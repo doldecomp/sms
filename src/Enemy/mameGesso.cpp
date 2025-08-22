@@ -424,7 +424,7 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 			}
 		} else {
 			if (self->checkCurAnmEnd(0)) {
-				spine->pushRaw(&TNerveMameGessoWait::theNerve());
+				spine->pushAfterCurrent(&TNerveMameGessoWait::theNerve());
 				return true;
 			}
 		}
@@ -448,7 +448,7 @@ DEFINE_NERVE(TNerveMameGessoDamage, TLiveActor)
 	}
 
 	if (!self->isAirborne() && self->getGroundPlane()->isWaterSurface()) {
-		spine->pushRaw(&TNerveMameGessoObject::theNerve());
+		spine->pushAfterCurrent(&TNerveMameGessoObject::theNerve());
 		return true;
 	}
 
@@ -458,9 +458,9 @@ DEFINE_NERVE(TNerveMameGessoDamage, TLiveActor)
 
 		if (!self->isAirborne()) {
 			if (self->getGroundPlane()->isWaterSurface())
-				spine->pushRaw(&TNerveMameGessoObject::theNerve());
+				spine->pushAfterCurrent(&TNerveMameGessoObject::theNerve());
 			else
-				spine->pushRaw(&TNerveMameGessoJitabata::theNerve());
+				spine->pushAfterCurrent(&TNerveMameGessoJitabata::theNerve());
 
 			return true;
 		}
@@ -485,7 +485,7 @@ DEFINE_NERVE(TNerveMameGessoJitabata, TLiveActor)
 				    > 300.0f)
 					self->unk1EC = 0;
 
-				spine->pushRaw(&TNerveMameGessoWait::theNerve());
+				spine->pushAfterCurrent(&TNerveMameGessoWait::theNerve());
 				self->unk164 = 0;
 				return true;
 			}
@@ -560,7 +560,7 @@ DEFINE_NERVE(TNerveMameGessoThrown, TLiveActor)
 
 	if (!self->isAirborne()) {
 		if (self->getGroundPlane()->isWaterSurface()) {
-			spine->pushRaw(&TNerveMameGessoObject::theNerve());
+			spine->pushAfterCurrent(&TNerveMameGessoObject::theNerve());
 			self->unk164 = 0;
 			return true;
 		}
@@ -613,7 +613,7 @@ DEFINE_NERVE(TNerveMameGessoObject, TLiveActor)
 				self->offHitFlag(HIT_FLAG_UNK1);
 				self->mPosition.y = self->unk1E4;
 				self->unk1E8      = 0.0f;
-				spine->pushRaw(&TNerveMameGessoWait::theNerve());
+				spine->pushAfterCurrent(&TNerveMameGessoWait::theNerve());
 				return true;
 			}
 		}
@@ -644,7 +644,7 @@ DEFINE_NERVE(TNerveMameGessoWait, TLiveActor)
 		               ? self->unk194->mSLWaitTimeInWater.get()
 		               : self->unk194->mSLWaitTimeOnGround.get();
 		if (spine->getTime() > wait + self->mInstanceIndex * 10) {
-			spine->pushRaw(&TNerveMameGessoGraphJumpWander::theNerve());
+			spine->pushAfterCurrent(&TNerveMameGessoGraphJumpWander::theNerve());
 			return true;
 		}
 	}

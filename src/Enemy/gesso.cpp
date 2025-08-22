@@ -735,15 +735,15 @@ void TGesso::genRandomItem()
 void TGesso::behaveToFindMario()
 {
 	if (unk150 & 2) {
-		mSpine->pushRaw(&TNerveWalkerGraphWander::theNerve());
-		mSpine->pushRaw(&TNerveWalkerEscape::theNerve());
-		mSpine->pushRaw(&TNerveSmallEnemyJump::theNerve());
+		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
+		mSpine->pushAfterCurrent(&TNerveWalkerEscape::theNerve());
+		mSpine->pushAfterCurrent(&TNerveSmallEnemyJump::theNerve());
 	} else {
 		setGoalPathMario();
-		mSpine->pushRaw(&TNerveWalkerGraphWander::theNerve());
-		mSpine->pushRaw(&TNerveWalkerAttack::theNerve());
+		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
+		mSpine->pushAfterCurrent(&TNerveWalkerAttack::theNerve());
 		if (unk1B4 == 0) {
-			mSpine->pushRaw(&TNerveGessoFindMario::theNerve());
+			mSpine->pushAfterCurrent(&TNerveGessoFindMario::theNerve());
 			unk1B4 = 1;
 		}
 	}
@@ -1044,7 +1044,7 @@ DEFINE_NERVE(TNerveGessoFreeze, TLiveActor)
 		self->unk1DC = local_88;
 
 		if (self->checkDropInWater()) {
-			spine->pushRaw(&TNerveGessoFall::theNerve());
+			spine->pushAfterCurrent(&TNerveGessoFall::theNerve());
 			return true;
 		}
 
@@ -1180,13 +1180,14 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 			} else if (!self->isAirborne()) {
 				if (self->getGroundPlane()->isWaterSurface()) {
 					self->generateEffectColumWater();
-					spine->pushRaw(&TNerveSmallEnemyDie::theNerve());
+					spine->pushAfterCurrent(&TNerveSmallEnemyDie::theNerve());
 
 					return true;
 				} else if (self->isBckAnm(4)) {
 					self->setBckAnm(7);
 				} else if (self->isBckAnm(7)) {
-					spine->pushRaw(&TNerveWalkerGraphWander::theNerve());
+					spine->pushAfterCurrent(
+					    &TNerveWalkerGraphWander::theNerve());
 					return true;
 				}
 			}
@@ -1203,7 +1204,7 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 			if (!self->isAirborne()) {
 				if (self->getGroundPlane()->isWaterSurface()) {
 					self->generateEffectColumWater();
-					spine->pushRaw(&TNerveSmallEnemyDie::theNerve());
+					spine->pushAfterCurrent(&TNerveSmallEnemyDie::theNerve());
 					return true;
 				}
 
@@ -1220,7 +1221,7 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 
 			if (self->checkCurAnmEnd(0)) {
 				self->fallEnd();
-				spine->pushRaw(&TNerveWalkerGraphWander::theNerve());
+				spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
 				return true;
 			}
 		}

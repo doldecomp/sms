@@ -117,7 +117,7 @@ public:
 	}
 
 	// fabricated
-	void pushRaw(Nerve nerve)
+	void pushAfterCurrent(Nerve nerve)
 	{
 		if (nerve)
 			mVertebrae.push(nerve);

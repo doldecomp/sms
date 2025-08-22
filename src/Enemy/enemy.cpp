@@ -59,7 +59,7 @@ void TSpineEnemy::reset()
 	offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 	onLiveFlag(LIVE_FLAG_UNK800);
 	mSpine->reset();
-	mSpine->pushRaw(mSpine->getDefault());
+	mSpine->pushAfterCurrent(mSpine->getDefault());
 }
 
 void TSpineEnemy::load(JSUMemoryInputStream& stream)

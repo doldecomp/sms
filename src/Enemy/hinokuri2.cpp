@@ -1048,7 +1048,7 @@ DEFINE_NERVE(TNerveHino2Appear, TLiveActor)
 
 	if (self->getMActor()->curAnmEndsNext()) {
 		self->goToExclusiveNextGraphNode();
-		spine->pushRaw(&TNerveHino2GraphWander::theNerve());
+		spine->pushAfterCurrent(&TNerveHino2GraphWander::theNerve());
 		return true;
 	}
 
@@ -1063,21 +1063,21 @@ DEFINE_NERVE(TNerveHino2GraphWander, TLiveActor)
 
 	if (self->isReachedToGoal()) {
 		if (self->jumpToNextGraphNode() >= 0) {
-			spine->pushRaw(&TNerveHino2GraphWander::theNerve());
-			spine->pushRaw(&TNerveHino2JumpIn::theNerve());
-			spine->pushRaw(&TNerveHino2Turn::theNerve());
+			spine->pushAfterCurrent(&TNerveHino2GraphWander::theNerve());
+			spine->pushAfterCurrent(&TNerveHino2JumpIn::theNerve());
+			spine->pushAfterCurrent(&TNerveHino2Turn::theNerve());
 
 			return true;
 		} else {
 			self->goToExclusiveNextGraphNode();
-			spine->pushRaw(&TNerveHino2GraphWander::theNerve());
+			spine->pushAfterCurrent(&TNerveHino2GraphWander::theNerve());
 			return true;
 		}
 	}
 
 	if (gpMarDirector->unk7D >= 2 && self->unk164 <= 0) {
 		if (self->getLevel() >= 1) {
-			spine->pushRaw(&TNerveHino2PrePol::theNerve());
+			spine->pushAfterCurrent(&TNerveHino2PrePol::theNerve());
 			return 1;
 		}
 
@@ -1130,7 +1130,7 @@ DEFINE_NERVE(TNerveHino2Fly, TLiveActor)
 
 	if (self->isReachedToGoal()
 	    || (spine->getTime() > 0 && !self->isAirborne())) {
-		spine->pushRaw(&TNerveHino2Landing::theNerve());
+		spine->pushAfterCurrent(&TNerveHino2Landing::theNerve());
 		return true;
 	}
 
@@ -1150,7 +1150,7 @@ DEFINE_NERVE(TNerveHino2JumpIn, TLiveActor)
 		f32 grav                       = self->getGravityY();
 		self->mVelocity = self->calcVelocityToJumpToY(p, f, grav);
 		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
-		spine->pushRaw(&TNerveHino2Fly::theNerve());
+		spine->pushAfterCurrent(&TNerveHino2Fly::theNerve());
 		return true;
 	}
 
@@ -1220,9 +1220,9 @@ DEFINE_NERVE(TNerveHino2PrePol, TLiveActor)
 			if (wait > uVar5) {
 				f32 prob = self->getSaveParam()->mSLStampProb.get();
 				if (rand() * (1.0f / (RAND_MAX + 1)) < prob) {
-					spine->pushRaw(&TNerveHino2Pollute::theNerve());
+					spine->pushAfterCurrent(&TNerveHino2Pollute::theNerve());
 				} else {
-					spine->pushRaw(&TNerveHino2Stamp::theNerve());
+					spine->pushAfterCurrent(&TNerveHino2Stamp::theNerve());
 				}
 
 				self->mWaitTimer = 0;
@@ -1296,7 +1296,7 @@ DEFINE_NERVE(TNerveHino2Pollute, TLiveActor)
 		self->mHitPoints = self->calcHitPoints();
 
 		self->resetPolInterval();
-		spine->pushRaw(&TNerveHino2GraphWander::theNerve());
+		spine->pushAfterCurrent(&TNerveHino2GraphWander::theNerve());
 
 		return true;
 	}
@@ -1327,7 +1327,7 @@ DEFINE_NERVE(TNerveHino2Damage, TLiveActor)
 		self->unk18C = 0;
 		if (self->mHitPoints == 0) {
 			self->unk180 = FALSE;
-			spine->pushRaw(&TNerveHino2Squat::theNerve());
+			spine->pushAfterCurrent(&TNerveHino2Squat::theNerve());
 			return true;
 		}
 	}
@@ -1335,7 +1335,7 @@ DEFINE_NERVE(TNerveHino2Damage, TLiveActor)
 	if (spine->getTime() >= self->getSaveParam()->getSLDamageTimer()) {
 		self->unk180 = FALSE;
 		if (self->getHitPoints() == 0) {
-			spine->pushRaw(&TNerveHino2Squat::theNerve());
+			spine->pushAfterCurrent(&TNerveHino2Squat::theNerve());
 			return true;
 		}
 
@@ -1346,7 +1346,7 @@ DEFINE_NERVE(TNerveHino2Damage, TLiveActor)
 			self->unk124->reset();
 			self->goToShortestNextGraphNode();
 			spine->reset();
-			spine->pushRaw(&TNerveHino2GraphWander::theNerve());
+			spine->pushAfterCurrent(&TNerveHino2GraphWander::theNerve());
 
 			self->mHitPoints = self->calcHitPoints();
 			self->resetPolInterval();
@@ -1376,7 +1376,7 @@ DEFINE_NERVE(TNerveHino2Squat, TLiveActor)
 		}
 
 		if (self->mCurrentBck == 0x14) {
-			spine->pushRaw(&TNerveHino2Burst::theNerve());
+			spine->pushAfterCurrent(&TNerveHino2Burst::theNerve());
 			return true;
 		}
 	}
@@ -1399,7 +1399,7 @@ DEFINE_NERVE(TNerveHino2Burst, TLiveActor)
 		self->unk124->reset();
 		self->goToShortestNextGraphNode();
 		spine->reset();
-		spine->pushRaw(&TNerveHino2GraphWander::theNerve());
+		spine->pushAfterCurrent(&TNerveHino2GraphWander::theNerve());
 		return true;
 	}
 
@@ -1422,7 +1422,7 @@ DEFINE_NERVE(TNerveHino2Die, TLiveActor)
 		self->unk124->reset();
 		self->goToShortestNextGraphNode();
 		spine->reset();
-		spine->pushRaw(&TNerveHino2GraphWander::theNerve());
+		spine->pushAfterCurrent(&TNerveHino2GraphWander::theNerve());
 		self->kill();
 		return true;
 	}
@@ -1445,7 +1445,7 @@ DEFINE_NERVE(TNerveHino2Stamp, TLiveActor)
 		if (uVar7 > stampCnt) {
 			self->setUnk160(0);
 			self->resetPolInterval();
-			spine->pushRaw(&TNerveHino2GraphWander::theNerve());
+			spine->pushAfterCurrent(&TNerveHino2GraphWander::theNerve());
 			return true;
 		}
 		self->setUnk160(uVar7);
