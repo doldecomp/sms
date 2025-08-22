@@ -133,14 +133,14 @@ void TWalkerEnemy::walkBehavior(int param_1, float param_2)
 void TWalkerEnemy::behaveToFindMario()
 {
 	if (checkUnk150(2)) {
-		mSpine->pushRaw(&TNerveWalkerGraphWander::theNerve());
-		mSpine->pushRaw(&TNerveWalkerEscape::theNerve());
-		mSpine->pushRaw(&TNerveSmallEnemyJump::theNerve());
+		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
+		mSpine->pushAfterCurrent(&TNerveWalkerEscape::theNerve());
+		mSpine->pushAfterCurrent(&TNerveSmallEnemyJump::theNerve());
 	} else {
 		setGoalPathMario();
-		mSpine->pushRaw(&TNerveWalkerGraphWander::theNerve());
-		mSpine->pushRaw(&TNerveWalkerAttack::theNerve());
-		mSpine->pushRaw(&TNerveSmallEnemyJump::theNerve());
+		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
+		mSpine->pushAfterCurrent(&TNerveWalkerAttack::theNerve());
+		mSpine->pushAfterCurrent(&TNerveSmallEnemyJump::theNerve());
 	}
 }
 
@@ -198,7 +198,7 @@ DEFINE_NERVE(TNerveWalkerGenerate, TLiveActor)
 		self->setGenerateAnm();
 	} else {
 		if (self->checkCurAnmEnd(0)) {
-			spine->pushRaw(&TNerveWalkerGraphWander::theNerve());
+			spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
 			return true;
 		}
 	}
@@ -312,8 +312,8 @@ DEFINE_NERVE(TNerveWalkerTraceMario, TLiveActor)
 	    || SMS_GetMarioGroundPlane()->isWaterSurface()
 	    || SMS_CheckMarioFlag(0x20000)) {
 
-		spine->pushRaw(&TNerveWalkerTraceMario::theNerve());
-		spine->pushRaw(&TNerveSmallEnemyWait::theNerve());
+		spine->pushAfterCurrent(&TNerveWalkerTraceMario::theNerve());
+		spine->pushAfterCurrent(&TNerveSmallEnemyWait::theNerve());
 		return true;
 	}
 

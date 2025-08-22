@@ -761,7 +761,7 @@ void TBossGesso::changeAttackMode(int new_mode)
 		changeAllTentacleState(0x8);
 		mSpine->reset();
 		mSpine->setNext(&TNerveBGRoll::theNerve());
-		mSpine->pushRaw(&TNerveBGWait::theNerve());
+		mSpine->pushAfterCurrent(&TNerveBGWait::theNerve());
 		break;
 
 	case ASTATE_SHOOT:
@@ -772,7 +772,7 @@ void TBossGesso::changeAttackMode(int new_mode)
 		    && mSpine->getLatestNerve() != &TNerveBGBeakDamage::theNerve()) {
 			mSpine->reset();
 			mSpine->setNext(&TNerveBGPolDrop::theNerve());
-			mSpine->pushRaw(&TNerveBGWait::theNerve());
+			mSpine->pushAfterCurrent(&TNerveBGWait::theNerve());
 			changeAllTentacleState(0x8);
 		}
 		break;
@@ -790,7 +790,7 @@ void TBossGesso::gotTentacleDamage()
 
 	mSpine->reset();
 	mSpine->setNext(&TNerveBGTentacleDamage::theNerve());
-	mSpine->pushRaw(&TNerveBGWait::theNerve());
+	mSpine->pushAfterCurrent(&TNerveBGWait::theNerve());
 }
 
 void TBossGesso::gotEyeDamage()
@@ -802,7 +802,7 @@ void TBossGesso::gotEyeDamage()
 
 	mSpine->reset();
 	mSpine->setNext(&TNerveBGEyeDamage::theNerve());
-	mSpine->pushRaw(&TNerveBGWait::theNerve());
+	mSpine->pushAfterCurrent(&TNerveBGWait::theNerve());
 }
 
 void TBossGesso::gotBeakDamage()
@@ -817,7 +817,7 @@ void TBossGesso::gotBeakDamage()
 		mSpine->setNext(&TNerveBGDie::theNerve());
 	} else {
 		mSpine->setNext(&TNerveBGBeakDamage::theNerve());
-		mSpine->pushRaw(&TNerveBGWait::theNerve());
+		mSpine->pushAfterCurrent(&TNerveBGWait::theNerve());
 	}
 }
 
@@ -1457,7 +1457,7 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 		ctrl4->setSpeed(0.0f);
 		ctrl4->setFrame(0.0f);
 
-		spine->pushRaw(&TNerveBGPollute::theNerve());
+		spine->pushAfterCurrent(&TNerveBGPollute::theNerve());
 		if (gpMarDirector->mMap == 3 || gpMarDirector->mMap == 59)
 			MSBgm::startBGM(0x8001002A);
 
@@ -1499,7 +1499,7 @@ DEFINE_NERVE(TNerveBGTentacleDamage, TLiveActor)
 		if (!self->tentacleHeld())
 			return true;
 
-		spine->pushRaw(&TNerveBGTentacleDamage::theNerve());
+		spine->pushAfterCurrent(&TNerveBGTentacleDamage::theNerve());
 		return true;
 	}
 
@@ -1740,7 +1740,7 @@ DEFINE_NERVE(TNerveBGPolDrop, TLiveActor)
 		if (self->unk195 < 3) {
 			f32 len = delta.squared();
 			if (singleAttackLen2 <= len && len < shootRadius2) {
-				spine->pushRaw(&TNerveBGPolDrop::theNerve());
+				spine->pushAfterCurrent(&TNerveBGPolDrop::theNerve());
 			}
 		}
 

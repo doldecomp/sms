@@ -283,7 +283,7 @@ void TSmallEnemy::reset()
 	goToShortestNextGraphNode();
 	offHitFlag(HIT_FLAG_UNK1);
 	mSpine->reset();
-	mSpine->pushRaw(mSpine->getDefault());
+	mSpine->pushAfterCurrent(mSpine->getDefault());
 	mScaling.set(mBodyScale, mBodyScale, mBodyScale);
 
 	mSprayedByWaterCooldown = 0;
@@ -322,7 +322,7 @@ void TSmallEnemy::forceKill()
 		if (mSpine->getCurrentNerve() != &TNerveSmallEnemyDie::theNerve()) {
 			mSpine->reset();
 			mSpine->setNext(&TNerveSmallEnemyDie::theNerve());
-			mSpine->pushRaw(mSpine->getDefault());
+			mSpine->pushAfterCurrent(mSpine->getDefault());
 
 			onLiveFlag(LIVE_FLAG_UNK20000);
 			mHitPoints = 1;
@@ -776,7 +776,7 @@ void TSmallEnemy::kill()
 	if (mSpine->getCurrentNerve() != &TNerveSmallEnemyDie::theNerve()) {
 		mSpine->reset();
 		mSpine->setNext(&TNerveSmallEnemyDie::theNerve());
-		mSpine->pushRaw(&TNerveSmallEnemyDie::theNerve());
+		mSpine->pushAfterCurrent(&TNerveSmallEnemyDie::theNerve());
 
 		onLiveFlag(LIVE_FLAG_UNK40);
 	}
@@ -1022,7 +1022,7 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 
 		spine->reset();
 		spine->setNext(&TNerveSmallEnemyDie::theNerve());
-		spine->pushRaw(spine->getDefault());
+		spine->pushAfterCurrent(spine->getDefault());
 
 		return true;
 	} else {

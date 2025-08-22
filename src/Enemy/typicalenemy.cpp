@@ -53,7 +53,7 @@ DEFINE_NERVE(TNerveTypicalGraphWander, TLiveActor)
 	}
 
 	if (self->isReachedToGoal()) {
-		spine->pushRaw(&TNerveTypicalGraphWander::theNerve());
+		spine->pushAfterCurrent(&TNerveTypicalGraphWander::theNerve());
 		return true;
 	} else {
 		self->walkToCurPathNode(self->getMarchSpeed(), self->getTurnSpeed(),

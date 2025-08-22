@@ -153,7 +153,7 @@ DEFINE_NERVE(TNerveRHGraphWander, TLiveActor)
 			self->mTimer = node.getRailNode()->mPitch;
 		}
 
-		spine->pushRaw(&TNerveRHGraphWander::theNerve());
+		spine->pushAfterCurrent(&TNerveRHGraphWander::theNerve());
 		return true;
 	} else {
 		if (self->unk124->unk0 == nullptr || self->unk124->unk0->isDummy()) {
