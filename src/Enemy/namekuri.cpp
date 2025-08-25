@@ -1,10 +1,14 @@
+#include "JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp"
 #include <Enemy/NameKuri.hpp>
 #include <Enemy/Walker.hpp>
 #include <Enemy/Graph.hpp>
+#include <Enemy/Spider.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Player/MarioAccess.hpp>
 #include <MoveBG/MapObjManager.hpp>
+#include <Map/MapData.hpp>
 #include <M3DUtil/MActor.hpp>
+#include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
@@ -13,12 +17,15 @@
 #include <Strategic/SharedParts.hpp>
 #include <Strategic/Spine.hpp>
 #include <Strategic/ObjModel.hpp>
+#include <System/EmitterViewObj.hpp>
 #include <M3DUtil/SDLModel.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
+#include <JSystem/JMath.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <JSystem/JUtility/JUTNameTab.hpp>
+#include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DNode.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
@@ -29,7 +36,7 @@
 #include <M3DUtil/InfectiousStrings.hpp>
 
 f32 TNameKuriManager::mExplosionSpeed    = 1.2f;
-u32 TNameKuriManager::mStopMinScaleFrame = 8;
+int TNameKuriManager::mStopMinScaleFrame = 8;
 
 static TNameKuri* gpCurNameKuri;
 
@@ -147,13 +154,126 @@ TNameIndParCallback::TNameIndParCallback(TNameKuri* owner)
 {
 }
 
-void TNameIndParCallback::execute(JPABaseEmitter*, JPABaseParticle*) { }
+void TNameIndParCallback::execute(JPABaseEmitter* param_1,
+                                  JPABaseParticle* param_2)
+{
+	if (mOwner->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
+		MtxPtr mA = mOwner->getMActor()->getModel()->getAnmMtx(1);
+
+		f32 s = JMASin(mOwner->unk1AC);
+		f32 c = JMACos(mOwner->unk1AC);
+
+		Mtx local_4c;
+		local_4c[0][0] = 1.0f;
+		local_4c[0][1] = 0.0f;
+		local_4c[0][2] = 0.0f;
+		local_4c[0][3] = 0.0f;
+
+		local_4c[1][0] = 0.0f;
+		local_4c[1][1] = c;
+		local_4c[1][2] = -s;
+		local_4c[1][3] = 0.0f;
+
+		local_4c[2][0] = 0.0f;
+		local_4c[2][1] = s;
+		local_4c[2][2] = c;
+		local_4c[2][3] = 0.0f;
+
+		MTXConcat(mA, local_4c, mA);
+
+		// TODO: definitely some inlines missing. Row/column extract func?
+		// Maybe a function to extract the scale vector from a matrix?
+		JGeometry::TVec3<f32> local_7c;
+
+		JGeometry::TVec3<f32> tmp1(mA[0][0], mA[1][0], mA[2][0]);
+		local_7c.y = tmp1.length();
+		JGeometry::TVec3<f32> tmp2(mA[0][1], mA[1][1], mA[2][1]);
+		local_7c.z = tmp2.length();
+		JGeometry::TVec3<f32> tmp3(mA[0][2], mA[1][2], mA[2][2]);
+		local_7c.x = tmp3.length();
+
+		param_1->setGlobalRTMatrix(mA);
+
+		if (mOwner->unk1A8) {
+			param_1->setScale(mOwner->mScaling);
+		} else {
+			if (mOwner->isAttackJump())
+				param_1->setScale(local_7c * 0.5f);
+			else
+				param_1->setScale(local_7c);
+		}
+	}
+}
 
 void TNameIndParCallback::draw(JPABaseEmitter*, JPABaseParticle*) { }
 
-BOOL NameKuriAttackCallback(J3DNode*, int) { }
+BOOL NameKuriAttackCallback(J3DNode* param_1, int param_2)
+{
+	if (param_2 == 0) {
+		if (gpCurNameKuri == nullptr || !gpCurNameKuri->isAttackJump())
+			return true;
 
-BOOL NameKuriScaleCallback(J3DNode*, int) { }
+		MtxPtr mA = gpCurNameKuri->getMActor()->getModel()->getAnmMtx(
+		    ((J3DJoint*)param_1)->getJntNo());
+
+		f32 s = JMASin(gpCurNameKuri->unk1AC);
+		f32 c = JMACos(gpCurNameKuri->unk1AC);
+
+		Mtx local_48;
+		local_48[0][0] = 1.0f;
+		local_48[0][1] = 0.0f;
+		local_48[0][2] = 0.0f;
+		local_48[0][3] = 0.0f;
+
+		local_48[1][0] = 0.0f;
+		local_48[1][1] = c;
+		local_48[1][2] = -s;
+		local_48[1][3] = 0.0f;
+
+		local_48[2][0] = 0.0f;
+		local_48[2][1] = s;
+		local_48[2][2] = c;
+		local_48[2][3] = 0.0f;
+
+		MTXConcat(mA, local_48, mA);
+		MTXConcat(J3DSys::mCurrentMtx, local_48, J3DSys::mCurrentMtx);
+	}
+
+	return true;
+}
+
+BOOL NameKuriScaleCallback(J3DNode* param_1, int param_2)
+{
+	if (param_2 == 0) {
+		if (gpCurNameKuri == nullptr || !gpCurNameKuri->isHitWaterJump())
+			return true;
+
+		MtxPtr mA = gpCurNameKuri->getMActor()->getModel()->getAnmMtx(
+		    ((J3DJoint*)param_1)->getJntNo());
+
+		Mtx local_3c;
+
+		local_3c[0][0] = 0.4;
+		local_3c[0][1] = 0.0;
+		local_3c[0][2] = 0.0;
+		local_3c[0][3] = 0.0;
+
+		local_3c[1][0] = 0.0;
+		local_3c[1][1] = 4.0;
+		local_3c[1][2] = 0.0;
+		local_3c[1][3] = 0.0;
+
+		local_3c[2][0] = 0.0;
+		local_3c[2][1] = 0.0;
+		local_3c[2][2] = 0.4;
+		local_3c[2][3] = 0.0;
+
+		MTXConcat(mA, local_3c, mA);
+		MTXConcat(J3DSys::mCurrentMtx, local_3c, J3DSys::mCurrentMtx);
+	}
+
+	return true;
+}
 
 TNameKuri::TNameKuri(const char* name)
     : TWalkerEnemy(name)
@@ -204,7 +324,102 @@ void TNameKuri::init(TLiveManager* param_1)
 	}
 }
 
-void TNameKuri::calcRootMatrix() { }
+void TNameKuri::calcRootMatrix()
+{
+	gpCurNameKuri = this;
+
+	if (isEaten())
+		return;
+
+	getModel()->setBaseScale(mScaling);
+
+	MtxPtr anmMtx = getModel()->getBaseTRMtx();
+
+	unk1A8 = false;
+
+	if (getWalker()->unk2C->unk10 > 0.0f && unk138 != nullptr) {
+		unk1A8 = true;
+		JGeometry::TVec3<f32> local_30(0.0f, 1.0f, 0.0f);
+
+		JGeometry::TVec3<f32> normal = mGroundPlane->getNormal();
+
+		JGeometry::TVec3<f32> local_a0;
+		local_a0.cross(normal, local_30);
+		MsVECNormalize(&local_a0, &local_a0);
+
+		local_30.cross(local_a0, normal);
+		MsVECNormalize(&local_30, &local_30);
+
+		anmMtx[0][0] = local_a0.x;
+		anmMtx[1][0] = local_a0.y;
+		anmMtx[2][0] = local_a0.z;
+
+		anmMtx[0][1] = normal.x;
+		anmMtx[1][1] = normal.y;
+		anmMtx[2][1] = normal.z;
+
+		anmMtx[0][2] = local_30.x;
+		anmMtx[1][2] = local_30.y;
+		anmMtx[2][2] = local_30.z;
+
+		anmMtx[0][3] = 0;
+		anmMtx[1][3] = 0;
+		anmMtx[2][3] = 0;
+
+		f32 angle = (1.0f - getWalker()->unk2C->unk10) * 90.0f;
+
+		f32 s = JMASin(angle);
+		f32 c = JMACos(angle);
+
+		Mtx local_7c;
+
+		local_7c[0][0] = 1.0f;
+		local_7c[1][0] = 0.0f;
+		local_7c[2][0] = 0.0f;
+
+		local_7c[0][1] = 0.0f;
+		local_7c[1][1] = c;
+		local_7c[2][1] = s;
+
+		local_7c[0][2] = 0.0f;
+		local_7c[1][2] = -s;
+		local_7c[2][2] = c;
+
+		local_7c[0][3] = 0.0f;
+		local_7c[1][3] = 0.0f;
+		local_7c[2][3] = 0.0f;
+
+		MTXConcat(anmMtx, local_7c, anmMtx);
+	} else {
+		JGeometry::TVec3<f32> local_88(JMASin(mRotation.y), 0.0f,
+		                               JMACos(mRotation.y));
+
+		JGeometry::TVec3<f32> normal = mGroundPlane->getNormal();
+
+		JGeometry::TVec3<f32> local_a0;
+		local_a0.cross(normal, local_88);
+		MsVECNormalize(&local_a0, &local_a0);
+
+		local_88.cross(local_a0, normal);
+		MsVECNormalize(&local_88, &local_88);
+
+		anmMtx[0][0] = local_a0.x;
+		anmMtx[1][0] = local_a0.y;
+		anmMtx[2][0] = local_a0.z;
+
+		anmMtx[0][1] = normal.x;
+		anmMtx[1][1] = normal.y;
+		anmMtx[2][1] = normal.z;
+
+		anmMtx[0][2] = local_88.x;
+		anmMtx[1][2] = local_88.y;
+		anmMtx[2][2] = local_88.z;
+	}
+
+	anmMtx[0][3] = mPosition.x;
+	anmMtx[1][3] = mPosition.y;
+	anmMtx[2][3] = mPosition.z;
+}
 
 void TNameKuri::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
@@ -290,13 +505,71 @@ void TNameKuri::setGenerateAnm()
 
 void TNameKuri::setWalkAnm() { setBckAnm(7); }
 
-void TNameKuri::setDeadAnm() { }
+void TNameKuri::setDeadAnm()
+{
+	setBckAnm(0);
 
-void TNameKuri::setAfterDeadEffect() { }
+	if (gpMSound->gateCheck(0x2800))
+		MSoundSESystem::MSoundSE::startSoundActor(0x2800, &mPosition, 0,
+		                                          nullptr, 0, 4);
+
+	MtxPtr mtx = getMActor()->getModel()->getAnmMtx(2);
+
+	if (JPABaseEmitter* emitter
+	    = gpMarioParticleManager->emitAndBindToMtxPtr(0x84, mtx, 0, nullptr)) {
+
+		emitter->unk154.set(mScaling);
+		emitter->unk174.set(mScaling);
+	}
+
+	if (JPABaseEmitter* emitter
+	    = gpMarioParticleManager->emitAndBindToMtxPtr(0x83, mtx, 0, nullptr)) {
+
+		emitter->unk154.set(mScaling);
+		emitter->unk174.set(mScaling);
+	}
+
+	setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
+	onLiveFlag(LIVE_FLAG_UNK10);
+}
+
+void TNameKuri::setAfterDeadEffect()
+{
+	if (unk198) {
+		void* waterGun = SMS_GetMarioWaterGun();
+		// TODO: where my water gun
+	}
+}
 
 void TNameKuri::setWaitAnm() { setBckAnm(6); }
 
-void TNameKuri::setMeltAnm() { }
+void TNameKuri::setMeltAnm()
+{
+	setBckAnm(0);
+
+	MtxPtr mtx = getMActor()->getModel()->getAnmMtx(2);
+
+	if (JPABaseEmitter* emitter
+	    = gpMarioParticleManager->emitAndBindToMtxPtr(0x84, mtx, 0, nullptr)) {
+
+		emitter->unk154.set(mScaling);
+		emitter->unk174.set(mScaling);
+	}
+
+	if (JPABaseEmitter* emitter
+	    = gpMarioParticleManager->emitAndBindToMtxPtr(0x83, mtx, 0, nullptr)) {
+
+		emitter->unk154.set(mScaling);
+		emitter->unk174.set(mScaling);
+	}
+
+	setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
+	onLiveFlag(LIVE_FLAG_UNK10);
+
+	if (gpMSound->gateCheck(0x2802))
+		MSoundSESystem::MSoundSE::startSoundActor(0x2802, &mPosition, 0,
+		                                          nullptr, 0, 4);
+}
 
 void TNameKuri::setMActorAndKeeper()
 {
@@ -352,11 +625,24 @@ void TNameKuri::endHitWaterJump()
 	mScaling.set(mBodyScale, mBodyScale, mBodyScale);
 }
 
-void TNameKuri::isAttackJump() const { }
+bool TNameKuri::isAttackJump() const
+{
+	if (mSpine->getCurrentNerve() == &TNerveNameKuriJumpAttack::theNerve()
+	    && mPosition.y > mGroundHeight + 5.0f && !unk1A8)
+		return true;
+	else
+		return false;
+}
 
-void TNameKuri::isHitWaterJump() const { }
+bool TNameKuri::isHitWaterJump() const
+{
+	if (mSpine->getCurrentNerve() == &TNerveSmallEnemyHitWaterJump::theNerve())
+		return true;
+	else
+		return false;
+}
 
-void TNameKuri::canJumpAttack() const { }
+bool TNameKuri::canJumpAttack() const { }
 
 bool TNameKuri::isHitValid(u32 param_1)
 {
@@ -397,16 +683,158 @@ TSmallEnemy* TDiffusionNameKuriManager::createEnemyInstance()
 	return new TDiffusionNameKuri;
 }
 
-DEFINE_NERVE(TNerveNameKuriLand, TLiveActor) { }
+DEFINE_NERVE(TNerveNameKuriLand, TLiveActor)
+{
+	TNameKuri* self = (TNameKuri*)spine->getBody();
 
-DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor) { }
+	if (self->isBckAnm(4) && self->checkCurAnmEnd(0))
+		return true;
 
-DEFINE_NERVE(TNerveNameKuriJumpAttackPrepare, TLiveActor) { }
+	if (!self->isAirborne())
+		self->setBckAnm(4);
 
-DEFINE_NERVE(TNerveNameKuriExplosion, TLiveActor) { }
+	return false;
+}
 
-DEFINE_NERVE(TNerveNameKuriDiffuse, TLiveActor) { }
+DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
+{
+	TNameKuri* self = (TNameKuri*)spine->getBody();
+
+	if (spine->getTime() < 2) {
+		// TODO: WTF?! Why does it use SMS_GetMarioHitActor here
+		// but directly use gpMarioAddress everywhere else?
+		self->setGoalPathMario();
+
+		self->unk1B0 = self->mScaling.y;
+		self->unk1AC = 0.0f;
+		self->unk1B8 = 0.0f;
+	} else {
+		TNameKuriSaveLoadParams* params = self->unk1A4;
+		if (self->isBckAnm(6)) {
+			if (spine->getTime() > 0) {
+				self->setBckAnm(3);
+			} else {
+				f32 jumpAttackTurnSp = params->mSLJumpAttackTurnSp.get();
+				self->walkToCurPathNode(0.0f, jumpAttackTurnSp, 0.0f);
+			}
+		} else if (self->isBckAnm(3)) {
+			if (self->getMActor()->getFrameCtrl(0)->checkPass(62.0f)) {
+				JGeometry::TVec3<f32> local_44 = SMS_GetMarioPos();
+				f32 jumpAttackSp = self->unk1A4->mSLJumpAttackSp.get();
+				f32 grav         = self->getGravityY();
+				JGeometry::TVec3<f32> local_6c
+				    = self->calcVelocityToJumpToY(local_44, jumpAttackSp, grav);
+				self->mPosition.y += 2.0f;
+				self->setVelocity(local_6c);
+				self->onLiveFlag(LIVE_FLAG_AIRBORNE);
+				self->unk1AC = 0.0f;
+				self->unk1B8 = 0.0f;
+
+				// TODO: It's different here too?!
+				self->setGoalPathMario();
+			}
+
+			self->walkToCurPathNode(0.0f, 6.0f, 0.0f);
+			int colorChangeRate = self->unk1A4->mSLColorChangeRate.get();
+			if (self->getCurAnmFrameNo(0) > 62.0f) {
+				self->unk1B8 += 1.0f;
+				s16 sVar5
+				    = MsClamp<s16>(self->unk1BC.r - colorChangeRate, 0, 255);
+				self->unk1BC.r = self->unk1BC.g = self->unk1BC.b = sVar5;
+			} else {
+				s16 col
+				    = abs(JMASin(colorChangeRate * spine->getTime())) * 255.0f;
+				self->unk1BC.r = self->unk1BC.g = self->unk1BC.b = col;
+			}
+
+			if (self->isAirborne())
+				self->mScaling.x = self->unk1B0;
+
+			if (!self->isAirborne() && self->checkCurAnmEnd(0))
+				self->setBckAnm(2);
+		} else if (self->isBckAnm(2)) {
+			if (self->checkCurAnmEnd(0)) {
+				self->switchNextGoalPath();
+				self->onLiveFlag(LIVE_FLAG_UNK20000);
+				spine->pushAfterCurrent(&TNerveSmallEnemyDie::theNerve());
+				return true;
+			}
+			f32 jumpMaxAngle = self->unk1A4->mSLJumpMaxAngle.get();
+			self->unk1AC = MsClamp(self->unk1AC * 0.9f, -jumpMaxAngle, 0.0f);
+		}
+	}
+
+	return false;
+}
+
+DEFINE_NERVE(TNerveNameKuriJumpAttackPrepare, TLiveActor)
+{
+	TNameKuri* self = (TNameKuri*)spine->getBody();
+	if (spine->getTime() == 1) {
+		self->setGoalPathMario();
+		self->setBckAnm(6);
+	} else if (self->isBckAnm(6)) {
+		if (self->isInSight(SMS_GetMarioPos(), 100000.0f, 30.0f, 0.0f)
+		    && !self->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
+			if (!self->isAirborne() && !self->unk1A8) {
+				spine->pushAfterCurrent(&TNerveNameKuriJumpAttack::theNerve());
+				return true;
+			}
+		} else {
+			self->walkToCurPathNode(
+			    0.0f, self->unk1A4->mSLJumpAttackTurnSp.get(), 0.0f);
+		}
+	}
+
+	return false;
+}
+
+DEFINE_NERVE(TNerveNameKuriExplosion, TLiveActor)
+{
+	TNameKuri* self = (TNameKuri*)spine->getBody();
+	if (spine->getTime() < TNameKuriManager::mStopMinScaleFrame) {
+		self->mScaling.x = self->mScaling.y = self->mScaling.z
+		    = self->mBodyScale * 0.5f;
+	} else {
+		if (self->mScaling.x < self->mBodyScale * 2.0f)
+			self->mScaling.x = self->mScaling.y = self->mScaling.z
+			    = self->mScaling.z * TNameKuriManager::mExplosionSpeed;
+		else
+			return true;
+	}
+
+	return false;
+}
+
+DEFINE_NERVE(TNerveNameKuriDiffuse, TLiveActor)
+{
+	TNameKuri* self = (TNameKuri*)spine->getBody();
+	if (!self->isAirborne())
+		return true;
+
+	return false;
+}
 
 DEFINE_NERVE(TNerveNameKuriDrawPollute, TLiveActor) { return true; }
 
-DEFINE_NERVE(TNerveNKFollowMario, TLiveActor) { }
+DEFINE_NERVE(TNerveNKFollowMario, TLiveActor)
+{
+	TNameKuri* self = (TNameKuri*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		self->setGoalPathMario();
+
+	self->walkToCurPathNode(self->mMarchSpeed, 3.0f, 0.0f);
+
+	TNameKuriSaveLoadParams* params
+	    = ((TNameKuriSaveLoadParams*)self->getSaveParam());
+	f32 jumpAttackRadius = params->mSLJumpAttackRadius.get();
+	f32 jumpAttackAngle  = params->mSLJumpAttackAngle.get();
+	if (self->isInSight(SMS_GetMarioPos(), jumpAttackRadius, jumpAttackAngle,
+	                    0.0f)) {
+		spine->pushAfterCurrent(&TNerveNameKuriJumpAttackPrepare::theNerve());
+		return true;
+	}
+
+	return false;
+}

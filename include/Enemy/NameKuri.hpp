@@ -49,7 +49,7 @@ public:
 	virtual void initSetEnemies();
 
 	static f32 mExplosionSpeed;
-	static u32 mStopMinScaleFrame;
+	static int mStopMinScaleFrame;
 
 public:
 	/* 0x60 */ int unk60;
@@ -95,18 +95,20 @@ public:
 	virtual void setAfterDeadEffect();
 	virtual void behaveToFindMario();
 
-	void isAttackJump() const;
-	void isHitWaterJump() const;
-	void canJumpAttack() const;
+	bool isAttackJump() const;
+	bool isHitWaterJump() const;
+	bool canJumpAttack() const;
 
 public:
 	/* 0x194 */ int unk194;
 	/* 0x198 */ u8 unk198;
 	/* 0x19C */ TNameIndParCallback unk19C;
 	/* 0x1A4 */ TNameKuriSaveLoadParams* unk1A4;
-	/* 0x1A8 */ char unk1A8[0x1B4 - 0x1A8];
+	/* 0x1A8 */ bool unk1A8;
+	/* 0x1AC */ f32 unk1AC;
+	/* 0x1B0 */ f32 unk1B0;
 	/* 0x1B4 */ f32 unk1B4;
-	/* 0x1B8 */ char unk1B8[0x4];
+	/* 0x1B8 */ f32 unk1B8;
 	/* 0x1BC */ GXColorS10 unk1BC;
 	/* 0x1C4 */ GXColorS10 unk1C4;
 	/* 0x1CC */ TSharedParts* unk1CC;

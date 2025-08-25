@@ -100,6 +100,11 @@ public:
 
 		unk114.clear();
 	}
+	void switchNextGoalPath()
+	{
+		if (!unk114.empty())
+			unkF4 = unk114.pop();
+	}
 
 	void decHitPoints()
 	{
