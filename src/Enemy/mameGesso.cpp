@@ -644,7 +644,8 @@ DEFINE_NERVE(TNerveMameGessoWait, TLiveActor)
 		               ? self->unk194->mSLWaitTimeInWater.get()
 		               : self->unk194->mSLWaitTimeOnGround.get();
 		if (spine->getTime() > wait + self->mInstanceIndex * 10) {
-			spine->pushAfterCurrent(&TNerveMameGessoGraphJumpWander::theNerve());
+			spine->pushAfterCurrent(
+			    &TNerveMameGessoGraphJumpWander::theNerve());
 			return true;
 		}
 	}
