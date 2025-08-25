@@ -128,6 +128,13 @@ public:
 	JPAFieldManager* getFieldManager() { return &mFieldManager; }
 	u32 getUnk172() { return unk172; }
 
+	// fabricated
+	inline void setScale(const JGeometry::TVec3<f32>& scale)
+	{
+		unk154.set(scale);
+		unk174.set(scale);
+	}
+
 public:
 	/* 0x0 */ JSULink<JPABaseEmitter> unk0;
 	/* 0x10 */ JPAFrameManager unk10;
