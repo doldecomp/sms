@@ -48,4 +48,6 @@ public:
 	/* 0x10 */ JPAEmitterManager* unk10;
 };
 
+void SMSSetEmitterPolColor(JPABaseEmitter*, int);
+
 #endif

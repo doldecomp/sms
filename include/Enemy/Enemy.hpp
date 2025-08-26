@@ -114,6 +114,7 @@ public:
 
 	const TPathNode& getUnkF4() const { return unkF4; }
 	const TPathNode& getUnk104() const { return unk104; }
+	TGraphTracer* getTracer() { return unk124; }
 
 public:
 	/* 0xF4 */ TPathNode unkF4;
