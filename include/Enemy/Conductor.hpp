@@ -27,6 +27,9 @@ public:
 	public:
 		TCondParams();
 
+		// fabricated
+		f32 getEnemyFarClip() const { return mEnemyFarClip.get(); }
+
 		/* 0x0C */ TParamRT<f32> mEnemyFarClip;
 		/* 0x10 */ TParamRT<f32> mGenerateRadiusMax;
 		/* 0x14 */ TParamRT<f32> mGenerateRadiusMin;
