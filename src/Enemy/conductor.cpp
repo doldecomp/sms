@@ -308,15 +308,15 @@ void TConductor::genEnemyFromPollution()
 		enemy->getModel()->entry();
 }
 
-// TODO: doesn't get inlined into perform unless marked with inline.
-inline void TConductor::clipAloneActors(JDrama::TGraphics* param_1)
+void TConductor::clipAloneActors(JDrama::TGraphics* param_1)
 {
+	JGadget::TList<TLiveActor*>::iterator it = unk30.begin(), e = unk30.end();
+
 	SetViewFrustumClipCheckPerspective(
 	    gpCamera->getFovy(), gpCamera->getAspect(), param_1->getNearPlane(),
-	    unk84.mEnemyFarClip.get());
+	    unk84.getEnemyFarClip());
 
-	JGadget::TList<TLiveActor*>::iterator it, e;
-	for (it = unk30.begin(), e = unk30.end(); it != e; ++it) {
+	for (; it != e; ++it) {
 		TLiveActor* actor = *it;
 		if (!actor->checkLiveFlag(LIVE_FLAG_UNK100)) {
 			actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
@@ -368,31 +368,34 @@ void TConductor::perform(u32 param_1, JDrama::TGraphics* param_2)
 		genEnemyFromPollution();
 
 	for (int i = 1; i >= 0; --i) {
-		if (i != 0) {
-			JGadget::TList<TLiveManager*>::iterator it, e;
-			for (it = unk10.begin(), e = unk10.end(); it != e; ++it)
-				if ((*it)->hasMapCollision())
-					(*it)->testPerform(param_1, param_2);
-		} else {
-			JGadget::TList<TLiveManager*>::iterator it, e;
-			for (it = unk10.begin(), e = unk10.end(); it != e; ++it)
-				if (!(*it)->hasMapCollision())
-					(*it)->testPerform(param_1, param_2);
+		{
+			JGadget::TList<TLiveManager*>::iterator it = unk10.begin();
+			if (i != 0) {
+				for (; it != unk10.end(); ++it)
+					if ((*it)->hasMapCollision())
+						(*it)->testPerform(param_1, param_2);
+			} else {
+				for (; it != unk10.end(); ++it)
+					if (!(*it)->hasMapCollision())
+						(*it)->testPerform(param_1, param_2);
+			}
 		}
 
 		if (param_1 & 2)
 			clipAloneActors(param_2);
 
-		if (i != 0) {
-			JGadget::TList<TLiveActor*>::iterator it, e;
-			for (it = unk30.begin(), e = unk30.end(); it != e; ++it)
-				if ((*it)->hasMapCollision())
-					(*it)->testPerform(param_1, param_2);
-		} else {
-			JGadget::TList<TLiveActor*>::iterator it, e;
-			for (it = unk30.begin(), e = unk30.end(); it != e; ++it)
-				if (!(*it)->hasMapCollision())
-					(*it)->testPerform(param_1, param_2);
+		{
+			JGadget::TList<TLiveActor*>::iterator it = unk30.begin(),
+			                                      e  = unk30.end();
+			if (i != 0) {
+				for (; it != e; ++it)
+					if ((*it)->hasMapCollision())
+						(*it)->testPerform(param_1, param_2);
+			} else {
+				for (; it != e; ++it)
+					if (!(*it)->hasMapCollision())
+						(*it)->testPerform(param_1, param_2);
+			}
 		}
 	}
 
