@@ -319,7 +319,7 @@ void TCommonLauncher::stateLaunch()
 			JGeometry::TVec3<f32> local_20(0.0f, 4.0f, 0.0f);
 			local_14.set(0.0f, 0.0f, 0.0f);
 			MTXMultVec(mtx, &local_20, &local_20);
-			enemy->resetSRTV(mPosition, local_14, enemy->mPosition, local_20);
+			enemy->resetSRTV(mPosition, local_14, enemy->mScaling, local_20);
 		}
 	}
 
