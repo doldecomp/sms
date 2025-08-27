@@ -45,7 +45,30 @@ const char* namekuri2_bastable[] = {
 	nullptr, nullptr, nullptr, nullptr,
 };
 
-void TNameKuriLauncher::stateLaunch() { }
+void TNameKuriLauncher::stateLaunch()
+{
+	if (mTicksSpentInCurState == 0) {
+		TSpineEnemy* enemy = getProperEnemy("ナメクリマネージャー");
+		if (enemy) {
+			Mtx mtx;
+			MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
+
+			JGeometry::TVec3<f32> local_14;
+			JGeometry::TVec3<f32> local_20;
+
+			local_20.set(0.0f, 4.0f, 0.0f);
+			local_14.set(0.0f, 0.0f, 0.0f);
+			MTXMultVec(mtx, &local_20, &local_20);
+
+			enemy->resetSRTV(mPosition, local_14, enemy->mScaling, local_20);
+		}
+	}
+
+	if (mMActor->curAnmEndsNext()) {
+		resetLaunchTimer();
+		changeState(STATE_NORMAL);
+	}
+}
 
 TNameKuriSaveLoadParams::TNameKuriSaveLoadParams(const char* path)
     : TWalkerEnemyParams(path)
