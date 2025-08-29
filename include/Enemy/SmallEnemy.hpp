@@ -83,7 +83,7 @@ public:
 	void createEnemies(int);
 	TSmallEnemy* getHolder(int);
 
-	virtual void initSetEnemies();
+	virtual void initSetEnemies() { }
 
 	// fabricated
 	TSmallEnemyParams* getSaveParam() const
