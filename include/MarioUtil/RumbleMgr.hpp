@@ -7,7 +7,7 @@ class RumbleBase {
 public:
 	void init();
 	void stop();
-	void update(float, bool);
+	void update(f32, bool);
 };
 
 class RumbleChannelDataMgr {
@@ -22,7 +22,7 @@ public:
 	void init(RumbleChannelDataMgr*);
 	void reset();
 	void repeat();
-	void start(int, int, float*);
+	void start(int, int, f32*);
 	void start(int, int, Vec*);
 	void update();
 };
@@ -32,7 +32,7 @@ public:
 	RumbleControllerMgr();
 	void init();
 	void reset();
-	void start(int, int, float*);
+	void start(int, int, f32*);
 	void start(int, int, Vec*);
 	void stop();
 	void stop(int);
@@ -50,15 +50,15 @@ public:
 	RumbleMgr(bool, bool, bool, bool);
 	void init();
 	void reset();
-	void start(int, float*);
+	void start(int, f32*);
 	void start(int, Vec*);
-	void start(int, float (*)[4]);
-	void start(int, int, float*);
+	void start(int, MtxPtr);
+	void start(int, int, f32*);
 	void start(int, int, Vec*);
-	void start(int, int, float (*)[4]);
-	void start(int, int, int, float*);
+	void start(int, int, MtxPtr);
+	void start(int, int, int, f32*);
 	void start(int, int, int, Vec*);
-	void start(int, int, int, float (*)[4]);
+	void start(int, int, int, MtxPtr);
 	void stop();
 	void stop(int);
 	void stop(int, int);

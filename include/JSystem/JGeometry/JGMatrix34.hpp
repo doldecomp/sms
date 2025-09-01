@@ -36,11 +36,7 @@ template <typename T> struct SMatrix34C {
 };
 
 // NOTE: this HAS to be an explicit specialization for function prologue &
-// epilogue to match. Whether it has to have 8-byte alignment is not certain. It
-// helps some stack frame layouts to match, but it also might just be that
-// function calls got inlined in those places and matrices don't really need the
-// alignment.
-// TODO: figure out whether we need 8-byte alignment here
+// epilogue to match.
 template <> struct SMatrix34C<f32> {
 	SMatrix34C() { }
 
@@ -55,6 +51,9 @@ template <> struct SMatrix34C<f32> {
 		void* ptr = mMtx;
 		gekko_ps_copy12(ptr, (void*)src);
 	}
+
+	f32 at(u32 i, u32 j) { return mMtx[i][j]; }
+	f32& ref(u32 i, u32 j) { return mMtx[i][j]; }
 
 	f32 mMtx[3][4];
 };

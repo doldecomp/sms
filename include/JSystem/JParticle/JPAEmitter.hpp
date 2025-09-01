@@ -29,11 +29,11 @@ public:
 	/* 0x30 */ Vec unk30;
 	/* 0x3C */ JGeometry::TVec3<f32> unk3C;
 	/* 0x48 */ Mtx33 unk48;
-	/* 0x6C */ JGeometry::SMatrix34C<f32> unk6C;
-	/* 0x9C */ JGeometry::SMatrix34C<f32> unk9C;
-	/* 0xCC */ JGeometry::SMatrix34C<f32> unkCC;
-	/* 0xFC */ JGeometry::SMatrix34C<f32> unkFC;
-	/* 0x12C */ JGeometry::SMatrix34C<f32> unk12C;
+	/* 0x6C */ TPosition3f unk6C;
+	/* 0x9C */ TPosition3f unk9C;
+	/* 0xCC */ TPosition3f unkCC;
+	/* 0xFC */ TPosition3f unkFC;
+	/* 0x12C */ TPosition3f unk12C;
 	/* 0x15C */ f32 unk15C;
 	/* 0x160 */ f32 unk160;
 	/* 0x164 */ u32 unk164;

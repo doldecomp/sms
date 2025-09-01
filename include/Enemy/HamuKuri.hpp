@@ -23,11 +23,35 @@ public:
 class THamuKuriSaveLoadParams : public TWalkerEnemyParams {
 public:
 	THamuKuriSaveLoadParams(const char* path);
+
+	s32 getCrashBonusNum() const { return mSLCrashBonusNum.get(); }
+	s32 getSerialCrashFrame() const { return mSLSerialCrashFrame.get(); }
+
+	/* 0x32C */ TParamRT<f32> mSLWaterCoeff;
+	/* 0x340 */ TParamRT<f32> mSLWaterAttackCoeff;
+	/* 0x354 */ TParamRT<f32> mSLFirstVelocityY;
+	/* 0x368 */ TParamRT<f32> mSLVelocityRate;
+	/* 0x37C */ TParamRT<s32> mSLBoundNum;
+	/* 0x390 */ TParamRT<s32> mSLSearchActorTime;
+	/* 0x3A4 */ TParamRT<f32> mSLCanSearchDist;
+	/* 0x3B8 */ TParamRT<s32> mSLJitabataTimer;
+	/* 0x3CC */ TParamRT<f32> mSLFirstKickVelocityY;
+	/* 0x3E0 */ TParamRT<s32> mSLFlyTimer;
+	/* 0x3F4 */ TParamRT<s32> mSLTrampleBonusNum;
+	/* 0x408 */ TParamRT<s32> mSLCrashBonusNum;
+	/* 0x41C */ TParamRT<s32> mSLSerialCrashFrame;
+	/* 0x430 */ TParamRT<s32> mSLKyoroTimer;
 };
 
 class THaneHamuKuriSaveLoadParams : public THamuKuriSaveLoadParams {
 public:
 	THaneHamuKuriSaveLoadParams(const char* path);
+
+	/* 0x444 */ TParamRT<f32> mSLNormalJumpVy;
+	/* 0x458 */ TParamRT<f32> mSLAttackJumpVy;
+	/* 0x46C */ TParamRT<f32> mSLFlyBaseHeight;
+	/* 0x480 */ TParamRT<f32> mSLFlyBaseAmplitude;
+	/* 0x494 */ TParamRT<f32> mSLFlyBaseFrequency;
 };
 
 class TBossDangoHamuKuriSaveLoadParams : public THamuKuriSaveLoadParams {
@@ -60,6 +84,17 @@ public:
 	void checkSerialKill();
 
 	static bool mSearchActSw;
+
+	// fabricated
+	int getUnk6C() const { return unk6C; }
+	void setUnk6C(int v) { unk6C = v; }
+
+public:
+	/* 0x60 */ u32 unk60;
+	/* 0x64 */ TMapObjBase** unk64;
+	/* 0x68 */ int unk68;
+	/* 0x6C */ int unk6C;
+	/* 0x70 */ THamuKuri* unk70;
 };
 
 class THaneHamuKuriManager : public THamuKuriManager {
@@ -142,7 +177,7 @@ public:
 
 class THamuKuri : public TWalkerEnemy {
 public:
-	THamuKuri(const char*);
+	THamuKuri(const char* name = "ハムクリ");
 
 	virtual MtxPtr getTakingMtx();
 	virtual void init(TLiveManager*);
@@ -174,7 +209,7 @@ public:
 	virtual void setRollAnm();
 	virtual void setCrashAnm();
 	virtual bool canDoJitabata() { }
-	virtual void onHaveCap();
+	virtual void onHaveCap() { unk198 = true; }
 
 	void releaseCap();
 	void setSearchActor(THitActor*);
@@ -194,11 +229,34 @@ public:
 	static f32 mCapSpeed;
 	static f32 mVGenerateGravityY;
 	static f32 mLandAnmFrameNum;
+
+	// fabricated
+	THamuKuriManager* getManager() { return (THamuKuriManager*)mManager; }
+
+public:
+	/* 0x194 */ f32 unk194;
+	/* 0x198 */ u8 unk198;
+	/* 0x19C */ int unk19C;
+	/* 0x1A0 */ u8 unk1A0;
+	/* 0x1A1 */ u8 unk1A1;
+	/* 0x1A2 */ u8 unk1A2;
+	/* 0x1A3 */ u8 unk1A3;
+	/* 0x1A4 */ u8 unk1A4;
+	/* 0x1A8 */ int unk1A8;
+	/* 0x1AC */ u8 unk1AC;
+	/* 0x1B0 */ Mtx unk1B0;
+	/* 0x1E0 */ u32 unk1E0;
+	/* 0x1E4 */ JGeometry::TVec3<f32> unk1E4;
+	/* 0x1F0 */ u8 unk1F0;
+	/* 0x1F4 */ THamuKuriSaveLoadParams* unk1F4;
+	/* 0x1F8 */ THitActor* unk1F8;
+	/* 0x1FC */ GXColor unk1FC;
+	/* 0x200 */ JGeometry::TVec3<f32> unk200;
 };
 
 class THaneHamuKuri : public THamuKuri {
 public:
-	THaneHamuKuri(const char*);
+	THaneHamuKuri(const char* name = "はねハムクリ");
 
 	virtual void init(TLiveManager*);
 	virtual void bind();
@@ -221,7 +279,7 @@ public:
 	virtual void walkBehavior(int, f32);
 	virtual void setRollAnm();
 	virtual void setCrashAnm();
-	virtual bool canDoJitabata() { }
+	virtual bool canDoJitabata() { return false; }
 
 	void resetFlyParam();
 
@@ -230,7 +288,7 @@ public:
 
 class TDoroHaneKuri : public THaneHamuKuri {
 public:
-	TDoroHaneKuri(const char*);
+	TDoroHaneKuri(const char* = "ドロハネクリ");
 
 	virtual void init(TLiveManager*);
 	virtual void reset();
@@ -251,7 +309,7 @@ public:
 	virtual BOOL isReachedToGoal() const;
 	virtual void behaveToWater(THitActor*) { }
 	virtual void forceKill() { }
-	virtual bool isHitValid(u32) { }
+	virtual bool isHitValid(u32) { return true; }
 	virtual void sendAttackMsgToMario();
 	virtual void walkBehavior(int, f32);
 };
@@ -291,9 +349,9 @@ public:
 	virtual void moveObject();
 	virtual void reset();
 	virtual void genEventCoin();
-	virtual bool changeByJuice() { }
+	virtual bool changeByJuice() { return false; }
 	virtual void setGenerateAnm();
-	virtual bool isFindMario(f32) { }
+	virtual bool isFindMario(f32) { return 0; }
 
 	void isDead();
 	void generateBody();

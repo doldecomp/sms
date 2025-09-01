@@ -1129,9 +1129,14 @@ public:
 	/* 0x120 */ s16 mHealth;
 
 	/* 0x122 */ u16 unk122;
-	/* 0x124 */ char unk124[0x264];
 
-	u16 mBlooperColor; // TODO: Make enum (0 = red, 1 = yellow, 2 = green)
+	/* 0x124 */ char unk124[0x380 - 0x124];
+
+	/* 0x380 */ u32 unk380;
+	/* 0x384 */ char unk384[0x4];
+
+	// TODO: Make enum (0 = red, 1 = yellow, 2 = green)
+	/* 0x388 */ u16 mBlooperColor;
 
 	/* 0x38A */ char unk38A[0x5A];
 
