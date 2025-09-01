@@ -270,10 +270,10 @@ void TEffectModel::moveObject()
 
 void TEffectModel::calcRootMatrix()
 {
-	TRotation3f mtx;
+	TPosition3f mtx;
 	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y, mPosition.z, mRotation.x,
 	               mRotation.y, mRotation.z);
-	mtx.setTranslate(mPosition);
+	mtx.translation(mPosition.x, mPosition.y, mPosition.z);
 	mMActor->getModel()->setBaseTRMtx(mtx);
 	mMActor->getModel()->setBaseScale(mScaling);
 }

@@ -86,6 +86,7 @@ public:
 
 	// fabricated
 	const TBGCheckData* getGroundPlane() const { return mGroundPlane; }
+	f32 getGroundHeight() const { return mGroundHeight; }
 	// TODO: which one is real?
 	bool checkLiveFlag(u32 flag) const { return mLiveFlag & flag; }
 	bool checkLiveFlag2(u32 flag) const { return mLiveFlag & flag ? 1 : 0; }

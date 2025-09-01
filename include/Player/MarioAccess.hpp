@@ -10,7 +10,7 @@ class TBGCheckData;
 
 extern size_t gpMarioAddress;
 
-extern JGeometry::TVec3<float>* gpMarioPos;
+extern JGeometry::TVec3<f32>* gpMarioPos;
 
 extern s16 *gpMarioAngleX, *gpMarioAngleY, *gpMarioAngleZ;
 extern f32 *gpMarioSpeedX, *gpMarioSpeedY, *gpMarioSpeedZ;

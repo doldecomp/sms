@@ -63,6 +63,7 @@ public:
 	// fabricated
 	MActorAnmData* getUnk40() { return unk40; }
 	J3DMaterialTable* getUnk68() { return unk68; }
+	TMapObjBase* getObj(int i) { return (TMapObjBase*)unk18[i]; }
 
 public:
 	/* 0x40 */ MActorAnmData* unk40;
