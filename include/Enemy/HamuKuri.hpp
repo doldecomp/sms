@@ -107,6 +107,8 @@ public:
 	virtual TSpineEnemy* createEnemyInstance();
 };
 
+class TDoroHige;
+
 class TDoroHaneKuriManager : public THaneHamuKuriManager {
 public:
 	TDoroHaneKuriManager(const char*);
@@ -118,6 +120,9 @@ public:
 	virtual TSpineEnemy* createEnemyInstance();
 
 	void createHige();
+
+public:
+	/* 0x74 */ TDoroHige* unk74;
 };
 
 class TDangoHamuKuriManager : public THamuKuriManager {
@@ -151,13 +156,17 @@ public:
 
 class TDoroHige : public TSharedParts {
 public:
-	TDoroHige(const TLiveActor* param_1, SDLModelData* param_2,
+	TDoroHige(const TLiveActor* param_1, int param_2, SDLModelData* param_3,
 	          const char* name = "ひげ")
-	    : TSharedParts(param_1, 5, param_2, 3, name)
+	    : TSharedParts(param_1, param_2, param_3, 3, name)
+	    , unk1C(param_1)
 	{
 	}
 
 	virtual void perform(u32, JDrama::TGraphics*);
+
+public:
+	/* 0x1C */ const TLiveActor* unk1C;
 };
 
 class TDoroHamuKuriManager : public THamuKuriManager {
@@ -275,7 +284,7 @@ public:
 	virtual void setMActorAndKeeper();
 	virtual bool isHitValid(u32);
 	virtual bool isCollidMove(THitActor*);
-	virtual void setBckAnm(int);
+	virtual void setBckAnm(int param_1) { TSmallEnemy::setBckAnm(param_1); }
 	virtual void walkBehavior(int, f32);
 	virtual void setRollAnm();
 	virtual void setCrashAnm();
@@ -284,6 +293,17 @@ public:
 	void resetFlyParam();
 
 	static bool mBoundFly;
+
+public:
+	/* 0x20C */ f32 unk20C;
+	/* 0x210 */ f32 unk210;
+	/* 0x214 */ f32 unk214;
+	/* 0x218 */ f32 unk218;
+	/* 0x21C */ f32 unk21C;
+	/* 0x220 */ Vec unk220;
+	/* 0x22C */ THaneHamuKuriSaveLoadParams* unk22C;
+	/* 0x230 */ f32 unk230;
+	/* 0x234 */ f32 unk234;
 };
 
 class TDoroHaneKuri : public THaneHamuKuri {
@@ -298,7 +318,16 @@ public:
 	virtual void setMActorAndKeeper();
 	virtual bool isCollidMove(THitActor*);
 
-	void onHaveCap();
+	void onHaveCap()
+	{
+		unk198          = 1;
+		TDoroHige* hige = ((TDoroHaneKuriManager*)mManager)->unk74;
+		hige->unk1C     = this;
+		hige->unk10     = this;
+	}
+
+public:
+	/* 0x238 */ THaneHamuKuriSaveLoadParams* unk238;
 };
 
 class THaneHamuKuri2 : public THaneHamuKuri {
