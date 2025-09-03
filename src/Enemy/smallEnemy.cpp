@@ -230,7 +230,10 @@ void TSmallEnemy::behaveToWater(THitActor* param_1)
 	}
 }
 
-void TSmallEnemy::sendAttackMsgToMario() { SMS_SendMessageToMario(this, 0xE); }
+void TSmallEnemy::sendAttackMsgToMario()
+{
+	SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+}
 
 void TSmallEnemy::attackToMario()
 {

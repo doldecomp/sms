@@ -9,6 +9,7 @@
 #include <Player/MarioMain.hpp>
 #include <M3DUtil/MActorData.hpp>
 #include <M3DUtil/MActor.hpp>
+#include <M3DUtil/SDLModel.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
@@ -20,6 +21,7 @@
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSe.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
 
 // rogue includes needed for matching sinit & bss
@@ -361,9 +363,21 @@ TSpineEnemy* TDangoHamuKuriManager::createEnemyInstance() { }
 
 void TDangoHamuKuriManager::createModelDataArray(const TModelDataLoadEntry*) { }
 
-void TDoroHaneKuriManager::perform(u32, JDrama::TGraphics*) { }
+void TDoroHaneKuriManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+{
+	THamuKuriManager::perform(param_1, param_2);
 
-void TDoroHaneKuriManager::createHige() { }
+	if (unk74)
+		unk74->perform(param_1, param_2);
+}
+
+void TDoroHaneKuriManager::createHige()
+{
+	void* rawModelData = JKRGetResource("/scene/hanekuri/dorokuriHige.bmd");
+	SDLModelData* modelData = new SDLModelData(
+	    J3DModelLoaderDataBase::load(rawModelData, 0x10210000));
+	unk74 = new TDoroHige((TLiveActor*)unk18[0], 7, modelData);
+}
 
 TBossDangoHamuKuriManager::TBossDangoHamuKuriManager(const char* name)
     : TDangoHamuKuriManager(name)
@@ -1020,68 +1034,235 @@ void THamuKuri::forceRoll(JGeometry::TVec3<f32> param_1, bool param_2)
 
 THaneHamuKuri::THaneHamuKuri(const char* name)
     : THamuKuri(name)
+    , unk20C(0.0f)
+    , unk210(0.0f)
+    , unk214(0.0f)
+    , unk21C(0.0f)
+    , unk230(0.0f)
+    , unk234(0.0f)
 {
 }
-void THaneHamuKuri::init(TLiveManager*) { }
 
-void THaneHamuKuri::moveObject() { }
+void THaneHamuKuri::init(TLiveManager* manager)
+{
+	THamuKuri::init(manager);
 
-void THaneHamuKuri::reset() { }
+	mSpine->initWith(&TNerveWalkerGraphWander::theNerve());
+
+	mActorType = 0x1000000F;
+	unk22C     = (THaneHamuKuriSaveLoadParams*)getSaveParam();
+	unk188     = 0.0f;
+}
+
+void THaneHamuKuri::moveObject() { TWalkerEnemy::moveObject(); }
+
+void THaneHamuKuri::reset()
+{
+	TWalkerEnemy::reset();
+	mHeadHeight = 200.0f;
+	unk230 = mGroundHeight = gpMap->checkGround(
+	    mPosition.x, mPosition.y + mHeadHeight, mPosition.z, &mGroundPlane);
+	unk214 = 0.0f;
+	unk210 = 0.0f;
+	unk234 = 0.0f;
+	unk20C = 0.0f;
+	unk21C = 0.0f;
+}
 
 void THaneHamuKuri::walkBehavior(int, f32) { }
 
-void THaneHamuKuri::bind() { }
+void THaneHamuKuri::bind()
+{
+	if (checkLiveFlag(LIVE_FLAG_UNK10))
+		return;
 
-BOOL THaneHamuKuri::isReachedToGoal() const { }
+	JGeometry::TVec3<f32> local_18 = mPosition;
+	local_18.y -= unk234 + unk210;
+	local_18 += mLinearVelocity;
+	local_18 += mVelocity;
 
-void THaneHamuKuri::attackToMario() { }
+	mVelocity.y -= getGravityY();
 
-void THaneHamuKuri::setMActorAndKeeper() { }
+	if (mVelocity.y < mVelocityMinY)
+		mVelocity.y = mVelocityMinY;
 
-void THaneHamuKuri::setWaitAnm() { }
+	if (unk214 == 0.0f) {
+		mGroundHeight
+		    = gpMap->checkGround(local_18.x, local_18.y + mHeadHeight + 200.0f,
+		                         local_18.z, &mGroundPlane);
+		mGroundHeight += 1.0f;
+	}
 
-void THaneHamuKuri::setWalkAnm() { }
+	if (local_18.y <= mGroundHeight + 0.05f) {
+		offLiveFlag(LIVE_FLAG_AIRBORNE);
+		mVelocity.set(0.0f, 0.0f, 0.0f);
+	} else {
+		onLiveFlag(LIVE_FLAG_AIRBORNE);
+	}
 
-void THaneHamuKuri::setRunAnm() { }
+	mLinearVelocity = local_18 - mPosition;
+	mLinearVelocity.y += unk234 + unk210;
+}
 
-void THaneHamuKuri::setRollAnm() { }
+BOOL THaneHamuKuri::isReachedToGoal() const
+{
+	JGeometry::TVec3<f32> local_c = unk104.getPoint();
+	local_c -= mPosition;
+	local_c.y = 0.0f;
+	if (MsVECMag2(&local_c) < 100.0f)
+		return true;
+	else
+		return false;
+}
 
-void THaneHamuKuri::behaveToWater(THitActor*) { }
+void THaneHamuKuri::attackToMario()
+{
+	if (gpMSound->gateCheck(0x2965))
+		MSoundSESystem::MSoundSE::startSoundActor(0x2965, &mPosition, 0,
+		                                          nullptr, 0, 4);
+	sendAttackMsgToMario();
+}
+
+void THaneHamuKuri::setMActorAndKeeper()
+{
+	mMActorKeeper = new TMActorKeeper(mManager, 1);
+	mMActor       = mMActorKeeper->createMActor("hanekuri.bmd", 3);
+}
+
+void THaneHamuKuri::setWaitAnm() { setBckAnm(3); }
+
+void THaneHamuKuri::setWalkAnm() { setBckAnm(3); }
+
+void THaneHamuKuri::setRunAnm() { setBckAnm(3); }
+
+void THaneHamuKuri::setRollAnm() { setBckAnm(2); }
+
+void THaneHamuKuri::behaveToWater(THitActor*) { forceRoll(*gpMarioPos, true); }
 
 void THaneHamuKuri::setCrashAnm() { }
 
-void THaneHamuKuri::setBckAnm(int) { }
-
 void THaneHamuKuri::setDeadAnm() { }
 
-bool THaneHamuKuri::isCollidMove(THitActor*) { }
+bool THaneHamuKuri::isCollidMove(THitActor* param_1)
+{
+	return TSmallEnemy::isCollidMove(param_1);
+}
 
-bool THaneHamuKuri::isHitValid(u32) { }
+bool THaneHamuKuri::isHitValid(u32)
+{
+	if (checkLiveFlag(LIVE_FLAG_UNK2))
+		return false;
+	else
+		return true;
+}
 
 void THaneHamuKuri::resetFlyParam() { }
 
-const char** THaneHamuKuri::getBasNameTable() const { }
+const char** THaneHamuKuri::getBasNameTable() const
+{
+	return hanekuri_bastable;
+}
 
 TDoroHaneKuri::TDoroHaneKuri(const char* name)
     : THaneHamuKuri(name)
 {
+	unk1AC = 5;
 }
 
-void TDoroHaneKuri::init(TLiveManager*) { }
+void TDoroHaneKuri::init(TLiveManager* param_1)
+{
+	THaneHamuKuri::init(param_1);
 
-void TDoroHaneKuri::reset() { }
+	mSpine->initWith(&TNerveWalkerGraphWander::theNerve());
+	mActorType = 0x10000037;
+	unk238     = (THaneHamuKuriSaveLoadParams*)getSaveParam();
+	unk188     = 0.0f;
 
-void TDoroHaneKuri::onHaveCap() { }
+	if (mInstanceIndex == 0) {
+		((TDoroHaneKuriManager*)mManager)->createHige();
 
-void TDoroHaneKuri::attackToMario() { }
+		for (u8 i = 0; i < getModel()->getModelData()->getJointNum(); i++)
+			(void)0; // assert?
+	}
+}
 
-void TDoroHaneKuri::setMActorAndKeeper() { }
+void TDoroHaneKuri::reset()
+{
+	unk18C = 5;
+	THaneHamuKuri::reset();
+	unk198 = 0;
+	onLiveFlag(LIVE_FLAG_UNK400);
+}
 
-void TDoroHaneKuri::behaveToWater(THitActor*) { }
+void TDoroHaneKuri::attackToMario()
+{
+	if (!gpMarioOriginal->isWearingCap()) {
+		if (SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK))
+			if (gpMSound->gateCheck(0x2965))
+				MSoundSESystem::MSoundSE::startSoundActor(0x2965, &mPosition, 0,
+				                                          nullptr, 0, 4);
+	} else {
+		if (SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK)) {
+			if (gpMSound->gateCheck(0x2965))
+				MSoundSESystem::MSoundSE::startSoundActor(0x2965, &mPosition, 0,
+				                                          nullptr, 0, 4);
 
-void TDoroHaneKuri::setBehavior() { }
+			mSpine->pushNerve(&TNerveDoroHaneRise::theNerve());
+			onHaveCap();
+			MtxPtr mtx = mMActor->getModel()->getAnmMtx(unk1AC);
+			unk200.set(mtx[3][0], mtx[3][1], mtx[3][2]);
+			gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &unk200, 0,
+			                                            nullptr);
+		}
+	}
+}
 
-bool TDoroHaneKuri::isCollidMove(THitActor*) { }
+void TDoroHaneKuri::setMActorAndKeeper()
+{
+	mMActorKeeper = new TMActorKeeper(mManager, 1);
+	mMActor       = mMActorKeeper->createMActor("dorohane.bmd", 3);
+}
+
+void TDoroHaneKuri::behaveToWater(THitActor*)
+{
+	unk21C = 1.0f;
+	if (mSpine->getCurrentNerve() != &TNerveDoroHaneHitWater::theNerve())
+		mSpine->pushNerve(&TNerveDoroHaneHitWater::theNerve());
+}
+
+void TDoroHaneKuri::setBehavior()
+{
+	if (mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve()
+	    && mHeldObject && mHeldObject->receiveMessage(this, 0x6)) {
+		TMapObjBase* held = (TMapObjBase*)mHeldObject;
+		held->mHolder     = nullptr;
+		held->offLiveFlag(0x2);
+		held->mPosition   = mPosition;
+		held->mPosition.y = mGroundHeight;
+		held->offHitFlag(HIT_FLAG_UNK1);
+		held->makeObjDead();
+		mHeldObject = nullptr;
+	}
+}
+
+bool TDoroHaneKuri::isCollidMove(THitActor* param_1)
+{
+	if ((param_1->getActorType() & 0xffff0000) == 0x40000000) {
+		TMapObjBase* mapObj = (TMapObjBase*)param_1;
+		if (mapObj->isHideObj(mapObj))
+			return false;
+
+		if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()) {
+			JGeometry::TVec3<f32> vel = mLinearVelocity;
+			vel.x *= -5.0f;
+			vel.z *= -5.0f;
+			mPosition.x += vel.x;
+			mPosition.z += vel.z;
+		}
+	}
+
+	return true;
+}
 
 THaneHamuKuri2::THaneHamuKuri2(const char* name)
     : THaneHamuKuri(name)
