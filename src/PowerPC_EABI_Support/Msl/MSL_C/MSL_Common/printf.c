@@ -10,8 +10,6 @@
 #include "wchar_io.h"
 #include "stdarg.h"
 
-extern void __num2dec(const decform*, double, decimal*);
-
 #define TARGET_FLOAT_BITS           64
 #define TARGET_FLOAT_BYTES          (TARGET_FLOAT_BITS / 8)
 #define TARGET_FLOAT_MAX_EXP        LDBL_MAX_EXP
