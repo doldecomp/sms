@@ -1,119 +1,126 @@
 #include "dolphin/types.h"
-#include "ansi_fp.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/ansi_fp.h"
 
-static const double bit_values[] = {
-	10.0,
-	100.0,
-	10000.0,
-	100000000.0,
-	10000000000000000.0,
-	1.00000000000000005366e+32,
-	1.00000000000000002132e+64,
-	1.00000000000000007517e+128,
-	1.00000000000000003013e+256,
-};
-static const double digit_values[] = {
-	10.0, 100.0, 1000.0, 10000.0, 100000.0, 1000000.0, 10000000.0, 100000000.0,
+static const f64 bit_values[] = {
+	1e1, 1e2, 1e4, 1e8, 1e16, 1e32, 1e64, 1e128, 1e256,
 };
 
-void __num2dec(const decform* fmt, double value, decimal* d)
+static const f64 digit_values[] = {
+	1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8,
+};
+
+void __num2dec(const decform* f, f64 x, decimal* d)
 {
-	int digits = fmt->digits;
-	int i;
+	int sp30;
+	int exp;
+	u8* p;
+	int digits;
+	int var_r4;
+	f64 var_f1;
+	int var_r11;
+	int var_r12;
+	int temp_r5;
+	int var_r6;
+	int var_r6_2;
+	const f64* var_r5;
 
-	if (digits > SIGDIGLEN) {
-		digits = SIGDIGLEN;
+	digits = f->digits;
+	if (digits > 16) {
+		digits = 16;
 	}
+
 	d->sign       = 0;
 	d->exp        = 0;
 	d->sig.length = 1;
 
-	if (value == 0.0) {
+	if (x == 0.0) {
 		d->sig.text[0] = '0';
-	} else {
-		if (!isfinite(value)) {
-			d->sig.text[0] = isnan(value) ? 'N' : 'I';
-		} else {
-			const double* pBitValues;
-			int zeros_to_add;
-			int exp;
-			int exponent_base10;
-			unsigned char* text_ptr;
-
-			d->sig.length = 0;
-			if (value < 0.0) {
-				value   = -value;
-				d->sign = 1;
-			}
-
-			frexp(value, &exp);
-
-			i               = 0x497E5 * exp / 1000000;
-			exponent_base10 = i;
-			pBitValues      = bit_values;
-			if (i < 0) {
-				i = -i;
-				for (; i; i >>= 1) {
-					if ((i & 1) != 0)
-						value *= *pBitValues;
-					++pBitValues;
-				}
-			} else if (i > 0) {
-				double v14 = 1.0;
-				while (i) {
-					if ((i & 1) != 0)
-						v14 *= *pBitValues;
-					i >>= 1;
-					++pBitValues;
-				}
-				value /= v14;
-			}
-
-			while (value >= 1.0) {
-				value *= 0.1;
-				++exponent_base10;
-			}
-			while (value < 0.1) {
-				value *= 10.0;
-				--exponent_base10;
-			}
-
-			text_ptr = d->sig.text;
-
-			while (digits) {
-				int integer_part;
-				int num_digits_to_gen = digits;
-
-				if (digits > 8)
-					num_digits_to_gen = 8;
-
-				d->sig.length += num_digits_to_gen;
-				digits -= num_digits_to_gen;
-				exponent_base10 -= num_digits_to_gen;
-				value *= digit_values[num_digits_to_gen - 1];
-				integer_part = (int)value;
-				value -= (double)integer_part;
-
-				text_ptr += num_digits_to_gen;
-				i = num_digits_to_gen + 1;
-				while (--i) {
-					*(--text_ptr) = (integer_part % 10) + '0';
-					integer_part /= 10;
-				}
-				text_ptr += num_digits_to_gen;
-			}
-
-			zeros_to_add
-			    = (fmt->digits > 36 ? 36 : fmt->digits) - d->sig.length;
-			if (zeros_to_add > 0) {
-				i = zeros_to_add + 1;
-				while (--i)
-					*text_ptr++ = '0';
-				exponent_base10 -= zeros_to_add;
-				d->sig.length += zeros_to_add;
-			}
-
-			d->exp = exponent_base10;
-		}
+		return;
 	}
+
+	if (!isfinite(x)) {
+		d->sig.text[0] = isnan(x) ? 'N' : 'I';
+		return;
+	}
+
+	d->sig.length = 0;
+	if (x < 0.0) {
+		x       = -x;
+		d->sign = 1;
+	}
+
+	frexp(x, &sp30);
+	var_r4 = (sp30 * 301029) / 1000000; // log_10(2)
+	exp    = var_r4;
+	var_r5 = bit_values;
+	if (var_r4 < 0) {
+		var_r4 = -var_r4;
+		while (var_r4 != 0) {
+			if (var_r4 & 1) {
+				x *= *var_r5;
+			}
+			var_r4 >>= 1;
+			var_r5++;
+		}
+	} else if (var_r4 > 0) {
+		var_f1 = 1.0f;
+		while (var_r4 != 0) {
+			if (var_r4 & 1) {
+				var_f1 *= *var_r5;
+			}
+			var_r4 >>= 1;
+			var_r5++;
+		}
+		x /= var_f1;
+	}
+
+	while (x >= 1.0) {
+		x *= 0.1;
+		exp += 1;
+	}
+
+	while (x < 0.1) {
+		x *= 10.0;
+		exp -= 1;
+	}
+
+	p = d->sig.text;
+	while (digits != 0) {
+		var_r12 = digits;
+		if (digits > 8) {
+			var_r12 = 8;
+		}
+		d->sig.length += var_r12;
+		digits -= var_r12;
+		exp -= var_r12;
+		p += var_r12;
+		x *= digit_values[var_r12 - 1];
+		var_r6 = (int)x;
+		x      = x - var_r6;
+
+		var_r11 = var_r12 + 1;
+		while (--var_r11 != 0) {
+			*--p = '0' + (var_r6 % 10);
+			var_r6 /= 10;
+		}
+		p += var_r12;
+	}
+
+	digits = f->digits;
+	if (f->digits > 36) {
+		digits = 36;
+	}
+
+	temp_r5 = digits - d->sig.length;
+	if (temp_r5 > 0) {
+		var_r6_2 = temp_r5 + 1;
+		while (--var_r6_2 != 0) {
+			*p++ = '0';
+		}
+		exp -= temp_r5;
+		d->sig.length += temp_r5;
+	}
+
+	d->exp = exp;
 }
+
