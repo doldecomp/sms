@@ -123,4 +123,3 @@ void __num2dec(const decform* f, f64 x, decimal* d)
 
 	d->exp = exp;
 }
-
