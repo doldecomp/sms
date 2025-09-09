@@ -1,13 +1,12 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h"
-#include "dolphin/types.h"
 
-#define __PI_O2 ((f32)M_PI / 2)
+#define __PI_O2 ((float)M_PI / 2)
 
-f32 atanf(f32);
-f32 _inv_sqrtf(f32);
-f32 atan__Ff(f32);
+float atanf(float);
+float _inv_sqrtf(float);
+float atan__Ff(float);
 
-f32 atan2f(f32 __y, f32 __x)
+float atan2f(float __y, float __x)
 {
 	if (signbit(__x) == signbit(__y)) {
 		if (signbit(__x) != 0) {
@@ -27,16 +26,16 @@ f32 atan2f(f32 __y, f32 __x)
 	return __y;
 }
 
-f32 acosf(f32 x) { return HALF_PI - atan__Ff(x * _inv_sqrtf(1.0f - x * x)); }
+float acosf(float x) { return HALF_PI - atan__Ff(x * _inv_sqrtf(1.0f - x * x)); }
 
 #pragma dont_inline on
-__declspec(weak) f32 _inv_sqrtf(f32 x)
+__declspec(weak) float _inv_sqrtf(float x)
 {
-	const f32 _half  = .5f;
-	const f32 _three = 3.0f;
+	const float _half  = .5f;
+	const float _three = 3.0f;
 
 	if (x > 0.0f) {
-		f32 guess = __frsqrte((f64)x); /* returns an approximation to  */
+		float guess = __frsqrte((double)x); /* returns an approximation to  */
 		guess     = _half * guess
 		        * (_three - guess * guess * x); /* now have 8  sig bits */
 		guess = _half * guess
@@ -55,7 +54,7 @@ __declspec(weak) f32 _inv_sqrtf(f32 x)
  * Address:	8021B924
  * Size:	000020
  */
-__declspec(weak) f32 atan__Ff(f32 x) { return atanf(x); }
+__declspec(weak) float atan__Ff(float x) { return atanf(x); }
 
 #pragma dont_inline reset
 /*
@@ -63,41 +62,41 @@ __declspec(weak) f32 atan__Ff(f32 x) { return atanf(x); }
  * Address:	8021B730
  * Size:	0001F4
  */
-f32 atanf(f32 x)
+float atanf(float x)
 {
-	f32 z, z_square;
+	float z, z_square;
 	int index = -1, inv = 0;
 	const int sign = (*(int*)&x) & 0x80000000;
 
 	/* poly # 4964-- poly for  [0,tan(pi/8)]  */
 
-	static const f32 atan_coeff[]
+	static const float atan_coeff[]
 	    = { .999999999f,   -.3333333213f,   .19999886356f, -.14281650536f,
 		    .11041179874f, -.084597554152f, .04714243524f /*.76f */ };
 
 	/* data for argument reduction  */
-	// static const f32  one_over_xi[]={2.414213562f, 1.49660575f,1.00000000f,
+	// static const float  one_over_xi[]={2.414213562f, 1.49660575f,1.00000000f,
 	//                                    .668178618f, .414213568f,.198912367f};
 
-	static const f32 onep_one_over_xisqr_hi[]
+	static const float onep_one_over_xisqr_hi[]
 	    = { 6.82842f,  3.239828f,   2.0f, /*   6.828427125f  */
 		    1.446462f, 1.17157292f, 1.039566130f };
 
-	static const f32 onep_one_over_xisqr_lo[]
+	static const float onep_one_over_xisqr_lo[]
 	    = { .000007135f, 0.00000082f, .0f, 0.00000063f, 0.0f, 0.0f };
 
-	static const f32 atan_xi_hi[]
+	static const float atan_xi_hi[]
 	    = { 0.0f,     .39269f,   .5890486f, .7853981f, /* .3926990817f  */
 		    .981747f, 1.178097f, 1.374446f };
-	static const f32 atan_xi_lo[]
+	static const float atan_xi_lo[]
 	    = { 0.0f,        .000009081698724f, .000000023f, .000000063f,
 		    .000000704f, .00000025f,        .00000079f };
 
-	static const f32 one_over_xi_hi[]
+	static const float one_over_xi_hi[]
 	    = { 2.414213f,   1.49660575f, 1.00000000f,
 		    .668178618f, .414213568f, .198912367f };
 
-	static const f32 one_over_xi_lo[]
+	static const float one_over_xi_lo[]
 	    = { .000000562f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 
 	(*(int*)&x) &= 0x7fffffff; /*  |x| */
