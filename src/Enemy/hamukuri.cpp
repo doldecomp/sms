@@ -1,5 +1,7 @@
+#include "MoveBG/Item.hpp"
 #include <Enemy/HamuKuri.hpp>
 #include <Enemy/Graph.hpp>
+#include <Enemy/Conductor.hpp>
 #include <Strategic/Spine.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <System/EmitterViewObj.hpp>
@@ -104,12 +106,16 @@ THaneHamuKuriSaveLoadParams::THaneHamuKuriSaveLoadParams(const char* path)
 TBossDangoHamuKuriSaveLoadParams::TBossDangoHamuKuriSaveLoadParams(
     const char* path)
     : THamuKuriSaveLoadParams(path)
+    , PARAM_INIT(mSLNumArray, 3)
 {
+	TParams::load(mPrmPath);
 }
 
 TFireHamuKuriSaveLoadParams::TFireHamuKuriSaveLoadParams(const char* path)
     : THamuKuriSaveLoadParams(path)
+    , PARAM_INIT(mSLRecoverTimer, 500)
 {
+	TParams::load(mPrmPath);
 }
 
 THamuKuriManager::THamuKuriManager(const char* name)
@@ -357,11 +363,31 @@ TDangoHamuKuriManager::TDangoHamuKuriManager(const char* name)
 {
 }
 
-void TDangoHamuKuriManager::load(JSUMemoryInputStream&) { }
+void TDangoHamuKuriManager::load(JSUMemoryInputStream& stream)
+{
+	unk38 = new THamuKuriSaveLoadParams("/enemy/dangohamukuri.prm");
+	TSmallEnemyManager::load(stream);
+}
 
-TSpineEnemy* TDangoHamuKuriManager::createEnemyInstance() { }
+TSpineEnemy* TDangoHamuKuriManager::createEnemyInstance()
+{
+	return new TDangoHamuKuri;
+}
 
-void TDangoHamuKuriManager::createModelDataArray(const TModelDataLoadEntry*) { }
+void TDangoHamuKuriManager::createModelDataArray(
+    const TModelDataLoadEntry* param_1)
+{
+	THamuKuriManager* manager
+	    = (THamuKuriManager*)gpConductor->getManagerByName(
+	        "ハムクリマネージャー");
+
+	if (manager) {
+		unk28            = manager->unk28;
+		mModelDataKeeper = manager->getModelDataKeeper();
+	} else {
+		TObjManager::createModelDataArray(param_1);
+	}
+}
 
 void TDoroHaneKuriManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
@@ -382,11 +408,20 @@ void TDoroHaneKuriManager::createHige()
 TBossDangoHamuKuriManager::TBossDangoHamuKuriManager(const char* name)
     : TDangoHamuKuriManager(name)
 {
+	mSearchActSw = false;
 }
 
-void TBossDangoHamuKuriManager::load(JSUMemoryInputStream&) { }
+void TBossDangoHamuKuriManager::load(JSUMemoryInputStream& stream)
+{
+	unk38
+	    = new TBossDangoHamuKuriSaveLoadParams("/enemy/bossdangohamukuri.prm");
+	TSmallEnemyManager::load(stream);
+}
 
-TSpineEnemy* TBossDangoHamuKuriManager::createEnemyInstance() { }
+TSpineEnemy* TBossDangoHamuKuriManager::createEnemyInstance()
+{
+	return new TBossDangoHamuKuri;
+}
 
 static GXColorS10 mFireHamNoseColorDiff  = { 0, 0, 0, 0 };
 static GXColorS10 mFireHamOtherColorDiff = { 0, 0, 0, 0 };
@@ -401,32 +436,142 @@ TFireHamuKuriManager::TFireHamuKuriManager(const char* name)
 {
 }
 
-void TFireHamuKuriManager::load(JSUMemoryInputStream&) { }
+void TFireHamuKuriManager::load(JSUMemoryInputStream& stream)
+{
+	unk38 = new TFireHamuKuriSaveLoadParams("/enemy/firehamukuri.prm");
+	TSmallEnemyManager::load(stream);
+}
 
-TSpineEnemy* TFireHamuKuriManager::createEnemyInstance() { }
+TSpineEnemy* TFireHamuKuriManager::createEnemyInstance()
+{
+	return new TFireHamuKuri;
+}
 
-void TFireHamuKuriManager::initSetEnemies() { }
+void TFireHamuKuriManager::initSetEnemies()
+{
+	for (int i = 0; i < mObjNum; ++i) {
+		TFireHamuKuri* hamu = (TFireHamuKuri*)unk18[i];
+		hamu->unk21C        = mFireHamNoseColorStart;
+		hamu->unk224        = mFireHamOtherColorStart;
 
-void TFireHamuKuriManager::createModelData() { }
+		static const GXColorS10 tevColorData[] = {
+			{ 200, 200, 200, 161 },
+			{ 0, 90, 0, 255 },
+			{ 200, 160, 130, 255 },
+		};
 
-void TDoroHige::perform(u32, JDrama::TGraphics*) { }
+		u32 matBodyBottom1Idx = ((TFireHamuKuri*)unk18[0])
+		                            ->getModel()
+		                            ->getModelData()
+		                            ->getMaterialName()
+		                            ->getIndex("_mat_body_bottom1");
+		SMS_InitPacket_ThreeTevColor(
+		    hamu->getMActor()->getModel(), matBodyBottom1Idx, GX_TEVREG0,
+		    &tevColorData[0], GX_TEVREG1, &tevColorData[1], GX_TEVREG2,
+		    &tevColorData[2]);
+
+		u32 matNose1Idx = hamu->getMActor()
+		                      ->getModel()
+		                      ->getModelData()
+		                      ->getMaterialName()
+		                      ->getIndex("_mat_nose1");
+		SMS_InitPacket_OneTevColor(hamu->getMActor()->getModel(), matNose1Idx,
+		                           GX_TEVREG0, &hamu->unk21C);
+		u32 matBodyTop1Idx = hamu->getMActor()
+		                         ->getModel()
+		                         ->getModelData()
+		                         ->getMaterialName()
+		                         ->getIndex("_mat_body_top1");
+		SMS_InitPacket_OneTevColorAndOneTevKColor(hamu->getMActor()->getModel(),
+		                                          matBodyTop1Idx, GX_TEVREG0,
+		                                          &hamu->unk224, &hamu->unk1FC);
+
+		hamu->unk1FC.a = 0;
+
+		u32 matLfoot1Idx = hamu->getMActor()
+		                       ->getModel()
+		                       ->getModelData()
+		                       ->getMaterialName()
+		                       ->getIndex("_mat_lfoot1");
+		SMS_InitPacket_OneTevColor(hamu->getMActor()->getModel(), matLfoot1Idx,
+		                           GX_TEVREG0, &hamu->unk224);
+
+		u32 matRfoot2Idx = hamu->getMActor()
+		                       ->getModel()
+		                       ->getModelData()
+		                       ->getMaterialName()
+		                       ->getIndex("_mat_rfoot2");
+		SMS_InitPacket_OneTevColor(hamu->getMActor()->getModel(), matRfoot2Idx,
+		                           GX_TEVREG0, &hamu->unk224);
+	}
+}
+
+void TFireHamuKuriManager::createModelData()
+{
+	static TModelDataLoadEntry entry[] = {
+		{ "default.bmd", 0x10240000, 0 },
+		{ nullptr, 0, 0 },
+	};
+	createModelDataArray(entry);
+}
+
+void TDoroHige::perform(u32 param_1, JDrama::TGraphics* param_2)
+{
+	if (!unk1C->isUnk198()
+	    || unk1C->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK2
+	                            | LIVE_FLAG_DEAD))
+		return;
+
+	TSharedParts::perform(param_1, param_2);
+}
 
 TDoroHamuKuriManager::TDoroHamuKuriManager(const char* name)
     : THamuKuriManager(name)
+    , unk74(nullptr)
 {
 }
 
-void TDoroHamuKuriManager::load(JSUMemoryInputStream&) { }
+void TDoroHamuKuriManager::load(JSUMemoryInputStream& stream)
+{
+	unk38 = new THamuKuriSaveLoadParams("/enemy/dorohamukuri.prm");
+	TSmallEnemyManager::load(stream);
+}
 
-void TDoroHamuKuriManager::loadAfter() { }
+void TDoroHamuKuriManager::loadAfter()
+{
+	THamuKuriManager::loadAfter();
+	TMapObjBaseManager::newAndRegisterObj("mario_cap");
+}
 
-TSpineEnemy* TDoroHamuKuriManager::createEnemyInstance() { }
+TSpineEnemy* TDoroHamuKuriManager::createEnemyInstance()
+{
+	return new TDoroHamuKuri;
+}
 
-void TDoroHamuKuriManager::createModelData() { }
+void TDoroHamuKuriManager::createModelData()
+{
+	static TModelDataLoadEntry entry[] = {
+		{ "dorokuri_model.bmd", 0x10240000, 0 },
+		{ nullptr, 0, 0 },
+	};
+	createModelDataArray(entry);
+}
 
-void TDoroHamuKuriManager::perform(u32, JDrama::TGraphics*) { }
+void TDoroHamuKuriManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+{
+	THamuKuriManager::perform(param_1, param_2);
 
-void TDoroHamuKuriManager::createHige() { }
+	if (unk74)
+		unk74->perform(param_1, param_2);
+}
+
+void TDoroHamuKuriManager::createHige()
+{
+	void* rawModelData = JKRGetResource("/scene/dorokuri/dorokuriHige.bmd");
+	SDLModelData* modelData = new SDLModelData(
+	    J3DModelLoaderDataBase::load(rawModelData, 0x10210000));
+	unk74 = new TDoroHige((TLiveActor*)unk18[0], 5, modelData);
+}
 
 THamuKuri::THamuKuri(const char* name)
     : TWalkerEnemy(name)
@@ -694,7 +839,7 @@ void THamuKuri::selectCapHolder()
 		sendAttackMsgToMario();
 	} else {
 		sendAttackMsgToMario();
-		if (getManager()->unk70 == 0) {
+		if (getManager()->unk70 == nullptr) {
 			TMapObjBase* obj = gpItemManager->makeObjAppear(
 			    mPosition.x, mPosition.y, mPosition.z, 0x2000003C, false);
 
@@ -737,6 +882,7 @@ void THamuKuri::makeCapFly(TMapObjBase* param_1)
 			onHitFlag(HIT_FLAG_UNK1);
 			getManager()->unk70 = this;
 
+			// TODO: this is an inline
 			int uVar11 = unk124->getCurrentIndex();
 
 			int count  = MsRandF(2, 3);
@@ -1139,9 +1285,23 @@ void THaneHamuKuri::setRollAnm() { setBckAnm(2); }
 
 void THaneHamuKuri::behaveToWater(THitActor*) { forceRoll(*gpMarioPos, true); }
 
-void THaneHamuKuri::setCrashAnm() { }
+void THaneHamuKuri::setCrashAnm() { setBckAnm(0); }
 
-void THaneHamuKuri::setDeadAnm() { }
+void THaneHamuKuri::setDeadAnm()
+{
+	if (unk198 && mHeldObject != nullptr
+	    && mHeldObject->receiveMessage(this, 6)) {
+		TMapObjBase* heldObj = (TMapObjBase*)mHeldObject;
+		heldObj->mHolder     = nullptr;
+		heldObj->offLiveFlag(LIVE_FLAG_UNK2);
+		heldObj->mPosition   = mPosition;
+		heldObj->mPosition.y = mGroundHeight;
+		heldObj->offHitFlag(HIT_FLAG_UNK1);
+		heldObj->makeObjDead();
+		mHeldObject = nullptr;
+	}
+	setBckAnm(1);
+}
 
 bool THaneHamuKuri::isCollidMove(THitActor* param_1)
 {
@@ -1269,73 +1429,475 @@ THaneHamuKuri2::THaneHamuKuri2(const char* name)
 {
 }
 
-void THaneHamuKuri2::reset() { }
+void THaneHamuKuri2::reset()
+{
+	TWalkerEnemy::reset();
+	mHeadHeight = 200.0f;
+	unk230 = mGroundHeight = gpMap->checkGround(
+	    mPosition.x, mPosition.y + mHeadHeight, mPosition.z, &mGroundPlane);
 
-void THaneHamuKuri2::sendAttackMsgToMario() { }
+	unk214 = 0.0f;
+	unk210 = 0.0f;
+	unk234 = 0.0f;
+	unk20C = 0.0f;
+	unk21C = 0.0f;
 
-void THaneHamuKuri2::walkBehavior(int, f32) { }
+	onLiveFlag(LIVE_FLAG_UNK10);
+	unk230 = mPosition.y;
+	mSpine->initWith(&TNerveHaneHamuKuriMoveOnGraph::theNerve());
+}
 
-BOOL THaneHamuKuri2::isReachedToGoal() const { }
+void THaneHamuKuri2::sendAttackMsgToMario()
+{
+	TSmallEnemy::sendAttackMsgToMario();
+}
+
+void THaneHamuKuri2::walkBehavior(int param_1, f32 param_2)
+{
+	f32 flyBaseFrequency = unk22C->mSLFlyBaseFrequency.get();
+	f32 flyBaseAmplitude = unk22C->mSLFlyBaseAmplitude.get();
+
+	unk20C += 1.0f;
+
+	if (unk20C > flyBaseFrequency)
+		unk20C = 0.0f;
+
+	f32 flyBaseHeight = unk22C->mSLFlyBaseHeight.get();
+	if (unk234 < flyBaseHeight)
+		unk234 += 1.0f;
+
+	if (unk234 > flyBaseHeight)
+		unk234 -= 1.0f;
+
+	unk210      = JMASin(unk20C * 360.0f / flyBaseFrequency) * flyBaseAmplitude;
+	mPosition.y = unk210 + unk230 + unk234;
+	mTurnSpeed
+	    = ((THaneHamuKuriSaveLoadParams*)getSaveParam())->mSLTurnSpeedLow.get();
+	mMarchSpeed = ((THaneHamuKuriSaveLoadParams*)getSaveParam())
+	                  ->mSLMarchSpeedLow.get();
+
+	if (!isBckAnm(4))
+		TWalkerEnemy::walkBehavior(param_1, param_2);
+}
+
+BOOL THaneHamuKuri2::isReachedToGoal() const
+{
+	JGeometry::TVec3<f32> local_c = unk104.getPoint();
+	local_c -= mPosition;
+	local_c.y = 0.0f;
+	if (MsVECMag2(&local_c) < 20.0f)
+		return true;
+	else
+		return false;
+}
 
 TDangoHamuKuri::TDangoHamuKuri(const char* name)
     : THamuKuri(name)
+    , unk20C(0.0f)
+    , unk210(0.0f)
+    , unk214(0.0f)
+    , unk218(0.0f)
+    , mNext(0)
+    , mPrev(nullptr)
+    , unk230(0)
+    , mBoss(nullptr)
 {
+	unk21C = 0.0f;
+	unk220 = 0.0f;
+	unk224 = 0.0f;
 }
 
-void TDangoHamuKuri::init(TLiveManager*) { }
+void TDangoHamuKuri::init(TLiveManager* param_1)
+{
+	THamuKuri::init(param_1);
+	mSpine->initWith(&TNerveDangoHamuKuriWait::theNerve());
+	mActorType = 0x10000010;
+}
 
-void TDangoHamuKuri::perform(u32, JDrama::TGraphics*) { }
+void TDangoHamuKuri::perform(u32 param_1, JDrama::TGraphics* param_2)
+{
+	if (mBoss
+	    && !(mBoss->mSpine->getCurrentNerve()
+	                 == &TNerveWalkerGenerate::theNerve()
+	             ? true
+	             : false))
+		TSmallEnemy::perform(param_1, param_2);
+}
 
-bool TDangoHamuKuri::changeByJuice() { }
+bool TDangoHamuKuri::changeByJuice()
+{
+	if (mPrev == nullptr)
+		return TSmallEnemy::changeByJuice();
+	else
+		return false;
+}
 
-void TDangoHamuKuri::moveObject() { }
+void TDangoHamuKuri::moveObject()
+{
+	THamuKuri::moveObject();
+	swingBody();
+	if (mBoss && !mBoss->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT))
+		offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
+}
 
-void TDangoHamuKuri::updateAnmSound() { }
+void TDangoHamuKuri::updateAnmSound()
+{
+	TSmallEnemy::updateAnmSound();
+	if (mBoss)
+		offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
+}
 
-bool TDangoHamuKuri::isCollidMove(THitActor*) { }
+bool TDangoHamuKuri::isCollidMove(THitActor* param_1)
+{
+	return TSmallEnemy::isCollidMove(param_1);
+}
 
-void TDangoHamuKuri::attackToMario() { }
+void TDangoHamuKuri::attackToMario()
+{
+	if (mPrev != nullptr || mPosition.y + 20.0f > SMS_GetMarioPos().y) {
+		if (mSpine->getCurrentNerve() == &TNerveHamuKuriJitabata::theNerve()) {
+			if (mPosition.y + 10.0f > SMS_GetMarioPos().y) {
+				forceRoll(SMS_GetMarioPos(), false);
+				SMSRumbleMgr->start(0x15, 5, (float*)nullptr);
+			}
+		} else {
+			TWalkerEnemy::attackToMario();
+		}
+	} else if (mBoss
+	           && (mBoss->mSpine->getCurrentNerve()
+	                       == &TNerveWalkerAttack::theNerve()
+	                   ? true
+	                   : false)) {
+		sendAttackMsgToMario();
+	}
+}
 
-MtxPtr TDangoHamuKuri::getTakingMtx() { }
+MtxPtr TDangoHamuKuri::getTakingMtx()
+{
+	mMActor->calc();
+	MtxPtr mtx = mMActor->getModel()->getAnmMtx(unk1AC);
+	f32 fVar2  = 0.0f;
+	if (mBoss == this)
+		fVar2 = 40.0f;
 
-void TDangoHamuKuri::setRunAnm() { }
+	TPosition3f pos;
+	pos.translation(mtx[0][3], mtx[1][3] + fVar2, mtx[2][3]);
+	Mtx afSstack_84;
+	MsMtxSetRotRPH(afSstack_84, 0.0f, mBoss->mRotation.y, 0.0f);
+	MtxPtr result = unk1B0;
+	MTXConcat(pos.mMtx, afSstack_84, result);
+	return result;
+}
 
-void TDangoHamuKuri::calcRootMatrix() { }
+void TDangoHamuKuri::setRunAnm()
+{
+	if (mNext == nullptr)
+		setBckAnm(8);
+	else
+		setBckAnm(14);
+}
 
-void TDangoHamuKuri::reset() { }
+void TDangoHamuKuri::calcRootMatrix()
+{
+	getModel()->setBaseScale(mPosition);
+	if (mHolder && mHolder->mHeldObject == this) {
+		MtxPtr takingMtx = getTakingMtx();
+		if (takingMtx) {
+			if (unk230) {
+				unk210 += 40.0f;
+				if (unk210 > 360.0f) {
+					// TODO: should be a rand interval
+					unk210 = -MsRandF(10.0f, 20.0f);
+					unk230 = 0;
+				}
+				TDangoHamuKuri* holder = (TDangoHamuKuri*)mHolder;
+				if (holder->unk230)
+					unk210 = -holder->unk210;
+				takingMtx[3][0] += unk21C;
+				takingMtx[3][1] += unk220;
+				takingMtx[3][2] += unk224;
 
-BOOL TDangoHamuKuri::receiveMessage(THitActor*, u32) { }
+				getModel()->setBaseScale(mScaling);
+				Mtx afStack_68;
+				MsMtxSetRotRPH(afStack_68, 0.0f, unk210, unk214);
+				MTXConcat(takingMtx, afStack_68, takingMtx);
+				getModel()->setBaseTRMtx(takingMtx);
 
-bool TDangoHamuKuri::isHitValid(u32) { }
+				mPosition.set(takingMtx[3][0], takingMtx[3][1],
+				              takingMtx[3][2]);
+				return;
+			}
+		}
+	}
 
-void TDangoHamuKuri::forceKill() { }
+	TSpineEnemy::calcRootMatrix();
+}
+
+void TDangoHamuKuri::reset()
+{
+	THamuKuri::reset();
+	mPrev = nullptr;
+	mNext = nullptr;
+	mBoss = nullptr;
+	// TODO: rand interval
+	unk20C = MsRandF(0.0f, 1.0f);
+	mMActor->calc();
+}
+
+BOOL TDangoHamuKuri::receiveMessage(THitActor* param_1, u32 param_2)
+{
+	if (param_2 == 4 && mHolder == nullptr && mBoss != this) {
+		onHitFlag(HIT_FLAG_UNK1);
+		mHolder = (TLiveActor*)param_1;
+		behaveToTaken(param_1);
+		return true;
+	}
+
+	if ((param_2 == 6 || param_2 == 7) && mHolder == param_1) {
+		mHolder = nullptr;
+		behaveToRelease();
+		offHitFlag(HIT_FLAG_UNK1);
+		return true;
+	}
+
+	if (param_2 == 0 || param_2 == 1 || param_2 == 3 || param_2 == 11) {
+		if (isHitValid(param_2)) {
+			unk184 = 0;
+			kill();
+		}
+		return true;
+	}
+
+	if (param_2 == 13) {
+		mHitPoints = 0;
+		onLiveFlag(LIVE_FLAG_DEAD);
+		onHitFlag(HIT_FLAG_UNK1);
+	}
+
+	if (param_2 == 15) {
+		gpMarioParticleManager->emit(0xE7, &mPosition, 0, nullptr);
+		gpMSound->startSoundSet(0x6802, &mPosition, 0.0f, 0.0f, 0, 0, 4);
+		if (mSprayedByWaterCooldown == 0) {
+			mSprayedByWaterCooldown = 1;
+			if (!changeByJuice()) {
+				decHpByWater(param_1);
+				behaveToWater(param_1);
+			}
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+bool TDangoHamuKuri::isHitValid(u32)
+{
+	if (mPrev != nullptr || mNext != nullptr)
+		return false;
+	else
+		return true;
+}
+
+void TDangoHamuKuri::forceKill()
+{
+	if (mPrev == nullptr)
+		TSmallEnemy::forceKill();
+
+	if (mBoss == nullptr)
+		return;
+
+	if (mBoss->isDead()
+	    && mSpine->getCurrentNerve() != &TNerveSmallEnemyDie::theNerve()) {
+		mSpine->reset();
+		mSpine->setNext(&TNerveSmallEnemyDie::theNerve());
+		mSpine->pushAfterCurrent(mSpine->getDefault());
+		onLiveFlag(LIVE_FLAG_UNK20000);
+	}
+}
 
 void TDangoHamuKuri::nerveInit() { }
 
-void TDangoHamuKuri::behaveToWater(THitActor*) { }
+void TDangoHamuKuri::behaveToWater(THitActor* param_1)
+{
+	if (!mNext) {
+		if (!mPrev) {
+			THamuKuri::behaveToWater(param_1);
+		} else if (mSprayedByWaterCooldown <= 1 && receiveMessage(mPrev, 6)) {
+			mHolder            = nullptr;
+			mPrev->mHeldObject = nullptr;
+			mPrev->mNext       = nullptr;
 
-void TDangoHamuKuri::swingBody() { }
+			mPrev->mSprayedByWaterCooldown = 1;
+
+			mPrev = nullptr;
+			mNext = nullptr;
+			mSpine->setNext(&TNerveWalkerGraphWander::theNerve());
+			unk210 = 0.0f;
+			unk214 = 0.0f;
+
+			JGeometry::TVec3<f32> local_20 = mPosition - SMS_GetMarioPos();
+			MsVECNormalize(&local_20, &local_20);
+			local_20.x *= 5.0f;
+			local_20.y = 1.0f;
+			local_20.z *= 5.0f;
+			mVelocity = local_20;
+			mPosition.y += 20.0f;
+			onLiveFlag(LIVE_FLAG_AIRBORNE);
+			unk230 = 0;
+		}
+	} else if (mPrev == nullptr) {
+		if (!isAirborne()) {
+			JGeometry::TVec3<f32> local_2c(0.0f, 2.0f, 0.0f);
+			mPosition.y += 10.0f;
+			onLiveFlag(LIVE_FLAG_AIRBORNE);
+			mVelocity = local_2c;
+			mSpine->pushNerve(&TNerveSmallEnemyHitWaterJump::theNerve());
+		}
+	} else if (!mPrev->unk230) {
+		unk230 = 1;
+		unk210 = 1.0f;
+		if (gpMSound->gateCheck(0x295E))
+			MSoundSESystem::MSoundSE::startSoundActor(0x295E, &mPosition, 0,
+			                                          nullptr, 0, 4);
+	}
+}
+
+void TDangoHamuKuri::swingBody()
+{
+	if (unk20C > 1.0f)
+		unk20C -= 1.0f;
+
+	unk20C += 0.01f;
+	f32 fVar1 = 10.0f;
+
+	if (mBoss->mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()
+	        ? true
+	        : false) {
+		if (mAttackSw) {
+			if (mPrev != nullptr) {
+				if (mPrev == mBoss) {
+					mPosition = mBoss->mPosition;
+					unk210 += 10.0f;
+				}
+
+				if (mPrev->mPrev == mBoss) {
+					unk218 += 1000.0f;
+					unk214 = JMASSin(unk218) * 30.0f + 90.0f;
+				}
+			} else if (mPrev != nullptr && mPrev->mPrev == mBoss) {
+				unk214 = 0.0f;
+			}
+		}
+		fVar1 = 16.0f;
+	}
+
+	unk21C = fVar1 * JMACos(unk20C * 360.0f);
+	unk224 = fVar1 * JMASin(unk20C * 360.0f);
+}
 
 TBossDangoHamuKuri::TBossDangoHamuKuri(const char* name)
     : TDangoHamuKuri(name)
 {
 }
 
-void TBossDangoHamuKuri::init(TLiveManager*) { }
+void TBossDangoHamuKuri::init(TLiveManager* param_1)
+{
+	TDangoHamuKuri::init(param_1);
+	unk23C = (TBossDangoHamuKuriSaveLoadParams*)getSaveParam();
+	mSpine->initWith(&TNerveWalkerGenerate::theNerve());
+	mBoss = this;
+}
 
-void TBossDangoHamuKuri::perform(u32, JDrama::TGraphics*) { }
+void TBossDangoHamuKuri::perform(u32 param_1, JDrama::TGraphics* param_2)
+{
+	TSmallEnemy::perform(param_1, param_2);
+}
 
-void TBossDangoHamuKuri::reset() { }
+void TBossDangoHamuKuri::reset()
+{
+	TDangoHamuKuri::reset();
+	mBoss  = this;
+	unk238 = 0;
+}
 
-void TBossDangoHamuKuri::isDead() { }
+bool TBossDangoHamuKuri::isDead()
+{
+	if (mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve()
+	    || mSpine->getCurrentNerve() == &TNerveHamuKuriWallDie::theNerve())
+		return true;
+	else
+		return false;
+}
 
-void TBossDangoHamuKuri::setGenerateAnm() { }
+void TBossDangoHamuKuri::setGenerateAnm()
+{
+	setBckAnm(9);
+	// -----O-O-O-O-O-
+	// Dangos ^
+	int dangoNum = unk23C->mSLNumArray.get();
+	for (int i = 0; i < dangoNum; ++i)
+		generateBody();
+}
 
-void TBossDangoHamuKuri::moveObject() { }
+void TBossDangoHamuKuri::moveObject() { TDangoHamuKuri::moveObject(); }
 
-void TBossDangoHamuKuri::genEventCoin() { }
+void TBossDangoHamuKuri::genEventCoin()
+{
+	if (!mCoin)
+		return;
 
-void TBossDangoHamuKuri::generateBody() { }
+	TMapObjBase* coin;
+
+	if (mCoin->isActorType(0x2000000E)) {
+		coin = gpItemManager->makeObjAppear(0x2000000E);
+	} else {
+		coin = mCoin;
+		coin->appear();
+	}
+
+	if (coin) {
+		coin->mPosition = mPosition;
+		coin->mVelocity.set(0.0f, 20.0f, 0.0f);
+		coin->offLiveFlag(LIVE_FLAG_UNK10);
+		unk18C -= 1;
+	}
+}
+
+void TBossDangoHamuKuri::generateBody()
+{
+	s32 numArray = unk23C->mSLNumArray.get();
+	if (unk238 >= numArray)
+		return;
+
+	TDangoHamuKuri* newHamu = (TDangoHamuKuri*)gpConductor->makeOneEnemyAppear(
+	    mPosition, "だんごハムクリマネージャー", 0);
+	TDangoHamuKuri* currHamu = this;
+
+	if (!newHamu)
+		return;
+
+	newHamu->reset();
+	newHamu->mSpine->reset();
+	newHamu->mSpine->setNext(&TNerveDangoHamuKuriWait::theNerve());
+	newHamu->mPosition.set(0.0f, 0.0f, 0.0f);
+	newHamu->unk124->unk0 = unk124->unk0;
+	++unk238;
+
+	for (int i = 0; i < numArray; ++i) {
+		if (!currHamu->mNext) {
+			currHamu->mNext = newHamu;
+			newHamu->mPrev  = currHamu;
+			if (newHamu->receiveMessage(currHamu, 4))
+				currHamu->mHeldObject = newHamu;
+			newHamu->mBoss = this;
+			break;
+		}
+		currHamu = currHamu->mNext;
+	}
+
+	newHamu->offHitFlag(HIT_FLAG_UNK1);
+}
 
 void TBossDangoHamuKuri::isNowAttack() { }
 
@@ -1343,57 +1905,338 @@ void TBossDangoHamuKuri::isNowGenerate() { }
 
 TFireHamuKuri::TFireHamuKuri(const char* name)
     : THamuKuri(name)
+    , unk210(0)
+    , unk214(0)
+    , unk218(0)
 {
 }
 
-void TFireHamuKuri::init(TLiveManager*) { }
+void TFireHamuKuri::init(TLiveManager* param_1)
+{
+	THamuKuri::init(param_1);
+	mSpine->initWith(&TNerveWalkerGenerate::theNerve());
+	mActorType = 0x10000011;
+	unk20C     = (TFireHamuKuriSaveLoadParams*)getSaveParam();
+}
 
-void TFireHamuKuri::behaveToWater(THitActor*) { }
+void TFireHamuKuri::behaveToWater(THitActor* param_1)
+{
+	if (unk210) {
+		JGeometry::TVec3<f32> local_20(mPosition.x - gpMarioPos->x, 0.0f,
+		                               mPosition.z - gpMarioPos->z);
 
-void TFireHamuKuri::reset() { }
+		if (local_20.x == 0.0f && local_20.y == 0.0f && local_20.z == 0.0f)
+			local_20.x += 1.0f;
 
-void TFireHamuKuri::setMActorAndKeeper() { }
+		MsVECNormalize(&local_20, &local_20);
+		local_20.scale(8.0f);
+		mVelocity = local_20;
+		onLiveFlag(LIVE_FLAG_AIRBORNE);
+		mPosition.y += 5.0f;
+		if (mHitPoints == 0) {
+			unk210 = 0;
+			unk1A2 = 1;
+			unk150 |= 0x2;
+			unk150 &= ~0x1;
+			unk214 = 1;
+			if (gpMSound->gateCheck(0x2903))
+				MSoundSESystem::MSoundSE::startSoundActor(0x2903, &mPosition, 0,
+				                                          nullptr, 0, 4);
+			if (JPABaseEmitter* emitter
+			    = gpMarioParticleManager->emitAndBindToMtxPtr(
+			        0x8B, mMActor->getModel()->getAnmMtx(unk1AC), 0, nullptr)) {
+				emitter->setScale(mScaling);
+			}
+		}
+		mSprayedByWaterCooldown = 20;
+		return;
+	}
 
-void TFireHamuKuri::moveObject() { }
+	THamuKuri::behaveToWater(param_1);
+}
 
-void TFireHamuKuri::calcRootMatrix() { }
+void TFireHamuKuri::reset()
+{
+	THamuKuri::reset();
+	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
+	unk150 &= ~0x2;
+	unk150 |= 0x1;
+	unk214 = 0;
+	unk210 = 0;
+}
 
-void TFireHamuKuri::walkBehavior(int, f32) { }
+void TFireHamuKuri::setMActorAndKeeper()
+{
+	mMActorKeeper = new TMActorKeeper(mManager, 1);
+	mMActor       = mMActorKeeper->createMActor("default.bmd", 3);
+	ResTIMG* img
+	    = (ResTIMG*)JKRGetResource("/scene/map/pollution/H_ma_rak.bti");
+	if (img)
+		SMS_ChangeTextureAll(mMActor->getModel()->getModelData(),
+		                     "H_ma_rak_dummy", *img);
+}
 
-bool TFireHamuKuri::isHitValid(u32) { }
+void TFireHamuKuri::moveObject()
+{
+	THamuKuri::moveObject();
+	changeTevColor();
+}
 
-void TFireHamuKuri::recoverFire() { }
+void TFireHamuKuri::calcRootMatrix()
+{
+	TSpineEnemy::calcRootMatrix();
+	if (unk210 && !checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
+		if (JPABaseEmitter* emitter
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(
+		        0x1ED, mMActor->getModel()->getAnmMtx(unk1AC), 3, this)) {
+			emitter->setScale(mScaling);
+		}
+		if (JPABaseEmitter* emitter
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(
+		        0x135, mMActor->getModel()->getAnmMtx(unk1AC), 1, this)) {
+			emitter->setScale(mScaling);
+		}
+		if (JPABaseEmitter* emitter
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(
+		        0x136, mMActor->getModel()->getAnmMtx(unk1AC), 1, this)) {
+			emitter->setScale(mScaling);
+		}
+		if (JPABaseEmitter* emitter
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(
+		        0x137, mMActor->getModel()->getAnmMtx(unk1AC), 1, this)) {
+			emitter->setScale(mScaling);
+		}
+	}
+}
 
-void TFireHamuKuri::setWalkAnm() { }
+void TFireHamuKuri::walkBehavior(int param_1, f32 param_2)
+{
+	if (!isBckAnm(4))
+		TWalkerEnemy::walkBehavior(param_1, param_2);
+
+	s32 recoverTimer = unk20C->mSLRecoverTimer.get();
+	if (unk214 > 0)
+		unk214 += 1;
+
+	if (unk214 == 0 && unk210 == 0)
+		unk210 = 1;
+
+	if (unk214 > recoverTimer) {
+		mSpine->reset();
+		mSpine->setNext(&TNerveWalkerGraphWander::theNerve());
+		mSpine->pushNerve(&TNerveFireHamuKuriRecover::theNerve());
+		setBckAnm(13);
+	}
+}
+
+bool TFireHamuKuri::isHitValid(u32 param_1)
+{
+	if (param_1 == 11)
+		return true;
+
+	if (unk210)
+		return false;
+
+	if (isBckAnm(3)) {
+		getManager()->requestSerialKill(this);
+		return true;
+	}
+
+	if (checkLiveFlag(LIVE_FLAG_UNK2))
+		return false;
+
+	return true;
+}
+
+// TODO: this is the wrong inline, size doesn't match at all!
+bool TFireHamuKuri::recoverFire()
+{
+	bool result = false;
+	if (!unk210) {
+		if (unk218 < 30) {
+			unk218 += 1;
+			result = true;
+		}
+	} else {
+		if (gpMSound->gateCheck(0x20C3))
+			MSoundSESystem::MSoundSE::startSoundActor(0x20C3, &mPosition, 0,
+			                                          nullptr, 0, 4);
+		if (unk218 > 0) {
+			unk218 -= 1;
+			result = true;
+		}
+	}
+	return result;
+}
+
+void TFireHamuKuri::setWalkAnm() { setBckAnm(14); }
 
 void TFireHamuKuri::genFire() { }
 
 void TFireHamuKuri::dieFire() { }
 
-void TFireHamuKuri::sendAttackMsgToMario() { }
+void TFireHamuKuri::sendAttackMsgToMario()
+{
+	if (unk210)
+		SMS_SendMessageToMario(this, 10);
+	else
+		SMS_SendMessageToMario(this, 14);
+}
 
-void TFireHamuKuri::changeTevColor() { }
+void TFireHamuKuri::changeTevColor()
+{
+	if (recoverFire()) {
+		unk21C.r = (mFireHamNoseColorDiff.r * unk218) / 30
+		           + mFireHamNoseColorStart.r;
+		unk21C.g = (mFireHamNoseColorDiff.g * unk218) / 30
+		           + mFireHamNoseColorStart.g;
+		unk21C.b = (mFireHamNoseColorDiff.b * unk218) / 30
+		           + mFireHamNoseColorStart.b;
+
+		unk224.r = (mFireHamOtherColorDiff.r * unk218) / 30
+		           + mFireHamOtherColorStart.r;
+		unk224.g = (mFireHamOtherColorDiff.g * unk218) / 30
+		           + mFireHamOtherColorStart.g;
+		unk224.b = (mFireHamOtherColorDiff.b * unk218) / 30
+		           + mFireHamOtherColorStart.b;
+	}
+}
 
 TDoroHamuKuri::TDoroHamuKuri(const char* name)
     : THamuKuri(name)
 {
 }
 
-void TDoroHamuKuri::init(TLiveManager*) { }
+void TDoroHamuKuri::init(TLiveManager* param_1)
+{
+	THamuKuri::init(param_1);
+	mActorType = 0x10000013;
+	mSpine->initWith(&TNerveWalkerGenerate::theNerve());
 
-void TDoroHamuKuri::reset() { }
+	if (mInstanceIndex == 0) {
+		((TDoroHamuKuriManager*)mManager)->createHige();
+	}
+}
 
-void TDoroHamuKuri::kill() { }
+void TDoroHamuKuri::reset()
+{
+	THamuKuri::reset();
+	mSpine->initWith(&TNerveWalkerGenerate::theNerve());
+}
 
-void TDoroHamuKuri::setMActorAndKeeper() { }
+void TDoroHamuKuri::kill() { THamuKuri::kill(); }
 
-void TDoroHamuKuri::attackToMario() { }
+void TDoroHamuKuri::setMActorAndKeeper()
+{
+	mMActorKeeper = new TMActorKeeper(mManager, 1);
+	mMActor       = mMActorKeeper->createMActor("dorokuri_model.bmd", 3);
+}
 
-void TDoroHamuKuri::setBehavior() { }
+void TDoroHamuKuri::attackToMario()
+{
+	if (mSpine->getCurrentNerve() == &TNerveHamuKuriJitabata::theNerve()) {
+		if (mPosition.y + 10.0f > gpMarioPos->y) {
+			forceRoll(SMS_GetMarioPos(), false);
+			SMSRumbleMgr->start(0x15, 5, (f32*)nullptr);
+		}
+	} else {
+		THamuKuri::selectCapHolder();
+	}
+}
 
-void TDoroHamuKuri::onHaveCap() { }
+void TDoroHamuKuri::setBehavior()
+{
+	TDoroHamuKuriManager* man = (TDoroHamuKuriManager*)getManager();
+	if (!unk198 && man->unk70) {
+		if (mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()
+		    && !isAirborne()) {
+			mSpine->pushNerve(&TNerveDoroHamuKuriRobCap::theNerve());
+			unk1F8 = man->unk70;
+		}
+	} else {
+		THamuKuri::setBehavior();
+	}
+}
 
-bool TDoroHamuKuri::isCollidMove(THitActor*) { }
+void TDoroHamuKuri::onHaveCap()
+{
+	unk198                    = 1;
+	TDoroHamuKuriManager* man = (TDoroHamuKuriManager*)getManager();
+	man->unk70                = this;
+	man->unk74->setOwner(this);
+}
+
+bool TDoroHamuKuri::isCollidMove(THitActor* param_1)
+{
+	if (unk198)
+		return false;
+
+	if (param_1->isActorType(0x10000013)) {
+		TDoroHamuKuri* other = (TDoroHamuKuri*)param_1;
+		if (other->isUnk198() && !other->isAirborne()) {
+			other->mVelocity = JGeometry::TVec3<f32>(0.0f, 3.0f, 0.0f);
+			other->mPosition.y += 2.0f;
+			other->onLiveFlag(LIVE_FLAG_AIRBORNE);
+
+			if (!isAirborne()) {
+				JGeometry::TVec3<f32> local_4c = mPosition;
+				mVelocity
+				    = calcVelocityToJumpToY(local_4c, 6.0f, getGravityY());
+				mPosition.y += 2.0f;
+				onLiveFlag(LIVE_FLAG_AIRBORNE);
+			}
+
+			if (!unk198 && isAirborne()
+			    && mPosition.y > param_1->mPosition.y + 10.0f) {
+				TTakeActor* pTVar1 = other->mHeldObject;
+				if (pTVar1 == nullptr) {
+					other->unk198      = 0;
+					other->mHeldObject = nullptr;
+					return true;
+				}
+
+				if (receiveMessage(param_1, 6)) {
+					pTVar1->mPosition = param_1->mPosition;
+					if (pTVar1->receiveMessage(this, 4)) {
+						other->unk198      = 0;
+						other->mHeldObject = nullptr;
+						onHaveCap();
+						mHeldObject = pTVar1;
+
+						// TODO: this is an inline
+						int uVar11 = unk124->getCurrentIndex();
+
+						int count  = MsRandF(2, 3);
+						int uVar10 = -1;
+						for (int i = 0; i < count; ++i) {
+							int next = unk124->unk0->getRandomNextIndex(
+							    uVar11, uVar10, 0xffffffff);
+							uVar10 = uVar11;
+							uVar11 = next;
+						}
+
+						if (uVar11 < 0)
+							uVar11 = 0;
+
+						JGeometry::TVec3<f32> VStack_60;
+						unk124->getGraph()->getGraphNode(uVar11).getPoint(
+						    &VStack_60);
+
+						JGeometry::TVec3<f32> local_6c = calcVelocityToJumpToY(
+						    VStack_60, mCapSpeed, getGravityY());
+						onLiveFlag(LIVE_FLAG_AIRBORNE);
+						mVelocity = local_6c;
+						return false;
+					}
+				}
+			}
+		}
+
+		return true;
+	}
+
+	return THamuKuri::isCollidMove(param_1);
+}
 
 DEFINE_NERVE(TNerveHamuKuriGoForSearchActor, TLiveActor) { }
 

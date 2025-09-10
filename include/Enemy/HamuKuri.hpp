@@ -57,11 +57,17 @@ public:
 class TBossDangoHamuKuriSaveLoadParams : public THamuKuriSaveLoadParams {
 public:
 	TBossDangoHamuKuriSaveLoadParams(const char* path);
+
+public:
+	/* 0x444 */ TParamRT<s32> mSLNumArray;
 };
 
 class TFireHamuKuriSaveLoadParams : public THamuKuriSaveLoadParams {
 public:
 	TFireHamuKuriSaveLoadParams(const char* path);
+
+public:
+	/* 0x444 */ TParamRT<s32> mSLRecoverTimer;
 };
 
 // ============= managers =============
@@ -70,7 +76,7 @@ class THamuKuri;
 
 class THamuKuriManager : public TSmallEnemyManager {
 public:
-	THamuKuriManager(const char*);
+	THamuKuriManager(const char* = "ハムクリマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
@@ -154,19 +160,27 @@ public:
 	virtual void initSetEnemies();
 };
 
+class TDoroHaneKuri;
+
 class TDoroHige : public TSharedParts {
 public:
 	TDoroHige(const TLiveActor* param_1, int param_2, SDLModelData* param_3,
 	          const char* name = "ひげ")
 	    : TSharedParts(param_1, param_2, param_3, 3, name)
-	    , unk1C(param_1)
+	    , unk1C((THamuKuri*)param_1)
 	{
 	}
 
 	virtual void perform(u32, JDrama::TGraphics*);
 
+	void setOwner(THamuKuri* hamu)
+	{
+		unk1C = hamu;
+		unk10 = (TLiveActor*)hamu;
+	}
+
 public:
-	/* 0x1C */ const TLiveActor* unk1C;
+	/* 0x1C */ const THamuKuri* unk1C;
 };
 
 class TDoroHamuKuriManager : public THamuKuriManager {
@@ -179,7 +193,10 @@ public:
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 
-	virtual void createHige();
+	void createHige();
+
+public:
+	/* 0x74 */ TDoroHige* unk74;
 };
 
 // ============= instances =============
@@ -217,7 +234,7 @@ public:
 	virtual bool isResignationAttack();
 	virtual void setRollAnm();
 	virtual void setCrashAnm();
-	virtual bool canDoJitabata() { }
+	virtual bool canDoJitabata() { return !isAirborne(); }
 	virtual void onHaveCap() { unk198 = true; }
 
 	void releaseCap();
@@ -241,6 +258,7 @@ public:
 
 	// fabricated
 	THamuKuriManager* getManager() { return (THamuKuriManager*)mManager; }
+	bool isUnk198() const { return unk198 ? true : false; }
 
 public:
 	/* 0x194 */ f32 unk194;
@@ -343,9 +361,11 @@ public:
 	virtual void walkBehavior(int, f32);
 };
 
+class TBossDangoHamuKuri;
+
 class TDangoHamuKuri : public THamuKuri {
 public:
-	TDangoHamuKuri(const char*);
+	TDangoHamuKuri(const char* = "だんごハムクリ");
 
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual BOOL receiveMessage(THitActor*, u32);
@@ -367,11 +387,24 @@ public:
 	void swingBody();
 
 	static bool mAttackSw;
+
+public:
+	/* 0x20C */ f32 unk20C;
+	/* 0x210 */ f32 unk210;
+	/* 0x214 */ f32 unk214;
+	/* 0x218 */ f32 unk218;
+	/* 0x21C */ f32 unk21C;
+	/* 0x220 */ f32 unk220;
+	/* 0x224 */ f32 unk224;
+	/* 0x228 */ TDangoHamuKuri* mNext;
+	/* 0x22C */ TDangoHamuKuri* mPrev;
+	/* 0x230 */ u8 unk230;
+	/* 0x234 */ TBossDangoHamuKuri* mBoss;
 };
 
 class TBossDangoHamuKuri : public TDangoHamuKuri {
 public:
-	TBossDangoHamuKuri(const char*);
+	TBossDangoHamuKuri(const char* = "ボスだんごハムクリ");
 
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual void init(TLiveManager*);
@@ -382,15 +415,19 @@ public:
 	virtual void setGenerateAnm();
 	virtual bool isFindMario(f32) { return 0; }
 
-	void isDead();
+	bool isDead();
 	void generateBody();
 	void isNowAttack();
 	void isNowGenerate();
+
+public:
+	/* 0x238 */ int unk238;
+	/* 0x23C */ TBossDangoHamuKuriSaveLoadParams* unk23C;
 };
 
 class TFireHamuKuri : public THamuKuri {
 public:
-	TFireHamuKuri(const char*);
+	TFireHamuKuri(const char* = "ヤキグリ");
 
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
@@ -404,15 +441,23 @@ public:
 	virtual void setBckAnm(int) { }
 	virtual void walkBehavior(int, f32);
 
-	void recoverFire();
+	bool recoverFire();
 	void genFire();
 	void dieFire();
 	void changeTevColor();
+
+public:
+	/* 0x20C */ TFireHamuKuriSaveLoadParams* unk20C;
+	/* 0x210 */ u8 unk210;
+	/* 0x214 */ int unk214;
+	/* 0x218 */ int unk218;
+	/* 0x21C */ GXColorS10 unk21C;
+	/* 0x224 */ GXColorS10 unk224;
 };
 
 class TDoroHamuKuri : public THamuKuri {
 public:
-	TDoroHamuKuri(const char*);
+	TDoroHamuKuri(const char* = "どろハムクリ");
 
 	virtual void init(TLiveManager*);
 	virtual void kill();

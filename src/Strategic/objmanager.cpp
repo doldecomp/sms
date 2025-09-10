@@ -33,7 +33,7 @@ TObjManager::TObjManager(const char* name)
     , unk18(nullptr)
     , unk1C(nullptr)
     , unk20(nullptr)
-    , unk24(nullptr)
+    , mModelDataKeeper(nullptr)
     , unk28(0)
     , unk2C(0)
     , unk30(0)
@@ -94,9 +94,9 @@ void TObjManager::createModelDataArrayBase(const TModelDataLoadEntry* entries,
 		++unk28;
 	}
 
-	unk24 = new TModelDataKeeper(param_2);
+	mModelDataKeeper = new TModelDataKeeper(param_2);
 	for (int i = 0; i < unk28; ++i)
-		unk24->createAndKeepData(entries[i].unk0, entries[i].unk4);
+		mModelDataKeeper->createAndKeepData(entries[i].unk0, entries[i].unk4);
 }
 
 void TObjManager::createModelData()
@@ -114,9 +114,9 @@ void TObjManager::createAnmData()
 
 TModelDataKeeper* TObjManager::getModelDataKeeper()
 {
-	if (!unk24)
+	if (!mModelDataKeeper)
 		createModelData();
-	return unk24;
+	return mModelDataKeeper;
 }
 
 JDrama::TNameRef* TObjManager::searchF(u16 key, const char* name)

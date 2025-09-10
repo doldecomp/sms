@@ -59,7 +59,7 @@ public:
 	/* 0x18 */ THitActor** unk18;
 	/* 0x1C */ TObjChara* unk1C;
 	/* 0x20 */ MActorAnmData* unk20;
-	/* 0x24 */ TModelDataKeeper* unk24;
+	/* 0x24 */ TModelDataKeeper* mModelDataKeeper;
 	/* 0x28 */ s32 unk28;
 	/* 0x2C */ u32 unk2C;
 	/* 0x30 */ u32 unk30;
