@@ -5,24 +5,18 @@
 
 float fabsf__Ff(float);
 
-const float tmp_float[]
+static const float tmp_float[]
     = { 0.25F, 0.023239374F, 0.00000017055572F, 1.867365e-11F };
-
-float __four_over_pi_m1[4] = { 0 };
+#pragma cplusplus on
+static float __four_over_pi_m1[]
+    = { tmp_float[0], tmp_float[1], tmp_float[2], tmp_float[3] };
+#pragma cplusplus off
 
 #define __two_over_pi        0.63661975F
 #define __SQRT_FLT_EPSILON__ 3.4526698300e-4F
 
 extern const float __sincos_poly[];
 extern const float __sincos_on_quadrant[];
-
-static void __sinit_trigf_c(void)
-{
-	__four_over_pi_m1[0] = tmp_float[0];
-	__four_over_pi_m1[1] = tmp_float[1];
-	__four_over_pi_m1[2] = tmp_float[2];
-	__four_over_pi_m1[3] = tmp_float[3];
-}
 
 #pragma dont_inline on
 
@@ -153,8 +147,8 @@ float cosf(float x)
 	                                    // n*pi/4 is a multiple of pi/2(not pi)
 }
 
-__declspec(weak) float cos__Ff(float x) { return cosf(x); }
 __declspec(weak) float sin__Ff(float x) { return sinf(x); }
+__declspec(weak) float cos__Ff(float x) { return cosf(x); }
 #pragma dont_inline reset
 
 float tanf(float x) { return sin__Ff(x) / cos__Ff(x); }
