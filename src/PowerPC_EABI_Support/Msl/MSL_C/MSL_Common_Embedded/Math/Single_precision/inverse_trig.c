@@ -26,7 +26,10 @@ float atan2f(float __y, float __x)
 	return __y;
 }
 
-float acosf(float x) { return HALF_PI - atan__Ff(x * _inv_sqrtf(1.0f - x * x)); }
+float acosf(float x)
+{
+	return HALF_PI - atan__Ff(x * _inv_sqrtf(1.0f - x * x));
+}
 
 #pragma dont_inline on
 __declspec(weak) float _inv_sqrtf(float x)
@@ -36,7 +39,7 @@ __declspec(weak) float _inv_sqrtf(float x)
 
 	if (x > 0.0f) {
 		float guess = __frsqrte((double)x); /* returns an approximation to  */
-		guess     = _half * guess
+		guess       = _half * guess
 		        * (_three - guess * guess * x); /* now have 8  sig bits */
 		guess = _half * guess
 		        * (_three - guess * guess * x); /* now have 16 sig bits */
@@ -49,19 +52,10 @@ __declspec(weak) float _inv_sqrtf(float x)
 	return HUGE_VALF;
 }
 
-/*
- * --INFO--
- * Address:	8021B924
- * Size:	000020
- */
 __declspec(weak) float atan__Ff(float x) { return atanf(x); }
 
 #pragma dont_inline reset
-/*
- * --INFO--
- * Address:	8021B730
- * Size:	0001F4
- */
+
 float atanf(float x)
 {
 	float z, z_square;

@@ -3,7 +3,7 @@
 
 #include "float.h"
 
-#define SIGDIGLEN 16
+#define SIGDIGLEN 36
 
 typedef struct decimal {
 	char sign;

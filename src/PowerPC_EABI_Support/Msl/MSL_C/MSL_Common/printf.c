@@ -541,7 +541,6 @@ static void round_decimal(decimal* dec, int new_length)
 static char* float2str(va_list arg, char* buff, print_format* format,
                        int vecIndex)
 {
-	unsigned int access_func[4];
 	decimal dec;
 	decform form;
 	char* p;
