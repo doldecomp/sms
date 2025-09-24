@@ -6,8 +6,15 @@
 #define NAN       (*(float*)__float_nan)
 #define HUGE_VALF (*(float*)__float_huge)
 
-#define M_PI    3.14159265358979323846f
-#define M_SQRT3 1.73205f
+#define LONG_TAU   6.2831854820251465
+#define TAU        6.2831855f
+#define PI         3.1415927f
+#define HALF_PI    1.5707964f
+#define THIRD_PI   1.0471976f
+#define QUARTER_PI 0.7853982f
+#define SIN_2_5    0.43633234f
+#define M_SQRT3    1.73205f
+#define M_PI       3.14159265358979323846f
 
 #define DEG_TO_RAD(degrees) (degrees * (M_PI / 180.0f))
 #define RAD_TO_DEG(radians)                                                    \
