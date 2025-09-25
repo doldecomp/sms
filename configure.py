@@ -542,7 +542,7 @@ config.libs = [
             Object(Matching, "JSystem/JStage/JSGObject.cpp"),
             Object(Matching, "JSystem/JStage/JSGSystem.cpp"),
 
-            Object(NonMatching, "JSystem/JMath.cpp"),
+            Object(Matching, "JSystem/JMath.cpp"),
             Object(Matching, "JSystem/JRenderer.cpp"),
             Object(Matching, "JSystem/random.cpp"),
             Object(Matching, "JSystem/dspproc.c", cflags=cflags_jsystem_dsp, mw_version="GC/1.2.5n"),
