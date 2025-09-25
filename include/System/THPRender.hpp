@@ -3,14 +3,13 @@
 
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/JDrama/JDRGraphics.hpp>
-#include "dolphin/gx/GXTransform.h"
+#include <dolphin/gx/GXTransform.h>
 
-#include "MarioUtil/DrawUtil.hpp"
-#include "THPPlayer/THPPlayer.h"
+#include <MarioUtil/DrawUtil.hpp>
+#include <THPPlayer/THPPlayer.h>
 
 class TTHPRender : public JDrama::TViewObj {
 public:
-	virtual ~TTHPRender() { }
 	void perform(u32, JDrama::TGraphics*); /* override */
 	TTHPRender(const char* name);
 

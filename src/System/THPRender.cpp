@@ -1,4 +1,4 @@
-#include "System/THPRender.hpp"
+#include <System/THPRender.hpp>
 
 void TTHPRender::perform(u32 flags, JDrama::TGraphics* gfx)
 {
@@ -7,14 +7,14 @@ void TTHPRender::perform(u32 flags, JDrama::TGraphics* gfx)
 		SMS_DrawInit();
 		GXLoadPosMtxImm(gfx->unkB4, GX_PNMTX0);
 		GXSetCurrentMtx(GX_PNMTX0);
-		this->frameNumber = THPPlayerDrawCurrentFrame(0, this->x, this->y,
-		                                              this->polyW, this->polyH);
+		frameNumber = THPPlayerDrawCurrentFrame(0, x, y, polyW, polyH);
 	}
 }
+
 TTHPRender::TTHPRender(const char* name)
     : JDrama::TViewObj(name)
 {
-	this->x           = 0;
-	this->y           = 0;
-	this->frameNumber = -1;
+	x           = 0;
+	y           = 0;
+	frameNumber = -1;
 }
