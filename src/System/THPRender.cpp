@@ -8,12 +8,13 @@ void TTHPRender::perform(u32 flags, JDrama::TGraphics* gfx)
 		GXLoadPosMtxImm(gfx->unkB4, GX_PNMTX0);
 		GXSetCurrentMtx(GX_PNMTX0);
 		this->frameNumber = THPPlayerDrawCurrentFrame(0, this->x, this->y,
-		                                        this->polyW, this->polyH);
+		                                              this->polyW, this->polyH);
 	}
 }
-TTHPRender::TTHPRender(const char* name) : JDrama::TViewObj(name)
+TTHPRender::TTHPRender(const char* name)
+    : JDrama::TViewObj(name)
 {
-	this->x     = 0;
-	this->y     = 0;
+	this->x           = 0;
+	this->y           = 0;
 	this->frameNumber = -1;
 }
