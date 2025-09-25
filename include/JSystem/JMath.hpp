@@ -70,10 +70,10 @@ inline f32 JMACos(f32 v) { return JMASCos(DEG2SHORTANGLE(v)); }
 
 inline f32 JMASin(f32 v) { return JMASSin(DEG2SHORTANGLE(v)); }
 
-void JMANewSinTable(u8);
+bool JMANewSinTable(u8 numBits);
 void JMADeleteSinTable();
-void JMAEulerToQuat(s16, s16, s16, Quaternion*);
-void JMAQuatLerp(Quaternion*, Quaternion*, f32, Quaternion*);
+void JMAEulerToQuat(s16 x, s16 y, s16 z, Quaternion* out);
+void JMAQuatLerp(Quaternion* a, Quaternion* b, f32 t, Quaternion* out);
 f32 JMAHermiteInterpolation(f32 frame, f32 time0, f32 value0, f32 tangent0,
                             f32 time1, f32 value1, f32 tangent1);
 void JMALagrangeInterpolation(int, f32*, f32*, f32);
