@@ -10,7 +10,7 @@
 
 class TTHPRender : public JDrama::TViewObj {
 public:
-	void perform(u32, JDrama::TGraphics*); /* override */
+	virtual void perform(u32, JDrama::TGraphics*); /* override */
 	TTHPRender(const char* name);
 
 	/* 0x10 */ u32 x;
