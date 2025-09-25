@@ -18,7 +18,7 @@ public:
 	/* 0x14 */ u32 y;
 	/* 0x18 */ u32 polyW;
 	/* 0x1c */ u32 polyH;
-	/* 0x20 */ u32 unk10;
+	/* 0x20 */ u32 frameNumber;
 };
 
 #endif // SYSTEM_THP_RENDER_HPP
