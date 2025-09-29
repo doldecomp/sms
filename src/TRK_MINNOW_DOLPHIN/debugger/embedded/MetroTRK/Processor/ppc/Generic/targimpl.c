@@ -82,7 +82,7 @@ DSError TRKPPCAccessSPR(void* value, u32 spr_register_num, BOOL read);
 DSError TRKPPCAccessPairedSingleRegister(void* srcDestPtr, u32 psr, BOOL read);
 DSError TRKPPCAccessFPRegister(void* srcDestPtr, u32 fpr, BOOL read);
 DSError TRKPPCAccessSpecialReg(void* value, u32* access_func, BOOL read);
-static void TRKExceptionHandler(u16);
+void TRKExceptionHandler(u16);
 void TRKInterruptHandlerEnableInterrupts(void);
 void WriteFPSCR(register f64*);
 void ReadFPSCR(register f64*);
@@ -425,12 +425,11 @@ DSError TRKTargetAccessExtended2(u32 firstRegister, u32 lastRegister,
                                  TRKBuffer* b, size_t* registerStorageSize,
                                  BOOL read)
 {
+	u32 value_buf[2];
 	TRKExceptionStatus savedException;
 	u32 i;
 	u32 value_buf0[1];
-	u32 value_buf[2];
 	DSError err;
-	u32 access_func[10];
 
 	if (lastRegister > 0x1f)
 		return DS_InvalidRegister;
@@ -647,7 +646,7 @@ L_802CF694:
 #endif // clang-format on
 }
 
-static asm void TRKExceptionHandler(u16)
+asm void TRKExceptionHandler(u16)
 {
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
@@ -1123,8 +1122,6 @@ DSError TRKPPCAccessSpecialReg(void* value, u32* access_func, BOOL read)
 {
 	typedef void (*asm_access_type)(void*, void*);
 
-	asm_access_type asm_access;
-
 	/*
 	** Construct a small assembly function to perform the
 	** requested access and call it.  The read/write function
@@ -1144,8 +1141,6 @@ DSError TRKPPCAccessSpecialReg(void* value, u32* access_func, BOOL read)
 	/*
 	** Now that the instruction array is built, get a function pointer to it.
 	*/
-
-	asm_access = (asm_access_type)access_func;
 
 #if DEBUG_VECTORREG_ACCESS
 
@@ -1169,7 +1164,7 @@ DSError TRKPPCAccessSpecialReg(void* value, u32* access_func, BOOL read)
 
 	// Flush cache
 	TRK_flush_cache(access_func, (sizeof(access_func) * 10));
-	(*asm_access)((u32*)value, (void*)&TRKvalue128_temp);
+	(*(asm_access_type)access_func)((u32*)value, (void*)&TRKvalue128_temp);
 
 	return DS_NoError;
 }
