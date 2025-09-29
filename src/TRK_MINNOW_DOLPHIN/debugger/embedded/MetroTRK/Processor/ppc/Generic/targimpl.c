@@ -1136,7 +1136,7 @@ DSError TRKPPCAccessSpecialReg(void* value, u32* access_func, BOOL read)
 	** a 5-instruction array w/the last one empty).
 	*/
 
-	access_func[9] = INSTR_BLR;
+	access_func[4] = INSTR_BLR;
 
 	/*
 	** Now that the instruction array is built, get a function pointer to it.
@@ -1163,7 +1163,7 @@ DSError TRKPPCAccessSpecialReg(void* value, u32* access_func, BOOL read)
 #endif
 
 	// Flush cache
-	TRK_flush_cache(access_func, (sizeof(access_func) * 10));
+	TRK_flush_cache(access_func, (sizeof(access_func) * 5));
 	(*(asm_access_type)access_func)((u32*)value, (void*)&TRKvalue128_temp);
 
 	return DS_NoError;
