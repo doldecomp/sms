@@ -9,16 +9,16 @@
 DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
                           DSIOResult* io_result, BOOL need_reply, BOOL read)
 {
+	BOOL exit;
+	u32 done;
 	DSError error;
 	int replyBufferId;
-	TRKBuffer* replyBuffer;
-	int bufferId;
 	TRKBuffer* buffer;
+	TRKBuffer* replyBuffer;
 	u32 length;
-	u32 done;
-	u8 replyIOResult;
+	int bufferId;
 	u16 replyLength;
-	BOOL exit;
+	u8 replyIOResult;
 
 	if (data == NULL || *count == 0) {
 		return DS_ParameterError;
