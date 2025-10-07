@@ -144,17 +144,34 @@ static u16 Zenkaku2Code[] = {
 	0x312, 0x313, 0x314, 0x315, 0x316, 0x317, 0x318, 0x319, 0x31A, 0x31B, 0x000
 };
 
-static int GetFontCode(unsigned short code)
+inline static BOOL IsSjisLeadByte(u8 c)
 {
-	if (OSGetFontEncode() == OS_FONT_ENCODE_SJIS) {
+	return (0x81 <= c && c <= 0x9F) || (0xE0 <= c && c <= 0xFC);
+}
+
+inline static BOOL IsSjisTrailByte(u8 c)
+{
+	return (0x40 <= c && c <= 0xFC) && (c != 0x7F);
+}
+
+static int GetFontCode(u16 code)
+{
+	u16 encode = OSGetFontEncode();
+
+	if (encode == OS_FONT_ENCODE_SJIS) {
 		if (code >= 0x20 && code <= 0xDF) {
 			return HankakuToCode[code - 0x20];
 		}
 
-		if (code > 0x889E) {
+		if (code > 0x889E && code <= 0x9872) {
 			int i = ((code >> 8) - 0x88) * 188;
-			int j = (code & 0xFF) - 0x40;
+			int j = (code & 0xFF);
 
+			if (!IsSjisTrailByte(j)) {
+				return 0;
+			}
+
+			j -= 0x40;
 			if (j >= 0x40) {
 				j--;
 			}
@@ -162,10 +179,15 @@ static int GetFontCode(unsigned short code)
 			return (i + j + 0x2BE);
 		}
 
-		if (code < 0x879E) {
+		if (code >= 0x8140 && code < 0x879E) {
 			int i = ((code >> 8) - 0x81) * 188;
-			int j = (code & 0xFF) - 0x40;
+			int j = (code & 0xFF);
 
+			if (!IsSjisTrailByte(j)) {
+				return 0;
+			}
+
+			j -= 0x40;
 			if (j >= 0x40) {
 				j--;
 			}
@@ -174,9 +196,8 @@ static int GetFontCode(unsigned short code)
 		}
 	} else if (code > 0x20 && code <= 0xFF) {
 		return code - 0x20;
-	} else {
-		return 0;
 	}
+
 	return 0;
 }
 
@@ -242,16 +263,7 @@ static void Decode(unsigned char* s, unsigned char* d)
 	} while (q < os);
 }
 
-static u32 GetFontSize(u8* buf)
-{
-	if (buf[0] == 'Y' && buf[1] == 'a' && buf[2] == 'y') {
-		return *(u32*)(buf + 0x4);
-	}
-
-	return 0;
-}
-
-unsigned short OSGetFontEncode(void)
+u16 OSGetFontEncode(void)
 {
 	static u16 fontEncode = 0xFFFF;
 	if (fontEncode <= 1) {
@@ -275,6 +287,15 @@ unsigned short OSGetFontEncode(void)
 	return fontEncode;
 }
 
+static inline u32 GetFontSize(u8* buf)
+{
+	if (buf[0] == 'Y' && buf[1] == 'a' && buf[2] == 'y') {
+		return *(u32*)(buf + 0x4);
+	}
+
+	return 0;
+}
+
 static void ReadROM(void* buf, int length, int offset)
 {
 	int len;
@@ -291,7 +312,7 @@ static void ReadROM(void* buf, int length, int offset)
 	}
 }
 
-static u32 ReadFont(void* img)
+static inline u32 ReadFont(void* img)
 {
 	if (OSGetFontEncode() == OS_FONT_ENCODE_SJIS) {
 		ReadROM(img, OS_FONT_ROM_SIZE_SJIS, 0x1AFF00);
@@ -313,83 +334,45 @@ u32 OSLoadFont(OSFontHeader* fontData, void* temp)
 		FontData     = fontData;
 		WidthTable   = (u8*)FontData + FontData->widthTable;
 		CharsInSheet = FontData->sheetColumn * FontData->sheetRow;
+
+		if (OSGetFontEncode() == OS_FONT_ENCODE_SJIS) {
+			int fontCode;
+			u8* imageSrc;
+			int sheet;
+			int numChars;
+			int row;
+			int column;
+			int x;
+			int y;
+			u8* src;
+			u16 imageT[4] = { 0x2ABE, 0x003D, 0x003D, 0x003D };
+
+			fontCode = GetFontCode(0x54);
+			sheet    = fontCode / CharsInSheet;
+			numChars = fontCode - (sheet * CharsInSheet);
+			row      = numChars / FontData->sheetColumn;
+			column   = numChars - (row * FontData->sheetColumn);
+			row *= FontData->cellHeight;
+			column *= FontData->cellWidth;
+
+			imageSrc = (u8*)FontData + FontData->sheetImage;
+			imageSrc += ((sheet * FontData->sheetSize) >> 1);
+
+			for (y = 4; y < 8; y++) {
+				x   = 0;
+				src = imageSrc
+				      + ((((FontData->sheetWidth / 8) << 5) / 2)
+				         * ((row + y) / 8));
+				src += ((column + x) / 8) * 0x10;
+				src += ((row + y) % 8) * 2;
+				src += ((column + x) % 8) / 4;
+
+				*(u16*)src = imageT[y - 4];
+			}
+		}
 	}
 
 	return size;
-}
-
-char* OSGetFontTexel(char* string, void* image, long pos, long stride,
-                     long* width)
-{
-	unsigned short code;
-	unsigned char* src;
-	unsigned char* dst;
-	int fontCode;
-	int sheet;
-	int numChars;
-	int row;
-	int column;
-	int x;
-	int y;
-	int offsetSrc;
-	int offsetDst;
-	unsigned char* colorIndex;
-	unsigned char* imageSrc;
-
-	ASSERTLINE(0x1F6, FontData && !SheetImage);
-
-	code = *string;
-	if (code == '\0') {
-		return string;
-	}
-
-	string++;
-	if (OSGetFontEncode() == OS_FONT_ENCODE_SJIS) {
-		if ((((code >= 0x80) && (code <= 0x9F))
-		     || ((code >= 0xE0) && (code <= 0xFF)))
-		    && ((s8)*string != 0U)) {
-			code = (code << 8) | (*string++); // Shift-JIS encoded byte
-		}
-	}
-	colorIndex = &FontData->c0;
-
-	ASSERTLINE(0x209, FontData->sheetFormat == GX_TF_I4);
-
-	fontCode = GetFontCode(code);
-
-	sheet    = fontCode / CharsInSheet;
-	numChars = fontCode - (sheet * CharsInSheet);
-	row      = numChars / FontData->sheetColumn;
-	column   = (numChars - (row * FontData->sheetColumn));
-	row *= FontData->cellHeight;
-	column *= FontData->cellWidth;
-	imageSrc = (u8*)FontData + FontData->sheetImage;
-	imageSrc += (sheet * FontData->sheetSize) / 2;
-
-	for (y = 0; y < FontData->cellHeight; y++) {
-		for (x = 0; x < FontData->cellWidth; x++) {
-			src = imageSrc
-			      + (((FontData->sheetWidth / 8) * 32) / 2) * ((row + y) / 8);
-			src += ((column + x) / 8) * 16;
-			src += ((row + y) % 8) * 2;
-			src += ((column + x) % 8) / 4;
-
-			offsetSrc = (column + x) % 4;
-
-			dst = (u8*)image + ((y / 8) * (((stride * 4) / 8) * 32));
-			dst += (((pos + x) / 8) * 32);
-			dst += ((y % 8) * 4);
-			dst += ((pos + x) % 8) / 2;
-
-			offsetDst = (pos + x) % 2;
-
-			*dst |= colorIndex[*src >> (6 - (offsetSrc * 2)) & 3]
-			        & ((offsetDst != 0) ? 0x0F : 0xF0);
-		}
-	}
-	*width = WidthTable[fontCode];
-
-	return string;
 }
 
 static void ExpandFontSheet(u8* src, u8* dst)
@@ -416,7 +399,7 @@ static void ExpandFontSheet(u8* src, u8* dst)
 	DCStoreRange(dst, FontData->sheetFullSize);
 }
 
-int OSInitFont(OSFontHeader* fontData)
+BOOL OSInitFont(OSFontHeader* fontData)
 {
 	unsigned long size;
 	void* temp;
@@ -429,18 +412,17 @@ int OSInitFont(OSFontHeader* fontData)
 	temp = ((void*)(((u32)(temp)) & ~((32) - 1)));
 	size = OSLoadFont(fontData, temp);
 	if (size == 0) {
-		return 0;
+		return FALSE;
 	}
 	SheetImage = (u8*)FontData + FontData->sheetImage;
 	SheetImage = (void*)((s32)(SheetImage + 0x1F) & 0xFFFFFFE0);
 	ExpandFontSheet((u8*)FontData + FontData->sheetImage, SheetImage);
-	return 1;
+	return TRUE;
 }
 
-char* OSGetFontTexture(char* string, void** image, long* x, long* y,
-                       long* width)
+char* OSGetFontTexture(char* string, void** image, s32* x, s32* y, s32* width)
 {
-	unsigned short code;
+	u16 code;
 	int fontCode;
 	int sheet;
 	int numChars;
@@ -450,7 +432,7 @@ char* OSGetFontTexture(char* string, void** image, long* x, long* y,
 	ASSERTLINE(0x291, SheetImage);
 	ASSERTLINE(0x292, WidthTable);
 
-	code = *string;
+	code = *(u8*)string;
 	if (code == 0) {
 		*image = NULL;
 		return string;
@@ -458,22 +440,23 @@ char* OSGetFontTexture(char* string, void** image, long* x, long* y,
 
 	string++;
 	if (OSGetFontEncode() == OS_FONT_ENCODE_SJIS) {
-		if ((((code >= 0x80) && (code <= 0x9F))
-		     || ((code >= 0xE0) && (code <= 0xFF)))
-		    && ((s8)*string != 0U)) {
-			code = (code << 8) | (*string++); // Shift-JIS encoded byte
+		if (((((u8)code >= 0x81) && ((u8)code <= 0x9F)) != FALSE
+		     || (((u8)code >= 0xE0) && ((u8)code <= 0xFC)))
+		        != FALSE
+		    && (*string != 0) != FALSE) {
+			code = (code << 8) | (*(u8*)string++); // Shift-JIS encoded byte
 		}
 	}
 
 	fontCode = GetFontCode(code);
 
-	sheet            = fontCode / CharsInSheet;
-	((u32*)image)[0] = (u32)SheetImage + (FontData->sheetSize * sheet);
-	numChars         = fontCode - (sheet * CharsInSheet);
-	row              = numChars / FontData->sheetColumn;
-	column           = (numChars - (row * FontData->sheetColumn));
-	*x               = column * FontData->cellWidth;
-	*y               = row * FontData->cellHeight;
+	sheet          = fontCode / CharsInSheet;
+	*(void**)image = (void*)(SheetImage + (FontData->sheetSize * sheet));
+	numChars       = fontCode - (sheet * CharsInSheet);
+	row            = numChars / FontData->sheetColumn;
+	column         = (numChars - (row * FontData->sheetColumn));
+	*x             = column * FontData->cellWidth;
+	*y             = row * FontData->cellHeight;
 
 	if (width) {
 		*width = WidthTable[fontCode];
@@ -483,23 +466,26 @@ char* OSGetFontTexture(char* string, void** image, long* x, long* y,
 
 char* OSGetFontWidth(char* string, s32* width)
 {
-	unsigned short code;
+	u16 code;
 
 	ASSERTLINE(0x2C2, WidthTable);
 
-	code = *string;
+	code = *(u8*)string;
 	if (code == 0) {
 		return string;
 	}
 
 	string++;
 	if (OSGetFontEncode() == OS_FONT_ENCODE_SJIS) {
-		if ((((code >= 0x80) && (code <= 0x9F))
-		     || ((code >= 0xE0) && (code <= 0xFF)))
-		    && ((s8)*string != 0U)) {
-			code = (code << 8) | (*string++); // Shift-JIS encoded byte
+		if (((((u8)code >= 0x81) && ((u8)code <= 0x9F)) != FALSE
+		     || (((u8)code >= 0xE0) && ((u8)code <= 0xFC)))
+		        != FALSE
+		    && (*string != 0) != FALSE) {
+			code = (code << 8) | (*(u8*)string++); // Shift-JIS encoded byte
 		}
 	}
-	*width = WidthTable[GetFontCode(code)];
+	if (width) {
+		*width = WidthTable[GetFontCode(code)];
+	}
 	return string;
 }

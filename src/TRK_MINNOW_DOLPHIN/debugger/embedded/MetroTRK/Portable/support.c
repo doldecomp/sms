@@ -18,7 +18,7 @@ DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
 	u32 length;
 	int bufferId;
 	u16 replyLength;
-	u8 replyIOResult;
+	DSIOResult replyIOResult;
 
 	if (data == NULL || *count == 0) {
 		return DS_ParameterError;
@@ -28,7 +28,7 @@ DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
 	*io_result = DS_IONoError;
 	done       = 0;
 	error      = DS_NoError;
-	while (!exit && done < *count && error == DS_NoError && *io_result == 0) {
+	while (!exit && done < *count && error == DS_NoError && *io_result == DS_IONoError) {
 		if (*count - done > 0x800) {
 			length = 0x800;
 		} else {
@@ -53,7 +53,7 @@ DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
 		if (error == DS_NoError) {
 			if (need_reply) {
 				replyLength   = 0;
-				replyIOResult = 0;
+				replyIOResult = DS_IONoError;
 
 				error = TRKRequestSend(buffer, &replyBufferId, read ? 5 : 5, 3,
 				                       !(read && file_handle == 0));
@@ -63,7 +63,7 @@ DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
 				}
 
 				if (error == DS_NoError)
-					error = TRKReadBuffer1_ui8(replyBuffer, &replyIOResult);
+					error = TRKReadBuffer1_ui8(replyBuffer, (u8*)&replyIOResult);
 
 				if (error == DS_NoError)
 					error = TRKReadBuffer1_ui16(replyBuffer, &replyLength);
@@ -71,8 +71,8 @@ DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
 				if (read && error == DS_NoError) {
 					if (replyBuffer->length != replyLength + 5) {
 						replyLength = replyBuffer->length - 5;
-						if (replyIOResult == 0)
-							replyIOResult = 1;
+						if (replyIOResult == DS_IONoError)
+							replyIOResult = DS_IOError;
 					}
 
 					if (replyLength <= length)
@@ -81,13 +81,13 @@ DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
 				}
 
 				if (replyLength != length) {
-					if ((!read || replyLength >= length) && replyIOResult == 0)
-						replyIOResult = 1;
+					if ((!read || replyLength >= length) && replyIOResult == DS_IONoError)
+						replyIOResult = DS_IOError;
 					length = replyLength;
 					exit   = TRUE;
 				}
 
-				*io_result = (DSIOResult)replyIOResult;
+				*io_result = replyIOResult;
 				TRKReleaseBuffer(replyBufferId);
 			} else {
 				error = TRKMessageSend((TRK_Msg*)buffer);
