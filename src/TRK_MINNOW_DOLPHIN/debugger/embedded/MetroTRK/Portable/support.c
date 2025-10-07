@@ -28,7 +28,8 @@ DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
 	*io_result = DS_IONoError;
 	done       = 0;
 	error      = DS_NoError;
-	while (!exit && done < *count && error == DS_NoError && *io_result == DS_IONoError) {
+	while (!exit && done < *count && error == DS_NoError
+	       && *io_result == DS_IONoError) {
 		if (*count - done > 0x800) {
 			length = 0x800;
 		} else {
@@ -63,7 +64,8 @@ DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
 				}
 
 				if (error == DS_NoError)
-					error = TRKReadBuffer1_ui8(replyBuffer, (u8*)&replyIOResult);
+					error
+					    = TRKReadBuffer1_ui8(replyBuffer, (u8*)&replyIOResult);
 
 				if (error == DS_NoError)
 					error = TRKReadBuffer1_ui16(replyBuffer, &replyLength);
@@ -81,7 +83,8 @@ DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
 				}
 
 				if (replyLength != length) {
-					if ((!read || replyLength >= length) && replyIOResult == DS_IONoError)
+					if ((!read || replyLength >= length)
+					    && replyIOResult == DS_IONoError)
 						replyIOResult = DS_IOError;
 					length = replyLength;
 					exit   = TRUE;
