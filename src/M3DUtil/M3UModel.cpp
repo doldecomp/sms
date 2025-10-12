@@ -5,7 +5,15 @@
 
 void M3UModelCommon::getMtxCalc(const M3UMtxCalcSetInfo&) { }
 
-void M3UModel::changeMtxCalcAnmTransform(int param_1, u8 param_2) { }
+void M3UModel::changeMtxCalcAnmTransform(int param_1, u8 param_2)
+{
+	u8* ptr = unk14 + param_1 * 6;
+	ptr[4]  = param_2;
+
+	J3DFrameCtrl& ctrl = unkC[ptr[5]];
+	ctrl.mEndFrame     = unk4->unk4[param_2]->getFrameMax();
+	ctrl.mCurrentFrame = 0.0f;
+}
 
 void M3UModel::changeAnmTexPattern(int param_1, u8 param_2)
 {
