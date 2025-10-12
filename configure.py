@@ -801,7 +801,7 @@ config.libs = [
             Object(Matching, "MarioUtil/GDUtil.cpp"),
             Object(Matching, "MarioUtil/TexUtil.cpp"),
             Object(Matching, "MarioUtil/MapUtil.cpp"),
-            Object(NonMatching, "MarioUtil/ToolData.cpp"),
+            Object(Matching, "MarioUtil/ToolData.cpp"),
         ],
     },
     {
