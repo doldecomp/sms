@@ -808,6 +808,7 @@ config.libs = [
         "lib": "M3DUtil",
         "mw_version": "GC/1.2.5",
         "cflags": [*cflags_system, "-inline deferred"],
+        "progress_category": "game",
         "objects": [
             Object(NonMatching, "M3DUtil/M3UJoint.cpp"),
             Object(NonMatching, "M3DUtil/M3UModel.cpp"),
@@ -826,6 +827,7 @@ config.libs = [
         "lib": "System",
         "mw_version": "GC/1.2.5",
         "cflags": cflags_system,
+        "progress_category": "game",
         "objects": [
             Object(Matching, "System/BaseParam.cpp"),
             Object(NonMatching, "System/EmitterViewObj.cpp"),
