@@ -2,8 +2,6 @@
 // point = sizeof(Frame)
 // static_assert(sizeof(Frame) == sizeof(Power))
 
-// also some of these are marked as static and some arent wtf????
-
 // struct RumbleData_t {
 // 	int* point;
 // 	int* frame;

@@ -24,7 +24,6 @@ public:
 
 	inline bool dataExists() const { return !!mData; }
 
-private:
 // JMAP value types, ignored in sunshine
 #define JMAP_VALUE_TYPE_LONG       0
 #define JMAP_VALUE_TYPE_STRING     1
@@ -50,6 +49,7 @@ private:
 		u32 mEntrySize;          // 0xC
 		const JMapItem mItems[]; // 0x10
 	};
+private:
 
 	inline u32 hashString(const char* key) const
 	{
