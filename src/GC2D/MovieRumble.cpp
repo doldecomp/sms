@@ -22,12 +22,29 @@ void TMovieRumble::init(const char* subtitleName)
 	void* glbResource    = JKRFileLoader::getGlbResource(szSubtitlePath);
 	toolData->Attach(glbResource);
 
-	if (toolData->dataExists())
-		entryIndex = 0;
-	else
+	if (toolData->dataExists() == FALSE)
 		entryIndex = -1;
+	else
+		entryIndex = 0;
 
-	updateRumbleState(toolData, 0);
+	const char* rumbleTypeString;
+
+	Koga::ToolData* pData  = toolData;
+	s32 nextEntryIndex     = entryIndex;
+	bool dataAndIndexValid = (pData != nullptr) && (nextEntryIndex >= 0);
+
+	// this if statement feels wrong
+	if (dataAndIndexValid && (nextEntryIndex < pData->mData->mNumEntries)) {
+		// get this rumble entry's data, and update this instance
+		pData->GetValue(nextEntryIndex, "start_frame", startFrame);
+		pData->GetValue(nextEntryIndex, "end_frame", endFrame);
+		pData->GetValue(nextEntryIndex, "type", rumbleTypeString);
+		rumbleTypeIndex = RumbleType::getIndex((char*)rumbleTypeString);
+	} else {
+		rumbleTypeIndex = -1;
+	}
+
+	isRumbleActive = false;
 }
 
 void TMovieRumble::perform(u32 flags, JDrama::TGraphics* graphics)
@@ -52,7 +69,26 @@ void TMovieRumble::checkRumbleOff()
 		if (endFrame <= thpRenderer->frameNumber) {
 			SMSRumbleMgr->stop();
 			entryIndex++;
-			updateRumbleState(toolData, 0);
+			const char* rumbleTypeString;
+
+			Koga::ToolData* pData = toolData;
+			s32 nextEntryIndex    = entryIndex;
+			bool dataAndIndexValid
+			    = (pData != nullptr) && (nextEntryIndex >= 0);
+
+			// this if statement feels wrong
+			if (dataAndIndexValid
+			    && (nextEntryIndex < pData->mData->mNumEntries)) {
+				// get this rumble entry's data, and update this instance
+				pData->GetValue(nextEntryIndex, "start_frame", startFrame);
+				pData->GetValue(nextEntryIndex, "end_frame", endFrame);
+				pData->GetValue(nextEntryIndex, "type", rumbleTypeString);
+				rumbleTypeIndex = RumbleType::getIndex((char*)rumbleTypeString);
+			} else {
+				rumbleTypeIndex = -1;
+			}
+
+			isRumbleActive = false;
 		}
 	}
 }

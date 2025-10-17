@@ -14,37 +14,14 @@ public:
 	virtual void perform(u32 flags, JDrama::TGraphics* graphics);
 	void checkRumbleOff();
 
-private:
-	inline void updateRumbleState(Koga::ToolData* bcsvData, s32 entryOffset)
-	{
-		const char* rumbleTypeString;
-
-		int nextEntryIndex     = entryIndex + entryOffset;
-		bool dataAndIndexValid = (bcsvData != nullptr) && (nextEntryIndex >= 0);
-
-		// this if statement feels wrong
-		if (dataAndIndexValid
-		    && (nextEntryIndex < bcsvData->mData->mNumEntries)) {
-			// get this rumble entry's data, and update this instance
-			bcsvData->GetValue(nextEntryIndex, "start_frame", startFrame);
-			bcsvData->GetValue(nextEntryIndex, "end_frame", endFrame);
-			bcsvData->GetValue(nextEntryIndex, "type", rumbleTypeString);
-			rumbleTypeIndex = RumbleType::getIndex((char*)rumbleTypeString);
-		} else {
-			rumbleTypeIndex = -1;
-		}
-
-		isRumbleActive = false;
-	}
-
 public:
 	const TTHPRender* thpRenderer;
 	Koga::ToolData* toolData; // this is supposedly the only usage of tooldata
 	                          // in the entire game lmao
-	int entryIndex;
-	int startFrame;
-	int endFrame;
-	int rumbleTypeIndex;
+	s32 entryIndex;
+	s32 startFrame;
+	s32 endFrame;
+	s32 rumbleTypeIndex;
 	bool isRumbleActive;
 };
 
