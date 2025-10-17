@@ -49,8 +49,8 @@ public:
 		u32 mEntrySize;          // 0xC
 		const JMapItem mItems[]; // 0x10
 	};
-private:
 
+private:
 	inline u32 hashString(const char* key) const
 	{
 		u32 stringHash = 0;
