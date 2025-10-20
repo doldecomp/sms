@@ -3,13 +3,13 @@
 
 void TBathtub::loadAfter() { }
 
-void TBathtub::hipdrop(const JGeometry::TVec3<float>&) { }
+void TBathtub::hipdrop(const JGeometry::TVec3<f32>&) { }
 
-void TBathtub::quake(const JGeometry::TVec3<float>&) { }
+void TBathtub::quake(const JGeometry::TVec3<f32>&) { }
 
 u8 TBathtub::getNumGripsDead() const { return 0; }
 
-void TBathtub::tumble(float, float) { }
+void TBathtub::tumble(f32, f32) { }
 
 MtxPtr TBathtub::getTakingMtx() { return nullptr; }
 
@@ -23,7 +23,7 @@ BOOL TBathtub::receiveMessage(THitActor* sender, u32 message) { return false; }
 
 Mtx* TBathtub::getRootJointMtx() const { return nullptr; }
 
-void TBathtub::perform(unsigned long, JDrama::TGraphics*) { }
+void TBathtub::perform(u32, JDrama::TGraphics*) { }
 
 void TBathtub::control() { }
 
@@ -39,21 +39,21 @@ bool TBathtub::allowsTumble() const { return false; }
 
 void TBathtub::calcRootMatrix() { }
 
-bool TBathtub::getNearGrip(const JGeometry::TVec3<float>&, float, float*) const
+bool TBathtub::getNearGrip(const JGeometry::TVec3<f32>&, f32, f32*) const
 {
 	return false;
 }
 
-u8 TBathtub::getNextJuncture(const JGeometry::TVec3<float>&,
-                             const JGeometry::TVec3<float>&) const
+u8 TBathtub::getNextJuncture(const JGeometry::TVec3<f32>&,
+                             const JGeometry::TVec3<f32>&) const
 {
 	return 0;
 }
 
-bool TBathtub::getNextGrip(const JGeometry::TVec3<float>&,
-                           const JGeometry::TVec3<float>&, float, float*) const
+u8 TBathtub::getNextGrip(const JGeometry::TVec3<f32>&,
+                           const JGeometry::TVec3<f32>&, f32, f32*) const
 {
-	return false;
+	return 0;
 }
 
 void TBathtub::updatePosture_() { }
@@ -78,16 +78,16 @@ bool TBathtub::isBreaking() const { return false; }
 bool TBathtub::isKillerLaunchable() const { return false; }
 
 // Unused
-void TBathtub::showMessage(unsigned long) { }
+void TBathtub::showMessage(u32) { }
 
 // Unused
-u8 TBathtub::getNearJuncture(const JGeometry::TVec3<float>&) const { return 0; }
+u8 TBathtub::getNearJuncture(const JGeometry::TVec3<f32>&) const { return 0; }
 
 // Unused
 MtxPtr TBathtub::getKoopaMtxInDemo() { return nullptr; }
 
 // Unused
-MtxPtr TBathtub::getWaterMtx(int) { return nullptr; }
+MtxPtr TBathtub::getWaterMtx(s32) { return nullptr; }
 
 // Unused
 MtxPtr TBathtub::getShineEffectMtx() { return nullptr; }
@@ -96,9 +96,9 @@ MtxPtr TBathtub::getShineEffectMtx() { return nullptr; }
 MtxPtr TBathtub::getShineMtx() { return nullptr; }
 
 // Unused
-void TBathtub::liftMario(const JGeometry::TVec3<float>&) { }
+void TBathtub::liftMario(const JGeometry::TVec3<f32>&) { }
 
 // Unused
-void TBathtub::trample(const JGeometry::TVec3<float>&) { }
+void TBathtub::trample(const JGeometry::TVec3<f32>&) { }
 
 TBathtub::~TBathtub() { }
