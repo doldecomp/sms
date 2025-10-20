@@ -4,6 +4,8 @@
 #include <Strategic/HitActor.hpp>
 #include <JSystem/JMath.hpp>
 
+static void draw_mist(u16 x, u16 y, u16 wd, u16 ht, void* buffer);
+
 class TBathtubData {
 public:
 	void getGravityDir(f32) const;
