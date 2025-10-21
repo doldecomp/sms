@@ -3,7 +3,7 @@
 #include <dolphin/mtx.h>
 #include <dolphin/gx.h>
 
-void draw_mist(u16 x, u16 y, u16 wd, u16 ht, void* buffer)
+static void draw_mist(u16 x, u16 y, u16 wd, u16 ht, void* buffer)
 {
 	Mtx e_m;
 	Mtx44 m;

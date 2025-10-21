@@ -4,8 +4,6 @@
 #include <Strategic/HitActor.hpp>
 #include <JSystem/JMath.hpp>
 
-static void draw_mist(u16 x, u16 y, u16 wd, u16 ht, void* buffer);
-
 class TBathtubData {
 public:
 	void getGravityDir(f32) const;
@@ -89,7 +87,7 @@ public:
 	void wave(JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>&, f32, f32) const;
 	void initializeIfYet_();
 	void preprocess(JDrama::TGraphics*);
-	void getWaterHeight(f32, f32) const;
+	f32 getWaterHeight(f32, f32) const;
 	void throwMario(f32);
 
 public:
