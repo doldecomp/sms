@@ -87,7 +87,7 @@ public:
 	void wave(JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>&, f32, f32) const;
 	void initializeIfYet_();
 	void preprocess(JDrama::TGraphics*);
-	void getWaterHeight(f32, f32) const;
+	f32 getWaterHeight(f32, f32) const;
 	void throwMario(f32);
 
 public:
