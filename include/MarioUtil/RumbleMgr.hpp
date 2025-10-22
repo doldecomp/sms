@@ -2,19 +2,22 @@
 #define MARIO_UTIL_RUMBLE_MGR_HPP
 
 #include <dolphin/mtx.h>
+#include <dolphin/pad.h>
+#include <JSystem/JGeometry.hpp>
 
-class RumbleBase {
-public:
-	void init();
-	void stop();
-	void update(f32, bool);
+#define MAX_RUMBLE_ID (25)
+#define MAX_RUMBLE_CHANNELS (32)
+
+struct RumbleChannelData {
+	int* point;
+	float* frame;
+	float* power;
 };
 
-class RumbleChannelDataMgr {
-public:
-	void init();
-	void getChannelDataTbl(int);
-};
+extern const RumbleChannelData channelDataTbl[];
+extern int channelNum;
+
+// RumbleMgr
 
 class RumbleChannelMgr {
 public:
