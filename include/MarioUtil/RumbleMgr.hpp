@@ -40,10 +40,10 @@ public:
 	void reset();
 	void start(int channelId, int loopCount, float* externalDampenPtr);
 	void start(int channelId, int loopCount, Vec* positionalSourcePtr);
-	void stop(int);
+	void stop(int channelId);
 	void channelMgrIsAllFree();
 	void updateMotorCount();
-	void update();
+	f32 update();
 
 public:
 	f32 currentPower;           // 0x00
@@ -97,6 +97,7 @@ public:
 	RumbleControllerMgr* m_controllerManagers[4]; // 0x1C
 	const int*** m_rumbleOutput;                  // 0x2C
 
+public:
 	static u32 mMotorCountLimit;
 	static u16 mMotorTimerPeriod;
 	static f32 mPowerThreshold;

@@ -1,3 +1,4 @@
+#include "dolphin/types.h"
 #include <types.h>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/RumbleType.hpp>
@@ -72,13 +73,11 @@ f32 RumbleChannelMgr::update()
 
 void RumbleControllerMgr::reset()
 {
-	this->currentPower = 0.0f;
-	this->unkC         = 0;
-	this->motorTime    = 0;
-	this->unk12        = false;
+	currentPower = 0.0f;
 
-	for (s32 i = 0; i < MAX_RUMBLE_CHANNELS; i++) {
-		RumbleChannelMgr* channel     = &this->channels[i];
+	// @FIXME: registers arent being assigned correctly during the unroll
+	for (u32 i = 0; i < MAX_RUMBLE_CHANNELS; ++i) {
+		RumbleChannelMgr* channel     = &channels[i];
 		channel->mElapsedTime         = 0.0f;
 		channel->mCurrentIntensity    = 0.0f;
 		channel->mChannelID           = -1;
@@ -87,8 +86,13 @@ void RumbleControllerMgr::reset()
 		channel->mPositionalSourcePtr = 0;
 		channel->rumbleData           = 0;
 	}
+
+	unkC      = 0;
+	motorTime = 0;
+	unk12     = false;
 }
 
+#pragma dont_inline on
 void RumbleControllerMgr::start(int channelId, int loopCount,
                                 float* externalDampenPtr)
 {
@@ -123,71 +127,22 @@ void RumbleControllerMgr::start(int channelId, int loopCount,
 	}
 }
 
-void RumbleControllerMgr::stop(int arg0)
+void RumbleControllerMgr::stop(int channelId)
 {
-
-#if 0
-	s32 temp_r5;
-	s32 temp_r5_2;
-	s32 temp_r5_3;
-	s32 var_ctr;
-	s32 var_r5;
-	RumbleControllerMgr* temp_r11;
-	RumbleControllerMgr* temp_r11_2;
-	RumbleControllerMgr* temp_r11_3;
-	RumbleControllerMgr* temp_r11_4;
-
-	var_r5  = 0;
-	var_ctr = 8;
-	do {
-		temp_r11 = (RumbleControllerMgr*)(this->channels + var_r5);
-		if (((u32)temp_r11->unk18 != 0U) && (arg0 == (s32)temp_r11->unk8)) {
-			temp_r11->unk0  = 0.0f;
-			temp_r11->unk4  = 0.0f;
-			temp_r11->unk8  = -1;
-			temp_r11->unkC  = 0;
-			temp_r11->unk10 = 0;
-			temp_r11->unk14 = 0;
-			temp_r11->unk18 = 0U;
+	for (u32 i = 0; i < MAX_RUMBLE_CHANNELS; ++i) {
+		RumbleChannelMgr* channel = &channels[i];
+		if (channel->rumbleData && channelId == channel->mChannelID) {
+			channel->mElapsedTime         = 0.0f;
+			channel->mCurrentIntensity    = 0.0f;
+			channel->mChannelID           = -1;
+			channel->mLoopCount           = 0;
+			channel->mExternalDampenPtr   = 0;
+			channel->mPositionalSourcePtr = 0;
+			channel->rumbleData           = 0;
 		}
-		temp_r5    = var_r5 + 0x20;
-		temp_r11_2 = (RumbleControllerMgr*)(this->channels + temp_r5);
-		if (((u32)temp_r11_2->unk18 != 0U) && (arg0 == (s32)temp_r11_2->unk8)) {
-			temp_r11_2->unk0  = 0.0f;
-			temp_r11_2->unk4  = 0.0f;
-			temp_r11_2->unk8  = -1;
-			temp_r11_2->unkC  = 0;
-			temp_r11_2->unk10 = 0;
-			temp_r11_2->unk14 = 0;
-			temp_r11_2->unk18 = 0U;
-		}
-		temp_r5_2  = temp_r5 + 0x20;
-		temp_r11_3 = (RumbleControllerMgr*)(this->channels + temp_r5_2);
-		if (((u32)temp_r11_3->unk18 != 0U) && (arg0 == (s32)temp_r11_3->unk8)) {
-			temp_r11_3->unk0  = 0.0f;
-			temp_r11_3->unk4  = 0.0f;
-			temp_r11_3->unk8  = -1;
-			temp_r11_3->unkC  = 0;
-			temp_r11_3->unk10 = 0;
-			temp_r11_3->unk14 = 0;
-			temp_r11_3->unk18 = 0U;
-		}
-		temp_r5_3  = temp_r5_2 + 0x20;
-		temp_r11_4 = (RumbleControllerMgr*)(this->channels + temp_r5_3);
-		if (((u32)temp_r11_4->unk18 != 0U) && (arg0 == (s32)temp_r11_4->unk8)) {
-			temp_r11_4->unk0  = 0.0f;
-			temp_r11_4->unk4  = 0.0f;
-			temp_r11_4->unk8  = -1;
-			temp_r11_4->unkC  = 0;
-			temp_r11_4->unk10 = 0;
-			temp_r11_4->unk14 = 0;
-			temp_r11_4->unk18 = 0U;
-		}
-		var_r5 = temp_r5_3 + 0x20;
-		var_ctr -= 1;
-	} while (var_ctr != 0);
-#endif
+	}
 }
+#pragma dont_inline off
 
 void RumbleControllerMgr::updateMotorCount()
 {
@@ -217,10 +172,46 @@ void RumbleControllerMgr::updateMotorCount()
 	unkC = 0U;
 }
 
-void RumbleControllerMgr::update()
+f32 RumbleControllerMgr::update()
 {
-	// RumbleChannelMgr::update();
-	RumbleMgr::mPowerThreshold;
+	RumbleChannelMgr* temp_r3;
+	f32 temp_f0;
+	f32 temp_f1;
+	f32 var_f31;
+	s32 var_r30;
+	s32 var_r31;
+
+	var_r31 = 0;
+	var_r30 = 0;
+	var_f31 = 0.0f;
+	do {
+		temp_r3 = this->channels + var_r31;
+		if (temp_r3->rumbleData != 0) {
+			this->currentPower = temp_r3->update();
+			temp_f0            = this->currentPower;
+			if (temp_f0 > var_f31) {
+				var_f31 = temp_f0;
+			}
+		}
+		var_r30 += 1;
+		var_r31 += 0x20;
+	} while (var_r30 < 0x20);
+
+	currentPower = var_f31;
+	temp_f1      = currentPower;
+	if (temp_f1 > 1.0f) {
+		currentPower = 1.0f;
+	} else if (temp_f1 < 0.0f) {
+		currentPower = 0.0f;
+	}
+
+	if (currentPower > RumbleMgr::mPowerThreshold) {
+		motorTime = RumbleMgr::mPowerThreshold;
+	}
+	if (unk12 != false) {
+		currentPower = 0.0f;
+	}
+	return currentPower;
 }
 
 RumbleMgr::RumbleMgr(bool bController1Avail, bool bController2Avail,
@@ -268,33 +259,44 @@ void RumbleMgr::reset() { PADControlMotor(0, 0); }
 
 void RumbleMgr::start(int a2, float* a3)
 {
+	int index = 0;
+
 	if (!this->m_flags && this->m_isInitialized) {
-		if (this->m_controllerManagers[0])
-			this->m_controllerManagers[0]->start(a2, 1, a3);
+		if (this->m_controllerManagers[index]) {
+			this->m_controllerManagers[index]->start(a2, 1, a3);
+		}
 	}
 }
 
 void RumbleMgr::start(int a2, Vec* a3)
 {
+	int index = 0;
+
 	if (!this->m_flags && this->m_isInitialized) {
-		if (this->m_controllerManagers[0])
-			this->m_controllerManagers[0]->start(a2, 1, a3);
+		if (this->m_controllerManagers[index]) {
+			this->m_controllerManagers[index]->start(a2, 1, a3);
+		}
 	}
 }
 
 void RumbleMgr::start(int arg0, int arg1, f32* arg2)
 {
+	int index = 0;
+
 	if (!this->m_flags && this->m_isInitialized) {
-		if (this->m_controllerManagers[0])
-			this->m_controllerManagers[0]->start(arg0, arg1, arg2);
+		if (this->m_controllerManagers[index]) {
+			this->m_controllerManagers[index]->start(arg0, arg1, arg2);
+		}
 	}
 }
 
 void RumbleMgr::start(int a2, int a3, Vec* a4)
 {
+	int index = 0;
+
 	if (!this->m_flags && this->m_isInitialized) {
-		if (this->m_controllerManagers[0]) {
-			this->m_controllerManagers[0]->start(a2, a3, a4);
+		if (this->m_controllerManagers[index]) {
+			this->m_controllerManagers[index]->start(a2, a3, a4);
 		}
 	}
 }
@@ -303,17 +305,21 @@ void RumbleMgr::stop() { }
 
 void RumbleMgr::stop(int arg0)
 {
-	if ((this->m_flags == false) && (this->m_isInitialized != false)
-	    && this->m_controllerManagers[0] != 0) {
-		this->m_controllerManagers[0]->stop(arg0);
+	int index = 0;
+
+	if (!this->m_flags && this->m_isInitialized) {
+		if (this->m_controllerManagers[index]) {
+			this->m_controllerManagers[index]->stop(arg0);
+		}
 	}
 }
 
 void RumbleMgr::update()
 {
-	s32 a = mPowerThreshold;
-	s32 b = mMotorTimerPeriod;
-	s32 c = a * b;
+	f32 fuck = SMSGetVSyncTimesPerSec();
+	s32 a    = fuck * mPowerThreshold;
+	s32 b    = mMotorTimerPeriod;
+	s32 c    = a * b;
 	// unk0  = c;
 }
 
