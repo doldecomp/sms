@@ -1,3 +1,4 @@
+#include <types.h>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/RumbleType.hpp>
 #include <System/Application.hpp>
@@ -15,8 +16,8 @@ RumbleChannelMgr::RumbleChannelMgr()
 	mCurrentIntensity    = 0.0f;
 	mChannelID           = -1;
 	mLoopCount           = 0;
-	mExternalDampenPtr   = nullptr;
-	mPositionalSourcePtr = nullptr;
+	mExternalDampenPtr   = 0;
+	mPositionalSourcePtr = 0;
 	rumbleData           = 0;
 }
 
