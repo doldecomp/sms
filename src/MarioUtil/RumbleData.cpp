@@ -1,7 +1,5 @@
 #include <MarioUtil/RumbleMgr.hpp>
 
-#define MAX_RUMBLE_ID (25)
-
 static int rumblePoint_00     = 11;
 static float rumbleFrame_00[] = {
 	0.0f, 0.05f, 0.1f, 0.15f, 0.2f, 0.25f, 0.25f, 0.33f, 0.4f, 0.5f, 0.6f,

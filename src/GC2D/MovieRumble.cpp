@@ -15,7 +15,7 @@ void TMovieRumble::init(const char* subtitleName)
 	char szSubtitlePath[128];
 	sprintf(szSubtitlePath, "/subtitle/rnbl/%s", subtitleName);
 	szSubtitlePathExtension = (char*)strrchr(szSubtitlePath, 46);
-	strcpy(szSubtitlePathExtension, ".bcr");
+	char* result            = strcpy(szSubtitlePathExtension, ".bcr");
 
 	Koga::ToolData* data = new Koga::ToolData;
 	toolData             = data;
@@ -27,22 +27,10 @@ void TMovieRumble::init(const char* subtitleName)
 	else
 		entryIndex = 0;
 
-	const char* rumbleTypeString;
+	Koga::ToolData* pData = toolData;
+	s32 nextEntryIndex    = entryIndex;
 
-	Koga::ToolData* pData  = toolData;
-	s32 nextEntryIndex     = entryIndex;
-	bool dataAndIndexValid = (pData != nullptr) && (nextEntryIndex >= 0);
-
-	// this if statement feels wrong
-	if (dataAndIndexValid && (nextEntryIndex < pData->mData->mNumEntries)) {
-		// get this rumble entry's data, and update this instance
-		pData->GetValue(nextEntryIndex, "start_frame", startFrame);
-		pData->GetValue(nextEntryIndex, "end_frame", endFrame);
-		pData->GetValue(nextEntryIndex, "type", rumbleTypeString);
-		rumbleTypeIndex = RumbleType::getIndex((char*)rumbleTypeString);
-	} else {
-		rumbleTypeIndex = -1;
-	}
+	updateRumbleState(pData, nextEntryIndex);
 
 	isRumbleActive = false;
 }
@@ -69,25 +57,10 @@ void TMovieRumble::checkRumbleOff()
 		if (endFrame <= thpRenderer->frameNumber) {
 			SMSRumbleMgr->stop();
 			entryIndex++;
-			const char* rumbleTypeString;
 
 			Koga::ToolData* pData = toolData;
 			s32 nextEntryIndex    = entryIndex;
-			bool dataAndIndexValid
-			    = (pData != nullptr) && (nextEntryIndex >= 0);
-
-			// this if statement feels wrong
-			if (dataAndIndexValid
-			    && (nextEntryIndex < pData->mData->mNumEntries)) {
-				// get this rumble entry's data, and update this instance
-				pData->GetValue(nextEntryIndex, "start_frame", startFrame);
-				pData->GetValue(nextEntryIndex, "end_frame", endFrame);
-				pData->GetValue(nextEntryIndex, "type", rumbleTypeString);
-				rumbleTypeIndex = RumbleType::getIndex((char*)rumbleTypeString);
-			} else {
-				rumbleTypeIndex = -1;
-			}
-
+			updateRumbleState(pData, nextEntryIndex);
 			isRumbleActive = false;
 		}
 	}

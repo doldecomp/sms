@@ -23,6 +23,24 @@ public:
 	s32 endFrame;
 	s32 rumbleTypeIndex;
 	bool isRumbleActive;
+
+private:
+	inline void updateRumbleState(Koga::ToolData* toolData, s32 entryIndex)
+	{
+		const char* rumbleTypeString;
+		s32 theEntryIndex = entryIndex;
+		bool isDataValid  = (toolData != nullptr) && (theEntryIndex >= 0);
+
+		if (isDataValid && toolData->isIndexValid(theEntryIndex)) {
+			// get this rumble entry's data, and update this instance
+			toolData->GetValue(theEntryIndex, "start_frame", startFrame);
+			toolData->GetValue(theEntryIndex, "end_frame", endFrame);
+			toolData->GetValue(theEntryIndex, "type", rumbleTypeString);
+			rumbleTypeIndex = RumbleType::getIndex((char*)rumbleTypeString);
+		} else {
+			rumbleTypeIndex = -1;
+		}
+	}
 };
 
 #endif // GC2D_MOVIE_RUMBLE_HPP
