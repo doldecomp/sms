@@ -24,6 +24,11 @@ public:
 
 	inline bool dataExists() const { return !!mData; }
 
+	inline bool isIndexValid(s32 entryIndex)
+	{
+		return entryIndex < mData->mNumEntries;
+	}
+
 // JMAP value types, ignored in sunshine
 #define JMAP_VALUE_TYPE_LONG       0
 #define JMAP_VALUE_TYPE_STRING     1
