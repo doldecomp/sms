@@ -51,7 +51,7 @@ u8 TBathtub::getNextJuncture(const JGeometry::TVec3<f32>&,
 }
 
 u8 TBathtub::getNextGrip(const JGeometry::TVec3<f32>&,
-                           const JGeometry::TVec3<f32>&, f32, f32*) const
+                         const JGeometry::TVec3<f32>&, f32, f32*) const
 {
 	return 0;
 }

@@ -30,21 +30,21 @@ public:
 	bool getNearGrip(const JGeometry::TVec3<f32>&, f32, f32*) const;
 	u8 getNextJuncture(const JGeometry::TVec3<f32>&,
 	                   const JGeometry::TVec3<f32>&) const;
-	u8 getNextGrip(const JGeometry::TVec3<f32>&,
-	                 const JGeometry::TVec3<f32>&, f32, f32*) const;
+	u8 getNextGrip(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&,
+	               f32, f32*) const;
 	void updatePosture_();
 	void load(JSUMemoryInputStream&);
 	u8 getNumKillerLaunchable() const;
 	bool isKillerAttackable() const;
 	u8 getNumKillerBurstable() const;
-	bool isBreaking() const;                                  // Unused
-	bool isKillerLaunchable() const;                          // Unused
-	void showMessage(u32);                          // Unused
+	bool isBreaking() const;                                // Unused
+	bool isKillerLaunchable() const;                        // Unused
+	void showMessage(u32);                                  // Unused
 	u8 getNearJuncture(const JGeometry::TVec3<f32>&) const; // Unused
-	MtxPtr getKoopaMtxInDemo();                               // Unused
-	MtxPtr getWaterMtx(s32);                                  // Unused
-	MtxPtr getShineEffectMtx();                               // Unused
-	MtxPtr getShineMtx();                                     // Unused
+	MtxPtr getKoopaMtxInDemo();                             // Unused
+	MtxPtr getWaterMtx(s32);                                // Unused
+	MtxPtr getShineEffectMtx();                             // Unused
+	MtxPtr getShineMtx();                                   // Unused
 	void liftMario(const JGeometry::TVec3<f32>&);           // Unused
 	void trample(const JGeometry::TVec3<f32>&);             // Unused
 
