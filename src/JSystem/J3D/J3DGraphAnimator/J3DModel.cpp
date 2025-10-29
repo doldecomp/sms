@@ -473,16 +473,16 @@ J3DModel::~J3DModel() { }
 void J3DModel::initialize()
 {
 
-	unkC        = nullptr;
-	unk8        = 0;
-	mModelData  = nullptr;
-	mDeformData = 0;
-	mSkinDeform = nullptr;
-	unk14.x     = 1.0;
-	unk14.y     = 1.0;
-	unk14.z     = 1.0;
+	unkC         = nullptr;
+	unk8         = 0;
+	mModelData   = nullptr;
+	mDeformData  = 0;
+	mSkinDeform  = nullptr;
+	mBaseScale.x = 1.0;
+	mBaseScale.y = 1.0;
+	mBaseScale.z = 1.0;
 
-	MTXIdentity(unk20);
+	MTXIdentity(mBaseMtx);
 
 	mScaleFlagArr     = nullptr;
 	mEvlpScaleFlagArr = nullptr;
@@ -688,7 +688,7 @@ void J3DModel::update()
 	// TODO: missing unknown virtual calls
 
 	j3dSys.setCurrentMtxCalc(mModelData->unk14);
-	mModelData->unk14->init(unk14, unk20);
+	mModelData->unk14->init(mBaseScale, mBaseMtx);
 	j3dSys.setTexture(mModelData->getTexture());
 	mModelData->unk14->recursiveCalc(mModelData->mRootNode);
 
@@ -727,7 +727,7 @@ void J3DModel::calc()
 	// TODO: missing unknown virtual calls
 
 	j3dSys.setCurrentMtxCalc(mModelData->unk14);
-	mModelData->unk14->init(unk14, unk20);
+	mModelData->unk14->init(mBaseScale, mBaseMtx);
 	j3dSys.setTexture(mModelData->getTexture());
 	mModelData->unk14->recursiveCalc(mModelData->mRootNode);
 
