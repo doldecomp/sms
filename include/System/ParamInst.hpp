@@ -26,20 +26,30 @@ public:
 
 template <typename T> class TParamRT : public TParamT<T> {
 public:
-	TParamRT(TParams* parent, u16 keycode, const char* name, T defaultValue)
-	    : TParamT<T>(parent, keycode, name, defaultValue)
+	TParamRT(TParams* parent, u16 code, const char* name, T defaultValue)
+	    : TParamT<T>(parent, code, name, defaultValue)
 	{
 	}
 
-	inline void set(T param) {};
+	inline void set(T param) { value = param; };
+
+	// Fabricated
+	TParamRT<T>& operator=(const TParamRT<T>& other)
+	{
+		this->keyCode = other.keyCode;
+		this->name    = other.name;
+		this->next    = other.next;
+		this->value   = other.value;
+		return *this;
+	}
 };
 
 class TParamVec : public TParamT<JGeometry::TVec3<f32> > {
 public:
 	// fabricated AND wrong
-	TParamVec(TParams* parent, u16 keycode, const char* name,
+	TParamVec(TParams* parent, u16 code, const char* name,
 	          JGeometry::TVec3<f32> defaultValue)
-	    : TParamT<JGeometry::TVec3<f32> >(parent, keycode, name, defaultValue)
+	    : TParamT<JGeometry::TVec3<f32> >(parent, code, name, defaultValue)
 	{
 	}
 };

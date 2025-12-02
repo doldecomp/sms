@@ -22,6 +22,8 @@ class MActorAnmBlk;
 
 class MActor {
 public:
+	enum AnimationType { BCK, BLK, BPK, BTP, BTK, BRK };
+
 	MActor(MActorAnmData*);
 
 	void setMActorAnmData(MActorAnmData*);
