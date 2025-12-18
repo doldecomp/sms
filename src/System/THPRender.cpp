@@ -1,5 +1,7 @@
 #include <System/THPRender.hpp>
 
+TTHPRender::~TTHPRender() {}
+
 void TTHPRender::perform(u32 flags, JDrama::TGraphics* gfx)
 {
 	if ((flags & 8)) {
