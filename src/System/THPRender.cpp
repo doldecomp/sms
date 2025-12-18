@@ -1,6 +1,6 @@
 #include <System/THPRender.hpp>
 
-TTHPRender::~TTHPRender() {}
+TTHPRender::~TTHPRender() { }
 
 void TTHPRender::perform(u32 flags, JDrama::TGraphics* gfx)
 {
