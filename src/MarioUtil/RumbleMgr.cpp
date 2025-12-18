@@ -1,9 +1,9 @@
 #include "dolphin/types.h"
-#include <types.h>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/RumbleType.hpp>
-#include <System/Application.hpp>
 #include <Player/MarioAccess.hpp>
+#include <System/Application.hpp>
+#include <types.h>
 
 RumbleMgr* SMSRumbleMgr;
 
@@ -26,45 +26,94 @@ f32 RumbleChannelMgr::update()
 {
 	f32 dampenFactor;
 	f32* externalDampenSource = this->mExternalDampenPtr;
-	f32 temp_f31              = 1.0f / SMSGetVSyncTimesPerSec();
+	f32 targetFrameTime       = 1.0f / SMSGetVSyncTimesPerSec();
 	if (externalDampenSource != NULL) {
-		f32 temp_f1;
-		temp_f1      = *externalDampenSource;
-		dampenFactor = temp_f1;
-		if (temp_f1 < 0.0f) {
+		dampenFactor = *mExternalDampenPtr;
+		if (dampenFactor >= 0.0f) {
+			if (dampenFactor > 1.0f)
+				dampenFactor = 1.0f;
+		} else {
 			dampenFactor = 0.0f;
-		} else if (dampenFactor > 1.0f) {
-			dampenFactor = 1.0f;
 		}
 	} else {
 		if (this->mPositionalSourcePtr != NULL) {
-			f32 temp_f2;
-			JGeometry::TVec3<f32> temp;
-			temp.set(SMS_GetMarioPos());
-			temp -= *this->mPositionalSourcePtr;
-			// temp = SMS_GetMarioPos() - *this->mPositionalSourcePtr;
-			f32 distance = temp.length(); // why are you getting inlined :(
-			// dampenFactor = clamp(distance, 0, 1);
+			f32 distance
+			    = (SMS_GetMarioPos() - *this->mPositionalSourcePtr).length();
+			const f32 kScaleFactor = 1.0f / 3000.0f;
+			distance     = -((kScaleFactor * (distance - 300.0f)) - 1.0f);
 			dampenFactor = distance;
-			if (distance < 0.0f) {
+			if (distance >= 0.0f) {
+				if (distance > 1.0f)
+					dampenFactor = 1.0f;
+			} else {
 				dampenFactor = 0.0f;
-			} else if (dampenFactor > 1.0f) {
-				dampenFactor = 1.0f;
 			}
 		} else {
 			dampenFactor = 1.0f;
 		}
 	}
 
-	this->mCurrentIntensity = 0.0;
+	this->mCurrentIntensity = 0.0f;
 	if (!this->mLoopCount) {
-		this->mElapsedTime         = 0.0;
-		this->mCurrentIntensity    = 0.0;
+		this->mElapsedTime         = 0.0f;
+		this->mCurrentIntensity    = 0.0f;
 		this->mChannelID           = -1;
 		this->mLoopCount           = 0;
 		this->mExternalDampenPtr   = 0;
 		this->mPositionalSourcePtr = 0;
 		this->rumbleData           = 0;
+	}
+
+	if (this->rumbleData) {
+		int totalRumblePoints   = 0;
+		int rumblePointIterator = 0;
+		int keyframeIndex       = 0;
+
+		this->mElapsedTime = this->mElapsedTime + targetFrameTime;
+
+		while (true) {
+			totalRumblePoints = *this->rumbleData->point;
+			if (rumblePointIterator >= totalRumblePoints - 1)
+				break;
+			float* currentFrame = this->rumbleData->frame;
+
+			if (this->mElapsedTime > this->rumbleData->frame[keyframeIndex]) {
+				float lerpFactor = 1.0f;
+				if ((this->rumbleData->frame[keyframeIndex + 1]
+				     - this->rumbleData->frame[keyframeIndex])
+				    <= 0.0)
+					lerpFactor = 1.0f;
+				else
+					lerpFactor = ((this->mElapsedTime
+					               - this->rumbleData->frame[keyframeIndex])
+					              / (this->rumbleData->frame[keyframeIndex + 1]
+					                 - this->rumbleData->frame[keyframeIndex]));
+				this->mCurrentIntensity
+				    = ((1.0f - lerpFactor) * rumbleData->power[keyframeIndex])
+				      + (lerpFactor * rumbleData->power[keyframeIndex + 1]);
+			}
+
+			++rumblePointIterator;
+			++keyframeIndex;
+			break;
+		}
+
+		if (this->mElapsedTime > rumbleData->frame[totalRumblePoints - 1]) {
+			if (this->mLoopCount <= 1) {
+				this->mElapsedTime = 0.0f;
+				if (mLoopCount >= 0) {
+					this->mCurrentIntensity    = 0.0f;
+					this->mChannelID           = -1;
+					this->mLoopCount           = 0;
+					this->mExternalDampenPtr   = 0;
+					this->mPositionalSourcePtr = 0;
+					this->rumbleData           = 0;
+				}
+			} else {
+				this->mElapsedTime = 0.0f;
+				--this->mLoopCount;
+			}
+		}
 	}
 
 	this->mCurrentIntensity *= dampenFactor;
@@ -244,18 +293,89 @@ RumbleMgr::RumbleMgr(bool bController1Avail, bool bController2Avail,
 		}
 	}
 
-	int* pOutput = new int;
-	if (pOutput)
+	const RumbleChannelData** pOutput = (const RumbleChannelData**)new int;
+	if (pOutput != nullptr) {
 		*pOutput = 0;
+	}
 
-	this->m_rumbleOutput  = (const int***)pOutput;
+	this->m_rumbleOutput  = pOutput;
 	this->m_isInitialized = TRUE;
 	this->m_flags         = 1;
 }
 
-void RumbleMgr::init() { channelDataTbl; }
+void RumbleMgr::init()
+{
+	this->m_masterIntensityL = 0.0f;
+	this->m_masterIntensityR = 0.0f;
 
-void RumbleMgr::reset() { PADControlMotor(0, 0); }
+	for (int i = 0; i < 4; ++i) {
+		RumbleControllerMgr* pControllerMgr = this->m_controllerManagers[i];
+
+		if (pControllerMgr != nullptr) {
+			pControllerMgr->currentPower = 0.0f;
+			for (int ch = 0; ch < MAX_RUMBLE_CHANNELS; ++ch) {
+				void* unk20               = pControllerMgr->unk8;
+				RumbleChannelMgr& channel = pControllerMgr->channels[ch];
+
+				channel.mElapsedTime         = 0.0f;
+				channel.mCurrentIntensity    = 0.0f;
+				channel.mChannelID           = -1;
+				channel.mLoopCount           = 0;
+				channel.mExternalDampenPtr   = nullptr;
+				channel.mPositionalSourcePtr = nullptr;
+				channel.rumbleData           = nullptr;
+				channel.unk20                = unk20;
+			}
+
+			RumbleControllerState* pState = this->m_controllerStates[i];
+			pState->m_currentIntensityL   = 0.0f;
+			pState->m_currentIntensityR   = 0.0f;
+		}
+	}
+
+	*this->m_rumbleOutput = channelDataTbl;
+	this->m_isInitialized = true;
+
+	this->m_flags = true;
+	this->unkA    = false;
+}
+
+void RumbleMgr::reset()
+{
+	this->m_masterIntensityL = 0.0f;
+	this->m_masterIntensityR = 0.0f;
+
+	for (int i = 0; i < 4; ++i) {
+		RumbleControllerMgr* pMgr = this->m_controllerManagers[i];
+
+		if (pMgr != nullptr) {
+			pMgr->currentPower = 0.0f;
+			for (int ch = 0; ch < MAX_RUMBLE_CHANNELS; ++ch) {
+				RumbleChannelMgr& channel = pMgr->channels[ch];
+
+				channel.mElapsedTime         = 0.0f;
+				channel.mCurrentIntensity    = 0.0f;
+				channel.mChannelID           = -1;
+				channel.mLoopCount           = 0;
+				channel.mExternalDampenPtr   = nullptr;
+				channel.mPositionalSourcePtr = nullptr;
+				channel.rumbleData           = nullptr;
+			}
+
+			pMgr->unkC      = 0;
+			pMgr->motorTime = 0;
+			pMgr->unk12     = false;
+
+			RumbleControllerState* pState = this->m_controllerStates[i];
+			PADControlMotor(pState->m_controllerIndex, PAD_MOTOR_STOP_HARD);
+
+			pState->m_currentIntensityL = 0.0f;
+			pState->m_currentIntensityR = 0.0f;
+		}
+	}
+
+	this->m_flags = false;
+}
 
 void RumbleMgr::start(int a2, float* a3)
 {
@@ -301,7 +421,30 @@ void RumbleMgr::start(int a2, int a3, Vec* a4)
 	}
 }
 
-void RumbleMgr::stop() { }
+void RumbleMgr::stop()
+{
+	for (int controllerPort = 0; controllerPort < 4; controllerPort++) {
+		RumbleControllerMgr* controllerMgr
+		    = this->m_controllerManagers[controllerPort];
+
+		if (controllerMgr != nullptr) {
+			for (int rumbleChannel = 0; rumbleChannel < MAX_RUMBLE_CHANNELS;
+			     rumbleChannel++) {
+				RumbleChannelMgr& channel
+				    = controllerMgr->channels[rumbleChannel];
+				if (channel.rumbleData != nullptr) {
+					channel.mElapsedTime         = 0.0f;
+					channel.mCurrentIntensity    = 0.0f;
+					channel.mChannelID           = -1;
+					channel.mLoopCount           = 0;
+					channel.mExternalDampenPtr   = nullptr;
+					channel.mPositionalSourcePtr = nullptr;
+					channel.rumbleData           = nullptr;
+				}
+			}
+		}
+	}
+}
 
 void RumbleMgr::stop(int arg0)
 {
@@ -316,11 +459,82 @@ void RumbleMgr::stop(int arg0)
 
 void RumbleMgr::update()
 {
-	f32 fuck = SMSGetVSyncTimesPerSec();
-	s32 a    = fuck * mPowerThreshold;
-	s32 b    = mMotorTimerPeriod;
-	s32 c    = a * b;
-	// unk0  = c;
+	float delta = 1.0f / SMSGetVSyncTimesPerSec();
+
+	if (!this->m_flags && this->m_isInitialized) {
+		for (int i = 0; i < 4; ++i) {
+			RumbleControllerMgr* controller = this->m_controllerManagers[i];
+
+			if (controller) {
+				bool isSilent = true;
+				for (int ch = 0; ch < MAX_RUMBLE_CHANNELS; ch++) {
+					RumbleChannelMgr& channel = controller->channels[ch];
+					if (channel.rumbleData != nullptr
+					    || channel.mElapsedTime != 0.0f) {
+						isSilent = false;
+						break;
+					}
+				}
+
+				RumbleControllerState* state = this->m_controllerStates[i];
+
+				if (isSilent) {
+					PADControlMotor(state->m_controllerIndex,
+					                PAD_MOTOR_STOP_HARD);
+					state->m_currentIntensityL = 0.0f;
+					state->m_currentIntensityR = 0.0f;
+				} else {
+					this->m_masterIntensityL = controller->update();
+
+					if (this->m_masterIntensityR > 0.0f) {
+						this->m_masterIntensityL
+						    = this->m_masterIntensityL
+						      * ((1.0f - this->m_masterIntensityL)
+						             * (this->m_masterIntensityR / 0.5f)
+						         + 1.0f);
+					}
+
+					if (this->m_masterIntensityL <= 1.0f) {
+						if (this->m_masterIntensityL < 0.0f) {
+							this->m_masterIntensityL = 0.0f;
+						}
+					} else {
+						this->m_masterIntensityL = 1.0f;
+					}
+
+					state->m_currentIntensityL = this->m_masterIntensityL;
+					state->m_currentIntensityR += state->m_currentIntensityL;
+
+					if (state->m_currentIntensityL > 0.0f) {
+						if (state->m_currentIntensityR >= 1.0f) {
+							state->m_currentIntensityR -= 1.0f;
+							PADControlMotor(state->m_controllerIndex,
+							                PAD_MOTOR_RUMBLE);
+						} else {
+							if (this->unkA)
+								PADControlMotor(state->m_controllerIndex,
+								                PAD_MOTOR_STOP_HARD);
+							else
+								PADControlMotor(state->m_controllerIndex,
+								                PAD_MOTOR_STOP);
+						}
+					} else {
+						if (this->unkA)
+							PADControlMotor(state->m_controllerIndex,
+							                PAD_MOTOR_STOP_HARD);
+						else
+							PADControlMotor(state->m_controllerIndex,
+							                PAD_MOTOR_STOP);
+					}
+				}
+				controller->updateMotorCount();
+			}
+		}
+
+		if (this->m_masterIntensityR > 0.0f) {
+			this->m_masterIntensityR = this->m_masterIntensityR - delta;
+		}
+	}
 }
 
 void RumbleMgr::setActive(bool activeState)

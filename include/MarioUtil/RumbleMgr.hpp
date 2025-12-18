@@ -93,9 +93,10 @@ public:
 	bool m_isInitialized;                         // 0x08
 	bool m_flags;                                 // 0x09
 	bool unkA;                                    // 0x0A
+	bool unkB;                                    // 0x0B
 	RumbleControllerState* m_controllerStates[4]; // 0x0C
 	RumbleControllerMgr* m_controllerManagers[4]; // 0x1C
-	const int*** m_rumbleOutput;                  // 0x2C
+	const RumbleChannelData** m_rumbleOutput;     // 0x2C
 
 public:
 	static u32 mMotorCountLimit;

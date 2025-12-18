@@ -6,7 +6,7 @@ extern int channelNum;
 
 struct UnkStruct3B0378 {
 	unsigned int unk0;
-	char* str;
+	const char* str;
 };
 
 // Enum To Str?

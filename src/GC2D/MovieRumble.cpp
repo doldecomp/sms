@@ -11,11 +11,10 @@ TMovieRumble::TMovieRumble(const TTHPRender* thpRender)
 
 void TMovieRumble::init(const char* subtitleName)
 {
-	char* szSubtitlePathExtension;
 	char szSubtitlePath[128];
 	sprintf(szSubtitlePath, "/subtitle/rnbl/%s", subtitleName);
-	szSubtitlePathExtension = (char*)strrchr(szSubtitlePath, 46);
-	char* result            = strcpy(szSubtitlePathExtension, ".bcr");
+	char* szSubtitlePathExtension = (char*)strrchr(szSubtitlePath, '.');
+	char* result                  = strcpy(szSubtitlePathExtension, ".bcr");
 
 	Koga::ToolData* data = new Koga::ToolData;
 	toolData             = data;
@@ -41,8 +40,9 @@ void TMovieRumble::perform(u32 flags, JDrama::TGraphics* graphics)
 		if (isRumbleActive) {
 			checkRumbleOff();
 		} else {
-			if (rumbleTypeIndex != -1
-			    && startFrame <= thpRenderer->frameNumber) {
+			bool rumbleTypeValid = rumbleTypeIndex != -1;
+			if (rumbleTypeValid
+			    && startFrame <= thpRenderer->getFrameNumber()) {
 				SMSRumbleMgr->start(rumbleTypeIndex, -1, (float*)0);
 				isRumbleActive = true;
 			}
@@ -53,8 +53,9 @@ void TMovieRumble::perform(u32 flags, JDrama::TGraphics* graphics)
 #pragma dont_inline on
 void TMovieRumble::checkRumbleOff()
 {
-	if (rumbleTypeIndex != -1) {
-		if (endFrame <= thpRenderer->frameNumber) {
+	bool rumbleTypeValid = rumbleTypeIndex != -1;
+	if (rumbleTypeValid) {
+		if (endFrame <= thpRenderer->getFrameNumber()) {
 			SMSRumbleMgr->stop();
 			entryIndex++;
 
