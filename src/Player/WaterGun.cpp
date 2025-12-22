@@ -1,4 +1,4 @@
-#include <Player/Watergun.hpp>
+#include <Player/WaterGun.hpp>
 #include <Player/NozzleTrigger.hpp>
 #include <Player/NozzleBase.hpp>
 #include <Player/NozzleDeform.hpp>
@@ -155,18 +155,18 @@ static bool WaterGunDivingCtrlR(J3DNode* node, BOOL param_2)
 
 void TWaterGun::init()
 {
-	mFlags                       = 0;
-	mNozzleList[Spray]           = &mNozzleDeform;
-	mNozzleList[Rocket]          = &mNozzleRocket;
-	mNozzleList[Underwater]      = &mNozzleUnderWater;
-	mNozzleList[Yoshi]           = &mNozzleYoshiDeform;
-	mNozzleList[Hover]           = &mNozzleHover;
-	mNozzleList[Turbo]           = &mNozzleTurbo;
-	mCurrentNozzle               = Spray;
-	mSecondNozzle                = Hover;
-	mNozzleRocket.mSoundID       = 0x81b;
-	mNozzleTurbo.mSoundID        = 0x814;
-	mNozzleDeform.mBomb.mSoundID = 0x813;
+	mFlags                     = 0;
+	mNozzleList[Spray]         = &mNozzleDeform;
+	mNozzleList[Rocket]        = &mNozzleRocket;
+	mNozzleList[Underwater]    = &mNozzleUnderWater;
+	mNozzleList[Yoshi]         = &mNozzleYoshiDeform;
+	mNozzleList[Hover]         = &mNozzleHover;
+	mNozzleList[Turbo]         = &mNozzleTurbo;
+	mCurrentNozzle             = Spray;
+	mSecondNozzle              = Hover;
+	mNozzleRocket.unk38C       = 0x81b;
+	mNozzleTurbo.unk38C        = 0x814;
+	mNozzleDeform.mBomb.unk38C = 0x813;
 	mCurrentWater = mNozzleList[mCurrentNozzle]->mEmitParams.mAmountMax.get();
 	mIsEmitWater  = false;
 	unk1C88       = 0.0f;
@@ -185,9 +185,9 @@ void TWaterGun::init()
 
 	// mEmitInfo = new TWaterEmitInfo; TODO
 
-	unk1D08                                  = 0;
-	mNozzleDeform.mBomb.mRumbleOnCharge      = true;
-	mNozzleYoshiDeform.mBomb.mRumbleOnCharge = true;
+	unk1D08                         = 0;
+	mNozzleDeform.mBomb.unk384      = true;
+	mNozzleYoshiDeform.mBomb.unk384 = true;
 
 	mEmitPos[3].x = mMario->mPosition.x;
 	mEmitPos[3].y = mMario->mPosition.y;
@@ -444,7 +444,7 @@ void TWaterGun::movement()
 		if (kind == 1) {
 			TNozzleTrigger* triggerNozzle
 			    = (TNozzleTrigger*)mNozzleList[mCurrentNozzle];
-			if (triggerNozzle->mSprayState == TNozzleTrigger::ACTIVE) {
+			if (triggerNozzle->unk385 == TNozzleTrigger::ACTIVE) {
 				canSpray = true;
 			} else {
 				canSpray = false;
@@ -792,7 +792,7 @@ void TNozzleBase::animation(int param_1)
 					if (nozzleKind == 1) {
 						TNozzleTrigger* trigger
 						    = (TNozzleTrigger*)fludd->getCurrentNozzle();
-						if (trigger->mSprayState == 1) {
+						if (trigger->unk385 == TNozzleTrigger::ACTIVE) {
 							updateAnimation = true;
 						} else {
 							updateAnimation = false;
@@ -837,7 +837,7 @@ void TNozzleBase::animation(int param_1)
 					if (nozzleKind == 1) {
 						TNozzleTrigger* trigger
 						    = (TNozzleTrigger*)fludd->getCurrentNozzle();
-						if (trigger->mSprayState == 1) {
+						if (trigger->unk385 == TNozzleTrigger::ACTIVE) {
 							updateAnimation = true;
 						} else {
 							updateAnimation = false;
@@ -892,11 +892,19 @@ void TNozzleBase::animation(int param_1)
 
 void TNozzleTrigger::init()
 {
-	this->mRumbleOnCharge   = false;
-	this->mSprayState       = 0;
-	mAnimState              = 0;
-	mSprayQuarterFramesLeft = 0;
-	mTriggerFill            = 0.0f;
+	unk384     = false;
+	unk385     = 0;
+	mAnimState = 0;
+	unk386     = 0;
+	unk388     = 0.0f;
+}
+
+void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
+{
+	// TODO: Missing stack space
+	volatile u32 unused2[2];
+
+	calcGunAngle(controllerWork);
 }
 
 void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
@@ -990,7 +998,7 @@ bool TWaterGun::isPressureOn()
 	if (this->getCurrentNozzle()->getNozzleKind() == 1) {
 		TNozzleTrigger* triggerNozzle
 		    = (TNozzleTrigger*)this->getCurrentNozzle();
-		if (triggerNozzle->mTriggerFill > 0.0f) {
+		if (triggerNozzle->unk388 > 0.0f) {
 			return true;
 		}
 	}
@@ -1004,7 +1012,7 @@ f32 TWaterGun::getPressure()
 	if (this->getCurrentNozzle()->getNozzleKind() == 1) {
 		TNozzleTrigger* triggerNozzle
 		    = (TNozzleTrigger*)this->getCurrentNozzle();
-		return triggerNozzle->mTriggerFill;
+		return triggerNozzle->unk388;
 	}
 	return 0.0f;
 }
