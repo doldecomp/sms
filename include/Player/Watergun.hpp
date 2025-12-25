@@ -21,7 +21,7 @@ public:
 	    , PARAM_INIT(mNozzleAngleYSpeedMax, 0x2000)
 	    , PARAM_INIT(mHoverRotMax, 0x2000)
 	    , PARAM_INIT(mHoverSmooth, 0.05f)
-	    , PARAM_INIT(mChangeSpeed, 0.1f) {};
+	    , PARAM_INIT(mChangeSpeed, 0.1f) { };
 	TParamRT<f32> mRocketHeight;
 	TParamRT<f32> mHoverHeight;
 	TParamRT<f32> mLAngleNormal;
@@ -39,14 +39,14 @@ struct NozzleJointData {
 };
 
 struct NozzleData {
-	/* 0x00 */ u32 _00; 				// Number of water streams emitted by this nozzle
-	/* 0x04 */ u32 _04; 				// Unused padding
+	/* 0x00 */ u32 _00; // Number of water streams emitted by this nozzle
+	/* 0x04 */ u32 _04; // Unused padding
 	/* 0x08 */ const char* mHelmetPath; // Path to optional helmet model (used
 	                                    // by underwater nozzle)
 	/* 0x0C */ const char* mPath;       // Path to base nozzle model directory
 	/* 0x10 */ const char* mBmdPath;    // Full path to nozzle's BMD model file
-	/* 0x14 */ u8 mNumEmitters; 		// Number of water emitter points on the nozzle
-	/* 0x15 */ u8 _15;          		// Unknown/padding
+	/* 0x14 */ u8 mNumEmitters; // Number of water emitter points on the nozzle
+	/* 0x15 */ u8 _15;          // Unknown/padding
 	/* 0x16 */ NozzleJointData mJoints[3]; // Array of joint data for the nozzle
 };
 

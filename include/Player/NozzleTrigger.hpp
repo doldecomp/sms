@@ -2,6 +2,7 @@
 #define NOZZLETRIGGER_HPP
 
 #include <Player/NozzleBase.hpp>
+#include <Player/MarioMain.hpp>
 
 class TNozzleTrigger : public TNozzleBase {
 public:
@@ -26,9 +27,10 @@ public:
 	enum SPRAYSTATE { INACTIVE, ACTIVE, DEAD };
 
 	bool unk384; // 0x0384 - Do rumble on charge
-	s8 unk385;   // 0x0385 - Spray state
-	s16 unk386;  // 0x0386 - Spray quarterframes left
-	f32 unk388;  // 0x0388 - trigger on fill
+	u8 unk385;   // 0x0385 - Spray state
+	s16 unk386;  // 0x0386 - Spray quarterframes left? (Using mTriggerTime in
+	             // emitParams)
+	f32 unk388;  // 0x0388 - Possibly spray rate
 	u32 unk38C;  // 0x038C - SoundID to play on charge
 };
 

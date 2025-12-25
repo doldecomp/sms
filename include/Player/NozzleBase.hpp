@@ -58,7 +58,7 @@ public:
 
 		{
 		}
-
+		// TODO: Validate these offsets...
 		/* 0x00 */ TParamRT<u8> mRocketType;
 		/* 0x14 */ TParamRT<f32> mNum;
 		/* 0x28 */ TParamRT<s16> mAttack;
@@ -93,9 +93,9 @@ public:
 		/* 0x26C */ TParamRT<f32> mMotorPowMin;
 		/* 0x280 */ TParamRT<f32> mMotorPowMax;
 		/* 0x294 */ TParamRT<f32> mReactionPowMin;
-		/* 0x2A8 */ TParamRT<f32> mInsidePressureDec;
-		/* 0x2BC */ TParamRT<f32> mInsidePressureMax;
-		/* 0x2D0 */ TParamRT<s16> mTriggerTime;
+		/* 0x2C0 */ TParamRT<f32> mInsidePressureDec; // These should be correct
+		/* 0x2D4 */ TParamRT<f32> mInsidePressureMax;
+		/* 0x2E8 */ TParamRT<s16> mTriggerTime;
 		/* 0x2E4 */ TParamRT<s16> mType;
 		/* 0x2F8 */ TParamRT<s16> mSideAngleMaxSide;
 		/* 0x30C */ TParamRT<s16> mSideAngleMaxFront;

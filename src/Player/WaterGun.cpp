@@ -11,6 +11,7 @@
 #include <System/StageUtil.hpp>
 
 #include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/RumbleMgr.hpp>
 #include <JSystem/JMath.hpp>
 
 // Define the global variable in .data section
@@ -902,7 +903,123 @@ void TNozzleTrigger::init()
 void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 {
 	// TODO: Missing stack space
-	volatile u32 unused2[2];
+	volatile u32 unused[54];
+
+	if (mFludd->mCurrentWater <= 0) {
+		unk385 = TNozzleTrigger::INACTIVE;
+		unk386 = 0;
+		unk388 = 0.0f;
+		return;
+	}
+
+	if (unk385 == TNozzleTrigger::ACTIVE) {
+		unk386 -= 1;
+
+		// Very likely an inline
+		bool check;
+		if (mFludd->mMario->unk380 == 0) {
+			check = true;
+		} else {
+			check = false;
+		}
+		if (!check || unk386 <= 0) {
+			unk385 = TNozzleTrigger::DEAD;
+			unk388 = 0.0f;
+			unk386 = 0;
+		}
+	}
+	// Spam spray sound?
+	if ((unk384 == true
+	     && (controllerWork.mFrameInput & TMarioControllerWork::A) != 0
+	     && (controllerWork.mInput & TMarioControllerWork::R) != 0)
+	    && unk385 == TNozzleTrigger::INACTIVE) {
+		unk385 = TNozzleTrigger::ACTIVE;
+		if (unk38C != 0xffffffff) {
+			u32 soundId;
+			if (unk378 < 1.0f) {
+				soundId = 0x806;
+			} else {
+				soundId = 0x805;
+			}
+			bool canPlay = gpMSound->gateCheck(soundId);
+			if (canPlay) {
+				MSoundSESystem::MSoundSE::startSoundActor(
+				    soundId, mFludd->mEmitPos[0], 0, nullptr, 0, 4);
+			}
+		}
+		unk386 = mEmitParams.mTriggerTime.get();
+	}
+
+	TMario* mario = mFludd->mMario;
+
+	// Most likely some inlined stuff, not matching
+	bool canSpray;
+	bool other = true;
+	if (mario->unk380 == 0) {
+		canSpray = true;
+	} else {
+		canSpray = false;
+	}
+	if ((mario->mAttributes & 0x30000) == 0
+	    && mFludd->mCurrentWater < mEmitParams.mAmountMax.get()) {
+		canSpray = false;
+	}
+
+	if (other && canSpray == true) {
+		unk388 += 150.0f * controllerWork.mAnalogR;
+		if (!unk384 && unk385 == TNozzleTrigger::INACTIVE) {
+			// Pretty certain there is some inline function shenanigans here
+			// Also what?
+			// if(gpMarDirector->unk58 == (gpMarDirector->unk58 / mario->unk568)
+			// * mario->unk568) {
+			SMSRumbleMgr->start((int)0x14, (int)mario->unk564, (f32*)nullptr);
+			//}
+		}
+		if (unk384 && unk385 == TNozzleTrigger::INACTIVE
+		    && controllerWork.mAnalogR > 0.0f) {
+			bool canPlay = gpMSound->gateCheck(0x4022);
+			if (canPlay) {
+				MSoundSESystem::MSoundSE::startSoundActor(
+				    0x4022, mFludd->mEmitPos[0], 0, nullptr, 0, 4);
+			}
+		}
+	}
+	unk388 -= mEmitParams.mInsidePressureDec.get();
+	if (unk388 < 0.0f) {
+		unk388 = 0.0f;
+	}
+
+	if (unk388 > mEmitParams.mInsidePressureMax.get()) {
+		unk388 = mEmitParams.mInsidePressureMax.get();
+		if (!unk384 && unk385 == TNozzleTrigger::INACTIVE) {
+			unk385      = TNozzleTrigger::ACTIVE;
+			unk386      = mEmitParams.mTriggerTime.get();
+			u32 soundId = unk38C;
+			if (soundId != 0xffffffff) {
+				// Non matching: Produces mr r4, r29 instead of addi r4, r29, 0
+				const Vec* soundPos = (Vec*)(&mFludd->mEmitPos[0]);
+				bool canPlay        = gpMSound->gateCheck(soundId);
+				if (canPlay) {
+					MSoundSESystem::MSoundSE::startSoundActor(soundId, soundPos,
+					                                          0, nullptr, 0, 4);
+				}
+			}
+			if (mFludd->mCurrentNozzle == (s8)TWaterGun::Hover) {
+				SMSRumbleMgr->start((int)0x15, 0x8, (f32*)nullptr);
+			}
+			if (mFludd->mCurrentNozzle == (s8)TWaterGun::Rocket
+			    || mFludd->mCurrentNozzle == (s8)TWaterGun::Turbo) {
+				SMSRumbleMgr->start((int)0x15, 0x14, (f32*)nullptr);
+			}
+		}
+	}
+
+	if (unk385 == TNozzleTrigger::DEAD) {
+		unk388 = 0.0f;
+		if (controllerWork.mAnalogR == 0.0f) {
+			unk385 = TNozzleTrigger::INACTIVE;
+		}
+	}
 
 	calcGunAngle(controllerWork);
 }
@@ -915,7 +1032,7 @@ void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
 	if (this->mFludd->mCurrentWater <= 0) {
 		return;
 	}
-	s32 var1 = 256.0f * controllerWork.mAnalogL * 150.0f;
+	s32 var1 = 256.0f * controllerWork.mAnalogR * 150.0f;
 
 	if (var1 > unk372) {
 		unk378 = (var1 - unk372) * 0.000015258789f;
@@ -1073,7 +1190,7 @@ void TWaterGun::rotateProp(f32 rotation)
 void TWaterGun::triggerPressureMovement(
     const TMarioControllerWork& controllerWork)
 {
-	mCurrentPressure = controllerWork.mAnalogL * 150.0f;
+	mCurrentPressure = controllerWork.mAnalogR * 150.0f;
 
 	TNozzleBase* currentNozzle = getCurrentNozzle();
 	currentNozzle->movement(controllerWork);
