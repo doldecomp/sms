@@ -52,7 +52,7 @@ macOS
 After OS upgrades, if macOS complains about `Wine Crossover.app` being unverified, you can unquarantine it using:
 
 ```sh
-sudo xattr -rd com.apple.quarantine '/Applications/Wine Crossover.app'
+sudo xattr -d com.apple.quarantine '/Applications/Wine Crossover.app'
 ```
 
 Linux
