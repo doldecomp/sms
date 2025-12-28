@@ -721,7 +721,20 @@ void THamuKuri::setSearchActor(THitActor* param_1)
 	setGoalPath(TPathNode(param_1->mPosition));
 }
 
-void THamuKuri::isGiveUpSearchActor() { }
+bool THamuKuri::isGiveUpSearchActor()
+{
+	TLiveActor* casted = (TLiveActor*)unk1F8;
+
+	if (unk128 > 100
+	    || abs(mGroundHeight - casted->getGroundHeight()) > 100.0f) {
+		unk1A0 = true;
+		unk1F8 = nullptr;
+		unk19C = 0;
+		return true;
+	} else {
+		return false;
+	}
+}
 
 void THamuKuri::jumpToSearchActor()
 {
@@ -2238,30 +2251,362 @@ bool TDoroHamuKuri::isCollidMove(THitActor* param_1)
 	return THamuKuri::isCollidMove(param_1);
 }
 
-DEFINE_NERVE(TNerveHamuKuriGoForSearchActor, TLiveActor) { }
+DEFINE_NERVE(TNerveHamuKuriGoForSearchActor, TLiveActor)
+{
+	THamuKuri* self = (THamuKuri*)spine->getBody();
+	if (spine->getTime() == 0)
+		self->setRunAnm();
 
-DEFINE_NERVE(TNerveHamuKuriBoundFreeze, TLiveActor) { }
+	if (!self->isAirborne()) {
+		if ((self->unk104.getPoint() - self->mPosition).length() < 200.0f)
+			self->jumpToSearchActor();
+	}
 
-DEFINE_NERVE(TNerveHamuKuriWallDie, TLiveActor) { }
+	if (self->unk1A0 || self->isGiveUpSearchActor()) {
+		spine->reset();
+		spine->setNext(&TNerveWalkerGraphWander::theNerve());
+		spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
+		return true;
+	}
 
-DEFINE_NERVE(TNerveHamuKuriLand, TLiveActor) { }
+	self->walkBehavior(0, 2.5f);
+	return false;
+}
 
-DEFINE_NERVE(TNerveHamuKuriJitabata, TLiveActor) { }
+DEFINE_NERVE(TNerveHamuKuriBoundFreeze, TLiveActor)
+{
+	THamuKuri* self = (THamuKuri*)spine->getBody();
 
-DEFINE_NERVE(TNerveDangoHamuKuriWait, TLiveActor) { }
+	if (spine->getTime() == 0) {
+		self->setRollAnm();
+		JGeometry::TVec3<f32> thing = self->mVelocity;
+		self->unk1E4.x              = thing.x;
+		self->unk1E4.y              = thing.y;
+		self->unk1E4.z              = thing.z;
+		self->setGoalPathMario();
+		self->unk1E0 = 1;
+	}
+
+	if (self->isHitWallInBound()) {
+		spine->pushAfterCurrent(&TNerveHamuKuriWallDie::theNerve());
+		return true;
+	}
+
+	if (self->unk1A4 == 0 && !self->isAirborne()) {
+		THamuKuriSaveLoadParams* params
+		    = (THamuKuriSaveLoadParams*)self->getSaveParam();
+		if (self->unk1E0 >= params->mSLBoundNum.get()) {
+			self->mRotation.x = 0;
+			spine->reset();
+			spine->setNext(&TNerveWalkerGraphWander::theNerve());
+			spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
+			return true;
+		}
+
+		self->unk1E0 += 1;
+		self->mPosition.y += 5.0f;
+		JGeometry::TVec3<f32> thing = self->unk1E4;
+		thing *= params->mSLVelocityRate.get();
+		self->unk1E4.x  = thing.x;
+		self->unk1E4.y  = thing.y;
+		self->unk1E4.z  = thing.z;
+		self->mVelocity = thing;
+	}
+
+	if (!self->isBckAnm(4))
+		self->TWalkerEnemy::walkBehavior(3, 1000.0f);
+
+	return false;
+}
+
+DEFINE_NERVE(TNerveHamuKuriWallDie, TLiveActor)
+{
+	THamuKuri* self = (THamuKuri*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		self->setCrashAnm();
+		JGeometry::TVec3<f32> local_34;
+		if (self->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
+			local_34 = self->getPosition();
+		} else {
+			MtxPtr mtx = self->getMActor()->getModel()->getAnmMtx(1);
+			local_34.x = mtx[0][3];
+			local_34.y = mtx[1][3];
+			local_34.z = mtx[2][3];
+		}
+
+		if (JPABaseEmitter* emitter = gpMarioParticleManager->emitWithRotate(
+		        0xE2, &local_34, 0, DEG2SHORTANGLE(self->mRotation.y), 0, 0,
+		        nullptr)) {
+			emitter->setScale(self->mScaling);
+		}
+
+		if (JPABaseEmitter* emitter = gpMarioParticleManager->emitWithRotate(
+		        0xE3, &self->getPosition(), 0,
+		        DEG2SHORTANGLE(self->getRotation().y), 0, 0, nullptr)) {
+			SMSSetEmitterPolColor(emitter, 6);
+		}
+
+		if (gpMSound->gateCheck(0x2804))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    0x2804, &self->getPosition(), 0, nullptr, 0, 4);
+
+		self->onHitFlag(HIT_FLAG_UNK1);
+		self->mHitPoints = 0;
+	} else {
+		int pTVar7 = self->getManager()->unk5C;
+		if (self->checkCurAnmEnd(0)) {
+			J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(0);
+
+			if (spine->getTime() > pTVar7 + ctrl->getEndFrame()) {
+				self->onLiveFlag(LIVE_FLAG_DEAD);
+				self->onLiveFlag(LIVE_FLAG_UNK8);
+				self->onLiveFlag(LIVE_FLAG_UNK20000);
+				self->offLiveFlag(LIVE_FLAG_UNK10000);
+				self->mHolder = nullptr;
+				self->stopAnmSound();
+				spine->reset();
+				spine->setNext(&TNerveSmallEnemyDie::theNerve());
+				spine->pushAfterCurrent(spine->getDefault());
+				self->genRandomItem();
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+DEFINE_NERVE(TNerveHamuKuriLand, TLiveActor)
+{
+	THamuKuri* self = (THamuKuri*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		self->setBckAnm(5);
+
+	if (self->checkCurAnmEnd(0)) {
+		self->offHitFlag(HIT_FLAG_UNK1);
+		self->unk1F0 = 0;
+		return true;
+	}
+
+	return false;
+}
+
+DEFINE_NERVE(TNerveHamuKuriJitabata, TLiveActor)
+{
+	THamuKuri* self = (THamuKuri*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		self->setBckAnm(12);
+
+	if (self->checkCurAnmEnd(0)) {
+		int timer = self->unk1F4->mSLJitabataTimer.get();
+		if (self->isBckAnm(12)) {
+			self->setBckAnm(3);
+		} else {
+			if (self->isBckAnm(11)) {
+				spine->pushAfterCurrent(&TNerveSmallEnemyWait::theNerve());
+				return true;
+			}
+
+			if (spine->getTime() > timer)
+				self->setBckAnm(11);
+		}
+	}
+
+	return 0;
+}
+
+DEFINE_NERVE(TNerveDangoHamuKuriWait, TLiveActor)
+{
+	THamuKuri* self = (THamuKuri*)spine->getBody();
+
+	if (spine->getTime() < 2) {
+		self->setWaitAnm();
+		self->getMActor()->getFrameCtrl(0)->setFrame(MsRandF(0.0f, 30.0f));
+	}
+
+	return false;
+}
 
 DEFINE_NERVE(TNerveDangoHamuKuriAttack, TLiveActor) { }
 
-DEFINE_NERVE(TNerveHaneHamuKuriUpWait, TLiveActor) { }
+DEFINE_NERVE(TNerveHaneHamuKuriUpWait, TLiveActor)
+{
+	THaneHamuKuri* self = (THaneHamuKuri*)spine->getBody();
+	if (spine->getTime() < 1) {
+		self->setWaitAnm();
+		self->setGoalPathMario();
+	}
 
-DEFINE_NERVE(TNerveHaneHamuKuriMoveOnGraph, TLiveActor) { }
+	self->mScaling.x = self->mScaling.z
+	    = MsClamp(self->mScaling.x * 0.9f, self->getBodyScale(),
+	              self->getBodyScale() * 2.0f);
 
-DEFINE_NERVE(TNerveDoroHamuKuriRobCap, TLiveActor) { }
+	self->mScaling.y
+	    = MsClamp(self->mScaling.y * 1.3f, 0.0f, self->getBodyScale());
 
-DEFINE_NERVE(TNerveFireHamuKuriRecover, TLiveActor) { }
+	if (spine->getTime() > 400)
+		return true;
 
-DEFINE_NERVE(TNerveDoroHaneRise, TLiveActor) { }
+	self->unk234 += 1.0f;
+	self->walkBehavior(3, 0.5f);
+	return false;
+}
 
-DEFINE_NERVE(TNerveDoroHaneHitWater, TLiveActor) { }
+DEFINE_NERVE(TNerveHaneHamuKuriMoveOnGraph, TLiveActor)
+{
+	THaneHamuKuri* self = (THaneHamuKuri*)spine->getBody();
 
-DEFINE_NERVE(TNerveDoroHanePrepareAttack, TLiveActor) { }
+	if (spine->getTime() == 0) {
+		self->setWalkAnm();
+		self->initialGraphNode();
+		if (self->getTracer()->getGraph()->getNodeNum() == 1)
+			self->setGoalPathMario();
+	}
+
+	if (self->getTracer()->getGraph()->getNodeNum() == 1) {
+		self->walkBehavior(3, 0.5f);
+	} else {
+		if (self->isReachedToGoal())
+			self->goToRandomNextGraphNode();
+		if (self->getTracer()->getPrevIndex() >= 0) {
+			JGeometry::TVec3<f32> curPos;
+			self->getTracer()
+			    ->getGraph()
+			    ->getGraphNode(self->getTracer()->getPrevIndex())
+			    .getPoint(&curPos);
+			JGeometry::TVec3<f32> prevPos;
+			self->getTracer()
+			    ->getGraph()
+			    ->getGraphNode(self->getTracer()->getCurrentIndex())
+			    .getPoint(&prevPos);
+
+			JGeometry::TVec3<f32> toCur  = curPos - self->mPosition;
+			f32 distToCur                = toCur.length();
+			JGeometry::TVec3<f32> toPrev = prevPos - self->mPosition;
+			f32 distToPrev               = toPrev.length();
+			self->unk230                 = curPos.y
+			               + (distToCur * (prevPos.y - curPos.y))
+			                     / (distToCur + distToPrev);
+			self->walkBehavior(2, 1.0f);
+		}
+	}
+
+	return false;
+}
+
+DEFINE_NERVE(TNerveDoroHamuKuriRobCap, TLiveActor)
+{
+	TDoroHamuKuri* self = (TDoroHamuKuri*)spine->getBody();
+
+	TDoroHamuKuriManager* manager = (TDoroHamuKuriManager*)self->getManager();
+	if (spine->getTime() == 0 || self->unk1F8 == nullptr) {
+		self->unk1F8 = manager->unk70;
+		self->setRunAnm();
+		// TODO: one more inline?
+		TPathNode target(manager->unk70);
+		if (manager->unk70)
+			target.unk4.set(manager->unk70->mPosition.x,
+			                manager->unk70->mPosition.y,
+			                manager->unk70->mPosition.z);
+		self->setGoalPath(target);
+	} else if (self->unk1F8 != manager->unk70) {
+		self->setGoalPathMario();
+		return true;
+	}
+
+	self->walkBehavior(0, 2.5f);
+	return false;
+}
+
+DEFINE_NERVE(TNerveFireHamuKuriRecover, TLiveActor)
+{
+	TFireHamuKuri* self = (TFireHamuKuri*)spine->getBody();
+
+	if (self->checkCurAnmEnd(0)) {
+		if (self->isBckAnm(6)) {
+			self->mHitPoints = self->getSaveParam()
+			                       ? self->getSaveParam()->mSLHitPointMax.get()
+			                       : 1;
+
+			self->unk150 &= ~0x2;
+			self->unk150 |= 0x1;
+			self->unk214 = 0;
+			self->unk210 = 0;
+			return true;
+		}
+
+		self->setBckAnm(6);
+	}
+
+	return false;
+}
+
+DEFINE_NERVE(TNerveDoroHaneRise, TLiveActor)
+{
+	TDoroHaneKuri* self = (TDoroHaneKuri*)spine->getBody();
+
+	if (self->mPosition.y < self->mGroundHeight + 800.0f)
+		self->unk234 += MsClamp(self->mSpine->getTime() * 0.01f, 0.01f, 5.0f);
+
+	self->mScaling.x = self->mScaling.z
+	    = MsClamp(self->mScaling.x * 0.9f, self->getBodyScale(),
+	              self->getBodyScale() * 2.0f);
+
+	self->mScaling.y
+	    = MsClamp(self->mScaling.y * 1.3f, 0.0f, self->getBodyScale());
+
+	if (!self->isUnk198()) {
+		spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
+		return true;
+	}
+
+	self->mRotation.x *= 0.9f;
+	self->mPosition.y = self->unk230 + self->unk234;
+	self->walkToCurPathNode(0.0f, 2.0f, 0.0f);
+	return false;
+}
+
+DEFINE_NERVE(TNerveDoroHaneHitWater, TLiveActor)
+{
+	TDoroHaneKuri* self = (TDoroHaneKuri*)spine->getBody();
+	if (spine->getTime() == 0) {
+		self->setGoalPath((SMS_GetMarioPos()));
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate() * 1.5f, 0);
+	}
+
+	if (self->mPosition.y > self->getGroundHeight() + 50.0f)
+		self->unk234 -= 4.0f;
+
+	self->unk210 = 0.0f;
+	self->unk214 = 0.0f;
+	self->unk20C = 0.0f;
+	self->unk230 = self->getGroundHeight();
+	if (spine->getTime() > 300) {
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+		return true;
+	}
+
+	self->mRotation.y += 10.0f;
+	if (!self->isBckAnm(4))
+		self->TWalkerEnemy::walkBehavior(0, 0.5f);
+	return false;
+}
+
+DEFINE_NERVE(TNerveDoroHanePrepareAttack, TLiveActor)
+{
+	TDoroHaneKuri* self = (TDoroHaneKuri*)spine->getBody();
+
+	if (spine->getTime() < 50)
+		self->unk234 += 4.0f;
+	else
+		self->unk234 -= 15.0f;
+
+	if (spine->getTime() > 100)
+		return true;
+
+	self->walkBehavior(0, 0.5f);
+	return false;
+}

@@ -239,7 +239,7 @@ public:
 
 	void releaseCap();
 	void setSearchActor(THitActor*);
-	void isGiveUpSearchActor();
+	bool isGiveUpSearchActor();
 	void jumpToSearchActor();
 	void canGoForSearchActor();
 	void changeCapHolder();
@@ -272,7 +272,7 @@ public:
 	/* 0x1A8 */ int unk1A8;
 	/* 0x1AC */ u8 unk1AC;
 	/* 0x1B0 */ Mtx unk1B0;
-	/* 0x1E0 */ u32 unk1E0;
+	/* 0x1E0 */ int unk1E0;
 	/* 0x1E4 */ JGeometry::TVec3<f32> unk1E4;
 	/* 0x1F0 */ u8 unk1F0;
 	/* 0x1F4 */ THamuKuriSaveLoadParams* unk1F4;
@@ -438,7 +438,7 @@ public:
 	virtual void setMActorAndKeeper();
 	virtual bool isHitValid(u32);
 	virtual void sendAttackMsgToMario();
-	virtual void setBckAnm(int) { }
+	virtual void setBckAnm(int index) { TSmallEnemy::setBckAnm(index); }
 	virtual void walkBehavior(int, f32);
 
 	bool recoverFire();
