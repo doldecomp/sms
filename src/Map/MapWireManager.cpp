@@ -86,10 +86,7 @@ TMapWireActorManager::TMapWireActorManager(TTakeActor* param_1)
 JUtility::TColor TMapWireManager::mUpperSurface;
 JUtility::TColor TMapWireManager::mLowerSurface;
 
-TMapWire* TMapWireManager::getWire(int index) const
-{
-	return unk18[index];
-}
+TMapWire* TMapWireManager::getWire(int index) const { return unk18[index]; }
 
 u32 TMapWireManager::getWireNo(const JGeometry::TVec3<f32>& param_1) const
 {
