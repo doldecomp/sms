@@ -47,6 +47,7 @@ TMapWireManager* gpMapWireManager;
 
 class TMapWireManager : public JDrama::TViewObj {
 public:
+	TMapWire* getWire(int index) const;
 	u32 getWireNo(const JGeometry::TVec3<f32>&) const;
 	void getPointPosInNthWire(int, const JGeometry::TVec3<f32>&,
 	                          JGeometry::TVec3<f32>*) const;
