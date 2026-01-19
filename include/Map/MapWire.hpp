@@ -36,6 +36,9 @@ public:
 	static f32 mDrawWidth;
 	static f32 mDrawHeight;
 
+	const JGeometry::TVec3<f32>& getUnk00() const { return unk00; }
+	const JGeometry::TVec3<f32>& getUnk0C() const { return unk0C; }
+
 public:
 	/* 0x00 */ JGeometry::TVec3<f32> unk00; // start point???
 	/* 0x0C */ JGeometry::TVec3<f32> unk0C; // end point???
