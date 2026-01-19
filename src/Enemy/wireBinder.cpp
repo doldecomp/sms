@@ -32,7 +32,9 @@ void TWireBinder::bind(TLiveActor* actor)
 	JGeometry::TVec3<f32> unk_20;
 	// Not sure why we use a different getWire here, but it matches
 	TMapWire* wire = gpMapWireManager->getWire(mWireNumber);
+
 	f32 posInWire = wire->getPosInWire(unk_14);
+
 	TMapWireManager::getGlobalWire(mWireNumber)
 	    ->getPointPosOnWire(posInWire, &unk_20);
 
