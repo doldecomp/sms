@@ -63,13 +63,9 @@ public:
 	static JUtility::TColor mLowerSurface;
 
 	// fabricated
-	f32 getPosInWire(int idx, const JGeometry::TVec3<f32>& pos)
+	static TMapWire* getGlobalWire(int index)
 	{
-		return unk18[idx]->getPosInWire(pos);
-	}
-	void getPointPosOnWire(int idx, f32 pos, JGeometry::TVec3<f32>& out)
-	{
-		unk18[idx]->getPointPosOnWire(pos, &out);
+		return gpMapWireManager->unk18[index];
 	}
 
 public:
