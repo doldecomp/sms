@@ -105,8 +105,22 @@ public:
 	{
 		return mMapCollisionManager;
 	}
+	void getNextFramePosition(JGeometry::TVec3<f32>& result)
+	{
+		result = mPosition;
+		result.add(mLinearVelocity);
+		// It's not clear why we copy mVelocity to a local variable first,
+		// but it matches what TWireBinder::bind does.
+		// We can revisit later if needed.
+		JGeometry::TVec3<f32> velocity = mVelocity;
+		result.add(velocity);
+	}
 	const JGeometry::TVec3<f32>& getVelocity() const { return mVelocity; }
 	void setVelocity(const JGeometry::TVec3<f32>& v) { mVelocity = v; }
+	void setLinearVelocity(const JGeometry::TVec3<f32>& v)
+	{
+		mLinearVelocity = v;
+	}
 
 public:
 	/* 0x70 */ TLiveManager* mManager;
