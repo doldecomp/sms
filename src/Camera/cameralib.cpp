@@ -1,8 +1,26 @@
 #include <Camera/cameralib.hpp>
 #include <JSystem/JMath.hpp>
+#include <MarioUtil/MathUtil.hpp>
 
 // TODO: This macro should probably be consolidated elsewhere
 #define ABS(x) ((x) >= 0 ? (x) : -(x))
+
+// TODO: This feels too useful to be limited to this file
+/**
+ * @brief A fast square root implementation.
+ * 
+ * @param x input value
+ * @return f32 sqrt(x) if x >= 0, x otherwise
+ */
+static inline f32 fastSqrt(f32 x)
+{
+	if (x > 0.0f) {
+		double guess = __frsqrte((double)x);
+		return 0.5 * guess * (3.0 - x * (guess * guess)) * x;
+	} else {
+		return x;
+	}
+}
 
 /**
  * @brief Creates a rotate-and-translate matrix.
@@ -95,4 +113,45 @@ bool CLBChaseDecrease(f32* dstValue, f32 targetValue, f32 ratio, f32 threshold)
 	} else {
 		return true;
 	}
+}
+
+/**
+ * @brief Converts Cartesian coordinates to spherical coordinates.
+ *
+ * @param offset an offset to apply to the input coordinates
+ * @param in the input vector
+ * @param outRadius the output radius
+ * @param outVAngle the output vertical angle from the xz-plane to the y-axis
+ * @param outHAngle the output horizontal angle in the xz-plane, clockwise from
+ * the z-axis
+ */
+void CLBCrossToPolar(const Vec& offset, const Vec& in, f32* outRadius,
+                     s16* outVAngle, s16* outHAngle)
+{
+	f32 dx = in.x - offset.x;
+	f32 dy = in.y - offset.y;
+	f32 dz = in.z - offset.z;
+
+	*outRadius = fastSqrt(dx * dx + dy * dy + dz * dz);
+
+	f32 xzDist = fastSqrt(dx * dx + dz * dz);
+	*outVAngle = matan(xzDist, dy);
+	*outHAngle = matan(dz, dx);
+}
+
+/**
+ * @brief Converts spherical coordinates to Cartesian coordinates.
+ *
+ * @param offset an offset to apply to the resulting coordinates
+ * @param out the output vector
+ * @param radius the radius of the point
+ * @param vAngle the vertical angle from the xz-plane to the y-axis
+ * @param hAngle the horizontal angle in the xz-plane, clockwise from the z-axis
+ */
+void CLBPolarToCross(const Vec& offset, Vec* out, f32 radius, s16 vAngle,
+                     s16 hAngle)
+{
+	out->x = offset.x + radius * JMASCos(vAngle) * JMASSin(hAngle);
+	out->y = offset.y + radius * JMASSin(vAngle);
+	out->z = offset.z + radius * JMASCos(vAngle) * JMASCos(hAngle);
 }
