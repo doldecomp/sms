@@ -1,3 +1,4 @@
+#include <types.h>
 #include <Camera/cameralib.hpp>
 #include <JSystem/JMath.hpp>
 #include <MarioUtil/MathUtil.hpp>
@@ -19,6 +20,34 @@ static inline f32 fastSqrt(f32 x)
 		return 0.5 * guess * (3.0 - x * (guess * guess)) * x;
 	} else {
 		return x;
+	}
+}
+
+// TODO: Explore how this is used, and add documentation
+void CLBCalc2DFPos(JGeometry::TVec2<f32>* param_1, MtxPtr param_2,
+                   const MtxPtr param_3, const Vec& param_4, u32* param_5,
+                   bool param_6)
+{
+	Vec prod;
+
+	PSMTXMultVec(param_3, (Vec*)&param_4, &prod);
+
+	if (prod.z == 0.0f) {
+		param_1->x = param_1->y = 10000.0f;
+	} else {
+		f32 fVar3 = 1.0f / -prod.z;
+		f32 fVar4 = (param_2[2][2] * prod.z + param_2[2][3]) * fVar3;
+		if (!param_6 && (fVar4 > 0.0f || fVar4 < -1.0f)) {
+			param_1->x = param_1->y = 10000.0f;
+		} else {
+			param_1->set(
+			    fVar3 * (param_2[0][0] * prod.x + param_2[0][2] * prod.z),
+			    fVar3 * (param_2[1][1] * prod.y + param_2[1][2] * prod.z));
+			if (param_5 != nullptr) {
+				*param_5
+				    = CLBLinearInbetween((u32)0, (u32)0xffffff, fVar4 + 1.0f);
+			}
+		}
 	}
 }
 
