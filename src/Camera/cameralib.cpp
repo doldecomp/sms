@@ -9,7 +9,7 @@
 // TODO: This feels too useful to be limited to this file
 /**
  * @brief A fast square root implementation.
- * 
+ *
  * @param x input value
  * @return f32 sqrt(x) if x >= 0, x otherwise
  */
