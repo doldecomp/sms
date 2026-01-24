@@ -220,47 +220,43 @@ void RumbleControllerMgr::updateMotorCount()
 	}
 	unkC = 0U;
 }
+#define CLAMP(val, min, max)                                                   \
+	((val) > (max) ? (max) : (val) < (min) ? (min) : (val))
+
+inline f32 clamp(f32 val, f32 min, f32 max) {
+    float value = val;
+    if (val > max)
+        return max;
+    return value;
+    if (val < min)
+        value = min;
+    return value;
+}
 
 f32 RumbleControllerMgr::update()
 {
-	RumbleChannelMgr* temp_r3;
-	f32 temp_f0;
-	f32 temp_f1;
-	f32 var_f31;
-	s32 var_r30;
-	s32 var_r31;
+	float maxCurrentPower = 0.0f;
 
-	var_r31 = 0;
-	var_r30 = 0;
-	var_f31 = 0.0f;
-	do {
-		temp_r3 = this->channels + var_r31;
-		if (temp_r3->rumbleData != 0) {
-			this->currentPower = temp_r3->update();
-			temp_f0            = this->currentPower;
-			if (temp_f0 > var_f31) {
-				var_f31 = temp_f0;
+	for (int channelIdx = 0; channelIdx < MAX_RUMBLE_CHANNELS; ++channelIdx) {
+		RumbleChannelMgr* currChannelManager = &this->channels[channelIdx];
+
+		if (currChannelManager->rumbleData) {
+			this->currentPower = currChannelManager->update();
+
+			if (this->currentPower > maxCurrentPower) {
+				maxCurrentPower = this->currentPower;
 			}
 		}
-		var_r30 += 1;
-		var_r31 += 0x20;
-	} while (var_r30 < 0x20);
-
-	currentPower = var_f31;
-	temp_f1      = currentPower;
-	if (temp_f1 > 1.0f) {
-		currentPower = 1.0f;
-	} else if (temp_f1 < 0.0f) {
-		currentPower = 0.0f;
 	}
 
-	if (currentPower > RumbleMgr::mPowerThreshold) {
-		motorTime = RumbleMgr::mPowerThreshold;
-	}
-	if (unk12 != false) {
-		currentPower = 0.0f;
-	}
-	return currentPower;
+	// this->currentPower = CLAMP(maxCurrentPower, 0.0f, 1.0f);
+	this->currentPower = clamp(maxCurrentPower, 0.0f, 1.0f);
+
+	if (this->currentPower > RumbleMgr::mPowerThreshold)
+		this->motorTime = RumbleMgr::mMotorTimerPeriod;
+	if (this->unk12)
+		this->currentPower = 0.0f;
+	return this->currentPower;
 }
 
 RumbleMgr::RumbleMgr(bool bController1Avail, bool bController2Avail,
@@ -377,46 +373,46 @@ void RumbleMgr::reset()
 	this->m_flags = false;
 }
 
-void RumbleMgr::start(int a2, float* a3)
+void RumbleMgr::start(int channelId, float* externalDampenPtr)
 {
 	int index = 0;
 
 	if (!this->m_flags && this->m_isInitialized) {
 		if (this->m_controllerManagers[index]) {
-			this->m_controllerManagers[index]->start(a2, 1, a3);
+			this->m_controllerManagers[index]->start(channelId, 1, externalDampenPtr);
 		}
 	}
 }
 
-void RumbleMgr::start(int a2, Vec* a3)
+void RumbleMgr::start(int channelId, Vec* positionalSourcePtr)
 {
 	int index = 0;
 
 	if (!this->m_flags && this->m_isInitialized) {
 		if (this->m_controllerManagers[index]) {
-			this->m_controllerManagers[index]->start(a2, 1, a3);
+			this->m_controllerManagers[index]->start(channelId, 1, positionalSourcePtr);
 		}
 	}
 }
 
-void RumbleMgr::start(int arg0, int arg1, f32* arg2)
+void RumbleMgr::start(int channelId, int loopCount, f32* externalDampenPtr)
 {
 	int index = 0;
 
 	if (!this->m_flags && this->m_isInitialized) {
 		if (this->m_controllerManagers[index]) {
-			this->m_controllerManagers[index]->start(arg0, arg1, arg2);
+			this->m_controllerManagers[index]->start(channelId, loopCount, externalDampenPtr);
 		}
 	}
 }
 
-void RumbleMgr::start(int a2, int a3, Vec* a4)
+void RumbleMgr::start(int channelId, int loopCount, Vec* positionalSourcePtr)
 {
 	int index = 0;
 
 	if (!this->m_flags && this->m_isInitialized) {
 		if (this->m_controllerManagers[index]) {
-			this->m_controllerManagers[index]->start(a2, a3, a4);
+			this->m_controllerManagers[index]->start(channelId, loopCount, positionalSourcePtr);
 		}
 	}
 }
@@ -432,6 +428,7 @@ void RumbleMgr::stop()
 			     rumbleChannel++) {
 				RumbleChannelMgr& channel
 				    = controllerMgr->channels[rumbleChannel];
+					
 				if (channel.rumbleData != nullptr) {
 					channel.mElapsedTime         = 0.0f;
 					channel.mCurrentIntensity    = 0.0f;
@@ -446,13 +443,13 @@ void RumbleMgr::stop()
 	}
 }
 
-void RumbleMgr::stop(int arg0)
+void RumbleMgr::stop(int channelId)
 {
 	int index = 0;
 
 	if (!this->m_flags && this->m_isInitialized) {
 		if (this->m_controllerManagers[index]) {
-			this->m_controllerManagers[index]->stop(arg0);
+			this->m_controllerManagers[index]->stop(channelId);
 		}
 	}
 }
