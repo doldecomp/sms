@@ -118,6 +118,34 @@ void CLBCalcScaleTranslateMatrix(MtxPtr mtx, const Vec& scale,
 }
 
 /**
+ * @brief Moves a SHORTANGLE towards another SHORTANGLE by a specified ratio.
+ *
+ * @param out the value to be modified
+ * @param target the target value to approach
+ * @param invSpeed a constant inversely proportional to the rate of change
+ * @return whether another iteration may refine the angle even further
+ */
+bool CLBChaseAngleDecrease(s16* out, s16 target, s16 invSpeed)
+{
+	if (invSpeed == 0) {
+		*out = target;
+	} else {
+		s16 difference = *out - target;
+		s16 newValue   = difference - difference / invSpeed + target;
+		if (newValue == *out) {
+			// No further calls will update the angle
+			return false;
+		}
+		*out = newValue;
+	}
+	if (*out == target) {
+		// Destination angle reached!
+		return false;
+	}
+	return true;
+}
+
+/**
  * @brief Moves dstValue toward targetValue by a fraction defined by ratio.
  *
  * @param dstValue the value to be modified
@@ -142,6 +170,24 @@ bool CLBChaseDecrease(f32* dstValue, f32 targetValue, f32 ratio, f32 threshold)
 	} else {
 		return true;
 	}
+}
+
+bool CLBChaseSpecialDecrease(f32* param_1, f32 param_2, f32 param_3,
+                             f32 param_4)
+{
+	if (param_3 > 1.0f) {
+		param_3 = 1.0f;
+	}
+
+	f32 fVar2 = param_3 * (param_2 - *param_1);
+	f32 fVar3 = ABS(param_4);
+	f32 fVar1 = ABS(fVar2);
+
+	if (fVar1 < fVar3) {
+		fVar2 = param_4;
+	}
+
+	return CLBChaseGeneralConstantSpecifySpeed(param_1, param_2, fVar2);
 }
 
 /**
