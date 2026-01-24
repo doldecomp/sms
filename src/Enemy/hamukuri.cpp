@@ -70,7 +70,45 @@ void THamuKuriLauncher::drawObject(JDrama::TGraphics* param_1)
 	TLiveActor::drawObject(param_1);
 }
 
-void THamuKuriLauncher::stateLaunch() { }
+void THamuKuriLauncher::stateLaunch()
+{
+	if (mTicksSpentInCurState == 0) {
+		THamuKuri* hamukuri
+		    = (THamuKuri*)getProperEnemy("ハムクリマネージャー");
+		if (hamukuri) {
+			Mtx afStack_6c;
+			MsMtxSetRotRPH(afStack_6c, mRotation.x, mRotation.y, mRotation.z);
+			JGeometry::TVec3<f32> local_3c(0.0f, 4.0f, 4.0f);
+			JGeometry::TVec3<f32> local_30(0.0f, mRotation.y, 0.0f);
+			hamukuri->unk1A1 = 0;
+			int iVar2        = mRotation.x;
+			int iVar1        = iVar2 / 180 + (iVar2 >> 15);
+			if ((int)mRotation.x % 180 != 0) {
+				hamukuri->unk1A1 = 1;
+				float dVar5      = THamuKuri::mLandAnmFrameNum;
+				const TBGCheckData* apTStack_74;
+				float dVar3
+				    = gpMap->checkGround(mPosition.x, mPosition.y + 10.0f,
+				                         mPosition.z, &apTStack_74);
+				local_3c.set(0.0f,
+				             (dVar5 * (dVar5 * hamukuri->getGravityY()) * 0.5f
+				              + (dVar3 - mPosition.y))
+				                 / dVar5,
+				             200.0f / dVar5);
+			} else {
+				local_3c.set(0.0f, 0.0f, 0.0f);
+			}
+			PSMTXMultVec(afStack_6c, &local_3c, &local_3c);
+			hamukuri->resetSRTV(mPosition, local_30, hamukuri->mScaling,
+			                    local_3c);
+		}
+	}
+
+	if (mMActor->curAnmEndsNext()) {
+		resetLaunchTimer();
+		changeState(STATE_NORMAL);
+	}
+}
 
 THamuKuriSaveLoadParams::THamuKuriSaveLoadParams(const char* path)
     : TWalkerEnemyParams(path)
@@ -79,7 +117,7 @@ THamuKuriSaveLoadParams::THamuKuriSaveLoadParams(const char* path)
     , PARAM_INIT(mSLFirstVelocityY, 5.0f)
     , PARAM_INIT(mSLVelocityRate, 0.8f)
     , PARAM_INIT(mSLBoundNum, 3)
-    , PARAM_INIT(mSLSearchActorTime, 500)
+    , PARAM_INIT(mSLSearchActorTimer, 500)
     , PARAM_INIT(mSLCanSearchDist, 800.0f)
     , PARAM_INIT(mSLJitabataTimer, 200)
     , PARAM_INIT(mSLFirstKickVelocityY, 2.0f)
@@ -154,6 +192,14 @@ void THamuKuriManager::loadAfter()
 	}
 }
 
+static const char* anmlist[] = {
+	"hamukuri_walk",
+	"hamukuri_run",
+	// TODO: this shouldn't be here but rodata ordering looks like it should?!
+	// "default.bmd",
+	"hanekuri_wait",
+};
+
 void THamuKuriManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
@@ -203,7 +249,7 @@ void THamuKuriManager::setSearchHamuKuri()
 			continue;
 
 		THamuKuriSaveLoadParams* params = (THamuKuriSaveLoadParams*)unk38;
-		s32 searchActorTime             = params->mSLSearchActorTime.get();
+		s32 searchActorTime             = params->mSLSearchActorTimer.get();
 		if (kuri->unk19C >= searchActorTime) {
 			f32 canSearchDist = params->mSLCanSearchDist.get();
 
@@ -423,13 +469,24 @@ TSpineEnemy* TBossDangoHamuKuriManager::createEnemyInstance()
 	return new TBossDangoHamuKuri;
 }
 
-static GXColorS10 mFireHamNoseColorDiff  = { 0, 0, 0, 0 };
-static GXColorS10 mFireHamOtherColorDiff = { 0, 0, 0, 0 };
+static const GXColorS10 mFireHamNoseColorStart = { 0x1F4, 0xC8, 0x78, 0xFF };
+static const GXColorS10 mFireHamNoseColorEnd = { 0xFFEC, 0xFFA6, 0xFF74, 0xFF };
+static const GXColorS10 mFireHamOtherColorStart
+    = { 0x1F4, 0xFFD8, 0xFFBA, 0xFF };
+static const GXColorS10 mFireHamOtherColorEnd = { 0x50, 0x5, 0xFFCE, 0xFF };
 
-static GXColorS10 mFireHamNoseColorStart  = { 0x1F4, 0xC8, 0x78, 0xFF };
-static GXColorS10 mFireHamNoseColorEnd    = { 0xFFEC, 0xFFA6, 0xFF74, 0xFF };
-static GXColorS10 mFireHamOtherColorStart = { 0x1F4, 0xFFD8, 0xFFBA, 0xFF };
-static GXColorS10 mFireHamOtherColorEnd   = { 0x50, 0x5, 0xFFCE, 0xFF };
+static GXColorS10 mFireHamNoseColorDiff = {
+	mFireHamNoseColorEnd.r - mFireHamNoseColorStart.r,
+	mFireHamNoseColorEnd.g - mFireHamNoseColorStart.g,
+	mFireHamNoseColorEnd.b - mFireHamNoseColorStart.b,
+	mFireHamNoseColorEnd.a - mFireHamNoseColorStart.a,
+};
+static GXColorS10 mFireHamOtherColorDiff = {
+	mFireHamOtherColorEnd.r - mFireHamOtherColorStart.r,
+	mFireHamOtherColorEnd.g - mFireHamOtherColorStart.g,
+	mFireHamOtherColorEnd.b - mFireHamOtherColorStart.b,
+	mFireHamOtherColorEnd.a - mFireHamOtherColorStart.a,
+};
 
 TFireHamuKuriManager::TFireHamuKuriManager(const char* name)
     : THamuKuriManager(name)
@@ -492,16 +549,16 @@ void TFireHamuKuriManager::initSetEnemies()
 		                       ->getModel()
 		                       ->getModelData()
 		                       ->getMaterialName()
-		                       ->getIndex("_mat_lfoot1");
+		                       ->getIndex("_mat_Lfoot1");
 		SMS_InitPacket_OneTevColor(hamu->getMActor()->getModel(), matLfoot1Idx,
 		                           GX_TEVREG0, &hamu->unk224);
 
-		u32 matRfoot2Idx = hamu->getMActor()
+		u32 matRfoot1Idx = hamu->getMActor()
 		                       ->getModel()
 		                       ->getModelData()
 		                       ->getMaterialName()
-		                       ->getIndex("_mat_rfoot2");
-		SMS_InitPacket_OneTevColor(hamu->getMActor()->getModel(), matRfoot2Idx,
+		                       ->getIndex("_mat_Rfoot1");
+		SMS_InitPacket_OneTevColor(hamu->getMActor()->getModel(), matRfoot1Idx,
 		                           GX_TEVREG0, &hamu->unk224);
 	}
 }

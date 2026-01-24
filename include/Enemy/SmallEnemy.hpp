@@ -86,7 +86,7 @@ public:
 	virtual void initSetEnemies() { }
 
 	// fabricated
-	TSmallEnemyParams* getSaveParam() const
+	TSmallEnemyParams* getSaveParam2() const
 	{
 		return (TSmallEnemyParams*)unk38;
 	}
@@ -169,7 +169,7 @@ public:
 	void behaveToHitOthers(THitActor*);
 
 	// fabricated
-	TSmallEnemyParams* getSaveParam() const
+	TSmallEnemyParams* getSaveParam2() const
 	{
 		return (TSmallEnemyParams*)TSpineEnemy::getSaveParam();
 	}

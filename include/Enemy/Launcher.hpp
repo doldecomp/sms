@@ -39,7 +39,8 @@ public:
 	void resetLaunchTimer();
 	TSpineEnemy* getProperEnemy(const char*);
 
-	TLauncherParams* getSaveParam() const
+	// fabricated
+	TLauncherParams* getSaveParam2() const
 	{
 		return (TLauncherParams*)TSpineEnemy::getSaveParam();
 	}

@@ -179,22 +179,22 @@ void TSmallEnemy::init(TLiveManager* param_1)
 	unk158 = 1.0f;
 
 	// TODO: are these f32 pairs some kind of rng interval class?
-	TSmallEnemyParams* params1 = getSaveParam();
+	TSmallEnemyParams* params1 = getSaveParam2();
 	mTurnSpeed                 = MsRandF(params1->unk2C4, params1->unk2C8);
 
-	TSmallEnemyParams* params2 = getSaveParam();
+	TSmallEnemyParams* params2 = getSaveParam2();
 	mBodyScale                 = MsRandF(params2->unk2D0, params2->unk2CC);
 
 	unk154            = mBodyScale;
-	mBodyRadius       = getSaveParam()->mSLBodyRadius.get();
-	mWallRadius       = getSaveParam()->mSLWallRadius.get();
-	mHeadHeight       = getSaveParam()->mSLHeadHeight.get();
+	mBodyRadius       = getSaveParam2()->mSLBodyRadius.get();
+	mWallRadius       = getSaveParam2()->mSLWallRadius.get();
+	mHeadHeight       = getSaveParam2()->mSLHeadHeight.get();
 	mScaledBodyRadius = mBodyScale * mBodyRadius * 15.0f;
 
-	f32 attackRadius = getSaveParam()->mSLAttackRadius.get();
-	f32 attackHeight = getSaveParam()->mSLAttackHeight.get();
-	f32 damageRadius = getSaveParam()->mSLDamageRadius.get();
-	f32 damageHeight = getSaveParam()->mSLDamageHeight.get();
+	f32 attackRadius = getSaveParam2()->mSLAttackRadius.get();
+	f32 attackHeight = getSaveParam2()->mSLAttackHeight.get();
+	f32 damageRadius = getSaveParam2()->mSLDamageRadius.get();
+	f32 damageHeight = getSaveParam2()->mSLDamageHeight.get();
 
 	initHitActor(0, 5, -0x68000000, attackRadius * mBodyScale,
 	             attackHeight * mBodyScale, damageRadius * mBodyScale,
@@ -257,27 +257,27 @@ void TSmallEnemy::reset()
 {
 	TSpineEnemy::reset();
 
-	TSmallEnemyParams* params1 = getSaveParam();
+	TSmallEnemyParams* params1 = getSaveParam2();
 	mTurnSpeed                 = MsRandF(params1->unk2C4, params1->unk2C8);
 
-	TSmallEnemyParams* params2 = getSaveParam();
+	TSmallEnemyParams* params2 = getSaveParam2();
 	mBodyScale                 = MsRandF(params2->unk2D0, params2->unk2CC);
 
 	unk190 = unk154 = mBodyScale;
 
-	mBodyRadius       = getSaveParam()->mSLBodyRadius.get();
-	mWallRadius       = getSaveParam()->mSLWallRadius.get();
-	mHeadHeight       = getSaveParam()->mSLHeadHeight.get();
+	mBodyRadius       = getSaveParam2()->mSLBodyRadius.get();
+	mWallRadius       = getSaveParam2()->mSLWallRadius.get();
+	mHeadHeight       = getSaveParam2()->mSLHeadHeight.get();
 	mScaledBodyRadius = mBodyScale * mBodyRadius * 15.0f;
 
-	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
+	mHitPoints = getSaveParam2() ? getSaveParam2()->mSLHitPointMax.get() : 1;
 
 	offLiveFlag(LIVE_FLAG_DEAD);
 	offLiveFlag(LIVE_FLAG_UNK20000);
 	offLiveFlag(LIVE_FLAG_UNK10000);
 	offLiveFlag(LIVE_FLAG_UNK2);
 
-	if (getSaveParam()->mSLGenerateOnlyDead.get())
+	if (getSaveParam2()->mSLGenerateOnlyDead.get())
 		offLiveFlag(LIVE_FLAG_UNK800);
 	else
 		onLiveFlag(LIVE_FLAG_UNK800);
@@ -293,10 +293,10 @@ void TSmallEnemy::reset()
 	unk165                  = 0;
 	unk184                  = 0;
 
-	f32 attackRadius = getSaveParam()->getSLAttackRadius();
-	f32 attackHeight = getSaveParam()->getSLAttackHeight();
-	f32 damageRadius = getSaveParam()->getSLDamageRadius();
-	f32 damageHeight = getSaveParam()->getSLDamageHeight();
+	f32 attackRadius = getSaveParam2()->getSLAttackRadius();
+	f32 attackHeight = getSaveParam2()->getSLAttackHeight();
+	f32 damageRadius = getSaveParam2()->getSLDamageRadius();
+	f32 damageHeight = getSaveParam2()->getSLDamageHeight();
 
 	f32 scale = mBodyScale;
 
@@ -335,7 +335,7 @@ void TSmallEnemy::forceKill()
 
 void TSmallEnemy::genRandomItem()
 {
-	if (!getSaveParam())
+	if (!getSaveParam2())
 		return;
 
 	setAfterDeadEffect();
@@ -434,8 +434,8 @@ void TSmallEnemy::setAfterDeadEffect()
 
 void TSmallEnemy::generateItem()
 {
-	if (MsRandF(0.0f, 100.0f) < getSaveParam()->mSLGenEggRate.get()
-	                                + getSaveParam()->mSLGenItemRate.get()
+	if (MsRandF(0.0f, 100.0f) < getSaveParam2()->mSLGenEggRate.get()
+	                                + getSaveParam2()->mSLGenItemRate.get()
 
 	    && !mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL))
 		gpMapObjManager->makeObjAppear(mPosition.x, mGroundHeight, mPosition.z,
@@ -458,10 +458,10 @@ void TSmallEnemy::moveObject()
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
-	f32 attackRadius = getSaveParam()->getSLAttackRadius();
-	f32 attackHeight = getSaveParam()->getSLAttackHeight();
-	f32 damageRadius = getSaveParam()->getSLDamageRadius();
-	f32 damageHeight = getSaveParam()->getSLDamageHeight();
+	f32 attackRadius = getSaveParam2()->getSLAttackRadius();
+	f32 attackHeight = getSaveParam2()->getSLAttackHeight();
+	f32 damageRadius = getSaveParam2()->getSLDamageRadius();
+	f32 damageHeight = getSaveParam2()->getSLDamageHeight();
 
 	f32 scale = mBodyScale;
 
@@ -823,7 +823,7 @@ bool TSmallEnemy::isMarioInWater() const
 #pragma dont_inline on
 bool TSmallEnemy::isFindMarioFromParam(float param_1) const
 {
-	TSmallEnemyParams* prms = getSaveParam();
+	TSmallEnemyParams* prms = getSaveParam2();
 
 	f32 searchHeight = prms->mSLSearchHeight.get();
 
@@ -875,10 +875,10 @@ void TSmallEnemy::setBckAnm(int index)
 
 void TSmallEnemy::expandCollision()
 {
-	f32 attackRadius = getSaveParam()->getSLAttackRadius();
-	f32 attackHeight = getSaveParam()->getSLAttackHeight();
-	f32 damageRadius = getSaveParam()->getSLDamageRadius();
-	f32 damageHeight = getSaveParam()->getSLDamageHeight();
+	f32 attackRadius = getSaveParam2()->getSLAttackRadius();
+	f32 attackHeight = getSaveParam2()->getSLAttackHeight();
+	f32 damageRadius = getSaveParam2()->getSLDamageRadius();
+	f32 damageHeight = getSaveParam2()->getSLDamageHeight();
 
 	f32 expansionFactor = unk190 / unk154;
 
@@ -993,7 +993,7 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 				    = (TSmallEnemyManager*)self->getManager();
 				gpPollution->stamp(man->getUnk58(), self->getPosition().x,
 				                   self->getPosition().y, self->getPosition().z,
-				                   man->getSaveParam()->getSLStampRange()
+				                   man->getSaveParam2()->getSLStampRange()
 				                       * 32.0f * self->getUnk158());
 			}
 			if (self->getHitPoints() == 0) {
@@ -1037,7 +1037,7 @@ DEFINE_NERVE(TNerveSmallEnemyFreeze, TLiveActor)
 {
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 
-	int freezeTime = self->getSaveParam()->getSLFreezeWait();
+	int freezeTime = self->getSaveParam2()->getSLFreezeWait();
 
 	if (spine->getTime() == 0)
 		self->setFreezeAnm();
@@ -1059,7 +1059,7 @@ DEFINE_NERVE(TNerveSmallEnemyJump, TLiveActor)
 		self->jumpBehavior();
 
 		JGeometry::TVec3<f32> v = self->getVelocity();
-		v.y = self->getSaveParam()->getSLJumpForce() * self->getBodyScale();
+		v.y = self->getSaveParam2()->getSLJumpForce() * self->getBodyScale();
 		self->setVelocity(v);
 
 		self->onLiveFlag(LIVE_FLAG_UNK8000);
@@ -1105,7 +1105,7 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 		self->jumpBehavior();
 
 		JGeometry::TVec3<f32> v = self->mVelocity;
-		v.y                     = self->getSaveParam()->mSLJumpForce.get();
+		v.y                     = self->getSaveParam2()->mSLJumpForce.get();
 		self->mVelocity         = v;
 
 		self->onLiveFlag(LIVE_FLAG_UNK8000);
@@ -1135,7 +1135,7 @@ DEFINE_NERVE(TNerveSmallEnemyWait, TLiveActor)
 		self->setWaitAnm();
 
 	if (self->checkCurAnmEnd(0)
-	    && spine->getTime() > self->getSaveParam()->getSLWaitTime())
+	    && spine->getTime() > self->getSaveParam2()->getSLWaitTime())
 		return true;
 	else
 		return false;
