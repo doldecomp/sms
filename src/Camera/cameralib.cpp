@@ -193,19 +193,19 @@ bool CLBChaseSpecialDecrease(f32* param_1, f32 param_2, f32 param_3,
 /**
  * @brief Converts Cartesian coordinates to spherical coordinates.
  *
- * @param offset an offset to apply to the input coordinates
+ * @param origin the point to use as the origin
  * @param in the input vector
  * @param outRadius the output radius
  * @param outVAngle the output vertical angle from the xz-plane to the y-axis
  * @param outHAngle the output horizontal angle in the xz-plane, clockwise from
  * the z-axis
  */
-void CLBCrossToPolar(const Vec& offset, const Vec& in, f32* outRadius,
+void CLBCrossToPolar(const Vec& origin, const Vec& in, f32* outRadius,
                      s16* outVAngle, s16* outHAngle)
 {
-	f32 dx = in.x - offset.x;
-	f32 dy = in.y - offset.y;
-	f32 dz = in.z - offset.z;
+	f32 dx = in.x - origin.x;
+	f32 dy = in.y - origin.y;
+	f32 dz = in.z - origin.z;
 
 	*outRadius = fastSqrt(dx * dx + dy * dy + dz * dz);
 
@@ -217,16 +217,16 @@ void CLBCrossToPolar(const Vec& offset, const Vec& in, f32* outRadius,
 /**
  * @brief Converts spherical coordinates to Cartesian coordinates.
  *
- * @param offset an offset to apply to the resulting coordinates
+ * @param origin the point to use as the origin
  * @param out the output vector
  * @param radius the radius of the point
  * @param vAngle the vertical angle from the xz-plane to the y-axis
  * @param hAngle the horizontal angle in the xz-plane, clockwise from the z-axis
  */
-void CLBPolarToCross(const Vec& offset, Vec* out, f32 radius, s16 vAngle,
+void CLBPolarToCross(const Vec& origin, Vec* out, f32 radius, s16 vAngle,
                      s16 hAngle)
 {
-	out->x = offset.x + radius * JMASCos(vAngle) * JMASSin(hAngle);
-	out->y = offset.y + radius * JMASSin(vAngle);
-	out->z = offset.z + radius * JMASCos(vAngle) * JMASCos(hAngle);
+	out->x = origin.x + radius * JMASCos(vAngle) * JMASSin(hAngle);
+	out->y = origin.y + radius * JMASSin(vAngle);
+	out->z = origin.z + radius * JMASCos(vAngle) * JMASCos(hAngle);
 }
