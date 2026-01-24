@@ -32,7 +32,7 @@ public:
 	/* 0x354 */ TParamRT<f32> mSLFirstVelocityY;
 	/* 0x368 */ TParamRT<f32> mSLVelocityRate;
 	/* 0x37C */ TParamRT<s32> mSLBoundNum;
-	/* 0x390 */ TParamRT<s32> mSLSearchActorTime;
+	/* 0x390 */ TParamRT<s32> mSLSearchActorTimer;
 	/* 0x3A4 */ TParamRT<f32> mSLCanSearchDist;
 	/* 0x3B8 */ TParamRT<s32> mSLJitabataTimer;
 	/* 0x3CC */ TParamRT<f32> mSLFirstKickVelocityY;

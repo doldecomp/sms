@@ -31,11 +31,11 @@ public:
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
 	virtual void reset();
-	virtual void resetToPosition(const JGeometry::TVec3<f32>&);
-	virtual void resetSRTV(const JGeometry::TVec3<f32>&,
-	                       const JGeometry::TVec3<f32>&,
-	                       const JGeometry::TVec3<f32>&,
-	                       const JGeometry::TVec3<f32>&);
+	virtual void resetToPosition(const JGeometry::TVec3<f32>& position);
+	virtual void resetSRTV(const JGeometry::TVec3<f32>& position,
+	                       const JGeometry::TVec3<f32>& rotation,
+	                       const JGeometry::TVec3<f32>& scaling,
+	                       const JGeometry::TVec3<f32>& velocity);
 	virtual TSpineEnemyParams* getSaveParam() const;
 	virtual f32 getPhaseShift() const { return 0.0f; }
 	virtual BOOL isReachedToGoal() const { }

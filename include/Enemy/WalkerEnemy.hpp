@@ -66,7 +66,7 @@ public:
 	bool isReachedToGoalXZ();
 
 	// fabricated
-	TWalkerEnemyParams* getSaveParam() const
+	TWalkerEnemyParams* getSaveParam2() const
 	{
 		return (TWalkerEnemyParams*)TSpineEnemy::getSaveParam();
 	}
