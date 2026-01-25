@@ -51,6 +51,7 @@ static const GXColorS10 cTelesaColor[2] = {
 };
 
 static const GXColor cTelesaColorStart = { 0, 0, 0, 0 };
+static const GXColor cTelesaColorEnd   = { 255, 255, 255, 255 };
 
 TTelesaSaveLoadParams::TTelesaSaveLoadParams(const char* path)
     : TWalkerEnemyParams(path)
@@ -76,7 +77,7 @@ TTelesaSaveLoadParams::TTelesaSaveLoadParams(const char* path)
     , unk468(0.0f)
     , unk46C(1.0f)
 {
-	TParams::load(path);
+	TParams::load(mPrmPath);
 	unk458 = mSLFlyHeightMin.get();
 	unk45C = mSLFlyHeightMax.get();
 	unk460 = mSLFlyAmplitudeMin.get();
@@ -89,7 +90,7 @@ TTelesaManager::TTelesaManager(const char* name)
     : TSmallEnemyManager(name)
     , unk60(0)
     , unk61(0)
-    , unk64(0)
+    , mModokiTelesaModel(nullptr)
 {
 }
 
@@ -98,7 +99,8 @@ void TTelesaManager::load(JSUMemoryInputStream& stream)
 	unk38 = new TTelesaSaveLoadParams("/enemy/telesa.prm");
 
 	void* data = JKRGetResource("/scene/telesa/modoki.bmd");
-	unk64 = new SDLModelData(J3DModelLoaderDataBase::load(data, 0x11020000));
+	mModokiTelesaModel
+	    = new SDLModelData(J3DModelLoaderDataBase::load(data, 0x11020000));
 
 	TSmallEnemyManager::load(stream);
 }
@@ -158,7 +160,17 @@ void TTelesaManager::telesaForceKill()
 	}
 }
 
-void TTelesaManager::generatePetBottle(TTelesa*) { }
+void TTelesaManager::generatePetBottle(TTelesa* telesa)
+{
+	unk61 += 1;
+
+	if (unk61 >= 5) {
+		unk61 = 0;
+		gpItemManager->makeObjAppear(telesa->mPosition.x,
+		                             telesa->mPosition.y + 20.0f,
+		                             telesa->mPosition.z, 0x20000002, true);
+	}
+}
 
 void TTelesaManager::setFlagOutOfCube()
 {
@@ -192,7 +204,7 @@ TTelesa::TTelesa(const char* name)
     , unk1B8(0)
     , mTelesaType(TELESA_TYPE_NORMAL)
     , mFadeLoopTimer(0)
-    , mImitatedItem(nullptr)
+    , mImitatedBmd(nullptr)
     , unk1C8(0)
     , mFadeTimer(0)
     , mFadeState(FADE_STATE_INVISIBLE)
@@ -261,7 +273,7 @@ void TTelesa::reset()
 	else
 		mSpine->initWith(&TNerveWalkerGraphWander::theNerve());
 
-	if (mImitatedItem)
+	if (mImitatedBmd)
 		mSpine->initWith(&TNerveTelesaImitate::theNerve());
 
 	mTelesaBaseColor = cTelesaColor[0];
@@ -271,7 +283,7 @@ void TTelesa::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	TSmallEnemy::perform(param_1, param_2);
 	if (!checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_DEAD)) {
-		if (mImitatedItem) {
+		if (mImitatedBmd) {
 			if (param_1 & 2) {
 				const TBGCheckData* pTStack_5c;
 				gpMap->checkGround(mPosition.x, mPosition.y, mPosition.z,
@@ -280,24 +292,23 @@ void TTelesa::perform(u32 param_1, JDrama::TGraphics* param_2)
 				MsMtxSetXYZRPH(afStack_58, mPosition.x, mPosition.y,
 				               mPosition.z, mRotation.x, mRotation.y,
 				               mRotation.z);
-				mImitatedItem->getMActor()->getModel()->setBaseTRMtx(
-				    afStack_58);
-				J3DModel* model = mImitatedItem->getMActor()->getModel();
+				mImitatedBmd->getMActor()->getModel()->setBaseTRMtx(afStack_58);
+				J3DModel* model = mImitatedBmd->getMActor()->getModel();
 				model->unk14    = JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f);
 			}
 
 			if (param_1 & 0x200)
-				mImitatedItem->getMActor()->setLightData(mGroundPlane,
-				                                         mPosition);
+				mImitatedBmd->getMActor()->setLightData(mGroundPlane,
+				                                        mPosition);
 
-			mImitatedItem->getMActor()->perform(param_1, param_2);
+			mImitatedBmd->getMActor()->perform(param_1, param_2);
 		}
 	}
 }
 
 void TTelesa::drawObject(JDrama::TGraphics* param_1)
 {
-	if (mImitatedItem == nullptr)
+	if (mImitatedBmd == nullptr)
 		TLiveActor::drawObject(param_1);
 }
 
@@ -595,6 +606,8 @@ void TTelesa::setWalkAnm()
 
 void TTelesa::setWaitAnm() { setBckAnm(6); }
 
+// TODO: wut?
+#pragma dont_inline on
 void TTelesa::reduceFlyForce()
 {
 	if (mCurrentFlyHeight > 0.0f)
@@ -617,6 +630,7 @@ void TTelesa::reduceFlyForce()
 	mFlyBobPhase *= 0.9f;
 	mRotation.x *= 0.9f;
 }
+#pragma dont_inline off
 
 f32 TTelesa::getGravityY() const
 {
@@ -626,9 +640,24 @@ f32 TTelesa::getGravityY() const
 	return unk194->mSLTelesaGravityY.get();
 }
 
-bool TTelesa::isFlying() { }
+bool TTelesa::isFlying()
+{
+	if (mCurrentFlyHeight != 0.0f)
+		return true;
 
-void TTelesa::isResetTransY() { }
+	if (mFlyBobOffsetY != 0.0f)
+		return true;
+
+	if (isAirborne())
+		return true;
+
+	mDampenedGroundHeight = mPosition.y;
+	return false;
+}
+
+// is this an actual predicate or some kind of a "trans Y with isReset flag
+// accounted for"???
+bool TTelesa::isResetTransY() { }
 
 void TTelesa::forceKill()
 {
@@ -718,11 +747,51 @@ bool TTelesa::isCollidMove(THitActor* param_1)
 	return param_1->mActorType == 0x10000020 ? false : true;
 }
 
-void TTelesa::resetBaseGround() { }
+// TODO: this FEELS real but it's 4 bytes too big!!!
+bool TTelesa::resetBaseGround()
+{
+	bool result = unk165;
+	if (result)
+		unk165 = false;
 
-void TTelesa::setAttackPoint() { }
+	return result;
+}
 
-void TTelesa::setFirstAttackPoint() { }
+void TTelesa::setAttackPoint()
+{
+	JGeometry::TVec3<f32> pos = mPosition;
+
+	f32 dx = SMS_GetMarioPos().x - mPosition.x;
+	f32 dz = SMS_GetMarioPos().z - mPosition.z;
+	// TODO: random interval
+	volatile f32 minR = 0.7f;
+	volatile f32 maxR = 1.6f;
+	f32 r             = MsRandF(minR, maxR);
+
+	pos.x += dx * r;
+	pos.z += dz * r;
+
+	setGoalPath(TPathNode(pos));
+}
+
+void TTelesa::setFirstAttackPoint()
+{
+	TRotation3f SStack_78; // TODO: uuuuuh...
+
+	if (unk184)
+		mRotation.y = 180.0f - mInstanceIndex * 720.0f;
+
+	JGeometry::TVec3<f32> pos = mPosition;
+
+	// TODO: probably done via TRotation calls? Why is is all so inlined ;(
+	f32 s = JMASin(mRotation.y);
+	f32 c = JMACos(mRotation.y);
+
+	pos.x += c * 1000.0f;
+	pos.z += s * 1000.0f;
+
+	setGoalPath(TPathNode(pos));
+}
 
 void TTelesa::setTypeNormal()
 {
@@ -876,7 +945,7 @@ bool TBoxTelesa::isHitValid(u32 param_1)
 
 TMarioModokiTelesa::TMarioModokiTelesa(const char* name)
     : TTelesa(name)
-    , mImitationItemIndex(0)
+    , mImitationIndex(IMITATION_INDEX_NOT_IMITATING)
 {
 }
 
@@ -884,73 +953,75 @@ void TMarioModokiTelesa::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);
 
-	stream.read(&mImitationItemIndex, 0x4);
+	stream.read(&mImitationIndex, 0x4);
 
-	SDLModelData* this_01 = ((TTelesaManager*)mManager)->unk64;
-	switch (mImitationItemIndex) {
+	SDLModelData* modelToUse = ((TTelesaManager*)mManager)->mModokiTelesaModel;
+	switch (mImitationIndex) {
+		// NOTE: IMITATION_INDEX_NOT_IMITATING=0 stands for no model change
+
 	case 1:
 		if (void* data = JKRGetResource("/scene/mapObj/coin.bmd"))
-			this_01 = new SDLModelData(
+			modelToUse = new SDLModelData(
 			    J3DModelLoaderDataBase::load(data, 0x10020000));
 		break;
 	case 2:
 		if (void* data = JKRGetResource("/scene/mapObj/coin_red.bmd"))
-			this_01 = new SDLModelData(
+			modelToUse = new SDLModelData(
 			    J3DModelLoaderDataBase::load(data, 0x10020000));
 		break;
 	case 3:
 		if (void* data = JKRGetResource("/scene/mapObj/coin_blue.bmd"))
-			this_01 = new SDLModelData(
+			modelToUse = new SDLModelData(
 			    J3DModelLoaderDataBase::load(data, 0x10020000));
 		break;
 	case 4:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitBanana.bmd"))
-			this_01 = new SDLModelData(
+			modelToUse = new SDLModelData(
 			    J3DModelLoaderDataBase::load(data, 0x10020000));
 		break;
 	case 5:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitDurian.bmd"))
-			this_01 = new SDLModelData(
+			modelToUse = new SDLModelData(
 			    J3DModelLoaderDataBase::load(data, 0x10020000));
 		break;
 	case 6:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitPapaya.bmd"))
-			this_01 = new SDLModelData(
+			modelToUse = new SDLModelData(
 			    J3DModelLoaderDataBase::load(data, 0x10020000));
 		break;
 	case 7:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitPine.bmd"))
-			this_01 = new SDLModelData(
+			modelToUse = new SDLModelData(
 			    J3DModelLoaderDataBase::load(data, 0x10020000));
 		break;
 	case 8:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitCoconut.bmd"))
-			this_01 = new SDLModelData(
+			modelToUse = new SDLModelData(
 			    J3DModelLoaderDataBase::load(data, 0x10020000));
 		break;
 	case 9:
 		if (void* data = JKRGetResource("/scene/mapObj/mashroom1up.bmd"))
-			this_01 = new SDLModelData(
+			modelToUse = new SDLModelData(
 			    J3DModelLoaderDataBase::load(data, 0x10020000));
 		break;
 	case 10:
 		if (void* data = JKRGetResource("/scene/mapObj/kibako.bmd"))
-			this_01 = new SDLModelData(
+			modelToUse = new SDLModelData(
 			    J3DModelLoaderDataBase::load(data, 0x10020000));
 		break;
 	case 11:
 		if (void* data = JKRGetResource("/scene/mapObj/woodbarrel.bmd"))
-			this_01 = new SDLModelData(
+			modelToUse = new SDLModelData(
 			    J3DModelLoaderDataBase::load(data, 0x10020000));
 		break;
 	case 12:
 		if (void* data = JKRGetResource("/scene/monteM/mom_model.bmd"))
-			this_01 = new SDLModelData(
+			modelToUse = new SDLModelData(
 			    J3DModelLoaderDataBase::load(data, 0x10020000));
 		break;
 	}
 
-	mImitatedItem = new TSharedParts(this, 0, this_01, 3);
+	mImitatedBmd = new TSharedParts(this, 0, modelToUse, 3);
 	reset();
 	mDampenedGroundHeight = mPosition.y;
 	setTypeNormal();
@@ -965,17 +1036,15 @@ void TMarioModokiTelesa::init(TLiveManager* manager)
 
 void TMarioModokiTelesa::imitateAnm()
 {
-	if (mImitationItemIndex == 0) // coin
-		mImitatedItem->getMActor()->setBckFromIndex(0);
-
-	// no animations for other imitated items
+	if (mImitationIndex == IMITATION_INDEX_NOT_IMITATING)
+		mImitatedBmd->getMActor()->setBckFromIndex(0);
 }
 
 DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 {
 	TTelesa* self = (TTelesa*)spine->getBody();
 
-	TSharedParts* imitatedItem = self->mImitatedItem;
+	TSharedParts* imitatedItem = self->mImitatedBmd;
 
 	if (gpApplication.mCurrArea.unk0 != 7
 	    && gpApplication.mCurrArea.unk0 != 14) {
@@ -1013,9 +1082,7 @@ DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 	if (!self->checkLiveFlag(LIVE_FLAG_DEAD)) {
 		// TODO: this is an inline
 
-		if (self->unk165 != 0) {
-			self->unk165 = 0;
-		} else if (self->unk165 == 0) {
+		if (!self->resetBaseGround()) {
 			if (self->isInSight(SMS_GetMarioPos(), 0.0f, 0.0f, searchAware))
 				return false;
 		}
@@ -1023,7 +1090,7 @@ DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 		gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &self->mPosition, 0,
 		                                            nullptr);
 
-		self->mImitatedItem = nullptr;
+		self->mImitatedBmd = nullptr;
 		self->setFlyParam(1.0f);
 
 		spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
@@ -1046,14 +1113,14 @@ DEFINE_NERVE(TNerveTelesaDie, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->decHitPoints();
-		if (self->mHitPoints == 0) {
+		if (self->getHitPoints() == 0) {
 			if (self->mFadeState == TTelesa::FADE_STATE_INVISIBLE
 			    || self->mFadeState == TTelesa::FADE_STATE_FADE_OUT)
 				self->mFadeState = TTelesa::FADE_STATE_FADE_IN;
 			self->onHitFlag(HIT_FLAG_UNK1);
 		}
 
-		if (self->unk184) {
+		if (self->getUnk184()) {
 			gpMarioParticleManager->emit(0xCD, &self->mPosition, 0, nullptr);
 		} else {
 			self->setBckAnm(2);
@@ -1062,7 +1129,7 @@ DEFINE_NERVE(TNerveTelesaDie, TLiveActor)
 
 	self->reduceFlyForce();
 
-	if (self->checkCurAnmEnd(0) || self->unk184) {
+	if (self->checkCurAnmEnd(0) || self->getUnk184()) {
 		self->onLiveFlag(LIVE_FLAG_DEAD);
 		self->onLiveFlag(LIVE_FLAG_UNK8);
 		self->offLiveFlag(LIVE_FLAG_UNK10000);
@@ -1073,17 +1140,10 @@ DEFINE_NERVE(TNerveTelesaDie, TLiveActor)
 		spine->setNext(&TNerveTelesaDie::theNerve());
 		spine->pushAfterCurrent(spine->getDefault());
 
-		if (!self->unk184) {
+		if (!self->getUnk184()) {
 			self->genRandomItem();
-			TTelesaManager* manager = (TTelesaManager*)self->mManager;
-			manager->unk61 += 1;
-
-			if (manager->unk61 >= 5) {
-				manager->unk61 = 0;
-				gpItemManager->makeObjAppear(
-				    self->mPosition.x, self->mPosition.y + 20.0f,
-				    self->mPosition.z, 0x20000002, true);
-			}
+			TTelesaManager* manager = (TTelesaManager*)self->getManager();
+			manager->generatePetBottle(self);
 
 			gpMarioParticleManager->emitAndBindToPosPtr(0xCE, &self->mPosition,
 			                                            0, nullptr);
@@ -1103,12 +1163,21 @@ DEFINE_NERVE(TNerveTelesaFreeze, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->setBckAnm(5);
 		self->setGoalPathMario();
-	} else {
-		// TODO: there is a MOUNTAIN of inlines here.
+	} else if (self->checkCurAnmEnd(0)) {
+		if (self->isBckAnm(4)) {
+			if (!self->isFlying()) {
+				self->unk1C8 = 0;
+				self->offHitFlag(HIT_FLAG_UNK10000000);
+				return true;
+			}
+		} else if (self->resetBaseGround() || self->isBckAnm(5))
+			self->setBckAnm(3);
+		else
+			self->setBckAnm(4);
 	}
 
 	self->reduceFlyForce();
-	self->walkToCurPathNode(0.0f, self->mTurnSpeed * 0.2f, 0.0f);
+	self->walkToCurPathNode(0.0f, self->getTurnSpeed() * 0.2f, 0.0f);
 
 	return false;
 }
@@ -1119,35 +1188,14 @@ DEFINE_NERVE(TNerveTelesaAttackMario, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->setBckAnm(6);
-		TRotation3f SStack_78; // TODO: uuuuuh...
-
-		if (self->unk184)
-			self->mRotation.y = self->mInstanceIndex * 720.0f - 180.0f;
-
-		f32 s = JMASin(self->mRotation.y);
-		f32 c = JMACos(self->mRotation.y);
-
-		self->setGoalPath(TPathNode(JGeometry::TVec3<f32>(
-		    self->mPosition.x + c * 1000.0f, self->mPosition.y,
-		    self->mPosition.z + s * 1000.0f)));
+		self->setFirstAttackPoint();
 	}
 
 	if (spine->getTime() == 10)
 		self->offLiveFlag(LIVE_FLAG_UNK2);
 
-	if (self->isReachedToGoalXZ()) {
-
-		// TODO: vec math ugghhhh
-		f32 r = MsRandF(0.2f, 0.7f);
-		JGeometry::TVec3<f32> target;
-		target.x
-		    = (SMS_GetMarioPos().x - self->mPosition.x) * r + self->mPosition.x;
-		target.y = self->mPosition.y;
-		target.z
-		    = (SMS_GetMarioPos().z - self->mPosition.z) * r + self->mPosition.z;
-
-		self->setGoalPath(TPathNode(target));
-	}
+	if (self->isReachedToGoalXZ())
+		self->setAttackPoint();
 
 	self->walkBehavior(2, 2.0f);
 

@@ -52,7 +52,7 @@ public:
 public:
 	/* 0x60 */ u8 unk60;
 	/* 0x61 */ u8 unk61;
-	/* 0x64 */ SDLModelData* unk64;
+	/* 0x64 */ SDLModelData* mModokiTelesaModel;
 };
 
 class TTelesa : public TWalkerEnemy {
@@ -92,10 +92,10 @@ public:
 	void setFlyParam(f32);
 	void reduceFlyForce();
 	bool isFlying();
-	void isResetTransY();
+	bool isResetTransY();
 	void initItemAttacker(THitActor*);
 	void setAttacker();
-	void resetBaseGround();
+	bool resetBaseGround();
 	void setAttackPoint();
 	void setFirstAttackPoint();
 	void setTypeNormal();
@@ -118,8 +118,8 @@ public:
 	/* 0x1B8 */ u8 unk1B8;
 	enum { TELESA_TYPE_NORMAL, TELESA_TYPE_LOOP, TELESA_TYPE_CAN_SEE };
 	/* 0x1BC */ int mTelesaType;
-	/* 0x1C0 */ int mFadeLoopTimer;          // used for waiting to fade in/out
-	/* 0x1C4 */ TSharedParts* mImitatedItem; // pretend to be this model/item
+	/* 0x1C0 */ int mFadeLoopTimer; // used for waiting to fade in/out
+	/* 0x1C4 */ TSharedParts* mImitatedBmd;
 	/* 0x1C8 */ u8 unk1C8;
 	/* 0x1C9 */ GXColor mTelesaFadeColor;
 	/* 0x1CE */ GXColorS10 mTelesaBaseColor;
@@ -165,7 +165,8 @@ public:
 	void imitateAnm();
 
 public:
-	/* 0x1E0 */ int mImitationItemIndex;
+	enum { IMITATION_INDEX_NOT_IMITATING = 0 };
+	/* 0x1E0 */ int mImitationIndex;
 };
 
 DECLARE_NERVE(TNerveTelesaImitate, TLiveActor);
