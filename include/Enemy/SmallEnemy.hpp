@@ -192,7 +192,7 @@ public:
 	/* 0x15C */ int mCurrentBckAnm;
 	/* 0x160 */ int mSprayedByWaterCooldown;
 	/* 0x164 */ u8 unk164;
-	/* 0x165 */ u8 unk165;
+	/* 0x165 */ bool unk165;
 	/* 0x166 */ char unk166[2];
 	/* 0x168 */ char unk168[0x174 - 0x168];
 	/* 0x174 */ u32 unk174;
