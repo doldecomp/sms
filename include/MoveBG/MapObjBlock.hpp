@@ -78,6 +78,8 @@ public:
 	void moveObject();
 	void initMapObj();
 
+	JGeometry::TVec3<f32>& getUnk140() { return unk140; }
+
 public:
 	/* 0x138 */ S16Vec unk138;
 	/* 0x140 */ JGeometry::TVec3<f32> unk140;

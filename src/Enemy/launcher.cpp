@@ -393,7 +393,7 @@ void TCommonLauncher::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (param_1 & 1) {
 		for (int i = 0; i < mColCount; ++i)
 			if (mCollisions[i]->isActorType(0x80000001))
-				SMS_SendMessageToMario(this, 0xE);
+				SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 	}
 }
 

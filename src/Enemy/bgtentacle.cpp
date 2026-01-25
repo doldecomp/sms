@@ -603,7 +603,7 @@ void TBGTentacle::throwMario(THitActor* param_1, THitActor* param_2)
 	local_e0.scale(2.0f);
 	local_e0.y += 1.0f;
 
-	SMS_SendMessageToMario(param_2, 0xE);
+	SMS_SendMessageToMario(param_2, HIT_MESSAGE_ATTACK);
 	SMS_SendMessageToMario(param_2, 0x7);
 
 	SMS_ThrowMario(local_e0, 3.21875f);

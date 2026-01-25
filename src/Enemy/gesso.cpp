@@ -421,7 +421,7 @@ bool TGesso::doKeepDistance()
 void TGesso::attackToMario()
 {
 	if (mState != STATE_WANDERING) {
-		SMS_SendMessageToMario(this, 0xE);
+		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 		mAttackCooldown = 1;
 		return;
 	}
@@ -436,13 +436,13 @@ void TGesso::attackToMario()
 
 	if (mSpine->getCurrentNerve() == &TNerveGessoPunch::theNerve()) {
 		if (mMActor->getFrameCtrl(0)->checkPass(10.0f))
-			SMS_SendMessageToMario(this, 0xE);
+			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 
 		return;
 	}
 
 	if (!isBckAnm(9))
-		SMS_SendMessageToMario(this, 0xE);
+		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 }
 
 void TGesso::setBehavior()
@@ -1009,7 +1009,7 @@ void TGessoPolluteObj::sendMessage()
 {
 	for (int i = 0; i < mColCount; ++i) {
 		if (mCollisions[i]->isActorType(0x80000001)) {
-			SMS_SendMessageToMario(this, 0xE);
+			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 			kill();
 		}
 	}

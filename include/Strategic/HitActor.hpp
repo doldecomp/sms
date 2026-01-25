@@ -16,9 +16,11 @@ enum THitMessageType {
 };
 
 enum THitFlagBits {
-	HIT_FLAG_UNK1 = 0x1,
-	HIT_FLAG_UNK2 = 0x2,
-	HIT_FLAG_UNK4 = 0x4,
+	HIT_FLAG_UNK1        = 0x1,
+	HIT_FLAG_UNK2        = 0x2,
+	HIT_FLAG_UNK4        = 0x4,
+	HIT_FLAG_UNK8000000  = 0x8000000,
+	HIT_FLAG_UNK10000000 = 0x10000000,
 };
 
 class THitActor : public JDrama::TActor {

@@ -149,7 +149,7 @@ TSmallEnemy::TSmallEnemy(const char* name)
     , unk164(0)
     , unk165(0)
     , unk174(0)
-    , unk178(0)
+    , mJuiceBlock(0)
     , mCoinId(-1)
     , mCoin(nullptr)
     , unk184(0)
@@ -581,22 +581,22 @@ bool TSmallEnemy::changeByJuice()
 	    || gpModelWaterManager->unk5D5F == 3
 	    || TSmallEnemyManager::mTestJuiceType != 0) {
 
-		if (unk178)
+		if (mJuiceBlock)
 			return true;
 
 		TJuiceBlock* block = (TJuiceBlock*)gpMapObjManager->makeObjAppear(
 		    mPosition.x, mPosition.y, mPosition.z, 0x400002C6, true);
-		unk178 = block;
+		mJuiceBlock = block;
 
-		if (!unk178)
+		if (!mJuiceBlock)
 			return false;
 
-		unk178->mScaling.set(0.1f, 0.1f, 0.1f);
-		unk178->unk140.set(0.0f, 0.0f, 0.0f);
-		unk178->mRotation.set(0.0f, mRotation.y, 0.0f);
+		mJuiceBlock->mScaling.set(0.1f, 0.1f, 0.1f);
+		mJuiceBlock->unk140.set(0.0f, 0.0f, 0.0f);
+		mJuiceBlock->mRotation.set(0.0f, mRotation.y, 0.0f);
 
-		unk178->unk14C = this;
-		unk178->offLiveFlag(LIVE_FLAG_UNK2);
+		mJuiceBlock->unk14C = this;
+		mJuiceBlock->offLiveFlag(LIVE_FLAG_UNK2);
 		onHitFlag(HIT_FLAG_UNK1);
 		onLiveFlag(LIVE_FLAG_UNK2);
 		onLiveFlag(LIVE_FLAG_UNK10);
@@ -642,18 +642,18 @@ bool TSmallEnemy::changeMove()
 	if (TSmallEnemyManager::mBlockWaitTime * 0.2f <= mSpine->getTime()) {
 		f32 time = TSmallEnemyManager::mBlockWaitTime * 0.2f;
 
-		unk178->mPosition.y += unk188 * 2.0f
-		                       * JMASin(mSpine->getTime() * 130.0f / time)
-		                       * TSmallEnemyManager::mBlockWaitMoveY;
+		mJuiceBlock->mPosition.y += unk188 * 2.0f
+		                            * JMASin(mSpine->getTime() * 130.0f / time)
+		                            * TSmallEnemyManager::mBlockWaitMoveY;
 
-		unk178->mRotation.y += mSpine->getTime() * 1080.0f / time;
+		mJuiceBlock->mRotation.y += mSpine->getTime() * 1080.0f / time;
 	} else {
 		if (mSpine->getTime() > TSmallEnemyManager::mBlockWaitTime) {
 			if (mSpine->getTime() > getChangeBlockTime() - 200) {
 				if (mSpine->getTime() % 20 < 10) {
-					unk178->onLiveFlag(LIVE_FLAG_UNK2);
+					mJuiceBlock->onLiveFlag(LIVE_FLAG_UNK2);
 				} else {
-					unk178->offLiveFlag(LIVE_FLAG_UNK2);
+					mJuiceBlock->offLiveFlag(LIVE_FLAG_UNK2);
 				}
 			}
 
@@ -663,36 +663,36 @@ bool TSmallEnemy::changeMove()
 				Mtx afStack_68;
 				MsMtxSetRotRPH(afStack_68, 0.0f, mRotation.y, 0.0f);
 				MTXMultVec(afStack_68, &local_38, &local_38);
-				unk178->mPosition.x
+				mJuiceBlock->mPosition.x
 				    += local_38.x * TSmallEnemyManager::mBlockMoveSpeed;
-				unk178->mPosition.z
+				mJuiceBlock->mPosition.z
 				    += local_38.z * TSmallEnemyManager::mBlockMoveSpeed;
 
 				if (gpMap->isTouchedOneWallAndMoveXZ(
-				        &unk178->mPosition.x, unk178->mPosition.y,
-				        &unk178->mPosition.z, mBodyRadius * 20.0f))
+				        &mJuiceBlock->mPosition.x, mJuiceBlock->mPosition.y,
+				        &mJuiceBlock->mPosition.z, mBodyRadius * 20.0f))
 					return 1;
 
-				JGeometry::TVec3<f32> local_74 = unk178->mPosition;
+				JGeometry::TVec3<f32> local_74 = mJuiceBlock->mPosition;
 				local_74.x += local_38.x * 300.0f;
 				local_74.z += local_38.z * 300.0f;
 
 				const TBGCheckData* local_2C;
 				f32 d = gpMap->checkGround(local_74.x, local_74.y + mHeadHeight,
 				                           local_74.z, &local_2C);
-				if (d > unk178->mPosition.y)
+				if (d > mJuiceBlock->mPosition.y)
 					return 1;
 				break;
 			}
 
 			case 3: {
-				unk178->mPosition.y += TSmallEnemyManager::mBlockMoveSpeed;
+				mJuiceBlock->mPosition.y += TSmallEnemyManager::mBlockMoveSpeed;
 				const TBGCheckData* local_2C;
-				f32 d = gpMap->checkRoof(unk178->mPosition.x,
-				                         unk178->mPosition.y + mHeadHeight,
-				                         unk178->mPosition.z, &local_2C);
-				if (local_2C && unk178->mPosition.y + mHeadHeight > d
-				    && local_2C->mActor != unk178)
+				f32 d = gpMap->checkRoof(mJuiceBlock->mPosition.x,
+				                         mJuiceBlock->mPosition.y + mHeadHeight,
+				                         mJuiceBlock->mPosition.z, &local_2C);
+				if (local_2C && mJuiceBlock->mPosition.y + mHeadHeight > d
+				    && local_2C->mActor != mJuiceBlock)
 					return 1;
 				break;
 			}
@@ -711,13 +711,13 @@ bool TSmallEnemy::changeMove()
 			MsMtxSetRotRPH(afStack_b0, 0.0f, mRotation.y, 0.0f);
 			MTXMultVec(afStack_b0, &local_80, &local_80);
 			if (mSpine->getTime() % 30 > 15) {
-				unk178->mPosition.y += 0.5f;
-				unk178->mPosition.x += local_80.x;
-				unk178->mPosition.z += local_80.z;
+				mJuiceBlock->mPosition.y += 0.5f;
+				mJuiceBlock->mPosition.x += local_80.x;
+				mJuiceBlock->mPosition.z += local_80.z;
 			} else {
-				unk178->mPosition.y -= 0.5f;
-				unk178->mPosition.x -= local_80.x;
-				unk178->mPosition.z -= local_80.z;
+				mJuiceBlock->mPosition.y -= 0.5f;
+				mJuiceBlock->mPosition.x -= local_80.x;
+				mJuiceBlock->mPosition.z -= local_80.z;
 			}
 		}
 	}
@@ -727,16 +727,16 @@ bool TSmallEnemy::changeMove()
 
 void TSmallEnemy::scalingChangeActor()
 {
-	f32 xzScale = MsClamp(unk178->unk140.x + 0.02f, 0.0f,
+	f32 xzScale = MsClamp(mJuiceBlock->unk140.x + 0.02f, 0.0f,
 	                      TSmallEnemyManager::mBlockXZScale);
 
-	unk178->unk140.x = unk178->unk140.z = xzScale;
-	unk178->mScaling.x = unk178->mScaling.z = xzScale;
+	mJuiceBlock->unk140.x = mJuiceBlock->unk140.z = xzScale;
+	mJuiceBlock->mScaling.x = mJuiceBlock->mScaling.z = xzScale;
 
-	f32 yScale         = MsClamp(unk178->unk140.y + 0.01f, 0.0f,
-	                             TSmallEnemyManager::mBlockYScale);
-	unk178->unk140.y   = yScale;
-	unk178->mScaling.y = yScale;
+	f32 yScale              = MsClamp(mJuiceBlock->unk140.y + 0.01f, 0.0f,
+	                                  TSmallEnemyManager::mBlockYScale);
+	mJuiceBlock->unk140.y   = yScale;
+	mJuiceBlock->mScaling.y = yScale;
 }
 
 void TSmallEnemy::changeOut()
@@ -746,12 +746,12 @@ void TSmallEnemy::changeOut()
 		                                          nullptr, 0, 4);
 
 	kill();
-	unk178->mPosition = mPosition;
+	mJuiceBlock->mPosition = mPosition;
 
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
 	getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
-	unk178->kill();
-	unk178 = nullptr;
+	mJuiceBlock->kill();
+	mJuiceBlock = nullptr;
 }
 
 void TSmallEnemy::decHpByWater(THitActor* param_1)

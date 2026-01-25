@@ -111,6 +111,9 @@ struct J3DTexMtxInfo {
 		mEffectMtx[3][3] = 1.0f;
 	}
 
+	// fabricated
+	void setEffectMtx2(Mtx m) { setEffectMtx(m); }
+
 	/* 0x00 */ u8 mProjection;
 	/* 0x01 */ u8 mInfo;
 	/* 0x02 */ u8 padding[2];

@@ -150,7 +150,7 @@ void TMameGesso::attackToMario()
 		return;
 
 	if (mSpine->getCurrentNerve() != &TNerveMameGessoObject::theNerve()) {
-		SMS_SendMessageToMario(this, 0xE);
+		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 	}
 }
 
