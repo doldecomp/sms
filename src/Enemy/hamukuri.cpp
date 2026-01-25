@@ -2150,7 +2150,7 @@ void TFireHamuKuri::sendAttackMsgToMario()
 	if (unk210)
 		SMS_SendMessageToMario(this, 10);
 	else
-		SMS_SendMessageToMario(this, 14);
+		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 }
 
 void TFireHamuKuri::changeTevColor()

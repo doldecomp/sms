@@ -77,13 +77,13 @@ public:
 class TSmallEnemyManager : public TEnemyManager {
 public:
 	TSmallEnemyManager(const char*);
-	void createModelData();
-	void load(JSUMemoryInputStream&);
-	void loadAfter();
-	void createEnemies(int);
-	TSmallEnemy* getHolder(int);
-
+	virtual void load(JSUMemoryInputStream&);
+	virtual void loadAfter();
+	virtual void createModelData();
+	virtual void createEnemies(int);
 	virtual void initSetEnemies() { }
+
+	TSmallEnemy* getHolder(int);
 
 	// fabricated
 	TSmallEnemyParams* getSaveParam2() const
@@ -196,7 +196,7 @@ public:
 	/* 0x166 */ char unk166[2];
 	/* 0x168 */ char unk168[0x174 - 0x168];
 	/* 0x174 */ u32 unk174;
-	/* 0x178 */ TJuiceBlock* unk178;
+	/* 0x178 */ TJuiceBlock* mJuiceBlock;
 	/* 0x17C */ int mCoinId;
 	/* 0x180 */ TCoin* mCoin;
 	/* 0x184 */ u8 unk184;

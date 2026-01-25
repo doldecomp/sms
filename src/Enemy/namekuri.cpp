@@ -629,7 +629,7 @@ void TNameKuri::reset()
 
 void TNameKuri::attackToMario()
 {
-	SMS_SendMessageToMario(this, 0xE);
+	SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 	if (mSpine->getCurrentNerve() == &TNerveNameKuriJumpAttack::theNerve()) {
 		setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
 		onLiveFlag(0x20000);
