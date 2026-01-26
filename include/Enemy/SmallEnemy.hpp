@@ -184,6 +184,13 @@ public:
 	{
 		return mCurrentBckAnm == index ? true : false;
 	}
+	bool unsetUnk165()
+	{
+		bool result = unk165;
+		if (unk165)
+			unk165 = false;
+		return result;
+	}
 
 public:
 	/* 0x150 */ u32 unk150;
