@@ -30,7 +30,7 @@ public:
 		unk0 = nullptr;
 		unk4 = point;
 	}
-
+	// TODO: this inline doesn't match in a couple of places.
 	const JGeometry::TVec3<f32>& getPoint() const
 	{
 		if (unk0 != 0)

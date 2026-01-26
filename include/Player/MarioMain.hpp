@@ -789,7 +789,7 @@ public:
 	void isForceSlip();
 	void getRidingMtx(f32 (*)[4]);
 	void isWallInFront() const;
-	void isInvincible() const;
+	bool isInvincible() const;
 	void isUnderWater() const;
 	void canSquat() const;
 	void getJumpSlideControl() const;
