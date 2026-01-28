@@ -23,6 +23,29 @@ static inline f32 fastSqrt(f32 x)
 	}
 }
 
+static inline void RotateAboutAxis(const JGeometry::TVec3<f32>& param_axis,
+                                   f32 angle, JGeometry::TVec3<f32>* vec)
+{
+	JGeometry::TRotation3<TMtx33f> mtxT;
+
+	mtxT.ref(0, 2) = mtxT.ref(1, 2) = 0.0f;
+	mtxT.ref(0, 1) = mtxT.ref(2, 1) = 0.0f;
+	mtxT.ref(1, 0) = mtxT.ref(2, 0) = 0.0f;
+	mtxT.ref(0, 0) = mtxT.ref(1, 1) = mtxT.ref(2, 2) = 1.0f;
+
+	mtxT.setRotate(param_axis, angle);
+
+	JGeometry::TVec3<f32> oldVec = *vec;
+
+	// vec = mtxT.T @ oldVec
+	vec->x = oldVec.x * mtxT.at(0, 0) + oldVec.y * mtxT.at(1, 0)
+	         + oldVec.z * mtxT.at(2, 0);
+	vec->y = oldVec.x * mtxT.at(0, 1) + oldVec.y * mtxT.at(1, 1)
+	         + oldVec.z * mtxT.at(2, 1);
+	vec->z = oldVec.x * mtxT.at(0, 2) + oldVec.y * mtxT.at(1, 2)
+	         + oldVec.z * mtxT.at(2, 2);
+}
+
 // TODO: Explore how this is used, and add documentation
 void CLBCalc2DFPos(JGeometry::TVec2<f32>* param_1, MtxPtr param_2,
                    const MtxPtr param_3, const Vec& param_4, u32* param_5,
@@ -48,6 +71,231 @@ void CLBCalc2DFPos(JGeometry::TVec2<f32>* param_1, MtxPtr param_2,
 				    = CLBLinearInbetween((u32)0, (u32)0xffffff, fVar4 + 1.0f);
 			}
 		}
+	}
+}
+
+// TODO: Not sure if this is fully correct
+void CLBCalcNearNinePos(JGeometry::TVec3<f32>* param_2, S16Vec* param_3,
+                        const JGeometry::TVec3<f32>& param_4,
+                        const JGeometry::TVec3<f32>& param_5, s16 param_6,
+                        f32 param_1, const JGeometry::TVec2<f32>& param_7)
+{
+	float fVar1;
+	float fVar2;
+	float fVar3;
+	int iVar4;
+	float fVar5;
+	float fVar6;
+	float fVar7;
+	float fVar8;
+	float fVar9;
+	float fVar10;
+	s16 sVar11;
+	u16 uVar12;
+	f32 extraout_var;
+
+	JGeometry::TVec3<f32> fVar16;
+	JGeometry::TVec3<f32> fVar19;
+
+	float fVar20;
+
+	JGeometry::TRotation3<TMtx33f> local_118;
+
+	float local_f4;
+	float local_f0;
+	float local_ec;
+
+	JGeometry::TRotation3<TMtx33f> local_e4;
+
+	float local_c0;
+	float local_bc;
+	float local_b8;
+	JGeometry::TVec3<f32> local_a8[2];
+	Vec local_90;
+	JGeometry::TVec3<f32> local_80;
+	float local_74;
+	float local_70;
+	float local_6c;
+	JGeometry::TVec3<f32> local_68;
+	u32 local_58;
+	u32 uStack_54;
+
+	local_a8[0].sub(param_5, param_4);
+	local_a8[0].normalize();
+
+	param_2[4].scaleAdd(param_1, param_4, local_a8[0]);
+
+	extraout_var
+	    = MsSqrtf(((param_4.x - param_5.x) * (param_4.x - param_5.x)
+	               + (param_4.z - param_5.z) * (param_4.z - param_5.z)));
+	sVar11     = matan(extraout_var, param_4.y - param_5.y);
+	param_3->x = -sVar11;
+	uVar12     = matan(param_4.z - param_5.z, param_4.x - param_5.x);
+	param_3->y = uVar12;
+	param_3->z = param_6;
+
+	local_68.set(0.0f, 1.0f, 0.0f);
+	local_74   = 1.0;
+	local_70   = 0.0;
+	local_6c   = 0.0;
+	local_80.sub(param_5, param_4);
+
+	local_80.normalize();
+
+	fVar1 = JMASSin(param_3->x);
+	fVar5 = local_68.z * fVar1;
+
+	fVar2 = JMASCos(param_3->x);
+	fVar6 = local_68.y * fVar1 + local_68.z * fVar2;
+
+	fVar1  = JMASSin(param_3->y);
+	fVar7  = param_3->z * 0.005493164f * 0.017453294f;
+	fVar16.z = fVar7;
+
+	fVar3    = JMASCos(param_3->y);
+	fVar8    = -local_68.x;
+	local_68.x = local_68.x * fVar3 + fVar6 * fVar1;
+	local_68.z = fVar8 * fVar1 + fVar6 * fVar3;
+
+	local_e4.identity33();
+	local_68.y = local_68.y * fVar2 - fVar5;
+	local_e4.setRotate(local_80, fVar7);
+
+	local_c0 = local_68.x;
+	local_bc = local_68.y;
+	local_b8 = local_68.z;
+	fVar6    = local_68.z * local_e4.at(2, 0);
+	fVar5    = local_68.x * local_e4.at(0, 1);
+	fVar7    = local_68.z * local_e4.at(2, 1);
+	local_68.z = local_68.z * local_e4.at(2, 2) + local_68.x * local_e4.at(0, 2)
+	           + local_68.y * local_e4.at(1, 2);
+
+	fVar1 = JMASSin(param_3->x);
+	fVar8 = local_6c * fVar1;
+	fVar2 = JMASCos(param_3->x);
+	fVar9 = local_70 * fVar1 + local_6c * fVar2;
+
+	fVar10 = -local_74;
+	fVar1  = JMASSin(param_3->y);
+	fVar3  = JMASCos(param_3->y);
+
+	local_74 = local_74 * fVar3 + fVar9 * fVar1;
+	local_6c = fVar10 * fVar1 + fVar9 * fVar3;
+
+	local_118.identity33();
+
+	local_70 = local_70 * fVar2 - fVar8;
+	local_68.x
+	    = fVar6 + local_68.x * local_e4.at(0, 0) + local_68.y * local_e4.at(1, 0);
+	local_68.y = fVar7 + fVar5 + local_68.y * local_e4.at(1, 1);
+	local_118.setRotate(local_80, fVar16.z);
+
+	local_f4 = local_74;
+	local_f0 = local_70;
+	local_ec = local_6c;
+	fVar2    = local_6c * local_118.at(2, 0) + local_74 * local_118.at(0, 0)
+	        + local_70 * local_118.at(1, 0);
+	fVar1 = local_6c * local_118.at(2, 1) + local_74 * local_118.at(0, 1)
+	        + local_70 * local_118.at(1, 1);
+	local_6c = local_6c * local_118.at(2, 2) + local_74 * local_118.at(0, 2)
+	           + local_70 * local_118.at(1, 2);
+
+	fVar3        = param_7.y * 0.5;
+	fVar5        = param_7.x * 0.5;
+	fVar6        = -fVar3;
+	fVar7        = -fVar5;
+	fVar20       = (fVar3 * fVar3 + fVar5 * fVar5);
+
+	fVar19.scale(fVar3, local_68);
+
+	param_2[1].scaleAdd(fVar3, param_2[4], local_68);
+	param_2[7].scaleAdd(fVar6, param_2[4], local_68);
+
+	param_2[3].x = param_2[4].x + fVar2 * fVar7;
+	param_2[3].y = param_2[4].y + fVar1 * fVar7;
+	param_2[3].z = param_2[4].z + local_6c * fVar7;
+
+	fVar16.x       = (fVar2 * fVar5);
+	fVar16.y       = (fVar1 * fVar5);
+	fVar16.z       = (local_6c * fVar5);
+	param_2[5].add(param_2[4], fVar16);
+
+	fVar20 = fastSqrt(fVar20);
+
+	local_90.x = (f32)((double)(fVar2 * fVar7) + fVar19.x);
+	local_90.y = (f32)((double)(fVar1 * fVar7) + fVar19.y);
+	local_90.z = (f32)((double)(local_6c * fVar7) + fVar19.z);
+	local_74   = fVar2;
+	local_70   = fVar1;
+	MsVECNormalize(&local_90, &local_90);
+
+	param_2[0].scaleAdd(fVar20, param_2[4], local_90);
+	param_2[8].x = (float)((double)-local_90.x * fVar20 + (double)param_2[4].x);
+	param_2[8].y = (float)((double)-local_90.y * fVar20 + (double)param_2[4].y);
+	param_2[8].z = (float)((double)-local_90.z * fVar20 + (double)param_2[4].z);
+
+	local_90.x   = (f32)(fVar16.x + fVar19.x);
+	local_90.y   = (f32)(fVar16.y + fVar19.y);
+	local_90.z   = (f32)(fVar16.z + fVar19.z);
+	MsVECNormalize(&local_90, &local_90);
+
+	param_2[2].scaleAdd(fVar20, param_2[4], local_90);
+	param_2[6].x = (float)((double)-local_90.x * fVar20 + (double)param_2[4].x);
+	param_2[6].y = (float)((double)-local_90.y * fVar20 + (double)param_2[4].y);
+	param_2[6].z = (float)((double)-local_90.z * fVar20 + (double)param_2[4].z);
+}
+
+void CLBCalcPointInCubeRatio(const Vec& param_1, const Vec& param_2,
+                             const Vec& param_3, const Vec& param_4,
+                             f32* param_5, f32* param_6, f32* param_7)
+{
+	f32 dx = param_1.x - param_2.x;
+	f32 dy = param_1.y - param_2.y;
+	f32 dz = param_1.z - param_2.z;
+
+	if (param_3.z != 0) {
+		s16 zAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.z));
+		f32 cosZ   = JMASCos(zAngle);
+		f32 sinZ   = JMASSin(zAngle);
+
+		f32 dySinZ = dy * sinZ;
+
+		dy = dx * sinZ + dy * cosZ;
+		dx = dx * cosZ - dySinZ;
+	}
+
+	if (param_3.y != 0) {
+		s16 yAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.y));
+		f32 cosY   = JMASCos(yAngle);
+		f32 sinY   = JMASSin(yAngle);
+
+		f32 dzSinY = dz * sinY;
+
+		dz = -dx * sinY + dz * cosY;
+		dx = dx * cosY + dzSinY;
+	}
+
+	if (param_3.x != 0) {
+		s16 xAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.x));
+		f32 cosX   = JMASCos(xAngle);
+		f32 sinX   = JMASSin(xAngle);
+
+		f32 dzSinX = dz * sinX;
+
+		dz = dy * sinX + dz * cosX;
+		dy = dy * cosX - dzSinX;
+	}
+
+	if (param_5 != nullptr) {
+		*param_5 = CLBCalcRatio(-param_4.x * 0.5f, param_4.x * 0.5f, dx);
+	}
+
+	if (param_6 != nullptr) {
+		*param_6 = CLBCalcRatio(0.0f, param_4.y, dy);
+	}
+
+	if (param_7 != nullptr) {
+		*param_7 = CLBCalcRatio(-param_4.z * 0.5f, param_4.z * 0.5f, dz);
 	}
 }
 
@@ -214,6 +462,61 @@ void CLBCrossToPolar(const Vec& origin, const Vec& in, f32* outRadius,
 	*outHAngle = matan(dz, dx);
 }
 
+bool CLBIsPointInCube(const Vec& param_1, const Vec& param_2,
+                      const Vec& param_3, const Vec& param_4)
+{
+	// TODO: Why is so much of this copy-pasted from CLBCalcPointInCubeRatio?
+
+	f32 dx = param_1.x - param_2.x;
+	f32 dy = param_1.y - param_2.y;
+	f32 dz = param_1.z - param_2.z;
+
+	bool result = false;
+
+	if (param_3.y != 0.0f || param_3.x != 0.0f || param_3.z != 0.0f) {
+		if (param_3.z != 0.0f) {
+			s16 zAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.z));
+			f32 cosZ   = JMASCos(zAngle);
+			f32 sinZ   = JMASSin(zAngle);
+
+			f32 dySinZ = dy * sinZ;
+
+			dy = dx * sinZ + dy * cosZ;
+			dx = dx * cosZ - dySinZ;
+		}
+
+		if (param_3.y != 0.0f) {
+			s16 yAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.y));
+			f32 cosY   = JMASCos(yAngle);
+			f32 sinY   = JMASSin(yAngle);
+
+			f32 dzSinY = dz * sinY;
+
+			dz = -dx * sinY + dz * cosY;
+			dx = dx * cosY + dzSinY;
+		}
+
+		if (param_3.x != 0.0f) {
+			s16 xAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.x));
+			f32 cosX   = JMASCos(xAngle);
+			f32 sinX   = JMASSin(xAngle);
+
+			f32 dzSinX = dz * sinX;
+
+			dz = dy * sinX + dz * cosX;
+			dy = dy * cosX - dzSinX;
+		}
+	}
+
+	if ((-param_4.x * 0.5f < dx && dx < param_4.x * 0.5f)
+	    && (0.0f < dy && dy < param_4.y)
+	    && (-param_4.z * 0.5f < dz && dz < param_4.z * 0.5f)) {
+		result = true;
+	}
+
+	return result;
+}
+
 /**
  * @brief Converts spherical coordinates to Cartesian coordinates.
  *
@@ -229,4 +532,49 @@ void CLBPolarToCross(const Vec& origin, Vec* out, f32 radius, s16 vAngle,
 	out->x = origin.x + radius * JMASCos(vAngle) * JMASSin(hAngle);
 	out->y = origin.y + radius * JMASSin(vAngle);
 	out->z = origin.z + radius * JMASCos(vAngle) * JMASCos(hAngle);
+}
+
+/**
+ * @brief Clamps a vector within a specified vertical angle range.
+ *
+ * @param vAngleMin the minimum vertical angle
+ * @param vAngleMax the maximum vertical angle
+ * @param origin the point to use as the origin
+ * @param inOut the input and output vector
+ */
+void CLBRevisionLookatByAngleX(s16 vAngleMin, s16 vAngleMax, const Vec& origin,
+                               Vec* inOut)
+{
+	f32 radius;
+	s16 vAngle;
+	s16 hAngle;
+
+	CLBCrossToPolar(origin, *inOut, &radius, &vAngle, &hAngle);
+	vAngle = MsClamp(vAngle, vAngleMin, vAngleMax);
+	CLBPolarToCross(origin, inOut, radius, vAngle, hAngle);
+}
+
+void CLBRotatePosAndUp(s16 sAngle1, s16 sAngle2,
+                       const JGeometry::TVec3<f32>& axis1,
+                       const JGeometry::TVec3<f32>& axis2,
+                       const JGeometry::TVec3<f32>& offset,
+                       JGeometry::TVec3<f32>* param_6,
+                       JGeometry::TVec3<f32>* param_7)
+
+{
+	// Radian conversion
+	// 0.00549... = 360/65536
+	// 0.01745... = pi/180
+	f32 angle1 = sAngle1 * 0.005493164f * 0.017453294f;
+	f32 angle2 = sAngle2 * 0.005493164f * 0.017453294f;
+
+	JGeometry::TVec3<f32> v1 = *param_6 - offset;
+	RotateAboutAxis(axis1, -angle1, &v1);
+	*param_6 = offset + v1;
+	RotateAboutAxis(axis1, -angle1, param_7);
+
+	JGeometry::TVec3<f32> v2 = *param_6 - offset;
+	RotateAboutAxis(axis2, -angle2, &v2);
+	*param_6 = offset + v2;
+	RotateAboutAxis(axis2, -angle2, param_7);
 }

@@ -118,4 +118,6 @@ MsPerpendicFootToLineR(const JGeometry::TVec3<f32>& param_1,
 	return thing;
 }
 
+f32 MsSqrtf(f32);
+
 #endif
