@@ -244,9 +244,9 @@ public:
 	J3DSkinDeform* getSkinDeform() { return mSkinDeform; }
 
 	// TODO: might be wrong
-	MtxPtr getBaseTRMtx() { return mBaseMtx; }
-	void setBaseTRMtx(Mtx m) { MTXCopy(m, mBaseMtx); }
-	void setBaseScale(const Vec& scale) { mBaseScale = scale; }
+	MtxPtr getBaseTRMtx() { return unk20; }
+	void setBaseTRMtx(Mtx m) { MTXCopy(m, unk20); }
+	void setBaseScale(const Vec& scale) { unk14 = scale; }
 
 	virtual ~J3DModel();
 
@@ -255,8 +255,8 @@ public:
 	/* 0x08 */ u32 unk8;
 	/* 0x0C */ J3DCalcCallBack unkC;
 	char pad1[0x4];
-	/* 0x14 */ Vec mBaseScale;
-	/* 0x20 */ Mtx mBaseMtx;
+	/* 0x14 */ Vec unk14; // mBaseScale
+	/* 0x20 */ Mtx unk20; // mBaseMtx
 	/* 0x50 */ u8* mScaleFlagArr;
 	/* 0x54 */ u8* mEvlpScaleFlagArr;
 	/* 0x58 */ Mtx* mNodeMatrices;

@@ -17,7 +17,7 @@ public:
 	virtual void emit(int);
 	virtual void animation(int);
 
-	TNozzleTrigger mBomb;
+	/* 0x384 */ TNozzleTrigger mBomb;
 };
 
 #endif

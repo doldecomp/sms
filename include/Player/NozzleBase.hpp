@@ -108,8 +108,8 @@ public:
 
 	virtual void init();
 	virtual inline s32 getNozzleKind() const;
-	virtual inline s16 getGunAngle() { return this->mGunAngle; }
-	virtual inline s16 getWaistAngle() { return this->mWaistAngle; }
+	virtual inline s16 getGunAngle() { return unk36E; }
+	virtual inline s16 getWaistAngle() { return unk370; }
 	virtual void movement(const TMarioControllerWork&);
 	virtual void emitCommon(int, TWaterEmitInfo*);
 	virtual void emit(int);
@@ -118,14 +118,14 @@ public:
 	void calcGunAngle(const TMarioControllerWork&);
 
 	/* 0x368 */ TWaterGun* mFludd;
-	/* 0x36C */ u16 mAnimState;
-	/* 0x36E */ s16 mGunAngle;
-	/* 0x370 */ s16 mWaistAngle;
+	/* 0x36C */ u16 unk36C; // Some animation state
+	/* 0x36E */ s16 unk36E; // Gun angle
+	/* 0x370 */ s16 unk370; // Waist angle
 	/* 0x372 */ u16 unk372;
 	/* 0x374 */ f32 unk374;
 	/* 0x378 */ f32 unk378;
 	/* 0x37C */ f32 unk37C;
-	/* 0x380 */ MActor* mActor;
+	/* 0x380 */ MActor* unk380; // MActor
 }; // 0x384
 
 #endif

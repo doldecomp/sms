@@ -123,7 +123,7 @@ static bool WaterGunDivingCtrlL(J3DNode* node, BOOL param_2)
 		// This looks very weird to me, probably because of some inline?
 		// I could imagine some s32 getNozzleSpeedY() and
 		// s16 localXXX = -getNozzleSpeedY();
-		s32 nozzleSpeedY = gpMarioForCallBack->mWaterGun->mNozzleSpeedY;
+		s32 nozzleSpeedY = gpMarioForCallBack->mWaterGun->unk1CC8;
 		s16 neg          = -nozzleSpeedY;
 		Mtx mtx;
 		// Unused stack space
@@ -140,7 +140,7 @@ static bool WaterGunDivingCtrlR(J3DNode* node, BOOL param_2)
 		// This looks very weird to me, probably because of some inline?
 		// I could imagine some s32 getNozzleSpeedY() and
 		// s16 localXXX = -getNozzleSpeedY();
-		s32 nozzleSpeedY = gpMarioForCallBack->mWaterGun->mNozzleSpeedZ;
+		s32 nozzleSpeedY = gpMarioForCallBack->mWaterGun->unk1CCC;
 		s16 neg          = -nozzleSpeedY;
 		Mtx mtx;
 		// Unused stack space
@@ -155,18 +155,18 @@ static bool WaterGunDivingCtrlR(J3DNode* node, BOOL param_2)
 
 void TWaterGun::init()
 {
-	mFlags                       = 0;
-	mNozzleList[Spray]           = &mNozzleDeform;
-	mNozzleList[Rocket]          = &mNozzleRocket;
-	mNozzleList[Underwater]      = &mNozzleUnderWater;
-	mNozzleList[Yoshi]           = &mNozzleYoshiDeform;
-	mNozzleList[Hover]           = &mNozzleHover;
-	mNozzleList[Turbo]           = &mNozzleTurbo;
-	mCurrentNozzle               = Spray;
-	mSecondNozzle                = Hover;
-	mNozzleRocket.mSoundID       = 0x81b;
-	mNozzleTurbo.mSoundID        = 0x814;
-	mNozzleDeform.mBomb.mSoundID = 0x813;
+	mFlags                     = 0;
+	mNozzleList[Spray]         = &mNozzleDeform;
+	mNozzleList[Rocket]        = &mNozzleRocket;
+	mNozzleList[Underwater]    = &mNozzleUnderWater;
+	mNozzleList[Yoshi]         = &mNozzleYoshiDeform;
+	mNozzleList[Hover]         = &mNozzleHover;
+	mNozzleList[Turbo]         = &mNozzleTurbo;
+	mCurrentNozzle             = Spray;
+	mSecondNozzle              = Hover;
+	mNozzleRocket.unk38C       = 0x81b;
+	mNozzleTurbo.unk38C        = 0x814;
+	mNozzleDeform.mBomb.unk38C = 0x813;
 	mCurrentWater = mNozzleList[mCurrentNozzle]->mEmitParams.mAmountMax.get();
 	mIsEmitWater  = false;
 	unk1C88       = 0.0f;
@@ -177,7 +177,7 @@ void TWaterGun::init()
 	unk1CF4           = 0.0049999999f;
 	unk1CF8           = 0x168;
 	unk1CFA           = 0;
-	mFluddSwitchTween = 0.0f;
+	unk1CFC           = 0.0f;
 	unk1D00           = 0.0f;
 	unk1D04           = 0;
 	unk1D06           = -0x1800;
@@ -185,9 +185,9 @@ void TWaterGun::init()
 
 	// mEmitInfo = new TWaterEmitInfo; TODO
 
-	unk1D08                                  = 0;
-	mNozzleDeform.mBomb.mRumbleOnCharge      = true;
-	mNozzleYoshiDeform.mBomb.mRumbleOnCharge = true;
+	unk1D08                         = 0;
+	mNozzleDeform.mBomb.unk384      = true;
+	mNozzleYoshiDeform.mBomb.unk384 = true;
 
 	mEmitPos[3].x = mMario->mPosition.x;
 	mEmitPos[3].y = mMario->mPosition.y;
@@ -197,9 +197,9 @@ void TWaterGun::init()
 	unk1CC2 = 0;
 	unk1CC4 = 0;
 
-	mNozzleSpeedY = 0.0f;
-	unk1CD0       = 0;
-	unk1CD2       = 0;
+	unk1CC8 = 0.0f;
+	unk1CD0 = 0;
+	unk1CD2 = 0;
 
 	// This is definitely an inlined funciton. Creating a model seems quite
 	// useful
@@ -218,7 +218,7 @@ void TWaterGun::init()
 	// Missing decompilation
 	// PSMTXCopy(
 	//     mMario->mModelMario->unk8->mJointArray[mMario->mBindBoneIDArray[0]],
-	//     mFluddModel->unk4->mBaseMtx);
+	//     mFluddModel->unk4->unk20);
 
 	mFluddModel->unk4->initialize();
 
@@ -227,57 +227,56 @@ void TWaterGun::init()
 
 	// unk1CDC is TMultiMtxEffect, but confused from implementation atm
 
-	mCurFluddTransformIdx
-	    = mFluddModel->unk4->mModelData->unkB0->getIndex("nozzle_center");
+	unk1CD8 = mFluddModel->unk4->mModelData->unkB0->getIndex("nozzle_center");
 
 	for (int i = 0; i < 6; ++i) {
 		if (!nozzleBmdData.getPath(i)) {
-			mNozzleList[i]->mActor = nullptr;
+			mNozzleList[i]->unk380 = nullptr;
 			continue;
 		}
 
 		MActorAnmData* nozzleData = new MActorAnmData();
 		nozzleData->init(nozzleBmdData.getPath(i), nullptr);
-		mNozzleList[i]->mActor = new MActor(nozzleData);
+		mNozzleList[i]->unk380 = new MActor(nozzleData);
 
 		void* nozzleModelData
 		    = JKRFileLoader::getGlbResource(nozzleBmdData.getBmdPath(i));
 		J3DModel* nozzleModel = new J3DModel(
 		    J3DModelLoaderDataBase::load(nozzleModelData, 0x10040000), 0, 1);
-		mNozzleList[i]->mActor->setModel(nozzleModel, 0);
+		mNozzleList[i]->unk380->setModel(nozzleModel, 0);
 
 		// TODO: Figure out
 		// ResTIMG* img = mFluddModel->unk4->mModelData->unkAC->getResTIMG(0);
-		// SMS_ChangeTextureAll(mNozzleList[i]->mActor->unk4->mModelData,
+		// SMS_ChangeTextureAll(mNozzleList[i]->unk380->unk4->mModelData,
 		//                      "H_watergun_main_dummy", img);
 
-		mNozzleList[i]->mActor->initDL();
+		mNozzleList[i]->unk380->initDL();
 		// Definitely inline potential
 		if (nozzleBmdData.getFlags(i, 0) != 4) {
 			s32 jointIdx
-			    = mNozzleList[i]->mActor->unk4->mModelData->unkB0->getIndex(
+			    = mNozzleList[i]->unk380->unk4->mModelData->unkB0->getIndex(
 			        "null_G_muzzle");
 			nozzleBmdData.setJointIndex(i, 0, jointIdx);
 		}
 		if (nozzleBmdData.getFlags(i, 1) != 4) {
 			s32 jointIdx
-			    = mNozzleList[i]->mActor->unk4->mModelData->unkB0->getIndex(
+			    = mNozzleList[i]->unk380->unk4->mModelData->unkB0->getIndex(
 			        "null_G_muzzle2");
 			nozzleBmdData.setJointIndex(i, 1, jointIdx);
 		}
 		if (nozzleBmdData.getFlags(i, 2) != 4) {
 			s32 jointIdx
-			    = mNozzleList[i]->mActor->unk4->mModelData->unkB0->getIndex(
+			    = mNozzleList[i]->unk380->unk4->mModelData->unkB0->getIndex(
 			        "null_G_muzzle3");
 			nozzleBmdData.setJointIndex(i, 2, jointIdx);
 		}
 	}
 
 	s32 jointIdx
-	    = mNozzleList[Spray]->mActor->unk4->mModelData->unkB0->getIndex(
+	    = mNozzleList[Spray]->unk380->unk4->mModelData->unkB0->getIndex(
 	        "chn_muzzle_l");
 	// mNozzleList[Spray]
-	//     ->mActor->unk4->mModelData->mJointNodePointer[jointIdx]
+	//     ->unk380->unk4->mModelData->mJointNodePointer[jointIdx]
 	//     ->mCallBack = functionPtr;
 	// 5 more of these
 
@@ -381,15 +380,15 @@ MtxPtr TWaterGun::getEmitMtx(int jointIndex)
 	volatile u32 unused2[24]; // TODO: A lot of stack space, possibly a lot of
 	                          // inlined functions.
 	MtxPtr result;
-	if (!this->mMario->onYoshi()) {
-		result = this->getYoshiMtx();
+	if (!mMario->onYoshi()) {
+		result = getYoshiMtx();
 	} else {
 		// This entire block is likely an inlined function.
-		u8 currentNozzle = this->mCurrentNozzle;
+		u8 currentNozzle = mCurrentNozzle;
 		s8 flag          = nozzleBmdData.getFlags(currentNozzle, jointIndex);
 		if (flag < 3) {
-			return this->getCurrentNozzle()->mActor->unk4->getAnmMtx(
-			    nozzleBmdData.getJointIndex(this->mCurrentNozzle, jointIndex));
+			return getCurrentNozzle()->unk380->unk4->getAnmMtx(
+			    nozzleBmdData.getJointIndex(mCurrentNozzle, jointIndex));
 		} else if (flag == 3) {
 			return getYoshiMtx();
 		}
@@ -400,7 +399,7 @@ MtxPtr TWaterGun::getEmitMtx(int jointIndex)
 
 MtxPtr TWaterGun::getNozzleMtx()
 {
-	return this->mFluddModel->unk4->getAnmMtx(this->mCurFluddTransformIdx);
+	return mFluddModel->unk4->getAnmMtx(unk1CD8);
 }
 
 void TWaterGun::initInLoadAfter() { }
@@ -413,12 +412,12 @@ void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 	                / mNozzleList[mCurrentNozzle]->mEmitParams.mAmountMax.get();
 	if (nozzleType == Spray) {
 		if (animate) {
-			mFluddSwitchTween = 0.0f;
+			unk1CFC = 0.0f;
 		}
 	} else {
 		mSecondNozzle = nozzleType;
 		if (animate) {
-			mFluddSwitchTween = 1.0f;
+			unk1CFC = 1.0f;
 		}
 	}
 	mCurrentNozzle = nozzleType;
@@ -444,7 +443,7 @@ void TWaterGun::movement()
 		if (kind == 1) {
 			TNozzleTrigger* triggerNozzle
 			    = (TNozzleTrigger*)mNozzleList[mCurrentNozzle];
-			if (triggerNozzle->mSprayState == TNozzleTrigger::ACTIVE) {
+			if (triggerNozzle->unk385 == TNozzleTrigger::ACTIVE) {
 				canSpray = true;
 			} else {
 				canSpray = false;
@@ -461,12 +460,10 @@ void TWaterGun::movement()
 		unk1CC4 = 0;
 	}
 
-	mNozzleSpeedY
-	    += (unk1CC2 - mNozzleSpeedY) * mWatergunParams.mChangeSpeed.get();
-	mNozzleSpeedZ
-	    += (unk1CC4 - mNozzleSpeedZ) * mWatergunParams.mChangeSpeed.get();
+	unk1CC8 += (unk1CC2 - unk1CC8) * mWatergunParams.mChangeSpeed.get();
+	unk1CCC += (unk1CC4 - unk1CCC) * mWatergunParams.mChangeSpeed.get();
 
-	TNozzleBase* currentNozzle = this->getCurrentNozzle();
+	TNozzleBase* currentNozzle = getCurrentNozzle();
 
 	rotateProp(currentNozzle->unk378);
 
@@ -500,9 +497,9 @@ void TWaterGun::movement()
 
 	// Nozzle swapping
 	if (unk1D00 != 0.0f) {
-		f32 unk           = mFluddSwitchTween;
-		f32 sum           = unk + unk1D00;
-		mFluddSwitchTween = sum;
+		f32 unk = unk1CFC;
+		f32 sum = unk + unk1D00;
+		unk1CFC = sum;
 		if ((unk < 0.5f) && (0.5f <= sum)) {
 			u8 curNozzle        = mCurrentNozzle;
 			s32 currentWater    = mCurrentWater;
@@ -515,7 +512,7 @@ void TWaterGun::movement()
 			}
 			mCurrentNozzle = secondNozzle;
 
-			currentNozzle = this->getCurrentNozzle();
+			currentNozzle = getCurrentNozzle();
 			currentNozzle->init(); // TODO: 2 vtable entry
 
 			if (secondNozzle == 3) {
@@ -533,20 +530,20 @@ void TWaterGun::movement()
 
 			mCurrentNozzle = 0;
 
-			currentNozzle = this->getCurrentNozzle();
+			currentNozzle = getCurrentNozzle();
 			currentNozzle->init(); // TODO: 2 vtable entry
 
 			mCurrentWater
 			    = waterPercentage * currentNozzle->mEmitParams.mAmountMax.get();
 		}
 
-		if (mFluddSwitchTween < 0.0) {
-			mFluddSwitchTween = 0.0f;
-			unk1D00           = 0.0f;
+		if (unk1CFC < 0.0) {
+			unk1CFC = 0.0f;
+			unk1D00 = 0.0f;
 		}
-		if (1.0f < mFluddSwitchTween) {
-			mFluddSwitchTween = 1.0f;
-			unk1D00           = 0.0f;
+		if (1.0f < unk1CFC) {
+			unk1CFC = 1.0f;
+			unk1D00 = 0.0f;
 		}
 	}
 	currentNozzle->animation(mCurrentNozzle);
@@ -582,7 +579,7 @@ void TNozzleBase::emit(int param_1)
 {
 	if (mFludd->mCurrentWater > 0 && unk378 != 0.0f) {
 		TWaterEmitInfo* emitInfo = mFludd->mEmitInfo;
-		this->emitCommon(param_1, emitInfo);
+		emitCommon(param_1, emitInfo);
 
 		unk37C          = unk37C + mEmitParams.mNum.get();
 		s32 local37cInt = (s32)unk37C;
@@ -679,7 +676,7 @@ void TWaterGun::setBaseTRMtx(Mtx mtx)
 	MsMtxSetRotRPH(result, 0.0f, 0.0f, 0.005493164f * angle);
 
 	PSMTXConcat(mtx, result, result);
-	PSMTXCopy(result, mFluddModel->unk4->mBaseMtx);
+	PSMTXCopy(result, mFluddModel->unk4->unk20);
 }
 
 // Not sure why this get's inlined aggressively
@@ -689,21 +686,21 @@ TNozzleBase::TNozzleBase(const char* name, const char* prm, TWaterGun* fludd)
     , mFludd(fludd)
 {
 	mEmitParams.load(mEmitParams.mPrmPath);
-	this->mAnimState = 2;
-	this->mGunAngle  = 0;
-	this->unk372     = 0;
-	this->unk378     = 0.0f;
-	this->unk37C     = 0.0f;
+	unk36C = 2;
+	unk36E = 0;
+	unk372 = 0;
+	unk378 = 0.0f;
+	unk37C = 0.0f;
 }
 #pragma dont_inline off
 
 void TNozzleBase::init()
 {
-	this->mAnimState = 2;
-	this->mGunAngle  = 0;
-	this->unk372     = 0;
-	this->unk378     = 0.0f;
-	this->unk37C     = 0.0f;
+	unk36C = 2;
+	unk36E = 0;
+	unk372 = 0;
+	unk378 = 0.0f;
+	unk37C = 0.0f;
 }
 
 void TNozzleBase::calcGunAngle(const TMarioControllerWork& work)
@@ -712,14 +709,14 @@ void TNozzleBase::calcGunAngle(const TMarioControllerWork& work)
 	if (mFludd->mMario == gpMarioAddress
 	    && (gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode)
 	        || gpCamera->isJetCoaster1stCamera())) {
-		mGunAngle = gpCamera->unkA4;
+		unk36E = gpCamera->unkA4;
 		return;
 	}
 
 	s16 angle;
 	if (mFludd->mMario->mAction == 0xC008220) {
 		// TODO: Wrong reguster used, using r3 instead of r4
-		angle = mGunAngle
+		angle = unk36E
 		        + (s16)(mFludd->mMario->mGamePad->mCompSPos[0].y
 		                * mEmitParams.mRButtonMult.get());
 	} else {
@@ -734,8 +731,8 @@ void TNozzleBase::calcGunAngle(const TMarioControllerWork& work)
 		angle = mEmitParams.mLAngleMax.get();
 	}
 
-	f32 diff = angle - mGunAngle;
-	mGunAngle += diff * mEmitParams.mLAngleChase.get();
+	f32 diff = angle - unk36E;
+	unk36E += diff * mEmitParams.mLAngleChase.get();
 }
 
 // TODO: This has a lot of inline functions, find them and update them
@@ -746,35 +743,35 @@ void TNozzleBase::animation(int param_1)
 		return;
 	}
 
-	if (0.0f < this->mFludd->unk1D00) {
-		this->mAnimState = 4;
+	if (0.0f < mFludd->unk1D00) {
+		unk36C = 4;
 	}
 
-	if (this->mFludd->unk1D00 < 0.0f) {
-		this->mAnimState = 3;
+	if (mFludd->unk1D00 < 0.0f) {
+		unk36C = 3;
 	}
 
-	switch (this->mAnimState) {
+	switch (unk36C) {
 	case 0: {
 
-		if (!this->mActor->checkCurBckFromIndex(4)) {
-			this->mActor->setBckFromIndex(4);
+		if (!unk380->checkCurBckFromIndex(4)) {
+			unk380->setBckFromIndex(4);
 		}
-		J3DFrameCtrl* ctrl = this->mActor->getFrameCtrl(MActor::BCK);
+		J3DFrameCtrl* ctrl = unk380->getFrameCtrl(MActor::BCK);
 		if (ctrl->mCurrentFrame <= (ctrl->mEndFrame - 0.1)
 		    && (ctrl->mFlags & 3) == 0) {
 			return;
 		}
-		this->mAnimState = 1;
+		unk36C = 1;
 		break;
 	}
 	case 1: {
 
-		if (!this->mActor->checkCurBckFromIndex(2)) {
-			this->mActor->setBckFromIndex(2);
+		if (!unk380->checkCurBckFromIndex(2)) {
+			unk380->setBckFromIndex(2);
 		}
 
-		TWaterGun* fludd     = this->mFludd;
+		TWaterGun* fludd     = mFludd;
 		bool updateAnimation = false;
 		if (fludd->mCurrentWater == 0) {
 			updateAnimation = false;
@@ -792,7 +789,7 @@ void TNozzleBase::animation(int param_1)
 					if (nozzleKind == 1) {
 						TNozzleTrigger* trigger
 						    = (TNozzleTrigger*)fludd->getCurrentNozzle();
-						if (trigger->mSprayState == 1) {
+						if (trigger->unk385 == TNozzleTrigger::ACTIVE) {
 							updateAnimation = true;
 						} else {
 							updateAnimation = false;
@@ -811,15 +808,15 @@ void TNozzleBase::animation(int param_1)
 			return;
 		}
 
-		this->mAnimState = 2;
+		unk36C = 2;
 		break;
 	}
 	case 2: {
 
-		if (!this->mActor->checkCurBckFromIndex(3)) {
-			this->mActor->setBckFromIndex(3);
+		if (!unk380->checkCurBckFromIndex(3)) {
+			unk380->setBckFromIndex(3);
 		}
-		TWaterGun* fludd     = this->mFludd;
+		TWaterGun* fludd     = mFludd;
 		bool updateAnimation = false;
 		if (fludd->mCurrentWater == 0) {
 			updateAnimation = false;
@@ -837,7 +834,7 @@ void TNozzleBase::animation(int param_1)
 					if (nozzleKind == 1) {
 						TNozzleTrigger* trigger
 						    = (TNozzleTrigger*)fludd->getCurrentNozzle();
-						if (trigger->mSprayState == 1) {
+						if (trigger->unk385 == TNozzleTrigger::ACTIVE) {
 							updateAnimation = true;
 						} else {
 							updateAnimation = false;
@@ -853,38 +850,38 @@ void TNozzleBase::animation(int param_1)
 		}
 
 		if (updateAnimation) {
-			this->mAnimState = 0;
+			unk36C = 0;
 		}
 		break;
 	}
 
 	case 3: {
 
-		J3DFrameCtrl* ctrl = this->mActor->getFrameCtrl(MActor::BCK);
-		if (!this->mActor->checkCurBckFromIndex(1)) {
-			this->mActor->setBckFromIndex(1);
+		J3DFrameCtrl* ctrl = unk380->getFrameCtrl(MActor::BCK);
+		if (!unk380->checkCurBckFromIndex(1)) {
+			unk380->setBckFromIndex(1);
 		}
 
 		// Use external tween value
-		ctrl->mCurrentFrame = this->mFludd->mFluddSwitchTween * ctrl->mEndFrame;
+		ctrl->mCurrentFrame = mFludd->unk1CFC * ctrl->mEndFrame;
 		ctrl->mSpeed        = 0.0f;
 		break;
 	}
 	case 4: {
 
-		J3DFrameCtrl* ctrl = this->mActor->getFrameCtrl(MActor::BCK);
-		if (!this->mActor->checkCurBckFromIndex(0)) {
-			this->mActor->setBckFromIndex(0);
+		J3DFrameCtrl* ctrl = unk380->getFrameCtrl(MActor::BCK);
+		if (!unk380->checkCurBckFromIndex(0)) {
+			unk380->setBckFromIndex(0);
 		}
 
 		// Use external tween value
-		ctrl->mCurrentFrame = this->mFludd->mFluddSwitchTween * ctrl->mEndFrame;
+		ctrl->mCurrentFrame = mFludd->unk1CFC * ctrl->mEndFrame;
 		ctrl->mSpeed        = 0.0f;
 
-		if (this->mFludd->mFluddSwitchTween < 1.0f) {
+		if (mFludd->unk1CFC < 1.0f) {
 			return;
 		}
-		this->mAnimState = 0;
+		unk36C = 0;
 		break;
 	}
 	}
@@ -892,11 +889,11 @@ void TNozzleBase::animation(int param_1)
 
 void TNozzleTrigger::init()
 {
-	this->mRumbleOnCharge   = false;
-	this->mSprayState       = 0;
-	mAnimState              = 0;
-	mSprayQuarterFramesLeft = 0;
-	mTriggerFill            = 0.0f;
+	unk384 = false;
+	unk385 = 0;
+	unk36C = 0;
+	unk386 = 0;
+	unk388 = 0.0f;
 }
 
 void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
@@ -904,7 +901,7 @@ void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
 	// TODO: Missing stack space
 	volatile u32 unused2[2];
 
-	if (this->mFludd->mCurrentWater <= 0) {
+	if (mFludd->mCurrentWater <= 0) {
 		return;
 	}
 	s32 var1 = 256.0f * controllerWork.mAnalogL * 150.0f;
@@ -929,29 +926,27 @@ void TWaterGun::perform(u32 flags, JDrama::TGraphics* graphics)
 	// volatile u32 unused2[24];
 
 	if ((flags & 0x1) != 0) {
-		if ((this->mFlags & 0x10) != 0) {
-			this->mCurrentWater = 0;
+		if ((mFlags & 0x10) != 0) {
+			mCurrentWater = 0;
 		}
-		this->movement();
+		movement();
 	}
 
 	if ((flags & 0x2) != 0) {
-		this->calcAnimation(graphics);
+		calcAnimation(graphics);
 	}
 
-	this->mFluddModel->perform(flags, graphics);
+	mFluddModel->perform(flags, graphics);
 
 	if ((flags & 0x2) != 0) {
-		MActor* p2 = this->getCurrentNozzle()->mActor;
+		MActor* p2 = getCurrentNozzle()->unk380;
 		if (p2 != nullptr) {
-			PSMTXCopy(this->getModel()->getAnmMtx(this->mCurFluddTransformIdx),
-			          p2->unk4->mBaseMtx);
+			PSMTXCopy(getModel()->getAnmMtx(unk1CD8), p2->unk4->unk20);
 		}
 
 		for (s32 index = 0;
-		     index < nozzleBmdData.getEmitterCount(this->mCurrentNozzle);
-		     index++) {
-			MtxPtr p1 = this->getEmitMtx(index);
+		     index < nozzleBmdData.getEmitterCount(mCurrentNozzle); index++) {
+			MtxPtr p1 = getEmitMtx(index);
 			if (p1 != nullptr) {
 				mEmitPos[index].x = p1[0][3];
 				mEmitPos[index].y = p1[1][3];
@@ -960,8 +955,8 @@ void TWaterGun::perform(u32 flags, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (this->getCurrentNozzle()->mActor) {
-		this->getCurrentNozzle()->mActor->perform(flags, graphics);
+	if (getCurrentNozzle()->unk380) {
+		getCurrentNozzle()->unk380->perform(flags, graphics);
 	}
 }
 
@@ -973,24 +968,22 @@ TNozzleBase* TWaterGun::getCurrentNozzle() const
 void TWaterGun::setAmountToRate(f32 rate)
 {
 	// volatile u32 unused2[7]; // TODO: possibly inlined function
-	if (this->mCurrentNozzle == 3) {
-		TNozzleBase* currentNozzle = this->getCurrentNozzle();
-		s32 amountMax       = currentNozzle->mEmitParams.mAmountMax.get();
-		this->mCurrentWater = amountMax;
+	if (mCurrentNozzle == 3) {
+		TNozzleBase* currentNozzle = getCurrentNozzle();
+		s32 amountMax = currentNozzle->mEmitParams.mAmountMax.get();
+		mCurrentWater = amountMax;
 	} else {
-		TNozzleBase* currentNozzle = this->getCurrentNozzle();
-		this->mCurrentWater
-		    = rate * currentNozzle->mEmitParams.mAmountMax.get();
+		TNozzleBase* currentNozzle = getCurrentNozzle();
+		mCurrentWater = rate * currentNozzle->mEmitParams.mAmountMax.get();
 	}
 }
 
 bool TWaterGun::isPressureOn()
 {
 	// volatile u32 unused2[6];
-	if (this->getCurrentNozzle()->getNozzleKind() == 1) {
-		TNozzleTrigger* triggerNozzle
-		    = (TNozzleTrigger*)this->getCurrentNozzle();
-		if (triggerNozzle->mTriggerFill > 0.0f) {
+	if (getCurrentNozzle()->getNozzleKind() == 1) {
+		TNozzleTrigger* triggerNozzle = (TNozzleTrigger*)getCurrentNozzle();
+		if (triggerNozzle->unk388 > 0.0f) {
 			return true;
 		}
 	}
@@ -1001,10 +994,9 @@ f32 TWaterGun::getPressure()
 {
 	// TODO: Missing stack space
 	// volatile u32 unused2[5];
-	if (this->getCurrentNozzle()->getNozzleKind() == 1) {
-		TNozzleTrigger* triggerNozzle
-		    = (TNozzleTrigger*)this->getCurrentNozzle();
-		return triggerNozzle->mTriggerFill;
+	if (getCurrentNozzle()->getNozzleKind() == 1) {
+		TNozzleTrigger* triggerNozzle = (TNozzleTrigger*)getCurrentNozzle();
+		return triggerNozzle->unk388;
 	}
 	return 0.0f;
 }
@@ -1014,8 +1006,8 @@ f32 TWaterGun::getPressureMax()
 	// TODO: Missing stack space
 	// volatile u32 unused2[6];
 
-	if (this->getCurrentNozzle()->getNozzleKind() == 1) {
-		return this->getCurrentNozzle()->mEmitParams.mInsidePressureMax.get();
+	if (getCurrentNozzle()->getNozzleKind() == 1) {
+		return getCurrentNozzle()->mEmitParams.mInsidePressureMax.get();
 	}
 
 	return 0.0f;
@@ -1098,15 +1090,15 @@ void TWaterGun::emit()
 	}
 
 	if (!mMario->onYoshi()) {
-		if (this->unk1CEC > 0.0f) {
+		if (unk1CEC > 0.0f) {
 			return;
 		}
 	}
 
 	// TODO: Probably an enum
 	// TODO: Probably inline function?
-	if (this->hasFlag(0x4)) {
-		this->mFlags &= ~0x4;
+	if (hasFlag(0x4)) {
+		mFlags &= ~0x4;
 		return;
 	}
 
@@ -1118,21 +1110,25 @@ void TWaterGun::emit()
 	if (mCurrentWater > 0) {
 		switch (currentNozzleType) {
 		case Spray: {
-			playSprayNozzleSound(0x24, getCurrentNozzle()->unk374);
+			JGeometry::TVec3<f32>* emitPos = &mEmitPos[0];
+			playSoundWithInfo(0x24, emitPos, 0, getCurrentNozzle()->unk374);
 		}
 		case Yoshi:
 		case Turbo: {
-			playSprayNozzleSound(0x0, getCurrentNozzle()->unk378);
+			JGeometry::TVec3<f32>* emitPos = &mEmitPos[0];
+			playSoundWithInfo(0x0, emitPos, 0, getCurrentNozzle()->unk378);
 			break;
 		}
 		case Underwater: {
-			playSound2(0x18);
+			JGeometry::TVec3<f32>* emitPos = &mEmitPos[0];
+			trySound(0x18, emitPos);
 		} break;
 		case Rocket:
 			break;
 		case Hover:
 			if (mIsEmitWater) {
-				playSound2(0x18);
+				JGeometry::TVec3<f32>* emitPos = &mEmitPos[0];
+				trySound(0x18, emitPos);
 			}
 			break;
 		}
@@ -1142,12 +1138,12 @@ bool TWaterGun::suck()
 {
 	// TODO: Missing stack space
 	// volatile u32 unused1[7];
-	if (this->isYoshiNozzle()) {
+	if (isYoshiNozzle()) {
 		return false;
 	} else {
-		s32 suckRate = this->getSuckRate();
+		s32 suckRate = getSuckRate();
 		if (suckRate > 0) {
-			this->incWater(suckRate);
+			incWater(suckRate);
 			return true;
 		}
 	}
@@ -1156,13 +1152,13 @@ bool TWaterGun::suck()
 
 bool TWaterGun::damage()
 {
-	if (this->hasWater()) {
-		TNozzleBase* nozzle = this->getCurrentNozzle();
+	if (hasWater()) {
+		TNozzleBase* nozzle = getCurrentNozzle();
 
-		this->mCurrentWater -= nozzle->mEmitParams.mDamageLoss.value;
+		mCurrentWater -= nozzle->mEmitParams.mDamageLoss.value;
 
-		if (this->mCurrentWater < 0) {
-			this->mCurrentWater = 0;
+		if (mCurrentWater < 0) {
+			mCurrentWater = 0;
 		}
 		return true;
 	}
@@ -1171,18 +1167,19 @@ bool TWaterGun::damage()
 
 void TWaterGun::changeBackup()
 {
-	// volatile u32 unused2[5]; // TODO: Missing stack space
-	if (this->mFluddSwitchTween == 0.0f) {
+	// TODO: Missing stack space
+	// volatile u32 unused2[5];
+	if (unk1CFC == 0.0f) {
 		if (gpMSound->gateCheck(0x812)) {
 			MSoundSESystem::MSoundSE::startSoundSystemSE(0x812, 0, nullptr, 0);
 		}
-		this->unk1D00 = mWatergunParams.mChangeSpeed.get();
+		unk1D00 = mWatergunParams.mChangeSpeed.get();
 	}
 
-	if (this->mFluddSwitchTween == 1.0f) {
+	if (unk1CFC == 1.0f) {
 		if (gpMSound->gateCheck(0x811)) {
 			MSoundSESystem::MSoundSE::startSoundSystemSE(0x811, 0, nullptr, 0);
 		}
-		this->unk1D00 = -mWatergunParams.mChangeSpeed.get();
+		unk1D00 = -mWatergunParams.mChangeSpeed.get();
 	}
 }

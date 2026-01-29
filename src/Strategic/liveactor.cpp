@@ -431,7 +431,7 @@ MtxPtr TLiveActor::getTakingMtx()
 	if (!mMActor)
 		return nullptr;
 
-	return mMActor->unk4->mBaseMtx;
+	return mMActor->unk4->unk20;
 }
 
 void TLiveActor::initAnmSound()

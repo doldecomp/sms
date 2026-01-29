@@ -21,7 +21,7 @@ public:
 	    , PARAM_INIT(mNozzleAngleYSpeedMax, 0x2000)
 	    , PARAM_INIT(mHoverRotMax, 0x2000)
 	    , PARAM_INIT(mHoverSmooth, 0.05f)
-	    , PARAM_INIT(mChangeSpeed, 0.1f) {};
+	    , PARAM_INIT(mChangeSpeed, 0.1f) { };
 	TParamRT<f32> mRocketHeight;
 	TParamRT<f32> mHoverHeight;
 	TParamRT<f32> mLAngleNormal;
@@ -81,6 +81,8 @@ extern TNozzleBmdData nozzleBmdData;
 
 class TWaterGun {
 public:
+	// TODO: I wish these could be combined
+	// If i make it a named enum, it defaults to 4 bytes size (i think)
 	typedef s8 TNozzleType;
 	enum { Spray = 0, Rocket, Underwater, Yoshi, Hover, Turbo };
 
@@ -110,39 +112,26 @@ public:
 	void setAmountToRate(f32);
 	void setBaseTRMtx(Mtx);
 	bool suck();
-	void startDashEffect();
-	void endDashEffect();
-	void getMarioUpperStatus();
+	void triggerPressureMovement(const TMarioControllerWork&);
 
+	J3DModel* getModel() { return mFluddModel->unk4; }
+
+	// Fabricated
+	// Probably inlined from Yoshi
 	inline MtxPtr getYoshiMtx()
 	{
-		TYoshi* yoshi = (TYoshi*)this->mMario->mYoshi;
+		TYoshi* yoshi = (TYoshi*)mMario->mYoshi;
 		return yoshi->mActor->unk4->getAnmMtx(yoshi->mJoint);
 	}
 
-	void decWater() { }
-
+	// Fabricated
 	void checkMax()
 	{
-		s32 maxWater = this->getCurrentNozzle()->mEmitParams.mAmountMax.get();
-		if (this->mCurrentWater > maxWater) {
-			this->mCurrentWater = maxWater;
+		s32 maxWater = getCurrentNozzle()->mEmitParams.mAmountMax.get();
+		if (mCurrentWater > maxWater) {
+			mCurrentWater = maxWater;
 		}
 	}
-
-	bool isYoshiNozzle() const { return this->mCurrentNozzle == (s8)Yoshi; }
-
-	bool hasWater() const { return this->mCurrentWater > 0; }
-
-	u32 getWaterGunAnmId();
-
-	J3DModel* getModel() { return this->mFluddModel->unk4; }
-
-	void setEmitPt();
-
-	void finalDrawInitialize();
-	void entryAll();
-	void createGunBody();
 
 	// Fabricated
 	// TODO: Probably not in Watergun
@@ -165,7 +154,7 @@ public:
 	inline bool hasFlag(u16 flag)
 	{
 		bool hasFlag;
-		if ((this->mFlags & flag) != 0) {
+		if ((mFlags & flag) != 0) {
 			hasFlag = true;
 		} else {
 			hasFlag = false;
@@ -174,114 +163,107 @@ public:
 	}
 
 	// Fabricated
-	// TODO: Possibly in each nozzle class?
-	inline void playSprayNozzleSound(u32 id, f32 val)
+	s32 getSuckRate()
 	{
-		JGeometry::TVec3<f32>* emitPos = &mEmitPos[0];
-		playSoundWithInfo(id, emitPos, 0, val);
+		return (s32)((f32)mCurrentPressure
+		             * getCurrentNozzle()->mEmitParams.mSuckRate.get());
 	}
 
 	// Fabricated
-	// TODO: This is definitely not the structure
-	// Figure out something better for sound funcs
-	inline void playSound2(u32 id)
-	{
-		JGeometry::TVec3<f32>* emitPos = &mEmitPos[0];
-		trySound(id, emitPos);
-	}
-
-	s32 getSuckRate()
-	{
-		return (s32)((f32)this->mCurrentPressure
-		             * this->getCurrentNozzle()->mEmitParams.mSuckRate.get());
-	}
-
-	s32 getCurrentWater() { return this->mCurrentWater; }
+	s32 getCurrentWater() { return mCurrentWater; }
+	// Fabricated
 	s32 getMaxWater()
 	{
-		return this->getCurrentNozzle()->mEmitParams.mAmountMax.get();
+		return getCurrentNozzle()->mEmitParams.mAmountMax.get();
 	}
 
-	bool isMaxWater() { return this->getCurrentWater() >= this->getMaxWater(); }
+	// Fabricated
+	bool isMaxWater() { return getCurrentWater() >= getMaxWater(); }
 
+	// Fabricated
 	void trySound(u32 id, JGeometry::TVec3<f32>* pos)
 	{
 		MSound* sound = gpMSound;
 		if (sound->gateCheck(id)) {
-			this->startSound(id, pos);
+			startSound(id, pos);
 		}
 	}
 
+	// Fabricated
 	void incWater(s32 amount)
 	{
-		this->mCurrentWater += amount;
+		mCurrentWater += amount;
 
-		s32 currentWater = this->getCurrentWater();
-		s32 maxWater     = this->getMaxWater();
+		s32 currentWater = getCurrentWater();
+		s32 maxWater     = getMaxWater();
 		if (currentWater > maxWater) {
 			mCurrentWater = maxWater;
 		}
 
 		if (!isMaxWater()) {
-			JGeometry::TVec3<f32>* emitPos = &this->mEmitPos[0];
+			JGeometry::TVec3<f32>* emitPos = &mEmitPos[0];
 			trySound(0xf, emitPos);
 		}
 	}
 
-	TNozzleBase* getNozzle(u8 index) { return this->mNozzleList[index]; }
+	// Fabricated
+	TNozzleBase* getNozzle(u8 index) { return mNozzleList[index]; }
 
-	void triggerPressureMovement(const TMarioControllerWork&);
+	// Fabricated
+	bool isYoshiNozzle() const { return mCurrentNozzle == (s8)Yoshi; }
 
-	u16 mFlags;                        // 0x0000
-	TMario* mMario;                    // 0x0008
-	TNozzleDeform mNozzleDeform;       // 0x000C
-	TNozzleTrigger mNozzleRocket;      // 0x0720
-	TNozzleBase mNozzleUnderWater;     // 0x0AB0
-	TNozzleDeform mNozzleYoshiDeform;  // 0x0E34
-	TNozzleTrigger mNozzleHover;       // 0x1548
-	TNozzleTrigger mNozzleTurbo;       // 0x18D8
-	TNozzleBase* mNozzleList[6];       // 0x1C68
-	s32 mCurrentWater;                 // 0x1C80
-	u8 mCurrentNozzle;                 // 0x1C84
-	u8 mSecondNozzle;                  // 0x1C85
-	bool mIsEmitWater;                 // 0x1C86
-	u8 unk1C87;                        // 0x1C87
-	u32 unk1C88;                       // 0x1C88
-	u8 mCurrentPressure;               // 0x1c8c
-	u8 mPreviousPressure;              // 0x1c8d
-	u8 unk1C8E;                        // 0x1c8e
-	u8 unk1C8F;                        // 0x1c8f
-	JGeometry::TVec3<f32> mEmitPos[4]; // 0x1C90
-	s16 unk1CC0;                       // 0x1CC0
-	s16 unk1CC2;                       // 0x1CC2
-	s16 unk1CC4;                       // 0x1CC4
-	s16 unk1CC6;                       // 0x1CC6
-	f32 mNozzleSpeedY;                 // 0x1CC8
-	f32 mNozzleSpeedZ;                 // 0x1CCC
-	s16 unk1CD0;                       // 0x1CD0
-	s16 unk1CD2;                       // 0x1CD2
-	MActor* mFluddModel;               // 0x1CD4 // MActor*
-	u8 mCurFluddTransformIdx;          // 0x1CD8
-	u8 unk1CD9;                        // 0x1CD9
-	u16 unk1CDA;                       // 0x1CDA
-	f32 unk1CDC;                       // 0x1CDC
-	f32 unk1CE0;                       // 0x1CE0
-	u32 unk1CE4;                       // 0x1CE4
-	u32 unk1CE8;                       // 0x1CE8
-	f32 unk1CEC;                       // 0x1CEC
-	f32 unk1CF0;                       // 0x1CF0
-	f32 unk1CF4;                       // 0x1CF4
-	u16 unk1CF8;                       // 0x1CF8
-	u16 unk1CFA;                       // 0x1CFA
-	f32 mFluddSwitchTween;             // 0x1CFC
-	f32 unk1D00;                       // 0x1D00
-	s16 unk1D04;                       // 0x1D04
-	s16 unk1D06;                       // 0x1D06
-	u32 unk1D08;                       // 0x1D08
-	TWaterEmitInfo* mEmitInfo;         // 0x1D0C // TWaterEmitInfo
-	TMirrorActor* unk1D10;             // 0x1D10
+	// Fabricated
+	bool hasWater() const { return mCurrentWater > 0; }
 
-	TWaterGunParams mWatergunParams; // 0x1d14
+	/* 0x0000 */ u16 mFlags;
+	/* 0x0008 */ TMario* mMario;
+	/* 0x000C */ TNozzleDeform mNozzleDeform;
+	/* 0x0720 */ TNozzleTrigger mNozzleRocket;
+	/* 0x0AB0 */ TNozzleBase mNozzleUnderWater;
+	/* 0x0E34 */ TNozzleDeform mNozzleYoshiDeform;
+	/* 0x1548 */ TNozzleTrigger mNozzleHover;
+	/* 0x18D8 */ TNozzleTrigger mNozzleTurbo;
+	/* 0x1C68 */ TNozzleBase* mNozzleList[6];
+	/* 0x1C80 */ s32 mCurrentWater;
+	/* 0x1C84 */ u8 mCurrentNozzle;
+	/* 0x1C85 */ u8 mSecondNozzle;
+	/* 0x1C86 */ bool mIsEmitWater;
+	/* 0x1C87 */ u8 unk1C87;
+	/* 0x1C88 */ u32 unk1C88;
+	/* 0x1c8c */ u8 mCurrentPressure;
+	/* 0x1c8d */ u8 mPreviousPressure;
+	/* 0x1c8e */ u8 unk1C8E;
+	/* 0x1c8f */ u8 unk1C8F;
+	/* 0x1C90 */ JGeometry::TVec3<f32> mEmitPos[4];
+	/* 0x1CC0 */ s16 unk1CC0;
+	/* 0x1CC2 */ s16 unk1CC2;
+	/* 0x1CC4 */ s16 unk1CC4;
+	/* 0x1CC6 */ s16 unk1CC6;
+	/* 0x1CC8 */ f32 unk1CC8; // mNozzleSpeedY
+	/* 0x1CCC */ f32 unk1CCC; // mNozzleSpeedZ
+	/* 0x1CD0 */ s16 unk1CD0;
+	/* 0x1CD2 */ s16 unk1CD2;
+	/* 0x1CD4 */ MActor* mFluddModel; // MActor*
+	/* 0x1CD8 */ u8 unk1CD8;          // mCurFluddTransformIdx
+	/* 0x1CD9 */ u8 unk1CD9;
+	/* 0x1CDA */ u16 unk1CDA;
+	/* 0x1CDC */ f32 unk1CDC;
+	/* 0x1CE0 */ f32 unk1CE0;
+	/* 0x1CE4 */ u32 unk1CE4;
+	/* 0x1CE8 */ u32 unk1CE8;
+	/* 0x1CEC */ f32 unk1CEC;
+	/* 0x1CF0 */ f32 unk1CF0;
+	/* 0x1CF4 */ f32 unk1CF4;
+	/* 0x1CF8 */ u16 unk1CF8;
+	/* 0x1CFA */ u16 unk1CFA;
+	/* 0x1CFC */ f32 unk1CFC; // mFluddSwitchTween
+	/* 0x1D00 */ f32 unk1D00;
+	/* 0x1D04 */ s16 unk1D04;
+	/* 0x1D06 */ s16 unk1D06;
+	/* 0x1D08 */ u32 unk1D08;
+	/* 0x1D0C */ TWaterEmitInfo* mEmitInfo; // TWaterEmitInfo
+	/* 0x1D10 */ TMirrorActor* unk1D10;
+	/* 0x1d14 */ TWaterGunParams mWatergunParams;
 };
 
 #endif

@@ -17,9 +17,10 @@ class J3DAnmTransform;
 struct TBGWallCheckRecord;
 
 // TODO: where should this be?
-enum E_SIDEWALK_TYPE {};
+enum E_SIDEWALK_TYPE { };
 
-// TODO: Where should this be?
+// TODO: Not quite sure how to structure this
+// Please change or comment if you have a better idea :)
 #define ATTR_IS_ABOVE_SEWER_FLOOR   0x1
 #define ATTR_IS_VISIBLE             0x2
 #define ATTR_IS_NPC_TALKING         0x8
@@ -1101,7 +1102,7 @@ public:
 	bool hasAttribute(u32 attribute) const
 	{
 		bool hasAttribute;
-		if ((this->mAttributes & attribute) != 0) {
+		if ((mAttributes & attribute) != 0) {
 			hasAttribute = true;
 		} else {
 			hasAttribute = false;

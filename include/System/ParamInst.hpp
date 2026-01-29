@@ -26,8 +26,8 @@ public:
 
 template <typename T> class TParamRT : public TParamT<T> {
 public:
-	TParamRT(TParams* parent, u16 code, const char* name, T defaultValue)
-	    : TParamT<T>(parent, code, name, defaultValue)
+	TParamRT(TParams* parent, u16 keycode, const char* name, T defaultValue)
+	    : TParamT<T>(parent, keycode, name, defaultValue)
 	{
 	}
 
@@ -47,9 +47,9 @@ public:
 class TParamVec : public TParamT<JGeometry::TVec3<f32> > {
 public:
 	// fabricated AND wrong
-	TParamVec(TParams* parent, u16 code, const char* name,
+	TParamVec(TParams* parent, u16 keycode, const char* name,
 	          JGeometry::TVec3<f32> defaultValue)
-	    : TParamT<JGeometry::TVec3<f32> >(parent, code, name, defaultValue)
+	    : TParamT<JGeometry::TVec3<f32> >(parent, keycode, name, defaultValue)
 	{
 	}
 };

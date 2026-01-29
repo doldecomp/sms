@@ -3,6 +3,8 @@
 
 #include "GC2D/GCConsole2.hpp"
 
+// Very barebones
+// TODO: Add functions
 extern class TMarDirector {
 public:
 	char pad_000[0x58];
