@@ -17,7 +17,7 @@ class J3DAnmTransform;
 struct TBGWallCheckRecord;
 
 // TODO: where should this be?
-enum E_SIDEWALK_TYPE { };
+enum E_SIDEWALK_TYPE {};
 
 // TODO: Not quite sure how to structure this
 // Please change or comment if you have a better idea :)

@@ -126,6 +126,6 @@ public:
 	/* 0x378 */ f32 unk378;
 	/* 0x37C */ f32 unk37C;
 	/* 0x380 */ MActor* unk380; // MActor
-}; // 0x384
+};
 
 #endif
