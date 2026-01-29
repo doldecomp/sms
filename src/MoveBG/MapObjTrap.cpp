@@ -47,7 +47,7 @@ void TLampTrapSpikeHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 		if (unk68->unk138 == 2 || unk68->unk138 == 0 || unk68->unk138 == 1) {
 			for (int i = 0; i < getColNum(); ++i)
 				if (getCollision(i)->isActorType(-0x7fffffff))
-					SMS_SendMessageToMario(this, 0xE);
+					SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 		}
 	}
 }

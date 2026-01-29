@@ -77,16 +77,16 @@ public:
 class TSmallEnemyManager : public TEnemyManager {
 public:
 	TSmallEnemyManager(const char*);
-	void createModelData();
-	void load(JSUMemoryInputStream&);
-	void loadAfter();
-	void createEnemies(int);
-	TSmallEnemy* getHolder(int);
-
+	virtual void load(JSUMemoryInputStream&);
+	virtual void loadAfter();
+	virtual void createModelData();
+	virtual void createEnemies(int);
 	virtual void initSetEnemies() { }
 
+	TSmallEnemy* getHolder(int);
+
 	// fabricated
-	TSmallEnemyParams* getSaveParam() const
+	TSmallEnemyParams* getSaveParam2() const
 	{
 		return (TSmallEnemyParams*)unk38;
 	}
@@ -169,7 +169,7 @@ public:
 	void behaveToHitOthers(THitActor*);
 
 	// fabricated
-	TSmallEnemyParams* getSaveParam() const
+	TSmallEnemyParams* getSaveParam2() const
 	{
 		return (TSmallEnemyParams*)TSpineEnemy::getSaveParam();
 	}
@@ -184,6 +184,13 @@ public:
 	{
 		return mCurrentBckAnm == index ? true : false;
 	}
+	bool unsetUnk165()
+	{
+		bool result = unk165;
+		if (unk165)
+			unk165 = false;
+		return result;
+	}
 
 public:
 	/* 0x150 */ u32 unk150;
@@ -192,11 +199,11 @@ public:
 	/* 0x15C */ int mCurrentBckAnm;
 	/* 0x160 */ int mSprayedByWaterCooldown;
 	/* 0x164 */ u8 unk164;
-	/* 0x165 */ u8 unk165;
+	/* 0x165 */ bool unk165;
 	/* 0x166 */ char unk166[2];
 	/* 0x168 */ char unk168[0x174 - 0x168];
 	/* 0x174 */ u32 unk174;
-	/* 0x178 */ TJuiceBlock* unk178;
+	/* 0x178 */ TJuiceBlock* mJuiceBlock;
 	/* 0x17C */ int mCoinId;
 	/* 0x180 */ TCoin* mCoin;
 	/* 0x184 */ u8 unk184;

@@ -48,7 +48,7 @@ void TLauncher::init(TLiveManager* param_1)
 	TSpineEnemy::init(param_1);
 
 	mSpine->initWith(&TNerveWaitForever<TLiveActor>::theNerve());
-	TLauncherParams* params = getSaveParam();
+	TLauncherParams* params = getSaveParam2();
 	if (params) {
 		s32 launchPeriod = params->mSLLaunchPeriod.get();
 		mLaunchCooldown  = launchPeriod * MsRandF();
@@ -123,7 +123,7 @@ void TLauncher::control()
 
 void TLauncher::resetLaunchTimer()
 {
-	TLauncherParams* params = getSaveParam();
+	TLauncherParams* params = getSaveParam2();
 	if (!params) {
 		mLaunchCooldown = 0;
 	} else {
@@ -393,7 +393,7 @@ void TCommonLauncher::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (param_1 & 1) {
 		for (int i = 0; i < mColCount; ++i)
 			if (mCollisions[i]->isActorType(0x80000001))
-				SMS_SendMessageToMario(this, 0xE);
+				SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 	}
 }
 

@@ -182,20 +182,20 @@ void TSpineEnemy::resetToPosition(const JGeometry::TVec3<f32>& position)
 	control();
 }
 
-void TSpineEnemy::resetSRTV(const JGeometry::TVec3<f32>& param_1,
-                            const JGeometry::TVec3<f32>& param_2,
-                            const JGeometry::TVec3<f32>& param_3,
-                            const JGeometry::TVec3<f32>& param_4)
+void TSpineEnemy::resetSRTV(const JGeometry::TVec3<f32>& position,
+                            const JGeometry::TVec3<f32>& rotation,
+                            const JGeometry::TVec3<f32>& scaling,
+                            const JGeometry::TVec3<f32>& velocity)
 {
-	mPosition = param_1;
+	mPosition = position;
 	offLiveFlag(LIVE_FLAG_UNK8);
 	offLiveFlag(LIVE_FLAG_DEAD);
 	reset();
-	mRotation  = param_2;
-	mScaling   = param_3;
+	mRotation  = rotation;
+	mScaling   = scaling;
 	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 	offHitFlag(HIT_FLAG_UNK1);
-	mVelocity = param_4;
+	mVelocity = velocity;
 	onLiveFlag(LIVE_FLAG_UNK8000);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 	control();
