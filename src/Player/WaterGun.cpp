@@ -14,6 +14,8 @@
 #include <MarioUtil/RumbleMgr.hpp>
 #include <JSystem/JMath.hpp>
 
+extern size_t gpMarioAddress;
+
 // Define the global variable in .data section
 TNozzleBmdData nozzleBmdData
     = { { { 0,                                          // _00
@@ -325,8 +327,8 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 			if (unk1CEC == 0.0f) {
 				if (mMario->fabricatedActionInline()) {
 					mFluddModel->setBck("wg_fepmp");
-				} else if (mMario->hasAttribute(ATTR_IS_SHALLOW_WATER
-				                                | ATTR_IS_WATER)) {
+				} else if (mMario->checkFlag(ATTR_IS_SHALLOW_WATER
+				                             | ATTR_IS_WATER)) {
 					mFluddModel->setBck("wg_swpmp");
 				} else {
 					// TODO: Cast would be weird here, probably an inlined
@@ -703,7 +705,7 @@ void TNozzleBase::init()
 void TNozzleBase::calcGunAngle(const TMarioControllerWork& work)
 {
 	// volatile u32 unused1[17];
-	if (mFludd->mMario == gpMarioAddress
+	if ((size_t)mFludd->mMario == gpMarioAddress
 	    && (gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode)
 	        || gpCamera->isJetCoaster1stCamera())) {
 		unk36E = gpCamera->unkA4;
@@ -953,7 +955,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 	} else {
 		canSpray = false;
 	}
-	if ((mario->mAttributes & 0x30000) == 0
+	if ((mario->unk118 & 0x30000) == 0
 	    && mFludd->mCurrentWater < mEmitParams.mAmountMax.get()) {
 		canSpray = false;
 	}
@@ -1198,8 +1200,8 @@ void TWaterGun::emit()
 	// volatile u32 unused1[25];
 
 	// TODO: Another possible inline to check if emit is possible
-	if (!mMario->hasAttribute(ATTR_HAS_HELMET_FLW_CAMERA)
-	    && mMario->hasAttribute(ATTR_IS_SHALLOW_WATER | ATTR_IS_WATER)) {
+	if (!mMario->checkFlag(ATTR_HAS_HELMET_FLW_CAMERA)
+	    && mMario->checkFlag(ATTR_IS_SHALLOW_WATER | ATTR_IS_WATER)) {
 		// I can imagine this also being an inline function that checks
 		// if the emit point is below the water height, but i will leave
 		// it for now. TODO.

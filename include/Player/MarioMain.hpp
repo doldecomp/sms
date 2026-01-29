@@ -1099,15 +1099,15 @@ public:
 	TBGCheckData* getGroundPlane() const { return mGroundPlane; }
 
 	// Fabricated
-	bool hasAttribute(u32 attribute) const
+	bool checkFlag(u32 attribute) const
 	{
-		bool hasAttribute;
-		if ((mAttributes & attribute) != 0) {
-			hasAttribute = true;
+		bool condition;
+		if ((unk118 & attribute) != 0) {
+			condition = true;
 		} else {
-			hasAttribute = false;
+			condition = false;
 		}
-		return hasAttribute;
+		return condition;
 	}
 
 	// Fabricated
@@ -1162,7 +1162,7 @@ public:
 
 	/* 0x108 */ u32 unk108[4];
 
-	/* 0x118 */ u32 mAttributes;
+	/* 0x118 */ u32 unk118;
 
 	/* 0x11C */ u32 unk11C;
 
@@ -1288,7 +1288,6 @@ public:
 };
 
 extern TMario* gpMarioOriginal;
-extern TMario* gpMarioAddress;
 extern TMario* gpMarioForCallBack;
 
 #endif
