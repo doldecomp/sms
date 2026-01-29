@@ -2,6 +2,7 @@
 #define NOZZLETRIGGER_HPP
 
 #include <Player/NozzleBase.hpp>
+#include <Player/MarioMain.hpp>
 
 class TNozzleTrigger : public TNozzleBase {
 public:
@@ -19,7 +20,7 @@ public:
 
 	virtual void init();
 	virtual s32 getNozzleKind() const { return 1; };
-	virtual void movement(const void*);
+	virtual void movement(const TMarioControllerWork&);
 	virtual void emit(int);
 	virtual void animation(int);
 
@@ -29,8 +30,7 @@ public:
 
 	/* 0x384 */ bool unk384; // mRumbleOnCharge
 	/* 0x385 */ s8 unk385;   // mSprayState, Current spray state
-	/* 0x386 */ s16 unk386;  // mSprayQuarterFramesLeft - Quarter frames left of
-	                         // spray (i think)
+	/* 0x386 */ s16 unk386;  // Quarter frames left of spray (i think)
 	/* 0x388 */ f32 unk388;  // mTriggerFill - How far the trigger has gotten
 	/* 0x38C */ u32 unk38C;  // mSoundID - The sound to play when triggering
 };

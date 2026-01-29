@@ -12,7 +12,7 @@ public:
 		init();
 	}
 
-	virtual s32 getNozzleKind() const; /* override */
+	virtual s32 getNozzleKind() const { return 3; } /* override */
 	virtual void movement(const TMarioControllerWork&);
 	virtual void emit(int);
 	virtual void animation(int);

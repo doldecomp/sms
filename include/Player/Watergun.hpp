@@ -125,23 +125,7 @@ public:
 	}
 
 	// Fabricated
-	void checkMax()
-	{
-		s32 maxWater = getCurrentNozzle()->mEmitParams.mAmountMax.get();
-		if (mCurrentWater > maxWater) {
-			mCurrentWater = maxWater;
-		}
-	}
-
-	// Fabricated
-	// TODO: Probably not in Watergun
-	void startSound(u32 id, const Vec* pos)
-	{
-		MSoundSESystem::MSoundSE::startSoundActor(id, pos, 0, nullptr, 0, 4);
-	}
-
-	// Fabricated
-	// TODO: Probably not in Watergun
+	// TODO: Definitely not from watergun
 	inline void playSoundWithInfo(u32 id, const Vec* pos, u32 _unk, f32 _unk2)
 	{
 		if (gpMSound->gateCheck(id)) {
@@ -165,52 +149,12 @@ public:
 	// Fabricated
 	s32 getSuckRate()
 	{
-		return (s32)((f32)mCurrentPressure
-		             * getCurrentNozzle()->mEmitParams.mSuckRate.get());
-	}
-
-	// Fabricated
-	s32 getCurrentWater() { return mCurrentWater; }
-	// Fabricated
-	s32 getMaxWater()
-	{
-		return getCurrentNozzle()->mEmitParams.mAmountMax.get();
-	}
-
-	// Fabricated
-	bool isMaxWater() { return getCurrentWater() >= getMaxWater(); }
-
-	// Fabricated
-	void trySound(u32 id, JGeometry::TVec3<f32>* pos)
-	{
-		MSound* sound = gpMSound;
-		if (sound->gateCheck(id)) {
-			startSound(id, pos);
-		}
-	}
-
-	// Fabricated
-	void incWater(s32 amount)
-	{
-		mCurrentWater += amount;
-
-		s32 currentWater = getCurrentWater();
-		s32 maxWater     = getMaxWater();
-		if (currentWater > maxWater) {
-			mCurrentWater = maxWater;
-		}
-
-		if (!isMaxWater()) {
-			JGeometry::TVec3<f32>* emitPos = &mEmitPos[0];
-			trySound(0xf, emitPos);
-		}
+		return mCurrentPressure
+		       * getCurrentNozzle()->mEmitParams.mSuckRate.get();
 	}
 
 	// Fabricated
 	TNozzleBase* getNozzle(u8 index) { return mNozzleList[index]; }
-
-	// Fabricated
-	bool isYoshiNozzle() const { return mCurrentNozzle == (s8)Yoshi; }
 
 	// Fabricated
 	bool hasWater() const { return mCurrentWater > 0; }
@@ -230,10 +174,10 @@ public:
 	/* 0x1C86 */ bool mIsEmitWater;
 	/* 0x1C87 */ u8 unk1C87;
 	/* 0x1C88 */ u32 unk1C88;
-	/* 0x1c8c */ u8 mCurrentPressure;
-	/* 0x1c8d */ u8 mPreviousPressure;
-	/* 0x1c8e */ u8 unk1C8E;
-	/* 0x1c8f */ u8 unk1C8F;
+	/* 0x1C8C */ u8 mCurrentPressure;
+	/* 0x1C8D */ u8 mPreviousPressure;
+	/* 0x1C8E */ u8 unk1C8E;
+	/* 0x1C8F */ u8 unk1C8F;
 	/* 0x1C90 */ JGeometry::TVec3<f32> mEmitPos[4];
 	/* 0x1CC0 */ s16 unk1CC0;
 	/* 0x1CC2 */ s16 unk1CC2;
@@ -263,7 +207,7 @@ public:
 	/* 0x1D08 */ u32 unk1D08;
 	/* 0x1D0C */ TWaterEmitInfo* mEmitInfo; // TWaterEmitInfo
 	/* 0x1D10 */ TMirrorActor* unk1D10;
-	/* 0x1d14 */ TWaterGunParams mWatergunParams;
+	/* 0x1D14 */ TWaterGunParams mWatergunParams;
 };
 
 #endif

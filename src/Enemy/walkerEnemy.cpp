@@ -38,7 +38,7 @@ void TWalkerEnemy::init(TLiveManager* param_1)
 	getWalker()->reset();
 	getWalker()->unk18 = 150.0f;
 
-	mMarchSpeed = getSaveParam()->unk324.get();
+	mMarchSpeed = getSaveParam2()->unk324.get();
 	mSpine->initWith(&TNerveWalkerGenerate::theNerve());
 }
 
@@ -64,7 +64,7 @@ void TWalkerEnemy::moveObject()
 
 		// TODO: some order of inlines should be used instead of tmps
 		f32 yAngle = mRotation.y;
-		f32 f      = getSaveParam()->unk324.mMax;
+		f32 f      = getSaveParam2()->unk324.mMax;
 
 		JGeometry::TVec3<f32> local = polarXZ(yAngle, f);
 
@@ -94,7 +94,7 @@ void TWalkerEnemy::reset()
 	unk124->reset();
 	TSmallEnemy::reset();
 
-	mMarchSpeed = getSaveParam()->unk324.get();
+	mMarchSpeed = getSaveParam2()->unk324.get();
 
 	((TWalker*)mBinder)->reset();
 	mSpine->reset();
@@ -108,8 +108,8 @@ void TWalkerEnemy::walkBehavior(int param_1, float param_2)
 	switch (param_1) {
 	case 0:
 		zigzagToCurPathNode(mMarchSpeed * fVar1, mTurnSpeed * fVar1,
-		                    getSaveParam()->mSLZigzagCycle.get(),
-		                    getSaveParam()->mSLZigzagAngle.get());
+		                    getSaveParam2()->mSLZigzagCycle.get(),
+		                    getSaveParam2()->mSLZigzagAngle.get());
 		break;
 
 	case 1:
@@ -161,7 +161,7 @@ static inline f32 dist(const JGeometry::TVec3<f32>& a,
 
 bool TWalkerEnemy::isResignationAttack()
 {
-	f32 fVar1 = getSaveParam()->getSLGiveUpLength();
+	f32 fVar1 = getSaveParam2()->getSLGiveUpLength();
 
 	if (dist(unk104.getPoint(), mPosition) > fVar1)
 		return true;
@@ -241,7 +241,7 @@ DEFINE_NERVE(TNerveWalkerAttack, TLiveActor)
 		    || SMS_CheckMarioFlag(0x20000))
 			return true;
 
-		f32 giveUpHeight = self->getSaveParam()->mSLGiveUpHeight.get();
+		f32 giveUpHeight = self->getSaveParam2()->mSLGiveUpHeight.get();
 		if (abs(SMS_GetMarioPos().y - self->getPosition().y) > giveUpHeight)
 			return true;
 	}
@@ -258,7 +258,7 @@ DEFINE_NERVE(TNerveWalkerPostAttack, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setWaitAnm();
 
-	s32 delay = self->getSaveParam()->getSLAttackWait();
+	s32 delay = self->getSaveParam2()->getSLAttackWait();
 	if (spine->getTime() >= delay && self->checkCurAnmEnd(0)) {
 		return true;
 	}
@@ -285,7 +285,7 @@ DEFINE_NERVE(TNerveWalkerEscape, TLiveActor)
 		return true;
 	}
 
-	f32 giveUpLength2 = self->getSaveParam()->mSLGiveUpLength.get();
+	f32 giveUpLength2 = self->getSaveParam2()->mSLGiveUpLength.get();
 	giveUpLength2 *= giveUpLength2;
 
 	self->updateSquareToMario();
@@ -317,7 +317,7 @@ DEFINE_NERVE(TNerveWalkerTraceMario, TLiveActor)
 		return true;
 	}
 
-	f32 giveUpHeight = self->getSaveParam()->mSLGiveUpHeight.get();
+	f32 giveUpHeight = self->getSaveParam2()->mSLGiveUpHeight.get();
 	if (abs(SMS_GetMarioPos().y - self->getPosition().y) > giveUpHeight)
 		return true;
 
