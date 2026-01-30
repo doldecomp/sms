@@ -31,7 +31,17 @@ public:
 	{
 	}
 
-	inline void set(T param) {};
+	inline void set(T param) { value = param; };
+
+	// Fabricated
+	TParamRT<T>& operator=(const TParamRT<T>& other)
+	{
+		this->keyCode = other.keyCode;
+		this->name    = other.name;
+		this->next    = other.next;
+		this->value   = other.value;
+		return *this;
+	}
 };
 
 class TParamVec : public TParamT<JGeometry::TVec3<f32> > {
