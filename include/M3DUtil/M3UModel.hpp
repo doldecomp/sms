@@ -5,6 +5,8 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 
 struct M3UMtxCalcSetInfo;
+class J3DModel;
+class J3DTexNoAnm;
 
 class M3UModelCommon {
 public:
