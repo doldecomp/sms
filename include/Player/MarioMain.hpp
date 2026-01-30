@@ -18,7 +18,7 @@ class J3DAnmTransform;
 struct TBGWallCheckRecord;
 
 // TODO: where should this be?
-enum E_SIDEWALK_TYPE { };
+enum E_SIDEWALK_TYPE {};
 
 struct TRidingInfo {
 	const TLiveActor* unk0;
@@ -1142,28 +1142,28 @@ public:
 	/* 0x388 */ u16 mBlooperColor;
 	/* 0x38A */ u16 unk38A;
 	/* 0x38C */ f32 mHolderHeightDiff;
-	/* 0x390 */ u32 _390;
-	/* 0x394 */ J3DDrawBuffer* mDrawBufferA;
-	/* 0x398 */ J3DDrawBuffer* mDrawBufferB;
-	/* 0x39C */ u32 _39C;
-	/* 0x3A0 */ u32 _3A0;
-	/* 0x3A4 */ u32 _3A4;
-	/* 0x3A8 */ M3UModelMario* mModelData;
-	/* 0x3AC */ J3DModelData* mBodyModelData;
-	/* 0x3B0 */ J3DModel* mHandModel2R;
-	/* 0x3B4 */ J3DModel* mHandModel2L;
-	/* 0x3B8 */ J3DModel* mHandModel3R;
-	/* 0x3BC */ J3DModel* mHandModel3L;
-	/* 0x3C0 */ J3DModel* mHandModel4R;
-	/* 0x3C4 */ u8 _3C4;
-	/* 0x3C5 */ u8 mBindBoneIDArray[12];
-	/* 0x3D1 */ u8 _3D1; // padding?
-	/* 0x3D2 */ u8 _3D2; // padding?
-	/* 0x3D3 */ u8 _3D3; // padding?
-	/* 0x3D4 */ u16 _3D4;
-	/* 0x3D6 */ u16 _3D6;
-	/* 0x3D8 */ f32 _3D8;
-	/* 0x3DC */ f32 _3DC;
+	/* 0x390 */ u32 unk390;
+	/* 0x394 */ J3DDrawBuffer* unk394;
+	/* 0x398 */ J3DDrawBuffer* unk398;
+	/* 0x39C */ u32 unk39C;
+	/* 0x3A0 */ u32 unk3A0;
+	/* 0x3A4 */ u32 unk3A4;
+	/* 0x3A8 */ M3UModelMario* unk3A8; // Full model data
+	/* 0x3AC */ J3DModelData* unk3AC;  // Body model data
+	/* 0x3B0 */ J3DModel* unk3B0;      // R Hand 2nd model
+	/* 0x3B4 */ J3DModel* unk3B4;      // L Hand 2nd model
+	/* 0x3B8 */ J3DModel* unk3B8;      // R Hand 3nd model
+	/* 0x3BC */ J3DModel* unk3BC;      // L Hand 3nd model
+	/* 0x3C0 */ J3DModel* unk3C0;      // R Hand 4nd model
+	/* 0x3C4 */ u8 unk3C4;
+	/* 0x3C5 */ u8 unk3C5[12]; // Array of bone ids
+	/* 0x3D1 */ u8 unk3D1;
+	/* 0x3D2 */ u8 unk3D2;
+	/* 0x3D3 */ u8 unk3D3;
+	/* 0x3D4 */ u16 unk3D4;
+	/* 0x3D6 */ u16 unk3D6;
+	/* 0x3D8 */ f32 unk3D8;
+	/* 0x3DC */ f32 unk3DC;
 	/* 0x3E0 */ void* mCap; // TMarioCap
 
 	/* 0x3E4 */ void* mWaterGun; // TWaterGun
