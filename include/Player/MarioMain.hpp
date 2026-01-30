@@ -17,7 +17,7 @@ class J3DAnmTransform;
 struct TBGWallCheckRecord;
 
 // TODO: where should this be?
-enum E_SIDEWALK_TYPE { };
+enum E_SIDEWALK_TYPE {};
 
 enum E_MARIO_FLAG {
 	MARIO_FLAG_ABOVE_SEWER_FLOOR   = (1 << 0),
