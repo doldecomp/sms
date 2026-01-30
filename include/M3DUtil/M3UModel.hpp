@@ -33,6 +33,9 @@ public:
 	void updateInTexPatternAnm();
 	void updateInMotion();
 
+	// Fabricated
+	J3DFrameCtrl* getFrameCtrl() { return unkC; }
+
 public:
 	/* 0x4 */ M3UModelCommon* unk4;
 	/* 0x8 */ J3DModel* unk8;

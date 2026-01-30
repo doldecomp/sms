@@ -49,11 +49,8 @@ bool TMario::actnMain()
 			result = changePlayerDropping(0x88c, 0);
 		} else {
 			stopCommon(0x6E, 0xC400201);
-			// Probably some inlined function
-			// I suspect this part: mModelData->unkC->checkPass(20.0f)
-			// Might be wrong
 			if (mHeldObject != nullptr
-			    && mModelData->getFrameCtrl()->checkPass(20.0f)) {
+			    && unk3A8->getFrameCtrl()->checkPass(20.0f)) {
 				mHeldObject->receiveMessage(this, 0x6);
 				mHeldObject = nullptr;
 			}
