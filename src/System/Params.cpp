@@ -53,7 +53,7 @@ void TParams::init()
 
 void TParams::load(JSUMemoryInputStream& stream)
 {
-	if (this->mHead != nullptr) {
+	if (mHead != nullptr) {
 		s32 length = stream.readS32();
 		for (int i = 0; i < length; i++) {
 			u16 keyCode = stream.read16b();
@@ -61,7 +61,7 @@ void TParams::load(JSUMemoryInputStream& stream)
 			stream.readString(buffer, 0x50);
 
 			TBaseParam* param;
-			for (param = this->mHead; param != nullptr; param = param->next) {
+			for (param = mHead; param != nullptr; param = param->next) {
 				if (keyCode == param->keyCode && !strcmp(buffer, param->name)) {
 					param->load(stream);
 					break;

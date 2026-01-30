@@ -25,8 +25,8 @@ struct TMarioControllerWork {
 	/* 0x10 */ f32 mStickH;
 	/* 0x14 */ f32 mStickV;
 	/* 0x18 */ f32 mStickDist;
-	/* 0x1C */ f32 mAnalogL;
-	/* 0x20 */ f32 mAnalogR;
+	/* 0x1C */ f32 mAnalogR;
+	/* 0x20 */ f32 mAnalogL;
 };
 
 class TMarioGamePad : public JUTGamePad {

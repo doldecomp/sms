@@ -6,8 +6,10 @@
 #include <System/ParamInst.hpp>
 #include <System/DrawSyncCallback.hpp>
 #include <Strategic/TakeActor.hpp>
+#include <Player/Yoshi.hpp>
 
 class TLiveActor;
+class TWaterGun;
 class TBGCheckData;
 class J3DAnmTexPattern;
 class J3DModelData;
@@ -16,6 +18,23 @@ struct TBGWallCheckRecord;
 
 // TODO: where should this be?
 enum E_SIDEWALK_TYPE {};
+
+enum E_MARIO_FLAG {
+	MARIO_FLAG_ABOVE_SEWER_FLOOR   = (1 << 0),
+	MARIO_FLAG_VISIBLE             = (1 << 1),
+	MARIO_FLAG_NPC_TALKING         = (1 << 3),
+	MARIO_FLAG_RECENTLY_LEFT_WATER = (1 << 4),
+	MARIO_FLAG_GAME_OVER           = (1 << 10),
+	MARIO_FLAG_GROUND_POUND_SIT_UP = (1 << 11),
+	MARIO_FLAG_HELMET_FLW_CAMERA   = (1 << 12),
+	MARIO_FLAG_HELMET              = (1 << 13),
+	MARIO_FLAG_FLUDD_EMITTING      = (1 << 14),
+	MARIO_FLAG_HAS_FLUDD           = (1 << 15),
+	MARIO_FLAG_IN_SHALLOW_WATER    = (1 << 16),
+	MARIO_FLAG_IN_WATER            = (1 << 17),
+	MARIO_FLAG_HAS_SHIRT           = (1 << 20),
+	MARIO_FLAG_IS_PERFORMING       = (1 << 21),
+};
 
 struct TRidingInfo {
 	const TLiveActor* unk0;
@@ -651,7 +670,7 @@ public:
 	bool isWearingCap();
 	void setDivHelm();
 	void getWallAngle() const;
-	void getPumpFrame() const;
+	f32 getPumpFrame() const;
 	void getCenterAnmMtx();
 	void getRootAnmMtx();
 	void getHeadRot();
@@ -781,7 +800,7 @@ public:
 	void canBendBody();
 	void considerRotateJumpStart();
 	void addVelocity(f32);
-	u32 onYoshi() const;
+	s32 onYoshi() const;
 	void getGroundJumpPower() const;
 	void windMove(const JGeometry::TVec3<f32>&);
 	void flowMove(const JGeometry::TVec3<f32>&);
@@ -1079,6 +1098,21 @@ public:
 
 	TBGCheckData* getGroundPlane() const { return mGroundPlane; }
 
+	// Fabricated
+	bool checkFlag(u32 attribute) const
+	{
+		return unk118 & attribute ? true : false;
+	}
+
+	// Fabricated
+	bool fabricatedActionInline() const
+	{
+		if (mAction >= 0x168 && 0x16c >= mAction) {
+			return true;
+		}
+		return false;
+	}
+
 public:
 	/* 0x74 */ u32 mInput;
 	/* 0x78 */ u32 unk78;
@@ -1114,7 +1148,7 @@ public:
 	/* 0xF6 */ u16 unkF6;
 
 	/* 0xF8 */ u16 mLightID;
-	// u16 _0FA;
+	/* 0xFA */ u16 unk0FA;
 
 	/* 0xFC */ u32 unkFC[2];
 
@@ -1122,7 +1156,7 @@ public:
 
 	/* 0x108 */ u32 unk108[4];
 
-	/* 0x118 */ u32 unk118; // gpMarioFlag points here;
+	/* 0x118 */ u32 unk118;
 
 	/* 0x11C */ u32 unk11C;
 
@@ -1140,18 +1174,18 @@ public:
 
 	/* 0x38A */ char unk38A[0x5A];
 
-	/* 0x3E4 */ void* mWaterGun; // TWaterGun
+	/* 0x3E4 */ TWaterGun* mWaterGun;
 
 	/* 0x3E8 */ u32 unk3E8;
 	/* 0x3EC */ u32 unk3EC;
 
-	/* 0x3F0 */ void* mYoshi; // TYoshi 0x3F0
+	/* 0x3F0 */ TYoshi* mYoshi;
 
 	/* 0x3F4 */ char unk3F4[0x0FC];
 
 	/* 0x4F0 */ JGeometry::TVec3<f32> unk4F0;
 
-	void* mGamePad; // TMarioGamePad
+	/* 0x4FC */ TMarioGamePad* mGamePad;
 
 	/* 0x500 */ char unk500[0x74];
 
@@ -1248,5 +1282,6 @@ public:
 };
 
 extern TMario* gpMarioOriginal;
+extern TMario* gpMarioForCallBack;
 
 #endif

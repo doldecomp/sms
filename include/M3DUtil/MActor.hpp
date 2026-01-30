@@ -22,6 +22,15 @@ class MActorAnmBlk;
 
 class MActor {
 public:
+	enum ANM_TYPE {
+		ANM_TYPE_BCK,
+		ANM_TYPE_BLK,
+		ANM_TYPE_BPK,
+		ANM_TYPE_BTP,
+		ANM_TYPE_BTK,
+		ANM_TYPE_BRK
+	};
+
 	MActor(MActorAnmData*);
 
 	void setMActorAnmData(MActorAnmData*);
