@@ -2,12 +2,9 @@
 #define M3DUTIL_M3U_MODEL_HPP
 
 #include <JSystem/JDrama/JDRGraphics.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 
 struct M3UMtxCalcSetInfo;
-class J3DModel;
-class J3DFrameCtrl;
-class J3DAnmTexPattern;
-class J3DTexNoAnm;
 
 class M3UModelCommon {
 public:

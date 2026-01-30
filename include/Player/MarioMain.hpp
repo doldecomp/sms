@@ -6,6 +6,9 @@
 #include <System/ParamInst.hpp>
 #include <System/DrawSyncCallback.hpp>
 #include <Strategic/TakeActor.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DDrawBuffer.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <M3DUtil/M3UModelMario.hpp>
 
 class TLiveActor;
 class TBGCheckData;
@@ -15,7 +18,7 @@ class J3DAnmTransform;
 struct TBGWallCheckRecord;
 
 // TODO: where should this be?
-enum E_SIDEWALK_TYPE {};
+enum E_SIDEWALK_TYPE { };
 
 struct TRidingInfo {
 	const TLiveActor* unk0;
@@ -565,12 +568,12 @@ public:
 	virtual void damageExec(THitActor*, int, int, int, f32, int, f32, s16);
 	virtual void getVoiceStatus();
 
-	void actnMain();
+	bool actnMain();
 	void pitching();
 	void putting();
 	void catchLost();
 	void takePose();
-	void taking();
+	bool taking();
 	void demoMain();
 	void disappear();
 	void nomotion();
@@ -637,7 +640,7 @@ public:
 	void changeHandByRate(f32);
 	void changeHand(int);
 	void isAnimeLoopOrStop();
-	void isLast1AnimeFrame();
+	s32 isLast1AnimeFrame();
 	void getMotionFrameCtrl();
 	void getCurrentFrame(int);
 	void getRailMtx() const;
@@ -753,10 +756,10 @@ public:
 	void checkGraffitoDamage();
 	void makeGraffitoDamage(const TMario::TEParams&);
 	void checkAllMotions();
-	void changePlayerDropping(u32, u32);
-	void changePlayerJumping(u32, u32);
+	bool changePlayerDropping(u32, u32);
+	bool changePlayerJumping(u32, u32);
 	void changePlayerTriJump();
-	void changePlayerStatus(u32, u32, bool);
+	bool changePlayerStatus(u32, u32, bool);
 	void throwMario(const JGeometry::TVec3<f32>&, f32);
 	void setStatusToRunning(u32, u32);
 	void setStatusToJumping(u32, u32);
@@ -779,7 +782,7 @@ public:
 	void changePos(const Vec&);
 	void isSpeedZero();
 	void canBendBody();
-	void considerRotateJumpStart();
+	s32 considerRotateJumpStart();
 	void addVelocity(f32);
 	u32 onYoshi() const;
 	void getGroundJumpPower() const;
@@ -1137,8 +1140,31 @@ public:
 
 	// TODO: Make enum (0 = red, 1 = yellow, 2 = green)
 	/* 0x388 */ u16 mBlooperColor;
-
-	/* 0x38A */ char unk38A[0x5A];
+	/* 0x38A */ u16 unk38A;
+	/* 0x38C */ f32 mHolderHeightDiff;
+	/* 0x390 */ u32 _390;
+	/* 0x394 */ J3DDrawBuffer* mDrawBufferA;
+	/* 0x398 */ J3DDrawBuffer* mDrawBufferB;
+	/* 0x39C */ u32 _39C;
+	/* 0x3A0 */ u32 _3A0;
+	/* 0x3A4 */ u32 _3A4;
+	/* 0x3A8 */ M3UModelMario* mModelData;
+	/* 0x3AC */ J3DModelData* mBodyModelData;
+	/* 0x3B0 */ J3DModel* mHandModel2R;
+	/* 0x3B4 */ J3DModel* mHandModel2L;
+	/* 0x3B8 */ J3DModel* mHandModel3R;
+	/* 0x3BC */ J3DModel* mHandModel3L;
+	/* 0x3C0 */ J3DModel* mHandModel4R;
+	/* 0x3C4 */ u8 _3C4;
+	/* 0x3C5 */ u8 mBindBoneIDArray[12];
+	/* 0x3D1 */ u8 _3D1; // padding?
+	/* 0x3D2 */ u8 _3D2; // padding?
+	/* 0x3D3 */ u8 _3D3; // padding?
+	/* 0x3D4 */ u16 _3D4;
+	/* 0x3D6 */ u16 _3D6;
+	/* 0x3D8 */ f32 _3D8;
+	/* 0x3DC */ f32 _3DC;
+	/* 0x3E0 */ void* mCap; // TMarioCap
 
 	/* 0x3E4 */ void* mWaterGun; // TWaterGun
 
