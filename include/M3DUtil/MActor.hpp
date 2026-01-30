@@ -22,7 +22,14 @@ class MActorAnmBlk;
 
 class MActor {
 public:
-	enum AnimationType { BCK, BLK, BPK, BTP, BTK, BRK };
+	enum ANM_TYPE {
+		ANM_TYPE_BCK,
+		ANM_TYPE_BLK,
+		ANM_TYPE_BPK,
+		ANM_TYPE_BTP,
+		ANM_TYPE_BTK,
+		ANM_TYPE_BRK
+	};
 
 	MActor(MActorAnmData*);
 

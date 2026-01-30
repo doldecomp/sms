@@ -6,7 +6,7 @@
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 
-#include <gpMarDirector.hpp>
+#include <System/MarDirector.hpp>
 
 #include <System/StageUtil.hpp>
 
@@ -16,56 +16,94 @@
 
 extern size_t gpMarioAddress;
 
-// Define the global variable in .data section
-TNozzleBmdData nozzleBmdData
-    = { { { 0,                                          // _00
+TNozzleBmdData nozzleBmdData = {
+	{
+	    {
+	        0,                                          // _00
 	        0,                                          // _04
 	        nullptr,                                    // mHelmetPath
 	        "/mario/watergun2/normal_wg",               // mPath
 	        "/mario/watergun2/normal_wg/normal_wg.bmd", // mBmdPath
 	        1,                                          // mNumEmitters
 	        2,                                          // _15
-	        { { 1, 0 }, { 4, 0 }, { 4, 0 } } },
-	      { 0,                                          // _00
+	        {
+	            { 1, 0 },
+	            { 4, 0 },
+	            { 4, 0 },
+	        },
+	    },
+	    {
+	        0,                                          // _00
 	        0,                                          // _04
 	        nullptr,                                    // mHelmetPath
 	        "/mario/watergun2/rocket_wg",               // mPath
 	        "/mario/watergun2/rocket_wg/rocket_wg.bmd", // mBmdPath
 	        1,                                          // mNumEmitters
 	        2,                                          // _15
-	        { { 2, 1 }, { 4, 0 }, { 4, 0 } } },
-	      { 0,                                        // _00
+	        {
+	            { 2, 1 },
+	            { 4, 0 },
+	            { 4, 0 },
+	        },
+	    },
+	    {
+	        0,                                        // _00
 	        0,                                        // _04
 	        "/mario/bmd/wg_hel_diver.bmd",            // mHelmetPath
 	        "/mario/watergun2/hover_wg",              // mPath
 	        "/mario/watergun2/hover_wg/hover_wg.bmd", // mBmdPath
 	        2,                                        // mNumEmitters
 	        0xc,                                      // _15
-	        { { 1, 0 }, { 1, 0 }, { 4, 0 } } },
-	      { 0,                                        // _00
+	        {
+	            { 1, 0 },
+	            { 1, 0 },
+	            { 4, 0 },
+	        },
+	    },
+	    {
+	        0,                                        // _00
 	        0,                                        // _04
 	        nullptr,                                  // mHelmetPath
 	        "/mario/watergun2/dummy_wg",              // mPath
 	        "/mario/watergun2/dummy_wg/dummy_wg.bmd", // mBmdPath
 	        1,                                        // mNumEmitters
 	        2,                                        // _15
-	        { { 3, 0 }, { 4, 0 }, { 4, 0 } } },
-	      { 0,                                        // _00
+	        {
+	            { 3, 0 },
+	            { 4, 0 },
+	            { 4, 0 },
+	        },
+	    },
+	    {
+	        0,                                        // _00
 	        0,                                        // _04
 	        nullptr,                                  // mHelmetPath
 	        "/mario/watergun2/hover_wg",              // mPath
 	        "/mario/watergun2/hover_wg/hover_wg.bmd", // mBmdPath
 	        2,                                        // mNumEmitters
 	        0xc,                                      // _15
-	        { { 1, 0 }, { 1, 0 }, { 4, 0 } } },
-	      { 0,                                      // _00
+	        {
+	            { 1, 0 },
+	            { 1, 0 },
+	            { 4, 0 },
+	        },
+	    },
+	    {
+	        0,                                      // _00
 	        0,                                      // _04
 	        nullptr,                                // mHelmetPath
 	        "/mario/watergun2/back_wg",             // mPath
 	        "/mario/watergun2/back_wg/back_wg.bmd", // mBmdPath
 	        1,                                      // mNumEmitters
 	        2,                                      // _15
-	        { { 1, 0 }, { 4, 0 }, { 4, 0 } } } } };
+	        {
+	            { 1, 0 },
+	            { 4, 0 },
+	            { 4, 0 },
+	        },
+	    },
+	},
+};
 
 TWaterGun::TWaterGun(TMario* mario)
     : mNozzleDeform("normal_wg", "/Mario/WaterGun/NozzleDeform.prm", this)
@@ -96,11 +134,11 @@ static bool NozzleCtrl(J3DNode* node, BOOL param_2)
 				// Unused stack space
 				// volatile u32 unused2[6];
 				MsMtxSetRotRPH(mtx, 0.0f, 0.0f, 0.005493164f * gunAngle);
-				PSMTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
+				MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
 			}
 		}
 	}
-	return 1;
+	return true;
 }
 
 static bool RotateCtrl(J3DNode* node, BOOL param_2)
@@ -111,9 +149,9 @@ static bool RotateCtrl(J3DNode* node, BOOL param_2)
 		// Unused stack space
 		// volatile u32 unused2[7];
 		MsMtxSetRotRPH(mtx, 0.005493164f * local1cd0, 0.0f, 0.0f);
-		PSMTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
+		MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
 	}
-	return 1;
+	return true;
 }
 
 static bool WaterGunDivingCtrlL(J3DNode* node, BOOL param_2)
@@ -128,9 +166,9 @@ static bool WaterGunDivingCtrlL(J3DNode* node, BOOL param_2)
 		// Unused stack space
 		// volatile u32 unused2[7];
 		MsMtxSetRotRPH(mtx, 0.0f, 0.0f, 0.005493164f * neg);
-		PSMTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
+		MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
 	}
-	return 1;
+	return true;
 }
 
 static bool WaterGunDivingCtrlR(J3DNode* node, BOOL param_2)
@@ -145,9 +183,9 @@ static bool WaterGunDivingCtrlR(J3DNode* node, BOOL param_2)
 		// Unused stack space
 		// volatile u32 unused2[7];
 		MsMtxSetRotRPH(mtx, 0.0f, 0.0f, 0.005493164f * neg);
-		PSMTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
+		MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
 	}
-	return 1;
+	return true;
 }
 
 // TODO: Nozzle deform
@@ -215,7 +253,7 @@ void TWaterGun::init()
 
 	// Requires M3UModelMario at 0x3a8 in TMario
 	// Missing decompilation
-	// PSMTXCopy(
+	// MTXCopy(
 	//     mMario->mModelMario->unk8->mJointArray[mMario->mBindBoneIDArray[0]],
 	//     mFluddModel->unk4->unk20);
 
@@ -279,7 +317,7 @@ void TWaterGun::init()
 	//     ->mCallBack = functionPtr;
 	// 5 more of these
 
-	// PSMTXCopy that requires M3UModelMario at 0x3a8 in TMario
+	// MTXCopy that requires M3UModelMario at 0x3a8 in TMario
 
 	unk1D10 = new TMirrorActor("水鉄砲in鏡");
 	unk1D10->init(mFluddModel->unk4, 4);
@@ -304,7 +342,7 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 	volatile u32 unused2[12];
 
 	gpMarioForCallBack      = mMario;
-	J3DFrameCtrl* frameCtrl = mFluddModel->getFrameCtrl(MActor::BCK);
+	J3DFrameCtrl* frameCtrl = mFluddModel->getFrameCtrl(MActor::ANM_TYPE_BCK);
 	if (mMario == nullptr) {
 		return;
 	}
@@ -327,8 +365,8 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 			if (unk1CEC == 0.0f) {
 				if (mMario->fabricatedActionInline()) {
 					mFluddModel->setBck("wg_fepmp");
-				} else if (mMario->checkFlag(ATTR_IS_SHALLOW_WATER
-				                             | ATTR_IS_WATER)) {
+				} else if (mMario->checkFlag(MARIO_FLAG_IN_SHALLOW_WATER
+				                             | MARIO_FLAG_IN_WATER)) {
 					mFluddModel->setBck("wg_swpmp");
 				} else {
 					// TODO: Cast would be weird here, probably an inlined
@@ -674,8 +712,8 @@ void TWaterGun::setBaseTRMtx(Mtx mtx)
 	Vec unused2;
 	MsMtxSetRotRPH(result, 0.0f, 0.0f, 0.005493164f * angle);
 
-	PSMTXConcat(mtx, result, result);
-	PSMTXCopy(result, mFluddModel->unk4->unk20);
+	MTXConcat(mtx, result, result);
+	MTXCopy(result, mFluddModel->unk4->unk20);
 }
 
 // Not sure why this get's inlined aggressively
@@ -756,7 +794,7 @@ void TNozzleBase::animation(int param_1)
 		if (!unk380->checkCurBckFromIndex(4)) {
 			unk380->setBckFromIndex(4);
 		}
-		J3DFrameCtrl* ctrl = unk380->getFrameCtrl(MActor::BCK);
+		J3DFrameCtrl* ctrl = unk380->getFrameCtrl(MActor::ANM_TYPE_BCK);
 		if (ctrl->mCurrentFrame <= (ctrl->mEndFrame - 0.1)
 		    && (ctrl->mFlags & 3) == 0) {
 			return;
@@ -775,7 +813,7 @@ void TNozzleBase::animation(int param_1)
 		if (fludd->mCurrentWater == 0) {
 			updateAnimation = false;
 		} else {
-			u8 gameState = gpMarDirector->mGameState;
+			u8 gameState = gpMarDirector->unk124;
 			if (gameState != 3 && gameState != 4) {
 				updateAnimation = true;
 				if (gameState != 1 && gameState != 2) {
@@ -820,7 +858,7 @@ void TNozzleBase::animation(int param_1)
 		if (fludd->mCurrentWater == 0) {
 			updateAnimation = false;
 		} else {
-			u8 gameState = gpMarDirector->mGameState;
+			u8 gameState = gpMarDirector->unk124;
 			if (gameState != 3 && gameState != 4) {
 				updateAnimation = true;
 				if (gameState != 1 && gameState != 2) {
@@ -856,7 +894,7 @@ void TNozzleBase::animation(int param_1)
 
 	case 3: {
 
-		J3DFrameCtrl* ctrl = unk380->getFrameCtrl(MActor::BCK);
+		J3DFrameCtrl* ctrl = unk380->getFrameCtrl(MActor::ANM_TYPE_BCK);
 		if (!unk380->checkCurBckFromIndex(1)) {
 			unk380->setBckFromIndex(1);
 		}
@@ -868,7 +906,7 @@ void TNozzleBase::animation(int param_1)
 	}
 	case 4: {
 
-		J3DFrameCtrl* ctrl = unk380->getFrameCtrl(MActor::BCK);
+		J3DFrameCtrl* ctrl = unk380->getFrameCtrl(MActor::ANM_TYPE_BCK);
 		if (!unk380->checkCurBckFromIndex(0)) {
 			unk380->setBckFromIndex(0);
 		}
@@ -1065,7 +1103,7 @@ void TWaterGun::perform(u32 flags, JDrama::TGraphics* graphics)
 	if ((flags & 0x2) != 0) {
 		MActor* p2 = getCurrentNozzle()->unk380;
 		if (p2 != nullptr) {
-			PSMTXCopy(getModel()->getAnmMtx(unk1CD8), p2->unk4->unk20);
+			MTXCopy(getModel()->getAnmMtx(unk1CD8), p2->unk4->unk20);
 		}
 
 		for (s32 index = 0;
@@ -1200,8 +1238,9 @@ void TWaterGun::emit()
 	// volatile u32 unused1[25];
 
 	// TODO: Another possible inline to check if emit is possible
-	if (!mMario->checkFlag(ATTR_HAS_HELMET_FLW_CAMERA)
-	    && mMario->checkFlag(ATTR_IS_SHALLOW_WATER | ATTR_IS_WATER)) {
+	if (!mMario->checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)
+	    && mMario->checkFlag(MARIO_FLAG_IN_SHALLOW_WATER
+	                         | MARIO_FLAG_IN_WATER)) {
 		// I can imagine this also being an inline function that checks
 		// if the emit point is below the water height, but i will leave
 		// it for now. TODO.

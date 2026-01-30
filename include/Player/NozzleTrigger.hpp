@@ -6,7 +6,6 @@
 
 class TNozzleTrigger : public TNozzleBase {
 public:
-	// Add constructor
 	TNozzleTrigger(const char* name, const char* prm, TWaterGun* fludd)
 	    : TNozzleBase(name, prm, fludd)
 	{
