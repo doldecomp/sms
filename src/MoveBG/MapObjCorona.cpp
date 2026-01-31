@@ -100,5 +100,3 @@ void TBathtub::liftMario(const JGeometry::TVec3<f32>&) { }
 
 // Unused
 void TBathtub::trample(const JGeometry::TVec3<f32>&) { }
-
-TBathtub::~TBathtub() { }

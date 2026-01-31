@@ -6,7 +6,6 @@
 class TBathtub : public TMapObjBase {
 public:
 	TBathtub(const char*);
-	~TBathtub();
 
 	void loadAfter();
 	void hipdrop(const JGeometry::TVec3<f32>&);
