@@ -640,7 +640,7 @@ public:
 	void changeHandByRate(f32);
 	void changeHand(int);
 	void isAnimeLoopOrStop();
-	s32 isLast1AnimeFrame();
+	BOOL isLast1AnimeFrame();
 	void getMotionFrameCtrl();
 	void getCurrentFrame(int);
 	void getRailMtx() const;
@@ -782,7 +782,7 @@ public:
 	void changePos(const Vec&);
 	void isSpeedZero();
 	void canBendBody();
-	s32 considerRotateJumpStart();
+	BOOL considerRotateJumpStart();
 	void addVelocity(f32);
 	u32 onYoshi() const;
 	void getGroundJumpPower() const;
