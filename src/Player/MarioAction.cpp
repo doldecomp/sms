@@ -1,5 +1,31 @@
 #include <Player/MarioMain.hpp>
 
+bool TMario::taking()
+{
+	if ((mInput & 4) != 0) {
+		return changePlayerDropping(0x88C, 0);
+	}
+
+	setAnimation(0x6B, 1.0f);
+	if (unk384 != nullptr && unk3A8->getFrameCtrl()->checkPass(11.0f)) {
+		if (unk384->receiveMessage(this, 0x4) == true) {
+			startVoice(0x788F);
+			mHeldObject = (TTakeActor*)unk384;
+		} else {
+			return changePlayerStatus(0xC400201, 0, false);
+		}
+		unk384 = nullptr;
+	}
+	if (isLast1AnimeFrame()) {
+		unk380 = 2;
+		unk37E = 0;
+		return changePlayerStatus(0xC400201, 0, false);
+	} else {
+		waitProcess();
+		return false;
+	}
+}
+
 bool TMario::actnMain()
 {
 	u32 action = mAction;
