@@ -115,12 +115,22 @@ public:
 	{
 		mParticleFlagSOA[i] = (mParticleFlagSOA[i] & ~0xf) | flag;
 	}
+	bool checkFlagBottom4Bits(int i, int flag) const
+	{
+		return (mParticleFlagSOA[i] & 0xf) == flag ? true : false;
+	}
 	JGeometry::TVec3<f32> vecBetweenParticles(int i, int j) const
 	{
 		JGeometry::TVec3<f32> d = mParticlePositionSOA[i];
 		d -= mParticlePositionSOA[j];
 		return d;
 	}
+	const JGeometry::TVec3<f32>* getParticlePositions() const
+	{
+		return mParticlePositionSOA;
+	}
+	THitActor** getParticleUnk2514() { return unk2514; }
+	u16 getParticleCount() const { return mParticleCount; }
 
 	enum { SLOT_NUM = 256 };
 

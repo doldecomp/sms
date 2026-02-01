@@ -57,6 +57,7 @@ public:
 	THitActor* getCollision(int i) { return mCollisions[i]; }
 	u16 getColNum() { return mColCount; }
 	bool checkHitFlag(u32 flag) { return unk64 & flag; }
+	bool checkHitFlag2(u32 flag) { return unk64 & flag ? true : false; }
 	void onHitFlag(u32 flag) { unk64 |= flag; }
 	void offHitFlag(u32 flag) { unk64 &= ~flag; }
 	f32 getAttackRadius() const { return mAttackRadius; }
@@ -84,6 +85,7 @@ public:
 		mDamageHeight = v;
 		calcEntryRadius();
 	}
+	f32 getEntryRadius() const { return mEntryRadius; }
 
 public:
 	/* 0x44 */ THitActor** mCollisions;

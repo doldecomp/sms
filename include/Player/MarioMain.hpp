@@ -1167,10 +1167,11 @@ public:
 
 	/* 0x122 */ u16 unk122;
 
-	/* 0x124 */ char unk124[0x380 - 0x124];
-
+	/* 0x124 */ char unk124[0x37C - 0x124];
+	/* 0x37C */ u16 unk37C;
+	/* 0x37E */ u16 unk37E;
 	/* 0x380 */ u32 unk380;
-	/* 0x384 */ THitActor* unk384;
+	/* 0x384 */ THitActor* unk384; // Last receiveMessage sender
 
 	// TODO: Make enum (0 = red, 1 = yellow, 2 = green)
 	/* 0x388 */ u16 mBlooperColor;
