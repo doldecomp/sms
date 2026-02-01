@@ -90,6 +90,9 @@ public:
 	f32 getWaterHeight(f32, f32) const;
 	void throwMario(f32);
 
+	// fabricated
+	TBathWaterPreprocessor* getPreprocessor() { return &unk34; }
+
 public:
 	/* 0x10 */ JMath::TRandom_fast_ unk10;
 	/* 0x14 */ TBathWaterParams** unk14;

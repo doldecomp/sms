@@ -5,7 +5,7 @@
 
 class TBathtub : public TMapObjBase {
 public:
-	TBathtub(const char*);
+	TBathtub(const char* name = "バスタブ");
 
 	void loadAfter();
 	void hipdrop(const JGeometry::TVec3<f32>&);
