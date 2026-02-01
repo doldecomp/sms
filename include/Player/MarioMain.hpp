@@ -609,10 +609,10 @@ public:
 	void downLoser();
 	void sinkLoser();
 	void openDoor();
-	void jumpingDemoCommon(u32, int, f32);
+	BOOL jumpingDemoCommon(u32, int, f32);
 	void elecDowning();
 	void bottleIn();
-	void readBillboard();
+	BOOL readBillboard();
 	BOOL winDemo();
 	void considerTake();
 	void calcDamagePos(const JGeometry::TVec3<f32>&);
@@ -625,7 +625,7 @@ public:
 	void canTake(THitActor*);
 	bool isTakeSituation(THitActor*);
 	void dropObject();
-	void getAttackAngle(const THitActor*);
+	s16 getAttackAngle(const THitActor*);
 	void decHP(int);
 	void incHP(int);
 	void rumbleStart(int, int);
@@ -1129,7 +1129,7 @@ public:
 	/* 0x92 */ u16 unk92;
 
 	/* 0x94 */ JGeometry::TVec3<s16> mFaceAngle;
-	/* 0x98 */ u16 mModelFaceAngle;
+	/* 0x9A */ s16 mModelFaceAngle;
 	/* 0x9C */ u32 unk9C;
 	/* 0xA0 */ u32 unkA0;
 	/* 0xA4 */ JGeometry::TVec3<f32> mVel;
