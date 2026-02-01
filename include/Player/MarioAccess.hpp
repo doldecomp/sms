@@ -96,6 +96,9 @@ inline void SMS_GetMarioPosStupid(Vec* result)
 }
 
 // fabricated
-const TBGCheckData* SMS_GetMarioGroundPlane() { return *gpMarioGroundPlane; }
+inline const TBGCheckData* SMS_GetMarioGroundPlane()
+{
+	return *gpMarioGroundPlane;
+}
 
 #endif

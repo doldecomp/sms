@@ -166,7 +166,7 @@ public:
 		// but it isn't
 		T* operator->() { return (T*)(p_ + 1); }
 
-		iterator operator++()
+		iterator& operator++()
 		{
 			p_ = p_->pNext_;
 			return *this;
@@ -246,9 +246,13 @@ public:
 		}
 
 		T operator*() { return (T)this->Base::operator*(); }
-		T operator->() { return (T)this->Base::operator->(); }
+		T operator->() { return *(T*)this->Base::operator->(); }
 
-		iterator operator++() { return iterator(this->Base::operator++()); }
+		iterator& operator++()
+		{
+			this->Base::operator++();
+			return *this;
+		}
 		iterator operator++(int) { return iterator(this->Base::operator++(0)); }
 
 		friend bool operator==(iterator fst, iterator snd)
