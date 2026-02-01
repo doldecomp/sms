@@ -22,10 +22,10 @@ void TMarDirector::initECTGft(
     JDrama::TViewObjPtrListT<JDrama::TViewObj>* param_4)
 {
 	if (gpPollution->getJointModelNum() == 0) {
-		JDrama::TViewObj* bathtubWater
-		    = JDrama::TNameRefGen::search<JDrama::TViewObj>("バスタブの水");
+		TBathWaterManager* bathtubWater
+		    = JDrama::TNameRefGen::search<TBathWaterManager>("バスタブの水");
 		if (bathtubWater)
-			param_2->push_back(bathtubWater, 8);
+			param_2->push_back(bathtubWater->getPreprocessor(), 8);
 	} else {
 		JDrama::TViewObjPtrListT<JDrama::TViewObj>* graffitiGroup
 		    = JDrama::TNameRefGen::search<
