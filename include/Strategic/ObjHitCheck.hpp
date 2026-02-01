@@ -10,6 +10,9 @@ class TObjCheckList {
 public:
 	TObjCheckList();
 
+	TObjCheckList* getNext() { return unk0; }
+	THitActor* getActor() { return unk4; }
+
 public:
 	/* 0x0 */ TObjCheckList* unk0;
 	/* 0x4 */ THitActor* unk4;
@@ -30,13 +33,18 @@ public:
 	void clearGroup(TIdxGroupObj*);
 	void entryGroup(TIdxGroupObj*);
 	void checkAndEntryGroup(TIdxGroupObj*);
-	void getTableIndex(const JGeometry::TVec3<f32>&, f32, u32*);
+	u32 getTableIndex(const JGeometry::TVec3<f32>&, f32, u32*);
 	void entryActor(THitActor*, TObjCheckList*);
 	void checkWater();
-	void checkWaterWithActorsInList(const JGeometry::TVec3<f32>&,
-	                                TObjCheckList*);
+	THitActor* checkWaterWithActorsInList(const JGeometry::TVec3<f32>&,
+	                                      TObjCheckList*);
 	void checkActorsInList(THitActor*, TObjCheckList*);
 	void suffererIsInAttackArea(THitActor*, THitActor*);
+
+	// fabricated
+	TObjCheckList* getCheckList(u32 index) { return &unk0[index]; }
+
+	TObjCheckList* getCheckList2(u32 index) { return unk0[index].unk0; }
 
 public:
 	/* 0x0 */ TObjCheckList unk0[256];
