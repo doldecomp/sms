@@ -613,7 +613,7 @@ public:
 	void elecDowning();
 	void bottleIn();
 	void readBillboard();
-	void winDemo();
+	BOOL winDemo();
 	void considerTake();
 	void calcDamagePos(const JGeometry::TVec3<f32>&);
 	void floorDamageExec(const TMario::TEParams&);
@@ -816,7 +816,7 @@ public:
 	void canSquat() const;
 	void getJumpSlideControl() const;
 	void getJumpAccelControl() const;
-	void jumpProcess(int);
+	BOOL jumpProcess(int);
 	void fallProcess();
 	void isFallCancel();
 	void checkGroundAtJumping(const Vec&, int);
@@ -1121,7 +1121,7 @@ public:
 	/* 0x78 */ u32 unk78;
 	/* 0x7C */ u32 mAction;
 	/* 0x80 */ u32 mPrevAction;
-	/* 0x84 */ s16 mActionState;
+	/* 0x84 */ u16 mActionState;
 	/* 0x86 */ s16 mActionTimer;
 	/* 0x88 */ u32 mActionArg;
 	/* 0x8C */ f32 mIntendedMag;
