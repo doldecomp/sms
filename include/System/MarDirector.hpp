@@ -158,7 +158,7 @@ public:
 	/* 0x80 */ JDrama::TViewObjPtrListT<JDrama::TViewObj>* unk80;
 	/* 0x84 */ TTalkCursor* unk84;
 	/* 0x88 */ JGadget::TVector_pointer<TBaseNPC> unk88;
-	/* 0xA0 */ TBaseNPC* unkA0;
+	/* 0xA0 */ TBaseNPC* unkA0; // talking NPC
 	/* 0xA4 */ char unkA4[0x8];
 	/* 0xAC */ TPauseMenu2* unkAC;
 	/* 0xB0 */ JDrama::TViewObj* unkB0;
@@ -178,9 +178,9 @@ public:
 	/* 0xE4 */ u32 unkE4;
 	/* 0xE8 */ OSStopwatch unkE8;
 	/* 0x120 */ char unk120[0x4];
-	/* 0x124 */ u8 unk124;
+	/* 0x124 */ u8 unk124; // Game state, paused, shine animation, 2=talking
 	/* 0x125 */ u8 unk125;
-	/* 0x126 */ u8 unk126;
+	/* 0x126 */ u8 unk126; // Next game state
 	/* 0x128 */ u16 unk128;
 	/* 0x12C */ TDemoInfo unk12C[8];
 	/* 0x24C */ u8 unk24C;
