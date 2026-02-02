@@ -34,6 +34,8 @@ struct TGraphics {
 	MtxPtr getUnkB4() { return unkB4.mMtx; }
 	f32 getNearPlane() { return mNearPlane; }
 
+	TFlagT<u16>& getUnkFC() { return unkFC; }
+
 	/* 0x00 */ u16 unk0;
 	/* 0x02 */ u16 unk2;
 	/* 0x04 */ void* unk4;

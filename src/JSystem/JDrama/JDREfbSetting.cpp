@@ -18,7 +18,7 @@ GXPixelFmt JDrama::DecidePixelFmt(bool param_1, bool param_2)
 bool JDrama::IsCanEnableDither(GXPixelFmt pix_fmt)
 {
 	bool res = true;
-	if (pix_fmt - 1 > 1u)
+	if (!(pix_fmt == GX_PF_RGBA6_Z24 || pix_fmt == GX_PF_RGB565_Z16))
 		res = false;
 	return res;
 }
@@ -57,42 +57,42 @@ void JDrama::IssueGXPixelFormatSetting(const GXRenderModeObj& param_1,
 	GXSetFieldMode(uVar1, half_aspect_ratio);
 }
 
-void JDrama::IssueGXSetCopyFilter(bool param_1, const u8 (*param_2)[2],
-                                  bool param_3, const u8* param_4)
+void JDrama::IssueGXSetCopyFilter(bool antialias, const u8 (*sample_pattern)[2],
+                                  bool use_vfilter, const u8* vfilter)
 {
 	GXBool vf = GX_FALSE;
-	if (param_3 && param_4 != nullptr) {
+	if (use_vfilter && vfilter != nullptr) {
 		vf = GX_TRUE;
 	}
 
 	GXBool aa = GX_FALSE;
-	if (param_1 && param_2 != nullptr) {
+	if (antialias && sample_pattern != nullptr) {
 		aa = GX_TRUE;
 	}
 
-	GXSetCopyFilter(aa, param_2, vf, param_4);
+	GXSetCopyFilter(aa, sample_pattern, vf, vfilter);
 }
 
-bool JDrama::IssueGXSetCopyClear(JUtility::TColor param_1, u32 param_2,
-                                 u16 param_3)
+bool JDrama::IssueGXSetCopyClear(JUtility::TColor clear_color, u32 clear_z,
+                                 u16 flags)
 {
 	bool iVar2 = true;
 
 	bool bVar1 = true;
-	if (((param_3 & 1) != 0) && ((param_3 & 2) != 0)) {
+	if (((flags & 1) != 0) && ((flags & 2) != 0)) {
 		bVar1 = false;
 	}
 
-	if (!bVar1 && ((param_3 & 4) != 0)) {
+	if (!bVar1 && ((flags & 4) != 0)) {
 		iVar2 = false;
 	}
 
 	if (iVar2) {
-		GXSetCopyClear(param_1, param_2);
-		GXSetColorUpdate((param_3 & 1) == 0);
-		GXSetAlphaUpdate((param_3 & 2) == 0);
+		GXSetCopyClear(clear_color, clear_z);
+		GXSetColorUpdate((flags & 1) == 0);
+		GXSetAlphaUpdate((flags & 2) == 0);
 
-		bool zTest = (param_3 & 4) == 0;
+		bool zTest = (flags & 4) == 0;
 
 		GXSetZMode(zTest, GX_ALWAYS, zTest);
 
@@ -103,17 +103,18 @@ bool JDrama::IssueGXSetCopyClear(JUtility::TColor param_1, u32 param_2,
 	return iVar2;
 }
 
-void JDrama::IssueGXCopyDisp(void* param_1, const TRect& param_2,
-                             const GXRenderModeObj& param_3,
-                             JUtility::TColor param_4, u32 param_5,
-                             GXFBClamp param_6, u16 param_7)
+void JDrama::IssueGXCopyDisp(void* param_1, const TRect& src_rect,
+                             const GXRenderModeObj& render_mode,
+                             JUtility::TColor clear_color, u32 clear_z,
+                             GXFBClamp framebuffer_clamp, u16 flags)
 {
-	IssueGXSetCopyFilter(param_3.aa, param_3.sample_pattern, param_7 & 20,
-	                     param_3.vfilter);
-	bool iVar3 = IssueGXSetCopyClear(param_4, param_5, param_7);
+	GXSetCopyClamp(framebuffer_clamp);
+	IssueGXSetCopyFilter(render_mode.aa, render_mode.sample_pattern, flags & 20,
+	                     render_mode.vfilter);
+	bool doClear = IssueGXSetCopyClear(clear_color, clear_z, flags);
 
-	GXSetDispCopySrc(param_2.x1, param_2.y1, param_2.x2, param_2.y2);
-	u32 uVar2 = GXSetDispCopyYScale(GetRenderModeYScale(param_3));
-	GXSetDispCopyDst(param_3.fbWidth + 0xf & 0xfffffff0, uVar2);
-	GXCopyDisp(param_1, iVar3);
+	GXSetDispCopySrc(src_rect.x1, src_rect.y1, src_rect.x2, src_rect.y2);
+	u32 uVar2 = GXSetDispCopyYScale(GetRenderModeYScale(render_mode));
+	GXSetDispCopyDst(render_mode.fbWidth + 0xf & 0xfffffff0, uVar2);
+	GXCopyDisp(param_1, doClear);
 }

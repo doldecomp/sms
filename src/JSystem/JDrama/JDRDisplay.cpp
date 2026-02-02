@@ -13,8 +13,8 @@ TDisplay::TDisplay(u16 param_1, void* param_2, void* param_3,
     , unk4C(param_1)
     , unk50(GX_GM_1_0)
     , unk54((GXFBClamp)(GX_CLAMP_TOP | GX_CLAMP_BOTTOM))
-    , unk58(0, 0, 0, 0)
-    , unk5C(0xffffff)
+    , mFrameBufferClearColor(0, 0, 0, 0)
+    , mFrameBufferClearZ(0xffffff)
     , unk64(0x20)
 {
 	unk4[0] = param_2;
@@ -39,7 +39,8 @@ void TDisplay::endRendering()
 
 	if ((unk64 & 0x40) != 0) {
 		TRect rect(0, 0, unk10.fbWidth, unk10.efbHeight);
-		IssueGXCopyDisp(unk4[unkC], rect, unk10, unk58, unk5C, unk54, unk64);
+		IssueGXCopyDisp(unk4[unkC], rect, unk10, mFrameBufferClearColor,
+		                mFrameBufferClearZ, unk54, unk64);
 		GXFlush();
 	}
 	unkC = unkC ^ 1;

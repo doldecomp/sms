@@ -15,6 +15,12 @@ public:
 	virtual void startRendering();
 	virtual void endRendering();
 
+	void* getCurrentFrameBuffer() { return unk4[unkC]; }
+	const GXRenderModeObj& getRenderMode() const { return unk10; }
+	GXFBClamp getFBClamp() const { return unk54; }
+	JUtility::TColor getClearColor() const { return mFrameBufferClearColor; }
+	u32 getClearZ() const { return mFrameBufferClearZ; }
+
 public:
 	/* 0x4 */ void* unk4[2];
 	/* 0xC */ u16 unkC;
@@ -23,8 +29,8 @@ public:
 	/* 0x4C */ u16 unk4C;
 	/* 0x50 */ GXGamma unk50;
 	/* 0x54 */ GXFBClamp unk54;
-	/* 0x58 */ JUtility::TColor unk58;
-	/* 0x5C */ u32 unk5C;
+	/* 0x58 */ JUtility::TColor mFrameBufferClearColor;
+	/* 0x5C */ u32 mFrameBufferClearZ;
 	/* 0x60 */ TVideo* unk60;
 	/* 0x64 */ u16 unk64; // TODO: TFlagT?
 };
