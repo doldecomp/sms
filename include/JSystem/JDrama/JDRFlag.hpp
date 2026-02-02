@@ -18,6 +18,14 @@ public:
 	void set(T v) { mValue = v; }
 	T get() const { return mValue; }
 
+	void setBit(T bit, bool on)
+	{
+		if (on)
+			mValue |= bit;
+		else
+			mValue &= ~bit;
+	}
+
 public:
 	T mValue;
 };
