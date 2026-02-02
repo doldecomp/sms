@@ -6,6 +6,9 @@
 // TODO: This macro should probably be consolidated elsewhere
 #define ABS(x) ((x) >= 0 ? (x) : -(x))
 
+static const f32 SHORTANGLE_TO_DEGREES = 0.005493164f; // 360/65536
+static const f32 DEGREES_TO_RADIANS    = 0.017453294f; // pi/180
+
 // TODO: Almost definitely fake, this is probably inlined somewhere else
 static inline f32 fastSqrt(f32 x)
 {
@@ -17,7 +20,7 @@ static inline f32 fastSqrt(f32 x)
 	}
 }
 
-// TODO:Possibly fake but still useful for now?
+// TODO: Possibly fake but still useful for now?
 static inline void MatrixT33Multiply(const TMtx33f& mtxT,
                                      JGeometry::TVec3<f32>* inOutVec)
 {
@@ -29,6 +32,13 @@ static inline void MatrixT33Multiply(const TMtx33f& mtxT,
 	              + oldVec.z * mtxT.at(2, 1);
 	inOutVec->z = oldVec.x * mtxT.at(0, 2) + oldVec.y * mtxT.at(1, 2)
 	              + oldVec.z * mtxT.at(2, 2);
+}
+
+// TODO: These are very fake
+static void normalizeInner1(JGeometry::TVec3<f32>& vec) { vec.normalize(); }
+static void normalizeInner2(JGeometry::TVec3<f32>& vec)
+{
+	normalizeInner1(vec);
 }
 
 static inline void RotateAboutAxis(const JGeometry::TVec3<f32>& param_axis,
@@ -74,13 +84,7 @@ void CLBCalc2DFPos(JGeometry::TVec2<f32>* param_1, MtxPtr param_2,
 	}
 }
 
-static void normalizeInner1(JGeometry::TVec3<f32>& vec) { vec.normalize(); }
-static void normalizeInner2(JGeometry::TVec3<f32>& vec)
-{
-	normalizeInner1(vec);
-}
-
-// TODO: Not sure if this is fully correct
+// TODO: This needs matching work, but it's mathematically correct
 void CLBCalcNearNinePos(JGeometry::TVec3<f32>* param_2, S16Vec* param_3,
                         const JGeometry::TVec3<f32>& param_4,
                         const JGeometry::TVec3<f32>& param_5, s16 param_6,
@@ -118,7 +122,7 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* param_2, S16Vec* param_3,
 	local_80.sub(param_5, param_4);
 	normalizeInner1(local_80);
 
-	fVar16.z = param_3->z * 0.005493164f * 0.017453294f;
+	fVar16.z = param_3->z * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
 
 	// Putting these in separate scopes for now because this feels like an
 	// inlined function
@@ -128,6 +132,10 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* param_2, S16Vec* param_3,
 		f32 sinY = JMASSin(param_3->y);
 		f32 cosY = JMASCos(param_3->y);
 
+		// This transformation appears to be the following:
+		// [cosY, 0, sinY]   [1,   0,     0 ]
+		// [  0,  1,   0 ] * [0, cosX, -sinX]
+		// [sinY, 0, cosY]   [0, sinX,  cosX]
 		local_68.set(local_68.x * cosY
 		                 + (local_68.y * sinX + local_68.z * cosX) * sinY,
 		             local_68.y * cosX - local_68.z * sinX,
@@ -146,11 +154,11 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* param_2, S16Vec* param_3,
 		f32 sinY = JMASSin(param_3->y);
 		f32 cosY = JMASCos(param_3->y);
 
-		local_74.set(
-			local_74.x * cosY + (local_74.y * sinX + local_74.z * cosX) * sinY,
-			local_74.y * cosX - local_74.z * sinX,
-			-local_74.x * sinY + (local_74.y * sinX + local_74.z * cosX) * cosY
-		);
+		local_74.set(local_74.x * cosY
+		                 + (local_74.y * sinX + local_74.z * cosX) * sinY,
+		             local_74.y * cosX - local_74.z * sinX,
+		             -local_74.x * sinY
+		                 + (local_74.y * sinX + local_74.z * cosX) * cosY);
 
 		local_118.identity33();
 		local_118.setRotate(local_80, fVar16.z);
@@ -508,11 +516,8 @@ void CLBRotatePosAndUp(s16 sAngle1, s16 sAngle2,
                        JGeometry::TVec3<f32>* param_7)
 
 {
-	// Radian conversion
-	// 0.00549... = 360/65536
-	// 0.01745... = pi/180
-	f32 angle1 = sAngle1 * 0.005493164f * 0.017453294f;
-	f32 angle2 = sAngle2 * 0.005493164f * 0.017453294f;
+	f32 angle1 = sAngle1 * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
+	f32 angle2 = sAngle2 * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
 
 	JGeometry::TVec3<f32> v1 = *param_6 - offset;
 	RotateAboutAxis(axis1, -angle1, &v1);
