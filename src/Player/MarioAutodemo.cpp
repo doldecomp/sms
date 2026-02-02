@@ -31,12 +31,13 @@ BOOL TMario::winDemo()
 BOOL TMario::readBillboard()
 {
 	// Missing stack space
-	volatile u32 padding[13];
+	// volatile u32 padding[16];
 	TBaseNPC* talkingNpc = gpMarDirector->unkA0;
 	switch (mActionState) {
 	case 0:
-		f32 dx = getPosition().x - talkingNpc->getPosition().x;
-		f32 dz = getPosition().z - talkingNpc->getPosition().z;
+		const JGeometry::TVec3<f32>& targetPos = talkingNpc->getPosition();
+		f32 dx                                 = mPosition.x - targetPos.x;
+		f32 dz                                 = mPosition.z - targetPos.z;
 		if (dx == 0.0f && dz == 0.0f) {
 			dx += 1.0f;
 		}
