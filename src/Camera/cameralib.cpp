@@ -399,9 +399,8 @@ bool CLBChaseSpecialDecrease(f32* param_1, f32 param_2, f32 param_3,
  * @param origin the point to use as the origin
  * @param in the input vector
  * @param outRadius the output radius
- * @param outVAngle the output vertical angle from the xz-plane to the y-axis
- * @param outHAngle the output horizontal angle in the xz-plane, clockwise from
- * the z-axis
+ * @param outVAngle the output vertical angle
+ * @param outHAngle the output horizontal angle
  */
 void CLBCrossToPolar(const Vec& origin, const Vec& in, f32* outRadius,
                      s16* outVAngle, s16* outHAngle)
