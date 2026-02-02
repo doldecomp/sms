@@ -133,9 +133,9 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* param_2, S16Vec* param_3,
 		f32 cosY = JMASCos(param_3->y);
 
 		// This transformation appears to be the following:
-		// [cosY, 0, sinY]   [1,   0,     0 ]
-		// [  0,  1,   0 ] * [0, cosX, -sinX]
-		// [sinY, 0, cosY]   [0, sinX,  cosX]
+		// [ cosY, 0, sinY]   [1,   0,     0 ]
+		// [   0,  1,   0 ] * [0, cosX, -sinX]
+		// [-sinY, 0, cosY]   [0, sinX,  cosX]
 		local_68.set(local_68.x * cosY
 		                 + (local_68.y * sinX + local_68.z * cosX) * sinY,
 		             local_68.y * cosX - local_68.z * sinX,
