@@ -5,6 +5,13 @@
 
 class TSnapTimeObj : public JDrama::TViewObj {
 public:
+	TSnapTimeObj(u32 param_1, const char* name)
+	    : JDrama::TViewObj(name)
+	    , unk10(param_1)
+	    , unk14(0)
+	{
+	}
+
 	virtual void perform(u32, JDrama::TGraphics*);
 
 public:

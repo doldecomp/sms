@@ -11,9 +11,11 @@ bool IsCanEnableDither(GXPixelFmt);
 void IssueGXPixelFormatSetting(bool, bool, bool, bool, bool);
 void IssueGXPixelFormatSetting(const GXRenderModeObj&, bool, bool);
 void IssueGXSetCopyFilter(bool, const u8 (*)[2], bool, const u8*);
-bool IssueGXSetCopyClear(JUtility::TColor, u32, u16);
-void IssueGXCopyDisp(void*, const TRect&, const GXRenderModeObj&,
-                     JUtility::TColor, u32, GXFBClamp, u16);
+bool IssueGXSetCopyClear(JUtility::TColor clear_color, u32 clear_z, u16 flags);
+void IssueGXCopyDisp(void* param_1, const TRect& src_rect,
+                     const GXRenderModeObj& render_mode,
+                     JUtility::TColor clear_color, u32 clear_z,
+                     GXFBClamp framebuffer_clamp, u16 flags);
 
 } // namespace JDrama
 

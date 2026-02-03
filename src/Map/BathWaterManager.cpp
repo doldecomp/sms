@@ -21,7 +21,7 @@ static void draw_mist(u16 x, u16 y, u16 wd, u16 ht, void* buffer)
 	f32 offset_x = (4.0f / f_wd);
 	f32 offset_y = (2.0f / f_ht);
 
-	C_MTXOrtho(m, f_left, f_right, f_top, f_bottom, 0.0f, 1.0f);
+	C_MTXOrtho(m, f_top, f_bottom, f_left, f_right, 0.0f, 1.0f);
 	PSMTXIdentity(e_m);
 	GXSetTexCopySrc(x, y, wd, ht);
 	GXSetCopyFilter(GX_FALSE, 0, GX_TRUE, vFilter);

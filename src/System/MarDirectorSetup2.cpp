@@ -5,6 +5,7 @@
 #include <System/TalkCursor.hpp>
 #include <System/MSoundMainSide.hpp>
 #include <System/PerformList.hpp>
+#include <System/StageEventInfo.hpp>
 #include <Map/PollutionManager.hpp>
 #include <Map/MapEventSink.hpp>
 #include <Player/MarioMain.hpp>
@@ -13,6 +14,8 @@
 #include <GC2D/ScrnFader.hpp>
 #include <GC2D/PauseMenu2.hpp>
 #include <GC2D/Guide.hpp>
+#include <GC2D/CardLoad.hpp>
+#include <GC2D/Talk2D2.hpp>
 #include <THPPlayer/THPPlayer.h>
 #include <MSound/MSound.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
@@ -74,8 +77,19 @@ TMarDirector::~TMarDirector()
 
 void TMarDirector::setup2()
 {
-	unkBC = JDrama::TNameRefGen::search<JDrama::TNameRef>("イベントテーブル");
-	// TODO: some code related to unkBC, but what is it...
+	unkBC = JDrama::TNameRefGen::search<TNameRefAryT<TStageEventInfo> >(
+	    "イベントテーブル");
+	if (unkBC) {
+		for (TStageEventInfo* it = unkBC->begin(); it != unkBC->end(); ++it) {
+			JDrama::TNameRef* ref
+			    = JDrama::TNameRefGen::search<JDrama::TNameRef>(it->unk14);
+			if (ref) {
+				// TODO: what is ref?
+				it->unk28 = ref;
+			}
+		}
+	}
+
 	JDrama::TNameRefGen::search<TMario>("マリオ")->setGamePad(*unk18);
 	JDrama::TNameRefGen::search<CPolarSubCamera>("camera 1")->unk120 = *unk18;
 	unk84    = JDrama::TNameRefGen::search<TTalkCursor>("会話カーソル");
@@ -87,8 +101,8 @@ void TMarDirector::setup2()
 	unkE0 = JDrama::TNameRefGen::search<TSMSFader>("サングラスフェーダ");
 	unk78 = JDrama::TNameRefGen::search<TGuide>("ガイド画面");
 	unkAC = JDrama::TNameRefGen::search<TPauseMenu2>("ポーズメニュー");
-	unkB0 = JDrama::TNameRefGen::search<JDrama::TViewObj>("会話表示");
-	unk70 = JDrama::TNameRefGen::search<JDrama::TViewObj>("データロード");
+	unkB0 = JDrama::TNameRefGen::search<TTalk2D2>("会話表示");
+	unk70 = JDrama::TNameRefGen::search<TCardLoad>("データロード");
 
 	// TODO:
 	// unk70->unk38 = *unk18;

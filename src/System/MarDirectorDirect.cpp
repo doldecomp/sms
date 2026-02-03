@@ -77,7 +77,7 @@ int TMarDirector::direct()
 			}
 			gpMSound->unkA8 = bVar7;
 
-			switch (unk64) {
+			switch (mState) {
 			case 5:
 			case 11:
 			case 12:
@@ -95,7 +95,7 @@ int TMarDirector::direct()
 				++unk58;
 			++unk5C;
 			if (unk4C & 0x2000) {
-				if (unk64 == 4 || unk64 == 7) {
+				if (mState == 4 || mState == 7) {
 					SMSRumbleMgr->update();
 				}
 			} else {
@@ -134,9 +134,9 @@ int TMarDirector::direct()
 			if (unk58 & 2)
 				uVar4 &= 0x200;
 			if (unk4E & 1)
-				unk28->perform(uVar4, &local_140);
+				mShinePfLstMov->perform(uVar4, &local_140);
 			else
-				unk44->perform(uVar4, &local_140);
+				mShinePfLstMov->perform(uVar4, &local_140);
 
 			u32 uVar44 = 0;
 			if (!(unk4C & 0x4000))
@@ -145,9 +145,9 @@ int TMarDirector::direct()
 			movement();
 			if (!(uVar8 & 2)) {
 				if (unk4E & 1)
-					unk2C->perform(uVar11, &local_140);
+					mPerformListCalcAnim->perform(uVar11, &local_140);
 				else
-					unk48->perform(uVar11, &local_140);
+					mShinePfLstAnm->perform(uVar11, &local_140);
 			}
 
 			if (unk4C & 0x4000) {
@@ -160,12 +160,12 @@ int TMarDirector::direct()
 			unk40->perform(0xffffffff, &local_140);
 			unk38->perform(0xffffffff, &local_140);
 			unk3C->perform(0xffffffff, &local_140);
-			unk1C->perform(0xffffffff, &local_140);
+			mPerformListGX->perform(0xffffffff, &local_140);
 			if ((gpSilhouetteManager->unk48 > 0.0f ? true : false)
 			    || gpCamera->unk2C8 != -1) {
-				unk20->perform(0xffffffff, &local_140);
+				mPerformListSilhouette->perform(0xffffffff, &local_140);
 			}
-			unk24->perform(0xffffffff, &local_140);
+			mPerformListGXPost->perform(0xffffffff, &local_140);
 			GXInvalidateTexAll();
 		}
 		result = changeState();
@@ -246,13 +246,13 @@ static int decideNextScenario(u8 param_1)
 
 int TMarDirector::changeState()
 {
-	u8 uVar5 = 1;
-	u8 uVar3 = unk64;
-	switch (unk64) {
+	u8 uVar5     = 1;
+	u8 nextState = mState;
+	switch (mState) {
 	case 0:
 		switch (gpApplication.mCurrArea.unk0) {
 		case 0xf:
-			uVar3 = 4;
+			nextState = 4;
 			unk50 |= 1;
 			break;
 
@@ -264,16 +264,16 @@ int TMarDirector::changeState()
 		case 0x8:
 		case 0x9:
 		case 0x34:
-			uVar3 = 1;
+			nextState = 1;
 			unk50 |= 0x6;
 			break;
 
 		case 1:
 			if (unk4E & 2) {
-				uVar3 = 1;
+				nextState = 1;
 				unk50 |= 6;
 			} else {
-				uVar3 = 2;
+				nextState = 2;
 			}
 			break;
 
@@ -281,10 +281,10 @@ int TMarDirector::changeState()
 		case 0x7:
 		default:
 			if (JKRGetResource("/scene/map/camera/startcamera.bck")) {
-				uVar3 = 1;
+				nextState = 1;
 				unk50 |= 10;
 			} else {
-				uVar3 = 4;
+				nextState = 4;
 			}
 			break;
 		}
@@ -293,7 +293,7 @@ int TMarDirector::changeState()
 	case 1:
 		if (unk4E & 4) {
 			if (mConsole->unk94->unk2BC == 4) {
-				uVar3 = 3;
+				nextState = 3;
 				unk4E &= ~0x8;
 			}
 		} else {
@@ -315,44 +315,44 @@ int TMarDirector::changeState()
 	case 3:
 		if (gpApplication.mCurrArea.unk0 == 1) {
 			if (mConsole->unk94->unk2BC == 6)
-				uVar3 = 2;
+				nextState = 2;
 		} else if (mConsole->unk94->unk2BC == 6
 		           && gpApplication.mCurrArea.unk0 == 0) {
-			uVar3 = 4;
+			nextState = 4;
 		}
 		break;
 
 	case 2:
 		if (!(gpMarioOriginal->mAction & 0x1000 ? true : false))
-			uVar3 = 4;
+			nextState = 4;
 		break;
 
 	case 4:
-		uVar3 = updateGameMode();
+		nextState = updateGameMode();
 		break;
 
 	case 5:
 		switch (unkAC->getNextState()) {
 		case 0:
-			uVar3 = 4;
+			nextState = 4;
 			break;
 		case 1:
-			unkE4 = 4;
-			uVar3 = 12;
-			unkB4 = 4;
+			unkE4     = 4;
+			nextState = 12;
+			unkB4     = 4;
 			break;
 		case 5:
 			decideNextStage();
 			unk4C &= ~0x100;
 			moveStage();
-			uVar3 = 9;
+			nextState = 9;
 			break;
 		}
 		break;
 
 	case 10:
 		if (unk78 && gpApplication.mFader->mFadeStatus == 1)
-			uVar3 = 4;
+			nextState = 4;
 		break;
 
 	case 11: {
@@ -374,7 +374,7 @@ int TMarDirector::changeState()
 				    TSMSFader::FADE_STATUS_UNK0);
 				uVar5 = 5;
 			} else {
-				uVar3 = 4;
+				nextState = 4;
 			}
 			break;
 		case 1:
@@ -383,9 +383,9 @@ int TMarDirector::changeState()
 				    TSMSFader::FADE_STATUS_UNK0);
 				uVar5 = 4;
 			} else {
-				unkE4 = 4;
-				uVar3 = 12;
-				unkB4 = 4;
+				unkE4     = 4;
+				nextState = 12;
+				unkB4     = 4;
 			}
 			break;
 		}
@@ -408,7 +408,7 @@ int TMarDirector::changeState()
 				moveStage();
 				unkE4 = 0xf;
 				gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 0xff));
-				uVar3 = 12;
+				nextState = 12;
 			} else {
 				gpApplication.mFader->startWipe(0xE, 0.3f, 0.0f);
 				gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 0xff));
@@ -430,24 +430,24 @@ int TMarDirector::changeState()
 	if ((unk18[0]->mPortNum & 0x3FU & TMarioGamePad::mResetFlag)
 	    && gpCardManager->getLastStatus() != -1 && (unk4C & 0x4000)
 	    && !(unk50 & 0x10)) {
-		uVar3 = 12;
+		nextState = 12;
 		unk50 |= 0x10;
 		unkE4 = 4;
 		unkB4 = 4;
 	}
 
-	if (uVar3 != unk64) {
-		currentStateFinalize(uVar3);
-		nextStateInitialize(uVar3);
-		unk64 = uVar3;
+	if (nextState != mState) {
+		currentStateFinalize(nextState);
+		nextStateInitialize(nextState);
+		mState = nextState;
 	}
 
 	return uVar5;
 }
 
-void TMarDirector::currentStateFinalize(u8 param_1)
+void TMarDirector::currentStateFinalize(u8 next_state)
 {
-	switch (unk64) {
+	switch (mState) {
 	case 0:
 		JDrama::TNameRefGen::search<JDrama::TViewObj>("Group 2D")->unkC.mValue
 		    &= ~0xB;
@@ -533,11 +533,11 @@ void TMarDirector::setMario()
 }
 #pragma dont_inline off
 
-void TMarDirector::nextStateInitialize(u8 param_1)
+void TMarDirector::nextStateInitialize(u8 next_state)
 {
 	TGameSequence& currSeq = gpApplication.mCurrArea;
 
-	switch (param_1) {
+	switch (next_state) {
 	case 1: {
 		const char* pcVar8 = "startcamera";
 		unk18[0]->onFlag(0x1);
@@ -597,7 +597,7 @@ void TMarDirector::nextStateInitialize(u8 param_1)
 		break;
 
 	case 4:
-		if (unk64 <= 3 && mMap != 0xf)
+		if (mState <= 3 && mMap != 0xf)
 			mConsole->unkC.mValue &= ~0xB;
 		if (unk50 & 2) {
 			mConsole->unk94->startAppearGo();

@@ -187,6 +187,7 @@ public:
 		setTo(unk0->findNearestNodeIndex(pos, 0xffffffff));
 	}
 	TGraphWeb* getGraph() { return unk0; }
+	void setGraph(TGraphWeb* web) { unk0 = web; }
 
 public:
 	/* 0x0 */ TGraphWeb* unk0;

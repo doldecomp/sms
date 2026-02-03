@@ -7,6 +7,7 @@
 #include <JSystem/JDrama/JDRDirector.hpp>
 #include <JSystem/JGadget/std-vector.hpp>
 #include <JSystem/JGeometry.hpp>
+#include <Strategic/NameRefAry.hpp>
 #include <dolphin/os/OSStopwatch.h>
 
 class TEventWatcher;
@@ -25,7 +26,11 @@ class TGCConsole2;
 class TSMSFader;
 class MSStage;
 class TPauseMenu2;
+class TTalk2D2;
 class TGuide;
+class TCardLoad;
+class JKRMemArchive;
+class TStageEventInfo;
 
 class TMarDirector;
 
@@ -80,10 +85,10 @@ public:
 	initECDisp(TPerformList*,
 	           JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*,
 	           JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*);
-	JDrama::TViewObj*
+	static JDrama::TViewObj*
 	initECTMir(TPerformList*,
 	           JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*);
-	void
+	static void
 	initECTGft(TPerformList*, TPerformList*,
 	           JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*,
 	           JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*);
@@ -94,13 +99,13 @@ public:
 	virtual JStage::TObject* JSGFindObject(const char*, JStage::TEObject) const;
 
 	void setup2();
-	void thpInit();
+	int thpInit();
 	void loadParticleMario();
 	void loadParticle();
 	void initLoadParticle();
-	void loadResource();
+	int loadResource();
 	bool createObjects();
-	void setupObjects();
+	bool setupObjects();
 	void decideMarioPosIdx();
 
 	// fabricated
@@ -126,18 +131,18 @@ public:
 
 public:
 	/* 0x18 */ TMarioGamePad** unk18;
-	/* 0x1C */ TPerformList* unk1C;
-	/* 0x20 */ TPerformList* unk20;
-	/* 0x24 */ TPerformList* unk24;
-	/* 0x28 */ TPerformList* unk28;
-	/* 0x2C */ TPerformList* unk2C;
+	/* 0x1C */ TPerformList* mPerformListGX;
+	/* 0x20 */ TPerformList* mPerformListSilhouette;
+	/* 0x24 */ TPerformList* mPerformListGXPost;
+	/* 0x28 */ TPerformList* mPerformListMovement;
+	/* 0x2C */ TPerformList* mPerformListCalcAnim;
 	/* 0x30 */ TPerformList* unk30;
 	/* 0x34 */ TPerformList* unk34;
 	/* 0x38 */ TPerformList* unk38;
 	/* 0x3C */ TPerformList* unk3C;
 	/* 0x40 */ TPerformList* unk40;
-	/* 0x44 */ TPerformList* unk44;
-	/* 0x48 */ TPerformList* unk48;
+	/* 0x44 */ TPerformList* mShinePfLstMov;
+	/* 0x48 */ TPerformList* mShinePfLstAnm;
 	/* 0x4C */ volatile u16 unk4C;
 	/* 0x4E */ u16 unk4E;
 	/* 0x50 */ u16 unk50;
@@ -145,10 +150,10 @@ public:
 	/* 0x58 */ int unk58;
 	/* 0x5C */ u32 unk5C;
 	/* 0x60 */ u32 unk60;
-	/* 0x64 */ u8 unk64;
+	/* 0x64 */ u8 mState;
 	/* 0x68 */ u32 unk68;
 	/* 0x6C */ f32 unk6C;
-	/* 0x70 */ JDrama::TViewObj* unk70;
+	/* 0x70 */ TCardLoad* unk70;
 	/* 0x74 */ TGCConsole2* mConsole;
 	/* 0x78 */ TGuide* unk78;
 	/* 0x7C */ u8 mMap;
@@ -158,29 +163,29 @@ public:
 	/* 0x80 */ JDrama::TViewObjPtrListT<JDrama::TViewObj>* unk80;
 	/* 0x84 */ TTalkCursor* unk84;
 	/* 0x88 */ JGadget::TVector_pointer<TBaseNPC> unk88;
-	/* 0xA0 */ TBaseNPC* unkA0;
+	/* 0xA0 */ TBaseNPC* unkA0; // talking NPC
 	/* 0xA4 */ char unkA4[0x8];
 	/* 0xAC */ TPauseMenu2* unkAC;
-	/* 0xB0 */ JDrama::TViewObj* unkB0;
+	/* 0xB0 */ TTalk2D2* unkB0;
 	/* 0xB4 */ u8 unkB4;
-	/* 0xB8 */ u32 unkB8;
-	/* 0xBC */ JDrama::TNameRef* unkBC; // TODO: type?
+	/* 0xB8 */ JKRMemArchive* unkB8;
+	/* 0xBC */ TNameRefAryT<TStageEventInfo>* unkBC;
 	/* 0xC0 */ JDrama::TDisplay* unkC0;
 	/* 0xC4 */ char unkC4[0x4];
 	/* 0xC8 */ u32 unkC8;
 	/* 0xCC */ u32 unkCC;
 	/* 0xD0 */ u8 unkD0;
 	/* 0xD1 */ u8 unkD1;
-	/* 0xD4 */ u32 unkD4;
-	/* 0xD8 */ u32 unkD8;
+	/* 0xD4 */ void* unkD4;
+	/* 0xD8 */ JKRMemArchive* unkD8;
 	/* 0xDC */ TSMSFader* unkDC;
 	/* 0xE0 */ TSMSFader* unkE0; // TODO: type unconfirmed
 	/* 0xE4 */ u32 unkE4;
 	/* 0xE8 */ OSStopwatch unkE8;
 	/* 0x120 */ char unk120[0x4];
-	/* 0x124 */ u8 unk124;
+	/* 0x124 */ u8 unk124; // Game state, paused, shine animation, 2=talking
 	/* 0x125 */ u8 unk125;
-	/* 0x126 */ u8 unk126;
+	/* 0x126 */ u8 unk126; // Next game state
 	/* 0x128 */ u16 unk128;
 	/* 0x12C */ TDemoInfo unk12C[8];
 	/* 0x24C */ u8 unk24C;

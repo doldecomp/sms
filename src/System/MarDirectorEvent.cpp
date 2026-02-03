@@ -163,7 +163,7 @@ void TMarDirector::fireDemoMovie(u32, TLiveActor*) { }
 
 void TMarDirector::movement()
 {
-	if ((int)unk64 != 4)
+	if ((int)mState != 4)
 		movement_game();
 }
 
