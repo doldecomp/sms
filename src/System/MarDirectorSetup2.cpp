@@ -92,12 +92,16 @@ void TMarDirector::setup2()
 
 	JDrama::TNameRefGen::search<TMario>("マリオ")->setGamePad(*unk18);
 	JDrama::TNameRefGen::search<CPolarSubCamera>("camera 1")->unk120 = *unk18;
-	unk84          = JDrama::TNameRefGen::search<TTalkCursor>("会話カーソル");
+
+	unk84 = JDrama::TNameRefGen::search<TTalkCursor>("会話カーソル");
+
 	mConsole       = JDrama::TNameRefGen::search<TGCConsole2>("GCコンソール");
 	mConsole->unkC = 0xB;
+
 	unkDC        = JDrama::TNameRefGen::search<TSMSFader>("シャインフェーダー");
 	unkDC->mRate = 120.0f;
 	unkDC->setColor(JUtility::TColor(0xD2, 0xD2, 0xD2, 0xFF));
+
 	unkE0 = JDrama::TNameRefGen::search<TSMSFader>("サングラスフェーダ");
 	unk78 = JDrama::TNameRefGen::search<TGuide>("ガイド画面");
 	unkAC = JDrama::TNameRefGen::search<TPauseMenu2>("ポーズメニュー");
