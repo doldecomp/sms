@@ -19,7 +19,7 @@ public:
 
 	virtual void perform(u32, JDrama::TGraphics*);
 
-	TMarioParticleManager(const char*);
+	TMarioParticleManager(const char* = "MarioParticleManager");
 	void createEffectInfoAry(int);
 
 	JPABaseEmitter* emit(s32, const JGeometry::TVec3<f32>*, u8, const void*);

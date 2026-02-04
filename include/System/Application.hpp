@@ -17,7 +17,7 @@ class JUTFont;
 
 f32 SMSGetVSyncTimesPerSec();
 f32 SMSGetAnmFrameRate();
-void SMSLoadArchive(const char*, void*, u32, JKRHeap*);
+void* SMSLoadArchive(const char*, void*, u32, JKRHeap*);
 
 class TARAMBlock { };
 void SMSLoadArchiveARAM(TARAMBlock*, const char*);
@@ -40,7 +40,7 @@ public:
 	void proc();
 	void gameLoop();
 	void drawDVDErr();
-	void mountStageArchive();
+	JKRMemArchive* mountStageArchive();
 
 public:
 	/* 0x00 */ TApplication* mSelf;

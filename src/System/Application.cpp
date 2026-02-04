@@ -1,7 +1,7 @@
 #include <System/Application.hpp>
 #include <dolphin/vi.h>
 
-void TApplication::mountStageArchive() { }
+JKRMemArchive* TApplication::mountStageArchive() { }
 void TApplication::drawDVDErr() { }
 void TApplication::gameLoop() { }
 void TApplication::proc() { }
@@ -18,7 +18,7 @@ void TApplication::setupThreadFuncBoot() { }
 JKRArchive* SMSSwitch2DArchive(const char*, TARAMBlock&) { }
 void SMSMountAramArchive(JKRMemArchive*, TARAMBlock&) { }
 void SMSLoadArchiveARAM(TARAMBlock*, const char*) { }
-void SMSLoadArchive(const char*, void*, u32, JKRHeap*) { }
+void* SMSLoadArchive(const char*, void*, u32, JKRHeap*) { }
 TApplication::TApplication() { }
 f32 SMSGetAnmFrameRate() { }
 
