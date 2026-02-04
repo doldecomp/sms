@@ -1,11 +1,12 @@
 #include <MarioUtil/RumbleType.hpp>
 #include <string.h>
+#include <macros.h>
 
 extern int channelNum;
 
 struct UnkStruct3B0378 {
 	unsigned int unk0;
-	char* str;
+	const char* str;
 };
 
 // Enum To Str?
@@ -44,5 +45,9 @@ int RumbleType::getIndex(char* strIn)
 			return _info[i].unk0;
 		}
 	}
+	ASSERTMSGLINE(
+	    __LINE__, -1,
+	    "Invalid RumbleType"); // this feels more correct but the string is
+	                           // getting omitted by the preprocessor
 	return -1;
 }
