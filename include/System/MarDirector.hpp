@@ -99,11 +99,11 @@ public:
 	virtual JStage::TObject* JSGFindObject(const char*, JStage::TEObject) const;
 
 	void setup2();
-	void thpInit();
+	int thpInit();
 	void loadParticleMario();
 	void loadParticle();
 	void initLoadParticle();
-	void loadResource();
+	int loadResource();
 	bool createObjects();
 	bool setupObjects();
 	void decideMarioPosIdx();
@@ -176,8 +176,8 @@ public:
 	/* 0xCC */ u32 unkCC;
 	/* 0xD0 */ u8 unkD0;
 	/* 0xD1 */ u8 unkD1;
-	/* 0xD4 */ u32 unkD4;
-	/* 0xD8 */ u32 unkD8;
+	/* 0xD4 */ void* unkD4;
+	/* 0xD8 */ JKRMemArchive* unkD8;
 	/* 0xDC */ TSMSFader* unkDC;
 	/* 0xE0 */ TSMSFader* unkE0; // TODO: type unconfirmed
 	/* 0xE4 */ u32 unkE4;

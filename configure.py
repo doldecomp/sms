@@ -871,7 +871,7 @@ config.libs = [
             Object(NonMatching, "System/MarNameRefGen_MapObj.cpp"),
             Object(NonMatching, "System/MarNameRefGen_NPC.cpp"),
             Object(NonMatching, "System/CardManager.cpp"),
-            Object(NonMatching, "System/MarDirectorLoadResource.cpp"),
+            Object(NonMatching, "System/MarDirectorLoadResource.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "System/MovieDirector.cpp"),
             Object(Matching, "System/MarDirectorCreateObjects.cpp"),
             Object(NonMatching, "System/MarDirectorSetupObjects.cpp", extra_cflags=["-inline deferred"]),
