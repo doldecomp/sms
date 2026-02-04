@@ -35,13 +35,24 @@ public:
 	/* 0x18 */ const char* unk18;
 };
 
+class TCubeManagerMarioIn : public TCubeManagerBase {
+public:
+	TCubeManagerMarioIn(const char* param_1, const char* param_2)
+	    : TCubeManagerBase(param_1, param_2)
+	{
+	}
+};
+
 class TCubeManagerArea;
 
 extern TCubeManagerArea* gpCubeArea;
 
-class TCubeManagerArea : public TCubeManagerBase {
+class TCubeManagerArea : public TCubeManagerMarioIn {
 public:
-	TCubeManagerArea();
+	TCubeManagerArea(const char* param_1, const char* param_2)
+	    : TCubeManagerMarioIn(param_1, param_2)
+	{
+	}
 
 	bool isInAreaCube(const Vec&) const;
 };
@@ -52,9 +63,12 @@ extern TCubeManagerFast* gpCubeFastA;
 extern TCubeManagerFast* gpCubeFastB;
 extern TCubeManagerFast* gpCubeFastC;
 
-class TCubeManagerFast : public TCubeManagerBase {
+class TCubeManagerFast : public TCubeManagerMarioIn {
 public:
-	TCubeManagerFast();
+	TCubeManagerFast(const char* param_1, const char* param_2)
+	    : TCubeManagerMarioIn(param_1, param_2)
+	{
+	}
 
 	bool isInOtherCube(const Vec&) const;
 

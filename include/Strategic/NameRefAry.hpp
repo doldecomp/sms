@@ -13,17 +13,18 @@ public:
 	}
 
 	// fabricated
-	JGadget::TVector_pointer<T>& getChildren() { return *this; }
+	JGadget::TVector<T>& getChildren() { return *this; }
 
 	virtual void load(JSUMemoryInputStream& stream)
 	{
 		U::load(stream);
 		u32 local_44 = stream.readU32();
-		getChildren().reserve(local_44);
+		getChildren().resize(local_44);
 
 		for (int i = 0; i < local_44; ++i) {
 			JSUMemoryInputStream stream2;
-			getChildren()[i]->load(stream2);
+			JDrama::TNameRef::getType(stream, stream2);
+			getChildren()[i].load(stream2);
 		}
 	}
 
@@ -40,8 +41,7 @@ public:
 			return candidate;
 
 		for (T* it = getChildren().begin(); it != getChildren().end(); ++it)
-			if (JDrama::TNameRef* candidate
-			    = JDrama::TNameRef::searchF(key, name))
+			if (JDrama::TNameRef* candidate = it->searchF(key, name))
 				return candidate;
 
 		return nullptr;

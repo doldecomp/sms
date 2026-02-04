@@ -10,8 +10,8 @@ class TExPane;
 
 class TGuide : public JDrama::TViewObj {
 public:
-	TGuide(const char*);
-	void load(JSUMemoryInputStream&);
+	TGuide(const char* name = "<Guide>");
+	void load(JSUMemoryInputStream& stream);
 	void resetObjects();
 	void resetScore();
 	void setup(JKRMemArchive*);

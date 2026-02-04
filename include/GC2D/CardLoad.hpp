@@ -12,9 +12,9 @@ extern TCardLoad* gpCardLoad;
 
 class TCardLoad : public JDrama::TViewObj {
 public:
-	TCardLoad(const char*);
+	TCardLoad(const char* name = "<TCardLoad>");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32, JDrama::TGraphics*);
 
 	void changePattern(J2DPicture*, s16, u32);

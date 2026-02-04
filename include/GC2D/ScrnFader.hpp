@@ -31,9 +31,9 @@ public:
 		/* 0x8 */ f32 unk8;
 	};
 
-	TSMSFader(JUtility::TColor, f32, const char*);
+	TSMSFader(JUtility::TColor, f32, const char* name);
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual void update();
 	virtual void draw(const JDrama::TRect&);
@@ -57,8 +57,6 @@ public:
 	void getMmarkBtiResource();
 	void getLogoBtiResource();
 
-	~TSMSFader();
-
 public:
 	/* 0x10 */ u16 unk10;
 	/* 0x12 */ u16 unk12;
@@ -69,6 +67,31 @@ public:
 	/* 0x24 */ WipeRequest mWipeRequest;
 	/* 0x30 */ int unk30;
 	/* 0x34 */ f32 unk34;
+};
+
+class TSmplFader : public TSMSFader {
+public:
+	TSmplFader(JUtility::TColor param_1, f32 param_2,
+	           const char* name = "<ScrnFader>")
+	    : TSMSFader(param_1, param_2, name)
+	{
+	}
+};
+
+class TShineFader : public TSmplFader {
+public:
+	TShineFader(JUtility::TColor param_1, f32 param_2,
+	            const char* name = "<ShineFader>")
+	    : TSmplFader(param_1, param_2, name)
+	{
+	}
+
+	virtual void load(JSUMemoryInputStream&);
+	virtual void perform(u32, JDrama::TGraphics*);
+
+	virtual void update();
+
+	void registFadeout(u16, u16);
 };
 
 #endif

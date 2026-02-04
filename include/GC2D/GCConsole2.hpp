@@ -22,7 +22,7 @@ class TConsoleStr;
 
 class TGCConsole2 : public JDrama::TViewObj {
 public:
-	TGCConsole2(const char* name);
+	TGCConsole2(const char* name = "<TGCConsole2>");
 	void load(JSUMemoryInputStream&);
 	void loadAfter();
 	void entryHelpActor(THelpActor*);
