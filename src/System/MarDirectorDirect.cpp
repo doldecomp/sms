@@ -134,9 +134,9 @@ int TMarDirector::direct()
 			if (unk58 & 2)
 				uVar4 &= 0x200;
 			if (unk4E & 1)
-				unk28->perform(uVar4, &local_140);
+				mShinePfLstMov->perform(uVar4, &local_140);
 			else
-				unk44->perform(uVar4, &local_140);
+				mShinePfLstMov->perform(uVar4, &local_140);
 
 			u32 uVar44 = 0;
 			if (!(unk4C & 0x4000))
@@ -145,9 +145,9 @@ int TMarDirector::direct()
 			movement();
 			if (!(uVar8 & 2)) {
 				if (unk4E & 1)
-					unk2C->perform(uVar11, &local_140);
+					mPerformListCalcAnim->perform(uVar11, &local_140);
 				else
-					unk48->perform(uVar11, &local_140);
+					mShinePfLstAnm->perform(uVar11, &local_140);
 			}
 
 			if (unk4C & 0x4000) {
@@ -160,12 +160,12 @@ int TMarDirector::direct()
 			unk40->perform(0xffffffff, &local_140);
 			unk38->perform(0xffffffff, &local_140);
 			unk3C->perform(0xffffffff, &local_140);
-			unk1C->perform(0xffffffff, &local_140);
+			mPerformListGX->perform(0xffffffff, &local_140);
 			if ((gpSilhouetteManager->unk48 > 0.0f ? true : false)
 			    || gpCamera->unk2C8 != -1) {
-				unk20->perform(0xffffffff, &local_140);
+				mPerformListSilhouette->perform(0xffffffff, &local_140);
 			}
-			unk24->perform(0xffffffff, &local_140);
+			mPerformListGXPost->perform(0xffffffff, &local_140);
 			GXInvalidateTexAll();
 		}
 		result = changeState();

@@ -21,17 +21,17 @@ s32 SMSGetGameRenderWidth() { return 640; }
 
 s32 SMSGetTitleVideoHeight()
 {
-	s32 ret = 0x1C0;
+	s32 ret = 448;
 
 	switch (VIGetTvFormat()) {
 	case 2:
 	case 0:
 	case 5:
-		ret = 0x1C0;
+		ret = 448;
 		break;
 
 	case 1:
-		ret = 0x212;
+		ret = 530;
 		break;
 
 	default:
@@ -40,21 +40,21 @@ s32 SMSGetTitleVideoHeight()
 	return ret;
 }
 
-s32 SMSGetTitleVideoWidth() { return 0x294; }
+s32 SMSGetTitleVideoWidth() { return 660; }
 
 s32 SMSGetGameVideoHeight()
 {
-	s32 ret = 0x1C0;
+	s32 ret = 448;
 
 	switch (VIGetTvFormat()) {
 	case 2:
 	case 0:
 	case 5:
-		ret = 0x1C0;
+		ret = 448;
 		break;
 
 	case 1:
-		ret = 0x212;
+		ret = 530;
 		break;
 
 	default:
@@ -63,4 +63,4 @@ s32 SMSGetGameVideoHeight()
 	return ret;
 }
 
-s32 SMSGetGameVideoWidth() { return 0x294; }
+s32 SMSGetGameVideoWidth() { return 660; }

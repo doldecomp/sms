@@ -63,7 +63,7 @@ public:
 	static void endStageEntranceDemo(u8, u8);
 	static void entranceDemoLoop(u32);
 	static void startStageEntranceDemo(u8, u8);
-	void setMSoundEnterStage(u8, u8);
+	static void setMSoundEnterStage(u8, u8);
 	static void setBossNotDamagedFlag(bool);
 	void getBossLivesFlag2();
 	void getBossLivesFlag();
