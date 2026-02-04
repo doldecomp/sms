@@ -2,10 +2,12 @@
 #define _MSL_COMMON_ALGORITHM_
 
 #include <string.h>
+#include <msl_utility>
 
 namespace std {
 
-template <class T, bool = true, bool = false> struct __copy {
+template <class T, bool = Metrowerks::is_POD<T>::value, bool = sizeof(T) < 4>
+struct __copy {
 	static T* copy(T* first, T* last, T* result)
 	{
 		for (; first < last; ++first, ++result)
