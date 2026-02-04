@@ -106,7 +106,7 @@ void TConsoleStr::loadAfter()
 void TConsoleStr::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (param_1 & 1) {
-		if (gpMarDirector->unk64 != 5) {
+		if (gpMarDirector->mState != 5) {
 			bool bVar6 = false;
 
 			switch (unk2B8) {
@@ -198,7 +198,7 @@ void TConsoleStr::perform(u32 param_1, JDrama::TGraphics* param_2)
 			unk18 += 0.5f;
 		}
 
-		if (!unk2A9 && gpMarDirector->unk64 != 4) {
+		if (!unk2A9 && gpMarDirector->mState != 4) {
 			if (unk2AC)
 				;
 
@@ -207,7 +207,7 @@ void TConsoleStr::perform(u32 param_1, JDrama::TGraphics* param_2)
 			unk2A9 = true;
 		}
 
-		if (unk2A9 && gpMarDirector->unk64 != 4) {
+		if (unk2A9 && gpMarDirector->mState != 4) {
 			if (unk2AC)
 				;
 
