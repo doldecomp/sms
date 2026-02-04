@@ -150,7 +150,7 @@ public:
 	/* 0x58 */ int unk58;
 	/* 0x5C */ u32 unk5C;
 	/* 0x60 */ u32 unk60;
-	/* 0x64 */ u8 unk64;
+	/* 0x64 */ u8 mState;
 	/* 0x68 */ u32 unk68;
 	/* 0x6C */ f32 unk6C;
 	/* 0x70 */ TCardLoad* unk70;
