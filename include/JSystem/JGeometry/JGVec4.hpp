@@ -3,34 +3,76 @@
 
 #include <dolphin/types.h>
 #include <dolphin/mtx.h>
+#include <JSystem/JGeometry/JGUtil.hpp>
 #include <JSystem/JGeometry/JGVec3.hpp>
 
 namespace JGeometry {
 
-template <typename T> class TVec4 {
+template <typename T> class TVec4 : public Quaternion {
 public:
-	TVec4();
-	TVec4(const JGeometry::TVec4<T>&);
-	void operator=(const JGeometry::TVec4<T>&);
+	/* Constructors */
+	inline TVec4() { }
 
-	template <class U> void set(U x_, U y_, U z_, U w_)
+	void zero() { x = y = z = w = 0.0f; }
+
+	template <typename A> TVec4(A _x, A _y, A _z, A _h)
 	{
-		x = x_;
-		y = y_;
-		z = z_;
-		w = w_;
+		x = _x;
+		y = _y;
+		z = _z;
+		w = _h;
 	}
 
-	void scale(T, const JGeometry::TVec4<T>&);
+	/* General operations */
+	template <typename A> void set(const JGeometry::TVec4<A>&);
 
-	T dot(const JGeometry::TVec4<T>& other) const
+	template <typename A> void set(A _x, A _y, A _z, A _w)
 	{
-		return x * other.x + y * other.y + z * other.z + w * other.w;
+		x = _x;
+		y = _y;
+		z = _z;
+		w = _w;
 	}
 
-	JGeometry::TVec3<T>& xyz() { return (JGeometry::TVec3<T>&)*this; }
+	void scale(T val)
+	{
+		x *= val;
+		y *= val;
+		z *= val;
+		w *= val;
+	}
 
-	T x, y, z, w;
+	void scale(T scale, const TVec4<T>& b)
+	{
+		x = b.x * scale;
+		y = b.y * scale;
+		z = b.z * scale;
+		w = b.w * scale;
+	}
+
+	inline TVec3<T>* toTVec3() { return (TVec3<T>*)this; }
+
+	f32 squared() const { return x * x + y * y + z * z + w * w; }
+
+	f32 length() const { return TUtil<f32>::sqrt(squared()); }
+
+	bool isZero() const { return squared() <= TUtil<f32>::epsilon(); }
+
+	// present in tww so likely real
+	void setLength(f32 length) { setLength(*this, length); }
+
+	void setLength(const TVec4<f32>& v, f32 length)
+	{
+		f32 lsq = v.squared();
+		if (lsq <= TUtil<f32>::epsilon()) {
+			zero();
+			return;
+		}
+
+		scale(length * JGeometry::TUtil<f32>::inv_sqrt(lsq), v);
+	}
+
+	void normalize() { setLength(*this, 1.0f); }
 };
 
 } // namespace JGeometry
