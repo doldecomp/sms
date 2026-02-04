@@ -95,10 +95,12 @@ void TMarDirector::setup2()
 
 	unk84 = JDrama::TNameRefGen::search<TTalkCursor>("会話カーソル");
 
-	mConsole       = JDrama::TNameRefGen::search<TGCConsole2>("GCコンソール");
+	mConsole = JDrama::TNameRefGen::search<TGCConsole2>("GCコンソール");
+
 	mConsole->unkC = 0xB;
 
-	unkDC        = JDrama::TNameRefGen::search<TSMSFader>("シャインフェーダー");
+	unkDC = JDrama::TNameRefGen::search<TSMSFader>("シャインフェーダー");
+
 	unkDC->mRate = 120.0f;
 	unkDC->setColor(JUtility::TColor(0xD2, 0xD2, 0xD2, 0xFF));
 
