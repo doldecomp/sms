@@ -1,0 +1,278 @@
+#ifndef _MSL_UTILITY
+#define _MSL_UTILITY
+
+namespace Metrowerks {
+
+template <class T, class U> struct is_same {
+	static const bool value = false;
+};
+template <class T> struct is_same<T, T> {
+	static const bool value = true;
+};
+
+template <class T> struct remove_const {
+	typedef T type;
+};
+template <class T> struct remove_const<T const> {
+	typedef T type;
+};
+
+template <class T> struct remove_volatile {
+	typedef T type;
+};
+template <class T> struct remove_volatile<T volatile> {
+	typedef T type;
+};
+
+template <class T> struct remove_cv {
+	typedef typename remove_const<typename remove_volatile<T>::type>::type type;
+};
+
+template <class T> struct is_const {
+	static const bool value
+	    = !is_same<T, typename remove_const<T>::type>::value;
+};
+
+template <class T> struct remove_pointer {
+	typedef T type;
+};
+template <class T> struct remove_pointer<T*> {
+	typedef T type;
+};
+template <class T> struct remove_pointer<T* const> {
+	typedef T type;
+};
+template <class T> struct remove_pointer<T* volatile> {
+	typedef T type;
+};
+template <class T> struct remove_pointer<T* const volatile> {
+	typedef T type;
+};
+
+template <class T> struct remove_reference {
+	typedef T type;
+};
+template <class T> struct remove_reference<T&> {
+	typedef T type;
+};
+
+template <class T> struct remove_bounds {
+	typedef T type;
+};
+template <class T, size_t N> struct remove_bounds<T[N]> {
+	typedef T type;
+};
+
+namespace details {
+	template <class T> struct is_integral_imp {
+		static const bool value = false;
+	};
+
+	template <> struct is_integral_imp<bool> {
+		static const bool value = true;
+	};
+	template <> struct is_integral_imp<char> {
+		static const bool value = true;
+	};
+	template <> struct is_integral_imp<signed char> {
+		static const bool value = true;
+	};
+	template <> struct is_integral_imp<unsigned char> {
+		static const bool value = true;
+	};
+	template <> struct is_integral_imp<wchar_t> {
+		static const bool value = true;
+	};
+	template <> struct is_integral_imp<short> {
+		static const bool value = true;
+	};
+	template <> struct is_integral_imp<unsigned short> {
+		static const bool value = true;
+	};
+	template <> struct is_integral_imp<int> {
+		static const bool value = true;
+	};
+	template <> struct is_integral_imp<unsigned int> {
+		static const bool value = true;
+	};
+	template <> struct is_integral_imp<long> {
+		static const bool value = true;
+	};
+	template <> struct is_integral_imp<unsigned long> {
+		static const bool value = true;
+	};
+	template <> struct is_integral_imp<long long> {
+		static const bool value = true;
+	};
+	template <> struct is_integral_imp<unsigned long long> {
+		static const bool value = true;
+	};
+	template <class T> struct is_floating_imp {
+		static const bool value = false;
+	};
+
+	template <> struct is_floating_imp<float> {
+		static const bool value = true;
+	};
+	template <> struct is_floating_imp<double> {
+		static const bool value = true;
+	};
+	template <> struct is_floating_imp<long double> {
+		static const bool value = true;
+	};
+
+	template <class T> struct is_void_imp {
+		static const bool value = false;
+	};
+	template <> struct is_void_imp<void> {
+		static const bool value = true;
+	};
+
+	template <class T> struct is_pointer_imp {
+		static const bool value
+		    = !is_same<T, typename remove_pointer<T>::type>::value;
+	};
+	template <class T> struct is_reference_imp {
+		static const bool value
+		    = !is_same<T, typename remove_reference<T>::type>::value;
+	};
+	template <class T> struct is_array_imp {
+		static const bool value
+		    = !is_same<T, typename remove_bounds<T>::type>::value;
+	};
+
+	template <class T> struct is_member_pointer_imp {
+		static const bool value = false;
+	};
+	template <class T, class U> struct is_member_pointer_imp<U T::*> {
+		static const bool value = true;
+	};
+
+	template <class T> struct is_enum_imp {
+		static const bool value = false;
+	}; // hook
+	template <class T> struct is_union_imp {
+		static const bool value = false;
+	}; // hook
+
+	template <class T> struct is_class_imp {
+		static const bool value
+		    = !(is_integral_imp<T>::value || is_floating_imp<T>::value
+		        || is_void_imp<T>::value || is_pointer_imp<T>::value
+		        || is_reference_imp<T>::value || is_member_pointer_imp<T>::value
+		        || is_array_imp<T>::value || is_enum_imp<T>::value
+		        || is_union_imp<T>::value);
+	};
+
+} // namespace details
+
+template <class T> struct is_integral {
+	static const bool value
+	    = details::is_integral_imp<typename remove_cv<T>::type>::value;
+};
+template <class T> struct is_floating {
+	static const bool value
+	    = details::is_floating_imp<typename remove_cv<T>::type>::value;
+};
+template <class T> struct is_void {
+	static const bool value
+	    = details::is_void_imp<typename remove_cv<T>::type>::value;
+};
+template <class T> struct is_pointer {
+	static const bool value = details::is_pointer_imp<T>::value;
+};
+template <class T> struct is_reference {
+	static const bool value = details::is_reference_imp<T>::value;
+};
+template <class T> struct is_member_pointer {
+	static const bool value
+	    = details::is_member_pointer_imp<typename remove_cv<T>::type>::value;
+};
+template <class T> struct is_array {
+	static const bool value = details::is_array_imp<T>::value;
+};
+template <class T> struct is_enum {
+	static const bool value
+	    = details::is_enum_imp<typename remove_cv<T>::type>::value;
+};
+template <class T> struct is_union {
+	static const bool value
+	    = details::is_union_imp<typename remove_cv<T>::type>::value;
+};
+template <class T> struct is_class {
+	static const bool value
+	    = details::is_class_imp<typename remove_cv<T>::type>::value;
+};
+
+template <class T> struct is_arithmetic {
+	static const bool value = is_integral<T>::value || is_floating<T>::value;
+};
+template <class T> struct is_fundamental {
+	static const bool value = is_arithmetic<T>::value || is_void<T>::value;
+};
+template <class T> struct is_scalar {
+	static const bool value = is_arithmetic<T>::value || is_pointer<T>::value
+	                          || is_member_pointer<T>::value
+	                          || is_enum<T>::value;
+};
+
+namespace details {
+	template <class T> struct class_has_trivial_default_ctor {
+		static const bool value = false; // hook
+	};
+
+	template <class T> struct class_has_trivial_copy_ctor {
+		static const bool value = false; // hook
+	};
+
+	template <class T> struct class_has_trivial_assignment {
+		static const bool value = false; // hook
+	};
+
+	template <class T> struct class_has_trivial_dtor {
+		static const bool value = false; // hook
+	};
+} // namespace details
+
+template <class T> struct has_trivial_default_ctor {
+	typedef typename remove_bounds<T>::type RB;
+	static const bool value
+	    = is_scalar<RB>::value || is_union<RB>::value
+	      || (is_class<RB>::value
+	          && details::class_has_trivial_default_ctor<RB>::value);
+};
+
+template <class T> struct has_trivial_copy_ctor {
+	typedef typename remove_bounds<T>::type RB;
+	static const bool value
+	    = is_scalar<RB>::value || is_union<RB>::value
+	      || (is_class<RB>::value
+	          && details::class_has_trivial_copy_ctor<RB>::value);
+};
+
+template <class T> struct has_trivial_assignment {
+	typedef typename remove_bounds<T>::type RB;
+	static const bool value
+	    = !is_const<RB>::value
+	      && (is_scalar<RB>::value || is_union<RB>::value
+	          || (is_class<RB>::value
+	              && details::class_has_trivial_assignment<RB>::value));
+};
+
+template <class T> struct has_trivial_dtor {
+	typedef typename remove_bounds<T>::type RB;
+	static const bool value
+	    = is_scalar<RB>::value || is_union<RB>::value
+	      || (is_class<RB>::value
+	          && details::class_has_trivial_dtor<RB>::value);
+};
+
+template <class T> struct is_POD {
+	static const bool value
+	    = has_trivial_default_ctor<T>::value && has_trivial_copy_ctor<T>::value
+	      && has_trivial_assignment<T>::value && has_trivial_dtor<T>::value;
+};
+
+} // namespace Metrowerks
+
+#endif
