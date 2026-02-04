@@ -20,7 +20,8 @@ public:
 
 class TStageEnemyInfoTable : public TNameRefPtrAryT<TStageEnemyInfo> {
 public:
-	TStageEnemyInfoTable(const char*);
+	TStageEnemyInfoTable(const char* name = "<TStageEnemyInfoTable>");
+
 	TStageEnemyInfo* getMatchedInfo(s32);
 };
 

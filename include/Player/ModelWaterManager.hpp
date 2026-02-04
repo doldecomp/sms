@@ -62,7 +62,10 @@ extern TModelWaterManager* gpModelWaterManager;
 
 class TModelWaterManager : public JDrama::TViewObj {
 public:
-	TModelWaterManager();
+	TModelWaterManager(const char* name = "<TModelWaterParticle>")
+	    : JDrama::TViewObj(name)
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();

@@ -41,6 +41,9 @@ enum TLiveFlagBits {
 
 class TLiveActor : public TTakeActor {
 public:
+	TLiveActor(const char* name = "活動オブジェクト基底型");
+
+	virtual ~TLiveActor();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
 	virtual BOOL belongToGround() const;
@@ -77,8 +80,6 @@ public:
 	J3DModel* getModel() const;
 	void calcRideMomentum();
 	void calcRidePos();
-	~TLiveActor();
-	TLiveActor(const char*);
 
 	MActor* getMActor() const { return mMActor; }
 

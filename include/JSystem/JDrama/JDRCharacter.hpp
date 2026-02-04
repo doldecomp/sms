@@ -9,8 +9,8 @@ namespace JDrama {
 
 class TCharacter : public TNameRef {
 public:
-	TCharacter()
-	    : TNameRef("<TCharacter>")
+	TCharacter(const char* name = "<TCharacter>")
+	    : TNameRef(name)
 	{
 	}
 

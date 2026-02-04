@@ -14,10 +14,15 @@ struct TModelDataLoadEntry {
 	/* 0x8 */ u32 unk8;
 };
 
-class TObjChara : JDrama::TCharacter {
+class TObjChara : public JDrama::TCharacter {
 public:
+	TObjChara()
+	    : mFolder(nullptr)
+	{
+	}
+
 	virtual ~TObjChara();
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 
 	virtual void* getRes(const char*) const;
 

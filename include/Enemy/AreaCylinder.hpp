@@ -5,9 +5,10 @@
 
 class TAreaCylinder : public JDrama::TViewObj {
 public:
-	TAreaCylinder(const char*);
-	void load(JSUMemoryInputStream&);
-	void perform(u32, JDrama::TGraphics*);
+	TAreaCylinder(const char* name = "<TAreaCylinder>");
+
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void perform(u32, JDrama::TGraphics*);
 
 public:
 	/* 0x10 */ f32 unk10;
@@ -20,11 +21,13 @@ public:
 
 class TAreaCylinderManager : public JDrama::TViewObj {
 public:
-	TAreaCylinderManager(const char*);
+	TAreaCylinderManager(const char* name);
+
+	virtual void perform(u32, JDrama::TGraphics*);
+
 	void registerCylinder(TAreaCylinder*);
 	void contain(const JGeometry::TVec3<f32>&);
 	TAreaCylinder* getCylinderContains(const JGeometry::TVec3<f32>&);
-	void perform(u32, JDrama::TGraphics*);
 };
 
 #endif

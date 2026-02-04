@@ -8,7 +8,7 @@ class TSpcBinary;
 
 class TLiveManager : public TObjManager {
 public:
-	TLiveManager(const char*);
+	TLiveManager(const char* = "ライブアクターマネージャ");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);

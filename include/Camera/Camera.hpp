@@ -11,7 +11,7 @@ class TMarioGamePad;
 
 class CPolarSubCamera : public JDrama::TLookAtCamera {
 public:
-	enum EnumNoticeOnOffMode {};
+	enum EnumNoticeOnOffMode { };
 
 	void calcSecureViewTarget_(s16, f32*, f32*);
 	void execSecureView_(s16, Vec*);
@@ -72,7 +72,7 @@ public:
 	void execHeightPan_();
 	void killHeightPan_();
 
-	CPolarSubCamera(const char*);
+	CPolarSubCamera(const char* = "<CPolarCamera>");
 	void startJetCoasterCam1();
 	void loadAfter();
 	void isNowInbetween() const;

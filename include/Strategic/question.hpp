@@ -19,9 +19,9 @@ class TQuestionManager;
 
 extern TQuestionManager* gpQuestionManager;
 
-class TQuestionManager : JDrama::TViewObj {
+class TQuestionManager : public JDrama::TViewObj {
 public:
-	TQuestionManager();
+	TQuestionManager() { }
 
 	virtual ~TQuestionManager() { }
 	virtual void load(JSUMemoryInputStream&);

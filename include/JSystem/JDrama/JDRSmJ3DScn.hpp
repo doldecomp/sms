@@ -14,10 +14,10 @@ class TLightMap;
 
 class TSmJ3DScn : public TViewObjPtrListT<TViewObj, TViewObj> {
 public:
-	TSmJ3DScn(const char*, s32);
-	void perform(u32, TGraphics*);
-	void loadSuper(JSUMemoryInputStream&);
-	~TSmJ3DScn() { }
+	TSmJ3DScn(const char* name = "<SmJ3DScn>", s32 = 2);
+
+	virtual void perform(u32, TGraphics*);
+	virtual void loadSuper(JSUMemoryInputStream& stream);
 
 public:
 	/* 0x20 */ TLightMap* mLightMap;

@@ -12,9 +12,9 @@ class TCardSave : public JDrama::TViewObj {
 public:
 	void changeMode(long);
 
-	TCardSave(const char*, bool);
+	TCardSave(const char* name = "<TCardSave>", bool = false);
 
-	void load(JSUMemoryInputStream&);
+	void load(JSUMemoryInputStream& stream);
 	void initData(TMarioGamePad*);
 	void init(int);
 	void perform(unsigned long, JDrama::TGraphics*);

@@ -21,9 +21,9 @@ extern TStrategy* gpStrategy;
 
 class TStrategy : public JDrama::TViewObj {
 public:
-	TStrategy(const char*);
+	TStrategy(const char* name = "<TStrategy>");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual JDrama::TNameRef* searchF(u16, const char*);
 	virtual void perform(u32, JDrama::TGraphics*);

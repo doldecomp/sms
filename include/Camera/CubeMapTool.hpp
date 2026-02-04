@@ -6,8 +6,8 @@
 
 class TCubeGeneralInfo : public JDrama::TNameRef {
 public:
-	TCubeGeneralInfo()
-	    : JDrama::TNameRef("<TCubeGeneralInfo>")
+	TCubeGeneralInfo(const char* name = "<TCubeGeneralInfo>")
+	    : JDrama::TNameRef(name)
 	    , unkC(0.0f, 0.0f, 0.0f)
 	    , unk18(0.0f, 0.0f, 0.0f)
 	    , unk24(1.0f, 1.0f, 1.0f)
@@ -34,6 +34,11 @@ public:
 
 class TCubeStreamInfo : public TCubeGeneralInfo {
 public:
+	TCubeStreamInfo(const char* name = "<TCubeStreamInfo>")
+	    : TCubeGeneralInfo(name)
+	{
+	}
+
 	virtual ~TCubeStreamInfo() { }
 	virtual void load(JSUMemoryInputStream&);
 
@@ -45,6 +50,11 @@ public:
 
 class TCubeCameraInfo : public TCubeGeneralInfo {
 public:
+	TCubeCameraInfo(const char* name = "<TCubeCameraInfo>")
+	    : TCubeGeneralInfo(name)
+	{
+	}
+
 	virtual ~TCubeCameraInfo() { }
 	virtual void load(JSUMemoryInputStream&);
 

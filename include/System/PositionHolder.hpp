@@ -8,10 +8,14 @@ class TStagePositionInfo;
 
 extern TStagePositionInfo* gpPositionHolder;
 
-class TStagePositionInfo : JDrama::TNameRef {
+class TStagePositionInfo : public JDrama::TNameRef {
 public:
-	TStagePositionInfo();
-	void load(JSUMemoryInputStream&);
+	TStagePositionInfo(const char* name = "<StagePositionInfo>")
+	    : JDrama::TNameRef(name)
+	{
+	}
+
+	virtual void load(JSUMemoryInputStream&);
 
 public:
 	/* 0xC */ Vec unkC;
