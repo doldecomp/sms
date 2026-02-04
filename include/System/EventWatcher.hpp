@@ -6,8 +6,8 @@
 
 class TEventWatcher : public JDrama::TViewObj {
 public:
-	TEventWatcher(const char*, const char*);
-	TEventWatcher(const char*);
+	TEventWatcher(const char* name, const char* script);
+	TEventWatcher(const char* name = "<EventWatcher>");
 
 	virtual ~TEventWatcher() { }
 	virtual void perform(u32, JDrama::TGraphics*);

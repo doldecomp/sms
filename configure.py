@@ -874,7 +874,7 @@ config.libs = [
             Object(NonMatching, "System/MarDirectorLoadResource.cpp"),
             Object(NonMatching, "System/MovieDirector.cpp"),
             Object(Matching, "System/MarDirectorCreateObjects.cpp"),
-            Object(NonMatching, "System/MarDirectorSetupObjects.cpp"),
+            Object(NonMatching, "System/MarDirectorSetupObjects.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "System/MSoundMainSide.cpp"),
             Object(Matching, "System/TargetArrow.cpp", extra_cflags=["-inline deferred"]),
         ],

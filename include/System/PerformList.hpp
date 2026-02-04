@@ -22,6 +22,10 @@ class TPerformList : public JDrama::TViewObj,
                      public JGadget::TSingleLinkList<TPerformLink, 0> {
 public:
 	TPerformList() { }
+	TPerformList(const char* name)
+	    : JDrama::TViewObj(name)
+	{
+	}
 
 	void push_back(JDrama::TViewObj*, u32);
 	void push_back(const char*, u32);

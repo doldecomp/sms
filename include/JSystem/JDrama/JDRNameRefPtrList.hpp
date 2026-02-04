@@ -58,6 +58,8 @@ public:
 
 		return nullptr;
 	}
+
+	void insert(T* obj) { this->push_back(obj); }
 };
 
 } // namespace JDrama

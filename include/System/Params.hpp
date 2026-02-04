@@ -22,7 +22,7 @@ public:
 
 	bool load(const char* filename);
 	void load(JSUMemoryInputStream& stream);
-	void init();
+	static void init();
 
 public:
 	const char* mPrmPath;

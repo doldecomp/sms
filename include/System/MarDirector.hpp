@@ -7,6 +7,7 @@
 #include <JSystem/JDrama/JDRDirector.hpp>
 #include <JSystem/JGadget/std-vector.hpp>
 #include <JSystem/JGeometry.hpp>
+#include <Strategic/NameRefAry.hpp>
 #include <dolphin/os/OSStopwatch.h>
 
 class TEventWatcher;
@@ -25,7 +26,11 @@ class TGCConsole2;
 class TSMSFader;
 class MSStage;
 class TPauseMenu2;
+class TTalk2D2;
 class TGuide;
+class TCardLoad;
+class JKRMemArchive;
+class TStageEventInfo;
 
 class TMarDirector;
 
@@ -80,10 +85,10 @@ public:
 	initECDisp(TPerformList*,
 	           JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*,
 	           JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*);
-	JDrama::TViewObj*
+	static JDrama::TViewObj*
 	initECTMir(TPerformList*,
 	           JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*);
-	void
+	static void
 	initECTGft(TPerformList*, TPerformList*,
 	           JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*,
 	           JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*);
@@ -100,7 +105,7 @@ public:
 	void initLoadParticle();
 	void loadResource();
 	bool createObjects();
-	void setupObjects();
+	bool setupObjects();
 	void decideMarioPosIdx();
 
 	// fabricated
@@ -126,18 +131,18 @@ public:
 
 public:
 	/* 0x18 */ TMarioGamePad** unk18;
-	/* 0x1C */ TPerformList* unk1C;
-	/* 0x20 */ TPerformList* unk20;
-	/* 0x24 */ TPerformList* unk24;
-	/* 0x28 */ TPerformList* unk28;
-	/* 0x2C */ TPerformList* unk2C;
+	/* 0x1C */ TPerformList* mPerformListGX;
+	/* 0x20 */ TPerformList* mPerformListSilhouette;
+	/* 0x24 */ TPerformList* mPerformListGXPost;
+	/* 0x28 */ TPerformList* mPerformListMovement;
+	/* 0x2C */ TPerformList* mPerformListCalcAnim;
 	/* 0x30 */ TPerformList* unk30;
 	/* 0x34 */ TPerformList* unk34;
 	/* 0x38 */ TPerformList* unk38;
 	/* 0x3C */ TPerformList* unk3C;
 	/* 0x40 */ TPerformList* unk40;
-	/* 0x44 */ TPerformList* unk44;
-	/* 0x48 */ TPerformList* unk48;
+	/* 0x44 */ TPerformList* mShinePfLstMov;
+	/* 0x48 */ TPerformList* mShinePfLstAnm;
 	/* 0x4C */ volatile u16 unk4C;
 	/* 0x4E */ u16 unk4E;
 	/* 0x50 */ u16 unk50;
@@ -148,7 +153,7 @@ public:
 	/* 0x64 */ u8 unk64;
 	/* 0x68 */ u32 unk68;
 	/* 0x6C */ f32 unk6C;
-	/* 0x70 */ JDrama::TViewObj* unk70;
+	/* 0x70 */ TCardLoad* unk70;
 	/* 0x74 */ TGCConsole2* mConsole;
 	/* 0x78 */ TGuide* unk78;
 	/* 0x7C */ u8 mMap;
@@ -161,10 +166,10 @@ public:
 	/* 0xA0 */ TBaseNPC* unkA0; // talking NPC
 	/* 0xA4 */ char unkA4[0x8];
 	/* 0xAC */ TPauseMenu2* unkAC;
-	/* 0xB0 */ JDrama::TViewObj* unkB0;
+	/* 0xB0 */ TTalk2D2* unkB0;
 	/* 0xB4 */ u8 unkB4;
-	/* 0xB8 */ u32 unkB8;
-	/* 0xBC */ JDrama::TNameRef* unkBC; // TODO: type?
+	/* 0xB8 */ JKRMemArchive* unkB8;
+	/* 0xBC */ TNameRefAryT<TStageEventInfo>* unkBC;
 	/* 0xC0 */ JDrama::TDisplay* unkC0;
 	/* 0xC4 */ char unkC4[0x4];
 	/* 0xC8 */ u32 unkC8;
