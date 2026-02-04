@@ -20,9 +20,15 @@ public:
 
 	// From SMG. These do NOT call the identity33() function.
 	// Implementations arbitrary, feel free to play around with them.
+	// void setTrans(const TVec3<f32>& translation)
+	// {
+	// 	setTrans(translation.x, translation.y, translation.z);
+	// }
 	void setTrans(const TVec3<f32>& translation)
 	{
-		setTrans(translation.x, translation.y, translation.z);
+		this->ref(0, 3) = translation.x;
+		this->ref(1, 3) = translation.y;
+		this->ref(2, 3) = translation.z;
 	}
 	void setTrans(f32 x, f32 y, f32 z)
 	{

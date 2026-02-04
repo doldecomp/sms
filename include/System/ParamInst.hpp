@@ -5,12 +5,12 @@
 #include <JSystem/JDrama/JDRNameRef.hpp>
 #include <System/BaseParam.hpp>
 
-#define PARAM_INIT(member, ...)                                                \
-	member(this, JDrama::TNameRef::calcKeyCode(#member), #member, __VA_ARGS__)
+#define PARAM_INIT(member, defaultValue)                                       \
+	member(this, defaultValue, JDrama::TNameRef::calcKeyCode(#member), #member)
 
 template <typename T> class TParamT : public TBaseParam {
 public:
-	TParamT(TParams* params, u16 code, const char* paramName, T defaultValue)
+	TParamT(TParams* params, T defaultValue, u16 code, const char* paramName)
 	    : TBaseParam(params, code, paramName)
 	    , value(defaultValue)
 	{
@@ -26,8 +26,8 @@ public:
 
 template <typename T> class TParamRT : public TParamT<T> {
 public:
-	TParamRT(TParams* parent, u16 keycode, const char* name, T defaultValue)
-	    : TParamT<T>(parent, keycode, name, defaultValue)
+	TParamRT(TParams* parent, T defaultValue, u16 keycode, const char* name)
+	    : TParamT<T>(parent, defaultValue, keycode, name)
 	{
 	}
 
@@ -47,9 +47,9 @@ public:
 class TParamVec : public TParamT<JGeometry::TVec3<f32> > {
 public:
 	// fabricated AND wrong
-	TParamVec(TParams* parent, u16 keycode, const char* name,
-	          JGeometry::TVec3<f32> defaultValue)
-	    : TParamT<JGeometry::TVec3<f32> >(parent, keycode, name, defaultValue)
+	TParamVec(TParams* parent, JGeometry::TVec3<f32> defaultValue, u16 keycode,
+	          const char* name)
+	    : TParamT<JGeometry::TVec3<f32> >(parent, defaultValue, keycode, name)
 	{
 	}
 };
