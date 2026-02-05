@@ -601,7 +601,7 @@ public:
 	void footDowning();
 	void electricDamage();
 	void warpOut();
-	void toroccoStart();
+	BOOL toroccoStart();
 	BOOL waitingStart(const JGeometry::TVec3<f32>*, f32);
 	BOOL returnStart(const JGeometry::TVec3<f32>*, f32, bool, int);
 	BOOL rollingStart(const JGeometry::TVec3<f32>*, f32);

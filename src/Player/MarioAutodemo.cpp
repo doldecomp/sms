@@ -314,3 +314,20 @@ BOOL TMario::waitingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 	}
 	return FALSE;
 }
+
+BOOL TMario::toroccoStart()
+{
+	changePlayerStatus(0x800447, 0, true);
+	unk114 |= 2;
+	if (unk3FC != nullptr) {
+		unk3FC->setBckFromIndex(0);
+		unk3FC->getFrameCtrl(0)->setSpeed(0.5f);
+		unk3FC->getFrameCtrl(0)->setFrame(0.0f);
+	}
+	if (unk400 != nullptr) {
+		unk400->setBckFromIndex(0);
+		unk400->getFrameCtrl(0)->setSpeed(0.5f);
+		unk400->getFrameCtrl(0)->setFrame(0.0f);
+	}
+	return TRUE;
+}
