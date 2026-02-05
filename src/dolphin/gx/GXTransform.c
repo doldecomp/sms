@@ -120,8 +120,7 @@ static asm void WriteMTXPS3x3from3x4(register f32 mtx[3][4],
 }
 
 static asm void WriteMTXPS4x2(register f32 mtx[2][4],
-                              register volatile f32* dest)
-{
+                              register volatile f32* dest) {
 #ifdef __MWERKS__ // clang-format off
 	psq_l f0, 0x00(mtx), 0, qr0
 	psq_l f1, 0x08(mtx), 0, qr0
