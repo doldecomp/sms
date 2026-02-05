@@ -36,6 +36,9 @@ class TCubeStreamInfo : public TCubeGeneralInfo {
 public:
 	TCubeStreamInfo(const char* name = "<TCubeStreamInfo>")
 	    : TCubeGeneralInfo(name)
+	    , unk38(1)
+	    , unk3C(0.0f)
+	    , unk40(0.0f)
 	{
 	}
 
@@ -52,6 +55,7 @@ class TCubeCameraInfo : public TCubeGeneralInfo {
 public:
 	TCubeCameraInfo(const char* name = "<TCubeCameraInfo>")
 	    : TCubeGeneralInfo(name)
+	    , unk38(nullptr)
 	{
 	}
 

@@ -71,18 +71,16 @@ public:
 
 class TSmplFader : public TSMSFader {
 public:
-	TSmplFader(JUtility::TColor param_1, f32 param_2,
-	           const char* name = "<ScrnFader>")
-	    : TSMSFader(param_1, param_2, name)
+	TSmplFader(const char* name = "<ScrnFader>")
+	    : TSMSFader(JUtility::TColor(0, 0, 0, 0), 60.0f, name)
 	{
 	}
 };
 
 class TShineFader : public TSmplFader {
 public:
-	TShineFader(JUtility::TColor param_1, f32 param_2,
-	            const char* name = "<ShineFader>")
-	    : TSmplFader(param_1, param_2, name)
+	TShineFader(const char* name = "<ShineFader>")
+	    : TSmplFader(name)
 	{
 	}
 

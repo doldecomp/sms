@@ -3,6 +3,7 @@
 
 #include <JSystem/JDrama/JDRNameRef.hpp>
 #include <JSystem/JGeometry.hpp>
+#include <Strategic/NameRefAry.hpp>
 
 class TCameraMapTool : public JDrama::TNameRef {
 public:
@@ -24,6 +25,6 @@ public:
 	/* 0x2C */ u32 unk2C;
 };
 
-extern TCameraMapTool* gpCamMapToolTable;
+extern TNameRefAryT<TCameraMapTool>* gpCamMapToolTable;
 
 #endif

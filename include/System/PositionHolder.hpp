@@ -1,12 +1,13 @@
 #ifndef SYSTEM_POSITION_HOLDER_HPP
 #define SYSTEM_POSITION_HOLDER_HPP
 
-#include <JSystem/JDrama/JDRNameRef.hpp>
 #include <dolphin/mtx.h>
+#include <JSystem/JDrama/JDRNameRef.hpp>
+#include <Strategic/NameRefAry.hpp>
 
 class TStagePositionInfo;
 
-extern TStagePositionInfo* gpPositionHolder;
+extern TNameRefAryT<TStagePositionInfo>* gpPositionHolder;
 
 class TStagePositionInfo : public JDrama::TNameRef {
 public:

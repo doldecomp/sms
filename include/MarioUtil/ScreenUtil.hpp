@@ -14,7 +14,7 @@ extern TAfterEffect* gpAfterEffect;
 
 class TAfterEffect : public JDrama::TViewObj {
 public:
-	TAfterEffect();
+	TAfterEffect() { }
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
@@ -63,7 +63,7 @@ extern TScreenTexture* gpScreenTexture;
 
 class TScreenTexture : public JDrama::TViewObj {
 public:
-	TScreenTexture();
+	TScreenTexture() { }
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*) { }

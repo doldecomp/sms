@@ -7,6 +7,7 @@
 class J3DDrawBuffer;
 
 class TLightWithDBSet;
+class TLightMario;
 
 class TLightWithDBSetManager : public JDrama::TViewObj {
 public:
@@ -28,7 +29,7 @@ public:
 	TLightWithDBSet* getUnk14(int i) { return unk14[i]; }
 
 public:
-	/* 0x10 */ u32 unk10;
+	/* 0x10 */ TLightMario* unk10;
 	/* 0x14 */ TLightWithDBSet** unk14;
 	/* 0x18 */ GXColor unk18;
 	/* 0x1C */ u32 unk1C;

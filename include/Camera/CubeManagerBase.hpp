@@ -10,6 +10,9 @@
 class TCubeManagerBase;
 
 extern TCubeManagerBase* gpCubeStream;
+extern TCubeManagerBase* gpCubeShadow;
+extern TCubeManagerBase* gpCubeSoundChange;
+extern TCubeManagerBase* gpCubeSoundEffect;
 
 class TCubeManagerBase : public JDrama::TViewObj {
 public:
