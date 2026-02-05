@@ -403,7 +403,7 @@ struct TContainerEnumerator_const
     : public TEnumerator2<typename TLinkList<T, I>::const_iterator, const T> {
 	inline TContainerEnumerator_const(const TLinkList<T, I>* param_0)
 	    : TEnumerator2<typename TLinkList<T, I>::const_iterator, const T>(
-	        param_0->begin(), param_0->end())
+	          param_0->begin(), param_0->end())
 	{
 	}
 };
