@@ -19,6 +19,7 @@ class J3DAnmTexPattern;
 class J3DModelData;
 class J3DAnmTransform;
 struct TBGWallCheckRecord;
+class TMarioCap;
 
 // TODO: where should this be?
 enum E_SIDEWALK_TYPE { };
@@ -605,7 +606,7 @@ public:
 	void returnStart(const JGeometry::TVec3<f32>*, f32, bool, int);
 	void rollingStart(const JGeometry::TVec3<f32>*, f32);
 	void startCommon(const JGeometry::TVec3<f32>*, f32);
-	void isUnUsualStageStart();
+	BOOL isUnUsualStageStart();
 	BOOL warpIn();
 	void downLoser();
 	void sinkLoser();
@@ -1204,7 +1205,7 @@ public:
 	/* 0x3D6 */ u16 unk3D6;
 	/* 0x3D8 */ f32 unk3D8;
 	/* 0x3DC */ f32 unk3DC;
-	/* 0x3E0 */ void* mCap; // TMarioCap
+	/* 0x3E0 */ TMarioCap* mCap;
 
 	/* 0x3E4 */ TWaterGun* mWaterGun;
 
@@ -1215,8 +1216,8 @@ public:
 
 	/* 0x3F4 */ u32 unk3F4;
 	/* 0x3F8 */ u32 unk3F8;
-	/* 0x3FC */ u32 unk3FC;
-	/* 0x400 */ u32 unk400;
+	/* 0x3FC */ MActor* unk3FC; // Pinna_rail model actor
+	/* 0x400 */ MActor* unk400; // Koopa_rail model actor
 	/* 0x404 */ u32 unk404;
 	/* 0x408 */ u32 unk408;
 	/* 0x40C */ u32 unk40C;

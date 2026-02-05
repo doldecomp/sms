@@ -4,6 +4,9 @@
 #include <NPC/NpcBase.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MoveBG/ModelGate.hpp>
+#include <System/StageUtil.hpp>
+#include <Player/Watergun.hpp>
+#include <Player/MarioCap.hpp>
 
 BOOL TMario::winDemo()
 {
@@ -178,5 +181,54 @@ BOOL TMario::warpIn()
 		break;
 	}
 
+	return FALSE;
+}
+
+BOOL TMario::isUnUsualStageStart()
+{
+	// Missing stack space
+	// volatile u32 padding[14];
+
+	// Pinna rollercoaster
+	if ((gpMarDirector->mMap == 0x3A)
+	    && (gpMarDirector->unk7D == 0 || gpMarDirector->unk7D == 1)) {
+		changePlayerStatus(0x800447, 0, true);
+		unk114 |= 2;
+		if (unk3FC != nullptr) {
+			unk3FC->setBckFromIndex(0);
+			unk3FC->getFrameCtrl(0)->setSpeed(0.5f);
+			unk3FC->getFrameCtrl(0)->setFrame(0.0f);
+		}
+		if (unk400 != nullptr) {
+			unk400->setBckFromIndex(0);
+			unk400->getFrameCtrl(0)->setSpeed(0.5f);
+			unk400->getFrameCtrl(0)->setFrame(0.0f);
+		}
+		return TRUE;
+	}
+
+	if (SMS_isDivingMap()) {
+		unk114 |= 2;
+
+		// I suspect some inline stuff here, weird to check right after you set
+		// it
+		unk118 |= MARIO_FLAG_HELMET_FLW_CAMERA;
+		unk118 |= MARIO_FLAG_HELMET;
+		unk118 |= MARIO_FLAG_HAS_FLUDD;
+
+		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
+			mWaterGun->changeNozzle(2, true);
+		}
+
+		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
+			mWaterGun->changeNozzle(mWaterGun->mSecondNozzle, true);
+		}
+
+		if (mCap != nullptr) {
+			mCap->unk4 |= 2;
+		}
+		changePlayerStatus(0x891, 0, true);
+		return TRUE;
+	}
 	return FALSE;
 }
