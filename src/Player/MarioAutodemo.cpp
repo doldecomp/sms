@@ -3,6 +3,7 @@
 #include <System/MarDirector.hpp>
 #include <NPC/NpcBase.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <MoveBG/ModelGate.hpp>
 
 BOOL TMario::winDemo()
 {
@@ -83,5 +84,99 @@ BOOL TMario::jumpingDemoCommon(u32 playerStatus, int animationId, f32 velocity)
 		changePlayerStatus(playerStatus, 0, true);
 		return TRUE;
 	}
+	return FALSE;
+}
+
+BOOL TMario::warpIn()
+{
+	// Missing stack space
+	// volatile u32 padding[15];
+	mActionTimer += 1;
+	const JGeometry::TVec3<f32>& gatePosOffset = ((TModelGate*)mHolder)->unkAC;
+	JGeometry::TVec3<f32> holderPosOffset(((TModelGate*)mHolder)->unkAC);
+	holderPosOffset.y -= 80.0f;
+	switch (mActionState) {
+	case 0:
+		if (mActionTimer <= 1) {
+			if (onYoshi() != FALSE) {
+				getOffYoshi(true);
+			}
+			TModelGate* gate  = (TModelGate*)mHolder;
+			u16 gateUnk72     = gate->unk72;
+			Mtx* nodeMatrices = gate->unk78->getModel()->mNodeMatrices;
+			unk45C.x          = nodeMatrices[gateUnk72][0][3] - gatePosOffset.x;
+			unk45C.y          = nodeMatrices[gateUnk72][1][3] - gatePosOffset.y;
+			unk45C.z          = nodeMatrices[gateUnk72][2][3] - gatePosOffset.z;
+			unk45C.normalize();
+			warpInLight();
+
+			u8 nextStage   = 2;
+			u8 destination = ((TModelGate*)mHolder)->unk71;
+			switch (destination) {
+			case 0:
+				nextStage = 2;
+				break;
+			case 1:
+				nextStage = 3;
+				break;
+			case 2:
+				nextStage = 4;
+				break;
+			}
+			gpMarDirector->setNextStage(nextStage, mHolder);
+		}
+
+		unk114 |= 2;
+		J3DFrameCtrl* frameCtrl = getMotionFrameCtrl();
+		frameCtrl->setSpeed(0.0f);
+
+		// Possibly TVec3 inaccuracies?
+		JGeometry::TVec3<f32> marioDist = holderPosOffset - mPosition;
+		mPosition                       = marioDist * 0.02f + mPosition;
+
+		f32 dist
+		    = mAutoDemoParams.mWarpInTremble.get() - marioDist.length() * 0.1f;
+		if (dist > 0.0f) {
+			unk53C->clash(dist);
+		}
+
+		if (0x78 < mActionTimer) {
+			mActionTimer = 0;
+			warpInEffect();
+			unk468       = 0.0f;
+			mActionState = 1;
+			// Probably some reserved sound?
+			startVoice(-0x2);
+		}
+		break;
+	case 1:
+		if ((f32)mActionTimer > mAutoDemoParams.mWarpInBallsDispTime.get()) {
+			unk114 &= ~(1 << 1);
+			rumbleStart(0x15, 0x14);
+		}
+		if (mAutoDemoParams.mWarpInBallsTime.get() > (f32)mActionTimer) {
+			mActionTimer = 0;
+			unk468       = mAutoDemoParams.mWarpInVecBase.get();
+			mActionState = 2;
+		}
+
+		break;
+	case 2:
+		unk114 &= ~(1 << 1);
+		rumbleStart(0x14, mMotorParams.mMotorWall.get() / 2);
+
+		if ((f32)mActionTimer > mAutoDemoParams.mWarpInCapturedTime.get()) {
+			unk114 &= ~(1 << 1);
+			mActionTimer = 0;
+			mHolder->receiveMessage(this, 0xE);
+			mActionState = 3;
+		}
+
+		break;
+	case 3:
+		unk118 |= MARIO_FLAG_IS_PERFORMING;
+		break;
+	}
+
 	return FALSE;
 }

@@ -10,6 +10,7 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
 #include <Player/Yoshi.hpp>
+#include <MarioUtil/DrawUtil.hpp>
 
 class TLiveActor;
 class TWaterGun;
@@ -605,7 +606,7 @@ public:
 	void rollingStart(const JGeometry::TVec3<f32>*, f32);
 	void startCommon(const JGeometry::TVec3<f32>*, f32);
 	void isUnUsualStageStart();
-	void warpIn();
+	BOOL warpIn();
 	void downLoser();
 	void sinkLoser();
 	void openDoor();
@@ -660,7 +661,7 @@ public:
 	void changeHand(int);
 	void isAnimeLoopOrStop();
 	BOOL isLast1AnimeFrame();
-	void getMotionFrameCtrl();
+	J3DFrameCtrl* getMotionFrameCtrl();
 	void getCurrentFrame(int);
 	void getRailMtx() const;
 	void getTakenMtx();
@@ -803,7 +804,7 @@ public:
 	void canBendBody();
 	BOOL considerRotateJumpStart();
 	void addVelocity(f32);
-	s32 onYoshi() const;
+	BOOL onYoshi() const;
 	void getGroundJumpPower() const;
 	void windMove(const JGeometry::TVec3<f32>&);
 	void flowMove(const JGeometry::TVec3<f32>&);
@@ -1122,7 +1123,7 @@ public:
 	/* 0x7C */ u32 mAction;
 	/* 0x80 */ u32 mPrevAction;
 	/* 0x84 */ u16 mActionState;
-	/* 0x86 */ s16 mActionTimer;
+	/* 0x86 */ u16 mActionTimer;
 	/* 0x88 */ u32 mActionArg;
 	/* 0x8C */ f32 mIntendedMag;
 	/* 0x90 */ s16 mIntendedYaw;
@@ -1157,9 +1158,13 @@ public:
 
 	/* 0x104 */ void* mController; // TMarioControllerWork
 
-	/* 0x108 */ u32 unk108[4];
+	/* 0x108 */ u32 unk108;
+	/* 0x10C */ u32 unk10C;
+	/* 0x110 */ u32 unk110;
 
-	/* 0x118 */ u32 unk118;
+	/* 0x114 */ u16 unk114;
+	/* 0x116 */ u16 unk116;
+	/* 0x118 */ u32 unk118; // some flag / attribute
 
 	/* 0x11C */ u32 unk11C;
 
@@ -1208,13 +1213,75 @@ public:
 
 	/* 0x3F0 */ TYoshi* mYoshi;
 
-	/* 0x3F4 */ char unk3F4[0x0FC];
+	/* 0x3F4 */ u32 unk3F4;
+	/* 0x3F8 */ u32 unk3F8;
+	/* 0x3FC */ u32 unk3FC;
+	/* 0x400 */ u32 unk400;
+	/* 0x404 */ u32 unk404;
+	/* 0x408 */ u32 unk408;
+	/* 0x40C */ u32 unk40C;
+	/* 0x410 */ u32 unk410;
+	/* 0x414 */ u32 unk414;
+	/* 0x418 */ u32 unk418;
+	/* 0x41C */ u32 unk41C;
+	/* 0x420 */ u32 unk420;
+	/* 0x424 */ u32 unk424;
+	/* 0x428 */ u32 unk428;
+	/* 0x42C */ u32 unk42C;
+	/* 0x430 */ u32 unk430;
+	/* 0x434 */ u32 unk434;
+	/* 0x438 */ u32 unk438;
+	/* 0x43C */ u32 unk43C;
+	/* 0x440 */ u32 unk440;
+	/* 0x444 */ u32 unk444;
+	/* 0x448 */ u32 unk448;
+	/* 0x44C */ u32 unk44C;
+	/* 0x450 */ u32 unk450;
+	/* 0x454 */ u32 unk454;
+	/* 0x458 */ u32 unk458;
+	/* 0x45C */ JGeometry::TVec3<f32> unk45C;
+	/* 0x468 */ f32 unk468;
+	/* 0x46C */ u32 unk46C;
+	/* 0x470 */ u32 unk470;
+	/* 0x474 */ u32 unk474;
+	/* 0x478 */ u32 unk478;
+	/* 0x47C */ u32 unk47C;
+	/* 0x480 */ u32 unk480;
+	/* 0x484 */ u32 unk484;
+	/* 0x488 */ u32 unk488;
+	/* 0x48C */ u32 unk48C;
+	/* 0x490 */ u32 unk490;
+	/* 0x494 */ u32 unk494;
+	/* 0x498 */ u32 unk498;
+	/* 0x49C */ u32 unk49C;
+	/* 0x4A0 */ u32 unk4A0;
+	/* 0x4A4 */ u32 unk4A4;
+	/* 0x4A8 */ u32 unk4A8;
+	/* 0x4AC */ u32 unk4AC;
+	/* 0x4B0 */ u32 unk4B0;
+	/* 0x4B4 */ u32 unk4B4;
+	/* 0x4B8 */ u32 unk4B8;
+	/* 0x4BC */ u32 unk4BC;
+	/* 0x4C0 */ u32 unk4C0;
+	/* 0x4C4 */ u32 unk4C4;
+	/* 0x4C8 */ u32 unk4C8;
+	/* 0x4CC */ u32 unk4CC;
+	/* 0x4D0 */ u32 unk4D0;
+	/* 0x4D4 */ u32 unk4D4;
+	/* 0x4D8 */ u32 unk4D8;
+	/* 0x4DC */ u32 unk4DC;
+	/* 0x4E0 */ u32 unk4E0;
+	/* 0x4E4 */ u32 unk4E4;
+	/* 0x4E8 */ u32 unk4E8;
+	/* 0x4EC */ u32 unk4EC;
 
 	/* 0x4F0 */ JGeometry::TVec3<f32> unk4F0;
 
 	/* 0x4FC */ TMarioGamePad* mGamePad;
 
-	/* 0x500 */ char unk500[0x74];
+	/* 0x500 */ char unk500[0x3C];
+	/* 0x53C */ TTrembleModelEffect* unk53C;
+	/* 0x540 */ char unk540[0x34];
 
 	/* 0x574 */ TDeParams mDeParams;
 
