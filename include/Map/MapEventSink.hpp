@@ -83,7 +83,9 @@ public:
 class TMapEventSinkBianco : public TMapEventSinkInPollutionReset {
 public:
 	TMapEventSinkBianco(const char* name = "イベント（建物沈むビアンコ）")
-	    : TMapEventSinkInPollutionReset(name) { };
+	    : TMapEventSinkInPollutionReset(name)
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
