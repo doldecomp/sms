@@ -471,12 +471,12 @@ THinokuri2::THinokuri2(const char* name)
     , mLevel(0)
 {
 	mBinder = new TWalker;
-	mHead = new THino2Hit(this, 25, "ヒノクリ２ヒットオブジェクト");
-	mBody = new THino2Hit(this, 19, "ヒノクリ２ヒットオブジェクト");
-	unk174 = new THino2Hit(this, 9, "ヒノクリ２ヒットオブジェクト");
-	unk178 = new THino2Hit(this, 16, "ヒノクリ２ヒットオブジェクト");
-	unk19C = new TWaterEmitInfo("/enemy/hinokuri2water.prm");
-	unk1A0 = new THino2MtxCalc(5, 6, 9, 12, 13, 16, 15.0f);
+	mHead   = new THino2Hit(this, 25, "ヒノクリ２ヒットオブジェクト");
+	mBody   = new THino2Hit(this, 19, "ヒノクリ２ヒットオブジェクト");
+	unk174  = new THino2Hit(this, 9, "ヒノクリ２ヒットオブジェクト");
+	unk178  = new THino2Hit(this, 16, "ヒノクリ２ヒットオブジェクト");
+	unk19C  = new TWaterEmitInfo("/enemy/hinokuri2water.prm");
+	unk1A0  = new THino2MtxCalc(5, 6, 9, 12, 13, 16, 15.0f);
 }
 
 void THinokuri2::init(TLiveManager* param_1)
