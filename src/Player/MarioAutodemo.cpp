@@ -331,3 +331,73 @@ BOOL TMario::toroccoStart()
 	}
 	return TRUE;
 }
+
+bool TMario::warpOut()
+{
+	// Missing stack space
+	// volatile u32 padding[4];
+
+	mActionTimer += 1;
+	unk114 |= 2;
+	switch (mActionState) {
+	case 0:
+		unk114 |= 2;
+		if ((mActionArg & 0xff) == 2) {
+			setAnimation(0x13B, 1.0f);
+		} else {
+			setAnimation(0x12E, 1.0f);
+		}
+		warpOutEffect((mActionArg >> 8) & 0xff,
+		              (mActionArg & 0xff) * 180.0f
+		                  + SHORTANGLE2DEG(mFaceAngle.y));
+		mActionState = 1;
+		mActionTimer = 0;
+		break;
+	case 1:
+		s32 unkDelay;
+		if ((mActionArg & 0x200) != 0) {
+			unkDelay = 0x70;
+		} else {
+			unkDelay = 0xb4;
+		}
+		if (mActionTimer >= unkDelay) {
+			if (checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
+				unk114 |= 2;
+				return changePlayerStatus(0x891, 0, true);
+			}
+			mActionState = 2;
+		}
+		break;
+	case 2:
+		unk114 |= 2;
+		if ((mActionArg & 0xff) == 2) {
+			setAnimation(0x13C, 1.0f);
+		} else {
+			setAnimation(0x13D, 1.0f);
+		}
+		if (jumpProcess(0) == TRUE) {
+			mActionState = 3;
+		}
+		break;
+	case 3:
+		unk114 |= 2;
+		switch (mActionArg & 0xff) {
+		case 0:
+			return changePlayerStatus(0xC000230, 0, true);
+		case 1:
+			setAnimation(0x10E, 1.0f);
+			if (isLast1AnimeFrame()) {
+				return changePlayerStatus(0xC400201, 0, true);
+			}
+			break;
+		case 2:
+			setAnimation(0x12D, 1.0f);
+			if (isLast1AnimeFrame()) {
+				return changePlayerStatus(0xC400201, 0, true);
+			}
+			break;
+		}
+		break;
+	}
+	return false;
+}

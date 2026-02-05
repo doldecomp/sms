@@ -600,7 +600,7 @@ public:
 	void nomotion();
 	void footDowning();
 	void electricDamage();
-	void warpOut();
+	bool warpOut();
 	BOOL toroccoStart();
 	BOOL waitingStart(const JGeometry::TVec3<f32>*, f32);
 	BOOL returnStart(const JGeometry::TVec3<f32>*, f32, bool, int);
