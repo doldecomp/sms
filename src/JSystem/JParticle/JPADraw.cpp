@@ -1160,9 +1160,9 @@ void JPADraw::zDrawChild()
 	GXSetMisc(GX_MT_XF_FLUSH, 0);
 }
 
-u32 JPADraw::getMainTextureID(u8 i)
+s16 JPADraw::getMainTextureID(u8 i)
 {
-	u32 result = -1;
+	s16 result = -1;
 	if (mDrawCtx.mBaseShape->unk80 != 0) {
 		if (i < mDrawCtx.mBaseShape->mTextureAnmKeyNum)
 			result = mDrawCtx.mBaseShape->mTextureIndices[i];

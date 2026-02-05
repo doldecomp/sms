@@ -828,7 +828,7 @@ config.libs = [
         "cflags": cflags_system,
         "objects": [
             Object(Matching, "System/BaseParam.cpp"),
-            Object(NonMatching, "System/EmitterViewObj.cpp"),
+            Object(NonMatching, "System/EmitterViewObj.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "System/EventWatcher.cpp"),
             Object(
                 Matching,
