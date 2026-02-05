@@ -117,6 +117,8 @@ public:
 		inst->crTimeAry()[0].append(tick, 0);
 	}
 
+	static TTimeRec* instance() { return _instance; }
+
 public:
 	/* 0x4 */ TTimeArray unk4[2][2];
 	/* 0x814 */ u32 unk814;

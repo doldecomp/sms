@@ -7,9 +7,9 @@ s32 SMSGetGCLogoVideoHeight() { return SMSGetGameVideoHeight(); }
 
 s32 SMSGetGCLogoVideoWidth() { return 640; }
 
-s32 SMSGetGCLogoRenderHeight() { return 448; }
+u16 SMSGetGCLogoRenderHeight() { return 448; }
 
-s32 SMSGetGCLogoRenderWidth() { return 640; }
+u16 SMSGetGCLogoRenderWidth() { return 640; }
 
 s32 SMSGetTitleRenderHeight() { return 448; }
 

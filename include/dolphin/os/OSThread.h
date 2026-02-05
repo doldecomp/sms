@@ -75,8 +75,7 @@ s32 OSDisableScheduler(void);
 s32 OSEnableScheduler(void);
 void OSYieldThread(void);
 int OSCreateThread(OSThread* thread, void* (*func)(void*), void* param,
-                   void* stack, unsigned long stackSize, long priority,
-                   unsigned short attr);
+                   void* stack, u32 stackSize, s32 priority, u16 attr);
 void OSExitThread(OSThread* thread);
 void OSCancelThread(OSThread*);
 int OSJoinThread(OSThread* thread, void* val);
