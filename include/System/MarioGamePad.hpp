@@ -33,7 +33,15 @@ class TMarioGamePad : public JUTGamePad {
 public:
 	TMarioGamePad(EPadPort port)
 	    : JUTGamePad(port)
+	    , mMeaning(0)
+	    , mEnabledFrameMeaning(0)
+	    , mDisabledFrameMeaning(0)
+	    , _DC(0)
+	    , _DE(0)
+	    , _E0(0)
+	    , mFlags(0)
 	{
+		reset();
 	}
 	virtual ~TMarioGamePad();
 

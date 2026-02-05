@@ -5,8 +5,8 @@
 
 s32 SMSGetGCLogoVideoHeight();
 s32 SMSGetGCLogoVideoWidth();
-s32 SMSGetGCLogoRenderHeight();
-s32 SMSGetGCLogoRenderWidth();
+u16 SMSGetGCLogoRenderHeight();
+u16 SMSGetGCLogoRenderWidth();
 s32 SMSGetTitleRenderHeight();
 s32 SMSGetTitleRenderWidth();
 s32 SMSGetGameRenderHeight();

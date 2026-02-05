@@ -224,7 +224,7 @@ JKRADCommand::~JKRADCommand()
 	}
 }
 
-u32 JKRDvdAramRipper::sSzpBufferSize = 0x00000400;
+u32 JKRDvdAramRipper::szpBufferSize = 0x00000400;
 static u8* szpBuf;
 static u8* szpEnd;
 static u8* refBuf;

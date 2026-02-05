@@ -854,7 +854,7 @@ config.libs = [
             Object(NonMatching, "System/TalkCursor.cpp"),
             Object(Matching, "System/TexCache.cpp"),
             Object(Matching, "System/ZBufferCatch.cpp", extra_cflags=["-inline deferred"]),
-            Object(NonMatching, "System/Application.cpp"),
+            Object(NonMatching, "System/Application.cpp", extra_cflags=["-inline deferred"]),
             Object(Matching, "System/ScenarioArchiveName.cpp"),
             Object(NonMatching, "System/MarioGamePad.cpp"),
             Object(NonMatching, "System/StageEventInfo.cpp"),

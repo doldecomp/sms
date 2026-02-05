@@ -14,9 +14,9 @@ public:
 		TDrawSyncTokenRange(u16, u16, TDrawSyncCallback*);
 	};
 
-	void start(u32, u32, s32);
+	static void start(u32, u32, s32);
 	void end();
-	void drawSyncCallback(u16);
+	static void drawSyncCallback(u16);
 	void threadFunc(void*);
 	TDrawSyncManager(u32, u32, s32);
 	~TDrawSyncManager();

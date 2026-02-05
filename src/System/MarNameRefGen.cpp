@@ -143,10 +143,10 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 		return new TSilhouette;
 
 	if (strcmp(name, "ScrnFader") == 0)
-		return new TSmplFader;
+		return new TSmplFader(60.0f);
 
 	if (strcmp(name, "ShineFader") == 0)
-		return new TShineFader;
+		return new TShineFader(60.0f);
 
 	if (strcmp(name, "IdxGroup") == 0)
 		return new TIdxGroupObj;
