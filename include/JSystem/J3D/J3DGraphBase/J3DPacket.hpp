@@ -49,7 +49,7 @@ public:
 	void addChildPacket(J3DPacket* packet);
 	virtual void draw() { }
 
-	virtual ~J3DPacket() {};
+	virtual ~J3DPacket() { }
 
 	void drawClear()
 	{

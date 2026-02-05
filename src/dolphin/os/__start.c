@@ -151,9 +151,8 @@ _goto_skip_init_bba:
 #endif // clang-format on
 }
 
-__declspec(section ".init") static void __copy_rom_section(void* dst,
-                                                           const void* src,
-                                                           unsigned long size)
+__declspec(section ".init") static void
+__copy_rom_section(void* dst, const void* src, unsigned long size)
 {
 	if (size && (dst != src)) {
 		memcpy(dst, src, size);

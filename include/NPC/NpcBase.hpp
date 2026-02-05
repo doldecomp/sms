@@ -5,9 +5,9 @@
 #include <JSystem/JUtility/JUTNameTab.hpp>
 
 // TODO: should this be here?
-enum EnumNpcAnmKind {};
-enum EnumNpcStopMotionBlendOnOff {};
-enum EnumHitNpcObjectKind {};
+enum EnumNpcAnmKind { };
+enum EnumNpcStopMotionBlendOnOff { };
+enum EnumHitNpcObjectKind { };
 struct TNpcInitInfo { };
 
 class TBaseNPC : public TSpineEnemy {
