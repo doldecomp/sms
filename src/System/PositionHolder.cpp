@@ -1,6 +1,6 @@
 #include <System/PositionHolder.hpp>
 
-TStagePositionInfo* gpPositionHolder;
+TNameRefAryT<TStagePositionInfo>* gpPositionHolder;
 
 void TStagePositionInfo::load(JSUMemoryInputStream& stream)
 {

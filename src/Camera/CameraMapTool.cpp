@@ -1,6 +1,6 @@
 #include <Camera/CameraMapTool.hpp>
 
-TCameraMapTool* gpCamMapToolTable;
+TNameRefAryT<TCameraMapTool>* gpCamMapToolTable;
 
 void TCameraMapTool::load(JSUMemoryInputStream&) { }
 
