@@ -123,10 +123,11 @@ public:
 	           f32 param_10, f32 param_11, f32 param_12, f32 param_13,
 	           s32 param_14, f32 param_15, s32 param_16, f32 param_17,
 	           f32 param_18, f32 param_19, bool param_20)
-	    : MSSetSoundTL<MSSetSound>(
-	        param_1, param_2, this, param_3, param_4, param_5, param_6, param_7,
-	        param_8, param_9, param_10, param_11, param_12, param_13, param_14,
-	        param_15, param_16, param_17, param_18, param_19, param_20)
+	    : MSSetSoundTL<MSSetSound>(param_1, param_2, this, param_3, param_4,
+	                               param_5, param_6, param_7, param_8, param_9,
+	                               param_10, param_11, param_12, param_13,
+	                               param_14, param_15, param_16, param_17,
+	                               param_18, param_19, param_20)
 	{
 	}
 
@@ -144,10 +145,11 @@ public:
 	              f32 param_10, f32 param_11, f32 param_12, f32 param_13,
 	              s32 param_14, f32 param_15, s32 param_16, f32 param_17,
 	              f32 param_18, f32 param_19, bool param_20)
-	    : MSSetSoundTL<MSSetSoundGrp>(
-	        param_1, param_2, this, param_3, param_4, param_5, param_6, param_7,
-	        param_8, param_9, param_10, param_11, param_12, param_13, param_14,
-	        param_15, param_16, param_17, param_18, param_19, param_20)
+	    : MSSetSoundTL<MSSetSoundGrp>(param_1, param_2, this, param_3, param_4,
+	                                  param_5, param_6, param_7, param_8,
+	                                  param_9, param_10, param_11, param_12,
+	                                  param_13, param_14, param_15, param_16,
+	                                  param_17, param_18, param_19, param_20)
 	{
 	}
 

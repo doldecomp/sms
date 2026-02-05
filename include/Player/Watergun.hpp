@@ -21,7 +21,9 @@ public:
 	    , PARAM_INIT(mNozzleAngleYSpeedMax, 0x2000)
 	    , PARAM_INIT(mHoverRotMax, 0x2000)
 	    , PARAM_INIT(mHoverSmooth, 0.05f)
-	    , PARAM_INIT(mChangeSpeed, 0.1f) {};
+	    , PARAM_INIT(mChangeSpeed, 0.1f)
+	{
+	}
 	TParamRT<f32> mRocketHeight;
 	TParamRT<f32> mHoverHeight;
 	TParamRT<f32> mLAngleNormal;

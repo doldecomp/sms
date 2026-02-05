@@ -32,7 +32,7 @@ extern "C" {
 #include <dolphin/os/OSMemory.h>
 
 // private macro, maybe shouldn't be defined here?
-#define OFFSET(addr, align) (((u32)(addr) & ((align)-1)))
+#define OFFSET(addr, align) (((u32)(addr) & ((align) - 1)))
 
 u32 OSGetPhysicalMemSize(void);
 u32 OSGetConsoleSimulatedMemSize(void);
@@ -176,8 +176,8 @@ void* OSUncachedToCached(void* ucaddr);
 	((void*)((u32)(OS_BASE_CACHED + (u32)(paddr))))
 #define OSPhysicalToUncached(paddr)                                            \
 	((void*)((u32)(OS_BASE_UNCACHED + (u32)(paddr))))
-#define OSCachedToPhysical(caddr)    ((u32)((u32)(caddr)-OS_BASE_CACHED))
-#define OSUncachedToPhysical(ucaddr) ((u32)((u32)(ucaddr)-OS_BASE_UNCACHED))
+#define OSCachedToPhysical(caddr)    ((u32)((u32)(caddr) - OS_BASE_CACHED))
+#define OSUncachedToPhysical(ucaddr) ((u32)((u32)(ucaddr) - OS_BASE_UNCACHED))
 #define OSCachedToUncached(caddr)                                              \
 	((void*)((u8*)(caddr) + (OS_BASE_UNCACHED - OS_BASE_CACHED)))
 #define OSUncachedToCached(ucaddr)                                             \

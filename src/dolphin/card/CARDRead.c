@@ -5,7 +5,7 @@
 
 #include "__card.h"
 
-#define TRUNC(n, a) (((u32)(n)) & ~((a)-1))
+#define TRUNC(n, a) (((u32)(n)) & ~((a) - 1))
 
 // functions
 static void ReadCallback(s32 chan, s32 result);

@@ -54,7 +54,6 @@ public:
 	};
 
 	JUTException(JUTDirectPrint*);
-	virtual ~JUTException() {};
 
 	void showFloatSub(int, f32);
 	void showFloat(OSContext*);

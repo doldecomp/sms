@@ -2,8 +2,8 @@
 #include <dolphin/hw_regs.h>
 #include "__os.h"
 
-#define TRUNC(n, a) (((u32)(n)) & ~((a)-1))
-#define ROUND(n, a) (((u32)(n) + (a)-1) & ~((a)-1))
+#define TRUNC(n, a) (((u32)(n)) & ~((a) - 1))
+#define ROUND(n, a) (((u32)(n) + (a) - 1) & ~((a) - 1))
 
 u32 OSGetConsoleSimulatedMemSize() { return __OSSimulatedMemSize; }
 

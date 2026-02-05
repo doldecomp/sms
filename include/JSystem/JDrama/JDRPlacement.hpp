@@ -14,7 +14,7 @@ public:
 	    , unk1C(0)
 	{
 	}
-	virtual ~TPlacement() {};
+
 	virtual void load(JSUMemoryInputStream&);
 
 	// fabricated

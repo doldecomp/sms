@@ -26,7 +26,7 @@ public:
 class TBeamManager : public JDrama::TViewObj {
 public:
 	TBeamManager(const char* name = "ビームマネージャ");
-	virtual ~TBeamManager() {};
+	virtual ~TBeamManager() { };
 
 	void setupMaterial();
 	void drawAllBeam();
