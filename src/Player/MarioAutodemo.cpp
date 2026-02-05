@@ -7,6 +7,7 @@
 #include <System/StageUtil.hpp>
 #include <Player/Watergun.hpp>
 #include <Player/MarioCap.hpp>
+#include <JSystem/JMath.hpp>
 
 BOOL TMario::winDemo()
 {
@@ -228,6 +229,64 @@ BOOL TMario::isUnUsualStageStart()
 			mCap->unk4 |= 2;
 		}
 		changePlayerStatus(0x891, 0, true);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+BOOL TMario::rollingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
+{
+	u8 result = isUnUsualStageStart();
+	if (result != 0) {
+		return TRUE;
+	} else {
+		if (mAction == 0x133f) {
+			unk114 &= ~2;
+			if (warpPos != nullptr) {
+				warpRequest(*warpPos, rotation);
+				mFaceAngle.set(0, DEG2SHORTANGLE(rotation), 0);
+			}
+
+			checkGroundPlane(mPosition.x, mPosition.y + 25.0f, mPosition.z,
+			                 &mFloorPosition.y, &mGroundPlane);
+			unk2BC = mFloorPosition.y;
+			setAnimation(0xC3, 1.0f);
+			changePlayerStatus(0x1337, 0x200, true);
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+BOOL TMario::returnStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation,
+                         bool flag, int playerStatus)
+{
+	if (mAction == 0x133f) {
+		int offsetPlayerStatus = playerStatus << 8;
+		if (flag == TRUE) {
+			unk114 &= ~2;
+			if (warpPos != nullptr) {
+				warpRequest(*warpPos, rotation);
+				mFaceAngle.set(0, DEG2SHORTANGLE(rotation), 0);
+			}
+			checkGroundPlane(mPosition.x, mPosition.y + 25.0f, mPosition.z,
+			                 &mFloorPosition.y, &mGroundPlane);
+			unk2BC = mFloorPosition.y;
+			setAnimation(0xC3, 1.0f);
+			changePlayerStatus(0x1337, offsetPlayerStatus | 2, true);
+		} else {
+			unk114 &= ~2;
+			if (warpPos != nullptr) {
+				f32 flippedAngle = rotation + 180.0f;
+				warpRequest(*warpPos, flippedAngle);
+				mFaceAngle.set(0, DEG2SHORTANGLE(flippedAngle), 0);
+			}
+			checkGroundPlane(mPosition.x, mPosition.y + 25.0f, mPosition.z,
+			                 &mFloorPosition.y, &mGroundPlane);
+			unk2BC = mFloorPosition.y;
+			setAnimation(0xC3, 1.0f);
+			changePlayerStatus(0x1337, offsetPlayerStatus | 1, true);
+		}
 		return TRUE;
 	}
 	return FALSE;

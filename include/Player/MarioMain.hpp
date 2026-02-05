@@ -603,8 +603,8 @@ public:
 	void warpOut();
 	void toroccoStart();
 	void waitingStart(const JGeometry::TVec3<f32>*, f32);
-	void returnStart(const JGeometry::TVec3<f32>*, f32, bool, int);
-	void rollingStart(const JGeometry::TVec3<f32>*, f32);
+	BOOL returnStart(const JGeometry::TVec3<f32>*, f32, bool, int);
+	BOOL rollingStart(const JGeometry::TVec3<f32>*, f32);
 	void startCommon(const JGeometry::TVec3<f32>*, f32);
 	BOOL isUnUsualStageStart();
 	BOOL warpIn();
@@ -1173,7 +1173,9 @@ public:
 
 	/* 0x122 */ u16 unk122;
 
-	/* 0x124 */ char unk124[0x37C - 0x124];
+	/* 0x124 */ char unk124[0x2BC - 0x124];
+	/* 0x2BC */ f32 unk2BC;
+	/* 0x2C0 */ char unk2C0[0x37C - 0x2C0];
 	/* 0x37C */ u16 unk37C;
 	/* 0x37E */ u16 unk37E;
 	/* 0x380 */ u32 unk380;
