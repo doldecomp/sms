@@ -291,3 +291,26 @@ BOOL TMario::returnStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation,
 	}
 	return FALSE;
 }
+
+BOOL TMario::waitingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
+{
+	u8 result = isUnUsualStageStart();
+	if (result != 0) {
+		return TRUE;
+	} else {
+		unk114 &= ~2;
+		if (warpPos != nullptr) {
+			warpRequest(*warpPos, rotation);
+			mFaceAngle.set(0, DEG2SHORTANGLE(rotation), 0);
+		}
+
+		checkGroundPlane(mPosition.x, mPosition.y + 25.0f, mPosition.z,
+		                 &mFloorPosition.y, &mGroundPlane);
+		unk2BC = mFloorPosition.y;
+		setAnimation(0xC3, 1.0f);
+		unk114 |= 2;
+		changePlayerStatus(0xC400201, 0, true);
+		return TRUE;
+	}
+	return FALSE;
+}
