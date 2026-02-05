@@ -5,6 +5,12 @@
 
 class TSMSSmplChara : public JDrama::TCharacter {
 public:
+	TSMSSmplChara()
+	    : mPath(nullptr)
+	{
+		mPath = new char[256];
+	}
+
 	virtual void load(JSUMemoryInputStream&);
 	virtual void* getRes(const char*) const;
 

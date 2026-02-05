@@ -17,6 +17,7 @@
 #include <Strategic/LiveActor.hpp>
 #include <Strategic/Strategy.hpp>
 #include <Strategic/NameRefAry.hpp>
+#include <Strategic/SmplCharacter.hpp>
 #include <GC2D/Talk2D2.hpp>
 #include <GC2D/ScrnFader.hpp>
 #include <GC2D/GCConsole2.hpp>
@@ -63,7 +64,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 		return new TObjChara;
 
 	if (strcmp(name, "SmplChara") == 0)
-		return new JDrama::TSmplChara;
+		return new TSMSSmplChara;
 
 	if (JDrama::TNameRef* ref = getNameRef_BossEnemy(name))
 		return ref;
@@ -119,11 +120,18 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 	if (strcmp(name, "MirrorCamera") == 0)
 		return new TMirrorCamera;
 
-	if (strcmp(name, "Mario") == 0)
-		return new TMario;
+	if (strcmp(name, "Mario") == 0) {
+		TMario* mario   = new TMario;
+		gpMarioOriginal = mario;
+		gpMarioAddress  = (size_t)mario;
+		return mario;
+	}
 
-	if (strcmp(name, "MLight") == 0)
-		return new TLightMario;
+	if (strcmp(name, "MLight") == 0) {
+		TLightMario* light    = new TLightMario;
+		gpLightManager->unk10 = light;
+		return light;
+	}
 
 	if (strcmp(name, "MirrorModelManager") == 0)
 		return new TMirrorModelManager;
@@ -135,10 +143,10 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 		return new TSilhouette;
 
 	if (strcmp(name, "ScrnFader") == 0)
-		return new TSmplFader(JUtility::TColor(0, 0, 0, 0), 60.0f);
+		return new TSmplFader;
 
 	if (strcmp(name, "ShineFader") == 0)
-		return new TShineFader(JUtility::TColor(0, 0, 0, 0), 60.0f);
+		return new TShineFader;
 
 	if (strcmp(name, "IdxGroup") == 0)
 		return new TIdxGroupObj;
@@ -186,34 +194,43 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 		return new TCubeManagerArea("?", "カメラキューブテーブル");
 
 	if (strcmp(name, "CubeMirror") == 0)
-		return new TCubeManagerBase("?", "鏡キューブテーブル");
+		return gpCubeMirror = new TCubeManagerBase("?", "鏡キューブテーブル");
 
 	if (strcmp(name, "CubeWire") == 0)
-		return new TCubeManagerBase("?", "ワイヤーキューブテーブル");
+		return gpCubeWire
+		       = new TCubeManagerBase("?", "ワイヤーキューブテーブル");
 
 	if (strcmp(name, "CubeStream") == 0)
-		return new TCubeManagerBase("?", "流れキューブテーブル");
+		return gpCubeStream = new TCubeManagerBase("?", "流れキューブテーブル");
 
 	if (strcmp(name, "CubeShadow") == 0)
-		return new TCubeManagerBase("?", "影キューブテーブル");
+		return gpCubeShadow = new TCubeManagerBase("?", "影キューブテーブル");
 
 	if (strcmp(name, "CubeArea") == 0)
-		return new TCubeManagerBase("?", "エリアキューブテーブル");
+		return gpCubeArea = new TCubeManagerArea("?", "エリアキューブテーブル");
 
 	if (strcmp(name, "CubeFastA") == 0)
-		return new TCubeManagerFast("?", "高速Ａキューブテーブル");
+		return gpCubeFastA
+		       = new TCubeManagerFast("?", "高速Ａキューブテーブル");
 
 	if (strcmp(name, "CubeFastB") == 0)
-		return new TCubeManagerFast("?", "高速Ｂキューブテーブル");
+		return gpCubeFastB
+		       = new TCubeManagerFast("?", "高速Ｂキューブテーブル");
 
 	if (strcmp(name, "CubeFastC") == 0)
-		return new TCubeManagerFast("?", "高速Ｃキューブテーブル");
+		return gpCubeFastC
+		       = new TCubeManagerFast("?", "高速Ｃキューブテーブル");
 
 	if (strcmp(name, "CubeSoundChange") == 0)
-		return new TCubeManagerBase("?", "サウンド切り替えキューブテーブル");
+		return gpCubeSoundChange
+		       = new TCubeManagerBase("?", "サウンド切り替えキューブテーブル");
 
 	if (strcmp(name, "CubeSoundEffect") == 0)
-		return new TCubeManagerBase("?", "サウンドエフェクトキューブテーブル");
+		return gpCubeSoundEffect = new TCubeManagerBase(
+		           "?", "サウンドエフェクトキューブテーブル");
+
+	if (JDrama::TNameRef* ref = getNameRef_MapObj(name))
+		return ref;
 
 	if (strcmp(name, "MapEventSinkInPollution") == 0)
 		return new TMapEventSinkInPollution;
@@ -260,7 +277,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 		return new TStageEventInfo;
 
 	if (strcmp(name, "CameraMapToolTable") == 0)
-		return new TNameRefAryT<TCameraMapTool>;
+		return gpCamMapToolTable = new TNameRefAryT<TCameraMapTool>;
 
 	if (strcmp(name, "CubeGeneralInfoTable") == 0)
 		return new TNameRefPtrAryT<TCubeGeneralInfo>;
@@ -287,10 +304,10 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 		return new TTalkCursor;
 
 	if (strcmp(name, "TargetArrow") == 0)
-		return new TTargetArrow;
+		return gpTargetArrow = new TTargetArrow;
 
 	if (strcmp(name, "PositionHolder") == 0)
-		return new TNameRefAryT<TStagePositionInfo>;
+		return gpPositionHolder = new TNameRefAryT<TStagePositionInfo>;
 
 	if (strcmp(name, "MarioPositionObj") == 0)
 		return new TMarioPositionObj;
@@ -320,10 +337,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 		return new TJ3DSysFlag;
 
 	if (strcmp(name, "Conductor") == 0)
-		return new TConductor;
+		return gpConductor = new TConductor;
 
-	if (JDrama::TNameRef* ref = JDrama::TNameRefGen::getNameRef(name))
-		return ref;
-
-	return nullptr;
+	return JDrama::TNameRefGen::getNameRef(name);
 }

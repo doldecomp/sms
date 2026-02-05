@@ -13,7 +13,11 @@ public:
 	}
 
 	// fabricated
-	TFlagT& operator=(const TFlagT<T>& other) { set(other.get()); }
+	TFlagT& operator=(const TFlagT<T>& other)
+	{
+		set(other.get());
+		return *this;
+	}
 
 	void set(T v) { mValue = v; }
 	T get() const { return mValue; }

@@ -13,12 +13,12 @@ extern TSilhouette* gpSilhouetteManager;
 
 class TSilhouette : public JDrama::TViewObj {
 public:
-	TSilhouette();
+	TSilhouette() { }
 
 	void calcSilhouetteBorder();
 	void setting(MtxPtr);
 
-	virtual ~TSilhouette() {};
+	virtual ~TSilhouette() { };
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);

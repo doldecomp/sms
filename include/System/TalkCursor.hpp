@@ -7,8 +7,11 @@ class TBaseNPC;
 
 class TTalkCursor : public JDrama::TViewObj {
 public:
-	void loadAfter();
-	void perform(u32, JDrama::TGraphics*);
+	TTalkCursor() { }
+
+	virtual void loadAfter();
+	virtual void perform(u32, JDrama::TGraphics*);
+
 	void associateNPC(TBaseNPC*);
 };
 
