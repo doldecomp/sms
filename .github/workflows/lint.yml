@@ -27,9 +27,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - uses: jidicula/clang-format-action@v4.14.0
+    - uses: jidicula/clang-format-action@v4.16.0
       with:
-        clang-format-version: '17'
+        clang-format-version: '21'
         fallback-style: 'none'
 
     # no tidy for now I'm too lazy sorry
