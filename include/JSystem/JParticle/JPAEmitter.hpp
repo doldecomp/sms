@@ -4,6 +4,7 @@
 #include <JSystem/JParticle/JPADraw.hpp>
 #include <JSystem/JParticle/JPACallback.hpp>
 #include <JSystem/JParticle/JPAField.hpp>
+#include <JSystem/JParticle/JPAMath.hpp>
 #include <JSystem/JMath.hpp>
 #include <JSystem/JGeometry.hpp>
 #include <JSystem/JSupport/JSUList.hpp>
@@ -129,10 +130,42 @@ public:
 	u32 getUnk172() { return unk172; }
 
 	// fabricated
-	inline void setScale(const JGeometry::TVec3<f32>& scale)
+	void setScale(const JGeometry::TVec3<f32>& scale)
 	{
 		unk154.set(scale);
 		unk174.set(scale);
+	}
+
+	void setRotation(s16 x, s16 y, s16 z)
+	{
+		unk16C.x = x;
+		unk16C.y = y;
+		unk16C.z = z;
+		JPAGetXYZRotateMtx(unk16C.x, unk16C.y, unk16C.z, unk124);
+	}
+
+	void setParamColor(u8 r, u8 g, u8 b)
+	{
+		unk180.r = r;
+		unk180.g = g;
+		unk180.b = b;
+	}
+
+	void setEnviColor(u8 r, u8 g, u8 b)
+	{
+		unk180.r = r;
+		unk180.g = g;
+		unk180.b = b;
+	}
+
+	bool checkUnk11C(u32 flag) const { return unk11C & flag ? true : false; }
+	bool isThing() const
+	{
+		if (checkUnk11C(0x8)
+		    && mParticleList.getNumLinks() + mChildParticleList.getNumLinks()
+		           == 0)
+			return true;
+		return false;
 	}
 
 public:
@@ -150,7 +183,7 @@ public:
 	/* 0x114 */ JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>* unk114;
 	/* 0x118 */ JPADataBlockLinkInfo* mEmitterDataBlockInfo;
 	/* 0x11C */ u32 unk11C;
-	/* 0x120 */ char unk120[4];
+	/* 0x120 */ void* unk120;
 	/* 0x124 */ Mtx unk124;
 
 	/* 0x154 */ JGeometry::TVec3<f32> unk154;
