@@ -110,10 +110,10 @@ BOOL TMario::warpIn()
 			}
 			TModelGate* gate  = (TModelGate*)mHolder;
 			MtxPtr nodeMatrix = gate->unk78->getModel()->getAnmMtx(gate->unk72);
-			unk45C.x          = nodeMatrix[0][3] - gatePosOffset.x;
-			unk45C.y          = nodeMatrix[1][3] - gatePosOffset.y;
-			unk45C.z          = nodeMatrix[2][3] - gatePosOffset.z;
-			unk45C.normalize();
+			mWarpInDir.x      = nodeMatrix[0][3] - gatePosOffset.x;
+			mWarpInDir.y      = nodeMatrix[1][3] - gatePosOffset.y;
+			mWarpInDir.z      = nodeMatrix[2][3] - gatePosOffset.z;
+			mWarpInDir.normalize();
 			warpInLight();
 
 			u8 nextStage   = 2;
@@ -143,7 +143,7 @@ BOOL TMario::warpIn()
 		f32 dist
 		    = mAutoDemoParams.mWarpInTremble.get() - marioDist.length() * 0.1f;
 		if (dist > 0.0f) {
-			unk53C->clash(dist);
+			mTrembleModelEffect->clash(dist);
 		}
 
 		if (0x78 < mActionTimer) {
@@ -197,15 +197,15 @@ BOOL TMario::isUnUsualStageStart()
 	    && (gpMarDirector->unk7D == 0 || gpMarDirector->unk7D == 1)) {
 		changePlayerStatus(0x800447, 0, true);
 		unk114 |= 2;
-		if (unk3FC != nullptr) {
-			unk3FC->setBckFromIndex(0);
-			unk3FC->getFrameCtrl(0)->setSpeed(0.5f);
-			unk3FC->getFrameCtrl(0)->setFrame(0.0f);
+		if (mPinaRail != nullptr) {
+			mPinaRail->setBckFromIndex(0);
+			mPinaRail->getFrameCtrl(0)->setSpeed(0.5f);
+			mPinaRail->getFrameCtrl(0)->setFrame(0.0f);
 		}
-		if (unk400 != nullptr) {
-			unk400->setBckFromIndex(0);
-			unk400->getFrameCtrl(0)->setSpeed(0.5f);
-			unk400->getFrameCtrl(0)->setFrame(0.0f);
+		if (mKoopaRail != nullptr) {
+			mKoopaRail->setBckFromIndex(0);
+			mKoopaRail->getFrameCtrl(0)->setSpeed(0.5f);
+			mKoopaRail->getFrameCtrl(0)->setFrame(0.0f);
 		}
 		return TRUE;
 	}
@@ -321,15 +321,15 @@ BOOL TMario::toroccoStart()
 {
 	changePlayerStatus(0x800447, 0, true);
 	unk114 |= 2;
-	if (unk3FC != nullptr) {
-		unk3FC->setBckFromIndex(0);
-		unk3FC->getFrameCtrl(0)->setSpeed(0.5f);
-		unk3FC->getFrameCtrl(0)->setFrame(0.0f);
+	if (mPinaRail != nullptr) {
+		mPinaRail->setBckFromIndex(0);
+		mPinaRail->getFrameCtrl(0)->setSpeed(0.5f);
+		mPinaRail->getFrameCtrl(0)->setFrame(0.0f);
 	}
-	if (unk400 != nullptr) {
-		unk400->setBckFromIndex(0);
-		unk400->getFrameCtrl(0)->setSpeed(0.5f);
-		unk400->getFrameCtrl(0)->setFrame(0.0f);
+	if (mKoopaRail != nullptr) {
+		mKoopaRail->setBckFromIndex(0);
+		mKoopaRail->getFrameCtrl(0)->setSpeed(0.5f);
+		mKoopaRail->getFrameCtrl(0)->setFrame(0.0f);
 	}
 	return TRUE;
 }
@@ -423,25 +423,19 @@ BOOL TMario::electricDamage()
 		mActionTimer += 1;
 		startVoice(0x7852);
 
-		if (unk53C != nullptr) {
-			unk53C->tremble(5.0f, 2.0f, 0.99f, 600);
+		if (mTrembleModelEffect != nullptr) {
+			mTrembleModelEffect->tremble(5.0f, 2.0f, 0.99f, 600);
 		}
 
 		elecEndEffect();
 
-		unk484.x = mPosition.x + JMASSin(mFaceAngle.y);
-		unk484.z = mPosition.z + JMASCos(mFaceAngle.y);
+		mFloorHitActor.mPosition.x = mPosition.x + JMASSin(mFaceAngle.y);
+		mFloorHitActor.mPosition.z = mPosition.z + JMASCos(mFaceAngle.y);
 
-		// This matches, but i am pretty certain it is wrong
-		// damageExec((THitActor*)&unk474, 0, 3,
-		//            mDmgParamsGraffitoElec.mWaterEmit.get(),
-		//            mDmgParamsGraffitoElec.mMinSpeed.get(),
-		//            mDmgParamsGraffitoElec.mMotor.get(), 0.0f, 0x3C);
-		// I am pretty certain this is the correct parameters to be passed
-		damageExec((THitActor*)&unk474, 0, 3,
-		           mDmgParamsGraffitoElec.mDamage.get(),
+		damageExec(&mFloorHitActor, 0, 3,
 		           mDmgParamsGraffitoElec.mWaterEmit.get(),
-		           mDmgParamsGraffitoElec.mMinSpeed.get(), 0.0f, 0x3C);
+		           mDmgParamsGraffitoElec.mMinSpeed.get(),
+		           mDmgParamsGraffitoElec.mMotor.get(), 0.0f, 0x3C);
 
 		return changePlayerStatus(0xC400201, 0, true);
 	}

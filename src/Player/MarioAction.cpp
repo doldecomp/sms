@@ -7,7 +7,7 @@ BOOL TMario::taking()
 	}
 
 	setAnimation(0x6B, 1.0f);
-	if (unk384 != nullptr && unk3A8->getFrameCtrl()->checkPass(11.0f)) {
+	if (unk384 != nullptr && mModel->getFrameCtrl()->checkPass(11.0f)) {
 		if (unk384->receiveMessage(this, 0x4) == true) {
 			startVoice(0x788F);
 			mHeldObject = (TTakeActor*)unk384;
@@ -76,7 +76,7 @@ BOOL TMario::actnMain()
 		} else {
 			stopCommon(0x6E, 0xC400201);
 			if (mHeldObject != nullptr
-			    && unk3A8->getFrameCtrl()->checkPass(20.0f)) {
+			    && mModel->getFrameCtrl()->checkPass(20.0f)) {
 				mHeldObject->receiveMessage(this, 0x6);
 				mHeldObject = nullptr;
 			}
