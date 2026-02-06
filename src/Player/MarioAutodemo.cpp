@@ -9,6 +9,7 @@
 #include <Player/MarioCap.hpp>
 #include <JSystem/JMath.hpp>
 
+#pragma dont_inline on
 BOOL TMario::winDemo()
 {
 	switch (mActionState) {
@@ -32,11 +33,13 @@ BOOL TMario::winDemo()
 
 	return FALSE;
 }
+#pragma dont_inline off
 
 BOOL TMario::readBillboard()
 {
 	// Missing stack space
 	// volatile u32 padding[16];
+
 	TBaseNPC* talkingNpc = gpMarDirector->unkA0;
 	switch (mActionState) {
 	case 0:
@@ -332,7 +335,7 @@ BOOL TMario::toroccoStart()
 	return TRUE;
 }
 
-bool TMario::warpOut()
+BOOL TMario::warpOut()
 {
 	// Missing stack space
 	// volatile u32 padding[4];
@@ -400,4 +403,165 @@ bool TMario::warpOut()
 		break;
 	}
 	return false;
+}
+
+BOOL TMario::electricDamage()
+{
+	if (mActionState == 0) {
+		startVoice(0x7844);
+		setAnimation(0x7A, 1.0f);
+		decHP(mDmgParamsGraffitoElec.mDamage.get());
+		rumbleStart(0x16, 1);
+		mActionState = 1;
+	}
+
+	elecEffect();
+	mActionTimer += 1;
+	if (mActionTimer > 0x78) {
+
+		J3DFrameCtrl* frameCtrl = getMotionFrameCtrl();
+		frameCtrl->setFrame(0.0f);
+		mActionTimer += 1;
+		startVoice(0x7852);
+
+		if (unk53C != nullptr) {
+			unk53C->tremble(5.0f, 2.0f, 0.99f, 600);
+		}
+
+		elecEndEffect();
+
+		unk484.x = mPosition.x + JMASSin(mFaceAngle.y);
+		unk484.z = mPosition.z + JMASCos(mFaceAngle.y);
+
+		// This matches, but i am pretty certain it is wrong
+		// damageExec((THitActor*)&unk474, 0, 3,
+		//            mDmgParamsGraffitoElec.mWaterEmit.get(),
+		//            mDmgParamsGraffitoElec.mMinSpeed.get(),
+		//            mDmgParamsGraffitoElec.mMotor.get(), 0.0f, 0x3C);
+		// I am pretty certain this is the correct parameters to be passed
+		damageExec((THitActor*)&unk474, 0, 3,
+		           mDmgParamsGraffitoElec.mDamage.get(),
+		           mDmgParamsGraffitoElec.mWaterEmit.get(),
+		           mDmgParamsGraffitoElec.mMinSpeed.get(), 0.0f, 0x3C);
+
+		return changePlayerStatus(0xC400201, 0, true);
+	}
+	return false;
+}
+
+BOOL TMario::footDowning()
+{
+	switch (mActionArg) {
+	case 0:
+		setAnimation(0x125, 1.0f);
+		if ((mInput & 2) != 0) {
+			mActionArg = 2;
+		}
+		break;
+	case 1:
+		setAnimation(0x123, 1.0f);
+		if ((mInput & 2) != 0) {
+			mActionArg = 3;
+		}
+		break;
+	case 2:
+		setAnimation(0x126, 1.0f);
+		if (isLast1AnimeFrame()) {
+			return changePlayerStatus(0xC400201, 0, false);
+		}
+		break;
+	case 3:
+		setAnimation(0x124, 1.0f);
+		J3DFrameCtrl* frameCtrl = getMotionFrameCtrl();
+		if (frameCtrl->checkPass(24.0f) != FALSE) {
+			sinkInSandEffect();
+		}
+		if (isLast1AnimeFrame()) {
+			return changePlayerStatus(0xC400201, 0, false);
+		}
+		break;
+	}
+	stopProcess();
+	return false;
+}
+
+BOOL TMario::demoMain()
+{
+	// Missing stack space
+	// volatile u32 padding[10];
+
+	BOOL result = FALSE;
+	switch (mAction) {
+	case 0x1302:
+		result = winDemo();
+		break;
+	case 0x10001308:
+		result = readBillboard();
+		break;
+	case 0x1310:
+		setAnimation(0x122, 1.0f);
+		result = FALSE;
+		break;
+	case 0x21313:
+		setAnimation(0x79, 1.0f);
+		result = FALSE;
+		break;
+	case 0x1320:
+	case 0x1321:
+		// Probably inlined?
+		if (mActionState == 0) {
+			startVoice(0x7884);
+			mActionState = 1;
+		}
+		stopProcess();
+		if (isLast1AnimeFrame()) {
+			if ((unk0FA == 0x5f) || (unk0FA == 0x60) || (unk0FA == 0xe9)) {
+				mPosition.x += JMASSin(mFaceAngle.y) * 150.0f;
+				mPosition.z += JMASCos(mFaceAngle.y) * 150.0f;
+			} else {
+				mPosition.x -= JMASSin(mFaceAngle.y) * 150.0f;
+				mPosition.z -= JMASCos(mFaceAngle.y) * 150.0f;
+			}
+			return changePlayerStatus(0xC400201, 0, true);
+		}
+		result = FALSE;
+		break;
+	case 0x10001123:
+		setPlayerVelocity(0.0f);
+		setAnimation(0xE8, 1.0f);
+		if (jumpProcess(0) == TRUE) {
+			changePlayerStatus(0x20000 + 0x467, 0, true);
+		}
+		result = FALSE;
+		break;
+	case 0x1000192a:
+		setPlayerVelocity(0.0f);
+		setAnimation(0x56, 1.0f);
+		if (jumpProcess(0) == TRUE) {
+			changePlayerStatus(0x20000 + 0x467, 0, true);
+		}
+		result = FALSE;
+		break;
+	case 0x1337:
+		result = warpOut();
+		break;
+	case 0x1336:
+		result = warpIn();
+		break;
+	case 0x20338:
+		result = electricDamage();
+		break;
+	case 0x2033c:
+		result = footDowning();
+		break;
+	case 0x133E:
+		stopProcess();
+		result = FALSE;
+		break;
+	case 0x133F:
+		unk114 &= ~2;
+		result = FALSE;
+		break;
+	}
+	return result;
 }

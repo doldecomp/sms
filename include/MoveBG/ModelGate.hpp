@@ -2,6 +2,7 @@
 #define MOVE_BG_MODEL_GATE
 
 #include <Strategic/TakeActor.hpp>
+#include <M3DUtil/MActor.hpp>
 
 class TModelGate : public TTakeActor {
 public:

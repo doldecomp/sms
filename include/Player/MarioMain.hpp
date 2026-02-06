@@ -585,8 +585,8 @@ public:
 	virtual void playerControl(JDrama::TGraphics*);
 	virtual void initModel();
 	virtual void drawSpecial(JDrama::TGraphics*);
-	virtual void checkCollision();
 	virtual void damageExec(THitActor*, int, int, int, f32, int, f32, s16);
+	virtual void checkCollision();
 	virtual void getVoiceStatus();
 
 	bool actnMain();
@@ -595,12 +595,12 @@ public:
 	void catchLost();
 	void takePose();
 	bool taking();
-	void demoMain();
+	BOOL demoMain();
 	void disappear();
 	void nomotion();
-	void footDowning();
-	void electricDamage();
-	bool warpOut();
+	BOOL footDowning();
+	BOOL electricDamage();
+	BOOL warpOut();
 	BOOL toroccoStart();
 	BOOL waitingStart(const JGeometry::TVec3<f32>*, f32);
 	BOOL returnStart(const JGeometry::TVec3<f32>*, f32, bool, int);
@@ -780,7 +780,7 @@ public:
 	bool changePlayerDropping(u32, u32);
 	bool changePlayerJumping(u32, u32);
 	void changePlayerTriJump();
-	bool changePlayerStatus(u32, u32, bool);
+	BOOL changePlayerStatus(u32, u32, bool);
 	void throwMario(const JGeometry::TVec3<f32>&, f32);
 	void setStatusToRunning(u32, u32);
 	void setStatusToJumping(u32, u32);
@@ -1246,13 +1246,11 @@ public:
 	/* 0x468 */ f32 unk468;
 	/* 0x46C */ u32 unk46C;
 	/* 0x470 */ u32 unk470;
-	/* 0x474 */ u32 unk474;
+	/* 0x474 */ THitActor* unk474;
 	/* 0x478 */ u32 unk478;
 	/* 0x47C */ u32 unk47C;
 	/* 0x480 */ u32 unk480;
-	/* 0x484 */ u32 unk484;
-	/* 0x488 */ u32 unk488;
-	/* 0x48C */ u32 unk48C;
+	/* 0x484 */ JGeometry::TVec3<f32> unk484;
 	/* 0x490 */ u32 unk490;
 	/* 0x494 */ u32 unk494;
 	/* 0x498 */ u32 unk498;
