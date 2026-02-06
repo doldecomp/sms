@@ -86,10 +86,10 @@ public:
 	/* 0x8C */ J3DMaterialTable* unk8C;
 	/* 0x90 */ J3DMaterialTable* unk90;
 	/* 0x94 */ J3DMaterialTable* unk94;
-	/* 0x98 */ SDLModelData* unk98;
-	/* 0x9C */ MActor* unk9C;
-	/* 0xA0 */ MActor* unkA0;
-	/* 0xA4 */ MActor* unkA4;
+	/* 0x98 */ SDLModelData* mSurfGessoModelData;
+	/* 0x9C */ MActor* mRedGesso;
+	/* 0xA0 */ MActor* mYellowGesso;
+	/* 0xA4 */ MActor* mGreenGesso;
 	/* 0xA8 */ GXColorS10 unkA8;
 	/* 0xB0 */ GXColorS10 unkB0;
 	/* 0xB8 */ GXColorS10 unkB8;

@@ -116,13 +116,17 @@ void TMapObjManager::load(JSUMemoryInputStream& stream)
 	if ((gpMarDirector->getCurrentMap() == 3
 	     && (gpMarDirector->unk7D == 1 || gpMarDirector->unk7D == 5))
 	    || gpMarDirector->getCurrentMap() == 0x1E) {
-		unk98 = SMS_MakeSDLModelData("/scene/mapObj/surfgeso.bmd", 0x10220000);
-		unk9C = SMS_MakeMActorFromSDLModelData(unk98, getMActorAnmData(), 3);
-		unkA0 = SMS_MakeMActorFromSDLModelData(unk98, getMActorAnmData(), 3);
-		unkA4 = SMS_MakeMActorFromSDLModelData(unk98, getMActorAnmData(), 3);
-		TMapObjBase::initPacketMatColor(unk9C->unk4, GX_TEVREG1, &unkA8);
-		TMapObjBase::initPacketMatColor(unkA0->unk4, GX_TEVREG1, &unkB0);
-		TMapObjBase::initPacketMatColor(unkA4->unk4, GX_TEVREG1, &unkB8);
+		mSurfGessoModelData
+		    = SMS_MakeSDLModelData("/scene/mapObj/surfgeso.bmd", 0x10220000);
+		mRedGesso    = SMS_MakeMActorFromSDLModelData(mSurfGessoModelData,
+		                                              getMActorAnmData(), 3);
+		mYellowGesso = SMS_MakeMActorFromSDLModelData(mSurfGessoModelData,
+		                                              getMActorAnmData(), 3);
+		mGreenGesso  = SMS_MakeMActorFromSDLModelData(mSurfGessoModelData,
+		                                              getMActorAnmData(), 3);
+		TMapObjBase::initPacketMatColor(mRedGesso->unk4, GX_TEVREG1, &unkA8);
+		TMapObjBase::initPacketMatColor(mYellowGesso->unk4, GX_TEVREG1, &unkB0);
+		TMapObjBase::initPacketMatColor(mGreenGesso->unk4, GX_TEVREG1, &unkB8);
 	}
 
 	unkC0 = loadMatTable("/scene/mapObj/SandBombBase.bmt");
@@ -159,10 +163,10 @@ TMapObjManager::TMapObjManager(const char* name)
     , unk8C(nullptr)
     , unk90(nullptr)
     , unk94(nullptr)
-    , unk98(nullptr)
-    , unk9C(nullptr)
-    , unkA0(nullptr)
-    , unkA4(nullptr)
+    , mSurfGessoModelData(nullptr)
+    , mRedGesso(nullptr)
+    , mYellowGesso(nullptr)
+    , mGreenGesso(nullptr)
     , unkC0(nullptr)
     , unkC4(nullptr)
     , unkC8(nullptr)
