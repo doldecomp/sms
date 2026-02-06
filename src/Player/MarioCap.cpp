@@ -12,7 +12,7 @@ const char cDirtyTexName[]  = "H_ma_rak_dummy";
 TMarioCap::TMarioCap(TMario* mario)
 {
 	// Unused stack space
-	volatile u32 padding[51];
+	// volatile u32 padding[51];
 	mMario = mario;
 
 	J3DModelData* maCap1ModelData = J3DModelLoaderDataBase::load(

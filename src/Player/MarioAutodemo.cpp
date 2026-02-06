@@ -97,7 +97,7 @@ BOOL TMario::jumpingDemoCommon(u32 playerStatus, int animationId, f32 velocity)
 BOOL TMario::warpIn()
 {
 	// Missing stack space
-	// volatile u32 padding[15];
+	// volatile u32 padding[10];
 	mActionTimer += 1;
 	const JGeometry::TVec3<f32>& gatePosOffset = ((TModelGate*)mHolder)->unkAC;
 	JGeometry::TVec3<f32> holderPosOffset(((TModelGate*)mHolder)->unkAC);
