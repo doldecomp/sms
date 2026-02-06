@@ -97,7 +97,7 @@ BOOL TMario::jumpingDemoCommon(u32 playerStatus, int animationId, f32 velocity)
 BOOL TMario::warpIn()
 {
 	// Missing stack space
-	// volatile u32 padding[15];
+	volatile u32 padding[10];
 	mActionTimer += 1;
 	const JGeometry::TVec3<f32>& gatePosOffset = ((TModelGate*)mHolder)->unkAC;
 	JGeometry::TVec3<f32> holderPosOffset(((TModelGate*)mHolder)->unkAC);
@@ -109,11 +109,10 @@ BOOL TMario::warpIn()
 				getOffYoshi(true);
 			}
 			TModelGate* gate  = (TModelGate*)mHolder;
-			u16 gateUnk72     = gate->unk72;
-			Mtx* nodeMatrices = gate->unk78->getModel()->mNodeMatrices;
-			unk45C.x          = nodeMatrices[gateUnk72][0][3] - gatePosOffset.x;
-			unk45C.y          = nodeMatrices[gateUnk72][1][3] - gatePosOffset.y;
-			unk45C.z          = nodeMatrices[gateUnk72][2][3] - gatePosOffset.z;
+			MtxPtr nodeMatrix = gate->unk78->getModel()->getAnmMtx(gate->unk72);
+			unk45C.x          = nodeMatrix[0][3] - gatePosOffset.x;
+			unk45C.y          = nodeMatrix[1][3] - gatePosOffset.y;
+			unk45C.z          = nodeMatrix[2][3] - gatePosOffset.z;
 			unk45C.normalize();
 			warpInLight();
 
