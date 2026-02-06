@@ -66,7 +66,7 @@ public:
 	/* 0x40 */ TDeParams mParams;
 };
 
-void TMtxTimeLagCallBack(J3DNode*, int);
+int TMtxTimeLagCallBack(J3DNode*, int);
 
 class TMtxSwingRZ : public TMtxEffectBase {
 public:
@@ -105,7 +105,7 @@ public:
 	/* 0x20 */ TDeParams mParams;
 };
 
-void TMtxSwingRZCallBack(J3DNode*, int);
+int TMtxSwingRZCallBack(J3DNode*, int);
 
 class TMtxSwingRZReverseXZ : public TMtxSwingRZ {
 public:
@@ -113,18 +113,36 @@ public:
 	    : TMtxSwingRZ(prm)
 	{
 	}
-
 	void calc(MtxPtr);
 };
 
-void TMtxSwingRZReverseXZCallBack(J3DNode*, int);
+int TMtxSwingRZReverseXZCallBack(J3DNode*, int);
 
 class TMultiMtxEffect {
 public:
 	void setup(J3DModel*, const char*);
 	void setUserArea();
+
+	// Unused
 	void add();
+
+	// Unused
 	void remove();
+
+	// Fabricated
+	void flagOn()
+	{
+		for (int i = 0; i < mNumBones; ++i) {
+			mMtxEffectTbl[i]->mFlags |= 1;
+		}
+	}
+	// Fabricated
+	void flagOff()
+	{
+		for (int i = 0; i < mNumBones; ++i) {
+			mMtxEffectTbl[i]->mFlags &= ~1;
+		}
+	}
 
 	/* 0x00 */ u16 mNumBones;      // number of bones to be manipulated
 	/* 0x04 */ u8* mMtxEffectType; // array of TMtxEffectBase types
