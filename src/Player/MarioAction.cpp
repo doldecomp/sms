@@ -1,6 +1,6 @@
 #include <Player/MarioMain.hpp>
 
-bool TMario::taking()
+BOOL TMario::taking()
 {
 	if ((mInput & 4) != 0) {
 		return changePlayerDropping(0x88C, 0);
@@ -22,15 +22,15 @@ bool TMario::taking()
 		return changePlayerStatus(0xC400201, 0, false);
 	} else {
 		waitProcess();
-		return false;
+		return FALSE;
 	}
 }
 
-bool TMario::actnMain()
+BOOL TMario::actnMain()
 {
 	u32 action = mAction;
 
-	bool result = false;
+	BOOL result = FALSE;
 
 	// TODO: Action enum
 	switch (action) {
@@ -46,14 +46,14 @@ bool TMario::actnMain()
 				result = changePlayerStatus(0xC400201, 0, false);
 			} else {
 				stopCommon(0x110, 0xC400201);
-				result = false;
+				result = FALSE;
 			}
 		}
 		break;
 	case 0x386:
 		if ((mInput & 2) != 0) {
 			if (considerRotateJumpStart()) {
-				result = true;
+				result = TRUE;
 			} else {
 				result = changePlayerJumping(0x2000880, false);
 			}
@@ -65,7 +65,7 @@ bool TMario::actnMain()
 					result = changePlayerStatus(0x50, 0, false);
 				} else {
 					stopCommon(0x5A, 0xC400201);
-					result = false;
+					result = FALSE;
 				}
 			}
 		}
@@ -80,7 +80,7 @@ bool TMario::actnMain()
 				mHeldObject->receiveMessage(this, 0x6);
 				mHeldObject = nullptr;
 			}
-			result = false;
+			result = FALSE;
 		}
 		break;
 	case 0x80000588:
@@ -89,7 +89,7 @@ bool TMario::actnMain()
 		} else {
 			stopCommon(0x65, 0xC400201);
 			checkThrowObject();
-			result = false;
+			result = FALSE;
 		}
 		break;
 	}
