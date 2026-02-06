@@ -589,12 +589,12 @@ public:
 	virtual void checkCollision();
 	virtual void getVoiceStatus();
 
-	bool actnMain();
+	BOOL actnMain();
 	void pitching();
 	void putting();
 	void catchLost();
 	void takePose();
-	bool taking();
+	BOOL taking();
 	BOOL demoMain();
 	void disappear();
 	void nomotion();
@@ -777,8 +777,8 @@ public:
 	void checkGraffitoDamage();
 	void makeGraffitoDamage(const TMario::TEParams&);
 	void checkAllMotions();
-	bool changePlayerDropping(u32, u32);
-	bool changePlayerJumping(u32, u32);
+	BOOL changePlayerDropping(u32, u32);
+	BOOL changePlayerJumping(u32, u32);
 	void changePlayerTriJump();
 	BOOL changePlayerStatus(u32, u32, bool);
 	void throwMario(const JGeometry::TVec3<f32>&, f32);
