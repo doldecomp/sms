@@ -3,7 +3,8 @@
 
 #include <dolphin/mtx.h>
 
-#define DEG2SHORTANGLE(deg) ((deg) * (65536.0f / 360.0f))
+#define DEG2SHORTANGLE(deg)   ((deg) * (65536.0f / 360.0f))
+#define SHORTANGLE2DEG(angle) ((angle) * (360.0f / 65536.0f))
 
 namespace JMath {
 
