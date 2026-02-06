@@ -11,6 +11,8 @@
 #include <M3DUtil/M3UModelMario.hpp>
 #include <Player/Yoshi.hpp>
 #include <MarioUtil/DrawUtil.hpp>
+#include <MSound/MAnmSound.hpp>
+#include <MarioUtil/MtxUtil.hpp>
 
 class TLiveActor;
 class TWaterGun;
@@ -41,11 +43,38 @@ enum E_MARIO_FLAG {
 	MARIO_FLAG_IS_PERFORMING       = (1 << 21),
 };
 
+enum E_MARIO_RAIL_TYPE {
+	MARIO_RAIL_TYPE_PINNA_RAIL = 0,
+	MARIO_RAIL_TYPE_KOOPA_RAIL = 1,
+
+	MARIO_RAIL_TYPE_MAX
+};
+
 struct TRidingInfo {
 	const TLiveActor* unk0;
 	Vec localPos;
 	f32 unk10;
 	// maybe more
+};
+
+struct TMarioSoundValues {
+	/* 0x00 */ int unk00;
+	/* 0x04 */ int unk04;
+	/* 0x08 */ int unk08;
+	/* 0x0C */ int unk0C;
+	/* 0x10 */ int unk10;
+	/* 0x14 */ int unk14;
+	/* 0x18 */ u8 unk18;
+	/* 0x1C */ int unk1C;
+	/* 0x20 */ u8 unk20;
+	/* 0x22 */ u16 unk22;
+	/* 0x24 */ u8 unk24;
+	/* 0x26 */ u16 unk26;
+	/* 0x28 */ u8 unk28;
+	/* 0x29 */ u8 unk29;
+	/* 0x2A */ u8 unk2A;
+	/* 0x2B */ u8 unk2B;
+	/* 0x2C */ u8 unk2C;
 };
 
 class TMarioGamePad;
@@ -585,7 +614,10 @@ public:
 	virtual void playerControl(JDrama::TGraphics*);
 	virtual void initModel();
 	virtual void drawSpecial(JDrama::TGraphics*);
-	virtual void damageExec(THitActor*, int, int, int, f32, int, f32, s16);
+	virtual void damageExec(THitActor* hittingActor, int damage,
+	                        int damageAnimType, int waterEmit,
+	                        f32 knockbackSpeed, int rumbleFrames,
+	                        f32 pollutionAmount, s16 invincibilityFrames);
 	virtual void checkCollision();
 	virtual void getVoiceStatus();
 
@@ -1191,15 +1223,15 @@ public:
 	/* 0x39C */ u32 unk39C;
 	/* 0x3A0 */ u32 unk3A0;
 	/* 0x3A4 */ u32 unk3A4;
-	/* 0x3A8 */ M3UModelMario* unk3A8; // Full model data
-	/* 0x3AC */ J3DModelData* unk3AC;  // Body model data
-	/* 0x3B0 */ J3DModel* unk3B0;      // R Hand 2nd model
-	/* 0x3B4 */ J3DModel* unk3B4;      // L Hand 2nd model
-	/* 0x3B8 */ J3DModel* unk3B8;      // R Hand 3nd model
-	/* 0x3BC */ J3DModel* unk3BC;      // L Hand 3nd model
-	/* 0x3C0 */ J3DModel* unk3C0;      // R Hand 4nd model
+	/* 0x3A8 */ M3UModelMario* mModel;        // Full model data
+	/* 0x3AC */ J3DModelData* mBodyModelData; // Body model data
+	/* 0x3B0 */ J3DModel* mRHand2ndModel;     // R Hand 2nd model
+	/* 0x3B4 */ J3DModel* mLHand2ndModel;     // L Hand 2nd model
+	/* 0x3B8 */ J3DModel* mRHand3ndModel;     // R Hand 3nd model
+	/* 0x3BC */ J3DModel* mLHand3ndModel;     // L Hand 3nd model
+	/* 0x3C0 */ J3DModel* mRHand4ndModel;     // R Hand 4nd model
 	/* 0x3C4 */ u8 unk3C4;
-	/* 0x3C5 */ u8 unk3C5[12]; // Array of bone ids
+	/* 0x3C5 */ u8 mBoneIDs[12]; // Array of bone ids
 	/* 0x3D1 */ u8 unk3D1;
 	/* 0x3D2 */ u8 unk3D2;
 	/* 0x3D3 */ u8 unk3D3;
@@ -1215,74 +1247,67 @@ public:
 	/* 0x3EC */ u32 unk3EC;
 
 	/* 0x3F0 */ TYoshi* mYoshi;
-
-	/* 0x3F4 */ u32 unk3F4;
-	/* 0x3F8 */ u32 unk3F8;
-	/* 0x3FC */ MActor* unk3FC; // Pinna_rail model actor
-	/* 0x400 */ MActor* unk400; // Koopa_rail model actor
-	/* 0x404 */ u32 unk404;
-	/* 0x408 */ u32 unk408;
-	/* 0x40C */ u32 unk40C;
-	/* 0x410 */ u32 unk410;
-	/* 0x414 */ u32 unk414;
-	/* 0x418 */ u32 unk418;
-	/* 0x41C */ u32 unk41C;
-	/* 0x420 */ u32 unk420;
-	/* 0x424 */ u32 unk424;
-	/* 0x428 */ u32 unk428;
-	/* 0x42C */ u32 unk42C;
-	/* 0x430 */ u32 unk430;
-	/* 0x434 */ u32 unk434;
-	/* 0x438 */ u32 unk438;
-	/* 0x43C */ u32 unk43C;
-	/* 0x440 */ u32 unk440;
-	/* 0x444 */ u32 unk444;
-	/* 0x448 */ u32 unk448;
-	/* 0x44C */ u32 unk44C;
-	/* 0x450 */ u32 unk450;
-	/* 0x454 */ u32 unk454;
-	/* 0x458 */ u32 unk458;
-	/* 0x45C */ JGeometry::TVec3<f32> unk45C;
+	/* 0x3F4 */ MActor* mSurfGesso;
+	/* 0x3F8 */ MActor* mTorocco;                  // pinna rail coaster actor
+	/* 0x3FC */ MActor* mPinaRail;                 // Pinna_rail model actor
+	/* 0x400 */ MActor* mKoopaRail;                // Koopa_rail model actor
+	/* 0x404 */ JGeometry::TVec3<f32> mToroccoPos; // position of coaster
+	/* 0x410 */ s16 mToroccoAngle;                 // angle of coaster
+	/* 0x412 */ u16 mRailType;                     // type of rail
+	/* 0x414 */ JGeometry::TVec3<f32> unk414;
+	/* 0x420 */ TMultiMtxEffect* mMultiMtxEffect;
+	/* 0x424 */ void* mMarioEffect; // TMarioEffect*
+	/* 0x428 */ JGeometry::TVec3<f32> mWireStartPos;
+	/* 0x434 */ JGeometry::TVec3<f32> mWireEndPos;
+	/* 0x440 */ f32 mWirePosRatio; // ratio from 0.0 to 1.0 of mario on the wire
+	/* 0x444 */ f32 mWireBounceVel;     // current wire bounce velocity
+	/* 0x448 */ f32 mWireBounceVelPrev; // previous wire bounce velocity
+	/* 0x44C */ f32 mWireSag;           // wire Y sag amount
+	/* 0x450 */ JGeometry::TVec3<f32>
+	    mMarioScreenPos; // position of mario on screen
+	/* 0x45C */ JGeometry::TVec3<f32>
+	    mWarpInDir; // direction of the warp in effect
 	/* 0x468 */ f32 unk468;
-	/* 0x46C */ u32 unk46C;
-	/* 0x470 */ u32 unk470;
-	/* 0x474 */ THitActor* unk474;
-	/* 0x478 */ u32 unk478;
-	/* 0x47C */ u32 unk47C;
-	/* 0x480 */ u32 unk480;
-	/* 0x484 */ JGeometry::TVec3<f32> unk484;
-	/* 0x490 */ u32 unk490;
-	/* 0x494 */ u32 unk494;
-	/* 0x498 */ u32 unk498;
-	/* 0x49C */ u32 unk49C;
-	/* 0x4A0 */ u32 unk4A0;
-	/* 0x4A4 */ u32 unk4A4;
-	/* 0x4A8 */ u32 unk4A8;
-	/* 0x4AC */ u32 unk4AC;
-	/* 0x4B0 */ u32 unk4B0;
-	/* 0x4B4 */ u32 unk4B4;
-	/* 0x4B8 */ u32 unk4B8;
-	/* 0x4BC */ u32 unk4BC;
-	/* 0x4C0 */ u32 unk4C0;
-	/* 0x4C4 */ u32 unk4C4;
-	/* 0x4C8 */ u32 unk4C8;
-	/* 0x4CC */ u32 unk4CC;
-	/* 0x4D0 */ u32 unk4D0;
-	/* 0x4D4 */ u32 unk4D4;
-	/* 0x4D8 */ u32 unk4D8;
-	/* 0x4DC */ u32 unk4DC;
-	/* 0x4E0 */ u32 unk4E0;
-	/* 0x4E4 */ u32 unk4E4;
-	/* 0x4E8 */ u32 unk4E8;
-	/* 0x4EC */ u32 unk4EC;
-
+	/* 0x46C */ f32 unk46C;
+	/* 0x470 */ ResTIMG* mBodyPollutionTex;
+	/* 0x474 */ THitActor mFloorHitActor;
+	/* 0x4DC */ MAnmSound* mAnmSound;
+	/* 0x4E0 */ JAIAnimeSound** mAnmSoundTbl;
+	/* 0x4E4 */ JAISound* mSound;
+	/* 0x4E8 */ u32 mSoundFlags;
+	/* 0x4EC */ u8 unk4EC;
+	/* 0x4ED */ u8 mBlendLogicOp;
+	/* 0x4EE */ u16 mWaterWakeAlpha; // should be verified
 	/* 0x4F0 */ JGeometry::TVec3<f32> unk4F0;
-
 	/* 0x4FC */ TMarioGamePad* mGamePad;
-
-	/* 0x500 */ char unk500[0x3C];
-	/* 0x53C */ TTrembleModelEffect* unk53C;
-	/* 0x540 */ char unk540[0x34];
+	/* 0x500 */ TMarioSoundValues mSoundValues;
+	/* 0x530 */ s16* unk530;
+	/* 0x534 */ u8 unk534;
+	/* 0x535 */ u8 unk535;
+	/* 0x536 */ u16 unk536;
+	/* 0x538 */ u16 unk538;
+	/* 0x53A */ u8 unk53A;
+	/* 0x53B */ u8 unk53B;
+	/* 0x53C */ TTrembleModelEffect* mTrembleModelEffect;
+	/* 0x540 */ f32 mWireSfx0MinVel; // minimum velocity for wire sfx0
+	/* 0x544 */ f32 mWireSfx1MinVel; // minimum velocity for wire sfx1
+	/* 0x548 */ u32 mWireQueuedSfxID;
+	/* 0x54C */ u8 mWireSfxTimer;
+	/* 0x54D */ u8 mWireSfxDelay; // initial value for mWireSfxTimer
+	/* 0x54E */ s16 unk54E;
+	/* 0x550 */ s16 mWireSwingPosAngle; // positive angle on wire to play sfx
+	/* 0x552 */ s16 mWireSwingNegAngle; // negative angle on wire to play sfx
+	/* 0x554 */ s16 mWireRollAngle;     // roll angle to play roll sfx on wire
+	/* 0x556 */ s16 unk556;
+	/* 0x558 */ int
+	    mCoinCount; // number of coins mario has collected (write only?)
+	/* 0x55C */ f32
+	    unk55C; // might be something like body radius but I'm not sure enough
+	/* 0x560 */ f32 unk560;
+	/* 0x564 */ f32 unk564;
+	/* 0x568 */ f32 unk568;
+	/* 0x56C */ f32 unk56C;
+	/* 0x570 */ f32 unk570;
 
 	/* 0x574 */ TDeParams mDeParams;
 
