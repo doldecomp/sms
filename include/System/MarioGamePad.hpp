@@ -84,7 +84,7 @@ public:
 	};
 
 	// Fabricated
-	inline bool checkReset(s32* resetPort)
+	static inline bool checkReset(s32* resetPort)
 	{
 		if (resetPort != 0) {
 			*resetPort = JUTGamePad::C3ButtonReset::sResetOccurredPort;
@@ -93,7 +93,7 @@ public:
 	}
 
 	// Fabricated
-	inline void handleReset(s32 resetPort)
+	static inline void handleReset(s32 resetPort)
 	{
 		if (resetPort == JUTGamePad::EPortInvalid) {
 			mResetFlag |= 0xf;
@@ -156,7 +156,10 @@ public:
 	void onFlag(u32 flag) { mFlags |= flag; }
 	void offFlag(u32 flag) { mFlags &= ~flag; }
 
-	u32 read();
+	// fabricated
+	bool isSomethingPushed() const { return (u16)(1 << mPortNum) & mResetFlag; }
+
+	static u32 read();
 	void onNeutralMarioKey();
 	void reset();
 	void updateMeaning();

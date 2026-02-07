@@ -129,6 +129,8 @@ public:
 		return false;
 	}
 
+	void* getUnkD4() { return unkD4; }
+
 public:
 	/* 0x18 */ TMarioGamePad** unk18;
 	/* 0x1C */ TPerformList* mPerformListGX;

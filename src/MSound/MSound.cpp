@@ -173,7 +173,7 @@ void MSound::exitStage()
 	unkC8 = 0;
 }
 
-BOOL MSound::checkWaveOnAram(MS_SCENE_WAVE wave)
+bool MSound::checkWaveOnAram(MS_SCENE_WAVE wave)
 {
 	u8 hi = wave >> 8;
 	u8 lo = wave & 0xff;
@@ -395,7 +395,7 @@ void MSound::setCategoryVOLsDefault(u16 param) { }
 
 void MSound::setCategoryVOLs(u16 param1, f32 volume) { }
 
-void MSound::resetAudioAll(u16 param) { }
+bool MSound::resetAudioAll(u16 param) { }
 
 void MSound::stopAllSeInCategory(u8 category, u32 param2) { }
 

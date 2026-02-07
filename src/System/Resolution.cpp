@@ -11,9 +11,9 @@ u16 SMSGetGCLogoRenderHeight() { return 448; }
 
 u16 SMSGetGCLogoRenderWidth() { return 640; }
 
-s32 SMSGetTitleRenderHeight() { return 448; }
+u16 SMSGetTitleRenderHeight() { return 448; }
 
-s32 SMSGetTitleRenderWidth() { return 640; }
+u16 SMSGetTitleRenderWidth() { return 640; }
 
 s32 SMSGetGameRenderHeight() { return 448; }
 
