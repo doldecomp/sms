@@ -79,6 +79,18 @@ void SMS_SetMarioAccessParams();
 // Real, see bossgesso
 inline JGeometry::TVec3<f32>& SMS_GetMarioPos() { return *gpMarioPos; }
 
+JGeometry::TVec3<f32> SMS_DistanceFromMarioVec(const JGeometry::TVec3<f32>& pos)
+{
+	JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
+	marioPos.sub(pos);
+	return marioPos;
+}
+
+f32 SMS_DistanceFromMario(const JGeometry::TVec3<f32>& pos)
+{
+	return SMS_DistanceFromMarioVec(pos).length();
+}
+
 // fabricated and very unlikely to be real
 // TODO: removeme
 inline void SMS_GetMarioPosStupid(Vec* result)
