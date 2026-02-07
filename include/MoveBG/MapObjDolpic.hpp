@@ -10,7 +10,6 @@ class TMonumentShine : public TMapObjBase {
 public:
 	TMonumentShine(const char*);
 
-	virtual ~TMonumentShine() { }
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
 	virtual void initMapObj();
@@ -30,7 +29,6 @@ class TBellDolpic : public TMapObjBase {
 public:
 	TBellDolpic(int, const char*);
 
-	virtual ~TBellDolpic() { }
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void calcRootMatrix();
 	virtual void control();
@@ -59,7 +57,6 @@ public:
 	{
 	}
 
-	virtual ~TDptMonteFence() { }
 	virtual void touchPlayer(THitActor*);
 };
 
@@ -70,7 +67,6 @@ public:
 	{
 	}
 
-	virtual ~TMapObjSmoke() { }
 	virtual void load(JSUMemoryInputStream&);
 	virtual void control();
 	virtual u32 touchWater(THitActor*);
@@ -83,7 +79,6 @@ public:
 	{
 	}
 
-	virtual ~TMareGate() { }
 	virtual void loadAfter();
 	virtual void control();
 };
@@ -98,7 +93,6 @@ public:
 	{
 	}
 
-	virtual ~TDemoCannon() { }
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual void loadAfter();
 	virtual void initMapObj();
@@ -121,7 +115,6 @@ public:
 	{
 	}
 
-	virtual ~TTurboNozzleDoor();
 	virtual void loadAfter();
 	virtual void touchPlayer(THitActor*);
 

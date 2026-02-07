@@ -26,6 +26,18 @@
 // rogue includes needed for matching sinit & rodata
 #include <M3DUtil/InfectiousStrings.hpp>
 
+// fabricated helper for boolean materialization matching
+static u8 isActorTypeOf(THitActor* actor, u32 base)
+{
+	u8 result;
+	if ((actor->mActorType - base) == 1) {
+		result = 1;
+	} else {
+		result = 0;
+	}
+	return result;
+}
+
 // TMonumentShine
 
 TMonumentShine::TMonumentShine(const char* name)
@@ -119,7 +131,7 @@ BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 	f32 _pad[2];
 	(void)_pad;
 
-	if (sender->isActorTypeOf(0x01000000)) {
+	if (isActorTypeOf(sender,0x01000000)) {
 		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
 		gpMSound->startSoundSet(0x6802, (const Vec*)&sender->mPosition, 0, 0.0f, 0, 0, 4);
 
@@ -133,8 +145,8 @@ BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 
 		if (unk13C == 0) {
 			gpItemManager->makeShineAppearWithDemo(
-			    "\x83\x56\x83\x83\x83\x43\x83\x93\x81\x69\x83\x82\x83\x6A\x83\x85\x83\x81\x83\x93\x83\x67\x83\x56\x83\x83\x83\x43\x83\x93\x97\x70\x81\x6A",
-			    "\x83\x82\x83\x6A\x83\x85\x83\x81\x83\x93\x83\x67\x83\x56\x83\x83\x83\x43\x83\x93\x83\x4A\x83\x81\x83\x89",
+			    "シャイン（モニュメントシャイン用）",
+			    "モニュメントシャインカメラ",
 			    mPosition.x, mPosition.y, mPosition.z);
 
 			if (gpMSound->gateCheck(0x484A)) {
@@ -240,23 +252,14 @@ void TBellDolpic::initMapObj()
 	unk138.g = 0xFF;
 	unk138.b = 0xFF;
 
-	if (unk13C != 0)
-		goto check1;
-	if (TFlagManager::getInstance()->getFlag(0x10061) != 0)
-		goto setZero;
-check1:
-	if (unk13C != 1)
-		goto set100;
-	if (TFlagManager::getInstance()->getFlag(0x10060) == 0)
-		goto set100;
-setZero:
-	unk138.a = 0;
-	unk154 = 0;
-	goto done;
-set100:
-	unk138.a = 100;
-	unk154 = 1000;
-done:;
+	if ((unk13C == 0 && TFlagManager::getInstance()->getFlag(0x10061) != 0) ||
+	    (unk13C == 1 && TFlagManager::getInstance()->getFlag(0x10060) != 0)) {
+		unk138.a = 0;
+		unk154 = 0;
+	} else {
+		unk138.a = 100;
+		unk154 = 1000;
+	}
 
 	SMS_InitPacket_OneTevKColor(getModel(), 0, GX_KCOLOR0, &unk138);
 	unk64 &= ~1;
@@ -328,11 +331,11 @@ BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 	f32 _pad[2];
 	(void)_pad;
 
-	if (sender->isActorTypeOf(0x80000000)) {
+	if (isActorTypeOf(sender,0x80000000)) {
 		ring(sender->mPosition);
 	}
 
-	if (sender->isActorTypeOf(0x01000000)) {
+	if (isActorTypeOf(sender,0x01000000)) {
 		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
 
 		if (unk154 == 0)
@@ -345,13 +348,13 @@ BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 		if (unk154 == 0) {
 			if (unk13C == 0) {
 				gpItemManager->makeShineAppearWithDemo(
-				    "\x83\x56\x83\x83\x83\x43\x83\x93\x81\x69\x83\x68\x83\x8B\x83\x73\x83\x62\x83\x4E\x8F\xE0\x8C\x78\x8E\x40\x8F\x90\x97\x70\x81\x6A",
-				    "\x83\x68\x83\x8B\x83\x73\x83\x62\x83\x4E\x8F\xE0\x8C\x78\x8E\x40\x8F\x90\x83\x4A\x83\x81\x83\x89",
+				    "シャイン（ドルピック鐘警察署用）",
+				    "ドルピック鐘警察署カメラ",
 				    mPosition.x, mPosition.y, mPosition.z);
 			} else {
 				gpItemManager->makeShineAppearWithDemo(
-				    "\x83\x56\x83\x83\x83\x43\x83\x93\x81\x69\x83\x68\x83\x8B\x83\x73\x83\x62\x83\x4E\x8F\xE0\x83\x65\x83\x83\x83\x8C\x83\x72\x8B\xC7\x97\x70\x81\x6A",
-				    "\x83\x68\x83\x8B\x83\x73\x83\x62\x83\x4E\x8F\xE0\x83\x65\x83\x83\x83\x8C\x83\x72\x8B\xC7\x83\x4A\x83\x81\x83\x89",
+				    "シャイン（ドルピック鐘テャレビ局用）",
+				    "ドルピック鐘テャレビ局カメラ",
 				    mPosition.x, mPosition.y, mPosition.z);
 			}
 
@@ -494,9 +497,6 @@ void TDemoCannon::loadAfter()
 
 void TDemoCannon::initMapObj()
 {
-	f32 _pad[2];
-	(void)_pad;
-
 	TMapObjBase::initMapObj();
 
 	mMActor->setBck("democannon_dpt");
@@ -533,11 +533,6 @@ void TDemoCannon::startDemo()
 
 void TDemoCannon::perform(u32 flags, JDrama::TGraphics* gfx)
 {
-	f32 _pad1[3];
-	volatile f32 f;
-	f32 _pad2[10];
-	(void)_pad1; (void)_pad2;
-
 	TMapObjBase::perform(flags, gfx);
 
 	if (!unk14C)
@@ -588,18 +583,14 @@ void TTurboNozzleDoor::loadAfter()
 	f32 _pad[8];
 	(void)_pad;
 
-	if (strcmp("\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x60\x82\x4f", mName) == 0) {
-		JDrama::TNameRef* root = JDrama::TNameRefGen::getInstance()->getRootNameRef();
-		unk144 = (TLiveActor*)root->searchF(JDrama::TNameRef::calcKeyCode("\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x60\x82\x50"), "\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x60\x82\x50");
-	} else if (strcmp("\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x60\x82\x50", mName) == 0) {
-		JDrama::TNameRef* root = JDrama::TNameRefGen::getInstance()->getRootNameRef();
-		unk144 = (TLiveActor*)root->searchF(JDrama::TNameRef::calcKeyCode("\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x60\x82\x4f"), "\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x60\x82\x4f");
-	} else if (strcmp("\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x61\x82\x4f", mName) == 0) {
-		JDrama::TNameRef* root = JDrama::TNameRefGen::getInstance()->getRootNameRef();
-		unk144 = (TLiveActor*)root->searchF(JDrama::TNameRef::calcKeyCode("\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x61\x82\x50"), "\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x61\x82\x50");
-	} else if (strcmp("\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x61\x82\x50", mName) == 0) {
-		JDrama::TNameRef* root = JDrama::TNameRefGen::getInstance()->getRootNameRef();
-		unk144 = (TLiveActor*)root->searchF(JDrama::TNameRef::calcKeyCode("\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x61\x82\x4f"), "\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x61\x82\x4f");
+	if (strcmp("空港ドアＡ０", mName) == 0) {
+		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＡ１");
+	} else if (strcmp("空港ドアＡ１", mName) == 0) {
+		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＡ０");
+	} else if (strcmp("空港ドアＢ０", mName) == 0) {
+		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＢ１");
+	} else if (strcmp("空港ドアＢ１", mName) == 0) {
+		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＢ０");
 	}
 }
 
@@ -640,5 +631,3 @@ void TTurboNozzleDoor::touchPlayer(THitActor* player)
 	removeMapCollision();
 	unk64 |= 1;
 }
-
-TTurboNozzleDoor::~TTurboNozzleDoor() { }
