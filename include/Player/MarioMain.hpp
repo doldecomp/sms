@@ -1205,7 +1205,14 @@ public:
 
 	/* 0x122 */ u16 unk122;
 
-	/* 0x124 */ char unk124[0x2BC - 0x124];
+	/* 0x124 */ u32 unk124;
+	/* 0x128 */ u32 unk128;
+	/* 0x12C */ u32 unk12C;
+	/* 0x130 */ u32 unk130;
+	/* 0x134 */ f32 unk134;
+	/* 0x138 */ char unk138[0x29C - 0x138];
+	/* 0x29C */ JGeometry::TVec3<f32> unk29C;
+	/* 0x2A8 */ char unk2A8[0x2BC - 0x2A8];
 	/* 0x2BC */ f32 unk2BC;
 	/* 0x2C0 */ char unk2C0[0x37C - 0x2C0];
 	/* 0x37C */ u16 unk37C;
