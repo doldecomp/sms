@@ -26,6 +26,18 @@
 // rogue includes needed for matching sinit & rodata
 #include <M3DUtil/InfectiousStrings.hpp>
 
+// fabricated helper for boolean materialization matching
+static u8 isActorTypeOf(THitActor* actor, u32 base)
+{
+	u8 result;
+	if ((actor->mActorType - base) == 1) {
+		result = 1;
+	} else {
+		result = 0;
+	}
+	return result;
+}
+
 // TMonumentShine
 
 TMonumentShine::TMonumentShine(const char* name)
@@ -49,12 +61,12 @@ void TMonumentShine::initMapObj()
 
 	if (TFlagManager::getInstance()->getFlag(0x10063) != 0) {
 		unk138.a = 0;
-		unk13C = 0;
-		unk149 = 1;
+		unk13C   = 0;
+		unk149   = 1;
 	} else {
 		unk138.a = 100;
-		unk13C = 1000;
-		unk149 = 0;
+		unk13C   = 1000;
+		unk149   = 0;
 	}
 
 	SMS_InitPacket_OneTevKColor(getModel(), 0, GX_KCOLOR0, &unk138);
@@ -74,15 +86,16 @@ void TMonumentShine::hitByWater(THitActor* actor)
 	(void)_pad;
 
 	waterDir = actor->mPosition;
-	f32 px = mPosition.x;
-	f32 py = mPosition.y;
-	f32 pz = mPosition.z;
+	f32 px   = mPosition.x;
+	f32 py   = mPosition.y;
+	f32 pz   = mPosition.z;
 	waterDir.x -= px;
 	waterDir.y -= py;
 	waterDir.z -= pz;
 	waterDir.y = 0.0f;
 
-	f32 lenSq = waterDir.x * waterDir.x + waterDir.z * waterDir.z + waterDir.y * waterDir.y;
+	f32 lenSq = waterDir.x * waterDir.x + waterDir.z * waterDir.z
+	            + waterDir.y * waterDir.y;
 	if (lenSq <= 0.0000038146973f)
 		return;
 	marioDir = *gpMarioPos;
@@ -91,7 +104,8 @@ void TMonumentShine::hitByWater(THitActor* actor)
 	marioDir.z -= pz;
 	marioDir.y = 0.0f;
 
-	f32 lenSq2 = marioDir.x * marioDir.x + marioDir.y * marioDir.y + marioDir.z * marioDir.z;
+	f32 lenSq2 = marioDir.x * marioDir.x + marioDir.y * marioDir.y
+	             + marioDir.z * marioDir.z;
 	if (lenSq2 <= 0.0000038146973f)
 		return;
 
@@ -119,9 +133,10 @@ BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 	f32 _pad[2];
 	(void)_pad;
 
-	if (sender->isActorTypeOf(0x01000000)) {
+	if (isActorTypeOf(sender, 0x01000000)) {
 		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
-		gpMSound->startSoundSet(0x6802, (const Vec*)&sender->mPosition, 0, 0.0f, 0, 0, 4);
+		gpMSound->startSoundSet(0x6802, (const Vec*)&sender->mPosition, 0, 0.0f,
+		                        0, 0, 4);
 
 		if (unk13C == 0)
 			return 1;
@@ -133,12 +148,13 @@ BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 
 		if (unk13C == 0) {
 			gpItemManager->makeShineAppearWithDemo(
-			    "\x83\x56\x83\x83\x83\x43\x83\x93\x81\x69\x83\x82\x83\x6A\x83\x85\x83\x81\x83\x93\x83\x67\x83\x56\x83\x83\x83\x43\x83\x93\x97\x70\x81\x6A",
-			    "\x83\x82\x83\x6A\x83\x85\x83\x81\x83\x93\x83\x67\x83\x56\x83\x83\x83\x43\x83\x93\x83\x4A\x83\x81\x83\x89",
-			    mPosition.x, mPosition.y, mPosition.z);
+			    "シャイン（モニュメントシャイン用）",
+			    "モニュメントシャインカメラ", mPosition.x, mPosition.y,
+			    mPosition.z);
 
 			if (gpMSound->gateCheck(0x484A)) {
-				MSoundSESystem::MSoundSE::startSoundSystemSE(0x484A, 0, nullptr, 0);
+				MSoundSESystem::MSoundSE::startSoundSystemSE(0x484A, 0, nullptr,
+				                                             0);
 			}
 		}
 
@@ -168,18 +184,20 @@ void TMonumentShine::control()
 	if (fabsf(unk140) < 0.1f) {
 		if (unk144 == 2) {
 			if (unk148 > 0) {
-				f32 rot = mRotation.y;
+				f32 rot    = mRotation.y;
 				f32 target = mInitialRotation.y + 360.0f;
-				f32 diff = target - MsWrap(rot, target - 180.0f, target + 180.0f);
+				f32 diff
+				    = target - MsWrap(rot, target - 180.0f, target + 180.0f);
 				if (diff > 0.1f)
 					diff = 0.1f;
 				if (0.0f == diff)
 					unk144++;
 				mAngularVelocity.y += diff;
 			} else {
-				f32 rot = mRotation.y;
+				f32 rot    = mRotation.y;
 				f32 target = mInitialRotation.y - 360.0f;
-				f32 diff = target - MsWrap(rot, target - 180.0f, target + 180.0f);
+				f32 diff
+				    = target - MsWrap(rot, target - 180.0f, target + 180.0f);
 				if (diff < -0.1f)
 					diff = -0.1f;
 				if (0.0f == diff)
@@ -204,7 +222,7 @@ void TMonumentShine::control()
 			}
 		}
 	} else {
-		f32 rot = mRotation.y;
+		f32 rot   = mRotation.y;
 		f32 limit = 360.0f;
 		while (rot >= limit)
 			rot -= limit;
@@ -240,23 +258,15 @@ void TBellDolpic::initMapObj()
 	unk138.g = 0xFF;
 	unk138.b = 0xFF;
 
-	if (unk13C != 0)
-		goto check1;
-	if (TFlagManager::getInstance()->getFlag(0x10061) != 0)
-		goto setZero;
-check1:
-	if (unk13C != 1)
-		goto set100;
-	if (TFlagManager::getInstance()->getFlag(0x10060) == 0)
-		goto set100;
-setZero:
-	unk138.a = 0;
-	unk154 = 0;
-	goto done;
-set100:
-	unk138.a = 100;
-	unk154 = 1000;
-done:;
+	if ((unk13C == 0 && TFlagManager::getInstance()->getFlag(0x10061) != 0)
+	    || (unk13C == 1
+	        && TFlagManager::getInstance()->getFlag(0x10060) != 0)) {
+		unk138.a = 0;
+		unk154   = 0;
+	} else {
+		unk138.a = 100;
+		unk154   = 1000;
+	}
 
 	SMS_InitPacket_OneTevKColor(getModel(), 0, GX_KCOLOR0, &unk138);
 	unk64 &= ~1;
@@ -313,26 +323,23 @@ void TBellDolpic::ring(const JGeometry::TVec3<f32>& pos)
 
 	unk150 -= 0.5f;
 
-	int r = rand();
+	int r   = rand();
 	f32 tmp = (f32)r * 0.000030517578f;
-	unk158 = (int)(tmp * 14400.0f) + 0x5460;
+	unk158  = (int)(tmp * 14400.0f) + 0x5460;
 }
 
-void TBellDolpic::touchPlayer(THitActor* actor)
-{
-	ring(actor->mPosition);
-}
+void TBellDolpic::touchPlayer(THitActor* actor) { ring(actor->mPosition); }
 
 BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 {
 	f32 _pad[2];
 	(void)_pad;
 
-	if (sender->isActorTypeOf(0x80000000)) {
+	if (isActorTypeOf(sender, 0x80000000)) {
 		ring(sender->mPosition);
 	}
 
-	if (sender->isActorTypeOf(0x01000000)) {
+	if (isActorTypeOf(sender, 0x01000000)) {
 		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
 
 		if (unk154 == 0)
@@ -345,18 +352,19 @@ BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 		if (unk154 == 0) {
 			if (unk13C == 0) {
 				gpItemManager->makeShineAppearWithDemo(
-				    "\x83\x56\x83\x83\x83\x43\x83\x93\x81\x69\x83\x68\x83\x8B\x83\x73\x83\x62\x83\x4E\x8F\xE0\x8C\x78\x8E\x40\x8F\x90\x97\x70\x81\x6A",
-				    "\x83\x68\x83\x8B\x83\x73\x83\x62\x83\x4E\x8F\xE0\x8C\x78\x8E\x40\x8F\x90\x83\x4A\x83\x81\x83\x89",
-				    mPosition.x, mPosition.y, mPosition.z);
+				    "シャイン（ドルピック鐘警察署用）",
+				    "ドルピック鐘警察署カメラ", mPosition.x, mPosition.y,
+				    mPosition.z);
 			} else {
 				gpItemManager->makeShineAppearWithDemo(
-				    "\x83\x56\x83\x83\x83\x43\x83\x93\x81\x69\x83\x68\x83\x8B\x83\x73\x83\x62\x83\x4E\x8F\xE0\x83\x65\x83\x83\x83\x8C\x83\x72\x8B\xC7\x97\x70\x81\x6A",
-				    "\x83\x68\x83\x8B\x83\x73\x83\x62\x83\x4E\x8F\xE0\x83\x65\x83\x83\x83\x8C\x83\x72\x8B\xC7\x83\x4A\x83\x81\x83\x89",
-				    mPosition.x, mPosition.y, mPosition.z);
+				    "シャイン（ドルピック鐘テャレビ局用）",
+				    "ドルピック鐘テャレビ局カメラ", mPosition.x, mPosition.y,
+				    mPosition.z);
 			}
 
 			if (gpMSound->gateCheck(0x484A)) {
-				MSoundSESystem::MSoundSE::startSoundSystemSE(0x484A, 0, nullptr, 0);
+				MSoundSESystem::MSoundSE::startSoundSystemSE(0x484A, 0, nullptr,
+				                                             0);
 			}
 		}
 
@@ -385,7 +393,7 @@ void TBellDolpic::control()
 	TMapObjBase::control();
 
 	f32 sinVal = -JMASin(unk14C);
-	unk150 = 0.01f * sinVal + unk150;
+	unk150     = 0.01f * sinVal + unk150;
 
 	unk14C = unk14C + unk150;
 
@@ -395,21 +403,25 @@ void TBellDolpic::control()
 		if (unk154 == 0) {
 			if (unk15C) {
 				if (gpMSound->gateCheck(0x38A5)) {
-					MSoundSESystem::MSoundSE::startSoundActor(0x38A5, (const Vec*)&mPosition, 0, nullptr, 0, 4);
+					MSoundSESystem::MSoundSE::startSoundActor(
+					    0x38A5, (const Vec*)&mPosition, 0, nullptr, 0, 4);
 				}
 			} else {
 				if (gpMSound->gateCheck(0x38A6)) {
-					MSoundSESystem::MSoundSE::startSoundActor(0x38A6, (const Vec*)&mPosition, 0, nullptr, 0, 4);
+					MSoundSESystem::MSoundSE::startSoundActor(
+					    0x38A6, (const Vec*)&mPosition, 0, nullptr, 0, 4);
 				}
 			}
 		} else {
 			if (unk15C) {
 				if (gpMSound->gateCheck(0x38A8)) {
-					MSoundSESystem::MSoundSE::startSoundActor(0x38A8, (const Vec*)&mPosition, 0, nullptr, 0, 4);
+					MSoundSESystem::MSoundSE::startSoundActor(
+					    0x38A8, (const Vec*)&mPosition, 0, nullptr, 0, 4);
 				}
 			} else {
 				if (gpMSound->gateCheck(0x38A9)) {
-					MSoundSESystem::MSoundSE::startSoundActor(0x38A9, (const Vec*)&mPosition, 0, nullptr, 0, 4);
+					MSoundSESystem::MSoundSE::startSoundActor(
+					    0x38A9, (const Vec*)&mPosition, 0, nullptr, 0, 4);
 				}
 			}
 		}
@@ -429,10 +441,12 @@ void TDptMonteFence::touchPlayer(THitActor* actor)
 
 	if (SMS_IsMarioStatusThrownDown()) {
 		if (gpMSound->gateCheck(0x380A)) {
-			MSoundSESystem::MSoundSE::startSoundActor(0x380A, (const Vec*)&mPosition, 0, nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    0x380A, (const Vec*)&mPosition, 0, nullptr, 0, 4);
 		}
 		if (gpMSound->gateCheck(0x3857)) {
-			MSoundSESystem::MSoundSE::startSoundActor(0x3857, (const Vec*)&mPosition, 0, nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    0x3857, (const Vec*)&mPosition, 0, nullptr, 0, 4);
 		}
 		kill();
 	}
@@ -468,7 +482,8 @@ void TMareGate::control()
 	TMapObjBase::control();
 	MSound* sound = gpMSound;
 	if (sound->gateCheck(0x3085)) {
-		MSoundSESystem::MSoundSE::startSoundActor(0x3085, (const Vec*)&mPosition, 0, (JAISound**)&sound->unk7C, 0, 4);
+		MSoundSESystem::MSoundSE::startSoundActor(
+		    0x3085, (const Vec*)&mPosition, 0, (JAISound**)&sound->unk7C, 0, 4);
 	}
 }
 
@@ -494,27 +509,28 @@ void TDemoCannon::loadAfter()
 
 void TDemoCannon::initMapObj()
 {
-	f32 _pad[2];
-	(void)_pad;
-
 	TMapObjBase::initMapObj();
 
 	mMActor->setBck("democannon_dpt");
-	J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(0);
+	J3DFrameCtrl* frameCtrl  = mMActor->getFrameCtrl(0);
 	frameCtrl->mCurrentFrame = (f32)frameCtrl->mEndFrame;
 
-	void* res = JKRFileLoader::getGlbResource("/scene/mapObj/demoCannon_dom.bmd");
-	SDLModelData* sdlData = new SDLModelData(J3DModelLoaderDataBase::load(res, 0x10050000));
+	void* res
+	    = JKRFileLoader::getGlbResource("/scene/mapObj/demoCannon_dom.bmd");
+	SDLModelData* sdlData
+	    = new SDLModelData(J3DModelLoaderDataBase::load(res, 0x10050000));
 
 	JUTNameTab* jointName = mMActor->getModel()->getModelData()->getJointName();
 
-	TSharedParts* parts = new TSharedParts(this, jointName->getIndex("nullA"), sdlData, 3, "<TSharedParts>");
-	unk138 = parts;
+	TSharedParts* parts = new TSharedParts(this, jointName->getIndex("nullA"),
+	                                       sdlData, 3, "<TSharedParts>");
+	unk138              = parts;
 
 	res = JKRFileLoader::getGlbResource("/scene/mapObj/demoCannon_mario.bmd");
-	SDLModelData* sdlData2 = new SDLModelData(J3DModelLoaderDataBase::load(res, 0x10010000));
+	SDLModelData* sdlData2
+	    = new SDLModelData(J3DModelLoaderDataBase::load(res, 0x10010000));
 
-	parts = new TSharedParts(this, 0, sdlData2, 3, "<TSharedParts>");
+	parts  = new TSharedParts(this, 0, sdlData2, 3, "<TSharedParts>");
 	unk13C = parts;
 }
 
@@ -523,7 +539,7 @@ void TDemoCannon::startDemo()
 	unk14C = 1;
 
 	MSound* sound = gpMSound;
-	s16 hp = SMS_GetMarioHP();
+	s16 hp        = SMS_GetMarioHP();
 	sound->startMarioVoice(30911, hp, 0);
 
 	mMActor->setBck("democannon_dpt");
@@ -533,11 +549,6 @@ void TDemoCannon::startDemo()
 
 void TDemoCannon::perform(u32 flags, JDrama::TGraphics* gfx)
 {
-	f32 _pad1[3];
-	volatile f32 f;
-	f32 _pad2[10];
-	(void)_pad1; (void)_pad2;
-
 	TMapObjBase::perform(flags, gfx);
 
 	if (!unk14C)
@@ -552,7 +563,8 @@ void TDemoCannon::perform(u32 flags, JDrama::TGraphics* gfx)
 	J3DFrameCtrl* frameCtrl = unk13C->getMActor()->getFrameCtrl(0);
 	if (frameCtrl->mCurrentFrame < 174.0f) {
 		if (gpMSound->gateCheck(8392))
-			MSoundSESystem::MSoundSE::startSoundActor(8392, &mPosition, 0, nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(8392, &mPosition, 0,
+			                                          nullptr, 0, 4);
 	}
 
 	frameCtrl = unk13C->getMActor()->getFrameCtrl(0);
@@ -562,16 +574,23 @@ void TDemoCannon::perform(u32 flags, JDrama::TGraphics* gfx)
 
 		Mtx* mtx = unk138->getMActor()->getModel()->mNodeMatrices;
 
-		gpMarioParticleManager->emitAndBindToMtxPtr(232, (MtxPtr)mtx, 0, nullptr);
-		gpMarioParticleManager->emitAndBindToMtxPtr(233, (MtxPtr)mtx, 0, nullptr);
-		gpMarioParticleManager->emitAndBindToMtxPtr(234, (MtxPtr)mtx, 0, nullptr);
-		gpMarioParticleManager->emitAndBindToMtxPtr(235, (MtxPtr)mtx, 0, nullptr);
-		gpMarioParticleManager->emitAndBindToMtxPtr(236, (MtxPtr)mtx, 0, nullptr);
+		gpMarioParticleManager->emitAndBindToMtxPtr(232, (MtxPtr)mtx, 0,
+		                                            nullptr);
+		gpMarioParticleManager->emitAndBindToMtxPtr(233, (MtxPtr)mtx, 0,
+		                                            nullptr);
+		gpMarioParticleManager->emitAndBindToMtxPtr(234, (MtxPtr)mtx, 0,
+		                                            nullptr);
+		gpMarioParticleManager->emitAndBindToMtxPtr(235, (MtxPtr)mtx, 0,
+		                                            nullptr);
+		gpMarioParticleManager->emitAndBindToMtxPtr(236, (MtxPtr)mtx, 0,
+		                                            nullptr);
 
 		if (gpMSound->gateCheck(10574))
-			MSoundSESystem::MSoundSE::startSoundActor(10574, &mPosition, 0, nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(10574, &mPosition, 0,
+			                                          nullptr, 0, 4);
 		if (gpMSound->gateCheck(10605))
-			MSoundSESystem::MSoundSE::startSoundActor(10605, &mPosition, 0, nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(10605, &mPosition, 0,
+			                                          nullptr, 0, 4);
 	}
 
 	frameCtrl = unk13C->getMActor()->getFrameCtrl(0);
@@ -588,18 +607,14 @@ void TTurboNozzleDoor::loadAfter()
 	f32 _pad[8];
 	(void)_pad;
 
-	if (strcmp("\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x60\x82\x4f", mName) == 0) {
-		JDrama::TNameRef* root = JDrama::TNameRefGen::getInstance()->getRootNameRef();
-		unk144 = (TLiveActor*)root->searchF(JDrama::TNameRef::calcKeyCode("\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x60\x82\x50"), "\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x60\x82\x50");
-	} else if (strcmp("\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x60\x82\x50", mName) == 0) {
-		JDrama::TNameRef* root = JDrama::TNameRefGen::getInstance()->getRootNameRef();
-		unk144 = (TLiveActor*)root->searchF(JDrama::TNameRef::calcKeyCode("\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x60\x82\x4f"), "\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x60\x82\x4f");
-	} else if (strcmp("\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x61\x82\x4f", mName) == 0) {
-		JDrama::TNameRef* root = JDrama::TNameRefGen::getInstance()->getRootNameRef();
-		unk144 = (TLiveActor*)root->searchF(JDrama::TNameRef::calcKeyCode("\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x61\x82\x50"), "\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x61\x82\x50");
-	} else if (strcmp("\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x61\x82\x50", mName) == 0) {
-		JDrama::TNameRef* root = JDrama::TNameRefGen::getInstance()->getRootNameRef();
-		unk144 = (TLiveActor*)root->searchF(JDrama::TNameRef::calcKeyCode("\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x61\x82\x4f"), "\x8b\xf3\x8d\x60\x83\x68\x83\x41\x82\x61\x82\x4f");
+	if (strcmp("空港ドアＡ０", mName) == 0) {
+		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＡ１");
+	} else if (strcmp("空港ドアＡ１", mName) == 0) {
+		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＡ０");
+	} else if (strcmp("空港ドアＢ０", mName) == 0) {
+		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＢ１");
+	} else if (strcmp("空港ドアＢ１", mName) == 0) {
+		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＢ０");
 	}
 }
 
@@ -616,9 +631,11 @@ void TTurboNozzleDoor::touchPlayer(THitActor* player)
 	}
 
 	if (gpMSound->gateCheck(14346))
-		MSoundSESystem::MSoundSE::startSoundActor(14346, &mPosition, 0, nullptr, 0, 4);
+		MSoundSESystem::MSoundSE::startSoundActor(14346, &mPosition, 0, nullptr,
+		                                          0, 4);
 	if (gpMSound->gateCheck(14423))
-		MSoundSESystem::MSoundSE::startSoundActor(14423, &mPosition, 0, nullptr, 0, 4);
+		MSoundSESystem::MSoundSE::startSoundActor(14423, &mPosition, 0, nullptr,
+		                                          0, 4);
 
 	JGeometry::TVec3<f32> scale;
 	f32 _pad[8];
@@ -640,5 +657,3 @@ void TTurboNozzleDoor::touchPlayer(THitActor* player)
 	removeMapCollision();
 	unk64 |= 1;
 }
-
-TTurboNozzleDoor::~TTurboNozzleDoor() { }
