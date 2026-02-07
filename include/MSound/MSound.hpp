@@ -15,6 +15,7 @@ class JAICamera;
 class JAIAnimeFrameSoundData;
 
 enum MS_SCENE_WAVE {
+	MS_WAVE_UNK0         = 0,
 	MS_WAVE_DEFAULT      = 256,
 	MS_WAVE_DOLPIC       = 513,
 	MS_WAVE_BIANCO       = 514,
@@ -26,6 +27,7 @@ enum MS_SCENE_WAVE {
 	MS_WAVE_SHILENA      = 519,
 	MS_WAVE_RICO         = 520,
 	MS_WAVE_CLEAR        = 521,
+	MS_WAVE_UNK528       = 528,
 };
 
 class MSSeCallBack {
@@ -68,7 +70,7 @@ public:
 	void enterStage(MS_SCENE_WAVE, u8, u8);
 	void loadWave(MS_SCENE_WAVE);
 	void cleanUpAramWave(u8);
-	BOOL checkWaveOnAram(MS_SCENE_WAVE);
+	bool checkWaveOnAram(MS_SCENE_WAVE);
 	bool checkSeqOnMemory(u32);
 
 	void stopAllSound();
@@ -110,7 +112,7 @@ public:
 	static u32 getSwitch(u32, u32, u32);
 	bool gateCheck(u32);
 
-	void resetAudioAll(u16);
+	bool resetAudioAll(u16);
 };
 
 extern MSound* MSGMSound;

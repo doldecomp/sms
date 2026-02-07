@@ -32,6 +32,7 @@ public:
 class JKRDvdFile;
 class JKRDvdAramRipper {
 public:
+	static JKRAramBlock* loadToAram(char*, u32, JKRExpandSwitch, u32, u32);
 	static JKRAramBlock* loadToAram(s32, u32, JKRExpandSwitch, u32, u32);
 	static JKRAramBlock* loadToAram(JKRDvdFile*, u32, JKRExpandSwitch, u32,
 	                                u32);
