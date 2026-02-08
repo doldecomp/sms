@@ -29,7 +29,7 @@ struct TARAMBlock {
 	/* 0x0 */ JKRAramBlock* unk0;
 	/* 0x4 */ bool unk4;
 };
-void* SMSLoadArchiveARAM(TARAMBlock*, const char*);
+void SMSLoadArchiveARAM(TARAMBlock*, const char*);
 void SMSMountAramArchive(JKRMemArchive*, TARAMBlock&);
 JKRArchive* SMSSwitch2DArchive(const char*, TARAMBlock&);
 extern TARAMBlock gArBkConsole;
