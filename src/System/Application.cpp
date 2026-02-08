@@ -135,7 +135,7 @@ void* SMSLoadArchive(const char* param_1, void* param_2, u32 param_3,
 	return result;
 }
 
-void* SMSLoadArchiveARAM(TARAMBlock* param_1, const char* param_2)
+void SMSLoadArchiveARAM(TARAMBlock* param_1, const char* param_2)
 {
 	// Try to load a compressed version of the archive first
 	char compressedArcPath[64];
@@ -495,9 +495,7 @@ void TApplication::proc()
 			mDirector          = dir;
 			dir->setup(mDisplay, mGamePads[0]);
 			TFlagManager::getInstance()->setFlag(3, 0x20001);
-			mCurrArea.unk0 = 1;
-			mCurrArea.unk1 = 0;
-			mCurrArea.unk2 = 0;
+			mCurrArea.set(1, 0, 0);
 		} break;
 
 		case APP_STATE_GAMEPLAY:
@@ -515,8 +513,8 @@ void TApplication::proc()
 				                       (u16)SMSGetGameRenderHeight());
 				TMarDirector* dir = new TMarDirector;
 				mDirector         = dir;
-				iVar9 = dir->setup(mDisplay, mGamePads, mCurrArea.unk0,
-				                   mCurrArea.unk1);
+				iVar9 = dir->setup(mDisplay, mGamePads, mCurrArea.getArea(),
+				                   mCurrArea.getStage());
 				if (iVar9)
 					nextState = APP_STATE_DONE;
 			}
@@ -528,15 +526,13 @@ void TApplication::proc()
 			                       SMSGetTitleRenderHeight());
 			TSelectDir* selectDir = new TSelectDir;
 			mDirector             = selectDir;
-			selectDir->setup(mDisplay, mGamePads[0], mCurrArea.unk0);
+			selectDir->setup(mDisplay, mGamePads[0], mCurrArea.getArea());
 		} break;
 
 		case APP_STATE_DONE:
 			gpApplication.mMovie = 9;
-			mNextArea.unk0       = 15;
-			mNextArea.unk1       = 0;
-			mNextArea.unk2       = 0;
-			break;
+			mNextArea.set(15, 0, 0);
+			// FALLTHROUGH
 
 		case APP_STATE_MOVIE: {
 			SMSSetupMovieRenderingInfo(mDisplay);
@@ -702,9 +698,10 @@ int TApplication::drawDVDErr()
 		break;
 
 	case 1:
-		if (DVDCheckDisk() == 0)
+		if (DVDCheckDisk() == 0) {
 			snprintf(message, 512, "ディスクを読み込んでいます。");
-		error = 'em_3';
+			error = 'em_3';
+		}
 		break;
 
 	case 5:
@@ -790,29 +787,27 @@ int TApplication::drawDVDErr()
 
 JKRMemArchive* TApplication::mountStageArchive()
 {
-	JKRMemArchive* arch = nullptr;
+	JKRMemArchive* result = nullptr;
 
-	if (mCurrArea.unk0 < unk30->size()) {
-
-		TNameRefAryT<TScenarioArchiveName>& scenarioArchives
-		    = (*unk30)[mCurrArea.unk0];
-
-		if (mCurrArea.unk1 < scenarioArchives.size()) {
+	TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >& tmp = *unk30;
+	if (mCurrArea.getArea() < tmp.size()) {
+		if (mCurrArea.getStage() < tmp[mCurrArea.getArea()].size()) {
 			const char* scenarioArcName
-			    = scenarioArchives[mCurrArea.unk1].getName();
+			    = tmp[mCurrArea.getArea()][mCurrArea.getStage()].getName();
 
 			DVDChangeDir("/data/scene");
 			void* archBlob
 			    = SMSLoadArchive(scenarioArcName, nullptr, 0, nullptr);
 
 			if (archBlob) {
-				arch = new JKRMemArchive;
+				JKRMemArchive* arch = new JKRMemArchive;
 				arch->mountFixed(archBlob, MBF_0);
+				result = arch;
 			}
 
 			DVDChangeDir("/");
 		}
 	}
 
-	return arch;
+	return result;
 }

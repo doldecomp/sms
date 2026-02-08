@@ -26,6 +26,11 @@ public:
 		unk2 = param_3;
 	}
 
+	// fabricated
+	// TODO: better names?
+	u8 getArea() const { return unk0; }
+	u8 getStage() const { return unk1; }
+
 public:
 	/* 0x0 */ u8 unk0;
 	/* 0x1 */ u8 unk1;
