@@ -513,8 +513,8 @@ void TApplication::proc()
 				                       (u16)SMSGetGameRenderHeight());
 				TMarDirector* dir = new TMarDirector;
 				mDirector         = dir;
-				iVar9 = dir->setup(mDisplay, mGamePads, mCurrArea.getArea(),
-				                   mCurrArea.getStage());
+				iVar9 = dir->setup(mDisplay, mGamePads, mCurrArea.getStage(),
+				                   mCurrArea.getScenario());
 				if (iVar9)
 					nextState = APP_STATE_DONE;
 			}
@@ -526,7 +526,7 @@ void TApplication::proc()
 			                       SMSGetTitleRenderHeight());
 			TSelectDir* selectDir = new TSelectDir;
 			mDirector             = selectDir;
-			selectDir->setup(mDisplay, mGamePads[0], mCurrArea.getArea());
+			selectDir->setup(mDisplay, mGamePads[0], mCurrArea.getStage());
 		} break;
 
 		case APP_STATE_DONE:
@@ -790,10 +790,10 @@ JKRMemArchive* TApplication::mountStageArchive()
 	JKRMemArchive* result = nullptr;
 
 	TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >& tmp = *unk30;
-	if (mCurrArea.getArea() < tmp.size()) {
-		if (mCurrArea.getStage() < tmp[mCurrArea.getArea()].size()) {
+	if (mCurrArea.getStage() < tmp.size()) {
+		if (mCurrArea.getScenario() < tmp[mCurrArea.getStage()].size()) {
 			const char* scenarioArcName
-			    = tmp[mCurrArea.getArea()][mCurrArea.getStage()].getName();
+			    = tmp[mCurrArea.getStage()][mCurrArea.getScenario()].getName();
 
 			DVDChangeDir("/data/scene");
 			void* archBlob
