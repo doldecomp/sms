@@ -23,7 +23,7 @@ void TLight::perform(u32 param_1, TGraphics* param_2)
 void TLight::correct(TGraphics* param_1) const
 {
 	Vec pos;
-	MTXMultVec(param_1->unkB4.mMtx, (Vec*)&mPosition, &pos);
+	MTXMultVec(param_1->mViewMtx.mMtx, (Vec*)&mPosition, &pos);
 	// Ewwwwwwwwwwwwwwwwwwwwwww
 	GXInitLightPos(const_cast<GXLightObj*>(&unk24), pos.x, pos.y, pos.z);
 }
@@ -105,7 +105,7 @@ void TLightAry::perform(u32 param_1, TGraphics* param_2)
 	for (int i = 0; i < mLightCount; ++i) {
 		TIdxLight& light = mLights[i];
 		Vec pos;
-		MTXMultVec(param_2->unkB4.mMtx, &light.mPosition, &pos);
+		MTXMultVec(param_2->mViewMtx.mMtx, &light.mPosition, &pos);
 		GXInitLightPos(&light.unk24, pos.x, pos.y, pos.z);
 	}
 

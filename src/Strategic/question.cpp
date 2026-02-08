@@ -47,7 +47,7 @@ void TQuestionManager::makeDL(JDrama::TGraphics* param_1) const
 		f32 f                    = req.unkC;
 		v1.y += f;
 		JGeometry::TVec3<f32> v2;
-		MTXMultVec(param_1->unkB4, &v1, &v2);
+		MTXMultVec(param_1->mViewMtx, &v1, &v2);
 		JGeometry::TVec3<f32> v3(v2.x - f, v2.y + f, v2.z + f);
 		unk20->request(&v3);
 	}

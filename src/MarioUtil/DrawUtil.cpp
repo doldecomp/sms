@@ -362,7 +362,7 @@ void SetViewFrustumClipCheckPerspective(f32 fovy, f32 aspect, f32 clip_near,
 BOOL ViewFrustumClipCheck(JDrama::TGraphics* gfx, Vec* position, f32 radius)
 {
 	Vec local_18;
-	MTXMultVec(gfx->unkB4, position, &local_18);
+	MTXMultVec(gfx->mViewMtx, position, &local_18);
 
 	for (int i = 0; i < 6; ++i)
 		if (-radius > sViewPlane[i].sdf(&local_18))

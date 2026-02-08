@@ -449,10 +449,9 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 {
 	switch (mState) {
 	case 0:
-		JDrama::TNameRefGen::search<JDrama::TViewObj>("Group 2D")->unkC.mValue
-		    &= ~0xB;
-		JDrama::TNameRefGen::search<JDrama::TViewObj>("Guide")->unkC.mValue
-		    |= 0xB;
+		JDrama::TNameRefGen::search<JDrama::TViewObj>("Group 2D")
+		    ->unkC.off(0xB);
+		JDrama::TNameRefGen::search<JDrama::TViewObj>("Guide")->unkC.on(0xB);
 
 		gpApplication.mFader->startWipe(unkE4, 0.4f, 0.0f);
 		SMSRumbleMgr->reset();
@@ -485,10 +484,9 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 		unk18[0]->mFlags &= ~0x1;
 		SMSRumbleMgr->finishPause();
 
-		JDrama::TNameRefGen::search<JDrama::TViewObj>("Group 2D")->unkC.mValue
-		    &= ~0xB;
-		JDrama::TNameRefGen::search<JDrama::TViewObj>("Guide")->unkC.mValue
-		    |= 0xB;
+		JDrama::TNameRefGen::search<JDrama::TViewObj>("Group 2D")
+		    ->unkC.off(0xB);
+		JDrama::TNameRefGen::search<JDrama::TViewObj>("Guide")->unkC.on(0xB);
 
 		SMSSwitch2DArchive("guide", gArBkConsole);
 		if (gpApplication.mCurrArea.unk0 == 1)
@@ -593,12 +591,12 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 			unk50 |= 1;
 		}
 		if (mMap != 0xf)
-			mConsole->unkC.mValue &= ~0xB;
+			mConsole->unkC.off(0xB);
 		break;
 
 	case 4:
 		if (mState <= 3 && mMap != 0xf)
-			mConsole->unkC.mValue &= ~0xB;
+			mConsole->unkC.off(0xB);
 		if (unk50 & 2) {
 			mConsole->unk94->startAppearGo();
 			unk50 &= ~0x2;
@@ -648,10 +646,8 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		for (int i = 0; i < 4; ++i)
 			JUTGamePad::CRumble::stopMotor(unk18[i]->mPortNum);
 		unk18[0]->onFlag(0x1);
-		JDrama::TNameRefGen::search<JDrama::TViewObj>("Group 2D")->unkC.mValue
-		    |= 0xB;
-		JDrama::TNameRefGen::search<JDrama::TViewObj>("Guide")->unkC.mValue
-		    &= ~0xB;
+		JDrama::TNameRefGen::search<JDrama::TViewObj>("Group 2D")->unkC.on(0xB);
+		JDrama::TNameRefGen::search<JDrama::TViewObj>("Guide")->unkC.off(0xB);
 		if (gpMSound->gateCheck(0x4817))
 			MSoundSESystem::MSoundSE::startSoundSystemSE(0x4817, 0, nullptr, 0);
 		gpApplication.mFader->startWipe(6, 1.0f, 0.0f);

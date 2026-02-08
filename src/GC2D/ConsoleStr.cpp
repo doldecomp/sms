@@ -260,9 +260,10 @@ void TConsoleStr::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 
 		local_1a0.setup2D();
-		param_2->unk64 = rect;
-		GXSetScissor(param_2->unk64.x1, param_2->unk64.y1,
-		             param_2->unk64.getWidth(), param_2->unk64.getHeight());
+		param_2->mScissorRect = rect;
+		GXSetScissor(param_2->mScissorRect.x1, param_2->mScissorRect.y1,
+		             param_2->mScissorRect.getWidth(),
+		             param_2->mScissorRect.getHeight());
 	}
 }
 
