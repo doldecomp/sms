@@ -18,7 +18,7 @@ void TJ3DSysFlag::perform(u32 param_1, JDrama::TGraphics* param_2)
 void TJ3DSysSetViewMtx::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (param_1 & 0x4)
-		MTXCopy(param_2->unkB4, j3dSys.mViewMtx);
+		MTXCopy(param_2->mViewMtx, j3dSys.mViewMtx);
 }
 
 void TSMSDrawInit::perform(u32 param_1, JDrama::TGraphics* param_2)

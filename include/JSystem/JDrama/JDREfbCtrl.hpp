@@ -25,15 +25,6 @@ public:
 
 	void setSrcRect(const TRect&);
 
-	// TODO: these should be inlines on TFlagT I guess
-	bool checkFlag8() const { return (unk20.mValue & 0x8) != 0; }
-	bool checkFlag10() const { return (unk20.mValue & 0x10) != 0; }
-	bool checkFlag20() const { return (unk20.mValue & 0x20) != 0; }
-	bool checkFlag100() const { return !!(unk20.mValue & 0x100); }
-	bool checkFlag200() const { return !!(unk20.mValue & 0x200); }
-	bool checkFlag400() const { return !!(unk20.mValue & 0x400); }
-	bool checkFlag800() const { return (unk20.mValue & 0x800) != 0; }
-
 public:
 	/* 0x10 */ TRect unk10;
 	/* 0x20 */ TFlagT<u16> unk20;

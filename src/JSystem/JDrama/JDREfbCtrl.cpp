@@ -10,11 +10,11 @@ void TEfbCtrl::perform(u32 param_1, TGraphics* param_2)
 	if (!(param_1 & 0x80))
 		return;
 
-	GXSetColorUpdate(!checkFlag100());
-	GXSetAlphaUpdate(!checkFlag200());
-	GXSetZMode(!checkFlag400(), GX_LEQUAL, GX_TRUE);
+	GXSetColorUpdate(!unk20.check(0x100));
+	GXSetAlphaUpdate(!unk20.check(0x200));
+	GXSetZMode(!unk20.check(0x400), GX_LEQUAL, GX_TRUE);
 
-	param_2->unk44 = unk10;
+	param_2->mDisplayRect = unk10;
 }
 
 void TEfbCtrl::setSrcRect(const TRect& param_1)
@@ -33,21 +33,23 @@ void TEfbCtrl::setSrcRect(const TRect& param_1)
 void TEfbCtrlDisp::perform(u32 param_1, TGraphics* param_2)
 {
 	if ((param_1 & 0x80) != 0) {
-		IssueGXPixelFormatSetting(param_2->unk8, param_2->checkFlag8(),
-		                          param_2->checkFlag10());
+		IssueGXPixelFormatSetting(param_2->mRenderMode,
+		                          param_2->unkFC.check(0x8),
+		                          param_2->unkFC.check(0x10));
 	}
 
 	if ((param_1 & 0x80) != 0) {
-		GXSetColorUpdate(!checkFlag100());
-		GXSetAlphaUpdate(!checkFlag200());
-		GXSetZMode(!checkFlag400(), GX_LEQUAL, 1);
+		GXSetColorUpdate(!unk20.check(0x100));
+		GXSetAlphaUpdate(!unk20.check(0x200));
+		GXSetZMode(!unk20.check(0x400), GX_LEQUAL, 1);
 
-		param_2->unk44 = unk10;
+		param_2->mDisplayRect = unk10;
 	}
 
-	if (((param_1 & 8) != 0) && ((param_2->unkFC.mValue & 0x40) == 0)) {
-		IssueGXCopyDisp(param_2->unk4, param_2->unk44, param_2->unk8,
-		                param_2->unkF4, param_2->unkF8, param_2->unkF0,
+	if (((param_1 & 8) != 0) && !param_2->unkFC.check(0x40)) {
+		IssueGXCopyDisp(param_2->mFrameBuffer, param_2->mDisplayRect,
+		                param_2->mRenderMode, param_2->mClearColor,
+		                param_2->mClearZ, param_2->mFBClamp,
 		                param_2->unkFC.mValue);
 	}
 }
@@ -83,28 +85,27 @@ void TEfbCtrlTex::setTexAttb(const GXTexObj& param_1)
 void TEfbCtrlTex::perform(u32 param_1, TGraphics* param_2)
 {
 	if ((param_1 & 0x80) != 0) {
-		IssueGXPixelFormatSetting(checkFlag800(), checkFlag8(), checkFlag10(),
-		                          false, false);
+		IssueGXPixelFormatSetting(unk20.check(0x800), unk20.check(0x8),
+		                          unk20.check(0x10), false, false);
 	}
 
 	if ((param_1 & 0x80) != 0) {
-		GXSetColorUpdate(!checkFlag100());
-		GXSetAlphaUpdate(!checkFlag200());
-		GXSetZMode(!checkFlag400(), GX_LEQUAL, 1);
+		GXSetColorUpdate(!unk20.check(0x100));
+		GXSetAlphaUpdate(!unk20.check(0x200));
+		GXSetZMode(!unk20.check(0x400), GX_LEQUAL, 1);
 
-		param_2->unk44 = unk10;
+		param_2->mDisplayRect = unk10;
 	}
 
 	if ((param_1 & 8)) {
 		GXSetCopyClamp(mFbClamp);
-		IssueGXSetCopyFilter(checkFlag800(), (u8(*)[2])unk40, checkFlag20(),
-		                     unk44);
+		IssueGXSetCopyFilter(unk20.check(0x800), (u8(*)[2])unk40,
+		                     unk20.check(0x20), unk44);
 
 		if (mImagePtr != nullptr) {
-			u32 iVar2 = IssueGXSetCopyClear(unk38, unk3C, unk20.mValue);
+			u32 iVar2 = IssueGXSetCopyClear(unk38, unk3C, unk20.get());
 			GXSetTexCopySrc(unk10.x1, unk10.y1, unk10.x2, unk10.y2);
-			GXSetTexCopyDst(mWidth, mHeight, mTexFmt,
-			                (unk20.mValue & 0x1000) != 0);
+			GXSetTexCopyDst(mWidth, mHeight, mTexFmt, unk20.check(0x1000));
 			GXCopyTex(mImagePtr, iVar2);
 		}
 	}

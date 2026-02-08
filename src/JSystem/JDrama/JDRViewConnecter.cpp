@@ -22,6 +22,6 @@ void TViewConnecter::perform(u32 param_1, TGraphics* param_2)
 	if (unk14)
 		unk14->testPerform(param_1, param_2);
 
-	if (unk10 && (unk18.mValue & 1))
+	if (unk10 && unk18.check(0x1))
 		unk10->testPerform(8, param_2);
 }

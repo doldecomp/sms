@@ -5,7 +5,7 @@ void TTHPRender::perform(u32 flags, JDrama::TGraphics* gfx)
 	if ((flags & 8)) {
 
 		SMS_DrawInit();
-		GXLoadPosMtxImm(gfx->unkB4, GX_PNMTX0);
+		GXLoadPosMtxImm(gfx->mViewMtx, GX_PNMTX0);
 		GXSetCurrentMtx(GX_PNMTX0);
 		frameNumber = THPPlayerDrawCurrentFrame(0, x, y, polyW, polyH);
 	}

@@ -29,8 +29,10 @@ TNameRef* TDirector::searchF(u16 key, const char* name)
 int TDirector::direct()
 {
 	TGraphics graphics;
+	graphics.unk2 = 1;
 	unk10->testPerform(3, &graphics);
-	unk10->testPerform(8, &graphics);
+	graphics.unk2 = 0;
+	unk14->testPerform(8, &graphics);
 	return 0;
 }
 
@@ -41,10 +43,10 @@ JStage::TObject* TDirector::JSGFindObject(const char* name,
 
 	if (candidate) {
 		switch (candidate->getType()) {
-		case 2:
+		case 1:
 			return static_cast<TCamera*>(candidate);
 
-		case 1:
+		case 2:
 			return static_cast<TActor*>(candidate);
 		}
 	}

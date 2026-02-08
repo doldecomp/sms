@@ -30,6 +30,10 @@ public:
 			mValue &= ~bit;
 	}
 
+	bool check(T bit) const { return (mValue & bit) != 0; }
+	void on(T bit) { mValue |= bit; }
+	void off(T bit) { mValue &= ~bit; }
+
 public:
 	T mValue;
 };
