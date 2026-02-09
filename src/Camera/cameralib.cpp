@@ -20,20 +20,6 @@ static inline f32 fastSqrt(f32 x)
 	}
 }
 
-// TODO: Possibly fake but still useful for now?
-static inline void MatrixT33Multiply(const TMtx33f& mtxT,
-                                     JGeometry::TVec3<f32>* inOutVec)
-{
-	JGeometry::TVec3<f32> oldVec = *inOutVec;
-
-	inOutVec->x = oldVec.x * mtxT.at(0, 0) + oldVec.y * mtxT.at(1, 0)
-	              + oldVec.z * mtxT.at(2, 0);
-	inOutVec->y = oldVec.x * mtxT.at(0, 1) + oldVec.y * mtxT.at(1, 1)
-	              + oldVec.z * mtxT.at(2, 1);
-	inOutVec->z = oldVec.x * mtxT.at(0, 2) + oldVec.y * mtxT.at(1, 2)
-	              + oldVec.z * mtxT.at(2, 2);
-}
-
 // TODO: These are very fake
 static void normalizeInner1(JGeometry::TVec3<f32>& vec) { vec.normalize(); }
 static void normalizeInner2(JGeometry::TVec3<f32>& vec)
@@ -46,14 +32,9 @@ static inline void RotateAboutAxis(const JGeometry::TVec3<f32>& param_axis,
 {
 	JGeometry::TRotation3<TMtx33f> mtxT;
 
-	mtxT.ref(0, 2) = mtxT.ref(1, 2) = 0.0f;
-	mtxT.ref(0, 1) = mtxT.ref(2, 1) = 0.0f;
-	mtxT.ref(1, 0) = mtxT.ref(2, 0) = 0.0f;
-	mtxT.ref(0, 0) = mtxT.ref(1, 1) = mtxT.ref(2, 2) = 1.0f;
-
+	mtxT.identity();
 	mtxT.setRotate(param_axis, angle);
-
-	MatrixT33Multiply(mtxT, vec);
+	mtxT.mult33(*vec);
 }
 
 // TODO: Explore how this is used, and add documentation
@@ -145,7 +126,7 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* param_2, S16Vec* param_3,
 		local_e4.identity33();
 		local_e4.setRotate(local_80, fVar16.z);
 
-		MatrixT33Multiply(local_e4, &local_68);
+		local_e4.mult33(local_68);
 	}
 
 	{
@@ -163,7 +144,7 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* param_2, S16Vec* param_3,
 		local_118.identity33();
 		local_118.setRotate(local_80, fVar16.z);
 
-		MatrixT33Multiply(local_118, &local_74);
+		local_118.mult33(local_74);
 	}
 
 	f32 fVar3 = param_7.y * 0.5f;

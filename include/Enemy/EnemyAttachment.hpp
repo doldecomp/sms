@@ -79,7 +79,7 @@ public:
 
 public:
 	/* 0x10 */ TSharedParts* unk10;
-	/* 0x14 */ TRotation3f unk14;
+	/* 0x14 */ TPosition3f unk14;
 	/* 0x44 */ Vec unk44;
 	/* 0x50 */ Vec unk50;
 	/* 0x5C */ u8 unk5C;
