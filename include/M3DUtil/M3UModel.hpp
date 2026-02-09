@@ -3,12 +3,13 @@
 
 #include <JSystem/JDrama/JDRGraphics.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
-#include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 
 struct M3UMtxCalcSetInfo;
 class J3DModel;
 class J3DTexNoAnm;
 class J3DMtxCalc;
+class J3DMtxCalcBasicAnm;
+class J3DMtxCalcSoftimageAnm;
 
 class M3UModelCommon {
 public:

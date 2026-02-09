@@ -2,7 +2,8 @@
 #define M3DUTIL_M3U_MODEL_MARIO_HPP
 
 #include <M3DUtil/M3UModel.hpp>
-#include <M3DUtil/M3UJoint.hpp>
+
+class M3UMtxCalcSIAnmBlendQuat;
 
 class M3UModelCommonMario : public M3UModelCommon {
 public:
