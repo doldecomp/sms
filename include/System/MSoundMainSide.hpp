@@ -70,12 +70,12 @@ public:
 	static void setBossLivesFlag2(bool);
 	static void setBossLivesFlagOnlyFlag(bool);
 	static void setBossLivesFlag(bool);
-	void fromTalkingCameraDemo(bool);
-	void toTalkingCameraDemo();
+	static void fromTalkingCameraDemo(bool);
+	static void toTalkingCameraDemo();
 	void fromTHPDemo();
 	void toTHPDemo();
-	void fromInnerCameraDemo();
-	void toInnerCameraDemo();
+	static void fromInnerCameraDemo();
+	static void toInnerCameraDemo();
 	void entranceDemoWipeInEnd();
 	void getMonteVillageActorArea(const Vec&);
 };

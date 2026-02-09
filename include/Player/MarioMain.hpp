@@ -1133,6 +1133,17 @@ public:
 		return false;
 	}
 
+	bool checkActionThing() { return mAction & 0x1000 ? true : false; }
+	bool checkActionThing2() { return mAction & 0x800 ? true : false; }
+	bool checkActionThing3()
+	{
+		if (checkFlag(0x1000))
+			return true;
+		if (checkActionThing2())
+			return false;
+		return true;
+	}
+
 	TBGCheckData* getGroundPlane() const { return mGroundPlane; }
 
 	// Fabricated

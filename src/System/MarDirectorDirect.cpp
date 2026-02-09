@@ -1,4 +1,7 @@
 #include <System/MarDirector.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <JSystem/JKernel/JKRFileLoader.hpp>
+#include <JSystem/JDrama/JDRCamera.hpp>
 #include <System/Application.hpp>
 #include <System/MSoundMainSide.hpp>
 #include <System/MarioGamePad.hpp>
@@ -7,6 +10,7 @@
 #include <System/FlagManager.hpp>
 #include <System/CardManager.hpp>
 #include <Player/MarioMain.hpp>
+#include <Player/Watergun.hpp>
 #include <Strategic/ObjHitCheck.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
@@ -17,11 +21,15 @@
 #include <GC2D/PauseMenu2.hpp>
 #include <GC2D/CardSave.hpp>
 #include <GC2D/Guide.hpp>
+#include <GC2D/SunGlass.hpp>
+#include <GC2D/Talk2D2.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
-#include <JSystem/JDrama/JDRNameRefGen.hpp>
-#include <JSystem/JKernel/JKRFileLoader.hpp>
-#include <JSystem/JDrama/JDRCamera.hpp>
+#include <Player/MarioAccess.hpp>
+#include <Player/MarioPositionObj.hpp>
+#include <MoveBG/Item.hpp>
+#include <MoveBG/MapObjDolpic.hpp>
+#include <NPC/NpcBase.hpp>
 #include <dolphin/gx.h>
 
 // rogue includes needed for matching sinit & bss
@@ -180,7 +188,8 @@ static void decideNextStage()
 {
 	// TODO: inline hell. TFlagT is my mortal enemy
 	TGameSequence local_3C;
-	int stage = SMS_getShineStage(gpApplication.mCurrArea.unk0);
+
+	int stage = SMS_getShineStage(gpApplication.mCurrArea.getStage());
 	switch (stage) {
 	case 0:
 		local_3C.set(1, 0xff, JDrama::TFlagT<u16>(0));
@@ -191,7 +200,7 @@ static void decideNextStage()
 		local_3C.set(1, 0xff, JDrama::TFlagT<u16>(0));
 		break;
 	}
-	gpApplication.mNextArea = local_3C;
+	gpApplication.setNextArea(local_3C);
 }
 
 static void decideNextStageOfMiss() { }
@@ -201,7 +210,7 @@ static void checkDefeatShadowMarioAll() { }
 // fabricated
 static inline bool decideSomething()
 {
-	static u8 stages[] = { 0x00 };
+	static u8 stages[] = { 0x6, 0x10, 0x1A, 0x24, 0x2E, 0x38, 0x42 };
 
 	int i = 0;
 	do {
@@ -277,8 +286,6 @@ int TMarDirector::changeState()
 			}
 			break;
 
-		case 0:
-		case 0x7:
 		default:
 			if (JKRGetResource("/scene/map/camera/startcamera.bck")) {
 				nextState = 1;
@@ -294,20 +301,19 @@ int TMarDirector::changeState()
 		if (unk4E & 4) {
 			if (mConsole->unk94->unk2BC == 4) {
 				nextState = 3;
-				unk4E &= ~0x8;
+				unk4E &= ~0x4;
 			}
 		} else {
-			TConsoleStr* str = mConsole->unk94;
-			f32 iVar2        = gpCamera->getRestDemoFrames() / 120.0f;
+			TGameSequence& curArea = gpApplication.mCurrArea;
+			TConsoleStr* str       = mConsole->unk94;
+			f32 iVar2              = gpCamera->getRestDemoFrames() / 120.0f;
 			if (iVar2 <= str->getWipeCloseTime()
-			    || ((gpApplication.mCurrArea.unk0 != 1
-			         || gpApplication.mCurrArea.unk1 != 1)
-			        && (gpApplication.mCurrArea.unk0 != 1
-			            || gpApplication.mCurrArea.unk1 != 9)
+			    || ((curArea.getStage() != 1 || curArea.getScenario() != 1)
+			        && (curArea.getStage() != 1 || curArea.getScenario() != 9)
 			        && (unk18[0]->mEnabledFrameMeaning & 0x61))) {
 				unk4E |= 4;
 				mConsole->unk94->startCloseWipe((unk50 & 8) != 0);
-				unk50 &= ~0x4;
+				unk50 &= ~0x8;
 			}
 		}
 		break;
@@ -317,13 +323,13 @@ int TMarDirector::changeState()
 			if (mConsole->unk94->unk2BC == 6)
 				nextState = 2;
 		} else if (mConsole->unk94->unk2BC == 6
-		           && gpApplication.mCurrArea.unk0 == 0) {
+		           && !gpMarioOriginal->checkActionThing()) {
 			nextState = 4;
 		}
 		break;
 
 	case 2:
-		if (!(gpMarioOriginal->mAction & 0x1000 ? true : false))
+		if (!unkE0->unk26 && !gpMarioOriginal->checkActionThing())
 			nextState = 4;
 		break;
 
@@ -345,13 +351,14 @@ int TMarDirector::changeState()
 			decideNextStage();
 			unk4C &= ~0x100;
 			moveStage();
+			unkE4     = 2;
 			nextState = 9;
 			break;
 		}
 		break;
 
 	case 10:
-		if (unk78 && gpApplication.mFader->mFadeStatus == 1)
+		if (unk78->unkC4 && gpApplication.mFader->mFadeStatus == 1)
 			nextState = 4;
 		break;
 
@@ -361,13 +368,11 @@ int TMarDirector::changeState()
 			if (unk261 == 7) {
 				TFlagManager::smInstance->restore();
 				TFlagManager::smInstance->setBool(true, 0x30001);
-				gpApplication.mNextArea.unk0
-				    = TFlagManager::smInstance->getFlag(0x40000);
-				if (gpApplication.mNextArea.unk0)
-					gpApplication.mNextArea.unk1 = 0xff;
-				else
-					gpApplication.mNextArea.unk1 = 0;
-				gpApplication.mNextArea.unk2 = 0;
+				if (!TFlagManager::smInstance->getFlag(0x40000)) {
+					gpApplication.mNextArea.set(0, 0, 0);
+				} else {
+					gpApplication.mNextArea.set(1, 0xff, 0);
+				}
 				unk4C &= ~0x100;
 				moveStage();
 				gpApplication.mFader->setFadeStatus(
@@ -394,15 +399,15 @@ int TMarDirector::changeState()
 
 	case 7:
 		if (gpApplication.mFader->mFadeStatus == 0
-		    && (MSBgm::getHandle(2) == 0 || unk5C - unk60 > 0x4AF)) {
-			if (TFlagManager::smInstance->getFlag(0x2001) < 0) {
+		    && (MSBgm::getHandle(2) == 0 || unk5C - unk60 >= 1200)) {
+			if (TFlagManager::smInstance->getFlag(0x20001) >= 0) {
 				TFlagManager::smInstance->setBool(true, 0x30002);
-				if (!SMS_isExMap() && gpApplication.mCurrArea.unk0 != 0
-				    && gpApplication.mCurrArea.unk0 != 60) {
-					decideNextStage();
+				const TGameSequence& curArea = gpApplication.mCurrArea;
+				if (SMS_isExMap() || curArea.getStage() == 0
+				    || curArea.getStage() == 60) {
+					gpApplication.mNextArea.set(curArea.getStage(), 0, 0);
 				} else {
-					gpApplication.mNextArea.set(gpApplication.mCurrArea.unk0, 0,
-					                            0);
+					decideNextStage();
 				}
 				unk4C &= ~0x100;
 				moveStage();
@@ -412,7 +417,8 @@ int TMarDirector::changeState()
 			} else {
 				gpApplication.mFader->startWipe(0xE, 0.3f, 0.0f);
 				gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 0xff));
-				unk261 = 7;
+				unk261    = 7;
+				nextState = 11;
 				mConsole->startDisappearStar();
 				mConsole->startDisappearCoin();
 			}
@@ -427,9 +433,8 @@ int TMarDirector::changeState()
 		break;
 	}
 
-	if ((unk18[0]->mPortNum & 0x3FU & TMarioGamePad::mResetFlag)
-	    && gpCardManager->getLastStatus() != -1 && (unk4C & 0x4000)
-	    && !(unk50 & 0x10)) {
+	if (unk18[0]->isSomethingPushed() && gpCardManager->getLastStatus() != -1
+	    && (unk4C & 0x4000) && !(unk50 & 0x10)) {
 		nextState = 12;
 		unk50 |= 0x10;
 		unkE4 = 4;
@@ -511,25 +516,87 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 	}
 }
 
-#pragma dont_inline on
 void TMarDirector::setMario()
 {
-	bool cVar4 = TFlagManager::smInstance->getBool(0x30006);
-	if (cVar4)
-		TFlagManager::smInstance->setBool(false, 0x30006);
+	bool cVar4 = false;
+	if (TFlagManager::getInstance()->getBool(0x30006)) {
+		TFlagManager::getInstance()->setBool(false, 0x30006);
+		cVar4 = true;
+	}
 
-	u32 uVar11 = unkD0;
+	u8 uVar10 = unkD0;
 
-	JDrama::TNameRef* marioSetPosition
-	    = JDrama::TNameRefGen::search<JDrama::TNameRef>("マリオセット位置");
-	if (!marioSetPosition /* && marioSetPosition->unkD0 */)
-		uVar11 = 0;
+	TMarioPositionObj* marioSetPosition
+	    = JDrama::TNameRefGen::search<TMarioPositionObj>("マリオセット位置");
+	if (!marioSetPosition || marioSetPosition->unkD0 == 0)
+		uVar10 = 0;
 
 	switch (unkD1) {
-		// TODO: requires knowing what marioSetPosition is and TWaterGun
+	case 1: {
+		f32 fVar1 = 0.0f;
+
+		const JGeometry::TVec3<f32>* pos = nullptr;
+
+		if (uVar10) {
+			fVar1 = marioSetPosition->getUnk70(uVar10 - 1).y;
+			pos   = &marioSetPosition->getUnk10(uVar10 - 1);
+		}
+		gpMarioOriginal->rollingStart(pos, fVar1);
+	} break;
+
+	case 2: {
+		int iVar9 = 0;
+		switch (SMS_getShineStage(gpApplication.mPrevArea.getStage())) {
+		case 5:
+		case 6:
+		case 7:
+			iVar9 = 1;
+			break;
+		case 8:
+			iVar9 = 2;
+			break;
+		}
+		f32 fVar1 = 0.0f;
+
+		const JGeometry::TVec3<f32>* pos = nullptr;
+
+		if (uVar10) {
+			fVar1 = marioSetPosition->getUnk70(uVar10 - 1).y;
+			pos   = &marioSetPosition->getUnk10(uVar10 - 1);
+		}
+		gpMarioOriginal->returnStart(pos, fVar1, cVar4, iVar9);
+	} break;
+
+	case 4:
+		gpMarioOriginal->toroccoStart();
+		break;
+
+	case 3:
+		const JGeometry::TVec3<f32>* pos = nullptr;
+		if (uVar10)
+			pos = &marioSetPosition->getUnk10(uVar10 - 1);
+		gpMarioOriginal->waitingStart(pos, 0.0f);
+		break;
 	}
+
+	switch (gpApplication.mCurrArea.getStage()) {
+	case 0x3C:
+		gpMarioOriginal->mWaterGun->changeNozzle(1, true);
+		break;
+
+		// TODO: crazy cases
+	case 0:
+	case 7:
+		gpMarioOriginal->mWaterGun->changeNozzle(
+		    TFlagManager::getInstance()->getFlag(0x40004), true);
+		gpMarioOriginal->mWaterGun->changeNozzle(0, true);
+		break;
+	}
+
+	u32 uVar6 = SMS_getShineIDofExStage(gpApplication.mCurrArea.getStage());
+	if (uVar6 != 0xff && TFlagManager::getInstance()->getShineFlag(uVar6) == 0)
+		gpMarioOriginal->unk118 &= ~0x8000;
 }
-#pragma dont_inline off
 
 void TMarDirector::nextStateInitialize(u8 next_state)
 {
@@ -684,9 +751,242 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 	}
 }
 
-#pragma dont_inline on
-u8 TMarDirector::updateGameMode() { }
-#pragma dont_inline off
+u8 TMarDirector::updateGameMode()
+{
+	u8 r29 = mState;
+
+	switch (unk124) {
+	case 0:
+		if (!(unk4C & 0x1FFF)) {
+			if (SMS_CheckMarioFlag(0x400)) {
+				unk4C |= 0x20;
+				break;
+			}
+
+			if (mMap != 15) {
+				if (unk18[0]->mButton.mTrigger & 0x10) {
+					r29 = 10;
+					break;
+				}
+
+				if (unk18[0]->mEnabledFrameMeaning & 0x1) {
+					if (gpMarioOriginal->checkActionThing3()) {
+						r29 = 5;
+						break;
+					}
+
+					if (gpMSound->gateCheck(0x483D))
+						MSoundSESystem::MSoundSE::startSoundSystemSE(
+						    0x483D, 0, nullptr, 0);
+				}
+			}
+		} else {
+			if (unk4C & 0x20) {
+				unk4C &= ~0x20;
+				r29 = 7;
+				TFlagManager::getInstance()->setFlag(0x40002, 0);
+				break;
+			}
+
+			if (unk4C & 0x1) {
+				unk4C &= ~0x1;
+				unk126 = 3;
+
+				TGCConsole2* console = gpMarDirector->mConsole;
+				console->unk94->startAppearShineGet();
+				console->unk34[19] = 1;
+				MSBgm::startBGM(0x8001000a);
+				TFlagManager::getInstance()->setBool(true, 0x30006);
+				TFlagManager::getInstance()->setShineFlag(unk25C->unk134);
+				f32 fVar3 = unkDC->mRate;
+				unkDC->registFadeout(fVar3 * 1.0f, fVar3 * 5.3333333f);
+				unk4C |= 0x8202;
+				unk261 = 6;
+				decideNextStage();
+				break;
+			}
+
+			if (unk4C & 0x40) {
+				unk126 = 3;
+				break;
+			}
+
+			if (unk4C & 0x200) {
+				unk4C &= ~0x200;
+				r29 = 11;
+				break;
+			}
+
+			if (unk4C & 0x8) {
+				unk4C &= ~0x8;
+				unk4C |= 0x2;
+				unk126 = 3;
+				if (gpApplication.mNextArea.getStage() == 5) {
+					fireStartDemoCamera("hodai_dpt_pinna1", nullptr, -1, 0.0f,
+					                    false, nullptr, 0, nullptr, 0);
+					if (unk254 != nullptr)
+						unk254->startDemo();
+					break;
+				}
+
+				if (gpApplication.mNextArea.getStage() == 6) {
+					fireStartDemoCamera("camera_sirena_gate_in", nullptr, -1,
+					                    0.0f, false, nullptr, 0, nullptr, 0);
+					break;
+				}
+
+				if (gpApplication.mNextArea.getStage() == 8) {
+					fireStartDemoCamera("camera_monte_gate_in", nullptr, -1,
+					                    0.0f, false, nullptr, 0, nullptr, 0);
+					break;
+				}
+
+				break;
+			}
+
+			if (unk4C & 0x4) {
+				unk4C &= ~0x4;
+				unk4C |= 0x2;
+				unk126 = 3;
+				fireStartDemoCamera(nullptr, nullptr, -1, 0.0f, false, nullptr,
+				                    0, unk250, 0);
+				break;
+			}
+
+			if (unk4C & 0x2) {
+				moveStage();
+				r29 = 9;
+				break;
+			}
+		}
+		break;
+
+	case 2:
+		if (unk4C & 0x40) {
+			unk126 = 4;
+		} else {
+			if (unkB0->unk248 == 0)
+				unk126 = 0;
+		}
+		break;
+
+	case 4: {
+		bool bVar5  = false;
+		bool uVar15 = 0;
+		if (unk4C & 0x80) {
+			uVar15 = 1;
+			bVar5  = true;
+			unk4C &= ~0x80;
+		} else {
+			if (!gpCamera->getRestDemoFrames()) {
+				if (!MSBgm::getHandle(2) || unk5C - unk60 >= 1200) {
+					bVar5  = true;
+					uVar15 = unk12C[unk24D].unk10;
+				}
+			}
+		}
+
+		if (bVar5) {
+			u32 prev = unk24D++;
+			unk24D &= 0x7;
+			TDemoInfo* info = &unk12C[prev];
+			if (unk24D != unk24C) {
+				gpCamera->endDemoCamera();
+				if (info->unk14 != nullptr)
+					(*info->unk14)(info->unk18, 1);
+
+				gpCamera->startDemoCamera(info->unk0, info->unk4, info->unk8,
+				                          info->unkC, info->unk10);
+				if (info->unk14 != nullptr)
+					(*info->unk14)(info->unk18, 0);
+			} else {
+				unk4C &= ~0x40;
+				unk126 = unk124 == 4 ? 2 : 0;
+				if (uVar15 != 0)
+					gpCamera->endDemoCamera();
+				if (unk12C[prev].unk14 != nullptr)
+					(*unk12C[prev].unk14)(unk12C[prev].unk18, 1);
+			}
+		}
+	} break;
+	}
+
+	if (unk24D == unk24C)
+		unk4C &= ~0x80;
+
+	unk125 = unk124;
+
+	if (unk124 != unk126) {
+		switch (unk124) {
+		case 2:
+			if (unk126 == 0) {
+				unkA0 = 0;
+				unkA4 = 0;
+				unk18[0]->mFlags &= ~0x2;
+				OSStartStopwatch(&unkE8);
+			}
+			break;
+
+		case 3:
+		case 4:
+			if (unk124 == 4)
+				MSMainProc::fromTalkingCameraDemo(unk124 == 4);
+			else
+				MSMainProc::fromInnerCameraDemo();
+			unk18[0]->mFlags &= ~0x80;
+			OSStartStopwatch(&unkE8);
+			break;
+		}
+
+		switch (unk126) {
+		case 0:
+			break;
+
+		case 1:
+			unkA0->onLiveFlag(LIVE_FLAG_UNK40000);
+			unkA0->unkC.off(0x3);
+			unk18[0]->mFlags |= 0x8;
+			OSStopStopwatch(&unkE8);
+			break;
+
+		case 2:
+			if (unk124 == 1)
+				unkB0->openTalkWindow(unkA0);
+			break;
+
+		case 3:
+		case 4:
+			if (unk124 == 4)
+				MSMainProc::toTalkingCameraDemo();
+			else
+				MSMainProc::toInnerCameraDemo();
+			unk18[0]->mFlags |= 0x10;
+			if (unk12C[unk24D].unk20.mValue == 1) {
+				gpCamera->startGateDemoCamera(unk12C[unk24D].unk1C);
+			} else {
+				TDemoInfo* info = &unk12C[unk24D];
+				gpCamera->startDemoCamera(info->unk0, info->unk4, info->unk8,
+				                          info->unkC, info->unk10);
+				if (info->unk14 != nullptr)
+					(*info->unk14)(info->unk18, 0);
+			}
+			OSStopStopwatch(&unkE8);
+			unk60 = unk5C;
+			break;
+		}
+
+		unk124 = unk126;
+	}
+
+	if (unk128 & 0x1) {
+		unk128 &= ~0x1;
+		unk128 |= 0x2;
+	} else {
+		unk128 &= ~0x2;
+	}
+
+	return r29;
+}
 
 void TMarDirector::moveStage()
 {
@@ -694,8 +994,8 @@ void TMarDirector::moveStage()
 	unkE4 = 15;
 	gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 0xff));
 
-	u8 sVar4 = SMS_getShineStage(gpApplication.mNextArea.unk0);
-	u8 sVar5 = SMS_getShineStage(gpApplication.mCurrArea.unk0);
+	u8 sVar4 = SMS_getShineStage(gpApplication.mNextArea.getStage());
+	u8 sVar5 = SMS_getShineStage(gpApplication.mCurrArea.getStage());
 	if (sVar4 != sVar5)
 		TFlagManager::smInstance->setFlag(0x40002, 0);
 
@@ -705,7 +1005,7 @@ void TMarDirector::moveStage()
 		switch (nextArea.unk0) {
 		case 1:
 			unkE4         = 2;
-			nextArea.unk1 = decideNextScenario(nextArea.unk0);
+			nextArea.unk1 = decideNextScenario(nextArea.getStage());
 			TFlagManager::smInstance->setFlag(0x40003, 0);
 			break;
 
@@ -834,10 +1134,11 @@ void TMarDirector::moveStage()
 		}
 	}
 
-	if (gpMarioOriginal->unk118 & 0x8000) {
-		// TODO: water gun
-		// u32 uVar1 = gpMarioOriginal->waterGun->unk1C85;
-		TFlagManager::smInstance->setFlag(0x40004, 0);
+	if (gpMarioOriginal->checkFlag(0x8000)) {
+		u32 r5 = 0;
+		if ((int)gpMarioOriginal->mWaterGun->mSecondNozzle == 3)
+			r5 = 4;
+		TFlagManager::smInstance->setFlag(0x40004, r5);
 	}
 }
 

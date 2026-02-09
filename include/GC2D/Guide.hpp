@@ -31,6 +31,12 @@ public:
 	void appearGuidePane(int);
 	void disappearGuidePane(int);
 	void perform(unsigned long, JDrama::TGraphics*);
+
+public:
+	/* 0x10 */ char unk10[0xC4 - 0x10];
+	/* 0xC4 */ u8 unkC4;
+	/* 0xC5 */ u8 unkC5;
+	/* 0xC6 */ char unkC6[0x6f8 - 0xC6];
 };
 
 #endif
