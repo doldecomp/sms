@@ -52,6 +52,8 @@ public:
 	int drawDVDErr();
 	JKRMemArchive* mountStageArchive();
 
+	void setNextArea(const TGameSequence& next_area) { mNextArea = next_area; }
+
 public:
 	enum {
 		APP_STATE_WAIT     = 0,

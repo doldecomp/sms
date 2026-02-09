@@ -39,6 +39,11 @@ public:
 	void openWindow(s8, f32);
 
 	static void* cColorTable;
+
+public:
+	/* 0x10 */ char unk10[0x248 - 0x10];
+	/* 0x248 */ u32 unk248;
+	/* 0x24C */ char unk24C[0x344 - 0x24C];
 };
 
 #endif

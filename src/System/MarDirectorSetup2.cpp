@@ -16,8 +16,10 @@
 #include <GC2D/Guide.hpp>
 #include <GC2D/CardLoad.hpp>
 #include <GC2D/Talk2D2.hpp>
+#include <GC2D/SunGlass.hpp>
 #include <THPPlayer/THPPlayer.h>
 #include <MSound/MSound.hpp>
+#include <MoveBG/MapObjDolpic.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JKernel/JKRMemArchive.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
@@ -99,12 +101,12 @@ void TMarDirector::setup2()
 
 	mConsole->unkC = 0xB;
 
-	unkDC = JDrama::TNameRefGen::search<TSMSFader>("シャインフェーダー");
+	unkDC = JDrama::TNameRefGen::search<TShineFader>("シャインフェーダー");
 
 	unkDC->mRate = 120.0f;
 	unkDC->setColor(JUtility::TColor(0xD2, 0xD2, 0xD2, 0xFF));
 
-	unkE0 = JDrama::TNameRefGen::search<TSMSFader>("サングラスフェーダ");
+	unkE0 = JDrama::TNameRefGen::search<TSunGlass>("サングラスフェーダ");
 	unk78 = JDrama::TNameRefGen::search<TGuide>("ガイド画面");
 	unkAC = JDrama::TNameRefGen::search<TPauseMenu2>("ポーズメニュー");
 	unkB0 = JDrama::TNameRefGen::search<TTalk2D2>("会話表示");
@@ -123,7 +125,7 @@ void TMarDirector::setup2()
 		unk70->unkC = 0xB;
 	}
 
-	unk254 = JDrama::TNameRefGen::search<JDrama::TNameRef>("デモ砲台");
+	unk254 = JDrama::TNameRefGen::search<TDemoCannon>("デモ砲台");
 
 	TDrawSyncManager::smInstance->setCallback(1, 0x7D, 0x7D, gpSunMgr);
 	TDrawSyncManager::smInstance->setCallback(2, 0x7E, 0x91,

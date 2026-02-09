@@ -157,7 +157,7 @@ public:
 	void offFlag(u32 flag) { mFlags &= ~flag; }
 
 	// fabricated
-	bool isSomethingPushed() const { return (u16)(1 << mPortNum) & mResetFlag; }
+	bool isSomethingPushed() const { return mResetFlag & (u16)(1 << mPortNum); }
 
 	static u32 read();
 	void onNeutralMarioKey();

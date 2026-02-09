@@ -6,12 +6,7 @@
 
 class TGameSequence {
 public:
-	TGameSequence()
-	    : unk0(0)
-	    , unk1(0)
-	    , unk2(0)
-	{
-	}
+	TGameSequence() { set(0, 0, 0); }
 
 	TGameSequence& operator=(const TGameSequence& other)
 	{

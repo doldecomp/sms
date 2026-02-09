@@ -31,6 +31,9 @@ class TGuide;
 class TCardLoad;
 class JKRMemArchive;
 class TStageEventInfo;
+class TSunGlass;
+class TShineFader;
+class TDemoCannon;
 
 class TMarDirector;
 
@@ -43,7 +46,7 @@ public:
 		/* 0x4 */ const JGeometry::TVec3<f32>* unk4;
 		/* 0x8 */ u32 unk8;
 		/* 0xC */ f32 unkC;
-		/* 0x10 */ u8 unk10;
+		/* 0x10 */ bool unk10;
 		/* 0x14 */ s32 (*unk14)(u32, u32);
 		/* 0x18 */ u32 unk18;
 		/* 0x1C */ JDrama::TActor* unk1C;
@@ -113,6 +116,7 @@ public:
 	u8 getCurrentStage() { return unk7D; }
 	bool checkUnk4CFlag(int flag) { return unk4C & flag; }
 	void onUnk4CFlag(int flag) { unk4C |= flag; }
+	void offUnk4CFlag(int flag) { unk4C &= ~flag; }
 	TGCConsole2* getConsole() { return mConsole; }
 
 	bool checkUnk124Thing1() const
@@ -145,13 +149,13 @@ public:
 	/* 0x40 */ TPerformList* unk40;
 	/* 0x44 */ TPerformList* mShinePfLstMov;
 	/* 0x48 */ TPerformList* mShinePfLstAnm;
-	/* 0x4C */ volatile u16 unk4C;
+	/* 0x4C */ u16 unk4C;
 	/* 0x4E */ u16 unk4E;
 	/* 0x50 */ u16 unk50;
 	/* 0x54 */ int unk54;
 	/* 0x58 */ int unk58;
-	/* 0x5C */ u32 unk5C;
-	/* 0x60 */ u32 unk60;
+	/* 0x5C */ int unk5C;
+	/* 0x60 */ int unk60;
 	/* 0x64 */ u8 mState;
 	/* 0x68 */ u32 unk68;
 	/* 0x6C */ f32 unk6C;
@@ -166,7 +170,8 @@ public:
 	/* 0x84 */ TTalkCursor* unk84;
 	/* 0x88 */ JGadget::TVector_pointer<TBaseNPC> unk88;
 	/* 0xA0 */ TBaseNPC* unkA0; // talking NPC
-	/* 0xA4 */ char unkA4[0x8];
+	/* 0xA4 */ u32 unkA4;
+	/* 0xA8 */ char unkA8[0x4];
 	/* 0xAC */ TPauseMenu2* unkAC;
 	/* 0xB0 */ TTalk2D2* unkB0;
 	/* 0xB4 */ u8 unkB4;
@@ -180,8 +185,8 @@ public:
 	/* 0xD1 */ u8 unkD1;
 	/* 0xD4 */ void* unkD4;
 	/* 0xD8 */ JKRMemArchive* unkD8;
-	/* 0xDC */ TSMSFader* unkDC;
-	/* 0xE0 */ TSMSFader* unkE0; // TODO: type unconfirmed
+	/* 0xDC */ TShineFader* unkDC;
+	/* 0xE0 */ TSunGlass* unkE0;
 	/* 0xE4 */ u32 unkE4;
 	/* 0xE8 */ OSStopwatch unkE8;
 	/* 0x120 */ char unk120[0x4];
@@ -192,8 +197,8 @@ public:
 	/* 0x12C */ TDemoInfo unk12C[8];
 	/* 0x24C */ u8 unk24C;
 	/* 0x24D */ u8 unk24D;
-	/* 0x250 */ u32 unk250;
-	/* 0x254 */ JDrama::TNameRef* unk254;
+	/* 0x250 */ JDrama::TActor* unk250;
+	/* 0x254 */ TDemoCannon* unk254;
 	/* 0x258 */ MSStage* unk258;
 	/* 0x25C */ TShine* unk25C;
 	/* 0x260 */ u8 unk260;
