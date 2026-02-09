@@ -137,8 +137,7 @@ void TCoasterEnemy::calcRootMatrix()
 {
 	TPosition3f pos;
 
-	pos.setQuat(mQuat);
-	pos.setTrans(mPosition);
+	pos.setQT(mQuat, mPosition);
 	getModel()->setBaseScale(mScaling);
 	getModel()->setBaseTRMtx(pos);
 }
@@ -220,8 +219,7 @@ void TCoasterKiller::perform(u32 param_1, JDrama::TGraphics* param_2)
 	TCoasterEnemy::perform(param_1, param_2);
 
 	if ((param_1 * 2) && (param_1 & 1) == 0) {
-		mParticlePos.setQuat(getQuat());
-		mParticlePos.setTrans(mPosition);
+		mParticlePos.setQT(getQuat(), mPosition);
 		gpMarioParticleManager->emitAndBindToMtxPtr(0x174, mParticlePos.mMtx, 1,
 		                                            this);
 

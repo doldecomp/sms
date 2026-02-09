@@ -157,51 +157,36 @@ void TPollutionCounterObj::draw(int param_1) const
 	}
 }
 
+// TODO: hack
+static inline void setEular(TRotation3f& rot, s16 yaw, s16 pitch, s16 roll)
+{
+	rot.setEular(yaw, pitch, roll);
+}
+
 void TPollutionCounterObj::countObjDegree() const
 {
 	ReInitializeGX();
 	initDrawObjGX();
 	for (u16 i = 0; i < unk8; ++i) {
 		J3DJoint* pJVar5 = unk14[i]->getJoint();
-		f32 fVar1        = pJVar5->getMin().z;
-		f32 fVar2        = pJVar5->getMin().x;
 
-		// TODO: This should be initCountObjDegree I think but can't get it to
-		// inline properly (and it doesn't match...)
-		JGeometry::SMatrix34C<f32> SStack_bc;
-		TRotation3f TStack_8c;
-		SStack_bc.mMtx[2][3] = 0.0f;
-		SStack_bc.mMtx[1][3] = 0.0f;
-		SStack_bc.mMtx[0][3] = 0.0f;
-		SStack_bc.mMtx[1][2] = 0.0f;
-		SStack_bc.mMtx[0][2] = 0.0f;
-		SStack_bc.mMtx[2][1] = 0.0f;
-		SStack_bc.mMtx[0][1] = 0.0f;
-		SStack_bc.mMtx[2][0] = 0.0f;
-		SStack_bc.mMtx[1][0] = 0.0f;
-		SStack_bc.mMtx[2][2] = 1.0f;
-		TStack_8c.mMtx[3][2] = 0.0f;
-		SStack_bc.mMtx[1][1] = 1.0f;
-		TStack_8c.mMtx[2][1] = 0.0f;
-		SStack_bc.mMtx[0][0] = 1.0f;
-		TStack_8c.mMtx[1][0] = 0.0f;
-		TStack_8c.mMtx[0][0] = 0.03125f;
-		TStack_8c.mMtx[0][1] = 0.0f;
-		TStack_8c.mMtx[0][2] = 0.0f;
-		TStack_8c.mMtx[1][1] = 0.0f;
-		TStack_8c.mMtx[1][2] = 0.03125f;
-		TStack_8c.mMtx[2][0] = 0.0f;
-		TStack_8c.mMtx[2][2] = 0.0f;
-		TStack_8c.mMtx[3][0] = 0.0f;
-		TStack_8c.mMtx[3][1] = 0.0f;
-		PSMTXConcat(SStack_bc.mMtx, TStack_8c.mMtx, SStack_bc.mMtx);
-		TStack_8c.setEular((s16)-16384, 0, 0);
-		MTXConcat(SStack_bc.mMtx, TStack_8c.mMtx, SStack_bc.mMtx);
-		SStack_bc.mMtx[0][3] = -fVar2 * 0.03125f;
-		SStack_bc.mMtx[1][3] = -fVar1 * 0.03125f;
-		SStack_bc.mMtx[2][3] = 0.0;
-		GXLoadPosMtxImm(SStack_bc.mMtx, 0);
+		const Vec& minVec = pJVar5->getMin();
+		f32 fVar1         = minVec.z;
+		f32 fVar2         = minVec.x;
 
+		TPosition3f local_AC;
+		TPosition3f local_7C;
+
+		local_7C.identity();
+
+		local_AC.identity();
+		local_AC.setScale(0.03125f, 0.03125f, 0.0f);
+
+		MTXConcat(local_7C.mMtx, local_AC.mMtx, local_7C.mMtx);
+		setEular(local_AC, DEG2SHORTANGLE(-90.0f), 0, 0);
+		MTXConcat(local_7C.mMtx, local_AC.mMtx, local_7C.mMtx);
+		local_7C.setTrans(-fVar1 / 32, -fVar2 / 32, 0);
+		GXLoadPosMtxImm(local_7C.mMtx, 0);
 		draw(i);
 		setCallback(i);
 	}

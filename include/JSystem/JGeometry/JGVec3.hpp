@@ -228,6 +228,8 @@ public:
 
 	void normalize() { setLength(*this, 1.0f); }
 
+	void normalize(const TVec3<f32>& other) { setLength(other, 1.0f); }
+
 	void setLength(const TVec3<f32>& v, f32 length)
 	{
 		f32 lsq = v.squared();

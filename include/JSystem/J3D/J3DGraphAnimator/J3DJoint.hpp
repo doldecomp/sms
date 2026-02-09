@@ -203,7 +203,7 @@ public:
 	const Vec& getMax() { return mMax; }
 	void setTransformInfo(const J3DTransformInfo& v) { mTransformInfo = v; }
 
-private:
+public:
 	/* 0x18 */ u16 mJntNo;
 	/* 0x1A */ u8 mKind;
 	/* 0x1B */ u8 mScaleCompensate;

@@ -18,12 +18,7 @@ public:
 		this->setTrans(x, y, z);
 	}
 
-	// From SMG. These do NOT call the identity33() function.
-	// Implementations arbitrary, feel free to play around with them.
-	// void setTrans(const TVec3<f32>& translation)
-	// {
-	// 	setTrans(translation.x, translation.y, translation.z);
-	// }
+	// From SMG, should be real
 	void setTrans(const TVec3<f32>& translation)
 	{
 		this->ref(0, 3) = translation.x;
@@ -36,7 +31,19 @@ public:
 		this->ref(1, 3) = y;
 		this->ref(2, 3) = z;
 	}
-	void zeroTrans() { setTrans(0.0f, 0.0f, 0.0f); }
+	void getTrans(JGeometry::TVec3<f32>& translation) const
+	{
+		translation.set(this->at(0, 3), this->at(1, 3), this->at(2, 3));
+	}
+	void zeroTrans()
+	{
+		this->ref(0, 3) = this->ref(1, 3) = this->ref(2, 3) = 0.0f;
+	}
+	void setQT(const TQuat4<f32>& quat, const TVec3<f32>& trans)
+	{
+		this->setQuat(quat);
+		this->setTrans(trans);
+	}
 };
 
 } // namespace JGeometry
