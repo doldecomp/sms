@@ -1121,11 +1121,13 @@ MtxPtr THamuKuri::getTakingMtx()
 	mHeldObject->onHitFlag(HIT_FLAG_UNK1);
 
 	TPosition3f mat;
-	mat.translation(mPosition.x, mPosition.y, mPosition.z);
+	mat.translation(mPosition.x, dVar4, mPosition.z);
 
 	Mtx afStack_84;
 	MsMtxSetRotRPH(afStack_84, 0.0f, 0.0f, 0.0f);
-	MTXConcat(mat.mMtx, afStack_84, mat.mMtx);
+	MTXConcat(mat, afStack_84, mat);
+
+	// TODO: identity33 but order is transposed?!
 	unk1B0[0][0] = 1.0f;
 	unk1B0[0][1] = 0.0f;
 	unk1B0[0][2] = 0.0f;
@@ -1137,7 +1139,10 @@ MtxPtr THamuKuri::getTakingMtx()
 	unk1B0[2][0] = 0.0f;
 	unk1B0[2][1] = 0.0f;
 	unk1B0[2][2] = 1.0f;
-	MTXConcat(mat.mMtx, unk1B0, unk1B0);
+
+	MTXConcat(mat, unk1B0, unk1B0);
+
+	return unk1B0;
 }
 
 bool THamuKuri::isResignationAttack()
