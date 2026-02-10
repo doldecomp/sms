@@ -126,16 +126,11 @@ public:
 	TMerryPole()
 	    : TMapObjBase("メリーゴーランド用ポール")
 	{
-		// not TRotation3f::identity33 and not written in it's style...
-		unk138.mMtx[1][0] = unk138.mMtx[2][0] = unk138.mMtx[0][1]
-		    = unk138.mMtx[2][1] = unk138.mMtx[0][2] = unk138.mMtx[1][2]
-		    = unk138.mMtx[0][3] = unk138.mMtx[1][3] = unk138.mMtx[2][3] = 0.0f;
-
-		unk138.mMtx[0][0] = unk138.mMtx[1][1] = unk138.mMtx[2][2] = 1.0f;
+		unk138.identity();
 	}
 
 public:
-	/* 0x138 */ TRotation3f unk138; // TODO: type likely wrong
+	/* 0x138 */ TMtx34f unk138;
 };
 
 #endif

@@ -23,8 +23,50 @@ void TSmJ3DAct::load(JSUMemoryInputStream& stream)
 		unk4C = J3DAnmLoaderDataBase::load(anmRes);
 		unk54 = J3DNewMtxCalcAnm(unk44->getUnkC(), (J3DAnmTransform*)unk4C);
 		unk50 = new J3DFrameCtrl;
-		unk50->mEndFrame = unk4C->getFrameMax();
+		unk50->setEndFrame(unk4C->getFrameMax());
 	}
 }
 
-void TSmJ3DAct::perform(u32 param_1, TGraphics* param_2) { }
+void TSmJ3DAct::perform(u32 param_1, TGraphics* param_2)
+{
+	if (param_1 & 2) {
+		TPosition3f mtx;
+		mtx.translation(mPosition.x, mPosition.y, mPosition.z);
+
+		TRotation3f rotX;
+		rotX.setEularX(DEG_TO_RAD(mRotation.x));
+		TMtx34f mtx1;
+		mtx1.concat(rotX, mtx);
+
+		TRotation3f rotY;
+		rotY.setEularY(DEG_TO_RAD(mRotation.y));
+		TMtx34f mtx2;
+		mtx2.concat(rotY, mtx1);
+
+		TRotation3f rotZ;
+		rotZ.setEularZ(DEG_TO_RAD(mRotation.z));
+		TMtx34f mtx3;
+		mtx3.concat(rotZ, mtx2);
+
+		unk48->setBaseTRMtx(mtx3);
+		unk48->setBaseScale(mScaling);
+
+		if (unk4C == nullptr) {
+			unk48->calc();
+		} else {
+			unk50->update();
+			unk4C->setFrame(unk50->getCurrentFrame());
+			J3DMtxCalc* prevCalc
+			    = unk48->getModelData()->getJointNodePointer(0)->getMtxCalc();
+			unk48->getModelData()->getJointNodePointer(0)->setMtxCalc(unk54);
+			unk48->calc();
+			unk48->getModelData()->getJointNodePointer(0)->setMtxCalc(prevCalc);
+		}
+	}
+
+	if (param_1 & 0x200)
+		unk48->entry();
+
+	if (param_1 & 0x4)
+		unk48->viewCalc();
+}
