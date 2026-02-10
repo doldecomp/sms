@@ -175,13 +175,13 @@ void TMirrorModel::init(const char* name)
 	                                 0x10210000);
 
 	TPosition3f local_44;
-	// TODO: WTF is happening with inlines here?
-	identity34(local_44.mMtx);
-	MTXCopy(local_44, unk4->getModel()->getBaseTRMtx());
+	local_44.identity();
+	unk4->getModel()->setBaseTRMtx(local_44);
 	unk4->calc();
 	unk4->getModel()->getModelData()->getMaterialNodePointer(0)->change();
 
-	gpMirrorModelManager->findMirrorCamera();
+	if (!gpMirrorModelManager->unk24)
+		gpMirrorModelManager->findMirrorCamera();
 	unk8 = gpMirrorModelManager->unk24;
 
 	initPlaneInfo();
@@ -281,16 +281,15 @@ void TMirrorModelManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 }
 
-// TODO: size is incorrect
 void TMirrorModelManager::findMirrorCamera()
 {
-	if (!unk24)
-		unk24 = JDrama::TNameRefGen::search<TMirrorCamera>("鏡カメラ");
+	unk24 = JDrama::TNameRefGen::search<TMirrorCamera>("鏡カメラ");
 }
 
 void TMirrorModelManager::loadAfter()
 {
-	findMirrorCamera();
+	if (!unk24)
+		findMirrorCamera();
 
 	for (int i = 0; i < unk10; ++i) {
 		// TODO: ghidra decompiler died here

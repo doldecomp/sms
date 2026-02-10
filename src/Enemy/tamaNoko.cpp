@@ -70,17 +70,6 @@ TTamaNokoFlower::TTamaNokoFlower(const TLiveActor* param_1, int param_2,
 	unk2C->initAnmSound(nullptr, 1, 0.0f);
 }
 
-// TODO: is this TPosition3 or am I trippin
-struct Magic : TRotation3f {
-	void translate(f32 x, f32 y, f32 z)
-	{
-		identity33();
-		this->mMtx[0][3] = x;
-		this->mMtx[1][3] = y;
-		this->mMtx[2][3] = z;
-	}
-};
-
 void TTamaNokoFlower::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (param_1 & 1) {
@@ -136,9 +125,9 @@ void TTamaNokoFlower::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (param_1 & 2) {
-		Magic magic;
-		magic.translate(unk10->mPosition.x, unk10->mPosition.y,
-		                unk10->mPosition.z);
+		TPosition3f magic;
+		magic.translation(unk10->mPosition.x, unk10->mPosition.y,
+		                  unk10->mPosition.z);
 		unk18->getModel()->setBaseTRMtx(magic);
 		if (unk2C != nullptr && unk30 != 0) {
 			J3DFrameCtrl* ctrl = unk18->getFrameCtrl(0);
