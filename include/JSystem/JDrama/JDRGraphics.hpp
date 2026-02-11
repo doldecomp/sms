@@ -40,9 +40,8 @@ struct TGraphics {
 	/* 0x44 */ TRect mDisplayRect;
 	/* 0x54 */ TRect mViewportRect;
 	/* 0x64 */ TRect mScissorRect;
-	// TODO: both are some kind of wrapper like TPosition/TRotation
-	/* 0x74 */ TMtx44f mProjMtx;
-	/* 0xB4 */ TSMtx34f mViewMtx;
+	/* 0x74 */ TProjection3f mProjMtx;
+	/* 0xB4 */ TPosition3f mViewMtx;
 	/* 0xE4 */ u32 unkE4;
 	/* 0xE8 */ float mNearPlane;
 	/* 0xEC */ float mFarPlane;
@@ -50,6 +49,7 @@ struct TGraphics {
 	/* 0xF4 */ JUtility::TColor mClearColor;
 	/* 0xF8 */ u32 mClearZ;
 	/* 0xFC */ TFlagT<u16> unkFC;
+	/* 0xFE */ TFlagT<u16> unkFE;
 };
 
 } // namespace JDrama

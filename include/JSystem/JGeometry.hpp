@@ -12,6 +12,7 @@
 #include <JSystem/JGeometry/JGUtil.hpp>
 #include <JSystem/JGeometry/JGVec2.hpp>
 #include <JSystem/JGeometry/JGVec3.hpp>
+#include <JSystem/JGeometry/JGProjection.hpp>
 
 typedef JGeometry::SMatrix33C<f32> TSMtx33f;
 typedef JGeometry::SMatrix34C<f32> TSMtx34f;
@@ -22,6 +23,7 @@ typedef JGeometry::TMatrix44<TSMtx44f> TMtx44f;
 
 typedef JGeometry::TRotation3<TMtx34f> TRotation3f;
 typedef JGeometry::TPosition3<TMtx34f> TPosition3f;
+typedef JGeometry::TProjection3<TMtx44f> TProjection3f;
 
 typedef JGeometry::TPartition3<f32> TPartition3f;
 

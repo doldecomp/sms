@@ -114,7 +114,7 @@ void TMarDirector::setup2()
 
 	// TODO:
 	// unk70->unk38 = *unk18;
-	// unk78->unkC0 = *unk18;
+	unk78->unkC0 = *unk18;
 
 	(*unk18)->mFlags = 0;
 	if (mMap == 15) {
