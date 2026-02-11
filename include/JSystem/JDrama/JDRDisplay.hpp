@@ -20,6 +20,7 @@ public:
 	GXFBClamp getFBClamp() const { return unk54; }
 	JUtility::TColor getClearColor() const { return mFrameBufferClearColor; }
 	u32 getClearZ() const { return mFrameBufferClearZ; }
+	TVideo* getVideo() { return unk60; }
 
 public:
 	/* 0x4 */ void* unk4[2];

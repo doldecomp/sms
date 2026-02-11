@@ -595,12 +595,14 @@ int TApplication::gameLoop()
 		mDisplay->startRendering();
 
 		// TODO: TimeRec BS
-		TTimeRec::startTimer();
+		TTimeRec::startTimerTwice(mDisplay->unk60->mLastRetraceTime, 0);
 		TTimeRec::snapGxTimeStatic(0);
 
 		TMarioGamePad::read();
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 4; i++) {
 			mGamePads[i]->updateMeaning();
+			mGamePads[i]->onFlag(0x40);
+		}
 
 		if (int dvderr = drawDVDErr()) {
 			SMSRumbleMgr->reset();

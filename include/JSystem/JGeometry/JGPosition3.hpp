@@ -44,6 +44,10 @@ public:
 		this->setQuat(quat);
 		this->setTrans(trans);
 	}
+
+	// from MKDD, may be useful in the future?
+	void makeRotate(const JGeometry::TVec3<f32>&, f32);
+	void setPositionFromLookAt(const TPosition3<T>&);
 };
 
 } // namespace JGeometry

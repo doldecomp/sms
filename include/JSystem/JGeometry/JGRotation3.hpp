@@ -235,6 +235,9 @@ public:
 		this->ref(2, 2) = scale.z * (f6 - f9);
 	}
 
+	// from TP, may be useful in the future?
+	void getEulerXYZ(JGeometry::TVec3<f32>&) const;
+
 	// From SMG
 	void setXDir(const TVec3<f32>& param_1)
 	{

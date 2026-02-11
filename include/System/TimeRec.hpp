@@ -108,6 +108,15 @@ public:
 		inst->crTimeAry()[0].append(tick, param_1);
 	}
 
+	static void startTimerTwice(u32 tick, u32 param_1)
+	{
+		TTimeRec* inst = _instance;
+		if (!inst)
+			return;
+		inst->crTimeAry()[0].append(tick, param_1);
+		inst->crTimeAry()[1].append(tick, param_1);
+	}
+
 	static void endTimer()
 	{
 		TTimeRec* inst = _instance;

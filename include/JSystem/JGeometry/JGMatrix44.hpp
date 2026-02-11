@@ -13,10 +13,13 @@ template <typename T> struct SMatrix44C {
 // specialization. I guess this is a bug in mwcc and it assumes T to have the
 // max possible alignment or something?
 template <> struct SMatrix44C<f32> {
+	SMatrix44C() { }
+
 	f32 mMtx[4][4];
 };
 
-template <typename T> struct TMatrix44 : public T {
+template <typename T> class TMatrix44 : public T {
+public:
 	TMatrix44() { }
 };
 
