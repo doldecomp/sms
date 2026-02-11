@@ -168,7 +168,7 @@ bool TGCLogoDir::direct_nlogo()
 	int nextState = mState;
 	switch (mState) {
 	case 0:
-		if (gpApplication.mFader->mFadeStatus == TSMSFader::FADE_STATUS_UNK1) {
+		if (gpApplication.mFader->isFullyFadedIn()) {
 			if (mProgSelect->unkC.mValue == 0)
 				nextState = 3;
 			else
@@ -239,7 +239,7 @@ bool TGCLogoDir::direct_nlogo()
 		break;
 
 	case 2:
-		if (gpApplication.mFader->mFadeStatus == TSMSFader::FADE_STATUS_UNK0)
+		if (gpApplication.mFader->isFullyFadedOut())
 			ended = true;
 		break;
 	}
@@ -264,7 +264,7 @@ bool TGCLogoDir::direct_dolby()
 	int nextState = mState;
 	switch (mState) {
 	case 0:
-		if (gpApplication.mFader->mFadeStatus == TSMSFader::FADE_STATUS_UNK1) {
+		if (gpApplication.mFader->isFullyFadedIn()) {
 			mLogoShowTimer = 0;
 			nextState      = 1;
 		}
@@ -277,7 +277,7 @@ bool TGCLogoDir::direct_dolby()
 		break;
 
 	case 2:
-		if (gpApplication.mFader->mFadeStatus == TSMSFader::FADE_STATUS_UNK0)
+		if (gpApplication.mFader->isFullyFadedOut())
 			ended = true;
 		break;
 	}

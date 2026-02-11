@@ -8,10 +8,10 @@
 class TSMSFader : public JDrama::TViewObj {
 public:
 	enum EFadeStatus {
-		FADE_STATUS_UNK0 = 0,
-		FADE_STATUS_UNK1 = 1,
-		FADE_STATUS_UNK2 = 2,
-		FADE_STATUS_UNK3 = 3,
+		FADE_STATUS_FULLY_FADED_OUT = 0,
+		FADE_STATUS_FULLY_FADED_IN  = 1,
+		FADE_STATUS_FADING_IN       = 2,
+		FADE_STATUS_FADING_OUT      = 3,
 	};
 
 	// TODO: maybe this is from the hx_wipe.h header/libary type thing?
@@ -56,6 +56,15 @@ public:
 	void getGameOverBtiResource();
 	void getMmarkBtiResource();
 	void getLogoBtiResource();
+
+	bool isFullyFadedIn() const
+	{
+		return mFadeStatus == FADE_STATUS_FULLY_FADED_IN;
+	}
+	bool isFullyFadedOut() const
+	{
+		return mFadeStatus == FADE_STATUS_FULLY_FADED_OUT;
+	}
 
 public:
 	/* 0x10 */ u16 unk10;

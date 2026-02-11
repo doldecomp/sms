@@ -136,6 +136,20 @@ public:
 	void* getUnkD4() { return unkD4; }
 
 public:
+	enum {
+		STATE_UNK0  = 0,
+		STATE_UNK1  = 1,
+		STATE_UNK2  = 2,
+		STATE_UNK3  = 3,
+		STATE_UNK4  = 4,
+		STATE_UNK5  = 5,
+		STATE_UNK7  = 7,
+		STATE_UNK9  = 9,
+		STATE_UNK10 = 10,
+		STATE_UNK11 = 11,
+		STATE_UNK12 = 12,
+	};
+
 	/* 0x18 */ TMarioGamePad** unk18;
 	/* 0x1C */ TPerformList* mPerformListGX;
 	/* 0x20 */ TPerformList* mPerformListSilhouette;
