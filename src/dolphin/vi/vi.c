@@ -919,10 +919,10 @@ u32 VIGetTvFormat(void)
 	return result;
 }
 
-u16 VIGetDTVStatus(void)
+u32 VIGetDTVStatus(void)
 {
 	BOOL enabled;
-	u16 result;
+	u32 result;
 
 	enabled = OSDisableInterrupts();
 	result  = GET_REG_FIELD(__VIRegs[0x37], 2, 0);

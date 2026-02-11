@@ -12,6 +12,7 @@
 #include <JSystem/J2D/J2DOrthoGraph.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JParticle/JPAEmitterManager.hpp>
+#include <JSystem/JUtility/JUTResFont.hpp>
 #include <dolphin/gx/GXCull.h>
 #include <stdio.h>
 

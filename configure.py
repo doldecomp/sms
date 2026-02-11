@@ -835,7 +835,7 @@ config.libs = [
                 "System/FlagManager.cpp",
                 cflags=[*cflags_system, "-inline all,level=1,deferred"],
             ),
-            Object(NonMatching, "System/GCLogoDir.cpp"),
+            Object(NonMatching, "System/GCLogoDir.cpp", extra_cflags=["-inline deferred"]),
             Object(Matching, "System/J3DSysFlag.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "System/MarDirector.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "System/MarDirectorDirect.cpp", extra_cflags=["-inline deferred"]),

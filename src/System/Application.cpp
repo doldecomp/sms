@@ -58,7 +58,7 @@ OSThread gSetupThread;
 u8* gpSetupThreadStack;
 
 TCardManager* gpCardManager;
-JUTFont* gpSystemFont;
+JUTResFont* gpSystemFont;
 JUTRomFont* gpRomFont;
 
 static int sGameInit;

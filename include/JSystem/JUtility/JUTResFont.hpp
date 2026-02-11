@@ -35,6 +35,8 @@ public:
 	void loadImage(int, GXTexMapID);
 	int convertSjis(int, u16*) const;
 
+	const ResFONT* getResFont() const { return mResFont; }
+
 	static const int suAboutEncoding_ = 3;
 	static IsLeadByte_func const saoAboutEncoding_[suAboutEncoding_];
 

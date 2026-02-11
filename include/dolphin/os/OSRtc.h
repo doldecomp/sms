@@ -48,6 +48,8 @@ typedef struct OSSramEx {
 
 u32 OSGetSoundMode();
 void OSSetSoundMode(u32 mode);
+u32 OSGetProgressiveMode();
+void OSSetProgressiveMode(u32 mode);
 u32 OSGetVideoMode();
 void OSSetVideoMode(u32 mode);
 u8 OSGetLanguage();

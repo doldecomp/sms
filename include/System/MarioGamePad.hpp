@@ -164,6 +164,13 @@ public:
 	void reset();
 	void updateMeaning();
 
+	// fabricated
+	bool checkFrameMeaning(u32 meaning)
+	{
+		return mEnabledFrameMeaning & meaning;
+	}
+
+public:
 	/* 0xA8 */ StickPos mCompSPos[VARIANTS];
 	/* 0xD0 */ u32 mMeaning;
 	/* 0xD4 */ u32 mEnabledFrameMeaning;
