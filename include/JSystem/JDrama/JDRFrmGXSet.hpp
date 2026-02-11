@@ -8,7 +8,7 @@ namespace JDrama {
 
 class TFrmGXSet : public TViewObj {
 public:
-	TFrmGXSet(TDisplay* display, const char* name = "<TFrmGXSet>")
+	TFrmGXSet(TDisplay* display, const char* name = "<FrmGXSet>")
 	    : TViewObj(name)
 	    , unk10(display)
 	{

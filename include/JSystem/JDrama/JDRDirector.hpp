@@ -3,6 +3,7 @@
 
 #include <JSystem/JStage/JSGSystem.hpp>
 #include <JSystem/JDrama/JDRNameRef.hpp>
+#include <JSystem/JDrama/JDRDStageGroup.hpp>
 
 namespace JDrama {
 
@@ -10,8 +11,8 @@ class TViewObj;
 
 class TDirector : public TNameRef, public JStage::TSystem {
 public:
-	TDirector()
-	    : TNameRef("<TDirector>")
+	TDirector(const char* name = "<TDirector>")
+	    : TNameRef(name)
 	    , unk10(nullptr)
 	    , unk14(nullptr)
 	{
@@ -24,7 +25,7 @@ public:
 
 public:
 	/* 0x10 */ TViewObj* unk10;
-	/* 0x14 */ TViewObj* unk14;
+	/* 0x14 */ TDStageGroup* unk14;
 };
 
 } // namespace JDrama

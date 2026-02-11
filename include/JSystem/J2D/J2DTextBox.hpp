@@ -43,6 +43,19 @@ public:
 	char* getStringPtr() const;
 	size_t setString(const char*, ...);
 
+	// fabricated
+	void setFontSize(int x, int y)
+	{
+		mFontSizeX = x;
+		mFontSizeY = y;
+	}
+
+	void setBlackWhite(JUtility::TColor black, JUtility::TColor white)
+	{
+		mBlack = black;
+		mWhite = white;
+	}
+
 public:
 	/* 0xEC */ JUTFont* mFont;
 	/* 0xF0 */ JUtility::TColor mCharColor;

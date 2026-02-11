@@ -13,6 +13,7 @@
 #include <JSystem/J2D/J2DTextBox.hpp>
 #include <JSystem/J2D/J2DPicture.hpp>
 #include <JSystem/J2D/J2DScreen.hpp>
+#include <JSystem/JUtility/JUTResFont.hpp>
 #include <stdio.h>
 
 // rogue includes needed for matching sinit & bss

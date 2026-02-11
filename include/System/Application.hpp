@@ -19,7 +19,7 @@ class TScenarioArchiveName;
 class TProcessMeter;
 class JKRAramBlock;
 class JKRArchive;
-class JUTFont;
+class JUTResFont;
 
 f32 SMSGetVSyncTimesPerSec();
 f32 SMSGetAnmFrameRate();
@@ -34,7 +34,7 @@ void SMSMountAramArchive(JKRMemArchive*, TARAMBlock&);
 JKRArchive* SMSSwitch2DArchive(const char*, TARAMBlock&);
 extern TARAMBlock gArBkConsole;
 extern TARAMBlock gArBkGuide;
-extern JUTFont* gpSystemFont;
+extern JUTResFont* gpSystemFont;
 
 class TApplication {
 public:
