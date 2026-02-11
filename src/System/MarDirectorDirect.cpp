@@ -56,7 +56,7 @@ int TMarDirector::direct()
 		unk260 = 1;
 	}
 
-	u32 result = 1;
+	u32 desiredAppState = TApplication::APP_STATE_DEFAULT;
 
 	JDrama::TGraphics local_140;
 
@@ -86,14 +86,14 @@ int TMarDirector::direct()
 			gpMSound->unkA8 = bVar7;
 
 			switch (mState) {
-			case 5:
-			case 11:
-			case 12:
+			case STATE_UNK5:
+			case STATE_UNK11:
+			case STATE_UNK12:
 				uVar8 |= 2;
 				uVar8 |= 1;
 				break;
 
-			case 10:
+			case STATE_UNK10:
 				uVar8 |= 2;
 				uVar8 |= 1;
 				break;
@@ -103,7 +103,7 @@ int TMarDirector::direct()
 				++unk58;
 			++unk5C;
 			if (unk4C & 0x2000) {
-				if (mState == 4 || mState == 7) {
+				if (mState == STATE_UNK4 || mState == STATE_UNK7) {
 					SMSRumbleMgr->update();
 				}
 			} else {
@@ -176,12 +176,12 @@ int TMarDirector::direct()
 			mPerformListGXPost->perform(0xffffffff, &local_140);
 			GXInvalidateTexAll();
 		}
-		result = changeState();
-		unk4C &= 0x8000;
+		desiredAppState = changeState();
+		unk4C &= ~0x6000;
 	}
 
 	gpMSound->unkA8 = bVar2;
-	return result;
+	return desiredAppState;
 }
 
 static void decideNextStage()
@@ -255,13 +255,13 @@ static int decideNextScenario(u8 param_1)
 
 int TMarDirector::changeState()
 {
-	u8 uVar5     = 1;
-	u8 nextState = mState;
+	int desiredAppState = TApplication::APP_STATE_DEFAULT;
+	u8 nextState        = mState;
 	switch (mState) {
-	case 0:
+	case STATE_UNK0:
 		switch (gpApplication.mCurrArea.unk0) {
 		case 0xf:
-			nextState = 4;
+			nextState = STATE_UNK4;
 			unk50 |= 1;
 			break;
 
@@ -273,34 +273,34 @@ int TMarDirector::changeState()
 		case 0x8:
 		case 0x9:
 		case 0x34:
-			nextState = 1;
+			nextState = STATE_UNK1;
 			unk50 |= 0x6;
 			break;
 
 		case 1:
 			if (unk4E & 2) {
-				nextState = 1;
+				nextState = STATE_UNK1;
 				unk50 |= 6;
 			} else {
-				nextState = 2;
+				nextState = STATE_UNK2;
 			}
 			break;
 
 		default:
 			if (JKRGetResource("/scene/map/camera/startcamera.bck")) {
-				nextState = 1;
+				nextState = STATE_UNK1;
 				unk50 |= 10;
 			} else {
-				nextState = 4;
+				nextState = STATE_UNK4;
 			}
 			break;
 		}
 		break;
 
-	case 1:
+	case STATE_UNK1:
 		if (unk4E & 4) {
 			if (mConsole->unk94->unk2BC == 4) {
-				nextState = 3;
+				nextState = STATE_UNK3;
 				unk4E &= ~0x4;
 			}
 		} else {
@@ -318,51 +318,51 @@ int TMarDirector::changeState()
 		}
 		break;
 
-	case 3:
+	case STATE_UNK3:
 		if (gpApplication.mCurrArea.unk0 == 1) {
 			if (mConsole->unk94->unk2BC == 6)
-				nextState = 2;
+				nextState = STATE_UNK2;
 		} else if (mConsole->unk94->unk2BC == 6
 		           && !gpMarioOriginal->checkActionThing()) {
-			nextState = 4;
+			nextState = STATE_UNK4;
 		}
 		break;
 
-	case 2:
+	case STATE_UNK2:
 		if (!unkE0->unk26 && !gpMarioOriginal->checkActionThing())
-			nextState = 4;
+			nextState = STATE_UNK4;
 		break;
 
-	case 4:
+	case STATE_UNK4:
 		nextState = updateGameMode();
 		break;
 
-	case 5:
+	case STATE_UNK5:
 		switch (unkAC->getNextState()) {
 		case 0:
-			nextState = 4;
+			nextState = STATE_UNK4;
 			break;
 		case 1:
 			unkE4     = 4;
-			nextState = 12;
-			unkB4     = 4;
+			nextState = STATE_UNK12;
+			unkB4     = TApplication::APP_STATE_DONE;
 			break;
 		case 5:
 			decideNextStage();
 			unk4C &= ~0x100;
 			moveStage();
 			unkE4     = 2;
-			nextState = 9;
+			nextState = STATE_UNK9;
 			break;
 		}
 		break;
 
-	case 10:
-		if (unk78->unkC4 && gpApplication.mFader->mFadeStatus == 1)
-			nextState = 4;
+	case STATE_UNK10:
+		if (unk78->unkC4 && gpApplication.mFader->isFullyFadedIn())
+			nextState = STATE_UNK4;
 		break;
 
-	case 11: {
+	case STATE_UNK11: {
 		switch (unkAC->unk118->getNextState()) {
 		case 0:
 			if (unk261 == 7) {
@@ -376,29 +376,29 @@ int TMarDirector::changeState()
 				unk4C &= ~0x100;
 				moveStage();
 				gpApplication.mFader->setFadeStatus(
-				    TSMSFader::FADE_STATUS_UNK0);
-				uVar5 = 5;
+				    TSMSFader::FADE_STATUS_FULLY_FADED_OUT);
+				desiredAppState = TApplication::APP_STATE_GAMEPLAY;
 			} else {
-				nextState = 4;
+				nextState = STATE_UNK4;
 			}
 			break;
 		case 1:
 			if (unk261 == 7) {
 				gpApplication.mFader->setFadeStatus(
-				    TSMSFader::FADE_STATUS_UNK0);
-				uVar5 = 4;
+				    TSMSFader::FADE_STATUS_FULLY_FADED_OUT);
+				desiredAppState = TApplication::APP_STATE_DONE;
 			} else {
 				unkE4     = 4;
-				nextState = 12;
-				unkB4     = 4;
+				nextState = STATE_UNK12;
+				unkB4     = TApplication::APP_STATE_DONE;
 			}
 			break;
 		}
 		break;
 	}
 
-	case 7:
-		if (gpApplication.mFader->mFadeStatus == 0
+	case STATE_UNK7:
+		if (gpApplication.mFader->isFullyFadedOut()
 		    && (MSBgm::getHandle(2) == 0 || unk5C - unk60 >= 1200)) {
 			if (TFlagManager::smInstance->getFlag(0x20001) >= 0) {
 				TFlagManager::smInstance->setBool(true, 0x30002);
@@ -413,32 +413,32 @@ int TMarDirector::changeState()
 				moveStage();
 				unkE4 = 0xf;
 				gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 0xff));
-				nextState = 12;
+				nextState = STATE_UNK12;
 			} else {
 				gpApplication.mFader->startWipe(0xE, 0.3f, 0.0f);
 				gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 0xff));
 				unk261    = 7;
-				nextState = 11;
+				nextState = STATE_UNK11;
 				mConsole->startDisappearStar();
 				mConsole->startDisappearCoin();
 			}
 		}
 		break;
 
-	case 9:
-	case 12:
-		if (gpApplication.mFader->mFadeStatus == 0
+	case STATE_UNK9:
+	case STATE_UNK12:
+		if (gpApplication.mFader->isFullyFadedOut()
 		    && gpMSound->checkWaveOnAram(MS_WAVE_DEFAULT))
-			uVar5 = unkB4;
+			desiredAppState = unkB4;
 		break;
 	}
 
 	if (unk18[0]->isSomethingPushed() && gpCardManager->getLastStatus() != -1
 	    && (unk4C & 0x4000) && !(unk50 & 0x10)) {
-		nextState = 12;
+		nextState = STATE_UNK12;
 		unk50 |= 0x10;
 		unkE4 = 4;
-		unkB4 = 4;
+		unkB4 = TApplication::APP_STATE_DONE;
 	}
 
 	if (nextState != mState) {
@@ -447,13 +447,13 @@ int TMarDirector::changeState()
 		mState = nextState;
 	}
 
-	return uVar5;
+	return desiredAppState;
 }
 
 void TMarDirector::currentStateFinalize(u8 next_state)
 {
 	switch (mState) {
-	case 0:
+	case STATE_UNK0:
 		JDrama::TNameRefGen::search<JDrama::TViewObj>("Group 2D")
 		    ->unkC.off(0xB);
 		JDrama::TNameRefGen::search<JDrama::TViewObj>("Guide")->unkC.on(0xB);
@@ -464,7 +464,7 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 			THPPlayerPlay();
 		break;
 
-	case 1:
+	case STATE_UNK1:
 		unk18[0]->mFlags &= ~0x1;
 		gpCamera->endDemoCamera();
 		mConsole->unk94->startOpenWipe();
@@ -472,20 +472,20 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 		                                 gpApplication.mCurrArea.unk1);
 		break;
 
-	case 4:
+	case STATE_UNK4:
 		if (unk124 == 0)
 			OSStopStopwatch(&unkE8);
 		unk18[0]->mFlags &= ~0x2;
 		break;
 
-	case 5:
+	case STATE_UNK5:
 		unk18[0]->mFlags &= ~0x1;
 		SMSRumbleMgr->finishPause();
 		if (gpApplication.mCurrArea.unk0 == 1)
 			THPPlayerPlay();
 		break;
 
-	case 10:
+	case STATE_UNK10:
 		unk18[0]->mFlags &= ~0x1;
 		SMSRumbleMgr->finishPause();
 
@@ -498,7 +498,7 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 			THPPlayerPlay();
 		break;
 
-	case 11:
+	case STATE_UNK11:
 		unk18[0]->mFlags &= ~0x1;
 		SMSRumbleMgr->finishPause();
 		if (gpApplication.mCurrArea.unk0 == 1)
@@ -662,7 +662,7 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		break;
 
 	case 4:
-		if (mState <= 3 && mMap != 0xf)
+		if (mState <= STATE_UNK3 && mMap != 0xf)
 			mConsole->unkC.off(0xB);
 		if (unk50 & 2) {
 			mConsole->unk94->startAppearGo();
@@ -765,13 +765,13 @@ u8 TMarDirector::updateGameMode()
 
 			if (mMap != 15) {
 				if (unk18[0]->mButton.mTrigger & 0x10) {
-					r29 = 10;
+					r29 = STATE_UNK10;
 					break;
 				}
 
 				if (unk18[0]->mEnabledFrameMeaning & 0x1) {
 					if (gpMarioOriginal->checkActionThing3()) {
-						r29 = 5;
+						r29 = STATE_UNK5;
 						break;
 					}
 
@@ -783,7 +783,7 @@ u8 TMarDirector::updateGameMode()
 		} else {
 			if (unk4C & 0x20) {
 				unk4C &= ~0x20;
-				r29 = 7;
+				r29 = STATE_UNK7;
 				TFlagManager::getInstance()->setFlag(0x40002, 0);
 				break;
 			}
@@ -813,7 +813,7 @@ u8 TMarDirector::updateGameMode()
 
 			if (unk4C & 0x200) {
 				unk4C &= ~0x200;
-				r29 = 11;
+				r29 = STATE_UNK11;
 				break;
 			}
 
@@ -855,7 +855,7 @@ u8 TMarDirector::updateGameMode()
 
 			if (unk4C & 0x2) {
 				moveStage();
-				r29 = 9;
+				r29 = STATE_UNK9;
 				break;
 			}
 		}
@@ -990,7 +990,7 @@ u8 TMarDirector::updateGameMode()
 
 void TMarDirector::moveStage()
 {
-	unkB4 = 5;
+	unkB4 = TApplication::APP_STATE_GAMEPLAY;
 	unkE4 = 15;
 	gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 0xff));
 
@@ -1098,13 +1098,13 @@ void TMarDirector::moveStage()
 		case 6:
 		case 8:
 			unkE4 = 2;
-			unkB4 = 2;
+			unkB4 = TApplication::APP_STATE_BOOT;
 			break;
 
 		case 9:
 			gpApplication.mFader->setColor(
 			    JUtility::TColor(0xD2, 0xD2, 0xD2, 0xFF));
-			unkB4 = 8;
+			unkB4 = TApplication::APP_STATE_TITLE;
 			break;
 
 		case 0x34:
@@ -1128,9 +1128,9 @@ void TMarDirector::moveStage()
 		if (unk4C & 0x100) {
 			unkE4 = 15;
 			gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 0xff));
-			unkB4 = 6;
+			unkB4 = TApplication::APP_STATE_MOVIE;
 		} else {
-			unkB4 = 5;
+			unkB4 = TApplication::APP_STATE_GAMEPLAY;
 		}
 	}
 

@@ -128,7 +128,7 @@ TSMSFader::TSMSFader(JUtility::TColor param_1, f32 param_2, const char* param_3)
     , mRate(param_2)
     , mFadeColor(param_1)
     , unk1C(false)
-    , mFadeStatus(FADE_STATUS_UNK0)
+    , mFadeStatus(FADE_STATUS_FULLY_FADED_OUT)
     , unk30(UNK30_UNK_14)
     , unk34(0.0f)
 {
@@ -149,7 +149,7 @@ void TSMSFader::update()
 {
 	updateRequest();
 
-	if (mFadeStatus == 0)
+	if (mFadeStatus == TSMSFader::FADE_STATUS_FULLY_FADED_OUT)
 		mFadeColor.a = 0xff;
 
 	if (unk30 >= UNK30_UNK_18 || unk30 < UNK30_UNK_14)
@@ -180,18 +180,18 @@ void TSMSFader::updateDelay() { }
 void TSMSFader::updateFadeinout()
 {
 	switch (mFadeStatus) {
-	case FADE_STATUS_UNK0:
+	case FADE_STATUS_FULLY_FADED_OUT:
 		mFadeColor.a = 0xff;
 		break;
-	case FADE_STATUS_UNK2:
+	case FADE_STATUS_FADING_IN:
 		mFadeColor.a = 0xff - (unk12++ * 0xff) / (unk10 + 1);
 		if (unk12 > unk10)
-			mFadeStatus = FADE_STATUS_UNK1;
+			mFadeStatus = FADE_STATUS_FULLY_FADED_IN;
 		break;
-	case FADE_STATUS_UNK3:
+	case FADE_STATUS_FADING_OUT:
 		mFadeColor.a = (++unk12 * 0xff) / (unk10 + 1);
 		if (unk12 > unk10)
-			mFadeStatus = FADE_STATUS_UNK0;
+			mFadeStatus = FADE_STATUS_FULLY_FADED_OUT;
 		break;
 	}
 }
@@ -199,7 +199,7 @@ void TSMSFader::updateFadeinout()
 void TSMSFader::draw(const JDrama::TRect& param_1)
 {
 	switch (mFadeStatus) {
-	case FADE_STATUS_UNK0: {
+	case FADE_STATUS_FULLY_FADED_OUT: {
 		setupGraphicsFadeinout();
 		JUtility::TColor color = mFadeColor;
 		color.a                = 0xff;
@@ -207,7 +207,7 @@ void TSMSFader::draw(const JDrama::TRect& param_1)
 		break;
 	}
 
-	case FADE_STATUS_UNK1:
+	case FADE_STATUS_FULLY_FADED_IN:
 		break;
 
 	default:
@@ -226,8 +226,9 @@ void TSMSFader::drawWipe(const JDrama::TRect& param_1)
 		break;
 	default:
 		if (Hx_UpdateWipe(mRate) == 3)
-			mFadeStatus = Hx_GetWipeType(unk30) != 0 ? FADE_STATUS_UNK1
-			                                         : FADE_STATUS_UNK0;
+			mFadeStatus = Hx_GetWipeType(unk30) != 0
+			                  ? FADE_STATUS_FULLY_FADED_IN
+			                  : FADE_STATUS_FULLY_FADED_OUT;
 		break;
 	}
 }
@@ -304,8 +305,9 @@ void TSMSFader::requestWipe(TSMSFader::WipeRequest* param_1)
 
 	default:
 		Hx_StartWipe(param_1->unk0, iVar3);
-		mFadeStatus = Hx_GetWipeType(param_1->unk0) == 1 ? FADE_STATUS_UNK2
-		                                                 : FADE_STATUS_UNK3;
+		mFadeStatus = Hx_GetWipeType(param_1->unk0) == 1
+		                  ? FADE_STATUS_FADING_IN
+		                  : FADE_STATUS_FADING_OUT;
 		break;
 	}
 
@@ -322,13 +324,13 @@ void TSMSFader::startWipe(u32 param_1, f32 param_2, f32 param_3)
 void TSMSFader::startFadein(int param_1)
 {
 	switch (mFadeStatus) {
-	case FADE_STATUS_UNK0:
-		mFadeStatus = FADE_STATUS_UNK2;
+	case FADE_STATUS_FULLY_FADED_OUT:
+		mFadeStatus = FADE_STATUS_FADING_IN;
 		unk12       = 0;
 		unk10       = param_1;
 		break;
-	case FADE_STATUS_UNK3:
-		mFadeStatus = FADE_STATUS_UNK2;
+	case FADE_STATUS_FADING_OUT:
+		mFadeStatus = FADE_STATUS_FADING_IN;
 		unk12       = param_1 * (unk10 - unk12) / unk10;
 		unk10       = param_1;
 		break;
@@ -345,13 +347,13 @@ void TSMSFader::startFadeinT(f32 param_1)
 void TSMSFader::startFadeout(int param_1)
 {
 	switch (mFadeStatus) {
-	case FADE_STATUS_UNK1:
-		mFadeStatus = FADE_STATUS_UNK3;
+	case FADE_STATUS_FULLY_FADED_IN:
+		mFadeStatus = FADE_STATUS_FADING_OUT;
 		unk12       = 0;
 		unk10       = param_1;
 		break;
-	case FADE_STATUS_UNK2:
-		mFadeStatus = FADE_STATUS_UNK3;
+	case FADE_STATUS_FADING_IN:
+		mFadeStatus = FADE_STATUS_FADING_OUT;
 		unk12       = param_1 * (unk10 - unk12) / unk10;
 		unk10       = param_1;
 		break;
@@ -399,12 +401,12 @@ void TSMSFader::setDisplaySize(int param_1, int param_2)
 void TSMSFader::setFadeStatus(TSMSFader::EFadeStatus param_1)
 {
 	switch (param_1) {
-	case FADE_STATUS_UNK1:
+	case FADE_STATUS_FULLY_FADED_IN:
 		mFadeStatus       = param_1;
 		mFadeColor.a      = 0;
 		mWipeRequest.unk0 = UNK30_UNK_18;
 		break;
-	case FADE_STATUS_UNK0:
+	case FADE_STATUS_FULLY_FADED_OUT:
 		mFadeStatus       = param_1;
 		mFadeColor.a      = 0xFF;
 		mWipeRequest.unk0 = UNK30_UNK_18;
