@@ -39,44 +39,6 @@ class JPAEmitterManager;
 
 extern JPAEmitterManager* gpEmitterManager4D2;
 
-TMarDirector::~TMarDirector()
-{
-	gpMSound->exitStage();
-	if (gpApplication.mCurrArea.unk0 == 15) {
-		if (JKRMemArchive* arch
-		    = (JKRMemArchive*)JKRFileLoader::getVolume("option"))
-			arch->unmountFixed();
-	}
-
-	if (JKRMemArchive* arch
-	    = (JKRMemArchive*)JKRFileLoader::getVolume("game_6"))
-		arch->unmountFixed();
-
-	if (JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume("guide"))
-		arch->unmountFixed();
-
-	if (JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume("yoshi"))
-		arch->unmountFixed();
-
-	if (JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume("scene"))
-		arch->unmountFixed();
-
-	(*unk18)->offFlag(0x20);
-	if (mMap == 1 || (mMap == 0 && unk7D == 0)) {
-		THPPlayerStop();
-		THPPlayerClose();
-		THPPlayerQuit();
-	}
-
-	TDrawSyncManager::smInstance->setCallback(1, 0, 0, nullptr);
-	TDrawSyncManager::smInstance->setCallback(2, 0, 0, nullptr);
-	TDrawSyncManager::smInstance->setCallback(3, 0, 0, nullptr);
-	TDrawSyncManager::smInstance->setCallback(4, 0, 0, nullptr);
-	gpEmitterManager4D2           = nullptr;
-	JDrama::TNameRefGen::instance = nullptr;
-	gpMarDirector                 = nullptr;
-}
-
 void TMarDirector::setup2()
 {
 	unkBC = JDrama::TNameRefGen::search<TNameRefAryT<TStageEventInfo> >(
@@ -92,8 +54,8 @@ void TMarDirector::setup2()
 		}
 	}
 
-	JDrama::TNameRefGen::search<TMario>("マリオ")->setGamePad(*unk18);
-	JDrama::TNameRefGen::search<CPolarSubCamera>("camera 1")->unk120 = *unk18;
+	JDrama::TNameRefGen::search<TMario>("マリオ")->setGamePad(unk18[0]);
+	JDrama::TNameRefGen::search<CPolarSubCamera>("camera 1")->unk120 = unk18[0];
 
 	unk84 = JDrama::TNameRefGen::search<TTalkCursor>("会話カーソル");
 
@@ -114,13 +76,13 @@ void TMarDirector::setup2()
 
 	// TODO:
 	// unk70->unk38 = *unk18;
-	unk78->unkC0 = *unk18;
+	unk78->unkC0 = unk18[0];
 
-	(*unk18)->mFlags = 0;
+	unk18[0]->mFlags = 0;
 	if (mMap == 15) {
 		unkAC->unkC = 0xB;
 		unkB0->unkC = 0xB;
-		(*unk18)->onFlag(0x20);
+		unk18[0]->onFlag(0x20);
 	} else {
 		unk70->unkC = 0xB;
 	}
@@ -164,4 +126,42 @@ void TMarDirector::setup2()
 
 	if (sinkInPollutionEvent)
 		sinkInPollutionEvent->initBuriedBuilding();
+}
+
+TMarDirector::~TMarDirector()
+{
+	gpMSound->exitStage();
+	if (gpApplication.mCurrArea.unk0 == 15) {
+		if (JKRMemArchive* arch
+		    = (JKRMemArchive*)JKRFileLoader::getVolume("option"))
+			arch->unmountFixed();
+	}
+
+	if (JKRMemArchive* arch
+	    = (JKRMemArchive*)JKRFileLoader::getVolume("game_6"))
+		arch->unmountFixed();
+
+	if (JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume("guide"))
+		arch->unmountFixed();
+
+	if (JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume("yoshi"))
+		arch->unmountFixed();
+
+	if (JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume("scene"))
+		arch->unmountFixed();
+
+	unk18[0]->offFlag(0x20);
+	if (mMap == 1 || (mMap == 0 && unk7D == 0)) {
+		THPPlayerStop();
+		THPPlayerClose();
+		THPPlayerQuit();
+	}
+
+	TDrawSyncManager::smInstance->setCallback(1, 0, 0, nullptr);
+	TDrawSyncManager::smInstance->setCallback(2, 0, 0, nullptr);
+	TDrawSyncManager::smInstance->setCallback(3, 0, 0, nullptr);
+	TDrawSyncManager::smInstance->setCallback(4, 0, 0, nullptr);
+	gpEmitterManager4D2           = nullptr;
+	JDrama::TNameRefGen::instance = nullptr;
+	gpMarDirector                 = nullptr;
 }

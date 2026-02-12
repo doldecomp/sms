@@ -1,37 +1,20 @@
 #include <System/Resolution.hpp>
 #include <dolphin/vi.h>
 
-u16 SMSGetGCLogoVideoHeight() { return SMSGetGameVideoHeight(); }
+u16 SMSGetGameVideoWidth() { return 660; }
 
-u16 SMSGetGCLogoVideoWidth() { return 640; }
-
-u16 SMSGetGCLogoRenderHeight() { return 448; }
-
-u16 SMSGetGCLogoRenderWidth() { return 640; }
-
-u16 SMSGetTitleRenderHeight() { return 448; }
-
-u16 SMSGetTitleRenderWidth() { return 640; }
-
-s32 SMSGetGameRenderHeight() { return 448; }
-
-s32 SMSGetGameRenderWidth() { return 640; }
-
-u16 SMSGetTitleVideoHeight()
+u16 SMSGetGameVideoHeight()
 {
 	u16 ret = 448;
-
 	switch (VIGetTvFormat()) {
-	case 2:
-	case 0:
-	case 5:
+	case VI_MPAL:
+	case VI_NTSC:
+	case VI_EURGB60:
 		ret = 448;
 		break;
-
-	case 1:
+	case VI_PAL:
 		ret = 530;
 		break;
-
 	default:
 		break;
 	}
@@ -40,25 +23,20 @@ u16 SMSGetTitleVideoHeight()
 
 u16 SMSGetTitleVideoWidth() { return 660; }
 
-u16 SMSGetGameVideoHeight()
-{
-	u16 ret = 448;
+u16 SMSGetTitleVideoHeight() { return SMSGetGameVideoHeight(); }
 
-	switch (VIGetTvFormat()) {
-	case 2:
-	case 0:
-	case 5:
-		ret = 448;
-		break;
+s32 SMSGetGameRenderWidth() { return 640; }
 
-	case 1:
-		ret = 530;
-		break;
+s32 SMSGetGameRenderHeight() { return 448; }
 
-	default:
-		break;
-	}
-	return ret;
-}
+u16 SMSGetTitleRenderWidth() { return 640; }
 
-u16 SMSGetGameVideoWidth() { return 660; }
+u16 SMSGetTitleRenderHeight() { return 448; }
+
+u16 SMSGetGCLogoRenderWidth() { return 640; }
+
+u16 SMSGetGCLogoRenderHeight() { return 448; }
+
+u16 SMSGetGCLogoVideoWidth() { return 640; }
+
+u16 SMSGetGCLogoVideoHeight() { return SMSGetTitleVideoHeight(); }

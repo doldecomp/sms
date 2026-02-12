@@ -1,26 +1,24 @@
-#include "System/FlagManager.hpp"
-#include "System/StageUtil.hpp"
-#include "dolphin/os.h"
+#include <System/FlagManager.hpp>
+#include <System/StageUtil.hpp>
+#include <dolphin/os.h>
 
 TFlagManager* TFlagManager::smInstance = 0;
 
-TFlagManager::TFlagManager() { }
-
 TFlagManager* TFlagManager::start(JKRHeap* heap)
 {
-	u8 _padding[8];
-	if (smInstance == nullptr) {
-		TFlagManager* fm = new (heap, 0) TFlagManager();
-
-		if (fm != nullptr) {
-			fm->firstStart();
-			fm->initOpt();
-		}
-
-		smInstance = fm;
-	}
+	if (smInstance == nullptr)
+		smInstance = new (heap, 0) TFlagManager;
 
 	return smInstance;
+}
+
+void TFlagManager::end() { }
+
+TFlagManager::TFlagManager()
+{
+	firstStart();
+	resetOpt();
+	correctOptFlag();
 }
 
 void TFlagManager::resetCard()
@@ -444,21 +442,21 @@ void TFlagManager::firstStart()
 
 void TFlagManager::correctFlag()
 {
-	if (getFlag(0x20001) < 3) {
+	if (getFlag(0x20001) < 3)
 		setFlag(0x20001, 3);
-	}
-	if (getFlag(0x20002) == 0) {
+
+	if (getFlag(0x20002) == 0)
 		setFlag(0x20002, 3500);
-	}
-	if (getFlag(0x20003) == 0) {
+
+	if (getFlag(0x20003) == 0)
 		setFlag(0x20003, 3000);
-	}
-	if (getFlag(0x20014) == 0) {
+
+	if (getFlag(0x20014) == 0)
 		setFlag(0x20014, 4000);
-	}
-	if (getFlag(0x20004) == 0) {
+
+	if (getFlag(0x20004) == 0)
 		setFlag(0x20004, 3000);
-	}
+
 	setBool(true, 0x1039A);
 	setBool(true, 0x1039D);
 
@@ -481,8 +479,6 @@ void TFlagManager::correctFlag()
 
 void TFlagManager::save(JSUMemoryOutputStream& out)
 {
-	u8 _padding[8];
-
 	mLastSaveTimeBackup = mLastSaveTime;
 	mLastSaveTime       = OSGetTime();
 
@@ -532,8 +528,10 @@ void TFlagManager::saveFail()
 
 void TFlagManager::resetOpt()
 {
-	mSavedOptionBools[0] = 0;
-	mSavedOptionInts[0]  = 0;
+	for (int i = 0; i < 1; ++i)
+		mSavedOptionBools[i] = 0;
+	for (int i = 0; i < 1; ++i)
+		mSavedOptionInts[i] = 0;
 }
 
 void TFlagManager::correctOptFlag()
@@ -551,26 +549,16 @@ void TFlagManager::correctOptFlag()
 
 void TFlagManager::loadOption(JSUMemoryInputStream& in)
 {
-	mSavedOptionBools[0] = 0;
-	mSavedOptionInts[0]  = 0;
+	resetOpt();
 
 	u32 magic;
-	u8 _padding[24];
 	in.read(&magic, sizeof(magic));
 	if (magic == 2) {
 		in.read(mSavedOptionBools, sizeof(mSavedOptionBools));
 		in.read(mSavedOptionInts, sizeof(mSavedOptionInts));
 	}
 
-	setBool(!getBool(0x70000), 0x90000);
-
-	if (OSGetSoundMode() == 0) {
-		setFlag(0xA0000, 0);
-	} else {
-		setFlag(0xA0000, getBool(0x70001) ? 2 : 1);
-	}
-
-	setFlag(0xA0001, 0x100);
+	correctOptFlag();
 }
 
 void TFlagManager::saveOption(JSUMemoryOutputStream& out)

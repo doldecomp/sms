@@ -31,11 +31,12 @@ public:
 	void setBool(bool value, u32 flag);
 	bool getBool(u32 flag) const;
 	void setFlag(u32 flag, s32 value);
-	long getFlag(u32 flag) const;
+	s32 getFlag(u32 flag) const;
 	void resetStage();
 	void resetGame();
 	void resetCard();
 	static TFlagManager* start(JKRHeap* heap);
+	static void end();
 
 	static TFlagManager* getInstance() { return smInstance; }
 
@@ -43,11 +44,6 @@ public:
 
 private:
 	TFlagManager();
-	void initOpt()
-	{
-		resetOpt();
-		correctOptFlag();
-	}
 
 	u8 mCardBools[119];
 	s32 mCardInts[21];

@@ -4,129 +4,109 @@
 #include <MSound/MSoundSE.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 
-void TEventWatcher::perform(u32 param_1, JDrama::TGraphics*)
-{
-	if ((param_1 & 1) && mInterp)
-		mInterp->update();
+static void evGetSystemFlag(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetSystemFlag(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evGetNameRefHandle(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evGetNameRefName(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void getNameRefPtr(TSpcSlice) { }
+static void evGetNPCType(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetFlagNPCDontTalk(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetFlagNPCDontThrow(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetFlagNPCDead(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evIsNearSameActors(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evIsNearActors(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evGetTalkNPC(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evGetTalkNPCName(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetTalkMsgID(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evGetTalkMode(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evGetTalkSelectedValue(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetValue2TalkVariable(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evIsTalkModeNow(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetFlagNPCCanTaken(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evPushNerve4LiveActor(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evIsOnLiveActorFlag(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetHide4LiveActor(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetDead4LiveActor(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetTimeLimit(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetAttentionTime(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetPollutionIncreaseCount(TSpcTypedInterp<TEventWatcher>*, u32) {
 }
-
-void TEventWatcher::launchScript(const char* script)
-{
-	if (void* res = JKRGetResource(script)) {
-		mBinary = new TSpcTypedBinary<TEventWatcher>(res);
-		mBinary->init();
-		mInterp = new TSpcTypedInterp<TEventWatcher>(mBinary, this, 0x20, 0x20,
-		                                             0x20, 0x20);
-	}
+static void evGetRestTime(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evGetPollutionLevel(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetEventStart(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetEventEnd(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetNextStage(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evRegisterMovie(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evGameOver(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evIsGraffitoCoverage0(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetGraffitoMultiplied(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evIsBossDefeated(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evLaunchEventClearDemo(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evIsEMarioReachedToGoal(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evIsEMarioDownWaitingToTalk(TSpcTypedInterp<TEventWatcher>*, u32) {
 }
-
-TEventWatcher::TEventWatcher(const char* name, const char* script)
-    : JDrama::TViewObj(name)
-    , mBinary(nullptr)
-    , mInterp(nullptr)
-{
-	launchScript(script);
-}
-
-TEventWatcher::TEventWatcher(const char* name)
-    : JDrama::TViewObj(name)
-    , mBinary(nullptr)
-    , mInterp(nullptr)
-{
-}
-
-static void evIsWaterMelonIsReached(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evInvalidatePad(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evOnNeutralMarioKey(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evWarpFrontToMario(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evAppear8RedCoinsAndTimer(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evAppearReadyGo(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetEventForWaterMelon(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evStartAppearJetBalloon(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evWarpMario(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetCollision(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evChangeSunglass(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evStartMiss(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evStartEventSE(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evStartSE(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evStopBGM(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evPutNozzle(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evEggYoshiStartFruit(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evStartBGM(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evManiCoinDown(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetEventID(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetTransScale(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evIsInsideFastCube(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evIsFinishMareBottleDemo(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evStartMareBottleDemo(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetMarioWaiting(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evIsInsideCube(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evKillWoodBox(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evRefreshWoodBox(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evCheckWoodBox(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evStartMarioTalking(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evChangeNozzle(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evAppearShineForWoodBox(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evAppearShineFromKageMario(TSpcTypedInterp<TEventWatcher>*, u32);
+static void evStartEMarioRunAway(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evStartEMarioGateDrawing(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evStartEMarioDisappear(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evStartOpenModelGate(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evIsMapEventFinishedAll(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evRaiseBuilding(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evForceCloseTalk(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evInsertTimer(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evStartTimer(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evStartMonteman(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evStopTimer(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evMonteManReachFlag(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evGetTime(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evKillShine(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evKillMushroom1up(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evAppearMushroom1up(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evAppearShineFromNPC(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evAppearShine(TSpcTypedInterp<TEventWatcher>*, u32) { }
 static void evAppearShineFromNPCWithoutDemo(TSpcTypedInterp<TEventWatcher>*,
-                                            u32);
-static void evAppearShine(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evAppearShineFromNPC(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evAppearMushroom1up(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evKillMushroom1up(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evKillShine(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evGetTime(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evMonteManReachFlag(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evStopTimer(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evStartMonteman(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evStartTimer(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evInsertTimer(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evForceCloseTalk(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evRaiseBuilding(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evIsMapEventFinishedAll(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evStartOpenModelGate(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evStartEMarioDisappear(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evStartEMarioGateDrawing(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evStartEMarioRunAway(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evIsEMarioDownWaitingToTalk(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evIsEMarioReachedToGoal(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evLaunchEventClearDemo(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evIsBossDefeated(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetGraffitoMultiplied(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evIsGraffitoCoverage0(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evGameOver(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evRegisterMovie(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetNextStage(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetEventEnd(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetEventStart(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evGetPollutionLevel(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evGetRestTime(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetPollutionIncreaseCount(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetAttentionTime(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetTimeLimit(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetDead4LiveActor(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetHide4LiveActor(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evIsOnLiveActorFlag(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evPushNerve4LiveActor(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetFlagNPCCanTaken(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evIsTalkModeNow(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetValue2TalkVariable(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evGetTalkSelectedValue(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evGetTalkMode(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetTalkMsgID(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evGetTalkNPCName(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evGetTalkNPC(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evIsNearActors(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evIsNearSameActors(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetFlagNPCDead(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetFlagNPCDontThrow(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetFlagNPCDontTalk(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evGetNPCType(TSpcTypedInterp<TEventWatcher>*, u32);
-static void getNameRefPtr(TSpcSlice);
-static void evGetNameRefName(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evGetNameRefHandle(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evSetSystemFlag(TSpcTypedInterp<TEventWatcher>*, u32);
-static void evGetSystemFlag(TSpcTypedInterp<TEventWatcher>*, u32);
+                                            u32)
+{
+}
+static void evAppearShineFromKageMario(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evAppearShineForWoodBox(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evChangeNozzle(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evStartMarioTalking(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evCheckWoodBox(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evRefreshWoodBox(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evKillWoodBox(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evIsInsideCube(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetMarioWaiting(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evStartMareBottleDemo(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evIsFinishMareBottleDemo(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evIsInsideFastCube(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetTransScale(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetEventID(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evManiCoinDown(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evStartBGM(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evEggYoshiStartFruit(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evPutNozzle(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evStopBGM(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evStartSE(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
+{
+	interp->verifyArgNum(1, &arg_num);
+	int se = interp->pop().getDataInt();
+	if (gpMSound->gateCheck(se))
+		MSoundSESystem::MSoundSE::startSoundSystemSE(se, 0, nullptr, 0);
+	interp->push(TSpcSlice());
+}
+static void evStartEventSE(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evStartMiss(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evChangeSunglass(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetCollision(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evWarpMario(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evStartAppearJetBalloon(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evSetEventForWaterMelon(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evAppearReadyGo(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evAppear8RedCoinsAndTimer(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evWarpFrontToMario(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evOnNeutralMarioKey(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evInvalidatePad(TSpcTypedInterp<TEventWatcher>*, u32) { }
+static void evIsWaterMelonIsReached(TSpcTypedInterp<TEventWatcher>*, u32) { }
 
 template <> void TSpcTypedBinary<TEventWatcher>::initUserBuiltin()
 {
@@ -223,108 +203,33 @@ template <> void TSpcTypedBinary<TEventWatcher>::initUserBuiltin()
 	TNpcEvent::initNpcBuiltin(this);
 }
 
-static void evIsWaterMelonIsReached(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evInvalidatePad(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evOnNeutralMarioKey(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evWarpFrontToMario(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evAppear8RedCoinsAndTimer(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evAppearReadyGo(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetEventForWaterMelon(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evStartAppearJetBalloon(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evWarpMario(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetCollision(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evChangeSunglass(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evStartMiss(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evStartEventSE(TSpcTypedInterp<TEventWatcher>*, u32) { }
-
-static void evStartSE(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
-{
-	interp->verifyArgNum(1, &arg_num);
-	int se = interp->pop().getDataInt();
-	if (gpMSound->gateCheck(se))
-		MSoundSESystem::MSoundSE::startSoundSystemSE(se, 0, nullptr, 0);
-	interp->push(TSpcSlice());
-}
-
-static void evStopBGM(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evPutNozzle(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evEggYoshiStartFruit(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evStartBGM(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evManiCoinDown(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetEventID(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetTransScale(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evIsInsideFastCube(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evIsFinishMareBottleDemo(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evStartMareBottleDemo(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetMarioWaiting(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evIsInsideCube(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evKillWoodBox(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evRefreshWoodBox(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evCheckWoodBox(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evStartMarioTalking(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evChangeNozzle(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evAppearShineForWoodBox(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evAppearShineFromKageMario(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evAppearShineFromNPCWithoutDemo(TSpcTypedInterp<TEventWatcher>*,
-                                            u32)
+TEventWatcher::TEventWatcher(const char* name)
+    : JDrama::TViewObj(name)
+    , mBinary(nullptr)
+    , mInterp(nullptr)
 {
 }
-static void evAppearShine(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evAppearShineFromNPC(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evAppearMushroom1up(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evKillMushroom1up(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evKillShine(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evGetTime(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evMonteManReachFlag(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evStopTimer(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evStartMonteman(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evStartTimer(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evInsertTimer(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evForceCloseTalk(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evRaiseBuilding(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evIsMapEventFinishedAll(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evStartOpenModelGate(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evStartEMarioDisappear(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evStartEMarioGateDrawing(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evStartEMarioRunAway(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evIsEMarioDownWaitingToTalk(TSpcTypedInterp<TEventWatcher>*, u32) {
+
+TEventWatcher::TEventWatcher(const char* name, const char* script)
+    : JDrama::TViewObj(name)
+    , mBinary(nullptr)
+    , mInterp(nullptr)
+{
+	launchScript(script);
 }
-static void evIsEMarioReachedToGoal(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evLaunchEventClearDemo(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evIsBossDefeated(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetGraffitoMultiplied(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evIsGraffitoCoverage0(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evGameOver(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evRegisterMovie(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetNextStage(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetEventEnd(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetEventStart(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evGetPollutionLevel(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evGetRestTime(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetPollutionIncreaseCount(TSpcTypedInterp<TEventWatcher>*, u32) {
+
+void TEventWatcher::launchScript(const char* script)
+{
+	if (void* res = JKRGetResource(script)) {
+		mBinary = new TSpcTypedBinary<TEventWatcher>(res);
+		mBinary->init();
+		mInterp = new TSpcTypedInterp<TEventWatcher>(mBinary, this, 0x20, 0x20,
+		                                             0x20, 0x20);
+	}
 }
-static void evSetAttentionTime(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetTimeLimit(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetDead4LiveActor(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetHide4LiveActor(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evIsOnLiveActorFlag(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evPushNerve4LiveActor(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetFlagNPCCanTaken(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evIsTalkModeNow(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetValue2TalkVariable(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evGetTalkSelectedValue(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evGetTalkMode(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetTalkMsgID(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evGetTalkNPCName(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evGetTalkNPC(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evIsNearActors(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evIsNearSameActors(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetFlagNPCDead(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetFlagNPCDontThrow(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetFlagNPCDontTalk(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evGetNPCType(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void getNameRefPtr(TSpcSlice) { }
-static void evGetNameRefName(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evGetNameRefHandle(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evSetSystemFlag(TSpcTypedInterp<TEventWatcher>*, u32) { }
-static void evGetSystemFlag(TSpcTypedInterp<TEventWatcher>*, u32) { }
+
+void TEventWatcher::perform(u32 param_1, JDrama::TGraphics*)
+{
+	if ((param_1 & 1) && mInterp)
+		mInterp->update();
+}

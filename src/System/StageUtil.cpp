@@ -23,25 +23,15 @@ static u8 exShineTable[] = {
 
 // clang-format on
 
-u8 SMS_getShineIDofExStage(u8 r3)
+bool SMS_isExMap()
 {
-	if (r3 <= 0x14 || r3 >= 0x35) {
-		return 0xFF;
-	} else {
-		return exShineTable[r3 - 0x15];
-	}
+	return (gpApplication.mCurrArea.unk0 > 0x14
+	        && gpApplication.mCurrArea.unk0 < 0x35);
 }
 
-u8 SMS_getShineStage(u8 r3) { return shineStageTable[r3]; }
-
-bool SMS_isOptionMap()
+bool SMS_isMultiPlayerMap()
 {
-	bool ret = false;
-
-	if (gpMarDirector->mMap == 15) {
-		ret = true;
-	}
-	return ret;
+	return (gpMarDirector->mMap == 12 && gpMarDirector->unk7D == 0);
 }
 
 bool SMS_isDivingMap()
@@ -61,13 +51,23 @@ bool SMS_isDivingMap()
 	return ret;
 }
 
-bool SMS_isMultiPlayerMap()
+bool SMS_isOptionMap()
 {
-	return (gpMarDirector->mMap == 12 && gpMarDirector->unk7D == 0);
+	bool ret = false;
+
+	if (gpMarDirector->mMap == 15) {
+		ret = true;
+	}
+	return ret;
 }
 
-bool SMS_isExMap()
+u8 SMS_getShineStage(u8 r3) { return shineStageTable[r3]; }
+
+u8 SMS_getShineIDofExStage(u8 r3)
 {
-	return (gpApplication.mCurrArea.unk0 > 0x14
-	        && gpApplication.mCurrArea.unk0 < 0x35);
+	if (r3 <= 0x14 || r3 >= 0x35) {
+		return 0xFF;
+	} else {
+		return exShineTable[r3 - 0x15];
+	}
 }
