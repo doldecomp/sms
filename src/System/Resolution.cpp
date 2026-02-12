@@ -1,11 +1,9 @@
 #include <System/Resolution.hpp>
 #include <dolphin/vi.h>
 
-s32 SMSGetGameVideoHeight();
+u16 SMSGetGCLogoVideoHeight() { return SMSGetGameVideoHeight(); }
 
-s32 SMSGetGCLogoVideoHeight() { return SMSGetGameVideoHeight(); }
-
-s32 SMSGetGCLogoVideoWidth() { return 640; }
+u16 SMSGetGCLogoVideoWidth() { return 640; }
 
 u16 SMSGetGCLogoRenderHeight() { return 448; }
 
@@ -19,9 +17,9 @@ s32 SMSGetGameRenderHeight() { return 448; }
 
 s32 SMSGetGameRenderWidth() { return 640; }
 
-s32 SMSGetTitleVideoHeight()
+u16 SMSGetTitleVideoHeight()
 {
-	s32 ret = 448;
+	u16 ret = 448;
 
 	switch (VIGetTvFormat()) {
 	case 2:
@@ -40,11 +38,11 @@ s32 SMSGetTitleVideoHeight()
 	return ret;
 }
 
-s32 SMSGetTitleVideoWidth() { return 660; }
+u16 SMSGetTitleVideoWidth() { return 660; }
 
-s32 SMSGetGameVideoHeight()
+u16 SMSGetGameVideoHeight()
 {
-	s32 ret = 448;
+	u16 ret = 448;
 
 	switch (VIGetTvFormat()) {
 	case 2:
@@ -63,4 +61,4 @@ s32 SMSGetGameVideoHeight()
 	return ret;
 }
 
-s32 SMSGetGameVideoWidth() { return 660; }
+u16 SMSGetGameVideoWidth() { return 660; }

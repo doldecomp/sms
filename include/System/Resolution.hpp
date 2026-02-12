@@ -3,19 +3,19 @@
 
 #include <dolphin/types.h>
 
-s32 SMSGetGCLogoVideoHeight();
-s32 SMSGetGCLogoVideoWidth();
+u16 SMSGetGCLogoVideoHeight();
+u16 SMSGetGCLogoVideoWidth();
 u16 SMSGetGCLogoRenderHeight();
 u16 SMSGetGCLogoRenderWidth();
 u16 SMSGetTitleRenderHeight();
 u16 SMSGetTitleRenderWidth();
 s32 SMSGetGameRenderHeight();
 s32 SMSGetGameRenderWidth();
-s32 SMSGetTitleVideoHeight();
-s32 SMSGetTitleVideoWidth();
+u16 SMSGetTitleVideoHeight();
+u16 SMSGetTitleVideoWidth();
 s32 SMSGetDisplayHeightMax();
 s32 SMSGetDisplayWidthMax();
-s32 SMSGetGameVideoHeight();
-s32 SMSGetGameVideoWidth();
+u16 SMSGetGameVideoHeight();
+u16 SMSGetGameVideoWidth();
 
 #endif
