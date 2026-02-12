@@ -754,7 +754,7 @@ void TNozzleBase::calcGunAngle(const TMarioControllerWork& work)
 	if (mFludd->mMario->mAction == 0xC008220) {
 		// TODO: Wrong reguster used, using r3 instead of r4
 		angle = unk36E
-		        + (s16)(mFludd->mMario->mGamePad->mCompSPos[0].y
+		        + (s16)(mFludd->mMario->mGamePad->mCompSPos[0 * 2 + 1]
 		                * mEmitParams.mRButtonMult.get());
 	} else {
 		angle = -mEmitParams.mLAngleBase.get();
