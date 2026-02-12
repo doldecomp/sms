@@ -2,6 +2,7 @@
 #define GC2D_MENU_HPP
 
 #include <JSystem/JDrama/JDRViewObj.hpp>
+#include <JSystem/J2D/J2DPane.hpp>
 
 class TMarioGamePad;
 class J2DScreen;
@@ -10,6 +11,12 @@ class J2DTextBox;
 
 class TMenuBase : public JDrama::TViewObj {
 public:
+	TMenuBase(J2DScreen* screen, const char* name = "<TMenuBase>")
+	    : JDrama::TViewObj(name)
+	    , unk10(screen)
+	{
+	}
+
 	virtual void perform(u32, JDrama::TGraphics*);
 
 public:
@@ -21,6 +28,36 @@ public:
 	TMenuPlane(const TMarioGamePad*, J2DPane*, u32, u32);
 
 	virtual void perform(u32, JDrama::TGraphics*);
+
+	void show()
+	{
+		unk3C = 10;
+		unk14->show();
+		unkC.off(1);
+		unk18 = 0;
+	}
+
+	void hide()
+	{
+		unk3C = 10;
+		unk14->hide();
+		unkC.on(0x1);
+		unk18 = 0;
+	}
+
+	void fade()
+	{
+		unk18 |= 0x4;
+		unk14->mAlpha = 160;
+	}
+
+	void unfade()
+	{
+		unk18         = 0;
+		unk14->mAlpha = 255;
+	}
+
+	bool checkFlag(u32 flag) const { return unk18 & flag ? true : false; }
 
 public:
 	/* 0x10 */ const TMarioGamePad* unk10;
@@ -39,7 +76,21 @@ public:
 
 class TFlashPane : public JDrama::TViewObj {
 public:
+	TFlashPane(J2DPane* param_1, const char* name = "<TFlashPane>")
+	    : JDrama::TViewObj(name)
+	    , unk10(param_1)
+	    , unk14(0)
+	    , unk18(4)
+	{
+	}
+
 	virtual void perform(u32, JDrama::TGraphics*);
+
+	void hide()
+	{
+		unk10->hide();
+		unkC.on(0x1);
+	}
 
 public:
 	/* 0x10 */ J2DPane* unk10;

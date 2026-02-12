@@ -845,7 +845,7 @@ config.libs = [
             Object(NonMatching, "System/MarDirectorSetup2.cpp"),
             Object(Matching, "System/marerr.cpp"),
             Object(NonMatching, "System/MarNameRefGen.cpp"),
-            Object(NonMatching, "System/MenuDir.cpp"),
+            Object(NonMatching, "System/MenuDir.cpp", extra_cflags=["-inline deferred"]),
             Object(Matching, "System/Params.cpp"),
             Object(Matching, "System/ParamInst.cpp"),
             Object(NonMatching, "System/PerformList.cpp", extra_cflags=["-inline deferred"]),
