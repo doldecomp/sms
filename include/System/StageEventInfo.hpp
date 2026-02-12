@@ -10,6 +10,8 @@ public:
 	{
 	}
 
+	virtual void load(JSUMemoryInputStream&);
+
 public:
 	/* 0xC */ u32 unkC;
 	/* 0x10 */ const char* unk10;
