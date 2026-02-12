@@ -31,7 +31,7 @@ public:
 	{
 	}
 
-	inline void set(T param) { value = param; };
+	inline void set(T param) { this->value = param; };
 
 	// Fabricated
 	TParamRT<T>& operator=(const TParamRT<T>& other)
