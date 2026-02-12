@@ -1,25 +1,12 @@
 #include <System/MarioGamePad.hpp>
 #include <System/Application.hpp>
 
-u16 TMarioGamePad::mResetFlag = 0;
-
-u32 TMarioGamePad::read()
-{
-	JUTGamePad::read();
-
-	// TODO: I could not make the register check work properly here.
-	s32 resetPort = 0;
-	if (checkReset(&resetPort)) {
-		handleReset(resetPort);
-	}
-}
-
-void TMarioGamePad::onNeutralMarioKey() { _E4 = 0x3c; }
+JDrama::TFlagT<u16> TMarioGamePad::mResetFlag;
 
 void TMarioGamePad::reset()
 {
-	setButtonRepeat(0xf00000f, 6.0f / SMSGetAnmFrameRate(),
-	                20.0f / SMSGetAnmFrameRate());
+	setButtonRepeat(0xf00000f, 20.0f / SMSGetAnmFrameRate(),
+	                6.0f / SMSGetAnmFrameRate());
 	_E4             = 0;
 	mDisabledFrames = 0;
 }
@@ -39,8 +26,8 @@ void TMarioGamePad::updateMeaning()
 	if (checkFlag(PAD_FLAG_0x80)) {
 		updateMeaning(A, MEANING_0x20, prevMeaning);
 		updateMeaning(B, MEANING_0x40, prevMeaning);
-		mCompSPos[4].x = mMainStick.mPosX;
-		mCompSPos[4].y = mMainStick.mPosY;
+		mCompSPos[4 * 2]     = mMainStick.mPosX;
+		mCompSPos[4 * 2 + 1] = mMainStick.mPosY;
 		goto finalize;
 	}
 
@@ -77,8 +64,8 @@ void TMarioGamePad::updateMeaning()
 		}
 		updateMeaning(A, MEANING_0x20000, prevMeaning);
 		updateMeaning(B, MEANING_0x40000, prevMeaning);
-		mCompSPos[1].x = (f32)(mButton.mAnalogL);
-		mCompSPos[1].y = (f32)(mButton.mAnalogR);
+		mCompSPos[1 * 2]     = (f32)(mButton.mAnalogL);
+		mCompSPos[1 * 2 + 1] = (f32)(mButton.mAnalogR);
 		updateMeaning(R, MEANING_0x400, prevMeaning);
 		updateMeaning(Z, MEANING_0x1000, prevMeaning);
 		updateMeaning(L, MEANING_0x2000, prevMeaning);
@@ -94,14 +81,14 @@ void TMarioGamePad::updateMeaning()
 		    = gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode);
 		if (isLButtonCameraSpecifyMode) {
 			// This is for when in y camera
-			mCompSPos[1].x = (f32)mButton.mAnalogL;
-			mCompSPos[1].y = (f32)mButton.mAnalogR;
+			mCompSPos[1 * 2]     = (f32)mButton.mAnalogL;
+			mCompSPos[1 * 2 + 1] = (f32)mButton.mAnalogR;
 
 			updateMeaning(R, MEANING_0x400, prevMeaning);
 			updateMeaning(Z, MEANING_0x1000, prevMeaning);
 			updateMeaning(L, MEANING_0x2000, prevMeaning);
-			mCompSPos[2].x = mMainStick.mPosX;
-			mCompSPos[2].y = mMainStick.mPosY;
+			mCompSPos[2 * 2]     = mMainStick.mPosX;
+			mCompSPos[2 * 2 + 1] = mMainStick.mPosY;
 			updateMeaning(A, MEANING_0x10000, prevMeaning);
 			updateMeaning(B, MEANING_0x10000, prevMeaning);
 			updateMeaning(Y, MEANING_0x4000, prevMeaning);
@@ -113,7 +100,7 @@ void TMarioGamePad::updateMeaning()
 
 			updateMeaning(X, MEANING_0x200000, prevMeaning);
 		} else {
-			f32 stickScaling = 176.0f;
+			f32 stickScaling = 1.0f;
 			bool _unk3       = false;
 			if (0 < _E4) {
 				_E4 -= 1;
@@ -125,23 +112,20 @@ void TMarioGamePad::updateMeaning()
 				if (_unk2 <= 0x28) {
 					stickScaling = 0.0f;
 				} else {
-					// TODO: CLBCalcRatio
-					// stickScaling =
 					stickScaling = CLBCalcRatio<s16>(0x28, 0x3c, _unk2);
 				}
 			}
 
 			if (_unk3) {
-				mCompSPos[0].x = stickScaling * mMainStick.mPosX;
-				mCompSPos[0].y = stickScaling * mMainStick.mPosY;
+				mCompSPos[0 * 2]     = stickScaling * mMainStick.mPosX;
+				mCompSPos[0 * 2 + 1] = stickScaling * mMainStick.mPosY;
 			} else {
-				mCompSPos[0].x = mMainStick.mPosX;
-				mCompSPos[0].y = mMainStick.mPosY;
+				mCompSPos[0 * 2]     = mMainStick.mPosX;
+				mCompSPos[0 * 2 + 1] = mMainStick.mPosY;
 			}
 
-			mCompSPos[1].x = (f32)mButton.mAnalogL;
-			mCompSPos[1].y = (f32)mButton.mAnalogR;
-
+			mCompSPos[1 * 2]     = (f32)mButton.mAnalogL;
+			mCompSPos[1 * 2 + 1] = (f32)mButton.mAnalogR;
 			updateMeaning(A, MEANING_0x80, prevMeaning);
 
 			if ((mFlags & 0x4) != 0) {
@@ -156,8 +140,8 @@ void TMarioGamePad::updateMeaning()
 			updateMeaning(Z, MEANING_0x1000, prevMeaning);
 			updateMeaning(L, MEANING_0x2000, prevMeaning);
 
-			mCompSPos[3].x = mSubStick.mPosX;
-			mCompSPos[3].y = mSubStick.mPosY;
+			mCompSPos[3 * 2]     = mSubStick.mPosX;
+			mCompSPos[3 * 2 + 1] = mSubStick.mPosY;
 
 			updateMeaning(Y, MEANING_0x4000, prevMeaning);
 			updateMeaning(L, MEANING_0x8000, prevMeaning);
@@ -174,4 +158,17 @@ void TMarioGamePad::updateMeaning()
 finalize:
 	mEnabledFrameMeaning  = mMeaning & ~prevMeaning;
 	mDisabledFrameMeaning = prevMeaning & ~mMeaning;
+}
+
+void TMarioGamePad::onNeutralMarioKey() { _E4 = 0x3c; }
+
+u32 TMarioGamePad::read()
+{
+	JUTGamePad::read();
+
+	// TODO: I could not make the register check work properly here.
+	s32 resetPort = 0;
+	if (checkReset(&resetPort)) {
+		handleReset(resetPort);
+	}
 }

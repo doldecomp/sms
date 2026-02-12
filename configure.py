@@ -856,7 +856,7 @@ config.libs = [
             Object(Matching, "System/ZBufferCatch.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "System/Application.cpp", extra_cflags=["-inline deferred"]),
             Object(Matching, "System/ScenarioArchiveName.cpp"),
-            Object(NonMatching, "System/MarioGamePad.cpp"),
+            Object(NonMatching, "System/MarioGamePad.cpp", extra_cflags=["-inline deferred"]),
             Object(NonMatching, "System/StageEventInfo.cpp"),
             Object(Matching, "System/StageUtil.cpp"),
             Object(Matching, "System/Resolution.cpp"),
