@@ -20,7 +20,7 @@ public:
 	void rsetup();
 	void decideNextMode(s32*);
 
-	void getStreamMovieName(u32);
+	static const char* getStreamMovieName(u32);
 };
 
 #endif

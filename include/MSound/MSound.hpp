@@ -16,6 +16,7 @@ class JAIAnimeFrameSoundData;
 
 enum MS_SCENE_WAVE {
 	MS_WAVE_UNK0         = 0,
+	MS_WAVE_UNK128       = 128,
 	MS_WAVE_DEFAULT      = 256,
 	MS_WAVE_DOLPIC       = 513,
 	MS_WAVE_BIANCO       = 514,
