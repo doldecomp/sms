@@ -26,6 +26,7 @@ struct TColor : public GXColor {
 
 	void set(u32 u32Color) { *(u32*)&r = u32Color; }
 	void set(GXColor gxColor) { *(GXColor*)&r = gxColor; }
+	GXColor get() const { return *this; }
 };
 
 } // namespace JUtility
