@@ -1259,7 +1259,7 @@ config.libs = [
             Object(NonMatching, "Animal/fishoid.cpp"),
             Object(NonMatching, "Animal/AnimalBase.cpp"),
             Object(NonMatching, "Animal/AnimalManager.cpp"),
-            Object(NonMatching, "Animal/AnimalSave.cpp"),
+            Object(Matching, "Animal/AnimalSave.cpp"),
             Object(NonMatching, "Animal/AnimalNerve.cpp"),
             Object(NonMatching, "Animal/Bird.cpp"),
             Object(NonMatching, "Animal/BeeHive.cpp"),
