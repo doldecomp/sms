@@ -17,10 +17,14 @@ public:
 
 	void* getCurrentFrameBuffer() { return unk4[unkC]; }
 	const GXRenderModeObj& getRenderMode() const { return unk10; }
+	GXRenderModeObj& getRenderMode() { return unk10; }
 	GXFBClamp getFBClamp() const { return unk54; }
 	JUtility::TColor getClearColor() const { return mFrameBufferClearColor; }
 	u32 getClearZ() const { return mFrameBufferClearZ; }
 	TVideo* getVideo() { return unk60; }
+
+	void onFlag(u16 flag) { unk64 |= flag; }
+	void offFlag(u16 flag) { unk64 &= ~flag; }
 
 public:
 	/* 0x4 */ void* unk4[2];

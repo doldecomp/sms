@@ -12,8 +12,8 @@ void SMSSetupGCLogoRenderingInfo(JDrama::TDisplay*);
 void SMSSetupGCLogoRenderMode(GXRenderModeObj*);
 JDrama::TRect SMSGetRederRect_Game();
 
-extern u8 SMSAASamplePattern_non[];
-extern u8 SMSAASamplePattern_aa[];
+extern u8 SMSAASamplePattern_non[][2];
+extern u8 SMSAASamplePattern_aa[][2];
 extern u8 SMSVFilter_non[];
 extern u8 SMSVFilter_flicker[];
 
