@@ -55,14 +55,24 @@ public:
 
 	TVector(const TAllocator<T>& alloc = TAllocator<T>())
 	    : mAllocator(alloc)
+	    , pBegin_(nullptr)
+	    , pEnd_(pBegin_)
+	    , mCapacity(0)
+	    , mGrowthMul(2.0f)
+	    , mGrowthAdd(0)
 	{
-		pBegin_    = nullptr;
-		pEnd_      = pBegin_;
-		mCapacity  = 0;
-		mGrowthMul = 2.0f;
-		mGrowthAdd = 0;
 	}
-	TVector(size_t, const T&, const TAllocator<T>&);
+	TVector(size_t param_1, const T& param_2 = T(),
+	        const TAllocator<T>& param_3 = TAllocator<T>())
+	    : mAllocator(param_3)
+	    , pBegin_(nullptr)
+	    , pEnd_(pBegin_)
+	    , mCapacity(0)
+	    , mGrowthMul(2.0f)
+	    , mGrowthAdd(0)
+	{
+		insert2(end(), param_1, param_2);
+	}
 	~TVector()
 	{
 		clear2();
@@ -81,6 +91,13 @@ public:
 	{
 		return insert(where, 1, what);
 	}
+
+	// TODO: hack
+	iterator insert2(iterator where, size_t how_many, const T& what)
+	{
+		insert(where, how_many, what);
+	}
+
 	iterator insert(iterator where, size_t how_many, const T& what)
 	{
 		ptrdiff_t offset = where - pBegin_;
