@@ -68,7 +68,7 @@ template <class T> T CLBLinearInbetween(T a, T b, f32 f)
 	return (T)(a + f * (b - a));
 }
 
-template <class T> void CLBPalFrame(T);
+template <class T> T CLBPalFrame(T);
 template <class T> void CLBPalIntSpeed(T);
 template <class T> T CLBRoundf(f32);
 template <class T> void CLBTwoDegreeGeneralInbetween(T, T, f32, f32);
