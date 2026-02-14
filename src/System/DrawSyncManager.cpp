@@ -5,48 +5,48 @@ TDrawSyncManager* TDrawSyncManager::smInstance;
 
 class TFifo {
 public:
-	TFifo(int param_1)
-	    : unk4(param_1)
-	    , unk8(0)
-	    , unkC(0)
+	TFifo(int capacity)
+	    : mCapacity(capacity)
+	    , mReadIdx(0)
+	    , mWriteIdx(0)
 	{
-		unk0 = new void*[unk4 + 1];
+		mData = new void*[mCapacity + 1];
 	}
 
-	int getLoopIdx(u32 param_1)
+	int getLoopIdx(u32 index)
 	{
-		if (param_1 >= unk4 + 1)
-			param_1 = 0;
-		return param_1;
+		if (index >= mCapacity + 1)
+			index = 0;
+		return index;
 	}
 
 	// fabricated
-	int getThing()
+	int size()
 	{
-		if (unk8 <= unkC)
-			return unkC - unk8;
+		if (mReadIdx <= mWriteIdx)
+			return mWriteIdx - mReadIdx;
 		else
-			return unkC + unk4 + 1 - unk8;
+			return mWriteIdx + mCapacity + 1 - mReadIdx;
 	}
 
 	// fabricated
-	void skip() { unk8 = getLoopIdx(unkC + 1); }
+	void advanceReadIdx() { mReadIdx = getLoopIdx(mReadIdx + 1); }
 
 	// fabricated
-	void* read() { return unk0[getLoopIdx(unk8 + 1)]; }
+	void* read() { return mData[getLoopIdx(mReadIdx + 1)]; }
 
 	// fabricated
-	void push(void* param_1)
+	void push(void* value)
 	{
-		unk0[unkC] = param_1;
-		unkC       = getLoopIdx(unkC + 1);
+		mData[mWriteIdx] = value;
+		mWriteIdx        = getLoopIdx(mWriteIdx + 1);
 	}
 
 private:
-	/* 0x0 */ void** unk0;
-	/* 0x4 */ int unk4;
-	/* 0x8 */ int unk8;
-	/* 0xC */ u32 unkC;
+	/* 0x0 */ void** mData;
+	/* 0x4 */ int mCapacity;
+	/* 0x8 */ int mReadIdx;
+	/* 0xC */ u32 mWriteIdx;
 };
 
 TDrawSyncManager* TDrawSyncManager::start(u32 param_1, u32 param_2, s32 param_3)
@@ -69,11 +69,11 @@ void* TDrawSyncManager::threadFunc(void* param_1)
 	TDrawSyncManager* self = (TDrawSyncManager*)param_1;
 	for (;;) {
 		void* msg;
-		OSReceiveMessage(&self->unk328, &msg, 1);
+		OSReceiveMessage(&self->mMessageQueue, &msg, 1);
 		if ((size_t)msg >= 0x80000000) {
-			self->unk348->push(msg);
+			self->mFifo->push(msg);
 
-			u32 iVar1 = self->unk348->getThing();
+			u32 iVar1 = self->mFifo->size();
 
 			if (iVar1 == 2)
 				GXEnableBreakPt(msg);
@@ -81,15 +81,15 @@ void* TDrawSyncManager::threadFunc(void* param_1)
 			if ((size_t)msg >= 0x10000)
 				break;
 
-			self->unk348->skip();
+			self->mFifo->advanceReadIdx();
 
-			u32 iVar1 = self->unk348->getThing();
+			u32 iVar1 = self->mFifo->size();
 
 			if (iVar1 != 0) {
 				if (iVar1 == 1)
 					GXDisableBreakPt();
 				else if (iVar1 >= 2)
-					GXEnableBreakPt(self->unk348->read());
+					GXEnableBreakPt(self->mFifo->read());
 			}
 		}
 	}
@@ -97,15 +97,14 @@ void* TDrawSyncManager::threadFunc(void* param_1)
 }
 
 TDrawSyncManager::TDrawSyncManager(u32 param_1, u32 param_2, s32 param_3)
-    : unk0(param_1)
+    : mCallbacks(param_1)
 {
-	unk34C    = 0;
-	u8* stack = new u8[0x1000];
-	OSCreateThread(&unk18, threadFunc, this, stack + 0x1000, 0x1000, param_3,
-	               0);
-	OSInitMessageQueue(&unk328, new u8[0x50], 0x14);
-	unk348 = new TFifo(param_2);
-	OSResumeThread(&unk18);
+	mFlags = 0;
+	OSCreateThread(&mProcessingThread, &threadFunc, this,
+	               new u8[0x1000] + 0x1000, 0x1000, param_3, 0);
+	OSInitMessageQueue(&mMessageQueue, new u8[0x50], 0x14);
+	mFifo = new TFifo(param_2);
+	OSResumeThread(&mProcessingThread);
 }
 
 TDrawSyncManager::~TDrawSyncManager() { }
@@ -113,34 +112,36 @@ TDrawSyncManager::~TDrawSyncManager() { }
 void TDrawSyncManager::setCallback(u32 param_1, u16 param_2, u16 param_3,
                                    TDrawSyncCallback* param_4)
 {
-	unk0[param_1] = TDrawSyncTokenRange(param_2, param_3, param_4);
+	mCallbacks[param_1] = TDrawSyncTokenRange(param_2, param_3, param_4);
 }
 
 void TDrawSyncManager::drawSyncCallbackSub(u16 param_1)
 {
 	if (param_1 == 0) {
-		if (!(unk34C & 2))
-			OSSendMessage(&unk328, (void*)(size_t)param_1, 1);
+		if (!(mFlags & 2))
+			OSSendMessage(&mMessageQueue, (void*)(size_t)param_1, 1);
 		return;
 	}
 
-	for (TDrawSyncTokenRange* it = unk0.begin(); it != unk0.end(); ++it)
-		if (it->unk4 != nullptr && it->unk0 <= param_1 && param_1 <= it->unk2) {
-			it->unk4->drawSyncCallback(param_1);
-			if (!(unk34C & 2))
-				OSSendMessage(&unk328, (void*)(size_t)param_1, 1);
+	for (TDrawSyncTokenRange* it = mCallbacks.begin(); it != mCallbacks.end();
+	     ++it)
+		if (it->mCallback != nullptr && it->mRangeStart <= param_1
+		    && param_1 <= it->mRangeEnd) {
+			it->mCallback->drawSyncCallback(param_1);
+			if (!(mFlags & 2))
+				OSSendMessage(&mMessageQueue, (void*)(size_t)param_1, 1);
 			return;
 		}
 }
 
 void TDrawSyncManager::pushBreakPoint()
 {
-	if (unk34C & 3)
+	if (mFlags & 3)
 		return;
 
 	GXFlush();
 	void* readPtr;
 	void* writePtr;
 	GXGetFifoPtrs(GXGetCPUFifo(), &readPtr, &writePtr);
-	OSSendMessage(&unk328, writePtr, 1);
+	OSSendMessage(&mMessageQueue, writePtr, 1);
 }
