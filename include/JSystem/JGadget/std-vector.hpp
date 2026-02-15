@@ -69,9 +69,52 @@ public:
 	{
 		insert(end(), param_1, param_2);
 	}
+
+	TVector& operator=(const TVector& other)
+	{
+		if (this == &other)
+			return *this;
+
+		size_t ourSize   = size();
+		size_t otherSize = other.size();
+		iterator ourBeg  = begin();
+		iterator ourEnd  = end();
+		if (ourSize < otherSize) {
+			if (mCapacity < otherSize) {
+				T* newBegin = mAllocator.allocate(otherSize);
+
+				if (!newBegin) {
+					JGADGET_WARN("can't allocate memory");
+					return *this;
+				}
+
+				TDestroyed_deallocate_ dealloc(mAllocator, newBegin);
+				std::uninitialized_copy(pBegin_, pEnd_, newBegin);
+				DestroyElement_all_();
+				dealloc.set(pBegin_);
+				pBegin_   = newBegin;
+				pEnd_     = newBegin + otherSize;
+				mCapacity = otherSize; // bug in TP
+			} else {
+				std::copy(ourBeg, ourBeg + ourSize, pBegin_);
+				pEnd_
+				    = std::uninitialized_copy(ourBeg + ourSize, ourEnd, pEnd_);
+			}
+		} else {
+			iterator it = std::copy(ourBeg, ourEnd, pBegin_);
+			DestroyElement_(it, ourEnd);
+			pEnd_ = it;
+		}
+
+		return *this;
+	}
+
 	~TVector()
 	{
-		clear2();
+		clear();
+		// clang-format off
+		JGADGET_ASSERT(size()==0);
+		// clang-format on
 		mAllocator.deallocate(pBegin_, mCapacity);
 	}
 
@@ -121,7 +164,11 @@ public:
 		// NOTE: non-standard: forgot to return the iterator
 	}
 
-	iterator erase(iterator what) { }
+	iterator erase(iterator where)
+	{
+		JGADGET_ASSERT(!empty());
+		return erase(where, where + 1);
+	}
 	iterator erase(iterator pItFirst, iterator pItLast)
 	{
 		// clang-format off
@@ -138,13 +185,11 @@ public:
 	}
 
 	void push_back(const T& value) { insert(end(), value); }
+	void pop_back() { erase(end() - 1); }
 
 	void clear() { erase(begin(), end()); }
 
-	// fabricated TODO: figure out wtf is happening w/ the dtor
-	void clear2() { clear(); }
-
-	void assign(size_t, const T&) { }
+	void assign(size_t, const T&) { } // not present in any other game
 
 	void resize(size_t new_size, const T& value = T())
 	{
@@ -268,7 +313,7 @@ public:
 	    const TAllocator<value_type>& = TAllocator<value_type>());
 	TVector_pointer_void(size_t, const value_type&,
 	                     const TAllocator<value_type>&);
-	void operator=(const JGadget::TVector_pointer_void&);
+	TVector_pointer_void& operator=(const JGadget::TVector_pointer_void&);
 	~TVector_pointer_void();
 
 	size_t size() const { return Base::size(); }
@@ -285,8 +330,8 @@ public:
 	void resize(size_t, const value_type&);
 	void reserve(size_t);
 
-	void InsertRaw(value_type*, size_t);
-	void ResizeRaw(size_t);
+	value_type* InsertRaw(value_type*, size_t);
+	value_type* ResizeRaw(size_t);
 };
 
 template <class T> class TVector_pointer : public TVector_pointer_void {
