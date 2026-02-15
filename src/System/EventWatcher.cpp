@@ -18,16 +18,28 @@
 #include <MoveBG/ItemManager.hpp>
 #include <MoveBG/ModelGate.hpp>
 #include <MoveBG/Item.hpp>
+#include <MoveBG/MapObjItem2.hpp>
+#include <MoveBG/MapObjBall.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Player/MarioMain.hpp>
 #include <Player/Watergun.hpp>
 #include <Camera/CubeManagerBase.hpp>
 
+// rogue includes needed for matching sinit & bss
+#include <M3DUtil/InfectiousStrings.hpp>
+
+// TODO: from M3UJoint or J3DJoint?
+static void dummy()
+{
+	(Vec) { 0.0f, 0.0f, 0.0f };
+	(Vec) { 1.0f, 1.0f, 1.0f };
+}
+
 template <class T> inline T* get_name_ref(TSpcSlice slice)
 {
 	T* result = nullptr;
 
-	switch (slice.mType) {
+	switch (slice.typeof()) {
 	case TSpcSlice::TYPE_STRING:
 		result = JDrama::TNameRefGen::search<T>(slice.getDataString());
 		break;
@@ -43,19 +55,21 @@ template <class T> inline T* get_name_ref(TSpcSlice slice)
 static void evGetSystemFlag(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
-	TSpcSlice id = interp->pop();
+	TSpcSlice idSlice = interp->pop();
+	int id            = idSlice.getDataInt();
 
-	int flag = TFlagManager::getInstance()->getFlag(id.getDataInt());
-	interp->push(flag);
+	interp->push((int)TFlagManager::getInstance()->getFlag(id));
 }
 
 static void evSetSystemFlag(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(2, &arg_num);
-	TSpcSlice id    = interp->pop();
-	TSpcSlice value = interp->pop();
+	TSpcSlice valueSlice = interp->pop();
+	TSpcSlice flagSlice  = interp->pop();
+	int flag             = flagSlice.getDataInt();
+	int value            = valueSlice.getDataInt();
 
-	TFlagManager::getInstance()->setFlag(id.getDataInt(), value.getDataInt());
+	TFlagManager::getInstance()->setFlag(flag, value);
 
 	interp->push();
 }
@@ -64,10 +78,9 @@ static void evGetNameRefHandle(TSpcTypedInterp<TEventWatcher>* interp,
                                u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
-	TSpcSlice name = interp->pop();
 
-	JDrama::TNameRef* ref
-	    = JDrama::TNameRefGen::search<JDrama::TNameRef>(name.getDataString());
+	JDrama::TNameRef* ref = JDrama::TNameRefGen::search<JDrama::TNameRef>(
+	    interp->pop().getDataString());
 
 	interp->push((int)ref);
 }
@@ -76,9 +89,8 @@ static void evGetNameRefName(TSpcTypedInterp<TEventWatcher>* interp,
                              u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
-	TSpcSlice handle = interp->pop();
 
-	int ref = handle.getDataInt();
+	int ref = interp->pop().getDataInt();
 
 	const char* name = ref ? ((JDrama::TNameRef*)ref)->getName() : "";
 
@@ -156,7 +168,7 @@ static void evSetTalkMsgID(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 static void evGetTalkMode(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
-	interp->push((int)gpTalk2D->unk248);
+	interp->push((int)gpTalk2D->getTalkMode());
 }
 
 static void evGetTalkSelectedValue(TSpcTypedInterp<TEventWatcher>* interp,
@@ -188,8 +200,9 @@ static void evPushNerve4LiveActor(TSpcTypedInterp<TEventWatcher>* interp,
                                   u32 arg_num)
 {
 	interp->verifyArgNum(2, &arg_num);
-	int nerveIndex                      = interp->pop().getDataInt();
-	const TNerveBase<TLiveActor>* nerve = NerveGetByIndex(nerveIndex);
+	TSpcSlice nerveSlice                = interp->pop();
+	int nerveId                         = nerveSlice.getDataInt();
+	const TNerveBase<TLiveActor>* nerve = NerveGetByIndex(nerveId);
 	const char* actorName               = interp->pop().getDataString();
 
 	TLiveActor* liveActor = JDrama::TNameRefGen::search<TLiveActor>(actorName);
@@ -496,11 +509,20 @@ static void evKillShine(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 static void evKillMushroom1up(TSpcTypedInterp<TEventWatcher>* interp,
                               u32 arg_num)
 {
+	interp->verifyArgNum(1, &arg_num);
+	get_name_ref<TMushroom1up>(interp->pop())->kill();
+	interp->push();
 }
 
 static void evAppearMushroom1up(TSpcTypedInterp<TEventWatcher>* interp,
                                 u32 arg_num)
 {
+	interp->verifyArgNum(1, &arg_num);
+	TMushroom1up* mushroom = get_name_ref<TMushroom1up>(interp->pop());
+	mushroom->appear();
+	if (gpMSound->gateCheck(0x4854))
+		MSoundSESystem::MSoundSE::startSoundSystemSE(0x4854, 0, nullptr, 0);
+	interp->push();
 }
 
 static void evAppearShineFromNPC(TSpcTypedInterp<TEventWatcher>* interp,
@@ -577,15 +599,74 @@ static void evStartMarioTalking(TSpcTypedInterp<TEventWatcher>* interp,
 
 static void evCheckWoodBox(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
+	interp->verifyArgNum(2, &arg_num);
+	int p1 = interp->pop().getDataInt();
+	int p2 = interp->pop().getDataInt();
+
+	int count = p2 - p1 + 1;
+
+	char buffer[13] = "ゲーム木箱00";
+	for (int i = p2; i <= p1; ++i) {
+		if (i < 10) {
+			buffer[10] = '0' + i;
+			buffer[11] = 0;
+		} else {
+			buffer[10] = '0' + i / 10;
+			buffer[11] = '0' + i % 10;
+		}
+		TMapObjBase* obj = JDrama::TNameRefGen::search<TMapObjBase>(buffer);
+		if (obj && obj->checkLiveFlag(LIVE_FLAG_DEAD))
+			--count;
+	}
+
+	interp->push(count);
 }
 
 static void evRefreshWoodBox(TSpcTypedInterp<TEventWatcher>* interp,
                              u32 arg_num)
 {
+	interp->verifyArgNum(2, &arg_num);
+	int p1 = interp->pop().getDataInt();
+	int p2 = interp->pop().getDataInt();
+
+	char buffer[13] = "ゲーム木箱00";
+	for (int i = p2; i <= p1; ++i) {
+		if (i < 10) {
+			buffer[10] = '0' + i;
+			buffer[11] = 0;
+		} else {
+			buffer[10] = '0' + i / 10;
+			buffer[11] = '0' + i % 10;
+		}
+		TMapObjBase* obj = JDrama::TNameRefGen::search<TMapObjBase>(buffer);
+		if (obj)
+			obj->appear();
+	}
+
+	interp->push();
 }
 
 static void evKillWoodBox(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
+	interp->verifyArgNum(2, &arg_num);
+	int p1 = interp->pop().getDataInt();
+	int p2 = interp->pop().getDataInt();
+
+	char buffer[13] = "ゲーム木箱00";
+	for (int i = p2; i <= p1; ++i) {
+		if (i < 10) {
+			buffer[10] = '0' + i;
+			buffer[11] = 0;
+		} else {
+			buffer[10] = '0' + i / 10;
+			buffer[11] = '0' + i % 10;
+		}
+		TMapObjBase* obj = JDrama::TNameRefGen::search<TMapObjBase>(buffer);
+		if (obj)
+			obj->makeObjDead();
+	}
+
+	interp->push();
 }
 
 static void evIsInsideCube(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
@@ -603,6 +684,9 @@ static void evIsInsideCube(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 static void evSetMarioWaiting(TSpcTypedInterp<TEventWatcher>* interp,
                               u32 arg_num)
 {
+	interp->verifyArgNum(0, &arg_num);
+	gpMarioOriginal->changePlayerStatus(0xC400201, 0, true);
+	interp->push();
 }
 
 static void evStartMareBottleDemo(TSpcTypedInterp<TEventWatcher>* interp,
@@ -791,6 +875,10 @@ static void evStartAppearJetBalloon(TSpcTypedInterp<TEventWatcher>* interp,
 static void evSetEventForWaterMelon(TSpcTypedInterp<TEventWatcher>* interp,
                                     u32 arg_num)
 {
+	interp->verifyArgNum(1, &arg_num);
+	TBigWatermelon* melon = get_name_ref<TBigWatermelon>(interp->pop());
+	melon->startEvent();
+	interp->push();
 }
 
 static void evAppearReadyGo(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)

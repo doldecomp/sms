@@ -50,6 +50,7 @@ public:
 	bool empty() const { return mSize <= 0; }
 	T& getFromBottom(u32 idx) { return mData[idx]; }
 	T& getFromTop(u32 idx) { return mData[mSize - 1 - idx]; }
+	void setFromTop(u32 idx, const T& v) { mData[mSize - 1 - idx] = v; }
 };
 
 class TSpcSlice {
@@ -85,7 +86,10 @@ public:
 	TSpcSlice(const char* value)
 	    : mType(TYPE_STRING)
 	{
-		(const char*&)mData = value;
+		if (!value)
+			mData.asString = "";
+		else
+			mData.asString = value;
 	}
 
 	u32 typeof() const { return mType; }
@@ -98,9 +102,12 @@ public:
 		case TYPE_FLOAT:
 			return mData.asFloat;
 		default:
+			(void)0;
 			return 0;
 		}
 	}
+
+	operator int() const { return getDataInt(); }
 
 	f32 getDataFloat() const
 	{
@@ -110,9 +117,12 @@ public:
 		case TYPE_FLOAT:
 			return mData.asFloat;
 		default:
+			(void)0;
 			return 0.0f;
 		}
 	}
+
+	operator float() const { return getDataFloat(); }
 
 	void setDataInt(int i)
 	{
@@ -122,8 +132,8 @@ public:
 
 	void setDataFloat(f32 f)
 	{
-		mData.asFloat = f;
 		mType         = TYPE_FLOAT;
+		mData.asFloat = f;
 	}
 
 	void setDataString(const char* s)
@@ -143,12 +153,6 @@ public:
 		default:
 			return "";
 		}
-	}
-
-	void setFloat(f32 f)
-	{
-		mType         = TYPE_FLOAT;
-		mData.asFloat = f;
 	}
 
 	TSpcSlice& operator++()
@@ -234,15 +238,60 @@ public:
 		}
 	}
 
-	BOOL operator>(const TSpcSlice& other) const
+	friend BOOL operator>(const TSpcSlice& a, const TSpcSlice& b)
 	{
-		if (mType == TYPE_FLOAT || other.mType == TYPE_FLOAT) {
-			if (getDataFloat() > other.getDataFloat())
+		if (a.mType == TYPE_FLOAT || b.mType == TYPE_FLOAT) {
+			if ((float)a > (float)b)
 				return true;
 			else
 				return false;
 		} else {
-			if (getDataInt() > other.getDataInt())
+			if ((int)a > (int)b)
+				return true;
+			else
+				return false;
+		}
+	}
+
+	friend BOOL operator<(const TSpcSlice& a, const TSpcSlice& b)
+	{
+		if (a.mType == TYPE_FLOAT || b.mType == TYPE_FLOAT) {
+			if ((float)a < (float)b)
+				return true;
+			else
+				return false;
+		} else {
+			if ((int)a < (int)b)
+				return true;
+			else
+				return false;
+		}
+	}
+
+	friend BOOL operator>=(const TSpcSlice& a, const TSpcSlice& b)
+	{
+		if (a.mType == TYPE_FLOAT || b.mType == TYPE_FLOAT) {
+			if ((float)a >= (float)b)
+				return true;
+			else
+				return false;
+		} else {
+			if ((int)a >= (int)b)
+				return true;
+			else
+				return false;
+		}
+	}
+
+	friend BOOL operator<=(const TSpcSlice& a, const TSpcSlice& b)
+	{
+		if (a.mType == TYPE_FLOAT || b.mType == TYPE_FLOAT) {
+			if ((float)a <= (float)b)
+				return true;
+			else
+				return false;
+		} else {
+			if ((int)a <= (int)b)
 				return true;
 			else
 				return false;
@@ -378,11 +427,8 @@ public:
 
 	const char* fetchString()
 	{
-		const char* str
-		    = (const char*)mBinary->getData(mBinary->getDataOffset(fetchU32()));
-		if (str == nullptr)
-			str = "";
-		return str;
+		return (const char*)mBinary->getData(
+		    mBinary->getDataOffset(fetchU32()));
 	}
 
 	void push(const TSpcSlice& slice) { mProcessStack.push(slice); }
