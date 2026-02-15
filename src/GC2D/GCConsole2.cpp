@@ -345,7 +345,7 @@ void TGCConsole2::startDisappearTelop() { }
 
 void TGCConsole2::startDisappearTimer() { }
 
-void TGCConsole2::startAppearTimer(int, long) { }
+void TGCConsole2::startAppearTimer(int, s32) { }
 
 void TGCConsole2::startInsertTimer() { }
 

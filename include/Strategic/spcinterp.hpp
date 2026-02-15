@@ -114,10 +114,25 @@ public:
 		}
 	}
 
+	void setDataInt(int i)
+	{
+		mData.asInt = i;
+		mType       = TYPE_INT;
+	}
+
 	void setDataFloat(f32 f)
 	{
 		mData.asFloat = f;
 		mType         = TYPE_FLOAT;
+	}
+
+	void setDataString(const char* s)
+	{
+		mType = TYPE_STRING;
+		if (!s)
+			mData.asString = "";
+		else
+			mData.asString = s;
 	}
 
 	const char* getDataString() const
