@@ -223,11 +223,11 @@ static void evSetHide4LiveActor(TSpcTypedInterp<TEventWatcher>* interp,
 	TLiveActor* liveActor = JDrama::TNameRefGen::search<TLiveActor>(actorName);
 	if (liveActor) {
 		if (value) {
-			liveActor->onLiveFlag(LIVE_FLAG_UNK2);
-			liveActor->onHitFlag(HIT_FLAG_UNK1);
+			liveActor->onLiveFlag(LIVE_FLAG_HIDDEN);
+			liveActor->onHitFlag(HIT_FLAG_NO_COLLISION);
 		} else {
-			liveActor->offLiveFlag(LIVE_FLAG_UNK2);
-			liveActor->offHitFlag(HIT_FLAG_UNK1);
+			liveActor->offLiveFlag(LIVE_FLAG_HIDDEN);
+			liveActor->offHitFlag(HIT_FLAG_NO_COLLISION);
 		}
 	}
 
@@ -245,10 +245,10 @@ static void evSetDead4LiveActor(TSpcTypedInterp<TEventWatcher>* interp,
 	if (liveActor) {
 		if (value) {
 			liveActor->onLiveFlag(LIVE_FLAG_DEAD);
-			liveActor->onHitFlag(HIT_FLAG_UNK1);
+			liveActor->onHitFlag(HIT_FLAG_NO_COLLISION);
 		} else {
 			liveActor->offLiveFlag(LIVE_FLAG_DEAD);
-			liveActor->offHitFlag(HIT_FLAG_UNK1);
+			liveActor->offHitFlag(HIT_FLAG_NO_COLLISION);
 		}
 	}
 
@@ -751,9 +751,9 @@ static void evSetCollision(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	THitActor* hitActor = get_name_ref<THitActor>(actor);
 
 	if (!value)
-		hitActor->onHitFlag(HIT_FLAG_UNK1);
+		hitActor->onHitFlag(HIT_FLAG_NO_COLLISION);
 	else
-		hitActor->offHitFlag(HIT_FLAG_UNK1);
+		hitActor->offHitFlag(HIT_FLAG_NO_COLLISION);
 
 	interp->push();
 }

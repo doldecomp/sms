@@ -244,7 +244,7 @@ void THamuKuriManager::setSearchHamuKuri()
 		if (!bVar6)
 			continue;
 
-		if (kuri->checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK2
+		if (kuri->checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
 		                        | LIVE_FLAG_CLIPPED_OUT))
 			continue;
 
@@ -575,7 +575,7 @@ void TFireHamuKuriManager::createModelData()
 void TDoroHige::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (!unk1C->isUnk198()
-	    || unk1C->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK2
+	    || unk1C->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_HIDDEN
 	                            | LIVE_FLAG_DEAD))
 		return;
 
@@ -846,16 +846,16 @@ void THamuKuri::moveObject()
 	if (unk198) {
 		offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		if (!isAirborne()) {
-			if (checkLiveFlag(LIVE_FLAG_UNK2)) {
+			if (checkLiveFlag(LIVE_FLAG_HIDDEN)) {
 				mSpine->reset();
 				mSpine->setNext(&TNerveWalkerGenerate::theNerve());
 				TLiveActor* heldObj = (TLiveActor*)mHeldObject;
 				if (heldObj)
-					heldObj->onLiveFlag(LIVE_FLAG_UNK2);
+					heldObj->onLiveFlag(LIVE_FLAG_HIDDEN);
 			}
 
-			offLiveFlag(LIVE_FLAG_UNK2);
-			offHitFlag(HIT_FLAG_UNK1);
+			offLiveFlag(LIVE_FLAG_HIDDEN);
+			offHitFlag(HIT_FLAG_NO_COLLISION);
 		}
 	}
 
@@ -946,10 +946,10 @@ void THamuKuri::makeCapFly(TMapObjBase* param_1)
 			reset();
 			onHaveCap();
 			mHeldObject = param_1;
-			onLiveFlag(LIVE_FLAG_UNK2);
+			onLiveFlag(LIVE_FLAG_HIDDEN);
 			offLiveFlag(LIVE_FLAG_DEAD);
 			offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-			onHitFlag(HIT_FLAG_UNK1);
+			onHitFlag(HIT_FLAG_NO_COLLISION);
 			getManager()->unk70 = this;
 
 			// TODO: this is an inline
@@ -980,7 +980,7 @@ void THamuKuri::makeCapFly(TMapObjBase* param_1)
 
 f32 THamuKuri::getGravityY() const
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK2))
+	if (checkLiveFlag(LIVE_FLAG_HIDDEN))
 		return mCapGravityY;
 
 	if (mSpine->getCurrentNerve() == &TNerveWalkerGenerate::theNerve()
@@ -1047,10 +1047,10 @@ void THamuKuri::setDeadAnm()
 	    && mHeldObject->receiveMessage(this, 6)) {
 		TMapObjBase* heldObj = (TMapObjBase*)mHeldObject;
 		heldObj->mHolder     = nullptr;
-		heldObj->offLiveFlag(LIVE_FLAG_UNK2);
+		heldObj->offLiveFlag(LIVE_FLAG_HIDDEN);
 		heldObj->mPosition   = mPosition;
 		heldObj->mPosition.y = mGroundHeight;
-		heldObj->offHitFlag(HIT_FLAG_UNK1);
+		heldObj->offHitFlag(HIT_FLAG_NO_COLLISION);
 		heldObj->makeObjDead();
 		mHeldObject = nullptr;
 	}
@@ -1080,10 +1080,10 @@ void THamuKuri::setCrashAnm()
 	    && mHeldObject->receiveMessage(this, 6)) {
 		TMapObjBase* heldObj = (TMapObjBase*)mHeldObject;
 		heldObj->mHolder     = nullptr;
-		heldObj->offLiveFlag(LIVE_FLAG_UNK2);
+		heldObj->offLiveFlag(LIVE_FLAG_HIDDEN);
 		heldObj->mPosition   = mPosition;
 		heldObj->mPosition.y = mGroundHeight;
-		heldObj->offHitFlag(HIT_FLAG_UNK1);
+		heldObj->offHitFlag(HIT_FLAG_NO_COLLISION);
 		heldObj->makeObjDead();
 		mHeldObject = nullptr;
 	}
@@ -1118,7 +1118,7 @@ MtxPtr THamuKuri::getTakingMtx()
 	f32 dVar4 = gpMap->checkGround(mPosition.x, mPosition.y + mHeadHeight,
 	                               mPosition.z, &mGroundPlane);
 
-	mHeldObject->onHitFlag(HIT_FLAG_UNK1);
+	mHeldObject->onHitFlag(HIT_FLAG_NO_COLLISION);
 
 	TPosition3f mat;
 	mat.translation(mPosition.x, dVar4, mPosition.z);
@@ -1167,7 +1167,7 @@ bool THamuKuri::isHitValid(u32 param_1)
 		return true;
 	}
 
-	if (checkLiveFlag(LIVE_FLAG_UNK2))
+	if (checkLiveFlag(LIVE_FLAG_HIDDEN))
 		return false;
 
 	return true;
@@ -1368,10 +1368,10 @@ void THaneHamuKuri::setDeadAnm()
 	    && mHeldObject->receiveMessage(this, 6)) {
 		TMapObjBase* heldObj = (TMapObjBase*)mHeldObject;
 		heldObj->mHolder     = nullptr;
-		heldObj->offLiveFlag(LIVE_FLAG_UNK2);
+		heldObj->offLiveFlag(LIVE_FLAG_HIDDEN);
 		heldObj->mPosition   = mPosition;
 		heldObj->mPosition.y = mGroundHeight;
-		heldObj->offHitFlag(HIT_FLAG_UNK1);
+		heldObj->offHitFlag(HIT_FLAG_NO_COLLISION);
 		heldObj->makeObjDead();
 		mHeldObject = nullptr;
 	}
@@ -1385,7 +1385,7 @@ bool THaneHamuKuri::isCollidMove(THitActor* param_1)
 
 bool THaneHamuKuri::isHitValid(u32)
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK2))
+	if (checkLiveFlag(LIVE_FLAG_HIDDEN))
 		return false;
 	else
 		return true;
@@ -1474,7 +1474,7 @@ void TDoroHaneKuri::setBehavior()
 		held->offLiveFlag(0x2);
 		held->mPosition   = mPosition;
 		held->mPosition.y = mGroundHeight;
-		held->offHitFlag(HIT_FLAG_UNK1);
+		held->offHitFlag(HIT_FLAG_NO_COLLISION);
 		held->makeObjDead();
 		mHeldObject = nullptr;
 	}
@@ -1722,7 +1722,7 @@ void TDangoHamuKuri::reset()
 BOOL TDangoHamuKuri::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	if (param_2 == 4 && mHolder == nullptr && mBoss != this) {
-		onHitFlag(HIT_FLAG_UNK1);
+		onHitFlag(HIT_FLAG_NO_COLLISION);
 		mHolder = (TLiveActor*)param_1;
 		behaveToTaken(param_1);
 		return true;
@@ -1731,7 +1731,7 @@ BOOL TDangoHamuKuri::receiveMessage(THitActor* param_1, u32 param_2)
 	if ((param_2 == 6 || param_2 == 7) && mHolder == param_1) {
 		mHolder = nullptr;
 		behaveToRelease();
-		offHitFlag(HIT_FLAG_UNK1);
+		offHitFlag(HIT_FLAG_NO_COLLISION);
 		return true;
 	}
 
@@ -1746,7 +1746,7 @@ BOOL TDangoHamuKuri::receiveMessage(THitActor* param_1, u32 param_2)
 	if (param_2 == 13) {
 		mHitPoints = 0;
 		onLiveFlag(LIVE_FLAG_DEAD);
-		onHitFlag(HIT_FLAG_UNK1);
+		onHitFlag(HIT_FLAG_NO_COLLISION);
 	}
 
 	if (param_2 == 15) {
@@ -1971,7 +1971,7 @@ void TBossDangoHamuKuri::generateBody()
 		currHamu = currHamu->mNext;
 	}
 
-	newHamu->offHitFlag(HIT_FLAG_UNK1);
+	newHamu->offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void TBossDangoHamuKuri::isNowAttack() { }
@@ -2117,7 +2117,7 @@ bool TFireHamuKuri::isHitValid(u32 param_1)
 		return true;
 	}
 
-	if (checkLiveFlag(LIVE_FLAG_UNK2))
+	if (checkLiveFlag(LIVE_FLAG_HIDDEN))
 		return false;
 
 	return true;
@@ -2413,7 +2413,7 @@ DEFINE_NERVE(TNerveHamuKuriWallDie, TLiveActor)
 			MSoundSESystem::MSoundSE::startSoundActor(
 			    0x2804, &self->getPosition(), 0, nullptr, 0, 4);
 
-		self->onHitFlag(HIT_FLAG_UNK1);
+		self->onHitFlag(HIT_FLAG_NO_COLLISION);
 		self->mHitPoints = 0;
 	} else {
 		int pTVar7 = self->getManager()->unk5C;
@@ -2447,7 +2447,7 @@ DEFINE_NERVE(TNerveHamuKuriLand, TLiveActor)
 		self->setBckAnm(5);
 
 	if (self->checkCurAnmEnd(0)) {
-		self->offHitFlag(HIT_FLAG_UNK1);
+		self->offHitFlag(HIT_FLAG_NO_COLLISION);
 		self->unk1F0 = 0;
 		return true;
 	}

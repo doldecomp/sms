@@ -306,7 +306,7 @@ DEFINE_NERVE(TNerveWalkerTraceMario, TLiveActor)
 	}
 
 	if (spine->getTime() == 10)
-		self->offLiveFlag(LIVE_FLAG_UNK2);
+		self->offLiveFlag(LIVE_FLAG_HIDDEN);
 
 	if (SMS_CheckMarioFlag(0x2) || SMS_CheckMarioFlag(0x10000)
 	    || SMS_GetMarioGroundPlane()->isWaterSurface()

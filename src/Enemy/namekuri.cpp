@@ -479,7 +479,7 @@ void TNameKuri::moveObject()
 			                                          nullptr, 0, 4);
 	}
 
-	if (!checkLiveFlag(LIVE_FLAG_UNK2)) {
+	if (!checkLiveFlag(LIVE_FLAG_HIDDEN)) {
 		++unk194;
 		int aliveTime = unk1A4->mSLAliveTime.get();
 		if (unk194 + 100 > aliveTime && mScaling.x < mBodyScale * 2.0f) {
