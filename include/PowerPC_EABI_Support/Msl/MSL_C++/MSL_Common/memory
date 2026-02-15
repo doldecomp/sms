@@ -15,7 +15,7 @@ inline void uninitialized_fill(I first, I last, const T& x)
 }
 
 template <class I, class S, class T>
-void uninitialized_fill_n(I first, S n, const T& x)
+inline void uninitialized_fill_n(I first, S n, const T& x)
 {
 	I dummy = first;
 	for (; n--; ++first)
