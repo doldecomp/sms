@@ -125,7 +125,7 @@ TLiveManager* TConductor::getManagerByName(const char* name)
 
 void TConductor::polluterExterminated() { }
 
-bool TConductor::isBossDefeated()
+BOOL TConductor::isBossDefeated()
 {
 	switch (gpMarDirector->mMap) {
 	case 2: {

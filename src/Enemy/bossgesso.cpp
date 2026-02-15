@@ -902,7 +902,7 @@ void TBossGesso::doAttackSingle()
 	if (gpMarDirector->unk58 < 0x1E0)
 		return;
 
-	if (gpMarDirector->checkUnk124Thing1()
+	if (gpMarDirector->isTalkModeNow()
 	    || gpMarDirector->checkUnk124Thing2())
 		return;
 

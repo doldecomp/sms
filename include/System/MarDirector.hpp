@@ -119,7 +119,7 @@ public:
 	void offUnk4CFlag(int flag) { unk4C &= ~flag; }
 	TGCConsole2* getConsole() { return mConsole; }
 
-	bool checkUnk124Thing1() const
+	bool isTalkModeNow() const
 	{
 		if (unk124 == 1 || unk124 == 2)
 			return true;
@@ -134,6 +134,16 @@ public:
 	}
 
 	void* getUnkD4() { return unkD4; }
+	TBaseNPC* getTalkingNPC() { return unkA0; }
+
+	int getRestTime()
+	{
+		s64 ticks = OSCheckStopwatch(&unkE8);
+		int time  = OSTicksToMilliseconds(ticks) / 10;
+		return unk120 - time;
+	}
+
+	void startTimer() { unkC8 = OSCheckStopwatch(&unkE8); }
 
 public:
 	enum {
@@ -193,8 +203,7 @@ public:
 	/* 0xBC */ TNameRefAryT<TStageEventInfo>* unkBC;
 	/* 0xC0 */ JDrama::TDisplay* unkC0;
 	/* 0xC4 */ char unkC4[0x4];
-	/* 0xC8 */ u32 unkC8;
-	/* 0xCC */ u32 unkCC;
+	/* 0xC8 */ s64 unkC8;
 	/* 0xD0 */ u8 unkD0;
 	/* 0xD1 */ u8 unkD1;
 	/* 0xD4 */ void* unkD4;
@@ -203,7 +212,7 @@ public:
 	/* 0xE0 */ TSunGlass* unkE0;
 	/* 0xE4 */ u32 unkE4;
 	/* 0xE8 */ OSStopwatch unkE8;
-	/* 0x120 */ char unk120[0x4];
+	/* 0x120 */ int unk120;
 	/* 0x124 */ u8 unk124; // Game state, paused, shine animation, 2=talking
 	/* 0x125 */ u8 unk125;
 	/* 0x126 */ u8 unk126; // Next game state

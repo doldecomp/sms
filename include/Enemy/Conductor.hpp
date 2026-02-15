@@ -53,7 +53,7 @@ public:
 	TGraphWeb* getGraphByName(const char*);
 	TLiveManager* getManagerByName(const char*);
 	void polluterExterminated();
-	bool isBossDefeated();
+	BOOL isBossDefeated();
 	void conduct();
 	void maskNFlagOfChildren(int, u32);
 	int makeEnemyAppear(const JGeometry::TVec3<f32>&, const char*, int, int);
