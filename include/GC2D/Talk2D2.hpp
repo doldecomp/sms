@@ -44,6 +44,8 @@ public:
 
 	static void* cColorTable;
 
+	int getTalkMode() const { return unk248; }
+
 public:
 	/* 0x10 */ char unk10[0x248 - 0x10];
 	/* 0x248 */ u32 unk248; // talk mode

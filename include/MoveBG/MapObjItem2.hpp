@@ -3,28 +3,34 @@
 
 #include <MoveBG/MapObjBase.hpp>
 
-// TODO: mark virtual methods as such
-
 class TMushroom1up : public TMapObjBase {
 public:
 	TMushroom1up(int, const char*);
-	void touchPlayer(THitActor*);
-	void makeObjAppeared();
-	void initMapObj();
-	void load(JSUMemoryInputStream&);
-	void control();
-	void perform(unsigned long, JDrama::TGraphics*);
+
+	virtual void load(JSUMemoryInputStream&);
+	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void control();
+	virtual void makeObjAppeared();
+	virtual void initMapObj();
+	virtual void touchPlayer(THitActor*);
+
+public:
+	/* 0x138 */ u8 unk138;
+	/* 0x139 */ u8 unk139;
+	/* 0x13A */ u8 unk13A;
+	/* 0x13C */ int unk13C;
 };
 
 class TJumpBase : public TMapObjBase {
 public:
 	TJumpBase(const char*);
-	void initMapObj();
-	void ensureTakeSituation();
-	BOOL receiveMessage(THitActor*, unsigned long);
-	Mtx* getRootJointMtx() const;
-	void calcRootMatrix();
-	void control();
+
+	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual void ensureTakeSituation();
+	virtual Mtx* getRootJointMtx() const;
+	virtual void calcRootMatrix();
+	virtual void control();
+	virtual void initMapObj();
 };
 
 #endif

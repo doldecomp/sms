@@ -12,6 +12,7 @@
 #include <Enemy/TypicalEnemy.hpp>
 #include <Animal/AnimalNerve.hpp>
 #include <NPC/NpcNerve.hpp>
+#include <MarioUtil/MathUtil.hpp>
 #include <M3DUtil/MActor.hpp>
 
 #include <M3DUtil/InfectiousStrings.hpp> // TODO: removeme
@@ -448,15 +449,21 @@ void linGetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	switch (arg2.getDataInt()) {
 	case 0:
 		switch (arg1.getDataInt()) {
-		case 0:
-			interp->push(TSpcSlice(owner->mPosition.x));
-			break;
-		case 1:
-			interp->push(TSpcSlice(owner->mPosition.y));
-			break;
-		case 2:
-			interp->push(TSpcSlice(owner->mPosition.z));
-			break;
+		case 0: {
+			TSpcSlice slice;
+			slice.setDataFloat(owner->mPosition.x);
+			interp->push(slice);
+		} break;
+		case 1: {
+			TSpcSlice slice;
+			slice.setDataFloat(owner->mPosition.y);
+			interp->push(slice);
+		} break;
+		case 2: {
+			TSpcSlice slice;
+			slice.setDataFloat(owner->mPosition.z);
+			interp->push(slice);
+		} break;
 		default:
 			interp->push();
 			break;
@@ -464,15 +471,21 @@ void linGetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 		break;
 	case 1:
 		switch (arg1.getDataInt()) {
-		case 0:
-			interp->push(TSpcSlice(owner->mRotation.x));
-			break;
-		case 1:
-			interp->push(TSpcSlice(owner->mRotation.y));
-			break;
-		case 2:
-			interp->push(TSpcSlice(owner->mRotation.z));
-			break;
+		case 0: {
+			TSpcSlice slice;
+			slice.setDataFloat(owner->mRotation.x);
+			interp->push(slice);
+		} break;
+		case 1: {
+			TSpcSlice slice;
+			slice.setDataFloat(owner->mRotation.y);
+			interp->push(slice);
+		} break;
+		case 2: {
+			TSpcSlice slice;
+			slice.setDataFloat(owner->mRotation.z);
+			interp->push(slice);
+		} break;
 		default:
 			interp->push();
 			break;
@@ -480,15 +493,21 @@ void linGetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 		break;
 	case 2:
 		switch (arg1.getDataInt()) {
-		case 0:
-			interp->push(TSpcSlice(owner->mScaling.x));
-			break;
-		case 1:
-			interp->push(TSpcSlice(owner->mScaling.y));
-			break;
-		case 2:
-			interp->push(TSpcSlice(owner->mScaling.z));
-			break;
+		case 0: {
+			TSpcSlice slice;
+			slice.setDataFloat(owner->mScaling.x);
+			interp->push(slice);
+		} break;
+		case 1: {
+			TSpcSlice slice;
+			slice.setDataFloat(owner->mScaling.y);
+			interp->push(slice);
+		} break;
+		case 2: {
+			TSpcSlice slice;
+			slice.setDataFloat(owner->mScaling.z);
+			interp->push(slice);
+		} break;
 		default:
 			interp->push();
 			break;
@@ -512,10 +531,7 @@ void linSetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 
 	switch (arg3.getDataInt()) {
 	case 1:
-		while (value >= 360.0f)
-			value -= 360.0f;
-		while (value < 0.0f)
-			value += 360.0f;
+		value = MsWrap(value, 0.0f, 360.0f);
 		switch (arg2.getDataInt()) {
 		case 0:
 			owner->mRotation.x = value;
