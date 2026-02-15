@@ -357,7 +357,7 @@ void TCommonLauncher::stateDie()
 		}
 
 		kill();
-		onHitFlag(HIT_FLAG_UNK1);
+		onHitFlag(HIT_FLAG_NO_COLLISION);
 		resetLaunchTimer();
 		changeState(STATE_NORMAL);
 	}

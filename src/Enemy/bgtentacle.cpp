@@ -198,7 +198,7 @@ TBGTakeHit::TBGTakeHit(TBGTentacle* owner, const char* name)
 	initHitActor(0x8000006, 1, -0x80000000, pTVar3->mAttackRadius.get(),
 	             pTVar3->mAttackHeight.get(), pTVar3->mDamageRadius.get(),
 	             pTVar3->mDamageHeight.get());
-	offHitFlag(HIT_FLAG_UNK1);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 	unk74.zero();
 }
 
@@ -379,7 +379,7 @@ TBGAttackHit::TBGAttackHit(TBGTentacle* owner, f32 pos_on_spline,
 	    ->getChildren()
 	    .push_back(this);
 	initHitActor(0x8000007, 1, -0x80000000, 50.0f, 50.0f, 50.0f, 50.0f);
-	offHitFlag(HIT_FLAG_UNK1);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void TBGAttackHit::perform(u32 param_1, JDrama::TGraphics* param_2)
@@ -811,9 +811,9 @@ void TBGTentacle::changeStateAndFixNodes(int new_state)
 	}
 
 	if (mState == 6)
-		mTakeHit->onHitFlag(HIT_FLAG_UNK1);
+		mTakeHit->onHitFlag(HIT_FLAG_NO_COLLISION);
 	else
-		mTakeHit->offHitFlag(HIT_FLAG_UNK1);
+		mTakeHit->offHitFlag(HIT_FLAG_NO_COLLISION);
 
 	if (mState == 9)
 		mTakeHit->onHitFlag(HIT_FLAG_UNK2);

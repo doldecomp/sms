@@ -53,7 +53,7 @@ void TItem::taken(THitActor* param_1)
 void TItem::touchPlayer(THitActor* param_1)
 {
 	if ((param_1->isActorType(0x80000001) || param_1->isActorType(0x8000083))
-	    && !checkHitFlag(HIT_FLAG_UNK1))
+	    && !checkHitFlag(HIT_FLAG_NO_COLLISION))
 		taken(param_1);
 }
 
@@ -130,14 +130,14 @@ void TItem::killByTimer(int param_1)
 	unk104 = unk150;
 
 	offMapObjFlag(0x10000000);
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 	offMapObjFlag(0x40000);
 }
 
 void TItem::appear()
 {
 	TMapObjGeneral::appear();
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 	unk104 = unk150;
 	offMapObjFlag(0x40000);
 }
@@ -147,8 +147,9 @@ void TItem::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
-	if ((param_1 & 1) && checkHitFlag(HIT_FLAG_UNK1) && !isUnk104Positive()) {
-		offHitFlag(HIT_FLAG_UNK1);
+	if ((param_1 & 1) && checkHitFlag(HIT_FLAG_NO_COLLISION)
+	    && !isUnk104Positive()) {
+		offHitFlag(HIT_FLAG_NO_COLLISION);
 		if (!checkMapObjFlag(0x10000000)) {
 			onMapObjFlag(0x40000);
 			unk104 = unk14C;
@@ -265,8 +266,8 @@ void TCoin::perform(u32 param_1, JDrama::TGraphics* param_2)
 		if (isUnk104Positive()) {
 			--unk104;
 		} else {
-			if (checkHitFlag(HIT_FLAG_UNK1)) {
-				offHitFlag(HIT_FLAG_UNK1);
+			if (checkHitFlag(HIT_FLAG_NO_COLLISION)) {
+				offHitFlag(HIT_FLAG_NO_COLLISION);
 				if (!checkMapObjFlag(0x10000000)) {
 					onMapObjFlag(0x40000);
 					unk104 = unk14C;

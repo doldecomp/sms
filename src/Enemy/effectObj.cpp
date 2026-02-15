@@ -100,7 +100,7 @@ void TEffectObjBase::reset()
 	unk68 = 1;
 	unk6C = 200.0f;
 	unk70 = 200.0f;
-	offHitFlag(HIT_FLAG_UNK1);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 	unk74 = 0;
 }
 
@@ -190,7 +190,7 @@ void TEffectObjBase::behaveToWater(THitActor* param_1)
 		MSoundSESystem::MSoundSE::startSoundActor(0x28C5, &mPosition, 0,
 		                                          nullptr, 0, 4);
 	unk68 = 3;
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
 	        0x8B, &mPosition, 0, nullptr)) {
@@ -244,7 +244,7 @@ void TEffectModel::init(TLiveManager* param_1)
 
 	onLiveFlag(LIVE_FLAG_DEAD);
 	mScaling.set(0.0f, 0.0f, 0.0f);
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 	mActorType = 0x10000020;
 	mRotation.zero();
 }
@@ -257,7 +257,7 @@ void TEffectModel::reset()
 	onLiveFlag(LIVE_FLAG_UNK10);
 	offLiveFlag(LIVE_FLAG_DEAD);
 	offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void TEffectModel::moveObject()
@@ -324,7 +324,7 @@ void TEffectColumWater::init(TLiveManager* param_1)
 	mMActor->setBrk("06_enem_tobikomi");
 	mMActor->setBtk("06_enem_tobikomi");
 	mMActor->setBpk("06_enem_tobikomi");
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void TEffectColumWater::reset()
@@ -360,7 +360,7 @@ void TEffectColumWater::generate(JGeometry::TVec3<f32>& param_1,
 		emitter->unk174.set(mScaling);
 	}
 
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 TEffectBombColumWaterManager::TEffectBombColumWaterManager(const char* name)
@@ -409,7 +409,7 @@ void TEffectBombColumWater::init(TLiveManager* param_1)
 	mMActor->setBrk("04_tobikomi");
 	mMActor->setBtk("04_tobikomi");
 	mMActor->setBpk("04_tobikomi");
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void TEffectBombColumWater::reset()
@@ -451,7 +451,7 @@ void TEffectBombColumWater::generate(JGeometry::TVec3<f32>& param_1,
 		emitter->unk174.set(mScaling);
 	}
 
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 TEffectColumSandManager::TEffectColumSandManager(const char* name)
@@ -498,7 +498,7 @@ void TEffectColumSand::init(TLiveManager* param_1)
 	mMActor->setBck("08_sunabashira");
 	mMActor->setBrk("08_sunabashira");
 	mMActor->setBtk("08_sunabashira");
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void TEffectColumSand::reset()
@@ -525,7 +525,7 @@ void TEffectColumSand::generate(JGeometry::TVec3<f32>& param_1,
 		emitter->unk174.set(fVar1, fVar1, fVar1);
 	}
 
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 TEffectExplosionManager::TEffectExplosionManager(const char* name)
@@ -574,7 +574,7 @@ void TEffectExplosion::init(TLiveManager* param_1)
 	mMActor->setBck("10_bomb");
 	mMActor->setBrk("10_bomb");
 	mMActor->setBtk("10_bomb");
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void TEffectExplosion::reset()
@@ -619,5 +619,5 @@ void TEffectExplosion::generate(JGeometry::TVec3<f32>& param_1,
 		emitter->unk174.set(fVar1, fVar1, fVar1);
 	}
 
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 }

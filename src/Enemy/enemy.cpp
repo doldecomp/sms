@@ -175,7 +175,7 @@ void TSpineEnemy::resetToPosition(const JGeometry::TVec3<f32>& position)
 	offLiveFlag(LIVE_FLAG_DEAD);
 	reset();
 	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
-	offHitFlag(HIT_FLAG_UNK1);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 	mVelocity = JGeometry::TVec3<f32>(0.0f, 5.0f, 0.0f);
 	onLiveFlag(LIVE_FLAG_UNK8000);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
@@ -194,7 +194,7 @@ void TSpineEnemy::resetSRTV(const JGeometry::TVec3<f32>& position,
 	mRotation  = rotation;
 	mScaling   = scaling;
 	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
-	offHitFlag(HIT_FLAG_UNK1);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 	mVelocity = velocity;
 	onLiveFlag(LIVE_FLAG_UNK8000);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
@@ -633,7 +633,7 @@ void TSpineEnemy::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 	if (mgr != nullptr) {
 		if ((param_1 & 2)
-		    && !checkLiveFlag(LIVE_FLAG_UNK2 | LIVE_FLAG_CLIPPED_OUT)
+		    && !checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT)
 		    && TEnemyManager::mIsCopyAnmMtx && mgr->unk4C >= 0) {
 			if (checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK200))
 				return;
@@ -643,7 +643,7 @@ void TSpineEnemy::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	} else {
 		if ((param_1 & 2)
-		    && !checkLiveFlag(LIVE_FLAG_UNK2 | LIVE_FLAG_CLIPPED_OUT)
+		    && !checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT)
 		    && checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK200)) {
 			return;
 		}

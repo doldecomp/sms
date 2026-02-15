@@ -50,7 +50,7 @@ void TEnemyAttachment::forceKill()
 
 	kill();
 
-	if (unk160->checkLiveFlag(LIVE_FLAG_UNK2)) {
+	if (unk160->checkLiveFlag(LIVE_FLAG_HIDDEN)) {
 		unk160->kill();
 		unk160->onLiveFlag(LIVE_FLAG_UNK20000);
 	}
@@ -107,7 +107,7 @@ void TEnemyAttachment::rebirth()
 {
 	unk150 = 0;
 	unk158 = 0;
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 	mVelocity.y = 0.0f;
 }
 
@@ -115,7 +115,7 @@ void TEnemyAttachment::kill()
 {
 	unk150 = 0;
 	unk158 = 0;
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void TEnemyAttachment::set()

@@ -347,7 +347,7 @@ DEFINE_NERVE(TNerveCoasterKillerExplosion, TLiveActor)
 	if (self->unk190 < self->get1AC()) {
 		self->unk190 *= 1.3f;
 	} else {
-		self->onHitFlag(HIT_FLAG_UNK1);
+		self->onHitFlag(HIT_FLAG_NO_COLLISION);
 		if (self->checkCurAnmEnd(0)) {
 			self->onLiveFlag(LIVE_FLAG_DEAD);
 			self->onLiveFlag(LIVE_FLAG_UNK8);

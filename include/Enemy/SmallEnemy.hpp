@@ -147,7 +147,7 @@ public:
 	virtual void initAttacker(THitActor*);
 	virtual bool isHitValid(u32)
 	{
-		return checkLiveFlag(LIVE_FLAG_UNK2) ? false : true;
+		return checkLiveFlag(LIVE_FLAG_HIDDEN) ? false : true;
 	}
 	virtual bool isCollidMove(THitActor*);
 	virtual BOOL isInhibitedForceMove() { return FALSE; }

@@ -71,7 +71,7 @@ void TRiccoHook::init(TLiveManager* manager)
 {
 	TSpineEnemy::init(manager);
 	mSpine->initWith(&TNerveRHGraphWander::theNerve());
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 	mHookTake = new THookTake(this);
 	unk124->reset();
 	goToShortestNextGraphNode();

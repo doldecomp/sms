@@ -109,7 +109,7 @@ void TPoiHanaCollision::checkHit()
 	}
 }
 
-void TPoiHanaCollision::kill() { onHitFlag(HIT_FLAG_UNK1); }
+void TPoiHanaCollision::kill() { onHitFlag(HIT_FLAG_NO_COLLISION); }
 
 u8 TPoiHana::mMouthJntIndex = 6;
 u8 TPoiHana::mSleepVersion  = 1;
@@ -298,7 +298,7 @@ void TPoiHana::setFreezeAnm() { setBckAnm(12); }
 void TPoiHana::setDeadAnm()
 {
 	unk1BC->kill();
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 	mHitPoints = 1;
 	if (!unk184)
 		unk18C = 3;
@@ -637,7 +637,7 @@ DEFINE_NERVE(TNervePoihanaFreeze, TLiveActor)
 			else
 				self->setBckAnm(4);
 		} else if (self->isBckAnm(2) || self->isBckAnm(13)) {
-			self->unk1BC->offHitFlag(HIT_FLAG_UNK1);
+			self->unk1BC->offHitFlag(HIT_FLAG_NO_COLLISION);
 			return true;
 		}
 	}

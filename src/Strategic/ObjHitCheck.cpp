@@ -153,7 +153,7 @@ void TObjHitCheck::checkAndEntryGroup(TIdxGroupObj* group)
 	     ++it) {
 		it->mColCount = 0;
 
-		if (it->checkHitFlag(HIT_FLAG_UNK1))
+		if (it->checkHitFlag(HIT_FLAG_NO_COLLISION))
 			continue;
 
 		u32 e;
@@ -179,7 +179,7 @@ void TObjHitCheck::entryGroup(TIdxGroupObj* group)
 	     ++it) {
 		it->mColCount = 0;
 
-		if (it->checkHitFlag(HIT_FLAG_UNK1))
+		if (it->checkHitFlag(HIT_FLAG_NO_COLLISION))
 			continue;
 
 		u32 e;
@@ -213,7 +213,7 @@ void TObjHitCheck::checkGroupPlayer(TIdxGroupObj* group)
 	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
 	     ++it) {
 		it->mColCount = 0;
-		if (it->checkHitFlag(HIT_FLAG_UNK1))
+		if (it->checkHitFlag(HIT_FLAG_NO_COLLISION))
 			continue;
 
 		if (checkDistance(it->mPosition, it->getAttackRadius(),

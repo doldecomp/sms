@@ -19,7 +19,7 @@ class TMapCollisionManager;
 
 enum TLiveFlagBits {
 	LIVE_FLAG_DEAD        = 0x1,
-	LIVE_FLAG_UNK2        = 0x2,
+	LIVE_FLAG_HIDDEN      = 0x2,
 	LIVE_FLAG_CLIPPED_OUT = 0x4,
 	LIVE_FLAG_UNK8        = 0x8,
 	LIVE_FLAG_UNK10       = 0x10,
