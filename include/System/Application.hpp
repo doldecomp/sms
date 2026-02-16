@@ -52,7 +52,10 @@ public:
 	int drawDVDErr();
 	JKRMemArchive* mountStageArchive();
 
+	// fabricated
 	void setNextArea(const TGameSequence& next_area) { mNextArea = next_area; }
+	u32 getMovie() const { return mMovie; }
+	void setMovie(u32 v) { mMovie = v; }
 
 public:
 	enum {
@@ -74,7 +77,7 @@ public:
 	/* 0x0A */ TGameSequence mPrevArea;
 	/* 0x0E */ TGameSequence mCurrArea;
 	/* 0x12 */ TGameSequence mNextArea;
-	/* 0x18 */ int mMovie;
+	/* 0x18 */ u32 mMovie;
 	/* 0x1C */ JDrama::TDisplay* mDisplay;
 	/* 0x20 */ TMarioGamePad* mGamePads[4];
 	/* 0x30 */ TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >* unk30;
