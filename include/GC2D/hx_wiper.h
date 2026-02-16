@@ -12,7 +12,7 @@ void Hx_Test4();
 void Hx_Test2R();
 void Hx_Test2();
 void Hx_Test1();
-void Hx_MovieStartSyncEx();
+int Hx_MovieStartSyncEx();
 void Hx_MovieStartSync();
 void Hx_Logo();
 void Hx_GameOver();
