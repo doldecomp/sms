@@ -28,6 +28,14 @@ public:
 	static const char* getStreamMovieName(u32);
 
 public:
+	enum {
+		STATE_FADE_IN           = 0,
+		STATE_PLAYING           = 1,
+		STATE_FADE_OUT          = 2,
+		STATE_SAVE_TO_TITLE     = 3,
+		STATE_SAVE_AND_CONTINUE = 4
+	};
+
 	/* 0x18 */ u8 unk18;
 	/* 0x1C */ int unk1C;
 	/* 0x20 */ TMarioGamePad* unk20;
