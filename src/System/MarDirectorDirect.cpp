@@ -433,7 +433,8 @@ int TMarDirector::changeState()
 		break;
 	}
 
-	if (unk18[0]->isSomethingPushed() && gpCardManager->getLastStatus() != -1
+	if (unk18[0]->isSomethingPushed()
+	    && gpCardManager->getLastStatus() != CARD_RESULT_BUSY
 	    && (unk4C & 0x4000) && !(unk50 & 0x10)) {
 		nextState = STATE_UNK12;
 		unk50 |= 0x10;

@@ -356,10 +356,11 @@ int TMovieDirector::direct()
 		break;
 	}
 
-	if (unk20->isSomethingPushed() && gpCardManager->getLastStatus() != -1
+	if (unk20->isSomethingPushed()
+	    && gpCardManager->getLastStatus() != CARD_RESULT_BUSY
 	    && !unk30.check(0x2)) {
 		unk30.on(0x2);
-		nextState = 2;
+		nextState = STATE_FADE_OUT;
 		unk28->unkC.on(0x9);
 		unk2C->unkC.on(0x9);
 		THPPlayerPause();

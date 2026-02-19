@@ -312,11 +312,12 @@ void TApplication::initialize_bootAfter()
 	prevHeap->becomeCurrentHeap();
 
 	CARDInit();
-	void* buf1 = new (0x20) u8[0x2000];
-	void* buf2 = new (0x20) u8[0xA000];
-	void* buf3 = new (0x20) u8[0x1000];
 
-	gpCardManager = new TCardManager(buf1, buf2, 0, 14, buf3, 0x1000);
+	void* sectorWorkArea    = new (0x20) u8[0x2000];
+	void* cardWorkArea      = new (0x20) u8[0xA000];
+	void* workerThreadStack = new (0x20) u8[0x1000];
+	gpCardManager = new TCardManager(sectorWorkArea, cardWorkArea, 0, 14,
+	                                 workerThreadStack, 0x1000);
 	gpCardManager->readOptionBlock();
 
 	mHeap->becomeCurrentHeap();

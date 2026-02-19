@@ -43,10 +43,6 @@ public:
 		TEBlockStat getState() const { return mState; }
 		u32 getWriteCount() const { return mWriteCount; }
 		void* getPreviewBytes() { return mPreviewBytes; }
-		static TEBlockStat getStateFor(bool match)
-		{
-			return match ? STATE_VALID : STATE_CHECKSUM_BAD;
-		}
 
 		/* 0x0 */ TEBlockStat mState;
 		/* 0x4 */ u32 mWriteCount;
@@ -58,48 +54,50 @@ public:
 	static s32 getWriteCount(TCriteria*);
 	static void copyTo(TCriteria*, TCardBookmarkInfo*);
 
-	TCardManager(void*, void*, s32, s32, void*, u32);
+	TCardManager(void* sector_work_area, void* card_work_area, s32 channel,
+	             s32 thread_prio, void* thread_stack, u32 thread_stack_size);
 	~TCardManager();
 
 	u32 probe();
 	s32 unmount();
 	void format();
 	void createFile();
-	void getBookmarkInfos(TCardBookmarkInfo*);
+	void getBookmarkInfos(TCardBookmarkInfo* out_infos);
 
-	void readBlock(u32);
-	void writeBlock(u32);
+	void readBlock(u32 index);
+	void writeBlock(u32 index);
 
-	void getReadStream(JSUMemoryInputStream*);
-	void getWriteStream(JSUMemoryOutputStream*);
+	void getReadStream(JSUMemoryInputStream* stream);
+	void getWriteStream(JSUMemoryOutputStream* stream);
 
 	void readOptionBlock();
 	void writeOptionBlock();
 
-	void getOptionReadStream(JSUMemoryInputStream*);
-	void getOptionWriteStream(JSUMemoryOutputStream*);
+	void getOptionReadStream(JSUMemoryInputStream* stream);
+	void getOptionWriteStream(JSUMemoryOutputStream* stream);
 
 	s32 getLastStatus();
 
 	s32 cmdLoop();
 
 private:
-	void issue(s32);
+	void issue(s32 command);
 	s32 probe_();
 	s32 mount_(bool);
 	s32 unmount_();
 	s32 format_();
 	s32 createFile_();
-	s32 filledInitData_(CARDFileInfo*);
-	s32 setCardStat_(CARDFileInfo*);
-	void buildHeader_(HeaderData*);
-	s32 open_(CARDFileInfo*);
+	s32 filledInitData_(CARDFileInfo* file);
+	s32 setCardStat_(CARDFileInfo* file);
+	void buildHeader_(HeaderData* header);
+	s32 open_(CARDFileInfo* file);
 	s32 getBookmarkInfos_();
-	s32 readBlock_(u32);
+	s32 readBlock_(u32 index);
 	s32 readOptionBlock_();
-	s32 writeBlock_(u32);
+	s32 writeBlock_(u32 index);
 	s32 writeOptionBlock_();
-	s32 writeCardSector_(CARDFileInfo*, s32, TCardSector*, TCriteria*);
+	s32 writeCardSector_(CARDFileInfo* file, s32 index, TCardSector* sector,
+	                     TCriteria* criteria);
 
 public:
 	enum {
@@ -143,8 +141,8 @@ struct HeaderData {
 
 struct TCardSector {
 	void clearData();
-	void setCheckSum(u32);
-	s32 read(CARDFileInfo*, s32, TCardManager::TCriteria*);
+	void setCheckSum(u32 write_count);
+	s32 read(CARDFileInfo* file, s32 index, TCardManager::TCriteria* criteria);
 
 	// fabricated
 	HeaderData* getHeader() { return &mHeader; }
