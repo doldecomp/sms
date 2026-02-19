@@ -8,7 +8,7 @@ void TPerformList::forEachPerform(
 {
 	for (JGadget::TSingleLinkList<TPerformLink, 0>::iterator it = b; it != e;
 	     ++it) {
-		it->unk4->testPerform(param_4, param_3);
+		it->unk4->testPerform(param_4 & it->unk8, param_3);
 	}
 }
 

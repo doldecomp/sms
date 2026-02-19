@@ -22,11 +22,18 @@ class TPerformList : public JDrama::TViewObj,
                      public JGadget::TSingleLinkList<TPerformLink, 0> {
 public:
 	TPerformList() { }
+	TPerformList(const char* name)
+	    : JDrama::TViewObj(name)
+	{
+	}
 
-	void push_back(JDrama::TViewObj*, u32);
-	void push_back(const char*, u32);
-	void load(JSUMemoryInputStream&);
-	void perform(u32, JDrama::TGraphics*);
+	virtual void load(JSUMemoryInputStream&);
+	virtual void perform(u32, JDrama::TGraphics*);
+
+	// Filters are &ed with the first param in perform
+	void push_back(JDrama::TViewObj* object, u32 filter);
+	void push_back(const char* name, u32 filter);
+
 	void forEachPerform(JGadget::TSingleLinkList<TPerformLink, 0>::iterator,
 	                    JGadget::TSingleLinkList<TPerformLink, 0>::iterator,
 	                    JDrama::TGraphics*, u32);

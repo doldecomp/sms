@@ -367,8 +367,7 @@ asm void ICBlockInvalidate(register void* addr)
 #endif // clang-format on
 }
 
-asm void ICSync(void)
-{
+asm void ICSync(void) {
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
 	isync

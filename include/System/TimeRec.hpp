@@ -108,6 +108,15 @@ public:
 		inst->crTimeAry()[0].append(tick, param_1);
 	}
 
+	static void startTimerTwice(u32 tick, u32 param_1)
+	{
+		TTimeRec* inst = _instance;
+		if (!inst)
+			return;
+		inst->crTimeAry()[0].append(tick, param_1);
+		inst->crTimeAry()[1].append(tick, param_1);
+	}
+
 	static void endTimer()
 	{
 		TTimeRec* inst = _instance;
@@ -116,6 +125,8 @@ public:
 		OSTick tick = OSGetTick();
 		inst->crTimeAry()[0].append(tick, 0);
 	}
+
+	static TTimeRec* instance() { return _instance; }
 
 public:
 	/* 0x4 */ TTimeArray unk4[2][2];

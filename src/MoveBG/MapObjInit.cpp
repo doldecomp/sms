@@ -11054,8 +11054,6 @@ bool isAlreadyRegistered(const TMapObjAnimDataInfo* anim, int i)
 	return false;
 }
 
-static void dummy6(const char*) {};
-
 MActor* TMapObjBase::initMActor(const char* param_1, const char* param_2,
                                 u32 param_3)
 {

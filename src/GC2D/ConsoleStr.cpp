@@ -12,6 +12,7 @@
 #include <JSystem/J2D/J2DOrthoGraph.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JParticle/JPAEmitterManager.hpp>
+#include <JSystem/JUtility/JUTResFont.hpp>
 #include <dolphin/gx/GXCull.h>
 #include <stdio.h>
 
@@ -106,7 +107,7 @@ void TConsoleStr::loadAfter()
 void TConsoleStr::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (param_1 & 1) {
-		if (gpMarDirector->unk64 != 5) {
+		if (gpMarDirector->mState != 5) {
 			bool bVar6 = false;
 
 			switch (unk2B8) {
@@ -198,7 +199,7 @@ void TConsoleStr::perform(u32 param_1, JDrama::TGraphics* param_2)
 			unk18 += 0.5f;
 		}
 
-		if (!unk2A9 && gpMarDirector->unk64 != 4) {
+		if (!unk2A9 && gpMarDirector->mState != 4) {
 			if (unk2AC)
 				;
 
@@ -207,7 +208,7 @@ void TConsoleStr::perform(u32 param_1, JDrama::TGraphics* param_2)
 			unk2A9 = true;
 		}
 
-		if (unk2A9 && gpMarDirector->unk64 != 4) {
+		if (unk2A9 && gpMarDirector->mState != 4) {
 			if (unk2AC)
 				;
 
@@ -260,9 +261,10 @@ void TConsoleStr::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 
 		local_1a0.setup2D();
-		param_2->unk64 = rect;
-		GXSetScissor(param_2->unk64.x1, param_2->unk64.y1,
-		             param_2->unk64.getWidth(), param_2->unk64.getHeight());
+		param_2->mScissorRect = rect;
+		GXSetScissor(param_2->mScissorRect.x1, param_2->mScissorRect.y1,
+		             param_2->mScissorRect.getWidth(),
+		             param_2->mScissorRect.getHeight());
 	}
 }
 

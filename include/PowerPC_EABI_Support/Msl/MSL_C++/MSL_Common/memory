@@ -6,18 +6,26 @@
 
 namespace std {
 
-template <class I, class S, class T>
-void uninitialized_fill_n(I first, S n, const T& x)
+template <class I, class T>
+inline void uninitialized_fill(I first, I last, const T& x)
 {
-	while (n--) {
+	I dummy = first;
+	for (; first != last; ++first)
 		new (&*first) typename iterator_traits<I>::value_type(x);
-		++first;
-	}
+}
+
+template <class I, class S, class T>
+inline void uninitialized_fill_n(I first, S n, const T& x)
+{
+	I dummy = first;
+	for (; n--; ++first)
+		new (&*first) typename iterator_traits<I>::value_type(x);
 }
 
 template <class I, class O>
 inline O uninitialized_copy(I first, I last, O d_first)
 {
+	O dummy = d_first;
 	for (; first != last; ++d_first, ++first)
 		new (&*d_first) typename iterator_traits<I>::value_type(*first);
 	return d_first;

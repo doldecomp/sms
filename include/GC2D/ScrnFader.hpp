@@ -8,10 +8,10 @@
 class TSMSFader : public JDrama::TViewObj {
 public:
 	enum EFadeStatus {
-		FADE_STATUS_UNK0 = 0,
-		FADE_STATUS_UNK1 = 1,
-		FADE_STATUS_UNK2 = 2,
-		FADE_STATUS_UNK3 = 3,
+		FADE_STATUS_FULLY_FADED_OUT = 0,
+		FADE_STATUS_FULLY_FADED_IN  = 1,
+		FADE_STATUS_FADING_IN       = 2,
+		FADE_STATUS_FADING_OUT      = 3,
 	};
 
 	// TODO: maybe this is from the hx_wipe.h header/libary type thing?
@@ -31,9 +31,9 @@ public:
 		/* 0x8 */ f32 unk8;
 	};
 
-	TSMSFader(JUtility::TColor, f32, const char*);
+	TSMSFader(JUtility::TColor, f32, const char* name);
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual void update();
 	virtual void draw(const JDrama::TRect&);
@@ -57,7 +57,14 @@ public:
 	void getMmarkBtiResource();
 	void getLogoBtiResource();
 
-	~TSMSFader();
+	bool isFullyFadedIn() const
+	{
+		return mFadeStatus == FADE_STATUS_FULLY_FADED_IN;
+	}
+	bool isFullyFadedOut() const
+	{
+		return mFadeStatus == FADE_STATUS_FULLY_FADED_OUT;
+	}
 
 public:
 	/* 0x10 */ u16 unk10;
@@ -69,6 +76,29 @@ public:
 	/* 0x24 */ WipeRequest mWipeRequest;
 	/* 0x30 */ int unk30;
 	/* 0x34 */ f32 unk34;
+};
+
+class TSmplFader : public TSMSFader {
+public:
+	TSmplFader(f32 param_1, const char* name = "<ScrnFader>")
+	    : TSMSFader(JUtility::TColor(0, 0, 0, 0), param_1, name)
+	{
+	}
+};
+
+class TShineFader : public TSmplFader {
+public:
+	TShineFader(f32 param_1, const char* name = "<ShineFader>")
+	    : TSmplFader(param_1, name)
+	{
+	}
+
+	virtual void load(JSUMemoryInputStream&);
+	virtual void perform(u32, JDrama::TGraphics*);
+
+	virtual void update();
+
+	void registFadeout(u16, u16);
 };
 
 #endif

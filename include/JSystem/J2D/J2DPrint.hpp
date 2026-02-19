@@ -56,6 +56,8 @@ public:
 		unk40 = c2;
 	}
 
+	void setUnk50(int a) { unk50 = a; }
+
 	static char* mStrBuff;
 	static bool mMutexInit;
 	static bool mHeapFlag;

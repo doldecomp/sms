@@ -471,12 +471,12 @@ THinokuri2::THinokuri2(const char* name)
     , mLevel(0)
 {
 	mBinder = new TWalker;
-	mHead = new THino2Hit(this, 25, "ヒノクリ２ヒットオブジェクト");
-	mBody = new THino2Hit(this, 19, "ヒノクリ２ヒットオブジェクト");
-	unk174 = new THino2Hit(this, 9, "ヒノクリ２ヒットオブジェクト");
-	unk178 = new THino2Hit(this, 16, "ヒノクリ２ヒットオブジェクト");
-	unk19C = new TWaterEmitInfo("/enemy/hinokuri2water.prm");
-	unk1A0 = new THino2MtxCalc(5, 6, 9, 12, 13, 16, 15.0f);
+	mHead   = new THino2Hit(this, 25, "ヒノクリ２ヒットオブジェクト");
+	mBody   = new THino2Hit(this, 19, "ヒノクリ２ヒットオブジェクト");
+	unk174  = new THino2Hit(this, 9, "ヒノクリ２ヒットオブジェクト");
+	unk178  = new THino2Hit(this, 16, "ヒノクリ２ヒットオブジェクト");
+	unk19C  = new TWaterEmitInfo("/enemy/hinokuri2water.prm");
+	unk1A0  = new THino2MtxCalc(5, 6, 9, 12, 13, 16, 15.0f);
 }
 
 void THinokuri2::init(TLiveManager* param_1)
@@ -607,20 +607,20 @@ void THinokuri2::resetPolInterval()
 
 void THinokuri2::invalidateCollisionAll()
 {
-	onHitFlag(HIT_FLAG_UNK1);
-	mHead->onHitFlag(HIT_FLAG_UNK1);
-	mBody->onHitFlag(HIT_FLAG_UNK1);
-	unk174->onHitFlag(HIT_FLAG_UNK1);
-	unk178->onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+	mHead->onHitFlag(HIT_FLAG_NO_COLLISION);
+	mBody->onHitFlag(HIT_FLAG_NO_COLLISION);
+	unk174->onHitFlag(HIT_FLAG_NO_COLLISION);
+	unk178->onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void THinokuri2::validateCollisionAll()
 {
-	onHitFlag(HIT_FLAG_UNK1);
-	mHead->offHitFlag(HIT_FLAG_UNK1);
-	mBody->offHitFlag(HIT_FLAG_UNK1);
-	unk174->offHitFlag(HIT_FLAG_UNK1);
-	unk178->offHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+	mHead->offHitFlag(HIT_FLAG_NO_COLLISION);
+	mBody->offHitFlag(HIT_FLAG_NO_COLLISION);
+	unk174->offHitFlag(HIT_FLAG_NO_COLLISION);
+	unk178->offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void THinokuri2::emitWaterParticle()
@@ -1170,7 +1170,7 @@ DEFINE_NERVE(TNerveHino2Landing, TLiveActor)
 
 	// TODO: asserts or something? Hard to match
 	self->getMActor()->getFrameCtrl(0)->getCurrentFrame();
-	self->checkLiveFlag(LIVE_FLAG_UNK2);
+	self->checkLiveFlag(LIVE_FLAG_HIDDEN);
 
 	if (self->getMActor()->curAnmEndsNext())
 		return true;

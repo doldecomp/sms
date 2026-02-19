@@ -11,4 +11,9 @@ TDStageDisp::TDStageDisp(const char* name, TFlagT<u16> flag)
 	unk14 = new TViewObjPtrListT<TViewObj>;
 }
 
-TViewObj* TDStageDisp::getEfbCtrlDisp() { return unk10; }
+const TEfbCtrlDisp* TDStageDisp::getEfbCtrlDisp() const
+{
+	return (TEfbCtrlDisp*)unk10;
+}
+
+TEfbCtrlDisp* TDStageDisp::getEfbCtrlDisp() { return (TEfbCtrlDisp*)unk10; }

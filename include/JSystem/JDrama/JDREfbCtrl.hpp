@@ -5,6 +5,12 @@
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <dolphin/gx.h>
 
+// EFB stands for "Embedded Frame Buffer" -- the on-chip GPU framebuffer.
+// These classes provide something like a "render pass" interface to the ECB,
+// allowing for setting up various EFB-related states and then finally copying
+// it back to main memory as a framebuffer that can be presented (EfbCtrlDisp)
+// or as a texture that can then be sampled (EfbCtrlTex).
+
 namespace JDrama {
 
 class TEfbCtrl : public TViewObj {
@@ -15,19 +21,9 @@ public:
 	{
 	}
 
-	virtual ~TEfbCtrl() { }
 	virtual void perform(u32, TGraphics*);
 
 	void setSrcRect(const TRect&);
-
-	// TODO: these should be inlines on TFlagT I guess
-	bool checkFlag8() const { return (unk20.mValue & 0x8) != 0; }
-	bool checkFlag10() const { return (unk20.mValue & 0x10) != 0; }
-	bool checkFlag20() const { return (unk20.mValue & 0x20) != 0; }
-	bool checkFlag100() const { return !!(unk20.mValue & 0x100); }
-	bool checkFlag200() const { return !!(unk20.mValue & 0x200); }
-	bool checkFlag400() const { return !!(unk20.mValue & 0x400); }
-	bool checkFlag800() const { return (unk20.mValue & 0x800) != 0; }
 
 public:
 	/* 0x10 */ TRect unk10;
@@ -41,7 +37,6 @@ public:
 	{
 	}
 
-	virtual ~TEfbCtrlDisp() { }
 	virtual void perform(u32, TGraphics*);
 
 	void setSrcRect(const GXRenderModeObj&);

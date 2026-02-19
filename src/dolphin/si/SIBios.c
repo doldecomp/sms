@@ -309,7 +309,7 @@ void SIInit(void)
 	SIGetType(3);
 }
 
-#define ROUND(n, a) (((u32)(n) + (a)-1) & ~((a)-1))
+#define ROUND(n, a) (((u32)(n) + (a) - 1) & ~((a) - 1))
 
 static BOOL __SITransfer(s32 chan, void* output, u32 outputBytes, void* input,
                          u32 inputBytes, SICallback callback)

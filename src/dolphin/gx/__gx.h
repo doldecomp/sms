@@ -202,7 +202,7 @@ struct __GXData_struct {
 	u8 dlSaveContext; // offset 0x4F1, size 0x1
 	u8 dirtyVAT;      // offset 0x4F2, size 0x1
 	u32 dirtyState;   // offset 0x4F4, size 0x4
-};                    // size = 0x4F8
+}; // size = 0x4F8
 
 extern struct __GXData_struct* gx;
 extern u16* __memReg;

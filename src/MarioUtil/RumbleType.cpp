@@ -4,13 +4,15 @@
 
 extern int channelNum;
 
-struct UnkStruct3B0378 {
+struct RumbleTypeInfo {
 	unsigned int unk0;
 	const char* str;
 };
 
 // Enum To Str?
-struct UnkStruct3B0378 _info[23] = {
+// @BUG - channelNum (number of rumble types) is 25,
+// but _info is only 23 elements long.
+struct RumbleTypeInfo _info[23] = {
 	{ 0, "MARIO_HIPDROP" },
 	{ 1, "MARIO_DAMAGE" },
 	{ 2, "MARIO_LANDING" },
@@ -50,4 +52,14 @@ int RumbleType::getIndex(char* strIn)
 	    "Invalid RumbleType"); // this feels more correct but the string is
 	                           // getting omitted by the preprocessor
 	return -1;
+}
+
+// Size needed: 0x54, current: 0x34
+const char* RumbleType::getName(int index)
+{
+	if (index < 0 || index >= channelNum) {
+		return invalidStr;
+	}
+
+	return _info[index].str;
 }

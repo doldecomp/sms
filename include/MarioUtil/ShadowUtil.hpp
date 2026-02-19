@@ -47,20 +47,21 @@ class TMBindShadowManager;
 
 extern TMBindShadowManager* gpBindShadowManager;
 
-class TMBindShadowManager : JDrama::TViewObj {
+class TMBindShadowManager : public JDrama::TViewObj {
 public:
-	TMBindShadowManager(const char*);
-	void load(JSUMemoryInputStream&);
+	TMBindShadowManager(const char* name = "<TMBindShadowManager>");
+
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void perform(u32, JDrama::TGraphics*);
+
 	void reset();
 	void initEntry(TMBindShadowBody*);
-	void perform(unsigned long, JDrama::TGraphics*);
 	void drawShadowVolume(bool, TAlphaShadowQuad*);
-	void drawShadowGD(unsigned long, JDrama::TGraphics*);
-	void drawShadow(unsigned long, JDrama::TGraphics*);
-	void request(const TCircleShadowRequest&, unsigned long);
-	void forceRequest(const TCircleShadowRequest&, unsigned long);
+	void drawShadowGD(u32, JDrama::TGraphics*);
+	void drawShadow(u32, JDrama::TGraphics*);
+	void request(const TCircleShadowRequest&, u32);
+	void forceRequest(const TCircleShadowRequest&, u32);
 	void calcVtx();
-	~TMBindShadowManager();
 };
 
 #endif

@@ -162,7 +162,7 @@ void TEnemyManager::setSharedFlags()
 	for (int i = 0; i < getObjNum(); ++i) {
 		TSpineEnemy* enemy = getObj(i);
 		enemy->offLiveFlag(LIVE_FLAG_UNK4000);
-		if (!enemy->checkLiveFlag(LIVE_FLAG_UNK2 | LIVE_FLAG_CLIPPED_OUT)) {
+		if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT)) {
 			int idx = enemy->getMActor()->getCurAnmIdx(0);
 			for (int i = 0; i < unk44; ++i) {
 				if (idx < 0 || idx == unk40[i].getIdx()) {
@@ -184,7 +184,7 @@ void TEnemyManager::updateAnmSoundShared()
 
 	for (int i = 0; i < getObjNum(); ++i) {
 		TSpineEnemy* enemy = getObj(i);
-		if (!enemy->checkLiveFlag(LIVE_FLAG_UNK2 | LIVE_FLAG_CLIPPED_OUT)) {
+		if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT)) {
 			int idx = enemy->getMActor()->getCurAnmIdx(0);
 			for (int i = 0; i < unk44; ++i) {
 				if (idx < 0 || idx == unk40[i].getIdx()) {
@@ -220,7 +220,7 @@ void TEnemyManager::copyFromShared()
 	for (int i = 0; i < r29; ++i) {
 		TSpineEnemy* enemy = getObj(i);
 		if (!enemy->checkLiveFlag(LIVE_FLAG_UNK4000)
-		    || enemy->checkLiveFlag(LIVE_FLAG_UNK2 | LIVE_FLAG_CLIPPED_OUT))
+		    || enemy->checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT))
 			continue;
 
 		int iVar6 = enemy->getMActor()->getCurAnmIdx(0);
@@ -293,7 +293,7 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 	int num = getActiveObjNum();
 	if (param_1 & 1) {
 		for (int i = num; i < mObjNum; ++i)
-			getObj(i)->onHitFlag(HIT_FLAG_UNK1);
+			getObj(i)->onHitFlag(HIT_FLAG_NO_COLLISION);
 	}
 
 	for (int i = 0; i < num; ++i) {
@@ -309,7 +309,7 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 			enemy->calcRootMatrix();
 			if (!enemy->checkLiveFlag(LIVE_FLAG_UNK4000)) {
 				enemy->getMActor()->frameUpdate();
-				if (!enemy->checkLiveFlag(LIVE_FLAG_UNK2
+				if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN
 				                          | LIVE_FLAG_CLIPPED_OUT)) {
 					enemy->getMActor()->calc();
 					enemy->updateAnmSound();
@@ -321,7 +321,8 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 			if (param_1 & 4)
 				enemy->requestShadow();
 
-			if (!enemy->checkLiveFlag(LIVE_FLAG_UNK2 | LIVE_FLAG_CLIPPED_OUT)) {
+			if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN
+			                          | LIVE_FLAG_CLIPPED_OUT)) {
 				if ((param_1 & 4) && !enemy->checkLiveFlag(LIVE_FLAG_UNK4000))
 					enemy->getMActor()->viewCalc();
 				if (param_1 & 0x200) {

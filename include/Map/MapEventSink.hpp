@@ -55,7 +55,7 @@ public:
 
 class TMapEventSinkInPollution : public TMapEventSink {
 public:
-	TMapEventSinkInPollution(const char* name)
+	TMapEventSinkInPollution(const char* name = "建物沈む（落書き）")
 	    : TMapEventSink(name)
 	{
 	}
@@ -68,7 +68,8 @@ public:
 
 class TMapEventSinkInPollutionReset : public TMapEventSinkInPollution {
 public:
-	TMapEventSinkInPollutionReset(const char* name)
+	TMapEventSinkInPollutionReset(const char* name
+	                              = "建物沈む（落書き再セット）")
 	    : TMapEventSinkInPollution(name)
 	{
 	}
@@ -81,7 +82,10 @@ public:
 
 class TMapEventSinkBianco : public TMapEventSinkInPollutionReset {
 public:
-	TMapEventSinkBianco();
+	TMapEventSinkBianco(const char* name = "イベント（建物沈むビアンコ）")
+	    : TMapEventSinkInPollutionReset(name)
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
@@ -101,7 +105,8 @@ public:
 
 class TMapEventSinkShadowMario : public TMapEventSink {
 public:
-	TMapEventSinkShadowMario();
+	TMapEventSinkShadowMario(const char* name = "建物沈む（影マリオ）")
+	    : TMapEventSink(name) { };
 
 	virtual void loadAfter();
 

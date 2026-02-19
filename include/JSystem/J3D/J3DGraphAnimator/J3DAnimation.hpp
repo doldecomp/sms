@@ -22,7 +22,7 @@ public:
 
 	J3DFrameCtrl() { init(0); };
 	J3DFrameCtrl(s16 s) { init(s); };
-	virtual ~J3DFrameCtrl() {};
+	virtual ~J3DFrameCtrl() { }
 
 	void setSpeed(f32 speed) { mSpeed = speed; }
 	void setAttribute(u8 attr) { mLoopMode = attr; }
@@ -154,7 +154,7 @@ public:
 	/* 0x0 */ u8 mAttribute;
 	/* 0x1 */ u8 unk1;
 	/* 0x2 */ s16 mMaxFrame;
-	/* 0x4 */ float mFrame;
+	/* 0x4 */ f32 mFrame;
 	/* 0x8 */ s32 mKind;
 
 public:

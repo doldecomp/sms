@@ -64,7 +64,7 @@ extern TEffectObjManager* gpEffectObjManager;
 
 class TEffectObjManager : public JDrama::TViewObj {
 public:
-	TEffectObjManager(const char* name);
+	TEffectObjManager(const char* name = "<EffectObjManager>");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);

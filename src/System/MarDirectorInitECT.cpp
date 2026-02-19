@@ -18,14 +18,14 @@
 
 void TMarDirector::initECTGft(
     TPerformList* param_1, TPerformList* param_2,
-    JDrama::TViewObjPtrListT<JDrama::TViewObj>* param_3,
-    JDrama::TViewObjPtrListT<JDrama::TViewObj>* param_4)
+    JDrama::TViewObjPtrListT<JDrama::TViewObj>* perf_event_group,
+    JDrama::TViewObjPtrListT<JDrama::TViewObj>* scene)
 {
 	if (gpPollution->getJointModelNum() == 0) {
-		JDrama::TViewObj* bathtubWater
-		    = JDrama::TNameRefGen::search<JDrama::TViewObj>("バスタブの水");
+		TBathWaterManager* bathtubWater
+		    = JDrama::TNameRefGen::search<TBathWaterManager>("バスタブの水");
 		if (bathtubWater)
-			param_2->push_back(bathtubWater, 8);
+			param_2->push_back(bathtubWater->getPreprocessor(), 8);
 	} else {
 		JDrama::TViewObjPtrListT<JDrama::TViewObj>* graffitiGroup
 		    = JDrama::TNameRefGen::search<
@@ -35,7 +35,7 @@ void TMarDirector::initECTGft(
 
 		JDrama::TEfbCtrlTex* graffitiEfbTex
 		    = new JDrama::TEfbCtrlTex("graffito check");
-		param_4->insert(graffitiEfbTex);
+		scene->insert(graffitiEfbTex);
 
 		JDrama::TRect rect;
 		rect.set(0, 0, 0x200, 0x200);
@@ -51,7 +51,7 @@ void TMarDirector::initECTGft(
 
 		for (int i = 0; i < gpPollution->getJointModelNum(); ++i) {
 			JDrama::TEfbCtrlTex* efbTex = new JDrama::TEfbCtrlTex("graffito");
-			param_4->insert(efbTex);
+			scene->insert(efbTex);
 			const ResTIMG* img = gpPollution->getLayer(i)->getUnk58();
 			efbTex->mImagePtr  = (u8*)&img + img->imageDataOffset;
 			efbTex->mWidth     = img->width;

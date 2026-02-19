@@ -168,6 +168,7 @@ public:
 	// fabricated
 	int getCurrentIndex() { return mCurrIdx; }
 	TGraphNode& getCurrent() { return unk0->getGraphNode(mCurrIdx); }
+	TGraphNode& getPrevious() { return unk0->getGraphNode(mPrevIdx); }
 	int getPrevIndex() { return mPrevIdx; }
 	void init(TGraphWeb* web) { unk0 = web; }
 	void reset() { mPrevIdx = -1; }
@@ -186,6 +187,7 @@ public:
 		setTo(unk0->findNearestNodeIndex(pos, 0xffffffff));
 	}
 	TGraphWeb* getGraph() { return unk0; }
+	void setGraph(TGraphWeb* web) { unk0 = web; }
 
 public:
 	/* 0x0 */ TGraphWeb* unk0;

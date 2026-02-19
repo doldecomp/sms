@@ -50,7 +50,7 @@ void TEnemyAttachment::forceKill()
 
 	kill();
 
-	if (unk160->checkLiveFlag(LIVE_FLAG_UNK2)) {
+	if (unk160->checkLiveFlag(LIVE_FLAG_HIDDEN)) {
 		unk160->kill();
 		unk160->onLiveFlag(LIVE_FLAG_UNK20000);
 	}
@@ -107,7 +107,7 @@ void TEnemyAttachment::rebirth()
 {
 	unk150 = 0;
 	unk158 = 0;
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 	mVelocity.y = 0.0f;
 }
 
@@ -115,7 +115,7 @@ void TEnemyAttachment::kill()
 {
 	unk150 = 0;
 	unk158 = 0;
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void TEnemyAttachment::set()
@@ -140,7 +140,7 @@ void TEnemyAttachment::sendMessage()
 {
 	for (int i = 0; i < mColCount; ++i) {
 		if (mCollisions[i]->isActorType(0x80000001)) {
-			SMS_SendMessageToMario(this, 0xE);
+			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 			continue;
 		}
 
@@ -267,27 +267,15 @@ void TEnemyPolluteModel::perform(u32 param_1, JDrama::TGraphics* param_2)
 		gpPollution->stampModel(unk10->unk18->getModel());
 }
 
-// TODO: is this TPosition3 or am I trippin
-struct Magic : TRotation3f {
-	void translate(f32 x, f32 y, f32 z)
-	{
-		identity33();
-		this->mMtx[0][3] = x;
-		this->mMtx[1][3] = y;
-		this->mMtx[2][3] = z;
-	}
-};
-
 void TEnemyPolluteModel::generate(JGeometry::TVec3<f32>& param_1,
                                   JGeometry::TVec3<f32>& param_2)
 {
 	unk44 = param_1;
 	unk50 = param_2;
 
-	Magic TStack_58;
-	TStack_58.translate(param_1.x, param_1.y, param_1.z);
-
-	(*(Magic*)&unk14).translate(param_1.x, param_1.y, param_1.z);
+	TPosition3f TStack_58;
+	TStack_58.translation(param_1.x, param_1.y, param_1.z);
+	unk14.translation(param_1.x, param_1.y, param_1.z);
 	unk10->unk18->getModel()->setBaseTRMtx(TStack_58);
 	unk5D = true;
 	unk5C = false;

@@ -11,7 +11,7 @@ class TBoundPane;
 
 class TConsoleStr : public JDrama::TViewObj {
 public:
-	TConsoleStr(const char* name);
+	TConsoleStr(const char* name = "<ConsoleStr>");
 	f32 getWipeCloseTime();
 	void load(JSUMemoryInputStream&);
 	void loadAfter();
