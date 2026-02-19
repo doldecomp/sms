@@ -356,9 +356,9 @@ void TApplication::initialize_nlogoAfter()
 	JKRGetRootHeap()->getSize(spGameHeapBlock);
 
 	JKRMemArchive* this_00 = new JKRMemArchive(arcBufMario, 0, MBF_0);
-	gpCardManager->unk4
+	gpCardManager->mIcons
 	    = (ResTIMG*)piVar2->getResource("/card/mario_icon.bti") + 1;
-	gpCardManager->unk8
+	gpCardManager->mBanner
 	    = (ResTIMG*)piVar2->getResource("/card/mariobnr_jpn.bti") + 1;
 
 	int status;
