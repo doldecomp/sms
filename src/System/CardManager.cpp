@@ -56,11 +56,11 @@ void TCardSector::setCheckSum(u32 write_count)
 }
 
 // TODO: incorrect
-s32 TCardSector::read(CARDFileInfo* info, s32 id,
+s32 TCardSector::read(CARDFileInfo* file, s32 index,
                       TCardManager::TCriteria* criteria)
 {
-	s32 errc
-	    = CARDRead(info, this, sizeof(TCardSector), id * sizeof(TCardSector));
+	s32 errc = CARDRead(file, this, sizeof(TCardSector),
+	                    index * sizeof(TCardSector));
 	if (errc == CARD_RESULT_READY) {
 		s32 writeCount   = mWriteCount;
 		const void* data = &mHeader;
@@ -171,23 +171,25 @@ void TCardManager::copyTo(TCardManager::TCriteria* param_1,
 
 static void* cardmain(void* param_1) { ((TCardManager*)param_1)->cmdLoop(); }
 
-TCardManager::TCardManager(void* param_1, void* param_2, s32 param_3,
-                           s32 param_4, void* param_5, u32 param_6)
-    : mChannel(param_3)
+TCardManager::TCardManager(void* sector_work_area, void* card_work_area,
+                           s32 channel, s32 thread_prio, void* thread_stack,
+                           u32 thread_stack_size)
+    : mChannel(channel)
     , mIcons(nullptr)
     , mBanner(nullptr)
     , mNeedsInit(false)
     , mIsMounted(false)
     , mFsCheckedOk(false)
     , mLastStatus(CARD_RESULT_NOCARD)
-    , mCardMountWorkArea(param_2)
-    , mSector((TCardSector*)param_1)
+    , mCardMountWorkArea(card_work_area)
+    , mSector((TCardSector*)sector_work_area)
     , mPendingCommand(CMD_NONE)
 {
 	OSInitMutex(&mMutex);
 	OSInitCond(&mCommandIsPending);
-	OSCreateThread(&mWorkerThread, &cardmain, this, (u8*)param_5 + param_6,
-	               param_6, param_4, 0);
+	OSCreateThread(&mWorkerThread, &cardmain, this,
+	               (u8*)thread_stack + thread_stack_size, thread_stack_size,
+	               thread_prio, 0);
 	OSResumeThread(&mWorkerThread);
 }
 
@@ -199,10 +201,10 @@ TCardManager::~TCardManager()
 	OSJoinThread(&mWorkerThread, &retcode);
 }
 
-void TCardManager::issue(s32 param_1)
+void TCardManager::issue(s32 command)
 {
 	OSLockMutex(&mMutex);
-	mPendingCommand = param_1;
+	mPendingCommand = command;
 	mLastStatus     = CARD_RESULT_BUSY;
 	OSUnlockMutex(&mMutex);
 	OSSignalCond(&mCommandIsPending);
@@ -241,33 +243,33 @@ void TCardManager::getBookmarkInfos(TCardBookmarkInfo* param_1)
 	OSSignalCond(&mCommandIsPending);
 }
 
-void TCardManager::readBlock(u32 param_1)
+void TCardManager::readBlock(u32 index)
 {
 	OSLockMutex(&mMutex);
-	mReadWriteBlockArg = param_1;
+	mReadWriteBlockArg = index;
 	mPendingCommand    = CMD_READ_BLOCK;
 	mLastStatus        = CARD_RESULT_BUSY;
 	OSUnlockMutex(&mMutex);
 	OSSignalCond(&mCommandIsPending);
 }
 
-void TCardManager::getReadStream(JSUMemoryInputStream* param_1)
+void TCardManager::getReadStream(JSUMemoryInputStream* stream)
 {
 	TCardSector* sector = (TCardSector*)mSector;
-	param_1->setBuffer(sector->getData(), sector->getDataSize());
+	stream->setBuffer(sector->getData(), sector->getDataSize());
 }
 
-void TCardManager::getWriteStream(JSUMemoryOutputStream* param_1)
+void TCardManager::getWriteStream(JSUMemoryOutputStream* stream)
 {
 	TCardSector* sector = (TCardSector*)mSector;
 	sector->clearData();
-	param_1->setBuffer(sector->getData(), sector->getDataSize());
+	stream->setBuffer(sector->getData(), sector->getDataSize());
 }
 
-void TCardManager::writeBlock(u32 param_1)
+void TCardManager::writeBlock(u32 index)
 {
 	OSLockMutex(&mMutex);
-	mReadWriteBlockArg = param_1;
+	mReadWriteBlockArg = index;
 	mPendingCommand    = CMD_WRITE_BLOCK;
 	mLastStatus        = CARD_RESULT_BUSY;
 	OSUnlockMutex(&mMutex);
@@ -419,7 +421,7 @@ s32 TCardManager::createFile_()
 	return result;
 }
 
-s32 TCardManager::filledInitData_(CARDFileInfo* info)
+s32 TCardManager::filledInitData_(CARDFileInfo* file)
 {
 	TCardSector* sector = (TCardSector*)mSector;
 	if (mSectorCriteria[0].getState() == TCriteria::STATE_EMPTY) {
@@ -429,7 +431,7 @@ s32 TCardManager::filledInitData_(CARDFileInfo* info)
 
 		sector->setCheckSum(0);
 
-		s32 errc = writeCardSector_(info, 0, sector, &mSectorCriteria[0]);
+		s32 errc = writeCardSector_(file, 0, sector, &mSectorCriteria[0]);
 
 		if (errc != 0)
 			return errc;
@@ -443,18 +445,18 @@ s32 TCardManager::filledInitData_(CARDFileInfo* info)
 		if (crit->getState() != TCriteria::STATE_EMPTY)
 			continue;
 
-		s32 errc = writeCardSector_(info, i, sector, crit);
+		s32 errc = writeCardSector_(file, i, sector, crit);
 
 		if (errc != 0)
 			return errc;
 	}
 
-	return setCardStat_(info);
+	return setCardStat_(file);
 }
 
-s32 TCardManager::setCardStat_(CARDFileInfo* info)
+s32 TCardManager::setCardStat_(CARDFileInfo* file)
 {
-	s32 fileNo = CARDGetFileNo(info);
+	s32 fileNo = CARDGetFileNo(file);
 
 	CARDStat stat;
 
@@ -474,7 +476,7 @@ s32 TCardManager::setCardStat_(CARDFileInfo* info)
 			CARDSetIconFormat(&stat, i, CARD_STAT_ICON_NONE);
 			CARDSetIconSpeed(&stat, i, CARD_STAT_SPEED_END);
 		}
-		result = CARDSetStatus(mChannel, info->fileNo, &stat);
+		result = CARDSetStatus(mChannel, file->fileNo, &stat);
 	}
 	return result;
 }
@@ -501,16 +503,16 @@ void TCardManager::buildHeader_(HeaderData* header)
 	memcpy(header->mIcons, mIcons, sizeof(header->mIcons));
 }
 
-s32 TCardManager::open_(CARDFileInfo* param_1)
+s32 TCardManager::open_(CARDFileInfo* file)
 {
 	s32 result = mount_(true);
 	if (result == CARD_RESULT_READY) {
 		bool valid;
 		mNeedsInit = valid = false;
-		result             = CARDOpen(mChannel, (char*)CardFileName, param_1);
+		result             = CARDOpen(mChannel, (char*)CardFileName, file);
 		if (result == CARD_RESULT_READY) {
 			CARDStat stat;
-			result = CARDGetStatus(mChannel, CARDGetFileNo(param_1), &stat);
+			result = CARDGetStatus(mChannel, CARDGetFileNo(file), &stat);
 			if (result == CARD_RESULT_READY) {
 				if (stat.iconAddr != 0xffffffff
 				    && stat.commentAddr != 0xffffffff)
@@ -705,18 +707,18 @@ s32 TCardManager::writeOptionBlock_()
 }
 
 // TODO: incorrect
-s32 TCardManager::writeCardSector_(CARDFileInfo* info, s32 id,
+s32 TCardManager::writeCardSector_(CARDFileInfo* file, s32 index,
                                    TCardSector* sector,
                                    TCardManager::TCriteria* criteria)
 {
-	s32 errc = CARDWrite(info, sector, sizeof(TCardSector),
-	                     id * sizeof(TCardSector));
+	s32 errc = CARDWrite(file, sector, sizeof(TCardSector),
+	                     index * sizeof(TCardSector));
 
 	criteria->set(TCriteria::STATE_UNREAD, 0, nullptr);
 	if (errc != CARD_RESULT_READY)
 		return errc;
 
-	errc = sector->read(info, id, criteria);
+	errc = sector->read(file, index, criteria);
 
 	return errc;
 }
