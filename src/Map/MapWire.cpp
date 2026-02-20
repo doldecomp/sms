@@ -194,9 +194,9 @@ void TMapWire::release()
 	}
 
 	posAdvancePerPoint
-	    = (1.0f - mHangPos) / (mNumMapWirePoints - halfNumPoints);
+	    = (1.0f - mHangPos) / (mNumActiveMapWirePoints - halfNumPoints);
 
-	for (int i = halfNumPoints; i < mNumMapWirePoints; i++) {
+	for (int i = halfNumPoints; i < mNumActiveMapWirePoints; i++) {
 		TMapWirePoint* mapWirePoint = &mMapWirePoints[i];
 		mapWirePoint->reset();
 
