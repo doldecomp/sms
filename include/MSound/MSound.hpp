@@ -9,6 +9,7 @@
 #include <JSystem/JAudio/JASystem/JASWaveArcLoader.hpp>
 #include <JSystem/JAudio/JAInterface/JAISound.hpp>
 #include <JSystem/JAudio/JAInterface/JAIBasic.hpp>
+#include <MSound/MSoundSE.hpp>
 
 class JAIActor;
 class JAICamera;
@@ -115,8 +116,16 @@ public:
 
 	bool resetAudioAll(u16);
 
-	// TODO: this is real & all code should be refactored to use it
-	void startSoundSystemSE(u32, u32, JAISound**, u32) { }
+	// real
+	void startSoundSystemSE(u32 param_1, u32 param_2, JAISound** param_3,
+	                        u32 param_4)
+	{
+		if (gateCheck(param_1))
+			MSoundSESystem::MSoundSE::startSoundSystemSE(param_1, param_2,
+			                                             param_3, param_4);
+	}
+	// TODO: startSoundActor was also very likely here
+
 	void startForceJumpSound(Vec*, u32, f32, u32) { }
 };
 

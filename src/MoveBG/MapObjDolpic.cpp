@@ -135,8 +135,8 @@ BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 
 	if (isActorTypeOf(sender, 0x01000000)) {
 		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
-		gpMSound->startSoundSet(0x6802, (const Vec*)&sender->mPosition, 0, 0.0f,
-		                        0, 0, 4);
+		SMSGetMSound()->startSoundSet(0x6802, (const Vec*)&sender->mPosition, 0,
+		                              0.0f, 0, 0, 4);
 
 		if (unk13C == 0)
 			return 1;
@@ -152,10 +152,7 @@ BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 			    "モニュメントシャインカメラ", mPosition.x, mPosition.y,
 			    mPosition.z);
 
-			if (gpMSound->gateCheck(0x484A)) {
-				MSoundSESystem::MSoundSE::startSoundSystemSE(0x484A, 0, nullptr,
-				                                             0);
-			}
+			SMSGetMSound()->startSoundSystemSE(0x484A, 0, nullptr, 0);
 		}
 
 		return 1;
@@ -184,20 +181,16 @@ void TMonumentShine::control()
 	if (fabsf(unk140) < 0.1f) {
 		if (unk144 == 2) {
 			if (unk148 > 0) {
-				f32 rot    = mRotation.y;
-				f32 target = mInitialRotation.y + 360.0f;
 				f32 diff
-				    = target - MsWrap(rot, target - 180.0f, target + 180.0f);
+				    = MsAngleDiff(mRotation.y, mInitialRotation.y + 360.0f);
 				if (diff > 0.1f)
 					diff = 0.1f;
 				if (0.0f == diff)
 					unk144++;
 				mAngularVelocity.y += diff;
 			} else {
-				f32 rot    = mRotation.y;
-				f32 target = mInitialRotation.y - 360.0f;
 				f32 diff
-				    = target - MsWrap(rot, target - 180.0f, target + 180.0f);
+				    = MsAngleDiff(mRotation.y, mInitialRotation.y - 360.0f);
 				if (diff < -0.1f)
 					diff = -0.1f;
 				if (0.0f == diff)
@@ -362,10 +355,7 @@ BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 				    mPosition.z);
 			}
 
-			if (gpMSound->gateCheck(0x484A)) {
-				MSoundSESystem::MSoundSE::startSoundSystemSE(0x484A, 0, nullptr,
-				                                             0);
-			}
+			SMSGetMSound()->startSoundSystemSE(0x484A, 0, nullptr, 0);
 		}
 
 		return 1;
