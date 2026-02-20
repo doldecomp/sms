@@ -47,7 +47,7 @@ public:
 		unk44 = param_3;
 		unk48 = f32(param_2 - param_3) / param_1;
 		unk4C = param_2;
-		unk50 = 1;
+		unk50 = true;
 	}
 
 	// fabricated

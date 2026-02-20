@@ -2,6 +2,7 @@
 #define SYSTEM_STAGE_UTIL_HPP
 
 #include <types.h>
+#include <System/FlagManager.hpp>
 
 u8 SMS_getShineIDofExStage(u8);
 u8 SMS_getShineStage(u8);
@@ -53,29 +54,7 @@ static u8* scShineConvTable[] = {
 };
 
 // Yes, these were defined in a header and marked as static instead of inline
-// by mistake. This is probably the right header, I think. Moreover, two of them
-// were completely inlined, so watch out for anything that might need these
-// inlines for matching.
-
-static void SMS_isGetShine(u32 param_1, u32, bool) { }
-
-static s16 SMS_getShineID(u32 param_1, u32 param_2, bool param_3)
-{
-	u8* puVar1;
-
-	if (param_1 > 9)
-		return -1;
-
-	if (param_3)
-		puVar1 = scEtcShineConvTable[param_1];
-	else
-		puVar1 = scShineConvTable[param_1];
-
-	if (puVar1 == nullptr)
-		return -1;
-
-	return puVar1[(u8)param_2];
-}
+// by mistake. This is probably the right header, I think.
 
 static u32 scScenarioNameTable[] = {
 	0x0,  0x1,  0x2,  0x3,  0x4,  0x5,  0x6,  0x7,  0x8,  0x9,  0x32, 0x33,
@@ -90,6 +69,33 @@ static u32 scScenarioNameTable[] = {
 static u16 SMS_getNormalStage(u32 param_1)
 {
 	return scScenarioNameTable[param_1];
+}
+
+static s16 SMS_getShineID(u32 stage, u32 scenario, bool is_etc_shine)
+{
+	u8* puVar1;
+
+	if (stage > 9)
+		return -1;
+
+	if (is_etc_shine)
+		puVar1 = scEtcShineConvTable[stage];
+	else
+		puVar1 = scShineConvTable[stage];
+
+	if (puVar1 == nullptr)
+		return -1;
+
+	return puVar1[scenario];
+}
+
+// size matches
+static bool SMS_isGetShine(u32 stage, u32 scenario, bool is_etc_shine)
+{
+	s32 shineId = SMS_getShineID(stage, scenario, is_etc_shine);
+	if (shineId == -1)
+		return false;
+	return TFlagManager::getInstance()->getShineFlag(shineId);
 }
 
 #endif

@@ -114,10 +114,17 @@ public:
 	bool gateCheck(u32);
 
 	bool resetAudioAll(u16);
+
+	// TODO: this is real & all code should be refactored to use it
+	void startSoundSystemSE(u32, u32, JAISound**, u32) { }
+	void startForceJumpSound(Vec*, u32, f32, u32) { }
 };
 
 extern MSound* MSGMSound;
 extern JAIBasic* MSGBasic;
 extern MSound* gpMSound;
+
+// real
+MSound* SMSGetMSound() { return gpMSound; }
 
 #endif // MSOUND_HPP
