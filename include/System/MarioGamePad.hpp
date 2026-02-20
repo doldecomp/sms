@@ -152,6 +152,9 @@ public:
 	void updateMeaning();
 
 	// fabricated
+	bool checkMeaning(u32 meaning) const { return mMeaning & meaning; }
+
+	// fabricated
 	bool checkFrameMeaning(u32 meaning) const
 	{
 		return mEnabledFrameMeaning & meaning;
