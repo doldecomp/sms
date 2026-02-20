@@ -23,11 +23,7 @@ void TMario::incHP(int hp)
 		if (unk12C > unk130) {
 			unk12C = unk130;
 		} else {
-			// Probably an inline
-			if (gpMSound->gateCheck(0x4801)) {
-				MSoundSESystem::MSoundSE::startSoundSystemSE(0x4801, 0, nullptr,
-				                                             0);
-			}
+			gpMSound->startSoundSystemSE(0x4801, 0, nullptr, 0);
 		}
 		return;
 	}
@@ -36,10 +32,7 @@ void TMario::incHP(int hp)
 	if (mHealth > mDeParams.mHpMax.get()) {
 		mHealth = mDeParams.mHpMax.get();
 	} else {
-		// Probably an inline
-		if (gpMSound->gateCheck(0x4801)) {
-			MSoundSESystem::MSoundSE::startSoundSystemSE(0x4801, 0, nullptr, 0);
-		}
+		gpMSound->startSoundSystemSE(0x4801, 0, nullptr, 0);
 	}
 }
 
@@ -221,10 +214,7 @@ void TMario::loserExec()
 		unk118 |= MARIO_FLAG_GAME_OVER;
 		mHealth = 0;
 
-		// Probably an inline
-		if (gpMSound->gateCheck(0x480c)) {
-			MSoundSESystem::MSoundSE::startSoundSystemSE(0x480c, 0, nullptr, 0);
-		}
+		gpMSound->startSoundSystemSE(0x480c, 0, nullptr, 0);
 
 		mAnmSound->stop();
 
