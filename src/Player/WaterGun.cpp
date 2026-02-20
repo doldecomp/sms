@@ -1355,16 +1355,12 @@ void TWaterGun::changeBackup()
 	// TODO: Missing stack space
 	// volatile u32 unused2[5];
 	if (unk1CFC == 0.0f) {
-		if (gpMSound->gateCheck(0x812)) {
-			MSoundSESystem::MSoundSE::startSoundSystemSE(0x812, 0, nullptr, 0);
-		}
+		SMSGetMSound()->startSoundSystemSE(0x812, 0, nullptr, 0);
 		unk1D00 = mWatergunParams.mChangeSpeed.get();
 	}
 
 	if (unk1CFC == 1.0f) {
-		if (gpMSound->gateCheck(0x811)) {
-			MSoundSESystem::MSoundSE::startSoundSystemSE(0x811, 0, nullptr, 0);
-		}
+		SMSGetMSound()->startSoundSystemSE(0x811, 0, nullptr, 0);
 		unk1D00 = -mWatergunParams.mChangeSpeed.get();
 	}
 }
