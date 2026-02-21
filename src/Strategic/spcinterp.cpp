@@ -72,9 +72,8 @@ void spcInt(TSpcInterp* interp, u32 arg_count)
 	if (arg_count != 1)
 		interp->verifyArgNum(1, &arg_count);
 
-	TSpcSlice slice;
-	slice = interp->pop();
-	interp->push(slice.getDataInt());
+	int val = interp->pop().getDataInt();
+	interp->push(val);
 }
 
 void spcFloat(TSpcInterp* interp, u32 arg_count)
@@ -83,8 +82,9 @@ void spcFloat(TSpcInterp* interp, u32 arg_count)
 		interp->verifyArgNum(1, &arg_count);
 
 	TSpcSlice slice;
-	slice = interp->pop();
-	interp->push(slice.getDataFloat());
+	slice   = interp->pop();
+	f32 flt = slice.getDataFloat();
+	interp->push(flt);
 }
 
 void spcTypeof(TSpcInterp* interp, u32 arg_count)
@@ -211,12 +211,24 @@ void TSpcInterp::execinc()
 	u32 arg1 = fetchU32();
 	u32 arg2 = fetchU32();
 
-	++mStorageStack.getFromBottom(mDisplay[arg1] + arg2);
+	int idx = mDisplay[arg1];
+	++mStorageStack.getFromBottom(idx + arg2);
 
-	mStorageStack.push(mStorageStack.getFromBottom(mDisplay[arg1] + arg2));
+	mProcessStack.push(mStorageStack.getFromBottom(idx + arg2));
 }
 
-void TSpcInterp::execdec() { }
+void TSpcInterp::execdec()
+{
+	++mProgramCounter;
+
+	u32 arg1 = fetchU32();
+	u32 arg2 = fetchU32();
+
+	int idx = mDisplay[arg1];
+	--mStorageStack.getFromBottom(idx + arg2);
+
+	mProcessStack.push(mStorageStack.getFromBottom(idx + arg2));
+}
 
 void TSpcInterp::execadd()
 {
@@ -226,10 +238,11 @@ void TSpcInterp::execadd()
 	if (arg1.typeof() == TSpcSlice::TYPE_FLOAT
 	    || arg2.typeof() == TSpcSlice::TYPE_FLOAT) {
 		TSpcSlice result;
-		result.setFloat(arg1.getDataFloat() + arg2.getDataFloat());
+		result.setDataFloat(arg1.getDataFloat() + arg2.getDataFloat());
 		mProcessStack.push(result);
 	} else {
-		mProcessStack.push(arg1.getDataInt() + arg2.getDataInt());
+		int result = arg1.getDataInt() + arg2.getDataInt();
+		mProcessStack.push(result);
 	}
 }
 
@@ -241,10 +254,11 @@ void TSpcInterp::execsub()
 	if (arg1.typeof() == TSpcSlice::TYPE_FLOAT
 	    || arg2.typeof() == TSpcSlice::TYPE_FLOAT) {
 		TSpcSlice result;
-		result.setFloat(arg1.getDataFloat() - arg2.getDataFloat());
+		result.setDataFloat(arg1.getDataFloat() - arg2.getDataFloat());
 		mProcessStack.push(result);
 	} else {
-		mProcessStack.push(arg1.getDataInt() - arg2.getDataInt());
+		int result = arg1.getDataInt() - arg2.getDataInt();
+		mProcessStack.push(result);
 	}
 }
 
@@ -256,10 +270,11 @@ void TSpcInterp::execmul()
 	if (arg1.typeof() == TSpcSlice::TYPE_FLOAT
 	    || arg2.typeof() == TSpcSlice::TYPE_FLOAT) {
 		TSpcSlice result;
-		result.setFloat(arg1.getDataFloat() * arg2.getDataFloat());
+		result.setDataFloat(arg1.getDataFloat() * arg2.getDataFloat());
 		mProcessStack.push(result);
 	} else {
-		mProcessStack.push(arg1.getDataInt() * arg2.getDataInt());
+		int result = arg1.getDataInt() * arg2.getDataInt();
+		mProcessStack.push(result);
 	}
 }
 
@@ -271,10 +286,11 @@ void TSpcInterp::execdiv()
 	if (arg1.typeof() == TSpcSlice::TYPE_FLOAT
 	    || arg2.typeof() == TSpcSlice::TYPE_FLOAT) {
 		TSpcSlice result;
-		result.setFloat(arg1.getDataFloat() / arg2.getDataFloat());
+		result.setDataFloat(arg1.getDataFloat() / arg2.getDataFloat());
 		mProcessStack.push(result);
 	} else {
-		mProcessStack.push(arg1.getDataInt() / arg2.getDataInt());
+		int result = arg1.getDataInt() / arg2.getDataInt();
+		mProcessStack.push(result);
 	}
 }
 
@@ -283,7 +299,8 @@ void TSpcInterp::execmod()
 	TSpcSlice arg2 = mProcessStack.pop();
 	TSpcSlice arg1 = mProcessStack.pop();
 
-	mProcessStack.push(arg1.getDataInt() % arg2.getDataInt());
+	int result = arg1.getDataInt() % arg2.getDataInt();
+	mProcessStack.push(result);
 }
 
 void TSpcInterp::execass()
@@ -314,19 +331,33 @@ void TSpcInterp::execgt()
 {
 	TSpcSlice arg2 = mProcessStack.pop();
 	TSpcSlice arg1 = mProcessStack.pop();
-	mProcessStack.push(arg1 > arg2);
+	BOOL result    = arg1 > arg2;
+	mProcessStack.push(result);
 }
 
-void TSpcInterp::execlt() { }
+void TSpcInterp::execlt()
+{
+	TSpcSlice arg2 = mProcessStack.pop();
+	TSpcSlice arg1 = mProcessStack.pop();
+	BOOL result    = arg1 < arg2;
+	mProcessStack.push(result);
+}
 
-void TSpcInterp::execge() { }
+void TSpcInterp::execge()
+{
+	TSpcSlice arg2 = mProcessStack.pop();
+	TSpcSlice arg1 = mProcessStack.pop();
+	BOOL result    = arg1 >= arg2;
+	mProcessStack.push(result);
+}
 
-static void dummy(TSpcSlice& x) { x.getDataFloat(); }
-static void dummy_1(TSpcSlice& x) { dummy(x); }
-static void dummy_2(TSpcSlice& x) { dummy_1(x); }
-static void dummy_3(TSpcSlice& x) { dummy_2(x); }
-
-void TSpcInterp::execle() { }
+void TSpcInterp::execle()
+{
+	TSpcSlice arg2 = mProcessStack.pop();
+	TSpcSlice arg1 = mProcessStack.pop();
+	BOOL result    = arg1 <= arg2;
+	mProcessStack.push(result);
+}
 
 void TSpcInterp::execneg()
 {
@@ -338,51 +369,56 @@ void TSpcInterp::execneg()
 void TSpcInterp::execnot()
 {
 	TSpcSlice slice = mProcessStack.pop();
-	mProcessStack.push(slice.getDataInt() == 0 ? 1 : 0);
+	int result      = slice.getDataInt() == 0 ? 1 : 0;
+	mProcessStack.push(result);
 }
 
 void TSpcInterp::execand()
 {
 	TSpcSlice arg2 = mProcessStack.pop();
 	TSpcSlice arg1 = mProcessStack.pop();
-	mProcessStack.push(arg1.getDataInt() != 0 && arg2.getDataInt() != 0 ? 1
-	                                                                    : 0);
+	int result     = arg1.getDataInt() != 0 && arg2.getDataInt() != 0 ? 1 : 0;
+	mProcessStack.push(result);
 }
 
 void TSpcInterp::execor()
 {
 	TSpcSlice arg2 = mProcessStack.pop();
 	TSpcSlice arg1 = mProcessStack.pop();
-	mProcessStack.push(arg1.getDataInt() != 0 || arg2.getDataInt() != 0 ? 1
-	                                                                    : 0);
+	int result     = arg1.getDataInt() != 0 || arg2.getDataInt() != 0 ? 1 : 0;
+	mProcessStack.push(result);
 }
 
 void TSpcInterp::execband()
 {
 	TSpcSlice arg2 = mProcessStack.pop();
 	TSpcSlice arg1 = mProcessStack.pop();
-	mProcessStack.push(arg1.getDataInt() & arg2.getDataInt());
+	int result     = arg1.getDataInt() & arg2.getDataInt();
+	mProcessStack.push(result);
 }
 
 void TSpcInterp::execbor()
 {
 	TSpcSlice arg2 = mProcessStack.pop();
 	TSpcSlice arg1 = mProcessStack.pop();
-	mProcessStack.push(arg1.getDataInt() | arg2.getDataInt());
+	int result     = arg1.getDataInt() | arg2.getDataInt();
+	mProcessStack.push(result);
 }
 
 void TSpcInterp::execshl()
 {
 	TSpcSlice arg2 = mProcessStack.pop();
 	TSpcSlice arg1 = mProcessStack.pop();
-	mProcessStack.push(TSpcSlice(arg1.getDataInt() << arg2.getDataInt()));
+	int result     = arg1.getDataInt() << arg2.getDataInt();
+	mProcessStack.push(result);
 }
 
 void TSpcInterp::execshr()
 {
 	TSpcSlice arg2 = mProcessStack.pop();
 	TSpcSlice arg1 = mProcessStack.pop();
-	mProcessStack.push(TSpcSlice(arg1.getDataInt() >> arg2.getDataInt()));
+	int result     = arg1.getDataInt() >> arg2.getDataInt();
+	mProcessStack.push(TSpcSlice(result));
 }
 
 void TSpcInterp::execcall()
@@ -397,7 +433,7 @@ void TSpcInterp::execcall()
 	for (int i = 0; i < argNum; ++i)
 		mStorageStack.push(TSpcSlice());
 	for (int i = 0; i < argNum; ++i)
-		mStorageStack.getFromTop(i) = mProcessStack.pop();
+		mStorageStack.setFromTop(i, mProcessStack.pop());
 	mProgramCounter = address;
 }
 
@@ -447,9 +483,8 @@ void TSpcInterp::execret0()
 
 void TSpcInterp::execjne()
 {
-	u32 arg1        = fetchU32();
-	TSpcSlice slice = mProcessStack.pop();
-	if (slice.getDataInt() == 0)
+	u32 arg1 = fetchU32();
+	if (!pop().getDataInt())
 		mProgramCounter = arg1;
 }
 

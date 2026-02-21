@@ -11,13 +11,13 @@ class TMarioGamePad;
 
 class CPolarSubCamera : public JDrama::TLookAtCamera {
 public:
-	enum EnumNoticeOnOffMode {};
+	enum EnumNoticeOnOffMode { };
 
 	void calcSecureViewTarget_(s16, f32*, f32*);
 	void execSecureView_(s16, Vec*);
 	bool isLButtonCameraSpecifyMode(int) const;
 	void isLButtonCameraInbetween() const;
-	void isJetCoaster1stCamera() const;
+	bool isJetCoaster1stCamera() const;
 	void isTalkCameraSpecifyMode(int) const;
 	void isTalkCameraInbetween() const;
 	void isNormalCameraSpecifyMode(int) const;
@@ -72,7 +72,7 @@ public:
 	void execHeightPan_();
 	void killHeightPan_();
 
-	CPolarSubCamera(const char*);
+	CPolarSubCamera(const char* = "<CPolarCamera>");
 	void startJetCoasterCam1();
 	void loadAfter();
 	void isNowInbetween() const;
@@ -131,7 +131,9 @@ public:
 
 public:
 	/* 0x50 */ int mMode;
-	/* 0x54 */ char unk54[0x120 - 0x54];
+	/* 0x54 */ char unk54[0xA4 - 0x54];
+	/* 0xA4 */ s16 unkA4;
+	/* 0xA6 */ char unkA6[0x120 - 0xA6];
 	/* 0x120 */ TMarioGamePad* unk120;
 	/* 0x124 */ JGeometry::TVec3<f32> unk124;
 	/* 0x130 */ char unk130[0xC];

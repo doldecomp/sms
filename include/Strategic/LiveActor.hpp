@@ -19,7 +19,7 @@ class TMapCollisionManager;
 
 enum TLiveFlagBits {
 	LIVE_FLAG_DEAD        = 0x1,
-	LIVE_FLAG_UNK2        = 0x2,
+	LIVE_FLAG_HIDDEN      = 0x2,
 	LIVE_FLAG_CLIPPED_OUT = 0x4,
 	LIVE_FLAG_UNK8        = 0x8,
 	LIVE_FLAG_UNK10       = 0x10,
@@ -41,6 +41,9 @@ enum TLiveFlagBits {
 
 class TLiveActor : public TTakeActor {
 public:
+	TLiveActor(const char* name = "活動オブジェクト基底型");
+
+	virtual ~TLiveActor();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
 	virtual BOOL belongToGround() const;
@@ -77,8 +80,6 @@ public:
 	J3DModel* getModel() const;
 	void calcRideMomentum();
 	void calcRidePos();
-	~TLiveActor();
-	TLiveActor(const char*);
 
 	MActor* getMActor() const { return mMActor; }
 
@@ -105,8 +106,22 @@ public:
 	{
 		return mMapCollisionManager;
 	}
+	void getNextFramePosition(JGeometry::TVec3<f32>& result)
+	{
+		result = mPosition;
+		result.add(mLinearVelocity);
+		// It's not clear why we copy mVelocity to a local variable first,
+		// but it matches what TWireBinder::bind does.
+		// We can revisit later if needed.
+		JGeometry::TVec3<f32> velocity = mVelocity;
+		result.add(velocity);
+	}
 	const JGeometry::TVec3<f32>& getVelocity() const { return mVelocity; }
 	void setVelocity(const JGeometry::TVec3<f32>& v) { mVelocity = v; }
+	void setLinearVelocity(const JGeometry::TVec3<f32>& v)
+	{
+		mLinearVelocity = v;
+	}
 
 public:
 	/* 0x70 */ TLiveManager* mManager;

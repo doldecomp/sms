@@ -53,7 +53,7 @@ void setLogMessage_f_va(u32 device, char* file, int line, const char* fmt,
 #define JUT_WARNING_F(COND, ...)                                               \
 	(COND) ? (void)0                                                           \
 	       : JUTAssertion::setWarningMessage_f(                                \
-	           JUTAssertion::getSDevice(), __FILE__, __LINE__, __VA_ARGS__);
+	             JUTAssertion::getSDevice(), __FILE__, __LINE__, __VA_ARGS__);
 
 // how about get rid of this and pass true to JUT_WARNING_F instead?
 #define JUT_WARNING_F2(...)                                                    \

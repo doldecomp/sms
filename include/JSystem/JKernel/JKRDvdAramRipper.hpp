@@ -32,6 +32,7 @@ public:
 class JKRDvdFile;
 class JKRDvdAramRipper {
 public:
+	static JKRAramBlock* loadToAram(char*, u32, JKRExpandSwitch, u32, u32);
 	static JKRAramBlock* loadToAram(s32, u32, JKRExpandSwitch, u32, u32);
 	static JKRAramBlock* loadToAram(JKRDvdFile*, u32, JKRExpandSwitch, u32,
 	                                u32);
@@ -40,11 +41,11 @@ public:
 	static JKRADCommand* callCommand_Async(JKRADCommand*);
 	static bool syncAram(JKRADCommand*, int);
 
-	static u32 getSzpBufferSize() { return sSzpBufferSize; }
-	static void setSzpBufferSize(u32 size) { sSzpBufferSize = size; }
+	static u32 getSzpBufferSize() { return szpBufferSize; }
+	static void setSzpBufferSize(u32 size) { szpBufferSize = size; }
 
 	static JSUList<JKRADCommand> sDvdAramAsyncList;
-	static u32 sSzpBufferSize;
+	static u32 szpBufferSize;
 	static bool errorRetry;
 };
 

@@ -13,7 +13,7 @@ class TCardSave;
 
 class TPauseMenu2 : public JDrama::TViewObj {
 public:
-	TPauseMenu2(const char*);
+	TPauseMenu2(const char* = "<TPauseMenu>");
 	void load(JSUMemoryInputStream&);
 	void loadAfter();
 	void appearWindow();

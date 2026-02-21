@@ -13,6 +13,7 @@
 #include <JSystem/J2D/J2DTextBox.hpp>
 #include <JSystem/J2D/J2DPicture.hpp>
 #include <JSystem/J2D/J2DScreen.hpp>
+#include <JSystem/JUtility/JUTResFont.hpp>
 #include <stdio.h>
 
 // rogue includes needed for matching sinit & bss
@@ -344,7 +345,7 @@ void TGCConsole2::startDisappearTelop() { }
 
 void TGCConsole2::startDisappearTimer() { }
 
-void TGCConsole2::startAppearTimer(int, long) { }
+void TGCConsole2::startAppearTimer(int, s32) { }
 
 void TGCConsole2::startInsertTimer() { }
 

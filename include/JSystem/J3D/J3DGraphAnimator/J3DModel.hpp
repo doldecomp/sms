@@ -255,8 +255,8 @@ public:
 	/* 0x08 */ u32 unk8;
 	/* 0x0C */ J3DCalcCallBack unkC;
 	char pad1[0x4];
-	/* 0x14 */ Vec unk14;
-	/* 0x20 */ Mtx unk20;
+	/* 0x14 */ Vec unk14; // mBaseScale
+	/* 0x20 */ Mtx unk20; // mBaseMtx
 	/* 0x50 */ u8* mScaleFlagArr;
 	/* 0x54 */ u8* mEvlpScaleFlagArr;
 	/* 0x58 */ Mtx* mNodeMatrices;

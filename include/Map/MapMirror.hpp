@@ -11,12 +11,13 @@ class MActorAnmData;
 
 class TMirrorCamera : public JDrama::TCamera {
 public:
+	TMirrorCamera(const char* name = "鏡用カメラ");
+
 	virtual void perform(u32, JDrama::TGraphics*);
 
 	void makeMirrorViewMtx();
 	void drawSetting(MtxPtr);
 	void calcEffectMtx(MtxPtr);
-	TMirrorCamera(const char*);
 
 	MtxPtr getUnk30() { return unk30; }
 	void setUnk84AndUnk90(f32 x, f32 y, f32 z, f32 dot)
@@ -74,7 +75,9 @@ extern TMirrorModelManager* gpMirrorModelManager;
 
 class TMirrorModelManager : public JDrama::TViewObj {
 public:
-	virtual void load(JSUMemoryInputStream&);
+	TMirrorModelManager(const char* name = "鏡表示モデル管理");
+
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
 
@@ -82,7 +85,6 @@ public:
 	bool isInMirror(JGeometry::TVec3<f32>&) const;
 	void findMirrorCamera();
 	void registerObjMirror(TMirrorModel*);
-	TMirrorModelManager(const char*);
 
 	// fabricated
 	MActorAnmData* getUnk20() { return unk20; }

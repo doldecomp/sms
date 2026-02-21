@@ -80,7 +80,7 @@ void TMarDirector::movement_game()
 	if ((int)unk124 == 0)
 		return;
 
-	(*unk18)->offFlag(0x2);
+	unk18[0]->offFlag(0x2);
 	if (!gpMarioOriginal->isHolding()
 	    && gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode))
 		return;
@@ -99,9 +99,9 @@ void TMarDirector::movement_game()
 			if (talkNpc != nullptr) {
 				unkA0 = talkNpc;
 				unk84->associateNPC(talkNpc);
-				(*unk18)->onFlag(4);
+				unk18[0]->onFlag(4);
 				unk128 |= 0x1;
-				if ((unk128 & 2) && ((*unk18)->mEnabledFrameMeaning & 0x800))
+				if ((unk128 & 2) && (unk18[0]->mEnabledFrameMeaning & 0x800))
 					unk126 = 1;
 			}
 		}
@@ -163,7 +163,7 @@ void TMarDirector::fireDemoMovie(u32, TLiveActor*) { }
 
 void TMarDirector::movement()
 {
-	if ((int)unk64 != 4)
+	if ((int)mState != STATE_UNK4)
 		movement_game();
 }
 

@@ -6,14 +6,15 @@ using namespace JDrama;
 
 void TGraphics::setViewport(const TRect& param_1, float param_2, float param_3)
 {
-	unk54 = param_1;
+	mViewportRect = param_1;
 
-	if (unk8.field_rendering) {
-		GXSetViewportJitter(unk54.x1, unk54.y1, unk54.getWidth(),
-		                    unk54.getHeight(), param_2, param_3,
-		                    VIGetNextField());
+	if (mRenderMode.field_rendering) {
+		GXSetViewportJitter(mViewportRect.x1, mViewportRect.y1,
+		                    mViewportRect.getWidth(), mViewportRect.getHeight(),
+		                    param_2, param_3, VIGetNextField());
 	} else {
-		GXSetViewport(unk54.x1, unk54.y1, unk54.getWidth(), unk54.getHeight(),
+		GXSetViewport(mViewportRect.x1, mViewportRect.y1,
+		              mViewportRect.getWidth(), mViewportRect.getHeight(),
 		              param_2, param_3);
 	}
 }

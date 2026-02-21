@@ -7,6 +7,7 @@
 class J3DDrawBuffer;
 
 class TLightWithDBSet;
+class TLightMario;
 
 class TLightWithDBSetManager : public JDrama::TViewObj {
 public:
@@ -28,7 +29,7 @@ public:
 	TLightWithDBSet* getUnk14(int i) { return unk14[i]; }
 
 public:
-	/* 0x10 */ u32 unk10;
+	/* 0x10 */ TLightMario* unk10;
 	/* 0x14 */ TLightWithDBSet** unk14;
 	/* 0x18 */ GXColor unk18;
 	/* 0x1C */ u32 unk1C;
@@ -51,7 +52,7 @@ extern TLightWithDBSetManager* gpLightManager;
 
 class TLightCommon : public JDrama::TViewObj {
 public:
-	TLightCommon(const char*);
+	TLightCommon(const char* = "<TLightCommon>");
 
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -137,7 +138,10 @@ public:
 
 class TLightMario : public TLightCommon {
 public:
-	TLightMario();
+	TLightMario(const char* name = "<TLightMario>")
+	    : TLightCommon(name)
+	{
+	}
 
 	virtual ~TLightMario() { }
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -149,7 +153,10 @@ public:
 
 class TLightShadow : public TLightCommon {
 public:
-	TLightShadow();
+	TLightShadow(const char* name = "<TLightShadow>")
+	    : TLightCommon(name)
+	{
+	}
 
 	virtual ~TLightShadow() { }
 	virtual void perform(u32, JDrama::TGraphics*);

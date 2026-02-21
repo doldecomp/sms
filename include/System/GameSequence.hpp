@@ -6,12 +6,7 @@
 
 class TGameSequence {
 public:
-	TGameSequence()
-	    : unk0(0)
-	    , unk1(0)
-	    , unk2(0)
-	{
-	}
+	TGameSequence() { set(0, 0, 0); }
 
 	TGameSequence& operator=(const TGameSequence& other)
 	{
@@ -25,6 +20,10 @@ public:
 		unk1 = param_2;
 		unk2 = param_3;
 	}
+
+	// fabricated
+	u8 getStage() const { return unk0; }
+	u8 getScenario() const { return unk1; }
 
 public:
 	/* 0x0 */ u8 unk0;

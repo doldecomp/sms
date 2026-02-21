@@ -87,6 +87,8 @@ extern inline double sqrt(double x)
 // Yes, they really had additional overloaded wrappers for when C++ is enabled.
 inline float abs(float x) { return fabsf(x); }
 inline double abs(double x) { return fabs(x); }
+inline float sin(float x) { return sinf(x); }
+inline float cos(float x) { return cosf(x); }
 
 namespace std {
 inline float fabsf(float f) { return ::fabsf(f); }

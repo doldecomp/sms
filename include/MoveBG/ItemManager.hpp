@@ -32,7 +32,7 @@ public:
 	void resetNozzleBoxesModel(int);
 
 public:
-	/* 0x40 */ Mtx unk40;
+	/* 0x40 */ TMtx34f unk40;
 	/* 0x70 */ f32 unk70;
 	/* 0x74 */ f32 unk74;
 	/* 0x78 */ TCoinEmpty* unk78;

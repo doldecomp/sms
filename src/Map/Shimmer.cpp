@@ -31,7 +31,7 @@ void TShimmer::perform(u32 param_1, JDrama::TGraphics* param_2)
 		return;
 
 	if (param_1 & 1) {
-		unk54->setFrame(unk58->getCurrentFrame());
+		unk54->setFrame(unk58->getFrame());
 		unk58->update();
 	}
 
@@ -67,7 +67,7 @@ void TShimmer::perform(u32 param_1, JDrama::TGraphics* param_2)
 		Mtx afStack_e0;
 		MTXScale(afStack_e0, mScaling.x, mScaling.y, mScaling.z);
 		Mtx afStack_80;
-		MTXInverse(param_2->unkB4, afStack_80);
+		MTXInverse(param_2->mViewMtx, afStack_80);
 		MTXConcat(afStack_80, afStack_b0, afStack_80);
 		MTXConcat(afStack_80, afStack_e0, afStack_80);
 		unk48->setBaseTRMtx(afStack_80);
@@ -114,7 +114,7 @@ void TShimmer::load(JSUMemoryInputStream& stream)
 		unk44->getMaterialNodePointer(i)->setSomeFlag();
 	}
 	unk58->init(unk54->getFrameMax());
-	unk58->setAttribute(2);
+	unk58->setAttribute(J3DFrameCtrl::ATTR_LOOP);
 }
 
 TShimmer::TShimmer(const char* name)

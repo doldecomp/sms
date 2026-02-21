@@ -30,7 +30,7 @@ TLampTrapSpikeHit::TLampTrapSpikeHit(TLampTrapSpike* trap, const char* name)
 	JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ")
 	    ->getChildren()
 	    .push_back(this);
-	offHitFlag(HIT_FLAG_UNK1);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 BOOL TLampTrapSpikeHit::receiveMessage(THitActor* sender, u32 message)
@@ -47,7 +47,7 @@ void TLampTrapSpikeHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 		if (unk68->unk138 == 2 || unk68->unk138 == 0 || unk68->unk138 == 1) {
 			for (int i = 0; i < getColNum(); ++i)
 				if (getCollision(i)->isActorType(-0x7fffffff))
-					SMS_SendMessageToMario(this, 0xE);
+					SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 		}
 	}
 }
@@ -60,7 +60,7 @@ TLampTrapSpike::TLampTrapSpike(const char* name)
 void TLampTrapSpike::initMapObj()
 {
 	TMapObjBase::initMapObj();
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void TLampTrapSpike::loadAfter()
@@ -86,13 +86,13 @@ void TLampTrapSpike::control()
 			mMActor->setBck("lamptrapspike_up");
 			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
 			ctrl->setFrame(6.0f);
-			ctrl->setSpeed(SMSGetAnmFrameRate());
+			ctrl->setRate(SMSGetAnmFrameRate());
 		}
 		if (mMActor->curAnmEndsNext(0, nullptr)) {
 			unk13C = 0;
 			unk138 = 2;
 		}
-		if (ctrl->getCurrentFrame() > ctrl->getEndFrame() * 0.5f)
+		if (ctrl->getFrame() > ctrl->getEnd() * 0.5f)
 			bVar1 = true;
 	} break;
 
@@ -102,13 +102,13 @@ void TLampTrapSpike::control()
 			mMActor->setBck("lamptrapspike_down");
 			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
 			ctrl->setFrame(0.0f);
-			ctrl->setSpeed(SMSGetAnmFrameRate() * 0.8f);
+			ctrl->setRate(SMSGetAnmFrameRate() * 0.8f);
 		}
 		if (mMActor->curAnmEndsNext(0, nullptr)) {
 			unk13C = 0;
 			unk138 = 3;
 		}
-		if (ctrl->getCurrentFrame() > ctrl->getEndFrame() * 0.5f)
+		if (ctrl->getFrame() > ctrl->getEnd() * 0.5f)
 			bVar1 = true;
 	} break;
 
@@ -116,8 +116,8 @@ void TLampTrapSpike::control()
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_up");
 			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
-			ctrl->setFrame(ctrl->getEndFrame());
-			ctrl->setSpeed(0.0f);
+			ctrl->setFrame(ctrl->getEnd());
+			ctrl->setRate(0.0f);
 			if (gpMSound->gateCheck(0x3863))
 				MSoundSESystem::MSoundSE::startSoundActor(0x3863, mPosition, 0,
 				                                          nullptr, 0, 4);
@@ -133,8 +133,8 @@ void TLampTrapSpike::control()
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_down");
 			if (J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0)) {
-				ctrl->setFrame(ctrl->getEndFrame());
-				ctrl->setSpeed(0.0f);
+				ctrl->setFrame(ctrl->getEnd());
+				ctrl->setRate(0.0f);
 			}
 		}
 		if (unk13C >= 120) {
@@ -150,10 +150,10 @@ void TLampTrapSpike::control()
 			mMActor->setBck("lamptrapspike_up");
 			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
 			ctrl->setFrame(0.0f);
-			ctrl->setSpeed(SMSGetAnmFrameRate() * 0.1f);
+			ctrl->setRate(SMSGetAnmFrameRate() * 0.1f);
 		}
 		if (ctrl->checkPass(6.0f))
-			ctrl->setSpeed(0.0f);
+			ctrl->setRate(0.0f);
 		if (unk13C >= 240) {
 			unk13C = 0;
 			unk138 = 0;
@@ -167,7 +167,7 @@ void TLampTrapSpike::control()
 			mMActor->setBck("lamptrapspike_up");
 			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
 			ctrl->setFrame(6.0f);
-			ctrl->setSpeed(-SMSGetAnmFrameRate());
+			ctrl->setRate(-SMSGetAnmFrameRate());
 		}
 		if (ctrl->checkPass(0.0f)) {
 			unk13C = 0;
@@ -203,7 +203,7 @@ TLampTrapIronHit::TLampTrapIronHit(TLampTrapIron* trap, const char* name)
 	JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ")
 	    ->getChildren()
 	    .push_back(this);
-	offHitFlag(HIT_FLAG_UNK1);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 BOOL TLampTrapIronHit::receiveMessage(THitActor* sender, u32 message)
@@ -238,7 +238,7 @@ TLampTrapIron::TLampTrapIron(const char* name)
 void TLampTrapIron::initMapObj()
 {
 	TMapObjBase::initMapObj();
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 	unk140 = 0;
 	unk13C = mHitPointMax;
 }

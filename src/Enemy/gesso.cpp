@@ -278,7 +278,7 @@ void TGesso::init(TLiveManager* param_1)
 
 	J3DFrameCtrl* ctrl0 = getMActor()->getFrameCtrl(0);
 
-	f32 endFrame = ctrl0->getEndFrame();
+	f32 endFrame = ctrl0->getEnd();
 	f32 inv      = 1.0f / mManager->getCapacity();
 	f32 index    = getInstanceIndex();
 	f32 frame    = endFrame * index * inv;
@@ -310,7 +310,7 @@ void TGesso::reset()
 
 	f32 inv      = 1.0f / mManager->getObjNum();
 	f32 index    = getInstanceIndex();
-	f32 endFrame = ctrl0->getEndFrame();
+	f32 endFrame = ctrl0->getEnd();
 	f32 frame    = endFrame * index * inv;
 	ctrl0->setFrame(frame);
 }
@@ -421,7 +421,7 @@ bool TGesso::doKeepDistance()
 void TGesso::attackToMario()
 {
 	if (mState != STATE_WANDERING) {
-		SMS_SendMessageToMario(this, 0xE);
+		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 		mAttackCooldown = 1;
 		return;
 	}
@@ -436,13 +436,13 @@ void TGesso::attackToMario()
 
 	if (mSpine->getCurrentNerve() == &TNerveGessoPunch::theNerve()) {
 		if (mMActor->getFrameCtrl(0)->checkPass(10.0f))
-			SMS_SendMessageToMario(this, 0xE);
+			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 
 		return;
 	}
 
 	if (!isBckAnm(9))
-		SMS_SendMessageToMario(this, 0xE);
+		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 }
 
 void TGesso::setBehavior()
@@ -560,7 +560,7 @@ void TGesso::setAfterDeadEffect()
 void TGesso::setDeadAnm()
 {
 	if (mGroundPlane->isWaterSurface())
-		onLiveFlag(LIVE_FLAG_UNK2);
+		onLiveFlag(LIVE_FLAG_HIDDEN);
 	else if (mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL)
 	         || mGessoType != TYPE_SURF)
 		setBckAnm(3);
@@ -760,7 +760,7 @@ void TGesso::rollCheck()
 	                unk1E8->mSLSearchAngleOnObj.get(), aware)) {
 		if ((mIsRightSideUp && mPosition.y > SMS_GetMarioPos().y + 10.0f)
 		    || (!mIsRightSideUp && mPosition.y < SMS_GetMarioPos().y - 10.0f)) {
-			onHitFlag(HIT_FLAG_UNK1);
+			onHitFlag(HIT_FLAG_NO_COLLISION);
 			mState = STATE_ROLLING;
 			mSpine->pushNerve(&TNerveGessoRolling::theNerve());
 			if (mIsRightSideUp)
@@ -782,7 +782,7 @@ void TGesso::rollCheck()
 
 void TGesso::rollEnd()
 {
-	offHitFlag(HIT_FLAG_UNK1);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 	mState         = STATE_BEAM_CHILLING;
 	mIsRightSideUp = !mIsRightSideUp;
 	if (mIsRightSideUp)
@@ -804,7 +804,7 @@ void TGesso::turnIn()
 {
 	setBckAnm(2);
 	mTurnAngle = 0.0f;
-	onHitFlag(HIT_FLAG_UNK1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 bool TGesso::turning()
@@ -827,7 +827,7 @@ void TGesso::turnOut()
 {
 	mTurnAngle = 0.0f;
 	unk1C4     = !unk1C4;
-	offHitFlag(HIT_FLAG_UNK1);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 // TODO: the size & logic matches but it won't inline =(
@@ -902,7 +902,7 @@ void TGessoPolluteObj::loadInit(TSpineEnemy* param_1, const char* param_2)
 
 	THitActor::initHitActor(0x10000006, 1, -0x80000000, 10.0f, 10.0f, 10.0f,
 	                        10.0f);
-	offHitFlag(HIT_FLAG_UNK1);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 	unk150       = 0;
 	mGroundPlane = TMap::getIllegalCheckData();
 }
@@ -922,7 +922,7 @@ void TGessoPolluteObj::pollute()
 	unk168 = 0;
 	mMActor->setBck("gero_run1");
 	mMActor->setBck("gero_run_loop1");
-	offHitFlag(HIT_FLAG_UNK1);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 	f32 scale  = unk164;
 	mScaling.z = scale;
 	mScaling.y = scale;
@@ -954,12 +954,12 @@ void TGessoPolluteObj::rebirth()
 	if (unk158 > 20) {
 		unk150 = 0;
 		unk158 = 0;
-		onHitFlag(HIT_FLAG_UNK1);
+		onHitFlag(HIT_FLAG_NO_COLLISION);
 	}
 
 	if (mPosition.y < mGroundHeight - 30.0f) {
 		mVelocity.y = 0.0f;
-		onHitFlag(HIT_FLAG_UNK1);
+		onHitFlag(HIT_FLAG_NO_COLLISION);
 	}
 }
 
@@ -1009,7 +1009,7 @@ void TGessoPolluteObj::sendMessage()
 {
 	for (int i = 0; i < mColCount; ++i) {
 		if (mCollisions[i]->isActorType(0x80000001)) {
-			SMS_SendMessageToMario(this, 0xE);
+			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 			kill();
 		}
 	}

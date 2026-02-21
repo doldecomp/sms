@@ -107,20 +107,21 @@ void TItemManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 		unk74 += unk70;
 		if (unk74 > 360.0f)
 			unk74 -= 360.0f;
-		f32 fVar1   = JMASSin(unk74 * (65536.0f / 360.0f));
-		f32 fVar2   = JMASCos(unk74 * (65536.0f / 360.0f));
-		unk40[0][0] = fVar2;
-		unk40[0][1] = 0.0;
-		unk40[0][2] = fVar1;
-		unk40[0][3] = 0.0;
-		unk40[1][0] = 0.0;
-		unk40[1][1] = 1.0;
-		unk40[1][2] = 0.0;
-		unk40[1][3] = 0.0;
-		unk40[2][0] = -fVar1;
-		unk40[2][1] = 0.0;
-		unk40[2][2] = fVar2;
-		unk40[2][3] = 0.0;
+
+		f32 fVar1        = JMASSin(unk74 * (65536.0f / 360.0f));
+		f32 fVar2        = JMASCos(unk74 * (65536.0f / 360.0f));
+		unk40.mMtx[0][0] = fVar2;
+		unk40.mMtx[0][1] = 0.0;
+		unk40.mMtx[0][2] = fVar1;
+		unk40.mMtx[0][3] = 0.0;
+		unk40.mMtx[1][0] = 0.0;
+		unk40.mMtx[1][1] = 1.0;
+		unk40.mMtx[1][2] = 0.0;
+		unk40.mMtx[1][3] = 0.0;
+		unk40.mMtx[2][0] = -fVar1;
+		unk40.mMtx[2][1] = 0.0;
+		unk40.mMtx[2][2] = fVar2;
+		unk40.mMtx[2][3] = 0.0;
 	}
 
 	TMapObjBaseManager::perform(param_1, param_2);
@@ -161,18 +162,7 @@ TItemManager::TItemManager(const char* name)
 	unk74 = 0.0f;
 	unk78 = nullptr;
 
-	unk40[2][3] = 0.0;
-	unk40[1][3] = 0.0;
-	unk40[0][3] = 0.0;
-	unk40[1][2] = 0.0;
-	unk40[0][2] = 0.0;
-	unk40[2][1] = 0.0;
-	unk40[0][1] = 0.0;
-	unk40[2][0] = 0.0;
-	unk40[1][0] = 0.0;
-	unk40[2][2] = 1.0;
-	unk40[1][1] = 1.0;
-	unk40[0][0] = 1.0;
+	unk40.identity();
 
 	gpItemManager = this;
 }

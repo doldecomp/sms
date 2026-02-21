@@ -7,7 +7,7 @@ class TLiveActor;
 
 class THelpActor : public THitActor {
 public:
-	THelpActor(const char*);
+	THelpActor(const char* = "バルーンヘルプ");
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -24,7 +24,7 @@ public:
 
 class TSwitchHelpActor : public THelpActor {
 public:
-	TSwitchHelpActor(const char*);
+	TSwitchHelpActor(const char* name = "スイッチバルーンヘルプ");
 
 	virtual bool check();
 };

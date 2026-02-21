@@ -2,10 +2,12 @@
 #define _MSL_COMMON_ALGORITHM_
 
 #include <string.h>
+#include <msl_utility>
 
 namespace std {
 
-template <class T, bool = true, bool = false> struct __copy {
+template <class T, bool = Metrowerks::is_POD<T>::value, bool = sizeof(T) < 4>
+struct __copy {
 	static T* copy(T* first, T* last, T* result)
 	{
 		for (; first < last; ++first, ++result)
@@ -19,7 +21,15 @@ template <class T> inline T* copy(T* first, T* last, T* result)
 	return __copy<T>::copy(first, last, result);
 }
 
-template <class T, bool = true, bool = false> struct __copy_backward {
+template <class I, class O> inline O copy_backward(I first, I last, O result)
+{
+	while (last != first)
+		*--result = *--last;
+	return result;
+}
+
+template <class T, bool = Metrowerks::is_POD<T>::value, bool = sizeof(T) < 4>
+struct __copy_backward {
 	static T* copy_backward(T* first, T* last, T* result)
 	{
 		while (last > first)
@@ -31,6 +41,13 @@ template <class T, bool = true, bool = false> struct __copy_backward {
 template <class T> inline T* copy_backward(T* first, T* last, T* result)
 {
 	return __copy_backward<T>::copy_backward(first, last, result);
+}
+
+template <class T>
+inline T* copy_backward(const T* first, const T* last, T* result)
+{
+	return __copy_backward<T>::copy_backward(const_cast<T*>(first),
+	                                         const_cast<T*>(last), result);
 }
 
 } // namespace std

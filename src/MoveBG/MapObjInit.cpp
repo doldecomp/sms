@@ -11038,9 +11038,9 @@ void TMapObjBase::initBckMoveData()
 		// info.mTranslate.x     = 0.0f;
 		// info.mTranslate.y     = 0.0f;
 		// info.mTranslate.z     = 0.0f;
-		move->unk8            = new J3DFrameCtrl(move->unk4->mMaxFrame);
-		move->unk8->mLoopMode = 2;
-		move->unk8->mSpeed    = SMSGetAnmFrameRate();
+		move->unk8 = new J3DFrameCtrl(move->unk4->mMaxFrame);
+		move->unk8->setAttribute(J3DFrameCtrl::ATTR_LOOP);
+		move->unk8->setRate(SMSGetAnmFrameRate());
 	}
 }
 #pragma dont_inline off
@@ -11053,8 +11053,6 @@ bool isAlreadyRegistered(const TMapObjAnimDataInfo* anim, int i)
 			return true;
 	return false;
 }
-
-static void dummy6(const char*) {};
 
 MActor* TMapObjBase::initMActor(const char* param_1, const char* param_2,
                                 u32 param_3)

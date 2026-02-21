@@ -25,15 +25,23 @@ struct TMarioControllerWork {
 	/* 0x10 */ f32 mStickH;
 	/* 0x14 */ f32 mStickV;
 	/* 0x18 */ f32 mStickDist;
-	/* 0x1C */ f32 mAnalogL;
-	/* 0x20 */ f32 mAnalogR;
+	/* 0x1C */ f32 mAnalogR;
+	/* 0x20 */ f32 mAnalogL;
 };
 
 class TMarioGamePad : public JUTGamePad {
 public:
 	TMarioGamePad(EPadPort port)
 	    : JUTGamePad(port)
+	    , mMeaning(0)
+	    , mEnabledFrameMeaning(0)
+	    , mDisabledFrameMeaning(0)
+	    , _DC(0)
+	    , _DE(0)
+	    , _E0(0)
+	    , mFlags(0)
 	{
+		reset();
 	}
 	virtual ~TMarioGamePad();
 
@@ -70,13 +78,8 @@ public:
 		PAD_FLAG_0x80 = 0x80,
 	};
 
-	struct StickPos {
-		f32 x;
-		f32 y;
-	};
-
 	// Fabricated
-	inline bool checkReset(s32* resetPort)
+	static inline bool checkReset(s32* resetPort)
 	{
 		if (resetPort != 0) {
 			*resetPort = JUTGamePad::C3ButtonReset::sResetOccurredPort;
@@ -85,12 +88,12 @@ public:
 	}
 
 	// Fabricated
-	inline void handleReset(s32 resetPort)
+	static inline void handleReset(s32 resetPort)
 	{
 		if (resetPort == JUTGamePad::EPortInvalid) {
-			mResetFlag |= 0xf;
+			mResetFlag.on(0xf);
 		} else {
-			mResetFlag |= (u16)(1 << resetPort);
+			mResetFlag.on(1 << resetPort);
 		}
 		JUTGamePad::C3ButtonReset::sResetOccurred = false;
 	}
@@ -107,13 +110,6 @@ public:
 	}
 
 	// Fabricated
-	inline void resetStick(StickPos& stick)
-	{
-		stick.x = 0.0f;
-		stick.y = 0.0f;
-	}
-
-	// Fabricated
 	inline u32 resetMeaning()
 	{
 		u16 dc = _DC;
@@ -124,19 +120,18 @@ public:
 		}
 
 		if ((dc & 1) != 0) {
-			if (mButton.mAnalogRf > 0.5f) {
+			if (mButton.mAnalogRf > 0.25f) {
 				_DC |= 1;
 			}
-		} else if (mButton.mAnalogRf > 0.25f) {
+		} else if (mButton.mAnalogRf > 0.5f) {
 			_DC |= 1;
 		}
 
 		_DE = _DC & ~dc;
 		_E0 = dc & ~_DC;
 
-		for (int i = 0; i < VARIANTS; i++) {
-			resetStick(mCompSPos[i]);
-		}
+		for (int i = 0; i < 10; i++)
+			mCompSPos[i] = 0.0f;
 
 		u32 prevMeaning = mMeaning;
 		mMeaning        = 0;
@@ -148,12 +143,32 @@ public:
 	void onFlag(u32 flag) { mFlags |= flag; }
 	void offFlag(u32 flag) { mFlags &= ~flag; }
 
-	u32 read();
+	// fabricated
+	bool isSomethingPushed() const { return mResetFlag.check(1 << mPortNum); }
+
+	static u32 read();
 	void onNeutralMarioKey();
 	void reset();
 	void updateMeaning();
 
-	/* 0xA8 */ StickPos mCompSPos[VARIANTS];
+	// fabricated
+	bool checkMeaning(u32 meaning) const { return mMeaning & meaning; }
+
+	// fabricated
+	bool checkFrameMeaning(u32 meaning) const
+	{
+		return mEnabledFrameMeaning & meaning;
+	}
+
+	// fabricated
+	f32 getMainStickInDir(f32 x, f32 y) const
+	{
+		return mMainStick.mPosX * x + mMainStick.mPosY * y;
+	}
+
+public:
+	// NOTE: suprisingly, only flat array matches
+	/* 0xA8 */ f32 mCompSPos[2 * VARIANTS];
 	/* 0xD0 */ u32 mMeaning;
 	/* 0xD4 */ u32 mEnabledFrameMeaning;
 	/* 0xD8 */ u32 mDisabledFrameMeaning;
@@ -168,7 +183,7 @@ public:
 	/* 0xE8 */ s32 mDisabledFrames;
 	/* 0xEC */ u32 _EC; // padding?
 
-	static u16 mResetFlag;
+	static JDrama::TFlagT<u16> mResetFlag;
 };
 
 #endif

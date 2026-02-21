@@ -5,7 +5,7 @@
 using namespace JDrama;
 
 TCamera::~TCamera() { }
-u32 TCamera::JSGGetFlag() const { return mFlag.mValue; }
+u32 TCamera::JSGGetFlag() const { return mFlag.get(); }
 void TCamera::JSGSetFlag(u32 flag) { mFlag.set(flag); }
 float TCamera::JSGGetProjectionNear() const { return mNear; }
 void TCamera::JSGSetProjectionNear(float near) { mNear = near; }
@@ -34,13 +34,13 @@ void TLookAtCamera::perform(u32 param_1, TGraphics* param_2)
 	if (!(param_1 & 0x14))
 		return;
 
-	C_MTXPerspective(param_2->unk74.mMtx, mFovy, mAspect, mNear, mFar);
+	C_MTXPerspective(param_2->mProjMtx.mMtx, mFovy, mAspect, mNear, mFar);
 	param_2->mNearPlane = mNear;
 	param_2->mFarPlane  = mFar;
-	C_MTXLookAt(param_2->unkB4.mMtx, &mPosition, &mUp, &mTarget);
+	C_MTXLookAt(param_2->mViewMtx.mMtx, &mPosition, &mUp, &mTarget);
 
 	if (param_1 & 0x10)
-		GXSetProjection(param_2->unk74.mMtx, GX_PERSPECTIVE);
+		GXSetProjection(param_2->mProjMtx.mMtx, GX_PERSPECTIVE);
 }
 JStage::TECameraProjection TLookAtCamera::JSGGetProjectionType() const
 {
@@ -74,14 +74,14 @@ void TOrthoProj::perform(u32 param_1, TGraphics* param_2)
 	if (!(param_1 & 0x14))
 		return;
 
-	C_MTXOrtho(param_2->unk74.mMtx, mField[1], mField[3], mField[0], mField[2],
-	           mNear, mFar);
+	C_MTXOrtho(param_2->mProjMtx.mMtx, mField[1], mField[3], mField[0],
+	           mField[2], mNear, mFar);
 	param_2->mNearPlane = mNear;
 	param_2->mFarPlane  = mFar;
-	MTXTrans(param_2->unkB4.mMtx, mPosition.x, mPosition.y, mPosition.z);
+	MTXTrans(param_2->mViewMtx.mMtx, mPosition.x, mPosition.y, mPosition.z);
 
 	if (param_1 & 0x10)
-		GXSetProjection(param_2->unk74.mMtx, GX_ORTHOGRAPHIC);
+		GXSetProjection(param_2->mProjMtx.mMtx, GX_ORTHOGRAPHIC);
 }
 JStage::TECameraProjection TOrthoProj::JSGGetProjectionType() const
 {

@@ -22,7 +22,7 @@ class TConsoleStr;
 
 class TGCConsole2 : public JDrama::TViewObj {
 public:
-	TGCConsole2(const char* name);
+	TGCConsole2(const char* name = "<TGCConsole2>");
 	void load(JSUMemoryInputStream&);
 	void loadAfter();
 	void entryHelpActor(THelpActor*);
@@ -42,7 +42,7 @@ public:
 	void startAppearTelop(bool);
 	void startDisappearTelop();
 	void startDisappearTimer();
-	void startAppearTimer(int, long);
+	void startAppearTimer(int, s32);
 	void startInsertTimer();
 	void startAppearJetBalloon(int, int);
 	void startInsertJetBalloon();
@@ -58,7 +58,7 @@ public:
 	void startAppearMario(bool);
 	void processMoveNozzle();
 	void changeNum(TBlendPane*, int, int);
-	void setTimer(long);
+	void setTimer(s32);
 	void startMoveTimer(int);
 	void stopMoveTimer();
 	int getFinishedTime();

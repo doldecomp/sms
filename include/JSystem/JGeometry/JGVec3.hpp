@@ -20,11 +20,23 @@ public:
 
 	// fabricated
 	TVec3(s16 x_, s16 y_, s16 z_) { set(x_, y_, z_); }
-	template <class TY> void set(TY x_, TY y_, TY z_)
+
+	// I replaced this with the one in TP and it matched perfectly for me
+	// I could not see it was in use anywhere, so i suspect the
+	// replacement below is more correct. Yell at me to move it back if needed
+	// in PR :) Or else i will remove this! -AZ template <class TY> void set(TY
+	// x_, TY y_, TY z_)
+	// {
+	// 	x = x_;
+	// 	y = y_;
+	// 	z = z_;
+	// }
+
+	void set(s16 x_, s16 y_, s16 z_)
 	{
-		x = x_;
-		y = y_;
-		z = z_;
+		x = (s16)x_;
+		y = (s16)y_;
+		z = (s16)z_;
 	}
 };
 
@@ -206,12 +218,17 @@ public:
 
 	f32 length() const { return TUtil<f32>::sqrt(squared()); }
 
+	// @fabricated
+	f32 length2() const { return length(); }
+
 	bool isZero() const { return squared() <= TUtil<f32>::epsilon(); }
 
 	// present in tww so likely real
 	void setLength(f32 length) { setLength(*this, length); }
 
 	void normalize() { setLength(*this, 1.0f); }
+
+	void normalize(const TVec3<f32>& other) { setLength(other, 1.0f); }
 
 	void setLength(const TVec3<f32>& v, f32 length)
 	{

@@ -4,21 +4,29 @@
 #include <JSystem/JDrama/JDRActor.hpp>
 
 enum TActorTypeBits {
-	ACTOR_TYPE_PLAYER = 0x80000000,
-	ACTOR_TYPE_ENEMY  = 0x10000000,
-	ACTOR_TYPE_BOSS   = 0x8000000,
+	ACTOR_TYPE_UNK4000000  = 0x4000000,
+	ACTOR_TYPE_BOSS        = 0x8000000,
+	ACTOR_TYPE_ENEMY       = 0x10000000,
+	ACTOR_TYPE_UNK40000000 = 0x40000000,
+	ACTOR_TYPE_PLAYER      = 0x80000000,
+
+	ACTOR_TYPE_MASK = 0xFFFF0000,
 };
 
 enum THitMessageType {
 	HIT_MESSAGE_HIP_DROP         = 1,
+	HIT_MESSAGE_UNK7             = 7,
 	HIT_MESSAGE_ATTACK           = 14,
 	HIT_MESSAGE_SPRAYED_BY_WATER = 15,
 };
 
 enum THitFlagBits {
-	HIT_FLAG_UNK1 = 0x1,
-	HIT_FLAG_UNK2 = 0x2,
-	HIT_FLAG_UNK4 = 0x4,
+	HIT_FLAG_NO_COLLISION = 0x1,
+	HIT_FLAG_UNK2         = 0x2,
+	HIT_FLAG_UNK4         = 0x4,
+	HIT_FLAG_UNK8000000   = 0x8000000,
+	HIT_FLAG_UNK10000000  = 0x10000000,
+	HIT_FLAG_UNK40000000  = 0x40000000,
 };
 
 class THitActor : public JDrama::TActor {
@@ -50,6 +58,7 @@ public:
 	THitActor* getCollision(int i) { return mCollisions[i]; }
 	u16 getColNum() { return mColCount; }
 	bool checkHitFlag(u32 flag) { return unk64 & flag; }
+	bool checkHitFlag2(u32 flag) { return unk64 & flag ? true : false; }
 	void onHitFlag(u32 flag) { unk64 |= flag; }
 	void offHitFlag(u32 flag) { unk64 &= ~flag; }
 	f32 getAttackRadius() const { return mAttackRadius; }
@@ -77,6 +86,7 @@ public:
 		mDamageHeight = v;
 		calcEntryRadius();
 	}
+	f32 getEntryRadius() const { return mEntryRadius; }
 
 public:
 	/* 0x44 */ THitActor** mCollisions;

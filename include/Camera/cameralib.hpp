@@ -20,9 +20,9 @@ void CLBCalcPointInCubeRatio(const Vec&, const Vec&, const Vec&, const Vec&,
                              f32*, f32*, f32*);
 void CLBCalcRotateZXYTranslateMatrix(MtxPtr, const Vec&, const Vec&);
 void CLBCalcScaleTranslateMatrix(MtxPtr, const Vec&, const Vec&);
-void CLBChaseAngleDecrease(s16*, s16, s16);
-void CLBChaseDecrease(f32*, f32, f32, f32);
-void CLBChaseSpecialDecrease(f32*, f32, f32, f32);
+bool CLBChaseAngleDecrease(s16*, s16, s16);
+bool CLBChaseDecrease(f32*, f32, f32, f32);
+bool CLBChaseSpecialDecrease(f32*, f32, f32, f32);
 void CLBCrossToPolar(const Vec&, const Vec&, f32*, s16*, s16*);
 bool CLBIsPointInCube(const Vec&, const Vec&, const Vec&, const Vec&);
 void CLBPolarToCross(const Vec&, Vec*, f32, s16, s16);
@@ -62,8 +62,13 @@ bool CLBChaseGeneralConstantSpecifySpeed(T* param_1, T param_2, T param_3)
 }
 template <class T> void CLBEaseInInbetween(T, T, T);
 template <class T> void CLBEaseOutInbetween(T, T, T);
-template <class T> void CLBLinearInbetween(T, T, T);
-template <class T> void CLBPalFrame(T);
+
+template <class T> T CLBLinearInbetween(T a, T b, f32 f)
+{
+	return (T)(a + f * (b - a));
+}
+
+template <class T> T CLBPalFrame(T);
 template <class T> void CLBPalIntSpeed(T);
 template <class T> T CLBRoundf(f32);
 template <class T> void CLBTwoDegreeGeneralInbetween(T, T, f32, f32);
