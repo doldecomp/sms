@@ -86,13 +86,13 @@ void TLampTrapSpike::control()
 			mMActor->setBck("lamptrapspike_up");
 			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
 			ctrl->setFrame(6.0f);
-			ctrl->setSpeed(SMSGetAnmFrameRate());
+			ctrl->setRate(SMSGetAnmFrameRate());
 		}
 		if (mMActor->curAnmEndsNext(0, nullptr)) {
 			unk13C = 0;
 			unk138 = 2;
 		}
-		if (ctrl->getCurrentFrame() > ctrl->getEndFrame() * 0.5f)
+		if (ctrl->getFrame() > ctrl->getEnd() * 0.5f)
 			bVar1 = true;
 	} break;
 
@@ -102,13 +102,13 @@ void TLampTrapSpike::control()
 			mMActor->setBck("lamptrapspike_down");
 			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
 			ctrl->setFrame(0.0f);
-			ctrl->setSpeed(SMSGetAnmFrameRate() * 0.8f);
+			ctrl->setRate(SMSGetAnmFrameRate() * 0.8f);
 		}
 		if (mMActor->curAnmEndsNext(0, nullptr)) {
 			unk13C = 0;
 			unk138 = 3;
 		}
-		if (ctrl->getCurrentFrame() > ctrl->getEndFrame() * 0.5f)
+		if (ctrl->getFrame() > ctrl->getEnd() * 0.5f)
 			bVar1 = true;
 	} break;
 
@@ -116,8 +116,8 @@ void TLampTrapSpike::control()
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_up");
 			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
-			ctrl->setFrame(ctrl->getEndFrame());
-			ctrl->setSpeed(0.0f);
+			ctrl->setFrame(ctrl->getEnd());
+			ctrl->setRate(0.0f);
 			if (gpMSound->gateCheck(0x3863))
 				MSoundSESystem::MSoundSE::startSoundActor(0x3863, mPosition, 0,
 				                                          nullptr, 0, 4);
@@ -133,8 +133,8 @@ void TLampTrapSpike::control()
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_down");
 			if (J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0)) {
-				ctrl->setFrame(ctrl->getEndFrame());
-				ctrl->setSpeed(0.0f);
+				ctrl->setFrame(ctrl->getEnd());
+				ctrl->setRate(0.0f);
 			}
 		}
 		if (unk13C >= 120) {
@@ -150,10 +150,10 @@ void TLampTrapSpike::control()
 			mMActor->setBck("lamptrapspike_up");
 			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
 			ctrl->setFrame(0.0f);
-			ctrl->setSpeed(SMSGetAnmFrameRate() * 0.1f);
+			ctrl->setRate(SMSGetAnmFrameRate() * 0.1f);
 		}
 		if (ctrl->checkPass(6.0f))
-			ctrl->setSpeed(0.0f);
+			ctrl->setRate(0.0f);
 		if (unk13C >= 240) {
 			unk13C = 0;
 			unk138 = 0;
@@ -167,7 +167,7 @@ void TLampTrapSpike::control()
 			mMActor->setBck("lamptrapspike_up");
 			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
 			ctrl->setFrame(6.0f);
-			ctrl->setSpeed(-SMSGetAnmFrameRate());
+			ctrl->setRate(-SMSGetAnmFrameRate());
 		}
 		if (ctrl->checkPass(0.0f)) {
 			unk13C = 0;

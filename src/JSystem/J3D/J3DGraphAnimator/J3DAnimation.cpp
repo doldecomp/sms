@@ -6,29 +6,29 @@
 
 void J3DFrameCtrl::init(s16 end)
 {
-	mLoopMode     = 2;
-	mFlags        = 0;
-	mStartFrame   = 0;
-	mEndFrame     = end;
-	mLoopFrame    = 0;
-	mSpeed        = 1.0;
-	mCurrentFrame = 0.0;
+	mAttribute = ATTR_LOOP;
+	mState     = 0;
+	mStart     = 0;
+	mEnd       = end;
+	mLoop      = 0;
+	mRate      = 1.0;
+	mFrame     = 0.0;
 }
 
 BOOL J3DFrameCtrl::checkPass(float pass_frame)
 {
-	f32 cur_frame  = mCurrentFrame;
-	f32 next_frame = cur_frame + mSpeed;
+	f32 cur_frame  = mFrame;
+	f32 next_frame = cur_frame + mRate;
 
-	switch (mLoopMode) {
-	case LOOP_ONCE_e:
-	case LOOP_ONCE_RESET_e:
-		if (next_frame < mStartFrame) {
-			next_frame = mStartFrame;
+	switch (mAttribute) {
+	case ATTR_ONCE:
+	case ATTR_ONCE_AND_RESET:
+		if (next_frame < mStart) {
+			next_frame = mStart;
 		}
 
-		if (next_frame >= mEndFrame) {
-			next_frame = mEndFrame - 0.001f;
+		if (next_frame >= mEnd) {
+			next_frame = mEnd - 0.001f;
 		}
 
 		if (cur_frame <= next_frame) {
@@ -44,58 +44,58 @@ BOOL J3DFrameCtrl::checkPass(float pass_frame)
 		}
 		return false;
 
-	case LOOP_REPEAT_e:
-		if (cur_frame < mStartFrame) {
-			while (next_frame < mStartFrame) {
-				if (mLoopFrame - mStartFrame <= 0.0f) {
+	case ATTR_LOOP:
+		if (cur_frame < mStart) {
+			while (next_frame < mStart) {
+				if (mLoop - mStart <= 0.0f) {
 					break;
 				}
-				next_frame += mLoopFrame - mStartFrame;
+				next_frame += mLoop - mStart;
 			}
 
-			if (next_frame <= pass_frame && pass_frame < mLoopFrame) {
+			if (next_frame <= pass_frame && pass_frame < mLoop) {
 				return true;
 			} else {
 				return false;
 			}
-		} else if (mEndFrame <= cur_frame) {
-			while (next_frame >= mEndFrame) {
-				if (mEndFrame - mLoopFrame <= 0.0f) {
+		} else if (mEnd <= cur_frame) {
+			while (next_frame >= mEnd) {
+				if (mEnd - mLoop <= 0.0f) {
 					break;
 				}
-				next_frame -= mEndFrame - mLoopFrame;
+				next_frame -= mEnd - mLoop;
 			}
 
-			if (mLoopFrame <= pass_frame && pass_frame < next_frame) {
+			if (mLoop <= pass_frame && pass_frame < next_frame) {
 				return true;
 			} else {
 				return false;
 			}
-		} else if (next_frame < mStartFrame) {
-			while (next_frame < mStartFrame) {
-				if (mLoopFrame - mStartFrame <= 0.0f) {
+		} else if (next_frame < mStart) {
+			while (next_frame < mStart) {
+				if (mLoop - mStart <= 0.0f) {
 					break;
 				}
-				next_frame += mLoopFrame - mStartFrame;
+				next_frame += mLoop - mStart;
 			}
 
-			if ((mStartFrame <= pass_frame && pass_frame < cur_frame)
-			    || (next_frame <= pass_frame && pass_frame < mLoopFrame)) {
+			if ((mStart <= pass_frame && pass_frame < cur_frame)
+			    || (next_frame <= pass_frame && pass_frame < mLoop)) {
 				return true;
 			} else {
 				return false;
 			}
-		} else if (mEndFrame <= next_frame) {
-			while (next_frame >= mEndFrame) {
-				if (mEndFrame - mLoopFrame <= 0.0f) {
+		} else if (mEnd <= next_frame) {
+			while (next_frame >= mEnd) {
+				if (mEnd - mLoop <= 0.0f) {
 					break;
 				}
 
-				next_frame -= mEndFrame - mLoopFrame;
+				next_frame -= mEnd - mLoop;
 			}
 
-			if ((cur_frame <= pass_frame && pass_frame < mEndFrame)
-			    || (mLoopFrame <= pass_frame && pass_frame < next_frame)) {
+			if ((cur_frame <= pass_frame && pass_frame < mEnd)
+			    || (mLoop <= pass_frame && pass_frame < next_frame)) {
 				return true;
 			} else {
 				return false;
@@ -111,14 +111,14 @@ BOOL J3DFrameCtrl::checkPass(float pass_frame)
 		}
 		return false;
 
-	case LOOP_MIRROR_ONCE_e:
-	case LOOP_MIRROR_REPEAT_e:
-		if (next_frame >= mEndFrame) {
-			next_frame = mEndFrame - 0.001f;
+	case ATTR_PING_PONG:
+	case ATTR_PING_PONG_LOOP:
+		if (next_frame >= mEnd) {
+			next_frame = mEnd - 0.001f;
 		}
 
-		if (next_frame < mStartFrame) {
-			next_frame = mStartFrame;
+		if (next_frame < mStart) {
+			next_frame = mStart;
 		}
 
 		if (cur_frame <= next_frame) {
@@ -141,70 +141,74 @@ BOOL J3DFrameCtrl::checkPass(float pass_frame)
 
 void J3DFrameCtrl::update()
 {
+	mState = 0;
+	mFrame += mRate;
+	switch (mAttribute) {
+	case ATTR_ONCE:
+		if (mFrame < mStart) {
+			mFrame = mStart;
+			mRate  = 0.0f;
+			mState |= STATE_COMPLETED_ONCE;
+		}
+		if (mFrame >= mEnd) {
+			mFrame = mEnd - 0.001f;
+			mRate  = 0.0f;
+			mState |= STATE_COMPLETED_ONCE;
+		}
+		break;
 
-	mFlags = 0;
-	mCurrentFrame += mSpeed;
-	switch (mLoopMode) {
-	case LOOP_ONCE_e:
-		if (mCurrentFrame < mStartFrame) {
-			mCurrentFrame = mStartFrame;
-			mSpeed        = 0.0f;
-			mFlags |= 1;
+	case ATTR_ONCE_AND_RESET:
+		if (mFrame < mStart) {
+			mFrame = mStart;
+			mRate  = 0.0f;
+			mState |= STATE_COMPLETED_ONCE;
 		}
-		if (mCurrentFrame >= mEndFrame) {
-			mCurrentFrame = mEndFrame - 0.001f;
-			mSpeed        = 0.0f;
-			mFlags |= 1;
+		if (mFrame >= mEnd) {
+			mFrame = mStart;
+			mRate  = 0.0f;
+			mState |= STATE_COMPLETED_ONCE;
 		}
 		break;
-	case LOOP_ONCE_RESET_e:
-		if (mCurrentFrame < mStartFrame) {
-			mCurrentFrame = mStartFrame;
-			mSpeed        = 0.0f;
-			mFlags |= 1;
-		}
-		if (mCurrentFrame >= mEndFrame) {
-			mCurrentFrame = mStartFrame;
-			mSpeed        = 0.0f;
-			mFlags |= 1;
-		}
-		break;
-	case LOOP_REPEAT_e:
-		while (mCurrentFrame < mStartFrame) {
-			mFlags |= 2;
-			if (mLoopFrame - mStartFrame <= 0.0f) {
+
+	case ATTR_LOOP:
+		while (mFrame < mStart) {
+			mState |= STATE_LOOPED_ONCE;
+			if (mLoop - mStart <= 0.0f) {
 				break;
 			}
-			mCurrentFrame += mLoopFrame - mStartFrame;
+			mFrame += mLoop - mStart;
 		}
-		while (mCurrentFrame >= mEndFrame) {
-			mFlags |= 2;
-			if (mEndFrame - mLoopFrame <= 0.0f) {
+
+		while (mFrame >= mEnd) {
+			mState |= STATE_LOOPED_ONCE;
+			if (mEnd - mLoop <= 0.0f) {
 				break;
 			}
-			mCurrentFrame -= mEndFrame - mLoopFrame;
+			mFrame -= mEnd - mLoop;
 		}
 		break;
-	case LOOP_MIRROR_ONCE_e:
-		if (mCurrentFrame >= mEndFrame) {
-			mCurrentFrame = mEndFrame - 0.001f;
-			mSpeed        = -mSpeed;
+
+	case ATTR_PING_PONG:
+		if (mFrame >= mEnd) {
+			mFrame = mEnd - 0.001f;
+			mRate  = -mRate;
 		}
-		if (mCurrentFrame < mStartFrame) {
-			mCurrentFrame = mStartFrame;
-			mSpeed        = 0.0f;
-			mFlags |= 1;
+		if (mFrame < mStart) {
+			mFrame = mStart;
+			mRate  = 0.0f;
+			mState |= STATE_COMPLETED_ONCE;
 		}
 		break;
-	case LOOP_MIRROR_REPEAT_e:
-		if (mCurrentFrame >= mEndFrame) {
-			mCurrentFrame = mEndFrame - 0.001f;
-			mSpeed        = -mSpeed;
+
+	case ATTR_PING_PONG_LOOP:
+		if (mFrame >= mEnd) {
+			mFrame = mEnd - 0.001f;
+			mRate  = -mRate;
 		}
-		if (mCurrentFrame < mStartFrame) {
-			mCurrentFrame = mStartFrame;
-			mSpeed        = -mSpeed;
-			mFlags |= 2;
+		if (mFrame < mStart) {
+			mFrame = mStart;
+			mRate  = -mRate;
+			mState |= STATE_LOOPED_ONCE;
 		}
 		break;
 	}

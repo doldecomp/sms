@@ -10,46 +10,79 @@ class J3DTransformInfo;
 class J3DTextureSRTInfo;
 class J3DModelData;
 
+/**
+ * @brief Animation frame controller with configurable playback modes.
+ * Supports once, loop, and ping-pong modes, with optional loop points.
+ */
 class J3DFrameCtrl {
 public:
-	enum Attribute_e {
-		LOOP_ONCE_e,
-		LOOP_ONCE_RESET_e,
-		LOOP_REPEAT_e,
-		LOOP_MIRROR_ONCE_e,
-		LOOP_MIRROR_REPEAT_e,
+	/// Playback modes.
+	enum {
+		ATTR_ONCE,           ///< Play to end and stop.
+		ATTR_ONCE_AND_RESET, ///< Play to end, reset to start, and stop.
+		ATTR_LOOP,           ///< Loop continuously between loop point and end.
+		ATTR_PING_PONG,      ///< Play forward then backward, stop at start.
+		ATTR_PING_PONG_LOOP, ///< Alternate forward/backward indefinitely.
+	};
+
+	/// State flags, reset each update(). Check with checkState().
+	enum {
+		STATE_COMPLETED_ONCE = 0x1, ///< Finished once (any mode)
+		STATE_LOOPED_ONCE    = 0x2, ///< Looped once (only loop modes)
 	};
 
 	J3DFrameCtrl() { init(0); };
-	J3DFrameCtrl(s16 s) { init(s); };
+	J3DFrameCtrl(s16 end) { init(end); };
 	virtual ~J3DFrameCtrl() { }
 
-	void setSpeed(f32 speed) { mSpeed = speed; }
-	void setAttribute(u8 attr) { mLoopMode = attr; }
-	f32 getRate() const { return mSpeed; }
-	void setRate(f32 rate) { mSpeed = rate; }
-	void setEndFrame(s16 end_frame) { mEndFrame = end_frame; }
-	f32 getCurrentFrame() const { return mCurrentFrame; }
-	void setFrame(f32 frame) { mCurrentFrame = frame; }
-	s16 getEndFrame() const { return mEndFrame; }
+	/// Initialize to ATTR_LOOP with rate 1.0 and frame range [0, @p end).
+	void init(s16 end);
 
-	void init(s16);
-	BOOL checkPass(float);
+	/// Test if @p pass_frame will be crossed during the next advance.
+	BOOL checkPass(float pass_frame);
+
+	/// Advance the frame by the current rate.
 	void update();
 
-	bool checkFlag(u32 flag) const { return (mFlags & flag) ? 1 : 0; }
+	s16 getStart() const { return mStart; }
+	void setStart(s16 start)
+	{
+		mStart = start;
+		mFrame = start;
+	}
 
-public:
-	// TODO: probably private and always accessed via getters/setters judging by
-	// stack frame padding
-	// TODO: Stolen from SMG, might be wrong
-	/* 0x4 */ u8 mLoopMode;
-	/* 0x5 */ u8 mFlags;
-	/* 0x6 */ s16 mStartFrame;
-	/* 0x8 */ s16 mEndFrame;
-	/* 0xA */ s16 mLoopFrame;
-	/* 0xC */ f32 mSpeed;
-	/* 0x10 */ f32 mCurrentFrame;
+	f32 getFrame() const { return mFrame; }
+	void setFrame(f32 frame) { mFrame = frame; }
+
+	s16 getEnd() const { return mEnd; }
+	void setEnd(s16 end) { mEnd = end; }
+
+	f32 getRate() const { return mRate; }
+	void setRate(f32 rate) { mRate = rate; }
+
+	s16 getLoop() const { return mLoop; }
+	void setLoop(s16 loop) { mLoop = loop; }
+
+	u8 getAttribute() const { return mAttribute; }
+	void setAttribute(u8 attr) { mAttribute = attr; }
+
+	void reset()
+	{
+		mFrame = mStart;
+		mRate  = 1.0f;
+	}
+
+	/// Test state flags, e.g. `checkState(STATE_COMPLETED_ONCE)`.
+	bool checkState(u32 mask) const { return (mState & mask) ? 1 : 0; }
+
+private:
+	/* 0x4 */ u8 mAttribute; ///< Playback mode (see ATTR_*).
+	/* 0x5 */ u8 mState;   ///< State flags (see STATE_*), reset each update().
+	/* 0x6 */ s16 mStart;  ///< Start frame (inclusive).
+	/* 0x8 */ s16 mEnd;    ///< End frame (exclusive).
+	/* 0xA */ s16 mLoop;   ///< Loop point for loop modes (inclusive).
+	/* 0xC */ f32 mRate;   ///< Frame advance per update (positive or negative).
+	/* 0x10 */ f32 mFrame; ///< Current frame (can be fractional).
 };
 
 struct J3DAnmKeyTableBase {

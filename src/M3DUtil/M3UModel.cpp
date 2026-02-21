@@ -22,8 +22,8 @@ void M3UModel::changeMtxCalcAnmTransform(int param_1, u8 param_2)
 	ptr.mAnmTransformIdx   = param_2;
 
 	J3DFrameCtrl& ctrl = unkC[ptr.mFrameCalcIdx];
-	ctrl.mEndFrame     = unk4->unk4[param_2]->getFrameMax();
-	ctrl.mCurrentFrame = 0.0f;
+	ctrl.setEnd(unk4->unk4[param_2]->getFrameMax());
+	ctrl.setFrame(0.0f);
 }
 
 void M3UModel::changeAnmTexPattern(int param_1, u8 param_2)
@@ -32,8 +32,8 @@ void M3UModel::changeAnmTexPattern(int param_1, u8 param_2)
 	ptr[0]  = param_2;
 
 	J3DFrameCtrl& ctrl = getFrameCtrl(ptr[1]);
-	ctrl.mEndFrame     = unk4->unk8[param_2]->getFrameMax();
-	ctrl.mCurrentFrame = 0.0f;
+	ctrl.setEnd(unk4->unk8[param_2]->getFrameMax());
+	ctrl.setFrame(0.0f);
 }
 
 void M3UModel::updateInMotion()
@@ -51,7 +51,7 @@ void M3UModel::updateInMotion()
 			jnt->setMtxCalc(nullptr);
 			continue;
 		}
-		f32 currentFrame = frameCtrl.getCurrentFrame();
+		f32 currentFrame = frameCtrl.getFrame();
 		anmTrans->setFrame(currentFrame);
 
 		// Possibly inlined? Feels like it fits more in M3UModelCommon
@@ -99,7 +99,7 @@ void M3UModel::entryIn()
 		J3DFrameCtrl& frameCtrl = getFrameCtrl(frameCtrlId);
 		if (patternId != 0xff) {
 			J3DAnmTexPattern* pattern = unk4->unk8[patternId];
-			pattern->setFrame(frameCtrl.getCurrentFrame());
+			pattern->setFrame(frameCtrl.getFrame());
 			unk8->mModelData->setTexNoAnimator(pattern, unk4->unkC[ids[0]]);
 		}
 	}

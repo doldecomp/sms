@@ -226,12 +226,9 @@ void TCoin::appear()
 	if (isActorType(0x20000010)) {
 		if (!TFlagManager::smInstance->getBlueCoinFlag(
 		        gpMarDirector->getCurrentMap(), unk134))
-			if (gpMSound->gateCheck(0x4843))
-				MSoundSESystem::MSoundSE::startSoundSystemSE(0x4843, 0, nullptr,
-				                                             0);
+			SMSGetMSound()->startSoundSystemSE(0x4843, 0, nullptr, 0);
 	} else {
-		if (gpMSound->gateCheck(0x4813))
-			MSoundSESystem::MSoundSE::startSoundSystemSE(0x4813, 0, nullptr, 0);
+		SMSGetMSound()->startSoundSystemSE(0x4813, 0, nullptr, 0);
 	}
 
 	appearWithoutSound();

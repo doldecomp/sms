@@ -135,8 +135,8 @@ BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 
 	if (isActorTypeOf(sender, 0x01000000)) {
 		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
-		gpMSound->startSoundSet(0x6802, (const Vec*)&sender->mPosition, 0, 0.0f,
-		                        0, 0, 4);
+		SMSGetMSound()->startSoundSet(0x6802, (const Vec*)&sender->mPosition, 0,
+		                              0.0f, 0, 0, 4);
 
 		if (unk13C == 0)
 			return 1;
@@ -152,10 +152,7 @@ BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 			    "モニュメントシャインカメラ", mPosition.x, mPosition.y,
 			    mPosition.z);
 
-			if (gpMSound->gateCheck(0x484A)) {
-				MSoundSESystem::MSoundSE::startSoundSystemSE(0x484A, 0, nullptr,
-				                                             0);
-			}
+			SMSGetMSound()->startSoundSystemSE(0x484A, 0, nullptr, 0);
 		}
 
 		return 1;
@@ -184,20 +181,16 @@ void TMonumentShine::control()
 	if (fabsf(unk140) < 0.1f) {
 		if (unk144 == 2) {
 			if (unk148 > 0) {
-				f32 rot    = mRotation.y;
-				f32 target = mInitialRotation.y + 360.0f;
 				f32 diff
-				    = target - MsWrap(rot, target - 180.0f, target + 180.0f);
+				    = MsAngleDiff(mRotation.y, mInitialRotation.y + 360.0f);
 				if (diff > 0.1f)
 					diff = 0.1f;
 				if (0.0f == diff)
 					unk144++;
 				mAngularVelocity.y += diff;
 			} else {
-				f32 rot    = mRotation.y;
-				f32 target = mInitialRotation.y - 360.0f;
 				f32 diff
-				    = target - MsWrap(rot, target - 180.0f, target + 180.0f);
+				    = MsAngleDiff(mRotation.y, mInitialRotation.y - 360.0f);
 				if (diff < -0.1f)
 					diff = -0.1f;
 				if (0.0f == diff)
@@ -362,10 +355,7 @@ BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 				    mPosition.z);
 			}
 
-			if (gpMSound->gateCheck(0x484A)) {
-				MSoundSESystem::MSoundSE::startSoundSystemSE(0x484A, 0, nullptr,
-				                                             0);
-			}
+			SMSGetMSound()->startSoundSystemSE(0x484A, 0, nullptr, 0);
 		}
 
 		return 1;
@@ -512,8 +502,8 @@ void TDemoCannon::initMapObj()
 	TMapObjBase::initMapObj();
 
 	mMActor->setBck("democannon_dpt");
-	J3DFrameCtrl* frameCtrl  = mMActor->getFrameCtrl(0);
-	frameCtrl->mCurrentFrame = (f32)frameCtrl->mEndFrame;
+	J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(0);
+	frameCtrl->setFrame(frameCtrl->getEnd());
 
 	void* res
 	    = JKRFileLoader::getGlbResource("/scene/mapObj/demoCannon_dom.bmd");
@@ -561,7 +551,7 @@ void TDemoCannon::perform(u32 flags, JDrama::TGraphics* gfx)
 		return;
 
 	J3DFrameCtrl* frameCtrl = unk13C->getMActor()->getFrameCtrl(0);
-	if (frameCtrl->mCurrentFrame < 174.0f) {
+	if (frameCtrl->getFrame() < 174.0f) {
 		if (gpMSound->gateCheck(8392))
 			MSoundSESystem::MSoundSE::startSoundActor(8392, &mPosition, 0,
 			                                          nullptr, 0, 4);
@@ -594,7 +584,7 @@ void TDemoCannon::perform(u32 flags, JDrama::TGraphics* gfx)
 	}
 
 	frameCtrl = unk13C->getMActor()->getFrameCtrl(0);
-	if (frameCtrl->mCurrentFrame > 175.0f) {
+	if (frameCtrl->getFrame() > 175.0f) {
 		Mtx* mtx = unk13C->getMActor()->getModel()->mNodeMatrices;
 		gpMarioParticleManager->emitAndBindToMtxPtr(358, (MtxPtr)mtx, 1, this);
 	}
