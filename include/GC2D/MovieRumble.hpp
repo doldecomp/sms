@@ -1,46 +1,41 @@
 #ifndef GC2D_MOVIE_RUMBLE_HPP
 #define GC2D_MOVIE_RUMBLE_HPP
 
-#include <dolphin/types.h>
 #include <System/THPRender.hpp>
-#include <MarioUtil/RumbleType.hpp>
+#include <JSystem/JDrama/JDRViewObj.hpp>
 #include <MarioUtil/ToolData.hpp>
 
 class TMovieRumble : public JDrama::TViewObj {
 public:
-	TMovieRumble(const TTHPRender* thpRender);
-	virtual ~TMovieRumble();
-	void init(const char* subtitleName);
-	virtual void perform(u32 flags, JDrama::TGraphics* graphics);
+	TMovieRumble(const TTHPRender*);
+
+	virtual void perform(u32, JDrama::TGraphics*);
+
+	void init(const char*);
+	void movement();
+	void checkRumbleOn();
 	void checkRumbleOff();
+	void readCurInfo();
+	void makeBcrName(char*, int, const char*);
+
+	bool isValid() const
+	{
+		bool result = false;
+		if (unk14 && unk18 >= 0)
+			result = true;
+		return result;
+	}
+
+	Koga::ToolData* getToolData() const { return unk14; }
 
 public:
-	const TTHPRender* thpRenderer;
-	Koga::ToolData* toolData; // this is supposedly the only usage of tooldata
-	                          // in the entire game lmao
-	s32 entryIndex;
-	s32 startFrame;
-	s32 endFrame;
-	s32 rumbleTypeIndex;
-	bool isRumbleActive;
-
-private:
-	inline void updateRumbleState(Koga::ToolData* toolData, s32 entryIndex)
-	{
-		const char* rumbleTypeString;
-		s32 theEntryIndex = entryIndex;
-		bool isDataValid  = (toolData != nullptr) && (theEntryIndex >= 0);
-
-		if (isDataValid && toolData->isIndexValid(theEntryIndex)) {
-			// get this rumble entry's data, and update this instance
-			toolData->GetValue(theEntryIndex, "start_frame", startFrame);
-			toolData->GetValue(theEntryIndex, "end_frame", endFrame);
-			toolData->GetValue(theEntryIndex, "type", rumbleTypeString);
-			rumbleTypeIndex = RumbleType::getIndex((char*)rumbleTypeString);
-		} else {
-			rumbleTypeIndex = -1;
-		}
-	}
+	/* 0x10 */ const TTHPRender* unk10;
+	/* 0x14 */ Koga::ToolData* unk14;
+	/* 0x18 */ int unk18;
+	/* 0x1C */ s32 unk1C;
+	/* 0x20 */ s32 unk20;
+	/* 0x24 */ int unk24;
+	/* 0x28 */ bool unk28;
 };
 
-#endif // GC2D_MOVIE_RUMBLE_HPP
+#endif
