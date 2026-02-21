@@ -278,7 +278,7 @@ void TGesso::init(TLiveManager* param_1)
 
 	J3DFrameCtrl* ctrl0 = getMActor()->getFrameCtrl(0);
 
-	f32 endFrame = ctrl0->getEndFrame();
+	f32 endFrame = ctrl0->getEnd();
 	f32 inv      = 1.0f / mManager->getCapacity();
 	f32 index    = getInstanceIndex();
 	f32 frame    = endFrame * index * inv;
@@ -310,7 +310,7 @@ void TGesso::reset()
 
 	f32 inv      = 1.0f / mManager->getObjNum();
 	f32 index    = getInstanceIndex();
-	f32 endFrame = ctrl0->getEndFrame();
+	f32 endFrame = ctrl0->getEnd();
 	f32 frame    = endFrame * index * inv;
 	ctrl0->setFrame(frame);
 }

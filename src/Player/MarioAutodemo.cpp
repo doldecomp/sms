@@ -134,7 +134,7 @@ BOOL TMario::warpIn()
 
 		unk114 |= 2;
 		J3DFrameCtrl* frameCtrl = getMotionFrameCtrl();
-		frameCtrl->setSpeed(0.0f);
+		frameCtrl->setRate(0.0f);
 
 		// Possibly TVec3 inaccuracies?
 		JGeometry::TVec3<f32> marioDist = holderPosOffset - mPosition;
@@ -199,12 +199,12 @@ BOOL TMario::isUnUsualStageStart()
 		unk114 |= 2;
 		if (mPinaRail != nullptr) {
 			mPinaRail->setBckFromIndex(0);
-			mPinaRail->getFrameCtrl(0)->setSpeed(0.5f);
+			mPinaRail->getFrameCtrl(0)->setRate(0.5f);
 			mPinaRail->getFrameCtrl(0)->setFrame(0.0f);
 		}
 		if (mKoopaRail != nullptr) {
 			mKoopaRail->setBckFromIndex(0);
-			mKoopaRail->getFrameCtrl(0)->setSpeed(0.5f);
+			mKoopaRail->getFrameCtrl(0)->setRate(0.5f);
 			mKoopaRail->getFrameCtrl(0)->setFrame(0.0f);
 		}
 		return TRUE;
@@ -323,12 +323,12 @@ BOOL TMario::toroccoStart()
 	unk114 |= 2;
 	if (mPinaRail != nullptr) {
 		mPinaRail->setBckFromIndex(0);
-		mPinaRail->getFrameCtrl(0)->setSpeed(0.5f);
+		mPinaRail->getFrameCtrl(0)->setRate(0.5f);
 		mPinaRail->getFrameCtrl(0)->setFrame(0.0f);
 	}
 	if (mKoopaRail != nullptr) {
 		mKoopaRail->setBckFromIndex(0);
-		mKoopaRail->getFrameCtrl(0)->setSpeed(0.5f);
+		mKoopaRail->getFrameCtrl(0)->setRate(0.5f);
 		mKoopaRail->getFrameCtrl(0)->setFrame(0.0f);
 	}
 	return TRUE;

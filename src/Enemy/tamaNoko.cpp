@@ -134,8 +134,7 @@ void TTamaNokoFlower::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 			unk20 = unk10->mPosition;
 
-			unk2C->animeLoop(&unk20, ctrl->getCurrentFrame(), ctrl->getRate(),
-			                 0, 4);
+			unk2C->animeLoop(&unk20, ctrl->getFrame(), ctrl->getRate(), 0, 4);
 		}
 	}
 
@@ -444,7 +443,7 @@ void TTamaNoko::calcRootMatrix()
 		}
 	}
 
-	if (isBckAnm(11) && mMActor->getFrameCtrl(0)->getCurrentFrame() > 90.0f) {
+	if (isBckAnm(11) && mMActor->getFrameCtrl(0)->getFrame() > 90.0f) {
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToPosPtr(0x185, &mPosition, 1,
 		                                                  this)) {

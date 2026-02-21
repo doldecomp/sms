@@ -169,7 +169,7 @@ void TBalloonControl::add(TExPane* pane)
 void TBalloonControl::setupAnm()
 {
 	mFrameCtrl.init((unk8 + 1) * 120.0f);
-	mFrameCtrl.setAttribute(J3DFrameCtrl::LOOP_REPEAT_e);
+	mFrameCtrl.setAttribute(J3DFrameCtrl::ATTR_LOOP);
 	unk20 = 0;
 	for (int i = 0; i < unk8; ++i)
 		unk0[i].unk0->getPane()->setAlpha(0);
@@ -198,7 +198,7 @@ void TPaneScalingControl::setupAnm(f32 amplitude, f32 speed)
 {
 	mAmplitude = amplitude;
 	mFrameCtrl.init(0x78);
-	mFrameCtrl.setAttribute(J3DFrameCtrl::LOOP_REPEAT_e);
+	mFrameCtrl.setAttribute(J3DFrameCtrl::ATTR_LOOP);
 	mFrameCtrl.setRate(speed);
 }
 
@@ -215,9 +215,8 @@ void TPaneScalingControl::update()
 	int iVar10 = mInitialBounds.getWidth();
 	int iVar5  = mInitialBounds.getHeight();
 
-	f32 progress
-	    = (f32)mFrameCtrl.getCurrentFrame() / (f32)mFrameCtrl.getEndFrame();
-	f32 fVar2 = mAmplitude * JMASin(RAD_TO_DEG(progress * (2 * M_PI)));
+	f32 progress = (f32)mFrameCtrl.getFrame() / (f32)mFrameCtrl.getEnd();
+	f32 fVar2    = mAmplitude * JMASin(RAD_TO_DEG(progress * (2 * M_PI)));
 
 	int uVar6 = fVar2 * iVar10;
 	int uVar1 = fVar2 * iVar5;
@@ -258,7 +257,7 @@ void TPatternAnmControl::setupAnm()
 	}
 
 	mFrameCtrl.init(120.0f * sum + 1.0f);
-	mFrameCtrl.setAttribute(J3DFrameCtrl::LOOP_REPEAT_e);
+	mFrameCtrl.setAttribute(J3DFrameCtrl::ATTR_LOOP);
 	mFrameCtrl.setRate(1.0f);
 	show();
 	mNextTriggerFrame = mCurrentChunk->mDuration * 120.0f;
@@ -267,10 +266,10 @@ void TPatternAnmControl::setupAnm()
 void TPatternAnmControl::update()
 {
 	if (mFrameCtrl.checkPass(mNextTriggerFrame)
-	    || mFrameCtrl.checkFlag(J3DFrameCtrl::FLAG_LOOPED)) {
+	    || mFrameCtrl.checkState(J3DFrameCtrl::STATE_LOOPED_ONCE)) {
 		mScreen->search(mCurrentChunk->mTag)->hide();
 		if (++mCurrentChunk == mChunks.end()
-		    || mFrameCtrl.checkFlag(J3DFrameCtrl::FLAG_LOOPED)) {
+		    || mFrameCtrl.checkState(J3DFrameCtrl::STATE_LOOPED_ONCE)) {
 			mCurrentChunk     = mChunks.begin();
 			mNextTriggerFrame = 0.0f;
 		}
@@ -528,7 +527,7 @@ TOptionSoundUnit::TOptionSoundUnit(J2DScreen* screen)
 	mSelectionText->setupToggle(cSoundToggleItems,
 	                            ARRAY_COUNT(cSoundToggleItems));
 	mMusicFrameCtrl.init(289);
-	mMusicFrameCtrl.setAttribute(J3DFrameCtrl::LOOP_REPEAT_e);
+	mMusicFrameCtrl.setAttribute(J3DFrameCtrl::ATTR_LOOP);
 	mMusicFrameCtrl.setRate(1.0f);
 	mMusic = nullptr;
 	setState(STATE_INACTIVE);
@@ -628,7 +627,7 @@ void TOptionSoundUnit::updatePatternAnm()
 		(*it)->update();
 
 	mMusicFrameCtrl.update();
-	if (mMusicFrameCtrl.checkFlag(J3DFrameCtrl::FLAG_LOOPED))
+	if (mMusicFrameCtrl.checkState(J3DFrameCtrl::STATE_LOOPED_ONCE))
 		adjustSound();
 }
 

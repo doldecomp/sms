@@ -32,7 +32,7 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 
 		J3DFrameCtrl* myCtrl    = mActor->getFrameCtrl(0);
 		J3DFrameCtrl* otherCtrl = other->getMActor()->getFrameCtrl(0);
-		myCtrl->mCurrentFrame   = otherCtrl->mCurrentFrame;
+		myCtrl->setFrame(otherCtrl->getFrame());
 	} else if (actor->getActorType() != 0x800001) {
 		// not the right type, skip animation setup
 	} else {
