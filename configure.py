@@ -1089,8 +1089,8 @@ config.libs = [
         "progress_category": "game",
         "objects": [
             Object(Matching, "GC2D/ChangeValue.cpp"),
-            Object(NonMatching, "GC2D/Coord2D.cpp"),
-            Object(NonMatching, "GC2D/ExPane.cpp"),
+            Object(Matching, "GC2D/Coord2D.cpp"),
+            Object(Matching, "GC2D/ExPane.cpp"),
             Object(NonMatching, "GC2D/Menu.cpp"),
             Object(NonMatching, "GC2D/ScrnFader.cpp"),
             Object(NonMatching, "GC2D/GCConsole2.cpp"),
