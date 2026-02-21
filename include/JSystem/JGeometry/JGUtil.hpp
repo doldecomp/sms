@@ -6,7 +6,23 @@
 
 namespace JGeometry {
 
-template <typename T> struct TUtil;
+template <typename T> struct TUtil {
+	static T clamp(T value, T min, T max)
+	{
+		if (value < min)
+			return min;
+		if (value > max)
+			return max;
+		return value;
+	}
+
+	static T mod(T value, T modulus);
+};
+
+template <class T> T TUtil<T>::mod(T value, T modulus)
+{
+	return value % modulus;
+}
 
 template <> struct TUtil<f32> {
 	static f32 epsilon() { return 3.81469727e-06f; }

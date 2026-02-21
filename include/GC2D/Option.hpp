@@ -2,8 +2,10 @@
 #define GC2D_OPTION_HPP
 
 #include <dolphin/types.h>
+#include <JSystem/J2D/J2DPane.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <JSystem/JUtility/JUTRect.hpp>
+#include <System/ArrayWrapper.hpp>
 
 class J2DPane;
 class J2DScreen;
@@ -12,25 +14,37 @@ class J2DSetScreen;
 class TExPane;
 class JAISound;
 
+/**
+ * @brief A control that makes a pane's left side
+ * stretch horizontally in a loop.
+ */
 class TArrowControl {
 public:
+	TArrowControl(J2DPane* pane)
+	    : mPane(pane)
+	    , unk14(true)
+	    , mPhase(0)
+	{
+		mBounds = mPane->getBounds();
+	}
+
 	void update();
 	void updateAlpha();
 	void updateScale();
-	void calcMoveX(int) const;
+	int calcMoveX(int phase) const;
 
 public:
-	/* 0x0 */ J2DPane* unk0;
-	/* 0x4 */ JUTRect unk4;
-	/* 0x14 */ u8 unk14;
-	/* 0x18 */ u32 unk18;
+	/* 0x0 */ J2DPane* mPane;
+	/* 0x4 */ JUTRect mBounds;
+	/* 0x14 */ bool unk14;
+	/* 0x18 */ int mPhase;
 };
 
 class TBalloonControl {
 public:
-	TBalloonControl(int);
+	TBalloonControl(int size);
 
-	void add(TExPane*);
+	void add(TExPane* pane);
 	void setupAnm();
 	void startAnm();
 	void stopAnm();
@@ -45,61 +59,101 @@ public:
 	/* 0x0 */ UnknownBalloonControlStruct* unk0;
 	/* 0x4 */ int unk4;
 	/* 0x8 */ int unk8;
-	/* 0xC */ J3DFrameCtrl unkC;
+	/* 0xC */ J3DFrameCtrl mFrameCtrl;
 	/* 0x20 */ u32 unk20;
 };
 
+/**
+ * @brief Pulsating control for a pane.
+ * The given pane gets smaller/larger relative to it's center in a loop.
+ */
 class TPaneScalingControl {
 public:
-	TPaneScalingControl(J2DPane*);
+	TPaneScalingControl(J2DPane* pane);
 
-	void setupAnm(f32, f32);
+	void setupAnm(f32 amplitude, f32 speed);
 	void startAnm();
 	void stopAnm();
 	void update();
 
 public:
-	/* 0x0 */ J2DPane* unk0;
-	/* 0x4 */ J3DFrameCtrl unk4;
-	/* 0x18 */ JUTRect unk18;
-	/* 0x28 */ f32 unk28;
+	/* 0x0 */ J2DPane* mPane;
+	/* 0x4 */ J3DFrameCtrl mFrameCtrl;
+	/* 0x18 */ JUTRect mInitialBounds;
+	/* 0x28 */ f32 mAmplitude;
 };
 
+/**
+ * @brief Animation sequence control for a set of panes with durations.
+ * Loops through the given set of TAnmChunks, showing each pane for the
+ * specified duration and then hiding it before moving to showing the next.
+ * Intended use is to have multiple panes in the exact same position with
+ * different key frames of an animation. No interpolation occurs.
+ */
 class TPatternAnmControl {
 public:
-	struct TAnmChunk { };
+	struct TAnmChunk {
+		/* 0x0 */ u32 mTag;
+		/* 0x4 */ f32 mDuration;
+	};
 
-	TPatternAnmControl(J2DScreen*);
-	void set(const TAnmChunk*, int);
+	TPatternAnmControl(J2DScreen* screen);
+
+	void set(const TAnmChunk* chunks, int num_chunks);
 	void setupAnm();
 	void update();
 	void show();
 	void hide();
 
+	bool checkCompletedOnce() const
+	{
+		return mFrameCtrl.checkFlag(J3DFrameCtrl::FLAG_LOOPED);
+	}
+
+	u32 getCurrentPaneTag() const { return mCurrentChunk->mTag; }
+
 public:
-	/* 0x0 */ J2DScreen* unk0;
-	/* 0x4 */ J3DFrameCtrl unk4;
-	/* 0x18 */ TAnmChunk* unk18;
-	/* 0x1C */ int unk1C;
-	/* 0x20 */ TAnmChunk* unk20;
-	/* 0x24 */ f32 unk24;
+	/* 0x0 */ J2DScreen* mScreen;
+	/* 0x4 */ J3DFrameCtrl mFrameCtrl;
+	/* 0x18 */ ArrayWrapper<const TAnmChunk> mChunks;
+	/* 0x20 */ const TAnmChunk* mCurrentChunk;
+	/* 0x24 */ f32 mNextTriggerFrame;
 };
 
+/**
+ * @brief A toggle control for switching between alternative panes.
+ * The intended use is to have multiple panes in the same position and toggle
+ * between them, like a yes/no select text. Only one pane is shown at a time.
+ */
 class TToggleControl {
 public:
-	TToggleControl(J2DScreen*);
-	void setupToggle(const u32*, int);
+	TToggleControl(J2DScreen* screen);
+
+	void setupToggle(const u32* tags, int num_tags);
 	void toggle();
-	void getNumber() const;
-	void setNumber(int);
+	s32 getNumber() const;
+	void setNumber(int num);
+
+public:
+	/* 0x0 */ J2DScreen* mScreen;
+	/* 0x4 */ ArrayWrapper<const u32> mItems;
+	/* 0xC */ const u32* mCurItem;
 };
 
 class TOptionRumbleUnit {
 public:
-	enum RumbleType { };
-	enum State { };
+	enum RumbleType {
+		RUMBLE_TYPE_UNK0 = 0,
+		RUMBLE_TYPE_UNK1 = 1,
+	};
+	enum State {
+		STATE_ACTIVE       = 0,
+		STATE_DEACTIVATING = 1,
+		STATE_INACTIVE     = 2,
+	};
 
-	TOptionRumbleUnit(J2DScreen*);
+	TOptionRumbleUnit(J2DScreen* screen);
+
 	void update();
 	void checkRumble();
 	void toggle();
@@ -107,113 +161,129 @@ public:
 	void adjustView();
 	void show();
 	void hide();
-	void deactivate(bool);
+	void deactivate(bool force);
 	void activate();
-	void setValue(RumbleType);
-	void setState(State);
-	void setInfluencedAlphaRecursive(J2DPane*, bool);
+	void setValue(RumbleType value);
+	RumbleType getValue() const
+	{
+		return (RumbleType)mSelectionText->getNumber();
+	}
+	void setState(State state);
+	void setInfluencedAlphaRecursive(J2DPane* pane, bool influenced_alpha);
+
+	TPatternAnmControl* getCurrentGamepadAnm() const
+	{
+		return mGamepadIcon[mSelectionText->getNumber()];
+	}
 
 public:
-	/* 0x0 */ J2DScreen* unk0;
-	/* 0x4 */ TExPane* unk4;
-	/* 0x8 */ u8 unk8;
+	/* 0x0 */ J2DScreen* mScreen;
+	/* 0x4 */ TExPane* mParentPane;
+	/* 0x8 */ u8 mInitialAlpha;
 	/* 0xC */ TBalloonControl* unkC;
-	/* 0x10 */ TPaneScalingControl* unk10;
-	/* 0x14 */ TPatternAnmControl* unk14;
-	/* 0x18 */ TPatternAnmControl* unk18;
-	/* 0x1C */ TToggleControl* unk1C;
-	/* 0x20 */ State unk20;
-	/* 0x24 */ bool unk24;
+	/* 0x10 */ TPaneScalingControl* mSelectionBubble;
+	/* 0x14 */ TPatternAnmControl* mGamepadIcon[2];
+	/* 0x1C */ TToggleControl* mSelectionText;
+	/* 0x20 */ State mState;
+	/* 0x24 */ bool mShouldRumble;
 };
-
-namespace { // huh? maybe TOptionSoundUnit was inside the cpp?
-template <class T> class ArrayWrapper {
-	ArrayWrapper() { }
-
-	void begin() const { }
-};
-} // namespace
 
 class TOptionSoundUnit {
 public:
-	enum SoundType { };
-	enum State { };
+	enum SoundType {
+		SOUND_TYPE_MONO     = 0,
+		SOUND_TYPE_STEREO   = 1,
+		SOUND_TYPE_SURROUND = 2,
+	};
+	enum State {
+		STATE_ACTIVE       = 0,
+		STATE_DEACTIVATING = 1,
+		STATE_INACTIVE     = 2,
+	};
 
-	TOptionSoundUnit(J2DScreen*);
+	TOptionSoundUnit(J2DScreen* screen);
+
 	void initMonoAnm();
 	void initSteleoAnm();
 	void initSurroundAnm();
 	void update();
 	void updatePatternAnm();
-	void foreachPatternAnm(ArrayWrapper<TPatternAnmControl*>&,
-	                       void (TPatternAnmControl::*)());
+	void foreachPatternAnm(ArrayWrapper<TPatternAnmControl*>& ary,
+	                       void (TPatternAnmControl::*ptmf)());
 	void toggle();
 	void adjust();
 	void show();
 	void hide();
-	void deactivate(bool);
+	void deactivate(bool force);
 	void activate();
-	void setValue(int);
-	void getValue() const;
+	void setValue(int value);
+	int getValue() const;
 	void stopSound();
-	void flagToType(int);
-	void typeToFlag(SoundType);
-	void setState(State);
+	static SoundType flagToType(int flag);
+	static int typeToFlag(SoundType type);
+	void setState(State state);
 	void adjustView();
 	void adjustSound();
-	void setInfluencedAlphaRecursive(J2DPane*, bool);
+	void setInfluencedAlphaRecursive(J2DPane* pane, bool influenced_alpha);
 
-	int cSoundSettings;
-	int cFlagInfos;
+	struct FabricatedSoundSettings {
+		/* 0x0 */ u32 mSoundSystemSE;
+		/* 0x4 */ u32 mOutputMode;
+	};
+	const static FabricatedSoundSettings cSoundSettings[];
+
+	struct FabricatedFlagInfo {
+		/* 0x0 */ SoundType mSoundType;
+		/* 0x4 */ int mFlag;
+	};
+	const static FabricatedFlagInfo cFlagInfos[];
 
 public:
-	/* 0x0 */ J2DScreen* unk0;
-	/* 0x4 */ TExPane* unk4;
-	/* 0x8 */ u8 unk8;
-	/* 0xC */ TBalloonControl* unkc;
-	/* 0x10 */ TPaneScalingControl* unk10;
-	/* 0x14 */ TToggleControl* unk14;
-	/* 0x18 */ u32 unk18;
-	/* 0x1C */ J3DFrameCtrl unk1c;
-	/* 0x30 */ JAISound* unk30;
-	/* 0x34 */ TPatternAnmControl* unk34[2];
-	/* 0x3C */ TPatternAnmControl* unk3c[3];
-	/* 0x48 */ TPatternAnmControl* unk48[5];
-	/* 0x5C */ TPatternAnmControl** unk5c;
-	/* 0x60 */ u32 unk60;
-	/* 0x64 */ TPatternAnmControl** unk64;
-	/* 0x68 */ u32 unk68;
-	/* 0x6C */ TPatternAnmControl** unk6c;
-	/* 0x70 */ u32 unk70;
+	/* 0x0 */ J2DScreen* mScreen;
+	/* 0x4 */ TExPane* mParentPane;
+	/* 0x8 */ u8 mInitialAlpha;
+	/* 0xC */ TBalloonControl* unkC;
+	/* 0x10 */ TPaneScalingControl* mSelectionBubble;
+	/* 0x14 */ TToggleControl* mSelectionText;
+	/* 0x18 */ State mState;
+	/* 0x1C */ J3DFrameCtrl mMusicFrameCtrl;
+	/* 0x30 */ JAISound* mMusic;
+	/* 0x34 */ TPatternAnmControl* mMonoAnimations[2];
+	/* 0x3C */ TPatternAnmControl* mStereoAnimations[3];
+	/* 0x48 */ TPatternAnmControl* mSurroundAnimations[5];
+	/* 0x5C */ ArrayWrapper<TPatternAnmControl*> mMonteIcons[3];
 };
 
 class TOptionControl {
 public:
-	enum SelectType { };
+	enum SelectType {
+		SELECT_TYPE_RUMBLE_OPTION = 0,
+		SELECT_TYPE_SOUND_OPTION  = 1,
+	};
 
 	void load();
 	void loadSetting();
 	void movementCommon();
-	void draw(J2DOrthoGraph*);
-	void movementCard2Option();
-	void movementOption();
-	void movementOption2Card();
-	void setType(TOptionControl::SelectType, bool);
+	void draw(J2DOrthoGraph* graph);
+	bool movementCard2Option();
+	bool movementOption();
+	bool movementOption2Card();
+	void setType(TOptionControl::SelectType type, bool initial_options_entry);
 	void toggleCurType();
 	void checkInput();
 	void writeValue();
-	void isChangedSetting() const;
+	bool isChangedSetting() const;
 	void resetChangedSetting();
 
 public:
-	/* 0x0 */ J2DSetScreen* unk0;
-	/* 0x4 */ TArrowControl* unk4;
-	/* 0x8 */ TOptionRumbleUnit* unk8;
-	/* 0xC */ TOptionSoundUnit* unkC;
-	/* 0x10 */ SelectType unk10;
-	/* 0x14 */ u8 unk14;
-	/* 0x18 */ u32 unk18;
-	/* 0x1C */ u32 unk1C;
+	/* 0x0 */ J2DSetScreen* mScreen;
+	/* 0x4 */ TArrowControl* mBackArrow;
+	/* 0x8 */ TOptionRumbleUnit* mRumbleOption;
+	/* 0xC */ TOptionSoundUnit* mSoundOption;
+	/* 0x10 */ SelectType mSelectedOption;
+	/* 0x14 */ bool mWasJumping;
+	/* 0x18 */ int mInitialRumbleValue;
+	/* 0x1C */ int mInitialSoundValue;
 };
 
 #endif
