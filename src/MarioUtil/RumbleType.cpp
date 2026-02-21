@@ -4,15 +4,11 @@
 extern int channelNum;
 
 struct RumbleTypeInfo {
-struct RumbleTypeInfo {
 	unsigned int unk0;
 	char* str;
 };
 
 // Enum To Str?
-// @BUG - channelNum (number of rumble types) is 25,
-// but _info is only 23 elements long.
-struct RumbleTypeInfo _info[23] = {
 // @BUG - channelNum (number of rumble types) is 25,
 // but _info is only 23 elements long.
 struct RumbleTypeInfo _info[23] = {
