@@ -377,7 +377,7 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 						mFluddModel->setBck("wg_pump");
 					}
 				}
-				frameCtrl->setSpeed(0.0f);
+				frameCtrl->setRate(0.0f);
 				frameCtrl->setFrame(mMario->getPumpFrame());
 				unk1CFA = unk1CF8;
 			} else {
@@ -386,8 +386,8 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 				    && (unk1CEC = unk1CEC - 0.1f, unk1CEC <= 0.0f)) {
 					unk1CEC = 0.0f;
 				}
-				frameCtrl->setSpeed(0.0f);
-				frameCtrl->setFrame(unk1CEC * frameCtrl->getEndFrame());
+				frameCtrl->setRate(0.0f);
+				frameCtrl->setFrame(unk1CEC * frameCtrl->getEnd());
 			}
 			return;
 		}
@@ -397,13 +397,13 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 		if (unk1CEC < 1.0f) {
 			unk1CEC = unk1CEC + unk1CF4;
 			mFluddModel->setBck("wg_house");
-			frameCtrl->setSpeed(0.0f);
-			frameCtrl->setFrame(unk1CEC * frameCtrl->getEndFrame());
+			frameCtrl->setRate(0.0f);
+			frameCtrl->setFrame(unk1CEC * frameCtrl->getEnd());
 		} else {
 			unk1CEC = 1.0f;
 			mFluddModel->setBck("wg_house");
-			frameCtrl->setSpeed(0.0f);
-			frameCtrl->setFrame(unk1CEC * frameCtrl->getEndFrame());
+			frameCtrl->setRate(0.0f);
+			frameCtrl->setFrame(unk1CEC * frameCtrl->getEnd());
 		}
 	} else {
 		unk1CFA = unk1CFA - 1;
@@ -795,8 +795,9 @@ void TNozzleBase::animation(int param_1)
 			unk380->setBckFromIndex(4);
 		}
 		J3DFrameCtrl* ctrl = unk380->getFrameCtrl(MActor::ANM_TYPE_BCK);
-		if (ctrl->mCurrentFrame <= (ctrl->mEndFrame - 0.1)
-		    && (ctrl->mFlags & 3) == 0) {
+		if (ctrl->getFrame() <= (ctrl->getEnd() - 0.1)
+		    && ctrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
+		                        | J3DFrameCtrl::STATE_LOOPED_ONCE)) {
 			return;
 		}
 		unk36C = 1;
@@ -900,8 +901,8 @@ void TNozzleBase::animation(int param_1)
 		}
 
 		// Use external tween value
-		ctrl->mCurrentFrame = mFludd->unk1CFC * ctrl->mEndFrame;
-		ctrl->mSpeed        = 0.0f;
+		ctrl->setFrame(mFludd->unk1CFC * ctrl->getFrame());
+		ctrl->setRate(0.0f);
 		break;
 	}
 	case 4: {
@@ -912,8 +913,8 @@ void TNozzleBase::animation(int param_1)
 		}
 
 		// Use external tween value
-		ctrl->mCurrentFrame = mFludd->unk1CFC * ctrl->mEndFrame;
-		ctrl->mSpeed        = 0.0f;
+		ctrl->setFrame(mFludd->unk1CFC * ctrl->getEnd());
+		ctrl->setRate(0.0f);
 
 		if (mFludd->unk1CFC < 1.0f) {
 			return;

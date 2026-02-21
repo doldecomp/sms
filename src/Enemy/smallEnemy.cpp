@@ -1012,7 +1012,7 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 
 	if (self->checkCurAnmEnd(0)
 	        && spine->getTime()
-	               > uVar8 + self->getMActor()->getFrameCtrl(0)->getEndFrame()
+	               > uVar8 + self->getMActor()->getFrameCtrl(0)->getEnd()
 	    || spine->getTime() > 360 || self->getUnk184() != 0) {
 		self->genRandomItem();
 		self->onHitFlag(HIT_FLAG_NO_COLLISION);

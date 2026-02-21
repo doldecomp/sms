@@ -49,8 +49,7 @@ public:
 
 	BOOL endsNext()
 	{
-		if (unk4.getCurrentFrame() + unk4.getRate() + 0.1f
-		    >= unk4.getEndFrame())
+		if (unk4.getFrame() + unk4.getRate() + 0.1f >= unk4.getEnd())
 			return true;
 		else
 			return false;
@@ -138,7 +137,7 @@ public:
 		unk24 = getData()->getAnmPtr(param_1);
 		unk4.init(unk24->getFrameMax());
 		unk4.setAttribute(unk24->getAttribute());
-		unk4.setSpeed(SMSGetAnmFrameRate());
+		unk4.setRate(SMSGetAnmFrameRate());
 
 		return true;
 	}

@@ -502,8 +502,8 @@ void TDemoCannon::initMapObj()
 	TMapObjBase::initMapObj();
 
 	mMActor->setBck("democannon_dpt");
-	J3DFrameCtrl* frameCtrl  = mMActor->getFrameCtrl(0);
-	frameCtrl->mCurrentFrame = (f32)frameCtrl->mEndFrame;
+	J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(0);
+	frameCtrl->setFrame(frameCtrl->getEnd());
 
 	void* res
 	    = JKRFileLoader::getGlbResource("/scene/mapObj/demoCannon_dom.bmd");
@@ -551,7 +551,7 @@ void TDemoCannon::perform(u32 flags, JDrama::TGraphics* gfx)
 		return;
 
 	J3DFrameCtrl* frameCtrl = unk13C->getMActor()->getFrameCtrl(0);
-	if (frameCtrl->mCurrentFrame < 174.0f) {
+	if (frameCtrl->getFrame() < 174.0f) {
 		if (gpMSound->gateCheck(8392))
 			MSoundSESystem::MSoundSE::startSoundActor(8392, &mPosition, 0,
 			                                          nullptr, 0, 4);
@@ -584,7 +584,7 @@ void TDemoCannon::perform(u32 flags, JDrama::TGraphics* gfx)
 	}
 
 	frameCtrl = unk13C->getMActor()->getFrameCtrl(0);
-	if (frameCtrl->mCurrentFrame > 175.0f) {
+	if (frameCtrl->getFrame() > 175.0f) {
 		Mtx* mtx = unk13C->getMActor()->getModel()->mNodeMatrices;
 		gpMarioParticleManager->emitAndBindToMtxPtr(358, (MtxPtr)mtx, 1, this);
 	}

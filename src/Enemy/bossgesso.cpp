@@ -702,7 +702,7 @@ void TBossGesso::changeBck(int param_1)
 
 	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
 	if (ctrl != nullptr)
-		unk188 = 10.0f / ctrl->getEndFrame();
+		unk188 = 10.0f / ctrl->getEnd();
 
 	const char** table = getBasNameTable();
 	setAnmSound(!table ? nullptr : table[param_1]);
@@ -1345,7 +1345,7 @@ DEFINE_NERVE(TNerveBGEyeDamage, TLiveActor)
 		self->getMActor()->setBtpFromIndex(1);
 		J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(3);
 		ctrl->setFrame(1.5f);
-		ctrl->setSpeed(0.0f);
+		ctrl->setRate(0.0f);
 		self->getMActor()->resetDL();
 	}
 
@@ -1387,14 +1387,14 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 		self->changeAllTentacleState(8);
 
 		J3DFrameCtrl* ctrl4 = self->getMActor()->getFrameCtrl(4);
-		ctrl4->setSpeed(1.0f);
+		ctrl4->setRate(1.0f);
 		ctrl4->setFrame(0.0f);
 
 		self->getMActor()->setBtpFromIndex(1);
 
 		J3DFrameCtrl* ctrl3 = self->getMActor()->getFrameCtrl(3);
 		ctrl3->setFrame(1.5f);
-		ctrl3->setSpeed(0.0f);
+		ctrl3->setRate(0.0f);
 
 		self->getMActor()->resetDL();
 
@@ -1453,7 +1453,7 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 		self->forceAllTentacleState(0);
 
 		J3DFrameCtrl* ctrl4 = self->getMActor()->getFrameCtrl(4);
-		ctrl4->setSpeed(0.0f);
+		ctrl4->setRate(0.0f);
 		ctrl4->setFrame(0.0f);
 
 		spine->pushAfterCurrent(&TNerveBGPollute::theNerve());
@@ -1530,7 +1530,7 @@ DEFINE_NERVE(TNerveBGTug, TLiveActor)
 
 			J3DFrameCtrl* ctrl3 = self->getMActor()->getFrameCtrl(3);
 			ctrl3->setFrame(1.5f);
-			ctrl3->setSpeed(0.0f);
+			ctrl3->setRate(0.0f);
 
 			self->getMActor()->resetDL();
 			if (!self->getMActor()->checkCurBckFromIndex(9))
@@ -1560,7 +1560,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 
 		J3DFrameCtrl* ctrl3 = self->getMActor()->getFrameCtrl(3);
 		ctrl3->setFrame(1.5f);
-		ctrl3->setSpeed(0.0f);
+		ctrl3->setRate(0.0f);
 
 		self->getMActor()->resetDL();
 
@@ -1723,7 +1723,7 @@ DEFINE_NERVE(TNerveBGPolDrop, TLiveActor)
 	}
 
 	J3DFrameCtrl* ctrl0 = self->getMActor()->getFrameCtrl(0);
-	if (83.0f < ctrl0->getCurrentFrame() && ctrl0->getCurrentFrame() < 87.0f) {
+	if (83.0f < ctrl0->getFrame() && ctrl0->getFrame() < 87.0f) {
 		self->launchPolDrop();
 	}
 

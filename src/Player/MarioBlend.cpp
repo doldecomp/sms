@@ -30,10 +30,10 @@ void M3UModelMario::updateInMotion()
 		J3DAnmTransform* prev = unk4->unk4[info.mAnmTransformIdx[0]];
 		J3DAnmTransform* next = unk4->unk4[info.mAnmTransformIdx[1]];
 		if (prev != nullptr) {
-			prev->setFrame(getFrameCtrl(info.mFrameCtrlIdx).getCurrentFrame());
+			prev->setFrame(getFrameCtrl(info.mFrameCtrlIdx).getFrame());
 		}
 		if (next != nullptr) {
-			next->setFrame(getFrameCtrl(info.mFrameCtrlIdx).getCurrentFrame());
+			next->setFrame(getFrameCtrl(info.mFrameCtrlIdx).getFrame());
 		}
 
 		// If we make a fabricated getter for unk18 it uses all padding and

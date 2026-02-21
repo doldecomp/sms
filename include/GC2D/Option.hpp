@@ -107,7 +107,7 @@ public:
 
 	bool checkCompletedOnce() const
 	{
-		return mFrameCtrl.checkFlag(J3DFrameCtrl::FLAG_LOOPED);
+		return mFrameCtrl.checkState(J3DFrameCtrl::STATE_LOOPED_ONCE);
 	}
 
 	u32 getCurrentPaneTag() const { return mCurrentChunk->mTag; }

@@ -728,7 +728,7 @@ void TBGTentacle::setAttackTarget()
 	}
 
 	J3DFrameCtrl* ctrl = unk80->getFrameCtrl(0);
-	ctrl->setSpeed(mOwner->getAttackSpeed() * SMSGetAnmFrameRate());
+	ctrl->setRate(mOwner->getAttackSpeed() * SMSGetAnmFrameRate());
 	unk4C = 0;
 }
 
@@ -1100,7 +1100,7 @@ void TBGTentacle::calcAtkParticleAndSE()
 {
 	if ((unk80->checkCurBckFromIndex(20) || unk80->checkCurBckFromIndex(23))
 	    && unk4C == 0) {
-		f32 frame = unk80->getFrameCtrl(0)->getCurrentFrame();
+		f32 frame = unk80->getFrameCtrl(0)->getFrame();
 		if ((unk80->checkCurBckFromIndex(20) && 118.0f <= frame
 		     && frame <= 160.0f)
 		    || (unk80->checkCurBckFromIndex(23) && 75.0f <= frame
@@ -1161,7 +1161,7 @@ void TBGTentacle::calcAtkParticleAndSE()
 	}
 
 	f32 atkSoundTime = mParams->mAtkSoundTime.get();
-	s16 endFrame     = unk80->getFrameCtrl(0)->getEndFrame();
+	s16 endFrame     = unk80->getFrameCtrl(0)->getEnd();
 	if (unk80->checkBckPass(endFrame - atkSoundTime)) {
 		if (mState != 10) {
 			const JGeometry::TVec3<f32>& p = mTakeHit->getPosition();
@@ -1185,7 +1185,7 @@ void TBGTentacle::decideAtkColExists()
 {
 	mTakeHit->onHitFlag(HIT_FLAG_UNK2);
 
-	f32 frame = unk80->getFrameCtrl(0)->getCurrentFrame();
+	f32 frame = unk80->getFrameCtrl(0)->getFrame();
 
 	BOOL shouldCollisionExist = false;
 

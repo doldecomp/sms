@@ -605,11 +605,11 @@ f32 TSpineEnemy::getCurAnmFrameNo(int param_1) const
 	int iVar1             = getMActor()->getCurAnmIdx(param_1);
 	TSharedMActorSet* set = mgr->getSharedMActorSet(iVar1);
 	if (set == nullptr) {
-		return getMActor()->getFrameCtrl(param_1)->getCurrentFrame();
+		return getMActor()->getFrameCtrl(param_1)->getFrame();
 	} else {
 		return set->getMActor(getInstanceIndex())
 		    ->getFrameCtrl(param_1)
-		    ->getCurrentFrame();
+		    ->getFrame();
 	}
 }
 
