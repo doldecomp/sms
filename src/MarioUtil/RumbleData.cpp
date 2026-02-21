@@ -1,5 +1,5 @@
-#include <macros.h>
 #include <MarioUtil/RumbleMgr.hpp>
+#include <macros.h>
 
 static int rumblePoint_00 = 0x0000000B;
 

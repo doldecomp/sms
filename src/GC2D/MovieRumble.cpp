@@ -1,10 +1,10 @@
 #include <GC2D/MovieRumble.hpp>
-#include <stdio.h>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
-#include <System/THPRender.hpp>
+#include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/RumbleType.hpp>
 #include <MarioUtil/ToolData.hpp>
-#include <MarioUtil/RumbleMgr.hpp>
+#include <System/THPRender.hpp>
+#include <stdio.h>
 
 // TODO: removeme
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
@@ -23,7 +23,7 @@ void TMovieRumble::init(const char* param_1)
 	unk14     = new Koga::ToolData;
 	void* bcr = JKRGetResource(acStack_90);
 	unk14->Attach(bcr);
-	if (!unk14->GetData())
+	if (!unk14->dataExists())
 		unk18 = -1;
 	else
 		unk18 = 0;
@@ -71,7 +71,7 @@ void TMovieRumble::readCurInfo()
 {
 	int group = unk18;
 
-	if (isValid() && group < unk14->GetGroupCount()) {
+	if (isValid() && unk14->isIndexValid(group)) {
 		Koga::ToolData* toolData = unk14;
 		toolData->GetValue(group, "start_frame", unk1C);
 		toolData->GetValue(group, "end_frame", unk20);

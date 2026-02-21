@@ -801,13 +801,14 @@ config.libs = [
             Object(Matching, "MarioUtil/GDUtil.cpp"),
             Object(Matching, "MarioUtil/TexUtil.cpp"),
             Object(Matching, "MarioUtil/MapUtil.cpp"),
-            Object(NonMatching, "MarioUtil/ToolData.cpp"),
+            Object(Matching, "MarioUtil/ToolData.cpp"),
         ],
     },
     {
         "lib": "M3DUtil",
         "mw_version": "GC/1.2.5",
         "cflags": [*cflags_system, "-inline deferred"],
+        "progress_category": "game",
         "objects": [
             Object(NonMatching, "M3DUtil/M3UJoint.cpp"),
             Object(NonMatching, "M3DUtil/M3UModel.cpp"),
@@ -826,6 +827,7 @@ config.libs = [
         "lib": "System",
         "mw_version": "GC/1.2.5",
         "cflags": [*cflags_system, "-inline deferred"],
+        "progress_category": "game",
         "objects": [
             Object(Matching, "System/BaseParam.cpp"),
             Object(NonMatching, "System/EmitterViewObj.cpp"),

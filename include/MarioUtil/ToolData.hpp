@@ -1,58 +1,117 @@
 #ifndef MARIO_UTIL_TOOL_DATA_HPP
 #define MARIO_UTIL_TOOL_DATA_HPP
-
-#include <dolphin/types.h>
+#include <types.h>
 
 namespace Koga {
-
+/**
+ * @brief ToolData is a class that reads BCSV data. Usage is as follows:
+ * Create a ToolData instance, fetch the BCSV data from disk and attach it.
+ * One can then call GetValue to retrieve data from the file.
+ *
+ * The structures and parsing logic are based off the Mario Galaxy decomp's
+ * handling of JMap files
+ */
 class ToolData {
 public:
 	ToolData();
+	virtual ~ToolData(); // if not explicitly defined its not generated ok
+	BOOL Attach(const void* bcsvFileData);
+	// returns TRUE if the value was found, otherwise FALSE
+	BOOL GetValue(int entryIndex, const char* key, long& pValueOut) const;
+	// returns TRUE if the value was found, otherwise FALSE
+	BOOL GetValue(int entryIndex, const char* key,
+	              const char*& pValueOut) const;
 
-	virtual ~ToolData();
+	inline bool dataExists() const { return !!mData; }
 
-	bool Attach(const void*);
-	void Detach();
-	static u32 Hash(const char*);
+	inline bool isIndexValid(s32 entryIndex)
+	{
+		return entryIndex < mData->mNumEntries;
+	}
 
-	bool GetValue(int, const char*, u32&) const;
-	bool GetValue(int, const char*, s32&) const;
-	bool GetValue(int, const char*, bool&) const;
-	bool GetValue(int, const char*, const char*&) const;
-	bool GetValue(int, const char*, f32&) const;
+// JMAP value types, ignored in sunshine
+#define JMAP_VALUE_TYPE_LONG       0
+#define JMAP_VALUE_TYPE_STRING     1
+#define JMAP_VALUE_TYPE_FLOAT      2
+#define JMAP_VALUE_TYPE_LONG_2     3
+#define JMAP_VALUE_TYPE_SHORT      4
+#define JMAP_VALUE_TYPE_BYTE       5
+#define JMAP_VALUE_TYPE_STRING_PTR 6
+#define JMAP_VALUE_TYPE_NULL       7
 
-	int SearchItemInfo(const char*) const;
+	struct JMapItem {
+		u32 mHash;     // 0x0
+		u32 mMask;     // 0x4
+		u16 mOffsData; // 0x8
+		u8 mShift;     // 0xA
+		u8 mType;      // 0xB
+	};
 
-	void FindElement(int, u32, int) const;
-	void FindElement(int, s32, int) const;
-	void FindElement(int, bool, int) const;
-	void FindElement(int, const char*, int) const;
-	void FindElement(int, f32, int) const;
+	struct JMapData {
+		s32 mNumEntries;         // 0x0
+		s32 mNumFields;          // 0x4
+		s32 mDataOffset;         // 0x8
+		u32 mEntrySize;          // 0xC
+		const JMapItem mItems[]; // 0x10
+	};
 
-	const void* GetData() const { return unk4; }
-	int GetGroupCount() const { return unk4->unk0; }
+private:
+	inline u32 hashString(const char* key) const
+	{
+		u32 stringHash = 0;
+		char current_char;
+
+		while ((current_char = *key) != 0) {
+			key++;
+			stringHash = (current_char + (stringHash << 8)) % 0x1FFFFD9;
+		}
+		return stringHash;
+	}
+
+	inline s32 searchItemInfo(const char* pKey) const
+	{
+		s32 nFields = mData->mNumFields;
+		u32 hash    = hashString(pKey);
+
+		for (int i = 0; i < nFields; ++i) {
+			if (hash == mData->mItems[i].mHash) {
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
+	inline const char* getEntryAddress(const JMapData* pData,
+	                                   const s32 dataOffset,
+	                                   const int entryIndex) const
+	{
+		return reinterpret_cast<const char*>(pData) + dataOffset
+		       + entryIndex * pData->mEntrySize;
+	}
+
+	inline BOOL getValue(const int entryIndex, const int itemIndex,
+	                     s32* pValueOut) const
+	{
+		const JMapItem* item = &mData->mItems[itemIndex];
+		const char* valuePtr
+		    = getEntryAddress(mData, mData->mDataOffset, entryIndex)
+		      + item->mOffsData;
+		*pValueOut = *reinterpret_cast<const s32*>(valuePtr);
+		return TRUE;
+	}
+
+	inline BOOL getValue(const int entryIndex, const int itemIndex,
+	                     const char** pValueOut) const
+	{
+		const JMapItem* item = &mData->mItems[itemIndex];
+		*pValueOut = getEntryAddress(mData, mData->mDataOffset, entryIndex)
+		             + item->mOffsData;
+		return TRUE;
+	}
 
 public:
-	struct ItemInfo {
-		u16 getUnk8() const { return unk8; }
-		u32 getUnk0() const { return unk0; }
-
-		/* 0x0 */ u32 unk0;
-		/* 0x4 */ char unk4[0x4];
-		/* 0x8 */ u16 unk8;
-	};
-
-	struct Header {
-		/* 0x0 */ int unk0;
-		/* 0x4 */ int unk4;
-		/* 0x8 */ u32 unk8;
-		/* 0xC */ u32 unkC;
-		/* 0x10 */ ItemInfo unk10[];
-	};
-
-	/* 0x4 */ const Header* unk4;
+	const JMapData* mData;
 };
-
 } // namespace Koga
-
 #endif
