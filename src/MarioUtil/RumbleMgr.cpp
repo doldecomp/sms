@@ -1,588 +1,616 @@
-#include "dolphin/types.h"
 #include <MarioUtil/RumbleMgr.hpp>
-#include <MarioUtil/RumbleType.hpp>
-#include <Player/MarioAccess.hpp>
+#include <MarioUtil/MathUtil.hpp>
 #include <System/Application.hpp>
-#include <types.h>
+#include <Player/MarioAccess.hpp>
 
-RumbleMgr* SMSRumbleMgr;
-
-u32 RumbleMgr::mMotorCountLimit  = 900;
+int RumbleMgr::mMotorCountLimit  = 900;
 u16 RumbleMgr::mMotorTimerPeriod = 80;
 f32 RumbleMgr::mPowerThreshold   = 0.5f;
 
+RumbleMgr* SMSRumbleMgr = nullptr;
+
+// Size needed: 0x10, current: 0x10
+void RumbleBase::init()
+{
+	mPower       = 0.0f;
+	mAccumulator = 0.0f;
+}
+
+// Size needed: 0x28, current: 0x28
+void RumbleBase::stop() { PADControlMotor(mChan, PAD_MOTOR_STOP_HARD); }
+
+// Size needed: 0xAC, current: 0xA0
+void RumbleBase::update(f32 power, bool stopHard)
+{
+	// This function is the likely cause for stack mismatch in
+	// RumbleMgr::update() as it's the only one whose size mismatches.
+	mPower = power;
+	mAccumulator += mPower;
+
+	if (mPower <= 0.0f) {
+		PADControlMotor(mChan, PAD_MOTOR_STOP_HARD);
+	} else if (mAccumulator < 1.0f) {
+		if (stopHard) {
+			PADControlMotor(mChan, PAD_MOTOR_STOP_HARD);
+		} else {
+			PADControlMotor(mChan, PAD_MOTOR_STOP);
+		}
+	} else {
+		// @fake - this doesn't fix our function size but it does match stack in
+		// RumbleMgr::update()
+		// f32 accumulator = mAccumulator;
+		// mAccumulator    = accumulator - 1.0f;
+		mAccumulator -= 1.0f;
+		PADControlMotor(mChan, PAD_MOTOR_RUMBLE);
+	}
+}
+
+// Size needed: 0x10, current: 0x10
+void RumbleChannelDataMgr::init() { mChannelDataTbl = channelDataTbl; }
+
+// Size needed: 0x14, current: 0x14
+RumbleChannelDataTbl* RumbleChannelDataMgr::getChannelDataTbl(int index)
+{
+	// This feels wrong, but I only see direct loads from channelDataTbl.
+	// Also, it only matches size when doing this.
+	return &channelDataTbl[index];
+}
+
 RumbleChannelMgr::RumbleChannelMgr()
 {
-	mElapsedTime         = 0.0f;
-	mCurrentIntensity    = 0.0f;
-	mChannelID           = -1;
-	mLoopCount           = 0;
-	mExternalDampenPtr   = 0;
-	mPositionalSourcePtr = 0;
-	rumbleData           = 0;
+	mElapsedTime    = 0.0f;
+	mPower          = 0.0f;
+	mChannelDataIdx = -1;
+	mRepeatCount    = 0;
+	mMultiplierF    = nullptr;
+	mWorldPos       = nullptr;
+	mChannelDataTbl = nullptr;
+}
+
+// Size needed: 0x30, current: 0x2C
+void RumbleChannelMgr::init(RumbleChannelDataMgr* dataMgr)
+{
+	mElapsedTime    = 0.0f;
+	mPower          = 0.0f;
+	mChannelDataIdx = -1;
+	mRepeatCount    = 0;
+	mMultiplierF    = nullptr;
+	mWorldPos       = nullptr;
+	mChannelDataTbl = nullptr;
+	mChannelDataMgr = dataMgr;
+}
+
+// Size needed: 0x2C, current: 0x2C
+void RumbleChannelMgr::reset()
+{
+	mElapsedTime    = 0.0f;
+	mPower          = 0.0f;
+	mChannelDataIdx = -1;
+	mRepeatCount    = 0;
+	mMultiplierF    = nullptr;
+	mWorldPos       = nullptr;
+	mChannelDataTbl = nullptr;
+}
+
+// Size needed: 0x0C, current: 0x0C
+void RumbleChannelMgr::repeat() { mElapsedTime = 0.0f; }
+
+// Size needed: 0x2C, current: 0x2C
+void RumbleChannelMgr::start(int channelDataIdx, int repeatCount,
+                             f32* multiplierF)
+{
+	mElapsedTime    = 0.0f;
+	mChannelDataTbl = mChannelDataMgr->getChannelDataTbl(channelDataIdx);
+	mChannelDataIdx = channelDataIdx;
+	mRepeatCount    = repeatCount;
+	mMultiplierF    = multiplierF;
+}
+
+// Size needed: 0x2C, current: 0x2C
+void RumbleChannelMgr::start(int channelDataIdx, int repeatCount, Vec* worldPos)
+{
+	mElapsedTime    = 0.0f;
+	mChannelDataTbl = mChannelDataMgr->getChannelDataTbl(channelDataIdx);
+	mChannelDataIdx = channelDataIdx;
+	mRepeatCount    = repeatCount;
+	mWorldPos       = worldPos;
 }
 
 f32 RumbleChannelMgr::update()
 {
-	f32 dampenFactor;
-	f32* externalDampenSource = this->mExternalDampenPtr;
-	f32 targetFrameTime       = 1.0f / SMSGetVSyncTimesPerSec();
-	if (externalDampenSource != NULL) {
-		dampenFactor = *mExternalDampenPtr;
-		if (dampenFactor >= 0.0f) {
-			if (dampenFactor > 1.0f)
-				dampenFactor = 1.0f;
-		} else {
-			dampenFactor = 0.0f;
+	f32 updateRate = 1.0f / SMSGetVSyncTimesPerSec();
+	f32 mult;
+
+	if (mMultiplierF != nullptr) {
+		mult = *mMultiplierF;
+		if (mult < 0.0f) {
+			mult = 0.0f;
+		} else if (mult > 1.0f) {
+			mult = 1.0f;
+		}
+	} else if (mWorldPos != nullptr) {
+		JGeometry::TVec3<f32>& v
+		    = *static_cast<JGeometry::TVec3<f32>*>(mWorldPos);
+		f32 dist = SMS_DistanceFromMario(v);
+		mult     = -((dist - 300.0f) * (1.0f / 3000.0f) - 1.0f);
+		if (mult < 0.0f) {
+			mult = 0.0f;
+		} else if (mult > 1.0f) {
+			mult = 1.0f;
 		}
 	} else {
-		if (this->mPositionalSourcePtr != NULL) {
-			f32 distance
-			    = (SMS_GetMarioPos() - *this->mPositionalSourcePtr).length();
-			const f32 kScaleFactor = 1.0f / 3000.0f;
-			distance     = -((kScaleFactor * (distance - 300.0f)) - 1.0f);
-			dampenFactor = distance;
-			if (distance >= 0.0f) {
-				if (distance > 1.0f)
-					dampenFactor = 1.0f;
-			} else {
-				dampenFactor = 0.0f;
-			}
-		} else {
-			dampenFactor = 1.0f;
-		}
+		mult = 1.0f;
 	}
 
-	this->mCurrentIntensity = 0.0f;
-	if (!this->mLoopCount) {
-		this->mElapsedTime         = 0.0f;
-		this->mCurrentIntensity    = 0.0f;
-		this->mChannelID           = -1;
-		this->mLoopCount           = 0;
-		this->mExternalDampenPtr   = 0;
-		this->mPositionalSourcePtr = 0;
-		this->rumbleData           = 0;
+	mPower = 0.0f;
+	if (mRepeatCount == 0) {
+		reset();
 	}
 
-	if (this->rumbleData) {
-		int totalRumblePoints   = 0;
-		int rumblePointIterator = 0;
-		int keyframeIndex       = 0;
+	if (mChannelDataTbl != nullptr) {
+		mElapsedTime += updateRate;
 
-		this->mElapsedTime = this->mElapsedTime + targetFrameTime;
+		for (int i = 0; i < *mChannelDataTbl->mPointData - 1; i++) {
+			if (mElapsedTime > mChannelDataTbl->mFrameData[i]) {
+				f32 delta = mChannelDataTbl->mFrameData[i + 1]
+				            - mChannelDataTbl->mFrameData[i];
+				f32 frameDelta = mElapsedTime - mChannelDataTbl->mFrameData[i];
+				f32 progress;
 
-		while (true) {
-			totalRumblePoints = *this->rumbleData->point;
-			if (rumblePointIterator >= totalRumblePoints - 1)
-				break;
-			float* currentFrame = this->rumbleData->frame;
-
-			if (this->mElapsedTime > this->rumbleData->frame[keyframeIndex]) {
-				float lerpFactor = 1.0f;
-				if ((this->rumbleData->frame[keyframeIndex + 1]
-				     - this->rumbleData->frame[keyframeIndex])
-				    <= 0.0)
-					lerpFactor = 1.0f;
-				else
-					lerpFactor = ((this->mElapsedTime
-					               - this->rumbleData->frame[keyframeIndex])
-					              / (this->rumbleData->frame[keyframeIndex + 1]
-					                 - this->rumbleData->frame[keyframeIndex]));
-				this->mCurrentIntensity
-				    = ((1.0f - lerpFactor) * rumbleData->power[keyframeIndex])
-				      + (lerpFactor * rumbleData->power[keyframeIndex + 1]);
-			}
-
-			++rumblePointIterator;
-			++keyframeIndex;
-			break;
-		}
-
-		if (this->mElapsedTime > rumbleData->frame[totalRumblePoints - 1]) {
-			if (this->mLoopCount <= 1) {
-				this->mElapsedTime = 0.0f;
-				if (mLoopCount >= 0) {
-					this->mCurrentIntensity    = 0.0f;
-					this->mChannelID           = -1;
-					this->mLoopCount           = 0;
-					this->mExternalDampenPtr   = 0;
-					this->mPositionalSourcePtr = 0;
-					this->rumbleData           = 0;
+				if (delta > 0.0f) {
+					progress = frameDelta / delta;
+				} else {
+					progress = 1.0f;
 				}
+
+				mPower = (1.0f - progress) * mChannelDataTbl->mPowerData[i]
+				         + progress * mChannelDataTbl->mPowerData[i + 1];
+			}
+		}
+
+		if (mElapsedTime
+		    > mChannelDataTbl->mFrameData[*mChannelDataTbl->mPointData - 1]) {
+			if (mRepeatCount > 1) {
+				repeat();
+				mRepeatCount--;
+			} else if (mRepeatCount < 0) {
+				repeat();
 			} else {
-				this->mElapsedTime = 0.0f;
-				--this->mLoopCount;
+				reset();
 			}
 		}
 	}
 
-	this->mCurrentIntensity *= dampenFactor;
-	return this->mCurrentIntensity;
+	mPower *= mult;
+	return mPower;
+}
+
+// Size needed: 0x58, current: 0x58
+RumbleControllerMgr::RumbleControllerMgr()
+{
+	mPower         = 0.0f;
+	mChannelMgrTbl = new RumbleChannelMgr[RUMBLE_CHANNELS_PER_CONTROLLER];
+}
+
+// Size needed: 0x1C4, current: 0x19C
+void RumbleControllerMgr::init()
+{
+	mPower = 0.0f;
+
+	for (int i = 0; i < RUMBLE_CHANNELS_PER_CONTROLLER; i++) {
+		mChannelMgrTbl[i].init(mChannelDataMgr);
+	}
 }
 
 void RumbleControllerMgr::reset()
 {
-	currentPower = 0.0f;
+	mPower = 0.0f;
 
-	// @FIXME: registers arent being assigned correctly during the unroll
-	for (u32 i = 0; i < MAX_RUMBLE_CHANNELS; ++i) {
-		RumbleChannelMgr* channel     = &channels[i];
-		channel->mElapsedTime         = 0.0f;
-		channel->mCurrentIntensity    = 0.0f;
-		channel->mChannelID           = -1;
-		channel->mLoopCount           = 0;
-		channel->mExternalDampenPtr   = 0;
-		channel->mPositionalSourcePtr = 0;
-		channel->rumbleData           = 0;
+	for (int i = 0; i < RUMBLE_CHANNELS_PER_CONTROLLER; i++) {
+		mChannelMgrTbl[i].reset();
 	}
 
-	unkC      = 0;
-	motorTime = 0;
-	unk12     = false;
+	mMotorCounter = 0;
+	mMotorTimer   = 0;
+	unk12         = 0;
 }
 
+// Hmm... why does this inline in RumbleMgr::start(int, f32*)?
 #pragma dont_inline on
-void RumbleControllerMgr::start(int channelId, int loopCount,
-                                float* externalDampenPtr)
+void RumbleControllerMgr::start(int channelDataIdx, int repeatCount,
+                                f32* multiplierF)
 {
-	for (s32 i = 0; i < MAX_RUMBLE_CHANNELS; ++i) {
-		RumbleChannelMgr* channel = &this->channels[i];
+	for (int i = 0; i < RUMBLE_CHANNELS_PER_CONTROLLER; i++) {
+		if (mChannelMgrTbl[i].mChannelDataTbl == nullptr) {
+			mChannelMgrTbl[i].start(channelDataIdx, repeatCount, multiplierF);
+			break;
+		}
+	}
+}
+#pragma dont_inline reset
 
-		if (channel->rumbleData == NULL) {
-			channel->mElapsedTime       = 0.0f;
-			channel->rumbleData         = &channelDataTbl[channelId];
-			channel->mChannelID         = channelId;
-			channel->mLoopCount         = loopCount;
-			channel->mExternalDampenPtr = externalDampenPtr;
-			return; // Found a slot and started the rumble, so we exit
+// This one also inlines in RumbleMgr::start(int, Vec*)?
+#pragma dont_inline on
+void RumbleControllerMgr::start(int channelDataIdx, int repeatCount,
+                                Vec* worldPos)
+{
+	for (int i = 0; i < RUMBLE_CHANNELS_PER_CONTROLLER; i++) {
+		if (mChannelMgrTbl[i].mChannelDataTbl == nullptr) {
+			mChannelMgrTbl[i].start(channelDataIdx, repeatCount, worldPos);
+			break;
+		}
+	}
+}
+#pragma dont_inline reset
+
+// Size needed: 0x10C, current: 0x10C
+void RumbleControllerMgr::stop()
+{
+	for (int i = 0; i < RUMBLE_CHANNELS_PER_CONTROLLER; i++) {
+		if (mChannelMgrTbl[i].mChannelDataTbl != nullptr) {
+			mChannelMgrTbl[i].reset();
 		}
 	}
 }
 
-void RumbleControllerMgr::start(int channelId, int loopCount,
-                                Vec* positionalSourcePtr)
+// This one also inlines in RumbleMgr::stop(int)?
+#pragma dont_inline on
+void RumbleControllerMgr::stop(int channelDataIdx)
 {
-	for (s32 i = 0; i < MAX_RUMBLE_CHANNELS; ++i) {
-		RumbleChannelMgr* channel = &this->channels[i];
-
-		if (channel->rumbleData == NULL) {
-			channel->mElapsedTime         = 0.0f;
-			channel->rumbleData           = &channelDataTbl[channelId];
-			channel->mChannelID           = channelId;
-			channel->mLoopCount           = loopCount;
-			channel->mPositionalSourcePtr = positionalSourcePtr;
-			return; // Found a slot and started the rumble, so we exit
+	for (int i = 0; i < RUMBLE_CHANNELS_PER_CONTROLLER; i++) {
+		if (mChannelMgrTbl[i].mChannelDataTbl != nullptr
+		    && mChannelMgrTbl[i].mChannelDataIdx == channelDataIdx) {
+			mChannelMgrTbl[i].reset();
 		}
 	}
 }
+#pragma dont_inline reset
 
-void RumbleControllerMgr::stop(int channelId)
+// Size needed: 0x11C, current: 0x11C
+bool RumbleControllerMgr::channelMgrIsAllFree()
 {
-	for (u32 i = 0; i < MAX_RUMBLE_CHANNELS; ++i) {
-		RumbleChannelMgr* channel = &channels[i];
-		if (channel->rumbleData && channelId == channel->mChannelID) {
-			channel->mElapsedTime         = 0.0f;
-			channel->mCurrentIntensity    = 0.0f;
-			channel->mChannelID           = -1;
-			channel->mLoopCount           = 0;
-			channel->mExternalDampenPtr   = 0;
-			channel->mPositionalSourcePtr = 0;
-			channel->rumbleData           = 0;
+	bool allFree = true;
+	for (int i = 0; i < RUMBLE_CHANNELS_PER_CONTROLLER; i++) {
+		if (mChannelMgrTbl[i].mChannelDataTbl != nullptr) {
+			allFree = false;
 		}
 	}
+	return allFree;
 }
-#pragma dont_inline off
 
 void RumbleControllerMgr::updateMotorCount()
 {
-	u16 temp_r4_2;
-	u32 temp_r4;
-
-	if ((s8)unk12 != 0) {
-		temp_r4 = unkC;
-		if (temp_r4 != 0U) {
-			unkC = temp_r4 - 1;
-			return;
+	if (unk12) {
+		if (mMotorCounter > 0) {
+			mMotorCounter--;
+		} else {
+			unk12       = 0;
+			mMotorTimer = 0;
 		}
-		unk12     = 0;
-		motorTime = 0;
-		return;
-	}
-	if (unkC > RumbleMgr::mMotorCountLimit) {
+	} else if (mMotorCounter > RumbleMgr::mMotorCountLimit) {
 		unk12 = 1;
-		return;
+	} else if (mMotorTimer > 0) {
+		mMotorTimer--;
+		mMotorCounter++;
+	} else {
+		mMotorCounter = 0;
 	}
-	temp_r4_2 = motorTime;
-	if (temp_r4_2 != 0) {
-		motorTime = temp_r4_2 - 1;
-		unkC += 1;
-		return;
-	}
-	unkC = 0U;
-}
-#define CLAMP(val, min, max)                                                   \
-	((val) > (max) ? (max) : (val) < (min) ? (min) : (val))
-
-inline f32 clamp(f32 val, f32 min, f32 max) {
-    float value = val;
-    if (val > max)
-        return max;
-    return value;
-    if (val < min)
-        value = min;
-    return value;
 }
 
 f32 RumbleControllerMgr::update()
 {
-	float maxCurrentPower = 0.0f;
-
-	for (int channelIdx = 0; channelIdx < MAX_RUMBLE_CHANNELS; ++channelIdx) {
-		RumbleChannelMgr* currChannelManager = &this->channels[channelIdx];
-
-		if (currChannelManager->rumbleData) {
-			this->currentPower = currChannelManager->update();
-
-			if (this->currentPower > maxCurrentPower) {
-				maxCurrentPower = this->currentPower;
+	f32 maxPower = 0.0f;
+	for (int i = 0; i < RUMBLE_CHANNELS_PER_CONTROLLER; i++) {
+		if (mChannelMgrTbl[i].mChannelDataTbl != nullptr) {
+			mPower = mChannelMgrTbl[i].update();
+			if (mPower > maxPower) {
+				maxPower = mPower;
 			}
 		}
 	}
 
-	// this->currentPower = CLAMP(maxCurrentPower, 0.0f, 1.0f);
-	this->currentPower = clamp(maxCurrentPower, 0.0f, 1.0f);
+	mPower = maxPower;
+	if (mPower > 1.0f) {
+		mPower = 1.0f;
+	} else if (mPower < 0.0f) {
+		mPower = 0.0f;
+	}
 
-	if (this->currentPower > RumbleMgr::mPowerThreshold)
-		this->motorTime = RumbleMgr::mMotorTimerPeriod;
-	if (this->unk12)
-		this->currentPower = 0.0f;
-	return this->currentPower;
+	if (mPower > RumbleMgr::mPowerThreshold) {
+		mMotorTimer = RumbleMgr::mMotorTimerPeriod;
+	}
+
+	if (unk12) {
+		mPower = 0.0f;
+	}
+
+	return mPower;
 }
 
-RumbleMgr::RumbleMgr(bool bController1Avail, bool bController2Avail,
-                     bool bController3Avail, bool bController4Avail)
+RumbleMgr::RumbleMgr(bool controller1, bool controller2, bool controller3,
+                     bool controller4)
 {
-	bool aControllers[4];
-	this->m_masterIntensityL = 0.0f;
-	this->m_masterIntensityR = 0.0f;
-	aControllers[0]          = bController1Avail;
-	aControllers[1]          = bController2Avail;
-	aControllers[2]          = bController3Avail;
-	aControllers[3]          = bController4Avail;
+	bool enable[4];
 
-	for (int i = 0; i < 4; ++i) {
-		if (aControllers[i]) {
-			RumbleControllerMgr* pMgr = new RumbleControllerMgr();
-			if (pMgr) {
-				pMgr->currentPower = 0.0f;
-				pMgr->channels     = new RumbleChannelMgr[MAX_RUMBLE_CHANNELS];
-			}
-			this->m_controllerManagers[i] = pMgr;
+	mPower = 0.0f;
+	mTimer = 0.0f;
 
-			RumbleControllerState* pState = new RumbleControllerState();
-			if (pState) {
-				pState->m_currentIntensityL = 0.0f;
-				pState->m_currentIntensityR = 0.0f;
-				pState->m_controllerIndex   = i;
-			}
-			this->m_controllerStates[i] = pState;
+	enable[0] = controller1;
+	enable[1] = controller2;
+	enable[2] = controller3;
+	enable[3] = controller4;
+
+	for (int i = 0; i < PAD_MAX_CONTROLLERS; i++) {
+		mControllerMgrTbl[i] = nullptr;
+		mRumbleBaseTbl[i]    = nullptr;
+
+		if (enable[i]) {
+			mControllerMgrTbl[i] = new RumbleControllerMgr();
+			mRumbleBaseTbl[i]    = new RumbleBase(i);
 		}
 	}
 
-	const RumbleChannelData** pOutput = (const RumbleChannelData**)new int;
-	if (pOutput != nullptr) {
-		*pOutput = 0;
-	}
-
-	this->m_rumbleOutput  = pOutput;
-	this->m_isInitialized = TRUE;
-	this->m_flags         = 1;
+	mChannelDataMgr = nullptr;
+	mChannelDataMgr = new RumbleChannelDataMgr();
+	mActive         = true;
+	mPaused         = false;
+	mStopHard       = true;
 }
 
 void RumbleMgr::init()
 {
-	this->m_masterIntensityL = 0.0f;
-	this->m_masterIntensityR = 0.0f;
+	mPower = 0.0f;
+	mTimer = 0.0f;
 
-	for (int i = 0; i < 4; ++i) {
-		RumbleControllerMgr* pControllerMgr = this->m_controllerManagers[i];
-
-		if (pControllerMgr != nullptr) {
-			pControllerMgr->currentPower = 0.0f;
-			for (int ch = 0; ch < MAX_RUMBLE_CHANNELS; ++ch) {
-				void* unk20               = pControllerMgr->unk8;
-				RumbleChannelMgr& channel = pControllerMgr->channels[ch];
-
-				channel.mElapsedTime         = 0.0f;
-				channel.mCurrentIntensity    = 0.0f;
-				channel.mChannelID           = -1;
-				channel.mLoopCount           = 0;
-				channel.mExternalDampenPtr   = nullptr;
-				channel.mPositionalSourcePtr = nullptr;
-				channel.rumbleData           = nullptr;
-				channel.unk20                = unk20;
-			}
-
-			RumbleControllerState* pState = this->m_controllerStates[i];
-			pState->m_currentIntensityL   = 0.0f;
-			pState->m_currentIntensityR   = 0.0f;
+	for (int i = 0; i < PAD_MAX_CONTROLLERS; i++) {
+		if (mControllerMgrTbl[i] != nullptr) {
+			mControllerMgrTbl[i]->init();
+			mRumbleBaseTbl[i]->init();
 		}
 	}
 
-	*this->m_rumbleOutput = channelDataTbl;
-	this->m_isInitialized = true;
-
-	this->m_flags = true;
-	this->unkA    = false;
+	mChannelDataMgr->init();
+	mActive   = true;
+	mPaused   = false;
+	mStopHard = true;
 }
 
 void RumbleMgr::reset()
 {
-	this->m_masterIntensityL = 0.0f;
-	this->m_masterIntensityR = 0.0f;
+	mPower = 0.0f;
+	mTimer = 0.0f;
 
-	for (int i = 0; i < 4; ++i) {
-		RumbleControllerMgr* pMgr = this->m_controllerManagers[i];
-
-		if (pMgr != nullptr) {
-			pMgr->currentPower = 0.0f;
-			for (int ch = 0; ch < MAX_RUMBLE_CHANNELS; ++ch) {
-				RumbleChannelMgr& channel = pMgr->channels[ch];
-
-				channel.mElapsedTime         = 0.0f;
-				channel.mCurrentIntensity    = 0.0f;
-				channel.mChannelID           = -1;
-				channel.mLoopCount           = 0;
-				channel.mExternalDampenPtr   = nullptr;
-				channel.mPositionalSourcePtr = nullptr;
-				channel.rumbleData           = nullptr;
-			}
-
-			pMgr->unkC      = 0;
-			pMgr->motorTime = 0;
-			pMgr->unk12     = false;
-
-			RumbleControllerState* pState = this->m_controllerStates[i];
-			PADControlMotor(pState->m_controllerIndex, PAD_MOTOR_STOP_HARD);
-
-			pState->m_currentIntensityL = 0.0f;
-			pState->m_currentIntensityR = 0.0f;
+	for (int i = 0; i < PAD_MAX_CONTROLLERS; i++) {
+		if (mControllerMgrTbl[i] != nullptr) {
+			mControllerMgrTbl[i]->reset();
+			mRumbleBaseTbl[i]->stop();
+			mRumbleBaseTbl[i]->init();
 		}
 	}
 
-	this->m_flags = false;
+	mPaused = 0;
 }
 
-void RumbleMgr::start(int channelId, float* externalDampenPtr)
+void RumbleMgr::start(int channelDataIdx, f32* multiplierF)
 {
-	int index = 0;
+	int controllerIdx = 0;
 
-	if (!this->m_flags && this->m_isInitialized) {
-		if (this->m_controllerManagers[index]) {
-			this->m_controllerManagers[index]->start(channelId, 1, externalDampenPtr);
-		}
+	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
+		mControllerMgrTbl[controllerIdx]->start(channelDataIdx, 1, multiplierF);
 	}
 }
 
-void RumbleMgr::start(int channelId, Vec* positionalSourcePtr)
+void RumbleMgr::start(int channelDataIdx, Vec* worldPos)
 {
-	int index = 0;
+	int controllerIdx = 0;
 
-	if (!this->m_flags && this->m_isInitialized) {
-		if (this->m_controllerManagers[index]) {
-			this->m_controllerManagers[index]->start(channelId, 1, positionalSourcePtr);
-		}
+	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
+		mControllerMgrTbl[controllerIdx]->start(channelDataIdx, 1, worldPos);
 	}
 }
 
-void RumbleMgr::start(int channelId, int loopCount, f32* externalDampenPtr)
+// Size needed: 0x74, current: 0x74
+void RumbleMgr::start(int channelDataIdx, MtxPtr mtx)
 {
-	int index = 0;
+	int controllerIdx = 0;
 
-	if (!this->m_flags && this->m_isInitialized) {
-		if (this->m_controllerManagers[index]) {
-			this->m_controllerManagers[index]->start(channelId, loopCount, externalDampenPtr);
-		}
+	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
+		Vec worldPos;
+		worldPos.x = mtx[3][0];
+		worldPos.y = mtx[3][1];
+		worldPos.z = mtx[3][2];
+
+		mControllerMgrTbl[controllerIdx]->start(channelDataIdx, 1, &worldPos);
 	}
 }
 
-void RumbleMgr::start(int channelId, int loopCount, Vec* positionalSourcePtr)
+void RumbleMgr::start(int channelDataIdx, int repeatCount, f32* multiplierF)
 {
-	int index = 0;
+	int controllerIdx = 0;
 
-	if (!this->m_flags && this->m_isInitialized) {
-		if (this->m_controllerManagers[index]) {
-			this->m_controllerManagers[index]->start(channelId, loopCount, positionalSourcePtr);
-		}
+	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
+		mControllerMgrTbl[controllerIdx]->start(channelDataIdx, repeatCount,
+		                                        multiplierF);
 	}
 }
 
+void RumbleMgr::start(int channelDataIdx, int repeatCount, Vec* worldPos)
+{
+	int controllerIdx = 0;
+
+	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
+		mControllerMgrTbl[controllerIdx]->start(channelDataIdx, repeatCount,
+		                                        worldPos);
+	}
+}
+
+// Size needed: 0x70, current: 0x70
+void RumbleMgr::start(int channelDataIdx, int repeatCount, MtxPtr mtx)
+{
+	int controllerIdx = 0;
+
+	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
+		Vec worldPos;
+		worldPos.x = mtx[3][0];
+		worldPos.y = mtx[3][1];
+		worldPos.z = mtx[3][2];
+
+		mControllerMgrTbl[controllerIdx]->start(channelDataIdx, repeatCount,
+		                                        &worldPos);
+	}
+}
+
+// Size needed: 0x94, current: 0x58
+void RumbleMgr::start(int controllerIdx, int channelDataIdx, int repeatCount,
+                      f32* multiplierF)
+{
+	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
+		mControllerMgrTbl[controllerIdx]->start(channelDataIdx, repeatCount,
+		                                        multiplierF);
+	}
+}
+
+// Size needed: 0x94, current: 0x58
+void RumbleMgr::start(int controllerIdx, int channelDataIdx, int repeatCount,
+                      Vec* worldPos)
+{
+	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
+		mControllerMgrTbl[controllerIdx]->start(channelDataIdx, repeatCount,
+		                                        worldPos);
+	}
+}
+
+// Size needed: 0x7C, current: 0x74
+void RumbleMgr::start(int controllerIdx, int channelDataIdx, int repeatCount,
+                      MtxPtr mtx)
+{
+	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
+		Vec worldPos;
+		worldPos.x = mtx[3][0];
+		worldPos.y = mtx[3][1];
+		worldPos.z = mtx[3][2];
+
+		mControllerMgrTbl[controllerIdx]->start(channelDataIdx, repeatCount,
+		                                        &worldPos);
+	}
+}
+
+// @stack
 void RumbleMgr::stop()
 {
-	for (int controllerPort = 0; controllerPort < 4; controllerPort++) {
-		RumbleControllerMgr* controllerMgr
-		    = this->m_controllerManagers[controllerPort];
+	// @fake - this fixes our stack mismatch, perhaps a leftover debug print?
+	int stack[2];
+	(void)stack;
 
-		if (controllerMgr != nullptr) {
-			for (int rumbleChannel = 0; rumbleChannel < MAX_RUMBLE_CHANNELS;
-			     rumbleChannel++) {
-				RumbleChannelMgr& channel
-				    = controllerMgr->channels[rumbleChannel];
-					
-				if (channel.rumbleData != nullptr) {
-					channel.mElapsedTime         = 0.0f;
-					channel.mCurrentIntensity    = 0.0f;
-					channel.mChannelID           = -1;
-					channel.mLoopCount           = 0;
-					channel.mExternalDampenPtr   = nullptr;
-					channel.mPositionalSourcePtr = nullptr;
-					channel.rumbleData           = nullptr;
-				}
-			}
+	for (int i = 0; i < PAD_MAX_CONTROLLERS; i++) {
+		if (mControllerMgrTbl[i] != nullptr) {
+			mControllerMgrTbl[i]->stop();
 		}
 	}
 }
 
-void RumbleMgr::stop(int channelId)
+void RumbleMgr::stop(int channelDataIdx)
 {
-	int index = 0;
+	int controllerIdx = 0;
 
-	if (!this->m_flags && this->m_isInitialized) {
-		if (this->m_controllerManagers[index]) {
-			this->m_controllerManagers[index]->stop(channelId);
-		}
+	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
+		mControllerMgrTbl[controllerIdx]->stop(channelDataIdx);
 	}
 }
 
+// Size needed: 0x178, current: 0x50
+void RumbleMgr::stop(int controllerIdx, int channelDataIdx)
+{
+	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
+		mControllerMgrTbl[controllerIdx]->stop(channelDataIdx);
+	}
+}
+
+// @stack
 void RumbleMgr::update()
 {
-	float delta = 1.0f / SMSGetVSyncTimesPerSec();
+	// @fake - this fixes our stack mismatch, perhaps a leftover debug print?
+	// NOTE: same hack fixes RumbleMgr::stop()
+	int stack[2];
+	(void)stack;
 
-	if (!this->m_flags && this->m_isInitialized) {
-		for (int i = 0; i < 4; ++i) {
-			RumbleControllerMgr* controller = this->m_controllerManagers[i];
+	f32 updateRate = 1.0f / SMSGetVSyncTimesPerSec();
 
-			if (controller) {
-				bool isSilent = true;
-				for (int ch = 0; ch < MAX_RUMBLE_CHANNELS; ch++) {
-					RumbleChannelMgr& channel = controller->channels[ch];
-					if (channel.rumbleData != nullptr
-					    || channel.mElapsedTime != 0.0f) {
-						isSilent = false;
-						break;
-					}
+	if (mPaused || !mActive) {
+		return;
+	}
+
+	for (int i = 0; i < PAD_MAX_CONTROLLERS; i++) {
+		if (mControllerMgrTbl[i] != nullptr) {
+			if (!mControllerMgrTbl[i]->channelMgrIsAllFree()) {
+				mPower = mControllerMgrTbl[i]->update();
+
+				if (mTimer > 0.0f) {
+					mPower *= ((1.0f - mPower) * (mTimer / 0.5f) + 1.0f);
 				}
 
-				RumbleControllerState* state = this->m_controllerStates[i];
-
-				if (isSilent) {
-					PADControlMotor(state->m_controllerIndex,
-					                PAD_MOTOR_STOP_HARD);
-					state->m_currentIntensityL = 0.0f;
-					state->m_currentIntensityR = 0.0f;
-				} else {
-					this->m_masterIntensityL = controller->update();
-
-					if (this->m_masterIntensityR > 0.0f) {
-						this->m_masterIntensityL
-						    = this->m_masterIntensityL
-						      * ((1.0f - this->m_masterIntensityL)
-						             * (this->m_masterIntensityR / 0.5f)
-						         + 1.0f);
-					}
-
-					if (this->m_masterIntensityL <= 1.0f) {
-						if (this->m_masterIntensityL < 0.0f) {
-							this->m_masterIntensityL = 0.0f;
-						}
-					} else {
-						this->m_masterIntensityL = 1.0f;
-					}
-
-					state->m_currentIntensityL = this->m_masterIntensityL;
-					state->m_currentIntensityR += state->m_currentIntensityL;
-
-					if (state->m_currentIntensityL > 0.0f) {
-						if (state->m_currentIntensityR >= 1.0f) {
-							state->m_currentIntensityR -= 1.0f;
-							PADControlMotor(state->m_controllerIndex,
-							                PAD_MOTOR_RUMBLE);
-						} else {
-							if (this->unkA)
-								PADControlMotor(state->m_controllerIndex,
-								                PAD_MOTOR_STOP_HARD);
-							else
-								PADControlMotor(state->m_controllerIndex,
-								                PAD_MOTOR_STOP);
-						}
-					} else {
-						if (this->unkA)
-							PADControlMotor(state->m_controllerIndex,
-							                PAD_MOTOR_STOP_HARD);
-						else
-							PADControlMotor(state->m_controllerIndex,
-							                PAD_MOTOR_STOP);
-					}
+				if (mPower > 1.0f) {
+					mPower = 1.0f;
+				} else if (mPower < 0.0f) {
+					mPower = 0.0f;
 				}
-				controller->updateMotorCount();
+
+				mRumbleBaseTbl[i]->update(mPower, mStopHard);
+			} else {
+				mRumbleBaseTbl[i]->stop();
+				mRumbleBaseTbl[i]->init();
 			}
-		}
 
-		if (this->m_masterIntensityR > 0.0f) {
-			this->m_masterIntensityR = this->m_masterIntensityR - delta;
+			mControllerMgrTbl[i]->updateMotorCount();
 		}
+	}
+
+	if (mTimer > 0.0f) {
+		mTimer -= updateRate;
 	}
 }
 
-void RumbleMgr::setActive(bool activeState)
+void RumbleMgr::setActive(bool active)
 {
-	int v3;                    // r30
-	int v4;                    // r31
-	RumbleControllerMgr* v5;   // r3
-	RumbleControllerState* v6; // r29
-	float* v7;                 // r3
-
-	this->m_isInitialized = activeState;
-	if (!this->m_isInitialized) {
-		v3                       = 0;
-		v4                       = 0;
-		this->m_masterIntensityL = 0.0;
-		this->m_masterIntensityR = 0.0;
-		do {
-			v5 = this->m_controllerManagers[v4];
-			if (v5) {
-				v5->reset();
-				v6 = m_controllerStates[v4];
-				PADControlMotor(v6->m_controllerIndex, PAD_MOTOR_STOP_HARD);
-				v6->m_currentIntensityL = 0.0f;
-				v6->m_currentIntensityR = 0.0f;
-			}
-			++v3;
-			++v4;
-		} while (v3 < 4);
-		this->m_flags = 0;
+	mActive = active;
+	if (!mActive) {
+		reset();
 	}
 }
 
 void RumbleMgr::startPause()
 {
-	int padIter;                               // r31
-	int i;                                     // r30
-	RumbleControllerState* theControllerState; // r3
-
-	padIter = 0;
-	for (i = 0; i < 4; ++i) {
-		theControllerState = this->m_controllerStates[padIter];
-		if (theControllerState)
-			PADControlMotor(theControllerState->m_controllerIndex,
-			                PAD_MOTOR_STOP_HARD);
-		++padIter;
+	for (int i = 0; i < PAD_MAX_CONTROLLERS; i++) {
+		if (mRumbleBaseTbl[i] != nullptr) {
+			mRumbleBaseTbl[i]->stop();
+		}
 	}
-	this->m_flags = 1;
+
+	mPaused = true;
 }
 
 void RumbleMgr::finishPause()
 {
-	this->m_masterIntensityR = 0.5;
-	this->m_flags            = 0;
+	mTimer  = 0.5f;
+	mPaused = false;
+}
+
+// Size needed: 0x94, current: 0x94
+void RumbleMgr::changePause()
+{
+	if (mPaused) {
+		finishPause();
+	} else {
+		startPause();
+	}
+}
+
+// Size needed: 0x24, current: 0x24
+void RumbleMgr::changeMode()
+{
+	if (mStopHard) {
+		mStopHard = false;
+	} else {
+		mStopHard = true;
+	}
 }

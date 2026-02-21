@@ -1,71 +1,91 @@
 #include <GC2D/MovieRumble.hpp>
-#include <JSystem/JKernel/JKRFileLoader.hpp>
-#include <MarioUtil/RumbleMgr.hpp>
 #include <stdio.h>
-#include <string.h>
+#include <JSystem/JKernel/JKRFileLoader.hpp>
+#include <System/THPRender.hpp>
+#include <MarioUtil/RumbleType.hpp>
+#include <MarioUtil/ToolData.hpp>
+#include <MarioUtil/RumbleMgr.hpp>
 
-TMovieRumble::TMovieRumble(const TTHPRender* thpRender)
+// TODO: removeme
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+
+TMovieRumble::TMovieRumble(const TTHPRender* param_1)
+    : unk10(param_1)
 {
-	thpRenderer = thpRender;
 }
 
-void TMovieRumble::init(const char* subtitleName)
+void TMovieRumble::init(const char* param_1)
 {
-	char szSubtitlePath[128];
-	sprintf(szSubtitlePath, "/subtitle/rnbl/%s", subtitleName);
-	char* szSubtitlePathExtension = (char*)strrchr(szSubtitlePath, '.');
-	char* result                  = strcpy(szSubtitlePathExtension, ".bcr");
+	char acStack_90[128];
+	makeBcrName(acStack_90, 128, param_1);
 
-	Koga::ToolData* data = new Koga::ToolData;
-	toolData             = data;
-	void* glbResource    = JKRFileLoader::getGlbResource(szSubtitlePath);
-	toolData->Attach(glbResource);
-
-	if (toolData->dataExists() == FALSE)
-		entryIndex = -1;
+	unk14     = new Koga::ToolData;
+	void* bcr = JKRGetResource(acStack_90);
+	unk14->Attach(bcr);
+	if (!unk14->GetData())
+		unk18 = -1;
 	else
-		entryIndex = 0;
+		unk18 = 0;
 
-	Koga::ToolData* pData = toolData;
-	s32 nextEntryIndex    = entryIndex;
-
-	updateRumbleState(pData, nextEntryIndex);
-
-	isRumbleActive = false;
+	readCurInfo();
+	unk28 = false;
 }
 
-void TMovieRumble::perform(u32 flags, JDrama::TGraphics* graphics)
+void TMovieRumble::perform(u32 param_1, JDrama::TGraphics*)
 {
-	if ((flags & 1) != 0) {
-		if (isRumbleActive) {
-			checkRumbleOff();
-		} else {
-			bool rumbleTypeValid = rumbleTypeIndex != -1;
-			if (rumbleTypeValid
-			    && startFrame <= thpRenderer->getFrameNumber()) {
-				SMSRumbleMgr->start(rumbleTypeIndex, -1, (float*)0);
-				isRumbleActive = true;
-			}
-		}
+	if (param_1 & 0x1)
+		movement();
+}
+
+void TMovieRumble::movement()
+{
+	if (unk28) {
+		checkRumbleOff();
+	} else {
+		checkRumbleOn();
+	}
+}
+
+void TMovieRumble::checkRumbleOn()
+{
+	if (unk24 != -1 && unk1C <= unk10->getFrameNumber()) {
+		SMSRumbleMgr->start(unk24, -1, (f32*)nullptr);
+		unk28 = true;
 	}
 }
 
 #pragma dont_inline on
 void TMovieRumble::checkRumbleOff()
 {
-	bool rumbleTypeValid = rumbleTypeIndex != -1;
-	if (rumbleTypeValid) {
-		if (endFrame <= thpRenderer->getFrameNumber()) {
-			SMSRumbleMgr->stop();
-			entryIndex++;
-
-			Koga::ToolData* pData = toolData;
-			s32 nextEntryIndex    = entryIndex;
-			updateRumbleState(pData, nextEntryIndex);
-			isRumbleActive = false;
-		}
+	if (unk24 != -1 && unk20 <= unk10->getFrameNumber()) {
+		SMSRumbleMgr->stop();
+		unk18 += 1;
+		readCurInfo();
+		unk28 = false;
 	}
 }
 #pragma dont_inline off
 
-TMovieRumble::~TMovieRumble() { }
+void TMovieRumble::readCurInfo()
+{
+	int group = unk18;
+
+	if (isValid() && group < unk14->GetGroupCount()) {
+		Koga::ToolData* toolData = unk14;
+		toolData->GetValue(group, "start_frame", unk1C);
+		toolData->GetValue(group, "end_frame", unk20);
+		const char* type;
+		toolData->GetValue(group, "type", type);
+		unk24 = RumbleType::getIndex((char*)type);
+	} else {
+		unk24 = -1;
+	}
+}
+
+void TMovieRumble::makeBcrName(char* acStack_90, int, const char* param_1)
+{
+	sprintf(acStack_90, "/subtitle/rnbl/%s", param_1);
+	char* it = strrchr(acStack_90, '.');
+	strcpy(it, ".bcr");
+}
