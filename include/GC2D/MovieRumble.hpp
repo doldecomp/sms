@@ -2,11 +2,8 @@
 #define GC2D_MOVIE_RUMBLE_HPP
 
 #include <JSystem/JDrama/JDRViewObj.hpp>
-
-class TTHPRender;
-namespace Koga {
-class ToolData;
-}
+#include <MarioUtil/ToolData.hpp>
+#include <System/THPRender.hpp>
 
 class TMovieRumble : public JDrama::TViewObj {
 public:

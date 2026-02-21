@@ -1,7 +1,7 @@
-#include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/MathUtil.hpp>
-#include <System/Application.hpp>
+#include <MarioUtil/RumbleMgr.hpp>
 #include <Player/MarioAccess.hpp>
+#include <System/Application.hpp>
 
 int RumbleMgr::mMotorCountLimit  = 900;
 u16 RumbleMgr::mMotorTimerPeriod = 80;
