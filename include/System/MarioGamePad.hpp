@@ -157,6 +157,12 @@ public:
 		return mEnabledFrameMeaning & meaning;
 	}
 
+	// fabricated
+	f32 getMainStickInDir(f32 x, f32 y) const
+	{
+		return mMainStick.mPosX * x + mMainStick.mPosY * y;
+	}
+
 public:
 	// NOTE: suprisingly, only flat array matches
 	/* 0xA8 */ f32 mCompSPos[2 * VARIANTS];

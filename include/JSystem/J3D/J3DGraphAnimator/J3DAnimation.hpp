@@ -10,6 +10,7 @@ class J3DTransformInfo;
 class J3DTextureSRTInfo;
 class J3DModelData;
 
+// TODO: refactor & document this
 class J3DFrameCtrl {
 public:
 	enum Attribute_e {
@@ -20,9 +21,18 @@ public:
 		LOOP_MIRROR_REPEAT_e,
 	};
 
+	enum {
+		FLAG_FINISHED = 0x1,
+		FLAG_LOOPED   = 0x2,
+	};
+
 	J3DFrameCtrl() { init(0); };
 	J3DFrameCtrl(s16 s) { init(s); };
 	virtual ~J3DFrameCtrl() { }
+
+	void init(s16 end);
+	BOOL checkPass(float pass_frame);
+	void update();
 
 	void setSpeed(f32 speed) { mSpeed = speed; }
 	void setAttribute(u8 attr) { mLoopMode = attr; }
@@ -32,10 +42,13 @@ public:
 	f32 getCurrentFrame() const { return mCurrentFrame; }
 	void setFrame(f32 frame) { mCurrentFrame = frame; }
 	s16 getEndFrame() const { return mEndFrame; }
+	s16 getStart() const { return mStartFrame; }
 
-	void init(s16);
-	BOOL checkPass(float);
-	void update();
+	void reset()
+	{
+		mCurrentFrame = mStartFrame;
+		mSpeed        = 1.0f;
+	}
 
 	bool checkFlag(u32 flag) const { return (mFlags & flag) ? 1 : 0; }
 

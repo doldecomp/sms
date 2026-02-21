@@ -149,42 +149,46 @@ void J3DFrameCtrl::update()
 		if (mCurrentFrame < mStartFrame) {
 			mCurrentFrame = mStartFrame;
 			mSpeed        = 0.0f;
-			mFlags |= 1;
+			mFlags |= FLAG_FINISHED;
 		}
 		if (mCurrentFrame >= mEndFrame) {
 			mCurrentFrame = mEndFrame - 0.001f;
 			mSpeed        = 0.0f;
-			mFlags |= 1;
+			mFlags |= FLAG_FINISHED;
 		}
 		break;
+
 	case LOOP_ONCE_RESET_e:
 		if (mCurrentFrame < mStartFrame) {
 			mCurrentFrame = mStartFrame;
 			mSpeed        = 0.0f;
-			mFlags |= 1;
+			mFlags |= FLAG_FINISHED;
 		}
 		if (mCurrentFrame >= mEndFrame) {
 			mCurrentFrame = mStartFrame;
 			mSpeed        = 0.0f;
-			mFlags |= 1;
+			mFlags |= FLAG_FINISHED;
 		}
 		break;
+
 	case LOOP_REPEAT_e:
 		while (mCurrentFrame < mStartFrame) {
-			mFlags |= 2;
+			mFlags |= FLAG_LOOPED;
 			if (mLoopFrame - mStartFrame <= 0.0f) {
 				break;
 			}
 			mCurrentFrame += mLoopFrame - mStartFrame;
 		}
+
 		while (mCurrentFrame >= mEndFrame) {
-			mFlags |= 2;
+			mFlags |= FLAG_LOOPED;
 			if (mEndFrame - mLoopFrame <= 0.0f) {
 				break;
 			}
 			mCurrentFrame -= mEndFrame - mLoopFrame;
 		}
 		break;
+
 	case LOOP_MIRROR_ONCE_e:
 		if (mCurrentFrame >= mEndFrame) {
 			mCurrentFrame = mEndFrame - 0.001f;
@@ -193,9 +197,10 @@ void J3DFrameCtrl::update()
 		if (mCurrentFrame < mStartFrame) {
 			mCurrentFrame = mStartFrame;
 			mSpeed        = 0.0f;
-			mFlags |= 1;
+			mFlags |= FLAG_FINISHED;
 		}
 		break;
+
 	case LOOP_MIRROR_REPEAT_e:
 		if (mCurrentFrame >= mEndFrame) {
 			mCurrentFrame = mEndFrame - 0.001f;
@@ -204,7 +209,7 @@ void J3DFrameCtrl::update()
 		if (mCurrentFrame < mStartFrame) {
 			mCurrentFrame = mStartFrame;
 			mSpeed        = -mSpeed;
-			mFlags |= 2;
+			mFlags |= FLAG_LOOPED;
 		}
 		break;
 	}
