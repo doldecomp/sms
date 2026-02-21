@@ -4,6 +4,7 @@
 #include <JSystem/JDrama/JDRActor.hpp>
 
 enum TActorTypeBits {
+	ACTOR_TYPE_UNK4000000  = 0x4000000,
 	ACTOR_TYPE_BOSS        = 0x8000000,
 	ACTOR_TYPE_ENEMY       = 0x10000000,
 	ACTOR_TYPE_UNK40000000 = 0x40000000,

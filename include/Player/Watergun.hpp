@@ -95,7 +95,7 @@ public:
 	void changeBackup();
 	void calcAnimation(JDrama::TGraphics*);
 	void changeNozzle(TNozzleType, bool);
-	bool damage();
+	BOOL damage();
 	void emit();
 	TNozzleBase* getCurrentNozzle() const;
 	MtxPtr getEmitMtx(int);

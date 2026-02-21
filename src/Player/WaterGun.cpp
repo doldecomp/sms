@@ -1336,7 +1336,7 @@ bool TWaterGun::suck()
 	return false;
 }
 
-bool TWaterGun::damage()
+BOOL TWaterGun::damage()
 {
 	if (hasWater()) {
 		TNozzleBase* nozzle = getCurrentNozzle();
@@ -1346,9 +1346,9 @@ bool TWaterGun::damage()
 		if (mCurrentWater < 0) {
 			mCurrentWater = 0;
 		}
-		return true;
+		return TRUE;
 	}
-	return false;
+	return FALSE;
 }
 
 void TWaterGun::changeBackup()
