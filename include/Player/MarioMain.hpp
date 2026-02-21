@@ -1252,7 +1252,7 @@ public:
 	/* 0x2C0 */ char unk2C0[0x37C - 0x2C0];
 	/* 0x37C */ u16 unk37C;
 	/* 0x37E */ u16 unk37E;
-	/* 0x380 */ u32 unk380; // pump state?
+	/* 0x380 */ u32 unk380;        // pump state?
 	/* 0x384 */ THitActor* unk384; // Last receiveMessage sender
 
 	// TODO: Make enum (0 = red, 1 = yellow, 2 = green)
