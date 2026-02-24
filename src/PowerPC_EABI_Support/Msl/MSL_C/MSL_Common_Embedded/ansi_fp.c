@@ -24,6 +24,11 @@ void __num2dec(const decform* f, f64 x, decimal* d)
 	int var_r6_2;
 	const f64* var_r5;
 
+	// fixes float ordering issue
+	(void)0.0;
+	(void)1.0;
+	(void)4503601774854144.0;
+
 	digits = f->digits;
 	if (digits > 16) {
 		digits = 16;

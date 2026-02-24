@@ -9,12 +9,12 @@
 DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
                           DSIOResult* io_result, BOOL need_reply, BOOL read)
 {
-	BOOL exit;
 	u32 done;
+	BOOL exit;
 	DSError error;
+	TRKBuffer* replyBuffer;
 	int replyBufferId;
 	TRKBuffer* buffer;
-	TRKBuffer* replyBuffer;
 	u32 length;
 	int bufferId;
 	u16 replyLength;
@@ -56,8 +56,8 @@ DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
 				replyLength   = 0;
 				replyIOResult = DS_IONoError;
 
-				error = TRKRequestSend(buffer, &replyBufferId, read ? 5 : 5, 3,
-				                       !(read && file_handle == 0));
+				error = (0, TRKRequestSend(buffer, &replyBufferId, read ? 5 : 5,
+				                           3, !(read && file_handle == 0)));
 				if (error == DS_NoError) {
 					replyBuffer = (TRKBuffer*)TRKGetBuffer(replyBufferId);
 					TRKSetBufferPosition(replyBuffer, 2);
@@ -73,8 +73,8 @@ DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
 				if (read && error == DS_NoError) {
 					if (replyBuffer->length != replyLength + 5) {
 						replyLength = replyBuffer->length - 5;
-						if (replyIOResult == DS_IONoError)
-							replyIOResult = DS_IOError;
+						if (replyIOResult == 0)
+							replyIOResult = 1;
 					}
 
 					if (replyLength <= length)
