@@ -38,7 +38,7 @@ public:
 	}
 
 	// fabricated
-	bool contain(const T& value) const
+	BOOL contain(const T& value) const
 	{
 		for (int i = 0; i < mSize; ++i)
 			if (mData[mSize - 1 - i] == value)
