@@ -9,7 +9,7 @@ struct HeaderData;
 struct TCardSector;
 
 struct TCardBookmarkInfo {
-	/* 0x0 */ u32 unk0;
+	/* 0x0 */ int unk0;
 	/* 0x4 */ u32 unk4;
 	/* 0x8 */ u64 unk8;
 	/* 0x10 */ u64 unk10;

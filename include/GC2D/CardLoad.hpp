@@ -15,6 +15,8 @@ class TExPane;
 class JUTTexture;
 class TFileLoadBlock;
 class TOptionControl;
+class TMapObjOptionWall;
+class TMarioGamePad;
 
 extern TCardLoad* gpCardLoad;
 
@@ -29,23 +31,23 @@ public:
 	void setupTitleScreen();
 	void setupScoreScreen();
 	void loadAfter();
-	void titleDraw();
+	bool titleDraw();
 	void makeBuffer(J2DTextBox*, int);
-	void changeMode(s32);
+	TEProgress changeMode(s32);
 	void setMessage(J2DTextBox*, s32, int);
-	void waitForChoice(TEProgress, TEProgress, int);
-	void waitForChoiceBM(TEProgress, TEProgress, int);
-	void waitForAnyKey(TEProgress);
-	void waitForAnyKeyBM(TEProgress);
-	void waitForStart(TEProgress);
-	void drawMessage(TEProgress);
-	void drawMessageBM(TEProgress);
-	void selectBookmark(TEProgress, TEProgress, bool);
-	void selectFunction();
+	s8 waitForChoice(TEProgress, TEProgress, int);
+	s8 waitForChoiceBM(TEProgress, TEProgress, int);
+	s8 waitForAnyKey(TEProgress);
+	s8 waitForAnyKeyBM(TEProgress);
+	s8 waitForStart(TEProgress);
+	s8 drawMessage(TEProgress);
+	s8 drawMessageBM(TEProgress);
+	s8 selectBookmark(TEProgress, TEProgress, bool);
+	s8 selectFunction();
 	void setSelected(u8);
 	void changeScene();
 
-	static u32 cMessageID;
+	static u32 cMessageID[];
 
 public:
 	struct UnkCardLoadStruct {
@@ -57,16 +59,16 @@ public:
 	};
 
 	/* 0x10 */ int unk10;
-	/* 0x14 */ u32 unk14;
-	/* 0x18 */ u32 unk18;
-	/* 0x1C */ u32 unk1C;
+	/* 0x14 */ int unk14;
+	/* 0x18 */ int unk18;
+	/* 0x1C */ TEProgress unk1C;
 	/* 0x20 */ u32 unk20;
-	/* 0x24 */ u32 unk24;
+	/* 0x24 */ int unk24;
 	/* 0x28 */ J2DSetScreen* unk28;
 	/* 0x2C */ J2DSetScreen* unk2C;
 	/* 0x30 */ u32 unk30;
 	/* 0x34 */ J2DSetScreen* unk34;
-	/* 0x38 */ void* unk38;
+	/* 0x38 */ TMarioGamePad* unk38;
 	/* 0x3C */ char unk3C[4];
 	/* 0x40 */ TCardBookmarkInfo unk40[3];
 	/* 0xA0 */ void* unkA0;
@@ -75,12 +77,12 @@ public:
 	/* 0xAC */ JPABaseEmitter* unkAC;
 	/* 0xB0 */ s8 unkB0;
 	/* 0xB1 */ s8 unkB1;
-	/* 0xB2 */ char unkB2[2];
+	/* 0xB2 */ s8 unkB2;
 	/* 0xB4 */ s16 unkB4;
 	/* 0xB6 */ s8 unkB6;
 	/* 0xB7 */ s8 unkB7;
 	/* 0xB8 */ u8 unkB8;
-	/* 0xBC */ u32 unkBC;
+	/* 0xBC */ int unkBC;
 	/* 0xC0 */ int unkC0;
 	/* 0xC4 */ int unkC4;
 	/* 0xC8 */ JUTTexture* unkC8[10];
@@ -90,7 +92,7 @@ public:
 	/* 0x124 */ JUTRect unk124[11];
 	/* 0x1D4 */ TExPane* unk1D4[13];
 	/* 0x208 */ J2DPane* unk208;
-	/* 0x20C */ s16 unk20C[11];
+	/* 0x20C */ u16 unk20C[11];
 	/* 0x222 */ u8 unk222[11];
 	/* 0x22E */ s16 unk22E[8];
 	/* 0x23E */ char unk23E[0x248 - 0x23E];
@@ -103,7 +105,7 @@ public:
 	/* 0x274 */ u8 unk274;
 	/* 0x275 */ u8 unk275;
 	/* 0x278 */ TFileLoadBlock* unk278[3];
-	/* 0x284 */ u32 unk284;
+	/* 0x284 */ TMapObjOptionWall* unk284;
 	/* 0x288 */ TExPane* unk288;
 	/* 0x28C */ JUTRect unk28C;
 	/* 0x29C */ J2DTextBox* unk29C;
@@ -140,9 +142,9 @@ public:
 	/* 0x4D8 */ TExPane* unk4D8[2];
 	/* 0x4E0 */ JUTRect unk4E0[2];
 	/* 0x500 */ J2DPane* unk500;
-	/* 0x504 */ J2DPane* unk504[3];
+	/* 0x504 */ J2DPicture* unk504[3];
 	/* 0x510 */ J2DPane* unk510;
-	/* 0x514 */ J2DPane* unk514[2];
+	/* 0x514 */ J2DPicture* unk514[2];
 	/* 0x51C */ J2DTextBox* unk51C;
 	/* 0x520 */ J2DTextBox* unk520;
 	/* 0x524 */ TExPane* unk524;
