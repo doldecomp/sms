@@ -42,6 +42,13 @@ public:
 		mOffsetAnimPending = true;
 	}
 
+	// fabricated
+	void updatePaneOffset(s32 time, s32 target_x, s32 target_y)
+	{
+		setPaneOffset(time, target_x, target_y, mOffsetInterpolator.getCurrentX(),
+		              mOffsetInterpolator.getCurrentY());
+	}
+
 	/// Initiates a pane's size animation.
 	void setPaneSize(s32 time, s32 target_w, s32 target_h, s32 initial_w,
 	                 s32 initial_h)
@@ -50,6 +57,13 @@ public:
 		                           initial_h);
 		mPane->resize(initial_w, initial_h);
 		mSizeAnimPending = true;
+	}
+
+	// fabricated
+	void updatePaneSize(s32 time, s32 target_w, s32 target_h)
+	{
+		setPaneSize(time, target_w, target_h, mSizeInterpolator.getCurrentX(),
+		            mSizeInterpolator.getCurrentY());
 	}
 
 	/// Initiates a pane's alpha animation.
@@ -63,7 +77,26 @@ public:
 		mAlphaAnimPending = true;
 	}
 
+	// fabricated and incorrect
+	void setCenteredSize(s32 time, s32 target_w, s32 target_h, s32 initial_w,
+	                     s32 initial_h)
+	{
+		setPaneSize(time, target_w, target_h, initial_w, initial_h);
+		s32 initH = mInitialBounds.getHeight();
+		s32 initW = mInitialBounds.getWidth();
+		setPaneOffset(time, (initW - target_w) * 0.5f,
+		              (initH - target_h) * 0.5f, (initW - initial_w) * 0.5f,
+		              (initH - initial_h) * 0.5f);
+	}
+
 	// fabricated
+	void updateCenteredSize(s32 time, s32 target_w, s32 target_h)
+	{
+		setCenteredSize(time, target_w, target_h,
+		                mSizeInterpolator.getCurrentX(),
+		                mSizeInterpolator.getCurrentY());
+	}
+
 	J2DPane* getPane() const { return mPane; }
 	const JUTRect& getInitialBounds() const { return mInitialBounds; }
 

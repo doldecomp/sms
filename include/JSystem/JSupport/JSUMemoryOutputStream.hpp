@@ -5,6 +5,10 @@
 
 class JSUMemoryOutputStream : public JSURandomOutputStream {
 public:
+	JSUMemoryOutputStream(void* buffer, s32 size) { setBuffer(buffer, size); }
+
+	JSUMemoryOutputStream() { setBuffer(nullptr, 0); }
+
 	virtual int writeData(const void* buf, s32 count);
 	virtual int seekPos(s32 offset, JSUStreamSeekFrom from);
 	virtual ~JSUMemoryOutputStream() { }

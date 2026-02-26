@@ -82,7 +82,7 @@ public:
 	/* 0x20 */ TMarioGamePad* mGamePads[4];
 	/* 0x30 */ TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >* unk30;
 	/* 0x34 */ TSMSFader* mFader;
-	/* 0x38 */ char mSaveFile;
+	/* 0x38 */ s8 mSaveFile;
 	/* 0x3C */ u32 unk3C;
 	/* 0x40 */ JKRHeap* mHeap;
 	/* 0x44 */ u16 unk44;

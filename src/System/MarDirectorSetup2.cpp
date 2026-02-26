@@ -74,8 +74,7 @@ void TMarDirector::setup2()
 	unkB0 = JDrama::TNameRefGen::search<TTalk2D2>("会話表示");
 	unk70 = JDrama::TNameRefGen::search<TCardLoad>("データロード");
 
-	// TODO:
-	// unk70->unk38 = *unk18;
+	unk70->unk38 = unk18[0];
 	unk78->unkC0 = unk18[0];
 
 	unk18[0]->mFlags = 0;
