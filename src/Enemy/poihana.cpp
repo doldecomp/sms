@@ -3,7 +3,7 @@
 #include <JSystem/JUtility/JUTNameTab.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
-#include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/Strategy.hpp>
 #include <Strategic/Spine.hpp>
@@ -304,27 +304,27 @@ void TPoiHana::setDeadAnm()
 		unk18C = 3;
 	setBckAnm(1);
 
-	if (JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(0xC0, &mPosition, 0, nullptr)) {
+	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+	        PARTICLE_MS_POI_DEAD, &mPosition, 0, nullptr)) {
 		emitter->setScale(mScaling);
 	}
 
 	if (!mGroundPlane->isSand()) {
-		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emit(0x10, &mPosition, 0, nullptr)) {
+		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+		        PARTICLE_MS_JUMP_ED_A, &mPosition, 0, nullptr)) {
 			emitter->setScale(mScaling);
 		}
-		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emit(0x11, &mPosition, 0, nullptr)) {
+		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+		        PARTICLE_MS_JUMP_ED_B, &mPosition, 0, nullptr)) {
 			emitter->setScale(mScaling);
 		}
 	} else {
-		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emit(0x53, &mPosition, 0, nullptr)) {
+		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+		        PARTICLE_MS_POI_SAND, &mPosition, 0, nullptr)) {
 			emitter->setScale(mScaling);
 		}
-		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emit(0x10, &mPosition, 0, nullptr)) {
+		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+		        PARTICLE_MS_JUMP_ED_A, &mPosition, 0, nullptr)) {
 			emitter->setScale(mScaling);
 		}
 	}
@@ -413,40 +413,31 @@ void TPoiHana::calcRootMatrix()
 {
 	TSpineEnemy::calcRootMatrix();
 
-	if (isBckAnm(3) || isBckAnm(4)) {
-		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emitAndBindToPosPtr(0x12F, &mPosition, 1,
-		                                                  this)) {
-			emitter->setScale(mScaling);
-		}
-	}
+	if (isBckAnm(3) || isBckAnm(4))
+		SMS_EasyEmitParticle(PARTICLE_MS_POI_KIZETSU, &mPosition, this,
+		                     mScaling);
 
-	if (isBckAnm(5)) {
-		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emitAndBindToPosPtr(0x124, &mPosition, 1,
-		                                                  this)) {
-			emitter->setScale(mScaling);
-		}
-	}
+	if (isBckAnm(5))
+		SMS_EasyEmitParticle(PARTICLE_MS_POI_ZZZ, &mPosition, this, mScaling);
 
 	if (isBckAnm(12) || isBckAnm(13)) {
 		if (mMActor->getFrameCtrl(0)->checkPass(18.0f)) {
 			if (!mGroundPlane->isSand()) {
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
-				        0x10, &mPosition, 0, nullptr)) {
+				        PARTICLE_MS_JUMP_ED_A, &mPosition, 0, nullptr)) {
 					emitter->setScale(mScaling);
 				}
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
-				        0x11, &mPosition, 0, nullptr)) {
+				        PARTICLE_MS_JUMP_ED_B, &mPosition, 0, nullptr)) {
 					emitter->setScale(mScaling);
 				}
 			} else {
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
-				        0x53, &mPosition, 0, nullptr)) {
+				        PARTICLE_MS_POI_SAND, &mPosition, 0, nullptr)) {
 					emitter->setScale(mScaling);
 				}
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
-				        0x10, &mPosition, 0, nullptr)) {
+				        PARTICLE_MS_JUMP_ED_A, &mPosition, 0, nullptr)) {
 					emitter->setScale(mScaling);
 				}
 			}
@@ -455,7 +446,8 @@ void TPoiHana::calcRootMatrix()
 
 	if (isBckAnm(2) && mGroundPlane->isSand()
 	    && mMActor->getFrameCtrl(0)->checkPass(34.0f)) {
-		gpMarioParticleManager->emit(0x53, &mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_POI_SAND, &mPosition, 0,
+		                             nullptr);
 	}
 }
 
@@ -679,8 +671,10 @@ DEFINE_NERVE(TNervePoihanaThrow, TLiveActor)
 		SMSRumbleMgr->start(0x15, 0xf, (float*)nullptr);
 		MtxPtr mtx
 		    = self->mMActor->getModel()->getAnmMtx(TPoiHana::mMouthJntIndex);
-		gpMarioParticleManager->emitAndBindToMtxPtr(0xB, mtx, 0, nullptr);
-		gpMarioParticleManager->emitAndBindToMtxPtr(0x39, mtx, 0, nullptr);
+		gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_DMG_B, mtx, 0,
+		                                            nullptr);
+		gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_M_AMIATTACK,
+		                                            mtx, 0, nullptr);
 	}
 
 	if (self->checkCurAnmEnd(0))
