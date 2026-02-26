@@ -82,4 +82,10 @@ template <class T> f32 CLBCalcRatio(T a, T b, T c)
 	return result;
 }
 
+// fabricated
+inline s16 CLBDegToShortAngle(f32 deg)
+{
+	return CLBRoundf<s16>(deg * (65536.0f / 360.0f));
+}
+
 #endif
