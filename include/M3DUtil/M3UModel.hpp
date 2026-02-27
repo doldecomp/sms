@@ -13,6 +13,13 @@ class J3DMtxCalcSoftimageAnm;
 
 class M3UModelCommon {
 public:
+	M3UModelCommon()
+	    : unk4(nullptr)
+	    , unk8(nullptr)
+	    , unk10(nullptr)
+	    , unk14(nullptr)
+	{
+	}
 	virtual J3DMtxCalc* getMtxCalc(const M3UMtxCalcSetInfo&);
 
 	// Fabricated
@@ -37,6 +44,15 @@ public:
 
 class M3UModel {
 public:
+	M3UModel()
+	    : unk4(nullptr)
+	    , unk8(nullptr)
+	    , unkC(nullptr)
+	    , unk10(nullptr)
+	    , unk14(nullptr)
+	    , unk1C(nullptr)
+	{
+	}
 	virtual void changeMtxCalcAnmTransform(int, u8);
 	virtual void changeAnmTexPattern(int, u8);
 	virtual void setMtxCalc(const M3UMtxCalcSetInfo&) { }
@@ -52,7 +68,10 @@ public:
 	void updateInMotion();
 
 	// Fabricated
-	J3DFrameCtrl& getFrameCtrl(u8 idx) { return unkC[idx]; }
+	J3DFrameCtrl& getFrameCtrl(int idx) { return unkC[idx]; }
+
+	// Fabricated
+	J3DModel* getModel() { return unk8; }
 
 public:
 	/* 0x4 */ M3UModelCommon* unk4;

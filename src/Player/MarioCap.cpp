@@ -114,9 +114,9 @@ void TMarioCap::perform(unsigned long param_1, JDrama::TGraphics* param_2)
 	// volatile u32 padding[42];
 
 	if ((param_1 & 2) != 0) {
-		if (mMario->unk0FA == 0x12D) {
-			J3DFrameCtrl* frameCtrl = mMario->getMotionFrameCtrl();
-			if (frameCtrl->getFrame() < 157.0f) {
+		if (mMario->mAnimationId == 0x12D) {
+			J3DFrameCtrl& frameCtrl = mMario->getMotionFrameCtrl();
+			if (frameCtrl.getFrame() < 157.0f) {
 				unkC = unk10[1];
 				onFlagAllShapes(unk10[0]->mModelData);
 				offFlagAllShapes(unk10[1]->mModelData);

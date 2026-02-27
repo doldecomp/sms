@@ -148,7 +148,7 @@ public:
 	/* 0x04 */ u8* mMtxEffectType; // array of TMtxEffectBase types
 	/* 0x08 */ u16* mBoneIDs;      // array of bone IDs to be manipulated
 	/* 0x0C */ J3DModel* mModel;   // model to be manipulated
-	/* 0x14 */ TMtxEffectBase** mMtxEffectTbl; // array of TMtxEffectBase
+	/* 0x10 */ TMtxEffectBase** mMtxEffectTbl; // array of TMtxEffectBase
 };
 
 void SMS_MakeJointsToArc(J3DModel*, const JGeometry::TVec3<f32>&,
