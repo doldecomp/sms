@@ -157,9 +157,10 @@ bool MActor::isCurAnmAlreadyEnd(int param_1)
 
 	J3DFrameCtrl* ctrl = getFrameCtrl(param_1);
 	if (ctrl) {
-		if (!ctrl->checkFlag(1) && !ctrl->checkFlag(2))
+		if (!ctrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE)
+		    && !ctrl->checkState(J3DFrameCtrl::STATE_LOOPED_ONCE))
 			ret = false;
-		if (!ret && !(ctrl->mCurrentFrame + 0.1f >= ctrl->mEndFrame))
+		if (!ret && !(ctrl->getFrame() + 0.1f >= ctrl->getEnd()))
 			ret = false;
 	}
 
@@ -440,7 +441,7 @@ void MActor::setFrameRate(float param_1, int param_2)
 	if (!unk28[param_2])
 		return;
 
-	unk28[param_2]->unk4.setSpeed(param_1);
+	unk28[param_2]->unk4.setRate(param_1);
 }
 
 void MActor::setBck(const char* name)

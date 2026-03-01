@@ -3,8 +3,7 @@
 
 s32 CARDReadAsync(CARDFileInfo* fileInfo, void* buf, s32 length, s32 offset,
                   CARDCallback callback);
-long CARDRead(struct CARDFileInfo* fileInfo, void* buf, long length,
-              long offset);
+long CARDRead(CARDFileInfo* fileInfo, void* buf, s32 length, s32 offset);
 s32 CARDCancel(CARDFileInfo* fileInfo);
 
 #endif // _DOLPHIN_CARDREAD_H_

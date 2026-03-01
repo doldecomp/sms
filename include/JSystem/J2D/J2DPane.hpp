@@ -99,6 +99,10 @@ public:
 
 	// fabricated
 	const JUTRect& getBounds() const { return mBounds; }
+	void setBounds(const JUTRect& bounds) { mBounds = bounds; }
+	const JUTRect& getGlobalBounds() const { return mGlobalBounds; }
+
+	void setInfluenceAlpha(bool influence) { mIsInfluencedAlpha = influence; }
 
 public:
 	/* 0x4 */ u16 mInfoTag;

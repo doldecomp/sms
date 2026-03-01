@@ -22,6 +22,7 @@ class J3DModelData;
 class J3DAnmTransform;
 struct TBGWallCheckRecord;
 class TMarioCap;
+class TWaterEmitInfo;
 
 // TODO: where should this be?
 enum E_SIDEWALK_TYPE { };
@@ -655,8 +656,8 @@ public:
 	void loserExec();
 	void normalizeNozzle();
 	void resetNozzle();
-	void trampleExec(THitActor*);
-	void canTake(THitActor*);
+	bool trampleExec(THitActor*);
+	bool canTake(THitActor*);
 	bool isTakeSituation(THitActor*);
 	void dropObject();
 	s16 getAttackAngle(const THitActor*);
@@ -699,7 +700,7 @@ public:
 	void getRailMtx() const;
 	void getTakenMtx();
 	void calcBodyPos(JGeometry::TVec3<f32>*);
-	void getTrampleCt();
+	u32 getTrampleCt();
 	void setPositions();
 	void takeOffGlass();
 	void wearGlass();
@@ -846,7 +847,7 @@ public:
 	void getRidingMtx(f32 (*)[4]);
 	void isWallInFront() const;
 	bool isInvincible() const;
-	void isUnderWater() const;
+	bool isUnderWater() const;
 	void canSquat() const;
 	void getJumpSlideControl() const;
 	void getJumpAccelControl() const;
@@ -1153,6 +1154,18 @@ public:
 	}
 
 	// Fabricated
+	bool checkActionFlag(u32 actionFlag) const
+	{
+		return mAction & actionFlag ? true : false;
+	}
+
+	// Fabricated
+	bool checkUnk380(u32 message) const
+	{
+		return unk380 == message ? true : false;
+	}
+
+	// Fabricated
 	bool fabricatedActionInline() const
 	{
 		if (mAction >= 0x168 && 0x16c >= mAction) {
@@ -1218,17 +1231,28 @@ public:
 
 	/* 0x124 */ u32 unk124;
 	/* 0x128 */ u32 unk128;
-	/* 0x12C */ u32 unk12C;
-	/* 0x130 */ u32 unk130;
-	/* 0x134 */ f32 unk134;
-	/* 0x138 */ char unk138[0x29C - 0x138];
+	/* 0x12C */ f32 unk12C; // under water health / air
+	/* 0x130 */ f32 unk130; // max air
+	/* 0x134 */ f32 unk134; // Pollution amount on model?
+	/* 0x138 */ u32 unk138;
+	/* 0x13C */ u32 unk13C;
+	/* 0x140 */ u32 unk140;
+	/* 0x144 */ s32 unk144;
+	/* 0x148 */ u32 unk148;
+	/* 0x14C */ s16 unk14C; // invincibility frames
+	/* 0x14E */ u16 unk14E;
+	/* 0x150 */ u32 unk150;
+	/* 0x154 */ TWaterEmitInfo* unk154;
+	/* 0x158 */ char unk158[0x19C - 0x158];
+	/* 0x19C */ JGeometry::TVec3<f32> unk19C; // damage pos
+	/* 0x1A8 */ char unk1A8[0x29C - 0x1A8];
 	/* 0x29C */ JGeometry::TVec3<f32> unk29C;
 	/* 0x2A8 */ char unk2A8[0x2BC - 0x2A8];
 	/* 0x2BC */ f32 unk2BC;
 	/* 0x2C0 */ char unk2C0[0x37C - 0x2C0];
 	/* 0x37C */ u16 unk37C;
 	/* 0x37E */ u16 unk37E;
-	/* 0x380 */ u32 unk380;
+	/* 0x380 */ u32 unk380;        // pump state?
 	/* 0x384 */ THitActor* unk384; // Last receiveMessage sender
 
 	// TODO: Make enum (0 = red, 1 = yellow, 2 = green)

@@ -351,9 +351,9 @@ void TConsoleStr::startAppearScenario()
 	}
 
 	unk290[0]->setPaneOffset(0x1E, 0.0f, 0.0f, 0.0f,
-	                         -(unk290[0]->getUnk4().y2 + 1));
+	                         -(unk290[0]->getInitialBounds().y2 + 1));
 	unk290[1]->setPaneOffset(0x1E, 0.0f, 0.0f, 0.0f,
-	                         465 - unk290[1]->getUnk4().y1);
+	                         465 - unk290[1]->getInitialBounds().y1);
 }
 
 #pragma dont_inline on
@@ -613,7 +613,7 @@ void TConsoleStr::startCloseWipe(bool param_1)
 		unk290[0]->setPaneAlpha(30, 100, 255);
 
 		unk290[1]->setPaneOffset(0x2D, 0, 224 - local_74.y1, 0,
-		                         465 - unk290[1]->unk4.y1);
+		                         465 - unk290[1]->getInitialBounds().y1);
 		unk290[1]->setPaneSize(0x2D, local_74.getWidth(), 0,
 		                       local_74.getHeight(), 0);
 		unk290[1]->setPaneAlpha(30, 100, 255);
@@ -629,7 +629,7 @@ void TConsoleStr::startCloseWipe(bool param_1)
 		unk290[0]->setPaneAlpha(30, 100, 255);
 
 		unk290[1]->setPaneOffset(0x2D, 0, 224 - local_88.y1, 0,
-		                         465 - unk290[1]->unk4.y1);
+		                         465 - unk290[1]->getInitialBounds().y1);
 		unk290[1]->setPaneSize(0x2D, local_88.getWidth(), 0,
 		                       local_88.getHeight(), 0);
 		unk290[1]->setPaneAlpha(30, 100, 255);

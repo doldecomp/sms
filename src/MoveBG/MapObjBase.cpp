@@ -147,7 +147,7 @@ void TMapObjBase::setUpMapCollision(u16 param_1)
 
 void TMapObjBase::soundBas(u32 param_1, f32 param_2, f32 param_3)
 {
-	f32 currFrame = mMActor->getFrameCtrl(0)->getCurrentFrame();
+	f32 currFrame = mMActor->getFrameCtrl(0)->getFrame();
 	if (currFrame <= param_2 && param_2 < currFrame + param_3) {
 		if (gpMSound->gateCheck(param_1))
 			MSoundSESystem::MSoundSE::startSoundActor(param_1, getPosition(), 0,
@@ -213,7 +213,7 @@ void TMapObjBase::startControlAnim(u16 param_1)
 	startAnim(param_1);
 	if (mMapObjData->mAnim && param_1 < mMapObjData->mAnim->unk0)
 		mMActor->getFrameCtrl(mMapObjData->mAnim->unk4[param_1].unk8)
-		    ->setSpeed(0);
+		    ->setRate(0);
 }
 
 void TMapObjBase::startBck(const char* param_1)
@@ -250,7 +250,7 @@ void TMapObjBase::makeObjDead()
 	if (unkFE != 0xffff && mMapObjData->mAnim && mMapObjData->mAnim->unk0 > 0
 	    && mMapObjData->mAnim->unk4[unkFE].unk4) {
 		u32 uVar6 = mMapObjData->mAnim->unk4[unkFE].unk8;
-		mMActor->getFrameCtrl(uVar6)->setSpeed(0.0f);
+		mMActor->getFrameCtrl(uVar6)->setRate(0.0f);
 		mMActor->getFrameCtrl(uVar6)->setFrame(0.0f);
 		mMActor->getUnk28(uVar6)->unk0 = 0xffffffff;
 		unkFE                          = 0xffff;
@@ -326,7 +326,7 @@ void TMapObjBase::control()
 	if (mMapObjData->mMove) {
 		TMapObjMoveData* move = mMapObjData->mMove;
 
-		move->unk4->setFrame(move->unk8->getCurrentFrame());
+		move->unk4->setFrame(move->unk8->getFrame());
 		move->unk8->update();
 		J3DTransformInfo info;
 		move->unk4->getTransform(1, &info);

@@ -3,20 +3,20 @@
 
 TCoord2D::TCoord2D()
 {
-	unk0.zero();
-	unk8.zero();
-	unk10.zero();
+	mCurrentPos.zero();
+	mTargetPos.zero();
+	mVelocity.zero();
 }
 
-void TCoord2D::setValue(s32 param_1, f32 param_2, f32 param_3, f32 param_4,
-                        f32 param_5)
+void TCoord2D::setValue(s32 time, f32 target_x, f32 target_y, f32 start_x,
+                        f32 start_y)
 {
-	unk8.set(param_2, param_3);
-	unk0.set(param_4, param_5);
-	if (param_1 <= 0) {
-		unk10.set(0.0f, 0.0f);
+	mTargetPos.set(target_x, target_y);
+	mCurrentPos.set(start_x, start_y);
+	if (time <= 0) {
+		mVelocity.set(0.0f, 0.0f);
 	} else {
-		unk10.set((param_2 - param_4) / param_1, (param_3 - param_5) / param_1);
+		mVelocity.set((target_x - start_x) / time, (target_y - start_y) / time);
 	}
 }
 
@@ -24,11 +24,13 @@ bool TCoord2D::update()
 {
 	bool result = false;
 
-	CLBChaseGeneralConstantSpecifySpeed(&unk0.x, unk8.x, unk10.x);
-	CLBChaseGeneralConstantSpecifySpeed(&unk0.y, unk8.y, unk10.y);
+	CLBChaseGeneralConstantSpecifySpeed(&mCurrentPos.x, mTargetPos.x,
+	                                    getVelocityX());
+	CLBChaseGeneralConstantSpecifySpeed(&mCurrentPos.y, mTargetPos.y,
+	                                    getVelocityY());
 
-	if (unk0.x == unk8.x && unk0.y == unk8.y ? true : false) {
-		unk10.set(0.0f, 0.0f);
+	if (isReachedTarget()) {
+		mVelocity.set(0.0f, 0.0f);
 		result = true;
 	}
 

@@ -152,9 +152,18 @@ public:
 	void updateMeaning();
 
 	// fabricated
+	bool checkMeaning(u32 meaning) const { return mMeaning & meaning; }
+
+	// fabricated
 	bool checkFrameMeaning(u32 meaning) const
 	{
 		return mEnabledFrameMeaning & meaning;
+	}
+
+	// fabricated
+	f32 getMainStickInDir(f32 x, f32 y) const
+	{
+		return mMainStick.mPosX * x + mMainStick.mPosY * y;
 	}
 
 public:

@@ -17,8 +17,7 @@ public:
 
 public:
 	/* 0xC */ JGeometry::TVec3<f32> unkC;
-	/* 0x18 */ f32 unk18; // TODO: these 2 floats are a struct I think?
-	/* 0x1C */ f32 unk1C;
+	/* 0x18 */ JGeometry::TVec2<f32> unk18;
 	/* 0x20 */ u32 unk20;
 	/* 0x24 */ int unk24;
 	/* 0x28 */ int unk28;

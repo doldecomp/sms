@@ -90,6 +90,13 @@ public:
 		return i;
 	}
 
+	u64 readU64()
+	{
+		u64 i;
+		read(&i, sizeof(u64));
+		return i;
+	}
+
 	/* @fabricated */
 	f32 readF32()
 	{

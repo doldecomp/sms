@@ -25,7 +25,7 @@ public:
 	void isTowerCameraSpecifyMode(int) const;
 	void isFollowCameraSpecifyMode(int) const;
 	void isRailCameraSpecifyMode(int) const;
-	void isFixCameraSpecifyMode(int) const;
+	bool isFixCameraSpecifyMode(int) const;
 	void isDefiniteCameraSpecifyMode(int) const;
 	void isOverHipAttackSpecifyMode(int) const;
 	void isSlopeCameraMode() const;
@@ -78,7 +78,7 @@ public:
 	void isNowInbetween() const;
 	void getToroccoMtx_() const;
 	void setMarioLookat_();
-	void getUsualLookat() const;
+	JGeometry::TVec3<f32> getUsualLookat() const;
 	void calcAngleXFromXRotRatio_() const;
 	void calcDistFromXRotRatio_() const;
 	void calcNowTargetFromPosAndAt_(const Vec&, const Vec&);

@@ -2420,7 +2420,7 @@ DEFINE_NERVE(TNerveHamuKuriWallDie, TLiveActor)
 		if (self->checkCurAnmEnd(0)) {
 			J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(0);
 
-			if (spine->getTime() > pTVar7 + ctrl->getEndFrame()) {
+			if (spine->getTime() > pTVar7 + ctrl->getEnd()) {
 				self->onLiveFlag(LIVE_FLAG_DEAD);
 				self->onLiveFlag(LIVE_FLAG_UNK8);
 				self->onLiveFlag(LIVE_FLAG_UNK20000);

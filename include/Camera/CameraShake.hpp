@@ -6,6 +6,7 @@
 class TCamSaveShake;
 
 enum EnumCamShakeMode {
+	CAM_SHAKE_MODE_UNK2  = 0x2,
 	CAM_SHAKE_MODE_UNK3  = 0x3,
 	CAM_SHAKE_MODE_UNK4  = 0x4,
 	CAM_SHAKE_MODE_UNK5  = 0x5,

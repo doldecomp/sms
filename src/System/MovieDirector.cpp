@@ -41,7 +41,7 @@ const char* TMovieDirector::getStreamMovieName(u32 idx)
 
 TMovieDirector::TMovieDirector()
     : unk18(1)
-    , unk1C(0)
+    , unk1C(STATE_FADE_IN)
     , unk20(nullptr)
     , unk24(nullptr)
     , unk30(0)
@@ -267,9 +267,7 @@ int TMovieDirector::direct()
 	if (!unk18) {
 		switch (Hx_MovieStartSyncEx()) {
 		case 1:
-			if (gpMSound->gateCheck(0x2972))
-				MSoundSESystem::MSoundSE::startSoundSystemSE(0x2972, 0, nullptr,
-				                                             0);
+			SMSGetMSound()->startSoundSystemSE(0x2972, 0, nullptr, 0);
 			break;
 		case 2:
 			unk18 = true;
@@ -280,7 +278,7 @@ int TMovieDirector::direct()
 
 	SMSRumbleMgr->update();
 
-	if (unk1C == 3 || unk1C == 4) {
+	if (unk1C == STATE_SAVE_TO_TITLE || unk1C == STATE_SAVE_AND_CONTINUE) {
 		JDrama::TGraphics graphics;
 		graphics.unk2 = 1;
 		unk10->testPerform(1, &graphics);
@@ -297,34 +295,34 @@ int TMovieDirector::direct()
 
 	s32 nextState = unk1C;
 	switch (unk1C) {
-	case 0:
+	case STATE_FADE_IN:
 		if (TFlagManager::getInstance()->getBool(gpApplication.getMovie()
 		                                         + 0x10391)
 		    && unk20->checkFrameMeaning(0x61)) {
-			nextState = 2;
+			nextState = STATE_FADE_OUT;
 		} else if (gpApplication.mFader->isFullyFadedIn()) {
-			nextState = 1;
+			nextState = STATE_PLAYING;
 		}
 		break;
 
-	case 1:
+	case STATE_PLAYING:
 		if (TFlagManager::getInstance()->getBool(gpApplication.getMovie()
 		                                         + 0x10391)
 		    && unk20->checkFrameMeaning(0x61)) {
-			nextState = 2;
+			nextState = STATE_FADE_OUT;
 		} else if (THPPlayerGetState() == 5) {
-			nextState = 2;
+			nextState = STATE_FADE_OUT;
 		} else if (THPPlayerGetState() == 3) {
 			desiredAppState = decideNextMode(&nextState);
 		}
 		break;
 
-	case 2:
-		if (gpApplication.mFader->isFullyFadedIn())
+	case STATE_FADE_OUT:
+		if (gpApplication.mFader->isFullyFadedOut())
 			desiredAppState = decideNextMode(&nextState);
 		break;
 
-	case 3:
+	case STATE_SAVE_TO_TITLE:
 		switch (unk24->getNextState()) {
 		case 0:
 		case 1:
@@ -335,7 +333,7 @@ int TMovieDirector::direct()
 		}
 		break;
 
-	case 4:
+	case STATE_SAVE_AND_CONTINUE:
 		switch (unk24->getNextState()) {
 		case 1:
 			gpApplication.mFader->setFadeStatus(
@@ -356,10 +354,11 @@ int TMovieDirector::direct()
 		break;
 	}
 
-	if (unk20->isSomethingPushed() && gpCardManager->getLastStatus() != -1
+	if (unk20->isSomethingPushed()
+	    && gpCardManager->getLastStatus() != CARD_RESULT_BUSY
 	    && !unk30.check(0x2)) {
 		unk30.on(0x2);
-		nextState = 2;
+		nextState = STATE_FADE_OUT;
 		unk28->unkC.on(0x9);
 		unk2C->unkC.on(0x9);
 		THPPlayerPause();
@@ -367,18 +366,16 @@ int TMovieDirector::direct()
 
 	if (nextState != unk1C) {
 		switch (nextState) {
-		case 3:
+		case STATE_SAVE_TO_TITLE:
 			THPPlayerStop();
 			unk28->unkC.on(0x9);
 			unk2C->unkC.on(0x9);
 			gpApplication.mFader->startWipe(15, 0.3f, 0.0f);
 			gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 255));
-			{
-				unk24->init(gpApplication.getMovie() == 17 ? 8 : 0);
-			}
+			unk24->init(gpApplication.getMovie() == 17 ? 8 : 0);
 			break;
 
-		case 4:
+		case STATE_SAVE_AND_CONTINUE:
 			THPPlayerStop();
 			unk28->unkC.on(0x9);
 			unk2C->unkC.on(0x9);
@@ -387,7 +384,7 @@ int TMovieDirector::direct()
 			unk24->init(9);
 			break;
 
-		case 2:
+		case STATE_FADE_OUT:
 			if (unk20->isSomethingPushed()) {
 				gpApplication.mFader->startWipe(4, 1.0f, 0.0f);
 			} else {

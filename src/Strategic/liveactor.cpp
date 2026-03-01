@@ -455,8 +455,7 @@ void TLiveActor::updateAnmSound()
 		return;
 
 	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
-	mAnmSound->animeLoop(&mPosition, ctrl->getCurrentFrame(), ctrl->getRate(),
-	                     0, 4);
+	mAnmSound->animeLoop(&mPosition, ctrl->getFrame(), ctrl->getRate(), 0, 4);
 }
 
 void TLiveActor::setAnmSound(const char* path)

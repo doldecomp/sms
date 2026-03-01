@@ -314,7 +314,7 @@ void THino2Mask::perform(u32 param_1, JDrama::TGraphics* param_2)
 			unk10->getModel()->setBaseTRMtx(unk4C);
 			J3DFrameCtrl* ctrl = unk10->getFrameCtrl(3);
 			ctrl->setFrame(unkC);
-			ctrl->setSpeed(0.0f);
+			ctrl->setRate(0.0f);
 			unk10->resetDL();
 		}
 		unk10->perform(param_1, param_2);
@@ -744,9 +744,9 @@ void THinokuri2::changeBck(int param_1)
 	J3DFrameCtrl* pJVar7 = getMActor()->getFrameCtrl(0);
 	if (pJVar7 != nullptr) {
 		if (mLevel == 0 && (param_1 - 23U <= 1 || param_1 - 26U <= 1))
-			pJVar7->setSpeed(getSaveParam()->mSLWalkSpeedRateLv0.get());
+			pJVar7->setRate(getSaveParam()->mSLWalkSpeedRateLv0.get());
 		else
-			pJVar7->setSpeed(1.0f);
+			pJVar7->setRate(1.0f);
 	}
 }
 
@@ -1101,7 +1101,7 @@ DEFINE_NERVE(TNerveHino2GraphWander, TLiveActor)
 		self->walkToCurPathNode(self->mMarchSpeed, self->mTurnSpeed, 0.0f);
 	}
 
-	int frame = self->getMActor()->getFrameCtrl(0)->getCurrentFrame();
+	int frame = self->getMActor()->getFrameCtrl(0)->getFrame();
 	if (self->getLevel() != 0 && !self->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)
 	    && !self->isAirborne() && (frame == 0x24 || frame == 0x55)) {
 		f32 ws = self->getSaveParam()->mSLWalkShake.get();
@@ -1169,7 +1169,7 @@ DEFINE_NERVE(TNerveHino2Landing, TLiveActor)
 	}
 
 	// TODO: asserts or something? Hard to match
-	self->getMActor()->getFrameCtrl(0)->getCurrentFrame();
+	self->getMActor()->getFrameCtrl(0)->getFrame();
 	self->checkLiveFlag(LIVE_FLAG_HIDDEN);
 
 	if (self->getMActor()->curAnmEndsNext())
@@ -1451,7 +1451,7 @@ DEFINE_NERVE(TNerveHino2Stamp, TLiveActor)
 		self->setUnk160(uVar7);
 	}
 
-	int frame = self->getMActor()->getFrameCtrl(0)->getCurrentFrame();
+	int frame = self->getMActor()->getFrameCtrl(0)->getFrame();
 	if (!self->isAirborne() && (frame == 0x1C || frame == 0x3E)) {
 		f32 js = self->getSaveParam()->mSLJumpShake.get();
 		if (!(js * js < self->getDistToMarioSquared()))

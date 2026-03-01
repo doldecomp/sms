@@ -520,8 +520,7 @@ static void evAppearMushroom1up(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->verifyArgNum(1, &arg_num);
 	TMushroom1up* mushroom = get_name_ref<TMushroom1up>(interp->pop());
 	mushroom->appear();
-	if (gpMSound->gateCheck(0x4854))
-		MSoundSESystem::MSoundSE::startSoundSystemSE(0x4854, 0, nullptr, 0);
+	SMSGetMSound()->startSoundSystemSE(0x4854, 0, nullptr, 0);
 	interp->push();
 }
 
@@ -605,7 +604,7 @@ static void evCheckWoodBox(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 
 	int count = p2 - p1 + 1;
 
-	char buffer[13] = "ゲーム木箱00";
+	char buffer[] = "ゲーム木箱00";
 	for (int i = p2; i <= p1; ++i) {
 		if (i < 10) {
 			buffer[10] = '0' + i;
@@ -629,7 +628,7 @@ static void evRefreshWoodBox(TSpcTypedInterp<TEventWatcher>* interp,
 	int p1 = interp->pop().getDataInt();
 	int p2 = interp->pop().getDataInt();
 
-	char buffer[13] = "ゲーム木箱00";
+	char buffer[] = "ゲーム木箱00";
 	for (int i = p2; i <= p1; ++i) {
 		if (i < 10) {
 			buffer[10] = '0' + i;
@@ -652,7 +651,7 @@ static void evKillWoodBox(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	int p1 = interp->pop().getDataInt();
 	int p2 = interp->pop().getDataInt();
 
-	char buffer[13] = "ゲーム木箱00";
+	char buffer[] = "ゲーム木箱00";
 	for (int i = p2; i <= p1; ++i) {
 		if (i < 10) {
 			buffer[10] = '0' + i;
@@ -799,8 +798,7 @@ static void evStartSE(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	int se = interp->pop().getDataInt();
-	if (gpMSound->gateCheck(se))
-		MSoundSESystem::MSoundSE::startSoundSystemSE(se, 0, nullptr, 0);
+	SMSGetMSound()->startSoundSystemSE(se, 0, nullptr, 0);
 	interp->push(TSpcSlice());
 }
 
@@ -808,9 +806,7 @@ static void evStartEventSE(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	int se = interp->pop().getDataInt();
-	if (gpMSound->gateCheck(se))
-		MSoundSESystem::MSoundSE::startSoundActor(
-		    se, gpMarioOriginal->mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundSystemSE(se, 0, nullptr, 0);
 	interp->push(TSpcSlice());
 }
 

@@ -1,9 +1,9 @@
 #ifndef MARIO_UTIL_RUMBLE_MGR_HPP
 #define MARIO_UTIL_RUMBLE_MGR_HPP
 
-#include <types.h>
 #include <dolphin/mtx.h>
 #include <dolphin/pad.h>
+#include <types.h>
 
 #define RUMBLE_CHANNELS_PER_CONTROLLER 32
 

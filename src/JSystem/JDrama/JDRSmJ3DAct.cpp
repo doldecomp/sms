@@ -23,7 +23,7 @@ void TSmJ3DAct::load(JSUMemoryInputStream& stream)
 		unk4C = J3DAnmLoaderDataBase::load(anmRes);
 		unk54 = J3DNewMtxCalcAnm(unk44->getUnkC(), (J3DAnmTransform*)unk4C);
 		unk50 = new J3DFrameCtrl;
-		unk50->setEndFrame(unk4C->getFrameMax());
+		unk50->setEnd(unk4C->getFrameMax());
 	}
 }
 
@@ -55,7 +55,7 @@ void TSmJ3DAct::perform(u32 param_1, TGraphics* param_2)
 			unk48->calc();
 		} else {
 			unk50->update();
-			unk4C->setFrame(unk50->getCurrentFrame());
+			unk4C->setFrame(unk50->getFrame());
 			J3DMtxCalc* prevCalc
 			    = unk48->getModelData()->getJointNodePointer(0)->getMtxCalc();
 			unk48->getModelData()->getJointNodePointer(0)->setMtxCalc(unk54);

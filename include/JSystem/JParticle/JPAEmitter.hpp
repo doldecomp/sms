@@ -136,6 +136,8 @@ public:
 		unk174.set(scale);
 	}
 
+	void setUnk190(f32 x, f32 y, f32 z) { unk190.set(x, y, z); }
+
 	void setRotation(s16 x, s16 y, s16 z)
 	{
 		unk16C.x = x;
@@ -199,7 +201,7 @@ public:
 	/* 0x188 */ u32 unk188;
 	/* 0x18C */ u32 unk18C;
 
-	/* 0x190 */ Vec unk190;
+	/* 0x190 */ JGeometry::TVec3<f32> unk190;
 	/* 0x19C */ JGeometry::TVec3<f32> unk19C;
 	/* 0x1A8 */ s16 unk1A8;
 	/* 0x1AA */ s16 unk1AA;

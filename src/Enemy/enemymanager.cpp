@@ -45,7 +45,7 @@ void TSharedMActorSet::init(MActorAnmData* param_1, J3DModelData* param_2,
 		unk0[i]->setModel(model, 0);
 		unk0[i]->setBck(param_3);
 		J3DFrameCtrl* ctrl = unk0[i]->getFrameCtrl(0);
-		ctrl->setFrame(coeff * ctrl->getEndFrame() * i);
+		ctrl->setFrame(coeff * ctrl->getEnd() * i);
 	}
 
 	unk8 = unk0[0]->getCurAnmIdx(0);
@@ -200,8 +200,8 @@ void TEnemyManager::updateAnmSoundShared()
 						          ->getFrameCtrl(0);
 
 						enemy->getAnmSound()->animeLoop(
-						    (Vec*)&enemy->getPosition(),
-						    ctrl->getCurrentFrame(), ctrl->getRate(), 0, 4);
+						    (Vec*)&enemy->getPosition(), ctrl->getFrame(),
+						    ctrl->getRate(), 0, 4);
 					}
 					break;
 				}
