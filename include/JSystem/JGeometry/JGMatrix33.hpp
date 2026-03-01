@@ -2,7 +2,6 @@
 #define JG_MATRIX33_HPP
 
 #include <dolphin/types.h>
-#include <JSystem/JGeometry/JGVec3.hpp>
 
 namespace JGeometry {
 
@@ -29,31 +28,6 @@ template <typename T> struct TMatrix33 : public T {
 		this->ref(1, 0) = this->ref(2, 0) = 0.0f;
 
 		this->ref(0, 0) = this->ref(1, 1) = this->ref(2, 2) = 1.0f;
-	}
-
-	// fabricated, possibly fake but still useful
-	static inline void multiplyInPlace(const TMatrix33& mtx, TVec3<f32>* vec)
-	{
-		vec->set(mtx.at(0, 0) * vec->x + mtx.at(0, 1) * vec->y
-		             + mtx.at(0, 2) * vec->z,
-		         mtx.at(1, 0) * vec->x + mtx.at(1, 1) * vec->y
-		             + mtx.at(1, 2) * vec->z,
-		         mtx.at(2, 0) * vec->x + mtx.at(2, 1) * vec->y
-		             + mtx.at(2, 2) * vec->z);
-	}
-
-	// fabricated and very fake
-	static inline void multiplyInPlaceNest1(const TMatrix33& mtx,
-	                                        TVec3<f32>* vec)
-	{
-		multiplyInPlace(mtx, vec);
-	}
-
-	// fabricated and very fake
-	static inline void multiplyInPlaceNest2(const TMatrix33& mtx,
-	                                        TVec3<f32>* vec)
-	{
-		multiplyInPlaceNest1(mtx, vec);
 	}
 };
 
