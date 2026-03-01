@@ -45,7 +45,8 @@ public:
 	// fabricated
 	void updatePaneOffset(s32 time, s32 target_x, s32 target_y)
 	{
-		setPaneOffset(time, target_x, target_y, mOffsetInterpolator.getCurrentX(),
+		setPaneOffset(time, target_x, target_y,
+		              mOffsetInterpolator.getCurrentX(),
 		              mOffsetInterpolator.getCurrentY());
 	}
 

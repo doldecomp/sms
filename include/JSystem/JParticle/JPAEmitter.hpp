@@ -136,9 +136,7 @@ public:
 		unk174.set(scale);
 	}
 
-	void setUnk190(f32 x, f32 y, f32 z) {
-		unk190.set(x, y, z);
-	}
+	void setUnk190(f32 x, f32 y, f32 z) { unk190.set(x, y, z); }
 
 	void setRotation(s16 x, s16 y, s16 z)
 	{
