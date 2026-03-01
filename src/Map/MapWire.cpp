@@ -112,7 +112,7 @@ void TMapWire::drawUpper() const
 
 // very fake, but it helps fix some inlining issues.
 // see TODO in getPointPosAtReleased
-static f32 gppar(const TMapWire* wire, f32 pos)
+static f32 fake_getPointPowerAtReleased(const TMapWire* wire, f32 pos)
 {
 	return wire->getPointPowerAtReleased(pos);
 }
@@ -132,14 +132,15 @@ f32 TMapWire::getPointPowerAtReleased(f32 pos) const
 
 void TMapWire::getPointPosAtReleased(f32 pos, JGeometry::TVec3<f32>* out) const
 {
-	// TODO: Something weird is happening with how this gets inlined
 	JGeometry::TVec3<f32> linePoint;
 	getPointPosOnLine(pos, &linePoint);
 
 	JGeometry::TVec3<f32> defaultPoint;
 	getPointPosDefault(pos, &defaultPoint);
 
-	f32 power = gppar(this, pos); // TODO: fix this inlining issue
+	// TODO: fix this inlining issue
+	f32 power = fake_getPointPowerAtReleased(this, pos);
+	// TODO: Regswaps for these calculations?
 	f32 yAdjusted
 	    = linePoint.y
 	      + (1.0f - mBounceRemainingPower) * (defaultPoint.y - linePoint.y)
@@ -161,6 +162,7 @@ void TMapWire::updatePointAtReleased(int index)
 	getPointPosAtReleased(pos, &mapWirePoint->mPosition);
 }
 
+// TODO: Unused, but exists in .map file. What is this?
 void TMapWire::updateMovePointAtReleased() { }
 
 void TMapWire::initPointAtJustReleased(f32 pos, TMapWirePoint* point)
@@ -170,6 +172,7 @@ void TMapWire::initPointAtJustReleased(f32 pos, TMapWirePoint* point)
 	point->mPosReturnRate = (point->mDefaultPosOnWire - pos) / 1000.0f;
 }
 
+// TODO: Needs work, but otherwise mathematically equivalent
 void TMapWire::release()
 {
 	if (mState == TMapWire::RELEASED) {
@@ -189,7 +192,7 @@ void TMapWire::release()
 		TMapWirePoint* mapWirePoint = &mMapWirePoints[i];
 		mapWirePoint->reset();
 
-		f32 pos = posAdvancePerPoint * i;
+		f32 pos = posAdvancePerPoint * (i + 1);
 		initPointAtJustReleased(pos, mapWirePoint);
 	}
 
@@ -336,6 +339,8 @@ void TMapWire::move()
 
 f32 TMapWire::getPosInWire(const JGeometry::TVec3<f32>& point) const
 {
+	// TODO: This needs stack offset adjustments
+
 	// Position here is only considered in the horizontal plane
 	JGeometry::TVec3<f32> flatStart = mStartPoint;
 	JGeometry::TVec3<f32> flatEnd   = mEndPoint;
@@ -345,7 +350,7 @@ f32 TMapWire::getPosInWire(const JGeometry::TVec3<f32>& point) const
 	JGeometry::TVec3<f32> perpPoint
 	    = MsPerpendicFootToLineR(flatStart, flatEnd, point);
 
-	f32 totalLength   = (flatStart - flatEnd).length();
+	f32 totalLength   = (flatEnd - flatStart).length();
 	f32 partialLength = (perpPoint - flatStart).length();
 	return partialLength / totalLength;
 }
@@ -419,6 +424,7 @@ void TMapWire::initTipPoints(const TCubeGeneralInfo* cubeInfo)
 	mWireSpan = mEndPoint - mStartPoint;
 }
 
+// TODO: Needs work, but otherwise mathematically equivalent
 void TMapWire::init(const TCubeGeneralInfo* cubeInfo)
 {
 	mNumMapWirePoints = (s32)((cubeInfo->getUnk24().z / 50.0f + 1.0f) - 2.0f);
