@@ -1390,9 +1390,7 @@ void TMario::initModel()
 	J3DAnmTexPattern** anmTexPattern = new J3DAnmTexPattern*[0x18];
 	J3DTexNoAnm** anmTexNoAnm        = new J3DTexNoAnm*[0x18];
 
-	int i = 0;
-	do {
-
+	for (int i = 0; i < 0x18; ++i) {
 		loadAnmTexPattern(&anmTexPattern[i], marioAnimeTexPatternFilenames[i],
 		                  mBodyModelData);
 		u16 matCount   = anmTexPattern[i]->getUpdateMaterialNum();
@@ -1402,8 +1400,7 @@ void TMario::initModel()
 			anmTexNoAnm[i][j].setAnmIndex(j);
 			anmTexNoAnm[i][j].setAnmTexPattern(anmTexPattern[i]);
 		}
-		i++;
-	} while (i < 0x18);
+	}
 
 	M3UMtxCalcSIAnmBlendQuat* anmBlendQuat = new M3UMtxCalcSIAnmBlendQuat[2];
 	anmBlendQuat[0].unk50                  = 0.0f;
