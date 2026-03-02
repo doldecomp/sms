@@ -14,8 +14,8 @@ bool TWireBinder::init(const JGeometry::TVec3<f32>& param_1)
 
 	TMapWire* wire = TMapWireManager::getGlobalWire(mWireNumber);
 
-	local24 = wire->getUnk00();
-	local30 = wire->getUnk0C();
+	local24 = wire->getStartPoint();
+	local30 = wire->getEndPoint();
 	local30.sub(local24);
 
 	// TODO: Why does the compiler inline stuff here but not in the target?

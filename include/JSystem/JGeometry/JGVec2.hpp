@@ -53,22 +53,47 @@ template <typename T> struct TVec2 {
 		y *= scale;
 	}
 
+	// fabricated
+	void rotate(f32 angle)
+	{
+		f32 cosTheta = cosf(angle);
+		f32 sinTheta = sinf(angle);
+		set(x * cosTheta - y * sinTheta, x * sinTheta + y * cosTheta);
+	}
+
 	bool isAbove(const TVec2<T>& other) const
 	{
 		return (x >= other.x) && (y >= other.y) ? true : false;
 	}
 
-	T dot(const TVec2<T>& other) { return x * other.x + y * other.y; }
+	T dot(const TVec2<T>& other) const { return x * other.x + y * other.y; }
 
 	// === length stuff ===
 
-	T squared() { return dot(*this); }
+	T squared() const { return dot(*this); }
 
 	T length()
 	{
 		T sqr = squared();
 		return TUtil<T>::sqrt(sqr);
 	}
+
+	// === normalize stuff lifted from JGVec3.hpp ===
+
+	// fabricated
+	void setLength(f32 length)
+	{
+		f32 lsq = squared();
+		if (lsq <= TUtil<f32>::epsilon()) {
+			zero();
+			return;
+		}
+
+		scale(length * JGeometry::TUtil<f32>::inv_sqrt(lsq));
+	}
+
+	// fabricated
+	void normalize() { setLength(1.0f); }
 
 	T x;
 	T y;
