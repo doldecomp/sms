@@ -27,6 +27,12 @@ static void dummy2(JGeometry::TVec3<f32>& v) { dummy(v); }
 static void dummy3(JGeometry::TVec3<f32>& v) { dummy2(v); }
 static void dummy4(JGeometry::TVec3<f32>& v) { dummy3(v); }
 
+static const char* MtxCalcTypeName[4]
+    = { "MActorMtxCalcType_Basic クラシックスケールＯＮ",
+	    "MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
+	    "MActorMtxCalcType_MotionBlend モーションブレンド",
+	    "MActorMtxCalcType_User ユーザー定義" };
+
 static unkTMarioAnimeFilesStruct marioAnimeFiles[199] = {
 	{ 0x00000001, "hgup" },
 	{ 0x00000001, "bdwn" },
