@@ -909,7 +909,7 @@ public:
 	void changePlayerWaiting();
 	void doBraking(f32);
 	void doSurfing();
-	void getSurfingParamsGround();
+	void getSurfingParamsGround(); // UNUSED
 	void getSurfingParamsWater();
 	void doRunning();
 	void doStopping();
@@ -944,7 +944,7 @@ public:
 	void wireSWaitToWaitR();
 	void wireSWaitToWaitL();
 	void wireRolling();
-	void getNozzleEmitVX();
+	void getNozzleEmitVX(); // UNUSED
 	void wireHanging();
 	void wireReturn();
 	void wireSWaitToHang();
@@ -1205,7 +1205,8 @@ public:
 
 	/* 0x94 */ JGeometry::TVec3<s16> mFaceAngle;
 	/* 0x9A */ s16 mModelFaceAngle;
-	/* 0x9C */ u32 unk9C;
+	/* 0x9C */ s16 unk9C;
+	/* 0x9E */ s16 unk9E;
 	/* 0xA0 */ u32 unkA0;
 	/* 0xA4 */ JGeometry::TVec3<f32> mVel;
 
@@ -1336,7 +1337,7 @@ public:
 	/* 0x400 */ MActor* mKoopaRail;                // Koopa_rail model actor
 	/* 0x404 */ JGeometry::TVec3<f32> mToroccoPos; // position of coaster
 	/* 0x410 */ s16 mToroccoAngle;                 // angle of coaster
-	/* 0x412 */ u16 mRailType;                     // type of rail
+	/* 0x412 */ s16 mRailType;                     // type of rail
 	/* 0x414 */ JGeometry::TVec3<f32> unk414;
 	/* 0x420 */ TMultiMtxEffect* mMultiMtxEffect;
 	/* 0x424 */ void* mMarioEffect; // TMarioEffect*
