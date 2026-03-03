@@ -2,7 +2,7 @@
 #define M3DUTIL_M3U_MODEL_MARIO_HPP
 
 #include <M3DUtil/M3UModel.hpp>
-// #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 
 class M3UMtxCalcSIAnmBlendQuat;
 
@@ -39,7 +39,7 @@ public:
 public:
 	/* 0x20 */ M3UModelCommonMario* unk20;
 	/* 0x24 */ M3UMarioMtxCalcSetInfo* unk24;
-	// /* 0x28 */ J3DMtxCalcSoftimage unk28;
+	/* 0x28 */ J3DMtxCalcSoftimage unk28;
 };
 
 #endif
