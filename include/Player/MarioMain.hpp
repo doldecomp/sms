@@ -23,6 +23,7 @@ class J3DAnmTransform;
 struct TBGWallCheckRecord;
 class TMarioCap;
 class TWaterEmitInfo;
+class TBaseNPC;
 
 // TODO: where should this be?
 enum E_SIDEWALK_TYPE { };
@@ -32,6 +33,7 @@ enum E_MARIO_FLAG {
 	MARIO_FLAG_VISIBLE             = (1 << 1),
 	MARIO_FLAG_NPC_TALKING         = (1 << 3),
 	MARIO_FLAG_RECENTLY_LEFT_WATER = (1 << 4),
+	MARIO_FLAG_UNK_40              = (1 << 6),
 	MARIO_FLAG_GAME_OVER           = (1 << 10),
 	MARIO_FLAG_GROUND_POUND_SIT_UP = (1 << 11),
 	MARIO_FLAG_HELMET_FLW_CAMERA   = (1 << 12),
@@ -683,22 +685,22 @@ public:
 	void calcBaseMtxPole(f32 (*)[4]);
 	void calcBaseMtxTorocco(f32 (*)[4]);
 	void considerWaist();
-	void isUpperPumpingStyle() const;
+	bool isUpperPumpingStyle() const;
 	void finalDrawInitialize();
 	void initMirrorModel();
 	void loadAnmTexPattern(J3DAnmTexPattern**, char*, J3DModelData*);
 	void loadBas(void**, const char*);
 	void loadAnm(J3DAnmTransform**, const char*);
-	void setReverseAnimation(int, f32);
-	void setAnimation(int, f32);
+	f32 setReverseAnimation(int, f32);
+	f32 setAnimation(int, f32);
 	void changeHandByRate(f32);
 	void changeHand(int);
-	void isAnimeLoopOrStop();
+	BOOL isAnimeLoopOrStop();
 	BOOL isLast1AnimeFrame();
-	J3DFrameCtrl* getMotionFrameCtrl();
-	void getCurrentFrame(int);
+	J3DFrameCtrl& getMotionFrameCtrl();
+	f32 getCurrentFrame(int);
 	void getRailMtx() const;
-	void getTakenMtx();
+	MtxPtr getTakenMtx();
 	void calcBodyPos(JGeometry::TVec3<f32>*);
 	u32 getTrampleCt();
 	void setPositions();
@@ -707,10 +709,10 @@ public:
 	bool isWearingHelm();
 	bool isWearingCap();
 	void setDivHelm();
-	void getWallAngle() const;
+	s16 getWallAngle() const;
 	f32 getPumpFrame() const;
-	void getCenterAnmMtx();
-	void getRootAnmMtx();
+	MtxPtr getCenterAnmMtx();
+	Mtx* getRootAnmMtx();
 	void getHeadRot();
 	void getJumpIntoWaterModelData();
 	void jumpMain();
@@ -764,7 +766,7 @@ public:
 	void thinkAloha();
 	void thinkCube();
 	void thinkFreeze();
-	void isMario();
+	BOOL isMario();
 	void gunExec();
 	void checkWet();
 	void thinkSound();
@@ -835,7 +837,7 @@ public:
 	void setNormalAttackArea();
 	void changePos(const Vec&);
 	void isSpeedZero();
-	void canBendBody();
+	BOOL canBendBody();
 	BOOL considerRotateJumpStart();
 	void addVelocity(f32);
 	BOOL onYoshi() const;
@@ -845,7 +847,7 @@ public:
 	void warpRequest(const JGeometry::TVec3<f32>&, f32);
 	void isForceSlip();
 	void getRidingMtx(f32 (*)[4]);
-	void isWallInFront() const;
+	bool isWallInFront() const;
 	bool isInvincible() const;
 	bool isUnderWater() const;
 	void canSquat() const;
@@ -907,7 +909,7 @@ public:
 	void changePlayerWaiting();
 	void doBraking(f32);
 	void doSurfing();
-	void getSurfingParamsGround();
+	void getSurfingParamsGround(); // UNUSED
 	void getSurfingParamsWater();
 	void doRunning();
 	void doStopping();
@@ -942,7 +944,7 @@ public:
 	void wireSWaitToWaitR();
 	void wireSWaitToWaitL();
 	void wireRolling();
-	void getNozzleEmitVX();
+	void getNozzleEmitVX(); // UNUSED
 	void wireHanging();
 	void wireReturn();
 	void wireSWaitToHang();
@@ -1154,6 +1156,12 @@ public:
 	}
 
 	// Fabricated
+	bool fabricatedIsPumping() const
+	{
+		return checkFlag(MARIO_FLAG_HAS_FLUDD) && isUpperPumpingStyle() != 0;
+	}
+
+	// Fabricated
 	bool checkActionFlag(u32 actionFlag) const
 	{
 		return mAction & actionFlag ? true : false;
@@ -1163,6 +1171,15 @@ public:
 	bool checkUnk380(u32 message) const
 	{
 		return unk380 == message ? true : false;
+	}
+
+	// Fabricated
+	bool fabricatedUnk380Inline() const
+	{
+		if (unk380 == 0 || unk380 == 1) {
+			return true;
+		}
+		return false;
 	}
 
 	// Fabricated
@@ -1188,7 +1205,8 @@ public:
 
 	/* 0x94 */ JGeometry::TVec3<s16> mFaceAngle;
 	/* 0x9A */ s16 mModelFaceAngle;
-	/* 0x9C */ u32 unk9C;
+	/* 0x9C */ s16 unk9C;
+	/* 0x9E */ s16 unk9E;
 	/* 0xA0 */ u32 unkA0;
 	/* 0xA4 */ JGeometry::TVec3<f32> mVel;
 
@@ -1209,10 +1227,13 @@ public:
 	/* 0xF6 */ u16 unkF6;
 
 	/* 0xF8 */ u16 mLightID;
-	/* 0xFA */ u16 unk0FA;
+	/* 0xFA */ u16 mAnimationId;
 
-	/* 0xFC */ u32 unkFC[2];
+	/* 0xFC */ s16 unkFC;
+	/* 0xFA */ s16 unkFA;
 
+	/* 0x100 */ s16 unk100;
+	/* 0x102 */ s16 unk102;
 	/* 0x104 */ void* mController; // TMarioControllerWork
 
 	/* 0x108 */ u32 unk108;
@@ -1231,32 +1252,56 @@ public:
 
 	/* 0x124 */ u32 unk124;
 	/* 0x128 */ u32 unk128;
-	/* 0x12C */ f32 unk12C; // under water health / air
-	/* 0x130 */ f32 unk130; // max air
-	/* 0x134 */ f32 unk134; // Pollution amount on model?
+	/* 0x12C */ u32 unk12C;
+	/* 0x130 */ u32 unk130;
+	/* 0x134 */ f32 unk134; // Amount of dirty?
 	/* 0x138 */ u32 unk138;
 	/* 0x13C */ u32 unk13C;
 	/* 0x140 */ u32 unk140;
-	/* 0x144 */ s32 unk144;
+	/* 0x144 */ u32 unk144;
 	/* 0x148 */ u32 unk148;
-	/* 0x14C */ s16 unk14C; // invincibility frames
+	/* 0x14C */ s16 unk14C;
 	/* 0x14E */ u16 unk14E;
 	/* 0x150 */ u32 unk150;
 	/* 0x154 */ TWaterEmitInfo* unk154;
-	/* 0x158 */ char unk158[0x19C - 0x158];
+	/* 0x158 */ u32 unk158;
+	/* 0x15C */ u32 unk15C;
+	/* 0x160 */ JGeometry::TVec3<f32>
+	    unk160[4]; // Bone position, probably larger array
+	/* 0x190 */ u32 unk190;
+	/* 0x194 */ u32 unk194;
+	/* 0x198 */ u32 unk198;
 	/* 0x19C */ JGeometry::TVec3<f32> unk19C; // damage pos
-	/* 0x1A8 */ char unk1A8[0x29C - 0x1A8];
+	/* 0x1A8 */ char unk1A8[0x1CC - 0x1A8];
+	/* 0x1CC */ f32 unk1CC;
+	/* 0x1D0 */ u32 unk1D0;
+	/* 0x1D4 */ u32 unk1D4;
+	/* 0x1D8 */ u32 unk1D8;
+	/* 0x1DC */ f32 unk1DC;
+	/* 0x1E0 */ u32 unk1E0;
+	/* 0x1E4 */ u32 unk1E4;
+	/* 0x1E8 */ u32 unk1E8;
+	/* 0x1EC */ f32 unk1EC;
+	/* 0x1F0 */ char unk1F0[0x29C - 0x1F0];
 	/* 0x29C */ JGeometry::TVec3<f32> unk29C;
 	/* 0x2A8 */ char unk2A8[0x2BC - 0x2A8];
 	/* 0x2BC */ f32 unk2BC;
-	/* 0x2C0 */ char unk2C0[0x37C - 0x2C0];
+	/* 0x2C0 */ char unk2C0[0x348 - 0x2C0];
+	/* 0x348 */ f32 unk348;
+	/* 0x34C */ u16 unk34C;
+	/* 0x34E */ u16 unk34E;
+	/* 0x350 */ s32 unk350;
+	/* 0x354 */ char unk354[0x370 - 0x354];
+	/* 0x370 */ u32 unk370;
+	/* 0x374 */ u32 unk374;
+	/* 0x378 */ u32 unk378;
 	/* 0x37C */ u16 unk37C;
 	/* 0x37E */ u16 unk37E;
 	/* 0x380 */ u32 unk380;        // pump state?
 	/* 0x384 */ THitActor* unk384; // Last receiveMessage sender
-
+	/* 0x388 */ u8 unk388;
 	// TODO: Make enum (0 = red, 1 = yellow, 2 = green)
-	/* 0x388 */ u16 mBlooperColor;
+	/* 0x389 */ u8 unk389; // Blooper color
 	/* 0x38A */ u16 unk38A;
 	/* 0x38C */ f32 mHolderHeightDiff;
 	/* 0x390 */ u32 unk390;
@@ -1264,21 +1309,18 @@ public:
 	/* 0x398 */ J3DDrawBuffer* unk398;
 	/* 0x39C */ u32 unk39C;
 	/* 0x3A0 */ u32 unk3A0;
-	/* 0x3A4 */ u32 unk3A4;
+	/* 0x3A4 */ SampleCtrlModelData* unk3A4;
 	/* 0x3A8 */ M3UModelMario* mModel;        // Full model data
 	/* 0x3AC */ J3DModelData* mBodyModelData; // Body model data
-	/* 0x3B0 */ J3DModel* mRHand2ndModel;     // R Hand 2nd model
-	/* 0x3B4 */ J3DModel* mLHand2ndModel;     // L Hand 2nd model
-	/* 0x3B8 */ J3DModel* mRHand3ndModel;     // R Hand 3nd model
-	/* 0x3BC */ J3DModel* mLHand3ndModel;     // L Hand 3nd model
-	/* 0x3C0 */ J3DModel* mRHand4ndModel;     // R Hand 4nd model
-	/* 0x3C4 */ u8 unk3C4;
+	/* 0x3B0 */ J3DModel* mHandModels[2][2];  // Hand models
+	/* 0x3C0 */ J3DModel* mRHand4ndModel;
+	/* 0x3C4 */ u8 unk3C4;       // Cemter Anm mtx idx
 	/* 0x3C5 */ u8 mBoneIDs[12]; // Array of bone ids
 	/* 0x3D1 */ u8 unk3D1;
 	/* 0x3D2 */ u8 unk3D2;
 	/* 0x3D3 */ u8 unk3D3;
-	/* 0x3D4 */ u16 unk3D4;
-	/* 0x3D6 */ u16 unk3D6;
+	/* 0x3D4 */ u16 unk3D4; // _mat_eye_L idx
+	/* 0x3D6 */ u16 unk3D6; // _mat_eye_R idx
 	/* 0x3D8 */ f32 unk3D8;
 	/* 0x3DC */ f32 unk3DC;
 	/* 0x3E0 */ TMarioCap* mCap;
@@ -1295,7 +1337,7 @@ public:
 	/* 0x400 */ MActor* mKoopaRail;                // Koopa_rail model actor
 	/* 0x404 */ JGeometry::TVec3<f32> mToroccoPos; // position of coaster
 	/* 0x410 */ s16 mToroccoAngle;                 // angle of coaster
-	/* 0x412 */ u16 mRailType;                     // type of rail
+	/* 0x412 */ s16 mRailType;                     // type of rail
 	/* 0x414 */ JGeometry::TVec3<f32> unk414;
 	/* 0x420 */ TMultiMtxEffect* mMultiMtxEffect;
 	/* 0x424 */ void* mMarioEffect; // TMarioEffect*
@@ -1317,7 +1359,7 @@ public:
 	/* 0x4E0 */ JAIAnimeSound** mAnmSoundTbl;
 	/* 0x4E4 */ JAISound* mSound;
 	/* 0x4E8 */ u32 mSoundFlags;
-	/* 0x4EC */ u8 unk4EC;
+	/* 0x4EC */ s8 unk4EC; // Bool if should do draw logic?
 	/* 0x4ED */ u8 mBlendLogicOp;
 	/* 0x4EE */ u16 mWaterWakeAlpha; // should be verified
 	/* 0x4F0 */ JGeometry::TVec3<f32> unk4F0;

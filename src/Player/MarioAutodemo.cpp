@@ -133,8 +133,8 @@ BOOL TMario::warpIn()
 		}
 
 		unk114 |= 2;
-		J3DFrameCtrl* frameCtrl = getMotionFrameCtrl();
-		frameCtrl->setRate(0.0f);
+		J3DFrameCtrl& frameCtrl = getMotionFrameCtrl();
+		frameCtrl.setRate(0.0f);
 
 		// Possibly TVec3 inaccuracies?
 		JGeometry::TVec3<f32> marioDist = holderPosOffset - mPosition;
@@ -418,8 +418,8 @@ BOOL TMario::electricDamage()
 	mActionTimer += 1;
 	if (mActionTimer > 0x78) {
 
-		J3DFrameCtrl* frameCtrl = getMotionFrameCtrl();
-		frameCtrl->setFrame(0.0f);
+		J3DFrameCtrl& frameCtrl = getMotionFrameCtrl();
+		frameCtrl.setFrame(0.0f);
 		mActionTimer += 1;
 		startVoice(0x7852);
 
@@ -465,8 +465,8 @@ BOOL TMario::footDowning()
 		break;
 	case 3:
 		setAnimation(0x124, 1.0f);
-		J3DFrameCtrl* frameCtrl = getMotionFrameCtrl();
-		if (frameCtrl->checkPass(24.0f) != FALSE) {
+		J3DFrameCtrl& frameCtrl = getMotionFrameCtrl();
+		if (frameCtrl.checkPass(24.0f) != FALSE) {
 			sinkInSandEffect();
 		}
 		if (isLast1AnimeFrame()) {
@@ -508,7 +508,8 @@ BOOL TMario::demoMain()
 		}
 		stopProcess();
 		if (isLast1AnimeFrame()) {
-			if ((unk0FA == 0x5f) || (unk0FA == 0x60) || (unk0FA == 0xe9)) {
+			if ((mAnimationId == 0x5f) || (mAnimationId == 0x60)
+			    || (mAnimationId == 0xe9)) {
 				mPosition.x += JMASSin(mFaceAngle.y) * 150.0f;
 				mPosition.z += JMASCos(mFaceAngle.y) * 150.0f;
 			} else {

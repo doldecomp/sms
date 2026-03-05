@@ -125,15 +125,13 @@ static bool NozzleCtrl(J3DNode* node, BOOL param_2)
 	// TODO: Inlined stack space
 	if (!param_2) {
 		if (gpMarioForCallBack != nullptr) {
-			s16 gunAngle = gpMarioForCallBack->mWaterGun
-			                   ->mNozzleList[gpMarioForCallBack->mWaterGun
-			                                     ->mCurrentNozzle]
+			s16 gunAngle = gpMarioForCallBack->mWaterGun->getCurrentNozzle()
 			                   ->getGunAngle();
 			if (gunAngle < 0) {
 				Mtx mtx;
 				// Unused stack space
 				// volatile u32 unused2[6];
-				MsMtxSetRotRPH(mtx, 0.0f, 0.0f, 0.005493164f * gunAngle);
+				MsMtxSetRotRPH(mtx, 0.0f, 0.0f, SHORTANGLE2DEG(gunAngle));
 				MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
 			}
 		}
@@ -371,7 +369,7 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 				} else {
 					// TODO: Cast would be weird here, probably an inlined
 					// getter that converts to s32
-					if ((s32)mMario->unk0FA != 0x33) {
+					if ((s32)mMario->mAnimationId != 0x33) {
 						mFluddModel->setBck("wg_hgpmp");
 					} else {
 						mFluddModel->setBck("wg_pump");
@@ -472,27 +470,7 @@ void TWaterGun::movement()
 {
 	volatile u32 unused2[69]; // TODO: A lot of stack space, possibly a lot of
 
-	bool canSpray; // Not sure if this is correct variable name
-	if (mCurrentWater == 0) {
-		canSpray = false;
-	} else {
-		s32 kind = getCurrentNozzle()->getNozzleKind();
-		if (kind == 1) {
-			TNozzleTrigger* triggerNozzle
-			    = (TNozzleTrigger*)mNozzleList[mCurrentNozzle];
-			if (triggerNozzle->unk385 == TNozzleTrigger::ACTIVE) {
-				canSpray = true;
-			} else {
-				canSpray = false;
-			}
-		} else if (getCurrentNozzle()->unk378 > 0.0f) {
-			canSpray = true;
-		} else {
-			canSpray = false;
-		}
-	}
-
-	if (!canSpray) {
+	if (!canSpray()) {
 		unk1CC2 = 0;
 		unk1CC4 = 0;
 	}
