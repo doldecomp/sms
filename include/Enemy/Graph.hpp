@@ -188,6 +188,15 @@ public:
 	}
 	TGraphWeb* getGraph() { return unk0; }
 	void setGraph(TGraphWeb* web) { unk0 = web; }
+	u32 popCurr() // very wrong
+	{
+		int result = mPrevIdx;
+		int curr   = mCurrIdx;
+		if (mPrevIdx == -1)
+			result = curr;
+		mPrevIdx = curr;
+		return result;
+	}
 
 public:
 	/* 0x0 */ TGraphWeb* unk0;

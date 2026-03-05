@@ -15,9 +15,13 @@ enum TActorTypeBits {
 
 enum THitMessageType {
 	HIT_MESSAGE_HIP_DROP         = 1,
+	HIT_MESSAGE_UNK4             = 4, // grab?
 	HIT_MESSAGE_UNK7             = 7,
-	HIT_MESSAGE_ATTACK           = 14,
-	HIT_MESSAGE_SPRAYED_BY_WATER = 15,
+	HIT_MESSAGE_UNK8             = 8,
+	HIT_MESSAGE_UNKA             = 0xA,
+	HIT_MESSAGE_ATTACK           = 0xE,
+	HIT_MESSAGE_SPRAYED_BY_WATER = 0xF,
+	HIT_MESSAGE_UNK10            = 0x10,
 };
 
 enum THitFlagBits {
@@ -86,6 +90,15 @@ public:
 		mDamageHeight = v;
 		calcEntryRadius();
 	}
+	void setHitParams(f32 attack_radius, f32 attack_height, f32 damage_radius,
+	                  f32 damage_height)
+	{
+		mAttackRadius = attack_radius;
+		mAttackHeight = attack_height;
+		mDamageRadius = damage_radius;
+		mDamageHeight = damage_height;
+		calcEntryRadius();
+	}
 	f32 getEntryRadius() const { return mEntryRadius; }
 
 public:
@@ -93,11 +106,11 @@ public:
 	/* 0x48 */ u16 mColCount;
 	/* 0x4A */ u16 mColCapacity;
 	/* 0x4C */ u32 mActorType;
-	/* 0x50 */ float mAttackRadius;
-	/* 0x54 */ float mAttackHeight;
-	/* 0x58 */ float mDamageRadius;
-	/* 0x5C */ float mDamageHeight;
-	/* 0x60 */ float mEntryRadius;
+	/* 0x50 */ f32 mAttackRadius;
+	/* 0x54 */ f32 mAttackHeight;
+	/* 0x58 */ f32 mDamageRadius;
+	/* 0x5C */ f32 mDamageHeight;
+	/* 0x60 */ f32 mEntryRadius;
 	/* 0x64 */ u32 unk64;
 };
 

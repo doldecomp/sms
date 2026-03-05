@@ -69,6 +69,9 @@ inline f32 MsAngleDiff(f32 alpha, f32 beta)
 	return alpha - MsWrap(beta, alpha - 180.0f, alpha + 180.0f);
 }
 
+// fabricated
+inline f32 MsAngleWrap(f32 angle) { return MsWrap(angle, 0.0f, 360.0f); }
+
 /**
  * @brief Checks whether the point \p target is within the line of sight of
  * an \p eye looking in direction \p sight, given a sight cone \p angle and

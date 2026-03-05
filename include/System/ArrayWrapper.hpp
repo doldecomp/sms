@@ -27,10 +27,17 @@ public:
 		mSize = size;
 	}
 
-	T* begin() const { return mData; }
-	T* end() const { return mData + mSize; }
-	u32 size() const { return mSize; }
-	T& operator[](int idx) const { return mData[idx]; }
+	T* begin() { return mData; }
+	T* end() { return mData + mSize; }
+	const T* begin() const { return mData; }
+	const T* end() const { return mData + mSize; }
+	s32 size() const { return mSize; }
+	const T& operator[](int idx) const { return mData[idx]; }
+	T& operator[](int idx) { return mData[idx]; }
+	const T& front() const { return mData[0]; }
+	T& front() { return mData[0]; }
+	const T& back() const { return mData[mSize - 1]; }
+	T& back() { return mData[mSize - 1]; }
 
 public:
 	/* 0x0 */ T* mData;

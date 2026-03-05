@@ -104,7 +104,7 @@ void TWalker::bind(TLiveActor* param_1)
 
 		if (unk30 == 2 && enemy->mPosition.y - local_30.y > 0.0f
 		    && !local_40->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
-			if (!local_40->checkSomething7()) {
+			if (!local_40->isEnemyThrough()) {
 				f32 dVar16;
 				const TBGCheckData* local_44;
 				if (enemy->checkLiveFlag(LIVE_FLAG_UNK1000)) {
@@ -139,7 +139,7 @@ void TWalker::bind(TLiveActor* param_1)
 
 		if (fVar1 + 0.05f <= local_30.y
 		    && !local_40->checkFlag(BG_CHECK_FLAG_ILLEGAL)
-		    && !local_40->checkSomething7()) {
+		    && !local_40->isEnemyThrough()) {
 			local_30.y       = fVar1;
 			enemy->mVelocity = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 			enemy->offLiveFlag(LIVE_FLAG_AIRBORNE);
