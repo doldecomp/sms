@@ -181,7 +181,7 @@ public:
 		else
 			return false;
 	}
-	bool checkSomething7() const
+	bool isEnemyThrough() const
 	{
 		if (mBGType == BG_TYPE_EVERYTHING_BUT_MAP_OBJECTS_PHASE_THROUGH
 		    || mBGType == BG_TYPE_ONLY_ENEMIES_PHASE_THROUGH)
