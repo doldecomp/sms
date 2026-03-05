@@ -75,6 +75,9 @@ public:
 	/// Test state flags, e.g. `checkState(STATE_COMPLETED_ONCE)`.
 	bool checkState(u32 mask) const { return (mState & mask) ? 1 : 0; }
 
+	// Fabricated
+	u8 getState() const { return mState; }
+
 private:
 	/* 0x4 */ u8 mAttribute; ///< Playback mode (see ATTR_*).
 	/* 0x5 */ u8 mState;   ///< State flags (see STATE_*), reset each update().

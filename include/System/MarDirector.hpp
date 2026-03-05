@@ -187,7 +187,7 @@ public:
 	/* 0x74 */ TGCConsole2* mConsole;
 	/* 0x78 */ TGuide* unk78;
 	/* 0x7C */ u8 mMap;
-	/* 0x7D */ u8 unk7D;
+	/* 0x7D */ u8 unk7D; // Scenario
 	/* 0x7E */ u8 unk7E;
 	/* 0x7F */ u8 unk7F;
 	/* 0x80 */ JDrama::TViewObjPtrListT<JDrama::TViewObj>* unk80;

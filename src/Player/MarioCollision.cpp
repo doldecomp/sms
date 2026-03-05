@@ -150,7 +150,7 @@ bool TMario::trampleExec(THitActor* param_1)
 	if (mAction == 0x888) {
 		changePlayerStatus(0x883, 0, false);
 	} else {
-		switch (unk0FA) {
+		switch (mAnimationId) {
 		case 0xd1:
 			setAnimation(0xd2, 1.0f);
 			break;

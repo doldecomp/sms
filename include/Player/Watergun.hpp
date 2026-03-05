@@ -161,6 +161,29 @@ public:
 	// Fabricated
 	bool hasWater() const { return mCurrentWater > 0; }
 
+	// Fabricated
+	bool canSpray() const
+	{
+		if (mCurrentWater == 0) {
+			return false;
+		} else {
+			s32 kind = getCurrentNozzle()->getNozzleKind();
+			if (kind == 1) {
+				TNozzleTrigger* triggerNozzle
+				    = (TNozzleTrigger*)getCurrentNozzle();
+				if (triggerNozzle->unk385 == TNozzleTrigger::ACTIVE) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (getCurrentNozzle()->unk378 > 0.0f) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+
 	/* 0x0000 */ u16 mFlags;
 	/* 0x0008 */ TMario* mMario;
 	/* 0x000C */ TNozzleDeform mNozzleDeform;
@@ -193,7 +216,7 @@ public:
 	/* 0x1CD8 */ u8 unk1CD8;          // mCurFluddTransformIdx
 	/* 0x1CD9 */ u8 unk1CD9;
 	/* 0x1CDA */ u16 unk1CDA;
-	/* 0x1CDC */ f32 unk1CDC;
+	/* 0x1CDC */ TMultiMtxEffect* unk1CDC;
 	/* 0x1CE0 */ f32 unk1CE0;
 	/* 0x1CE4 */ u32 unk1CE4;
 	/* 0x1CE8 */ u32 unk1CE8;

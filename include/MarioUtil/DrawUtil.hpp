@@ -57,6 +57,28 @@ public:
 	void clash(float);
 	void tremble(float, float, float, int);
 	void init(J3DModel*);
+
+	// Fabricated
+	bool checkUnk8(u8 flag) { return unk8 & flag ? true : false; }
+
+public:
+	/* 0x0 */ J3DModel* unk0;
+	/* 0x4 */ void* unk4;
+	/* 0x8 */ u8 unk8;
+	/* 0xA */ u16 unkA;
+	/* 0xC */ u32 unkC;
+	/* 0x10 */ u32 unk10;
+	/* 0x14 */ u32 unk14;
+	/* 0x18 */ u32 unk18;
+	/* 0x1C */ u32 unk1C;
+	/* 0x20 */ u32 unk20;
+	/* 0x24 */ u32 unk24;
+	/* 0x28 */ u32 unk28;
+	/* 0x2C */ u32 unk2C;
+	/* 0x30 */ u32 unk30;
+	/* 0x34 */ u32 unk34;
+	/* 0x38 */ u32 unk38;
+	/* 0x3C */ u32 unk3C;
 };
 
 class J3DMaterial;
