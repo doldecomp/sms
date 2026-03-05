@@ -10,13 +10,21 @@ namespace JGeometry {
 template <typename T> struct TQuat4 : public TVec4<T> {
 public:
 	/* Constructors */
-	inline TQuat4() { }
+	TQuat4() { }
 
-	inline TQuat4(T xyz, T _w)
+	TQuat4(T xyz, T _w)
 	{
 		this->x = xyz;
 		this->y = xyz;
 		this->z = xyz;
+		this->w = _w;
+	}
+
+	TQuat4(T _x, T _y, T _z, T _w)
+	{
+		this->x = _x;
+		this->y = _y;
+		this->z = _z;
 		this->w = _w;
 	}
 
@@ -28,9 +36,17 @@ public:
 		this->w = _w;
 	}
 
-	inline TVec3<T>* toTvec() { return (TVec3<T>*)this; }
+	TQuat4<T>& operator=(const TQuat4<T>& rSrc)
+	{
+		this->x = rSrc.x;
+		this->y = rSrc.y;
+		this->z = rSrc.z;
+		this->w = rSrc.w;
+	}
 
-	template <typename A> inline void set(A _x, A _y, A _z, A _w)
+	TVec3<T>* toTvec() { return (TVec3<T>*)this; }
+
+	template <typename A> void set(A _x, A _y, A _z, A _w)
 	{
 		TVec4<T>::set(_x, _y, _z, _w);
 	}
@@ -59,7 +75,11 @@ public:
 	}
 
 	/* General operations */
-	void normalize(const TQuat4<T>& rSrc);
+
+	// NOTE: SMG contains a "normalize" implementation here that reset the
+	// quaternion to identity in case of zero length -- welp, not in SMS! Here
+	// we just leave it all to TVec4 and zero out the quaternion to device by
+	// zero even more! Fun!
 
 	void getXDir(TVec3<T>& rDest) const
 	{
@@ -87,7 +107,16 @@ public:
 
 	void getEuler(TVec3<T>& rDest) const;
 	void setEuler(T _x, T _y, T _z);
-	void setEulerZ(T _z);
+	void setEulerZ(T _z)
+	{
+		_z /= 2;
+		f32 s   = sin(_z);
+		f32 c   = cos(_z);
+		this->x = 0.0f;
+		this->y = 0.0f;
+		this->z = c;
+		this->w = s;
+	}
 
 	void setRotate(const TVec3<T>& pVec, f32 pAngle)
 	{
@@ -132,14 +161,44 @@ public:
 		this->slerp(a2, a3);
 	}
 
-	void scale(f32 scalar, const TVec3<T>& rVec)
+	void slerp(const TQuat4<T>& param_1, T param_2)
 	{
-		TVec3<T>::scale(scalar, rVec);
+		TQuat4<f32> q1;
+		q1.normalize(*this);
+		TQuat4<f32> q2;
+		q2.normalize(param_1);
+
+		f32 fVar13 = q1.dot(q2);
+
+		bool bVar9;
+		if (fVar13 < 0.0f) {
+			bVar9  = true;
+			fVar13 = -fVar13;
+		} else {
+			bVar9 = false;
+		}
+
+		f32 fVar92;
+		if (1.0f - fVar13 <= TUtil<f32>::epsilon()) {
+			fVar92 = 1.0f - param_2;
+		} else {
+			f32 fVar11 = acosf(fVar13);
+			f32 fVar12 = sinf(fVar11);
+
+			fVar92  = sinf((1.0f - param_2) * fVar11) / fVar12;
+			param_2 = sinf(param_2 * fVar11) / fVar12;
+		}
+
+		if (bVar9)
+			param_2 = -param_2;
+
+		this->x = fVar92 * q1.x + param_2 * q2.x;
+		this->y = fVar92 * q1.y + param_2 * q2.y;
+		this->z = fVar92 * q1.z + param_2 * q2.z;
+		this->w = fVar92 * q1.w + param_2 * q2.w;
 	}
 
-	void slerp(const TQuat4<T>&, T);
-
-	void transform(const TVec3<T>& v, TVec3<T>& rDest)
+	void transform(const TVec3<T>& v, TVec3<T>& rDest) const
 	{
 		TQuat4<T> q((this->w * v.x) + (this->y * v.z) - (this->z * v.y),
 		            (this->w * v.y) - (this->x * v.z) + (this->z * v.x),
@@ -154,10 +213,7 @@ public:
 		              + (q.z * this->w));
 	}
 
-	void transform(TVec3<T>& rDest) const;
-
-	/* Operators */
-	TQuat4<T>& operator=(const TQuat4<T>& rSrc);
+	void transform(TVec3<T>& v) const { transform(v, v); }
 };
 
 } // namespace JGeometry

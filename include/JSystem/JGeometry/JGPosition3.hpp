@@ -17,6 +17,11 @@ public:
 		this->identity33();
 		this->setTrans(x, y, z);
 	}
+	void translation(const TVec3<f32>& translation)
+	{
+		this->identity33();
+		this->setTrans(translation);
+	}
 
 	// From SMG, should be real
 	void setTrans(const TVec3<f32>& translation)

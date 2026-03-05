@@ -27,6 +27,26 @@ template <class T> T TUtil<T>::mod(T value, T modulus)
 template <> struct TUtil<f32> {
 	static f32 epsilon() { return 3.81469727e-06f; }
 
+	static bool epsilonEquals(f32 param_1, f32 param_2, f32 epsilon)
+	{
+		if (param_1 - param_2 < -epsilon)
+			return 0;
+
+		if (epsilon < param_1 - param_2)
+			return 0;
+
+		return 1;
+	}
+
+	static f32 clamp(f32 value, f32 min, f32 max)
+	{
+		if (value < min)
+			return min;
+		if (value > max)
+			return max;
+		return value;
+	}
+
 	static f32 sqrt(f32 mag)
 	{
 		if (mag <= 0.0f)
