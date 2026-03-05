@@ -34,6 +34,11 @@ public:
 		w = _w;
 	}
 
+	f32 dot(const TVec4<f32>& other) const
+	{
+		return x * other.x + y * other.y + z * other.z + w * other.w;
+	}
+
 	void scale(T val)
 	{
 		x *= val;
@@ -73,6 +78,8 @@ public:
 	}
 
 	void normalize() { setLength(*this, 1.0f); }
+
+	void normalize(const TVec4<f32>& other) { setLength(other, 1.0f); }
 };
 
 } // namespace JGeometry

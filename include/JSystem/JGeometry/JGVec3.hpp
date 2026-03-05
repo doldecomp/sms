@@ -42,12 +42,13 @@ public:
 
 template <> class TVec3<f32> : public Vec {
 public:
-	// NOTE: this MUST be uninitialized as far as I can tell
 	TVec3() { }
 
 	TVec3(const Vec& b) { set(b.x, b.y, b.z); }
 
 	template <class T> TVec3(T x_, T y_, T z_) { set(x_, y_, z_); }
+
+	TVec3(f32 value) { setAll(value); }
 
 	TVec3(const TVec3& other)
 	{
@@ -89,6 +90,13 @@ public:
 		x = other.x;
 		y = other.y;
 		z = other.z;
+	}
+
+	template <class TY> void setAll(TY value)
+	{
+		x = value;
+		y = value;
+		z = value;
 	}
 
 	// === arithmetic stuff ===
@@ -214,6 +222,14 @@ public:
 
 	// === length stuff ===
 
+	f32 distance(const TVec3<f32>& other) const
+	{
+		f32 dx = x - other.x;
+		f32 dy = y - other.y;
+		f32 dz = z - other.z;
+		return TUtil<f32>::sqrt(dx * dx + dy * dy + dz * dz);
+	}
+
 	f32 squared() const { return x * x + y * y + z * z; }
 
 	f32 length() const { return TUtil<f32>::sqrt(squared()); }
@@ -223,7 +239,6 @@ public:
 
 	bool isZero() const { return squared() <= TUtil<f32>::epsilon(); }
 
-	// present in tww so likely real
 	void setLength(f32 length) { setLength(*this, length); }
 
 	void normalize() { setLength(*this, 1.0f); }
@@ -250,6 +265,7 @@ public:
 		if (z <= max.z)
 			z = max.z;
 	}
+
 	void setMin(const TVec3& min)
 	{
 		if (x >= min.x)
