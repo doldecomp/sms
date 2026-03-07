@@ -48,7 +48,7 @@ public:
 
 	template <class T> TVec3(T x_, T y_, T z_) { set(x_, y_, z_); }
 
-	TVec3(f32 value) { setAll(value); }
+	explicit TVec3(f32 value) { setAll(value); }
 
 	TVec3(const TVec3& other)
 	{
@@ -188,8 +188,14 @@ public:
 
 	void cross(const TVec3<f32>& a, const TVec3<f32>& b)
 	{
-		set(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z,
-		    a.x * b.y - a.y * b.x);
+		f32 _x = a.y * b.z - a.z * b.y;
+		f32 _y = a.z * b.x - a.x * b.z;
+		f32 _z = a.x * b.y - a.y * b.x;
+
+		// Using set here leads to regswaps.
+		x = _x;
+		y = _y;
+		z = _z;
 	}
 
 	void negate()
@@ -274,6 +280,13 @@ public:
 			y = min.y;
 		if (z >= min.z)
 			z = min.z;
+	}
+
+	// TODO: SMG's operator== uses epsilonEquals. Maybe this wasn't operator==
+	// but a separate function? Eh, whatever.
+	bool operator==(const TVec3& other) const
+	{
+		return x == other.x && y == other.y && z == other.z;
 	}
 };
 

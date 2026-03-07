@@ -10,14 +10,14 @@ float atan2f(float __y, float __x)
 {
 	if (signbit(__x) == signbit(__y)) {
 		if (signbit(__x) != 0) {
-			return atanf(__y / __x) - PI;
+			return atanf(__y / __x) - M_PI;
 		} else if (__x) {
 			return atanf(__y / __x);
 		} else {
 			return HALF_PI;
 		}
 	} else if (__x < 0.0f) {
-		return PI + atanf(__y / __x);
+		return M_PI + atanf(__y / __x);
 	} else if (__x) {
 		return atanf(__y / __x);
 	}

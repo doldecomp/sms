@@ -48,29 +48,57 @@ public:
 
 	template <typename A> void set(A _x, A _y, A _z, A _w)
 	{
-		TVec4<T>::set(_x, _y, _z, _w);
+		this->x = _x;
+		this->y = _y;
+		this->z = _z;
+		this->w = _w;
+	}
+
+	void set(T _x, T _y, T _z, T _w)
+	{
+		this->x = _x;
+		this->y = _y;
+		this->z = _z;
+		this->w = _w;
+	}
+
+	template <class TY> void set(const TQuat4<TY>& other)
+	{
+		this->x = other.x;
+		this->y = other.y;
+		this->z = other.z;
+		this->w = other.w;
+	}
+
+	void conjugate(const TQuat4<T>& other)
+	{
+		this->x = -other.x;
+		this->y = -other.y;
+		this->z = -other.z;
+		this->w = other.w;
 	}
 
 	template <typename A> void mul(const TVec4<A>& other)
 	{
-		T _x = this->w * other.x + this->x * other.w + this->y * other.z
-		       - this->z * other.y;
-		T _y = this->w * other.y - this->x * other.z + this->y * other.w
-		       + this->z * other.x;
-		T _z = this->w * other.z + this->x * other.y - this->y * other.x
-		       + this->z * other.w;
-		T _w = this->w * other.w - this->x * other.x - this->y * other.y
-		       - this->z * other.z;
+		// clang-format off
+		T _x = this->w * other.x + this->x * other.w + this->y * other.z - this->z * other.y;
+		T _y = this->w * other.y + this->y * other.w + this->x * other.z - this->z * other.x;
+		T _z = this->w * other.z + this->z * other.w + this->x * other.y - this->y * other.x;
+		T _w = this->w * other.w - this->x * other.x - this->y * other.y - this->z * other.z;
+		// clang-format on
 
 		set(_x, _y, _z, _w);
 	}
 
 	template <typename A> void mul(const TQuat4<A>& a, const TQuat4<A>& b)
 	{
-		T _x = a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y;
-		T _y = a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x;
-		T _z = a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w;
-		T _w = a.w * b.w - a.x * a.x - a.y * a.y - a.z * a.z;
+		// clang-format off
+		T _x =  a.w * b.w + a.y * b.z - a.z * b.y + a.w * b.x;
+		T _y = -a.x * b.z + a.y * b.w + a.z * b.x + a.w * b.y;
+		T _z =  a.x * b.y - a.y * b.x + a.z * b.w + a.w * b.z;
+		T _w = -a.x * b.x - a.y * b.y - a.z * b.z + a.w * b.w;
+		// clang-format on
+
 		set(_x, _y, _z, _w);
 	}
 
@@ -107,15 +135,23 @@ public:
 
 	void getEuler(TVec3<T>& rDest) const;
 	void setEuler(T _x, T _y, T _z);
+	void setEulerY(T _y)
+	{
+		f32 s   = sin(0.5f * _y);
+		f32 c   = cos(0.5f * _y);
+		this->x = 0.0f;
+		this->y = s;
+		this->z = 0.0f;
+		this->w = c;
+	}
 	void setEulerZ(T _z)
 	{
-		_z /= 2;
-		f32 s   = sin(_z);
-		f32 c   = cos(_z);
+		f32 s   = sin(0.5f * _z);
+		f32 c   = cos(0.5f * _z);
 		this->x = 0.0f;
 		this->y = 0.0f;
-		this->z = c;
-		this->w = s;
+		this->z = s;
+		this->w = c;
 	}
 
 	void setRotate(const TVec3<T>& pVec, f32 pAngle)
@@ -133,12 +169,12 @@ public:
 		f32 len = axis.length();
 		if (len <= TUtil<f32>::epsilon()) {
 			set(0.0f, 0.0f, 0.0f, 1.0f);
-		} else {
-			f32 calcAngle = atan2f(len, from.dot(to));
-			f32 halfAngle = amount * (calcAngle * 0.5f);
-			toTvec()->scale(sinf(halfAngle) / len, axis);
-			this->w = cosf(halfAngle);
+			return;
 		}
+
+		f32 halfAngle = amount * (atan2(len, from.dot(to)) * 0.5f);
+		toTvec()->scale(sin(halfAngle) / len, axis);
+		this->w = cos(halfAngle);
 	}
 
 	void setRotate(const TVec3<T>&, const TVec3<T>&);
@@ -150,7 +186,37 @@ public:
 		setRotate(pVec, pAngle);
 	}
 
-	void rotate(TVec3<T>& rDest) const;
+	// Assumes unit quaternion. These were renamed to "transform" in SMG.
+	void rotate(const TVec3<T>& v, TVec3<T>& rDest) const
+	{
+		// Incollect regalloc
+		f32 vx = v.x;
+		f32 vy = v.y;
+		f32 vz = v.z;
+
+		T w = this->w;
+		T z = this->z;
+		T y = this->y;
+		T x = this->x;
+
+		// clang-format off
+		TQuat4 q;
+		q.x =  w *  0 + y * vz - z * vy + w * vx;
+		q.y = -x * vz + y *  0 + z * vx + w * vy;
+		q.z =  x * vy - y * vx + z *  0 + w * vz;
+		q.w = -x * vx - y * vy - z * vz + w *  0;
+
+		TQuat4 q2;
+		q2.x =  q.x *  w + q.y * -z - q.z * -y + q.w * -x;
+		q2.y = -q.x * -z + q.y *  w + q.z * -x + q.w * -y;
+		q2.z =  q.x * -y - q.y * -x + q.z *  w + q.w * -z;
+		// clang-format on
+
+		// This set wasn't inlined in SMG, so should be real?
+		rDest.set(q2.x, q2.y, q2.z);
+	}
+
+	void rotate(TVec3<T>& rDest) const { rotate(rDest, rDest); }
 
 	void slerp(const TQuat4<T>& a1, const TQuat4<T>& a2, T a3)
 	{
@@ -197,23 +263,6 @@ public:
 		this->z = fVar92 * q1.z + param_2 * q2.z;
 		this->w = fVar92 * q1.w + param_2 * q2.w;
 	}
-
-	void transform(const TVec3<T>& v, TVec3<T>& rDest) const
-	{
-		TQuat4<T> q((this->w * v.x) + (this->y * v.z) - (this->z * v.y),
-		            (this->w * v.y) - (this->x * v.z) + (this->z * v.x),
-		            (this->w * v.z) + (this->x * v.y) - (this->y * v.x),
-		            -((this->x * v.x) + (this->y * v.y) + (this->z * v.z)));
-
-		rDest.set((-q.w * this->x) + (q.x * this->w) - (q.y * this->z)
-		              + (q.z * this->y),
-		          (-q.w * this->y) + (q.x * this->z) + (q.y * this->w)
-		              - (q.z * this->x),
-		          (-q.w * this->z) - (q.x * this->y) + (q.y * this->x)
-		              + (q.z * this->w));
-	}
-
-	void transform(TVec3<T>& v) const { transform(v, v); }
 };
 
 } // namespace JGeometry

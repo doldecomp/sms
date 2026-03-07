@@ -52,11 +52,12 @@ static const char* fireWanwan_bastable[] = {
 	"/scene/fireWanwan/bas/wanwan_walk.bas",
 };
 
-void TLerpControl::init(const GXColorS10& param_1, const GXColorS10& param_2,
+void TLerpControl::init(const GXColorS10& to, const GXColorS10& from,
                         f32 param_3)
 {
-	unk8  = param_1;
-	unk10 = param_2;
+	mStart   = from;
+	mEnd     = to;
+	mCurrent = from;
 	unk18.init(param_3);
 	unk18.setAttribute(J3DFrameCtrl::ATTR_ONCE);
 	unk18.setRate(SMSGetAnmFrameRate());
@@ -71,75 +72,74 @@ void TLerpControl::update()
 	else
 		fVar1 = unk18.getFrame() / unk18.getEnd();
 
-	unk0.r = MyUtil::value_lerp<s16>(unk8.r, unk10.r, fVar1);
-	unk0.g = MyUtil::value_lerp<s16>(unk8.g, unk10.g, fVar1);
-	unk0.b = MyUtil::value_lerp<s16>(unk8.b, unk10.b, fVar1);
+	mCurrent.r = MyUtil::value_lerp<s16>(mStart.r, mEnd.r, fVar1);
+	mCurrent.g = MyUtil::value_lerp<s16>(mStart.g, mEnd.g, fVar1);
+	mCurrent.b = MyUtil::value_lerp<s16>(mStart.b, mEnd.b, fVar1);
 }
 
 TTailRubber::TTailRubber(int count)
-    : unk8(true)
-    , mIsHeld(true)
+    : mFixHeadPos(true)
+    , mFixTailPos(true)
     , mBoundRate(0.25f)
     , mDecay(0.5f)
 {
 	unk0.set(new Node[count], count);
 }
 
-inline void TTailRubber::reset(const JGeometry::TVec3<f32>& param_1,
-                               const JGeometry::TVec3<f32>& param_2)
+void TTailRubber::reset(const JGeometry::TVec3<f32>& param_1,
+                        const JGeometry::TVec3<f32>& param_2)
 {
 	setHeadPos(param_1);
 	setTailPos(param_2);
 
-	JGeometry::TVec3<f32> diff = param_2;
-	diff -= param_1;
+	JGeometry::TVec3<f32> diff;
+	diff.sub(param_2, param_1);
 
 	for (int i = 1; i < unk0.size() - 1; ++i) {
-		f32 fVar4 = f32(i) / unk0.size();
 		JGeometry::TVec3<f32> pos;
-		pos.x = param_1.x + diff.x * fVar4;
-		pos.y = param_1.y + diff.y * fVar4;
-		pos.z = param_1.z + diff.z * fVar4;
-		unk0[i].mPos.set(pos);
-		unk0[i].mVel.set(0.0f, 0.0f, 0.0f);
-	}
+		pos.scaleAdd(f32(i) / f32(unk0.size()), param_1, diff);
 
-	unk8    = true;
-	mIsHeld = false;
+		Node& node = unk0[i];
+		node.mPos.set(pos);
+		node.mVel.set(0.0f, 0.0f, 0.0f);
+	}
 }
 
 void TTailRubber::setHeadPos(const JGeometry::TVec3<f32>& param_1)
 {
-	unk0.front().mPos.set(param_1);
-	unk0.front().mVel.set(0.0f, 0.0f, 0.0f);
+	Node& node = unk0.front();
+	node.mPos  = param_1;
+	node.mVel.set(0.0f, 0.0f, 0.0f);
 }
 
 void TTailRubber::setTailPos(const JGeometry::TVec3<f32>& param_1)
 {
-	unk0.back().mPos.set(param_1);
-	unk0.back().mVel.set(0.0f, 0.0f, 0.0f);
+	Node& node = *(unk0.end() - 1);
+	node.mPos  = param_1;
+	node.mVel.set(0.0f, 0.0f, 0.0f);
 }
 
-// correct-ish?
 void TTailRubber::movement()
 {
 	adjust();
 	restrict();
 	bind();
 
-	for (Node *it = unk0.begin() + 1, *e = unk0.end() - 1; it != e; ++it)
+	Node* end = unk0.end();
+	for (Node *it = unk0.begin() + 1, *e = end - 1; it != e; ++it)
 		it->mPos += it->mVel;
 
-	if (!unk8)
+	if (!mFixHeadPos)
 		unk0.front().mPos += unk0.front().mVel;
 
-	if (!mIsHeld)
+	if (!mFixTailPos)
 		unk0.back().mPos += unk0.back().mVel;
 }
 
 void TTailRubber::bind()
 {
-	for (Node *it = unk0.begin(), *e = unk0.end() - 1; it != e; ++it)
+	Node* end = unk0.end();
+	for (Node *it = unk0.begin() + 1, *e = end - 1; it != e; ++it)
 		bindOne(*it);
 }
 
@@ -200,7 +200,7 @@ void TTailRubber::restrict()
 
 	avgHorLen /= (f32)(unk0.size() - 1);
 
-	if (mIsHeld) {
+	if (mFixTailPos) {
 		for (Node *e = unk0.begin() - 1, *it = unk0.end() - 2; it != e; --it) {
 			JGeometry::TVec3<f32> diff = (it + 1)->mPos;
 			diff -= it->mPos;
@@ -374,8 +374,15 @@ void TFireWanwanManager::checkShineAppear()
 
 void TFireWanwanManager::receiveMessageFromTail(int) { }
 
-void TFireWanwanManager::receiveMessageFromBody(const TFireWanwan*, BodyMsgType)
+void TFireWanwanManager::receiveMessageFromBody(const TFireWanwan* wanwan,
+                                                BodyMsgType msg)
 {
+	switch (msg) {
+	case BODY_MSG_RECOVERED:
+		if (mWanwanRecoversBeforeHelpBalloon > 0)
+			mWanwanRecoversBeforeHelpBalloon -= 1;
+		break;
+	}
 }
 
 TFireWanwanTailNode::TFireWanwanTailNode(MActor* actor)
@@ -383,7 +390,7 @@ TFireWanwanTailNode::TFireWanwanTailNode(MActor* actor)
     , mScale(1.0f, 1.0f, 1.0f)
     , unk10(0)
     , mJointIdx(
-          mMActor->getModel()->getModelData()->getMaterialName()->getIndex(
+          (u16)mMActor->getModel()->getModelData()->getJointName()->getIndex(
               "tail_null1"))
 {
 }
@@ -445,8 +452,8 @@ BOOL TFireWanwanTailHit::receiveMessage(THitActor* param_1, u32 param_2)
 
 void TFireWanwanTailHit::behaveTaken(THitActor* param_1)
 {
-	mHolder        = (TTakeActor*)param_1;
-	unkA4->mIsHeld = true;
+	mHolder            = (TTakeActor*)param_1;
+	unkA4->mFixTailPos = true;
 	if (gpMSound->gateCheck(0x28DE))
 		MSoundSESystem::MSoundSE::startSoundActor(0x28DE, &mPosition, 0,
 		                                          nullptr, 0, 4);
@@ -459,7 +466,7 @@ void TFireWanwanTailHit::behaveTaken(THitActor* param_1)
 
 void TFireWanwanTailHit::behaveApart()
 {
-	unkA4->mIsHeld = false;
+	unkA4->mFixTailPos = false;
 
 	((TFireWanwanManager*)mOwner->getManager())->unk64 = 0;
 	mOwner->startThrownSound();
@@ -474,28 +481,32 @@ void TFireWanwanTailHit::init()
 	unkA4      = new TTailRubber(5);
 	MtxPtr mtx = mOwner->getTailMtx();
 
-	// TODO: smells fake
-	JGeometry::TVec3<f32>* pos = (JGeometry::TVec3<f32>*)&mtx[0][3];
-	unkA4->reset(*pos, *pos);
+	JGeometry::TVec3<f32> pos;
+	pos.x = mtx[0][3];
+	pos.y = mtx[1][3];
+	pos.z = mtx[2][3];
+	unkA4->reset(pos, pos);
+
+	unkA4->mFixHeadPos = true;
+	unkA4->mFixTailPos = false;
 
 	TMActorKeeper* keeper = mOwner->getActorKeeper();
 
 	unkBC = new TLerpControl;
 
-	unkBC->unk0 = cBodyColorOnFire;
+	unkBC->setCurrent(cBodyColorOnFire);
 
 	for (int i = 0; i < 5; ++i) {
 		MActor* actor = keeper->createMActor("wanwanTail.bmd", 3);
 		SMS_InitPacket_OneTevColor(actor->getModel(), 0, GX_TEVREG0,
-		                           &unkBC->unk0);
+		                           &unkBC->getCurrent());
 		unkA8[i] = new TFireWanwanTailNode(actor);
 
-		JGeometry::TVec3<f32> local_78(mOwner->getBodyScale(),
-		                               mOwner->getBodyScale(),
-		                               mOwner->getBodyScale());
+		JGeometry::TVec3<f32> local_78(mOwner->getBodyScale());
 		if (i == 4)
 			local_78 *= 2.0f;
-		unkA8[i]->mScale.set(local_78);
+
+		unkA8[i]->setScale(local_78);
 
 		TPosition3f mtx;
 		mtx.translation(unkA4->getNode(i)->mPos);
@@ -532,26 +543,8 @@ void TFireWanwanTailHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 		    mtx[0][3], mtx[1][3] - mDamageHeight * 0.5f, mtx[2][3]));
 	}
 
-	if ((param_1 & 2) && mIsOnFire) {
-		TFireWanwan* wanwan = mOwner;
-
-		u32 maxHp = wanwan->getSaveParam()
-		                ? wanwan->getSaveParam()->mSLHitPointMax.get()
-		                : 1;
-
-		f32 scale = wanwan->mBodyScale * f32(wanwan->mHitPoints) / f32(maxHp);
-
-		MtxPtr mtx = unkA8[4]->mMActor->getModel()->getBaseTRMtx();
-		JGeometry::TVec3<f32> scaleVec(scale, scale, scale);
-		SMS_EasyEmitParticle(PARTICLE_MS_MOE_FIRE_C, mtx, this, scaleVec);
-		SMS_EasyEmitParticle(PARTICLE_MS_MOE_FIRE_A, mtx, this, scaleVec);
-		SMS_EasyEmitParticle(PARTICLE_MS_MOE_FIRE_B, mtx, this, scaleVec);
-		SMS_EasyEmitParticle(PARTICLE_MS_MOE_FIRE_D, mtx, this, scaleVec);
-
-		if (gpMSound->gateCheck(0x20AB))
-			MSoundSESystem::MSoundSE::startSoundActor(0x20AB, &mPosition, 0,
-			                                          nullptr, 0, 4);
-	}
+	if ((param_1 & 2) && mIsOnFire)
+		onFireEffect();
 
 	if (param_1 & 2)
 		unkBC->update();
@@ -605,14 +598,10 @@ void TFireWanwanTailHit::performNodes(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	for (int i = 0; i < 5; ++i) {
-		Mtx afStack_a4;
+		TPosition3f afStack_a4;
 		MTXCopy(afStack_a4, unkA8[i]->mMActor->getModel()->getBaseTRMtx());
 
-		JGeometry::TVec3<f32>& vec = unkA4->getNode(i + 1)->mPos;
-
-		afStack_a4[0][3] = vec.x;
-		afStack_a4[1][3] = vec.y;
-		afStack_a4[2][3] = vec.z;
+		afStack_a4.setTrans(unkA4->getNode(i + 1)->mPos);
 
 		unkA8[i]->setBarAnmMtx(afStack_a4);
 	}
@@ -622,16 +611,12 @@ void TFireWanwanTailHit::clipNodes(JDrama::TGraphics*) { }
 
 void TFireWanwanTailHit::movementBody(const JGeometry::TVec3<f32>& param_1)
 {
-	if (mOwner->isHungTailNerve() && !mOwner->unk194->isTaken()) {
-		if (!mOwner->isReadyToFly()) {
-			unkA4->mBoundRate
-			    = mOwner->getSaveParam2()->mRubberBoundRateHitting.get();
-			unkA4->mDecay = mOwner->getSaveParam2()->mRubberDecayHitting.get();
-			return;
-		}
-	}
-
-	if (mOwner->isAttacking()) {
+	if (mOwner->isHungTailNerve() && !mOwner->unk194->isTaken()
+	    && !mOwner->isReadyToFly()) {
+		unkA4->mBoundRate
+		    = mOwner->getSaveParam2()->mRubberBoundRateHitting.get();
+		unkA4->mDecay = mOwner->getSaveParam2()->mRubberDecayHitting.get();
+	} else if (mOwner->isAttacking()) {
 		unkA4->mBoundRate = 0.7f;
 		unkA4->mDecay     = 0.4f;
 	} else {
@@ -686,23 +671,44 @@ bool TFireWanwanTailHit::moveRequest(const JGeometry::TVec3<f32>& param_1)
 	return true;
 }
 
-void TFireWanwanTailHit::onFireEffect() { }
+void TFireWanwanTailHit::onFireEffect()
+{
+	u8 maxHp = mOwner->getMaxHitPoints();
 
-void TFireWanwanTailHit::offFireEffect() { }
+	JGeometry::TVec3<f32> scaleVec(mOwner->getBodyScale()
+	                               * mOwner->getHitPoints() / maxHp);
+
+	MtxPtr mtx = unkA8[4]->mMActor->getModel()->getBaseTRMtx();
+	SMS_EasyEmitParticle(PARTICLE_MS_MOE_FIRE_C, mtx, this, scaleVec);
+	SMS_EasyEmitParticle(PARTICLE_MS_MOE_FIRE_A, mtx, this, scaleVec);
+	SMS_EasyEmitParticle(PARTICLE_MS_MOE_FIRE_B, mtx, this, scaleVec);
+	SMS_EasyEmitParticle(PARTICLE_MS_MOE_FIRE_D, mtx, this, scaleVec);
+
+	if (gpMSound->gateCheck(0x20AB))
+		MSoundSESystem::MSoundSE::startSoundActor(0x20AB, &mPosition, 0,
+		                                          nullptr, 0, 4);
+}
+
+void TFireWanwanTailHit::offFireEffect()
+{
+	JGeometry::TVec3<f32> scale(mOwner->mBodyScale);
+	MtxPtr mtx = unkA8[4]->mMActor->getModel()->getBaseTRMtx();
+	SMS_EasyEmitParticle(PARTICLE_MS_MOE_FIRE_OFF, mtx, this, scale);
+}
 
 void TFireWanwanTailHit::changeBodyToRed(f32 param_1)
 {
-	unkBC->init(unkBC->unk0, cBodyColorOnFire, param_1);
+	unkBC->init(cBodyColorOnFire, unkBC->getCurrent(), param_1);
 }
 
 void TFireWanwanTailHit::changeBodyToBlack(f32 param_1)
 {
-	unkBC->init(unkBC->unk0, cBodyColorOnCool, param_1);
+	unkBC->init(cBodyColorOnCool, unkBC->getCurrent(), param_1);
 }
 
 void TFireWanwanTailHit::changeBodyToSilver(f32 param_1)
 {
-	unkBC->init(unkBC->unk0, cBodyColorOnSilver, param_1);
+	unkBC->init(cBodyColorOnSilver, unkBC->getCurrent(), param_1);
 }
 
 f32 TFireWanwanTailHit::getTailLength() const { }
@@ -750,7 +756,7 @@ void TFireWanwan::init(TLiveManager* manager)
 	int idx
 	    = getModel()->getModelData()->getMaterialName()->getIndex("_mat_body");
 	SMS_InitPacket_OneTevColor(mMActor->getModel(), idx, GX_TEVREG0,
-	                           &unk238->unk0);
+	                           &unk238->getCurrent());
 	reset();
 }
 
@@ -775,9 +781,9 @@ void TFireWanwan::reset()
 	mMarchSpeed = params->mMarchSpeed.get();
 	mSpine->reset();
 	mSpine->setDefaultNext();
-	unk238->unk0 = cBodyColorOnFire;
-	unk238->init(unk238->unk0, cBodyColorOnFire, 1.0f);
-	unk194->unkBC->init(unk194->unkBC->unk0, cBodyColorOnFire, 1.0f);
+	unk238->setCurrent(cBodyColorOnFire);
+	unk238->init(cBodyColorOnFire, unk238->getCurrent(), 1.0f);
+	unk194->unkBC->init(cBodyColorOnFire, unk194->unkBC->getCurrent(), 1.0f);
 }
 
 void TFireWanwan::initParticle()
@@ -866,28 +872,29 @@ void TFireWanwan::decideTarget(const JGeometry::TVec3<f32>& param_1)
 	local_54.normalize();
 
 	if (is_antiparallel(local_2C, JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f))) {
-		unk1CC.setEulerZ(M_PI);
+		unk1CC.setEulerY(JGeometry::TUtil<f32>::PI());
 	} else {
 		unk1CC.setRotate(JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f), local_54,
 		                 1.0f);
 	}
 
-	unk1BC.setEulerZ(DEG_TO_RAD(mRotation.y));
+	unk1BC.setEulerY(DEG_TO_RAD(mRotation.y));
 }
 
 void TFireWanwan::doAdjustTarget()
 {
 	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
 
-	f32 fVar8 = MsClamp(ctrl->getFrame() / ctrl->getEnd(), 0.0f, 1.0f);
+	f32 fVar8 = JGeometry::TUtil<f32>::clamp(ctrl->getFrame() / ctrl->getEnd(),
+	                                         0.0f, 1.0f);
 
-	JGeometry::TQuat4<f32> local_70 = unk1BC;
-	local_70.slerp(unk1CC, fVar8);
+	JGeometry::TQuat4<f32> local_70;
+	local_70.slerp(unk1BC, unk1CC, fVar8);
 	local_70.normalize();
 
 	JGeometry::TVec3<f32> local_60(0.0f, 0.0f, 1.0f);
 
-	local_70.transform(local_60);
+	local_70.rotate(local_60);
 
 	f32 rot = MsGetRotFromZaxisY(local_60);
 
@@ -947,13 +954,14 @@ BOOL TFireWanwan::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	switch (param_2) {
 	case 0:
+	case 1:
 		return false;
 
 	case 0xF: {
 		SMS_EasyEmitParticle(PARTICLE_MS_ENM_WATHIT, &param_1->getPosition(),
 		                     nullptr, JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
-		u8 uVar3 = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
-		if (uVar3 == mHitPoints)
+		u8 maxHp = getMaxHitPoints();
+		if (maxHp == mHitPoints)
 			if (gpMSound->gateCheck(0x290F))
 				MSoundSESystem::MSoundSE::startSoundActor(0x290F, &mPosition, 0,
 				                                          nullptr, 0, 4);
@@ -1005,39 +1013,36 @@ void TFireWanwan::behaveToWater(THitActor* param_1)
 		                                          nullptr, 0, 4);
 	mSpine->reset();
 	mSpine->setNext(&TNerveFireWanwanEscape::theNerve());
-	// TODO: unk194->offFireEffect()?
-	SMS_EasyEmitParticle(
-	    PARTICLE_MS_MOE_FIRE_OFF, &mPosition, unk194,
-	    JGeometry::TVec3<f32>(mBodyScale, mBodyScale, mBodyScale));
+	unk194->offFireEffect();
 	unk194->mIsOnFire       = false;
 	mSprayedByWaterCooldown = 20;
 }
 
 void TFireWanwan::behaveHitComrades()
 {
-	if (mSpine->getLatestNerve() == &TNerveFireWanwanGraphWander::theNerve()
-	    && mNoCollideTimer <= 0) {
-		mNoCollideTimer = getSaveParam2()->mNoCollideTimerMax.get();
-		mSpine->reset();
-		mSpine->setNext(&TNerveFireWanwanTurn::theNerve());
-	}
+	if (!isWalking() || mNoCollideTimer > 0)
+		return;
+
+	mNoCollideTimer = getSaveParam2()->mNoCollideTimerMax.get();
+	mSpine->reset();
+	mSpine->setNext(&TNerveFireWanwanTurn::theNerve());
 }
 
 void TFireWanwan::changeBodyToRed(f32 param_1)
 {
-	unk238->init(unk238->unk0, cBodyColorOnFire, param_1);
+	unk238->init(cBodyColorOnFire, unk238->getCurrent(), param_1);
 	unk194->changeBodyToRed(param_1);
 }
 
 void TFireWanwan::changeBodyToBlack(f32 param_1)
 {
-	unk238->init(unk238->unk0, cBodyColorOnCool, param_1);
+	unk238->init(cBodyColorOnCool, unk238->getCurrent(), param_1);
 	unk194->changeBodyToBlack(param_1);
 }
 
 void TFireWanwan::changeBodyToSilver(f32 param_1)
 {
-	unk238->init(unk238->unk0, cBodyColorOnSilver, param_1);
+	unk238->init(cBodyColorOnSilver, unk238->getCurrent(), param_1);
 	unk194->changeBodyToSilver(param_1);
 }
 
@@ -1067,7 +1072,7 @@ void TFireWanwan::kill()
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
-	if (!isDefeat()) {
+	if (isDefeat()) {
 		(void)mSpine;
 	} else {
 		mSpine->reset();
@@ -1080,10 +1085,12 @@ bool TFireWanwan::isHitValid(u32) { return false; }
 void TFireWanwan::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	TSmallEnemy::perform(param_1, param_2);
-	if (param_1 & 2) {
+	if (!(param_1 & 2)) {
 		calcRootMatrix();
 		mMActor->calc();
-	} else {
+	}
+
+	if (param_1 & 2) {
 		emitEffects();
 		unk238->update();
 	}
@@ -1168,12 +1175,13 @@ void TFireWanwan::moveObject()
 // Tiny size mismatch
 void TFireWanwan::updateCollisionFromParam()
 {
-	if (isDefeat()) {
-		setHitParams(getSaveParam2()->mSLAttackRadius.get(),
-		             getSaveParam2()->mSLAttackHeight.get(),
-		             getSaveParam2()->mSLDamageRadius.get(),
-		             getSaveParam2()->mSLDamageHeight.get());
-	}
+	if (isDefeat())
+		return;
+
+	setHitParams(getSaveParam2()->mSLAttackRadius.get(),
+	             getSaveParam2()->mSLAttackHeight.get(),
+	             getSaveParam2()->mSLDamageRadius.get(),
+	             getSaveParam2()->mSLDamageHeight.get());
 }
 
 // Tiny size mismatch
@@ -1190,7 +1198,7 @@ void TFireWanwan::updateRumble()
 	f32 fVar1 = getSaveParam2()->mContShakeRange.get();
 
 	if (!isCameraShake() && mDistToMarioSquared < fVar1 * fVar1) {
-		if (isOverApproachRumble()) {
+		if (!isOverApproachRumble()) {
 			SMSRumbleMgr->start(9, &mPosition);
 			mApproachRumbleTimer += 1;
 		}
@@ -1199,7 +1207,7 @@ void TFireWanwan::updateRumble()
 	}
 
 	if (unk194->isTaken()) {
-		if (isOverHungTailRumble()) {
+		if (!isOverHungTailRumble()) {
 			SMSRumbleMgr->start(9, (f32*)nullptr);
 			mHungTailRumbleTimer += 1;
 		}
@@ -1236,13 +1244,10 @@ void TFireWanwan::updateHitPoint()
 {
 	if (unk194->mIsOnFire) {
 		mRecoverTimer += getSaveParam2()->mRecoverRate.get();
-		if (mRecoverTimer >= 1.0f) {
+		if (1.0f <= mRecoverTimer) {
 			mRecoverTimer -= 1.0f;
-			int maxHp
-			    = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
-
-			// TODO: clamp is incorrect here, maybe min+max? Hard to match.
-			mHitPoints = MsClamp<u8>(mHitPoints + 1, 0, maxHp);
+			mHitPoints = JGeometry::TUtil<u32>::clamp((u8)(mHitPoints + 1), 0,
+			                                          getMaxHitPoints());
 		}
 	}
 	ensureTakeSituation();
@@ -1272,12 +1277,12 @@ void TFireWanwan::emitEffects()
 		} else {
 			pos = unk1FC;
 			MTXCopy(getModel()->getBaseTRMtx(), pos);
-			JGeometry::TVec3<f32> thing(unk1FC[0][2], unk1FC[1][2],
-			                            unk1FC[2][2]);
+			JGeometry::TVec3<f32> thing(pos[0][2], pos[1][2], pos[2][2]);
 			thing.normalize();
-			unk1FC[0][3] += thing.x * 150.0f;
-			unk1FC[1][3] += thing.y * 150.0f;
-			unk1FC[2][3] += thing.z * 150.0f;
+			thing *= 150.0f;
+			pos[0][3] += thing.x;
+			pos[1][3] += thing.y;
+			pos[2][3] += thing.z;
 		}
 
 		if (JPABaseEmitter* emitter = SMS_EasyEmitParticle(
@@ -1291,7 +1296,7 @@ void TFireWanwan::emitEffects()
 		SMS_EasyEmitParticle(PARTICLE_MS_HIKAGE1_A, &mPosition, this, local_40);
 	}
 
-	if (!isDefeat()) {
+	if (isDefeat()) {
 		calcRipplePos();
 
 		if (mSpine->getTime() < 600)
@@ -1318,7 +1323,7 @@ void TFireWanwan::emitEffectsOnHittingWall(
 	JGeometry::TQuat4<f32> local_d8;
 
 	if (is_antiparallel(local_54, JGeometry::TVec3<f32>(0.0f, 0.0f, -1.0f))) {
-		local_d8.setEulerZ(M_PI);
+		local_d8.setEulerZ(JGeometry::TUtil<f32>::PI());
 	} else {
 		local_d8.setRotate(JGeometry::TVec3<f32>(0.0f, 0.0f, -1.0f), local_54,
 		                   1.0f);
@@ -1340,28 +1345,26 @@ void TFireWanwan::checkHitActors()
 {
 	for (THitActor **it = mCollisions, **e = mCollisions + mColCount; it != e;
 	     ++it) {
-		THitActor* other = *it;
-		if (other == this)
+		if (*it == this)
 			continue;
 
-		if (other->isActorType(0x80000001)) {
+		if ((*it)->isActorType(0x80000001)) {
 			attackToMario();
 			continue;
 		}
 
-		if (other->isActorType(0x10000028))
+		if ((*it)->isActorType(0x10000028))
 			continue;
 
-		if (other->isActorType(0x1000000E)) {
-			behaveToHitOthers(other);
+		if ((*it)->isActorType(0x1000000E)) {
+			behaveToHitOthers((*it));
 			behaveHitComrades();
 
-			TFireWanwan* otherWanwan = static_cast<TFireWanwan*>(*it);
-			otherWanwan->behaveHitComrades();
+			static_cast<TFireWanwan*>(*it)->behaveHitComrades();
 			continue;
 		}
 
-		behaveToHitOthers(other);
+		behaveToHitOthers((*it));
 	}
 }
 
@@ -1391,9 +1394,9 @@ void TFireWanwan::initEscapeNextGraphNode()
 
 	JGeometry::TVec3<f32> p1 = SMS_GetMarioPos();
 	JGeometry::TVec3<f32> p2;
-	unk124->getGraph()->unk0[uVar1].getPoint(&p2);
+	unk124->getGraph()->getGraphNode(uVar1).getPoint(&p2);
 	JGeometry::TVec3<f32> p3;
-	unk124->getGraph()->unk0[uVar2].getPoint(&p3);
+	unk124->getGraph()->getGraphNode(uVar2).getPoint(&p3);
 
 	p2 -= mPosition;
 	p3 -= mPosition;
@@ -1418,14 +1421,13 @@ void TFireWanwan::initEscapeNextGraphNode()
 
 void TFireWanwan::recoverFire()
 {
-	u8 maxHp   = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
-	mHitPoints = maxHp;
+	mHitPoints        = getMaxHitPoints();
 	unk194->mIsOnFire = true;
 }
 
 bool TFireWanwan::isDefeat() const
 {
-	return mSpine->getLatestNerve() != &TNerveFireWanwanDie::theNerve();
+	return mSpine->getLatestNerve() == &TNerveFireWanwanDie::theNerve();
 }
 
 bool TFireWanwan::canTakenByMario() const
@@ -1470,7 +1472,8 @@ bool TFireWanwan::isFreeze() const
 
 bool TFireWanwan::isReadyToFly() const
 {
-	return unk194->isTaken()
+	bool taken = unk194->isTaken();
+	return !taken
 	       && unk194->unkA4->getLength()
 	              <= getSaveParam2()->mTailLengthToFly.get();
 }
@@ -1483,7 +1486,7 @@ bool TFireWanwan::isRecovering() const
 // Probably wrong?
 bool TFireWanwan::isCameraShake() const
 {
-	return isFreeze() || isDefeat() || !unk194->isTaken() || isRecovering()
+	return isFreeze() || isDefeat() || unk194->isTaken() || isRecovering()
 	       || mSpine->getLatestNerve() == &TNerveFireWanwanEscape::theNerve();
 }
 
@@ -1576,7 +1579,7 @@ void TFireWanwan::bind()
 		JGeometry::TVec3<f32> stepNormal;
 		iVar12 += bindBody(&boundStep, &stepNormal, velStep);
 
-		bVar2 &= checkLiveFlag(LIVE_FLAG_AIRBORNE);
+		bVar2 &= checkLiveFlag2(LIVE_FLAG_AIRBORNE);
 
 		mPosition += boundStep;
 		totalNormal += stepNormal;
@@ -1636,8 +1639,8 @@ int TFireWanwan::bindBody(JGeometry::TVec3<f32>* bound_step,
 			// Give a man a hammer...
 			JGeometry::TVec3<f32> off(0.0f, 0.0f, mWallRadius - fVar1);
 			JGeometry::TQuat4<f32> quat;
-			quat.setEulerZ(i * (M_PI / 2.0f));
-			quat.transform(off);
+			quat.setEulerY(i * JGeometry::TUtil<f32>::halfPI());
+			quat.rotate(off, off);
 			point += off;
 		}
 
@@ -1689,8 +1692,8 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
 
 	if (point.y > actualPoint.y && !local_30->isIllegalData()) {
 		if (!local_30->isEnemyThrough()) {
-			const TBGCheckData* local_34;
 			f32 dVar9;
+			const TBGCheckData* local_34;
 			if (checkLiveFlag(LIVE_FLAG_UNK1000))
 				dVar9 = gpMap->checkGroundIgnoreWaterSurface(
 				    actualPoint.x, actualPoint.y + mHeadHeight, actualPoint.z,
@@ -1716,15 +1719,15 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
 		}
 
 		offLiveFlag(LIVE_FLAG_AIRBORNE);
-		if (!isFlying() && !isDefeat()) {
-			f32 fVar4 = 1.0f - mGroundPlane->getNormal().dot(actualPoint)
-			            - (mGroundPlane->getNormal().x * actualPoint.x
-			               + mGroundHeight * actualPoint.y
-			               + mGroundPlane->getNormal().z * actualPoint.z);
-			if (fVar4 > 0.0f) {
-				actualPoint.scaleAdd(fVar4, actualPoint,
-				                     mGroundPlane->getNormal());
-			}
+		if (isFlying() || isDefeat()) {
+			JGeometry::TVec3<f32> normal;
+			normal.set(mGroundPlane->getNormal());
+			f32 fVar4 = 1.0f
+			            - (normal.dot(actualPoint)
+			               - normal.dot(JGeometry::TVec3<f32>(
+			                   actualPoint.x, mGroundHeight, actualPoint.z)));
+			if (fVar4 > 0.0f)
+				actualPoint.scaleAdd(fVar4, actualPoint, normal);
 		} else {
 			actualPoint.y = mGroundHeight + 1.0f;
 		}
@@ -1783,17 +1786,18 @@ void TFireWanwan::calcShadowPos() { }
 
 void TFireWanwan::calcRipplePos()
 {
-	MtxPtr mtx2 = getModel()->getAnmMtx(mCenterJointIdx);
+	MtxPtr mtx = getModel()->getAnmMtx(mCenterJointIdx);
 	const TBGCheckData* checkData;
-	f32 dVar14 = gpMap->checkGround(mtx2[0][3], mtx2[1][3] + 200.0f, mtx2[2][3],
-	                                &checkData);
-	mRipplePos.set(mtx2[0][3], dVar14, mtx2[2][3]);
+	mRipplePos.set(mtx[0][3],
+	               gpMap->checkGround(mtx[0][3], mtx[1][3] + 200.0f, mtx[2][3],
+	                                  &checkData),
+	               mtx[2][3]);
 }
 
 f32 TFireWanwan::getGravityY() const
 {
 	f32 result = mGravity;
-	if (isFlying() || !isDefeat())
+	if (isFlying() || isDefeat())
 		result = getSaveParam2()->mSLFlyGravityY.get();
 	return result;
 }
@@ -1958,8 +1962,9 @@ DEFINE_NERVE(TNerveFireWanwanRecover, TLiveActor)
 		self->getMActor()->setFrameRate(0.0f, 4);
 		self->getMActor()->getFrameCtrl(4)->setFrame(0.0f);
 		TFireWanwanManager* manager = (TFireWanwanManager*)self->getManager();
-		if (manager->mWanwanRecoversBeforeHelpBalloon > 0)
-			manager->mWanwanRecoversBeforeHelpBalloon -= 1;
+		manager->receiveMessageFromBody(self,
+		                                TFireWanwanManager::BODY_MSG_RECOVERED);
+
 		if (gpMSound->gateCheck(0x28E2))
 			MSoundSESystem::MSoundSE::startSoundActor(0x28E2, &self->mPosition,
 			                                          0, nullptr, 0, 4);
@@ -2035,7 +2040,6 @@ DEFINE_NERVE(TNerveFireWanwanHungTail, TLiveActor)
 
 	JGeometry::TVec3<f32> vec = self->mPosition;
 	vec -= SMS_GetMarioPos();
-	vec.y = 0.0f;
 
 	self->mRotation.y = MsGetRotFromZaxisY(vec);
 	if (self->isReadyToFly()) {
@@ -2066,14 +2070,15 @@ DEFINE_NERVE(TNerveFireWanwanFly, TLiveActor)
 		JGeometry::TVec3<f32> vel
 		    = fromPolar(self->mRotation.y, self->unk194->mThrowPow);
 		self->mVelocity = vel;
+
 		SMS_EasyEmitParticle(PARTICLE_MS_FUMI_C, self->getTailMtx(), self,
 		                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 
 		f32 fVar1 = self->getSaveParam2()->mFreezeTimeThreshold.get();
-		if (vel.squared() <= fVar1 * fVar1)
-			self->mFreezeWait = self->getSaveParam2()->mSLFreezeWaitShort.get();
-		else
+		if (fVar1 * fVar1 < vel.squared())
 			self->mFreezeWait = self->getSaveParam2()->mSLFreezeWait.get();
+		else
+			self->mFreezeWait = self->getSaveParam2()->mSLFreezeWaitShort.get();
 	}
 
 	JGeometry::TVec3<f32> vel = self->mVelocity;

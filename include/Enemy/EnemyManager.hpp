@@ -2,26 +2,11 @@
 #define ENEMY_ENEMY_MANAGER_HPP
 
 #include <Strategic/LiveManager.hpp>
-#include <System/Params.hpp>
-#include <System/ParamInst.hpp>
+#include <Enemy/Enemy.hpp>
 
 class J3DModelData;
 class TSpineEnemy;
 class MActor;
-
-class TSpineEnemyParams : public TParams {
-public:
-	TSpineEnemyParams(const char*);
-
-	/* 0x8 */ TParamRT<f32> mSLHeadHeight;
-	/* 0x1C */ TParamRT<f32> mSLBodyRadius;
-	/* 0x30 */ TParamRT<f32> mSLWallRadius;
-	/* 0x44 */ TParamRT<f32> mSLClipRadius;
-	/* 0x58 */ TParamRT<f32> mSLFarClip;
-	/* 0x6C */ TParamRT<u8> mSLHitPointMax;
-	/* 0x80 */ TParamRT<u8> mSLInstanceNum;
-	/* 0x94 */ TParamRT<u8> mSLActiveEnemyNum;
-};
 
 class TSharedMActorSet {
 public:

@@ -5,6 +5,9 @@
 
 namespace JGeometry {
 
+/// Represents a plane in 3D space, defined by a normal and a distance from the
+/// origin. The name is as such because a plane partitions 3D space into two
+/// halves, I presume.
 template <typename T> class TPartition3 {
 public:
 	TPartition3() { }

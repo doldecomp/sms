@@ -414,11 +414,18 @@ void TPoiHana::calcRootMatrix()
 	TSpineEnemy::calcRootMatrix();
 
 	if (isBckAnm(3) || isBckAnm(4))
-		SMS_EasyEmitParticle(PARTICLE_MS_POI_KIZETSU, &mPosition, this,
-		                     mScaling);
+		if (JPABaseEmitter* emitter
+		    = gpMarioParticleManager->emitAndBindToPosPtr(
+		        PARTICLE_MS_POI_KIZETSU, &mPosition, 1, this)) {
+			emitter->setScale(mScaling);
+		}
 
 	if (isBckAnm(5))
-		SMS_EasyEmitParticle(PARTICLE_MS_POI_ZZZ, &mPosition, this, mScaling);
+		if (JPABaseEmitter* emitter
+		    = gpMarioParticleManager->emitAndBindToPosPtr(
+		        PARTICLE_MS_POI_ZZZ, &mPosition, 1, this)) {
+			emitter->setScale(mScaling);
+		}
 
 	if (isBckAnm(12) || isBckAnm(13)) {
 		if (mMActor->getFrameCtrl(0)->checkPass(18.0f)) {
