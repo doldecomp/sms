@@ -715,7 +715,7 @@ public:
 	Mtx* getRootAnmMtx();
 	void getHeadRot();
 	void getJumpIntoWaterModelData();
-	void jumpMain();
+	BOOL jumpMain();
 	void fallDead();
 	void diving();
 	void hipAttacking();
@@ -793,7 +793,7 @@ public:
 	void checkGroundPlane(f32, f32, f32, f32*, const TBGCheckData**);
 	void makeHistory();
 	void checkStickSmash();
-	void checkStickRotate(int*);
+	BOOL checkStickRotate(int*);
 	void getLRLevel(unsigned char);
 	void getDizzyPower();
 	void getDizzyAngle();
@@ -811,7 +811,7 @@ public:
 	void checkGraffitoFire();
 	void checkGraffitoDamage();
 	void makeGraffitoDamage(const TMario::TEParams&);
-	void checkAllMotions();
+	BOOL checkAllMotions();
 	BOOL changePlayerDropping(u32, u32);
 	BOOL changePlayerJumping(u32, u32);
 	void changePlayerTriJump();
@@ -830,8 +830,8 @@ public:
 	void getSlideStopNormal();
 	void canSlipJump();
 	void isSlipStart();
-	void isFrontSlip(int);
-	void checkRoofPlane(const Vec&, f32, const TBGCheckData**);
+	bool isFrontSlip(int);
+	f32 checkRoofPlane(const Vec&, f32, const TBGCheckData**);
 	void checkWallPlane(Vec*, f32, f32);
 	void setPlayerVelocity(f32);
 	void setNormalAttackArea();
@@ -840,19 +840,19 @@ public:
 	BOOL canBendBody();
 	BOOL considerRotateJumpStart();
 	void addVelocity(f32);
-	BOOL onYoshi() const;
+	bool onYoshi() const;
 	void getGroundJumpPower() const;
 	void windMove(const JGeometry::TVec3<f32>&);
 	void flowMove(const JGeometry::TVec3<f32>&);
 	void warpRequest(const JGeometry::TVec3<f32>&, f32);
-	void isForceSlip();
+	BOOL isForceSlip();
 	void getRidingMtx(f32 (*)[4]);
-	bool isWallInFront() const;
+	BOOL isWallInFront() const;
 	bool isInvincible() const;
 	bool isUnderWater() const;
 	void canSquat() const;
-	void getJumpSlideControl() const;
-	void getJumpAccelControl() const;
+	f32 getJumpSlideControl() const;
+	f32 getJumpAccelControl() const;
 	BOOL jumpProcess(int);
 	void fallProcess();
 	void isFallCancel();
@@ -867,7 +867,7 @@ public:
 	void keepDistance(const THitActor&, f32);
 	void keepDistance(const JGeometry::TVec3<f32>&, f32, f32);
 	void playerRefrection(int);
-	void moveMain();
+	BOOL moveMain();
 	void broadJumpSlip();
 	void ultraJumpSlip();
 	void uTurnJumpSlip();
@@ -932,7 +932,7 @@ public:
 	void postureControl();
 	void isThrowStart();
 	void considerRotateStart();
-	void specMain();
+	BOOL specMain();
 	void fencePunch();
 	void fenceMove();
 	void fenceJumpCatch();
@@ -1034,7 +1034,7 @@ public:
 	void emitParticle(int);
 	void moveParticle();
 	void initParticle();
-	void waitMain();
+	BOOL waitMain();
 	void slipEnd();
 	void brakeEnd();
 	void hipAttackEnd();
@@ -1064,7 +1064,7 @@ public:
 	void canPut();
 	void canSleep();
 	void startTalking();
-	void swimMain();
+	BOOL swimMain();
 	void swimPDown();
 	void swimDown();
 	void swimPDamage();
