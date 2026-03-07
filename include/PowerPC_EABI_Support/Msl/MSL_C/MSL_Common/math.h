@@ -8,7 +8,6 @@
 
 #define LONG_TAU   6.2831854820251465
 #define TAU        6.2831855f
-#define PI         3.1415927f
 #define HALF_PI    1.5707964f
 #define THIRD_PI   1.0471976f
 #define QUARTER_PI 0.7853982f
@@ -89,15 +88,16 @@ inline float abs(float x) { return fabsf(x); }
 inline double abs(double x) { return fabs(x); }
 inline float sin(float x) { return sinf(x); }
 inline float cos(float x) { return cosf(x); }
+inline float atan2(float x, float y) { return atan2f(x, y); }
 
 namespace std {
 inline float fabsf(float f) { return ::fabsf(f); }
 inline float abs(float f) { return ::fabs(f); }
 inline float fmodf(float x, float y) { return ::fmod(x, y); }
-inline float atan2f(float y, float x) { return ::atan2(y, x); }
-inline float sinf(float x) { return ::sin(x); }
-inline float cosf(float x) { return ::cos(x); }
-inline float tanf(float x) { return ::tan(x); }
+inline float atan2f(float y, float x) { return ::atan2((double)y, (double)x); }
+inline float sinf(float x) { return ::sin((double)x); }
+inline float cosf(float x) { return ::cos((double)x); }
+inline float tanf(float x) { return ::tan((double)x); }
 inline float powf(float e, float x) { return ::powf(e, x); }
 
 extern inline float sqrtf(float x)

@@ -3,6 +3,7 @@
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MSound/MSoundSE.hpp>
+#include <System/Particles.hpp>
 #include <System/MarioGamePad.hpp>
 #include <Player/Watergun.hpp>
 #include <Camera/CameraShake.hpp>
@@ -170,9 +171,9 @@ bool TMario::trampleExec(THitActor* param_1)
 	rumbleStart(0x15, mMotorParams.mMotorTrample.get());
 
 	if (param_1->checkActorType(ACTOR_TYPE_UNK4000000)) {
-		// SMS_EasyEmitParticle looks funky
-		// SMS_EasyEmitParticle(8, mPosition, this);
-		// SMS_EasyEmitParticle(9, mPosition, this);
+		JGeometry::TVec3<f32> scale(0.5f);
+		SMS_EasyEmitParticle(PARTICLE_MS_FUMI_B, &mPosition, this, scale);
+		SMS_EasyEmitParticle(PARTICLE_MS_FUMI_C, &mPosition, this, scale);
 	} else {
 		emitParticle(7);
 		emitParticle(8);
@@ -186,7 +187,7 @@ bool TMario::trampleExec(THitActor* param_1)
 	    && !param_1->isActorType(0x2000000a)) {
 		u32 trampleCt = getTrampleCt();
 		// Probably an inline
-		if (gpMSound->gateCheck(0x1818)) {
+		if (SMSGetMSound()->gateCheck(0x1818)) {
 			MSoundSESystem::MSoundSE::startSoundActorWithInfo(
 			    0x1818, &mPosition, nullptr, 0.0f, trampleCt, 0, nullptr, 0, 4);
 		}

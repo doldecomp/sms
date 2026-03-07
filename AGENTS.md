@@ -56,6 +56,8 @@ The underlying utility used for splitting the binary is `dtk` (`build/tools/dtk`
 
 The main diffing tool used by humans is **objdiff** (`encounter/objdiff`). It compares the compiled `.o` from our source against the original `.o` extracted from the DOL, function by function, showing PPC assembly side-by-side. It automatically rebuilds on file changes.
 
+**Important for agents**: The human user typically has objdiff open in the background. It watches source files and **automatically recompiles** whenever a file changes. This means after editing a source or header file, you do **not** need to manually `touch` files or force rebuilds — just run `ninja` and if it says "no work to do", that's fine; objdiff has already compiled the latest code. Never waste time trying to force ninja to rebuild.
+
 ### Using `decomp-diff.py` (agent-friendly CLI diffing)
 
 Since agents cannot use the objdiff GUI, use the wrapper script `tools/decomp-diff.py` instead. It calls `objdiff-cli` and produces readable text output.
@@ -93,14 +95,16 @@ python tools/decomp-diff.py -u mario/Enemy/fireWanwan -d "TFireWanwan::moveObjec
 
 The `-d` argument takes a substring match on the demangled or mangled symbol name.
 
-Output shows left (target/original) vs right (our build) PPC assembly with diff markers:
-- ` ` (space) — instructions match
-- `~` — argument mismatch (operand differs)
-- `|` — opcode replacement (different instruction)
-- `>` — inserted (exists only on right side)
-- `<` — deleted (exists only on left side)
+Output shows target (original) and our build PPC assembly **interleaved** in a single column, with diff markers in the leftmost position:
+- ` ` (space) — instructions match perfectly
+- `~` — same opcode, but one or more operands differ (shown in `{braces}`)
+- `|` — different opcode at corresponding position
+- `>` — instruction exists only in our build (inserted/extra)
+- `<` — instruction exists only in the target (deleted/missing)
 
-Differing arguments are wrapped in `{braces}` for easy identification.
+Each line shows **one** instruction. When the marker is ` ` or `~`, both target and our build have a corresponding instruction at that position. When the marker is `|`, the target instruction is shown but our build emits a different opcode there. `<` and `>` lines indicate instructions present in only one side — the shown instruction is from whichever side has it.
+
+Differing operands are wrapped in `{braces}` for easy identification.
 
 Matching instruction runs are collapsed by default (shows 3 lines of context). Options:
 - `-C 5` — show 5 context lines instead of 3

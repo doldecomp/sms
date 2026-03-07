@@ -74,7 +74,7 @@ class TBGCheckData {
 public:
 	TBGCheckData();
 
-	const JGeometry::TVec3<f32>& getNormal() const { return mNormal; };
+	const JGeometry::TVec3<f32>& getNormal() const { return mNormal; }
 	bool isIllegalData() const
 	{
 		return mFlags & BG_CHECK_FLAG_ILLEGAL ? true : false;
