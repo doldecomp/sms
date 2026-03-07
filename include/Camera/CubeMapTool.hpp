@@ -17,9 +17,9 @@ public:
 	{
 	}
 
-	const Vec& getUnkC() const { return unkC; }
-	const Vec& getUnk18() const { return unk18; }
-	const Vec& getUnk24() const { return unk24; }
+	const JGeometry::TVec3<f32>& getUnkC() const { return unkC; }
+	const JGeometry::TVec3<f32>& getUnk18() const { return unk18; }
+	const JGeometry::TVec3<f32>& getUnk24() const { return unk24; }
 
 	virtual void load(JSUMemoryInputStream&);
 

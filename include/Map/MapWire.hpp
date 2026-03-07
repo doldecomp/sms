@@ -12,7 +12,11 @@ public:
 	TMapWirePoint();
 
 	// fabricated
-	void reset();
+	void reset()
+	{
+		mPosition  = mDefaultPosition;
+		mPosOnWire = mDefaultPosOnWire;
+	}
 
 public:
 	/* 0x00 */ JGeometry::TVec3<f32> mPosition;
@@ -60,6 +64,8 @@ public:
 	// fabricated
 	const JGeometry::TVec3<f32>& getStartPoint() const { return mStartPoint; }
 	const JGeometry::TVec3<f32>& getEndPoint() const { return mEndPoint; }
+
+	TMapWirePoint* getPoint(int i) { return &mMapWirePoints[i]; }
 
 public:
 	/* 0x00 */ JGeometry::TVec3<f32> mStartPoint;

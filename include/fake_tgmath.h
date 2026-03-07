@@ -1,9 +1,5 @@
 #include <dolphin/types.h>
 
-f32 acosf(f32);
-f32 atanf(f32);
-f32 sinf(f32);
-
 #pragma cplusplus on
 
 extern inline float sqrtf(float x)

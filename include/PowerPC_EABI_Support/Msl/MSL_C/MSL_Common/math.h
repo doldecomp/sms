@@ -29,6 +29,7 @@ double acos(double);
 float acosf(float);
 double asin(double);
 double atan(double);
+float atanf(float);
 double atan2(double, double);
 float atan2f(float, float);
 double ceil(double);

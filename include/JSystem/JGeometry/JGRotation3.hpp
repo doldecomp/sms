@@ -362,16 +362,7 @@ public:
 		);
 	}
 
-	void mult33(TVec3<f32>& param_1) const
-	{
-		param_1.set(
-		    // clang-format off
-		this->at(0, 0) * param_1.x + this->at(0, 1) * param_1.y + this->at(0, 2) * param_1.z,
-		this->at(1, 0) * param_1.x + this->at(1, 1) * param_1.y + this->at(1, 2) * param_1.z,
-		this->at(2, 0) * param_1.x + this->at(2, 1) * param_1.y + this->at(2, 2) * param_1.z
-		    // clang-format on
-		);
-	}
+	void mult33(TVec3<f32>& param_1) const { mult33(param_1, param_1); }
 
 	void setScale(f32 param_1, f32 param_2, f32 param_3)
 	{
