@@ -260,21 +260,22 @@ void JPAVortexField::set()
 }
 void JPAVortexField::affect(JPAParticle* particle)
 {
-	JGeometry::TVec3<f32> thing  = particle->mLocalPosition;
-	JGeometry::TVec3<f32> thing2 = unk58;
+	JGeometry::TVec3<f32> projected;
+	projected.scale(particle->mLocalPosition.dot(unk58), unk58);
 
-	f32 dot = thing.dot(thing2);
-	thing2.scale(dot);
-	thing.sub(thing2);
+	JGeometry::TVec3<f32> thing3;
+	thing3.sub(particle->mLocalPosition, projected);
 
-	f32 fVar1 = thing.squared();
-	if (thing.squared() > unk30)
+	f32 fVar1 = thing3.squared();
+	if (fVar1 > unk30)
 		fVar1 = unk30;
 	fVar1 *= unk34;
-	fVar1 = (1.0f - fVar1) * unk10 + fVar1 * unk14;
-	thing.setLength(1.0f);
-	unk7C.cross(unk58, thing);
-	unk7C.scale(fVar1);
+	f32 fVar2 = (1.0f - fVar1) * unk10 + fVar1 * unk14;
+
+	JGeometry::TVec3<f32> tmp;
+	tmp.normalize(thing3);
+	unk7C.cross(tmp, unk58);
+	unk7C.scale(fVar2);
 	calcFieldVelocity(particle);
 }
 bool JPAVortexField::checkMaxDistance(JGeometry::TVec3<float>&,
@@ -316,36 +317,33 @@ void JPAConvectionField::set()
 }
 void JPAConvectionField::affect(JPAParticle* particle)
 {
-	bool bVar13                 = false;
-	bool bVar12                 = false;
-	JGeometry::TVec3<f32> thing = particle->mLocalPosition;
-	if (unk64.x == 0.0f && unk64.y == 1.0f) {
-		bVar12 = true;
-	}
-	if (bVar12 && unk64.z == 0.0f) {
-		bVar13 = true;
-	}
+	JGeometry::TVec3<f32> thing;
+	thing.set(particle->mLocalPosition);
+
+	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 	JGeometry::TVec3<f32> thing2;
-	if (bVar13) {
-		thing2.set(0.0f, 0.0f, 0.0f);
+	if (up == unk64) {
+		thing2.set(thing.x, 0.0f, thing.z);
 	} else {
-		JGeometry::TVec3<f32> a = unk58;
-		JGeometry::TVec3<f32> b = unk70;
-		f32 fVar11              = a.dot(thing);
-		f32 fVar10              = b.dot(thing);
-		a.scale(fVar11);
-		b.scale(fVar10);
+		JGeometry::TVec3<f32> a;
+		a.scale(unk58.dot(thing), unk58);
+		JGeometry::TVec3<f32> b;
+		b.scale(unk70.dot(thing), unk70);
 		thing2.add(a, b);
 	}
 	thing2.setLength(thing2, unk30);
-	thing.sub(thing2);
+
+	JGeometry::TVec3<f32> thing4;
+	thing4.sub(thing, thing2);
+
 	JGeometry::TVec3<f32> thing3;
-	thing3.cross(thing2, unk64);
-	unk7C.cross(thing3, thing);
+	thing3.cross(unk64, thing2);
+
+	unk7C.cross(thing3, thing4);
 	unk7C.setLength(unk10);
 	if (unk34 != 0.0f) {
 		JGeometry::TVec3<f32> thing4;
-		thing4.setLength(thing, unk34);
+		thing4.setLength(thing4, unk34);
 		unk7C.add(thing4);
 	}
 	calcFieldVelocity(particle);

@@ -437,10 +437,18 @@ bool TTamaNoko::doKeepDistance()
 void TTamaNoko::calcRootMatrix()
 {
 	if (isBckAnm(16))
-		SMS_EasyEmitParticle(PARTICLE_MS_TAMA_HIT, &mPosition, this, mScaling);
+		if (JPABaseEmitter* emitter
+		    = gpMarioParticleManager->emitAndBindToPosPtr(
+		        PARTICLE_MS_TAMA_HIT, &mPosition, 1, this)) {
+			emitter->setScale(mScaling);
+		}
 
 	if (isBckAnm(11) && mMActor->getFrameCtrl(0)->getFrame() > 90.0f)
-		SMS_EasyEmitParticle(PARTICLE_MS_TAMA_HIT, &mPosition, this, mScaling);
+		if (JPABaseEmitter* emitter
+		    = gpMarioParticleManager->emitAndBindToPosPtr(
+		        PARTICLE_MS_TAMA_HIT, &mPosition, 1, this)) {
+			emitter->setScale(mScaling);
+		}
 
 	if (isBckAnm(1)) {
 		if (mMActor->getFrameCtrl(0)->checkPass(0.0f)
@@ -456,12 +464,14 @@ void TTamaNoko::calcRootMatrix()
 				gpCameraShake->startShake(CAM_SHAKE_MODE_UNK7, 1.0f);
 				SMSRumbleMgr->start(8, 1, (float*)nullptr);
 
-				SMS_EasyEmitParticle(PARTICLE_MS_SMB_AP_ROCK, &mPosition,
-				                     nullptr,
-				                     JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
-				SMS_EasyEmitParticle(PARTICLE_MS_SMB_AP_SMOKE, &mPosition,
-				                     nullptr,
-				                     JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
+				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+				        PARTICLE_MS_SMB_AP_ROCK, &mPosition, 0, nullptr)) {
+					emitter->setScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
+				}
+				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+				        PARTICLE_MS_SMB_AP_SMOKE, &mPosition, 0, nullptr)) {
+					emitter->setScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
+				}
 			}
 		}
 	}
@@ -475,13 +485,17 @@ void TTamaNoko::calcRootMatrix()
 			gpMap->checkGround(mPosition.x, mPosition.y + 500.0f, mPosition.z,
 			                   &local_18);
 			if (local_18 && !local_18->isWaterSurface())
-				SMS_EasyEmitParticle(PARTICLE_MS_JUMP_ED_B, &mPosition, nullptr,
-				                     mScaling);
+				gpMarioParticleManager->emitAndBindToPosPtr(
+				    PARTICLE_MS_JUMP_ED_B, &mPosition, 0, nullptr);
 		}
 	}
 
 	if (mSpine->getCurrentNerve() == &TNerveTamaNokoSleep::theNerve())
-		SMS_EasyEmitParticle(PARTICLE_MS_POI_ZZZ, &mPosition, this, mScaling);
+		if (JPABaseEmitter* emitter
+		    = gpMarioParticleManager->emitAndBindToPosPtr(
+		        PARTICLE_MS_POI_ZZZ, &mPosition, 1, this)) {
+			emitter->setScale(mScaling);
+		}
 
 	TSpineEnemy::calcRootMatrix();
 }
@@ -533,10 +547,14 @@ void TTamaNoko::requestShadow()
 void TTamaNoko::landEffect()
 {
 	if (mGroundPlane->isSand()) {
-		SMS_EasyEmitParticle(PARTICLE_MS_HIPDROP_C, &mPosition, nullptr,
-		                     mScaling);
-		SMS_EasyEmitParticle(PARTICLE_MS_POI_SAND, &mPosition, nullptr,
-		                     mScaling);
+		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+		        PARTICLE_MS_HIPDROP_C, &mPosition, 0, nullptr)) {
+			emitter->setScale(mScaling);
+		}
+		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+		        PARTICLE_MS_POI_SAND, &mPosition, 0, nullptr)) {
+			emitter->setScale(mScaling);
+		}
 	}
 
 	const TBGCheckData* local_10;
@@ -545,10 +563,14 @@ void TTamaNoko::landEffect()
 	if (local_10 && local_10->isWaterSurface()) {
 		generateEffectColumWater();
 	} else {
-		SMS_EasyEmitParticle(PARTICLE_MS_HIPDROP_C, &mPosition, nullptr,
-		                     mScaling);
-		SMS_EasyEmitParticle(PARTICLE_MS_HIPDROP_B, &mPosition, nullptr,
-		                     mScaling);
+		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+		        PARTICLE_MS_HIPDROP_C, &mPosition, 0, nullptr)) {
+			emitter->setScale(mScaling);
+		}
+		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+		        PARTICLE_MS_HIPDROP_B, &mPosition, 0, nullptr)) {
+			emitter->setScale(mScaling);
+		}
 	}
 
 	gpCameraShake->startShake(CAM_SHAKE_MODE_UNK7, 1.0f);
@@ -655,9 +677,12 @@ DEFINE_NERVE(TNerveTamaNokoAttack, TLiveActor)
 
 	JGeometry::TVec3<f32> local_48 = self->getVelocity();
 	if (local_48.y < -1.0f) {
-		SMS_EasyEmitParticle(PARTICLE_MS_TAMA_BLUR,
-		                     self->getMActor()->getModel()->getAnmMtx(1), self,
-		                     self->mScaling);
+		if (JPABaseEmitter* emitter
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(
+		        PARTICLE_MS_TAMA_BLUR,
+		        self->getMActor()->getModel()->getAnmMtx(1), 1, self)) {
+			emitter->setScale(self->mScaling);
+		}
 	}
 
 	// If doing jump attack -- we're basically playing out the jump arc,
@@ -674,8 +699,11 @@ DEFINE_NERVE(TNerveTamaNokoAttack, TLiveActor)
 		if (local_54.y < 0.0f) {
 			MtxPtr mtx = self->getMActor()->getModel()->getAnmMtx(1);
 			self->unk1AC.set(mtx[0][3], mtx[1][3] - 200.0f, mtx[2][3]);
-			SMS_EasyEmitParticle(PARTICLE_MS_M_BLUR2, &self->unk1AC, self,
-			                     self->mScaling);
+			if (JPABaseEmitter* emitter
+			    = gpMarioParticleManager->emitAndBindToPosPtr(
+			        PARTICLE_MS_M_BLUR2, &self->unk1AC, 1, self)) {
+				emitter->setScale(self->mScaling);
+			}
 
 			if (self->mAirAttackTimer < TTamaNoko::mStopOnAirTimeMax) {
 				self->onLiveFlag(LIVE_FLAG_UNK10);

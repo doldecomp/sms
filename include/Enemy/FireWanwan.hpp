@@ -15,10 +15,13 @@ public:
 	void init(const GXColorS10&, const GXColorS10&, f32);
 	void update();
 
+	const GXColorS10& getCurrent() const { return mCurrent; }
+	void setCurrent(const GXColorS10& color) { mCurrent = color; }
+
 public:
-	/* 0x0 */ GXColorS10 unk0;
-	/* 0x8 */ GXColorS10 unk8;
-	/* 0x10 */ GXColorS10 unk10;
+	/* 0x0 */ GXColorS10 mCurrent;
+	/* 0x8 */ GXColorS10 mStart;
+	/* 0x10 */ GXColorS10 mEnd;
 	/* 0x18 */ J3DFrameCtrl unk18;
 };
 
@@ -49,8 +52,8 @@ public:
 
 public:
 	/* 0x0 */ ArrayWrapper<Node> unk0;
-	/* 0x8 */ bool unk8;
-	/* 0x9 */ bool mIsHeld;
+	/* 0x8 */ bool mFixHeadPos;
+	/* 0x9 */ bool mFixTailPos;
 	/* 0xC */ f32 mBoundRate;
 	/* 0x10 */ f32 mDecay;
 	/* 0x14 */ f32 mMaxLength;
@@ -97,7 +100,9 @@ class TFireWanwan;
 
 class TFireWanwanManager : public TSmallEnemyManager {
 public:
-	enum BodyMsgType { };
+	enum BodyMsgType {
+		BODY_MSG_RECOVERED,
+	};
 
 	TFireWanwanManager(const char*);
 	void load(JSUMemoryInputStream&);
@@ -134,6 +139,8 @@ public:
 	void setBarAnmMtx(MtxPtr);
 	void perform(u32, JDrama::TGraphics*, const JGeometry::TVec3<f32>&,
 	             const JGeometry::TVec3<f32>&);
+
+	void setScale(const JGeometry::TVec3<f32>& scale) { mScale.set(scale); }
 
 public:
 	/* 0x0 */ MActor* mMActor;
@@ -260,10 +267,15 @@ public:
 
 	static u8 mTailJntIndex;
 
+	// fabricated
 	TFireWanwanSaveLoadParams* getSaveParam2() const
 	{
 		return (TFireWanwanSaveLoadParams*)getSaveParam();
 	}
+
+	bool isTailTaken() const { return unk194->isTaken(); }
+	bool isTailTaken2() const { return isTailTaken(); }
+	bool isTailTaken3() const { return isTailTaken2(); }
 
 public:
 	/* 0x194 */ TFireWanwanTailHit* unk194;

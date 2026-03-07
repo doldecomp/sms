@@ -23,10 +23,10 @@ void TBathtubKiller::makeQuat(JGeometry::TVec3<f32> axis, float moveAmountY,
 		right.normalize();
 
 		JGeometry::TQuat4<f32> tiltQuat;
-		tiltQuat.setRotate(right, PI / 2.0f);
+		tiltQuat.setRotate(right, M_PI / 2.0f);
 
 		JGeometry::TVec3<f32> curUp;
-		tiltQuat.transform(forward, curUp);
+		tiltQuat.rotate(forward, curUp);
 
 		steer.setRotate(up, curUp, moveAmountX);
 		mQuat.mul(steer);

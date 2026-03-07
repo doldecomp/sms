@@ -1,6 +1,8 @@
 #ifndef ENEMY_ENEMY_HPP
 #define ENEMY_ENEMY_HPP
 
+#include <System/ParamInst.hpp>
+#include <System/Params.hpp>
 #include <Strategic/LiveActor.hpp>
 #include <Strategic/SolidStack.hpp>
 #include <Enemy/PathNode.hpp>
@@ -19,6 +21,20 @@ static inline f32 vecdist(const JGeometry::TVec3<f32>& a,
 	tmp.sub(b);
 	return tmp.length();
 }
+
+class TSpineEnemyParams : public TParams {
+public:
+	TSpineEnemyParams(const char*);
+
+	/* 0x8 */ TParamRT<f32> mSLHeadHeight;
+	/* 0x1C */ TParamRT<f32> mSLBodyRadius;
+	/* 0x30 */ TParamRT<f32> mSLWallRadius;
+	/* 0x44 */ TParamRT<f32> mSLClipRadius;
+	/* 0x58 */ TParamRT<f32> mSLFarClip;
+	/* 0x6C */ TParamRT<u8> mSLHitPointMax;
+	/* 0x80 */ TParamRT<u8> mSLInstanceNum;
+	/* 0x94 */ TParamRT<u8> mSLActiveEnemyNum;
+};
 
 class TSpineEnemy : public TLiveActor {
 public:
@@ -75,6 +91,10 @@ public:
 	f32 getWallRadius() const { return mBodyScale * mWallRadius; }
 	f32 getBodyRadius() const { return mBodyScale * mBodyRadius; }
 	f32 getBodyScale() const { return mBodyScale; }
+	u32 getMaxHitPoints() const
+	{
+		return getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
+	}
 
 	// fabricated
 	void setGoalPathMario()
