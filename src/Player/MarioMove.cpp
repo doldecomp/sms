@@ -5,6 +5,12 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <System/MarDirector.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <Player/Watergun.hpp>
+#include <Strategic/LiveActor.hpp>
+#include <MarioUtil/MtxUtil.hpp>
+#include <MSound/MSound.hpp>
+#include <Map/MapData.hpp>
+#include <dolphin/mtx.h>
 
 void TMario::addVelocity(f32 vel)
 {
@@ -77,9 +83,9 @@ void TMario::checkThrowObject()
 	}
 }
 
-BOOL TMario::onYoshi() const
+bool TMario::onYoshi() const
 {
-	BOOL result = false;
+	bool result = false;
 	if (mYoshi != NULL) {
 		if (mYoshi->onYoshi())
 			result = true;
@@ -95,7 +101,7 @@ f32 TMario::checkRoofPlane(const Vec& pos, f32 height,
 
 bool TMario::isFrontSlip(int param)
 {
-	s16 angle = mFaceAngle.y;
+	int angle = mFaceAngle.y;
 	if (param != 0) {
 		if (mForwardVel < 0.0f)
 			angle = angle + 0x8000;
@@ -428,4 +434,235 @@ BOOL TMario::considerRotateJumpStart()
 		return true;
 	}
 	return false;
+}
+
+BOOL TMario::canSquat() const
+{
+	u8 hasFludd;
+	if (unk118 & 0x8000)
+		hasFludd = 1;
+	else
+		hasFludd = 0;
+
+	if (hasFludd) {
+		if (mWaterGun != NULL) {
+			TNozzleBase* nozzle = mWaterGun->getCurrentNozzle();
+			if (*(u8*)((u8*)nozzle + 0x18) != 1) {
+				if (mWaterGun->mCurrentNozzle != 5) {
+					if (mInput & 0x200) {
+						return true;
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+
+void TMario::thinkDirty()
+{
+	u8 isDirty;
+	if (unk118 & 0x40)
+		isDirty = 1;
+	else
+		isDirty = 0;
+
+	if (isDirty) {
+		if (mAction == 0x04000440 || mAction == 0x0004045C) {
+			unk134 += *(f32*)((u8*)this + 0x25D4);
+		}
+		if (mAction == 0x00800456 || mAction == 0x0084045D ||
+		    mAction == 0x0004045E) {
+			unk134 += *(f32*)((u8*)this + 0x25E8);
+		}
+		if (mAction == 0x50) {
+			unk134 += *(f32*)((u8*)this + 0x25FC);
+		}
+	}
+
+	u8 inWater;
+	if (unk118 & 0x30000)
+		inWater = 1;
+	else
+		inWater = 0;
+
+	if (inWater) {
+		f32 waterLevel = *(f32*)((u8*)this + 0xF0);
+		if (mPosition.y > waterLevel - 200.0f)
+			meltInWaterEffect();
+		*(s16*)((u8*)this + 0x360) = 0;
+		unk134 -= *(f32*)((u8*)this + 0x2610);
+	}
+
+	if (mAction == 0x895 || mAction == 0x896) {
+		unk134 -= *(f32*)((u8*)this + 0x2638);
+		*(s16*)((u8*)this + 0x360) = 0;
+	}
+
+	u8 hasShirt;
+	if (unk118 & 0x10)
+		hasShirt = 1;
+	else
+		hasShirt = 0;
+
+	if (hasShirt) {
+		unk134 -= *(f32*)((u8*)this + 0x2624);
+		*(s16*)((u8*)this + 0x360) = 0;
+	}
+
+	dirtyLimitCheck();
+}
+
+void TMario::getOffYoshi(bool knockedOff)
+{
+	mInput &= ~0x8000;
+	if (knockedOff) {
+		changePlayerStatus(0x89C, 0, false);
+		mYoshi->getOff(true);
+	} else {
+		changePlayerStatus(0x883, 0, false);
+		mVel.y = *(f32*)((u8*)this + 0xE88);
+		mYoshi->getOff(false);
+	}
+	setAnimation(0x4D, 1.0f);
+	unk78 &= ~0x100;
+	mPosition.y += 100.0f;
+	mForwardVel = -8.0f;
+	mWaterGun->changeNozzle(4, true);
+	normalizeNozzle();
+	TWaterGun* gun = mWaterGun;
+	TNozzleBase* nozzle = gun->getCurrentNozzle();
+	*(s32*)((u8*)gun + 0x1C80) = *(s32*)((u8*)nozzle + 0xCC);
+}
+
+void TMario::checkEnforceJump()
+{
+	const TBGCheckData* ground = mGroundPlane;
+
+	u8 groundFlag;
+	if (ground->mFlags & 0x10)
+		groundFlag = 1;
+	else
+		groundFlag = 0;
+
+	u8 notWall;
+	if (groundFlag == 1)
+		notWall = 0;
+	else
+		notWall = 1;
+
+	if (!notWall)
+		return;
+
+	u8 isTrampoline;
+	if (ground->mBGType == 0x7 || ground->mBGType == 0x8007)
+		isTrampoline = 1;
+	else
+		isTrampoline = 0;
+
+	if (!isTrampoline)
+		return;
+
+	u8 yCheck;
+	if (mPosition.y <= 4.0f + *(f32*)((u8*)this + 0xEC))
+		yCheck = 1;
+	else
+		yCheck = 0;
+
+	if (!yCheck)
+		return;
+
+	if (!(*(u32*)((u8*)this + 0x80) & 0x800))
+		return;
+
+	gpMSound->startForceJumpSound((Vec*)&mPosition, *(u32*)((u8*)this + 0x4E8),
+	                              0.0f, (u32)ground->mData);
+	startVoice(0x78B9);
+	changePlayerStatus(0x884, 0, false);
+	rumbleStart(*(s16*)((u8*)this + 0x27F8), 0x15);
+
+	const TLiveActor* groundActor = ground->mActor;
+	if (groundActor != NULL) {
+		((THitActor*)groundActor)->receiveMessage((THitActor*)this, 0);
+	}
+}
+
+void TMario::checkReturn()
+{
+	u8 shouldReturn;
+
+	if (*(s16*)((u8*)this + 0x14C) > 0) {
+		shouldReturn = 1;
+	} else {
+		u8 hasFlag;
+		if (unk118 & 0x8)
+			hasFlag = 1;
+		else
+			hasFlag = 0;
+
+		if (hasFlag) {
+			shouldReturn = 1;
+		} else if (mAction == 0x89C) {
+			shouldReturn = 1;
+		} else {
+			u8 areaID = *(u8*)((u8*)gpMarDirector + 0x124);
+			if (areaID == 3 || areaID == 4) {
+				shouldReturn = 1;
+			} else {
+				u8 isEvent = 1;
+				if (areaID != 1) {
+					if (areaID != 2)
+						isEvent = 0;
+				}
+
+				if (isEvent) {
+					shouldReturn = 1;
+				} else {
+					u8 hasBit;
+					if (mAction & 0x1000)
+						hasBit = 1;
+					else
+						hasBit = 0;
+
+					if (hasBit)
+						shouldReturn = 1;
+					else
+						shouldReturn = 0;
+				}
+			}
+		}
+	}
+
+	if (shouldReturn)
+		return;
+
+	u8 groundFlag;
+	if (*(u16*)((u8*)mGroundPlane + 4) & 0x10)
+		groundFlag = 1;
+	else
+		groundFlag = 0;
+
+	u8 isSafe;
+	if (groundFlag == 1)
+		isSafe = 0;
+	else
+		isSafe = 1;
+
+	if (!isSafe)
+		return;
+
+	*(u32*)((u8*)this + 0x2A8) = *(u32*)((u8*)this + 0x10);
+	*(u32*)((u8*)this + 0x2AC) = *(u32*)((u8*)this + 0x14);
+	*(u32*)((u8*)this + 0x2B0) = *(u32*)((u8*)this + 0x18);
+	*(u32*)((u8*)this + 0x2B4) = *(u32*)((u8*)this + 0x94);
+	*(u16*)((u8*)this + 0x2B8) = *(u16*)((u8*)this + 0x98);
+}
+
+void TMario::getRidingMtx(MtxPtr outMtx)
+{
+	if ((*(TLiveActor**)((u8*)this + 0x2C0))->getRootJointMtx() == NULL) {
+		SMS_GetActorMtx(**(TLiveActor**)((u8*)this + 0x2C0), outMtx);
+	} else {
+		PSMTXCopy(*(*(TLiveActor**)((u8*)this + 0x2C0))->getRootJointMtx(), outMtx);
+	}
 }

@@ -126,7 +126,7 @@ public:
 	}
 	// TODO: startSoundActor was also very likely here
 
-	void startForceJumpSound(Vec*, u32, f32, u32) { }
+	void startForceJumpSound(Vec*, u32, f32, u32);
 };
 
 extern MSound* MSGMSound;

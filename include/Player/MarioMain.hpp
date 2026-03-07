@@ -840,7 +840,7 @@ public:
 	BOOL canBendBody();
 	BOOL considerRotateJumpStart();
 	void addVelocity(f32);
-	BOOL onYoshi() const;
+	bool onYoshi() const;
 	void getGroundJumpPower() const;
 	void windMove(const JGeometry::TVec3<f32>&);
 	void flowMove(const JGeometry::TVec3<f32>&);
@@ -850,7 +850,7 @@ public:
 	bool isWallInFront() const;
 	bool isInvincible() const;
 	bool isUnderWater() const;
-	void canSquat() const;
+	BOOL canSquat() const;
 	f32 getJumpSlideControl() const;
 	f32 getJumpAccelControl() const;
 	BOOL jumpProcess(int);
