@@ -840,7 +840,7 @@ public:
 	BOOL canBendBody();
 	BOOL considerRotateJumpStart();
 	void addVelocity(f32);
-	bool onYoshi() const;
+	BOOL onYoshi() const;
 	void getGroundJumpPower() const;
 	void windMove(const JGeometry::TVec3<f32>&);
 	void flowMove(const JGeometry::TVec3<f32>&);

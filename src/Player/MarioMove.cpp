@@ -83,9 +83,9 @@ void TMario::checkThrowObject()
 	}
 }
 
-bool TMario::onYoshi() const
+BOOL TMario::onYoshi() const
 {
-	bool result = false;
+	BOOL result = false;
 	if (mYoshi != NULL) {
 		if (mYoshi->onYoshi())
 			result = true;
