@@ -77,9 +77,9 @@ void TMario::checkThrowObject()
 	}
 }
 
-bool TMario::onYoshi() const
+BOOL TMario::onYoshi() const
 {
-	bool result = false;
+	BOOL result = false;
 	if (mYoshi != NULL) {
 		if (mYoshi->onYoshi())
 			result = true;
@@ -343,7 +343,7 @@ bool TMario::isUnderWater() const
 	return false;
 }
 
-BOOL TMario::isWallInFront() const
+bool TMario::isWallInFront() const
 {
 	if (mWallPlane == NULL)
 		return false;

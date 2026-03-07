@@ -28,7 +28,7 @@ public:
 	void initInLoadAfter();
 	void kill();
 	void movement();
-	BOOL onYoshi();
+	bool onYoshi();
 	void ride();
 	void setEggYoshiPtr(void*); // TEggYoshi*
 	void thinkAnimation();
