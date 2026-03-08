@@ -101,6 +101,11 @@ public:
 	J2DPane* getPane() const { return mPane; }
 	const JUTRect& getInitialBounds() const { return mInitialBounds; }
 
+	// fabricated and likely fake, these only exist to avoid storing
+	// &mInitialBounds in one of the registers
+	int getInitialY1() const { return mInitialBounds.y1; }
+	int getInitialY2() const { return mInitialBounds.y2; }
+
 	bool isBoundsAnimationCompleted() const
 	{
 		bool result = false;
@@ -115,6 +120,12 @@ public:
 		if (isBoundsAnimationCompleted() && !mAlphaAnimPending)
 			result = true;
 		return result;
+	}
+
+	bool isInterpolatorAtZero() const
+	{
+		return mOffsetInterpolator.getCurrentX() == 0
+		       && mOffsetInterpolator.getCurrentY() == 0;
 	}
 
 public:

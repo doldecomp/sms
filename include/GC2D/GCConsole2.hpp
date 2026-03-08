@@ -124,7 +124,7 @@ public:
 	/* 0x8C */ int unk8C;
 	/* 0x90 */ THelpActor** unk90;
 	/* 0x94 */ TConsoleStr* unk94;
-	/* 0x98 */ u16 unk98;
+	/* 0x98 */ s16 unk98;
 	/* 0x9A */ u8 unk9A[20];
 	/* 0xB0 */ J2DSetScreen* unkB0;
 	/* 0xB4 */ u8 unkB4;
@@ -168,7 +168,7 @@ public:
 	/* 0x264 */ u16 unk264;
 	/* 0x266 */ u8 unk266;
 	/* 0x268 */ u16 unk268;
-	/* 0x26A */ u16 unk26A;
+	/* 0x26A */ s16 unk26A;
 	/* 0x26C */ TBoundPane* unk26C;
 	/* 0x270 */ TBoundPane* unk270;
 	/* 0x274 */ TBoundPane* unk274;

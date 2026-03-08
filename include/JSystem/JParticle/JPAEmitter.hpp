@@ -161,6 +161,9 @@ public:
 	}
 
 	bool checkUnk11C(u32 flag) const { return unk11C & flag ? true : false; }
+	void clearUnk11CFlag(u32 flag) { unk11C &= ~flag; }
+	void setUnk11CFlag(u32 flag) { unk11C |= flag; }
+
 	bool isThing() const
 	{
 		if (checkUnk11C(0x8)

@@ -7,12 +7,14 @@
 #include <GC2D/ExPane.hpp>
 #include <Strategic/Strategy.hpp>
 #include <System/Application.hpp>
+#include <System/FlagManager.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/J2D/J2DTextBox.hpp>
 #include <JSystem/J2D/J2DPicture.hpp>
 #include <JSystem/J2D/J2DScreen.hpp>
+#include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/JUtility/JUTResFont.hpp>
 #include <stdio.h>
 
@@ -319,13 +321,73 @@ void TGCConsole2::resetMoveTank() { }
 
 void TGCConsole2::endCameraDemo() { }
 
-void TGCConsole2::startAppearTank() { }
+void TGCConsole2::startAppearTank()
+{
+	if (unk34[17] || TFlagManager::smInstance->getBool(0x30002)) {
+		return;
+	}
 
+	// TODO: needs register swapping
+	unk34[17] = 1;
+	unk59     = 1;
+	unk7C     = 0;
+	
+	unk2F8->getPane()->show();
+	unk2F8->setPaneOffset(unk98, 0, 0, 0, 465 - unk2F8->getInitialY1());
+
+	unk26C->setPanePosition(50, JUTPoint(0, 100), JUTPoint(0, -30),
+	                        JUTPoint(0, -30));
+
+	unk274->getPane()->show();
+	unk29C->getPane()->show();
+}
+
+// Probably inlined somewhere in the final product?
 void TGCConsole2::startDisappearTank() { }
 
-void TGCConsole2::startAppearCoin() { }
+void TGCConsole2::startAppearCoin()
+{
+	if (unk108->getPane()->isVisible()) {
+		return;
+	}
 
-void TGCConsole2::startDisappearCoin() { }
+	unk34[27] = 1;
+	unk59     = 1;
+	unk88     = 0;
+
+	unk108->getPane()->show();
+	unk108->setPaneOffset(unk98, 0, unk26A, 0, -(unk108->getInitialY2() + 1));
+
+	unkC8->setPanePosition(50, cDownTopPoint, cDownMidPoint, cDownMidPoint);
+
+	unkCC->getPane()->hide();
+	unkD0->getPane()->hide();
+	for (int i = 0; i < 3; i++) {
+		unkD4[i]->getPane()->hide();
+	}
+
+	unk124->clearUnk11CFlag(1 << 0);
+}
+
+void TGCConsole2::startDisappearCoin()
+{
+	unk34[25] = true;
+	unk5A     = true;
+
+	if (unk140->isInterpolatorAtZero()) {
+		J2DPane* pane = unk128->getPane();
+		unk140->updatePaneOffset(
+		    40, 0, -(unk140->getInitialY2() + 1 + pane->mBounds.getHeight()));
+	}
+
+	J2DPane* pane = unkC8->getPane();
+	// TODO: The last argument needs some massaging to get the instructions in
+	// the right order, but this is still equivalent
+	unk108->updatePaneOffset(
+	    40, 0, -(pane->mBounds.getHeight() + unk108->getInitialY2() + 1));
+
+	unk124->setUnk11CFlag(1 << 0);
+}
 
 void TGCConsole2::startInsertLife(int) { }
 
