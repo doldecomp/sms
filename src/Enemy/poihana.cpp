@@ -95,7 +95,7 @@ void TPoiHanaManager::initSetEnemies()
 
 BOOL TPoiHanaCollision::receiveMessage(THitActor* param_1, u32 param_2)
 {
-	unk68->receiveMessage(param_1, param_2);
+	return unk68->receiveMessage(param_1, param_2);
 }
 
 void TPoiHanaCollision::checkHit()

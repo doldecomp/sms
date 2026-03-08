@@ -71,7 +71,7 @@ s16 TMario::getAttackAngle(const THitActor* other)
 void TMario::dropObject()
 {
 	if (mHeldObject != nullptr) {
-		mHeldObject->receiveMessage(this, 7);
+		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK7);
 		mHeldObject = nullptr;
 	}
 }
@@ -144,7 +144,7 @@ bool TMario::trampleExec(THitActor* param_1)
 		return false;
 	}
 
-	if (param_1->receiveMessage(this, 0) == FALSE) {
+	if (param_1->receiveMessage(this, HIT_MESSAGE_TRAMPLE) == FALSE) {
 		return false;
 	}
 
@@ -428,8 +428,8 @@ void TMario::considerTake()
 	}
 
 	if (mHeldObject != nullptr && !check) {
-		mHeldObject->receiveMessage(this, 7);
-		mHeldObject->receiveMessage(this, 8);
+		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK7);
+		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK8);
 		mHeldObject = nullptr;
 	}
 
@@ -443,8 +443,8 @@ void TMario::considerTake()
 		}
 
 		if (!check2) {
-			mHolder->receiveMessage(this, 8);
-			mHolder->receiveMessage(this, 7);
+			mHolder->receiveMessage(this, HIT_MESSAGE_UNK8);
+			mHolder->receiveMessage(this, HIT_MESSAGE_UNK7);
 			mHolder = nullptr;
 		}
 	}

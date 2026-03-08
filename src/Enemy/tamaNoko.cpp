@@ -370,7 +370,7 @@ void TTamaNoko::behaveToRelease()
 
 BOOL TTamaNoko::receiveMessage(THitActor* param_1, u32 param_2)
 {
-	if (param_2 == 0 || param_2 == HIT_MESSAGE_HIP_DROP) {
+	if (param_2 == HIT_MESSAGE_TRAMPLE || param_2 == HIT_MESSAGE_HIP_DROP) {
 		if (isHitValid(param_2)) {
 			unk184 = 0;
 			kill();
@@ -378,7 +378,7 @@ BOOL TTamaNoko::receiveMessage(THitActor* param_1, u32 param_2)
 		return true;
 	}
 
-	if (param_2 == 13) {
+	if (param_2 == HIT_MESSAGE_UNKD) {
 		mHitPoints = 0;
 		onLiveFlag(LIVE_FLAG_DEAD);
 		onHitFlag(HIT_FLAG_NO_COLLISION);
@@ -641,7 +641,7 @@ bool TTamaNoko::isCollidMove(THitActor* param_1)
 		return true;
 
 	if (mSpine->getCurrentNerve() == &TNerveTamaNokoSleep::theNerve()) {
-		param_1->receiveMessage(this, 0);
+		param_1->receiveMessage(this, HIT_MESSAGE_TRAMPLE);
 		return true;
 	}
 

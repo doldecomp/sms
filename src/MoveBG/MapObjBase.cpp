@@ -261,12 +261,12 @@ void TMapObjBase::makeObjDead()
 	removeMapCollision();
 	unk104 = 0;
 	if (mHeldObject) {
-		mHeldObject->receiveMessage(this, 0x8);
+		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK8);
 		mHeldObject = nullptr;
 	}
 
 	if (mHolder) {
-		mHolder->receiveMessage(this, 0x8);
+		mHolder->receiveMessage(this, HIT_MESSAGE_UNK8);
 		mHolder = nullptr;
 	}
 
@@ -282,17 +282,17 @@ void TMapObjBase::moveByBck() { }
 
 void TMapObjBase::touchBoss(THitActor* boss)
 {
-	boss->receiveMessage(this, 0xE);
+	boss->receiveMessage(this, HIT_MESSAGE_ATTACK);
 }
 
 void TMapObjBase::touchEnemy(THitActor* enemy)
 {
-	enemy->receiveMessage(this, 0xE);
+	enemy->receiveMessage(this, HIT_MESSAGE_ATTACK);
 }
 
 void TMapObjBase::touchPlayer(THitActor* player)
 {
-	player->receiveMessage(this, 0xE);
+	player->receiveMessage(this, HIT_MESSAGE_ATTACK);
 }
 
 void TMapObjBase::touchActor(THitActor* actor)
@@ -379,10 +379,10 @@ void TMapObjBase::calcRootMatrix()
 
 BOOL TMapObjBase::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == 5 && checkMapObjFlag(0x40)) {
+	if (message == HIT_MESSAGE_UNK5 && checkMapObjFlag(0x40)) {
 		mHeldObject = (TTakeActor*)sender;
 		return 1;
-	} else if (message == 0xF) {
+	} else if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		return touchWater(sender);
 	} else {
 		return false;
