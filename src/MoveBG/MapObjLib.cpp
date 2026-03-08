@@ -815,7 +815,7 @@ void TMapObjTurn::control() { }
 BOOL TMapObjTurn::receiveMessage(THitActor* sender, u32 message)
 {
 	u32 result;
-	if (message == 5
+	if (message == HIT_MESSAGE_UNK5
 	    && (sender->isActorType(0x2000000E) || sender->isActorType(0x2000000F)
 	        || sender->isActorType(0x20000010))) {
 		unk168 = 1;

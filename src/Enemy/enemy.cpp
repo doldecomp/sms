@@ -248,12 +248,12 @@ void TSpineEnemy::updateSquareToMario()
 
 BOOL TSpineEnemy::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == 4 && mHolder == nullptr) {
+	if (message == HIT_MESSAGE_TAKE && mHolder == nullptr) {
 		mHolder = (TTakeActor*)sender;
 		return true;
 	}
 
-	if (message <= 2) {
+	if (message <= HIT_MESSAGE_UNK2) {
 		kill();
 		return true;
 	}

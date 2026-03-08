@@ -28,7 +28,7 @@ void TItem::appeared()
 {
 	if (checkMapObjFlag(0x40000) && !isUnk104Positive()) {
 		if (unk148)
-			unk148->receiveMessage(this, 5);
+			unk148->receiveMessage(this, HIT_MESSAGE_UNK5);
 
 		if (isActorType(0x2000000f) || isActorType(0x20000010)) {
 			if (gpMSound->gateCheck(0x484C))
@@ -42,7 +42,7 @@ void TItem::appeared()
 
 void TItem::taken(THitActor* param_1)
 {
-	param_1->receiveMessage(this, 0xE);
+	param_1->receiveMessage(this, HIT_MESSAGE_ATTACK);
 	kill();
 	if (checkMapObjFlag(0x80000)) {
 		makeObjDefault();
@@ -59,10 +59,10 @@ void TItem::touchPlayer(THitActor* param_1)
 
 BOOL TItem::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == 0xF)
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER)
 		return false;
 
-	if (message == 0xb) {
+	if (message == HIT_MESSAGE_UNKB) {
 		taken(sender);
 		return true;
 	}
@@ -190,7 +190,7 @@ void TCoin::taken(THitActor* param_1)
 		                                          0, 4);
 
 	if (unk148)
-		unk148->receiveMessage(this, 8);
+		unk148->receiveMessage(this, HIT_MESSAGE_UNK8);
 
 	if (TFlagManager::smInstance->getFlag(0x40002) == 100) {
 		TShine* shine = JDrama::TNameRefGen::search<TShine>(
@@ -272,7 +272,7 @@ void TCoin::perform(u32 param_1, JDrama::TGraphics* param_2)
 			} else {
 				if (!checkMapObjFlag(0x10000000)) {
 					if (unk148 != 0)
-						unk148->receiveMessage(this, 5);
+						unk148->receiveMessage(this, HIT_MESSAGE_UNK5);
 					makeObjDead();
 				}
 			}
@@ -348,7 +348,7 @@ void TCoinRed::taken(THitActor* param_1)
 		                                          0, 4);
 
 	if (unk148)
-		unk148->receiveMessage(this, 8);
+		unk148->receiveMessage(this, HIT_MESSAGE_UNK8);
 
 	TItem::taken(param_1);
 }
@@ -372,7 +372,7 @@ void TCoinBlue::taken(THitActor* param_1)
 	gpMarDirector->fireGetBlueCoin(this);
 
 	if (unk148)
-		unk148->receiveMessage(this, 8);
+		unk148->receiveMessage(this, HIT_MESSAGE_UNK8);
 
 	TItem::taken(param_1);
 }

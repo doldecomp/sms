@@ -15,13 +15,13 @@ BOOL TMario::winDemo()
 	switch (mActionState) {
 	case 0:
 		if (mHeldObject != nullptr) {
-			mHeldObject->receiveMessage(mHeldObject, 0xD);
+			mHeldObject->receiveMessage(mHeldObject, HIT_MESSAGE_UNKD);
 			mHeldObject = nullptr;
 		}
 		gpConductor->killEnemiesWithin(mPosition, 2000.0f);
 		if (jumpProcess(0) == TRUE) {
 			gpMarDirector->fireGetStar((TShine*)unk384);
-			unk384->receiveMessage(this, 0x4);
+			unk384->receiveMessage(this, HIT_MESSAGE_TAKE);
 			mActionState = 1;
 		}
 		break;
@@ -42,7 +42,7 @@ BOOL TMario::readBillboard()
 
 	TBaseNPC* talkingNpc = gpMarDirector->unkA0;
 	switch (mActionState) {
-	case 0:
+	case 0: {
 		const JGeometry::TVec3<f32>& targetPos = talkingNpc->getPosition();
 		f32 dx                                 = mPosition.x - targetPos.x;
 		f32 dz                                 = mPosition.z - targetPos.z;
@@ -59,7 +59,8 @@ BOOL TMario::readBillboard()
 		}
 		setAnimation(0xD9, 1.0f);
 		mActionState = 1;
-	case 1:
+	}
+	case 1: {
 		s16 attackAngle = getAttackAngle(talkingNpc);
 		s16 diffAngle   = attackAngle - mFaceAngle.y;
 		s32 convAngle
@@ -72,6 +73,7 @@ BOOL TMario::readBillboard()
 			mActionState          = 2;
 		}
 		break;
+	}
 	case 2:
 		if (gpMarDirector->unk124 == 0 || gpMarDirector->unk124 == 5) {
 			changePlayerStatus(0xC400201, 0, true);
@@ -103,7 +105,7 @@ BOOL TMario::warpIn()
 	JGeometry::TVec3<f32> holderPosOffset(((TModelGate*)mHolder)->unkAC);
 	holderPosOffset.y -= 80.0f;
 	switch (mActionState) {
-	case 0:
+	case 0: {
 		if (mActionTimer <= 1) {
 			if (onYoshi() != FALSE) {
 				getOffYoshi(true);
@@ -155,7 +157,8 @@ BOOL TMario::warpIn()
 			startVoice(-0x2);
 		}
 		break;
-	case 1:
+	}
+	case 1: {
 		if ((f32)mActionTimer > mAutoDemoParams.mWarpInBallsDispTime.get()) {
 			unk114 &= ~(1 << 1);
 			rumbleStart(0x15, 0x14);
@@ -167,6 +170,7 @@ BOOL TMario::warpIn()
 		}
 
 		break;
+	}
 	case 2:
 		unk114 &= ~(1 << 1);
 		rumbleStart(0x14, mMotorParams.mMotorWall.get() / 2);
@@ -174,7 +178,7 @@ BOOL TMario::warpIn()
 		if ((f32)mActionTimer > mAutoDemoParams.mWarpInCapturedTime.get()) {
 			unk114 &= ~(1 << 1);
 			mActionTimer = 0;
-			mHolder->receiveMessage(this, 0xE);
+			mHolder->receiveMessage(this, HIT_MESSAGE_ATTACK);
 			mActionState = 3;
 		}
 

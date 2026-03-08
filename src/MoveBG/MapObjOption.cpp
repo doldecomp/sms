@@ -56,7 +56,7 @@ void TFileLoadBlock::touchPlayer(THitActor* param_1)
 BOOL TFileLoadBlock::receiveMessage(THitActor* sender, u32 message)
 {
 
-	if (isState(1) && message == 2 && !isUnk104Positive()) {
+	if (isState(1) && message == HIT_MESSAGE_UNK2 && !isUnk104Positive()) {
 		pushed();
 		return true;
 	}

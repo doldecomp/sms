@@ -940,7 +940,7 @@ void THamuKuri::makeCapFly(TMapObjBase* param_1)
 		mPosition.y += 100.0f;
 		param_1->mPosition.y = mPosition.y;
 
-		if (param_1->receiveMessage(this, 0x4)) {
+		if (param_1->receiveMessage(this, HIT_MESSAGE_TAKE)) {
 			onLiveFlag(LIVE_FLAG_DEAD);
 		} else {
 			reset();
@@ -1044,7 +1044,7 @@ void THamuKuri::setWalkAnm() { setBckAnm(4); }
 void THamuKuri::setDeadAnm()
 {
 	if (unk198 && mHeldObject != nullptr
-	    && mHeldObject->receiveMessage(this, 6)) {
+	    && mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK6)) {
 		TMapObjBase* heldObj = (TMapObjBase*)mHeldObject;
 		heldObj->mHolder     = nullptr;
 		heldObj->offLiveFlag(LIVE_FLAG_HIDDEN);
@@ -1077,7 +1077,7 @@ void THamuKuri::setRollAnm() { setBckAnm(7); }
 void THamuKuri::setCrashAnm()
 {
 	if (unk198 && mHeldObject != nullptr
-	    && mHeldObject->receiveMessage(this, 6)) {
+	    && mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK6)) {
 		TMapObjBase* heldObj = (TMapObjBase*)mHeldObject;
 		heldObj->mHolder     = nullptr;
 		heldObj->offLiveFlag(LIVE_FLAG_HIDDEN);
@@ -1177,7 +1177,7 @@ bool THamuKuri::isCollidMove(THitActor* param_1)
 {
 	if (param_1->isActorType(0x8000013))
 		if (mSpine->getCurrentNerve() == &TNerveHamuKuriBoundFreeze::theNerve())
-			param_1->receiveMessage(this, 0);
+			param_1->receiveMessage(this, HIT_MESSAGE_TRAMPLE);
 
 	if (param_1->isActorType(0x10000002) || param_1->isActorType(0x1000000F)
 	    || param_1->isActorType(0x10000013)
@@ -1365,7 +1365,7 @@ void THaneHamuKuri::setCrashAnm() { setBckAnm(0); }
 void THaneHamuKuri::setDeadAnm()
 {
 	if (unk198 && mHeldObject != nullptr
-	    && mHeldObject->receiveMessage(this, 6)) {
+	    && mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK6)) {
 		TMapObjBase* heldObj = (TMapObjBase*)mHeldObject;
 		heldObj->mHolder     = nullptr;
 		heldObj->offLiveFlag(LIVE_FLAG_HIDDEN);
@@ -1468,7 +1468,7 @@ void TDoroHaneKuri::behaveToWater(THitActor*)
 void TDoroHaneKuri::setBehavior()
 {
 	if (mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve()
-	    && mHeldObject && mHeldObject->receiveMessage(this, 0x6)) {
+	    && mHeldObject && mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK6)) {
 		TMapObjBase* held = (TMapObjBase*)mHeldObject;
 		held->mHolder     = nullptr;
 		held->offLiveFlag(0x2);
@@ -1721,21 +1721,23 @@ void TDangoHamuKuri::reset()
 
 BOOL TDangoHamuKuri::receiveMessage(THitActor* param_1, u32 param_2)
 {
-	if (param_2 == 4 && mHolder == nullptr && mBoss != this) {
+	if (param_2 == HIT_MESSAGE_TAKE && mHolder == nullptr && mBoss != this) {
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 		mHolder = (TLiveActor*)param_1;
 		behaveToTaken(param_1);
 		return true;
 	}
 
-	if ((param_2 == 6 || param_2 == 7) && mHolder == param_1) {
+	if ((param_2 == HIT_MESSAGE_UNK6 || param_2 == HIT_MESSAGE_UNK7)
+	    && mHolder == param_1) {
 		mHolder = nullptr;
 		behaveToRelease();
 		offHitFlag(HIT_FLAG_NO_COLLISION);
 		return true;
 	}
 
-	if (param_2 == 0 || param_2 == 1 || param_2 == 3 || param_2 == 11) {
+	if (param_2 == HIT_MESSAGE_TRAMPLE || param_2 == HIT_MESSAGE_HIP_DROP
+	    || param_2 == HIT_MESSAGE_UNK3 || param_2 == HIT_MESSAGE_UNKB) {
 		if (isHitValid(param_2)) {
 			unk184 = 0;
 			kill();
@@ -1743,13 +1745,13 @@ BOOL TDangoHamuKuri::receiveMessage(THitActor* param_1, u32 param_2)
 		return true;
 	}
 
-	if (param_2 == 13) {
+	if (param_2 == HIT_MESSAGE_UNKD) {
 		mHitPoints = 0;
 		onLiveFlag(LIVE_FLAG_DEAD);
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 	}
 
-	if (param_2 == 15) {
+	if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		gpMarioParticleManager->emit(0xE7, &mPosition, 0, nullptr);
 		gpMSound->startSoundSet(0x6802, &mPosition, 0.0f, 0.0f, 0, 0, 4);
 		if (mSprayedByWaterCooldown == 0) {
@@ -1798,7 +1800,8 @@ void TDangoHamuKuri::behaveToWater(THitActor* param_1)
 	if (!mNext) {
 		if (!mPrev) {
 			THamuKuri::behaveToWater(param_1);
-		} else if (mSprayedByWaterCooldown <= 1 && receiveMessage(mPrev, 6)) {
+		} else if (mSprayedByWaterCooldown <= 1
+		           && receiveMessage(mPrev, HIT_MESSAGE_UNK6)) {
 			mHolder            = nullptr;
 			mPrev->mHeldObject = nullptr;
 			mPrev->mNext       = nullptr;
@@ -1963,7 +1966,7 @@ void TBossDangoHamuKuri::generateBody()
 		if (!currHamu->mNext) {
 			currHamu->mNext = newHamu;
 			newHamu->mPrev  = currHamu;
-			if (newHamu->receiveMessage(currHamu, 4))
+			if (newHamu->receiveMessage(currHamu, HIT_MESSAGE_TAKE))
 				currHamu->mHeldObject = newHamu;
 			newHamu->mBoss = this;
 			break;
@@ -2270,9 +2273,9 @@ bool TDoroHamuKuri::isCollidMove(THitActor* param_1)
 					return true;
 				}
 
-				if (receiveMessage(param_1, 6)) {
+				if (receiveMessage(param_1, HIT_MESSAGE_UNK6)) {
 					pTVar1->mPosition = param_1->mPosition;
-					if (pTVar1->receiveMessage(this, 4)) {
+					if (pTVar1->receiveMessage(this, HIT_MESSAGE_TAKE)) {
 						other->unk198      = 0;
 						other->mHeldObject = nullptr;
 						onHaveCap();

@@ -491,39 +491,43 @@ BOOL TMapObjGeneral::receiveMessage(THitActor* sender, u32 message)
 		return true;
 
 	// TODO: concerning. Is unkAC actually a Vec?
-	if (message == 4 && checkMapObjFlag(0x100000)
+	if (message == HIT_MESSAGE_TAKE && checkMapObjFlag(0x100000)
 	    && JGeometry::TVec3<f32>(mVelocity).squared() <= 3.814697e-06f
 	    && (isState(2) || isState(1) || isState(4) || isState(5))) {
 		hold((TTakeActor*)sender);
 		return true;
 	}
 
-	if (message == 4 && isActorType(0x10000025) && (isState(2) || isState(1))) {
+	if (message == HIT_MESSAGE_TAKE && isActorType(0x10000025)
+	    && (isState(2) || isState(1))) {
 		hold((TTakeActor*)sender);
 		return 1;
 	}
 
-	if (message == 6 && isState(6)) {
+	if (message == HIT_MESSAGE_UNK6 && isState(6)) {
 		put();
 		return true;
 	}
 
-	if (message == 7 && isState(6) && mMapObjData->mPhysical != nullptr) {
+	if (message == HIT_MESSAGE_UNK7 && isState(6)
+	    && mMapObjData->mPhysical != nullptr) {
 		thrown();
 		return true;
 	}
 
-	if (message == 1 && checkMapObjFlag(0x200000)) {
+	if (message == HIT_MESSAGE_HIP_DROP && checkMapObjFlag(0x200000)) {
 		kill();
 		return true;
 	}
 
-	if (isActorType(0x80000001) && (message == 0 || message == 1)) {
+	if (isActorType(0x80000001)
+	    && (message == HIT_MESSAGE_TRAMPLE
+	        || message == HIT_MESSAGE_HIP_DROP)) {
 		receiveMessageFromPlayer();
 		return true;
 	}
 
-	if (message == 11 && checkMapObjFlag(0x200000)) {
+	if (message == HIT_MESSAGE_UNKB && checkMapObjFlag(0x200000)) {
 		kill();
 	}
 

@@ -433,7 +433,7 @@ TFireWanwanTailHit::TFireWanwanTailHit(TFireWanwan& param_1)
 BOOL TFireWanwanTailHit::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	if (param_1->getActorType() == 0x80000001) {
-		if (param_2 == HIT_MESSAGE_UNK4) {
+		if (param_2 == HIT_MESSAGE_TAKE) {
 			if (!mOwner->canTakenByMario())
 				return false;
 
@@ -953,11 +953,11 @@ bool TFireWanwan::isOverHungTailRumble() const
 BOOL TFireWanwan::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	switch (param_2) {
-	case 0:
-	case 1:
+	case HIT_MESSAGE_TRAMPLE:
+	case HIT_MESSAGE_HIP_DROP:
 		return false;
 
-	case 0xF: {
+	case HIT_MESSAGE_SPRAYED_BY_WATER: {
 		SMS_EasyEmitParticle(PARTICLE_MS_ENM_WATHIT, &param_1->getPosition(),
 		                     nullptr, JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 		u8 maxHp = getMaxHitPoints();
