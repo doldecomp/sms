@@ -391,7 +391,24 @@ void TGCConsole2::startDisappearCoin()
 
 void TGCConsole2::startInsertLife(int) { }
 
-void TGCConsole2::resetLife(int) { }
+void TGCConsole2::resetLife(int param_1)
+{
+	for (int i = 1; i < 9; i++) {
+		if (i < param_1 + 1) {
+			unk17C[2 * i]->show();
+		} else {
+			unk17C[2 * i]->hide();
+		}
+
+		// TODO: This feels like a fakematch, is setBounds correct?
+
+		JUTRect local_38(unk1D0[i].x1, unk1D0[i].y1, unk1D0[i].x2, unk1D0[i].y2);
+		unk17C[2 * i]->setBounds(local_38);
+
+		JUTRect local_48(unk1D0[i].x1, unk1D0[i].y1, unk1D0[i].x2, unk1D0[i].y2);
+		unk17C[2 * i + 1]->setBounds(local_48);
+	}
+}
 
 void TGCConsole2::startAppearLife(int) { }
 
