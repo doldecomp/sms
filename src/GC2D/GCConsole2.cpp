@@ -485,7 +485,17 @@ void TGCConsole2::startAppearTelop(bool param_1)
 	}
 }
 
-void TGCConsole2::startDisappearTelop() { }
+void TGCConsole2::startDisappearTelop()
+{
+	if (unk34[15] || !unk520->getPane()->isVisible()) {
+		return;
+	}
+
+	unk34[15] = 1;
+	unk5A = 1;
+
+	unk520->updatePaneOffset(80, 0, unk520->get465MinusInitialY1());
+}
 
 void TGCConsole2::startDisappearTimer() { }
 
