@@ -331,9 +331,9 @@ void TGCConsole2::startAppearTank()
 	unk34[17] = 1;
 	unk59     = 1;
 	unk7C     = 0;
-	
+
 	unk2F8->getPane()->show();
-	unk2F8->setPaneOffset(unk98, 0, 0, 0, 465 - unk2F8->getInitialY1());
+	unk2F8->setPaneOffset(unk98, 0, 0, 0, unk2F8->get465MinusInitialY1());
 
 	unk26C->setPanePosition(50, JUTPoint(0, 100), JUTPoint(0, -30),
 	                        JUTPoint(0, -30));
@@ -401,10 +401,12 @@ void TGCConsole2::resetLife(int param_1)
 
 		// TODO: This feels like a fakematch, is setBounds correct?
 
-		JUTRect local_38(unk1D0[i].x1, unk1D0[i].y1, unk1D0[i].x2, unk1D0[i].y2);
+		JUTRect local_38(unk1D0[i].x1, unk1D0[i].y1, unk1D0[i].x2,
+		                 unk1D0[i].y2);
 		unk17C[2 * i]->setBounds(local_38);
 
-		JUTRect local_48(unk1D0[i].x1, unk1D0[i].y1, unk1D0[i].x2, unk1D0[i].y2);
+		JUTRect local_48(unk1D0[i].x1, unk1D0[i].y1, unk1D0[i].x2,
+		                 unk1D0[i].y2);
 		unk17C[2 * i + 1]->setBounds(local_48);
 	}
 }
@@ -413,7 +415,31 @@ void TGCConsole2::startAppearLife(int) { }
 
 void TGCConsole2::startDisappearLife(int) { }
 
-void TGCConsole2::startDownLeftBot() { }
+void TGCConsole2::startDownLeftBot()
+{
+	if (unk34[13]) {
+		return;
+	}
+
+	unk34[13] = 1;
+	unk34[12] = 0;
+	unk5A = 1;
+
+	if (unk44C->getPane()->isVisible() && unk44C->isInterpolatorAtZero()) {
+		unk44C->updatePaneOffset(20, 0, unk44C->get465MinusInitialY1() + 60);
+		unk51C = 1;
+	}
+
+	if (unk428->getPane()->isVisible()) {
+		unk428->updatePaneOffset(20, 0, unk428->get465MinusInitialY1() + 60);
+		unk448 = 1;
+	}
+
+	if (unk3FC->getPane()->isVisible()) {
+		unk3FC->updatePaneOffset(20, 0, unk3FC->get465MinusInitialY1() + 60);
+		unk426 = 1;
+	}
+}
 
 void TGCConsole2::startUpLeftBot() { }
 

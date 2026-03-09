@@ -103,7 +103,7 @@ public:
 
 	// fabricated and likely fake, these only exist to avoid storing
 	// &mInitialBounds in one of the registers
-	int getInitialY1() const { return mInitialBounds.y1; }
+	int get465MinusInitialY1() const { return 465 - mInitialBounds.y1; }
 	int getInitialY2() const { return mInitialBounds.y2; }
 
 	bool isBoundsAnimationCompleted() const
