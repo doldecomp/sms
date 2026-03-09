@@ -9,7 +9,6 @@ namespace JGeometry {
 
 template <typename T> struct TQuat4 : public TVec4<T> {
 public:
-	/* Constructors */
 	TQuat4() { }
 
 	TQuat4(T xyz, T _w)
@@ -36,48 +35,9 @@ public:
 		this->w = _w;
 	}
 
-	TQuat4<T>& operator=(const TQuat4<T>& rSrc)
-	{
-		this->x = rSrc.x;
-		this->y = rSrc.y;
-		this->z = rSrc.z;
-		this->w = rSrc.w;
-	}
+	void conjugate() { this->xyz().negate(); }
 
-	TVec3<T>* toTvec() { return (TVec3<T>*)this; }
-
-	template <typename A> void set(A _x, A _y, A _z, A _w)
-	{
-		this->x = _x;
-		this->y = _y;
-		this->z = _z;
-		this->w = _w;
-	}
-
-	void set(T _x, T _y, T _z, T _w)
-	{
-		this->x = _x;
-		this->y = _y;
-		this->z = _z;
-		this->w = _w;
-	}
-
-	template <class TY> void set(const TQuat4<TY>& other)
-	{
-		this->x = other.x;
-		this->y = other.y;
-		this->z = other.z;
-		this->w = other.w;
-	}
-
-	void conjugate(const TQuat4<T>& other)
-	{
-		this->x = -other.x;
-		this->y = -other.y;
-		this->z = -other.z;
-		this->w = other.w;
-	}
-
+	// TODO: the two mul are definitely not correct ATM
 	template <typename A> void mul(const TVec4<A>& other)
 	{
 		// clang-format off
@@ -93,44 +53,42 @@ public:
 	template <typename A> void mul(const TQuat4<A>& a, const TQuat4<A>& b)
 	{
 		// clang-format off
-		T _x =  a.w * b.w + a.y * b.z - a.z * b.y + a.w * b.x;
-		T _y = -a.x * b.z + a.y * b.w + a.z * b.x + a.w * b.y;
-		T _z =  a.x * b.y - a.y * b.x + a.z * b.w + a.w * b.z;
-		T _w = -a.x * b.x - a.y * b.y - a.z * b.z + a.w * b.w;
+		T _x = a.x * b.w + a.w * b.x + a.y * b.z - a.z * b.y;
+		T _y = a.y * b.w + a.w * b.y + a.z * b.x - a.x * b.z;
+		T _z = a.z * b.w + a.w * b.z + a.x * b.y - a.y * b.x;
+		T _w = a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z;
 		// clang-format on
 
 		set(_x, _y, _z, _w);
 	}
 
-	/* General operations */
-
 	// NOTE: SMG contains a "normalize" implementation here that reset the
 	// quaternion to identity in case of zero length -- welp, not in SMS! Here
-	// we just leave it all to TVec4 and zero out the quaternion to device by
+	// we just leave it all to TVec4 and zero out the quaternion to divide by
 	// zero even more! Fun!
 
 	void getXDir(TVec3<T>& rDest) const
 	{
-		rDest.template set<T>(
-		    1.0f - this->y * this->y * 2.0f - this->z * this->z * 2.0f,
-		    this->x * this->y * 2.0f + this->w * this->z * 2.0f,
-		    this->x * this->z * 2.0f - this->w * this->y * 2.0f);
+		f32 _x = 1.0f - this->y * this->y * 2.0f - this->z * this->z * 2.0f;
+		f32 _y = this->x * this->y * 2.0f + this->w * this->z * 2.0f;
+		f32 _z = this->x * this->z * 2.0f - this->w * this->y * 2.0f;
+		rDest.set(_x, _y, _z);
 	}
 
 	void getYDir(TVec3<T>& rDest) const
 	{
-		rDest.template set<T>(
-		    this->x * this->y * 2.0f - this->w * this->z * 2.0f,
-		    1.0f - this->x * this->x * 2.0f - this->z * this->z * 2.0f,
-		    this->y * this->z * 2.0f + this->w * this->x * 2.0f);
+		f32 _x = this->x * this->y * 2.0f - this->w * this->z * 2.0f;
+		f32 _y = 1.0f - this->x * this->x * 2.0f - this->z * this->z * 2.0f;
+		f32 _z = this->y * this->z * 2.0f + this->w * this->x * 2.0f;
+		rDest.set(_x, _y, _z);
 	}
 
 	void getZDir(TVec3<T>& rDest) const
 	{
-		rDest.template set<T>(
-		    this->x * this->z * 2.0f + this->w * this->y * 2.0f,
-		    this->y * this->z * 2.0f - this->w * this->x * 2.0f,
-		    1.0f - this->x * this->x * 2.0f - this->y * this->y * 2.0f);
+		f32 _x = this->x * this->z * 2.0f + this->w * this->y * 2.0f;
+		f32 _y = this->y * this->z * 2.0f - this->w * this->x * 2.0f;
+		f32 _z = 1.0f - this->x * this->x * 2.0f - this->y * this->y * 2.0f;
+		rDest.set(_x, _y, _z);
 	}
 
 	void getEuler(TVec3<T>& rDest) const;
@@ -156,9 +114,8 @@ public:
 
 	void setRotate(const TVec3<T>& pVec, f32 pAngle)
 	{
-		f32 halfAngle = pAngle * 0.5f;
-		toTvec()->scale(sinf(halfAngle), pVec);
-		this->w = cosf(halfAngle);
+		this->xyz().scale(sinf(pAngle * 0.5f), pVec);
+		this->w = cosf(pAngle * 0.5f);
 	}
 
 	void setRotate(const TVec3<T>& from, const TVec3<T>& to, T amount)
@@ -168,12 +125,12 @@ public:
 
 		f32 len = axis.length();
 		if (len <= TUtil<f32>::epsilon()) {
-			set(0.0f, 0.0f, 0.0f, 1.0f);
+			this->set(0.0f, 0.0f, 0.0f, 1.0f);
 			return;
 		}
 
-		f32 halfAngle = amount * (atan2(len, from.dot(to)) * 0.5f);
-		toTvec()->scale(sin(halfAngle) / len, axis);
+		f32 halfAngle = 0.5f * atan2(len, from.dot(to)) * amount;
+		this->xyz().scale(sin(halfAngle) / len, axis);
 		this->w = cos(halfAngle);
 	}
 

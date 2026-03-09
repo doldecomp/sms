@@ -379,7 +379,7 @@ void MActor::perform(u32 param_1, JDrama::TGraphics* param_2)
 		entry();
 }
 
-bool MActor::checkCurAnm(const char* param_1, int param_2)
+BOOL MActor::checkCurAnm(const char* param_1, int param_2)
 {
 	if (!unk28[param_2])
 		return false;
