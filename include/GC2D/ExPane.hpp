@@ -101,10 +101,9 @@ public:
 	J2DPane* getPane() const { return mPane; }
 	const JUTRect& getInitialBounds() const { return mInitialBounds; }
 
-	// fabricated and likely fake, these only exist to avoid storing
-	// &mInitialBounds in one of the registers
+	// fabricated, but they make a lot of things in GCConsole2 work
 	int get465MinusInitialY1() const { return 465 - mInitialBounds.y1; }
-	int getInitialY2() const { return mInitialBounds.y2; }
+	int getNegativeInitialY2Plus1() const { return -(mInitialBounds.y2 + 1); }
 
 	bool isBoundsAnimationCompleted() const
 	{

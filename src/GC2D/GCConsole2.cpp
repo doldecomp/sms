@@ -355,7 +355,8 @@ void TGCConsole2::startAppearCoin()
 	unk88     = 0;
 
 	unk108->getPane()->show();
-	unk108->setPaneOffset(unk98, 0, unk26A, 0, -(unk108->getInitialY2() + 1));
+	unk108->setPaneOffset(unk98, 0, unk26A, 0,
+	                      unk108->getNegativeInitialY2Plus1());
 
 	unkC8->setPanePosition(50, cDownTopPoint, cDownMidPoint, cDownMidPoint);
 
@@ -375,15 +376,15 @@ void TGCConsole2::startDisappearCoin()
 
 	if (unk140->isInterpolatorAtZero()) {
 		J2DPane* pane = unk128->getPane();
-		unk140->updatePaneOffset(
-		    40, 0, -(unk140->getInitialY2() + 1 + pane->mBounds.getHeight()));
+		unk140->updatePaneOffset(40, 0,
+		                         -pane->mBounds.getHeight()
+		                             + unk140->getNegativeInitialY2Plus1());
 	}
 
 	J2DPane* pane = unkC8->getPane();
-	// TODO: The last argument needs some massaging to get the instructions in
-	// the right order, but this is still equivalent
-	unk108->updatePaneOffset(
-	    40, 0, -(pane->mBounds.getHeight() + unk108->getInitialY2() + 1));
+	unk108->updatePaneOffset(40, 0,
+	                         -(pane->mBounds.getHeight())
+	                             + unk108->getNegativeInitialY2Plus1());
 
 	unk124->setUnk11CFlag(1 << 0);
 }
