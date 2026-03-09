@@ -424,7 +424,7 @@ void TGCConsole2::startDownLeftBot()
 
 	unk34[13] = 1;
 	unk34[12] = 0;
-	unk5A = 1;
+	unk5A     = 1;
 
 	if (unk44C->getPane()->isVisible() && unk44C->isInterpolatorAtZero()) {
 		unk44C->updatePaneOffset(20, 0, unk44C->get465MinusInitialY1() + 60);
