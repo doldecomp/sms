@@ -201,6 +201,14 @@ public:
 			return false;
 	}
 
+	bool isFence() const
+	{
+		if (mBGType == BG_TYPE_CLIMBABLE_FENCE)
+			return true;
+		else
+			return false;
+	}
+
 	bool isShadow() const
 	{
 		if (mBGType & BG_PROPERTY_FLAG_SHADOW)

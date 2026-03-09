@@ -108,11 +108,11 @@ public:
 		z += operand.z;
 	}
 
-	void add(const TVec3<f32>& a, const TVec3<f32>& b)
+	void add(const TVec3& a, const TVec3& b)
 	{
 		x = a.x + b.x;
-		y = a.x + b.y;
-		z = a.x + b.z;
+		y = a.y + b.y;
+		z = a.z + b.z;
 	}
 
 	void sub(const TVec3& translate)
@@ -129,7 +129,7 @@ public:
 		z = fst.z - snd.z;
 	}
 
-	void mul(const TVec3<f32>& b)
+	void mul(const TVec3& b)
 	{
 		x *= b.x;
 		y *= b.y;
@@ -175,18 +175,18 @@ public:
 	}
 
 	// @fabricated
-	friend TVec3 operator*(TVec3 fst, float snd)
+	friend TVec3 operator*(TVec3 fst, f32 snd)
 	{
 		fst *= snd;
 		return fst;
 	}
 
-	f32 dot(const TVec3<f32>& other) const
+	f32 dot(const TVec3& other) const
 	{
 		return x * other.x + y * other.y + z * other.z;
 	}
 
-	void cross(const TVec3<f32>& a, const TVec3<f32>& b)
+	void cross(const TVec3& a, const TVec3& b)
 	{
 		f32 _x = a.y * b.z - a.z * b.y;
 		f32 _y = a.z * b.x - a.x * b.z;
@@ -212,14 +212,14 @@ public:
 		z *= scale;
 	}
 
-	void scale(f32 scale, const TVec3<f32>& b)
+	void scale(f32 scale, const TVec3& b)
 	{
 		x = b.x * scale;
 		y = b.y * scale;
 		z = b.z * scale;
 	}
 
-	void scaleAdd(f32 scale, const TVec3<f32>& b, const TVec3<f32>& c)
+	void scaleAdd(f32 scale, const TVec3& b, const TVec3& c)
 	{
 		x = b.x + c.x * scale;
 		y = b.y + c.y * scale;
@@ -228,7 +228,7 @@ public:
 
 	// === length stuff ===
 
-	f32 distance(const TVec3<f32>& other) const
+	f32 distance(const TVec3& other) const
 	{
 		f32 dx = x - other.x;
 		f32 dy = y - other.y;
@@ -236,7 +236,7 @@ public:
 		return TUtil<f32>::sqrt(dx * dx + dy * dy + dz * dz);
 	}
 
-	f32 squared() const { return x * x + y * y + z * z; }
+	f32 squared() const { return dot(*this); }
 
 	f32 length() const { return TUtil<f32>::sqrt(squared()); }
 
@@ -247,11 +247,11 @@ public:
 
 	void setLength(f32 length) { setLength(*this, length); }
 
-	void normalize() { setLength(*this, 1.0f); }
+	void normalize() { setLength(*this, TUtil<f32>::one()); }
 
-	void normalize(const TVec3<f32>& other) { setLength(other, 1.0f); }
+	void normalize(const TVec3& other) { setLength(other, TUtil<f32>::one()); }
 
-	void setLength(const TVec3<f32>& v, f32 length)
+	void setLength(const TVec3& v, f32 length)
 	{
 		f32 lsq = v.squared();
 		if (lsq <= TUtil<f32>::epsilon()) {

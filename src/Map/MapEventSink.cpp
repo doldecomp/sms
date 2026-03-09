@@ -270,7 +270,8 @@ void TMapEventSinkBianco::finishControl()
 			    = (TLiveActor*)JDrama::TNameRefGen::getInstance()
 			          ->getRootNameRef()
 			          ->search(buffer);
-			bananaTree->receiveMessage(gpModelWaterManager->unk2514[0], 0xf);
+			bananaTree->receiveMessage(gpModelWaterManager->unk2514[0],
+			                           HIT_MESSAGE_SPRAYED_BY_WATER);
 		}
 
 		for (int i = 0; i < 7; ++i) {
@@ -279,7 +280,8 @@ void TMapEventSinkBianco::finishControl()
 			    = (TLiveActor*)JDrama::TNameRefGen::getInstance()
 			          ->getRootNameRef()
 			          ->search(buffer);
-			graffiti->receiveMessage(gpModelWaterManager->unk2514[0], 0xf);
+			graffiti->receiveMessage(gpModelWaterManager->unk2514[0],
+			                         HIT_MESSAGE_SPRAYED_BY_WATER);
 		}
 	}
 
