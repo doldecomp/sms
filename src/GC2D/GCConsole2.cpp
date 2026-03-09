@@ -342,7 +342,6 @@ void TGCConsole2::startAppearTank()
 	unk29C->getPane()->show();
 }
 
-// Probably inlined somewhere in the final product?
 void TGCConsole2::startDisappearTank() { }
 
 void TGCConsole2::startAppearCoin()
