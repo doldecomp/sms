@@ -5,6 +5,7 @@
 #include <GC2D/MessageUtil.hpp>
 #include <GC2D/HelpActor.hpp>
 #include <GC2D/ExPane.hpp>
+#include <MSound/MSound.hpp>
 #include <Strategic/Strategy.hpp>
 #include <System/Application.hpp>
 #include <System/FlagManager.hpp>
@@ -13,6 +14,7 @@
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/J2D/J2DTextBox.hpp>
 #include <JSystem/J2D/J2DPicture.hpp>
+#include <JSystem/J2D/J2DPrint.hpp>
 #include <JSystem/J2D/J2DScreen.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/JUtility/JUTResFont.hpp>
@@ -111,7 +113,7 @@ TGCConsole2::TGCConsole2(const char* name)
     , unk444(0)
     , unk448(0)
     , unk530(nullptr)
-    , unk554(0)
+    , mTelopTextWidth(0)
     , unk558(0)
     , unk55C(0)
     , unk560(60)
@@ -120,7 +122,7 @@ TGCConsole2::TGCConsole2(const char* name)
     , unk568(0.0f)
     , unk56C(1)
     , unk56D(1)
-    , unk570(0)
+    , unk570(nullptr)
 {
 	for (int i = 0; i < 2; ++i)
 		unkE0[i] = 0;
@@ -444,7 +446,44 @@ void TGCConsole2::startDownLeftBot()
 
 void TGCConsole2::startUpLeftBot() { }
 
-void TGCConsole2::startAppearTelop(bool) { }
+void TGCConsole2::startAppearTelop(bool param_1)
+{
+	if (unk34[28]) {
+		return;
+	}
+	if (unk530->unk4 == nullptr) {
+		return;
+	}
+	if (unk570 == 0 || unk44C->getPane()->isVisible()) {
+		return;
+	}
+	if (!(param_1 || unk34[16])) {
+		return;
+	}
+
+	unk34[14] = 1;
+	unk59     = 1;
+	unk56D    = 1;
+	unk520->getPane()->show();
+
+	unk520->setPaneOffset(80, 0, 0, 0, unk520->get465MinusInitialY1());
+
+	if (param_1) {
+		// TODO: needs regswapping
+		const u8* messageText
+		    = &unk530->getMessageData()[unk530->unk8[unk570[unk558] & 0xffff].unk0];
+
+		snprintf(unk528->getStringPtr(), 0x3ff, "%s", messageText);
+		snprintf(unk52C->getStringPtr(), 0x3ff, "%s", messageText);
+
+		J2DPrint print(gpSystemFont, 0);
+		mTelopTextWidth = print.getWidth(unk528->getStringPtr());
+
+		if (gpMSound->gateCheck(0x4812)) {
+			MSoundSESystem::MSoundSE::startSoundSystemSE(0x4812, 0, nullptr, 0);
+		}
+	}
+}
 
 void TGCConsole2::startDisappearTelop() { }
 

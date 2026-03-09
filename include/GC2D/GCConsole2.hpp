@@ -255,7 +255,7 @@ public:
 	/* 0x530 */ TMessageLoader* unk530;
 	/* 0x534 */ JUTRect unk534;
 	/* 0x544 */ JUTRect unk544;
-	/* 0x554 */ u32 unk554;
+	/* 0x554 */ s32 mTelopTextWidth;
 	/* 0x558 */ u8 unk558;
 	/* 0x55C */ u32 unk55C;
 	/* 0x560 */ u16 unk560;
@@ -264,7 +264,7 @@ public:
 	/* 0x568 */ f32 unk568;
 	/* 0x56C */ u8 unk56C;
 	/* 0x56D */ u8 unk56D;
-	/* 0x570 */ u32 unk570;
+	/* 0x570 */ u32* unk570; // Some sort of Dolphic News struct?
 };
 
 #endif
