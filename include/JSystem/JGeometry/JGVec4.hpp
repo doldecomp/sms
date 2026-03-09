@@ -13,7 +13,7 @@ public:
 	/* Constructors */
 	inline TVec4() { }
 
-	void zero() { x = y = z = w = 0.0f; }
+	TVec4(const TVec4& other) { *(Quaternion*)this = *(Quaternion*)&other; }
 
 	template <typename A> TVec4(A _x, A _y, A _z, A _h)
 	{
@@ -24,6 +24,8 @@ public:
 	}
 
 	/* General operations */
+	void zero() { x = y = z = w = 0.0f; }
+
 	template <typename A> void set(const JGeometry::TVec4<A>&);
 
 	template <typename A> void set(A _x, A _y, A _z, A _w)
@@ -55,9 +57,9 @@ public:
 		w = b.w * scale;
 	}
 
-	inline TVec3<T>* toTVec3() { return (TVec3<T>*)this; }
+	TVec3<T>& xyz() { return (TVec3<T>&)*this; }
 
-	f32 squared() const { return x * x + y * y + z * z + w * w; }
+	f32 squared() const { return dot(*this); }
 
 	f32 length() const { return TUtil<f32>::sqrt(squared()); }
 

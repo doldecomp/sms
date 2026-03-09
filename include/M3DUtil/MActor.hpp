@@ -61,7 +61,7 @@ public:
 	void frameUpdate();
 	void matAnmFrameUpdate();
 	void perform(u32, JDrama::TGraphics*);
-	bool checkCurAnm(const char*, int);
+	BOOL checkCurAnm(const char*, int);
 	bool checkCurAnmFromIndex(int, int);
 	bool checkAnmFileExist(const char*, int);
 	J3DFrameCtrl* getFrameCtrl(int);

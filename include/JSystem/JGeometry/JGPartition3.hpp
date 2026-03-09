@@ -16,9 +16,13 @@ public:
 	    , mDist(dist)
 	{
 	}
+	TPartition3(const TVec3<T>& param_1, const TVec3<T>& param_2)
+	{
+		set(param_1, param_2);
+	}
 
-	void set(const TVec3<T>& param_1, const TVec3<f32> param_2,
-	         const TVec3<f32> param_3)
+	void set(const TVec3<T>& param_1, const TVec3<f32>& param_2,
+	         const TVec3<f32>& param_3)
 	{
 		TVec3<f32> v1 = param_2 - param_1;
 		TVec3<f32> v2 = param_3 - param_2;
@@ -27,10 +31,10 @@ public:
 		mDist = mNormal.dot(param_1);
 	}
 
-	void set(const TVec3<T>& param_1, const TVec3<f32> param_2)
+	void set(const TVec3<T>& param_1, const TVec3<f32>& param_2)
 	{
-		mNormal = param_1;
-		mDist   = mNormal.dot(param_2);
+		mNormal.set(param_1);
+		mDist = mNormal.dot(param_2);
 	}
 
 	TVec3<T> mNormal; // plane normal

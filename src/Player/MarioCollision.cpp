@@ -269,6 +269,10 @@ void TMario::floorDamageExec(int damage, int damageAnimType, int waterEmit,
 void TMario::calcDamagePos(const JGeometry::TVec3<f32>& pos)
 {
 	JGeometry::TVec3<f32> offset = pos - mPosition;
+	if (offset.isZero()) {
+		unk19C = mPosition;
+		return;
+	}
 	offset.normalize();
 	unk19C = mPosition + offset * 50.0f;
 }
