@@ -981,7 +981,7 @@ public:
 	void stateMachineUpper();
 	void checkPumpEnable();
 	void checkPumping();
-	u32 askJumpIntoWaterEffectExist() const;
+	bool askJumpIntoWaterEffectExist() const;
 	void sinkInSandEffect();
 	void kickFruitEffect();
 	void toroccoEffect();
@@ -1147,7 +1147,7 @@ public:
 		return true;
 	}
 
-	TBGCheckData* getGroundPlane() const { return mGroundPlane; }
+	const TBGCheckData* getGroundPlane() const { return mGroundPlane; }
 
 	// Fabricated
 	bool checkFlag(u32 attribute) const
