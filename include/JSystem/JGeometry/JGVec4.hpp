@@ -23,10 +23,22 @@ public:
 		w = _h;
 	}
 
+	TVec4& operator=(const TVec4& other)
+	{
+		*(Quaternion*)this = *(Quaternion*)&other;
+		return *this;
+	}
+
 	/* General operations */
 	void zero() { x = y = z = w = 0.0f; }
 
-	template <typename A> void set(const JGeometry::TVec4<A>&);
+	template <typename A> void set(const JGeometry::TVec4<A>& _v)
+	{
+		x = _v.x;
+		y = _v.y;
+		z = _v.z;
+		w = _v.w;
+	}
 
 	template <typename A> void set(A _x, A _y, A _z, A _w)
 	{
@@ -79,9 +91,12 @@ public:
 		scale(length * JGeometry::TUtil<f32>::inv_sqrt(lsq), v);
 	}
 
-	void normalize() { setLength(*this, 1.0f); }
+	void normalize() { setLength(*this, JGeometry::TUtil<f32>::one()); }
 
-	void normalize(const TVec4<f32>& other) { setLength(other, 1.0f); }
+	void normalize(const TVec4<f32>& other)
+	{
+		setLength(other, JGeometry::TUtil<f32>::one());
+	}
 };
 
 } // namespace JGeometry

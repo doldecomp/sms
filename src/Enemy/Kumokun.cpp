@@ -1028,11 +1028,10 @@ void TKumokunManager::load(JSUMemoryInputStream& stream)
 
 	unk38 = params;
 
-	// What the? Is there a TParamValueWrapper struct that wraps them?
-	params->mSLAttackRadius.value = (u32) { 60 };
-	params->mSLAttackRadius.value = (u32) { 50 };
-	params->mSLDamageRadius.value = (u32) { 60 };
-	params->mSLDamageHeight.value = (u32) { 70 };
+	params->mSLAttackRadius.set(60);
+	params->mSLAttackRadius.set(50);
+	params->mSLDamageRadius.set(60);
+	params->mSLDamageHeight.set(70);
 	TSmallEnemyManager::load(stream);
 }
 

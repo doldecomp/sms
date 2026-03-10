@@ -62,10 +62,20 @@ public:
 	void updateVertexPos(f32*);
 	void updateTrans(const JGeometry::TVec3<f32>&);
 	void setCheckData(const f32*, const s16*, TBGCheckData*, int);
-	void isSetUp() const;
+	bool isSetUp() const
+	{
+		if (checkFlag(0x1))
+			return false;
+		return true;
+	}
 
 	// fabricated
-	bool checkFlag(u16 flag) const { return unk5C & flag ? true : false; }
+	bool checkFlag(u16 flag) const
+	{
+		if (unk5C & flag)
+			return true;
+		return false;
+	}
 	void onFlag(u16 flag) { unk5C |= flag; }
 	void offFlag(u16 flag) { unk5C &= ~flag; }
 	u32 getUnk8() const { return unk8; }
