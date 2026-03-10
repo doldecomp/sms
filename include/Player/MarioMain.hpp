@@ -610,7 +610,7 @@ public:
 	virtual MtxPtr getTakingMtx();
 	virtual bool moveRequest(const JGeometry::TVec3<f32>&);
 
-	virtual void drawSyncCallback(u16);
+	void drawSyncCallback(u16);
 	virtual void initValues();
 	virtual void checkReturn();
 	virtual void checkController(JDrama::TGraphics*);
@@ -789,8 +789,8 @@ public:
 	void checkRideMovement();
 	void getActorMtx(const THitActor&, f32 (*)[4]);
 	void checkCurrentPlane();
-	void getDmgMapCode(int) const;
-	void checkGroundPlane(f32, f32, f32, f32*, const TBGCheckData**);
+	TEParams* getDmgMapCode(int code) const;
+	BOOL checkGroundPlane(f32 x, f32 y, f32 z, f32* outHeight, const TBGCheckData** outPlane);
 	void makeHistory();
 	void checkStickSmash();
 	BOOL checkStickRotate(int*);
@@ -814,11 +814,11 @@ public:
 	BOOL checkAllMotions();
 	BOOL changePlayerDropping(u32, u32);
 	BOOL changePlayerJumping(u32, u32);
-	void changePlayerTriJump();
+	BOOL changePlayerTriJump();
 	BOOL changePlayerStatus(u32, u32, bool);
 	void throwMario(const JGeometry::TVec3<f32>&, f32);
 	void setStatusToRunning(u32, u32);
-	void setStatusToJumping(u32, u32);
+	u32 setStatusToJumping(u32, u32);
 	void setPlayerJumpSpeed(f32, f32);
 	void setMissJumping();
 	void isTurnning();
@@ -826,13 +826,13 @@ public:
 	void checkPlayerAround(int, f32);
 	void isJumpMiss();
 	void isSlipLimit();
-	void getSlideStopCatch();
-	void getSlideStopNormal();
-	void canSlipJump();
-	void isSlipStart();
+	f32 getSlideStopCatch();
+	f32 getSlideStopNormal();
+	BOOL canSlipJump();
+	BOOL isSlipStart();
 	bool isFrontSlip(int);
 	f32 checkRoofPlane(const Vec&, f32, const TBGCheckData**);
-	void checkWallPlane(Vec*, f32, f32);
+	const TBGCheckData* checkWallPlane(Vec*, f32, f32);
 	void setPlayerVelocity(f32);
 	void setNormalAttackArea();
 	void changePos(const Vec&);
@@ -1214,7 +1214,8 @@ public:
 	/* 0xB4 */ f32 mSlideVelX;
 	/* 0xB8 */ f32 mSlideVelZ;
 
-	/* 0xBC */ char unkBC[0x1C];
+	/* 0xBC */ f32 unkBC;
+	/* 0xC0 */ char unkC0[0x18];
 
 	/* 0xD8 */ const TBGCheckData* mWallPlane;   // TBGCheckData 0xD8
 	/* 0xDC */ const TBGCheckData* mRoofPlane;   // TBGCheckData 0xDC
@@ -1265,7 +1266,7 @@ public:
 	/* 0x150 */ u32 unk150;
 	/* 0x154 */ TWaterEmitInfo* unk154;
 	/* 0x158 */ u32 unk158;
-	/* 0x15C */ u32 unk15C;
+	/* 0x15C */ f32 unk15C;
 	/* 0x160 */ JGeometry::TVec3<f32>
 	    unk160[4]; // Bone position, probably larger array
 	/* 0x190 */ u32 unk190;
@@ -1282,17 +1283,22 @@ public:
 	/* 0x1E4 */ u32 unk1E4;
 	/* 0x1E8 */ u32 unk1E8;
 	/* 0x1EC */ f32 unk1EC;
-	/* 0x1F0 */ char unk1F0[0x29C - 0x1F0];
+	/* 0x1F0 */ char unk1F0[0x250 - 0x1F0];
+	/* 0x250 */ Mtx mGroundMtx;
+	/* 0x280 */ char unk280[0x29C - 0x280];
 	/* 0x29C */ JGeometry::TVec3<f32> unk29C;
-	/* 0x2A8 */ char unk2A8[0x2BC - 0x2A8];
+	/* 0x2A8 */ char unk2A8[0x2BA - 0x2A8];
+	/* 0x2BA */ s16 unk2BA;
 	/* 0x2BC */ f32 unk2BC;
-	/* 0x2C0 */ char unk2C0[0x348 - 0x2C0];
+	/* 0x2C0 */ TLiveActor* mRidingActor;
+	/* 0x2C4 */ char unk2C4[0x348 - 0x2C4];
 	/* 0x348 */ f32 unk348;
 	/* 0x34C */ u16 unk34C;
 	/* 0x34E */ u16 unk34E;
 	/* 0x350 */ s32 unk350;
-	/* 0x354 */ char unk354[0x370 - 0x354];
-	/* 0x370 */ u32 unk370;
+	/* 0x354 */ char unk354[0x36C - 0x354];
+	/* 0x36C */ f32 unk36C;
+	/* 0x370 */ f32 unk370;
 	/* 0x374 */ u32 unk374;
 	/* 0x378 */ u32 unk378;
 	/* 0x37C */ u16 unk37C;
