@@ -98,7 +98,7 @@ public:
 	void ctrlGameCamera_();
 	void perform(u32, JDrama::TGraphics*);
 	void getOffsetAngleX() const;
-	void getOffsetAngleY() const;
+	s16 getOffsetAngleY() const;
 	void getFinalAngleZ() const;
 	~CPolarSubCamera();
 	void controlByCameraCode_(int*);

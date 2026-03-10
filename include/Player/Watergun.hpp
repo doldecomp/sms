@@ -198,7 +198,7 @@ public:
 	/* 0x1C85 */ u8 mSecondNozzle;
 	/* 0x1C86 */ bool mIsEmitWater;
 	/* 0x1C87 */ u8 unk1C87;
-	/* 0x1C88 */ u32 unk1C88;
+	/* 0x1C88 */ f32 unk1C88;
 	/* 0x1C8C */ u8 mCurrentPressure;
 	/* 0x1C8D */ u8 mPreviousPressure;
 	/* 0x1C8E */ u8 unk1C8E;

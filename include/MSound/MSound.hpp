@@ -126,8 +126,42 @@ public:
 	}
 	// TODO: startSoundActor was also very likely here
 
-	void startForceJumpSound(Vec*, u32, f32, u32) { }
+	void startForceJumpSound(Vec*, u32, f32, u32);
 };
+
+#pragma dont_inline on
+void MSound::startForceJumpSound(Vec* pos, u32 groundType, f32 height,
+                                 u32 dist)
+{
+	u32 soundID;
+	u8 type = (u8)groundType;
+
+	switch (type) {
+	case 21:
+	case 23:
+	case 29:
+		soundID = 0x180A;
+		break;
+	case 30:
+	default:
+		if (dist < 6000) {
+			soundID = 0x1810;
+		} else if (dist < 12000) {
+			soundID = 0x1811;
+		} else {
+			soundID = 0x1812;
+		}
+		break;
+	}
+
+	if (gateCheck(soundID)) {
+		if (gateCheck(soundID)) {
+			MSoundSESystem::MSoundSE::startSoundActor(soundID, pos, 0,
+			                                          (JAISound**)NULL, 0, 4);
+		}
+	}
+}
+#pragma dont_inline off
 
 extern MSound* MSGMSound;
 extern JAIBasic* MSGBasic;
