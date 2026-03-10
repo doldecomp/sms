@@ -37,22 +37,25 @@ bool TMapObjGeneral::isPollutedGround(const JGeometry::TVec3<f32>& v) const
 
 inline f32 distToMario(const JGeometry::TVec3<f32>& v)
 {
-	JGeometry::TVec3<f32> r;
-	r.sub(v, *gpMarioPos);
-	return r.length();
+	f32 l = (v.x - gpMarioPos->x) * (v.x - gpMarioPos->x) +
+            (v.y - gpMarioPos->y) * (v.y - gpMarioPos->y) +
+            (v.z - gpMarioPos->z) * (v.z - gpMarioPos->z);
+	return JGeometry::TUtil<f32>::sqrt(l); 
 }
 
 void TMapObjGeneral::waitingToAppear()
 {
-	if (mTimeTilAppear > 0 ? true : false)
+	if (isReadyToAppear())
 		return;
 
 	if (isActorType(0x4000005a)) {
-		if (SMS_GetMarioDamageRadius() + mDamageRadius + 100.0f
+		f32 damageRadius = getDamageRadius();
+		if (SMS_GetMarioDamageRadius() + damageRadius + 100.0f
 		    > distToMario(mInitialPosition))
 			appear();
 	} else {
-		if (SMS_GetMarioDamageRadius() + mDamageRadius
+		f32 damageRadius = getDamageRadius();
+		if (SMS_GetMarioDamageRadius() + damageRadius
 		    > distToMario(mInitialPosition))
 			appear();
 	}
