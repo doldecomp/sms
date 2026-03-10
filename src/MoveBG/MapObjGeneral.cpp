@@ -4,6 +4,7 @@
 #include <Player/MarioAccess.hpp>
 #include <Map/MapCollisionManager.hpp>
 #include <Map/MapCollisionEntry.hpp>
+#include <Map/MapData.hpp>
 #include <Map/PollutionManager.hpp>
 #include <Map/MapCollisionData.hpp>
 #include <Map/Map.hpp>
@@ -476,7 +477,35 @@ void TMapObjGeneral::checkGroundCollision(JGeometry::TVec3<f32>* param_1)
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 }
 
-void TMapObjGeneral::calcVelocity() { }
+void TMapObjGeneral::calcVelocity() 
+{
+	if (checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
+		f32 dVar5 = getGravityY();
+		mVelocity.y -= dVar5;
+
+		f32 cappedVelY = MsClamp<f32>(mVelocity.y, -mBodyRadius, mBodyRadius);
+		mVelocity.y = cappedVelY;
+	}
+
+	const TMapObjPhysicalInfo* piVar4 = mMapObjData->mPhysical;
+	if (piVar4 ? (u8)1 : (u8)0) {
+		mVelocity.x *= mMapObjData->mPhysical->unk4->unk18;
+		mVelocity.z *= mMapObjData->mPhysical->unk4->unk18;
+
+		f32 cappedVelX = MsClamp<f32>(mVelocity.x, -mBodyRadius, mBodyRadius);
+		mVelocity.x = cappedVelX;
+
+		f32 cappedVelZ = MsClamp<f32>(mVelocity.z, -mBodyRadius, mBodyRadius);
+		mVelocity.z = cappedVelZ;
+	
+		if (mGroundPlane->mNormal.y == 1.0f) {
+			if (abs(mVelocity.x) < mMapObjData->mPhysical->unk4->unkC)
+				mVelocity.x = 0.0f;
+			if (abs(mVelocity.z) < mMapObjData->mPhysical->unk4->unkC)
+				mVelocity.z = 0.0f;
+		}
+	}
+}
 
 void TMapObjGeneral::bind() { }
 
