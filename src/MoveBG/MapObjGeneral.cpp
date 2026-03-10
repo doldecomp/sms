@@ -44,7 +44,7 @@ inline f32 distToMario(const JGeometry::TVec3<f32>& v)
 
 void TMapObjGeneral::waitingToAppear()
 {
-	if (unk104 > 0 ? true : false)
+	if (mTimeTilAppear > 0 ? true : false)
 		return;
 
 	if (isActorType(0x4000005a)) {
@@ -64,12 +64,12 @@ void TMapObjGeneral::waitingToRecover()
 		recover();
 }
 
-void TMapObjGeneral::waitToAppear(s32 param_1)
+void TMapObjGeneral::waitToAppear(s32 waitTime)
 {
-	if (param_1 == 0)
-		unk104 = mNormalWaitToAppearTime;
+	if (waitTime == 0)
+		mTimeTilAppear = mNormalWaitToAppearTime;
 	else
-		unk104 = param_1;
+		mTimeTilAppear = waitTime;
 	mState = 10;
 }
 
@@ -83,7 +83,19 @@ void TMapObjGeneral::sink()
 	startSound(6);
 }
 
-void TMapObjGeneral::put() { }
+void TMapObjGeneral::put() 
+{
+	mHolder = nullptr;
+	mHolder = nullptr;
+	s32 preservedTimeTilAppear = getTimeTilAppear();
+	makeObjAppeared();
+	mTimeTilAppear = preservedTimeTilAppear;
+	mPosition.x = JMASSin(*gpMarioAngleY) * (getDamageRadius() + SMS_GetMarioDamageRadius() + 10.0f) + SMS_GetMarioPos().x;
+	mPosition.y = SMS_GetMarioPos().y;
+	mPosition.z = JMASCos(*gpMarioAngleY) * (getDamageRadius() + SMS_GetMarioDamageRadius() + 10.0f) + SMS_GetMarioPos().z;
+	offLiveFlag(LIVE_FLAG_UNK10);
+	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
+}
 
 void TMapObjGeneral::thrown() { }
 
@@ -190,7 +202,7 @@ uuuh:
 
 void TMapObjGeneral::appeared()
 {
-	if (checkMapObjFlag(0x40000) && !(unk104 > 0 ? true : false))
+	if (checkMapObjFlag(0x40000) && !(mTimeTilAppear > 0 ? true : false))
 		makeObjDead();
 }
 
@@ -279,7 +291,7 @@ void TMapObjGeneral::kill()
 	unk64 |= 1;
 	removeMapCollision();
 	onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
-	unk104 = 0xffffffff;
+	mTimeTilAppear = 0xffffffff;
 	startAnim(2);
 	mState = 3;
 	startSound(2);
@@ -303,7 +315,7 @@ void TMapObjGeneral::appear()
 
 	appearing();
 	if (checkMapObjFlag(0x40000))
-		unk104 = getLivingTime();
+		mTimeTilAppear = getLivingTime();
 
 	mState = 2;
 }
@@ -474,9 +486,9 @@ void TMapObjGeneral::perform(u32 param_1, JDrama::TGraphics* param_2)
 			waitingToAppear();
 		}
 	} else {
-		if (checkMapObjFlag(0x40000) && isUnk104Positive()
-		    && getUnk104() < getFlushTime()
-		    && ((getUnk104() / mNormalFlushInterval) & 1) != 0) {
+		if (checkMapObjFlag(0x40000) && isReadyToAppear()
+		    && getTimeTilAppear() < getFlushTime()
+		    && ((getTimeTilAppear() / mNormalFlushInterval) & 1) != 0) {
 			return;
 		}
 	}
