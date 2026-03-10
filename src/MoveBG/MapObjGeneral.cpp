@@ -100,7 +100,45 @@ void TMapObjGeneral::put()
 	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
 }
 
-void TMapObjGeneral::thrown() { }
+void TMapObjGeneral::thrown() 
+{
+	f32 posX = gpMarioPos->x;
+	f32 posY = gpMarioPos->y;
+	f32 posZ = gpMarioPos->z;
+	mPosition.x = posX;
+	mPosition.y = posY;
+	mPosition.z = posZ;
+
+	s16 angX = *gpMarioAngleX;
+	s16 angY = *gpMarioAngleY;
+	s16 angZ = *gpMarioAngleZ;
+	mRotation.x = angX;
+	mRotation.y = angY;
+	mRotation.z = angZ;
+	
+	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
+	unk138 = 0;
+	mHolder = nullptr;
+
+	f32 initialVelX = JMASSin((s32)*gpMarioAngleY) * *gpMarioThrowPower * mMapObjData->mPhysical->unk4->unk2C + (mNormalThrowSpeedRate * *gpMarioSpeedX);
+	f32 initialVelY = mMapObjData->mPhysical->unk4->unk30;
+	f32 initialVelZ = JMASCos((s32)*gpMarioAngleY) * *gpMarioThrowPower * mMapObjData->mPhysical->unk4->unk2C + (mNormalThrowSpeedRate * *gpMarioSpeedZ);
+	mVelocity.x = initialVelX;
+	mVelocity.y = initialVelY;
+	mVelocity.z = initialVelZ;
+	
+	offLiveFlag(LIVE_FLAG_UNK10);
+	JGeometry::TVec3<f32> vel = mVelocity;
+	mPosition.x += vel.x;
+	mPosition.y += vel.y;
+	mPosition.z += vel.z;
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
+	removeMapCollision();
+	offLiveFlag(LIVE_FLAG_DEAD);
+	startAnim(5);
+	startSound(5);
+	mState = 1;
+ }
 
 void TMapObjGeneral::touchingWater()
 {
