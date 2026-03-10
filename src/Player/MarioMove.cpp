@@ -164,32 +164,28 @@ BOOL TMario::changePlayerTriJump()
 				isSand = 1;
 			else
 				isSand = 0;
-			if (isSand) {
-				if (ground->mNormal.y < 0.866025f) {
-					jumpAmount = *(u8*)((u8*)this + 0x2D94);
-					goto jumpCheck;
-				}
-			}
-
-			u8 isWet;
-			if (bgType == 0x04 || bgType == 0x4004
-			    || bgType == 0x8004 || bgType == 0xC004)
-				isWet = 1;
-			else
-				isWet = 0;
-			if (isWet) {
-				if (ground->mNormal.y > 0.99f) {
-					jumpAmount = *(u8*)((u8*)this + 0x2F5C);
-				} else {
-					jumpAmount = *(u8*)((u8*)this + 0x2E78);
-				}
+			if (isSand && ground->mNormal.y < 0.866025f) {
+				jumpAmount = *(u8*)((u8*)this + 0x2D94);
 			} else {
-				jumpAmount = *(u8*)((u8*)this + 0x2A04);
+				u8 isWet;
+				if (bgType == 0x04 || bgType == 0x4004
+				    || bgType == 0x8004 || bgType == 0xC004)
+					isWet = 1;
+				else
+					isWet = 0;
+				if (isWet) {
+					if (ground->mNormal.y > 0.99f) {
+						jumpAmount = *(u8*)((u8*)this + 0x2F5C);
+					} else {
+						jumpAmount = *(u8*)((u8*)this + 0x2E78);
+					}
+				} else {
+					jumpAmount = *(u8*)((u8*)this + 0x2A04);
+				}
 			}
 		}
 	}
 
-jumpCheck:
 	if (jumpAmount != 0) {
 		*(u16*)((u8*)this + 0x94) = 0;
 		mModelFaceAngle = mFaceAngle.y;
@@ -271,32 +267,28 @@ BOOL TMario::changePlayerJumping(u32 status, u32 arg)
 				isSand = 1;
 			else
 				isSand = 0;
-			if (isSand) {
-				if (ground->mNormal.y < 0.866025f) {
-					jumpAmount = *(u8*)((u8*)this + 0x2D94);
-					goto jumpCheck;
-				}
-			}
-
-			u8 isWet;
-			if (bgType == 0x04 || bgType == 0x4004
-			    || bgType == 0x8004 || bgType == 0xC004)
-				isWet = 1;
-			else
-				isWet = 0;
-			if (isWet) {
-				if (ground->mNormal.y > 0.99f) {
-					jumpAmount = *(u8*)((u8*)this + 0x2F5C);
-				} else {
-					jumpAmount = *(u8*)((u8*)this + 0x2E78);
-				}
+			if (isSand && ground->mNormal.y < 0.866025f) {
+				jumpAmount = *(u8*)((u8*)this + 0x2D94);
 			} else {
-				jumpAmount = *(u8*)((u8*)this + 0x2A04);
+				u8 isWet;
+				if (bgType == 0x04 || bgType == 0x4004
+				    || bgType == 0x8004 || bgType == 0xC004)
+					isWet = 1;
+				else
+					isWet = 0;
+				if (isWet) {
+					if (ground->mNormal.y > 0.99f) {
+						jumpAmount = *(u8*)((u8*)this + 0x2F5C);
+					} else {
+						jumpAmount = *(u8*)((u8*)this + 0x2E78);
+					}
+				} else {
+					jumpAmount = *(u8*)((u8*)this + 0x2A04);
+				}
 			}
 		}
 	}
 
-jumpCheck:
 	if (jumpAmount != 0) {
 		*(u16*)((u8*)this + 0x94) = 0;
 		mModelFaceAngle = mFaceAngle.y;
@@ -1321,10 +1313,18 @@ void TMario::checkController(JDrama::TGraphics* gfx)
 				mIntendedMag = *(f32*)unkC0;
 				mWaterGun->rotateProp(*(f32*)unkC0);
 			} else {
-				goto notTurbo;
+				if (*(f32*)unkC0 > 0.1f) {
+					if (0.0f == mIntendedMag)
+						mIntendedYaw = mFaceAngle.y;
+					*(f32*)unkC0 *= *(f32*)((u8*)this + 0x5DC);
+					mIntendedMag = *(f32*)unkC0;
+				} else {
+					*(f32*)unkC0 = 0.0f;
+				}
+				*(s16*)(unkC0 + 4) = 0;
+				unk118 &= ~0x4000;
 			}
 		} else {
-		notTurbo:
 			if (*(f32*)unkC0 > 0.1f) {
 				if (0.0f == mIntendedMag)
 					mIntendedYaw = mFaceAngle.y;
@@ -2310,69 +2310,57 @@ void TMario::checkRideMovement()
 
 	if (rideActor == 0) {
 		*(u32*)((u8*)this + 0x2C0) = 0;
-		goto end;
-	}
-
-	{
+	} else {
 		TLiveActor* existing = *(TLiveActor**)((u8*)this + 0x2C0);
-		if (existing != 0 && existing == rideActor) goto sameRide;
-	}
+		if (existing != 0 && existing == rideActor) {
+			// sameRide
+			Mtx stackMtx;
+			if (existing->getRootJointMtx() == 0) {
+				SMS_GetActorMtx(*existing, stackMtx);
+			} else {
+				PSMTXCopy((MtxPtr)existing->getRootJointMtx(), stackMtx);
+			}
 
-	{
-		// newRide
-		*(TLiveActor**)((u8*)this + 0x2C0) = rideActor;
+			PSMTXMultVec(stackMtx,
+			             (Vec*)((u8*)this + 0x2F4),
+			             (Vec*)&mPosition);
 
-		TLiveActor* ride = *(TLiveActor**)((u8*)this + 0x2C0);
-		*(f32*)((u8*)this + 0x30C) = ride->mRotation.y;
+			TLiveActor* ride = *(TLiveActor**)((u8*)this + 0x2C0);
+			f32 savedRot = *(f32*)((u8*)this + 0x30C);
+			f32 currentRot = ride->mRotation.y;
+			f32 delta = currentRot - savedRot;
+			s16 faceAngle = *(s16*)((u8*)this + 0x96);
+			*(s16*)((u8*)this + 0x96) =
+			    faceAngle + (int)(32768.0f * delta / 180.0f);
 
-		ride = *(TLiveActor**)((u8*)this + 0x2C0);
-		if (ride == 0) goto end;
-
-		Mtx stackMtx;
-		if (ride->getRootJointMtx() == 0) {
-			SMS_GetActorMtx(*ride, stackMtx);
+			ride = *(TLiveActor**)((u8*)this + 0x2C0);
+			*(f32*)((u8*)this + 0x30C) = ride->mRotation.y;
 		} else {
-			PSMTXCopy((MtxPtr)ride->getRootJointMtx(), stackMtx);
+			// newRide
+			*(TLiveActor**)((u8*)this + 0x2C0) = rideActor;
+
+			TLiveActor* ride = *(TLiveActor**)((u8*)this + 0x2C0);
+			*(f32*)((u8*)this + 0x30C) = ride->mRotation.y;
+
+			ride = *(TLiveActor**)((u8*)this + 0x2C0);
+			if (ride != 0) {
+				Mtx stackMtx;
+				if (ride->getRootJointMtx() == 0) {
+					SMS_GetActorMtx(*ride, stackMtx);
+				} else {
+					PSMTXCopy((MtxPtr)ride->getRootJointMtx(), stackMtx);
+				}
+
+				PSMTXInverse(stackMtx, stackMtx);
+
+				*(Vec*)((u8*)this + 0x300) = *(Vec*)((u8*)this + 0x2F4);
+
+				PSMTXMultVec(stackMtx,
+				             (Vec*)&mPosition,
+				             (Vec*)((u8*)this + 0x2F4));
+			}
 		}
-
-		PSMTXInverse(stackMtx, stackMtx);
-
-		*(Vec*)((u8*)this + 0x300) = *(Vec*)((u8*)this + 0x2F4);
-
-		PSMTXMultVec(stackMtx,
-		             (Vec*)&mPosition,
-		             (Vec*)((u8*)this + 0x2F4));
-		goto end;
 	}
-
-sameRide:
-	{
-		TLiveActor* existing = *(TLiveActor**)((u8*)this + 0x2C0);
-
-		Mtx stackMtx;
-		if (existing->getRootJointMtx() == 0) {
-			SMS_GetActorMtx(*existing, stackMtx);
-		} else {
-			PSMTXCopy((MtxPtr)existing->getRootJointMtx(), stackMtx);
-		}
-
-		PSMTXMultVec(stackMtx,
-		             (Vec*)((u8*)this + 0x2F4),
-		             (Vec*)&mPosition);
-
-		TLiveActor* ride = *(TLiveActor**)((u8*)this + 0x2C0);
-		f32 savedRot = *(f32*)((u8*)this + 0x30C);
-		f32 currentRot = ride->mRotation.y;
-		f32 delta = currentRot - savedRot;
-		s16 faceAngle = *(s16*)((u8*)this + 0x96);
-		*(s16*)((u8*)this + 0x96) =
-		    faceAngle + (int)(32768.0f * delta / 180.0f);
-
-		ride = *(TLiveActor**)((u8*)this + 0x2C0);
-		*(f32*)((u8*)this + 0x30C) = ride->mRotation.y;
-	}
-
-end:;
 }
 
 void TMario::checkCurrentPlane()
@@ -2458,83 +2446,84 @@ void TMario::checkCurrentPlane()
 				}
 			}
 		}
-		if (skip)
-			goto afterFirstWalls;
-	}
+		if (!skip) {
+			// Loop over first wall results
+			for (int i = 0; i < wallCheck.mResultWallsNum; i++) {
+				TBGCheckData* wall = wallCheck.mResultWalls[i];
+				u16 wt = wall->mBGType;
+				u8 isDmgWall;
+				if (wt == 0xB || wt == 0x800B || wt == 0x103 || wt == 0x101) {
+					isDmgWall = 1;
+				} else {
+					isDmgWall = 0;
+				}
+				if (!isDmgWall)
+					continue;
 
-	// Loop over first wall results
-	for (int i = 0; i < wallCheck.mResultWallsNum; i++) {
-		TBGCheckData* wall = wallCheck.mResultWalls[i];
-		u16 wt = wall->mBGType;
-		u8 isDmgWall;
-		if (wt == 0xB || wt == 0x800B || wt == 0x103 || wt == 0x101) {
-			isDmgWall = 1;
-		} else {
-			isDmgWall = 0;
-		}
-		if (!isDmgWall)
-			continue;
-
-		TEParams* dmg = getDmgMapCode(wall->mData);
-		*(f32*)((u8*)this + 0x484)
-		    = mPosition.x + JMASSin((u16)mFaceAngle.y);
-		*(f32*)((u8*)this + 0x48C)
-		    = mPosition.z + JMASCos((u16)mFaceAngle.y);
-		damageExec(&mFloorHitActor,
-		           dmg->mDamage.get(), dmg->mDownType.get(),
-		           dmg->mWaterEmit.get(), dmg->mMinSpeed.get(),
-		           dmg->mMotor.get(), dmg->mDirty.get(),
-		           dmg->mInvincibleTime.get());
-	}
-
-	// Two-wall crush check
-	if (wallCheck.mResultWallsNum == 2) {
-		TBGCheckData* wall0 = wallCheck.mResultWalls[0];
-		TBGCheckData* wall1 = wallCheck.mResultWalls[1];
-		f32 dot = wall0->mNormal.y * wall1->mNormal.y
-		          + wall0->mNormal.x * wall1->mNormal.x
-		          + wall0->mNormal.z * wall1->mNormal.z;
-		if (dot < -0.9f) {
-			// Copy position
-			JGeometry::TVec3<f32> pos;
-			pos.x = mPosition.x;
-			pos.y = mPosition.y;
-			pos.z = mPosition.z;
-
-			// Compute plane distances
-			f32 dist0 = wall0->mNormal.y * pos.y
-			            + wall0->mNormal.x * pos.x
-			            + wall0->mNormal.z * pos.z
-			            + wall0->mPlaneDistance;
-			f32 dist1 = wall1->mNormal.y * pos.y
-			            + wall1->mNormal.x * pos.x
-			            + wall1->mNormal.z * pos.z
-			            + wall1->mPlaneDistance;
-
-			// Check actor type
-			const TLiveActor* actor0 = wall0->getActor();
-			if (actor0 != nullptr) {
-				u32 actorType = *(u32*)((u8*)actor0 + 0x4C);
-				if ((actorType - 0x40000000) == 0x2BD)
-					goto doCrush;
+				TEParams* dmg = getDmgMapCode(wall->mData);
+				*(f32*)((u8*)this + 0x484)
+				    = mPosition.x + JMASSin((u16)mFaceAngle.y);
+				*(f32*)((u8*)this + 0x48C)
+				    = mPosition.z + JMASCos((u16)mFaceAngle.y);
+				damageExec(&mFloorHitActor,
+				           dmg->mDamage.get(), dmg->mDownType.get(),
+				           dmg->mWaterEmit.get(), dmg->mMinSpeed.get(),
+				           dmg->mMotor.get(), dmg->mDirty.get(),
+				           dmg->mInvincibleTime.get());
 			}
 
-			const TLiveActor* actor1 = wall1->getActor();
-			if (actor1 == nullptr)
-				goto afterFirstWalls;
-			u32 actorType1 = *(u32*)((u8*)actor1 + 0x4C);
-			if ((actorType1 - 0x40000000) != 0x2BD)
-				goto afterFirstWalls;
+			// Two-wall crush check
+			if (wallCheck.mResultWallsNum == 2) {
+				TBGCheckData* wall0 = wallCheck.mResultWalls[0];
+				TBGCheckData* wall1 = wallCheck.mResultWalls[1];
+				f32 dot = wall0->mNormal.y * wall1->mNormal.y
+				          + wall0->mNormal.x * wall1->mNormal.x
+				          + wall0->mNormal.z * wall1->mNormal.z;
+				if (dot < -0.9f) {
+					// Copy position
+					JGeometry::TVec3<f32> pos;
+					pos.x = mPosition.x;
+					pos.y = mPosition.y;
+					pos.z = mPosition.z;
 
-		doCrush:
-			if (dist0 < 10.0f || dist1 < 10.0f) {
-				floorDamageExec(*(s16*)((u8*)this + 0x58C), 3, 0,
-				                *(s16*)((u8*)this + 0x27BC));
+					// Compute plane distances
+					f32 dist0 = wall0->mNormal.y * pos.y
+					            + wall0->mNormal.x * pos.x
+					            + wall0->mNormal.z * pos.z
+					            + wall0->mPlaneDistance;
+					f32 dist1 = wall1->mNormal.y * pos.y
+					            + wall1->mNormal.x * pos.x
+					            + wall1->mNormal.z * pos.z
+					            + wall1->mPlaneDistance;
+
+					// Check actor type - either wall must be type 0x2BD
+					u8 doCrush = 0;
+					const TLiveActor* actor0 = wall0->getActor();
+					if (actor0 != nullptr) {
+						u32 actorType = *(u32*)((u8*)actor0 + 0x4C);
+						if ((actorType - 0x40000000) == 0x2BD)
+							doCrush = 1;
+					}
+
+					if (!doCrush) {
+						const TLiveActor* actor1 = wall1->getActor();
+						if (actor1 != nullptr) {
+							u32 actorType1 = *(u32*)((u8*)actor1 + 0x4C);
+							if ((actorType1 - 0x40000000) == 0x2BD)
+								doCrush = 1;
+						}
+					}
+
+					if (doCrush) {
+						if (dist0 < 10.0f || dist1 < 10.0f) {
+							floorDamageExec(*(s16*)((u8*)this + 0x58C), 3, 0,
+							                *(s16*)((u8*)this + 0x27BC));
+						}
+					}
+				}
 			}
 		}
 	}
-
-afterFirstWalls:
 	// Second wall check (lower, smaller radius)
 	u8 r26 = 1;
 	r28     = 0;
@@ -2548,50 +2537,46 @@ afterFirstWalls:
 
 	// Skip check for second walls (slightly different logic)
 	if (*(s16*)((u8*)this + 0x14C) > 0) {
-		goto afterSecondWalls;
-	}
-	if (!(*(u32*)((u8*)this + 0x118) & 0x8)) {
-		r26 = r28;
-	}
-	if (r26) {
 		r26 = 1;
-		goto afterSecondWalls;
-	}
-	{
-		u32 action2 = mAction;
-		if (action2 == 0x89C) {
-			r26 = 1;
-			goto afterSecondWalls;
+	} else {
+		if (!(*(u32*)((u8*)this + 0x118) & 0x8)) {
+			r26 = r28;
 		}
-		u8 dirState2 = *(u8*)((u8*)gpMarDirector + 0x124);
-		if (dirState2 == 3 || dirState2 == 4) {
-			r26 = 1;
-			goto afterSecondWalls;
-		}
-		u8 isDemo2;
-		if (dirState2 == 1 || dirState2 == 2) {
-			isDemo2 = 1;
-		} else {
-			isDemo2 = 0;
-		}
-		if (isDemo2) {
-			r26 = 1;
-			goto afterSecondWalls;
-		}
-		u8 bit19_2;
-		if (action2 & 0x1000) {
-			bit19_2 = 1;
-		} else {
-			bit19_2 = 0;
-		}
-		if (bit19_2) {
-			r26 = 1;
-		} else {
-			r26 = 0;
+		if (!r26) {
+			u32 action2 = mAction;
+			if (action2 == 0x89C) {
+				r26 = 1;
+			} else {
+				u8 dirState2 = *(u8*)((u8*)gpMarDirector + 0x124);
+				if (dirState2 == 3 || dirState2 == 4) {
+					r26 = 1;
+				} else {
+					u8 isDemo2;
+					if (dirState2 == 1 || dirState2 == 2) {
+						isDemo2 = 1;
+					} else {
+						isDemo2 = 0;
+					}
+					if (isDemo2) {
+						r26 = 1;
+					} else {
+						u8 bit19_2;
+						if (action2 & 0x1000) {
+							bit19_2 = 1;
+						} else {
+							bit19_2 = 0;
+						}
+						if (bit19_2) {
+							r26 = 1;
+						} else {
+							r26 = 0;
+						}
+					}
+				}
+			}
 		}
 	}
 
-afterSecondWalls:
 	if (!r26) {
 		for (int i = 0; i < wallCheck.mResultWallsNum; i++) {
 			TBGCheckData* wall = wallCheck.mResultWalls[i];
@@ -2873,110 +2858,103 @@ void TMario::thinkParams()
 			hasMotion = 1;
 		else
 			hasMotion = 0;
-		if (!hasMotion) goto capBranch;
-	}
+		if (hasMotion) {
+			u8 nonZero;
+			if (motionBits)
+				nonZero = 1;
+			else
+				nonZero = 0;
 
-	{
-		u8 nonZero;
-		if (motionBits)
-			nonZero = 1;
-		else
-			nonZero = 0;
-
-		u8 belowThreshold;
-		if (!nonZero) {
-			belowThreshold = 0;
-		} else if (*(f32*)((u8*)this + 0x170)
-		           < *(f32*)((u8*)this + 0xF0) - *(f32*)((u8*)this + 0x1244)) {
-			belowThreshold = 1;
-		} else {
-			belowThreshold = 0;
-		}
-		if (belowThreshold) goto resetCounters;
-	}
-
-	{
-		u16 bgType = mWaterFloor->mBGType;
-		u8 isWaterGround;
-		if (bgType == 0x0B || bgType == 0x800B || bgType == 0x103
-		    || bgType == 0x101)
-			isWaterGround = 1;
-		else
-			isWaterGround = 0;
-		if (!isWaterGround) goto resetCounters;
-
-		u8 isWaterGround2;
-		if (bgType == 0x0B || bgType == 0x800B || bgType == 0x103
-		    || bgType == 0x101)
-			isWaterGround2 = 1;
-		else
-			isWaterGround2 = 0;
-		if (!isWaterGround2) goto resetCounters;
-
-		u8 actionBit;
-		if (mAction & 0x10000)
-			actionBit = 1;
-		else
-			actionBit = 0;
-		if (actionBit) goto resetCounters;
-
-		{
-			s16 data = mWaterFloor->mData;
-			TEParams* params;
-			switch (data) {
-			case 0: params = (TEParams*)((u8*)this + 0x3BD4); break;
-			case 1: params = (TEParams*)((u8*)this + 0x3C68); break;
-			case 2: params = (TEParams*)((u8*)this + 0x3CFC); break;
-			case 3: params = (TEParams*)((u8*)this + 0x3D90); break;
-			case 4: params = (TEParams*)((u8*)this + 0x3E24); break;
-			case 5: params = (TEParams*)((u8*)this + 0x3EB8); break;
-			case 6: params = (TEParams*)((u8*)this + 0x3F4C); break;
-			case 7: params = (TEParams*)((u8*)this + 0x3FE0); break;
-			case 8: params = (TEParams*)((u8*)this + 0x4074); break;
-			case 9: params = (TEParams*)((u8*)this + 0x4108); break;
-			default: params = (TEParams*)((u8*)this + 0x3BD4); break;
+			u8 belowThreshold;
+			if (!nonZero) {
+				belowThreshold = 0;
+			} else if (*(f32*)((u8*)this + 0x170)
+			           < *(f32*)((u8*)this + 0xF0) - *(f32*)((u8*)this + 0x1244)) {
+				belowThreshold = 1;
+			} else {
+				belowThreshold = 0;
 			}
-			floorDamageExec(*params);
+			if (!belowThreshold) {
+				u16 bgType = mWaterFloor->mBGType;
+				u8 isWaterGround;
+				if (bgType == 0x0B || bgType == 0x800B || bgType == 0x103
+				    || bgType == 0x101)
+					isWaterGround = 1;
+				else
+					isWaterGround = 0;
+
+				u8 isWaterGround2;
+				if (bgType == 0x0B || bgType == 0x800B || bgType == 0x103
+				    || bgType == 0x101)
+					isWaterGround2 = 1;
+				else
+					isWaterGround2 = 0;
+
+				u8 actionBit;
+				if (mAction & 0x10000)
+					actionBit = 1;
+				else
+					actionBit = 0;
+
+				if (isWaterGround && isWaterGround2 && !actionBit) {
+					s16 data = mWaterFloor->mData;
+					TEParams* params;
+					switch (data) {
+					case 0: params = (TEParams*)((u8*)this + 0x3BD4); break;
+					case 1: params = (TEParams*)((u8*)this + 0x3C68); break;
+					case 2: params = (TEParams*)((u8*)this + 0x3CFC); break;
+					case 3: params = (TEParams*)((u8*)this + 0x3D90); break;
+					case 4: params = (TEParams*)((u8*)this + 0x3E24); break;
+					case 5: params = (TEParams*)((u8*)this + 0x3EB8); break;
+					case 6: params = (TEParams*)((u8*)this + 0x3F4C); break;
+					case 7: params = (TEParams*)((u8*)this + 0x3FE0); break;
+					case 8: params = (TEParams*)((u8*)this + 0x4074); break;
+					case 9: params = (TEParams*)((u8*)this + 0x4108); break;
+					default: params = (TEParams*)((u8*)this + 0x3BD4); break;
+					}
+					floorDamageExec(*params);
+				}
+			}
+
+			// resetCounters
+			*(u16*)((u8*)this + 0x126) = 0;
+			*(s16*)((u8*)this + 0x128) = *(s16*)((u8*)this + 0x898);
+		} else {
+			// capBranch
+			TMarioCap* cap = *(TMarioCap**)((u8*)this + 0x3E0);
+			u8 skipCap = 0;
+			if (cap == 0) {
+				skipCap = 1;
+			} else {
+				u8 hatOn;
+				if (*(u16*)((u8*)cap + 4) & 1)
+					hatOn = 1;
+				else
+					hatOn = 0;
+				if (hatOn) {
+					skipCap = 1;
+				} else {
+					*(u16*)((u8*)this + 0x126) = *(u16*)((u8*)this + 0x126) + 1;
+					if ((u16)*(u16*)((u8*)this + 0x126)
+					    <= (s16)*(s16*)((u8*)this + 0x128)) {
+						skipCap = 1;
+					} else {
+						decHP(1);
+						if (gpMSound->gateCheck(0x480C)) {
+							MSoundSESystem::MSoundSE::startSoundSystemSE(
+							    0x480C, 0, (JAISound**)0, 0);
+						}
+
+						*(s16*)((u8*)this + 0x128) = *(s16*)((u8*)this + 0x898);
+						*(u16*)((u8*)this + 0x126) = 0;
+						rumbleStart(20, *(s16*)((u8*)this + 0x27F8));
+						*(u16*)((u8*)this + 0x14C) = (int)*(f32*)((u8*)this + 0x55C);
+					}
+				}
+			}
+			*(u16*)((u8*)this + 0x122) = 0;
 		}
 	}
-
-resetCounters:
-	*(u16*)((u8*)this + 0x126) = 0;
-	*(s16*)((u8*)this + 0x128) = *(s16*)((u8*)this + 0x898);
-	goto groundActorCheck;
-
-capBranch:
-	{
-		TMarioCap* cap = *(TMarioCap**)((u8*)this + 0x3E0);
-		if (cap == 0) goto endCapSection;
-
-		u8 hatOn;
-		if (*(u16*)((u8*)cap + 4) & 1)
-			hatOn = 1;
-		else
-			hatOn = 0;
-		if (hatOn) goto endCapSection;
-
-		*(u16*)((u8*)this + 0x126) = *(u16*)((u8*)this + 0x126) + 1;
-		if ((u16)*(u16*)((u8*)this + 0x126)
-		    <= (s16)*(s16*)((u8*)this + 0x128))
-			goto endCapSection;
-
-		decHP(1);
-		if (gpMSound->gateCheck(0x480C)) {
-			MSoundSESystem::MSoundSE::startSoundSystemSE(
-			    0x480C, 0, (JAISound**)0, 0);
-		}
-
-		*(s16*)((u8*)this + 0x128) = *(s16*)((u8*)this + 0x898);
-		*(u16*)((u8*)this + 0x126) = 0;
-		rumbleStart(20, *(s16*)((u8*)this + 0x27F8));
-		*(u16*)((u8*)this + 0x14C) = (int)*(f32*)((u8*)this + 0x55C);
-	}
-endCapSection:
-	*(u16*)((u8*)this + 0x122) = 0;
-
-groundActorCheck:
 	{
 		const TBGCheckData* ground = mGroundPlane;
 		if (ground != 0) {
@@ -3093,15 +3071,11 @@ void TMario::thinkWaterSurface()
 		}
 	}
 
-	if (r30 == 0)
-		goto skipWaterLogic;
-
-	// Water surface logic
-	{
+	if (r30 != 0) {
+		// Water surface logic
 		f32 posY2 = mPosition.y;
 		f32 waterLvl = *(f32*)((u8*)this + 0xF0);
-		if (posY2 >= waterLvl)
-			goto skipWaterLogic;
+		if (posY2 < waterLvl) {
 
 		// Check deep water threshold
 		f32 deepThreshold = posY2 + *(f32*)((u8*)this + 0xFBC);
@@ -3166,10 +3140,8 @@ void TMario::thinkWaterSurface()
 			if (holdingObj)
 				shouldEnter = 0;
 
-			if ((u8)shouldEnter != 1)
-				goto skipWaterLogic;
-
-			// Apply water drag
+			if ((u8)shouldEnter == 1) {
+				// Apply water drag
 			mForwardVel = mForwardVel * *(f32*)((u8*)this + 0x117C);
 			mVel.y = mVel.y * *(f32*)((u8*)this + 0x1190);
 
@@ -3202,6 +3174,7 @@ void TMario::thinkWaterSurface()
 					changePlayerStatus(0x22D1, 0, true);
 				}
 			}
+			}
 		} else {
 			// Shallow water - check frame-based effects
 			f32 shallowThreshold = posY2 + *(f32*)((u8*)this + 0x233C);
@@ -3218,9 +3191,10 @@ void TMario::thinkWaterSurface()
 				rippleEffect();
 			}
 		}
+		}
 	}
 
-skipWaterLogic:
+
 	// Check wet ground type
 	{
 		u16 gndBGType = mGroundPlane->mBGType;
@@ -3318,6 +3292,8 @@ skipWaterLogic:
 
 	// Drowning/air recovery logic
 	{
+		u8 shouldDrown = 0;
+
 		u8 isInWater2;
 		if (unk118 & 0x30000)
 			isInWater2 = 1;
@@ -3327,67 +3303,63 @@ skipWaterLogic:
 		if (isInWater2) {
 			f32 airThreshold = *(f32*)((u8*)this + 0xF0) - *(f32*)((u8*)this + 0x1244);
 			if (*(f32*)((u8*)this + 0x170) < airThreshold) {
-				goto doDrown;
+				shouldDrown = 1;
 			}
 		}
-		{
+		if (!shouldDrown) {
 			u8 isDiving;
 			if (unk118 & 0x8000)
 				isDiving = 1;
 			else
 				isDiving = 0;
 			if (isDiving)
-				goto doDrown;
+				shouldDrown = 1;
 		}
-		goto doRecover;
 
-	doDrown: {
-		f32 prevAir = *(f32*)((u8*)this + 0x12C);
-		u8 isHelm;
-		isHelm = isWearingHelm();
-		if (isHelm) {
-			u32 actionVal = mAction;
-			if ((u32)(actionVal - 0x10020000) == 0x370) {
-				goto afterAirDecay;
+		if (shouldDrown) {
+			f32 prevAir = *(f32*)((u8*)this + 0x12C);
+			u8 isHelm;
+			isHelm = isWearingHelm();
+			if (isHelm) {
+				u32 actionVal = mAction;
+				if ((u32)(actionVal - 0x10020000) != 0x370) {
+					*(f32*)((u8*)this + 0x12C) -= *(f32*)((u8*)this + 0x1280);
+				}
+			} else {
+				*(f32*)((u8*)this + 0x12C) -= *(f32*)((u8*)this + 0x126C);
 			}
-			*(f32*)((u8*)this + 0x12C) -= *(f32*)((u8*)this + 0x1280);
+			f32 currentAir = *(f32*)((u8*)this + 0x12C);
+
+			// Compare truncated values to detect crossing
+			s32 prevInt;
+			s32 currInt;
+			{
+				f32 prev = prevAir;
+				f32 curr = currentAir;
+				// fctiwz + store/load pattern
+				volatile s32 prevTrunc = (s32)prev;
+				volatile s32 currTrunc = (s32)curr;
+				prevInt = prevTrunc;
+				currInt = currTrunc;
+			}
+
+			if (prevInt != currInt) {
+				rumbleStart(0x14, *(s16*)((u8*)this + 0x27F8));
+				volatile s32 truncHP = (s32)(*(f32*)((u8*)this + 0x55C));
+				*(s16*)((u8*)this + 0x14C) = (s16)truncHP;
+			}
+
+			if (*(f32*)((u8*)this + 0x12C) < 1.0f) {
+				*(f32*)((u8*)this + 0x12C) = 0.0f;
+				loserExec();
+				changePlayerStatus(0x000224E0, 0, false);
+			}
+			return;
 		} else {
-			*(f32*)((u8*)this + 0x12C) -= *(f32*)((u8*)this + 0x126C);
-		}
-	afterAirDecay:
-		f32 currentAir = *(f32*)((u8*)this + 0x12C);
-
-		// Compare truncated values to detect crossing
-		s32 prevInt;
-		s32 currInt;
-		{
-			f32 prev = prevAir;
-			f32 curr = currentAir;
-			// fctiwz + store/load pattern
-			volatile s32 prevTrunc = (s32)prev;
-			volatile s32 currTrunc = (s32)curr;
-			prevInt = prevTrunc;
-			currInt = currTrunc;
-		}
-
-		if (prevInt != currInt) {
-			rumbleStart(0x14, *(s16*)((u8*)this + 0x27F8));
-			volatile s32 truncHP = (s32)(*(f32*)((u8*)this + 0x55C));
-			*(s16*)((u8*)this + 0x14C) = (s16)truncHP;
-		}
-
-		if (*(f32*)((u8*)this + 0x12C) < 1.0f) {
-			*(f32*)((u8*)this + 0x12C) = 0.0f;
-			loserExec();
-			changePlayerStatus(0x000224E0, 0, false);
-		}
-		return;
-	}
-
-	doRecover:
-		*(f32*)((u8*)this + 0x12C) += *(f32*)((u8*)this + 0x1294);
-		if (*(f32*)((u8*)this + 0x12C) >= *(f32*)((u8*)this + 0x130)) {
-			*(f32*)((u8*)this + 0x12C) = *(f32*)((u8*)this + 0x130);
+			*(f32*)((u8*)this + 0x12C) += *(f32*)((u8*)this + 0x1294);
+			if (*(f32*)((u8*)this + 0x12C) >= *(f32*)((u8*)this + 0x130)) {
+				*(f32*)((u8*)this + 0x12C) = *(f32*)((u8*)this + 0x130);
+			}
 		}
 	}
 }
@@ -3432,48 +3404,47 @@ void TMario::thinkSituation()
 	}
 
 	// Ground damage check
-	if (isMario()) {
-		u8 isOnGround;
-		if (mPosition.y <= mFloorPosition.y + 4.0f)
-			isOnGround = 1;
-		else
-			isOnGround = 0;
+	{
+		u8 didDamage = 0;
+		if (isMario()) {
+			u8 isOnGround;
+			if (mPosition.y <= mFloorPosition.y + 4.0f)
+				isOnGround = 1;
+			else
+				isOnGround = 0;
 
-		if (isOnGround) {
-			if (mAction != 0x133F) {
-				u8 hasDmgFlag;
-				if (mGroundPlane->mFlags & 0x10)
-					hasDmgFlag = 1;
-				else
-					hasDmgFlag = 0;
+			if (isOnGround) {
+				if (mAction != 0x133F) {
+					u8 hasDmgFlag;
+					if (mGroundPlane->mFlags & 0x10)
+						hasDmgFlag = 1;
+					else
+						hasDmgFlag = 0;
 
-				if (!hasDmgFlag) {
 					u8 isDmgType;
 					if (mGroundPlane->mBGType == 0x600)
 						isDmgType = 1;
 					else
 						isDmgType = 0;
-					if (!isDmgType)
-						goto doDecrement;
-				}
 
-				// Shared damage code
-				unk2BA += *(s16*)((u8*)this + 0x988);
-				if (unk2BA > *(s16*)((u8*)this + 0x99C)) {
-					decHP(*(s16*)((u8*)this + 0x58C));
+					if (hasDmgFlag || isDmgType) {
+						unk2BA += *(s16*)((u8*)this + 0x988);
+						if (unk2BA > *(s16*)((u8*)this + 0x99C)) {
+							decHP(*(s16*)((u8*)this + 0x58C));
+						}
+						didDamage = 1;
+					}
 				}
-				goto afterDamage;
 			}
+		}
+
+		if (!didDamage) {
+			unk2BA -= 1;
+			if (unk2BA < 0)
+				unk2BA = 0;
 		}
 	}
 
-doDecrement:
-	// Decrement damage counter
-	unk2BA -= 1;
-	if (unk2BA < 0)
-		unk2BA = 0;
-
-afterDamage:
 	// BGM handling for slippery ground
 	if (isMario()) {
 		u8 curSlippery;
@@ -3985,6 +3956,7 @@ f32 TMario::getSlideStopCatch()
 	if (isSand) {
 		shouldSlip = 1;
 	} else {
+		u8 slipSet = 0;
 		if (unk350 == 2) {
 			u8 hasFlag;
 			if (unk118 & 0x40)
@@ -3994,17 +3966,18 @@ f32 TMario::getSlideStopCatch()
 			if (hasFlag) {
 				if (plane->getNormal().y < *(f32*)((u8*)this + 0x26EC)) {
 					shouldSlip = 1;
-					goto checkResult_gsc;
+					slipSet = 1;
 				}
 			}
 		}
-		if (plane->getNormal().y < mDeParams.mForceSlipAngle.value)
-			shouldSlip = 1;
-		else
-			shouldSlip = 0;
+		if (!slipSet) {
+			if (plane->getNormal().y < mDeParams.mForceSlipAngle.value)
+				shouldSlip = 1;
+			else
+				shouldSlip = 0;
+		}
 	}
 
-checkResult_gsc:
 	if (shouldSlip)
 		return *(f32*)((u8*)this + 0x2BA4);
 
@@ -4055,6 +4028,7 @@ f32 TMario::getSlideStopNormal()
 	if (isSand) {
 		shouldSlip = 1;
 	} else {
+		u8 slipSet = 0;
 		if (unk350 == 2) {
 			u8 hasFlag;
 			if (unk118 & 0x40)
@@ -4064,17 +4038,18 @@ f32 TMario::getSlideStopNormal()
 			if (hasFlag) {
 				if (plane->getNormal().y < *(f32*)((u8*)this + 0x26EC)) {
 					shouldSlip = 1;
-					goto checkResult_gsn;
+					slipSet = 1;
 				}
 			}
 		}
-		if (plane->getNormal().y < mDeParams.mForceSlipAngle.value)
-			shouldSlip = 1;
-		else
-			shouldSlip = 0;
+		if (!slipSet) {
+			if (plane->getNormal().y < mDeParams.mForceSlipAngle.value)
+				shouldSlip = 1;
+			else
+				shouldSlip = 0;
+		}
 	}
 
-checkResult_gsn:
 	if (shouldSlip)
 		return *(f32*)((u8*)this + 0x2B90);
 
@@ -4125,6 +4100,7 @@ BOOL TMario::canSlipJump()
 	if (isSand) {
 		shouldSlip = 1;
 	} else {
+		u8 slipSet = 0;
 		if (unk350 == 2) {
 			u8 hasFlag;
 			if (unk118 & 0x40)
@@ -4134,17 +4110,18 @@ BOOL TMario::canSlipJump()
 			if (hasFlag) {
 				if (plane->getNormal().y < *(f32*)((u8*)this + 0x26EC)) {
 					shouldSlip = 1;
-					goto checkResult;
+					slipSet = 1;
 				}
 			}
 		}
-		if (plane->getNormal().y < mDeParams.mForceSlipAngle.value)
-			shouldSlip = 1;
-		else
-			shouldSlip = 0;
+		if (!slipSet) {
+			if (plane->getNormal().y < mDeParams.mForceSlipAngle.value)
+				shouldSlip = 1;
+			else
+				shouldSlip = 0;
+		}
 	}
 
-checkResult:
 	if (shouldSlip)
 		return *((u8*)this + 0x2BB8);
 
@@ -4206,6 +4183,7 @@ BOOL TMario::isSlipStart()
 	if (isSand) {
 		shouldSlip = 1;
 	} else {
+		u8 slipSet = 0;
 		if (unk350 == 2) {
 			u8 hasFlag;
 			if (unk118 & 0x40)
@@ -4215,17 +4193,18 @@ BOOL TMario::isSlipStart()
 			if (hasFlag) {
 				if (plane->getNormal().y < *(f32*)((u8*)this + 0x26EC)) {
 					shouldSlip = 1;
-					goto checkResult;
+					slipSet = 1;
 				}
 			}
 		}
-		if (plane->getNormal().y < mDeParams.mForceSlipAngle.value)
-			shouldSlip = 1;
-		else
-			shouldSlip = 0;
+		if (!slipSet) {
+			if (plane->getNormal().y < mDeParams.mForceSlipAngle.value)
+				shouldSlip = 1;
+			else
+				shouldSlip = 0;
+		}
 	}
 
-checkResult:
 	if (shouldSlip)
 		return true;
 
@@ -4388,50 +4367,51 @@ void TMario::checkSink()
 	}
 
 	s32 sinkState = *(s32*)((u8*)this + 0x350);
-	if (sinkState != 0) goto checkState5;
-	{
+	u8 sinkHandled = 0;
+
+	if (sinkState == 0) {
 		u8 bit6;
 		if (unk118 & 0x40)
 			bit6 = 1;
 		else
 			bit6 = 0;
-		if (!bit6) goto checkState5;
+		if (bit6) {
+			*(f32*)((u8*)this + 0x368) += 1.0f;
+			*(s16*)((u8*)this + 0x360) = *(s16*)((u8*)this + 0x690);
 
-		*(f32*)((u8*)this + 0x368) += 1.0f;
-		*(s16*)((u8*)this + 0x360) = *(s16*)((u8*)this + 0x690);
+			if (*(s16*)((u8*)this + 0x120) > 0) {
+				f32 limit = (f32)*(s16*)((u8*)this + 0x2428)
+				            * *(f32*)((u8*)this + 0x24DC);
+				if (*(f32*)((u8*)this + 0x368) > limit)
+					*(f32*)((u8*)this + 0x368) = limit;
+			}
 
-		if (*(s16*)((u8*)this + 0x120) > 0) {
-			f32 limit = (f32)*(s16*)((u8*)this + 0x2428)
-			            * *(f32*)((u8*)this + 0x24DC);
-			if (*(f32*)((u8*)this + 0x368) > limit)
-				*(f32*)((u8*)this + 0x368) = limit;
+			s16 interval = *(s16*)((u8*)this + 0x243C);
+			if (gpMarDirector->unk58 % interval == 0) {
+				floorDamageExec(1, 3, 0,
+				                *(s16*)((u8*)this + 0x27BC));
+			}
+
+			if (gpMSound->gateCheck(0x100B)) {
+				MSoundSESystem::MSoundSE::startSoundActor(
+				    0x100B, (Vec*)&mPosition, 0, (JAISound**)0, 0, 4);
+			}
+
+			if (*(f32*)((u8*)this + 0x368) > (f32)*(s16*)((u8*)this + 0x2428)) {
+				loserExec();
+				changePlayerStatus(0x10001123, 0, false);
+			}
+
+			SMS_EmitSinkInPollutionEffect(
+			    mPosition,
+			    *(JGeometry::TVec3<f32>*)((u8*)mGroundPlane + 0x34),
+			    true);
+			startVoice(0x7865);
+			sinkHandled = 1;
 		}
-
-		s16 interval = *(s16*)((u8*)this + 0x243C);
-		if (gpMarDirector->unk58 % interval == 0) {
-			floorDamageExec(1, 3, 0,
-			                *(s16*)((u8*)this + 0x27BC));
-		}
-
-		if (gpMSound->gateCheck(0x100B)) {
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    0x100B, (Vec*)&mPosition, 0, (JAISound**)0, 0, 4);
-		}
-
-		if (*(f32*)((u8*)this + 0x368) > (f32)*(s16*)((u8*)this + 0x2428)) {
-			loserExec();
-			changePlayerStatus(0x10001123, 0, false);
-		}
-
-		SMS_EmitSinkInPollutionEffect(
-		    mPosition,
-		    *(JGeometry::TVec3<f32>*)((u8*)mGroundPlane + 0x34),
-		    true);
-		startVoice(0x7865);
-		goto end;
 	}
-checkState5:
-	if (sinkState == 5) {
+
+	if (!sinkHandled && sinkState == 5) {
 		u8 bit6;
 		if (unk118 & 0x40)
 			bit6 = 1;
@@ -4448,13 +4428,15 @@ checkState5:
 			*(f32*)((u8*)this + 0xB8) = 0.0f;
 			loserExec();
 			changePlayerStatus(0x10001123, 0, false);
-			goto end;
+			sinkHandled = 1;
 		}
 	}
-	*(f32*)((u8*)this + 0x374) = 0.0f;
-	*(f32*)((u8*)this + 0x378) = 0.0f;
-	*(f32*)((u8*)this + 0x368) = 0.0f;
-end:;
+
+	if (!sinkHandled) {
+		*(f32*)((u8*)this + 0x374) = 0.0f;
+		*(f32*)((u8*)this + 0x378) = 0.0f;
+		*(f32*)((u8*)this + 0x368) = 0.0f;
+	}
 }
 
 void TMario::getRidingMtx(MtxPtr outMtx)
