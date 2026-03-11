@@ -98,6 +98,12 @@ public:
 		mDamageHeight = v;
 		calcEntryRadius();
 	}
+	void setDamageParams(f32 damage_radius, f32 damage_height)
+	{
+		mDamageRadius = damage_radius;
+		mDamageHeight = damage_height;
+		calcEntryRadius();
+	}
 	void setHitParams(f32 attack_radius, f32 attack_height, f32 damage_radius,
 	                  f32 damage_height)
 	{
