@@ -1,6 +1,7 @@
 #include <MoveBG/MapObjGeneral.hpp>
 #include <System/FlagManager.hpp>
 #include <System/MarDirector.hpp>
+#include <Strategic/Binder.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Map/MapCollisionManager.hpp>
 #include <Map/MapCollisionEntry.hpp>
@@ -80,7 +81,7 @@ void TMapObjGeneral::waitToAppear(s32 waitTime)
 void TMapObjGeneral::sink()
 {
 	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NOT_MOVING);
 	mState = 7;
 	unk144 = mPosition.y;
 	setUpMapCollision(1);
@@ -97,7 +98,7 @@ void TMapObjGeneral::put()
 	mPosition.x = JMASSin(*gpMarioAngleY) * (getDamageRadius() + SMS_GetMarioDamageRadius() + 10.0f) + SMS_GetMarioPos().x;
 	mPosition.y = SMS_GetMarioPos().y;
 	mPosition.z = JMASCos(*gpMarioAngleY) * (getDamageRadius() + SMS_GetMarioDamageRadius() + 10.0f) + SMS_GetMarioPos().z;
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NOT_MOVING);
 	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
 }
 
@@ -128,7 +129,7 @@ void TMapObjGeneral::thrown()
 	mVelocity.y = initialVelY;
 	mVelocity.z = initialVelZ;
 	
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NOT_MOVING);
 	JGeometry::TVec3<f32> vel = mVelocity;
 	mPosition.x += vel.x;
 	mPosition.y += vel.y;
@@ -236,7 +237,7 @@ void TMapObjGeneral::appearing()
 	}
 
 uuuh:
-	if (!checkLiveFlag(LIVE_FLAG_UNK10))
+	if (!checkLiveFlag(LIVE_FLAG_NOT_MOVING))
 		return;
 
 	makeObjAppeared();
@@ -324,7 +325,7 @@ void TMapObjGeneral::ensureTakeSituation()
 	TMapObjBase::ensureTakeSituation();
 	if (isState(6) && mHolder == nullptr) {
 		mState = 1;
-		offLiveFlag(LIVE_FLAG_UNK10);
+		offLiveFlag(LIVE_FLAG_NOT_MOVING);
 	}
 }
 
@@ -332,7 +333,7 @@ void TMapObjGeneral::kill()
 {
 	unk64 |= 1;
 	removeMapCollision();
-	onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NOT_MOVING | LIVE_FLAG_UNK8);
 	mTimeTilAppear = 0xffffffff;
 	startAnim(2);
 	mState = 3;
@@ -461,7 +462,7 @@ void TMapObjGeneral::touchGround(JGeometry::TVec3<f32>* param_1)
 	} else {
 		offLiveFlag(LIVE_FLAG_AIRBORNE);
 		mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
-		onLiveFlag(LIVE_FLAG_UNK10);
+		onLiveFlag(LIVE_FLAG_NOT_MOVING);
 		param_1->y = mGroundHeight;
 	}
 }
@@ -507,7 +508,52 @@ void TMapObjGeneral::calcVelocity()
 	}
 }
 
-void TMapObjGeneral::bind() { }
+void TMapObjGeneral::bind() 
+{
+	if (checkLiveFlag(LIVE_FLAG_NOT_MOVING) == 0) {
+		if (mBinder != nullptr) {
+			mBinder->bind(this);
+		} else {
+			calcVelocity();
+			JGeometry::TVec3<f32> vec = getPosition();
+			vec.x += mLinearVelocity.x;
+			vec.y += mLinearVelocity.y;
+			vec.z += mLinearVelocity.z;
+			vec.x += mVelocity.x;
+ 			vec.y += mVelocity.y;
+			vec.z += mVelocity.z;
+			checkGroundCollision(&vec);
+			if (checkMapObjFlag(0x10000) != 0) {
+				checkWallCollision(&vec);
+			}
+			if (checkMapObjFlag(0x20000) != 0) {
+				JGeometry::TVec3<f32> vel = mVelocity;
+				if (vel.y > 0.0f) {
+					checkRoofCollision(&vec);
+				}
+			}
+			if (mGroundPlane->checkFlag(0x10)) {
+				kill();
+			} else {
+				if (!checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
+					JGeometry::TVec3<f32> vel = mVelocity;
+					JGeometry::TVec3<f32> velCopy = vel;
+					if (velCopy.x == 0.0f) {
+						JGeometry::TVec3<f32> velCopy2 = vel;
+						if (velCopy2.y == 0.0f) {
+							JGeometry::TVec3<f32> velCopy3 = vel;
+							if (velCopy3.z == 0.0f) {
+								onLiveFlag(LIVE_FLAG_NOT_MOVING);
+							}
+						}
+					}
+				}
+				
+				mLinearVelocity = vec - mLinearVelocity;
+			}
+		}
+	}
+}
 
 void TMapObjGeneral::control()
 {
