@@ -325,7 +325,7 @@ void TAmenbo::doAdjustTarget()
 	vel *= 0.9f;
 	mVelocity = vel;
 
-	unk1E0 = mMActor->getFrameCtrl(0)->getFrame() * 0.015873017f;
+	unk1E0 = mMActor->getFrameCtrl(0)->getFrame() / 63;
 
 	if (1.0f <= unk1E0)
 		unk1E0 = 1.0f;
