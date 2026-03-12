@@ -471,7 +471,8 @@ void TGCConsole2::startAppearTelop(bool param_1)
 	if (param_1) {
 		// TODO: needs regswapping
 		const u8* messageText
-		    = &unk530->getMessageData()[unk530->unk8[unk570[unk558] & 0xffff].unk0];
+		    = &unk530->getMessageData()[unk530->unk8[unk570[unk558] & 0xffff]
+.unk0];
 
 		snprintf(unk528->getStringPtr(), 0x3ff, "%s", messageText);
 		snprintf(unk52C->getStringPtr(), 0x3ff, "%s", messageText);
@@ -492,7 +493,7 @@ void TGCConsole2::startDisappearTelop()
 	}
 
 	unk34[15] = 1;
-	unk5A = 1;
+	unk5A     = 1;
 
 	unk520->updatePaneOffset(80, 0, unk520->get465MinusInitialY1());
 }
