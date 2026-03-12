@@ -9,6 +9,7 @@
 #include <Strategic/Strategy.hpp>
 #include <System/Application.hpp>
 #include <System/FlagManager.hpp>
+#include <System/MarDirector.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
@@ -472,7 +473,7 @@ void TGCConsole2::startAppearTelop(bool param_1)
 		// TODO: needs regswapping
 		const u8* messageText
 		    = &unk530->getMessageData()[unk530->unk8[unk570[unk558] & 0xffff]
-.unk0];
+		                                    .unk0];
 
 		snprintf(unk528->getStringPtr(), 0x3ff, "%s", messageText);
 		snprintf(unk52C->getStringPtr(), 0x3ff, "%s", messageText);
@@ -498,11 +499,69 @@ void TGCConsole2::startDisappearTelop()
 	unk520->updatePaneOffset(80, 0, unk520->get465MinusInitialY1());
 }
 
-void TGCConsole2::startDisappearTimer() { }
+void TGCConsole2::startDisappearTimer()
+{
+	unk44C->updatePaneOffset(40, 0, unk44C->get465MinusInitialY1() + 60);
+	unk34[11] = 1;
+	unk5A     = 1;
+}
 
-void TGCConsole2::startAppearTimer(int, s32) { }
+void TGCConsole2::startAppearTimer(int param_1, s32 param_2)
+{
+	startDisappearTelop();
 
-void TGCConsole2::startInsertTimer() { }
+	if (param_1 == 0) {
+		unk510 = true;
+		unk514 = 0;
+	} else {
+		unk510 = false;
+		unk514 = param_2 * 100;
+	}
+
+	if (unk510 || param_2 >= 0x3C) {
+		unk500[0]->show();
+		unk500[1]->hide();
+	} else {
+		unk500[0]->hide();
+		unk500[1]->show();
+	}
+
+	if (param_2 > 0) {
+		setTimer(unk514);
+	}
+
+	for (int i = 6; i <= 9; i++) {
+		((J2DPicture*)unk458[i]->getPane())->mWhite = unk50C;
+	}
+	((J2DPicture*)unk480[2]->getPane())->mWhite = unk50C;
+
+	startInsertTimer();
+}
+
+void TGCConsole2::startInsertTimer()
+{
+	unk34[10] = 1;
+
+	for (int i = 0; i < 10; i++) {
+		unk458[i]->getPane()->hide();
+	}
+
+	for (int i = 0; i < 3; i++) {
+		unk480[i]->getPane()->hide();
+	}
+
+	unk59 = 1;
+
+	unk44C->getPane()->show();
+	unk44C->setPaneOffset(40, 0, 0, 0, unk44C->get465MinusInitialY1());
+
+	unk450->getPane()->show();
+	unk450->setPanePosition(50, cUpTopPoint, cUpMidPoint, cUpMidPoint);
+
+	unk454->getPane()->hide();
+	unk518 = 0;
+	unk70[6] = 0;
+}
 
 void TGCConsole2::startAppearJetBalloon(int, int) { }
 
@@ -541,7 +600,77 @@ void TGCConsole2::processMoveNozzle() { }
 
 void TGCConsole2::changeNum(TBlendPane*, int, int) { }
 
-void TGCConsole2::setTimer(long) { }
+void TGCConsole2::setTimer(s32 param_1)
+{
+	// TODO: Needs regswaps but should otherwise be equivalent
+
+	u32 timerValue;
+
+	if (param_1 == -1) {
+		s64 uVar3 = gpMarDirector->unkC8;
+		s64 uVar5 = OSCheckStopwatch(&gpMarDirector->unkE8);
+		s64 uVar9 = OSTicksToMilliseconds(uVar3);
+		s64 uVar8 = OSTicksToMilliseconds(uVar5);
+
+		timerValue = (uVar8 - uVar9) * 0.1f;
+
+		if (!unk510) {
+			if (unk514 < timerValue) {
+				timerValue = 0;
+			} else {
+				timerValue = unk514 - timerValue;
+			}
+		}
+	}
+
+	// Cap at 5999.99 seconds (99:59.99)
+	if (timerValue > 599999) {
+		timerValue = 599999;
+	}
+
+	u16 minutes          = (timerValue - timerValue % 100) / 6000;
+	u32 timeMinusMinutes = timerValue - minutes * 6000;
+	u16 seconds          = timeMinusMinutes * 0.01;
+	u16 centis           = timeMinusMinutes - 100 * seconds;
+
+	if (unk500[0]->isVisible()) {
+		((J2DPicture*)unk458[0]->getPane())
+		    ->changeTexture(unkE0[minutes / 10]->getTexInfo(), 0);
+		((J2DPicture*)unk458[1]->getPane())
+		    ->changeTexture(unkE0[minutes % 10]->getTexInfo(), 0);
+		((J2DPicture*)unk458[2]->getPane())
+		    ->changeTexture(unkE0[seconds / 10]->getTexInfo(), 0);
+		((J2DPicture*)unk458[3]->getPane())
+		    ->changeTexture(unkE0[seconds % 10]->getTexInfo(), 0);
+		((J2DPicture*)unk458[4]->getPane())
+		    ->changeTexture(unkE0[centis / 10]->getTexInfo(), 0);
+		((J2DPicture*)unk458[5]->getPane())
+		    ->changeTexture(unkE0[centis % 10]->getTexInfo(), 0);
+	} else {
+		if (timerValue < 1000
+		    && ((J2DPicture*)unk458[9]->getPane())->mWhite != unk508) {
+			for (int i = 6; i <= 9; i++) {
+				((J2DPicture*)unk458[i]->getPane())->mWhite = unk508;
+			}
+			((J2DPicture*)unk480[2]->getPane())->mWhite = unk508;
+		}
+		((J2DPicture*)unk458[6]->getPane())
+		    ->changeTexture(unkE0[seconds / 10]->getTexInfo(), 0);
+		((J2DPicture*)unk458[7]->getPane())
+		    ->changeTexture(unkE0[seconds % 10]->getTexInfo(), 0);
+		((J2DPicture*)unk458[8]->getPane())
+		    ->changeTexture(unkE0[centis / 10]->getTexInfo(), 0);
+		((J2DPicture*)unk458[9]->getPane())
+		    ->changeTexture(unkE0[centis % 10]->getTexInfo(), 0);
+	}
+
+	if (timerValue != 0 && timerValue < unk518
+	    && gpMarDirector->mState != TMarDirector::STATE_UNK5) {
+		gpMSound->playTimer(timerValue * 10);
+	}
+
+	unk4FC = param_1;
+}
 
 void TGCConsole2::startMoveTimer(int param_1)
 {

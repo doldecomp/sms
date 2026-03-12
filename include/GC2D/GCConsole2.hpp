@@ -245,7 +245,8 @@ public:
 	/* 0x500 */ J2DPane* unk500[2];
 	/* 0x508 */ int unk508;
 	/* 0x50C */ int unk50C;
-	/* 0x510 */ char unk510[0x8];
+	/* 0x510 */ bool unk510;
+	/* 0x514 */ s32 unk514;
 	/* 0x518 */ int unk518;
 	/* 0x51C */ u8 unk51C;
 	/* 0x520 */ TExPane* unk520;
