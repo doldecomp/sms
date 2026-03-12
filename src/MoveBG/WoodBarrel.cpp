@@ -57,7 +57,7 @@ void TWoodBarrel::kill()
 	unk148->mPos.value = vec;
 	gpModelWaterManager->emitRequest(*unk148);
 	if (mHolder) {
-		mHolder->receiveMessage(this, 0x8);
+		mHolder->receiveMessage(this, HIT_MESSAGE_UNK8);
 		mHolder = nullptr;
 	}
 }
@@ -110,17 +110,17 @@ void TWoodBarrel::touchActor(THitActor* param_1)
 {
 	if (param_1->checkActorType(0x4000000)
 	    || param_1->checkActorType(0x40000000)) {
-		param_1->receiveMessage(this, 0xE);
+		param_1->receiveMessage(this, HIT_MESSAGE_ATTACK);
 		kill();
 	} else {
-		param_1->receiveMessage(this, 0xE);
+		param_1->receiveMessage(this, HIT_MESSAGE_ATTACK);
 		TMapObjGeneral::touchActor(param_1);
 	}
 }
 
 BOOL TWoodBarrel::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == 0xD) {
+	if (message == HIT_MESSAGE_UNKD) {
 		kill();
 		return true;
 	}

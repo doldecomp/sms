@@ -31,7 +31,9 @@ public:
 	{
 	}
 
-	inline void set(T param) { this->value = param; };
+	// NOTE: this MUST take a reference, as constants passed
+	// to it must be stored in sdata!
+	inline void set(const T& param) { this->value = param; };
 
 	// Fabricated
 	TParamRT<T>& operator=(const TParamRT<T>& other)

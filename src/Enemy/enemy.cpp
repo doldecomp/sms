@@ -7,6 +7,7 @@
 #include <Player/MarioAccess.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/MtxUtil.hpp>
 #include <Strategic/Spine.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
@@ -248,12 +249,12 @@ void TSpineEnemy::updateSquareToMario()
 
 BOOL TSpineEnemy::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == 4 && mHolder == nullptr) {
+	if (message == HIT_MESSAGE_TAKE && mHolder == nullptr) {
 		mHolder = (TTakeActor*)sender;
 		return true;
 	}
 
-	if (message <= 2) {
+	if (message <= HIT_MESSAGE_UNK2) {
 		kill();
 		return true;
 	}

@@ -237,11 +237,11 @@ void THino2Hit::perform(u32 param_1, JDrama::TGraphics* param_2)
 			continue;
 
 		if (col->isActorType(0x80000001)) {
-			col->receiveMessage(this, 0xE);
+			col->receiveMessage(this, HIT_MESSAGE_ATTACK);
 		} else if ((col->isActorType(0x10000003)
 		            || col->isActorType(0x10000002))
 		           && mOwner->getMActor()->checkCurBckFromIndex(0xE)) {
-			col->receiveMessage(this, 0x1);
+			col->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 		}
 	}
 }
@@ -253,7 +253,8 @@ BOOL THino2Hit::receiveMessage(THitActor* sender, u32 message)
 			mOwner->mJointIdxMessageCameFrom = mJointIdx;
 			return mOwner->receiveMessage(sender, message);
 		}
-		if (sender->getActorType() == 0x1000001 && message == 0xF) {
+		if (sender->getActorType() == 0x1000001
+		    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 			mOwner->mJointIdxMessageCameFrom = mJointIdx;
 			return mOwner->receiveMessage(sender, message);
 		}
@@ -264,7 +265,8 @@ BOOL THino2Hit::receiveMessage(THitActor* sender, u32 message)
 	}
 
 	if (mJointIdx == 0x13) {
-		if (sender->getActorType() == 0x1000001 && message == 0xF) {
+		if (sender->getActorType() == 0x1000001
+		    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 			mOwner->mJointIdxMessageCameFrom = mJointIdx;
 			return mOwner->receiveMessage(sender, message);
 		}
@@ -753,10 +755,11 @@ void THinokuri2::changeBck(int param_1)
 BOOL THinokuri2::receiveMessageLv0(THitActor* param_1, u32 param_2)
 {
 	if (mJointIdxMessageCameFrom == 0x13 && param_1->getActorType() == 0x1000001
-	    && param_2 == 0xf)
+	    && param_2 == HIT_MESSAGE_SPRAYED_BY_WATER)
 		return true;
 
-	if (param_1->getActorType() == 0x1000001 && param_2 == 0xf) {
+	if (param_1->getActorType() == 0x1000001
+	    && param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (mJointIdxMessageCameFrom != 0x19)
 			return true;
 
@@ -764,7 +767,8 @@ BOOL THinokuri2::receiveMessageLv0(THitActor* param_1, u32 param_2)
 			mSpine->pushNerve(&TNerveHino2Freeze::theNerve());
 	}
 
-	if (param_1->getActorType() == 0x80000001 && param_2 == 0) {
+	if (param_1->getActorType() == 0x80000001
+	    && param_2 == HIT_MESSAGE_TRAMPLE) {
 		if (mJointIdxMessageCameFrom != 0x19)
 			return true;
 
@@ -781,10 +785,11 @@ BOOL THinokuri2::receiveMessageLv0(THitActor* param_1, u32 param_2)
 BOOL THinokuri2::receiveMessageLv1(THitActor* param_1, u32 param_2)
 {
 	if (mJointIdxMessageCameFrom == 0x13 && param_1->getActorType() == 0x1000001
-	    && param_2 == 0xf)
+	    && param_2 == HIT_MESSAGE_SPRAYED_BY_WATER)
 		return true;
 
-	if (unk180 && param_1->getActorType() == 0x1000001 && param_2 == 0xf) {
+	if (unk180 && param_1->getActorType() == 0x1000001
+	    && param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (mJointIdxMessageCameFrom != 0x19)
 			return true;
 
@@ -825,7 +830,8 @@ BOOL THinokuri2::receiveMessageLv1(THitActor* param_1, u32 param_2)
 
 BOOL THinokuri2::receiveMessageLv2(THitActor* param_1, u32 param_2)
 {
-	if (param_1->getActorType() == 0x1000001 && param_2 == 0xF) {
+	if (param_1->getActorType() == 0x1000001
+	    && param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (mJointIdxMessageCameFrom != 0x13)
 			return true;
 

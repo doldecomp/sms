@@ -101,3 +101,17 @@ The compiler hoists constant loads (`lfs`, `lfd` from SDA/SDA2) before loops. Th
 - The order of operations within the loop
 
 If the target hoists a constant (e.g., `lfd f28, @5181@sda21`) before a loop but our build does not, it means the compiler sees a different code structure. This is usually a symptom of a deeper structural mismatch in the loop body or inlined functions, not fixable by just moving the load.
+
+## Local Symbol Mangling: `@unnamed@` vs `static`
+
+MWCC mangles symbols inside anonymous namespaces with an `@unnamed@` prefix.
+
+- If a local symbol's mangled name includes `@unnamed@`, model it as being in an anonymous namespace.
+- If the symbol is local but does not include `@unnamed@`, prefer a plain `static` function/variable instead.
+
+## Symbol Order with `-inline deferred`
+
+When a TU is compiled with `-inline deferred` (see TU-specific flags in `configure.py`), define symbols in reverse order relative to the map/symbol listing for that TU.
+
+- In practice, function-definition order in the `.cpp` should be reversed for those TUs.
+- If order-sensitive matching drifts for an `-inline deferred` TU, verify definition order before attempting smaller codegen tweaks.
