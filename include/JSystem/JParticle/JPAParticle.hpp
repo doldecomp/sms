@@ -96,6 +96,7 @@ public:
 	bool checkFlag(u32 flag) const { return (unk10 & flag) ? true : false; }
 	s32 getAge() const { return unk44; } // TODO: name might be wrong
 	bool isInvisibleParticle() { return checkFlag(8); }
+	f32 getUnk48() const { return unk48; }
 };
 
 class JPAParticle : public JPABaseParticle {
@@ -122,7 +123,10 @@ public:
 
 	virtual JGeometry::TVec3<f32>& accessFVelVec() { return mVelocity; }
 	virtual JGeometry::TVec3<f32>& accessFAccVec() { return mAcceleration; }
-	virtual void getBaseVelVec(JGeometry::TVec3<float>&) const;
+	virtual void getBaseVelVec(JGeometry::TVec3<float>& out) const
+	{
+		out.set(mBaseVelocity);
+	}
 	virtual JGeometry::TVec3<f32>& accessBaseVelVec() { return mBaseVelocity; }
 	virtual void setBaseVelVec(const JGeometry::TVec3<float>& v)
 	{

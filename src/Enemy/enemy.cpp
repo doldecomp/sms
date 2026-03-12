@@ -7,6 +7,7 @@
 #include <Player/MarioAccess.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/MtxUtil.hpp>
 #include <Strategic/Spine.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>

@@ -186,16 +186,24 @@ public:
 		return x * other.x + y * other.y + z * other.z;
 	}
 
+	// Incorrect!!!
 	void cross(const TVec3& a, const TVec3& b)
 	{
 		f32 _x = a.y * b.z - a.z * b.y;
 		f32 _y = a.z * b.x - a.x * b.z;
 		f32 _z = a.x * b.y - a.y * b.x;
 
-		// Using set here leads to regswaps.
 		x = _x;
 		y = _y;
 		z = _z;
+
+		// Second version, both are wrong in some places.
+		// Were they literally two different functions or something?
+		// TWW also has problems matching this.
+
+		// set(a.y * b.z - a.z * b.y, //
+		//     a.z * b.x - a.x * b.z, //
+		//     a.x * b.y - a.y * b.x);
 	}
 
 	void negate()
