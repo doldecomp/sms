@@ -76,12 +76,13 @@ f32 JPABaseField::calcFieldFadeScale(float param_1)
 
 void JPABaseField::calcFieldVelocity(JPAParticle* particle)
 {
-	JGeometry::TVec3<f32> local_14 = unk7C;
-	if (particle->checkFlag(4)) {
-		// TODO: getter fpr unk38
-		f32 scale = calcFieldFadeScale(particle->unk48);
+	JGeometry::TVec3<f32> local_14;
+	local_14.set(unk7C.x, unk7C.y, unk7C.z); // why?
+
+	if (!particle->checkFlag(4)) {
+		f32 scale = calcFieldFadeScale(particle->getUnk48());
 		if (scale <= 0.0f) {
-			local_14.set(0.0f, 0.0f, 0.0f);
+			local_14.zero();
 		} else if (scale < 1.0f)
 			local_14.scale(scale);
 	}
@@ -151,7 +152,7 @@ JPAAirField::JPAAirField() { unk50 = 1; }
 void JPAAirField::set()
 {
 	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
-	unk70                = unk24;
+	unk70.set(unk24);
 	if (!checkFlag(0x2)) {
 		MTXMultVec(info->unk6C, &unk70, &unk70);
 	}
@@ -161,7 +162,7 @@ void JPAAirField::set()
 		if (!checkFlag(0x2)) {
 			MTXMultVec(info->unk6C.mMtx, &unk18, &unk58);
 		} else {
-			unk58 = unk18;
+			unk58.set(unk18);
 		}
 	}
 }
@@ -175,7 +176,7 @@ void JPAAirField::affect(JPAParticle* particle)
 			diff.sub(particle->mGlobalPosition, unk58);
 
 		diff.normalize();
-		if (unk64.x <= unk70.dot(diff))
+		if (unk70.dot(diff) >= unk64.x)
 			calcFieldVelocity(particle);
 	} else {
 		calcFieldVelocity(particle);
@@ -200,7 +201,7 @@ void JPAMagnetField::set()
 	if (!checkFlag(0x2)) {
 		MTXMultVec(info->unk6C.mMtx, &unk18, &unk58);
 	} else {
-		unk58 = unk18;
+		unk58.set(unk18);
 	}
 }
 void JPAMagnetField::affect(JPAParticle* particle)
@@ -222,7 +223,7 @@ void JPANewtonField::set()
 	if (!checkFlag(0x2)) {
 		MTXMultVec(info->unk6C.mMtx, &unk18, &unk58);
 	} else {
-		unk58 = unk18;
+		unk58.set(unk18);
 	}
 	unk34 = unk30 * unk30;
 }
@@ -301,10 +302,8 @@ void JPAConvectionField::set()
 {
 	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
 	JGeometry::TVec3<f32> prod;
-	JGeometry::TVec3<f32> localUnk18 = unk18;
-	JGeometry::TVec3<f32> localUnk24 = unk24;
-	prod.cross(localUnk24, localUnk18);
-	unk18.cross(localUnk24, prod);
+	prod.cross(unk18, unk24);
+	unk18.cross(prod, unk24);
 	unk18.normalize();
 
 	MTXMultVec(info->unkCC, &unk18, &unk58);

@@ -38,7 +38,7 @@ public:
 	void conjugate() { this->xyz().negate(); }
 
 	// TODO: the two mul are definitely not correct ATM
-	template <typename A> void mul(const TVec4<A>& other)
+	void mul(const TQuat4& other)
 	{
 		// clang-format off
 		T _x = this->w * other.x + this->x * other.w + this->y * other.z - this->z * other.y;
@@ -50,7 +50,7 @@ public:
 		set(_x, _y, _z, _w);
 	}
 
-	template <typename A> void mul(const TQuat4<A>& a, const TQuat4<A>& b)
+	void mul(const TQuat4& a, const TQuat4& b)
 	{
 		// clang-format off
 		T _x = a.x * b.w + a.w * b.x + a.y * b.z - a.z * b.y;
@@ -134,13 +134,9 @@ public:
 		this->w = cos(halfAngle);
 	}
 
-	void setRotate(const TVec3<T>&, const TVec3<T>&);
-
-	// Might be fake
-	void setRotate(f32 x, f32 y, f32 z, f32 pAngle)
+	void setRotate(const TVec3<T>& a, const TVec3<T>& b)
 	{
-		TVec3<T> pVec(x, y, z);
-		setRotate(pVec, pAngle);
+		setRotate(a, b, 1.0f);
 	}
 
 	// Assumes unit quaternion. These were renamed to "transform" in SMG.

@@ -234,7 +234,8 @@ void TBGBeakHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 			JGeometry::TVec3<f32> offset = us2mario;
 			JGeometry::TVec3<f32> perp;
 			// TODO: cross is incorrect?
-			perp.cross(offset, JGeometry::TVec3<f32>(0.0f, 1.0f, 1.0f));
+			JGeometry::TVec3<f32> up(0.0f, 1.0f, 1.0f);
+			perp.cross(offset, up);
 			if (!perp.isZero())
 				VECNormalize(&perp, &perp);
 			else

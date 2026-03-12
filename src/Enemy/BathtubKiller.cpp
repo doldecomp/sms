@@ -169,7 +169,7 @@ void TBathtubKiller::makeQuat(JGeometry::TVec3<f32> axis, f32 moveAmountY,
 		mQuat.mul(steer);
 	}
 
-	static_cast<JGeometry::TVec4<f32>&>(mQuat).normalize();
+	mQuat.normalize();
 }
 
 void TBathtubKiller::makeScrewQuat(JGeometry::TVec3<f32>, f32, f32) { }
