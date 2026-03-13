@@ -409,6 +409,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "Viking") == 0)
 		return new TViking("バイキング");
     
+	// TODO:
 	// if ( strcmp(name, "SirenaGate") == 0 )
 	// 	return new TSirenaGate("シレナゲート");
 
@@ -469,57 +470,73 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if ( strcmp(name, "MareEventPoint") == 0 )
 		return new TMareEventPoint("イベントポイント");
 
+	// TODO:
 	// if ( strcmp(name, "CasinoRoulette") == 0 )
 	// 	return new TCasinoRoulette("カジノルーレット");
 
+	// TODO:
 	// if ( strcmp(name, "Roulette") == 0 )
 	// 	return new TRoulette("ルーレット");
 
+	// TODO:
 	// if ( strcmp(name, "SlotDrum") == 0 )
 	// 	return new TSlotDrum("スロットマシーン");
 
+	// TODO:
 	// if ( strcmp(name, "ItemSlotDrum") == 0 )
 	// 	return new TItemSlotDrum("スロットマシーン");
 
+	// TODO:
 	// if ( strcmp(name, "TelesaSlot") == 0 )
 	// 	return new TTelesaSlot("btelesaSlot");
 
+	// TODO:
 	// if ( strcmp(name, "CasinoPanelGate") == 0 )
 	// 	return new TCasinoPanelGate("カジノパネルゲート");
 
+	// TODO:
 	// if ( strcmp(name, "WarpArea") == 0 )
 	// 	return new TWarpAreaActor("ワープエリア");
 
 	if ( strcmp(name, "GlassBreak") == 0 )
 		return new TMapObjGeneral("汎用地形オブジェ");
 
+	// TODO:
 	// if (strcmp(name, "Closet") == 0)
 	// 	return new TCloset("クローゼット");
 
+	// TODO:
 	// if (strcmp(name, "Donchou") == 0)
 	// 	return new TDonchou("パネルカーテン");
 
+	// TODO:
 	// if ( strcmp(name, "SakuCasino") == 0 )
 	// 	return new TSakuCasino("パネル柵");
 
+	// TODO:
 	// if ( strcmp(name, "SirenabossWall") == 0 )
 	// 	return new TSirenabossWall("ボステレサ部屋壁");
 
+	// TODO:
 	// if ( strcmp(name, "SirenaCasinoRoof") == 0 )
 	// 	return new TSirenaCasinoRoof("カジノ部屋天井");
 
+	// TODO:
 	// if ( strcmp(name, "ChestRevolve") == 0 )
 	// 	return new TChestRevolve("回転棚");
 
+	// TODO:
 	// if ( strcmp(name, "PosterTeresa") == 0 )
 	// 	return new TWaterHitPictureHideObj("オブジェ出現の絵");
 
+	// TODO:
 	// if ( strcmp(name, "PictureTeresa") == 0 )
 	// 	return new TPictureTelesa("テルサの絵");
 
 	if ( strcmp(name, "PanelBreak") == 0 )
 		return new TMapObjGeneral("汎用地形オブジェ");
 
+	// TODO:
 	// if ( strcmp(name, "PanelRevolve") == 0 )
 	// 	return new TPanelRevolve("回転棚");
 
@@ -637,15 +654,19 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "HideObj") == 0)
 		return new THideObjBase("隠しオブジェ");
 
+	// TODO:
 	// if ( strcmp(name, "WaterHitHideObj") == 0 )
 	// 	return new TWaterHitHideObj("水ヒットオブジェ");
 
+	// TODO:
 	// if (strcmp(name, "FruitHitHideObj") == 0)
 	// 	return new TFruitHitHideObj("水ヒットオブジェ");
 
+	// TODO:
 	// if (strcmp(name, "HipDropHideObj") == 0)
 	// 	return new THipDropHideObj("ヒップドロップオブジェ");
 
+	// TODO:
 	// if (strcmp(name, "HideObjPictureTwin") == 0)
 	// 	return new THideObjPictureTwin("ふたご落書き");
 
