@@ -32,7 +32,7 @@ public:
 	void grow();
 	void control();
 	void initMapObj();
-	TSandLeafBase();
+	TSandLeafBase(const char*);
 };
 
 class TSandBomb : public TSandLeaf {
@@ -124,7 +124,7 @@ class TMammaYacht : public TMapObjBase {
 public:
 	void control();
 	void initMapObj();
-	TMammaYacht();
+	TMammaYacht(const char*);
 };
 
 class TSandBird : public TJointCoin {
@@ -158,7 +158,7 @@ public:
 class TSandEgg : public TMapObjBase {
 public:
 	u32 getSDLModelFlag() const;
-	TSandEgg();
+	TSandEgg(const char*);
 };
 
 #endif

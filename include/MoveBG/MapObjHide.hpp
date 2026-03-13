@@ -25,7 +25,7 @@ public:
 
 class TBreakHideObj : public THideObjBase {
 public:
-	TBreakHideObj();
+	TBreakHideObj(const char*);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
 	virtual void kill();

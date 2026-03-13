@@ -32,7 +32,7 @@ public:
 	void draw() const;
 	void control();
 	void initMapObj();
-	TMapObjElasticCode();
+	TMapObjElasticCode(const char*);
 };
 
 class TMapObjGrowTree : public TMapObjBase {
@@ -60,7 +60,7 @@ public:
 	void touchPlayer(THitActor*);
 	void control();
 	void load(JSUMemoryInputStream&);
-	TMapObjPuncher();
+	TMapObjPuncher(const char*);
 };
 
 class TMuddyBoat : public TMapObjBase {
@@ -83,7 +83,7 @@ class TMareFall : public TMapObjBase {
 public:
 	void calc();
 	void load(JSUMemoryInputStream&);
-	TMareFall();
+	TMareFall(const char*);
 };
 
 class TMareCork : public TMapObjBase {
@@ -93,14 +93,14 @@ public:
 	void calcRootMatrix();
 	MtxPtr getTakingMtx();
 	void drawObject(JDrama::TGraphics*);
-	TMareCork();
+	TMareCork(const char*);
 };
 
 class TMareEventPoint : public THitActor {
 public:
 	BOOL receiveMessage(THitActor* sender, u32 message);
 	void load(JSUMemoryInputStream&);
-	TMareEventPoint();
+	TMareEventPoint(const char*);
 };
 
 #endif

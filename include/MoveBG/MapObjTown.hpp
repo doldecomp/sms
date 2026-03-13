@@ -1,6 +1,7 @@
 #ifndef MOVE_BG_MAP_OBJ_TOWN_HPP
 #define MOVE_BG_MAP_OBJ_TOWN_HPP
 
+#include "Strategic/HitActor.hpp"
 #include <MoveBG/MapObjBase.hpp>
 #include <MoveBG/MapObjGeneral.hpp>
 #include <MoveBG/MapObjHide.hpp>
@@ -32,7 +33,7 @@ public:
 	void swing(THitActor*);
 	void touchActor(THitActor*);
 	u32 touchWater(THitActor*);
-	TMapObjBillboard();
+	TMapObjBillboard(const char* name) : THideObjBase(name) {}
 };
 
 class TMapObjChangeStage : public TMapObjBase {
@@ -53,13 +54,20 @@ class TMapObjChangeStageHipDrop : public TMapObjChangeStage {
 public:
 	void touchPlayer(THitActor*);
 	void initMapObj();
+	TMapObjChangeStageHipDrop(const char* name)
+	    : TMapObjChangeStage(name)
+	{
+	}
 };
 
 class TMapObjStartDemo : public TMapObjBase {
 public:
 	void touchPlayer(THitActor*);
 	void load(JSUMemoryInputStream&);
-	TMapObjStartDemo();
+	TMapObjStartDemo(const char* name)
+	    : TMapObjBase(name)
+	{
+	}
 };
 
 class TDamageObj : public THitActor {
@@ -67,7 +75,10 @@ public:
 	void perform(unsigned long, JDrama::TGraphics*);
 	void init(unsigned long);
 	void load(JSUMemoryInputStream&);
-	TDamageObj();
+	TDamageObj(const char* name = "ダメージオブジェ")
+	    : THitActor(name)
+	{
+	}
 };
 
 class TShadowObj {
@@ -84,6 +95,7 @@ public:
 
 class THideObjInfo : public JDrama::TViewObj {
 public:
+	void perform(unsigned long, JDrama::TGraphics*);
 	void action(long);
 	void load(JSUMemoryInputStream&);
 	THideObjInfo(const char*);
@@ -111,7 +123,7 @@ class TBasketReverse : public TMapObjBase {
 public:
 	void kill();
 	void initMapObj();
-	TBasketReverse();
+	TBasketReverse(const char*);
 };
 
 #endif

@@ -77,7 +77,7 @@ public:
 
 class TCoverFruit : public TMapObjBase {
 public:
-	TCoverFruit();
+	TCoverFruit(const char*);
 	virtual void loadAfter();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 

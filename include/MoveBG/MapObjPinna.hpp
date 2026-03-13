@@ -85,19 +85,19 @@ public:
 	void touchActor(THitActor*);
 	void kill();
 	void load(JSUMemoryInputStream&);
-	TBalloonKoopaJr();
+	TBalloonKoopaJr(const char*);
 };
 
 class TPinnaEntrance : public TMapObjBase {
 public:
 	void loadAfter();
-	TPinnaEntrance();
+	TPinnaEntrance(const char*);
 };
 
 class TWaterRecoverObj : public TMapObjBase {
 public:
 	void touchPlayer(THitActor*);
-	TWaterRecoverObj();
+	TWaterRecoverObj(const char*);
 };
 
 class TAmiKing : public TMapObjBase {
@@ -109,7 +109,7 @@ public:
 	void calcRootMatrix();
 	void bind();
 	void touchPlayer(THitActor*);
-	TAmiKing();
+	TAmiKing(const char*);
 };
 
 class TPinnaCoaster : public TMapObjBase {
