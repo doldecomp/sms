@@ -33,7 +33,10 @@ public:
 	void swing(THitActor*);
 	void touchActor(THitActor*);
 	u32 touchWater(THitActor*);
-	TMapObjBillboard(const char* name) : THideObjBase(name) {}
+	TMapObjBillboard(const char* name)
+	    : THideObjBase(name)
+	{
+	}
 };
 
 class TMapObjChangeStage : public TMapObjBase {
