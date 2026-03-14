@@ -6,6 +6,7 @@
 #include <JSystem/JUtility/JUTColor.hpp>
 #include <JSystem/JUtility/JUTRect.hpp>
 #include <dolphin/mtx.h>
+#include <dolphin/gx/GXCull.h>
 #include <dolphin/gx/GXStruct.h>
 
 namespace JDrama {
@@ -22,11 +23,19 @@ struct TRect : JUTRect {
 };
 
 struct TGraphics {
-	void setViewport(const TRect&, float, float);
+	void setViewport(const TRect&, f32, f32);
 
+	void setScissor(const TRect& scissor)
+	{
+		mScissorRect = scissor;
+		GXSetScissor(mScissorRect.x1, mScissorRect.y1, mScissorRect.getWidth(),
+		             mScissorRect.getHeight());
+	}
+
+	// fabricated
 	TRect& getUnk44() { return mDisplayRect; }
-	TRect& getUnk54() { return mViewportRect; }
-	const TRect& getUnk64() { return mScissorRect; }
+	TRect& getViewport() { return mViewportRect; }
+	const TRect& getScissor() { return mScissorRect; }
 
 	MtxPtr getUnkB4() { return mViewMtx.mMtx; }
 	f32 getNearPlane() { return mNearPlane; }

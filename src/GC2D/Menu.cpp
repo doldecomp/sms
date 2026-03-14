@@ -8,10 +8,10 @@
 void TMenuBase::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (param_1 & 0x8) {
-		J2DOrthoGraph orthoGraph(param_2->getUnk54());
+		J2DOrthoGraph orthoGraph(param_2->getViewport());
 		orthoGraph.setup2D();
 		unk10->draw(0, 0, &orthoGraph);
-		const JUTRect& rect = param_2->getUnk64();
+		const JUTRect& rect = param_2->getScissor();
 		GXSetScissor(rect.x1, rect.y1, rect.getWidth(), rect.getHeight());
 	}
 }
