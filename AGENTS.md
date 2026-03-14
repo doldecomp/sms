@@ -106,10 +106,53 @@ Each line shows **one** instruction. When the marker is ` ` or `~`, both target 
 
 Differing operands are wrapped in `{braces}` for easy identification.
 
-Matching instruction runs are collapsed by default (shows 3 lines of context). Options:
+By default, long runs of fully matching instructions are **collapsed** into a summary line like `... 10 matching instructions ...`.
+This is only a display shortcut: those instructions still exist and still match; they are just hidden to keep the diff compact.
+
+With `--no-collapse`, those summary lines disappear and every instruction in matching regions is printed explicitly.
+This is useful when mapping source lines to exact instruction neighborhoods or when checking whether a mismatch cluster is truly contiguous.
+
+Quick rule of thumb for agents:
+- default (collapsed): better for scanning large functions and finding mismatch hotspots quickly.
+- `--no-collapse`: better for deep analysis when you need complete sequential instruction flow.
+
+Options:
 - `-C 5` — show 5 context lines instead of 3
-- `--no-collapse` — show every instruction
+- `--no-collapse` — disable match-run collapsing and show every instruction
 - `--range 100-300` — only show instructions at hex offsets 0x100–0x300
+
+### Using `m2c` for raw draft decompilation
+
+If a local clone of [`m2c`](https://github.com/matt-kempster/m2c) is available, it can be used to produce a **rough first-pass C draft** from an extracted assembly file.
+For this repository, the relevant input files are the dtk-generated assembly files under `build/GMSJ01/asm/<path>.s`.
+
+`m2c` works here as an asm-to-draft tool, not as a source-of-truth decompiler.
+Treat its output as scaffolding for understanding control flow and rough data flow, then verify everything against objdiff and the binary.
+
+Tested example:
+
+```bash
+python D:/Develop/m2c/m2c.py -t ppc -f __dt__22TNerveFireWanwanEscapeFv --globals=none build/GMSJ01/asm/Enemy/fireWanwan.s
+```
+
+That command decompiles the function named by the `.fn` symbol in the asm file and prints a raw draft to stdout.
+For larger functions, the same pattern works with the mangled symbol name, for example:
+
+```bash
+python D:/Develop/m2c/m2c.py -t ppc -f "execute__22TNerveFireWanwanEscapeCFP24TSpineBase<10TLiveActor>" --globals=none build/GMSJ01/asm/Enemy/fireWanwan.s
+```
+
+Practical workflow:
+- find the TU assembly file in `build/GMSJ01/asm/...`
+- open it and copy the mangled function name from the `.fn` line
+- run `m2c` with `-t ppc` (`ppc` is the right alias for this CodeWarrior PowerPC output)
+- use `--globals=none` when you only want the function body draft
+- redirect stdout to a scratch file if needed for longer functions
+
+Important limitations:
+- `m2c` output is often rough for this codebase: inferred placeholder structs, bad field names, missing types, and occasional broken expressions are normal.
+- `m2c` does **not** support the C++ context flow needed for this repository's real types, so do not try to feed it SMS C++ context files and expect good typed output.
+- use `m2c` for orientation only; never trust it over the asm or decomp-diff.
 
 ## Source Organization
 
@@ -302,4 +345,6 @@ UNUSED functions must still be reconstructed in the source because:
 - **Don't try to process diff tool output with external utilities**. It is designed to be read by agents, and filtering out certain lines via regex will miss crucial context. The diff shows the disassembly of the original binary and current code simultaneously and should be read directly and sequentially in an attempt to understand what the current code does differently from the original.
 - **Read the full diff before acting**. Use `--no-collapse` to see every instruction. Identify all problem clusters before making changes, then work on the largest cluster first.
 - **Focus on one part of the function at a time**. Identify what exact lines in the source code a non-matching part of the disassembly corresponds. Use `--range` argument of the diff tool to only see the asm for the part being worked on.
+- **Use temporary marker calls to map source to asm when anchors are missing**. If there are no obvious anchors (for example, no calls to known functions nearby), temporarily add a fake external marker like `extern void marker__();` and call it at a candidate point in the function. The call will show up clearly in diff output and helps bracket surrounding instructions, and you can repeat this process to narrow correspondence precisely.
+- **Always remove marker calls after mapping**. Any extra call can change register allocation/scheduling and inhibit matching, so markers are strictly temporary debugging aids.
 - **Read [docs/AGENT_MATCHING_TIPS.md](docs/AGENT_MATCHING_TIPS.md)** for detailed MWCC codegen patterns that come up repeatedly.

@@ -115,7 +115,7 @@ void TAfterEffect::perform(u32 param_1, JDrama::TGraphics* param_2)
 	color.b = 0;
 	color.a = 0;
 
-	JDrama::TRect& rect = param_2->getUnk54();
+	const JDrama::TRect& rect = param_2->getViewport();
 
 	unk20 += unk48 * (unk1B - unk20);
 	unk24 += unk48 * (unk1C - unk24);

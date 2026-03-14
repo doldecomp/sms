@@ -749,8 +749,8 @@ void TCardLoad::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (param_1 & 8) {
-		const JUTRect& rect = param_2->getUnk64();
-		J2DOrthoGraph graph(param_2->getUnk54());
+		const JDrama::TRect& rect = param_2->getScissor();
+		J2DOrthoGraph graph(param_2->getViewport());
 		graph.setup2D();
 		switch (unk14) {
 		case 0:
@@ -775,14 +775,7 @@ void TCardLoad::perform(u32 param_1, JDrama::TGraphics* param_2)
 			break;
 		}
 
-		// TODO: are these actually TVec2s or something?
-		param_2->mScissorRect.x1 = rect.x1;
-		param_2->mScissorRect.y1 = rect.y1;
-		param_2->mScissorRect.x2 = rect.x2;
-		param_2->mScissorRect.y2 = rect.y2;
-		GXSetScissor(param_2->mScissorRect.x1, param_2->mScissorRect.y1,
-		             param_2->mScissorRect.getWidth(),
-		             param_2->mScissorRect.getHeight());
+		param_2->setScissor(rect);
 	}
 }
 

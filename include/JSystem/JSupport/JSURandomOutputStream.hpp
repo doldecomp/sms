@@ -5,8 +5,6 @@
 
 class JSURandomOutputStream : public JSUOutputStream {
 public:
-	virtual ~JSURandomOutputStream() { }
-
 	virtual int getLength() const   = 0;
 	virtual int getPosition() const = 0;
 	virtual void seek(s32 offset, JSUStreamSeekFrom from);

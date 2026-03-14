@@ -4,7 +4,7 @@
 
 using namespace JDrama;
 
-void TGraphics::setViewport(const TRect& param_1, float param_2, float param_3)
+void TGraphics::setViewport(const TRect& param_1, f32 param_2, f32 param_3)
 {
 	mViewportRect = param_1;
 
