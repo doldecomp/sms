@@ -101,6 +101,10 @@ public:
 	J2DPane* getPane() const { return mPane; }
 	const JUTRect& getInitialBounds() const { return mInitialBounds; }
 
+	// fabricated, but they make a lot of things in GCConsole2 work
+	int get465MinusInitialY1() const { return 465 - mInitialBounds.y1; }
+	int getNegativeInitialY2Plus1() const { return -(mInitialBounds.y2 + 1); }
+
 	bool isBoundsAnimationCompleted() const
 	{
 		bool result = false;
@@ -115,6 +119,12 @@ public:
 		if (isBoundsAnimationCompleted() && !mAlphaAnimPending)
 			result = true;
 		return result;
+	}
+
+	bool isInterpolatorAtZero() const
+	{
+		return mOffsetInterpolator.getCurrentX() == 0
+		       && mOffsetInterpolator.getCurrentY() == 0;
 	}
 
 public:
