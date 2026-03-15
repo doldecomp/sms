@@ -559,7 +559,7 @@ void TGCConsole2::startInsertTimer()
 	unk450->setPanePosition(50, cUpTopPoint, cUpMidPoint, cUpMidPoint);
 
 	unk454->getPane()->hide();
-	unk518 = 0;
+	unk518   = 0;
 	unk70[6] = 0;
 }
 
