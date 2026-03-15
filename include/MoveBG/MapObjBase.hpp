@@ -329,8 +329,8 @@ public:
 	void offMapObjFlag(u32 flag) { unkF8 &= ~flag; }
 	TMapObjData* getMapObjData() { return mMapObjData; }
 	bool isState(u32 v) { return mState == v ? true : false; }
-	bool isUnk104Positive() { return unk104 > 0 ? true : false; }
-	int getUnk104() { return unk104; }
+	bool isReadyToAppear() { return mTimeTilAppear > 0 ? true : false; }
+	int getTimeTilAppear() { return mTimeTilAppear; }
 	u32 getUnk134() { return unk134; }
 	void setUnk134(u32 v) { unk134 = v; }
 	const char* getUnkF4() { return unkF4; }
@@ -342,7 +342,7 @@ public:
 	/* 0xFE */ u16 unkFE;
 	/* 0x100 */ u16 unk100;
 	/* 0x102 */ u16 unk102;
-	/* 0x104 */ int unk104;
+	/* 0x104 */ int mTimeTilAppear;
 	/* 0x108 */ f32 mYOffset; // TODO: offset from what to what?
 	/* 0x10C */ JGeometry::TVec3<f32> mInitialPosition;
 	/* 0x118 */ JGeometry::TVec3<f32> mInitialRotation;
