@@ -12,14 +12,14 @@ public:
 	void calc();
 	void control();
 	void load(JSUMemoryInputStream&);
-	TCraneRotY();
+	TCraneRotY(const char*);
 };
 
 class TCraneUpDown : public TMapObjBase {
 public:
 	void control();
 	void initMapObj();
-	TCraneUpDown();
+	TCraneUpDown(const char*);
 };
 
 class TCraneCargo : public TLeanBlock {
@@ -44,7 +44,7 @@ public:
 class TSurfGesoObj : public TItem {
 public:
 	void initMapObj();
-	TSurfGesoObj();
+	TSurfGesoObj(const char*);
 };
 
 class TFruitSwitch : public TMapObjBase {
@@ -52,7 +52,7 @@ public:
 	void pullUp();
 	void pushDown();
 	BOOL receiveMessage(THitActor* sender, u32 message);
-	TFruitSwitch();
+	TFruitSwitch(const char*);
 };
 
 class TFruitLauncher : public TMapObjBase {
@@ -60,7 +60,7 @@ public:
 	void appearFruit() const;
 	void fireObj();
 	void loadAfter();
-	TFruitLauncher();
+	TFruitLauncher(const char*);
 };
 
 #endif

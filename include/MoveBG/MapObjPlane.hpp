@@ -52,14 +52,14 @@ public:
 	/* 0x11C */ u16 unk11C;
 };
 
-class TRockPlane : TMapObjPlane {
+class TRockPlane : public TMapObjPlane {
 public:
 	TRockPlane(const char*);
 
 	virtual void load(JSUMemoryInputStream&);
 };
 
-class TSandPlane : TMapObjPlane {
+class TSandPlane : public TMapObjPlane {
 public:
 	TSandPlane(const char*);
 

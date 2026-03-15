@@ -39,7 +39,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void control();
 
-	TMapObjSteam();
+	TMapObjSteam(const char*);
 };
 
 #endif

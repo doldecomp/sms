@@ -24,7 +24,10 @@ class TRevolvingFenceOuter : public TFence {
 public:
 	BOOL receiveMessage(THitActor* sender, u32 message);
 	void initMapCollisionData();
-	TRevolvingFenceOuter();
+	TRevolvingFenceOuter(const char* name)
+	    : TFence(name)
+	{
+	}
 };
 
 class TRevolvingFenceInner : public TFence {
@@ -60,7 +63,10 @@ public:
 	void control();
 	void initMapCollisionData();
 	void initMapObj();
-	TFenceWater();
+	TFenceWater(const char* name)
+	    : TFence(name)
+	{
+	}
 };
 
 class TFenceWaterH : public TFenceWater {
@@ -68,6 +74,10 @@ public:
 	void control();
 	void changeStatusToGo();
 	void changeStatusToWait();
+	TFenceWaterH(const char* name)
+	    : TFenceWater(name)
+	{
+	}
 };
 
 class TRailFence : public TFence {
@@ -78,7 +88,10 @@ public:
 	void control();
 	void initMapCollisionData();
 	void load(JSUMemoryInputStream&);
-	TRailFence(const char*);
+	TRailFence(const char* name)
+	    : TFence(name)
+	{
+	}
 };
 
 #endif
