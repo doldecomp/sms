@@ -42,7 +42,7 @@ void TPollutionManager::stampGround(u16 param_1, f32 param_2, f32 param_3,
 			getLayer(i)->stamp(param_1, param_2, param_3, param_4, param_5);
 }
 
-u16 TPollutionManager::getPollutionType(f32 param_1, f32 param_2,
+u32 TPollutionManager::getPollutionType(f32 param_1, f32 param_2,
                                         f32 param_3) const
 {
 	for (int i = 0; i < getJointModelNum(); ++i)

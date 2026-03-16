@@ -600,7 +600,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	unk2BC = mPosition.y;
 
 	s16 health = *(s16*)((u8*)this + 0x360);
-	s16 halfMaxHealth = *(s16*)((u8*)this + 0x690) / 2;
+	s32 halfMaxHealth = *(s16*)((u8*)this + 0x690) / 2;
 	if (health > halfMaxHealth) {
 		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
 		                   *(f32*)((u8*)this + 0x26D8));
@@ -804,9 +804,8 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		mForwardVel = clampedVel;
 
 		u16 angle = mFaceAngle.y;
-		s32 shift = jmaSinShift;
-		mSlideVelX = mForwardVel * jmaSinTable[angle >> shift];
-		mSlideVelZ = mForwardVel * jmaCosTable[angle >> shift];
+		mSlideVelX = mForwardVel * jmaSinTable[angle >> jmaSinShift];
+		mSlideVelZ = mForwardVel * jmaCosTable[angle >> jmaSinShift];
 		mVel.x = mSlideVelX;
 		mVel.z = mSlideVelZ;
 		break;
@@ -823,7 +822,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		if (waterGun == NULL)
 			break;
 
-		u8 nozzle = waterGun->mCurrentNozzle;
+		s32 nozzle = waterGun->mCurrentNozzle;
 		if (nozzle == 1) {
 			// Rocket
 			startVoice(0x78B9);
@@ -876,9 +875,8 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		mVel.y = mForwardVel * 0.25f + 42.0f;
 		mForwardVel = 0.0f;
 		u16 angle = mFaceAngle.y;
-		s32 shift = jmaSinShift;
-		mSlideVelX = mForwardVel * jmaSinTable[angle >> shift];
-		mSlideVelZ = mForwardVel * jmaCosTable[angle >> shift];
+		mSlideVelX = mForwardVel * jmaSinTable[angle >> jmaSinShift];
+		mSlideVelZ = mForwardVel * jmaCosTable[angle >> jmaSinShift];
 		mVel.x = mSlideVelX;
 		mVel.z = mSlideVelZ;
 		startVoice(0x78B6);
@@ -897,11 +895,10 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 			mForwardVel = -(fAngle * paramSpeed * 1.0f) * cosVal;
 
 			u16 faceAngle = mFaceAngle.y;
-			s32 shift2 = jmaSinShift;
 			mSlideVelX
-			    = mForwardVel * jmaSinTable[faceAngle >> shift2];
+			    = mForwardVel * jmaSinTable[faceAngle >> jmaSinShift];
 			mSlideVelZ
-			    = mForwardVel * jmaCosTable[faceAngle >> shift2];
+			    = mForwardVel * jmaCosTable[faceAngle >> jmaSinShift];
 			mVel.x = mSlideVelX;
 			mVel.z = mSlideVelZ;
 		} else {
@@ -915,11 +912,10 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 			mForwardVel = -(fAngle * paramSpeed * 1.0f) * cosVal;
 
 			u16 faceAngle = mFaceAngle.y;
-			s32 shift2 = jmaSinShift;
 			mSlideVelX
-			    = mForwardVel * jmaSinTable[faceAngle >> shift2];
+			    = mForwardVel * jmaSinTable[faceAngle >> jmaSinShift];
 			mSlideVelZ
-			    = mForwardVel * jmaCosTable[faceAngle >> shift2];
+			    = mForwardVel * jmaCosTable[faceAngle >> jmaSinShift];
 			mVel.x = mSlideVelX;
 			mVel.z = mSlideVelZ;
 		}
@@ -931,9 +927,8 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		mVel.y = mForwardVel * 0.0f + 42.0f;
 		mForwardVel = 0.0f;
 		u16 angle = mFaceAngle.y;
-		s32 shift = jmaSinShift;
-		mSlideVelX = mForwardVel * jmaSinTable[angle >> shift];
-		mSlideVelZ = mForwardVel * jmaCosTable[angle >> shift];
+		mSlideVelX = mForwardVel * jmaSinTable[angle >> jmaSinShift];
+		mSlideVelZ = mForwardVel * jmaCosTable[angle >> jmaSinShift];
 		mVel.x = mSlideVelX;
 		mVel.z = mSlideVelZ;
 		startVoice(0x78AB);
@@ -945,7 +940,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 	// Speed bonus
 	f32 speedBonus = *(f32*)((u8*)this + 0x368);
-	u8 hasSpeedBonus;
+	int hasSpeedBonus;
 	if (speedBonus > 0.0f)
 		hasSpeedBonus = 1;
 	else
@@ -1791,7 +1786,7 @@ void TMario::checkGraffito()
 		return;
 
 	// Get pollution type at current position
-	u8 isPolluted = 0;
+	s32 isPolluted = 0;
 	unk350 = gpPollution->getPollutionType(mPosition.x, mPosition.y,
 	                                       mPosition.z);
 
@@ -2308,17 +2303,16 @@ void TMario::checkRideMovement()
 		}
 	}
 
-	if (rideActor == 0) {
-		*(u32*)((u8*)this + 0x2C0) = 0;
-	} else {
-		TLiveActor* existing = *(TLiveActor**)((u8*)this + 0x2C0);
-		if (existing != 0 && existing == rideActor) {
+	if (rideActor != 0) {
+		if (*(TLiveActor**)((u8*)this + 0x2C0) != 0
+		    && *(TLiveActor**)((u8*)this + 0x2C0) == rideActor) {
 			// sameRide
+			TLiveActor* cur = *(TLiveActor**)((u8*)this + 0x2C0);
 			Mtx stackMtx;
-			if (existing->getRootJointMtx() == 0) {
-				SMS_GetActorMtx(*existing, stackMtx);
+			if (cur->getRootJointMtx() == 0) {
+				SMS_GetActorMtx(*cur, stackMtx);
 			} else {
-				PSMTXCopy((MtxPtr)existing->getRootJointMtx(), stackMtx);
+				PSMTXCopy((MtxPtr)cur->getRootJointMtx(), stackMtx);
 			}
 
 			PSMTXMultVec(stackMtx,
@@ -2360,6 +2354,8 @@ void TMario::checkRideMovement()
 				             (Vec*)((u8*)this + 0x2F4));
 			}
 		}
+	} else {
+		*(u32*)((u8*)this + 0x2C0) = 0;
 	}
 }
 
@@ -2875,7 +2871,7 @@ void TMario::thinkParams()
 				belowThreshold = 0;
 			}
 			if (!belowThreshold) {
-				u16 bgType = mWaterFloor->mBGType;
+				u16 bgType = *(u16*)((u8*)mWaterFloor);
 				u8 isWaterGround;
 				if (bgType == 0x0B || bgType == 0x800B || bgType == 0x103
 				    || bgType == 0x101)
@@ -2883,36 +2879,40 @@ void TMario::thinkParams()
 				else
 					isWaterGround = 0;
 
-				u8 isWaterGround2;
-				if (bgType == 0x0B || bgType == 0x800B || bgType == 0x103
-				    || bgType == 0x101)
-					isWaterGround2 = 1;
-				else
-					isWaterGround2 = 0;
+				if (isWaterGround) {
+					u8 isWaterGround2;
+					if (bgType == 0x0B || bgType == 0x800B || bgType == 0x103
+					    || bgType == 0x101)
+						isWaterGround2 = 1;
+					else
+						isWaterGround2 = 0;
 
-				u8 actionBit;
-				if (mAction & 0x10000)
-					actionBit = 1;
-				else
-					actionBit = 0;
+					if (isWaterGround2) {
+						u8 actionBit;
+						if (mAction & 0x10000)
+							actionBit = 1;
+						else
+							actionBit = 0;
 
-				if (isWaterGround && isWaterGround2 && !actionBit) {
-					s16 data = mWaterFloor->mData;
-					TEParams* params;
-					switch (data) {
-					case 0: params = (TEParams*)((u8*)this + 0x3BD4); break;
-					case 1: params = (TEParams*)((u8*)this + 0x3C68); break;
-					case 2: params = (TEParams*)((u8*)this + 0x3CFC); break;
-					case 3: params = (TEParams*)((u8*)this + 0x3D90); break;
-					case 4: params = (TEParams*)((u8*)this + 0x3E24); break;
-					case 5: params = (TEParams*)((u8*)this + 0x3EB8); break;
-					case 6: params = (TEParams*)((u8*)this + 0x3F4C); break;
-					case 7: params = (TEParams*)((u8*)this + 0x3FE0); break;
-					case 8: params = (TEParams*)((u8*)this + 0x4074); break;
-					case 9: params = (TEParams*)((u8*)this + 0x4108); break;
-					default: params = (TEParams*)((u8*)this + 0x3BD4); break;
+						if (!actionBit) {
+							s16 data = mWaterFloor->mData;
+							TEParams* params;
+							switch (data) {
+							case 0: params = (TEParams*)((u8*)this + 0x3BD4); break;
+							case 1: params = (TEParams*)((u8*)this + 0x3C68); break;
+							case 2: params = (TEParams*)((u8*)this + 0x3CFC); break;
+							case 3: params = (TEParams*)((u8*)this + 0x3D90); break;
+							case 4: params = (TEParams*)((u8*)this + 0x3E24); break;
+							case 5: params = (TEParams*)((u8*)this + 0x3EB8); break;
+							case 6: params = (TEParams*)((u8*)this + 0x3F4C); break;
+							case 7: params = (TEParams*)((u8*)this + 0x3FE0); break;
+							case 8: params = (TEParams*)((u8*)this + 0x4074); break;
+							case 9: params = (TEParams*)((u8*)this + 0x4108); break;
+							default: params = (TEParams*)((u8*)this + 0x3BD4); break;
+							}
+							floorDamageExec(*params);
+						}
 					}
-					floorDamageExec(*params);
 				}
 			}
 
@@ -2922,23 +2922,16 @@ void TMario::thinkParams()
 		} else {
 			// capBranch
 			TMarioCap* cap = *(TMarioCap**)((u8*)this + 0x3E0);
-			u8 skipCap = 0;
-			if (cap == 0) {
-				skipCap = 1;
-			} else {
+			if (cap != 0) {
 				u8 hatOn;
 				if (*(u16*)((u8*)cap + 4) & 1)
 					hatOn = 1;
 				else
 					hatOn = 0;
-				if (hatOn) {
-					skipCap = 1;
-				} else {
+				if (!hatOn) {
 					*(u16*)((u8*)this + 0x126) = *(u16*)((u8*)this + 0x126) + 1;
 					if ((u16)*(u16*)((u8*)this + 0x126)
-					    <= (s16)*(s16*)((u8*)this + 0x128)) {
-						skipCap = 1;
-					} else {
+					    > (s16)*(s16*)((u8*)this + 0x128)) {
 						decHP(1);
 						if (gpMSound->gateCheck(0x480C)) {
 							MSoundSESystem::MSoundSE::startSoundSystemSE(
@@ -3750,7 +3743,7 @@ void TMario::checkWet()
 		return;
 
 	u8 actionCheck;
-	if (mAction & 0x400)
+	if (mAction & 0x200)
 		actionCheck = 1;
 	else
 		actionCheck = 0;
@@ -3956,7 +3949,7 @@ f32 TMario::getSlideStopCatch()
 	if (isSand) {
 		shouldSlip = 1;
 	} else {
-		u8 slipSet = 0;
+		shouldSlip = 0;
 		if (unk350 == 2) {
 			u8 hasFlag;
 			if (unk118 & 0x40)
@@ -3964,13 +3957,11 @@ f32 TMario::getSlideStopCatch()
 			else
 				hasFlag = 0;
 			if (hasFlag) {
-				if (plane->getNormal().y < *(f32*)((u8*)this + 0x26EC)) {
+				if (plane->getNormal().y < *(f32*)((u8*)this + 0x26EC))
 					shouldSlip = 1;
-					slipSet = 1;
-				}
 			}
 		}
-		if (!slipSet) {
+		if (!shouldSlip) {
 			if (plane->getNormal().y < mDeParams.mForceSlipAngle.value)
 				shouldSlip = 1;
 			else
@@ -4028,7 +4019,7 @@ f32 TMario::getSlideStopNormal()
 	if (isSand) {
 		shouldSlip = 1;
 	} else {
-		u8 slipSet = 0;
+		shouldSlip = 0;
 		if (unk350 == 2) {
 			u8 hasFlag;
 			if (unk118 & 0x40)
@@ -4036,13 +4027,11 @@ f32 TMario::getSlideStopNormal()
 			else
 				hasFlag = 0;
 			if (hasFlag) {
-				if (plane->getNormal().y < *(f32*)((u8*)this + 0x26EC)) {
+				if (plane->getNormal().y < *(f32*)((u8*)this + 0x26EC))
 					shouldSlip = 1;
-					slipSet = 1;
-				}
 			}
 		}
-		if (!slipSet) {
+		if (!shouldSlip) {
 			if (plane->getNormal().y < mDeParams.mForceSlipAngle.value)
 				shouldSlip = 1;
 			else
@@ -4100,7 +4089,7 @@ BOOL TMario::canSlipJump()
 	if (isSand) {
 		shouldSlip = 1;
 	} else {
-		u8 slipSet = 0;
+		shouldSlip = 0;
 		if (unk350 == 2) {
 			u8 hasFlag;
 			if (unk118 & 0x40)
@@ -4108,13 +4097,11 @@ BOOL TMario::canSlipJump()
 			else
 				hasFlag = 0;
 			if (hasFlag) {
-				if (plane->getNormal().y < *(f32*)((u8*)this + 0x26EC)) {
+				if (plane->getNormal().y < *(f32*)((u8*)this + 0x26EC))
 					shouldSlip = 1;
-					slipSet = 1;
-				}
 			}
 		}
-		if (!slipSet) {
+		if (!shouldSlip) {
 			if (plane->getNormal().y < mDeParams.mForceSlipAngle.value)
 				shouldSlip = 1;
 			else
@@ -4183,7 +4170,7 @@ BOOL TMario::isSlipStart()
 	if (isSand) {
 		shouldSlip = 1;
 	} else {
-		u8 slipSet = 0;
+		shouldSlip = 0;
 		if (unk350 == 2) {
 			u8 hasFlag;
 			if (unk118 & 0x40)
@@ -4191,13 +4178,11 @@ BOOL TMario::isSlipStart()
 			else
 				hasFlag = 0;
 			if (hasFlag) {
-				if (plane->getNormal().y < *(f32*)((u8*)this + 0x26EC)) {
+				if (plane->getNormal().y < *(f32*)((u8*)this + 0x26EC))
 					shouldSlip = 1;
-					slipSet = 1;
-				}
 			}
 		}
-		if (!slipSet) {
+		if (!shouldSlip) {
 			if (plane->getNormal().y < mDeParams.mForceSlipAngle.value)
 				shouldSlip = 1;
 			else
@@ -4780,10 +4765,10 @@ void TMario::gunExec()
 		f32 radius = *(f32*)((u8*)this + 0x25A4);
 
 		JGeometry::TVec3<f32> tempDir(dir);
-		tempDir.scale(dist);
+		PSVECScale((Vec*)&tempDir, (Vec*)&tempDir, dist);
 
 		JGeometry::TVec3<f32> pos(mPosition);
-		pos.add(tempDir);
+		PSVECAdd((Vec*)&pos, (Vec*)&tempDir, (Vec*)&pos);
 
 		gpPollution->clean(pos.x, pos.y, pos.z, radius);
 	}

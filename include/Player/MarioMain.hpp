@@ -858,7 +858,7 @@ public:
 	void isFallCancel();
 	void checkGroundAtJumping(const Vec&, int);
 	void hangonCheck(const TBGCheckData*, const Vec&, const Vec&);
-	void barProcess();
+	int barProcess();
 	void walkProcess();
 	void waitProcess();
 	void stopProcess();
@@ -933,7 +933,7 @@ public:
 	void isThrowStart();
 	void considerRotateStart();
 	BOOL specMain();
-	void fencePunch();
+	BOOL fencePunch();
 	void fenceMove();
 	void fenceJumpCatch();
 	void fenceCatch();
@@ -954,7 +954,7 @@ public:
 	void wireWaitToSWaitL();
 	void wireSWait();
 	void wireWait();
-	void wireMove(f32);
+	int wireMove(f32);
 	void getOnWirePosAngle(JGeometry::TVec3<f32>*, short*);
 	void taken();
 	void hangJumping();
@@ -970,10 +970,10 @@ public:
 	void moveRoof();
 	void waitRoof();
 	void hangRoof();
-	void roofCommonEvents();
+	BOOL roofCommonEvents();
 	void doRoofWaitingProcess();
-	void doRoofMovingProcess();
-	void hangingCheckRoof(JGeometry::TVec3<f32>*);
+	int doRoofMovingProcess();
+	int hangingCheckRoof(JGeometry::TVec3<f32>*);
 	void barHang();
 	void barClimb();
 	void barWait();
