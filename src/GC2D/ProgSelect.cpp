@@ -95,7 +95,7 @@ void TProgSelect::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (param_1 & 0x8) {
-		J2DOrthoGraph local_110(param_2->getUnk54());
+		J2DOrthoGraph local_110(param_2->getViewport());
 		local_110.setup2D();
 		J2DPrint JStack_174(gpSystemFont, 0);
 		JStack_174.setUnk50(32);

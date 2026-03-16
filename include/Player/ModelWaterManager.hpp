@@ -109,6 +109,10 @@ public:
 	{
 		return mParticleFlagSOA[hit->unk68] & flag ? TRUE : FALSE;
 	}
+	u16 getParticleFlag(TWaterHitActor* hit)
+	{
+		return mParticleFlagSOA[hit->unk68];
+	}
 	s16 getParticleAttack(TWaterHitActor* hit)
 	{
 		return mParticleAttackSOA[hit->unk68];
