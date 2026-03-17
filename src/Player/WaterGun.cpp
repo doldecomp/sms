@@ -439,7 +439,6 @@ MtxPtr TWaterGun::getNozzleMtx()
 
 void TWaterGun::initInLoadAfter() { }
 
-bool TWaterGun::isEmitting() { return false; }
 
 void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 {

@@ -235,4 +235,25 @@ public:
 	/* 0x1D14 */ TWaterGunParams mWatergunParams;
 };
 
+bool TWaterGun::isEmitting()
+{
+	if (mCurrentWater == 0) {
+		return false;
+	}
+	s32 kind = getCurrentNozzle()->getNozzleKind();
+	if (kind == 1) {
+		TNozzleTrigger* triggerNozzle
+		    = (TNozzleTrigger*)getCurrentNozzle();
+		if (triggerNozzle->unk385 == TNozzleTrigger::ACTIVE) {
+			return true;
+		} else {
+			return false;
+		}
+	} else if (getCurrentNozzle()->unk378 > 0.0f) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 #endif

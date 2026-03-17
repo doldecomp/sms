@@ -84,7 +84,13 @@ class TMarioGamePad;
 
 class TMario : public TTakeActor, public TDrawSyncCallback {
 public:
-	struct JumpSlipRecord;
+	struct JumpSlipRecord {
+		s16 mTimer;
+		u16 _pad;
+		u32 mStatus;
+		u32 mJumpStatus;
+		u32 mFallbackStatus;
+	};
 
 	class TOptionParams : public TParams {
 	public:
@@ -884,7 +890,7 @@ public:
 	void shortBackDown();
 	void foreDown();
 	void backDown();
-	void downingCommon(int, f32, int);
+	f32 downingCommon(int, f32, int);
 	void oilSlope();
 	void oilSlip();
 	void oilRun();
@@ -909,29 +915,29 @@ public:
 	void changePlayerWaiting();
 	void doBraking(f32);
 	void doSurfing();
-	void getSurfingParamsGround(); // UNUSED
-	void getSurfingParamsWater();
+	TSurfingParams& getSurfingParamsGround(); // UNUSED
+	TSurfingParams& getSurfingParamsWater();
 	void doRunning();
 	void doStopping();
 	void doSlipping(f32);
 	void slopeProcess();
-	void doSliding(f32);
+	int doSliding(f32);
 	void slideProcess(f32, f32);
-	void getSlideStickMult();
+	f32 getSlideStickMult();
 	void getChangeAngleSpeed();
 	void getSlopeSlideAccele(f32*, f32*);
 	void getSlopeNormalAccele(f32*, f32*);
 	void doRunningAnimation();
 	void getRunningInWaterBrake();
-	void isRunningInWater();
+	BOOL isRunningInWater();
 	void changePlayerCatching();
-	void isRunningTurnning();
-	void isRunningSlipStart();
+	BOOL isRunningTurnning();
+	BOOL isRunningSlipStart();
 	void changePlayerPower(f32, u32, u32);
 	void clashStandard(u32, u32);
 	void postureControl();
-	void isThrowStart();
-	void considerRotateStart();
+	BOOL isThrowStart();
+	BOOL considerRotateStart();
 	BOOL specMain();
 	BOOL fencePunch();
 	void fenceMove();
@@ -1061,7 +1067,7 @@ public:
 	void stopCommon(int, int);
 	void waitingCommonEvents();
 	void checkPutStart();
-	void canPut();
+	BOOL canPut();
 	void canSleep();
 	void startTalking();
 	BOOL swimMain();
