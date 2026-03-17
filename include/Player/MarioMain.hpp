@@ -90,6 +90,7 @@ public:
 		u32 mStatus;
 		u32 mJumpStatus;
 		u32 mFallbackStatus;
+		u32 _unk10;
 	};
 
 	class TOptionParams : public TParams {
@@ -880,7 +881,7 @@ public:
 	void secJumpSlip();
 	void landSlip();
 	void jumpSlip();
-	void jumpSlipEvents(TMario::JumpSlipRecord*);
+	BOOL jumpSlipEvents(TMario::JumpSlipRecord*);
 	void jumpSlipCommon(short, u32);
 	void loserDown();
 	void catchDown();
@@ -924,7 +925,7 @@ public:
 	int doSliding(f32);
 	void slideProcess(f32, f32);
 	f32 getSlideStickMult();
-	void getChangeAngleSpeed();
+	f32 getChangeAngleSpeed();
 	void getSlopeSlideAccele(f32*, f32*);
 	void getSlopeNormalAccele(f32*, f32*);
 	void doRunningAnimation();

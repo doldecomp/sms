@@ -290,7 +290,7 @@ void TMario::getSlopeSlideAccele(f32* accelUp, f32* accelDown)
 
 // getChangeAngleSpeed - returns angle change speed (s16 param -> f32 -> * forwardVel * 1/32)
 // Despite being declared void, the asm returns a value in f1
-void TMario::getChangeAngleSpeed()
+f32 TMario::getChangeAngleSpeed()
 {
 	f32 angleSpeed;
 
@@ -338,7 +338,7 @@ void TMario::getChangeAngleSpeed()
 		}
 	}
 
-	f32 result = 0.03125f * angleSpeed * mForwardVel;
+	return 0.03125f * angleSpeed * mForwardVel;
 }
 
 // getSlideStickMult - 0x8013B8E8
@@ -2308,17 +2308,17 @@ void TMario::jumpSlipCommon(short anmId, u32 status)
 }
 
 // jumpSlipEvents - 0x80138114
-void TMario::jumpSlipEvents(TMario::JumpSlipRecord* record)
+BOOL TMario::jumpSlipEvents(TMario::JumpSlipRecord* record)
 {
-	if (mInput & 0x20) {
+	if (mInput & 0x10) {
 		changePlayerStatus(record->mStatus, 0, false);
-		return;
+		return 1;
 	}
 
 	mActionTimer++;
-	if ((s32)mActionTimer >= record->mTimer) {
+	if (mActionTimer >= record->mTimer) {
 		changePlayerStatus(record->mStatus, 0, false);
-		return;
+		return 1;
 	}
 
 	u32 input = mInput;
@@ -2327,49 +2327,47 @@ void TMario::jumpSlipEvents(TMario::JumpSlipRecord* record)
 		if ((jumpStatus - 0x02000000) == 0x0881) {
 			if (mForwardVel >= mJumpParams.mSecJumpEnableSp.get()) {
 				changePlayerJumping(0x02000881, 0);
-				return;
+				return 1;
 			}
 		}
 		if (jumpStatus == 0x0882) {
 			if (mForwardVel >= mJumpParams.mTriJumpEnableSp.get()) {
 				changePlayerJumping(0x0882, 0);
-				return;
+				return 1;
 			}
 		}
 		changePlayerJumping(0x02000880, 0);
-		return;
-	} else if (input & 0x8000) {
-		mVel.x = 0.0f;
+		return 1;
+	} else if (input & 0x4000) {
+		mVel.y = 0.0f;
 		changePlayerStatus(0x0080088A, 1, false);
-		return;
+		return 1;
 	} else if (input & 0x4) {
 		changePlayerStatus(record->mFallbackStatus, 0, false);
-		return;
+		return 1;
 	}
-	return;
+	return 0;
 }
 
 // moveMain - 0x80138000
 BOOL TMario::moveMain()
 {
 	static JumpSlipRecord sRecords[] = {
-		{15, 0x04000440, 0x02000881, 0x0200088E},
-		{30, 0x04000440, 0x0882, 0x0200088E},
-		{15, 0x04000440, 0x02000880, 0x0200088E},
-		{15, 0x04000440, 0x02000880, 0x0200088E},
-		{15, 0x04000440, 0x02000880, 0x0200088E},
-		{15, 0x04000440, 0x02000880, 0x0200088E},
-		{15, 0x04000440, 0x02000880, 0x0200088E},
-		{15, 0x04000440, 0x02000880, 0x0200088E},
+		{16, 0, 0x0C000230, 0x02000881, 0x0000088C, 0x50},
+		{16, 0, 0x0C000232, 0x02000881, 0x0000088C, 0x50},
+		{16, 0, 0x0C000231, 0x00000882, 0x0000088C, 0x50},
+		{16, 0, 0x0C000233, 0x02000880, 0x0000088C, 0x50},
+		{4, 0, 0x0800023A, 0x02000880, 0x0000088C, 0x50},
+		{24, 0, 0x0800023B, 0x00000888, 0x0000088C, 0x50},
 	};
 
 	BOOL result = 0;
-	actnMain();
+	checkEnforceJump();
 	checkController(nullptr);
 
 	u32 action = mAction;
 	u8 flag;
-	if (action & 0x80000)
+	if (action & 0x40000)
 		flag = 1;
 	else
 		flag = 0;
@@ -2402,10 +2400,240 @@ BOOL TMario::moveMain()
 		turnEnd();
 		result = 0;
 		break;
-	case 0x04000445:
+	case 0x04000445: {
+		if (!(mInput & 0x10) && (mInput & 0xF)) {
+			result = checkAllMotions();
+			break;
+		}
+		int stopped = 0;
+		mForwardVel = FConverge(mForwardVel, 0.0f, 4.0f, 4.0f);
+		if (mForwardVel == 0.0f)
+			stopped = 1;
+		slopeProcess();
+		if (stopped) {
+			changePlayerStatus(0x0C00023D, 0, false);
+		} else {
+			int wp = walkProcess();
+			switch (wp) {
+			case 0:
+				changePlayerStatus(0x088C, 0, false);
+				break;
+			case 2:
+				if (mForwardVel > 16.0f) {
+					playerRefrection(1);
+					changePlayerDropping(0x00020462, 0);
+				} else {
+					setPlayerVelocity(0.0f);
+					changePlayerStatus(0x0C00023D, 0, false);
+				}
+				break;
+			}
+		}
+		setAnimation(15, 1.0f);
+		result = 0;
+		break;
+	}
+	case 0x00810446:
+		surfing();
+		result = 0;
+		break;
+	case 0x00800447:
+		soundTorocco();
+		toroccoEffect();
+		result = 0;
+		break;
+	case 0x0400044A:
 		walkEnd();
 		result = 0;
 		break;
+	case 0x044C: {
+		s16 savedAngle = mFaceAngle.y;
+		f32 stopNormal = getSlideStopNormal();
+		if (doSliding(stopNormal)) {
+			changePlayerStatus(0x0C00023E, 0, false);
+		} else {
+			slippingBasic(0x0C00023E, 0x0200088E, 15);
+			mFaceAngle.y = savedAngle;
+			result = 0;
+		}
+		break;
+	}
+	case 0x00020449:
+		fireDashing();
+		result = 0;
+		break;
+	case 0x00840452:
+		slipForeCommon(0x0C00023E, 0x02000880, 0x0200088E, 145);
+		result = 0;
+		break;
+	case 0x00840453:
+		slipBackCommon(902, 0x088C, 137);
+		result = 0;
+		break;
+	case 0x00800456:
+		catching();
+		result = 0;
+		break;
+	case 0x04808459: {
+		setNormalAttackArea();
+		if (mInput & 0x8) {
+			changePlayerStatus(0x00840452, 0, false);
+		} else if (mInput & 0x2) {
+			changePlayerJumping(0x02000880, 0);
+		} else if (mInput & 0x10) {
+			changePlayerStatus(0x04000445, 0, false);
+		} else {
+			slipForeCommon(0x0C008220, 0x02000880, 0x088C, 151);
+		}
+		result = 0;
+		break;
+	}
+	case 0x0004045C:
+		oilRun();
+		result = 0;
+		break;
+	case 0x0084045D:
+		oilSlip();
+		result = 0;
+		break;
+	case 0x0004045E: {
+		s16 timer = *(s16*)((u8*)this + 0x13C);
+		*(s16*)((u8*)this + 0x13C) = timer - 1;
+		if (*(s16*)((u8*)this + 0x13C) <= 0) {
+			*(s16*)((u8*)this + 0x13C) = 0;
+			*(f32*)((u8*)this + 0x138) = 0.0f;
+			changePlayerStatus(0x00800456, 0, false);
+		}
+		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
+		                   *(f32*)((u8*)this + 0x269C));
+		slipBackCommon(902, 0x088C, 137);
+		result = 0;
+		break;
+	}
+	case 0x00020460:
+		if (mActionTimer == 0) {
+			mActionTimer++;
+			emitParticle(12);
+			rumbleStart(21, *(s16*)((u8*)this + 0x27F8));
+		}
+		downingCommon(1, 86.0f, mActionArg);
+		result = 0;
+		break;
+	case 0x00020461:
+		if (mActionTimer == 0) {
+			mActionTimer++;
+			emitParticle(12);
+			rumbleStart(21, *(s16*)((u8*)this + 0x27F8));
+		}
+		downingCommon(44, 42.0f, mActionArg);
+		result = 0;
+		break;
+	case 0x00020462:
+		if (mActionTimer == 0) {
+			mActionTimer++;
+			emitParticle(12);
+			rumbleStart(21, *(s16*)((u8*)this + 0x27F8));
+		}
+		downingCommon(123, 88.0f, mActionArg);
+		result = 0;
+		break;
+	case 0x00020463:
+		if (mActionTimer == 0) {
+			mActionTimer++;
+			emitParticle(12);
+			rumbleStart(21, *(s16*)((u8*)this + 0x27F8));
+		}
+		downingCommon(124, 80.0f, mActionArg);
+		result = 0;
+		break;
+	case 0x00020464:
+		if (mActionTimer == 0) {
+			mActionTimer++;
+			emitParticle(12);
+			rumbleStart(21, *(s16*)((u8*)this + 0x27F8));
+		}
+		downingCommon(116, 200.0f, mActionArg);
+		result = 0;
+		break;
+	case 0x00020465:
+		if (mActionTimer == 0) {
+			mActionTimer++;
+			emitParticle(12);
+			rumbleStart(21, *(s16*)((u8*)this + 0x27F8));
+		}
+		downingCommon(117, 100.0f, mActionArg);
+		result = 0;
+		break;
+	case 0x00020466:
+		if (mActionTimer == 0) {
+			mActionTimer++;
+			emitParticle(12);
+			rumbleStart(21, *(s16*)((u8*)this + 0x27F8));
+		}
+		downingCommon(138, 128.0f, mActionArg);
+		result = 0;
+		break;
+	case 0x00020467:
+		loserDown();
+		result = 0;
+		break;
+	case 0x04000470:
+		if (jumpSlipEvents(&sRecords[0])) {
+			result = 1;
+		} else {
+			jumpSlipCommon(78, 0x088C);
+			result = 0;
+		}
+		break;
+	case 0x04000471:
+		if (jumpSlipEvents(&sRecords[1])) {
+			result = 1;
+		} else {
+			jumpSlipCommon(87, 0x088C);
+			result = 0;
+		}
+		break;
+	case 0x04000472:
+		if (jumpSlipEvents(&sRecords[2])) {
+			result = 1;
+		} else {
+			jumpSlipCommon(75, 0x088C);
+			result = 0;
+		}
+		break;
+	case 0x04000473:
+		if (jumpSlipEvents(&sRecords[3])) {
+			result = 1;
+		} else {
+			jumpSlipCommon(190, 0x088C);
+			if (result != 2) {
+				*(u16*)((u8*)this + 0x94) = 0;
+				s16 angle = *(s16*)((u8*)this + 0x9A);
+				*(s16*)((u8*)this + 0x9A) = angle + 0x8000;
+			}
+			result = 0;
+		}
+		break;
+	case 0x04000478:
+		if (jumpSlipEvents(&sRecords[4])) {
+			result = 1;
+		} else {
+			jumpSlipCommon(192, 0x088C);
+			result = 0;
+		}
+		break;
+	case 0x0479: {
+		if (!(mInput & 0x4000)) {
+			mInput &= ~0x2;
+		}
+		if (jumpSlipEvents(&sRecords[5])) {
+			result = 1;
+		} else {
+			jumpSlipCommon(152, 0x088C);
+			result = 0;
+		}
+		break;
+	}
 	default:
 		break;
 	}
