@@ -55,8 +55,8 @@ BOOL TMario::canSleep()
 	if (hasFlags)
 		return 0;
 
-	f32 sleepCheckDist = *(f32*)((u8*)this + 0x960);
-	f32 sleepCheckTol = *(f32*)((u8*)this + 0x974);
+	f32 sleepCheckDist = mDeParams.mSleepingCheckDist.value;
+	f32 sleepCheckTol = mDeParams.mSleepingCheckHeight.value;
 	const TBGCheckData* bgData;
 
 	f32 groundY = gpMap->checkGround(
@@ -144,12 +144,12 @@ BOOL TMario::waitingCommonEvents()
 	if (input & 0x01) {
 		s16 faceY = mFaceAngle.y;
 		s16 intendedYaw = mIntendedYaw;
-		s16 turnSpeed = *(s16*)((u8*)this + 0x604);
+		s16 turnSpeed = mDeParams.mWaitingRotSp.value;
 		s16 diff = (s16)(intendedYaw - faceY);
 		s16 converged = IConverge((int)diff, 0, (int)turnSpeed, (int)turnSpeed);
 		mFaceAngle.y = (s16)(intendedYaw - converged);
 
-		if (mIntendedMag > *(f32*)((u8*)this + 0x23A8)) {
+		if (mIntendedMag > mControllerParams.mStartToWalkLevel.value) {
 			emitSmoke(mFaceAngle.y);
 			changePlayerStatus(0x04000440, 0, false);
 			return 1;
@@ -442,14 +442,14 @@ void TMario::getSideWalkValues(E_SIDEWALK_TYPE* outType, f32* outSpeed, f32* out
 	s32 idx = (s32)diffU >> jmaSinShift;
 	f32 sinVal = jmaSinTable[idx];
 	f32 sideComponent = mIntendedMag * sinVal;
-	f32 ff8 = *(f32*)((u8*)this + 0xFF8);
+	f32 ff8 = mRunParams.mPumpingSlideSp.value;
 	f32 sidewalkVel = sideComponent * ff8;
 
 	if (0.0f == sidewalkVel) {
 		*outType = (E_SIDEWALK_TYPE)0;
 		*outSpeed = getMotionFrameCtrl().getRate();
 	} else {
-		f32 f100c = *(f32*)((u8*)this + 0x100C);
+		f32 f100c = mRunParams.mPumpingSlideAnmSp.value;
 		f32 speed = sidewalkVel * f100c;
 		if (speed < 0.0f)
 			speed = -speed;
@@ -514,7 +514,7 @@ BOOL TMario::squating()
 		if (pad->mMeaning & 0x2000) {
 			if (gun != nullptr) {
 				if (*(u8*)((u8*)gun + 0x1C84) == 0) {
-					rumbleStart(21, *(s16*)((u8*)this + 0x27E4));
+					rumbleStart(21, mMotorParams.mMotorHipDrop.value);
 					changePlayerStatus(0x0883, 0, false);
 					return 1;
 				}
@@ -597,8 +597,8 @@ BOOL TMario::squating()
 			if (analogStick < 0.0f)
 				isPositive = 0;
 
-			f32 threshold = *(f32*)((u8*)this + 0x23F8);
-			f32 maxSpeed = *(f32*)((u8*)this + 0x240C);
+			f32 threshold = mControllerParams.mSquatRotMidAnalog.value;
+			f32 maxSpeed = mControllerParams.mSquatRotMidValue.value;
 			f32 turnSpeed;
 
 			if (absVal < threshold) {
@@ -613,7 +613,7 @@ BOOL TMario::squating()
 			if (!isPositive)
 				turnSpeed = -turnSpeed;
 
-			s16 maxTurnRate = *(s16*)((u8*)this + 0x604);
+			s16 maxTurnRate = mDeParams.mWaitingRotSp.value;
 			s32 negRate = -maxTurnRate;
 			s16 faceY = mFaceAngle.y;
 			s16 angleDelta = (s16)(s32)(turnSpeed * (f64)negRate);

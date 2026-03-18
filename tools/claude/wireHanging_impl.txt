@@ -1,0 +1,173 @@
+void TMario::wireHanging()
+{
+	s16 angle;
+	getOnWirePosAngle(&mPosition, &angle);
+
+	if ((mInput & 0x2) && (mFloorPosition.x - mFloorPosition.y >= 160.0f)) {
+		mWireBounceVel = 5.0f;
+		changePlayerStatus(0x10000556, 0, false);
+		return;
+	}
+
+	if (mInput & 0x8000) {
+		mHolder->receiveMessage(this, 8);
+		mHolder = 0;
+
+		f32 zero = 0.0f;
+		mVel.y = zero;
+		mForwardVel = zero;
+
+		mPosition.x -= 60.0f * JMASSin(mFaceAngle.y);
+		mPosition.z -= 60.0f * JMASCos(mFaceAngle.y);
+
+		f32 groundY = gpMap->checkGround(mPosition.x, mPosition.y, mPosition.z, (const TBGCheckData**)0);
+
+		f32 limit = mPosition.y - 100.0f;
+		if (groundY < limit) {
+			mPosition.y = limit;
+		} else {
+			mPosition.y = groundY;
+		}
+
+		changePlayerStatus(0x208ba, 0, false);
+		return;
+	}
+
+	u8 canSpray = 0;
+	unkF6 = 0;
+
+	s16 wireAngle = (s16)angle;
+	mFaceAngle.x = 0;
+	mFaceAngle.y = wireAngle + 0x4000;
+	mModelFaceAngle = angle;
+
+	if (mInput & 0x1) {
+		s16 angleDiff = (s16)(wireAngle - mIntendedYaw);
+
+		if (angleDiff > -0x2000 && angleDiff < 0x3555) {
+			int moveResult = wireMove(3.0f);
+			if (moveResult != 0) {
+				setAnimation(0xe5, 1.0f);
+			} else {
+				setAnimation(0xe3, 1.0f);
+			}
+		}
+
+		if (angleDiff < -0x6000 || angleDiff > 0x4AAA) {
+			int moveResult = wireMove(-3.0f);
+			if (moveResult != 0) {
+				setAnimation(0xe6, 1.0f);
+			} else {
+				setAnimation(0xe3, 1.0f);
+			}
+		}
+
+		if (angleDiff >= -0x6000 && angleDiff <= -0x2000) {
+			mWireBounceVel = 5.0f;
+			changePlayerStatus(0x10000556, 0, false);
+			return;
+		}
+
+		if (angleDiff >= 0x3555 && angleDiff <= 0x4AAA) {
+			f32 zero = 0.0f;
+			mVel.y = zero;
+			mForwardVel = zero;
+
+			mPosition.x -= 60.0f * JMASSin(mFaceAngle.y);
+			mPosition.z -= 60.0f * JMASCos(mFaceAngle.y);
+
+			f32 groundY = gpMap->checkGround(mPosition.x, mPosition.y, mPosition.z, (const TBGCheckData**)0);
+
+			f32 limit = mPosition.y - 100.0f;
+			if (groundY < limit) {
+				mPosition.y = limit;
+			} else {
+				mPosition.y = groundY;
+			}
+
+			changePlayerStatus(0x208ba, 0, false);
+		}
+	} else {
+		if (unk380 != 0) {
+			setAnimation(0xe3, 1.0f);
+			return;
+		}
+
+		TWaterGun* waterGun = mWaterGun;
+		if (waterGun == 0) {
+			setAnimation(0xe3, 1.0f);
+			return;
+		}
+
+		if (waterGun->mCurrentWater == 0) {
+		} else {
+			s32 kind = waterGun->getCurrentNozzle()->getNozzleKind();
+			if (kind == 1) {
+				if (waterGun->getCurrentNozzle()->unk385 == 1) {
+					canSpray = 1;
+				}
+			} else {
+				if (waterGun->getCurrentNozzle()->unk378 > 0.0f) {
+					canSpray = 1;
+				}
+			}
+		}
+
+		if (!canSpray) {
+			setAnimation(0xe3, 1.0f);
+			return;
+		}
+
+		s16 rotSpeed;
+		if (mWaterGun == 0) {
+			rotSpeed = 0;
+		} else {
+			switch (mWaterGun->mCurrentNozzle) {
+			case TWaterGun::Rocket:
+				rotSpeed = mWireParams.mRotSpeedTrgRocket.get();
+				break;
+			case TWaterGun::Hover:
+				rotSpeed = mWireParams.mRotSpeedTrgHover.get();
+				break;
+			case TWaterGun::Turbo:
+				rotSpeed = mWireParams.mRotSpeedTrgTurbo.get();
+				break;
+			default:
+				rotSpeed = mWireParams.mRotSpeed.get();
+				break;
+			}
+		}
+
+		if (rotSpeed > 0) {
+			unkF6 = unkF6 + mWireParams.mRotStop.get() * 2;
+		} else {
+			unkF6 = unkF6 - mWireParams.mRotStop.get() * 2;
+		}
+
+		s16 rotSpeed2;
+		if (mWaterGun == 0) {
+			rotSpeed2 = 0;
+		} else {
+			switch (mWaterGun->mCurrentNozzle) {
+			case TWaterGun::Rocket:
+				rotSpeed2 = mWireParams.mRotSpeedTrgRocket.get();
+				break;
+			case TWaterGun::Hover:
+				rotSpeed2 = mWireParams.mRotSpeedTrgHover.get();
+				break;
+			case TWaterGun::Turbo:
+				rotSpeed2 = mWireParams.mRotSpeedTrgTurbo.get();
+				break;
+			default:
+				rotSpeed2 = mWireParams.mRotSpeed.get();
+				break;
+			}
+		}
+
+		unkF6 = unkF6 + rotSpeed2;
+		changePlayerStatus(0x10000358, 0, false);
+		return;
+	}
+
+	setAnimation(0xe3, 1.0f);
+}

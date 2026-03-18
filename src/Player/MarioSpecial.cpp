@@ -22,7 +22,7 @@ BOOL TMario::specMain()
 
 	f32 bounceVel = mWireBounceVel;
 	f32 wireSag = mWireSag;
-	f32 factor1 = *(f32*)((u8*)this + 0x1400);
+	f32 factor1 = mWireParams.mSwingRate.value;
 	mWireBounceVel = bounceVel - wireSag * factor1;
 
 	f32 sag = mWireSag;
@@ -30,16 +30,16 @@ BOOL TMario::specMain()
 	mWireSag = sag + vel;
 
 	f32 sag2 = mWireSag;
-	f32 damping = *(f32*)((u8*)this + 0x1464);
+	f32 damping = mWireParams.mWireSwingBrake.value;
 	mWireSag = sag2 * damping;
 
-	f32 maxBounce = *(f32*)((u8*)this + 0x1478);
+	f32 maxBounce = mWireParams.mWireSwingMax.value;
 	f32 curSag = mWireSag;
 	f32 negMax = -maxBounce;
 	if (curSag < negMax)
 		mWireSag = negMax;
 
-	f32 posMax = *(f32*)((u8*)this + 0x1478);
+	f32 posMax = mWireParams.mWireSwingMax.value;
 	if (posMax < mWireSag)
 		mWireSag = posMax;
 
@@ -50,7 +50,7 @@ BOOL TMario::specMain()
 	case 0x10100341:
 		// barClimb entry variant - rumble + bar process
 		if (mActionTimer == 0) {
-			rumbleStart(0x15, *(s16*)((u8*)this + 0x27f8));
+			rumbleStart(0x15, mMotorParams.mMotorWall.value);
 			mActionTimer++;
 		}
 		if ((u32)mHeldObject == 0) {
@@ -102,10 +102,10 @@ BOOL TMario::specMain()
 		// fence kick
 		setAnimation(0x101, 1.0f);
 		{
-			f32 entryR1 = *(f32*)((u8*)this + 0xae8);
+			f32 entryR1 = mAttackParamsKickRoof.mRadius.value;
 			mAttackRadius = entryR1;
 			calcEntryRadius();
-			f32 entryR2 = *(f32*)((u8*)this + 0xafc);
+			f32 entryR2 = mAttackParamsKickRoof.mHeight.value;
 			mAttackHeight = entryR2;
 			calcEntryRadius();
 		}
@@ -441,7 +441,7 @@ BOOL TMario::fencePunch()
 			MSoundSESystem::MSoundSE::startSoundActor(
 			    0x193a, (Vec*)&mPosition, 0, (JAISound**)0, 0, 4);
 		}
-		rumbleStart(0x15, *(s16*)((u8*)this + 0x27f8));
+		rumbleStart(0x15, mMotorParams.mMotorWall.value);
 		startJumpWall();
 		return;
 	}
@@ -458,10 +458,10 @@ BOOL TMario::fencePunch()
 	}
 
 	setAnimation(0x100, 1.0f);
-	f32 entryR1 = *(f32*)((u8*)this + 0xab8);
+	f32 entryR1 = mAttackParamsFencePunch.mRadius.value;
 	mAttackRadius = entryR1;
 	calcEntryRadius();
-	f32 entryR2 = *(f32*)((u8*)this + 0xacc);
+	f32 entryR2 = mAttackParamsFencePunch.mHeight.value;
 	mAttackHeight = entryR2;
 	calcEntryRadius();
 
@@ -471,7 +471,7 @@ BOOL TMario::fencePunch()
 
 	if (getMotionFrameCtrl().checkPass(5.0f)) {
 		emitParticle(0x39, (JGeometry::TVec3<f32>*)((u8*)this + 0x184));
-		rumbleStart(0x15, *(s16*)((u8*)this + 0x27f8));
+		rumbleStart(0x15, mMotorParams.mMotorWall.value);
 
 		TLiveActor* actor = *(TLiveActor**)((u8*)this + 0x2C0);
 		if (actor != 0) {
@@ -519,7 +519,7 @@ void TMario::fenceMove()
 			JGeometry::TVec3<f32> movePos(mPosition);
 
 			TMarioControllerWork* ctrl = (TMarioControllerWork*)unk108;
-			f32 fenceSpeed = *(f32*)((u8*)this + 0xBA4);
+			f32 fenceSpeed = mJumpParams.mFenceSpeed.value;
 			movePos.y += (0.015625f * ctrl->mStickV) * fenceSpeed;
 
 			s16 camAngle = *(s16*)((u8*)gpCamera + 0x258);
@@ -621,7 +621,7 @@ void TMario::fenceMove()
 			MSoundSESystem::MSoundSE::startSoundActor(
 			    0x193a, (Vec*)&mPosition, 0, (JAISound**)0, 0, 4);
 		}
-		rumbleStart(0x15, *(s16*)((u8*)this + 0x27f8));
+		rumbleStart(0x15, mMotorParams.mMotorWall.value);
 		startJumpWall();
 		return;
 	}
@@ -1436,10 +1436,10 @@ void TMario::wireWait()
 		changePlayerStatus(0x892, 0, false);
 		setPlayerVelocity(0.0f);
 		if (mWireBounceVel < 0.0f) {
-			f32 factor = *(f32*)((u8*)this + 0x143c);
+			f32 factor = mWireParams.mWireJumpMult.value;
 			mVel.y = -(mWireBounceVel * factor - mVel.y);
 		}
-		mVel.y = mVel.y + *(f32*)((u8*)this + 0x1450);
+		mVel.y = mVel.y + mWireParams.mWireJumpBase.value;
 
 		u32 soundId;
 		if (mWireBounceVel < *(f32*)((u8*)this + 0x544)) {
@@ -1807,13 +1807,13 @@ void TMario::hanging()
 
 		s16 stickDiffExt2 = (s16)stickAngleDiff;
 		if (stickDiffExt2 > -29127 && stickDiffExt2 < 29127) {
-			if (mActionTimer >= *(s16*)((u8*)this + 0x12D8) && wallCheck1.mResultWallsNum > 0) {
+			if (mActionTimer >= mHangingParams.mRapidTime.value && wallCheck1.mResultWallsNum > 0) {
 				JGeometry::TVec3<f32> targetPos;
 				targetPos.x = mPosition.x;
 				targetPos.y = mPosition.y;
 				targetPos.z = mPosition.z;
 
-				f32 moveSpeed = *(f32*)((u8*)this + 0x12B0);
+				f32 moveSpeed = mHangingParams.mMoveSp.value;
 				if (stickDiffExt2 > 1024 && stickDiffExt2 < 29127) {
 					f32 mag = mIntendedMag;
 					targetPos.x = mPosition.x - moveSpeed * (mag * bestWall->mNormal.z);
@@ -1878,7 +1878,7 @@ void TMario::hanging()
 						        + bestWall->mNormal.x * bestWall3->mNormal.x
 						        + bestWall->mNormal.z * bestWall3->mNormal.z;
 
-						if (*(f32*)((u8*)this + 0x08FC) < dot) {
+						if (mDeParams.mHangWallMovableAngle.value < dot) {
 							s32 newAngle = matan(bestWall3->mNormal.z, bestWall3->mNormal.x);
 							mFaceAngle.y = (s16)(newAngle + 0x8000);
 
@@ -1951,17 +1951,17 @@ void TMario::hanging()
 			f32 guess = __frsqrte(distSq);
 			dist = distSq * (0.5f * guess * (3.0f - distSq * guess * guess));
 		}
-		f32 animSpeed = dist * *(f32*)((u8*)this + 0x12C4);
+		f32 animSpeed = dist * mHangingParams.mAnmRate.value;
 		if ((s16)stickAngleDiff < 0) {
 			setAnimation(0xD7, animSpeed);
 		} else {
 			setAnimation(0xD8, animSpeed);
 		}
 	} else {
-		if (mActionTimer < *(s16*)((u8*)this + 0x12D8)) {
+		if (mActionTimer < mHangingParams.mRapidTime.value) {
 			setAnimation(0x33, 1.0f);
 		} else {
-			setAnimation(0x33, *(f32*)((u8*)this + 0x1300));
+			setAnimation(0x33, mHangingParams.mAnmRapid.value);
 		}
 	}
 }
@@ -1998,7 +1998,7 @@ void TMario::moveRoof()
 				actor->receiveMessage(this, 3);
 				if (actor->mActorType == 0x4000006a) {
 					emitParticle(0x39, &unk160[1]);
-					rumbleStart(0x15, *(s16*)((u8*)this + 0x27f8));
+					rumbleStart(0x15, mMotorParams.mMotorWall.value);
 					changePlayerStatus(0x00200345, 0, false);
 					return;
 				}
@@ -2035,7 +2035,7 @@ afterCommon:
 	JGeometry::TVec3<f32> dir = diff;
 	f32 dist = JGeometry::TUtil<f32>::sqrt(dir.x * dir.x + dir.y * dir.y + dir.z * dir.z);
 
-	f32 speed = dist * *(f32*)((u8*)this + 0x1330);
+	f32 speed = dist * mHangRoofParams.mAnmMult.value;
 	if (mActionArg & 1) {
 		setAnimation(0x5c, speed);
 	} else {
@@ -2061,7 +2061,7 @@ BOOL TMario::roofCommonEvents()
 			actor->receiveMessage(this, 3);
 			if (actor->mActorType == 0x4000006a) {
 				emitParticle(0x39, &unk160[1]);
-				rumbleStart(0x15, *(s16*)((u8*)this + 0x27f8));
+				rumbleStart(0x15, mMotorParams.mMotorWall.value);
 				return changePlayerStatus(0x00200345, 0, false);
 			}
 		}
@@ -2187,7 +2187,7 @@ void TMario::barClimb()
 	}
 
 	mVel.y = 0.0f;
-	f32 climbRate = *(f32*)((u8*)this + 0x15f4);
+	f32 climbRate = mBarParams.mClimbSp.value;
 	mPosition.y = mPosition.y + climbParam * climbRate;
 	mHolderHeightDiff = mPosition.y - mHolder->mPosition.y;
 
@@ -2199,7 +2199,7 @@ void TMario::barClimb()
 
 	int barResult = barProcess();
 	if (barResult == 0) {
-		f32 animSpeed = *(f32*)((u8*)unk108 + 0x14) * *(f32*)((u8*)this + 0x161c) + 1.0f;
+		f32 animSpeed = *(f32*)((u8*)unk108 + 0x14) * mBarParams.mClimbAnmRate.value + 1.0f;
 		setAnimation(5, animSpeed);
 	}
 
@@ -2313,7 +2313,7 @@ void TMario::barWait()
 		}
 	}
 
-	mFaceAngle.y += (int)(*(f32*)((u8*)unk108 + 0x10) * *(f32*)((u8*)this + 0x1608));
+	mFaceAngle.y += (int)(*(f32*)((u8*)unk108 + 0x10) * mBarParams.mRotateSp.value);
 	mFaceAngle.x = 0;
 	mModelFaceAngle = mFaceAngle.y;
 

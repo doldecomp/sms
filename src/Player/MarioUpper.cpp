@@ -93,8 +93,8 @@ BOOL TMario::checkPumpEnable()
 	// Check dirty amount and ratio
 	f32 dirty = *(f32*)((u8*)this + 0x368);
 	if (dirty > 0.0f) {
-		s16 val = *(s16*)((u8*)this + 0x2428);
-		f32 limit = *(f32*)((u8*)this + 0x24C8);
+		s16 val = mGraffitoParams.mSinkTime.value;
+		f32 limit = mGraffitoParams.mSinkPumpLimit.value;
 		f32 ratio = dirty / (f32)val;
 		if (ratio > limit) {
 			unk380 = 5;
@@ -184,7 +184,7 @@ void TMario::stateMachineUpper()
 		f32 pumpFrame = *(f32*)((u8*)unk108 + 0x1C);
 		if (pumpFrame == 0.0f) {
 			unk380 = 1;
-			unk37E = *(u16*)((u8*)this + 0x3084);
+			unk37E = mUpperBodyParams.mPumpWaitTime.value;
 		}
 
 		if (!checkFlag(MARIO_FLAG_FLUDD_EMITTING))

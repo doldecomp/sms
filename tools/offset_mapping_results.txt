@@ -1,0 +1,1317 @@
+==========================================================================================
+COMPLETE TParams OFFSET-TO-NAME MAPPING TABLE
+==========================================================================================
+OFFSET   PARAM_NAME                                              DEFAULT_VALUE
+------   ----------                                              -------------
+  --- mDeParams (TDeParams) @ base 0x0574 ---
+0x058C   mDeParams.mHpMax                                        8
+0x05A0   mDeParams.mRunningMax                                   45.0f
+0x05B4   mDeParams.mDashMax                                      60.0f
+0x05C8   mDeParams.mDashAcc                                      0.5f
+0x05DC   mDeParams.mDashBrake                                    0.8f
+0x05F0   mDeParams.mDashStartTime                                0x78
+0x0604   mDeParams.mWaitingRotSp                                 0x100
+0x0618   mDeParams.mRunningRotSpMin                              0x200
+0x062C   mDeParams.mRunningRotSpMax                              0x400
+0x0640   mDeParams.mRocketRotSp                                  0x100
+0x0654   mDeParams.mPumpingRotSpMin                              0x100
+0x0668   mDeParams.mPumpingRotSpMax                              0x200
+0x067C   mDeParams.mInvincibleTime                               0x14
+0x0690   mDeParams.mFootPrintTimerMax                            0x208
+0x06A4   mDeParams.mWaterTriggerRate                             1
+0x06B8   mDeParams.mGraffitoNoDmgTime                            10
+0x06CC   mDeParams.mRestMax                                      0xff
+0x06E0   mDeParams.mShadowSize                                   200.0f
+0x06F4   mDeParams.mShadowErase                                  0.2f
+0x0708   mDeParams.mHoldRadius                                   100.0f
+0x071C   mDeParams.mDamageRadius                                 42.0f
+0x0730   mDeParams.mDamageHeight                                 110.0f
+0x0744   mDeParams.mAttackHeight                                 50.0f
+0x0758   mDeParams.mTrampleRadius                                100.0f
+0x076C   mDeParams.mPushupRadius                                 100.0f
+0x0780   mDeParams.mPushupHeight                                 200.0f
+0x0794   mDeParams.mHipdropRadius                                250.0f
+0x07A8   mDeParams.mQuakeRadius                                  500.0f
+0x07BC   mDeParams.mQuakeHeight                                  500.0f
+0x07D0   mDeParams.mTramplePowStep1                              30.0f
+0x07E4   mDeParams.mTramplePowStep2                              40.0f
+0x07F8   mDeParams.mTramplePowStep3                              50.0f
+0x080C   mDeParams.mJumpWallHeight                               1000.0f
+0x0820   mDeParams.mThrowPower                                   2.0f
+0x0834   mDeParams.mSlipStart                                    0.342f
+0x0848   mDeParams.mWasOnWaterSlip                               0.97f
+0x085C   mDeParams.mInWaterSlip                                  0.9f
+0x0870   mDeParams.mToroccoRotSp                                 1.0f
+0x0884   mDeParams.mRecoverTimer                                 0xf0
+0x0898   mDeParams.mHotTimer                                     0x4b0
+0x08AC   mDeParams.mFeelDeep                                     500.0f
+0x08C0   mDeParams.mDamageFallHeight                             1000.0f
+0x08D4   mDeParams.mForceSlipAngle                               0.5f
+0x08E8   mDeParams.mClashSpeed                                   50.0f
+0x08FC   mDeParams.mHangWallMovableAngle                         0.3f
+0x0910   mDeParams.mColMvMax                                     10.0f
+0x0924   mDeParams.mNoFreezeTime                                 0x78
+0x0938   mDeParams.mKickFreezeTime                               5
+0x094C   mDeParams.mSurfStartFreezeTime                          0x78
+0x0960   mDeParams.mSleepingCheckDist                            50.0f
+0x0974   mDeParams.mSleepingCheckHeight                          30.0f
+0x0988   mDeParams.mIllegalPlaneCtInc                            4
+0x099C   mDeParams.mIllegalPlaneTime                             0x1e0
+  --- mBodyAngleParamsFree (TBodyAngleParams) @ base 0x09A0 ---
+0x09B8   mBodyAngleParamsFree.mHeadRot                           0.0f
+0x09CC   mBodyAngleParamsFree.mWaistRoll                         0.0f
+0x09E0   mBodyAngleParamsFree.mWaistPitch                        80.0f
+0x09F4   mBodyAngleParamsFree.mWaistRollMax                      0
+0x0A08   mBodyAngleParamsFree.mWaistPitchMax                     1000
+0x0A1C   mBodyAngleParamsFree.mWaistAngleChangeRate              0.07f
+  --- mBodyAngleParamsWaterGun (TBodyAngleParams) @ base 0x0A20 ---
+0x0A38   mBodyAngleParamsWaterGun.mHeadRot                       0.0f
+0x0A4C   mBodyAngleParamsWaterGun.mWaistRoll                     0.0f
+0x0A60   mBodyAngleParamsWaterGun.mWaistPitch                    80.0f
+0x0A74   mBodyAngleParamsWaterGun.mWaistRollMax                  0
+0x0A88   mBodyAngleParamsWaterGun.mWaistPitchMax                 1000
+0x0A9C   mBodyAngleParamsWaterGun.mWaistAngleChangeRate          0.07f
+  --- mAttackParamsFencePunch (TAttackParams) @ base 0x0AA0 ---
+0x0AB8   mAttackParamsFencePunch.mRadius                         100.0f
+0x0ACC   mAttackParamsFencePunch.mHeight                         50.0f
+  --- mAttackParamsKickRoof (TAttackParams) @ base 0x0AD0 ---
+0x0AE8   mAttackParamsKickRoof.mRadius                           100.0f
+0x0AFC   mAttackParamsKickRoof.mHeight                           50.0f
+  --- mJumpParams (TJumpParams) @ base 0x0B00 ---
+0x0B18   mJumpParams.mGravity                                    0.8f
+0x0B2C   mJumpParams.mSpinJumpGravity                            0.6f
+0x0B40   mJumpParams.mJumpingMax                                 80.0f
+0x0B54   mJumpParams.mJumpSpeedBrake                             0.999f
+0x0B68   mJumpParams.mJumpAccelControl                           0.5f
+0x0B7C   mJumpParams.mJumpSlideControl                           0.5f
+0x0B90   mJumpParams.mTurnJumpForce                              62.0f
+0x0BA4   mJumpParams.mFenceSpeed                                 2.0f
+0x0BB8   mJumpParams.mFireDownForce                              80.0f
+0x0BCC   mJumpParams.mFireDownControl                            1.0f
+0x0BE0   mJumpParams.mFireBackVelocity                           1.0f
+0x0BF4   mJumpParams.mBroadJumpForce                             80.0f
+0x0C08   mJumpParams.mBroadJumpForceY                            30.0f
+0x0C1C   mJumpParams.mRotateJumpForceY                           62.0f
+0x0C30   mJumpParams.mPopUpSpeedY                                5.0f
+0x0C44   mJumpParams.mPopUpForceYMult                            10.0f
+0x0C58   mJumpParams.mBackJumpForce                              -16.0f
+0x0C6C   mJumpParams.mBackJumpForceY                             62.0f
+0x0C80   mJumpParams.mHipAttackSpeedY                            -50.0f
+0x0C94   mJumpParams.mSuperHipAttackSpeedY                       -80.0f
+0x0CA8   mJumpParams.mJumpCatchRotXSp                            0x100
+0x0CBC   mJumpParams.mJumpCatchRotXMax                           0x2aaa
+0x0CD0   mJumpParams.mRotBroadEnableV                            30.0f
+0x0CE4   mJumpParams.mRotBroadJumpForce                          60.0f
+0x0CF8   mJumpParams.mRotBroadJumpForceY                         20.0f
+0x0D0C   mJumpParams.mTrampolineDec                              1.0f
+0x0D20   mJumpParams.mSecJumpEnableSp                            20.0f
+0x0D34   mJumpParams.mSecJumpForce                               52.0f
+0x0D48   mJumpParams.mSecJumpSpeedMult                           0.0f
+0x0D5C   mJumpParams.mSecJumpXZMult                              0.8f
+0x0D70   mJumpParams.mTriJumpEnableSp                            20.0f
+0x0D84   mJumpParams.mUltraJumpForce                             70.0f
+0x0D98   mJumpParams.mUltraJumpSpeedMult                         0.25f
+0x0DAC   mJumpParams.mUltraJumpXZMult                            0.8f
+0x0DC0   mJumpParams.mValleyDepth                                500.0f
+0x0DD4   mJumpParams.mThrownAccel                                0.5f
+0x0DE8   mJumpParams.mThrownSlide                                0.5f
+0x0DFC   mJumpParams.mThrownBrake                                0.98f
+0x0E10   mJumpParams.mTremblePower                               5.0f
+0x0E24   mJumpParams.mTrembleAccele                              2.0f
+0x0E38   mJumpParams.mTrembleBrake                               0.99f
+0x0E4C   mJumpParams.mTrembleTime                                600
+0x0E60   mJumpParams.mClashAngle                                 0x3555
+0x0E74   mJumpParams.mJumpJumpCatchSp                            50.0f
+0x0E88   mJumpParams.mGetOffYoshiY                               30.0f
+0x0E9C   mJumpParams.mSuperHipAttackCt                           0x32
+  --- mRunParams (TRunParams) @ base 0x0EA0 ---
+0x0EB8   mRunParams.mMaxSpeed                                    32.0f
+0x0ECC   mRunParams.mVelMinusBrake                               1.1f
+0x0EE0   mRunParams.mAddBase                                     1.1f
+0x0EF4   mRunParams.mAddVelDiv                                   0.0233f
+0x0F08   mRunParams.mDecStartNrmY                                0.95f
+0x0F1C   mRunParams.mDecBrake                                    1.0f
+0x0F30   mRunParams.mSoft2Walk                                   8.0f
+0x0F44   mRunParams.mWalk2Soft                                   5.0f
+0x0F58   mRunParams.mSoftStepAnmMult                             0.125f
+0x0F6C   mRunParams.mRunAnmSpeedBase                             1.0f
+0x0F80   mRunParams.mRunAnmSpeedMult                             0.06f
+0x0F94   mRunParams.mMotBlendWalkSp                              1.0f
+0x0FA8   mRunParams.mMotBlendRunSp                               3.0f
+0x0FBC   mRunParams.mSwimDepth                                   120.0f
+0x0FD0   mRunParams.mInWaterBrake                                0.9f
+0x0FE4   mRunParams.mInWaterAnmBrake                             0.6f
+0x0FF8   mRunParams.mPumpingSlideSp                              0.1f
+0x100C   mRunParams.mPumpingSlideAnmSp                           0.5f
+0x1020   mRunParams.mDoJumpCatchSp                               15.0f
+0x1034   mRunParams.mTurnNeedSp                                  10.0f
+0x1048   mRunParams.mDashRotSp                                   100
+  --- mSwimParams (TSwimParams) @ base 0x104C ---
+0x1064   mSwimParams.mStartSp                                    1.0f
+0x1078   mSwimParams.mMoveSp                                     0.8f
+0x108C   mSwimParams.mMoveBrake                                  1.0f
+0x10A0   mSwimParams.mSwimmingRotSpMin                           0x200
+0x10B4   mSwimParams.mSwimmingRotSpMax                           0x400
+0x10C8   mSwimParams.mPumpingRotSpMin                            0x100
+0x10DC   mSwimParams.mPumpingRotSpMax                            0x200
+0x10F0   mSwimParams.mGravity                                    0.1f
+0x1104   mSwimParams.mWaitBouyancy                               1.0f
+0x1118   mSwimParams.mMoveBouyancy                               1.0f
+0x112C   mSwimParams.mUpDownBrake                                0.95f
+0x1140   mSwimParams.mCanJumpDepth                               1.0f
+0x1154   mSwimParams.mEndDepth                                   80.0f
+0x1168   mSwimParams.mFloatHeight                                120.0f
+0x117C   mSwimParams.mStartVMult                                 0.1f
+0x1190   mSwimParams.mStartVYMult                                0.1f
+0x11A4   mSwimParams.mRush                                       3.0f
+0x11B8   mSwimParams.mAnmBrake                                   0.02f
+0x11CC   mSwimParams.mPaddleSpeedUp                              0.3f
+0x11E0   mSwimParams.mPaddleJumpUp                               1.0f
+0x11F4   mSwimParams.mFloatUp                                    2.0f
+0x1208   mSwimParams.mWaterLevelCheckHeight                      10.0f
+0x121C   mSwimParams.mPaddleDown                                 1.0f
+0x1230   mSwimParams.mWaitSinkTime                               0x32
+0x1244   mSwimParams.mCanBreathDepth                             50.0f
+0x1258   mSwimParams.mWaitSinkSpeed                              5.0f
+0x126C   mSwimParams.mAirDec                                     0.001f
+0x1280   mSwimParams.mAirDecDive                                 0.001f
+0x1294   mSwimParams.mAirInc                                     0.03f
+  --- mHangingParams (THangingParams) @ base 0x1298 ---
+0x12B0   mHangingParams.mMoveSp                                  0.1f
+0x12C4   mHangingParams.mAnmRate                                 0.5f
+0x12D8   mHangingParams.mRapidTime                               2000
+0x12EC   mHangingParams.mLimitTime                               0x960
+0x1300   mHangingParams.mAnmRapid                                8.0f
+0x1314   mHangingParams.mDescentSp                               10.0f
+  --- mHangRoofParams (THangRoofParams) @ base 0x1318 ---
+0x1330   mHangRoofParams.mAnmMult                                0.3f
+  --- mWireParams (TWireParams) @ base 0x1334 ---
+0x134C   mWireParams.mRotSpeed                                   -8
+0x1360   mWireParams.mRotSpeedTrgHover                           8
+0x1374   mWireParams.mRotSpeedTrgTurbo                           1000
+0x1388   mWireParams.mRotSpeedTrgRocket                          1000
+0x139C   mWireParams.mRotSpeedMax                                0x578
+0x13B0   mWireParams.mRotStop                                    100
+0x13C4   mWireParams.mRotGravity                                 0x14
+0x13D8   mWireParams.mRotBrake                                   0.98f
+0x13EC   mWireParams.mJumpRate                                   0.09f
+0x1400   mWireParams.mSwingRate                                  0.005f
+0x1414   mWireParams.mWireJumpAccelControl                       0.01f
+0x1428   mWireParams.mWireJumpSlideControl                       0.3f
+0x143C   mWireParams.mWireJumpMult                               5.0f
+0x1450   mWireParams.mWireJumpBase                               20.0f
+0x1464   mWireParams.mWireSwingBrake                             0.99f
+0x1478   mWireParams.mWireSwingMax                               100.0f
+  --- mPullParamsBGBeak (TPullParams) @ base 0x147C ---
+0x1494   mPullParamsBGBeak.mPullRateV                            0.3f
+0x14A8   mPullParamsBGBeak.mPullRateH                            0.05f
+0x14BC   mPullParamsBGBeak.mOilPullRateV                         0.1f
+0x14D0   mPullParamsBGBeak.mOilPullRateH                         0.01f
+  --- mPullParamsBGTentacle (TPullParams) @ base 0x14D4 ---
+0x14EC   mPullParamsBGTentacle.mPullRateV                        0.3f
+0x1500   mPullParamsBGTentacle.mPullRateH                        0.05f
+0x1514   mPullParamsBGTentacle.mOilPullRateV                     0.1f
+0x1528   mPullParamsBGTentacle.mOilPullRateH                     0.01f
+  --- mPullParamsBGFireWanWanBossTail (TPullParams) @ base 0x152C ---
+0x1544   mPullParamsBGFireWanWanBossTail.mPullRateV              0.3f
+0x1558   mPullParamsBGFireWanWanBossTail.mPullRateH              0.05f
+0x156C   mPullParamsBGFireWanWanBossTail.mOilPullRateV           0.1f
+0x1580   mPullParamsBGFireWanWanBossTail.mOilPullRateH           0.01f
+  --- mPullParamsFireWanWanTail (TPullParams) @ base 0x1584 ---
+0x159C   mPullParamsFireWanWanTail.mPullRateV                    0.3f
+0x15B0   mPullParamsFireWanWanTail.mPullRateH                    0.05f
+0x15C4   mPullParamsFireWanWanTail.mOilPullRateV                 0.1f
+0x15D8   mPullParamsFireWanWanTail.mOilPullRateH                 0.01f
+  --- mBarParams (TBarParams) @ base 0x15DC ---
+0x15F4   mBarParams.mClimbSp                                     0.035f
+0x1608   mBarParams.mRotateSp                                    3.0f
+0x161C   mBarParams.mClimbAnmRate                                0.0039f
+0x1630   mBarParams.mCatchRadius                                 100.0f
+0x1644   mBarParams.mCatchAngle                                  0.8f
+  --- mSurfingParamsWaterRed (TSurfingParams) @ base 0x1648 ---
+0x1660   mSurfingParamsWaterRed.mRotMin                          2048.0f
+0x1674   mSurfingParamsWaterRed.mRotMax                          1024.0f
+0x1688   mSurfingParamsWaterRed.mPowMin                          24.0f
+0x169C   mSurfingParamsWaterRed.mPowMax                          64.0f
+0x16B0   mSurfingParamsWaterRed.mAccel                           58.0f
+0x16C4   mSurfingParamsWaterRed.mWaistRoll                       0.25f
+0x16D8   mSurfingParamsWaterRed.mWaistPitch                      170.0f
+0x16EC   mSurfingParamsWaterRed.mWaistRollMax                    0x400
+0x1700   mSurfingParamsWaterRed.mWaistPitchMax                   0x1555
+0x1714   mSurfingParamsWaterRed.mRoll                            -0.45f
+0x1728   mSurfingParamsWaterRed.mPitch                           -170.0f
+0x173C   mSurfingParamsWaterRed.mRollMax                         0x4000
+0x1750   mSurfingParamsWaterRed.mPitchMax                        0x1555
+0x1764   mSurfingParamsWaterRed.mAngleChangeRate                 0.01f
+0x1778   mSurfingParamsWaterRed.mWaistAngleChangeRate            0.01f
+0x178C   mSurfingParamsWaterRed.mScaleMin                        0.5f
+0x17A0   mSurfingParamsWaterRed.mScaleMax                        1.0f
+0x17B4   mSurfingParamsWaterRed.mScaleMinSpeed                   24.0f
+0x17C8   mSurfingParamsWaterRed.mScaleMaxSpeed                   60.0f
+0x17DC   mSurfingParamsWaterRed.mJumpPow                         42.0f
+0x17F0   mSurfingParamsWaterRed.mJumpXZRatio                     0.25f
+0x1804   mSurfingParamsWaterRed.mClashSpeed                      40.0f
+0x1818   mSurfingParamsWaterRed.mClashAngle                      0x5555
+  --- mSurfingParamsGroundRed (TSurfingParams) @ base 0x181C ---
+0x1834   mSurfingParamsGroundRed.mRotMin                         2048.0f
+0x1848   mSurfingParamsGroundRed.mRotMax                         1024.0f
+0x185C   mSurfingParamsGroundRed.mPowMin                         24.0f
+0x1870   mSurfingParamsGroundRed.mPowMax                         64.0f
+0x1884   mSurfingParamsGroundRed.mAccel                          58.0f
+0x1898   mSurfingParamsGroundRed.mWaistRoll                      0.25f
+0x18AC   mSurfingParamsGroundRed.mWaistPitch                     170.0f
+0x18C0   mSurfingParamsGroundRed.mWaistRollMax                   0x400
+0x18D4   mSurfingParamsGroundRed.mWaistPitchMax                  0x1555
+0x18E8   mSurfingParamsGroundRed.mRoll                           -0.45f
+0x18FC   mSurfingParamsGroundRed.mPitch                          -170.0f
+0x1910   mSurfingParamsGroundRed.mRollMax                        0x4000
+0x1924   mSurfingParamsGroundRed.mPitchMax                       0x1555
+0x1938   mSurfingParamsGroundRed.mAngleChangeRate                0.01f
+0x194C   mSurfingParamsGroundRed.mWaistAngleChangeRate           0.01f
+0x1960   mSurfingParamsGroundRed.mScaleMin                       0.5f
+0x1974   mSurfingParamsGroundRed.mScaleMax                       1.0f
+0x1988   mSurfingParamsGroundRed.mScaleMinSpeed                  24.0f
+0x199C   mSurfingParamsGroundRed.mScaleMaxSpeed                  60.0f
+0x19B0   mSurfingParamsGroundRed.mJumpPow                        42.0f
+0x19C4   mSurfingParamsGroundRed.mJumpXZRatio                    0.25f
+0x19D8   mSurfingParamsGroundRed.mClashSpeed                     40.0f
+0x19EC   mSurfingParamsGroundRed.mClashAngle                     0x5555
+  --- mSurfingParamsWaterYellow (TSurfingParams) @ base 0x19F0 ---
+0x1A08   mSurfingParamsWaterYellow.mRotMin                       2048.0f
+0x1A1C   mSurfingParamsWaterYellow.mRotMax                       1024.0f
+0x1A30   mSurfingParamsWaterYellow.mPowMin                       24.0f
+0x1A44   mSurfingParamsWaterYellow.mPowMax                       64.0f
+0x1A58   mSurfingParamsWaterYellow.mAccel                        58.0f
+0x1A6C   mSurfingParamsWaterYellow.mWaistRoll                    0.25f
+0x1A80   mSurfingParamsWaterYellow.mWaistPitch                   170.0f
+0x1A94   mSurfingParamsWaterYellow.mWaistRollMax                 0x400
+0x1AA8   mSurfingParamsWaterYellow.mWaistPitchMax                0x1555
+0x1ABC   mSurfingParamsWaterYellow.mRoll                         -0.45f
+0x1AD0   mSurfingParamsWaterYellow.mPitch                        -170.0f
+0x1AE4   mSurfingParamsWaterYellow.mRollMax                      0x4000
+0x1AF8   mSurfingParamsWaterYellow.mPitchMax                     0x1555
+0x1B0C   mSurfingParamsWaterYellow.mAngleChangeRate              0.01f
+0x1B20   mSurfingParamsWaterYellow.mWaistAngleChangeRate         0.01f
+0x1B34   mSurfingParamsWaterYellow.mScaleMin                     0.5f
+0x1B48   mSurfingParamsWaterYellow.mScaleMax                     1.0f
+0x1B5C   mSurfingParamsWaterYellow.mScaleMinSpeed                24.0f
+0x1B70   mSurfingParamsWaterYellow.mScaleMaxSpeed                60.0f
+0x1B84   mSurfingParamsWaterYellow.mJumpPow                      42.0f
+0x1B98   mSurfingParamsWaterYellow.mJumpXZRatio                  0.25f
+0x1BAC   mSurfingParamsWaterYellow.mClashSpeed                   40.0f
+0x1BC0   mSurfingParamsWaterYellow.mClashAngle                   0x5555
+  --- mSurfingParamsGroundYellow (TSurfingParams) @ base 0x1BC4 ---
+0x1BDC   mSurfingParamsGroundYellow.mRotMin                      2048.0f
+0x1BF0   mSurfingParamsGroundYellow.mRotMax                      1024.0f
+0x1C04   mSurfingParamsGroundYellow.mPowMin                      24.0f
+0x1C18   mSurfingParamsGroundYellow.mPowMax                      64.0f
+0x1C2C   mSurfingParamsGroundYellow.mAccel                       58.0f
+0x1C40   mSurfingParamsGroundYellow.mWaistRoll                   0.25f
+0x1C54   mSurfingParamsGroundYellow.mWaistPitch                  170.0f
+0x1C68   mSurfingParamsGroundYellow.mWaistRollMax                0x400
+0x1C7C   mSurfingParamsGroundYellow.mWaistPitchMax               0x1555
+0x1C90   mSurfingParamsGroundYellow.mRoll                        -0.45f
+0x1CA4   mSurfingParamsGroundYellow.mPitch                       -170.0f
+0x1CB8   mSurfingParamsGroundYellow.mRollMax                     0x4000
+0x1CCC   mSurfingParamsGroundYellow.mPitchMax                    0x1555
+0x1CE0   mSurfingParamsGroundYellow.mAngleChangeRate             0.01f
+0x1CF4   mSurfingParamsGroundYellow.mWaistAngleChangeRate        0.01f
+0x1D08   mSurfingParamsGroundYellow.mScaleMin                    0.5f
+0x1D1C   mSurfingParamsGroundYellow.mScaleMax                    1.0f
+0x1D30   mSurfingParamsGroundYellow.mScaleMinSpeed               24.0f
+0x1D44   mSurfingParamsGroundYellow.mScaleMaxSpeed               60.0f
+0x1D58   mSurfingParamsGroundYellow.mJumpPow                     42.0f
+0x1D6C   mSurfingParamsGroundYellow.mJumpXZRatio                 0.25f
+0x1D80   mSurfingParamsGroundYellow.mClashSpeed                  40.0f
+0x1D94   mSurfingParamsGroundYellow.mClashAngle                  0x5555
+  --- mSurfingParamsWaterGreen (TSurfingParams) @ base 0x1D98 ---
+0x1DB0   mSurfingParamsWaterGreen.mRotMin                        2048.0f
+0x1DC4   mSurfingParamsWaterGreen.mRotMax                        1024.0f
+0x1DD8   mSurfingParamsWaterGreen.mPowMin                        24.0f
+0x1DEC   mSurfingParamsWaterGreen.mPowMax                        64.0f
+0x1E00   mSurfingParamsWaterGreen.mAccel                         58.0f
+0x1E14   mSurfingParamsWaterGreen.mWaistRoll                     0.25f
+0x1E28   mSurfingParamsWaterGreen.mWaistPitch                    170.0f
+0x1E3C   mSurfingParamsWaterGreen.mWaistRollMax                  0x400
+0x1E50   mSurfingParamsWaterGreen.mWaistPitchMax                 0x1555
+0x1E64   mSurfingParamsWaterGreen.mRoll                          -0.45f
+0x1E78   mSurfingParamsWaterGreen.mPitch                         -170.0f
+0x1E8C   mSurfingParamsWaterGreen.mRollMax                       0x4000
+0x1EA0   mSurfingParamsWaterGreen.mPitchMax                      0x1555
+0x1EB4   mSurfingParamsWaterGreen.mAngleChangeRate               0.01f
+0x1EC8   mSurfingParamsWaterGreen.mWaistAngleChangeRate          0.01f
+0x1EDC   mSurfingParamsWaterGreen.mScaleMin                      0.5f
+0x1EF0   mSurfingParamsWaterGreen.mScaleMax                      1.0f
+0x1F04   mSurfingParamsWaterGreen.mScaleMinSpeed                 24.0f
+0x1F18   mSurfingParamsWaterGreen.mScaleMaxSpeed                 60.0f
+0x1F2C   mSurfingParamsWaterGreen.mJumpPow                       42.0f
+0x1F40   mSurfingParamsWaterGreen.mJumpXZRatio                   0.25f
+0x1F54   mSurfingParamsWaterGreen.mClashSpeed                    40.0f
+0x1F68   mSurfingParamsWaterGreen.mClashAngle                    0x5555
+  --- mSurfingParamsGroundGreen (TSurfingParams) @ base 0x1F6C ---
+0x1F84   mSurfingParamsGroundGreen.mRotMin                       2048.0f
+0x1F98   mSurfingParamsGroundGreen.mRotMax                       1024.0f
+0x1FAC   mSurfingParamsGroundGreen.mPowMin                       24.0f
+0x1FC0   mSurfingParamsGroundGreen.mPowMax                       64.0f
+0x1FD4   mSurfingParamsGroundGreen.mAccel                        58.0f
+0x1FE8   mSurfingParamsGroundGreen.mWaistRoll                    0.25f
+0x1FFC   mSurfingParamsGroundGreen.mWaistPitch                   170.0f
+0x2010   mSurfingParamsGroundGreen.mWaistRollMax                 0x400
+0x2024   mSurfingParamsGroundGreen.mWaistPitchMax                0x1555
+0x2038   mSurfingParamsGroundGreen.mRoll                         -0.45f
+0x204C   mSurfingParamsGroundGreen.mPitch                        -170.0f
+0x2060   mSurfingParamsGroundGreen.mRollMax                      0x4000
+0x2074   mSurfingParamsGroundGreen.mPitchMax                     0x1555
+0x2088   mSurfingParamsGroundGreen.mAngleChangeRate              0.01f
+0x209C   mSurfingParamsGroundGreen.mWaistAngleChangeRate         0.01f
+0x20B0   mSurfingParamsGroundGreen.mScaleMin                     0.5f
+0x20C4   mSurfingParamsGroundGreen.mScaleMax                     1.0f
+0x20D8   mSurfingParamsGroundGreen.mScaleMinSpeed                24.0f
+0x20EC   mSurfingParamsGroundGreen.mScaleMaxSpeed                60.0f
+0x2100   mSurfingParamsGroundGreen.mJumpPow                      42.0f
+0x2114   mSurfingParamsGroundGreen.mJumpXZRatio                  0.25f
+0x2128   mSurfingParamsGroundGreen.mClashSpeed                   40.0f
+0x213C   mSurfingParamsGroundGreen.mClashAngle                   0x5555
+  --- mHoverParams (THHoverParams) @ base 0x2140 ---
+0x2158   mHoverParams.mRotSp                                     0x80
+0x216C   mHoverParams.mAccelRate                                 0.03f
+0x2180   mHoverParams.mBrake                                     0.95f
+  --- mDivingParams (TDivingParams) @ base 0x2184 ---
+0x219C   mDivingParams.mRotSp                                    0x80
+0x21B0   mDivingParams.mGravity                                  0.5f
+0x21C4   mDivingParams.mAccelControl                             0.02f
+0x21D8   mDivingParams.mSeaBrake                                 0.999f
+0x21EC   mDivingParams.mSeaBrakeY                                0.98f
+  --- mYoshiParams (TYoshiParams) @ base 0x21F0 ---
+0x2208   mYoshiParams.mRunYoshiMult                              1.2f
+0x221C   mYoshiParams.mJumpYoshiMult                             1.0f
+0x2230   mYoshiParams.mRotYoshiMult                              1.5f
+0x2244   mYoshiParams.mHeadFront                                 80.0f
+0x2258   mYoshiParams.mHeadRadius                                50.0f
+0x226C   mYoshiParams.mHoldOutAccCtrlF                           0.01f
+0x2280   mYoshiParams.mHoldOutAccCtrlB                           0.023f
+0x2294   mYoshiParams.mHoldOutSldCtrl                            0.3f
+0x22A8   mYoshiParams.mDecBrake                                  1.0f
+  --- mWaterEffectParams (TWaterEffectParams) @ base 0x22AC ---
+0x22C4   mWaterEffectParams.mJumpIntoMdlEffectSpY                10.0f
+0x22D8   mWaterEffectParams.mJumpIntoMinY                        20.0f
+0x22EC   mWaterEffectParams.mJumpIntoMaxY                        50.0f
+0x2300   mWaterEffectParams.mJumpIntoScaleMin                    0.75f
+0x2314   mWaterEffectParams.mJumpIntoScaleWidth                  1.0f
+0x2328   mWaterEffectParams.mRunningRippleSpeed                  30.0f
+0x233C   mWaterEffectParams.mRunningRippleDepth                  30.0f
+  --- mControllerParams (TControllerParams) @ base 0x2340 ---
+0x2358   mControllerParams.mAnalogLRToZeroVal                    0x1e
+0x236C   mControllerParams.mAnalogLRToMiddleVal                  0x5a
+0x2380   mControllerParams.mAnalogLRToMaxVal                     0x96
+0x2394   mControllerParams.mAnalogLRMiddleLevel                  0.1f
+0x23A8   mControllerParams.mStartToWalkLevel                     15.0f
+0x23BC   mControllerParams.mStickRotateTime                      0x18
+0x23D0   mControllerParams.mLengthMultTimes                      10
+0x23E4   mControllerParams.mLengthMult                           0.935f
+0x23F8   mControllerParams.mSquatRotMidAnalog                    0.7f
+0x240C   mControllerParams.mSquatRotMidValue                     0.05f
+  --- mGraffitoParams (TGraffitoParams) @ base 0x2410 ---
+0x2428   mGraffitoParams.mSinkTime                               0xf0
+0x243C   mGraffitoParams.mSinkDmgTime                            0xf0
+0x2450   mGraffitoParams.mSinkHeight                             150.0f
+0x2464   mGraffitoParams.mSinkMoveMin                            0.3f
+0x2478   mGraffitoParams.mSinkMoveMax                            0.5f
+0x248C   mGraffitoParams.mSinkRecover                            0.05f
+0x24A0   mGraffitoParams.mSinkJumpRateMin                        0.1f
+0x24B4   mGraffitoParams.mSinkJumpRateMax                        0.3f
+0x24C8   mGraffitoParams.mSinkPumpLimit                          0.25f
+0x24DC   mGraffitoParams.mSinkDmgDepth                           0.25f
+0x24F0   mGraffitoParams.mFireHeight                             1000.0f
+0x2504   mGraffitoParams.mDizzySlipCtMax                         1000
+0x2518   mGraffitoParams.mDizzyWalkCtMax                         1000
+0x252C   mGraffitoParams.mDizzyAngleY                            0x7fff
+0x2540   mGraffitoParams.mDizzyAngleRate                         400.0f
+0x2554   mGraffitoParams.mDizzyPowerRate                         120.0f
+0x2568   mGraffitoParams.mDizzyPower                             20.0f
+0x257C   mGraffitoParams.mFireInvincibleTime                     0x96
+0x2590   mGraffitoParams.mFootEraseTimes                         4
+0x25A4   mGraffitoParams.mFootEraseSize                          400.0f
+0x25B8   mGraffitoParams.mFootEraseFront                         200.0f
+  --- mDirtyParams (TDirtyParams) @ base 0x25BC ---
+0x25D4   mDirtyParams.mIncRunning                                0.1f
+0x25E8   mDirtyParams.mIncCatching                               0.3f
+0x25FC   mDirtyParams.mIncSlipping                               0.2f
+0x2610   mDirtyParams.mDecSwimming                               0.5f
+0x2624   mDirtyParams.mDecWaterHit                               0.2f
+0x2638   mDirtyParams.mDecRotJump                                0.1f
+0x264C   mDirtyParams.mBrakeStartValSlip                         0.99f
+0x2660   mDirtyParams.mBrakeStartValRun                          0.98f
+0x2674   mDirtyParams.mDirtyTimeSlip                             600
+0x2688   mDirtyParams.mDirtyTimeRun                              600
+0x269C   mDirtyParams.mPolSizeSlip                               200.0f
+0x26B0   mDirtyParams.mPolSizeRun                                80.0f
+0x26C4   mDirtyParams.mPolSizeFootPrint                          200.0f
+0x26D8   mDirtyParams.mPolSizeJump                               200.0f
+0x26EC   mDirtyParams.mSlopeAngle                                0.99f
+0x2700   mDirtyParams.mDirtyMax                                  200.0f
+0x2714   mDirtyParams.mSlipAnmSpeed                              3.0f
+0x2728   mDirtyParams.mSlipRunSp                                 0.01f
+0x273C   mDirtyParams.mSlipCatchSp                               0.01f
+0x2750   mDirtyParams.mSlipRotate                                0x100
+0x2764   mDirtyParams.mSlipCatchRotate                           0x100
+0x2778   mDirtyParams.mBrakeSlipNoPollute                        0.98f
+0x278C   mDirtyParams.mFogTimeYellow                             0xf0
+0x27A0   mDirtyParams.mFogTimeRed                                600
+  --- mMotorParams (TMotorParams) @ base 0x27A4 ---
+0x27BC   mMotorParams.mMotorReturn                               0x19
+0x27D0   mMotorParams.mMotorTrample                              8
+0x27E4   mMotorParams.mMotorHipDrop                              0xf
+0x27F8   mMotorParams.mMotorWall                                 6
+  --- mParticleParams (TParticleParams) @ base 0x27FC ---
+0x2814   mParticleParams.mMeltInWaterMax                         0.5f
+0x2828   mParticleParams.mWaveEmitSpeed                          5.0f
+0x283C   mParticleParams.mWaveAlphaDec                           5
+0x2850   mParticleParams.mBubbleDepth                            10.0f
+0x2864   mParticleParams.mBodyBubbleSpMin                        0.0f
+0x2878   mParticleParams.mBodyBubbleSpMax                        40.0f
+0x288C   mParticleParams.mBodyBubbleEmitMin                      0.0f
+0x28A0   mParticleParams.mBodyBubbleEmitMax                      0.5f
+0x28B4   mParticleParams.mBubbleToRipple                         0.3f
+0x28C8   mParticleParams.mToroccoWind                            0.001f
+0x28DC   mParticleParams.mToroccoSpark                           0.001f
+  --- mEffectParams (TEffectParams) @ base 0x28E0 ---
+0x28F8   mEffectParams.mDashInc                                  0.033f
+0x290C   mEffectParams.mDashDec                                  0.017f
+0x2920   mEffectParams.mDashMaxBlendInBlur                       0xb4
+0x2934   mEffectParams.mDashMaxBlendInIris                       0xb4
+0x2948   mEffectParams.mDashBlendScale                           0.2f
+  --- mSlipParamsNormal (TSlipParams) @ base 0x294C ---
+0x2964   mSlipParamsNormal.mSlipFriction                         0.9f
+0x2978   mSlipParamsNormal.mSlopeAcceleUp                        0.0f
+0x298C   mSlipParamsNormal.mSlopeAcceleDown                      0.0f
+0x29A0   mSlipParamsNormal.mSlideAcceleUp                        0.0f
+0x29B4   mSlipParamsNormal.mSlideAcceleDown                      0.0f
+0x29C8   mSlipParamsNormal.mSlideStopNormal                      15.0f
+0x29DC   mSlipParamsNormal.mSlideStopCatch                       15.0f
+0x29F0   mSlipParamsNormal.mJumpEnable                           1
+0x2A04   mSlipParamsNormal.mMissJump                             1
+0x2A18   mSlipParamsNormal.mSlideAngleYSp                        0x200
+0x2A2C   mSlipParamsNormal.mStickSlideMult                       0.05f
+  --- mSlipParamsOil (TSlipParams) @ base 0x2A30 ---
+0x2A48   mSlipParamsOil.mSlipFriction                            0.9f
+0x2A5C   mSlipParamsOil.mSlopeAcceleUp                           0.0f
+0x2A70   mSlipParamsOil.mSlopeAcceleDown                         0.0f
+0x2A84   mSlipParamsOil.mSlideAcceleUp                           0.0f
+0x2A98   mSlipParamsOil.mSlideAcceleDown                         0.0f
+0x2AAC   mSlipParamsOil.mSlideStopNormal                         15.0f
+0x2AC0   mSlipParamsOil.mSlideStopCatch                          15.0f
+0x2AD4   mSlipParamsOil.mJumpEnable                              1
+0x2AE8   mSlipParamsOil.mMissJump                                1
+0x2AFC   mSlipParamsOil.mSlideAngleYSp                           0x200
+0x2B10   mSlipParamsOil.mStickSlideMult                          0.05f
+  --- mSlipParamsAll (TSlipParams) @ base 0x2B14 ---
+0x2B2C   mSlipParamsAll.mSlipFriction                            0.9f
+0x2B40   mSlipParamsAll.mSlopeAcceleUp                           0.0f
+0x2B54   mSlipParamsAll.mSlopeAcceleDown                         0.0f
+0x2B68   mSlipParamsAll.mSlideAcceleUp                           0.0f
+0x2B7C   mSlipParamsAll.mSlideAcceleDown                         0.0f
+0x2B90   mSlipParamsAll.mSlideStopNormal                         15.0f
+0x2BA4   mSlipParamsAll.mSlideStopCatch                          15.0f
+0x2BB8   mSlipParamsAll.mJumpEnable                              1
+0x2BCC   mSlipParamsAll.mMissJump                                1
+0x2BE0   mSlipParamsAll.mSlideAngleYSp                           0x200
+0x2BF4   mSlipParamsAll.mStickSlideMult                          0.05f
+  --- mSlipParamsAllSlider (TSlipParams) @ base 0x2BF8 ---
+0x2C10   mSlipParamsAllSlider.mSlipFriction                      0.9f
+0x2C24   mSlipParamsAllSlider.mSlopeAcceleUp                     0.0f
+0x2C38   mSlipParamsAllSlider.mSlopeAcceleDown                   0.0f
+0x2C4C   mSlipParamsAllSlider.mSlideAcceleUp                     0.0f
+0x2C60   mSlipParamsAllSlider.mSlideAcceleDown                   0.0f
+0x2C74   mSlipParamsAllSlider.mSlideStopNormal                   15.0f
+0x2C88   mSlipParamsAllSlider.mSlideStopCatch                    15.0f
+0x2C9C   mSlipParamsAllSlider.mJumpEnable                        1
+0x2CB0   mSlipParamsAllSlider.mMissJump                          1
+0x2CC4   mSlipParamsAllSlider.mSlideAngleYSp                     0x200
+0x2CD8   mSlipParamsAllSlider.mStickSlideMult                    0.05f
+  --- mSlipParams45 (TSlipParams) @ base 0x2CDC ---
+0x2CF4   mSlipParams45.mSlipFriction                             0.9f
+0x2D08   mSlipParams45.mSlopeAcceleUp                            0.0f
+0x2D1C   mSlipParams45.mSlopeAcceleDown                          0.0f
+0x2D30   mSlipParams45.mSlideAcceleUp                            0.0f
+0x2D44   mSlipParams45.mSlideAcceleDown                          0.0f
+0x2D58   mSlipParams45.mSlideStopNormal                          15.0f
+0x2D6C   mSlipParams45.mSlideStopCatch                           15.0f
+0x2D80   mSlipParams45.mJumpEnable                               1
+0x2D94   mSlipParams45.mMissJump                                 1
+0x2DA8   mSlipParams45.mSlideAngleYSp                            0x200
+0x2DBC   mSlipParams45.mStickSlideMult                           0.05f
+  --- mSlipParamsWaterSlope (TSlipParams) @ base 0x2DC0 ---
+0x2DD8   mSlipParamsWaterSlope.mSlipFriction                     0.9f
+0x2DEC   mSlipParamsWaterSlope.mSlopeAcceleUp                    0.0f
+0x2E00   mSlipParamsWaterSlope.mSlopeAcceleDown                  0.0f
+0x2E14   mSlipParamsWaterSlope.mSlideAcceleUp                    0.0f
+0x2E28   mSlipParamsWaterSlope.mSlideAcceleDown                  0.0f
+0x2E3C   mSlipParamsWaterSlope.mSlideStopNormal                  15.0f
+0x2E50   mSlipParamsWaterSlope.mSlideStopCatch                   15.0f
+0x2E64   mSlipParamsWaterSlope.mJumpEnable                       1
+0x2E78   mSlipParamsWaterSlope.mMissJump                         1
+0x2E8C   mSlipParamsWaterSlope.mSlideAngleYSp                    0x200
+0x2EA0   mSlipParamsWaterSlope.mStickSlideMult                   0.05f
+  --- mSlipParamsWaterGround (TSlipParams) @ base 0x2EA4 ---
+0x2EBC   mSlipParamsWaterGround.mSlipFriction                    0.9f
+0x2ED0   mSlipParamsWaterGround.mSlopeAcceleUp                   0.0f
+0x2EE4   mSlipParamsWaterGround.mSlopeAcceleDown                 0.0f
+0x2EF8   mSlipParamsWaterGround.mSlideAcceleUp                   0.0f
+0x2F0C   mSlipParamsWaterGround.mSlideAcceleDown                 0.0f
+0x2F20   mSlipParamsWaterGround.mSlideStopNormal                 15.0f
+0x2F34   mSlipParamsWaterGround.mSlideStopCatch                  15.0f
+0x2F48   mSlipParamsWaterGround.mJumpEnable                      1
+0x2F5C   mSlipParamsWaterGround.mMissJump                        1
+0x2F70   mSlipParamsWaterGround.mSlideAngleYSp                   0x200
+0x2F84   mSlipParamsWaterGround.mStickSlideMult                  0.05f
+  --- mSlipParamsYoshi (TSlipParams) @ base 0x2F88 ---
+0x2FA0   mSlipParamsYoshi.mSlipFriction                          0.9f
+0x2FB4   mSlipParamsYoshi.mSlopeAcceleUp                         0.0f
+0x2FC8   mSlipParamsYoshi.mSlopeAcceleDown                       0.0f
+0x2FDC   mSlipParamsYoshi.mSlideAcceleUp                         0.0f
+0x2FF0   mSlipParamsYoshi.mSlideAcceleDown                       0.0f
+0x3004   mSlipParamsYoshi.mSlideStopNormal                       15.0f
+0x3018   mSlipParamsYoshi.mSlideStopCatch                        15.0f
+0x302C   mSlipParamsYoshi.mJumpEnable                            1
+0x3040   mSlipParamsYoshi.mMissJump                              1
+0x3054   mSlipParamsYoshi.mSlideAngleYSp                         0x200
+0x3068   mSlipParamsYoshi.mStickSlideMult                        0.05f
+  --- mUpperBodyParams (TUpperParams) @ base 0x306C ---
+0x3084   mUpperBodyParams.mPumpWaitTime                          10
+0x3098   mUpperBodyParams.mPumpAnmSpeed                          0.01f
+0x30AC   mUpperBodyParams.mHoverHeadAngle                        0xe000
+0x30C0   mUpperBodyParams.mFeelDeepHeadAngle                     0x2000
+0x30D4   mUpperBodyParams.mFrontWallHeadAngle                    0xe000
+  --- mDmgParamsEnemyCommon (TEParams) @ base 0x30D8 ---
+0x30F0   mDmgParamsEnemyCommon.mDamage                           1
+0x3104   mDmgParamsEnemyCommon.mDownType                         0
+0x3118   mDmgParamsEnemyCommon.mWaterEmit                        0
+0x312C   mDmgParamsEnemyCommon.mMotor                            0
+0x3140   mDmgParamsEnemyCommon.mMinSpeed                         0.0f
+0x3154   mDmgParamsEnemyCommon.mDirty                            0.0f
+0x3168   mDmgParamsEnemyCommon.mInvincibleTime                   0
+  --- mDmgParamsHamakuri (TEParams) @ base 0x316C ---
+0x3184   mDmgParamsHamakuri.mDamage                              1
+0x3198   mDmgParamsHamakuri.mDownType                            0
+0x31AC   mDmgParamsHamakuri.mWaterEmit                           0
+0x31C0   mDmgParamsHamakuri.mMotor                               0
+0x31D4   mDmgParamsHamakuri.mMinSpeed                            0.0f
+0x31E8   mDmgParamsHamakuri.mDirty                               0.0f
+0x31FC   mDmgParamsHamakuri.mInvincibleTime                      0
+  --- mDmgParamsNamekuri (TEParams) @ base 0x3200 ---
+0x3218   mDmgParamsNamekuri.mDamage                              1
+0x322C   mDmgParamsNamekuri.mDownType                            0
+0x3240   mDmgParamsNamekuri.mWaterEmit                           0
+0x3254   mDmgParamsNamekuri.mMotor                               0
+0x3268   mDmgParamsNamekuri.mMinSpeed                            0.0f
+0x327C   mDmgParamsNamekuri.mDirty                               0.0f
+0x3290   mDmgParamsNamekuri.mInvincibleTime                      0
+  --- mDmgParamsHinokuri (TEParams) @ base 0x3294 ---
+0x32AC   mDmgParamsHinokuri.mDamage                              1
+0x32C0   mDmgParamsHinokuri.mDownType                            0
+0x32D4   mDmgParamsHinokuri.mWaterEmit                           0
+0x32E8   mDmgParamsHinokuri.mMotor                               0
+0x32FC   mDmgParamsHinokuri.mMinSpeed                            0.0f
+0x3310   mDmgParamsHinokuri.mDirty                               0.0f
+0x3324   mDmgParamsHinokuri.mInvincibleTime                      0
+  --- mDmgParamsFire (TEParams) @ base 0x3328 ---
+0x3340   mDmgParamsFire.mDamage                                  1
+0x3354   mDmgParamsFire.mDownType                                0
+0x3368   mDmgParamsFire.mWaterEmit                               0
+0x337C   mDmgParamsFire.mMotor                                   0
+0x3390   mDmgParamsFire.mMinSpeed                                0.0f
+0x33A4   mDmgParamsFire.mDirty                                   0.0f
+0x33B8   mDmgParamsFire.mInvincibleTime                          0
+  --- mDmgParamsBGTentacle (TEParams) @ base 0x33BC ---
+0x33D4   mDmgParamsBGTentacle.mDamage                            1
+0x33E8   mDmgParamsBGTentacle.mDownType                          0
+0x33FC   mDmgParamsBGTentacle.mWaterEmit                         0
+0x3410   mDmgParamsBGTentacle.mMotor                             0
+0x3424   mDmgParamsBGTentacle.mMinSpeed                          0.0f
+0x3438   mDmgParamsBGTentacle.mDirty                             0.0f
+0x344C   mDmgParamsBGTentacle.mInvincibleTime                    0
+  --- mDmgParamsBossEel (TEParams) @ base 0x3450 ---
+0x3468   mDmgParamsBossEel.mDamage                               1
+0x347C   mDmgParamsBossEel.mDownType                             0
+0x3490   mDmgParamsBossEel.mWaterEmit                            0
+0x34A4   mDmgParamsBossEel.mMotor                                0
+0x34B8   mDmgParamsBossEel.mMinSpeed                             0.0f
+0x34CC   mDmgParamsBossEel.mDirty                                0.0f
+0x34E0   mDmgParamsBossEel.mInvincibleTime                       0
+  --- mDmgParamsHanachanBoss (TEParams) @ base 0x34E4 ---
+0x34FC   mDmgParamsHanachanBoss.mDamage                          1
+0x3510   mDmgParamsHanachanBoss.mDownType                        0
+0x3524   mDmgParamsHanachanBoss.mWaterEmit                       0
+0x3538   mDmgParamsHanachanBoss.mMotor                           0
+0x354C   mDmgParamsHanachanBoss.mMinSpeed                        0.0f
+0x3560   mDmgParamsHanachanBoss.mDirty                           0.0f
+0x3574   mDmgParamsHanachanBoss.mInvincibleTime                  0
+  --- mDmgParamsPoihana (TEParams) @ base 0x3578 ---
+0x3590   mDmgParamsPoihana.mDamage                               1
+0x35A4   mDmgParamsPoihana.mDownType                             0
+0x35B8   mDmgParamsPoihana.mWaterEmit                            0
+0x35CC   mDmgParamsPoihana.mMotor                                0
+0x35E0   mDmgParamsPoihana.mMinSpeed                             0.0f
+0x35F4   mDmgParamsPoihana.mDirty                                0.0f
+0x3608   mDmgParamsPoihana.mInvincibleTime                       0
+  --- mDmgParamsKiller (TEParams) @ base 0x360C ---
+0x3624   mDmgParamsKiller.mDamage                                1
+0x3638   mDmgParamsKiller.mDownType                              0
+0x364C   mDmgParamsKiller.mWaterEmit                             0
+0x3660   mDmgParamsKiller.mMotor                                 0
+0x3674   mDmgParamsKiller.mMinSpeed                              0.0f
+0x3688   mDmgParamsKiller.mDirty                                 0.0f
+0x369C   mDmgParamsKiller.mInvincibleTime                        0
+  --- mDmgParamsLampTrapIron (TEParams) @ base 0x36A0 ---
+0x36B8   mDmgParamsLampTrapIron.mDamage                          1
+0x36CC   mDmgParamsLampTrapIron.mDownType                        0
+0x36E0   mDmgParamsLampTrapIron.mWaterEmit                       0
+0x36F4   mDmgParamsLampTrapIron.mMotor                           0
+0x3708   mDmgParamsLampTrapIron.mMinSpeed                        0.0f
+0x371C   mDmgParamsLampTrapIron.mDirty                           0.0f
+0x3730   mDmgParamsLampTrapIron.mInvincibleTime                  0
+  --- mDmgParamsLampTrapSpike (TEParams) @ base 0x3734 ---
+0x374C   mDmgParamsLampTrapSpike.mDamage                         1
+0x3760   mDmgParamsLampTrapSpike.mDownType                       0
+0x3774   mDmgParamsLampTrapSpike.mWaterEmit                      0
+0x3788   mDmgParamsLampTrapSpike.mMotor                          0
+0x379C   mDmgParamsLampTrapSpike.mMinSpeed                       0.0f
+0x37B0   mDmgParamsLampTrapSpike.mDirty                          0.0f
+0x37C4   mDmgParamsLampTrapSpike.mInvincibleTime                 0
+  --- mDmgParamsEnemyMario (TEParams) @ base 0x37C8 ---
+0x37E0   mDmgParamsEnemyMario.mDamage                            1
+0x37F4   mDmgParamsEnemyMario.mDownType                          0
+0x3808   mDmgParamsEnemyMario.mWaterEmit                         0
+0x381C   mDmgParamsEnemyMario.mMotor                             0
+0x3830   mDmgParamsEnemyMario.mMinSpeed                          0.0f
+0x3844   mDmgParamsEnemyMario.mDirty                             0.0f
+0x3858   mDmgParamsEnemyMario.mInvincibleTime                    0
+  --- mDmgParamsCannotBreath (TEParams) @ base 0x385C ---
+0x3874   mDmgParamsCannotBreath.mDamage                          1
+0x3888   mDmgParamsCannotBreath.mDownType                        0
+0x389C   mDmgParamsCannotBreath.mWaterEmit                       0
+0x38B0   mDmgParamsCannotBreath.mMotor                           0
+0x38C4   mDmgParamsCannotBreath.mMinSpeed                        0.0f
+0x38D8   mDmgParamsCannotBreath.mDirty                           0.0f
+0x38EC   mDmgParamsCannotBreath.mInvincibleTime                  0
+  --- mDmgParamsGraffitoFire (TEParams) @ base 0x38F0 ---
+0x3908   mDmgParamsGraffitoFire.mDamage                          1
+0x391C   mDmgParamsGraffitoFire.mDownType                        0
+0x3930   mDmgParamsGraffitoFire.mWaterEmit                       0
+0x3944   mDmgParamsGraffitoFire.mMotor                           0
+0x3958   mDmgParamsGraffitoFire.mMinSpeed                        0.0f
+0x396C   mDmgParamsGraffitoFire.mDirty                           0.0f
+0x3980   mDmgParamsGraffitoFire.mInvincibleTime                  0
+  --- mDmgParamsGraffitoPoison (TEParams) @ base 0x3984 ---
+0x399C   mDmgParamsGraffitoPoison.mDamage                        1
+0x39B0   mDmgParamsGraffitoPoison.mDownType                      0
+0x39C4   mDmgParamsGraffitoPoison.mWaterEmit                     0
+0x39D8   mDmgParamsGraffitoPoison.mMotor                         0
+0x39EC   mDmgParamsGraffitoPoison.mMinSpeed                      0.0f
+0x3A00   mDmgParamsGraffitoPoison.mDirty                         0.0f
+0x3A14   mDmgParamsGraffitoPoison.mInvincibleTime                0
+  --- mDmgParamsGraffitoElec (TEParams) @ base 0x3A18 ---
+0x3A30   mDmgParamsGraffitoElec.mDamage                          1
+0x3A44   mDmgParamsGraffitoElec.mDownType                        0
+0x3A58   mDmgParamsGraffitoElec.mWaterEmit                       0
+0x3A6C   mDmgParamsGraffitoElec.mMotor                           0
+0x3A80   mDmgParamsGraffitoElec.mMinSpeed                        0.0f
+0x3A94   mDmgParamsGraffitoElec.mDirty                           0.0f
+0x3AA8   mDmgParamsGraffitoElec.mInvincibleTime                  0
+  --- mDmgParamsGraffitoLava (TEParams) @ base 0x3AAC ---
+0x3AC4   mDmgParamsGraffitoLava.mDamage                          1
+0x3AD8   mDmgParamsGraffitoLava.mDownType                        0
+0x3AEC   mDmgParamsGraffitoLava.mWaterEmit                       0
+0x3B00   mDmgParamsGraffitoLava.mMotor                           0
+0x3B14   mDmgParamsGraffitoLava.mMinSpeed                        0.0f
+0x3B28   mDmgParamsGraffitoLava.mDirty                           0.0f
+0x3B3C   mDmgParamsGraffitoLava.mInvincibleTime                  0
+  --- mDmgParamsWaterSurface (TEParams) @ base 0x3B40 ---
+0x3B58   mDmgParamsWaterSurface.mDamage                          1
+0x3B6C   mDmgParamsWaterSurface.mDownType                        0
+0x3B80   mDmgParamsWaterSurface.mWaterEmit                       0
+0x3B94   mDmgParamsWaterSurface.mMotor                           0
+0x3BA8   mDmgParamsWaterSurface.mMinSpeed                        0.0f
+0x3BBC   mDmgParamsWaterSurface.mDirty                           0.0f
+0x3BD0   mDmgParamsWaterSurface.mInvincibleTime                  0
+  --- mDmgMapParams0 (TEParams) @ base 0x3BD4 ---
+0x3BEC   mDmgMapParams0.mDamage                                  1
+0x3C00   mDmgMapParams0.mDownType                                0
+0x3C14   mDmgMapParams0.mWaterEmit                               0
+0x3C28   mDmgMapParams0.mMotor                                   0
+0x3C3C   mDmgMapParams0.mMinSpeed                                0.0f
+0x3C50   mDmgMapParams0.mDirty                                   0.0f
+0x3C64   mDmgMapParams0.mInvincibleTime                          0
+  --- mDmgMapParams1 (TEParams) @ base 0x3C68 ---
+0x3C80   mDmgMapParams1.mDamage                                  1
+0x3C94   mDmgMapParams1.mDownType                                0
+0x3CA8   mDmgMapParams1.mWaterEmit                               0
+0x3CBC   mDmgMapParams1.mMotor                                   0
+0x3CD0   mDmgMapParams1.mMinSpeed                                0.0f
+0x3CE4   mDmgMapParams1.mDirty                                   0.0f
+0x3CF8   mDmgMapParams1.mInvincibleTime                          0
+  --- mDmgMapParams2 (TEParams) @ base 0x3CFC ---
+0x3D14   mDmgMapParams2.mDamage                                  1
+0x3D28   mDmgMapParams2.mDownType                                0
+0x3D3C   mDmgMapParams2.mWaterEmit                               0
+0x3D50   mDmgMapParams2.mMotor                                   0
+0x3D64   mDmgMapParams2.mMinSpeed                                0.0f
+0x3D78   mDmgMapParams2.mDirty                                   0.0f
+0x3D8C   mDmgMapParams2.mInvincibleTime                          0
+  --- mDmgMapParams3 (TEParams) @ base 0x3D90 ---
+0x3DA8   mDmgMapParams3.mDamage                                  1
+0x3DBC   mDmgMapParams3.mDownType                                0
+0x3DD0   mDmgMapParams3.mWaterEmit                               0
+0x3DE4   mDmgMapParams3.mMotor                                   0
+0x3DF8   mDmgMapParams3.mMinSpeed                                0.0f
+0x3E0C   mDmgMapParams3.mDirty                                   0.0f
+0x3E20   mDmgMapParams3.mInvincibleTime                          0
+  --- mDmgMapParams4 (TEParams) @ base 0x3E24 ---
+0x3E3C   mDmgMapParams4.mDamage                                  1
+0x3E50   mDmgMapParams4.mDownType                                0
+0x3E64   mDmgMapParams4.mWaterEmit                               0
+0x3E78   mDmgMapParams4.mMotor                                   0
+0x3E8C   mDmgMapParams4.mMinSpeed                                0.0f
+0x3EA0   mDmgMapParams4.mDirty                                   0.0f
+0x3EB4   mDmgMapParams4.mInvincibleTime                          0
+  --- mDmgMapParams5 (TEParams) @ base 0x3EB8 ---
+0x3ED0   mDmgMapParams5.mDamage                                  1
+0x3EE4   mDmgMapParams5.mDownType                                0
+0x3EF8   mDmgMapParams5.mWaterEmit                               0
+0x3F0C   mDmgMapParams5.mMotor                                   0
+0x3F20   mDmgMapParams5.mMinSpeed                                0.0f
+0x3F34   mDmgMapParams5.mDirty                                   0.0f
+0x3F48   mDmgMapParams5.mInvincibleTime                          0
+  --- mDmgMapParams6 (TEParams) @ base 0x3F4C ---
+0x3F64   mDmgMapParams6.mDamage                                  1
+0x3F78   mDmgMapParams6.mDownType                                0
+0x3F8C   mDmgMapParams6.mWaterEmit                               0
+0x3FA0   mDmgMapParams6.mMotor                                   0
+0x3FB4   mDmgMapParams6.mMinSpeed                                0.0f
+0x3FC8   mDmgMapParams6.mDirty                                   0.0f
+0x3FDC   mDmgMapParams6.mInvincibleTime                          0
+  --- mDmgMapParams7 (TEParams) @ base 0x3FE0 ---
+0x3FF8   mDmgMapParams7.mDamage                                  1
+0x400C   mDmgMapParams7.mDownType                                0
+0x4020   mDmgMapParams7.mWaterEmit                               0
+0x4034   mDmgMapParams7.mMotor                                   0
+0x4048   mDmgMapParams7.mMinSpeed                                0.0f
+0x405C   mDmgMapParams7.mDirty                                   0.0f
+0x4070   mDmgMapParams7.mInvincibleTime                          0
+  --- mDmgMapParams8 (TEParams) @ base 0x4074 ---
+0x408C   mDmgMapParams8.mDamage                                  1
+0x40A0   mDmgMapParams8.mDownType                                0
+0x40B4   mDmgMapParams8.mWaterEmit                               0
+0x40C8   mDmgMapParams8.mMotor                                   0
+0x40DC   mDmgMapParams8.mMinSpeed                                0.0f
+0x40F0   mDmgMapParams8.mDirty                                   0.0f
+0x4104   mDmgMapParams8.mInvincibleTime                          0
+  --- mDmgMapParams9 (TEParams) @ base 0x4108 ---
+0x4120   mDmgMapParams9.mDamage                                  1
+0x4134   mDmgMapParams9.mDownType                                0
+0x4148   mDmgMapParams9.mWaterEmit                               0
+0x415C   mDmgMapParams9.mMotor                                   0
+0x4170   mDmgMapParams9.mMinSpeed                                0.0f
+0x4184   mDmgMapParams9.mDirty                                   0.0f
+0x4198   mDmgMapParams9.mInvincibleTime                          0
+  --- mAutoDemoParams (TAutoDemoParams) @ base 0x419C ---
+0x41B4   mAutoDemoParams.mWarpInBallsDispTime                    6
+0x41C8   mAutoDemoParams.mWarpInBallsTime                        0x46
+0x41DC   mAutoDemoParams.mWarpInCapturedTime                     0x78
+0x41F0   mAutoDemoParams.mWarpInTremble                          15.0f
+0x4204   mAutoDemoParams.mWarpInVecBase                          0.3f
+0x4218   mAutoDemoParams.mWarpTransTremble                       50.0f
+0x422C   mAutoDemoParams.mReadRotSp                              0x400f
+  --- mSoundParams (TSoundParams) @ base 0x4230 ---
+0x4248   mSoundParams.mStartFallVoiceSpeed                       60.0f
+  --- mOptionParams (TOptionParams) @ base 0x424C ---
+0x4264   mOptionParams.mZ                                        -1000.0f
+0x4278   mOptionParams.mXMin                                     846.0f
+0x428C   mOptionParams.mXMax                                     2000.0f
+
+Total TParams value offsets: 753
+TMario TParams block: 0x0574 - 0x4290
+
+==========================================================================================
+RAW OFFSET ACCESSES THAT MAP TO TParams FIELDS
+==========================================================================================
+
+--- MarioMove.cpp (198 TParams accesses) ---
+  Line  149: 0x2BCC -> mSlipParamsAll.mMissJump
+  Line  160: 0x2CB0 -> mSlipParamsAllSlider.mMissJump
+  Line  168: 0x2D94 -> mSlipParams45.mMissJump
+  Line  178: 0x2F5C -> mSlipParamsWaterGround.mMissJump
+  Line  180: 0x2E78 -> mSlipParamsWaterSlope.mMissJump
+  Line  183: 0x2A04 -> mSlipParamsNormal.mMissJump
+  Line  252: 0x2BCC -> mSlipParamsAll.mMissJump
+  Line  263: 0x2CB0 -> mSlipParamsAllSlider.mMissJump
+  Line  271: 0x2D94 -> mSlipParams45.mMissJump
+  Line  281: 0x2F5C -> mSlipParamsWaterGround.mMissJump
+  Line  283: 0x2E78 -> mSlipParamsWaterSlope.mMissJump
+  Line  286: 0x2A04 -> mSlipParamsNormal.mMissJump
+  Line  444: 0x0708 -> mDeParams.mHoldRadius
+  Line  446: 0x0744 -> mDeParams.mAttackHeight
+  Line  528: 0x2700 -> mDirtyParams.mDirtyMax
+  Line  603: 0x0690 -> mDeParams.mFootPrintTimerMax
+  Line  606: 0x26D8 -> mDirtyParams.mPolSizeJump
+  Line  669: 0x08AC -> mDeParams.mFeelDeep
+  Line  683: 0x0D48 -> mJumpParams.mSecJumpSpeedMult
+  Line  684: 0x0D34 -> mJumpParams.mSecJumpForce
+  Line  685: 0x0D5C -> mJumpParams.mSecJumpXZMult
+  Line  699: 0x0D98 -> mJumpParams.mUltraJumpSpeedMult
+  Line  700: 0x0D84 -> mJumpParams.mUltraJumpForce
+  Line  701: 0x0DAC -> mJumpParams.mUltraJumpXZMult
+  Line  707: 0x0C58 -> mJumpParams.mBackJumpForce
+  Line  710: 0x0C6C -> mJumpParams.mBackJumpForceY
+  Line  729: 0x0C1C -> mJumpParams.mRotateJumpForceY
+  Line  737: 0x0B90 -> mJumpParams.mTurnJumpForce
+  Line  747: 0x0BF4 -> mJumpParams.mBroadJumpForce
+  Line  748: 0x0C08 -> mJumpParams.mBroadJumpForceY
+  Line  754: 0x0CE4 -> mJumpParams.mRotBroadJumpForce
+  Line  755: 0x0CF8 -> mJumpParams.mRotBroadJumpForceY
+  Line  779: 0x17F0 -> mSurfingParamsWaterRed.mJumpXZRatio
+  Line  780: 0x17DC -> mSurfingParamsWaterRed.mJumpPow
+  Line  783: 0x19C4 -> mSurfingParamsGroundRed.mJumpXZRatio
+  Line  784: 0x19B0 -> mSurfingParamsGroundRed.mJumpPow
+  Line  792: 0x0BB8 -> mJumpParams.mFireDownForce
+  Line  795: 0x0BE0 -> mJumpParams.mFireBackVelocity
+  Line  853: 0x07E4 -> mDeParams.mTramplePowStep2
+  Line  860: 0x07F8 -> mDeParams.mTramplePowStep3
+  Line  867: 0x07D0 -> mDeParams.mTramplePowStep1
+  Line  890: 0x13EC -> mWireParams.mJumpRate
+  Line  908: 0x13EC -> mWireParams.mJumpRate
+  Line  949: 0x2428 -> mGraffitoParams.mSinkTime
+  Line  951: 0x24A0 -> mGraffitoParams.mSinkJumpRateMin
+  Line  952: 0x24B4 -> mGraffitoParams.mSinkJumpRateMax
+  Line  960: 0x248C -> mGraffitoParams.mSinkRecover
+  Line  979: 0x221C -> mYoshiParams.mJumpYoshiMult
+  Line 1045: 0x2428 -> mGraffitoParams.mSinkTime
+  Line 1046: 0x2464 -> mGraffitoParams.mSinkMoveMin
+  Line 1047: 0x2478 -> mGraffitoParams.mSinkMoveMax
+  Line 1085: 0x2358 -> mControllerParams.mAnalogLRToZeroVal
+  Line 1086: 0x236C -> mControllerParams.mAnalogLRToMiddleVal
+  Line 1087: 0x2380 -> mControllerParams.mAnalogLRToMaxVal
+  Line 1088: 0x2394 -> mControllerParams.mAnalogLRMiddleLevel
+  Line 1189: 0x23D0 -> mControllerParams.mLengthMultTimes
+  Line 1191: 0x23E4 -> mControllerParams.mLengthMult
+  Line 1216: 0x252C -> mGraffitoParams.mDizzyAngleY
+  Line 1217: 0x2518 -> mGraffitoParams.mDizzyWalkCtMax
+  Line 1218: 0x2540 -> mGraffitoParams.mDizzyAngleRate
+  Line 1219: 0x2554 -> mGraffitoParams.mDizzyPowerRate
+  Line 1220: 0x2568 -> mGraffitoParams.mDizzyPower
+  Line 1258: 0x05C8 -> mDeParams.mDashAcc
+  Line 1265: 0x05F0 -> mDeParams.mDashStartTime
+  Line 1266: 0x05F0 -> mDeParams.mDashStartTime
+  Line 1314: 0x05DC -> mDeParams.mDashBrake
+  Line 1326: 0x05DC -> mDeParams.mDashBrake
+  Line 1437: 0x23BC -> mControllerParams.mStickRotateTime
+  Line 1440: 0x23BC -> mControllerParams.mStickRotateTime
+  Line 1446: 0x23BC -> mControllerParams.mStickRotateTime
+  Line 1561: 0x24F0 -> mGraffitoParams.mFireHeight
+  Line 1572: 0x3930 -> mDmgParamsGraffitoFire.mWaterEmit
+  Line 1573: 0x3944 -> mDmgParamsGraffitoFire.mMotor
+  Line 1574: 0x3980 -> mDmgParamsGraffitoFire.mInvincibleTime
+  Line 1580: 0x3908 -> mDmgParamsGraffitoFire.mDamage
+  Line 1581: 0x391C -> mDmgParamsGraffitoFire.mDownType
+  Line 1583: 0x3958 -> mDmgParamsGraffitoFire.mMinSpeed
+  Line 1585: 0x396C -> mDmgParamsGraffitoFire.mDirty
+  Line 1593: 0x257C -> mGraffitoParams.mFireInvincibleTime
+  Line 1613: 0x0690 -> mDeParams.mFootPrintTimerMax
+  Line 1617: 0x264C -> mDirtyParams.mBrakeStartValSlip
+  Line 1618: 0x2674 -> mDirtyParams.mDirtyTimeSlip
+  Line 1623: 0x2660 -> mDirtyParams.mBrakeStartValRun
+  Line 1624: 0x2688 -> mDirtyParams.mDirtyTimeRun
+  Line 1628: 0x26EC -> mDirtyParams.mSlopeAngle
+  Line 1629: 0x264C -> mDirtyParams.mBrakeStartValSlip
+  Line 1630: 0x2674 -> mDirtyParams.mDirtyTimeSlip
+  Line 1637: 0x264C -> mDirtyParams.mBrakeStartValSlip
+  Line 1638: 0x2674 -> mDirtyParams.mDirtyTimeSlip
+  Line 1644: 0x2660 -> mDirtyParams.mBrakeStartValRun
+  Line 1645: 0x2688 -> mDirtyParams.mDirtyTimeRun
+  Line 1660: 0x278C -> mDirtyParams.mFogTimeYellow
+  Line 1661: 0x27A0 -> mDirtyParams.mFogTimeRed
+  Line 1667: 0x27A0 -> mDirtyParams.mFogTimeRed
+  Line 1669: 0x27BC -> mMotorParams.mMotorReturn
+  Line 1672: 0x278C -> mDirtyParams.mFogTimeYellow
+  Line 1673: 0x27A0 -> mDirtyParams.mFogTimeRed
+  Line 1678: 0x2778 -> mDirtyParams.mBrakeSlipNoPollute
+  Line 1679: 0x2674 -> mDirtyParams.mDirtyTimeSlip
+  Line 1692: 0x06B8 -> mDeParams.mGraffitoNoDmgTime
+  Line 1960: 0x0690 -> mDeParams.mFootPrintTimerMax
+  Line 2057: 0x26EC -> mDirtyParams.mSlopeAngle
+  Line 2062: 0x08D4 -> mDeParams.mForceSlipAngle
+  Line 2078: 0x1244 -> mSwimParams.mCanBreathDepth
+  Line 2126: 0x1414 -> mWireParams.mWireJumpAccelControl
+  Line 2127: 0x0B68 -> mJumpParams.mJumpAccelControl
+  Line 2133: 0x1428 -> mWireParams.mWireJumpSlideControl
+  Line 2149: 0x2294 -> mYoshiParams.mHoldOutSldCtrl
+  Line 2152: 0x0B7C -> mJumpParams.mJumpSlideControl
+  Line 2205: 0x25D4 -> mDirtyParams.mIncRunning
+  Line 2209: 0x25E8 -> mDirtyParams.mIncCatching
+  Line 2212: 0x25FC -> mDirtyParams.mIncSlipping
+  Line 2227: 0x2610 -> mDirtyParams.mDecSwimming
+  Line 2231: 0x2638 -> mDirtyParams.mDecRotJump
+  Line 2242: 0x2624 -> mDirtyParams.mDecWaterHit
+  Line 2515: 0x058C -> mDeParams.mHpMax
+  Line 2516: 0x27BC -> mMotorParams.mMotorReturn
+  Line 2788: 0x0834 -> mDeParams.mSlipStart
+  Line 2816: 0x3BD4 -> mDmgMapParams0 (struct base)
+  Line 2817: 0x3C68 -> mDmgMapParams1 (struct base)
+  Line 2818: 0x3CFC -> mDmgMapParams2 (struct base)
+  Line 2819: 0x3D90 -> mDmgMapParams3 (struct base)
+  Line 2820: 0x3E24 -> mDmgMapParams4 (struct base)
+  Line 2821: 0x3EB8 -> mDmgMapParams5 (struct base)
+  Line 2822: 0x3F4C -> mDmgMapParams6 (struct base)
+  Line 2823: 0x3FE0 -> mDmgMapParams7 (struct base)
+  Line 2824: 0x4074 -> mDmgMapParams8 (struct base)
+  Line 2825: 0x4108 -> mDmgMapParams9 (struct base)
+  Line 2826: 0x3BD4 -> mDmgMapParams0 (struct base)
+  Line 2868: 0x1244 -> mSwimParams.mCanBreathDepth
+  Line 2901: 0x3BD4 -> mDmgMapParams0 (struct base)
+  Line 2902: 0x3C68 -> mDmgMapParams1 (struct base)
+  Line 2903: 0x3CFC -> mDmgMapParams2 (struct base)
+  Line 2904: 0x3D90 -> mDmgMapParams3 (struct base)
+  Line 2905: 0x3E24 -> mDmgMapParams4 (struct base)
+  Line 2906: 0x3EB8 -> mDmgMapParams5 (struct base)
+  Line 2907: 0x3F4C -> mDmgMapParams6 (struct base)
+  Line 2908: 0x3FE0 -> mDmgMapParams7 (struct base)
+  Line 2909: 0x4074 -> mDmgMapParams8 (struct base)
+  Line 2910: 0x4108 -> mDmgMapParams9 (struct base)
+  Line 2911: 0x3BD4 -> mDmgMapParams0 (struct base)
+  Line 2921: 0x0898 -> mDeParams.mHotTimer
+  Line 2941: 0x0898 -> mDeParams.mHotTimer
+  Line 2943: 0x27F8 -> mMotorParams.mMotorWall
+  Line 3028: 0x1208 -> mSwimParams.mWaterLevelCheckHeight
+  Line 3074: 0x0FBC -> mRunParams.mSwimDepth
+  Line 3138: 0x117C -> mSwimParams.mStartVMult
+  Line 3139: 0x1190 -> mSwimParams.mStartVYMult
+  Line 3173: 0x233C -> mWaterEffectParams.mRunningRippleDepth
+  Line 3297: 0x1244 -> mSwimParams.mCanBreathDepth
+  Line 3319: 0x1280 -> mSwimParams.mAirDecDive
+  Line 3322: 0x126C -> mSwimParams.mAirDec
+  Line 3340: 0x27F8 -> mMotorParams.mMotorWall
+  Line 3352: 0x1294 -> mSwimParams.mAirInc
+  Line 3368: 0x0D0C -> mJumpParams.mTrampolineDec
+  Line 3424: 0x0988 -> mDeParams.mIllegalPlaneCtInc
+  Line 3425: 0x099C -> mDeParams.mIllegalPlaneTime
+  Line 3426: 0x058C -> mDeParams.mHpMax
+  Line 3579: 0x4264 -> mOptionParams.mZ
+  Line 3580: 0x4278 -> mOptionParams.mXMin
+  Line 3581: 0x4278 -> mOptionParams.mXMin
+  Line 3582: 0x428C -> mOptionParams.mXMax
+  Line 3583: 0x428C -> mOptionParams.mXMax
+  Line 3631: 0x0E88 -> mJumpParams.mGetOffYoshiY
+  Line 3659: 0x2244 -> mYoshiParams.mHeadFront
+  Line 3669: 0x2258 -> mYoshiParams.mHeadRadius
+  Line 3811: 0x27F8 -> mMotorParams.mMotorWall
+  Line 3960: 0x26EC -> mDirtyParams.mSlopeAngle
+  Line 3973: 0x2BA4 -> mSlipParamsAll.mSlideStopCatch
+  Line 3981: 0x2C88 -> mSlipParamsAllSlider.mSlideStopCatch
+  Line 3990: 0x2D6C -> mSlipParams45.mSlideStopCatch
+  Line 4000: 0x2F34 -> mSlipParamsWaterGround.mSlideStopCatch
+  Line 4001: 0x2E50 -> mSlipParamsWaterSlope.mSlideStopCatch
+  Line 4004: 0x29DC -> mSlipParamsNormal.mSlideStopCatch
+  Line 4030: 0x26EC -> mDirtyParams.mSlopeAngle
+  Line 4043: 0x2B90 -> mSlipParamsAll.mSlideStopNormal
+  Line 4051: 0x2C74 -> mSlipParamsAllSlider.mSlideStopNormal
+  Line 4060: 0x2D58 -> mSlipParams45.mSlideStopNormal
+  Line 4070: 0x2F20 -> mSlipParamsWaterGround.mSlideStopNormal
+  Line 4073: 0x2E3C -> mSlipParamsWaterSlope.mSlideStopNormal
+  Line 4100: 0x26EC -> mDirtyParams.mSlopeAngle
+  Line 4113: 0x2BB8 -> mSlipParamsAll.mJumpEnable
+  Line 4122: 0x2C9C -> mSlipParamsAllSlider.mJumpEnable
+  Line 4131: 0x2D80 -> mSlipParams45.mJumpEnable
+  Line 4141: 0x2F48 -> mSlipParamsWaterGround.mJumpEnable
+  Line 4142: 0x2E64 -> mSlipParamsWaterSlope.mJumpEnable
+  Line 4181: 0x26EC -> mDirtyParams.mSlopeAngle
+  Line 4365: 0x0690 -> mDeParams.mFootPrintTimerMax
+  Line 4368: 0x2428 -> mGraffitoParams.mSinkTime
+  Line 4369: 0x24DC -> mGraffitoParams.mSinkDmgDepth
+  Line 4374: 0x243C -> mGraffitoParams.mSinkDmgTime
+  Line 4377: 0x27BC -> mMotorParams.mMotorReturn
+  Line 4385: 0x2428 -> mGraffitoParams.mSinkTime
+  Line 4406: 0x0B18 -> mJumpParams.mGravity
+  Line 4495: 0x0870 -> mDeParams.mToroccoRotSp
+  Line 4763: 0x2590 -> mGraffitoParams.mFootEraseTimes
+  Line 4764: 0x25B8 -> mGraffitoParams.mFootEraseFront
+  Line 4765: 0x25A4 -> mGraffitoParams.mFootEraseSize
+
+--- MarioSpecial.cpp (32 TParams accesses) ---
+  Line   25: 0x1400 -> mWireParams.mSwingRate
+  Line   33: 0x1464 -> mWireParams.mWireSwingBrake
+  Line   36: 0x1478 -> mWireParams.mWireSwingMax
+  Line   42: 0x1478 -> mWireParams.mWireSwingMax
+  Line   53: 0x27F8 -> mMotorParams.mMotorWall
+  Line  105: 0x0AE8 -> mAttackParamsKickRoof.mRadius
+  Line  108: 0x0AFC -> mAttackParamsKickRoof.mHeight
+  Line  444: 0x27F8 -> mMotorParams.mMotorWall
+  Line  461: 0x0AB8 -> mAttackParamsFencePunch.mRadius
+  Line  464: 0x0ACC -> mAttackParamsFencePunch.mHeight
+  Line  474: 0x27F8 -> mMotorParams.mMotorWall
+  Line  522: 0x0BA4 -> mJumpParams.mFenceSpeed
+  Line  624: 0x27F8 -> mMotorParams.mMotorWall
+  Line  900: 0x147C -> mPullParamsBGBeak (struct base)
+  Line  905: 0x14D4 -> mPullParamsBGTentacle (struct base)
+  Line  908: 0x152C -> mPullParamsBGFireWanWanBossTail (struct base)
+  Line  911: 0x1584 -> mPullParamsFireWanWanTail (struct base)
+  Line 1439: 0x143C -> mWireParams.mWireJumpMult
+  Line 1442: 0x1450 -> mWireParams.mWireJumpBase
+  Line 1679: 0x12EC -> mHangingParams.mLimitTime
+  Line 1810: 0x12D8 -> mHangingParams.mRapidTime
+  Line 1816: 0x12B0 -> mHangingParams.mMoveSp
+  Line 1881: 0x08FC -> mDeParams.mHangWallMovableAngle
+  Line 1954: 0x12C4 -> mHangingParams.mAnmRate
+  Line 1961: 0x12D8 -> mHangingParams.mRapidTime
+  Line 1964: 0x1300 -> mHangingParams.mAnmRapid
+  Line 2001: 0x27F8 -> mMotorParams.mMotorWall
+  Line 2038: 0x1330 -> mHangRoofParams.mAnmMult
+  Line 2064: 0x27F8 -> mMotorParams.mMotorWall
+  Line 2190: 0x15F4 -> mBarParams.mClimbSp
+  Line 2202: 0x161C -> mBarParams.mClimbAnmRate
+  Line 2316: 0x1608 -> mBarParams.mRotateSp
+
+--- MarioPhysics.cpp (3 TParams accesses) ---
+  Line   60: 0x08E8 -> mDeParams.mClashSpeed
+  Line  756: 0x0E60 -> mJumpParams.mClashAngle
+  Line  780: 0x21B0 -> mDivingParams.mGravity
+
+--- MarioRun.cpp (123 TParams accesses) ---
+  Line  188: 0x2B40 -> mSlipParamsAll.mSlopeAcceleUp
+  Line  189: 0x2B54 -> mSlipParamsAll.mSlopeAcceleDown
+  Line  202: 0x2C24 -> mSlipParamsAllSlider.mSlopeAcceleUp
+  Line  203: 0x2C38 -> mSlipParamsAllSlider.mSlopeAcceleDown
+  Line  213: 0x2D08 -> mSlipParams45.mSlopeAcceleUp
+  Line  214: 0x2D1C -> mSlipParams45.mSlopeAcceleDown
+  Line  225: 0x2ED0 -> mSlipParamsWaterGround.mSlopeAcceleUp
+  Line  226: 0x2EE4 -> mSlipParamsWaterGround.mSlopeAcceleDown
+  Line  228: 0x2DEC -> mSlipParamsWaterSlope.mSlopeAcceleUp
+  Line  229: 0x2E00 -> mSlipParamsWaterSlope.mSlopeAcceleDown
+  Line  234: 0x2978 -> mSlipParamsNormal.mSlopeAcceleUp
+  Line  235: 0x298C -> mSlipParamsNormal.mSlopeAcceleDown
+  Line  241: 0x2B68 -> mSlipParamsAll.mSlideAcceleUp
+  Line  242: 0x2B7C -> mSlipParamsAll.mSlideAcceleDown
+  Line  255: 0x2C4C -> mSlipParamsAllSlider.mSlideAcceleUp
+  Line  256: 0x2C60 -> mSlipParamsAllSlider.mSlideAcceleDown
+  Line  266: 0x2D30 -> mSlipParams45.mSlideAcceleUp
+  Line  267: 0x2D44 -> mSlipParams45.mSlideAcceleDown
+  Line  278: 0x2EF8 -> mSlipParamsWaterGround.mSlideAcceleUp
+  Line  279: 0x2F0C -> mSlipParamsWaterGround.mSlideAcceleDown
+  Line  281: 0x2E14 -> mSlipParamsWaterSlope.mSlideAcceleUp
+  Line  282: 0x2E28 -> mSlipParamsWaterSlope.mSlideAcceleDown
+  Line  287: 0x29A0 -> mSlipParamsNormal.mSlideAcceleUp
+  Line  288: 0x29B4 -> mSlipParamsNormal.mSlideAcceleDown
+  Line  298: 0x2BE0 -> mSlipParamsAll.mSlideAngleYSp
+  Line  309: 0x2CC4 -> mSlipParamsAllSlider.mSlideAngleYSp
+  Line  317: 0x2DA8 -> mSlipParams45.mSlideAngleYSp
+  Line  335: 0x2A18 -> mSlipParamsNormal.mSlideAngleYSp
+  Line  430: 0x2A18 -> mSlipParamsNormal.mSlideAngleYSp
+  Line  436: 0x2A18 -> mSlipParamsNormal.mSlideAngleYSp
+  Line  442: 0x2A18 -> mSlipParamsNormal.mSlideAngleYSp
+  Line  448: 0x2A18 -> mSlipParamsNormal.mSlideAngleYSp
+  Line  512: 0x2A48 -> mSlipParamsOil.mSlipFriction
+  Line  517: 0x2B2C -> mSlipParamsAll.mSlipFriction
+  Line  528: 0x2C10 -> mSlipParamsAllSlider.mSlipFriction
+  Line  536: 0x2CF4 -> mSlipParams45.mSlipFriction
+  Line  545: 0x2EBC -> mSlipParamsWaterGround.mSlipFriction
+  Line  547: 0x2DD8 -> mSlipParamsWaterSlope.mSlipFriction
+  Line  553: 0x2FA0 -> mSlipParamsYoshi.mSlipFriction
+  Line  555: 0x2964 -> mSlipParamsNormal.mSlipFriction
+  Line  559: 0x0848 -> mDeParams.mWasOnWaterSlip
+  Line  566: 0x085C -> mDeParams.mInWaterSlip
+  Line  581: 0x2A48 -> mSlipParamsOil.mSlipFriction
+  Line  583: 0x2B2C -> mSlipParamsAll.mSlipFriction
+  Line  593: 0x2C10 -> mSlipParamsAllSlider.mSlipFriction
+  Line  601: 0x2CF4 -> mSlipParams45.mSlipFriction
+  Line  610: 0x2EBC -> mSlipParamsWaterGround.mSlipFriction
+  Line  612: 0x2DD8 -> mSlipParamsWaterSlope.mSlipFriction
+  Line  614: 0x2FA0 -> mSlipParamsYoshi.mSlipFriction
+  Line  616: 0x2964 -> mSlipParamsNormal.mSlipFriction
+  Line  619: 0x0848 -> mDeParams.mWasOnWaterSlip
+  Line  626: 0x085C -> mDeParams.mInWaterSlip
+  Line  727: 0x05A0 -> mDeParams.mRunningMax
+  Line  728: 0x05A0 -> mDeParams.mRunningMax
+  Line  751: 0x0EB8 -> mRunParams.mMaxSpeed
+  Line  752: 0x0EB8 -> mRunParams.mMaxSpeed
+  Line  757: 0x2208 -> mYoshiParams.mRunYoshiMult
+  Line  763: 0x0ECC -> mRunParams.mVelMinusBrake
+  Line  766: 0x0EF4 -> mRunParams.mAddVelDiv
+  Line  767: 0x0EE0 -> mRunParams.mAddBase
+  Line  772: 0x0F08 -> mRunParams.mDecStartNrmY
+  Line  775: 0x0F1C -> mRunParams.mDecBrake
+  Line  777: 0x22A8 -> mYoshiParams.mDecBrake
+  Line  792: 0x0654 -> mDeParams.mPumpingRotSpMin
+  Line  793: 0x0668 -> mDeParams.mPumpingRotSpMax
+  Line  798: 0x0618 -> mDeParams.mRunningRotSpMin
+  Line  799: 0x062C -> mDeParams.mRunningRotSpMax
+  Line  806: 0x2230 -> mYoshiParams.mRotYoshiMult
+  Line  815: 0x1048 -> mRunParams.mDashRotSp
+  Line  824: 0x0FBC -> mRunParams.mSwimDepth
+  Line  832: 0x0FBC -> mRunParams.mSwimDepth
+  Line  833: 0x0FD0 -> mRunParams.mInWaterBrake
+  Line  893: 0x1BDC -> mSurfingParamsGroundYellow.mRotMin
+  Line  894: 0x1F84 -> mSurfingParamsGroundGreen.mRotMin
+  Line  895: 0x1834 -> mSurfingParamsGroundRed.mRotMin
+  Line  898: 0x1BF0 -> mSurfingParamsGroundYellow.mRotMax
+  Line  899: 0x1F98 -> mSurfingParamsGroundGreen.mRotMax
+  Line  900: 0x1848 -> mSurfingParamsGroundRed.mRotMax
+  Line  903: 0x1C04 -> mSurfingParamsGroundYellow.mPowMin
+  Line  904: 0x1FAC -> mSurfingParamsGroundGreen.mPowMin
+  Line  905: 0x185C -> mSurfingParamsGroundRed.mPowMin
+  Line  908: 0x1C18 -> mSurfingParamsGroundYellow.mPowMax
+  Line  909: 0x1FC0 -> mSurfingParamsGroundGreen.mPowMax
+  Line  910: 0x1870 -> mSurfingParamsGroundRed.mPowMax
+  Line  944: 0x1C2C -> mSurfingParamsGroundYellow.mAccel
+  Line  945: 0x1FD4 -> mSurfingParamsGroundGreen.mAccel
+  Line  946: 0x1884 -> mSurfingParamsGroundRed.mAccel
+  Line 1149: 0x1034 -> mRunParams.mTurnNeedSp
+  Line 1215: 0x08E8 -> mDeParams.mClashSpeed
+  Line 1222: 0x080C -> mDeParams.mJumpWallHeight
+  Line 1223: 0x05B4 -> mDeParams.mDashMax
+  Line 1235: 0x1020 -> mRunParams.mDoJumpCatchSp
+  Line 1250: 0x05B4 -> mDeParams.mDashMax
+  Line 1293: 0x05B4 -> mDeParams.mDashMax
+  Line 1527: 0x1BC0 -> mSurfingParamsWaterYellow.mClashAngle
+  Line 1531: 0x1F68 -> mSurfingParamsWaterGreen.mClashAngle
+  Line 1535: 0x1818 -> mSurfingParamsWaterRed.mClashAngle
+  Line 1542: 0x1BAC -> mSurfingParamsWaterYellow.mClashSpeed
+  Line 1546: 0x1F54 -> mSurfingParamsWaterGreen.mClashSpeed
+  Line 1550: 0x1804 -> mSurfingParamsWaterRed.mClashSpeed
+  Line 1558: 0x1D94 -> mSurfingParamsGroundYellow.mClashAngle
+  Line 1562: 0x213C -> mSurfingParamsGroundGreen.mClashAngle
+  Line 1566: 0x19EC -> mSurfingParamsGroundRed.mClashAngle
+  Line 1573: 0x1D80 -> mSurfingParamsGroundYellow.mClashSpeed
+  Line 1577: 0x2128 -> mSurfingParamsGroundGreen.mClashSpeed
+  Line 1581: 0x19D8 -> mSurfingParamsGroundRed.mClashSpeed
+  Line 1589: 0x058C -> mDeParams.mHpMax
+  Line 1882: 0x08E8 -> mDeParams.mClashSpeed
+  Line 2077: 0x26B0 -> mDirtyParams.mPolSizeRun
+  Line 2081: 0x2750 -> mDirtyParams.mSlipRotate
+  Line 2089: 0x2728 -> mDirtyParams.mSlipRunSp
+  Line 2127: 0x2714 -> mDirtyParams.mSlipAnmSpeed
+  Line 2153: 0x2764 -> mDirtyParams.mSlipCatchRotate
+  Line 2170: 0x269C -> mDirtyParams.mPolSizeSlip
+  Line 2183: 0x273C -> mDirtyParams.mSlipCatchSp
+  Line 2508: 0x269C -> mDirtyParams.mPolSizeSlip
+  Line 2517: 0x27F8 -> mMotorParams.mMotorWall
+  Line 2526: 0x27F8 -> mMotorParams.mMotorWall
+  Line 2535: 0x27F8 -> mMotorParams.mMotorWall
+  Line 2544: 0x27F8 -> mMotorParams.mMotorWall
+  Line 2553: 0x27F8 -> mMotorParams.mMotorWall
+  Line 2562: 0x27F8 -> mMotorParams.mMotorWall
+  Line 2571: 0x27F8 -> mMotorParams.mMotorWall
+
+--- MarioJump.cpp (63 TParams accesses) ---
+  Line   32: 0x0E74 -> mJumpParams.mJumpJumpCatchSp
+  Line   40: 0x0B54 -> mJumpParams.mJumpSpeedBrake
+  Line   61: 0x21C4 -> mDivingParams.mAccelControl
+  Line   77: 0x226C -> mYoshiParams.mHoldOutAccCtrlF
+  Line   78: 0x2280 -> mYoshiParams.mHoldOutAccCtrlB
+  Line   85: 0x0B68 -> mJumpParams.mJumpAccelControl
+  Line   86: 0x0B68 -> mJumpParams.mJumpAccelControl
+  Line   96: 0x0758 -> mDeParams.mTrampleRadius
+  Line   98: 0x0744 -> mDeParams.mAttackHeight
+  Line  101: 0x076C -> mDeParams.mPushupRadius
+  Line  103: 0x0780 -> mDeParams.mPushupHeight
+  Line  122: 0x08C0 -> mDeParams.mDamageFallHeight
+  Line  144: 0x27E4 -> mMotorParams.mMotorHipDrop
+  Line  150: 0x27BC -> mMotorParams.mMotorReturn
+  Line  157: 0x27F8 -> mMotorParams.mMotorWall
+  Line  165: 0x08E8 -> mDeParams.mClashSpeed
+  Line  185: 0x27F8 -> mMotorParams.mMotorWall
+  Line  194: 0x27F8 -> mMotorParams.mMotorWall
+  Line  211: 0x27F8 -> mMotorParams.mMotorWall
+  Line  233: 0x0E74 -> mJumpParams.mJumpJumpCatchSp
+  Line  247: 0x0E74 -> mJumpParams.mJumpJumpCatchSp
+  Line  273: 0x08C0 -> mDeParams.mDamageFallHeight
+  Line  333: 0x0E74 -> mJumpParams.mJumpJumpCatchSp
+  Line  341: 0x0E74 -> mJumpParams.mJumpJumpCatchSp
+  Line  347: 0x0B68 -> mJumpParams.mJumpAccelControl
+  Line  357: 0x0E74 -> mJumpParams.mJumpJumpCatchSp
+  Line  392: 0x0B54 -> mJumpParams.mJumpSpeedBrake
+  Line  402: 0x0B68 -> mJumpParams.mJumpAccelControl
+  Line  403: 0x0B68 -> mJumpParams.mJumpAccelControl
+  Line  416: 0x27F8 -> mMotorParams.mMotorWall
+  Line  427: 0x0BCC -> mJumpParams.mFireDownControl
+  Line  430: 0x0BCC -> mJumpParams.mFireDownControl
+  Line  433: 0x0BE0 -> mJumpParams.mFireBackVelocity
+  Line  434: 0x0B68 -> mJumpParams.mJumpAccelControl
+  Line  442: 0x0BF4 -> mJumpParams.mBroadJumpForce
+  Line  443: 0x0BF4 -> mJumpParams.mBroadJumpForce
+  Line  454: 0x0DD4 -> mJumpParams.mThrownAccel
+  Line  456: 0x0DE8 -> mJumpParams.mThrownSlide
+  Line  458: 0x0DFC -> mJumpParams.mThrownBrake
+  Line  465: 0x0BF4 -> mJumpParams.mBroadJumpForce
+  Line  466: 0x0BF4 -> mJumpParams.mBroadJumpForce
+  Line  477: 0x0758 -> mDeParams.mTrampleRadius
+  Line  478: 0x0744 -> mDeParams.mAttackHeight
+  Line  480: 0x076C -> mDeParams.mPushupRadius
+  Line  481: 0x0780 -> mDeParams.mPushupHeight
+  Line  490: 0x1818 -> mSurfingParamsWaterRed.mClashAngle
+  Line  492: 0x1804 -> mSurfingParamsWaterRed.mClashSpeed
+  Line  547: 0x2158 -> mHoverParams.mRotSp
+  Line  547: 0x2158 -> mHoverParams.mRotSp
+  Line  559: 0x21C4 -> mDivingParams.mAccelControl
+  Line  568: 0x216C -> mHoverParams.mAccelRate
+  Line  569: 0x2180 -> mHoverParams.mBrake
+  Line  572: 0x27F8 -> mMotorParams.mMotorWall
+  Line  574: 0x0E74 -> mJumpParams.mJumpJumpCatchSp
+  Line  601: 0x0C80 -> mJumpParams.mHipAttackSpeedY
+  Line  602: 0x0E74 -> mJumpParams.mJumpJumpCatchSp
+  Line  603: 0x0C80 -> mJumpParams.mHipAttackSpeedY
+  Line  621: 0x0E9C -> mJumpParams.mSuperHipAttackCt
+  Line  622: 0x0C80 -> mJumpParams.mHipAttackSpeedY
+  Line  623: 0x0C94 -> mJumpParams.mSuperHipAttackSpeedY
+  Line  624: 0x0794 -> mDeParams.mHipdropRadius
+  Line  625: 0x0744 -> mDeParams.mAttackHeight
+  Line  648: 0x27F8 -> mMotorParams.mMotorWall
+
+--- MarioWait.cpp (10 TParams accesses) ---
+  Line   58: 0x0960 -> mDeParams.mSleepingCheckDist
+  Line   59: 0x0974 -> mDeParams.mSleepingCheckHeight
+  Line  147: 0x0604 -> mDeParams.mWaitingRotSp
+  Line  152: 0x23A8 -> mControllerParams.mStartToWalkLevel
+  Line  445: 0x0FF8 -> mRunParams.mPumpingSlideSp
+  Line  452: 0x100C -> mRunParams.mPumpingSlideAnmSp
+  Line  517: 0x27E4 -> mMotorParams.mMotorHipDrop
+  Line  600: 0x23F8 -> mControllerParams.mSquatRotMidAnalog
+  Line  601: 0x240C -> mControllerParams.mSquatRotMidValue
+  Line  616: 0x0604 -> mDeParams.mWaitingRotSp
+
+--- MarioSwim.cpp (20 TParams accesses) ---
+  Line   29: 0x1154 -> mSwimParams.mEndDepth
+  Line   38: 0x1078 -> mSwimParams.mMoveSp
+  Line   46: 0x108C -> mSwimParams.mMoveBrake
+  Line   52: 0x10C8 -> mSwimParams.mPumpingRotSpMin
+  Line   53: 0x10DC -> mSwimParams.mPumpingRotSpMax
+  Line   56: 0x10A0 -> mSwimParams.mSwimmingRotSpMin
+  Line   57: 0x10B4 -> mSwimParams.mSwimmingRotSpMax
+  Line   69: 0x10F0 -> mSwimParams.mGravity
+  Line   75: 0x1168 -> mSwimParams.mFloatHeight
+  Line   82: 0x1104 -> mSwimParams.mWaitBouyancy
+  Line   85: 0x1118 -> mSwimParams.mMoveBouyancy
+  Line   93: 0x112C -> mSwimParams.mUpDownBrake
+  Line  163: 0x1140 -> mSwimParams.mCanJumpDepth
+  Line  207: 0x05B4 -> mDeParams.mDashMax
+  Line  268: 0x1168 -> mSwimParams.mFloatHeight
+  Line  319: 0x11CC -> mSwimParams.mPaddleSpeedUp
+  Line  322: 0x11E0 -> mSwimParams.mPaddleJumpUp
+  Line  360: 0x11F4 -> mSwimParams.mFloatUp
+  Line  378: 0x1230 -> mSwimParams.mWaitSinkTime
+  Line  385: 0x1258 -> mSwimParams.mWaitSinkSpeed
+
+--- MarioCheckCol.cpp (2 TParams accesses) ---
+  Line  167: 0x1630 -> mBarParams.mCatchRadius
+  Line  168: 0x1644 -> mBarParams.mCatchAngle
+
+--- MarioUpper.cpp (3 TParams accesses) ---
+  Line   96: 0x2428 -> mGraffitoParams.mSinkTime
+  Line   97: 0x24C8 -> mGraffitoParams.mSinkPumpLimit
+  Line  187: 0x3084 -> mUpperBodyParams.mPumpWaitTime
+
+==========================================================================================
+SUMMARY
+==========================================================================================
+Total raw offset accesses found: 784
+Mapped to TParams fields: 454
+Non-TParams offsets: 330

@@ -146,7 +146,7 @@ BOOL TMario::changePlayerTriJump()
 	int jumpAmount;
 
 	if ((u8)isForceSlip()) {
-		jumpAmount = *(u8*)((u8*)this + 0x2BCC);
+		jumpAmount = mSlipParamsAll.mMissJump.value;
 	} else {
 		const TBGCheckData* ground = mGroundPlane;
 		u16 bgType = ground->mBGType;
@@ -157,7 +157,7 @@ BOOL TMario::changePlayerTriJump()
 		else
 			isSlippery = 0;
 		if (isSlippery) {
-			jumpAmount = *(u8*)((u8*)this + 0x2CB0);
+			jumpAmount = mSlipParamsAllSlider.mMissJump.value;
 		} else {
 			u8 isSand;
 			if (bgType == 0x02 || bgType == 0x8002)
@@ -165,7 +165,7 @@ BOOL TMario::changePlayerTriJump()
 			else
 				isSand = 0;
 			if (isSand && ground->mNormal.y < 0.866025f) {
-				jumpAmount = *(u8*)((u8*)this + 0x2D94);
+				jumpAmount = mSlipParams45.mMissJump.value;
 			} else {
 				u8 isWet;
 				if (bgType == 0x04 || bgType == 0x4004
@@ -175,12 +175,12 @@ BOOL TMario::changePlayerTriJump()
 					isWet = 0;
 				if (isWet) {
 					if (ground->mNormal.y > 0.99f) {
-						jumpAmount = *(u8*)((u8*)this + 0x2F5C);
+						jumpAmount = mSlipParamsWaterGround.mMissJump.value;
 					} else {
-						jumpAmount = *(u8*)((u8*)this + 0x2E78);
+						jumpAmount = mSlipParamsWaterSlope.mMissJump.value;
 					}
 				} else {
-					jumpAmount = *(u8*)((u8*)this + 0x2A04);
+					jumpAmount = mSlipParamsNormal.mMissJump.value;
 				}
 			}
 		}
@@ -249,7 +249,7 @@ BOOL TMario::changePlayerJumping(u32 status, u32 arg)
 	int jumpAmount;
 
 	if ((u8)isForceSlip()) {
-		jumpAmount = *(u8*)((u8*)this + 0x2BCC);
+		jumpAmount = mSlipParamsAll.mMissJump.value;
 	} else {
 		const TBGCheckData* ground = mGroundPlane;
 		u16 bgType = ground->mBGType;
@@ -260,7 +260,7 @@ BOOL TMario::changePlayerJumping(u32 status, u32 arg)
 		else
 			isSlippery = 0;
 		if (isSlippery) {
-			jumpAmount = *(u8*)((u8*)this + 0x2CB0);
+			jumpAmount = mSlipParamsAllSlider.mMissJump.value;
 		} else {
 			u8 isSand;
 			if (bgType == 0x02 || bgType == 0x8002)
@@ -268,7 +268,7 @@ BOOL TMario::changePlayerJumping(u32 status, u32 arg)
 			else
 				isSand = 0;
 			if (isSand && ground->mNormal.y < 0.866025f) {
-				jumpAmount = *(u8*)((u8*)this + 0x2D94);
+				jumpAmount = mSlipParams45.mMissJump.value;
 			} else {
 				u8 isWet;
 				if (bgType == 0x04 || bgType == 0x4004
@@ -278,12 +278,12 @@ BOOL TMario::changePlayerJumping(u32 status, u32 arg)
 					isWet = 0;
 				if (isWet) {
 					if (ground->mNormal.y > 0.99f) {
-						jumpAmount = *(u8*)((u8*)this + 0x2F5C);
+						jumpAmount = mSlipParamsWaterGround.mMissJump.value;
 					} else {
-						jumpAmount = *(u8*)((u8*)this + 0x2E78);
+						jumpAmount = mSlipParamsWaterSlope.mMissJump.value;
 					}
 				} else {
-					jumpAmount = *(u8*)((u8*)this + 0x2A04);
+					jumpAmount = mSlipParamsNormal.mMissJump.value;
 				}
 			}
 		}
@@ -441,9 +441,9 @@ void TMario::setPlayerVelocity(f32 speed)
 
 void TMario::setNormalAttackArea()
 {
-	mAttackRadius = *(f32*)((u8*)this + 0x708);
+	mAttackRadius = mDeParams.mHoldRadius.value;
 	calcEntryRadius();
-	mAttackHeight = *(f32*)((u8*)this + 0x744);
+	mAttackHeight = mDeParams.mAttackHeight.value;
 	calcEntryRadius();
 }
 
@@ -525,7 +525,7 @@ void TMario::dirtyLimitCheck()
 {
 	if (unk134 < 0.0f)
 		unk134 = 0.0f;
-	f32 maxDirty = *(f32*)((u8*)this + 0x2700);
+	f32 maxDirty = mDirtyParams.mDirtyMax.value;
 	if (maxDirty < unk134)
 		unk134 = maxDirty;
 }
@@ -600,10 +600,10 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	unk2BC = mPosition.y;
 
 	s16 health = *(s16*)((u8*)this + 0x360);
-	s32 halfMaxHealth = *(s16*)((u8*)this + 0x690) / 2;
+	s32 halfMaxHealth = mDeParams.mFootPrintTimerMax.value / 2;
 	if (health > halfMaxHealth) {
 		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
-		                   *(f32*)((u8*)this + 0x26D8));
+		                   mDirtyParams.mPolSizeJump.value);
 	}
 
 	switch (status) {
@@ -666,7 +666,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 		// Normal ground: check speed for voice
 		u8 isFast;
-		if (unk370 > *(f32*)((u8*)this + 0x8AC))
+		if (unk370 > mDeParams.mFeelDeep.value)
 			isFast = 1;
 		else
 			isFast = 0;
@@ -680,9 +680,9 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	case 0x02000881: {
 		// Hip-drop jump
 		mVel.y
-		    = mForwardVel * *(f32*)((u8*)this + 0xD48)
-		      + *(f32*)((u8*)this + 0xD34);
-		mForwardVel = mForwardVel * *(f32*)((u8*)this + 0xD5C);
+		    = mForwardVel * mJumpParams.mSecJumpSpeedMult.value
+		      + mJumpParams.mSecJumpForce.value;
+		mForwardVel = mForwardVel * mJumpParams.mSecJumpXZMult.value;
 		startVoice(0x78B1);
 		break;
 	}
@@ -696,18 +696,18 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	case 0x0882: {
 		// Somersault jump
 		mVel.y
-		    = mForwardVel * *(f32*)((u8*)this + 0xD98)
-		      + *(f32*)((u8*)this + 0xD84);
-		mForwardVel = mForwardVel * *(f32*)((u8*)this + 0xDAC);
+		    = mForwardVel * mJumpParams.mUltraJumpSpeedMult.value
+		      + mJumpParams.mUltraJumpForce.value;
+		mForwardVel = mForwardVel * mJumpParams.mUltraJumpXZMult.value;
 		startVoice(0x78B6);
 		break;
 	}
 	case 0x0883: {
 		// Side somersault
-		mForwardVel = *(f32*)((u8*)this + 0xC58);
+		mForwardVel = mJumpParams.mBackJumpForce.value;
 		mVel.y
 		    = mForwardVel * 0.0f
-		      + *(f32*)((u8*)this + 0xC6C);
+		      + mJumpParams.mBackJumpForceY.value;
 		startVoice(0x78B6);
 		break;
 	}
@@ -726,7 +726,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	case 0x0896: {
 		// Backflip
 		mVel.y
-		    = mForwardVel * 0.25f + *(f32*)((u8*)this + 0xC1C);
+		    = mForwardVel * 0.25f + mJumpParams.mRotateJumpForceY.value;
 		mForwardVel = mForwardVel * 0.8f;
 		startVoice(0x78B6);
 		break;
@@ -734,7 +734,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	case 0x0887: {
 		// Spin jump
 		mVel.y
-		    = mForwardVel * 0.0f + *(f32*)((u8*)this + 0xB90);
+		    = mForwardVel * 0.0f + mJumpParams.mTurnJumpForce.value;
 		mForwardVel = 8.0f;
 		*(s16*)((u8*)this + 0x96)
 		    = *(s16*)((u8*)this + 0x90);
@@ -744,15 +744,15 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	case 0x0888: {
 		// Wall kick
 		startVoice(0x78B1);
-		mForwardVel = *(f32*)((u8*)this + 0xBF4);
-		mVel.y = *(f32*)((u8*)this + 0xC08);
+		mForwardVel = mJumpParams.mBroadJumpForce.value;
+		mVel.y = mJumpParams.mBroadJumpForceY.value;
 		break;
 	}
 	case 0x02000889: {
 		// Long jump
 		startVoice(0x78B1);
-		mForwardVel = *(f32*)((u8*)this + 0xCE4);
-		mVel.y = *(f32*)((u8*)this + 0xCF8);
+		mForwardVel = mJumpParams.mRotBroadJumpForce.value;
+		mVel.y = mJumpParams.mRotBroadJumpForceY.value;
 		break;
 	}
 	case 0x0208B4: {
@@ -776,12 +776,12 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 			isBeach = 0;
 		if (isBeach) {
 			mVel.y
-			    = mForwardVel * *(f32*)((u8*)this + 0x17F0)
-			      + *(f32*)((u8*)this + 0x17DC);
+			    = mForwardVel * mSurfingParamsWaterRed.mJumpXZRatio.value
+			      + mSurfingParamsWaterRed.mJumpPow.value;
 		} else {
 			mVel.y
-			    = mForwardVel * *(f32*)((u8*)this + 0x19C4)
-			      + *(f32*)((u8*)this + 0x19B0);
+			    = mForwardVel * mSurfingParamsGroundRed.mJumpXZRatio.value
+			      + mSurfingParamsGroundRed.mJumpPow.value;
 		}
 		break;
 	}
@@ -789,10 +789,10 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		// Wall slide jump
 		if (*(u32*)((u8*)this + 0x88) == 2)
 			break;
-		mVel.y = *(f32*)((u8*)this + 0xBB8);
+		mVel.y = mJumpParams.mFireDownForce.value;
 		if (*(u32*)((u8*)this + 0x88) != 0)
 			break;
-		mForwardVel = -*(f32*)((u8*)this + 0xBE0);
+		mForwardVel = -mJumpParams.mFireBackVelocity.value;
 		break;
 	}
 	case 0x0080088A: {
@@ -850,21 +850,21 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 			startVoice(0x78B1);
 			mVel.y
 			    = mForwardVel * 0.25f
-			      + *(f32*)((u8*)this + 0x7E4);
+			      + mDeParams.mTramplePowStep2.value;
 			break;
 		case 0xD3:
 			// Double jump (D3)
 			startVoice(0x78B6);
 			mVel.y
 			    = mForwardVel * 0.25f
-			      + *(f32*)((u8*)this + 0x7F8);
+			      + mDeParams.mTramplePowStep3.value;
 			break;
 		default:
 			// Other
 			startVoice(0x78AB);
 			mVel.y
 			    = mForwardVel * 0.25f
-			      + *(f32*)((u8*)this + 0x7D0);
+			      + mDeParams.mTramplePowStep1.value;
 			break;
 		}
 		mForwardVel = mForwardVel * 0.8f;
@@ -887,7 +887,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		if (arg == 0) {
 			s16 poleAngle = *(s16*)((u8*)this + 0xF6);
 			s32 fixedAngle = -0x2000;
-			f32 paramSpeed = *(f32*)((u8*)this + 0x13EC);
+			f32 paramSpeed = mWireParams.mJumpRate.value;
 			f32 fAngle = (f32)poleAngle;
 			f32 sinVal = jmaSinTable[fixedAngle >> jmaSinShift];
 			mVel.y = fAngle * paramSpeed * 1.0f * sinVal;
@@ -905,7 +905,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 			s16 poleAngle = *(s16*)((u8*)this + 0xF6);
 			f32 fAngle = (f32)poleAngle;
 			s32 fixedAngle = 0x6000;
-			f32 paramSpeed = *(f32*)((u8*)this + 0x13EC);
+			f32 paramSpeed = mWireParams.mJumpRate.value;
 			f32 sinVal = jmaSinTable[fixedAngle >> jmaSinShift];
 			mVel.y = fAngle * paramSpeed * 1.0f * sinVal;
 			f32 cosVal = jmaCosTable[fixedAngle >> jmaSinShift];
@@ -946,10 +946,10 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	else
 		hasSpeedBonus = 0;
 	if (hasSpeedBonus) {
-		s16 maxAge = *(s16*)((u8*)this + 0x2428);
+		s16 maxAge = mGraffitoParams.mSinkTime.value;
 		f32 fMaxAge = (f32)maxAge;
-		f32 minScale = *(f32*)((u8*)this + 0x24A0);
-		f32 maxScale = *(f32*)((u8*)this + 0x24B4);
+		f32 minScale = mGraffitoParams.mSinkJumpRateMin.value;
+		f32 maxScale = mGraffitoParams.mSinkJumpRateMax.value;
 		f32 scaleRange = maxScale - minScale;
 		f32 ratio = 1.0f - speedBonus / fMaxAge;
 		f32 scale = scaleRange * ratio + minScale;
@@ -957,7 +957,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		mForwardVel *= scale;
 
 		// Decay speed bonus
-		f32 decayParam = *(f32*)((u8*)this + 0x248C);
+		f32 decayParam = mGraffitoParams.mSinkRecover.value;
 		f32 bonus2 = *(f32*)((u8*)this + 0x368);
 		f32 fAge2 = (f32)maxAge;
 		f32 ratio2 = bonus2 / fAge2;
@@ -976,7 +976,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 			isOnYoshi = 1;
 	}
 	if (isOnYoshi) {
-		mVel.y *= *(f32*)((u8*)this + 0x221C);
+		mVel.y *= mYoshiParams.mJumpYoshiMult.value;
 		TYoshi* yoshi = (TYoshi*)mYoshi;
 		yoshi->mFlutterState = 0;
 		yoshi->mFlutterTimer = yoshi->mMaxFlutterTimer;
@@ -1042,9 +1042,9 @@ void TMario::checkController(JDrama::TGraphics* gfx)
 		bTimerActive = 0;
 	}
 	if (bTimerActive) {
-		s16 maxTime = *(s16*)((u8*)this + 0x2428);
-		f32 minScale = *(f32*)((u8*)this + 0x2464);
-		f32 maxScale = *(f32*)((u8*)this + 0x2478);
+		s16 maxTime = mGraffitoParams.mSinkTime.value;
+		f32 minScale = mGraffitoParams.mSinkMoveMin.value;
+		f32 maxScale = mGraffitoParams.mSinkMoveMax.value;
 		f32 ratio = timer368 / (f32)maxTime;
 		f32 scale = (maxScale - minScale) * (1.0f - ratio) + minScale;
 		CTRL->mStickHS16 = (s16)((f32)CTRL->mStickHS16 * scale);
@@ -1186,9 +1186,9 @@ void TMario::checkController(JDrama::TGraphics* gfx)
 	}
 
 	// Apply decay from mLengthMultTimes
-	s32 times = (s32)*(s16*)((u8*)this + 0x23D0);
+	s32 times = (s32)mControllerParams.mLengthMultTimes.value;
 	for (s32 i = 0; i < times; i++) {
-		stickDist *= *(f32*)((u8*)this + 0x23E4);
+		stickDist *= mControllerParams.mLengthMult.value;
 	}
 
 	CTRL->mStickDist = stickDist;
@@ -1213,11 +1213,11 @@ void TMario::checkController(JDrama::TGraphics* gfx)
 	s32 rotOffset = 0;
 	if (*(s16*)((u8*)this + 0xA0) > 0) {
 		s16 rotTimer = *(s16*)((u8*)this + 0xA0);
-		s16 unk252C  = *(s16*)((u8*)this + 0x252C);
-		s16 unk2518  = *(s16*)((u8*)this + 0x2518);
-		f32 unk2540  = *(f32*)((u8*)this + 0x2540);
-		f32 unk2554  = *(f32*)((u8*)this + 0x2554);
-		f32 unk2568  = *(f32*)((u8*)this + 0x2568);
+		s16 unk252C  = mGraffitoParams.mDizzyAngleY.value;
+		s16 unk2518  = mGraffitoParams.mDizzyWalkCtMax.value;
+		f32 unk2540  = mGraffitoParams.mDizzyAngleRate.value;
+		f32 unk2554  = mGraffitoParams.mDizzyPowerRate.value;
+		f32 unk2568  = mGraffitoParams.mDizzyPower.value;
 
 		u16 sinAngle = (u16)(s32)((f32)rotTimer * unk2540);
 		u16 cosAngle = (u16)(s32)((f32)rotTimer * unk2554);
@@ -1255,15 +1255,15 @@ void TMario::checkController(JDrama::TGraphics* gfx)
 				if (0.0f == mIntendedMag)
 					mIntendedYaw = mFaceAngle.y;
 
-				f32 rotSpeed = *(f32*)((u8*)this + 0x5C8);
+				f32 rotSpeed = mDeParams.mDashAcc.value;
 
 				*(f32*)unkC0 += rotSpeed;
 				if (*(f32*)unkC0 > 32.0f) {
 					*(f32*)unkC0 = 32.0f;
 					*(s16*)(unkC0 + 4) = *(s16*)(unkC0 + 4) + 1;
 					if ((f32)*(s16*)(unkC0 + 4)
-					    > (f32)*(s16*)((u8*)this + 0x5F0)) {
-						*(s16*)(unkC0 + 4) = *(s16*)((u8*)this + 0x5F0);
+					    > (f32)mDeParams.mDashStartTime.value) {
+						*(s16*)(unkC0 + 4) = mDeParams.mDashStartTime.value;
 
 						u8 hasFlag;
 						if (unk118 & 0x4000) {
@@ -1311,7 +1311,7 @@ void TMario::checkController(JDrama::TGraphics* gfx)
 				if (*(f32*)unkC0 > 0.1f) {
 					if (0.0f == mIntendedMag)
 						mIntendedYaw = mFaceAngle.y;
-					*(f32*)unkC0 *= *(f32*)((u8*)this + 0x5DC);
+					*(f32*)unkC0 *= mDeParams.mDashBrake.value;
 					mIntendedMag = *(f32*)unkC0;
 				} else {
 					*(f32*)unkC0 = 0.0f;
@@ -1323,7 +1323,7 @@ void TMario::checkController(JDrama::TGraphics* gfx)
 			if (*(f32*)unkC0 > 0.1f) {
 				if (0.0f == mIntendedMag)
 					mIntendedYaw = mFaceAngle.y;
-				*(f32*)unkC0 *= *(f32*)((u8*)this + 0x5DC);
+				*(f32*)unkC0 *= mDeParams.mDashBrake.value;
 				mIntendedMag = *(f32*)unkC0;
 			} else {
 				*(f32*)unkC0 = 0.0f;
@@ -1434,16 +1434,16 @@ void TMario::makeHistory()
 		unk530[unk534] = mIntendedYaw;
 		unk534 = unk534 + 1;
 
-		if ((s32)unk534 >= *(s16*)((u8*)this + 0x23BC)) {
+		if ((s32)unk534 >= mControllerParams.mStickRotateTime.value) {
 			int i = 0;
 			int offset = 0;
-			while (i < *(s16*)((u8*)this + 0x23BC)) {
+			while (i < mControllerParams.mStickRotateTime.value) {
 				s16* p = (s16*)((u8*)unk530 + offset);
 				*p = *(s16*)((u8*)p + 2);
 				i++;
 				offset += 2;
 			}
-			unk534 = (u8)(*(s16*)((u8*)this + 0x23BC) - 1);
+			unk534 = (u8)(mControllerParams.mStickRotateTime.value - 1);
 		}
 
 		s16 diff = (s16)(mIntendedYaw - mFaceAngle.y);
@@ -1558,7 +1558,7 @@ void TMario::checkGraffitoFire()
 		waterFlag = 0;
 	if (waterFlag) return;
 
-	if (mPosition.y - mFloorPosition.y > *(f32*)((u8*)this + 0x24F0))
+	if (mPosition.y - mFloorPosition.y > mGraffitoParams.mFireHeight.value)
 		return;
 
 	u32 action = mAction;
@@ -1577,12 +1577,12 @@ void TMario::checkGraffitoFire()
 	*(f32*)((u8*)this + 0x48C) = mPosition.z + JMASCos(*(s16*)((u8*)this + 0x96));
 
 	damageExec((THitActor*)((u8*)this + 0x474),
-	           *(u8*)((u8*)this + 0x3908),
-	           *(u8*)((u8*)this + 0x391C),
+	           mDmgParamsGraffitoFire.mDamage.value,
+	           mDmgParamsGraffitoFire.mDownType.value,
 	           *fireType,
-	           *(f32*)((u8*)this + 0x3958),
+	           mDmgParamsGraffitoFire.mMinSpeed.value,
 	           *fireDamage,
-	           *(f32*)((u8*)this + 0x396C),
+	           mDmgParamsGraffitoFire.mDirty.value,
 	           *fireRadius);
 
 	if (*(f32*)((u8*)this + 0x55C) > 0.0f) {
@@ -1590,7 +1590,7 @@ void TMario::checkGraffitoFire()
 		mForwardVel = savedForwardVel;
 	}
 
-	*(s16*)((u8*)this + 0x14C) = *(s16*)((u8*)this + 0x257C);
+	*(s16*)((u8*)this + 0x14C) = mGraffitoParams.mFireInvincibleTime.value;
 	dropObject();
 	changePlayerStatus(0x208B7, 1, false);
 	gpMarioParticleManager->emitAndBindToPosPtr(6, &mPosition, 0, 0);
@@ -1610,39 +1610,39 @@ void TMario::checkGraffitoSlip()
 		onSlipSurface = 0;
 
 	if (onSlipSurface) {
-		*(s16*)((u8*)this + 0x360) = *(s16*)((u8*)this + 0x690);
+		*(s16*)((u8*)this + 0x360) = mDeParams.mFootPrintTimerMax.value;
 
 		u32 action = mAction;
 		if (action == 0x84045D || action == 0x4045E) {
-			*(f32*)((u8*)this + 0x138) = *(f32*)((u8*)this + 0x264C);
-			*(s16*)((u8*)this + 0x13C) = *(s16*)((u8*)this + 0x2674);
+			*(f32*)((u8*)this + 0x138) = mDirtyParams.mBrakeStartValSlip.value;
+			*(s16*)((u8*)this + 0x13C) = mDirtyParams.mDirtyTimeSlip.value;
 		}
 
 		action = mAction;
 		if (action - 0x40000 == 0x45C || action - 0x40000 == 0x561) {
-			*(f32*)((u8*)this + 0x138) = *(f32*)((u8*)this + 0x2660);
-			*(s16*)((u8*)this + 0x13C) = *(s16*)((u8*)this + 0x2688);
+			*(f32*)((u8*)this + 0x138) = mDirtyParams.mBrakeStartValRun.value;
+			*(s16*)((u8*)this + 0x13C) = mDirtyParams.mDirtyTimeRun.value;
 		}
 
 		const TBGCheckData* ground = mGroundPlane;
-		if (*(f32*)((u8*)ground + 0x38) <= *(f32*)((u8*)this + 0x26EC)) {
-			*(f32*)((u8*)this + 0x138) = *(f32*)((u8*)this + 0x264C);
-			*(s16*)((u8*)this + 0x13C) = *(s16*)((u8*)this + 0x2674);
+		if (*(f32*)((u8*)ground + 0x38) <= mDirtyParams.mSlopeAngle.value) {
+			*(f32*)((u8*)this + 0x138) = mDirtyParams.mBrakeStartValSlip.value;
+			*(s16*)((u8*)this + 0x13C) = mDirtyParams.mDirtyTimeSlip.value;
 			changePlayerStatus(0x4045E, 0, false);
 			startVoice(0x78D3);
 		} else {
 			action = mAction;
 			if (action == 0x80088A || action == 0x800456
 			    || action == 0x84045D || action == 0x4045E) {
-				*(f32*)((u8*)this + 0x138) = *(f32*)((u8*)this + 0x264C);
-				*(s16*)((u8*)this + 0x13C) = *(s16*)((u8*)this + 0x2674);
+				*(f32*)((u8*)this + 0x138) = mDirtyParams.mBrakeStartValSlip.value;
+				*(s16*)((u8*)this + 0x13C) = mDirtyParams.mDirtyTimeSlip.value;
 				changePlayerStatus(0x84045D, 0, false);
 				if (mPrevAction != 0x84045D) {
 					startVoice(0x78D3);
 				}
 			} else if (mAction != 0x386) {
-				*(f32*)((u8*)this + 0x138) = *(f32*)((u8*)this + 0x2660);
-				*(s16*)((u8*)this + 0x13C) = *(s16*)((u8*)this + 0x2688);
+				*(f32*)((u8*)this + 0x138) = mDirtyParams.mBrakeStartValRun.value;
+				*(s16*)((u8*)this + 0x13C) = mDirtyParams.mDirtyTimeRun.value;
 				if (mAction == 0x560) {
 					changePlayerStatus(0x40561, 0, false);
 				} else {
@@ -1657,26 +1657,26 @@ void TMario::checkGraffitoSlip()
 		else
 			bit25 = 0;
 		if (!bit25) {
-			unk34E = *(s16*)((u8*)this + 0x278C)
-			         + *(s16*)((u8*)this + 0x27A0);
+			unk34E = mDirtyParams.mFogTimeYellow.value
+			         + mDirtyParams.mFogTimeRed.value;
 		}
 		u16 timer = unk34E;
 		unk34E = timer - 1;
 		timer = unk34E;
 		if (timer != 0) {
-			if (timer == *(s16*)((u8*)this + 0x27A0)) {
+			if (timer == mDirtyParams.mFogTimeRed.value) {
 				floorDamageExec(1, 3, 0,
-				                *(s16*)((u8*)this + 0x27BC));
+				                mMotorParams.mMotorReturn.value);
 			}
 		} else {
-			unk34E = *(s16*)((u8*)this + 0x278C)
-			         + *(s16*)((u8*)this + 0x27A0);
+			unk34E = mDirtyParams.mFogTimeYellow.value
+			         + mDirtyParams.mFogTimeRed.value;
 		}
 	} else {
 		u32 action = mAction;
 		if (action == 0x84045D || action == 0x4045E) {
-			*(f32*)((u8*)this + 0x138) = *(f32*)((u8*)this + 0x2778);
-			*(s16*)((u8*)this + 0x13C) = *(s16*)((u8*)this + 0x2674);
+			*(f32*)((u8*)this + 0x138) = mDirtyParams.mBrakeSlipNoPollute.value;
+			*(s16*)((u8*)this + 0x13C) = mDirtyParams.mDirtyTimeSlip.value;
 		}
 	}
 }
@@ -1689,7 +1689,7 @@ void TMario::checkGraffitoElec()
 	else
 		bit25 = 0;
 	if (!bit25) {
-		unk34E = *(u8*)((u8*)this + 0x6B8);
+		unk34E = mDeParams.mGraffitoNoDmgTime.value;
 	}
 
 	u16 timer = unk34E;
@@ -1957,7 +1957,7 @@ void TMario::checkGraffito()
 
 	*(s16*)((u8*)this + 0x360) = footTimer - 1;
 
-	s16 halfDuration = *(s16*)((u8*)this + 0x690);
+	s16 halfDuration = mDeParams.mFootPrintTimerMax.value;
 	halfDuration = halfDuration / 2;
 	if (*(s16*)((u8*)this + 0x360) <= halfDuration)
 		return;
@@ -2054,12 +2054,12 @@ BOOL TMario::isForceSlip()
 			hasBit = 0;
 
 		if (hasBit) {
-			if (*(f32*)((u8*)mGroundPlane + 0x38) < *(f32*)((u8*)this + 0x26EC))
+			if (*(f32*)((u8*)mGroundPlane + 0x38) < mDirtyParams.mSlopeAngle.value)
 				return true;
 		}
 	}
 
-	if (*(f32*)((u8*)mGroundPlane + 0x38) < *(f32*)((u8*)this + 0x8D4))
+	if (*(f32*)((u8*)mGroundPlane + 0x38) < mDeParams.mForceSlipAngle.value)
 		return true;
 
 	return false;
@@ -2075,7 +2075,7 @@ bool TMario::isUnderWater() const
 
 	if (inWater) {
 		f32 floorZ = mFloorPosition.z;
-		f32 param = *(f32*)((u8*)this + 0x1244);
+		f32 param = mSwimParams.mCanBreathDepth.value;
 		f32 val = *(f32*)((u8*)this + 0x170);
 		if (val < floorZ - param)
 			return true;
@@ -2123,14 +2123,14 @@ void TMario::thinkSand()
 f32 TMario::getJumpAccelControl() const
 {
 	if (mAction == 0x892)
-		return *(f32*)((u8*)this + 0x1414);
-	return *(f32*)((u8*)this + 0x0B68);
+		return mWireParams.mWireJumpAccelControl.value;
+	return mJumpParams.mJumpAccelControl.value;
 }
 
 f32 TMario::getJumpSlideControl() const
 {
 	if (mAction == 0x892)
-		return *(f32*)((u8*)this + 0x1428);
+		return mWireParams.mWireJumpSlideControl.value;
 
 	u8 riding = 0;
 	if (mYoshi != NULL) {
@@ -2146,10 +2146,10 @@ f32 TMario::getJumpSlideControl() const
 			fluttering = 0;
 
 		if (fluttering)
-			return *(f32*)((u8*)this + 0x2294);
+			return mYoshiParams.mHoldOutSldCtrl.value;
 	}
 
-	return *(f32*)((u8*)this + 0x0B7C);
+	return mJumpParams.mJumpSlideControl.value;
 }
 
 BOOL TMario::considerRotateJumpStart()
@@ -2202,14 +2202,14 @@ void TMario::thinkDirty()
 
 	if (isDirty) {
 		if (mAction == 0x04000440 || mAction == 0x0004045C) {
-			unk134 += *(f32*)((u8*)this + 0x25D4);
+			unk134 += mDirtyParams.mIncRunning.value;
 		}
 		if (mAction == 0x00800456 || mAction == 0x0084045D ||
 		    mAction == 0x0004045E) {
-			unk134 += *(f32*)((u8*)this + 0x25E8);
+			unk134 += mDirtyParams.mIncCatching.value;
 		}
 		if (mAction == 0x50) {
-			unk134 += *(f32*)((u8*)this + 0x25FC);
+			unk134 += mDirtyParams.mIncSlipping.value;
 		}
 	}
 
@@ -2224,11 +2224,11 @@ void TMario::thinkDirty()
 		if (mPosition.y > waterLevel - 200.0f)
 			meltInWaterEffect();
 		*(s16*)((u8*)this + 0x360) = 0;
-		unk134 -= *(f32*)((u8*)this + 0x2610);
+		unk134 -= mDirtyParams.mDecSwimming.value;
 	}
 
 	if (mAction == 0x895 || mAction == 0x896) {
-		unk134 -= *(f32*)((u8*)this + 0x2638);
+		unk134 -= mDirtyParams.mDecRotJump.value;
 		*(s16*)((u8*)this + 0x360) = 0;
 	}
 
@@ -2239,7 +2239,7 @@ void TMario::thinkDirty()
 		hasShirt = 0;
 
 	if (hasShirt) {
-		unk134 -= *(f32*)((u8*)this + 0x2624);
+		unk134 -= mDirtyParams.mDecWaterHit.value;
 		*(s16*)((u8*)this + 0x360) = 0;
 	}
 
@@ -2512,8 +2512,8 @@ void TMario::checkCurrentPlane()
 
 					if (doCrush) {
 						if (dist0 < 10.0f || dist1 < 10.0f) {
-							floorDamageExec(*(s16*)((u8*)this + 0x58C), 3, 0,
-							                *(s16*)((u8*)this + 0x27BC));
+							floorDamageExec(mDeParams.mHpMax.value, 3, 0,
+							                mMotorParams.mMotorReturn.value);
 						}
 					}
 				}
@@ -2785,7 +2785,7 @@ void TMario::checkCurrentPlane()
 					slipResult = 0;
 				} else {
 					if (ground->mNormal.y
-					    < *(f32*)((u8*)this + 0x834)) {
+					    < mDeParams.mSlipStart.value) {
 						slipResult = 1;
 					} else {
 						slipResult = 0;
@@ -2865,7 +2865,7 @@ void TMario::thinkParams()
 			if (!nonZero) {
 				belowThreshold = 0;
 			} else if (*(f32*)((u8*)this + 0x170)
-			           < *(f32*)((u8*)this + 0xF0) - *(f32*)((u8*)this + 0x1244)) {
+			           < *(f32*)((u8*)this + 0xF0) - mSwimParams.mCanBreathDepth.value) {
 				belowThreshold = 1;
 			} else {
 				belowThreshold = 0;
@@ -2918,7 +2918,7 @@ void TMario::thinkParams()
 
 			// resetCounters
 			*(u16*)((u8*)this + 0x126) = 0;
-			*(s16*)((u8*)this + 0x128) = *(s16*)((u8*)this + 0x898);
+			*(s16*)((u8*)this + 0x128) = mDeParams.mHotTimer.value;
 		} else {
 			// capBranch
 			TMarioCap* cap = *(TMarioCap**)((u8*)this + 0x3E0);
@@ -2938,9 +2938,9 @@ void TMario::thinkParams()
 							    0x480C, 0, (JAISound**)0, 0);
 						}
 
-						*(s16*)((u8*)this + 0x128) = *(s16*)((u8*)this + 0x898);
+						*(s16*)((u8*)this + 0x128) = mDeParams.mHotTimer.value;
 						*(u16*)((u8*)this + 0x126) = 0;
-						rumbleStart(20, *(s16*)((u8*)this + 0x27F8));
+						rumbleStart(20, mMotorParams.mMotorWall.value);
 						*(u16*)((u8*)this + 0x14C) = (int)*(f32*)((u8*)this + 0x55C);
 					}
 				}
@@ -3025,7 +3025,7 @@ void TMario::thinkWaterSurface()
 
 		f32 checkHeight
 		    = *(f32*)((u8*)this + 0xF0) - clampedDiff
-		      + *(f32*)((u8*)this + 0x1208);
+		      + mSwimParams.mWaterLevelCheckHeight.value;
 		f32 groundHeight = gpMap->checkGround(
 		    mPosition.x, checkHeight, mPosition.z, &mWaterFloor);
 
@@ -3071,7 +3071,7 @@ void TMario::thinkWaterSurface()
 		if (posY2 < waterLvl) {
 
 		// Check deep water threshold
-		f32 deepThreshold = posY2 + *(f32*)((u8*)this + 0xFBC);
+		f32 deepThreshold = posY2 + mRunParams.mSwimDepth.value;
 		if (waterLvl <= deepThreshold) {
 			// Deep water - check yoshi
 			TYoshi* yoshi = (TYoshi*)mYoshi;
@@ -3135,8 +3135,8 @@ void TMario::thinkWaterSurface()
 
 			if ((u8)shouldEnter == 1) {
 				// Apply water drag
-			mForwardVel = mForwardVel * *(f32*)((u8*)this + 0x117C);
-			mVel.y = mVel.y * *(f32*)((u8*)this + 0x1190);
+			mForwardVel = mForwardVel * mSwimParams.mStartVMult.value;
+			mVel.y = mVel.y * mSwimParams.mStartVYMult.value;
 
 			// Check if falling from air
 			u8 isFalling;
@@ -3170,7 +3170,7 @@ void TMario::thinkWaterSurface()
 			}
 		} else {
 			// Shallow water - check frame-based effects
-			f32 shallowThreshold = posY2 + *(f32*)((u8*)this + 0x233C);
+			f32 shallowThreshold = posY2 + mWaterEffectParams.mRunningRippleDepth.value;
 			if (waterLvl >= shallowThreshold) {
 				// Check if in walking state 0x04000440
 				u32 actionVal = mAction;
@@ -3294,7 +3294,7 @@ void TMario::thinkWaterSurface()
 			isInWater2 = 0;
 
 		if (isInWater2) {
-			f32 airThreshold = *(f32*)((u8*)this + 0xF0) - *(f32*)((u8*)this + 0x1244);
+			f32 airThreshold = *(f32*)((u8*)this + 0xF0) - mSwimParams.mCanBreathDepth.value;
 			if (*(f32*)((u8*)this + 0x170) < airThreshold) {
 				shouldDrown = 1;
 			}
@@ -3316,10 +3316,10 @@ void TMario::thinkWaterSurface()
 			if (isHelm) {
 				u32 actionVal = mAction;
 				if ((u32)(actionVal - 0x10020000) != 0x370) {
-					*(f32*)((u8*)this + 0x12C) -= *(f32*)((u8*)this + 0x1280);
+					*(f32*)((u8*)this + 0x12C) -= mSwimParams.mAirDecDive.value;
 				}
 			} else {
-				*(f32*)((u8*)this + 0x12C) -= *(f32*)((u8*)this + 0x126C);
+				*(f32*)((u8*)this + 0x12C) -= mSwimParams.mAirDec.value;
 			}
 			f32 currentAir = *(f32*)((u8*)this + 0x12C);
 
@@ -3337,7 +3337,7 @@ void TMario::thinkWaterSurface()
 			}
 
 			if (prevInt != currInt) {
-				rumbleStart(0x14, *(s16*)((u8*)this + 0x27F8));
+				rumbleStart(0x14, mMotorParams.mMotorWall.value);
 				volatile s32 truncHP = (s32)(*(f32*)((u8*)this + 0x55C));
 				*(s16*)((u8*)this + 0x14C) = (s16)truncHP;
 			}
@@ -3349,7 +3349,7 @@ void TMario::thinkWaterSurface()
 			}
 			return;
 		} else {
-			*(f32*)((u8*)this + 0x12C) += *(f32*)((u8*)this + 0x1294);
+			*(f32*)((u8*)this + 0x12C) += mSwimParams.mAirInc.value;
 			if (*(f32*)((u8*)this + 0x12C) >= *(f32*)((u8*)this + 0x130)) {
 				*(f32*)((u8*)this + 0x12C) = *(f32*)((u8*)this + 0x130);
 			}
@@ -3365,7 +3365,7 @@ void TMario::thinkSituation()
 	// Recovery timer
 	f32 recoveryVal = unkBC;
 	if (recoveryVal < 0.0f) {
-		unkBC = recoveryVal + *(f32*)((u8*)this + 0xD0C);
+		unkBC = recoveryVal + mJumpParams.mTrampolineDec.value;
 	} else {
 		unkBC = 0.0f;
 	}
@@ -3421,9 +3421,9 @@ void TMario::thinkSituation()
 						isDmgType = 0;
 
 					if (hasDmgFlag || isDmgType) {
-						unk2BA += *(s16*)((u8*)this + 0x988);
-						if (unk2BA > *(s16*)((u8*)this + 0x99C)) {
-							decHP(*(s16*)((u8*)this + 0x58C));
+						unk2BA += mDeParams.mIllegalPlaneCtInc.value;
+						if (unk2BA > mDeParams.mIllegalPlaneTime.value) {
+							decHP(mDeParams.mHpMax.value);
 						}
 						didDamage = 1;
 					}
@@ -3576,11 +3576,11 @@ void TMario::thinkSituation()
 
 	// Option map position constraints
 	if (SMS_isOptionMap()) {
-		mPosition.z = *(f32*)((u8*)this + 0x4264);
-		if (mPosition.x < *(f32*)((u8*)this + 0x4278))
-			mPosition.x = *(f32*)((u8*)this + 0x4278);
-		if (mPosition.x > *(f32*)((u8*)this + 0x428C))
-			mPosition.x = *(f32*)((u8*)this + 0x428C);
+		mPosition.z = mOptionParams.mZ.value;
+		if (mPosition.x < mOptionParams.mXMin.value)
+			mPosition.x = mOptionParams.mXMin.value;
+		if (mPosition.x > mOptionParams.mXMax.value)
+			mPosition.x = mOptionParams.mXMax.value;
 	}
 
 	// Save ground Y when not airborne
@@ -3628,7 +3628,7 @@ void TMario::getOffYoshi(bool knockedOff)
 		mYoshi->getOff(true);
 	} else {
 		changePlayerStatus(0x883, 0, false);
-		mVel.y = *(f32*)((u8*)this + 0xE88);
+		mVel.y = mJumpParams.mGetOffYoshiY.value;
 		mYoshi->getOff(false);
 	}
 	setAnimation(0x4D, 1.0f);
@@ -3656,7 +3656,7 @@ void TMario::thinkYoshiHeadCollision()
 	int maxResults = 4;
 	int flags      = 0;
 
-	f32 headOffset = *(f32*)((u8*)this + 0x2244);
+	f32 headOffset = mYoshiParams.mHeadFront.value;
 	u32 angleIdx   = static_cast<u16>(mFaceAngle.y) >> jmaSinShift;
 	tempPos.x += jmaSinTable[angleIdx] * headOffset;
 	tempPos.z += jmaCosTable[angleIdx] * headOffset;
@@ -3666,7 +3666,7 @@ void TMario::thinkYoshiHeadCollision()
 	wallCheck.mCenter.y = 100.0f + tempPos.y;
 	f32 savedZ          = tempPos.z;
 	wallCheck.mCenter.z = savedZ;
-	wallCheck.mRadius     = *(f32*)((u8*)this + 0x2258);
+	wallCheck.mRadius     = mYoshiParams.mHeadRadius.value;
 	wallCheck.mMaxResults = maxResults;
 	wallCheck.mFlags      = flags;
 
@@ -3808,7 +3808,7 @@ void TMario::checkEnforceJump()
 	                              0.0f, (u32)*(s16*)((u8*)mGroundPlane + 2));
 	startVoice(0x78B9);
 	changePlayerStatus(0x884, 0, false);
-	rumbleStart(0x15, *(s16*)((u8*)this + 0x27F8));
+	rumbleStart(0x15, mMotorParams.mMotorWall.value);
 
 	TLiveActor* groundActor = (TLiveActor*)mGroundPlane->mActor;
 	if (groundActor != NULL) {
@@ -3957,7 +3957,7 @@ f32 TMario::getSlideStopCatch()
 			else
 				hasFlag = 0;
 			if (hasFlag) {
-				if (plane->getNormal().y < *(f32*)((u8*)this + 0x26EC))
+				if (plane->getNormal().y < mDirtyParams.mSlopeAngle.value)
 					shouldSlip = 1;
 			}
 		}
@@ -3970,7 +3970,7 @@ f32 TMario::getSlideStopCatch()
 	}
 
 	if (shouldSlip)
-		return *(f32*)((u8*)this + 0x2BA4);
+		return mSlipParamsAll.mSlideStopCatch.value;
 
 	u8 isTypeC;
 	if (bgType == 0xC || bgType == 0x800C || bgType == 0xA00C)
@@ -3978,7 +3978,7 @@ f32 TMario::getSlideStopCatch()
 	else
 		isTypeC = 0;
 	if (isTypeC)
-		return *(f32*)((u8*)this + 0x2C88);
+		return mSlipParamsAllSlider.mSlideStopCatch.value;
 
 	u8 isType2;
 	if (bgType == 0x2 || bgType == 0x8002)
@@ -3987,7 +3987,7 @@ f32 TMario::getSlideStopCatch()
 		isType2 = 0;
 	if (isType2) {
 		if (plane->getNormal().y < 0.0f)
-			return *(f32*)((u8*)this + 0x2D6C);
+			return mSlipParams45.mSlideStopCatch.value;
 	}
 
 	u8 isType4;
@@ -3997,11 +3997,11 @@ f32 TMario::getSlideStopCatch()
 		isType4 = 0;
 	if (isType4) {
 		if (plane->getNormal().y > 0.0f)
-			return *(f32*)((u8*)this + 0x2F34);
-		return *(f32*)((u8*)this + 0x2E50);
+			return mSlipParamsWaterGround.mSlideStopCatch.value;
+		return mSlipParamsWaterSlope.mSlideStopCatch.value;
 	}
 
-	return *(f32*)((u8*)this + 0x29DC);
+	return mSlipParamsNormal.mSlideStopCatch.value;
 }
 
 f32 TMario::getSlideStopNormal()
@@ -4027,7 +4027,7 @@ f32 TMario::getSlideStopNormal()
 			else
 				hasFlag = 0;
 			if (hasFlag) {
-				if (plane->getNormal().y < *(f32*)((u8*)this + 0x26EC))
+				if (plane->getNormal().y < mDirtyParams.mSlopeAngle.value)
 					shouldSlip = 1;
 			}
 		}
@@ -4040,7 +4040,7 @@ f32 TMario::getSlideStopNormal()
 	}
 
 	if (shouldSlip)
-		return *(f32*)((u8*)this + 0x2B90);
+		return mSlipParamsAll.mSlideStopNormal.value;
 
 	u8 isTypeC;
 	if (bgType == 0xC || bgType == 0x800C || bgType == 0xA00C)
@@ -4048,7 +4048,7 @@ f32 TMario::getSlideStopNormal()
 	else
 		isTypeC = 0;
 	if (isTypeC)
-		return *(f32*)((u8*)this + 0x2C74);
+		return mSlipParamsAllSlider.mSlideStopNormal.value;
 
 	u8 isType2;
 	if (bgType == 0x2 || bgType == 0x8002)
@@ -4057,7 +4057,7 @@ f32 TMario::getSlideStopNormal()
 		isType2 = 0;
 	if (isType2) {
 		if (plane->getNormal().y < 0.0f)
-			return *(f32*)((u8*)this + 0x2D58);
+			return mSlipParams45.mSlideStopNormal.value;
 	}
 
 	u8 isType4;
@@ -4067,10 +4067,10 @@ f32 TMario::getSlideStopNormal()
 		isType4 = 0;
 	if (isType4) {
 		if (plane->getNormal().y > 0.0f)
-			return *(f32*)((u8*)this + 0x2F20);
+			return mSlipParamsWaterGround.mSlideStopNormal.value;
 	}
 
-	return *(f32*)((u8*)this + 0x2E3C);
+	return mSlipParamsWaterSlope.mSlideStopNormal.value;
 }
 
 BOOL TMario::canSlipJump()
@@ -4097,7 +4097,7 @@ BOOL TMario::canSlipJump()
 			else
 				hasFlag = 0;
 			if (hasFlag) {
-				if (plane->getNormal().y < *(f32*)((u8*)this + 0x26EC))
+				if (plane->getNormal().y < mDirtyParams.mSlopeAngle.value)
 					shouldSlip = 1;
 			}
 		}
@@ -4178,7 +4178,7 @@ BOOL TMario::isSlipStart()
 			else
 				hasFlag = 0;
 			if (hasFlag) {
-				if (plane->getNormal().y < *(f32*)((u8*)this + 0x26EC))
+				if (plane->getNormal().y < mDirtyParams.mSlopeAngle.value)
 					shouldSlip = 1;
 			}
 		}
@@ -4362,19 +4362,19 @@ void TMario::checkSink()
 			bit6 = 0;
 		if (bit6) {
 			*(f32*)((u8*)this + 0x368) += 1.0f;
-			*(s16*)((u8*)this + 0x360) = *(s16*)((u8*)this + 0x690);
+			*(s16*)((u8*)this + 0x360) = mDeParams.mFootPrintTimerMax.value;
 
 			if (*(s16*)((u8*)this + 0x120) > 0) {
-				f32 limit = (f32)*(s16*)((u8*)this + 0x2428)
-				            * *(f32*)((u8*)this + 0x24DC);
+				f32 limit = (f32)mGraffitoParams.mSinkTime.value
+				            * mGraffitoParams.mSinkDmgDepth.value;
 				if (*(f32*)((u8*)this + 0x368) > limit)
 					*(f32*)((u8*)this + 0x368) = limit;
 			}
 
-			s16 interval = *(s16*)((u8*)this + 0x243C);
+			s16 interval = mGraffitoParams.mSinkDmgTime.value;
 			if (gpMarDirector->unk58 % interval == 0) {
 				floorDamageExec(1, 3, 0,
-				                *(s16*)((u8*)this + 0x27BC));
+				                mMotorParams.mMotorReturn.value);
 			}
 
 			if (gpMSound->gateCheck(0x100B)) {
@@ -4382,7 +4382,7 @@ void TMario::checkSink()
 				    0x100B, (Vec*)&mPosition, 0, (JAISound**)0, 0, 4);
 			}
 
-			if (*(f32*)((u8*)this + 0x368) > (f32)*(s16*)((u8*)this + 0x2428)) {
+			if (*(f32*)((u8*)this + 0x368) > (f32)mGraffitoParams.mSinkTime.value) {
 				loserExec();
 				changePlayerStatus(0x10001123, 0, false);
 			}
@@ -4403,7 +4403,7 @@ void TMario::checkSink()
 		else
 			bit6 = 0;
 		if (bit6) {
-			*(f32*)((u8*)this + 0x374) -= *(f32*)((u8*)this + 0x0B18);
+			*(f32*)((u8*)this + 0x374) -= mJumpParams.mGravity.value;
 			*(f32*)((u8*)this + 0x378) += *(f32*)((u8*)this + 0x374);
 			mVel.x = 0.0f;
 			mVel.y = 0.0f;
@@ -4492,7 +4492,7 @@ void TMario::playerControl(JDrama::TGraphics* gfx)
 
 	// Coaster angle interpolation
 	s16 stickValue = *(s16*)unk108;
-	f32 rate = *(f32*)((u8*)this + 0x870);
+	f32 rate = mDeParams.mToroccoRotSp.value;
 	mToroccoAngle = (s16)((f32)stickValue * rate + (f32)mToroccoAngle);
 
 	stateMachine();
@@ -4760,9 +4760,9 @@ void TMario::gunExec()
 	dir.y = 0.0f;
 	dir.z = jmaCosTable[sinIdx];
 
-	for (s32 i = 0; i < *(s16*)((u8*)this + 0x2590); i++) {
-		f32 dist = *(f32*)((u8*)this + 0x25B8);
-		f32 radius = *(f32*)((u8*)this + 0x25A4);
+	for (s32 i = 0; i < mGraffitoParams.mFootEraseTimes.value; i++) {
+		f32 dist = mGraffitoParams.mFootEraseFront.value;
+		f32 radius = mGraffitoParams.mFootEraseSize.value;
 
 		JGeometry::TVec3<f32> tempDir(dir);
 		PSVECScale((Vec*)&tempDir, (Vec*)&tempDir, dist);

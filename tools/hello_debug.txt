@@ -1,0 +1,94 @@
+===============================================================================
+ Hello Debug Text - Super Mario Sunshine (GMSJ01)
+ v3: Hook in TApplication::gameLoop (runs every frame unconditionally)
+===============================================================================
+
+Hook: 0x800F9D60 in TApplication::gameLoop()
+  - Right after changeFrameBuffer + flushMessage (framebuffer is valid)
+  - Reached on every loop iteration (unconditional path)
+  - Normal function context (safe to call game functions)
+
+Original instruction: cmplwi r29, 0x1  [281D0001]
+
+===============================================================================
+ GECKO CODE
+===============================================================================
+
+$Hello from Claude [GMSJ01]
+C20F9D60 00000011
+3C608041 806B9870
+28030000 41820074
+80030014 28000000
+41820068 9421FFC0
+3C004865 60006C6C
+90010020 3C006F20
+60006672 90010024
+3C006F6D 60002043
+90010028 3C006C61
+60007564 9001002C
+3C006521 90010030
+38000000 90010034
+38800010 38A00020
+38C10020 3D808001
+618C15AC 7D8903A6
+4E800421 38210040
+281D0001 00000000
+
+===============================================================================
+ DISASSEMBLY
+===============================================================================
+
+// C2 hook at TApplication::gameLoop()+0x40C  (0x800F9D60)
+// This address is reached every frame, after changeFrameBuffer
+// updates the JUTDirectPrint framebuffer pointer.
+// Original instruction: cmplwi r29, 0x1
+
+// --- Get sDirectPrint singleton ---
+lis     r3, 0x8041
+lwz     r3, 0x9870(r3)        // sDirectPrint (0x80409870)
+cmplwi  r3, 0
+beq     done
+
+// --- Check framebuffer valid ---
+lwz     r0, 0x14(r3)          // mFrameBuffer
+cmplwi  r0, 0
+beq     done
+
+// --- Allocate temp stack ---
+stwu    r1, -0x40(r1)
+
+// --- Build "Hello from Claude!" ---
+lis     r0, 0x4865
+ori     r0, r0, 0x6C6C        // "Hell"
+stw     r0, 0x20(r1)
+lis     r0, 0x6F20
+ori     r0, r0, 0x6672        // "o fr"
+stw     r0, 0x24(r1)
+lis     r0, 0x6F6D
+ori     r0, r0, 0x2043        // "om C"
+stw     r0, 0x28(r1)
+lis     r0, 0x6C61
+ori     r0, r0, 0x7564        // "laud"
+stw     r0, 0x2C(r1)
+lis     r0, 0x6521             // "e!\0\0"
+stw     r0, 0x30(r1)
+li      r0, 0
+stw     r0, 0x34(r1)
+
+// --- Call drawString ---
+li      r4, 16                 // x
+li      r5, 32                 // y
+addi    r6, r1, 0x20           // str
+lis     r12, 0x8001
+ori     r12, r12, 0x15AC      // drawString @ 0x800115AC
+mtctr   r12
+bctrl
+
+// --- Restore temp stack ---
+addi    r1, r1, 0x40
+
+done:
+// --- Original instruction ---
+cmplwi  r29, 0x1              // [281D0001] - sets CR0 for the ble that follows
+
+===============================================================================

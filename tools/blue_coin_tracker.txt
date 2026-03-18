@@ -1,0 +1,150 @@
+===============================================================================
+ Blue Coin Pause Counter for Super Mario Sunshine (GMSJ01)
+ Gecko Code v1.0
+===============================================================================
+
+Displays the total blue coin count on screen while the game is paused.
+Uses JUTDirectPrint to render directly to the embedded framebuffer,
+bypassing J2D/GX setup entirely.
+
+Text appears as white 8x8 pixel debug text near the bottom-left:
+  "Blue: XX/240"
+
+Key addresses:
+  gpMarDirector        = 0x8040A2A8  (game director singleton)
+  gpMarDirector+0x124  = game state  (10 = paused)
+  sDirectPrint         = 0x80409870  (JUTDirectPrint singleton)
+  drawString_f         = 0x800115D8  (printf-style EFB text draw)
+  smInstance           = 0x8040A290  (TFlagManager singleton)
+  smInstance+0xD4      = mGameInts[1] (total blue coin count)
+
+TFlagManager layout (offsets to mGameInts[1]):
+  mCardBools[119]  @ +0x00  (119 bytes)
+  <1 byte padding>
+  mCardInts[21]    @ +0x78  (84 bytes)
+  mGameBools[4]    @ +0xCC  (4 bytes)
+  mGameInts[5]     @ +0xD0  (20 bytes)  ← [1] = blue coin count @ +0xD4
+
+===============================================================================
+ GECKO CODE
+===============================================================================
+
+$Blue Coin Pause Counter [GMSJ01]
+C0000000 00000014
+9421FFA0 7C0802A6
+90010064 3D608041
+806BA2A8 28030000
+41820074 88030124
+2C00000A 40820068
+806B9870 28030000
+4182005C 808BA290
+28040000 41820050
+80E400D4 3C00426C
+60007565 90010030
+3C003A20 60002564
+90010034 3C002F32
+60003430 90010038
+38000000 9001003C
+38800010 38A001A4
+38C10030 3D808001
+618C15D8 7D8903A6
+4E800421 80010064
+7C0803A6 38210060
+4E800020 00000000
+
+===============================================================================
+ DISASSEMBLY
+===============================================================================
+
+// C0 code: runs every frame via Gecko handler
+
+// --- Prologue ---
+stwu    r1, -0x60(r1)          // allocate stack (0x60 for param save + locals)
+mflr    r0                     // save link register
+stw     r0, 0x64(r1)
+
+// --- Load common base for globals (all in 0x8040xxxx) ---
+lis     r11, 0x8041            // r11 = 0x80410000
+
+// --- Check: is game paused? ---
+lwz     r3, 0xA2A8(r11)       // r3 = gpMarDirector (0x8040A2A8)
+cmplwi  r3, 0
+beq     cleanup                // director not initialized
+lbz     r0, 0x124(r3)         // r0 = game state byte
+cmpwi   r0, 10                // 10 = STATE_PAUSE
+bne     cleanup                // not paused, skip drawing
+
+// --- Get JUTDirectPrint singleton ---
+lwz     r3, 0x9870(r11)       // r3 = sDirectPrint (0x80409870)
+cmplwi  r3, 0
+beq     cleanup                // not initialized
+
+// --- Get TFlagManager + blue coin count ---
+lwz     r4, 0xA290(r11)       // r4 = TFlagManager::smInstance (0x8040A290)
+cmplwi  r4, 0
+beq     cleanup                // not initialized
+lwz     r7, 0xD4(r4)          // r7 = mGameInts[1] = total blue coins
+
+// --- Build format string "Blue: %d/240" on stack ---
+lis     r0, 0x426C             //
+ori     r0, r0, 0x7565         // "Blue"
+stw     r0, 0x30(r1)
+lis     r0, 0x3A20             //
+ori     r0, r0, 0x2564         // ": %d"
+stw     r0, 0x34(r1)
+lis     r0, 0x2F32             //
+ori     r0, r0, 0x3430         // "/240"
+stw     r0, 0x38(r1)
+li      r0, 0                  //
+stw     r0, 0x3C(r1)          // "\0\0\0\0" (null terminator)
+
+// --- Call drawString_f(this, x, y, fmt, count) ---
+// r3 = sDirectPrint (this)    [already set]
+li      r4, 16                 // x = 16 pixels from left
+li      r5, 420                // y = 420 pixels from top
+addi    r6, r1, 0x30           // fmt = stack string address
+// r7 = blue coin count        [already set]
+lis     r12, 0x8001
+ori     r12, r12, 0x15D8      // r12 = drawString_f (0x800115D8)
+mtctr   r12
+bctrl                          // JUTDirectPrint::drawString_f(16, 420, "Blue: %d/240", count)
+
+// --- Cleanup ---
+cleanup:
+lwz     r0, 0x64(r1)          // restore link register
+mtlr    r0
+addi    r1, r1, 0x60           // deallocate stack
+blr                            // return to Gecko handler
+
+===============================================================================
+ NOTES
+===============================================================================
+
+- Uses C0 (execute) Gecko code type: runs once per frame regardless of
+  game state. All pause-state checks are done in the code itself.
+
+- JUTDirectPrint::drawString_f uses GXPokeARGB to write 8x8 pixel white
+  characters directly to the embedded framebuffer. No J2D/GX context
+  setup is required.
+
+- The format string is built on the stack to avoid needing a separate
+  memory write code (06 type) for string storage.
+
+- Stack frame is 0x60 bytes: 0x08 backchain/padding + 0x28 parameter
+  save area (for drawString_f callee) + 0x10 format string + 0x10
+  saved registers/LR.
+
+- The blue coin count is read from TFlagManager::mGameInts[1] (flag
+  0x40001), which the game maintains as a running total. It is
+  recomputed from individual blue coin flags on save load via
+  TFlagManager::correctFlag().
+
+- Blue coin flags are stored as card-persistent bools in the range
+  0x10078 - 0x10365 (9 stages x 50 slots, though only ~30 per stage
+  are used). Per-stage counts could be added by iterating these flags,
+  but that would roughly double the code size.
+
+- Text position (16, 420) places it in the bottom-left corner of
+  the screen. Adjust r4/r5 (instructions 29/30 in the code) to move it.
+
+===============================================================================

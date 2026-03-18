@@ -26,7 +26,7 @@ void TMario::doSwimming()
 
 	// Check above swim end depth
 	f32 floorY = mFloorPosition.y;
-	f32 endDepth = *(f32*)((u8*)this + 0x1154);
+	f32 endDepth = mSwimParams.mEndDepth.value;
 	f32 posY = mPosition.y;
 	if (floorY + endDepth > posY) {
 		changePlayerStatus(0x0C400201, 0, false);
@@ -35,7 +35,7 @@ void TMario::doSwimming()
 
 	// Apply swim movement
 	f32 stickMag = mIntendedMag;
-	f32 swimMoveSp = *(f32*)((u8*)this + 0x1078);
+	f32 swimMoveSp = mSwimParams.mMoveSp.value;
 	f32 fwdVel = mForwardVel;
 	f32 startMult = *(f32*)((u8*)0 + 0);
 	fwdVel = startMult * stickMag * swimMoveSp + fwdVel;
@@ -43,18 +43,18 @@ void TMario::doSwimming()
 
 	// Brake
 	f32 curVel = mForwardVel;
-	f32 brake = *(f32*)((u8*)this + 0x108C);
+	f32 brake = mSwimParams.mMoveBrake.value;
 	mForwardVel = curVel * brake;
 
 	// Rotation
 	u32 pumpState = unk380;
 	if (pumpState == 0 || pumpState == 1) {
-		s16 rotMin = *(s16*)((u8*)this + 0x10C8);
-		s16 rotMax = *(s16*)((u8*)this + 0x10DC);
+		s16 rotMin = mSwimParams.mPumpingRotSpMin.value;
+		s16 rotMax = mSwimParams.mPumpingRotSpMax.value;
 		// int-to-float conversion and interpolation
 	} else {
-		s16 rotMin = *(s16*)((u8*)this + 0x10A0);
-		s16 rotMax = *(s16*)((u8*)this + 0x10B4);
+		s16 rotMin = mSwimParams.mSwimmingRotSpMin.value;
+		s16 rotMax = mSwimParams.mSwimmingRotSpMax.value;
 	}
 
 	considerJumpRotate();
@@ -66,23 +66,23 @@ void TMario::doSwimming()
 
 	// Gravity
 	f32 velY = mVel.y;
-	f32 gravity = *(f32*)((u8*)this + 0x10F0);
+	f32 gravity = mSwimParams.mGravity.value;
 	mVel.y = velY - gravity;
 
 	// Depth ratio
 	f32 waterLevel = mPosition.y;
 	f32 curPosY = mPosition.y;
-	f32 floatHeight = *(f32*)((u8*)this + 0x1168);
+	f32 floatHeight = mSwimParams.mFloatHeight.value;
 	f32 depthRatio = (waterLevel - curPosY) / floatHeight;
 	if (depthRatio < 0.0f) depthRatio = 0.0f;
 	if (depthRatio > 1.0f) depthRatio = 1.0f;
 
 	u16 animId = mAnimationId;
 	if (animId == 0x107 || animId == 0x106 || mAction == 0x22D2) {
-		f32 mult = *(f32*)((u8*)this + 0x1104);
+		f32 mult = mSwimParams.mWaitBouyancy.value;
 		depthRatio *= mult;
 	} else {
-		f32 mult = *(f32*)((u8*)this + 0x1118);
+		f32 mult = mSwimParams.mMoveBouyancy.value;
 		depthRatio *= mult;
 	}
 
@@ -90,7 +90,7 @@ void TMario::doSwimming()
 	mVel.y = curVelY + depthRatio;
 
 	f32 brakeVelY = mVel.y;
-	f32 upDownBrake = *(f32*)((u8*)this + 0x112C);
+	f32 upDownBrake = mSwimParams.mUpDownBrake.value;
 	mVel.y = brakeVelY * upDownBrake;
 
 	// Swim paddle result
@@ -160,7 +160,7 @@ BOOL TMario::checkSwimJump()
 
 	// Depth check
 	f32 floorY = mFloorPosition.y;
-	f32 canJumpDepth = *(f32*)((u8*)this + 0x1140);
+	f32 canJumpDepth = mSwimParams.mCanJumpDepth.value;
 	f32 curY = mPosition.y;
 	f32 depth = floorY - canJumpDepth;
 	if (depth < curY)
@@ -204,7 +204,7 @@ void TMario::swimPaddle()
 	setAnimation(0x119, animSpeed);
 
 	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
-		f32 paddleUp = *(f32*)((u8*)this + 0x05B4);
+		f32 paddleUp = mDeParams.mDashMax.value;
 		addVelocity(paddleUp);
 		setAnimation(0x19, 0);
 		startSoundActor(0x117D);
@@ -265,7 +265,7 @@ BOOL TMario::swimMain()
 
 	// Clamp Y
 	f32 waterSurface = mPosition.y;
-	f32 floatHeight = *(f32*)((u8*)this + 0x1168);
+	f32 floatHeight = mSwimParams.mFloatHeight.value;
 	f32 curY = mPosition.y;
 	f32 minY = waterSurface - floatHeight;
 	if (curY <= minY)
@@ -316,10 +316,10 @@ BOOL TMario::swimMain()
 	case 0x24D4: {
 		setAnimation(0x118, 0.0f);
 		f32 fwdVel = mForwardVel;
-		f32 accel = *(f32*)((u8*)this + 0x11CC);
+		f32 accel = mSwimParams.mPaddleSpeedUp.value;
 		mForwardVel = fwdVel + accel;
 		f32 velY = mVel.y;
-		f32 accelY = *(f32*)((u8*)this + 0x11E0);
+		f32 accelY = mSwimParams.mPaddleJumpUp.value;
 		mVel.y = velY + accelY;
 		doSwimming();
 		if (checkSwimJump())
@@ -357,7 +357,7 @@ BOOL TMario::swimMain()
 	case 0x24D8: {
 		setAnimation(0x11C, 0.0f);
 		f32 velY = mVel.y;
-		f32 accelUp = *(f32*)((u8*)this + 0x11F4);
+		f32 accelUp = mSwimParams.mFloatUp.value;
 		mVel.y = velY + accelUp;
 		doSwimming();
 		if (checkSwimJump()) {
@@ -375,14 +375,14 @@ BOOL TMario::swimMain()
 		setAnimation(0x128, 296);
 		doSwimming();
 		if (checkSwimJump()) {
-			*(s16*)((u8*)this + 0x1230) = *(s16*)((u8*)this + 0x0366);
+			mSwimParams.mWaitSinkTime.value = *(s16*)((u8*)this + 0x0366);
 		}
 		{
 			s16 timer = *(s16*)((u8*)this + 0x0366);
 			if (timer > 0) {
 				*(s16*)((u8*)this + 0x0366) = timer - 1;
 				f32 velY = mVel.y;
-				f32 sinkSpeed = *(f32*)((u8*)this + 0x1258);
+				f32 sinkSpeed = mSwimParams.mWaitSinkSpeed.value;
 				mVel.y = velY - sinkSpeed;
 			}
 		}

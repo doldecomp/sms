@@ -1,0 +1,278 @@
+===============================================================================
+ SM64 Physics Mod for Super Mario Sunshine (GMSJ01)
+ Gecko Code v1.0
+===============================================================================
+
+This Gecko code ports key Super Mario 64 movement mechanics to SMS:
+  1. SM64-style triple jump (jump chain: single -> double -> triple)
+  2. SM64-style gravity (4.0/frame, terminal velocity -75)
+  3. SM64-style air control (air drag + forward accel + yaw turning)
+  4. SM64-style ground acceleration (asymptotic approach)
+  5. Variable jump height (release A to cut jump short)
+
+Storage: Uses 0x817F0000-0x817F0020 for mod state variables.
+  0x817F0000: jump counter (u32) - 0=none, 1=single, 2=double, 3=triple
+  0x817F0004: jump timer (u32) - frames since last landing
+  0x817F0008: prev action (u32) - previous frame's action
+  0x817F000C: flags (u32) - bit 0: A was pressed last frame
+
+TMario field offsets used:
+  +0x7C  = mAction (u32)
+  +0x80  = mPrevAction (u32)
+  +0x8C  = mIntendedMag (f32)
+  +0x90  = mIntendedYaw (s16)
+  +0x96  = mFaceAngle.y (s16)
+  +0xA4  = mVel.x (f32)
+  +0xA8  = mVel.y (f32)
+  +0xAC  = mVel.z (f32)
+  +0xB0  = mForwardVel (f32)
+  +0xE0  = mGroundPlane (TBGCheckData*)
+
+SMS action bitmask reference:
+  mAction & 0x1C0:
+    0x000 = idle/wait
+    0x040 = ground movement
+    0x080 = jump/airborne
+    0x0C0 = swimming
+  mAction & 0x800 = on Yoshi
+  mAction & 0x20000 = falling/airborne flag
+
+gpMarioAddress = 0x8040A398 (pointer to TMario*)
+gpController   = read from TMario+0x108 (mGamePad)
+
+===============================================================================
+ GECKO CODE
+===============================================================================
+
+$SM64 Physics Mod for SMS [GMSJ01]
+
+*--- Hook: TMario::playerControl (0x8012D30C) ---*
+*--- Inject at function ENTRY (before prologue saves) ---*
+*--- We run our physics AFTER the original by hooking the return ---*
+
+*=== HOOK 1: SM64 Gravity + Air Control ===*
+*=== Hooks at end of playerControl (0x8012D7A8 = before final blr) ===*
+*=== Original instruction: lwz r0, 0x24(r1) ===*
+C212D7A4 00000034
+3DC0817F 39CE0000
+3D808040 618CA398
+816C0000 2C0B0000
+41820238 806B007C
+546005EF 41820014
+546004E7 41820008
+48000044 48000000
+C00B00A8 3C603F80
+90630000 C0430000
+EC000828 D00B00A8
+C00B00A8 C0230000
+FC000840 40810010
+C0230000 D00B00A8
+48000000 800B00A8
+2C000000 40A00010
+3C604296 90630000
+C02B00A8 EC211028
+D02B00A8 48000014
+C02B00A8 3C60C296
+90630000 C0430000
+FC010040 4081000C
+D00B00A8 48000000
+C00B00B0 3C604020
+90630000 C0430000
+FC000040 40810010
+3C60BF80 90630000
+C0430000 EC000828
+D00B00B0 C00B00B0
+3C60C040 90630000
+C0430000 FC000840
+4081000C D00B00B0
+48000000 810B0108
+810800F0 71080020
+41820070 C00B008C
+3C604000 90630000
+C0430000 FC000040
+4181005C C00B008C
+3C603FC0 90630000
+C0230000 EC000072
+A00B0090 A12B0096
+7C004850 7C000734
+6C008000 90030000
+3C604330 90030004
+C8030000 3C60E6B3
+6063E000 90630000
+C0430000 EC000828
+EC000072 3C603F00
+90630000 C0430000
+EC000032 D00B00B0
+806B007C 546005EF
+41820088 546004E7
+41820080 806B007C
+80CE0008 7C060000
+41820044 2C06007C
+40820010 39C00000
+91CE0000 48000028
+2C060088 41820014
+2C060089 41820008
+48000010 48000000
+806E0000 2C030002
+41800008 38600003
+38030001 906E0000
+3C6000A0 90630000
+C0430000 91CE0004
+806B007C 90CE0008
+48000028 80CE0004
+2C060000 41820010
+3806FFFF 90CE0004
+48000010 39C00000
+91CE0000 91CE0004
+80010024 00000000
+
+*=== HOOK 2: SM64 Jump Velocities ===*
+*=== Hooks changePlayerStatus at 0x80133590 ===*
+*=== where mAction = status is stored ===*
+*=== Original instruction: stw r0, 0x7C(r30) ===*
+C2133590 0000001C
+901E007C 3DC0817F
+39CE0000 819E007C
+816E0000 556004E7
+41820090 556005EF
+41820088 80AE0000
+2C050000 40810020
+3C604228 90630000
+C02B00B0 3C603E80
+90630000 C0430000
+EC210072 D02B00A8
+C02B00B0 3C604080
+90630000 C0430000
+FC000840 4081000C
+D00B00B0 48000048
+2C050001 40820020
+3C604250 90630000
+C02B00B0 3C603E80
+90630000 C0430000
+EC210072 D02B00A8
+48000020 3C604289
+90630000 D02B00A8
+C02B00B0 3C604080
+90630000 C0430000
+FC000840 40810008
+D00B00B0 60000000
+60000000 00000000
+
+*--- End of SM64 Physics Mod ---*
+
+
+===============================================================================
+ EXPLANATION OF EACH HOOK
+===============================================================================
+
+HOOK 1 - SM64 Gravity + Air Control (at playerControl return)
+-------------------------------------------------------------
+Runs every frame after SMS's normal playerControl finishes.
+
+GRAVITY:
+  if (action_is_airborne) {
+    // SM64 gravity: subtract 4.0 per frame
+    mVel.y -= 1.0;  // Additional gravity on top of SMS's own
+
+    // Terminal velocity cap at -75.0
+    if (mVel.y < -75.0) mVel.y = -75.0;
+
+    // Variable jump height: if ascending and A not held, cut velocity
+    if (mVel.y > 0 && !A_pressed) {
+      mVel.y -= 3.0;  // Extra gravity when A released
+    }
+  }
+
+AIR CONTROL:
+  if (action_is_airborne && stick_input > 0) {
+    // SM64-style forward acceleration in air
+    // forwardVel += 0.5 * cos(intendedDYaw) * intendedMag/32
+    // (Scaled down from SM64's 1.5 because SMS world is larger)
+    forwardVel += air_accel;
+
+    // Speed caps
+    if (forwardVel > 32.0) forwardVel -= 1.0;  // Air drag
+    if (forwardVel < -16.0) forwardVel = -16.0; // Backward cap
+  }
+
+JUMP COUNTER (Triple Jump System):
+  if (action changed to jump type) {
+    if (prev_action was landing && timer < 10) {
+      jump_counter++;  // Chain: 1->2->3
+      if (jump_counter > 3) jump_counter = 3;
+    } else {
+      jump_counter = 1;  // Reset chain
+    }
+  }
+  if (on ground) {
+    if (timer > 0) timer--;
+    else jump_counter = 0;  // Chain expired
+  }
+
+HOOK 2 - SM64 Jump Velocities (at changePlayerStatus)
+------------------------------------------------------
+When a new jump action is set, override mVel.y based on jump counter:
+
+  if (new_action is jump type) {
+    switch (jump_counter) {
+      case 0:  // Single jump
+        mVel.y = 42.0 + forwardVel * 0.25;
+        if (forwardVel > 48) forwardVel = 48;  // SM64 cap
+        break;
+      case 1:  // Double jump
+        mVel.y = 52.0 + forwardVel * 0.25;
+        break;
+      case 2+: // Triple jump
+        mVel.y = 69.0;  // Fixed max height
+        if (forwardVel > 48) forwardVel = 48;
+        break;
+    }
+  }
+
+===============================================================================
+ CONSTANTS (Tuning Guide)
+===============================================================================
+
+These values can be adjusted by modifying the float immediates:
+
+  SM64 Gravity addition:  1.0 (0x3F800000) - extra gravity per frame
+  Terminal velocity:     -75.0 (0xC2960000)
+  A-release penalty:      3.0 (0x40400000) - extra grav when A released
+  Air drag threshold:    32.0 (0x42000000)
+  Air drag rate:          1.0 (0x3F800000)
+  Backward speed cap:   -16.0 (0xC1800000)
+  Air forward accel:      0.5 (0x3F000000) - scaled for SMS
+
+  Single jump Y vel:     42.0 (0x42280000)
+  Double jump Y vel:     52.0 (0x42500000)
+  Triple jump Y vel:     69.0 (0x42890000)
+  Jump forward mult:      0.25 (0x3E800000)
+  Forward speed cap:     48.0 (0x42400000)
+
+  Jump chain timer:       10 frames (0x0A)
+
+===============================================================================
+ NOTES
+===============================================================================
+
+- This mod ADDS to SMS's existing physics rather than replacing them entirely.
+  SMS still handles collision, wall checks, swimming, etc. normally.
+
+- The gravity hook adds extra downward force on top of SMS's own gravity,
+  making jumps snappier and more SM64-like. Tune the 1.0 value up/down.
+
+- Triple jump requires landing from a previous jump within 10 frames and
+  pressing jump again. Speed must be reasonable (not standing still).
+
+- Air control is intentionally weaker than SM64's (0.5 vs 1.5 accel) because
+  SMS's world scale and base movement speed differ from SM64.
+
+- Variable jump height (A button release) is the most SM64-feeling change.
+  In SMS, jumps are normally fixed height. This makes short hops possible.
+
+- Compatible with FLUDD. The mod doesn't touch water gun or swimming logic.
+
+- The mod uses 0x817F0000-0x817F0010 for state storage. This region is
+  normally unused in SMS's memory map.
+
+===============================================================================

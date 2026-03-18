@@ -164,8 +164,8 @@ void TMario::hangPole(THitActor* actor)
 	f32 cosVal = *(f32*)(cosTbl + (u32)((u16)halfAngle << 2));
 	f32 catchRadius = *(f32*)((u8*)actor + 0x58);
 	f32 dot = cosVal * normZ + sinVal * normX;
-	f32 poleRadius = *(f32*)((u8*)this + 0x1630);
-	f32 poleHeight = *(f32*)((u8*)this + 0x1644);
+	f32 poleRadius = mBarParams.mCatchRadius.value;
+	f32 poleHeight = mBarParams.mCatchAngle.value;
 
 	if (prevAction & 0x100000)
 		canCatch = 0;

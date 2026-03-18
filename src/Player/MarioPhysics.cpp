@@ -753,7 +753,7 @@ int TMario::checkGroundAtJumping(const Vec& pos, int flags)
 
 			const JGeometry::TVec3<f32>& normal = mWallPlane->getNormal();
 			int wallAngle = matan(normal.z, normal.x);
-			s16 limit = *(s16*)((u8*)this + 0xE60);
+			s16 limit = mJumpParams.mClashAngle.value;
 			s16 diff = (s16)(wallAngle - (mFaceAngle.y + 0x8000));
 
 			if (-limit < diff && diff < limit) {
@@ -777,7 +777,7 @@ void TMario::fallProcess()
 	u32 action = mAction;
 
 	if (action == 0x0891) {
-		mVel.y -= *(f32*)((u8*)this + 0x21B0);
+		mVel.y -= mDivingParams.mGravity.value;
 		if (mVel.y < -75.0f) {
 			mVel.y = -75.0f;
 		}

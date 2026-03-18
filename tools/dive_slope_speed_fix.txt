@@ -1,0 +1,96 @@
+===============================================================================
+ Dive Slope Speed Fix for Super Mario Sunshine (GMSJ01)
+ Gecko Code v1.0
+===============================================================================
+
+Fixes a bug where Mario walks faster than normal after diving (belly slide)
+on sloped surfaces. The extra speed persists until the player stops moving
+or leaves the slope.
+
+Root cause: When Mario transitions from an airborne action (dive) to a
+ground movement action, changePlayerStatus does not clamp mForwardVel.
+The running handler (action 0x04000440) never decelerates mForwardVel,
+so the dive's high speed is preserved indefinitely on slopes.
+
+Fix: Hook changePlayerStatus at the point where mAction is stored. When
+transitioning from an airborne action (mAction & 0x1C0 == 0x80) to a
+ground movement action (new status & 0x1C0 == 0x40), cap mForwardVel
+at 32.0 (normal maximum running speed).
+
+TMario field offsets used:
+  +0x7C  = mAction (u32)
+  +0x80  = mPrevAction (u32)
+  +0xB0  = mForwardVel (f32)
+
+Hook address: 0x801335C4 (inside changePlayerStatus, where mAction is written)
+Original instruction: stw r29, 0x7c(r30)
+
+Register state at hook point:
+  r30 = this (TMario*)
+  r29 = new action (status)
+  r4  = old mAction (already saved to mPrevAction)
+  r3  = 1 (return value, must be restored)
+  r0  = 0 (used for subsequent stores, must not be clobbered)
+
+===============================================================================
+ GECKO CODE
+===============================================================================
+
+$Dive Slope Speed Fix [GMSJ01]
+C21335C4 00000008
+93BE007C 548305F2
+2C030080 4082002C
+57A305F2 2C030040
+40820020 C01E00B0
+3C604200 9061FFFC
+C021FFFC FC000840
+40810008 D03E00B0
+38600001 00000000
+
+===============================================================================
+ DISASSEMBLY
+===============================================================================
+
+// --- Hook at changePlayerStatus+0x1A0 (0x801335C4) ---
+// Original: stw r29, 0x7c(r30)   [store new mAction]
+
+stw     r29, 0x7C(r30)          // execute original instruction
+
+// Check: was the old action airborne? (mAction & 0x1C0 == 0x80)
+rlwinm  r3, r4, 0, 23, 25      // r3 = oldAction & 0x1C0
+cmpwi   r3, 0x80                // airborne type?
+bne     done                    // skip if not airborne
+
+// Check: is the new action ground movement? (status & 0x1C0 == 0x40)
+rlwinm  r3, r29, 0, 23, 25     // r3 = newAction & 0x1C0
+cmpwi   r3, 0x40                // ground movement type?
+bne     done                    // skip if not ground
+
+// Clamp mForwardVel to 32.0 (normal max running speed)
+lfs     f0, 0xB0(r30)          // f0 = mForwardVel
+lis     r3, 0x4200             // r3 = 0x42000000 (32.0 as IEEE754)
+stw     r3, -0x4(r1)           // store float bits to stack temp
+lfs     f1, -0x4(r1)           // f1 = 32.0
+fcmpo   cr0, f0, f1            // mForwardVel vs 32.0
+ble     done                   // skip if already <= 32.0
+stfs    f1, 0xB0(r30)          // mForwardVel = 32.0
+
+done:
+li      r3, 1                  // restore r3 (return value)
+
+===============================================================================
+ NOTES
+===============================================================================
+
+- The cap value of 32.0 matches Mario's normal maximum ground running speed.
+  This does not affect normal gameplay since regular jumps don't land with
+  speeds above 32.0 in typical play.
+
+- The fix is targeted: it only activates on airborne-to-ground transitions
+  (action type 0x80 -> 0x40), so swimming, climbing, and other state
+  transitions are unaffected.
+
+- Compatible with all stages. The hook is in the core changePlayerStatus
+  function which handles all action transitions.
+
+===============================================================================
