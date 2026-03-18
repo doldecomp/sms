@@ -1272,7 +1272,7 @@ public:
 	/* 0x14E */ u16 unk14E;
 	/* 0x150 */ u32 unk150;
 	/* 0x154 */ TWaterEmitInfo* unk154;
-	/* 0x158 */ u32 unk158;
+	/* 0x158 */ TWaterEmitInfo* unk158;
 	/* 0x15C */ f32 unk15C;
 	/* 0x160 */ JGeometry::TVec3<f32>
 	    unk160[4]; // Bone position, probably larger array

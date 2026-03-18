@@ -1,8 +1,24 @@
 #include <Player/MarioMain.hpp>
+#include <Player/Watergun.hpp>
+#include <Player/MarioCap.hpp>
+#include <Player/MarioAccess.hpp>
+#include <MarioUtil/ShadowUtil.hpp>
+#include <System/StageUtil.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+
+// Forward declarations for types not fully included
+class CPolarSubCamera;
+class MSound;
+class JSUMemoryInputStream;
+
+extern CPolarSubCamera* gpCamera;
+extern MSound* gpMSound;
+
+// TMarioEffect forward declaration - init called via symbol
+extern "C" void init__12TMarioEffectFP6TMario(void*, TMario*);
 
 // TODO: stuff from other rogue includes
 static JGeometry::TVec3<f32> cDeformedTerrainCenter
@@ -527,13 +543,205 @@ TMario::TDeParams::TDeParams()
 
 void TMario::setGamePad(TMarioGamePad* pad) { mGamePad = pad; }
 
-void TMario::resetHistory() { }
+void TMario::resetHistory()
+{
+	for (int i = 0; i < 60; i++) {
+		unk530[i] = 0;
+	}
 
-void TMario::initValues() { }
+	unk534 = 0;
+	unk536 = 0;
+	unk538 = 0;
+	unk53A = 0;
+	unk53B = 0;
+}
 
-void TMario::loadAfter() { }
+void TMario::initValues()
+{
+	mHealth = mDeParams.mHpMax.get();
+	unk134  = 0.0f;
+	*(f32*)&unk138 = 1.0f;
+	unk13C  = 0;
+	*(f32*)&unk140 = 0.0f;
 
-void TMario::load(JSUMemoryInputStream&) { }
+	// Allocate and init TMarioControllerWork (36 bytes)
+	unk108 = (u32)operator new(0x24);
+	{
+		u8* p = (u8*)unk108;
+		*(s16*)(p + 0x00) = 0;
+		*(s16*)(p + 0x02) = 0;
+		*(f32*)(p + 0x10) = 0.0f;
+		*(f32*)(p + 0x14) = 0.0f;
+		*(f32*)(p + 0x18) = 0.0f;
+		*(u32*)(p + 0x04) = 0;
+		*(u32*)(p + 0x08) = 0;
+		*(u8*)(p + 0x0C) = 0;
+		*(u8*)(p + 0x0D) = 0;
+	}
+	*(f32*)&unk10C = 0.0f;
+	*(f32*)&unk110 = 0.0f;
+
+	// Allocate TWaterEmitInfo for damage and wet
+	TWaterEmitInfo* damageEmit = new TWaterEmitInfo("/Mario/DamageWaterEmit.prm");
+	unk154 = damageEmit;
+
+	TWaterEmitInfo* wetEmit = new TWaterEmitInfo("/Mario/WetWaterEmit.prm");
+	unk158 = wetEmit;
+
+	unk388            = 0;
+	unk389            = 0;
+	mHolderHeightDiff = 0.0f;
+
+	initModel();
+
+	unk3D8 = 0.0f;
+	unk3DC = 0.0f;
+
+	// Allocate and init TMarioCap
+	TMarioCap* cap = new TMarioCap(this);
+	mCap = cap;
+
+	// Allocate and init TWaterGun
+	TWaterGun* gun = new TWaterGun(this);
+	mWaterGun = gun;
+	mWaterGun->init();
+	mWaterGun->setAmountToRate((f32)*(u32*)&unk280[0x18] / 100.0f);
+
+	// Allocate and init TYoshi
+	TYoshi* yoshi = (TYoshi*)operator new(0x124);
+	if (yoshi) {
+		J3DFrameCtrl* frameCtrl = new ((void*)((u8*)yoshi + 0x5C)) J3DFrameCtrl(0);
+	}
+	mYoshi = yoshi;
+	mYoshi->init(this);
+
+	// Allocate and init TMarioEffect (THitActor subclass, 0x84 bytes)
+	void* marioEffect = operator new(0x84);
+	if (marioEffect) {
+		new (marioEffect) THitActor("マリオエフェクト");
+		// In original code, TMarioEffect vtable is set here
+	}
+	mMarioEffect = marioEffect;
+	init__12TMarioEffectFP6TMario(mMarioEffect, this);
+
+	// Init unk414 and related float vectors
+	unk414.x = 0.0f;
+	unk414.y = 0.0f;
+	unk414.z = 1.0f;
+	mMarioScreenPos.x = 0.0f;
+	mMarioScreenPos.y = 0.0f;
+	mMarioScreenPos.z = 0.0f;
+	mWarpInDir.x = 0.0f;
+	mWarpInDir.y = 0.0f;
+	mWarpInDir.z = 0.0f;
+	unk468 = 0.0f;
+	unk46C = 0.0f;
+
+	// Allocate and init MAnmSound
+	MAnmSound* anmSound = new MAnmSound(gpMSound);
+	mAnmSound = anmSound;
+	mAnmSound->initAnmSound(nullptr, 1, 0.0f);
+
+	unk4EC          = 0;
+	mBlendLogicOp   = 10;
+	mWaterWakeAlpha = 0;
+
+	// Allocate history buffer (60 s16 entries = 120 bytes)
+	unk530 = (s16*)operator new[](120);
+
+	resetHistory();
+
+	// Init this as a hit actor
+	initHitActor(0x80000001, 5, -1024,
+	    mDeParams.mTrampleRadius.get(),
+	    mDeParams.mAttackHeight.get(),
+	    mDeParams.mDamageRadius.get(),
+	    mDeParams.mDamageHeight.get());
+
+	// Allocate TMBindShadowBody (0x1C = 28 bytes)
+	TMBindShadowBody* shadow = (TMBindShadowBody*)operator new(0x1C);
+	if (shadow) {
+		new (shadow) TMBindShadowBody(this, mModel->unk8, 1.0f);
+	}
+	unk390 = (u32)shadow;
+
+	// Set default identification/magic values for various fields
+	unk92  = 0x11;                                     // 0x92 sth
+	*(s16*)((u8*)this + 0xA2)  = 0xAD;                // 0xA2 sth
+	*(s16*)((u8*)this + 0xC6)  = 0x22;                // 0xC6 sth
+	*(s16*)((u8*)this + 0xD6)  = 0x33;                // 0xD6 sth
+	*(s16*)((u8*)this + 0x102) = 0xAD;                // 0x102 sth
+	*(s16*)((u8*)this + 0x12A) = 0x44;                // 0x12A sth
+	*(s16*)((u8*)this + 0x13E) = 0x55;                // 0x13E sth
+	unk37C = 0x99;                                     // 0x37C sth
+	unk3D1 = 0xAA;                                     // 0x3D1 stb
+	*(s16*)((u8*)this + 0x3D2) = 0xBB;                // 0x3D2 sth
+	unk535 = 0xCC;                                     // 0x535 stb
+	unk556 = 0xEE;                                     // 0x556 sth
+}
+
+void TMario::loadAfter()
+{
+	u8 hasFludd;
+	if (unk118 & MARIO_FLAG_HAS_FLUDD) {
+		hasFludd = 1;
+	} else {
+		hasFludd = 0;
+	}
+	if (hasFludd) {
+		mWaterGun->initInLoadAfter();
+	}
+
+	if (mYoshi) {
+		mYoshi->initInLoadAfter();
+	}
+
+	if (SMS_isMultiPlayerMap()) {
+		gpCamera->addMultiPlayer(&mPosition, 60.0f, 80.0f);
+	}
+
+	initParticle();
+
+	if (isMario()) {
+		MtxPtr mtx = (MtxPtr)((u8*)mModel->unk8->mNodeMatrices + 0x30);
+		gpMSound->setPlayerInfo(&mPosition, &unk29C, mtx, true);
+	} else {
+		MtxPtr mtx = (MtxPtr)((u8*)mModel->unk8->mNodeMatrices + 0x30);
+		gpMSound->setPlayerInfo(&mPosition, &unk29C, mtx, false);
+	}
+
+	finalDrawInitialize();
+	initMirrorModel();
+}
+
+void TMario::load(JSUMemoryInputStream& stream)
+{
+	JDrama::TActor::load(stream);
+
+	mFaceAngle.x = 0;
+
+	mFaceAngle.y = (s16)(mRotation.y * (65536.0f / 360.0f));
+	mFaceAngle.z = 0;
+	mModelFaceAngle = mFaceAngle.y;
+	unk9C = mFaceAngle.y;
+	unk9E = mFaceAngle.y;
+
+	stream.read(&unk280[0x18], 4);
+
+	u32 flags;
+	stream.read(&flags, 4);
+
+	unk118 = 0;
+	if (flags & 1) {
+		unk118 &= ~MARIO_FLAG_HAS_FLUDD;
+	} else {
+		unk118 |= MARIO_FLAG_HAS_FLUDD;
+	}
+
+	SMS_SetMarioAccessParams();
+
+	initValues();
+}
 
 TMario::TMario()
     : TTakeActor("HitActor")
