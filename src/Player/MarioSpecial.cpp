@@ -1992,6 +1992,7 @@ void TMario::moveRoof()
 		if (input & 0x8000) {
 			mInput = input & ~0x8000;
 			changePlayerStatus(0x88c, 0, false);
+			return;
 		} else if (input & 0x2) {
 			TLiveActor* actor = (TLiveActor*)mRoofPlane->mActor;
 			if (actor != 0) {
@@ -2004,12 +2005,9 @@ void TMario::moveRoof()
 				}
 			}
 			changePlayerStatus(0x00200347, 0, false);
-		} else {
-			goto afterCommon;
+			return;
 		}
-		return;
 	}
-afterCommon:
 
 	if (mInput & 1) {
 		int result = doRoofMovingProcess();
@@ -2085,7 +2083,6 @@ int TMario::doRoofMovingProcess()
 		mFaceAngle.y = mIntendedYaw - turn;
 	}
 
-	mFaceAngle.y; // access for codegen
 	mSlideAngle = mFaceAngle.y;
 
 	mSlideVelX = mForwardVel * JMASSin(mFaceAngle.y);

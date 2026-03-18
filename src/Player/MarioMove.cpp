@@ -206,7 +206,7 @@ BOOL TMario::changePlayerTriJump()
 			if (sqSum > 0.0f) {
 				double guess = __frsqrte((double)sqSum);
 				guess = .5 * guess * (3.0 - guess * guess * sqSum);
-				volatile f32 sqrtResult;
+				f32 sqrtResult;
 				sqrtResult = (f32)(sqSum * guess);
 				sqSum = sqrtResult;
 			}
@@ -309,7 +309,7 @@ BOOL TMario::changePlayerJumping(u32 status, u32 arg)
 			if (sqSum > 0.0f) {
 				double guess = __frsqrte((double)sqSum);
 				guess = .5 * guess * (3.0 - guess * guess * sqSum);
-				volatile f32 sqrtResult;
+				f32 sqrtResult;
 				sqrtResult = (f32)(sqSum * guess);
 				sqSum = sqrtResult;
 			}
@@ -1180,7 +1180,7 @@ void TMario::checkController(JDrama::TGraphics* gfx)
 	if (dist2 > 0.0f) {
 		double guess = __frsqrte((double)dist2);
 		guess = .5 * guess * (3.0 - guess * guess * dist2);
-		volatile f32 sqrtResult;
+		f32 sqrtResult;
 		sqrtResult = (f32)(dist2 * guess);
 		stickDist  = sqrtResult;
 	}
@@ -3330,15 +3330,15 @@ void TMario::thinkWaterSurface()
 				f32 prev = prevAir;
 				f32 curr = currentAir;
 				// fctiwz + store/load pattern
-				volatile s32 prevTrunc = (s32)prev;
-				volatile s32 currTrunc = (s32)curr;
+				s32 prevTrunc = (s32)prev;
+				s32 currTrunc = (s32)curr;
 				prevInt = prevTrunc;
 				currInt = currTrunc;
 			}
 
 			if (prevInt != currInt) {
 				rumbleStart(0x14, mMotorParams.mMotorWall.value);
-				volatile s32 truncHP = (s32)(*(f32*)((u8*)this + 0x55C));
+				s32 truncHP = (s32)(*(f32*)((u8*)this + 0x55C));
 				unk14C = (s16)truncHP;
 			}
 
@@ -3891,7 +3891,7 @@ BOOL TMario::checkStickRotate(int* outDirection)
 	int decreasing = 0;
 	int count      = unk534;
 
-	volatile int q[4];
+	int q[4];
 	for (int i = 0; i < count - 1; i++) {
 		s16 angle = unk530[i];
 		f32 val   = (f32)angle;

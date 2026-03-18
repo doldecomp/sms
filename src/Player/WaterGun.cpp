@@ -633,40 +633,38 @@ void TNozzleBase::emit(int param_1)
 			f32 temp          = emittedWaterF * decRateF;
 			f32 temp2         = temp / unk1C88OldF;
 			*unk1C88Ptr       = 10.0f * temp2 + unk1C88;
-			if (emittedWaterU32 == 0) {
-				goto skip_velocity;
+			if (emittedWaterU32 != 0) {
+				mFludd->mCurrentWater
+				    -= emittedWaterU32 * mEmitParams.mDecRate.get();
+				if (mFludd->mCurrentWater < 0) {
+					mFludd->mCurrentWater = 0;
+				}
+
+				f32* powPtr                   = &emitInfo->mPow.value;
+				JGeometry::TVec3<f32>* dirPtr = &emitInfo->mDir.value;
+				f32 powVal                    = *powPtr;
+				s16 faceAngleY                = mFludd->mMario->mFaceAngle.y;
+				f32 cosAngle                  = JMASCos(faceAngleY);
+				f32 sinAngle                  = JMASSin(faceAngleY);
+				f32 dirX                      = -dirPtr->x;
+				f32 dirZ                      = dirPtr->z;
+				f32 dirY                      = dirPtr->y;
+				f32 reactionPow = powVal * mEmitParams.mReactionPow.get();
+				f32 reactionY   = mEmitParams.mReactionY.get();
+				f32 unkE0       = mEmitParams.mReactionPow.value;
+				f32 unkF4       = mEmitParams.mReactionY.value;
+				f32 f31         = powVal * unkE0;
+
+				mFludd->mMario->addVelocity((dirX * sinAngle - dirZ * cosAngle)
+				                            * reactionPow);
+
+				f32* velX = &mFludd->mMario->mVel.x;
+				*velX     = -dirPtr->x * reactionPow - *velX;
+				f32* velZ = &mFludd->mMario->mVel.z;
+				*velZ     = -dirPtr->z * reactionPow - *velZ;
+				f32* velY = &mFludd->mMario->mVel.y;
+				*velY     = *velY - dirY * powVal * unkF4 * reactionY;
 			}
-			mFludd->mCurrentWater
-			    -= emittedWaterU32 * mEmitParams.mDecRate.get();
-			if (mFludd->mCurrentWater < 0) {
-				mFludd->mCurrentWater = 0;
-			}
-
-			f32* powPtr                   = &emitInfo->mPow.value;
-			JGeometry::TVec3<f32>* dirPtr = &emitInfo->mDir.value;
-			f32 powVal                    = *powPtr;
-			s16 faceAngleY                = mFludd->mMario->mFaceAngle.y;
-			f32 cosAngle                  = JMASCos(faceAngleY);
-			f32 sinAngle                  = JMASSin(faceAngleY);
-			f32 dirX                      = -dirPtr->x;
-			f32 dirZ                      = dirPtr->z;
-			f32 dirY                      = dirPtr->y;
-			f32 reactionPow = powVal * mEmitParams.mReactionPow.get();
-			f32 reactionY   = mEmitParams.mReactionY.get();
-			f32 unkE0       = mEmitParams.mReactionPow.value;
-			f32 unkF4       = mEmitParams.mReactionY.value;
-			f32 f31         = powVal * unkE0;
-
-			mFludd->mMario->addVelocity((dirX * sinAngle - dirZ * cosAngle)
-			                            * reactionPow);
-
-			f32* velX = &mFludd->mMario->mVel.x;
-			*velX     = -dirPtr->x * reactionPow - *velX;
-			f32* velZ = &mFludd->mMario->mVel.z;
-			*velZ     = -dirPtr->z * reactionPow - *velZ;
-			f32* velY = &mFludd->mMario->mVel.y;
-			*velY     = *velY - dirY * powVal * unkF4 * reactionY;
-		skip_velocity:;
 		}
 	}
 }

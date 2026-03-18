@@ -236,62 +236,54 @@ void TMario::checkCollision()
 				// Additional checks
 				u32 action = mAction;
 				if (action & 0x1000) {
-					if (*(u32*)((u8*)this + 0x6C) != 0)
-						goto afterYoshi;
-					if (mVel.y >= 0.0f)
-						goto afterYoshi;
-					f32 yoshiSurfY = *(f32*)((u8*)yoshi + 0x24);
-					if (yoshiSurfY >= mPosition.y)
-						goto afterYoshi;
-					if (action == 0x89C)
-						goto afterYoshi;
-					if ((action - 0x02000000) == 0x8B8)
-						goto afterYoshi;
-					if (action == 0x883)
-						goto afterYoshi;
-					if (dist >= *(f32*)((u8*)0 + 0))
-						goto afterYoshi;
+					if (*(u32*)((u8*)this + 0x6C) == 0
+					    && mVel.y < 0.0f
+					    && *(f32*)((u8*)yoshi + 0x24) < mPosition.y
+					    && action != 0x89C
+					    && (action - 0x02000000) != 0x8B8
+					    && action != 0x883
+					    && dist < *(f32*)((u8*)0 + 0))
+					{
+						// Copy yoshi pos
+						mPosition.x = *(f32*)((u8*)yoshi + 0x20);
+						mPosition.y = *(f32*)((u8*)yoshi + 0x24);
+						mPosition.z = *(f32*)((u8*)yoshi + 0x28);
 
-					// Copy yoshi pos
-					mPosition.x = *(f32*)((u8*)yoshi + 0x20);
-					mPosition.y = *(f32*)((u8*)yoshi + 0x24);
-					mPosition.z = *(f32*)((u8*)yoshi + 0x28);
+						TYoshi* yoshi2 = mYoshi;
+						s16 yoshiAngle = *(s16*)((u8*)yoshi2 + 0x70);
+						mModelFaceAngle = yoshiAngle;
+						mFaceAngle.z = mModelFaceAngle;
 
-					TYoshi* yoshi2 = mYoshi;
-					s16 yoshiAngle = *(s16*)((u8*)yoshi2 + 0x70);
-					mModelFaceAngle = yoshiAngle;
-					mFaceAngle.z = mModelFaceAngle;
+						// HAS_FLUDD check
+						if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
+							TWaterGun* wg = mWaterGun;
+							u8 ntype = wg->mCurrentNozzle;
+							*(u32*)((u8*)this + 0x3E8) = ntype;
 
-					// HAS_FLUDD check
-					if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-						TWaterGun* wg = mWaterGun;
-						u8 ntype = wg->mCurrentNozzle;
-						*(u32*)((u8*)this + 0x3E8) = ntype;
+							TWaterGun* wg2 = mWaterGun;
+							TNozzleBase* nozzle = wg2->getCurrentNozzle();
+							u32 waterA = *(u32*)((u8*)nozzle + 0xCC);
+							u32 waterB = *(u32*)((u8*)nozzle + 0xBC);
+							f32 ratio = (f32)((s32)waterA / (s32)waterB);
+							*(f32*)((u8*)this + 0x3EC) = ratio;
+						}
 
-						TWaterGun* wg2 = mWaterGun;
-						TNozzleBase* nozzle = wg2->getCurrentNozzle();
-						u32 waterA = *(u32*)((u8*)nozzle + 0xCC);
-						u32 waterB = *(u32*)((u8*)nozzle + 0xBC);
-						f32 ratio = (f32)((s32)waterA / (s32)waterB);
-						*(f32*)((u8*)this + 0x3EC) = ratio;
+						TYoshi* yoshi3 = mYoshi;
+						*(u32*)((u8*)yoshi3 + 0) = 0; // ride
+						mState |= 0x8000;
+
+						if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
+							mWaterGun->changeNozzle(3, true);
+						}
+
+						changePlayerStatus(0x0C400201, 0, false);
+						return;
 					}
-
-					TYoshi* yoshi3 = mYoshi;
-					*(u32*)((u8*)yoshi3 + 0) = 0; // ride
-					mState |= 0x8000;
-
-					if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-						mWaterGun->changeNozzle(3, true);
-					}
-
-					changePlayerStatus(0x0C400201, 0, false);
-					return;
 				}
 			}
 		}
 	}
 
-afterYoshi:
 	// Set attack area
 	setNormalAttackArea();
 

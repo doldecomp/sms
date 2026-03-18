@@ -185,8 +185,7 @@ void TMario::checkDescent()
 	const TBGCheckData* groundPlane;
 	checkGroundPlane(wallRecord.mCenter.x, 30.0f + mPosition.y, wallRecord.mCenter.z, &groundY, &groundPlane);
 
-	if (groundPlane->mFlags & 0x10) {
-	} else {
+	if (!(groundPlane->mFlags & 0x10)) {
 		isOnIllegal = zero;
 	}
 
@@ -474,9 +473,7 @@ int TMario::hangonCheck(const TBGCheckData* checkData, const Vec& pos1,
 		return 0;
 
 	Vec newPos;
-	f32 _pad[7];
 	const TBGCheckData* groundPlane;
-	(void)_pad;
 	newPos.x = pos2.x - 60.0f * checkData->mNormal.x;
 	newPos.z = pos2.z - 60.0f * checkData->mNormal.z;
 	checkGroundPlane(newPos.x, 160.0f + pos2.y, newPos.z, &newPos.y,
@@ -673,13 +670,15 @@ int TMario::checkGroundAtJumping(const Vec& pos, int flags)
 								isFence = 0;
 							if (isFence) {
 								slopeResult = 4;
-								goto endSlopeCheck;
+							} else {
+								slopeResult = 0;
 							}
+						} else {
+							slopeResult = 0;
 						}
+					} else {
+						slopeResult = 0;
 					}
-
-					slopeResult = 0;
-				endSlopeCheck:;
 				}
 			}
 		}
@@ -848,8 +847,7 @@ int TMario::jumpProcess(int param)
 		result = groundResult;
 	}
 
-	if (mVel.y >= 0.0f) {
-	} else {
+	if (mVel.y < 0.0f) {
 		*(f32*)((u8*)this + 0x104) = mPosition.y;
 	}
 

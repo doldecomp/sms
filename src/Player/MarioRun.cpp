@@ -1885,65 +1885,59 @@ void TMario::slippingBasic(int statusOnStop, int slipStatus, int slipArg)
 
 	if (isSlipStart()) {
 		const TBGCheckData* wall = mWallPlane;
-		if (wall == nullptr) {
-			// No wall - compute velocity from slide direction
-			goto doSlipSound;
+		if (wall != nullptr) {
+			s16 wallAngle = matan(wall->mNormal.z + 52, wall->mNormal.x);
+
+			f32 svx = mSlideVelX;
+			f32 svz = mSlideVelZ;
+			f32 velSq = svx * svx + svz * svz;
+			f32 speed;
+			if (velSq > 0.0f) {
+				f32 root = __frsqrte(velSq);
+				f32 refined = 0.5f * root * (3.0f - velSq * (root * root));
+				speed = velSq * refined;
+				speed = (f32)speed;
+			} else {
+				speed = velSq;
+			}
+
+			f32 speedHalf = speed * 0.5f;
+			if (speedHalf < 0.0f)
+				speedHalf = 0.0f;
+
+			s16 slideDirAngle = mSlideAngle;
+			s16 wallDiff = (s16)(slideDirAngle - wallAngle);
+			s16 wallDiffExt = (s16)wallDiff;
+			s16 newAngle = (s16)(wallAngle - wallDiffExt + 0x18000);
+			mSlideAngle = newAngle;
+
+			u16 uAngle = mSlideAngle;
+			mSlideVelX = speedHalf * JMASSin(uAngle);
+			mVel.x = mSlideVelX;
+
+			uAngle = mSlideAngle;
+			mSlideVelZ = speedHalf * JMASCos(uAngle);
+			mVel.z = mSlideVelZ;
+
+			// Play slip sound
+			u8 groundAttr = mWallPlane ? ((u8*)mWallPlane)[6] : 0;
+			s32 soundId;
+			soundId = *(s32*)((u8*)gpMSound + 0);
+			if (gpMSound->gateCheck(soundId)) {
+				MSoundSESystem::MSoundSE::startSoundActor(soundId, (const Vec*)&mPosition,
+				                                           0, nullptr, 0, 4);
+			}
 		}
-
-		s16 wallAngle = matan(wall->mNormal.z + 52, wall->mNormal.x);
-
-		f32 svx = mSlideVelX;
-		f32 svz = mSlideVelZ;
-		f32 velSq = svx * svx + svz * svz;
-		f32 speed;
-		if (velSq > 0.0f) {
-			f32 root = __frsqrte(velSq);
-			f32 refined = 0.5f * root * (3.0f - velSq * (root * root));
-			speed = velSq * refined;
-			speed = (f32)speed;
-		} else {
-			speed = velSq;
-		}
-
-		f32 speedHalf = speed * 0.5f;
-		if (speedHalf < 0.0f)
-			speedHalf = 0.0f;
-
-		s16 slideDirAngle = mSlideAngle;
-		s16 wallDiff = (s16)(slideDirAngle - wallAngle);
-		s16 wallDiffExt = (s16)wallDiff;
-		s16 newAngle = (s16)(wallAngle - wallDiffExt + 0x18000);
-		mSlideAngle = newAngle;
-
-		u16 uAngle = mSlideAngle;
-		mSlideVelX = speedHalf * JMASSin(uAngle);
-		mVel.x = mSlideVelX;
-
-		uAngle = mSlideAngle;
-		mSlideVelZ = speedHalf * JMASCos(uAngle);
-		mVel.z = mSlideVelZ;
-
-		// Play slip sound
-		u8 groundAttr = mWallPlane ? ((u8*)mWallPlane)[6] : 0;
-		s32 soundId;
-		soundId = *(s32*)((u8*)gpMSound + 0);
-		if (gpMSound->gateCheck(soundId)) {
-			MSoundSESystem::MSoundSE::startSoundActor(soundId, (const Vec*)&mPosition,
-			                                           0, nullptr, 0, 4);
-		}
-		goto done;
-	}
-
-	if (mForwardVel > 0.0f) {
-		checkPlayerAround(1, 0.0f);
-		changePlayerDropping(0x00020466, 0);
 	} else {
-		setPlayerVelocity(0.0f);
-		changePlayerStatus(statusOnStop, 0, false);
+		if (mForwardVel > 0.0f) {
+			checkPlayerAround(1, 0.0f);
+			changePlayerDropping(0x00020466, 0);
+		} else {
+			setPlayerVelocity(0.0f);
+			changePlayerStatus(statusOnStop, 0, false);
+		}
 	}
 
-done:
-doSlipSound:
 	*(u16*)((u8*)this + 0x114) = *(u16*)((u8*)this + 0x114) | 0x8;
 }
 

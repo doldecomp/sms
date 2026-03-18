@@ -268,39 +268,44 @@ BOOL TMario::waiting()
 
 		if (isPositive != 0) {
 			setAnimation(0xE7, 1.0f);
-		} else if (mPumpState == 5) {
-			if (mPrevAction - 0x0C00023D == 0) {
-				// fall through to montemanWait
-			} else {
-				u8 hasFlag;
-				if (mState & 0x00000040) {
-					hasFlag = 1;
-				} else {
-					hasFlag = 0;
-				}
-				if (!hasFlag) {
-					goto regularWait;
-				}
-			}
-
-			// montemanWait
-			if (!(actionState & 0x01)) {
-				setAnimation(0xDA, 1.0f);
-
-				J3DFrameCtrl* frameCtrl = mModel->unkC;
-				if (frameCtrl->checkPass(138.0f)) {
-					emitSweat((s16)(mFaceAngle.y - 0x4000));
-				}
-
-				if (isLast1AnimeFrame()) {
-					mActionState |= 0x01;
-				}
-				goto doWaitProcess;
-			}
-
-			goto regularWait;
 		} else {
-regularWait:
+			bool doMontemanWait = false;
+			if (mPumpState == 5) {
+				if (mPrevAction - 0x0C00023D == 0) {
+					doMontemanWait = true;
+				} else {
+					u8 hasFlag;
+					if (mState & 0x00000040) {
+						hasFlag = 1;
+					} else {
+						hasFlag = 0;
+					}
+					if (hasFlag) {
+						doMontemanWait = true;
+					}
+				}
+			}
+
+			if (doMontemanWait) {
+				// montemanWait
+				if (!(actionState & 0x01)) {
+					setAnimation(0xDA, 1.0f);
+
+					J3DFrameCtrl* frameCtrl = mModel->unkC;
+					if (frameCtrl->checkPass(138.0f)) {
+						emitSweat((s16)(mFaceAngle.y - 0x4000));
+					}
+
+					if (isLast1AnimeFrame()) {
+						mActionState |= 0x01;
+					}
+
+					waitProcess();
+					return 0;
+				}
+			}
+
+			// regularWait
 			if (mHealth <= 3) {
 				if (mAnimationId != 0x11D && mAnimationId != 0x127) {
 					setAnimation(0x127, 1.0f);
@@ -319,7 +324,6 @@ regularWait:
 		}
 	}
 
-doWaitProcess:
 	waitProcess();
 	return 0;
 }
@@ -369,25 +373,27 @@ BOOL TMario::sleeping()
 {
 	u32 input = mInput;
 
+	bool shouldWake = true;
 	if (!(input & 0xA41F)) {
 		u32* ctrlWork = (u32*)unk108;
 		f32 stickX = *(f32*)((u8*)ctrlWork + 0x1c);
 		f32 stickY = *(f32*)((u8*)ctrlWork + 0x20);
 		if (stickX <= 0.0f && stickY <= 0.0f) {
-			goto continueSleep;
+			shouldWake = false;
 		}
 	}
 
-	// wakeUp
-	if (mActionState == 0) {
-		startSoundActor(0x7883);
-	} else {
-		startSoundActor(0x789A);
+	if (shouldWake) {
+		// wakeUp
+		if (mActionState == 0) {
+			startSoundActor(0x7883);
+		} else {
+			startSoundActor(0x789A);
+		}
+		changePlayerStatus(0x0C000204, mActionState, false);
+		return 1;
 	}
-	changePlayerStatus(0x0C000204, mActionState, false);
-	return 1;
 
-continueSleep:
 	waitProcess();
 
 	{
@@ -757,8 +763,7 @@ BOOL TMario::waitMain()
 			changePlayerStatus(0x50, 0, false);
 		} else if (waitingCommonEvents()) {
 			sleepingEffectKill();
-			result = 1;
-			goto end;
+			return 1;
 		} else {
 			waitProcess();
 			int animId;
@@ -928,6 +933,5 @@ BOOL TMario::waitMain()
 		result = 0;
 	}
 
-end:
 	return result;
 }
