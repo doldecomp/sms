@@ -44,6 +44,8 @@ public:
 	static u32 getSzpBufferSize() { return szpBufferSize; }
 	static void setSzpBufferSize(u32 size) { szpBufferSize = size; }
 
+	static bool isErrorRetry() { return errorRetry; }
+
 	static JSUList<JKRADCommand> sDvdAramAsyncList;
 	static u32 szpBufferSize;
 	static bool errorRetry;

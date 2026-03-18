@@ -1,4 +1,5 @@
 #include <JSystem/JUtility/JUTNameTab.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 #include <string.h>
 
 void JUTNameTab::setResource(const ResNTAB* pNameTable)
@@ -14,17 +15,18 @@ JUTNameTab::JUTNameTab(const ResNTAB* pNameTable) { setResource(pNameTable); }
 
 s32 JUTNameTab::getIndex(const char* pName) const
 {
+	JUT_ASSERT(101, mNameTable != NULL);
+
 	const ResNTAB::Entry* pEntry = mNameTable->mEntries;
 	u16 keyCode                  = calcKeyCode(pName);
 
-	for (u16 i = 0; i < mNameNum; pEntry++, i++) {
-		if (pEntry->mKeyCode != keyCode)
-			continue;
+	for (u16 i = 0; i < mNameNum; i++) {
+		if (pEntry->mKeyCode == keyCode
+		    && !strcmp(mNameTable->mEntries[i].mOffs + (char*)mNameTable,
+		               pName))
+			return i;
 
-		s32 idx = i;
-
-		if (!strcmp(mNameTable->mEntries[idx].mOffs + (char*)mNameTable, pName))
-			return idx;
+		pEntry++;
 	}
 
 	return -1;

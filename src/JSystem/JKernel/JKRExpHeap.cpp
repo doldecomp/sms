@@ -97,7 +97,10 @@ void JKRExpHeap::destroy()
 			JKRFreeToHeap(parent, this);
 		}
 	} else {
+		u8* r28 = (u8*)_70;
+		u32 r27 = _74;
 		this->~JKRExpHeap();
+		// (debug thing that uses r28/r27, stripped from sms)
 	}
 }
 
@@ -167,18 +170,22 @@ void* JKRExpHeap::alloc(u32 size, int alignment)
 
 void* JKRExpHeap::allocFromHead(u32 size, int align)
 {
-	size                  = ALIGN_NEXT(size, 4);
-	int foundSize         = -1;
-	u32 foundOffset       = 0;
-	CMemBlock* foundBlock = nullptr;
+	size                    = ALIGN_NEXT(size, 4);
+	u32 foundSize           = -1;
+	u32 foundOffset         = 0;
+	CMemBlock* foundBlock   = nullptr;
+	CMemBlock* newFreeBlock = nullptr;
+	CMemBlock* newUsedBlock = nullptr;
 
 	for (CMemBlock* block = mHead; block; block = block->mNext) {
-		u32 content = (u32)block->getContent();
-		u32 offset  = ALIGN_PREV(align - 1 + content, align) - content;
+		// this bastard is the problem
+		void* content = block->getContent();
+		u32 offset    = ALIGN_NEXT((u32)content, align) - (u32)content;
+
 		if (block->mAllocatedSpace < size + offset) {
 			continue;
 		}
-		if (foundSize <= (u32)block->mAllocatedSpace) {
+		if (foundSize <= block->mAllocatedSpace) {
 			continue;
 		}
 		foundSize   = block->mAllocatedSpace;
@@ -197,11 +204,9 @@ void* JKRExpHeap::allocFromHead(u32 size, int align)
 	DBfoundBlock  = foundBlock;
 
 	if (foundBlock) {
-		CMemBlock* newFreeBlock;
-		CMemBlock* newUsedBlock;
 
 		if (foundOffset >= sizeof(CMemBlock)) {
-			whatdo2++;
+			whatdo2 += 1;
 			CMemBlock* prev = foundBlock->mPrev;
 			CMemBlock* next = foundBlock->mNext;
 			newUsedBlock    = foundBlock->allocFore(
@@ -231,9 +236,7 @@ void* JKRExpHeap::allocFromHead(u32 size, int align)
 			DBnewUsedBlock = newUsedBlock;
 
 			return newUsedBlock->getContent();
-		}
-
-		if (foundOffset != 0) {
+		} else if (foundOffset != 0) {
 			whatdo2 += 0x10;
 			CMemBlock* prev = foundBlock->mPrev;
 			CMemBlock* next = foundBlock->mNext;
@@ -720,9 +723,8 @@ void JKRExpHeap::recycleFreeBlock(JKRExpHeap::CMemBlock* block)
 	int size                        = block->mAllocatedSpace;
 	void* blockEnd                  = (u8*)block + size;
 	block->mUsageHeader             = 0;
-	// int offset = block->mFlags & 0x7f;
 
-	if ((u32)(block->mFlags & 0x7f) != 0) {
+	if (u8(block->mFlags & 0x7f) != 0) {
 		newBlock = (CMemBlock*)((u8*)block - (block->mFlags & 0x7f));
 		size += (block->mFlags & 0x7f);
 		blockEnd                  = (u8*)newBlock + size;
@@ -766,13 +768,8 @@ void JKRExpHeap::recycleFreeBlock(JKRExpHeap::CMemBlock* block)
 	}
 }
 
-// This functions doesn't match for the debug build, however functionality wise
-// it's the same https://decomp.me/scratch/UOwNi
 void JKRExpHeap::joinTwoBlocks(CMemBlock* block)
 {
-	// for some reason this gets rid of regswaps for the debug version, however
-	// is most likely incorrect u32 endAddr; u32 nextAddr; CMemBlock *next;
-
 	u32 endAddr     = (u32)(block + 1) + block->mAllocatedSpace;
 	CMemBlock* next = block->mNext;
 	u32 nextAddr    = (u32)next - (next->mFlags & 0x7f);
@@ -784,14 +781,16 @@ void JKRExpHeap::joinTwoBlocks(CMemBlock* block)
 		         block->mNext->mFlags, block->mNext->mAllocatedSpace);
 		JREPORTF(":::: endAddr = %x\n", endAddr);
 		JREPORTF(":::: nextAddr = %x\n", nextAddr);
-		JKRGetCurrentHeap()->dump();
+		JKRHeap* heap = JKRGetCurrentHeap();
+		heap->dump();
 		JPANIC(1808, ":::: Bad Block\n");
 	}
 	if (endAddr == nextAddr) {
 		block->mAllocatedSpace = next->mAllocatedSpace + sizeof(CMemBlock)
 		                         + (next->mFlags & 0x7f)
 		                         + block->mAllocatedSpace;
-		setFreeBlock(block, block->mPrev, next->mNext);
+		CMemBlock* local_30 = next->mNext;
+		setFreeBlock(block, block->mPrev, local_30);
 	}
 }
 
@@ -851,16 +850,16 @@ bool JKRExpHeap::dump_sort()
 	u32 freeCount = 0;
 	JUTReportConsole(" attr  address:   size    gid aln   prev_ptr next_ptr\n");
 	JUTReportConsole("(Used Blocks)\n");
+
 	if (mHeadUsedList == nullptr) {
 		JUTReportConsole(" NONE\n");
 	} else {
 		CMemBlock* var1 = nullptr;
 		while (true) {
 			CMemBlock* block = (CMemBlock*)0xffffffff;
-			for (CMemBlock* iterBlock = mHeadUsedList; iterBlock;
-			     iterBlock            = iterBlock->mNext) {
-				if (var1 < iterBlock && iterBlock < block) {
-					block = iterBlock;
+			for (CMemBlock* it = mHeadUsedList; it; it = it->mNext) {
+				if (var1 < it && it < block) {
+					block = it;
 				}
 			}
 			if (block == (CMemBlock*)0xffffffff) {
@@ -868,15 +867,15 @@ bool JKRExpHeap::dump_sort()
 			}
 			if (!block->isValid()) {
 				JUTReportConsole_f("xxxxx %08x: --------  --- ---  (-------- "
-				                   "--------)\nabort\n");
+				                   "--------)\nabort\n",
+				                   var1);
 				break;
 			}
-			int offset       = block->getAlignment();
-			void* content    = block->getContent();
-			const char* type = block->_isTempMemBlock() ? " temp" : "alloc";
-			JUTReportConsole_f("%s %08x: %08x  %3d %3d  (%08x %08x)\n", type,
-			                   content, block->mAllocatedSpace, block->mGroupID,
-			                   offset, block->mPrev, block->mNext);
+			JUTReportConsole_f("%s %08x: %08x  %3d %3d  (%08x %08x)\n",
+			                   block->_isTempMemBlock() ? " temp" : "alloc",
+			                   block->getContent(), block->mAllocatedSpace,
+			                   block->mGroupID, block->getAlignment(),
+			                   block->mPrev, block->mNext);
 			usedBytes += sizeof(CMemBlock) + block->mAllocatedSpace
 			             + block->getAlignment();
 			usedCount++;
@@ -986,8 +985,8 @@ JKRExpHeap::CMemBlock* JKRExpHeap::CMemBlock::getHeapBlock(void* mem)
 
 void JKRExpHeap::state_register(JKRHeap::TState* p, u32 param_1) const
 {
-	JUT_ASSERT(p != 0);
-	JUT_ASSERT(p->getHeap() == this);
+	JUT_ASSERT(0, p != 0);
+	JUT_ASSERT(0, p->getHeap() == this);
 	u32 prevState = getState_(p); // not needed, however TP debug has it
 	setState_u32ID_(p, param_1);
 	if (param_1 <= 0xff) {
@@ -1014,10 +1013,10 @@ bool JKRExpHeap::state_compare(const JKRHeap::TState& fst,
 {
 	JUT_ASSERT(fst.getHeap() == snd.getHeap());
 	bool result = true;
-	if (fst.mCheckCode != snd.mCheckCode) {
+	if (fst.getCheckCode() != snd.getCheckCode()) {
 		result = false;
 	}
-	if (fst.mUsedSize != snd.mUsedSize) {
+	if (fst.getUsedSize() != snd.getUsedSize()) {
 		result = false;
 	}
 	return result;

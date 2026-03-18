@@ -81,11 +81,13 @@ public:
 	}
 	int diffIndex(int param_0, int param_1) const
 	{
+		int result;
 		int diff = param_1 - param_0;
-		if (diff >= 0) {
-			return diff;
-		}
-		return diff += mMaxLines;
+		if (diff >= 0)
+			result = diff;
+		else
+			result = diff + mMaxLines;
+		return result;
 	}
 
 	int prevIndex(int index) const
@@ -93,7 +95,10 @@ public:
 		return --index < 0 ? index = mMaxLines - 1 : index;
 	}
 
-	int nextIndex(int index) const { return ++index >= mMaxLines ? 0 : index; }
+	int nextIndex(int index) const
+	{
+		return ++index >= mMaxLines ? index = 0 : index;
+	}
 
 	void scrollToLastLine() { scroll(mMaxLines); }
 	void scrollToFirstLine() { scroll(-mMaxLines); }
