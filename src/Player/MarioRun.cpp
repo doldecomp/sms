@@ -412,7 +412,7 @@ void TMario::slideProcess(f32 accelUp, f32 accelDown)
 	mSlideVelX = mSlideVelX * accelDown;
 	mSlideVelZ = mSlideVelZ * accelDown;
 
-	unk9E = matan(mSlideVelZ, mSlideVelX);
+	mSlideAngle = matan(mSlideVelZ, mSlideVelX);
 
 	f32 negThresh = -1.0f;
 	s32 angleChange = 0;
@@ -420,7 +420,7 @@ void TMario::slideProcess(f32 accelUp, f32 accelDown)
 	    && negThresh < mSlideVelZ && mSlideVelZ < 0.0f) {
 		// velocity very small, skip angle processing
 	} else {
-		s16 slideAngle = unk9E;
+		s16 slideAngle = mSlideAngle;
 		s16 faceDiff = (s16)(mFaceAngle.y - slideAngle);
 		s32 faceDiffExt = (s16)faceDiff;
 		angleChange = faceDiffExt;
@@ -451,7 +451,7 @@ void TMario::slideProcess(f32 accelUp, f32 accelDown)
 				angleChange = -32768;
 		}
 
-		mFaceAngle.y = (s16)(unk9E + angleChange);
+		mFaceAngle.y = (s16)(mSlideAngle + angleChange);
 	}
 
 	mVel.x = mSlideVelX;
@@ -489,7 +489,7 @@ int TMario::doSliding(f32 stopThreshold)
 	s32 result = 0;
 
 	// Compute sine/cosine of face-slide direction difference
-	s16 slideDir = unk9E;
+	s16 slideDir = mSlideAngle;
 	s16 faceDir = mIntendedYaw;
 	u16 angleDiff = (u16)(faceDir - slideDir);
 	f32 sinVal = JMASSin(angleDiff);
@@ -1909,17 +1909,17 @@ void TMario::slippingBasic(int statusOnStop, int slipStatus, int slipArg)
 		if (speedHalf < 0.0f)
 			speedHalf = 0.0f;
 
-		s16 slideDirAngle = unk9E;
+		s16 slideDirAngle = mSlideAngle;
 		s16 wallDiff = (s16)(slideDirAngle - wallAngle);
 		s16 wallDiffExt = (s16)wallDiff;
 		s16 newAngle = (s16)(wallAngle - wallDiffExt + 0x18000);
-		unk9E = newAngle;
+		mSlideAngle = newAngle;
 
-		u16 uAngle = unk9E;
+		u16 uAngle = mSlideAngle;
 		mSlideVelX = speedHalf * JMASSin(uAngle);
 		mVel.x = mSlideVelX;
 
-		uAngle = unk9E;
+		uAngle = mSlideAngle;
 		mSlideVelZ = speedHalf * JMASCos(uAngle);
 		mVel.z = mSlideVelZ;
 

@@ -2086,7 +2086,7 @@ int TMario::doRoofMovingProcess()
 	}
 
 	mFaceAngle.y; // access for codegen
-	unk9E = mFaceAngle.y;
+	mSlideAngle = mFaceAngle.y;
 
 	mSlideVelX = mForwardVel * JMASSin(mFaceAngle.y);
 	mSlideVelZ = mForwardVel * JMASCos(mFaceAngle.y);

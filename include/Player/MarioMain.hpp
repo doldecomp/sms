@@ -1213,7 +1213,7 @@ public:
 	/* 0x94 */ JGeometry::TVec3<s16> mFaceAngle;
 	/* 0x9A */ s16 mModelFaceAngle;
 	/* 0x9C */ s16 unk9C;
-	/* 0x9E */ s16 unk9E;
+	/* 0x9E */ s16 mSlideAngle; // direction of sliding velocity (from matan(velZ, velX))
 	/* 0xA0 */ u32 unkA0;
 	/* 0xA4 */ JGeometry::TVec3<f32> mVel;
 

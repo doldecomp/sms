@@ -724,7 +724,7 @@ void TMario::load(JSUMemoryInputStream& stream)
 	mFaceAngle.z = 0;
 	mModelFaceAngle = mFaceAngle.y;
 	unk9C = mFaceAngle.y;
-	unk9E = mFaceAngle.y;
+	mSlideAngle = mFaceAngle.y;
 
 	stream.read(&unk280[0x18], 4);
 
