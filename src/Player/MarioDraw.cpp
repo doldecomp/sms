@@ -1561,7 +1561,7 @@ void TMario::initModel()
 				mKoopaRail->getModel()->setBaseTRMtx(
 				    mTorocco->getModel()->getAnmMtx(0));
 			}
-			unk118 |= MARIO_FLAG_HAS_FLUDD;
+			mState |= MARIO_FLAG_HAS_FLUDD;
 			mTorocco->calcAnm();
 			MtxPtr toroccoMtx = mTorocco->getModel()->getAnmMtx(2);
 			mPosition.x       = toroccoMtx[0][3];
@@ -1642,7 +1642,7 @@ void TMario::finalDrawInitialize()
 
 bool TMario::isUpperPumpingStyle() const
 {
-	if (unk380 == 0 || unk380 == 1) {
+	if (mPumpState == 0 || mPumpState == 1) {
 		return true;
 	}
 	return false;
@@ -1797,7 +1797,7 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 					mFaceAngle.x = 0;
 				}
 				// Probably another checkFlag inline
-				if ((unk114 & 8) ? true : false) {
+				if ((mSubState & 8) ? true : false) {
 					// This is too many inlines for me to try even figure out,
 					// so i won't even attempt it rn...
 					// Keeping my working draft, but it is 100% wrong
@@ -1878,7 +1878,7 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 
 	modelData->getJointNodePointer(mBoneIDs[1])->setCallBack(MarioWaistCtrl);
 
-	if (0x4B0 > gpMarDirector->unk58 || fabricatedUnk380Inline()) {
+	if (0x4B0 > gpMarDirector->unk58 || isPumpIdle()) {
 		if (mMultiMtxEffect != nullptr) {
 			mMultiMtxEffect->flagOff();
 		}
@@ -1891,7 +1891,7 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 			mCap->mtxEffectHide();
 		}
 	} else {
-		if ((gMarioAnimeData[mAnimationId].unk6 & 2) != 0 && unk380 == 5) {
+		if ((gMarioAnimeData[mAnimationId].unk6 & 2) != 0 && mPumpState == 5) {
 			if (mMultiMtxEffect != nullptr) {
 				mMultiMtxEffect->flagOn();
 			}
@@ -1906,7 +1906,7 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 		}
 	}
 
-	if ((gMarioAnimeData[mAnimationId].unk6 & 4) != 0 && unk380 == 5) {
+	if ((gMarioAnimeData[mAnimationId].unk6 & 4) != 0 && mPumpState == 5) {
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 			mWaterGun->unk1CDC->mMtxEffectTbl[1]->mFlags |= 1;
 		}
@@ -1940,15 +1940,15 @@ void TMario::setUpperDamageRun()
 	frameCtrl.setFrame(frameCtrl.getStart());
 	frameCtrl.setRate(1.0f);
 	frameCtrl.setRate(0.5f);
-	unk380 = 4;
+	mPumpState = 4;
 }
 
 void TMario::addUpper()
 {
 	// volatile u32 padding[17];
 	J3DFrameCtrl& frameCtrl = mModel->getFrameCtrl(1);
-	if (unk380 != 4) {
-		switch (unk380) {
+	if (mPumpState != 4) {
+		switch (mPumpState) {
 		case 0:
 		case 1:
 			if (onYoshi()) {
@@ -1970,7 +1970,7 @@ void TMario::addUpper()
 			break;
 		}
 
-		if (unk380 == 0) {
+		if (mPumpState == 0) {
 			frameCtrl.setAttribute(J3DFrameCtrl::ATTR_PING_PONG_LOOP);
 			unk348
 			    = mGamePad->mCompSPos[3] * mUpperBodyParams.mPumpAnmSpeed.get();
@@ -2150,10 +2150,10 @@ void TMario::drawSpecial(JDrama::TGraphics* graphics)
 {
 	if (mAction == 0x20338) {
 		unk4EC = 1;
-		unk114 |= 0x20;
+		mSubState |= 0x20;
 	} else {
 		unk4EC = 0;
-		unk114 &= ~0x20;
+		mSubState &= ~0x20;
 	}
 	// Probably some enum? I see no reason why this is a switch...
 	switch (unk4EC) {
@@ -2190,7 +2190,7 @@ void TMario::drawLogic()
 	unk398->draw();
 	GXSetColorUpdate(GX_TRUE);
 	GXSetAlphaUpdate(GX_FALSE);
-	if (unk114 & 0x20 ? true : false) {
+	if (mSubState & 0x20 ? true : false) {
 		unk394->draw();
 		unk398->draw();
 	}

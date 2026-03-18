@@ -733,7 +733,7 @@ void TCardLoad::perform(u32 param_1, JDrama::TGraphics* param_2)
 		case 10:
 			MSBgm::startBGM(0x80010010);
 			unk38->onFlag(0x1);
-			gpMarioOriginal->unk118 &= ~0x400;
+			gpMarioOriginal->mState &= ~0x400;
 			unk14 = 9;
 			unk18 = 1;
 			unkF0->getPane()->setAlpha(0);

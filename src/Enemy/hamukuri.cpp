@@ -759,7 +759,7 @@ bool THamuKuri::isFindMario(f32 param_1)
 	if (unk198)
 		return false;
 
-	if (gpMarioOriginal->unk380 == 0
+	if (gpMarioOriginal->mPumpState == 0
 	    && !*(int*)((u8*)gpMarioOriginal->mWaterGun + 0x1C80) /* TODO: */) {
 		unk194 = unk1F4->mSLGiveUpLength.get();
 		unk194 *= 3.0f;

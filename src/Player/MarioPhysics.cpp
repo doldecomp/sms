@@ -650,12 +650,12 @@ int TMario::checkGroundAtJumping(const Vec& pos, int flags)
 					mVel.y = 0.0f;
 
 					u8 hasFlag2;
-					if (unk118 & 2)
+					if (mState & 2)
 						hasFlag2 = 1;
 					else
 						hasFlag2 = 0;
 					if (hasFlag2) {
-						unk118 |= 0x200;
+						mState |= 0x200;
 					}
 
 					if (flags & 2) {

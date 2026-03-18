@@ -755,7 +755,7 @@ void TMario::pulling()
 
 	// Check if action is 0x40561 and specific flag
 	if (mAction == 0x40561) {
-		u32 flags118 = unk118;
+		u32 flags118 = mState;
 		u8 isGrounded;
 		if (flags118 & 0x40) {
 			isGrounded = 1;
@@ -998,7 +998,7 @@ void TMario::wireRolling()
 		}
 	}
 
-	if (unk380 == 0) {
+	if (mPumpState == 0) {
 		TWaterGun* waterGun = mWaterGun;
 		if (waterGun != NULL) {
 			u8 emitting;
@@ -1291,7 +1291,7 @@ void TMario::wireHanging()
 			changePlayerStatus(0x208ba, 0, false);
 		}
 	} else {
-		if (unk380 == 0) {
+		if (mPumpState == 0) {
 			TWaterGun* waterGun = mWaterGun;
 			if (waterGun != 0) {
 				if (waterGun->mCurrentWater != 0) {
@@ -1420,11 +1420,11 @@ void TMario::wireWait()
 	}
 
 	if (mInput & 0x2) {
-		unk118 |= 0x100;
+		mState |= 0x100;
 	}
 
 	u8 onWire;
-	if (unk118 & 0x100) {
+	if (mState & 0x100) {
 		onWire = 1;
 	} else {
 		onWire = 0;
@@ -1543,11 +1543,11 @@ void TMario::wireSWait()
 	}
 
 	if (mInput & 0x2) {
-		unk118 |= 0x100;
+		mState |= 0x100;
 	}
 
 	u8 onWire;
-	if (unk118 & 0x100) {
+	if (mState & 0x100) {
 		onWire = 1;
 	} else {
 		onWire = 0;

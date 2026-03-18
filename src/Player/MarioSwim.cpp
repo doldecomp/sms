@@ -47,7 +47,7 @@ void TMario::doSwimming()
 	mForwardVel = curVel * brake;
 
 	// Rotation
-	u32 pumpState = unk380;
+	u32 pumpState = mPumpState;
 	if (pumpState == 0 || pumpState == 1) {
 		s16 rotMin = mSwimParams.mPumpingRotSpMin.value;
 		s16 rotMax = mSwimParams.mPumpingRotSpMax.value;

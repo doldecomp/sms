@@ -278,7 +278,7 @@ void TMario::checkCollision()
 
 					TYoshi* yoshi3 = mYoshi;
 					*(u32*)((u8*)yoshi3 + 0) = 0; // ride
-					unk118 |= 0x8000;
+					mState |= 0x8000;
 
 					if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 						mWaterGun->changeNozzle(3, true);

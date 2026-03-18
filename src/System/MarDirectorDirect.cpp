@@ -596,7 +596,7 @@ void TMarDirector::setMario()
 
 	u32 uVar6 = SMS_getShineIDofExStage(gpApplication.mCurrArea.getStage());
 	if (uVar6 != 0xff && TFlagManager::getInstance()->getShineFlag(uVar6) == 0)
-		gpMarioOriginal->unk118 &= ~0x8000;
+		gpMarioOriginal->mState &= ~0x8000;
 }
 
 void TMarDirector::nextStateInitialize(u8 next_state)

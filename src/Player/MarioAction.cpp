@@ -17,7 +17,7 @@ BOOL TMario::taking()
 		unk384 = nullptr;
 	}
 	if (isLast1AnimeFrame()) {
-		unk380 = 2;
+		mPumpState = 2;
 		unk37E = 0;
 		return changePlayerStatus(0xC400201, 0, false);
 	} else {

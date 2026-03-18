@@ -99,7 +99,7 @@ bool TMario::isTakeSituation(THitActor* object)
 	}
 
 	// Probably an inline
-	if (!checkUnk380(5)) {
+	if (!checkPumpState(5)) {
 		return false;
 	}
 
@@ -212,7 +212,7 @@ void TMario::loserExec()
 	// volatile u32 padding[2];
 	if (mAction != 0x224e0 && mAction != 0x21313 && mAction != 0x224e1
 	    && mAction != 0x1000192a) {
-		unk118 |= MARIO_FLAG_GAME_OVER;
+		mState |= MARIO_FLAG_GAME_OVER;
 		mHealth = 0;
 
 		gpMSound->startSoundSystemSE(0x480c, 0, nullptr, 0);
@@ -407,11 +407,11 @@ void TMario::considerTake()
 	// volatile u32 missingStack[6];
 	bool check = false;
 
-	if (checkUnk380(2)) {
+	if (checkPumpState(2)) {
 		check = true;
 	}
 
-	if (checkUnk380(3)) {
+	if (checkPumpState(3)) {
 		check = true;
 	}
 

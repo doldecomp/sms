@@ -683,7 +683,7 @@ void TMario::initValues()
 void TMario::loadAfter()
 {
 	u8 hasFludd;
-	if (unk118 & MARIO_FLAG_HAS_FLUDD) {
+	if (mState & MARIO_FLAG_HAS_FLUDD) {
 		hasFludd = 1;
 	} else {
 		hasFludd = 0;
@@ -731,11 +731,11 @@ void TMario::load(JSUMemoryInputStream& stream)
 	u32 flags;
 	stream.read(&flags, 4);
 
-	unk118 = 0;
+	mState = 0;
 	if (flags & 1) {
-		unk118 &= ~MARIO_FLAG_HAS_FLUDD;
+		mState &= ~MARIO_FLAG_HAS_FLUDD;
 	} else {
-		unk118 |= MARIO_FLAG_HAS_FLUDD;
+		mState |= MARIO_FLAG_HAS_FLUDD;
 	}
 
 	SMS_SetMarioAccessParams();

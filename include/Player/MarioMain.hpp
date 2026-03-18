@@ -1159,7 +1159,7 @@ public:
 	// Fabricated
 	bool checkFlag(u32 attribute) const
 	{
-		return unk118 & attribute ? true : false;
+		return mState & attribute ? true : false;
 	}
 
 	// Fabricated
@@ -1175,15 +1175,15 @@ public:
 	}
 
 	// Fabricated
-	bool checkUnk380(u32 message) const
+	bool checkPumpState(u32 state) const
 	{
-		return unk380 == message ? true : false;
+		return mPumpState == state ? true : false;
 	}
 
 	// Fabricated
-	bool fabricatedUnk380Inline() const
+	bool isPumpIdle() const
 	{
-		if (unk380 == 0 || unk380 == 1) {
+		if (mPumpState == 0 || mPumpState == 1) {
 			return true;
 		}
 		return false;
@@ -1248,11 +1248,11 @@ public:
 	/* 0x10C */ u32 unk10C;
 	/* 0x110 */ u32 unk110;
 
-	/* 0x114 */ u16 unk114;
-	/* 0x116 */ u16 unk116;
-	/* 0x118 */ u32 unk118; // some flag / attribute
+	/* 0x114 */ u16 mSubState;
+	/* 0x116 */ u16 mSubStateTimer;
+	/* 0x118 */ u32 mState; // E_MARIO_FLAG bitfield, tested via checkFlag()
 
-	/* 0x11C */ u32 unk11C;
+	/* 0x11C */ u32 mPrevState; // previous frame's mState
 
 	/* 0x120 */ s16 mHealth;
 
@@ -1312,7 +1312,7 @@ public:
 	/* 0x378 */ u32 unk378;
 	/* 0x37C */ u16 unk37C;
 	/* 0x37E */ u16 unk37E;
-	/* 0x380 */ u32 unk380;        // pump state?
+	/* 0x380 */ u32 mPumpState;    // FLUDD pump phase (0=idle, 1=requested, 2=active, 3=holding)
 	/* 0x384 */ THitActor* unk384; // Last receiveMessage sender
 	/* 0x388 */ u8 unk388;
 	// TODO: Make enum (0 = red, 1 = yellow, 2 = green)

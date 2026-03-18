@@ -86,7 +86,7 @@ bool SMS_IsMarioDashing()
 {
 	bool ret;
 
-	if ((gpMarioOriginal->unk118 & 0x4000) != 0) {
+	if ((gpMarioOriginal->mState & 0x4000) != 0) {
 		ret = true;
 	} else {
 		ret = false;
@@ -253,7 +253,7 @@ void SMS_SetMarioAccessParams()
 	gpMarioSpeedZ = speed + 2;
 
 	gpMarioLightID = &gpMarioOriginal->mLightID;
-	gpMarioFlag    = &gpMarioOriginal->unk118;
+	gpMarioFlag    = &gpMarioOriginal->mState;
 
 	gpMarioThrowPower  = &gpMarioOriginal->mDeParams.mThrowPower.value;
 	gpMarioGroundPlane = &gpMarioOriginal->mGroundPlane;

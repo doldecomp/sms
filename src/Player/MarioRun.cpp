@@ -118,7 +118,7 @@ void TMario::doRunningAnimation()
 			}
 
 			u8 isShallow;
-			if (unk118 & 0x30000)
+			if (mState & 0x30000)
 				isShallow = 1;
 			else
 				isShallow = 0;
@@ -169,7 +169,7 @@ void TMario::doRunningAnimation()
 BOOL TMario::isRunningInWater()
 {
 	u8 flag;
-	if (unk118 & 0x30000) {
+	if (mState & 0x30000) {
 		flag = 1;
 	} else {
 		flag = 0;
@@ -558,7 +558,7 @@ int TMario::doSliding(f32 stopThreshold)
 								if (mActionState == 1)
 									slideStop2 = mDeParams.mWasOnWaterSlip.value;
 								u8 isInShallow;
-								if (unk118 & 0x30000)
+								if (mState & 0x30000)
 									isInShallow = 1;
 								else
 									isInShallow = 0;
@@ -618,7 +618,7 @@ int TMario::doSliding(f32 stopThreshold)
 						if (mActionState == 1)
 							slideStop = mDeParams.mWasOnWaterSlip.value;
 						u8 isInShallow;
-						if (unk118 & 0x30000)
+						if (mState & 0x30000)
 							isInShallow = 1;
 						else
 							isInShallow = 0;
@@ -781,10 +781,10 @@ void TMario::doRunning()
 	if (mForwardVel < 0.0f)
 		mForwardVel = 0.0f;
 
-	// Compute angle change speed based on unk380
+	// Compute angle change speed based on mPumpState
 	s16 angleChange;
 	u8 isPumpState;
-	if (unk380 == 0 || unk380 == 1)
+	if (mPumpState == 0 || mPumpState == 1)
 		isPumpState = 1;
 	else
 		isPumpState = 0;
@@ -807,7 +807,7 @@ void TMario::doRunning()
 	}
 
 	u8 isInWater;
-	if (unk118 & 0x4000)
+	if (mState & 0x4000)
 		isInWater = 1;
 	else
 		isInWater = 0;
@@ -816,7 +816,7 @@ void TMario::doRunning()
 	}
 
 	u8 isInShallow;
-	if (unk118 & 0x30000)
+	if (mState & 0x30000)
 		isInShallow = 1;
 	else
 		isInShallow = 0;
@@ -1126,7 +1126,7 @@ void TMario::running()
 
 	// Check turn
 	u8 isTurnable;
-	u32 pumpState = unk380;
+	u32 pumpState = mPumpState;
 	if (pumpState == 0 || pumpState == 1)
 		isTurnable = 1;
 	else
@@ -1202,7 +1202,7 @@ void TMario::running()
 		}
 
 		u8 isWallBit;
-		if (unk118 & 0x4)
+		if (mState & 0x4)
 			isWallBit = 1;
 		else
 			isWallBit = 0;
@@ -1278,14 +1278,14 @@ void TMario::running()
 
 			doPushingAnimation(prevPos);
 			mFaceAngle.x = 0;
-			unk118 = unk118 & ~0x4000;
+			mState = mState & ~0x4000;
 		}
 	}
 
 	doRunningAnimation();
 
 	u8 isInWater;
-	if (unk118 & 0x4000)
+	if (mState & 0x4000)
 		isInWater = 1;
 	else
 		isInWater = 0;
@@ -1346,7 +1346,7 @@ void TMario::fireDashing()
 	}
 
 	u8 isWallHit;
-	if (unk118 & 0x00030000)
+	if (mState & 0x00030000)
 		isWallHit = 1;
 	else
 		isWallHit = 0;
@@ -1682,7 +1682,7 @@ void TMario::turnning()
 
 	// Check turn state
 	u8 shouldStop;
-	u32 pumpState = unk380;
+	u32 pumpState = mPumpState;
 	if (pumpState == 0 || pumpState == 1)
 		shouldStop = 1;
 	else
@@ -2012,7 +2012,7 @@ void TMario::catching()
 	}
 
 	u8 onWater;
-	if (unk118 & 0x10) {
+	if (mState & 0x10) {
 		onWater = 1;
 	} else {
 		onWater = 0;
@@ -2114,7 +2114,7 @@ void TMario::oilRun()
 	f32 mag = mIntendedMag;
 	if (0.0f == mag) {
 		u8 isInWater;
-		if (unk118 & 0x4000)
+		if (mState & 0x4000)
 			isInWater = 1;
 		else
 			isInWater = 0;

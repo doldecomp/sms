@@ -46,7 +46,7 @@ void TMario::doJumping()
 		s16 angleDiff = intendedYaw - faceY;
 		if (mAction == 0x088B) {
 			u8 hasFludd;
-			if (unk118 & 0x10000) hasFludd = 1; else hasFludd = 0;
+			if (mState & 0x10000) hasFludd = 1; else hasFludd = 0;
 			if (hasFludd) {
 				TWaterGun* gun = mWaterGun;
 				if (gun->mCurrentWater != 0) {
@@ -117,7 +117,7 @@ void TMario::jumpingBasic(int statusId, int anmId, int groundCheck)
 		if (mGroundPlane->getActor())
 			((TLiveActor*)mGroundPlane->getActor())->receiveMessage(this, 0);
 		u8 canCatch = 0, shouldCatch = 1;
-		u8 hy; if (unk114 & 0x100) hy = 1; else hy = 0;
+		u8 hy; if (mSubState & 0x100) hy = 1; else hy = 0;
 		if (hy) shouldCatch = 0;
 		if (*(f32*)((u8*)this + 0x02AC) - mPosition.y <= mDeParams.mDamageFallHeight.value)
 			shouldCatch = 0;
@@ -134,9 +134,9 @@ void TMario::jumpingBasic(int statusId, int anmId, int groundCheck)
 		}
 		if (mVel.y > 0.0f) shouldCatch = 0;
 		if (shouldCatch) {
-			u8 cf; if (unk118 & 0x80000) cf = 1; else cf = 0;
+			u8 cf; if (mState & 0x80000) cf = 1; else cf = 0;
 			if (cf) {
-				u8 fe; if (unk118 & 0x10000) fe = 1; else fe = 0;
+				u8 fe; if (mState & 0x10000) fe = 1; else fe = 0;
 				if (fe) {
 					if (*(u8*)((u8*)mWaterGun + 0x1C84) == 2) break;
 					jumpProcess(0);
@@ -268,7 +268,7 @@ void TMario::jumpCatch()
 	switch (r) {
 	case 1: {
 		u8 cc = 1;
-		u8 hy; if (unk114 & 0x100) hy = 1; else hy = 0;
+		u8 hy; if (mSubState & 0x100) hy = 1; else hy = 0;
 		if (hy) cc = 0;
 		if (*(f32*)((u8*)this + 0x02AC) - mPosition.y <= mDeParams.mDamageFallHeight.value) cc = 0;
 		if (onYoshi()) cc = 0;
@@ -282,7 +282,7 @@ void TMario::jumpCatch()
 		}
 		if (mVel.y > 0.0f) cc = 0;
 		if (cc) {
-			u8 cf; if (unk118 & 0x80000) cf = 1; else cf = 0;
+			u8 cf; if (mState & 0x80000) cf = 1; else cf = 0;
 			if (cf) { sinkInSandEffect(); changePlayerStatus(0x0002033C, 1, false); break; }
 		}
 		changePlayerStatus(0x00800456, 0, false);
@@ -501,10 +501,10 @@ BOOL TMario::rocketCheck()
 	u8 cr = 1;
 	if (mAction == 0x088B) cr = 0;
 	if (mAction == 0x088D) cr = 0;
-	u8 hf; if (unk118 & 0x10000) hf = 1; else hf = 0;
+	u8 hf; if (mState & 0x10000) hf = 1; else hf = 0;
 	if (hf) {
 		if (*(u8*)((u8*)mWaterGun->getCurrentNozzle() + 0x18) != 1) cr = 0;
-		u8 nw; if (unk380 == 0) nw = 1; else nw = 0;
+		u8 nw; if (mPumpState == 0) nw = 1; else nw = 0;
 		if (nw) cr = 0;
 		TWaterGun* g = mWaterGun;
 		if (g->mCurrentWater == 0) cr = 0;
@@ -523,10 +523,10 @@ BOOL TMario::rocketCheck()
 
 void TMario::rocketing()
 {
-	u8 hf; if (unk118 & 0x10000) hf = 1; else hf = 0;
+	u8 hf; if (mState & 0x10000) hf = 1; else hf = 0;
 	if (!hf) { changePlayerStatus(0x088D, 0, false); return; }
 	if (*(u8*)((u8*)mWaterGun->getCurrentNozzle() + 0x18) != 1) { changePlayerStatus(0x088D, 0, false); return; }
-	u8 nw; if (unk380 == 0) nw = 1; else nw = 0;
+	u8 nw; if (mPumpState == 0) nw = 1; else nw = 0;
 	if (nw) { changePlayerStatus(0x088D, 0, false); return; }
 	if (mInput & 1) {
 		u8 rp = *(u8*)((u8*)mWaterGun + 0x1C84);
@@ -540,7 +540,7 @@ void TMario::rocketing()
 				f32 ac = *(f32*)((u8*)this + 0x0B8C) * (-im);
 				u16 au = (u16)ad;
 				s16 ra = (s16)(ac * (f32)fa2 * JMASSin(au));
-				u8 fo; if (unk118 & 0x10000) fo = 1; else fo = 0;
+				u8 fo; if (mState & 0x10000) fo = 1; else fo = 0;
 				if (fo) {
 					mWaterGun->unk1CC2 = -ra;
 					mWaterGun->unk1CC4 = ra;

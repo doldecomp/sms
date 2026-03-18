@@ -345,7 +345,7 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 		return;
 	}
 
-	s32 var380 = mMario->unk380;
+	s32 var380 = mMario->mPumpState;
 	if ((var380 & 0x8000) != 0) {
 		var380 = 0;
 	}
@@ -928,7 +928,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 
 		// Very likely an inline
 		bool check;
-		if (mFludd->mMario->unk380 == 0) {
+		if (mFludd->mMario->mPumpState == 0) {
 			check = true;
 		} else {
 			check = false;
@@ -966,12 +966,12 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 	// Most likely some inlined stuff, not matching
 	bool canSpray;
 	bool other = true;
-	if (mario->unk380 == 0) {
+	if (mario->mPumpState == 0) {
 		canSpray = true;
 	} else {
 		canSpray = false;
 	}
-	if ((mario->unk118 & 0x30000) == 0
+	if ((mario->mState & 0x30000) == 0
 	    && mFludd->mCurrentWater < mEmitParams.mAmountMax.get()) {
 		canSpray = false;
 	}

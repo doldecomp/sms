@@ -47,7 +47,7 @@ BOOL TMario::startTalking()
 BOOL TMario::canSleep()
 {
 	u8 hasFlags;
-	if (unk118 & 0x00030000) {
+	if (mState & 0x00030000) {
 		hasFlags = 1;
 	} else {
 		hasFlags = 0;
@@ -157,7 +157,7 @@ BOOL TMario::waitingCommonEvents()
 	}
 
 	u8 hasJumpInput;
-	if (unk118 & 0x00004000) {
+	if (mState & 0x00004000) {
 		hasJumpInput = 1;
 	} else {
 		hasJumpInput = 0;
@@ -227,7 +227,7 @@ BOOL TMario::waiting()
 
 	if (isMario()) {
 		u8 isPumpFive;
-		if (unk380 == 5) {
+		if (mPumpState == 5) {
 			isPumpFive = 1;
 		} else {
 			isPumpFive = 0;
@@ -268,12 +268,12 @@ BOOL TMario::waiting()
 
 		if (isPositive != 0) {
 			setAnimation(0xE7, 1.0f);
-		} else if (unk380 == 5) {
+		} else if (mPumpState == 5) {
 			if (mPrevAction - 0x0C00023D == 0) {
 				// fall through to montemanWait
 			} else {
 				u8 hasFlag;
-				if (unk118 & 0x00000040) {
+				if (mState & 0x00000040) {
 					hasFlag = 1;
 				} else {
 					hasFlag = 0;
@@ -392,7 +392,7 @@ continueSleep:
 
 	{
 		u8 hasFlag;
-		if (unk114 & 0x02) {
+		if (mSubState & 0x02) {
 			hasFlag = 1;
 		} else {
 			hasFlag = 0;
@@ -498,7 +498,7 @@ BOOL TMario::squating()
 
 	{
 		u8 hasFlag;
-		if (unk118 & 0x00008000) {
+		if (mState & 0x00008000) {
 			hasFlag = 1;
 		} else {
 			hasFlag = 0;

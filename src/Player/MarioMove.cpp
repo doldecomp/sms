@@ -1244,7 +1244,7 @@ void TMario::checkController(JDrama::TGraphics* gfx)
 	if (mWaterGun != nullptr) {
 		if (mWaterGun->mCurrentNozzle == TWaterGun::Turbo) {
 			u8 hasPump;
-			if (unk380 == 0) {
+			if (mPumpState == 0) {
 				hasPump = 1;
 			} else {
 				hasPump = 0;
@@ -1266,7 +1266,7 @@ void TMario::checkController(JDrama::TGraphics* gfx)
 						*(s16*)(unkC0 + 4) = mDeParams.mDashStartTime.value;
 
 						u8 hasFlag;
-						if (unk118 & 0x4000) {
+						if (mState & 0x4000) {
 							hasFlag = 1;
 						} else {
 							hasFlag = 0;
@@ -1275,7 +1275,7 @@ void TMario::checkController(JDrama::TGraphics* gfx)
 							TNozzleBase* nozzle
 							    = mWaterGun->getCurrentNozzle();
 							if (((TNozzleTrigger*)nozzle)->unk385 == 1) {
-								unk118 |= 0x4000;
+								mState |= 0x4000;
 								startSoundActor(0x814);
 
 								u8 isRunning;
@@ -1298,11 +1298,11 @@ void TMario::checkController(JDrama::TGraphics* gfx)
 						// keep going
 					} else {
 						*(s16*)(unkC0 + 4) = 0;
-						unk118 &= ~0x4000;
+						mState &= ~0x4000;
 					}
 				} else {
 					*(s16*)(unkC0 + 4) = 0;
-					unk118 &= ~0x4000;
+					mState &= ~0x4000;
 				}
 
 				mIntendedMag = *(f32*)unkC0;
@@ -1317,7 +1317,7 @@ void TMario::checkController(JDrama::TGraphics* gfx)
 					*(f32*)unkC0 = 0.0f;
 				}
 				*(s16*)(unkC0 + 4) = 0;
-				unk118 &= ~0x4000;
+				mState &= ~0x4000;
 			}
 		} else {
 			if (*(f32*)unkC0 > 0.1f) {
@@ -1329,7 +1329,7 @@ void TMario::checkController(JDrama::TGraphics* gfx)
 				*(f32*)unkC0 = 0.0f;
 			}
 			*(s16*)(unkC0 + 4) = 0;
-			unk118 &= ~0x4000;
+			mState &= ~0x4000;
 		}
 
 		// Check turbo nozzle prop rotation
@@ -1389,14 +1389,14 @@ void TMario::checkController(JDrama::TGraphics* gfx)
 
 	// FLUDD nozzle switch handling
 	u8 hasFluddFlag;
-	if (unk118 & 0x8000) {
+	if (mState & 0x8000) {
 		hasFluddFlag = 1;
 	} else {
 		hasFluddFlag = 0;
 	}
 	if (hasFluddFlag) {
 		u8 isTurboActive;
-		if (unk118 & 0x4000) {
+		if (mState & 0x4000) {
 			isTurboActive = 1;
 		} else {
 			isTurboActive = 0;
@@ -1515,7 +1515,7 @@ void TMario::checkGraffitoFire()
 		shouldSkip = 1;
 	} else {
 		u8 flagCheck;
-		if (unk118 & 0x8)
+		if (mState & 0x8)
 			flagCheck = 1;
 		else
 			flagCheck = 0;
@@ -1552,7 +1552,7 @@ void TMario::checkGraffitoFire()
 	if (shouldSkip) return;
 
 	u8 waterFlag;
-	if (unk118 & 0x400)
+	if (mState & 0x400)
 		waterFlag = 1;
 	else
 		waterFlag = 0;
@@ -1652,7 +1652,7 @@ void TMario::checkGraffitoSlip()
 		}
 
 		u8 bit25;
-		if (unk118 & 0x40)
+		if (mState & 0x40)
 			bit25 = 1;
 		else
 			bit25 = 0;
@@ -1684,7 +1684,7 @@ void TMario::checkGraffitoSlip()
 void TMario::checkGraffitoElec()
 {
 	u8 bit25;
-	if (unk118 & 0x40)
+	if (mState & 0x40)
 		bit25 = 1;
 	else
 		bit25 = 0;
@@ -1703,7 +1703,7 @@ void TMario::checkGraffitoElec()
 		shouldSkip = 1;
 	} else {
 		u8 flagCheck;
-		if (unk118 & 0x8)
+		if (mState & 0x8)
 			flagCheck = 1;
 		else
 			flagCheck = 0;
@@ -1927,9 +1927,9 @@ void TMario::checkGraffito()
 
 	// Set/clear graffito flag
 	if (isPolluted == 1) {
-		unk118 |= 0x40;
+		mState |= 0x40;
 	} else {
-		unk118 &= ~0x40;
+		mState &= ~0x40;
 	}
 
 	// Check floor proximity for effects
@@ -1980,7 +1980,7 @@ void TMario::checkGraffito()
 
 	// Check trigger flags
 	u8 hasTrigger;
-	if (unk118 & 0x30000)
+	if (mState & 0x30000)
 		hasTrigger = 1;
 	else
 		hasTrigger = 0;
@@ -1997,7 +1997,7 @@ bool TMario::isInvincible() const
 		return true;
 
 	u8 hasFlag;
-	if (unk118 & 0x8)
+	if (mState & 0x8)
 		hasFlag = 1;
 	else
 		hasFlag = 0;
@@ -2048,7 +2048,7 @@ BOOL TMario::isForceSlip()
 
 	if (*(s32*)((u8*)this + 0x350) == 2) {
 		u8 hasBit;
-		if (unk118 & 0x40)
+		if (mState & 0x40)
 			hasBit = 1;
 		else
 			hasBit = 0;
@@ -2068,7 +2068,7 @@ BOOL TMario::isForceSlip()
 bool TMario::isUnderWater() const
 {
 	u8 inWater;
-	if (unk118 & 0x30000)
+	if (mState & 0x30000)
 		inWater = 1;
 	else
 		inWater = 0;
@@ -2097,7 +2097,7 @@ bool TMario::isWallInFront() const
 void TMario::thinkSand()
 {
 	u8 inWater;
-	if (unk118 & 0x30000)
+	if (mState & 0x30000)
 		inWater = 1;
 	else
 		inWater = 0;
@@ -2112,12 +2112,12 @@ void TMario::thinkSand()
 			isSand = 0;
 
 		if (isSand == 1) {
-			unk118 |= 0x40000;
+			mState |= 0x40000;
 			emitSandEffect();
 			return;
 		}
 	}
-	unk118 &= ~0x40000;
+	mState &= ~0x40000;
 }
 
 f32 TMario::getJumpAccelControl() const
@@ -2172,7 +2172,7 @@ BOOL TMario::considerRotateJumpStart()
 BOOL TMario::canSquat() const
 {
 	u8 hasFludd;
-	if (unk118 & 0x8000)
+	if (mState & 0x8000)
 		hasFludd = 1;
 	else
 		hasFludd = 0;
@@ -2195,7 +2195,7 @@ BOOL TMario::canSquat() const
 void TMario::thinkDirty()
 {
 	u8 isDirty;
-	if (unk118 & 0x40)
+	if (mState & 0x40)
 		isDirty = 1;
 	else
 		isDirty = 0;
@@ -2214,7 +2214,7 @@ void TMario::thinkDirty()
 	}
 
 	u8 inWater;
-	if (unk118 & 0x30000)
+	if (mState & 0x30000)
 		inWater = 1;
 	else
 		inWater = 0;
@@ -2233,7 +2233,7 @@ void TMario::thinkDirty()
 	}
 
 	u8 hasShirt;
-	if (unk118 & 0x10)
+	if (mState & 0x10)
 		hasShirt = 1;
 	else
 		hasShirt = 0;
@@ -2401,7 +2401,7 @@ void TMario::checkCurrentPlane()
 		if (unk14C > 0) {
 			skip = 1;
 		} else {
-			if (unk118 & 0x8) {
+			if (mState & 0x8) {
 				r28 = 1;
 			}
 			if (r28) {
@@ -2623,13 +2623,13 @@ void TMario::checkCurrentPlane()
 		if (unk14C > 0) {
 			skip3 = 1;
 		} else {
-			u8 unk118bit;
+			u8 mStatebit;
 			if (*(u32*)((u8*)this + 0x118) & 0x8) {
-				unk118bit = 1;
+				mStatebit = 1;
 			} else {
-				unk118bit = 0;
+				mStatebit = 0;
 			}
-			if (unk118bit) {
+			if (mStatebit) {
 				skip3 = 1;
 			} else {
 				u32 action3 = mAction;
@@ -2806,7 +2806,7 @@ void TMario::checkCurrentPlane()
 		}
 	}
 
-	// Clear bit 20 of unk118
+	// Clear bit 20 of mState
 	*(u32*)((u8*)this + 0x118) = *(u32*)((u8*)this + 0x118) & ~0x800;
 }
 #pragma dont_inline on
@@ -2841,13 +2841,13 @@ void TMario::thinkParams()
 	}
 
 	u8 waterFlag;
-	if (unk118 & 0x400)
+	if (mState & 0x400)
 		waterFlag = 1;
 	else
 		waterFlag = 0;
 	if (waterFlag) return;
 
-	u32 motionBits = unk118 & 0x30000;
+	u32 motionBits = mState & 0x30000;
 	{
 		u8 hasMotion;
 		if (motionBits)
@@ -2972,8 +2972,8 @@ void TMario::thinkWaterSurface()
 	if (onWater)
 		return;
 
-	// Check if currently in water (bits 14-15 of unk118)
-	u32 waterBits = unk118 & 0x30000;
+	// Check if currently in water (bits 14-15 of mState)
+	u32 waterBits = mState & 0x30000;
 	u8 wasInWater;
 	if (waterBits)
 		wasInWater = 1;
@@ -2996,8 +2996,8 @@ void TMario::thinkWaterSurface()
 	}
 
 	// Clear water surface flags
-	unk118 &= ~0x10000;
-	unk118 &= ~0x20000;
+	mState &= ~0x10000;
+	mState &= ~0x20000;
 
 	// Check if ground plane is a pool type
 	u16 bgType = mGroundPlane->mBGType;
@@ -3012,7 +3012,7 @@ void TMario::thinkWaterSurface()
 		*(f32*)((u8*)this + 0xF0) = gpPoolManager->getWaterLevel(mGroundPlane);
 		if (*(f32*)((u8*)this + 0xF0) > mPosition.y) {
 			r30 = 1;
-			unk118 |= 0x10000;
+			mState |= 0x10000;
 		}
 	}
 
@@ -3044,7 +3044,7 @@ void TMario::thinkWaterSurface()
 			*(f32*)((u8*)this + 0xF0) = groundHeight;
 			if (*(f32*)((u8*)this + 0xF0) >= mPosition.y) {
 				r30 = 1;
-				unk118 |= 0x20000;
+				mState |= 0x20000;
 			}
 		} else {
 			// Check ground at current position
@@ -3059,7 +3059,7 @@ void TMario::thinkWaterSurface()
 
 			if (isSpecialType) {
 				r30 = 1;
-				unk118 |= 0x20000;
+				mState |= 0x20000;
 			}
 		}
 	}
@@ -3151,7 +3151,7 @@ void TMario::thinkWaterSurface()
 			} else {
 				// Check if running on ground
 				u8 isRunning;
-				if (unk118 & 0x4000)
+				if (mState & 0x4000)
 					isRunning = 1;
 				else
 					isRunning = 0;
@@ -3211,7 +3211,7 @@ void TMario::thinkWaterSurface()
 
 	// Build water surface matrix
 	{
-		if (unk118 & 0x30000)
+		if (mState & 0x30000)
 			r30 = 1;
 		else
 			r30 = 0;
@@ -3288,7 +3288,7 @@ void TMario::thinkWaterSurface()
 		u8 shouldDrown = 0;
 
 		u8 isInWater2;
-		if (unk118 & 0x30000)
+		if (mState & 0x30000)
 			isInWater2 = 1;
 		else
 			isInWater2 = 0;
@@ -3301,7 +3301,7 @@ void TMario::thinkWaterSurface()
 		}
 		if (!shouldDrown) {
 			u8 isDiving;
-			if (unk118 & 0x8000)
+			if (mState & 0x8000)
 				isDiving = 1;
 			else
 				isDiving = 0;
@@ -3360,7 +3360,7 @@ void TMario::thinkWaterSurface()
 void TMario::thinkSituation()
 {
 	// Save previous situation flags
-	unk11C = unk118;
+	mPrevState = mState;
 
 	// Recovery timer
 	f32 recoveryVal = unkBC;
@@ -3380,8 +3380,8 @@ void TMario::thinkSituation()
 	}
 
 	// Clear slippery and shadow bits
-	unk118 &= ~0x2;
-	unk118 &= ~0x20;
+	mState &= ~0x2;
+	mState &= ~0x20;
 
 	// Check slippery ground
 	{
@@ -3392,7 +3392,7 @@ void TMario::thinkSituation()
 		else
 			isSlippery = 0;
 		if (isSlippery) {
-			unk118 |= 0x2;
+			mState |= 0x2;
 		}
 	}
 
@@ -3441,14 +3441,14 @@ void TMario::thinkSituation()
 	// BGM handling for slippery ground
 	if (isMario()) {
 		u8 curSlippery;
-		if (unk118 & 0x2)
+		if (mState & 0x2)
 			curSlippery = 1;
 		else
 			curSlippery = 0;
 
 		if (curSlippery == 1) {
 			u8 prevSlippery;
-			if (unk11C & 0x2)
+			if (mPrevState & 0x2)
 				prevSlippery = 1;
 			else
 				prevSlippery = 0;
@@ -3458,14 +3458,14 @@ void TMario::thinkSituation()
 		}
 
 		u8 curSlippery2;
-		if (unk118 & 0x2)
+		if (mState & 0x2)
 			curSlippery2 = 1;
 		else
 			curSlippery2 = 0;
 
 		if (!curSlippery2) {
 			u8 prevSlippery2;
-			if (unk11C & 0x2)
+			if (mPrevState & 0x2)
 				prevSlippery2 = 1;
 			else
 				prevSlippery2 = 0;
@@ -3489,7 +3489,7 @@ void TMario::thinkSituation()
 
 		if (isDeathPlane) {
 			if (groundHeight > mPosition.y) {
-				unk118 |= 0x400;
+				mState |= 0x400;
 				mHealth = 0;
 				mAnmSound->stop();
 				if (mYoshi != NULL)
@@ -3520,7 +3520,7 @@ void TMario::thinkSituation()
 			if (mFloorPosition.y + 200.0f > mPosition.y) {
 				mLightID = mGroundPlane->mData;
 				if (mLightID == 1) {
-					unk118 |= 0x20;
+					mState |= 0x20;
 				}
 			}
 		}
@@ -3534,7 +3534,7 @@ void TMario::thinkSituation()
 	}
 
 	// Water particle ground check
-	unk118 &= ~0x10;
+	mState &= ~0x10;
 	if (isMario()) {
 		u8 isOnGround;
 		if (mPosition.y <= mFloorPosition.y + 4.0f)
@@ -3544,7 +3544,7 @@ void TMario::thinkSituation()
 		if (isOnGround) {
 			if (gpModelWaterManager->askHitWaterParticleOnGround(
 			        *(JGeometry::TVec3<f32>*)&mPosition)) {
-				unk118 |= 0x10;
+				mState |= 0x10;
 			}
 		}
 	}
@@ -3569,8 +3569,8 @@ void TMario::thinkSituation()
 
 			gpMarDirector->setNextStage(mGroundPlane->mData,
 			                            (JDrama::TActor*)NULL);
-			unk114 &= ~0x2;
-			unk114 &= ~0x400;
+			mSubState &= ~0x2;
+			mSubState &= ~0x400;
 		}
 	}
 
@@ -3613,9 +3613,9 @@ void TMario::thinkSituation()
 			hasWaterBit = 0;
 
 		if (areaID == 3 || areaID == 4 || isIndoor || hasWaterBit) {
-			unk118 |= 0x8;
+			mState |= 0x8;
 		} else {
-			unk118 &= ~0x8;
+			mState &= ~0x8;
 		}
 	}
 }
@@ -3824,7 +3824,7 @@ void TMario::checkReturn()
 		shouldReturn = 1;
 	} else {
 		u8 hasFlag;
-		if (unk118 & 0x8)
+		if (mState & 0x8)
 			hasFlag = 1;
 		else
 			hasFlag = 0;
@@ -3952,7 +3952,7 @@ f32 TMario::getSlideStopCatch()
 		shouldSlip = 0;
 		if (unk350 == 2) {
 			u8 hasFlag;
-			if (unk118 & 0x40)
+			if (mState & 0x40)
 				hasFlag = 1;
 			else
 				hasFlag = 0;
@@ -4022,7 +4022,7 @@ f32 TMario::getSlideStopNormal()
 		shouldSlip = 0;
 		if (unk350 == 2) {
 			u8 hasFlag;
-			if (unk118 & 0x40)
+			if (mState & 0x40)
 				hasFlag = 1;
 			else
 				hasFlag = 0;
@@ -4092,7 +4092,7 @@ BOOL TMario::canSlipJump()
 		shouldSlip = 0;
 		if (unk350 == 2) {
 			u8 hasFlag;
-			if (unk118 & 0x40)
+			if (mState & 0x40)
 				hasFlag = 1;
 			else
 				hasFlag = 0;
@@ -4173,7 +4173,7 @@ BOOL TMario::isSlipStart()
 		shouldSlip = 0;
 		if (unk350 == 2) {
 			u8 hasFlag;
-			if (unk118 & 0x40)
+			if (mState & 0x40)
 				hasFlag = 1;
 			else
 				hasFlag = 0;
@@ -4303,7 +4303,7 @@ void TMario::checkSink()
 		shouldSkip = 1;
 	} else {
 		u8 flagCheck;
-		if (unk118 & 0x8)
+		if (mState & 0x8)
 			flagCheck = 1;
 		else
 			flagCheck = 0;
@@ -4356,7 +4356,7 @@ void TMario::checkSink()
 
 	if (sinkState == 0) {
 		u8 bit6;
-		if (unk118 & 0x40)
+		if (mState & 0x40)
 			bit6 = 1;
 		else
 			bit6 = 0;
@@ -4398,7 +4398,7 @@ void TMario::checkSink()
 
 	if (!sinkHandled && sinkState == 5) {
 		u8 bit6;
-		if (unk118 & 0x40)
+		if (mState & 0x40)
 			bit6 = 1;
 		else
 			bit6 = 0;
@@ -4438,7 +4438,7 @@ void TMario::playerControl(JDrama::TGraphics* gfx)
 	// Save angle and position history
 	*(s16*)((u8*)this + 0x9C) = mFaceAngle.y;
 	*(JGeometry::TVec3<f32>*)((u8*)this + 0x29C) = mPosition;
-	unk114 &= ~0x8;
+	mSubState &= ~0x8;
 
 	// Scene 1: force status change
 	u8 areaID = *(u8*)((u8*)gpMarDirector + 0x124);
@@ -4502,7 +4502,7 @@ void TMario::playerControl(JDrama::TGraphics* gfx)
 
 	// Sand effect handling
 	u8 hasSandFlags;
-	if (unk118 & 0x30000)
+	if (mState & 0x30000)
 		hasSandFlags = 1;
 	else
 		hasSandFlags = 0;
@@ -4516,13 +4516,13 @@ void TMario::playerControl(JDrama::TGraphics* gfx)
 		else
 			isSandGround = 0;
 		if (isSandGround) {
-			unk118 |= 0x40000;
+			mState |= 0x40000;
 			emitSandEffect();
 		} else {
-			unk118 &= ~0x40000;
+			mState &= ~0x40000;
 		}
 	} else {
-		unk118 &= ~0x40000;
+		mState &= ~0x40000;
 	}
 
 	// Inlined thinkHeight
@@ -4613,7 +4613,7 @@ void TMario::gunExec()
 
 	// Guard: need gun flag or be on Yoshi
 	u8 hasGunFlag;
-	if (unk118 & 0x8000)
+	if (mState & 0x8000)
 		hasGunFlag = 1;
 	else
 		hasGunFlag = 0;
@@ -4645,10 +4645,10 @@ void TMario::gunExec()
 	    *(TMarioControllerWork*)unk108);
 
 	// Clear bit 0x80
-	unk118 &= ~0x80;
+	mState &= ~0x80;
 
 	// Check trigger bits
-	if (unk118 & 0x30000)
+	if (mState & 0x30000)
 		hasTrigger = 1;
 
 	if (hasTrigger) {
@@ -4661,10 +4661,10 @@ void TMario::gunExec()
 
 		if (!onYoshi3) {
 			if (mWaterGun->suck() == 1) {
-				unk118 |= 0x80;
+				mState |= 0x80;
 
 				u8 hasWaterFlag;
-				if (unk118 & 0x10000)
+				if (mState & 0x10000)
 					hasWaterFlag = 1;
 				else
 					hasWaterFlag = 0;
@@ -4688,7 +4688,7 @@ void TMario::gunExec()
 		curNozzle = waterGun->getCurrentNozzle();
 		if (waterGun->mCurrentWater
 		    == curNozzle->mEmitParams.mAmountMax.get()) {
-			if (unk380 == 0) {
+			if (mPumpState == 0) {
 				waterGun->emit();
 				waterGun->mCurrentWater
 				    = waterGun->getCurrentNozzle()
@@ -4697,7 +4697,7 @@ void TMario::gunExec()
 		}
 	} else {
 		// No trigger
-		if (unk380 == 0) {
+		if (mPumpState == 0) {
 			mWaterGun->emit();
 		}
 	}
@@ -4715,9 +4715,9 @@ void TMario::gunExec()
 		}
 	}
 
-	// unk114 bit 7 -> refill water
+	// mSubState bit 7 -> refill water
 	u8 hasBit0;
-	if (unk114 & 0x80)
+	if (mSubState & 0x80)
 		hasBit0 = 1;
 	else
 		hasBit0 = 0;
