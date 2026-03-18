@@ -515,17 +515,19 @@ void JUTException::printContext(OSError error, OSContext* context, u32 dsisr,
 			break;
 		}
 
-		sConsole->setOutput(sConsole->getOutput() & 1);
+		u32 output = sConsole->getOutput();
+		sConsole->setOutput(output & 1);
 	}
 
 	if (!is_pad_enabled) {
 		OSEnableInterrupts();
 
+		u32 button;
+		u32 trigger;
+
 		int down = 0;
 		int up   = 0;
-		do {
-			u32 button;
-			u32 trigger;
+		while (true) {
 			readPad(&trigger, &button);
 
 			bool draw = false;
@@ -565,7 +567,7 @@ void JUTException::printContext(OSError error, OSContext* context, u32 dsisr,
 			}
 
 			waitTime(30);
-		} while (true);
+		}
 	}
 
 	while (true) {
@@ -573,29 +575,20 @@ void JUTException::printContext(OSError error, OSContext* context, u32 dsisr,
 		JUTConsoleManager::sManager->drawDirect(true);
 		waitTime(2000);
 
-		int line_offset;
-		int used_line;
-		u32 height;
 	next:
 		for (u32 i = sConsole->getHeight(); i > 0; i--) {
 			sConsole->scroll(1);
 			JUTConsoleManager::sManager->drawDirect(true);
 
-			height              = sConsole->getHeight();
-			JUTConsole* console = sConsole;
-			line_offset         = console->getLineOffset();
-			used_line           = console->getUsedLine();
-			if ((used_line - height) + 1U <= line_offset)
+			if ((sConsole->getUsedLine() - sConsole->getHeight()) + 1U
+			    <= sConsole->getLineOffset())
 				break;
 			waitTime(20);
 		}
 
 		waitTime(3000);
-		height              = sConsole->getHeight();
-		JUTConsole* console = sConsole;
-		line_offset         = console->getLineOffset();
-		used_line           = console->getUsedLine();
-		if ((used_line - height) + 1U <= line_offset) {
+		if ((sConsole->getUsedLine() - sConsole->getHeight()) + 1U
+		    <= sConsole->getLineOffset()) {
 			continue;
 		}
 		goto next;
@@ -619,14 +612,14 @@ void JUTException::createFB()
 {
 	GXRenderModeObj* renderMode = &GXNtsc480Int;
 
-	void* end  = OSGetArenaHi();
-	u16 width  = ALIGN_NEXT(renderMode->fbWidth, 16);
-	u16 height = renderMode->xfbHeight;
-	u32 size   = width * height * 2;
+	void* end = OSGetArenaHi();
+	u32 size  = (u16)ALIGN_NEXT((u16)renderMode->fbWidth, 16)
+	           * renderMode->xfbHeight * 2;
 
 	void* begin  = (void*)ALIGN_PREV((u32)end - size, 32);
 	void* object = (void*)ALIGN_PREV((s32)begin - sizeof(JUTExternalFB), 32);
-	new (object) JUTExternalFB(renderMode, GX_GM_1_7, begin, size);
+	new ((JUTExternalFB*)object)
+	    JUTExternalFB(renderMode, GX_GM_1_7, begin, size);
 
 	mDirectPrint->changeFrameBuffer(object);
 	VIConfigure(renderMode);
@@ -674,9 +667,8 @@ void JUTException::appendMapFile(char* path)
 		return;
 	}
 
-	JSUListIterator<JUTExMapFile> iterator;
-	for (iterator = sMapFileList.getFirst(); iterator != sMapFileList.getEnd();
-	     ++iterator) {
+	for (JSUListIterator<JUTExMapFile> iterator = sMapFileList.getFirst();
+	     iterator != sMapFileList.getEnd(); iterator++) {
 		if (strcmp(path, iterator->mPath) == 0) {
 			return;
 		}
@@ -719,16 +711,15 @@ bool JUTException::queryMapAddress_single(char* mapPath, u32 address,
                                           u32 line_length, bool print,
                                           bool begin_with_newline)
 {
-	if (!mapPath) {
+	if (!mapPath)
 		return false;
-	}
 
-	char section_name[16];
 	JUTDirectFile file;
+	char buffer[0x200];
+	char section_name[16];
 	int section_idx = 0;
-	if (!file.fopen(mapPath)) {
+	if (!file.fopen(mapPath))
 		return false;
-	}
 
 	bool result = false;
 	bool found_section;
@@ -736,19 +727,18 @@ bool JUTException::queryMapAddress_single(char* mapPath, u32 address,
 	while (true) {
 		section_idx++;
 		found_section = false;
-		char buffer[0x200];
 
 		while (true) {
+			int i;
 			char* src;
-			char* dst;
 
 			if (file.fgets(buffer, ARRAY_COUNT(buffer)) < 0)
 				break;
 			if (buffer[0] != '.')
 				continue;
 
-			int i = 0;
-			src   = buffer + 1;
+			i   = 0;
+			src = buffer + 1;
 			while (*src != '\0') {
 				section_name[i] = *src;
 				if (*src == ' ' || i == 0xf)
@@ -781,65 +771,65 @@ bool JUTException::queryMapAddress_single(char* mapPath, u32 address,
 				break;
 			if ((length < 28))
 				continue;
-			if (buffer[28] == '4') {
-				u32 addr = ((buffer[18] - '0') << 28)
-				           | strtol(buffer + 19, nullptr, 16);
-				int size = strtol(buffer + 11, nullptr, 16);
-				if ((addr <= address && address < addr + size)) {
-					if (out_addr)
-						*out_addr = addr;
+			if (buffer[28] != '4')
+				continue;
 
-					if (out_size)
-						*out_size = size;
+			u32 addr
+			    = ((buffer[18] - '0') << 28) | strtol(buffer + 19, nullptr, 16);
+			int size = strtol(buffer + 11, nullptr, 16);
+			if ((addr <= address && address < addr + size)) {
+				if (out_addr)
+					*out_addr = addr;
 
-					if (out_line) {
-						const u8* src = (const u8*)&buffer[0x1e];
-						u8* dst       = (u8*)out_line;
-						u32 i         = 0;
+				if (out_size)
+					*out_size = size;
 
-						for (i = 0; i < line_length - 1; ++src) {
-							if ((u32)(*src) < ' ' && (u32)*src != '\t')
-								break;
-							if ((*src == ' ' || (u32)*src == '\t')
-							    && (i != 0)) {
-								if (dst[-1] != ' ') {
-									*dst = ' ';
-									dst++;
-									++i;
-								}
-							} else {
-								*dst++ = *src;
-								i++;
+				if (out_line) {
+					const u8* src = (const u8*)&buffer[0x1e];
+					u8* dst       = (u8*)out_line;
+					u32 i         = 0;
+
+					for (i = 0; i < line_length - 1; ++src) {
+						if (*src < (u32)' ' && *src != (u32)'\t')
+							break;
+						if ((*src == ' ' || *src == (u32)'\t') && (i != 0)) {
+							if (dst[-1] != ' ') {
+								*dst = ' ';
+								dst++;
+								++i;
 							}
-						}
-						if (i != 0 && dst[-1] == ' ') {
-							dst--;
-							i--;
-						}
-						*dst = 0;
-						if (print) {
-							if (begin_with_newline) {
-								sConsole->print("\n");
-							}
-							sConsole->print_f(
-							    "  [%08X]: .%s [%08X: %XH]\n  %s\n", address,
-							    section_name, addr, size, out_line);
-							begin_with_newline = false;
+						} else {
+							*dst++ = *src;
+							i++;
 						}
 					}
-					result = true;
-					break;
+					if (i != 0 && dst[-1] == ' ') {
+						dst--;
+						i--;
+					}
+					(void)*src;
+					*dst = 0;
+					if (print) {
+						if (begin_with_newline) {
+							sConsole->print("\n");
+						}
+						sConsole->print_f("  [%08X]: .%s [%08X: %XH]\n  %s\n",
+						                  address, section_name, addr, size,
+						                  out_line);
+						begin_with_newline = false;
+					}
 				}
+				result = true;
+				break;
 			}
 		}
 
-		if ((section_id < 0 || section_id != section_idx)) {
-			continue;
+		if ((section_id >= 0 && section_id == section_idx)) {
+			if (print && begin_with_newline) {
+				sConsole->print("\n");
+			}
+			break;
 		}
-		if (print && begin_with_newline) {
-			sConsole->print("\n");
-		}
-		break;
 	}
 
 	file.fclose();

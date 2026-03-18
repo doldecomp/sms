@@ -120,7 +120,8 @@ void* JKRDvdArchive::fetchResource(SDIFileEntry* fileEntry, u32* returnSize)
 		u32 resourceSize = fetchResource_subroutine(
 		    mEntryNum, mDataOffset + fileEntry->mDataOffset, fileEntry->mSize,
 		    mHeap,
-		    JKRArchive::convertAttrToCompressionType(fileEntry->getAttr()),
+		    JKRArchive::convertAttrToCompressionType(
+		        fileEntry->mFlagsAndNameOffset >> 24),
 		    mCompression, &resourcePtr);
 		if (returnSize)
 			*returnSize = resourceSize;
@@ -144,7 +145,8 @@ void* JKRDvdArchive::fetchResource(void* buffer, u32 bufferSize,
 
 	if (!fileEntry->mData) {
 		JKRCompression fileCompression
-		    = JKRArchive::convertAttrToCompressionType(fileEntry->getAttr());
+		    = JKRArchive::convertAttrToCompressionType(
+		        fileEntry->mFlagsAndNameOffset >> 24);
 		size = fetchResource_subroutine(
 		    mEntryNum, mDataOffset + fileEntry->mDataOffset, fileEntry->mSize,
 		    (u8*)buffer, bufferSize, fileCompression, mCompression);

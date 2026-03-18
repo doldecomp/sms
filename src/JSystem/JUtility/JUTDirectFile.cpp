@@ -75,40 +75,32 @@ void JUTDirectFile::fclose()
 
 int JUTDirectFile::fgets(void* buf, int len)
 {
-	if (!mIsOpen) {
+	if (!mIsOpen)
 		return -1;
-	}
 
-	if (len == 0) {
+	if (len == 0)
 		return 0;
-	}
 
-	if (len == 1) {
+	if (len == 1)
 		return 1;
-	}
 
-	if (!buf) {
+	if (!buf)
 		return -1;
-	}
 
-	if (mPos >= mLength) {
+	if (mPos >= mLength)
 		return -1;
-	}
 
 	u8* byteBuf   = (u8*)buf;
 	int readCount = 0;
-	int readMax;
 
-	while (readMax = len - 1, mPos < mLength) {
-		if (mToRead == 0 && fetch32byte() < 0) {
+	while (mPos < mLength) {
+		if (mToRead == 0 && fetch32byte() < 0)
 			return -1;
-		}
 
 		u32 currPos   = mPos & (JUTDF_BUFSIZE - 1);
 		u32 chunkSize = (mToRead - currPos);
-		if (readCount + chunkSize > readMax) {
+		if (readCount + chunkSize > len - 1)
 			chunkSize = len - readCount - 1;
-		}
 
 		BOOL isAtEnd = FALSE;
 		for (int i = 0; i < chunkSize; i++) {
@@ -122,9 +114,8 @@ int JUTDirectFile::fgets(void* buf, int len)
 			}
 		}
 
-		if (currPos >= JUTDF_BUFSIZE) {
+		if (currPos >= JUTDF_BUFSIZE)
 			mToRead = 0;
-		}
 
 		if (isAtEnd == TRUE) {
 			*byteBuf = 0;
@@ -136,7 +127,7 @@ int JUTDirectFile::fgets(void* buf, int len)
 		mPos += chunkSize;
 		readCount += chunkSize;
 
-		if (readCount >= readMax) {
+		if (readCount >= len - 1) {
 			*byteBuf = 0;
 			break;
 		}

@@ -14,74 +14,40 @@ public:
 		HEAPALLOC_Unk1 = 1,
 	};
 
-	struct TState { // NB: this struct doesn't agree with TP's struct
-		struct TLocation {
-			TLocation()
-			    : _00(nullptr)
-			    , _04(-1)
-			{
-			}
-
-			void* _00; // _00
-			int _04;   // _04
-		};
-
-		struct TArgument {
-			TArgument(const JKRHeap* heap, u32 p2, bool p3)
-			    : mHeap((heap) ? heap : JKRHeap::sCurrentHeap)
-			    , mId(p2)
-			    , mIsCompareOnDestructed(p3)
-			{
-			}
-
-			const JKRHeap* mHeap;        // _00
-			u32 mId;                     // _04
-			bool mIsCompareOnDestructed; // _08
-		};
-
+	struct TState {
 		TState(const JKRHeap* heap, u32 id, bool isCompareOnDestructed)
 		    : mUsedSize(0)
 		    , mCheckCode(0)
-		    , mArgument(heap, id, isCompareOnDestructed)
+		    , mHeap(heap)
+		    , mId(id)
 		{
-			mArgument.mHeap->state_register(this, mArgument.mId);
+			mHeap->state_register(this, mId);
 		}
 
 		TState(JKRHeap* heap)
 		    : mUsedSize(0)
 		    , mCheckCode(0)
-		    , mArgument(heap, 0xFFFFFFFF, true)
+		    , mHeap(heap)
+		    , mId(0xFFFFFFFF)
 		{
 		}
 
 		~TState();
-		void dump() const { mArgument.mHeap->state_dump(*this); }
-		bool isVerbose() { return bVerbose_; };
-		bool isCompareOnDestructed() const
-		{
-			return mArgument.mIsCompareOnDestructed;
-		};
+		void dump() const { mHeap->state_dump(*this); }
+		bool isVerbose() { return bVerbose_; }
 		u32 getUsedSize() const { return mUsedSize; }
 		u32 getCheckCode() const { return mCheckCode; }
-		const JKRHeap* getHeap() const { return mArgument.mHeap; }
-		u32 getId() const { return mArgument.mId; }
-
-		// unused/inlined:
-		TState(const JKRHeap::TState::TArgument& arg,
-		       const JKRHeap::TState::TLocation& location);
-		TState(const JKRHeap::TState& other, bool p2);
-		TState(const JKRHeap::TState& other,
-		       const JKRHeap::TState::TLocation& location, bool p3);
+		const JKRHeap* getHeap() const { return mHeap; }
+		u32 getId() const { return mId; }
 
 		static bool bVerbose_;
 
 		// TODO: this is all wrong
-		u32 mBuf;            // _00
-		u32 mUsedSize;       // _04
-		u32 mCheckCode;      // _08
-		u32 _0C;             // _0C
-		TArgument mArgument; // _10
-		TLocation mLocation; // _1C
+		u32 mBuf;             // _00
+		u32 mUsedSize;        // _04
+		u32 mCheckCode;       // _08
+		u32 mId;              // _0C
+		const JKRHeap* mHeap; // _10
 	};
 
 public:
@@ -89,8 +55,6 @@ public:
 
 	bool setErrorFlag(bool errorFlag);
 
-	// TODO: order of vtable entries, their names and 2 unknown entries
-	// (looks to be a bit different in sms)
 	virtual ~JKRHeap();
 	virtual void* alloc(u32 size, int alignment) = 0;
 	virtual void free(void* ptr)                 = 0;
@@ -166,10 +130,7 @@ public:
 	{
 		return state->mBuf;
 	} // might instead be a pointer to a next state?
-	static void setState_u32ID_(TState* state, u32 id)
-	{
-		state->mArgument.mId = id;
-	}
+	static void setState_u32ID_(TState* state, u32 id) { state->mId = id; }
 	static void setState_uUsedSize_(TState* state, u32 usedSize)
 	{
 		state->mUsedSize = usedSize;

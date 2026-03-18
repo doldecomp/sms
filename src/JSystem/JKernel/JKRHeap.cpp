@@ -151,20 +151,25 @@ void JKRHeap::dispose_subroutine(u32 begin, u32 end)
 	JSUListIterator<JKRDisposer> iterator;
 	for (iterator = mDisposerList.getFirst();
 	     iterator != mDisposerList.getEnd(); iterator = next_iterator) {
-		if ((void*)begin <= iterator.getObject()
-		    && iterator.getObject() < (void*)end) {
-			iterator.getObject()->~JKRDisposer();
-			if (last_iterator == nullptr) {
+		JKRDisposer* disposer = iterator.getObject();
+
+		if ((void*)begin <= disposer && disposer < (void*)end) {
+			iterator->~JKRDisposer();
+			if (last_iterator
+			    == JSUListIterator<JKRDisposer>(
+			        (JSULink<JKRDisposer>*)nullptr)) {
 				next_iterator = mDisposerList.getFirst();
-			} else {
-				next_iterator = last_iterator;
-				next_iterator++;
+				continue;
 			}
-		} else {
-			last_iterator = iterator;
-			next_iterator = iterator;
+
+			next_iterator = last_iterator;
 			next_iterator++;
+			continue;
 		}
+
+		last_iterator = iterator;
+		next_iterator = iterator;
+		next_iterator++;
 	}
 }
 
@@ -196,12 +201,8 @@ void JKRHeap::copyMemory(void* dst, void* src, u32 size)
 
 	u32* dst_32 = (u32*)dst;
 	u32* src_32 = (u32*)src;
-	while (count > 0) {
-		*dst_32 = *src_32;
-		dst_32++;
-		src_32++;
-		count--;
-	}
+	while (count-- > 0)
+		*dst_32++ = *src_32++;
 }
 
 void JKRDefaultMemoryErrorRoutine(void* heap, u32 size, int alignment)

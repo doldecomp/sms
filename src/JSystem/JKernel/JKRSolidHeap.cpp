@@ -174,18 +174,24 @@ bool JKRSolidHeap::dump()
 
 void JKRSolidHeap::state_register(TState* state, u32 param_1) const
 {
-	state->_0C        = param_1;
-	state->mUsedSize  = mSize - ((JKRSolidHeap*)this)->getTotalFreeSize();
-	state->mCheckCode = ((u32)mCurEnd * 3) + (u32)mCurStart;
+	setState_u32ID_(state, param_1);
+	setState_uUsedSize_(state, getUsedSize_((JKRSolidHeap*)this));
+	// impossible to properly figure out unless new debug
+	// builds of jsystem games are discovered
+	// + it really doesn't matter
+	char trash[0x10];
+	u32 checkCode = (u32)mCurStart;
+	checkCode += (u32)mCurEnd * 3;
+	setState_u32CheckCode_(state, checkCode);
 }
 
 bool JKRSolidHeap::state_compare(const TState& fst, const TState& snd) const
 {
 	bool result = true;
-	if (fst.mCheckCode != snd.mCheckCode) {
+	if (fst.getCheckCode() != snd.getCheckCode()) {
 		result = false;
 	}
-	if (fst.mUsedSize != snd.mUsedSize) {
+	if (fst.getUsedSize() != snd.getUsedSize()) {
 		result = false;
 	}
 	return result;

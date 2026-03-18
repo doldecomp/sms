@@ -85,27 +85,21 @@ void JUTConsole::doDraw(JUTConsole::EConsoleType consoleType) const
 					J2DOrthoGraph ortho(0, 0, 640, 480);
 					ortho.setPort();
 				} else {
-					JUTVideo* pVideo = JUTGetVideoManager();
-					J2DOrthoGraph ortho(0, 0, pVideo->getFbWidth(),
-					                    pVideo->getEfbHeight());
+					J2DOrthoGraph ortho(0, 0,
+					                    JUTGetVideoManager()->getFbWidth(),
+					                    JUTGetVideoManager()->getEfbHeight());
 					ortho.setPort();
-				}
-
-				const JUtility::TColor* color;
-				if (temp_r30) {
-					color = &field_0x60;
-				} else {
-					color = &field_0x5c;
 				}
 
 				J2DFillBox(mPositionX - 2, (int)(mPositionY - font_yOffset),
 				           (int)((mFontSizeX * field_0x20) + 4.0f),
-				           (int)(font_yOffset * mHeight), *color);
+				           (int)(font_yOffset * mHeight),
+				           temp_r30 ? field_0x60 : field_0x5c);
 				mFont->setGX();
 
 				if (temp_r30) {
-					s32 s = (diffIndex(field_0x30, field_0x38) - mHeight) + 1;
-					if (s <= 0) {
+					if (diffIndex(field_0x30, field_0x38) - (int)mHeight + 1
+					    <= 0) {
 						mFont->setCharColor(
 						    JUtility::TColor(255, 255, 255, 255));
 					} else if (field_0x30 == field_0x34) {
@@ -124,29 +118,29 @@ void JUTConsole::doDraw(JUTConsole::EConsoleType consoleType) const
 				    (int)(font_yOffset * mHeight) + 4);
 			}
 
-			char* linePtr;
 			s32 curLine = field_0x30;
 			s32 y       = 0;
+			u8* linePtr;
 
 			do {
-				linePtr = (char*)getLinePtr(curLine);
+				linePtr = getLinePtr(curLine);
 
-				if ((u8)linePtr[-1] != nullptr) {
-					if (consoleType != CONSOLE_TYPE_2) {
-						mFont->drawString_scale(
-						    mPositionX, ((y * font_yOffset) + mPositionY),
-						    mFontSizeX, mFontSizeY, linePtr, true);
-					} else {
-						JUTDirectPrint::getManager()->drawString(
-						    mPositionX, ((y * font_yOffset) + mPositionY),
-						    linePtr);
-					}
-
-					curLine = nextIndex(curLine);
-					y++;
-				} else {
+				u8 c = (u8)linePtr[-1];
+				if (c == nullptr)
 					break;
+
+				if (consoleType != CONSOLE_TYPE_2) {
+					mFont->drawString_scale(
+					    mPositionX, ((y * font_yOffset) + mPositionY),
+					    mFontSizeX, mFontSizeY, (char*)linePtr, true);
+				} else {
+					JUTDirectPrint::getManager()->drawString(
+					    mPositionX, ((y * font_yOffset) + mPositionY),
+					    (char*)linePtr);
 				}
+
+				curLine = nextIndex(curLine);
+				y++;
 			} while (y < mHeight && curLine != field_0x34);
 		}
 	}
@@ -168,9 +162,9 @@ void JUTConsole::print(const char* param_0)
 	const char* r29 = param_0;
 	u8* r28         = getLinePtr(field_0x38) + field_0x3c;
 	while (*r29) {
-		if (field_0x66 && field_0x34 == nextIndex(field_0x38)) {
+		if (field_0x66 && field_0x34 == nextIndex(field_0x38))
 			break;
-		}
+
 		if (*r29 == '\n') {
 			r29++;
 			field_0x3c = field_0x20;
@@ -179,18 +173,17 @@ void JUTConsole::print(const char* param_0)
 			while (field_0x3c < field_0x20) {
 				*(r28++) = ' ';
 				field_0x3c++;
-				if (field_0x3c % 8 == 0) {
+				if (field_0x3c % 8 == 0)
 					break;
-				}
 			}
 		} else {
 			*(r28++) = *(r29++);
 			field_0x3c++;
 		}
 
-		if (field_0x3c < field_0x20) {
+		if (field_0x3c < field_0x20)
 			continue;
-		}
+
 		*r28       = 0;
 		field_0x38 = nextIndex(field_0x38);
 		field_0x3c = 0;
@@ -198,15 +191,15 @@ void JUTConsole::print(const char* param_0)
 		r28          = getLinePtr(field_0x38);
 		*r28         = 0;
 		int local_28 = diffIndex(field_0x30, field_0x38);
-		if (local_28 == mHeight) {
+
+		if (local_28 == mHeight)
 			field_0x30 = nextIndex(field_0x30);
-		}
-		if (field_0x38 == field_0x34) {
+
+		if (field_0x38 == field_0x34)
 			field_0x34 = nextIndex(field_0x34);
-		}
-		if (field_0x38 == field_0x30) {
+
+		if (field_0x38 == field_0x30)
 			field_0x30 = nextIndex(field_0x30);
-		}
 	}
 	*r28 = 0;
 }
@@ -278,6 +271,9 @@ JUTConsoleManager* JUTConsoleManager::createManager(JKRHeap* pHeap)
 
 void JUTConsoleManager::appendConsole(JUTConsole* console)
 {
+	JUT_ASSERT(961, sManager != NULL && console != NULL);
+	JUT_ASSERT(964, soLink_.Find(console) == soLink_.end());
+
 	soLink_.Push_back(console);
 
 	if (mActiveConsole == nullptr)

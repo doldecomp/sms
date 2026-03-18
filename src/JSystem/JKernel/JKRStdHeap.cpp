@@ -89,18 +89,18 @@ s32 JKRStdHeap::getFreeSize()
 
 void JKRStdHeap::state_register(TState* state, u32 param_1) const
 {
-	state->_0C        = param_1;
-	state->mUsedSize  = 0;
-	state->mCheckCode = 0;
+	setState_u32ID_(state, param_1);
+	setState_uUsedSize_(state, 0);
+	setState_u32CheckCode_(state, 0);
 }
 
 bool JKRStdHeap::state_compare(const TState& fst, const TState& snd) const
 {
 	bool result = true;
-	if (fst.mCheckCode != snd.mCheckCode) {
+	if (fst.getCheckCode() != snd.getCheckCode()) {
 		result = false;
 	}
-	if (fst.mUsedSize != snd.mUsedSize) {
+	if (fst.getUsedSize() != snd.getUsedSize()) {
 		result = false;
 	}
 	return result;

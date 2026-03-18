@@ -74,4 +74,10 @@ inline JKRAramStreamCommand* JKRStreamToAram_Async(JSUFileInputStream* stream,
 	return JKRAramStream::write_StreamToAram_Async(stream, addr, size, offset);
 }
 
+inline JKRAramStreamCommand* JKRStreamToAram_Sync(JKRAramStreamCommand* command,
+                                                  BOOL isNonBlocking)
+{
+	return JKRAramStream::sync(command, isNonBlocking);
+}
+
 #endif

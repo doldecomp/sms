@@ -97,9 +97,9 @@ bool JKRArchive::getDirEntry(SDirEntry* dirEntry, u32 index) const
 		return false;
 	}
 
-	dirEntry->mFlags = fileEntry->mFlag >> 24;
+	dirEntry->mFlags = fileEntry->mFlagsAndNameOffset >> 24;
 	dirEntry->mID    = fileEntry->mFileID;
-	dirEntry->mName  = mStrTable + fileEntry->getNameOffset();
+	dirEntry->mName  = mStrTable + (fileEntry->mFlagsAndNameOffset & 0xFFFFFF);
 	return true;
 }
 
