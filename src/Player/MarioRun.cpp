@@ -2607,9 +2607,9 @@ BOOL TMario::moveMain()
 		} else {
 			jumpSlipCommon(190, 0x088C);
 			if (result != 2) {
-				*(u16*)((u8*)this + 0x94) = 0;
-				s16 angle = *(s16*)((u8*)this + 0x9A);
-				*(s16*)((u8*)this + 0x9A) = angle + 0x8000;
+				mFaceAngle.x = 0;
+				s16 angle = mModelFaceAngle;
+				mModelFaceAngle = angle + 0x8000;
 			}
 			result = 0;
 		}

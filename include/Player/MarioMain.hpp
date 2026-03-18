@@ -1294,7 +1294,9 @@ public:
 	/* 0x250 */ Mtx mGroundMtx;
 	/* 0x280 */ char unk280[0x29C - 0x280];
 	/* 0x29C */ JGeometry::TVec3<f32> unk29C;
-	/* 0x2A8 */ char unk2A8[0x2BA - 0x2A8];
+	/* 0x2A8 */ JGeometry::TVec3<f32> unk2A8;
+	/* 0x2B4 */ u32 unk2B4;
+	/* 0x2B8 */ u16 unk2B8;
 	/* 0x2BA */ s16 unk2BA;
 	/* 0x2BC */ f32 unk2BC;
 	/* 0x2C0 */ TLiveActor* mRidingActor;

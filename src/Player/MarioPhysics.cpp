@@ -620,7 +620,7 @@ int TMario::checkGroundAtJumping(const Vec& pos, int flags)
 	}
 
 	if (groundResult == 1) {
-		*(f32*)((u8*)this + 0xBC) = mVel.y;
+		unkBC = mVel.y;
 	}
 
 	if (mRoofPlane != NULL) {

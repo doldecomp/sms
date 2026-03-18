@@ -755,7 +755,7 @@ void TMario::pulling()
 
 	// Check if action is 0x40561 and specific flag
 	if (mAction == 0x40561) {
-		u32 flags118 = *(u32*)((u8*)this + 0x118);
+		u32 flags118 = unk118;
 		u8 isGrounded;
 		if (flags118 & 0x40) {
 			isGrounded = 1;
