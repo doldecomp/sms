@@ -22,7 +22,7 @@ f32 TMapObjNail::mDownHeight = 50.0f;
 
 BOOL TMapObjNail::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == HIT_MESSAGE_HIP_DROP && !isUnk104Positive() && unk150 < 3) {
+	if (message == HIT_MESSAGE_HIP_DROP && !isWaitingToAppear() && unk150 < 3) {
 		mPosition.y -= mDownHeight;
 		removeMapCollision();
 		setUpCurrentMapCollision();
@@ -31,7 +31,7 @@ BOOL TMapObjNail::receiveMessage(THitActor* sender, u32 message)
 			MSoundSESystem::MSoundSE::startSoundActor(0x3850, mPosition, 0,
 			                                          nullptr, 0, 4);
 
-		unk104 = 0x78;
+		mTimeTilAppear = 0x78;
 		++unk150;
 		if (unk150 == 3 && unk138) {
 			TMapObjBase* obj = unk138;

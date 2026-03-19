@@ -259,7 +259,7 @@ void TMapObjBase::makeObjDead()
 	unk100 = 0xffff;
 	unk64 |= 1;
 	removeMapCollision();
-	unk104 = 0;
+	mTimeTilAppear = 0;
 	if (mHeldObject) {
 		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK8);
 		mHeldObject = nullptr;
@@ -434,7 +434,7 @@ TMapObjBase::TMapObjBase(const char* name)
     , unkFE(0xffff)
     , unk100(0xffff)
     , unk102(0)
-    , unk104(0)
+    , mTimeTilAppear(0)
     , mYOffset(0.0f)
     , mMapObjData(nullptr)
     , unk134(0)
