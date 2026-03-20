@@ -8,6 +8,16 @@
 #include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAnm.hpp>
 
+// TODO: what is this? This isn't part of mtx.h =/
+inline BOOL checkScaleOne(Vec v)
+{
+	if (v.x == 1.0f && v.y == 1.0f && v.z == 1.0f) {
+		return TRUE;
+	} else {
+		return FALSE;
+	}
+}
+
 void J3DMtxCalcAnm::calc(u16 param_0)
 {
 	j3dSys.setCurrentMtxCalc(this);
@@ -90,16 +100,6 @@ void J3DMtxCalcBasic::recursiveEntry(J3DNode* node)
 	}
 }
 
-// TODO: what is this? This isn't part of mtx.h =/
-inline BOOL checkScaleOne(Vec v)
-{
-	if (v.x == 1.0f && v.y == 1.0f && v.z == 1.0f) {
-		return TRUE;
-	} else {
-		return FALSE;
-	}
-}
-
 void J3DMtxCalcBasic::calcTransform(u16 param_0, const J3DTransformInfo& info)
 {
 	J3DSys::mCurrentS.x *= info.mScale.x;
@@ -150,18 +150,21 @@ void J3DMtxCalcSoftimage::calcTransform(u16 param_0,
 	                         info.mTranslate.y * J3DSys::mCurrentS.y,
 	                         info.mTranslate.z * J3DSys::mCurrentS.z, mtx);
 	MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
+
 	J3DSys::mCurrentS.x = J3DSys::mCurrentS.x * info.mScale.x;
 	J3DSys::mCurrentS.y = J3DSys::mCurrentS.y * info.mScale.y;
 	J3DSys::mCurrentS.z = J3DSys::mCurrentS.z * info.mScale.z;
-	s32 var2;
+
+	BOOL b;
 	if (checkScaleOne(J3DSys::mCurrentS)) {
 		j3dSys.getModel()->setScaleFlag(param_0, 1);
-		var2 = 1;
+		b = true;
 	} else {
 		j3dSys.getModel()->setScaleFlag(param_0, 0);
-		var2 = 0;
+		b = false;
 	}
-	if (!var2) {
+
+	if (!b) {
 		mtx[0][0] = J3DSys::mCurrentMtx[0][0] * J3DSys::mCurrentS.x;
 		mtx[0][1] = J3DSys::mCurrentMtx[0][1] * J3DSys::mCurrentS.y;
 		mtx[0][2] = J3DSys::mCurrentMtx[0][2] * J3DSys::mCurrentS.z;

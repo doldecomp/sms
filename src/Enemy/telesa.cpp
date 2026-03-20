@@ -444,7 +444,7 @@ void TTelesa::calcRootMatrix()
 			    ->getMaterialNodePointer(i)
 			    ->getTexGenBlock()
 			    ->getTexMtx(2)
-			    ->setEffectMtx2(afStack_94);
+			    ->setEffectMtx(afStack_94);
 		}
 
 		if (JPABaseEmitter* emitter

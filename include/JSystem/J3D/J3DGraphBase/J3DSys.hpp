@@ -84,6 +84,10 @@ public:
 	void setModel(J3DModel* pModel) { mModel = pModel; }
 	void setTexture(J3DTexture* pTex) { mTexture = pTex; }
 
+	void onFlag(u32 flag) { mFlags |= flag; }
+	void offFlag(u32 flag) { mFlags &= ~flag; }
+	bool checkFlag(u32 flag) { return mFlags & flag ? true : false; }
+
 	// Completely made up
 	int checkFlag2() { return mFlags & 2 ? TRUE : FALSE; }
 	int checkFlag4() { return mFlags & 4 ? TRUE : FALSE; }

@@ -74,10 +74,12 @@ u16 J3DMaterialFactory::countUniqueMaterials()
 
 u32 J3DMaterialFactory::countTexGens(int idx) const
 {
-	u8 no = mpMaterialInitData[mpMaterialID[idx]].mTexGenNumIdx;
-	if (no != 0xFF)
-		return mpTexGenNum[no];
-	return 0;
+	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
+	if (initData->mTexGenNumIdx != 0xFF)
+		return mpTexGenNum[initData->mTexGenNumIdx];
+	else
+		return 0;
 }
 
 u32 J3DMaterialFactory::countStages(int idx) const
@@ -112,10 +114,15 @@ J3DMaterial* J3DMaterialFactory::create(J3DMaterial* mat, int idx,
 
 	u32 texNum = tevStageNum > 8 ? 8 : tevStageNum;
 
-	u32 colorFlag  = flag & 0x40000000 ? 0 : 1;
-	u32 texGenFlag = flag & 0x04000000 ? 0 : 1;
-	u32 peFlag     = flag & 0x10000000 ? 0 : 1;
-	u32 indFlag    = flag & 0x01000000 ? 1 : 0;
+	u32 colorFlag;
+	u32 peFlag;
+	u32 texGenFlag;
+	u32 indFlag;
+
+	colorFlag  = flag & 0x40000000 ? 0 : 1;
+	texGenFlag = flag & 0x04000000 ? 0 : 1;
+	peFlag     = flag & 0x10000000 ? 0 : 1;
+	indFlag    = flag & 0x01000000 ? 1 : 0;
 
 	if (mat == nullptr)
 		mat = new J3DMaterial();
@@ -199,59 +206,66 @@ J3DMaterial* J3DMaterialFactory::create(J3DMaterial* mat, int idx,
 
 J3DGXColor J3DMaterialFactory::newMatColor(int idx, int stage) const
 {
-	J3DGXColor ret((GXColor) { 0xFF, 0xFF, 0xFF, 0xFF });
+	J3DGXColor dflt = (GXColor) { 0xFF, 0xFF, 0xFF, 0xFF };
+
 	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
-	u16 no = mpMaterialInitData[mpMaterialID[idx]].mMatColorIdx[stage];
-	if (no != 0xFFFF)
-		return mpMatColor[no];
+
+	if (initData->mMatColorIdx[stage] != 0xFFFF)
+		return mpMatColor[initData->mMatColorIdx[stage]];
 	else
-		return ret;
+		return dflt;
 }
 
 u8 J3DMaterialFactory::newColorChanNum(int idx) const
 {
-	u8 no = mpMaterialInitData[mpMaterialID[idx]].mColorChanNumIdx;
-	if (no != 0xFF)
-		return mpColorChanNum[no];
+	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
+	if (initData->mColorChanNumIdx != 0xFF)
+		return mpColorChanNum[initData->mColorChanNumIdx];
 	else
 		return 0;
 }
 
 J3DColorChan J3DMaterialFactory::newColorChan(int idx, int stage) const
 {
-	u16 no = mpMaterialInitData[mpMaterialID[idx]].mColorChanIdx[stage];
-	if (no != 0xFFFF)
-		return J3DColorChan(mpColorChanInfo[no]);
+	u32 unused = 0; // from TP debug
+
+	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
+	if (initData->mColorChanIdx[stage] != 0xFFFF)
+		return J3DColorChan(mpColorChanInfo[initData->mColorChanIdx[stage]]);
 	else
 		return J3DColorChan();
 }
 
 J3DGXColor J3DMaterialFactory::newAmbColor(int idx, int stage) const
 {
-	J3DGXColor ret((GXColor) { 0x32, 0x32, 0x32, 0x32 });
+	J3DGXColor dflt = (GXColor) { 0x32, 0x32, 0x32, 0x32 };
 
 	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
-	u16 no = mpMaterialInitData[mpMaterialID[idx]].mAmbColorIdx[stage];
-	if (no != 0xFFFF)
-		return mpAmbColor[no];
+
+	if (initData->mAmbColorIdx[stage] != 0xFFFF)
+		return mpAmbColor[initData->mAmbColorIdx[stage]];
 	else
-		return ret;
+		return dflt;
 }
 
 u32 J3DMaterialFactory::newTexGenNum(int idx) const
 {
-	u8 no = mpMaterialInitData[mpMaterialID[idx]].mTexGenNumIdx;
-	if (no != 0xFF)
-		return mpTexGenNum[no];
+	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
+	if (initData->mTexGenNumIdx != 0xFF)
+		return mpTexGenNum[initData->mTexGenNumIdx];
 	else
 		return 0;
 }
 
 J3DTexCoord J3DMaterialFactory::newTexCoord(int idx, int stage) const
 {
-	u16 no = mpMaterialInitData[mpMaterialID[idx]].mTexCoordIdx[stage];
-	if (no != 0xFFFF)
-		return J3DTexCoord(mpTexCoordInfo[no]);
+	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
+	if (initData->mTexCoordIdx[stage] != 0xFFFF)
+		return J3DTexCoord(mpTexCoordInfo[initData->mTexCoordIdx[stage]]);
 	else
 		return J3DTexCoord();
 }
@@ -261,74 +275,83 @@ J3DTexMtx* J3DMaterialFactory::newTexMtx(int idx, int stage) const
 	J3DTexMtx* ret = nullptr;
 
 	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
 	if (initData->mTexMtxIdx[stage] != 0xFFFF)
 		ret = new J3DTexMtx(mpTexMtxInfo[initData->mTexMtxIdx[stage]]);
+
 	return ret;
 }
 
 u8 J3DMaterialFactory::newCullMode(int idx) const
 {
-	u8 no = mpMaterialInitData[mpMaterialID[idx]].mCullModeIdx;
-	if (no != 0xFF)
-		return mpCullMode[no];
+	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
+	if (initData->mCullModeIdx != 0xFF)
+		return mpCullMode[initData->mCullModeIdx];
 	else
 		return 0xFF;
 }
 
 u16 J3DMaterialFactory::newTexNo(int idx, int stage) const
 {
-	u16 no = mpMaterialInitData[mpMaterialID[idx]].mTexNoIdx[stage];
-	if (no != 0xFFFF)
-		return mpTexNo[no];
+	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
+	if (initData->mTexNoIdx[stage] != 0xFFFF)
+		return mpTexNo[initData->mTexNoIdx[stage]];
 	else
 		return 0xFFFF;
 }
 
 J3DTevOrder J3DMaterialFactory::newTevOrder(int idx, int stage) const
 {
-	u16 no = mpMaterialInitData[mpMaterialID[idx]].mTevOrderIdx[stage];
-	if (no != 0xFFFF)
-		return J3DTevOrder(mpTevOrderInfo[no]);
+	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
+	if (initData->mTevOrderIdx[stage] != 0xFFFF)
+		return J3DTevOrder(mpTevOrderInfo[initData->mTevOrderIdx[stage]]);
 	else
 		return J3DTevOrder();
 }
 
 J3DGXColorS10 J3DMaterialFactory::newTevColor(int idx, int stage) const
 {
-	J3DGXColorS10 ret((GXColorS10) { 0x00, 0x00, 0x00, 0x00 });
+	J3DGXColorS10 dflt = (GXColorS10) { 0x00, 0x00, 0x00, 0x00 };
+
 	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
-	u16 no = mpMaterialInitData[mpMaterialID[idx]].mTevColorIdx[stage];
-	if (no != 0xFFFF)
-		return mpTevColor[no];
+
+	if (initData->mTevColorIdx[stage] != 0xFFFF)
+		return mpTevColor[initData->mTevColorIdx[stage]];
 	else
-		return ret;
+		return dflt;
 }
 
 J3DGXColor J3DMaterialFactory::newTevKColor(int idx, int stage) const
 {
-	J3DGXColor ret((GXColor) { 0xFF, 0xFF, 0xFF, 0xFF });
+	J3DGXColor dflt = (GXColor) { 0xFF, 0xFF, 0xFF, 0xFF };
+
 	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
-	u16 no = mpMaterialInitData[mpMaterialID[idx]].mTevKColorIdx[stage];
-	if (no != 0xFFFF)
-		return mpTevKColor[no];
+
+	if (initData->mTevKColorIdx[stage] != 0xFFFF)
+		return mpTevKColor[initData->mTevKColorIdx[stage]];
 	else
-		return ret;
+		return dflt;
 }
 
 u8 J3DMaterialFactory::newTevStageNum(int idx) const
 {
-	u8 no = mpMaterialInitData[mpMaterialID[idx]].mTevStageNumIdx;
-	if (no != 0xFF)
-		return mpTevStageNum[no];
+	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
+	if (initData->mTevStageNumIdx != 0xFF)
+		return mpTevStageNum[initData->mTevStageNumIdx];
 	else
 		return 0xFF;
 }
 
 J3DTevStage J3DMaterialFactory::newTevStage(int idx, int stage) const
 {
-	u16 no = mpMaterialInitData[mpMaterialID[idx]].mTevStageIdx[stage];
-	if (no != 0xFFFF)
-		return J3DTevStage(mpTevStageInfo[no]);
+	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
+	if (initData->mTevStageIdx[stage] != 0xFFFF)
+		return J3DTevStage(mpTevStageInfo[initData->mTevStageIdx[stage]]);
 	else
 		return J3DTevStage();
 }
@@ -336,9 +359,11 @@ J3DTevStage J3DMaterialFactory::newTevStage(int idx, int stage) const
 J3DTevSwapModeTable J3DMaterialFactory::newTevSwapModeTable(int idx,
                                                             int stage) const
 {
-	u16 no = mpMaterialInitData[mpMaterialID[idx]].mTevSwapModeTableIdx[stage];
-	if (no != 0xFFFF)
-		return J3DTevSwapModeTable(mpTevSwapModeTableInfo[no]);
+	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
+	if (initData->mTevSwapModeTableIdx[stage] != 0xFFFF)
+		return J3DTevSwapModeTable(
+		    mpTevSwapModeTableInfo[initData->mTevSwapModeTableIdx[stage]]);
 	else
 		return J3DTevSwapModeTable(j3dDefaultTevSwapModeTable);
 }
@@ -353,102 +378,112 @@ u8 J3DMaterialFactory::newIndTexStageNum(int idx) const
 
 J3DIndTexOrder J3DMaterialFactory::newIndTexOrder(int idx, int stage) const
 {
-	J3DIndTexOrder ret;
+	J3DIndTexOrder dflt;
 	if (mpIndInitData[idx].mEnabled == true)
 		return J3DIndTexOrder(mpIndInitData[idx].mIndTexOrderInfo[stage]);
 	else
-		return ret;
+		return dflt;
 }
 
 J3DIndTexMtx J3DMaterialFactory::newIndTexMtx(int idx, int stage) const
 {
-	J3DIndTexMtx ret;
+	J3DIndTexMtx dflt;
 	if (mpIndInitData[idx].mEnabled == true)
 		return J3DIndTexMtx(mpIndInitData[idx].mIndTexMtxInfo[stage]);
 	else
-		return ret;
+		return dflt;
 }
 
 J3DIndTevStage J3DMaterialFactory::newIndTevStage(int idx, int stage) const
 {
-	J3DIndTevStage ret;
+	J3DIndTevStage dflt;
 	if (mpIndInitData[idx].mEnabled == true)
 		return J3DIndTevStage(mpIndInitData[idx].mIndTevStageInfo[stage]);
 	else
-		return ret;
+		return dflt;
 }
 
 J3DIndTexCoordScale J3DMaterialFactory::newIndTexCoordScale(int idx,
                                                             int stage) const
 {
-	J3DIndTexCoordScale ret;
+	J3DIndTexCoordScale dflt;
 	if (mpIndInitData[idx].mEnabled == true)
 		return J3DIndTexCoordScale(
 		    mpIndInitData[idx].mIndTexCoordScaleInfo[stage]);
 	else
-		return ret;
+		return dflt;
 }
 
 J3DFog* J3DMaterialFactory::newFog(int idx) const
 {
-	J3DFog* ret                   = nullptr;
+	J3DFog* ret = nullptr;
+
 	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
 	if (initData->mFogIdx != 0xFFFF)
 		ret = new J3DFog(mpFogInfo[initData->mFogIdx]);
+
 	return ret;
 }
 
 J3DAlphaComp J3DMaterialFactory::newAlphaComp(int idx) const
 {
-	u16 no = mpMaterialInitData[mpMaterialID[idx]].mAlphaCompIdx;
-	if (no != 0xFFFF)
-		return J3DAlphaComp(mpAlphaCompInfo[no]);
+	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
+	if (initData->mAlphaCompIdx != 0xFFFF)
+		return J3DAlphaComp(mpAlphaCompInfo[initData->mAlphaCompIdx]);
 	else
 		return J3DAlphaComp(0xFFFF);
 }
 
 J3DBlend J3DMaterialFactory::newBlend(int idx) const
 {
-	u16 no = mpMaterialInitData[mpMaterialID[idx]].mBlendIdx;
-	if (no != 0xFFFF)
-		return J3DBlend(mpBlendInfo[no]);
+	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
+	if (initData->mBlendIdx != 0xFFFF)
+		return J3DBlend(mpBlendInfo[initData->mBlendIdx]);
 	else
 		return J3DBlend();
 }
 
 J3DZMode J3DMaterialFactory::newZMode(int idx) const
 {
-	u8 no = mpMaterialInitData[mpMaterialID[idx]].mZModeIdx;
-	if (no != 0xFF)
-		return J3DZMode(mpZModeInfo[no]);
+	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
+	if (initData->mZModeIdx != 0xFF)
+		return J3DZMode(mpZModeInfo[initData->mZModeIdx]);
 	else
 		return J3DZMode(0xffff);
 }
 
 u8 J3DMaterialFactory::newZCompLoc(int idx) const
 {
-	u8 no = mpMaterialInitData[mpMaterialID[idx]].mZCompLocIdx;
-	if (no != 0xFF)
-		return mpZCompLoc[no];
+	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
+	if (initData->mZCompLocIdx != 0xFF)
+		return mpZCompLoc[initData->mZCompLocIdx];
 	else
 		return 0xFF;
 }
 
 u8 J3DMaterialFactory::newDither(int idx) const
 {
-	u8 no = mpMaterialInitData[mpMaterialID[idx]].mDitherIdx;
-	if (no != 0xFF)
-		return mpDither[no];
+	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
+	if (initData->mDitherIdx != 0xFF)
+		return mpDither[initData->mDitherIdx];
 	else
 		return 0xFF;
 }
 
 J3DNBTScale J3DMaterialFactory::newNBTScale(int idx) const
 {
-	J3DNBTScale ret;
-	u16 no = mpMaterialInitData[mpMaterialID[idx]].mNBTScaleIdx;
-	if (no != 0xFFFF)
-		return J3DNBTScale(mpNBTScaleInfo[no]);
+	J3DNBTScale dflt;
+
+	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+
+	if (initData->mNBTScaleIdx != 0xFFFF)
+		return J3DNBTScale(mpNBTScaleInfo[initData->mNBTScaleIdx]);
 	else
-		return ret;
+		return dflt;
 }

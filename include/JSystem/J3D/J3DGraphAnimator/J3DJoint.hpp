@@ -193,8 +193,8 @@ public:
 	J3DTransformInfo& getTransformInfo() { return mTransformInfo; }
 	u8 getScaleCompensate() const { return mScaleCompensate; }
 	J3DMaterial* getMesh() { return mMesh; }
-	u8 getMtxType() const { return (mKind >> 4) & 0xF; }
-	void setMtxType(u8 type) { mKind = (mKind & ~0xf0) | (type << 4); }
+	u8 getMtxType() const { return (mKind & 0xF0) >> 4; }
+	void setMtxType(u8 type) { mKind = (mKind & ~0xF0) | (type << 4); }
 	void setMtxCalc(J3DMtxCalc* mtx_calc) { mMtxCalc = mtx_calc; }
 	J3DMtxCalc* getMtxCalc() { return mMtxCalc; }
 

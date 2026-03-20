@@ -75,11 +75,10 @@ enum J3DTexMtxMode {
 struct J3DTexMtxInfo {
 	J3DTexMtxInfo& operator=(const J3DTexMtxInfo& other)
 	{
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j < 4; j++)
 				mEffectMtx[i][j] = other.mEffectMtx[i][j];
-			}
-		}
+
 		mCenter.x   = other.mCenter.x;
 		mCenter.y   = other.mCenter.y;
 		mCenter.z   = other.mCenter.z;
@@ -90,29 +89,14 @@ struct J3DTexMtxInfo {
 	}
 	void setEffectMtx(Mtx m)
 	{
-		mEffectMtx[0][0] = m[0][0];
-		mEffectMtx[0][1] = m[0][1];
-		mEffectMtx[0][2] = m[0][2];
-		mEffectMtx[0][3] = m[0][3];
+		for (int i = 0; i < 3; i++)
+			for (int j = 0; j < 4; j++)
+				mEffectMtx[i][j] = m[i][j];
 
-		mEffectMtx[1][0] = m[1][0];
-		mEffectMtx[1][1] = m[1][1];
-		mEffectMtx[1][2] = m[1][2];
-		mEffectMtx[1][3] = m[1][3];
+		mEffectMtx[3][0] = mEffectMtx[3][1] = mEffectMtx[3][2] = 0.0f;
 
-		mEffectMtx[2][0] = m[2][0];
-		mEffectMtx[2][1] = m[2][1];
-		mEffectMtx[2][2] = m[2][2];
-		mEffectMtx[2][3] = m[2][3];
-
-		mEffectMtx[3][0] = 0.0f;
-		mEffectMtx[3][1] = 0.0f;
-		mEffectMtx[3][2] = 0.0f;
 		mEffectMtx[3][3] = 1.0f;
 	}
-
-	// fabricated
-	void setEffectMtx2(Mtx m) { setEffectMtx(m); }
 
 	/* 0x00 */ u8 mProjection;
 	/* 0x01 */ u8 mInfo;
@@ -125,11 +109,10 @@ struct J3DTexMtxInfo {
 struct J3DIndTexMtxInfo {
 	J3DIndTexMtxInfo& operator=(const J3DIndTexMtxInfo& other)
 	{
-		for (int i = 0; i < 2; i++) {
-			for (int j = 0; j < 3; j++) {
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < 3; j++)
 				mOffsetMtx[i][j] = other.mOffsetMtx[i][j];
-			}
-		}
+
 		mScaleExp = other.mScaleExp;
 		return *this;
 	}
