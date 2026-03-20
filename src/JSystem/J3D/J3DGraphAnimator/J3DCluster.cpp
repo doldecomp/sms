@@ -16,9 +16,9 @@ void J3DDeformData::deform(J3DModel* model)
 		mClusters[i].getDeformer()->deform(model, i);
 
 	DCStoreRange(model->getVertexBuffer()->getVtxPosArrayPointer(0),
-	             model->getModelData()->getVtxNum() * 12);
+	             model->getModelData()->getVtxNum() * sizeof(Vec));
 	DCStoreRange(model->getVertexBuffer()->getVtxNrmArrayPointer(0),
-	             model->getModelData()->getNrmNum() * 12);
+	             model->getModelData()->getNrmNum() * sizeof(Vec));
 
 	model->getVertexBuffer()->setCurrentVtxPos(
 	    model->getVertexBuffer()->getVtxPosArrayPointer(0));
