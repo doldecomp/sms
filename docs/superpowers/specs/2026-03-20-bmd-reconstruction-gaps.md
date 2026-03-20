@@ -255,6 +255,7 @@ These were discovered during the VTX1/SHP1 reconstruction work and apply to ALL 
 5. **Triangle winding:** GX expects CW, Blender stores CCW — swap v1/v2 on export
 6. **Section padding:** Each section must be padded to 32-byte boundary
 7. **DRW1 ordering:** All rigid entries must come before all weighted entries
+8. **DRW1 envelope duplication bug:** Nintendo's dev tools duplicated all envelope entries. Some J3D games require this duplicated data. SMS may need it — test with and without.
 
 ---
 
@@ -262,10 +263,18 @@ These were discovered during the VTX1/SHP1 reconstruction work and apply to ALL 
 
 | Tool | Source | Key Insight |
 |------|--------|-------------|
-| **SuperBMD** | `C:\Users\ryana\AppData\Local\Temp\SuperBMD` | Full from-scratch BMD builder. Material JSON presets. DRW1 weighted indices filled during SHP1. |
+| **SuperBMD** | github.com/Sage-of-Mirrors/SuperBMD | Only open-source tool that builds complete BMDs from scratch. Material JSON presets. C#/Assimp. |
 | **SMS Decomp** | `C:\Users\ryana\Documents\sms\src\JSystem\J3D\` | Definitive binary layout reference. J3DShapeFactory, J3DModelLoader. |
-| **noclip.website** | github.com/magcius/noclip.website | TypeScript BMD parser with good format documentation. |
+| **noclip.website** | github.com/magcius/noclip.website | Best-documented TypeScript parser. Documents DRW1 envelope duplication bug. |
+| **j3dview** | github.com/blank63/j3dview | Python BMD viewer/editor with NumPy. Texture export/replace. |
+| **GCFT** | github.com/LagoLunatic/GCFT | Python GUI for editing MAT3 material properties with visual preview. |
 | **BrawlCrate** | github.com/soopercool101/BrawlCrate | Similar Nintendo model formats (MDL0). Vertex encoding reference. |
+| **BlenderMD** | github.com/AugsEU/BlenderMD | Blender plugin wrapper that calls SuperBMD for BMD export. |
+
+### Wiki Documentation
+- **CloudModding ZGCN**: wiki.cloudmodding.com/zgcn/BMD_and_BDL — Most comprehensive section-by-section breakdown
+- **Luma's Workshop**: lumasworkshop.com/wiki/BMD/BDL_(File_Format) — Detailed format spec with J3DLoader flags
+- **WindEditor Wiki**: github.com/LordNed/WindEditor/wiki/BMD-and-BDL-Model-Format — Good SHP1/primitive docs
 
 ---
 
