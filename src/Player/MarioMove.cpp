@@ -91,17 +91,17 @@ bool TMario::moveRequest(const JGeometry::TVec3<f32>& pos)
 	unk1DC += delta.y;
 	unk1EC += delta.z;
 
-	*(f32*)((u8*)this + 0x1FC) += delta.x;
-	*(f32*)((u8*)this + 0x20C) += delta.y;
-	*(f32*)((u8*)this + 0x21C) += delta.z;
+	unk1FC += delta.x;
+	unk20C += delta.y;
+	unk21C += delta.z;
 
-	*(f32*)((u8*)this + 0x22C) += delta.x;
-	*(f32*)((u8*)this + 0x23C) += delta.y;
-	*(f32*)((u8*)this + 0x24C) += delta.z;
+	unk22C += delta.x;
+	unk23C += delta.y;
+	unk24C += delta.z;
 
-	*(f32*)((u8*)this + 0x324) += delta.x;
-	*(f32*)((u8*)this + 0x334) += delta.y;
-	*(f32*)((u8*)this + 0x344) += delta.z;
+	unk324 += delta.x;
+	unk334 += delta.y;
+	unk344 += delta.z;
 
 	if (mRidingActor != NULL) {
 		Mtx localMtx;
@@ -112,11 +112,10 @@ bool TMario::moveRequest(const JGeometry::TVec3<f32>& pos)
 		}
 		PSMTXInverse(localMtx, localMtx);
 
-		*(JGeometry::TVec3<f32>*)((u8*)this + 0x300) =
-		    *(JGeometry::TVec3<f32>*)((u8*)this + 0x2F4);
+		unk300 = unk2F4;
 
 		PSMTXMultVec(localMtx, (Vec*)&mPosition,
-		             (Vec*)((u8*)this + 0x2F4));
+		             (Vec*)&unk2F4);
 	}
 
 	return true;
@@ -599,7 +598,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 {
 	unk2BC = mPosition.y;
 
-	s16 health = *(s16*)((u8*)this + 0x360);
+	s16 health = unk360;
 	s32 halfMaxHealth = mDeParams.mFootPrintTimerMax.value / 2;
 	if (health > halfMaxHealth) {
 		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
@@ -939,7 +938,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	}
 
 	// Speed bonus
-	f32 speedBonus = *(f32*)((u8*)this + 0x368);
+	f32 speedBonus = unk368;
 	int hasSpeedBonus;
 	if (speedBonus > 0.0f)
 		hasSpeedBonus = 1;
@@ -958,15 +957,15 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 		// Decay speed bonus
 		f32 decayParam = mGraffitoParams.mSinkRecover.value;
-		f32 bonus2 = *(f32*)((u8*)this + 0x368);
+		f32 bonus2 = unk368;
 		f32 fAge2 = (f32)maxAge;
 		f32 ratio2 = bonus2 / fAge2;
 		f32 invRatio = 1.0f - ratio2;
 		f32 decay = fAge2 * decayParam;
 		f32 newBonus = bonus2 - invRatio * decay;
-		*(f32*)((u8*)this + 0x368) = newBonus;
-		if (*(f32*)((u8*)this + 0x368) < 0.0f)
-			*(f32*)((u8*)this + 0x368) = 0.0f;
+		unk368 = newBonus;
+		if (unk368 < 0.0f)
+			unk368 = 0.0f;
 	}
 
 	// Yoshi check
@@ -1016,11 +1015,10 @@ void TMario::checkRideReCalc()
 		}
 		PSMTXInverse(localMtx, localMtx);
 
-		*(JGeometry::TVec3<f32>*)((u8*)this + 0x300) =
-		    *(JGeometry::TVec3<f32>*)((u8*)this + 0x2F4);
+		unk300 = unk2F4;
 
 		PSMTXMultVec(localMtx, (Vec*)&mPosition,
-		             (Vec*)((u8*)this + 0x2F4));
+		             (Vec*)&unk2F4);
 	}
 }
 
@@ -1034,7 +1032,7 @@ void TMario::checkController(JDrama::TGraphics* gfx)
 	CTRL->mStickVS16 = (s16)(128.0f * mGamePad->mCompSPos[1]);
 
 	// Scale stick values during special movement
-	f32 timer368 = *(f32*)((u8*)this + 0x368);
+	f32 timer368 = unk368;
 	int bTimerActive;
 	if (timer368 > 0.0f) {
 		bTimerActive = 1;
@@ -1610,7 +1608,7 @@ void TMario::checkGraffitoSlip()
 		onSlipSurface = 0;
 
 	if (onSlipSurface) {
-		*(s16*)((u8*)this + 0x360) = mDeParams.mFootPrintTimerMax.value;
+		unk360 = mDeParams.mFootPrintTimerMax.value;
 
 		u32 action = mAction;
 		if (action == 0x84045D || action == 0x4045E) {
@@ -1744,7 +1742,7 @@ void TMario::checkGraffitoElec()
 		if (motionBits != 0x40) return;
 	}
 
-	if (*(s16*)((u8*)this + 0x360) > 0) return;
+	if (unk360 > 0) return;
 
 	changePlayerStatus(0x20338, 0, false);
 
@@ -1842,7 +1840,7 @@ void TMario::checkGraffito()
 		isPolluted = 1;
 		JGeometry::TVec3<f32> pos;
 		pos.x = mPosition.x;
-		pos.y = *(f32*)((u8*)this + 0xEC);
+		pos.y = mFloorPosition.y;
 		pos.z = mPosition.z;
 
 		pos.z -= 38.0f;
@@ -1869,7 +1867,7 @@ void TMario::checkGraffito()
 		// Single point check
 		JGeometry::TVec3<f32> pos;
 		pos.x = mPosition.x;
-		pos.y = *(f32*)((u8*)this + 0xEC);
+		pos.y = mFloorPosition.y;
 		pos.z = mPosition.z;
 
 		if (gpPollution->isPolluted(pos.x, pos.y, pos.z)) {
@@ -1917,8 +1915,8 @@ void TMario::checkGraffito()
 		break;
 	case 3:
 		if (isPolluted == 1) {
-			mPosition.x = *(f32*)((u8*)this + 0x29C);
-			mPosition.z = *(f32*)((u8*)this + 0x2A4);
+			mPosition.x = unk29C.x;
+			mPosition.z = unk29C.z;
 		}
 		break;
 	default:
@@ -1934,7 +1932,7 @@ void TMario::checkGraffito()
 
 	// Check floor proximity for effects
 	u8 isOnFloor;
-	if (mPosition.y <= *(f32*)((u8*)this + 0xEC) + 8.0f)
+	if (mPosition.y <= mFloorPosition.y + 8.0f)
 		isOnFloor = 1;
 	else
 		isOnFloor = 0;
@@ -1951,15 +1949,15 @@ void TMario::checkGraffito()
 	}
 
 	// Footprint timer
-	s16 footTimer = *(s16*)((u8*)this + 0x360);
+	s16 footTimer = unk360;
 	if (footTimer <= 0)
 		return;
 
-	*(s16*)((u8*)this + 0x360) = footTimer - 1;
+	unk360 = footTimer - 1;
 
 	s16 halfDuration = mDeParams.mFootPrintTimerMax.value;
 	halfDuration = halfDuration / 2;
-	if (*(s16*)((u8*)this + 0x360) <= halfDuration)
+	if (unk360 <= halfDuration)
 		return;
 
 	// Check ground plane flag (inverted)
@@ -2046,7 +2044,7 @@ BOOL TMario::isForceSlip()
 	if (isIce)
 		return true;
 
-	if (*(s32*)((u8*)this + 0x350) == 2) {
+	if (unk350 == 2) {
 		u8 hasBit;
 		if (mState & 0x40)
 			hasBit = 1;
@@ -2220,16 +2218,16 @@ void TMario::thinkDirty()
 		inWater = 0;
 
 	if (inWater) {
-		f32 waterLevel = *(f32*)((u8*)this + 0xF0);
+		f32 waterLevel = mFloorPosition.z;
 		if (mPosition.y > waterLevel - 200.0f)
 			meltInWaterEffect();
-		*(s16*)((u8*)this + 0x360) = 0;
+		unk360 = 0;
 		unk134 -= mDirtyParams.mDecSwimming.value;
 	}
 
 	if (mAction == 0x895 || mAction == 0x896) {
 		unk134 -= mDirtyParams.mDecRotJump.value;
-		*(s16*)((u8*)this + 0x360) = 0;
+		unk360 = 0;
 	}
 
 	u8 hasShirt;
@@ -2240,7 +2238,7 @@ void TMario::thinkDirty()
 
 	if (hasShirt) {
 		unk134 -= mDirtyParams.mDecWaterHit.value;
-		*(s16*)((u8*)this + 0x360) = 0;
+		unk360 = 0;
 	}
 
 	dirtyLimitCheck();
@@ -2283,7 +2281,7 @@ void TMario::checkRideMovement()
 
 	if (groundActor != 0) {
 		if (mAction == 0x8008A9) {
-			u16 subState = *(u16*)((u8*)this + 0x84);
+			u16 subState = mActionState;
 			if (subState == 2 || subState == 3)
 				rideActor = groundActor;
 		}
@@ -2304,10 +2302,10 @@ void TMario::checkRideMovement()
 	}
 
 	if (rideActor != 0) {
-		if (*(TLiveActor**)((u8*)this + 0x2C0) != 0
-		    && *(TLiveActor**)((u8*)this + 0x2C0) == rideActor) {
+		if (mRidingActor != 0
+		    && mRidingActor == rideActor) {
 			// sameRide
-			TLiveActor* cur = *(TLiveActor**)((u8*)this + 0x2C0);
+			TLiveActor* cur = mRidingActor;
 			Mtx stackMtx;
 			if (cur->getRootJointMtx() == 0) {
 				SMS_GetActorMtx(*cur, stackMtx);
@@ -2316,27 +2314,27 @@ void TMario::checkRideMovement()
 			}
 
 			PSMTXMultVec(stackMtx,
-			             (Vec*)((u8*)this + 0x2F4),
+			             (Vec*)&unk2F4,
 			             (Vec*)&mPosition);
 
-			TLiveActor* ride = *(TLiveActor**)((u8*)this + 0x2C0);
-			f32 savedRot = *(f32*)((u8*)this + 0x30C);
+			TLiveActor* ride = mRidingActor;
+			f32 savedRot = unk30C;
 			f32 currentRot = ride->mRotation.y;
 			f32 delta = currentRot - savedRot;
 			s16 faceAngle = mFaceAngle.y;
 			mFaceAngle.y =
 			    faceAngle + (int)(32768.0f * delta / 180.0f);
 
-			ride = *(TLiveActor**)((u8*)this + 0x2C0);
-			*(f32*)((u8*)this + 0x30C) = ride->mRotation.y;
+			ride = mRidingActor;
+			unk30C = ride->mRotation.y;
 		} else {
 			// newRide
-			*(TLiveActor**)((u8*)this + 0x2C0) = rideActor;
+			mRidingActor = rideActor;
 
-			TLiveActor* ride = *(TLiveActor**)((u8*)this + 0x2C0);
-			*(f32*)((u8*)this + 0x30C) = ride->mRotation.y;
+			TLiveActor* ride = mRidingActor;
+			unk30C = ride->mRotation.y;
 
-			ride = *(TLiveActor**)((u8*)this + 0x2C0);
+			ride = mRidingActor;
 			if (ride != 0) {
 				Mtx stackMtx;
 				if (ride->getRootJointMtx() == 0) {
@@ -2347,11 +2345,11 @@ void TMario::checkRideMovement()
 
 				PSMTXInverse(stackMtx, stackMtx);
 
-				*(Vec*)((u8*)this + 0x300) = *(Vec*)((u8*)this + 0x2F4);
+				unk300 = unk2F4;
 
 				PSMTXMultVec(stackMtx,
 				             (Vec*)&mPosition,
-				             (Vec*)((u8*)this + 0x2F4));
+				             (Vec*)&unk2F4);
 			}
 		}
 	} else {
@@ -2604,16 +2602,16 @@ void TMario::checkCurrentPlane()
 	// Ground check
 	f32 f30 = mPosition.z;
 	f32 f31 = mPosition.x;
-	*(f32*)((u8*)this + 0xEC)
+	mFloorPosition.y
 	    = gpMap->checkGround(f31, 25.0f + mPosition.y, f30, &mGroundPlane);
 
 	if (mGroundPlane->isMarioThrough()) {
-		*(f32*)((u8*)this + 0xEC) = gpMap->checkGround(
-		    f31, *(f32*)((u8*)this + 0xEC) - 1.0f, f30, &mGroundPlane);
+		mFloorPosition.y = gpMap->checkGround(
+		    f31, mFloorPosition.y - 1.0f, f30, &mGroundPlane);
 	}
 
 	// Roof check
-	*(f32*)((u8*)this + 0xE8)
+	mFloorPosition.x
 	    = gpMap->checkRoof(mPosition.x, 80.0f + mPosition.y, mPosition.z,
 	                       &mRoofPlane);
 
@@ -2671,7 +2669,7 @@ void TMario::checkCurrentPlane()
 		if (!skip3) {
 			// Check ground damage
 			u8 nearGround;
-			if (mPosition.y <= 4.0f + *(f32*)((u8*)this + 0xEC)) {
+			if (mPosition.y <= 4.0f + mFloorPosition.y) {
 				nearGround = 1;
 			} else {
 				nearGround = 0;
@@ -2719,7 +2717,7 @@ void TMario::checkCurrentPlane()
 			}
 
 			// Check roof damage
-			if (160.0f + mPosition.y > *(f32*)((u8*)this + 0xE8)) {
+			if (160.0f + mPosition.y > mFloorPosition.x) {
 				TBGCheckData* roof = mRoofPlane;
 				u16 rt = roof->mBGType;
 				u8 isDmgR;
@@ -2764,7 +2762,7 @@ void TMario::checkCurrentPlane()
 		// invert: isLegal means data IS illegal, so !isLegal means legal
 		if (isLegal != 1) {
 			// compute slope angle
-			*(s16*)((u8*)this + 0xF4) = matan(
+			mSlopeAngle = matan(
 			    ground->mNormal.z, ground->mNormal.x);
 
 			s32 slipResult;
@@ -2800,7 +2798,7 @@ void TMario::checkCurrentPlane()
 
 			// High slope check
 			if (mPosition.y
-			    > 100.0f + *(f32*)((u8*)this + 0xEC)) {
+			    > 100.0f + mFloorPosition.y) {
 				mInput |= 0x4;
 			}
 		}
@@ -2865,7 +2863,7 @@ void TMario::thinkParams()
 			if (!nonZero) {
 				belowThreshold = 0;
 			} else if (*(f32*)((u8*)this + 0x170)
-			           < *(f32*)((u8*)this + 0xF0) - mSwimParams.mCanBreathDepth.value) {
+			           < mFloorPosition.z - mSwimParams.mCanBreathDepth.value) {
 				belowThreshold = 1;
 			} else {
 				belowThreshold = 0;
@@ -2992,7 +2990,7 @@ void TMario::thinkWaterSurface()
 	if ((u8)wasOnSurface == 1) {
 		r30 = 1;
 	} else {
-		*(f32*)((u8*)this + 0xF0) = mPosition.y;
+		mFloorPosition.z = mPosition.y;
 	}
 
 	// Clear water surface flags
@@ -3009,8 +3007,8 @@ void TMario::thinkWaterSurface()
 		isPool = 0;
 
 	if (isPool) {
-		*(f32*)((u8*)this + 0xF0) = gpPoolManager->getWaterLevel(mGroundPlane);
-		if (*(f32*)((u8*)this + 0xF0) > mPosition.y) {
+		mFloorPosition.z = gpPoolManager->getWaterLevel(mGroundPlane);
+		if (mFloorPosition.z > mPosition.y) {
 			r30 = 1;
 			mState |= 0x10000;
 		}
@@ -3018,13 +3016,13 @@ void TMario::thinkWaterSurface()
 
 	// Check height above ground with offset
 	{
-		f32 heightDiff = mPosition.y - *(f32*)((u8*)this + 0x2A0);
+		f32 heightDiff = mPosition.y - unk29C.y;
 		f32 clampedDiff = heightDiff;
 		if (heightDiff > 0.0f)
 			clampedDiff = 0.0f;
 
 		f32 checkHeight
-		    = *(f32*)((u8*)this + 0xF0) - clampedDiff
+		    = mFloorPosition.z - clampedDiff
 		      + mSwimParams.mWaterLevelCheckHeight.value;
 		f32 groundHeight = gpMap->checkGround(
 		    mPosition.x, checkHeight, mPosition.z, &mWaterFloor);
@@ -3041,8 +3039,8 @@ void TMario::thinkWaterSurface()
 			isWaterSurface = 0;
 
 		if (isWaterSurface) {
-			*(f32*)((u8*)this + 0xF0) = groundHeight;
-			if (*(f32*)((u8*)this + 0xF0) >= mPosition.y) {
+			mFloorPosition.z = groundHeight;
+			if (mFloorPosition.z >= mPosition.y) {
 				r30 = 1;
 				mState |= 0x20000;
 			}
@@ -3067,7 +3065,7 @@ void TMario::thinkWaterSurface()
 	if (r30 != 0) {
 		// Water surface logic
 		f32 posY2 = mPosition.y;
-		f32 waterLvl = *(f32*)((u8*)this + 0xF0);
+		f32 waterLvl = mFloorPosition.z;
 		if (posY2 < waterLvl) {
 
 		// Check deep water threshold
@@ -3091,7 +3089,7 @@ void TMario::thinkWaterSurface()
 
 			// Check ripple height
 			f32 rippleCheck = 160.0f + mPosition.y;
-			if (rippleCheck <= *(f32*)((u8*)this + 0xF0))
+			if (rippleCheck <= mFloorPosition.z)
 				rippleEffect();
 
 			swimmingBubbleEffect();
@@ -3160,7 +3158,7 @@ void TMario::thinkWaterSurface()
 					// Wading
 					changePlayerStatus(0x24D5, 0, true);
 					mVel.y = 0.0f;
-					mPosition.y = *(f32*)((u8*)this + 0xF0);
+					mPosition.y = mFloorPosition.z;
 					startSoundActor(0x828);
 				} else {
 					// Shallow water entry
@@ -3217,12 +3215,12 @@ void TMario::thinkWaterSurface()
 			r30 = 0;
 
 		s16 rotY = mModelFaceAngle;
-		J3DGetTranslateRotateMtx(0, rotY, 0, mPosition.x, *(f32*)((u8*)this + 0xF0), mPosition.z,
+		J3DGetTranslateRotateMtx(0, rotY, 0, mPosition.x, mFloorPosition.z, mPosition.z,
 		                         *(Mtx*)((u8*)this + 0x220));
 
 		// Store water position
 		*(f32*)((u8*)this + 0x190) = mPosition.x;
-		*(f32*)((u8*)this + 0x194) = *(f32*)((u8*)this + 0xF0);
+		*(f32*)((u8*)this + 0x194) = mFloorPosition.z;
 		*(f32*)((u8*)this + 0x198) = mPosition.z;
 
 		// Copy joint matrix
@@ -3235,12 +3233,12 @@ void TMario::thinkWaterSurface()
 
 		// Check if water state changed
 		if (r30 != r31) {
-			inOutWaterEffect(*(f32*)((u8*)this + 0xF0));
-			f32 splashHeight = *(f32*)((u8*)this + 0xF0) - *(f32*)((u8*)this + 0xEC);
+			inOutWaterEffect(mFloorPosition.z);
+			f32 splashHeight = mFloorPosition.z - mFloorPosition.y;
 
 			if (r31 == 1 && r30 == 0) {
 				// Entering water
-				*(s16*)((u8*)this + 0x362) = 0x78;
+				unk362 = 0x78;
 
 				if (splashHeight < 32.0f) {
 					// Small splash
@@ -3294,7 +3292,7 @@ void TMario::thinkWaterSurface()
 			isInWater2 = 0;
 
 		if (isInWater2) {
-			f32 airThreshold = *(f32*)((u8*)this + 0xF0) - mSwimParams.mCanBreathDepth.value;
+			f32 airThreshold = mFloorPosition.z - mSwimParams.mCanBreathDepth.value;
 			if (*(f32*)((u8*)this + 0x170) < airThreshold) {
 				shouldDrown = 1;
 			}
@@ -3712,10 +3710,10 @@ void TMario::checkWet()
 	if (onYoshiFlag)
 		return;
 
-	s16 wetTimer = *(s16*)((u8*)this + 0x362);
+	s16 wetTimer = unk362;
 	if (wetTimer <= 0)
 		return;
-	*(s16*)((u8*)this + 0x362) = wetTimer - 1;
+	unk362 = wetTimer - 1;
 
 	const TBGCheckData* check;
 	f32 posZ = mPosition.z;
@@ -3739,7 +3737,7 @@ void TMario::checkWet()
 	if (isWater)
 		return;
 
-	if (*(f32*)((u8*)this + 0xF0) > mPosition.y)
+	if (mFloorPosition.z > mPosition.y)
 		return;
 
 	u8 actionCheck;
@@ -3750,7 +3748,7 @@ void TMario::checkWet()
 	if (actionCheck)
 		return;
 
-	if (*(s16*)((u8*)this + 0x362) & 7)
+	if (unk362 & 7)
 		return;
 
 	TWaterEmitInfo* emitInfo = (TWaterEmitInfo*)*(u32*)((u8*)this + 0x158);
@@ -3793,7 +3791,7 @@ void TMario::checkEnforceJump()
 		return;
 
 	u8 yCheck;
-	if (mPosition.y <= 4.0f + *(f32*)((u8*)this + 0xEC))
+	if (mPosition.y <= 4.0f + mFloorPosition.y)
 		yCheck = 1;
 	else
 		yCheck = 0;
@@ -3801,7 +3799,7 @@ void TMario::checkEnforceJump()
 	if (!yCheck)
 		return;
 
-	if (!(*(u32*)((u8*)this + 0x80) & 0x800))
+	if (!(mPrevAction & 0x800))
 		return;
 
 	gpMSound->startForceJumpSound((Vec*)&mPosition, *(u32*)((u8*)this + 0x4E8),
@@ -3880,9 +3878,9 @@ void TMario::checkReturn()
 	if (!isSafe)
 		return;
 
-	*(JGeometry::TVec3<f32>*)((u8*)this + 0x2A8) = mPosition;
-	*(u32*)((u8*)this + 0x2B4) = *(u32*)((u8*)this + 0x94);
-	*(u16*)((u8*)this + 0x2B8) = *(u16*)((u8*)this + 0x98);
+	*(JGeometry::TVec3<f32>*)&unk2A8 = mPosition;
+	unk2B4 = *(u32*)((u8*)this + 0x94);
+	unk2B8 = (u16)mFaceAngle.z;
 }
 
 BOOL TMario::checkStickRotate(int* outDirection)
@@ -4347,11 +4345,11 @@ void TMario::checkSink()
 	if (groundBit) return;
 
 	if (100.0f + mFloorPosition.y < mPosition.y) {
-		*(f32*)((u8*)this + 0x368) = 0.0f;
+		unk368 = 0.0f;
 		return;
 	}
 
-	s32 sinkState = *(s32*)((u8*)this + 0x350);
+	s32 sinkState = unk350;
 	u8 sinkHandled = 0;
 
 	if (sinkState == 0) {
@@ -4361,14 +4359,14 @@ void TMario::checkSink()
 		else
 			bit6 = 0;
 		if (bit6) {
-			*(f32*)((u8*)this + 0x368) += 1.0f;
-			*(s16*)((u8*)this + 0x360) = mDeParams.mFootPrintTimerMax.value;
+			unk368 += 1.0f;
+			unk360 = mDeParams.mFootPrintTimerMax.value;
 
 			if (*(s16*)((u8*)this + 0x120) > 0) {
 				f32 limit = (f32)mGraffitoParams.mSinkTime.value
 				            * mGraffitoParams.mSinkDmgDepth.value;
-				if (*(f32*)((u8*)this + 0x368) > limit)
-					*(f32*)((u8*)this + 0x368) = limit;
+				if (unk368 > limit)
+					unk368 = limit;
 			}
 
 			s16 interval = mGraffitoParams.mSinkDmgTime.value;
@@ -4382,7 +4380,7 @@ void TMario::checkSink()
 				    0x100B, (Vec*)&mPosition, 0, (JAISound**)0, 0, 4);
 			}
 
-			if (*(f32*)((u8*)this + 0x368) > (f32)mGraffitoParams.mSinkTime.value) {
+			if (unk368 > (f32)mGraffitoParams.mSinkTime.value) {
 				loserExec();
 				changePlayerStatus(0x10001123, 0, false);
 			}
@@ -4409,8 +4407,8 @@ void TMario::checkSink()
 			mVel.y = 0.0f;
 			mVel.z = 0.0f;
 			mForwardVel = 0.0f;
-			*(f32*)((u8*)this + 0xB4) = 0.0f;
-			*(f32*)((u8*)this + 0xB8) = 0.0f;
+			mSlideVelX = 0.0f;
+			mSlideVelZ = 0.0f;
 			loserExec();
 			changePlayerStatus(0x10001123, 0, false);
 			sinkHandled = 1;
@@ -4420,7 +4418,7 @@ void TMario::checkSink()
 	if (!sinkHandled) {
 		*(f32*)((u8*)this + 0x374) = 0.0f;
 		*(f32*)((u8*)this + 0x378) = 0.0f;
-		*(f32*)((u8*)this + 0x368) = 0.0f;
+		unk368 = 0.0f;
 	}
 }
 
@@ -4436,7 +4434,7 @@ void TMario::getRidingMtx(MtxPtr outMtx)
 void TMario::playerControl(JDrama::TGraphics* gfx)
 {
 	// Save angle and position history
-	*(s16*)((u8*)this + 0x9C) = mFaceAngle.y;
+	unk9C = mFaceAngle.y;
 	*(JGeometry::TVec3<f32>*)((u8*)this + 0x29C) = mPosition;
 	mSubState &= ~0x8;
 
@@ -4575,11 +4573,10 @@ void TMario::playerControl(JDrama::TGraphics* gfx)
 		}
 		PSMTXInverse(localMtx, localMtx);
 
-		*(JGeometry::TVec3<f32>*)((u8*)this + 0x300) =
-		    *(JGeometry::TVec3<f32>*)((u8*)this + 0x2F4);
+		unk300 = unk2F4;
 
 		PSMTXMultVec(localMtx, (Vec*)&mPosition,
-		             (Vec*)((u8*)this + 0x2F4));
+		             (Vec*)&unk2F4);
 	}
 
 	checkWet();
