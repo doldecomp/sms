@@ -1222,7 +1222,9 @@ public:
 	/* 0xB8 */ f32 mSlideVelZ;
 
 	/* 0xBC */ f32 unkBC;
-	/* 0xC0 */ char unkC0[0x18];
+	/* 0xC0 */ f32 mDashSpeed;
+	/* 0xC4 */ s16 mDashTimer;
+	/* 0xC6 */ char unkC6[0xD8 - 0xC6];
 
 	/* 0xD8 */ const TBGCheckData* mWallPlane;   // TBGCheckData 0xD8
 	/* 0xDC */ const TBGCheckData* mRoofPlane;   // TBGCheckData 0xDC

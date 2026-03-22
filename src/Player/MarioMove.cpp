@@ -1255,13 +1255,13 @@ void TMario::checkController(JDrama::TGraphics* gfx)
 
 				f32 rotSpeed = mDeParams.mDashAcc.value;
 
-				*(f32*)unkC0 += rotSpeed;
-				if (*(f32*)unkC0 > 32.0f) {
-					*(f32*)unkC0 = 32.0f;
-					*(s16*)(unkC0 + 4) = *(s16*)(unkC0 + 4) + 1;
-					if ((f32)*(s16*)(unkC0 + 4)
+				mDashSpeed += rotSpeed;
+				if (mDashSpeed > 32.0f) {
+					mDashSpeed = 32.0f;
+					mDashTimer = mDashTimer + 1;
+					if ((f32)mDashTimer
 					    > (f32)mDeParams.mDashStartTime.value) {
-						*(s16*)(unkC0 + 4) = mDeParams.mDashStartTime.value;
+						mDashTimer = mDeParams.mDashStartTime.value;
 
 						u8 hasFlag;
 						if (mState & 0x4000) {
@@ -1295,38 +1295,38 @@ void TMario::checkController(JDrama::TGraphics* gfx)
 					    || mAction == 0x24D5) {
 						// keep going
 					} else {
-						*(s16*)(unkC0 + 4) = 0;
+						mDashTimer = 0;
 						mState &= ~0x4000;
 					}
 				} else {
-					*(s16*)(unkC0 + 4) = 0;
+					mDashTimer = 0;
 					mState &= ~0x4000;
 				}
 
-				mIntendedMag = *(f32*)unkC0;
-				mWaterGun->rotateProp(*(f32*)unkC0);
+				mIntendedMag = mDashSpeed;
+				mWaterGun->rotateProp(mDashSpeed);
 			} else {
-				if (*(f32*)unkC0 > 0.1f) {
+				if (mDashSpeed > 0.1f) {
 					if (0.0f == mIntendedMag)
 						mIntendedYaw = mFaceAngle.y;
-					*(f32*)unkC0 *= mDeParams.mDashBrake.value;
-					mIntendedMag = *(f32*)unkC0;
+					mDashSpeed *= mDeParams.mDashBrake.value;
+					mIntendedMag = mDashSpeed;
 				} else {
-					*(f32*)unkC0 = 0.0f;
+					mDashSpeed = 0.0f;
 				}
-				*(s16*)(unkC0 + 4) = 0;
+				mDashTimer = 0;
 				mState &= ~0x4000;
 			}
 		} else {
-			if (*(f32*)unkC0 > 0.1f) {
+			if (mDashSpeed > 0.1f) {
 				if (0.0f == mIntendedMag)
 					mIntendedYaw = mFaceAngle.y;
-				*(f32*)unkC0 *= mDeParams.mDashBrake.value;
-				mIntendedMag = *(f32*)unkC0;
+				mDashSpeed *= mDeParams.mDashBrake.value;
+				mIntendedMag = mDashSpeed;
 			} else {
-				*(f32*)unkC0 = 0.0f;
+				mDashSpeed = 0.0f;
 			}
-			*(s16*)(unkC0 + 4) = 0;
+			mDashTimer = 0;
 			mState &= ~0x4000;
 		}
 
