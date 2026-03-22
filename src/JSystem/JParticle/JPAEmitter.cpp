@@ -13,55 +13,62 @@ JPAEmitterInfo* JPAGetEmitterInfoPtr() { return &JPAEmitterInfoObj; }
 
 JPABaseEmitter::JPABaseEmitter()
     : unk0(this)
-    , unk14(1.0f)
-    , unk18(0.0f)
-    , unk1C(1.0f)
     , mRng(0)
 {
-	PSMTXIdentity(unk124);
-
-	// TODO: vectors?
+	MTXIdentity(unk124);
 
 	unk154.set(1.0f, 1.0f, 1.0f);
 
 	unk174.set(1.0f, 1.0f, 1.0f);
 
-	unk16C.x = unk16C.y = unk16C.z = 0;
-
-	unk160.x = unk160.y = unk160.z = 0.0f;
+	unk16C.zero();
+	unk160.zero();
 
 	unk1B8 = 0.0f;
-	unk1BC = 0.0f;
-	unk1C0 = 1.0f;
+
+	mRateTimer = 0.0f;
+
+	mRateTimerStep = 1.0f;
 
 	unk110                = nullptr;
 	unk114                = nullptr;
 	mEmitterDataBlockInfo = nullptr;
 
 	unk172 = 0;
-	unk11C = 0;
-	unk11C |= 0x30;
-	mRng.value = JPAEmitterInfoObj.unk8.next();
+
+	initStatus(0);
+	setStatus(STATUS_FIRST_EMIT | STATUS_EMIT_NEXT_FRAME);
+	mRng.setSeed(JPAEmitterInfoObj.unk8.get());
 }
 
-f32 JPABaseEmitter::getFovy() { return JPAEmitterInfoObj.unk15C; }
+f32 JPABaseEmitter::getFovy() { return JPAEmitterInfoObj.mFovy; }
 
-f32 JPABaseEmitter::getAspect() { return JPAEmitterInfoObj.unk160; }
+f32 JPABaseEmitter::getAspect() { return JPAEmitterInfoObj.mAspect; }
 
-void JPABaseEmitter::newParticle() { }
+JPABaseParticle* JPABaseEmitter::newParticle()
+{
+	JPAParticle* particle
+	    = (JPAParticle*)mManager->unk0.getFirst()->getObject();
+
+	mManager->unk0.remove(particle->getLinkBufferPtr());
+	particle->setStatus(JPABaseParticle::FLAG_JUST_BORN);
+
+	return particle;
+}
 
 void JPABaseEmitter::deleteBaseParticle(JPABaseParticle* particle,
                                         JSUList<JPABaseParticle>* list)
 {
 	particle->init();
 	list->remove(particle->getLinkBufferPtr());
-	unk10C->unk0.prepend(particle->getLinkBufferPtr());
+	mManager->unk0.prepend(particle->getLinkBufferPtr());
 }
 
 void JPABaseEmitter::deleteParticle(JPABaseParticle* particle) { }
 
 void JPABaseEmitter::deleteAllParticle()
 {
+	// TODO: this is hella fake
 	JSUList<JPABaseParticle>* list;
 	JSULink<JPABaseParticle>* it;
 
@@ -84,43 +91,40 @@ void JPABaseEmitter::deleteAllParticle()
 
 void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 {
-	JGeometry::TVec3<f32> parentUnk20 = parent->unk14;
-	JGeometry::TVec3<f32> parentUnk14 = parent->unk14;
-
 	JGeometry::TVec3<f32> local_c0(0.0f, 0.0f, 0.0f);
 
 	JPASweepShape* sweepShape = mEmitterDataBlockInfo->unkC;
 	int count                 = sweepShape->unk42;
+
+	JGeometry::TVec3<f32> parentUnk20;
+	parentUnk20.set(parent->mLocalPosition);
+	JGeometry::TVec3<f32> parentUnk14;
+	parentUnk14.set(parent->unk14);
 
 	bool bVar1 = false;
 	if (!JPAEmitterInfoObj.unk17F)
 		bVar1 = true;
 
 	for (int i = 0; i < count; ++i) {
-
-		if (unk10C->unk0.getNumLinks() == 0)
+		if (mManager->unk0.getNumLinks() == 0)
 			break;
 
-		JPABaseParticle* baseParticle = unk10C->unk0.getFirst()->getObject();
-		unk10C->unk0.remove(baseParticle->getLinkBufferPtr());
-		JPAParticle* particle = (JPAParticle*)baseParticle;
+		JPAParticle* particle = (JPAParticle*)newParticle();
+		mChildParticleList.prepend(particle->getLinkBufferPtr());
 
-		baseParticle->unk10 |= 0x1;
-		mChildParticleList.prepend(baseParticle->getLinkBufferPtr());
-
-		baseParticle->unk10 |= 0x4;
-		baseParticle->unk48 = 0.0f;
-		baseParticle->unk4C = sweepShape->unk40;
-		baseParticle->unk50 = unk114;
+		particle->setStatus(JPABaseParticle::FLAG_UNK4);
+		particle->mLifeProgress = 0.0f;
+		particle->mLifetime     = sweepShape->unk40;
+		particle->unk50         = unk114;
 
 		if (bVar1) {
-			baseParticle->unk10 |= 0x40;
+			particle->setStatus(JPABaseParticle::FLAG_IGNORE_FIELDS);
 		} else {
 			particle->mDragForce        = parent->getDragForce();
 			particle->mCurrentDragForce = parent->getCurrentDragForce();
 		}
 
-		particle->mVelocity = local_c0;
+		particle->mVelocity.set(local_c0);
 
 		f32 sweepShapeUnk1C = sweepShape->unk1C;
 		if (sweepShapeUnk1C != 0.0f) {
@@ -128,145 +132,130 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 			baseVel.scale(sweepShapeUnk1C, parent->accessBaseVelVec());
 			JGeometry::TVec3<f32> fVel;
 			fVel.scale(sweepShapeUnk1C, parent->accessFVelVec());
-			baseParticle->setBaseVelVec(baseVel);
-			particle->mAcceleration = fVel;
+			particle->setBaseVelVec(baseVel);
+			particle->mAcceleration.set(fVel);
 		} else {
-			baseParticle->setBaseVelVec(local_c0);
-			particle->mAcceleration = local_c0;
+			particle->setBaseVelVec(local_c0);
+			particle->mAcceleration.set(local_c0);
 		}
 
 		if (sweepShape->unkC != 0.0f) {
-			JGeometry::TVec3<f32> vec(mRng.get_ufloat_1() - 0.5f,
-			                          mRng.get_ufloat_1() - 0.5f,
-			                          mRng.get_ufloat_1() - 0.5f);
-			vec.setLength(vec, sweepShape->unk20);
-			baseParticle->addBaseVelVec(vec);
+			f32 f18 = getRandomRF() * (sweepShape->unkC * sweepShape->unk20);
+			f18 += sweepShape->unkC;
+
+			JGeometry::TVec3<f32> vec(getRandomSF(), getRandomSF(),
+			                          getRandomSF());
+			vec.setLength(f18);
+			particle->addBaseVelVec(vec);
 		}
 
-		particle->unk68.x = 0.0f;
-		particle->unk68.y = -1.0f;
-		particle->unk68.z = 0.0f;
+		particle->unk68.set(0.0f, -1.0f, 0.0f);
 
 		particle->unk78           = sweepShape->unk24;
 		particle->mAirResistance  = parent->getAirResistance();
 		particle->mDynamicsWeight = parent->getDynamicsWeight();
-		baseParticle->setVelocity();
+		particle->setVelocity();
 
-		if (unk188 & 0x10 ? true : false)
-			baseParticle->unk10 |= 0x20;
+		if (checkFlag(EMIT_FLAG_FOLLOW_EMITTER_CHILD))
+			particle->setStatus(JPABaseParticle::FLAG_FOLLOW_EMITTER);
 
-		baseParticle->unk14          = parentUnk14;
-		baseParticle->mLocalPosition = parentUnk20;
+		particle->unk14.set(parentUnk14);
+		particle->mLocalPosition.set(parentUnk20);
 
 		f32 sweepShapeUnk8 = sweepShape->unk8;
 		if (sweepShapeUnk8 != 0.0f) {
 			Mtx rotMtx;
 			JPAGetXYRotateMtx(mRng.get(), mRng.get(), rotMtx);
 			JGeometry::TVec3<f32> vec(0.0f, 0.0f,
-			                          mRng.get_ufloat_1() * sweepShapeUnk8);
+			                          getRandomF() * sweepShapeUnk8);
 			MTXMultVec(rotMtx, vec, vec);
-			baseParticle->mLocalPosition.add(vec);
+			particle->mLocalPosition.add(vec);
 		}
 
-		mDraw.initChild(parent, baseParticle);
-		baseParticle->unk54 = parent->unk54;
+		mDraw.initChild(parent, particle);
+		particle->unk54 = parent->unk54;
 	}
 }
 
 void JPABaseEmitter::getEmitterGlobalTranslation(JGeometry::TVec3<f32>& vec)
 {
-	Mtx local_3c;
-	PSMTXScale(local_3c, unk154.x, unk154.y, unk154.z);
-	PSMTXConcat(unk124, local_3c, local_3c);
-
-	vec.x = unk160.x //
-	        + local_3c[0][0] * unk19C.x + local_3c[0][1] * unk19C.y
-	        + local_3c[0][2] * unk19C.z;
-	vec.y = unk160.y //
-	        + local_3c[1][0] * unk19C.x + local_3c[1][1] * unk19C.y
-	        + local_3c[1][2] * unk19C.z;
-	vec.z = unk160.z //
-	        + local_3c[2][0] * unk19C.x + local_3c[2][1] * unk19C.y
-	        + local_3c[2][2] * unk19C.z;
+	TPosition3f local_3c;
+	MTXScale(local_3c, unk154.x, unk154.y, unk154.z);
+	MTXConcat(unk124, local_3c, local_3c);
+	local_3c.setTrans(unk160);
+	local_3c.mult(unk19C, vec);
 }
 
 void JPABaseEmitter::calcEmitterGlobalParams()
 {
-	JPAEmitterInfoObj.unk4 = &mFieldManager;
-	if (mEmitterDataBlockInfo->unkC == nullptr
-	    || mEmitterDataBlockInfo->unkC->unk48 == 0)
-		JPAEmitterInfoObj.unk17F = 0;
-	else
-		JPAEmitterInfoObj.unk17F = 1;
-
 	JPAEmitterInfoObj.unk0 = this;
-	JPAGetXYZRotateMtx(unk1A8 * 0xB6, unk1AA * 0xB6, unk1AC * 0xB6,
-	                   JPAEmitterInfoObj.unkCC.mMtx);
+	JPAEmitterInfoObj.unk4 = &mFieldManager;
+
+	if (mEmitterDataBlockInfo->unkC != nullptr
+	    && mEmitterDataBlockInfo->unkC->unk48 != 0)
+		JPAEmitterInfoObj.unk17F = 1;
+	else
+		JPAEmitterInfoObj.unk17F = 0;
+
+	JPAGetXYZRotateMtx(unk1A8.x * 182, unk1A8.y * 182, unk1A8.z * 182,
+	                   JPAEmitterInfoObj.unkCC);
 	Mtx afStack_48;
-	PSMTXCopy(JPAEmitterInfoObj.unkCC.mMtx, afStack_48);
-	JPAEmitterInfoObj.unk30 = unk190;
-	Mtx afStack_78;
-	PSMTXScale(afStack_78, unk190.x, unk190.y, unk190.z);
-	PSMTXConcat(JPAEmitterInfoObj.unkCC.mMtx, afStack_78,
-	            JPAEmitterInfoObj.unkFC.mMtx);
-	JGeometry::TVec3<f32> local_3C = unk19C;
-	JPAEmitterInfoObj.unk18        = unk154;
-	JPAEmitterInfoObj.unk30.x *= unk154.x;
-	JPAEmitterInfoObj.unk30.y *= unk154.y;
-	JPAEmitterInfoObj.unk30.z *= unk154.z;
+	MTXCopy(JPAEmitterInfoObj.unkCC, afStack_48);
 
-	JPAEmitterInfoObj.unkC.x = JPAEmitterInfoObj.unk18.x * 1.0f;
-	JPAEmitterInfoObj.unkC.y = JPAEmitterInfoObj.unk18.y * 1.0f;
-	JPAEmitterInfoObj.unkC.z = JPAEmitterInfoObj.unk18.z * 1.0f;
+	JPAEmitterInfoObj.unk30.set(unk190);
 
-	PSMTXScale(JPAEmitterInfoObj.unk9C.mMtx, unk154.x, unk154.y, unk154.z);
-	PSMTXCopy(unk124, JPAEmitterInfoObj.unk6C.mMtx);
-	PSMTXConcat(JPAEmitterInfoObj.unk6C.mMtx, JPAEmitterInfoObj.unkCC.mMtx,
-	            JPAEmitterInfoObj.unkCC.mMtx);
-	PSMTXConcat(JPAEmitterInfoObj.unk6C.mMtx, JPAEmitterInfoObj.unkFC.mMtx,
-	            JPAEmitterInfoObj.unkFC.mMtx);
-	PSMTXConcat(JPAEmitterInfoObj.unk6C.mMtx, JPAEmitterInfoObj.unk9C.mMtx,
-	            JPAEmitterInfoObj.unk9C.mMtx);
+	TPosition3f local_A0;
+	MTXScale(local_A0, unk190.x, unk190.y, unk190.z);
+	MTXConcat(JPAEmitterInfoObj.unkCC, local_A0, JPAEmitterInfoObj.unkFC);
+	local_A0.setTrans(unk19C);
 
-	JPAEmitterInfoObj.unk9C.mMtx[0][3] = unk160.x;
-	JPAEmitterInfoObj.unk9C.mMtx[1][3] = unk160.y;
-	JPAEmitterInfoObj.unk9C.mMtx[2][3] = unk160.z;
+	JPAEmitterInfoObj.unk18.set(unk154);
+	JPAEmitterInfoObj.unk30.mul(unk154);
 
-	PSMTXConcat(JPAEmitterInfoObj.unk9C.mMtx, afStack_48, afStack_48);
-	JPAEmitterInfoObj.unk24       = local_3C;
-	JPAEmitterInfoObj.unk48[0][0] = JPAEmitterInfoObj.unkCC.mMtx[0][0];
-	JPAEmitterInfoObj.unk48[0][1] = JPAEmitterInfoObj.unkCC.mMtx[1][0];
-	JPAEmitterInfoObj.unk48[0][2] = JPAEmitterInfoObj.unkCC.mMtx[2][0];
-	JPAEmitterInfoObj.unk48[1][0] = JPAEmitterInfoObj.unkCC.mMtx[0][1];
-	JPAEmitterInfoObj.unk48[1][1] = JPAEmitterInfoObj.unkCC.mMtx[1][1];
-	JPAEmitterInfoObj.unk48[1][2] = JPAEmitterInfoObj.unkCC.mMtx[2][1];
-	JPAEmitterInfoObj.unk48[2][0] = JPAEmitterInfoObj.unkCC.mMtx[0][2];
-	JPAEmitterInfoObj.unk48[2][1] = JPAEmitterInfoObj.unkCC.mMtx[1][2];
-	JPAEmitterInfoObj.unk48[2][2] = JPAEmitterInfoObj.unkCC.mMtx[2][2];
+	JPAEmitterInfoObj.unkC.scale(1.0f, JPAEmitterInfoObj.unk18);
 
-	Vec local_84;
-	local_84.x = 0.0f;
-	local_84.y = 0.0f;
-	local_84.z = 1.0f;
+	MTXScale(JPAEmitterInfoObj.unk9C, unk154.x, unk154.y, unk154.z);
+
+	MTXCopy(unk124, JPAEmitterInfoObj.unk6C);
+	MTXConcat(JPAEmitterInfoObj.unk6C, JPAEmitterInfoObj.unkCC,
+	          JPAEmitterInfoObj.unkCC);
+	MTXConcat(JPAEmitterInfoObj.unk6C, JPAEmitterInfoObj.unkFC,
+	          JPAEmitterInfoObj.unkFC);
+	MTXConcat(JPAEmitterInfoObj.unk6C, JPAEmitterInfoObj.unk9C,
+	          JPAEmitterInfoObj.unk9C);
+
+	JPAEmitterInfoObj.unk9C.setTrans(unk160);
+
+	MTXConcat(JPAEmitterInfoObj.unk9C.mMtx, afStack_48, afStack_48);
+	local_A0.getTrans(JPAEmitterInfoObj.unk24);
+
+	JGeometry::TVec3<f32> xDir;
+	JPAEmitterInfoObj.unkCC.getXDir(xDir);
+	JPAEmitterInfoObj.unk48[0][0] = xDir.x;
+	JPAEmitterInfoObj.unk48[0][1] = xDir.y;
+	JPAEmitterInfoObj.unk48[0][2] = xDir.z;
+
+	JGeometry::TVec3<f32> yDir;
+	JPAEmitterInfoObj.unkCC.getXDir(yDir);
+	JPAEmitterInfoObj.unk48[1][0] = yDir.x;
+	JPAEmitterInfoObj.unk48[1][1] = yDir.y;
+	JPAEmitterInfoObj.unk48[1][2] = yDir.z;
+
+	JGeometry::TVec3<f32> zDir;
+	JPAEmitterInfoObj.unkCC.getXDir(zDir);
+	JPAEmitterInfoObj.unk48[2][0] = zDir.x;
+	JPAEmitterInfoObj.unk48[2][1] = zDir.y;
+	JPAEmitterInfoObj.unk48[2][2] = zDir.z;
+
+	JGeometry::TVec3<f32> local_84(0.0f, 0.0f, 1.0f);
 	JGeometry::TVec3<f32> local_90;
-	local_90.setLength(unk210, 1.0f);
+	local_90.normalize(unk210);
 
-	bool bVar5              = false;
-	bool bVar4              = false;
-	JPAEmitterInfoObj.unk3C = local_90;
-	if (local_90.x == local_84.x && local_90.y == local_84.y)
-		bVar4 = true;
-
-	if (bVar4 == true && local_90.z == local_84.z)
-		bVar5 = true;
-
-	if (bVar5) {
-		PSMTXIdentity(JPAEmitterInfoObj.unk12C.mMtx);
+	JPAEmitterInfoObj.unk3C.set(local_90);
+	if (local_90 == local_84) {
+		MTXIdentity(JPAEmitterInfoObj.unk12C);
 	} else {
-		JPAVecToRotaMtx(
-		    JPAEmitterInfoObj.unk12C.mMtx,
-		    JGeometry::TVec3<f32>(local_84.x, local_84.y, local_84.z),
-		    JGeometry::TVec3<f32>(local_90.x, local_90.y, local_90.z));
+		JPAVecToRotaMtx(JPAEmitterInfoObj.unk12C, local_84, local_90);
 	}
 }
 
@@ -278,17 +267,17 @@ void JPABaseEmitter::loadBaseEmitterBlock(JPADataBlock* block)
 	stream.read(&unk190, 0xC);
 	stream.read(&unk19C, 0xC);
 	stream.read(&unk1A8, 6);
-	stream.read(&unk1AE, 1);
+	stream.read(&mVolumeType, 1);
 	stream.read(&unk1AF, 1);
 	stream.skip(2);
 	stream.read(&unk1F2, 2);
 	stream.read(&unk1B0, 4);
-	unk1B4 = JPAConvertFixToFloat(stream.readS16());
-	unk1E8 = stream.readS16();
+	unk1B4    = JPAConvertFixToFloat(stream.readS16());
+	mMaxFrame = stream.readS16();
 	stream.read(&unk1EC, 2);
 	stream.read(&unk1F0, 2);
-	unk1F4 = JPAConvertFixToFloat(stream.readS16());
-	unk1F8 = JPAConvertFixToFloat(stream.readS16());
+	unk1F4           = JPAConvertFixToFloat(stream.readS16());
+	mVolumeMinRadius = JPAConvertFixToFloat(stream.readS16());
 	stream.read(&unk1EE, 2);
 	unk1E0 = JPAConvertFixToFloat(stream.readS16());
 	unk1D8 = JPAConvertFixToFloat(stream.readS16());
@@ -309,7 +298,7 @@ void JPABaseEmitter::loadBaseEmitterBlock(JPADataBlock* block)
 	JPAConvertFixVecToFloatVec(floatVec, fixVec);
 	unk210.setLength(floatVec, 1.0f);
 	unk1E4 = JPAConvertFixToFloat(stream.readS16());
-	stream.read(&unk188, 4);
+	stream.read(&mEmitFlags, 4);
 	stream.read(&unk18C, 4);
 }
 
@@ -323,49 +312,419 @@ void JPABaseEmitter::drawEmitterCallBack()
 		unk110->draw(this);
 }
 
-void JPABaseEmitter::createParticle() { }
+JPABaseParticle* JPABaseEmitter::createParticle()
+{
+	if (mManager->unk0.getNumLinks() != 0) {
+
+		JPAParticle* particle = (JPAParticle*)newParticle();
+		mParticleList.prepend(particle->getLinkBufferPtr());
+
+		if (checkFlag(EMIT_FLAG_FOLLOW_EMITTER))
+			particle->setStatus(JPABaseParticle::FLAG_FOLLOW_EMITTER);
+
+		particle->unk14.set(JPAEmitterInfoObj.unk24);
+
+		s16 r24_param174;
+		s16 r25_param176;
+		s16 r26_param164;
+		s32 r27_param168;
+
+		if (checkFlag(EMIT_FLAG_FIXED_INTERVAL)) {
+			r27_param168 = JPAEmitterInfoObj.mVolumeEmitIdx;
+			r26_param164 = JPAEmitterInfoObj.mEmitCount;
+
+			if (mVolumeType == VOLUME_TYPE_SPHERE) {
+				r24_param174 = JPAEmitterInfoObj.unk174;
+				r25_param176 = JPAEmitterInfoObj.unk176;
+
+				JPAEmitterInfoObj.unk16C++;
+				JPAEmitterInfoObj.unk176 += JPAEmitterInfoObj.unk17A;
+
+				if (JPAEmitterInfoObj.unk16C == JPAEmitterInfoObj.unk170) {
+					JPAEmitterInfoObj.unk16C = 0;
+
+					if (JPAEmitterInfoObj.unk17C != 0) {
+						JPAEmitterInfoObj.unk170 -= 4;
+						if (JPAEmitterInfoObj.unk170 == 0) {
+							JPAEmitterInfoObj.unk170 = 1;
+						} else {
+							JPAEmitterInfoObj.unk17A
+							    = (s16)((int)(unk1F4 * 65536.0f)
+							            / (int)JPAEmitterInfoObj.unk170);
+						}
+						JPAEmitterInfoObj.unk174 = -JPAEmitterInfoObj.unk174;
+						JPAEmitterInfoObj.unk174 += JPAEmitterInfoObj.unk178;
+						JPAEmitterInfoObj.unk17C = 0;
+
+					} else {
+						JPAEmitterInfoObj.unk174 = -JPAEmitterInfoObj.unk174;
+						JPAEmitterInfoObj.unk17C = 1;
+					}
+				}
+				JPAEmitterInfoObj.unk176 = 0;
+			}
+		}
+
+		JGeometry::TVec3<f32> local_468;
+		JGeometry::TVec3<f32> f31_f30_f29;
+
+		f32 volumeSize = (f32)(u16)unk1F0;
+
+		particle->unk68.zero();
+
+		switch (mVolumeType) {
+		case VOLUME_TYPE_POINT: {
+			local_468.zero();
+			break;
+		}
+		case VOLUME_TYPE_LINE: {
+			f32 z;
+			if (checkFlag(EMIT_FLAG_FIXED_INTERVAL)) {
+				z = (volumeSize * (f32)r27_param168) / (f32)(r26_param164 - 1)
+				    - volumeSize * 0.5f;
+			} else {
+				z = volumeSize * getRandomSF();
+			}
+			local_468.set(0.0f, 0.0f, z);
+			break;
+		}
+		case VOLUME_TYPE_CIRCLE: {
+			Mtx local_438;
+			s16 angle;
+
+			if (checkFlag(EMIT_FLAG_FIXED_INTERVAL)) {
+				angle = (r27_param168 << 16) / r26_param164;
+			} else {
+				u32 uVar25 = mRng.get();
+				u32 uVar26 = mRng.get();
+				angle      = uVar25;
+			}
+
+			if (unk1F4 < 1.0f) {
+				JPAGetYRotateMtx(angle * unk1F4, local_438);
+			} else {
+				JPAGetYRotateMtx(angle, local_438);
+			}
+
+			f32 distance = getRandomF();
+			if (checkFlag(EMIT_FLAG_FIXED_DENSITY)) {
+				distance = JPASqrtf(distance);
+			}
+
+			f32 r = volumeSize
+			        * (mVolumeMinRadius + distance * (1.0f - mVolumeMinRadius));
+			local_468.set(0.0f, 0.0f, r);
+
+			MTXMultVec(local_438, &local_468, &local_468);
+			break;
+		}
+		case VOLUME_TYPE_CUBE: {
+			local_468.set(getRandomSF() * volumeSize,
+			              getRandomSF() * volumeSize,
+			              getRandomSF() * volumeSize);
+			break;
+		}
+		case VOLUME_TYPE_SPHERE: {
+			Mtx local_408;
+
+			if (checkFlag(EMIT_FLAG_FIXED_INTERVAL)) {
+				JPAGetXYRotateMtx(r24_param174, r25_param176, local_408);
+			} else {
+				if (unk1F4 < 1.0f) {
+					f32 y = unk1F4 * getRandomSS();
+					JPAGetXYRotateMtx(getRandomRS(), y, local_408);
+				} else {
+					JPAGetXYZRotateMtx(mRng.get(), mRng.get(), mRng.get(),
+					                   local_408);
+				}
+			}
+
+			f32 distance = getRandomF();
+			if (checkFlag(EMIT_FLAG_FIXED_DENSITY))
+				distance = JPASqrtf(distance);
+
+			f32 r = volumeSize
+			        * (mVolumeMinRadius + distance * (1.0f - mVolumeMinRadius));
+			local_468.set(0.0f, 0.0f, r);
+
+			MTXMultVec(local_408, &local_468, &local_468);
+			break;
+		}
+		case VOLUME_TYPE_CYLINDER: {
+			s16 uVar11;
+			if (unk1F4 < 1.0f) {
+				uVar11 = unk1F4 * getRandomSS();
+			} else {
+				uVar11 = mRng.get();
+			}
+
+			f32 distance = getRandomF();
+			if (checkFlag(EMIT_FLAG_FIXED_DENSITY)) {
+				distance = JPASqrtf(distance);
+			}
+
+			f32 r = volumeSize
+			        * (mVolumeMinRadius + distance * (1.0f - mVolumeMinRadius));
+
+			local_468.set(r * JMASSin(uVar11), volumeSize * getRandomRF(),
+			              r * JMASCos(uVar11));
+			break;
+		}
+		case VOLUME_TYPE_TORUS: {
+			s16 theta;
+			if (unk1F4 < 1.0f) {
+				theta = unk1F4 * getRandomSS();
+			} else {
+				theta = mRng.get();
+			}
+
+			Mtx afStack_170;
+			JPAGetYRotateMtx(theta, afStack_170);
+
+			local_468.set(volumeSize * JMASSin(theta), 0.0f,
+			              volumeSize * JMASCos(theta));
+
+			JGeometry::TVec3<f32> local_3C8;
+
+			f32 rad = volumeSize * mVolumeMinRadius;
+			s16 phi = mRng.get();
+
+			local_3C8.set(0.0f, rad * JMASSin(phi), rad * JMASCos(phi));
+
+			MTXMultVec(afStack_170, &local_3C8, &local_3C8);
+			local_468 += local_3C8;
+			f31_f30_f29.set(local_3C8);
+			break;
+		}
+		}
+
+		if (mVolumeType != VOLUME_TYPE_TORUS)
+			f31_f30_f29.set(local_468.x, 0.0f, local_468.z);
+
+		JGeometry::TVec3<f32> f21_f20_f19;
+		f21_f20_f19.mul(local_468, JPAEmitterInfoObj.unk30);
+
+		MTXMultVec(JPAEmitterInfoObj.unkFC.mMtx, &local_468,
+		           &particle->mLocalPosition);
+
+		f32 random_scale = unk1C4 * getRandomRF() + 1.0f;
+
+		JGeometry::TVec3<f32> local_398(0.0f, 0.0f, 0.0f);
+		JGeometry::TVec3<f32> f26_f25_f28(0.0f, 0.0f, 0.0f);
+		if (unk1FC != 0.0f) {
+			if (mVolumeType == VOLUME_TYPE_POINT) {
+				f26_f25_f28.set(getRandomSF(), getRandomSF(), getRandomSF());
+				f26_f25_f28.setLength(unk1FC);
+			} else {
+				f26_f25_f28.set(f21_f20_f19);
+				f26_f25_f28.setLength(unk1FC);
+			}
+		}
+
+		JGeometry::TVec3<f32> f22_f23_f24(0.0f, 0.0f, 0.0f);
+		if (unk200 != 0.0f) {
+			if (mVolumeType == VOLUME_TYPE_POINT) {
+				if (checkFlag(EMIT_FLAG_FIXED_INTERVAL)) {
+					s16 ang = (s16)((r27_param168 << 16) / r26_param164);
+					f22_f23_f24.set(JMASSin(ang), 0.0f, JMASCos(ang));
+				} else {
+					f22_f23_f24.x = getRandomSF();
+					f22_f23_f24.y = 0.0f;
+					f22_f23_f24.z = getRandomSF();
+				}
+				f22_f23_f24.setLength(unk200);
+			} else {
+				f22_f23_f24.setLength(f31_f30_f29, unk200);
+			}
+		}
+
+		JGeometry::TVec3<f32> add3_vec(0.0f, 0.0f, 0.0f);
+		if (unk204 != 0.0f) {
+			add3_vec.x = getRandomSF() * unk204;
+			add3_vec.y = getRandomSF() * unk204;
+			add3_vec.z = getRandomSF() * unk204;
+		}
+
+		if (unk208 != 0.0f) {
+			if (unk1E4 > 0.0f) {
+				local_398.set(0.0f, 0.0f, 1.0f);
+				Mtx temp;
+				s16 y = (32768.0f * getRandomRF()) * unk1E4;
+				JPAGetYZRotateMtx(y, mRng.get(), temp);
+				MTXConcat(JPAEmitterInfoObj.unk12C.mMtx, temp, temp);
+				MTXMultVec(temp, &local_398, &local_398);
+			} else {
+				local_398.set(JPAEmitterInfoObj.unk3C);
+			}
+			local_398 *= unk208;
+		}
+
+		JGeometry::TVec3<f32> local_35c;
+		local_35c.x = local_398.x + add3_vec.x + f26_f25_f28.x + f22_f23_f24.x;
+		local_35c.y = local_398.y + add3_vec.y + f26_f25_f28.y + f22_f23_f24.y;
+		local_35c.z = local_398.z + add3_vec.z + f26_f25_f28.z + f22_f23_f24.z;
+
+		if (unk1C4 != 0.0f)
+			local_35c *= random_scale;
+
+		if (checkFlag(EMIT_FLAG_INHERIT_SCALE)) {
+			local_35c.mul(unk190);
+		}
+
+		MTXMultVec(JPAEmitterInfoObj.unkCC.mMtx, &local_35c, &local_35c);
+		particle->setBaseVelVec(local_35c);
+
+		JGeometry::TVec3<f32> local_350;
+		local_350.normalize(local_35c);
+		JGeometry::TVec3<f32> local_340 = local_350;
+		particle->unk68.set(local_340);
+
+		f32 dynamics_scale = 0.0f;
+		if (unk1C8 != 0.0f) {
+			dynamics_scale = unk1C8 * (unk1CC * getRandomRF() + 1.0f);
+		}
+		particle->unk78 = dynamics_scale;
+
+		f32 air = unk1D4 * getRandomSF() + unk1D0;
+		if (air > 1.0f)
+			air = 1.0f;
+		particle->mAirResistance = air;
+
+		particle->mDynamicsWeight = unk1D8 * -(unk1DC * getRandomF() - 1.0f);
+
+		particle->initGlobalPosition();
+		particle->mLifeProgress = 0.0f;
+
+		f32 life = (f32)(s16)unk1EE;
+		if (unk1E0 != 0.0f) {
+			life *= -(unk1E0 * getRandomF() - 1.0f);
+		}
+		particle->mLifetime = life;
+		particle->unk50     = unk114;
+		mDraw.initParticle(particle);
+
+		return particle;
+	}
+
+	return nullptr;
+}
 
 void JPABaseEmitter::calcCurrentRateTimerStep()
 {
 	if (unk1AF == 0) {
-		unk1C0 = 1.0f;
+		mRateTimerStep = 1.0f;
 	} else {
-		unk1C0 = 1.0f / (unk1AF + 1.0f) + 1e-07f;
+		mRateTimerStep = 1.0f / (unk1AF + 1.0f) + 1e-07f;
 	}
 }
 
-#pragma dont_inline on
-void JPABaseEmitter::calcCreateParticle() { }
-#pragma dont_inline off
+int JPABaseEmitter::calcCreateParticle()
+{
+	int numToCreate = 0;
+
+	if (checkStatus(STATUS_EMIT_NEXT_FRAME)) {
+
+		if (!checkFlag(EMIT_FLAG_FIXED_INTERVAL)) {
+			f32 createRate = unk1B0;
+
+			if (unk1B4 != 0.0f) {
+				createRate += createRate * unk1B4 * getRandomRF();
+			}
+
+			unk1B8 += createRate;
+
+			if (unk1B8 >= 1.0f) {
+				numToCreate = unk1B8;
+				unk1B8      = unk1B8 - (f32)(s32)unk1B8;
+			} else if (createRate > 0.0f && checkStatus(STATUS_FIRST_EMIT)) {
+				numToCreate = 1;
+			} else {
+				numToCreate = 0;
+			}
+		} else {
+			if (mVolumeType == VOLUME_TYPE_SPHERE) {
+
+				JPAEmitterInfoObj.unk16C = 0;
+				JPAEmitterInfoObj.unk174 = 0;
+				JPAEmitterInfoObj.unk176 = 0;
+				JPAEmitterInfoObj.unk170 = 2;
+				JPAEmitterInfoObj.unk17C = 1;
+				JPAEmitterInfoObj.unk170 = 0;
+
+				numToCreate = 2;
+				for (int i = 0; i < unk1F2; ++i) {
+					numToCreate += JPAEmitterInfoObj.unk170;
+					JPAEmitterInfoObj.unk170 += 4;
+					numToCreate += JPAEmitterInfoObj.unk170;
+				}
+
+				JPAEmitterInfoObj.unk17A = (s16)((s32)(65536.0f * unk1F4)
+				                                 / JPAEmitterInfoObj.unk170);
+				JPAEmitterInfoObj.unk178 = (s16)(0x4000 / unk1F2);
+			} else if (mVolumeType == VOLUME_TYPE_CIRCLE
+			           || mVolumeType == VOLUME_TYPE_LINE) {
+				numToCreate = unk1F2;
+			}
+		}
+
+		JPAEmitterInfoObj.mEmitCount = numToCreate;
+
+		if (checkStatus(STATUS_STOP_EMIT))
+			numToCreate = 0;
+
+		if (numToCreate != 0) {
+			for (int i = 0; i < numToCreate; ++i) {
+				JPAEmitterInfoObj.mVolumeEmitIdx = i;
+				if (createParticle() == nullptr)
+					break;
+			}
+		}
+	}
+
+	if (mRateTimerStep == 1.0f) {
+		setStatus(STATUS_EMIT_NEXT_FRAME);
+	} else {
+		mRateTimer += mRateTimerStep;
+
+		if (mRateTimer >= 1.0f) {
+			mRateTimer -= 1.0f;
+			setStatus(STATUS_EMIT_NEXT_FRAME);
+		} else {
+			clearStatus(STATUS_EMIT_NEXT_FRAME);
+		}
+	}
+
+	clearStatus(STATUS_FIRST_EMIT);
+
+	return numToCreate;
+}
 
 bool JPABaseEmitter::checkStartFrame()
 {
-	if ((s16)unk18 >= unk1EC)
+	if ((s16)unk18.getFrame() >= unk1EC)
 		return true;
 
-	unk18 += unk1C;
-	if (unk18 < 0.0f)
-		unk18 = 0.0f;
+	unk18.incFrame();
 	return false;
 }
 
 bool JPABaseEmitter::checkMaxFrame()
 {
-	// TODO: constantly true inlines?
+	if (mMaxFrame == 0 ? true : false)
+		return false;
 
-	if (unk1E8 == 0)
-		return true;
-
-	if (unk1E8 < 0) {
-		unk11C |= 8;
+	if (mMaxFrame < 0) {
+		setStatus(STATUS_ENABLE_DELETE);
 		return true;
 	}
 
-	if ((s32)unk10.getFrame() >= unk1E8) {
-		unk11C |= 8;
+	if ((s32)unk10.getFrame() >= mMaxFrame) {
+		setStatus(STATUS_ENABLE_DELETE);
 
-		if (unk11C & 0x40)
-			return true;
+		if (checkStatus(STATUS_IMMORTAL))
+			return false;
+
+		return true;
 	}
 
 	return false;
@@ -381,22 +740,21 @@ void JPABaseEmitter::doParticle()
 		JSULink<JPABaseParticle>* next = link->getNext();
 
 		particle->incTimer();
-		if (!particle->checkFlag(0x80)) {
+		if (!particle->checkStatus(JPABaseParticle::FLAG_DEAD)) {
 			particle->calcVelocity();
 			particle->executeParticleCallBack(this);
-			if (!particle->checkFlag(2)) {
+			if (!particle->checkStatus(JPABaseParticle::FLAG_DELETE)) {
 				mDraw.calcParticle(particle);
 				if (particle->checkCreateChildParticle())
 					createChildParticle(particle);
 				particle->calcGlobalPosition();
 			}
 		} else {
-			particle->unk10 |= 2;
+			particle->setDeleteParticleFlag();
 		}
 
-		if (particle->checkFlag(2)) {
+		if (particle->checkStatus(JPABaseParticle::FLAG_DELETE))
 			deleteBaseParticle(particle, list);
-		}
 
 		link = next;
 	}
@@ -412,19 +770,19 @@ void JPABaseEmitter::doChildParticle()
 		JSULink<JPABaseParticle>* next = link->getNext();
 
 		particle->incTimer();
-		if (!particle->checkFlag(0x80)) {
-			if ((int)particle->unk44)
+		if (!particle->checkStatus(JPABaseParticle::FLAG_DEAD)) {
+			if (particle->getAge() != 0)
 				particle->calcVelocity();
 			particle->executeParticleCallBack(this);
-			if (!particle->checkFlag(2)) {
+			if (!particle->checkStatus(JPABaseParticle::FLAG_DELETE)) {
 				mDraw.calcChild(particle);
 				particle->calcGlobalPosition();
 			}
 		} else {
-			particle->unk10 |= 2;
+			particle->setDeleteParticleFlag();
 		}
 
-		if (particle->checkFlag(2)) {
+		if (particle->checkStatus(JPABaseParticle::FLAG_DELETE)) {
 			deleteBaseParticle(particle, list);
 		}
 
@@ -512,31 +870,26 @@ void JPABaseEmitter::calcKeyFrameAnime()
 
 void JPABaseEmitter::calc()
 {
-	bool doAnime = false;
+	JPAEmitterInfoObj.mEmitCount = 0;
 
-	JPAEmitterInfoObj.unk164 = 0;
-
-	if (unk11C & 2)
-		doAnime = true;
-
-	if (!doAnime)
+	if (!checkStatus(STATUS_STOP_CALC))
 		calcKeyFrameAnime();
 
 	if (unk110)
 		unk110->execute(this);
 
-	if (!(unk11C & 2 ? true : false)) {
+	if (!checkStatus(STATUS_STOP_CALC)) {
 		calcEmitterGlobalParams();
 		mDraw.calc();
 		mFieldManager.calcFieldParams();
-		if (!(unk11C & 8 ? true : false))
+		if (!checkStatus(STATUS_ENABLE_DELETE))
 			calcCreateParticle();
 	}
 
 	if (unk110)
 		unk110->executeAfter(this);
 
-	if (!(unk11C & 2 ? true : false)) {
+	if (!checkStatus(STATUS_STOP_CALC)) {
 		doParticle();
 		doChildParticle();
 		unk10.incFrame();

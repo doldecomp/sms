@@ -103,6 +103,8 @@ public:
 	s16 getColLoopOffset() { return mColLoopOffset; }
 	s16 getTexLoopOffset() { return mTexLoopOffset; }
 
+	u32 isDrawPrntAhead() const { return (mFlags >> 1) & 0x1; }
+
 public:
 	/* 0x8 */ u8* mTextureIndices;
 	/* 0xC */ GXColor* mPrmColors;

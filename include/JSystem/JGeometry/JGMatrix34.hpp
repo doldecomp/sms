@@ -2,6 +2,7 @@
 #define JG_MATRIX34_HPP
 
 #include <dolphin/types.h>
+#include <JSystem/JGeometry/JGVec3.hpp>
 
 namespace JGeometry {
 
@@ -61,7 +62,7 @@ public:
 	}
 
 	typedef f32 ArrType[4];
-	operator ArrType*() { return mMtx; }
+	operator ArrType*() { return mMtx; } // Real!
 	operator const ArrType*() const { return mMtx; }
 
 	void set(const ArrType* src)
@@ -134,6 +135,52 @@ public:
 		this->at(2, 3) + this->at(2, 0) * b.at(0, 3) + this->at(2, 1) * b.at(1, 3) + this->at(2, 2) * b.at(2, 3)
 		    // clang-format on
 		);
+	}
+
+	void invert(const TMatrix34& mtx);
+
+	void mult(const TVec3<f32>& vec, TVec3<f32>& result)
+	{
+		result.set(
+		    // clang-format off
+		this->at(0, 3) + (this->at(0, 0) * vec.x + this->at(0, 1) * vec.y + this->at(0, 2) * vec.z),
+		this->at(1, 3) + (this->at(1, 0) * vec.x + this->at(1, 1) * vec.y + this->at(1, 2) * vec.z),
+		this->at(2, 3) + (this->at(2, 0) * vec.x + this->at(2, 1) * vec.y + this->at(2, 2) * vec.z)
+		    // clang-format on
+		);
+	}
+
+	void multTranspose(const TVec3<f32>& vec, TVec3<f32>& result)
+	{
+		f32 y = vec.x - this->at(0, 3);
+		f32 x = vec.y - this->at(1, 3);
+		f32 z = vec.z - this->at(2, 3);
+		result.set(
+		    // clang-format off
+		z * this->at(2, 0) + y * this->at(0, 0) + x * this->at(1, 0),
+		z * this->at(2, 1) + y * this->at(0, 1) + x * this->at(1, 1),
+		z * this->at(2, 2) + y * this->at(0, 2) + x * this->at(1, 2)
+		    // clang-format on
+		);
+	}
+
+	void scale(f32 scale)
+	{
+		this->ref(0, 0) *= scale;
+		this->ref(1, 0) *= scale;
+		this->ref(2, 0) *= scale;
+
+		this->ref(0, 1) *= scale;
+		this->ref(1, 1) *= scale;
+		this->ref(2, 1) *= scale;
+
+		this->ref(0, 2) *= scale;
+		this->ref(1, 2) *= scale;
+		this->ref(2, 2) *= scale;
+
+		this->ref(0, 3) *= scale;
+		this->ref(1, 3) *= scale;
+		this->ref(2, 3) *= scale;
 	}
 };
 

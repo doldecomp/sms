@@ -52,7 +52,7 @@ JPAEmitterData* JPAEmitterResource::getByUserIndex(u16 idx)
 JPAResourceManager::JPAResourceManager(u32 param_1, u32 param_2,
                                        JKRHeap* param_3)
 {
-	unk0 = param_3 ? param_3 : JKRHeap::getCurrentHeap();
+	unk0 = param_3 ? param_3 : JKRGetCurrentHeap();
 
 	unk4 = new (unk0, 0) JPAEmitterResource(param_1, unk0);
 	unk8 = new (unk0, 0) JPATextureResource(param_2, unk0);
@@ -60,12 +60,12 @@ JPAResourceManager::JPAResourceManager(u32 param_1, u32 param_2,
 
 int JPAResourceManager::load(const char* param_1, u16 param_2)
 {
-	return load(JKRFileLoader::getGlbResource(param_1), param_2);
+	return load(JKRGetResource(param_1), param_2);
 }
 
 int JPAResourceManager::load(const void* param_1, u16 param_2)
 {
-	JPAEmitterData* data
-	    = JPAEmitterLoaderDataBase::load((const u8*)param_1, unk0, unk8);
-	return getEmitterResource()->registration(data, param_2);
+	return unk4->registration(
+	    JPAEmitterLoaderDataBase::load((const u8*)param_1, unk0, unk8),
+	    param_2);
 }
