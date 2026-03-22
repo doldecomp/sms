@@ -1318,6 +1318,7 @@ public:
 	/* 0x2F4 */ JGeometry::TVec3<f32> unk2F4;
 	/* 0x300 */ JGeometry::TVec3<f32> unk300;
 	/* 0x30C */ f32 unk30C;
+	/* 0x310 */ u32 unk310;
 	/* 0x314 */ f32 mRocketTargetY;
 	/* 0x318 */ char unk318[0x324 - 0x318];
 	/* 0x324 */ f32 unk324;
