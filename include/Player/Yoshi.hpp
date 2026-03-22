@@ -6,13 +6,14 @@
 #include <M3DUtil/MActor.hpp>
 
 class TMario;
+class TEggYoshi;
 
 class TYoshi {
 public:
 	enum Color { GREEN, ORANGE, PURPLE, PINK };
 	enum State { EGG = 0, DROWNING = 3, DYING = 4, UNMOUNTED = 6, MOUNTED = 8 };
 
-	bool appearFromEgg(const JGeometry::TVec3<f32>&);
+	bool appearFromEgg(const JGeometry::TVec3<f32>&, f32, TEggYoshi*);
 	void calcAnim();
 	void changeAnimation(int id);
 	bool disappear();
@@ -30,7 +31,7 @@ public:
 	void movement();
 	BOOL onYoshi();
 	void ride();
-	void setEggYoshiPtr(void*); // TEggYoshi*
+	void setEggYoshiPtr(TEggYoshi*);
 	void thinkAnimation();
 	void thinkBtp(int);
 	void thinkHoldOut();
@@ -67,8 +68,18 @@ public:
 	u8 _09;                             // 0x00D1
 	u16 _10;                            // 0x00D2
 	u32 _11[0x1C / 4];                  // 0x00D4
-	void* mEgg;                         // 0x00F0
-	u32 _F4[0x30 / 4];
+	TEggYoshi* mEgg;                    // 0x00F0
+	u16 mCurBtpIdx;                     // 0x00F4
+	u16 mEmitJoint;                     // 0x00F6
+	u16 mFootLJoint2;                   // 0x00F8
+	u16 _FA;                            // 0x00FA
+	JGeometry::TVec3<f32> mMtxTrans;    // 0x00FC
+	JGeometry::TVec3<f32> mMtxTrans2;   // 0x0108
+	f32 mSpineScale;                    // 0x0114
+	void* mBckPlayer;                   // 0x0118
+	u32* mAnimFrameRates;               // 0x011C
+	void* mBckPlayer2;                  // 0x0120
+	u32 _124;
 };
 
 extern JUtility::TColor bodyColor[4];
