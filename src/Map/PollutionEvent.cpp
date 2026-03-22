@@ -6,4 +6,6 @@
 
 void TPollutionTest::perform(u32, JDrama::TGraphics*) { }
 
+TPollutionTest::~TPollutionTest() { }
+
 void TPollutionTest::loadAfter() { TNameRef::loadAfter(); }

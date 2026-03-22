@@ -5,6 +5,7 @@
 
 class TPollutionTest : public JDrama::TViewObj {
 public:
+	virtual ~TPollutionTest();
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual void loadAfter();
 };
