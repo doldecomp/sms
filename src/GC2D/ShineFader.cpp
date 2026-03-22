@@ -10,18 +10,15 @@ void TShineFader::update()
 		mFadeColor.a = 0xff;
 		break;
 	case FADE_STATUS_FADING_OUT:
-		u16 unk12Copy = unk12;
-		unk12Copy += 1;
-		unk12   = unk12Copy;
-		s32 val = unk38 + unk10;
-		if (unk12 > val) {
+		unk12 += 1;
+		s32 fadeAlpha = unk38 + unk10;
+		if (unk12 > fadeAlpha) {
 			mFadeStatus = FADE_STATUS_FULLY_FADED_OUT;
 			unk1C       = 0;
 		} else {
 			if (unk12 > unk38) {
-				val = unk12 - 1;
-				val -= unk38;
-				mFadeColor.a = (u8)(((u16)val * 0xff) / unk10);
+				fadeAlpha    = unk12 - 1 - unk38;
+				mFadeColor.a = ((u16)fadeAlpha * 0xff) / unk10;
 			}
 		}
 		break;
