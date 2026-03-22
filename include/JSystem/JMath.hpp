@@ -18,6 +18,8 @@ public:
 		return value;
 	}
 
+	void setSeed(u32 seed) { value = seed; }
+
 	u32 get()
 	{
 		value = (value * 0x19660d) + 0x3c6ef35f;

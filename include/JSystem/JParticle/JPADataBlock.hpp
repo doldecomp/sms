@@ -9,6 +9,11 @@ public:
 	JPADataBlock(const u8*, JKRHeap*);
 	virtual ~JPADataBlock() { }
 
+	template <class T> T* getAtOffset(u32 offset) const
+	{
+		return (T*)((u8*)mRawData + offset);
+	}
+
 public:
 	/* 0x4 */ void* mRawData;
 };

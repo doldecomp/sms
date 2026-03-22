@@ -935,7 +935,7 @@ void JPADrawCalcScaleCopyX2Y::calc(const JPADrawContext*,
 void JPADrawCalcScaleAnmTimingNormal::calc(const JPADrawContext*,
                                            JPABaseParticle* particle)
 {
-	JPADrawContext::pcb->unkA8 = particle->unk48;
+	JPADrawContext::pcb->unkA8 = particle->mLifeProgress;
 }
 
 void JPADrawCalcScaleAnmTimingRepeatX::calc(const JPADrawContext* dc,
@@ -1033,7 +1033,7 @@ void JPADrawCalcColorAnmFrameMerge::calc(const JPADrawContext* dc,
 	s32 start = particle->getDrawParamPPtr()->unk28
 	            & dc->mBaseShape->getColLoopOffset();
 	s32 maxFrame = dc->mBaseShape->getColorRegAnmMaxFrm() + 1;
-	s32 frame    = (s32)(start + maxFrame * particle->unk48) % maxFrame;
+	s32 frame    = (s32)(start + maxFrame * particle->mLifeProgress) % maxFrame;
 	JPADrawContext::pcb->unkAC = frame;
 }
 
@@ -1048,7 +1048,7 @@ void JPADrawCalcColorAnmFrameRandom::calc(const JPADrawContext* dc,
 
 void JPADrawCalcAlpha::calc(const JPADrawContext* dc, JPABaseParticle* particle)
 {
-	f32 time = particle->unk48;
+	f32 time = particle->mLifeProgress;
 	f32 alpha;
 	if (time < dc->mExtraShape->getAlphaInTiming()) {
 		alpha = time * dc->mExtraShape->getAlphaIncreaseRate()
@@ -1168,7 +1168,7 @@ void JPADrawCalcTextureAnmIndexMerge::calc(const JPADrawContext* dc,
 	s32 maxFrame = dc->mBaseShape->getTextureAnmKeyNum();
 	s32 start    = particles->getDrawParamPPtr()->unk28
 	            & dc->mBaseShape->getTexLoopOffset();
-	s32 frame = (s32)(start + maxFrame * particles->unk48) % maxFrame;
+	s32 frame = (s32)(start + maxFrame * particles->mLifeProgress) % maxFrame;
 	particles->getDrawParamPPtr()->unk3A
 	    = dc->mTexIndices[dc->mBaseShape->getTextureIndex(frame)];
 }
@@ -1186,7 +1186,7 @@ void JPADrawCalcTextureAnmIndexRandom::calc(const JPADrawContext* dc,
 void JPADrawCalcChildAlphaOut::calc(const JPADrawContext*,
                                     JPABaseParticle* particles)
 {
-	particles->getDrawParamCPtr()->unk20 = 1.0f - particles->unk48;
+	particles->getDrawParamCPtr()->unk20 = 1.0f - particles->mLifeProgress;
 }
 
 void JPADrawCalcChildScaleOut::calc(const JPADrawContext*,
@@ -1194,6 +1194,6 @@ void JPADrawCalcChildScaleOut::calc(const JPADrawContext*,
 {
 	JPADrawParams* params = particles->getDrawParamCPtr();
 
-	params->unk10 = params->unkC * (1.0f - particles->unk48);
-	params->unk14 = params->unk24 * (1.0f - particles->unk48);
+	params->unk10 = params->unkC * (1.0f - particles->mLifeProgress);
+	params->unk14 = params->unk24 * (1.0f - particles->mLifeProgress);
 }

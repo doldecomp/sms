@@ -11,7 +11,7 @@ template <class T> class TVec3 { };
 
 template <> struct TVec3<s16> : public S16Vec {
 public:
-	TVec3();
+	TVec3() { }
 
 	TVec3(const S16Vec& b) { set(b.x, b.y, b.z); }
 
@@ -38,6 +38,8 @@ public:
 		y = (s16)y_;
 		z = (s16)z_;
 	}
+
+	void zero() { x = y = z = 0; }
 };
 
 template <> class TVec3<f32> : public Vec {
@@ -134,6 +136,13 @@ public:
 		x *= b.x;
 		y *= b.y;
 		z *= b.z;
+	}
+
+	void mul(const TVec3& fst, const TVec3& snd)
+	{
+		x = fst.x * snd.x;
+		y = fst.y * snd.y;
+		z = fst.z * snd.z;
 	}
 
 	void div(f32 divisor) { scale(1.0f / divisor); }

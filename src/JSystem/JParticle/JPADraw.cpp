@@ -154,13 +154,13 @@ void JPADraw::draw(MtxPtr param_1)
 
 	unkC2 &= ~0x1;
 
-	if ((mDrawCtx.mBaseShape->mFlags >> 1 & 1) == 1UL
+	if (mDrawCtx.mBaseShape->isDrawPrntAhead() == 1
 	    && mDrawCtx.mSweepShape != nullptr)
 		drawChild();
 
 	drawParticle();
 
-	if ((mDrawCtx.mBaseShape->mFlags >> 1 & 1) == 0UL
+	if (!mDrawCtx.mBaseShape->isDrawPrntAhead()
 	    && mDrawCtx.mSweepShape != nullptr)
 		drawChild();
 

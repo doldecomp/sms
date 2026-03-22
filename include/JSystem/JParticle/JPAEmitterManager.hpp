@@ -35,7 +35,7 @@ public:
 	u32 getParticleNumber();
 	u32 getFieldNumber();
 
-	void calcBase(u8);
+	void calcBase(u8 group_id);
 	void calc();
 	void calc(u8);
 

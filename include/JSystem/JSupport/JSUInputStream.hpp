@@ -16,15 +16,15 @@ public:
 	char* readString();
 	char* readString(char* buf, u16 len);
 
-	u32 read(s8& p) { return read(&p, sizeof(s8)); } /* @fabricated */
+	u32 read(s8& p) { return read(&p, sizeof(s8)); }
 	u32 read(u8& p) { return read(&p, sizeof(u8)); }
 	u32 read(bool& p) { return read(&p, sizeof(bool)); }
-	u32 read(s16& p) { return read(&p, sizeof(s16)); } /* @fabricated */
-	u32 read(u16& p) { return read(&p, sizeof(u16)); } /* @fabricated */
-	u32 read(s32& p) { return read(&p, sizeof(s32)); } /* @fabricated */
+	u32 read(s16& p) { return read(&p, sizeof(s16)); }
+	u32 read(u16& p) { return read(&p, sizeof(u16)); }
+	u32 read(s32& p) { return read(&p, sizeof(s32)); }
 	u32 read(u32& p) { return read(&p, sizeof(u32)); }
-	u32 read(s64& p) { return read(&p, sizeof(s64)); } /* @fabricated */
-	u32 read(u64& p) { return read(&p, sizeof(u64)); } /* @fabricated */
+	u32 read(s64& p) { return read(&p, sizeof(s64)); }
+	u32 read(u64& p) { return read(&p, sizeof(u64)); }
 
 	u8 read8b()
 	{

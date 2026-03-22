@@ -16,22 +16,22 @@ void JPABaseParticle::initBase()
 	mLocalPosition.z = 0.0f;
 	mLocalPosition.y = 0.0f;
 	mLocalPosition.x = 0.0f;
-	unk44            = 0.0f;
+	mAge             = 0.0f;
 	unk50            = nullptr;
 }
 
 void JPABaseParticle::incTimer()
 {
-	if (unk10 & 1)
-		unk10 &= ~1;
+	if (unk10 & FLAG_JUST_BORN)
+		unk10 &= ~FLAG_JUST_BORN;
 	else
-		unk44 += 1.0f;
+		mAge += 1.0f;
 
-	if (unk44 >= unk4C) {
-		unk48 = 1.0f;
-		unk10 |= 0x80;
+	if (mAge >= mLifetime) {
+		mLifeProgress = 1.0f;
+		unk10 |= FLAG_DEAD;
 	} else {
-		unk48 = unk44 / unk4C;
+		mLifeProgress = mAge / mLifetime;
 	}
 }
 
@@ -80,13 +80,13 @@ void JPAParticle::calcVelocity()
 	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
 
 	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
-	if (checkFlag(0x20))
-		unk14 = info->unk24;
+	if (checkStatus(JPABaseParticle::FLAG_FOLLOW_EMITTER))
+		unk14.set(info->unk24);
 
 	if (unk78 != 0.0f)
 		mBaseVelocity.scaleAdd(unk78, mBaseVelocity, unk68);
 
-	if (!checkFlag(0x40))
+	if (!checkStatus(JPABaseParticle::FLAG_IGNORE_FIELDS))
 		info->unk4->affectField(this);
 
 	if (mAirResistance < 1.0f)
@@ -130,8 +130,8 @@ bool JPAParticle::checkCreateChildParticle()
 
 	if (info->unk0->getUnk172()) {
 		f32 time;
-		if (unk4C > 1.0f)
-			time = unk44 / (unk4C - 1.0f);
+		if (mLifetime > 1.0f)
+			time = mAge / (mLifetime - 1.0f);
 		else
 			time = 1.0f;
 
@@ -139,7 +139,7 @@ bool JPAParticle::checkCreateChildParticle()
 		    = info->unk0->getEmitterDataBlockInfoPtr()->getSweepShape();
 		if (time >= sweepShape->getTiming()) {
 			if (sweepShape->getStep() > 0) {
-				f32 frame = unk44;
+				f32 frame = mAge;
 				s32 step  = sweepShape->getStep() + 1;
 				if ((int)frame % step == 0)
 					result = true;
