@@ -3635,7 +3635,7 @@ void TMario::getOffYoshi(bool knockedOff)
 	unk78 &= ~0x100;
 	mPosition.y += 100.0f;
 	mForwardVel = -8.0f;
-	mWaterGun->changeNozzle(4, true);
+	mWaterGun->changeNozzle(TWaterGun::Hover, true);
 	normalizeNozzle();
 	TWaterGun* gun = mWaterGun;
 	TNozzleBase* nozzle = gun->getCurrentNozzle();

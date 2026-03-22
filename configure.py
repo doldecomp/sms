@@ -914,7 +914,7 @@ config.libs = [
             Object(NonMatching, "Player/MarioDraw.cpp"),
             Object(NonMatching, "Player/MarioJump.cpp"),
             Object(NonMatching, "Player/MarioMain.cpp"),
-            Object(NonMatching, "Player/MarioMove.cpp"),
+            Object(Equivalent, "Player/MarioMove.cpp"),
             Object(NonMatching, "Player/MarioPhysics.cpp"),
             Object(NonMatching, "Player/MarioRecord.cpp"),
             Object(NonMatching, "Player/MarioRun.cpp"),

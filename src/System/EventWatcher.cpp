@@ -584,7 +584,7 @@ static void evChangeNozzle(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	if (id == 7)
 		gpMarioOriginal->setDivHelm();
 	else
-		gpMarioOriginal->mWaterGun->changeNozzle(id, true);
+		gpMarioOriginal->mWaterGun->changeNozzle((TWaterGun::TNozzleType)id, true);
 	interp->push();
 }
 

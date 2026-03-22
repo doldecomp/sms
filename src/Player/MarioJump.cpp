@@ -93,11 +93,13 @@ void TMario::doJumping()
 	mVel.x = mSlideVelX;
 	mVel.z = mSlideVelZ;
 	if (mVel.y < 0.0f) {
+		// Pointer math slop
 		*(f32*)((u8*)this + 0x50) = mDeParams.mTrampleRadius.value;
 		calcEntryRadius();
 		*(f32*)((u8*)this + 0x54) = mDeParams.mAttackHeight.value;
 		calcEntryRadius();
 	} else {
+		// Pointer math slop
 		*(f32*)((u8*)this + 0x50) = mDeParams.mPushupRadius.value;
 		calcEntryRadius();
 		*(f32*)((u8*)this + 0x54) = mDeParams.mPushupHeight.value;
@@ -119,9 +121,11 @@ void TMario::jumpingBasic(int statusId, int anmId, int groundCheck)
 		u8 canCatch = 0, shouldCatch = 1;
 		u8 hy; if (mSubState & 0x100) hy = 1; else hy = 0;
 		if (hy) shouldCatch = 0;
+		// Pointer math slop
 		if (*(f32*)((u8*)this + 0x02AC) - mPosition.y <= mDeParams.mDamageFallHeight.value)
 			shouldCatch = 0;
 		if (onYoshi()) shouldCatch = 0;
+		// Pointer math slop
 		u16 bg = *(u16*)((u8*)mGroundPlane);
 		if (bg == 0x0A || bg == 0x800A || bg == 0x0108) shouldCatch = 0;
 		else {
@@ -138,6 +142,7 @@ void TMario::jumpingBasic(int statusId, int anmId, int groundCheck)
 			if (cf) {
 				u8 fe; if (mState & 0x10000) fe = 1; else fe = 0;
 				if (fe) {
+					// Pointer math slop
 					if (*(u8*)((u8*)mWaterGun + 0x1C84) == 2) break;
 					jumpProcess(0);
 					changePlayerStatus(0x0479, 0, false);
@@ -152,6 +157,7 @@ void TMario::jumpingBasic(int statusId, int anmId, int groundCheck)
 				}
 			}
 		}
+		// Pointer math slop
 		*(f32*)((u8*)this + 0x02AC) = mPosition.y;
 		changePlayerStatus(statusId, 0, false);
 		if (!canCatch) { rumbleStart(20, mMotorParams.mMotorWall.value / 2); stopVoice(); }
@@ -170,11 +176,13 @@ void TMario::jumpingBasic(int statusId, int anmId, int groundCheck)
 		setAnimation(anmId, 1.0f);
 		if (onYoshi()) { setPlayerVelocity(0.0f); break; }
 		if (mWallPlane) {
+			// Pointer math slop
 			u16 wt = *(u16*)((u8*)mWallPlane);
 			u8 rp; if (wt == 5 || wt == 0x8005) rp = 1; else rp = 0;
 			if (rp) { changePlayerStatus(0x088D, 0, false); setPlayerVelocity(0.0f); break; }
 		}
 		if (mWallPlane) {
+			// Pointer math slop
 			u16 wt = *(u16*)((u8*)mWallPlane);
 			u8 fc; if (wt == 0x010A) fc = 1; else fc = 0;
 			if (fc) {
@@ -270,8 +278,10 @@ void TMario::jumpCatch()
 		u8 cc = 1;
 		u8 hy; if (mSubState & 0x100) hy = 1; else hy = 0;
 		if (hy) cc = 0;
+		// Pointer math slop
 		if (*(f32*)((u8*)this + 0x02AC) - mPosition.y <= mDeParams.mDamageFallHeight.value) cc = 0;
 		if (onYoshi()) cc = 0;
+		// Pointer math slop
 		u16 bg = *(u16*)((u8*)mGroundPlane);
 		if (bg == 0x0A || bg == 0x800A || bg == 0x0108) cc = 0;
 		else {
@@ -290,6 +300,7 @@ void TMario::jumpCatch()
 	}
 	case 2: case 3: {
 		if (mWallPlane) {
+			// Pointer math slop
 			u8 fc; if (*(u16*)((u8*)mWallPlane) == 0x010A) fc = 1; else fc = 0;
 			if (fc) { changePlayerDropping(0x3000036C, 0); break; }
 		}
@@ -394,6 +405,7 @@ void TMario::slipFalling()
 		s16 ad = mIntendedYaw - mFaceAngle.y;
 		u16 au = (u16)ad;
 		f32 im = mIntendedMag;
+		// Pointer math slop
 		f32 cr = *(f32*)((u8*)this + 0x0B8C);
 		f32 ac = im * cr;
 		mForwardVel += ac * JMASSin(au);
@@ -408,6 +420,7 @@ void TMario::slipFalling()
 	switch (jr) {
 	case 1:
 		if (mActionState == 0 && mVel.y < 0.0f && mGroundPlane->getNormal().y >= 0.0f) {
+			// Pointer math slop
 			mVel.y = -mVel.y * *(f32*)((u8*)this + 0x0BA0); mActionState = 1;
 		} else changePlayerStatus(0x00840452, 0, false);
 		break;
@@ -427,6 +440,7 @@ void TMario::fireDowning()
 	if (!(mInput & 1)) mForwardVel = FConverge(mForwardVel, 0.0f, 0.0f, mJumpParams.mFireDownControl.value);
 	if (mInput & 1) {
 		s16 ad = mIntendedYaw - mFaceAngle.y; u16 au = (u16)ad;
+		// Pointer math slop
 		f32 ac = mIntendedMag * *(f32*)((u8*)this + 0x0B8C) * mJumpParams.mFireDownControl.value;
 		mForwardVel += ac * JMASSin(au);
 		mFaceAngle.y = (s16)(ac * JMASCos(au) + (f32)mFaceAngle.y);
@@ -450,6 +464,7 @@ void TMario::fireDowning()
 void TMario::thrownDowning()
 {
 	s16 ad = mIntendedYaw - mFaceAngle.y; u16 au = (u16)ad;
+	// Pointer math slop
 	f32 ac = mIntendedMag * *(f32*)((u8*)this + 0x0B8C);
 	f32 ta = mJumpParams.mThrownAccel.value;
 	mForwardVel += ac * JMASSin(au) * ta;
@@ -474,9 +489,11 @@ void TMario::boardJumping()
 {
 	setAnimation(109, 1.0f);
 	if (mVel.y < 0.0f) {
+		// Pointer math slop
 		*(f32*)((u8*)this + 0x50) = mDeParams.mTrampleRadius.value; calcEntryRadius();
 		*(f32*)((u8*)this + 0x54) = mDeParams.mAttackHeight.value; calcEntryRadius();
 	} else {
+		// Pointer math slop
 		*(f32*)((u8*)this + 0x50) = mDeParams.mPushupRadius.value; calcEntryRadius();
 		*(f32*)((u8*)this + 0x54) = mDeParams.mPushupHeight.value; calcEntryRadius();
 	}
@@ -503,6 +520,7 @@ BOOL TMario::rocketCheck()
 	if (mAction == 0x088D) cr = 0;
 	u8 hf; if (mState & 0x10000) hf = 1; else hf = 0;
 	if (hf) {
+		// Pointer math slop
 		if (*(u8*)((u8*)mWaterGun->getCurrentNozzle() + 0x18) != 1) cr = 0;
 		u8 nw; if (mPumpState == 0) nw = 1; else nw = 0;
 		if (nw) cr = 0;
@@ -515,7 +533,7 @@ BOOL TMario::rocketCheck()
 		}
 	} else cr = 0;
 	if ((u8)cr == 1) {
-		*(f32*)((u8*)this + 0x0314) = mPosition.y + *(f32*)((u8*)mWaterGun + 0x1D40);
+		mRocketTargetY = mPosition.y + mWaterGun->mWatergunParams.mHoverHeight.get();
 		changePlayerStatus(0x088B, 0, false);
 	}
 	return 0;
@@ -525,10 +543,12 @@ void TMario::rocketing()
 {
 	u8 hf; if (mState & 0x10000) hf = 1; else hf = 0;
 	if (!hf) { changePlayerStatus(0x088D, 0, false); return; }
+	// Pointer math slop
 	if (*(u8*)((u8*)mWaterGun->getCurrentNozzle() + 0x18) != 1) { changePlayerStatus(0x088D, 0, false); return; }
 	u8 nw; if (mPumpState == 0) nw = 1; else nw = 0;
 	if (nw) { changePlayerStatus(0x088D, 0, false); return; }
 	if (mInput & 1) {
+		// Pointer math slop
 		u8 rp = *(u8*)((u8*)mWaterGun + 0x1C84);
 		if (rp == 4) {
 			s16 ad = mIntendedYaw - mFaceAngle.y;
@@ -536,6 +556,7 @@ void TMario::rocketing()
 			s16 ade = (s16)ad;
 			if (ade > -5461 && ade < 5461) {
 			} else if (ade >= -27306 && ade <= 27306) {
+				// Pointer math slop
 				s16 fa2 = *(s16*)((u8*)mWaterGun->getCurrentNozzle() + 0x0310);
 				f32 ac = *(f32*)((u8*)this + 0x0B8C) * (-im);
 				u16 au = (u16)ad;
@@ -548,6 +569,7 @@ void TMario::rocketing()
 					mFaceAngle.y = mIntendedYaw - ra;
 				}
 			} else {
+				// Pointer math slop
 				s16 ta;
 				if (ade >= -16384 && ade <= 16384) ta = *(s16*)((u8*)mWaterGun->getCurrentNozzle() + 0x0324);
 				else ta = *(s16*)((u8*)mWaterGun->getCurrentNozzle() + 0x0338);
@@ -563,9 +585,10 @@ void TMario::rocketing()
 	u16 fa = mFaceAngle.y;
 	mSlideVelX = mForwardVel * JMASSin(fa); mSlideVelZ = mForwardVel * JMASCos(fa);
 	mVel.x = mSlideVelX; mVel.z = mSlideVelZ;
-	u8 rp2 = *(u8*)((u8*)mWaterGun + 0x1C84);
+	// Pointer math slop
+	u8 rp2 = mWaterGun->mCurrentNozzle;
 	if (rp2 == 4) {
-		mVel.y = (*(f32*)((u8*)this + 0x0314) - mPosition.y) * mHoverParams.mAccelRate.value;
+		mVel.y = (mRocketTargetY - mPosition.y) * mHoverParams.mAccelRate.value;
 		mForwardVel *= mHoverParams.mBrake.value;
 	}
 	int res = jumpProcess(2);
@@ -580,11 +603,14 @@ void TMario::rocketing()
 void TMario::hipAttacking()
 {
 	s32 i = 0; f32 md = 0.0f;
+	// Pointer math slop
 	while (i < *(u16*)((u8*)this + 0x48)) {
+		// Pointer math slop
 		THitActor* a = ((THitActor**)*(u32*)((u8*)this + 0x44))[i];
 		u32 at = *(u32*)((u8*)a + 0x4C);
 		u8 it; if (at - 0xC0000000 <= 11) it = 1; else it = 0;
 		if (it) {
+			// Pointer math slop
 			f32 dx = *(f32*)((u8*)a + 0x10) - mPosition.x;
 			f32 dy = *(f32*)((u8*)a + 0x14) - mPosition.y;
 			f32 dz = *(f32*)((u8*)a + 0x18) - mPosition.z;
@@ -601,10 +627,12 @@ void TMario::hipAttacking()
 			f32 f = (f32)(40 - mActionTimer) * mJumpParams.mHipAttackSpeedY.value;
 			if (mJumpParams.mJumpJumpCatchSp.value + mPosition.y + f < mFloorPosition.y) {
 				mPosition.y += f * mJumpParams.mHipAttackSpeedY.value;
+				// Pointer math slop
 				*(f32*)((u8*)this + 0x104) = mPosition.y;
 			}
 		}
 		setPlayerVelocity(0.0f);
+		// Pointer math slop
 		*(f32*)((u8*)this + 0x50) = 0.0f; calcEntryRadius();
 		setAnimation(60, 1.0f);
 		u16 tt = mActionTimer; mActionTimer = tt + 1;
@@ -621,6 +649,7 @@ void TMario::hipAttacking()
 		if ((s16)mActionTimer > mJumpParams.mSuperHipAttackCt.value) mActionState = 3;
 		if (mActionState == 2) { mVel.y = mJumpParams.mHipAttackSpeedY.value; emitBlurHipDrop(); }
 		else { mVel.y = mJumpParams.mSuperHipAttackSpeedY.value; emitBlurHipDropSuper(); }
+		// Pointer math slop
 		*(f32*)((u8*)this + 0x50) = mDeParams.mHipdropRadius.value; calcEntryRadius();
 		*(f32*)((u8*)this + 0x54) = mDeParams.mAttackHeight.value; calcEntryRadius();
 		int r = jumpProcess(0);
@@ -630,6 +659,7 @@ void TMario::hipAttacking()
 				else { rumbleStart(21, 30); gpCameraShake->startShake((EnumCamShakeMode)39, 0.0f); }
 			}
 			if (mGroundPlane->getActor()) {
+				// Pointer math slop
 				if (!onYoshi() && *(u32*)((u8*)mGroundPlane->getActor() + 0x4C) - 0xC0000000 <= 106) {
 					emitParticle(57, (const JGeometry::TVec3<f32>*)&mPosition);
 					mPosition.y -= 5.0f;
@@ -661,6 +691,7 @@ void TMario::diving()
 
 BOOL TMario::jumpMain()
 {
+	// Pointer math slop
 	if (*(u32*)((u8*)this + 0x6C) != 0) {
 		u8 s; if (mInput & 0x4000) s = 1; else s = 0;
 		if (s) changePlayerStatus(0x820008AB, 0, false);

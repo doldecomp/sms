@@ -224,11 +224,11 @@ BOOL TMario::isUnUsualStageStart()
 		mState |= MARIO_FLAG_HAS_FLUDD;
 
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-			mWaterGun->changeNozzle(2, true);
+			mWaterGun->changeNozzle((TWaterGun::TNozzleType)2, true);
 		}
 
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-			mWaterGun->changeNozzle(mWaterGun->mSecondNozzle, true);
+			mWaterGun->changeNozzle((TWaterGun::TNozzleType)mWaterGun->mSecondNozzle, true);
 		}
 
 		if (mCap != nullptr) {

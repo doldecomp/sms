@@ -273,7 +273,7 @@ void TMario::checkCollision()
 						mState |= 0x8000;
 
 						if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-							mWaterGun->changeNozzle(3, true);
+							mWaterGun->changeNozzle((TWaterGun::TNozzleType)3, true);
 						}
 
 						changePlayerStatus(0x0C400201, 0, false);

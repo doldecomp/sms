@@ -83,10 +83,9 @@ extern TNozzleBmdData nozzleBmdData;
 
 class TWaterGun {
 public:
-	// TODO: I wish these could be combined
-	// If i make it a named enum, it defaults to 4 bytes size (i think)
-	typedef s8 TNozzleType;
-	enum { Spray = 0, Rocket, Underwater, Yoshi, Hover, Turbo };
+#pragma enumsalwaysint off
+	enum TNozzleType { Spray = 0, Rocket, Underwater, Yoshi, Hover, Turbo };
+#pragma enumsalwaysint reset
 
 	TWaterGun(TMario* mario);
 

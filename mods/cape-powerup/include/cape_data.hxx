@@ -1,61 +1,61 @@
 #pragma once
 
-#include <SMS/Player/Mario.hxx>
-#include <types.h>
+#include <Dolphin/types.h>
 
-namespace CapeMod {
+// Forward declare — BSE header provides full definition
+class TMario;
 
-// --- State ID ---
-// Custom state IDs must satisfy (state & 0x1C0) == 0x1C0.
-// Eclipse-style format: 0xF000__C0.
-constexpr u32 STATE_CAPE_FLY = 0xF00001C0;
+// Custom state ID — must satisfy (state & 0x1C0) == 0x1C0
+// BSE's registerStateMachine validates this mask.
+// Eclipse-style format: 0xF000__C0
+constexpr u32 STATE_CAPE_GLIDE = 0xF00031C0;
 
-// --- Fall state (from decomp) ---
-constexpr u32 STATE_FALL = 0x0000088C;
+// Fall state (verified from decomp MarioMove.cpp:1500)
+constexpr u32 STATE_FALL = 0x88C;
 
-// --- Controller button masks (verified from decomp) ---
-constexpr u32 BTN_R = 0x0020;
-constexpr u32 BTN_A = 0x0100;
-constexpr u32 BTN_B = 0x0200;
+// Per-player data key for BSE's registerData system
+constexpr const char *CAPE_DATA_KEY = "__cape_powerup";
+
+// Controller button masks (verified from decomp MarioGamePad.hpp)
+constexpr u32 BTN_R = 0x20;
+constexpr u32 BTN_A = 0x100;
+constexpr u32 BTN_B = 0x200;
 constexpr u32 BTN_L = 0x4000;
 
-// --- Physics tuning constants ---
-constexpr f32 CAPE_GRAVITY       = -0.5f;   // Reduced gravity while gliding
-constexpr f32 CAPE_FORWARD_SPEED = 16.0f;   // Forward speed during glide
-constexpr f32 CAPE_LIFT_ACCEL    = 0.8f;    // Upward acceleration on activation
-constexpr f32 CAPE_MAX_Y_SPEED   = 10.0f;   // Terminal upward velocity
-constexpr f32 CAPE_MIN_Y_SPEED   = -8.0f;   // Terminal downward velocity
-constexpr f32 CAPE_PITCH_RATE    = 2.0f;    // Pitch control sensitivity
-constexpr f32 CAPE_YAW_RATE      = 4.0f;    // Yaw/turning sensitivity
+// Physics constants — all tunable, start conservative
+constexpr f32 CAPE_TIMER_DURATION   = 60.0f;   // seconds
+constexpr f32 CAPE_FADE_START       = 50.0f;   // seconds elapsed when fade begins
+constexpr f32 CAPE_BASE_GLIDE_SPEED = 20.0f;
+constexpr f32 CAPE_MAX_DIVE_SPEED   = 60.0f;
+constexpr f32 CAPE_STALL_SPEED      = 8.0f;
+constexpr f32 CAPE_DRAG_DECEL       = 0.2f;
+constexpr f32 CAPE_DIVE_ACCEL       = 1.5f;
+constexpr f32 CAPE_CLIMB_DECEL      = 1.2f;
+constexpr f32 CAPE_PITCH_RATE       = 2.0f;    // degrees per frame
+constexpr f32 CAPE_TURN_RATE        = 4.0f;    // degrees per frame
+constexpr f32 CAPE_PITCH_MIN        = -60.0f;  // max dive angle (degrees)
+constexpr f32 CAPE_PITCH_MAX        = 60.0f;   // max climb angle (degrees)
 
-// --- Activation requirements ---
-constexpr f32 MIN_ACTIVATION_HEIGHT = 100.0f;  // Min height above ground to activate
-constexpr s32 CAPE_COOLDOWN_FRAMES  = 30;      // Frames before cape can reactivate
-
-// --- Player field offsets (decomp-verified) ---
-// These document the raw offsets for reference. Code should use BSE accessors.
-//   mFaceAngle  @ 0x94  (TVec3<s16>)  -> BSE: mAngle
-//   mVel        @ 0xA4  (TVec3<f32>)  -> BSE: mSpeed
-//   mForwardVel @ 0xB0  (f32)         -> BSE: mForwardSpeed
+// Decomp field reference (for documentation — code uses BSE accessors):
+//   mFaceAngle  @ 0x94  TVec3<s16>              -> BSE: mAngle
+//   mVel        @ 0xA4  TVec3<f32>              -> BSE: mSpeed
+//   mForwardVel @ 0xB0  f32                     -> BSE: mForwardSpeed
 //   unk108      @ 0x108 (TMarioControllerWork*) -> BSE: mController
-//   mState      @ 0x118 (u32)         -> BSE: mState
-//   mWaterGun   @ 0x3E4 (TWaterGun*)  -> BSE: mFludd
+//   mState      @ 0x118 u32                     -> BSE: mState
+//   mWaterGun   @ 0x3E4 TWaterGun*              -> BSE: mFludd
 
-/// Per-player cape runtime data.
 struct CapeData {
-    bool isActive;          // Currently gliding
-    bool isUnlocked;        // Cape ability available
-    s32  cooldownTimer;     // Frames remaining before reactivation
-    f32  glideTimer;        // Seconds spent in current glide
-    f32  pitchAngle;        // Current pitch in degrees
-
-    void reset() {
-        isActive       = false;
-        isUnlocked     = false;
-        cooldownTimer  = 0;
-        glideTimer     = 0.0f;
-        pitchAngle     = 0.0f;
-    }
+    bool hasCape;               // cape ability is active
+    f32 timer;                  // counts down from 60.0 (seconds)
+    bool isGliding;             // currently in glide state
+    f32 glideSpeed;             // scalar speed along flight vector
+    f32 glidePitch;             // pitch angle in degrees (-60 to +60)
+    f32 glideYaw;               // facing direction in degrees
+    u8 storedNozzle;            // saved TWaterGun::mCurrentNozzle
+    u8 storedSecondNozzle;      // saved TWaterGun::mSecondNozzle
+    s32 storedWater;            // saved TWaterGun::mCurrentWater
+    bool persistAcrossLoad;     // true = preserve cape across loading zone
 };
 
-}  // namespace CapeMod
+CapeData *getCapeData(TMario *player);
+void initCapeData(CapeData *data);

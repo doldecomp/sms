@@ -1300,7 +1300,9 @@ public:
 	/* 0x2BA */ s16 unk2BA;
 	/* 0x2BC */ f32 unk2BC;
 	/* 0x2C0 */ TLiveActor* mRidingActor;
-	/* 0x2C4 */ char unk2C4[0x348 - 0x2C4];
+	/* 0x2C4 */ char unk2C4[0x314 - 0x2C4];
+	/* 0x314 */ f32 mRocketTargetY;
+	/* 0x318 */ char unk318[0x348 - 0x318];
 	/* 0x348 */ f32 unk348;
 	/* 0x34C */ u16 unk34C;
 	/* 0x34E */ u16 unk34E;
