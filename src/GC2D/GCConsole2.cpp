@@ -29,11 +29,13 @@
 
 static int getOffsetForBelowScreen(TExPane* pane)
 {
+	// setPaneOffset moves this to y1 = 465
 	return 465 - pane->mInitialBounds.y1;
 }
 
 static int getOffsetForAboveScreen(TExPane* pane)
 {
+	// setPaneOffset moves this to y2 = -1
 	return -(pane->mInitialBounds.y2 + 1);
 }
 
