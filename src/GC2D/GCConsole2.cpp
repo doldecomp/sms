@@ -25,6 +25,11 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+// Fabricated inlines, but they make a bunch of offset stuff work
+// TODO: These need better names
+static int get465MinusInitialY1(TExPane* pane) { return 465 - pane->mInitialBounds.y1; }
+static int getNegativeInitialY2Plus1(TExPane* pane) { return -(pane->mInitialBounds.y2 + 1); }
+
 TGCConsole2::TGCConsole2(const char* name)
     : JDrama::TViewObj(name)
     , unk10(0)
@@ -336,7 +341,7 @@ void TGCConsole2::startAppearTank()
 	unk7C     = 0;
 
 	unk2F8->getPane()->show();
-	unk2F8->setPaneOffset(unk98, 0, 0, 0, unk2F8->get465MinusInitialY1());
+	unk2F8->setPaneOffset(unk98, 0, 0, 0, get465MinusInitialY1(unk2F8));
 
 	unk26C->setPanePosition(50, JUTPoint(0, 100), JUTPoint(0, -30),
 	                        JUTPoint(0, -30));
@@ -359,7 +364,7 @@ void TGCConsole2::startAppearCoin()
 
 	unk108->getPane()->show();
 	unk108->setPaneOffset(unk98, 0, unk26A, 0,
-	                      unk108->getNegativeInitialY2Plus1());
+	                      getNegativeInitialY2Plus1(unk108));
 
 	unkC8->setPanePosition(50, cDownTopPoint, cDownMidPoint, cDownMidPoint);
 
@@ -381,13 +386,13 @@ void TGCConsole2::startDisappearCoin()
 		J2DPane* pane = unk128->getPane();
 		unk140->updatePaneOffset(40, 0,
 		                         -pane->mBounds.getHeight()
-		                             + unk140->getNegativeInitialY2Plus1());
+		                             + getNegativeInitialY2Plus1(unk140));
 	}
 
 	J2DPane* pane = unkC8->getPane();
 	unk108->updatePaneOffset(40, 0,
 	                         -(pane->mBounds.getHeight())
-	                             + unk108->getNegativeInitialY2Plus1());
+	                             + getNegativeInitialY2Plus1(unk108));
 
 	unk124->setUnk11CFlag(1 << 0);
 }
@@ -430,17 +435,17 @@ void TGCConsole2::startDownLeftBot()
 	unk5A     = 1;
 
 	if (unk44C->getPane()->isVisible() && unk44C->isInterpolatorAtZero()) {
-		unk44C->updatePaneOffset(20, 0, unk44C->get465MinusInitialY1() + 60);
+		unk44C->updatePaneOffset(20, 0, get465MinusInitialY1(unk44C) + 60);
 		unk51C = 1;
 	}
 
 	if (unk428->getPane()->isVisible()) {
-		unk428->updatePaneOffset(20, 0, unk428->get465MinusInitialY1() + 60);
+		unk428->updatePaneOffset(20, 0, get465MinusInitialY1(unk428) + 60);
 		unk448 = 1;
 	}
 
 	if (unk3FC->getPane()->isVisible()) {
-		unk3FC->updatePaneOffset(20, 0, unk3FC->get465MinusInitialY1() + 60);
+		unk3FC->updatePaneOffset(20, 0, get465MinusInitialY1(unk3FC) + 60);
 		unk426 = 1;
 	}
 }
@@ -467,7 +472,7 @@ void TGCConsole2::startAppearTelop(bool param_1)
 	unk56D    = 1;
 	unk520->getPane()->show();
 
-	unk520->setPaneOffset(80, 0, 0, 0, unk520->get465MinusInitialY1());
+	unk520->setPaneOffset(80, 0, 0, 0, get465MinusInitialY1(unk520));
 
 	if (param_1) {
 		// TODO: needs regswapping
@@ -496,12 +501,12 @@ void TGCConsole2::startDisappearTelop()
 	unk34[15] = 1;
 	unk5A     = 1;
 
-	unk520->updatePaneOffset(80, 0, unk520->get465MinusInitialY1());
+	unk520->updatePaneOffset(80, 0, get465MinusInitialY1(unk520));
 }
 
 void TGCConsole2::startDisappearTimer()
 {
-	unk44C->updatePaneOffset(40, 0, unk44C->get465MinusInitialY1() + 60);
+	unk44C->updatePaneOffset(40, 0, get465MinusInitialY1(unk44C) + 60);
 	unk34[11] = 1;
 	unk5A     = 1;
 }
@@ -553,7 +558,7 @@ void TGCConsole2::startInsertTimer()
 	unk59 = 1;
 
 	unk44C->getPane()->show();
-	unk44C->setPaneOffset(40, 0, 0, 0, unk44C->get465MinusInitialY1());
+	unk44C->setPaneOffset(40, 0, 0, 0, get465MinusInitialY1(unk44C));
 
 	unk450->getPane()->show();
 	unk450->setPanePosition(50, cUpTopPoint, cUpMidPoint, cUpMidPoint);
