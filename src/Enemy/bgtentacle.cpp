@@ -359,13 +359,13 @@ void TBGTakeHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 				else if (mOwner->mOwner->getAttackMode() == 4)
 					mOwner->throwMario(col, mOwner->mOwner);
 				else
-					col->receiveMessage(this, 0xE);
+					col->receiveMessage(this, HIT_MESSAGE_ATTACK);
 			}
 		}
 
 		if (mOwner->getState() != 3 && mOwner->getState() != 4
 		    && mHolder != nullptr)
-			mHolder->receiveMessage(this, 0x8);
+			mHolder->receiveMessage(this, HIT_MESSAGE_UNK8);
 	}
 }
 
@@ -401,7 +401,7 @@ void TBGAttackHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 				else if (mOwner->mOwner->getAttackMode() == 4)
 					mOwner->throwMario(col, mOwner->mOwner);
 				else
-					col->receiveMessage(this, 0xE);
+					col->receiveMessage(this, HIT_MESSAGE_ATTACK);
 			}
 		}
 	}
@@ -1075,7 +1075,7 @@ void TBGTentacle::decideOwnState()
 		if (mTimeInCurrentState >= amputeeTime - 240
 		    && mTakeHit->getHolder() != nullptr) {
 			TTakeActor* holder = mTakeHit->getHolder();
-			holder->receiveMessage(mTakeHit, 8);
+			holder->receiveMessage(mTakeHit, HIT_MESSAGE_UNK8);
 		}
 		break;
 	}

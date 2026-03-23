@@ -187,8 +187,8 @@ void* JKRMemArchive::fetchResource(void* buffer, u32 bufferSize,
 	if (fileEntry->mData != nullptr) {
 		JKRHeap::copyMemory(buffer, fileEntry->mData, srcLength);
 	} else {
-		JKRCompression compression
-		    = JKRArchive::convertAttrToCompressionType(fileEntry->getAttr());
+		JKRCompression compression = JKRArchive::convertAttrToCompressionType(
+		    fileEntry->mFlagsAndNameOffset >> 24);
 		srcLength = fetchResource_subroutine(
 		    (u8*)mArchiveData + fileEntry->mDataOffset, srcLength, (u8*)buffer,
 		    bufferSize, compression);

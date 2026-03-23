@@ -2,6 +2,7 @@
 #define JGADGET_LINKLIST_HPP
 
 #include <types.h>
+#include <JSystem/JUtility/JUTAssert.hpp>
 
 namespace JGadget {
 
@@ -23,6 +24,11 @@ public:
 struct TNodeLinkList {
 	struct iterator {
 		explicit iterator(TLinkListNode* pNode) { node = pNode; }
+		iterator& operator=(const iterator& other)
+		{
+			node = other.node;
+			return *this;
+		}
 
 		iterator& operator++()
 		{
@@ -181,20 +187,20 @@ template <typename T, int I> struct TLinkList : public TNodeLinkList {
 	{
 	}
 
-	struct iterator {
+	struct iterator : TNodeLinkList::iterator {
 		explicit iterator(TNodeLinkList::iterator iter)
-		    : base(iter)
+		    : TNodeLinkList::iterator(iter)
 		{
 		}
 
 		iterator& operator++()
 		{
-			++base;
+			TNodeLinkList::iterator::operator++();
 			return *this;
 		}
 		iterator& operator--()
 		{
-			--base;
+			TNodeLinkList::iterator::operator--();
 			return *this;
 		}
 		iterator operator++(int)
@@ -211,35 +217,40 @@ template <typename T, int I> struct TLinkList : public TNodeLinkList {
 		}
 		friend bool operator==(iterator a, iterator b)
 		{
-			return a.base == b.base;
+			return (TNodeLinkList::iterator&)a == (TNodeLinkList::iterator&)b;
 		}
 		friend bool operator!=(iterator a, iterator b) { return !(a == b); }
 
-		T* operator->() const { return Element_getValue(base.operator->()); }
-		T& operator*() const { return *operator->(); }
-
-	public:
-		/* 0x00 */ TNodeLinkList::iterator base;
+		T* operator->() const
+		{
+			return Element_getValue(TNodeLinkList::iterator::operator->());
+		}
+		T& operator*() const
+		{
+			T* p = operator->();
+			JUT_ASSERT(541, p != nullptr);
+			return *p;
+		}
 	};
 
-	struct const_iterator {
+	struct const_iterator : TNodeLinkList::const_iterator {
 		explicit const_iterator(TNodeLinkList::const_iterator iter)
-		    : base(iter)
+		    : TNodeLinkList::const_iterator((TNodeLinkList::iterator&)iter)
 		{
 		}
 		explicit const_iterator(iterator iter)
-		    : base(iter.base)
+		    : TNodeLinkList::const_iterator(iter)
 		{
 		}
 
 		const_iterator& operator++()
 		{
-			++base;
+			TNodeLinkList::const_iterator::operator++();
 			return *this;
 		}
 		const_iterator& operator--()
 		{
-			--base;
+			TNodeLinkList::const_iterator::operator--();
 			return *this;
 		}
 		const_iterator operator++(int)
@@ -256,7 +267,8 @@ template <typename T, int I> struct TLinkList : public TNodeLinkList {
 		}
 		friend bool operator==(const_iterator a, const_iterator b)
 		{
-			return a.base == b.base;
+			return (TNodeLinkList::const_iterator&)a
+			       == (TNodeLinkList::const_iterator&)b;
 		}
 		friend bool operator!=(const_iterator a, const_iterator b)
 		{
@@ -265,42 +277,45 @@ template <typename T, int I> struct TLinkList : public TNodeLinkList {
 
 		const T* operator->() const
 		{
-			return Element_getValue(base.operator->());
+			return Element_getValue(
+			    TNodeLinkList::const_iterator::operator->());
 		}
-		const T& operator*() const { return *operator->(); }
-
-	public:
-		/* 0x00 */ TNodeLinkList::const_iterator base;
+		const T& operator*() const
+		{
+			T* p = operator->();
+			JUT_ASSERT(586, p != nullptr);
+			return *p;
+		}
 	};
 
 	static const TLinkListNode* Element_getNode(const T* element)
 	{
-		(void)element; // Debug-only assert
+		JUT_ASSERT(753, element != NULL);
 		return reinterpret_cast<const TLinkListNode*>(
 		    reinterpret_cast<const char*>(element) - I);
 	}
 	static TLinkListNode* Element_getNode(T* element)
 	{
-		(void)element; // Debug-only assert
+		JUT_ASSERT(758, element != NULL);
 		return reinterpret_cast<TLinkListNode*>(reinterpret_cast<char*>(element)
 		                                        - I);
 	}
 	static const T* Element_getValue(const TLinkListNode* node)
 	{
-		(void)node; // Debug-only assert
+		JUT_ASSERT(763, node != NULL);
 		return reinterpret_cast<const T*>(reinterpret_cast<const char*>(node)
 		                                  + I);
 	}
 	static T* Element_getValue(TLinkListNode* node)
 	{
-		(void)node; // Debug-only assert
+		JUT_ASSERT(768, node != NULL);
 		return reinterpret_cast<T*>(reinterpret_cast<char*>(node) + I);
 	}
 
 	iterator Insert(iterator iter, T* element)
 	{
-		return iterator(
-		    TNodeLinkList::Insert(iter.base, Element_getNode(element)));
+		return iterator(TNodeLinkList::Insert((TNodeLinkList::iterator&)iter,
+		                                      Element_getNode(element)));
 	}
 	iterator Erase(T* element)
 	{
@@ -317,8 +332,16 @@ template <typename T, int I> struct TLinkList : public TNodeLinkList {
 	{
 		return const_iterator(const_cast<TLinkList*>(this)->end());
 	}
-	T& front() { return *begin(); }
-	T& back() { return *--end(); }
+	T& front()
+	{
+		JUT_ASSERT(642, !empty());
+		return *begin();
+	}
+	T& back()
+	{
+		JUT_ASSERT(652, !empty());
+		return *--end();
+	}
 	void Push_front(T* element) { Insert(begin(), element); }
 	void Push_back(T* element) { Insert(end(), element); }
 	iterator Find(const T* element)
@@ -328,84 +351,6 @@ template <typename T, int I> struct TLinkList : public TNodeLinkList {
 	void Remove(T* element) { TNodeLinkList::Remove(Element_getNode(element)); }
 	u32 size() { return count; }
 	bool empty() { return size() == 0; }
-};
-
-template <typename T, int I> struct TLinkList_factory : public TLinkList<T, I> {
-	virtual ~TLinkList_factory() { }
-	virtual T* Do_create()      = 0;
-	virtual void Do_destroy(T*) = 0;
-	void Erase_destroy(T* elem)
-	{
-		Erase(elem);
-		Do_destroy(elem);
-	}
-};
-
-template <typename T> struct TEnumerator {
-	inline TEnumerator(T _current, T _end)
-	    : current(_current)
-	    , end(_end)
-	{
-	}
-
-	bool isEnd() const { return current != end; }
-	operator bool() const { return isEnd(); }
-	T operator*()
-	{
-		T rv = current;
-		++current;
-		return rv;
-	}
-
-	T current;
-	T end;
-};
-
-// TEnumerator2 should be the same but there are two issues:
-// 1. How to derive the iterator return type for operator* (the debug makes it
-// seem like operator* is called so the return value should be what the iterator
-// points to)
-// 2. Calling the * operator seems to make functions using TEnumerator<T*> not
-// work. See JStudio::TAdaptor::adaptor_setVariableValue_n Perhaps template
-// specialization?
-template <typename Iterator, typename T> struct TEnumerator2 {
-	inline TEnumerator2(Iterator _current, Iterator _end)
-	    : current(_current)
-	    , end(_end)
-	{
-	}
-
-	bool isEnd() const { return current != end; }
-	operator bool() const { return isEnd(); }
-	T& operator*()
-	{
-		T& rv = *current;
-		++current;
-		return rv;
-	}
-
-	Iterator current;
-	Iterator end;
-};
-
-template <typename T, int I>
-struct TContainerEnumerator
-    : public TEnumerator2<typename TLinkList<T, I>::iterator, T> {
-	inline TContainerEnumerator(TLinkList<T, I>* param_0)
-	    : TEnumerator2<typename TLinkList<T, I>::iterator, T>(param_0->begin(),
-	                                                          param_0->end())
-	{
-	}
-};
-
-template <typename T, int I>
-struct TContainerEnumerator_const
-    : public TEnumerator2<typename TLinkList<T, I>::const_iterator, const T> {
-	inline TContainerEnumerator_const(const TLinkList<T, I>* param_0)
-	    : TEnumerator2<typename TLinkList<T, I>::const_iterator, const T>(
-	          param_0->begin(), param_0->end())
-	{
-	}
 };
 
 } // namespace JGadget

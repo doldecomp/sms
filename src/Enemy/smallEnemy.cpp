@@ -529,22 +529,24 @@ void TSmallEnemy::updateAnmSound() { TSpineEnemy::updateAnmSound(); }
 
 BOOL TSmallEnemy::receiveMessage(THitActor* sender, u32 message)
 {
-	if (isEatenByYosshi() && message == 4 && !mHolder) {
+	if (isEatenByYosshi() && message == HIT_MESSAGE_TAKE && !mHolder) {
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 		mHolder = (TTakeActor*)sender;
 		behaveToTaken(sender);
 		return true;
 	}
 
-	if ((message == 6 || message == 7) && mHolder == sender) {
+	if ((message == HIT_MESSAGE_UNK6 || message == HIT_MESSAGE_UNK7)
+	    && mHolder == sender) {
 		mHolder = nullptr;
 		behaveToRelease();
 		offHitFlag(HIT_FLAG_NO_COLLISION);
 		return true;
 	}
 
-	if (message == 0 || message == 1 || message == 3 || message == 11
-	    || (mActorType == 0x10000021 && message == 0xC)) {
+	if (message == HIT_MESSAGE_TRAMPLE || message == HIT_MESSAGE_HIP_DROP
+	    || message == HIT_MESSAGE_UNK3 || message == HIT_MESSAGE_UNKB
+	    || (mActorType == 0x10000021 && message == HIT_MESSAGE_PUNCH)) {
 		if (isHitValid(message)) {
 			unk184 = 0;
 			kill();
@@ -552,7 +554,7 @@ BOOL TSmallEnemy::receiveMessage(THitActor* sender, u32 message)
 		return true;
 	}
 
-	if (message == 13) {
+	if (message == HIT_MESSAGE_UNKD) {
 		mHitPoints = 0;
 		onLiveFlag(LIVE_FLAG_DEAD);
 		onHitFlag(HIT_FLAG_NO_COLLISION);

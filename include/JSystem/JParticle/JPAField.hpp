@@ -17,21 +17,21 @@ public:
 	/* 0x30 */ f32 unk30;
 	/* 0x34 */ f32 unk34;
 	/* 0x38 */ char unk38[4];
-	/* 0x3C */ f32 unk3C;
-	/* 0x40 */ f32 unk40;
-	/* 0x44 */ f32 unk44;
-	/* 0x48 */ f32 unk48;
-	/* 0x4C */ f32 unk4C;
+	/* 0x3C */ f32 mMaxDistance;
+	/* 0x40 */ f32 mFadeInEnd;
+	/* 0x44 */ f32 mFadeOutStart;
+	/* 0x48 */ f32 mFadeInStart;
+	/* 0x4C */ f32 mFadeOutEnd;
 	/* 0x50 */ u8 unk50;
-	/* 0x51 */ char unk51[1];
+	/* 0x51 */ u8 unk51;
 	/* 0x52 */ u8 unk52;
 	/* 0x53 */ u8 unk53;
-	/* 0x54 */ u16 unk54;
+	/* 0x54 */ volatile u16 unk54;
 	/* 0x58 */ JGeometry::TVec3<f32> unk58;
 	/* 0x64 */ JGeometry::TVec3<f32> unk64;
 	/* 0x70 */ JGeometry::TVec3<f32> unk70;
 	/* 0x7C */ JGeometry::TVec3<f32> unk7C;
-	/* 0x88 */ f32 unk88;
+	/* 0x88 */ f32 mMaxDistanceSq;
 	/* 0x8C */ // vt
 
 public:
@@ -51,8 +51,20 @@ public:
 	// from tww
 	JSULink<JPABaseField>* getLinkBufferPtr() { return &unk0; }
 
+	bool checkStatus(u32 flag) { return unk54 & flag ? true : false; }
+	enum {
+		STATUS_AIR_CONE                 = 0x1,
+		STATUS_USE_GLOBAL_COORDS        = 0x2,
+		STATUS_AIR_CLAMP_VELOCITY       = 0x4,
+		STATUS_FADE_ENABLE_START_CUTOFF = 0x8,
+		STATUS_FADE_ENABLE_END_CUTOFF   = 0x10,
+		STATUS_FADE_ENABLE_FADE_IN      = 0x20,
+		STATUS_FADE_ENABLE_FADE_OUT     = 0x40,
+		STATUS_LIMIT_DISTANCE           = 0x80,
+		STATUS_NEWTON_CONSTANT_FORCE    = 0x100,
+	};
+
 	// fabricated
-	bool checkFlag(u32 flag) { return unk54 & flag ? true : false; }
 	JGeometry::TVec3<f32>& getUnk18() { return unk18; }
 };
 

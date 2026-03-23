@@ -177,7 +177,7 @@ BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
 		return false;
 
 	if (sender->getActorType() == 0x80000001) {
-		if (message == 4) {
+		if (message == HIT_MESSAGE_TAKE) {
 			TTakeActor* actor = (TTakeActor*)sender;
 			if (actor->mHeldObject != nullptr && actor->mHeldObject != this)
 				return false;
@@ -190,7 +190,7 @@ BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
 			return true;
 		}
 
-		if (message == 7 || message == 8) {
+		if (message == HIT_MESSAGE_UNK7 || message == HIT_MESSAGE_UNK8) {
 			// TODO: inlined from TBossGesso?
 			JGeometry::TVec3<f32> delta = mPosition;
 			TBossGesso* gesso           = mOwner;
@@ -234,7 +234,8 @@ void TBGBeakHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 			JGeometry::TVec3<f32> offset = us2mario;
 			JGeometry::TVec3<f32> perp;
 			// TODO: cross is incorrect?
-			perp.cross(offset, JGeometry::TVec3<f32>(0.0f, 1.0f, 1.0f));
+			JGeometry::TVec3<f32> up(0.0f, 1.0f, 1.0f);
+			perp.cross(offset, up);
 			if (!perp.isZero())
 				VECNormalize(&perp, &perp);
 			else
@@ -262,12 +263,12 @@ void TBGBeakHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 			f32 lenPollute = mOwner->getSaveParam()->mSLBeakLengthPollute.get();
 			if (mOwner->unk190.color.a != 0 && beakPullDist >= lenPollute) {
-				mHolder->receiveMessage(this, 0x8);
+				mHolder->receiveMessage(this, HIT_MESSAGE_UNK8);
 			}
 
 			f32 lenLimit = mOwner->getSaveParam()->mSLBeakLengthLimit.get();
 			if (beakPullDist >= lenLimit) {
-				mHolder->receiveMessage(this, 0x8);
+				mHolder->receiveMessage(this, HIT_MESSAGE_UNK8);
 				mOwner->gotBeakDamage();
 			}
 		}
@@ -294,7 +295,8 @@ BOOL TBGEyeHit::receiveMessage(THitActor* sender, u32 message)
 	if (mOwner->getAttackMode() == 3)
 		return false;
 
-	if (sender->getActorType() == 0x1000001 && message == 15) {
+	if (sender->getActorType() == 0x1000001
+	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		mOwner->gotEyeDamage();
 		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
 		return true;
@@ -324,7 +326,8 @@ TBGBodyHit::TBGBodyHit(TBossGesso* owner, int joint_index, const char* name)
 
 BOOL TBGBodyHit::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->getActorType() == 0x1000001 && message == 0xf) {
+	if (sender->getActorType() == 0x1000001
+	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
 		return true;
 	}
@@ -883,7 +886,8 @@ const char** TBossGesso::getBasNameTable() const { return bgeso_bastable; }
 
 BOOL TBossGesso::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->getActorType() == 0x1000001 && message == 0xf) {
+	if (sender->getActorType() == 0x1000001
+	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
 		return true;
 	}
@@ -1655,7 +1659,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		    "マーレボスゲッソー用ブロック");
 
 		if (block != nullptr) {
-			block->receiveMessage(self, 14);
+			block->receiveMessage(self, HIT_MESSAGE_ATTACK);
 			MSBgm::stopTrackBGM(1, 10);
 			MSBgm::setTrackVolume(0, 1.0f, 5, 0);
 		}

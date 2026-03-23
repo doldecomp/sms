@@ -219,9 +219,9 @@ void TConsoleStr::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if ((param_1 & 0x8) && unk2B8 != 0) {
-		const JDrama::TRect& rect = param_2->getUnk64();
+		const JDrama::TRect& rect = param_2->getScissor();
 
-		J2DOrthoGraph local_1a0(param_2->getUnk54());
+		J2DOrthoGraph local_1a0(param_2->getViewport());
 		local_1a0.setup2D();
 
 		if (unk2B8 == 1 && unk18 > 60.0f) {
@@ -261,10 +261,7 @@ void TConsoleStr::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 
 		local_1a0.setup2D();
-		param_2->mScissorRect = rect;
-		GXSetScissor(param_2->mScissorRect.x1, param_2->mScissorRect.y1,
-		             param_2->mScissorRect.getWidth(),
-		             param_2->mScissorRect.getHeight());
+		param_2->setScissor(rect);
 	}
 }
 

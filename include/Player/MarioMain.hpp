@@ -981,7 +981,7 @@ public:
 	void stateMachineUpper();
 	void checkPumpEnable();
 	void checkPumping();
-	u32 askJumpIntoWaterEffectExist() const;
+	bool askJumpIntoWaterEffectExist() const;
 	void sinkInSandEffect();
 	void kickFruitEffect();
 	void toroccoEffect();
@@ -1147,7 +1147,7 @@ public:
 		return true;
 	}
 
-	TBGCheckData* getGroundPlane() const { return mGroundPlane; }
+	const TBGCheckData* getGroundPlane() const { return mGroundPlane; }
 
 	// Fabricated
 	bool checkFlag(u32 attribute) const
@@ -1216,10 +1216,10 @@ public:
 
 	/* 0xBC */ char unkBC[0x1C];
 
-	/* 0xD8 */ TBGCheckData* mWallPlane;   // TBGCheckData 0xD8
-	/* 0xDC */ TBGCheckData* mRoofPlane;   // TBGCheckData 0xDC
-	/* 0xE0 */ TBGCheckData* mGroundPlane; // TBGCheckData 0xE0
-	/* 0xE4 */ TBGCheckData* mWaterFloor;  // TBGCheckData 0xE4
+	/* 0xD8 */ const TBGCheckData* mWallPlane;   // TBGCheckData 0xD8
+	/* 0xDC */ const TBGCheckData* mRoofPlane;   // TBGCheckData 0xDC
+	/* 0xE0 */ const TBGCheckData* mGroundPlane; // TBGCheckData 0xE0
+	/* 0xE4 */ const TBGCheckData* mWaterFloor;  // TBGCheckData 0xE4
 
 	/* 0xE8 */ JGeometry::TVec3<f32> mFloorPosition;
 

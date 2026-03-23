@@ -382,7 +382,7 @@ void TGCConsole2::startAppearCoin()
 		unkD4[i]->getPane()->hide();
 	}
 
-	unk124->clearUnk11CFlag(1 << 0);
+	unk124->clearStatus(JPABaseEmitter::STATUS_STOP_EMIT);
 }
 
 void TGCConsole2::startDisappearCoin()
@@ -401,7 +401,7 @@ void TGCConsole2::startDisappearCoin()
 	unk108->updatePaneOffset(
 	    40, 0, -(pane->mBounds.getHeight()) + getOffsetForAboveScreen(unk108));
 
-	unk124->setUnk11CFlag(1 << 0);
+	unk124->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
 }
 
 void TGCConsole2::startInsertLife(int) { }

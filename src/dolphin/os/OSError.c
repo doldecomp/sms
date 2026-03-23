@@ -9,7 +9,7 @@
 
 OSErrorHandlerEx __OSErrorTable[16];
 
-void OSReport(char* msg, ...)
+void OSReport(const char* msg, ...)
 {
 	va_list marker;
 	va_start(marker, msg);
@@ -17,7 +17,7 @@ void OSReport(char* msg, ...)
 	va_end(marker);
 }
 
-void OSPanic(char* file, int line, char* msg, ...)
+void OSPanic(const char* file, int line, const char* msg, ...)
 {
 	va_list marker;
 	u32 i;

@@ -14,12 +14,20 @@ enum TActorTypeBits {
 };
 
 enum THitMessageType {
+	HIT_MESSAGE_TRAMPLE          = 0,
 	HIT_MESSAGE_HIP_DROP         = 1,
-	HIT_MESSAGE_UNK4             = 4, // grab?
+	HIT_MESSAGE_UNK2             = 2,
+	HIT_MESSAGE_UNK3             = 3,
+	HIT_MESSAGE_TAKE             = 4,
+	HIT_MESSAGE_UNK5             = 5,
+	HIT_MESSAGE_UNK6             = 6,
 	HIT_MESSAGE_UNK7             = 7,
 	HIT_MESSAGE_UNK8             = 8,
 	HIT_MESSAGE_UNKA             = 0xA,
-	HIT_MESSAGE_ATTACK           = 0xE,
+	HIT_MESSAGE_UNKB             = 0xB,
+	HIT_MESSAGE_PUNCH            = 0xC,
+	HIT_MESSAGE_UNKD             = 0xD,
+	HIT_MESSAGE_ATTACK           = 0xE, // TODO: attack -> touch?!
 	HIT_MESSAGE_SPRAYED_BY_WATER = 0xF,
 	HIT_MESSAGE_UNK10            = 0x10,
 };
@@ -88,6 +96,12 @@ public:
 	void setDamageHeight(f32 v)
 	{
 		mDamageHeight = v;
+		calcEntryRadius();
+	}
+	void setDamageParams(f32 damage_radius, f32 damage_height)
+	{
+		mDamageRadius = damage_radius;
+		mDamageHeight = damage_height;
 		calcEntryRadius();
 	}
 	void setHitParams(f32 attack_radius, f32 attack_height, f32 damage_radius,

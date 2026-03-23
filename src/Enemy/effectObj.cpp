@@ -118,7 +118,7 @@ void TEffectObjBase::perform(u32 param_1, JDrama::TGraphics*)
 
 BOOL TEffectObjBase::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == 0xf) {
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		behaveToWater(sender);
 		return true;
 	}

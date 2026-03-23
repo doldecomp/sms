@@ -83,25 +83,27 @@ u32 JPAEmitterManager::getParticleNumber() { }
 
 u32 JPAEmitterManager::getFieldNumber() { }
 
-void JPAEmitterManager::calcBase(u8 param_1)
+void JPAEmitterManager::calcBase(u8 group_id)
 {
-	if (!unk44[param_1].getNumLinks())
+	if (!unk44[group_id].getNumLinks())
 		return;
 
-	JSULink<JPABaseEmitter>* link = unk44[param_1].getFirst();
-	while (link) {
-		JSULink<JPABaseEmitter>* next = link->getNext();
-		JPABaseEmitter* emitter       = link->getObject();
+	JSUList<JPABaseEmitter>* list = &unk44[group_id];
+
+	JSULink<JPABaseEmitter>* next = nullptr;
+	for (JSULink<JPABaseEmitter>* link = list->getFirst();
+	     link != list->getEnd(); link  = next) {
+		next = link->getNext();
+
+		JPABaseEmitter* emitter = link->getObject();
+
 		if (!emitter->checkStartFrame())
 			continue;
-		if (emitter->checkMaxFrame() != 0
-		    && emitter->mParticleList.getNumLinks()
-		               + emitter->getChildParticleList()->getNumLinks()
-		           == 0)
+
+		if (emitter->checkMaxFrame() != 0 && emitter->getParticleNumber() == 0)
 			deleteEmitter(emitter);
 		else
 			emitter->calc();
-		link = next;
 	}
 	unk3C += unk40;
 	if (unk3C < 0.0f)
@@ -110,23 +112,28 @@ void JPAEmitterManager::calcBase(u8 param_1)
 
 void JPAEmitterManager::calc()
 {
-	for (int i = 0; i < 8; ++i)
-		calcBase(i);
+	for (int gid = 0; gid < 8; ++gid)
+		calcBase(gid);
 }
 
 void JPAEmitterManager::calc(u8) { }
 
-void JPAEmitterManager::drawBase(JPADrawInfo* info, u8 i)
+void JPAEmitterManager::drawBase(JPADrawInfo* info, u8 group_id)
 {
-	JPAGetEmitterInfoPtr()->unk15C = info->getFovy();
-	JPAGetEmitterInfoPtr()->unk160 = info->getAspect();
-	if (!unk44[i].getNumLinks())
+	JPAGetEmitterInfoPtr()->mFovy   = info->getFovy();
+	JPAGetEmitterInfoPtr()->mAspect = info->getAspect();
+	if (!unk44[group_id].getNumLinks())
 		return;
 
-	JSUListIterator<JPABaseEmitter> it = unk44[i].getFirst();
-	for (; it != unk44[i].getEnd(); ++it) {
-		if (!((it->unk11C & 4) ? true : false))
-			it->mDraw.draw(info->getCameraMtxPtr());
+	JSUList<JPABaseEmitter>* list = &unk44[group_id];
+
+	for (JSULink<JPABaseEmitter>* link = list->getFirst();
+	     link != list->getEnd(); link  = link->getNext()) {
+
+		if (link->getObject()->checkStatus(JPABaseEmitter::STATUS_STOP_DRAW))
+			continue;
+
+		link->getObject()->mDraw.draw(info->getCameraMtxPtr());
 	}
 }
 
@@ -138,12 +145,12 @@ void JPAEmitterManager::draw(JPADrawInfo* info)
 
 void JPAEmitterManager::draw(MtxPtr) { }
 
-void JPAEmitterManager::draw(JPADrawInfo* info, u8 i)
+void JPAEmitterManager::draw(JPADrawInfo* info, u8 group_id)
 {
-	if (i >= 8)
+	if (group_id >= 8)
 		return;
 
-	drawBase(info, i);
+	drawBase(info, group_id);
 }
 
 void JPAEmitterManager::draw(MtxPtr, u8) { }
@@ -171,15 +178,15 @@ JPABaseEmitter* JPAEmitterManager::createEmitterBase(
 
 		if (unk14.getNumLinks()) {
 			emitter = unk14.getFirst()->getObject();
-			unk14.remove(&emitter->unk0);
+			unk14.remove(emitter->getLinkBufferPtr());
 			new (emitter) JPABaseEmitter;
-			unk44[param_2].append(&emitter->unk0);
+			unk44[param_2].append(emitter->getLinkBufferPtr());
 			emitter->loadBaseEmitterBlock(block);
 		}
 
 		if (emitter) {
 			emitter->unk173             = param_2;
-			emitter->unk10C             = this;
+			emitter->mManager           = this;
 			emitter->unk180.r           = 0xff;
 			emitter->unk180.g           = 0xff;
 			emitter->unk180.b           = 0xff;
@@ -189,12 +196,14 @@ JPABaseEmitter* JPAEmitterManager::createEmitterBase(
 			emitter->unk180.a           = 0xff;
 			emitter->mFieldManager.unkC = &unk28;
 
+			JPAFieldManager* fieldMgr = emitter->getFieldManager();
+
 			int count             = linkInfo->unk20;
 			JPADataBlock** blocks = linkInfo->unk18;
 			for (int i = 0; i < count; ++i) {
 				JPADataBlock* block2 = blocks[i];
-				JPABaseField* field  = emitter->mFieldManager.setField(
-                    ((u8*)block2->mRawData)[0xC]);
+				JPABaseField* field
+				    = fieldMgr->setField(((u8*)blocks[i]->mRawData)[0xC]);
 				if (field)
 					field->loadFieldBlock(block2);
 			}
@@ -222,9 +231,7 @@ JPABaseEmitter* JPAEmitterManager::createSimpleEmitterID(
 	    = createEmitterBase(param_2, param_3, param_4, param_5, param_6);
 
 	if (result) {
-		result->unk160.x = param_1.x;
-		result->unk160.y = param_1.y;
-		result->unk160.z = param_1.z;
+		result->unk160.set(param_1);
 		return result;
 	}
 

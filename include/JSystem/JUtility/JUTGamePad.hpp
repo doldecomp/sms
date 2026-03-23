@@ -208,7 +208,6 @@ public:
 	struct CRumble {
 		CRumble(JUTGamePad* pad) { clear(pad); }
 
-		static u32 sChannelMask[4];
 		static bool mStatus[4];
 		static u32 mEnable;
 
@@ -231,12 +230,6 @@ public:
 		static void setEnable(u32 mask);
 
 		static bool isEnabled(u32 mask) { return mEnable & mask; }
-
-		static bool isEnabledPort(int port)
-		{
-			JUT_ASSERT(250, 0 <= port && port < 4);
-			return isEnabled(sChannelMask[port]);
-		}
 
 		/* 0x00 */ u32 mFrame;
 		/* 0x04 */ u32 mLength;

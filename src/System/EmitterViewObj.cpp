@@ -125,9 +125,8 @@ void TMarioParticleManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 					JPABaseEmitter* emitter = info->mEmitter;
 					if (emitter == nullptr) {
 						emitTry(i, info, 3);
-					} else if (emitter->isThing()) {
-						emitter->unk1E8 = -1;
-						emitter->unk11C |= 0x1;
+					} else if (emitter->isEnableDeleteEmitter()) {
+						emitter->becomeInvalidEmitter();
 						info->mEmitter = nullptr;
 						emitTry(i, info, 3);
 					}
@@ -135,8 +134,7 @@ void TMarioParticleManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 				if ((info->mPrevFrameFlags & INFO_FLAG_UNK4)
 				    && !(info->mFlags & INFO_FLAG_UNK4)) {
 					if (JPABaseEmitter* emitter = info->mEmitter) {
-						emitter->unk1E8 = -1;
-						emitter->unk11C |= 0x1;
+						emitter->becomeInvalidEmitter();
 						info->mEmitter = nullptr;
 						info->unk0     = nullptr;
 						info->unk4     = nullptr;
@@ -156,9 +154,8 @@ void TMarioParticleManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 					JPABaseEmitter* emitter = info->mEmitter;
 					if (emitter == nullptr) {
 						emitTry(i, info, 3);
-					} else if (emitter->isThing()) {
-						emitter->unk1E8 = -1;
-						emitter->unk11C |= 0x1;
+					} else if (emitter->isEnableDeleteEmitter()) {
+						emitter->becomeInvalidEmitter();
 						info->mEmitter = nullptr;
 						emitTry(i, info, 3);
 					}
@@ -166,8 +163,7 @@ void TMarioParticleManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 				if ((info->mPrevFrameFlags & INFO_FLAG_UNK4)
 				    && !(info->mFlags & INFO_FLAG_UNK4)) {
 					if (JPABaseEmitter* emitter = info->mEmitter) {
-						emitter->unk1E8 = -1;
-						emitter->unk11C |= 0x1;
+						emitter->becomeInvalidEmitter();
 						info->mEmitter = nullptr;
 						info->unk0     = nullptr;
 						info->unk4     = nullptr;

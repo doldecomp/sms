@@ -13,7 +13,7 @@ public:
 	/* Constructors */
 	inline TVec4() { }
 
-	void zero() { x = y = z = w = 0.0f; }
+	TVec4(const TVec4& other) { *(Quaternion*)this = *(Quaternion*)&other; }
 
 	template <typename A> TVec4(A _x, A _y, A _z, A _h)
 	{
@@ -23,8 +23,22 @@ public:
 		w = _h;
 	}
 
+	TVec4& operator=(const TVec4& other)
+	{
+		*(Quaternion*)this = *(Quaternion*)&other;
+		return *this;
+	}
+
 	/* General operations */
-	template <typename A> void set(const JGeometry::TVec4<A>&);
+	void zero() { x = y = z = w = 0.0f; }
+
+	template <typename A> void set(const JGeometry::TVec4<A>& _v)
+	{
+		x = _v.x;
+		y = _v.y;
+		z = _v.z;
+		w = _v.w;
+	}
 
 	template <typename A> void set(A _x, A _y, A _z, A _w)
 	{
@@ -55,9 +69,9 @@ public:
 		w = b.w * scale;
 	}
 
-	inline TVec3<T>* toTVec3() { return (TVec3<T>*)this; }
+	TVec3<T>& xyz() { return (TVec3<T>&)*this; }
 
-	f32 squared() const { return x * x + y * y + z * z + w * w; }
+	f32 squared() const { return dot(*this); }
 
 	f32 length() const { return TUtil<f32>::sqrt(squared()); }
 
@@ -77,9 +91,12 @@ public:
 		scale(length * JGeometry::TUtil<f32>::inv_sqrt(lsq), v);
 	}
 
-	void normalize() { setLength(*this, 1.0f); }
+	void normalize() { setLength(*this, JGeometry::TUtil<f32>::one()); }
 
-	void normalize(const TVec4<f32>& other) { setLength(other, 1.0f); }
+	void normalize(const TVec4<f32>& other)
+	{
+		setLength(other, JGeometry::TUtil<f32>::one());
+	}
 };
 
 } // namespace JGeometry
