@@ -15,11 +15,11 @@ JPASweepShape::JPASweepShape(const u8* data)
 	unk8 = *(f32*)(data + 0x28);
 	unkC = *(f32*)(data + 0x2C);
 
-	unk48         = data[0x36];
-	unk49         = data[0x44];
-	unk4A         = data[0x45];
-	unk4B         = data[0x46];
-	mTextureIndex = data[0x47];
+	mChildrenAffectedByFields = data[0x36];
+	unk49                     = data[0x44];
+	unk4A                     = data[0x45];
+	unk4B                     = data[0x46];
+	mTextureIndex             = data[0x47];
 
 	mScaleY = *(f32*)(data + 0x4C);
 	mScaleX = *(f32*)(data + 0x50);

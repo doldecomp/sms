@@ -35,8 +35,8 @@ public:
 	/* 0x9C */ GXColor mEnvColor;
 	/* 0xA0 */ DirTypeFunc mDirTypeFunc;
 	/* 0xA4 */ RotTypeFunc mRotTypeFunc;
-	/* 0xA8 */ f32 unkA8;
-	/* 0xAC */ s16 unkAC;
+	/* 0xA8 */ f32 mScaleAnmTimer;
+	/* 0xAC */ s16 mColorAnmFrame;
 };
 
 class JPADrawVisitorContainer {

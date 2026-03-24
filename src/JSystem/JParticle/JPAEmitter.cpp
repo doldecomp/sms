@@ -101,9 +101,9 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 	JGeometry::TVec3<f32> parentUnk14;
 	parentUnk14.set(parent->unk14);
 
-	bool bVar1 = false;
-	if (!JPAEmitterInfoObj.unk17F)
-		bVar1 = true;
+	bool ignoreFields = false;
+	if (!JPAEmitterInfoObj.mChildrenAffectedByFields)
+		ignoreFields = true;
 
 	for (int i = 0; i < count; ++i) {
 		if (mManager->unk0.getNumLinks() == 0)
@@ -117,7 +117,7 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 		particle->mLifetime     = sweepShape->unk40;
 		particle->unk50         = unk114;
 
-		if (bVar1) {
+		if (ignoreFields) {
 			particle->setStatus(JPABaseParticle::FLAG_IGNORE_FIELDS);
 		} else {
 			particle->mDragForce        = parent->getDragForce();
@@ -188,14 +188,14 @@ void JPABaseEmitter::getEmitterGlobalTranslation(JGeometry::TVec3<f32>& vec)
 
 void JPABaseEmitter::calcEmitterGlobalParams()
 {
-	JPAEmitterInfoObj.unk0 = this;
-	JPAEmitterInfoObj.unk4 = &mFieldManager;
+	JPAEmitterInfoObj.mCurrentEmitter      = this;
+	JPAEmitterInfoObj.mCurrentFieldManager = &mFieldManager;
 
 	if (mEmitterDataBlockInfo->getSweepShape() != nullptr
-	    && mEmitterDataBlockInfo->getSweepShape()->unk48 != 0)
-		JPAEmitterInfoObj.unk17F = 1;
+	    && mEmitterDataBlockInfo->getSweepShape()->mChildrenAffectedByFields)
+		JPAEmitterInfoObj.mChildrenAffectedByFields = true;
 	else
-		JPAEmitterInfoObj.unk17F = 0;
+		JPAEmitterInfoObj.mChildrenAffectedByFields = false;
 
 	JPAGetXYZRotateMtx(mRot.x * 182, mRot.y * 182, mRot.z * 182,
 	                   JPAEmitterInfoObj.unkCC);
@@ -272,13 +272,13 @@ void JPABaseEmitter::loadBaseEmitterBlock(JPADataBlock* block)
 	stream.read(&mVolumeType, 1);
 	stream.read(&mEmitInterval, 1);
 	stream.skip(2);
-	stream.read(&unk1F2, 2);
+	stream.read(&mVolumeSubdivision, 2);
 	stream.read(&mChildSpawnRate, 4);
 	mChildSpawnRateVariance = JPAConvertFixToFloat(stream.readS16());
 	mMaxFrame               = stream.readS16();
 	stream.read(&mStartFrame, 2);
 	stream.read(&mVolumeSize, 2);
-	unk1F4           = JPAConvertFixToFloat(stream.readS16());
+	mVolumeYawSweep  = JPAConvertFixToFloat(stream.readS16());
 	mVolumeMinRadius = JPAConvertFixToFloat(stream.readS16());
 	stream.read(&mBaseLifetime, 2);
 	mLifetimeRandomScale   = JPAConvertFixToFloat(stream.readS16());
@@ -344,34 +344,43 @@ JPABaseParticle* JPABaseEmitter::createParticle()
 			r26_param164 = JPAEmitterInfoObj.mEmitCount;
 
 			if (mVolumeType == VOLUME_TYPE_SPHERE) {
-				r24_param174 = JPAEmitterInfoObj.unk174;
-				r25_param176 = JPAEmitterInfoObj.unk176;
+				r24_param174 = JPAEmitterInfoObj.mSphereCurrentPitch;
+				r25_param176 = JPAEmitterInfoObj.mSphereCurrentYaw;
 
-				JPAEmitterInfoObj.unk16C++;
-				JPAEmitterInfoObj.unk176 += JPAEmitterInfoObj.unk17A;
+				JPAEmitterInfoObj.mSphereParticlesEmittedForCurrentLayer++;
+				JPAEmitterInfoObj.mSphereCurrentYaw
+				    += JPAEmitterInfoObj.mSphereYawStep;
 
-				if (JPAEmitterInfoObj.unk16C == JPAEmitterInfoObj.unk170) {
-					JPAEmitterInfoObj.unk16C = 0;
+				if (JPAEmitterInfoObj.mSphereParticlesEmittedForCurrentLayer
+				    == JPAEmitterInfoObj.mSphereParticlesInCurrentLayer) {
 
-					if (JPAEmitterInfoObj.unk17C != 0) {
-						JPAEmitterInfoObj.unk170 -= 4;
-						if (JPAEmitterInfoObj.unk170 == 0) {
-							JPAEmitterInfoObj.unk170 = 1;
+					JPAEmitterInfoObj.mSphereParticlesEmittedForCurrentLayer
+					    = 0;
+
+					if (JPAEmitterInfoObj.mHemisphereFlipFlop) {
+						JPAEmitterInfoObj.mSphereParticlesInCurrentLayer -= 4;
+						if (JPAEmitterInfoObj.mSphereParticlesInCurrentLayer
+						    == 0) {
+							JPAEmitterInfoObj.mSphereParticlesInCurrentLayer
+							    = 1;
 						} else {
-							JPAEmitterInfoObj.unk17A
-							    = (s16)((int)(unk1F4 * 65536.0f)
-							            / (int)JPAEmitterInfoObj.unk170);
+							JPAEmitterInfoObj.mSphereYawStep
+							    = (s16)((int)(mVolumeYawSweep * 65536.0f)
+							            / (int)JPAEmitterInfoObj
+							                  .mSphereParticlesInCurrentLayer);
 						}
-						JPAEmitterInfoObj.unk174 = -JPAEmitterInfoObj.unk174;
-						JPAEmitterInfoObj.unk174 += JPAEmitterInfoObj.unk178;
-						JPAEmitterInfoObj.unk17C = 0;
-
+						JPAEmitterInfoObj.mSphereCurrentPitch
+						    = -JPAEmitterInfoObj.mSphereCurrentPitch;
+						JPAEmitterInfoObj.mSphereCurrentPitch
+						    += JPAEmitterInfoObj.mSpherePitchStep;
+						JPAEmitterInfoObj.mHemisphereFlipFlop = false;
 					} else {
-						JPAEmitterInfoObj.unk174 = -JPAEmitterInfoObj.unk174;
-						JPAEmitterInfoObj.unk17C = 1;
+						JPAEmitterInfoObj.mSphereCurrentPitch
+						    = -JPAEmitterInfoObj.mSphereCurrentPitch;
+						JPAEmitterInfoObj.mHemisphereFlipFlop = true;
 					}
 				}
-				JPAEmitterInfoObj.unk176 = 0;
+				JPAEmitterInfoObj.mSphereCurrentYaw = 0;
 			}
 		}
 
@@ -410,8 +419,8 @@ JPABaseParticle* JPABaseEmitter::createParticle()
 				angle      = uVar25;
 			}
 
-			if (unk1F4 < 1.0f) {
-				JPAGetYRotateMtx(angle * unk1F4, local_438);
+			if (mVolumeYawSweep < 1.0f) {
+				JPAGetYRotateMtx(angle * mVolumeYawSweep, local_438);
 			} else {
 				JPAGetYRotateMtx(angle, local_438);
 			}
@@ -440,8 +449,8 @@ JPABaseParticle* JPABaseEmitter::createParticle()
 			if (checkFlag(EMIT_FLAG_FIXED_INTERVAL)) {
 				JPAGetXYRotateMtx(r24_param174, r25_param176, local_408);
 			} else {
-				if (unk1F4 < 1.0f) {
-					f32 y = unk1F4 * getRandomSS();
+				if (mVolumeYawSweep < 1.0f) {
+					f32 y = mVolumeYawSweep * getRandomSS();
 					JPAGetXYRotateMtx(getRandomRS(), y, local_408);
 				} else {
 					JPAGetXYZRotateMtx(mRng.get(), mRng.get(), mRng.get(),
@@ -462,8 +471,8 @@ JPABaseParticle* JPABaseEmitter::createParticle()
 		}
 		case VOLUME_TYPE_CYLINDER: {
 			s16 uVar11;
-			if (unk1F4 < 1.0f) {
-				uVar11 = unk1F4 * getRandomSS();
+			if (mVolumeYawSweep < 1.0f) {
+				uVar11 = mVolumeYawSweep * getRandomSS();
 			} else {
 				uVar11 = mRng.get();
 			}
@@ -482,8 +491,8 @@ JPABaseParticle* JPABaseEmitter::createParticle()
 		}
 		case VOLUME_TYPE_TORUS: {
 			s16 theta;
-			if (unk1F4 < 1.0f) {
-				theta = unk1F4 * getRandomSS();
+			if (mVolumeYawSweep < 1.0f) {
+				theta = mVolumeYawSweep * getRandomSS();
 			} else {
 				theta = mRng.get();
 			}
@@ -659,25 +668,29 @@ int JPABaseEmitter::calcCreateParticle()
 		} else {
 			if (mVolumeType == VOLUME_TYPE_SPHERE) {
 
-				eio.unk16C = 0;
-				eio.unk174 = 0;
-				eio.unk176 = 0;
-				eio.unk170 = 2;
-				eio.unk17C = 1;
-				eio.unk170 = 0;
+				eio.mSphereParticlesEmittedForCurrentLayer = 0;
+				eio.mSphereCurrentPitch                    = 0;
+				eio.mSphereCurrentYaw                      = 0;
+				eio.mSphereParticlesInCurrentLayer         = 2;
+				eio.mHemisphereFlipFlop                    = true;
+				eio.mSphereParticlesInCurrentLayer         = 0;
 
 				numToCreate = 2;
-				for (int i = 0; i < unk1F2; ++i) {
-					numToCreate += eio.unk170;
-					eio.unk170 += 4;
-					numToCreate += eio.unk170;
+				for (int i = 0; i < mVolumeSubdivision; ++i) {
+					numToCreate += eio.mSphereParticlesInCurrentLayer;
+					eio.mSphereParticlesInCurrentLayer += 4;
+					numToCreate += eio.mSphereParticlesInCurrentLayer;
 				}
 
-				eio.unk17A = (s16)((s32)(65536.0f * unk1F4) / eio.unk170);
-				eio.unk178 = (s16)(0x4000 / unk1F2);
+				// 65536 is 360 degree
+				eio.mSphereYawStep
+				    = (s16)((s32)(65536.0f * mVolumeYawSweep)
+				            / eio.mSphereParticlesInCurrentLayer);
+				// 90 degrees divided by the number of layers
+				eio.mSpherePitchStep = (s16)(65536 / 4 / mVolumeSubdivision);
 			} else if (mVolumeType == VOLUME_TYPE_CIRCLE
 			           || mVolumeType == VOLUME_TYPE_LINE) {
-				numToCreate = unk1F2;
+				numToCreate = mVolumeSubdivision;
 			}
 		}
 
@@ -850,7 +863,7 @@ void JPABaseEmitter::calcKeyFrameAnime()
 			mVolumeSize = getKeyValue(time, frameNum, keyFrames);
 			break;
 		case 2:
-			unk1F4 = getKeyValue(time, frameNum, keyFrames);
+			mVolumeYawSweep = getKeyValue(time, frameNum, keyFrames);
 			break;
 		case 3:
 			unk20C = getKeyValue(time, frameNum, keyFrames);

@@ -1376,12 +1376,12 @@ void JPADrawExecRegisterColorChildPE::exec(const JPADrawContext* dc)
 
 void JPADrawCalcColorPrm::calc(const JPADrawContext* dc)
 {
-	dc->unk14->mPrmColor = dc->mBaseShape->getPrmColor(dc->pcb->unkAC);
+	dc->unk14->mPrmColor = dc->mBaseShape->getPrmColor(dc->pcb->mColorAnmFrame);
 }
 
 void JPADrawCalcColorEnv::calc(const JPADrawContext* dc)
 {
-	dc->unk14->mEnvColor = dc->mBaseShape->getEnvColor(dc->pcb->unkAC);
+	dc->unk14->mEnvColor = dc->mBaseShape->getEnvColor(dc->pcb->mColorAnmFrame);
 }
 
 void JPADrawCalcColorAnmFrameNormal::calc(const JPADrawContext* dc)
@@ -1390,13 +1390,14 @@ void JPADrawCalcColorAnmFrameNormal::calc(const JPADrawContext* dc)
 	s16 max   = dc->mBaseShape->getColorRegAnmMaxFrm();
 	s32 frame = tick < max ? tick : max;
 
-	dc->pcb->unkAC = frame;
+	dc->pcb->mColorAnmFrame = frame;
 }
 
 void JPADrawCalcColorAnmFrameRepeat::calc(const JPADrawContext* dc)
 {
-	f32 tick       = dc->mBaseEmitter->unk10.getFrame();
-	dc->pcb->unkAC = ((u32)tick) % (dc->mBaseShape->getColorRegAnmMaxFrm() + 1);
+	f32 tick = dc->mBaseEmitter->unk10.getFrame();
+	dc->pcb->mColorAnmFrame
+	    = ((u32)tick) % (dc->mBaseShape->getColorRegAnmMaxFrm() + 1);
 }
 
 void JPADrawCalcColorAnmFrameReverse::calc(const JPADrawContext* dc)
@@ -1405,17 +1406,17 @@ void JPADrawCalcColorAnmFrameReverse::calc(const JPADrawContext* dc)
 	s32 maxFrame = dc->mBaseShape->getColorRegAnmMaxFrm();
 	s32 odd   = (tick / maxFrame) & 1; // whether we're on an even or odd loop
 	s32 frame = tick % maxFrame;
-	dc->pcb->unkAC = frame + (odd * maxFrame) - 2 * (odd * frame);
+	dc->pcb->mColorAnmFrame = frame + (odd * maxFrame) - 2 * (odd * frame);
 }
 
 void JPADrawCalcColorAnmFrameMerge::calc(const JPADrawContext* dc)
 {
-	dc->pcb->unkAC = 0;
+	dc->pcb->mColorAnmFrame = 0;
 }
 
 void JPADrawCalcColorAnmFrameRandom::calc(const JPADrawContext* dc)
 {
-	dc->pcb->unkAC = 0;
+	dc->pcb->mColorAnmFrame = 0;
 }
 
 void JPADrawCalcTextureAnmIndexNormal::calc(const JPADrawContext* dc)
@@ -1469,17 +1470,17 @@ void JPADrawCalcScaleX::calc(const JPADrawContext* dc,
 {
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
-	if (dc->pcb->unkA8 < dc->mExtraShape->getScaleInTiming()) {
+	if (dc->pcb->mScaleAnmTimer < dc->mExtraShape->getScaleInTiming()) {
 		params->unk10
 		    = params->unkC
-		      * ((dc->mExtraShape->getIncreaseRateX() * dc->pcb->unkA8)
+		      * ((dc->mExtraShape->getIncreaseRateX() * dc->pcb->mScaleAnmTimer)
 		         + dc->mExtraShape->getScaleInValueX());
-	} else if (dc->pcb->unkA8 > dc->mExtraShape->getScaleOutTiming()) {
-		params->unk10
-		    = params->unkC
-		      * ((dc->mExtraShape->getDecreaseRateX()
-		          * (dc->pcb->unkA8 - dc->mExtraShape->getScaleOutTiming()))
-		         + 1.0f);
+	} else if (dc->pcb->mScaleAnmTimer > dc->mExtraShape->getScaleOutTiming()) {
+		params->unk10 = params->unkC
+		                * ((dc->mExtraShape->getDecreaseRateX()
+		                    * (dc->pcb->mScaleAnmTimer
+		                       - dc->mExtraShape->getScaleOutTiming()))
+		                   + 1.0f);
 	} else {
 		params->unk10 = params->unkC;
 	}
@@ -1490,17 +1491,17 @@ void JPADrawCalcScaleY::calc(const JPADrawContext* dc,
 {
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
-	if (dc->pcb->unkA8 < dc->mExtraShape->getScaleInTiming()) {
+	if (dc->pcb->mScaleAnmTimer < dc->mExtraShape->getScaleInTiming()) {
 		params->unk14
 		    = params->unkC
-		      * ((dc->mExtraShape->getIncreaseRateY() * dc->pcb->unkA8)
+		      * ((dc->mExtraShape->getIncreaseRateY() * dc->pcb->mScaleAnmTimer)
 		         + dc->mExtraShape->getScaleInValueY());
-	} else if (dc->pcb->unkA8 > dc->mExtraShape->getScaleOutTiming()) {
-		params->unk14
-		    = params->unkC
-		      * ((dc->mExtraShape->getDecreaseRateY()
-		          * (dc->pcb->unkA8 - dc->mExtraShape->getScaleOutTiming()))
-		         + 1.0f);
+	} else if (dc->pcb->mScaleAnmTimer > dc->mExtraShape->getScaleOutTiming()) {
+		params->unk14 = params->unkC
+		                * ((dc->mExtraShape->getDecreaseRateY()
+		                    * (dc->pcb->mScaleAnmTimer
+		                       - dc->mExtraShape->getScaleOutTiming()))
+		                   + 1.0f);
 	} else {
 		params->unk14 = params->unkC;
 	}
@@ -1513,17 +1514,17 @@ void JPADrawCalcScaleXBySpeed::calc(const JPADrawContext* dc,
 
 	JGeometry::TVec3<f32> vel = particle->mVelocity;
 
-	if (dc->pcb->unkA8 < dc->mExtraShape->getScaleInTiming()) {
+	if (dc->pcb->mScaleAnmTimer < dc->mExtraShape->getScaleInTiming()) {
 		params->unk10
 		    = params->unkC
-		      * ((dc->mExtraShape->getIncreaseRateX() * dc->pcb->unkA8)
+		      * ((dc->mExtraShape->getIncreaseRateX() * dc->pcb->mScaleAnmTimer)
 		         + dc->mExtraShape->getScaleInValueX());
-	} else if (dc->pcb->unkA8 > dc->mExtraShape->getScaleOutTiming()) {
-		params->unk10
-		    = params->unkC
-		      * ((dc->mExtraShape->getDecreaseRateX()
-		          * (dc->pcb->unkA8 - dc->mExtraShape->getScaleOutTiming()))
-		         + 1.0f);
+	} else if (dc->pcb->mScaleAnmTimer > dc->mExtraShape->getScaleOutTiming()) {
+		params->unk10 = params->unkC
+		                * ((dc->mExtraShape->getDecreaseRateX()
+		                    * (dc->pcb->mScaleAnmTimer
+		                       - dc->mExtraShape->getScaleOutTiming()))
+		                   + 1.0f);
 	} else {
 		params->unk10 = params->unkC;
 	}
@@ -1537,17 +1538,17 @@ void JPADrawCalcScaleYBySpeed::calc(const JPADrawContext* dc,
 
 	JGeometry::TVec3<f32> vel = particle->mVelocity;
 
-	if (dc->pcb->unkA8 < dc->mExtraShape->getScaleInTiming()) {
+	if (dc->pcb->mScaleAnmTimer < dc->mExtraShape->getScaleInTiming()) {
 		params->unk14
 		    = params->unkC
-		      * ((dc->mExtraShape->getIncreaseRateY() * dc->pcb->unkA8)
+		      * ((dc->mExtraShape->getIncreaseRateY() * dc->pcb->mScaleAnmTimer)
 		         + dc->mExtraShape->getScaleInValueY());
-	} else if (dc->pcb->unkA8 > dc->mExtraShape->getScaleOutTiming()) {
-		params->unk14
-		    = params->unkC
-		      * ((dc->mExtraShape->getDecreaseRateY()
-		          * (dc->pcb->unkA8 - dc->mExtraShape->getScaleOutTiming()))
-		         + 1.0f);
+	} else if (dc->pcb->mScaleAnmTimer > dc->mExtraShape->getScaleOutTiming()) {
+		params->unk14 = params->unkC
+		                * ((dc->mExtraShape->getDecreaseRateY()
+		                    * (dc->pcb->mScaleAnmTimer
+		                       - dc->mExtraShape->getScaleOutTiming()))
+		                   + 1.0f);
 	} else {
 		params->unk14 = params->unkC;
 	}
@@ -1565,21 +1566,23 @@ void JPADrawCalcScaleCopyX2Y::calc(const JPADrawContext*,
 void JPADrawCalcScaleAnmTimingNormal::calc(const JPADrawContext* dc,
                                            JPABaseParticle* particle)
 {
-	dc->pcb->unkA8 = particle->mLifeProgress;
+	dc->pcb->mScaleAnmTimer = particle->mLifeProgress;
 }
 
 void JPADrawCalcScaleAnmTimingRepeatX::calc(const JPADrawContext* dc,
                                             JPABaseParticle* particle)
 {
-	dc->pcb->unkA8 = (particle->getAge() % dc->mExtraShape->getAnmCycleX())
-	                 / (f32)dc->mExtraShape->getAnmCycleX();
+	dc->pcb->mScaleAnmTimer
+	    = (particle->getAge() % dc->mExtraShape->getAnmCycleX())
+	      / (f32)dc->mExtraShape->getAnmCycleX();
 }
 
 void JPADrawCalcScaleAnmTimingRepeatY::calc(const JPADrawContext* dc,
                                             JPABaseParticle* particle)
 {
-	dc->pcb->unkA8 = (particle->getAge() % dc->mExtraShape->getAnmCycleY())
-	                 / (f32)dc->mExtraShape->getAnmCycleY();
+	dc->pcb->mScaleAnmTimer
+	    = (particle->getAge() % dc->mExtraShape->getAnmCycleY())
+	      / (f32)dc->mExtraShape->getAnmCycleY();
 }
 
 void JPADrawCalcScaleAnmTimingReverseX::calc(const JPADrawContext* dc,
@@ -1589,7 +1592,7 @@ void JPADrawCalcScaleAnmTimingReverseX::calc(const JPADrawContext* dc,
 	f32 odd   = (particle->getAge() / dc->mExtraShape->getAnmCycleX()) & 1;
 	f32 frame = (f32)(particle->getAge() % dc->mExtraShape->getAnmCycleX())
 	            / dc->mExtraShape->getAnmCycleX();
-	dc->pcb->unkA8 = odd + (frame - odd * 2.0f * frame);
+	dc->pcb->mScaleAnmTimer = odd + (frame - odd * 2.0f * frame);
 }
 
 void JPADrawCalcScaleAnmTimingReverseY::calc(const JPADrawContext* dc,
@@ -1599,21 +1602,21 @@ void JPADrawCalcScaleAnmTimingReverseY::calc(const JPADrawContext* dc,
 	f32 odd   = (particle->getAge() / dc->mExtraShape->getAnmCycleY()) & 1;
 	f32 frame = (f32)(particle->getAge() % dc->mExtraShape->getAnmCycleY())
 	            / dc->mExtraShape->getAnmCycleY();
-	dc->pcb->unkA8 = odd + (frame - odd * 2.0f * frame);
+	dc->pcb->mScaleAnmTimer = odd + (frame - odd * 2.0f * frame);
 }
 
 void JPADrawCalcColorPrm::calc(const JPADrawContext* dc,
                                JPABaseParticle* particle)
 {
 	particle->getDrawParamPPtr()->unk2C
-	    = dc->mBaseShape->getPrmColor(dc->pcb->unkAC);
+	    = dc->mBaseShape->getPrmColor(dc->pcb->mColorAnmFrame);
 }
 
 void JPADrawCalcColorEnv::calc(const JPADrawContext* dc,
                                JPABaseParticle* particle)
 {
 	particle->getDrawParamPPtr()->unk30
-	    = dc->mBaseShape->getEnvColor(dc->pcb->unkAC);
+	    = dc->mBaseShape->getEnvColor(dc->pcb->mColorAnmFrame);
 }
 
 void JPADrawCalcColorCopyFromEmitter::calc(const JPADrawContext* dc,
@@ -1629,7 +1632,7 @@ void JPADrawCalcColorAnmFrameNormal::calc(const JPADrawContext* dc,
 	s32 frame = (particle->getAge() < dc->mBaseShape->getColorRegAnmMaxFrm())
 	                ? particle->getAge()
 	                : dc->mBaseShape->getColorRegAnmMaxFrm();
-	dc->pcb->unkAC = frame;
+	dc->pcb->mColorAnmFrame = frame;
 }
 
 void JPADrawCalcColorAnmFrameRepeat::calc(const JPADrawContext* dc,
@@ -1639,7 +1642,7 @@ void JPADrawCalcColorAnmFrameRepeat::calc(const JPADrawContext* dc,
 	              & dc->mBaseShape->getColLoopOffset())
 	             + particle->getAge())
 	            % (dc->mBaseShape->getColorRegAnmMaxFrm() + 1);
-	dc->pcb->unkAC = frame;
+	dc->pcb->mColorAnmFrame = frame;
 }
 
 void JPADrawCalcColorAnmFrameReverse::calc(const JPADrawContext* dc,
@@ -1652,7 +1655,7 @@ void JPADrawCalcColorAnmFrameReverse::calc(const JPADrawContext* dc,
 	s32 odd        = (t / maxFrame) & 1;
 	s32 frame      = t % maxFrame;
 
-	dc->pcb->unkAC = frame + (odd * maxFrame) - 2 * (odd * frame);
+	dc->pcb->mColorAnmFrame = frame + (odd * maxFrame) - 2 * (odd * frame);
 }
 
 void JPADrawCalcColorAnmFrameMerge::calc(const JPADrawContext* dc,
@@ -1662,7 +1665,7 @@ void JPADrawCalcColorAnmFrameMerge::calc(const JPADrawContext* dc,
 	            & dc->mBaseShape->getColLoopOffset();
 	s32 maxFrame = dc->mBaseShape->getColorRegAnmMaxFrm() + 1;
 	s32 frame    = (s32)(start + maxFrame * particle->mLifeProgress) % maxFrame;
-	dc->pcb->unkAC = frame;
+	dc->pcb->mColorAnmFrame = frame;
 }
 
 void JPADrawCalcColorAnmFrameRandom::calc(const JPADrawContext* dc,
@@ -1671,7 +1674,7 @@ void JPADrawCalcColorAnmFrameRandom::calc(const JPADrawContext* dc,
 	s32 frame = (particle->getDrawParamPPtr()->unk28
 	             & dc->mBaseShape->getColLoopOffset())
 	            % (dc->mBaseShape->getColorRegAnmMaxFrm() + 1);
-	dc->pcb->unkAC = frame;
+	dc->pcb->mColorAnmFrame = frame;
 }
 
 void JPADrawCalcAlpha::calc(const JPADrawContext* dc, JPABaseParticle* particle)

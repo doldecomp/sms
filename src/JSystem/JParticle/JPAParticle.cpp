@@ -88,7 +88,7 @@ void JPAParticle::calcVelocity()
 		mBaseVelocity.scaleAdd(unk78, mBaseVelocity, unk68);
 
 	if (!checkStatus(JPABaseParticle::FLAG_IGNORE_FIELDS))
-		info->unk4->affectField(this);
+		info->mCurrentFieldManager->affectField(this);
 
 	if (mAirResistance < 1.0f)
 		mBaseVelocity.scale(mAirResistance);
@@ -129,7 +129,7 @@ bool JPAParticle::checkCreateChildParticle()
 	bool result          = false;
 	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
 
-	if (info->unk0->getUnk172()) {
+	if (info->mCurrentEmitter->getUnk172()) {
 		f32 time;
 		if (mLifetime > 1.0f)
 			time = mAge / (mLifetime - 1.0f);
@@ -137,7 +137,8 @@ bool JPAParticle::checkCreateChildParticle()
 			time = 1.0f;
 
 		JPASweepShape* sweepShape
-		    = info->unk0->getEmitterDataBlockInfoPtr()->getSweepShape();
+		    = info->mCurrentEmitter->getEmitterDataBlockInfoPtr()
+		          ->getSweepShape();
 		if (time >= sweepShape->getTiming()) {
 			if (sweepShape->getStep() > 0) {
 				f32 frame = mAge;
