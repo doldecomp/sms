@@ -13,6 +13,9 @@ class JPAEmitterManager;
 class JPADataBlockLinkInfo;
 
 // name fabricated
+// Represents various state & parameters of the emitter that is
+// currently being processed. Made this way because they couldn't
+// be bothered to thread a context throughout the entire library.
 class JPAEmitterInfo {
 public:
 	JPAEmitterInfo()
@@ -23,8 +26,8 @@ public:
 	void setEmitCount(s16 count) { mEmitCount = count; }
 
 public:
-	/* 0x0 */ JPABaseEmitter* unk0;
-	/* 0x4 */ JPAFieldManager* unk4;
+	/* 0x0 */ JPABaseEmitter* mCurrentEmitter;
+	/* 0x4 */ JPAFieldManager* mCurrentFieldManager;
 	/* 0x8 */ JMath::TRandom_fast_ unk8;
 	/* 0xC */ JGeometry::TVec3<f32> unkC;
 	/* 0x18 */ JGeometry::TVec3<f32> unk18;
@@ -41,15 +44,15 @@ public:
 	/* 0x160 */ f32 mAspect;
 	/* 0x164 */ u32 mEmitCount;
 	/* 0x168 */ u32 mVolumeEmitIdx;
-	/* 0x16C */ int unk16C;
-	/* 0x170 */ int unk170;
-	/* 0x174 */ s16 unk174;
-	/* 0x176 */ s16 unk176;
-	/* 0x178 */ s16 unk178;
-	/* 0x17A */ s16 unk17A;
-	/* 0x17C */ u8 unk17C;
+	/* 0x16C */ int mSphereParticlesEmittedForCurrentLayer;
+	/* 0x170 */ int mSphereParticlesInCurrentLayer;
+	/* 0x174 */ s16 mSphereCurrentPitch;
+	/* 0x176 */ s16 mSphereCurrentYaw;
+	/* 0x178 */ s16 mSpherePitchStep;
+	/* 0x17A */ s16 mSphereYawStep;
+	/* 0x17C */ bool mHemisphereFlipFlop;
 	/* 0x17D */ char unk17D[2];
-	/* 0x17C */ u8 unk17F;
+	/* 0x17F */ bool mChildrenAffectedByFields;
 };
 
 JPAEmitterInfo* JPAGetEmitterInfoPtr();
@@ -286,8 +289,9 @@ public:
 	/* 0x1EC */ s16 mStartFrame;
 	/* 0x1EE */ s16 mBaseLifetime;
 	/* 0x1F0 */ u16 mVolumeSize;
-	/* 0x1F2 */ u16 unk1F2;
-	/* 0x1F4 */ f32 unk1F4;
+	/// Layers for sphere, or number of particles for circle/line
+	/* 0x1F2 */ u16 mVolumeSubdivision;
+	/* 0x1F4 */ f32 mVolumeYawSweep;
 	/* 0x1F8 */ f32 mVolumeMinRadius;
 	/* 0x1FC */ f32 unk1FC;
 	/* 0x200 */ f32 unk200;

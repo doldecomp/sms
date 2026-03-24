@@ -61,7 +61,7 @@ public:
 	/* 0x45 */ u8 mDirType;
 	/* 0x46 */ u8 mRotType;
 	/* 0x47 */ u8 mStep;
-	/* 0x48 */ u8 unk48;
+	/* 0x48 */ u8 mChildrenAffectedByFields;
 	/* 0x49 */ u8 unk49;
 	/* 0x4A */ u8 unk4A;
 	/* 0x4B */ u8 unk4B;
