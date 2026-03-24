@@ -10,7 +10,7 @@ public:
 	BOOL receiveMessage(THitActor* sender, u32 message);
 	void initMapCollisionData();
 	void initMapObj();
-	TFence(const char* name)
+	TFence(const char* name = "フェンス")
 	    : TMapObjBase(name)
 	    , unk138(0)
 	{
@@ -24,7 +24,7 @@ class TRevolvingFenceOuter : public TFence {
 public:
 	BOOL receiveMessage(THitActor* sender, u32 message);
 	void initMapCollisionData();
-	TRevolvingFenceOuter(const char* name)
+	TRevolvingFenceOuter(const char* name = "フェンス外側")
 	    : TFence(name)
 	{
 	}
@@ -63,7 +63,7 @@ public:
 	void control();
 	void initMapCollisionData();
 	void initMapObj();
-	TFenceWater(const char* name)
+	TFenceWater(const char* name = "水回転フェンス（垂直）")
 	    : TFence(name)
 	{
 	}
@@ -74,7 +74,7 @@ public:
 	void control();
 	void changeStatusToGo();
 	void changeStatusToWait();
-	TFenceWaterH(const char* name)
+	TFenceWaterH(const char* name = "水回転フェンス（水平）")
 	    : TFenceWater(name)
 	{
 	}
@@ -88,7 +88,7 @@ public:
 	void control();
 	void initMapCollisionData();
 	void load(JSUMemoryInputStream&);
-	TRailFence(const char* name)
+	TRailFence(const char* name = "レールフェンス")
 	    : TFence(name)
 	{
 	}

@@ -5,7 +5,7 @@
 
 class TMapObjBall : public TMapObjGeneral {
 public:
-	TMapObjBall(const char*);
+	TMapObjBall(const char* name = "ボール");
 
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
@@ -32,7 +32,7 @@ public:
 
 class TResetFruit : public TMapObjBall {
 public:
-	TResetFruit(const char*);
+	TResetFruit(const char* name = "無限フルーツ");
 
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
@@ -71,13 +71,13 @@ public:
 
 class TRandomFruit : public TResetFruit {
 public:
-	TRandomFruit(const char*);
+	TRandomFruit(const char* name = "ランダムフルーツ");
 	virtual void initMapObj();
 };
 
 class TCoverFruit : public TMapObjBase {
 public:
-	TCoverFruit(const char*);
+	TCoverFruit(const char* name = "フタのフルーツ");
 	virtual void loadAfter();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
@@ -86,7 +86,7 @@ public:
 
 class TBigWatermelon : public TMapObjBall {
 public:
-	TBigWatermelon(const char*);
+	TBigWatermelon(const char* name = "お化けスイカ");
 
 	virtual void loadAfter();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);

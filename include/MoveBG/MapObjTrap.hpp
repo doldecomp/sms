@@ -18,7 +18,7 @@ public:
 
 class TLampTrapSpike : public TMapObjBase {
 public:
-	TLampTrapSpike(const char*);
+	TLampTrapSpike(const char* name = "トゲランプ");
 
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -47,7 +47,7 @@ public:
 
 class TLampTrapIron : public TMapObjBase {
 public:
-	TLampTrapIron(const char*);
+	TLampTrapIron(const char* name = "鉄板ランプ");
 
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);

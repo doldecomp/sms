@@ -9,14 +9,14 @@
 class TMapObjMonteRoot : public TMapObjBase {
 public:
 	void initMapObj();
-	TMapObjMonteRoot(const char*);
+	TMapObjMonteRoot(const char* name = "根っこ");
 };
 
 class TJumpMushroom : public TMapObjBase {
 public:
 	BOOL receiveMessage(THitActor*, unsigned long);
 	void load(JSUMemoryInputStream&);
-	TJumpMushroom(const char*);
+	TJumpMushroom(const char* name = "ジャンプきのこ");
 };
 
 class THangingBridgeBoard : public TLeanBlock {
@@ -48,7 +48,7 @@ public:
 	void perform(unsigned long, JDrama::TGraphics*);
 	void initMonte();
 	void loadAfter();
-	THangingBridge(const char*);
+	THangingBridge(const char* name = "つり橋");
 };
 
 class TSwingBoard : public TMapObjBase {
@@ -60,7 +60,7 @@ public:
 	void swing();
 	void control();
 	void load(JSUMemoryInputStream&);
-	TSwingBoard(const char*);
+	TSwingBoard(const char* name = "つり橋");
 };
 
 class TGoalFlag : public TMapObjBase {
@@ -68,7 +68,7 @@ public:
 	f32 getRadiusAtY(f32) const;
 	void touchActor(THitActor*);
 	void initMapObj();
-	TGoalFlag(const char*);
+	TGoalFlag(const char* name = "ゴールフラグ");
 };
 
 class TFluff : public TMapObjBase {
@@ -94,7 +94,7 @@ public:
 	void getRandomZ() const;
 	void loadAfter();
 	void load(JSUMemoryInputStream&);
-	TFluffManager(const char*);
+	TFluffManager(const char* name = "特別な綿毛");
 };
 
 #endif

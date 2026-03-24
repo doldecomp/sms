@@ -12,14 +12,14 @@ public:
 	void calc();
 	void control();
 	void load(JSUMemoryInputStream&);
-	TCraneRotY(const char*);
+	TCraneRotY(const char* name = "Ｙ軸回転クレーン");
 };
 
 class TCraneUpDown : public TMapObjBase {
 public:
 	void control();
 	void initMapObj();
-	TCraneUpDown(const char*);
+	TCraneUpDown(const char* name = "上下クレーン");
 };
 
 class TCraneCargo : public TLeanBlock {
@@ -38,13 +38,13 @@ public:
 	void control();
 	void calc();
 	void loadAfter();
-	TRiccoWatermill(const char*);
+	TRiccoWatermill(const char* name = "リコ水車");
 };
 
 class TSurfGesoObj : public TItem {
 public:
 	void initMapObj();
-	TSurfGesoObj(const char*);
+	TSurfGesoObj(const char* name = "イカサーフィン");
 };
 
 class TFruitSwitch : public TMapObjBase {
@@ -52,7 +52,7 @@ public:
 	void pullUp();
 	void pushDown();
 	BOOL receiveMessage(THitActor* sender, u32 message);
-	TFruitSwitch(const char*);
+	TFruitSwitch(const char* name = "フルーツスイッチ");
 };
 
 class TFruitLauncher : public TMapObjBase {
@@ -60,7 +60,7 @@ public:
 	void appearFruit() const;
 	void fireObj();
 	void loadAfter();
-	TFruitLauncher(const char*);
+	TFruitLauncher(const char* name = "フルーツ発射口");
 };
 
 #endif

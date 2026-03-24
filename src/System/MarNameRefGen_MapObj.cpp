@@ -40,276 +40,275 @@
 JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 {
 	if (strcmp(name, "MapObjBase") == 0)
-		return new TMapObjBase("地形オブジェ基底");
+		return new TMapObjBase;
 
 	if (strcmp(name, "MapObjGeneral") == 0)
-		return new TMapObjGeneral("汎用地形オブジェ");
+		return new TMapObjGeneral;
 
 	if (strcmp(name, "Item") == 0)
-		return new TItem("アイテム");
+		return new TItem;
 
 	if (strcmp(name, "Fruit") == 0)
-		return new TResetFruit("無限フルーツ");
+		return new TResetFruit;
 
 	if (strcmp(name, "ResetFruit") == 0)
-		return new TResetFruit("無限フルーツ");
+		return new TResetFruit;
 
 	if (strcmp(name, "RandomFruit") == 0)
-		return new TRandomFruit("ランダムフルーツ");
+		return new TRandomFruit;
 
 	if (strcmp(name, "CoverFruit") == 0)
-		return new TCoverFruit("フタのフルーツ");
+		return new TCoverFruit;
 
 	if (strcmp(name, "MapStaticObj") == 0)
-		return new TMapStaticObj("簡易マップオブジェ");
+		return new TMapStaticObj;
 
 	if (strcmp(name, "MapObjSoundGroup") == 0)
-		return new TMapObjSoundGroup("環境音テスト");
+		return new TMapObjSoundGroup;
 
 	if (strcmp(name, "MapObjManager") == 0)
-		return new TMapObjManager("地形オブジェ管理");
+		return new TMapObjManager;
 
 	if (strcmp(name, "MapObjBaseManager") == 0)
-		return new TMapObjBaseManager("地形基底オブジェ管理");
+		return new TMapObjBaseManager;
 
 	if (strcmp(name, "ItemManager") == 0)
-		return new TItemManager("アイテムマネージャー");
+		return new TItemManager;
 
 	if (strcmp(name, "PoolManager") == 0)
-		return new TPoolManager("水場マネージャー");
+		return new TPoolManager;
 
 	if (strcmp(name, "MapWireManager") == 0)
-		return new TMapWireManager("ワイヤー管理");
+		return new TMapWireManager;
 
 	// TODO:
 	// if ( strcmp( name, "MapObjFlagManager" ) == 0 )
 	//     return new TMapObjFlagManager   ( "旗管理" );
 
 	if (strcmp(name, "MapObjPoleManager") == 0)
-		return new TMapObjPoleManager("旗管理");
+		return new TMapObjPoleManager;
 
 	if (strcmp(name, "MapObjWave") == 0)
-		return new TMapObjWave("波の表現");
+		return new TMapObjWave;
 
 	// TODO:
 	// if ( strcmp( name, "MapObjFlag" ) == 0 )
 	//     return new TMapObjFlag  ("旗");
 
 	if (strcmp(name, "RockPlane") == 0)
-		return new TRockPlane("岩平面");
+		return new TRockPlane;
 
 	if (strcmp(name, "SandPlane") == 0)
-		return new TSandPlane("砂平面");
+		return new TSandPlane;
 
 	if (strcmp(name, "MapObjGrassManager") == 0)
-		return new TMapObjGrassManager("草管理");
+		return new TMapObjGrassManager;
 
 	if (strcmp(name, "MapObjGrassGroup") == 0)
 		return new TMapObjGrassGroup;
 
 	if (strcmp(name, "MirrorMapOperator") == 0)
-		return new TMammaMirrorMapOperator("鏡内地形操作");
+		return new TMammaMirrorMapOperator;
 
 	if (strcmp(name, "MapObjChangeStage") == 0)
-		return new TMapObjChangeStage("ステージ切り替え");
+		return new TMapObjChangeStage;
 
 	if (strcmp(name, "MapObjChangeStageHipDrop") == 0)
-		return new TMapObjChangeStageHipDrop(
-		    "ステージ切り替え（ヒップドロップ）");
+		return new TMapObjChangeStageHipDrop;
 
 	if (strcmp(name, "MapObjStartDemo") == 0)
-		return new TMapObjStartDemo("デモ開始オブジェ");
+		return new TMapObjStartDemo;
 
 	if (strcmp(name, "DamageObj") == 0)
-		return new TDamageObj("ダメージオブジェ");
+		return new TDamageObj;
 
 	if (strcmp(name, "MapObjSmoke") == 0)
-		return new TMapObjSmoke("黒煙");
+		return new TMapObjSmoke;
 
 	if (strcmp(name, "MapObjWaterSpray") == 0)
-		return new TMapObjWaterSpray("汎用水しぶき");
+		return new TMapObjWaterSpray;
 
 	if (strcmp(name, "JuiceBlock") == 0)
-		return new TJuiceBlock("ジュースブロック");
+		return new TJuiceBlock;
 
 	if (strcmp(name, "Billboard") == 0)
-		return new TMapObjBillboard("看板");
+		return new TMapObjBillboard;
 
 	if (strcmp(name, "MapObjFloatOnSea") == 0)
-		return new TMapObjFloatOnSea("海に浮くオブジェ");
+		return new TMapObjFloatOnSea;
 
 	if (strcmp(name, "WoodBarrel") == 0)
-		return new TWoodBarrel("木樽");
+		return new TWoodBarrel;
 
 	if (strcmp(name, "Door") == 0)
-		return new TDoor("ドア");
+		return new TDoor;
 
 	if (strcmp(name, "Fence") == 0)
-		return new TFence("フェンス");
+		return new TFence;
 
 	if (strcmp(name, "FenceRevolve") == 0)
-		return new TRevolvingFenceOuter("フェンス外側");
+		return new TRevolvingFenceOuter;
 
 	if (strcmp(name, "FenceInner") == 0)
-		return new TRevolvingFenceInner("フェンス内側");
+		return new TRevolvingFenceInner;
 
 	if (strcmp(name, "FenceWaterH") == 0)
-		return new TFenceWaterH("水回転フェンス（水平）");
+		return new TFenceWaterH;
 
 	if (strcmp(name, "FenceWaterV") == 0)
-		return new TFenceWater("水回転フェンス（垂直）");
+		return new TFenceWater;
 
 	if (strcmp(name, "RailFence") == 0)
-		return new TRailFence("レールフェンス");
+		return new TRailFence;
 
 	if (strcmp(name, "Football") == 0)
-		return new TMapObjBall("レールフェンス");
+		return new TMapObjBall;
 
 	if (strcmp(name, "Manhole") == 0)
-		return new TManhole("マンホール");
+		return new TManhole;
 
 	if (strcmp(name, "Pool") == 0)
-		return new TPool("水場");
+		return new TPool;
 
 	// TODO:
 	// if (strcmp(name, "WaterHitPictureHideObj") == 0)
 	// 	return new TWaterHitPictureHideObj("オブジェ出現の絵");
 
 	if (strcmp(name, "MapObjSwitch") == 0)
-		return new TMapObjSwitch("オブジェスイッチ");
+		return new TMapObjSwitch;
 
 	if (strcmp(name, "RedCoinSwitch") == 0)
-		return new TRedCoinSwitch("赤コインスイッチ");
+		return new TRedCoinSwitch;
 
 	if (strcmp(name, "HideObjInfo") == 0)
-		return new THideObjInfo("オブジェ出現情報");
+		return new THideObjInfo;
 
 	// TODO:
 	// if (strcmp(name, "FruitBasket") == 0)
 	// 	return new TFruitBasket("バスケット");
 
 	if (strcmp(name, "BasketReverse") == 0)
-		return new TBasketReverse("さかさバスケット");
+		return new TBasketReverse;
 
 	// TODO:
 	// if ( strcmp(name, "FruitBasketEvent") == 0 )
 	// 	return new TFruitBasketEvent("バスケット（イベント用）");
 
 	if (strcmp(name, "JumpBase") == 0)
-		return new TJumpBase("移動ジャンプ台");
+		return new TJumpBase;
 
 	if (strcmp(name, "LampTrapIron") == 0)
-		return new TLampTrapIron("鉄板ランプ");
+		return new TLampTrapIron;
 
 	if (strcmp(name, "LampTrapSpike") == 0)
-		return new TLampTrapSpike("トゲランプ");
+		return new TLampTrapSpike;
 
 	if (strcmp(name, "MapObjBase") == 0)
-		return new TMapObjBase("地形オブジェ基底");
+		return new TMapObjBase;
 
 	if (strcmp(name, "MapObjSteam") == 0)
-		return new TMapObjSteam("水蒸気");
+		return new TMapObjSteam;
 
 	if (strcmp(name, "BananaTree") == 0)
-		return new TMapObjTree("木");
+		return new TMapObjTree;
 
 	if (strcmp(name, "Palm") == 0)
-		return new TMapObjTree("木");
+		return new TMapObjTree;
 
 	if (strcmp(name, "PalmOugi") == 0)
-		return new TMapObjTree("木");
+		return new TMapObjTree;
 
 	if (strcmp(name, "PalmSago") == 0)
-		return new TMapObjTree("木");
+		return new TMapObjTree;
 
 	if (strcmp(name, "PalmNatume") == 0)
 		return new TMapObjTree("地形オブジェ基底");
 
 	if (strcmp(name, "FruitTree") == 0)
-		return new TMapObjBase("地形オブジェ基底");
+		return new TMapObjBase;
 
 	if (strcmp(name, "MapObjTreeScale") == 0)
-		return new TMapObjTreeScale("スケールの木");
+		return new TMapObjTreeScale;
 
 	if (strcmp(name, "RideCloud") == 0)
-		return new TRideCloud("乗れる雲");
+		return new TRideCloud;
 
 	if (strcmp(name, "AirportSwitch") == 0)
-		return new TAirportSwitch("水場スイッチ");
+		return new TAirportSwitch;
 
 	if (strcmp(name, "AirportPool") == 0)
-		return new TPool("水場");
+		return new TPool;
 
 	// TODO:
 	// if (strcmp(name, "WoodBox") == 0)
 	// 	return new TWoodBox ("木箱");
 
 	if (strcmp(name, "AirportEventSink") == 0)
-		return new TAirportEventSink("水場スイッチ");
+		return new TAirportEventSink;
 
 	if (strcmp(name, "JellyGate") == 0)
-		return new TModelGate("<TModelGate>");
+		return new TModelGate;
 
 	if (strcmp(name, "GateShadow") == 0)
 		return new TGateShadow;
 
 	if (strcmp(name, "IceCar") == 0)
-		return new TMapObjBase("地形オブジェ基底");
+		return new TMapObjBase;
 
 	if (strcmp(name, "MonumentShine") == 0)
-		return new TMonumentShine("モニュメントシャイン");
+		return new TMonumentShine;
 
 	if (strcmp(name, "BellDolpicTV") == 0)
-		return new TBellDolpic(1, "ドルピック鐘");
+		return new TBellDolpic(1);
 
 	if (strcmp(name, "BellDolpicPolice") == 0)
-		return new TBellDolpic(0, "ドルピック鐘");
+		return new TBellDolpic(0);
 
 	if (strcmp(name, "DptMonteFence") == 0)
-		return new TDptMonteFence("投げモンテフェンス");
+		return new TDptMonteFence;
 
 	if (strcmp(name, "DolWeathercock") == 0)
-		return new TMapObjTurn("水回転オブジェ");
+		return new TMapObjTurn;
 
 	if (strcmp(name, "DemoCannon") == 0)
-		return new TDemoCannon("デモ砲台");
+		return new TDemoCannon;
 
 	if (strcmp(name, "TurboNozzleDoor") == 0)
-		return new TTurboNozzleDoor("ターボノズルドア");
+		return new TTurboNozzleDoor;
 
 	if (strcmp(name, "CraneRotY") == 0)
-		return new TCraneRotY("デモ砲台");
+		return new TCraneRotY;
 
 	if (strcmp(name, "craneUpDown") == 0)
-		return new TCraneUpDown("上下クレーン");
+		return new TCraneUpDown;
 
 	// TODO:
 	// if ( strcmp(name, "RiccoLog") == 0 )
 	// 	return new TWoodLog("丸太");
 
 	if (strcmp(name, "GesoSurfBoard") == 0)
-		return new TItem("アイテム");
+		return new TItem;
 
 	if (strcmp(name, "SurfGesoRed") == 0)
-		new TSurfGesoObj("イカサーフィン");
+		return new TSurfGesoObj;
 
 	if (strcmp(name, "SurfGesoYellow") == 0)
-		return new TSurfGesoObj("イカサーフィン");
+		return new TSurfGesoObj;
 
 	if (strcmp(name, "SurfGesoGreen") == 0)
-		return new TSurfGesoObj("イカサーフィン");
+		return new TSurfGesoObj;
 
 	if (strcmp(name, "riccoWatermill") == 0)
-		return new TRiccoWatermill("リコ水車");
+		return new TRiccoWatermill;
 
 	if (strcmp(name, "submarine") == 0)
-		return new TMapObjBase("地形オブジェ基底");
+		return new TMapObjBase;
 
 	if (strcmp(name, "RiccoSwitch") == 0)
-		return new TFruitSwitch("フルーツスイッチ");
+		return new TFruitSwitch;
 
 	if (strcmp(name, "RiccoSwitchShine") == 0)
-		return new TFruitLauncher("フルーツ発射口");
+		return new TFruitLauncher;
 
 	// TODO:
 	// if ( strcmp(name, "BigWindmill") == 0 )
@@ -320,7 +319,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	// 	return new TBiancoMiniWindmill("風車（ビアンコ小）");
 
 	if (strcmp(name, "WindmillRoof") == 0)
-		return new TMapObjBase("地形オブジェ基底");
+		return new TMapObjBase;
 
 	// TODO:
 	// if ( strcmp(name, "MapObjRootPakkun") == 0 )
@@ -343,7 +342,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	// 	return new TBiancoWatermillVertical("水車（ビアンコ垂直）");
 
 	if (strcmp(name, "BiaTurnBridge") == 0)
-		return new TMapObjBase("地形オブジェ基底");
+		return new TMapObjBase;
 
 	// TODO:
 	// if ( strcmp(name, "LeafBoat") == 0 )
@@ -362,113 +361,113 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	// 	return new TLampSeesaw("ランプシーソー（従）");
 
 	if (strcmp(name, "SandBird") == 0)
-		return new TSandBird("おおすな鳥");
+		return new TSandBird;
 
 	if (strcmp(name, "SandLeafBase") == 0)
-		return new TSandLeafBase("すなやまの芽の土台");
+		return new TSandLeafBase;
 
 	if (strcmp(name, "SandBombBase") == 0)
-		return new TSandBombBase("すなやま爆弾の土台");
+		return new TSandBombBase;
 
 	if (strcmp(name, "SandBomb") == 0)
 		return new TSandBomb;
 
 	if (strcmp(name, "LeanMirror") == 0)
-		return new TLeanMirror("ぐらぐら鏡");
+		return new TLeanMirror;
 
 	if (strcmp(name, "WaterMelon") == 0)
-		return new TBigWatermelon("お化けスイカ");
+		return new TBigWatermelon;
 
 	if (strcmp(name, "ShiningStone") == 0)
-		return new TShiningStone("太陽石");
+		return new TShiningStone;
 
 	if (strcmp(name, "SandCastle") == 0)
-		return new TSandCastle("砂の城");
+		return new TSandCastle;
 
 	if (strcmp(name, "MammaBlockRotate") == 0)
-		return new TMammaBlockRotate("太陽の塔ブロック");
+		return new TMammaBlockRotate;
 
 	if (strcmp(name, "MammaSurfboard") == 0)
-		return new TMapObjBase("地形オブジェ基底");
+		return new TMapObjBase;
 
 	if (strcmp(name, "MammaYacht") == 0)
-		return new TMammaYacht("砂の城");
+		return new TMammaYacht;
 
 	if (strcmp(name, "GoalWatermelon") == 0)
-		return new TGoalWatermelon("スイカゴール");
+		return new TGoalWatermelon;
 
 	if (strcmp(name, "SandEgg") == 0)
-		return new TSandEgg("すなのたまご");
+		return new TSandEgg;
 
 	if (strcmp(name, "Merrygoround") == 0)
-		return new TMerrygoround("メリーゴーランド");
+		return new TMerrygoround;
 
 	if (strcmp(name, "FerrisWheel") == 0)
-		return new TFerrisWheel("観覧車");
+		return new TFerrisWheel;
 
 	if (strcmp(name, "Viking") == 0)
-		return new TViking("バイキング");
+		return new TViking;
 
 	// TODO:
 	// if ( strcmp(name, "SirenaGate") == 0 )
 	// 	return new TSirenaGate("シレナゲート");
 
 	if (strcmp(name, "PinnaDoor") == 0)
-		return new TPinnaEntrance("シレナゲート");
+		return new TPinnaEntrance;
 
 	if (strcmp(name, "PinnaDoorOpen") == 0)
-		return new TPinnaEntrance("ピンナ入り口");
+		return new TPinnaEntrance;
 
 	if (strcmp(name, "BalloonKoopaJr") == 0)
-		return new TBalloonKoopaJr("風船（クッパＪｒ）");
+		return new TBalloonKoopaJr;
 
 	if (strcmp(name, "ShellCup") == 0)
-		return new TShellCup("シェルカップ");
+		return new TShellCup;
 
 	if (strcmp(name, "GateShell") == 0)
-		return new TMareGate("マーレゲート");
+		return new TMareGate;
 
 	if (strcmp(name, "MareGate") == 0)
-		return new TMareGate("マーレゲート");
+		return new TMareGate;
 
 	if (strcmp(name, "WaterRecoverObj") == 0)
-		return new TWaterRecoverObj("水回復オブジェ");
+		return new TWaterRecoverObj;
 
 	if (strcmp(name, "AmiKing") == 0)
-		return new TAmiKing("アミキング");
+		return new TAmiKing;
 
 	if (strcmp(name, "PinnaCoaster") == 0)
-		return new TPinnaCoaster("コースター");
+		return new TPinnaCoaster;
 
 	if (strcmp(name, "Cogwheel") == 0)
-		return new TCogwheel("天秤");
+		return new TCogwheel;
 
 	if (strcmp(name, "MapObjElasticCode") == 0)
-		return new TMapObjElasticCode("ゴムひも");
+		return new TMapObjElasticCode;
 
 	if (strcmp(name, "MapObjGrowTree") == 0)
-		return new TMapObjGrowTree("もやしの木");
+		return new TMapObjGrowTree;
 
 	if (strcmp(name, "WireBell") == 0)
-		return new TWireBell("ワイヤー鈴（紫）");
+		return new TWireBell;
 
 	if (strcmp(name, "MuddyBoat") == 0)
-		return new TMuddyBoat("どろの船");
+		return new TMuddyBoat;
 
 	if (strcmp(name, "Puncher") == 0)
-		return new TMapObjPuncher("パンチャー");
+		return new TMapObjPuncher;
 
 	if (strcmp(name, "CoinFish") == 0)
-		return new TJointCoin("ジョイントコイン");
+		return new TJointCoin;
 
 	if (strcmp(name, "MareFall") == 0)
-		return new TMareFall("マーレ滝");
+		return new TMareFall;
 
 	if (strcmp(name, "MareCork") == 0)
-		return new TMareCork("マーレコルク");
+		return new TMareCork;
 
 	if (strcmp(name, "MareEventPoint") == 0)
-		return new TMareEventPoint("イベントポイント");
+		return new TMareEventPoint;
 
 	// TODO:
 	// if ( strcmp(name, "CasinoRoulette") == 0 )
@@ -499,7 +498,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	// 	return new TWarpAreaActor("ワープエリア");
 
 	if (strcmp(name, "GlassBreak") == 0)
-		return new TMapObjGeneral("汎用地形オブジェ");
+		return new TMapObjGeneral;
 
 	// TODO:
 	// if (strcmp(name, "Closet") == 0)
@@ -534,7 +533,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	// 	return new TPictureTelesa("テルサの絵");
 
 	if (strcmp(name, "PanelBreak") == 0)
-		return new TMapObjGeneral("汎用地形オブジェ");
+		return new TMapObjGeneral;
 
 	// TODO:
 	// if ( strcmp(name, "PanelRevolve") == 0 )
@@ -544,103 +543,103 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 		return new TTelesaBlock;
 
 	if (strcmp(name, "MonteRoot") == 0)
-		return new TMapObjMonteRoot("根っこ");
+		return new TMapObjMonteRoot;
 
 	if (strcmp(name, "JumpMushroom") == 0)
-		return new TJumpMushroom("ジャンプきのこ");
+		return new TJumpMushroom;
 
 	if (strcmp(name, "HangingBridge") == 0)
-		return new THangingBridge("つり橋");
+		return new THangingBridge;
 
 	if (strcmp(name, "SwingBoard") == 0)
-		return new TSwingBoard("つり橋");
+		return new TSwingBoard;
 
 	if (strcmp(name, "GoalFlag") == 0)
-		return new TGoalFlag("ゴールフラグ");
+		return new TGoalFlag;
 
 	if (strcmp(name, "FluffManager") == 0)
-		return new TFluffManager("特別な綿毛");
+		return new TFluffManager;
 
 	if (strcmp(name, "Bathtub") == 0)
-		return new TBathtub("バスタブ");
+		return new TBathtub;
 
 	if (strcmp(name, "FileLoadBlockA") == 0)
-		return new TFileLoadBlock("ファイル読み込みブロック");
+		return new TFileLoadBlock;
 
 	if (strcmp(name, "FileLoadBlockB") == 0)
-		return new TFileLoadBlock("ファイル読み込みブロック");
+		return new TFileLoadBlock;
 
 	if (strcmp(name, "FileLoadBlockC") == 0)
-		return new TFileLoadBlock("ファイル読み込みブロック");
+		return new TFileLoadBlock;
 
 	if (strcmp(name, "NormalLift") == 0)
-		return new TNormalLift("ノーマルリフト");
+		return new TNormalLift;
 
 	if (strcmp(name, "EXRollCube") == 0)
-		return new TRailBlock("移動板");
+		return new TRailBlock;
 
 	if (strcmp(name, "EXKickBoard") == 0)
-		return new TNormalLift("ノーマルリフト");
+		return new TNormalLift;
 
 	if (strcmp(name, "Umaibou") == 0)
-		return new TRollBlock("回転板");
+		return new TRollBlock;
 
 	if (strcmp(name, "Kamaboko") == 0)
-		return new TNormalLift("ノーマルリフト");
+		return new TNormalLift;
 
 	if (strcmp(name, "GetaGreen") == 0)
-		return new TRollBlock("回転板");
+		return new TRollBlock;
 
 	if (strcmp(name, "GetaOrange") == 0)
-		return new TRollBlock("回転板");
+		return new TRollBlock;
 
 	if (strcmp(name, "RailBlock") == 0)
-		return new TRailBlock("移動板");
+		return new TRailBlock;
 
 	if (strcmp(name, "RailBlockR") == 0)
-		return new TRailBlock("移動板");
+		return new TRailBlock;
 
 	if (strcmp(name, "RailBlockY") == 0)
-		return new TRailBlock("移動板");
+		return new TRailBlock;
 
 	if (strcmp(name, "RailBlockB") == 0)
-		return new TRailBlock("移動板");
+		return new TRailBlock;
 
 	if (strcmp(name, "RollBlock") == 0)
-		return new TRollBlock("回転板");
+		return new TRollBlock;
 
 	if (strcmp(name, "RollBlockR") == 0)
-		return new TRollBlock("回転板");
+		return new TRollBlock;
 
 	if (strcmp(name, "RollBlockY") == 0)
-		return new TRollBlock("回転板");
+		return new TRollBlock;
 
 	if (strcmp(name, "RollBlockB") == 0)
-		return new TRollBlock("回転板");
+		return new TRollBlock;
 
 	if (strcmp(name, "Uirou") == 0)
-		return new TNormalLift("ノーマルリフト");
+		return new TNormalLift;
 
 	if (strcmp(name, "Castella") == 0)
-		return new TNormalLift("ノーマルリフト");
+		return new TNormalLift;
 
 	if (strcmp(name, "Hikidashi") == 0)
-		return new TNormalLift("ノーマルリフト");
+		return new TNormalLift;
 
 	if (strcmp(name, "YoshiBlock") == 0)
-		return new TWoodBlock("木のブロック");
+		return new TWoodBlock;
 
 	if (strcmp(name, "MapObjNail") == 0)
-		return new TMapObjNail("くぎ");
+		return new TMapObjNail;
 
 	if (strcmp(name, "WoodBlock") == 0)
-		return new TWoodBlock("木のブロック");
+		return new TWoodBlock;
 
 	if (strcmp(name, "MapObjRevivalPollution") == 0)
-		return new TMapObjRevivalPollution("復活落書き");
+		return new TMapObjRevivalPollution;
 
 	if (strcmp(name, "PolluterBase") == 0)
-		return new TPolluterBase("汚染オブジェ");
+		return new TPolluterBase;
 
 	if (strcmp(name, "Coin") == 0)
 		return new TCoin;
@@ -652,7 +651,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 		return new TCoinBlue;
 
 	if (strcmp(name, "HideObj") == 0)
-		return new THideObjBase("隠しオブジェ");
+		return new THideObjBase;
 
 	// TODO:
 	// if ( strcmp(name, "WaterHitHideObj") == 0 )
@@ -683,34 +682,34 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 		return new TItemNozzle;
 
 	if (strcmp(name, "Mushroom1up") == 0)
-		return new TMushroom1up(0, "１ＵＰキノコ");
+		return new TMushroom1up(0);
 
 	if (strcmp(name, "Mushroom1upR") == 0)
-		return new TMushroom1up(1, "１ＵＰキノコ");
+		return new TMushroom1up(1);
 
 	if (strcmp(name, "Mushroom1upX") == 0)
-		return new TMushroom1up(2, "１ＵＰキノコ");
+		return new TMushroom1up(2);
 
 	if (strcmp(name, "EggYoshi") == 0)
-		return new TEggYoshi("ヨッシーの卵");
+		return new TEggYoshi;
 
 	if (strcmp(name, "NormalBlock") == 0)
-		return new TMapObjBase("地形オブジェ基底");
+		return new TMapObjBase;
 
 	if (strcmp(name, "SuperHipDropBlock") == 0)
-		return new TSuperHipDropBlock("スーパーヒップドロップブロック");
+		return new TSuperHipDropBlock;
 
 	if (strcmp(name, "IceBlock") == 0)
-		return new TIceBlock("アイスブロック");
+		return new TIceBlock;
 
 	if (strcmp(name, "BreakableBlock") == 0)
 		return new TBreakableBlock;
 
 	if (strcmp(name, "BrickBlock") == 0)
-		return new TBrickBlock("レンガブロック");
+		return new TBrickBlock;
 
 	if (strcmp(name, "WatermelonBlock") == 0)
-		return new TBreakHideObj("壊れる隠しオブジェ");
+		return new TBreakHideObj;
 
 	if (strcmp(name, "SandBlock") == 0)
 		return new TSandBlock;

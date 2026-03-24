@@ -6,7 +6,7 @@
 
 class TModelGate : public TTakeActor {
 public:
-	TModelGate(const char*);
+	TModelGate(const char* name = "<TModelGate>");
 
 	virtual MtxPtr getTakingMtx();
 	virtual void perform(u32, JDrama::TGraphics*);

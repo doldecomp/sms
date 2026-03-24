@@ -12,7 +12,7 @@ class TDoor : public TMapObjBase {
 public:
 	void touchPlayer(THitActor*);
 	void load(JSUMemoryInputStream&);
-	TDoor(const char*);
+	TDoor(const char* name = "ドア");
 };
 
 class TManhole : public TMapObjGeneral {
@@ -25,7 +25,7 @@ public:
 	void makeManholeUnuseful(const TMapObjBase*);
 	void loadAfter();
 	void initMapObj();
-	TManhole(const char*);
+	TManhole(const char* name = "マンホール");
 };
 
 class TMapObjBillboard : public THideObjBase {
@@ -33,7 +33,7 @@ public:
 	void swing(THitActor*);
 	void touchActor(THitActor*);
 	u32 touchWater(THitActor*);
-	TMapObjBillboard(const char* name)
+	TMapObjBillboard(const char* name = "看板")
 	    : THideObjBase(name)
 	{
 	}
@@ -57,7 +57,7 @@ class TMapObjChangeStageHipDrop : public TMapObjChangeStage {
 public:
 	void touchPlayer(THitActor*);
 	void initMapObj();
-	TMapObjChangeStageHipDrop(const char* name)
+	TMapObjChangeStageHipDrop(const char* name = "ステージ切り替え（ヒップドロップ）")
 	    : TMapObjChangeStage(name)
 	{
 	}
@@ -67,7 +67,7 @@ class TMapObjStartDemo : public TMapObjBase {
 public:
 	void touchPlayer(THitActor*);
 	void load(JSUMemoryInputStream&);
-	TMapObjStartDemo(const char* name)
+	TMapObjStartDemo(const char* name = "デモ開始オブジェ")
 	    : TMapObjBase(name)
 	{
 	}
@@ -93,7 +93,7 @@ class TMapObjWaterSpray : public TMapObjBase {
 public:
 	void calc();
 	void load(JSUMemoryInputStream&);
-	TMapObjWaterSpray(const char*);
+	TMapObjWaterSpray(const char* name = "汎用水しぶき");
 };
 
 class THideObjInfo : public JDrama::TViewObj {
@@ -101,7 +101,7 @@ public:
 	void perform(unsigned long, JDrama::TGraphics*);
 	void action(long);
 	void load(JSUMemoryInputStream&);
-	THideObjInfo(const char*);
+	THideObjInfo(const char* name = "オブジェ出現情報");
 };
 
 class TMapObjSwitch : public TMapObjBase {
@@ -110,7 +110,7 @@ public:
 	BOOL receiveMessage(THitActor*, unsigned long);
 	void registerObjInfo(THideObjInfo*);
 	void load(JSUMemoryInputStream&);
-	TMapObjSwitch(const char*);
+	TMapObjSwitch(const char* name = "オブジェスイッチ");
 };
 
 class TRedCoinSwitch : public TMapObjBase {
@@ -119,14 +119,14 @@ public:
 	void control();
 	void loadAfter();
 	void load(JSUMemoryInputStream&);
-	TRedCoinSwitch(const char*);
+	TRedCoinSwitch(const char* name = "赤コインスイッチ");
 };
 
 class TBasketReverse : public TMapObjBase {
 public:
 	void kill();
 	void initMapObj();
-	TBasketReverse(const char*);
+	TBasketReverse(const char* name = "さかさバスケット");
 };
 
 #endif

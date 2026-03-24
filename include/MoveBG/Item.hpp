@@ -7,7 +7,7 @@ class TMirrorActor;
 
 class TItem : public TMapObjGeneral {
 public:
-	TItem(const char*);
+	TItem(const char* name = "アイテム");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -60,7 +60,7 @@ public:
 
 class TCoinEmpty : public TCoin {
 public:
-	TCoinEmpty(const char*);
+	TCoinEmpty(const char* name = "空コイン");
 
 	virtual void kill();
 	virtual void appear();

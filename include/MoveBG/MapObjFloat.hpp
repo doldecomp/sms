@@ -12,7 +12,7 @@ public:
 	virtual void calc();
 	virtual void touchPlayer(THitActor*);
 
-	TMapObjFloatOnSea(const char*);
+	TMapObjFloatOnSea(const char* name = "海に浮くオブジェ");
 
 public:
 	/* 0x194 */ TMapObjLibWave* unk194;

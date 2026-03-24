@@ -22,7 +22,7 @@ public:
 	virtual void touchGround(JGeometry::TVec3<float>*);
 	virtual void touchWall(JGeometry::TVec3<float>*, TBGWallCheckRecord*);
 
-	TWoodBarrel(const char*);
+	TWoodBarrel(const char* name = "木樽");
 
 	static s32 mWaitAppearTime;
 	static int mBreakTime;

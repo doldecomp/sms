@@ -8,7 +8,7 @@ class TMapCheckGroundPlane;
 
 class TMapObjPlane : public TLiveActor {
 public:
-	TMapObjPlane(const char*);
+	TMapObjPlane(const char* name);
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -54,14 +54,14 @@ public:
 
 class TRockPlane : public TMapObjPlane {
 public:
-	TRockPlane(const char*);
+	TRockPlane(const char* name = "岩平面");
 
 	virtual void load(JSUMemoryInputStream&);
 };
 
 class TSandPlane : public TMapObjPlane {
 public:
-	TSandPlane(const char*);
+	TSandPlane(const char* name = "砂平面");
 
 	virtual void load(JSUMemoryInputStream&);
 };

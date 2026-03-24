@@ -15,7 +15,7 @@ class TDrawBufObj;
 
 class TMapObjBaseManager : public TLiveManager {
 public:
-	TMapObjBaseManager(const char*);
+	TMapObjBaseManager(const char* name = "地形基底オブジェ管理");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();
@@ -50,7 +50,7 @@ class TMapObjManager : public TMapObjBaseManager {
 public:
 	void initKeyCode();
 
-	TMapObjManager(const char*);
+	TMapObjManager(const char* name = "地形オブジェ管理");
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual BOOL hasMapCollision() const { return true; }
