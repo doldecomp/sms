@@ -1,9 +1,9 @@
 #ifndef JKR_FILELOADER_HPP
 #define JKR_FILELOADER_HPP
 
-#include "JSystem/JKernel/JKREnum.hpp"
-#include "JSystem/JKernel/JKRDisposer.hpp"
-#include "JSystem/JSupport/JSUList.hpp"
+#include <JSystem/JKernel/JKREnum.hpp>
+#include <JSystem/JKernel/JKRDisposer.hpp>
+#include <JSystem/JSupport/JSUList.hpp>
 
 class JKRFileFinder;
 

@@ -318,8 +318,9 @@ const ResTIMG* JPADraw::swapImage(const ResTIMG* param_1, s16 param_2)
 	if (param_2 < 0)
 		return nullptr;
 
-	return mDrawCtx.mTexResource->swapImage(param_1,
-	                                        mDrawCtx.getTexIdx(param_2));
+	u8 id   = param_2;
+	u32 idx = mDrawCtx.mTexIndices[id];
+	return mDrawCtx.mTexResource->swapImage(param_1, idx);
 }
 
 void JPADraw::loadTexture(u8 idx, GXTexMapID map_id) { }

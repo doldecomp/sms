@@ -1,6 +1,5 @@
-#include "JSystem/JKernel/JKRDisposer.hpp"
-
-#include "JSystem/JKernel/JKRHeap.hpp"
+#include <JSystem/JKernel/JKRDisposer.hpp>
+#include <JSystem/JKernel/JKRHeap.hpp>
 
 JKRDisposer::JKRDisposer()
     : mPointerLinks(this)

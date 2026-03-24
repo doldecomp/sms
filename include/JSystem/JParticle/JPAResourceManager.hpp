@@ -41,46 +41,50 @@ class JPAKeyFrameAnime;
 // TODO: fabricated. Name taken from TWW
 struct JPADataBlockLinkInfo {
 	JPADataBlockLinkInfo()
-	    : unk0(nullptr)
-	    , unk4(nullptr)
-	    , unk8(nullptr)
-	    , unkC(nullptr)
-	    , unk10(nullptr)
-	    , unk14(nullptr)
-	    , unk18(nullptr)
-	    , unk1C(nullptr)
-	    , unk20(0)
-	    , unk21(0)
-	    , unk22(0)
+	    : mBaseEmitterBlock(nullptr)
+	    , mBaseShape(nullptr)
+	    , mExtraShape(nullptr)
+	    , mSweepShape(nullptr)
+	    , mExTexShape(nullptr)
+	    , mKeyframeAnimations(nullptr)
+	    , mFields(nullptr)
+	    , mTextureDataBase(nullptr)
+	    , mFieldNum(0)
+	    , mTextureNum(0)
+	    , mKeyframeAnimationNum(0)
 	{
 	}
 
-	JPABaseShape* getBaseShape() { return unk4; }
-	JPAExTexShape* getExTexShape() { return unk10; }
-	JPAExtraShape* getExtraShape() { return unk8; }
-	JPASweepShape* getSweepShape() { return unkC; }
+	// fabricated, got renamed to getDynamics in TWW due to refactoring of JPA
+	JPADataBlock* getBaseEmitterBlock() { return mBaseEmitterBlock; }
 
-	JPADataBlock** getField() { return unk18; }
-	u8 getFieldNum() { return unk20; }
+	// All real, from TWW.
+	JPABaseShape* getBaseShape() { return mBaseShape; }
+	JPAExTexShape* getExTexShape() { return mExTexShape; }
+	JPAExtraShape* getExtraShape() { return mExtraShape; }
+	JPASweepShape* getSweepShape() { return mSweepShape; }
 
-	u16* getTextureDataBase() { return unk1C; }
-	u8 getTextureNum() { return unk21; }
+	JPADataBlock** getField() { return mFields; }
+	u8 getFieldNum() { return mFieldNum; }
 
-	JPAKeyFrameAnime** getKey() { return unk14; }
-	u8 getKeyNum() { return unk22; }
+	u16* getTextureDataBase() { return mTextureDataBase; }
+	u8 getTextureNum() { return mTextureNum; }
+
+	JPAKeyFrameAnime** getKey() { return mKeyframeAnimations; }
+	u8 getKeyNum() { return mKeyframeAnimationNum; }
 
 public:
-	/* 0x0 */ JPADataBlock* unk0;
-	/* 0x4 */ JPABaseShape* unk4;
-	/* 0x8 */ JPAExtraShape* unk8;
-	/* 0xC */ JPASweepShape* unkC;
-	/* 0x10 */ JPAExTexShape* unk10;
-	/* 0x14 */ JPAKeyFrameAnime** unk14;
-	/* 0x18 */ JPADataBlock** unk18;
-	/* 0x1C */ u16* unk1C;
-	/* 0x20 */ u8 unk20;
-	/* 0x21 */ u8 unk21;
-	/* 0x22 */ u8 unk22;
+	/* 0x0 */ JPADataBlock* mBaseEmitterBlock;
+	/* 0x4 */ JPABaseShape* mBaseShape;
+	/* 0x8 */ JPAExtraShape* mExtraShape;
+	/* 0xC */ JPASweepShape* mSweepShape;
+	/* 0x10 */ JPAExTexShape* mExTexShape;
+	/* 0x14 */ JPAKeyFrameAnime** mKeyframeAnimations;
+	/* 0x18 */ JPADataBlock** mFields;
+	/* 0x1C */ u16* mTextureDataBase;
+	/* 0x20 */ u8 mFieldNum;
+	/* 0x21 */ u8 mTextureNum;
+	/* 0x22 */ u8 mKeyframeAnimationNum;
 };
 
 // TODO: name & usage might be wrong
@@ -93,6 +97,9 @@ struct JPAEmitterData {
 	// inlines from TWW
 	void setUserIndex(u16 v) { unk6 = v; }
 	u16 getUserIndex() { return unk6; }
+
+	// You'd THINK that they support multiple emitters here --
+	// but no, in SMS, only a single emitter is allowed.
 
 	/* 0x0 */ JPADataBlockLinkInfo** unk0;
 	/* 0x4 */ u16 unk4;
@@ -125,7 +132,7 @@ public:
 public:
 	/* 0x0 */ JKRHeap* unk0;
 	/* 0x4 */ JPAEmitterResource* unk4;
-	/* 0x4 */ JPATextureResource* unk8;
+	/* 0x8 */ JPATextureResource* unk8;
 };
 
 #endif

@@ -174,7 +174,7 @@ JPABaseEmitter* JPAEmitterManager::createEmitterBase(
 		JPABaseEmitter* emitter = nullptr;
 
 		JPADataBlockLinkInfo* linkInfo = emitterData->unk0[0];
-		JPADataBlock* block            = linkInfo->unk0;
+		JPADataBlock* block            = linkInfo->getBaseEmitterBlock();
 
 		if (unk14.getNumLinks()) {
 			emitter = unk14.getFirst()->getObject();
@@ -208,7 +208,7 @@ JPABaseEmitter* JPAEmitterManager::createEmitterBase(
 					field->loadFieldBlock(block2);
 			}
 			emitter->mEmitterDataBlockInfo = linkInfo;
-			if (linkInfo->unkC)
+			if (linkInfo->getSweepShape())
 				emitter->unk172 = 1;
 
 			emitter->calcCurrentRateTimerStep();
