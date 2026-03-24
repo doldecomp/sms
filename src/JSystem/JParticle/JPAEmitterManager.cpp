@@ -198,8 +198,8 @@ JPABaseEmitter* JPAEmitterManager::createEmitterBase(
 
 			JPAFieldManager* fieldMgr = emitter->getFieldManager();
 
-			int count             = linkInfo->unk20;
-			JPADataBlock** blocks = linkInfo->unk18;
+			int count             = linkInfo->getFieldNum();
+			JPADataBlock** blocks = linkInfo->getField();
 			for (int i = 0; i < count; ++i) {
 				JPADataBlock* block2 = blocks[i];
 				JPABaseField* field

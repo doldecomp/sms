@@ -55,7 +55,19 @@ struct JPADataBlockLinkInfo {
 	{
 	}
 
+	JPABaseShape* getBaseShape() { return unk4; }
+	JPAExTexShape* getExTexShape() { return unk10; }
+	JPAExtraShape* getExtraShape() { return unk8; }
 	JPASweepShape* getSweepShape() { return unkC; }
+
+	JPADataBlock** getField() { return unk18; }
+	u8 getFieldNum() { return unk20; }
+
+	u16* getTextureDataBase() { return unk1C; }
+	u8 getTextureNum() { return unk21; }
+
+	JPAKeyFrameAnime** getKey() { return unk14; }
+	u8 getKeyNum() { return unk22; }
 
 public:
 	/* 0x0 */ JPADataBlock* unk0;

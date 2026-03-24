@@ -47,7 +47,6 @@ static GXColor* makeColorTable(JPAColorRegAnmKey* param_1, int param_2,
 
 	f32 accumR, accumG, accumB, accumA;
 	f32 fR, fG, fB, fA;
-	f32 thing;
 
 	fR = (f32)param_1[0].unk2.r;
 	fG = (f32)param_1[0].unk2.g;
@@ -71,7 +70,7 @@ static GXColor* makeColorTable(JPAColorRegAnmKey* param_1, int param_2,
 			if (nextKey < param_2) {
 				JPAColorRegAnmKey* key = &param_1[nextKey];
 
-				thing = 1.0f / (key->unk0 - key[-1].unk0);
+				f32 thing = 1.0f / (key->unk0 - key[-1].unk0);
 
 				accumR = thing * (key->unk2.r - fR);
 				accumG = thing * (key->unk2.g - fG);
@@ -109,32 +108,11 @@ JPABaseShape::JPABaseShape(const u8* data, JKRHeap* heap)
 	mColLoopOffset = (r5 & 1) ? 0xffff : 0;
 	mTexLoopOffset = (r6 & 1) ? 0xffff : 0;
 
-	// TODO: something awful is happening here (no inlines involved?!)
-	u8 r5_3 = true;
-	u8 r5_2 = 1;
-	if (!(r5 & 2) && mType != 5) {
-		r5_3 = false;
-	}
+	bool r5_2 = (r5 & 2) || mType == 5 || mType == 6;
+	u8 r6_2   = r5_2 ? 1 : 0;
 
-	if (!r5_3 && (mType != 6)) {
-		r5_2 = 0;
-	}
-
-	u8 r6_2 = r5_2 ? 1 : 0;
-
-	u8 r5_4;
-	u8 r4;
-	r5_4 = true;
-	r4   = 1;
-	if (!(r6 & 2) && mType != 5) {
-		r5_4 = false;
-	}
-
-	if (!r5_4 && (mType != 6)) {
-		r4 = 0;
-	}
-
-	u8 r0 = r4 ? 1 : 0;
+	bool r4 = (r6 & 2) || mType == 5 || mType == 6;
+	u8 r0   = r4 ? 1 : 0;
 
 	unk68 = r6_2 << 1 | r0;
 

@@ -11,7 +11,7 @@ class JPABaseEmitter;
 
 // fabricated
 struct JPADrawParams {
-	/* 0x0 */ Vec unk0;
+	/* 0x0 */ JGeometry::TVec3<f32> unk0;
 	/* 0x8 */ f32 unkC;
 	/* 0x10 */ f32 unk10;
 	/* 0x14 */ f32 unk14;
@@ -34,7 +34,7 @@ public:
 	/* 0x14 */ JGeometry::TVec3<f32> unk14;
 	/* 0x20 */ JGeometry::TVec3<f32> mLocalPosition;
 	/* 0x2C */ JGeometry::TVec3<f32> mGlobalPosition;
-	/* 0x38 */ JGeometry::TVec3<f32> unk38;
+	/* 0x38 */ JGeometry::TVec3<f32> unk38; // momentum?
 	/* 0x44 */ f32 mAge;
 	/* 0x48 */ f32 mLifeProgress;
 	/* 0x4C */ f32 mLifetime;
