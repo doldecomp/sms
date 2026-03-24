@@ -10,7 +10,7 @@
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/JKernel/JKRMemArchive.hpp>
 #include <JSystem/JUtility/JUTAssert.hpp>
-#include "JSystem/JKernel/JKRArchive.hpp"
+#include <JSystem/JKernel/JKRArchive.hpp>
 #include "dolphin/os.h"
 
 JKRCompArchive::JKRCompArchive(s32 entryNum,

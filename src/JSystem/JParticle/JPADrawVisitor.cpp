@@ -468,7 +468,7 @@ void JPADrawExecRotYBillBoard::exec(const JPADrawContext* dc,
 void dirTypeVel(JPABaseParticle* particle, JPABaseEmitter*,
                 JGeometry::TVec3<f32>& result)
 {
-	result.set(particle->unk38);
+	result.set(particle->mVelocity);
 }
 
 void dirTypePos(JPABaseParticle* particle, JPABaseEmitter*,
@@ -487,7 +487,7 @@ void dirTypePosInv(JPABaseParticle* particle, JPABaseEmitter*,
 void dirTypeEmtrDir(JPABaseParticle*, JPABaseEmitter* emitter,
                     JGeometry::TVec3<f32>& result)
 {
-	result.set(emitter->unk210);
+	result.set(emitter->mEmitterDirection);
 }
 
 void dirTypePrevPtcl(JPABaseParticle* particle, JPABaseEmitter* emitter,
@@ -1088,7 +1088,7 @@ void JPADrawExecLine::exec(const JPADrawContext* dc, JPABaseParticle* particle)
 	JGeometry::TVec3<f32> local_40;
 	JGeometry::TVec3<f32> f31_f30_f39;
 	particle->getGlobalPosition(f31_f30_f39);
-	local_40 = particle->unk38;
+	local_40 = particle->mVelocity;
 	if (local_40.isZero())
 		return;
 
@@ -1284,7 +1284,7 @@ void JPADrawExecStripeCross::exec(const JPADrawContext* dc)
 		f32 y = params->unk14 * (dc->pcb->unk4 - dc->pcb->unkC);
 
 		JGeometry::TVec3<f32> local_BC;
-		local_BC = particle->unk38;
+		local_BC = particle->mVelocity;
 
 		JGeometry::TVec3<f32> v1(x * sin, x * cos, 0.0f);
 		JGeometry::TVec3<f32> v2(y * sin, y * cos, 0.0f);
@@ -1511,7 +1511,7 @@ void JPADrawCalcScaleXBySpeed::calc(const JPADrawContext* dc,
 {
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
-	JGeometry::TVec3<f32> vel = particle->unk38;
+	JGeometry::TVec3<f32> vel = particle->mVelocity;
 
 	if (dc->pcb->unkA8 < dc->mExtraShape->getScaleInTiming()) {
 		params->unk10
@@ -1535,7 +1535,7 @@ void JPADrawCalcScaleYBySpeed::calc(const JPADrawContext* dc,
 {
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
-	JGeometry::TVec3<f32> vel = particle->unk38;
+	JGeometry::TVec3<f32> vel = particle->mVelocity;
 
 	if (dc->pcb->unkA8 < dc->mExtraShape->getScaleInTiming()) {
 		params->unk14

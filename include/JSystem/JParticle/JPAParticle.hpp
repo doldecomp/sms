@@ -34,7 +34,7 @@ public:
 	/* 0x14 */ JGeometry::TVec3<f32> unk14;
 	/* 0x20 */ JGeometry::TVec3<f32> mLocalPosition;
 	/* 0x2C */ JGeometry::TVec3<f32> mGlobalPosition;
-	/* 0x38 */ JGeometry::TVec3<f32> unk38; // momentum?
+	/* 0x38 */ JGeometry::TVec3<f32> mVelocity;
 	/* 0x44 */ f32 mAge;
 	/* 0x48 */ f32 mLifeProgress;
 	/* 0x4C */ f32 mLifetime;
@@ -122,8 +122,8 @@ public:
 	/* 0x7C */ f32 mAirResistance;
 	/* 0x80 */ f32 mDragForce;
 	/* 0x84 */ f32 mCurrentDragForce;
-	/* 0x88 */ JGeometry::TVec3<f32> mVelocity;
-	/* 0x94 */ JGeometry::TVec3<f32> mAcceleration;
+	/* 0x88 */ JGeometry::TVec3<f32> mFieldVelocity;
+	/* 0x94 */ JGeometry::TVec3<f32> mFieldAcceleration;
 	/* 0xA0 */ JPADrawParams mDrawParams;
 
 public:
@@ -135,8 +135,11 @@ public:
 	virtual void setVelocity();
 	virtual bool checkCreateChildParticle();
 
-	virtual JGeometry::TVec3<f32>& accessFVelVec() { return mVelocity; }
-	virtual JGeometry::TVec3<f32>& accessFAccVec() { return mAcceleration; }
+	virtual JGeometry::TVec3<f32>& accessFVelVec() { return mFieldVelocity; }
+	virtual JGeometry::TVec3<f32>& accessFAccVec()
+	{
+		return mFieldAcceleration;
+	}
 	virtual void getBaseVelVec(JGeometry::TVec3<float>& out) const
 	{
 		out.set(mBaseVelocity);

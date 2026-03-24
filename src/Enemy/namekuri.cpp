@@ -1,4 +1,3 @@
-#include "JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp"
 #include <Enemy/NameKuri.hpp>
 #include <Enemy/Walker.hpp>
 #include <Enemy/Graph.hpp>
@@ -29,6 +28,7 @@
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DNode.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>

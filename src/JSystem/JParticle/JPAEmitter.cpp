@@ -24,11 +24,11 @@ JPABaseEmitter::JPABaseEmitter()
 	unk16C.zero();
 	unk160.zero();
 
-	unk1B8 = 0.0f;
+	mChildSpawnTimer = 0.0f;
 
-	mRateTimer = 0.0f;
+	mEmitTimer = 0.0f;
 
-	mRateTimerStep = 1.0f;
+	mEmitRate = 1.0f;
 
 	unk110                = nullptr;
 	unk114                = nullptr;
@@ -93,7 +93,7 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 {
 	JGeometry::TVec3<f32> local_c0(0.0f, 0.0f, 0.0f);
 
-	JPASweepShape* sweepShape = mEmitterDataBlockInfo->unkC;
+	JPASweepShape* sweepShape = mEmitterDataBlockInfo->getSweepShape();
 	int count                 = sweepShape->unk42;
 
 	JGeometry::TVec3<f32> parentUnk20;
@@ -124,7 +124,7 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 			particle->mCurrentDragForce = parent->getCurrentDragForce();
 		}
 
-		particle->mVelocity.set(local_c0);
+		particle->mFieldVelocity.set(local_c0);
 
 		f32 sweepShapeUnk1C = sweepShape->unk1C;
 		if (sweepShapeUnk1C != 0.0f) {
@@ -133,10 +133,10 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 			JGeometry::TVec3<f32> fVel;
 			fVel.scale(sweepShapeUnk1C, parent->accessFVelVec());
 			particle->setBaseVelVec(baseVel);
-			particle->mAcceleration.set(fVel);
+			particle->mFieldAcceleration.set(fVel);
 		} else {
 			particle->setBaseVelVec(local_c0);
-			particle->mAcceleration.set(local_c0);
+			particle->mFieldAcceleration.set(local_c0);
 		}
 
 		if (sweepShape->unkC != 0.0f) {
@@ -183,7 +183,7 @@ void JPABaseEmitter::getEmitterGlobalTranslation(JGeometry::TVec3<f32>& vec)
 	MTXScale(local_3c, unk154.x, unk154.y, unk154.z);
 	MTXConcat(unk124, local_3c, local_3c);
 	local_3c.setTrans(unk160);
-	local_3c.mult(unk19C, vec);
+	local_3c.mult(mTrans, vec);
 }
 
 void JPABaseEmitter::calcEmitterGlobalParams()
@@ -191,23 +191,23 @@ void JPABaseEmitter::calcEmitterGlobalParams()
 	JPAEmitterInfoObj.unk0 = this;
 	JPAEmitterInfoObj.unk4 = &mFieldManager;
 
-	if (mEmitterDataBlockInfo->unkC != nullptr
-	    && mEmitterDataBlockInfo->unkC->unk48 != 0)
+	if (mEmitterDataBlockInfo->getSweepShape() != nullptr
+	    && mEmitterDataBlockInfo->getSweepShape()->unk48 != 0)
 		JPAEmitterInfoObj.unk17F = 1;
 	else
 		JPAEmitterInfoObj.unk17F = 0;
 
-	JPAGetXYZRotateMtx(unk1A8.x * 182, unk1A8.y * 182, unk1A8.z * 182,
+	JPAGetXYZRotateMtx(mRot.x * 182, mRot.y * 182, mRot.z * 182,
 	                   JPAEmitterInfoObj.unkCC);
 	Mtx afStack_48;
 	MTXCopy(JPAEmitterInfoObj.unkCC, afStack_48);
 
-	JPAEmitterInfoObj.unk30.set(unk190);
+	JPAEmitterInfoObj.unk30.set(mScale);
 
 	TPosition3f local_A0;
-	MTXScale(local_A0, unk190.x, unk190.y, unk190.z);
+	MTXScale(local_A0, mScale.x, mScale.y, mScale.z);
 	MTXConcat(JPAEmitterInfoObj.unkCC, local_A0, JPAEmitterInfoObj.unkFC);
-	local_A0.setTrans(unk19C);
+	local_A0.setTrans(mTrans);
 
 	JPAEmitterInfoObj.unk18.set(unk154);
 	JPAEmitterInfoObj.unk30.mul(unk154);
@@ -226,7 +226,7 @@ void JPABaseEmitter::calcEmitterGlobalParams()
 
 	JPAEmitterInfoObj.unk9C.setTrans(unk160);
 
-	MTXConcat(JPAEmitterInfoObj.unk9C.mMtx, afStack_48, afStack_48);
+	MTXConcat(JPAEmitterInfoObj.unk9C, afStack_48, afStack_48);
 	local_A0.getTrans(JPAEmitterInfoObj.unk24);
 
 	JGeometry::TVec3<f32> xDir;
@@ -249,7 +249,7 @@ void JPABaseEmitter::calcEmitterGlobalParams()
 
 	JGeometry::TVec3<f32> local_84(0.0f, 0.0f, 1.0f);
 	JGeometry::TVec3<f32> local_90;
-	local_90.normalize(unk210);
+	local_90.normalize(mEmitterDirection);
 
 	JPAEmitterInfoObj.unk3C.set(local_90);
 	if (local_90 == local_84) {
@@ -261,31 +261,33 @@ void JPABaseEmitter::calcEmitterGlobalParams()
 
 void JPABaseEmitter::loadBaseEmitterBlock(JPADataBlock* block)
 {
-	JSUMemoryInputStream stream(block->mRawData,
-	                            *(u32*)((u8*)block->mRawData + 4));
+	JSUMemoryInputStream stream2(block->mRawData,
+	                             *(u32*)((u8*)block->mRawData + 4));
+
+	JSUInputStream& stream = stream2;
 	stream.skip(0xC);
-	stream.read(&unk190, 0xC);
-	stream.read(&unk19C, 0xC);
-	stream.read(&unk1A8, 6);
+	stream.read(&mScale, 0xC);
+	stream.read(&mTrans, 0xC);
+	stream.read(&mRot, 6);
 	stream.read(&mVolumeType, 1);
-	stream.read(&unk1AF, 1);
+	stream.read(&mEmitInterval, 1);
 	stream.skip(2);
 	stream.read(&unk1F2, 2);
-	stream.read(&unk1B0, 4);
-	unk1B4    = JPAConvertFixToFloat(stream.readS16());
-	mMaxFrame = stream.readS16();
-	stream.read(&unk1EC, 2);
-	stream.read(&unk1F0, 2);
+	stream.read(&mChildSpawnRate, 4);
+	mChildSpawnRateVariance = JPAConvertFixToFloat(stream.readS16());
+	mMaxFrame               = stream.readS16();
+	stream.read(&mStartFrame, 2);
+	stream.read(&mVolumeSize, 2);
 	unk1F4           = JPAConvertFixToFloat(stream.readS16());
 	mVolumeMinRadius = JPAConvertFixToFloat(stream.readS16());
-	stream.read(&unk1EE, 2);
-	unk1E0 = JPAConvertFixToFloat(stream.readS16());
-	unk1D8 = JPAConvertFixToFloat(stream.readS16());
-	unk1DC = JPAConvertFixToFloat(stream.readS16());
-	unk1C4 = JPAConvertFixToFloat(stream.readS16());
-	unk1CC = JPAConvertFixToFloat(stream.readS16());
-	unk1D0 = JPAConvertFixToFloat(stream.readS16());
-	unk1D4 = JPAConvertFixToFloat(stream.readS16());
+	stream.read(&mBaseLifetime, 2);
+	mLifetimeRandomScale   = JPAConvertFixToFloat(stream.readS16());
+	mBaseWeight            = JPAConvertFixToFloat(stream.readS16());
+	mWeightRandomScale     = JPAConvertFixToFloat(stream.readS16());
+	unk1C4                 = JPAConvertFixToFloat(stream.readS16());
+	unk1CC                 = JPAConvertFixToFloat(stream.readS16());
+	mBaseAirResistance     = JPAConvertFixToFloat(stream.readS16());
+	mAirResistanceVariance = JPAConvertFixToFloat(stream.readS16());
 	stream.read(&unk1FC, 4);
 	stream.read(&unk200, 4);
 	stream.read(&unk204, 4);
@@ -296,15 +298,23 @@ void JPABaseEmitter::loadBaseEmitterBlock(JPADataBlock* block)
 	stream.read(&fixVec, 6);
 	JGeometry::TVec3<f32> floatVec;
 	JPAConvertFixVecToFloatVec(floatVec, fixVec);
-	unk210.setLength(floatVec, 1.0f);
+	mEmitterDirection.normalize(floatVec);
 	unk1E4 = JPAConvertFixToFloat(stream.readS16());
 	stream.read(&mEmitFlags, 4);
-	stream.read(&unk18C, 4);
+	stream.read(&mKeyAnmTypeMask, 4);
 }
 
-void JPABaseEmitter::executeBeforeCallBack() { }
+void JPABaseEmitter::executeBeforeCallBack()
+{
+	if (unk110)
+		unk110->execute(this);
+}
 
-void JPABaseEmitter::executeAfterCallBack() { }
+void JPABaseEmitter::executeAfterCallBack()
+{
+	if (unk110)
+		unk110->executeAfter(this);
+}
 
 void JPABaseEmitter::drawEmitterCallBack()
 {
@@ -368,7 +378,7 @@ JPABaseParticle* JPABaseEmitter::createParticle()
 		JGeometry::TVec3<f32> local_468;
 		JGeometry::TVec3<f32> f31_f30_f29;
 
-		f32 volumeSize = (f32)(u16)unk1F0;
+		f32 volumeSize = (f32)mVolumeSize;
 
 		particle->unk68.zero();
 
@@ -568,7 +578,7 @@ JPABaseParticle* JPABaseEmitter::createParticle()
 			local_35c *= random_scale;
 
 		if (checkFlag(EMIT_FLAG_INHERIT_SCALE)) {
-			local_35c.mul(unk190);
+			local_35c.mul(mScale);
 		}
 
 		MTXMultVec(JPAEmitterInfoObj.unkCC.mMtx, &local_35c, &local_35c);
@@ -585,19 +595,20 @@ JPABaseParticle* JPABaseEmitter::createParticle()
 		}
 		particle->unk78 = dynamics_scale;
 
-		f32 air = unk1D4 * getRandomSF() + unk1D0;
+		f32 air = mBaseAirResistance + mAirResistanceVariance * getRandomSF();
 		if (air > 1.0f)
 			air = 1.0f;
 		particle->mAirResistance = air;
 
-		particle->mDynamicsWeight = unk1D8 * -(unk1DC * getRandomF() - 1.0f);
+		particle->mDynamicsWeight
+		    = mBaseWeight * (1.0f - mWeightRandomScale * getRandomF());
 
 		particle->initGlobalPosition();
 		particle->mLifeProgress = 0.0f;
 
-		f32 life = (f32)(s16)unk1EE;
-		if (unk1E0 != 0.0f) {
-			life *= -(unk1E0 * getRandomF() - 1.0f);
+		f32 life = (f32)mBaseLifetime;
+		if (mLifetimeRandomScale != 0.0f) {
+			life *= 1.0f - mLifetimeRandomScale * getRandomF();
 		}
 		particle->mLifetime = life;
 		particle->unk50     = unk114;
@@ -611,10 +622,10 @@ JPABaseParticle* JPABaseEmitter::createParticle()
 
 void JPABaseEmitter::calcCurrentRateTimerStep()
 {
-	if (unk1AF == 0) {
-		mRateTimerStep = 1.0f;
+	if (mEmitInterval == 0) {
+		mEmitRate = 1.0f;
 	} else {
-		mRateTimerStep = 1.0f / (unk1AF + 1.0f) + 1e-07f;
+		mEmitRate = 1.0f / (mEmitInterval + 1.0f) + 1e-07f;
 	}
 }
 
@@ -622,20 +633,24 @@ int JPABaseEmitter::calcCreateParticle()
 {
 	int numToCreate = 0;
 
+	JPAEmitterInfo& eio = JPAEmitterInfoObj;
+
 	if (checkStatus(STATUS_EMIT_NEXT_FRAME)) {
 
 		if (!checkFlag(EMIT_FLAG_FIXED_INTERVAL)) {
-			f32 createRate = unk1B0;
+			f32 createRate = mChildSpawnRate;
 
-			if (unk1B4 != 0.0f) {
-				createRate += createRate * unk1B4 * getRandomRF();
+			if (mChildSpawnRateVariance != 0.0f) {
+				createRate
+				    += createRate * mChildSpawnRateVariance * getRandomRF();
 			}
 
-			unk1B8 += createRate;
+			mChildSpawnTimer += createRate;
 
-			if (unk1B8 >= 1.0f) {
-				numToCreate = unk1B8;
-				unk1B8      = unk1B8 - (f32)(s32)unk1B8;
+			if (mChildSpawnTimer >= 1.0f) {
+				numToCreate = (s32)mChildSpawnTimer;
+				mChildSpawnTimer
+				    = mChildSpawnTimer - (f32)(s32)mChildSpawnTimer;
 			} else if (createRate > 0.0f && checkStatus(STATUS_FIRST_EMIT)) {
 				numToCreate = 1;
 			} else {
@@ -644,50 +659,49 @@ int JPABaseEmitter::calcCreateParticle()
 		} else {
 			if (mVolumeType == VOLUME_TYPE_SPHERE) {
 
-				JPAEmitterInfoObj.unk16C = 0;
-				JPAEmitterInfoObj.unk174 = 0;
-				JPAEmitterInfoObj.unk176 = 0;
-				JPAEmitterInfoObj.unk170 = 2;
-				JPAEmitterInfoObj.unk17C = 1;
-				JPAEmitterInfoObj.unk170 = 0;
+				eio.unk16C = 0;
+				eio.unk174 = 0;
+				eio.unk176 = 0;
+				eio.unk170 = 2;
+				eio.unk17C = 1;
+				eio.unk170 = 0;
 
 				numToCreate = 2;
 				for (int i = 0; i < unk1F2; ++i) {
-					numToCreate += JPAEmitterInfoObj.unk170;
-					JPAEmitterInfoObj.unk170 += 4;
-					numToCreate += JPAEmitterInfoObj.unk170;
+					numToCreate += eio.unk170;
+					eio.unk170 += 4;
+					numToCreate += eio.unk170;
 				}
 
-				JPAEmitterInfoObj.unk17A = (s16)((s32)(65536.0f * unk1F4)
-				                                 / JPAEmitterInfoObj.unk170);
-				JPAEmitterInfoObj.unk178 = (s16)(0x4000 / unk1F2);
+				eio.unk17A = (s16)((s32)(65536.0f * unk1F4) / eio.unk170);
+				eio.unk178 = (s16)(0x4000 / unk1F2);
 			} else if (mVolumeType == VOLUME_TYPE_CIRCLE
 			           || mVolumeType == VOLUME_TYPE_LINE) {
 				numToCreate = unk1F2;
 			}
 		}
 
-		JPAEmitterInfoObj.mEmitCount = numToCreate;
+		JPAEmitterInfoObj.mEmitCount = (s16)numToCreate;
 
 		if (checkStatus(STATUS_STOP_EMIT))
 			numToCreate = 0;
 
 		if (numToCreate != 0) {
 			for (int i = 0; i < numToCreate; ++i) {
-				JPAEmitterInfoObj.mVolumeEmitIdx = i;
+				eio.mVolumeEmitIdx = i;
 				if (createParticle() == nullptr)
 					break;
 			}
 		}
 	}
 
-	if (mRateTimerStep == 1.0f) {
+	if (mEmitRate == 1.0f) {
 		setStatus(STATUS_EMIT_NEXT_FRAME);
 	} else {
-		mRateTimer += mRateTimerStep;
+		mEmitTimer += mEmitRate;
 
-		if (mRateTimer >= 1.0f) {
-			mRateTimer -= 1.0f;
+		if (mEmitTimer >= 1.0f) {
+			mEmitTimer -= 1.0f;
 			setStatus(STATUS_EMIT_NEXT_FRAME);
 		} else {
 			clearStatus(STATUS_EMIT_NEXT_FRAME);
@@ -701,7 +715,7 @@ int JPABaseEmitter::calcCreateParticle()
 
 bool JPABaseEmitter::checkStartFrame()
 {
-	if ((s16)unk18.getFrame() >= unk1EC)
+	if ((s16)unk18.getFrame() >= mStartFrame)
 		return true;
 
 	unk18.incFrame();
@@ -710,7 +724,7 @@ bool JPABaseEmitter::checkStartFrame()
 
 bool JPABaseEmitter::checkMaxFrame()
 {
-	if (mMaxFrame == 0 ? true : false)
+	if (isContinuousParticle())
 		return false;
 
 	if (mMaxFrame < 0) {
@@ -790,79 +804,77 @@ void JPABaseEmitter::doChildParticle()
 	}
 }
 
-void JPABaseEmitter::getKeyValue(f32, u16, f32*) { }
+f32 JPABaseEmitter::getKeyValue(f32 time, u16 frame_num, f32* frames)
+{
+	return JPAGetKeyFrameValue(time, frame_num, frames);
+}
 
 void JPABaseEmitter::calcKeyFrameAnime()
 {
-	JPAKeyFrameAnime** animeFrames;
-	u32 flags;
-	u32 bit;
-	u32 bitIdx;
-	u32 uVar8;
-
-	uVar8 = mEmitterDataBlockInfo->getKeyNum();
-	if (!uVar8)
+	u32 keyNum = mEmitterDataBlockInfo->getKeyNum();
+	if (!keyNum)
 		return;
 
-	flags       = unk18C;
-	animeFrames = mEmitterDataBlockInfo->getKey();
-	bit         = 1;
-	bitIdx      = 0;
+	u32 mask = mKeyAnmTypeMask;
 
-	for (int i = 0; i < uVar8; ++i) {
+	JPAKeyFrameAnime** animeFrames = mEmitterDataBlockInfo->getKey();
+
+	u32 bit    = 1;
+	u32 bitIdx = 0;
+
+	for (int i = 0; i < keyNum; ++i) {
 
 		u32 stop = false;
 		do {
-			if ((flags & bit) != 0)
+			if ((mask & bit) != 0)
 				stop = true;
 			bit <<= 1;
 			++bitIdx;
 		} while (!stop);
 
-		f32 dVar9     = unk10.getFrame();
-		u8* animeData = (u8*)animeFrames[i]->mRawData;
-		f32* frames   = (f32*)(animeData + 0x20);
-		u8 frameNum   = animeData[0x10];
-		u8 thing      = animeData[0x12];
-		if (thing ? true : false)
-			dVar9 -= (int)unk10.getFrame()
-			         / ((int)frames[(frameNum - 1) * 4] + 1)
-			         * ((int)frames[(frameNum - 1) * 4] + 1);
+		f32 time       = unk10.getFrame();
+		u8* animeData  = (u8*)animeFrames[i]->mRawData;
+		f32* keyFrames = (f32*)(animeData + 0x20);
+		u8 frameNum    = animeData[0x10];
+		if (animeData[0x12] ? true : false) {
+			s32 keyFrame = (s32)keyFrames[(frameNum - 1) * 4] + 1;
+			s32 tmp      = (s32)unk10.getFrame() / keyFrame;
+			time -= tmp * keyFrame;
+		}
 
 		switch (bitIdx - 1) {
 		case 0:
-			unk1B0 = JPAGetKeyFrameValue(dVar9, frameNum, frames);
+			mChildSpawnRate = getKeyValue(time, frameNum, keyFrames);
 			break;
 		case 1:
-			unk1F0 = JPAGetKeyFrameValue(dVar9, frameNum, frames);
+			mVolumeSize = getKeyValue(time, frameNum, keyFrames);
 			break;
 		case 2:
-			unk1F4 = JPAGetKeyFrameValue(dVar9, frameNum, frames);
+			unk1F4 = getKeyValue(time, frameNum, keyFrames);
 			break;
 		case 3:
-			unk20C = JPAGetKeyFrameValue(dVar9, frameNum, frames);
+			unk20C = getKeyValue(time, frameNum, keyFrames);
 			break;
 		case 4:
-			unk1EE = JPAGetKeyFrameValue(dVar9, frameNum, frames);
+			mBaseLifetime = getKeyValue(time, frameNum, keyFrames);
 			break;
 		case 5:
-			unk1D8 = JPAGetKeyFrameValue(dVar9, frameNum, frames);
+			mBaseWeight = getKeyValue(time, frameNum, keyFrames);
 			break;
 		case 6:
-			unk1FC = JPAGetKeyFrameValue(dVar9, frameNum, frames);
+			unk1FC = getKeyValue(time, frameNum, keyFrames);
 			break;
 		case 7:
-			unk1FC = JPAGetKeyFrameValue(dVar9, frameNum, frames);
+			unk1FC = getKeyValue(time, frameNum, keyFrames);
 			break;
 		case 8:
-			unk208 = JPAGetKeyFrameValue(dVar9, frameNum, frames);
+			unk208 = getKeyValue(time, frameNum, keyFrames);
 			break;
 		case 9:
-			unk1E4 = JPAGetKeyFrameValue(dVar9, frameNum, frames);
+			unk1E4 = getKeyValue(time, frameNum, keyFrames);
 			break;
 		case 10:
-			// TODO: wrong, need JPADraw
-			unk1E4 = JPAGetKeyFrameValue(dVar9, frameNum, frames);
+			unk1E4 = getKeyValue(time, frameNum, keyFrames);
 			break;
 		}
 	}
@@ -875,8 +887,7 @@ void JPABaseEmitter::calc()
 	if (!checkStatus(STATUS_STOP_CALC))
 		calcKeyFrameAnime();
 
-	if (unk110)
-		unk110->execute(this);
+	executeBeforeCallBack();
 
 	if (!checkStatus(STATUS_STOP_CALC)) {
 		calcEmitterGlobalParams();
@@ -886,8 +897,7 @@ void JPABaseEmitter::calc()
 			calcCreateParticle();
 	}
 
-	if (unk110)
-		unk110->executeAfter(this);
+	executeAfterCallBack();
 
 	if (!checkStatus(STATUS_STOP_CALC)) {
 		doParticle();

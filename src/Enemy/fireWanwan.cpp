@@ -1307,7 +1307,7 @@ void TFireWanwan::emitEffects()
 		local_4c *= 0.22f;
 		if (JPABaseEmitter* emitter = SMS_EasyEmitParticle(
 		        BWANWAN_JPA_MS_BWAN_KIRA, mtx, this, local_4c))
-			emitter->unk1B0 = 0.1f;
+			emitter->mChildSpawnRate = 0.1f;
 		local_4c.set(1.5f, 1.5f, 1.5f);
 		SMS_EasyEmitParticle(PARTICLE_MS_NPC_HAMON_B, &mRipplePos, this,
 		                     local_4c);

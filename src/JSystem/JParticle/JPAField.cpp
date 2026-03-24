@@ -96,13 +96,13 @@ void JPABaseField::calcFieldVelocity(JPAParticle* particle)
 
 	switch (unk52) {
 	case 0:
-		particle->mAcceleration.add(local_14);
+		particle->mFieldAcceleration.add(local_14);
 		break;
 	case 1:
 		particle->addBaseVelVec(local_14);
 		break;
 	case 2:
-		particle->mVelocity.add(local_14);
+		particle->mFieldVelocity.add(local_14);
 		break;
 	}
 }

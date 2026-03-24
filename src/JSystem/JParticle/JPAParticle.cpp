@@ -58,28 +58,29 @@ void JPAParticle::init()
 	unk78             = 0.0f;
 	mDragForce        = 1.0f;
 	mCurrentDragForce = 1.0f;
-	mAcceleration.z   = 0.0f;
-	mAcceleration.y   = 0.0f;
-	mAcceleration.x   = 0.0f;
+	mFieldAcceleration.zero();
 }
 
 void JPAParticle::setVelocity()
 {
 	JPAGetEmitterInfoPtr();
-	mVelocity.add(mAcceleration);
-	unk38.x
-	    = mCurrentDragForce * (mBaseVelocity.x + mVelocity.x) * mDynamicsWeight;
-	unk38.y
-	    = mCurrentDragForce * (mBaseVelocity.y + mVelocity.y) * mDynamicsWeight;
-	unk38.z
-	    = mCurrentDragForce * (mBaseVelocity.z + mVelocity.z) * mDynamicsWeight;
+	mFieldVelocity.add(mFieldAcceleration);
+
+	// Don't try thinking about the physical units here too hard.
+	// The original developers likely didn't either.
+	mVelocity.x = mCurrentDragForce * (mBaseVelocity.x + mFieldVelocity.x)
+	              * mDynamicsWeight;
+	mVelocity.y = mCurrentDragForce * (mBaseVelocity.y + mFieldVelocity.y)
+	              * mDynamicsWeight;
+	mVelocity.z = mCurrentDragForce * (mBaseVelocity.z + mFieldVelocity.z)
+	              * mDynamicsWeight;
 }
 
 void JPAParticle::calcVelocity()
 {
 	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
 
-	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
+	mFieldVelocity.zero();
 	if (checkStatus(JPABaseParticle::FLAG_FOLLOW_EMITTER))
 		unk14.set(info->unk24);
 
@@ -106,7 +107,7 @@ void JPABaseParticle::initGlobalPosition()
 
 void JPABaseParticle::calcGlobalPosition()
 {
-	mLocalPosition.add(unk38);
+	mLocalPosition.add(mVelocity);
 	initGlobalPosition();
 }
 
@@ -114,9 +115,9 @@ void JPABaseParticle::getCurrentPosition(JGeometry::TVec3<f32>& result)
 {
 	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
 
-	result.x = info->unkC.x * (mLocalPosition.x + unk38.x) + unk14.x;
-	result.y = info->unkC.y * (mLocalPosition.y + unk38.y) + unk14.y;
-	result.z = info->unkC.z * (mLocalPosition.z + unk38.z) + unk14.z;
+	result.x = info->unkC.x * (mLocalPosition.x + mVelocity.x) + unk14.x;
+	result.y = info->unkC.y * (mLocalPosition.y + mVelocity.y) + unk14.y;
+	result.z = info->unkC.z * (mLocalPosition.z + mVelocity.z) + unk14.z;
 }
 
 void JPABaseParticle::getCurrentPositionX() { }

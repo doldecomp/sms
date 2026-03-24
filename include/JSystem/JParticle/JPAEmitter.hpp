@@ -20,6 +20,8 @@ public:
 	{
 	}
 
+	void setEmitCount(s16 count) { mEmitCount = count; }
+
 public:
 	/* 0x0 */ JPABaseEmitter* unk0;
 	/* 0x4 */ JPAFieldManager* unk4;
@@ -102,7 +104,7 @@ public:
 	bool checkMaxFrame();
 	void doParticle();
 	void doChildParticle();
-	void getKeyValue(f32, u16, f32*);
+	f32 getKeyValue(f32, u16, f32*);
 	void calcKeyFrameAnime();
 	void calc();
 	void setGlobalRMatrix(MtxPtr);
@@ -122,7 +124,9 @@ public:
 	f32 getRandomF() { return mRng.get_ufloat_1(); }
 	f32 getRandomRF() { return mRng.get_ufloat_1() * 2.0f - 1.0f; }
 	f32 getRandomSF() { return mRng.get_ufloat_1() - 0.5f; }
+	// TODO: wrong!
 	s32 getRandomSS() { return (mRng.get() & 0xffff) - 0x8000; }
+	// TODO: fake!
 	s16 getRandomRS() { return (mRng.get() & 0x7fff) - 0x4000; }
 	JPADataBlockLinkInfo* getEmitterDataBlockInfoPtr() const
 	{
@@ -140,7 +144,7 @@ public:
 		unk174.set(scale);
 	}
 
-	void setUnk190(f32 x, f32 y, f32 z) { unk190.set(x, y, z); }
+	void setUnk190(f32 x, f32 y, f32 z) { mScale.set(x, y, z); }
 
 	void setRotation(s16 x, s16 y, s16 z)
 	{
@@ -185,6 +189,8 @@ public:
 	void playCalcEmitter() { clearStatus(STATUS_STOP_CALC); }
 	void stopDrawParticle() { setStatus(STATUS_STOP_DRAW); }
 	void playDrawParticle() { clearStatus(STATUS_STOP_DRAW); }
+
+	bool isContinuousParticle() { return mMaxFrame == 0 ? true : false; }
 
 	void becomeImmortalEmitter() { setStatus(STATUS_IMMORTAL); }
 	void becomeContinuousParticle() { mMaxFrame = 0; }
@@ -255,31 +261,31 @@ public:
 	/* 0x185 */ u8 unk185;
 	/* 0x186 */ u8 unk186;
 	/* 0x188 */ u32 mEmitFlags;
-	/* 0x18C */ u32 unk18C;
+	/* 0x18C */ u32 mKeyAnmTypeMask;
 
-	/* 0x190 */ JGeometry::TVec3<f32> unk190;
-	/* 0x19C */ JGeometry::TVec3<f32> unk19C;
-	/* 0x1A8 */ S16Vec unk1A8;
-	/* 0x1AE */ u8 mVolumeType;
-	/* 0x1AF */ u8 unk1AF;
-	/* 0x1B0 */ f32 unk1B0;
-	/* 0x1B4 */ f32 unk1B4;
-	/* 0x1B8 */ f32 unk1B8;
-	/* 0x1BC */ f32 mRateTimer;
-	/* 0x1C0 */ f32 mRateTimerStep;
+	/* 0x190 */ JGeometry::TVec3<f32> mScale;
+	/* 0x19C */ JGeometry::TVec3<f32> mTrans;
+	/* 0x1A8 */ S16Vec mRot;
+	/* 0x1AE */ u8 mVolumeType;   //< See VOLUME_TYPE_
+	/* 0x1AF */ u8 mEmitInterval; //< In frames, 0 = every frame
+	/* 0x1B0 */ f32 mChildSpawnRate;
+	/* 0x1B4 */ f32 mChildSpawnRateVariance;
+	/* 0x1B8 */ f32 mChildSpawnTimer;
+	/* 0x1BC */ f32 mEmitTimer;
+	/* 0x1C0 */ f32 mEmitRate;
 	/* 0x1C4 */ f32 unk1C4;
 	/* 0x1C4 */ f32 unk1C8;
 	/* 0x1CC */ f32 unk1CC;
-	/* 0x1D0 */ f32 unk1D0;
-	/* 0x1D4 */ f32 unk1D4;
-	/* 0x1D8 */ f32 unk1D8;
-	/* 0x1DC */ f32 unk1DC;
-	/* 0x1E0 */ f32 unk1E0;
+	/* 0x1D0 */ f32 mBaseAirResistance;
+	/* 0x1D4 */ f32 mAirResistanceVariance;
+	/* 0x1D8 */ f32 mBaseWeight;
+	/* 0x1DC */ f32 mWeightRandomScale;
+	/* 0x1E0 */ f32 mLifetimeRandomScale;
 	/* 0x1E4 */ f32 unk1E4;
 	/* 0x1E8 */ s32 mMaxFrame;
-	/* 0x1EC */ s16 unk1EC;
-	/* 0x1EE */ s16 unk1EE;
-	/* 0x1F0 */ s16 unk1F0;
+	/* 0x1EC */ s16 mStartFrame;
+	/* 0x1EE */ s16 mBaseLifetime;
+	/* 0x1F0 */ u16 mVolumeSize;
 	/* 0x1F2 */ u16 unk1F2;
 	/* 0x1F4 */ f32 unk1F4;
 	/* 0x1F8 */ f32 mVolumeMinRadius;
@@ -288,7 +294,7 @@ public:
 	/* 0x200 */ f32 unk204;
 	/* 0x208 */ f32 unk208;
 	/* 0x20C */ f32 unk20C;
-	/* 0x210 */ JGeometry::TVec3<f32> unk210;
+	/* 0x210 */ JGeometry::TVec3<f32> mEmitterDirection;
 	/* 0x21C */ JMath::TRandom_fast_ mRng;
 };
 

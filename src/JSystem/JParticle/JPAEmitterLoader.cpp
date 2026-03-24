@@ -36,7 +36,7 @@ JPAEmitterData* JPAEmitterLoader_v10::load(JPATextureResource* param_1)
 	// TODO: fakematch, all vars were probably defined at the top originally
 	u32 nextOffset;
 
-	unk10 = new (unk4, 0) JPAEmitterData;
+	unk10 = new (mHeap, 0) JPAEmitterData;
 
 	u32 offset = 0x20;
 
@@ -59,17 +59,17 @@ JPAEmitterData* JPAEmitterLoader_v10::load(JPATextureResource* param_1)
 		offset += nextOffset;
 	}
 	unk10->unk4 = 1;
-	unk10->unk0 = new (unk4, 0) JPADataBlockLinkInfo*[unk10->unk4];
-	JPADataBlockLinkInfo* linkInfo = new (unk4, 0) JPADataBlockLinkInfo;
-	linkInfo->unk22                = kfa1Count;
-	linkInfo->unk14
-	    = kfa1Count ? new (unk4, 0) JPAKeyFrameAnime*[kfa1Count] : nullptr;
-	linkInfo->unk20 = fld1Count;
-	linkInfo->unk18
-	    = fld1Count ? new (unk4, 0) JPADataBlock*[fld1Count] : nullptr;
-	linkInfo->unk21 = tex1Count;
-	linkInfo->unk1C
-	    = tex1Count ? (u16*)JKRHeap::alloc(tex1Count * sizeof(u16), 4, unk4)
+	unk10->unk0 = new (mHeap, 0) JPADataBlockLinkInfo*[unk10->unk4];
+	JPADataBlockLinkInfo* linkInfo  = new (mHeap, 0) JPADataBlockLinkInfo;
+	linkInfo->mKeyframeAnimationNum = kfa1Count;
+	linkInfo->mKeyframeAnimations
+	    = kfa1Count ? new (mHeap, 0) JPAKeyFrameAnime*[kfa1Count] : nullptr;
+	linkInfo->mFieldNum = fld1Count;
+	linkInfo->mFields
+	    = fld1Count ? new (mHeap, 0) JPADataBlock*[fld1Count] : nullptr;
+	linkInfo->mTextureNum = tex1Count;
+	linkInfo->mTextureDataBase
+	    = tex1Count ? (u16*)JKRHeap::alloc(tex1Count * sizeof(u16), 4, mHeap)
 	                : nullptr;
 
 	u32 offset2 = 0x20;
@@ -80,23 +80,28 @@ JPAEmitterData* JPAEmitterLoader_v10::load(JPATextureResource* param_1)
 		nextOffset = *(u32*)(unk8 + offset2 + 4);
 
 		if (*(u32*)(unk8 + offset2) == 'FLD1') {
-			linkInfo->unk18[nextFld1]
-			    = new (unk4, 0) JPADataBlock(unk8 + offset2, unk4);
+			linkInfo->mFields[nextFld1]
+			    = new (mHeap, 0) JPADataBlock(unk8 + offset2, mHeap);
 			++nextFld1;
 		} else if (*(u32*)(unk8 + offset2) == 'KFA1') {
-			linkInfo->unk14[nextKfa1]
-			    = new (unk4, 0) JPAKeyFrameAnime(unk8 + offset2, unk4);
+			linkInfo->mKeyframeAnimations[nextKfa1]
+			    = new (mHeap, 0) JPAKeyFrameAnime(unk8 + offset2, mHeap);
 			++nextKfa1;
 		} else if (*(u32*)(unk8 + offset2) == 'BEM1') {
-			linkInfo->unk0 = new (unk4, 0) JPADataBlock(unk8 + offset2, unk4);
+			linkInfo->mBaseEmitterBlock
+			    = new (mHeap, 0) JPADataBlock(unk8 + offset2, mHeap);
 		} else if (*(u32*)(unk8 + offset2) == 'BSP1') {
-			linkInfo->unk4 = new (unk4, 0) JPABaseShape(unk8 + offset2, unk4);
+			linkInfo->mBaseShape
+			    = new (mHeap, 0) JPABaseShape(unk8 + offset2, mHeap);
 		} else if (*(u32*)(unk8 + offset2) == 'ESP1') {
-			linkInfo->unk8 = new (unk4, 0) JPAExtraShape(unk8 + offset2);
+			linkInfo->mExtraShape
+			    = new (mHeap, 0) JPAExtraShape(unk8 + offset2);
 		} else if (*(u32*)(unk8 + offset2) == 'SSP1') {
-			linkInfo->unkC = new (unk4, 0) JPASweepShape(unk8 + offset2);
+			linkInfo->mSweepShape
+			    = new (mHeap, 0) JPASweepShape(unk8 + offset2);
 		} else if (*(u32*)(unk8 + offset2) == 'ETX1') {
-			linkInfo->unk10 = new (unk4, 0) JPAExTexShape(unk8 + offset2);
+			linkInfo->mExTexShape
+			    = new (mHeap, 0) JPAExTexShape(unk8 + offset2);
 		}
 
 		offset2 += nextOffset;
@@ -105,7 +110,8 @@ JPAEmitterData* JPAEmitterLoader_v10::load(JPATextureResource* param_1)
 	for (int i = 0, nextTex1 = 0; i < tex1Count; ++i) {
 		nextOffset = *(u32*)(unk8 + offset2 + 4);
 
-		linkInfo->unk1C[nextTex1] = param_1->registration(unk8 + offset2, unk4);
+		linkInfo->mTextureDataBase[nextTex1]
+		    = param_1->registration(unk8 + offset2, mHeap);
 		++nextTex1;
 		offset2 += nextOffset;
 	}
