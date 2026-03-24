@@ -800,12 +800,12 @@ void JPABaseEmitter::calcKeyFrameAnime()
 	u32 bitIdx;
 	u32 uVar8;
 
-	uVar8 = mEmitterDataBlockInfo->unk22;
+	uVar8 = mEmitterDataBlockInfo->getKeyNum();
 	if (!uVar8)
 		return;
 
 	flags       = unk18C;
-	animeFrames = mEmitterDataBlockInfo->unk14;
+	animeFrames = mEmitterDataBlockInfo->getKey();
 	bit         = 1;
 	bitIdx      = 0;
 

@@ -14,6 +14,7 @@ class JPABaseParticle;
 
 class JPADrawClipBoard {
 public:
+	JPADrawClipBoard() { }
 	~JPADrawClipBoard() { }
 
 public:
@@ -27,7 +28,7 @@ public:
 	/* 0xC */ f32 unkC;
 	/* 0x10 */ f32 unk10;
 	/* 0x14 */ JGeometry::TVec2<f32> mTexCoords[4];
-	/* 0x34 */ Mtx44* unk34;
+	/* 0x34 */ MtxPtr unk34;
 	/* 0x38 */ Mtx unk38;
 	/* 0x68 */ Mtx unk68;
 	/* 0x98 */ GXColor mPrmColor;

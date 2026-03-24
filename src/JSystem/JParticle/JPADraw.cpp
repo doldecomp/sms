@@ -17,14 +17,21 @@ BOOL JPADraw::initialize(JPABaseEmitter* param_1, JPATextureResource* param_2)
 	JPADrawContext::pcb = &cb;
 
 	mDrawCtx.mBaseEmitter = param_1;
-	mDrawCtx.mBaseShape   = mDrawCtx.mBaseEmitter->mEmitterDataBlockInfo->unk4;
-	mDrawCtx.mExtraShape  = mDrawCtx.mBaseEmitter->mEmitterDataBlockInfo->unk8;
-	mDrawCtx.mSweepShape  = mDrawCtx.mBaseEmitter->mEmitterDataBlockInfo->unkC;
-	mDrawCtx.mExTexShape  = mDrawCtx.mBaseEmitter->mEmitterDataBlockInfo->unk10;
+
+	mDrawCtx.mBaseShape
+	    = mDrawCtx.mBaseEmitter->getEmitterDataBlockInfoPtr()->getBaseShape();
+	mDrawCtx.mExtraShape
+	    = mDrawCtx.mBaseEmitter->getEmitterDataBlockInfoPtr()->getExtraShape();
+	mDrawCtx.mSweepShape
+	    = mDrawCtx.mBaseEmitter->getEmitterDataBlockInfoPtr()->getSweepShape();
+	mDrawCtx.mExTexShape
+	    = mDrawCtx.mBaseEmitter->getEmitterDataBlockInfoPtr()->getExTexShape();
+
 	mDrawCtx.unk14        = this;
 	mDrawCtx.mTexResource = param_2;
-	mDrawCtx.mTexIndices  = mDrawCtx.mBaseEmitter->mEmitterDataBlockInfo->unk1C;
-	mDrawCtx.unk18        = &mDrawCtx.mBaseEmitter->mParticleList;
+	mDrawCtx.mTexIndices  = mDrawCtx.mBaseEmitter->getEmitterDataBlockInfoPtr()
+	                           ->getTextureDataBase();
+	mDrawCtx.unk18 = mDrawCtx.mBaseEmitter->getParticleList();
 
 	unkC2 = 0;
 	unkB4 = 1.0f;
@@ -141,8 +148,7 @@ void JPADraw::draw(MtxPtr param_1)
 	cb.mEnvColor.b = be->unk186;
 	cb.mEnvColor.a = 0xff;
 
-	// TODO: wut?!
-	cb.unk34 = (Mtx44*)param_1;
+	cb.unk34 = param_1;
 
 	cb.mSetupTev.setupTev(mDrawCtx.mBaseShape, mDrawCtx.mExTexShape);
 
@@ -732,10 +738,10 @@ void JPADraw::setParticleClipBoard()
 		MTXIdentity(cb.unk68);
 		break;
 	case 10:
-		loadYBBMtx(*cb.unk34);
+		loadYBBMtx(cb.unk34);
 		break;
 	default:
-		MTXCopy(*cb.unk34, cb.unk68);
+		MTXCopy(cb.unk34, cb.unk68);
 		break;
 	}
 
@@ -841,10 +847,10 @@ void JPADraw::setChildClipBoard()
 		MTXIdentity(cb.unk68);
 		break;
 	case 10:
-		loadYBBMtx(*cb.unk34);
+		loadYBBMtx(cb.unk34);
 		break;
 	default:
-		MTXCopy(*cb.unk34, cb.unk68);
+		MTXCopy(cb.unk34, cb.unk68);
 		break;
 	}
 
