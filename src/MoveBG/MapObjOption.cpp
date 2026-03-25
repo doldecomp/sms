@@ -41,14 +41,14 @@ void TFileLoadBlock::pushed()
 	SMSRumbleMgr->start(0x15, sRumbleTime, (float*)nullptr);
 	gpMarioParticleManager->emit(0x6E, &unk144, 0, nullptr);
 	gpMarioParticleManager->emit(0x39, &unk144, 0, nullptr);
-	unk104         = 0x78;
-	unk13C->unk104 = 0x78;
-	unk140->unk104 = 0x78;
+	mTimeTilAppear         = 0x78;
+	unk13C->mTimeTilAppear = 0x78;
+	unk140->mTimeTilAppear = 0x78;
 }
 
 void TFileLoadBlock::touchPlayer(THitActor* param_1)
 {
-	if (isState(1) && marioHeadAttack() && !isUnk104Positive()) {
+	if (isState(1) && marioHeadAttack() && !isWaitingToAppear()) {
 		pushed();
 	}
 }
@@ -56,7 +56,7 @@ void TFileLoadBlock::touchPlayer(THitActor* param_1)
 BOOL TFileLoadBlock::receiveMessage(THitActor* sender, u32 message)
 {
 
-	if (isState(1) && message == HIT_MESSAGE_UNK2 && !isUnk104Positive()) {
+	if (isState(1) && message == HIT_MESSAGE_UNK2 && !isWaitingToAppear()) {
 		pushed();
 		return true;
 	}

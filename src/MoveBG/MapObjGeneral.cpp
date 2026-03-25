@@ -1,9 +1,11 @@
 #include <MoveBG/MapObjGeneral.hpp>
 #include <System/FlagManager.hpp>
 #include <System/MarDirector.hpp>
+#include <Strategic/Binder.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Map/MapCollisionManager.hpp>
 #include <Map/MapCollisionEntry.hpp>
+#include <Map/MapData.hpp>
 #include <Map/PollutionManager.hpp>
 #include <Map/MapCollisionData.hpp>
 #include <Map/Map.hpp>
@@ -37,22 +39,25 @@ bool TMapObjGeneral::isPollutedGround(const JGeometry::TVec3<f32>& v) const
 
 inline f32 distToMario(const JGeometry::TVec3<f32>& v)
 {
-	JGeometry::TVec3<f32> r;
-	r.sub(v, *gpMarioPos);
-	return r.length();
+	f32 l = (v.x - gpMarioPos->x) * (v.x - gpMarioPos->x)
+	        + (v.y - gpMarioPos->y) * (v.y - gpMarioPos->y)
+	        + (v.z - gpMarioPos->z) * (v.z - gpMarioPos->z);
+	return JGeometry::TUtil<f32>::sqrt(l);
 }
 
 void TMapObjGeneral::waitingToAppear()
 {
-	if (unk104 > 0 ? true : false)
+	if (isWaitingToAppear())
 		return;
 
 	if (isActorType(0x4000005a)) {
-		if (SMS_GetMarioDamageRadius() + mDamageRadius + 100.0f
+		f32 damageRadius = getDamageRadius();
+		if (SMS_GetMarioDamageRadius() + damageRadius + 100.0f
 		    > distToMario(mInitialPosition))
 			appear();
 	} else {
-		if (SMS_GetMarioDamageRadius() + mDamageRadius
+		f32 damageRadius = getDamageRadius();
+		if (SMS_GetMarioDamageRadius() + damageRadius
 		    > distToMario(mInitialPosition))
 			appear();
 	}
@@ -64,12 +69,12 @@ void TMapObjGeneral::waitingToRecover()
 		recover();
 }
 
-void TMapObjGeneral::waitToAppear(s32 param_1)
+void TMapObjGeneral::waitToAppear(s32 waitTime)
 {
-	if (param_1 == 0)
-		unk104 = mNormalWaitToAppearTime;
+	if (waitTime == 0)
+		mTimeTilAppear = mNormalWaitToAppearTime;
 	else
-		unk104 = param_1;
+		mTimeTilAppear = waitTime;
 	mState = 10;
 }
 
@@ -83,9 +88,51 @@ void TMapObjGeneral::sink()
 	startSound(6);
 }
 
-void TMapObjGeneral::put() { }
+void TMapObjGeneral::put()
+{
+	mHolder                    = nullptr;
+	mHolder                    = nullptr;
+	s32 preservedTimeTilAppear = getTimeTilAppear();
+	makeObjAppeared();
+	mTimeTilAppear = preservedTimeTilAppear;
+	mPosition.x    = JMASSin(*gpMarioAngleY)
+	                  * (getDamageRadius() + SMS_GetMarioDamageRadius() + 10.0f)
+	              + SMS_GetMarioPos().x;
+	mPosition.y = SMS_GetMarioPos().y;
+	mPosition.z = JMASCos(*gpMarioAngleY)
+	                  * (getDamageRadius() + SMS_GetMarioDamageRadius() + 10.0f)
+	              + SMS_GetMarioPos().z;
+	offLiveFlag(LIVE_FLAG_UNK10);
+	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
+}
 
-void TMapObjGeneral::thrown() { }
+void TMapObjGeneral::thrown()
+{
+	mPosition.set(gpMarioPos->x, gpMarioPos->y, gpMarioPos->z);
+	mRotation.set(*gpMarioAngleX, *gpMarioAngleY, *gpMarioAngleZ);
+
+	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
+	unk138        = 0;
+	mHolder       = nullptr;
+
+	mVelocity.set(JMASSin((s32)*gpMarioAngleY) * *gpMarioThrowPower
+	                      * mMapObjData->mPhysical->unk4->unk2C
+	                  + (mNormalThrowSpeedRate * *gpMarioSpeedX),
+	              mMapObjData->mPhysical->unk4->unk30,
+	              JMASCos((s32)*gpMarioAngleY) * *gpMarioThrowPower
+	                      * mMapObjData->mPhysical->unk4->unk2C
+	                  + (mNormalThrowSpeedRate * *gpMarioSpeedZ));
+
+	offLiveFlag(LIVE_FLAG_UNK10);
+	JGeometry::TVec3<f32> vel = mVelocity;
+	mPosition.add(vel);
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
+	removeMapCollision();
+	offLiveFlag(LIVE_FLAG_DEAD);
+	startAnim(5);
+	startSound(5);
+	mState = 1;
+}
 
 void TMapObjGeneral::touchingWater()
 {
@@ -190,7 +237,7 @@ uuuh:
 
 void TMapObjGeneral::appeared()
 {
-	if (checkMapObjFlag(0x40000) && !(unk104 > 0 ? true : false))
+	if (checkMapObjFlag(0x40000) && !(mTimeTilAppear > 0 ? true : false))
 		makeObjDead();
 }
 
@@ -279,7 +326,7 @@ void TMapObjGeneral::kill()
 	unk64 |= 1;
 	removeMapCollision();
 	onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
-	unk104 = 0xffffffff;
+	mTimeTilAppear = 0xffffffff;
 	startAnim(2);
 	mState = 3;
 	startSound(2);
@@ -303,7 +350,7 @@ void TMapObjGeneral::appear()
 
 	appearing();
 	if (checkMapObjFlag(0x40000))
-		unk104 = getLivingTime();
+		mTimeTilAppear = getLivingTime();
 
 	mState = 2;
 }
@@ -382,6 +429,16 @@ void TMapObjGeneral::checkRoofCollision(JGeometry::TVec3<f32>* param_1)
 		touchRoof(param_1);
 }
 
+inline void playCoinSound(const JGeometry::TVec3<f32>& pos,
+                          const JGeometry::TVec3<f32>& vel)
+{
+	f32 a = abs(JGeometry::TVec3<f32>(vel).y);
+	if (gpMSound->gateCheck(0x4842)) {
+		MSoundSESystem::MSoundSE::startSoundActorWithInfo(
+		    0x4842, pos, nullptr, a, 0, 0, nullptr, 0, 4);
+	}
+}
+
 void TMapObjGeneral::touchGround(JGeometry::TVec3<f32>* param_1)
 {
 	if (mMapObjData->mPhysical ? true : false) {
@@ -390,17 +447,12 @@ void TMapObjGeneral::touchGround(JGeometry::TVec3<f32>* param_1)
 	}
 
 	if ((mMapObjData->mPhysical ? true : false)
-	    && std::abs(JGeometry::TVec3<f32>(mVelocity).y)
+	    && abs(JGeometry::TVec3<f32>(mVelocity).y)
 	           > mMapObjData->mPhysical->unk4->unkC) {
 		param_1->y -= JGeometry::TVec3<f32>(mVelocity).y;
 		mVelocity.y *= -mMapObjData->mPhysical->unk4->unk4;
 		if (isCoin(this)) {
-			// TODO: this is an inline 100%
-			f32 a = std::fabsf(JGeometry::TVec3<f32>(mVelocity).y);
-			if (gpMSound->gateCheck(0x4842)) {
-				MSoundSESystem::MSoundSE::startSoundActorWithInfo(
-				    0x4842, mPosition, nullptr, a, 0, 0, nullptr, 0, 4);
-			}
+			playCoinSound(mPosition, mVelocity);
 		} else {
 			startSound(4);
 		}
@@ -423,9 +475,74 @@ void TMapObjGeneral::checkGroundCollision(JGeometry::TVec3<f32>* param_1)
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 }
 
-void TMapObjGeneral::calcVelocity() { }
+void TMapObjGeneral::calcVelocity()
+{
+	if (checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
+		f32 dVar5 = getGravityY();
+		mVelocity.y -= dVar5;
 
-void TMapObjGeneral::bind() { }
+		mVelocity.y = MsClamp<f32>(mVelocity.y, -mBodyRadius, mBodyRadius);
+	}
+
+	const TMapObjPhysicalInfo* piVar4 = mMapObjData->mPhysical;
+	if (piVar4 ? (u8)1 : (u8)0) {
+		mVelocity.x *= mMapObjData->mPhysical->unk4->unk18;
+		mVelocity.z *= mMapObjData->mPhysical->unk4->unk18;
+
+		mVelocity.x = MsClamp<f32>(mVelocity.x, -mBodyRadius, mBodyRadius);
+		mVelocity.z = MsClamp<f32>(mVelocity.z, -mBodyRadius, mBodyRadius);
+
+		if (mGroundPlane->mNormal.y == 1.0f) {
+			if (abs(mVelocity.x) < mMapObjData->mPhysical->unk4->unkC)
+				mVelocity.x = 0.0f;
+			if (abs(mVelocity.z) < mMapObjData->mPhysical->unk4->unkC)
+				mVelocity.z = 0.0f;
+		}
+	}
+}
+
+void TMapObjGeneral::bind()
+{
+	if (checkLiveFlag(LIVE_FLAG_UNK10) == 0) {
+		if (mBinder != nullptr) {
+			mBinder->bind(this);
+		} else {
+			calcVelocity();
+			JGeometry::TVec3<f32> vec = getPosition();
+			vec.add(mLinearVelocity);
+			vec.add(mVelocity);
+			checkGroundCollision(&vec);
+			if (checkMapObjFlag(0x10000) != 0) {
+				checkWallCollision(&vec);
+			}
+			if (checkMapObjFlag(0x20000) != 0) {
+				JGeometry::TVec3<f32> vel = mVelocity;
+				if (vel.y > 0.0f) {
+					checkRoofCollision(&vec);
+				}
+			}
+			if (mGroundPlane->checkFlag(0x10)) {
+				kill();
+			} else {
+				if (!checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
+					JGeometry::TVec3<f32> vel     = mVelocity;
+					JGeometry::TVec3<f32> velCopy = vel;
+					if (velCopy.x == 0.0f) {
+						JGeometry::TVec3<f32> velCopy2 = vel;
+						if (velCopy2.y == 0.0f) {
+							JGeometry::TVec3<f32> velCopy3 = vel;
+							if (velCopy3.z == 0.0f) {
+								onLiveFlag(LIVE_FLAG_UNK10);
+							}
+						}
+					}
+				}
+
+				mLinearVelocity = vec - mLinearVelocity;
+			}
+		}
+	}
+}
 
 void TMapObjGeneral::control()
 {
@@ -474,9 +591,9 @@ void TMapObjGeneral::perform(u32 param_1, JDrama::TGraphics* param_2)
 			waitingToAppear();
 		}
 	} else {
-		if (checkMapObjFlag(0x40000) && isUnk104Positive()
-		    && getUnk104() < getFlushTime()
-		    && ((getUnk104() / mNormalFlushInterval) & 1) != 0) {
+		if (checkMapObjFlag(0x40000) && isWaitingToAppear()
+		    && getTimeTilAppear() < getFlushTime()
+		    && ((getTimeTilAppear() / mNormalFlushInterval) & 1) != 0) {
 			return;
 		}
 	}
