@@ -33,8 +33,8 @@ void TMapDrawWall::perform(u32 param_1, JDrama::TGraphics* param_2)
 	u32 sVar1 = unk14.a - unk18;
 	Mtx mtx;
 	MTXIdentity(mtx);
-	GXLoadPosMtxImm(mtx, 0);
-	GXSetCurrentMtx(0);
+	GXLoadPosMtxImm(mtx, GX_PNMTX0);
+	GXSetCurrentMtx(GX_PNMTX0);
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XY, GX_S16, 0);
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_U16, 0);
 	GXClearVtxDesc();

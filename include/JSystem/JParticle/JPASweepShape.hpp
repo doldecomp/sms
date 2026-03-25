@@ -40,6 +40,9 @@ public:
 	f32 getTiming() { return mTiming; }
 	s32 getStep() { return mStep; }
 
+	BOOL isEnableAlphaOut() { return unk4B; }
+	BOOL isEnableScaleOut() { return unk4A; }
+
 public:
 	/* 0x8 */ f32 unk8;
 	/* 0xC */ f32 unkC;

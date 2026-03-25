@@ -2213,14 +2213,14 @@ void TMario::boxDrawPrepare(MtxPtr mtx)
 	GXClearVtxDesc();
 	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_CLR_RGBA, GX_F32, 0);
-	GXSetCurrentMtx(0);
+	GXSetCurrentMtx(GX_PNMTX0);
 
 	Mtx stackMtx;
 	MTXScale(stackMtx, 200.0f, 200.0f, 200.0f);
 
 	MTXConcat(mtx, stackMtx, stackMtx);
 
-	GXLoadPosMtxImm(stackMtx, 0);
+	GXLoadPosMtxImm(stackMtx, GX_PNMTX0);
 	GXSetCullMode(GX_CULL_BACK);
 	GXSetNumChans(1);
 	GXSetChanCtrl(GX_COLOR0A0, FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,

@@ -122,8 +122,8 @@ static void draw_mist(u16 x, u16 y, u16 wd, u16 ht, void* buffer)
 	GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
 	GXSetAlphaUpdate(GX_FALSE);
 	GXSetColorUpdate(GX_TRUE);
-	GXLoadPosMtxImm(e_m, 0);
-	GXSetCurrentMtx(0);
+	GXLoadPosMtxImm(e_m, GX_PNMTX0);
+	GXSetCurrentMtx(GX_PNMTX0);
 	GXSetCullMode(GX_CULL_NONE);
 	GXSetBlendMode(GX_BM_SUBTRACT, GX_BL_ZERO, GX_BL_ZERO, GX_LO_NOOP);
 

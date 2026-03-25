@@ -72,11 +72,11 @@ void TSky::perform(u32 param_1, JDrama::TGraphics* param_2)
 		              GX_DF_NONE, GX_AF_NONE);
 		GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0x0, 0x12, 0xEE, 0x80 });
 		GXSetNumTexGens(0);
-		GXSetCurrentMtx(0);
+		GXSetCurrentMtx(GX_PNMTX0);
 		Mtx afStack_dc;
 		MTXScale(afStack_dc, 100000.0f, 100000.0f, 100000.0f);
-		GXLoadPosMtxImm(afStack_dc, 0);
-		GXLoadNrmMtxImm(afStack_dc, 0);
+		GXLoadPosMtxImm(afStack_dc, GX_PNMTX0);
+		GXLoadNrmMtxImm(afStack_dc, GX_PNMTX0);
 		GXSetNumTevStages(1);
 		GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
 		              GX_COLOR0A0);

@@ -132,8 +132,8 @@ void TAfterEffect::perform(u32 param_1, JDrama::TGraphics* param_2)
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
 	GXSetCullMode(GX_CULL_BACK);
-	GXSetCurrentMtx(0);
-	GXLoadPosMtxImm(param_2->getUnkB4(), 0);
+	GXSetCurrentMtx(GX_PNMTX0);
+	GXLoadPosMtxImm(param_2->getUnkB4(), GX_PNMTX0);
 	GXSetNumChans(1);
 	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_VTX, GX_SRC_VTX, 0, GX_DF_NONE,
 	              GX_AF_NONE);
@@ -237,7 +237,7 @@ void SMS_FillScreenAlpha(u8 param_1)
 {
 	Mtx afStack_3c;
 	MTXIdentity(afStack_3c);
-	GXLoadPosMtxImm(afStack_3c, 0);
+	GXLoadPosMtxImm(afStack_3c, GX_PNMTX0);
 	GXSetNumChans(1);
 	GXSetChanCtrl(GX_COLOR0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 	              GX_AF_NONE);

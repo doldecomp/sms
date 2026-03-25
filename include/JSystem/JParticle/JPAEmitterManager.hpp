@@ -8,15 +8,23 @@
 
 class JPADrawInfo {
 public:
-	MtxPtr getCameraMtxPtr() { return unk0; }
-	f32 getFovy() { return unk4; }
-	void setFovy(f32 fovy) { unk4 = fovy; }
-	f32 getAspect() { return unk8; }
-	void setAspect(f32 aspect) { unk8 = aspect; }
+	JPADrawInfo(MtxPtr cam_mtx, f32 fovy = 45.0f, f32 aspect = 1.218f)
+	    : mCameraMtx(cam_mtx)
+	    , mFovy(fovy)
+	    , mAspect(aspect)
+	{
+	}
 
-	MtxPtr unk0;
-	f32 unk4;
-	f32 unk8;
+	MtxPtr getCameraMtxPtr() { return mCameraMtx; }
+	f32 getFovy() { return mFovy; }
+	void setFovy(f32 fovy) { mFovy = fovy; }
+	f32 getAspect() { return mAspect; }
+	void setAspect(f32 aspect) { mAspect = aspect; }
+
+private:
+	MtxPtr mCameraMtx;
+	f32 mFovy;
+	f32 mAspect;
 };
 
 class JPAResourceManager;

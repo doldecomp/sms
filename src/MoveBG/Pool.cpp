@@ -14,8 +14,8 @@ void TPool::draw() const
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
 	GXClearVtxDesc();
 	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
-	GXLoadPosMtxImm(j3dSys.getViewMtx(), 0);
-	GXSetCurrentMtx(0);
+	GXLoadPosMtxImm(j3dSys.getViewMtx(), GX_PNMTX0);
+	GXSetCurrentMtx(GX_PNMTX0);
 	GXSetNumChans(1);
 	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 	              GX_AF_NONE);

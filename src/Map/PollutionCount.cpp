@@ -23,7 +23,7 @@ static void drawBlack(u16 param_1, u16 param_2)
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XY, GX_U16, 1);
 	GXClearVtxDesc();
 	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
-	GXSetCurrentMtx(0);
+	GXSetCurrentMtx(GX_PNMTX0);
 	GXSetCullMode(GX_CULL_NONE);
 	GXSetNumChans(1);
 	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
@@ -102,8 +102,8 @@ static void initDrawObjGX()
 	local_34[2][2] = 1.0f;
 	local_34[1][1] = 1.0f;
 	local_34[0][0] = 1.0f;
-	GXLoadPosMtxImm(local_34, 0);
-	GXSetCurrentMtx(0);
+	GXLoadPosMtxImm(local_34, GX_PNMTX0);
+	GXSetCurrentMtx(GX_PNMTX0);
 	GXSetNumChans(0);
 	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 	              GX_AF_NONE);
@@ -186,7 +186,7 @@ void TPollutionCounterObj::countObjDegree() const
 		setEular(local_AC, DEG2SHORTANGLE(-90.0f), 0, 0);
 		MTXConcat(local_7C.mMtx, local_AC.mMtx, local_7C.mMtx);
 		local_7C.setTrans(-fVar1 / 32, -fVar2 / 32, 0);
-		GXLoadPosMtxImm(local_7C.mMtx, 0);
+		GXLoadPosMtxImm(local_7C.mMtx, GX_PNMTX0);
 		draw(i);
 		setCallback(i);
 	}
@@ -248,7 +248,7 @@ static void initGXforPollutionLayer(int param_1, u16 param_2, u8 param_3,
 	if ((param_2 & 2) != 0) {
 		param_4 = 2;
 	}
-	GXSetCurrentMtx(0);
+	GXSetCurrentMtx(GX_PNMTX0);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, 0, 0x7d);
 	GXSetNumChans(0);
 	GXSetTevColor(GX_TEVREG0, (GXColor) { param_4, param_4, param_4, param_4 });
@@ -365,7 +365,7 @@ void TPollutionCounterLayer::drawJointObjStamp(int param_1) const
 		TPosition3f local_6c;
 		makeWorldToPollutionMtx(pTVar2->unk5C.mInverseVerticalScale,
 		                        pTVar2->unk38, pTVar2->unk40, &local_6c);
-		GXLoadPosMtxImm(local_6c, 0);
+		GXLoadPosMtxImm(local_6c, GX_PNMTX0);
 
 		j3dSys.setVtxPos(pTVar2->getModelData()->getVtxPosArray());
 		for (int j = 0; j < unkD8[i].unk4->getShapeNum(); ++j) {

@@ -57,8 +57,8 @@ public:
 	GXBool getZCompLoc() { return mZCompLoc; }
 
 	u32 getListOrder() { return !(mFlags & 1); }
-	u8 getChildOrder() { return mFlags >> 1 & 1; }
-	u32 isClipOn() { return mFlags >> 2 & 1; }
+	u8 getChildOrder() { return (mFlags >> 1) & 1; }
+	u32 isClipOn() { return (mFlags >> 2) & 1; }
 
 	u8 getType() { return mType; }
 	u8 getDirType() { return mDirType; }
@@ -68,7 +68,7 @@ public:
 	f32 getTilingY() { return mTilingY; }
 
 	GXBool textureIsEmpty() { return unk81; }
-	BOOL isEnableTextureAnm() { return unk80; }
+	u32 isEnableTextureAnm() { return unk80; }
 
 	u8 getTextureIndex() { return mTextureIndex; }
 	u8 getTextureIndex(u8 idx) { return mTextureIndices[idx]; }
@@ -103,7 +103,15 @@ public:
 	s16 getColLoopOffset() { return mColLoopOffset; }
 	s16 getTexLoopOffset() { return mTexLoopOffset; }
 
-	u32 isDrawPrntAhead() const { return (mFlags >> 1) & 0x1; }
+	BOOL isEnableProjection() { return unk7B; }
+	u32 isEnableTexScrollAnm() { return unk87; }
+	BOOL isEnableGlobalTexAnm() { return unk68 & 1; }
+	BOOL isEnableGlobalColAnm() { return unk68 & 2; }
+
+	u8 getTextureAnmType() { return unk7D; }
+	u8 getColorRegAnmType() { return unk82; }
+
+	BOOL isEnableAnmTone() { return unk7A; }
 
 public:
 	/* 0x8 */ u8* mTextureIndices;

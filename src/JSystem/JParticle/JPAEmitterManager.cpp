@@ -185,15 +185,16 @@ JPABaseEmitter* JPAEmitterManager::createEmitterBase(
 		}
 
 		if (emitter) {
-			emitter->unk173             = param_2;
-			emitter->mManager           = this;
-			emitter->unk180.r           = 0xff;
-			emitter->unk180.g           = 0xff;
-			emitter->unk180.b           = 0xff;
-			emitter->unk184             = 0xff;
-			emitter->unk185             = 0xff;
-			emitter->unk186             = 0xff;
-			emitter->unk180.a           = 0xff;
+			emitter->unk173   = param_2;
+			emitter->mManager = this;
+			emitter->unk180.r = 0xff;
+			emitter->unk180.g = 0xff;
+			emitter->unk180.b = 0xff;
+			emitter->unk184.r = 0xff;
+			emitter->unk184.g = 0xff;
+			emitter->unk184.b = 0xff;
+			emitter->unk180.a = 0xff;
+
 			emitter->mFieldManager.unkC = &unk28;
 
 			JPAFieldManager* fieldMgr = emitter->getFieldManager();
