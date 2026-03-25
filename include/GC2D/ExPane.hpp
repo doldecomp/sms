@@ -117,6 +117,12 @@ public:
 		return result;
 	}
 
+	bool isInterpolatorAtZero() const
+	{
+		return mOffsetInterpolator.getCurrentX() == 0
+		       && mOffsetInterpolator.getCurrentY() == 0;
+	}
+
 public:
 	/* 0x0 */ J2DPane* mPane;
 	/* 0x4 */ JUTRect mInitialBounds;

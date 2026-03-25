@@ -5,20 +5,39 @@
 #include <GC2D/MessageUtil.hpp>
 #include <GC2D/HelpActor.hpp>
 #include <GC2D/ExPane.hpp>
+#include <MSound/MSound.hpp>
 #include <Strategic/Strategy.hpp>
 #include <System/Application.hpp>
+#include <System/FlagManager.hpp>
+#include <System/MarDirector.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/J2D/J2DTextBox.hpp>
 #include <JSystem/J2D/J2DPicture.hpp>
+#include <JSystem/J2D/J2DPrint.hpp>
 #include <JSystem/J2D/J2DScreen.hpp>
+#include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/JUtility/JUTResFont.hpp>
 #include <stdio.h>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+
+// Fabricated inlines to help bring panes off-screen
+
+static int getOffsetForBelowScreen(TExPane* pane)
+{
+	// setPaneOffset moves this to y1 = 465
+	return 465 - pane->mInitialBounds.y1;
+}
+
+static int getOffsetForAboveScreen(TExPane* pane)
+{
+	// setPaneOffset moves this to y2 = -1
+	return -(pane->mInitialBounds.y2 + 1);
+}
 
 TGCConsole2::TGCConsole2(const char* name)
     : JDrama::TViewObj(name)
@@ -109,7 +128,7 @@ TGCConsole2::TGCConsole2(const char* name)
     , unk444(0)
     , unk448(0)
     , unk530(nullptr)
-    , unk554(0)
+    , mTelopTextWidth(0)
     , unk558(0)
     , unk55C(0)
     , unk560(60)
@@ -118,7 +137,7 @@ TGCConsole2::TGCConsole2(const char* name)
     , unk568(0.0f)
     , unk56C(1)
     , unk56D(1)
-    , unk570(0)
+    , unk570(nullptr)
 {
 	for (int i = 0; i < 2; ++i)
 		unkE0[i] = 0;
@@ -319,35 +338,242 @@ void TGCConsole2::resetMoveTank() { }
 
 void TGCConsole2::endCameraDemo() { }
 
-void TGCConsole2::startAppearTank() { }
+void TGCConsole2::startAppearTank()
+{
+	if (unk34[17] || TFlagManager::smInstance->getBool(0x30002)) {
+		return;
+	}
+
+	// TODO: needs register swapping
+	unk34[17] = 1;
+	unk59     = 1;
+	unk7C     = 0;
+
+	unk2F8->getPane()->show();
+	unk2F8->setPaneOffset(unk98, 0, 0, 0, getOffsetForBelowScreen(unk2F8));
+
+	unk26C->setPanePosition(50, JUTPoint(0, 100), JUTPoint(0, -30),
+	                        JUTPoint(0, -30));
+
+	unk274->getPane()->show();
+	unk29C->getPane()->show();
+}
 
 void TGCConsole2::startDisappearTank() { }
 
-void TGCConsole2::startAppearCoin() { }
+void TGCConsole2::startAppearCoin()
+{
+	if (unk108->getPane()->isVisible()) {
+		return;
+	}
 
-void TGCConsole2::startDisappearCoin() { }
+	unk34[27] = 1;
+	unk59     = 1;
+	unk88     = 0;
+
+	unk108->getPane()->show();
+	unk108->setPaneOffset(unk98, 0, unk26A, 0, getOffsetForAboveScreen(unk108));
+
+	unkC8->setPanePosition(50, cDownTopPoint, cDownMidPoint, cDownMidPoint);
+
+	unkCC->getPane()->hide();
+	unkD0->getPane()->hide();
+	for (int i = 0; i < 3; i++) {
+		unkD4[i]->getPane()->hide();
+	}
+
+	unk124->clearStatus(JPABaseEmitter::STATUS_STOP_EMIT);
+}
+
+void TGCConsole2::startDisappearCoin()
+{
+	unk34[25] = true;
+	unk5A     = true;
+
+	if (unk140->isInterpolatorAtZero()) {
+		J2DPane* pane = unk128->getPane();
+		unk140->updatePaneOffset(40, 0,
+		                         -pane->mBounds.getHeight()
+		                             + getOffsetForAboveScreen(unk140));
+	}
+
+	J2DPane* pane = unkC8->getPane();
+	unk108->updatePaneOffset(
+	    40, 0, -(pane->mBounds.getHeight()) + getOffsetForAboveScreen(unk108));
+
+	unk124->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
+}
 
 void TGCConsole2::startInsertLife(int) { }
 
-void TGCConsole2::resetLife(int) { }
+void TGCConsole2::resetLife(int param_1)
+{
+	for (int i = 1; i < 9; i++) {
+		if (i < param_1 + 1) {
+			unk17C[2 * i]->show();
+		} else {
+			unk17C[2 * i]->hide();
+		}
+
+		// TODO: This feels like a fakematch, is setBounds correct?
+
+		JUTRect local_38(unk1D0[i].x1, unk1D0[i].y1, unk1D0[i].x2,
+		                 unk1D0[i].y2);
+		unk17C[2 * i]->setBounds(local_38);
+
+		JUTRect local_48(unk1D0[i].x1, unk1D0[i].y1, unk1D0[i].x2,
+		                 unk1D0[i].y2);
+		unk17C[2 * i + 1]->setBounds(local_48);
+	}
+}
 
 void TGCConsole2::startAppearLife(int) { }
 
 void TGCConsole2::startDisappearLife(int) { }
 
-void TGCConsole2::startDownLeftBot() { }
+void TGCConsole2::startDownLeftBot()
+{
+	if (unk34[13]) {
+		return;
+	}
+
+	unk34[13] = 1;
+	unk34[12] = 0;
+	unk5A     = 1;
+
+	if (unk44C->getPane()->isVisible() && unk44C->isInterpolatorAtZero()) {
+		unk44C->updatePaneOffset(20, 0, getOffsetForBelowScreen(unk44C) + 60);
+		unk51C = 1;
+	}
+
+	if (unk428->getPane()->isVisible()) {
+		unk428->updatePaneOffset(20, 0, getOffsetForBelowScreen(unk428) + 60);
+		unk448 = 1;
+	}
+
+	if (unk3FC->getPane()->isVisible()) {
+		unk3FC->updatePaneOffset(20, 0, getOffsetForBelowScreen(unk3FC) + 60);
+		unk426 = 1;
+	}
+}
 
 void TGCConsole2::startUpLeftBot() { }
 
-void TGCConsole2::startAppearTelop(bool) { }
+void TGCConsole2::startAppearTelop(bool param_1)
+{
+	if (unk34[28]) {
+		return;
+	}
+	if (unk530->unk4 == nullptr) {
+		return;
+	}
+	if (unk570 == 0 || unk44C->getPane()->isVisible()) {
+		return;
+	}
+	if (!(param_1 || unk34[16])) {
+		return;
+	}
 
-void TGCConsole2::startDisappearTelop() { }
+	unk34[14] = 1;
+	unk59     = 1;
+	unk56D    = 1;
+	unk520->getPane()->show();
 
-void TGCConsole2::startDisappearTimer() { }
+	unk520->setPaneOffset(80, 0, 0, 0, getOffsetForBelowScreen(unk520));
 
-void TGCConsole2::startAppearTimer(int, s32) { }
+	if (param_1) {
+		// TODO: needs regswapping
+		const u8* messageText
+		    = &unk530->getMessageData()[unk530->unk8[unk570[unk558] & 0xffff]
+		                                    .unk0];
 
-void TGCConsole2::startInsertTimer() { }
+		snprintf(unk528->getStringPtr(), 0x3ff, "%s", messageText);
+		snprintf(unk52C->getStringPtr(), 0x3ff, "%s", messageText);
+
+		J2DPrint print(gpSystemFont, 0);
+		mTelopTextWidth = print.getWidth(unk528->getStringPtr());
+
+		if (gpMSound->gateCheck(0x4812)) {
+			MSoundSESystem::MSoundSE::startSoundSystemSE(0x4812, 0, nullptr, 0);
+		}
+	}
+}
+
+void TGCConsole2::startDisappearTelop()
+{
+	if (unk34[15] || !unk520->getPane()->isVisible()) {
+		return;
+	}
+
+	unk34[15] = 1;
+	unk5A     = 1;
+
+	unk520->updatePaneOffset(80, 0, getOffsetForBelowScreen(unk520));
+}
+
+void TGCConsole2::startDisappearTimer()
+{
+	unk44C->updatePaneOffset(40, 0, getOffsetForBelowScreen(unk44C) + 60);
+	unk34[11] = 1;
+	unk5A     = 1;
+}
+
+void TGCConsole2::startAppearTimer(int param_1, s32 param_2)
+{
+	startDisappearTelop();
+
+	if (param_1 == 0) {
+		unk510 = true;
+		unk514 = 0;
+	} else {
+		unk510 = false;
+		unk514 = param_2 * 100;
+	}
+
+	if (unk510 || param_2 >= 0x3C) {
+		unk500[0]->show();
+		unk500[1]->hide();
+	} else {
+		unk500[0]->hide();
+		unk500[1]->show();
+	}
+
+	if (param_2 > 0) {
+		setTimer(unk514);
+	}
+
+	for (int i = 6; i <= 9; i++) {
+		((J2DPicture*)unk458[i]->getPane())->mWhite = unk50C;
+	}
+	((J2DPicture*)unk480[2]->getPane())->mWhite = unk50C;
+
+	startInsertTimer();
+}
+
+void TGCConsole2::startInsertTimer()
+{
+	unk34[10] = 1;
+
+	for (int i = 0; i < 10; i++) {
+		unk458[i]->getPane()->hide();
+	}
+
+	for (int i = 0; i < 3; i++) {
+		unk480[i]->getPane()->hide();
+	}
+
+	unk59 = 1;
+
+	unk44C->getPane()->show();
+	unk44C->setPaneOffset(40, 0, 0, 0, getOffsetForBelowScreen(unk44C));
+
+	unk450->getPane()->show();
+	unk450->setPanePosition(50, cUpTopPoint, cUpMidPoint, cUpMidPoint);
+
+	unk454->getPane()->hide();
+	unk518   = 0;
+	unk70[6] = 0;
+}
 
 void TGCConsole2::startAppearJetBalloon(int, int) { }
 
@@ -386,7 +612,77 @@ void TGCConsole2::processMoveNozzle() { }
 
 void TGCConsole2::changeNum(TBlendPane*, int, int) { }
 
-void TGCConsole2::setTimer(long) { }
+void TGCConsole2::setTimer(s32 param_1)
+{
+	// TODO: Needs regswaps but should otherwise be equivalent
+
+	u32 timerValue;
+
+	if (param_1 == -1) {
+		s64 uVar3 = gpMarDirector->unkC8;
+		s64 uVar5 = OSCheckStopwatch(&gpMarDirector->unkE8);
+		s64 uVar9 = OSTicksToMilliseconds(uVar3);
+		s64 uVar8 = OSTicksToMilliseconds(uVar5);
+
+		timerValue = (uVar8 - uVar9) * 0.1f;
+
+		if (!unk510) {
+			if (unk514 < timerValue) {
+				timerValue = 0;
+			} else {
+				timerValue = unk514 - timerValue;
+			}
+		}
+	}
+
+	// Cap at 5999.99 seconds (99:59.99)
+	if (timerValue > 599999) {
+		timerValue = 599999;
+	}
+
+	u16 minutes          = (timerValue - timerValue % 100) / 6000;
+	u32 timeMinusMinutes = timerValue - minutes * 6000;
+	u16 seconds          = timeMinusMinutes * 0.01;
+	u16 centis           = timeMinusMinutes - 100 * seconds;
+
+	if (unk500[0]->isVisible()) {
+		((J2DPicture*)unk458[0]->getPane())
+		    ->changeTexture(unkE0[minutes / 10]->getTexInfo(), 0);
+		((J2DPicture*)unk458[1]->getPane())
+		    ->changeTexture(unkE0[minutes % 10]->getTexInfo(), 0);
+		((J2DPicture*)unk458[2]->getPane())
+		    ->changeTexture(unkE0[seconds / 10]->getTexInfo(), 0);
+		((J2DPicture*)unk458[3]->getPane())
+		    ->changeTexture(unkE0[seconds % 10]->getTexInfo(), 0);
+		((J2DPicture*)unk458[4]->getPane())
+		    ->changeTexture(unkE0[centis / 10]->getTexInfo(), 0);
+		((J2DPicture*)unk458[5]->getPane())
+		    ->changeTexture(unkE0[centis % 10]->getTexInfo(), 0);
+	} else {
+		if (timerValue < 1000
+		    && ((J2DPicture*)unk458[9]->getPane())->mWhite != unk508) {
+			for (int i = 6; i <= 9; i++) {
+				((J2DPicture*)unk458[i]->getPane())->mWhite = unk508;
+			}
+			((J2DPicture*)unk480[2]->getPane())->mWhite = unk508;
+		}
+		((J2DPicture*)unk458[6]->getPane())
+		    ->changeTexture(unkE0[seconds / 10]->getTexInfo(), 0);
+		((J2DPicture*)unk458[7]->getPane())
+		    ->changeTexture(unkE0[seconds % 10]->getTexInfo(), 0);
+		((J2DPicture*)unk458[8]->getPane())
+		    ->changeTexture(unkE0[centis / 10]->getTexInfo(), 0);
+		((J2DPicture*)unk458[9]->getPane())
+		    ->changeTexture(unkE0[centis % 10]->getTexInfo(), 0);
+	}
+
+	if (timerValue != 0 && timerValue < unk518
+	    && gpMarDirector->mState != TMarDirector::STATE_UNK5) {
+		gpMSound->playTimer(timerValue * 10);
+	}
+
+	unk4FC = param_1;
+}
 
 void TGCConsole2::startMoveTimer(int param_1)
 {
