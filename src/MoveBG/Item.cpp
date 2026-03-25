@@ -26,7 +26,7 @@ f32 TItem::mAppearedScaleSpeed = 0.01f;
 
 void TItem::appeared()
 {
-	if (checkMapObjFlag(0x40000) && !isUnk104Positive()) {
+	if (checkMapObjFlag(0x40000) && !isWaitingToAppear()) {
 		if (unk148)
 			unk148->receiveMessage(this, HIT_MESSAGE_UNK5);
 
@@ -126,8 +126,8 @@ void TItem::appearing()
 
 void TItem::killByTimer(int param_1)
 {
-	unk14C = param_1;
-	unk104 = unk150;
+	unk14C         = param_1;
+	mTimeTilAppear = unk150;
 
 	offMapObjFlag(0x10000000);
 	onHitFlag(HIT_FLAG_NO_COLLISION);
@@ -138,7 +138,7 @@ void TItem::appear()
 {
 	TMapObjGeneral::appear();
 	onHitFlag(HIT_FLAG_NO_COLLISION);
-	unk104 = unk150;
+	mTimeTilAppear = unk150;
 	offMapObjFlag(0x40000);
 }
 
@@ -148,11 +148,11 @@ void TItem::perform(u32 param_1, JDrama::TGraphics* param_2)
 		return;
 
 	if ((param_1 & 1) && checkHitFlag(HIT_FLAG_NO_COLLISION)
-	    && !isUnk104Positive()) {
+	    && !isWaitingToAppear()) {
 		offHitFlag(HIT_FLAG_NO_COLLISION);
 		if (!checkMapObjFlag(0x10000000)) {
 			onMapObjFlag(0x40000);
-			unk104 = unk14C;
+			mTimeTilAppear = unk14C;
 		}
 	}
 
@@ -260,14 +260,14 @@ void TCoin::perform(u32 param_1, JDrama::TGraphics* param_2)
 				return;
 		}
 
-		if (isUnk104Positive()) {
-			--unk104;
+		if (isWaitingToAppear()) {
+			--mTimeTilAppear;
 		} else {
 			if (checkHitFlag(HIT_FLAG_NO_COLLISION)) {
 				offHitFlag(HIT_FLAG_NO_COLLISION);
 				if (!checkMapObjFlag(0x10000000)) {
 					onMapObjFlag(0x40000);
-					unk104 = unk14C;
+					mTimeTilAppear = unk14C;
 				}
 			} else {
 				if (!checkMapObjFlag(0x10000000)) {

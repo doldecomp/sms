@@ -36,7 +36,7 @@ void TWoodBarrel::hold(TTakeActor* param_1)
 {
 	TMapObjGeneral::hold(param_1);
 	if (isActorType(0x4000005c))
-		unk104 = mBreakTime;
+		mTimeTilAppear = mBreakTime;
 }
 
 void TWoodBarrel::breaking()
@@ -131,7 +131,7 @@ BOOL TWoodBarrel::receiveMessage(THitActor* sender, u32 message)
 void TWoodBarrel::control()
 {
 	TMapObjGeneral::control();
-	if (isActorType(0x4000005c) && isState(6) && !isUnk104Positive())
+	if (isActorType(0x4000005c) && isState(6) && !isWaitingToAppear())
 		kill();
 }
 
