@@ -16,11 +16,11 @@ struct JPADrawParams {
 	/* 0x10 */ f32 unk10;
 	/* 0x14 */ f32 unk14;
 	/* 0x18 */ char unk18[8];
-	/* 0x20 */ f32 unk20;
+	/* 0x20 */ f32 mAlpha;
 	/* 0x24 */ f32 unk24;
 	/* 0x28 */ s32 unk28;
-	/* 0x2C */ GXColor unk2C;
-	/* 0x30 */ GXColor unk30;
+	/* 0x2C */ GXColor mPrmColor;
+	/* 0x30 */ GXColor mEnvColor;
 	/* 0x34 */ u16 unk34;
 	/* 0x36 */ s16 unk36;
 	/* 0x38 */ char unk38[2];
@@ -164,11 +164,11 @@ public:
 
 	virtual f32 getWidth()
 	{
-		return mDrawParams.unk10 * 2.0f * JPADraw::cb.unk4;
+		return mDrawParams.unk10 * 2.0f * JPADraw::cb.unk4.x;
 	}
 	virtual f32 getHeight()
 	{
-		return mDrawParams.unk14 * 2.0f * JPADraw::cb.unk8;
+		return mDrawParams.unk14 * 2.0f * JPADraw::cb.unk4.y;
 	}
 };
 

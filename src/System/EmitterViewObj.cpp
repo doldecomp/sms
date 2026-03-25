@@ -31,10 +31,7 @@ void TEmitterViewObj::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (param_1 & 0x8) {
-		JPADrawInfo drawInfo;
-		drawInfo.unk0 = param_2->getUnkB4();
-		drawInfo.unk4 = 45.0f;
-		drawInfo.unk8 = 1.218f;
+		JPADrawInfo drawInfo(param_2->getUnkB4());
 		unk10->draw(&drawInfo);
 	}
 }
@@ -48,13 +45,9 @@ void TEmitterIndirectViewObj::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 	if (param_1 & 0x8) {
 		SMS_DrawInit();
-		JPADrawInfo drawInfo;
-		drawInfo.unk0 = param_2->getUnkB4();
-		drawInfo.unk4 = 45.0f;
-		drawInfo.unk8 = 1.218f;
-
-		drawInfo.unk4 = gpCamera->getFovy();
-		drawInfo.unk8 = gpCamera->getAspect();
+		JPADrawInfo drawInfo(param_2->getUnkB4());
+		drawInfo.setFovy(gpCamera->getFovy());
+		drawInfo.setAspect(gpCamera->getAspect());
 		unk10->draw(&drawInfo);
 	}
 }
@@ -153,11 +146,11 @@ void TMarioParticleManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 				    && (info->mFlags & INFO_FLAG_UNK4)) {
 					JPABaseEmitter* emitter = info->mEmitter;
 					if (emitter == nullptr) {
-						emitTry(i, info, 3);
+						emitTry(i, info, 1);
 					} else if (emitter->isEnableDeleteEmitter()) {
 						emitter->becomeInvalidEmitter();
 						info->mEmitter = nullptr;
-						emitTry(i, info, 3);
+						emitTry(i, info, 1);
 					}
 				}
 				if ((info->mPrevFrameFlags & INFO_FLAG_UNK4)
@@ -179,21 +172,15 @@ void TMarioParticleManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (param_1 & 0x8) {
 		if (param_1 & 0x40000000) {
 			SMS_DrawInit();
-			JPADrawInfo drawInfo;
-			drawInfo.unk0 = param_2->getUnkB4();
-			drawInfo.unk4 = 45.0f;
-			drawInfo.unk8 = 1.218f;
-			drawInfo.unk4 = gpCamera->getFovy();
-			drawInfo.unk8 = gpCamera->getAspect();
+			JPADrawInfo drawInfo(param_2->getUnkB4());
+			drawInfo.setFovy(gpCamera->getFovy());
+			drawInfo.setAspect(gpCamera->getAspect());
 			unk3B8->draw(&drawInfo, 2);
 			unk3B8->draw(&drawInfo, 3);
 		}
 
 		if (param_1 & 0x80000000) {
-			JPADrawInfo drawInfo;
-			drawInfo.unk0 = param_2->getUnkB4();
-			drawInfo.unk4 = 45.0f;
-			drawInfo.unk8 = 1.218f;
+			JPADrawInfo drawInfo(param_2->getUnkB4());
 			unk3B8->draw(&drawInfo, 0);
 			unk3B8->draw(&drawInfo, 1);
 		}

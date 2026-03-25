@@ -92,11 +92,11 @@ static void ReInitLighting()
 static void ReInitTransform()
 {
 
-	GXLoadPosMtxImm(IdentityMtx, 0);
-	GXLoadNrmMtxImm(IdentityMtx, 0);
+	GXLoadPosMtxImm(IdentityMtx, GX_PNMTX0);
+	GXLoadNrmMtxImm(IdentityMtx, GX_PNMTX0);
 	GXLoadTexMtxImm(IdentityMtx, 0x3c, GX_MTX3x4);
 	GXLoadTexMtxImm(IdentityMtx, 0x7d, GX_MTX3x4);
-	GXSetCurrentMtx(0);
+	GXSetCurrentMtx(GX_PNMTX0);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, GX_FALSE,
 	                  0x7d);
 	GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX1, 0x3c, GX_FALSE,

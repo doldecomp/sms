@@ -266,8 +266,8 @@ void TSMSFader::setupGraphicsFadeinout()
 	              GX_AF_NONE);
 	Mtx afStack_40;
 	MTXTrans(afStack_40, 0.0f, 0.0f, 0.0f);
-	GXLoadPosMtxImm(afStack_40, 0);
-	GXSetCurrentMtx(0);
+	GXLoadPosMtxImm(afStack_40, GX_PNMTX0);
+	GXSetCurrentMtx(GX_PNMTX0);
 	GXSetZMode(0, GX_LEQUAL, 0);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, 0, 0x7d);
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_CLR_RGBA, GX_RGBA4, 0);

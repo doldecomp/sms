@@ -26,8 +26,8 @@ void TNintendo2D::perform(u32 param_1, JDrama::TGraphics*)
 		GXSetCullMode(GX_CULL_BACK);
 		Mtx afStack_3c;
 		MTXTrans(afStack_3c, 0.0, 0.0, 0.0);
-		GXLoadPosMtxImm(afStack_3c, 0);
-		GXSetCurrentMtx(0);
+		GXLoadPosMtxImm(afStack_3c, GX_PNMTX0);
+		GXSetCurrentMtx(GX_PNMTX0);
 		GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_S16, 0);
 		GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
 		GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_S8, 0);

@@ -42,8 +42,8 @@ TMapWireActor::TMapWireActor(const char* name)
 static void initDraw()
 {
 	GXSetColorUpdate(GX_TRUE);
-	GXLoadPosMtxImm(j3dSys.getViewMtx(), 0);
-	GXSetCurrentMtx(0);
+	GXLoadPosMtxImm(j3dSys.getViewMtx(), GX_PNMTX0);
+	GXSetCurrentMtx(GX_PNMTX0);
 	GXClearVtxDesc();
 	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);

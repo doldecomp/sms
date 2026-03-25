@@ -179,12 +179,12 @@ void J2DTextBox::draw(int x, int y)
 	print.setSomeColors(mBlack, mWhite);
 	print.initiate();
 	makeMatrix(x, y);
-	GXLoadPosMtxImm(mPositionMtx, 0);
-	GXSetCurrentMtx(0);
+	GXLoadPosMtxImm(mPositionMtx, GX_PNMTX0);
+	GXSetCurrentMtx(GX_PNMTX0);
 	print.print(0, 0, mColorAlpha, "%s", mText);
 	Mtx mtx;
 	MTXIdentity(mtx);
-	GXLoadPosMtxImm(mtx, 0);
+	GXLoadPosMtxImm(mtx, GX_PNMTX0);
 }
 
 char* J2DTextBox::getStringPtr() const { return mText; }
@@ -232,7 +232,7 @@ void J2DTextBox::drawSelf(int x, int y, Mtx* mtx)
 	print.initiate();
 	Mtx transform;
 	MTXConcat(*mtx, mGlobalMtx, transform);
-	GXLoadPosMtxImm(transform, 0);
+	GXLoadPosMtxImm(transform, GX_PNMTX0);
 	print.locate(x, y);
 	print.printReturn(mText, mBounds.getWidth(), mBounds.getHeight(), mHBinding,
 	                  mVBinding, unk104, unk108, mColorAlpha);

@@ -320,8 +320,8 @@ void J2DPicture::draw(int x, int y, int param_3, int param_4, bool param_5,
 
 	makeMatrix(x, y);
 
-	GXLoadPosMtxImm(mPositionMtx, 0);
-	GXSetCurrentMtx(0);
+	GXLoadPosMtxImm(mPositionMtx, GX_PNMTX0);
+	GXSetCurrentMtx(GX_PNMTX0);
 	mColorAlpha = mAlpha;
 
 	setTevMode();
@@ -372,7 +372,7 @@ void J2DPicture::draw(int x, int y, int param_3, int param_4, bool param_5,
 
 	Mtx id;
 	MTXIdentity(id);
-	GXLoadPosMtxImm(id, 0);
+	GXLoadPosMtxImm(id, GX_PNMTX0);
 	GXSetNumTexGens(0);
 	GXSetNumTevStages(1);
 	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
@@ -401,7 +401,7 @@ void J2DPicture::drawTexCoord(int x, int y, int w, int h, float u1, float v1,
 	GXSetNumTexGens(mTextureNum);
 	Mtx transform;
 	MTXConcat(*mtx, mGlobalMtx, transform);
-	GXLoadPosMtxImm(transform, 0);
+	GXLoadPosMtxImm(transform, GX_PNMTX0);
 	setTevMode();
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);

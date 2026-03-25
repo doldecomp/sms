@@ -166,10 +166,12 @@ public:
 
 	void setEnviColor(u8 r, u8 g, u8 b)
 	{
-		unk180.r = r;
-		unk180.g = g;
-		unk180.b = b;
+		unk184.r = r;
+		unk184.g = g;
+		unk184.b = b;
 	}
+
+	u8 getAlpha() const { return unk180.a; }
 
 	// Status stuff is taken from TP
 	enum {
@@ -212,9 +214,7 @@ public:
 	}
 	bool isEnableDeleteEmitter() const
 	{
-		if (checkStatus(STATUS_ENABLE_DELETE) && getParticleNumber() == 0)
-			return true;
-		return false;
+		return checkStatus(STATUS_ENABLE_DELETE) && getParticleNumber() == 0;
 	}
 
 	bool checkFlag(u32 flag) const { return mEmitFlags & flag ? true : false; }
@@ -260,9 +260,7 @@ public:
 	/* 0x173 */ u8 unk173;
 	/* 0x174 */ JGeometry::TVec3<f32> unk174;
 	/* 0x180 */ GXColor unk180;
-	/* 0x184 */ u8 unk184;
-	/* 0x185 */ u8 unk185;
-	/* 0x186 */ u8 unk186;
+	/* 0x184 */ GXColor unk184;
 	/* 0x188 */ u32 mEmitFlags;
 	/* 0x18C */ u32 mKeyAnmTypeMask;
 

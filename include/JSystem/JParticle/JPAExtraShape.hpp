@@ -9,9 +9,18 @@ public:
 	JPAExtraShape(const u8*);
 	~JPAExtraShape() { }
 
-	BOOL isEnableScale() { return unk7E & 1; }
-	BOOL isEnableAlpha() { return unk78 & 1; }
+	BOOL isEnableScale() { return unk7E & 0x1; }
+	BOOL isEnableAlpha() { return unk78 & 0x1; }
 	BOOL isEnableRotate() { return unk7F; }
+	BOOL isEnableSinWave() { return unk78 & 0x2; }
+
+	BOOL isEnableScaleAnmX() { return unk7E & 0x8; }
+	BOOL isEnableScaleAnmY() { return unk7E & 0x4; }
+	u8 getAnmTypeX() { return unk7D; }
+	u8 getAnmTypeY() { return unk7B; }
+	BOOL isEnableScaleBySpeedX() { return unk7E & 0x20; }
+	BOOL isEnableScaleBySpeedY() { return unk7E & 0x10; }
+	BOOL isDiffXY() { return unk7E & 0x2; }
 
 	f32 getRotateAngle() { return mRotateAngle; }
 	f32 getRotateRandomAngle() { return mRotateRandomAngle; }
@@ -47,6 +56,9 @@ public:
 	f32 getAlphaWaveParam1() { return mAlphaWaveParam1; }
 	f32 getAlphaWaveParam2() { return mAlphaWaveParam2; }
 	f32 getAlphaWaveParam3() { return mAlphaWaveParam3; }
+
+	u8 getPivotX() { return unk7C; }
+	u8 getPivotY() { return unk7A; }
 
 public:
 	/* 0x8 */ f32 mAlphaInTiming;

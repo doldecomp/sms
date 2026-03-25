@@ -67,9 +67,9 @@ void TQuestionManager::draw() const
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_U8, 7);
 
 	MTXIdentity(mtx);
-	GXSetCurrentMtx(0);
-	GXLoadPosMtxImm(mtx, 0);
-	GXLoadNrmMtxImm(mtx, 0);
+	GXSetCurrentMtx(GX_PNMTX0);
+	GXLoadPosMtxImm(mtx, GX_PNMTX0);
+	GXLoadNrmMtxImm(mtx, GX_PNMTX0);
 	GXSetNumTexGens(1);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, 0, 0x7d);
 	GXSetCullMode(GX_CULL_NONE);

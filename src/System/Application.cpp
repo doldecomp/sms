@@ -743,7 +743,7 @@ int TApplication::drawDVDErr()
 		C_MTXOrtho(afStack_260, 16.0f, 464.0f, 0.0f, 600.0f, -1.0f, 1.0f);
 		GXSetProjection(afStack_260, GX_ORTHOGRAPHIC);
 		MTXIdentity(afStack_260);
-		GXLoadPosMtxImm(afStack_260, 0);
+		GXLoadPosMtxImm(afStack_260, GX_PNMTX0);
 		GXSetCullMode(GX_CULL_BACK);
 		GXSetNumTexGens(1);
 		GXSetNumTevStages(1);
