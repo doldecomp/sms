@@ -98,7 +98,9 @@ public:
 
 	virtual void update();
 
-	void registFadeout(u16, u16);
+	bool registFadeout(u16, u16);
+
+	/* 0x38 */ u16 unk38;
 };
 
 #endif
