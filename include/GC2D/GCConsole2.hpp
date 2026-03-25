@@ -124,7 +124,7 @@ public:
 	/* 0x8C */ int unk8C;
 	/* 0x90 */ THelpActor** unk90;
 	/* 0x94 */ TConsoleStr* unk94;
-	/* 0x98 */ u16 unk98;
+	/* 0x98 */ s16 unk98;
 	/* 0x9A */ u8 unk9A[20];
 	/* 0xB0 */ J2DSetScreen* unkB0;
 	/* 0xB4 */ u8 unkB4;
@@ -168,7 +168,7 @@ public:
 	/* 0x264 */ u16 unk264;
 	/* 0x266 */ u8 unk266;
 	/* 0x268 */ u16 unk268;
-	/* 0x26A */ u16 unk26A;
+	/* 0x26A */ s16 unk26A;
 	/* 0x26C */ TBoundPane* unk26C;
 	/* 0x270 */ TBoundPane* unk270;
 	/* 0x274 */ TBoundPane* unk274;
@@ -245,7 +245,8 @@ public:
 	/* 0x500 */ J2DPane* unk500[2];
 	/* 0x508 */ int unk508;
 	/* 0x50C */ int unk50C;
-	/* 0x510 */ char unk510[0x8];
+	/* 0x510 */ bool unk510;
+	/* 0x514 */ s32 unk514;
 	/* 0x518 */ int unk518;
 	/* 0x51C */ u8 unk51C;
 	/* 0x520 */ TExPane* unk520;
@@ -255,7 +256,7 @@ public:
 	/* 0x530 */ TMessageLoader* unk530;
 	/* 0x534 */ JUTRect unk534;
 	/* 0x544 */ JUTRect unk544;
-	/* 0x554 */ u32 unk554;
+	/* 0x554 */ s32 mTelopTextWidth;
 	/* 0x558 */ u8 unk558;
 	/* 0x55C */ u32 unk55C;
 	/* 0x560 */ u16 unk560;
@@ -264,7 +265,7 @@ public:
 	/* 0x568 */ f32 unk568;
 	/* 0x56C */ u8 unk56C;
 	/* 0x56D */ u8 unk56D;
-	/* 0x570 */ u32 unk570;
+	/* 0x570 */ u32* unk570; // Some sort of Dolphic News struct?
 };
 
 #endif
