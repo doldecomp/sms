@@ -57,7 +57,7 @@ public:
 
 class THinokuri2Manager : public TEnemyManager {
 public:
-	THinokuri2Manager(const char*);
+	THinokuri2Manager(const char* name = "ヒノクリ２マネージャ");
 
 	virtual void load(JSUMemoryInputStream&);
 	void createModelData();
@@ -135,7 +135,7 @@ public:
 
 class THinokuri2 : public TSpineEnemy {
 public:
-	THinokuri2(const char*);
+	THinokuri2(const char* name = "ヒノクリ２");
 
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);

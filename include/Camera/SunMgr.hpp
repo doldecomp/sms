@@ -10,7 +10,7 @@ extern TSunMgr* gpSunMgr;
 
 class TSunMgr : public JDrama::TViewObj, public TDrawSyncCallback {
 public:
-	TSunMgr(const char*);
+	TSunMgr(const char* name = "<TSunMgr>");
 	void load(JSUMemoryInputStream&);
 	void perform(unsigned long, JDrama::TGraphics*);
 	void getAddColor() const;

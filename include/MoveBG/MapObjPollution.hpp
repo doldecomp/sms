@@ -10,7 +10,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);
 
-	TPolluterBase(const char*);
+	TPolluterBase(const char* name = "汚染オブジェ");
 
 public:
 	/* 0x138 */ MActor* unk138;
@@ -40,7 +40,7 @@ public:
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
 
-	TMapObjRevivalPollution(const char*);
+	TMapObjRevivalPollution(const char* name = "復活落書き");
 
 public:
 	/* 0x10 */ s32 unk10;

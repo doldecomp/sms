@@ -9,7 +9,7 @@ class TMapObjBase;
 
 class THamuKuriLauncher : public TLauncher {
 public:
-	THamuKuriLauncher(const char* name)
+	THamuKuriLauncher(const char* name = "ハムクリランチャー")
 	    : TLauncher(name)
 	{
 	}
@@ -105,7 +105,7 @@ public:
 
 class THaneHamuKuriManager : public THamuKuriManager {
 public:
-	THaneHamuKuriManager(const char*);
+	THaneHamuKuriManager(const char* name = "ハムクリマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();
@@ -117,7 +117,7 @@ class TDoroHige;
 
 class TDoroHaneKuriManager : public THaneHamuKuriManager {
 public:
-	TDoroHaneKuriManager(const char*);
+	TDoroHaneKuriManager(const char* name = "ドロハネクリマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
@@ -133,7 +133,7 @@ public:
 
 class TDangoHamuKuriManager : public THamuKuriManager {
 public:
-	TDangoHamuKuriManager(const char*);
+	TDangoHamuKuriManager(const char* name = "だんごハムクリマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelDataArray(const TModelDataLoadEntry*);
@@ -143,7 +143,8 @@ public:
 
 class TBossDangoHamuKuriManager : public TDangoHamuKuriManager {
 public:
-	TBossDangoHamuKuriManager(const char*);
+	TBossDangoHamuKuriManager(const char* name
+	                          = "ボスだんごハムクリマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual TSpineEnemy* createEnemyInstance();
@@ -152,7 +153,7 @@ public:
 
 class TFireHamuKuriManager : public THamuKuriManager {
 public:
-	TFireHamuKuriManager(const char*);
+	TFireHamuKuriManager(const char* name = "ヤキグリマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();
@@ -185,7 +186,7 @@ public:
 
 class TDoroHamuKuriManager : public THamuKuriManager {
 public:
-	TDoroHamuKuriManager(const char*);
+	TDoroHamuKuriManager(const char* name = "どろハムクリマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
@@ -350,7 +351,7 @@ public:
 
 class THaneHamuKuri2 : public THaneHamuKuri {
 public:
-	THaneHamuKuri2(const char*);
+	THaneHamuKuri2(const char* name = "はねハムクリ2");
 
 	virtual void reset();
 	virtual BOOL isReachedToGoal() const;

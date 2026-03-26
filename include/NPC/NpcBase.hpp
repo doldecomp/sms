@@ -91,7 +91,7 @@ public:
 	void isNormalMonteM() const;
 	void loadAfter();
 	void load(JSUMemoryInputStream&);
-	TBaseNPC(u32, const char*);
+	TBaseNPC(u32, const char* name = "?");
 	void setIndividualDifference_(JSUMemoryInputStream&);
 	void init(TLiveManager*);
 	void initNpcLight_();

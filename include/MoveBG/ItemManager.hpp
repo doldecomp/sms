@@ -12,7 +12,7 @@ extern TItemManager* gpItemManager;
 
 class TItemManager : public TMapObjBaseManager {
 public:
-	TItemManager(const char*);
+	TItemManager(const char* name = "アイテムマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();

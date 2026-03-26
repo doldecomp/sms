@@ -5,7 +5,7 @@
 
 class TMushroom1up : public TMapObjBase {
 public:
-	TMushroom1up(int, const char*);
+	TMushroom1up(int unk, const char* name = "１ＵＰキノコ");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -23,7 +23,7 @@ public:
 
 class TJumpBase : public TMapObjBase {
 public:
-	TJumpBase(const char*);
+	TJumpBase(const char* name = "移動ジャンプ台");
 
 	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void ensureTakeSituation();

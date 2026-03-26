@@ -13,7 +13,7 @@ public:
 	bool subWaterLevel();
 	void makePoolUnlimited();
 
-	TPool(const char*);
+	TPool(const char* name = "水場");
 
 	// fabricated
 
@@ -33,7 +33,7 @@ extern TPoolManager* gpPoolManager;
 
 class TPoolManager : public TMapObjBaseManager {
 public:
-	TPoolManager(const char*);
+	TPoolManager(const char* name = "水場マネージャー");
 	bool subWaterLevel(const TBGCheckData*);
 	f32 getWaterLevel(const TBGCheckData*) const;
 };

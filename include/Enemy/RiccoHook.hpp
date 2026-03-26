@@ -20,7 +20,7 @@ public:
 
 class TRiccoHookManager : public TEnemyManager {
 public:
-	TRiccoHookManager(const char* name);
+	TRiccoHookManager(const char* name = "フックマネージャ");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);

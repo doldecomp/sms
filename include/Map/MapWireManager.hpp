@@ -57,7 +57,7 @@ public:
 	void entry(TTakeActor*);
 	void loadAfter();
 	void load(JSUMemoryInputStream&);
-	TMapWireManager(const char*);
+	TMapWireManager(const char* name = "ワイヤー管理");
 
 	static JUtility::TColor mUpperSurface;
 	static JUtility::TColor mLowerSurface;

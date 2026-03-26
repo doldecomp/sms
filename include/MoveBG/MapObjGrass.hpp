@@ -33,7 +33,7 @@ public:
 	void initDrawFar() const;
 	void draw() const;
 	void entryGrassGroup(TMapObjGrassGroup*, long);
-	TMapObjGrassManager(const char*);
+	TMapObjGrassManager(const char* name = "草管理");
 
 	static f32 mWidth;
 	static f32 mSwingWidth;

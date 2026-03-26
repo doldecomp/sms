@@ -14,7 +14,7 @@ public:
 	void becomeCalmlyCallback(u32, u32);
 	void control();
 	void initMapObj();
-	TFerrisWheel(const char*);
+	TFerrisWheel(const char* name = "観覧車");
 };
 
 class THorizontalViking : public TMapObjBase {
@@ -34,7 +34,7 @@ public:
 	void reset();
 	void loadAfter();
 	void initMapObj();
-	TViking(const char*);
+	TViking(const char* name = "バイキング");
 };
 
 class TPinnaShell : public THitActor {
@@ -54,7 +54,7 @@ public:
 	void perform(u32, JDrama::TGraphics*);
 	void loadAfter();
 	void initMapObj();
-	TShellCup(const char*);
+	TShellCup(const char* name = "シェルカップ");
 };
 
 class TMerrygoround : public TMapObjBase {
@@ -62,7 +62,7 @@ public:
 	void control();
 	void draw() const;
 	void initMapObj();
-	TMerrygoround(const char*);
+	TMerrygoround(const char* name = "メリーゴーランド");
 };
 
 class TChangeStageMerrygoround : public TMapObjChangeStage {
@@ -85,19 +85,19 @@ public:
 	void touchActor(THitActor*);
 	void kill();
 	void load(JSUMemoryInputStream&);
-	TBalloonKoopaJr();
+	TBalloonKoopaJr(const char* name = "風船（クッパＪｒ）");
 };
 
 class TPinnaEntrance : public TMapObjBase {
 public:
 	void loadAfter();
-	TPinnaEntrance();
+	TPinnaEntrance(const char* name = "ピンナ入り口");
 };
 
 class TWaterRecoverObj : public TMapObjBase {
 public:
 	void touchPlayer(THitActor*);
-	TWaterRecoverObj();
+	TWaterRecoverObj(const char* name = "水回復オブジェ");
 };
 
 class TAmiKing : public TMapObjBase {
@@ -109,14 +109,14 @@ public:
 	void calcRootMatrix();
 	void bind();
 	void touchPlayer(THitActor*);
-	TAmiKing();
+	TAmiKing(const char* name = "アミキング");
 };
 
 class TPinnaCoaster : public TMapObjBase {
 public:
 	void control();
 	void initMapObj();
-	TPinnaCoaster(const char*);
+	TPinnaCoaster(const char* name = "コースター");
 };
 
 class TMerryPole : public TMapObjBase {

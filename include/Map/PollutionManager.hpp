@@ -37,7 +37,7 @@ public:
 	void draw();
 	void setDataAddress(TPollutionManager::TPollutionInfo*);
 	void initPollutionInfo();
-	TPollutionManager(const char*);
+	TPollutionManager(const char* name = "落書き管理");
 
 	// fabricated
 	TPollutionCounterLayer& getCounterLayer() { return unk70; }

@@ -151,7 +151,7 @@ void TItemManager::loadAfter()
 void TItemManager::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBaseManager::load(stream);
-	unk78 = new TCoinEmpty("空コイン");
+	unk78 = new TCoinEmpty;
 	unk78->initHitActor(0x2000000E, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f);
 }
 

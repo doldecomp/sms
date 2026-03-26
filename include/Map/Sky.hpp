@@ -7,7 +7,7 @@ class MActor;
 
 class TSky : public JDrama::TActor {
 public:
-	TSky(const char*);
+	TSky(const char* name = "空");
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);
 

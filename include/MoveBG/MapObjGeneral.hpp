@@ -9,7 +9,7 @@ class TMapObjGeneral : public TMapObjBase {
 public:
 	void initPhysicalData();
 
-	TMapObjGeneral(const char*);
+	TMapObjGeneral(const char* name = "汎用地形オブジェ");
 
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);

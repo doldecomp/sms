@@ -39,7 +39,7 @@ class TTelesa;
 
 class TTelesaManager : public TSmallEnemyManager {
 public:
-	TTelesaManager(const char* name);
+	TTelesaManager(const char* name = "テレサマネージャー");
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();
 	virtual void setFlagOutOfCube();
@@ -135,19 +135,19 @@ public:
 
 class TSeeTelesa : public TTelesa {
 public:
-	TSeeTelesa(const char* name);
+	TSeeTelesa(const char* name = "可視テレサ");
 	void load(JSUMemoryInputStream&);
 };
 
 class TLoopTelesa : public TTelesa {
 public:
-	TLoopTelesa(const char* name);
+	TLoopTelesa(const char* name = "ループテレサ");
 	void load(JSUMemoryInputStream&);
 };
 
 class TBoxTelesa : public TTelesa {
 public:
-	TBoxTelesa(const char* name);
+	TBoxTelesa(const char* name = "箱テレサ");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void reset();
@@ -157,7 +157,7 @@ public:
 
 class TMarioModokiTelesa : public TTelesa {
 public:
-	TMarioModokiTelesa(const char* name);
+	TMarioModokiTelesa(const char* name = "マリオモドキテレサ");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void init(TLiveManager*);
@@ -177,7 +177,7 @@ DECLARE_NERVE(TNerveTelesaTrample, TLiveActor);
 
 class TKageMarioModokiManager : public TSmallEnemyManager {
 public:
-	TKageMarioModokiManager(const char* name)
+	TKageMarioModokiManager(const char* name = "カゲマリオモドキマネージャー")
 	    : TSmallEnemyManager(name)
 	{
 	}

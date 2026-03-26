@@ -24,7 +24,7 @@ public:
 	void calc();
 	void control();
 	void initMapObj();
-	TCogwheel(const char*);
+	TCogwheel(const char* name = "天秤");
 };
 
 class TMapObjElasticCode : public TMapObjBase {
@@ -32,7 +32,7 @@ public:
 	void draw() const;
 	void control();
 	void initMapObj();
-	TMapObjElasticCode();
+	TMapObjElasticCode(const char* name = "ゴムひも");
 };
 
 class TMapObjGrowTree : public TMapObjBase {
@@ -43,7 +43,7 @@ public:
 	void control();
 	void loadAfter();
 	void initMapObj();
-	TMapObjGrowTree(const char*);
+	TMapObjGrowTree(const char* name = "もやしの木");
 };
 
 class TWireBell : public TMapObjBase {
@@ -52,7 +52,7 @@ public:
 	void draw() const;
 	void control();
 	void loadAfter();
-	TWireBell(const char*);
+	TWireBell(const char* name = "ワイヤー鈴（紫）");
 };
 
 class TMapObjPuncher : public TMapObjBase {
@@ -60,7 +60,7 @@ public:
 	void touchPlayer(THitActor*);
 	void control();
 	void load(JSUMemoryInputStream&);
-	TMapObjPuncher();
+	TMapObjPuncher(const char* name = "パンチャー");
 };
 
 class TMuddyBoat : public TMapObjBase {
@@ -76,14 +76,14 @@ public:
 	void calc();
 	u32 getSDLModelFlag() const;
 	void initMapObj();
-	TMuddyBoat(const char*);
+	TMuddyBoat(const char* name = "どろの船");
 };
 
 class TMareFall : public TMapObjBase {
 public:
 	void calc();
 	void load(JSUMemoryInputStream&);
-	TMareFall();
+	TMareFall(const char* name = "マーレ滝");
 };
 
 class TMareCork : public TMapObjBase {
@@ -93,14 +93,14 @@ public:
 	void calcRootMatrix();
 	MtxPtr getTakingMtx();
 	void drawObject(JDrama::TGraphics*);
-	TMareCork();
+	TMareCork(const char* name = "マーレコルク");
 };
 
 class TMareEventPoint : public THitActor {
 public:
 	BOOL receiveMessage(THitActor* sender, u32 message);
 	void load(JSUMemoryInputStream&);
-	TMareEventPoint();
+	TMareEventPoint(const char* name = "イベントポイント");
 };
 
 #endif

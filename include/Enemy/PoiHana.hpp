@@ -20,7 +20,7 @@ public:
 
 class TPoiHanaManager : public TSmallEnemyManager {
 public:
-	TPoiHanaManager(const char* name);
+	TPoiHanaManager(const char* name = "ポイハナマネージャー");
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual TSmallEnemy* createEnemyInstance();

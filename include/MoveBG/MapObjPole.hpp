@@ -44,7 +44,7 @@ public:
 	void loadPole(TMapObjPoleManager::TMapObjPoleInfo*, TMapObjPole*,
 	              const char*);
 	void registerObj(TMapObjPole*);
-	TMapObjPoleManager(const char*);
+	TMapObjPoleManager(const char* name = "旗管理");
 
 public:
 	/* 0x10 */ TMapObjPoleInfo unk10[1];

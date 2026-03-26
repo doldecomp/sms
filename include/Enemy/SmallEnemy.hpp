@@ -76,7 +76,7 @@ public:
 
 class TSmallEnemyManager : public TEnemyManager {
 public:
-	TSmallEnemyManager(const char*);
+	TSmallEnemyManager(const char* name = "エフェクト敵マネージャー");
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual void createModelData();
