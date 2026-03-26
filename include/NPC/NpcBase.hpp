@@ -78,7 +78,7 @@ public:
 	void isBeTrampledNpc() const;
 	void isPollutionNpc() const;
 	void isSmallNpc() const;
-	void isChild() const;
+	bool isChild() const;
 	void isSunflower() const;
 	void isJellyFishMare() const;
 	void isSpecialMareW() const;
@@ -87,8 +87,8 @@ public:
 	void isNormalMareM() const;
 	void isSpecialMonteW() const;
 	void isSpecialMonteM() const;
-	void isNormalMonteW() const;
-	void isNormalMonteM() const;
+	bool isNormalMonteW() const;
+	bool isNormalMonteM() const;
 	void loadAfter();
 	void load(JSUMemoryInputStream&);
 	TBaseNPC(u32, const char* name = "?");
