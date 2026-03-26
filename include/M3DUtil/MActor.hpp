@@ -93,7 +93,8 @@ public:
 	// fabricated
 	MActorAnmBase* getUnk28(int i) { return unk28[i]; }
 	MActorAnmBck* getAnmBck() { return unkC; }
-	J3DModel* getModel() const { return unk4; }
+	J3DModel* getModel() { return unk4; }
+	const J3DModel* getModel() const { return unk4; }
 	void unmarkUnk40() { unk40 = false; }
 	BOOL curAnmEndsNext() { return curAnmEndsNext(0, 0); }
 
