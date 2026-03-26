@@ -54,16 +54,16 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	//     return new TKoopaManager("クッパマネージャー");
 
 	if (strcmp(name, "HinoKuri2") == 0)
-		return new THinokuri2("ヒノクリ２");
+		return new THinokuri2;
 
 	if (strcmp(name, "HinoKuri2Manager") == 0)
-		return new THinokuri2Manager("ヒノクリ２マネージャ");
+		return new THinokuri2Manager;
 
 	if (strcmp(name, "BossGesso") == 0)
-		return new TBossGesso("ボスゲッソー");
+		return new TBossGesso;
 
 	if (strcmp(name, "BossGessoManager") == 0)
-		return new TBossGessoManager("ボスゲッソーマネージャ");
+		return new TBossGessoManager;
 
 	// TODO:
 	// if ( strcmp( name, "TinKoopa" ) == 0 )
