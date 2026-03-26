@@ -9,7 +9,7 @@ struct ResTIMG;
 // camera enters a wall
 class TMapDrawWall : public JDrama::TViewObj {
 public:
-	TMapDrawWall(const char*);
+	TMapDrawWall(const char* name = "カメラ食い込み壁");
 
 	virtual ~TMapDrawWall() { }
 	virtual void load(JSUMemoryInputStream&);

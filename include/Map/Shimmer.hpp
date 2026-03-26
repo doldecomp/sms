@@ -10,7 +10,7 @@ class J3DFrameCtrl;
 
 class TShimmer : public JDrama::TActor {
 public:
-	TShimmer(const char*);
+	TShimmer(const char* name = "<Shimmer>");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();

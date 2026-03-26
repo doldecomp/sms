@@ -13,26 +13,26 @@
 JDrama::TNameRef* TMarNameRefGen::getNameRef_Map(const char* name) const
 {
 	if (strcmp(name, "Map") == 0)
-		return new TMap("マップ");
+		return new TMap;
 
 	if (strcmp(name, "MapDrawWall") == 0)
-		return new TMapDrawWall("カメラ食い込み壁");
+		return new TMapDrawWall;
 
 	if (strcmp(name, "Sky") == 0)
-		return new TSky("空");
+		return new TSky;
 
 	if (strcmp(name, "Shimmer") == 0)
-		return new TShimmer("<Shimmer>");
+		return new TShimmer;
 
 	if (strcmp(name, "Pollution") == 0)
-		return new TPollutionManager("落書き管理");
+		return new TPollutionManager;
 
 	// TODO:
 	// if ( strcmp(name, "PollutionTest" ) == 0 )
 	//     return new TPollutionTest("落書きテスト");
 
 	if (strcmp(name, "SunMgr") == 0)
-		return new TSunMgr("<TSunMgr>");
+		return new TSunMgr;
 
 	// TODO:
 	// if ( strcmp(name, "SunModel" ) == 0 )
@@ -43,7 +43,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Map(const char* name) const
 	//     return new TSunModel(true, "<TSunModel>");
 
 	if (strcmp(name, "MarineSnow") == 0)
-		return new TMarineSnow("MarineSnow");
+		return new TMarineSnow;
 
 	if (strcmp(name, "StickyStain") == 0)
 		return new TStickyStainManager;
