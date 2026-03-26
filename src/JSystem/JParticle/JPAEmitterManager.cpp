@@ -202,22 +202,23 @@ JPABaseEmitter* JPAEmitterManager::createEmitterBase(
 			int count             = linkInfo->getFieldNum();
 			JPADataBlock** blocks = linkInfo->getField();
 			for (int i = 0; i < count; ++i) {
-				JPADataBlock* block2 = blocks[i];
+				JPADataBlock* block = blocks[i];
 				JPABaseField* field
-				    = fieldMgr->setField(((u8*)blocks[i]->mRawData)[0xC]);
+				    = fieldMgr->setField(block->getRawData()[0xC]);
 				if (field)
-					field->loadFieldBlock(block2);
+					field->loadFieldBlock(block);
 			}
 			emitter->mEmitterDataBlockInfo = linkInfo;
 			if (linkInfo->getSweepShape())
-				emitter->unk172 = 1;
+				emitter->mParticlesCreateChildren = 1;
 
 			emitter->calcCurrentRateTimerStep();
-			emitter->mDraw.initialize(emitter, unkA4[param_3]->unk8);
+			emitter->getDraw()->initialize(
+			    emitter, unkA4[param_3]->getTextureResource());
 			emitter->unk110 = param_4;
 			emitter->unk114 = param_5;
-			return emitter;
 		}
+		return emitter;
 	}
 
 	return nullptr;

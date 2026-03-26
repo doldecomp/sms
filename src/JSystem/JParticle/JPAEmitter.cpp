@@ -34,7 +34,7 @@ JPABaseEmitter::JPABaseEmitter()
 	unk114                = nullptr;
 	mEmitterDataBlockInfo = nullptr;
 
-	unk172 = 0;
+	mParticlesCreateChildren = 0;
 
 	initStatus(0);
 	setStatus(STATUS_FIRST_EMIT | STATUS_EMIT_NEXT_FRAME);
