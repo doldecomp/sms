@@ -26,7 +26,7 @@ public:
 	/* 0x51 */ u8 unk51;
 	/* 0x52 */ u8 unk52;
 	/* 0x53 */ u8 unk53;
-	/* 0x54 */ volatile u16 unk54;
+	/* 0x54 */ u16 unk54;
 	/* 0x58 */ JGeometry::TVec3<f32> unk58;
 	/* 0x64 */ JGeometry::TVec3<f32> unk64;
 	/* 0x70 */ JGeometry::TVec3<f32> unk70;

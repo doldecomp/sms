@@ -23,8 +23,6 @@ public:
 	{
 	}
 
-	void setEmitCount(s16 count) { mEmitCount = count; }
-
 public:
 	/* 0x0 */ JPABaseEmitter* mCurrentEmitter;
 	/* 0x4 */ JPAFieldManager* mCurrentFieldManager;
@@ -138,7 +136,7 @@ public:
 
 	// fabricated
 	JPAFieldManager* getFieldManager() { return &mFieldManager; }
-	u32 getUnk172() { return unk172; }
+	bool doParticleCreateChildren() { return mParticlesCreateChildren; }
 
 	// fabricated
 	void setScale(const JGeometry::TVec3<f32>& scale)
@@ -219,6 +217,9 @@ public:
 
 	bool checkFlag(u32 flag) const { return mEmitFlags & flag ? true : false; }
 
+	// fabricated
+	JPADraw* getDraw() { return &mDraw; }
+
 public:
 	enum {
 		EMIT_FLAG_FIXED_DENSITY        = 0x1,
@@ -256,7 +257,7 @@ public:
 	/* 0x154 */ JGeometry::TVec3<f32> unk154;
 	/* 0x160 */ JGeometry::TVec3<f32> unk160;
 	/* 0x16C */ JGeometry::TVec3<s16> unk16C;
-	/* 0x172 */ u8 unk172;
+	/* 0x172 */ bool mParticlesCreateChildren;
 	/* 0x173 */ u8 unk173;
 	/* 0x174 */ JGeometry::TVec3<f32> unk174;
 	/* 0x180 */ GXColor unk180;

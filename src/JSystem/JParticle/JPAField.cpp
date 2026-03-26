@@ -35,12 +35,13 @@ void JPABaseField::calcMaxDistance() { }
 bool JPABaseField::checkMaxDistance(JGeometry::TVec3<f32>& param_1,
                                     JGeometry::TVec3<f32>& param_2)
 {
-	JGeometry::TVec3<f32> diff;
 	bool result = false;
-	diff.sub(param_1, param_2);
-	diff.mul(diff);
-	if (mMaxDistanceSq <= diff.x + diff.y + diff.z)
+	if ((param_1.x - param_2.x) * (param_1.x - param_2.x)
+	        + (param_1.y - param_2.y) * (param_1.y - param_2.y)
+	        + (param_1.z - param_2.z) * (param_1.z - param_2.z)
+	    >= mMaxDistanceSq) {
 		result = true;
+	}
 	return result;
 }
 
@@ -177,11 +178,9 @@ void JPAAirField::affect(JPAParticle* particle)
 	if (checkStatus(STATUS_AIR_CONE)) {
 		JGeometry::TVec3<f32> diff;
 		if (!checkStatus(STATUS_USE_GLOBAL_COORDS)) {
-			particle->getLocalPosition(diff);
-			diff -= unk58;
+			diff.sub(particle->mLocalPosition, unk58);
 		} else {
-			particle->getGlobalPosition(diff);
-			diff -= unk58;
+			diff.sub(particle->mGlobalPosition, unk58);
 		}
 
 		diff.normalize();
@@ -284,7 +283,7 @@ void JPAVortexField::affect(JPAParticle* particle)
 
 	JGeometry::TVec3<f32> tmp;
 	tmp.normalize(thing3);
-	unk7C.cross(tmp, unk58);
+	unk7C.cross2(tmp, unk58);
 	unk7C.scale(fVar2);
 	calcFieldVelocity(particle);
 }
@@ -311,8 +310,8 @@ void JPAConvectionField::set()
 {
 	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
 	JGeometry::TVec3<f32> prod;
-	prod.cross(unk18, unk24);
-	unk18.cross(prod, unk24);
+	prod.cross2(unk18, unk24);
+	unk18.cross2(prod, unk24);
 	unk18.normalize();
 
 	MTXMultVec(info->unkCC, &unk18, &unk58);
@@ -326,7 +325,7 @@ void JPAConvectionField::set()
 void JPAConvectionField::affect(JPAParticle* particle)
 {
 	JGeometry::TVec3<f32> thing;
-	thing.set(particle->mLocalPosition);
+	particle->getLocalPosition(thing);
 
 	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 	JGeometry::TVec3<f32> thing2;
@@ -378,8 +377,9 @@ void JPARandomField::affect(JPAParticle* particle)
 	}
 
 	if (bVar3) {
-		unk7C.set(FieldRand.get_ufloat_1(), FieldRand.get_ufloat_1(),
-		          FieldRand.get_ufloat_1());
+		unk7C.set(FieldRand.get_ufloat_1() - 0.5f,
+		          FieldRand.get_ufloat_1() - 0.5f,
+		          FieldRand.get_ufloat_1() - 0.5f);
 		unk7C.scale(unk10);
 		calcFieldVelocity(particle);
 	}

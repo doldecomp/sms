@@ -205,14 +205,14 @@ public:
 		x = _x;
 		y = _y;
 		z = _z;
+	}
 
-		// Second version, both are wrong in some places.
-		// Were they literally two different functions or something?
-		// TWW also has problems matching this.
-
-		// set(a.y * b.z - a.z * b.y, //
-		//     a.z * b.x - a.x * b.z, //
-		//     a.x * b.y - a.y * b.x);
+	// Incorrect!!!
+	void cross2(const TVec3& a, const TVec3& b)
+	{
+		set(a.y * b.z - a.z * b.y, //
+		    a.z * b.x - a.x * b.z, //
+		    a.x * b.y - a.y * b.x);
 	}
 
 	void negate()

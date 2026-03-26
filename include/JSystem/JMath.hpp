@@ -12,12 +12,6 @@ class TRandom_fast_ {
 public:
 	TRandom_fast_(u32);
 
-	inline u32 next()
-	{
-		value = value * 0x19660d + 0x3c6ef35f;
-		return value;
-	}
-
 	void setSeed(u32 seed) { value = seed; }
 
 	u32 get()
@@ -25,6 +19,8 @@ public:
 		value = (value * 0x19660d) + 0x3c6ef35f;
 		return value;
 	}
+
+	u32 get_bit32() { return get(); }
 
 	f32 get_ufloat_1()
 	{
@@ -51,6 +47,19 @@ private:
 	/* 0x0 */ u32 unk0;
 	/* 0x4 */ u32 unk4;
 	/* 0x8 */ u32 unk8[32];
+};
+
+// Reconstructed from TP and TWW
+template <class T> class TRandom_ : T {
+	TRandom_(u32 seed)
+	    : T(seed)
+	{
+	}
+
+	f32 get_float(f32);
+	f32 get_ufloat(f32);
+	u32 get_uint32(u32);
+	u8 get_uint8(u8 param_1) { return param_1 * this->get_ufloat_1(); }
 };
 
 } // namespace JMath

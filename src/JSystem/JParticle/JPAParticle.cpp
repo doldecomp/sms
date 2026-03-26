@@ -129,7 +129,7 @@ bool JPAParticle::checkCreateChildParticle()
 	bool result          = false;
 	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
 
-	if (info->mCurrentEmitter->getUnk172()) {
+	if (info->mCurrentEmitter->doParticleCreateChildren()) {
 		f32 time;
 		if (mLifetime > 1.0f)
 			time = mAge / (mLifetime - 1.0f);
@@ -141,9 +141,7 @@ bool JPAParticle::checkCreateChildParticle()
 		          ->getSweepShape();
 		if (time >= sweepShape->getTiming()) {
 			if (sweepShape->getStep() > 0) {
-				f32 frame = mAge;
-				s32 step  = sweepShape->getStep() + 1;
-				if ((int)frame % step == 0)
+				if (getAge() % (sweepShape->getStep() + 1) == 0)
 					result = true;
 			} else {
 				result = true;
