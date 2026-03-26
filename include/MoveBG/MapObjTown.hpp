@@ -57,7 +57,8 @@ class TMapObjChangeStageHipDrop : public TMapObjChangeStage {
 public:
 	void touchPlayer(THitActor*);
 	void initMapObj();
-	TMapObjChangeStageHipDrop(const char* name = "ステージ切り替え（ヒップドロップ）")
+	TMapObjChangeStageHipDrop(const char* name
+	                          = "ステージ切り替え（ヒップドロップ）")
 	    : TMapObjChangeStage(name)
 	{
 	}

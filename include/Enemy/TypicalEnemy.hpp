@@ -8,7 +8,7 @@ class TLiveActor;
 
 class TTypicalEnemy : public TSpineEnemy {
 public:
-	TTypicalEnemy(const char* name);
+	TTypicalEnemy(const char* name = "典型敵");
 	void init(TLiveManager*);
 };
 
@@ -21,7 +21,7 @@ public:
 
 class TTypicalManager : public TEnemyManager {
 public:
-	TTypicalManager(const char*);
+	TTypicalManager(const char* name = "典型敵マネージャ");
 	void load(JSUMemoryInputStream&);
 	TTypicalEnemy* createEnemyInstance();
 };

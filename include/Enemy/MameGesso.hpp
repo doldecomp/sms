@@ -30,7 +30,7 @@ class TMameGesso;
 
 class TMameGessoManager : public TSmallEnemyManager {
 public:
-	TMameGessoManager(const char* name);
+	TMameGessoManager(const char* name = "まめゲッソーマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();

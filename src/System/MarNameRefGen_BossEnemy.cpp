@@ -24,11 +24,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	// TODO:
 	// if ( strcmp( name, "BossHanachanManager" ) == 0 )
 	//     return new TBossHanachanManager("?");
-	
+
 	// TODO:
 	// if (strcmp(name, "SleepBossHanachan") == 0)
 	// 	return new TSleepBossHanachan("?");
-	
+
 	// TODO:
 	// if (strcmp(name, "SleepBossHanachanManager") == 0)
 	// 	return new TDemoBossHanachanManager("?");
@@ -36,7 +36,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	// TODO:
 	// if ( strcmp( name, "BossEel" ) == 0 )
 	//     return new TBossEel;
-	
+
 	// TODO:
 	// if (strcmp(name, "BossEelManager") == 0)
 	// 	return new TBossEelManager("?");

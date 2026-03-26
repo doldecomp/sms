@@ -14,7 +14,7 @@ class TSharedParts;
 
 class TNameKuriLauncher : public TLauncher {
 public:
-	TNameKuriLauncher(const char*);
+	TNameKuriLauncher(const char* name = "ナメクリランチャー");
 
 	virtual void stateLaunch();
 };
@@ -39,7 +39,7 @@ public:
 
 class TNameKuriManager : public TSmallEnemyManager {
 public:
-	TNameKuriManager(const char* name);
+	TNameKuriManager(const char* name = "ナメクリマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
@@ -116,7 +116,7 @@ public:
 
 class TDiffusionNameKuriManager : public TNameKuriManager {
 public:
-	TDiffusionNameKuriManager(const char*);
+	TDiffusionNameKuriManager(const char* name = "拡散ナメクリマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual TSmallEnemy* createEnemyInstance();

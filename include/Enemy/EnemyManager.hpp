@@ -33,7 +33,7 @@ public:
 
 class TEnemyManager : public TLiveManager {
 public:
-	TEnemyManager(const char*);
+	TEnemyManager(const char* name = "エネミーマネージャ基底型");
 
 	virtual ~TEnemyManager();
 	virtual void load(JSUMemoryInputStream&);
