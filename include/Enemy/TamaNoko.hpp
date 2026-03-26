@@ -40,7 +40,7 @@ public:
 
 class TTamaNokoManager : public TSmallEnemyManager {
 public:
-	TTamaNokoManager(const char*);
+	TTamaNokoManager(const char* name = "タマノコマネージャー");
 
 	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();

@@ -5,7 +5,7 @@
 
 class TMapObjTurn : public THideObjBase {
 public:
-	TMapObjTurn(const char*);
+	TMapObjTurn(const char* name = "水回転オブジェ");
 
 	virtual void loadAfter();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);

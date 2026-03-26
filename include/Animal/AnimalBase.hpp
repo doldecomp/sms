@@ -5,7 +5,7 @@
 
 class TAnimalBase : public TSpineEnemy {
 public:
-	TAnimalBase(u32, const char*);
+	TAnimalBase(u32, const char* name = "?");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);

@@ -7,7 +7,7 @@ class TMirrorActor;
 
 class TItem : public TMapObjGeneral {
 public:
-	TItem(const char*);
+	TItem(const char* name = "アイテム");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -32,7 +32,7 @@ public:
 
 class TCoin : public TItem {
 public:
-	TCoin(const char*);
+	TCoin(const char* name = "コイン");
 
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -50,7 +50,7 @@ public:
 
 class TFlowerCoin : public TCoin {
 public:
-	TFlowerCoin();
+	TFlowerCoin(const char* name = "コイン(フラワー用)");
 
 	virtual void load(JSUMemoryInputStream&);
 
@@ -60,7 +60,7 @@ public:
 
 class TCoinEmpty : public TCoin {
 public:
-	TCoinEmpty(const char*);
+	TCoinEmpty(const char* name = "空コイン");
 
 	virtual void kill();
 	virtual void appear();
@@ -71,13 +71,13 @@ public:
 
 class TCoinRed : public TCoin {
 public:
-	TCoinRed(const char*);
+	TCoinRed(const char* name = "赤コイン");
 	virtual void taken(THitActor*);
 };
 
 class TCoinBlue : public TCoin {
 public:
-	TCoinBlue(const char*);
+	TCoinBlue(const char* name = "青コイン");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void makeObjAppeared();
@@ -87,7 +87,7 @@ public:
 
 class TShine : public TItem {
 public:
-	TShine(const char*);
+	TShine(const char* name = "シャイン");
 
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -147,7 +147,7 @@ public:
 
 class TEggYoshi : public TMapObjGeneral {
 public:
-	TEggYoshi(const char*);
+	TEggYoshi(const char* name = "ヨッシーの卵");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -180,7 +180,7 @@ public:
 
 class TNozzleBox : public TMapObjGeneral {
 public:
-	TNozzleBox(const char*);
+	TNozzleBox(const char* name = "ノズルボックス");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();

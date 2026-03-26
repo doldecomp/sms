@@ -12,7 +12,7 @@ class TMapCollisionManager;
 
 class TMapStaticObj : public THitActor {
 public:
-	TMapStaticObj(const char*);
+	TMapStaticObj(const char* name = "簡易マップオブジェ");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
@@ -67,7 +67,7 @@ public:
 
 class TMapObjSoundGroup : public JDrama::TViewObj {
 public:
-	TMapObjSoundGroup(const char*);
+	TMapObjSoundGroup(const char* name = "環境音テスト");
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);
 

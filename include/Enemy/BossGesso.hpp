@@ -140,7 +140,7 @@ public:
 		ASTATE_ROLL      = 7,
 	};
 
-	TBossGesso(const char*);
+	TBossGesso(const char* name = "ボスゲッソー");
 
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
@@ -246,7 +246,7 @@ public:
 
 class TBossGessoManager : public TEnemyManager {
 public:
-	TBossGessoManager(const char*);
+	TBossGessoManager(const char* name = "ボスゲッソーマネージャ");
 
 	virtual void load(JSUMemoryInputStream&);
 

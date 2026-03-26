@@ -5,7 +5,7 @@
 
 class THideObjBase : public TMapObjBase {
 public:
-	THideObjBase(const char*);
+	THideObjBase(const char* name = "隠しオブジェ");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
@@ -25,7 +25,7 @@ public:
 
 class TBreakHideObj : public THideObjBase {
 public:
-	TBreakHideObj();
+	TBreakHideObj(const char* name = "壊れる隠しオブジェ");
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
 	virtual void kill();

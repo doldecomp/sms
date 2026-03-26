@@ -32,7 +32,7 @@ public:
 	void grow();
 	void control();
 	void initMapObj();
-	TSandLeafBase();
+	TSandLeafBase(const char* name = "すなやまの芽の土台");
 };
 
 class TSandBomb : public TSandLeaf {
@@ -66,7 +66,7 @@ public:
 	void findTriggerActor();
 	void loadAfter();
 	void initMapObj();
-	TSandBombBase(const char*);
+	TSandBombBase(const char* name = "すなやま爆弾の土台");
 };
 
 class TSandCastle : public TSandBombBase {
@@ -79,7 +79,7 @@ public:
 	void findTriggerActor();
 	void loadAfter();
 	void initMapObj();
-	TSandCastle(const char*);
+	TSandCastle(const char* name = "砂の城");
 };
 
 class TLeanMirror : public TMapObjBase {
@@ -99,7 +99,7 @@ public:
 	u32 getSDLModelFlag() const;
 	void initMapObj();
 	void load(JSUMemoryInputStream&);
-	TLeanMirror(const char*);
+	TLeanMirror(const char* name = "ぐらぐら鏡");
 };
 
 class TShiningStone : public THitActor {
@@ -108,7 +108,7 @@ public:
 	void putOnLight(TLiveActor*);
 	void perform(u32, JDrama::TGraphics*);
 	void load(JSUMemoryInputStream&);
-	TShiningStone(const char*);
+	TShiningStone(const char* name = "太陽石");
 };
 
 class TMammaBlockRotate : public TMapObjBase {
@@ -117,14 +117,14 @@ public:
 	void control();
 	void initMapObj();
 	void load(JSUMemoryInputStream&);
-	TMammaBlockRotate(const char*);
+	TMammaBlockRotate(const char* name = "太陽の塔ブロック");
 };
 
 class TMammaYacht : public TMapObjBase {
 public:
 	void control();
 	void initMapObj();
-	TMammaYacht();
+	TMammaYacht(const char* name = "砂の城");
 };
 
 class TSandBird : public TJointCoin {
@@ -134,7 +134,7 @@ public:
 	virtual TMapObjBase* makeObjFromJointName(const char*, unsigned short);
 	virtual bool nameIsObj(const char*);
 
-	TSandBird(const char*);
+	TSandBird(const char* name = "おおすな鳥");
 };
 
 class TGoalWatermelon : public TMapObjBase {
@@ -143,7 +143,7 @@ public:
 	void control();
 	void loadAfter();
 	void load(JSUMemoryInputStream&);
-	TGoalWatermelon(const char*);
+	TGoalWatermelon(const char* name = "スイカゴール");
 };
 
 class TMammaMirrorMapOperator : public JDrama::TViewObj {
@@ -152,13 +152,13 @@ public:
 	void hide(int);
 	void perform(u32, JDrama::TGraphics*);
 	void loadAfter();
-	TMammaMirrorMapOperator(const char*);
+	TMammaMirrorMapOperator(const char* name = "鏡内地形操作");
 };
 
 class TSandEgg : public TMapObjBase {
 public:
 	u32 getSDLModelFlag() const;
-	TSandEgg();
+	TSandEgg(const char* name = "すなのたまご");
 };
 
 #endif

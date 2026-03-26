@@ -16,7 +16,7 @@ public:
 
 	void controlLeaf(int);
 	void initEach();
-	TMapObjTree(const char*);
+	TMapObjTree(const char* name = "木");
 
 	static f32 mNearMiddle;
 	static f32 mMiddleFar;
@@ -31,7 +31,7 @@ public:
 
 	void startScaleUp();
 	void beSmall();
-	TMapObjTreeScale(const char*);
+	TMapObjTreeScale(const char* name = "スケールの木");
 
 	static f32 mScaleSpeedY;
 	static f32 mStatusChangeScaleY;

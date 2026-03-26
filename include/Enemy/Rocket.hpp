@@ -9,7 +9,7 @@
 
 class TRocket : public TSmallEnemy {
 public:
-	TRocket(const char* name);
+	TRocket(const char* name = "ロケット");
 	virtual ~TRocket() { }
 
 	// TODO: add other methods

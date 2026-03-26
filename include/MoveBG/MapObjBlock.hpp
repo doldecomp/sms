@@ -18,7 +18,7 @@ public:
 
 class TSandBlock : public TMapObjBase {
 public:
-	TSandBlock();
+	TSandBlock(const char* name = "砂ブロック");
 	void initMapObj();
 	void control();
 	void touchPlayer(THitActor*);
@@ -48,7 +48,7 @@ public:
 
 class TIceBlock : public TMapObjBase {
 public:
-	TIceBlock();
+	TIceBlock(const char* name = "アイスブロック");
 	void initMapObj();
 	void calc();
 	void control();
@@ -59,7 +59,7 @@ public:
 
 class TBrickBlock : public THideObjBase {
 public:
-	TBrickBlock();
+	TBrickBlock(const char* name = "レンガブロック");
 	void initMapObj();
 	BOOL receiveMessage(THitActor* sender, u32 message);
 	void kill();
@@ -100,6 +100,7 @@ public:
 
 class TSuperHipDropBlock : public TBreakHideObj {
 public:
+	TSuperHipDropBlock(const char* name = "スーパーヒップドロップブロック");
 	void loadAfter();
 	BOOL receiveMessage(THitActor* sender, u32 message);
 };

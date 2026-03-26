@@ -138,7 +138,7 @@ struct TMapObjData {
 
 class TMapObjBase : public TLiveActor {
 public:
-	TMapObjBase(const char*);
+	TMapObjBase(const char* name = "地形オブジェ基底");
 
 	virtual ~TMapObjBase() { }
 	virtual void load(JSUMemoryInputStream&);
