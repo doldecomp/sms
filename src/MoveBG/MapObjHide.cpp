@@ -11,7 +11,12 @@
 #include <System/MarDirector.hpp>
 #include <System/Particles.hpp>
 
+#include <Player/ModelWaterManager.hpp>
+
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+
 #include <MSound/MSound.hpp>
+#include <MarioUtil/MathUtil.hpp>
 
 void THideObjBase::appearObj(f32 param1)
 {
@@ -113,11 +118,284 @@ THideObjBase::THideObjBase(const char* name)
 {
 }
 
+void TWaterHitPictureHideObj::afterFinishedAnim()
+{
+	if (isActorType(0x400001A1)) {
+		SMSGetMSound()->startSoundActor(0x296F, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundSystemSE(0x484D, 0, nullptr, 0);
+	}
+
+	removeMapCollision();
+	onHitFlag(HIT_FLAG_UNK4);
+	appearObjFromPoint(getObjAppearPos());
+	mState = 3;
+}
+
+void TWaterHitPictureHideObj::forward(f32 param_1)
+{
+	if (unk150) {
+		unk160 -= param_1;
+		if (unk160 < unk164) {
+			afterFinishedAnim();
+		}
+	} else {
+		unk160 += param_1;
+		if (unk160 > unk168) {
+			afterFinishedAnim();
+		}
+	}
+	unk160   = MsClamp(unk160, unk164, unk168);
+	unk16C.a = (u16)unk160 & 0xff;
+}
+
+u32 TWaterHitPictureHideObj::touchWater(THitActor* param_1)
+{
+	volatile u32 padding[12];
+	const JGeometry::TVec3<f32>& waterSpeed = getWaterSpeed(param_1);
+
+	MtxPtr rootMtx = getModel()->getAnmMtx(0);
+	if ((rootMtx[0][2] * waterSpeed.x + rootMtx[1][2] * waterSpeed.y
+	     + rootMtx[2][2] * waterSpeed.z)
+	    > 0.0f) {
+		return 0;
+	}
+	int id = getWaterID(param_1);
+	if (gpModelWaterManager->checkFlagBottom4Bits(id, 0x1)) {
+		gpMarioParticleManager->emit(0xe7, &mPosition, 0, nullptr);
+		SMSGetMSound()->startSoundSet(0x6802, &mPosition, 0, 0, 0, 0, 4);
+	}
+	forward(unk154);
+	if (isActorType(0x400001A1)) {
+		soundBas(0x296E, 200.0f, unk154);
+	}
+	return 1;
+}
+
+void TWaterHitPictureHideObj::touchActor(THitActor* param_1)
+{
+	if (param_1->isActorType(0x4000005A)) {
+		mState = 2;
+	}
+}
+
+void TWaterHitPictureHideObj::control()
+{
+	TMapObjBase::control();
+	switch (mState) {
+	case 1:
+		if (unk150) {
+			unk160 += unk15C;
+			if (unk160 > unk168) {
+				unk160 = unk168;
+			}
+		} else {
+			unk160 -= unk15C;
+			if (unk160 < unk164) {
+				unk160 = unk164;
+			}
+		}
+		unk16C.a = (u16)unk160 & 0xff;
+		break;
+	case 2:
+		forward(unk158);
+		break;
+	case 3:
+		break;
+	}
+}
+
+BOOL TWaterHitPictureHideObj::receiveMessage(THitActor* sender, u32 message)
+{
+	if (message == 5
+	    && (sender->isActorType(0x2000000E) || sender->isActorType(0x2000000F)
+	        || sender->isActorType(0x20000010))) {
+		offHitFlag(HIT_FLAG_NO_COLLISION);
+		offHitFlag(HIT_FLAG_UNK4);
+		offHitFlag(HIT_FLAG_UNK2);
+		mState = 1;
+		unk14C = 1;
+		return TRUE;
+	}
+	if (isState(3)) {
+		return FALSE;
+	}
+	if (sender->isActorType(0x4000005A)) {
+		mState = 2;
+		return TRUE;
+	}
+
+	if (message == 5
+	    && (sender->isActorType(0x2000000E) || sender->isActorType(0x2000000F)
+	        || sender->isActorType(0x20000010))) {
+		unk14C = true;
+	}
+	return TMapObjBase::receiveMessage(sender, message);
+}
+
+void TWaterHitPictureHideObj::loadAfter()
+{
+	volatile u32 padding[10];
+	TMapObjBase::loadAfter();
+
+	const char* name = mName;
+	unk138 = TMapObjBaseManager::newAndRegisterObjByEventID(unk134, name);
+
+	// very likely inline, duplicate from another function
+	if (unk138 != nullptr) {
+		if (unk138->isActorType(0x20000010)) {
+			bool isBlueCollected = TFlagManager::smInstance->getBlueCoinFlag(
+			    gpMarDirector->getCurrentMap(), unk134);
+			if (isBlueCollected) {
+				unk14C = false;
+			}
+		}
+		if (unk138->isActorType(0x20000013)) {
+			size_t nameLen    = strlen(mName);
+			unk144            = new char[nameLen + 0x13];
+			const char* name2 = mName;
+			snprintf(unk144, nameLen + 0x13, "シャイン（%s）カメラ", name2);
+		}
+	}
+
+	if (unk138 != nullptr) {
+		if (unk138->isActorType(0x20000010)) {
+			bool isBlueCollected = TFlagManager::smInstance->getBlueCoinFlag(
+			    gpMarDirector->getCurrentMap(), unk134);
+			if (isBlueCollected) {
+				makeObjDead();
+				return;
+			}
+		}
+	}
+	switch (mActorType) {
+	case 0x40000012:
+		unk164 = 32.0f;
+		unk168 = 100.0f;
+		if (getModel()->getAnmMtx(0)[1][2] > 0.7f) {
+			unk154 = 1.5f;
+		} else {
+			unk154 = 0.48f;
+		}
+		unk15C = 0.2f;
+		unk150 = false;
+		break;
+	case 0x40000013:
+	case 0x40000018:
+	case 0x40000019:
+	case 0x4000001A:
+		unk164 = 20.0f;
+		unk150 = true;
+		break;
+	case 0x40000020:
+		unk154 = 1.2f;
+		unk164 = 30.0f;
+		unk168 = 170.0f;
+		unk150 = false;
+		break;
+	case 0x400001A2:
+		unk164 = 0.0f;
+		unk168 = 200.0f;
+		unk154 = 0.4f;
+		unk150 = false;
+		break;
+	case 0x400001A1:
+		unk164 = 0.0f;
+		unk168 = 255.0f;
+		unk150 = true;
+		break;
+	}
+
+	if (unk150) {
+		unk160 = unk168;
+	} else {
+		unk160 = unk164;
+	}
+
+	if (unk138 != nullptr) {
+		if (TMapObjBase::isCoin(unk138)) {
+			unk138->offMapObjFlag(0x10000000);
+		}
+
+		if (unk138->isActorType(0x20000013)) {
+
+			bool isShineCollected
+			    = TFlagManager::smInstance->getShineFlag(unk138->unk134);
+			if (isShineCollected) {
+				if (unk150) {
+					unk160 = unk164;
+				} else {
+					unk160 = unk168;
+				}
+				unk16C.a = (u16)unk160 & 0xff;
+				mState   = 3;
+			}
+		}
+	}
+}
+
+void TWaterHitPictureHideObj::load(JSUMemoryInputStream& stream)
+{
+	THideObjBase::load(stream);
+
+	u32 r;
+	u32 g;
+	u32 b;
+
+	stream.read(r);
+	stream.read(g);
+	stream.read(b);
+	unk16C.r = r & 0xff;
+	unk16C.g = g & 0xff;
+	unk16C.b = b & 0xff;
+
+	unk16C.a = 0xFF;
+	unk154   = 1.8f;
+	unk158   = 1.0f;
+	unk15C   = 0.4f;
+
+	f32 unk = getModel()->getAnmMtx(0)[1][2];
+	if (unk > 0.7f) {
+		mYOffset      = 0.0f;
+		mDamageHeight = 40.0f;
+		calcEntryRadius();
+		mPosition.y = mInitialPosition.y + mYOffset;
+		unk154      = 2.8f;
+	} else {
+		if (unk < -0.7f) {
+			mYOffset      = mScaling.y * -10.0f;
+			mDamageHeight = 30.0f;
+			calcEntryRadius();
+			mPosition.y = mInitialPosition.y + mYOffset;
+			unk154      = 2.5f;
+		} else {
+			unk154 = 1.8f;
+		}
+	}
+
+	initPacketMatColor(getModel(), GX_TEVREG0, &unk16C);
+}
+
+TWaterHitPictureHideObj::TWaterHitPictureHideObj(const char* name)
+    : THideObjBase(name)
+    , unk150(true)
+    , unk154(0.0f)
+    , unk158(0.0f)
+    , unk15C(0.0f)
+    , unk160(0.0f)
+    , unk164(0.0f)
+    , unk168(255.0f)
+{
+	unk16C.r = 0;
+	unk16C.g = 0;
+	unk16C.b = 0;
+	unk16C.a = 0;
+}
+
 void TBreakHideObj::kill()
 {
 	startAnim(2);
 	removeMapCollision();
-	onHitFlag(1);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 	onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
 	mTimeTilAppear = -1;
 	mState         = 2;
