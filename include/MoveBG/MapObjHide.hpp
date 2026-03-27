@@ -10,17 +10,17 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
-	virtual void appearObj(float);
-	virtual void appearObjFromPoint(const JGeometry::TVec3<float>&);
+	virtual void appearObj(f32);
+	virtual void appearObjFromPoint(const JGeometry::TVec3<f32>&);
 	virtual void emitEffect();
 
 public:
 	/* 0x138 */ TMapObjBase* unk138;
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ f32 unk140;
-	/* 0x144 */ u32 unk144;
-	/* 0x148 */ u32 unk148;
-	/* 0x14C */ u8 unk14C;
+	/* 0x144 */ char* unk144;
+	/* 0x148 */ s32 unk148;
+	/* 0x14C */ bool unk14C;
 };
 
 class TBreakHideObj : public THideObjBase {
