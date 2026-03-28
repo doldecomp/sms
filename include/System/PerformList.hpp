@@ -7,7 +7,8 @@
 class TPerformLink {
 public:
 	TPerformLink(JDrama::TViewObj* param_1, u32 param_2)
-	    : unk4(param_1)
+	    : unk0(nullptr)
+	    , unk4(param_1)
 	    , unk8(param_2)
 	{
 	}

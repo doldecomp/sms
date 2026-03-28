@@ -42,8 +42,11 @@ class TCubeManagerMarioIn : public TCubeManagerBase {
 public:
 	TCubeManagerMarioIn(const char* param_1, const char* param_2)
 	    : TCubeManagerBase(param_1, param_2)
+	    , unk1C(-1)
 	{
 	}
+
+	/* 0x1C */ u32 unk1C;
 };
 
 class TCubeManagerArea;
@@ -74,14 +77,12 @@ public:
 	}
 
 	bool isInOtherCube(const Vec&) const;
-
-public:
-	/* 0x1C */ u32 unk1C;
 };
 
 bool SMS_IsInOtherFastCube(const Vec&);
 bool SMS_IsInSameCameraCube(const Vec&);
 
+extern TCubeManagerBase* gpCubeCamera;
 extern TCubeManagerBase* gpCubeMirror;
 extern TCubeManagerBase* gpCubeWire;
 

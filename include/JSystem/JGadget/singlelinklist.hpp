@@ -7,8 +7,9 @@ namespace JGadget {
 
 class TSingleLinkListNode {
 public:
-	TSingleLinkListNode()
-	    : mNext(nullptr)
+	TSingleLinkListNode() { }
+	TSingleLinkListNode(TSingleLinkListNode* next)
+	    : mNext(next)
 	{
 	}
 
