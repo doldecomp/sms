@@ -282,6 +282,19 @@ TFruitBasketEvent::TFruitBasketEvent(const char* name)
 	reset();
 }
 
+void THipDropHideObj::touchPlayer(THitActor* param_1)
+{
+	if (SMS_IsMarioStatusHipDrop()) {
+		appearObj(0);
+		makeObjDead();
+	}
+}
+
+THipDropHideObj::THipDropHideObj(const char* name)
+    : THideObjBase(name)
+{
+}
+
 void TWaterHitPictureHideObj::afterFinishedAnim()
 {
 	if (isActorType(0x400001A1)) {

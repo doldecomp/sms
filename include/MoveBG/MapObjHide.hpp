@@ -68,6 +68,12 @@ public:
 	/* 0x154 */ u32 unk154[5];
 };
 
+class THipDropHideObj : public THideObjBase {
+public:
+	THipDropHideObj(const char* name = "ヒップドロップオブジェ");
+	virtual void touchPlayer(THitActor*);
+};
+
 class TWaterHitPictureHideObj : public THideObjBase {
 public:
 	TWaterHitPictureHideObj(const char* name = "オブジェ出現の絵");

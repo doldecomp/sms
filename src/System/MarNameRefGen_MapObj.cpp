@@ -656,9 +656,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "FruitHitHideObj") == 0)
 		return new TFruitHitHideObj;
 
-	// TODO:
-	// if (strcmp(name, "HipDropHideObj") == 0)
-	// 	return new THipDropHideObj("ヒップドロップオブジェ");
+	if (strcmp(name, "HipDropHideObj") == 0)
+		return new THipDropHideObj;
 
 	if (strcmp(name, "HideObjPictureTwin") == 0)
 		return new THideObjPictureTwin;
