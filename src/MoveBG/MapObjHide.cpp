@@ -6,14 +6,19 @@
 #include <MoveBG/ItemManager.hpp>
 #include <MoveBG/MapObjBall.hpp>
 
+#include <Map/Map.hpp>
+#include <Map/MapData.hpp>
+
 #include <System/EmitterViewObj.hpp>
 #include <System/FlagManager.hpp>
 #include <System/MarDirector.hpp>
 #include <System/Particles.hpp>
 
+#include <Player/MarioAccess.hpp>
 #include <Player/ModelWaterManager.hpp>
 
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
 
 #include <MSound/MSound.hpp>
 #include <MarioUtil/MathUtil.hpp>
@@ -116,6 +121,28 @@ THideObjBase::THideObjBase(const char* name)
     , unk148(0)
     , unk14C(true)
 {
+}
+
+void THideObj::touchPlayer(THitActor* param_1)
+{
+	if (marioHeadAttack() && unk138 != nullptr) {
+		appearObj(100.0f);
+		makeObjDead();
+	}
+}
+
+u32 TWaterHitHideObj::touchWater(THitActor* param_1)
+{
+	if (unk138 != 0) {
+		appearObj(100.0f);
+		makeObjDead();
+	}
+	return 1;
+}
+
+void TWaterHitHideObj::load(JSUMemoryInputStream& stream)
+{
+	THideObjBase::load(stream);
 }
 
 void TWaterHitPictureHideObj::afterFinishedAnim()
@@ -391,6 +418,92 @@ TWaterHitPictureHideObj::TWaterHitPictureHideObj(const char* name)
 	unk16C.a = 0;
 }
 
+// A lot in this function is likely wrong still
+// Some stuff feels pretty fof
+void THideObjPictureTwin::afterFinishedAnim()
+{
+	removeMapCollision();
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+
+	TMapObjBase* target = unk138;
+	if (target != nullptr && unk14C != 0) {
+		if (TMapObjBase::isCoin(target)) {
+			TCoin* coin = (TCoin*)target;
+			if (coin->isActorType(0x2000000E)) {
+				target = gpItemManager->makeObjAppear(0x2000000E);
+				if (target == nullptr) {
+					return;
+				}
+			}
+			((TCoin*)target)->appearWithoutSound();
+		} else {
+			appear();
+		}
+
+		target->mPosition.set(unk174->mPosition);
+		Mtx mtx;
+		MsMtxSetRotRPH(mtx, unk174->mRotation.x, unk174->mRotation.y,
+		               unk174->mRotation.z);
+		target->mVelocity.set(mtx[0][2] * unk13C, mtx[1][2] * unk13C + unk140,
+		                      mtx[2][2] * unk13C);
+		target->offLiveFlag(LIVE_FLAG_UNK10);
+
+		if (TMapObjBase::isCoin(target)) {
+			TCoin* coin  = (TCoin*)target;
+			coin->unk148 = this;
+			coin->unk14C = unk148;
+		}
+		SMSGetMSound()->startSoundSystemSE(0x4843, 0, nullptr, 0);
+
+		// Possible getter?
+		TMarDirector* director = gpMarDirector;
+		director->fireStartDemoCamera(unk178, &mPosition, -1, 0.0f, true,
+		                              nullptr, 0, nullptr, 0);
+	}
+	mState = 3;
+}
+
+void THideObjPictureTwin::loadAfter()
+{
+	TWaterHitPictureHideObj::loadAfter();
+	char* wrapName = strstr(mName, "ふたご落書きＡ");
+	if (wrapName != nullptr) {
+		size_t len = strlen("ふたご落書きＡ");
+		char buffer[4];
+		buffer[0] = mName[len];
+		buffer[1] = mName[len + 1];
+		buffer[2] = mName[len + 2];
+		buffer[3] = mName[len + 3];
+
+		char buffer2[0x4C];
+		snprintf(buffer2, 0x40, "ふたご落書きＢ００");
+		buffer2[len]     = buffer[0];
+		buffer2[len + 1] = buffer[1];
+		buffer2[len + 2] = buffer[2];
+		buffer2[len + 3] = buffer[3];
+
+		THideObjPictureTwin* hitActor
+		    = (THideObjPictureTwin*)JDrama::TNameRefGen::getInstance()
+		          ->getRootNameRef()
+		          ->searchF(TNameRef::calcKeyCode(buffer2), buffer2);
+		unk174         = hitActor;
+		unk174->unk174 = this;
+	}
+}
+
+void THideObjPictureTwin::initMapObj()
+{
+	TMapObjBase::initMapObj();
+	snprintf(unk178, 0x19, "%sカメラ", getName());
+}
+
+THideObjPictureTwin::THideObjPictureTwin(const char* name)
+    : TWaterHitPictureHideObj(name)
+    , unk174(nullptr)
+{
+	memset(unk178, 0, 0x19);
+}
+
 void TBreakHideObj::kill()
 {
 	startAnim(2);
@@ -439,4 +552,45 @@ void TBreakHideObj::initMapObj()
 		SMS_LoadParticle("/scene/mapObj/WaterMelonBlockA.jpa", 0x6B);
 		SMS_LoadParticle("/scene/mapObj/WaterMelonBlockB.jpa", 0x6C);
 	}
+}
+
+void TWoodBox::fabricatedGroundKillCheck(f32 dX, f32 dY)
+{
+	const TBGCheckData* groundPlane;
+	f32 resY = gpMap->checkGround(dX + gpMarioPos->x, gpMarioPos->y + 1000.0f,
+	                              dY + gpMarioPos->z, &groundPlane);
+	if (resY + 10.0f > gpMarioPos->y) {
+		const TLiveActor* actor = groundPlane->getActor();
+		if (actor != nullptr && actor != this
+		    && actor->isActorType(0x4000001C)) {
+			((TBreakHideObj*)actor)->kill();
+		}
+	}
+}
+void TWoodBox::kill()
+{
+	startAnim(2);
+	removeMapCollision();
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
+	mTimeTilAppear = -1;
+	mState         = 2;
+
+	SMSGetMSound()->startSoundActor(0x380A, &mPosition, 0, nullptr, 0, 4);
+
+	fabricatedGroundKillCheck(50.0f, 50.0f);
+	fabricatedGroundKillCheck(50.0f, -50.0f);
+	fabricatedGroundKillCheck(-50.0f, 50.0f);
+	fabricatedGroundKillCheck(-50.0f, -50.0f);
+}
+
+void TWoodBox::loadAfter()
+{
+	TBreakHideObj::loadAfter();
+	checkOnManhole();
+}
+
+TWoodBox::TWoodBox(const char* name)
+    : TBreakHideObj(name)
+{
 }

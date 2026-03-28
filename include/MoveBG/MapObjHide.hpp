@@ -23,6 +23,21 @@ public:
 	/* 0x14C */ bool unk14C;
 };
 
+class THideObj : public THideObjBase {
+public:
+	THideObj(const char* name = "隠しオブジェ");
+
+	virtual void touchPlayer(THitActor*);
+};
+
+class TWaterHitHideObj : public THideObjBase {
+public:
+	TWaterHitHideObj(const char* name = "水ヒットオブジェ");
+
+	virtual void load(JSUMemoryInputStream&);
+	virtual u32 touchWater(THitActor*);
+};
+
 class TWaterHitPictureHideObj : public THideObjBase {
 public:
 	TWaterHitPictureHideObj(const char* name = "オブジェ出現の絵");
@@ -33,7 +48,7 @@ public:
 	virtual void control();
 	virtual u32 touchWater(THitActor*);
 	virtual void touchActor(THitActor*);
-	virtual const JGeometry::TVec3<f32>& getObjAppearPos();
+	virtual const JGeometry::TVec3<f32>& getObjAppearPos() { return mPosition; }
 	virtual void afterFinishedAnim();
 	virtual void forward(f32);
 
@@ -55,16 +70,39 @@ public:
 	virtual void loadAfter();
 	virtual void initMapObj();
 
-	void afterFinishedAnim();
+	virtual const JGeometry::TVec3<f32>& getObjAppearPos()
+	{
+		return unk174->mPosition;
+	}
+	virtual void afterFinishedAnim();
+
+public:
+	THideObjPictureTwin* unk174;
+	char unk178[0x19];
 };
 
 class TBreakHideObj : public THideObjBase {
 public:
-	TBreakHideObj(const char* name = "壊れる隠しオブジェ");
+	TBreakHideObj(const char* name = "壊れる隠しオブジェ")
+	    : THideObjBase(name)
+	{
+	}
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
 	virtual void kill();
 	virtual void initMapObj();
 };
 
+class TWoodBox : public TBreakHideObj {
+public:
+	TWoodBox(const char* name = "木箱");
+
+	virtual void loadAfter();
+	virtual void kill();
+
+	// Fabricated
+	void fabricatedGroundKillCheck(f32, f32);
+
+public:
+};
 #endif
