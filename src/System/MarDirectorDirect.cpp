@@ -192,12 +192,12 @@ static void decideNextStage()
 	int stage = SMS_getShineStage(gpApplication.mCurrArea.getStage());
 	switch (stage) {
 	case 0:
-		local_3C.set(1, 0xff, JDrama::TFlagT<u16>(0));
+		local_3C.set(1, 0xff, JDrama::TFlagT<u16>());
 		break;
 	case 1:
 	case 2:
 	default:
-		local_3C.set(1, 0xff, JDrama::TFlagT<u16>(0));
+		local_3C.set(1, 0xff, JDrama::TFlagT<u16>());
 		break;
 	}
 	gpApplication.setNextArea(local_3C);
