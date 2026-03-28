@@ -236,6 +236,52 @@ TFruitBasket::TFruitBasket(const char* name)
 {
 }
 
+void TFruitBasketEvent::countFruit(THitActor* fruit)
+{
+	TFruitBasket::countFruit(fruit);
+
+	switch (fruit->getActorType()) {
+	case 0x40000394:
+		unk154[0] += 1;
+		break;
+	case 0x40000393:
+		unk154[1] += 1;
+		break;
+	case 0x40000391:
+		unk154[2] += 1;
+		break;
+	case 0x40000392:
+		unk154[3] += 1;
+		break;
+	case 0x40000390:
+		unk154[4] += 1;
+		break;
+	case 0x40000395:
+		break;
+	default:
+		return;
+	}
+	// This feels wrong... symbols say param is a THitActor tho..
+	// Sane approach would be to cast after validating earlier
+	((TResetFruit*)fruit)->makeObjWaitingToAppear();
+	mColCount = 0;
+}
+
+int TFruitBasketEvent::getFruitNum(int idx) const { return unk154[idx]; }
+
+void TFruitBasketEvent::reset()
+{
+	for (int i = 0; i < 5; ++i) {
+		unk154[i] = 0;
+	}
+}
+
+TFruitBasketEvent::TFruitBasketEvent(const char* name)
+    : TFruitBasket(name)
+{
+	reset();
+}
+
 void TWaterHitPictureHideObj::afterFinishedAnim()
 {
 	if (isActorType(0x400001A1)) {

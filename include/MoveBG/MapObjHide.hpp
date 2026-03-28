@@ -56,6 +56,18 @@ public:
 	/* 0x150 */ u32 unk150;
 };
 
+class TFruitBasketEvent : public TFruitBasket {
+public:
+	TFruitBasketEvent(const char* name = "バスケット（イベント用）");
+	virtual void countFruit(THitActor*);
+
+	int getFruitNum(int param_1) const;
+	void reset();
+
+public:
+	/* 0x154 */ u32 unk154[5];
+};
+
 class TWaterHitPictureHideObj : public THideObjBase {
 public:
 	TWaterHitPictureHideObj(const char* name = "オブジェ出現の絵");

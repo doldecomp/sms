@@ -170,9 +170,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "Pool") == 0)
 		return new TPool;
 
-	// TODO:
-	// if (strcmp(name, "WaterHitPictureHideObj") == 0)
-	// 	return new TWaterHitPictureHideObj("オブジェ出現の絵");
+	if (strcmp(name, "WaterHitPictureHideObj") == 0)
+		return new TWaterHitPictureHideObj;
 
 	if (strcmp(name, "MapObjSwitch") == 0)
 		return new TMapObjSwitch;
@@ -183,16 +182,14 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "HideObjInfo") == 0)
 		return new THideObjInfo;
 
-	// TODO:
 	if (strcmp(name, "FruitBasket") == 0)
 		return new TFruitBasket;
 
 	if (strcmp(name, "BasketReverse") == 0)
 		return new TBasketReverse;
 
-	// TODO:
-	// if ( strcmp(name, "FruitBasketEvent") == 0 )
-	// 	return new TFruitBasketEvent("バスケット（イベント用）");
+	if (strcmp(name, "FruitBasketEvent") == 0)
+		return new TFruitBasketEvent;
 
 	if (strcmp(name, "JumpBase") == 0)
 		return new TJumpBase;
