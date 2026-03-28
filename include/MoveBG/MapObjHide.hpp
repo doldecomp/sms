@@ -33,9 +33,27 @@ public:
 class TWaterHitHideObj : public THideObjBase {
 public:
 	TWaterHitHideObj(const char* name = "水ヒットオブジェ");
-
 	virtual void load(JSUMemoryInputStream&);
 	virtual u32 touchWater(THitActor*);
+};
+
+class TFruitHitHideObj : public THideObjBase {
+public:
+	TFruitHitHideObj(const char* name = "水ヒットオブジェ");
+	virtual void load(JSUMemoryInputStream&);
+	virtual void touchActor(THitActor*);
+	virtual void touchFruit(THitActor*);
+};
+
+class TFruitBasket : public TFruitHitHideObj {
+public:
+	TFruitBasket(const char* name = "バスケット");
+	virtual void loadAfter();
+	virtual void touchFruit(THitActor*);
+	virtual void countFruit(THitActor*);
+
+public:
+	/* 0x150 */ u32 unk150;
 };
 
 class TWaterHitPictureHideObj : public THideObjBase {

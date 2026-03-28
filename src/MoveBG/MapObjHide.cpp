@@ -22,6 +22,7 @@
 
 #include <MSound/MSound.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <M3DUtil/MActor.hpp>
 
 void THideObjBase::appearObj(f32 param1)
 {
@@ -143,6 +144,96 @@ u32 TWaterHitHideObj::touchWater(THitActor* param_1)
 void TWaterHitHideObj::load(JSUMemoryInputStream& stream)
 {
 	THideObjBase::load(stream);
+}
+
+TWaterHitHideObj::TWaterHitHideObj(const char* name)
+    : THideObjBase(name)
+{
+}
+
+void TFruitHitHideObj::touchFruit(THitActor* param_1)
+{
+	if (unk138 != 0) {
+		appearObj(50.0f);
+		emitEffect();
+		makeObjDead();
+	}
+
+	((TMapObjBase*)param_1)->kill();
+}
+
+void TFruitHitHideObj::touchActor(THitActor* param_1)
+{
+	if (TMapObjBase::isFruit(param_1)) {
+		touchFruit(param_1);
+	}
+}
+
+void TFruitHitHideObj::load(JSUMemoryInputStream& stream)
+{
+	THideObjBase::load(stream);
+}
+
+TFruitHitHideObj::TFruitHitHideObj(const char* name)
+    : THideObjBase(name)
+{
+}
+
+void TFruitBasket::countFruit(THitActor* param_1)
+{
+	mMActor->setBck("basket");
+
+	if (unk138 != nullptr) {
+		appearObj(0.0f);
+
+		SMSGetMSound()->startSoundActor(0x3809, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundSystemSE(0x480A, 0, nullptr, 0);
+	} else {
+		if (unk150 == 0) {
+			SMSGetMSound()->startSoundActor(0x384E, &mPosition, 0, nullptr, 0,
+			                                4);
+		} else if (param_1->isActorType(unk150)) {
+
+			SMSGetMSound()->startSoundActor(0x3809, &mPosition, 0, nullptr, 0,
+			                                4);
+			SMSGetMSound()->startSoundSystemSE(0x480A, 0, nullptr, 0);
+		} else {
+			SMSGetMSound()->startSoundSystemSE(0x483D, 0, nullptr, 0);
+		}
+	}
+	((TResetFruit*)param_1)->makeObjWaitingToAppear();
+}
+
+void TFruitBasket::touchFruit(THitActor* param_1)
+{
+	if (fabsf(mRotation.x) < 45.0f) {
+		if (((TLiveActor*)param_1)->getGroundPlane()->getActor() != this)
+			return;
+	} else {
+		const TBGCheckData* roofPlane;
+		gpMap->checkRoof(param_1->mPosition.x, param_1->mPosition.y,
+		                 param_1->mPosition.z, &roofPlane);
+		if ((TFruitBasket*)roofPlane->getActor() != this)
+			return;
+	}
+
+	countFruit(param_1);
+}
+
+void TFruitBasket::loadAfter()
+{
+	TFruitHitHideObj::loadAfter();
+
+	if (mRotation.x != 0.0f) {
+		setAttackRadius(400.0f);
+		setAttackHeight(200.0f);
+	}
+}
+
+TFruitBasket::TFruitBasket(const char* name)
+    : TFruitHitHideObj(name)
+    , unk150(0)
+{
 }
 
 void TWaterHitPictureHideObj::afterFinishedAnim()
@@ -382,16 +473,14 @@ void TWaterHitPictureHideObj::load(JSUMemoryInputStream& stream)
 
 	f32 unk = getModel()->getAnmMtx(0)[1][2];
 	if (unk > 0.7f) {
-		mYOffset      = 0.0f;
-		mDamageHeight = 40.0f;
-		calcEntryRadius();
+		mYOffset = 0.0f;
+		setDamageHeight(40.0f);
 		mPosition.y = mInitialPosition.y + mYOffset;
 		unk154      = 2.8f;
 	} else {
 		if (unk < -0.7f) {
-			mYOffset      = mScaling.y * -10.0f;
-			mDamageHeight = 30.0f;
-			calcEntryRadius();
+			mYOffset = mScaling.y * -10.0f;
+			setDamageHeight(30.0f);
 			mPosition.y = mInitialPosition.y + mYOffset;
 			unk154      = 2.5f;
 		} else {
