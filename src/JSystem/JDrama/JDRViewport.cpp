@@ -20,7 +20,7 @@ void TViewport::perform(u32 param_1, TGraphics* param_2)
 	if (unk20 & 1)
 		return;
 
-	TRect rect(param_2->getUnk44());
+	TRect rect(param_2->getDisplayRect());
 	rect.intersect(unk10);
 	param_2->setScissor(rect);
 }

@@ -11,6 +11,9 @@
 #include <JSystem/JDrama/JDRViewport.hpp>
 #include <JSystem/JDrama/JDREfbCtrl.hpp>
 
+// From J3DJoint maybe? idk
+static void dummy() { (void)(Vec) { 0.0f, 0.0f, 0.0f }; }
+
 using namespace JDrama;
 
 TNameRefGen* TNameRefGen::instance;
@@ -21,6 +24,8 @@ TNameRef* TNameRefGen::load(JSUMemoryInputStream& stream)
 
 	if ((mRootNameRef = TNameRef::genObject(stream, tmpStream)))
 		mRootNameRef->load(tmpStream);
+
+	return mRootNameRef;
 }
 
 TNameRef* TNameRefGen::getNameRef(const char* name) const
@@ -29,7 +34,7 @@ TNameRef* TNameRefGen::getNameRef(const char* name) const
 		return new TViewObjPtrListT<TViewObj, TViewObj>;
 
 	if (strcmp(name, "SmJ3DScn") == 0)
-		return new TSmJ3DScn("<SmJ3DScn>", 2);
+		return new TSmJ3DScn;
 
 	if (strcmp(name, "PolarCamera") == 0)
 		return new TPolarCamera;
@@ -56,15 +61,15 @@ TNameRef* TNameRefGen::getNameRef(const char* name) const
 		return new TAmbAry;
 
 	if (strcmp(name, "NameRefGrp") == 0)
-		return new TNameRefPtrListT<TNameRef, TNameRef>();
+		return new TNameRefPtrListT<TNameRef, TNameRef>;
 
 	if (strcmp(name, "DrawBufObj") == 0)
-		return new TDrawBufObj();
+		return new TDrawBufObj;
 
 	if (strcmp(name, "EfbCtrlTex") == 0)
-		return new TEfbCtrlTex("<EfbCtrlTex>", 0);
+		return new TEfbCtrlTex;
 
 	if (strcmp(name, "Viewport") == 0)
-		return new TViewport(TRect(0, 0, 640, 528), "<Viewport>");
+		return new TViewport;
 	return nullptr;
 }

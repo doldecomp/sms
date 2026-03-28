@@ -8,7 +8,9 @@ using namespace JDrama;
 void TLight::load(JSUMemoryInputStream& stream)
 {
 	TPlacement::load(stream);
-	JUtility::TColor color = stream.readU32();
+
+	// TODO: this implies an inline, probably?
+	const JUtility::TColor& color = stream.readU32();
 	GXInitLightColor(&unk24, color);
 }
 
@@ -94,7 +96,7 @@ void TLightAry::setLightNum(s32 num)
 		mLights = new TIdxLight[mLightCount];
 
 	for (int i = 0; i < mLightCount; ++i)
-		mLights[i].unk68 = i;
+		mLights[i].setLightIdx(i);
 }
 
 void TLightAry::perform(u32 param_1, TGraphics* param_2)
@@ -102,12 +104,8 @@ void TLightAry::perform(u32 param_1, TGraphics* param_2)
 	if (!(param_1 & 0x20))
 		return;
 
-	for (int i = 0; i < mLightCount; ++i) {
-		TIdxLight& light = mLights[i];
-		Vec pos;
-		MTXMultVec(param_2->mViewMtx.mMtx, &light.mPosition, &pos);
-		GXInitLightPos(&light.unk24, pos.x, pos.y, pos.z);
-	}
+	for (int i = 0; i < mLightCount; ++i)
+		mLights[i].correct(param_2);
 
 	DCFlushRange(mLights, mLightCount * sizeof(TIdxLight));
 	GXSetArray(GX_LIGHT_ARRAY, &mLights[0].unk24, sizeof(TIdxLight));

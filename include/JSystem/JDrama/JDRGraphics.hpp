@@ -1,6 +1,7 @@
 #ifndef JDR_GRAPHICS_HPP
 #define JDR_GRAPHICS_HPP
 
+#include <JSystem/JDrama/JDRRect.hpp>
 #include <JSystem/JDrama/JDRFlag.hpp>
 #include <JSystem/JGeometry.hpp>
 #include <JSystem/JUtility/JUTColor.hpp>
@@ -11,20 +12,9 @@
 
 namespace JDrama {
 
-struct TRect : JUTRect {
-	TRect()
-	    : JUTRect()
-	{
-	}
-	TRect(int x1, int y1, int x2, int y2)
-	    : JUTRect(x1, y1, x2, y2)
-	{
-	}
-};
-
 struct TGraphics {
+	void setDisplayRect(const TRect& rect) { mDisplayRect = rect; }
 	void setViewport(const TRect&, f32, f32);
-
 	void setScissor(const TRect& scissor)
 	{
 		mScissorRect = scissor;
@@ -33,13 +23,18 @@ struct TGraphics {
 	}
 
 	// fabricated
-	TRect& getUnk44() { return mDisplayRect; }
-	TRect& getViewport() { return mViewportRect; }
+	void* getFrameBuffer() { return mFrameBuffer; }
+	const GXRenderModeObj& getRenderMode() { return mRenderMode; }
+	const TRect& getDisplayRect() { return mDisplayRect; }
+	const TRect& getViewport() { return mViewportRect; }
 	const TRect& getScissor() { return mScissorRect; }
 
 	MtxPtr getUnkB4() { return mViewMtx.mMtx; }
 	f32 getNearPlane() { return mNearPlane; }
 
+	GXFBClamp getFBClamp() { return mFBClamp; }
+	JUtility::TColor getClearColor() { return mClearColor; }
+	u32 getClearZ() { return mClearZ; }
 	TFlagT<u16>& getUnkFC() { return unkFC; }
 
 	/* 0x00 */ u16 unk0;
@@ -58,7 +53,7 @@ struct TGraphics {
 	/* 0xF4 */ JUtility::TColor mClearColor;
 	/* 0xF8 */ u32 mClearZ;
 	/* 0xFC */ TFlagT<u16> unkFC;
-	/* 0xFE */ TFlagT<u16> unkFE;
+	/* 0xFE */ u16 unkFE;
 };
 
 } // namespace JDrama

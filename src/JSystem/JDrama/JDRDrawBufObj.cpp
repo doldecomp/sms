@@ -30,18 +30,18 @@ void TDrawBufObj::load(JSUMemoryInputStream& stream)
 
 void TDrawBufObj::perform(u32 param_1, TGraphics* param_2)
 {
-	if ((param_1 & 0x80))
+	if (param_1 & 0x80)
 		mDrawBuffer->frameInit();
 
-	if ((param_1 & 0x400)) {
-		if ((unk18 & 3))
-			j3dSys.mDrawBuffer[0] = mDrawBuffer;
+	if (param_1 & 0x400) {
+		if (unk18 & 3)
+			j3dSys.setDrawBuffer(mDrawBuffer, 0);
 
-		if ((unk18 & 4))
-			j3dSys.mDrawBuffer[1] = mDrawBuffer;
+		if (unk18 & 4)
+			j3dSys.setDrawBuffer(mDrawBuffer, 1);
 	}
 
-	if ((param_1 & 8)) {
+	if (param_1 & 8) {
 		j3dSys.unk4C = unk18;
 		mDrawBuffer->draw();
 	}

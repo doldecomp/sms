@@ -1,20 +1,22 @@
 #include <JSystem/JDrama/JDREfbCtrl.hpp>
 #include <JSystem/JDrama/JDREfbSetting.hpp>
 #include <dolphin/gx.h>
+#include <macros.h>
 
 using namespace JDrama;
 
 void TEfbCtrl::perform(u32 param_1, TGraphics* param_2)
 {
+	if (param_1 & 0x80) {
+		GXSetColorUpdate(!unk20.check(0x100));
+		GXSetAlphaUpdate(!unk20.check(0x200));
+		GXSetZMode(!unk20.check(0x400), GX_LEQUAL, GX_TRUE);
+		param_2->setDisplayRect(unk10);
+	}
 
-	if (!(param_1 & 0x80))
-		return;
-
-	GXSetColorUpdate(!unk20.check(0x100));
-	GXSetAlphaUpdate(!unk20.check(0x200));
-	GXSetZMode(!unk20.check(0x400), GX_LEQUAL, GX_TRUE);
-
-	param_2->mDisplayRect = unk10;
+	if (param_1 & 0x8) {
+		// no-op
+	}
 }
 
 void TEfbCtrl::setSrcRect(const TRect& param_1)
@@ -22,35 +24,30 @@ void TEfbCtrl::setSrcRect(const TRect& param_1)
 	unk10 = param_1;
 	unk10.intersect(TRect(0, 0, 640, 528));
 
-	unk10.x1 = (param_1.x1 + 1U) & ~1U;
-	unk10.y1 = (param_1.y1 + 1U) & ~1U;
-	unk10.x2 = param_1.x2 & ~1U;
-	unk10.y2 = param_1.y2 & ~1U;
+	unk10.x1 = ALIGN_NEXT(param_1.x1, 2);
+	unk10.y1 = ALIGN_NEXT(param_1.y1, 2);
+	unk10.x2 = ALIGN_PREV(param_1.x2, 2);
+	unk10.y2 = ALIGN_PREV(param_1.y2, 2);
 
 	unk10.normalize();
 }
 
 void TEfbCtrlDisp::perform(u32 param_1, TGraphics* param_2)
 {
-	if ((param_1 & 0x80) != 0) {
-		IssueGXPixelFormatSetting(param_2->mRenderMode,
-		                          param_2->unkFC.check(0x8),
-		                          param_2->unkFC.check(0x10));
+	if (param_1 & 0x80) {
+		IssueGXPixelFormatSetting(param_2->getRenderMode(),
+		                          param_2->getUnkFC().check(0x8),
+		                          param_2->getUnkFC().check(0x10));
 	}
 
-	if ((param_1 & 0x80) != 0) {
-		GXSetColorUpdate(!unk20.check(0x100));
-		GXSetAlphaUpdate(!unk20.check(0x200));
-		GXSetZMode(!unk20.check(0x400), GX_LEQUAL, 1);
+	TEfbCtrl::perform(param_1, param_2);
 
-		param_2->mDisplayRect = unk10;
-	}
-
-	if (((param_1 & 8) != 0) && !param_2->unkFC.check(0x40)) {
-		IssueGXCopyDisp(param_2->mFrameBuffer, param_2->mDisplayRect,
-		                param_2->mRenderMode, param_2->mClearColor,
-		                param_2->mClearZ, param_2->mFBClamp,
-		                param_2->unkFC.mValue);
+	if (param_1 & 0x8) {
+		if (!param_2->getUnkFC().check(0x40))
+			IssueGXCopyDisp(param_2->getFrameBuffer(),
+			                param_2->getDisplayRect(), param_2->getRenderMode(),
+			                param_2->getClearColor(), param_2->getClearZ(),
+			                param_2->getFBClamp(), param_2->getUnkFC().get());
 	}
 }
 
@@ -76,37 +73,30 @@ void TEfbCtrlTex::setTexAttb(const GXTexObj& param_1)
 	GXGetTexObjAll(&param_1, &mImagePtr, &width, &height, &mTexFmt, &wrap_s,
 	               &wrap_t, &mipmap);
 
-	// TODO: inline
-	char trash[0x10];
-	mWidth  = width;
-	mHeight = height;
+	mWidth  = (u32)width;
+	mHeight = (u32)height;
 }
 
 void TEfbCtrlTex::perform(u32 param_1, TGraphics* param_2)
 {
-	if ((param_1 & 0x80) != 0) {
+	if (param_1 & 0x80) {
 		IssueGXPixelFormatSetting(unk20.check(0x800), unk20.check(0x8),
 		                          unk20.check(0x10), false, false);
 	}
 
-	if ((param_1 & 0x80) != 0) {
-		GXSetColorUpdate(!unk20.check(0x100));
-		GXSetAlphaUpdate(!unk20.check(0x200));
-		GXSetZMode(!unk20.check(0x400), GX_LEQUAL, 1);
+	TEfbCtrl::perform(param_1, param_2);
 
-		param_2->mDisplayRect = unk10;
-	}
-
-	if ((param_1 & 8)) {
+	if (param_1 & 0x8) {
 		GXSetCopyClamp(mFbClamp);
-		IssueGXSetCopyFilter(unk20.check(0x800), (u8(*)[2])unk40,
-		                     unk20.check(0x20), unk44);
+		IssueGXSetCopyFilter(unk20.check(0x800), unk40, unk20.check(0x20),
+		                     unk44);
 
 		if (mImagePtr != nullptr) {
-			u32 iVar2 = IssueGXSetCopyClear(unk38, unk3C, unk20.get());
-			GXSetTexCopySrc(unk10.x1, unk10.y1, unk10.x2, unk10.y2);
+			bool doClear = IssueGXSetCopyClear(unk38, unk3C, unk20.get());
+			GXSetTexCopySrc(unk10.x1, unk10.y1, unk10.getWidth(),
+			                unk10.getHeight());
 			GXSetTexCopyDst(mWidth, mHeight, mTexFmt, unk20.check(0x1000));
-			GXCopyTex(mImagePtr, iVar2);
+			GXCopyTex(mImagePtr, doClear);
 		}
 	}
 }

@@ -6,6 +6,7 @@
 void JDrama::TActor::load(JSUMemoryInputStream& stream)
 {
 	TPlacement::load(stream);
+
 	stream.read(&mRotation.x, sizeof(f32));
 	stream.read(&mRotation.y, sizeof(f32));
 	stream.read(&mRotation.z, sizeof(f32));
@@ -18,14 +19,22 @@ void JDrama::TActor::load(JSUMemoryInputStream& stream)
 
 	unk3C = TNameRefGen::search<TCharacter>(str);
 
-	unk40 = new TLightMap;
-	unk40->load(stream);
+	TLightMap* lightMap = new TLightMap;
+
+	unk40 = lightMap;
+	lightMap->load(stream);
+}
+
+void JDrama::TActor::issueGXLight(u32 param_1, JDrama::TGraphics* param_2)
+{
+	if (unk40 != nullptr)
+		unk40->perform(param_1 | 0x20, param_2);
 }
 
 void JDrama::TActor::perform(u32 param_1, TGraphics* param_2)
 {
-	if ((param_1 & 0x8) && unk40 != nullptr)
-		unk40->perform(param_1 | 0x20, param_2);
+	if (param_1 & 0x8)
+		issueGXLight(param_1, param_2);
 }
 
 JDrama::TActor::~TActor() { }

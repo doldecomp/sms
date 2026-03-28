@@ -1,7 +1,7 @@
 #ifndef JDR_EFB_SETTING_HPP
 #define JDR_EFB_SETTING_HPP
 
-#include <JSystem/JDrama/JDRGraphics.hpp>
+#include <JSystem/JDrama/JDRRect.hpp>
 #include <JSystem/JUtility/JUTColor.hpp>
 
 namespace JDrama {
