@@ -12,25 +12,23 @@ namespace JDrama {
 template <class T, class U = TNameRef>
 class TNameRefPtrListT : public U, public JGadget::TList_pointer<T*> {
 public:
-	TNameRefPtrListT()
-	    : TNameRef("<TNameRefPtrListT>")
+	TNameRefPtrListT(const char* name = "<TNameRefPtrListT>")
+	    : TNameRef(name)
 	{
 	}
-
-	virtual ~TNameRefPtrListT() { }
 
 	virtual void load(JSUMemoryInputStream& stream)
 	{
 		TNameRef::load(stream);
-		int count = stream.readS32();
+		s32 count = stream.readS32();
 
-		JGadget::TList_pointer<T*>& lst = *this;
-		for (int i = 0; i < count; ++i) {
-			JSUMemoryInputStream stream2(nullptr, 0);
-			TNameRef* nr = TNameRef::genObject(stream, stream2);
+		JGadget::TList_pointer<T*>& lst = getChildren();
+		for (s32 i = 0; i < count; ++i) {
+			JSUMemoryInputStream remainder(nullptr, 0);
+			TNameRef* nr = TNameRef::genObject(stream, remainder);
 			if (nr) {
 				lst.push_back(nr);
-				nr->load(stream2);
+				nr->load(remainder);
 			}
 		}
 	}
@@ -38,9 +36,9 @@ public:
 	virtual void loadAfter()
 	{
 		TNameRef::loadAfter();
-		typename JGadget::TList_pointer<T*>::iterator it = this->begin();
-		for (; it != this->end(); ++it)
-			(*it)->loadAfter();
+		typedef typename JGadget::TList_pointer<T*>::iterator I;
+		for (I it = getChildren().begin(); it != getChildren().end(); ++it)
+			it->loadAfter();
 	}
 
 	virtual TNameRef* searchF(u16 key, const char* name)
@@ -49,9 +47,9 @@ public:
 		if (res != nullptr)
 			return res;
 
-		typename JGadget::TList_pointer<T*>::iterator it = this->begin();
-		for (; it != this->end(); ++it) {
-			TNameRef* r = (*it)->searchF(key, name);
+		typedef typename JGadget::TList_pointer<T*>::iterator I;
+		for (I it = getChildren().begin(); it != getChildren().end(); ++it) {
+			TNameRef* r = it->searchF(key, name);
 			if (r != nullptr)
 				return r;
 		}
@@ -60,6 +58,9 @@ public:
 	}
 
 	void insert(T* obj) { this->push_back(obj); }
+
+	// fabricated
+	JGadget::TList_pointer<T*>& getChildren() { return *this; }
 };
 
 } // namespace JDrama

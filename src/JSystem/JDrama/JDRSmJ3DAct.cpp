@@ -30,25 +30,27 @@ void TSmJ3DAct::load(JSUMemoryInputStream& stream)
 void TSmJ3DAct::perform(u32 param_1, TGraphics* param_2)
 {
 	if (param_1 & 2) {
-		TPosition3f mtx;
-		mtx.translation(mPosition.x, mPosition.y, mPosition.z);
+		TPosition3f local_148;
+		local_148.identity();
+		local_148.setTrans(mPosition);
 
-		TRotation3f rotX;
-		rotX.setEularX(DEG_TO_RAD(mRotation.x));
-		TMtx34f mtx1;
-		mtx1.concat(rotX, mtx);
+		(void)&local_148;
 
-		TRotation3f rotY;
-		rotY.setEularY(DEG_TO_RAD(mRotation.y));
-		TMtx34f mtx2;
-		mtx2.concat(rotY, mtx1);
+		TPosition3f tmp;
+		tmp.identity();
+		tmp.setEularX(DEG_TO_RAD(mRotation.x));
 
-		TRotation3f rotZ;
-		rotZ.setEularZ(DEG_TO_RAD(mRotation.z));
-		TMtx34f mtx3;
-		mtx3.concat(rotZ, mtx2);
+		TMtx34f local_110;
+		local_110.concat(local_148, tmp);
 
-		unk48->setBaseTRMtx(mtx3);
+		tmp.setEularY(DEG_TO_RAD(mRotation.y));
+		TMtx34f local_140;
+		local_140.concat(local_110, tmp);
+
+		tmp.setEularZ(DEG_TO_RAD(mRotation.z));
+		local_110.concat(local_140, tmp);
+
+		unk48->setBaseTRMtx(local_110);
 		unk48->setBaseScale(mScaling);
 
 		if (unk4C == nullptr) {

@@ -3,6 +3,7 @@
 
 #include <dolphin/gx/GXStruct.h>
 #include <JSystem/JUtility/JUTColor.hpp>
+#include <JSystem/JDrama/JDRFlag.hpp>
 
 namespace JDrama {
 
@@ -23,8 +24,8 @@ public:
 	u32 getClearZ() const { return mFrameBufferClearZ; }
 	TVideo* getVideo() { return unk60; }
 
-	void onFlag(u16 flag) { unk64 |= flag; }
-	void offFlag(u16 flag) { unk64 &= ~flag; }
+	void onFlag(u16 flag) { unk64.mValue |= flag; }
+	void offFlag(u16 flag) { unk64.mValue &= ~flag; }
 
 public:
 	/* 0x4 */ void* unk4[2];
@@ -37,7 +38,7 @@ public:
 	/* 0x58 */ JUtility::TColor mFrameBufferClearColor;
 	/* 0x5C */ u32 mFrameBufferClearZ;
 	/* 0x60 */ TVideo* unk60;
-	/* 0x64 */ u16 unk64; // TODO: TFlagT?
+	/* 0x64 */ TFlagT<u16> unk64; // TODO: TFlagT?
 };
 
 } // namespace JDrama

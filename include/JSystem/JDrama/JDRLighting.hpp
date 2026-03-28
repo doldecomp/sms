@@ -24,14 +24,13 @@ public:
 		TViewObj* unk4;
 	};
 
-	TLightMap()
-	    : TViewObj("<LightMap>")
+	TLightMap(const char* name = "<LightMap>")
+	    : TViewObj(name)
 	    , mLightInfoCount(0)
 	    , mLightInfos(nullptr)
 	{
 	}
 
-	virtual ~TLightMap() { }
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(unsigned long, TGraphics*);
 
@@ -44,17 +43,16 @@ class TLight : public TPlacement, public JStage::TLight {
 public:
 	TLight(const char* name = "<Light>")
 	    : TPlacement(name)
+	    , mLightType(JStage::TELIGHT_Unk1)
 	{
-		GXInitLightAttn(&unk24, 1.875f, 0.0f, 0.0f, 1.875f, 0.0f, 0.0f);
-		GXInitLightColor(&unk24, JUtility::TColor(0xff, 0xff, 0xff, 0xff));
+		GXInitLightAttn(&unk24, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+		const JUtility::TColor& color
+		    = JUtility::TColor(0xff, 0xff, 0xff, 0xff);
+		GXInitLightColor(&unk24, color);
 	}
-
-	virtual ~TLight() { }
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, TGraphics*);
-
-	void correct(TGraphics*) const;
 
 	virtual JStage::TELight JSGGetLightType() const;
 	virtual void JSGSetLightType(JStage::TELight);
@@ -65,6 +63,8 @@ public:
 	virtual GXColor JSGGetColor() const;
 	virtual void JSGSetColor(GXColor);
 
+	void correct(TGraphics*) const;
+
 public:
 	/* 0x24 */ GXLightObj unk24;
 	/* 0x64 */ JStage::TELight mLightType;
@@ -72,13 +72,13 @@ public:
 
 class TIdxLight : public TLight {
 public:
-	TIdxLight()
-	    : TLight("<IdxLight>")
+	TIdxLight(const char* name = "<IdxLight>")
+	    : TLight(name)
 	    , unk68(0)
 	{
 	}
 
-	virtual ~TIdxLight() { }
+	void setLightIdx(u32 idx) { unk68 = idx; }
 
 public:
 	/* 0x68 */ u32 unk68;
@@ -86,12 +86,14 @@ public:
 
 class TLightAry : public TViewObj {
 public:
-	TLightAry()
-	    : TViewObj("<LightAry>")
+	TLightAry(const char* name = "<LightAry>")
+	    : TViewObj(name)
+	    , mLights(nullptr)
+	    , mLightCount(0)
 	{
+		setLightNum(0);
 	}
 
-	virtual ~TLightAry() { }
 	virtual void load(JSUMemoryInputStream&);
 	virtual TNameRef* searchF(u16, const char*);
 	virtual void perform(u32, TGraphics*);
@@ -105,13 +107,12 @@ public:
 
 class TAmbColor : public TViewObj, public JStage::TAmbientLight {
 public:
-	TAmbColor()
-	    : TViewObj("<AmbColor>")
+	TAmbColor(const char* name = "<AmbColor>")
+	    : TViewObj(name)
 	    , mColor(0x4C, 0x4C, 0x4C, 0xFF)
 	{
 	}
 
-	virtual ~TAmbColor() { }
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, TGraphics*);
 	virtual GXColor JSGGetColor() const;
@@ -123,12 +124,14 @@ public:
 
 class TAmbAry : public TViewObj {
 public:
-	TAmbAry()
-	    : TViewObj("<AmbAry>")
+	TAmbAry(const char* name = "<AmbAry>")
+	    : TViewObj(name)
+	    , mAmbColors(nullptr)
+	    , mAmbColorCount(0)
 	{
+		setAmbNum(0);
 	}
 
-	virtual ~TAmbAry() { }
 	virtual void load(JSUMemoryInputStream&);
 	virtual TNameRef* searchF(u16, const char*);
 	virtual void perform(u32, TGraphics*) { }

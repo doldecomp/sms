@@ -101,6 +101,7 @@ void TMarDirector::setup2()
 	unk258 = MSStage::init(mMap, unk7D);
 
 	JDrama::TGraphics graphics;
+	graphics.unkFE = 0;
 	unk40->perform(0xffffffff, &graphics);
 	unk38->perform(0xffffffff, &graphics);
 	GXSetDrawDone();

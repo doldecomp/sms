@@ -14,13 +14,8 @@ public:
 	TActor(const char* name)
 	    : TPlacement(name)
 	{
-		mScaling.x = 1.0f;
-		mScaling.y = 1.0f;
-		mScaling.z = 1.0f;
-
-		mRotation.x = 0.0f;
-		mRotation.y = 0.0f;
-		mRotation.z = 0.0f;
+		mScaling.setAll(1.0f);
+		mRotation.setAll(0.0f);
 
 		unk3C = nullptr;
 		unk40 = nullptr;

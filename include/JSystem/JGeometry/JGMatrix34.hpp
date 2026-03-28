@@ -45,20 +45,20 @@ public:
 	void set(f32 m00, f32 m01, f32 m02, f32 m03, f32 m10, f32 m11, f32 m12,
 	         f32 m13, f32 m20, f32 m21, f32 m22, f32 m23)
 	{
-		mMtx[0][0] = m00;
-		mMtx[0][1] = m01;
-		mMtx[0][2] = m02;
-		mMtx[0][3] = m03;
+		ref(0, 0) = m00;
+		ref(0, 1) = m01;
+		ref(0, 2) = m02;
+		ref(0, 3) = m03;
 
-		mMtx[1][0] = m10;
-		mMtx[1][1] = m11;
-		mMtx[1][2] = m12;
-		mMtx[1][3] = m13;
+		ref(1, 0) = m10;
+		ref(1, 1) = m11;
+		ref(1, 2) = m12;
+		ref(1, 3) = m13;
 
-		mMtx[2][0] = m20;
-		mMtx[2][1] = m21;
-		mMtx[2][2] = m22;
-		mMtx[2][3] = m23;
+		ref(2, 0) = m20;
+		ref(2, 1) = m21;
+		ref(2, 2) = m22;
+		ref(2, 3) = m23;
 	}
 
 	typedef f32 ArrType[4];

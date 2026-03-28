@@ -96,6 +96,8 @@ public:
 	void* getVtxPos() const { return unk10C; }
 	void setVtxPos(void* pVtxPos) { unk10C = pVtxPos; }
 
+	void setUnk4C(u32 unk) { unk4C = unk; }
+
 public:
 	/* 0x0 */ Mtx mViewMtx;
 	/* 0x30 */ J3DMtxCalc* mCurrentMtxCalc;

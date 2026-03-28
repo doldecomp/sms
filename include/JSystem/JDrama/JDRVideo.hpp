@@ -11,6 +11,11 @@ public:
 	void setNextXFB(const void*);
 	void waitForRetrace(u16);
 
+	void setNextRenderMode(const GXRenderModeObj& render_mode)
+	{
+		mNextRenderMode = render_mode;
+	}
+
 public:
 	/* 0x00 */ GXRenderModeObj mCurRenderMode;
 	/* 0x3C */ GXRenderModeObj mNextRenderMode;

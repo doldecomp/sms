@@ -14,7 +14,6 @@ public:
 	{
 	}
 
-	virtual ~TFrmGXSet() { }
 	virtual void perform(u32, TGraphics*);
 
 public:
