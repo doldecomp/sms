@@ -589,11 +589,11 @@ f32 TMapObjBase::getDistance(const JGeometry::TVec3<f32>& param_1) const
 	return diff.length();
 }
 
-void TMapObjBase::getWaterID(THitActor*) { }
+int TMapObjBase::getWaterID(THitActor*) { }
 
 void TMapObjBase::getWaterPlane(THitActor*) { }
 
-void TMapObjBase::getWaterSpeed(THitActor*) { }
+const JGeometry::TVec3<f32>& TMapObjBase::getWaterSpeed(THitActor*) { }
 
 void TMapObjBase::getWaterPos(THitActor*) { }
 

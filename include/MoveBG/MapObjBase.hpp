@@ -234,9 +234,9 @@ public:
 	void sendMsg(u32, u32);
 	void waterHitPlane(THitActor*);
 	void getWaterPos(THitActor*);
-	void getWaterSpeed(THitActor*);
+	static const JGeometry::TVec3<f32>& getWaterSpeed(THitActor*);
 	static void getWaterPlane(THitActor*);
-	void getWaterID(THitActor*);
+	static int getWaterID(THitActor*);
 	f32 getDistance(const JGeometry::TVec3<f32>&) const;
 	f32 getDistanceXZ(const JGeometry::TVec3<f32>&) const;
 	f32 getRotYFromAxisZ(const JGeometry::TVec3<f32>&) const;

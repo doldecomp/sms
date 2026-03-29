@@ -124,7 +124,15 @@ public:
 			MSoundSESystem::MSoundSE::startSoundSystemSE(param_1, param_2,
 			                                             param_3, param_4);
 	}
-	// TODO: startSoundActor was also very likely here
+
+	// Fabricated, very likely due to real startSoundSystemSE
+	void startSoundActor(u32 param_1, const Vec* param_2, u32 param_3,
+	                     JAISound** param_4, u32 param_5, u8 param_6)
+	{
+		if (gateCheck(param_1))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    param_1, param_2, param_3, param_4, param_5, param_6);
+	}
 
 	void startForceJumpSound(Vec*, u32, f32, u32) { }
 };
