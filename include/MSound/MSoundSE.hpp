@@ -27,18 +27,18 @@ public:
 	~MSRandPlayVec() { }
 
 public:
-	/* 0x0 */ u32 unk0;
+	/* 0x0 */ const Vec* unk0;
 	/* 0x4 */ u8 unk4;
-	/* 0x8 */ u32 unk8;
-	/* 0xC */ u32 unkC;
+	/* 0x8 */ s32 unk8;
+	/* 0xC */ s32 unkC;
 	/* 0x10 */ JSULink<MSRandPlayVec> unk10;
-	/* 0x20 */ u32 unk20;
+	/* 0x20 */ JAISound* unk20;
 };
 
 class MSRandPlay {
 public:
 	/* 0x0 */ JSULink<MSRandPlay> unk0;
-	/* 0x10 */ u32 unk10;
+	/* 0x10 */ MSRandPlayVec* unk10;
 	/* 0x14 */ u16 unk14;
 	/* 0x16 */ u16 unk16;
 
@@ -51,9 +51,9 @@ public:
 	static void construct(u32, s32, s32, f32, f32);
 	static void createRandPlayVec(u32, u16);
 	void createRandPlayVecDynamic(u16);
-	static void registerTrans(u32, const Vec*);
-	void registerTransDynamic(const Vec*);
-	void startSeRandPlay(u32, u32);
+	static int registerTrans(u32, const Vec*);
+	int registerTransDynamic(const Vec*);
+	static void startSeRandPlay(u32, u32);
 	static JSUList<MSRandPlay> smList;
 
 public:
@@ -66,24 +66,34 @@ public:
 
 class SeInfo {
 public:
-	static void* smSeSetting;
+	SeInfo(f32 param_1, f32 param_2)
+	    : unk0(param_1)
+	    , unk4(param_2)
+	{
+	}
+
+	static SeInfo smSeSetting;
+
+	/* 0x0 */ f32 unk0;
+	/* 0x4 */ f32 unk4;
 };
 
 class MSoundSE {
 public:
-	MSoundSE();
+	MSoundSE() { }
+
 	static void construct();
 	static bool checkMonoSound(u32, JAIActor*);
-	static void checkSoundArea(u32, const Vec&);
+	static bool checkSoundArea(u32, const Vec&);
 	static u32 getNewIDByGroundCode(u32, JAIActor*);
 	static u32 getNewIDBySurfaceCode(u32, JAIActor*);
 	static u32 getRandomID(u32);
-	static void startSoundActor(u32, const Vec*, u32, JAISound**, u32, u8);
-	static void startSoundActorInner(u32, JAISound**, JAIActor*, u32, u8);
+	static JAISound* startSoundActor(u32, const Vec*, u32, JAISound**, u32, u8);
+	static JAISound* startSoundActorInner(u32, JAISound**, JAIActor*, u32, u8);
 	static void startSoundActorWithInfo(u32, const Vec*, Vec*, f32, u32, u32,
 	                                    JAISound**, u32, u8);
 	static void startSoundNpcActor(u32, const Vec*, u32, JAISound**, u32, u8);
-	static void startSoundSystemSE(u32, u32, JAISound**, u32);
+	static JAISound* startSoundSystemSE(u32, u32, JAISound**, u32);
 	static MSoundSE* mObj;
 };
 

@@ -77,7 +77,7 @@ public:
 	static void fromInnerCameraDemo();
 	static void toInnerCameraDemo();
 	void entranceDemoWipeInEnd();
-	void getMonteVillageActorArea(const Vec&);
+	static int getMonteVillageActorArea(const Vec&);
 };
 
 #endif

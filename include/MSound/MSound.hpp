@@ -37,8 +37,8 @@ public:
 	static u16 setParameterSeqSync(JASystem::TTrack*, u16);
 	static void setWaterFilter(u16);
 	static void setWaterCameraFir(bool);
-	static u8 smTrackCategory;
-	static u8 smPolifonic;
+	static u16 smTrackCategory[];
+	static u8 smPolifonic[];
 	static u16 smWaterFilter;
 };
 
@@ -94,16 +94,16 @@ public:
 	f32 getDistFromCamera(Vec*);
 	bool cameraLooksAtMario();
 
-	JAISound* startSoundSet(u32, const Vec*, u32, f32, u32, u32, u8);
-	JAISound* startSoundSetGrp(u32, const Vec*, u32, f32, u32, u32, u8);
-	JAISound* startSoundActorSpecial(u32, const Vec*, f32, f32, u32, JAISound**,
-	                                 u32, u8);
-	JAISound* startBeeSe(Vec*, u32);
+	void startSoundSet(u32, const Vec*, u32, f32, u32, u32, u8);
+	void startSoundSetGrp(u32, const Vec*, u32, f32, u32, u32, u8);
+	void startSoundActorSpecial(u32, const Vec*, f32, f32, u32, JAISound**, u32,
+	                            u8);
+	void startBeeSe(Vec*, u32);
 
-	void startMarioVoice(u32, s16, u8);
+	u32 startMarioVoice(u32, s16, u8);
 	void stopMarioVoice(u32, u8);
-	u8 getMarioVoiceID(u8);
-	bool checkMarioVoicePlaying(u8);
+	u32 getMarioVoiceID(u8);
+	void* checkMarioVoicePlaying(u8);
 
 	void playTimer(u32);
 	void requestShineAppearFanfare();
@@ -135,6 +135,19 @@ public:
 	}
 
 	void startForceJumpSound(Vec*, u32, f32, u32) { }
+
+public:
+	/* 0xAC */ JAICamera unkAC[2];
+	/* 0xC4 */ JAISound* unkC4;
+	/* 0xC8 */ u8 unkC8[5];
+	/* 0xCD */ u8 unkCD;
+	/* 0xCE */ u8 unkCE;
+	/* 0xCF */ u8 unkCF;
+	/* 0xD0 */ u8 unkD0;
+	/* 0xD1 */ u8 unkD1;
+	/* 0xD2 */ char unkD2[0x304 - 0xD2];
+	/* 0x304 */ JASystem::TTrack::TOuterParam* unk304;
+	/* 0x308 */ char unk308[0x4];
 };
 
 extern MSound* MSGMSound;

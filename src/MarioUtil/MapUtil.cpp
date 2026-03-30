@@ -1,3 +1,4 @@
+#include <MarioUtil/MapUtil.hpp>
 #include <Strategic/TakeActor.hpp>
 #include <Strategic/HitActor.hpp>
 #include <Strategic/LiveActor.hpp>

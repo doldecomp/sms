@@ -6,7 +6,7 @@
 #include <dolphin/mtx.h>
 
 struct SeCategory {
-	u32 mType;
+	u8 mType;
 	f32 unk4;
 	f32 unk8;
 	f32 unkC;
@@ -25,6 +25,8 @@ public:
 	static f32 cDol_HalfRad;
 	static f32 cDol_FullRad;
 
+	MSHandle() { }
+
 	virtual void setSeDistanceParameters();
 	virtual void setSeDistanceVolume(u8 param);
 	virtual void setSeDistancePan(u8 param);
@@ -32,10 +34,10 @@ public:
 	virtual void setSeDistanceDolby(u8 param);
 	virtual f32 setDistanceVolumeCommon(f32 volume, u8 param);
 
-	f32 calcVolume(f32 param1, f32 param2, f32 param3, u8 param4, u8 param5);
-	f32 calcPan(const Vec& vec, f32 param1, f32 param2);
-	f32 calcDolby(const Vec& vec, f32 param);
-	f32 MSACos(f32 param);
+	static f32 calcVolume(f32 param1, f32 param2, f32 param3, u8 param4, u8 param5);
+	static f32 calcPan(const Vec& vec, f32 param1, f32 param2);
+	static f32 calcDolby(const Vec& vec, f32 param);
+	static f32 MSACos(f32 param);
 };
 
 #endif // MSHANDLE_HPP

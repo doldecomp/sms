@@ -170,7 +170,15 @@ template <class T, class U> class JALLinkD;
 
 template <class T, class U> class JALListD : public JSUList<T> {
 public:
-	void searchD(u32);
+	T* searchD(u32 param_1)
+	{
+		for (JSUListIterator<T> it = this->getFirst(); it != this->getEnd();
+		     ++it)
+			if (it.getObject()->unk0 == param_1)
+				return it.getObject();
+
+		return nullptr;
+	}
 
 	void append(JALLinkD<T, U>* link)
 	{
@@ -222,11 +230,8 @@ T* JALListGrp<T, U, V>::searchGroup(U param_1)
 {
 	JSUListIterator<T> it = JALList<T>::smList.getFirst();
 	for (; it != JALList<T>::smList.getEnd(); ++it) {
-		JSUListIterator<V> it2 = it.getObject()->getFirst();
-		for (; it2 != it.getObject()->getEnd(); ++it2)
-			if (param_1 == it2.getObject()->unk0)
-				break;
-		if (it2 != it.getObject()->getEnd())
+		V* res = it.getObject()->searchD(param_1);
+		if (res)
 			return it.getObject();
 	}
 	return nullptr;

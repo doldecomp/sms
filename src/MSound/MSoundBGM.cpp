@@ -162,35 +162,16 @@ void MSBgm::setSeqTRACKsMuteH(JAISound* param1, bool param2, u16 param3) { }
 
 void MSBgm::setStageBgmYoshiPercussion(bool param)
 {
-	JAISound* sound;
-	JAISeqParameter* pJVar2;
-	u32 uVar1;
-	u32 uVar2;
-	JASystem::TTrack* pTVar3;
-	// Inlined function in MSoundBGM.hpp TODO: Found original inline function
-	// placement.
-	sound = someInline();
+	JAISound* sound = smBgmInTrack[0] ? smBgmInTrack[0]->unk14 : nullptr;
+
 	if (sound == nullptr)
 		return;
 
-	uVar1 = MSGMSound->getBstSwitch(sound->unk8);
+	if (MSGMSound->getBstSwitch(sound->unk8) & 0x10000000) {
+		JASystem::TTrack* pTVar3 = getJASTrack(sound, 15);
 
-	if ((uVar1 & 0x10000000)) {
-		pJVar2 = sound->getSeqParameter();
-		pTVar3 = JASystem::TrackMgr::handleToSeq(pJVar2->unk0);
-		if (pTVar3 == nullptr) {
-			pTVar3 = nullptr;
-		} else {
-			pTVar3 = pTVar3->unk2C4[0xf];
-		}
-		if (pTVar3 != nullptr) {
-			if (param == 1) {
-				uVar2 = 0;
-			} else {
-				uVar2 = 1;
-			}
-			pTVar3->unk3C2 = uVar2;
-		}
+		if (pTVar3 != nullptr)
+			pTVar3->unk3C2 = param == 1 ? 0 : 1;
 	}
 }
 
@@ -305,4 +286,12 @@ JAISound* MSBgm::getHandle(u8 param)
 	return nullptr;
 }
 
-JAISound* MSBgm::getJASTrack(JAISound* param1, u8 param2) { return nullptr; }
+JASystem::TTrack* MSBgm::getJASTrack(JAISound* sound, u8 param_2)
+{
+	JASystem::TTrack* pTVar3
+	    = JASystem::TrackMgr::handleToSeq(sound->getSeqParameter()->unk0);
+	if (!pTVar3)
+		return nullptr;
+
+	return pTVar3->unk2C4[param_2];
+}
