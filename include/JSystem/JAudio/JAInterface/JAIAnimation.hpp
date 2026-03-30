@@ -36,8 +36,17 @@ public:
 	/* 0x84 */ int mLoopCount;
 	/* 0x88 */ f32 mCurrentTime;
 	/* 0x8C */ u8 unk8C[0x4];
-	// TODO: not JUST u16...
-	/* 0x90 */ u16* mData;
+
+	struct UnkStruct {
+		/* 0x0 */ char unk0[0x8];
+		/* 0x8 */ u32 unk8;
+		/* 0xC */ f32 unkC;
+		/* 0x10 */ char unk10[0x8];
+		/* 0x18 */ u32 unk18;
+		/* 0x1C */ char unk1C[0x4];
+	};
+
+	/* 0x90 */ UnkStruct* mData;
 	/* 0x94 */ // vtable
 
 public:

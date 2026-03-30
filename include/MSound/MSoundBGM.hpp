@@ -36,17 +36,7 @@ public:
 	static bool checkPlaying(u32);
 	static u32 getSceneNo(u32);
 	static JAISound* getHandle(u8);
-	static JAISound* getJASTrack(JAISound*, u8);
-
-	// TODO: Found out where this inline is from.
-	static JAISound* someInline()
-	{
-		if (smBgmInTrack[0] != 0) {
-			return smBgmInTrack[0]->unk14;
-		} else {
-			return nullptr;
-		}
-	}
+	static JASystem::TTrack* getJASTrack(JAISound*, u8);
 
 public:
 	/* 0x14 */ JAISound* unk14;

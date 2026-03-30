@@ -8,6 +8,8 @@
 #include <dolphin/types.h>
 #include <dolphin/mtx.h>
 
+class JAISound;
+
 class MSSetSoundMember : public JALLinkD<MSSetSoundMember, u32> {
 public:
 	MSSetSoundMember(u32 param_1, JALListD<MSSetSoundMember, u32>* param_2,
@@ -60,11 +62,9 @@ public:
 		unkB9 = param_21;
 		unk5A = 0;
 		unk59 = 1;
-		unk5C = 0;
-		unk60 = 0;
-		unk64 = 0;
-		unk68 = 0;
-		unk6C = 0;
+
+		for (int i = 0; i < 5; ++i)
+			unk5C[i] = 0;
 	}
 	~MSSetSoundTL();
 
@@ -76,12 +76,9 @@ public:
 		unkB8 = 0;
 	}
 
-	bool startSoundSetDyna(u32 param1, const Vec* param2, u32 param3,
-	                       f32 param4, u32 param5, u32 param6, u8 param7,
-	                       MSSetSoundGrp* param8)
-	{
-		// TODO: stuff
-	}
+	bool startSoundSetDyna(u32 param_1, const Vec* param_2, u32 param_3,
+	                       f32 param_4, u32 param_5, u32 param_6, u8 param_7,
+	                       MSSetSoundGrp* param_8);
 
 public:
 	/* 0x1C */ JADPrm<u8> unk1C;
@@ -105,12 +102,8 @@ public:
 	/* 0x58 */ u8 unk58;
 	/* 0x59 */ u8 unk59;
 	/* 0x5A */ u8 unk5A;
-	/* 0x5C */ u32 unk5C;
-	/* 0x60 */ u32 unk60;
-	/* 0x64 */ u32 unk64;
-	/* 0x68 */ u32 unk68;
-	/* 0x6C */ u32 unk6C;
-	/* 0x70 */ char unk70[0xAC - 0x70];
+	/* 0x5C */ JAISound* unk5C[5];
+	/* 0x70 */ Vec unk70[5];
 	/* 0xAC */ Vec unkAC;
 	/* 0xB8 */ u8 unkB8;
 	/* 0xB9 */ bool unkB9;

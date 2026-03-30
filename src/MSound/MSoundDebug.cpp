@@ -1,5 +1,11 @@
 #include <MSound/MSoundDebug.hpp>
 
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+
+static void dummy() { JADPrm<u8> prm(0, ""); }
+
 MSD* MSD::get() { return 0; }
 
 MSPrintBase::MSPrintBase() { }

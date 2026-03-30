@@ -8,6 +8,8 @@ public:
 	JADPrm();
 	JADPrm(T val, const char*);
 
+	T get() const { return unk0; }
+
 	T unk0;
 };
 
