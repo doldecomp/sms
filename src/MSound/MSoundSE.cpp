@@ -407,8 +407,9 @@ u32 MSoundSE::getRandomID(u32 param_1)
 	return param_1 + r6;
 }
 
-JAISound* MSoundSE::startSoundActor(u32 param_1, const Vec* param_2, u32 param_3,
-                               JAISound** param_4, u32 param_5, u8 param_6)
+JAISound* MSoundSE::startSoundActor(u32 param_1, const Vec* param_2,
+                                    u32 param_3, JAISound** param_4,
+                                    u32 param_5, u8 param_6)
 {
 	JAIActor actor(param_2, param_2, param_2, param_3);
 	return startSoundActorInner(param_1, param_4, &actor, param_5, param_6);
