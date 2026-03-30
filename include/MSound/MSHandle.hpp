@@ -34,7 +34,8 @@ public:
 	virtual void setSeDistanceDolby(u8 param);
 	virtual f32 setDistanceVolumeCommon(f32 volume, u8 param);
 
-	static f32 calcVolume(f32 param1, f32 param2, f32 param3, u8 param4, u8 param5);
+	static f32 calcVolume(f32 param1, f32 param2, f32 param3, u8 param4,
+	                      u8 param5);
 	static f32 calcPan(const Vec& vec, f32 param1, f32 param2);
 	static f32 calcDolby(const Vec& vec, f32 param);
 	static f32 MSACos(f32 param);
