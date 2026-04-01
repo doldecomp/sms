@@ -93,7 +93,6 @@ void MSModBgm::loop()
 }
 
 // The calculation used here is idx / 19, with the start value as 1 and ending at 18.
-// The values are pre-calculated and pasted here for optimization, presumably.
 f32 MSBgmXFade::scTiming[18] = {
 	0.052632f,   0.105263f,   0.157895f, 0.210526f,   0.26315799f, 0.315789f,
 	0.36842099f, 0.42105299f, 0.473684f, 0.52631599f, 0.578947f,   0.63157898f,
