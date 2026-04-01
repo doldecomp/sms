@@ -67,7 +67,7 @@ public:
 	void moveObject();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	Vec getFocalPoint() const;
-	void getCursorPos() const;
+	Vec getCursorPos() const;
 	void isInMadSearchRange() const;
 	void isInBodyTurnSearchRange() const;
 	void isNeedNeckStraight() const;
