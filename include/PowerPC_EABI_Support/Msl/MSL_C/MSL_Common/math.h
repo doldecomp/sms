@@ -101,6 +101,13 @@ inline float cosf(float x) { return ::cos((double)x); }
 inline float tanf(float x) { return ::tan((double)x); }
 inline float powf(float e, float x) { return ::powf(e, x); }
 
+inline float fabs(float x)
+{
+	(*(unsigned int*)&x) &= 0x7fffffff;
+
+	return x;
+}
+
 extern inline float sqrtf(float x)
 {
 	const double _half  = .5;

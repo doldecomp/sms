@@ -1,0 +1,32 @@
+#ifndef MS_SCENE_WAVE_HPP
+#define MS_SCENE_WAVE_HPP
+
+enum MS_SCENE_WAVE {
+
+	MS_WAVE_UNK0         = 0,
+	MS_WAVE_UNK128       = 0x80,
+	MS_WAVE_DEFAULT      = 0x100,
+	MS_WAVE_DOLPIC       = 0x201,
+	MS_WAVE_BIANCO       = 0x202,
+	MS_WAVE_MANMA        = 0x203,
+	MS_WAVE_PINNAPACO_S  = 0x204,
+	MS_WAVE_PINNAPACO    = 0x204,
+	MS_WAVE_MARE_SEA     = 0x205,
+	MS_WAVE_MONTEVILLAGE = 0x206,
+	MS_WAVE_SHILENA      = 0x207,
+	MS_WAVE_RICO         = 0x208,
+	MS_WAVE_CLEAR        = 0x209,
+	MS_WAVE_UNK20A       = 0x20A,
+	MS_WAVE_UNK20C       = 0x20C,
+	MS_WAVE_UNK20D       = 0x20D,
+	MS_WAVE_UNK20E       = 0x20E,
+	MS_WAVE_UNK20F       = 0x20F,
+	MS_WAVE_UNK210       = 0x210,
+	MS_WAVE_UNK211       = 0x211,
+	MS_WAVE_UNK212       = 0x212,
+	MS_WAVE_UNK214       = 0x214,
+	MS_WAVE_UNK215       = 0x215,
+	MS_WAVE_INVALID      = 0xffffffff,
+};
+
+#endif
