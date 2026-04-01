@@ -262,7 +262,7 @@ void* TApplication::setupThreadFuncLogo()
 {
 	while (!gpMSound->checkWaveOnAram(MS_WAVE_UNK0))
 		OSYieldThread();
-	while (!gpMSound->checkWaveOnAram(MS_WAVE_UNK528))
+	while (!gpMSound->checkWaveOnAram(MS_WAVE_UNK210))
 		OSYieldThread();
 
 	arcBufMario
@@ -309,7 +309,7 @@ void TApplication::initialize_bootAfter()
 
 	JAIGlobalParameter::setParamSoundOutputMode(!OSGetSoundMode() ? 0 : 1);
 	gpMSound->loadWave(MS_WAVE_UNK0);
-	gpMSound->loadWave(MS_WAVE_UNK528);
+	gpMSound->loadWave(MS_WAVE_UNK210);
 	prevHeap->becomeCurrentHeap();
 
 	CARDInit();

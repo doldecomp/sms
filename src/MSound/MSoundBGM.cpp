@@ -177,103 +177,103 @@ void MSBgm::setStageBgmYoshiPercussion(bool param)
 
 bool MSBgm::checkPlaying(u32 param) { return false; }
 
-u32 MSBgm::getSceneNo(u32 param)
+MS_SCENE_WAVE MSBgm::getSceneNo(u32 param)
 {
 	switch (param) {
 	case 0x80010001:
-		return 0x201;
+		return MS_WAVE_DOLPIC;
 	case 0x80010002:
-		return 0x202;
+		return MS_WAVE_BIANCO;
 	case 0x80010003:
-		return 0x203;
+		return MS_WAVE_MANMA;
 	case 0x80010004:
-		return 0x204;
+		return MS_WAVE_PINNAPACO_S;
 	case 0x80010005:
-		return 0x204;
+		return MS_WAVE_PINNAPACO;
 	case 0x80010006:
-		return 0x205;
+		return MS_WAVE_MARE_SEA;
 	case 0x80010007:
-		return 0x206;
+		return MS_WAVE_MONTEVILLAGE;
 	case 0x80010008:
-		return 0x207;
+		return MS_WAVE_SHILENA;
 	case 0x80010009:
-		return 0x208;
+		return MS_WAVE_RICO;
 	case 0x8001000a:
-		return 0x210;
+		return MS_WAVE_UNK210;
 	case 0x8001000b:
-		return 0x210;
+		return MS_WAVE_UNK210;
 	case 0x8001000c:
-		return 0x210;
+		return MS_WAVE_UNK210;
 	case 0x8001000d:
-		return 0x210;
+		return MS_WAVE_UNK210;
 	case 0x8001000e:
-		return 0x20a;
+		return MS_WAVE_UNK20A;
 	case 0x8001000f:
-		return 0x209;
+		return MS_WAVE_CLEAR;
 	case 0x80010010:
-		return 0x20a;
+		return MS_WAVE_UNK20A;
 	case 0x80010011:
-		return 0xffffffff;
+		return MS_WAVE_INVALID;
 	case 0x80010012:
-		return 0x20c;
+		return MS_WAVE_UNK20C;
 	case 0x80010013:
-		return 0x20d;
+		return MS_WAVE_UNK20D;
 	case 0x80010014:
-		return 0x20e;
+		return MS_WAVE_UNK20E;
 	case 0x80010015:
-		return 0x20f;
+		return MS_WAVE_UNK20F;
 	case 0x80010016:
-		return 0x210;
+		return MS_WAVE_UNK210;
 	case 0x80010017:
-		return 0x210;
+		return MS_WAVE_UNK210;
 	case 0x80010018:
-		return 0x206;
+		return MS_WAVE_MONTEVILLAGE;
 	case 0x80010019:
-		return 0x211;
+		return MS_WAVE_UNK211;
 	case 0x8001001a:
-		return 0x212;
+		return MS_WAVE_UNK212;
 	case 0x8001001b:
-		return 0x210;
+		return MS_WAVE_UNK210;
 	case 0x8001001c:
-		return 0x20a;
+		return MS_WAVE_UNK20A;
 	case 0x8001001d:
-		return 0x206;
+		return MS_WAVE_MONTEVILLAGE;
 	case 0x8001001e:
-		return 0x20d;
+		return MS_WAVE_UNK20D;
 	case 0x8001001f:
-		return 0x210;
+		return MS_WAVE_UNK210;
 	case 0x80010020:
-		return 0x210;
+		return MS_WAVE_UNK210;
 	case 0x80010021:
-		return 0x214;
+		return MS_WAVE_UNK214;
 	case 0x80010022:
-		return 0x206;
+		return MS_WAVE_MONTEVILLAGE;
 	case 0x80010023:
-		return 0x204;
+		return MS_WAVE_PINNAPACO_S;
 	case 0x80010024:
-		return 0x210;
+		return MS_WAVE_UNK210;
 	case 0x80010025:
-		return 0x20d;
+		return MS_WAVE_UNK20D;
 	case 0x80010026:
-		return 0x210;
+		return MS_WAVE_UNK210;
 	case 0x80010027:
-		return 0x210;
+		return MS_WAVE_UNK210;
 	case 0x80010028:
-		return 0x210;
+		return MS_WAVE_UNK210;
 	case 0x80010029:
-		return 0x210;
+		return MS_WAVE_UNK210;
 	case 0x8001002a:
-		return 0x210;
+		return MS_WAVE_UNK210;
 	case 0x8001002b:
-		return 0x210;
+		return MS_WAVE_UNK210;
 	case 0x8001002c:
-		return 0x206;
+		return MS_WAVE_MONTEVILLAGE;
 	case 0x8001002e:
-		return 0x215;
+		return MS_WAVE_UNK215;
 	case 0x8001002f:
-		return 0x210;
+		return MS_WAVE_UNK210;
 	default:
-		return 0xffffffff;
+		return MS_WAVE_INVALID;
 	}
 }
 

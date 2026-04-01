@@ -23,9 +23,11 @@ struct JAIStreamUpdateParameter;
 // fabricated
 struct JAISoundInfo {
 	/* 0x0 */ u32 unk0;
-	/* 0x4 */ u32 unk4;
-	/* 0x8 */ f32 unk8;
-	/* 0xC */ u8 unkC;
+	/* 0x4 */ u8 unk4;
+	/* 0x5 */ u8 unk5;
+	/* 0x8 */ f32 unk8; // pitch?
+	/* 0xC */ u8 unkC;  // volume?
+	/* 0xD */ u8 unkD;  // fxmix?
 };
 
 struct FabricatedSoundTableMemoryHeader {
@@ -155,7 +157,7 @@ public:
 	/* 0x1D4 */ JAIStreamParameter* unk1D4;
 	/* 0x1D8 */ JAIStreamParameter* unk1D8;
 	/* 0x1DC */ JAIStreamParameter* unk1DC;
-	/* 0x1E0 */ u32* unk1E0;
+	/* 0x1E0 */ JAISound** unk1E0;
 	/* 0x1E4 */ JAISound** unk1E4;
 	/* 0x1E8 */ JAILinkBuffer* unk1E8;
 	/* 0x1EC */ JAIHeapBlock* unk1EC;

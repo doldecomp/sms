@@ -5,9 +5,15 @@
 
 class MSStage {
 public:
-	virtual void setPosPtr(Vec*);
+	MSStage() { }
+
+	virtual void setPosPtr(Vec*) { }
 	virtual void stageLoop();
+	virtual void proc() = 0;
+
 	static MSStage* init(u8, u8);
+
+	static MSStage* smMSStage;
 };
 
 class MSSTageSimpleEnvironmentMonte {
@@ -15,69 +21,114 @@ public:
 	void proc();
 };
 
-class MSSTageSimpleEnvironment {
+class MSSTageSimpleEnvironment : public MSStage {
 public:
-	void proc();
+	MSSTageSimpleEnvironment()
+	    : unk4(0x5012)
+	{
+	}
+
+	virtual void proc();
+
+public:
+	/* 0x4 */ u32 unk4;
 };
 
-class MSStageCubeSwitch {
+class MSStageCubeFade : public MSStage {
 public:
-	void toBossBgm();
-	void toStageBgm();
-	void proc();
-};
-
-class MSStageCubeFade {
-public:
-	void calcParamRatioInCube(long);
-	void proc();
 	MSStageCubeFade();
+
+	virtual void proc();
+
+	f32 calcParamRatioInCube(s32);
+
+public:
+	/* 0x4 */ int unk4;
+	/* 0x8 */ int unk8;
+	/* 0xC */ f32 unkC;
 };
 
-class MSStageCubeFadeMonte {
+class MSStageCubeSwitch : public MSStageCubeFade {
 public:
-	void proc();
+	MSStageCubeSwitch(u8 param_1)
+	    : unk10(param_1)
+	{
+	}
+
+	virtual void proc();
+
+	void toStageBgm();
+	void toBossBgm();
+
+public:
+	/* 0x10 */ u8 unk10;
+	/* 0x11 */ u8 unk11;
+};
+
+class MSStageCubeFadeMonte : public MSStageCubeFade {
+public:
 	MSStageCubeFadeMonte();
+
+	virtual void proc();
+
+public:
+	/* 0x10 */ int unk10;
+	/* 0x14 */ int unk14;
 };
 
-class MSStageDistFadeMonte {
+class MSStageDistFade : public MSStage {
 public:
-	void proc();
-	MSStageDistFadeMonte(const Vec*, float, float, u32, bool);
+	MSStageDistFade(const Vec*, f32, f32, u32, bool);
+
+	virtual void proc();
+
+public:
+	/* 0x4 */ u32 unk4;
+	/* 0x8 */ f32 unk8;
+	/* 0xC */ f32 unkC;
+	/* 0x10 */ const Vec* unk10;
+	/* 0x14 */ u32 unk14;
+	/* 0x18 */ u8 unk18;
 };
 
-class MSStageDistFade {
+class MSStageDistFadeMonte : public MSStageDistFade {
 public:
-	void proc();
-	MSStageDistFade(const Vec*, float, float, u32, bool);
+	MSStageDistFadeMonte(const Vec*, f32, f32, u32, bool);
+
+	virtual void proc();
+
+public:
+	/* 0x1C */ int unk1C;
+	/* 0x20 */ int unk20;
 };
 
 class MSStageProc {
 public:
-	void setBgmPosition(const Vec&, float, bool, u32, u32);
+	void setBgmPosition(const Vec&, f32, bool, u32, u32);
 };
 
-class MSMainProc {
-public:
-	static void startStageBGM(u8, u8);
-	static void endStageEntranceDemo(u8, u8);
-	static void entranceDemoLoop(u32);
-	static void startStageEntranceDemo(u8, u8);
-	static void setMSoundEnterStage(u8, u8);
-	static void setBossNotDamagedFlag(bool);
-	void getBossLivesFlag2();
-	void getBossLivesFlag();
-	static void setBossLivesFlag2(bool);
-	static void setBossLivesFlagOnlyFlag(bool);
-	static void setBossLivesFlag(bool);
-	static void fromTalkingCameraDemo(bool);
-	static void toTalkingCameraDemo();
-	void fromTHPDemo();
-	void toTHPDemo();
-	static void fromInnerCameraDemo();
-	static void toInnerCameraDemo();
-	void entranceDemoWipeInEnd();
-	static int getMonteVillageActorArea(const Vec&);
-};
+namespace MSMainProc {
+
+int getMonteVillageActorArea(const Vec&);
+void entranceDemoWipeInEnd();
+void toInnerCameraDemo();
+void fromInnerCameraDemo();
+void toTHPDemo();
+void fromTHPDemo();
+void toTalkingCameraDemo();
+void fromTalkingCameraDemo(bool);
+void setBossLivesFlag(bool);
+void setBossLivesFlagOnlyFlag(bool);
+void setBossLivesFlag2(bool);
+bool getBossLivesFlag();
+bool getBossLivesFlag2();
+void setBossNotDamagedFlag(bool);
+void setMSoundEnterStage(u8, u8);
+void startStageEntranceDemo(u8, u8);
+void entranceDemoLoop(u32);
+void endStageEntranceDemo(u8, u8);
+void startStageBGM(u8, u8);
+
+} // namespace MSMainProc
 
 #endif

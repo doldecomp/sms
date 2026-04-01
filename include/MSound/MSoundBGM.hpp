@@ -1,13 +1,12 @@
 #ifndef MSOUNDBGM_HPP
 #define MSOUNDBGM_HPP
 
-#include <dolphin/types.h>
-#include <JSystem/JAudio/JAInterface/JAISound.hpp>
+#include <MSound/MSSceneWave.hpp>
 #include <JSystem/JAudio/JALibrary/JALList.hpp>
-#include <JSystem/JSupport/JSUList.hpp>
 #include <JSystem/JAudio/JASystem/JASTrack.hpp>
 
-template <typename T, typename U> class JALListVirtualNode;
+class JAISound;
+
 class MSBgm : public JALListHioNode<MSBgm, u32> {
 public:
 	MSBgm(int i)
@@ -34,9 +33,17 @@ public:
 	static void setSeqTRACKsMuteH(JAISound*, bool, u16);
 	static void setStageBgmYoshiPercussion(bool);
 	static bool checkPlaying(u32);
-	static u32 getSceneNo(u32);
+	static MS_SCENE_WAVE getSceneNo(u32);
 	static JAISound* getHandle(u8);
 	static JASystem::TTrack* getJASTrack(JAISound*, u8);
+
+	// fabricated
+	static void setAllTracksVolume(f32 param_1, u32 param_2)
+	{
+		for (u8 i = 0; i < 3; ++i)
+			if (0x7 >> i & 1)
+				MSBgm::setTrackVolume(i, param_1, param_2, 3);
+	}
 
 public:
 	/* 0x14 */ JAISound* unk14;

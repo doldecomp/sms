@@ -9,28 +9,14 @@
 #include <JSystem/JAudio/JASystem/JASWaveArcLoader.hpp>
 #include <JSystem/JAudio/JAInterface/JAISound.hpp>
 #include <JSystem/JAudio/JAInterface/JAIBasic.hpp>
+#include <MSound/MSSceneWave.hpp>
 #include <MSound/MSoundSE.hpp>
 
 class JAIActor;
 class JAICamera;
 class JAIAnimeFrameSoundData;
-
-enum MS_SCENE_WAVE {
-	MS_WAVE_UNK0         = 0,
-	MS_WAVE_UNK128       = 128,
-	MS_WAVE_DEFAULT      = 256,
-	MS_WAVE_DOLPIC       = 513,
-	MS_WAVE_BIANCO       = 514,
-	MS_WAVE_MANMA        = 515,
-	MS_WAVE_PINNAPACO_S  = 516,
-	MS_WAVE_PINNAPACO    = 516,
-	MS_WAVE_MARE_SEA     = 517,
-	MS_WAVE_MONTEVILLAGE = 518,
-	MS_WAVE_SHILENA      = 519,
-	MS_WAVE_RICO         = 520,
-	MS_WAVE_CLEAR        = 521,
-	MS_WAVE_UNK528       = 528,
-};
+class MSModBgm;
+class MSBgmXFade;
 
 class MSSeCallBack {
 public:
@@ -136,7 +122,14 @@ public:
 
 	void startForceJumpSound(Vec*, u32, f32, u32) { }
 
+	bool checkUnkA8(u32 flag) { return !(unkA8 & flag) ? false : true; }
+
 public:
+	/* 0x98 */ MSModBgm* unk98;
+	/* 0x9C */ MSBgmXFade* unk9C;
+	/* 0xA0 */ u32 unkA0;
+	/* 0xA4 */ u32 unkA4;
+	/* 0xA8 */ u8 unkA8;
 	/* 0xAC */ JAICamera unkAC[2];
 	/* 0xC4 */ JAISound* unkC4;
 	/* 0xC8 */ u8 unkC8[5];

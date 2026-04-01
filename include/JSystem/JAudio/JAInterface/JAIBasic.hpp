@@ -22,6 +22,13 @@ public:
 	{
 	}
 
+	Vec toCamSpace(Vec in) const
+	{
+		Vec out;
+		MTXMultVec(unk8, &in, &out);
+		return out;
+	}
+
 	/* 0x0 */ VecPtr unk0;
 	/* 0x4 */ VecPtr unk4;
 	/* 0x8 */ MtxPtr unk8;
@@ -255,11 +262,6 @@ public:
 	/* 0x88 */ u8 unk88;
 	/* 0x8C */ JAISound* unk8C[2];
 	/* 0x94 */ u16 unk94;
-	/* 0x98 */ void* unk98;
-	/* 0x9C */ void* unk9C;
-	/* 0xA0 */ u32 unkA0;
-	/* 0xA4 */ u32 unkA4;
-	/* 0xA8 */ u8 unkA8;
 	// TODO: some of the fields might actually be
 	// from a derived class, MSound.
 };
