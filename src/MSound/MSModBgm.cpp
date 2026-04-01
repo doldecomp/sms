@@ -92,11 +92,12 @@ void MSModBgm::loop()
 	unk0 = 0;
 }
 
+// The calculation used here is idx / 19, with the start value as 1 and ending at 18.
+// The values are pre-calculated and pasted here for optimization, presumably.
 f32 MSBgmXFade::scTiming[18] = {
-	1.0f / 19.0f,  2.0f / 19.0f,  3.0f / 19.0f,  4.0f / 19.0f,  5.0f / 19.0f,
-	6.0f / 19.0f,  7.0f / 19.0f,  8.0f / 19.0f,  9.0f / 19.0f,  10.0f / 19.0f,
-	11.0f / 19.0f, 12.0f / 19.0f, 13.0f / 19.0f, 14.0f / 19.0f, 15.0f / 19.0f,
-	16.0f / 19.0f, 17.0f / 19.0f, 18.0f / 19.0f,
+	0.052632f,   0.105263f,   0.157895f, 0.210526f,   0.26315799f, 0.315789f,
+	0.36842099f, 0.42105299f, 0.473684f, 0.52631599f, 0.578947f,   0.63157898f,
+	0.684211f,   0.73684198f, 0.789474f, 0.84210497f, 0.894737f,   0.947368f,
 };
 
 f32 MSBgmXFade::scExp[18] = {
