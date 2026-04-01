@@ -159,7 +159,7 @@ void TMapStaticObj::perform(u32 param_1, JDrama::TGraphics* param_2)
 		u32 sfx = unk78;
 		if (sfx != 0xffffffff) {
 			if (gpMSound->gateCheck(sfx))
-				MSoundSESystem::MSoundSE::startSoundActor(sfx, mPosition, 0,
+				MSoundSESystem::MSoundSE::startSoundActor(sfx, &mPosition, 0,
 				                                          nullptr, 0, 4);
 		}
 
