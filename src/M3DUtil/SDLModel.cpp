@@ -2,15 +2,71 @@
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
+#include <Enemy/Conductor.hpp>
+#include <Camera/Camera.hpp>
 #include <macros.h>
 
 void SDLModelData::entrySameMat(J3DMaterial* param_1, SDLDrawBufToken* param_2)
 {
+	SDLModel* model = param_2->unk8;
+	while (model != nullptr) {
+		if (model->unkA8 & 0x1)
+			break;
+		model = model->unkA4;
+	}
+
+	if (model != nullptr) {
+		j3dSys.setModel(model);
+		j3dSys.setTexture(unk0->getTexture());
+
+		SDLMatPacket* matPacket
+		    = (SDLMatPacket*)model->getMatPacket(param_1->getIndex());
+		matPacket->drawClear();
+
+		J3DShapePacket* shapePacket
+		    = model->getShapePacket(param_1->getShape()->getIndex());
+		shapePacket->drawClear();
+
+		matPacket->setShapePacket(shapePacket);
+
+		SDLModel* model2 = model->unkA4;
+		while (model2 != nullptr) {
+			if (model->unkA8 & 1) {
+				J3DShapePacket* shapePacket2
+				    = model2->getShapePacket(param_1->getShape()->getIndex());
+				shapePacket2->drawClear();
+				matPacket->addShapePacket(shapePacket2);
+			}
+			model2 = model2->unkA4;
+		}
+		param_2->unk0[param_1->isDrawModeOpaTexEdge() ? 0 : 1]->entryImm(
+		    matPacket, 0);
+	}
 }
 
-void SDLModelData::entryNode(J3DNode* param_1, SDLDrawBufToken* param_2) { }
+void SDLModelData::entryNode(J3DNode* param_1, SDLDrawBufToken* param_2)
+{
+	J3DJoint* joint       = (J3DJoint*)param_1;
+	J3DMaterial* material = joint->getMesh();
+	while (material != nullptr) {
+		if (material->getShape()->checkFlag(0x1)) {
+			material = material->getNext();
+		} else {
+			entrySameMat(material, param_2);
+			material = material->getNext();
+		}
+	}
+}
 
-void SDLModelData::recursiveEntry(J3DNode* param_1, SDLDrawBufToken* param_2) {
+void SDLModelData::recursiveEntry(J3DNode* param_1, SDLDrawBufToken* param_2)
+{
+	if (param_1) {
+		entryNode(param_1, param_2);
+		recursiveEntry(param_1->getChild(), param_2);
+		recursiveEntry(param_1->getYounger(), param_2);
+	}
 }
 
 SDLModelData::SDLModelData(J3DModelData* model)
@@ -18,11 +74,35 @@ SDLModelData::SDLModelData(J3DModelData* model)
     , unk4(0)
     , unk18(0)
 {
+	gpConductor->registerSDLModelData(this);
 }
 
-void SDLModelData::entrySDLModels() { }
+void SDLModelData::registerSDLModel(SDLModel*) { }
+
+void SDLModelData::entrySDLModels()
+{
+	if (unk18 & 0x1)
+		return;
+
+	typedef JGadget::TList<SDLDrawBufToken*>::iterator I;
+	for (I it = unk8.begin(), e = unk8.end(); it != e; ++it) {
+		recursiveEntry(unk0->getRootNode(), *it);
+
+		SDLModel* model = (*it)->unk8;
+		while (model != nullptr) {
+			model->unkA8 &= ~0x1;
+			model = model->unkA4;
+		}
+
+		(*it)->unk8 = nullptr;
+	}
+}
 
 SDLMatPacket::SDLMatPacket() { }
+
+void SDLMatPacket::beParasiteDL(J3DMatPacket*) { }
+
+void SDLMatPacket::newSingleDL(u32) { }
 
 SDLModel::SDLModel(SDLModelData* param_1, u32 param_2, u32 param_3)
     : unkA0(param_1)
@@ -32,6 +112,8 @@ SDLModel::SDLModel(SDLModelData* param_1, u32 param_2, u32 param_3)
 	initialize();
 	entryModelDataSDL(param_1, param_2, param_3);
 }
+
+SDLModel::SDLModel(J3DModelData*, u32) { }
 
 void SDLModel::entryModelDataSDL(SDLModelData* param_1, u32 param_2,
                                  u32 param_3)
@@ -175,6 +257,45 @@ void SDLModel::entryModelDataSDL(SDLModelData* param_1, u32 param_2,
 	mVertexBuffer = new J3DVertexBuffer(&md->getVertexData());
 }
 
-void SDLModel::entry() { }
+void SDLModel::entry()
+{
+	if (!(unkA8 & 0x8) || !(unkA8 & 2) || !unkA0 || (unkA0->unk18 & 0x1)) {
+		unkA8 &= ~0x1;
+		J3DModel::entry();
+		return;
+	}
 
-void SDLModel::viewCalcSimple() { }
+	unkA8 |= 0x1;
+	unkA4 = nullptr;
+
+	typedef JGadget::TList<SDLDrawBufToken*>::iterator I;
+	for (I it = unkA0->unk8.begin(); it != unkA0->unk8.end(); ++it) {
+		SDLDrawBufToken* token = *it;
+
+		bool found = token->unk0[0] == j3dSys.getDrawBuffer(0)
+		             && token->unk0[1] == j3dSys.getDrawBuffer(1);
+
+		if (found) {
+			unkA4       = token->unk8;
+			token->unk8 = this;
+			return;
+		}
+	}
+
+	SDLDrawBufToken* token = new SDLDrawBufToken;
+
+	token->unk0[0] = j3dSys.getDrawBuffer(0);
+	token->unk0[1] = j3dSys.getDrawBuffer(1);
+	token->unk8    = this;
+
+	unkA0->unk8.push_back(token);
+}
+
+void SDLModel::viewCalcSimple()
+{
+	swapDrawMtx();
+	MtxPtr mA = gpCamera->getUnk1EC();
+	for (int i = 0; i < mModelData->getDrawMtxNum(); ++i)
+		MTXConcat(mA, mNodeMatrices[i], getDrawMtx(i));
+	DCStoreRange(getDrawMtxPtr(), mModelData->getDrawMtxNum() * sizeof(Mtx));
+}

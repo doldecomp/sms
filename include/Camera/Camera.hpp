@@ -128,6 +128,7 @@ public:
 	void execGroundCheck_(Vec);
 
 	s16 getUnk2C8() const { return unk2C8; }
+	MtxPtr getUnk1EC() { return unk1EC; }
 
 public:
 	/* 0x50 */ int mMode;
