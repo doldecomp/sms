@@ -115,6 +115,8 @@ public:
 
 	void* getVtxPosArray() const { return mVertexData.getVtxPosArray(); }
 
+	J3DJoint* getRootNode() { return mRootNode; }
+
 	// This is the J3DMtxCalcAnm type this model needs supposedly
 	u32 getUnkC() const { return unkC & 0xf; }
 

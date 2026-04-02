@@ -28,7 +28,7 @@ public:
 	J3DSys();
 	void loadPosMtxIndx(int, u16) const;
 	void loadNrmMtxIndx(int, u16) const;
-	void loadTexMtx(u32, float (*)[4]) const;
+	void loadTexMtx(u32, MtxPtr) const;
 	void setTexCacheRegion(GXTexCacheSize);
 	void drawInit();
 	void reinitGX();
