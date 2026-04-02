@@ -820,7 +820,7 @@ config.libs = [
             Object(NonMatching, "M3DUtil/SampleCtrlNode.cpp"),
             Object(NonMatching, "M3DUtil/SampleCtrlModel.cpp"),
             Object(NonMatching, "M3DUtil/MotionBlendCtrl.cpp"),
-            Object(NonMatching, "M3DUtil/LodAnm.cpp"),
+            Object(Matching, "M3DUtil/LodAnm.cpp"),
         ],
     },
     {

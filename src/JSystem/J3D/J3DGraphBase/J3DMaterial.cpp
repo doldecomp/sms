@@ -252,22 +252,6 @@ inline void loadTexCoordScale(GXTexCoordID coord,
 // TODO: header
 extern void loadCullMode(u8);
 
-inline GXAttnFn J3DColorChan::getAttnFn()
-{
-	u8 attnFnTbl[] = { GX_AF_NONE, GX_AF_SPEC, GX_AF_NONE, GX_AF_SPOT };
-	return (GXAttnFn)attnFnTbl[mChanCtrl >> 9 & 0x03];
-}
-
-// Made up
-inline void J3DColorChan::load(u32 idx)
-{
-	const GXChannelID chanTbl[]
-	    = { GX_COLOR0, GX_ALPHA0, GX_COLOR1, GX_ALPHA1 };
-
-	J3DGDSetChanCtrl(chanTbl[idx], getEnable(), getAmbSrc(), getMatSrc(),
-	                 getLightMask(), getDiffuseFn(), getAttnFn());
-}
-
 void J3DColorBlockLightOff::load()
 {
 	for (u32 i = 0; i < ARRAY_COUNT(mMatColor); ++i)

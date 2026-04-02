@@ -57,7 +57,7 @@ s32 TCubeManagerBase::getDataNo(s32 i) const
 	return result;
 }
 
-u32 TCubeManagerBase::getInCubeNo(const Vec& v) const
+int TCubeManagerBase::getInCubeNo(const Vec& v) const
 {
 	for (u32 i = 0; i < unk10; ++i) {
 		TCubeGeneralInfo& info = (*unk14)[i];

@@ -3,32 +3,71 @@
 #include <JSystem/JKernel/JKRFileFinder.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
 
-inline int to_upper(int c)
+static int to_upper_hack(int c)
 {
 	if (c >= 'a' && c <= 'z')
-		return c + -0x20;
-	else
-		return c;
+		return c + ('A' - 'a');
+
+	return c;
+}
+
+static int strcmp_ignore_case(const char* fst, const char* snd)
+{
+	while (*fst != '\0' && *snd != '\0') {
+		if (to_upper_hack(*fst) > to_upper_hack(*snd))
+			return -1;
+
+		if (to_upper_hack(*fst) < to_upper_hack(*snd))
+			return 1;
+
+		++fst;
+		++snd;
+	}
+
+	if (to_upper_hack(*fst) > to_upper_hack(*snd))
+		return -1;
+
+	if (to_upper_hack(*fst) < to_upper_hack(*snd))
+		return 1;
+
+	return 0;
 }
 
 void MActorAnmDataBase::checkLower(const char* param_1)
 {
-	for (int iVar1 = 0; iVar1 < unk0; ++iVar1) {
-		const char* pcVar4 = unk8[iVar1];
-		const char* pcVar5 = param_1;
-		while (*pcVar5 != '\0' && *pcVar4 != '\0') {
-
-			if (to_upper(*pcVar5) > to_upper(*pcVar4)
-			    || to_upper(*pcVar5) < to_upper(*pcVar4))
-				break;
-
-			++pcVar5;
-			++pcVar4;
+	for (int i = 0; i < unk0; ++i) {
+		if (strcmp_ignore_case(param_1, unk8[i])) {
+			// assert?
 		}
 	}
 }
 
-void MActorAnmDataBase::sortByFileNameRaw(void** param_1) { }
+void MActorAnmDataBase::sortByFileNameRaw(void** param_1)
+{
+	if (unk0 > 1) {
+		for (int i = 1; i < unk0; ++i) {
+			int j;
+
+			const char* str = unk8[i];
+			u16 key         = unk4[i];
+			void* prm       = param_1[i];
+
+			for (j = i - 1; j >= 0; --j) {
+
+				if (strcmp_ignore_case(str, unk8[j]) < 0)
+					break;
+
+				unk8[j + 1]    = unk8[j];
+				unk4[j + 1]    = unk4[j];
+				param_1[j + 1] = param_1[j];
+			}
+
+			unk8[j + 1]    = str;
+			unk4[j + 1]    = key;
+			param_1[j + 1] = prm;
+		}
+	}
+}
 
 MActorAnmData::MActorAnmData()
 {
@@ -61,12 +100,9 @@ u16 MActorCalcKeyCode(const char* name)
 
 u32 MActorAnmData::partsNameToIdx(const char* name)
 {
-	JGadget::TList<MActorSubAnmInfo>::iterator e;
-	JGadget::TList<MActorSubAnmInfo>::iterator it;
-	it      = unk1C.begin();
-	e       = unk1C.end();
+	typedef JGadget::TList<MActorSubAnmInfo>::iterator I;
 	u32 idx = 0;
-	for (; it != e; ++idx, ++it)
+	for (I it = unk1C.begin(), e = unk1C.end(); it != e; ++idx, ++it)
 		if (strcmp(it->unk4, name) == 0)
 			return idx;
 	return -1;

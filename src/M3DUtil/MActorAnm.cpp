@@ -126,24 +126,15 @@ void MActorAnmBck::updateOut()
 	unk18->getModelData()->getJointNodePointer(unk28)->setMtxCalc(nullptr);
 }
 
-void MActorAnmBck::setAnmFromIndex(int param_1, u16* param_2)
+void MActorAnmBck::setAnmFromIndex(int param_1, u16*)
 {
-	if (unk2A == 2 && unk0 != -1) {
+	if (unk2A == 2 && unk0 != -1)
 		unk34->keepCurAnm(getData()->getAnmPtr(unk0), unk4.getFrame());
-	}
 
-	unk0 = param_1;
+	setFrameCtrl(param_1);
 
-	if (param_1 >= 0) {
-		unk24 = getData()->getAnmPtr(param_1);
-		unk4.init(unk24->getFrameMax());
-		unk4.setAttribute(unk24->getAttribute());
-		unk4.setRate(SMSGetAnmFrameRate());
-	}
-
-	if (unk2A == 2) {
+	if (unk2A == 2)
 		unk34->setNewAnm(getData()->getAnmPtr(unk0));
-	}
 }
 
 void MActorAnmBtp::setTexNoAnmFullPtr()
@@ -253,7 +244,8 @@ void MActorAnmBtk::setTexMtxAnmKeyPtr()
 void MActorAnmBtk::updateIn()
 {
 	unk24->setFrame(unk4.getFrame());
-	unk18->getModelData()->setTexMtxAnimator(unk24, unk28[unk0], unk28[unk0]);
+	J3DTexMtxAnm* anm = unk28[unk0];
+	unk18->getModelData()->setTexMtxAnimator(unk24, anm, anm);
 }
 
 void MActorAnmBtk::updateOut()
@@ -379,7 +371,7 @@ void MActorAnmBrk::checkUseMaterialID(u16* param_1)
 
 void MActorAnmBlk::updateIn()
 {
-	if (unk24->getFrameMax() <= unk4.getFrame() + 1.0f)
+	if (unk4.getFrame() + 1.0f >= unk24->getFrameMax())
 		unk4.setFrame(0.0f);
 	unk24->setFrame(unk4.getFrame());
 	unk28->setAnm(unk24);
@@ -389,12 +381,5 @@ void MActorAnmBlk::updateOut() { unk28->setAnm(nullptr); }
 
 void MActorAnmBlk::setAnmFromIndex(int param_1, u16* param_2)
 {
-	unk0 = param_1;
-
-	if (param_1 >= 0) {
-		unk24 = getData()->getAnmPtr(param_1);
-		unk4.init(unk24->getFrameMax());
-		unk4.setAttribute(unk24->getAttribute());
-		unk4.setRate(SMSGetAnmFrameRate());
-	}
+	setFrameCtrl(param_1);
 }
