@@ -11,15 +11,21 @@ class J3DNode;
 class SDLModel;
 
 struct SDLDrawBufToken {
+	SDLDrawBufToken()
+	{
+		unk0[0] = nullptr;
+		unk0[1] = nullptr;
+		unk8    = nullptr;
+	}
+
 	/* 0x0 */ J3DDrawBuffer* unk0[2];
-	/* 0x8 */ J3DModel* unk8;
+	/* 0x8 */ SDLModel* unk8;
 };
 
 // 0x1CU
 class SDLModelData {
 public:
 	SDLModelData(J3DModelData*);
-	~SDLModelData();
 
 	void entrySDLModels();
 	void registerSDLModel(SDLModel*);
@@ -40,7 +46,6 @@ public:
 class SDLMatPacket : public J3DMatPacket {
 public:
 	SDLMatPacket();
-	~SDLMatPacket() { }
 
 	void newSingleDL(u32);
 	void beParasiteDL(J3DMatPacket*);
@@ -51,7 +56,6 @@ class SDLModel : public J3DModel {
 public:
 	SDLModel(J3DModelData*, u32);
 	SDLModel(SDLModelData*, u32, u32);
-	virtual ~SDLModel() { }
 
 	virtual void viewCalcSimple();
 	void entry();
@@ -62,7 +66,7 @@ public:
 
 public:
 	/* 0xA0 */ SDLModelData* unkA0;
-	/* 0xA4 */ J3DDrawBuffer* unkA4;
+	/* 0xA4 */ SDLModel* unkA4;
 	/* 0xA8 */ u32 unkA8;
 };
 
