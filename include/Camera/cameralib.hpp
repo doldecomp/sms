@@ -3,6 +3,8 @@
 
 #include <JSystem/JGeometry.hpp>
 
+extern f32 SMSGetAnmFrameRate(); // avoid including Application.hpp
+
 void CLBCalc2DFPos(JGeometry::TVec2<f32>*, const MtxPtr, const MtxPtr,
                    const Vec&, u32*, bool);
 void CLBCalcNearClipAngle(JGeometry::TVec3<f32>*, S16Vec*,
@@ -68,9 +70,18 @@ template <class T> T CLBLinearInbetween(T a, T b, f32 f)
 	return (T)(a + f * (b - a));
 }
 
-template <class T> T CLBPalFrame(T);
+template <class T> T CLBRoundf(f32 param_1)
+{
+	return (T)(param_1 + (param_1 > 0.0f ? 0.5f : -0.5f));
+}
+
+template <class T> T CLBPalFrame(T param_1)
+{
+	f32 rate = SMSGetAnmFrameRate();
+	return CLBRoundf<T>(param_1 * (1.0f / rate));
+}
+
 template <class T> void CLBPalIntSpeed(T);
-template <class T> T CLBRoundf(f32);
 template <class T> void CLBTwoDegreeGeneralInbetween(T, T, f32, f32);
 
 template <class T> f32 CLBCalcRatio(T a, T b, T c)
