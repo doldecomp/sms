@@ -1047,7 +1047,7 @@ void TNozzleDeform::movement(const TMarioControllerWork& controllerWork)
 
 	unk378 *= mEmitParams.mEmitPowScale.get();
 
-	if ( unk378 > 1.0f ) {
+	if (unk378 > 1.0f) {
 		unk378 = 1.0f;
 	}
 
