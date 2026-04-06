@@ -1037,6 +1037,23 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 	calcGunAngle(controllerWork);
 }
 
+void TNozzleDeform::movement(const TMarioControllerWork& controllerWork)
+{
+	if (!mFludd->hasWater()) {
+		return;
+	}
+
+	TNozzleBase::movement(controllerWork);
+
+	unk378 *= mEmitParams.mEmitPowScale.get();
+
+	if (unk378 > 1.0f) {
+		unk378 = 1.0f;
+	}
+
+	mBomb.movement(controllerWork);
+}
+
 void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
 {
 	// TODO: Missing stack space
