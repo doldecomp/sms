@@ -33,6 +33,32 @@ class TNpcCoin;
 class TNpcBalloon;
 class TNpcInbetween;
 
+// "Delayed" animation that will be applied after motion blending is done.
+struct TNpcKeepAnm {
+	TNpcKeepAnm()
+	    : mKind(NPC_ANM_KIND_INVALID)
+	    , mBlendOn(0)
+	{
+	}
+
+	void reset() { mKind = NPC_ANM_KIND_INVALID; }
+	void keep(EnumNpcAnmKind anm, EnumNpcStopMotionBlendOnOff blend)
+	{
+		mKind    = anm;
+		mBlendOn = blend != NPC_STOP_MOTION_BLEND_OFF;
+	}
+
+	EnumNpcAnmKind getKind() const { return mKind; }
+	EnumNpcStopMotionBlendOnOff getBlend() const
+	{
+		return (EnumNpcStopMotionBlendOnOff)mBlendOn;
+	}
+
+private:
+	/* 0x0 */ EnumNpcAnmKind mKind;
+	/* 0x4 */ bool mBlendOn;
+};
+
 class TBaseNPC : public TSpineEnemy {
 public:
 	TBaseNPC(u32, const char* name = "?");
@@ -152,6 +178,14 @@ public:
 	void offUnk1D8(u32 flag) { unk1D8 &= ~flag; }
 	bool checkUnk1D8(u32 flag) const { return (unk1D8 & flag) != 0; }
 
+	void onUnk1DA(u32 flag) { unk1DA |= flag; }
+	void offUnk1DA(u32 flag) { unk1DA &= ~flag; }
+	bool checkUnk1DA(u32 flag) const { return (unk1DA & flag) != 0; }
+
+	void onActionFlag(u32 flag) { mActionFlag |= flag; }
+	void offActionFlag(u32 flag) { mActionFlag &= ~flag; }
+	bool checkActionFlag(u32 flag) const { return (mActionFlag & flag) != 0; }
+
 	bool isSunflowerReviving() const
 	{
 		bool result = false;
@@ -191,6 +225,7 @@ private:
 	void movementOnlyTalk_(const JDrama::TGraphics*);
 	void updateForbidCount_()
 	{
+		(void)0;
 		if (mTalkForbidCount != 0)
 			mTalkForbidCount -= 1;
 		if (mWalkForbidCount != 0)
@@ -204,7 +239,7 @@ private:
 		f32 fVar1  = gpCamera->mFar;
 		u32 uVar5  = unkD0->getCurrentAnmKind();
 		f32 fVar2  = mPtrSaveNormal->mSLDanceAnmOffDist.get();
-		if ((mActionFlag & (NPC_ACTION_HAPPY | NPC_ACTION_DANCE))
+		if (checkActionFlag(NPC_ACTION_HAPPY | NPC_ACTION_DANCE)
 		    || mActorType == 0x400000D || uVar5 || uVar5 == 23) {
 			bVar3 = true;
 		}
@@ -277,7 +312,7 @@ private:
 public:
 	/* 0x150 */ SDLModel* unk150;
 	/* 0x154 */ MtxPtr unk154;
-	/* 0x158 */ THitActor* unk158;
+	/* 0x158 */ TTakeActor* unk158;
 
 	// fabricated
 	class TNpcSink {
@@ -335,12 +370,7 @@ public:
 	/* 0x184 */ TNpcCoin* mCoinCtrl;
 	/* 0x188 */ TNpcBalloon* mBalloonCtrl;
 	/* 0x18C */ TNpcInbetween* mInbetweenCtrl;
-
-	struct UnkNpcStruct {
-		EnumNpcAnmKind unk0;
-		u8 unk4;
-	};
-	/* 0x190 */ UnkNpcStruct* unk190;
+	/* 0x190 */ TNpcKeepAnm* mKeepAnmCtrl;
 	/* 0x194 */ JGeometry::TVec3<f32> unk194;
 	/* 0x1A0 */ JGeometry::TVec3<f32> unk1A0;
 	/* 0x1AC */ JGeometry::TVec3<f32> mInitialScale;
@@ -359,6 +389,12 @@ public:
 
 	/* 0x1D8 */ u8 unk1D8;
 	/* 0x1D9 */ u8 unk1D9;
+
+	enum {
+		UNK1DA_FLAG_UNK1 = 0x1,
+		UNK1DA_FLAG_UNK2 = 0x2,
+	};
+
 	/* 0x1DA */ u8 unk1DA;
 	/* 0x1DC */ int unk1DC;
 	/* 0x1E0 */ u16 mTalkForbidCount;

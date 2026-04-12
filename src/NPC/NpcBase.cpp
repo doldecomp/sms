@@ -47,7 +47,7 @@ TBaseNPC::TBaseNPC(u32 param_1, const char* name)
     , mCoinCtrl(nullptr)
     , mBalloonCtrl(nullptr)
     , mInbetweenCtrl(nullptr)
-    , unk190(nullptr)
+    , mKeepAnmCtrl(nullptr)
     , unk1C4(0.0f)
     , unk1C8(0.0f)
     , unk1CC(0)
@@ -83,13 +83,11 @@ TBaseNPC::TBaseNPC(u32 param_1, const char* name)
 
 	mActorType = param_1;
 
-	if (param_1 == 0x400001C)
-		return;
+	if (param_1 != 0x400001C) {
+		mKeepAnmCtrl = new TNpcKeepAnm;
 
-	unk190 = new UnkNpcStruct;
-
-	if (isBeTrampledNpc()) {
-		mTrampleCtrl = new TNpcTrample;
+		if (isBeTrampledNpc())
+			mTrampleCtrl = new TNpcTrample;
 	}
 }
 
@@ -108,8 +106,8 @@ void TBaseNPC::load(JSUMemoryInputStream& stream)
 void TBaseNPC::loadAfter()
 {
 	TSpineEnemy::loadAfter();
-	if (mActorType == 0x4000018 && gpMarDirector->mMap == 1
-	    && gpMarDirector->unk7D == 1) {
+	if (mActorType == 0x4000018 && gpMarDirector->getCurrentMap() == 1
+	    && gpMarDirector->getCurrentStage() == 1) {
 		mBalloonCtrl = new TNpcBalloon;
 	}
 	gpMarDirector->entryNPC(this);
@@ -379,14 +377,13 @@ bool TBaseNPC::isNeedNeckStraight() const
 {
 	bool result = false;
 	int anmKind = unkD0->getCurrentAnmKind();
-	if ((mHolder == nullptr || mHolder != gpMarioAddress) && isClean()
-	    && mActorType != 0x4000012
-	    && (mActorType != 0x4000019 || anmKind != NPC_ANM_KIND_UNK5)) {
-		if ((isMare() && anmKind == NPC_ANM_KIND_UNKC)
-		    || ((checkUnk1D8(UNK1D8_FLAG_UNK2) || anmKind == NPC_ANM_KIND_UNK5)
-		        & (mActorType == 0x4000018))) {
-			result = true;
-		}
+	if ((mHolder != nullptr && mHolder == gpMarioAddress) || !isClean()
+	    || mActorType == 0x4000012
+	    || (mActorType == 0x4000019 && anmKind == NPC_ANM_KIND_UNK5)
+	    || (isMare() && anmKind == NPC_ANM_KIND_UNKC)
+	    || ((checkUnk1D8(UNK1D8_FLAG_UNK2) || anmKind == NPC_ANM_KIND_UNK5)
+	        & (mActorType == 0x4000018))) {
+		result = true;
 	}
 	return result;
 }
@@ -439,7 +436,12 @@ JGeometry::TVec3<f32> TBaseNPC::getFocalPoint() const
 BOOL TBaseNPC::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	bool result = false;
-	if (mActorType != 0x400001C) {
+
+	switch (mActorType) {
+	case 0x400001C:
+		break;
+
+	default:
 		if (param_2 == HIT_MESSAGE_TAKE && checkLiveFlag(LIVE_FLAG_UNK100000)
 		    && mHolder == nullptr) {
 			behaveToBeTaken_(param_1);
@@ -453,13 +455,16 @@ BOOL TBaseNPC::receiveMessage(THitActor* param_1, u32 param_2)
 			result = true;
 		} else if (param_2 == HIT_MESSAGE_UNK10
 		           || (param_2 == HIT_MESSAGE_ATTACK
-		               && param_1->mActorType == 0x4000005A)) {
+		               && param_1->getActorType() == 0x4000005A)) {
 			if (mDamageParticleForbidCount == 0) {
-				SMS_EasyEmitParticle(PARTICLE_MS_DMG_A, &mPosition, nullptr,
+				SMS_EasyEmitParticle(PARTICLE_MS_DMG_A, &param_1->mPosition,
+				                     nullptr,
 				                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
-				SMS_EasyEmitParticle(PARTICLE_MS_DMG_B, &mPosition, nullptr,
+				SMS_EasyEmitParticle(PARTICLE_MS_DMG_B, &param_1->mPosition,
+				                     nullptr,
 				                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
-				SMS_EasyEmitParticle(PARTICLE_MS_DMG_C, &mPosition, nullptr,
+				SMS_EasyEmitParticle(PARTICLE_MS_DMG_C, &param_1->mPosition,
+				                     nullptr,
 				                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 				mDamageParticleForbidCount = 16;
 			}
@@ -473,6 +478,7 @@ BOOL TBaseNPC::receiveMessage(THitActor* param_1, u32 param_2)
 
 			result = true;
 		}
+		break;
 	}
 
 	return result;
@@ -484,7 +490,7 @@ void TBaseNPC::moveObject()
 		return;
 
 	ensureTakeSituation();
-	if (unk158 != nullptr && ((TTakeActor*)unk158)->getHeldObject() != this)
+	if (unk158 != nullptr && unk158->getHeldObject() != this)
 		releaseTaken_();
 
 	if (mTrampleCtrl != nullptr
@@ -493,9 +499,7 @@ void TBaseNPC::moveObject()
 		changeNerveToMad_();
 	}
 
-	if (mInbetweenCtrl->unk8 > 0) {
-		mPosition.set(mInbetweenCtrl->unk18);
-	}
+	mInbetweenCtrl->applyPos(mPosition);
 
 	if (mCoinCtrl != nullptr)
 		mCoinCtrl->updateCoin();
@@ -506,13 +510,13 @@ void TBaseNPC::moveObject()
 		    && mBalloonCtrl->updateBalloon()) {
 			if (mHolder != nullptr) {
 				switch (prev) {
-				case 0xe004F:
+				case 0xE004F:
 					mBalloonCtrl->setNextMessage(0xE0051, 0x1C20);
 					break;
 				case 0xE0050:
 					break;
 				case 0xE0051:
-					mBalloonCtrl->setNextMessage(0xE004f, 0x1C20);
+					mBalloonCtrl->setNextMessage(0xE004F, 0x1C20);
 					break;
 				}
 			} else {
@@ -560,7 +564,7 @@ void TBaseNPC::moveObject()
 			MtxPtr mtx = mHolder->getTakingMtx();
 			mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 			if (unk150 == nullptr) {
-				s16 angle = CLBRoundf<s16>(DEG2SHORTANGLE(mHolder->mRotation.y))
+				s16 angle = CLBDegToShortAngle(mHolder->mRotation.y)
 				            - mAngleYDiffWhenTaken;
 				mRotation.y = SHORTANGLE2DEG(angle);
 			}
@@ -578,13 +582,13 @@ void TBaseNPC::moveObject()
 
 void TBaseNPC::execMotionBlend_()
 {
-	if (!mInbetweenCtrl->isThing())
+	if (!mInbetweenCtrl->isMotionBlending())
 		setKeepAnm_();
 
 	mInbetweenCtrl->execMotionBlend(getMActor());
 
-	if (mInbetweenCtrl->isOtherThing())
-		unk190->unk0 = NPC_ANM_KIND_INVALID;
+	if (mInbetweenCtrl->isForcedBlendRatio())
+		mKeepAnmCtrl->reset();
 }
 
 void TBaseNPC::calcRootMatrix()
@@ -606,7 +610,17 @@ void TBaseNPC::calcRootMatrix()
 	TLiveActor::calcRootMatrix();
 }
 
-void TBaseNPC::movementOnlyTalk_(const JDrama::TGraphics*) { }
+void TBaseNPC::movementOnlyTalk_(const JDrama::TGraphics* param_1)
+{
+	if (checkLiveFlag(LIVE_FLAG_DEAD))
+		return;
+
+	updateForbidCount_();
+	updateSquareToMario();
+	control();
+	if (param_1->unk0 & 0x2)
+		changeNerveProc_();
+}
 
 void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
@@ -619,14 +633,7 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 			mRotation = mDummyConnectActor->mRotation;
 		}
 
-		if (checkLiveFlag(LIVE_FLAG_DEAD))
-			return;
-
-		updateForbidCount_();
-		updateSquareToMario();
-		control();
-		if (param_2->unk0 & 0x2)
-			changeNerveProc_();
+		movementOnlyTalk_(param_2);
 		return;
 	}
 
@@ -634,13 +641,8 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 		if (checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_DEAD))
 			return;
 
-		if ((param_1 & 0x2) && !checkLiveFlag(LIVE_FLAG_DEAD)) {
-			updateForbidCount_();
-			updateSquareToMario();
-			control();
-			if (param_2->unk0 & 0x2)
-				changeNerveProc_();
-		}
+		if (param_1 & 0x1)
+			movementOnlyTalk_(param_2);
 
 		TLiveActor::performOnlyDraw(param_1, param_2);
 		return;
@@ -657,7 +659,7 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 	} else if ((param_1 & 0x1) && mHolder == nullptr && !isAirborne()
 	           && !belongToGround() && mSpine->getTime() != 0
 	           && mActorType != 0x4000018 && isNerveMaybeDontMovement()
-	           && !checkLiveFlag(LIVE_FLAG_UNK800000)) {
+	           && !checkLiveFlag(LIVE_FLAG_SINK_BOTTOM)) {
 		TNPCManager* manager = (TNPCManager*)mManager;
 		f32 farClip          = gpConductor->unk84.mEnemyFarClip.get();
 		if (manager != nullptr)
@@ -705,21 +707,21 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 					offHitFlag(HIT_FLAG_NO_COLLISION);
 					offLiveFlag(LIVE_FLAG_UNK10000000);
 				}
-
-				if (!isJellyFishMare() && mActorType != 0x4000007)
-					setVariableDamageRadius_();
-
-				if (isPollutionNpc())
-					unk174.a = mPollutionAmount
-					           * mIndividualParams->mPollutionMax.get();
 			}
+
+			if (!isJellyFishMare() && mActorType != 0x4000007)
+				setVariableDamageRadius_();
+
+			if (isPollutionNpc())
+				unk174.a
+				    = mPollutionAmount * mIndividualParams->mPollutionMax.get();
 		}
 
 		param_1 &= ~0x1;
 	}
 
 	if (param_1 & 0x2) {
-		if (mActionFlag & NPC_ACTION_BURNING) {
+		if (checkActionFlag(NPC_ACTION_BURNING)) {
 			if (SMSGetMSound()->gateCheck(0x8017))
 				MSoundSESystem::MSoundSE::startSoundNpcActor(0x8017, &mPosition,
 				                                             0, nullptr, 0, 4);
@@ -729,12 +731,14 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 		                   | LIVE_FLAG_CLIPPED_OUT))
 			emitParticle_();
 
+		bool r31 = false;
+
 		bool bVar12 = checkLiveFlag2(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
 		                             | LIVE_FLAG_DEAD);
 		bool bVar6  = checkLiveFlag2(LIVE_FLAG_UNK1000000);
 
 		if (bVar12) {
-			bVar5 = true;
+			r31 = true;
 			updateAnmSound();
 			execMotionBlend_();
 			mMActor->frameUpdate();
@@ -749,17 +753,17 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 				diff.sub(mPosition, gpCamera->unk124);
 				if (CLBSquared(getAnmOffDist_()) < diff.squared() && !bVar6
 				    && mSpine->getTime() > 2) {
-					bVar5 = true;
+					r31 = true;
 					execMotionBlend_();
 				}
 			}
 		}
 
-		if (bVar6 && !bVar5 && mMultiMtxEffect != nullptr) {
+		if (bVar6 && !r31 && mMultiMtxEffect != nullptr) {
 			mMultiMtxEffect->flagOn(0x2);
 		}
 
-		if (bVar5) {
+		if (r31) {
 			param_1 &= ~0x2;
 		}
 	}

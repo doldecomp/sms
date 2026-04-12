@@ -17,15 +17,15 @@ bool TBaseNPC::isCanWalk() const
 void TBaseNPC::execWalk(bool param_1)
 {
 	if (mWalkForbidCount != 0 || gpMarDirector->isThing() || !isClean()
-	    || (mActionFlag & NPC_ACTION_HAPPY)) {
+	    || checkActionFlag(NPC_ACTION_HAPPY)) {
 		mMarchSpeed = 0.0f;
 		mTurnSpeed  = 0.0f;
 		return;
 	}
 
-	if (param_1 && (unk1DA & 0x1)) {
+	if (param_1 && checkUnk1DA(UNK1DA_FLAG_UNK1)) {
 		f32 fVar1 = 4.0f;
-		if (mActionFlag & NPC_ACTION_RUN)
+		if (checkActionFlag(NPC_ACTION_RUN))
 			fVar1 = 6.0f;
 
 		SMS_GoRotate(mPosition, unkF4.getPoint(), fVar1, &mRotation.y);
@@ -38,7 +38,7 @@ void TBaseNPC::execWalk(bool param_1)
 
 		f32 angle = MsGetRotFromZaxisY(copy);
 		if (MsWrap(mRotation.y - angle, 0.0f, 360.0f) < 0.001f)
-			unk1DA &= ~0x1;
+			offUnk1DA(UNK1DA_FLAG_UNK1);
 
 		return;
 	}
@@ -57,7 +57,7 @@ void TBaseNPC::execWalk(bool param_1)
 		case NPC_ANM_KIND_RUN:
 			dVar11 = mIndividualParams->mSLMaxRunSpeed.get();
 			dVar12 = mIndividualParams->mSLRunAccel.get();
-			if (mActionFlag & NPC_ACTION_BURNING) {
+			if (checkActionFlag(NPC_ACTION_BURNING)) {
 				f32 dVar10 = mPtrSaveNormal->mSLSmokeRunMagnif.get();
 				dVar11 *= dVar10;
 				dVar12 *= dVar10;
@@ -88,7 +88,7 @@ bool TBaseNPC::execUTurn()
 	if (targetYaw == mRotation.y)
 		return true;
 
-	if (!isClean() || (mActionFlag & NPC_ACTION_HAPPY))
+	if (!isClean() || checkActionFlag(NPC_ACTION_HAPPY))
 		return false;
 
 	bool result = false;
@@ -135,7 +135,7 @@ bool TBaseNPC::execTurnToFirstState()
 
 bool TBaseNPC::isNeedTurnToFirstState() const
 {
-	if (!isClean() || (mActionFlag & NPC_ACTION_HAPPY))
+	if (!isClean() || checkActionFlag(NPC_ACTION_HAPPY))
 		return false;
 
 	bool result = false;
@@ -151,9 +151,8 @@ bool TBaseNPC::isNeedTurnToFirstState() const
 		if ((nerve == &TNerveNPCWaitMarioApproach::theNerve()
 		     || nerve == &TNerveNPCTurnToMario::theNerve())
 		    && (mActorType == 0x4000006
-		        || !(mActionFlag
-		             & (NPC_ACTION_UNK800 | NPC_ACTION_UNK400
-		                | NPC_ACTION_UNK1)))) {
+		        || !checkActionFlag(NPC_ACTION_UNK800 | NPC_ACTION_UNK400
+		                            | NPC_ACTION_UNK1))) {
 			result = true;
 		}
 		break;
@@ -175,8 +174,8 @@ bool TBaseNPC::isTurnToMarioWhenTalk() const
 		break;
 
 	default:
-		if (mActionFlag
-		    & (NPC_ACTION_UNK800 | NPC_ACTION_UNK400 | NPC_ACTION_UNK1))
+		if (checkActionFlag(NPC_ACTION_UNK800 | NPC_ACTION_UNK400
+		                    | NPC_ACTION_UNK1))
 			result = false;
 		break;
 	}
@@ -185,7 +184,7 @@ bool TBaseNPC::isTurnToMarioWhenTalk() const
 
 bool TBaseNPC::isTurnToMarioWhenApproach() const
 {
-	if (!isClean() || (mActionFlag & NPC_ACTION_HAPPY))
+	if (!isClean() || checkActionFlag(NPC_ACTION_HAPPY))
 		return false;
 
 	bool result = true;
@@ -194,12 +193,12 @@ bool TBaseNPC::isTurnToMarioWhenApproach() const
 	case 0x4000016:
 	case 0x4000017:
 	case 0x4000018:
-		if (mActionFlag
-		    & (NPC_ACTION_BURNING | NPC_ACTION_UNK2000 | NPC_ACTION_UNK1000
-		       | NPC_ACTION_UNK800 | NPC_ACTION_UNK400 | NPC_ACTION_HAPPY
-		       | NPC_ACTION_UNK40 | NPC_ACTION_UNK20 | NPC_ACTION_UNK10
-		       | NPC_ACTION_RUN | NPC_ACTION_DANCE | NPC_ACTION_UNK2
-		       | NPC_ACTION_UNK1))
+		if (checkActionFlag(
+		        NPC_ACTION_BURNING | NPC_ACTION_UNK2000 | NPC_ACTION_UNK1000
+		        | NPC_ACTION_UNK800 | NPC_ACTION_UNK400 | NPC_ACTION_HAPPY
+		        | NPC_ACTION_UNK40 | NPC_ACTION_UNK20 | NPC_ACTION_UNK10
+		        | NPC_ACTION_RUN | NPC_ACTION_DANCE | NPC_ACTION_UNK2
+		        | NPC_ACTION_UNK1))
 			result = false;
 		break;
 

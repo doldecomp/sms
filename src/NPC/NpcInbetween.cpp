@@ -2,48 +2,49 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <M3DUtil/MActor.hpp>
 
-void TNpcInbetween::execPosInbetween(JGeometry::TVec3<f32>* param_1)
+void TNpcInbetween::execPosInbetween(JGeometry::TVec3<f32>* cur_pos)
 {
-	unk18.set(*param_1);
-	if (unk8 >= 2) {
-		unk8 -= 1;
+	mCurrentPos.set(*cur_pos);
+	if (mPosInbetweenTimer >= 2) {
+		mPosInbetweenTimer -= 1;
 
-		f32 fVar2  = unk8 * (1.0f / unk0);
-		param_1->x = fVar2 * (unkC.x - unk18.x) + unk18.x;
-		param_1->y = fVar2 * (unkC.y - unk18.y) + unk18.y;
-		param_1->z = fVar2 * (unkC.z - unk18.z) + unk18.z;
+		f32 progress = mPosInbetweenTimer * (1.0f / mPosInbetweenFrame);
+
+		cur_pos->x = mCurrentPos.x + (mTargetPos.x - mCurrentPos.x) * progress;
+		cur_pos->y = mCurrentPos.y + (mTargetPos.y - mCurrentPos.y) * progress;
+		cur_pos->z = mCurrentPos.z + (mTargetPos.z - mCurrentPos.z) * progress;
 	} else {
-		unkC.set(*param_1);
-		unk8 = 0;
+		mTargetPos.set(*cur_pos);
+		mPosInbetweenTimer = 0;
 	}
 }
 
-void TNpcInbetween::execMotionBlend(MActor* param_1)
+void TNpcInbetween::execMotionBlend(MActor* mactor)
 {
-	f32 fVar1 = 0.0f;
-	if (isOtherThing()) {
-		unk24 = 0;
+	f32 ratio = 0.0f;
+	if (isForcedBlendRatio()) {
+		mMotionBlendTimer = 0;
 
-		J3DAnmTransform* pJVar4 = param_1->getBckOldMotionBlendAnmPtr();
+		J3DAnmTransform* anm = mactor->getBckOldMotionBlendAnmPtr();
 
-		if (pJVar4 != nullptr) {
-			J3DFrameCtrl ctrl = *param_1->getFrameCtrl(0);
+		if (anm != nullptr) {
+			J3DFrameCtrl ctrl = *mactor->getFrameCtrl(0);
 			ctrl.update();
-			pJVar4->setFrame(ctrl.getFrame());
-			fVar1 = unk28;
+			anm->setFrame(ctrl.getFrame());
+			ratio = mForcedBlendRatio;
 		}
-	} else if (isThing()) {
-		if (unk24 > 0)
-			unk24 -= 1;
-		if (unk24 > 0) {
-			J3DAnmTransform* pJVar4 = param_1->getBckOldMotionBlendAnmPtr();
+	} else if (isMotionBlending()) {
+		if (mMotionBlendTimer > 0)
+			mMotionBlendTimer -= 1;
+		if (mMotionBlendTimer > 0) {
+			J3DAnmTransform* anm = mactor->getBckOldMotionBlendAnmPtr();
 
-			if (pJVar4 != nullptr)
-				pJVar4->setFrame(param_1->getBckOldMotionBlendFrame());
+			if (anm != nullptr)
+				anm->setFrame(mactor->getBckOldMotionBlendFrame());
 
-			fVar1 = unk24 * (1.0f / unk4);
+			ratio = mMotionBlendTimer * (1.0f / mMotionBlendFrame);
 		}
 	}
 
-	param_1->setMotionBlendRatioForBck(fVar1);
+	mactor->setMotionBlendRatioForBck(ratio);
 }

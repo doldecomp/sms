@@ -120,7 +120,7 @@ void TBaseNPC::emitSinkEffect_()
 {
 	bool bVar1 = true;
 	JGeometry::TVec3<f32> pos(mPosition.x, unk1C4, mPosition.z);
-	if (checkLiveFlag(LIVE_FLAG_UNK800000))
+	if (checkLiveFlag(LIVE_FLAG_SINK_BOTTOM))
 		bVar1 = false;
 	SMS_EmitSinkInPollutionEffect(pos, mGroundPlane->getNormal(), bVar1);
 }
@@ -227,7 +227,7 @@ inline bool TBaseNPC::isPolWaitREffectEmitTime_() const
 
 void TBaseNPC::emitParticle_()
 {
-	if (mSmokeEffectMtxPtr != nullptr && (mActionFlag & NPC_ACTION_BURNING)) {
+	if (mSmokeEffectMtxPtr != nullptr && checkActionFlag(NPC_ACTION_BURNING)) {
 		JGeometry::TVec3<f32> scale = getEffectScale_();
 		mFireParticlePos.set(mSmokeEffectMtxPtr[0][3], mSmokeEffectMtxPtr[1][3],
 		                     mSmokeEffectMtxPtr[2][3]);

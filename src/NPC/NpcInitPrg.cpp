@@ -264,13 +264,13 @@ inline void TBaseNPC::initBaseActionFlag_()
 
 	if (isMonte()) {
 		setMonteActionFlag_();
-		if (mActionFlag & NPC_ACTION_UNK400)
+		if (checkActionFlag(NPC_ACTION_UNK400))
 			unkD0->unk18 = sIndividualHoldArrowBck;
 	} else if (isMare()) {
 		setMareActionFlag_();
 	} else if (mActorType == 0x4000016 || mActorType == 0x4000017) {
 		setKinoActionFlag_();
-		if (mActionFlag & NPC_ACTION_UNK100) {
+		if (checkActionFlag(NPC_ACTION_UNK100)) {
 			switch (mActorType) {
 			case 0x4000016:
 				unkD0->unk18 = sIndividualKinopioBck;
@@ -326,10 +326,10 @@ inline void TBaseNPC::initIndividualAnm_()
 	switch (mActorType) {
 	case 0x4000019:
 		if (strcmp(mName, cManiyaParentViewObjName) == 0) {
-			mActionFlag |= NPC_ACTION_UNK800;
+			onActionFlag(NPC_ACTION_UNK800);
 			unkD0->unk18 = sIndividualParentRaccoonDogAnmBck;
 		} else if (strcmp(mName, cManiyaChildViewObjName) == 0) {
-			mActionFlag |= NPC_ACTION_UNK800;
+			onActionFlag(NPC_ACTION_UNK800);
 			onLiveFlag(LIVE_FLAG_UNK10000);
 			unkD0->unk18 = sIndividualChildRaccoonDogAnmBck;
 		}
@@ -445,7 +445,9 @@ void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 	if (uVar20 & 0x1)
 		mThrowCtrl = new TNpcThrow(local_a0, local_a4);
 
-	bool bVar4 = isNormalMonteM() && (mActionFlag & 0x4000) ? true : false;
+	bool bVar4 = isNormalMonteM() && checkActionFlag(NPC_ACTION_BURNING)
+	                 ? true
+	                 : false;
 
 	bool bVar3 = true;
 	if (local_a8 == 2000 || local_a8 == 200
@@ -458,8 +460,8 @@ void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 
 		if (bVar4 && bVar5) {
 			bVar3 = false;
-			mActionFlag
-			    &= ~(NPC_ACTION_BURNING | NPC_ACTION_UNK80 | NPC_ACTION_RUN);
+			offActionFlag(NPC_ACTION_BURNING | NPC_ACTION_UNK80
+			              | NPC_ACTION_RUN);
 		} else {
 			if (bVar5)
 				local_a8 = 2000;

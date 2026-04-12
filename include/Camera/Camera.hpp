@@ -129,6 +129,7 @@ public:
 
 	s16 getUnk2C8() const { return unk2C8; }
 	MtxPtr getUnk1EC() { return unk1EC; }
+	const JGeometry::TVec3<f32>& getUnk124() const { return unk124; }
 
 public:
 	/* 0x50 */ int mMode;
