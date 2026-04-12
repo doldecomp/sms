@@ -6,8 +6,10 @@
 class TNpcEvent {
 public:
 	static void reviveOneSunflower();
-	void initDownSunflowerNum();
+	static void initDownSunflowerNum();
 	static void initNpcBuiltin(TSpcTypedBinary<TEventWatcher>*);
+
+	static int mDownSunflowerNum;
 };
 
 #endif

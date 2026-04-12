@@ -5,14 +5,14 @@
 TLodAnm::TLodAnm(TLiveActor* param_1, const TLodAnmIndex* param_2, int param_3,
                  f32 param_4)
 {
-	unk0  = param_1;
-	unk4  = param_2;
-	unk8  = param_3;
-	unkC  = param_4;
-	unk10 = 0;
-	unk14 = -1;
-	unk18 = nullptr;
-	unk1C = 0;
+	mOwner            = param_1;
+	mLodAnmIndexTable = param_2;
+	unk8              = param_3;
+	unkC              = param_4;
+	unk10             = 0;
+	mCurrentAnmKind   = -1;
+	unk18             = nullptr;
+	unk1C             = 0;
 	if (param_2) {
 		while (param_2[unk10].unk0[0] >= -1)
 			++unk10;
@@ -22,29 +22,29 @@ TLodAnm::TLodAnm(TLiveActor* param_1, const TLodAnmIndex* param_2, int param_3,
 bool TLodAnm::setBckAnm_(int param_1)
 {
 	if (param_1 < 0) {
-		unk0->getMActor()->setBckFromIndex(-1);
+		mOwner->getMActor()->setBckFromIndex(-1);
 		return true;
 	}
 
 	bool result = false;
 
-	int iVar3 = unk0->getMActor()->getCurAnmIdx(0);
+	int iVar3 = mOwner->getMActor()->getCurAnmIdx(0);
 
 	int tmp;
-	if (unk4 == nullptr)
+	if (mLodAnmIndexTable == nullptr)
 		tmp = param_1;
 	else
-		tmp = unk4[param_1].unk0[unk8];
+		tmp = mLodAnmIndexTable[param_1].unk0[unk8];
 
 	if (unk18 != nullptr)
-		for (BckMapping* it = unk18; it->unk0 >= 0; ++it)
+		for (const TAnmBckMapping* it = unk18; it->unk0 >= 0; ++it)
 			if (tmp == it->unk0) {
 				tmp = it->unk4;
 				break;
 			}
 
 	if (iVar3 != tmp) {
-		unk0->getMActor()->setBckFromIndex(tmp);
+		mOwner->getMActor()->setBckFromIndex(tmp);
 		result = true;
 	}
 
@@ -54,25 +54,25 @@ bool TLodAnm::setBckAnm_(int param_1)
 bool TLodAnm::setBtpAnm_(int param_1)
 {
 	if (param_1 < 0) {
-		unk0->getMActor()->setBtpFromIndex(-1);
+		mOwner->getMActor()->setBtpFromIndex(-1);
 		return true;
 	}
 
 	bool result = false;
 
-	int iVar3 = unk0->getMActor()->getCurAnmIdx(3);
+	int iVar3 = mOwner->getMActor()->getCurAnmIdx(3);
 
-	int tmp = unk4[param_1].unk8[unk8];
+	int tmp = mLodAnmIndexTable[param_1].unk8[unk8];
 
 	if (unk1C != nullptr)
-		for (BtpMapping* it = unk1C; it->unk0 >= 0; ++it)
+		for (const TAnmBtpMapping* it = unk1C; it->unk0 >= 0; ++it)
 			if (tmp == it->unk0) {
 				tmp = it->unk4;
 				break;
 			}
 
 	if (iVar3 != tmp) {
-		unk0->getMActor()->setBtpFromIndex(tmp);
+		mOwner->getMActor()->setBtpFromIndex(tmp);
 		result = true;
 	}
 
@@ -82,8 +82,10 @@ bool TLodAnm::setBtpAnm_(int param_1)
 bool TLodAnm::setBckAndBtpAnm(int param_1)
 {
 	bool result = setBckAnm_(param_1);
-	if (unk4 != nullptr)
+	if (mLodAnmIndexTable != nullptr)
 		setBtpAnm_(param_1);
-	unk14 = param_1;
+	mCurrentAnmKind = param_1;
 	return result;
 }
+
+void TLodAnm::execChangeLod() { }

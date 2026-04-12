@@ -1,11 +1,13 @@
+#include <Map/MapWire.hpp>
+
 #include <dolphin/mtx.h>
+#include <dolphin/gx.h>
 #include <fake_tgmath.h>
 #include <types.h>
 
-#include <Map/MapWire.hpp>
-
-#include <Camera/CubeMapTool.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/JMath.hpp>
+#include <Camera/CubeMapTool.hpp>
 #include <Map/MapCollisionEntry.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/ModelUtil.hpp>

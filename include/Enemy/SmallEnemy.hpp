@@ -124,7 +124,7 @@ public:
 	virtual void genEventCoin();
 	virtual void generateItem();
 	virtual bool isEatenByYosshi() { return true; }
-	virtual void setBehavior();
+	virtual void setBehavior() { }
 	virtual void jumpBehavior() { }
 	virtual void behaveToWater(THitActor*);
 	virtual bool changeByJuice();
@@ -135,12 +135,12 @@ public:
 	virtual void behaveToTaken(THitActor*) { }
 	virtual void behaveToRelease() { }
 	virtual void setGenerateAnm() { }
-	virtual void setWalkAnm();
+	virtual void setWalkAnm() { }
 	virtual void setDeadAnm() { }
 	virtual void setFreezeAnm() { }
 	virtual void setMeltAnm() { }
 	virtual void setWaitAnm() { }
-	virtual void setRunAnm();
+	virtual void setRunAnm() { }
 	virtual void attackToMario();
 	virtual void forceKill();
 	virtual void setMActorAndKeeper();

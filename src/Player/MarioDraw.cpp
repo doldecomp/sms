@@ -7,6 +7,9 @@
 #include <MarioUtil/PacketUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <MarioUtil/ModelUtil.hpp>
+#include <MarioUtil/DrawUtil.hpp>
+#include <MSound/MAnmSound.hpp>
+#include <M3DUtil/M3UModelMario.hpp>
 #include <M3DUtil/SampleCtrlModel.hpp>
 #include <M3DUtil/M3UJoint.hpp>
 #include <Map/Map.hpp>
@@ -20,12 +23,6 @@
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 #include <System/MarDirector.hpp>
 #include <NPC/NpcBase.hpp>
-
-// NOTE: hack for matching setLength
-static void dummy(JGeometry::TVec3<f32>& v) { v.setLength(v, 1.0f); }
-static void dummy2(JGeometry::TVec3<f32>& v) { dummy(v); }
-static void dummy3(JGeometry::TVec3<f32>& v) { dummy2(v); }
-static void dummy4(JGeometry::TVec3<f32>& v) { dummy3(v); }
 
 static const char* MtxCalcTypeName[4]
     = { "MActorMtxCalcType_Basic クラシックスケールＯＮ",
@@ -1880,7 +1877,7 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 
 	if (0x4B0 > gpMarDirector->unk58 || fabricatedUnk380Inline()) {
 		if (mMultiMtxEffect != nullptr) {
-			mMultiMtxEffect->flagOff();
+			mMultiMtxEffect->flagOff(0x1);
 		}
 
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
@@ -1893,11 +1890,11 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 	} else {
 		if ((gMarioAnimeData[mAnimationId].unk6 & 2) != 0 && unk380 == 5) {
 			if (mMultiMtxEffect != nullptr) {
-				mMultiMtxEffect->flagOn();
+				mMultiMtxEffect->flagOn(0x1);
 			}
 		} else {
 			if (mMultiMtxEffect != nullptr) {
-				mMultiMtxEffect->flagOff();
+				mMultiMtxEffect->flagOff(0x1);
 			}
 		}
 

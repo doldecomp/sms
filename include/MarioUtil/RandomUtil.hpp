@@ -20,4 +20,10 @@ inline f32 MsRandF(f32 l, f32 r)
 	return rand() * (1.f / (RAND_MAX + 1)) * (r - l) + l;
 }
 
+inline int MsRandI(int l, int r)
+{
+	int rnd = rand() * (1.f / (RAND_MAX + 1)) * (r - l);
+	return 1 + l + rnd;
+}
+
 #endif

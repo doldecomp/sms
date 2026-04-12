@@ -38,7 +38,9 @@ void TRailMapObj::initGraphTracer(TGraphWeb* graph)
 			unk138->moveToShortestNext();
 		}
 
-		if (graph->getGraphNode(unk138->getCurrentIndex()).getRailNode()->mFlags
+		if (graph->getGraphNode(unk138->getCurGraphIndex())
+		        .getRailNode()
+		        ->mFlags
 		    & 0x80)
 			onRailFlag(2);
 

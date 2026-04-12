@@ -5,6 +5,7 @@
 #include <Player/NozzleTrigger.hpp>
 #include <Player/NozzleDeform.hpp>
 #include <Player/MarioMain.hpp>
+#include <Player/Yoshi.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <Strategic/MirrorActor.hpp>

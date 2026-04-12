@@ -121,6 +121,17 @@ MsPerpendicFootToLineR(const JGeometry::TVec3<f32>& param_1,
 	return thing;
 }
 
-f32 MsSqrtf(f32);
+inline f32 MsSqrtf(f32 x)
+{
+	// We love copy-pasting code, don't we?
+	volatile float y;
+	if (x > 0.0f) {
+		double guess = __frsqrte((double)x);
+		guess        = .5 * guess * (3.0 - guess * guess * x);
+		y            = (float)(x * guess);
+		return y;
+	}
+	return x;
+}
 
 #endif

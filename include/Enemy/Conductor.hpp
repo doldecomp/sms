@@ -68,6 +68,7 @@ public:
 	virtual void perform(u32, JDrama::TGraphics*);
 
 	const TCondParams& getCondParams() const { return unk84; }
+	const TNpcParams* getNpcParams() const { return unkF4; }
 
 public:
 	/* 0x10 */ JGadget::TList<TLiveManager*> unk10;

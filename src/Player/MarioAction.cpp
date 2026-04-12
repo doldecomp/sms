@@ -1,4 +1,5 @@
 #include <Player/MarioMain.hpp>
+#include <M3DUtil/M3UModelMario.hpp>
 
 BOOL TMario::taking()
 {

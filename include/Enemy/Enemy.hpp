@@ -10,7 +10,7 @@
 class TGraphTracer;
 class TSpineEnemyParams;
 class TEnemyManager;
-extern size_t gpMarioAddress;
+extern void* gpMarioAddress;
 
 // TODO: this definitely has a better place to live
 // I took it from walkerEnemy.cpp
@@ -54,7 +54,10 @@ public:
 	                       const JGeometry::TVec3<f32>& velocity);
 	virtual TSpineEnemyParams* getSaveParam() const;
 	virtual f32 getPhaseShift() const { return 0.0f; }
-	virtual BOOL isReachedToGoal() const { }
+	virtual BOOL isReachedToGoal() const
+	{
+		return vecdist(unk104.getPoint(), mPosition) < 100.0f ? TRUE : FALSE;
+	}
 
 	void calcEnemyRootMatrix();
 	f32 calcMinimumTurnRadius(f32, f32) const;
@@ -103,9 +106,9 @@ public:
 
 		// the hell
 		if (gpMarioAddress) {
-			node.unk4.set(*(f32*)(gpMarioAddress + 0x10),
-			              *(f32*)(gpMarioAddress + 0x14),
-			              *(f32*)(gpMarioAddress + 0x18));
+			node.unk4.set(*(f32*)((u8*)gpMarioAddress + 0x10),
+			              *(f32*)((u8*)gpMarioAddress + 0x14),
+			              *(f32*)((u8*)gpMarioAddress + 0x18));
 		}
 
 		unkF4  = node;

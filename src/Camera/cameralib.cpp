@@ -235,16 +235,6 @@ void CLBCalcPointInCubeRatio(const Vec& param_1, const Vec& param_2,
 	}
 }
 
-/**
- * @brief Creates a rotate-and-translate matrix.
- *
- * @details
- * Rotations are applied in ZXY order.
- *
- * @param mtx the destination matrix
- * @param rotate rotation angles in degrees
- * @param translate translation values
- */
 void CLBCalcRotateZXYTranslateMatrix(MtxPtr mtx, const Vec& rotate,
                                      const Vec& translate)
 {
@@ -275,13 +265,6 @@ void CLBCalcRotateZXYTranslateMatrix(MtxPtr mtx, const Vec& rotate,
 	mtx[2][3] = translate.z;
 }
 
-/**
- * @brief Creates a scale-and-translate matrix.
- *
- * @param mtx the destination matrix
- * @param scale scale factors
- * @param translate translation values
- */
 void CLBCalcScaleTranslateMatrix(MtxPtr mtx, const Vec& scale,
                                  const Vec& translate)
 {
@@ -301,14 +284,6 @@ void CLBCalcScaleTranslateMatrix(MtxPtr mtx, const Vec& scale,
 	mtx[2][3] = translate.z;
 }
 
-/**
- * @brief Moves a SHORTANGLE towards another SHORTANGLE by a specified ratio.
- *
- * @param out the value to be modified
- * @param target the target value to approach
- * @param invSpeed a constant inversely proportional to the rate of change
- * @return whether another iteration may refine the angle even further
- */
 bool CLBChaseAngleDecrease(s16* out, s16 target, s16 invSpeed)
 {
 	if (invSpeed == 0) {
@@ -329,16 +304,7 @@ bool CLBChaseAngleDecrease(s16* out, s16 target, s16 invSpeed)
 	return true;
 }
 
-/**
- * @brief Moves dstValue toward targetValue by a fraction defined by ratio.
- *
- * @param dstValue the value to be modified
- * @param targetValue the target value to approach
- * @param ratio the ratio by which dstValue approaches targetValue
- * @param threshold a threshold for if we're close enough
- * @return whether dstValue is still outside the threshold of targetValue
- */
-bool CLBChaseDecrease(f32* dstValue, f32 targetValue, f32 ratio, f32 threshold)
+BOOL CLBChaseDecrease(f32* dstValue, f32 targetValue, f32 ratio, f32 threshold)
 {
 	if (ratio > 1.0f) {
 		ratio = 1.0f;
@@ -374,15 +340,6 @@ bool CLBChaseSpecialDecrease(f32* param_1, f32 param_2, f32 param_3,
 	return CLBChaseGeneralConstantSpecifySpeed(param_1, param_2, fVar2);
 }
 
-/**
- * @brief Converts Cartesian coordinates to spherical coordinates.
- *
- * @param origin the point to use as the origin
- * @param in the input vector
- * @param outRadius the output radius
- * @param outVAngle the output vertical angle
- * @param outHAngle the output horizontal angle
- */
 void CLBCrossToPolar(const Vec& origin, const Vec& in, f32* outRadius,
                      s16* outVAngle, s16* outHAngle)
 {
@@ -451,15 +408,6 @@ bool CLBIsPointInCube(const Vec& param_1, const Vec& param_2,
 	return result;
 }
 
-/**
- * @brief Converts spherical coordinates to Cartesian coordinates.
- *
- * @param origin the point to use as the origin
- * @param out the output vector
- * @param radius the radius of the point
- * @param vAngle the vertical angle from the xz-plane to the y-axis
- * @param hAngle the horizontal angle in the xz-plane, clockwise from the z-axis
- */
 void CLBPolarToCross(const Vec& origin, Vec* out, f32 radius, s16 vAngle,
                      s16 hAngle)
 {
@@ -468,14 +416,6 @@ void CLBPolarToCross(const Vec& origin, Vec* out, f32 radius, s16 vAngle,
 	out->z = origin.z + radius * JMASCos(vAngle) * JMASCos(hAngle);
 }
 
-/**
- * @brief Clamps a vector within a specified vertical angle range.
- *
- * @param vAngleMin the minimum vertical angle
- * @param vAngleMax the maximum vertical angle
- * @param origin the point to use as the origin
- * @param inOut the input and output vector
- */
 void CLBRevisionLookatByAngleX(s16 vAngleMin, s16 vAngleMax, const Vec& origin,
                                Vec* inOut)
 {

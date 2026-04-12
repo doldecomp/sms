@@ -4,7 +4,7 @@
 #include <Player/MarioMain.hpp>
 #include <JSystem/JGeometry.hpp>
 
-size_t gpMarioAddress;
+void* gpMarioAddress;
 JGeometry::TVec3<f32>* gpMarioPos;
 s16 *gpMarioAngleX, *gpMarioAngleY, *gpMarioAngleZ;
 f32 *gpMarioSpeedX, *gpMarioSpeedY, *gpMarioSpeedZ;
@@ -239,7 +239,7 @@ void SMS_SetMarioAccessParams()
 	s16* angle;
 	f32* speed;
 
-	gpMarioAddress = (size_t)gpMarioOriginal;
+	gpMarioAddress = gpMarioOriginal;
 	gpMarioPos     = &gpMarioOriginal->mPosition;
 
 	angle         = &gpMarioOriginal->mFaceAngle.x;

@@ -93,8 +93,7 @@ public:
 	// fabricated
 	MActorAnmBase* getUnk28(int i) { return unk28[i]; }
 	MActorAnmBck* getAnmBck() { return unkC; }
-	J3DModel* getModel() { return unk4; }
-	const J3DModel* getModel() const { return unk4; }
+	J3DModel* getModel() const { return unk4; }
 	void unmarkUnk40() { unk40 = false; }
 	BOOL curAnmEndsNext() { return curAnmEndsNext(0, 0); }
 
@@ -107,7 +106,43 @@ public:
 		unkC->setCalc(calc);
 	}
 
+	J3DAnmTransform* getBckOldMotionBlendAnmPtr() const
+	{
+		if (!unkC)
+			return nullptr;
+
+		return unkC->getOldMotionBlendAnmPtr();
+	}
+
+	f32 getBckOldMotionBlendFrame() const
+	{
+		if (!unkC)
+			return 0.0f;
+
+		return unkC->getOldMotionBlendFrame();
+	}
+
 	void setFrameCtrlForBck(int param_1) { unkC->setFrameCtrl(param_1); }
+
+	void setMotionBlendRatioForBck(f32 ratio)
+	{
+		if (!unkC)
+			return;
+
+		unkC->setMotionBlendRatio(ratio);
+	}
+
+	void initSimpleMotionBlend(int frame)
+	{
+		if (!unkC)
+			return;
+
+		unkC->initSimpleMotionBlend(frame);
+	}
+
+	void copyBckFrmCtrl(J3DFrameCtrl ctrl) { }
+
+	void copyBtpFrmCtrl(J3DFrameCtrl ctrl) { }
 
 public:
 	/* 0x00 */ MActorAnmData* unk0;

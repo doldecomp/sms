@@ -4,10 +4,6 @@
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <Strategic/TakeActor.hpp>
 
-// rogue includes needed for matching sinit & bss
-#include <MSound/MSSetSound.hpp>
-#include <MSound/MSoundBGM.hpp>
-
 class TMapWireActorManager;
 class TMapWire;
 

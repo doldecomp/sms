@@ -1,13 +1,22 @@
 #ifndef NPCBALLOON_HPP
 #define NPCBALLOON_HPP
 
-#include "dolphin.h"
+#include <dolphin/types.h>
 
 class TNpcBalloon {
+public:
+	TNpcBalloon()
+	    : unk0(0)
+	    , mBalloonAppearTimer(-1)
+	{
+	}
+
 	bool updateBalloon();
 	void setNextMessage(u32, s32);
-	int _000;
-	int mBalloonAppearTimer;
+
+public:
+	/* 0x0 */ int unk0;
+	/* 0x4 */ int mBalloonAppearTimer;
 };
 
 #endif

@@ -130,20 +130,21 @@ public:
 	void remove();
 
 	// Fabricated
-	void flagOn()
+	void flagOn(u32 flag)
 	{
 		for (int i = 0; i < mNumBones; ++i) {
-			mMtxEffectTbl[i]->mFlags |= 1;
+			mMtxEffectTbl[i]->mFlags |= flag;
 		}
 	}
 	// Fabricated
-	void flagOff()
+	void flagOff(u32 flag)
 	{
 		for (int i = 0; i < mNumBones; ++i) {
-			mMtxEffectTbl[i]->mFlags &= ~1;
+			mMtxEffectTbl[i]->mFlags &= ~flag;
 		}
 	}
 
+public:
 	/* 0x00 */ u16 mNumBones;      // number of bones to be manipulated
 	/* 0x04 */ u8* mMtxEffectType; // array of TMtxEffectBase types
 	/* 0x08 */ u16* mBoneIDs;      // array of bone IDs to be manipulated

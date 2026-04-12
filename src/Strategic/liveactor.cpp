@@ -424,7 +424,7 @@ int TLiveActor::getJointTransByIndex(int param_1,
 	return param_1;
 }
 
-Vec TLiveActor::getFocalPoint() const { return mPosition; }
+JGeometry::TVec3<f32> TLiveActor::getFocalPoint() const { return mPosition; }
 
 MtxPtr TLiveActor::getTakingMtx()
 {

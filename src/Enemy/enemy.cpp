@@ -324,11 +324,11 @@ int TSpineEnemy::jumpToNextGraphNode()
 
 void TSpineEnemy::goToRandomNextGraphNode()
 {
-	if (unk124->getCurrentIndex() < 0)
+	if (unk124->getCurGraphIndex() < 0)
 		unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
 	else
 		unk124->moveTo(unk124->unk0->getRandomNextIndex(
-		    unk124->getCurrentIndex(), unk124->getPrevIndex(), -1));
+		    unk124->getCurGraphIndex(), unk124->getPrevIndex(), -1));
 
 	setGoalPathFromGraph();
 	unk128 = 0;
@@ -337,11 +337,11 @@ void TSpineEnemy::goToRandomNextGraphNode()
 
 void TSpineEnemy::goToRandomEscapeGraphNode()
 {
-	if (unk124->getCurrentIndex() < 0)
+	if (unk124->getCurGraphIndex() < 0)
 		unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
 	else
 		unk124->moveTo(unk124->unk0->getEscapeFromMarioIndex(
-		    unk124->getCurrentIndex(), -1, mPosition, -1));
+		    unk124->getCurGraphIndex(), -1, mPosition, -1));
 
 	setGoalPathFromGraph();
 	unk128 = 0;
@@ -357,12 +357,12 @@ void TSpineEnemy::goToExclusiveNextGraphNode()
 			unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
 		} else {
 			int idx = unk124->unk0->getRandomNextIndex(
-			    unk124->getCurrentIndex(), unk124->getPrevIndex(), -1);
+			    unk124->getCurGraphIndex(), unk124->getPrevIndex(), -1);
 			for (int i = 0; i < mManager->getObjNum(); ++i) {
 				TSpineEnemy* enemy = (TSpineEnemy*)mManager->getObj(i);
 				if (this != enemy && idx == enemy->unk124->mCurrIdx)
 					idx = unk124->unk0->getRandomNextIndex(
-					    unk124->getCurrentIndex(), idx, -1);
+					    unk124->getCurGraphIndex(), idx, -1);
 			}
 			unk124->moveTo(idx);
 		}

@@ -4,21 +4,24 @@
 
 void TNpcBalloon::setNextMessage(u32 a, s32 timer)
 {
-	_000                = a;
+	unk0                = a;
 	mBalloonAppearTimer = timer;
 }
 
 bool TNpcBalloon::updateBalloon()
 {
-	int pad[5];
-	bool ret = false;
+	bool result = false;
 
-	if (mBalloonAppearTimer > 0
-	    && (--mBalloonAppearTimer, !mBalloonAppearTimer)) {
-		gpMarDirector->mConsole->startAppearBalloon(_000, true);
-		mBalloonAppearTimer = -1;
-		ret                 = true;
+	if (mBalloonAppearTimer > 0) {
+		mBalloonAppearTimer -= 1;
+
+		if (mBalloonAppearTimer == 0) {
+			gpMarDirector->getConsole()->startAppearBalloon(unk0, true);
+			mBalloonAppearTimer = -1;
+
+			result = true;
+		}
 	}
 
-	return ret;
+	return result;
 }

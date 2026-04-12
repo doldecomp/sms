@@ -6,13 +6,6 @@
 #include <System/ParamInst.hpp>
 #include <System/DrawSyncCallback.hpp>
 #include <Strategic/TakeActor.hpp>
-#include <JSystem/J3D/J3DGraphBase/J3DDrawBuffer.hpp>
-#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
-#include <M3DUtil/M3UModelMario.hpp>
-#include <Player/Yoshi.hpp>
-#include <MarioUtil/DrawUtil.hpp>
-#include <MSound/MAnmSound.hpp>
-#include <MarioUtil/MtxUtil.hpp>
 
 class TLiveActor;
 class TWaterGun;
@@ -24,6 +17,19 @@ struct TBGWallCheckRecord;
 class TMarioCap;
 class TWaterEmitInfo;
 class TBaseNPC;
+class J3DFrameCtrl;
+class J3DDrawBuffer;
+class M3UModelMario;
+class TYoshi;
+class MActor;
+struct ResTIMG;
+class MAnmSound;
+class JAIAnimeSound;
+class JAISound;
+class J3DModel;
+class TTrembleModelEffect;
+class SampleCtrlModelData;
+class TMultiMtxEffect;
 
 // TODO: where should this be?
 enum E_SIDEWALK_TYPE { };

@@ -123,7 +123,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 	if (strcmp(name, "Mario") == 0) {
 		TMario* mario   = new TMario;
 		gpMarioOriginal = mario;
-		gpMarioAddress  = (size_t)mario;
+		gpMarioAddress  = mario;
 		return mario;
 	}
 

@@ -73,9 +73,9 @@ TTamaNokoFlower::TTamaNokoFlower(const TLiveActor* param_1, int param_2,
 void TTamaNokoFlower::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (param_1 & 1) {
-		if (gpMarDirector->isTalkModeNow()) {
+		if (!gpMarDirector->isTalkModeNow()) {
 			if (unk35 != 0 && unk1C == 0) {
-				if (gpMarDirector->checkUnk124Thing2()) {
+				if (!gpMarDirector->isDemoModeNow()) {
 					unk1C = 1;
 
 					for (int i = 0; i < 5; ++i) {
@@ -138,7 +138,7 @@ void TTamaNokoFlower::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if (gpMarDirector->checkUnk124Thing2() && gpMarDirector->isTalkModeNow()) {
+	if (!gpMarDirector->isDemoModeNow() && gpMarDirector->isTalkModeNow()) {
 		if (param_1 & 0x4)
 			unk18->viewCalc();
 

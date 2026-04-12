@@ -1,6 +1,7 @@
 #include <MSound/MSoundSE.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSRandVol.hpp>
+#include <MSound/MSSetSound.hpp>
 #include <JSystem/JAudio/JALibrary/JALSystem.hpp>
 #include <JSystem/JAudio/JAInterface/JAIConst.hpp>
 #include <MarioUtil/MapUtil.hpp>

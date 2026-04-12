@@ -7,8 +7,6 @@
 #include <JSystem/JAudio/JAInterface/JAISound.hpp>
 #include <JSystem/JSupport/JSUList.hpp>
 
-#include <MSound/MSSetSound.hpp>
-
 class JAIActor;
 
 namespace MSoundSESystem {

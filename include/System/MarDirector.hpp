@@ -119,19 +119,16 @@ public:
 	void offUnk4CFlag(int flag) { unk4C &= ~flag; }
 	TGCConsole2* getConsole() { return mConsole; }
 
-	bool isTalkModeNow() const
+	bool isTalkModeNow() const { return unk124 == 1 || unk124 == 2; }
+
+	bool isDemoModeNow() const { return unk124 == 3 || unk124 == 4; }
+
+	bool isTalkOrDemoModeNow() const
 	{
-		if (unk124 == 1 || unk124 == 2)
-			return true;
-		return false;
+		return isTalkModeNow() || isDemoModeNow();
 	}
 
-	bool checkUnk124Thing2() const
-	{
-		if (unk124 == 3 || unk124 == 4)
-			return true;
-		return false;
-	}
+	bool isThing() const { return isTalkModeNow() || unk124 == 4; }
 
 	void* getUnkD4() { return unkD4; }
 	TBaseNPC* getTalkingNPC() { return unkA0; }
