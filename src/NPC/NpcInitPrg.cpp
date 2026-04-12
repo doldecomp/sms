@@ -459,7 +459,7 @@ void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 		if (bVar4 && bVar5) {
 			bVar3 = false;
 			mActionFlag
-			    &= ~(NPC_ACTION_BURNING | NPC_ACTION_UNK80 | NPC_ACTION_UNK8);
+			    &= ~(NPC_ACTION_BURNING | NPC_ACTION_UNK80 | NPC_ACTION_RUN);
 		} else {
 			if (bVar5)
 				local_a8 = 2000;

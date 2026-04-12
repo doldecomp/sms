@@ -280,11 +280,11 @@ void TBaseNPC::emitParticle_()
 	}
 
 	switch (unkD0->getCurrentAnmKind()) {
-	case NPC_ANM_KIND_UNKF:
+	case NPC_ANM_KIND_DIRTY:
 		emitDirtyEffect_();
 		break;
 
-	case NPC_ANM_KIND_UNK19:
+	case NPC_ANM_KIND_WASH:
 		emitWashEffect_();
 		break;
 	}

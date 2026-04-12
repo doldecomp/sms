@@ -46,7 +46,7 @@ void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
 	if (!unkD0->setBckAndBtpAnm(param_1))
 		return;
 
-	if (param_1 == NPC_ANM_KIND_UNK11) {
+	if (param_1 == NPC_ANM_KIND_HAPPY) {
 		switch (unk1D9) {
 		case 0:
 		case 1:
@@ -106,7 +106,7 @@ void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
 				int iVar7;
 
 				switch (param_1) {
-				case NPC_ANM_KIND_UNK9:
+				case NPC_ANM_KIND_TAKEN:
 					iVar7 = 7;
 					break;
 
@@ -267,8 +267,8 @@ void TBaseNPC::walkAnmRateChange_()
 	                     + mLinearVelocity.z * mLinearVelocity.z);
 	if (dVar13 < 0.001f) {
 		switch (unkD0->getCurrentAnmKind()) {
-		case NPC_ANM_KIND_UNK0:
-		case NPC_ANM_KIND_UNK8: {
+		case NPC_ANM_KIND_WALK:
+		case NPC_ANM_KIND_RUN: {
 			int iVar5
 			    = CLBPalFrame(mPtrSaveNormal->mStopWalkAnmRateFrame.get());
 			BOOL bVar7 = CLBChaseDecrease(
@@ -303,14 +303,14 @@ void TBaseNPC::walkAnmRateChange_()
 	} else {
 		unk1CC = 0;
 		switch (unkD0->getCurrentAnmKind()) {
-		case NPC_ANM_KIND_UNK0:
-		case NPC_ANM_KIND_UNK8: {
+		case NPC_ANM_KIND_WALK:
+		case NPC_ANM_KIND_RUN: {
 			f32 fVar1 = mIndividualParams->mSLMinWalkAnmRate.get()
 			            * SMSGetAnmFrameRate();
 
 			f32 dVar10;
 			f32 dVar12;
-			if (unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK8) {
+			if (unkD0->getCurrentAnmKind() == NPC_ANM_KIND_RUN) {
 				dVar12 = mIndividualParams->mSLMaxRunAnmRate.get()
 				         * SMSGetAnmFrameRate();
 				dVar10 = mIndividualParams->mSLMaxRunSpeed.get();
@@ -345,10 +345,10 @@ void TBaseNPC::walkAnmRateChange_()
 
 		default:
 			unk1D0 = 0.0f;
-			if (mActionFlag & NPC_ACTION_UNK8)
-				requestNpcAnm_(NPC_ANM_KIND_UNK8, NPC_STOP_MOTION_BLEND_ON);
+			if (mActionFlag & NPC_ACTION_RUN)
+				requestNpcAnm_(NPC_ANM_KIND_RUN, NPC_STOP_MOTION_BLEND_ON);
 			else
-				requestNpcAnm_(NPC_ANM_KIND_UNK0, NPC_STOP_MOTION_BLEND_ON);
+				requestNpcAnm_(NPC_ANM_KIND_WALK, NPC_STOP_MOTION_BLEND_ON);
 			break;
 		}
 	}
@@ -367,7 +367,7 @@ EnumNpcAnmKind TBaseNPC::getNpcWaitAnmBase_()
 		else if (mActionFlag & NPC_ACTION_UNK40)
 			result = NPC_ANM_KIND_UNK17;
 		else if (mActionFlag & NPC_ACTION_DANCE)
-			result = NPC_ANM_KIND_UNK16;
+			result = NPC_ANM_KIND_DANCE;
 	}
 	return result;
 }
@@ -378,9 +378,9 @@ void TBaseNPC::npcWaitIn()
 
 	if (!(mActionFlag & NPC_ACTION_UNK400)) {
 		if (!isClean()) {
-			kind = NPC_ANM_KIND_UNKF;
+			kind = NPC_ANM_KIND_DIRTY;
 		} else if (mActionFlag & NPC_ACTION_HAPPY) {
-			kind = NPC_ANM_KIND_UNK11;
+			kind = NPC_ANM_KIND_HAPPY;
 		} else if ((mActionFlag & NPC_ACTION_UNK1)
 		           && !(mActionFlag & NPC_ACTION_DANCE)) {
 			if (mActionFlag & NPC_ACTION_UNK20) {
@@ -539,14 +539,14 @@ void TBaseNPC::npcTalkOut()
 
 void TBaseNPC::npcTakenIn()
 {
-	requestNpcAnm_(NPC_ANM_KIND_UNK9, NPC_STOP_MOTION_BLEND_ON);
+	requestNpcAnm_(NPC_ANM_KIND_TAKEN, NPC_STOP_MOTION_BLEND_ON);
 	resetToWait_();
 }
 
 void TBaseNPC::npcDanceIn()
 {
 	mActionFlag |= NPC_ACTION_DANCE;
-	requestNpcAnm_(NPC_ANM_KIND_UNK16, NPC_STOP_MOTION_BLEND_ON);
+	requestNpcAnm_(NPC_ANM_KIND_DANCE, NPC_STOP_MOTION_BLEND_ON);
 	resetToWait_();
 }
 
@@ -554,7 +554,7 @@ void TBaseNPC::npcHappyIn(u8 param_1)
 {
 	unk1D9 = param_1;
 	mActionFlag |= NPC_ACTION_HAPPY;
-	requestNpcAnm_(NPC_ANM_KIND_UNK11, NPC_STOP_MOTION_BLEND_ON);
+	requestNpcAnm_(NPC_ANM_KIND_HAPPY, NPC_STOP_MOTION_BLEND_ON);
 	resetToWait_();
 }
 
@@ -564,7 +564,7 @@ void TBaseNPC::npcWetIn()
 		EnumNpcAnmKind EVar7              = NPC_ANM_KIND_UNK5;
 		EnumNpcStopMotionBlendOnOff EVar6 = NPC_STOP_MOTION_BLEND_ON;
 		if (!isClean()) {
-			EVar7 = NPC_ANM_KIND_UNK19;
+			EVar7 = NPC_ANM_KIND_WASH;
 		} else {
 			if (mActionFlag & NPC_ACTION_UNK1) {
 				EVar7 = NPC_ANM_KIND_UNK14;
@@ -609,7 +609,7 @@ bool TBaseNPC::npcWetting()
 		npcHappyIn(0);
 		npcWetOut();
 		result = true;
-	} else if (unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK19) {
+	} else if (unkD0->getCurrentAnmKind() == NPC_ANM_KIND_WASH) {
 		if (isClean()) {
 			npcHappyIn(0);
 			npcWetOut();
@@ -663,7 +663,7 @@ bool TBaseNPC::npcWetting()
 						npcMadding();
 					break;
 
-				case NPC_ANM_KIND_UNKA:
+				case NPC_ANM_KIND_MAD:
 				case NPC_ANM_KIND_UNKB:
 					if (checkLiveFlag(LIVE_FLAG_UNK2000000)) {
 						if (npcMadding()) {
@@ -693,7 +693,7 @@ bool TBaseNPC::npcWetting()
 							break;
 
 						case NPC_ANM_KIND_UNKB:
-							requestNpcAnm_(NPC_ANM_KIND_UNKA,
+							requestNpcAnm_(NPC_ANM_KIND_MAD,
 							               NPC_STOP_MOTION_BLEND_ON);
 							break;
 
@@ -715,7 +715,7 @@ bool TBaseNPC::npcWetting()
 							case NPC_ANM_KIND_UNK5:
 							case NPC_ANM_KIND_UNKB:
 							case NPC_ANM_KIND_UNK14:
-							case NPC_ANM_KIND_UNK19:
+							case NPC_ANM_KIND_WASH:
 								npcWetOut();
 								result = true;
 								break;
@@ -761,7 +761,7 @@ void TBaseNPC::npcSinking()
 
 void TBaseNPC::npcThrowIn()
 {
-	requestNpcAnm_(NPC_ANM_KIND_UNKD, NPC_STOP_MOTION_BLEND_ON);
+	requestNpcAnm_(NPC_ANM_KIND_THROW, NPC_STOP_MOTION_BLEND_ON);
 	resetToWait_();
 }
 
@@ -787,7 +787,7 @@ void TBaseNPC::npcMadIn()
 	onLiveFlag(LIVE_FLAG_UNK2000000);
 
 	if (mActorType == 0x4000007 || (mActionFlag & NPC_ACTION_UNK1)) {
-		requestNpcAnm_(NPC_ANM_KIND_UNKA, NPC_STOP_MOTION_BLEND_ON);
+		requestNpcAnm_(NPC_ANM_KIND_MAD, NPC_STOP_MOTION_BLEND_ON);
 		return;
 	}
 
@@ -814,12 +814,12 @@ bool TBaseNPC::npcMadding()
 			f32 fVar1 = MsWrap(abs(mRotation.y - MsGetRotFromZaxisY(copy3)),
 			                   0.0f, 360.0f);
 			if (fVar1 < 0.001f)
-				requestNpcAnm_(NPC_ANM_KIND_UNKA, NPC_STOP_MOTION_BLEND_OFF);
+				requestNpcAnm_(NPC_ANM_KIND_MAD, NPC_STOP_MOTION_BLEND_OFF);
 			if (!unk124->getGraph()->isDummy())
 				unk1DA |= 0x1;
 		} break;
 
-		case NPC_ANM_KIND_UNKA:
+		case NPC_ANM_KIND_MAD:
 		case NPC_ANM_KIND_UNKB:
 			if (mMActor->isCurAnmAlreadyEnd(0)) {
 				result = true;
@@ -1022,7 +1022,7 @@ void TBaseNPC::monteMESetAnmWhenNear()
 		break;
 
 	case NPC_ANM_KIND_UNK3:
-	case NPC_ANM_KIND_UNKA:
+	case NPC_ANM_KIND_MAD:
 		if (mMActor->isCurAnmAlreadyEnd(0))
 			requestNpcAnm_(NPC_ANM_KIND_UNK4, NPC_STOP_MOTION_BLEND_OFF);
 		break;
