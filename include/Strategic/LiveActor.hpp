@@ -40,7 +40,7 @@ enum TLiveFlagBits {
 	LIVE_FLAG_UNK100000   = 0x100000,
 	LIVE_FLAG_UNK200000   = 0x200000,
 	LIVE_FLAG_UNK400000   = 0x400000,
-	LIVE_FLAG_UNK800000   = 0x800000,
+	LIVE_FLAG_SINK_BOTTOM = 0x800000, // for NPCs only
 	LIVE_FLAG_UNK1000000  = 0x1000000,
 	LIVE_FLAG_UNK2000000  = 0x2000000,
 	LIVE_FLAG_UNK4000000  = 0x4000000,
@@ -100,7 +100,10 @@ public:
 	f32 getGroundHeight() const { return mGroundHeight; }
 	// TODO: which one is real?
 	bool checkLiveFlag(u32 flag) const { return mLiveFlag & flag; }
-	bool checkLiveFlag2(u32 flag) const { return mLiveFlag & flag ? 1 : 0; }
+	bool checkLiveFlag2(u32 flag) const
+	{
+		return mLiveFlag & flag ? true : false;
+	}
 	bool isAirborne() const
 	{
 		return checkLiveFlag(LIVE_FLAG_AIRBORNE) ? 1 : 0;

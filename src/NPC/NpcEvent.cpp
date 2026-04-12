@@ -73,7 +73,7 @@ static void evCheckLatestNerve4Npc(TSpcTypedInterp<TEventWatcher>* interp,
 static void evIsNpcSinkBottom(TSpcTypedInterp<TEventWatcher>* interp,
                               u32 arg_num)
 {
-	IsNpcFlagOn_(interp, arg_num, LIVE_FLAG_UNK800000);
+	IsNpcFlagOn_(interp, arg_num, LIVE_FLAG_SINK_BOTTOM);
 }
 
 static void evIsGameModeNormal(TSpcTypedInterp<TEventWatcher>* interp,
@@ -199,7 +199,7 @@ static void evNpcDanceOffHappyOn(TSpcTypedInterp<TEventWatcher>* interp,
 {
 	interp->verifyArgNum(1, &arg_num);
 	TBaseNPC* npc = (TBaseNPC*)interp->pop().getDataInt();
-	npc->mActionFlag &= ~TBaseNPC::NPC_ACTION_DANCE;
+	npc->offActionFlag(TBaseNPC::NPC_ACTION_DANCE);
 	npc->npcHappyIn(2);
 	interp->push();
 }

@@ -8,50 +8,56 @@ class MActor;
 class TNpcInbetween {
 public:
 	TNpcInbetween(int pos_inbetween_frame, int motion_blend_frame)
-	    : unk0(pos_inbetween_frame)
-	    , unk4(motion_blend_frame)
-	    , unk8(0)
-	    , unkC(0.0f, 0.0f, 0.0f)
-	    , unk18(0.0f, 0.0f, 0.0f)
-	    , unk24(0)
-	    , unk28(0.0f)
+	    : mPosInbetweenFrame(pos_inbetween_frame)
+	    , mMotionBlendFrame(motion_blend_frame)
+	    , mPosInbetweenTimer(0)
+	    , mTargetPos(0.0f, 0.0f, 0.0f)
+	    , mCurrentPos(0.0f, 0.0f, 0.0f)
+	    , mMotionBlendTimer(0)
+	    , mForcedBlendRatio(0.0f)
 	{
 	}
 
-	void execMotionBlend(MActor*);
-	void execPosInbetween(JGeometry::TVec3<f32>*);
+	void execMotionBlend(MActor* mactor);
+	void execPosInbetween(JGeometry::TVec3<f32>* cur_pos);
 
 	// fabricated
-	bool isThing() const
+	bool isMotionBlending() const
 	{
-		if (unk24 > 0)
+		if (mMotionBlendTimer > 0)
 			return true;
 		else
 			return false;
 	}
-
-	bool isOtherThing() const
+	bool isForcedBlendRatio() const
 	{
-		if (unk28 > 0.0f)
+		if (mForcedBlendRatio > 0.0f)
 			return true;
 		else
 			return false;
 	}
-
+	void startPosBlend() { mPosInbetweenTimer = mPosInbetweenFrame; }
+	void startMotionBlend() { mMotionBlendTimer = mMotionBlendFrame; }
+	void stopMotionBlend() { mMotionBlendTimer = 0; }
+	void applyPos(JGeometry::TVec3<f32>& pos)
+	{
+		if (mPosInbetweenTimer > 0)
+			pos.set(mCurrentPos);
+	}
 	void reset()
 	{
-		unk24 = 0;
-		unk28 = 0.0f;
+		mMotionBlendTimer = 0;
+		mForcedBlendRatio = 0.0f;
 	}
 
 public:
-	/* 0x0 */ int unk0;
-	/* 0x4 */ int unk4;
-	/* 0x8 */ int unk8;
-	/* 0xC */ JGeometry::TVec3<f32> unkC;
-	/* 0x18 */ JGeometry::TVec3<f32> unk18;
-	/* 0x24 */ int unk24;
-	/* 0x28 */ f32 unk28;
+	/* 0x0 */ int mPosInbetweenFrame;
+	/* 0x4 */ int mMotionBlendFrame;
+	/* 0x8 */ int mPosInbetweenTimer;
+	/* 0xC */ JGeometry::TVec3<f32> mTargetPos;
+	/* 0x18 */ JGeometry::TVec3<f32> mCurrentPos;
+	/* 0x24 */ int mMotionBlendTimer;
+	/* 0x28 */ f32 mForcedBlendRatio;
 };
 
 #endif

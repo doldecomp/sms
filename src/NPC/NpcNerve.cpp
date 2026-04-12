@@ -41,7 +41,7 @@ DEFINE_NERVE(TNerveNPCGraphWander, TLiveActor)
 		bool bVar4 = self->unk22C->doThing2();
 		if ((bVar6 == true && fVar2 < CLBSquared(50.0f))
 		    || (bVar6 == false && fVar2 < CLBSquared(100.0f))) {
-			if (!(self->mActionFlag & TBaseNPC::NPC_ACTION_UNK80) && bVar4) {
+			if (!self->checkActionFlag(TBaseNPC::NPC_ACTION_UNK80) && bVar4) {
 				spine->pushAfterCurrent(&TNerveNPCGraphWait::theNerve());
 				return true;
 			}
