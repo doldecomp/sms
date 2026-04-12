@@ -1,7 +1,9 @@
 #include <Player/MarioMain.hpp>
 
+#include <M3DUtil/M3UModelMario.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <MSound/MAnmSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <System/Particles.hpp>
 #include <System/MarioGamePad.hpp>

@@ -36,7 +36,17 @@ enum TLiveFlagBits {
 	LIVE_FLAG_UNK10000    = 0x10000,
 	LIVE_FLAG_UNK20000    = 0x20000,
 	LIVE_FLAG_UNK40000    = 0x40000,
+	LIVE_FLAG_UNK80000    = 0x80000,
 	LIVE_FLAG_UNK100000   = 0x100000,
+	LIVE_FLAG_UNK200000   = 0x200000,
+	LIVE_FLAG_UNK400000   = 0x400000,
+	LIVE_FLAG_UNK800000   = 0x800000,
+	LIVE_FLAG_UNK1000000  = 0x1000000,
+	LIVE_FLAG_UNK2000000  = 0x2000000,
+	LIVE_FLAG_UNK4000000  = 0x4000000,
+	LIVE_FLAG_UNK8000000  = 0x8000000,
+	LIVE_FLAG_UNK10000000 = 0x10000000,
+	LIVE_FLAG_UNK20000000 = 0x20000000,
 };
 
 class TLiveActor : public TTakeActor {
@@ -61,7 +71,7 @@ public:
 	virtual void kill();
 	virtual f32 getGravityY() const;
 	virtual BOOL hasMapCollision() const;
-	virtual Vec getFocalPoint() const;
+	virtual JGeometry::TVec3<f32> getFocalPoint() const;
 	virtual void updateAnmSound();
 	virtual const char** getBasNameTable() const;
 
@@ -118,10 +128,16 @@ public:
 	}
 	const JGeometry::TVec3<f32>& getVelocity() const { return mVelocity; }
 	void setVelocity(const JGeometry::TVec3<f32>& v) { mVelocity = v; }
+	void setVelocityAndFlag10(f32 x, f32 y, f32 z)
+	{
+		mVelocity.set(x, y, z);
+		offLiveFlag(LIVE_FLAG_UNK10);
+	}
 	void setLinearVelocity(const JGeometry::TVec3<f32>& v)
 	{
 		mLinearVelocity = v;
 	}
+	TLodAnm* getLodAnm() { return unkD0; }
 
 public:
 	/* 0x70 */ TLiveManager* mManager;

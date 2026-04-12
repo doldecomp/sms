@@ -19,7 +19,7 @@ public:
 	void isLButtonCameraInbetween() const;
 	bool isJetCoaster1stCamera() const;
 	void isTalkCameraSpecifyMode(int) const;
-	void isTalkCameraInbetween() const;
+	bool isTalkCameraInbetween() const;
 	void isNormalCameraSpecifyMode(int) const;
 	void isNormalCameraCompletely() const;
 	void isTowerCameraSpecifyMode(int) const;
@@ -75,7 +75,7 @@ public:
 	CPolarSubCamera(const char* = "<CPolarCamera>");
 	void startJetCoasterCam1();
 	void loadAfter();
-	void isNowInbetween() const;
+	bool isNowInbetween() const;
 	void getToroccoMtx_() const;
 	void setMarioLookat_();
 	JGeometry::TVec3<f32> getUsualLookat() const;
@@ -132,14 +132,16 @@ public:
 
 public:
 	/* 0x50 */ int mMode;
-	/* 0x54 */ char unk54[0xA4 - 0x54];
+	/* 0x54 */ int unk54;
+	/* 0x58 */ char unk58[0xA4 - 0x58];
 	/* 0xA4 */ s16 unkA4;
 	/* 0xA6 */ char unkA6[0x120 - 0xA6];
 	/* 0x120 */ TMarioGamePad* unk120;
 	/* 0x124 */ JGeometry::TVec3<f32> unk124;
 	/* 0x130 */ char unk130[0xC];
 	/* 0x13C */ JGeometry::TVec3<f32> unk13C;
-	/* 0x148 */ char unk148[0x1EC - 0x148];
+	/* 0x148 */ JGeometry::TVec3<f32> unk148;
+	/* 0x154 */ char unk154[0x1EC - 0x154];
 	/* 0x1EC */ Mtx unk1EC;
 	/* 0x21C */ char unk21C[0x2C8 - 0x21C];
 	/* 0x2C8 */ s16 unk2C8;

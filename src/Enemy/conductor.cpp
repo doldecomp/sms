@@ -1,5 +1,5 @@
 #include <Enemy/Conductor.hpp>
-#include <Enemy/NpcSave.hpp>
+#include <NPC/NpcSave.hpp>
 #include <Enemy/EnemyManager.hpp>
 #include <Enemy/Graph.hpp>
 #include <Enemy/Enemy.hpp>

@@ -1,1 +1,202 @@
+#include <NPC/NpcBase.hpp>
+#include <Strategic/Spine.hpp>
+#include <System/MarDirector.hpp>
+#include <MarioUtil/MathUtil.hpp>
+#include <NPC/NpcNerve.hpp>
+#include <Camera/cameralib.hpp>
 
+bool TBaseNPC::isCanWalk() const
+{
+	bool result = true;
+	// TODO: TVec3::sub should use set internally I guess?
+	if ((unkF4.getPoint() - mPosition).squared() < CLBSquared(2.5625f))
+		result = false;
+	return result;
+}
+
+void TBaseNPC::execWalk(bool param_1)
+{
+	if (unk1E2 != 0 || gpMarDirector->isThing() || unk178 != 0.0f
+	    || (mActionFlag & 0x200)) {
+		mMarchSpeed = 0.0f;
+		mTurnSpeed  = 0.0f;
+		return;
+	}
+
+	if (param_1 && (unk1DA & 0x1)) {
+		f32 fVar1 = 4.0f;
+		if (mActionFlag & 0x8)
+			fVar1 = 6.0f;
+
+		SMS_GoRotate(mPosition, unkF4.getPoint(), fVar1, &mRotation.y);
+
+		// TODO: vector math is borked
+		JGeometry::TVec3<f32> local_54 = unkF4.getPoint();
+		local_54 -= mPosition;
+		JGeometry::TVec3<f32> copy;
+		copy.set(local_54);
+
+		f32 angle = MsGetRotFromZaxisY(copy);
+		if (MsWrap(mRotation.y - angle, 0.0f, 360.0f) < 0.001f)
+			unk1DA &= ~0x1;
+
+		return;
+	}
+
+	if (param_1) {
+		EnumNpcAnmKind uVar4 = (EnumNpcAnmKind)unkD0->getCurrentAnmKind();
+
+		f32 dVar11 = unk228->mSLMinMarchSpeed.get();
+		f32 dVar12 = unk228->mMarchAccel.get();
+
+		switch (uVar4) {
+		case NPC_ANM_KIND_UNK0:
+			dVar11 = unk228->mMaxMarchSpeed.get();
+			break;
+
+		case NPC_ANM_KIND_UNK8:
+			dVar11 = unk228->mSLMaxRunSpeed.get();
+			dVar12 = unk228->mSLRunAccel.get();
+			if (mActionFlag & 0x4000) {
+				f32 dVar10 = mPtrSaveNormal->mSLSmokeRunMagnif.get();
+				dVar11 *= dVar10;
+				dVar12 *= dVar10;
+			}
+			break;
+		}
+
+		CLBChaseGeneralConstantSpecifySpeed(&mMarchSpeed, dVar11, dVar12);
+	} else {
+		CLBChaseGeneralConstantSpecifySpeed(&mMarchSpeed, 0.0f,
+		                                    unk228->mMarchDecrease.get());
+	}
+
+	if (mMarchSpeed < 0.001f)
+		mTurnSpeed = unk228->mWaitTurnSpeed.get();
+	else
+		mTurnSpeed = unk228->mWalkTurnSpeed.get();
+
+	if (isCanWalk())
+		walkToCurPathNode(mMarchSpeed, mTurnSpeed, 0.0f);
+}
+
+bool TBaseNPC::execUTurn()
+{
+	JGeometry::TVec3<f32> local_24 = unkF4.getPoint();
+	local_24 -= mPosition;
+	f32 targetYaw = MsGetRotFromZaxis(local_24).y;
+	if (targetYaw == mRotation.y)
+		return true;
+
+	if (unk178 != 0.0f || (mActionFlag & 0x200))
+		return false;
+
+	bool result = false;
+
+	targetYaw   = MsWrap(targetYaw, 0.0f, 360.0f);
+	mRotation.y = MsWrap(mRotation.y, 0.0f, 360.0f);
+	if (checkLiveFlag(LIVE_FLAG_UNK200000)) {
+		if (mRotation.y > targetYaw)
+			mRotation.y -= 360.0f;
+	} else {
+		if (mRotation.y < targetYaw)
+			mRotation.y += 360.0f;
+	}
+
+	BOOL r      = CLBChaseGeneralConstantSpecifySpeed(&mRotation.y, targetYaw,
+	                                                  unk228->mUTurnSpeed.get());
+	mRotation.y = MsWrap(mRotation.y, 0.0f, 360.0f);
+	if (!r)
+		result = true;
+
+	return result;
+}
+
+bool TBaseNPC::execTurnToFirstState()
+{
+	if (mRotation.y == unk1A0.y)
+		return true;
+
+	bool result = false;
+
+	s16 angle1 = CLBDegToShortAngle(mRotation.y);
+	s16 angle2 = CLBDegToShortAngle(unk1A0.y);
+	s16 angle3 = CLBDegToShortAngle(unk228->mFirstStateTurnSpeed.get());
+	if (!CLBChaseGeneralConstantSpecifySpeed(&angle1, angle2, angle3)) {
+		result      = true;
+		mRotation.y = unk1A0.y;
+	} else {
+		mRotation.y = SHORTANGLE2DEG(angle1);
+	}
+
+	return result;
+}
+
+bool TBaseNPC::isNeedTurnToFirstState() const
+{
+	if (unk178 != 0.0f || (mActionFlag & 0x200))
+		return false;
+
+	bool result = false;
+
+	switch (mActorType) {
+	case 0x400001C:
+	case 0x400001D:
+	case 0x4000008:
+		break;
+
+	default:
+		const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
+		if ((nerve == &TNerveNPCWaitMarioApproach::theNerve()
+		     || nerve == &TNerveNPCTurnToMario::theNerve())
+		    && (mActorType == 0x4000006 || !(mActionFlag & 0xC01))) {
+			result = true;
+		}
+		break;
+	}
+
+	return result;
+}
+
+bool TBaseNPC::isTurnToMarioWhenTalk() const
+{
+	bool result = true;
+	switch (mActorType) {
+	case 0x4000007:
+	case 0x4000008:
+	case 0x400001A:
+	case 0x400001B:
+	case 0x400001D:
+		result = false;
+		break;
+
+	default:
+		if (mActionFlag & 0xC01)
+			result = false;
+		break;
+	}
+	return result;
+}
+
+bool TBaseNPC::isTurnToMarioWhenApproach() const
+{
+	if (unk178 != 0.0f || (mActionFlag & 0x200))
+		return false;
+
+	bool result = true;
+
+	switch (mActorType) {
+	case 0x4000016:
+	case 0x4000017:
+	case 0x4000018:
+		if (!(mActionFlag & 0x7E7F))
+			break;
+		result = false;
+		break;
+
+	default:
+		result = false;
+		break;
+	}
+	return result;
+}

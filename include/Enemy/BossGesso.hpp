@@ -191,7 +191,7 @@ public:
 	}
 
 	// fabricated
-	TNerveBase<TLiveActor>* getLatestNerve()
+	const TNerveBase<TLiveActor>* getLatestNerve()
 	{
 		return mSpine->getLatestNerve();
 	}

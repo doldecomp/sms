@@ -3,6 +3,7 @@
 #include <System/MarDirector.hpp>
 #include <NPC/NpcBase.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/DrawUtil.hpp>
 #include <MoveBG/ModelGate.hpp>
 #include <System/StageUtil.hpp>
 #include <Player/Watergun.hpp>

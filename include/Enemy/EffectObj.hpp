@@ -4,10 +4,6 @@
 #include <Enemy/Enemy.hpp>
 #include <Enemy/EnemyManager.hpp>
 
-// rogue includes needed for matching sinit & bss
-#include <MSound/MSSetSound.hpp>
-#include <MSound/MSoundBGM.hpp>
-
 class TSimpleEffect : public JDrama::TActor {
 public:
 	TSimpleEffect(const char* name);

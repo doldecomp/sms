@@ -10,10 +10,10 @@ void TBaseNPC::setMonteActionFlag_()
 		0, 2, 16, 32, 8,  10, 0x18, 0x28, 0x80, 0, 0x0400, 0x4088,
 	};
 
-	if (_16C > ARRAY_COUNT(sBaseActionFlagTable) - 1)
-		_16C = 0;
+	if (unk16C > ARRAY_COUNT(sBaseActionFlagTable) - 1)
+		unk16C = 0;
 
-	mActionFlag = sBaseActionFlagTable[_16C];
+	mActionFlag = sBaseActionFlagTable[unk16C];
 }
 
 void TBaseNPC::setMareActionFlag_()
@@ -23,10 +23,10 @@ void TBaseNPC::setMareActionFlag_()
 		0x2080, 0, 0,    8,    0,    0x20, 0, 2,
 	};
 
-	if (_16C > ARRAY_COUNT(sBaseActionFlagTable) - 1)
-		_16C = 0;
+	if (unk16C > ARRAY_COUNT(sBaseActionFlagTable) - 1)
+		unk16C = 0;
 
-	mActionFlag = sBaseActionFlagTable[_16C];
+	mActionFlag = sBaseActionFlagTable[unk16C];
 }
 
 void TBaseNPC::setKinoActionFlag_()
@@ -36,8 +36,8 @@ void TBaseNPC::setKinoActionFlag_()
 		0x100, 0x101, 0x188, 0x120, 0x121, 0x180, 0x100, 0x108,
 	};
 
-	if (_16C > ARRAY_COUNT(sBaseActionFlagTable) - 1)
-		_16C = 0;
+	if (unk16C > ARRAY_COUNT(sBaseActionFlagTable) - 1)
+		unk16C = 0;
 
-	mActionFlag = sBaseActionFlagTable[_16C];
+	mActionFlag = sBaseActionFlagTable[unk16C];
 }

@@ -1,6 +1,7 @@
 #include <MSound/MSound.hpp>
 #include <MSound/MSRandVol.hpp>
 #include <MSound/MSHandle.hpp>
+#include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <MSound/MSModBgm.hpp>

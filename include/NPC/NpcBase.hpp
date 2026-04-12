@@ -3,152 +3,419 @@
 
 #include <Enemy/Enemy.hpp>
 #include <JSystem/JUtility/JUTNameTab.hpp>
+#include <M3DUtil/LodAnm.hpp>
+#include <MarioUtil/RandomUtil.hpp>
+#include <NPC/NpcAnmKind.hpp>
+#include <NPC/NpcSave.hpp>
+#include <Camera/Camera.hpp>
 
+struct TNpcInitInfo;
+class SDLModel;
+class TMultiMtxEffect;
+
+class TNpcSaveNormal;
 // TODO: should this be here?
-enum EnumNpcAnmKind { };
-enum EnumNpcStopMotionBlendOnOff { };
-enum EnumHitNpcObjectKind { };
-struct TNpcInitInfo { };
+enum EnumNpcStopMotionBlendOnOff {
+	NPC_STOP_MOTION_BLEND_OFF = 0,
+	NPC_STOP_MOTION_BLEND_ON  = 1,
+};
+enum EnumHitNpcObjectKind {
+	HIT_NPC_OBJECT_KIND_UNK0 = 0,
+	HIT_NPC_OBJECT_KIND_UNK1 = 1,
+	HIT_NPC_OBJECT_KIND_UNK2 = 2,
+};
+
+class TNpcParts;
+class TNpcSaveIndividual;
+class TNpcThrow;
+class TNpcTrample;
+class TNpcCoin;
+class TNpcBalloon;
+class TNpcInbetween;
 
 class TBaseNPC : public TSpineEnemy {
 public:
-	void monteMESetAnmWhenNear();
-	void monteMESetAnmWhenFar();
-	void sunflowerReviving();
-	void sunflowerReviveIn();
-	void sunflowerDownIn_();
-	void peachTiredOut_();
-	void peachTiredIn_();
-	void peachParasolOut_();
-	void peachParasolIn_();
-	void npcMareStanding();
-	void npcMareStandIn();
-	void npcBlowning();
-	void npcBlownIn();
-	void npcMadding();
-	void npcMadIn();
-	void npcThrowing();
-	void npcThrowIn();
-	void npcSinking();
-	void npcWetOut();
-	void npcWetting();
-	void npcWetIn();
-	void npcHappyIn(unsigned char);
-	void npcDanceIn();
-	void npcTakenIn();
-	void npcTalkOut();
-	void npcTalking();
-	void npcTalkIn();
-	void npcStepIn();
-	void npcRecoverAfterIn();
-	void npcRecoverFromSinking();
-	void npcFallIn();
-	void npcWaitIn();
-	void getNpcWaitAnmBase_();
-	void walkAnmRateChange_();
-	void randomizeBckAndBtpFrame_();
-	void requestTalkAnm_();
-	void setKeepAnm_();
-	void requestNpcAnm_(EnumNpcAnmKind, EnumNpcStopMotionBlendOnOff);
-	void setNpcAnm_(EnumNpcAnmKind, EnumNpcStopMotionBlendOnOff);
-	void onStopMotionBlend();
-	void offStopMotionBlend();
-	void isNowMotionBlend() const;
-	~TBaseNPC();
-	void getPtrInitPollutionColor() const;
-	void setBalloonMessage(u32, long);
-	void setDummyConnectActor(const JDrama::TActor*);
-	void perform(u32, JDrama::TGraphics*);
-	void getAnmOffDist_();
-	void updateForbidCount_();
-	void movementOnlyTalk_(const JDrama::TGraphics*);
-	void calcRootMatrix();
-	void execMotionBlend_();
-	void moveObject();
-	virtual BOOL receiveMessage(THitActor* sender, u32 message);
-	Vec getFocalPoint() const;
-	Vec getCursorPos() const;
-	void isInMadSearchRange() const;
-	void isInBodyTurnSearchRange() const;
-	void isNeedNeckStraight() const;
-	void isPartsAnmNpc() const;
-	void isBehaveToHitNpc() const;
-	void isBehaveToWaterNpc() const;
-	void isMadNpc() const;
-	void isBeTrampledNpc() const;
-	void isPollutionNpc() const;
-	void isSmallNpc() const;
-	bool isChild() const;
-	void isSunflower() const;
-	void isJellyFishMare() const;
-	void isSpecialMareW() const;
-	void isSpecialMareM() const;
-	void isNormalMareW() const;
-	void isNormalMareM() const;
-	void isSpecialMonteW() const;
-	void isSpecialMonteM() const;
-	bool isNormalMonteW() const;
-	bool isNormalMonteM() const;
-	void loadAfter();
-	void load(JSUMemoryInputStream&);
 	TBaseNPC(u32, const char* name = "?");
-	void setIndividualDifference_(JSUMemoryInputStream&);
-	void init(TLiveManager*);
-	void initNpcLight_();
-	const char** getBasNameTable() const;
-	void kill();
-	void setPosAndInitAfterSinkBottom();
-	void changeNerveProc_();
+
+	virtual void load(JSUMemoryInputStream&);
+	virtual void loadAfter();
+	virtual void perform(u32, JDrama::TGraphics*);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void init(TLiveManager*);
+	virtual void calcRootMatrix();
+	virtual void bind();
+	virtual void moveObject();
+	virtual void kill();
+	virtual JGeometry::TVec3<f32> getFocalPoint() const;
+	virtual const char** getBasNameTable() const;
+
+	bool isCanWalk() const;
+	bool isNeedTurnToFirstState() const;
+	bool isTurnToMarioWhenTalk() const;
+	bool isTurnToMarioWhenApproach() const;
+	bool isNerveWalk() const;
+	bool isNerveMaybeDontMovement() const;
+	bool isNerveMaybeDontCalcAnim0() const;
+	bool isNerveMaybeDontCalcAnim1() const;
+	bool isNerveCanGoToTalk() const;
+	bool isNerveCanGoToWet() const;
+	bool isNerveCanGoToSink() const;
+	bool isNerveCanGoToTaken() const;
+	bool isNerveCanGoToThrow() const;
+	bool isNerveCanGoToMad() const;
+	bool isNerveCanGoToBlown() const;
+
+	bool isNormalMonteM() const;
+	bool isNormalMonteW() const;
+	bool isNormalMonte() const { return isNormalMonteM() || isNormalMonteW(); }
+	bool isSpecialMonteM() const;
+	bool isSpecialMonteW() const;
+	bool isSpecialMonte() const
+	{
+		return isSpecialMonteM() || isSpecialMonteW();
+	}
+	bool isMonte() const { return isNormalMonte() || isSpecialMonte(); }
+	bool isMonteM() const { return isNormalMonteM() || isSpecialMonteM(); }
+	bool isMonteW() const { return isNormalMonteW() || isSpecialMonteW(); }
+
+	bool isNormalMareM() const;
+	bool isNormalMareW() const;
+	bool isNormalMare() const { return isNormalMareM() || isNormalMareW(); }
+	bool isSpecialMareM() const;
+	bool isSpecialMareW() const;
+	bool isSpecialMare() const { return isSpecialMareM() || isSpecialMareW(); }
+	bool isMare() const { return isNormalMare() || isSpecialMare(); }
+	bool isMareM() const { return isNormalMareM() || isSpecialMareM(); }
+	bool isMareW() const { return isNormalMareW() || isSpecialMareW(); }
+
+	bool isJellyFishMare() const;
+	bool isSunflower() const;
+	bool isChild() const;
+	bool isSmallNpc() const;
+	bool isPollutionNpc() const;
+	bool isBeTrampledNpc() const;
+	bool isMadNpc() const;
+	bool isBehaveToWaterNpc() const;
+	bool isBehaveToHitNpc() const;
+	bool isPartsAnmNpc() const;
+	bool isNeedNeckStraight() const;
+	bool isInBodyTurnSearchRange() const;
+	bool isInMadSearchRange() const;
 	bool isNowCanTaken() const;
-	void isStateGoToMad_() const;
-	void behaveToSandBomb_(const TLiveActor*);
-	void behaveToHitObject_(THitActor*, EnumHitNpcObjectKind);
-	void behaveToBeTrampled_();
-	void behaveToBeTaken_(THitActor*);
-	void releaseTaken_();
-	void changeNerveToMad_();
-	void changeNerveToWet_();
-	void changeNerveFromTalk_();
-	void isNerveCanGoToBlown() const;
-	void isNerveCanGoToMad() const;
-	void isNerveCanGoToThrow() const;
-	void isNerveCanGoToTaken() const;
-	void isNerveCanGoToSink() const;
-	void isNerveCanGoToWet() const;
-	void isNerveCanGoToTalk() const;
-	void isNerveMaybeDontCalcAnim1() const;
-	void isNerveMaybeDontCalcAnim0() const;
-	void isNerveMaybeDontMovement() const;
-	void isNerveWalk() const;
-	void emitParticle_();
-	void isPolWaitCEffectEmitTime_() const;
-	void emitHappyEffect_();
-	void emitSinkEffect_();
-	void getEffectScale_() const;
-	void setSmokeEffectMtxPtr_(bool);
-	void setPollutionEffectMtxPtr_(const JUTNameTab*);
-	void setNoteEffectMtxPtr_(const JUTNameTab*);
-	void setHappyEffectMtxPtr_(const JUTNameTab*);
-	void setKinoActionFlag_();
-	void setMareActionFlag_();
-	void setMonteActionFlag_();
-	void isTurnToMarioWhenApproach() const;
-	void isTurnToMarioWhenTalk() const;
-	void isNeedTurnToFirstState() const;
-	void execTurnToFirstState();
-	void execUTurn();
+
 	void execWalk(bool);
-	void isCanWalk() const;
-	void bind();
-	void setVariableDamageRadius_();
-	void execNpcObjCollision_();
+	bool execUTurn();
+	bool execTurnToFirstState();
+	void setPosAndInitAfterSinkBottom();
+
+	JGeometry::TVec3<f32> getCursorPos() const;
+	void setDummyConnectActor(const JDrama::TActor*);
+	void setBalloonMessage(u32, long);
+	const GXColor* getPtrInitPollutionColor() const;
+	void isNowMotionBlend() const;
+	void offStopMotionBlend();
+	void onStopMotionBlend();
+	void npcWaitIn();
+	void npcFallIn();
+	bool npcRecoverFromSinking();
+	void npcRecoverAfterIn();
+
+	void npcStepIn();
+	void npcTalkIn();
+	void npcTalking();
+	void npcTalkOut();
+	void npcTakenIn();
+	void npcDanceIn();
+	void npcHappyIn(u8);
+	void npcWetIn();
+	bool npcWetting();
+	void npcWetOut();
+	void npcSinking();
+	void npcThrowIn();
+	bool npcThrowing();
+	void npcMadIn();
+	bool npcMadding();
+	void npcBlownIn();
+	bool npcBlowning();
+	void npcMareStandIn();
+	bool npcMareStanding();
+	void sunflowerReviveIn();
+	bool sunflowerReviving();
+	void monteMESetAnmWhenFar();
+	void monteMESetAnmWhenNear();
+
+	static TNpcSaveNormal* mPtrSaveNormal;
+	static s16 mAngleYDiffWhenTaken;
+
+	// fabricated
+	void onUnk1D8(u32 flag) { unk1D8 |= flag; }
+	void offUnk1D8(u32 flag) { unk1D8 &= ~flag; }
+	bool checkUnk1D8(u32 flag) const { return (unk1D8 & flag) != 0; }
+
+	bool isSunflowerReviving() const
+	{
+		bool result = false;
+		if (isSunflower() && (unk1D8 & 0x2))
+			result = true;
+		return result;
+	}
+
+	bool isPeachTired() const
+	{
+		bool result = false;
+		if (mActorType == 0x4000018 && (unk1D8 & 0x2))
+			result = true;
+		return result;
+	}
+
+private:
+	void setIndividualDifference_(JSUMemoryInputStream&);
+	void initIndividualAnm_();
+	void initBaseActionFlag_();
+	void initNpcLight_();
+	void setMtxEffect_();
+	void initSinkNpc_();
+	void changeNerveFromTalk_();
+	void changeNerveToWet_();
+	void changeNerveToMad_();
+	void releaseTaken_();
+	void behaveToBeTaken_(THitActor*);
+	void behaveToBeTrampled_();
+	void behaveToHitObject_(THitActor*, EnumHitNpcObjectKind);
+	void behaveToSandBomb_(const TLiveActor*);
+	bool isStateGoToMad_() const;
+	void changeNerveProc_();
+	void execMotionBlend_();
+	void movementOnlyTalk_(const JDrama::TGraphics*);
+	void updateForbidCount_()
+	{
+		if (mTalkForbidCount != 0)
+			mTalkForbidCount -= 1;
+		if (unk1E2 != 0)
+			unk1E2 -= 1;
+		if (unk1E4 != 0)
+			unk1E4 -= 1;
+	}
+	f32 getAnmOffDist_()
+	{
+		bool bVar3 = false;
+		f32 fVar1  = gpCamera->mFar;
+		u32 uVar5  = unkD0->getCurrentAnmKind();
+		f32 fVar2  = mPtrSaveNormal->mSLDanceAnmOffDist.get();
+		if ((mActionFlag & 0x204) || mActorType == 0x400000D || uVar5
+		    || uVar5 == 23) {
+			bVar3 = true;
+		}
+
+		if (!isNerveMaybeDontCalcAnim0() && !isNerveMaybeDontCalcAnim1()) {
+			fVar1 = unk228->mWaitAnmOffDist1.get();
+			if (bVar3 && fVar1 < fVar2)
+				fVar1 = fVar2;
+		} else {
+			fVar1 = unk228->mWaitAnmOffDist0.get();
+			if (bVar3 && fVar1 < fVar2)
+				fVar1 = fVar2;
+		}
+
+		return fVar1;
+	}
+	void setNpcAnm_(EnumNpcAnmKind, EnumNpcStopMotionBlendOnOff);
+	void requestNpcAnm_(EnumNpcAnmKind, EnumNpcStopMotionBlendOnOff);
+	void setKeepAnm_();
+	void requestTalkAnm_();
+	void randomizeBckAndBtpFrame_();
+	void walkAnmRateChange_();
+	EnumNpcAnmKind getNpcWaitAnmBase_();
 	void initNpcObjCollision_(const TNpcInitInfo*);
+	void execNpcObjCollision_();
+	void setVariableDamageRadius_();
+	void setMonteActionFlag_();
+	void setMareActionFlag_();
+	void setKinoActionFlag_();
+	void setHappyEffectMtxPtr_(const JUTNameTab*);
+	void setNoteEffectMtxPtr_(const JUTNameTab*);
+	void setPollutionEffectMtxPtr_(const JUTNameTab*);
+	void setSmokeEffectMtxPtr_(bool);
+	JGeometry::TVec3<f32> getEffectScale_() const;
+	void emitSinkEffect_();
+	void emitHappyEffect_();
+	void emitPollutionParticle_(int, MtxPtr); // fabricated
+	void emitDirtyEffect_();                  // fabricated
+	void emitWashEffect_();                   // fabricated
+	bool isPolWaitCEffectEmitTime_() const;
+	bool isPolWaitLEffectEmitTime_() const;
+	bool isPolWaitREffectEmitTime_() const;
+	void emitParticle_();
+
+	void peachParasolIn_();
+	void peachParasolOut_();
+	void peachTiredIn_();
+	void peachTiredOut_();
+	void sunflowerDownIn_();
+
+	// fabricated
+	void resetToWait_()
+	{
+		mMarchSpeed = 0.0f;
+		mTurnSpeed  = unk228->mWaitTurnSpeed.get();
+		unk1CC      = 0;
+		unk1D0      = 0.0f;
+	}
+	void resetToTurn_()
+	{
+		mMarchSpeed  = 0.0f;
+		mTurnSpeed   = unk228->mWaitTurnSpeed.get();
+		unk1CC       = 0;
+		unk1D0       = 0.0f;
+		unk22C->unk0 = 0;
+	}
 
 public:
-	/* 0x150 */ char unk150[0x1C];
-	/* 0x16C */ s32 _16C;
+	/* 0x150 */ SDLModel* unk150;
+	/* 0x154 */ MtxPtr unk154;
+	/* 0x158 */ THitActor* unk158;
+
+	// fabricated
+	class TNpcSink {
+	public:
+		TNpcSink(int param_1, int param_2)
+		    : unk0(param_1)
+		    , unk4(param_2)
+		{
+		}
+
+		bool doThing()
+		{
+			bool result = false;
+			unk0 += 1;
+			if (unk0 >= unk4) {
+				unk0   = unk4;
+				result = true;
+			}
+			return result;
+		}
+
+		/* 0x0 */ int unk0;
+		/* 0x4 */ int unk4;
+	};
+
+	/* 0x15C */ TNpcSink* unk15C;
+	/* 0x160 */ TMultiMtxEffect* mMultiMtxEffect;
+	/* 0x164 */ int mNeckJointIndex;
+	/* 0x168 */ TNpcParts* unk168;
+	/* 0x16C */ s32 unk16C;
 	/* 0x170 */ u32 mActionFlag;
-	/* 0x174 */ char unk174[0x234 - 0x174];
+	/* 0x174 */ GXColor unk174;
+	/* 0x178 */ f32 unk178;
+	/* 0x17C */ TNpcThrow* mThrowCtrl;
+	/* 0x180 */ TNpcTrample* mTrampleCtrl;
+	/* 0x184 */ TNpcCoin* mCoinCtrl;
+	/* 0x188 */ TNpcBalloon* mBalloonCtrl;
+	/* 0x18C */ TNpcInbetween* mInbetweenCtrl;
+
+	struct UnkNpcStruct {
+		EnumNpcAnmKind unk0;
+		u8 unk4;
+	};
+	/* 0x190 */ UnkNpcStruct* unk190;
+	/* 0x194 */ JGeometry::TVec3<f32> unk194;
+	/* 0x1A0 */ JGeometry::TVec3<f32> unk1A0;
+	/* 0x1AC */ JGeometry::TVec3<f32> unk1AC;
+	/* 0x1B8 */ JGeometry::TVec3<f32> unk1B8;
+	/* 0x1C4 */ f32 unk1C4;
+	/* 0x1C8 */ f32 unk1C8;
+	/* 0x1CC */ int unk1CC;
+	/* 0x1D0 */ f32 unk1D0;
+	/* 0x1D4 */ const JDrama::TActor* mDummyConnectActor;
+
+	enum {
+		UNK1D8_FLAG_UNK1 = 0x1,
+		UNK1D8_FLAG_UNK2 = 0x2,
+		UNK1D8_FLAG_UNK4 = 0x4,
+	};
+
+	/* 0x1D8 */ u8 unk1D8;
+	/* 0x1D9 */ u8 unk1D9;
+	/* 0x1DA */ u8 unk1DA;
+	/* 0x1DC */ int unk1DC;
+	/* 0x1E0 */ u16 mTalkForbidCount;
+	/* 0x1E2 */ u16 unk1E2;
+	/* 0x1E4 */ u16 unk1E4;
+	/* 0x1E8 */ MtxPtr unk1E8;
+	/* 0x1EC */ MtxPtr unk1EC;
+	/* 0x1F0 */ JGeometry::TVec3<f32> unk1F0;
+	/* 0x1FC */ MtxPtr unk1FC;
+	/* 0x200 */ MtxPtr unk200;
+	/* 0x204 */ MtxPtr unk204;
+	/* 0x208 */ MtxPtr unk208;
+	/* 0x20C */ JGeometry::TVec3<f32> unk20C;
+	/* 0x218 */ f32 unk218;
+	/* 0x21C */ JGeometry::TVec3<f32> unk21C;
+	/* 0x228 */ TNpcSaveIndividual* unk228;
+
+	class TNpcUnk22CStruct {
+	public:
+		TNpcUnk22CStruct()
+		    : unk0(0)
+		    , unk4(1)
+		{
+		}
+
+		void doThing()
+		{
+			int iVar13 = mPtrSaveNormal->mSLGraphWanderMinFrame.get();
+			int sVar1  = mPtrSaveNormal->mSLGraphWanderMaxFrame.get();
+
+			unk0 = 0;
+			unk4 = MsRandI(sVar1, iVar13);
+		}
+
+		bool doThing2()
+		{
+			bool result = false;
+			unk0 += 1;
+			if (unk0 >= unk4) {
+				unk0   = unk4;
+				result = true;
+			}
+			return result;
+		}
+
+		void doThing3(int l, int r)
+		{
+			if (unk0 == 0) {
+				unk0 = 0;
+				unk4 = MsRandI(l, r);
+			}
+		}
+
+		/* 0x0 */ int unk0;
+		/* 0x4 */ int unk4;
+	};
+
+	/* 0x22C */ TNpcUnk22CStruct* unk22C;
+
+	class TNpcUnk230Struct {
+	public:
+		TNpcUnk230Struct()
+		    : unk0(0)
+		    , unk2(0)
+		{
+		}
+
+		void set(s16 x, s16 y)
+		{
+			unk0 = x;
+			unk2 = y;
+		}
+
+		/* 0x0 */ s16 unk0;
+		/* 0x2 */ s16 unk2;
+	};
+
+	/* 0x230 */ TNpcUnk230Struct* unk230;
 };
+
+extern TBaseNPC* gpCurrentNpc;
 
 #endif

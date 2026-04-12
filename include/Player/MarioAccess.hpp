@@ -8,7 +8,7 @@ class TLiveActor;
 class THitActor;
 class TBGCheckData;
 
-extern size_t gpMarioAddress;
+extern void* gpMarioAddress;
 
 extern JGeometry::TVec3<f32>* gpMarioPos;
 
@@ -79,14 +79,15 @@ void SMS_SetMarioAccessParams();
 // Real, see bossgesso
 inline JGeometry::TVec3<f32>& SMS_GetMarioPos() { return *gpMarioPos; }
 
-JGeometry::TVec3<f32> SMS_DistanceFromMarioVec(const JGeometry::TVec3<f32>& pos)
+inline JGeometry::TVec3<f32>
+SMS_DistanceFromMarioVec(const JGeometry::TVec3<f32>& pos)
 {
 	JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
 	marioPos.sub(pos);
 	return marioPos;
 }
 
-f32 SMS_DistanceFromMario(const JGeometry::TVec3<f32>& pos)
+inline f32 SMS_DistanceFromMario(const JGeometry::TVec3<f32>& pos)
 {
 	return SMS_DistanceFromMarioVec(pos).length();
 }
@@ -102,9 +103,9 @@ inline void SMS_GetMarioPosStupid(Vec* result)
 	if (!gpMarioAddress)
 		return;
 
-	result->z = *(f32*)(gpMarioAddress + 0x18);
-	result->y = *(f32*)(gpMarioAddress + 0x14);
-	result->x = *(f32*)(gpMarioAddress + 0x10);
+	result->z = *(f32*)((u8*)gpMarioAddress + 0x18);
+	result->y = *(f32*)((u8*)gpMarioAddress + 0x14);
+	result->x = *(f32*)((u8*)gpMarioAddress + 0x10);
 }
 
 // fabricated

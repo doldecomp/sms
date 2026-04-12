@@ -1,10 +1,11 @@
 #ifndef MARIOCAP_HPP
 #define MARIOCAP_HPP
 
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
 #include <Player/MarioMain.hpp>
 #include <MarioUtil/MtxUtil.hpp>
 #include <Strategic/MirrorActor.hpp>
-#include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
 
 class TMarioCap {
 public:

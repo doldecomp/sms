@@ -7,7 +7,8 @@ class TBGCheckData;
 class TLiveActor;
 
 int SMS_GetMonteVillageAreaInMario();
-void* SMS_GetGroundActor(const TBGCheckData* bgData, u32 value);
+const TLiveActor* SMS_GetGroundActor(const TBGCheckData* check_data,
+                                     u32 type_filter);
 float SMS_GetSandRiseUpRatio(const TLiveActor* actor);
 
 #endif

@@ -162,13 +162,16 @@ public:
 	int moveTo(int node_idx);
 	f32 calcSplineSpeed(float);
 	bool traceSpline(float);
-	void getCurGraphIndex() const;
-	void getGraph() const;
+	int getCurGraphIndex() const { return mCurrIdx; }
+	const TGraphWeb* getGraph() const { return unk0; }
 
 	// fabricated
-	int getCurrentIndex() { return mCurrIdx; }
-	TGraphNode& getCurrent() { return unk0->getGraphNode(mCurrIdx); }
-	TGraphNode& getPrevious() { return unk0->getGraphNode(mPrevIdx); }
+	TGraphNode& getCurrent() { return getGraph()->getGraphNode(mCurrIdx); }
+	TGraphNode& getPrevious() { return getGraph()->getGraphNode(mPrevIdx); }
+	const TGraphNode& getCurrent() const
+	{
+		return getGraph()->getGraphNode(mCurrIdx);
+	}
 	int getPrevIndex() { return mPrevIdx; }
 	void init(TGraphWeb* web) { unk0 = web; }
 	void reset() { mPrevIdx = -1; }
@@ -179,7 +182,7 @@ public:
 	}
 	void moveToShortestNext()
 	{
-		moveTo(unk0->getShortestNextIndex(getCurrentIndex(), getPrevIndex(),
+		moveTo(unk0->getShortestNextIndex(getCurGraphIndex(), getPrevIndex(),
 		                                  0xffffffff));
 	}
 	void setToNearest(const JGeometry::TVec3<f32>& pos)
@@ -196,6 +199,18 @@ public:
 			result = curr;
 		mPrevIdx = curr;
 		return result;
+	}
+	bool currPitchIsZero() const
+	{
+		if (getCurrent().getRailNode()->mPitch == 0)
+			return true;
+		return false;
+	}
+	bool hasOnlyOneNext() const
+	{
+		if (getCurrent().getRailNode()->mConnectionNum == 1)
+			return true;
+		return false;
 	}
 
 public:

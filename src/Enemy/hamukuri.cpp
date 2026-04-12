@@ -953,7 +953,7 @@ void THamuKuri::makeCapFly(TMapObjBase* param_1)
 			getManager()->unk70 = this;
 
 			// TODO: this is an inline
-			int uVar11 = unk124->getCurrentIndex();
+			int uVar11 = unk124->getCurGraphIndex();
 
 			int count  = MsRandF(2, 3);
 			int uVar10 = -1;
@@ -2282,7 +2282,7 @@ bool TDoroHamuKuri::isCollidMove(THitActor* param_1)
 						mHeldObject = pTVar1;
 
 						// TODO: this is an inline
-						int uVar11 = unk124->getCurrentIndex();
+						int uVar11 = unk124->getCurGraphIndex();
 
 						int count  = MsRandF(2, 3);
 						int uVar10 = -1;
@@ -2545,7 +2545,7 @@ DEFINE_NERVE(TNerveHaneHamuKuriMoveOnGraph, TLiveActor)
 			JGeometry::TVec3<f32> prevPos;
 			self->getTracer()
 			    ->getGraph()
-			    ->getGraphNode(self->getTracer()->getCurrentIndex())
+			    ->getGraphNode(self->getTracer()->getCurGraphIndex())
 			    .getPoint(&prevPos);
 
 			JGeometry::TVec3<f32> toCur  = curPos - self->mPosition;

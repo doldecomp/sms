@@ -3,6 +3,8 @@
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
+#include <M3DUtil/M3UModelMario.hpp>
+#include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 
@@ -226,14 +228,14 @@ void TMarioCap::perform(unsigned long param_1, JDrama::TGraphics* param_2)
 
 void TMarioCap::mtxEffectHide()
 {
-	unk20->flagOff();
-	unk24->flagOff();
+	unk20->flagOff(0x1);
+	unk24->flagOff(0x1);
 }
 
 void TMarioCap::mtxEffectShow()
 {
-	unk20->flagOn();
-	unk24->flagOn();
+	unk20->flagOn(0x1);
+	unk24->flagOn(0x1);
 }
 
 void TMarioCap::addDirty() { }
