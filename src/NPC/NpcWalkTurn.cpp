@@ -25,7 +25,7 @@ void TBaseNPC::execWalk(bool param_1)
 
 	if (param_1 && (unk1DA & 0x1)) {
 		f32 fVar1 = 4.0f;
-		if (mActionFlag & NPC_ACTION_UNK8)
+		if (mActionFlag & NPC_ACTION_RUN)
 			fVar1 = 6.0f;
 
 		SMS_GoRotate(mPosition, unkF4.getPoint(), fVar1, &mRotation.y);
@@ -50,11 +50,11 @@ void TBaseNPC::execWalk(bool param_1)
 		f32 dVar12 = mIndividualParams->mMarchAccel.get();
 
 		switch (uVar4) {
-		case NPC_ANM_KIND_UNK0:
+		case NPC_ANM_KIND_WALK:
 			dVar11 = mIndividualParams->mMaxMarchSpeed.get();
 			break;
 
-		case NPC_ANM_KIND_UNK8:
+		case NPC_ANM_KIND_RUN:
 			dVar11 = mIndividualParams->mSLMaxRunSpeed.get();
 			dVar12 = mIndividualParams->mSLRunAccel.get();
 			if (mActionFlag & NPC_ACTION_BURNING) {
@@ -198,7 +198,7 @@ bool TBaseNPC::isTurnToMarioWhenApproach() const
 		    & (NPC_ACTION_BURNING | NPC_ACTION_UNK2000 | NPC_ACTION_UNK1000
 		       | NPC_ACTION_UNK800 | NPC_ACTION_UNK400 | NPC_ACTION_HAPPY
 		       | NPC_ACTION_UNK40 | NPC_ACTION_UNK20 | NPC_ACTION_UNK10
-		       | NPC_ACTION_UNK8 | NPC_ACTION_DANCE | NPC_ACTION_UNK2
+		       | NPC_ACTION_RUN | NPC_ACTION_DANCE | NPC_ACTION_UNK2
 		       | NPC_ACTION_UNK1))
 			result = false;
 		break;

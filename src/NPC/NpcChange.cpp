@@ -358,7 +358,7 @@ void TBaseNPC::behaveToHitObject_(THitActor* param_1,
 
 		mBurnStrength = 0.0f;
 		mActionFlag
-		    &= ~(NPC_ACTION_BURNING | NPC_ACTION_UNK80 | NPC_ACTION_UNK8);
+		    &= ~(NPC_ACTION_BURNING | NPC_ACTION_UNK80 | NPC_ACTION_RUN);
 		npcHappyIn(1);
 		return;
 	}
