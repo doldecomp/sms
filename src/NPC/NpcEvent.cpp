@@ -199,7 +199,7 @@ static void evNpcDanceOffHappyOn(TSpcTypedInterp<TEventWatcher>* interp,
 {
 	interp->verifyArgNum(1, &arg_num);
 	TBaseNPC* npc = (TBaseNPC*)interp->pop().getDataInt();
-	npc->mActionFlag &= ~0x4;
+	npc->mActionFlag &= ~TBaseNPC::NPC_ACTION_DANCE;
 	npc->npcHappyIn(2);
 	interp->push();
 }
@@ -305,7 +305,7 @@ static void evCheckMonteClear(TSpcTypedInterp<TEventWatcher>* interp,
 	TBaseNPC* npc = JDrama::TNameRefGen::search<TBaseNPC>(buffer);
 
 	int b;
-	if (!npc->checkLiveFlag(LIVE_FLAG_UNK400000) && npc->unk178 == 0.0f)
+	if (!npc->checkLiveFlag(LIVE_FLAG_UNK400000) && npc->isClean())
 		b = true;
 	else
 		b = false;

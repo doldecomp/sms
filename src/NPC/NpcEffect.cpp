@@ -30,7 +30,7 @@ void TBaseNPC::setHappyEffectMtxPtr_(const JUTNameTab* tab)
 		jointName = nullptr;
 
 	if (jointName != nullptr)
-		unk1E8 = getModel()->getAnmMtx(tab->getIndex(jointName));
+		mHappyEffectMtxPtr = getModel()->getAnmMtx(tab->getIndex(jointName));
 }
 
 void TBaseNPC::setNoteEffectMtxPtr_(const JUTNameTab* tab)
@@ -51,7 +51,7 @@ void TBaseNPC::setNoteEffectMtxPtr_(const JUTNameTab* tab)
 	}
 
 	if (jointName)
-		unk1EC = getModel()->getAnmMtx(tab->getIndex(jointName));
+		mNoteEffectMtxPtr = getModel()->getAnmMtx(tab->getIndex(jointName));
 }
 
 void TBaseNPC::setPollutionEffectMtxPtr_(const JUTNameTab* tab)
@@ -76,7 +76,7 @@ void TBaseNPC::setPollutionEffectMtxPtr_(const JUTNameTab* tab)
 	}
 
 	if (pcVar5)
-		unk208 = getModel()->getAnmMtx(tab->getIndex(pcVar5));
+		mPollutionEffectMtxPtr = getModel()->getAnmMtx(tab->getIndex(pcVar5));
 }
 
 void TBaseNPC::setSmokeEffectMtxPtr_(bool param_1)
@@ -90,7 +90,7 @@ void TBaseNPC::setSmokeEffectMtxPtr_(bool param_1)
 		model  = getModel();
 		pcVar3 = "yashi_jnt";
 	}
-	unk208 = model->getAnmMtx(
+	mSmokeEffectMtxPtr = model->getAnmMtx(
 	    model->getModelData()->getJointName()->getIndex(pcVar3));
 }
 
@@ -113,7 +113,7 @@ JGeometry::TVec3<f32> TBaseNPC::getEffectScale_() const
 	case 0x4000017:
 		return JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f);
 	}
-	return unk1AC;
+	return mInitialScale;
 }
 
 void TBaseNPC::emitSinkEffect_()
@@ -130,9 +130,11 @@ void TBaseNPC::emitHappyEffect_()
 	JGeometry::TVec3<f32> scale = getEffectScale_();
 	scale *= mPtrSaveNormal->mSLCleanEffectScale.get();
 	if (isNormalMonte()) {
-		SMS_EasyEmitParticle(PARTICLE_MS_MNT_KIRA, unk1E8, this, scale);
+		SMS_EasyEmitParticle(PARTICLE_MS_MNT_KIRA, mHappyEffectMtxPtr, this,
+		                     scale);
 	} else if (isNormalMare() || mActorType == 0x4000016) {
-		SMS_EasyEmitParticle(PARTICLE_MS_MARE_KIRA, unk1E8, this, scale);
+		SMS_EasyEmitParticle(PARTICLE_MS_MARE_KIRA, mHappyEffectMtxPtr, this,
+		                     scale);
 	}
 }
 
@@ -157,7 +159,7 @@ inline void TBaseNPC::emitDirtyEffect_()
 			particle = PARTICLE_MS_KINO_YOGORE;
 
 		if (particle != -1) {
-			emitPollutionParticle_(particle, unk1FC);
+			emitPollutionParticle_(particle, mPollutionEffectMtxPtr);
 		}
 	}
 
@@ -180,8 +182,8 @@ inline void TBaseNPC::emitWashEffect_()
 
 	if (particle != -1) {
 		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emitAndBindToMtxPtr(particle, unk1FC, 1,
-		                                                  this)) {
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(
+		        particle, mPollutionEffectMtxPtr, 1, this)) {
 			emitter->setScale(getEffectScale_());
 			SMSSetEmitterPolColor(emitter, 6);
 		}
@@ -225,24 +227,30 @@ inline bool TBaseNPC::isPolWaitREffectEmitTime_() const
 
 void TBaseNPC::emitParticle_()
 {
-	if (unk208 != nullptr && (mActionFlag & 0x4000)) {
+	if (mSmokeEffectMtxPtr != nullptr && (mActionFlag & NPC_ACTION_BURNING)) {
 		JGeometry::TVec3<f32> scale = getEffectScale_();
-		unk20C.set(unk208[0][3], unk208[1][3], unk208[2][3]);
-		SMS_EasyEmitParticle(PARTICLE_MS_NPC_KOKUEN, &unk20C, this, scale);
+		mFireParticlePos.set(mSmokeEffectMtxPtr[0][3], mSmokeEffectMtxPtr[1][3],
+		                     mSmokeEffectMtxPtr[2][3]);
+		SMS_EasyEmitParticle(PARTICLE_MS_NPC_KOKUEN, &mFireParticlePos, this,
+		                     scale);
 		JGeometry::TVec3<f32> local_30 = scale;
-		local_30 *= unk218;
-		SMS_EasyEmitParticle(PARTICLE_MS_MOE_FIRE_C, &unk20C, this, local_30);
-		SMS_EasyEmitParticle(PARTICLE_MS_MOE_FIRE_A, &unk20C, this, local_30);
-		SMS_EasyEmitParticle(PARTICLE_MS_MOE_FIRE_B, &unk20C, this, local_30);
+		local_30 *= mBurnStrength;
+		SMS_EasyEmitParticle(PARTICLE_MS_MOE_FIRE_C, &mFireParticlePos, this,
+		                     local_30);
+		SMS_EasyEmitParticle(PARTICLE_MS_MOE_FIRE_A, &mFireParticlePos, this,
+		                     local_30);
+		SMS_EasyEmitParticle(PARTICLE_MS_MOE_FIRE_B, &mFireParticlePos, this,
+		                     local_30);
 	}
 
-	if (unk1EC != nullptr
+	if (mNoteEffectMtxPtr != nullptr
 	    && (mActorType != 0x4000012
 	        || unkD0->getCurrentAnmKind() != NPC_ANM_KIND_UNK5)) {
 		JGeometry::TVec3<f32> scale = getEffectScale_();
 		scale *= 0.75f;
 
-		unk1F0.set(unk1EC[0][3], unk1EC[1][3], unk1EC[2][3]);
+		unk1F0.set(mNoteEffectMtxPtr[0][3], mNoteEffectMtxPtr[1][3],
+		           mNoteEffectMtxPtr[2][3]);
 		SMS_EasyEmitParticle(PARTICLE_MS_YNB_ONPU, &unk1F0, this, scale);
 	}
 
@@ -263,9 +271,11 @@ void TBaseNPC::emitParticle_()
 		}
 
 		if (doEmit) {
-			unk21C.set(mPosition.x, dVar11, mPosition.z);
-			SMS_EasyEmitParticle(PARTICLE_MS_NPC_HAMON_B, &unk21C, this, scale);
-			SMS_EasyEmitParticle(PARTICLE_MS_NPC_HAMON_A, &unk21C, this, scale);
+			mWaveParticlePos.set(mPosition.x, dVar11, mPosition.z);
+			SMS_EasyEmitParticle(PARTICLE_MS_NPC_HAMON_B, &mWaveParticlePos,
+			                     this, scale);
+			SMS_EasyEmitParticle(PARTICLE_MS_NPC_HAMON_A, &mWaveParticlePos,
+			                     this, scale);
 		}
 	}
 

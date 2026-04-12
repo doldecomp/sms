@@ -47,11 +47,11 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 
 				f32 dist2 = toMario.squared();
 				if (dist2 > 0.001f
-				    && dist2 < CLBSquared<f32>(
-				           gpCurrentNpc->unk228->mNeckTurnSearchDist.get())
+				    && dist2 < CLBSquared<f32>(gpCurrentNpc->mIndividualParams
+				                                   ->mNeckTurnSearchDist.get())
 				    && fabs(marioPos.y - currMtx[1][3])
-				           < gpCurrentNpc->unk228->mNeckTurnSearchHeight
-				                 .get()) {
+				           < gpCurrentNpc->mIndividualParams
+				                 ->mNeckTurnSearchHeight.get()) {
 
 					JGeometry::TVec3<f32> neckForward(
 					    currMtx[0][1], currMtx[1][1], currMtx[2][1]);
@@ -63,8 +63,9 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 					local_148.zero();
 				}
 
-				s16 tmp      = CLBDegToShortAngle(local_148.y);
-				s16 maxNeckY = gpCurrentNpc->unk228->mNeckMaxAngleY.get();
+				s16 tmp = CLBDegToShortAngle(local_148.y);
+				s16 maxNeckY
+				    = gpCurrentNpc->mIndividualParams->mNeckMaxAngleY.get();
 				s16 minNeckY = -maxNeckY;
 
 				r28 = MsClamp<s16>(tmp, minNeckY, maxNeckY);
@@ -73,26 +74,26 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 			CLBChaseGeneralConstantSpecifySpeed<s16>(
 			    &neckY, r28,
 			    CLBPalIntSpeed<s16>(
-			        gpCurrentNpc->unk228->mNeckAngleYSpeed.get()));
+			        gpCurrentNpc->mIndividualParams->mNeckAngleYSpeed.get()));
 
 			if (useTracking) {
 
 				s16 tmp2 = CLBDegToShortAngle(local_148.x);
 				s16 tmp  = MsClamp<s16>(
-                    tmp2, gpCurrentNpc->unk228->mNeckMinAngleX.get(),
-                    gpCurrentNpc->unk228->mNeckMaxAngleX.get());
+                    tmp2, gpCurrentNpc->mIndividualParams->mNeckMinAngleX.get(),
+                    gpCurrentNpc->mIndividualParams->mNeckMaxAngleX.get());
 
 				r30 = CLBEaseOutInbetween<s16>(
 				    0.5f * tmp, tmp,
 				    CLBCalcRatio<int>(
-				        gpCurrentNpc->unk228->mNeckMaxAngleY.get(), 0,
-				        neckY >= 0 ? neckY : -neckY));
+				        gpCurrentNpc->mIndividualParams->mNeckMaxAngleY.get(),
+				        0, neckY >= 0 ? neckY : -neckY));
 			}
 
 			CLBChaseGeneralConstantSpecifySpeed<s16>(
 			    &neckX, r30,
 			    CLBPalIntSpeed<s16>(
-			        gpCurrentNpc->unk228->mNeckAngleXSpeed.get()));
+			        gpCurrentNpc->mIndividualParams->mNeckAngleXSpeed.get()));
 
 			gpCurrentNpc->unk230->set(neckX, neckY);
 

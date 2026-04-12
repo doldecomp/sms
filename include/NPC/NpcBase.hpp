@@ -20,9 +20,9 @@ enum EnumNpcStopMotionBlendOnOff {
 	NPC_STOP_MOTION_BLEND_ON  = 1,
 };
 enum EnumHitNpcObjectKind {
-	HIT_NPC_OBJECT_KIND_UNK0 = 0,
-	HIT_NPC_OBJECT_KIND_UNK1 = 1,
-	HIT_NPC_OBJECT_KIND_UNK2 = 2,
+	HIT_NPC_OBJECT_KIND_WATER_SPRAY = 0,
+	HIT_NPC_OBJECT_KIND_UNK1        = 1,
+	HIT_NPC_OBJECT_KIND_UNK2        = 2,
 };
 
 class TNpcParts;
@@ -155,7 +155,7 @@ public:
 	bool isSunflowerReviving() const
 	{
 		bool result = false;
-		if (isSunflower() && (unk1D8 & 0x2))
+		if (isSunflower() && (unk1D8 & UNK1D8_FLAG_UNK2))
 			result = true;
 		return result;
 	}
@@ -163,10 +163,12 @@ public:
 	bool isPeachTired() const
 	{
 		bool result = false;
-		if (mActorType == 0x4000018 && (unk1D8 & 0x2))
+		if (mActorType == 0x4000018 && (unk1D8 & UNK1D8_FLAG_UNK2))
 			result = true;
 		return result;
 	}
+
+	bool isClean() const { return mPollutionAmount == 0.0f; }
 
 private:
 	void setIndividualDifference_(JSUMemoryInputStream&);
@@ -191,10 +193,10 @@ private:
 	{
 		if (mTalkForbidCount != 0)
 			mTalkForbidCount -= 1;
-		if (unk1E2 != 0)
-			unk1E2 -= 1;
-		if (unk1E4 != 0)
-			unk1E4 -= 1;
+		if (mWalkForbidCount != 0)
+			mWalkForbidCount -= 1;
+		if (mDamageParticleForbidCount != 0)
+			mDamageParticleForbidCount -= 1;
 	}
 	f32 getAnmOffDist_()
 	{
@@ -202,17 +204,17 @@ private:
 		f32 fVar1  = gpCamera->mFar;
 		u32 uVar5  = unkD0->getCurrentAnmKind();
 		f32 fVar2  = mPtrSaveNormal->mSLDanceAnmOffDist.get();
-		if ((mActionFlag & 0x204) || mActorType == 0x400000D || uVar5
-		    || uVar5 == 23) {
+		if ((mActionFlag & (NPC_ACTION_HAPPY | NPC_ACTION_DANCE))
+		    || mActorType == 0x400000D || uVar5 || uVar5 == 23) {
 			bVar3 = true;
 		}
 
 		if (!isNerveMaybeDontCalcAnim0() && !isNerveMaybeDontCalcAnim1()) {
-			fVar1 = unk228->mWaitAnmOffDist1.get();
+			fVar1 = mIndividualParams->mWaitAnmOffDist1.get();
 			if (bVar3 && fVar1 < fVar2)
 				fVar1 = fVar2;
 		} else {
-			fVar1 = unk228->mWaitAnmOffDist0.get();
+			fVar1 = mIndividualParams->mWaitAnmOffDist0.get();
 			if (bVar3 && fVar1 < fVar2)
 				fVar1 = fVar2;
 		}
@@ -257,18 +259,20 @@ private:
 	void resetToWait_()
 	{
 		mMarchSpeed = 0.0f;
-		mTurnSpeed  = unk228->mWaitTurnSpeed.get();
+		mTurnSpeed  = mIndividualParams->mWaitTurnSpeed.get();
 		unk1CC      = 0;
 		unk1D0      = 0.0f;
 	}
 	void resetToTurn_()
 	{
 		mMarchSpeed  = 0.0f;
-		mTurnSpeed   = unk228->mWaitTurnSpeed.get();
+		mTurnSpeed   = mIndividualParams->mWaitTurnSpeed.get();
 		unk1CC       = 0;
 		unk1D0       = 0.0f;
 		unk22C->unk0 = 0;
 	}
+
+	bool isExtinguished_() const { return mBurnStrength <= 0.0f; }
 
 public:
 	/* 0x150 */ SDLModel* unk150;
@@ -304,9 +308,28 @@ public:
 	/* 0x164 */ int mNeckJointIndex;
 	/* 0x168 */ TNpcParts* unk168;
 	/* 0x16C */ s32 unk16C;
+
+	enum {
+		NPC_ACTION_UNK1    = 0x1,
+		NPC_ACTION_UNK2    = 0x2,
+		NPC_ACTION_DANCE   = 0x4,
+		NPC_ACTION_UNK8    = 0x8,
+		NPC_ACTION_UNK10   = 0x10,
+		NPC_ACTION_UNK20   = 0x20,
+		NPC_ACTION_UNK40   = 0x40,
+		NPC_ACTION_UNK80   = 0x80,
+		NPC_ACTION_UNK100  = 0x100,
+		NPC_ACTION_HAPPY   = 0x200,
+		NPC_ACTION_UNK400  = 0x400,
+		NPC_ACTION_UNK800  = 0x800,
+		NPC_ACTION_UNK1000 = 0x1000,
+		NPC_ACTION_UNK2000 = 0x2000,
+		NPC_ACTION_BURNING = 0x4000,
+	};
+
 	/* 0x170 */ u32 mActionFlag;
 	/* 0x174 */ GXColor unk174;
-	/* 0x178 */ f32 unk178;
+	/* 0x178 */ f32 mPollutionAmount;
 	/* 0x17C */ TNpcThrow* mThrowCtrl;
 	/* 0x180 */ TNpcTrample* mTrampleCtrl;
 	/* 0x184 */ TNpcCoin* mCoinCtrl;
@@ -320,7 +343,7 @@ public:
 	/* 0x190 */ UnkNpcStruct* unk190;
 	/* 0x194 */ JGeometry::TVec3<f32> unk194;
 	/* 0x1A0 */ JGeometry::TVec3<f32> unk1A0;
-	/* 0x1AC */ JGeometry::TVec3<f32> unk1AC;
+	/* 0x1AC */ JGeometry::TVec3<f32> mInitialScale;
 	/* 0x1B8 */ JGeometry::TVec3<f32> unk1B8;
 	/* 0x1C4 */ f32 unk1C4;
 	/* 0x1C8 */ f32 unk1C8;
@@ -339,19 +362,19 @@ public:
 	/* 0x1DA */ u8 unk1DA;
 	/* 0x1DC */ int unk1DC;
 	/* 0x1E0 */ u16 mTalkForbidCount;
-	/* 0x1E2 */ u16 unk1E2;
-	/* 0x1E4 */ u16 unk1E4;
-	/* 0x1E8 */ MtxPtr unk1E8;
-	/* 0x1EC */ MtxPtr unk1EC;
+	/* 0x1E2 */ u16 mWalkForbidCount;
+	/* 0x1E4 */ u16 mDamageParticleForbidCount;
+	/* 0x1E8 */ MtxPtr mHappyEffectMtxPtr;
+	/* 0x1EC */ MtxPtr mNoteEffectMtxPtr;
 	/* 0x1F0 */ JGeometry::TVec3<f32> unk1F0;
-	/* 0x1FC */ MtxPtr unk1FC;
+	/* 0x1FC */ MtxPtr mPollutionEffectMtxPtr;
 	/* 0x200 */ MtxPtr unk200;
 	/* 0x204 */ MtxPtr unk204;
-	/* 0x208 */ MtxPtr unk208;
-	/* 0x20C */ JGeometry::TVec3<f32> unk20C;
-	/* 0x218 */ f32 unk218;
-	/* 0x21C */ JGeometry::TVec3<f32> unk21C;
-	/* 0x228 */ TNpcSaveIndividual* unk228;
+	/* 0x208 */ MtxPtr mSmokeEffectMtxPtr;
+	/* 0x20C */ JGeometry::TVec3<f32> mFireParticlePos;
+	/* 0x218 */ f32 mBurnStrength;
+	/* 0x21C */ JGeometry::TVec3<f32> mWaveParticlePos;
+	/* 0x228 */ TNpcSaveIndividual* mIndividualParams;
 
 	class TNpcUnk22CStruct {
 	public:

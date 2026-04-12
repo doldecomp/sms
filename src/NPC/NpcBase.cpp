@@ -41,7 +41,7 @@ TBaseNPC::TBaseNPC(u32 param_1, const char* name)
     , unk168(nullptr)
     , unk16C(0)
     , mActionFlag(0)
-    , unk178(0.0f)
+    , mPollutionAmount(0.0f)
     , mThrowCtrl(nullptr)
     , mTrampleCtrl(nullptr)
     , mCoinCtrl(nullptr)
@@ -58,18 +58,18 @@ TBaseNPC::TBaseNPC(u32 param_1, const char* name)
     , unk1DA(0)
     , unk1DC(0)
     , mTalkForbidCount(120)
-    , unk1E2(0)
-    , unk1E4(0)
-    , unk1E8(nullptr)
-    , unk1EC(nullptr)
+    , mWalkForbidCount(0)
+    , mDamageParticleForbidCount(0)
+    , mHappyEffectMtxPtr(nullptr)
+    , mNoteEffectMtxPtr(nullptr)
     , unk1F0(0.0f, 0.0f, 0.0f)
-    , unk1FC(nullptr)
+    , mPollutionEffectMtxPtr(nullptr)
     , unk200(nullptr)
     , unk204(nullptr)
-    , unk208(nullptr)
-    , unk20C(0.0f, 0.0f, 0.0f)
-    , unk218(1.0f)
-    , unk21C(0.0f, 0.0f, 0.0f)
+    , mSmokeEffectMtxPtr(nullptr)
+    , mFireParticlePos(0.0f, 0.0f, 0.0f)
+    , mBurnStrength(1.0f)
+    , mWaveParticlePos(0.0f, 0.0f, 0.0f)
     , unk22C(nullptr)
     , unk230(nullptr)
 {
@@ -96,10 +96,10 @@ TBaseNPC::TBaseNPC(u32 param_1, const char* name)
 void TBaseNPC::load(JSUMemoryInputStream& stream)
 {
 	TSpineEnemy::load(stream);
-	unk194 = mPosition;
-	unk1A0 = mRotation;
-	unk1AC = mScaling;
-	unk1B8 = getFocalPoint();
+	unk194        = mPosition;
+	unk1A0        = mRotation;
+	mInitialScale = mScaling;
+	unk1B8        = getFocalPoint();
 
 	if (mActorType >= 0x400001E || mActorType < 0x400001C)
 		setIndividualDifference_(stream);
@@ -379,11 +379,11 @@ bool TBaseNPC::isNeedNeckStraight() const
 {
 	bool result = false;
 	int anmKind = unkD0->getCurrentAnmKind();
-	if ((mHolder == nullptr || mHolder != gpMarioAddress) && unk178 == 0.0f
+	if ((mHolder == nullptr || mHolder != gpMarioAddress) && isClean()
 	    && mActorType != 0x4000012
 	    && (mActorType != 0x4000019 || anmKind != NPC_ANM_KIND_UNK5)) {
 		if ((isMare() && anmKind == NPC_ANM_KIND_UNKC)
-		    || (((unk1D8 & 0x2) || anmKind == NPC_ANM_KIND_UNK5)
+		    || ((checkUnk1D8(UNK1D8_FLAG_UNK2) || anmKind == NPC_ANM_KIND_UNK5)
 		        & (mActorType == 0x4000018))) {
 			result = true;
 		}
@@ -395,10 +395,11 @@ bool TBaseNPC::isInBodyTurnSearchRange() const
 {
 	bool result = false;
 	if (abs(SMS_GetMarioPos().y - mPosition.y)
-	        < unk228->mBodyTurnSearchHeight.get()
-	    && isInSight(SMS_GetMarioPos(), unk228->mBodyTurnSearchDist.get(),
-	                 unk228->mBodyTurnSearchDegree.get(),
-	                 unk228->mBodyTurnSearchAware.get()))
+	        < mIndividualParams->mBodyTurnSearchHeight.get()
+	    && isInSight(SMS_GetMarioPos(),
+	                 mIndividualParams->mBodyTurnSearchDist.get(),
+	                 mIndividualParams->mBodyTurnSearchDegree.get(),
+	                 mIndividualParams->mBodyTurnSearchAware.get()))
 		result = true;
 	return result;
 }
@@ -406,31 +407,33 @@ bool TBaseNPC::isInBodyTurnSearchRange() const
 bool TBaseNPC::isInMadSearchRange() const
 {
 	bool result = false;
-	if (abs(SMS_GetMarioPos().y - mPosition.y) < unk228->mMadSearchHeight.get()
-	    && isInSight(SMS_GetMarioPos(), unk228->mMadSearchDist.get(),
-	                 unk228->mMadSearchDegree.get(),
-	                 unk228->mMadSearchAware.get()))
+	if (abs(SMS_GetMarioPos().y - mPosition.y)
+	        < mIndividualParams->mMadSearchHeight.get()
+	    && isInSight(SMS_GetMarioPos(), mIndividualParams->mMadSearchDist.get(),
+	                 mIndividualParams->mMadSearchDegree.get(),
+	                 mIndividualParams->mMadSearchAware.get()))
 		result = true;
 	return result;
 }
 
 JGeometry::TVec3<f32> TBaseNPC::getCursorPos() const
 {
-	return JGeometry::TVec3<f32>(mPosition.x,
-	                             mPosition.y
-	                                 + unk1AC.y * unk228->mSLBodyHeight.get()
-	                                 + unk228->mSLCursorHeight.get(),
-	                             mPosition.z);
+	return JGeometry::TVec3<f32>(
+	    mPosition.x,
+	    mPosition.y + mInitialScale.y * mIndividualParams->mSLBodyHeight.get()
+	        + mIndividualParams->mSLCursorHeight.get(),
+	    mPosition.z);
 }
 
 JGeometry::TVec3<f32> TBaseNPC::getFocalPoint() const
 {
-	return JGeometry::TVec3<f32>(mPosition.x,
-	                             mPosition.y
-	                                 + unk1AC.y
-	                                       * (unk228->mSLBodyHeight.get()
-	                                          - unk228->mSLLookatHeight.get()),
-	                             mPosition.z);
+	return JGeometry::TVec3<f32>(
+	    mPosition.x,
+	    mPosition.y
+	        + mInitialScale.y
+	              * (mIndividualParams->mSLBodyHeight.get()
+	                 - mIndividualParams->mSLLookatHeight.get()),
+	    mPosition.z);
 }
 
 BOOL TBaseNPC::receiveMessage(THitActor* param_1, u32 param_2)
@@ -446,19 +449,19 @@ BOOL TBaseNPC::receiveMessage(THitActor* param_1, u32 param_2)
 			result = true;
 		} else if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
 			if (isBehaveToWaterNpc())
-				behaveToHitObject_(param_1, HIT_NPC_OBJECT_KIND_UNK0);
+				behaveToHitObject_(param_1, HIT_NPC_OBJECT_KIND_WATER_SPRAY);
 			result = true;
 		} else if (param_2 == HIT_MESSAGE_UNK10
 		           || (param_2 == HIT_MESSAGE_ATTACK
 		               && param_1->mActorType == 0x4000005A)) {
-			if (unk1E4 == 0) {
+			if (mDamageParticleForbidCount == 0) {
 				SMS_EasyEmitParticle(PARTICLE_MS_DMG_A, &mPosition, nullptr,
 				                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 				SMS_EasyEmitParticle(PARTICLE_MS_DMG_B, &mPosition, nullptr,
 				                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 				SMS_EasyEmitParticle(PARTICLE_MS_DMG_C, &mPosition, nullptr,
 				                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
-				unk1E4 = 16;
+				mDamageParticleForbidCount = 16;
 			}
 
 			if (isBehaveToHitNpc()) {
@@ -485,7 +488,7 @@ void TBaseNPC::moveObject()
 		releaseTaken_();
 
 	if (mTrampleCtrl != nullptr
-	    && mTrampleCtrl->updateTrample(unk1AC.y, &mScaling.y)
+	    && mTrampleCtrl->updateTrample(mInitialScale.y, &mScaling.y)
 	    && isNerveCanGoToMad() && isStateGoToMad_()) {
 		changeNerveToMad_();
 	}
@@ -686,9 +689,11 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 				if (unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK4) {
 					f32 rate = SMSGetAnmFrameRate();
 					mMActor->setFrameRate(
-					    MsClamp(mTurnSpeed * unk228->mTurnAnmRate.get() * rate,
-					            unk228->mTurnAnmMinRate.get() * rate,
-					            unk228->mTurnAnmMaxRate.get() * rate),
+					    MsClamp(
+					        mTurnSpeed * mIndividualParams->mTurnAnmRate.get()
+					            * rate,
+					        mIndividualParams->mTurnAnmMinRate.get() * rate,
+					        mIndividualParams->mTurnAnmMaxRate.get() * rate),
 					    0);
 				}
 			}
@@ -705,7 +710,8 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 					setVariableDamageRadius_();
 
 				if (isPollutionNpc())
-					unk174.a = unk178 * unk228->mPollutionMax.get();
+					unk174.a = mPollutionAmount
+					           * mIndividualParams->mPollutionMax.get();
 			}
 		}
 
@@ -713,7 +719,7 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (param_1 & 0x2) {
-		if (mActionFlag & 0x4000) {
+		if (mActionFlag & NPC_ACTION_BURNING) {
 			if (SMSGetMSound()->gateCheck(0x8017))
 				MSoundSESystem::MSoundSE::startSoundNpcActor(0x8017, &mPosition,
 				                                             0, nullptr, 0, 4);
@@ -769,7 +775,7 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 		offLiveFlag(LIVE_FLAG_UNK1000000);
 		JGeometry::TVec3<f32> diff;
 		diff.sub(mPosition, gpCamera->unk124);
-		if (diff.squared() > CLBSquared(unk228->mAllDLLockDist.get())
+		if (diff.squared() > CLBSquared(mIndividualParams->mAllDLLockDist.get())
 		    && !isSunflower()) {
 			getModel()->lock();
 		} else {

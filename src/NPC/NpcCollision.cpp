@@ -104,7 +104,7 @@ void TBaseNPC::setVariableDamageRadius_()
 		diff.sub(mPosition, SMS_GetMarioPos());
 		diff.y = 0.0f;
 		if (diff.squared() < CLBSquared(fVar6 * 3.0f))
-			fVar6 = unk228->mSLDamageRadiusSmall.get();
+			fVar6 = mIndividualParams->mSLDamageRadiusSmall.get();
 	}
 
 	mDamageRadius = fVar6;

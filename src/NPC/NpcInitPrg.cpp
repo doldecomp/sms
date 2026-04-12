@@ -37,7 +37,13 @@ static const char* cEyeMaterialName            = "_eye_mat";
 static const char* cFruitsBoatRideJointName    = "monte_koko";
 static const char* cNeckJointName              = "kubi";
 
-void TBaseNPC::initNpcLight_() { }
+void TBaseNPC::initNpcLight_()
+{
+	mMActor->setLightType(1);
+	if (checkLiveFlag(LIVE_FLAG_UNK10))
+		mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
+		    mPosition.x, mPosition.y + 10.0f, mPosition.z, &mGroundPlane);
+}
 
 // NOTE: this is not present as an UNUSED symbol, so it was an inline, but it is
 // sure as hell isn't used anywhere but here so I'm not defining it in the
@@ -117,14 +123,14 @@ void TBaseNPC::init(TLiveManager* param_1)
 {
 	int iVar18 = mActorType - 0x4000001;
 
-	unk228 = gpConductor->unkF4->unk8[iVar18];
+	mIndividualParams = gpConductor->unkF4->unk8[iVar18];
 
 	if (param_1 == nullptr) {
 		onLiveFlag(LIVE_FLAG_DEAD);
 		initHitActor(mActorType, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f);
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 		mSpine->initWith(&TNerveNPCWaitMarioApproach::theNerve());
-		mTurnSpeed = unk228->mWaitTurnSpeed.get();
+		mTurnSpeed = mIndividualParams->mWaitTurnSpeed.get();
 		gpConductor->registerAloneActor(this);
 		return;
 	}
@@ -148,18 +154,14 @@ void TBaseNPC::init(TLiveManager* param_1)
 	mWallRadius       = pTVar3->mAttackRadius * mScaling.x;
 	mHeadHeight       = mPtrSaveNormal->mSLHeadHeightNormal.get();
 	mGravity          = mPtrSaveNormal->mGravityY.get();
-	mScaledBodyRadius = mScaling.x * unk228->mCircleShadowSize.get();
+	mScaledBodyRadius = mScaling.x * mIndividualParams->mCircleShadowSize.get();
 
 	if (mActorType == 0x400001d) {
 		onLiveFlag(LIVE_FLAG_UNK2000 | LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
 		initNpcObjCollision_(pTVar3);
 		mSpine->initWith(&TNerveNPCWaitMarioApproach::theNerve());
 		mTurnSpeed = 0.0f;
-		mMActor->setLightType(1);
-		if (checkLiveFlag(LIVE_FLAG_UNK10)) {
-			mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
-			    mPosition.x, mPosition.y + 10.0f, mPosition.z, &mGroundPlane);
-		}
+		initNpcLight_();
 		return;
 	}
 
@@ -229,12 +231,8 @@ void TBaseNPC::init(TLiveManager* param_1)
 	    CLBPalFrame(mPtrSaveNormal->mPosInbetweenFrame.get()),
 	    CLBPalFrame(mPtrSaveNormal->mMotionBlendFrame.get()));
 	const TNpcInitAnmInfo* anmInitInfo = SMSGetNpcInitAnmData(iVar18);
-	initLodAnm(anmInitInfo->unk0, 0, unk228->mLodChangeDist.get());
-	mMActor->setLightType(1);
-	if (checkLiveFlag(LIVE_FLAG_UNK10)) {
-		mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
-		    mPosition.x, mPosition.y + 10.0f, mPosition.z, &mGroundPlane);
-	}
+	initLodAnm(anmInitInfo->unk0, 0, mIndividualParams->mLodChangeDist.get());
+	initNpcLight_();
 }
 
 // NOTE: see above for inline motivation
@@ -266,13 +264,13 @@ inline void TBaseNPC::initBaseActionFlag_()
 
 	if (isMonte()) {
 		setMonteActionFlag_();
-		if (mActionFlag & 0x400)
+		if (mActionFlag & NPC_ACTION_UNK400)
 			unkD0->unk18 = sIndividualHoldArrowBck;
 	} else if (isMare()) {
 		setMareActionFlag_();
 	} else if (mActorType == 0x4000016 || mActorType == 0x4000017) {
 		setKinoActionFlag_();
-		if (mActionFlag & 0x100) {
+		if (mActionFlag & NPC_ACTION_UNK100) {
 			switch (mActorType) {
 			case 0x4000016:
 				unkD0->unk18 = sIndividualKinopioBck;
@@ -328,10 +326,10 @@ inline void TBaseNPC::initIndividualAnm_()
 	switch (mActorType) {
 	case 0x4000019:
 		if (strcmp(mName, cManiyaParentViewObjName) == 0) {
-			mActionFlag |= 0x800;
+			mActionFlag |= NPC_ACTION_UNK800;
 			unkD0->unk18 = sIndividualParentRaccoonDogAnmBck;
 		} else if (strcmp(mName, cManiyaChildViewObjName) == 0) {
-			mActionFlag |= 0x800;
+			mActionFlag |= NPC_ACTION_UNK800;
 			onLiveFlag(LIVE_FLAG_UNK10000);
 			unkD0->unk18 = sIndividualChildRaccoonDogAnmBck;
 		}
@@ -375,8 +373,8 @@ void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 	}
 
 	if (isPollutionNpc()) {
-		unk178   = local_78[0].color.b * (1.0f / 255);
-		unk174.a = unk178 * unk228->mPollutionMax.get();
+		mPollutionAmount = local_78[0].color.b * (1.0f / 255);
+		unk174.a = mPollutionAmount * mIndividualParams->mPollutionMax.get();
 	}
 
 	int uVar21   = stream.readS32();
@@ -460,7 +458,8 @@ void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 
 		if (bVar4 && bVar5) {
 			bVar3 = false;
-			mActionFlag &= ~0x4088;
+			mActionFlag
+			    &= ~(NPC_ACTION_BURNING | NPC_ACTION_UNK80 | NPC_ACTION_UNK8);
 		} else {
 			if (bVar5)
 				local_a8 = 2000;
@@ -468,8 +467,10 @@ void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 		}
 	}
 
-	if (bVar4 && bVar3)
-		setSmokeEffectMtxPtr_(uVar21 & 0x800);
+	if (bVar4 && bVar3) {
+		bool b = (uVar21 & NPC_ACTION_UNK800) != 0;
+		setSmokeEffectMtxPtr_(b);
+	}
 
 	npcWaitIn();
 	randomizeBckAndBtpFrame_();

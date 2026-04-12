@@ -275,7 +275,7 @@ void TBaseNPC::behaveToBeTrampled_()
 		if (cVar7) {
 			uVar10 = 0x88AD;
 		} else {
-			switch (mActionFlag) {
+			switch (mActorType) {
 			case 0x4000010:
 			case 0x4000011:
 				uVar10 = 0x88AF;
@@ -315,7 +315,7 @@ void TBaseNPC::behaveToBeTrampled_()
 	if (!isBehaveToWaterNpc())
 		return;
 
-	if (mActionFlag & 0x4200)
+	if (mActionFlag & (NPC_ACTION_BURNING | NPC_ACTION_HAPPY))
 		return;
 
 	switch (unkD0->getCurrentAnmKind()) {
@@ -340,8 +340,8 @@ void TBaseNPC::behaveToBeTrampled_()
 void TBaseNPC::behaveToHitObject_(THitActor* param_1,
                                   EnumHitNpcObjectKind param_2)
 {
-	if (mActionFlag & 0x4000) {
-		if (param_2 != HIT_NPC_OBJECT_KIND_UNK0)
+	if (mActionFlag & NPC_ACTION_BURNING) {
+		if (param_2 != HIT_NPC_OBJECT_KIND_WATER_SPRAY)
 			return;
 
 		if (gpMarDirector->isTalkOrDemoModeNow())
@@ -352,23 +352,25 @@ void TBaseNPC::behaveToHitObject_(THitActor* param_1,
 		if (SMSGetMSound()->gateCheck(0x8837))
 			MSoundSESystem::MSoundSE::startSoundNpcActor(0x8837, &mPosition, 0,
 			                                             nullptr, 0, 4);
-		unk218 -= mPtrSaveNormal->mSLFireDecSpeed.get();
-		if (!(unk218 <= 0.0f))
+		mBurnStrength -= mPtrSaveNormal->mSLFireDecSpeed.get();
+		if (!isExtinguished_())
 			return;
 
-		unk218 = 0.0f;
-		mActionFlag &= ~0x4088;
+		mBurnStrength = 0.0f;
+		mActionFlag
+		    &= ~(NPC_ACTION_BURNING | NPC_ACTION_UNK80 | NPC_ACTION_UNK8);
 		npcHappyIn(1);
 		return;
 	}
 
-	if (param_2 == HIT_NPC_OBJECT_KIND_UNK0) {
+	if (param_2 == HIT_NPC_OBJECT_KIND_WATER_SPRAY) {
 		if (!gpMarDirector->isTalkOrDemoModeNow() && isPollutionNpc()
 		    && mSpine->getCurrentNerve() == &TNerveNPCWet::theNerve()) {
-			if (unk178 > 0.0f) {
-				unk178 -= unk228->mPollutionCleanSpeed.get();
-				if (unk178 <= 0.0f) {
-					unk178           = 0.0f;
+			if (mPollutionAmount > 0.0f) {
+				mPollutionAmount
+				    -= mIndividualParams->mPollutionCleanSpeed.get();
+				if (mPollutionAmount <= 0.0f) {
+					mPollutionAmount = 0.0f;
 					mTalkForbidCount = 60;
 					unk1DA |= 0x2;
 				}
@@ -376,15 +378,15 @@ void TBaseNPC::behaveToHitObject_(THitActor* param_1,
 		}
 	}
 
-	if (mActionFlag & 0x600)
+	if (mActionFlag & (NPC_ACTION_UNK400 | NPC_ACTION_HAPPY))
 		return;
 
-	if (isNerveCanGoToWet() && !(mActionFlag & 0x800)) {
+	if (isNerveCanGoToWet() && !(mActionFlag & NPC_ACTION_UNK800)) {
 
 		if (!isPeachTired()) {
 
 			if (!isSunflowerReviving()
-			    && (unk178 == 0.0f || param_2 != HIT_NPC_OBJECT_KIND_UNK1)
+			    && (isClean() || param_2 != HIT_NPC_OBJECT_KIND_UNK1)
 			    && (mActorType != 0x4000006
 			        || unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK4
 			        || unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK6)
@@ -419,8 +421,10 @@ void TBaseNPC::behaveToSandBomb_(const TLiveActor* param_1)
 bool TBaseNPC::isStateGoToMad_() const
 {
 	bool result = false;
-	if (isMadNpc() && !(mActionFlag & 0x4600) && unk178 == 0.0f
-	    && isInMadSearchRange()) {
+	if (isMadNpc()
+	    && !(mActionFlag
+	         & (NPC_ACTION_BURNING | NPC_ACTION_UNK400 | NPC_ACTION_HAPPY))
+	    && isClean() && isInMadSearchRange()) {
 		result = true;
 	}
 	return result;
@@ -454,8 +458,8 @@ void TBaseNPC::changeNerveProc_()
 			bVar5 = true;
 		} else if (mTalkForbidCount == 0 && !isJellyFishMare()
 		           && !gpCamera->isTalkCameraInbetween() && mHolder == nullptr
-		           && !checkLiveFlag(0xc10207) && !(mActionFlag & 0x4000)
-		           && unk178 == 0.0f) {
+		           && !checkLiveFlag(0xc10207)
+		           && !(mActionFlag & NPC_ACTION_BURNING) && isClean()) {
 
 			if (isSunflowerReviving() && isNerveCanGoToTalk()
 			    && (mActorType != 0x4000006
@@ -483,8 +487,8 @@ void TBaseNPC::changeNerveProc_()
 				}
 
 				f32 fVar3;
-				if ((mActionFlag & 0x401) || isSunflower()
-				    || mActorType == 0x400001D) {
+				if ((mActionFlag & (NPC_ACTION_UNK400 | NPC_ACTION_UNK1))
+				    || isSunflower() || mActorType == 0x400001D) {
 					fVar3 = mPtrSaveNormal->mSLSitTalkAcceptDegree.get();
 				} else {
 					fVar3 = mPtrSaveNormal->mTalkAcceptDegree.get();
@@ -527,7 +531,8 @@ void TBaseNPC::changeNerveProc_()
 	if (!isPollutionNpc())
 		return;
 
-	if (mActionFlag & 0x4600)
+	if (mActionFlag
+	    & (NPC_ACTION_BURNING | NPC_ACTION_UNK400 | NPC_ACTION_HAPPY))
 		return;
 
 	if (unk15C == nullptr)
@@ -596,7 +601,7 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 	unk190->unk0 = NPC_ANM_KIND_INVALID;
 	unk1CC       = 0;
 	unk1D0       = 0.0f;
-	if (cVar8 && isPollutionNpc() && !(mActionFlag & 0x400)) {
+	if (cVar8 && isPollutionNpc() && !(mActionFlag & NPC_ACTION_UNK400)) {
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 		mSpine->setDefaultNext();
 		mSpine->pushNerve(&TNerveNPCSink::theNerve());
@@ -604,7 +609,7 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 		onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK400000 | LIVE_FLAG_UNK800000);
 		unk1C4 = mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
 		    pos.x, pos.y + getHeadHeight(), pos.z, &mGroundPlane);
-		pos.y = unk1C4 - unk228->mSinkHeight.get();
+		pos.y = unk1C4 - mIndividualParams->mSinkHeight.get();
 		mVelocity.set(0.0f, 0.0f, 0.0f);
 	} else {
 		offHitFlag(HIT_FLAG_NO_COLLISION);
