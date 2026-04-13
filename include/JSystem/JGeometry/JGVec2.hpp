@@ -6,16 +6,40 @@
 namespace JGeometry {
 
 template <typename T> struct TVec2 {
+	// NOTE: A whole bunch of inlines are taken from SMG and TP
+public:
 	TVec2() { }
-	TVec2(T x, T y) { set(x, y); }
+	template <typename U> TVec2(U x_, U y_) { set(x_, y_); }
 
-	void set(T x, T y)
+	// NOTE: Present in TP, presumably to force use of stfs/lfs instead of
+	// stw/lwz, but it seems like SMS didn't have them yet?
+
+	// TVec2(const TVec2& other)
+	// {
+	// 	x = other.x;
+	// 	y = other.y;
+	// }
+	// TVec2& operator=(const TVec2& other)
+	// {
+	// 	// no `set` call according to TP debug
+	// 	x = other.x;
+	// 	y = other.y;
+	// 	return *this;
+	// }
+
+	template <typename U> void setAll(U value)
 	{
-		this->x = x;
-		this->y = y;
+		x = value;
+		y = value;
 	}
 
-	void set(const TVec2<T>& other)
+	template <typename U> void set(U x_, U y_)
+	{
+		x = x_;
+		y = y_;
+	}
+
+	template <typename U> void set(const TVec2<U>& other)
 	{
 		x = other.x;
 		y = other.y;
@@ -23,9 +47,16 @@ template <typename T> struct TVec2 {
 
 	void zero() { x = y = 0.0f; }
 
+	bool equals(const TVec2& other) const
+	{
+		return x == other.x && y == other.y;
+	}
+
+	bool operator==(const TVec2& other) const { return equals(other); }
+
 	// === arithmetic stuff ===
 
-	void setMin(const TVec2<T>& min)
+	void setMin(const TVec2& min)
 	{
 		if (x >= min.x)
 			x = min.x;
@@ -33,7 +64,7 @@ template <typename T> struct TVec2 {
 			y = min.y;
 	}
 
-	void setMax(const TVec2<T>& max)
+	void setMax(const TVec2& max)
 	{
 		if (x <= max.x)
 			x = max.x;
@@ -41,10 +72,28 @@ template <typename T> struct TVec2 {
 			y = max.y;
 	}
 
-	void add(const TVec2<T>& other)
+	void add(const TVec2& other)
 	{
 		x += other.x;
 		y += other.y;
+	}
+
+	void add(const TVec2& fst, const TVec2& snd)
+	{
+		x = fst.x + snd.x;
+		y = fst.y + snd.y;
+	}
+
+	void sub(const TVec2& other)
+	{
+		x -= other.x;
+		y -= other.y;
+	}
+
+	void sub(const TVec2& fst, const TVec2& snd)
+	{
+		x = fst.x - snd.x;
+		y = fst.y - snd.y;
 	}
 
 	void scale(f32 scale)
@@ -61,21 +110,57 @@ template <typename T> struct TVec2 {
 		set(x * cosTheta - y * sinTheta, x * sinTheta + y * cosTheta);
 	}
 
-	bool isAbove(const TVec2<T>& other) const
+	bool isAbove(const TVec2& other) const
 	{
 		return (x >= other.x) && (y >= other.y) ? true : false;
 	}
 
-	T dot(const TVec2<T>& other) const { return x * other.x + y * other.y; }
+	T dot(const TVec2& other) const { return x * other.x + y * other.y; }
+
+	T cross(const TVec2& other) const { return x * other.y - y * other.x; }
+
+	TVec2& operator+=(const TVec2& other)
+	{
+		add(other);
+		return *this;
+	}
+
+	TVec2& operator-=(const TVec2& other)
+	{
+		sub(other);
+		return *this;
+	}
+
+	TVec2 operator*(T scalar) const { return TVec2(x * scalar, y * scalar); }
+
+	TVec2 operator+(const TVec2& other) const
+	{
+		return TVec2(x + other.x, y + other.y);
+	}
+
+	TVec2 operator-(const TVec2& other) const
+	{
+		return TVec2(x - other.x, y - other.y);
+	}
 
 	// === length stuff ===
 
 	T squared() const { return dot(*this); }
 
-	T length()
+	T squared(const TVec2& other) const
 	{
-		T sqr = squared();
-		return TUtil<T>::sqrt(sqr);
+		T dx = x - other.x;
+		T dy = y - other.y;
+		return dx * dx + dy * dy;
+	}
+
+	T length() const { return TUtil<T>::sqrt(squared()); }
+
+	T distance(const TVec2& other) const
+	{
+		T dx = x - other.x;
+		T dy = y - other.y;
+		return TUtil<T>::sqrt(dx * dx + dy * dy);
 	}
 
 	// === normalize stuff lifted from JGVec3.hpp ===
