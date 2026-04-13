@@ -1,6 +1,10 @@
 #include <Player/MarioMain.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
 
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+
 BOOL TMario::taking()
 {
 	if ((mInput & 4) != 0) {
