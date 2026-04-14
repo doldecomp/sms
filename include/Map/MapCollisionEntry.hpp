@@ -81,12 +81,6 @@ public:
 	u32 getUnk8() const { return unk8; }
 	u32 getUnkC() const { return unkC; }
 
-	JGeometry::TVec3<f32> calcOffset(JGeometry::TVec3<f32> new_trans) const
-	{
-		new_trans -= unk50;
-		return new_trans;
-	}
-
 public:
 	/* 0x4 */ TBGCheckData* unk4;
 	/* 0x8 */ u32 unk8;

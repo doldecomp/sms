@@ -77,6 +77,8 @@ As MWCC inlines functions, sometimes nonsensical control flow will be encountere
 
 Reconstructing correct inline calls is crucial in matching code correctly. When a similar block of code reoccurs -- always consider the possibility that it's an inline, but never disregard the possibility that the original authors simply copy-pasted it. When starting on a new function, explore the inlines already available in the different classes that it uses, as well as in the current translation unit.
 
+UNUSED functions from the MAP must often be reconstructed even when they do not exist as standalone code in the final binary: their inlined bodies still determine caller codegen (register allocation, load offsets, branch layout). Treat their MAP signature and size as constraints, recover a plausible body from repeated callsite patterns, and validate by diffing the caller(s) after each inline-shape change rather than expecting a direct symbol-level match for the UNUSED function itself.
+
 ## Reference Locals Affect Register Allocation
 
 Introducing a reference local before accessing struct members can change how the compiler allocates registers:
@@ -120,6 +122,44 @@ class FieldClass {
 ```
 
 This is sometimes indistinguishable from a local reference being used.
+
+## Intermediate Variables Heavily Influence Register Allocation
+
+Intermediate variables are not inherently bad. They are a strong codegen lever in MWCC and can change register pressure, load/store timing, and expression scheduling.
+
+Start with the simplest hypothesis, then iterate:
+1. First try a fully inlined arithmetic form (no intermediate variables).
+2. If that does not match, try decomposed forms with temporaries.
+3. If still nonmatching, vary grouping/order (including compound assignments).
+
+Examples (all semantically equivalent, all can compile differently):
+
+```cpp
+// Inline form
+f32 c0 = (z1 - z0) * (x2 - x1) - (x1 - x0) * (z2 - z1);
+
+// Decomposed form A
+f32 dx = x1 - x0;
+f32 dz = z1 - z0;
+f32 c0 = dz * (x2 - x1) - dx * (z2 - z1);
+
+// Decomposed form B
+f32 c0 = (z1 - z0) * (x2 - x1);
+c0 -= (x1 - x0) * (z2 - z1);
+```
+
+Practical rule: do not treat temporaries as "wrong" or inlining as "always right". Treat decomposition style as an iterative search dimension and test multiple shapes until one matches. When trying different approaches, always try things that look reasonable to have been written by a human first, and only if nothing sensible works start trying crazy and weird approaches.
+
+## Avoid Reference Aliases as a Workaround
+
+When trying to match complex struct access patterns, DO NOT use reference aliases as a general strategy to "improve" codegen. While they can sometimes help with register reuse (see "Reference Locals Affect Register Allocation" above), they frequently harm matching by changing pointer offset calculations and register assignments in ways that deviate from the original.
+
+Only introduce reference aliases when:
+1. The original code clearly had them (evidenced by a single load of a base pointer that's reused)
+2. Direct member access results in repeated redundant loads that don't appear in the target
+3. You are confident from diff analysis that a reference was intended
+
+Otherwise, use direct member access or direct getter calls inline in expressions and let the common subexpression elimination & redundant load optimizations do the rest.
 
 ## Constant Hoisting and Loop Codegen
 

@@ -68,9 +68,9 @@ void TMapCollisionBase::setCheckData(const f32* param_1, const s16* param_2,
 
 void TBGCheckData::updateTrans(const JGeometry::TVec3<f32>& translate_by)
 {
-	mPoint1.add(translate_by);
-	mPoint2.add(translate_by);
-	mPoint3.add(translate_by);
+	mPoint1 += translate_by;
+	mPoint2 += translate_by;
+	mPoint3 += translate_by;
 
 	mMinY += translate_by.y;
 	mMaxY += translate_by.y;
@@ -81,13 +81,12 @@ void TBGCheckData::updateTrans(const JGeometry::TVec3<f32>& translate_by)
 
 void TMapCollisionBase::updateTrans(const JGeometry::TVec3<f32>& param_1)
 {
-	JGeometry::TVec3<f32> copy = calcOffset(param_1);
+	JGeometry::TVec3<f32> copy = param_1 - unk50;
 
-	TBGCheckData* unk4it = unk4;
-	for (int i = 0; i < unkC; ++i) {
-		unk4it->updateTrans(copy);
-		gpMapCollisionData->addCheckDataToGrid(unk4it, getUnk8());
-		unk4it += 1;
+	TBGCheckData* it = unk4;
+	for (int i = 0; i < unkC; ++it, ++i) {
+		it->updateTrans(copy);
+		gpMapCollisionData->addCheckDataToGrid(it, getUnk8());
 	}
 
 	unk50 = param_1;

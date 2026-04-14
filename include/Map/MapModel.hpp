@@ -10,13 +10,7 @@ class J3DMaterial;
 
 class TMapModel : public TJointModel {
 public:
-	TMapModel()
-	    : mUnderpass(nullptr)
-	    , mUnderpassMaterial(nullptr)
-	    , unk38(0.5f)
-	    , unk3C(1.0f)
-	{
-	}
+	TMapModel();
 
 	virtual void initJointModel(TJointModelManager*, const char*,
 	                            MActorAnmData*);

@@ -133,14 +133,18 @@ public:
 
 	TVec2 operator*(T scalar) const { return TVec2(x * scalar, y * scalar); }
 
-	TVec2 operator+(const TVec2& other) const
+	const TVec2& operator+(const TVec2& other) const
 	{
-		return TVec2(x + other.x, y + other.y);
+		TVec2 result = *this;
+		result += other;
+		return result;
 	}
 
-	TVec2 operator-(const TVec2& other) const
+	const TVec2& operator-(const TVec2& other) const
 	{
-		return TVec2(x - other.x, y - other.y);
+		TVec2 result = *this;
+		result -= other;
+		return result;
 	}
 
 	// === length stuff ===
