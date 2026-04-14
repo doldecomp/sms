@@ -10,10 +10,12 @@
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
 
 void TMirrorCamera::makeMirrorViewMtx() { }
 
@@ -220,7 +222,7 @@ void TMirrorModelObj::setPlane()
 
 void TMirrorModelObj::calc()
 {
-	// TODO: what is unk28?
+	unk4->getModel()->setAnmMtx(0, unk28->getAnmMtx(0));
 }
 
 void TMirrorModelObj::init(const char* name)
@@ -292,7 +294,17 @@ void TMirrorModelManager::loadAfter()
 		findMirrorCamera();
 
 	for (int i = 0; i < unk10; ++i) {
-		// TODO: ghidra decompiler died here
+		J3DTexture* texture
+		    = unk1C[i]->getUnk4()->getModel()->getModelData()->getTexture();
+
+		// This looks like setResTIMG but isn't???
+
+		const ResTIMG& source = *unk24->getUnk94();
+		ResTIMG& target       = texture->mResources[0];
+
+		target = source;
+		target.imageDataOffset
+		    = (u32)&source + source.imageDataOffset - (u32)&target;
 	}
 }
 

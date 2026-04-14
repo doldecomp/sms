@@ -13,11 +13,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-static inline void fake(J3DMaterial* mat, MtxPtr mtx)
-{
-	mat->getTexGenBlock()->getTexMtx(0)->setEffectMtx(mtx);
-}
-
 void TMapModel::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (checkFlag(1))
@@ -27,22 +22,27 @@ void TMapModel::perform(u32 param_1, JDrama::TGraphics* param_2)
 		// NOTE: this seems to be the logic for entering delphino plaza
 		// underpasses: if inside, draw them on top of everything and move the
 		// camera to top view
-		if ((*gpMarioFlag & 2 ? true : false)
+		if (SMS_CheckMarioFlag(0x2)
 		    && SMS_GetMarioPos().y < SMS_GetMarioGrLevel() + 200.0f) {
 			mUnderpass->awake();
-			Vec pos;
-			gpCamera->JSGGetViewPosition(&pos);
-			Vec up;
-			gpCamera->JSGGetViewUpVector(&up);
+
+			Mtx view;
 			Mtx proj;
+			Mtx viewProj;
+
+			Vec up;
+			Vec pos;
+
+			gpCamera->JSGGetViewPosition(&pos);
+			gpCamera->JSGGetViewUpVector(&up);
+
 			C_MTXLightOrtho(proj, unk38 * 1000.0f, unk38 * -1000.0f,
 			                unk38 * -1000.0f, unk38 * 1000.0f, 0.5f, 0.5f, 0.5f,
 			                0.5f);
-			Mtx view;
 			C_MTXLookAt(view, &pos, &up, gpMarioPos);
-			Mtx viewProj;
 			MTXConcat(proj, view, viewProj);
-			fake(mUnderpassMaterial, viewProj);
+
+			mUnderpassMaterial->getTexMtx(0)->setEffectMtx(viewProj);
 		} else {
 			mUnderpass->sleep();
 		}
@@ -59,19 +59,19 @@ void TMapModel::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 void TMapModel::initUnderpass()
 {
-	s32 nameIdx = mModelData->unkB0->getIndex("underpass");
+	s32 nameIdx = mModelData->getJointName()->getIndex("underpass");
 	if (nameIdx < 0)
 		return;
 
 	J3DJoint* underpass = mModelData->getJointNodePointer(nameIdx);
 	int i;
-	for (i = 0; i < mChildrenNum && mChildren[i]->mJoint != underpass; ++i)
+	for (i = 0; i < mChildrenNum && mChildren[i]->getJoint() != underpass; ++i)
 		;
 
 	mUnderpass         = mChildren[i];
 	mUnderpassMaterial = underpass->getMesh();
 	mUnderpassMaterial->change();
-	mUnderpassMaterial->unk1C |= 1;
+	mUnderpassMaterial->setSomeFlag();
 
 	J3DTexCoord* texCoord
 	    = mUnderpassMaterial->getTexGenBlock()->getTexCoord(0);
@@ -98,6 +98,14 @@ void TMapModel::initJointModel(TJointModelManager* param_1, const char* param_2,
 
 	mActor->calc();
 	initUnderpass();
+}
+
+TMapModel::TMapModel()
+    : mUnderpass(nullptr)
+    , mUnderpassMaterial(nullptr)
+    , unk38(0.5f)
+    , unk3C(1.0f)
+{
 }
 
 void TMapModelManager::init()

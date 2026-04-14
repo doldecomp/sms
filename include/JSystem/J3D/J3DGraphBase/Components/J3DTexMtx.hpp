@@ -17,6 +17,7 @@ public:
 	void setViewMtx(const Mtx viewMtx) { MTXCopy((MtxPtr)viewMtx, mViewMtx); }
 
 	void setEffectMtx(Mtx effectMtx) { J3DTexMtxInfo::setEffectMtx(effectMtx); }
+	void setInfo(u8 info) { mInfo = info; }
 
 	// Made up
 	u32 getInfo() { return mInfo; }

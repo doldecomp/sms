@@ -60,6 +60,19 @@ public:
 	J3DTexCoord* getTexCoord(u32 idx) { return mTexGenBlock->getTexCoord(idx); }
 	J3DNBTScale* getNBTScale() { return mTexGenBlock->getNBTScale(); }
 
+	void setTevColor(u32 i, const J3DGXColorS10* i_color)
+	{
+		mTevBlock->setTevColor(i, i_color);
+	}
+	void setTevKColor(u32 i, const J3DGXColor* i_color)
+	{
+		mTevBlock->setTevKColor(i, i_color);
+	}
+	void setTexMtx(u32 idx, J3DTexMtx* mtx)
+	{
+		mTexGenBlock->setTexMtx(idx, mtx);
+	}
+
 	J3DMaterial* getNext() { return mNext; }
 	void setNext(J3DMaterial* material) { mNext = material; }
 	J3DShape* getShape() { return mShape; }
