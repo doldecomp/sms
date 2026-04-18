@@ -63,7 +63,7 @@ public:
 	f32 mMaxVSpdStartFlutter;           // 0x00C0
 	f32 mFlutterAcceleration;           // 0x00C4
 	u32 _08[0x8 / 4];                   // 0x00C8
-	s8 mType;                           // 0x00D0
+	u8 mType;                           // 0x00D0
 	u8 _09;                             // 0x00D1
 	u16 _10;                            // 0x00D2
 	u32 _11[0x1C / 4];                  // 0x00D4

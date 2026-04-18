@@ -114,7 +114,6 @@ TWaterGun::TWaterGun(TMario* mario)
     , mNozzleHover("hover_wg", "/Mario/WaterGun/NozzleTrgHover.prm", this)
     , mNozzleTurbo("back_wg", "/Mario/WaterGun/NozzleTrgTurbo.prm", this)
     , mWatergunParams("/Mario/WaterGun.prm")
-    , mMario(mario)
 {
 	mWatergunParams.load(mWatergunParams.mPrmPath);
 	mMario = mario;
@@ -345,21 +344,19 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 		return;
 	}
 
+	// TODO: This is probably an enum.
 	s32 var380 = mMario->unk380;
 	if ((var380 & 0x8000) != 0) {
 		var380 = 0;
 	}
 
-	// Definitely wrong, possibly a swtich statement, but couldn't make that
-	// work either
-	if (var380 == 5) {
-		// Unused
-	} else if (var380 >= 5) {
-		// Unused
-	} else if (2 <= var380) {
-	} else {
-		if (var380 >= 0) {
-		} else {
+	// TODO: Definitely a fake match.
+	// Maybe nested inlined switch statements?
+	if (var380 != 5 && var380 < 5) {
+		switch (var380) {
+
+		case 1:
+		case 0:
 			if (unk1CEC == 0.0f) {
 				if (mMario->fabricatedActionInline()) {
 					mFluddModel->setBck("wg_fepmp");
@@ -369,10 +366,14 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 				} else {
 					// TODO: Cast would be weird here, probably an inlined
 					// getter that converts to s32
-					if ((s32)mMario->mAnimationId != 0x33) {
-						mFluddModel->setBck("wg_hgpmp");
-					} else {
+
+					switch ((s32)mMario->mAnimationId) {
+					case 0x33:
 						mFluddModel->setBck("wg_pump");
+						break;
+					default:
+						mFluddModel->setBck("wg_pump");
+						break;
 					}
 				}
 				frameCtrl->setRate(0.0f);
@@ -380,14 +381,17 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 				unk1CFA = unk1CF8;
 			} else {
 				mFluddModel->setBck("wg_house");
-				if ((0.0f < unk1CEC)
+				if ((unk1CEC > 0.0f)
 				    && (unk1CEC = unk1CEC - 0.1f, unk1CEC <= 0.0f)) {
 					unk1CEC = 0.0f;
 				}
 				frameCtrl->setRate(0.0f);
 				frameCtrl->setFrame(unk1CEC * frameCtrl->getEnd());
 			}
-			return;
+			break;
+
+		default:
+			break;
 		}
 	}
 
@@ -414,18 +418,25 @@ MtxPtr TWaterGun::getEmitMtx(int jointIndex)
 {
 	volatile u32 unused2[24]; // TODO: A lot of stack space, possibly a lot of
 	                          // inlined functions.
-	MtxPtr result;
-	if (!mMario->onYoshi()) {
+	MtxPtr result = nullptr;
+	if (mMario->onYoshi()) {
 		result = getYoshiMtx();
 	} else {
 		// This entire block is likely an inlined function.
-		u8 currentNozzle = mCurrentNozzle;
-		s8 flag          = nozzleBmdData.getFlags(currentNozzle, jointIndex);
-		if (flag < 3) {
-			return getCurrentNozzle()->unk380->unk4->getAnmMtx(
+		s32 flag = nozzleBmdData.getFlags(mCurrentNozzle, jointIndex);
+
+		switch (flag) {
+		case 0:
+		case 1:
+		case 2:
+			result = getCurrentNozzle()->unk380->unk4->getAnmMtx(
 			    nozzleBmdData.getJointIndex(mCurrentNozzle, jointIndex));
-		} else if (flag == 3) {
-			return getYoshiMtx();
+			break;
+		case 3:
+			result = getYoshiMtx();
+			break;
+		default:
+			break;
 		}
 	}
 	return result;
@@ -443,15 +454,15 @@ bool TWaterGun::isEmitting() { return false; }
 
 void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 {
-	f32 usedWater = mCurrentWater
+	f32 usedWater = (f32)mCurrentWater
 	                / mNozzleList[mCurrentNozzle]->mEmitParams.mAmountMax.get();
 	if (nozzleType == Spray) {
-		if (animate) {
+		if (animate == true) {
 			unk1CFC = 0.0f;
 		}
 	} else {
 		mSecondNozzle = nozzleType;
-		if (animate) {
+		if (animate == true) {
 			unk1CFC = 1.0f;
 		}
 	}
@@ -596,85 +607,71 @@ void TNozzleBase::emit(int param_1)
 		TWaterEmitInfo* emitInfo = mFludd->mEmitInfo;
 		emitCommon(param_1, emitInfo);
 
-		unk37C          = unk37C + mEmitParams.mNum.get();
+		f32 emitNum = mEmitParams.mNum.get();
+		unk37C += emitNum;
+
 		s32 local37cInt = (s32)unk37C;
-		if (local37cInt != 0) {
-			unk37C = unk37C - (f32)local37cInt;
-			emitInfo->mNum.set(local37cInt);
-			emitInfo->mAttack = mEmitParams.mAttack;
-			f32 emitCtrl      = mEmitParams.mEmitCtrl.get();
-			f32 emitPow       = mEmitParams.mEmitPow.get();
-			emitInfo->mPow.set(emitCtrl * emitPow * unk378
-			                   + emitPow * (1.0f - emitCtrl));
-			emitInfo->mFlag.set(0x40);
-			u16 flags = mFludd->mFlags;
-			u32 flagResult;
-			if ((flags & 2) != 0) {
-				flagResult = 1;
-			} else {
-				flagResult = 0;
-			}
-			if (flagResult != 0) {
-				emitInfo->mFlag.set(emitInfo->mFlag.get() | 0x80);
-			}
+		if ((s32)unk37C == 0) {
+			return;
+		}
+		unk37C -= (f32)local37cInt;
 
-			int emittedWater     = gpModelWaterManager->emitRequest(*emitInfo);
-			u32 emittedWaterU32  = (u32)emittedWater & 0xFF;
-			mFludd->mIsEmitWater = (u8)emittedWater;
-			f32* unk1C88Ptr      = (f32*)&mFludd->unk1C88;
-			f32 unk1C88          = *unk1C88Ptr;
-			u8 currentNozzle     = mFludd->mCurrentNozzle;
-			TNozzleBase** nozzleList      = mFludd->mNozzleList;
-			TNozzleBase* currentNozzlePtr = nozzleList[currentNozzle];
-			u32 unk1C88U32                = (u32)mFludd->unk1C88;
-			s16 decRate       = currentNozzlePtr->mEmitParams.mDecRate.get();
-			f32 emittedWaterF = (f32)emittedWaterU32;
-			f32 decRateF      = (f32)decRate;
-			f32 unk1C88OldF   = (f32)unk1C88U32;
-			f32 temp          = emittedWaterF * decRateF;
-			f32 temp2         = temp / unk1C88OldF;
-			*unk1C88Ptr       = 10.0f * temp2 + unk1C88;
-			if (emittedWaterU32 == 0) {
-				goto skip_velocity;
-			}
-			mFludd->mCurrentWater
-			    -= emittedWaterU32 * mEmitParams.mDecRate.get();
-			if (mFludd->mCurrentWater < 0) {
-				mFludd->mCurrentWater = 0;
-			}
+		f32& refEmitPow  = emitInfo->mPow.value;
+		s32& refEmitFlag = emitInfo->mFlag.value;
 
-			f32* powPtr                   = &emitInfo->mPow.value;
-			JGeometry::TVec3<f32>* dirPtr = &emitInfo->mDir.value;
-			f32 powVal                    = *powPtr;
-			s16 faceAngleY                = mFludd->mMario->mFaceAngle.y;
-			f32 cosAngle                  = JMASCos(faceAngleY);
-			f32 sinAngle                  = JMASSin(faceAngleY);
-			f32 dirX                      = -dirPtr->x;
-			f32 dirZ                      = dirPtr->z;
-			f32 dirY                      = dirPtr->y;
-			f32 reactionPow = powVal * mEmitParams.mReactionPow.get();
-			f32 reactionY   = mEmitParams.mReactionY.get();
-			f32 unkE0       = mEmitParams.mReactionPow.value;
-			f32 unkF4       = mEmitParams.mReactionY.value;
-			f32 f31         = powVal * unkE0;
+		emitInfo->mNum.set(local37cInt);
+		emitInfo->mAttack = mEmitParams.mAttack;
 
-			mFludd->mMario->addVelocity((dirX * sinAngle - dirZ * cosAngle)
-			                            * reactionPow);
+		f32 emitPow  = mEmitParams.mEmitPow.get();
+		f32 emitCtrl = mEmitParams.mEmitCtrl.get();
+		emitInfo->mPow.set(emitPow * unk378 * emitCtrl
+		                   + emitPow * (1.0f - emitCtrl));
 
-			f32* velX = &mFludd->mMario->mVel.x;
-			*velX     = -dirPtr->x * reactionPow - *velX;
-			f32* velZ = &mFludd->mMario->mVel.z;
-			*velZ     = -dirPtr->z * reactionPow - *velZ;
-			f32* velY = &mFludd->mMario->mVel.y;
-			*velY     = *velY - dirY * powVal * unkF4 * reactionY;
-		skip_velocity:;
+		refEmitFlag = 0x40;
+		if (mFludd->hasFlag(0x2)) {
+			refEmitFlag = (refEmitFlag | 0x80);
+		}
+
+		s32 emittedWater = gpModelWaterManager->emitRequest(*emitInfo);
+
+		mFludd->updateUnk1C88(emittedWater);
+		if (emittedWater != 0) {
+			mFludd->depleteWater(emittedWater * mEmitParams.mDecRate.get());
+
+			f32 emitReactionPow = mEmitParams.mReactionPow.get();
+			f32 reactionPow     = refEmitPow * emitReactionPow;
+
+			// TODO: This section doesn't quite match here nor in derived
+			// classes. There may be some weird inlining going on here?
+			s16 faceAngleY     = mFludd->mMario->mFaceAngle.y;
+			f32 dirX           = emitInfo->mDir.get().x;
+			f32 dirZ           = emitInfo->mDir.get().z;
+			f32 cosAngle       = JMASCos(faceAngleY);
+			f32 sinAngle       = JMASSin(faceAngleY);
+			f32 directionScale = (-dirX * sinAngle - dirZ * cosAngle);
+
+			f32 velocity = reactionPow * directionScale;
+
+			mFludd->mMario->addVelocity(velocity);
+
+			JGeometry::TVec3<f32> const& dirVec = emitInfo->mDir.get();
+
+			mFludd->mMario->mVel.x -= dirVec.x * reactionPow;
+			mFludd->mMario->mVel.z -= dirVec.z * reactionPow;
+
+			f32 velocityY
+			    = -dirVec.y * refEmitPow * mEmitParams.mReactionY.get();
+			mFludd->mMario->mVel.y += velocityY;
 		}
 	}
 }
 
 void TWaterGun::setBaseTRMtx(Mtx mtx)
 {
-	volatile u32 unused1[10];
+	Mtx result;
+	volatile u32 unused1;
+	Mtx temp;
+
 	f32 initialAngle = mtx[1][0];
 	if (initialAngle < 0.0f) {
 		initialAngle = -initialAngle;
@@ -686,11 +683,10 @@ void TWaterGun::setBaseTRMtx(Mtx mtx)
 
 	s16 angle = initialAngle * angleDiff + baseAngle;
 
-	Mtx result;
-	Vec unused2;
-	MsMtxSetRotRPH(result, 0.0f, 0.0f, 0.005493164f * angle);
+	f32 angleDegrees = SHORTANGLE2DEG(angle);
+	MsMtxSetRotRPH(temp, 0.0f, 0.0f, angleDegrees);
 
-	MTXConcat(mtx, result, result);
+	MTXConcat(mtx, temp, result);
 	MTXCopy(result, mFluddModel->unk4->unk20);
 }
 
@@ -1037,6 +1033,83 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 	calcGunAngle(controllerWork);
 }
 
+void TNozzleTrigger::emit(int param_1)
+{
+	if (mFludd->mCurrentWater > 0 && (u8)unk385 == TNozzleTrigger::ACTIVE) {
+		TWaterEmitInfo* emitInfo = mFludd->mEmitInfo;
+		emitCommon(param_1, emitInfo);
+
+		f32 triggerFill       = unk388;
+		f32 insidePressureMax = mEmitParams.mInsidePressureMax.get();
+		f32 emitNumMin        = mEmitParams.mNumMin.get();
+		f32 emitNum           = mEmitParams.mNum.get();
+
+		f32 pressure = triggerFill / insidePressureMax;
+
+		unk37C += pressure * (emitNum - emitNumMin) + emitNumMin;
+
+		s32 local37cInt = (s32)unk37C;
+		if ((s32)unk37C == 0) {
+			return;
+		}
+		unk37C -= (f32)local37cInt;
+
+		emitInfo->mNum.set(local37cInt);
+
+		f32& refEmitPow  = emitInfo->mPow.value;
+		s32& refEmitFlag = emitInfo->mFlag.value;
+
+		s16 attackMin = mEmitParams.mAttackMin.get();
+		s16 attack    = mEmitParams.mAttack.get();
+		emitInfo->mAttack.set(pressure * (f32)(attack - attackMin)
+		                      + (f32)attackMin);
+
+		f32 emitPowMin = mEmitParams.mEmitPowMin.get();
+		f32 emitPow    = mEmitParams.mEmitPow.get();
+		emitInfo->mPow.set(pressure * (emitPow - emitPowMin) + emitPowMin);
+
+		refEmitFlag = 0x40;
+		if (mFludd->hasFlag(0x2)) {
+			refEmitFlag = (refEmitFlag | 0x80);
+		}
+
+		u8 emittedWater = gpModelWaterManager->emitRequest(*emitInfo);
+		mFludd->updateUnk1C88(emittedWater);
+
+		if (emittedWater != 0) {
+			mFludd->depleteWater(emittedWater * mEmitParams.mDecRate.get());
+
+			if ((mFludd->mCurrentNozzle == TWaterGun::Hover)
+			    && ((gpMarDirector->unk58 & 0x7u) == 0u)) {
+				SMSRumbleMgr->start(20, 2, (f32*)nullptr);
+			}
+
+			f32 reactionPowMin = mEmitParams.mReactionPowMin.get();
+			f32 reactionPow    = mEmitParams.mReactionPow.get();
+
+			f32 reaction
+			    = pressure * (reactionPow - reactionPowMin) + reactionPowMin;
+
+			s16 faceAngleY     = mFludd->mMario->mFaceAngle.y;
+			f32 dirX           = emitInfo->mDir.get().x;
+			f32 dirZ           = emitInfo->mDir.get().z;
+			f32 cosAngle       = JMASCos(faceAngleY);
+			f32 sinAngle       = JMASSin(faceAngleY);
+			f32 directionScale = (-dirX * sinAngle - cosAngle * dirZ);
+
+			f32 velocity = reaction;
+			velocity *= directionScale;
+			velocity *= refEmitPow;
+
+			mFludd->mMario->addVelocity(velocity);
+
+			JGeometry::TVec3<f32> const& dirVec = emitInfo->mDir.get();
+			f32 accelY = -dirVec.y * refEmitPow * mEmitParams.mReactionY.get();
+			mFludd->mMario->mVel.y += accelY;
+		}
+	}
+}
+
 void TNozzleDeform::movement(const TMarioControllerWork& controllerWork)
 {
 	if (!mFludd->hasWater()) {
@@ -1052,6 +1125,114 @@ void TNozzleDeform::movement(const TMarioControllerWork& controllerWork)
 	}
 
 	mBomb.movement(controllerWork);
+}
+
+void TNozzleDeform::emit(int param_1)
+{
+
+	if (param_1 == TWaterGun::Yoshi && mFludd->mMario->mYoshi->mType == 0) {
+		return;
+	}
+
+	if (!((f32)mFludd->mCurrentWater > 0.0f)) {
+		return;
+	}
+
+	if (mBomb.unk385 == TNozzleTrigger::INACTIVE && unk378 > 0.0f) {
+		TWaterEmitInfo* emitInfo = mFludd->mEmitInfo;
+		emitCommon(param_1, emitInfo);
+
+		f32 localUnk378 = unk378;
+
+		f32 emitNum    = mEmitParams.mNum.get();
+		f32 emitNumMin = mEmitParams.mNumMin.get();
+		unk37C += localUnk378 * (emitNum - emitNumMin) + emitNumMin;
+
+		s32 local37cInt = (s32)unk37C;
+		if ((s32)unk37C == 0) {
+			return;
+		}
+		unk37C -= (f32)local37cInt;
+
+		emitInfo->mNum.set(local37cInt);
+
+		f32& refEmitPow  = emitInfo->mPow.value;
+		s32& refEmitFlag = emitInfo->mFlag.value;
+
+		s16 attackMin = mEmitParams.mAttackMin.get();
+		s16 attack    = mEmitParams.mAttack.get();
+		emitInfo->mAttack.set(localUnk378 * (f32)(attack - attackMin)
+		                      + (f32)attackMin);
+
+		f32 dirTrembleMin = mEmitParams.mDirTrembleMin.get();
+		f32 dirTremble    = mEmitParams.mDirTremble.get();
+		emitInfo->mDirTremble.set(localUnk378 * (dirTremble - dirTrembleMin)
+		                          + dirTrembleMin);
+
+		f32 emitPowMin = mEmitParams.mEmitPowMin.get();
+		f32 emitPow    = mEmitParams.mEmitPow.get();
+		emitInfo->mPow.set(localUnk378 * (emitPow - emitPowMin) + emitPowMin);
+
+		refEmitFlag = 0x40;
+		if (mFludd->hasFlag(0x2)) {
+			refEmitFlag = (refEmitFlag | 0x80);
+		}
+
+		f32 sizeMinPressure = mEmitParams.mSizeMinPressure.get();
+		f32 sizeMin         = mEmitParams.mSizeMin.get();
+		f32 size            = mEmitParams.mSize.get();
+		f32 sizeMaxPressure = mEmitParams.mSizeMaxPressure.get();
+
+		f32 emitSizeLerp;
+		if (localUnk378 < sizeMinPressure) {
+			emitSizeLerp = 0.0f;
+		} else {
+			if (localUnk378 < sizeMaxPressure) {
+				emitSizeLerp = (sizeMinPressure - localUnk378)
+				               / (sizeMaxPressure - localUnk378);
+			} else {
+				emitSizeLerp = 1.0f;
+			}
+		}
+
+		emitInfo->mSize.set(emitSizeLerp * (size - sizeMin) + sizeMin);
+
+		u8 emittedWater = gpModelWaterManager->emitRequest(*emitInfo);
+
+		mFludd->updateUnk1C88(emittedWater);
+
+		if (emittedWater != 0) {
+			mFludd->depleteWater(emittedWater * mEmitParams.mDecRate.get());
+
+			if ((gpMarDirector->unk58 & 0x7u) == 0u) {
+				SMSRumbleMgr->start(20, 2, (f32*)nullptr);
+			}
+
+			f32 reactionPowMin = mEmitParams.mReactionPowMin.get();
+			f32 reactionPow    = mEmitParams.mReactionPow.get();
+
+			f32 reaction
+			    = localUnk378 * (reactionPow - reactionPowMin) + reactionPowMin;
+
+			s16 faceAngleY     = mFludd->mMario->mFaceAngle.y;
+			f32 dirX           = emitInfo->mDir.get().x;
+			f32 dirZ           = emitInfo->mDir.get().z;
+			f32 cosAngle       = JMASCos(faceAngleY);
+			f32 sinAngle       = JMASSin(faceAngleY);
+			f32 directionScale = (-dirX * sinAngle - cosAngle * dirZ);
+
+			f32 velocity = reaction;
+			velocity *= directionScale;
+			velocity *= refEmitPow;
+
+			mFludd->mMario->addVelocity(velocity);
+
+			JGeometry::TVec3<f32> const& dirVec = emitInfo->mDir.get();
+			f32 accelY = -dirVec.y * refEmitPow * mEmitParams.mReactionY.get();
+			mFludd->mMario->mVel.y += accelY;
+		}
+	}
+	mBomb.emit(param_1);
 }
 
 void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
@@ -1256,7 +1437,7 @@ void TWaterGun::emit()
 
 	// TODO: Probably an enum
 	// TODO: Probably inline function?
-	if (hasFlag(0x4)) {
+	if ((u8)hasFlag(0x4)) {
 		mFlags &= ~0x4;
 		return;
 	}

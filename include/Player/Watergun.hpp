@@ -84,10 +84,7 @@ extern TNozzleBmdData nozzleBmdData;
 
 class TWaterGun {
 public:
-	// TODO: I wish these could be combined
-	// If i make it a named enum, it defaults to 4 bytes size (i think)
-	typedef s8 TNozzleType;
-	enum { Spray = 0, Rocket, Underwater, Yoshi, Hover, Turbo };
+	enum TNozzleType { Spray = 0, Rocket, Underwater, Yoshi, Hover, Turbo };
 
 	TWaterGun(TMario* mario);
 
@@ -163,6 +160,26 @@ public:
 	bool hasWater() const { return mCurrentWater > 0; }
 
 	// Fabricated
+	void depleteWater(s32 amount)
+	{
+		mCurrentWater -= amount;
+		if (mCurrentWater < 0) {
+			mCurrentWater = 0;
+		}
+	}
+
+	// Fabricated
+	void updateUnk1C88(u8 emittedWater)
+	{
+		mIsEmitWater = emittedWater;
+		s16 decRate  = mNozzleList[mCurrentNozzle]->mEmitParams.mDecRate.get();
+
+		unk1C88 += 10.0f
+		           * ((f32)emittedWater * (f32)decRate
+		              / mNozzleList[0]->mEmitParams.mAmountMax.get());
+	}
+
+	// Fabricated
 	bool canSpray() const
 	{
 		if (mCurrentWater == 0) {
@@ -197,9 +214,9 @@ public:
 	/* 0x1C80 */ s32 mCurrentWater;
 	/* 0x1C84 */ u8 mCurrentNozzle;
 	/* 0x1C85 */ u8 mSecondNozzle;
-	/* 0x1C86 */ bool mIsEmitWater;
+	/* 0x1C86 */ u8 mIsEmitWater;
 	/* 0x1C87 */ u8 unk1C87;
-	/* 0x1C88 */ u32 unk1C88;
+	/* 0x1C88 */ f32 unk1C88;
 	/* 0x1C8C */ u8 mCurrentPressure;
 	/* 0x1C8D */ u8 mPreviousPressure;
 	/* 0x1C8E */ u8 unk1C8E;
