@@ -335,9 +335,6 @@ void TWaterGun::init()
 
 void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 {
-	// TODO: Inlined stack space
-	volatile u32 unused2[12];
-
 	gpMarioForCallBack      = mMario;
 	J3DFrameCtrl* frameCtrl = mFluddModel->getFrameCtrl(MActor::ANM_TYPE_BCK);
 	if (mMario == nullptr) {
@@ -352,63 +349,61 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 
 	// TODO: Definitely a fake match.
 	// Maybe nested inlined switch statements?
-	if (var380 != 5 && var380 < 5) {
-		switch (var380) {
+	switch (var380) {
 
-		case 1:
-		case 0:
-			if (unk1CEC == 0.0f) {
-				if (mMario->fabricatedActionInline()) {
-					mFluddModel->setBck("wg_fepmp");
-				} else if (mMario->checkFlag(MARIO_FLAG_IN_SHALLOW_WATER
-				                             | MARIO_FLAG_IN_WATER)) {
-					mFluddModel->setBck("wg_swpmp");
-				} else {
-					// TODO: Cast would be weird here, probably an inlined
-					// getter that converts to s32
-
-					switch ((s32)mMario->mAnimationId) {
-					case 0x33:
-						mFluddModel->setBck("wg_pump");
-						break;
-					default:
-						mFluddModel->setBck("wg_pump");
-						break;
-					}
-				}
-				frameCtrl->setRate(0.0f);
-				frameCtrl->setFrame(mMario->getPumpFrame());
-				unk1CFA = unk1CF8;
+	case 1:
+	case 0:
+		if (unk1CEC == 0.0f) {
+			if (mMario->fabricatedActionInline()) {
+				mFluddModel->setBck("wg_fepmp");
+			} else if (mMario->checkFlag(MARIO_FLAG_IN_SHALLOW_WATER
+			                             | MARIO_FLAG_IN_WATER)) {
+				mFluddModel->setBck("wg_swpmp");
 			} else {
-				mFluddModel->setBck("wg_house");
-				if ((unk1CEC > 0.0f)
-				    && (unk1CEC = unk1CEC - 0.1f, unk1CEC <= 0.0f)) {
-					unk1CEC = 0.0f;
+				// TODO: Cast would be weird here, probably an inlined
+				// getter that converts to s32
+
+				switch ((s32)mMario->mAnimationId) {
+				case 0x33:
+					mFluddModel->setBck("wg_pump");
+					break;
+				default:
+					mFluddModel->setBck("wg_pump");
+					break;
 				}
+			}
+			frameCtrl->setRate(0.0f);
+			frameCtrl->setFrame(mMario->getPumpFrame());
+			unk1CFA = unk1CF8;
+		} else {
+			mFluddModel->setBck("wg_house");
+			if ((unk1CEC > 0.0f)
+			    && (unk1CEC = unk1CEC - 0.1f, unk1CEC <= 0.0f)) {
+				unk1CEC = 0.0f;
+			}
+			frameCtrl->setRate(0.0f);
+			frameCtrl->setFrame(unk1CEC * frameCtrl->getEnd());
+		}
+		break;
+
+	case 5:
+	default:
+		if (unk1CFA == 0) {
+			if (unk1CEC < 1.0f) {
+				unk1CEC = unk1CEC + unk1CF4;
+				mFluddModel->setBck("wg_house");
+				frameCtrl->setRate(0.0f);
+				frameCtrl->setFrame(unk1CEC * frameCtrl->getEnd());
+			} else {
+				unk1CEC = 1.0f;
+				mFluddModel->setBck("wg_house");
 				frameCtrl->setRate(0.0f);
 				frameCtrl->setFrame(unk1CEC * frameCtrl->getEnd());
 			}
-			break;
-
-		default:
-			break;
-		}
-	}
-
-	if (unk1CFA == 0) {
-		if (unk1CEC < 1.0f) {
-			unk1CEC = unk1CEC + unk1CF4;
-			mFluddModel->setBck("wg_house");
-			frameCtrl->setRate(0.0f);
-			frameCtrl->setFrame(unk1CEC * frameCtrl->getEnd());
 		} else {
-			unk1CEC = 1.0f;
-			mFluddModel->setBck("wg_house");
-			frameCtrl->setRate(0.0f);
-			frameCtrl->setFrame(unk1CEC * frameCtrl->getEnd());
+			unk1CFA = unk1CFA - 1;
 		}
-	} else {
-		unk1CFA = unk1CFA - 1;
+		break;
 	}
 }
 
@@ -416,8 +411,6 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 #pragma dont_inline on
 MtxPtr TWaterGun::getEmitMtx(int jointIndex)
 {
-	volatile u32 unused2[24]; // TODO: A lot of stack space, possibly a lot of
-	                          // inlined functions.
 	MtxPtr result = nullptr;
 	if (mMario->onYoshi()) {
 		result = getYoshiMtx();
@@ -479,8 +472,6 @@ void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 
 void TWaterGun::movement()
 {
-	volatile u32 unused2[69]; // TODO: A lot of stack space, possibly a lot of
-
 	if (!canSpray()) {
 		unk1CC2 = 0;
 		unk1CC4 = 0;
@@ -669,7 +660,6 @@ void TNozzleBase::emit(int param_1)
 void TWaterGun::setBaseTRMtx(Mtx mtx)
 {
 	Mtx result;
-	volatile u32 unused1;
 	Mtx temp;
 
 	f32 initialAngle = mtx[1][0];
@@ -910,9 +900,6 @@ void TNozzleTrigger::init()
 
 void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 {
-	// TODO: Missing stack space
-	volatile u32 unused[54];
-
 	if (mFludd->mCurrentWater <= 0) {
 		unk385 = TNozzleTrigger::INACTIVE;
 		unk386 = 0;
@@ -1237,9 +1224,6 @@ void TNozzleDeform::emit(int param_1)
 
 void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
 {
-	// TODO: Missing stack space
-	volatile u32 unused2[2];
-
 	if (mFludd->mCurrentWater <= 0) {
 		return;
 	}
@@ -1437,8 +1421,8 @@ void TWaterGun::emit()
 
 	// TODO: Probably an enum
 	// TODO: Probably inline function?
-	if ((u8)hasFlag(0x4)) {
-		mFlags &= ~0x4;
+	if (hasFlag(0x4)) {
+		offFlag(0x4);
 		return;
 	}
 

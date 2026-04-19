@@ -147,6 +147,9 @@ public:
 	}
 
 	// Fabricated
+	void offFlag(u16 flag) { mFlags &= ~flag; }
+
+	// Fabricated
 	s32 getSuckRate()
 	{
 		return mCurrentPressure
