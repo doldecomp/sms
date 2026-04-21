@@ -1191,7 +1191,7 @@ public:
 	// Fabricated
 	bool fabricatedActionInline() const
 	{
-		if (mAction >= 0x168 && 0x16c >= mAction) {
+		if ((mAction & 0x1FF) >= 0x168 && 0x16c >= (mAction & 0x1FF)) {
 			return true;
 		}
 		return false;
