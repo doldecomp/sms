@@ -582,15 +582,17 @@ void TMarDirector::setMario()
 
 	switch (gpApplication.mCurrArea.getStage()) {
 	case 0x3C:
-		gpMarioOriginal->mWaterGun->changeNozzle(1, true);
+		gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Rocket, true);
 		break;
 
 		// TODO: crazy cases
 	case 0:
 	case 7:
 		gpMarioOriginal->mWaterGun->changeNozzle(
-		    TFlagManager::getInstance()->getFlag(0x40004), true);
-		gpMarioOriginal->mWaterGun->changeNozzle(0, true);
+		    (TWaterGun::TNozzleType)TFlagManager::getInstance()->getFlag(
+		        0x40004),
+		    true);
+		gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Spray, true);
 		break;
 	}
 

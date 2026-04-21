@@ -73,7 +73,7 @@ public:
 	void getWaterAlpha() const;
 	bool askHitWaterParticleOnGround(const JGeometry::TVec3<f32>&);
 	void makeEmit(const TWaterEmitInfo&);
-	int emitRequest(const TWaterEmitInfo&);
+	u8 emitRequest(const TWaterEmitInfo&);
 	void splashSound(const JGeometry::TVec3<f32>&, f32) const;
 	void splashGround(int);
 	void touchingExec(int);
