@@ -6,24 +6,21 @@
 
 inline DSError TRKDoNotifyStopped_Inline(TRKBuffer* msg, MessageCommandID cmd)
 {
-	DSError err;
-
 	if (msg->position >= 0x880) {
-		err = DS_MessageBufferOverflow;
+		return DS_MessageBufferOverflow;
 	} else {
 		msg->data[msg->position++] = cmd;
 		msg->length += 1;
-		err = 0;
+		return DS_NoError;
 	}
-	return err;
 }
 
 DSError TRKDoNotifyStopped(MessageCommandID cmd)
 {
 	DSError err;
-	int bufIdx;
 	int reqIdx;
 	TRKBuffer* msg;
+	int bufIdx;
 
 	err = TRKGetFreeBuffer(&bufIdx, &msg);
 	if (err == DS_NoError) {
