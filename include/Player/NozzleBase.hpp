@@ -72,7 +72,7 @@ public:
 		/* 0xC8 */ TParamRT<f32> mReactionPow;
 		/* 0xDC */ TParamRT<f32> mReactionY;
 		/* 0xF0 */ TParamRT<s16> mDecRate;
-		/* 0x104 */ TParamRT<u16> mTriggerRate;
+		/* 0x104 */ TParamRT<s16> mTriggerRate;
 		/* 0x118 */ TParamRT<s32> mDamageLoss;
 		/* 0x12C */ TParamRT<f32> mSuckRate;
 		/* 0x140 */ TParamRT<f32> mHitRadius;
@@ -107,16 +107,18 @@ public:
 	TNozzleBase(const char* name, const char* prm, TWaterGun* fludd);
 
 	virtual void init();
-	virtual inline s32 getNozzleKind() const;
-	virtual inline s16 getGunAngle() { return unk36E; }
-	virtual inline s16 getWaistAngle() { return unk370; }
+	virtual s32 getNozzleKind() const;
+	virtual s16 getGunAngle() { return unk36E; }
+	virtual s16 getWaistAngle() { return unk370; }
 	virtual void movement(const TMarioControllerWork&);
 	virtual void emitCommon(int, TWaterEmitInfo*);
 	virtual void emit(int);
 	virtual void animation(int);
 
 	void calcGunAngle(const TMarioControllerWork&);
+	MActor* getMActor() { return unk380; }
 
+public:
 	/* 0x368 */ TWaterGun* mFludd;
 	/* 0x36C */ u16 unk36C; // Some animation state
 	/* 0x36E */ s16 unk36E; // Gun angle

@@ -22,7 +22,7 @@
 #include <MoveBG/MapObjBall.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Player/MarioMain.hpp>
-#include <Player/Watergun.hpp>
+#include <Player/WaterGun.hpp>
 #include <Camera/CubeManagerBase.hpp>
 
 // rogue includes needed for matching sinit & bss
@@ -580,12 +580,12 @@ static void evAppearShineForWoodBox(TSpcTypedInterp<TEventWatcher>* interp,
 static void evChangeNozzle(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
-	int id = interp->pop().getDataInt();
-	if (id == 7)
+	TWaterGun::TNozzleType id
+	    = (TWaterGun::TNozzleType)interp->pop().getDataInt();
+	if (id == TWaterGun::DivingHelmet)
 		gpMarioOriginal->setDivHelm();
 	else
-		gpMarioOriginal->mWaterGun->changeNozzle((TWaterGun::TNozzleType)id,
-		                                         true);
+		gpMarioOriginal->mWaterGun->changeNozzle(id, true);
 	interp->push();
 }
 

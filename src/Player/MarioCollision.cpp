@@ -7,7 +7,7 @@
 #include <MSound/MSoundSE.hpp>
 #include <System/Particles.hpp>
 #include <System/MarioGamePad.hpp>
-#include <Player/Watergun.hpp>
+#include <Player/WaterGun.hpp>
 #include <Camera/CameraShake.hpp>
 #include <System/Particles.hpp>
 

@@ -6,7 +6,7 @@
 #include <MarioUtil/DrawUtil.hpp>
 #include <MoveBG/ModelGate.hpp>
 #include <System/StageUtil.hpp>
-#include <Player/Watergun.hpp>
+#include <Player/WaterGun.hpp>
 #include <Player/MarioCap.hpp>
 #include <JSystem/JMath.hpp>
 

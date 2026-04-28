@@ -1,6 +1,7 @@
 #ifndef NOZZLEDEFORM_HPP
 #define NOZZLEDEFORM_HPP
 
+#include <Player/NozzleTrigger.hpp>
 #include <Player/NozzleBase.hpp>
 
 class TNozzleDeform : public TNozzleBase {

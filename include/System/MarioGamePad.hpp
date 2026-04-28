@@ -1,7 +1,7 @@
 #ifndef SYSTEM_MARIO_GAME_PAD_HPP
 #define SYSTEM_MARIO_GAME_PAD_HPP
 
-#include <Dolphin/types.h>
+#include <dolphin/types.h>
 #include <JSystem/JUtility/JUTGamePad.hpp>
 #include <Camera/cameralib.hpp>
 #include <Camera/Camera.hpp>
