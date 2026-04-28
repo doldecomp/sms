@@ -4,6 +4,17 @@ This document collects practical knowledge about how the Metrowerks CodeWarrior 
 
 Read this document before attempting to match functions. The patterns described here are recurring and will save significant trial-and-error time. Expand the document as needed. Ask for human review whenever the contents of the document disagree with observed reality.
 
+## What NOT to focus on
+
+There are some things that might seem like low hanging fruit at first sight but really are not. They are:
+
+- function stack frame size
+- prologue and epilogue shape
+- wrong registers being used
+
+These things are usually the hardest ones to get right and so should be left for the very end of matching an entire file, when nothing else remains to be done.
+Instead of these, first and foremost wrong instructions being used and ordering of these instructions should be resolved.
+
 ## MWCC dislikes reordering
 
 The compiler never reorders memory stores, loads and function calls relative to one another.
@@ -68,6 +79,10 @@ bge ...
 b   ...
 ... the code block inside the switch ...
 ```
+
+### Case ordering is strict
+
+MWCC **never reorders cases in a switch statement** during compilation. The order of `case` labels in the source code must match exactly the order they appear in the assembled jump table or branch chain. If a function exhibits a non-matching switch and you've verified the case logic is correct, inspect the target assembly to determine the actual case sequence and reorder the source cases accordingly. Even if semantically equivalent, the compiled output will differ until case order matches.
 
 ## Nonsensical control flow
 

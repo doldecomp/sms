@@ -1,7 +1,7 @@
 #include <Player/MarioMain.hpp>
 #include <Player/MarioAnimeData.hpp>
 #include <Player/MarioCap.hpp>
-#include <Player/Watergun.hpp>
+#include <Player/WaterGun.hpp>
 
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>

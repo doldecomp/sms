@@ -10,7 +10,7 @@
 #include <System/FlagManager.hpp>
 #include <System/CardManager.hpp>
 #include <Player/MarioMain.hpp>
-#include <Player/Watergun.hpp>
+#include <Player/WaterGun.hpp>
 #include <Strategic/ObjHitCheck.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/RumbleMgr.hpp>

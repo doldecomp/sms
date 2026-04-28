@@ -84,7 +84,16 @@ extern TNozzleBmdData nozzleBmdData;
 
 class TWaterGun {
 public:
-	enum TNozzleType { Spray = 0, Rocket, Underwater, Yoshi, Hover, Turbo };
+	enum TNozzleType {
+		Spray            = 0,
+		Rocket           = 1,
+		Underwater       = 2,
+		Yoshi            = 3,
+		Hover            = 4,
+		Turbo            = 5,
+		NOZZLE_TYPE_UNK6 = 6,
+		DivingHelmet     = 7
+	};
 
 	TWaterGun(TMario* mario);
 
@@ -158,6 +167,7 @@ public:
 
 	// Fabricated
 	TNozzleBase* getNozzle(u8 index) { return mNozzleList[index]; }
+	TNozzleBase* getCurrentNozzle() { return mNozzleList[mCurrentNozzle]; }
 
 	// Fabricated
 	bool hasWater() const { return mCurrentWater > 0; }
@@ -185,24 +195,21 @@ public:
 	// Fabricated
 	bool canSpray() const
 	{
-		if (mCurrentWater == 0) {
+		if (mCurrentWater == 0)
 			return false;
-		} else {
-			s32 kind = getCurrentNozzle()->getNozzleKind();
-			if (kind == 1) {
-				TNozzleTrigger* triggerNozzle
-				    = (TNozzleTrigger*)getCurrentNozzle();
-				if (triggerNozzle->unk385 == TNozzleTrigger::ACTIVE) {
-					return true;
-				} else {
-					return false;
-				}
-			} else if (getCurrentNozzle()->unk378 > 0.0f) {
+
+		if (getCurrentNozzle()->getNozzleKind() == 1) {
+			TNozzleTrigger* triggerNozzle = (TNozzleTrigger*)getCurrentNozzle();
+			if (triggerNozzle->unk385 == TNozzleTrigger::ACTIVE)
 				return true;
-			} else {
-				return false;
-			}
+
+			return false;
 		}
+
+		if (getCurrentNozzle()->unk378 > 0.0f)
+			return true;
+
+		return false;
 	}
 
 	/* 0x0000 */ u16 mFlags;
@@ -233,8 +240,8 @@ public:
 	/* 0x1CCC */ f32 unk1CCC; // mNozzleSpeedZ
 	/* 0x1CD0 */ s16 unk1CD0;
 	/* 0x1CD2 */ s16 unk1CD2;
-	/* 0x1CD4 */ MActor* mFluddModel; // MActor*
-	/* 0x1CD8 */ u8 unk1CD8;          // mCurFluddTransformIdx
+	/* 0x1CD4 */ MActor* mFluddModel;
+	/* 0x1CD8 */ u8 unk1CD8; // mCurFluddTransformIdx
 	/* 0x1CD9 */ u8 unk1CD9;
 	/* 0x1CDA */ u16 unk1CDA;
 	/* 0x1CDC */ TMultiMtxEffect* unk1CDC;
@@ -250,7 +257,7 @@ public:
 	/* 0x1D00 */ f32 unk1D00;
 	/* 0x1D04 */ s16 unk1D04;
 	/* 0x1D06 */ s16 unk1D06;
-	/* 0x1D08 */ u32 unk1D08;
+	/* 0x1D08 */ s16 unk1D08;
 	/* 0x1D0C */ TWaterEmitInfo* mEmitInfo; // TWaterEmitInfo
 	/* 0x1D10 */ TMirrorActor* unk1D10;
 	/* 0x1D14 */ TWaterGunParams mWatergunParams;
