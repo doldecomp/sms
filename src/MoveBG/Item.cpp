@@ -13,6 +13,12 @@
 #include <System/Particles.hpp>
 #include <Strategic/MirrorActor.hpp>
 #include <Strategic/question.hpp>
+#include <Player/MarioAccess.hpp>
+#include <Player/Yoshi.hpp>
+#include <M3DUtil/MActor.hpp>
+#include <M3DUtil/MActorUtil.hpp>
+#include <MarioUtil/RandomUtil.hpp>
+#include <MarioUtil/MathUtil.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JParticle/JPAResourceManager.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
@@ -447,26 +453,251 @@ TShine::TShine(const char* name)
 {
 }
 
-void TEggYoshi::decideRandomLoveFruit() { }
+void TEggYoshi::decideRandomLoveFruit()
+{
+	u8 map = gpMarDirector->mMap;
 
-void TEggYoshi::startBalloonAnim() { }
+	if (map == 7 && gpMarDirector->unk7D == 1) {
+		unk14C = 0x40000392;
+		return;
+	}
 
-void TEggYoshi::touchFruit(THitActor*) { }
+	if (map == 3) {
+		unk14C = 0x40000393;
+		return;
+	}
 
-void TEggYoshi::touchActor(THitActor*) { }
+	if (map == 1 && strcmp(getName(), "ヨッシーの卵（影マリオ用）") == 0) {
+		unk14C = 0x40000394;
+		return;
+	}
 
-void TEggYoshi::control() { }
+	int r = 4 * MsRandF();
+	switch (r) {
+	case 0:
+		unk14C = 0x40000394;
+		break;
+	case 1:
+		unk14C = 0x40000391;
+		break;
+	case 2:
+		unk14C = 0x40000392;
+		break;
+	default:
+		unk14C = 0x40000390;
+		break;
+	}
+}
 
-void TEggYoshi::perform(u32, JDrama::TGraphics*) { }
+void TEggYoshi::startBalloonAnim()
+{
+	switch (unk14C) {
+	case 0x40000394:
+		unk148->getFrameCtrl(3)->setFrame(1.0f);
+		break;
+	case 0x40000393:
+		unk148->getFrameCtrl(3)->setFrame(3.0f);
+		break;
+	case 0x40000391:
+		unk148->getFrameCtrl(3)->setFrame(5.0f);
+		break;
+	case 0x40000392:
+		unk148->getFrameCtrl(3)->setFrame(7.0f);
+		break;
+	case 0x40000390:
+		unk148->getFrameCtrl(3)->setFrame(9.0f);
+		break;
+	}
+}
 
-void TEggYoshi::startFruit() { }
+void TEggYoshi::touchFruit(THitActor* fruit)
+{
+	if (isState(0xE) || isState(6))
+		return;
 
-BOOL TEggYoshi::receiveMessage(THitActor*, u32) { }
+	if (unk14C == (u32)fruit->mActorType) {
+		startAnim(1);
+		unk148->getFrameCtrl(3)->setFrame(11.0f);
+		mRotation.y = (360.0f / 65536.0f)
+		              * matan(fruit->mPosition.z - mPosition.z,
+		                      fruit->mPosition.x - mPosition.x);
+		mState = 0xB;
+		unk150 = fruit;
+		if (gpMSound->gateCheck(0x483F))
+			MSoundSESystem::MSoundSE::startSoundSystemSE(0x483F, 0, nullptr, 0);
+	} else if (animIsFinished()) {
+		startAnim(2);
+		unk148->getFrameCtrl(3)->setFrame(12.0f);
+		if (gpMSound->gateCheck(0x483E))
+			MSoundSESystem::MSoundSE::startSoundSystemSE(0x483E, 0, nullptr, 0);
+		mState = 0xD;
+	}
+}
 
-void TEggYoshi::load(JSUMemoryInputStream&) { }
+void TEggYoshi::touchActor(THitActor* other)
+{
+	if (!isState(1) && !isState(0xD))
+		return;
+
+	if (other->isActorType(0x80000001)) {
+		TTakeActor* casted = static_cast<TTakeActor*>(other);
+		if (casted->getHeldObject()
+		    && TMapObjBase::isFruit(casted->getHeldObject()))
+			touchFruit(casted->getHeldObject());
+	}
+
+	if (TMapObjBase::isFruit(other))
+		touchFruit(other);
+}
+
+void TEggYoshi::control()
+{
+	TMapObjBase::control();
+
+	switch (mState) {
+	case 0xD:
+		if (animIsFinished()) {
+			startAnim(0);
+			startBalloonAnim();
+			mState = 1;
+		}
+		break;
+	case 0xB:
+		if (animIsFinished()) {
+			startAnim(3);
+			TYoshi* yoshi = SMS_GetYoshi();
+			if (!yoshi->isHatched()) {
+				JGeometry::TVec3<f32> pos = mPosition;
+				yoshi->appearFromEgg(pos, mRotation.y, this);
+				yoshi->setEggYoshiPtr(this);
+			}
+			mState = 0xC;
+		}
+		break;
+	case 0xC:
+		if (animIsFinished()) {
+			kill();
+			mState = 0;
+		}
+		break;
+	case 0xF: {
+		JGeometry::TVec3<f32> v = mVelocity;
+		if (v.y == 0.0f)
+			mState = 0x10;
+		break;
+	}
+	case 0x0:
+	case 0x1:
+	case 0x2:
+	case 0x3:
+	case 0x4:
+	case 0x5:
+	case 0x6:
+	case 0x7:
+	case 0x8:
+	case 0x9:
+	case 0xA:
+	case 0xE:
+	case 0x10:
+		break;
+	}
+}
+
+void TEggYoshi::perform(u32 param_1, JDrama::TGraphics* param_2)
+{
+	TMapObjGeneral::perform(param_1, param_2);
+
+	if (!isState(0xC) && !isState(0) && !isState(6) && !isState(2)
+	    && !isState(0xE) && !isState(0xF) && !isState(0x10)) {
+		if (param_1 & 2)
+			unk148->getModel()->setBaseTRMtx(getModel()->getAnmMtx(0));
+
+		unk148->perform(param_1, param_2);
+	}
+}
+
+void TEggYoshi::startFruit()
+{
+	receiveMessage(nullptr, HIT_MESSAGE_UNK10);
+	if (isState(0) || isState(0xE) || isState(0xF) || isState(0x10))
+		receiveMessage(nullptr, HIT_MESSAGE_UNK10);
+}
+
+BOOL TEggYoshi::receiveMessage(THitActor* sender, u32 message)
+{
+	if (message == HIT_MESSAGE_TAKE) {
+		hold((TTakeActor*)sender);
+		return TRUE;
+	}
+
+	if (message == HIT_MESSAGE_UNK7 || message == HIT_MESSAGE_UNK8) {
+		mVelocity.y = 10.0f;
+		offLiveFlag(LIVE_FLAG_UNK10);
+		mState = 0xF;
+		return TRUE;
+	}
+
+	if (message == HIT_MESSAGE_UNK10) {
+		JGeometry::TVec3<f32> v = mVelocity;
+		makeObjAppeared();
+		mVelocity.y = v.y;
+		offLiveFlag(LIVE_FLAG_UNK10);
+		decideRandomLoveFruit();
+		startBalloonAnim();
+		mState = 1;
+		return TRUE;
+	}
+
+	if (message == HIT_MESSAGE_UNK6) {
+		makeObjAppeared();
+		decideRandomLoveFruit();
+		startBalloonAnim();
+	}
+
+	return FALSE;
+}
+
+void TEggYoshi::load(JSUMemoryInputStream& stream)
+{
+	TMapObjBase::load(stream);
+
+	if (strcmp(unkF4, "eggYoshiEvent") == 0) {
+		if (TFlagManager::getInstance()->getFlag(0x60003) == 1) {
+			mState = 0xE;
+		} else {
+			makeObjDead();
+			return;
+		}
+	} else if (gpMarDirector->mMap == 1) {
+		if (!TFlagManager::getInstance()->getBool(0x1038F)) {
+			makeObjDead();
+			return;
+		}
+	} else if (!TFlagManager::getInstance()->getShineFlag(0x21)) {
+		makeObjDead();
+		return;
+	}
+
+	unk148 = SMS_MakeMActorWithAnmData("/scene/mapObj/eggYoshi_fukidashi.bmd",
+	                                   mManager->getMActorAnmData(), 3,
+	                                   0x10210000);
+	MtxPtr src = getModel()->getAnmMtx(0);
+	PSMTXCopy(src, unk148->getModel()->getBaseTRMtx());
+	unk148->setBck("eggyoshi_fukidashi_wait");
+	unk148->setBtp("eggyoshi_fukidashi");
+	unk148->getFrameCtrl(3)->setRate(0.0f);
+
+	decideRandomLoveFruit();
+
+	if (!isState(0xE))
+		startBalloonAnim();
+}
 
 TEggYoshi::TEggYoshi(const char* name)
     : TMapObjGeneral(name)
+    , unk148(nullptr)
+    , unk14C(0)
+    , unk150(nullptr)
 {
 }
 

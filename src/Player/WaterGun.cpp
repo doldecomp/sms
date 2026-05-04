@@ -1406,7 +1406,7 @@ MtxPtr TWaterGun::getEmitMtx(int jointIndex)
 {
 	MtxPtr result = nullptr;
 	if (mMario->onYoshi()) {
-		result = getYoshiMtx();
+		result = mMario->mYoshi->getTongueMtx();
 	} else {
 		// This entire block is likely an inlined function.
 		s32 flag = nozzleBmdData.getFlags(mCurrentNozzle, jointIndex);
@@ -1419,7 +1419,7 @@ MtxPtr TWaterGun::getEmitMtx(int jointIndex)
 			    nozzleBmdData.getJointIndex(mCurrentNozzle, jointIndex));
 			break;
 		case 3:
-			result = getYoshiMtx();
+			result = mMario->mYoshi->getTongueMtx();
 			break;
 		default:
 			break;
@@ -1453,7 +1453,7 @@ void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 	mCurrentNozzle = nozzleType;
 	mNozzleList[mCurrentNozzle]->init();
 	if (nozzleType == Yoshi) {
-		mCurrentWater = mMario->mYoshi->_11[0];
+		mCurrentWater = mMario->mYoshi->unkD4;
 	} else {
 		mCurrentWater
 		    = usedWater
@@ -1471,9 +1471,7 @@ void TWaterGun::movement()
 	unk1CC8 += (unk1CC2 - unk1CC8) * mWatergunParams.mChangeSpeed.get();
 	unk1CCC += (unk1CC4 - unk1CCC) * mWatergunParams.mChangeSpeed.get();
 
-	TNozzleBase* currentNozzle = getCurrentNozzle();
-
-	rotateProp(currentNozzle->unk378);
+	rotateProp(getCurrentNozzle()->unk378);
 
 	// They do the same thing again?... This is the exact same code as
 	// rotateProp
@@ -1508,53 +1506,25 @@ void TWaterGun::movement()
 		f32 unk = unk1CFC;
 		f32 sum = unk + unk1D00;
 		unk1CFC = sum;
-		if ((unk < 0.5f) && (0.5f <= sum)) {
-			u8 curNozzle        = mCurrentNozzle;
-			s32 currentWater    = mCurrentWater;
-			u8 secondNozzle     = mSecondNozzle;
-			f32 maxWater        = currentNozzle->mEmitParams.mAmountMax.get();
-			f32 waterPercentage = currentWater / maxWater;
 
-			if (secondNozzle != 0) {
-				mSecondNozzle = secondNozzle;
-			}
-			mCurrentNozzle = secondNozzle;
+		if (unk < 0.5f && 0.5f <= sum)
+			changeNozzle((TNozzleType)mSecondNozzle, false);
 
-			currentNozzle = getCurrentNozzle();
-			currentNozzle->init(); // TODO: 2 vtable entry
+		if (sum < 0.5f && 0.5f <= unk)
+			changeNozzle(Spray, false);
 
-			if (secondNozzle == 3) {
-				mCurrentWater
-				    = mMario->mYoshi->_11[0]; // TODO: Proper yoshi stuff
-			} else {
-				mCurrentWater = waterPercentage
-				                * currentNozzle->mEmitParams.mAmountMax.get();
-			}
-		}
-		if ((sum < 0.5f) && (0.5f <= unk)) {
-			f32 currentWater    = (f32)mCurrentWater;
-			f32 maxWater        = currentNozzle->mEmitParams.mAmountMax.get();
-			f32 waterPercentage = currentWater / maxWater;
-
-			mCurrentNozzle = 0;
-
-			currentNozzle = getCurrentNozzle();
-			currentNozzle->init(); // TODO: 2 vtable entry
-
-			mCurrentWater
-			    = waterPercentage * currentNozzle->mEmitParams.mAmountMax.get();
-		}
-
-		if (unk1CFC < 0.0) {
+		if (unk1CFC < 0.0f) {
 			unk1CFC = 0.0f;
 			unk1D00 = 0.0f;
 		}
+
 		if (1.0f < unk1CFC) {
 			unk1CFC = 1.0f;
 			unk1D00 = 0.0f;
 		}
 	}
-	currentNozzle->animation(mCurrentNozzle);
+
+	getCurrentNozzle()->animation(mCurrentNozzle);
 }
 
 void TWaterGun::setBaseTRMtx(Mtx mtx)

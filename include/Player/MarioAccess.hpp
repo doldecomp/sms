@@ -7,6 +7,8 @@
 class TLiveActor;
 class THitActor;
 class TBGCheckData;
+class TWaterGun;
+class TYoshi;
 
 extern void* gpMarioAddress;
 
@@ -50,7 +52,7 @@ bool SMS_IsMarioTouchGround4cm();
 void SMS_ThrowMario(const JGeometry::TVec3<f32>&, f32);
 bool SMS_SendMessageToMario(THitActor*, u32);
 void SMS_GetMarioJumpIntoWaterModelData();
-void* SMS_GetMarioWaterGun();
+TWaterGun* SMS_GetMarioWaterGun();
 
 f32 SMS_GetMarioGravity();
 f32 SMS_GetMarioGrLevel();
@@ -73,7 +75,7 @@ bool SMS_IsMarioStatusWaiting();
 TLiveActor* SMS_GetMarioLiveActor();
 THitActor* SMS_GetMarioHitActor();
 bool SMS_AskJumpIntoWaterEffectExist();
-void* SMS_GetYoshi();
+TYoshi* SMS_GetYoshi();
 void SMS_SetMarioAccessParams();
 
 // Real, see bossgesso

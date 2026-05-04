@@ -59,11 +59,19 @@ enum E_MARIO_RAIL_TYPE {
 	MARIO_RAIL_TYPE_MAX
 };
 
-struct TRidingInfo {
-	const TLiveActor* unk0;
-	Vec localPos;
-	f32 unk10;
-	// maybe more
+class TRidingInfo {
+public:
+	TRidingInfo()
+	    : unk0(nullptr)
+	    , localPos(0.0f, 0.0f, 0.0f)
+	    , unk10(0.0f)
+	{
+	}
+
+public:
+	/* 0x0 */ const TLiveActor* unk0;
+	/* 0x4 */ JGeometry::TVec3<f32> localPos;
+	/* 0x10 */ f32 unk10;
 };
 
 struct TMarioSoundValues {
@@ -614,7 +622,7 @@ public:
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
-	virtual bool moveRequest(const JGeometry::TVec3<f32>&);
+	virtual BOOL moveRequest(const JGeometry::TVec3<f32>&);
 
 	virtual void drawSyncCallback(u16);
 	virtual void initValues();
@@ -1126,6 +1134,7 @@ public:
 	// fabricated
 	f32 getIntendedMag() const { return mIntendedMag; }
 	f32 getIntendedYaw() const { return mIntendedYaw * (360.0f / 65536.0f); }
+	THitActor* getFloorHitActor() { return &mFloorHitActor; }
 
 	// fabricated
 	bool isTouchGround4cm() const
@@ -1141,6 +1150,7 @@ public:
 
 		return false;
 	}
+	u32 getAction() const { return mAction; }
 
 	bool checkActionThing() { return mAction & 0x1000 ? true : false; }
 	bool checkActionThing2() { return mAction & 0x800 ? true : false; }

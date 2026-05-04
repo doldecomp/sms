@@ -149,10 +149,7 @@ bool SMS_SendMessageToMario(THitActor* m, u32 mesg)
 	return false;
 }
 
-void* SMS_GetMarioWaterGun()
-{ // TODO: returns TWaterGun
-	return gpMarioOriginal->mWaterGun;
-}
+TWaterGun* SMS_GetMarioWaterGun() { return gpMarioOriginal->mWaterGun; }
 
 f32 SMS_GetMarioGravity()
 {
@@ -229,10 +226,7 @@ bool SMS_AskJumpIntoWaterEffectExist()
 	return gpMarioOriginal->askJumpIntoWaterEffectExist();
 }
 
-void* SMS_GetYoshi()
-{ // TODO: returns TYoshi
-	return gpMarioOriginal->mYoshi;
-}
+TYoshi* SMS_GetYoshi() { return gpMarioOriginal->mYoshi; }
 
 void SMS_SetMarioAccessParams()
 {

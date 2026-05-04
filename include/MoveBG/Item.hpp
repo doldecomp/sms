@@ -145,6 +145,8 @@ public:
 	/* 0x1B4 */ u8 unk1B4;
 };
 
+class MActor;
+
 class TEggYoshi : public TMapObjGeneral {
 public:
 	TEggYoshi(const char* name = "ヨッシーの卵");
@@ -160,6 +162,14 @@ public:
 	void touchFruit(THitActor*);
 	void startBalloonAnim();
 	void decideRandomLoveFruit();
+
+	// fabricated
+	THitActor* getFruit() { return unk150; }
+
+public:
+	/* 0x148 */ MActor* unk148;
+	/* 0x14C */ u32 unk14C;
+	/* 0x150 */ THitActor* unk150;
 };
 
 class TItemNozzle : public TItem {
