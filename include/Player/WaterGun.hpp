@@ -126,14 +126,6 @@ public:
 	J3DModel* getModel() { return mFluddModel->unk4; }
 
 	// Fabricated
-	// Probably inlined from Yoshi
-	inline MtxPtr getYoshiMtx()
-	{
-		TYoshi* yoshi = (TYoshi*)mMario->mYoshi;
-		return yoshi->mActor->unk4->getAnmMtx(yoshi->mJoint);
-	}
-
-	// Fabricated
 	// TODO: Definitely not from watergun
 	inline void playSoundWithInfo(u32 id, const Vec* pos, u32 _unk, f32 _unk2)
 	{
@@ -212,7 +204,7 @@ public:
 		return false;
 	}
 
-	/* 0x0000 */ u16 mFlags;
+	/* 0x0004 */ u16 mFlags;
 	/* 0x0008 */ TMario* mMario;
 	/* 0x000C */ TNozzleDeform mNozzleDeform;
 	/* 0x0720 */ TNozzleTrigger mNozzleRocket;

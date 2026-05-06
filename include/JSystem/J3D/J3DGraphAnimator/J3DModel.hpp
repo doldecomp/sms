@@ -4,6 +4,7 @@
 #include <types.h>
 #include <JSystem/J3D/J3DGraphBase/J3DVertex.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DPacket.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAttach.hpp>
 #include <JSystem/ResTIMG.hpp>
 #include <dolphin/mtx.h>
@@ -119,6 +120,18 @@ public:
 
 	// This is the J3DMtxCalcAnm type this model needs supposedly
 	u32 getUnkC() const { return unkC & 0xf; }
+
+	void onFlag1OnAllShapes()
+	{
+		for (u16 j = 0; j < mShapeNum; ++j)
+			mShapeNodePointer[j]->onFlag(1);
+	}
+
+	void offFlag1OnAllShapes()
+	{
+		for (u16 j = 0; j < mShapeNum; ++j)
+			mShapeNodePointer[j]->offFlag(1);
+	}
 
 public:
 	/* 0x04 */ const void* unk4;
