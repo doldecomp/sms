@@ -24,11 +24,10 @@
 #include <System/MarDirector.hpp>
 #include <NPC/NpcBase.hpp>
 
-static const char* MtxCalcTypeName[4]
-    = { "MActorMtxCalcType_Basic クラシックスケールＯＮ",
-	    "MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
-	    "MActorMtxCalcType_MotionBlend モーションブレンド",
-	    "MActorMtxCalcType_User ユーザー定義" };
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
 
 static unkTMarioAnimeFilesStruct marioAnimeFiles[199] = {
 	{ 0x00000001, "hgup" },
