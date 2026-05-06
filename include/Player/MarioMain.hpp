@@ -1268,8 +1268,8 @@ public:
 
 	/* 0x124 */ u32 unk124;
 	/* 0x128 */ u32 unk128;
-	/* 0x12C */ u32 unk12C;
-	/* 0x130 */ u32 unk130;
+	/* 0x12C */ f32 unk12C;
+	/* 0x130 */ f32 unk130;
 	/* 0x134 */ f32 unk134; // Amount of dirty?
 	/* 0x138 */ u32 unk138;
 	/* 0x13C */ u32 unk13C;

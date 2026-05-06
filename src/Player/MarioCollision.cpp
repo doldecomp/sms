@@ -11,6 +11,10 @@
 #include <Camera/CameraShake.hpp>
 #include <System/Particles.hpp>
 
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+
 void TMario::rumbleStart(int channelDataIdx, int repeatCount)
 {
 	if (this == gpMarioOriginal) {
@@ -26,7 +30,7 @@ void TMario::incHP(int hp)
 		if (unk12C > unk130) {
 			unk12C = unk130;
 		} else {
-			gpMSound->startSoundSystemSE(0x4801, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(0x4801, 0, nullptr, 0);
 		}
 		return;
 	}
@@ -35,7 +39,7 @@ void TMario::incHP(int hp)
 	if (mHealth > mDeParams.mHpMax.get()) {
 		mHealth = mDeParams.mHpMax.get();
 	} else {
-		gpMSound->startSoundSystemSE(0x4801, 0, nullptr, 0);
+		SMSGetMSound()->startSoundSystemSE(0x4801, 0, nullptr, 0);
 	}
 }
 
@@ -122,7 +126,7 @@ bool TMario::isTakeSituation(THitActor* object)
 		return false;
 	}
 
-	f32 dist = (object->mPosition - mPosition).length();
+	f32 dist = JGeometry::TVec3<f32>(object->mPosition - mPosition).length();
 	if (dist > mAttackRadius + object->getDamageRadius()) {
 		return false;
 	}
@@ -241,28 +245,29 @@ void TMario::loserExec()
 	}
 }
 
+void TMario::floorDamageExec(int damage, int damageAnimType, int waterEmit,
+                             int rumbleFrames)
+{
+	if (isInvincible())
+		return;
+
+	mFloorHitActor.mPosition.x = mPosition.x + JMASSin(mFaceAngle.y);
+	mFloorHitActor.mPosition.z = mPosition.z + JMASCos(mFaceAngle.y);
+	damageExec(&mFloorHitActor, damage, damageAnimType, waterEmit, 16.0f,
+	           rumbleFrames, 0.0f, 60);
+}
+
 void TMario::floorDamageExec(const TMario::TEParams& params)
 {
-	if (isInvincible()) {
+	if (isInvincible())
 		return;
-	}
+
 	mFloorHitActor.mPosition.x = mPosition.x + JMASSin(mFaceAngle.y);
 	mFloorHitActor.mPosition.z = mPosition.z + JMASCos(mFaceAngle.y);
 	damageExec(&mFloorHitActor, params.mDamage.get(), params.mDownType.get(),
 	           params.mWaterEmit.get(), params.mMinSpeed.get(),
 	           params.mMotor.get(), params.mDamage.get(),
 	           params.mInvincibleTime.get());
-}
-void TMario::floorDamageExec(int damage, int damageAnimType, int waterEmit,
-                             int rumbleFrames)
-{
-	if (isInvincible()) {
-		return;
-	}
-	mFloorHitActor.mPosition.x = mPosition.x + JMASSin(mFaceAngle.y);
-	mFloorHitActor.mPosition.z = mPosition.z + JMASCos(mFaceAngle.y);
-	damageExec(&mFloorHitActor, damage, damageAnimType, waterEmit, 16.0f,
-	           rumbleFrames, 0.0f, 0x3c);
 }
 
 // Closest i got, but i think this is wrong, but probably functionally
