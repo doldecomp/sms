@@ -1298,7 +1298,9 @@ public:
 	/* 0x1E4 */ u32 unk1E4;
 	/* 0x1E8 */ u32 unk1E8;
 	/* 0x1EC */ f32 unk1EC;
-	/* 0x1F0 */ char unk1F0[0x29C - 0x1F0];
+	/* 0x1F0 */ char unk1F0[0x220 - 0x1F0];
+	/* 0x220 */ Mtx unk220;
+	/* 0x250 */ char unk250[0x29C - 0x250];
 	/* 0x29C */ JGeometry::TVec3<f32> unk29C;
 	/* 0x2A8 */ char unk2A8[0x2BC - 0x2A8];
 	/* 0x2BC */ f32 unk2BC;

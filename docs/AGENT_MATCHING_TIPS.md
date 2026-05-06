@@ -186,6 +186,43 @@ Only introduce reference aliases when:
 
 Otherwise, use direct member access or direct getter calls inline in expressions and let the common subexpression elimination & redundant load optimizations do the rest.
 
+## Reconstructing initializer-heavy functions (init/ctors) from raw asm
+
+When a function body is mostly field assignments (typical for `init()` / constructors), the fastest path is to decode the raw `.s` file directly rather than relying on `m2c` or guessing.
+
+Workflow:
+
+1. Find the function in `build/GMSJ01/asm/<path>.s` by mangled name (`grep -n` for `.fn <mangled>`).
+2. Walk the prologue forward and map every `stb`/`sth`/`stw`/`stfs` to a class field using the `/* 0xNN */` offsets in the header. Each store = one source statement.
+3. Float and integer constants live at the bottom of the same `.s` file as `.obj "@NNNN"` blocks with `.float`/`.4byte` directives. The assembly references them as `lfs f0, "@NNNN"@sda21(r0)`.
+4. String literals (joint names, file paths) are in `.rodata` / `.sdata2` and referenced as `addi r4, r30, 0xNNN` where `r30` is the loaded address of `@1490` (the TU's local rodata base).
+5. Cross-reference against the existing partial source — anything in the asm but not in the source is missing.
+
+Compare offsets one-for-one. If the asm writes to offsets `0xFC, 0x100, 0x104` and the source only zeroes `0x108..0x110`, you're missing a `unkFC.zero();` before `unk108.zero();`.
+
+## Recognising common MWCC store idioms
+
+**`u32 → f32` cast** (typical for `(f32)someByte` from a packed struct like `GXColor`):
+```
+lbz   r0, OFF(rBase)              ; load unsigned byte
+lis   r4, 0x4330                  ; high half of magic constant
+lfd   f1, "@magic"@sda21(r0)      ; magic = 4503599627370496.0 (0x4330000000000000)
+stw   r0, X(r1)                   ; store low half on stack
+stw   r4, X-4(r1)                 ; store high half on stack
+lfd   f0, X-4(r1)                 ; load as double
+fsubs f0, f0, f1                  ; subtract magic → real float value
+stfs  f0, FIELD(rThis)
+```
+Source: `unk84.x = (f32)bodyColor[0].r;` — straight cast of a `u8` field to `f32`.
+
+**`(u8)` cast on an `int`-returning call before storing to a `u16` field**:
+```
+bl    JUTNameTab::getIndex(...)
+clrlwi r0, r3, 24                 ; mask to low 8 bits
+sth    r0, FIELD(rThis)           ; store as halfword
+```
+Source: `mField = (u8)getIndex(...);` even though `mField` is declared `u16`. Without the `(u8)` cast, MWCC emits `sth r3, FIELD(rThis)` directly with no `clrlwi`. This pattern appears repeatedly for joint-index assignments.
+
 ## Constant Hoisting and Loop Codegen
 
 The compiler hoists constant loads (`lfs`, `lfd` from SDA/SDA2) before loops. The exact set of constants hoisted depends on:
@@ -232,6 +269,10 @@ pos.z = z;
 ```
 
 Check the target assembly to see which pattern (batched vs interleaved) is used, and write the source accordingly.
+
+### `Vec3::zero()` vs `Vec3::set(0,0,0)`
+
+`.zero()` emits stores in **reverse component order** (`z`, `y`, `x` → offsets `+8, +4, +0`). `.set(0,0,0)` typically emits forward order. Match the asm order to pick the right call.
 
 ### Assignment: `operator=` vs `.set()`
 
