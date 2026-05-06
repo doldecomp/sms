@@ -216,7 +216,7 @@ static inline JGeometry::TVec3<f32> fromPolar(f32 theta, f32 radius)
 	                             radius * JMASCos(theta * (65536.0f / 360.0f)));
 }
 
-bool TBGTakeHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
+BOOL TBGTakeHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 {
 	JGeometry::TVec3<f32> local_EC = where_to;
 	gpMap->isTouchedOneWallAndMoveXZ(&local_EC.x, local_EC.y, &local_EC.z,

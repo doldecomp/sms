@@ -140,7 +140,7 @@ static inline JGeometry::TVec3<f32> fromPolar(f32 theta, f32 radius)
 	                             radius * JMASCos(theta * (65536.0f / 360.0f)));
 }
 
-bool TBGBeakHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
+BOOL TBGBeakHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 {
 	TBossGessoParams* params = mOwner->getSaveParam();
 

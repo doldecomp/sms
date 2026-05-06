@@ -15,6 +15,16 @@ There are some things that might seem like low hanging fruit at first sight but 
 These things are usually the hardest ones to get right and so should be left for the very end of matching an entire file, when nothing else remains to be done.
 Instead of these, first and foremost wrong instructions being used and ordering of these instructions should be resolved.
 
+## Function definition order matters
+
+Functions with non-weak symbols must be defined in code in the exact order they appear in the target binary.
+MWCC never reorders symbols, so this is a rule that must never be broken.
+
+## Do not use reinterpret casts to access fields
+
+Never use raw byte offsets and reinterpret casts to access fields -- the codegen from that almost always differs from using proper fields.
+Instead, introduce the relevant fields and use them, or rather even getters/setters if already available.
+
 ## MWCC dislikes reordering
 
 The compiler never reorders memory stores, loads and function calls relative to one another.

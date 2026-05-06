@@ -302,12 +302,12 @@ void TLiveActor::requestShadow()
 
 		local_2c.unk0 = mPosition;
 
-		if (!(mLiveFlag & 0x80 ? 0 : 1)) {
+		if (!isAirborne()) {
 			local_2c.unk0.y = mGroundHeight;
 			local_2c.unk1D  = 0;
 		}
 
-		local_2c.unk10 = local_2c.unkC = mScaledBodyRadius;
+		local_2c.unkC = local_2c.unk10 = mScaledBodyRadius;
 
 		local_2c.unk1C = getShadowType();
 		local_2c.unk14 = mRotation.y;

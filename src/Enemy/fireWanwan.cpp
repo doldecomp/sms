@@ -652,7 +652,7 @@ f32 TFireWanwanTailHit::calcApartPow()
 
 MtxPtr TFireWanwanTailHit::getTakingMtx() { return unk74; }
 
-bool TFireWanwanTailHit::moveRequest(const JGeometry::TVec3<f32>& param_1)
+BOOL TFireWanwanTailHit::moveRequest(const JGeometry::TVec3<f32>& param_1)
 {
 	JGeometry::TVec3<f32> next = param_1;
 
@@ -1432,7 +1432,7 @@ bool TFireWanwan::isDefeat() const
 
 bool TFireWanwan::canTakenByMario() const
 {
-	TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
+	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
 	return nerve == &TNerveFireWanwanEscape::theNerve()
 	       || nerve == &TNerveFireWanwanFreeze::theNerve();
 }
@@ -1449,13 +1449,13 @@ bool TFireWanwan::isFlying() const
 
 bool TFireWanwan::isWalking() const
 {
-	TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
+	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
 	return nerve == &TNerveFireWanwanGraphWander::theNerve();
 }
 
 bool TFireWanwan::isWandering() const
 {
-	TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
+	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
 	return nerve == &TNerveFireWanwanRecover::theNerve()
 	       || nerve == &TNerveFireWanwanTurn::theNerve() || isWalking();
 }
@@ -1533,7 +1533,7 @@ void TFireWanwan::attackToMario()
 	if (!unk194->mIsOnFire)
 		return;
 
-	TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
+	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
 	if (nerve != &TNerveFireWanwanFly::theNerve()
 	    && nerve != &TNerveFireWanwanEscape::theNerve()
 	    && nerve != &TNerveFireWanwanRecover::theNerve()) {

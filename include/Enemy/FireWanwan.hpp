@@ -155,7 +155,7 @@ public:
 
 	BOOL receiveMessage(THitActor*, u32);
 	MtxPtr getTakingMtx();
-	bool moveRequest(const JGeometry::TVec3<f32>&);
+	BOOL moveRequest(const JGeometry::TVec3<f32>&);
 	void behaveTaken(THitActor*);
 	void behaveApart();
 	void init();

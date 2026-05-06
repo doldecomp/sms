@@ -123,6 +123,10 @@ public:
 
 	bool isDemoModeNow() const { return unk124 == 3 || unk124 == 4; }
 
+	// TODO: better names
+	bool isDemoMode3() const { return unk124 == 3; }
+	bool isDemoMode4() const { return unk124 == 4; }
+
 	bool isTalkOrDemoModeNow() const
 	{
 		return isTalkModeNow() || isDemoModeNow();

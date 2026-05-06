@@ -140,6 +140,20 @@ public:
 		unkC->initSimpleMotionBlend(frame);
 	}
 
+	void initNormalMotionBlend()
+	{
+		if (!unkC)
+			return;
+
+		unkC->initNormalMotionBlend();
+	}
+
+	void setBck(int index)
+	{
+		if (!checkCurBckFromIndex(index))
+			setBckFromIndex(index);
+	}
+
 	void copyBckFrmCtrl(J3DFrameCtrl ctrl) { }
 
 	void copyBtpFrmCtrl(J3DFrameCtrl ctrl) { }
