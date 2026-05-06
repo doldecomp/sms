@@ -2,13 +2,17 @@
 #define M3DUTIL_M3U_MODEL_MARIO_HPP
 
 #include <M3DUtil/M3UModel.hpp>
+#include <M3DUtil/M3UJoint.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 
 class M3UMtxCalcSIAnmBlendQuat;
 
 class M3UModelCommonMario : public M3UModelCommon {
 public:
-	virtual J3DMtxCalc* getMtxCalc(const M3UMtxCalcSetInfo& param_1);
+	virtual J3DMtxCalc* getMtxCalc(const M3UMtxCalcSetInfo& param_1)
+	{
+		return &unk18[param_1.mMtxCalcIdx];
+	}
 
 public:
 	/* 0x18 */ M3UMtxCalcSIAnmBlendQuat* unk18;
