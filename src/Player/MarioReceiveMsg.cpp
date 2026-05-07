@@ -95,14 +95,27 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 
 	// Generic "Mario hit by enemy" thump sound.
 	if (sender->checkActorType(0x20000000)) {
-		const u32 senderType = sender->mActorType;
-		bool playThump = senderType == 0x2000000E || senderType == 0x2000000F
-		                 || senderType == 0x20000010 || senderType == 0x20000011
-		                 || senderType == 0x20000013 || senderType == 0x2000001F
-		                 || senderType == 0x20000026 || senderType == 0x20000022
-		                 || senderType == 0x2000002A;
+		bool playThump = true;
+		if (sender->mActorType == 0x2000000E)
+			playThump = false;
+		if (sender->mActorType == 0x2000000F)
+			playThump = false;
+		if (sender->mActorType == 0x20000010)
+			playThump = false;
+		if (sender->mActorType == 0x20000011)
+			playThump = false;
+		if (sender->mActorType == 0x20000013)
+			playThump = false;
+		if (sender->mActorType == 0x2000001F)
+			playThump = false;
+		if (sender->mActorType == 0x20000026)
+			playThump = false;
+		if (sender->mActorType == 0x20000022)
+			playThump = false;
+		if (sender->mActorType == 0x2000002A)
+			playThump = false;
 
-		if (playThump)
+		if (playThump == true)
 			SMSGetMSound()->startSoundActor(0x180C, &mPosition, 0, nullptr, 0,
 			                                4);
 	}
@@ -226,7 +239,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				unk384          = sender;
 				mPosition.x     = sender->mPosition.x;
 				mPosition.z     = sender->mPosition.z;
-				mFaceAngle.y    = DEG2SHORTANGLE(sender->mRotation.y);
+				mFaceAngle.y    = DEG2SHORTANGLE(*(f32*)((u8*)sender + 0x11C));
 				mModelFaceAngle = mFaceAngle.y;
 				setPlayerVelocity(0.0f);
 				mHealth = mDeParams.mHpMax.get();
@@ -370,6 +383,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				return TRUE;
 			}
 			break;
+
 		case 0x10000037:
 		case 0x10000013: // dispatched as enemy common, drops cap
 			if (message == HIT_MESSAGE_ATTACK && !isInvincible()) {
@@ -384,6 +398,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				return TRUE;
 			}
 			break;
+
 		case 0x4000019B: // hamukuri (alternate)
 		case 0x10000002: // hamukuri
 			if (message == HIT_MESSAGE_ATTACK && !isInvincible()) {
@@ -409,6 +424,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				return TRUE;
 			}
 			// fallthrough
+
 		case 0x1000000B:
 		case 0x10000021:
 		case 0x10000034: // elec attacker
@@ -417,9 +433,10 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				changePlayerStatus(0x20338, 0, false);
 				return TRUE;
 			}
-			keepDistance(sender->mPosition, 30.0f + sender->mDamageRadius,
+			keepDistance(sender->mPosition, sender->getDamageRadius() + 30.0f,
 			             0.0f);
 			return TRUE;
+
 		case 0x1000001F: // killer (bullet bill)
 			if ((message == HIT_MESSAGE_UNKA || message == HIT_MESSAGE_ATTACK)
 			    && !isInvincible()) {
@@ -439,7 +456,40 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				return TRUE;
 			}
 			break;
-		default:
+
+		case 0x0800000F:
+		case 0x08000010:
+		case 0x08000011:
+		case 0x08000012:
+		case 0x10000004:
+		case 0x10000006:
+		case 0x10000007:
+		case 0x10000008:
+		case 0x10000009:
+		case 0x1000000C:
+		case 0x10000010:
+		case 0x10000012:
+		case 0x10000014:
+		case 0x10000016:
+		case 0x10000017:
+		case 0x10000018:
+		case 0x10000019:
+		case 0x1000001A:
+		case 0x1000001B:
+		case 0x1000001C:
+		case 0x1000001D:
+		case 0x10000020:
+		case 0x10000022:
+		case 0x10000024:
+		case 0x10000025:
+		case 0x10000029:
+		case 0x1000002A:
+		case 0x1000002C:
+		case 0x1000002D:
+		case 0x1000002E:
+		case 0x1000002F:
+		case 0x10000033:
+		case 0x10000036: // common enemy
 			if (message == HIT_MESSAGE_ATTACK && !isInvincible()) {
 				damageExec(sender, mDmgParamsEnemyCommon.mDamage.get(),
 				           mDmgParamsEnemyCommon.mDownType.get(),
@@ -450,7 +500,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				           mDmgParamsEnemyCommon.mInvincibleTime.get());
 				return TRUE;
 			}
-			keepDistance(sender->mPosition, 30.0f + sender->getDamageRadius(),
+			keepDistance(sender->mPosition, sender->getDamageRadius() + 30.0f,
 			             0.0f);
 			return TRUE;
 		case 0x40000053: // boss-graffito-tongue / sea attacker
@@ -500,8 +550,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				           mDmgParamsFire.mInvincibleTime.get());
 				return TRUE;
 			}
-			if ((message == HIT_MESSAGE_UNKA || message == 0xB)
-			    && !isInvincible()) {
+			if (((u32)(message - 9) <= 1U) && !isInvincible()) {
 				damageExec(sender, mDmgParamsFire.mDamage.get(),
 				           mDmgParamsFire.mDownType.get(),
 				           mDmgParamsFire.mWaterEmit.get(),
@@ -544,8 +593,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		}
 		return FALSE;
 
+	case 0x0800002A:
 	case 0x0800002C:
-	case 0x08000030:
 		if (message == HIT_MESSAGE_ATTACK && !isInvincible()) {
 			damageExec(sender, mDmgParamsEnemyCommon.mDamage.get(),
 			           mDmgParamsEnemyCommon.mDownType.get(),
@@ -576,6 +625,9 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			}
 			return TRUE;
 		}
+		break;
+
+	case 0x08000005:
 		break;
 
 	case 0x08000013: // BG tentacle
@@ -631,10 +683,18 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		}
 		break;
 
-	case 0x08000027:
+	case 0x08000006:
+	case 0x08000007:
+	case 0x08000008:
+	case 0x08000010:
+	case 0x08000011:
+	case 0x08000012:
 	case 0x0800001F:
-	case 0x10000035:
+	case 0x08000022:
+	case 0x08000023:
+	case 0x08000027:
 	case 0x1000000F:
+	case 0x10000035:
 		switch (message) {
 		case HIT_MESSAGE_TAKE:
 			if (!isInvincible() && mHeldObject == nullptr
@@ -646,13 +706,13 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			break;
 		case HIT_MESSAGE_ATTACK:
 			if (!isInvincible()) {
-				damageExec(sender, mDmgParamsHanachanBoss.mDamage.get(),
-				           mDmgParamsHanachanBoss.mDownType.get(),
-				           mDmgParamsHanachanBoss.mWaterEmit.get(),
-				           mDmgParamsHanachanBoss.mMinSpeed.get(),
-				           mDmgParamsHanachanBoss.mMotor.get(),
-				           mDmgParamsHanachanBoss.mDirty.get(),
-				           mDmgParamsHanachanBoss.mInvincibleTime.get());
+				damageExec(sender, mDmgParamsBGTentacle.mDamage.get(),
+				           mDmgParamsBGTentacle.mDownType.get(),
+				           mDmgParamsBGTentacle.mWaterEmit.get(),
+				           mDmgParamsBGTentacle.mMinSpeed.get(),
+				           mDmgParamsBGTentacle.mMotor.get(),
+				           mDmgParamsBGTentacle.mDirty.get(),
+				           mDmgParamsBGTentacle.mInvincibleTime.get());
 				return TRUE;
 			}
 			break;
@@ -682,7 +742,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		}
 		// fallthrough
 
-	case 0x08000014: // common enemy-2
+	case 0x08000014:
+	case 0x08000015: // common enemy-2
 		if (message == HIT_MESSAGE_ATTACK && !isInvincible()) {
 			damageExec(sender, mDmgParamsHanachanBoss.mDamage.get(),
 			           mDmgParamsHanachanBoss.mDownType.get(),
@@ -695,6 +756,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		}
 		// fallthrough
 
+	case 0x4000002A:
 	case 0x4000002C: { // big spinning enemy with rotation-based attack window
 		if (mInput & 0x8000) {
 			s16 attackAngle = getAttackAngle(sender);
@@ -776,7 +838,16 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		}
 		break;
 
-	default:
+	case 0x4000002D:
+	case 0x4000002E:
+	case 0x40000032:
+	case 0x40000034:
+	case 0x40000035:
+	case 0x40000036:
+	case 0x40000037:
+	case 0x40000039:
+	case 0x4000003A:
+	case 0x4000005A:
 		if (message == HIT_MESSAGE_UNK8) {
 			changePlayerStatus(0x0C400201, 0, false);
 			mHeldObject = nullptr;
@@ -799,7 +870,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 	case 0x400000A5:
 	case 0x4000009C: // bird/butterfly: keep distance only
 		if (message == HIT_MESSAGE_ATTACK) {
-			keepDistance(sender->mPosition, 30.0f + sender->getDamageRadius(),
+			keepDistance(sender->mPosition, sender->getDamageRadius() + 30.0f,
 			             0.0f);
 			return TRUE;
 		}
@@ -816,11 +887,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		}
 		break;
 
-	case 0x40000033:
-	case 0x40000038:
 	case 0x40000246:
-	case 0x0800002B:
-		// no-op for these actor types
 		break;
 	}
 
