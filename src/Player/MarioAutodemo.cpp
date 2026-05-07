@@ -10,6 +10,10 @@
 #include <Player/MarioCap.hpp>
 #include <JSystem/JMath.hpp>
 
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+
 #pragma dont_inline on
 BOOL TMario::winDemo()
 {
