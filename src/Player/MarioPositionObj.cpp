@@ -5,25 +5,18 @@ void TMarioPositionObj::load(JSUMemoryInputStream& stream)
 	JDrama::TNameRef::load(stream);
 
 	char buffer[0x50];
+	u32 i;
 
-	u32 i = 0;
-	while (i < 8 && stream.getLength() > (u32)stream.getPosition() + 36) {
-		stream.readString(buffer, 0x50);
+	JGeometry::TVec3<f32> tmp;
+	for (i = 0; i < 8
+	            && stream.getLength() > stream.getPosition()
+	                                        + 3 * sizeof(JGeometry::TVec3<f32>);
+	     i++) {
+		stream.readString(buffer, sizeof(buffer));
 
-		stream.read(&unk10[i].x, 4);
-		stream.read(&unk10[i].y, 4);
-		stream.read(&unk10[i].z, 4);
-
-		stream.read(&unk70[i].x, 4);
-		stream.read(&unk70[i].y, 4);
-		stream.read(&unk70[i].z, 4);
-
-		JGeometry::TVec3<f32> tmp;
-		stream.read(&tmp.x, 4);
-		stream.read(&tmp.y, 4);
-		stream.read(&tmp.z, 4);
-
-		i++;
+		stream >> unk10[i].x >> unk10[i].y >> unk10[i].z;
+		stream >> unk70[i].x >> unk70[i].y >> unk70[i].z;
+		stream >> tmp.x >> tmp.y >> tmp.z;
 	}
 
 	unkD0 = i;

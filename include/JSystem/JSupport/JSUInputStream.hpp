@@ -129,9 +129,21 @@ public:
 		return *this;
 	}
 
+	JSUInputStream& operator>>(s32& p)
+	{
+		read(&p, sizeof(s32));
+		return *this;
+	}
+
 	JSUInputStream& operator>>(u32& p)
 	{
 		read(&p, sizeof(u32));
+		return *this;
+	}
+
+	JSUInputStream& operator>>(f32& p)
+	{
+		read(&p, sizeof(f32));
 		return *this;
 	}
 };
