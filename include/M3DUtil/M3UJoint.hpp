@@ -8,7 +8,6 @@ class M3UMtxCalcSIAnmBlendQuat : public J3DMtxCalcSoftimage {
 public:
 	M3UMtxCalcSIAnmBlendQuat();
 	M3UMtxCalcSIAnmBlendQuat(bool);
-	~M3UMtxCalcSIAnmBlendQuat() { }
 
 	void calc(u16);
 	void init(const Vec&, const Mtx&);

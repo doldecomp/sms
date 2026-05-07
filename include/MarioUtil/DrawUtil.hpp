@@ -59,7 +59,7 @@ public:
 	void init(J3DModel*);
 
 	// Fabricated
-	bool checkUnk8(u8 flag) { return unk8 & flag ? true : false; }
+	BOOL checkUnk8(u8 flag) { return unk8 & flag ? TRUE : FALSE; }
 
 public:
 	/* 0x0 */ J3DModel* unk0;

@@ -23,11 +23,14 @@
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 #include <System/MarDirector.hpp>
 #include <NPC/NpcBase.hpp>
+#include <math.h>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
+
+TMario* gpMarioForCallBack;
 
 static unkTMarioAnimeFilesStruct marioAnimeFiles[199] = {
 	{ 0x00000001, "hgup" },
@@ -594,15 +597,15 @@ bool TMarioAnimeData::isPumpOK() const
 	return true;
 }
 
-int MarioHeadCtrl(J3DNode* param_1, int param_2)
+static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 {
 	// volatile u32 padding[34];
 	Mtx transform;
 	if (param_2 == 0) {
 		if (gpMarioForCallBack->mAction == 0x10001308) {
-			if (gpMarDirector->unkA0 == nullptr) {
+			if (gpMarDirector->unkA0 == nullptr)
 				return 0;
-			}
+
 			JGeometry::TVec3<f32> npcResetToPos;
 			gpMarDirector->unkA0->resetToPosition(npcResetToPos);
 			JGeometry::TVec3<f32> pos;
@@ -610,8 +613,8 @@ int MarioHeadCtrl(J3DNode* param_1, int param_2)
 			pos.y = gpMarioForCallBack->mPosition.y + 112.0f;
 			pos.z = gpMarioForCallBack->mPosition.z;
 			JGeometry::TVec3<f32> other = npcResetToPos - pos;
-			f32 mult                    = other.squared();
-			if (mult > 0.0f) { }
+
+			f32 mult = std::sqrtf(other.x * other.x + other.z * other.z);
 
 			s16 angle = -matan(mult, other.y);
 			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(angle));
@@ -624,9 +627,10 @@ int MarioHeadCtrl(J3DNode* param_1, int param_2)
 				               SHORTANGLE2DEG(headAngle));
 			}
 		} else if (gpMarioForCallBack->mAction == 0xC400201
-		           && gpMarioForCallBack->mUpperBodyParams.mFeelDeepHeadAngle
-		                      .get()
-		                  < gpMarioForCallBack->unk370) {
+		           && (gpMarioForCallBack->unk370
+		                       > gpMarioForCallBack->mDeParams.mFeelDeep.get()
+		                   ? true
+		                   : false)) {
 			s16 headAngle
 			    = gpMarioForCallBack->mUpperBodyParams.mFeelDeepHeadAngle.get();
 			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(headAngle));
@@ -647,9 +651,8 @@ int MarioHeadCtrl(J3DNode* param_1, int param_2)
 
 			s16 headAngle = mario->unk100 * anmSpeed;
 			MsMtxSetRotRPH(transform, 0.0f, SHORTANGLE2DEG(headAngle), 0.0f);
-			s16 gunAngle = gpMarioForCallBack->mWaterGun->getCurrentNozzle()
-			                   ->getGunAngle()
-			               / 2;
+			const TWaterGun* gun = gpMarioForCallBack->mWaterGun;
+			s16 gunAngle         = gun->getCurrentNozzle()->getGunAngle() / 2;
 			if (gunAngle < 0) {
 				Mtx gunMtx;
 				MsMtxSetRotRPH(gunMtx, 0.0f, 0.0f, SHORTANGLE2DEG(gunAngle));
@@ -662,7 +665,7 @@ int MarioHeadCtrl(J3DNode* param_1, int param_2)
 	return 1;
 }
 
-int MarioWaistCtrl(J3DNode* param_1, int param_2)
+static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 {
 	volatile u32 padding[3];
 	if (param_2 == 0) {
@@ -671,17 +674,17 @@ int MarioWaistCtrl(J3DNode* param_1, int param_2)
 		if (mario == gpMarioOriginal
 		    && gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode) == 1
 		    && gpMarioForCallBack->canBendBody() != 0 && gpCamera->unkA4 > 0) {
-			unk = &gpCamera->unkA4; // This feels wrong
+			*unk = gpCamera->unkA4;
 			Mtx transform;
-			MsMtxSetRotRPH(transform, SHORTANGLE2DEG(mario->unk100), 0.0f,
+			MsMtxSetRotRPH(transform, SHORTANGLE2DEG(-mario->unk100), 0.0f,
 			               SHORTANGLE2DEG(gpCamera->unkA4));
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
 		} else if (gpMarioForCallBack->checkActionFlag(MARIO_FLAG_HAS_FLUDD)
 		           && !gpMarioForCallBack->onYoshi()) {
-			TNozzleBase* currentNozzle
-			    = gpMarioForCallBack->mWaterGun->getCurrentNozzle();
-			s16 gunAngle = currentNozzle->getGunAngle();
+			const TWaterGun* gun       = gpMarioForCallBack->mWaterGun;
+			TNozzleBase* currentNozzle = gun->getCurrentNozzle();
+			s16 gunAngle               = currentNozzle->getGunAngle();
 			if (gunAngle > 0) {
 				Mtx gunMtx;
 				MsMtxSetRotRPH(gunMtx, 0.0f, 0.0f, SHORTANGLE2DEG(gunAngle));
@@ -715,7 +718,7 @@ int MarioWaistCtrl(J3DNode* param_1, int param_2)
 	return 1;
 }
 
-int MarioFootPosRCtrl(J3DNode* param_1, int param_2)
+static int MarioFootPosRCtrl(J3DNode* param_1, int param_2)
 {
 	// volatile u32 padding[9];
 	if (param_2 == 0) {
@@ -759,7 +762,7 @@ int MarioFootPosRCtrl(J3DNode* param_1, int param_2)
 	return 1;
 }
 
-int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
+static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
 
@@ -837,7 +840,7 @@ int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 	return 1;
 }
 
-int MarioFootPosLCtrl(J3DNode* param_1, int param_2)
+static int MarioFootPosLCtrl(J3DNode* param_1, int param_2)
 {
 	// volatile u32 padding[9];
 	if (param_2 == 0) {
@@ -881,7 +884,7 @@ int MarioFootPosLCtrl(J3DNode* param_1, int param_2)
 	return 1;
 }
 
-int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
+static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
 
@@ -1129,7 +1132,7 @@ void TMario::changeHand(int idx)
 
 f32 TMario::setAnimation(int param_1, f32 param_2)
 {
-	volatile u32 padding[37];
+	// volatile u32 padding[37];
 	if (onYoshi()) {
 		if (param_1 == 0x5a) {
 			mYoshi->changeAnimation(0x12);
@@ -1223,24 +1226,24 @@ f32 TMario::setAnimation(int param_1, f32 param_2)
 			    0, 0, gMarioAnimeData[param_1].unk0);
 			mModel->unk20->unk18->unk50 = 0.0f;
 			getMotionFrameCtrl().setAttribute(
-			    mModel->unk4->unk4[param_1]->mAttribute);
-			s8 unk1 = gMarioAnimeData[param_1].unk4;
-			if (mTrembleModelEffect != nullptr
-			    && (mTrembleModelEffect->checkUnk8(1))) {
-				unk1 = 8;
-			}
-			if (unk1 < 0x18) {
-				mModel->changeMtxCalcAnmTransform(0, unk1);
-			}
+			    mModel->unk4->unk4[gMarioAnimeData[param_1].unk0]->mAttribute);
 
+			int unk1 = gMarioAnimeData[param_1].unk4;
+			if (mTrembleModelEffect != nullptr
+			    && mTrembleModelEffect->checkUnk8(1))
+				unk1 = 8;
+
+			if (unk1 < 0x18)
+				mModel->changeAnmTexPattern(0, unk1);
+
+			u16 r0 = gMarioAnimeData[param_1].unk0;
 			u32 unk; // SoundId?
-			if (param_2 >= 0.0f) {
-				unk = -1;
-			} else {
+			if (param_2 >= 0.0f)
 				unk = 1;
-			}
-			mAnmSound->initAnmSound(
-			    &mAnmSoundTbl[gMarioAnimeData[param_1].unk0], unk, 0.0f);
+			else
+				unk = -1;
+
+			mAnmSound->initAnmSound(mAnmSoundTbl[r0], unk, 0.0f);
 
 			changeHand(gMarioAnimeData[param_1].unk5);
 		}
@@ -1622,18 +1625,13 @@ void TMario::finalDrawInitialize()
 	changeHand(0);
 	SMS_MakeDLAndLock(mModel->unk8);
 
-	// Something feels weird around here
-	int packetId = 0;
-	for (int i = 0; i < mBodyModelData->getMaterialNum(); ++i) {
-		if (i == unk3D4 || i == unk3D6) {
-			mModel->unk8->mMatPackets[packetId].offFlag(0x1);
-		}
-		packetId++;
-	}
+	for (int i = 0; i < mBodyModelData->getMaterialNum(); ++i)
+		if (i == unk3D4 || i == unk3D6)
+			mModel->getModel()->mMatPackets[i].offFlag(0x1);
 
-	for (int i = 0; i < mBodyModelData->getMaterialNum(); ++i) {
-		SMS_InitPacket_OneTevKColorAndFog(mModel->unk8, i, GX_KCOLOR0, nullptr);
-	}
+	for (int i = 0; i < mBodyModelData->getMaterialNum(); ++i)
+		SMS_InitPacket_OneTevKColorAndFog(mModel->getModel(), i, GX_KCOLOR0,
+		                                  nullptr);
 }
 
 bool TMario::isUpperPumpingStyle() const
@@ -2203,8 +2201,10 @@ void TMario::boxDrawPrepare(MtxPtr mtx)
 	f32 wpsave[5];
 	GXGetViewportv(wpsave);
 
-	GXProject(mPosition.x, mPosition.y + 80.0f, mPosition.z, mtx, psave, wpsave,
-	          &mMarioScreenPos.x, &mMarioScreenPos.y, &mMarioScreenPos.z);
+	JGeometry::TVec3<f32> pos = mPosition;
+	pos.y += 80.0f;
+	GXProject(pos.x, pos.y, pos.z, mtx, psave, wpsave, &mMarioScreenPos.x,
+	          &mMarioScreenPos.y, &mMarioScreenPos.z);
 
 	GXClearVtxDesc();
 	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
@@ -2213,6 +2213,9 @@ void TMario::boxDrawPrepare(MtxPtr mtx)
 
 	Mtx stackMtx;
 	MTXScale(stackMtx, 200.0f, 200.0f, 200.0f);
+	stackMtx[0][3] = pos.x;
+	stackMtx[1][3] = pos.y;
+	stackMtx[2][3] = pos.z;
 
 	MTXConcat(mtx, stackMtx, stackMtx);
 
