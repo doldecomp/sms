@@ -107,7 +107,7 @@ public:
 	TNozzleBase(const char* name, const char* prm, TWaterGun* fludd);
 
 	virtual void init();
-	virtual s32 getNozzleKind() const;
+	virtual s32 getNozzleKind() const { return 0; }
 	virtual s16 getGunAngle() { return unk36E; }
 	virtual s16 getWaistAngle() { return unk370; }
 	virtual void movement(const TMarioControllerWork&);
