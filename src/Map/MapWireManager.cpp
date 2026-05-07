@@ -10,7 +10,7 @@
 
 void TMapWireActor::checkTakingActor() { }
 
-void TMapWireActor::getPosInWire() const { }
+f32 TMapWireActor::getPosInWire() const { }
 
 void TMapWireActor::getTipPoints(JGeometry::TVec3<f32>*,
                                  JGeometry::TVec3<f32>*) const

@@ -6,6 +6,7 @@
 #include <System/ParamInst.hpp>
 #include <System/DrawSyncCallback.hpp>
 #include <Strategic/TakeActor.hpp>
+#include <Player/WaterGun.hpp>
 
 class TLiveActor;
 class TWaterGun;
@@ -599,8 +600,8 @@ public:
 		TParamRT<s16> mRecoverTimer;
 		TParamRT<s16> mHotTimer;
 		TParamRT<f32> mFeelDeep;
-		TParamRT<f32> mDamageFallHeight;
-		TParamRT<f32> mForceSlipAngle;
+		/* 0x33C */ TParamRT<f32> mDamageFallHeight;
+		/* 0x350 */ TParamRT<f32> mForceSlipAngle;
 		TParamRT<f32> mClashSpeed;
 		TParamRT<f32> mHangWallMovableAngle;
 		TParamRT<f32> mColMvMax;
@@ -609,8 +610,8 @@ public:
 		TParamRT<s16> mSurfStartFreezeTime;
 		TParamRT<f32> mSleepingCheckDist;
 		TParamRT<f32> mSleepingCheckHeight;
-		TParamRT<s16> mIllegalPlaneCtInc;
-		TParamRT<s16> mIllegalPlaneTime;
+		/* 0x404 */ TParamRT<s16> mIllegalPlaneCtInc;
+		/* 0x418 */ TParamRT<s16> mIllegalPlaneTime;
 	};
 
 public:
@@ -1118,8 +1119,7 @@ public:
 	void getCoinRed();
 	void getCoin();
 	void getGesso(THitActor*);
-	// TODO: TWaterGun
-	// void getNozzle(THitActor*, TWaterGun::TNozzleType);
+	bool getNozzle(THitActor*, TWaterGun::TNozzleType);
 	void startSoundActor(u32);
 	void stopVoice();
 	void startVoiceIfNoVoice(u32);
@@ -1275,10 +1275,10 @@ public:
 	/* 0x13C */ u32 unk13C;
 	/* 0x140 */ u32 unk140;
 	/* 0x144 */ u32 unk144;
-	/* 0x148 */ u32 unk148;
+	/* 0x148 */ THitActor* unk148;
 	/* 0x14C */ s16 unk14C;
-	/* 0x14E */ u16 unk14E;
-	/* 0x150 */ u32 unk150;
+	/* 0x14E */ s16 unk14E;
+	/* 0x150 */ s16 unk150;
 	/* 0x154 */ TWaterEmitInfo* unk154;
 	/* 0x158 */ u32 unk158;
 	/* 0x15C */ u32 unk15C;

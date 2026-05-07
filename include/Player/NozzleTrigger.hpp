@@ -2,7 +2,6 @@
 #define NOZZLETRIGGER_HPP
 
 #include <Player/NozzleBase.hpp>
-#include <Player/MarioMain.hpp>
 
 class TNozzleTrigger : public TNozzleBase {
 public:
