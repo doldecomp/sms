@@ -4,11 +4,12 @@
 #include <Player/NozzleBase.hpp>
 #include <Player/NozzleTrigger.hpp>
 #include <Player/NozzleDeform.hpp>
-#include <Player/MarioMain.hpp>
 #include <Player/Yoshi.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <Strategic/MirrorActor.hpp>
+
+class TMultiMtxEffect;
 
 class TWaterGunParams : public TParams {
 public:
@@ -174,6 +175,19 @@ public:
 	}
 
 	// Fabricated
+	void addWater(s32 amount)
+	{
+		mCurrentWater += amount;
+		s32 maxWater = getMaxWater();
+		if (mCurrentWater > maxWater) {
+			mCurrentWater = maxWater;
+		}
+	}
+
+	// Fabricated
+	void resetWaterToFull() { mCurrentWater = getMaxWater(); }
+
+	// Fabricated
 	void updateUnk1C88(u8 emittedWater)
 	{
 		mIsEmitWater = emittedWater;
@@ -182,6 +196,12 @@ public:
 		unk1C88 += 10.0f
 		           * ((f32)emittedWater * (f32)decRate
 		              / mNozzleList[0]->mEmitParams.mAmountMax.get());
+	}
+
+	// Fabricated
+	s32 getMaxWater() const
+	{
+		return getCurrentNozzle()->mEmitParams.mAmountMax.get();
 	}
 
 	// Fabricated
@@ -204,6 +224,7 @@ public:
 		return false;
 	}
 
+public:
 	/* 0x0004 */ u16 mFlags;
 	/* 0x0008 */ TMario* mMario;
 	/* 0x000C */ TNozzleDeform mNozzleDeform;
