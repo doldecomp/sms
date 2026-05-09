@@ -684,7 +684,7 @@ public:
 	void thinkDashEffect();
 	void addDamageFog(JDrama::TGraphics*);
 	void addDirty();
-	void boxDrawPrepare(f32 (*)[4]);
+	void boxDrawPrepare(MtxPtr);
 	void drawLogic();
 	void entryModels(JDrama::TGraphics*);
 	void calcView(JDrama::TGraphics*);
@@ -695,10 +695,10 @@ public:
 	void addCallBack(JDrama::TGraphics*);
 	void calcAnimHands();
 	void calcAnimBody(u32, JDrama::TGraphics*);
-	void calcBaseMtx(f32 (*)[4]);
-	void calcBaseMtxSwim(f32 (*)[4]);
-	void calcBaseMtxPole(f32 (*)[4]);
-	void calcBaseMtxTorocco(f32 (*)[4]);
+	void calcBaseMtx(MtxPtr);
+	void calcBaseMtxSwim(MtxPtr);
+	void calcBaseMtxPole(MtxPtr);
+	void calcBaseMtxTorocco(MtxPtr);
 	void considerWaist();
 	bool isUpperPumpingStyle() const;
 	void finalDrawInitialize();
@@ -802,9 +802,35 @@ public:
 	void checkPlayerAction(JDrama::TGraphics*);
 	void checkRideReCalc();
 	void checkRideMovement();
-	void getActorMtx(const THitActor&, f32 (*)[4]);
+	void getActorMtx(const THitActor&, MtxPtr);
 	void checkCurrentPlane();
-	void getDmgMapCode(int) const;
+	const TEParams& getDmgMapCode(int param_1) const
+	{
+		switch (param_1) {
+		case 0:
+			return mDmgMapParams0;
+		case 1:
+			return mDmgMapParams1;
+		case 2:
+			return mDmgMapParams2;
+		case 3:
+			return mDmgMapParams3;
+		case 4:
+			return mDmgMapParams4;
+		case 5:
+			return mDmgMapParams5;
+		case 6:
+			return mDmgMapParams6;
+		case 7:
+			return mDmgMapParams7;
+		case 8:
+			return mDmgMapParams8;
+		case 9:
+			return mDmgMapParams9;
+		default:
+			return mDmgMapParams0;
+		}
+	}
 	void checkGroundPlane(f32, f32, f32, f32*, const TBGCheckData**);
 	void makeHistory();
 	void checkStickSmash();
@@ -826,28 +852,28 @@ public:
 	void checkGraffitoFire();
 	void checkGraffitoDamage();
 	void makeGraffitoDamage(const TMario::TEParams&);
-	void checkAllMotions();
+	int checkAllMotions();
 	BOOL changePlayerDropping(u32, u32);
 	BOOL changePlayerJumping(u32, u32);
 	void changePlayerTriJump();
 	BOOL changePlayerStatus(u32, u32, bool);
 	void throwMario(const JGeometry::TVec3<f32>&, f32);
-	void setStatusToRunning(u32, u32);
-	void setStatusToJumping(u32, u32);
+	u32 setStatusToRunning(u32, u32);
+	u32 setStatusToJumping(u32, u32);
 	void setPlayerJumpSpeed(f32, f32);
 	void setMissJumping();
 	void isTurnning();
 	void isTurnStart();
-	void checkPlayerAround(int, f32);
+	f32 checkPlayerAround(int, f32);
 	void isJumpMiss();
 	void isSlipLimit();
 	void getSlideStopCatch();
 	void getSlideStopNormal();
 	void canSlipJump();
 	void isSlipStart();
-	void isFrontSlip(int);
+	BOOL isFrontSlip(int);
 	void checkRoofPlane(const Vec&, f32, const TBGCheckData**);
-	void checkWallPlane(Vec*, f32, f32);
+	TBGCheckData* checkWallPlane(Vec*, f32, f32);
 	void setPlayerVelocity(f32);
 	void setNormalAttackArea();
 	void changePos(const Vec&);
@@ -860,12 +886,12 @@ public:
 	void windMove(const JGeometry::TVec3<f32>&);
 	void flowMove(const JGeometry::TVec3<f32>&);
 	void warpRequest(const JGeometry::TVec3<f32>&, f32);
-	void isForceSlip();
-	void getRidingMtx(f32 (*)[4]);
+	bool isForceSlip();
+	void getRidingMtx(MtxPtr);
 	bool isWallInFront() const;
 	bool isInvincible() const;
 	bool isUnderWater() const;
-	void canSquat() const;
+	bool canSquat() const;
 	f32 getJumpSlideControl() const;
 	f32 getJumpAccelControl() const;
 	int jumpProcess(int);
@@ -882,7 +908,7 @@ public:
 	void keepDistance(const THitActor&, f32);
 	void keepDistance(const JGeometry::TVec3<f32>&, f32, f32);
 	void playerRefrection(int);
-	void moveMain();
+	BOOL moveMain();
 	void broadJumpSlip();
 	void ultraJumpSlip();
 	void uTurnJumpSlip();
@@ -947,7 +973,7 @@ public:
 	void postureControl();
 	void isThrowStart();
 	void considerRotateStart();
-	void specMain();
+	BOOL specMain();
 	void fencePunch();
 	void fenceMove();
 	void fenceJumpCatch();
@@ -1049,7 +1075,7 @@ public:
 	void emitParticle(int);
 	void moveParticle();
 	void initParticle();
-	void waitMain();
+	BOOL waitMain();
 	void slipEnd();
 	void brakeEnd();
 	void hipAttackEnd();
@@ -1079,7 +1105,7 @@ public:
 	void canPut();
 	void canSleep();
 	void startTalking();
-	void swimMain();
+	BOOL swimMain();
 	void swimPDown();
 	void swimDown();
 	void swimPDamage();
@@ -1230,7 +1256,8 @@ public:
 	/* 0xB4 */ f32 mSlideVelX;
 	/* 0xB8 */ f32 mSlideVelZ;
 
-	/* 0xBC */ char unkBC[0x1C];
+	/* 0xBC */ f32 unkBC;
+	/* 0xC0 */ char unkC0[0x18];
 
 	/* 0xD8 */ const TBGCheckData* mWallPlane;   // TBGCheckData 0xD8
 	/* 0xDC */ const TBGCheckData* mRoofPlane;   // TBGCheckData 0xDC
@@ -1240,7 +1267,7 @@ public:
 	/* 0xE8 */ JGeometry::TVec3<f32> mFloorPosition;
 
 	/* 0xF4 */ s16 mSlopeAngle;
-	/* 0xF6 */ u16 unkF6;
+	/* 0xF6 */ s16 unkF6;
 
 	/* 0xF8 */ u16 mLightID;
 	/* 0xFA */ u16 mAnimationId;
@@ -1281,7 +1308,7 @@ public:
 	/* 0x150 */ s16 unk150;
 	/* 0x154 */ TWaterEmitInfo* unk154;
 	/* 0x158 */ u32 unk158;
-	/* 0x15C */ u32 unk15C;
+	/* 0x15C */ f32 unk15C;
 	/* 0x160 */ JGeometry::TVec3<f32>
 	    unk160[4]; // Bone position, probably larger array
 	/* 0x190 */ u32 unk190;
@@ -1305,14 +1332,17 @@ public:
 	/* 0x2A8 */ JGeometry::TVec3<f32> unk2A8;
 	/* 0x2B4 */ S16Vec unk2B4;
 	/* 0x2BC */ f32 unk2BC;
-	/* 0x2C0 */ char unk2C0[0x314 - 0x2C0];
+	/* 0x2C0 */ const TLiveActor* unk2C0;
+	/* 0x2C4 */ char unk2C4[0x314 - 0x2C4];
 	/* 0x314 */ f32 unk314;
 	/* 0x318 */ char unk318[0x348 - 0x318];
 	/* 0x348 */ f32 unk348;
 	/* 0x34C */ u16 unk34C;
 	/* 0x34E */ u16 unk34E;
 	/* 0x350 */ s32 unk350;
-	/* 0x354 */ char unk354[0x370 - 0x354];
+	/* 0x354 */ char unk354[0x368 - 0x354];
+	/* 0x368 */ f32 unk368;
+	/* 0x36C */ f32 unk36C;
 	/* 0x370 */ f32 unk370;
 	/* 0x374 */ u32 unk374;
 	/* 0x378 */ u32 unk378;
@@ -1389,8 +1419,8 @@ public:
 	/* 0x530 */ s16* unk530;
 	/* 0x534 */ u8 unk534;
 	/* 0x535 */ u8 unk535;
-	/* 0x536 */ u16 unk536;
-	/* 0x538 */ u16 unk538;
+	/* 0x536 */ s16 unk536;
+	/* 0x538 */ s16 unk538;
 	/* 0x53A */ u8 unk53A;
 	/* 0x53B */ u8 unk53B;
 	/* 0x53C */ TTrembleModelEffect* mTrembleModelEffect;
@@ -1430,7 +1460,7 @@ public:
 	/* 0x132C */ TWireParams mWireParams;
 
 	// TODO: Should these be an array indexed by an enum?
-	TPullParams mPullParamsBGBeak;
+	/* 0x1474 */ TPullParams mPullParamsBGBeak;
 	TPullParams mPullParamsBGTentacle;
 	TPullParams mPullParamsBGFireWanWanBossTail;
 	TPullParams mPullParamsFireWanWanTail;
@@ -1445,12 +1475,12 @@ public:
 	TSurfingParams mSurfingParamsGroundGreen;
 
 	/* 0x2138 */ THHoverParams mHoverParams;
-	TDivingParams mDivingParams;
+	/* 0x217C */ TDivingParams mDivingParams;
 	TYoshiParams mYoshiParams;
 	TWaterEffectParams mWaterEffectParams;
 	TControllerParams mControllerParams;
-	TGraffitoParams mGraffitoParams;
-	TDirtyParams mDirtyParams;
+	/* 0x2408 */ TGraffitoParams mGraffitoParams;
+	/* 0x25B4 */ TDirtyParams mDirtyParams;
 	TMotorParams mMotorParams;
 	TParticleParams mParticleParams;
 	TEffectParams mEffectParams;
@@ -1468,7 +1498,7 @@ public:
 	TUpperParams mUpperBodyParams;
 
 	// TODO: Should these be an array indexed by an enum?
-	TEParams mDmgParamsEnemyCommon;
+	/* 0x30D0 */ TEParams mDmgParamsEnemyCommon;
 	TEParams mDmgParamsHamakuri;
 	TEParams mDmgParamsNamekuri;
 	TEParams mDmgParamsHinokuri;
@@ -1488,7 +1518,7 @@ public:
 	TEParams mDmgParamsGraffitoLava;
 	TEParams mDmgParamsWaterSurface;
 
-	TEParams mDmgMapParams0;
+	/* 0x3BCC */ TEParams mDmgMapParams0;
 	TEParams mDmgMapParams1;
 	TEParams mDmgMapParams2;
 	TEParams mDmgMapParams3;
