@@ -730,47 +730,47 @@ public:
 	Mtx* getRootAnmMtx();
 	void getHeadRot();
 	void getJumpIntoWaterModelData();
-	void jumpMain();
+	int jumpMain();
 	void fallDead();
-	void diving();
-	void hipAttacking();
+	int diving();
+	int hipAttacking();
 	void pullJumping();
 	void wireJumping();
 	void rotateJumping();
-	void rocketing();
-	void rocketCheck();
-	void boardJumping();
-	void rotateBroadJumping();
+	int rocketing();
+	int rocketCheck();
+	int boardJumping();
+	int rotateBroadJumping();
 	void broadJumping();
 	void fireLanding();
 	void fireJumping();
 	void missJumping();
 	void trample();
-	void thrownDowning();
-	void fireDowning();
-	void slipFalling();
-	void catchStop();
-	void stayWall();
+	int thrownDowning();
+	int fireDowning();
+	int slipFalling();
+	BOOL catchStop();
+	int stayWall();
 	void landSafeDown();
 	void jumpForeDown();
 	void jumpBackDown();
 	void jumpShortForeDown();
 	void jumpShortBackDown();
 	void checkWallJumping();
-	void jumpDownCommon(int, int, f32);
+	int jumpDownCommon(int, int, f32);
 	void jumpingThrow();
-	void jumpCatch();
+	int jumpCatch();
 	void jumpWall();
 	void uTurnJumping();
-	void landing();
+	int landing();
 	void backJumping();
 	void ultraJumping();
 	void secJumping();
 	void jumping();
 	void jumpingCommonEvents();
-	void checkBackTrig();
-	void considerJumpRotate();
-	void jumpingBasic(int, int, int);
+	int checkBackTrig();
+	int considerJumpRotate();
+	int jumpingBasic(int, int, int);
 	void askStrongGroundTouch();
 	void doJumping();
 	void setJumpingAttackArea();
@@ -808,8 +808,8 @@ public:
 	void checkGroundPlane(f32, f32, f32, f32*, const TBGCheckData**);
 	void makeHistory();
 	void checkStickSmash();
-	void checkStickRotate(int*);
-	void getLRLevel(unsigned char);
+	int checkStickRotate(int*);
+	void getLRLevel(u8);
 	void getDizzyPower();
 	void getDizzyAngle();
 	void checkThrowObject();
@@ -866,9 +866,9 @@ public:
 	bool isInvincible() const;
 	bool isUnderWater() const;
 	void canSquat() const;
-	void getJumpSlideControl() const;
-	void getJumpAccelControl() const;
-	BOOL jumpProcess(int);
+	f32 getJumpSlideControl() const;
+	f32 getJumpAccelControl() const;
+	int jumpProcess(int);
 	void fallProcess();
 	void isFallCancel();
 	void checkGroundAtJumping(const Vec&, int);
@@ -890,7 +890,7 @@ public:
 	void landSlip();
 	void jumpSlip();
 	void jumpSlipEvents(TMario::JumpSlipRecord*);
-	void jumpSlipCommon(short, u32);
+	void jumpSlipCommon(s16, u32);
 	void loserDown();
 	void catchDown();
 	void safeForeDown();
@@ -970,7 +970,7 @@ public:
 	void wireSWait();
 	void wireWait();
 	void wireMove(f32);
-	void getOnWirePosAngle(JGeometry::TVec3<f32>*, short*);
+	void getOnWirePosAngle(JGeometry::TVec3<f32>*, s16*);
 	void taken();
 	void hangJumping();
 	void descend();
@@ -1040,11 +1040,11 @@ public:
 	void emitGetWaterEffect();
 	void emitGetEffect();
 	void emitRecover();
-	void emitSweatSometimes(short);
+	void emitSweatSometimes(s16);
 	void emitSweatSometimes();
-	void emitSweat(short);
-	void emitSmoke(short);
-	void emitParticle(int, short);
+	void emitSweat(s16);
+	void emitSmoke(s16);
+	void emitParticle(int, s16);
 	void emitParticle(int, const JGeometry::TVec3<f32>*);
 	void emitParticle(int);
 	void moveParticle();
@@ -1129,7 +1129,7 @@ public:
 	void animSound();
 	void soundMovement();
 	void startVoiceYoshi(u32);
-	void checkStatusType(long) const;
+	void checkStatusType(s32) const;
 
 	// fabricated
 	f32 getIntendedMag() const { return mIntendedMag; }
@@ -1302,9 +1302,12 @@ public:
 	/* 0x220 */ Mtx unk220;
 	/* 0x250 */ char unk250[0x29C - 0x250];
 	/* 0x29C */ JGeometry::TVec3<f32> unk29C;
-	/* 0x2A8 */ char unk2A8[0x2BC - 0x2A8];
+	/* 0x2A8 */ JGeometry::TVec3<f32> unk2A8;
+	/* 0x2B4 */ S16Vec unk2B4;
 	/* 0x2BC */ f32 unk2BC;
-	/* 0x2C0 */ char unk2C0[0x348 - 0x2C0];
+	/* 0x2C0 */ char unk2C0[0x314 - 0x2C0];
+	/* 0x314 */ f32 unk314;
+	/* 0x318 */ char unk318[0x348 - 0x318];
 	/* 0x348 */ f32 unk348;
 	/* 0x34C */ u16 unk34C;
 	/* 0x34E */ u16 unk34E;
@@ -1414,17 +1417,17 @@ public:
 	/* 0x574 */ TDeParams mDeParams;
 
 	// TODO: Should these be an array indexed by an enum?
-	TBodyAngleParams mBodyAngleParamsFree;
-	TBodyAngleParams mBodyAngleParamsWaterGun;
+	/* 0x998 */ TBodyAngleParams mBodyAngleParamsFree;
+	/* 0xA18 */ TBodyAngleParams mBodyAngleParamsWaterGun;
 
-	TAttackParams mAttackParamsFencePunch;
-	TAttackParams mAttackParamsKickRoof;
-	TJumpParams mJumpParams;
-	TRunParams mRunParams;
-	TSwimParams mSwimParams;
-	THangingParams mHangingParams;
-	THangRoofParams mHangRoofParams;
-	TWireParams mWireParams;
+	/* 0xA98 */ TAttackParams mAttackParamsFencePunch;
+	/* 0xAC8 */ TAttackParams mAttackParamsKickRoof;
+	/* 0xAF8 */ TJumpParams mJumpParams;
+	/* 0xE98 */ TRunParams mRunParams;
+	/* 0x1044 */ TSwimParams mSwimParams;
+	/* 0x1290 */ THangingParams mHangingParams;
+	/* 0x1310 */ THangRoofParams mHangRoofParams;
+	/* 0x132C */ TWireParams mWireParams;
 
 	// TODO: Should these be an array indexed by an enum?
 	TPullParams mPullParamsBGBeak;
@@ -1434,14 +1437,14 @@ public:
 
 	TBarParams mBarParams;
 
-	TSurfingParams mSurfingParamsWaterRed;
+	/* 0x1640 */ TSurfingParams mSurfingParamsWaterRed;
 	TSurfingParams mSurfingParamsGroundRed;
 	TSurfingParams mSurfingParamsWaterYellow;
 	TSurfingParams mSurfingParamsGroundYellow;
 	TSurfingParams mSurfingParamsWaterGreen;
 	TSurfingParams mSurfingParamsGroundGreen;
 
-	THHoverParams mHoverParams;
+	/* 0x2138 */ THHoverParams mHoverParams;
 	TDivingParams mDivingParams;
 	TYoshiParams mYoshiParams;
 	TWaterEffectParams mWaterEffectParams;
@@ -1453,7 +1456,7 @@ public:
 	TEffectParams mEffectParams;
 
 	// TODO: Should these be an array indexed by an enum?
-	TSlipParams mSlipParamsNormal;
+	/* 0x2944 */ TSlipParams mSlipParamsNormal;
 	TSlipParams mSlipParamsOil;
 	TSlipParams mSlipParamsAll;
 	TSlipParams mSlipParamsAllSlider;

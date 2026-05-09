@@ -13,7 +13,12 @@ enum BGCheckFlagBits {
 
 // fabricated
 enum BGTypeBits {
-	BG_TYPE_WET_GROUND = 0x4,
+	BG_TYPE_WET_GROUND        = 0x4,
+	BG_TYPE_NO_WALL_JUMP      = 0x5,
+	BG_TYPE_BOUNCE_ON_LANDING = 0x7,
+	BG_TYPE_FIXED_JUMP_SPEED  = 0x8,
+	BG_TYPE_UNK9              = 0x9,
+	BG_TYPE_UNKA              = 0xA,
 
 	BG_TYPE_WATER                        = 0x100,
 	BG_TYPE_DAMAGING_WATER               = 0x101,
@@ -61,6 +66,16 @@ enum BGTypeBits {
 	= BG_TYPE_ONLY_MARIO_PHASES_THROUGH | BG_PROPERTY_FLAG_CAMERA_WONT_CLIP,
 	BG_TYPE_CAM_NOCLIP_WET_GROUND
 	= BG_TYPE_WET_GROUND | BG_PROPERTY_FLAG_CAMERA_WONT_CLIP, // 0x8004
+	BG_TYPE_CAM_NOCLIP_NO_WALL_JUMP
+	= BG_TYPE_NO_WALL_JUMP | BG_PROPERTY_FLAG_CAMERA_WONT_CLIP, // 0x8005
+	BG_TYPE_CAM_NOCLIP_BOUNCE_ON_LANDING
+	= BG_TYPE_BOUNCE_ON_LANDING | BG_PROPERTY_FLAG_CAMERA_WONT_CLIP, // 0x8007
+	BG_TYPE_CAM_NOCLIP_FIXED_JUMP_SPEED
+	= BG_TYPE_FIXED_JUMP_SPEED | BG_PROPERTY_FLAG_CAMERA_WONT_CLIP, // 0x8008
+	BG_TYPE_CAM_NOCLIP_UNK9
+	= BG_TYPE_UNK9 | BG_PROPERTY_FLAG_CAMERA_WONT_CLIP, // 0x8009
+	BG_TYPE_CAM_NOCLIP_UNKA
+	= BG_TYPE_UNKA | BG_PROPERTY_FLAG_CAMERA_WONT_CLIP, // 0x800A
 
 	BG_TYPE_CAM_NOCLIP_SHADED_WET_GROUND
 	= BG_TYPE_WET_GROUND | BG_PROPERTY_FLAG_SHADOW
@@ -206,6 +221,52 @@ public:
 		    || mBGType == BG_TYPE_EVERYTHING_BUT_MAP_OBJECTS_PHASE_THROUGH
 		    || mBGType == BG_TYPE_CLIMBABLE_FENCE
 		    || mBGType == BG_TYPE_CAM_NOCLIP_ONLY_MARIO_PHASES_THROUGH)
+			return true;
+		else
+			return false;
+	}
+
+	bool isBounceOnLanding() const
+	{
+		if (mBGType == BG_TYPE_BOUNCE_ON_LANDING
+		    || mBGType == BG_TYPE_CAM_NOCLIP_BOUNCE_ON_LANDING)
+			return true;
+		else
+			return false;
+	}
+
+	bool isNoWallJump() const
+	{
+		if (mBGType == BG_TYPE_NO_WALL_JUMP
+		    || mBGType == BG_TYPE_CAM_NOCLIP_NO_WALL_JUMP)
+			return true;
+		else
+			return false;
+	}
+
+	bool isThing2() const
+	{
+		if (mBGType == BG_TYPE_UNDERGROUND_SUPER_JUMP
+		    || mBGType == BG_TYPE_FIXED_JUMP_SPEED
+		    || mBGType == BG_TYPE_CAM_NOCLIP_FIXED_JUMP_SPEED)
+			return true;
+		else
+			return false;
+	}
+
+	bool isThing3() const
+	{
+		if (mBGType == BG_TYPE_UNK9 || mBGType == BG_TYPE_CAM_NOCLIP_UNK9)
+			return true;
+		else
+			return false;
+	}
+
+	bool isThing4() const
+	{
+		if (mBGType == BG_TYPE_UNKA || mBGType == BG_TYPE_CAM_NOCLIP_UNKA
+		    || mBGType == BG_TYPE_UNDERGROUND_SUPER_JUMP || isBounceOnLanding()
+		    || isThing2() || isThing3())
 			return true;
 		else
 			return false;
