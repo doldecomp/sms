@@ -46,7 +46,7 @@ public:
 	void initInLoadAfter();
 	void kill();
 	void movement();
-	bool onYoshi();
+	BOOL onYoshi() { return mState == STATE_MOUNTED ? TRUE : FALSE; }
 	void ride();
 	void setEggYoshiPtr(TEggYoshi*);
 	u16 changeHand();
