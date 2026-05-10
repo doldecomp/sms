@@ -323,13 +323,15 @@ int TMarDirector::changeState()
 			if (mConsole->unk94->unk2BC == 6)
 				nextState = STATE_UNK2;
 		} else if (mConsole->unk94->unk2BC == 6
-		           && !gpMarioOriginal->checkActionThing()) {
+		           && !gpMarioOriginal->checkStatusFlag(
+		               TMario::STATUS_FLAG_UNK1000)) {
 			nextState = STATE_UNK4;
 		}
 		break;
 
 	case STATE_UNK2:
-		if (!unkE0->unk26 && !gpMarioOriginal->checkActionThing())
+		if (!unkE0->unk26
+		    && !gpMarioOriginal->checkStatusFlag(TMario::STATUS_FLAG_UNK1000))
 			nextState = STATE_UNK4;
 		break;
 

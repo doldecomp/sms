@@ -17,7 +17,7 @@
 #pragma dont_inline on
 BOOL TMario::winDemo()
 {
-	switch (mActionState) {
+	switch (mStatusState) {
 	case 0:
 		if (mHeldObject != nullptr) {
 			mHeldObject->receiveMessage(mHeldObject, HIT_MESSAGE_UNKD);
@@ -27,7 +27,7 @@ BOOL TMario::winDemo()
 		if (jumpProcess(0) == TRUE) {
 			gpMarDirector->fireGetStar((TShine*)unk384);
 			unk384->receiveMessage(this, HIT_MESSAGE_TAKE);
-			mActionState = 1;
+			mStatusState = 1;
 		}
 		break;
 	case 1:
@@ -46,7 +46,7 @@ BOOL TMario::readBillboard()
 	// volatile u32 padding[16];
 
 	TBaseNPC* talkingNpc = gpMarDirector->unkA0;
-	switch (mActionState) {
+	switch (mStatusState) {
 	case 0: {
 		const JGeometry::TVec3<f32>& targetPos = talkingNpc->getPosition();
 		f32 dx                                 = mPosition.x - targetPos.x;
@@ -63,7 +63,7 @@ BOOL TMario::readBillboard()
 			moveRequest(moveDist);
 		}
 		setAnimation(0xD9, 1.0f);
-		mActionState = 1;
+		mStatusState = 1;
 	}
 	case 1: {
 		s16 attackAngle = getAttackAngle(talkingNpc);
@@ -75,7 +75,7 @@ BOOL TMario::readBillboard()
 		mFaceAngle.y = convAngle;
 		if (attackAngle == mFaceAngle.y) {
 			gpMarDirector->unk126 = 2;
-			mActionState          = 2;
+			mStatusState          = 2;
 		}
 		break;
 	}
@@ -105,13 +105,13 @@ BOOL TMario::warpIn()
 {
 	// Missing stack space
 	// volatile u32 padding[10];
-	mActionTimer += 1;
+	mStatusTimer += 1;
 	const JGeometry::TVec3<f32>& gatePosOffset = ((TModelGate*)mHolder)->unkAC;
 	JGeometry::TVec3<f32> holderPosOffset(((TModelGate*)mHolder)->unkAC);
 	holderPosOffset.y -= 80.0f;
-	switch (mActionState) {
+	switch (mStatusState) {
 	case 0: {
-		if (mActionTimer <= 1) {
+		if (mStatusTimer <= 1) {
 			if (onYoshi() != FALSE) {
 				getOffYoshi(true);
 			}
@@ -153,25 +153,25 @@ BOOL TMario::warpIn()
 			mTrembleModelEffect->clash(dist);
 		}
 
-		if (0x78 < mActionTimer) {
-			mActionTimer = 0;
+		if (0x78 < mStatusTimer) {
+			mStatusTimer = 0;
 			warpInEffect();
 			unk468       = 0.0f;
-			mActionState = 1;
+			mStatusState = 1;
 			// Probably some reserved sound?
 			startVoice(-0x2);
 		}
 		break;
 	}
 	case 1: {
-		if ((f32)mActionTimer > mAutoDemoParams.mWarpInBallsDispTime.get()) {
+		if ((f32)mStatusTimer > mAutoDemoParams.mWarpInBallsDispTime.get()) {
 			unk114 &= ~(1 << 1);
 			rumbleStart(0x15, 0x14);
 		}
-		if (mAutoDemoParams.mWarpInBallsTime.get() > (f32)mActionTimer) {
-			mActionTimer = 0;
+		if (mAutoDemoParams.mWarpInBallsTime.get() > (f32)mStatusTimer) {
+			mStatusTimer = 0;
 			unk468       = mAutoDemoParams.mWarpInVecBase.get();
-			mActionState = 2;
+			mStatusState = 2;
 		}
 
 		break;
@@ -180,11 +180,11 @@ BOOL TMario::warpIn()
 		unk114 &= ~(1 << 1);
 		rumbleStart(0x14, mMotorParams.mMotorWall.get() / 2);
 
-		if ((f32)mActionTimer > mAutoDemoParams.mWarpInCapturedTime.get()) {
+		if ((f32)mStatusTimer > mAutoDemoParams.mWarpInCapturedTime.get()) {
 			unk114 &= ~(1 << 1);
-			mActionTimer = 0;
+			mStatusTimer = 0;
 			mHolder->receiveMessage(this, HIT_MESSAGE_ATTACK);
-			mActionState = 3;
+			mStatusState = 3;
 		}
 
 		break;
@@ -252,7 +252,7 @@ BOOL TMario::rollingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 	if (result != 0) {
 		return TRUE;
 	} else {
-		if (mAction == 0x133f) {
+		if (mStatus == 0x133f) {
 			unk114 &= ~2;
 			if (warpPos != nullptr) {
 				warpRequest(*warpPos, rotation);
@@ -273,7 +273,7 @@ BOOL TMario::rollingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 BOOL TMario::returnStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation,
                          bool flag, int playerStatus)
 {
-	if (mAction == 0x133f) {
+	if (mStatus == 0x133f) {
 		int offsetPlayerStatus = playerStatus << 8;
 		if (flag == TRUE) {
 			unk114 &= ~2;
@@ -349,51 +349,51 @@ BOOL TMario::warpOut()
 	// Missing stack space
 	// volatile u32 padding[4];
 
-	mActionTimer += 1;
+	mStatusTimer += 1;
 	unk114 |= 2;
-	switch (mActionState) {
+	switch (mStatusState) {
 	case 0:
 		unk114 |= 2;
-		if ((mActionArg & 0xff) == 2) {
+		if ((mStatusArg & 0xff) == 2) {
 			setAnimation(0x13B, 1.0f);
 		} else {
 			setAnimation(0x12E, 1.0f);
 		}
-		warpOutEffect((mActionArg >> 8) & 0xff,
-		              (mActionArg & 0xff) * 180.0f
+		warpOutEffect((mStatusArg >> 8) & 0xff,
+		              (mStatusArg & 0xff) * 180.0f
 		                  + SHORTANGLE2DEG(mFaceAngle.y));
-		mActionState = 1;
-		mActionTimer = 0;
+		mStatusState = 1;
+		mStatusTimer = 0;
 		break;
 	case 1:
 		s32 unkDelay;
-		if ((mActionArg & 0x200) != 0) {
+		if ((mStatusArg & 0x200) != 0) {
 			unkDelay = 0x70;
 		} else {
 			unkDelay = 0xb4;
 		}
-		if (mActionTimer >= unkDelay) {
+		if (mStatusTimer >= unkDelay) {
 			if (checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
 				unk114 |= 2;
 				return changePlayerStatus(0x891, 0, true);
 			}
-			mActionState = 2;
+			mStatusState = 2;
 		}
 		break;
 	case 2:
 		unk114 |= 2;
-		if ((mActionArg & 0xff) == 2) {
+		if ((mStatusArg & 0xff) == 2) {
 			setAnimation(0x13C, 1.0f);
 		} else {
 			setAnimation(0x13D, 1.0f);
 		}
 		if (jumpProcess(0) == TRUE) {
-			mActionState = 3;
+			mStatusState = 3;
 		}
 		break;
 	case 3:
 		unk114 |= 2;
-		switch (mActionArg & 0xff) {
+		switch (mStatusArg & 0xff) {
 		case 0:
 			return changePlayerStatus(0xC000230, 0, true);
 		case 1:
@@ -416,21 +416,21 @@ BOOL TMario::warpOut()
 
 BOOL TMario::electricDamage()
 {
-	if (mActionState == 0) {
+	if (mStatusState == 0) {
 		startVoice(0x7844);
 		setAnimation(0x7A, 1.0f);
 		decHP(mDmgParamsGraffitoElec.mDamage.get());
 		rumbleStart(0x16, 1);
-		mActionState = 1;
+		mStatusState = 1;
 	}
 
 	elecEffect();
-	mActionTimer += 1;
-	if (mActionTimer > 0x78) {
+	mStatusTimer += 1;
+	if (mStatusTimer > 0x78) {
 
 		J3DFrameCtrl& frameCtrl = getMotionFrameCtrl();
 		frameCtrl.setFrame(0.0f);
-		mActionTimer += 1;
+		mStatusTimer += 1;
 		startVoice(0x7852);
 
 		if (mTrembleModelEffect != nullptr) {
@@ -454,17 +454,17 @@ BOOL TMario::electricDamage()
 
 BOOL TMario::footDowning()
 {
-	switch (mActionArg) {
+	switch (mStatusArg) {
 	case 0:
 		setAnimation(0x125, 1.0f);
 		if ((mInput & 2) != 0) {
-			mActionArg = 2;
+			mStatusArg = 2;
 		}
 		break;
 	case 1:
 		setAnimation(0x123, 1.0f);
 		if ((mInput & 2) != 0) {
-			mActionArg = 3;
+			mStatusArg = 3;
 		}
 		break;
 	case 2:
@@ -494,7 +494,7 @@ BOOL TMario::demoMain()
 	// volatile u32 padding[10];
 
 	BOOL result = FALSE;
-	switch (mAction) {
+	switch (mStatus) {
 	case 0x1302:
 		result = winDemo();
 		break;
@@ -512,9 +512,9 @@ BOOL TMario::demoMain()
 	case 0x1320:
 	case 0x1321:
 		// Probably inlined?
-		if (mActionState == 0) {
+		if (mStatusState == 0) {
 			startVoice(0x7884);
-			mActionState = 1;
+			mStatusState = 1;
 		}
 		stopProcess();
 		if (isLast1AnimeFrame()) {

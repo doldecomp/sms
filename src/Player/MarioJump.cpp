@@ -38,12 +38,12 @@ void TMario::doJumping()
 		f32 mag       = mIntendedMag;
 		s16 angleDiff = mIntendedYaw - mFaceAngle.y;
 
-		if (mAction == 0x88B && checkFlag(0x8000)) {
+		if (mStatus == 0x88B && checkFlag(0x8000)) {
 			if (mWaterGun->canSpray())
 				mag = 2.5f * mIntendedMag;
 		}
 
-		if (mAction == 0x02000886U && mVel.y > 0.0f
+		if (mStatus == 0x02000886U && mVel.y > 0.0f
 		    && (angleDiff < -0x4000 || angleDiff > 0x4000)) {
 			mag = 0.0f;
 		}
@@ -147,8 +147,8 @@ int TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 			stopVoice();
 		}
 
-		if (mPrevAction == 0x887U || mPrevAction == 0x895U
-		    || mPrevAction == 0x896U)
+		if (mPrevStatus == 0x887U || mPrevStatus == 0x895U
+		    || mPrevStatus == 0x896U)
 			strongTouchDownEffect();
 		else
 			smallTouchDownEffect();
@@ -156,7 +156,7 @@ int TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 	}
 
 	case 2:
-		if (mAction != 0x893U && mForwardVel > mDeParams.mClashSpeed.get()) {
+		if (mStatus != 0x893U && mForwardVel > mDeParams.mClashSpeed.get()) {
 			emitParticle(0xC);
 			changePlayerDropping(0x208B0U, 0U);
 			return result;
@@ -178,13 +178,13 @@ int TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 				const JGeometry::TVec3<f32>& normal = mWallPlane->getNormal();
 				mFaceAngle.y    = matan(normal.z, normal.x) + 0x8000;
 				mModelFaceAngle = mFaceAngle.y;
-				if (mAction == 0x887U)
+				if (mStatus == 0x887U)
 					mModelFaceAngle -= 0x8000;
 				rumbleStart(0x15, mMotorParams.mMotorWall.get());
 				return changePlayerStatus(0x3000036CU, 0U, 0);
 			}
 		}
-		if (mForwardVel > 16.0f && mAction != 0x88DU) {
+		if (mForwardVel > 16.0f && mStatus != 0x88DU) {
 			playerRefrection(0);
 			mFaceAngle.y += 0x8000;
 			if (mWallPlane != nullptr) {
@@ -232,10 +232,10 @@ int TMario::considerJumpRotate()
 	if (checkStickRotate(&spC) == 1) {
 		switch (spC) {
 		case 2:
-			mAction = 0x896;
+			mStatus = 0x896;
 			break;
 		case 3:
-			mAction = 0x895;
+			mStatus = 0x895;
 			break;
 		}
 		return 1;
@@ -270,10 +270,10 @@ void TMario::backJumping() { }
 int TMario::landing()
 {
 	if (mVel.y < 0.0f) {
-		if (mActionTimer++ > 240) {
-			mActionTimer = 240;
+		if (mStatusTimer++ > 240) {
+			mStatusTimer = 240;
 			startSoundActor(0x786B);
-			mActionArg = 3;
+			mStatusArg = 3;
 		}
 	}
 
@@ -284,7 +284,7 @@ int TMario::landing()
 		return true;
 
 	int r31;
-	switch (mActionArg) {
+	switch (mStatusArg) {
 	case 0:
 		r31 = 0x56;
 		break;
@@ -372,7 +372,7 @@ int TMario::jumpDownCommon(int param_1, int animation, float velocity)
 		setAnimation(animation, 1.0f);
 		break;
 	case 1:
-		changePlayerStatus(param_1, mActionArg, 0);
+		changePlayerStatus(param_1, mStatusArg, 0);
 		break;
 	case 2:
 		setAnimation(2, 1.0f);
@@ -400,9 +400,9 @@ void TMario::landSafeDown() { }
 
 int TMario::stayWall()
 {
-	mActionTimer += 1;
-	if (mActionTimer > 60)
-		mActionTimer = 60;
+	mStatusTimer += 1;
+	if (mStatusTimer > 60)
+		mStatusTimer = 60;
 
 	if (mInput & 2) {
 		if (mWallPlane) {
@@ -423,11 +423,11 @@ int TMario::stayWall()
 	if (checkBackTrig())
 		return true;
 
-	if (mActionTimer < 20) {
-		mActionTimer += 1;
+	if (mStatusTimer < 20) {
+		mStatusTimer += 1;
 		mVel.set(0.0f, 0.0f, 0.0f);
 	} else {
-		mVel.y = -mActionTimer * 0.5f;
+		mVel.y = -mStatusTimer * 0.5f;
 	}
 
 	if (mWallPlane) {
@@ -459,14 +459,14 @@ int TMario::stayWall()
 
 BOOL TMario::catchStop()
 {
-	if (mActionState == 0) {
+	if (mStatusState == 0) {
 		mVel.y       = 30.0f;
-		mActionState = 1;
+		mStatusState = 1;
 	}
 	doJumping();
 	switch (jumpProcess(0)) {
 	case 0:
-		if (mActionState == 1) {
+		if (mStatusState == 1) {
 			setAnimation(0x6F, 1.0f);
 		} else {
 			setAnimation(0x56, 1.0f);
@@ -479,16 +479,16 @@ BOOL TMario::catchStop()
 		setPlayerVelocity(0.0f);
 		break;
 	}
-	if (mActionState == 1 && isLast1AnimeFrame()) {
-		mActionState = 2;
+	if (mStatusState == 1 && isLast1AnimeFrame()) {
+		mStatusState = 2;
 	}
 	return 0;
 }
 
 int TMario::slipFalling()
 {
-	mActionTimer += 1;
-	if (mActionTimer > 120 && mPosition.y - mFloorPosition.y > 500.0f)
+	mStatusTimer += 1;
+	if (mStatusTimer > 120 && mPosition.y - mFloorPosition.y > 500.0f)
 		return changePlayerStatus(0x88C, 1, false);
 
 	mForwardVel *= mJumpParams.mJumpSpeedBrake.get();
@@ -514,10 +514,10 @@ int TMario::slipFalling()
 
 	switch (jumpProcess(0)) {
 	case 1:
-		if (mActionState == 0 && mVel.y < 0.0f
+		if (mStatusState == 0 && mVel.y < 0.0f
 		    && mGroundPlane->getNormal().y >= 0.9848077f) {
 			mVel.y       = -mVel.y / 2.0f;
-			mActionState = 1;
+			mStatusState = 1;
 		} else {
 			changePlayerStatus(0x840452, 0, false);
 		}
@@ -536,9 +536,9 @@ int TMario::slipFalling()
 
 int TMario::fireDowning()
 {
-	if (mActionTimer == 1)
+	if (mStatusTimer == 1)
 		startVoice(0x7849);
-	mActionTimer += 1;
+	mStatusTimer += 1;
 
 	if (!(mInput & 1))
 		mForwardVel = FConverge(mForwardVel, 0.0f, 0.35f, 0.35f);
@@ -564,10 +564,10 @@ int TMario::fireDowning()
 
 	switch (jumpProcess(0)) {
 	case 1:
-		if (mActionState < 2 && mVel.y < 0.0f) {
+		if (mStatusState < 2 && mVel.y < 0.0f) {
 			mVel.y = 0.4f * -mVel.y;
 			setPlayerVelocity(0.5f * mForwardVel);
-			mActionState += 1;
+			mStatusState += 1;
 		} else {
 			startVoice(0x7852);
 			changePlayerStatus(0x08000239U, 0U, 0);
@@ -599,10 +599,10 @@ int TMario::thrownDowning()
 
 	switch (jumpProcess(0)) {
 	case 1:
-		if (mActionState < 2 && mVel.y < 0.0f) {
+		if (mStatusState < 2 && mVel.y < 0.0f) {
 			mVel.y = 0.4f * -mVel.y;
 			setPlayerVelocity(0.5f * mForwardVel);
-			mActionState += 1;
+			mStatusState += 1;
 		} else {
 			return changePlayerStatus(0x0C000223U, 0U, 0);
 		}
@@ -667,9 +667,9 @@ int TMario::boardJumping()
 int TMario::rocketCheck()
 {
 	bool bVar2 = true;
-	if (mAction == 0x88B)
+	if (mStatus == 0x88B)
 		bVar2 = false;
-	if (mAction == 0x88D)
+	if (mStatus == 0x88D)
 		bVar2 = false;
 
 	if (checkFlag(0x8000)) {
@@ -804,10 +804,10 @@ int TMario::hipAttacking()
 		}
 	}
 
-	switch (mActionState) {
+	switch (mStatusState) {
 	case 0:
 		startVoice(0x788F);
-		mActionState = 1;
+		mStatusState = 1;
 		// fallthrough
 
 	case 1:
@@ -815,8 +815,8 @@ int TMario::hipAttacking()
 			mPosition.y = 1.0f + mFloorPosition.y;
 			changePlayerStatus(0x80023CU, 0U, 0);
 		}
-		if (mActionTimer < 0x28) {
-			f32 lift = (f32)(0x28 - mActionTimer) * 0.5f;
+		if (mStatusTimer < 0x28) {
+			f32 lift = (f32)(0x28 - mStatusTimer) * 0.5f;
 			if (160.0f + (mPosition.y + lift) < mFloorPosition.x) {
 				mPosition.y                = lift * 0.25f + mPosition.y;
 				*(f32*)((u8*)this + 0x104) = mPosition.y;
@@ -825,10 +825,10 @@ int TMario::hipAttacking()
 		setPlayerVelocity(0.0f);
 		setAttackRadius(0.0f);
 		setAnimation(0x3C, 1.0f);
-		mActionTimer += 1;
-		if (mActionTimer >= 60) {
-			mActionTimer = 0;
-			mActionState = 2;
+		mStatusTimer += 1;
+		if (mStatusTimer >= 60) {
+			mStatusTimer = 0;
+			mStatusState = 2;
 		}
 		mVel.y = 0.0f;
 		{
@@ -849,16 +849,16 @@ int TMario::hipAttacking()
 	case 2:
 	case 3:
 		setAnimation(0x3D, 1.0f);
-		mActionTimer += 1;
-		if (mActionTimer > mJumpParams.mSuperHipAttackCt.get())
-			mActionState = 3;
+		mStatusTimer += 1;
+		if (mStatusTimer > mJumpParams.mSuperHipAttackCt.get())
+			mStatusState = 3;
 
-		if (mActionState == 2)
+		if (mStatusState == 2)
 			mVel.y = mJumpParams.mHipAttackSpeedY.get();
 		else
 			mVel.y = mJumpParams.mSuperHipAttackSpeedY.get();
 
-		if (mActionState == 2)
+		if (mStatusState == 2)
 			emitBlurHipDrop();
 		else
 			emitBlurHipDropSuper();
@@ -870,7 +870,7 @@ int TMario::hipAttacking()
 
 		if (r == 1) {
 			if (isMario()) {
-				if (mActionState == 2) {
+				if (mStatusState == 2) {
 					SMSRumbleMgr->start(0, (f32*)nullptr);
 					gpCameraShake->startShake((EnumCamShakeMode)0, 1.0f);
 				} else {
@@ -889,7 +889,7 @@ int TMario::hipAttacking()
 					startVoice(0x78D3);
 					return changePlayerStatus(0x200346U, 0U, 0);
 				}
-				if (mActionState == 2) {
+				if (mStatusState == 2) {
 					((THitActor*)mGroundPlane->mActor)->receiveMessage(this, 1);
 				} else {
 					((THitActor*)mGroundPlane->mActor)->receiveMessage(this, 3);
@@ -897,7 +897,7 @@ int TMario::hipAttacking()
 				}
 			}
 
-			if (mActionState == 2) {
+			if (mStatusState == 2) {
 				emitParticle(0x14);
 				emitParticle(0x13);
 				emitParticle(0x12);
@@ -1040,7 +1040,7 @@ static int unknown_inline_3(TMario* mario)
 	if (unknown_inline_2(mario))
 		return 1;
 
-	switch (mario->mAction) {
+	switch (mario->mStatus) {
 	case 0x89C:
 		mario->jumpingBasic(0x208B8, 0x120, 0);
 		break;
@@ -1062,8 +1062,8 @@ static int unknown_inline_3(TMario* mario)
 
 static int unknown_inline_4(TMario* mario)
 {
-	if (mario->mActionTimer == 0) {
-		mario->mActionTimer += 1;
+	if (mario->mStatusTimer == 0) {
+		mario->mStatusTimer += 1;
 		mario->rumbleStart(0x14, mario->mMotorParams.mMotorWall.get());
 	}
 
@@ -1082,8 +1082,8 @@ static int unknown_inline_4(TMario* mario)
 
 static int unknown_inline_5(TMario* mario)
 {
-	if (mario->mActionTimer == 0) {
-		mario->mActionTimer += 1;
+	if (mario->mStatusTimer == 0) {
+		mario->mStatusTimer += 1;
 		mario->rumbleStart(0x15, mario->mMotorParams.mMotorWall.get());
 	}
 
@@ -1105,10 +1105,10 @@ static int unknown_inline_6(TMario* mario)
 	if (mario->rocketCheck())
 		return 1;
 
-	if (mario->mActionState == 0 && mario->isLast1AnimeFrame())
-		mario->mActionState = 1;
+	if (mario->mStatusState == 0 && mario->isLast1AnimeFrame())
+		mario->mStatusState = 1;
 
-	if (mario->mActionState == 0)
+	if (mario->mStatusState == 0)
 		mario->jumpingBasic(0x04000472, 0xF7, 0);
 	else
 		mario->jumpingBasic(0x04000472, 0x56, 0);
@@ -1171,17 +1171,17 @@ static int unknown_inline_9(TMario* mario)
 
 static int unknown_inline_10(TMario* mario)
 {
-	if (mario->mActionTimer == 1)
+	if (mario->mStatusTimer == 1)
 		mario->startVoice(0x7849);
 
-	mario->mActionTimer += 1;
+	mario->mStatusTimer += 1;
 	mario->setPlayerVelocity(mario->mForwardVel);
 
 	if (mario->jumpProcess(0) == 1)
 		mario->changePlayerStatus(0x20449U, 0U, 0);
 
 	int anim;
-	if (mario->mActionArg == 0)
+	if (mario->mStatusArg == 0)
 		anim = 0x4D;
 	else
 		anim = 0x29;
@@ -1201,12 +1201,12 @@ static int unknown_inline_11(TMario* mario)
 	mario->setAnimation(0xF4, 1.0f);
 	mario->emitBlurSpinJump();
 	mario->jumpingBasic(0x04000472, mario->mAnimationId, 0);
-	mario->mActionTimer += 1;
+	mario->mStatusTimer += 1;
 
-	if (mario->mAction == 0x896U)
-		mario->mModelFaceAngle = mario->mActionTimer * 4096;
+	if (mario->mStatus == 0x896U)
+		mario->mModelFaceAngle = mario->mStatusTimer * 4096;
 	else
-		mario->mModelFaceAngle = -(mario->mActionTimer * 4096);
+		mario->mModelFaceAngle = -(mario->mStatusTimer * 4096);
 
 	if (!(gpMarDirector->unk58 & 0x3F))
 		mario->rumbleStart(0x14, mario->mMotorParams.mMotorWall.get() / 2);
@@ -1216,8 +1216,8 @@ static int unknown_inline_11(TMario* mario)
 
 static int unknown_inline_12(TMario* mario)
 {
-	if (mario->mPrevAction == 0x10000358U) {
-		if (mario->mActionArg == 0U)
+	if (mario->mPrevStatus == 0x10000358U) {
+		if (mario->mStatusArg == 0U)
 			mario->setAnimation(0xF8, 1.0f);
 		else
 			mario->setAnimation(0x6F, 1.0f);
@@ -1241,7 +1241,7 @@ int TMario::jumpMain()
 			changePlayerStatus(0x820008ABU, 0U, 0);
 	}
 
-	switch (mAction) {
+	switch (mStatus) {
 	case 0x884:
 	case 0x89C:
 	case 0x2000880:
@@ -1313,7 +1313,7 @@ int TMario::jumpMain()
 		mForwardVel  = 0.0f;
 		mIntendedMag = 0.0f;
 		jumpingBasic(0x560, mAnimationId, 3);
-		if (mAction == 0x560U)
+		if (mStatus == 0x560U)
 			setAnimation(0xF2, 1.0f);
 		JGeometry::TVec3<f32> pos = mPosition;
 		if (mHeldObject->moveRequest(pos) == 1)
@@ -1330,7 +1330,7 @@ int TMario::jumpMain()
 		doJumping();
 		switch (jumpProcess(0)) {
 		case 1:
-			mAction = 0x80000A36;
+			mStatus = 0x80000A36;
 			break;
 		case 2:
 			setPlayerVelocity(0.0f);
@@ -1340,8 +1340,8 @@ int TMario::jumpMain()
 		break;
 	}
 	case 0x208B0: {
-		if (mActionTimer == 0) {
-			mActionTimer += 1;
+		if (mStatusTimer == 0) {
+			mStatusTimer += 1;
 			rumbleStart(0x15, 0x14);
 		}
 		jumpDownCommon(0x20462, 2, -16.0f);
@@ -1349,8 +1349,8 @@ int TMario::jumpMain()
 		break;
 	}
 	case 0x208B1: {
-		if (mActionTimer == 0) {
-			mActionTimer += 1;
+		if (mStatusTimer == 0) {
+			mStatusTimer += 1;
 			rumbleStart(0x15, 0x14);
 		}
 		jumpDownCommon(0x20463, 0x2D, 16.0f);
@@ -1358,8 +1358,8 @@ int TMario::jumpMain()
 		break;
 	}
 	case 0x208B2: {
-		if (mActionTimer == 0) {
-			mActionTimer += 1;
+		if (mStatusTimer == 0) {
+			mStatusTimer += 1;
 			rumbleStart(0x15, 0x14);
 		}
 		jumpDownCommon(0x20461, 0x2D, 16.0f);
@@ -1367,8 +1367,8 @@ int TMario::jumpMain()
 		break;
 	}
 	case 0x208B3: {
-		if (mActionTimer == 0) {
-			mActionTimer += 1;
+		if (mStatusTimer == 0) {
+			mStatusTimer += 1;
 			rumbleStart(0x15, 0x14);
 		}
 		jumpDownCommon(0x20460, 2, -16.0f);

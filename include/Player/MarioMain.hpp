@@ -1168,23 +1168,11 @@ public:
 		return mFloorPosition.y + 4.0f <= mPosition.y ? true : false;
 	}
 
-	// fabricated
-	bool isActionCoolOrSomethingIdk() const
-	{
-		if ((mAction & 0x1FF) >= 0x147 && (mAction & 0x1FF) <= 0x14A)
-			return true;
-
-		return false;
-	}
-	u32 getAction() const { return mAction; }
-
-	bool checkActionThing() { return mAction & 0x1000 ? true : false; }
-	bool checkActionThing2() { return mAction & 0x800 ? true : false; }
 	bool checkActionThing3()
 	{
 		if (checkFlag(0x1000))
 			return true;
-		if (checkActionThing2())
+		if (checkStatusFlag(STATUS_FLAG_JUMPING))
 			return false;
 		return true;
 	}
@@ -1204,12 +1192,6 @@ public:
 	}
 
 	// Fabricated
-	bool checkActionFlag(u32 actionFlag) const
-	{
-		return mAction & actionFlag ? true : false;
-	}
-
-	// Fabricated
 	bool checkUnk380(u32 message) const
 	{
 		return unk380 == message ? true : false;
@@ -1225,9 +1207,28 @@ public:
 	}
 
 	// Fabricated
+	bool checkStatusFlag(u32 actionFlag) const
+	{
+		return mStatus & actionFlag ? true : false;
+	}
+
+	// TODO: rename and sort out the status category checks
+
+	// fabricated
+	bool isActionCoolOrSomethingIdk() const
+	{
+		if ((mStatus & STATUS_TYPE_AND_ID_MASK) >= 0x147
+		    && (mStatus & STATUS_TYPE_AND_ID_MASK) <= 0x14A)
+			return true;
+
+		return false;
+	}
+
+	// Fabricated
 	bool fabricatedActionInline() const
 	{
-		if ((mAction & 0x1FF) >= 0x168 && 0x16c >= (mAction & 0x1FF)) {
+		if ((mStatus & STATUS_TYPE_AND_ID_MASK) >= 0x168
+		    && 0x16c >= (mStatus & STATUS_TYPE_AND_ID_MASK)) {
 			return true;
 		}
 		return false;
@@ -1236,11 +1237,37 @@ public:
 public:
 	/* 0x74 */ u32 mInput;
 	/* 0x78 */ u32 unk78;
-	/* 0x7C */ u32 mAction;
-	/* 0x80 */ u32 mPrevAction;
-	/* 0x84 */ u16 mActionState;
-	/* 0x86 */ u16 mActionTimer;
-	/* 0x88 */ u32 mActionArg;
+
+	enum {
+		STATUS_FLAG_JUMPING     = 0x800,
+		STATUS_FLAG_UNK1000     = 0x1000,
+		STATUS_FLAG_SWIMMING    = 0x2000,
+		STATUS_FLAG_UNK10000    = 0x10000,
+		STATUS_FLAG_UNK100000   = 0x100000,
+		STATUS_FLAG_UNK2000000  = 0x2000000,
+		STATUS_FLAG_UNK10000000 = 0x10000000,
+		STATUS_FLAG_UNK80000000 = 0x80000000,
+
+		STATUS_TYPE_WAITING  = 0x000,
+		STATUS_TYPE_RUNNING  = 0x040,
+		STATUS_TYPE_JUMPING  = 0x080,
+		STATUS_TYPE_SWIMMING = 0x0C0,
+		STATUS_TYPE_DEMO     = 0x100,
+		STATUS_TYPE_SPECIAL  = 0x140,
+		STATUS_TYPE_ACTION   = 0x180,
+		STATUS_TYPE_MASK     = 0x1C0,
+
+		STATUS_ID_MASK = 0x3F,
+
+		STATUS_TYPE_AND_ID_MASK = 0x1FF,
+	};
+
+	/* 0x7C */ u32 mStatus;
+	/* 0x80 */ u32 mPrevStatus;
+	/* 0x84 */ u16 mStatusState;
+	/* 0x86 */ u16 mStatusTimer;
+	/* 0x88 */ u32 mStatusArg;
+
 	/* 0x8C */ f32 mIntendedMag;
 	/* 0x90 */ s16 mIntendedYaw;
 	/* 0x92 */ u16 unk92;
@@ -1277,7 +1304,7 @@ public:
 
 	/* 0x100 */ s16 unk100;
 	/* 0x102 */ s16 unk102;
-	/* 0x104 */ void* mController; // TMarioControllerWork
+	/* 0x104 */ f32 unk104;
 
 	/* 0x108 */ u32 unk108;
 	/* 0x10C */ u32 unk10C;

@@ -84,38 +84,29 @@ void TMario::dropObject()
 
 bool TMario::isTakeSituation(THitActor* object)
 {
-	if (unk14C > 0) {
+	if (unk14C > 0)
 		return false;
-	}
-	// Probably inline
-	if (checkActionFlag(0x80000000)) {
+
+	if (checkStatusFlag(STATUS_FLAG_UNK80000000))
 		return false; // Airborn?
-	}
 
-	// Probably inline
-	if (checkActionFlag(0x10000000)) {
+	if (checkStatusFlag(STATUS_FLAG_UNK10000000))
 		return false;
-	}
-	if (mAction == 0x800456) {
-		return false;
-	}
 
-	if (onYoshi()) {
+	if (mStatus == 0x800456)
 		return false;
-	}
 
-	// Probably an inline
-	if (!checkUnk380(5)) {
+	if (onYoshi())
 		return false;
-	}
 
-	if (mHeldObject != nullptr) {
+	if (!checkUnk380(5))
 		return false;
-	}
 
-	if (mHolder != nullptr) {
+	if (mHeldObject != nullptr)
 		return false;
-	}
+
+	if (mHolder != nullptr)
+		return false;
 
 	s16 attackAngle = getAttackAngle(object) - mFaceAngle.y;
 	if (attackAngle <= -0x2aaa) {
@@ -142,19 +133,16 @@ bool TMario::canTake(THitActor* object)
 
 bool TMario::trampleExec(THitActor* param_1)
 {
-	if (!checkActionFlag(0x800)) {
+	if (!checkStatusFlag(STATUS_FLAG_JUMPING))
 		return false;
-	}
 
-	if (mAction == 0x891) {
+	if (mStatus == 0x891)
 		return false;
-	}
 
-	if (param_1->receiveMessage(this, HIT_MESSAGE_TRAMPLE) == FALSE) {
+	if (param_1->receiveMessage(this, HIT_MESSAGE_TRAMPLE) == FALSE)
 		return false;
-	}
 
-	if (mAction == 0x888) {
+	if (mStatus == 0x888) {
 		changePlayerStatus(0x883, 0, false);
 	} else {
 		switch (mAnimationId) {
@@ -216,8 +204,8 @@ void TMario::normalizeNozzle()
 void TMario::loserExec()
 {
 	// volatile u32 padding[2];
-	if (mAction != 0x224e0 && mAction != 0x21313 && mAction != 0x224e1
-	    && mAction != 0x1000192a) {
+	if (mStatus != 0x224e0 && mStatus != 0x21313 && mStatus != 0x224e1
+	    && mStatus != 0x1000192a) {
 		unk118 |= MARIO_FLAG_GAME_OVER;
 		mHealth = 0;
 
@@ -229,7 +217,7 @@ void TMario::loserExec()
 			mYoshi->kill();
 		}
 
-		if (checkActionFlag(0x2000)) {
+		if (checkStatusFlag(STATUS_FLAG_SWIMMING)) {
 			if (unk12C < 1.0f) {
 				changePlayerStatus(0x224e0, 0, true);
 			} else {
@@ -237,7 +225,7 @@ void TMario::loserExec()
 			}
 			return;
 		}
-		if (mAction == 0x20338) {
+		if (mStatus == 0x20338) {
 			changePlayerStatus(0x21313, 0, true);
 		} else {
 			changePlayerStatus(0x1000192a, 0, true);
@@ -312,13 +300,13 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 		return;
 	}
 
-	u32 animOffset1 = checkActionFlag(0x800) ? 1 : 0;
+	u32 animOffset1 = checkStatusFlag(STATUS_FLAG_JUMPING) ? 1 : 0;
 	if (onYoshi()) {
 		animOffset1 = true;
 	}
 
 	if (damageAnimType == 3) {
-		if (mAction == 0x4000440 || mAction == 0x4045C) {
+		if (mStatus == 0x4000440 || mStatus == 0x4045C) {
 			setUpperDamageRun();
 		}
 	} else {
@@ -342,16 +330,14 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 
 		// Inline?
 		bool canPlayAnimation = true;
-		if (mAction == 0x800447) {
+		if (mStatus == 0x800447)
 			canPlayAnimation = false;
-		}
-		if (mAction == 0x891) {
-			canPlayAnimation = false;
-		}
 
-		if (checkActionFlag(0x2000)) {
+		if (mStatus == 0x891)
+			canPlayAnimation = false;
+
+		if (checkStatusFlag(STATUS_FLAG_SWIMMING))
 			canPlayAnimation = true;
-		}
 
 		if (canPlayAnimation) {
 			// I don't think this is correct, but was the closest i could get
@@ -422,11 +408,11 @@ void TMario::considerTake()
 		check = true;
 	}
 
-	if (mAction == 899 || checkActionFlag(0x80000000)) {
+	if (mStatus == 899 || checkStatusFlag(STATUS_FLAG_UNK80000000)) {
 		check = true;
 	}
 
-	if (mAction == 0x560 || mAction == 0x894 || mAction == 0x40561) {
+	if (mStatus == 0x560 || mStatus == 0x894 || mStatus == 0x40561) {
 		check = true;
 	}
 
@@ -447,9 +433,9 @@ void TMario::considerTake()
 	if (mHolder != nullptr) {
 		// Probably an inline
 		BOOL check2 = false;
-		u32 test    = mAction & 0x1ff;
+		u32 test    = mStatus & STATUS_TYPE_AND_ID_MASK;
 		if ((0x150 <= test && 0x15c >= test) || (0x140 <= test && test <= 0x143)
-		    || checkActionFlag(0x1000) || mAction == 0x10020370) {
+		    || checkStatusFlag(STATUS_FLAG_UNK1000) || mStatus == 0x10020370) {
 			check2 = true;
 		}
 
