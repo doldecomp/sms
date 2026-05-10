@@ -602,7 +602,7 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 	// volatile u32 padding[34];
 	Mtx transform;
 	if (param_2 == 0) {
-		if (gpMarioForCallBack->mAction == 0x10001308) {
+		if (gpMarioForCallBack->mStatus == 0x10001308) {
 			if (gpMarDirector->unkA0 == nullptr)
 				return 0;
 
@@ -618,7 +618,7 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 
 			s16 angle = -matan(mult, other.y);
 			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(angle));
-		} else if (gpMarioForCallBack->mAction == 0x88b) {
+		} else if (gpMarioForCallBack->mStatus == 0x88b) {
 			if (gpMarioForCallBack->mWaterGun->canSpray() == true) {
 
 				s16 headAngle = gpMarioForCallBack->mUpperBodyParams
@@ -626,7 +626,7 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 				MsMtxSetRotRPH(transform, 0.0f, 0.0f,
 				               SHORTANGLE2DEG(headAngle));
 			}
-		} else if (gpMarioForCallBack->mAction == 0xC400201
+		} else if (gpMarioForCallBack->mStatus == 0xC400201
 		           && (gpMarioForCallBack->unk370
 		                       > gpMarioForCallBack->mDeParams.mFeelDeep.get()
 		                   ? true
@@ -680,7 +680,7 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 			               SHORTANGLE2DEG(gpCamera->unkA4));
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
-		} else if (gpMarioForCallBack->checkActionFlag(MARIO_FLAG_HAS_FLUDD)
+		} else if (gpMarioForCallBack->checkStatusFlag(MARIO_FLAG_HAS_FLUDD)
 		           && !gpMarioForCallBack->onYoshi()) {
 			const TWaterGun* gun       = gpMarioForCallBack->mWaterGun;
 			TNozzleBase* currentNozzle = gun->getCurrentNozzle();
@@ -694,7 +694,7 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 		} else if (gpMarioForCallBack->mAnimationId == 0x48
 		           || gpMarioForCallBack->mAnimationId == 0x72
 		           || gpMarioForCallBack->mAnimationId == 0x6D
-		                  && !gpMarioForCallBack->checkActionFlag(
+		                  && !gpMarioForCallBack->checkStatusFlag(
 		                      MARIO_FLAG_FLUDD_EMITTING)) {
 
 			// Ah, i love storing floats, casting them to s16
@@ -728,12 +728,13 @@ static int MarioFootPosRCtrl(J3DNode* param_1, int param_2)
 
 		// Definitely some inline shenanigans
 		// And this is wrong
-		if ((gpMarioForCallBack->mAction & 0x1C0) == 0
-		    && gpMarioForCallBack->mAction != 0xC00023D
+		if ((gpMarioForCallBack->mStatus & TMario::STATUS_TYPE_MASK)
+		        == TMario::STATUS_TYPE_WAITING
+		    && gpMarioForCallBack->mStatus != 0xC00023D
 		    && gpMarioForCallBack->onYoshi() == 0) {
 
-			check2 = !(gpMarioForCallBack->mAction != 0xC400202
-			           && gpMarioForCallBack->mAction != 0xC000203)
+			check2 = !(gpMarioForCallBack->mStatus != 0xC400202
+			           && gpMarioForCallBack->mStatus != 0xC000203)
 			             ? TRUE
 			             : FALSE;
 		}
@@ -771,12 +772,13 @@ static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 
 		// Definitely some inline shenanigans
 		// And this is wrong
-		if ((gpMarioForCallBack->mAction & 0x1C0) == 0
-		    && gpMarioForCallBack->mAction != 0xC00023D
+		if ((gpMarioForCallBack->mStatus & TMario::STATUS_TYPE_MASK)
+		        == TMario::STATUS_TYPE_WAITING
+		    && gpMarioForCallBack->mStatus != 0xC00023D
 		    && gpMarioForCallBack->onYoshi() == 0) {
 
-			check2 = !(gpMarioForCallBack->mAction != 0xC400202
-			           && gpMarioForCallBack->mAction != 0xC000203)
+			check2 = !(gpMarioForCallBack->mStatus != 0xC400202
+			           && gpMarioForCallBack->mStatus != 0xC000203)
 			             ? TRUE
 			             : FALSE;
 		}
@@ -850,12 +852,13 @@ static int MarioFootPosLCtrl(J3DNode* param_1, int param_2)
 
 		// Definitely some inline shenanigans
 		// And this is wrong
-		if ((gpMarioForCallBack->mAction & 0x1C0) == 0
-		    && gpMarioForCallBack->mAction != 0xC00023D
+		if ((gpMarioForCallBack->mStatus & TMario::STATUS_TYPE_MASK)
+		        == TMario::STATUS_TYPE_WAITING
+		    && gpMarioForCallBack->mStatus != 0xC00023D
 		    && gpMarioForCallBack->onYoshi() == 0) {
 
-			check2 = !(gpMarioForCallBack->mAction != 0xC400202
-			           && gpMarioForCallBack->mAction != 0xC000203)
+			check2 = !(gpMarioForCallBack->mStatus != 0xC400202
+			           && gpMarioForCallBack->mStatus != 0xC000203)
 			             ? TRUE
 			             : FALSE;
 		}
@@ -893,12 +896,13 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 
 		// Definitely some inline shenanigans
 		// And this is wrong
-		if ((gpMarioForCallBack->mAction & 0x1C0) == 0
-		    && gpMarioForCallBack->mAction != 0xC00023D
+		if ((gpMarioForCallBack->mStatus & TMario::STATUS_TYPE_MASK)
+		        == TMario::STATUS_TYPE_WAITING
+		    && gpMarioForCallBack->mStatus != 0xC00023D
 		    && gpMarioForCallBack->onYoshi() == 0) {
 
-			check2 = !(gpMarioForCallBack->mAction != 0xC400202
-			           && gpMarioForCallBack->mAction != 0xC000203)
+			check2 = !(gpMarioForCallBack->mStatus != 0xC400202
+			           && gpMarioForCallBack->mStatus != 0xC000203)
 			             ? TRUE
 			             : FALSE;
 		}
@@ -1202,7 +1206,7 @@ f32 TMario::setAnimation(int param_1, f32 param_2)
 			check = true;
 		}
 
-		if (mAction == 0x10001308) {
+		if (mStatus == 0x10001308) {
 			check = true;
 		}
 
@@ -1650,7 +1654,7 @@ void TMario::considerWaist()
 	f32 angleChangeRate;
 
 	// Possibly unused get params function?
-	if (checkActionFlag(0x10000)) {
+	if (checkStatusFlag(STATUS_FLAG_UNK10000)) {
 		if (mGroundPlane->isWaterSurface()) {
 			maxPitch    = mSurfingParamsWaterRed.mWaistPitchMax.get();
 			targetPitch = mSurfingParamsWaterRed.mWaistPitch.get();
@@ -1690,7 +1694,7 @@ void TMario::considerWaist()
 	f32 targetRoll;
 	s16 diffAngle = mFaceAngle.y - unk9C;
 	// Possibly unused get params function?
-	if (checkActionFlag(0x10000)) {
+	if (checkStatusFlag(STATUS_FLAG_UNK10000)) {
 		if (mGroundPlane->isWaterSurface()) {
 			rollMax    = mSurfingParamsWaterRed.mWaistRollMax.get();
 			targetRoll = mSurfingParamsWaterRed.mWaistRoll.get();
@@ -1731,7 +1735,7 @@ void TMario::considerWaist()
 // This needs work!
 void TMario::calcBaseMtx(MtxPtr mtx)
 {
-	if (mAction == 0x800447) {
+	if (mStatus == 0x800447) {
 		if (mRailType == 0) {
 			mPinaRail->calcAnm();
 			MTXCopy(mPinaRail->getModel()->getAnmMtx(0),
@@ -1752,7 +1756,7 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		mPosition.x = mtx[0][3];
 		mPosition.y = mtx[1][3];
 		mPosition.z = mtx[2][3];
-	} else if (checkActionFlag(0x100000)) {
+	} else if (checkStatusFlag(STATUS_FLAG_UNK100000)) {
 		J3DTransformInfo ti;
 		ti.mScale.x     = 1.0f;
 		ti.mScale.y     = 1.0f;
@@ -1765,9 +1769,8 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		ti.mTranslate.y = mPosition.y;
 		ti.mTranslate.z = mPosition.z - radiusAtY * JMASCos(mModelFaceAngle);
 		J3DGetTranslateRotateMtx(ti, mtx);
-
 	} else {
-		if (!checkActionFlag(0x2000)) {
+		if (!checkStatusFlag(STATUS_FLAG_SWIMMING)) {
 			J3DTransformInfo ti;
 			ti.mScale.x     = 1.0f;
 			ti.mScale.y     = 1.0f;
@@ -1787,7 +1790,7 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 				MTXCopy(mHolder->getTakingMtx(), mtx);
 			} else {
 
-				if (mAction != 0x80088A && mAction != 0x10000358) {
+				if (mStatus != 0x80088A && mStatus != 0x10000358) {
 					mFaceAngle.x = 0;
 				}
 				// Probably another checkFlag inline
@@ -2025,12 +2028,12 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 		mCap->perform(2, graphics);
 	}
 
-	if (checkActionFlag(0x10000)) {
+	if (checkStatusFlag(STATUS_FLAG_UNK10000)) {
 		mSurfGesso->getModel()->setBaseTRMtx(mModel->unk8->getBaseTRMtx());
 		mSurfGesso->perform(2, graphics);
 	}
 
-	if (mAction == 0x800447) {
+	if (mStatus == 0x800447) {
 		mTorocco->perform(2, graphics);
 	}
 
@@ -2059,7 +2062,7 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (mAction == 0x4000440 && mAnimationId != 0x92) {
+	if (mStatus == 0x4000440 && mAnimationId != 0x92) {
 		f32 blendRatio = unk414.z;
 		if (blendRatio < 0.3f) {
 			changeHand(2);
@@ -2106,11 +2109,11 @@ void TMario::calcView(JDrama::TGraphics* graphics)
 		mCap->perform(4, graphics);
 	}
 
-	if (checkActionFlag(0x10000)) {
+	if (checkStatusFlag(STATUS_FLAG_UNK10000)) {
 		mSurfGesso->perform(4, graphics);
 	}
 
-	if (mAction == 0x800447) {
+	if (mStatus == 0x800447) {
 		mTorocco->perform(4, graphics);
 	}
 }
@@ -2130,19 +2133,19 @@ void TMario::entryModels(JDrama::TGraphics* graphics)
 		mCap->perform(0x200, graphics);
 	}
 
-	if (checkActionFlag(0x10000)) {
+	if (checkStatusFlag(STATUS_FLAG_UNK10000)) {
 		mSurfGesso->setLightData(mGroundPlane, mPosition);
 		mSurfGesso->perform(0x200, graphics);
 	}
 
-	if (mAction == 0x800447) {
+	if (mStatus == 0x800447) {
 		mTorocco->perform(0x200, graphics);
 	}
 }
 
 void TMario::drawSpecial(JDrama::TGraphics* graphics)
 {
-	if (mAction == 0x20338) {
+	if (mStatus == 0x20338) {
 		unk4EC = 1;
 		unk114 |= 0x20;
 	} else {

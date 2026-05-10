@@ -35,11 +35,11 @@ bool TMario::getNozzle(THitActor* sender, TWaterGun::TNozzleType type)
 
 void TMario::getGesso(THitActor* param_1)
 {
-	if (mAction != 0x10000) {
+	if (mStatus != 0x10000) {
 		mFaceAngle.y    = DEG2SHORTANGLE(param_1->mRotation.y);
 		mModelFaceAngle = mFaceAngle.y;
 		changePlayerStatus(0x810446, 0, false);
-		mActionTimer = mDeParams.mSurfStartFreezeTime.get();
+		mStatusTimer = mDeParams.mSurfStartFreezeTime.get();
 		emitGetEffect();
 		switch (param_1->getActorType()) {
 		case 0x400000C5:
@@ -235,7 +235,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			getCoinBlue();
 			return TRUE;
 		case 0x20000013: // 1-up shroom / pickup-action
-			if (message == HIT_MESSAGE_ATTACK && mAction != 0x1302) {
+			if (message == HIT_MESSAGE_ATTACK && mStatus != 0x1302) {
 				unk384          = sender;
 				mPosition.x     = sender->mPosition.x;
 				mPosition.z     = sender->mPosition.z;
@@ -315,11 +315,11 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			break;
 		case 0x40000098: { // wire/zipline
 			if (mHolder == nullptr) {
-				if (mAction == 0x892 && mVel.y > 0.0f)
+				if (mStatus == 0x892 && mVel.y > 0.0f)
 					return FALSE;
-				if (mAction == 0x893 && mVel.y > 0.0f)
+				if (mStatus == 0x893 && mVel.y > 0.0f)
 					return FALSE;
-				if (mAction == 0x208BA)
+				if (mStatus == 0x208BA)
 					return FALSE;
 				if (onYoshi())
 					return FALSE;
@@ -336,7 +336,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				mWireSag       = 0.0f;
 
 				bool flipDir;
-				if (mAction == 0x893 || mAction == 0x80088A) {
+				if (mStatus == 0x893 || mStatus == 0x80088A) {
 					flipDir = true;
 				} else if (mVel.y < 0.0f) {
 					flipDir = false;
@@ -620,7 +620,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		}
 		if (message == HIT_MESSAGE_UNK3 && !isInvincible()) {
 			unk118 |= 0x800;
-			if (!checkActionFlag(0x800)) {
+			if (!checkStatusFlag(STATUS_FLAG_JUMPING)) {
 				rumbleStart(0x15, 0x0A);
 			}
 			return TRUE;
@@ -729,7 +729,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 
 	case 0x08000024: // boss-eel-class
 		if (!isInvincible() && message == HIT_MESSAGE_ATTACK
-		    && (((mAction - 0x800000) != 0x8A9) || mActionState != 3)) {
+		    && (((mStatus - 0x800000) != 0x8A9) || mStatusState != 3)) {
 			damageExec(sender, mDmgParamsBGTentacle.mDamage.get(),
 			           mDmgParamsBGTentacle.mDownType.get(),
 			           mDmgParamsBGTentacle.mWaterEmit.get(),
@@ -855,9 +855,9 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		break;
 
 	case 0x080000C0:
-		if (mAction != 0x1336 && message == HIT_MESSAGE_TAKE) {
+		if (mStatus != 0x1336 && message == HIT_MESSAGE_TAKE) {
 			mHolder = (TTakeActor*)sender;
-			if (!checkActionFlag(0x800)) {
+			if (!checkStatusFlag(STATUS_FLAG_JUMPING)) {
 				setAnimation(0x4D, 1.0f);
 				s16 endFrame = getMotionFrameCtrl().getEnd();
 				getMotionFrameCtrl().setFrame((f32)endFrame);

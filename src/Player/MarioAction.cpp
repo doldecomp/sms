@@ -33,12 +33,12 @@ BOOL TMario::taking()
 
 BOOL TMario::actnMain()
 {
-	u32 action = mAction;
+	u32 status = mStatus;
 
 	BOOL result = FALSE;
 
 	// TODO: Action enum
-	switch (action) {
+	switch (status) {
 	case 0x383:
 		result = taking();
 		break;

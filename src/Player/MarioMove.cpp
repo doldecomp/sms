@@ -15,7 +15,7 @@
 
 f32 TMario::getJumpAccelControl() const
 {
-	if (mAction == 0x892)
+	if (mStatus == 0x892)
 		return mWireParams.mWireJumpAccelControl.get();
 
 	return mJumpParams.mJumpAccelControl.get();
@@ -23,7 +23,7 @@ f32 TMario::getJumpAccelControl() const
 
 f32 TMario::getJumpSlideControl() const
 {
-	if (mAction == 0x892)
+	if (mStatus == 0x892)
 		return mWireParams.mWireJumpSlideControl.get();
 
 	if (onYoshi() && (mYoshi->mFlutterState == 1 ? true : false))
@@ -62,11 +62,12 @@ bool TMario::isInvincible() const
 	if (unk118 & 0x8 ? true : false)
 		return true;
 
-	if (mAction == 0x89C)
+	if (mStatus == 0x89C)
 		return true;
 
 	if (gpMarDirector->isDemoMode3() || gpMarDirector->isDemoMode4()
-	    || gpMarDirector->isTalkModeNow() || (mAction & 0x1000 ? true : false))
+	    || gpMarDirector->isTalkModeNow()
+	    || (mStatus & STATUS_FLAG_UNK1000 ? true : false))
 		return true;
 
 	return false;
@@ -119,7 +120,7 @@ void TMario::warpRequest(const JGeometry::TVec3<f32>& pos, f32 angle)
 
 void TMario::flowMove(const JGeometry::TVec3<f32>& flow)
 {
-	if ((mAction & 0x2000 ? true : false) == true) {
+	if (checkStatusFlag(STATUS_FLAG_SWIMMING) == true) {
 		mPosition.x += flow.x;
 		mPosition.y += flow.y;
 		mPosition.z += flow.z;
@@ -164,7 +165,7 @@ BOOL TMario::considerRotateJumpStart()
 
 BOOL TMario::canBendBody()
 {
-	u32 act = mAction & 0x1FF;
+	u32 act = mStatus & STATUS_TYPE_AND_ID_MASK;
 	if (act >= 0x14B && act <= 0x14F)
 		return FALSE;
 	if (act >= 0x140 && act <= 0x143)
@@ -322,24 +323,25 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		startVoice(0x78B6);
 		break;
 
-		// wrong order of cases
-
 	case 0x884:
 		mVel.y = mGroundPlane != nullptr
 		             ? 0.01f * mGroundPlane->getActiveJumpPower()
 		             : 0.0f;
 		startVoice(0x78B1);
 		break;
+
 	case 0x895:
 	case 0x896:
 		mVel.y = (mForwardVel * 0.25f) + mJumpParams.mRotateJumpForceY.get();
 		mForwardVel *= 0.8f;
 		startVoice(0x78B6);
 		break;
+
 	case 0x208B4:
 		mVel.y      = 31.5f;
 		mForwardVel = 8.0f;
 		break;
+
 	case 0x281089A: {
 		startVoice(0x78AB);
 
@@ -355,35 +357,42 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		}
 		break;
 	}
+
 	case 0x883:
 		mForwardVel = mJumpParams.mBackJumpForce.get();
 		mVel.y      = (mForwardVel * 0.0f) + mJumpParams.mBackJumpForceY.get();
 		startVoice(0x78B6);
 		break;
+
 	case 0x2000886:
 		mVel.y      = (mForwardVel * 0.0f) + 62.0f;
 		mForwardVel = 24.0f;
 		startVoice(0x78B1);
 		break;
+
 	case 0x887:
 		mVel.y       = (mForwardVel * 0.0f) + mJumpParams.mTurnJumpForce.get();
 		mForwardVel  = 8.0f;
 		mFaceAngle.y = mIntendedYaw;
 		startVoice(0x78B6);
 		break;
+
 	case 0x2000885:
 		startVoice(0x78AB);
 		mVel.y = (mForwardVel * 0.25f) + 42.0f;
 		break;
+
 	case 0x208B8:
 		break;
+
 	case 0x208B7:
-		if (mActionArg != 2) {
+		if (mStatusArg != 2) {
 			mVel.y = mJumpParams.mFireDownForce.get();
-			if (mActionArg == 0)
+			if (mStatusArg == 0)
 				mForwardVel = -mJumpParams.mFireBackVelocity.get();
 		}
 		break;
+
 	case 0x80088A: {
 		startVoice(0x7884);
 
@@ -398,16 +407,19 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		mVel.z      = mSlideVelZ;
 		break;
 	}
+
 	case 0x888:
 		startVoice(0x78B1);
 		mForwardVel = mJumpParams.mBroadJumpForce.get();
 		mVel.y      = mJumpParams.mBroadJumpForceY.get();
 		break;
+
 	case 0x2000889:
 		startVoice(0x78B1);
 		mForwardVel = mJumpParams.mRotBroadJumpForce.get();
 		mVel.y      = mJumpParams.mRotBroadJumpForceY.get();
 		break;
+
 	case 0x88B: {
 		if (mWaterGun != nullptr) {
 			if ((int)mWaterGun->mCurrentNozzle == 1) {
@@ -422,6 +434,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		}
 		break;
 	}
+
 	case 0x2000890:
 		switch (mAnimationId) {
 		case 0xD2:
@@ -439,6 +452,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		}
 		mForwardVel *= 0.8f;
 		break;
+
 	case 0x892:
 		mVel.y      = (mForwardVel * 0.25f) + 42.0f;
 		mForwardVel = 0.0f;
@@ -448,6 +462,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		mVel.z      = mSlideVelZ;
 		startVoice(0x78B6);
 		break;
+
 	case 0x893: {
 		if (arg == 0) {
 			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * 1.0f;
@@ -473,6 +488,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		startVoice(0x78B9);
 		break;
 	}
+
 	case 0x894:
 		mVel.y      = (mForwardVel * 0.0f) + 42.0f;
 		mForwardVel = 0.0f;
@@ -485,7 +501,6 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	}
 
 	if (unk368 > 0.0f ? TRUE : FALSE) {
-
 		f32 scale = ((mGraffitoParams.mSinkJumpRateMax.get()
 		              - mGraffitoParams.mSinkJumpRateMin.get())
 		             * (1.0f - (unk368 / mGraffitoParams.mSinkTime.get())))
@@ -507,8 +522,8 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		mYoshi->mFlutterTimer = mYoshi->mMaxFlutterTimer;
 	}
 
-	*(f32*)((u8*)this + 0x104) = mPosition.y;
-	if (nextStatus & 0x02000000)
+	unk104 = mPosition.y;
+	if (nextStatus & STATUS_FLAG_UNK2000000)
 		unk78 |= 0x100;
 	else
 		unk78 &= 0xFFFFFEFF;
@@ -546,13 +561,13 @@ void TMario::throwMario(const JGeometry::TVec3<f32>&, f32) { }
 int TMario::changePlayerStatus(u32 status, u32 arg, bool force)
 {
 	if (!force) {
-		if (status == mAction)
+		if (status == mStatus)
 			return 0;
-		if (mAction & 0x1000 ? true : false)
+		if (mStatus & STATUS_FLAG_UNK1000 ? true : false)
 			return 0;
 	}
 
-	if (mAction == 0x20467)
+	if (mStatus == 0x20467)
 		return 0;
 
 	if (SMS_isDivingMap()) {
@@ -560,20 +575,20 @@ int TMario::changePlayerStatus(u32 status, u32 arg, bool force)
 			return 0;
 	}
 
-	switch (status & 0x1C0) {
-	case 0x40:
+	switch (status & STATUS_TYPE_MASK) {
+	case STATUS_TYPE_RUNNING:
 		status = setStatusToRunning(status, arg);
 		break;
-	case 0x80:
+	case STATUS_TYPE_JUMPING:
 		status = setStatusToJumping(status, arg);
 		break;
 	}
 
-	mPrevAction  = mAction;
-	mAction      = status;
-	mActionArg   = arg;
-	mActionState = 0;
-	mActionTimer = 0;
+	mPrevStatus  = mStatus;
+	mStatus      = status;
+	mStatusArg   = arg;
+	mStatusState = 0;
+	mStatusTimer = 0;
 	return 1;
 }
 
@@ -649,7 +664,7 @@ void TMario::thinkDirty() { }
 
 void TMario::thinkHeight()
 {
-	if (mAction & 0x800 ? true : false) {
+	if (checkStatusFlag(STATUS_FLAG_JUMPING)) {
 		f32 height = mPosition.y - mFloorPosition.y;
 		if (unk36C < height)
 			unk36C = height;
@@ -771,26 +786,26 @@ void TMario::stateMachine()
 {
 	int result = 1;
 	while (result != 0) {
-		switch (mAction & 0x1C0) {
-		case 0x000:
+		switch (mStatus & STATUS_TYPE_MASK) {
+		case STATUS_TYPE_WAITING:
 			result = waitMain();
 			break;
-		case 0x040:
+		case STATUS_TYPE_RUNNING:
 			result = moveMain();
 			break;
-		case 0x080:
+		case STATUS_TYPE_JUMPING:
 			result = jumpMain();
 			break;
-		case 0x0C0:
+		case STATUS_TYPE_SWIMMING:
 			result = swimMain();
 			break;
-		case 0x100:
+		case STATUS_TYPE_DEMO:
 			result = demoMain();
 			break;
-		case 0x140:
+		case STATUS_TYPE_SPECIAL:
 			result = specMain();
 			break;
-		case 0x180:
+		case STATUS_TYPE_ACTION:
 			result = actnMain();
 			break;
 		}

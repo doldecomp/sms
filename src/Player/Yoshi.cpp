@@ -295,7 +295,7 @@ void TYoshi::changeAnimation(int id)
 u16 TYoshi::changeHand()
 {
 	u16 curIdx = mActor->getCurAnmIdx(0);
-	u32 action = mMario->mAction;
+	u32 action = mMario->mStatus;
 
 	if (action & 0x400) {
 		if (curIdx == 12)
@@ -309,7 +309,7 @@ u16 TYoshi::changeHand()
 		if (mFlutterState == 1)
 			return 9;
 		if (action == 0x8008A9) {
-			u16 actionState = mMario->mActionState;
+			u16 actionState = mMario->mStatusState;
 			if ((s16)actionState < 2) {
 				if ((s16)actionState >= 0)
 					return 8;
@@ -343,7 +343,7 @@ u16 TYoshi::changeHand()
 			return 13;
 	}
 
-	u32 a2 = mMario->mAction;
+	u32 a2 = mMario->mStatus;
 	if (a2 == 0x8023C)
 		return 6;
 	if (a2 == 0x1302)
@@ -478,7 +478,7 @@ void TYoshi::thinkAnimation()
 	f32 nextFrame = mMario->getMotionFrameCtrl().getRate();
 	u16 curIdx    = mActor->getCurAnmIdx(0);
 	u16 newIdx    = curIdx;
-	u32 action    = mMario->mAction;
+	u32 action    = mMario->mStatus;
 
 	if (action & 0x400) {
 		BOOL tmp;
@@ -500,7 +500,7 @@ void TYoshi::thinkAnimation()
 		if (mFlutterState == 1) {
 			newIdx = 9;
 		} else if (action == 0x8008A9) {
-			switch (mMario->mActionState) {
+			switch (mMario->mStatusState) {
 			case 0:
 			case 1:
 				newIdx = 8;
@@ -548,7 +548,7 @@ void TYoshi::thinkAnimation()
 			}
 		} else {
 		walking:
-			u32 act = mMario->getAction();
+			u32 act = mMario->mStatus;
 			if (act == 0x8023C)
 				newIdx = 6;
 			else if (act == 0x1302)
@@ -588,7 +588,7 @@ void TYoshi::thinkAnimation()
 		J3DAnmTransform* oldAnm = mActor->getBckOldMotionBlendAnmPtr();
 		oldAnm->mFrame          = mActor->getFrameCtrl(0)->getFrame();
 
-		if (mMario->mAction == 0x4045C)
+		if (mMario->mStatus == 0x4045C)
 			nextFrame = mMario->getMotionFrameCtrl().getRate();
 		else
 			nextFrame = unkA0 + unkA4 * mMario->mForwardVel;
@@ -807,7 +807,7 @@ void TYoshi::movement()
 {
 	if (!gpMarDirector->isDemoMode3() && !gpMarDirector->isDemoMode4()
 	    && !gpMarDirector->isTalkModeNow()) {
-		if (!mMario->checkActionFlag(0x1000) && unkC > 0) {
+		if (!mMario->checkStatusFlag(TMario::STATUS_FLAG_UNK1000) && unkC > 0) {
 			unkC -= 1;
 		}
 	}
