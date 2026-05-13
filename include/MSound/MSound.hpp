@@ -120,7 +120,31 @@ public:
 			    param_1, param_2, param_3, param_4, param_5, param_6);
 	}
 
-	void startForceJumpSound(Vec*, u32, f32, u32) { }
+	void startForceJumpSound(Vec* param_1, u32 param_2, f32 param_3,
+	                         u32 param_4)
+	{
+		u32 r31;
+		switch (param_2 & 0xff) {
+		case 0x15:
+		case 0x17:
+		case 0x1D:
+			r31 = 0x180A;
+			break;
+
+		case 0x1E:
+		default:
+			if (param_4 < 0x1770)
+				r31 = 0x1810;
+			else if (param_4 < 0x2EE0)
+				r31 = 0x1811;
+			else
+				r31 = 0x1812;
+			break;
+		}
+
+		if (gateCheck(r31))
+			startSoundActor(r31, param_1, 0, nullptr, 0, 4);
+	}
 
 	bool checkUnkA8(u32 flag) { return !(unkA8 & flag) ? false : true; }
 

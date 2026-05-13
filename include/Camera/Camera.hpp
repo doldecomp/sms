@@ -97,8 +97,8 @@ public:
 	void calcExternalData_();
 	void ctrlGameCamera_();
 	void perform(u32, JDrama::TGraphics*);
-	void getOffsetAngleX() const;
-	void getOffsetAngleY() const;
+	s16 getOffsetAngleX() const;
+	s16 getOffsetAngleY() const;
 	void getFinalAngleZ() const;
 	~CPolarSubCamera();
 	void controlByCameraCode_(int*);
@@ -134,7 +134,9 @@ public:
 public:
 	/* 0x50 */ int mMode;
 	/* 0x54 */ int unk54;
-	/* 0x58 */ char unk58[0xA4 - 0x58];
+	/* 0x58 */ char unk58[0x64 - 0x58];
+	/* 0x64 */ u16 unk64;
+	/* 0x68 */ char unk68[0xA4 - 0x68];
 	/* 0xA4 */ s16 unkA4;
 	/* 0xA6 */ char unkA6[0x120 - 0xA6];
 	/* 0x120 */ TMarioGamePad* unk120;
@@ -144,7 +146,9 @@ public:
 	/* 0x148 */ JGeometry::TVec3<f32> unk148;
 	/* 0x154 */ char unk154[0x1EC - 0x154];
 	/* 0x1EC */ Mtx unk1EC;
-	/* 0x21C */ char unk21C[0x2C8 - 0x21C];
+	/* 0x21C */ char unk21C[0x258 - 0x21C];
+	/* 0x258 */ s16 unk258;
+	/* 0x25A */ char unk25A[0x2C8 - 0x25A];
 	/* 0x2C8 */ s16 unk2C8;
 };
 

@@ -121,7 +121,7 @@ public:
 	void rotateProp(f32);
 	void setAmountToRate(f32);
 	void setBaseTRMtx(Mtx);
-	bool suck();
+	BOOL suck();
 	void triggerPressureMovement(const TMarioControllerWork&);
 
 	J3DModel* getModel() { return mFluddModel->unk4; }
@@ -191,7 +191,10 @@ public:
 	void updateUnk1C88(u8 emittedWater)
 	{
 		mIsEmitWater = emittedWater;
-		s16 decRate  = mNozzleList[mCurrentNozzle]->mEmitParams.mDecRate.get();
+		// TODO: one more inline for getting emit params
+		// rather than separate getMaxWater, getDecRate, etc. functions?
+		s16 decRate = (((const TWaterGun*)this)->getCurrentNozzle())
+		                  ->mEmitParams.mDecRate.get();
 
 		unk1C88 += 10.0f
 		           * ((f32)emittedWater * (f32)decRate

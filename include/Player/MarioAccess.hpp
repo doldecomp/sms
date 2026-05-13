@@ -17,7 +17,7 @@ extern JGeometry::TVec3<f32>* gpMarioPos;
 extern s16 *gpMarioAngleX, *gpMarioAngleY, *gpMarioAngleZ;
 extern f32 *gpMarioSpeedX, *gpMarioSpeedY, *gpMarioSpeedZ;
 
-extern u16* gpMarioLightID;
+extern s16* gpMarioLightID;
 extern u32* gpMarioFlag;
 extern f32* gpMarioThrowPower;
 extern const TBGCheckData** gpMarioGroundPlane;

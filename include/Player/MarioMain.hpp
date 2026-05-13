@@ -96,6 +96,7 @@ struct TMarioSoundValues {
 };
 
 class TMarioGamePad;
+struct TMarioControllerWork;
 
 class TMario : public TTakeActor, public TDrawSyncCallback {
 public:
@@ -831,7 +832,7 @@ public:
 			return mDmgMapParams0;
 		}
 	}
-	void checkGroundPlane(f32, f32, f32, f32*, const TBGCheckData**);
+	BOOL checkGroundPlane(f32, f32, f32, f32*, const TBGCheckData**);
 	void makeHistory();
 	void checkStickSmash();
 	int checkStickRotate(int*);
@@ -855,7 +856,7 @@ public:
 	int checkAllMotions();
 	BOOL changePlayerDropping(u32, u32);
 	BOOL changePlayerJumping(u32, u32);
-	void changePlayerTriJump();
+	BOOL changePlayerTriJump();
 	BOOL changePlayerStatus(u32, u32, bool);
 	void throwMario(const JGeometry::TVec3<f32>&, f32);
 	u32 setStatusToRunning(u32, u32);
@@ -865,12 +866,12 @@ public:
 	void isTurnning();
 	void isTurnStart();
 	f32 checkPlayerAround(int, f32);
-	void isJumpMiss();
+	BOOL isJumpMiss();
 	void isSlipLimit();
-	void getSlideStopCatch();
-	void getSlideStopNormal();
-	void canSlipJump();
-	void isSlipStart();
+	f32 getSlideStopCatch();
+	f32 getSlideStopNormal();
+	BOOL canSlipJump();
+	BOOL isSlipStart();
 	BOOL isFrontSlip(int);
 	void checkRoofPlane(const Vec&, f32, const TBGCheckData**);
 	TBGCheckData* checkWallPlane(Vec*, f32, f32);
@@ -1228,10 +1229,33 @@ public:
 	bool fabricatedActionInline() const
 	{
 		if ((mStatus & STATUS_TYPE_AND_ID_MASK) >= 0x168
-		    && 0x16c >= (mStatus & STATUS_TYPE_AND_ID_MASK)) {
+		    && 0x16c >= (mStatus & STATUS_TYPE_AND_ID_MASK))
 			return true;
-		}
+
 		return false;
+	}
+
+	// Fabricated
+	bool isActionThing() const
+	{
+		if ((mStatus & STATUS_TYPE_AND_ID_MASK) >= 0x14C
+		    && 150 >= (mStatus & STATUS_TYPE_AND_ID_MASK))
+			return true;
+
+		return false;
+	}
+
+	// Fabricated and probably wrong
+	void damageExec(THitActor* hittingActor, int code)
+	{
+		const TEParams& params = getDmgMapCode(code);
+
+		hittingActor->mPosition.x = mPosition.x + JMASSin(mFaceAngle.y);
+		hittingActor->mPosition.z = mPosition.z + JMASCos(mFaceAngle.y);
+		damageExec(hittingActor, params.mDamage.get(), params.mDownType.get(),
+		           params.mWaterEmit.get(), params.mMinSpeed.get(),
+		           params.mMotor.get(), params.mDirty.get(),
+		           params.mInvincibleTime.get());
 	}
 
 public:
@@ -1239,6 +1263,7 @@ public:
 	/* 0x78 */ u32 unk78;
 
 	enum {
+		STATUS_FLAG_UNK200      = 0x200,
 		STATUS_FLAG_JUMPING     = 0x800,
 		STATUS_FLAG_UNK1000     = 0x1000,
 		STATUS_FLAG_SWIMMING    = 0x2000,
@@ -1246,6 +1271,7 @@ public:
 		STATUS_FLAG_UNK100000   = 0x100000,
 		STATUS_FLAG_UNK2000000  = 0x2000000,
 		STATUS_FLAG_UNK10000000 = 0x10000000,
+		STATUS_FLAG_UNK20000000 = 0x20000000,
 		STATUS_FLAG_UNK80000000 = 0x80000000,
 
 		STATUS_TYPE_WAITING  = 0x000,
@@ -1276,7 +1302,8 @@ public:
 	/* 0x9A */ s16 mModelFaceAngle;
 	/* 0x9C */ s16 unk9C;
 	/* 0x9E */ s16 unk9E;
-	/* 0xA0 */ u32 unkA0;
+	/* 0xA0 */ s16 unkA0;
+	/* 0xA2 */ u16 unkA2;
 	/* 0xA4 */ JGeometry::TVec3<f32> mVel;
 
 	/* 0xB0 */ f32 mForwardVel;
@@ -1284,7 +1311,9 @@ public:
 	/* 0xB8 */ f32 mSlideVelZ;
 
 	/* 0xBC */ f32 unkBC;
-	/* 0xC0 */ char unkC0[0x18];
+	/* 0xC0 */ f32 unkC0;
+	/* 0xC4 */ s16 unkC4;
+	/* 0xC6 */ char unkC6[0xD8 - 0xC6];
 
 	/* 0xD8 */ const TBGCheckData* mWallPlane;   // TBGCheckData 0xD8
 	/* 0xDC */ const TBGCheckData* mRoofPlane;   // TBGCheckData 0xDC
@@ -1296,19 +1325,19 @@ public:
 	/* 0xF4 */ s16 mSlopeAngle;
 	/* 0xF6 */ s16 unkF6;
 
-	/* 0xF8 */ u16 mLightID;
+	/* 0xF8 */ s16 mLightID;
 	/* 0xFA */ u16 mAnimationId;
 
 	/* 0xFC */ s16 unkFC;
-	/* 0xFA */ s16 unkFA;
+	/* 0xFE */ s16 unkFE;
 
 	/* 0x100 */ s16 unk100;
 	/* 0x102 */ s16 unk102;
 	/* 0x104 */ f32 unk104;
 
-	/* 0x108 */ u32 unk108;
-	/* 0x10C */ u32 unk10C;
-	/* 0x110 */ u32 unk110;
+	/* 0x108 */ TMarioControllerWork* unk108;
+	/* 0x10C */ f32 unk10C;
+	/* 0x110 */ f32 unk110;
 
 	/* 0x114 */ u16 unk114;
 	/* 0x116 */ u16 unk116;
@@ -1320,13 +1349,14 @@ public:
 
 	/* 0x122 */ u16 unk122;
 
-	/* 0x124 */ u32 unk124;
-	/* 0x128 */ u32 unk128;
+	/* 0x124 */ u16 unk124;
+	/* 0x126 */ u16 unk126;
+	/* 0x128 */ s16 unk128;
 	/* 0x12C */ f32 unk12C;
 	/* 0x130 */ f32 unk130;
 	/* 0x134 */ f32 unk134; // Amount of dirty?
-	/* 0x138 */ u32 unk138;
-	/* 0x13C */ u32 unk13C;
+	/* 0x138 */ f32 unk138;
+	/* 0x13C */ s16 unk13C;
 	/* 0x140 */ u32 unk140;
 	/* 0x144 */ u32 unk144;
 	/* 0x148 */ THitActor* unk148;
@@ -1334,45 +1364,46 @@ public:
 	/* 0x14E */ s16 unk14E;
 	/* 0x150 */ s16 unk150;
 	/* 0x154 */ TWaterEmitInfo* unk154;
-	/* 0x158 */ u32 unk158;
+	/* 0x158 */ TWaterEmitInfo* unk158;
 	/* 0x15C */ f32 unk15C;
 	/* 0x160 */ JGeometry::TVec3<f32>
 	    unk160[4]; // Bone position, probably larger array
-	/* 0x190 */ u32 unk190;
-	/* 0x194 */ u32 unk194;
-	/* 0x198 */ u32 unk198;
+	/* 0x190 */ f32 unk190;
+	/* 0x194 */ f32 unk194;
+	/* 0x198 */ f32 unk198;
 	/* 0x19C */ JGeometry::TVec3<f32> unk19C; // damage pos
-	/* 0x1A8 */ char unk1A8[0x1CC - 0x1A8];
-	/* 0x1CC */ f32 unk1CC;
-	/* 0x1D0 */ u32 unk1D0;
-	/* 0x1D4 */ u32 unk1D4;
-	/* 0x1D8 */ u32 unk1D8;
-	/* 0x1DC */ f32 unk1DC;
-	/* 0x1E0 */ u32 unk1E0;
-	/* 0x1E4 */ u32 unk1E4;
-	/* 0x1E8 */ u32 unk1E8;
-	/* 0x1EC */ f32 unk1EC;
-	/* 0x1F0 */ char unk1F0[0x220 - 0x1F0];
+	/* 0x1A8 */ char unk1A8[0x1C0 - 0x1A8];
+	/* 0x1C0 */ Mtx unk1C0;
+	/* 0x1F0 */ Mtx unk1F0;
 	/* 0x220 */ Mtx unk220;
-	/* 0x250 */ char unk250[0x29C - 0x250];
+	/* 0x250 */ Mtx unk250;
+	/* 0x280 */ char unk280[0x29C - 0x280];
 	/* 0x29C */ JGeometry::TVec3<f32> unk29C;
 	/* 0x2A8 */ JGeometry::TVec3<f32> unk2A8;
 	/* 0x2B4 */ S16Vec unk2B4;
+	/* 0x2BA */ s16 unk2BA;
 	/* 0x2BC */ f32 unk2BC;
 	/* 0x2C0 */ const TLiveActor* unk2C0;
-	/* 0x2C4 */ char unk2C4[0x314 - 0x2C4];
+	/* 0x2C4 */ Mtx unk2C4;
+	/* 0x2F4 */ JGeometry::TVec3<f32> unk2F4;
+	/* 0x300 */ JGeometry::TVec3<f32> unk300;
+	/* 0x30C */ f32 unk30C;
+	/* 0x310 */ char unk310[0x4];
 	/* 0x314 */ f32 unk314;
-	/* 0x318 */ char unk318[0x348 - 0x318];
+	/* 0x318 */ Mtx unk318;
 	/* 0x348 */ f32 unk348;
 	/* 0x34C */ u16 unk34C;
 	/* 0x34E */ u16 unk34E;
 	/* 0x350 */ s32 unk350;
-	/* 0x354 */ char unk354[0x368 - 0x354];
+	/* 0x354 */ char unk354[0x360 - 0x354];
+	/* 0x360 */ s16 unk360;
+	/* 0x362 */ s16 unk362;
+	/* 0x364 */ char unk364[0x4];
 	/* 0x368 */ f32 unk368;
 	/* 0x36C */ f32 unk36C;
 	/* 0x370 */ f32 unk370;
-	/* 0x374 */ u32 unk374;
-	/* 0x378 */ u32 unk378;
+	/* 0x374 */ f32 unk374;
+	/* 0x378 */ f32 unk378;
 	/* 0x37C */ u16 unk37C;
 	/* 0x37E */ u16 unk37E;
 	/* 0x380 */ u32 unk380;        // pump state?
@@ -1503,24 +1534,24 @@ public:
 
 	/* 0x2138 */ THHoverParams mHoverParams;
 	/* 0x217C */ TDivingParams mDivingParams;
-	TYoshiParams mYoshiParams;
-	TWaterEffectParams mWaterEffectParams;
-	TControllerParams mControllerParams;
+	/* 0x21E8 */ TYoshiParams mYoshiParams;
+	/* 0x22A4 */ TWaterEffectParams mWaterEffectParams;
+	/* 0x2338 */ TControllerParams mControllerParams;
 	/* 0x2408 */ TGraffitoParams mGraffitoParams;
 	/* 0x25B4 */ TDirtyParams mDirtyParams;
-	TMotorParams mMotorParams;
+	/* 0x279C */ TMotorParams mMotorParams;
 	TParticleParams mParticleParams;
 	TEffectParams mEffectParams;
 
 	// TODO: Should these be an array indexed by an enum?
 	/* 0x2944 */ TSlipParams mSlipParamsNormal;
-	TSlipParams mSlipParamsOil;
-	TSlipParams mSlipParamsAll;
-	TSlipParams mSlipParamsAllSlider;
-	TSlipParams mSlipParams45;
-	TSlipParams mSlipParamsWaterSlope;
-	TSlipParams mSlipParamsWaterGround;
-	TSlipParams mSlipParamsYoshi;
+	/* 0x2A28 */ TSlipParams mSlipParamsOil;
+	/* 0x2B0C */ TSlipParams mSlipParamsAll;
+	/* 0x2BF0 */ TSlipParams mSlipParamsAllSlider;
+	/* 0x2CD4 */ TSlipParams mSlipParams45;
+	/* 0x2DB8 */ TSlipParams mSlipParamsWaterSlope;
+	/* 0x2E9C */ TSlipParams mSlipParamsWaterGround;
+	/* 0x2F80 */ TSlipParams mSlipParamsYoshi;
 
 	TUpperParams mUpperBodyParams;
 
@@ -1546,7 +1577,7 @@ public:
 	TEParams mDmgParamsWaterSurface;
 
 	/* 0x3BCC */ TEParams mDmgMapParams0;
-	TEParams mDmgMapParams1;
+	/* 0x3C60 */ TEParams mDmgMapParams1;
 	TEParams mDmgMapParams2;
 	TEParams mDmgMapParams3;
 	TEParams mDmgMapParams4;
@@ -1556,9 +1587,9 @@ public:
 	TEParams mDmgMapParams8;
 	TEParams mDmgMapParams9;
 
-	TAutoDemoParams mAutoDemoParams;
-	TSoundParams mSoundParams;
-	TOptionParams mOptionParams;
+	/* 0x4194 */ TAutoDemoParams mAutoDemoParams;
+	/* 0x4228 */ TSoundParams mSoundParams;
+	/* 0x4244 */ TOptionParams mOptionParams;
 
 	char unk4290[0x80];
 };
