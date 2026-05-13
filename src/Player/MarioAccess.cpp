@@ -8,7 +8,7 @@ void* gpMarioAddress;
 JGeometry::TVec3<f32>* gpMarioPos;
 s16 *gpMarioAngleX, *gpMarioAngleY, *gpMarioAngleZ;
 f32 *gpMarioSpeedX, *gpMarioSpeedY, *gpMarioSpeedZ;
-u16* gpMarioLightID;
+s16* gpMarioLightID;
 u32* gpMarioFlag;
 f32* gpMarioThrowPower;
 const TBGCheckData** gpMarioGroundPlane;

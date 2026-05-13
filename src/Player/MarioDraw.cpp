@@ -1025,9 +1025,9 @@ void TMario::setPositions()
 	unk160[0].y = root[1][3];
 	unk160[0].z = root[2][3];
 
-	unk160[1].x = unk1CC;
-	unk160[1].y = unk1DC;
-	unk160[1].z = unk1EC;
+	unk160[1].x = unk1C0[0][3];
+	unk160[1].y = unk1C0[1][3];
+	unk160[1].z = unk1C0[2][3];
 
 	MtxPtr centerMtx = getCenterAnmMtx();
 	unk160[2].x      = centerMtx[0][3];

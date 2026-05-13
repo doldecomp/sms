@@ -10,16 +10,17 @@
 
 struct TMarioControllerWork {
 	enum Buttons {
-		R = 0x20,
-		A = 0x100,
-		B = 0x200,
-		L = 0x4000,
+		UNK10 = 0x10,
+		R     = 0x20,
+		A     = 0x100,
+		B     = 0x200,
+		L     = 0x4000,
 	};
 
 	/* 0x00 */ s16 mStickHS16;
 	/* 0x02 */ s16 mStickVS16;
-	/* 0x04 */ Buttons mInput;
-	/* 0x08 */ Buttons mFrameInput;
+	/* 0x04 */ s32 mInput;
+	/* 0x08 */ s32 mFrameInput;
 	/* 0x0C */ u8 mAnalogRU8;
 	/* 0x0D */ u8 mAnalogLU8;
 	/* 0x10 */ f32 mStickH;

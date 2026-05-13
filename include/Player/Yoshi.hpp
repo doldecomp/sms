@@ -46,7 +46,7 @@ public:
 	void initInLoadAfter();
 	void kill();
 	void movement();
-	BOOL onYoshi() { return mState == STATE_MOUNTED ? TRUE : FALSE; }
+	BOOL onYoshi();
 	void ride();
 	void setEggYoshiPtr(TEggYoshi*);
 	u16 changeHand();
@@ -139,5 +139,21 @@ public:
 	/* 0x11C */ void** mBodyAnmSoundTable;
 	/* 0x120 */ MAnmSound* mTongueAnmSound;
 };
+
+// TODO: dumb hack, but why is it not getting inlined in the original?!
+inline BOOL TYoshi::onYoshi()
+{
+	(void)0;
+	(void)0;
+	(void)0;
+	(void)0;
+	(void)0;
+	(void)0;
+	(void)0;
+	(void)0;
+	(void)0;
+	(void)0;
+	return mState == STATE_MOUNTED ? TRUE : FALSE;
+}
 
 #endif

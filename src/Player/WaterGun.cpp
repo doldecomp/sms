@@ -1849,7 +1849,7 @@ void TWaterGun::emit()
 		}
 	}
 }
-bool TWaterGun::suck()
+BOOL TWaterGun::suck()
 {
 	// TODO: Missing stack space
 	// volatile u32 unused1[7];
