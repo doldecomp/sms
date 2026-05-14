@@ -142,8 +142,8 @@ bool TMario::trampleExec(THitActor* param_1)
 	if (param_1->receiveMessage(this, HIT_MESSAGE_TRAMPLE) == FALSE)
 		return false;
 
-	if (mStatus == 0x888) {
-		changePlayerStatus(0x883, 0, false);
+	if (mStatus == STATUS_BROAD_JUMP) {
+		changePlayerStatus(STATUS_BACK_JUMP, 0, false);
 	} else {
 		switch (mAnimationId) {
 		case 0xd1:
@@ -204,8 +204,8 @@ void TMario::normalizeNozzle()
 void TMario::loserExec()
 {
 	// volatile u32 padding[2];
-	if (mStatus != 0x224e0 && mStatus != 0x21313 && mStatus != 0x224e1
-	    && mStatus != 0x1000192a) {
+	if (mStatus != 0x224E0 && mStatus != 0x21313 && mStatus != 0x224E1
+	    && mStatus != 0x1000192A) {
 		unk118 |= MARIO_FLAG_GAME_OVER;
 		mHealth = 0;
 
@@ -219,16 +219,16 @@ void TMario::loserExec()
 
 		if (checkStatusFlag(STATUS_FLAG_SWIMMING)) {
 			if (unk12C < 1.0f) {
-				changePlayerStatus(0x224e0, 0, true);
+				changePlayerStatus(0x224E0, 0, true);
 			} else {
-				changePlayerStatus(0x224e1, 0, true);
+				changePlayerStatus(0x224E1, 0, true);
 			}
 			return;
 		}
 		if (mStatus == 0x20338) {
 			changePlayerStatus(0x21313, 0, true);
 		} else {
-			changePlayerStatus(0x1000192a, 0, true);
+			changePlayerStatus(0x1000192A, 0, true);
 		}
 	}
 }
