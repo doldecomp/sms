@@ -737,12 +737,12 @@ public:
 	int hipAttacking();
 	void pullJumping();
 	void wireJumping();
-	void rotateJumping();
+	int rotateJumping();
 	int rocketing();
 	int rocketCheck();
 	int boardJumping();
 	int rotateBroadJumping();
-	void broadJumping();
+	int broadJumping();
 	void fireLanding();
 	void fireJumping();
 	void missJumping();
@@ -761,14 +761,14 @@ public:
 	int jumpDownCommon(int, int, f32);
 	void jumpingThrow();
 	int jumpCatch();
-	void jumpWall();
-	void uTurnJumping();
+	int jumpWall();
+	int uTurnJumping();
 	int landing();
-	void backJumping();
-	void ultraJumping();
-	void secJumping();
-	void jumping();
-	void jumpingCommonEvents();
+	int backJumping();
+	int ultraJumping();
+	int secJumping();
+	int jumping();
+	int jumpingCommonEvents();
 	int checkBackTrig();
 	int considerJumpRotate();
 	int jumpingBasic(int, int, int);
@@ -1282,6 +1282,27 @@ public:
 		STATUS_TYPE_SPECIAL  = 0x140,
 		STATUS_TYPE_ACTION   = 0x180,
 		STATUS_TYPE_MASK     = 0x1C0,
+
+		STATUS_JUMP = STATUS_FLAG_UNK2000000 | STATUS_FLAG_JUMPING
+		              | STATUS_TYPE_JUMPING | 0x0, // 0x2000880
+		STATUS_SECOND_JUMP = STATUS_FLAG_UNK2000000 | STATUS_FLAG_JUMPING
+		                     | STATUS_TYPE_JUMPING | 0x1, // 0x2000881
+		STATUS_ULTRA_JUMP
+		= STATUS_FLAG_JUMPING | STATUS_TYPE_JUMPING | 0x2, // 0x882
+		STATUS_BACK_JUMP
+		= STATUS_FLAG_JUMPING | STATUS_TYPE_JUMPING | 0x3, // 0x883
+
+		STATUS_WALL_JUMP = STATUS_FLAG_UNK2000000 | STATUS_FLAG_JUMPING
+		                   | STATUS_TYPE_JUMPING | 0x6, // 0x2000886
+		STATUS_U_TURN_JUMP
+		= STATUS_FLAG_JUMPING | STATUS_TYPE_JUMPING | 0x7, // 0x887
+		STATUS_BROAD_JUMP
+		= STATUS_FLAG_JUMPING | STATUS_TYPE_JUMPING | 0x8, // 0x888
+
+		STATUS_LEFT_ROTATE_JUMP
+		= STATUS_FLAG_JUMPING | STATUS_TYPE_JUMPING | 0x15, // 0x895
+		STATUS_RIGHT_ROTATE_JUMP
+		= STATUS_FLAG_JUMPING | STATUS_TYPE_JUMPING | 0x16, // 0x896
 
 		STATUS_ID_MASK = 0x3F,
 

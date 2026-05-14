@@ -416,7 +416,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		                   mDirtyParams.mPolSizeJump.get());
 
 	switch (status) {
-	case 0x2000880:
+	case STATUS_JUMP:
 	case 0x89C:
 		setPlayerJumpSpeed(0.25f, 42.0f);
 		mForwardVel *= 0.8f;
@@ -447,14 +447,14 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 			startVoice(0x78AB);
 		break;
 
-	case 0x2000881:
+	case STATUS_SECOND_JUMP:
 		setPlayerJumpSpeed(mJumpParams.mSecJumpSpeedMult.get(),
 		                   mJumpParams.mSecJumpForce.get());
 		mForwardVel *= mJumpParams.mSecJumpXZMult.get();
 		startVoice(0x78B1);
 		break;
 
-	case 0x882:
+	case STATUS_ULTRA_JUMP:
 		setPlayerJumpSpeed(mJumpParams.mUltraJumpSpeedMult.get(),
 		                   mJumpParams.mUltraJumpForce.get());
 		mForwardVel *= mJumpParams.mUltraJumpXZMult.get();
@@ -468,8 +468,8 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		startVoice(0x78B1);
 		break;
 
-	case 0x895:
-	case 0x896:
+	case STATUS_LEFT_ROTATE_JUMP:
+	case STATUS_RIGHT_ROTATE_JUMP:
 		setPlayerJumpSpeed(0.25f, mJumpParams.mRotateJumpForceY.get());
 		mForwardVel *= 0.8f;
 		startVoice(0x78B6);
@@ -496,7 +496,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		break;
 	}
 
-	case 0x883:
+	case STATUS_BACK_JUMP:
 		mForwardVel = mJumpParams.mBackJumpForce.get();
 		setPlayerJumpSpeed(0.0f, mJumpParams.mBackJumpForceY.get());
 		startVoice(0x78B6);
@@ -508,7 +508,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		startVoice(0x78B1);
 		break;
 
-	case 0x887:
+	case STATUS_U_TURN_JUMP:
 		setPlayerJumpSpeed(0.0f, mJumpParams.mTurnJumpForce.get());
 		mForwardVel  = 8.0f;
 		mFaceAngle.y = mIntendedYaw;
@@ -546,7 +546,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		break;
 	}
 
-	case 0x888:
+	case STATUS_BROAD_JUMP:
 		startVoice(0x78B1);
 		mForwardVel = mJumpParams.mBroadJumpForce.get();
 		mVel.y      = mJumpParams.mBroadJumpForceY.get();
@@ -560,13 +560,13 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 	case 0x88B: {
 		if (mWaterGun != nullptr) {
-			if ((int)mWaterGun->mCurrentNozzle == 1) {
+			if ((int)mWaterGun->mCurrentNozzle == TWaterGun::Rocket) {
 				startVoice(0x78B9);
 				rocketEffectStart();
 			}
-			if ((int)mWaterGun->mCurrentNozzle == 5)
+			if ((int)mWaterGun->mCurrentNozzle == TWaterGun::Turbo)
 				startVoice(0x788F);
-			if ((int)mWaterGun->mCurrentNozzle == 4)
+			if ((int)mWaterGun->mCurrentNozzle == TWaterGun::Hover)
 				startVoice(0x78AB);
 			mVel.y = 10.0f;
 		}
@@ -762,12 +762,12 @@ BOOL TMario::changePlayerTriJump()
 		changePlayerStatus(0x2000885, 0, false);
 	} else {
 		if (considerRotateJumpStart())
-			return true;
+			return 1;
 
 		changePlayerStatus(0x2000880, 0, false);
 	}
 
-	return true;
+	return 1;
 }
 
 int TMario::changePlayerJumping(u32 param_1, u32 param_2)
@@ -789,12 +789,12 @@ int TMario::changePlayerJumping(u32 param_1, u32 param_2)
 		changePlayerStatus(0x2000885, 0, false);
 	} else {
 		if (considerRotateJumpStart())
-			return true;
+			return 1;
 
 		changePlayerStatus(param_1, param_2, false);
 	}
 
-	return true;
+	return 1;
 }
 
 int TMario::changePlayerDropping(u32 status, u32 arg)
