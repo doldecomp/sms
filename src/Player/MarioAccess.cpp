@@ -164,8 +164,8 @@ s16 SMS_GetMarioHP() { return gpMarioOriginal->mHealth; }
 
 bool SMS_IsMarioHeadSlideAttack()
 {
-	if (gpMarioOriginal->mStatus == 0x00800456
-	    || gpMarioOriginal->mStatus == 0x0080088A) {
+	if (gpMarioOriginal->mStatus == 0x800456
+	    || gpMarioOriginal->mStatus == TMario::STATUS_DIVE_JUMP) {
 		return 1;
 	} else {
 		return 0;
@@ -174,7 +174,7 @@ bool SMS_IsMarioHeadSlideAttack()
 
 bool SMS_IsMarioStatusElecDamage()
 {
-	if (gpMarioOriginal->mStatus == 0x00020338) {
+	if (gpMarioOriginal->mStatus == TMario::STATUS_ELEC_DAMAGE) {
 		return 1;
 	} else {
 		return 0;
@@ -183,7 +183,7 @@ bool SMS_IsMarioStatusElecDamage()
 
 bool SMS_IsMarioStatusThrownDown()
 {
-	if (gpMarioOriginal->mStatus == 0x000208B8) {
+	if (gpMarioOriginal->mStatus == TMario::STATUS_THROWN_DOWN) {
 		return 1;
 	} else {
 		return 0;
@@ -192,7 +192,7 @@ bool SMS_IsMarioStatusThrownDown()
 
 bool SMS_IsMarioStatusHipDrop()
 {
-	if (gpMarioOriginal->mStatus == 0x008008A9) {
+	if (gpMarioOriginal->mStatus == TMario::STATUS_HIP_DROP) {
 		return 1;
 	} else {
 		return 0;

@@ -193,10 +193,10 @@ BOOL TMario::considerRotateJumpStart()
 	if (checkStickRotate(&spC)) {
 		switch (spC) {
 		case 2:
-			changePlayerStatus(0x896, 0, 0);
+			changePlayerStatus(STATUS_RIGHT_ROTATE_JUMP, 0, 0);
 			break;
 		case 3:
-			changePlayerStatus(0x895, 0, 0);
+			changePlayerStatus(STATUS_LEFT_ROTATE_JUMP, 0, 0);
 			break;
 		}
 		return 1;
@@ -502,7 +502,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		startVoice(0x78B6);
 		break;
 
-	case 0x2000886:
+	case STATUS_WALL_JUMP:
 		setPlayerJumpSpeed(0.0f, 62.0f);
 		mForwardVel = 24.0f;
 		startVoice(0x78B1);
@@ -764,7 +764,7 @@ BOOL TMario::changePlayerTriJump()
 		if (considerRotateJumpStart())
 			return 1;
 
-		changePlayerStatus(0x2000880, 0, false);
+		changePlayerStatus(STATUS_JUMP, 0, false);
 	}
 
 	return 1;
@@ -808,7 +808,7 @@ int TMario::checkAllMotions()
 	if (mInput & 2) {
 		if (considerRotateJumpStart())
 			return 1;
-		return changePlayerStatus(0x2000880, 0, 0);
+		return changePlayerStatus(STATUS_JUMP, 0, 0);
 	}
 
 	if (mInput & 4)
@@ -1148,7 +1148,8 @@ void TMario::thinkDirty()
 		unk134 -= mDirtyParams.mDecSwimming.get();
 	}
 
-	if (mStatus == 0x895 || mStatus == 0x896) {
+	if (mStatus == STATUS_LEFT_ROTATE_JUMP
+	    || mStatus == STATUS_RIGHT_ROTATE_JUMP) {
 		unk134 -= mDirtyParams.mDecRotJump.get();
 		unk360 = 0;
 	}
@@ -1160,6 +1161,7 @@ void TMario::thinkDirty()
 
 	if (unk134 < 0.0f)
 		unk134 = 0.0f;
+
 	if (mDirtyParams.mDirtyMax.get() < unk134)
 		unk134 = mDirtyParams.mDirtyMax.get();
 }
@@ -2264,7 +2266,7 @@ void TMario::getOffYoshi(bool fly)
 		changePlayerStatus(0x89C, 0, 0);
 		mYoshi->getOff(true);
 	} else {
-		changePlayerStatus(0x883, 0, 0);
+		changePlayerStatus(STATUS_BACK_JUMP, 0, 0);
 		mVel.y = mJumpParams.mGetOffYoshiY.get();
 		mYoshi->getOff(false);
 	}
@@ -2407,7 +2409,7 @@ void TMario::gunExec()
 	if (unk114 & 0x80 ? true : false)
 		mWaterGun->resetWaterToFull();
 
-	if (mStatus != 0x883 && mStatus != 0x208b8
+	if (mStatus != STATUS_BACK_JUMP && mStatus != 0x208b8
 	    && mGamePad->checkFrameMeaning(0x200000) && !onYoshi()
 	    && mStatus != 0x800447)
 		mWaterGun->changeBackup();

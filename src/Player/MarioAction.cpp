@@ -60,7 +60,7 @@ BOOL TMario::actnMain()
 			if (considerRotateJumpStart()) {
 				result = TRUE;
 			} else {
-				result = changePlayerJumping(0x2000880, false);
+				result = changePlayerJumping(STATUS_JUMP, false);
 			}
 		} else {
 			if ((mInput & 4) != 0) {

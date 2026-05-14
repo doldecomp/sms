@@ -295,20 +295,20 @@ void TYoshi::changeAnimation(int id)
 u16 TYoshi::changeHand()
 {
 	u16 curIdx = mActor->getCurAnmIdx(0);
-	u32 action = mMario->mStatus;
+	u32 status = mMario->mStatus;
 
-	if (action & 0x400) {
+	if (status & 0x400) {
 		if (curIdx == 12)
 			return 11;
-		if (action == 0x800456 || action == 0x84045D || action == 0x4045E
-		    || ((action & 0x40000) ? true : false))
+		if (status == 0x800456 || status == 0x84045D || status == 0x4045E
+		    || ((status & 0x40000) ? true : false))
 			return 19;
 		return 15;
 	}
-	if (action & 0x800) {
+	if (status & 0x800) {
 		if (mFlutterState == 1)
 			return 9;
-		if (action == 0x8008A9) {
+		if (status == TMario::STATUS_HIP_DROP) {
 			u16 actionState = mMario->mStatusState;
 			if ((s16)actionState < 2) {
 				if ((s16)actionState >= 0)
@@ -321,11 +321,11 @@ u16 TYoshi::changeHand()
 			return 10;
 		return 12;
 	}
-	if ((action & 0x200)
-	    && (action == 0x386 || (u32)(action - 0x0C00023D) <= 1)) {
+	if ((status & 0x200)
+	    && (status == 0x386 || (u32)(status - 0x0C00023D) <= 1)) {
 		return 18;
 	}
-	if ((action & 0x8000) ? true : false) {
+	if ((status & 0x8000) ? true : false) {
 		if (mMario->mGamePad->checkMeaning(0x2000)) {
 			E_SIDEWALK_TYPE type;
 			f32 a, b;
@@ -478,9 +478,9 @@ void TYoshi::thinkAnimation()
 	f32 nextFrame = mMario->getMotionFrameCtrl().getRate();
 	u16 curIdx    = mActor->getCurAnmIdx(0);
 	u16 newIdx    = curIdx;
-	u32 action    = mMario->mStatus;
+	u32 status    = mMario->mStatus;
 
-	if (action & 0x400) {
+	if (status & TMario::STATUS_FLAG_UNK400) {
 		BOOL tmp;
 		if (curIdx == 12) {
 			newIdx = 11;
@@ -491,15 +491,15 @@ void TYoshi::thinkAnimation()
 
 		if (!tmp) {
 			newIdx = 15;
-			if (action == 0x800456 || action == 0x84045D || action == 0x4045E
-			    || (action & 0x40000 ? true : false)) {
+			if (status == 0x800456 || status == 0x84045D || status == 0x4045E
+			    || (status & 0x40000 ? true : false)) {
 				newIdx = 19;
 			}
 		}
-	} else if (action & 0x800) {
+	} else if (status & TMario::STATUS_FLAG_JUMPING) {
 		if (mFlutterState == 1) {
 			newIdx = 9;
-		} else if (action == 0x8008A9) {
+		} else if (status == TMario::STATUS_HIP_DROP) {
 			switch (mMario->mStatusState) {
 			case 0:
 			case 1:
@@ -519,12 +519,12 @@ void TYoshi::thinkAnimation()
 			else
 				newIdx = 12;
 		}
-	} else if ((action & 0x200)
-	           && (action == 0x386 || action == 0xC000023D
-	               || action == 0xC000023E)) {
+	} else if ((status & TMario::STATUS_FLAG_UNK200)
+	           && (status == 0x386 || status == 0xC000023D
+	               || status == 0xC000023E)) {
 		newIdx = 18;
 	} else {
-		bool sliding = (action & 0x8000) ? true : false;
+		bool sliding = (status & TMario::STATUS_FLAG_UNK8000) ? true : false;
 		if (sliding) {
 			if (mMario->mGamePad->checkMeaning(0x2000)) {
 				E_SIDEWALK_TYPE type;

@@ -232,10 +232,10 @@ int TMario::considerJumpRotate()
 	if (checkStickRotate(&spC) == 1) {
 		switch (spC) {
 		case 2:
-			mStatus = 0x896;
+			mStatus = STATUS_RIGHT_ROTATE_JUMP;
 			break;
 		case 3:
-			mStatus = 0x895;
+			mStatus = STATUS_LEFT_ROTATE_JUMP;
 			break;
 		}
 		return 1;
@@ -247,7 +247,7 @@ int TMario::checkBackTrig()
 {
 	if (mInput & 0x8000) {
 		if (mGamePad->mEnabledFrameMeaning & 0x2000) {
-			return changePlayerStatus(0x8008A9U, 0U, 0);
+			return changePlayerStatus(STATUS_HIP_DROP, 0U, 0);
 		}
 		if (onYoshi() == 0) {
 			setPlayerVelocity(mJumpParams.mJumpJumpCatchSp.get());
@@ -415,7 +415,7 @@ int TMario::jumpCatch()
 {
 	if ((mInput & 0x8000) != 0
 	    && ((mGamePad->mEnabledFrameMeaning & 0x2000) != 0)) {
-		return changePlayerStatus(0x8008a9, 0, false);
+		return changePlayerStatus(STATUS_HIP_DROP, 0, false);
 	}
 	setAnimation(0x88, 1.0);
 	doJumping();
@@ -443,7 +443,7 @@ int TMario::jumpCatch()
 
 		if (isStrong && (unk118 & 0x40000 ? true : false)) {
 			sinkInSandEffect();
-			changePlayerStatus(0x2033c, 1, false);
+			changePlayerStatus(0x2033C, 1, false);
 		} else {
 			changePlayerStatus(0x800456, 0, false);
 		}
@@ -452,13 +452,13 @@ int TMario::jumpCatch()
 
 	case 2:
 		if (mWallPlane && mWallPlane->isFence())
-			return changePlayerDropping(0x3000036c, 0);
+			return changePlayerDropping(0x3000036C, 0);
 		playerRefrection(1);
 		if ((mVel).y > 0.0f) {
 			(mVel).y = 0.0f;
 		}
-		emitParticle(0xc);
-		changePlayerDropping(0x208b0, 0);
+		emitParticle(0xC);
+		changePlayerDropping(0x208B0, 0);
 		break;
 	}
 
@@ -524,7 +524,7 @@ int TMario::stayWall()
 		mFaceAngle.y += 0x8000;
 		if (mVel.y + (mPosition.y + 160.0f) >= mFloorPosition.x)
 			mVel.y = 1.0f;
-		return changePlayerStatus(0x2000886, 0, false);
+		return changePlayerStatus(STATUS_WALL_JUMP, 0, false);
 	}
 
 	if (checkBackTrig())
@@ -1308,7 +1308,7 @@ int TMario::jumpMain()
 		result = 0;
 		break;
 	}
-	case 0x80088A:
+	case STATUS_DIVE_JUMP:
 		result = jumpCatch();
 		break;
 	case 0x820008AB: {
@@ -1370,7 +1370,7 @@ int TMario::jumpMain()
 		jumpDownCommon(0x04000471, 0x56, mForwardVel);
 		result = 0;
 		break;
-	case 0x8A7:
+	case STATUS_WALL_SLIDE:
 		result = stayWall();
 		break;
 	case 0x8A6:
@@ -1388,7 +1388,7 @@ int TMario::jumpMain()
 	case 0x2000890:
 		result = unknown_inline_1(this);
 		break;
-	case 0x8008A9:
+	case STATUS_HIP_DROP:
 		result = hipAttacking();
 		break;
 	case 0x891:
