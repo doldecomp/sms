@@ -257,15 +257,98 @@ int TMario::checkBackTrig()
 	return 0;
 }
 
-void TMario::jumpingCommonEvents() { }
+int TMario::jumpingCommonEvents()
+{
+	if (checkBackTrig())
+		return 1;
+	if (rocketCheck())
+		return 1;
+	if (considerJumpRotate())
+		return 1;
 
-void TMario::jumping() { }
+	return 0;
+}
 
-void TMario::secJumping() { }
+int TMario::jumping()
+{
+	if (jumpingCommonEvents())
+		return 1;
 
-void TMario::ultraJumping() { }
+	switch (mStatus) {
+	case 0x89C:
+		jumpingBasic(0x208B8, 0x120, 0);
+		break;
+	case 0x884: {
+		int anim;
+		if (mVel.y >= 0.0f)
+			anim = 0x50;
+		else
+			anim = 0x4C;
+		jumpingBasic(0x04000470, anim, 3);
+		break;
+	}
+	default:
+		jumpingBasic(0x04000470, 0x4D, 3);
+		break;
+	}
+	return 0;
+}
 
-void TMario::backJumping() { }
+int TMario::secJumping()
+{
+	if (mStatusTimer == 0) {
+		mStatusTimer += 1;
+		rumbleStart(0x14, mMotorParams.mMotorWall.get());
+	}
+
+	int anim;
+	if (mVel.y >= 0.0f)
+		anim = 0x50;
+	else
+		anim = 0x4C;
+
+	if (jumpingCommonEvents())
+		return 1;
+
+	jumpingBasic(0x04000472, anim, 3);
+	return 0;
+}
+
+int TMario::ultraJumping()
+{
+	if (mStatusTimer == 0) {
+		mStatusTimer += 1;
+		rumbleStart(0x15, mMotorParams.mMotorWall.get());
+	}
+
+	if (checkBackTrig())
+		return 1;
+
+	if (rocketCheck())
+		return 1;
+
+	jumpingBasic(0x04000478, 0x6F, 0);
+	return 0;
+}
+
+int TMario::backJumping()
+{
+	if (checkBackTrig())
+		return 1;
+
+	if (rocketCheck())
+		return 1;
+
+	if (mStatusState == 0 && isLast1AnimeFrame())
+		mStatusState = 1;
+
+	if (mStatusState == 0)
+		jumpingBasic(0x04000472, 0xF7, 0);
+	else
+		jumpingBasic(0x04000472, 0x56, 0);
+
+	return 0;
+}
 
 int TMario::landing()
 {
@@ -300,9 +383,33 @@ int TMario::landing()
 	return 0;
 }
 
-void TMario::uTurnJumping() { }
+int TMario::uTurnJumping()
+{
+	if (jumpingCommonEvents())
+		return 1;
 
-void TMario::jumpWall() { }
+	if (checkBackTrig())
+		return 1;
+
+	if (jumpingBasic(0x04000473, 0xBF, 1) != 3) {
+		mFaceAngle.x = 0;
+		mModelFaceAngle += 0x8000;
+	}
+	return 0;
+}
+
+int TMario::jumpWall()
+{
+	if (checkBackTrig())
+		return 1;
+	if (considerJumpRotate())
+		return 1;
+	if (rocketCheck())
+		return 1;
+
+	jumpingBasic(0x04000470, 0xCB, 3);
+	return 0;
+}
 
 int TMario::jumpCatch()
 {
@@ -624,7 +731,12 @@ void TMario::fireJumping() { }
 
 void TMario::fireLanding() { }
 
-void TMario::broadJumping() { }
+int TMario::broadJumping()
+{
+	jumpingBasic(0x04000440, 0xF6, 1);
+	unk118 |= 0x4000;
+	return 0;
+}
 
 int TMario::rotateBroadJumping() { }
 
@@ -710,7 +822,7 @@ int TMario::rocketing()
 
 	if (mInput & 1) {
 		switch (mWaterGun->mCurrentNozzle) {
-		case 4:
+		case TWaterGun::Hover:
 			f32 mag       = mIntendedMag;
 			s16 angleDiff = mIntendedYaw - mFaceAngle.y;
 
@@ -765,7 +877,7 @@ int TMario::rocketing()
 	mVel.z     = mSlideVelZ;
 
 	switch (mWaterGun->mCurrentNozzle) {
-	case 4:
+	case TWaterGun::Hover:
 		mVel.y = (unk314 - mPosition.y) * mHoverParams.mAccelRate.get();
 		mForwardVel *= mHoverParams.mBrake.get();
 		break;
@@ -786,7 +898,29 @@ int TMario::rocketing()
 	return 0;
 }
 
-void TMario::rotateJumping() { }
+int TMario::rotateJumping()
+{
+	if (checkBackTrig())
+		return 1;
+
+	if (rocketCheck())
+		return 1;
+
+	setAnimation(0xF4, 1.0f);
+	emitBlurSpinJump();
+	jumpingBasic(0x04000472, mAnimationId, 0);
+	mStatusTimer += 1;
+
+	if (mStatus == 0x896U)
+		mModelFaceAngle = mStatusTimer * 4096;
+	else
+		mModelFaceAngle = -(mStatusTimer * 4096);
+
+	if (!(gpMarDirector->unk58 & 0x3F))
+		rumbleStart(0x14, mMotorParams.mMotorWall.get() / 2);
+
+	return 0;
+}
 
 void TMario::wireJumping() { }
 
@@ -1014,133 +1148,12 @@ void TMario::fallDead() { }
 
 // TODO: figure out which of the real inlines these fake ones correspond to!
 
-static int unknown_inline_2(TMario* mario)
-{
-	if (mario->checkBackTrig())
-		return 1;
-	if (mario->rocketCheck())
-		return 1;
-	if (mario->considerJumpRotate())
-		return 1;
-
-	return 0;
-}
-
 static int unknown_inline_1(TMario* mario)
 {
-	if (unknown_inline_2(mario))
+	if (mario->jumpingCommonEvents())
 		return 1;
 
 	mario->jumpingBasic(0x04000472, mario->mAnimationId, 3);
-	return 0;
-}
-
-static int unknown_inline_3(TMario* mario)
-{
-	if (unknown_inline_2(mario))
-		return 1;
-
-	switch (mario->mStatus) {
-	case 0x89C:
-		mario->jumpingBasic(0x208B8, 0x120, 0);
-		break;
-	case 0x884: {
-		int anim;
-		if (mario->mVel.y >= 0.0f)
-			anim = 0x50;
-		else
-			anim = 0x4C;
-		mario->jumpingBasic(0x04000470, anim, 3);
-		break;
-	}
-	default:
-		mario->jumpingBasic(0x04000470, 0x4D, 3);
-		break;
-	}
-	return 0;
-}
-
-static int unknown_inline_4(TMario* mario)
-{
-	if (mario->mStatusTimer == 0) {
-		mario->mStatusTimer += 1;
-		mario->rumbleStart(0x14, mario->mMotorParams.mMotorWall.get());
-	}
-
-	int anim;
-	if (mario->mVel.y >= 0.0f)
-		anim = 0x50;
-	else
-		anim = 0x4C;
-
-	if (unknown_inline_2(mario))
-		return 1;
-
-	mario->jumpingBasic(0x04000472, anim, 3);
-	return 0;
-}
-
-static int unknown_inline_5(TMario* mario)
-{
-	if (mario->mStatusTimer == 0) {
-		mario->mStatusTimer += 1;
-		mario->rumbleStart(0x15, mario->mMotorParams.mMotorWall.get());
-	}
-
-	if (mario->checkBackTrig())
-		return 1;
-
-	if (mario->rocketCheck())
-		return 1;
-
-	mario->jumpingBasic(0x04000478, 0x6F, 0);
-	return 0;
-}
-
-static int unknown_inline_6(TMario* mario)
-{
-	if (mario->checkBackTrig())
-		return 1;
-
-	if (mario->rocketCheck())
-		return 1;
-
-	if (mario->mStatusState == 0 && mario->isLast1AnimeFrame())
-		mario->mStatusState = 1;
-
-	if (mario->mStatusState == 0)
-		mario->jumpingBasic(0x04000472, 0xF7, 0);
-	else
-		mario->jumpingBasic(0x04000472, 0x56, 0);
-
-	return 0;
-}
-
-static int unknown_inline_7(TMario* mario)
-{
-	if (unknown_inline_2(mario))
-		return 1;
-
-	if (mario->checkBackTrig())
-		return 1;
-
-	if (mario->jumpingBasic(0x04000473, 0xBF, 1) != 3) {
-		mario->mFaceAngle.x = 0;
-		mario->mModelFaceAngle += 0x8000;
-	}
-	return 0;
-}
-
-static int unknown_inline_8(TMario* mario)
-{
-	if (mario->checkBackTrig())
-		return 1;
-	if (mario->considerJumpRotate())
-		return 1;
-	if (mario->rocketCheck())
-		return 1;
-
-	mario->jumpingBasic(0x04000470, 0xCB, 3);
 	return 0;
 }
 
@@ -1190,30 +1203,6 @@ static int unknown_inline_10(TMario* mario)
 	return 0;
 }
 
-static int unknown_inline_11(TMario* mario)
-{
-	if (mario->checkBackTrig())
-		return 1;
-
-	if (mario->rocketCheck())
-		return 1;
-
-	mario->setAnimation(0xF4, 1.0f);
-	mario->emitBlurSpinJump();
-	mario->jumpingBasic(0x04000472, mario->mAnimationId, 0);
-	mario->mStatusTimer += 1;
-
-	if (mario->mStatus == 0x896U)
-		mario->mModelFaceAngle = mario->mStatusTimer * 4096;
-	else
-		mario->mModelFaceAngle = -(mario->mStatusTimer * 4096);
-
-	if (!(gpMarDirector->unk58 & 0x3F))
-		mario->rumbleStart(0x14, mario->mMotorParams.mMotorWall.get() / 2);
-
-	return 0;
-}
-
 static int unknown_inline_12(TMario* mario)
 {
 	if (mario->mPrevStatus == 0x10000358U) {
@@ -1225,7 +1214,7 @@ static int unknown_inline_12(TMario* mario)
 		mario->setAnimation(0x4D, 1.0f);
 	}
 
-	if (unknown_inline_2(mario))
+	if (mario->jumpingCommonEvents())
 		return 1;
 
 	mario->jumpingBasic(0x04000472, mario->mAnimationId, 3);
@@ -1244,27 +1233,27 @@ int TMario::jumpMain()
 	switch (mStatus) {
 	case 0x884:
 	case 0x89C:
-	case 0x2000880:
-		result = unknown_inline_3(this);
+	case STATUS_JUMP:
+		result = jumping();
 		break;
-	case 0x2000881:
-		result = unknown_inline_4(this);
+	case STATUS_SECOND_JUMP:
+		result = secJumping();
 		break;
 	case 0x88C:
 	case 0x88D:
 		result = landing();
 		break;
-	case 0x882:
-		result = unknown_inline_5(this);
+	case STATUS_ULTRA_JUMP:
+		result = ultraJumping();
 		break;
-	case 0x883:
-		result = unknown_inline_6(this);
+	case STATUS_BACK_JUMP:
+		result = backJumping();
 		break;
-	case 0x887:
-		result = unknown_inline_7(this);
+	case STATUS_U_TURN_JUMP:
+		result = uTurnJumping();
 		break;
-	case 0x2000886:
-		result = unknown_inline_8(this);
+	case STATUS_WALL_JUMP:
+		result = jumpWall();
 		break;
 	case 0x2000885:
 		result = unknown_inline_9(this);
@@ -1280,10 +1269,8 @@ int TMario::jumpMain()
 		setAnimation(0x56, 1.0f);
 		result = 0;
 		break;
-	case 0x888:
-		jumpingBasic(0x04000440, 0xF6, 1);
-		result = 0;
-		unk118 |= 0x4000;
+	case STATUS_BROAD_JUMP:
+		result = broadJumping();
 		break;
 	case 0x2000889:
 		jumpingBasic(0x04000440, 0x10F, 1);
@@ -1296,9 +1283,9 @@ int TMario::jumpMain()
 	case 0x88B:
 		result = rocketing();
 		break;
-	case 0x895:
-	case 0x896:
-		result = unknown_inline_11(this);
+	case STATUS_LEFT_ROTATE_JUMP:
+	case STATUS_RIGHT_ROTATE_JUMP:
+		result = rotateJumping();
 		break;
 	case 0x892:
 		result = unknown_inline_12(this);
