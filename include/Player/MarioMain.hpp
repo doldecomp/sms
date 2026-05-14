@@ -861,7 +861,7 @@ public:
 	void throwMario(const JGeometry::TVec3<f32>&, f32);
 	u32 setStatusToRunning(u32, u32);
 	u32 setStatusToJumping(u32, u32);
-	void setPlayerJumpSpeed(f32, f32);
+	void setPlayerJumpSpeed(f32 speed_mult, f32 force);
 	void setMissJumping();
 	void isTurnning();
 	void isTurnStart();
@@ -1166,7 +1166,7 @@ public:
 	// fabricated
 	bool isTouchGround4cm() const
 	{
-		return mFloorPosition.y + 4.0f <= mPosition.y ? true : false;
+		return mPosition.y <= mFloorPosition.y + 4.0f ? true : false;
 	}
 
 	bool checkActionThing3()
