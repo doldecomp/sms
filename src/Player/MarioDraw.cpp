@@ -2248,7 +2248,7 @@ void TMario::addDirty()
 		J3DGXColor* konstColor = mBodyModelData->getMaterialNodePointer(i)
 		                             ->getTevBlock()
 		                             ->getTevKColor(0);
-		konstColor->color.a    = unk134;
+		konstColor->color.a = unk134;
 	}
 
 	if (mHandModels[0][0] != nullptr) {
