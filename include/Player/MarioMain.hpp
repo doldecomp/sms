@@ -844,7 +844,7 @@ public:
 	void setNormalAttackArea();
 	void setPlayerVelocity(f32);
 	TBGCheckData* checkWallPlane(Vec*, f32, f32);
-	void checkRoofPlane(const Vec&, f32, const TBGCheckData**);
+	f32 checkRoofPlane(const Vec&, f32, const TBGCheckData**);
 	BOOL isFrontSlip(int);
 	BOOL isSlipStart();
 	BOOL canSlipJump();
@@ -914,14 +914,14 @@ public:
 	void keepDistance(const JGeometry::TVec3<f32>&, f32, f32);
 	void keepDistance(const THitActor&, f32);
 	void checkDescent();
-	void checkGroundAtWalking(Vec*);
+	int checkGroundAtWalking(Vec*);
 	void stopProcess();
-	void waitProcess();
+	int waitProcess();
 	int walkProcess();
-	void barProcess();
-	void hangonCheck(const TBGCheckData*, const Vec&, const Vec&);
-	void checkGroundAtJumping(const Vec&, int);
-	void isFallCancel();
+	int barProcess();
+	BOOL hangonCheck(const TBGCheckData*, const Vec&, const Vec&);
+	int checkGroundAtJumping(const Vec&, int);
+	BOOL isFallCancel();
 	void fallProcess();
 	int jumpProcess(int);
 
