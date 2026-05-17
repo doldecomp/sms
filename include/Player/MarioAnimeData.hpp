@@ -5,7 +5,7 @@
 
 struct TMarioAnimeData {
 public:
-	bool isPumpOK() const;
+	BOOL isPumpOK() const;
 
 public:
 	/* 0x0 */ u16 unk0;
@@ -18,7 +18,7 @@ public:
 
 extern TMarioAnimeData gMarioAnimeData[336];
 
-struct unkTMarioAnimeFilesStruct {
+struct unkTMarioAnimeFilesStru ct {
 public:
 	u32 unk0;
 	const char* unk4;
