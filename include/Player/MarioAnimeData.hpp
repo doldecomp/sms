@@ -18,7 +18,7 @@ public:
 
 extern TMarioAnimeData gMarioAnimeData[336];
 
-struct unkTMarioAnimeFilesStru ct {
+struct unkTMarioAnimeFilesStruct {
 public:
 	u32 unk0;
 	const char* unk4;
