@@ -674,7 +674,7 @@ u32 TMario::setStatusToRunning(u32 status, u32)
 	f32 mag = mIntendedMag <= 8.0f ? 8.0f : mIntendedMag;
 
 	switch (status) {
-	case 0x04000440:
+	case STATUS_RUN:
 		if (0.0f <= mForwardVel && mForwardVel < mag)
 			mForwardVel = mag;
 		break;
@@ -815,7 +815,7 @@ int TMario::checkAllMotions()
 		return changePlayerStatus(0x88C, 0, 0);
 
 	if (mInput & 1)
-		return changePlayerStatus(0x04000440, 0, 0);
+		return changePlayerStatus(STATUS_RUN, 0, 0);
 
 	if (mInput & 8)
 		return changePlayerStatus(0x50, 0, 0);
@@ -1133,7 +1133,7 @@ void TMario::dirtyLimitCheck()
 void TMario::thinkDirty()
 {
 	if (checkFlag(0x40)) {
-		if (mStatus == 0x4000440 || mStatus == 0x4045C)
+		if (mStatus == STATUS_RUN || mStatus == 0x4045C)
 			unk134 += mDirtyParams.mIncRunning.get();
 		if (mStatus == 0x800456 || mStatus == 0x84045D || mStatus == 0x4045E)
 			unk134 += mDirtyParams.mIncCatching.get();
@@ -2107,7 +2107,7 @@ void TMario::thinkWaterSurface()
 		} else if (mFloorPosition.z
 		           < mPosition.y
 		                 + mWaterEffectParams.mRunningRippleDepth.get()) {
-			if (mStatus == 0x4000440) {
+			if (mStatus == STATUS_RUN) {
 				if (getMotionFrameCtrl().checkPass(38.0f)
 				    || getMotionFrameCtrl().checkPass(8.0f))
 					runningRippleEffect();
@@ -2117,7 +2117,7 @@ void TMario::thinkWaterSurface()
 		}
 	}
 
-	if (mGroundPlane->isWetGround() && mStatus == 0x4000440) {
+	if (mGroundPlane->isWetGround() && mStatus == STATUS_RUN) {
 		if (getMotionFrameCtrl().checkPass(38.0f)
 		    || getMotionFrameCtrl().checkPass(8.0f))
 			runningRippleEffect();
@@ -2411,7 +2411,7 @@ void TMario::gunExec()
 
 	if (mStatus != STATUS_BACK_JUMP && mStatus != 0x208b8
 	    && mGamePad->checkFrameMeaning(0x200000) && !onYoshi()
-	    && mStatus != 0x800447)
+	    && mStatus != STATUS_TOROCCO)
 		mWaterGun->changeBackup();
 
 	if ((int)mWaterGun->mCurrentNozzle == TWaterGun::Spray
