@@ -165,7 +165,7 @@ void TMario::postureControl() { }
 
 void TMario::clashStandard(u32, u32) { }
 
-void TMario::changePlayerPower(f32, u32, u32) {}
+void TMario::changePlayerPower(f32, u32, u32) { }
 
 BOOL TMario::isRunningSlipStart()
 {
