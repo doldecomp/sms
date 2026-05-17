@@ -1435,7 +1435,6 @@ MtxPtr TWaterGun::getNozzleMtx()
 	return mFluddModel->unk4->getAnmMtx(unk1CD8);
 }
 
-bool TWaterGun::isEmitting() { return false; }
 
 void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 {

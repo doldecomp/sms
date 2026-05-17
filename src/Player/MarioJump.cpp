@@ -733,7 +733,7 @@ void TMario::fireLanding() { }
 
 int TMario::broadJumping()
 {
-	jumpingBasic(0x04000440, 0xF6, 1);
+	jumpingBasic(STATUS_RUN, 0xF6, 1);
 	unk118 |= 0x4000;
 	return 0;
 }
@@ -753,7 +753,7 @@ int TMario::boardJumping()
 	switch (jumpProcess(0)) {
 	case 1:
 		if (mVel.y < 0.0f)
-			changePlayerStatus(0x810446U, 0U, 0);
+			changePlayerStatus(STATUS_SURF, 0U, 0);
 		break;
 	case 2:
 		if (mWallPlane == nullptr) {
@@ -1191,7 +1191,7 @@ static int unknown_inline_10(TMario* mario)
 	mario->setPlayerVelocity(mario->mForwardVel);
 
 	if (mario->jumpProcess(0) == 1)
-		mario->changePlayerStatus(0x20449U, 0U, 0);
+		mario->changePlayerStatus(TMario::STATUS_FIRE_DASH, 0U, 0);
 
 	int anim;
 	if (mario->mStatusArg == 0)
@@ -1265,7 +1265,7 @@ int TMario::jumpMain()
 	case 0x208B5:
 		setPlayerVelocity(mForwardVel);
 		if (jumpProcess(0) == 1)
-			changePlayerStatus(0x20449U, 0U, 0);
+			changePlayerStatus(STATUS_FIRE_DASH, 0U, 0);
 		setAnimation(0x56, 1.0f);
 		result = 0;
 		break;
@@ -1273,7 +1273,7 @@ int TMario::jumpMain()
 		result = broadJumping();
 		break;
 	case 0x2000889:
-		jumpingBasic(0x04000440, 0x10F, 1);
+		jumpingBasic(STATUS_RUN, 0x10F, 1);
 		result = 0;
 		break;
 	case 0x281089A:

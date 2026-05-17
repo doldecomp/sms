@@ -480,7 +480,7 @@ void TYoshi::thinkAnimation()
 	u16 newIdx    = curIdx;
 	u32 status    = mMario->mStatus;
 
-	if (status & TMario::STATUS_FLAG_UNK400) {
+	if (status & TMario::STATUS_FLAG_RUNNING) {
 		BOOL tmp;
 		if (curIdx == 12) {
 			newIdx = 11;

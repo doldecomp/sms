@@ -100,7 +100,13 @@ struct TMarioControllerWork;
 
 class TMario : public TTakeActor, public TDrawSyncCallback {
 public:
-	struct JumpSlipRecord;
+	struct JumpSlipRecord {
+		/* 0x00 */ s16 mMaxTimer;
+		/* 0x04 */ u32 mEndStatus;
+		/* 0x08 */ u32 mJumpStatus;
+		/* 0x0C */ u32 unkC;
+		/* 0x10 */ u32 unk10;
+	};
 
 	class TOptionParams : public TParams {
 	public:
@@ -731,80 +737,7 @@ public:
 	Mtx* getRootAnmMtx();
 	void getHeadRot();
 	void getJumpIntoWaterModelData();
-	int jumpMain();
-	void fallDead();
-	int diving();
-	int hipAttacking();
-	void pullJumping();
-	void wireJumping();
-	int rotateJumping();
-	int rocketing();
-	int rocketCheck();
-	int boardJumping();
-	int rotateBroadJumping();
-	int broadJumping();
-	void fireLanding();
-	void fireJumping();
-	void missJumping();
-	void trample();
-	int thrownDowning();
-	int fireDowning();
-	int slipFalling();
-	BOOL catchStop();
-	int stayWall();
-	void landSafeDown();
-	void jumpForeDown();
-	void jumpBackDown();
-	void jumpShortForeDown();
-	void jumpShortBackDown();
-	void checkWallJumping();
-	int jumpDownCommon(int, int, f32);
-	void jumpingThrow();
-	int jumpCatch();
-	int jumpWall();
-	int uTurnJumping();
-	int landing();
-	int backJumping();
-	int ultraJumping();
-	int secJumping();
-	int jumping();
-	int jumpingCommonEvents();
-	int checkBackTrig();
-	int considerJumpRotate();
-	int jumpingBasic(int, int, int);
-	void askStrongGroundTouch();
-	void doJumping();
-	void setJumpingAttackArea();
-	void doSpinJumping();
-	void doSlipJumping();
-	void checkJumpingThrowStart();
-	void startJumpWall();
-	void thinkAloha();
-	void thinkCube();
-	void thinkFreeze();
-	BOOL isMario();
-	void gunExec();
-	void checkWet();
-	void thinkSound();
-	void thinkTorocco();
-	void thinkDiving();
-	void thinkYoshiHeadCollision();
-	void checkYoshiGetOff();
-	void getOffYoshi(bool);
-	void thinkParams();
-	void thinkSand();
-	void thinkWaterSurface();
-	void thinkSituation();
-	void calcGroundMtx(const JGeometry::TVec3<f32>&);
-	void view1stMove();
-	void talkMove();
-	void canReadBillboard(int);
-	void stateMachine();
-	void checkPlayerAction(JDrama::TGraphics*);
-	void checkRideReCalc();
-	void checkRideMovement();
-	void getActorMtx(const THitActor&, MtxPtr);
-	void checkCurrentPlane();
+
 	const TEParams& getDmgMapCode(int param_1) const
 	{
 		switch (param_1) {
@@ -832,76 +765,158 @@ public:
 			return mDmgMapParams0;
 		}
 	}
-	BOOL checkGroundPlane(f32, f32, f32, f32*, const TBGCheckData**);
-	void makeHistory();
-	void checkStickSmash();
-	int checkStickRotate(int*);
-	void getLRLevel(u8);
-	void getDizzyPower();
-	void getDizzyAngle();
-	void checkThrowObject();
-	void doReturn();
-	void checkEnforceJump();
-	void checkSink();
-	void thinkHeight();
-	void thinkDirty();
-	void dirtyLimitCheck();
-	void checkGraffito();
-	void checkGraffitoElec();
-	void checkGraffitoSlip();
-	void checkGraffitoLava();
-	void checkGraffitoFire();
-	void checkGraffitoDamage();
-	void makeGraffitoDamage(const TMario::TEParams&);
-	int checkAllMotions();
-	BOOL changePlayerDropping(u32, u32);
-	BOOL changePlayerJumping(u32, u32);
-	BOOL changePlayerTriJump();
-	BOOL changePlayerStatus(u32, u32, bool);
-	void throwMario(const JGeometry::TVec3<f32>&, f32);
-	u32 setStatusToRunning(u32, u32);
-	u32 setStatusToJumping(u32, u32);
-	void setPlayerJumpSpeed(f32 speed_mult, f32 force);
-	void setMissJumping();
-	void isTurnning();
-	void isTurnStart();
-	f32 checkPlayerAround(int, f32);
-	BOOL isJumpMiss();
-	void isSlipLimit();
-	f32 getSlideStopCatch();
-	f32 getSlideStopNormal();
-	BOOL canSlipJump();
-	BOOL isSlipStart();
-	BOOL isFrontSlip(int);
-	void checkRoofPlane(const Vec&, f32, const TBGCheckData**);
-	TBGCheckData* checkWallPlane(Vec*, f32, f32);
-	void setPlayerVelocity(f32);
-	void setNormalAttackArea();
-	void changePos(const Vec&);
-	void isSpeedZero();
-	BOOL canBendBody();
-	BOOL considerRotateJumpStart();
-	void addVelocity(f32);
-	BOOL onYoshi() const;
-	void getGroundJumpPower() const;
-	void windMove(const JGeometry::TVec3<f32>&);
-	void flowMove(const JGeometry::TVec3<f32>&);
-	void warpRequest(const JGeometry::TVec3<f32>&, f32);
-	bool isForceSlip();
-	void getRidingMtx(MtxPtr);
-	bool isWallInFront() const;
-	bool isInvincible() const;
-	bool isUnderWater() const;
-	bool canSquat() const;
-	f32 getJumpSlideControl() const;
+
+	// Jump stuff
+	void startJumpWall();
+	void checkJumpingThrowStart();
+	void doSlipJumping();
+	void doSpinJumping();
+	void setJumpingAttackArea();
+	void doJumping();
+	void askStrongGroundTouch();
+	int jumpingBasic(int, int, int);
+	int considerJumpRotate();
+	int checkBackTrig();
+	int jumpingCommonEvents();
+	int jumping();
+	int secJumping();
+	int ultraJumping();
+	int backJumping();
+	int landing();
+	int uTurnJumping();
+	int jumpWall();
+	int jumpCatch();
+	void jumpingThrow();
+	int jumpDownCommon(int, int, f32);
+	void checkWallJumping();
+	void jumpShortBackDown();
+	void jumpShortForeDown();
+	void jumpBackDown();
+	void jumpForeDown();
+	void landSafeDown();
+	int stayWall();
+	BOOL catchStop();
+	int slipFalling();
+	int fireDowning();
+	int thrownDowning();
+	void trample();
+	void missJumping();
+	void fireJumping();
+	void fireLanding();
+	int broadJumping();
+	int rotateBroadJumping();
+	int boardJumping();
+	int rocketCheck();
+	int rocketing();
+	int rotateJumping();
+	void wireJumping();
+	void pullJumping();
+	int hipAttacking();
+	int diving();
+	void fallDead();
+	int jumpMain();
+
+	// ?
+	void thinkAloha();
+	void thinkCube();
+	void thinkFreeze();
+	BOOL isMario();
+
+	// Move stuff
 	f32 getJumpAccelControl() const;
+	f32 getJumpSlideControl() const;
+	bool canSquat() const;
+	bool isUnderWater() const;
+	bool isInvincible() const;
+	bool isWallInFront() const;
+	void getRidingMtx(MtxPtr);
+	bool isForceSlip();
+	void warpRequest(const JGeometry::TVec3<f32>&, f32);
+	void flowMove(const JGeometry::TVec3<f32>&);
+	void windMove(const JGeometry::TVec3<f32>&);
+	void getGroundJumpPower() const;
+	BOOL onYoshi() const;
+	void addVelocity(f32);
+	BOOL considerRotateJumpStart();
+	BOOL canBendBody();
+	void isSpeedZero();
+	void changePos(const Vec&);
+	void setNormalAttackArea();
+	void setPlayerVelocity(f32);
+	TBGCheckData* checkWallPlane(Vec*, f32, f32);
+	void checkRoofPlane(const Vec&, f32, const TBGCheckData**);
+	BOOL isFrontSlip(int);
+	BOOL isSlipStart();
+	BOOL canSlipJump();
+	f32 getSlideStopNormal();
+	f32 getSlideStopCatch();
+	void isSlipLimit();
+	BOOL isJumpMiss();
+	f32 checkPlayerAround(int, f32);
+	void isTurnStart();
+	void isTurnning();
+	void setMissJumping();
+	void setPlayerJumpSpeed(f32 speed_mult, f32 force);
+	u32 setStatusToJumping(u32, u32);
+	u32 setStatusToRunning(u32, u32);
+	void throwMario(const JGeometry::TVec3<f32>&, f32);
+	BOOL changePlayerStatus(u32, u32, bool);
+	BOOL changePlayerTriJump();
+	BOOL changePlayerJumping(u32, u32);
+	BOOL changePlayerDropping(u32, u32);
+	int checkAllMotions();
+	void makeGraffitoDamage(const TMario::TEParams&);
+	void checkGraffitoDamage();
+	void checkGraffitoFire();
+	void checkGraffitoLava();
+	void checkGraffitoSlip();
+	void checkGraffitoElec();
+	void checkGraffito();
+	void dirtyLimitCheck();
+	void thinkDirty();
+	void thinkHeight();
+	void checkSink();
+	void checkEnforceJump();
+	void doReturn();
+	void checkThrowObject();
+	void getDizzyAngle();
+	void getDizzyPower();
+	void getLRLevel(u8);
+	int checkStickRotate(int*);
+	void checkStickSmash();
+	void makeHistory();
+	BOOL checkGroundPlane(f32, f32, f32, f32*, const TBGCheckData**);
+	void checkCurrentPlane();
+	void getActorMtx(const THitActor&, MtxPtr);
+	void checkRideMovement();
+	void checkRideReCalc();
+	void checkPlayerAction(JDrama::TGraphics*);
+	void stateMachine();
+	void canReadBillboard(int);
+	void talkMove();
+	void view1stMove();
+	void calcGroundMtx(const JGeometry::TVec3<f32>&);
+	void thinkSituation();
+	void thinkWaterSurface();
+	void thinkSand();
+	void thinkParams();
+	void getOffYoshi(bool);
+	void checkYoshiGetOff();
+	void thinkYoshiHeadCollision();
+	void thinkDiving();
+	void thinkTorocco();
+	void thinkSound();
+	void checkWet();
+	void gunExec();
+
+	// ?
 	int jumpProcess(int);
 	void fallProcess();
 	void isFallCancel();
 	void checkGroundAtJumping(const Vec&, int);
 	void hangonCheck(const TBGCheckData*, const Vec&, const Vec&);
 	void barProcess();
-	void walkProcess();
+	int walkProcess();
 	void waitProcess();
 	void stopProcess();
 	void checkGroundAtWalking(Vec*);
@@ -909,220 +924,234 @@ public:
 	void keepDistance(const THitActor&, f32);
 	void keepDistance(const JGeometry::TVec3<f32>&, f32, f32);
 	void playerRefrection(int);
-	BOOL moveMain();
-	void broadJumpSlip();
-	void ultraJumpSlip();
-	void uTurnJumpSlip();
-	void secJumpSlip();
-	void landSlip();
-	void jumpSlip();
-	void jumpSlipEvents(TMario::JumpSlipRecord*);
-	void jumpSlipCommon(s16, u32);
-	void loserDown();
-	void catchDown();
-	void safeForeDown();
-	void safeBackDown();
-	void shortForeDown();
-	void shortBackDown();
-	void foreDown();
-	void backDown();
-	void downingCommon(int, f32, int);
-	void oilSlope();
-	void oilSlip();
-	void oilRun();
-	void squatSlipping();
-	void catching();
-	void slipBack();
-	void slipBackCommon(int, int, int);
-	void slipFore();
-	void slipForeCommon(int, int, int, int);
-	void slippingBasic(int, int, int);
-	void fireDashing();
-	void speedSliding();
-	void walkEnd();
-	void toroccoing();
-	void surfing();
-	void braking();
-	void turnEnd();
-	void turnning();
-	void rotating();
-	void running();
-	void doPushingAnimation(const Vec&);
-	void changePlayerWaiting();
-	void doBraking(f32);
-	void doSurfing();
-	void getSurfingParamsGround(); // UNUSED
-	void getSurfingParamsWater();
-	void doRunning();
-	void doStopping();
-	void doSlipping(f32);
-	void slopeProcess();
-	void doSliding(f32);
-	void slideProcess(f32, f32);
-	void getSlideStickMult();
-	void getChangeAngleSpeed();
-	void getSlopeSlideAccele(f32*, f32*);
-	void getSlopeNormalAccele(f32*, f32*);
-	void doRunningAnimation();
-	void getRunningInWaterBrake();
-	void isRunningInWater();
-	void changePlayerCatching();
-	void isRunningTurnning();
-	void isRunningSlipStart();
-	void changePlayerPower(f32, u32, u32);
-	void clashStandard(u32, u32);
+
+	// Run stuff
+	BOOL considerRotateStart();
+	BOOL isThrowStart();
 	void postureControl();
-	void isThrowStart();
-	void considerRotateStart();
-	BOOL specMain();
-	void fencePunch();
-	void fenceMove();
-	void fenceJumpCatch();
-	void fenceCatch();
-	void fenceFootCheck();
-	void pulling();
-	void setPullingAnm(const JGeometry::TVec3<f32>&, f32);
-	void getCurrentPullParams(f32*, f32*);
-	void wireSWaitToWaitR();
-	void wireSWaitToWaitL();
-	void wireRolling();
-	void getNozzleEmitVX(); // UNUSED
-	void wireHanging();
-	void wireReturn();
-	void wireSWaitToHang();
-	void wireWaitToHang();
-	void changeWireHanging();
-	void wireWaitToSWaitR();
-	void wireWaitToSWaitL();
-	void wireSWait();
-	void wireWait();
-	void wireMove(f32);
-	void getOnWirePosAngle(JGeometry::TVec3<f32>*, s16*);
-	void taken();
-	void hangJumping();
-	void descend();
-	void ascend();
-	void hanging();
-	void findNearestWall(const TBGWallCheckRecord&);
-	void hangingCommon(int, int);
-	void startHangLanding(u32);
-	void kickRoofRollDown();
-	void kickRoofRollUp();
-	void kickRoof();
-	void moveRoof();
-	void waitRoof();
-	void hangRoof();
-	void roofCommonEvents();
-	void doRoofWaitingProcess();
-	void doRoofMovingProcess();
-	void hangingCheckRoof(JGeometry::TVec3<f32>*);
-	void barHang();
-	void barClimb();
-	void barWait();
+	void clashStandard(u32, u32);
+	void changePlayerPower(f32, u32, u32);
+	BOOL isRunningSlipStart();
+	BOOL isRunningTurnning();
+	void changePlayerCatching();
+	bool isRunningInWater();
+	void getRunningInWaterBrake();
+	BOOL doRunningAnimation();
+	void getSlopeNormalAccele(f32*, f32*);
+	void getSlopeSlideAccele(f32*, f32*);
+	f32 getChangeAngleSpeed();
+	f32 getSlideStickMult();
+	void slideProcess(f32, f32);
+	BOOL doSliding(f32);
+	void slopeProcess();
+	void doSlipping(f32);
+	void doStopping();
+	void doRunning();
+	TSurfingParams* getSurfingParamsWater();
+	TSurfingParams* getSurfingParamsGround();
+	void doSurfing();
+	void doBraking(f32);
+	void changePlayerWaiting();
+	void doPushingAnimation(const Vec&);
+	BOOL running();
+	BOOL rotating();
+	BOOL turnning();
+	BOOL turnEnd();
+	int braking();
+	BOOL surfing();
+	int toroccoing();
+	BOOL walkEnd();
+	int speedSliding();
+	BOOL fireDashing();
+	void slippingBasic(int, int, int);
+	BOOL slipForeCommon(int, int, int, int);
+	int slipFore();
+	BOOL slipBackCommon(int, int, int);
+	int slipBack();
+	BOOL catching();
+	int squatSlipping();
+	int oilRun();
+	int oilSlip();
+	int oilSlope();
+	f32 downingCommon(int, f32, int);
+	int backDown();
+	int foreDown();
+	int shortBackDown();
+	int shortForeDown();
+	int safeBackDown();
+	int safeForeDown();
+	int catchDown();
+	BOOL loserDown();
+	BOOL jumpSlipCommon(s16, u32);
+	BOOL jumpSlipEvents(TMario::JumpSlipRecord*);
+	void jumpSlip();
+	void landSlip();
+	void secJumpSlip();
+	void uTurnJumpSlip();
+	void ultraJumpSlip();
+	void broadJumpSlip();
+	BOOL moveMain();
+
+	// Special stuff
 	void barJumpSetting();
-	void stateMachineUpper();
-	void checkPumpEnable();
+	void barWait();
+	void barClimb();
+	void barHang();
+	void hangingCheckRoof(JGeometry::TVec3<f32>*);
+	void doRoofMovingProcess();
+	void doRoofWaitingProcess();
+	void roofCommonEvents();
+	void hangRoof();
+	void waitRoof();
+	void moveRoof();
+	void kickRoof();
+	void kickRoofRollUp();
+	void kickRoofRollDown();
+	void startHangLanding(u32);
+	void hangingCommon(int, int);
+	void findNearestWall(const TBGWallCheckRecord&);
+	void hanging();
+	void ascend();
+	void descend();
+	void hangJumping();
+	void taken();
+	void getOnWirePosAngle(JGeometry::TVec3<f32>*, s16*);
+	void wireMove(f32);
+	void wireWait();
+	void wireSWait();
+	void wireWaitToSWaitL();
+	void wireWaitToSWaitR();
+	void changeWireHanging();
+	void wireWaitToHang();
+	void wireSWaitToHang();
+	void wireReturn();
+	void wireHanging();
+	void getNozzleEmitVX(); // UNUSED
+	void wireRolling();
+	void wireSWaitToWaitL();
+	void wireSWaitToWaitR();
+	void getCurrentPullParams(f32*, f32*);
+	void setPullingAnm(const JGeometry::TVec3<f32>&, f32);
+	void pulling();
+	void fenceFootCheck();
+	void fenceCatch();
+	void fenceJumpCatch();
+	void fenceMove();
+	void fencePunch();
+	BOOL specMain();
+
+	// Upper stuff
 	void checkPumping();
-	bool askJumpIntoWaterEffectExist() const;
-	void sinkInSandEffect();
-	void kickFruitEffect();
-	void toroccoEffect();
-	void sleepingEffectKill();
-	void sleepingEffect();
-	void kickRoofEffect();
-	void elecEndEffect();
-	void elecEffect();
-	void rocketEffectStart();
-	void rocketEffectNozzle();
-	void meltInWaterEffect();
-	void emitSandEffect();
-	void emitDirtyFootPrint();
-	void emitFootPrint(int);
-	void emitFootPrintWithEffect(int, int);
-	void setFootPrint(const JGeometry::TVec3<f32>&, int);
-	void emitRotateShootEffect();
-	void emitBlurSpinJump();
-	void emitBlurHipDropSuper();
-	void emitBlurHipDrop();
-	void warpOutEffect(int, f32);
-	void warpInLight();
-	void warpInEffect();
-	void surfingEffect();
-	void frontSlipEffect();
-	void treeSlipEffect();
-	void wallSlipEffect();
-	void blurEffect();
-	void runningRippleEffect();
-	void smallRippleEffect(JGeometry::TVec3<f32>*);
-	void swimmingBubbleEffect();
-	void bubbleFromBody();
-	void bubbleFromMouth(int);
-	void inOutWaterEffect(f32);
-	void rippleEffectSmall();
-	void rippleEffect();
-	void smallTouchDownEffect();
-	void strongTouchDownEffect();
-	void strongTouchDownEffectDisp();
-	void emitGetCoinEffect(JGeometry::TVec3<f32>*);
-	void emitGetWaterEffect();
-	void emitGetEffect();
-	void emitRecover();
-	void emitSweatSometimes(s16);
-	void emitSweatSometimes();
-	void emitSweat(s16);
-	void emitSmoke(s16);
-	void emitParticle(int, s16);
-	void emitParticle(int, const JGeometry::TVec3<f32>*);
-	void emitParticle(int);
-	void moveParticle();
+	void checkPumpEnable();
+	void stateMachineUpper();
+
+	// Particle stuff
 	void initParticle();
-	BOOL waitMain();
-	void slipEnd();
-	void brakeEnd();
-	void hipAttackEnd();
-	void broadJumpEnd();
-	void fireJumpEnd();
-	void jumpThrowEnd();
-	void uTurnJumpEnd();
-	void ultraJumpEnd();
-	void landEnd();
-	void secJumpEnd();
-	void jumpEnd();
-	void jumpEndEvents(u32);
-	void jumpEndCommon(int, int);
-	void pullEnd();
-	void squatStandup();
-	void squatStart();
-	void squating();
-	void getSideWalkValues(E_SIDEWALK_TYPE*, f32*, f32*);
-	void wakeup();
-	void sleeping();
-	void sleepily();
-	void waiting();
-	void changeMontemanWaitingAnim();
-	void stopCommon(int, int);
-	void waitingCommonEvents();
-	void checkPutStart();
-	void canPut();
-	void canSleep();
+	void moveParticle();
+	void emitParticle(int);
+	void emitParticle(int, const JGeometry::TVec3<f32>*);
+	void emitParticle(int, s16);
+	void emitSmoke(s16);
+	void emitSweat(s16);
+	void emitSweatSometimes();
+	void emitSweatSometimes(s16);
+	void emitRecover();
+	void emitGetEffect();
+	void emitGetWaterEffect();
+	void emitGetCoinEffect(JGeometry::TVec3<f32>*);
+	void strongTouchDownEffectDisp();
+	void strongTouchDownEffect();
+	void smallTouchDownEffect();
+	void rippleEffect();
+	void rippleEffectSmall();
+	void inOutWaterEffect(f32);
+	void bubbleFromMouth(int);
+	void bubbleFromBody();
+	void swimmingBubbleEffect();
+	void smallRippleEffect(JGeometry::TVec3<f32>*);
+	void runningRippleEffect();
+	void blurEffect();
+	void wallSlipEffect();
+	void treeSlipEffect();
+	void frontSlipEffect();
+	void surfingEffect();
+	void warpInEffect();
+	void warpInLight();
+	void warpOutEffect(int, f32);
+	void emitBlurHipDrop();
+	void emitBlurHipDropSuper();
+	void emitBlurSpinJump();
+	void emitRotateShootEffect();
+	void setFootPrint(const JGeometry::TVec3<f32>&, int);
+	void emitFootPrintWithEffect(int, int);
+	void emitFootPrint(int);
+	void emitDirtyFootPrint();
+	void emitSandEffect();
+	void meltInWaterEffect();
+	void rocketEffectNozzle();
+	void rocketEffectStart();
+	void elecEffect();
+	void elecEndEffect();
+	void kickRoofEffect();
+	void sleepingEffect();
+	void sleepingEffectKill();
+	void toroccoEffect();
+	void kickFruitEffect();
+	void sinkInSandEffect();
+	bool askJumpIntoWaterEffectExist() const;
+
+	// Wait stuff
 	void startTalking();
-	BOOL swimMain();
-	void swimPDown();
-	void swimDown();
-	void swimPDamage();
-	void swimDive();
-	void swimUp();
-	void swimPaddleEndToWait();
-	void swimPaddleEnd();
-	void swimPaddle();
-	void swimPaddleStart();
-	void swimWaitToPaddle();
-	void swimWait();
-	void swimStart();
-	void checkSwimToHangFence();
-	void checkSwimJump();
-	void doSwimming();
+	void canSleep();
+	BOOL canPut();
+	void checkPutStart();
+	void waitingCommonEvents();
+	void stopCommon(int, int);
+	void changeMontemanWaitingAnim();
+	void waiting();
+	void sleepily();
+	void sleeping();
+	void wakeup();
+	void getSideWalkValues(E_SIDEWALK_TYPE*, f32*, f32*);
+	void squating();
+	void squatStart();
+	void squatStandup();
+	void pullEnd();
+	void jumpEndCommon(int, int);
+	void jumpEndEvents(u32);
+	void jumpEnd();
+	void secJumpEnd();
+	void landEnd();
+	void ultraJumpEnd();
+	void uTurnJumpEnd();
+	void jumpThrowEnd();
+	void fireJumpEnd();
+	void broadJumpEnd();
+	void hipAttackEnd();
+	void brakeEnd();
+	void slipEnd();
+	BOOL waitMain();
+
+	// Swim stuff
 	void isSwimWaiting();
+	void doSwimming();
+	void checkSwimJump();
+	void checkSwimToHangFence();
+	void swimStart();
+	void swimWait();
+	void swimWaitToPaddle();
+	void swimPaddleStart();
+	void swimPaddle();
+	void swimPaddleEnd();
+	void swimPaddleEndToWait();
+	void swimUp();
+	void swimDive();
+	void swimPDamage();
+	void swimDown();
+	void swimPDown();
+	BOOL swimMain();
+
+	// ?
 	void setGamePad(TMarioGamePad*);
 	void stageSetting();
 	void resetHistory();
@@ -1264,15 +1293,18 @@ public:
 
 	enum {
 		STATUS_FLAG_UNK200      = 0x200,
-		STATUS_FLAG_UNK400      = 0x400,
+		STATUS_FLAG_RUNNING     = 0x400,
 		STATUS_FLAG_JUMPING     = 0x800,
 		STATUS_FLAG_UNK1000     = 0x1000,
 		STATUS_FLAG_SWIMMING    = 0x2000,
 		STATUS_FLAG_UNK8000     = 0x8000,
 		STATUS_FLAG_UNK10000    = 0x10000,
+		STATUS_FLAG_UNK20000    = 0x20000,
+		STATUS_FLAG_UNK40000    = 0x40000,
 		STATUS_FLAG_UNK100000   = 0x100000,
 		STATUS_FLAG_UNK800000   = 0x800000,
 		STATUS_FLAG_UNK2000000  = 0x2000000,
+		STATUS_FLAG_UNK4000000  = 0x4000000,
 		STATUS_FLAG_UNK10000000 = 0x10000000,
 		STATUS_FLAG_UNK20000000 = 0x20000000,
 		STATUS_FLAG_UNK80000000 = 0x80000000,
@@ -1285,6 +1317,64 @@ public:
 		STATUS_TYPE_SPECIAL  = 0x140,
 		STATUS_TYPE_ACTION   = 0x180,
 		STATUS_TYPE_MASK     = 0x1C0,
+
+		STATUS_RUN = STATUS_FLAG_UNK4000000 | STATUS_FLAG_RUNNING
+		             | STATUS_TYPE_RUNNING | 0x0, // 0x4000440
+		STATUS_ROTATE_L
+		= STATUS_FLAG_RUNNING | STATUS_TYPE_RUNNING | 0x1, // 0x441
+		STATUS_ROTATE_R
+		= STATUS_FLAG_RUNNING | STATUS_TYPE_RUNNING | 0x2,             // 0x442
+		STATUS_TURN = STATUS_FLAG_RUNNING | STATUS_TYPE_RUNNING | 0x3, // 0x443
+		STATUS_TURN_END
+		= STATUS_FLAG_RUNNING | STATUS_TYPE_RUNNING | 0x4, // 0x444
+		STATUS_BRAKE = STATUS_FLAG_UNK4000000 | STATUS_FLAG_RUNNING
+		               | STATUS_TYPE_RUNNING | 0x5, // 0x4000445
+		STATUS_SURF = STATUS_FLAG_UNK800000 | STATUS_FLAG_UNK10000
+		              | STATUS_FLAG_RUNNING | STATUS_TYPE_RUNNING
+		              | 0x6, // 0x810446
+		// TODO: rename, this is like the rail thing in pina park I think?
+		STATUS_TOROCCO = STATUS_FLAG_UNK800000 | STATUS_FLAG_RUNNING
+		                 | STATUS_TYPE_RUNNING | 0x7, // 0x800447
+		STATUS_WALK_END = STATUS_FLAG_UNK4000000 | STATUS_FLAG_RUNNING
+		                  | STATUS_TYPE_RUNNING | 0xA, // 0x400044A
+		STATUS_SPEED_SLIDING
+		= STATUS_FLAG_RUNNING | STATUS_TYPE_RUNNING | 0xC, // 0x44C
+		STATUS_FIRE_DASH = STATUS_FLAG_UNK20000 | STATUS_FLAG_RUNNING
+		                   | STATUS_TYPE_RUNNING | 0x9, // 0x20449
+		STATUS_SLIP_FORE = STATUS_FLAG_UNK800000 | STATUS_FLAG_UNK40000
+		                   | STATUS_FLAG_RUNNING | STATUS_TYPE_RUNNING
+		                   | 0x12, // 0x840452
+		STATUS_SLIP_BACK = STATUS_FLAG_UNK800000 | STATUS_FLAG_UNK40000
+		                   | STATUS_FLAG_RUNNING | STATUS_TYPE_RUNNING
+		                   | 0x13, // 0x453
+		STATUS_CATCH = STATUS_FLAG_UNK800000 | STATUS_FLAG_RUNNING
+		               | STATUS_TYPE_RUNNING | 0x16, // 0x456
+		STATUS_SQUAT_SLIP = STATUS_FLAG_UNK4000000 | STATUS_FLAG_UNK800000
+		                    | STATUS_FLAG_UNK8000 | STATUS_FLAG_RUNNING
+		                    | STATUS_TYPE_RUNNING | 0x19, // 0x4808459
+		STATUS_OIL_RUN = STATUS_FLAG_UNK40000 | STATUS_FLAG_RUNNING
+		                 | STATUS_TYPE_RUNNING | 0x1C, // 0x4045C
+		STATUS_OIL_SLIP = STATUS_FLAG_UNK800000 | STATUS_FLAG_UNK40000
+		                  | STATUS_FLAG_RUNNING | STATUS_TYPE_RUNNING
+		                  | 0x1D, // 0x84045D
+		STATUS_OIL_SLOPE = STATUS_FLAG_UNK40000 | STATUS_FLAG_RUNNING
+		                   | STATUS_TYPE_RUNNING | 0x1E, // 0x4045EF
+		STATUS_BACK_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_RUNNING
+		                   | STATUS_TYPE_RUNNING | 0x20, // 0x20460
+		STATUS_FORE_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_RUNNING
+		                   | STATUS_TYPE_RUNNING | 0x21, // 0x20461
+		STATUS_SHORT_BACK_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_RUNNING
+		                         | STATUS_TYPE_RUNNING | 0x22, // 0x20462
+		STATUS_SHORT_FORE_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_RUNNING
+		                         | STATUS_TYPE_RUNNING | 0x23, // 0x20463
+		STATUS_SAFE_BACK_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_RUNNING
+		                        | STATUS_TYPE_RUNNING | 0x24, // 0x20464
+		STATUS_SAFE_FORE_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_RUNNING
+		                        | STATUS_TYPE_RUNNING | 0x25, // 0x20465
+		STATUS_CATCH_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_RUNNING
+		                    | STATUS_TYPE_RUNNING | 0x26, // 0x20466
+		STATUS_LOSER_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_RUNNING
+		                    | STATUS_TYPE_RUNNING | 0x27, // 0x20467
 
 		STATUS_JUMP = STATUS_FLAG_UNK2000000 | STATUS_FLAG_JUMPING
 		              | STATUS_TYPE_JUMPING | 0x0, // 0x2000880
