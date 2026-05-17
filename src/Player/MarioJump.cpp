@@ -458,14 +458,31 @@ int TMario::jumpCatch()
 			(mVel).y = 0.0f;
 		}
 		emitParticle(0xC);
-		changePlayerDropping(0x208B0, 0);
+		changePlayerDropping(STATUS_JUMP_SHORT_BACK_DOWN, 0);
 		break;
 	}
 
 	return 0;
 }
 
-void TMario::jumpingThrow() { }
+int TMario::jumpingThrow()
+{
+	setAnimation(0x65, 1.0f);
+	checkThrowObject();
+	doJumping();
+
+	switch (jumpProcess(0)) {
+	case 1:
+		mStatus = 0x80000A36;
+		break;
+
+	case 2:
+		setPlayerVelocity(0.0f);
+		break;
+	}
+
+	return 0;
+}
 
 int TMario::jumpDownCommon(int param_1, int animation, float velocity)
 {
@@ -495,13 +512,45 @@ int TMario::jumpDownCommon(int param_1, int animation, float velocity)
 
 void TMario::checkWallJumping() { }
 
-void TMario::jumpShortBackDown() { }
+int TMario::jumpShortBackDown()
+{
+	if (mStatusTimer == 0) {
+		mStatusTimer += 1;
+		rumbleStart(0x15, 0x14);
+	}
+	jumpDownCommon(STATUS_SHORT_BACK_DOWN, 2, -16.0f);
+	return 0;
+}
 
-void TMario::jumpShortForeDown() { }
+int TMario::jumpShortForeDown()
+{
+	if (mStatusTimer == 0) {
+		mStatusTimer += 1;
+		rumbleStart(0x15, 0x14);
+	}
+	jumpDownCommon(STATUS_SHORT_FORE_DOWN, 0x2D, 16.0f);
+	return 0;
+}
 
-void TMario::jumpBackDown() { }
+int TMario::jumpBackDown()
+{
+	if (mStatusTimer == 0) {
+		mStatusTimer += 1;
+		rumbleStart(0x15, 0x14);
+	}
+	jumpDownCommon(STATUS_BACK_DOWN, 2, -16.0f);
+	return 0;
+}
 
-void TMario::jumpForeDown() { }
+int TMario::jumpForeDown()
+{
+	if (mStatusTimer == 0) {
+		mStatusTimer += 1;
+		rumbleStart(0x15, 0x14);
+	}
+	jumpDownCommon(STATUS_FORE_DOWN, 0x2D, 16.0f);
+	return 0;
+}
 
 void TMario::landSafeDown() { }
 
@@ -1308,92 +1357,73 @@ int TMario::jumpMain()
 		result = 0;
 		break;
 	}
+
 	case STATUS_DIVE_JUMP:
 		result = jumpCatch();
 		break;
-	case 0x820008AB: {
-		setAnimation(0x65, 1.0f);
-		checkThrowObject();
-		doJumping();
-		switch (jumpProcess(0)) {
-		case 1:
-			mStatus = 0x80000A36;
-			break;
-		case 2:
-			setPlayerVelocity(0.0f);
-			break;
-		}
-		result = 0;
+
+	case STATUS_JUMP_THROW:
+		result = jumpingThrow();
 		break;
-	}
-	case 0x208B0: {
-		if (mStatusTimer == 0) {
-			mStatusTimer += 1;
-			rumbleStart(0x15, 0x14);
-		}
-		jumpDownCommon(0x20462, 2, -16.0f);
-		result = 0;
+
+	case STATUS_JUMP_SHORT_BACK_DOWN:
+		result = jumpShortBackDown();
 		break;
-	}
-	case 0x208B1: {
-		if (mStatusTimer == 0) {
-			mStatusTimer += 1;
-			rumbleStart(0x15, 0x14);
-		}
-		jumpDownCommon(0x20463, 0x2D, 16.0f);
-		result = 0;
+
+	case STATUS_JUMP_SHORT_FORE_DOWN:
+		result = jumpShortForeDown();
 		break;
-	}
-	case 0x208B2: {
-		if (mStatusTimer == 0) {
-			mStatusTimer += 1;
-			rumbleStart(0x15, 0x14);
-		}
-		jumpDownCommon(0x20461, 0x2D, 16.0f);
-		result = 0;
+
+	case STATUS_JUMP_FORE_DOWN:
+		result = jumpForeDown();
 		break;
-	}
-	case 0x208B3: {
-		if (mStatusTimer == 0) {
-			mStatusTimer += 1;
-			rumbleStart(0x15, 0x14);
-		}
-		jumpDownCommon(0x20460, 2, -16.0f);
-		result = 0;
+
+	case STATUS_JUMP_BACK_DOWN:
+		result = jumpBackDown();
 		break;
-	}
+
 	case 0x208B6:
-		jumpDownCommon(0x04000471, 0x56, mForwardVel);
+		jumpDownCommon(0x4000471, 0x56, mForwardVel);
 		result = 0;
 		break;
+
 	case 0x208BA:
-		jumpDownCommon(0x04000471, 0x56, mForwardVel);
+		jumpDownCommon(0x4000471, 0x56, mForwardVel);
 		result = 0;
 		break;
+
 	case STATUS_WALL_SLIDE:
 		result = stayWall();
 		break;
+
 	case 0x8A6:
 		result = catchStop();
 		break;
+
 	case 0x200088E:
 		result = slipFalling();
 		break;
+
 	case 0x208B7:
 		result = fireDowning();
 		break;
+
 	case 0x208B8:
 		result = thrownDowning();
 		break;
+
 	case 0x2000890:
 		result = unknown_inline_1(this);
 		break;
+
 	case STATUS_HIP_DROP:
 		result = hipAttacking();
 		break;
+
 	case 0x891:
 		result = diving();
 		break;
+
 	case 0x208B9:
 		jumpProcess(0);
 		result = 0;
