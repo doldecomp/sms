@@ -248,6 +248,30 @@ public:
 		return false;
 	}
 
+	// Fabricated
+	bool isUnk1D00LessThanZero() { return unk1D00 < 0.0f ? true : false; }
+
+	// Fabricated
+	bool isUnk1D00GreaterThanZero() { return unk1D00 > 0.0f ? true : false; }
+
+	// Fabricated
+	bool checkCurrentNozzleRocketType(u32 pType) const
+	{
+		return getCurrentNozzle()->mEmitParams.mRocketType.get() == pType;
+	}
+
+	// Fabricated
+	bool checkCurrentNozzleKind(s32 pNozzleKind) const
+	{
+		return getCurrentNozzle()->getNozzleKind() == pNozzleKind;
+	}
+
+	// Fabricated
+	bool checkCurrentNozzleTriggerSprayState(s32 pState) const
+	{
+		return ((TNozzleTrigger*)getCurrentNozzle())->unk385 == pState;
+	}
+
 public:
 	/* 0x0004 */ u16 mFlags;
 	/* 0x0008 */ TMario* mMario;
