@@ -818,7 +818,7 @@ BOOL TMario::running()
 		if (!pushed) {
 			if (mForwardVel > mDeParams.mClashSpeed.get()) {
 				emitParticle(0xC);
-				return changePlayerDropping(0x208B0, 0);
+				return changePlayerDropping(STATUS_JUMP_SHORT_BACK_DOWN, 0);
 			}
 
 			if ((mInput & 0x2)
@@ -1060,7 +1060,7 @@ BOOL TMario::surfing()
 		if ((wallToFace < -maxAngle || maxAngle < wallToFace)
 		    && mForwardVel > minSpeed) {
 			decHP(mDeParams.mHpMax.get());
-			BOOL ret    = changePlayerStatus(0x208B3, 0, true);
+			BOOL ret    = changePlayerStatus(STATUS_JUMP_BACK_DOWN, 0, true);
 			mForwardVel = 0.8f * -mForwardVel;
 			mVel.y      = 50.0f;
 			return ret;
@@ -1464,9 +1464,9 @@ f32 TMario::downingCommon(int anim, f32 limit, int arg2)
 
 	if (!walkProcess()) {
 		if (mForwardVel >= 0.0f)
-			changePlayerStatus(0x208B1, arg2, false);
+			changePlayerStatus(STATUS_JUMP_SHORT_FORE_DOWN, arg2, false);
 		else
-			changePlayerStatus(0x208B0, arg2, false);
+			changePlayerStatus(STATUS_JUMP_SHORT_BACK_DOWN, arg2, false);
 
 	} else if (isLast1AnimeFrame()) {
 		changePlayerStatus(0xC400201, 0, false);
@@ -1780,23 +1780,23 @@ BOOL TMario::moveMain()
 		ret = loserDown();
 		break;
 
-	case 0x04000470:
+	case 0x4000470:
 		ret = unknown_inline_4(this);
 		break;
 
-	case 0x04000471:
+	case 0x4000471:
 		ret = unknown_inline_5(this);
 		break;
 
-	case 0x04000472:
+	case 0x4000472:
 		ret = unknown_inline_6(this);
 		break;
 
-	case 0x04000473:
+	case 0x4000473:
 		ret = unknown_inline_7(this);
 		break;
 
-	case 0x04000478:
+	case 0x4000478:
 		ret = unknown_inline_8(this);
 		break;
 

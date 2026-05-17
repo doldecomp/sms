@@ -786,13 +786,13 @@ public:
 	int uTurnJumping();
 	int jumpWall();
 	int jumpCatch();
-	void jumpingThrow();
+	int jumpingThrow();
 	int jumpDownCommon(int, int, f32);
 	void checkWallJumping();
-	void jumpShortBackDown();
-	void jumpShortForeDown();
-	void jumpBackDown();
-	void jumpForeDown();
+	int jumpShortBackDown();
+	int jumpShortForeDown();
+	int jumpBackDown();
+	int jumpForeDown();
 	void landSafeDown();
 	int stayWall();
 	BOOL catchStop();
@@ -909,21 +909,21 @@ public:
 	void checkWet();
 	void gunExec();
 
-	// ?
-	int jumpProcess(int);
-	void fallProcess();
-	void isFallCancel();
-	void checkGroundAtJumping(const Vec&, int);
-	void hangonCheck(const TBGCheckData*, const Vec&, const Vec&);
-	void barProcess();
-	int walkProcess();
-	void waitProcess();
-	void stopProcess();
-	void checkGroundAtWalking(Vec*);
-	void checkDescent();
-	void keepDistance(const THitActor&, f32);
-	void keepDistance(const JGeometry::TVec3<f32>&, f32, f32);
+	// Physics stuff
 	void playerRefrection(int);
+	void keepDistance(const JGeometry::TVec3<f32>&, f32, f32);
+	void keepDistance(const THitActor&, f32);
+	void checkDescent();
+	void checkGroundAtWalking(Vec*);
+	void stopProcess();
+	void waitProcess();
+	int walkProcess();
+	void barProcess();
+	void hangonCheck(const TBGCheckData*, const Vec&, const Vec&);
+	void checkGroundAtJumping(const Vec&, int);
+	void isFallCancel();
+	void fallProcess();
+	int jumpProcess(int);
 
 	// Run stuff
 	BOOL considerRotateStart();
@@ -1391,6 +1391,14 @@ public:
 		= STATUS_FLAG_JUMPING | STATUS_TYPE_JUMPING | 0x7, // 0x887
 		STATUS_BROAD_JUMP
 		= STATUS_FLAG_JUMPING | STATUS_TYPE_JUMPING | 0x8, // 0x888
+		STATUS_JUMP_SHORT_BACK_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_JUMPING
+		                              | STATUS_TYPE_JUMPING | 0x30, // 0x208B0
+		STATUS_JUMP_SHORT_FORE_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_JUMPING
+		                              | STATUS_TYPE_JUMPING | 0x31, // 0x208B1
+		STATUS_JUMP_FORE_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_JUMPING
+		                        | STATUS_TYPE_JUMPING | 0x32, // 0x208B2
+		STATUS_JUMP_BACK_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_JUMPING
+		                        | STATUS_TYPE_JUMPING | 0x33, // 0x208B3
 
 		STATUS_LEFT_ROTATE_JUMP
 		= STATUS_FLAG_JUMPING | STATUS_TYPE_JUMPING | 0x15, // 0x895
@@ -1405,6 +1413,7 @@ public:
 		STATUS_ELEC_DAMAGE = 0x20338,
 		STATUS_THROWN_DOWN = 0x208B8,
 		STATUS_DIVE_JUMP   = 0x80088A,
+		STATUS_JUMP_THROW  = 0x820008AB,
 
 		STATUS_ID_MASK = 0x3F,
 
