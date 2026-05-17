@@ -264,10 +264,10 @@ TBGCheckData* TMario::checkWallPlane(Vec* pos, f32 yOff, f32 radius)
 	return result;
 }
 
-void TMario::checkRoofPlane(const Vec& point, f32 yOff,
-                            const TBGCheckData** outRoof)
+f32 TMario::checkRoofPlane(const Vec& point, f32 yOff,
+                           const TBGCheckData** outRoof)
 {
-	gpMap->checkRoof(point.x, 80.0f + yOff, point.z, outRoof);
+	return gpMap->checkRoof(point.x, 80.0f + yOff, point.z, outRoof);
 }
 
 BOOL TMario::isFrontSlip(int param_1)
