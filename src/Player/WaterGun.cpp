@@ -1435,7 +1435,6 @@ MtxPtr TWaterGun::getNozzleMtx()
 	return mFluddModel->unk4->getAnmMtx(unk1CD8);
 }
 
-
 void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 {
 	f32 usedWater = (f32)mCurrentWater

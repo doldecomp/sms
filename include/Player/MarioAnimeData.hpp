@@ -5,7 +5,7 @@
 
 struct TMarioAnimeData {
 public:
-	bool isPumpOK() const;
+	BOOL isPumpOK() const;
 
 public:
 	/* 0x0 */ u16 unk0;

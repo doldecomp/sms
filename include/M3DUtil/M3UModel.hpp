@@ -73,6 +73,9 @@ public:
 	// Fabricated
 	J3DModel* getModel() { return unk8; }
 
+	// Fabricated
+	BOOL checkModelState() const { return (unkC[1].getState() & 3) ? 1 : 0; }
+
 public:
 	/* 0x4 */ M3UModelCommon* unk4;
 	/* 0x8 */ J3DModel* unk8;

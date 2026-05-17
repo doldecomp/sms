@@ -589,12 +589,12 @@ static char* marioAnimeTexPatternFilenames[24] = {
 	"/mario/btp/ma_sleep_wait_tx.btp",  "/mario/btp/ma_sleep_end_tx.btp"
 };
 
-bool TMarioAnimeData::isPumpOK() const
+BOOL TMarioAnimeData::isPumpOK() const
 {
 	if (unk2 == 200) {
-		return false;
+		return FALSE;
 	}
-	return true;
+	return TRUE;
 }
 
 static int MarioHeadCtrl(J3DNode* param_1, int param_2)
