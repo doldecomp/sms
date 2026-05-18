@@ -1139,21 +1139,21 @@ public:
 	// Swim stuff
 	void isSwimWaiting();
 	void doSwimming();
-	void checkSwimJump();
-	void checkSwimToHangFence();
-	void swimStart();
-	void swimWait();
-	void swimWaitToPaddle();
-	void swimPaddleStart();
-	void swimPaddle();
-	void swimPaddleEnd();
-	void swimPaddleEndToWait();
-	void swimUp();
-	void swimDive();
-	void swimPDamage();
-	void swimDown();
-	void swimPDown();
-	BOOL swimMain();
+	BOOL checkSwimJump();
+	BOOL checkSwimToHangFence();
+	BOOL swimStart();
+	BOOL swimWait();
+	BOOL swimWaitToPaddle();
+	BOOL swimPaddleStart();
+	BOOL swimPaddle();
+	BOOL swimPaddleEnd();
+	BOOL swimPaddleEndToWait();
+	BOOL swimUp();
+	BOOL swimDive();
+	BOOL swimPDamage();
+	BOOL swimDown();
+	BOOL swimPDown();
+	int swimMain();
 
 	// ?
 	void setGamePad(TMarioGamePad*);
@@ -1434,6 +1434,28 @@ public:
 		STATUS_BRAKE_END       = 0xC00023D,
 		STATUS_SLIP_END        = 0xC00023E,
 
+		STATUS_SWIM_START = STATUS_FLAG_SWIMMING | STATUS_FLAG_UNK200
+		                    | STATUS_TYPE_SWIMMING | 0x11,
+		STATUS_SWIM_WAIT = STATUS_FLAG_SWIMMING | STATUS_FLAG_UNK200
+		                   | STATUS_TYPE_SWIMMING | 0x12,
+		STATUS_SWIM_WAIT_TO_PADDLE = STATUS_FLAG_SWIMMING | STATUS_FLAG_RUNNING
+		                             | STATUS_TYPE_SWIMMING | 0x13,
+		STATUS_SWIM_PADDLE_START = STATUS_FLAG_SWIMMING | STATUS_FLAG_RUNNING
+		                           | STATUS_TYPE_SWIMMING | 0x14,
+		STATUS_SWIM_PADDLE = STATUS_FLAG_SWIMMING | STATUS_FLAG_RUNNING
+		                     | STATUS_TYPE_SWIMMING | 0x15,
+		STATUS_SWIM_PADDLE_END = STATUS_FLAG_SWIMMING | STATUS_FLAG_RUNNING
+		                         | STATUS_TYPE_SWIMMING | 0x16,
+		STATUS_SWIM_PADDLE_END_TO_WAIT = STATUS_FLAG_SWIMMING
+		                                 | STATUS_FLAG_RUNNING
+		                                 | STATUS_TYPE_SWIMMING | 0x17,
+		STATUS_SWIM_UP = STATUS_FLAG_SWIMMING | STATUS_FLAG_RUNNING
+		                 | STATUS_TYPE_SWIMMING | 0x18,
+		STATUS_SWIM_DIVE = STATUS_FLAG_SWIMMING | STATUS_FLAG_RUNNING
+		                   | STATUS_TYPE_SWIMMING | 0x19,
+		STATUS_SWIM_P_DAMAGE = STATUS_FLAG_SWIMMING | STATUS_FLAG_RUNNING
+		                       | STATUS_TYPE_SWIMMING | 0x1A,
+
 		// TODO: these ones I'm not 100% sure about, or they need better names
 		STATUS_ELEC_DAMAGE = 0x20338,
 		STATUS_THROWN_DOWN = 0x208B8,
@@ -1556,7 +1578,8 @@ public:
 	/* 0x354 */ char unk354[0x360 - 0x354];
 	/* 0x360 */ s16 unk360;
 	/* 0x362 */ s16 unk362;
-	/* 0x364 */ char unk364[0x4];
+	/* 0x364 */ char unk364[0x2];
+	/* 0x366 */ s16 unk366;
 	/* 0x368 */ f32 unk368;
 	/* 0x36C */ f32 unk36C;
 	/* 0x370 */ f32 unk370;

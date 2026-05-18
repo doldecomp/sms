@@ -1502,11 +1502,11 @@ void TMario::checkController(JDrama::TGraphics*)
 						unk118 |= 0x4000;
 						startSoundActor(0x814);
 						if (checkStatusFlag(STATUS_FLAG_SWIMMING))
-							changePlayerStatus(0x24D5, 0, false);
+							changePlayerStatus(STATUS_SWIM_PADDLE, 0, false);
 					}
 				}
 				if (((mStatus + 0xFC000000) & 0xFFFFFFFF) != 0x440
-				    && mStatus != 0x24D5) {
+				    && mStatus != STATUS_SWIM_PADDLE) {
 					unkC4 = 0;
 					unk118 &= ~0x4000;
 				}
@@ -2094,14 +2094,14 @@ void TMario::thinkWaterSurface()
 				mVel.y *= mSwimParams.mStartVYMult.get();
 
 				if (checkStatusFlag(0x20000)) {
-					changePlayerStatus(0x24DA, 0, true);
+					changePlayerStatus(STATUS_SWIM_P_DAMAGE, 0, true);
 				} else if (checkFlag(0x4000)) {
-					changePlayerStatus(0x24D5, 0, true);
+					changePlayerStatus(STATUS_SWIM_PADDLE, 0, true);
 					mVel.y      = 0.0f;
 					mPosition.y = mFloorPosition.z;
 					startSoundActor(0x828);
 				} else {
-					changePlayerStatus(0x22D1, 0, true);
+					changePlayerStatus(STATUS_SWIM_START, 0, true);
 				}
 			}
 		} else if (mFloorPosition.z
