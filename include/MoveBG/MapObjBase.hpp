@@ -225,7 +225,7 @@ public:
 	                           const JGeometry::TVec3<f32>&,
 	                           const JGeometry::TVec3<f32>&);
 	void emitColumnWater();
-	void marioHipAttack() const;
+	bool marioHipAttack() const;
 	bool marioHeadAttack() const;
 	bool marioIsOn() const;
 	static bool marioIsOn(const TLiveActor*);
@@ -247,7 +247,7 @@ public:
 	void getNormalVecFromOffset(f32, f32, f32, JGeometry::TVec3<f32>*);
 	void getNormalVecFromTargetXZ(f32, f32, JGeometry::TVec3<f32>*) const;
 	void getNormalVecFromOffsetXZ(f32, f32, JGeometry::TVec3<f32>*);
-	void rotateVecByAxisY(JGeometry::TVec3<f32>*, f32);
+	static void rotateVecByAxisY(JGeometry::TVec3<f32>*, f32);
 	void getVerticalVecFromOffsetXZ(f32, f32, JGeometry::TVec3<f32>*);
 	void getVerticalVecToTargetXZ(f32, f32, JGeometry::TVec3<f32>*) const;
 	void calcReflectingVelocity(const TBGCheckData* wall, f32,
@@ -334,6 +334,21 @@ public:
 	u32 getUnk134() { return unk134; }
 	void setUnk134(u32 v) { unk134 = v; }
 	const char* getUnkF4() { return unkF4; }
+
+	// Fabricated
+	bool checkState(u32 state) { return mState == state; }
+
+	// Fabricated
+	void setState(u32 state) { mState = state; }
+
+	// Fabricated
+	void setTimeTilAppear(int timeTilAppear) { mTimeTilAppear = timeTilAppear; }
+
+	// Fabricated
+	bool isAppearTimeFinished() { return mTimeTilAppear > 0 ? true : false; }
+
+	// Fabricated
+	const JGeometry::TVec3<f32>& getInitialScaling() { return mInitialScaling; }
 
 public:
 	/* 0xF4 */ const char* unkF4;

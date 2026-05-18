@@ -632,7 +632,7 @@ bool TMapObjBase::marioIsOn() const
 
 bool TMapObjBase::marioHeadAttack() const { }
 
-void TMapObjBase::marioHipAttack() const { }
+bool TMapObjBase::marioHipAttack() const { }
 
 void TMapObjBase::emitColumnWater() { }
 
