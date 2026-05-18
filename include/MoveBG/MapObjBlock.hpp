@@ -7,7 +7,6 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <MSound/MSound.hpp>
 
-// TODO: mark virtual methods as such
 class TSmallEnemy;
 
 class TBreakableBlock : public TMapObjGeneral {
@@ -16,7 +15,7 @@ public:
 	    : TMapObjGeneral("壊れるブロック")
 	{
 	}
-	void touchPlayer(THitActor*);
+	virtual void touchPlayer(THitActor*);
 };
 
 class TSandBlock : public TMapObjBase {
@@ -31,9 +30,9 @@ public:
 	};
 
 	TSandBlock(const char* name = "砂ブロック");
-	void initMapObj();
-	void control();
-	void touchPlayer(THitActor*);
+	virtual void initMapObj();
+	virtual void control();
+	virtual void touchPlayer(THitActor*);
 
 	static u32 mWaitTimeToFall;
 	static f32 mSandScaleUp;
@@ -70,9 +69,9 @@ public:
 class TIceBlock : public TMapObjBase {
 public:
 	TIceBlock(const char* name = "アイスブロック");
-	void initMapObj();
-	void calc();
-	void control();
+	virtual void initMapObj();
+	virtual void calc();
+	virtual void control();
 
 	u32 touchWater(THitActor*);
 	u32 getSDLModelFlag() const;
@@ -85,9 +84,9 @@ public:
 class TBrickBlock : public THideObjBase {
 public:
 	TBrickBlock(const char* name = "レンガブロック");
-	void initMapObj();
-	BOOL receiveMessage(THitActor* sender, u32 message);
-	void kill();
+	virtual void initMapObj();
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void kill();
 };
 
 class TJuiceBlock : public TMapObjBase {
@@ -99,9 +98,9 @@ public:
 		unk140.set(1.0f, 1.0f, 1.0f);
 	}
 
-	void kill();
-	void moveObject();
-	void initMapObj();
+	virtual void kill();
+	virtual void moveObject();
+	virtual void initMapObj();
 
 	JGeometry::TVec3<f32>& getUnk140() { return unk140; }
 
@@ -118,16 +117,16 @@ public:
 	{
 	}
 
-	void setGroundCollision();
-	void perform(u32, JDrama::TGraphics*);
-	void initMapObj();
+	virtual void setGroundCollision();
+	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void initMapObj();
 };
 
 class TSuperHipDropBlock : public TBreakHideObj {
 public:
 	TSuperHipDropBlock(const char* name = "スーパーヒップドロップブロック");
-	void loadAfter();
-	BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void loadAfter();
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 public:
 	/* 0x150 */ bool mMonteBlockBroken;
