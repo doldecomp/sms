@@ -626,7 +626,7 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 				MsMtxSetRotRPH(transform, 0.0f, 0.0f,
 				               SHORTANGLE2DEG(headAngle));
 			}
-		} else if (gpMarioForCallBack->mStatus == 0xC400201
+		} else if (gpMarioForCallBack->mStatus == TMario::STATUS_WAIT
 		           && (gpMarioForCallBack->unk370
 		                       > gpMarioForCallBack->mDeParams.mFeelDeep.get()
 		                   ? true
@@ -730,11 +730,11 @@ static int MarioFootPosRCtrl(J3DNode* param_1, int param_2)
 		// And this is wrong
 		if ((gpMarioForCallBack->mStatus & TMario::STATUS_TYPE_MASK)
 		        == TMario::STATUS_TYPE_WAITING
-		    && gpMarioForCallBack->mStatus != 0xC00023D
+		    && gpMarioForCallBack->mStatus != TMario::STATUS_BRAKE_END
 		    && gpMarioForCallBack->onYoshi() == 0) {
 
-			check2 = !(gpMarioForCallBack->mStatus != 0xC400202
-			           && gpMarioForCallBack->mStatus != 0xC000203)
+			check2 = !(gpMarioForCallBack->mStatus != TMario::STATUS_SLEEPY
+			           && gpMarioForCallBack->mStatus != TMario::STATUS_SLEEP)
 			             ? TRUE
 			             : FALSE;
 		}
@@ -774,11 +774,11 @@ static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 		// And this is wrong
 		if ((gpMarioForCallBack->mStatus & TMario::STATUS_TYPE_MASK)
 		        == TMario::STATUS_TYPE_WAITING
-		    && gpMarioForCallBack->mStatus != 0xC00023D
+		    && gpMarioForCallBack->mStatus != TMario::STATUS_BRAKE_END
 		    && gpMarioForCallBack->onYoshi() == 0) {
 
-			check2 = !(gpMarioForCallBack->mStatus != 0xC400202
-			           && gpMarioForCallBack->mStatus != 0xC000203)
+			check2 = !(gpMarioForCallBack->mStatus != TMario::STATUS_SLEEPY
+			           && gpMarioForCallBack->mStatus != TMario::STATUS_SLEEP)
 			             ? TRUE
 			             : FALSE;
 		}
@@ -854,11 +854,11 @@ static int MarioFootPosLCtrl(J3DNode* param_1, int param_2)
 		// And this is wrong
 		if ((gpMarioForCallBack->mStatus & TMario::STATUS_TYPE_MASK)
 		        == TMario::STATUS_TYPE_WAITING
-		    && gpMarioForCallBack->mStatus != 0xC00023D
+		    && gpMarioForCallBack->mStatus != TMario::STATUS_BRAKE_END
 		    && gpMarioForCallBack->onYoshi() == 0) {
 
-			check2 = !(gpMarioForCallBack->mStatus != 0xC400202
-			           && gpMarioForCallBack->mStatus != 0xC000203)
+			check2 = !(gpMarioForCallBack->mStatus != TMario::STATUS_SLEEPY
+			           && gpMarioForCallBack->mStatus != TMario::STATUS_SLEEP)
 			             ? TRUE
 			             : FALSE;
 		}
@@ -898,11 +898,11 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 		// And this is wrong
 		if ((gpMarioForCallBack->mStatus & TMario::STATUS_TYPE_MASK)
 		        == TMario::STATUS_TYPE_WAITING
-		    && gpMarioForCallBack->mStatus != 0xC00023D
+		    && gpMarioForCallBack->mStatus != TMario::STATUS_BRAKE_END
 		    && gpMarioForCallBack->onYoshi() == 0) {
 
-			check2 = !(gpMarioForCallBack->mStatus != 0xC400202
-			           && gpMarioForCallBack->mStatus != 0xC000203)
+			check2 = !(gpMarioForCallBack->mStatus != TMario::STATUS_SLEEPY
+			           && gpMarioForCallBack->mStatus != TMario::STATUS_SLEEP)
 			             ? TRUE
 			             : FALSE;
 		}

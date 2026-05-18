@@ -17,14 +17,14 @@ BOOL TMario::taking()
 			startVoice(0x788F);
 			mHeldObject = (TTakeActor*)unk384;
 		} else {
-			return changePlayerStatus(0xC400201, 0, false);
+			return changePlayerStatus(STATUS_WAIT, 0, false);
 		}
 		unk384 = nullptr;
 	}
 	if (isLast1AnimeFrame()) {
 		unk380 = 2;
 		unk37E = 0;
-		return changePlayerStatus(0xC400201, 0, false);
+		return changePlayerStatus(STATUS_WAIT, 0, false);
 	} else {
 		waitProcess();
 		return FALSE;
@@ -48,9 +48,9 @@ BOOL TMario::actnMain()
 		} else {
 			if (isLast1AnimeFrame()) {
 				setAnimation(0xC3, 1.0f);
-				result = changePlayerStatus(0xC400201, 0, false);
+				result = changePlayerStatus(STATUS_WAIT, 0, false);
 			} else {
-				stopCommon(0x110, 0xC400201);
+				stopCommon(0x110, STATUS_WAIT);
 				result = FALSE;
 			}
 		}
@@ -69,7 +69,7 @@ BOOL TMario::actnMain()
 				if ((mInput & 8) != 0) {
 					result = changePlayerStatus(0x50, 0, false);
 				} else {
-					stopCommon(0x5A, 0xC400201);
+					stopCommon(0x5A, STATUS_WAIT);
 					result = FALSE;
 				}
 			}
@@ -79,7 +79,7 @@ BOOL TMario::actnMain()
 		if ((mInput & 4) != 0) {
 			result = changePlayerDropping(0x88c, 0);
 		} else {
-			stopCommon(0x6E, 0xC400201);
+			stopCommon(0x6E, STATUS_WAIT);
 			if (mHeldObject != nullptr
 			    && mModel->getFrameCtrl(0).checkPass(20.0f)) {
 				mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK6);
@@ -92,7 +92,7 @@ BOOL TMario::actnMain()
 		if ((mInput & 4) != 0) {
 			result = changePlayerDropping(0x88C, 0);
 		} else {
-			stopCommon(0x65, 0xC400201);
+			stopCommon(0x65, STATUS_WAIT);
 			checkThrowObject();
 			result = FALSE;
 		}

@@ -847,7 +847,7 @@ void TMario::checkGraffitoFire()
 	if (mPosition.y - mFloorPosition.y > mGraffitoParams.mFireHeight.get())
 		return;
 
-	if (mStatus == 0x208b7 || mStatus == 0x8000239)
+	if (mStatus == 0x208b7 || mStatus == STATUS_FIRE_JUMP_END)
 		mFaceAngle.y += 0x8000;
 
 	f32 fVar2 = mForwardVel;
