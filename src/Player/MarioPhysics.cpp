@@ -277,7 +277,7 @@ int TMario::barProcess()
 	checkGroundPlane(mPosition.x, mPosition.y, mPosition.z, &floorY, &ground);
 	if (mPosition.y < floorY) {
 		mPosition.y = floorY;
-		changePlayerStatus(0xc400201, 0, false);
+		changePlayerStatus(STATUS_WAIT, 0, false);
 		result = 1;
 	}
 

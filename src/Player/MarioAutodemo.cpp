@@ -81,7 +81,7 @@ BOOL TMario::readBillboard()
 	}
 	case 2:
 		if (gpMarDirector->unk124 == 0 || gpMarDirector->unk124 == 5) {
-			changePlayerStatus(0xC400201, 0, true);
+			changePlayerStatus(STATUS_WAIT, 0, true);
 		}
 		break;
 	}
@@ -321,7 +321,7 @@ BOOL TMario::waitingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 		unk2BC = mFloorPosition.y;
 		setAnimation(0xC3, 1.0f);
 		unk114 |= 2;
-		changePlayerStatus(0xC400201, 0, true);
+		changePlayerStatus(STATUS_WAIT, 0, true);
 		return TRUE;
 	}
 	return FALSE;
@@ -399,13 +399,13 @@ BOOL TMario::warpOut()
 		case 1:
 			setAnimation(0x10E, 1.0f);
 			if (isLast1AnimeFrame()) {
-				return changePlayerStatus(0xC400201, 0, true);
+				return changePlayerStatus(STATUS_WAIT, 0, true);
 			}
 			break;
 		case 2:
 			setAnimation(0x12D, 1.0f);
 			if (isLast1AnimeFrame()) {
-				return changePlayerStatus(0xC400201, 0, true);
+				return changePlayerStatus(STATUS_WAIT, 0, true);
 			}
 			break;
 		}
@@ -447,7 +447,7 @@ BOOL TMario::electricDamage()
 		           mDmgParamsGraffitoElec.mMinSpeed.get(),
 		           mDmgParamsGraffitoElec.mMotor.get(), 0.0f, 0x3C);
 
-		return changePlayerStatus(0xC400201, 0, true);
+		return changePlayerStatus(STATUS_WAIT, 0, true);
 	}
 	return false;
 }
@@ -470,7 +470,7 @@ BOOL TMario::footDowning()
 	case 2:
 		setAnimation(0x126, 1.0f);
 		if (isLast1AnimeFrame()) {
-			return changePlayerStatus(0xC400201, 0, false);
+			return changePlayerStatus(STATUS_WAIT, 0, false);
 		}
 		break;
 	case 3:
@@ -480,7 +480,7 @@ BOOL TMario::footDowning()
 			sinkInSandEffect();
 		}
 		if (isLast1AnimeFrame()) {
-			return changePlayerStatus(0xC400201, 0, false);
+			return changePlayerStatus(STATUS_WAIT, 0, false);
 		}
 		break;
 	}
@@ -526,7 +526,7 @@ BOOL TMario::demoMain()
 				mPosition.x -= JMASSin(mFaceAngle.y) * 150.0f;
 				mPosition.z -= JMASCos(mFaceAngle.y) * 150.0f;
 			}
-			return changePlayerStatus(0xC400201, 0, true);
+			return changePlayerStatus(STATUS_WAIT, 0, true);
 		}
 		result = FALSE;
 		break;

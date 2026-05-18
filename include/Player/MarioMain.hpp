@@ -33,7 +33,11 @@ class SampleCtrlModelData;
 class TMultiMtxEffect;
 
 // TODO: where should this be?
-enum E_SIDEWALK_TYPE { };
+enum E_SIDEWALK_TYPE {
+	SIDEWALK_TYPE_UNK0 = 0,
+	SIDEWALK_TYPE_UNK1 = 1,
+	SIDEWALK_TYPE_UNK2 = 2,
+};
 
 enum E_MARIO_FLAG {
 	MARIO_FLAG_ABOVE_SEWER_FLOOR   = (1 << 0),
@@ -1101,35 +1105,35 @@ public:
 	bool askJumpIntoWaterEffectExist() const;
 
 	// Wait stuff
-	void startTalking();
-	void canSleep();
+	BOOL startTalking();
+	bool canSleep();
 	BOOL canPut();
 	void checkPutStart();
-	void waitingCommonEvents();
+	BOOL waitingCommonEvents();
 	void stopCommon(int, int);
 	void changeMontemanWaitingAnim();
-	void waiting();
-	void sleepily();
-	void sleeping();
-	void wakeup();
+	BOOL waiting();
+	BOOL sleepily();
+	BOOL sleeping();
+	BOOL wakeup();
 	void getSideWalkValues(E_SIDEWALK_TYPE*, f32*, f32*);
-	void squating();
-	void squatStart();
-	void squatStandup();
-	void pullEnd();
-	void jumpEndCommon(int, int);
-	void jumpEndEvents(u32);
-	void jumpEnd();
-	void secJumpEnd();
-	void landEnd();
-	void ultraJumpEnd();
-	void uTurnJumpEnd();
-	void jumpThrowEnd();
-	void fireJumpEnd();
-	void broadJumpEnd();
-	void hipAttackEnd();
-	void brakeEnd();
-	void slipEnd();
+	BOOL squating();
+	BOOL squatStart();
+	BOOL squatStandup();
+	BOOL pullEnd();
+	BOOL jumpEndCommon(int, int);
+	BOOL jumpEndEvents(u32);
+	BOOL jumpEnd();
+	BOOL secJumpEnd();
+	BOOL landEnd();
+	BOOL ultraJumpEnd();
+	BOOL uTurnJumpEnd();
+	BOOL jumpThrowEnd();
+	BOOL fireJumpEnd();
+	BOOL broadJumpEnd();
+	BOOL hipAttackEnd();
+	BOOL brakeEnd();
+	BOOL slipEnd();
 	BOOL waitMain();
 
 	// Swim stuff
@@ -1414,6 +1418,22 @@ public:
 		STATUS_HIP_DROP = STATUS_FLAG_UNK800000 | STATUS_FLAG_JUMPING
 		                  | STATUS_TYPE_JUMPING | 0x29, // 0x8008A9
 
+		STATUS_WAIT            = 0xC400201,
+		STATUS_SLEEPY          = 0xC400202,
+		STATUS_SLEEP           = 0xC000203,
+		STATUS_WAKEUP          = 0xC000204,
+		STATUS_SQUAT           = 0xC008220,
+		STATUS_SQUAT_START     = 0xC008221,
+		STATUS_PULL_END        = 0xC00022F,
+		STATUS_U_TURN_JUMP_END = 0xC000233,
+		STATUS_JUMP_THROW_END  = 0x80000A36,
+		STATUS_FIRE_JUMP_END   = 0x8000239,
+		STATUS_ULTRA_JUMP_END  = 0x800023A,
+		STATUS_BROAD_JUMP_END  = 0x800023B,
+		STATUS_HIP_ATTACK_END  = 0x80023C,
+		STATUS_BRAKE_END       = 0xC00023D,
+		STATUS_SLIP_END        = 0xC00023E,
+
 		// TODO: these ones I'm not 100% sure about, or they need better names
 		STATUS_ELEC_DAMAGE = 0x20338,
 		STATUS_THROWN_DOWN = 0x208B8,
@@ -1509,7 +1529,8 @@ public:
 	/* 0x194 */ f32 unk194;
 	/* 0x198 */ f32 unk198;
 	/* 0x19C */ JGeometry::TVec3<f32> unk19C; // damage pos
-	/* 0x1A8 */ char unk1A8[0x1C0 - 0x1A8];
+	/* 0x1A8 */ char unk1A8[0xC];
+	/* 0x1B4 */ JGeometry::TVec3<f32> unk1B4;
 	/* 0x1C0 */ Mtx unk1C0;
 	/* 0x1F0 */ Mtx unk1F0;
 	/* 0x220 */ Mtx unk220;

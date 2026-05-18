@@ -84,7 +84,8 @@ static int unknown_inline_6(TMario* mario)
 static int unknown_inline_7(TMario* mario)
 {
 	static TMario::JumpSlipRecord param
-	    = { 0x10, 0xC000233, TMario::STATUS_JUMP, 0x88C, 0x50 };
+	    = { 0x10, TMario::STATUS_U_TURN_JUMP_END, TMario::STATUS_JUMP, 0x88C,
+		    0x50 };
 
 	if (mario->jumpSlipEvents(&param))
 		return 1;
@@ -99,8 +100,8 @@ static int unknown_inline_7(TMario* mario)
 
 static int unknown_inline_8(TMario* mario)
 {
-	static TMario::JumpSlipRecord param
-	    = { 0x04, 0x800023A, TMario::STATUS_JUMP, 0x88C, 0x50 };
+	static TMario::JumpSlipRecord param = { 0x04, TMario::STATUS_ULTRA_JUMP_END,
+		                                    TMario::STATUS_JUMP, 0x88C, 0x50 };
 
 	if (mario->jumpSlipEvents(&param))
 		return 1;
@@ -116,7 +117,8 @@ static int unknown_inline_9(TMario* mario)
 		mario->mInput &= ~0x2;
 
 	static TMario::JumpSlipRecord param
-	    = { 0x18, 0x800023B, TMario::STATUS_BROAD_JUMP, 0x88C, 0x50 };
+	    = { 0x18, TMario::STATUS_BROAD_JUMP_END, TMario::STATUS_BROAD_JUMP,
+		    0x88C, 0x50 };
 
 	if (mario->jumpSlipEvents(&param))
 		return 1;
@@ -783,7 +785,7 @@ BOOL TMario::running()
 
 	if (canSquat()) {
 		setPlayerVelocity(0.0f);
-		return changePlayerStatus(0xC008220, 0, false);
+		return changePlayerStatus(STATUS_SQUAT, 0, false);
 	}
 
 	if (rocketCheck()) {
@@ -1109,7 +1111,7 @@ BOOL TMario::walkEnd()
 	setPlayerVelocity(mForwardVel);
 
 	if (zeroed)
-		return changePlayerStatus(0xC400201, 0, false);
+		return changePlayerStatus(STATUS_WAIT, 0, false);
 
 	switch (walkProcess()) {
 	case 0:
@@ -1253,7 +1255,7 @@ BOOL TMario::slipForeCommon(int arg0, int arg1, int arg2, int arg3)
 
 int TMario::slipFore()
 {
-	return slipForeCommon(0xC00023E, STATUS_JUMP, 0x200088E, 0x91);
+	return slipForeCommon(STATUS_SLIP_END, STATUS_JUMP, 0x200088E, 0x91);
 }
 
 BOOL TMario::slipBackCommon(int arg0, int arg1, int arg2)
@@ -1313,7 +1315,7 @@ int TMario::squatSlipping()
 	if (mInput & 0x10)
 		return changePlayerStatus(STATUS_BRAKE, 0, false);
 
-	return slipForeCommon(0xC008220, STATUS_JUMP, 0x88C, 0x97);
+	return slipForeCommon(STATUS_SQUAT, STATUS_JUMP, 0x88C, 0x97);
 }
 
 int TMario::oilRun()
@@ -1331,7 +1333,7 @@ int TMario::oilRun()
 	if (-1.0f < mVel.x && mVel.x < 1.0f) {
 		if (-1.0f < mVel.z && mVel.z < 1.0f) {
 			setPlayerVelocity(0.0f);
-			return changePlayerStatus(0xC400201, 0, false);
+			return changePlayerStatus(STATUS_WAIT, 0, false);
 		}
 	}
 
@@ -1469,7 +1471,7 @@ f32 TMario::downingCommon(int anim, f32 limit, int arg2)
 			changePlayerStatus(STATUS_JUMP_SHORT_BACK_DOWN, arg2, false);
 
 	} else if (isLast1AnimeFrame()) {
-		changePlayerStatus(0xC400201, 0, false);
+		changePlayerStatus(STATUS_WAIT, 0, false);
 	}
 
 	return animRate;
