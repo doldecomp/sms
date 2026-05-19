@@ -8,26 +8,20 @@ namespace JGeometry {
 
 inline void gekko_ps_copy12(register void* dst, register void* src)
 {
-	register f32 src0;
-	register f32 src1;
-	register f32 src2;
-	register f32 src3;
-	register f32 src4;
-	register f32 src5;
 #ifdef __MWERKS__ // clang-format off
 	asm {
-		psq_l src0, 0(src), 0, 0
-		psq_l src1, 8(src), 0, 0
-		psq_l src2, 16(src), 0, 0
-		psq_l src3, 24(src), 0, 0
-		psq_l src4, 32(src), 0, 0
-		psq_l src5, 40(src), 0, 0
-		psq_st src0, 0(dst), 0, 0
-		psq_st src1, 8(dst), 0, 0
-		psq_st src2, 16(dst), 0, 0
-		psq_st src3, 24(dst), 0, 0
-		psq_st src4, 32(dst), 0, 0
-		psq_st src5, 40(dst), 0, 0
+		psq_l f0, 0(src), 0, 0
+		psq_l f2, 8(src), 0, 0
+		psq_l f4, 16(src), 0, 0
+		psq_l f6, 24(src), 0, 0
+		psq_l f8, 32(src), 0, 0
+		psq_l f10, 40(src), 0, 0
+		psq_st f0, 0(dst), 0, 0
+		psq_st f2, 8(dst), 0, 0
+		psq_st f4, 16(dst), 0, 0
+		psq_st f6, 24(dst), 0, 0
+		psq_st f8, 32(dst), 0, 0
+		psq_st f10, 40(dst), 0, 0
 	}
 #endif // clang-format on
 }
