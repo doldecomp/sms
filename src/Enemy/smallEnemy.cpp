@@ -611,19 +611,19 @@ bool TSmallEnemy::changeByJuice()
 
 		switch (unk185) {
 		case 1:
-			block->unk138.x = 0x1C2;
-			block->unk138.y = 0xDC;
-			block->unk138.z = 0x50;
+			block->unk138.r = 0x1C2;
+			block->unk138.g = 0xDC;
+			block->unk138.b = 0x50;
 			break;
 		case 2:
-			block->unk138.x = 0x118;
-			block->unk138.y = 0x6E;
-			block->unk138.z = 0x154;
+			block->unk138.r = 0x118;
+			block->unk138.g = 0x6E;
+			block->unk138.b = 0x154;
 			break;
 		case 3:
-			block->unk138.x = 0x1E0;
-			block->unk138.y = 0xFA;
-			block->unk138.z = 0x154;
+			block->unk138.r = 0x1E0;
+			block->unk138.g = 0xFA;
+			block->unk138.b = 0x154;
 			break;
 		}
 
