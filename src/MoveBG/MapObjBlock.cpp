@@ -43,9 +43,9 @@ void TBreakableBlock::touchPlayer(THitActor* player)
 
 void TSandBlock::touchPlayer(THitActor* player)
 {
-	if (marioIsOn() && checkState(TSandBlock::Waiting)) {
+	if (marioIsOn() && checkState(TSandBlock::STATE_WAITING)) {
 		setTimeTilAppear(mWaitTimeToFall);
-		setState(TSandBlock::Touched);
+		setState(TSandBlock::STATE_TOUCHED);
 	}
 }
 
@@ -54,24 +54,24 @@ void TSandBlock::control()
 	TMapObjBase::control();
 
 	switch (mState) {
-	case TSandBlock::Waiting:
+	case TSandBlock::STATE_WAITING:
 		break;
-	case TSandBlock::Restoring:
+	case TSandBlock::STATE_RESTORING:
 		mScaling.x += mSandScaleUp;
 		mScaling.y += mSandScaleUp;
 		mScaling.z += mSandScaleUp;
 		if (mScaling.y >= mInitialScaling.x) {
 			mScaling.set(mInitialScaling);
-			setState(TSandBlock::Waiting);
+			setState(TSandBlock::STATE_WAITING);
 		}
 		break;
-	case TSandBlock::Touched:
+	case TSandBlock::STATE_TOUCHED:
 		if (!isAppearTimeFinished()) {
 			setUpMapCollision(1);
-			setState(TSandBlock::Falling);
+			setState(TSandBlock::STATE_FALLING);
 		}
 		break;
-	case TSandBlock::Falling:
+	case TSandBlock::STATE_FALLING:
 		mScaling.y -= mSandScaleDown;
 		gpMSound->startSoundActor(0x30AA, &mPosition, 0, nullptr, 0, 0x4);
 		JGeometry::TVec3<f32> particleScale(mScaling.x, mInitialScaling.y,
@@ -83,11 +83,11 @@ void TSandBlock::control()
 			mScaling.z = mScaling.y;
 			TMapObjBase::sleep();
 			setTimeTilAppear(mSandWaitTime);
-			setState(TSandBlock::Gone);
+			setState(TSandBlock::STATE_GONE);
 		}
 
 		break;
-	case TSandBlock::Gone:
+	case TSandBlock::STATE_GONE:
 		if (!isAppearTimeFinished()
 		    && getDistance(SMS_GetMarioPos()) > mScaling.x * 100.0f) {
 			TMapObjBase::awake();
@@ -95,7 +95,7 @@ void TSandBlock::control()
 			mScaling.set(mInitialScaling);
 			setUpMapCollision(0);
 			mScaling.set(scaleCopy);
-			setState(TSandBlock::Restoring);
+			setState(TSandBlock::STATE_RESTORING);
 		}
 		break;
 	}

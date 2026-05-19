@@ -21,12 +21,12 @@ public:
 class TSandBlock : public TMapObjBase {
 public:
 	// Fabricated
-	typedef enum ESandBlockStates {
-		Waiting   = 1,
-		Restoring = 2,
-		Touched   = 3,
-		Falling   = 4,
-		Gone      = 5
+	enum EState {
+		STATE_WAITING   = 1,
+		STATE_RESTORING = 2,
+		STATE_TOUCHED   = 3,
+		STATE_FALLING   = 4,
+		STATE_GONE      = 5
 	};
 
 	TSandBlock(const char* name = "砂ブロック");
