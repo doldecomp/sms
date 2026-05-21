@@ -111,6 +111,7 @@ void JKRHeap::freeAll()
 	JSUListIterator<JKRDisposer> iterator;
 	while (iterator = mDisposerList.getFirst(),
 	       iterator != mDisposerList.getEnd()) {
+		//TODO: Is there a better way to match this?
         JKRDisposer* disposer = iterator.getObject();
         JKRDisposer* disposer2 = disposer;
 
@@ -194,6 +195,7 @@ void JKRHeap::dispose()
 	JSUListIterator<JKRDisposer> iterator;
 	while (iterator = mDisposerList.getFirst(),
 	       iterator != mDisposerList.getEnd()) {
+		//TODO: Is there a better way to match this?
         JKRDisposer* disposer = iterator.getObject();
         JKRDisposer* disposer2 = disposer;
 
