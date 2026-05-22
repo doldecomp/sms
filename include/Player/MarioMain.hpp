@@ -721,8 +721,8 @@ public:
 	BOOL isAnimeLoopOrStop();
 	void changeHand(int);
 	void changeHandByRate(f32);
-	f32 setAnimation(int, f32);
-	f32 setReverseAnimation(int, f32);
+	f32 setAnimation(int anm_id, f32 rate);
+	f32 setReverseAnimation(int anm_id, f32 rate);
 	void loadAnm(J3DAnmTransform**, const char*);
 	void loadBas(void**, const char*);
 	void loadAnmTexPattern(J3DAnmTexPattern**, char*, J3DModelData*);
@@ -810,21 +810,21 @@ public:
 	int slipFalling();
 	int fireDowning();
 	int thrownDowning();
-	void trample();
-	void missJumping();
-	void fireJumping();
-	void fireLanding();
+	int trample();
+	int missJumping();
+	int fireJumping();
+	int fireLanding();
 	int broadJumping();
 	int rotateBroadJumping();
 	int boardJumping();
 	int rocketCheck();
 	int rocketing();
 	int rotateJumping();
-	void wireJumping();
-	void pullJumping();
+	int wireJumping();
+	int pullJumping();
 	int hipAttacking();
 	int diving();
-	void fallDead();
+	int fallDead();
 	int jumpMain();
 
 	// ?
@@ -995,12 +995,12 @@ public:
 	BOOL loserDown();
 	BOOL jumpSlipCommon(s16, u32);
 	BOOL jumpSlipEvents(TMario::JumpSlipRecord*);
-	void jumpSlip();
-	void landSlip();
-	void secJumpSlip();
-	void uTurnJumpSlip();
-	void ultraJumpSlip();
-	void broadJumpSlip();
+	BOOL jumpSlip();
+	BOOL landSlip();
+	BOOL secJumpSlip();
+	BOOL uTurnJumpSlip();
+	BOOL ultraJumpSlip();
+	BOOL broadJumpSlip();
 	BOOL moveMain();
 
 	// Special stuff
@@ -1033,14 +1033,14 @@ public:
 	BOOL wireWaitToSWaitL();
 	BOOL wireWaitToSWaitR();
 	void changeWireHanging();
-	void wireWaitToHang();
-	void wireSWaitToHang();
-	void wireReturn();
+	BOOL wireWaitToHang();
+	BOOL wireSWaitToHang();
+	BOOL wireReturn();
 	BOOL wireHanging();
 	s16 getNozzleEmitVX();
 	BOOL wireRolling();
-	void wireSWaitToWaitL();
-	void wireSWaitToWaitR();
+	BOOL wireSWaitToWaitL();
+	BOOL wireSWaitToWaitR();
 	void getCurrentPullParams(f32*, f32*);
 	void setPullingAnm(const JGeometry::TVec3<f32>&, f32);
 	BOOL pulling();
@@ -1391,6 +1391,12 @@ public:
 		                    | STATUS_TYPE_RUNNING | 0x26, // 0x20466
 		STATUS_LOSER_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_RUNNING
 		                    | STATUS_TYPE_RUNNING | 0x27, // 0x20467
+		STATUS_JUMP_SLIP        = 0x4000470,
+		STATUS_LAND_SLIP        = 0x4000471,
+		STATUS_SEC_JUMP_SLIP    = 0x4000472,
+		STATUS_U_TURN_JUMP_SLIP = 0x4000473,
+		STATUS_ULTRA_JUMP_SLIP  = 0x4000478,
+		STATUS_BROAD_JUMP_SLIP  = 0x479,
 
 		STATUS_JUMP = STATUS_FLAG_UNK2000000 | STATUS_FLAG_JUMPING
 		              | STATUS_TYPE_JUMPING | 0x0, // 0x2000880
@@ -1407,6 +1413,12 @@ public:
 		= STATUS_FLAG_JUMPING | STATUS_TYPE_JUMPING | 0x7, // 0x887
 		STATUS_BROAD_JUMP
 		= STATUS_FLAG_JUMPING | STATUS_TYPE_JUMPING | 0x8, // 0x888
+		// NOTE: colloquially known as the "dive jump"
+		STATUS_JUMP_CATCH = STATUS_FLAG_UNK800000 | STATUS_FLAG_JUMPING
+		                    | STATUS_TYPE_JUMPING | 0xA, // 0x80088A
+		STATUS_JUMP_THROW = STATUS_FLAG_UNK80000000 | STATUS_FLAG_UNK2000000
+		                    | STATUS_FLAG_JUMPING | STATUS_TYPE_JUMPING
+		                    | 0x2B, // 0x820008AB
 		STATUS_JUMP_SHORT_BACK_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_JUMPING
 		                              | STATUS_TYPE_JUMPING | 0x30, // 0x208B0
 		STATUS_JUMP_SHORT_FORE_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_JUMPING
@@ -1432,6 +1444,9 @@ public:
 		STATUS_SQUAT           = 0xC008220,
 		STATUS_SQUAT_START     = 0xC008221,
 		STATUS_PULL_END        = 0xC00022F,
+		STATUS_JUMP_END        = 0xC000230,
+		STATUS_SEC_JUMP_END    = 0xC000231,
+		STATUS_LAND_END        = 0xC000232,
 		STATUS_U_TURN_JUMP_END = 0xC000233,
 		STATUS_JUMP_THROW_END  = 0x80000A36,
 		STATUS_FIRE_JUMP_END   = 0x8000239,
@@ -1442,27 +1457,34 @@ public:
 		STATUS_SLIP_END        = 0xC00023E,
 
 		STATUS_SWIM_START = STATUS_FLAG_SWIMMING | STATUS_FLAG_UNK200
-		                    | STATUS_TYPE_SWIMMING | 0x11,
+		                    | STATUS_TYPE_SWIMMING | 0x11, // 0x22D1
 		STATUS_SWIM_WAIT = STATUS_FLAG_SWIMMING | STATUS_FLAG_UNK200
-		                   | STATUS_TYPE_SWIMMING | 0x12,
+		                   | STATUS_TYPE_SWIMMING | 0x12, // 0x22D2
 		STATUS_SWIM_WAIT_TO_PADDLE = STATUS_FLAG_SWIMMING | STATUS_FLAG_RUNNING
-		                             | STATUS_TYPE_SWIMMING | 0x13,
+		                             | STATUS_TYPE_SWIMMING | 0x13, // 0x24D3
 		STATUS_SWIM_PADDLE_START = STATUS_FLAG_SWIMMING | STATUS_FLAG_RUNNING
-		                           | STATUS_TYPE_SWIMMING | 0x14,
+		                           | STATUS_TYPE_SWIMMING | 0x14, // 0x24D4
 		STATUS_SWIM_PADDLE = STATUS_FLAG_SWIMMING | STATUS_FLAG_RUNNING
-		                     | STATUS_TYPE_SWIMMING | 0x15,
+		                     | STATUS_TYPE_SWIMMING | 0x15, // 0x24D5
 		STATUS_SWIM_PADDLE_END = STATUS_FLAG_SWIMMING | STATUS_FLAG_RUNNING
-		                         | STATUS_TYPE_SWIMMING | 0x16,
-		STATUS_SWIM_PADDLE_END_TO_WAIT = STATUS_FLAG_SWIMMING
-		                                 | STATUS_FLAG_RUNNING
-		                                 | STATUS_TYPE_SWIMMING | 0x17,
+		                         | STATUS_TYPE_SWIMMING | 0x16, // 0x24D6
+		STATUS_SWIM_PADDLE_END_TO_WAIT
+		= STATUS_FLAG_SWIMMING | STATUS_FLAG_RUNNING | STATUS_TYPE_SWIMMING
+		  | 0x17, // 0x24D7
 		STATUS_SWIM_UP = STATUS_FLAG_SWIMMING | STATUS_FLAG_RUNNING
-		                 | STATUS_TYPE_SWIMMING | 0x18,
+		                 | STATUS_TYPE_SWIMMING | 0x18, // 0x24D8
 		STATUS_SWIM_DIVE = STATUS_FLAG_SWIMMING | STATUS_FLAG_RUNNING
-		                   | STATUS_TYPE_SWIMMING | 0x19,
+		                   | STATUS_TYPE_SWIMMING | 0x19, // 0x24D9
 		STATUS_SWIM_P_DAMAGE = STATUS_FLAG_SWIMMING | STATUS_FLAG_RUNNING
-		                       | STATUS_TYPE_SWIMMING | 0x1A,
+		                       | STATUS_TYPE_SWIMMING | 0x1A, // 0x24DA
+		STATUS_SWIM_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_SWIMMING
+		                   | STATUS_FLAG_RUNNING | STATUS_TYPE_SWIMMING
+		                   | 0x20, // 0x224E0
+		STATUS_SWIM_P_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_SWIMMING
+		                     | STATUS_FLAG_RUNNING | STATUS_TYPE_SWIMMING
+		                     | 0x21, // 0x224E1
 
+		// Note that the "bars" here are actually trees/palms
 		STATUS_BAR_WAIT              = 0x18100340,
 		STATUS_BAR_HANG              = 0x10100341,
 		STATUS_BAR_CLIMB             = 0x10100343,
@@ -1473,13 +1495,21 @@ public:
 		STATUS_WAIT_ROOF             = 0x200349,
 		STATUS_MOVE_ROOF             = 0x20054A,
 		STATUS_HANGING               = 0x3800034B,
+		STATUS_ASCEND                = 0x3000054C,
+		STATUS_DESCEND               = 0x3000054E,
+		STATUS_HANG_JUMPING          = 0x3000054F,
 		STATUS_TAKEN                 = 0x10020370,
 		STATUS_WIRE_WAIT             = 0x350,
 		STATUS_WIRE_S_WAIT           = 0x351,
 		STATUS_WIRE_WAIT_TO_S_WAIT_L = 0x352,
 		STATUS_WIRE_WAIT_TO_S_WAIT_R = 0x353,
+		STATUS_WIRE_WAIT_TO_HANG     = 0x10000554,
+		STATUS_WIRE_S_WAIT_TO_HANG   = 0x10000555,
+		STATUS_WIRE_RETURN           = 0x10000556,
 		STATUS_WIRE_HANGING          = 0x10000357,
 		STATUS_WIRE_ROLLING          = 0x10000358,
+		STATUS_WIRE_S_WAIT_TO_WAIT_R = 0x35B,
+		STATUS_WIRE_S_WAIT_TO_WAIT_L = 0x35C,
 		STATUS_FENCE_CATCH           = 0x3000036B,
 		STATUS_FENCE_JUMP_CATCH      = 0x3000036C,
 		STATUS_FENCE_PUNCH           = 0x3000036A,
@@ -1492,6 +1522,12 @@ public:
 
 		STATUS_WIN_DEMO        = 0x1302,
 		STATUS_READ_BILLBOARD  = 0x10001308,
+		STATUS_BOTTLE_IN       = 0x1310,
+		STATUS_ELEC_DOWN       = 0x21313,
+		STATUS_DOOR_OPEN_R     = 0x1320,
+		STATUS_DOOR_OPEN_L     = 0x1321,
+		STATUS_SINK_LOSER      = 0x10001123,
+		STATUS_DOWN_LOSER      = 0x1000192A,
 		STATUS_WARP_OUT        = 0x1337,
 		STATUS_WARP_IN         = 0x1336,
 		STATUS_ELECTRIC_DAMAGE = 0x20338,
@@ -1501,8 +1537,6 @@ public:
 
 		// TODO: these ones I'm not 100% sure about, or they need better names
 		STATUS_THROWN_DOWN = 0x208B8,
-		STATUS_DIVE_JUMP   = 0x80088A,
-		STATUS_JUMP_THROW  = 0x820008AB,
 		STATUS_SLIP_FALL   = 0x200088E,
 		STATUS_FIRE_DOWN   = 0x208B7,
 		STATUS_DIVE        = 0x891,
@@ -1513,212 +1547,213 @@ public:
 	};
 
 	// Definitions derived from gMarioAnimeData
+	// TODO: disambiguate the abbreviations in the names.
 	enum {
-		ANIM_HGUP               = 0,
-		ANIM_BDWN               = 1,
-		ANIM_BKDWN              = 2,
-		ANIM_TREE_CLIMB         = 5,
-		ANIM_TREE_CATCH         = 6,
-		ANIM_TREE_WAIT          = 13,
-		ANIM_BRAKE              = 15,
-		ANIM_HGDWN              = 28,
-		ANIM_FJPEND             = 40,
-		ANIM_FIREJMP            = 41,
-		ANIM_SDWNF              = 44,
-		ANIM_JFDWN              = 45,
-		ANIM_HANG               = 51,
-		ANIM_HGJMP              = 52,
-		ANIM_LADDER_HANG_CATCH  = 53,
-		ANIM_HIPED              = 58,
-		ANIM_HIPSR              = 60,
-		ANIM_HIPAT              = 61,
-		ANIM_RUN1               = 72,
-		ANIM_2JMED              = 75,
-		ANIM_2JMP2              = 76,
-		ANIM_JUMP               = 77,
-		ANIM_JMPED              = 78,
-		ANIM_2JMP1              = 80,
-		ANIM_LAND               = 86,
-		ANIM_LAEND              = 87,
-		ANIM_LOST               = 90,
-		ANIM_LADDER_HANG_MOVE_L = 92,
-		ANIM_LADDER_HANG_MOVE_R = 93,
-		ANIM_DOOR_OPENR         = 95,
-		ANIM_DOOR_OPENL         = 96,
-		ANIM_THROW              = 101,
-		ANIM_RAISE              = 107,
-		ANIM_PUSH               = 108,
-		ANIM_RIDE_SHELL         = 109,
-		ANIM_PUT                = 110,
-		ANIM_ROLL               = 111,
-		ANIM_RUN2               = 114,
-		ANIM_SFBDN              = 116,
-		ANIM_SFFDN              = 117,
-		ANIM_SHOCK_DOWN         = 121,
-		ANIM_SHOCK              = 122,
-		ANIM_SDOWN              = 123,
-		ANIM_SHFDN              = 124,
-		ANIM_SWAIT              = 126,
-		ANIM_SWLKL              = 127,
-		ANIM_SWLKR              = 128,
-		ANIM_SLDCT              = 136,
-		ANIM_SLPBK              = 137,
-		ANIM_SLDWN              = 138,
-		ANIM_SLPED              = 143,
-		ANIM_SLPLA              = 144,
-		ANIM_SLIP               = 145,
-		ANIM_SSTEP              = 146,
-		ANIM_SQEND              = 150,
-		ANIM_SQSTA              = 151,
-		ANIM_SQWAT              = 152,
-		ANIM_TURN               = 188,
-		ANIM_TRNED              = 189,
-		ANIM_TJMP2              = 190,
-		ANIM_TJMP1              = 191,
+		ANIM_HGUP               = 0x0,
+		ANIM_BDWN               = 0x1,
+		ANIM_BKDWN              = 0x2,
+		ANIM_TREE_CLIMB         = 0x5,
+		ANIM_TREE_CATCH         = 0x6,
+		ANIM_TREE_WAIT          = 0xD,
+		ANIM_BRAKE              = 0xF,
+		ANIM_HGDWN              = 0x1C,
+		ANIM_FJPEND             = 0x28,
+		ANIM_FIREJMP            = 0x29,
+		ANIM_SDWNF              = 0x2C,
+		ANIM_JFDWN              = 0x2D,
+		ANIM_HANG               = 0x33,
+		ANIM_HGJMP              = 0x34,
+		ANIM_LADDER_HANG_CATCH  = 0x35,
+		ANIM_HIPED              = 0x3A,
+		ANIM_HIPSR              = 0x3C,
+		ANIM_HIPAT              = 0x3D,
+		ANIM_RUN1               = 0x48,
+		ANIM_2JMED              = 0x4B,
+		ANIM_2JMP2              = 0x4C,
+		ANIM_JUMP               = 0x4D,
+		ANIM_JMPED              = 0x4E,
+		ANIM_2JMP1              = 0x50,
+		ANIM_LAND               = 0x56,
+		ANIM_LAEND              = 0x57,
+		ANIM_LOST               = 0x5A,
+		ANIM_LADDER_HANG_MOVE_L = 0x5C,
+		ANIM_LADDER_HANG_MOVE_R = 0x5D,
+		ANIM_DOOR_OPENR         = 0x5F,
+		ANIM_DOOR_OPENL         = 0x60,
+		ANIM_THROW              = 0x65,
+		ANIM_RAISE              = 0x6B,
+		ANIM_PUSH               = 0x6C,
+		ANIM_RIDE_SHELL         = 0x6D,
+		ANIM_PUT                = 0x6E,
+		ANIM_ROLL               = 0x6F,
+		ANIM_RUN2               = 0x72,
+		ANIM_SFBDN              = 0x74,
+		ANIM_SFFDN              = 0x75,
+		ANIM_SHOCK_DOWN         = 0x79,
+		ANIM_SHOCK              = 0x7A,
+		ANIM_SDOWN              = 0x7B,
+		ANIM_SHFDN              = 0x7C,
+		ANIM_SWAIT              = 0x7E,
+		ANIM_SWLKL              = 0x7F,
+		ANIM_SWLKR              = 0x80,
+		ANIM_SLDCT              = 0x88,
+		ANIM_SLPBK              = 0x89,
+		ANIM_SLDWN              = 0x8A,
+		ANIM_SLPED              = 0x8F,
+		ANIM_SLPLA              = 0x90,
+		ANIM_SLIP               = 0x91,
+		ANIM_SSTEP              = 0x92,
+		ANIM_SQEND              = 0x96,
+		ANIM_SQSTA              = 0x97,
+		ANIM_SQWAT              = 0x98,
+		ANIM_TURN               = 0xBC,
+		ANIM_TRNED              = 0xBD,
+		ANIM_TJMP2              = 0xBE,
+		ANIM_TJMP1              = 0xBF,
 		// Duplicate entry for TJMP2?
-		// ANIM_TJMP2_UNK = 192
-		ANIM_JUMP_ROLLING       = 193,
-		ANIM_WAIT               = 195,
-		ANIM_LADDER_HANG_WAIT_L = 198,
-		ANIM_LADDER_HANG_WAIT_R = 199,
-		ANIM_WALK               = 202,
-		ANIM_WJMP               = 203,
-		ANIM_WSLD               = 204,
-		ANIM_DEMO_SHINE_GET     = 205,
-		ANIM_STEP1              = 209,
-		ANIM_STEP2              = 210,
-		ANIM_STEP3              = 211,
-		ANIM_JKICK              = 212,
-		ANIM_DGRUN              = 213,
+		// ANIM_TJMP2_UNK = 0xC0
+		ANIM_JUMP_ROLLING       = 0xC1,
+		ANIM_WAIT               = 0xC3,
+		ANIM_LADDER_HANG_WAIT_L = 0xC6,
+		ANIM_LADDER_HANG_WAIT_R = 0xC7,
+		ANIM_WALK               = 0xCA,
+		ANIM_WJMP               = 0xCB,
+		ANIM_WSLD               = 0xCC,
+		ANIM_DEMO_SHINE_GET     = 0xCD,
+		ANIM_STEP1              = 0xD1,
+		ANIM_STEP2              = 0xD2,
+		ANIM_STEP3              = 0xD3,
+		ANIM_JKICK              = 0xD4,
+		ANIM_DGRUN              = 0xD5,
 		// ANIM_LAND w/ changed parameters
 		// (hand id is 1, unk7 is 0x16)
-		// ANIM_LAND_UNK = 214,
-		ANIM_HMOV_L       = 215,
-		ANIM_HMOV_R       = 216,
-		ANIM_T_WAIT       = 217,
-		ANIM_HOT_WAIT     = 218,
-		ANIM_ROPE_WALK    = 219,
-		ANIM_ROPE_RUN     = 220,
-		ANIM_ROPE_WAIT    = 221,
-		ANIM_ROPE_WTOSW   = 222,
-		ANIM_ROPE_WTOSW_R = 223,
-		ANIM_ROPE_SWAIT   = 224,
-		ANIM_ROPE_WHG     = 225,
-		ANIM_ROPE_SWHG    = 226,
-		ANIM_ROPE_HGWAT   = 227,
-		ANIM_ROPE_RETURN  = 228,
-		ANIM_ROPE_HMOVR   = 229,
-		ANIM_ROPE_HMOVL   = 230,
-		ANIM_SINKING      = 231,
-		ANIM_SINK_DOWN    = 232,
-		ANIM_DOOR_KICK    = 233,
-		ANIM_HOLD         = 234,
-		ANIM_HOLD_WAIT    = 235,
-		ANIM_HOLD_BACK    = 236,
-		ANIM_HOLD_MOVE_R  = 237,
-		ANIM_HOLD_MOVE_L  = 238,
-		ANIM_HOLD_DRAG    = 239,
-		ANIM_HOLD_TO_HANG = 240,
-		ANIM_HOLD_HANG    = 241,
-		ANIM_HANG_TO_HOLD = 242,
-		ANIM_HOLD_RETURN  = 243,
-		ANIM_SPIN_P       = 244,
-		ANIM_TURBO_DASH   = 245,
-		ANIM_BROAD_JUMP   = 246,
+		// ANIM_LAND_UNK = 0xD6,
+		ANIM_HMOV_L       = 0xD7,
+		ANIM_HMOV_R       = 0xD8,
+		ANIM_T_WAIT       = 0xD9,
+		ANIM_HOT_WAIT     = 0xDA,
+		ANIM_ROPE_WALK    = 0xDB,
+		ANIM_ROPE_RUN     = 0xDC,
+		ANIM_ROPE_WAIT    = 0xDD,
+		ANIM_ROPE_WTOSW   = 0xDE,
+		ANIM_ROPE_WTOSW_R = 0xDF,
+		ANIM_ROPE_SWAIT   = 0xE0,
+		ANIM_ROPE_WHG     = 0xE1,
+		ANIM_ROPE_SWHG    = 0xE2,
+		ANIM_ROPE_HGWAT   = 0xE3,
+		ANIM_ROPE_RETURN  = 0xE4,
+		ANIM_ROPE_HMOVR   = 0xE5,
+		ANIM_ROPE_HMOVL   = 0xE6,
+		ANIM_SINKING      = 0xE7,
+		ANIM_SINK_DOWN    = 0xE8,
+		ANIM_DOOR_KICK    = 0xE9,
+		ANIM_HOLD         = 0xEA,
+		ANIM_HOLD_WAIT    = 0xEB,
+		ANIM_HOLD_BACK    = 0xEC,
+		ANIM_HOLD_MOVE_R  = 0xED,
+		ANIM_HOLD_MOVE_L  = 0xEE,
+		ANIM_HOLD_DRAG    = 0xEF,
+		ANIM_HOLD_TO_HANG = 0xF0,
+		ANIM_HOLD_HANG    = 0xF1,
+		ANIM_HANG_TO_HOLD = 0xF2,
+		ANIM_HOLD_RETURN  = 0xF3,
+		ANIM_SPIN_P       = 0xF4,
+		ANIM_TURBO_DASH   = 0xF5,
+		ANIM_BROAD_JUMP   = 0xF6,
 		// ANIM_JUMP_ROLLING w/ a slightly different param
 		// (hand id in it's entry is set to 0 instead of 2)
-		// ANIM_JUMP_ROLLING_UNK = 247,
-		ANIM_GIANT_ROLLING    = 248,
-		ANIM_FENCE_CATCH      = 249,
-		ANIM_FENCE_JCATCH     = 250,
-		ANIM_FENCE_WAIT       = 251,
-		ANIM_FENCE_MOVE_L     = 252,
-		ANIM_FENCE_MOVE_R     = 253,
-		ANIM_FENCE_MOVE_UP    = 254,
-		ANIM_FENCE_MOVE_DOWN  = 255,
-		ANIM_FENCE_PUNCH      = 256,
-		ANIM_LADDER_HANG_KICK = 257,
-		ANIM_LADDER_ROLL_UP   = 258,
-		ANIM_LADDER_ROLL_DOWN = 259,
+		// ANIM_JUMP_ROLLING_UNK = 0xF7,
+		ANIM_GIANT_ROLLING    = 0xF8,
+		ANIM_FENCE_CATCH      = 0xF9,
+		ANIM_FENCE_JCATCH     = 0xFA,
+		ANIM_FENCE_WAIT       = 0xFB,
+		ANIM_FENCE_MOVE_L     = 0xFC,
+		ANIM_FENCE_MOVE_R     = 0xFD,
+		ANIM_FENCE_MOVE_UP    = 0xFE,
+		ANIM_FENCE_MOVE_DOWN  = 0xFF,
+		ANIM_FENCE_PUNCH      = 0x100,
+		ANIM_LADDER_HANG_KICK = 0x101,
+		ANIM_LADDER_ROLL_UP   = 0x102,
+		ANIM_LADDER_ROLL_DOWN = 0x103,
 		// Duplicate entry for ANIM_RIDE_SHELL with the hand id set to 1
-		// ANIM_RIDE_SHELL_UNK = 260
-		ANIM_RIDE_SHELL_WAIT = 261,
-		ANIM_SWIM_START      = 262,
-		ANIM_SWIM_WAIT       = 263,
-		ANIM_WAIT_TO_SWIM    = 264,
-		ANIM_SWIM            = 265,
-		ANIM_SWIM_TO_WAIT    = 266,
-		ANIM_SWIM_DAMAGE     = 267,
-		ANIM_SWIM_DOWN       = 268,
-		ANIM_DEMO_GATE_IN    = 269,
-		ANIM_DEMO_GATE_OUT   = 270,
-		ANIM_ROLL_JUMP       = 271,
-		ANIM_GET_FAIL        = 272,
-		ANIM_TREE_MOVE_L     = 273,
-		ANIM_TREE_MOVE_R     = 274,
-		ANIM_DIE             = 275,
-		ANIM_MONTEMAN_WAIT   = 276,
+		// ANIM_RIDE_SHELL_UNK = 0x104
+		ANIM_RIDE_SHELL_WAIT = 0x105,
+		ANIM_SWIM_START      = 0x106,
+		ANIM_SWIM_WAIT       = 0x107,
+		ANIM_WAIT_TO_SWIM    = 0x108,
+		ANIM_SWIM            = 0x109,
+		ANIM_SWIM_TO_WAIT    = 0x10A,
+		ANIM_SWIM_DAMAGE     = 0x10B,
+		ANIM_SWIM_DOWN       = 0x10C,
+		ANIM_DEMO_GATE_IN    = 0x10D,
+		ANIM_DEMO_GATE_OUT   = 0x10E,
+		ANIM_ROLL_JUMP       = 0x10F,
+		ANIM_GET_FAIL        = 0x110,
+		ANIM_TREE_MOVE_L     = 0x111,
+		ANIM_TREE_MOVE_R     = 0x112,
+		ANIM_DIE             = 0x113,
+		ANIM_MONTEMAN_WAIT   = 0x114,
 		// duplicate entry of ANIM_SWIM_START for paddling (?)
-		ANIM_PADDLE_SWIM_START = 277,
+		ANIM_PADDLE_SWIM_START = 0x115,
 		// duplicate entry of ANIM_SWIM_WAIT for paddling (?)
-		ANIM_PADDLE_SWIM_WAIT          = 278,
-		ANIM_WAIT_TO_PADDLE            = 279,
-		ANIM_PADDLE_START              = 280,
-		ANIM_PADDLE_SWIM               = 281,
-		ANIM_PADDLE_END                = 282,
-		ANIM_PADDLE_TO_WAIT            = 283,
-		ANIM_FLOAT                     = 284,
-		ANIM_DAMAGE_WAIT               = 285,
-		ANIM_FEPMP                     = 286,
-		ANIM_SWPMP                     = 287,
-		ANIM_THROWN                    = 288,
-		ANIM_THROWN_END                = 289,
-		ANIM_BOTTLE_IN                 = 290,
-		ANIM_SAND_FILL_HEAD            = 291,
-		ANIM_SAND_FILL_HEAD_END        = 292,
-		ANIM_SANDFILL_LEG              = 293,
-		ANIM_SANDFILL_LEG_END          = 294,
-		ANIM_DAMAGE_WAIT_START         = 295,
-		ANIM_SWIM_DIVE                 = 296,
-		ANIM_DRAW                      = 297,
-		ANIM_SWIM_P_DAMAGE             = 298,
-		ANIM_SWIM_P_DOWN               = 299,
-		ANIM_PIVOT                     = 300,
-		ANIM_DEMO_GATE_OUT_GET2        = 301,
-		ANIM_DEMO_GATE_OUT_APPEAR      = 302,
-		ANIM_BELT_UP                   = 303,
-		ANIM_YAWN                      = 304,
-		ANIM_SIT                       = 305,
-		ANIM_SIT_WAIT                  = 306,
-		ANIM_SIT_END                   = 307,
-		ANIM_SLEEP                     = 308,
-		ANIM_SLEEP_WAIT                = 309,
-		ANIM_SLEEP_END                 = 310,
-		ANIM_DIVE_WAIT                 = 311,
-		ANIM_DIVE_LAND                 = 312,
-		ANIM_DOOR_GACHA_L              = 313,
-		ANIM_DOOR_GACHA_R              = 314,
-		ANIM_DEMO_GATE_OUT_APPEAR_GET  = 315,
-		ANIM_DEMO_GATE_OUT_ROLLING_GET = 316,
-		ANIM_DEMO_GATE_OUT_ROLLING     = 317,
-		ANIM_FALL_DOWN_WAIT            = 318,
-		ANIM_YO_WAIT                   = 319,
-		ANIM_YO_WALK                   = 320,
-		ANIM_YO_RUN                    = 321,
-		ANIM_YO_EAT                    = 322,
-		ANIM_YO_EAT_END                = 323,
-		ANIM_YO_JUMP                   = 324,
-		ANIM_YO_JUMP_FALL              = 325,
-		ANIM_YO_JUMP_END               = 326,
-		ANIM_YO_HOLD_JUMP              = 327,
-		ANIM_YO_RIDE                   = 328,
-		ANIM_YO_HIP_START              = 329,
-		ANIM_YO_HIP_POSE               = 330,
-		ANIM_YO_HIP_END                = 331,
-		ANIM_YO_DAMAGE                 = 332,
-		ANIM_DEMO_SHINE_GET_YO         = 333,
-		ANIM_YO_SLIDE_POSE             = 334,
-		ANIM_YO_SLIDE_END              = 335,
+		ANIM_PADDLE_SWIM_WAIT          = 0x116,
+		ANIM_WAIT_TO_PADDLE            = 0x117,
+		ANIM_PADDLE_START              = 0x118,
+		ANIM_PADDLE_SWIM               = 0x119,
+		ANIM_PADDLE_END                = 0x11A,
+		ANIM_PADDLE_TO_WAIT            = 0x11B,
+		ANIM_FLOAT                     = 0x11C,
+		ANIM_DAMAGE_WAIT               = 0x11D,
+		ANIM_FEPMP                     = 0x11E,
+		ANIM_SWPMP                     = 0x11F,
+		ANIM_THROWN                    = 0x120,
+		ANIM_THROWN_END                = 0x121,
+		ANIM_BOTTLE_IN                 = 0x122,
+		ANIM_SAND_FILL_HEAD            = 0x123,
+		ANIM_SAND_FILL_HEAD_END        = 0x124,
+		ANIM_SANDFILL_LEG              = 0x125,
+		ANIM_SANDFILL_LEG_END          = 0x126,
+		ANIM_DAMAGE_WAIT_START         = 0x127,
+		ANIM_SWIM_DIVE                 = 0x128,
+		ANIM_DRAW                      = 0x129,
+		ANIM_SWIM_P_DAMAGE             = 0x12A,
+		ANIM_SWIM_P_DOWN               = 0x12B,
+		ANIM_PIVOT                     = 0x12C,
+		ANIM_DEMO_GATE_OUT_GET2        = 0x12D,
+		ANIM_DEMO_GATE_OUT_APPEAR      = 0x12E,
+		ANIM_BELT_UP                   = 0x12F,
+		ANIM_YAWN                      = 0x130,
+		ANIM_SIT                       = 0x131,
+		ANIM_SIT_WAIT                  = 0x132,
+		ANIM_SIT_END                   = 0x133,
+		ANIM_SLEEP                     = 0x134,
+		ANIM_SLEEP_WAIT                = 0x135,
+		ANIM_SLEEP_END                 = 0x136,
+		ANIM_DIVE_WAIT                 = 0x137,
+		ANIM_DIVE_LAND                 = 0x138,
+		ANIM_DOOR_GACHA_L              = 0x139,
+		ANIM_DOOR_GACHA_R              = 0x13A,
+		ANIM_DEMO_GATE_OUT_APPEAR_GET  = 0x13B,
+		ANIM_DEMO_GATE_OUT_ROLLING_GET = 0x13C,
+		ANIM_DEMO_GATE_OUT_ROLLING     = 0x13D,
+		ANIM_FALL_DOWN_WAIT            = 0x13E,
+		ANIM_YO_WAIT                   = 0x13F,
+		ANIM_YO_WALK                   = 0x140,
+		ANIM_YO_RUN                    = 0x141,
+		ANIM_YO_EAT                    = 0x142,
+		ANIM_YO_EAT_END                = 0x143,
+		ANIM_YO_JUMP                   = 0x144,
+		ANIM_YO_JUMP_FALL              = 0x145,
+		ANIM_YO_JUMP_END               = 0x146,
+		ANIM_YO_HOLD_JUMP              = 0x147,
+		ANIM_YO_RIDE                   = 0x148,
+		ANIM_YO_HIP_START              = 0x149,
+		ANIM_YO_HIP_POSE               = 0x14A,
+		ANIM_YO_HIP_END                = 0x14B,
+		ANIM_YO_DAMAGE                 = 0x14C,
+		ANIM_DEMO_SHINE_GET_YO         = 0x14D,
+		ANIM_YO_SLIDE_POSE             = 0x14E,
+		ANIM_YO_SLIDE_END              = 0x14F,
 	};
 
 	/* 0x7C */ u32 mStatus;

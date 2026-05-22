@@ -90,9 +90,17 @@ BOOL TMario::readBillboard()
 	return FALSE;
 }
 
-BOOL TMario::bottleIn() { }
+BOOL TMario::bottleIn()
+{
+	setAnimation(ANIM_BOTTLE_IN, 1.0f);
+	return FALSE;
+}
 
-BOOL TMario::elecDowning() { }
+BOOL TMario::elecDowning()
+{
+	setAnimation(ANIM_SHOCK_DOWN, 1.0f);
+	return FALSE;
+}
 
 BOOL TMario::jumpingDemoCommon(u32 playerStatus, int animationId, f32 velocity)
 {
@@ -127,9 +135,24 @@ BOOL TMario::openDoor()
 	return FALSE;
 }
 
-BOOL TMario::sinkLoser() { }
+BOOL TMario::sinkLoser()
+{
+	setPlayerVelocity(0.0f);
+	setAnimation(ANIM_SINK_DOWN, 1.0f);
+	if (jumpProcess(0) == TRUE) {
+		changePlayerStatus(STATUS_LOSER_DOWN, 0, true);
+	}
+	return FALSE;
+}
 
-BOOL TMario::downLoser() { }
+BOOL TMario::downLoser()
+{
+	setPlayerVelocity(0.0f);
+	setAnimation(ANIM_LAND, 1.0f);
+	if (jumpProcess(0) == TRUE)
+		changePlayerStatus(STATUS_LOSER_DOWN, 0, true);
+	return FALSE;
+}
 
 BOOL TMario::warpIn()
 {
@@ -427,7 +450,7 @@ BOOL TMario::warpOut()
 		unk114 |= 2;
 		switch (mStatusArg & 0xff) {
 		case 0:
-			return changePlayerStatus(0xC000230, 0, true);
+			return changePlayerStatus(STATUS_JUMP_END, 0, true);
 		case 1:
 			setAnimation(ANIM_DEMO_GATE_OUT, 1.0f);
 			if (isLast1AnimeFrame()) {
@@ -547,37 +570,25 @@ BOOL TMario::demoMain()
 		result = readBillboard();
 		break;
 
-	case 0x1310: // bottle in?
-		setAnimation(ANIM_BOTTLE_IN, 1.0f);
-		result = FALSE;
+	case STATUS_BOTTLE_IN:
+		result = bottleIn();
 		break;
 
-	case 0x21313: // elec downing?
-		setAnimation(ANIM_SHOCK_DOWN, 1.0f);
-		result = FALSE;
+	case STATUS_ELEC_DOWN:
+		result = elecDowning();
 		break;
 
-	case 0x1320:
-	case 0x1321:
+	case STATUS_DOOR_OPEN_R:
+	case STATUS_DOOR_OPEN_L:
 		result = openDoor();
 		break;
 
-	case 0x10001123: // sink loser?
-		setPlayerVelocity(0.0f);
-		setAnimation(ANIM_SINK_DOWN, 1.0f);
-		if (jumpProcess(0) == TRUE) {
-			changePlayerStatus(0x20000 + 0x467, 0, true);
-		}
-		result = FALSE;
+	case STATUS_SINK_LOSER:
+		result = sinkLoser();
 		break;
 
-	case 0x1000192a: // down loser?
-		setPlayerVelocity(0.0f);
-		setAnimation(ANIM_LAND, 1.0f);
-		if (jumpProcess(0) == TRUE) {
-			changePlayerStatus(0x20000 + 0x467, 0, true);
-		}
-		result = FALSE;
+	case STATUS_DOWN_LOSER:
+		result = downLoser();
 		break;
 
 	case STATUS_WARP_OUT:

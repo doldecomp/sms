@@ -55,7 +55,7 @@ void TMario::decHP(int hp)
 
 		if (unk12C < 1.0f) {
 			loserExec();
-			changePlayerStatus(0x224E0, 0, true);
+			changePlayerStatus(STATUS_SWIM_DOWN, 0, true);
 		}
 		return;
 	}
@@ -204,8 +204,8 @@ void TMario::normalizeNozzle()
 void TMario::loserExec()
 {
 	// volatile u32 padding[2];
-	if (mStatus != 0x224E0 && mStatus != 0x21313 && mStatus != 0x224E1
-	    && mStatus != 0x1000192A) {
+	if (mStatus != STATUS_SWIM_DOWN && mStatus != STATUS_ELEC_DOWN
+	    && mStatus != STATUS_SWIM_P_DOWN && mStatus != STATUS_DOWN_LOSER) {
 		unk118 |= MARIO_FLAG_GAME_OVER;
 		mHealth = 0;
 
@@ -219,16 +219,16 @@ void TMario::loserExec()
 
 		if (checkStatusFlag(STATUS_FLAG_SWIMMING)) {
 			if (unk12C < 1.0f) {
-				changePlayerStatus(0x224E0, 0, true);
+				changePlayerStatus(STATUS_SWIM_DOWN, 0, true);
 			} else {
-				changePlayerStatus(0x224E1, 0, true);
+				changePlayerStatus(STATUS_SWIM_P_DOWN, 0, true);
 			}
 			return;
 		}
 		if (mStatus == STATUS_ELECTRIC_DAMAGE) {
-			changePlayerStatus(0x21313, 0, true);
+			changePlayerStatus(STATUS_ELEC_DOWN, 0, true);
 		} else {
-			changePlayerStatus(0x1000192A, 0, true);
+			changePlayerStatus(STATUS_DOWN_LOSER, 0, true);
 		}
 	}
 }

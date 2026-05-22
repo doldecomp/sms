@@ -315,28 +315,24 @@ BOOL TMario::swimPDamage()
 	return 0;
 }
 
-BOOL TMario::swimDown() { }
-
-BOOL TMario::swimPDown() { }
-
-static int unknown_inline_10(TMario* mario)
+BOOL TMario::swimDown()
 {
-	mario->doSwimming();
-	mario->jumpingDemoCommon(0x224e0, TMario::ANIM_SWIM_DOWN, 0.0f);
+	doSwimming();
+	jumpingDemoCommon(STATUS_SWIM_DOWN, ANIM_SWIM_DOWN, 0.0f);
 	return 0;
 }
 
-static int unknown_inline_11(TMario* mario)
+BOOL TMario::swimPDown()
 {
-	mario->doSwimming();
-	mario->jumpingDemoCommon(0x224e1, TMario::ANIM_SWIM_P_DOWN, 0.0f);
+	doSwimming();
+	jumpingDemoCommon(STATUS_SWIM_P_DOWN, ANIM_SWIM_P_DOWN, 0.0f);
 	return 0;
 }
 
 int TMario::swimMain()
 {
 	if (checkFlag(MARIO_FLAG_GAME_OVER))
-		changePlayerStatus(0x224e1, 0, false);
+		changePlayerStatus(STATUS_SWIM_P_DOWN, 0, false);
 
 	if (checkSwimJump() == 1)
 		return 0;
@@ -385,11 +381,11 @@ int TMario::swimMain()
 	case STATUS_SWIM_P_DAMAGE:
 		return swimPDamage();
 
-	case 0x224e0:
-		return unknown_inline_10(this);
+	case STATUS_SWIM_DOWN:
+		return swimDown();
 
-	case 0x224e1:
-		return unknown_inline_11(this);
+	case STATUS_SWIM_P_DOWN:
+		return swimPDown();
 	}
 
 	return result;
