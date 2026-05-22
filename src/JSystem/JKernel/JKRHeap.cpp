@@ -108,14 +108,10 @@ void JKRHeap::free(void* memory, JKRHeap* heap)
 void JKRHeap::freeAll()
 {
 	JUT_WARNING_F(417, !mInitFlag, "freeAll in heap %x", this);
-	JSUListIterator<JKRDisposer> iterator;
+	JSUListIterator<JKRDisposer> iterator(&mDisposerList);
 	while (iterator = mDisposerList.getFirst(),
 	       iterator != mDisposerList.getEnd()) {
-		// TODO: Is there a better way to match this?
-		JKRDisposer* disposer  = iterator.getObject();
-		JKRDisposer* disposer2 = disposer;
-
-		disposer2->~JKRDisposer();
+		iterator.getObject()->~JKRDisposer();
 	}
 }
 
@@ -192,14 +188,10 @@ void JKRHeap::dispose(void* begin, void* end)
 
 void JKRHeap::dispose()
 {
-	JSUListIterator<JKRDisposer> iterator;
+	JSUListIterator<JKRDisposer> iterator(&mDisposerList);
 	while (iterator = mDisposerList.getFirst(),
 	       iterator != mDisposerList.getEnd()) {
-		// TODO: Is there a better way to match this?
-		JKRDisposer* disposer  = iterator.getObject();
-		JKRDisposer* disposer2 = disposer;
-
-		disposer2->~JKRDisposer();
+		iterator.getObject()->~JKRDisposer();
 	}
 }
 
