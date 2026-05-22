@@ -221,12 +221,12 @@ BOOL TMario::doRunningAnimation()
 	while (loop) {
 		switch (mAnimationId) {
 		default:
-		case 0x72:
+		case ANIM_RUN2:
 			if (mForwardVel >= mDeParams.mDashMax.get() - 1.0f) {
-				setAnimation(0xF5, 1.0f);
+				setAnimation(ANIM_TURBO_DASH, 1.0f);
 				loop = false;
 			} else if (sp < mRunParams.mWalk2Soft.get()) {
-				setAnimation(0x92, 1.0f);
+				setAnimation(ANIM_SSTEP, 1.0f);
 				loop = false;
 			} else {
 				rate = sp * mRunParams.mRunAnmSpeedMult.get()
@@ -238,7 +238,7 @@ BOOL TMario::doRunningAnimation()
 					         - tmp * (1.0f - mRunParams.mInWaterBrake.get()))
 					        * mRunParams.mInWaterAnmBrake.get();
 				}
-				setAnimation(0x72, rate);
+				setAnimation(ANIM_RUN2, rate);
 				f32 lo = mRunParams.mMotBlendWalkSp.get();
 				f32 hi = mRunParams.mMotBlendRunSp.get();
 				f32 mix;
@@ -257,27 +257,27 @@ BOOL TMario::doRunningAnimation()
 				loop = false;
 			}
 			break;
-		case 0x92:
+		case ANIM_SSTEP:
 			if (sp > mRunParams.mSoft2Walk.get()) {
-				setAnimation(0x72, 1.0f);
+				setAnimation(ANIM_RUN2, 1.0f);
 				loop = false;
 			} else {
 				f32 rate2 = sp;
 				if (rate2 < 0.1f)
 					rate2 = 0.1f;
 				rate2 *= mRunParams.mSoftStepAnmMult.get();
-				setAnimation(0x92, rate2);
+				setAnimation(ANIM_SSTEP, rate2);
 				loop = false;
 			}
 			break;
-		case 0xF5:
+		case ANIM_TURBO_DASH:
 			if (mForwardVel < mDeParams.mDashMax.get() - 1.0f) {
-				setAnimation(0x72, 1.0f);
+				setAnimation(ANIM_RUN2, 1.0f);
 				loop = false;
 			} else {
 				f32 sp2 = sp * mRunParams.mRunAnmSpeedMult.get()
 				          + mRunParams.mRunAnmSpeedBase.get();
-				setAnimation(0xF5, sp2);
+				setAnimation(ANIM_TURBO_DASH, sp2);
 				loop = false;
 			}
 			break;
@@ -714,16 +714,16 @@ void TMario::doPushingAnimation(const Vec& vec)
 	}
 
 	if (mWallPlane == nullptr || angDiff < -0x71C7 || angDiff > 0x71C7) {
-		setAnimation(0x6C, 1.0f);
+		setAnimation(ANIM_PUSH, 1.0f);
 		startVoice(0x7094);
 		return;
 	}
 
 	f32 rate = 2.0f * MsSqrtf(dx * dx + dz * dz);
 	if (angDiff < 0)
-		setAnimation(0x80, rate);
+		setAnimation(ANIM_SWLKR, rate);
 	else
-		setAnimation(0x7F, rate);
+		setAnimation(ANIM_SWLKL, rate);
 
 	mFaceAngle.x    = 0;
 	mModelFaceAngle = wallAngle + 0x8000;
@@ -803,7 +803,7 @@ BOOL TMario::running()
 	switch (walkProcess()) {
 	case 0:
 		changePlayerStatus(0x88C, 0, false);
-		setAnimation(0x56, 1.0f);
+		setAnimation(ANIM_LAND, 1.0f);
 		break;
 	case 1:
 		doRunningAnimation();
@@ -867,7 +867,7 @@ BOOL TMario::rotating()
 			return changePlayerStatus(0x895, 0, false);
 	}
 
-	setAnimation(0xF4, 1.0f);
+	setAnimation(ANIM_SPIN_P, 1.0f);
 	emitRotateShootEffect();
 	emitBlurSpinJump();
 
@@ -931,9 +931,9 @@ BOOL TMario::turnning()
 	}
 
 	if (mForwardVel >= 18.0f) {
-		setAnimation(0xBC, 1.0f);
+		setAnimation(ANIM_TURN, 1.0f);
 	} else {
-		setAnimation(0xBD, 1.0f);
+		setAnimation(ANIM_TRNED, 1.0f);
 		if (isLast1AnimeFrame()) {
 			f32 vel = mForwardVel;
 			if (vel > 0.0f) {
@@ -965,7 +965,7 @@ BOOL TMario::turnEnd()
 		return true;
 
 	doRunning();
-	setAnimation(0xBD, 1.0f);
+	setAnimation(ANIM_TRNED, 1.0f);
 
 	if (!walkProcess())
 		changePlayerStatus(0x88C, 0, false);
@@ -1013,13 +1013,13 @@ inline int TMario::braking()
 		}
 		break;
 	}
-	setAnimation(0xF, 1.0f);
+	setAnimation(ANIM_BRAKE, 1.0f);
 	return 0;
 }
 
 BOOL TMario::surfing()
 {
-	setAnimation(0x6D, 1.0f);
+	setAnimation(ANIM_RIDE_SHELL, 1.0f);
 	if (mStatusTimer != 0) {
 		mStatusTimer--;
 		return 0;
@@ -1125,7 +1125,7 @@ BOOL TMario::walkEnd()
 	f32 rate = 0.25f * mForwardVel;
 	if (rate < 0.1f)
 		rate = 0.1f;
-	setAnimation(0x48, rate);
+	setAnimation(ANIM_RUN1, rate);
 	return 0;
 }
 
@@ -1168,7 +1168,7 @@ BOOL TMario::fireDashing()
 	if (!walkProcess()) {
 		changePlayerStatus(0x208B5, 0, false);
 	}
-	setAnimation(0x29, 0.1f * (0.5f * mForwardVel));
+	setAnimation(ANIM_FIREJMP, 0.1f * (0.5f * mForwardVel));
 	return 0;
 }
 
@@ -1366,12 +1366,12 @@ int TMario::oilRun()
 	mSlideVelZ  = 0.0f;
 	if (mIntendedMag == 0.0f) {
 		if (mInput & 0x4000) {
-			setAnimation(0x98, 0.5f);
+			setAnimation(ANIM_SQWAT, 0.5f);
 		} else {
-			setAnimation(0xC3, 0.5f);
+			setAnimation(ANIM_WAIT, 0.5f);
 		}
 	} else {
-		setAnimation(0x72,
+		setAnimation(ANIM_RUN2,
 		             0.5f * mIntendedMag * mDirtyParams.mSlipAnmSpeed.get());
 		startVoiceIfNoVoice(0x78D3);
 		if (gpMSound->gateCheck(0x1001)) {
@@ -1565,7 +1565,7 @@ BOOL TMario::loserDown()
 	if (mForwardVel * mForwardVel < 1.0f)
 		setPlayerVelocity(0.0f);
 
-	setAnimation(0x113, 1.0f);
+	setAnimation(ANIM_DIE, 1.0f);
 	switch (mStatusState) {
 	case 0:
 		startVoice(0x785D);
@@ -1613,7 +1613,7 @@ BOOL TMario::jumpSlipCommon(s16 anim, u32 status)
 		changePlayerStatus(status, 0, false);
 		break;
 	case 2:
-		setAnimation(0x6C, 1.0f);
+		setAnimation(ANIM_PUSH, 1.0f);
 		break;
 	case 1:
 		break;

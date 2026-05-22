@@ -695,9 +695,10 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 				MTXConcat(J3DSys::mCurrentMtx, gunMtx, J3DSys::mCurrentMtx);
 				return 1;
 			}
-		} else if (gpMarioForCallBack->mAnimationId == 0x48
-		           || gpMarioForCallBack->mAnimationId == 0x72
-		           || gpMarioForCallBack->mAnimationId == 0x6D
+		} else if (gpMarioForCallBack->mAnimationId == TMario::ANIM_RUN1
+		           || gpMarioForCallBack->mAnimationId == TMario::ANIM_RUN2
+		           || gpMarioForCallBack->mAnimationId
+		                      == TMario::ANIM_RIDE_SHELL
 		                  && !gpMarioForCallBack->checkStatusFlag(
 		                      MARIO_FLAG_FLUDD_EMITTING)) {
 
@@ -1051,11 +1052,11 @@ void TMario::setPositions()
 u32 TMario::getTrampleCt()
 {
 	switch (mAnimationId) {
-	case 0xd1:
+	case ANIM_STEP1:
 		return 1;
-	case 0xd2:
+	case ANIM_STEP2:
 		return 2;
-	case 0xd3:
+	case ANIM_STEP3:
 		return 3;
 	}
 	return 0;
@@ -1146,7 +1147,7 @@ f32 TMario::setAnimation(int param_1, f32 param_2)
 {
 	// volatile u32 padding[37];
 	if (onYoshi()) {
-		if (param_1 == 0x5a) {
+		if (param_1 == ANIM_LOST) {
 			mYoshi->changeAnimation(0x12);
 		}
 
@@ -1479,7 +1480,7 @@ void TMario::initModel()
 	marioCommon->unk18[1].unk58 = nullptr;
 	mModel                      = modelMario;
 
-	setAnimation(0xC3, 1.0f);
+	setAnimation(ANIM_WAIT, 1.0f);
 
 	J3DTransformInfo transformInfo;
 	transformInfo.mScale.x     = 1.0f;
@@ -2070,7 +2071,7 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (mStatus == 0x4000440 && mAnimationId != 0x92) {
+	if (mStatus == 0x4000440 && mAnimationId != ANIM_SSTEP) {
 		f32 blendRatio = unk414.z;
 		if (blendRatio < 0.3f) {
 			changeHand(2);
@@ -2083,7 +2084,7 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (mAnimationId == 0x12d) {
+	if (mAnimationId == ANIM_DEMO_GATE_OUT_GET2) {
 		mModel->unk8->getModelData()->getShapeNodePointer(5)->onFlag(1);
 		mModel->unk8->getModelData()->getShapeNodePointer(6)->onFlag(1);
 		flagOnAllShapes(mHandModels[0][0]->getModelData(), 1);

@@ -1580,7 +1580,7 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 				// getter that converts to s32
 
 				switch ((s32)mMario->mAnimationId) {
-				case 0x33:
+				case TMario::ANIM_HANG:
 					mFluddModel->setBck("wg_pump");
 					break;
 				default:

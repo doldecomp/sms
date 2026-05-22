@@ -49,7 +49,7 @@ void TMario::doSwimming()
 	if (depthRatio > 1.0f)
 		depthRatio = 1.0f;
 
-	if (mAnimationId == 0x107 || mAnimationId == 0x106
+	if (mAnimationId == ANIM_SWIM_WAIT || mAnimationId == ANIM_SWIM_START
 	    || mStatus == STATUS_SWIM_WAIT)
 		depthRatio *= mSwimParams.mWaitBouyancy.get();
 	else
@@ -145,7 +145,7 @@ BOOL TMario::swimStart()
 	if (!checkStatusFlag(STATUS_FLAG_SWIMMING))
 		return 1;
 
-	setAnimation(0x115, 1.0f);
+	setAnimation(ANIM_PADDLE_SWIM_START, 1.0f);
 
 	if (isLast1AnimeFrame())
 		changePlayerStatus(STATUS_SWIM_WAIT, 0, false);
@@ -155,7 +155,7 @@ BOOL TMario::swimStart()
 
 BOOL TMario::swimWait()
 {
-	setAnimation(0x116, 1.0f);
+	setAnimation(ANIM_PADDLE_SWIM_WAIT, 1.0f);
 
 	if (mInput & 0x1)
 		return changePlayerStatus(STATUS_SWIM_WAIT_TO_PADDLE, 0, false);
@@ -165,7 +165,7 @@ BOOL TMario::swimWait()
 	if (!checkStatusFlag(STATUS_FLAG_SWIMMING))
 		return 1;
 
-	setAnimation(0x116, 1.0f);
+	setAnimation(ANIM_PADDLE_SWIM_WAIT, 1.0f);
 
 	if (gpMSound->gateCheck(0x1950))
 		MSoundSESystem::MSRandPlay::startSeRandPlay(0x1950, 0);
@@ -174,7 +174,7 @@ BOOL TMario::swimWait()
 
 BOOL TMario::swimWaitToPaddle()
 {
-	setAnimation(0x117, 1.0f);
+	setAnimation(ANIM_WAIT_TO_PADDLE, 1.0f);
 
 	if (isLast1AnimeFrame())
 		changePlayerStatus(STATUS_SWIM_PADDLE_START, 0, false);
@@ -189,7 +189,7 @@ BOOL TMario::swimWaitToPaddle()
 
 BOOL TMario::swimPaddleStart()
 {
-	setAnimation(0x118, 1.0f);
+	setAnimation(ANIM_PADDLE_START, 1.0f);
 	mForwardVel += mSwimParams.mPaddleSpeedUp.get();
 	mVel.y += mSwimParams.mPaddleJumpUp.get();
 
@@ -209,7 +209,7 @@ BOOL TMario::swimPaddle()
 	f32 anmRate = 0.5f;
 	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING))
 		anmRate = 5.0f;
-	setAnimation(0x119, anmRate);
+	setAnimation(ANIM_PADDLE_SWIM, anmRate);
 
 	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
 		setPlayerVelocity(mDeParams.mDashMax.get());
@@ -233,7 +233,7 @@ BOOL TMario::swimPaddle()
 
 BOOL TMario::swimPaddleEnd()
 {
-	setAnimation(0x11a, 1.0f);
+	setAnimation(ANIM_PADDLE_END, 1.0f);
 
 	if (isLast1AnimeFrame())
 		return changePlayerStatus(STATUS_SWIM_PADDLE_END_TO_WAIT, 0, false);
@@ -248,7 +248,7 @@ BOOL TMario::swimPaddleEnd()
 
 BOOL TMario::swimPaddleEndToWait()
 {
-	setAnimation(0x11b, 1.0f);
+	setAnimation(ANIM_PADDLE_TO_WAIT, 1.0f);
 
 	if (isLast1AnimeFrame())
 		return changePlayerStatus(STATUS_SWIM_WAIT, 0, false);
@@ -263,11 +263,11 @@ BOOL TMario::swimPaddleEndToWait()
 
 BOOL TMario::swimUp()
 {
-	setAnimation(0x11c, 1.0f);
+	setAnimation(ANIM_FLOAT, 1.0f);
 	mVel.y += mSwimParams.mFloatUp.get();
 
 	if (isLast1AnimeFrame()) {
-		setAnimation(0x116, 1.0f);
+		setAnimation(ANIM_PADDLE_SWIM_WAIT, 1.0f);
 		return changePlayerStatus(STATUS_SWIM_WAIT, 0, false);
 	}
 
@@ -281,7 +281,7 @@ BOOL TMario::swimUp()
 
 BOOL TMario::swimDive()
 {
-	setAnimation(0x128, 1.0f);
+	setAnimation(ANIM_SWIM_DIVE, 1.0f);
 
 	if (getMotionFrameCtrl().checkPass(16.0f))
 		unk366 = mSwimParams.mWaitSinkTime.get();
@@ -292,7 +292,7 @@ BOOL TMario::swimDive()
 	}
 
 	if (isLast1AnimeFrame()) {
-		setAnimation(0x116, 1.0f);
+		setAnimation(ANIM_PADDLE_SWIM_WAIT, 1.0f);
 		return changePlayerStatus(STATUS_SWIM_PADDLE_END, 0, false);
 	}
 
@@ -307,7 +307,7 @@ BOOL TMario::swimDive()
 BOOL TMario::swimPDamage()
 {
 	doSwimming();
-	jumpingDemoCommon(STATUS_SWIM_P_DAMAGE, 0x12a, 0.0f);
+	jumpingDemoCommon(STATUS_SWIM_P_DAMAGE, ANIM_SWIM_P_DAMAGE, 0.0f);
 
 	if (isLast1AnimeFrame())
 		changePlayerStatus(STATUS_SWIM_WAIT, 0, false);
@@ -322,14 +322,14 @@ BOOL TMario::swimPDown() { }
 static int unknown_inline_10(TMario* mario)
 {
 	mario->doSwimming();
-	mario->jumpingDemoCommon(0x224e0, 0x10c, 0.0f);
+	mario->jumpingDemoCommon(0x224e0, TMario::ANIM_SWIM_DOWN, 0.0f);
 	return 0;
 }
 
 static int unknown_inline_11(TMario* mario)
 {
 	mario->doSwimming();
-	mario->jumpingDemoCommon(0x224e1, 0x12b, 0.0f);
+	mario->jumpingDemoCommon(0x224e1, TMario::ANIM_SWIM_P_DOWN, 0.0f);
 	return 0;
 }
 

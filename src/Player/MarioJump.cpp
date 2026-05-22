@@ -213,7 +213,7 @@ int TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 		break;
 
 	case 3:
-		setAnimation(0x33, 1.0f);
+		setAnimation(ANIM_HANG, 1.0f);
 		changePlayerDropping(STATUS_HANGING, 0U);
 		break;
 
@@ -417,7 +417,7 @@ int TMario::jumpCatch()
 	    && ((mGamePad->mEnabledFrameMeaning & 0x2000) != 0)) {
 		return changePlayerStatus(STATUS_HIP_DROP, 0, false);
 	}
-	setAnimation(0x88, 1.0);
+	setAnimation(ANIM_SLDCT, 1.0);
 	doJumping();
 
 	switch (jumpProcess(0)) {
@@ -467,7 +467,7 @@ int TMario::jumpCatch()
 
 int TMario::jumpingThrow()
 {
-	setAnimation(0x65, 1.0f);
+	setAnimation(ANIM_THROW, 1.0f);
 	checkThrowObject();
 	doJumping();
 
@@ -496,7 +496,7 @@ int TMario::jumpDownCommon(int param_1, int animation, float velocity)
 		changePlayerStatus(param_1, mStatusArg, 0);
 		break;
 	case 2:
-		setAnimation(2, 1.0f);
+		setAnimation(ANIM_BKDWN, 1.0f);
 		playerRefrection(0);
 		if (mVel.y > 0.0f)
 			mVel.y = 0.0f;
@@ -601,7 +601,7 @@ int TMario::stayWall()
 		return changePlayerStatus(0x88C, 0, false);
 	}
 
-	setAnimation(0xCC, 1.0f);
+	setAnimation(ANIM_WSLD, 1.0f);
 	if (mVel.y < -10.0f) {
 		wallSlipEffect();
 		SMSGetMSound()->startSoundActor(0x113F, &mPosition, 0, nullptr, 0, 4);
@@ -620,9 +620,9 @@ BOOL TMario::catchStop()
 	switch (jumpProcess(0)) {
 	case 0:
 		if (mStatusState == 1) {
-			setAnimation(0x6F, 1.0f);
+			setAnimation(ANIM_ROLL, 1.0f);
 		} else {
-			setAnimation(0x56, 1.0f);
+			setAnimation(ANIM_LAND, 1.0f);
 		}
 		break;
 	case 1:
@@ -683,7 +683,7 @@ int TMario::slipFalling()
 		changePlayerStatus(0x208B0, 0, false);
 		break;
 	}
-	setAnimation(0x91, 1.0f);
+	setAnimation(ANIM_SLIP, 1.0f);
 	return false;
 }
 
@@ -731,7 +731,7 @@ int TMario::fireDowning()
 		playerRefrection(0);
 		break;
 	}
-	setAnimation(0x29, 1.0f);
+	setAnimation(ANIM_FIREJMP, 1.0f);
 	return 0;
 }
 
@@ -766,7 +766,7 @@ int TMario::thrownDowning()
 		playerRefrection(0);
 		break;
 	}
-	setAnimation(0x120, 1.0f);
+	setAnimation(ANIM_THROWN, 1.0f);
 	return 0;
 }
 
@@ -793,7 +793,7 @@ int TMario::rotateBroadJumping()
 
 int TMario::boardJumping()
 {
-	setAnimation(0x6D, 1.0f);
+	setAnimation(ANIM_RIDE_SHELL, 1.0f);
 	if (mVel.y < 0.0f) {
 		setAttackRadius(mDeParams.mTrampleRadius.get());
 		setAttackHeight(mDeParams.mAttackHeight.get());
@@ -945,7 +945,7 @@ int TMario::rocketing()
 		if (160.0f + mPosition.y > mFloorPosition.x)
 			mPosition.y = mFloorPosition.x - 160.0f;
 
-	setAnimation(0x56, 1.0f);
+	setAnimation(ANIM_LAND, 1.0f);
 	return 0;
 }
 
@@ -957,7 +957,7 @@ int TMario::rotateJumping()
 	if (rocketCheck())
 		return 1;
 
-	setAnimation(0xF4, 1.0f);
+	setAnimation(ANIM_SPIN_P, 1.0f);
 	emitBlurSpinJump();
 	jumpingBasic(0x4000472, mAnimationId, 0);
 	mStatusTimer += 1;
@@ -1009,7 +1009,7 @@ int TMario::hipAttacking()
 		}
 		setPlayerVelocity(0.0f);
 		setAttackRadius(0.0f);
-		setAnimation(0x3C, 1.0f);
+		setAnimation(ANIM_HIPSR, 1.0f);
 		mStatusTimer += 1;
 		if (mStatusTimer >= 60) {
 			mStatusTimer = 0;
@@ -1033,7 +1033,7 @@ int TMario::hipAttacking()
 
 	case 2:
 	case 3:
-		setAnimation(0x3D, 1.0f);
+		setAnimation(ANIM_HIPAT, 1.0f);
 		mStatusTimer += 1;
 		if (mStatusTimer > mJumpParams.mSuperHipAttackCt.get())
 			mStatusState = 3;
@@ -1120,7 +1120,7 @@ int TMario::diving()
 		mFaceAngle.x    = 0;
 		mModelFaceAngle = mFaceAngle.y;
 		mFaceAngle.z    = 0;
-		setAnimation(0x120, 1.0f);
+		setAnimation(ANIM_THROWN, 1.0f);
 		return 0;
 	}
 
@@ -1156,23 +1156,23 @@ int TMario::diving()
 				                           mDivingParams.mRotSp.get());
 			}
 		}
-		setAnimation(0x137, 1.0f);
+		setAnimation(ANIM_DIVE_WAIT, 1.0f);
 	} else {
 		if (mPosition.y <= mFloorPosition.y + 4.0f ? true : false) {
 			setPlayerVelocity(0.0f);
 			switch (mAnimationId) {
-			case 0xC3:
+			case ANIM_WAIT:
 				break;
-			case 0x138:
+			case ANIM_DIVE_LAND:
 				if (isLast1AnimeFrame())
-					setAnimation(0xC3, 1.0f);
+					setAnimation(ANIM_WAIT, 1.0f);
 				break;
 			default:
-				setAnimation(0x138, 1.0f);
+				setAnimation(ANIM_DIVE_LAND, 1.0f);
 				break;
 			}
 		} else {
-			setAnimation(0x137, 1.0f);
+			setAnimation(ANIM_DIVE_WAIT, 1.0f);
 		}
 		if (checkFlag(0x8000)) {
 			mWaterGun->unk1CC2 = 0;
@@ -1229,7 +1229,7 @@ static int unknown_inline_9(TMario* mario)
 		break;
 	}
 
-	mario->setAnimation(0x4D, 1.0f);
+	mario->setAnimation(TMario::ANIM_JUMP, 1.0f);
 	return 0;
 }
 
@@ -1258,11 +1258,11 @@ static int unknown_inline_12(TMario* mario)
 {
 	if (mario->mPrevStatus == TMario::STATUS_WIRE_ROLLING) {
 		if (mario->mStatusArg == 0U)
-			mario->setAnimation(0xF8, 1.0f);
+			mario->setAnimation(TMario::ANIM_GIANT_ROLLING, 1.0f);
 		else
-			mario->setAnimation(0x6F, 1.0f);
+			mario->setAnimation(TMario::ANIM_ROLL, 1.0f);
 	} else {
-		mario->setAnimation(0x4D, 1.0f);
+		mario->setAnimation(TMario::ANIM_JUMP, 1.0f);
 	}
 
 	if (mario->jumpingCommonEvents())
@@ -1317,7 +1317,7 @@ int TMario::jumpMain()
 		setPlayerVelocity(mForwardVel);
 		if (jumpProcess(0) == 1)
 			changePlayerStatus(STATUS_FIRE_DASH, 0, 0);
-		setAnimation(0x56, 1.0f);
+		setAnimation(ANIM_LAND, 1.0f);
 		result = 0;
 		break;
 	case STATUS_BROAD_JUMP:
@@ -1346,13 +1346,13 @@ int TMario::jumpMain()
 		break;
 
 	case 0x894: {
-		if (mAnimationId == 0xF0 && isLast1AnimeFrame())
-			setAnimation(0xF1, 1.0f);
+		if (mAnimationId == ANIM_HOLD_TO_HANG && isLast1AnimeFrame())
+			setAnimation(ANIM_HOLD_HANG, 1.0f);
 		mForwardVel  = 0.0f;
 		mIntendedMag = 0.0f;
 		jumpingBasic(0x560, mAnimationId, 3);
 		if (mStatus == 0x560U)
-			setAnimation(0xF2, 1.0f);
+			setAnimation(ANIM_HANG_TO_HOLD, 1.0f);
 		JGeometry::TVec3<f32> pos = mPosition;
 		if (mHeldObject->moveRequest(pos) == 1)
 			mPosition = pos;

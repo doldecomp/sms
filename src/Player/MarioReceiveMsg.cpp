@@ -772,9 +772,9 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 					changePlayerStatus(0x1320, 0, false);
 					if (isHolding()) {
 						unk380 = 2;
-						setAnimation(0xE9, 1.0f);
+						setAnimation(ANIM_DOOR_KICK, 1.0f);
 					} else {
-						setAnimation(0x5F, 1.0f);
+						setAnimation(ANIM_DOOR_OPENR, 1.0f);
 					}
 					startVoice(0x78E5);
 					return TRUE;
@@ -786,9 +786,9 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 						changePlayerStatus(0x1321, 0, false);
 						if (isHolding()) {
 							unk380 = 2;
-							setAnimation(0xE9, 1.0f);
+							setAnimation(ANIM_DOOR_KICK, 1.0f);
 						} else {
-							setAnimation(0x60, 1.0f);
+							setAnimation(ANIM_DOOR_OPENL, 1.0f);
 						}
 						startVoice(0x78E5);
 						return TRUE;
@@ -797,7 +797,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 						mPosition    = sender->mPosition;
 						mFaceAngle.y = frontYaw + 0x8000;
 						changePlayerStatus(0x1321, 0, false);
-						setAnimation(0x139, 1.0f);
+						setAnimation(ANIM_DOOR_GACHA_L, 1.0f);
 						return FALSE;
 					}
 				}
@@ -858,7 +858,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		if (mStatus != STATUS_WARP_IN && message == HIT_MESSAGE_TAKE) {
 			mHolder = (TTakeActor*)sender;
 			if (!checkStatusFlag(STATUS_FLAG_JUMPING)) {
-				setAnimation(0x4D, 1.0f);
+				setAnimation(ANIM_JUMP, 1.0f);
 				s16 endFrame = getMotionFrameCtrl().getEnd();
 				getMotionFrameCtrl().setFrame((f32)endFrame);
 			}
