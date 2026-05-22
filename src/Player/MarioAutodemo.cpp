@@ -31,7 +31,7 @@ BOOL TMario::winDemo()
 		}
 		break;
 	case 1:
-		setAnimation(0xCD, 1.0f);
+		setAnimation(ANIM_DEMO_SHINE_GET, 1.0f);
 		stopProcess();
 		break;
 	}
@@ -62,7 +62,7 @@ BOOL TMario::readBillboard()
 			moveDist.y = mFloorPosition.y;
 			moveRequest(moveDist);
 		}
-		setAnimation(0xD9, 1.0f);
+		setAnimation(ANIM_T_WAIT, 1.0f);
 		mStatusState = 1;
 	}
 	case 1: {
@@ -113,8 +113,9 @@ BOOL TMario::openDoor()
 	}
 	stopProcess();
 	if (isLast1AnimeFrame()) {
-		if ((mAnimationId == 0x5f) || (mAnimationId == 0x60)
-		    || (mAnimationId == 0xe9)) {
+		if ((mAnimationId == ANIM_DOOR_OPENR)
+		    || (mAnimationId == ANIM_DOOR_OPENL)
+		    || (mAnimationId == ANIM_DOOR_KICK)) {
 			mPosition.x += JMASSin(mFaceAngle.y) * 150.0f;
 			mPosition.z += JMASCos(mFaceAngle.y) * 150.0f;
 		} else {
@@ -293,7 +294,7 @@ BOOL TMario::rollingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 			checkGroundPlane(mPosition.x, mPosition.y + 25.0f, mPosition.z,
 			                 &mFloorPosition.y, &mGroundPlane);
 			unk2BC = mFloorPosition.y;
-			setAnimation(0xC3, 1.0f);
+			setAnimation(ANIM_WAIT, 1.0f);
 			changePlayerStatus(STATUS_WARP_OUT, 0x200, true);
 			return TRUE;
 		}
@@ -315,7 +316,7 @@ BOOL TMario::returnStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation,
 			checkGroundPlane(mPosition.x, mPosition.y + 25.0f, mPosition.z,
 			                 &mFloorPosition.y, &mGroundPlane);
 			unk2BC = mFloorPosition.y;
-			setAnimation(0xC3, 1.0f);
+			setAnimation(ANIM_WAIT, 1.0f);
 			changePlayerStatus(STATUS_WARP_OUT, offsetPlayerStatus | 2, true);
 		} else {
 			unk114 &= ~2;
@@ -327,7 +328,7 @@ BOOL TMario::returnStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation,
 			checkGroundPlane(mPosition.x, mPosition.y + 25.0f, mPosition.z,
 			                 &mFloorPosition.y, &mGroundPlane);
 			unk2BC = mFloorPosition.y;
-			setAnimation(0xC3, 1.0f);
+			setAnimation(ANIM_WAIT, 1.0f);
 			changePlayerStatus(STATUS_WARP_OUT, offsetPlayerStatus | 1, true);
 		}
 		return TRUE;
@@ -350,7 +351,7 @@ BOOL TMario::waitingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 		checkGroundPlane(mPosition.x, mPosition.y + 25.0f, mPosition.z,
 		                 &mFloorPosition.y, &mGroundPlane);
 		unk2BC = mFloorPosition.y;
-		setAnimation(0xC3, 1.0f);
+		setAnimation(ANIM_WAIT, 1.0f);
 		unk114 |= 2;
 		changePlayerStatus(STATUS_WAIT, 0, true);
 		return TRUE;
@@ -386,9 +387,9 @@ BOOL TMario::warpOut()
 	case 0:
 		unk114 |= 2;
 		if ((mStatusArg & 0xff) == 2) {
-			setAnimation(0x13B, 1.0f);
+			setAnimation(ANIM_DEMO_GATE_OUT_APPEAR_GET, 1.0f);
 		} else {
-			setAnimation(0x12E, 1.0f);
+			setAnimation(ANIM_DEMO_GATE_OUT_APPEAR, 1.0f);
 		}
 		warpOutEffect((mStatusArg >> 8) & 0xff,
 		              (mStatusArg & 0xff) * 180.0f
@@ -414,9 +415,9 @@ BOOL TMario::warpOut()
 	case 2:
 		unk114 |= 2;
 		if ((mStatusArg & 0xff) == 2) {
-			setAnimation(0x13C, 1.0f);
+			setAnimation(ANIM_DEMO_GATE_OUT_ROLLING_GET, 1.0f);
 		} else {
-			setAnimation(0x13D, 1.0f);
+			setAnimation(ANIM_DEMO_GATE_OUT_ROLLING, 1.0f);
 		}
 		if (jumpProcess(0) == TRUE) {
 			mStatusState = 3;
@@ -428,13 +429,13 @@ BOOL TMario::warpOut()
 		case 0:
 			return changePlayerStatus(0xC000230, 0, true);
 		case 1:
-			setAnimation(0x10E, 1.0f);
+			setAnimation(ANIM_DEMO_GATE_OUT, 1.0f);
 			if (isLast1AnimeFrame()) {
 				return changePlayerStatus(STATUS_WAIT, 0, true);
 			}
 			break;
 		case 2:
-			setAnimation(0x12D, 1.0f);
+			setAnimation(ANIM_DEMO_GATE_OUT_GET2, 1.0f);
 			if (isLast1AnimeFrame()) {
 				return changePlayerStatus(STATUS_WAIT, 0, true);
 			}
@@ -449,7 +450,7 @@ BOOL TMario::electricDamage()
 {
 	if (mStatusState == 0) {
 		startVoice(0x7844);
-		setAnimation(0x7A, 1.0f);
+		setAnimation(ANIM_SHOCK, 1.0f);
 		decHP(mDmgParamsGraffitoElec.mDamage.get());
 		rumbleStart(0x16, 1);
 		mStatusState = 1;
@@ -487,25 +488,25 @@ BOOL TMario::footDowning()
 {
 	switch (mStatusArg) {
 	case 0:
-		setAnimation(0x125, 1.0f);
+		setAnimation(ANIM_SANDFILL_LEG, 1.0f);
 		if ((mInput & 2) != 0) {
 			mStatusArg = 2;
 		}
 		break;
 	case 1:
-		setAnimation(0x123, 1.0f);
+		setAnimation(ANIM_SAND_FILL_HEAD, 1.0f);
 		if ((mInput & 2) != 0) {
 			mStatusArg = 3;
 		}
 		break;
 	case 2:
-		setAnimation(0x126, 1.0f);
+		setAnimation(ANIM_SANDFILL_LEG_END, 1.0f);
 		if (isLast1AnimeFrame()) {
 			return changePlayerStatus(STATUS_WAIT, 0, false);
 		}
 		break;
 	case 3:
-		setAnimation(0x124, 1.0f);
+		setAnimation(ANIM_SAND_FILL_HEAD_END, 1.0f);
 		J3DFrameCtrl& frameCtrl = getMotionFrameCtrl();
 		if (frameCtrl.checkPass(24.0f) != FALSE) {
 			sinkInSandEffect();
@@ -547,12 +548,12 @@ BOOL TMario::demoMain()
 		break;
 
 	case 0x1310: // bottle in?
-		setAnimation(0x122, 1.0f);
+		setAnimation(ANIM_BOTTLE_IN, 1.0f);
 		result = FALSE;
 		break;
 
 	case 0x21313: // elec downing?
-		setAnimation(0x79, 1.0f);
+		setAnimation(ANIM_SHOCK_DOWN, 1.0f);
 		result = FALSE;
 		break;
 
@@ -563,7 +564,7 @@ BOOL TMario::demoMain()
 
 	case 0x10001123: // sink loser?
 		setPlayerVelocity(0.0f);
-		setAnimation(0xE8, 1.0f);
+		setAnimation(ANIM_SINK_DOWN, 1.0f);
 		if (jumpProcess(0) == TRUE) {
 			changePlayerStatus(0x20000 + 0x467, 0, true);
 		}
@@ -572,7 +573,7 @@ BOOL TMario::demoMain()
 
 	case 0x1000192a: // down loser?
 		setPlayerVelocity(0.0f);
-		setAnimation(0x56, 1.0f);
+		setAnimation(ANIM_LAND, 1.0f);
 		if (jumpProcess(0) == TRUE) {
 			changePlayerStatus(0x20000 + 0x467, 0, true);
 		}

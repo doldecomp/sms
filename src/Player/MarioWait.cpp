@@ -150,7 +150,7 @@ BOOL TMario::waiting()
 		return 1;
 
 	if (isMario() && (unk380 == 5 ? true : false) && canSleep()
-	    && mAnimationId == 0xc3 && isAnimeLoopOrStop()
+	    && mAnimationId == ANIM_WAIT && isAnimeLoopOrStop()
 	    && mGroundPlane != nullptr && mGroundPlane->getNormal().y > 0.99f) {
 		mStatusTimer += 1;
 		if (mStatusTimer >= 10)
@@ -158,30 +158,31 @@ BOOL TMario::waiting()
 	}
 
 	if (mStatusState & 0x2) {
-		setAnimation(0x114, 1.0f);
+		setAnimation(ANIM_MONTEMAN_WAIT, 1.0f);
 	} else if (gpMarDirector->unk124 == 3) {
-		setAnimation(0xd9, 1.0f);
+		setAnimation(ANIM_T_WAIT, 1.0f);
 	} else if (unk368 > 0.0f ? TRUE : FALSE) {
-		setAnimation(0xe7, 1.0f);
+		setAnimation(ANIM_SINKING, 1.0f);
 	} else if (unk380 == 5
 	           && (mPrevStatus == STATUS_BRAKE_END || checkFlag(0x20))
 	           && !(mStatusState & 0x1)) {
-		setAnimation(0xda, 1.0f);
+		setAnimation(ANIM_HOT_WAIT, 1.0f);
 		if (mModel->getFrameCtrl(0).checkPass(138.0f))
 			emitSweat(mFaceAngle.y - 0x4000);
 		if (isLast1AnimeFrame())
 			mStatusState |= 0x1;
 	} else if (mHealth <= 3) {
-		if (mAnimationId != 0x11d && mAnimationId != 0x127) {
-			setAnimation(0x127, 1.0f);
+		if (mAnimationId != ANIM_DAMAGE_WAIT
+		    && mAnimationId != ANIM_DAMAGE_WAIT_START) {
+			setAnimation(ANIM_DAMAGE_WAIT_START, 1.0f);
 		} else {
-			if (mAnimationId == 0x127 && isLast1AnimeFrame())
-				setAnimation(0x11d, 1.0f);
+			if (mAnimationId == ANIM_DAMAGE_WAIT_START && isLast1AnimeFrame())
+				setAnimation(ANIM_DAMAGE_WAIT, 1.0f);
 		}
 	} else if (mIntendedMag == 0.0f) {
-		setAnimation(0xc3, 1.0f);
+		setAnimation(ANIM_WAIT, 1.0f);
 	} else {
-		setAnimation(0x12c, 1.0f);
+		setAnimation(ANIM_PIVOT, 1.0f);
 	}
 
 	waitProcess();
@@ -201,13 +202,13 @@ BOOL TMario::sleepily()
 
 	switch (mStatusState) {
 	case 0:
-		setAnimation(0x12f, 1.0f);
+		setAnimation(ANIM_BELT_UP, 1.0f);
 		break;
 	case 1:
-		setAnimation(0x130, 1.0f);
+		setAnimation(ANIM_YAWN, 1.0f);
 		break;
 	case 2:
-		setAnimation(0x131, 1.0f);
+		setAnimation(ANIM_SIT, 1.0f);
 		break;
 	}
 
@@ -237,19 +238,19 @@ BOOL TMario::sleeping()
 
 	switch (mStatusState) {
 	case 0:
-		setAnimation(0x132, 1.0f);
+		setAnimation(ANIM_SIT_WAIT, 1.0f);
 		if (isLast1AnimeFrame()) {
 			if (++mStatusTimer > 0x28)
 				mStatusState += 1;
 		}
 		break;
 	case 1:
-		setAnimation(0x134, 1.0f);
+		setAnimation(ANIM_SLEEP, 1.0f);
 		if (isLast1AnimeFrame())
 			mStatusState += 1;
 		break;
 	case 2:
-		setAnimation(0x135, 1.0f);
+		setAnimation(ANIM_SLEEP_WAIT, 1.0f);
 		break;
 	}
 	return 0;
@@ -273,7 +274,7 @@ BOOL TMario::wakeup()
 	}
 
 	waitProcess();
-	setAnimation(mStatusArg == 0 ? 0x133 : 0x136, 1.0f);
+	setAnimation(mStatusArg == 0 ? ANIM_SIT_END : ANIM_SLEEP_END, 1.0f);
 
 	if (isLast1AnimeFrame()) {
 		sleepingEffectKill();
@@ -344,13 +345,13 @@ BOOL TMario::squating()
 		getSideWalkValues(&type, &v1, &v2);
 		switch ((int)type) {
 		case 0:
-			setAnimation(0x98, 1.0f);
+			setAnimation(ANIM_SQWAT, 1.0f);
 			break;
 		case 1:
-			setAnimation(0x7f, v1);
+			setAnimation(ANIM_SWLKL, v1);
 			break;
 		case 2:
-			setAnimation(0x80, v1);
+			setAnimation(ANIM_SWLKR, v1);
 			break;
 		}
 
@@ -373,7 +374,7 @@ BOOL TMario::squating()
 		if (!positive)
 			rotAmt = -rotAmt;
 		mFaceAngle.y += (s16)(rotAmt * (f32)(-mDeParams.mWaitingRotSp.get()));
-		setAnimation(0x98, 1.0f);
+		setAnimation(ANIM_SQWAT, 1.0f);
 	}
 
 	waitProcess();
@@ -396,9 +397,9 @@ BOOL TMario::squatStandup()
 	waitProcess();
 
 	if (mStatus == 0xc000223)
-		setAnimation(0x121, 1.0f);
+		setAnimation(ANIM_THROWN_END, 1.0f);
 	else
-		setAnimation(0x96, 1.0f);
+		setAnimation(ANIM_SQEND, 1.0f);
 
 	if (isLast1AnimeFrame())
 		changePlayerStatus(STATUS_WAIT, 0, false);
@@ -414,7 +415,7 @@ BOOL TMario::pullEnd()
 		return changePlayerStatus(0x50, 0, false);
 
 	waitProcess();
-	setAnimation(0xF3, 1.0f);
+	setAnimation(ANIM_HOLD_RETURN, 1.0f);
 	if (isLast1AnimeFrame())
 		changePlayerStatus(STATUS_WAIT, 0, false);
 	return 0;
@@ -456,7 +457,7 @@ BOOL TMario::ultraJumpEnd()
 		return 1;
 
 	waitProcess();
-	setAnimation(0x57, 1.0f);
+	setAnimation(ANIM_LAEND, 1.0f);
 	if (isLast1AnimeFrame())
 		changePlayerStatus(STATUS_WAIT, 0, false);
 	return 0;
@@ -468,7 +469,7 @@ BOOL TMario::uTurnJumpEnd()
 		return 1;
 
 	waitProcess();
-	setAnimation(0xBE, 1.0f);
+	setAnimation(ANIM_TJMP2, 1.0f);
 	if (isLast1AnimeFrame())
 		changePlayerStatus(STATUS_WAIT, 0, false);
 
@@ -491,7 +492,7 @@ BOOL TMario::fireJumpEnd()
 		return 1;
 
 	waitProcess();
-	setAnimation(0x28, 1.0f);
+	setAnimation(ANIM_FJPEND, 1.0f);
 	if (isLast1AnimeFrame())
 		changePlayerStatus(STATUS_WAIT, 0, false);
 	return 0;
@@ -507,7 +508,7 @@ BOOL TMario::broadJumpEnd()
 			return 1;
 	} else {
 		waitProcess();
-		setAnimation(0x98, 1.0f);
+		setAnimation(ANIM_SQWAT, 1.0f);
 		if (isLast1AnimeFrame())
 			changePlayerStatus(0xC008222, 0, false);
 	}
@@ -523,7 +524,7 @@ BOOL TMario::hipAttackEnd()
 		return changePlayerStatus(0x840452, 0, false);
 	} else {
 		waitProcess();
-		setAnimation(0x3A, 1.0f);
+		setAnimation(ANIM_HIPED, 1.0f);
 		if (isLast1AnimeFrame())
 			changePlayerStatus(STATUS_SLIP_END, 0, false);
 	}
@@ -554,7 +555,7 @@ static int unknown_inline_1(TMario* mario)
 		return 1;
 
 	mario->waitProcess();
-	mario->setAnimation(0x4E, 1.0f);
+	mario->setAnimation(TMario::ANIM_JMPED, 1.0f);
 	if (mario->isLast1AnimeFrame())
 		mario->changePlayerStatus(TMario::STATUS_WAIT, 0, false);
 	return 0;
@@ -566,7 +567,7 @@ static int unknown_inline_2(TMario* mario)
 		return 1;
 
 	mario->waitProcess();
-	mario->setAnimation(0x4B, 1.0f);
+	mario->setAnimation(TMario::ANIM_2JMED, 1.0f);
 	if (mario->isLast1AnimeFrame())
 		mario->changePlayerStatus(TMario::STATUS_WAIT, 0, false);
 	return 0;
@@ -578,7 +579,7 @@ static int unknown_inline_3(TMario* mario)
 		return 1;
 
 	mario->waitProcess();
-	mario->setAnimation(0x57, 1.0f);
+	mario->setAnimation(TMario::ANIM_LAEND, 1.0f);
 	if (mario->isLast1AnimeFrame())
 		mario->changePlayerStatus(TMario::STATUS_WAIT, 0, false);
 	return 0;

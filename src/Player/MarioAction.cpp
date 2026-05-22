@@ -11,7 +11,7 @@ BOOL TMario::taking()
 		return changePlayerDropping(0x88C, 0);
 	}
 
-	setAnimation(0x6B, 1.0f);
+	setAnimation(ANIM_RAISE, 1.0f);
 	if (unk384 != nullptr && mModel->getFrameCtrl(0).checkPass(11.0f)) {
 		if (unk384->receiveMessage(this, HIT_MESSAGE_TAKE) == true) {
 			startVoice(0x788F);
@@ -37,7 +37,7 @@ BOOL TMario::takePose()
 		return changePlayerDropping(0x88C, 0);
 
 	if (isLast1AnimeFrame()) {
-		setAnimation(0xC3, 1.0f);
+		setAnimation(ANIM_WAIT, 1.0f);
 		return changePlayerStatus(STATUS_WAIT, 0, false);
 	}
 

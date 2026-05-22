@@ -129,7 +129,7 @@ void TMario::checkDescent()
 		mPosition.z  = rec.mCenter.z - dist * wall->mNormal.z;
 		mFaceAngle.y = wallAng + 0x8000;
 		changePlayerStatus(0x3000054e, 0, false);
-		setAnimation(0x1c, 1.0f);
+		setAnimation(ANIM_HGDWN, 1.0f);
 	}
 }
 
