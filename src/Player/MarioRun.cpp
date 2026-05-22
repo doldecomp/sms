@@ -42,99 +42,13 @@ static bool unknown_inline_2(TMario* mario)
 		return false;
 }
 
-static int unknown_inline_4(TMario* mario)
-{
-	static TMario::JumpSlipRecord param
-	    = { 0x10, 0x0C000230, TMario::STATUS_SECOND_JUMP, 0x88C, 0x50 };
-
-	if (mario->jumpSlipEvents(&param))
-		return 1;
-
-	mario->jumpSlipCommon(0x4E, 0x88C);
-
-	return 0;
-}
-
-static int unknown_inline_5(TMario* mario)
-{
-	static TMario::JumpSlipRecord param
-	    = { 0x10, 0xC000232, TMario::STATUS_SECOND_JUMP, 0x88C, 0x50 };
-
-	if (mario->jumpSlipEvents(&param))
-		return 1;
-
-	mario->jumpSlipCommon(0x57, 0x88C);
-
-	return 0;
-}
-
-static int unknown_inline_6(TMario* mario)
-{
-	static TMario::JumpSlipRecord param
-	    = { 0x10, 0xC000231, TMario::STATUS_ULTRA_JUMP, 0x88C, 0x50 };
-
-	if (mario->jumpSlipEvents(&param))
-		return 1;
-
-	mario->jumpSlipCommon(0x4B, 0x88C);
-
-	return 0;
-}
-
-static int unknown_inline_7(TMario* mario)
-{
-	static TMario::JumpSlipRecord param
-	    = { 0x10, TMario::STATUS_U_TURN_JUMP_END, TMario::STATUS_JUMP, 0x88C,
-		    0x50 };
-
-	if (mario->jumpSlipEvents(&param))
-		return 1;
-
-	if (mario->jumpSlipCommon(0xBE, 0x88C) != 2) {
-		mario->mFaceAngle.x = 0;
-		mario->mModelFaceAngle += 0x8000;
-	}
-
-	return 0;
-}
-
-static int unknown_inline_8(TMario* mario)
-{
-	static TMario::JumpSlipRecord param = { 0x04, TMario::STATUS_ULTRA_JUMP_END,
-		                                    TMario::STATUS_JUMP, 0x88C, 0x50 };
-
-	if (mario->jumpSlipEvents(&param))
-		return 1;
-
-	mario->jumpSlipCommon(0xC0, 0x88C);
-
-	return 0;
-}
-
-static int unknown_inline_9(TMario* mario)
-{
-	if (!(mario->mInput & 0x4000))
-		mario->mInput &= ~0x2;
-
-	static TMario::JumpSlipRecord param
-	    = { 0x18, TMario::STATUS_BROAD_JUMP_END, TMario::STATUS_BROAD_JUMP,
-		    0x88C, 0x50 };
-
-	if (mario->jumpSlipEvents(&param))
-		return 1;
-
-	mario->jumpSlipCommon(0x98, 0x88C);
-
-	return 0;
-}
-
 static int unknown_inline_10(TMario* mario)
 {
 	if ((mario->mInput & 0x8000)
 	    && mario->mForwardVel > mario->mRunParams.mDoJumpCatchSp.get()
 	    && mario->mIntendedMag > 0.75f) {
 		mario->mVel.y = 20.0f;
-		return mario->changePlayerStatus(TMario::STATUS_DIVE_JUMP, 1, false);
+		return mario->changePlayerStatus(TMario::STATUS_JUMP_CATCH, 1, false);
 	}
 
 	return 0;
@@ -1181,7 +1095,7 @@ void TMario::slippingBasic(int statusOnStop, int statusOnFall, int slipAnim)
 	}
 	if (mInput & 0x8000) {
 		mVel.y = 20.0f;
-		changePlayerStatus(STATUS_DIVE_JUMP, 1, false);
+		changePlayerStatus(STATUS_JUMP_CATCH, 1, false);
 		return;
 	}
 
@@ -1330,7 +1244,7 @@ int TMario::oilRun()
 
 	if (mInput & 0x8000) {
 		mVel.y = 20.0f;
-		return changePlayerStatus(0x80088A, 1, false);
+		return changePlayerStatus(STATUS_JUMP_CATCH, 1, false);
 	}
 
 	if (-1.0f < mVel.x && mVel.x < 1.0f) {
@@ -1646,7 +1560,7 @@ BOOL TMario::jumpSlipEvents(JumpSlipRecord* rec)
 
 	if (mInput & 0x8000) {
 		mVel.y = 20.0f;
-		return changePlayerStatus(0x80088A, 1, false);
+		return changePlayerStatus(STATUS_JUMP_CATCH, 1, false);
 	}
 
 	if (mInput & 0x4)
@@ -1655,17 +1569,89 @@ BOOL TMario::jumpSlipEvents(JumpSlipRecord* rec)
 	return 0;
 }
 
-void TMario::jumpSlip() { }
+BOOL TMario::jumpSlip()
+{
+	static TMario::JumpSlipRecord param
+	    = { 0x10, STATUS_JUMP_END, STATUS_SECOND_JUMP, 0x88C, 0x50 };
 
-void TMario::landSlip() { }
+	if (jumpSlipEvents(&param))
+		return 1;
 
-void TMario::secJumpSlip() { }
+	jumpSlipCommon(ANIM_JMPED, 0x88C);
 
-void TMario::uTurnJumpSlip() { }
+	return 0;
+}
 
-void TMario::ultraJumpSlip() { }
+BOOL TMario::landSlip()
+{
+	static TMario::JumpSlipRecord param
+	    = { 0x10, STATUS_LAND_END, STATUS_SECOND_JUMP, 0x88C, 0x50 };
 
-void TMario::broadJumpSlip() { }
+	if (jumpSlipEvents(&param))
+		return 1;
+
+	jumpSlipCommon(ANIM_LAEND, 0x88C);
+
+	return 0;
+}
+
+BOOL TMario::secJumpSlip()
+{
+	static TMario::JumpSlipRecord param
+	    = { 0x10, STATUS_SEC_JUMP_END, STATUS_ULTRA_JUMP, 0x88C, 0x50 };
+
+	if (jumpSlipEvents(&param))
+		return 1;
+
+	jumpSlipCommon(ANIM_2JMED, 0x88C);
+
+	return 0;
+}
+
+BOOL TMario::uTurnJumpSlip()
+{
+	static TMario::JumpSlipRecord param
+	    = { 0x10, STATUS_U_TURN_JUMP_END, STATUS_JUMP, 0x88C, 0x50 };
+
+	if (jumpSlipEvents(&param))
+		return 1;
+
+	if (jumpSlipCommon(ANIM_TJMP2, 0x88C) != 2) {
+		mFaceAngle.x = 0;
+		mModelFaceAngle += 0x8000;
+	}
+
+	return 0;
+}
+
+BOOL TMario::ultraJumpSlip()
+{
+	static TMario::JumpSlipRecord param
+	    = { 0x04, STATUS_ULTRA_JUMP_END, STATUS_JUMP, 0x88C, 0x50 };
+
+	if (jumpSlipEvents(&param))
+		return 1;
+
+	jumpSlipCommon(0xC0, 0x88C);
+
+	return 0;
+}
+
+BOOL TMario::broadJumpSlip()
+{
+	if (!(mInput & 0x4000))
+		mInput &= ~0x2;
+
+	static TMario::JumpSlipRecord param
+	    = { 0x18, STATUS_BROAD_JUMP_END, STATUS_BROAD_JUMP, 0x88C, 0x50 };
+
+	if (jumpSlipEvents(&param))
+		return 1;
+
+	jumpSlipCommon(ANIM_SQWAT, 0x88C);
+
+	return 0;
+}
 
 BOOL TMario::moveMain()
 {
@@ -1785,28 +1771,28 @@ BOOL TMario::moveMain()
 		ret = loserDown();
 		break;
 
-	case 0x4000470:
-		ret = unknown_inline_4(this);
+	case STATUS_JUMP_SLIP:
+		ret = jumpSlip();
 		break;
 
-	case 0x4000471:
-		ret = unknown_inline_5(this);
+	case STATUS_LAND_SLIP:
+		ret = landSlip();
 		break;
 
-	case 0x4000472:
-		ret = unknown_inline_6(this);
+	case STATUS_SEC_JUMP_SLIP:
+		ret = secJumpSlip();
 		break;
 
-	case 0x4000473:
-		ret = unknown_inline_7(this);
+	case STATUS_U_TURN_JUMP_SLIP:
+		ret = uTurnJumpSlip();
 		break;
 
-	case 0x4000478:
-		ret = unknown_inline_8(this);
+	case STATUS_ULTRA_JUMP_SLIP:
+		ret = ultraJumpSlip();
 		break;
 
-	case 0x479:
-		ret = unknown_inline_9(this);
+	case STATUS_BROAD_JUMP_SLIP:
+		ret = broadJumpSlip();
 		break;
 	}
 

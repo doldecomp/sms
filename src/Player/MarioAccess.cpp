@@ -99,8 +99,8 @@ bool SMS_IsMarioOnYoshi() { return gpMarioOriginal->onYoshi(); }
 
 bool SMS_IsMarioOpeningDoor()
 {
-	if (gpMarioOriginal->mStatus == 0x1320
-	    || gpMarioOriginal->mStatus == 0x1321) {
+	if (gpMarioOriginal->mStatus == TMario::STATUS_DOOR_OPEN_R
+	    || gpMarioOriginal->mStatus == TMario::STATUS_DOOR_OPEN_L) {
 		return true;
 	} else {
 		return false;
@@ -165,7 +165,7 @@ s16 SMS_GetMarioHP() { return gpMarioOriginal->mHealth; }
 bool SMS_IsMarioHeadSlideAttack()
 {
 	if (gpMarioOriginal->mStatus == 0x800456
-	    || gpMarioOriginal->mStatus == TMario::STATUS_DIVE_JUMP) {
+	    || gpMarioOriginal->mStatus == TMario::STATUS_JUMP_CATCH) {
 		return 1;
 	} else {
 		return 0;

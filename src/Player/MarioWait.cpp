@@ -421,12 +421,12 @@ BOOL TMario::pullEnd()
 	return 0;
 }
 
-BOOL TMario::jumpEndCommon(int param_1, int param_2)
+BOOL TMario::jumpEndCommon(int anim, int status)
 {
 	waitProcess();
-	setAnimation(param_1, 1.0f);
+	setAnimation(anim, 1.0f);
 	if (isLast1AnimeFrame())
-		return changePlayerStatus(param_2, 0, false);
+		return changePlayerStatus(status, 0, false);
 	return 0;
 }
 
@@ -445,21 +445,39 @@ BOOL TMario::jumpEndEvents(u32 param_1)
 	return 0;
 }
 
-BOOL TMario::jumpEnd() { }
+BOOL TMario::jumpEnd()
+{
+	if (jumpEndEvents(0))
+		return 1;
 
-BOOL TMario::secJumpEnd() { }
+	jumpEndCommon(ANIM_JMPED, STATUS_WAIT);
+	return 0;
+}
 
-BOOL TMario::landEnd() { }
+BOOL TMario::secJumpEnd()
+{
+	if (jumpEndEvents(0))
+		return 1;
+
+	jumpEndCommon(ANIM_2JMED, STATUS_WAIT);
+	return 0;
+}
+
+BOOL TMario::landEnd()
+{
+	if (jumpEndEvents(0))
+		return 1;
+
+	jumpEndCommon(ANIM_LAEND, STATUS_WAIT);
+	return 0;
+}
 
 BOOL TMario::ultraJumpEnd()
 {
 	if (jumpEndEvents(STATUS_JUMP))
 		return 1;
 
-	waitProcess();
-	setAnimation(ANIM_LAEND, 1.0f);
-	if (isLast1AnimeFrame())
-		changePlayerStatus(STATUS_WAIT, 0, false);
+	jumpEndCommon(ANIM_LAEND, STATUS_WAIT);
 	return 0;
 }
 
@@ -468,10 +486,7 @@ BOOL TMario::uTurnJumpEnd()
 	if (jumpEndEvents(0))
 		return 1;
 
-	waitProcess();
-	setAnimation(ANIM_TJMP2, 1.0f);
-	if (isLast1AnimeFrame())
-		changePlayerStatus(STATUS_WAIT, 0, false);
+	jumpEndCommon(ANIM_TJMP2, STATUS_WAIT);
 
 	mFaceAngle.x = 0;
 	mModelFaceAngle += 0x8000;
@@ -481,7 +496,7 @@ BOOL TMario::uTurnJumpEnd()
 BOOL TMario::jumpThrowEnd()
 {
 	checkThrowObject();
-	jumpEndCommon(0x65, STATUS_WAIT);
+	jumpEndCommon(ANIM_THROW, STATUS_WAIT);
 	return 0;
 }
 
@@ -491,10 +506,7 @@ BOOL TMario::fireJumpEnd()
 	if (jumpEndEvents(0))
 		return 1;
 
-	waitProcess();
-	setAnimation(ANIM_FJPEND, 1.0f);
-	if (isLast1AnimeFrame())
-		changePlayerStatus(STATUS_WAIT, 0, false);
+	jumpEndCommon(ANIM_FJPEND, STATUS_WAIT);
 	return 0;
 }
 
@@ -502,15 +514,12 @@ BOOL TMario::broadJumpEnd()
 {
 	mInput &= ~0x2000;
 	if (jumpEndEvents(STATUS_JUMP)) {
-		if (mStatus - 0x4000000U == 0x440U)
-			changePlayerStatus(0xC008222, 0, false);
+		if (mStatus == STATUS_RUN)
+			return changePlayerStatus(0xC008222, 0, false);
 		else
 			return 1;
 	} else {
-		waitProcess();
-		setAnimation(ANIM_SQWAT, 1.0f);
-		if (isLast1AnimeFrame())
-			changePlayerStatus(0xC008222, 0, false);
+		jumpEndCommon(ANIM_SQWAT, 0xC008222);
 	}
 	return 0;
 }
@@ -523,10 +532,7 @@ BOOL TMario::hipAttackEnd()
 	} else if (mInput & 0x8) {
 		return changePlayerStatus(0x840452, 0, false);
 	} else {
-		waitProcess();
-		setAnimation(ANIM_HIPED, 1.0f);
-		if (isLast1AnimeFrame())
-			changePlayerStatus(STATUS_SLIP_END, 0, false);
+		jumpEndCommon(ANIM_HIPED, STATUS_SLIP_END);
 	}
 	return 0;
 }
@@ -546,42 +552,6 @@ BOOL TMario::slipEnd()
 		return checkAllMotions();
 
 	stopCommon(0x8F, STATUS_WAIT);
-	return 0;
-}
-
-static int unknown_inline_1(TMario* mario)
-{
-	if (mario->jumpEndEvents(0))
-		return 1;
-
-	mario->waitProcess();
-	mario->setAnimation(TMario::ANIM_JMPED, 1.0f);
-	if (mario->isLast1AnimeFrame())
-		mario->changePlayerStatus(TMario::STATUS_WAIT, 0, false);
-	return 0;
-}
-
-static int unknown_inline_2(TMario* mario)
-{
-	if (mario->jumpEndEvents(0))
-		return 1;
-
-	mario->waitProcess();
-	mario->setAnimation(TMario::ANIM_2JMED, 1.0f);
-	if (mario->isLast1AnimeFrame())
-		mario->changePlayerStatus(TMario::STATUS_WAIT, 0, false);
-	return 0;
-}
-
-static int unknown_inline_3(TMario* mario)
-{
-	if (mario->jumpEndEvents(0))
-		return 1;
-
-	mario->waitProcess();
-	mario->setAnimation(TMario::ANIM_LAEND, 1.0f);
-	if (mario->isLast1AnimeFrame())
-		mario->changePlayerStatus(TMario::STATUS_WAIT, 0, false);
 	return 0;
 }
 
@@ -640,16 +610,16 @@ int TMario::waitMain()
 		result = pullEnd();
 		break;
 
-	case 0xC000230:
-		result = unknown_inline_1(this);
+	case STATUS_JUMP_END:
+		result = jumpEnd();
 		break;
 
-	case 0xC000231:
-		result = unknown_inline_2(this);
+	case STATUS_SEC_JUMP_END:
+		result = secJumpEnd();
 		break;
 
-	case 0xC000232:
-		result = unknown_inline_3(this);
+	case STATUS_LAND_END:
+		result = landEnd();
 		break;
 
 	case STATUS_U_TURN_JUMP_END:

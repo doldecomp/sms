@@ -128,7 +128,7 @@ void TMario::checkDescent()
 		mPosition.x  = rec.mCenter.x - dist * wall->mNormal.x;
 		mPosition.z  = rec.mCenter.z - dist * wall->mNormal.z;
 		mFaceAngle.y = wallAng + 0x8000;
-		changePlayerStatus(0x3000054e, 0, false);
+		changePlayerStatus(STATUS_DESCEND, 0, false);
 		setAnimation(ANIM_HGDWN, 1.0f);
 	}
 }
@@ -503,7 +503,7 @@ int TMario::jumpProcess(int param_1)
 
 	fallProcess();
 
-	if (mStatus != STATUS_DIVE_JUMP)
+	if (mStatus != STATUS_JUMP_CATCH)
 		mFaceAngle.x = 0;
 
 	mModelFaceAngle = mFaceAngle.y;

@@ -449,7 +449,7 @@ BOOL TMario::hanging()
 
 	if ((mInput & 0x2) && onCeil) {
 		startVoice(0x788f);
-		return changePlayerStatus(0x3000054f, 0, false);
+		return changePlayerStatus(STATUS_HANG_JUMPING, 0, false);
 	}
 
 	TBGCheckData* foundWall = nullptr;
@@ -488,7 +488,7 @@ BOOL TMario::hanging()
 	if (mStatusTimer >= 0x28 && (mInput & 0x1)) {
 		if (yawDiff >= -0x400 && yawDiff <= 0x400 && onCeil) {
 			setAnimation(ANIM_HGUP, 1.0f);
-			return changePlayerStatus(0x3000054c, 0, false);
+			return changePlayerStatus(STATUS_ASCEND, 0, false);
 		}
 
 		if (yawDiff <= -0x71c7 || yawDiff >= 0x71c7)
@@ -574,7 +574,7 @@ BOOL TMario::hanging()
 	f32 below = mPosition.y - checkPlayerAround(-0x8000, 30.0f);
 	if (onCeil && below < 100.0f) {
 		startVoice(0x788f);
-		return changePlayerStatus(0x3000054f, 0, false);
+		return changePlayerStatus(STATUS_HANG_JUMPING, 0, false);
 	}
 
 	setPlayerVelocity(0.0f);
@@ -599,11 +599,38 @@ BOOL TMario::hanging()
 	return 0;
 }
 
-BOOL TMario::ascend() { }
+BOOL TMario::ascend()
+{
+	if (mInput & 0x4)
+		return startHangLanding(0x208b6);
+	waitProcess();
+	setAnimation(ANIM_HGUP, 1.0f);
+	if (isLast1AnimeFrame())
+		changePlayerStatus(STATUS_WAIT, 0, false);
+	return 0;
+}
 
-BOOL TMario::descend() { }
+BOOL TMario::descend()
+{
+	if (mInput & 0x4)
+		return startHangLanding(0x208b6);
+	waitProcess();
+	setAnimation(ANIM_HGDWN, 1.0f);
+	if (isLast1AnimeFrame())
+		changePlayerStatus(STATUS_HANGING, 0, false);
+	return 0;
+}
 
-BOOL TMario::hangJumping() { }
+BOOL TMario::hangJumping()
+{
+	if (mInput & 0x4)
+		return startHangLanding(0x208b6);
+	waitProcess();
+	setAnimation(ANIM_HGJMP, 1.0f);
+	if (isLast1AnimeFrame())
+		changePlayerStatus(STATUS_WAIT, 0, false);
+	return 0;
+}
 
 BOOL TMario::taken()
 {
@@ -762,14 +789,14 @@ BOOL TMario::wireSWait()
 
 	if (mInput & 0x1) {
 		s16 diff = mIntendedYaw - wireAngle;
-		if (diff > -0x4000 && diff < 0x4000) {
-			return changePlayerStatus(0x35c, 0, false);
-		}
+		if (diff > -0x4000 && diff < 0x4000)
+			return changePlayerStatus(STATUS_WIRE_S_WAIT_TO_WAIT_L, 0, false);
+
 		JGeometry::TVec3<f32> tmp = mWireStartPos;
 		mWireStartPos             = mWireEndPos;
 		mWireEndPos               = tmp;
 		mWirePosRatio             = 1.0f - mWirePosRatio;
-		return changePlayerStatus(0x35b, 0, false);
+		return changePlayerStatus(STATUS_WIRE_S_WAIT_TO_WAIT_R, 0, false);
 	}
 
 	setAnimation(ANIM_ROPE_SWAIT, 1.0f);
@@ -815,11 +842,47 @@ void TMario::changeWireHanging()
 	}
 }
 
-void TMario::wireWaitToHang() { }
+BOOL TMario::wireWaitToHang()
+{
+	getOnWirePosAngle(&mPosition, &mModelFaceAngle);
+	mFaceAngle.y = mModelFaceAngle + 0x4000;
+	setAnimation(ANIM_ROPE_WHG, 1.0f);
+	if (isLast1AnimeFrame()) {
+		BOOL noHold = FALSE;
+		if (mHeldObject == nullptr && !onYoshi())
+			noHold = TRUE;
+		if (noHold)
+			return changePlayerStatus(STATUS_WIRE_HANGING, 0, false);
+		return changePlayerStatus(0x88c, 0, false);
+	}
+	return 0;
+}
 
-void TMario::wireSWaitToHang() { }
+BOOL TMario::wireSWaitToHang()
+{
+	getOnWirePosAngle(&mPosition, &mFaceAngle.y);
+	mModelFaceAngle = mFaceAngle.y;
+	setAnimation(ANIM_ROPE_SWHG, 1.0f);
+	if (isLast1AnimeFrame()) {
+		BOOL noHold = FALSE;
+		if (mHeldObject == nullptr && !onYoshi())
+			noHold = TRUE;
+		if (noHold)
+			return changePlayerStatus(STATUS_WIRE_HANGING, 0, false);
+		return changePlayerStatus(0x88c, 0, false);
+	}
+	return 0;
+}
 
-void TMario::wireReturn() { }
+BOOL TMario::wireReturn()
+{
+	getOnWirePosAngle(&mPosition, &mFaceAngle.y);
+	mModelFaceAngle = mFaceAngle.y;
+	setAnimation(ANIM_ROPE_RETURN, 1.0f);
+	if (isLast1AnimeFrame())
+		changePlayerStatus(STATUS_WIRE_WAIT, 0, false);
+	return 0;
+}
 
 BOOL TMario::wireHanging()
 {
@@ -830,7 +893,7 @@ BOOL TMario::wireHanging()
 
 	if ((mInput & 0x2) && b) {
 		mWireBounceVel = 5.0f;
-		return changePlayerStatus(0x10000556, 0, false);
+		return changePlayerStatus(STATUS_WIRE_RETURN, 0, false);
 	}
 
 	if (mInput & 0x8000) {
@@ -863,7 +926,7 @@ BOOL TMario::wireHanging()
 
 		if (diff >= -0x6000 && diff <= -0x2000) {
 			mWireBounceVel = 5.0f;
-			return changePlayerStatus(0x10000556, 0, false);
+			return changePlayerStatus(STATUS_WIRE_RETURN, 0, false);
 		}
 
 		if (diff >= 0x3555 && diff <= 0x4aaa)
@@ -1078,9 +1141,25 @@ BOOL TMario::wireRolling()
 	return 0;
 }
 
-void TMario::wireSWaitToWaitL() { }
+BOOL TMario::wireSWaitToWaitL()
+{
+	getOnWirePosAngle(&mPosition, &mModelFaceAngle);
+	mFaceAngle.y = mModelFaceAngle + 0x4000;
+	setReverseAnimation(ANIM_ROPE_WTOSW, 1.0f);
+	if (isAnimeLoopOrStop())
+		changePlayerStatus(STATUS_WIRE_WAIT, 0, false);
+	return 0;
+}
 
-void TMario::wireSWaitToWaitR() { }
+BOOL TMario::wireSWaitToWaitR()
+{
+	getOnWirePosAngle(&mPosition, &mModelFaceAngle);
+	mFaceAngle.y = mModelFaceAngle - 0x4000;
+	setReverseAnimation(ANIM_ROPE_WTOSW_R, 1.0f);
+	if (isAnimeLoopOrStop())
+		changePlayerStatus(STATUS_WIRE_WAIT, 0, false);
+	return 0;
+}
 
 void TMario::getCurrentPullParams(f32* outV, f32* outH)
 {
@@ -1320,7 +1399,7 @@ BOOL TMario::fenceMove()
 		mPosition.z += 50.0f * JMASCos(mFaceAngle.y);
 		setAnimation(ANIM_HGUP, 1.0f);
 		mInput &= ~0x4;
-		return changePlayerDropping(0x3000054c, 0);
+		return changePlayerDropping(STATUS_ASCEND, 0);
 	case 2:
 	default:
 		if (mRoofPlane != nullptr) {
@@ -1445,103 +1524,6 @@ BOOL TMario::fencePunch()
 	return 0;
 }
 
-static int unknown_inline_7(TMario* mario)
-{
-	if (mario->mInput & 0x4)
-		return mario->startHangLanding(0x208b6);
-	mario->waitProcess();
-	mario->setAnimation(TMario::ANIM_HGUP, 1.0f);
-	if (mario->isLast1AnimeFrame())
-		mario->changePlayerStatus(TMario::STATUS_WAIT, 0, false);
-	return 0;
-}
-
-static int unknown_inline_8(TMario* mario)
-{
-	if (mario->mInput & 0x4)
-		return mario->startHangLanding(0x208b6);
-	mario->waitProcess();
-	mario->setAnimation(TMario::ANIM_HGDWN, 1.0f);
-	if (mario->isLast1AnimeFrame())
-		mario->changePlayerStatus(TMario::STATUS_HANGING, 0, false);
-	return 0;
-}
-
-static int unknown_inline_9(TMario* mario)
-{
-	if (mario->mInput & 0x4)
-		return mario->startHangLanding(0x208b6);
-	mario->waitProcess();
-	mario->setAnimation(TMario::ANIM_HGJMP, 1.0f);
-	if (mario->isLast1AnimeFrame())
-		mario->changePlayerStatus(TMario::STATUS_WAIT, 0, false);
-	return 0;
-}
-
-static int unknown_inline_13(TMario* mario)
-{
-	mario->getOnWirePosAngle(&mario->mPosition, &mario->mModelFaceAngle);
-	mario->mFaceAngle.y = mario->mModelFaceAngle + 0x4000;
-	mario->setAnimation(TMario::ANIM_ROPE_WHG, 1.0f);
-	if (mario->isLast1AnimeFrame()) {
-		BOOL noHold = FALSE;
-		if (mario->mHeldObject == nullptr && !mario->onYoshi())
-			noHold = TRUE;
-		if (noHold)
-			return mario->changePlayerStatus(TMario::STATUS_WIRE_HANGING, 0,
-			                                 false);
-		return mario->changePlayerStatus(0x88c, 0, false);
-	}
-	return 0;
-}
-
-static int unknown_inline_14(TMario* mario)
-{
-	mario->getOnWirePosAngle(&mario->mPosition, &mario->mFaceAngle.y);
-	mario->mModelFaceAngle = mario->mFaceAngle.y;
-	mario->setAnimation(TMario::ANIM_ROPE_SWHG, 1.0f);
-	if (mario->isLast1AnimeFrame()) {
-		BOOL noHold = FALSE;
-		if (mario->mHeldObject == nullptr && !mario->onYoshi())
-			noHold = TRUE;
-		if (noHold)
-			return mario->changePlayerStatus(TMario::STATUS_WIRE_HANGING, 0,
-			                                 false);
-		return mario->changePlayerStatus(0x88c, 0, false);
-	}
-	return 0;
-}
-
-static int unknown_inline_15(TMario* mario)
-{
-	mario->getOnWirePosAngle(&mario->mPosition, &mario->mFaceAngle.y);
-	mario->mModelFaceAngle = mario->mFaceAngle.y;
-	mario->setAnimation(TMario::ANIM_ROPE_RETURN, 1.0f);
-	if (mario->isLast1AnimeFrame())
-		mario->changePlayerStatus(TMario::STATUS_WIRE_WAIT, 0, false);
-	return 0;
-}
-
-static int unknown_inline_16(TMario* mario)
-{
-	mario->getOnWirePosAngle(&mario->mPosition, &mario->mModelFaceAngle);
-	mario->mFaceAngle.y = mario->mModelFaceAngle - 0x4000;
-	mario->setReverseAnimation(TMario::ANIM_ROPE_WTOSW_R, 1.0f);
-	if (mario->isAnimeLoopOrStop())
-		mario->changePlayerStatus(TMario::STATUS_WIRE_WAIT, 0, false);
-	return 0;
-}
-
-static int unknown_inline_17(TMario* mario)
-{
-	mario->getOnWirePosAngle(&mario->mPosition, &mario->mModelFaceAngle);
-	mario->mFaceAngle.y = mario->mModelFaceAngle + 0x4000;
-	mario->setReverseAnimation(TMario::ANIM_ROPE_WTOSW, 1.0f);
-	if (mario->isAnimeLoopOrStop())
-		mario->changePlayerStatus(TMario::STATUS_WIRE_WAIT, 0, false);
-	return 0;
-}
-
 int TMario::specMain()
 {
 	int result = 0;
@@ -1557,6 +1539,7 @@ int TMario::specMain()
 		mWireSag = mWireParams.mWireSwingMax.get();
 
 	switch (mStatus) {
+		// The "bars" here are, in fact, trees.
 	case STATUS_BAR_WAIT:
 		result = barWait();
 		break;
@@ -1597,16 +1580,16 @@ int TMario::specMain()
 		result = hanging();
 		break;
 
-	case 0x3000054c:
-		result = unknown_inline_7(this);
+	case STATUS_ASCEND:
+		result = ascend();
 		break;
 
-	case 0x3000054e:
-		result = unknown_inline_8(this);
+	case STATUS_DESCEND:
+		result = descend();
 		break;
 
-	case 0x3000054f:
-		result = unknown_inline_9(this);
+	case STATUS_HANG_JUMPING:
+		result = hangJumping();
 		break;
 
 	case STATUS_TAKEN:
@@ -1629,16 +1612,16 @@ int TMario::specMain()
 		result = wireWaitToSWaitR();
 		break;
 
-	case 0x10000554: // wait AND s-wait to hang
-		result = unknown_inline_13(this);
+	case STATUS_WIRE_WAIT_TO_HANG:
+		result = wireWaitToHang();
 		break;
 
-	case 0x10000555:
-		result = unknown_inline_14(this);
+	case STATUS_WIRE_S_WAIT_TO_HANG:
+		result = wireSWaitToHang();
 		break;
 
-	case 0x10000556: // hang to wire wait
-		result = unknown_inline_15(this);
+	case STATUS_WIRE_RETURN:
+		result = wireReturn();
 		break;
 
 	case STATUS_WIRE_HANGING:
@@ -1649,12 +1632,12 @@ int TMario::specMain()
 		result = wireRolling();
 		break;
 
-	case 0x35b:
-		result = unknown_inline_16(this);
+	case STATUS_WIRE_S_WAIT_TO_WAIT_R:
+		result = wireSWaitToWaitR();
 		break;
 
-	case 0x35c:
-		result = unknown_inline_17(this);
+	case STATUS_WIRE_S_WAIT_TO_WAIT_L:
+		result = wireSWaitToWaitL();
 		break;
 
 	case 0x560:
@@ -1679,5 +1662,6 @@ int TMario::specMain()
 		result = fencePunch();
 		break;
 	}
+
 	return result;
 }

@@ -1143,70 +1143,70 @@ void TMario::changeHand(int idx)
 	flagOnAllShapes(mRHand4ndModel->getModelData(), 1);
 }
 
-f32 TMario::setAnimation(int param_1, f32 param_2)
+f32 TMario::setAnimation(int anm_id, f32 rate)
 {
 	// volatile u32 padding[37];
 	if (onYoshi()) {
-		if (param_1 == ANIM_LOST) {
+		if (anm_id == ANIM_LOST) {
 			mYoshi->changeAnimation(0x12);
 		}
 
 		switch (mYoshi->mActor->getCurAnmIdx(0)) {
 		case 0x1:
-			param_1 = 0xB6;
+			anm_id = 0xB6;
 			break;
 		case 0x2:
-			param_1 = 0xB7;
+			anm_id = 0xB7;
 			break;
 		case 0x3:
-			param_1 = 0xB8;
+			anm_id = 0xB8;
 			break;
 		case 0x4:
-			param_1 = 0xB9;
+			anm_id = 0xB9;
 			break;
 		case 0x6:
-			param_1 = 0xBF;
+			anm_id = 0xBF;
 			break;
 		case 0x7:
-			param_1 = 0xBA;
+			anm_id = 0xBA;
 			break;
 		case 0x8:
-			param_1 = 0xBB;
+			anm_id = 0xBB;
 			break;
 		case 0x9:
-			param_1 = 0xBC;
+			anm_id = 0xBC;
 			break;
 		case 0xA:
-			param_1 = 0xBD;
+			anm_id = 0xBD;
 			break;
 		case 0xB:
-			param_1 = 0xBE;
+			anm_id = 0xBE;
 			break;
 		case 0xC:
-			param_1 = 0xB8;
+			anm_id = 0xB8;
 			break;
 		case 0xE:
-			param_1 = 0xC0;
+			anm_id = 0xC0;
 			break;
 		case 0xF:
-			param_1 = 0xC1;
+			anm_id = 0xC1;
 			break;
 		case 0x10:
 		case 0x11:
-			param_1 = 0xC2;
+			anm_id = 0xC2;
 			break;
 		case 0x12:
-			param_1 = 0xC4;
+			anm_id = 0xC4;
 			break;
 		case 0x13:
-			param_1 = 0xC5;
+			anm_id = 0xC5;
 			break;
 		case 0x16:
-			param_1 = 0xC6;
+			anm_id = 0xC6;
 			break;
 		case 0x18:
 		default:
-			param_1 = 0xB6;
+			anm_id = 0xB6;
 			break;
 		}
 
@@ -1220,28 +1220,28 @@ f32 TMario::setAnimation(int param_1, f32 param_2)
 		}
 
 		if (check == true) {
-			param_1 = 0xB8;
+			anm_id = 0xB8;
 		}
 	}
 
-	if (param_1 != mAnimationId) {
-		mAnimationId = param_1;
+	if (anm_id != mAnimationId) {
+		mAnimationId = anm_id;
 
 		if (onYoshi()) {
-			mModel->changeMtxCalcSIAnmBQAnmTransform(0, 0, param_1);
+			mModel->changeMtxCalcSIAnmBQAnmTransform(0, 0, anm_id);
 			mModel->unk20->unk18->unk50 = 0.0f;
 			getMotionFrameCtrl().setAttribute(
-			    mModel->unk4->unk4[param_1]->mAttribute);
+			    mModel->unk4->unk4[anm_id]->mAttribute);
 			changeHand(0);
 			mAnmSound->stop();
 		} else {
 			mModel->changeMtxCalcSIAnmBQAnmTransform(
-			    0, 0, gMarioAnimeData[param_1].unk0);
+			    0, 0, gMarioAnimeData[anm_id].unk0);
 			mModel->unk20->unk18->unk50 = 0.0f;
 			getMotionFrameCtrl().setAttribute(
-			    mModel->unk4->unk4[gMarioAnimeData[param_1].unk0]->mAttribute);
+			    mModel->unk4->unk4[gMarioAnimeData[anm_id].unk0]->mAttribute);
 
-			int unk1 = gMarioAnimeData[param_1].unk4;
+			int unk1 = gMarioAnimeData[anm_id].unk4;
 			if (mTrembleModelEffect != nullptr
 			    && mTrembleModelEffect->checkUnk8(1))
 				unk1 = 8;
@@ -1249,38 +1249,38 @@ f32 TMario::setAnimation(int param_1, f32 param_2)
 			if (unk1 < 0x18)
 				mModel->changeAnmTexPattern(0, unk1);
 
-			u16 r0 = gMarioAnimeData[param_1].unk0;
+			u16 r0 = gMarioAnimeData[anm_id].unk0;
 			u32 unk; // SoundId?
-			if (param_2 >= 0.0f)
+			if (rate >= 0.0f)
 				unk = 1;
 			else
 				unk = -1;
 
 			mAnmSound->initAnmSound(mAnmSoundTbl[r0], unk, 0.0f);
 
-			changeHand(gMarioAnimeData[param_1].unk5);
+			changeHand(gMarioAnimeData[anm_id].unk5);
 		}
 	}
-	getMotionFrameCtrl().setRate(param_2 * 0.5f);
-	mModel->getFrameCtrl(2).setRate(param_2 * 0.5f);
+	getMotionFrameCtrl().setRate(rate * 0.5f);
+	mModel->getFrameCtrl(2).setRate(rate * 0.5f);
 	return getCurrentFrame(0);
 }
 
-f32 TMario::setReverseAnimation(int param_1, f32 param_2)
+f32 TMario::setReverseAnimation(int anm_id, f32 rate)
 {
 	// volatile u32 padding[4];
-	if (param_1 != mAnimationId) {
-		setAnimation(param_1, param_2);
+	if (anm_id != mAnimationId) {
+		setAnimation(anm_id, rate);
 		// Tried using existing functions, but couldn make it match
 		// I suspect there might be another inline?
 		// Maybe a reset FrameCtrl or something
 		J3DFrameCtrl* frameCtrl       = mModel->unkC;
 		J3DFrameCtrl& motionFrameCtrl = frameCtrl[0];
-		motionFrameCtrl.setRate(param_2 * -0.5f);
+		motionFrameCtrl.setRate(rate * -0.5f);
 		motionFrameCtrl.setFrame(motionFrameCtrl.getEnd() - 0.1f);
 
 		J3DFrameCtrl& otherFrameCtrl = frameCtrl[2];
-		otherFrameCtrl.setRate(param_2 * -0.5f);
+		otherFrameCtrl.setRate(rate * -0.5f);
 		otherFrameCtrl.setFrame(otherFrameCtrl.getEnd() - 0.1f);
 	}
 	return getCurrentFrame(0);
@@ -1799,7 +1799,8 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 				MTXCopy(mHolder->getTakingMtx(), mtx);
 			} else {
 
-				if (mStatus != 0x80088A && mStatus != STATUS_WIRE_ROLLING) {
+				if (mStatus != STATUS_JUMP_CATCH
+				    && mStatus != STATUS_WIRE_ROLLING) {
 					mFaceAngle.x = 0;
 				}
 				// Probably another checkFlag inline

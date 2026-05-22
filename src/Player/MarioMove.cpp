@@ -531,7 +531,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		}
 		break;
 
-	case 0x80088A: {
+	case STATUS_JUMP_CATCH: {
 		startVoice(0x7884);
 
 		f32 jumpSpeed = 15.0f + mForwardVel;
@@ -593,35 +593,35 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 	case 0x892:
 		setPlayerJumpSpeed(0.25f, 42.0f);
+
 		mForwardVel = 0.0f;
 		mSlideVelX  = mForwardVel * JMASSin(mFaceAngle.y);
 		mSlideVelZ  = mForwardVel * JMASCos(mFaceAngle.y);
 		mVel.x      = mSlideVelX;
 		mVel.z      = mSlideVelZ;
+
 		startVoice(0x78B6);
 		break;
 
 	case 0x893: {
 		if (arg == 0) {
 			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * 1.0f;
+			mVel.y        = jumpPower * JMASSin(0xE000);
 
-			mVel.y      = jumpPower * JMASSin(0xE000);
 			mForwardVel = jumpPower * -JMASCos(0xE000);
-
-			mSlideVelX = mForwardVel * JMASSin(mFaceAngle.y);
-			mSlideVelZ = mForwardVel * JMASCos(mFaceAngle.y);
-			mVel.x     = mSlideVelX;
-			mVel.z     = mSlideVelZ;
+			mSlideVelX  = mForwardVel * JMASSin(mFaceAngle.y);
+			mSlideVelZ  = mForwardVel * JMASCos(mFaceAngle.y);
+			mVel.x      = mSlideVelX;
+			mVel.z      = mSlideVelZ;
 		} else {
 			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * 1.0f;
+			mVel.y        = jumpPower * JMASSin(0x6000);
 
-			mVel.y      = jumpPower * JMASSin(0x6000);
 			mForwardVel = jumpPower * -JMASCos(0x6000);
-
-			mSlideVelX = mForwardVel * JMASSin(mFaceAngle.y);
-			mSlideVelZ = mForwardVel * JMASCos(mFaceAngle.y);
-			mVel.x     = mSlideVelX;
-			mVel.z     = mSlideVelZ;
+			mSlideVelX  = mForwardVel * JMASSin(mFaceAngle.y);
+			mSlideVelZ  = mForwardVel * JMASCos(mFaceAngle.y);
+			mVel.x      = mSlideVelX;
+			mVel.z      = mSlideVelZ;
 		}
 		startVoice(0x78B9);
 		break;
@@ -629,11 +629,13 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 	case 0x894:
 		setPlayerJumpSpeed(0.0f, 42.0f);
+
 		mForwardVel = 0.0f;
 		mSlideVelX  = mForwardVel * JMASSin(mFaceAngle.y);
 		mSlideVelZ  = mForwardVel * JMASCos(mFaceAngle.y);
 		mVel.x      = mSlideVelX;
 		mVel.z      = mSlideVelZ;
+
 		startVoice(0x78AB);
 		break;
 	}
@@ -718,7 +720,7 @@ int TMario::changePlayerStatus(u32 status, u32 arg, bool force)
 			return 0;
 	}
 
-	if (mStatus == 0x20467)
+	if (mStatus == STATUS_LOSER_DOWN)
 		return 0;
 
 	if (SMS_isDivingMap()) {
@@ -1222,7 +1224,7 @@ void TMario::checkSink()
 
 			if (unk368 > mGraffitoParams.mSinkTime.get()) {
 				loserExec();
-				changePlayerStatus(0x10001123, 0, false);
+				changePlayerStatus(STATUS_SINK_LOSER, 0, false);
 			}
 			SMS_EmitSinkInPollutionEffect(mPosition, mGroundPlane->getNormal(),
 			                              true);
@@ -1240,7 +1242,7 @@ void TMario::checkSink()
 			mSlideVelX  = 0.0f;
 			mSlideVelZ  = 0.0f;
 			loserExec();
-			changePlayerStatus(0x10001123, 0, false);
+			changePlayerStatus(STATUS_SINK_LOSER, 0, false);
 			return;
 		}
 	}
@@ -2190,7 +2192,7 @@ void TMario::thinkWaterSurface()
 		if (unk12C < 1.0f) {
 			unk12C = 0.0f;
 			loserExec();
-			changePlayerStatus(0x224E0, 0, false);
+			changePlayerStatus(STATUS_SWIM_DOWN, 0, false);
 		}
 	} else {
 		unk12C += mSwimParams.mAirInc.get();

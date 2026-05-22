@@ -336,7 +336,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				mWireSag       = 0.0f;
 
 				bool flipDir;
-				if (mStatus == 0x893 || mStatus == 0x80088A) {
+				if (mStatus == 0x893 || mStatus == STATUS_JUMP_CATCH) {
 					flipDir = true;
 				} else if (mVel.y < 0.0f) {
 					flipDir = false;
@@ -769,7 +769,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				if (frontDiff > -0x2000 && frontDiff < 0x2000) {
 					mPosition    = sender->mPosition;
 					mFaceAngle.y = frontYaw;
-					changePlayerStatus(0x1320, 0, false);
+					changePlayerStatus(STATUS_DOOR_OPEN_R, 0, false);
 					if (isHolding()) {
 						unk380 = 2;
 						setAnimation(ANIM_DOOR_KICK, 1.0f);
@@ -783,7 +783,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 					if (message == 0x11) {
 						mPosition    = sender->mPosition;
 						mFaceAngle.y = frontYaw + 0x8000;
-						changePlayerStatus(0x1321, 0, false);
+						changePlayerStatus(STATUS_DOOR_OPEN_L, 0, false);
 						if (isHolding()) {
 							unk380 = 2;
 							setAnimation(ANIM_DOOR_KICK, 1.0f);
@@ -796,7 +796,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 					if (!isHolding()) {
 						mPosition    = sender->mPosition;
 						mFaceAngle.y = frontYaw + 0x8000;
-						changePlayerStatus(0x1321, 0, false);
+						changePlayerStatus(STATUS_DOOR_OPEN_L, 0, false);
 						setAnimation(ANIM_DOOR_GACHA_L, 1.0f);
 						return FALSE;
 					}
