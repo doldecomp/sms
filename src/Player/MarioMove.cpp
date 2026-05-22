@@ -575,11 +575,11 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 	case 0x2000890:
 		switch (mAnimationId) {
-		case 0xD2:
+		case ANIM_STEP2:
 			startVoice(0x78B1);
 			setPlayerJumpSpeed(0.25f, mDeParams.mTramplePowStep1.get());
 			break;
-		case 0xD3:
+		case ANIM_STEP3:
 			startVoice(0x78B6);
 			setPlayerJumpSpeed(0.25f, mDeParams.mTramplePowStep2.get());
 			break;
@@ -1956,7 +1956,7 @@ void TMario::thinkSituation()
 		if (mYoshi)
 			mYoshi->kill();
 		changePlayerStatus(0x208B9, 0, true);
-		if (mAnimationId != 0x120)
+		if (mAnimationId != ANIM_THROWN)
 			startSoundActor(0x786B);
 		gpCamera->unk64 |= 0x800;
 		gpMarDirector->unk4E |= 0x8;
@@ -2272,7 +2272,7 @@ void TMario::getOffYoshi(bool fly)
 		mYoshi->getOff(false);
 	}
 
-	setAnimation(0x4D, 1.0f);
+	setAnimation(ANIM_JUMP, 1.0f);
 	unk78 &= ~0x100;
 	mPosition.y += 100.0f;
 	mForwardVel = -8.0f;

@@ -146,16 +146,16 @@ bool TMario::trampleExec(THitActor* param_1)
 		changePlayerStatus(STATUS_BACK_JUMP, 0, false);
 	} else {
 		switch (mAnimationId) {
-		case 0xd1:
-			setAnimation(0xd2, 1.0f);
+		case ANIM_STEP1:
+			setAnimation(ANIM_STEP2, 1.0f);
 			break;
-		case 0xd2:
-		case 0xd3:
-			setAnimation(0xd3, 1.0f);
+		case ANIM_STEP2:
+		case ANIM_STEP3:
+			setAnimation(ANIM_STEP3, 1.0f);
 			mModel->getFrameCtrl(0).setFrame(0.0f);
 			break;
 		default:
-			setAnimation(0xd1, 1.0f);
+			setAnimation(ANIM_STEP1, 1.0f);
 			break;
 		}
 		changePlayerStatus(0x2000890, 0, false);
