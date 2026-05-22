@@ -111,7 +111,7 @@ void JKRHeap::freeAll()
 	JSUListIterator<JKRDisposer> iterator(&mDisposerList);
 	while (iterator = mDisposerList.getFirst(),
 	       iterator != mDisposerList.getEnd()) {
-		iterator.getObject()->~JKRDisposer();
+		iterator->~JKRDisposer();
 	}
 }
 
@@ -191,7 +191,7 @@ void JKRHeap::dispose()
 	JSUListIterator<JKRDisposer> iterator(&mDisposerList);
 	while (iterator = mDisposerList.getFirst(),
 	       iterator != mDisposerList.getEnd()) {
-		iterator.getObject()->~JKRDisposer();
+		iterator->~JKRDisposer();
 	}
 }
 
