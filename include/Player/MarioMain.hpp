@@ -1512,7 +1512,7 @@ public:
 		STATUS_TYPE_AND_ID_MASK = 0x1FF,
 	};
 
-	// Definitions derived from 
+	// Definitions derived from gMarioAnimeData
 	enum {
 		ANIM_HGUP               = 0,
 		ANIM_BDWN               = 1,
