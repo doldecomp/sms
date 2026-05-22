@@ -460,7 +460,7 @@ BOOL TMario::isFallCancel()
 
 void TMario::fallProcess()
 {
-	if (mStatus == 0x891) {
+	if (mStatus == STATUS_DIVE) {
 		mVel.y -= mDivingParams.mGravity.get();
 		if (mVel.y < -75.0f)
 			mVel.y = -75.0f;

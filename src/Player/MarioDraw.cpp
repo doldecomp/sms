@@ -602,7 +602,7 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 	// volatile u32 padding[34];
 	Mtx transform;
 	if (param_2 == 0) {
-		if (gpMarioForCallBack->mStatus == 0x10001308) {
+		if (gpMarioForCallBack->mStatus == TMario::STATUS_READ_BILLBOARD) {
 			if (gpMarDirector->unkA0 == nullptr)
 				return 0;
 
@@ -966,6 +966,10 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 	return 1;
 }
 
+void TMario::getJumpIntoWaterModelData() { }
+
+void TMario::getHeadRot() { }
+
 Mtx* TMario::getRootAnmMtx() { return mModel->getModel()->mNodeMatrices; }
 
 MtxPtr TMario::getCenterAnmMtx() { return getRootAnmMtx()[unk3C4]; }
@@ -1206,7 +1210,7 @@ f32 TMario::setAnimation(int param_1, f32 param_2)
 			check = true;
 		}
 
-		if (mStatus == 0x10001308) {
+		if (mStatus == STATUS_READ_BILLBOARD) {
 			check = true;
 		}
 
@@ -1735,7 +1739,7 @@ void TMario::considerWaist()
 // This needs work!
 void TMario::calcBaseMtx(MtxPtr mtx)
 {
-	if (mStatus == 0x800447) {
+	if (mStatus == STATUS_TOROCCO) {
 		if (mRailType == 0) {
 			mPinaRail->calcAnm();
 			MTXCopy(mPinaRail->getModel()->getAnmMtx(0),
@@ -1790,7 +1794,7 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 				MTXCopy(mHolder->getTakingMtx(), mtx);
 			} else {
 
-				if (mStatus != 0x80088A && mStatus != 0x10000358) {
+				if (mStatus != 0x80088A && mStatus != STATUS_WIRE_ROLLING) {
 					mFaceAngle.x = 0;
 				}
 				// Probably another checkFlag inline
@@ -2033,7 +2037,7 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 		mSurfGesso->perform(2, graphics);
 	}
 
-	if (mStatus == 0x800447) {
+	if (mStatus == STATUS_TOROCCO) {
 		mTorocco->perform(2, graphics);
 	}
 
@@ -2113,7 +2117,7 @@ void TMario::calcView(JDrama::TGraphics* graphics)
 		mSurfGesso->perform(4, graphics);
 	}
 
-	if (mStatus == 0x800447) {
+	if (mStatus == STATUS_TOROCCO) {
 		mTorocco->perform(4, graphics);
 	}
 }
@@ -2138,14 +2142,13 @@ void TMario::entryModels(JDrama::TGraphics* graphics)
 		mSurfGesso->perform(0x200, graphics);
 	}
 
-	if (mStatus == 0x800447) {
+	if (mStatus == STATUS_TOROCCO)
 		mTorocco->perform(0x200, graphics);
-	}
 }
 
 void TMario::drawSpecial(JDrama::TGraphics* graphics)
 {
-	if (mStatus == 0x20338) {
+	if (mStatus == STATUS_ELECTRIC_DAMAGE) {
 		unk4EC = 1;
 		unk114 |= 0x20;
 	} else {

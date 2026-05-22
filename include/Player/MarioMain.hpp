@@ -404,7 +404,7 @@ public:
 		TParamRT<s16> mRotGravity;
 		TParamRT<f32> mRotBrake;
 		TParamRT<f32> mJumpRate;
-		TParamRT<s32> mSwingRate;
+		TParamRT<f32> mSwingRate;
 		TParamRT<f32> mWireJumpAccelControl;
 		TParamRT<f32> mWireJumpSlideControl;
 		TParamRT<f32> mWireJumpMult;
@@ -650,33 +650,38 @@ public:
 	virtual void checkCollision();
 	virtual void getVoiceStatus();
 
-	BOOL actnMain();
-	void pitching();
-	void putting();
-	void catchLost();
-	void takePose();
+	// Action stuff
 	BOOL taking();
-	BOOL demoMain();
-	void disappear();
-	void nomotion();
-	BOOL footDowning();
-	BOOL electricDamage();
-	BOOL warpOut();
-	BOOL toroccoStart();
-	BOOL waitingStart(const JGeometry::TVec3<f32>*, f32);
-	BOOL returnStart(const JGeometry::TVec3<f32>*, f32, bool, int);
-	BOOL rollingStart(const JGeometry::TVec3<f32>*, f32);
-	void startCommon(const JGeometry::TVec3<f32>*, f32);
-	BOOL isUnUsualStageStart();
-	BOOL warpIn();
-	void downLoser();
-	void sinkLoser();
-	void openDoor();
-	BOOL jumpingDemoCommon(u32, int, f32);
-	void elecDowning();
-	void bottleIn();
-	BOOL readBillboard();
+	BOOL takePose();
+	BOOL catchLost();
+	BOOL putting();
+	BOOL pitching();
+	BOOL actnMain();
+
+	// Demo stuff
 	BOOL winDemo();
+	BOOL readBillboard();
+	BOOL bottleIn();
+	BOOL elecDowning();
+	BOOL jumpingDemoCommon(u32, int, f32);
+	BOOL openDoor();
+	BOOL sinkLoser();
+	BOOL downLoser();
+	BOOL warpIn();
+	BOOL isUnUsualStageStart();
+	void startCommon(const JGeometry::TVec3<f32>*, f32);
+	BOOL rollingStart(const JGeometry::TVec3<f32>*, f32);
+	BOOL returnStart(const JGeometry::TVec3<f32>*, f32, bool, int);
+	BOOL waitingStart(const JGeometry::TVec3<f32>*, f32);
+	BOOL toroccoStart();
+	BOOL warpOut();
+	BOOL electricDamage();
+	BOOL footDowning();
+	BOOL nomotion();
+	BOOL disappear();
+	BOOL demoMain();
+
+	// Collision stuff
 	void considerTake();
 	void calcDamagePos(const JGeometry::TVec3<f32>&);
 	void floorDamageExec(const TMario::TEParams&);
@@ -692,55 +697,57 @@ public:
 	void decHP(int);
 	void incHP(int);
 	void rumbleStart(int, int);
-	void thinkDashEffect();
-	void addDamageFog(JDrama::TGraphics*);
-	void addDirty();
-	void boxDrawPrepare(MtxPtr);
-	void drawLogic();
-	void entryModels(JDrama::TGraphics*);
-	void calcView(JDrama::TGraphics*);
-	void calcAnim(u32, JDrama::TGraphics*);
-	void removeCallBack();
-	void addUpper();
-	void setUpperDamageRun();
-	void addCallBack(JDrama::TGraphics*);
-	void calcAnimHands();
-	void calcAnimBody(u32, JDrama::TGraphics*);
-	void calcBaseMtx(MtxPtr);
-	void calcBaseMtxSwim(MtxPtr);
-	void calcBaseMtxPole(MtxPtr);
-	void calcBaseMtxTorocco(MtxPtr);
-	void considerWaist();
-	bool isUpperPumpingStyle() const;
-	void finalDrawInitialize();
-	void initMirrorModel();
-	void loadAnmTexPattern(J3DAnmTexPattern**, char*, J3DModelData*);
-	void loadBas(void**, const char*);
-	void loadAnm(J3DAnmTransform**, const char*);
-	f32 setReverseAnimation(int, f32);
-	f32 setAnimation(int, f32);
-	void changeHandByRate(f32);
-	void changeHand(int);
-	BOOL isAnimeLoopOrStop();
-	BOOL isLast1AnimeFrame();
-	J3DFrameCtrl& getMotionFrameCtrl();
-	f32 getCurrentFrame(int);
-	void getRailMtx() const;
-	MtxPtr getTakenMtx();
-	void calcBodyPos(JGeometry::TVec3<f32>*);
-	u32 getTrampleCt();
-	void setPositions();
-	void takeOffGlass();
-	void wearGlass();
-	bool isWearingHelm();
-	bool isWearingCap();
-	void setDivHelm();
-	s16 getWallAngle() const;
-	f32 getPumpFrame() const;
-	MtxPtr getCenterAnmMtx();
-	Mtx* getRootAnmMtx();
-	void getHeadRot();
+
+	// Draw stuff
 	void getJumpIntoWaterModelData();
+	void getHeadRot();
+	Mtx* getRootAnmMtx();
+	MtxPtr getCenterAnmMtx();
+	f32 getPumpFrame() const;
+	s16 getWallAngle() const;
+	void setDivHelm();
+	bool isWearingCap();
+	bool isWearingHelm();
+	void wearGlass();
+	void takeOffGlass();
+	void setPositions();
+	u32 getTrampleCt();
+	void calcBodyPos(JGeometry::TVec3<f32>*);
+	MtxPtr getTakenMtx();
+	void getRailMtx() const;
+	f32 getCurrentFrame(int);
+	J3DFrameCtrl& getMotionFrameCtrl();
+	BOOL isLast1AnimeFrame();
+	BOOL isAnimeLoopOrStop();
+	void changeHand(int);
+	void changeHandByRate(f32);
+	f32 setAnimation(int, f32);
+	f32 setReverseAnimation(int, f32);
+	void loadAnm(J3DAnmTransform**, const char*);
+	void loadBas(void**, const char*);
+	void loadAnmTexPattern(J3DAnmTexPattern**, char*, J3DModelData*);
+	void initMirrorModel();
+	void finalDrawInitialize();
+	bool isUpperPumpingStyle() const;
+	void considerWaist();
+	void calcBaseMtxTorocco(MtxPtr);
+	void calcBaseMtxPole(MtxPtr);
+	void calcBaseMtxSwim(MtxPtr);
+	void calcBaseMtx(MtxPtr);
+	void calcAnimBody(u32, JDrama::TGraphics*);
+	void calcAnimHands();
+	void addCallBack(JDrama::TGraphics*);
+	void setUpperDamageRun();
+	void addUpper();
+	void removeCallBack();
+	void calcAnim(u32, JDrama::TGraphics*);
+	void calcView(JDrama::TGraphics*);
+	void entryModels(JDrama::TGraphics*);
+	void drawLogic();
+	void boxDrawPrepare(MtxPtr);
+	void addDirty();
+	void addDamageFog(JDrama::TGraphics*);
+	void thinkDashEffect();
 
 	const TEParams& getDmgMapCode(int param_1) const
 	{
@@ -771,7 +778,7 @@ public:
 	}
 
 	// Jump stuff
-	void startJumpWall();
+	BOOL startJumpWall();
 	void checkJumpingThrowStart();
 	void doSlipJumping();
 	void doSpinJumping();
@@ -998,50 +1005,50 @@ public:
 
 	// Special stuff
 	void barJumpSetting();
-	void barWait();
-	void barClimb();
-	void barHang();
-	void hangingCheckRoof(JGeometry::TVec3<f32>*);
-	void doRoofMovingProcess();
+	BOOL barWait();
+	BOOL barClimb();
+	BOOL barHang();
+	int hangingCheckRoof(JGeometry::TVec3<f32>*);
+	int doRoofMovingProcess();
 	void doRoofWaitingProcess();
-	void roofCommonEvents();
-	void hangRoof();
-	void waitRoof();
-	void moveRoof();
-	void kickRoof();
-	void kickRoofRollUp();
-	void kickRoofRollDown();
-	void startHangLanding(u32);
+	BOOL roofCommonEvents();
+	BOOL hangRoof();
+	BOOL waitRoof();
+	BOOL moveRoof();
+	BOOL kickRoof();
+	BOOL kickRoofRollUp();
+	BOOL kickRoofRollDown();
+	BOOL startHangLanding(u32);
 	void hangingCommon(int, int);
 	void findNearestWall(const TBGWallCheckRecord&);
-	void hanging();
-	void ascend();
-	void descend();
-	void hangJumping();
-	void taken();
+	BOOL hanging();
+	BOOL ascend();
+	BOOL descend();
+	BOOL hangJumping();
+	BOOL taken();
 	void getOnWirePosAngle(JGeometry::TVec3<f32>*, s16*);
-	void wireMove(f32);
-	void wireWait();
-	void wireSWait();
-	void wireWaitToSWaitL();
-	void wireWaitToSWaitR();
+	BOOL wireMove(f32);
+	BOOL wireWait();
+	BOOL wireSWait();
+	BOOL wireWaitToSWaitL();
+	BOOL wireWaitToSWaitR();
 	void changeWireHanging();
 	void wireWaitToHang();
 	void wireSWaitToHang();
 	void wireReturn();
-	void wireHanging();
-	void getNozzleEmitVX(); // UNUSED
-	void wireRolling();
+	BOOL wireHanging();
+	s16 getNozzleEmitVX();
+	BOOL wireRolling();
 	void wireSWaitToWaitL();
 	void wireSWaitToWaitR();
 	void getCurrentPullParams(f32*, f32*);
 	void setPullingAnm(const JGeometry::TVec3<f32>&, f32);
-	void pulling();
+	BOOL pulling();
 	void fenceFootCheck();
-	void fenceCatch();
-	void fenceJumpCatch();
-	void fenceMove();
-	void fencePunch();
+	BOOL fenceCatch();
+	BOOL fenceJumpCatch();
+	BOOL fenceMove();
+	BOOL fencePunch();
 	BOOL specMain();
 
 	// Upper stuff
@@ -1110,7 +1117,7 @@ public:
 	BOOL canPut();
 	void checkPutStart();
 	BOOL waitingCommonEvents();
-	void stopCommon(int, int);
+	void stopCommon(int anim_id, int status_on_end);
 	void changeMontemanWaitingAnim();
 	BOOL waiting();
 	BOOL sleepily();
@@ -1456,11 +1463,49 @@ public:
 		STATUS_SWIM_P_DAMAGE = STATUS_FLAG_SWIMMING | STATUS_FLAG_RUNNING
 		                       | STATUS_TYPE_SWIMMING | 0x1A,
 
+		STATUS_BAR_WAIT              = 0x18100340,
+		STATUS_BAR_HANG              = 0x10100341,
+		STATUS_BAR_CLIMB             = 0x10100343,
+		STATUS_KICK_ROOF_ROLL_UP     = 0x200345,
+		STATUS_KICK_ROOF_ROLL_DOWN   = 0x200346,
+		STATUS_KICK_ROOF             = 0x200347,
+		STATUS_HANG_ROOF             = 0x8200348,
+		STATUS_WAIT_ROOF             = 0x200349,
+		STATUS_MOVE_ROOF             = 0x20054A,
+		STATUS_HANGING               = 0x3800034B,
+		STATUS_TAKEN                 = 0x10020370,
+		STATUS_WIRE_WAIT             = 0x350,
+		STATUS_WIRE_S_WAIT           = 0x351,
+		STATUS_WIRE_WAIT_TO_S_WAIT_L = 0x352,
+		STATUS_WIRE_WAIT_TO_S_WAIT_R = 0x353,
+		STATUS_WIRE_HANGING          = 0x10000357,
+		STATUS_WIRE_ROLLING          = 0x10000358,
+		STATUS_FENCE_CATCH           = 0x3000036B,
+		STATUS_FENCE_JUMP_CATCH      = 0x3000036C,
+		STATUS_FENCE_PUNCH           = 0x3000036A,
+
+		STATUS_TAKE       = 0x383,
+		STATUS_TAKE_POSE  = 0x384,
+		STATUS_CATCH_LOST = 0x386,
+		STATUS_PUTTING    = 0x80000387,
+		STATUS_PITCHING   = 0x80000588,
+
+		STATUS_WIN_DEMO        = 0x1302,
+		STATUS_READ_BILLBOARD  = 0x10001308,
+		STATUS_WARP_OUT        = 0x1337,
+		STATUS_WARP_IN         = 0x1336,
+		STATUS_ELECTRIC_DAMAGE = 0x20338,
+		STATUS_FOOT_DOWN       = 0x2033C,
+		STATUS_NOMOTION        = 0x133E,
+		STATUS_DISAPPEAR       = 0x133F,
+
 		// TODO: these ones I'm not 100% sure about, or they need better names
-		STATUS_ELEC_DAMAGE = 0x20338,
 		STATUS_THROWN_DOWN = 0x208B8,
 		STATUS_DIVE_JUMP   = 0x80088A,
 		STATUS_JUMP_THROW  = 0x820008AB,
+		STATUS_SLIP_FALL   = 0x200088E,
+		STATUS_FIRE_DOWN   = 0x208B7,
+		STATUS_DIVE        = 0x891,
 
 		STATUS_ID_MASK = 0x3F,
 

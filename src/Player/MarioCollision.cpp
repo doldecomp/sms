@@ -136,7 +136,7 @@ bool TMario::trampleExec(THitActor* param_1)
 	if (!checkStatusFlag(STATUS_FLAG_JUMPING))
 		return false;
 
-	if (mStatus == 0x891)
+	if (mStatus == STATUS_DIVE)
 		return false;
 
 	if (param_1->receiveMessage(this, HIT_MESSAGE_TRAMPLE) == FALSE)
@@ -225,7 +225,7 @@ void TMario::loserExec()
 			}
 			return;
 		}
-		if (mStatus == 0x20338) {
+		if (mStatus == STATUS_ELECTRIC_DAMAGE) {
 			changePlayerStatus(0x21313, 0, true);
 		} else {
 			changePlayerStatus(0x1000192A, 0, true);
@@ -278,9 +278,9 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 {
 	// volatile u32 padding[10];
 	u32 animationTypes[16] = {
-		0x20464, 0x20462,   0x20460, 0xC400201, 0x208b0, 0x208b0,
-		0x208b3, 0xC400201, 0x20465, 0x20463,   0x20461, 0xC400201,
-		0x208B1, 0x208B1,   0x208B2, 0xC400201,
+		0x20464, 0x20462,     0x20460, STATUS_WAIT, 0x208b0, 0x208b0,
+		0x208b3, STATUS_WAIT, 0x20465, 0x20463,     0x20461, STATUS_WAIT,
+		0x208B1, 0x208B1,     0x208B2, STATUS_WAIT,
 	};
 
 	if (isInvincible())
@@ -330,10 +330,10 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 
 		// Inline?
 		bool canPlayAnimation = true;
-		if (mStatus == 0x800447)
+		if (mStatus == STATUS_TOROCCO)
 			canPlayAnimation = false;
 
-		if (mStatus == 0x891)
+		if (mStatus == STATUS_DIVE)
 			canPlayAnimation = false;
 
 		if (checkStatusFlag(STATUS_FLAG_SWIMMING))
@@ -341,14 +341,14 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 
 		if (canPlayAnimation) {
 			// I don't think this is correct, but was the closest i could get
-			u32 animationIdx = animationTypes[damageAnimType + animOffset1 * 4
-			                                  + animOffset2 * 8];
+			u32 statusIdx = animationTypes[damageAnimType + animOffset1 * 4
+			                               + animOffset2 * 8];
 			// Possibly inlined check for held by specific thing
 			// M art in shine gates?
 			if (mHolder == nullptr || mHolder->isActorType(0x40000098)) {
 				changePlayerDropping(0x208BA, 0);
 			} else {
-				changePlayerDropping(animationIdx, 0);
+				changePlayerDropping(statusIdx, 0);
 			}
 		}
 	}
@@ -435,7 +435,8 @@ void TMario::considerTake()
 		BOOL check2 = false;
 		u32 test    = mStatus & STATUS_TYPE_AND_ID_MASK;
 		if ((0x150 <= test && 0x15c >= test) || (0x140 <= test && test <= 0x143)
-		    || checkStatusFlag(STATUS_FLAG_UNK1000) || mStatus == 0x10020370) {
+		    || checkStatusFlag(STATUS_FLAG_UNK1000)
+		    || mStatus == STATUS_TAKEN) {
 			check2 = true;
 		}
 

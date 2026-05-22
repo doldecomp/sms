@@ -156,7 +156,7 @@ void TMario::warpRequest(const JGeometry::TVec3<f32>& pos, f32 angle)
 	gpCamera->addMoveCameraAndMario(offset);
 	if (gpMarDirector->mMap != 7)
 		mGamePad->onNeutralMarioKey();
-	changePlayerStatus(0x0C400201, 0, 1);
+	changePlayerStatus(STATUS_WAIT, 0, 1);
 }
 
 void TMario::flowMove(const JGeometry::TVec3<f32>& flow)
@@ -520,10 +520,10 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		setPlayerJumpSpeed(0.25f, 42.0f);
 		break;
 
-	case 0x208B8:
+	case STATUS_THROWN_DOWN:
 		break;
 
-	case 0x208B7:
+	case STATUS_FIRE_DOWN:
 		if (mStatusArg != 2) {
 			mVel.y = mJumpParams.mFireDownForce.get();
 			if (mStatusArg == 0)
@@ -722,7 +722,8 @@ int TMario::changePlayerStatus(u32 status, u32 arg, bool force)
 		return 0;
 
 	if (SMS_isDivingMap()) {
-		if (status != 0x10020370 && status != 0x891 && status != 0x1302)
+		if (status != STATUS_TAKEN && status != STATUS_DIVE
+		    && status != STATUS_WIN_DEMO)
 			return 0;
 	}
 
@@ -847,7 +848,7 @@ void TMario::checkGraffitoFire()
 	if (mPosition.y - mFloorPosition.y > mGraffitoParams.mFireHeight.get())
 		return;
 
-	if (mStatus == 0x208b7 || mStatus == STATUS_FIRE_JUMP_END)
+	if (mStatus == STATUS_FIRE_DOWN || mStatus == STATUS_FIRE_JUMP_END)
 		mFaceAngle.y += 0x8000;
 
 	f32 fVar2 = mForwardVel;
@@ -862,7 +863,7 @@ void TMario::checkGraffitoFire()
 
 	unk14C = mGraffitoParams.mFireInvincibleTime.get();
 	dropObject();
-	changePlayerStatus(0x208B7, 1, false);
+	changePlayerStatus(STATUS_FIRE_DOWN, 1, false);
 	gpMarioParticleManager->emitAndBindToPosPtr(6, &mPosition, 0, nullptr);
 	SMSGetMSound()->startSoundActor(0x1813, &mPosition, 0, nullptr, 0, 4);
 }
@@ -899,7 +900,7 @@ void TMario::checkGraffitoSlip()
 			if (this->mPrevStatus != 0x84045d) {
 				startVoice(0x78d3);
 			}
-		} else if (mStatus != 0x386) {
+		} else if (mStatus != STATUS_CATCH_LOST) {
 			unk138 = mDirtyParams.mBrakeStartValRun.get();
 			unk13C = mDirtyParams.mDirtyTimeRun.get();
 
@@ -949,7 +950,7 @@ void TMario::checkGraffitoElec()
 	if (((mStatus & STATUS_TYPE_MASK) == STATUS_TYPE_WAITING
 	     || (mStatus & STATUS_TYPE_MASK) == STATUS_TYPE_RUNNING)
 	    && unk360 <= 0) {
-		changePlayerStatus(0x20338, 0, false);
+		changePlayerStatus(STATUS_ELECTRIC_DAMAGE, 0, false);
 		SMSGetMSound()->startSoundActor(0x1814, &mPosition, 0, nullptr, 0, 4);
 		SMSGetMSound()->startSoundActor(0x3806, &mPosition, 0, nullptr, 0, 4);
 	}
@@ -1925,7 +1926,7 @@ void TMario::thinkSituation()
 	if (mGroundPlane->isUnderground())
 		unk118 |= 0x2;
 
-	if (isMario() && isTouchGround4cm() && mStatus != 0x133F
+	if (isMario() && isTouchGround4cm() && mStatus != STATUS_DISAPPEAR
 	    && (mGroundPlane->isIllegalData() || mGroundPlane->isOob())) {
 		unk2BA += mDeParams.mIllegalPlaneCtInc.get();
 		if (unk2BA > mDeParams.mIllegalPlaneTime.get())
@@ -2174,7 +2175,7 @@ void TMario::thinkWaterSurface()
 	if (deepUnderwater || checkFlag(0x1000)) {
 		f32 prevAir = unk12C;
 		if (isWearingHelm()) {
-			if (mStatus != 0x10020370) {
+			if (mStatus != STATUS_TAKEN) {
 				unk12C -= mSwimParams.mAirDecDive.get();
 			}
 		} else {
@@ -2332,7 +2333,7 @@ void TMario::thinkTorocco()
 
 void TMario::thinkSound()
 {
-	if (mStatus != 0x208b8 && mSound != nullptr)
+	if (mStatus != STATUS_THROWN_DOWN && mSound != nullptr)
 		mSound->stop(1);
 }
 
@@ -2409,7 +2410,7 @@ void TMario::gunExec()
 	if (unk114 & 0x80 ? true : false)
 		mWaterGun->resetWaterToFull();
 
-	if (mStatus != STATUS_BACK_JUMP && mStatus != 0x208b8
+	if (mStatus != STATUS_BACK_JUMP && mStatus != STATUS_THROWN_DOWN
 	    && mGamePad->checkFrameMeaning(0x200000) && !onYoshi()
 	    && mStatus != STATUS_TOROCCO)
 		mWaterGun->changeBackup();
@@ -2435,8 +2436,8 @@ void TMario::playerControl(JDrama::TGraphics* param_1)
 	unk9C  = mFaceAngle.y;
 	unk29C = mPosition;
 	unk114 &= ~0x1;
-	if (gpMarDirector->unk124 == 1 && mStatus != 0x10001308)
-		changePlayerStatus(0x10001308, 0, false);
+	if (gpMarDirector->unk124 == 1 && mStatus != STATUS_READ_BILLBOARD)
+		changePlayerStatus(STATUS_READ_BILLBOARD, 0, false);
 
 	if (gpMarioOriginal == this) {
 		if (gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode)

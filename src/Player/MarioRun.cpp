@@ -145,17 +145,17 @@ BOOL TMario::isThrowStart()
 	if (mHeldObject != nullptr && ((mInput & 0x2000) ? true : false)) {
 
 		if (mHeldObject->checkActorType(0x10000000))
-			return changePlayerStatus(0x80000588, 0, false);
+			return changePlayerStatus(STATUS_PITCHING, 0, false);
 
 		switch (mHeldObject->getActorType()) {
 		case 0x80000001:
-			return changePlayerStatus(0x80000588, 0, false);
+			return changePlayerStatus(STATUS_PITCHING, 0, false);
 
 		default:
 			if (mForwardVel > 16.0f)
-				return changePlayerStatus(0x80000588, 0, false);
+				return changePlayerStatus(STATUS_PITCHING, 0, false);
 			if (canPut())
-				return changePlayerStatus(0x80000387, 0, false);
+				return changePlayerStatus(STATUS_PUTTING, 0, false);
 			break;
 		}
 	}
@@ -761,7 +761,7 @@ BOOL TMario::running()
 	if (!onYoshi() && (mInput & 0x8000)) {
 		if (unknown_inline_10(this))
 			return 1;
-		changePlayerStatus(0x384, 0, false);
+		changePlayerStatus(STATUS_TAKE_POSE, 0, false);
 	}
 
 	if (mInput & 0x20) {
@@ -840,7 +840,7 @@ BOOL TMario::running()
 				                     mWallPlane->getNormal().x)
 				               + 0x8000;
 				mModelFaceAngle = mFaceAngle.y;
-				return changePlayerStatus(0x3000036B, 0, false);
+				return changePlayerStatus(STATUS_FENCE_CATCH, 0, false);
 			}
 
 			doPushingAnimation(prevPos);
@@ -873,7 +873,7 @@ BOOL TMario::rotating()
 
 	mStatusTimer++;
 	if (mStatusTimer > 0x78)
-		return changePlayerStatus(0x0C400201, 0, false);
+		return changePlayerStatus(STATUS_WAIT, 0, false);
 
 	doRunning();
 
@@ -1095,7 +1095,7 @@ BOOL TMario::walkEnd()
 			return changePlayerStatus(STATUS_RUN, 0, false);
 
 		if (mInput & 0x8000)
-			return changePlayerStatus(0x384, 0, false);
+			return changePlayerStatus(STATUS_TAKE_POSE, 0, false);
 	}
 
 	if (considerRotateStart())
@@ -1255,7 +1255,7 @@ BOOL TMario::slipForeCommon(int arg0, int arg1, int arg2, int arg3)
 
 int TMario::slipFore()
 {
-	return slipForeCommon(STATUS_SLIP_END, STATUS_JUMP, 0x200088E, 0x91);
+	return slipForeCommon(STATUS_SLIP_END, STATUS_JUMP, STATUS_SLIP_FALL, 0x91);
 }
 
 BOOL TMario::slipBackCommon(int arg0, int arg1, int arg2)
@@ -1274,7 +1274,10 @@ BOOL TMario::slipBackCommon(int arg0, int arg1, int arg2)
 	return 0;
 }
 
-int TMario::slipBack() { return slipBackCommon(0x386, 0x88C, 0x89); }
+int TMario::slipBack()
+{
+	return slipBackCommon(STATUS_CATCH_LOST, 0x88C, 0x89);
+}
 
 BOOL TMario::catching()
 {
@@ -1289,9 +1292,9 @@ BOOL TMario::catching()
 	}
 	if (doSliding(getSlideStopCatch())) {
 		setPlayerVelocity(0.0f);
-		return changePlayerStatus(0x386, 0, false);
+		return changePlayerStatus(STATUS_CATCH_LOST, 0, false);
 	}
-	slippingBasic(0x386, 0x88C, 0x88);
+	slippingBasic(STATUS_CATCH_LOST, 0x88C, 0x88);
 	if (gpMSound->gateCheck(0x1009)) {
 		MSoundSESystem::MSoundSE::startSoundActor(0x1009, &mPosition, 0,
 		                                          nullptr, 0, 4);
@@ -1420,7 +1423,7 @@ int TMario::oilSlip()
 
 	if (-1.0f < mForwardVel && mForwardVel < 1.0f) {
 		setPlayerVelocity(0.0f);
-		return changePlayerStatus(0x386, 0, false);
+		return changePlayerStatus(STATUS_CATCH_LOST, 0, false);
 	}
 
 	switch (walkProcess()) {
@@ -1446,7 +1449,7 @@ int TMario::oilSlope()
 	}
 	gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
 	                   mDirtyParams.mPolSizeSlip.get());
-	return slipBackCommon(0x386, 0x88C, 0x89);
+	return slipBackCommon(STATUS_CATCH_LOST, 0x88C, 0x89);
 }
 
 f32 TMario::downingCommon(int anim, f32 limit, int arg2)

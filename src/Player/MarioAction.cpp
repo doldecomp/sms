@@ -31,71 +31,91 @@ BOOL TMario::taking()
 	}
 }
 
+BOOL TMario::takePose()
+{
+	if ((mInput & 4) != 0)
+		return changePlayerDropping(0x88C, 0);
+
+	if (isLast1AnimeFrame()) {
+		setAnimation(0xC3, 1.0f);
+		return changePlayerStatus(STATUS_WAIT, 0, false);
+	}
+
+	stopCommon(0x110, STATUS_WAIT);
+	return FALSE;
+}
+
+BOOL TMario::catchLost()
+{
+	if ((mInput & 2) != 0) {
+		if (considerRotateJumpStart()) {
+			return TRUE;
+		} else {
+			return changePlayerJumping(STATUS_JUMP, false);
+		}
+	} else {
+		if ((mInput & 4) != 0) {
+			return changePlayerStatus(0x88C, 0, false);
+		} else {
+			if ((mInput & 8) != 0) {
+				return changePlayerStatus(0x50, 0, false);
+			} else {
+				stopCommon(0x5A, STATUS_WAIT);
+				return FALSE;
+			}
+		}
+	}
+}
+
+BOOL TMario::putting()
+{
+	if ((mInput & 4) != 0)
+		return changePlayerDropping(0x88c, 0);
+
+	stopCommon(0x6E, STATUS_WAIT);
+	if (mHeldObject != nullptr && mModel->getFrameCtrl(0).checkPass(20.0f)) {
+		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK6);
+		mHeldObject = nullptr;
+	}
+
+	return FALSE;
+}
+
+BOOL TMario::pitching()
+{
+	if ((mInput & 4) != 0)
+		return changePlayerDropping(0x88C, 0);
+
+	stopCommon(0x65, STATUS_WAIT);
+	checkThrowObject();
+	return FALSE;
+}
+
 BOOL TMario::actnMain()
 {
 	u32 status = mStatus;
 
 	BOOL result = FALSE;
 
-	// TODO: Action enum
 	switch (status) {
-	case 0x383:
+	case STATUS_TAKE:
 		result = taking();
 		break;
-	case 0x384:
-		if ((mInput & 4) != 0) {
-			result = changePlayerDropping(0x88C, 0);
-		} else {
-			if (isLast1AnimeFrame()) {
-				setAnimation(0xC3, 1.0f);
-				result = changePlayerStatus(STATUS_WAIT, 0, false);
-			} else {
-				stopCommon(0x110, STATUS_WAIT);
-				result = FALSE;
-			}
-		}
+
+	case STATUS_TAKE_POSE:
+		result = takePose();
 		break;
-	case 0x386:
-		if ((mInput & 2) != 0) {
-			if (considerRotateJumpStart()) {
-				result = TRUE;
-			} else {
-				result = changePlayerJumping(STATUS_JUMP, false);
-			}
-		} else {
-			if ((mInput & 4) != 0) {
-				result = changePlayerStatus(0x88C, 0, false);
-			} else {
-				if ((mInput & 8) != 0) {
-					result = changePlayerStatus(0x50, 0, false);
-				} else {
-					stopCommon(0x5A, STATUS_WAIT);
-					result = FALSE;
-				}
-			}
-		}
+
+	case STATUS_CATCH_LOST:
+		result = catchLost();
 		break;
-	case 0x80000387:
-		if ((mInput & 4) != 0) {
-			result = changePlayerDropping(0x88c, 0);
-		} else {
-			stopCommon(0x6E, STATUS_WAIT);
-			if (mHeldObject != nullptr
-			    && mModel->getFrameCtrl(0).checkPass(20.0f)) {
-				mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK6);
-				mHeldObject = nullptr;
-			}
-			result = FALSE;
-		}
+
+	case STATUS_PUTTING:
+		result = putting();
 		break;
-	case 0x80000588:
-		if ((mInput & 4) != 0) {
-			result = changePlayerDropping(0x88C, 0);
-		} else {
-			stopCommon(0x65, STATUS_WAIT);
-			checkThrowObject();
-			result = FALSE;
-		}
+
+	case STATUS_PITCHING:
+		result = pitching();
 		break;
 	}
 	return result;

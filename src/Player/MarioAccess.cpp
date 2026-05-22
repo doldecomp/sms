@@ -174,7 +174,7 @@ bool SMS_IsMarioHeadSlideAttack()
 
 bool SMS_IsMarioStatusElecDamage()
 {
-	if (gpMarioOriginal->mStatus == TMario::STATUS_ELEC_DAMAGE) {
+	if (gpMarioOriginal->mStatus == TMario::STATUS_ELECTRIC_DAMAGE) {
 		return 1;
 	} else {
 		return 0;
