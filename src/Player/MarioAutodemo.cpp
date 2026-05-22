@@ -90,6 +90,10 @@ BOOL TMario::readBillboard()
 	return FALSE;
 }
 
+BOOL TMario::bottleIn() { }
+
+BOOL TMario::elecDowning() { }
+
 BOOL TMario::jumpingDemoCommon(u32 playerStatus, int animationId, f32 velocity)
 {
 	setPlayerVelocity(velocity);
@@ -100,6 +104,31 @@ BOOL TMario::jumpingDemoCommon(u32 playerStatus, int animationId, f32 velocity)
 	}
 	return FALSE;
 }
+
+BOOL TMario::openDoor()
+{
+	if (mStatusState == 0) {
+		startVoice(0x7884);
+		mStatusState = 1;
+	}
+	stopProcess();
+	if (isLast1AnimeFrame()) {
+		if ((mAnimationId == 0x5f) || (mAnimationId == 0x60)
+		    || (mAnimationId == 0xe9)) {
+			mPosition.x += JMASSin(mFaceAngle.y) * 150.0f;
+			mPosition.z += JMASCos(mFaceAngle.y) * 150.0f;
+		} else {
+			mPosition.x -= JMASSin(mFaceAngle.y) * 150.0f;
+			mPosition.z -= JMASCos(mFaceAngle.y) * 150.0f;
+		}
+		return changePlayerStatus(STATUS_WAIT, 0, true);
+	}
+	return FALSE;
+}
+
+BOOL TMario::sinkLoser() { }
+
+BOOL TMario::downLoser() { }
 
 BOOL TMario::warpIn()
 {
@@ -204,7 +233,7 @@ BOOL TMario::isUnUsualStageStart()
 	// Pinna rollercoaster
 	if ((gpMarDirector->mMap == 0x3A)
 	    && (gpMarDirector->unk7D == 0 || gpMarDirector->unk7D == 1)) {
-		changePlayerStatus(0x800447, 0, true);
+		changePlayerStatus(STATUS_TOROCCO, 0, true);
 		unk114 |= 2;
 		if (mPinaRail != nullptr) {
 			mPinaRail->setBckFromIndex(0);
@@ -240,11 +269,13 @@ BOOL TMario::isUnUsualStageStart()
 		if (mCap != nullptr) {
 			mCap->unk4 |= 2;
 		}
-		changePlayerStatus(0x891, 0, true);
+		changePlayerStatus(STATUS_DIVE, 0, true);
 		return TRUE;
 	}
 	return FALSE;
 }
+
+void startCommon(const JGeometry::TVec3<f32>*, f32) { }
 
 BOOL TMario::rollingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 {
@@ -252,7 +283,7 @@ BOOL TMario::rollingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 	if (result != 0) {
 		return TRUE;
 	} else {
-		if (mStatus == 0x133f) {
+		if (mStatus == STATUS_DISAPPEAR) {
 			unk114 &= ~2;
 			if (warpPos != nullptr) {
 				warpRequest(*warpPos, rotation);
@@ -263,7 +294,7 @@ BOOL TMario::rollingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 			                 &mFloorPosition.y, &mGroundPlane);
 			unk2BC = mFloorPosition.y;
 			setAnimation(0xC3, 1.0f);
-			changePlayerStatus(0x1337, 0x200, true);
+			changePlayerStatus(STATUS_WARP_OUT, 0x200, true);
 			return TRUE;
 		}
 	}
@@ -273,7 +304,7 @@ BOOL TMario::rollingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 BOOL TMario::returnStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation,
                          bool flag, int playerStatus)
 {
-	if (mStatus == 0x133f) {
+	if (mStatus == STATUS_DISAPPEAR) {
 		int offsetPlayerStatus = playerStatus << 8;
 		if (flag == TRUE) {
 			unk114 &= ~2;
@@ -285,7 +316,7 @@ BOOL TMario::returnStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation,
 			                 &mFloorPosition.y, &mGroundPlane);
 			unk2BC = mFloorPosition.y;
 			setAnimation(0xC3, 1.0f);
-			changePlayerStatus(0x1337, offsetPlayerStatus | 2, true);
+			changePlayerStatus(STATUS_WARP_OUT, offsetPlayerStatus | 2, true);
 		} else {
 			unk114 &= ~2;
 			if (warpPos != nullptr) {
@@ -297,7 +328,7 @@ BOOL TMario::returnStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation,
 			                 &mFloorPosition.y, &mGroundPlane);
 			unk2BC = mFloorPosition.y;
 			setAnimation(0xC3, 1.0f);
-			changePlayerStatus(0x1337, offsetPlayerStatus | 1, true);
+			changePlayerStatus(STATUS_WARP_OUT, offsetPlayerStatus | 1, true);
 		}
 		return TRUE;
 	}
@@ -329,7 +360,7 @@ BOOL TMario::waitingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 
 BOOL TMario::toroccoStart()
 {
-	changePlayerStatus(0x800447, 0, true);
+	changePlayerStatus(STATUS_TOROCCO, 0, true);
 	unk114 |= 2;
 	if (mPinaRail != nullptr) {
 		mPinaRail->setBckFromIndex(0);
@@ -375,7 +406,7 @@ BOOL TMario::warpOut()
 		if (mStatusTimer >= unkDelay) {
 			if (checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
 				unk114 |= 2;
-				return changePlayerStatus(0x891, 0, true);
+				return changePlayerStatus(STATUS_DIVE, 0, true);
 			}
 			mStatusState = 2;
 		}
@@ -488,6 +519,18 @@ BOOL TMario::footDowning()
 	return false;
 }
 
+BOOL TMario::nomotion()
+{
+	stopProcess();
+	return FALSE;
+}
+
+BOOL TMario::disappear()
+{
+	unk114 &= ~2;
+	return FALSE;
+}
+
 BOOL TMario::demoMain()
 {
 	// Missing stack space
@@ -495,42 +538,30 @@ BOOL TMario::demoMain()
 
 	BOOL result = FALSE;
 	switch (mStatus) {
-	case 0x1302:
+	case STATUS_WIN_DEMO:
 		result = winDemo();
 		break;
-	case 0x10001308:
+
+	case STATUS_READ_BILLBOARD:
 		result = readBillboard();
 		break;
-	case 0x1310:
+
+	case 0x1310: // bottle in?
 		setAnimation(0x122, 1.0f);
 		result = FALSE;
 		break;
-	case 0x21313:
+
+	case 0x21313: // elec downing?
 		setAnimation(0x79, 1.0f);
 		result = FALSE;
 		break;
+
 	case 0x1320:
 	case 0x1321:
-		// Probably inlined?
-		if (mStatusState == 0) {
-			startVoice(0x7884);
-			mStatusState = 1;
-		}
-		stopProcess();
-		if (isLast1AnimeFrame()) {
-			if ((mAnimationId == 0x5f) || (mAnimationId == 0x60)
-			    || (mAnimationId == 0xe9)) {
-				mPosition.x += JMASSin(mFaceAngle.y) * 150.0f;
-				mPosition.z += JMASCos(mFaceAngle.y) * 150.0f;
-			} else {
-				mPosition.x -= JMASSin(mFaceAngle.y) * 150.0f;
-				mPosition.z -= JMASCos(mFaceAngle.y) * 150.0f;
-			}
-			return changePlayerStatus(STATUS_WAIT, 0, true);
-		}
-		result = FALSE;
+		result = openDoor();
 		break;
-	case 0x10001123:
+
+	case 0x10001123: // sink loser?
 		setPlayerVelocity(0.0f);
 		setAnimation(0xE8, 1.0f);
 		if (jumpProcess(0) == TRUE) {
@@ -538,7 +569,8 @@ BOOL TMario::demoMain()
 		}
 		result = FALSE;
 		break;
-	case 0x1000192a:
+
+	case 0x1000192a: // down loser?
 		setPlayerVelocity(0.0f);
 		setAnimation(0x56, 1.0f);
 		if (jumpProcess(0) == TRUE) {
@@ -546,25 +578,29 @@ BOOL TMario::demoMain()
 		}
 		result = FALSE;
 		break;
-	case 0x1337:
+
+	case STATUS_WARP_OUT:
 		result = warpOut();
 		break;
-	case 0x1336:
+
+	case STATUS_WARP_IN:
 		result = warpIn();
 		break;
-	case 0x20338:
+
+	case STATUS_ELECTRIC_DAMAGE:
 		result = electricDamage();
 		break;
-	case 0x2033c:
+
+	case STATUS_FOOT_DOWN:
 		result = footDowning();
 		break;
-	case 0x133E:
-		stopProcess();
-		result = FALSE;
+
+	case STATUS_NOMOTION:
+		result = nomotion();
 		break;
-	case 0x133F:
-		unk114 &= ~2;
-		result = FALSE;
+
+	case STATUS_DISAPPEAR:
+		result = disappear();
 		break;
 	}
 	return result;

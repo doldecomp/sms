@@ -322,7 +322,8 @@ u16 TYoshi::changeHand()
 		return 12;
 	}
 	if ((status & 0x200)
-	    && (status == 0x386 || (u32)(status - 0x0C00023D) <= 1)) {
+	    && (status == TMario::STATUS_CATCH_LOST || status == 0xC00023D
+	        || status == 0xC00023E)) {
 		return 18;
 	}
 	if ((status & 0x8000) ? true : false) {
@@ -346,7 +347,7 @@ u16 TYoshi::changeHand()
 	u32 a2 = mMario->mStatus;
 	if (a2 == 0x8023C)
 		return 6;
-	if (a2 == 0x1302)
+	if (a2 == TMario::STATUS_WIN_DEMO)
 		return 2;
 	return 22;
 }
@@ -520,7 +521,7 @@ void TYoshi::thinkAnimation()
 				newIdx = 12;
 		}
 	} else if ((status & TMario::STATUS_FLAG_UNK200)
-	           && (status == 0x386 || status == 0xC000023D
+	           && (status == TMario::STATUS_CATCH_LOST || status == 0xC000023D
 	               || status == 0xC000023E)) {
 		newIdx = 18;
 	} else {
@@ -551,7 +552,7 @@ void TYoshi::thinkAnimation()
 			u32 act = mMario->mStatus;
 			if (act == 0x8023C)
 				newIdx = 6;
-			else if (act == 0x1302)
+			else if (act == TMario::STATUS_WIN_DEMO)
 				newIdx = 2;
 			else
 				newIdx = 22;

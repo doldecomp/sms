@@ -15,7 +15,7 @@ BOOL TMario::startTalking()
 {
 	if (mGroundPlane->isLegal()) {
 		mPosition.y = 1.0f + mFloorPosition.y;
-		changePlayerStatus(0x10001308, 0, true);
+		changePlayerStatus(STATUS_READ_BILLBOARD, 0, true);
 		return 1;
 	}
 	return 0;
@@ -113,7 +113,7 @@ BOOL TMario::waitingCommonEvents()
 	}
 
 	if (mInput & 0x10000)
-		return changePlayerStatus(0x384, 0, false);
+		return changePlayerStatus(STATUS_TAKE_POSE, 0, false);
 
 	if (rocketCheck()) {
 		unk314
@@ -126,14 +126,14 @@ BOOL TMario::waitingCommonEvents()
 	return 0;
 }
 
-void TMario::stopCommon(int param_1, int param_2)
+void TMario::stopCommon(int anim_id, int status_on_end)
 {
 	waitProcess();
-	setAnimation(param_1, 1.0f);
+	setAnimation(anim_id, 1.0f);
 	if (onYoshi() && mYoshi->mActor->curAnmEndsNext(0, nullptr)) {
-		changePlayerStatus(param_2, 0, false);
+		changePlayerStatus(status_on_end, 0, false);
 	} else if (isLast1AnimeFrame()) {
-		changePlayerStatus(param_2, 0, false);
+		changePlayerStatus(status_on_end, 0, false);
 	}
 }
 
@@ -452,7 +452,7 @@ BOOL TMario::landEnd() { }
 
 BOOL TMario::ultraJumpEnd()
 {
-	if (jumpEndEvents(0x2000880))
+	if (jumpEndEvents(STATUS_JUMP))
 		return 1;
 
 	waitProcess();
@@ -500,7 +500,7 @@ BOOL TMario::fireJumpEnd()
 BOOL TMario::broadJumpEnd()
 {
 	mInput &= ~0x2000;
-	if (jumpEndEvents(0x2000880)) {
+	if (jumpEndEvents(STATUS_JUMP)) {
 		if (mStatus - 0x4000000U == 0x440U)
 			changePlayerStatus(0xC008222, 0, false);
 		else
@@ -595,12 +595,12 @@ int TMario::waitMain()
 	if (mHeldObject != nullptr && (mInput & 0x2000 ? true : false)) {
 		switch (mHeldObject->getActorType()) {
 		case 0x80000001:
-			changePlayerStatus(0x80000588, 0, false);
+			changePlayerStatus(STATUS_PITCHING, 0, false);
 			break;
 
 		default:
 			if (canPut())
-				changePlayerStatus(0x80000387, 0, false);
+				changePlayerStatus(STATUS_PUTTING, 0, false);
 			break;
 		}
 	}

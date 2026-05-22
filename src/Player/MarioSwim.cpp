@@ -18,7 +18,7 @@ void TMario::doSwimming()
 	}
 
 	if (mFloorPosition.y + mSwimParams.mEndDepth.get() > mFloorPosition.z) {
-		changePlayerStatus(0xc400201, 0, false);
+		changePlayerStatus(STATUS_WAIT, 0, false);
 		return;
 	}
 
@@ -132,7 +132,7 @@ BOOL TMario::checkSwimToHangFence()
 			mFaceAngle.y    = wallAng + 0x8000;
 			mModelFaceAngle = mFaceAngle.y;
 			mPosition.y += 100.0f;
-			return changePlayerStatus(0x3000036b, 0, false);
+			return changePlayerStatus(STATUS_FENCE_CATCH, 0, false);
 		}
 	}
 	return 0;
