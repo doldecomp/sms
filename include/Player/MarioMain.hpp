@@ -1590,8 +1590,8 @@ public:
 		ANIM_STEP3              = 211,
 		ANIM_JKICK              = 212,
 		ANIM_DGRUN              = 213,
-		// Unknown entry for ANIM_LAND with changed parameters (param 4 is 1,
-		// param 6 is 0x16)
+		// ANIM_LAND w/ changed parameters
+		// (hand id is 1, unk7 is 0x16)
 		// ANIM_LAND_UNK = 214,
 		ANIM_HMOV_L       = 215,
 		ANIM_HMOV_R       = 216,
@@ -1625,8 +1625,8 @@ public:
 		ANIM_SPIN_P       = 244,
 		ANIM_TURBO_DASH   = 245,
 		ANIM_BROAD_JUMP   = 246,
-		// Duplicate entry for ANIM_JUMP_ROLLING with the 4th value set to 0
-		// instead of 2
+		// ANIM_JUMP_ROLLING w/ a slightly different param
+		// (hand id in it's entry is set to 0 instead of 2)
 		// ANIM_JUMP_ROLLING_UNK = 247,
 		ANIM_GIANT_ROLLING    = 248,
 		ANIM_FENCE_CATCH      = 249,
@@ -1640,7 +1640,7 @@ public:
 		ANIM_LADDER_HANG_KICK = 257,
 		ANIM_LADDER_ROLL_UP   = 258,
 		ANIM_LADDER_ROLL_DOWN = 259,
-		// Duplicate entry for ANIM_RIDE_SHELL with the 4th value set to 1
+		// Duplicate entry for ANIM_RIDE_SHELL with the hand id set to 1
 		// ANIM_RIDE_SHELL_UNK = 260
 		ANIM_RIDE_SHELL_WAIT = 261,
 		ANIM_SWIM_START      = 262,
@@ -1658,10 +1658,10 @@ public:
 		ANIM_TREE_MOVE_R     = 274,
 		ANIM_DIE             = 275,
 		ANIM_MONTEMAN_WAIT   = 276,
-		ANIM_PADDLE_SWIM_START
-		= 277, // duplicate entry of ANIM_SWIM_START for paddling (?)
-		ANIM_PADDLE_SWIM_WAIT
-		= 278, // duplicate entry of ANIM_SWIM_WAIT for paddling (?)
+		// duplicate entry of ANIM_SWIM_START for paddling (?)
+		ANIM_PADDLE_SWIM_START = 277,
+		// duplicate entry of ANIM_SWIM_WAIT for paddling (?)
+		ANIM_PADDLE_SWIM_WAIT          = 278,
 		ANIM_WAIT_TO_PADDLE            = 279,
 		ANIM_PADDLE_START              = 280,
 		ANIM_PADDLE_SWIM               = 281,
