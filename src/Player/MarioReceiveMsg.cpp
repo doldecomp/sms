@@ -315,9 +315,9 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			break;
 		case 0x40000098: { // wire/zipline
 			if (mHolder == nullptr) {
-				if (mStatus == 0x892 && mVel.y > 0.0f)
+				if (mStatus == STATUS_WIRE_JUMP && mVel.y > 0.0f)
 					return FALSE;
-				if (mStatus == 0x893 && mVel.y > 0.0f)
+				if (mStatus == STATUS_WIRE_ROLL_JUMP && mVel.y > 0.0f)
 					return FALSE;
 				if (mStatus == 0x208BA)
 					return FALSE;
@@ -336,7 +336,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				mWireSag       = 0.0f;
 
 				bool flipDir;
-				if (mStatus == 0x893 || mStatus == STATUS_JUMP_CATCH) {
+				if (mStatus == STATUS_WIRE_ROLL_JUMP
+				    || mStatus == STATUS_JUMP_CATCH) {
 					flipDir = true;
 				} else if (mVel.y < 0.0f) {
 					flipDir = false;

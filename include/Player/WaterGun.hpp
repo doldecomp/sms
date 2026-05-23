@@ -180,6 +180,10 @@ public:
 	// Fabricated
 	TNozzleBase* getNozzle(u8 index) { return mNozzleList[index]; }
 	TNozzleBase* getCurrentNozzle() { return mNozzleList[mCurrentNozzle]; }
+	const TNozzleBase::TEmitParams& getEmitParams() const
+	{
+		return getCurrentNozzle()->mEmitParams;
+	}
 
 	// Fabricated
 	bool hasWater() const { return mCurrentWater > 0; }

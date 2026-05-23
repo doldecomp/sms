@@ -705,7 +705,7 @@ BOOL TMario::running()
 	if (rocketCheck()) {
 		unk314
 		    = mFloorPosition.y + mWaterGun->mWatergunParams.mHoverHeight.get();
-		return changePlayerStatus(0x88B, 0, false);
+		return changePlayerStatus(STATUS_ROCKET, 0, false);
 	}
 
 	bool pushed                   = false;
@@ -1058,7 +1058,7 @@ int TMario::speedSliding()
 BOOL TMario::fireDashing()
 {
 	if (mInput & 0x2)
-		return changePlayerStatus(0x208B4, 0, false);
+		return changePlayerStatus(STATUS_FIRE_JUMP, 0, false);
 
 	if (mStatusTimer++ > 0xA0)
 		return changePlayerStatus(STATUS_RUN, 0, false);
@@ -1080,7 +1080,7 @@ BOOL TMario::fireDashing()
 	}
 	slopeProcess();
 	if (!walkProcess()) {
-		changePlayerStatus(0x208B5, 0, false);
+		changePlayerStatus(STATUS_FIRE_LAND, 0, false);
 	}
 	setAnimation(ANIM_FIREJMP, 0.1f * (0.5f * mForwardVel));
 	return 0;
@@ -1176,7 +1176,7 @@ BOOL TMario::slipBackCommon(int arg0, int arg1, int arg2)
 {
 	if (mStatusTimer > 20) {
 		if (!(mInput & 0x8) && (mInput & 0x2) && canSlipJump())
-			return changePlayerDropping(0x8A6, 0);
+			return changePlayerDropping(STATUS_CATCH_STOP, 0);
 	} else {
 		mStatusTimer++;
 	}
@@ -1195,27 +1195,31 @@ int TMario::slipBack()
 
 BOOL TMario::catching()
 {
+	// TODO: removeme
+	(void)0;
+
 	if (!(mInput & 0x8) && (mInput & 0x2)) {
-		if (mForwardVel > mDeParams.mClashSpeed.get()) {
-			return changePlayerStatus(0x2000889, 0, false);
-		}
-		return changePlayerStatus(0x8A6, 0, false);
+		if (mForwardVel > mDeParams.mClashSpeed.get())
+			return changePlayerStatus(STATUS_ROTATE_BROAD_JUMP, 0, false);
+
+		return changePlayerStatus(STATUS_CATCH_STOP, 0, false);
 	}
-	if (checkFlag(0x10)) {
+
+	if (checkFlag(0x10))
 		mStatusState = 1;
-	}
+
 	if (doSliding(getSlideStopCatch())) {
 		setPlayerVelocity(0.0f);
 		return changePlayerStatus(STATUS_CATCH_LOST, 0, false);
 	}
+
 	slippingBasic(STATUS_CATCH_LOST, 0x88C, 0x88);
-	if (gpMSound->gateCheck(0x1009)) {
-		MSoundSESystem::MSoundSE::startSoundActor(0x1009, &mPosition, 0,
-		                                          nullptr, 0, 4);
-	}
-	if (getMotionFrameCtrl().getFrame() > 50.0f) {
+
+	SMSGetMSound()->startSoundActor(0x1009, &mPosition, 0, nullptr, 0, 4);
+
+	if (getMotionFrameCtrl().getFrame() > 50.0f)
 		getMotionFrameCtrl().setFrame(50.0f);
-	}
+
 	return 0;
 }
 
@@ -1288,10 +1292,7 @@ int TMario::oilRun()
 		setAnimation(ANIM_RUN2,
 		             0.5f * mIntendedMag * mDirtyParams.mSlipAnmSpeed.get());
 		startVoiceIfNoVoice(0x78D3);
-		if (gpMSound->gateCheck(0x1001)) {
-			MSoundSESystem::MSoundSE::startSoundActor(0x1001, &mPosition, 0,
-			                                          nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActor(0x1001, &mPosition, 0, nullptr, 0, 4);
 	}
 
 	switch (walkProcess()) {

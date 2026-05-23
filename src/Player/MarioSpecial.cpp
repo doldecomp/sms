@@ -405,7 +405,7 @@ BOOL TMario::kickRoofRollDown()
 	return 0;
 }
 
-BOOL TMario::startHangLanding(u32 param_1)
+BOOL TMario::startHangLanding(u32 status)
 {
 	mVel.y      = 0.0f;
 	mForwardVel = 0.0f;
@@ -420,7 +420,7 @@ BOOL TMario::startHangLanding(u32 param_1)
 	else
 		mPosition.y = groundY;
 
-	return changePlayerStatus(param_1, 0, false);
+	return changePlayerStatus(status, 0, false);
 }
 
 void TMario::hangingCommon(int, int) { }
@@ -704,7 +704,7 @@ BOOL TMario::wireWait()
 		if (mWireSag <= 0.0f) {
 			((THitActor*)mHolder)->receiveMessage(this, 8);
 			mHolder  = nullptr;
-			BOOL ret = changePlayerStatus(0x892, 0, false);
+			BOOL ret = changePlayerStatus(STATUS_WIRE_JUMP, 0, false);
 			setPlayerVelocity(0.0f);
 			if (mWireBounceVel < 0.0f)
 				mVel.y -= mWireParams.mWireJumpMult.get() * mWireBounceVel;
@@ -773,7 +773,7 @@ BOOL TMario::wireSWait()
 		if (mWireSag < 0.0f) {
 			((THitActor*)mHolder)->receiveMessage(this, 8);
 			mHolder  = nullptr;
-			BOOL ret = changePlayerStatus(0x892, 0, false);
+			BOOL ret = changePlayerStatus(STATUS_WIRE_JUMP, 0, false);
 			setPlayerVelocity(0.0f);
 			if (mWireBounceVelPrev < 0.0f)
 				mVel.y -= 5.0f * mWireBounceVelPrev;
@@ -1004,12 +1004,12 @@ BOOL TMario::wireRolling()
 	if ((mStatusState & 1) && unkF6 < 0) {
 		s16 ang = mFaceAngle.x;
 		if (ang > -0x2000 && ang <= rotSpeedMax - 0x2000)
-			return changePlayerStatus(0x893, 0, false);
+			return changePlayerStatus(STATUS_WIRE_ROLL_JUMP, 0, false);
 	}
 	if ((mStatusState & 1) && unkF6 > 0) {
 		s16 ang = mFaceAngle.x;
 		if (0x6000 - rotSpeedMax <= ang && ang < 0x6000)
-			return changePlayerStatus(0x893, 1, false);
+			return changePlayerStatus(STATUS_WIRE_ROLL_JUMP, 1, false);
 	}
 
 	if (mInput & 0x1) {
@@ -1210,7 +1210,7 @@ BOOL TMario::pulling()
 
 	if (mInput & 0x2) {
 		setAnimation(ANIM_HOLD_TO_HANG, 1.0f);
-		return changePlayerJumping(0x894, 0);
+		return changePlayerJumping(STATUS_PULL_JUMP, 0);
 	}
 
 	if (mStatus == 0x40561 && !checkFlag(0x40))

@@ -102,7 +102,9 @@ public:
 		/* 0x320 */ TParamRT<s16> mSideAngleMaxBack;
 		/* 0x334 */ TParamRT<f32> mRButtonMult;
 		/* 0x348 */ TParamRT<f32> mEmitPowScale;
-	} mEmitParams; // 0x0000
+	};
+
+	TEmitParams mEmitParams; // 0x0000
 
 	TNozzleBase(const char* name, const char* prm, TWaterGun* fludd);
 
