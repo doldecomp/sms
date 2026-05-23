@@ -158,8 +158,8 @@ bool TMario::trampleExec(THitActor* param_1)
 			setAnimation(ANIM_STEP1, 1.0f);
 			break;
 		}
-		changePlayerStatus(0x2000890, 0, false);
-		setStatusToJumping(0x2000890, 0);
+		changePlayerStatus(STATUS_TRAMPLE, 0, false);
+		setStatusToJumping(STATUS_TRAMPLE, 0);
 	}
 
 	rumbleStart(0x15, mMotorParams.mMotorTrample.get());
@@ -412,7 +412,7 @@ void TMario::considerTake()
 		check = true;
 	}
 
-	if (mStatus == 0x560 || mStatus == 0x894 || mStatus == 0x40561) {
+	if (mStatus == 0x560 || mStatus == STATUS_PULL_JUMP || mStatus == 0x40561) {
 		check = true;
 	}
 

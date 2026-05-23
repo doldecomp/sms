@@ -24,7 +24,7 @@
 
 f32 TMario::getJumpAccelControl() const
 {
-	if (mStatus == 0x892)
+	if (mStatus == STATUS_WIRE_JUMP)
 		return mWireParams.mWireJumpAccelControl.get();
 
 	return mJumpParams.mJumpAccelControl.get();
@@ -32,7 +32,7 @@ f32 TMario::getJumpAccelControl() const
 
 f32 TMario::getJumpSlideControl() const
 {
-	if (mStatus == 0x892)
+	if (mStatus == STATUS_WIRE_JUMP)
 		return mWireParams.mWireJumpSlideControl.get();
 
 	if (onYoshi() && (mYoshi->mFlutterState == 1 ? true : false))
@@ -475,7 +475,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		startVoice(0x78B6);
 		break;
 
-	case 0x208B4:
+	case STATUS_FIRE_JUMP:
 		mVel.y      = 31.5f;
 		mForwardVel = 8.0f;
 		break;
@@ -515,7 +515,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		startVoice(0x78B6);
 		break;
 
-	case 0x2000885:
+	case STATUS_MISS_JUMP:
 		startVoice(0x78AB);
 		setPlayerJumpSpeed(0.25f, 42.0f);
 		break;
@@ -552,13 +552,13 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		mVel.y      = mJumpParams.mBroadJumpForceY.get();
 		break;
 
-	case 0x2000889:
+	case STATUS_ROTATE_BROAD_JUMP:
 		startVoice(0x78B1);
 		mForwardVel = mJumpParams.mRotBroadJumpForce.get();
 		mVel.y      = mJumpParams.mRotBroadJumpForceY.get();
 		break;
 
-	case 0x88B: {
+	case STATUS_ROCKET: {
 		if (mWaterGun != nullptr) {
 			if ((int)mWaterGun->mCurrentNozzle == TWaterGun::Rocket) {
 				startVoice(0x78B9);
@@ -573,7 +573,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		break;
 	}
 
-	case 0x2000890:
+	case STATUS_TRAMPLE:
 		switch (mAnimationId) {
 		case ANIM_STEP2:
 			startVoice(0x78B1);
@@ -591,7 +591,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		mForwardVel *= 0.8f;
 		break;
 
-	case 0x892:
+	case STATUS_WIRE_JUMP:
 		setPlayerJumpSpeed(0.25f, 42.0f);
 
 		mForwardVel = 0.0f;
@@ -603,7 +603,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		startVoice(0x78B6);
 		break;
 
-	case 0x893: {
+	case STATUS_WIRE_ROLL_JUMP: {
 		if (arg == 0) {
 			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * 1.0f;
 			mVel.y        = jumpPower * JMASSin(0xE000);
@@ -627,7 +627,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		break;
 	}
 
-	case 0x894:
+	case STATUS_PULL_JUMP:
 		setPlayerJumpSpeed(0.0f, 42.0f);
 
 		mForwardVel = 0.0f;
@@ -752,7 +752,7 @@ BOOL TMario::changePlayerTriJump()
 		mFaceAngle.x    = 0;
 		mModelFaceAngle = mFaceAngle.y;
 		if (mForwardVel > 0.0f) {
-			// TODO: inlineF
+			// TODO: inline
 			s16 a     = mSlopeAngle + 0x8000;
 			s16 angle = mFaceAngle.y - a;
 			f32 x     = mForwardVel * JMASSin(angle);
@@ -762,7 +762,7 @@ BOOL TMario::changePlayerTriJump()
 			mFaceAngle.y = a + matan(z, x);
 		}
 		dropObject();
-		changePlayerStatus(0x2000885, 0, false);
+		changePlayerStatus(STATUS_MISS_JUMP, 0, false);
 	} else {
 		if (considerRotateJumpStart())
 			return 1;
@@ -789,7 +789,7 @@ int TMario::changePlayerJumping(u32 param_1, u32 param_2)
 			mFaceAngle.y = a + matan(z, x);
 		}
 		dropObject();
-		changePlayerStatus(0x2000885, 0, false);
+		changePlayerStatus(STATUS_MISS_JUMP, 0, false);
 	} else {
 		if (considerRotateJumpStart())
 			return 1;
@@ -1957,7 +1957,7 @@ void TMario::thinkSituation()
 		mAnmSound->stop();
 		if (mYoshi)
 			mYoshi->kill();
-		changePlayerStatus(0x208B9, 0, true);
+		changePlayerStatus(STATUS_FALL_DEAD, 0, true);
 		if (mAnimationId != ANIM_THROWN)
 			startSoundActor(0x786B);
 		gpCamera->unk64 |= 0x800;
