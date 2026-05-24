@@ -444,7 +444,7 @@ BOOL TMario::hanging()
 		mInput &= ~0x4;
 		mInput &= ~0x8000;
 
-		return startHangLanding(0x8a7);
+		return startHangLanding(STATUS_WALL_SLIDE);
 	}
 
 	if ((mInput & 0x2) && onCeil) {
@@ -698,9 +698,9 @@ BOOL TMario::wireWait()
 	getOnWirePosAngle(&mPosition, &wireAngle);
 
 	if (mInput & 0x2)
-		unk118 |= 0x100;
+		unk118 |= MARIO_FLAG_UNK100;
 
-	if (checkFlag(0x100) == true) {
+	if (checkFlag(MARIO_FLAG_UNK100) == true) {
 		if (mWireSag <= 0.0f) {
 			((THitActor*)mHolder)->receiveMessage(this, 8);
 			mHolder  = nullptr;
@@ -767,9 +767,9 @@ BOOL TMario::wireSWait()
 	getOnWirePosAngle(&mPosition, &wireAngle);
 
 	if (mInput & 0x2)
-		unk118 |= 0x100;
+		unk118 |= MARIO_FLAG_UNK100;
 
-	if (checkFlag(0x100) == true) {
+	if (checkFlag(MARIO_FLAG_UNK100) == true) {
 		if (mWireSag < 0.0f) {
 			((THitActor*)mHolder)->receiveMessage(this, 8);
 			mHolder  = nullptr;
@@ -1524,7 +1524,7 @@ BOOL TMario::fencePunch()
 	return 0;
 }
 
-int TMario::specMain()
+BOOL TMario::specMain()
 {
 	int result = 0;
 

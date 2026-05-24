@@ -600,7 +600,7 @@ void TMarDirector::setMario()
 
 	u32 uVar6 = SMS_getShineIDofExStage(gpApplication.mCurrArea.getStage());
 	if (uVar6 != 0xff && TFlagManager::getInstance()->getShineFlag(uVar6) == 0)
-		gpMarioOriginal->unk118 &= ~0x8000;
+		gpMarioOriginal->unk118 &= ~MARIO_FLAG_HAS_FLUDD;
 }
 
 void TMarDirector::nextStateInitialize(u8 next_state)
@@ -1135,7 +1135,7 @@ void TMarDirector::moveStage()
 		}
 	}
 
-	if (gpMarioOriginal->checkFlag(0x8000)) {
+	if (gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 		u32 r5 = 0;
 		if ((int)gpMarioOriginal->mWaterGun->mSecondNozzle == 3)
 			r5 = 4;

@@ -39,22 +39,31 @@ enum E_SIDEWALK_TYPE {
 	SIDEWALK_TYPE_UNK2 = 2,
 };
 
+// TODO: check these flag names!
 enum E_MARIO_FLAG {
-	MARIO_FLAG_ABOVE_SEWER_FLOOR   = (1 << 0),
-	MARIO_FLAG_VISIBLE             = (1 << 1),
-	MARIO_FLAG_NPC_TALKING         = (1 << 3),
-	MARIO_FLAG_RECENTLY_LEFT_WATER = (1 << 4),
-	MARIO_FLAG_UNK_40              = (1 << 6),
-	MARIO_FLAG_GAME_OVER           = (1 << 10),
-	MARIO_FLAG_GROUND_POUND_SIT_UP = (1 << 11),
-	MARIO_FLAG_HELMET_FLW_CAMERA   = (1 << 12),
-	MARIO_FLAG_HELMET              = (1 << 13),
-	MARIO_FLAG_FLUDD_EMITTING      = (1 << 14),
-	MARIO_FLAG_HAS_FLUDD           = (1 << 15),
-	MARIO_FLAG_IN_SHALLOW_WATER    = (1 << 16),
-	MARIO_FLAG_IN_WATER            = (1 << 17),
-	MARIO_FLAG_HAS_SHIRT           = (1 << 20),
-	MARIO_FLAG_IS_PERFORMING       = (1 << 21),
+	MARIO_FLAG_ABOVE_SEWER_FLOOR   = 0x1,
+	MARIO_FLAG_VISIBLE             = 0x2,
+	MARIO_FLAG_NPC_TALKING         = 0x8,
+	MARIO_FLAG_RECENTLY_LEFT_WATER = 0x10,
+	MARIO_FLAG_UNK_20              = 0x20,
+	MARIO_FLAG_UNK_40              = 0x40, // fully polluted?
+	MARIO_FLAG_UNK_80              = 0x80,
+	MARIO_FLAG_UNK100              = 0x100,
+	MARIO_FLAG_UNK200              = 0x200,
+	MARIO_FLAG_GAME_OVER           = 0x400,
+	MARIO_FLAG_GROUND_POUND_SIT_UP = 0x800,
+	MARIO_FLAG_HELMET_FLW_CAMERA   = 0x1000,
+	MARIO_FLAG_HELMET              = 0x2000,
+	MARIO_FLAG_FLUDD_EMITTING      = 0x4000, // TODO: incorrect?
+	MARIO_FLAG_HAS_FLUDD           = 0x8000,
+	MARIO_FLAG_IN_SHALLOW_WATER    = 0x10000,
+	MARIO_FLAG_IN_WATER            = 0x20000,
+	MARIO_FLAG_UNK40000            = 0x40000, // on sand?
+	MARIO_FLAG_HAS_SHIRT           = 0x100000,
+	MARIO_FLAG_IS_PERFORMING       = 0x200000,
+
+	MARIO_FLAG_IN_ANY_WATER
+	= MARIO_FLAG_IN_SHALLOW_WATER | MARIO_FLAG_IN_WATER, // 0x30000
 };
 
 enum E_MARIO_RAIL_TYPE {
@@ -785,47 +794,47 @@ public:
 	void setJumpingAttackArea();
 	void doJumping();
 	void askStrongGroundTouch();
-	int jumpingBasic(int, int, int);
-	int considerJumpRotate();
-	int checkBackTrig();
-	int jumpingCommonEvents();
-	int jumping();
-	int secJumping();
-	int ultraJumping();
-	int backJumping();
-	int landing();
-	int uTurnJumping();
-	int jumpWall();
-	int jumpCatch();
-	int jumpingThrow();
-	int jumpDownCommon(int, int, f32);
+	BOOL jumpingBasic(int, int, int);
+	BOOL considerJumpRotate();
+	BOOL checkBackTrig();
+	BOOL jumpingCommonEvents();
+	BOOL jumping();
+	BOOL secJumping();
+	BOOL ultraJumping();
+	BOOL backJumping();
+	BOOL landing();
+	BOOL uTurnJumping();
+	BOOL jumpWall();
+	BOOL jumpCatch();
+	BOOL jumpingThrow();
+	BOOL jumpDownCommon(int, int, f32);
 	void checkWallJumping();
-	int jumpShortBackDown();
-	int jumpShortForeDown();
-	int jumpBackDown();
-	int jumpForeDown();
-	int landSafeDown();
-	int stayWall();
+	BOOL jumpShortBackDown();
+	BOOL jumpShortForeDown();
+	BOOL jumpBackDown();
+	BOOL jumpForeDown();
+	BOOL landSafeDown();
+	BOOL stayWall();
 	BOOL catchStop();
-	int slipFalling();
-	int fireDowning();
-	int thrownDowning();
-	int trample();
-	int missJumping();
-	int fireJumping();
-	int fireLanding();
-	int broadJumping();
-	int rotateBroadJumping();
-	int boardJumping();
-	int rocketCheck();
-	int rocketing();
-	int rotateJumping();
-	int wireJumping();
-	int pullJumping();
-	int hipAttacking();
-	int diving();
-	int fallDead();
-	int jumpMain();
+	BOOL slipFalling();
+	BOOL fireDowning();
+	BOOL thrownDowning();
+	BOOL trample();
+	BOOL missJumping();
+	BOOL fireJumping();
+	BOOL fireLanding();
+	BOOL broadJumping();
+	BOOL rotateBroadJumping();
+	BOOL boardJumping();
+	BOOL rocketCheck();
+	BOOL rocketing();
+	BOOL rotateJumping();
+	BOOL wireJumping();
+	BOOL pullJumping();
+	BOOL hipAttacking();
+	BOOL diving();
+	BOOL fallDead();
+	BOOL jumpMain();
 
 	// ?
 	void thinkAloha();
@@ -968,30 +977,30 @@ public:
 	BOOL rotating();
 	BOOL turnning();
 	BOOL turnEnd();
-	int braking();
+	BOOL braking();
 	BOOL surfing();
-	int toroccoing();
+	BOOL toroccoing();
 	BOOL walkEnd();
-	int speedSliding();
+	BOOL speedSliding();
 	BOOL fireDashing();
 	void slippingBasic(int, int, int);
 	BOOL slipForeCommon(int, int, int, int);
-	int slipFore();
+	BOOL slipFore();
 	BOOL slipBackCommon(int, int, int);
-	int slipBack();
+	BOOL slipBack();
 	BOOL catching();
-	int squatSlipping();
-	int oilRun();
-	int oilSlip();
-	int oilSlope();
+	BOOL squatSlipping();
+	BOOL oilRun();
+	BOOL oilSlip();
+	BOOL oilSlope();
 	f32 downingCommon(int, f32, int);
-	int backDown();
-	int foreDown();
-	int shortBackDown();
-	int shortForeDown();
-	int safeBackDown();
-	int safeForeDown();
-	int catchDown();
+	BOOL backDown();
+	BOOL foreDown();
+	BOOL shortBackDown();
+	BOOL shortForeDown();
+	BOOL safeBackDown();
+	BOOL safeForeDown();
+	BOOL catchDown();
 	BOOL loserDown();
 	BOOL jumpSlipCommon(s16, u32);
 	BOOL jumpSlipEvents(TMario::JumpSlipRecord*);
@@ -1160,7 +1169,7 @@ public:
 	BOOL swimPDamage();
 	BOOL swimDown();
 	BOOL swimPDown();
-	int swimMain();
+	BOOL swimMain();
 
 	// ?
 	void setGamePad(TMarioGamePad*);
@@ -1211,7 +1220,7 @@ public:
 
 	bool checkActionThing3()
 	{
-		if (checkFlag(0x1000))
+		if (checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA))
 			return true;
 		if (checkStatusFlag(STATUS_FLAG_JUMPING))
 			return false;
@@ -1221,6 +1230,7 @@ public:
 	const TBGCheckData* getGroundPlane() const { return mGroundPlane; }
 
 	// Fabricated
+	// See E_MARIO_FLAG
 	bool checkFlag(u32 attribute) const
 	{
 		return unk118 & attribute ? true : false;
@@ -1375,7 +1385,7 @@ public:
 		                  | STATUS_FLAG_RUNNING | STATUS_TYPE_RUNNING
 		                  | 0x1D, // 0x84045D
 		STATUS_OIL_SLOPE = STATUS_FLAG_UNK40000 | STATUS_FLAG_RUNNING
-		                   | STATUS_TYPE_RUNNING | 0x1E, // 0x4045EF
+		                   | STATUS_TYPE_RUNNING | 0x1E, // 0x4045E
 		STATUS_BACK_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_RUNNING
 		                   | STATUS_TYPE_RUNNING | 0x20, // 0x20460
 		STATUS_FORE_DOWN = STATUS_FLAG_UNK20000 | STATUS_FLAG_RUNNING
@@ -1823,7 +1833,7 @@ public:
 
 	/* 0x114 */ u16 unk114;
 	/* 0x116 */ u16 unk116;
-	/* 0x118 */ u32 unk118; // some flag / attribute
+	/* 0x118 */ u32 unk118; // see E_MARIO_FLAG
 
 	/* 0x11C */ u32 unk11C;
 

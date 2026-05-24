@@ -297,15 +297,17 @@ u16 TYoshi::changeHand()
 	u16 curIdx = mActor->getCurAnmIdx(0);
 	u32 status = mMario->mStatus;
 
-	if (status & 0x400) {
+	if (status & TMario::STATUS_FLAG_RUNNING) {
 		if (curIdx == 12)
 			return 11;
-		if (status == 0x800456 || status == 0x84045D || status == 0x4045E
-		    || ((status & 0x40000) ? true : false))
+		if (status == 0x800456 || status == TMario::STATUS_OIL_SLIP
+		    || status == TMario::STATUS_OIL_SLOPE
+		    || ((status & TMario::STATUS_FLAG_UNK40000) ? true : false))
 			return 19;
 		return 15;
 	}
-	if (status & 0x800) {
+
+	if (status & TMario::STATUS_FLAG_JUMPING) {
 		if (mFlutterState == 1)
 			return 9;
 		if (status == TMario::STATUS_HIP_DROP) {
@@ -321,12 +323,14 @@ u16 TYoshi::changeHand()
 			return 10;
 		return 12;
 	}
-	if ((status & 0x200)
-	    && (status == TMario::STATUS_CATCH_LOST || status == 0xC00023D
-	        || status == 0xC00023E)) {
+	if ((status & TMario::STATUS_FLAG_UNK200)
+	    && (status == TMario::STATUS_CATCH_LOST
+	        || status == TMario::STATUS_BRAKE_END
+	        || status == TMario::STATUS_SLIP_END)) {
 		return 18;
 	}
-	if ((status & 0x8000) ? true : false) {
+
+	if ((status & TMario::STATUS_FLAG_UNK8000) ? true : false) {
 		if (mMario->mGamePad->checkMeaning(0x2000)) {
 			E_SIDEWALK_TYPE type;
 			f32 a, b;
@@ -405,7 +409,7 @@ bool TYoshi::disappear()
 		if (mState == STATE_MOUNTED)
 			mMario->getOffYoshi(true);
 
-		if (mMario->checkFlag(0x30000)) {
+		if (mMario->checkFlag(MARIO_FLAG_IN_ANY_WATER)) {
 			mState = STATE_DROWNING;
 			changeAnimation(0x19);
 		} else {
@@ -492,8 +496,9 @@ void TYoshi::thinkAnimation()
 
 		if (!tmp) {
 			newIdx = 15;
-			if (status == 0x800456 || status == 0x84045D || status == 0x4045E
-			    || (status & 0x40000 ? true : false)) {
+			if (status == 0x800456 || status == TMario::STATUS_OIL_SLIP
+			    || status == TMario::STATUS_OIL_SLOPE
+			    || (status & TMario::STATUS_FLAG_UNK40000 ? true : false)) {
 				newIdx = 19;
 			}
 		}
@@ -589,7 +594,7 @@ void TYoshi::thinkAnimation()
 		J3DAnmTransform* oldAnm = mActor->getBckOldMotionBlendAnmPtr();
 		oldAnm->mFrame          = mActor->getFrameCtrl(0)->getFrame();
 
-		if (mMario->mStatus == 0x4045C)
+		if (mMario->mStatus == TMario::STATUS_OIL_RUN)
 			nextFrame = mMario->getMotionFrameCtrl().getRate();
 		else
 			nextFrame = unkA0 + unkA4 * mMario->mForwardVel;

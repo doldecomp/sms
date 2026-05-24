@@ -552,7 +552,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 	if (!(mFludd->mMario->unk380 == 0 ? true : false))
 		canSpray = false;
 
-	if ((mFludd->mMario->unk118 & 0x30000 ? true : false) == true
+	if (mFludd->mMario->checkFlag(MARIO_FLAG_IN_ANY_WATER) == true
 	    && mFludd->mCurrentWater < mEmitParams.mAmountMax.get())
 		canSpray = false;
 

@@ -27,7 +27,7 @@ void TShimmer::far() { }
 
 void TShimmer::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
-	if (gpMarioOriginal->unk118 & 0x4000 ? true : false)
+	if (gpMarioOriginal->checkFlag(MARIO_FLAG_FLUDD_EMITTING))
 		return;
 
 	if (param_1 & 1) {

@@ -164,7 +164,8 @@ BOOL TMario::waiting()
 	} else if (unk368 > 0.0f ? TRUE : FALSE) {
 		setAnimation(ANIM_SINKING, 1.0f);
 	} else if (unk380 == 5
-	           && (mPrevStatus == STATUS_BRAKE_END || checkFlag(0x20))
+	           && (mPrevStatus == STATUS_BRAKE_END
+	               || checkFlag(MARIO_FLAG_UNK_20))
 	           && !(mStatusState & 0x1)) {
 		setAnimation(ANIM_HOT_WAIT, 1.0f);
 		if (mModel->getFrameCtrl(0).checkPass(138.0f))
@@ -318,7 +319,7 @@ BOOL TMario::squating()
 	if (!(mInput & 0x4000) && !(mInput & 0x200))
 		return changePlayerStatus(0xc008222, 0, false);
 
-	if (mWaterGun == nullptr || !checkFlag(0x8000))
+	if (mWaterGun == nullptr || !checkFlag(MARIO_FLAG_HAS_FLUDD))
 		return changePlayerStatus(0xc008222, 0, false);
 
 	if (mInput & 0x2) {
@@ -555,7 +556,7 @@ BOOL TMario::slipEnd()
 	return 0;
 }
 
-int TMario::waitMain()
+BOOL TMario::waitMain()
 {
 	int result = 0;
 

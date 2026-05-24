@@ -383,8 +383,8 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 
 			if (mVel.y >= 0.0f) {
 				mVel.y = 0.0f;
-				if (checkFlag(0x2))
-					unk118 |= 0x200;
+				if (checkFlag(MARIO_FLAG_VISIBLE))
+					unk118 |= MARIO_FLAG_UNK200;
 
 				if (param_2 & 0x2) {
 					BOOL canHang = (mHeldObject == nullptr && !onYoshi());

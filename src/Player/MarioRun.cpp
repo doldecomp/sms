@@ -111,7 +111,7 @@ void TMario::changePlayerCatching() { }
 
 bool TMario::isRunningInWater()
 {
-	if (checkFlag(0x30000)
+	if (checkFlag(MARIO_FLAG_IN_ANY_WATER)
 	    && (mFloorPosition.z < mPosition.y + mRunParams.mSwimDepth.get()))
 		return true;
 
@@ -390,7 +390,7 @@ BOOL TMario::doSliding(f32 stopThreshold)
 		cs *= 0.01f * (0.5f * mForwardVel) + 0.5f;
 
 	f32 slipFr;
-	if (mStatus == 0x84045D) {
+	if (mStatus == STATUS_OIL_SLIP) {
 		slipFr = mSlipParamsOil.mSlipFriction.get();
 	} else if (isForceSlip()) {
 		slipFr = mSlipParamsAll.mSlipFriction.get();
@@ -410,7 +410,7 @@ BOOL TMario::doSliding(f32 stopThreshold)
 		if (mStatus == 0x800456) {
 			if (mStatusState == 1)
 				slipFr = mDeParams.mWasOnWaterSlip.get();
-			if (checkFlag(0x30000))
+			if (checkFlag(MARIO_FLAG_IN_ANY_WATER))
 				slipFr = mDeParams.mInWaterSlip.get();
 		}
 	}
@@ -514,7 +514,7 @@ void TMario::doRunning()
 	if (onYoshi())
 		rotSp = (s16)((f32)rotSp * mYoshiParams.mRotYoshiMult.get());
 
-	if (checkFlag(0x4000))
+	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING))
 		rotSp = mDeParams.mRunningRotSpMin.get();
 
 	if (isRunningInWater()) {
@@ -665,7 +665,7 @@ BOOL TMario::running()
 		return changePlayerStatus(STATUS_WALK_END, 0, false);
 	}
 
-	if (checkFlag(0x4000) && (mInput & 0x2)
+	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING) && (mInput & 0x2)
 	    && mForwardVel > mDeParams.mDashMax.get() - 1.0f)
 		return changePlayerJumping(STATUS_BROAD_JUMP, 0);
 
@@ -728,7 +728,7 @@ BOOL TMario::running()
 			break;
 		}
 
-		if (unk118 & 2)
+		if (unk118 & MARIO_FLAG_VISIBLE)
 			pushed = true;
 
 		if (!pushed) {
@@ -759,13 +759,13 @@ BOOL TMario::running()
 
 			doPushingAnimation(prevPos);
 			unkC4 = 0;
-			unk118 &= ~0x4000;
+			unk118 &= ~MARIO_FLAG_FLUDD_EMITTING;
 		}
 		break;
 	}
 
 	checkDescent();
-	if (checkFlag(0x4000)) {
+	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
 		setPlayerVelocity(mDeParams.mDashMax.get());
 		startSoundActor(0x19);
 	}
@@ -893,7 +893,7 @@ BOOL TMario::turnEnd()
 }
 
 // TODO: remove the inline mark here!!!
-inline int TMario::braking()
+inline BOOL TMario::braking()
 {
 	if (!(mInput & 0x10) && (mInput & 0xF))
 		return checkAllMotions();
@@ -989,7 +989,7 @@ BOOL TMario::surfing()
 	return 0;
 }
 
-int TMario::toroccoing()
+BOOL TMario::toroccoing()
 {
 	soundTorocco();
 	toroccoEffect();
@@ -1043,7 +1043,7 @@ BOOL TMario::walkEnd()
 	return 0;
 }
 
-int TMario::speedSliding()
+BOOL TMario::speedSliding()
 {
 	s16 savedFace = mFaceAngle.y;
 
@@ -1063,7 +1063,7 @@ BOOL TMario::fireDashing()
 	if (mStatusTimer++ > 0xA0)
 		return changePlayerStatus(STATUS_RUN, 0, false);
 
-	if (checkFlag(0x30000))
+	if (checkFlag(MARIO_FLAG_IN_ANY_WATER))
 		return changePlayerStatus(STATUS_RUN, 0, false);
 
 	if (mForwardVel < 8.0f)
@@ -1167,7 +1167,7 @@ BOOL TMario::slipForeCommon(int arg0, int arg1, int arg2, int arg3)
 	return 0;
 }
 
-int TMario::slipFore()
+BOOL TMario::slipFore()
 {
 	return slipForeCommon(STATUS_SLIP_END, STATUS_JUMP, STATUS_SLIP_FALL, 0x91);
 }
@@ -1188,7 +1188,7 @@ BOOL TMario::slipBackCommon(int arg0, int arg1, int arg2)
 	return 0;
 }
 
-int TMario::slipBack()
+BOOL TMario::slipBack()
 {
 	return slipBackCommon(STATUS_CATCH_LOST, 0x88C, 0x89);
 }
@@ -1205,7 +1205,7 @@ BOOL TMario::catching()
 		return changePlayerStatus(STATUS_CATCH_STOP, 0, false);
 	}
 
-	if (checkFlag(0x10))
+	if (checkFlag(MARIO_FLAG_RECENTLY_LEFT_WATER))
 		mStatusState = 1;
 
 	if (doSliding(getSlideStopCatch())) {
@@ -1223,7 +1223,7 @@ BOOL TMario::catching()
 	return 0;
 }
 
-int TMario::squatSlipping()
+BOOL TMario::squatSlipping()
 {
 	setNormalAttackArea();
 
@@ -1239,7 +1239,7 @@ int TMario::squatSlipping()
 	return slipForeCommon(STATUS_SQUAT, STATUS_JUMP, 0x88C, 0x97);
 }
 
-int TMario::oilRun()
+BOOL TMario::oilRun()
 {
 	if (mInput & 0x2) {
 		setPlayerVelocity(0.0f);
@@ -1306,7 +1306,7 @@ int TMario::oilRun()
 	return 0;
 }
 
-int TMario::oilSlip()
+BOOL TMario::oilSlip()
 {
 	if (mInput & 0x2) {
 		setPlayerVelocity(0.0f);
@@ -1354,7 +1354,7 @@ int TMario::oilSlip()
 	}
 }
 
-int TMario::oilSlope()
+BOOL TMario::oilSlope()
 {
 	unk13C--;
 	if (unk13C <= 0) {
@@ -1395,7 +1395,7 @@ f32 TMario::downingCommon(int anim, f32 limit, int arg2)
 	return animRate;
 }
 
-int TMario::backDown()
+BOOL TMario::backDown()
 {
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
@@ -1406,7 +1406,7 @@ int TMario::backDown()
 	return 0;
 }
 
-int TMario::foreDown()
+BOOL TMario::foreDown()
 {
 
 	if (mStatusTimer == 0) {
@@ -1414,62 +1414,62 @@ int TMario::foreDown()
 		emitParticle(0xC);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
-	downingCommon(0x2C, 42.0f, mStatusArg);
+	downingCommon(ANIM_SDWNF, 42.0f, mStatusArg);
 	return 0;
 }
 
-int TMario::shortBackDown()
+BOOL TMario::shortBackDown()
 {
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
 		emitParticle(0xC);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
-	downingCommon(0x7B, 88.0f, mStatusArg);
+	downingCommon(ANIM_SDOWN, 88.0f, mStatusArg);
 	return 0;
 }
 
-int TMario::shortForeDown()
+BOOL TMario::shortForeDown()
 {
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
 		emitParticle(0xC);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
-	downingCommon(0x7C, 80.0f, mStatusArg);
+	downingCommon(ANIM_SHFDN, 80.0f, mStatusArg);
 	return 0;
 }
 
-int TMario::safeBackDown()
+BOOL TMario::safeBackDown()
 {
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
 		emitParticle(0xC);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
-	downingCommon(0x74, 200.0f, mStatusArg);
+	downingCommon(ANIM_SFBDN, 200.0f, mStatusArg);
 	return 0;
 }
 
-int TMario::safeForeDown()
+BOOL TMario::safeForeDown()
 {
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
 		emitParticle(0xC);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
-	downingCommon(0x75, 100.0f, mStatusArg);
+	downingCommon(ANIM_SFFDN, 100.0f, mStatusArg);
 	return 0;
 }
 
-int TMario::catchDown()
+BOOL TMario::catchDown()
 {
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
 		emitParticle(0xC);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
-	downingCommon(0x8A, 128.0f, mStatusArg);
+	downingCommon(ANIM_SLDWN, 128.0f, mStatusArg);
 	return 0;
 }
 
@@ -1662,7 +1662,7 @@ BOOL TMario::moveMain()
 	checkReturn();
 
 	if ((mStatus & STATUS_FLAG_UNK40000) ? true : false) {
-		if (!((mStatus & 0x4045C) ? true : false)) {
+		if (!((mStatus & STATUS_OIL_RUN) ? true : false)) {
 			if (!((mStatus & 0x84045D) ? true : false)) {
 				SMSGetMSound()->startSoundActor(0x1009, &mPosition, 0, nullptr,
 				                                0, 4);
