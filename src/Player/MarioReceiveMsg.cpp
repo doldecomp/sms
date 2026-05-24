@@ -328,7 +328,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				wire->getTipPoints(&mWireStartPos, &mWireEndPos);
 				mWirePosRatio = wire->getPosInWire();
 				wireMove(0.0f);
-				unk118 &= ~0x100;
+				unk118 &= ~MARIO_FLAG_UNK100;
 
 				JGeometry::TVec3<f32> diff = mWireEndPos - mWireStartPos;
 				int dirToEnd   = (s16)(matan(diff.z, diff.x) - mFaceAngle.y);
@@ -505,8 +505,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			             0.0f);
 			return TRUE;
 		case 0x40000053: // boss-graffito-tongue / sea attacker
-			if (checkFlag(0x30000) && message == HIT_MESSAGE_ATTACK
-			    && !isInvincible()) {
+			if (checkFlag(MARIO_FLAG_IN_ANY_WATER)
+			    && message == HIT_MESSAGE_ATTACK && !isInvincible()) {
 				damageExec(sender, mDmgParamsEnemyCommon.mDamage.get(),
 				           mDmgParamsEnemyCommon.mDownType.get(),
 				           mDmgParamsEnemyCommon.mWaterEmit.get(),
@@ -620,7 +620,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			return TRUE;
 		}
 		if (message == HIT_MESSAGE_UNK3 && !isInvincible()) {
-			unk118 |= 0x800;
+			unk118 |= MARIO_FLAG_GROUND_POUND_SIT_UP;
 			if (!checkStatusFlag(STATUS_FLAG_JUMPING)) {
 				rumbleStart(0x15, 0x0A);
 			}
@@ -653,7 +653,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			}
 			break;
 		case HIT_MESSAGE_UNK8:
-			if (checkFlag(0x1000)) {
+			if (checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
 				changePlayerStatus(STATUS_DIVE, 0, true);
 			} else {
 				changePlayerStatus(STATUS_WAIT, 0, false);
@@ -718,7 +718,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			}
 			break;
 		case HIT_MESSAGE_UNK8:
-			if (checkFlag(0x1000)) {
+			if (checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
 				changePlayerStatus(STATUS_DIVE, 0, true);
 			} else {
 				changePlayerStatus(STATUS_WAIT, 0, false);

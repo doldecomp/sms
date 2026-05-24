@@ -329,7 +329,7 @@ BOOL TMario::swimPDown()
 	return 0;
 }
 
-int TMario::swimMain()
+BOOL TMario::swimMain()
 {
 	if (checkFlag(MARIO_FLAG_GAME_OVER))
 		changePlayerStatus(STATUS_SWIM_P_DOWN, 0, false);

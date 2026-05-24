@@ -43,7 +43,7 @@ f32 TMario::getJumpSlideControl() const
 
 bool TMario::canSquat() const
 {
-	if (checkFlag(0x8000) && mWaterGun
+	if (checkFlag(MARIO_FLAG_HAS_FLUDD) && mWaterGun
 	    && ((const TWaterGun*)mWaterGun)
 	               ->getCurrentNozzle()
 	               ->mEmitParams.mRocketType.get()
@@ -56,7 +56,7 @@ bool TMario::canSquat() const
 
 bool TMario::isUnderWater() const
 {
-	if (checkFlag(0x30000)
+	if (checkFlag(MARIO_FLAG_IN_ANY_WATER)
 	    && unk160[1].y < mFloorPosition.z - mSwimParams.mCanBreathDepth.get())
 		return true;
 	else
@@ -68,7 +68,7 @@ bool TMario::isInvincible() const
 	if (unk14C > 0)
 		return true;
 
-	if (checkFlag(0x8))
+	if (checkFlag(MARIO_FLAG_NPC_TALKING))
 		return true;
 
 	if (mStatus == 0x89C)
@@ -106,7 +106,7 @@ bool TMario::isForceSlip()
 		return true;
 
 	if (unk350 == 2) {
-		if (checkFlag(0x40)) {
+		if (checkFlag(MARIO_FLAG_UNK_40)) {
 			if (mGroundPlane->mNormal.y < mDirtyParams.mSlopeAngle.get())
 				return true;
 		}
@@ -844,7 +844,7 @@ void TMario::checkGraffitoFire()
 	if (isInvincible())
 		return;
 
-	if (checkFlag(0x400))
+	if (checkFlag(MARIO_FLAG_GAME_OVER))
 		return;
 
 	if (mPosition.y - mFloorPosition.y > mGraffitoParams.mFireHeight.get())
@@ -877,12 +877,12 @@ void TMario::checkGraffitoSlip()
 	if (isTouchGround4cm()) {
 		unk360 = mDeParams.mFootPrintTimerMax.get();
 
-		if (mStatus == 0x84045d || mStatus == 0x4045e) {
+		if (mStatus == STATUS_OIL_SLIP || mStatus == STATUS_OIL_SLOPE) {
 			unk138 = mDirtyParams.mBrakeStartValSlip.get();
 			unk13C = mDirtyParams.mDirtyTimeSlip.get();
 		}
 
-		if (mStatus == 0x4045c || mStatus == 0x40561) {
+		if (mStatus == STATUS_OIL_RUN || mStatus == 0x40561) {
 			unk138 = mDirtyParams.mBrakeStartValRun.get();
 			unk13C = mDirtyParams.mDirtyTimeRun.get();
 		}
@@ -891,15 +891,16 @@ void TMario::checkGraffitoSlip()
 			unk138 = mDirtyParams.mBrakeStartValSlip.get();
 			unk13C = mDirtyParams.mDirtyTimeSlip.get();
 
-			changePlayerStatus(0x4045e, 0, false);
+			changePlayerStatus(STATUS_OIL_SLOPE, 0, false);
 			startVoice(0x78D3);
-		} else if (mStatus == 0x80088a || mStatus == 0x800456
-		           || mStatus == 0x84045d || mStatus == 0x4045e) {
+		} else if (mStatus == STATUS_JUMP_CATCH || mStatus == 0x800456
+		           || mStatus == STATUS_OIL_SLIP
+		           || mStatus == STATUS_OIL_SLOPE) {
 			unk138 = mDirtyParams.mBrakeStartValSlip.get();
 			unk13C = mDirtyParams.mDirtyTimeSlip.get();
 
-			changePlayerStatus(0x84045d, 0, false);
-			if (this->mPrevStatus != 0x84045d) {
+			changePlayerStatus(STATUS_OIL_SLIP, 0, false);
+			if (this->mPrevStatus != STATUS_OIL_SLIP) {
 				startVoice(0x78d3);
 			}
 		} else if (mStatus != STATUS_CATCH_LOST) {
@@ -909,11 +910,11 @@ void TMario::checkGraffitoSlip()
 			if (this->mStatus == 0x560) {
 				changePlayerStatus(0x40561, 0, false);
 			} else {
-				changePlayerStatus(0x4045c, 0, false);
+				changePlayerStatus(STATUS_OIL_RUN, 0, false);
 			}
 		}
 
-		if (!checkFlag(0x40))
+		if (!checkFlag(MARIO_FLAG_UNK_40))
 			unk34E = mDirtyParams.mFogTimeYellow.get()
 			         + mDirtyParams.mFogTimeRed.get();
 
@@ -925,7 +926,7 @@ void TMario::checkGraffitoSlip()
 			unk34E = mDirtyParams.mFogTimeYellow.get()
 			         + mDirtyParams.mFogTimeRed.get();
 		}
-	} else if (mStatus == 0x84045d || mStatus == 0x4045e) {
+	} else if (mStatus == STATUS_OIL_SLIP || mStatus == STATUS_OIL_SLOPE) {
 		unk138 = mDirtyParams.mBrakeSlipNoPollute.get();
 		unk13C = mDirtyParams.mDirtyTimeSlip.get();
 	}
@@ -938,7 +939,7 @@ void TMario::checkGraffitoElec()
 	(void)0;
 	(void)0;
 
-	if (!checkFlag(0x40))
+	if (!checkFlag(MARIO_FLAG_UNK_40))
 		unk34E = mDeParams.mGraffitoNoDmgTime.get();
 
 	if (unk34E != 0) {
@@ -1099,9 +1100,9 @@ void TMario::checkGraffito()
 	}
 
 	if (isFullyPolluted == 1)
-		unk118 |= 0x40;
+		unk118 |= MARIO_FLAG_UNK_40;
 	else
-		unk118 &= ~0x40;
+		unk118 &= ~MARIO_FLAG_UNK_40;
 
 	if (isTouchGround4cm()) {
 		if (isFullyPolluted == 1)
@@ -1117,7 +1118,7 @@ void TMario::checkGraffito()
 		if (!mGroundPlane->isLegal())
 			return;
 
-		if (checkFlag(0x30000))
+		if (checkFlag(MARIO_FLAG_IN_ANY_WATER))
 			return;
 
 		emitDirtyFootPrint();
@@ -1135,16 +1136,17 @@ void TMario::dirtyLimitCheck()
 
 void TMario::thinkDirty()
 {
-	if (checkFlag(0x40)) {
-		if (mStatus == STATUS_RUN || mStatus == 0x4045C)
+	if (checkFlag(MARIO_FLAG_UNK_40)) {
+		if (mStatus == STATUS_RUN || mStatus == STATUS_OIL_RUN)
 			unk134 += mDirtyParams.mIncRunning.get();
-		if (mStatus == 0x800456 || mStatus == 0x84045D || mStatus == 0x4045E)
+		if (mStatus == 0x800456 || mStatus == STATUS_OIL_SLIP
+		    || mStatus == STATUS_OIL_SLOPE)
 			unk134 += mDirtyParams.mIncCatching.get();
 		if (mStatus == 0x50)
 			unk134 += mDirtyParams.mIncSlipping.get();
 	}
 
-	if (checkFlag(0x30000)) {
+	if (checkFlag(MARIO_FLAG_IN_ANY_WATER)) {
 		if (mPosition.y > mFloorPosition.z - 1.0f)
 			meltInWaterEffect();
 		unk360 = 0;
@@ -1157,7 +1159,7 @@ void TMario::thinkDirty()
 		unk360 = 0;
 	}
 
-	if (checkFlag(0x10)) {
+	if (checkFlag(MARIO_FLAG_RECENTLY_LEFT_WATER)) {
 		unk134 -= mDirtyParams.mDecWaterHit.get();
 		unk360 = 0;
 	}
@@ -1204,7 +1206,7 @@ void TMario::checkSink()
 	}
 
 	if (unk350 == 0) {
-		if (checkFlag(0x40)) {
+		if (checkFlag(MARIO_FLAG_UNK_40)) {
 			unk368 += 1.0f;
 			unk360 = mDeParams.mFootPrintTimerMax.get();
 			if (mHealth > 0
@@ -1234,7 +1236,7 @@ void TMario::checkSink()
 	}
 
 	if (unk350 == 5) {
-		if (checkFlag(0x40)) {
+		if (checkFlag(MARIO_FLAG_UNK_40)) {
 			unk374 -= mJumpParams.mGravity.get();
 			unk378 += unk374;
 			mVel.set(0.0f, 0.0f, 0.0f);
@@ -1497,12 +1499,12 @@ void TMario::checkController(JDrama::TGraphics*)
 				unkC4 += 1;
 				if ((f32)unkC4 > (f32)mDeParams.mDashStartTime.get()) {
 					unkC4 = mDeParams.mDashStartTime.get();
-					if (!checkFlag(0x4000)
+					if (!checkFlag(MARIO_FLAG_FLUDD_EMITTING)
 					    && ((TNozzleTrigger*)((const TWaterGun*)mWaterGun)
 					            ->getCurrentNozzle())
 					               ->unk385
 					           == 1) {
-						unk118 |= 0x4000;
+						unk118 |= MARIO_FLAG_FLUDD_EMITTING;
 						startSoundActor(0x814);
 						if (checkStatusFlag(STATUS_FLAG_SWIMMING))
 							changePlayerStatus(STATUS_SWIM_PADDLE, 0, false);
@@ -1511,11 +1513,11 @@ void TMario::checkController(JDrama::TGraphics*)
 				if (((mStatus + 0xFC000000) & 0xFFFFFFFF) != 0x440
 				    && mStatus != STATUS_SWIM_PADDLE) {
 					unkC4 = 0;
-					unk118 &= ~0x4000;
+					unk118 &= ~MARIO_FLAG_FLUDD_EMITTING;
 				}
 			} else {
 				unkC4 = 0;
-				unk118 &= ~0x4000;
+				unk118 &= ~MARIO_FLAG_FLUDD_EMITTING;
 			}
 			mIntendedMag = unkC0;
 			mWaterGun->rotateProp(unkC0);
@@ -1529,7 +1531,7 @@ void TMario::checkController(JDrama::TGraphics*)
 				unkC0 = 0.0f;
 			}
 			unkC4 = 0;
-			unk118 &= ~0x4000;
+			unk118 &= ~MARIO_FLAG_FLUDD_EMITTING;
 		}
 
 		if ((s32)mWaterGun->mCurrentNozzle == TWaterGun::Turbo
@@ -1568,8 +1570,8 @@ void TMario::checkController(JDrama::TGraphics*)
 			mInput |= 0x8000;
 	}
 
-	if (checkFlag(0x8000)) {
-		if (!checkFlag(0x4000)) {
+	if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
+		if (!checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
 			if ((mGamePad->mMeaning & 0x400) || (mGamePad->mMeaning & 0x2000))
 				mInput |= 0x200;
 			if (mGamePad->mEnabledFrameMeaning & 0x400)
@@ -1757,13 +1759,13 @@ void TMario::checkCurrentPlane()
 		mSlopeAngle
 		    = matan(mGroundPlane->getNormal().z, mGroundPlane->getNormal().x);
 
-		if (isSlipStart() || checkFlag(0x800))
+		if (isSlipStart() || checkFlag(MARIO_FLAG_GROUND_POUND_SIT_UP))
 			mInput |= 0x8;
 
 		if (mPosition.y > mFloorPosition.y + 100.0f)
 			mInput |= 0x4;
 
-		unk118 &= ~0x800;
+		unk118 &= ~MARIO_FLAG_GROUND_POUND_SIT_UP;
 	}
 }
 
@@ -1922,11 +1924,11 @@ void TMario::thinkSituation()
 		mPosition.z = mHolder->getTakingMtx()[2][3];
 	}
 
-	unk118 &= ~0x2;
-	unk118 &= ~0x20;
+	unk118 &= ~MARIO_FLAG_VISIBLE;
+	unk118 &= ~MARIO_FLAG_UNK_20;
 
 	if (mGroundPlane->isUnderground())
-		unk118 |= 0x2;
+		unk118 |= MARIO_FLAG_VISIBLE;
 
 	if (isMario() && isTouchGround4cm() && mStatus != STATUS_DISAPPEAR
 	    && (mGroundPlane->isIllegalData() || mGroundPlane->isOob())) {
@@ -1940,10 +1942,12 @@ void TMario::thinkSituation()
 	}
 
 	if (isMario()) {
-		if (checkFlag(0x2) == true && (unk11C & 2 ? true : false) == false)
+		if (checkFlag(MARIO_FLAG_VISIBLE) == true
+		    && (unk11C & 2 ? true : false) == false)
 			MSBgm::startBGM(0x8001001b);
 
-		if (checkFlag(0x2) == false && (unk11C & 2 ? true : false) == true)
+		if (checkFlag(MARIO_FLAG_VISIBLE) == false
+		    && (unk11C & 2 ? true : false) == true)
 			MSBgm::stopBGM(0x8001001b, 10);
 	}
 
@@ -1952,7 +1956,7 @@ void TMario::thinkSituation()
 	                               mPosition.z, &ground);
 
 	if (ground->isDeathPlane() && dVar7 > mPosition.y) {
-		unk118 |= 0x400;
+		unk118 |= MARIO_FLAG_GAME_OVER;
 		mHealth = 0;
 		mAnmSound->stop();
 		if (mYoshi)
@@ -1972,18 +1976,18 @@ void TMario::thinkSituation()
 	if (mGroundPlane->isShadow() && mFloorPosition.y + 200.0f > mPosition.y) {
 		mLightID = mGroundPlane->getData();
 		if (mLightID == 1)
-			unk118 |= 0x20;
+			unk118 |= MARIO_FLAG_UNK_20;
 	}
 
 	if (gpCubeShadow != nullptr && gpCubeShadow->getInCubeNo(mPosition) != -1)
 		mLightID = 1;
 
-	unk118 &= ~0x10;
+	unk118 &= ~MARIO_FLAG_RECENTLY_LEFT_WATER;
 
 	if (isMario()) {
 		if (isTouchGround4cm()) {
 			if (gpModelWaterManager->askHitWaterParticleOnGround(mPosition))
-				unk118 |= 0x10;
+				unk118 |= MARIO_FLAG_RECENTLY_LEFT_WATER;
 		}
 	}
 
@@ -1991,8 +1995,8 @@ void TMario::thinkSituation()
 		if (onYoshi())
 			getOffYoshi(false);
 		gpMarDirector->setNextStage(mGroundPlane->getData(), nullptr);
-		unk114 &= ~0x2;
-		unk114 &= ~0x400;
+		unk114 &= ~MARIO_FLAG_VISIBLE;
+		unk114 &= ~MARIO_FLAG_GAME_OVER;
 	}
 
 	if (SMS_isOptionMap()) {
@@ -2011,9 +2015,9 @@ void TMario::thinkSituation()
 	if (gpMarDirector->isDemoMode3() || gpMarDirector->isDemoMode4()
 	    || gpMarDirector->isTalkModeNow()
 	    || checkStatusFlag(STATUS_FLAG_UNK1000))
-		unk118 = 0x8;
+		unk118 = MARIO_FLAG_NPC_TALKING;
 	else
-		unk118 &= ~0x8;
+		unk118 &= ~MARIO_FLAG_NPC_TALKING;
 }
 
 void TMario::thinkWaterSurface()
@@ -2021,21 +2025,21 @@ void TMario::thinkWaterSurface()
 	if (checkStatusFlag(STATUS_FLAG_UNK10000))
 		return;
 
-	BOOL wasInWater = checkFlag(0x30000);
+	BOOL wasInWater = checkFlag(MARIO_FLAG_IN_ANY_WATER);
 	bool isInWater  = false;
-	if (checkFlag(0x30000) == true)
+	if (checkFlag(MARIO_FLAG_IN_ANY_WATER) == true)
 		isInWater = true;
 	else
 		mFloorPosition.z = mPosition.y;
 
-	unk118 &= ~0x10000;
-	unk118 &= ~0x20000;
+	unk118 &= ~MARIO_FLAG_IN_SHALLOW_WATER;
+	unk118 &= ~MARIO_FLAG_IN_WATER;
 
 	if (mGroundPlane->isPool()) {
 		mFloorPosition.z = gpPoolManager->getWaterLevel(mGroundPlane);
 		if (mFloorPosition.z > mPosition.y) {
 			isInWater = true;
-			unk118 |= 0x10000;
+			unk118 |= MARIO_FLAG_IN_SHALLOW_WATER;
 		}
 	}
 
@@ -2052,7 +2056,7 @@ void TMario::thinkWaterSurface()
 		mFloorPosition.z = waterFloorY;
 		if (mFloorPosition.z >= mPosition.y) {
 			isInWater = true;
-			unk118 |= 0x20000;
+			unk118 |= MARIO_FLAG_IN_WATER;
 		}
 	} else {
 		const TBGCheckData* localBg;
@@ -2060,7 +2064,7 @@ void TMario::thinkWaterSurface()
 		// TODO: identify BG type 0x810B (camera-noclip variant of 0x10B)
 		if (localBg->mBGType == 0x810B ? true : false) {
 			isInWater = true;
-			unk118 |= 0x20000;
+			unk118 |= MARIO_FLAG_IN_WATER;
 		}
 	}
 
@@ -2096,9 +2100,9 @@ void TMario::thinkWaterSurface()
 				mForwardVel *= mSwimParams.mStartVMult.get();
 				mVel.y *= mSwimParams.mStartVYMult.get();
 
-				if (checkStatusFlag(0x20000)) {
+				if (checkStatusFlag(MARIO_FLAG_IN_WATER)) {
 					changePlayerStatus(STATUS_SWIM_P_DAMAGE, 0, true);
-				} else if (checkFlag(0x4000)) {
+				} else if (checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
 					changePlayerStatus(STATUS_SWIM_PADDLE, 0, true);
 					mVel.y      = 0.0f;
 					mPosition.y = mFloorPosition.z;
@@ -2126,7 +2130,7 @@ void TMario::thinkWaterSurface()
 			runningRippleEffect();
 	}
 
-	BOOL nowInWater = checkFlag(0x30000);
+	BOOL nowInWater = checkFlag(MARIO_FLAG_IN_ANY_WATER);
 
 	J3DGetTranslateRotateMtx(0, mModelFaceAngle, 0, mPosition.x,
 	                         mFloorPosition.z, mPosition.z, unk220);
@@ -2168,13 +2172,13 @@ void TMario::thinkWaterSurface()
 	}
 
 	bool deepUnderwater;
-	if (checkFlag(0x30000)
+	if (checkFlag(MARIO_FLAG_IN_ANY_WATER)
 	    && unk160[1].y < mFloorPosition.z - mSwimParams.mCanBreathDepth.get())
 		deepUnderwater = true;
 	else
 		deepUnderwater = false;
 
-	if (deepUnderwater || checkFlag(0x1000)) {
+	if (deepUnderwater || checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
 		f32 prevAir = unk12C;
 		if (isWearingHelm()) {
 			if (mStatus != STATUS_TAKEN) {
@@ -2203,11 +2207,12 @@ void TMario::thinkWaterSurface()
 
 void TMario::thinkSand()
 {
-	if (checkFlag(0x30000) == false && mGroundPlane->isSand() == true) {
-		unk118 |= 0x40000;
+	if (checkFlag(MARIO_FLAG_IN_ANY_WATER) == false
+	    && mGroundPlane->isSand() == true) {
+		unk118 |= MARIO_FLAG_UNK40000;
 		emitSandEffect();
 	} else {
-		unk118 &= ~0x40000;
+		unk118 &= ~MARIO_FLAG_UNK40000;
 	}
 }
 
@@ -2216,11 +2221,11 @@ void TMario::thinkParams()
 	mRotation.y = SHORTANGLE2DEG(mFaceAngle.y);
 	if (unk14C > 0)
 		unk14C -= 1;
-	if (!checkFlag(0x400)) {
-		if (checkFlag(0x30000)) {
+	if (!checkFlag(MARIO_FLAG_GAME_OVER)) {
+		if (checkFlag(MARIO_FLAG_IN_ANY_WATER)) {
 			// TODO: inline
 			bool b;
-			if (checkFlag(0x30000)
+			if (checkFlag(MARIO_FLAG_IN_ANY_WATER)
 			    && unk160[1].y
 			           < mFloorPosition.z - mSwimParams.mCanBreathDepth.get())
 				b = true;
@@ -2383,17 +2388,18 @@ void TMario::gunExec()
 	if (!onYoshi())
 		gpModelWaterManager->unk5D5F = 0;
 
-	if (!checkFlag(0x8000) && !onYoshi())
+	if (!checkFlag(MARIO_FLAG_HAS_FLUDD) && !onYoshi())
 		return;
 
 	mWaterGun->updateUnk1C88(0);
 	mWaterGun->triggerPressureMovement(*unk108);
 
-	unk118 &= ~0x80;
-	if (checkFlag(0x30000)) {
+	unk118 &= ~MARIO_FLAG_UNK_80;
+	if (checkFlag(MARIO_FLAG_IN_ANY_WATER)) {
 		if (!onYoshi() && mWaterGun->suck() == true) {
-			unk118 |= 0x80;
-			if (checkFlag(0x10000) && mGroundPlane->isPool())
+			unk118 |= MARIO_FLAG_UNK_80;
+			if (checkFlag(MARIO_FLAG_IN_SHALLOW_WATER)
+			    && mGroundPlane->isPool())
 				gpPoolManager->subWaterLevel(mGroundPlane);
 		}
 

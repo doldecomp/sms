@@ -84,15 +84,7 @@ void SMS_MarioMoveRequest(const JGeometry::TVec3<float>& vec)
 
 bool SMS_IsMarioDashing()
 {
-	bool ret;
-
-	if ((gpMarioOriginal->unk118 & 0x4000) != 0) {
-		ret = true;
-	} else {
-		ret = false;
-	}
-
-	return !!ret;
+	return !!gpMarioOriginal->checkFlag(MARIO_FLAG_FLUDD_EMITTING);
 }
 
 bool SMS_IsMarioOnYoshi() { return gpMarioOriginal->onYoshi(); }

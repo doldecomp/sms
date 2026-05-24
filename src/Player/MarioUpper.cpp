@@ -17,13 +17,13 @@ void TMario::checkPumping()
 		    && checkPumpEnable()) {
 			unk380 = 1;
 			unk37E = 0;
-		} else if (mStatus == 0x00800447) {
+		} else if (mStatus == STATUS_TOROCCO) {
 			unk380 = 1;
 			unk37E = 0;
-		} else if (mStatus == 0x0c008220 && unk380 == 5) {
+		} else if (mStatus == STATUS_SQUAT && unk380 == 5) {
 			unk380 = 1;
 			unk37E = 0;
-		} else if (checkFlag(0x4000)) {
+		} else if (checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
 			unk380 = 0;
 			unk37E = 0;
 		}
@@ -32,7 +32,7 @@ void TMario::checkPumping()
 
 BOOL TMario::checkPumpEnable()
 {
-	if ((mWaterGun != nullptr) && checkFlag(0x8000)
+	if ((mWaterGun != nullptr) && checkFlag(MARIO_FLAG_HAS_FLUDD)
 	    && gMarioAnimeData[mAnimationId].isPumpOK() && !onYoshi()
 	    && (!checkUnk368()
 	        || !((unk368 / (float)mGraffitoParams.mSinkTime.get()
@@ -54,7 +54,6 @@ BOOL TMario::checkPumpEnable()
 void TMario::stateMachineUpper()
 {
 	switch (unk380) {
-
 	case 0:
 		if (!checkPumpEnable()) {
 			mModel->unkC[1].setFrame(0.0f);
@@ -64,7 +63,7 @@ void TMario::stateMachineUpper()
 			unk380 = 1;
 			unk37E = mUpperBodyParams.mPumpWaitTime.get();
 		}
-		if (!checkFlag(0x30000) && mWaterGun != nullptr) {
+		if (!checkFlag(MARIO_FLAG_IN_ANY_WATER) && mWaterGun != nullptr) {
 			s32 flag;
 			if (mWaterGun->mCurrentWater == 0) {
 				flag = 0;
@@ -104,28 +103,25 @@ void TMario::stateMachineUpper()
 		checkPumping();
 		break;
 	case 2:
-		if (mStatus == -0x7ffffc79) {
+		if (mStatus == STATUS_PUTTING)
 			unk380 = 5;
-		}
-		if (mHeldObject == nullptr) {
+
+		if (mHeldObject == nullptr)
 			unk380 = 5;
-		}
-		if (mStatus == 0x4000440 && mForwardVel > 20.0f) {
+
+		if (mStatus == STATUS_RUN && mForwardVel > 20.0f)
 			emitSweatSometimes();
-		}
 		break;
 	case 4:
-		if (mModel->checkModelState()) {
+		if (mModel->checkModelState())
 			unk380 = 5;
-		}
 		break;
 
 	case 3:
 	case 5:
 	default:
-		if (checkPumpEnable()) {
+		if (checkPumpEnable())
 			checkPumping();
-		}
 		break;
 	}
 }
