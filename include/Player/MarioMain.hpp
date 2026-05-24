@@ -43,6 +43,7 @@ enum E_SIDEWALK_TYPE {
 enum E_MARIO_FLAG {
 	MARIO_FLAG_ABOVE_SEWER_FLOOR   = 0x1,
 	MARIO_FLAG_VISIBLE             = 0x2,
+	MARIO_FLAG_UNK4                = 0x4,
 	MARIO_FLAG_NPC_TALKING         = 0x8,
 	MARIO_FLAG_RECENTLY_LEFT_WATER = 0x10,
 	MARIO_FLAG_UNK_20              = 0x20,
@@ -645,19 +646,19 @@ public:
 	virtual MtxPtr getTakingMtx();
 	virtual BOOL moveRequest(const JGeometry::TVec3<f32>&);
 
-	virtual void drawSyncCallback(u16);
 	virtual void initValues();
 	virtual void checkReturn();
 	virtual void checkController(JDrama::TGraphics*);
 	virtual void playerControl(JDrama::TGraphics*);
 	virtual void initModel();
 	virtual void drawSpecial(JDrama::TGraphics*);
+	virtual void checkCollision();
 	virtual void damageExec(THitActor* hittingActor, int damage,
 	                        int damageAnimType, int waterEmit,
 	                        f32 knockbackSpeed, int rumbleFrames,
 	                        f32 pollutionAmount, s16 invincibilityFrames);
-	virtual void checkCollision();
 	virtual void getVoiceStatus();
+	virtual void drawSyncCallback(u16);
 
 	// Action stuff
 	BOOL taking();
@@ -1910,8 +1911,8 @@ public:
 	/* 0x390 */ u32 unk390;
 	/* 0x394 */ J3DDrawBuffer* unk394;
 	/* 0x398 */ J3DDrawBuffer* unk398;
-	/* 0x39C */ u32 unk39C;
-	/* 0x3A0 */ u32 unk3A0;
+	/* 0x39C */ J3DDrawBuffer* unk39C;
+	/* 0x3A0 */ J3DDrawBuffer* unk3A0;
 	/* 0x3A4 */ SampleCtrlModelData* unk3A4;
 	/* 0x3A8 */ M3UModelMario* mModel;        // Full model data
 	/* 0x3AC */ J3DModelData* mBodyModelData; // Body model data
