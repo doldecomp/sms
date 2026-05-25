@@ -89,7 +89,11 @@ public:
 	/* 0x10 */ f32 unk10;
 };
 
-struct TMarioSoundValues {
+class TMarioSoundValues {
+public:
+	TMarioSoundValues();
+
+public:
 	/* 0x00 */ int unk00;
 	/* 0x04 */ int unk04;
 	/* 0x08 */ int unk08;
@@ -97,7 +101,7 @@ struct TMarioSoundValues {
 	/* 0x10 */ int unk10;
 	/* 0x14 */ int unk14;
 	/* 0x18 */ u8 unk18;
-	/* 0x1C */ int unk1C;
+	/* 0x1C */ u32 unk1C;
 	/* 0x20 */ u8 unk20;
 	/* 0x22 */ u16 unk22;
 	/* 0x24 */ u8 unk24;
@@ -657,7 +661,7 @@ public:
 	                        int damageAnimType, int waterEmit,
 	                        f32 knockbackSpeed, int rumbleFrames,
 	                        f32 pollutionAmount, s16 invincibilityFrames);
-	virtual void getVoiceStatus();
+	virtual u8 getVoiceStatus();
 	virtual void drawSyncCallback(u16);
 
 	// Action stuff
@@ -1199,8 +1203,8 @@ public:
 	bool getNozzle(THitActor*, TWaterGun::TNozzleType);
 	void startSoundActor(u32);
 	void stopVoice();
-	void startVoiceIfNoVoice(u32);
-	void startVoice(u32);
+	u32 startVoiceIfNoVoice(u32);
+	u32 startVoice(u32);
 	void soundTorocco();
 	void soundHitBound();
 	void animSound();

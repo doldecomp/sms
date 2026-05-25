@@ -120,6 +120,16 @@ public:
 			    param_1, param_2, param_3, param_4, param_5, param_6);
 	}
 
+	void startSoundActorWithInfo(u32 param_1, const Vec* param_2, Vec* param_3,
+	                             f32 param_4, u32 param_5, u32 param_6,
+	                             JAISound** param_7, u32 param_8, u8 param_9)
+	{
+		if (gateCheck(param_1))
+			MSoundSESystem::MSoundSE::startSoundActorWithInfo(
+			    param_1, param_2, param_3, param_4, param_5, param_6, param_7,
+			    param_8, param_9);
+	}
+
 	void startForceJumpSound(Vec* param_1, u32 param_2, f32 param_3,
 	                         u32 param_4)
 	{
