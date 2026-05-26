@@ -690,7 +690,7 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 	case 9: {
 		gpApplication.mFader->startWipe(unkE4, 0.4f, 0.0f);
 		if (unkE4 == 8)
-			SMSGetMSound()->startSoundSystemSE(0x4859, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_MA_INTO_DOKAN, 0, nullptr, 0);
 		MSound* sound = gpMSound;
 		sound->fadeOutAllSound(SMSGetVSyncTimesPerSec() * 0.4f);
 		SMSRumbleMgr->reset();
@@ -718,8 +718,8 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		unk18[0]->onFlag(0x1);
 		JDrama::TNameRefGen::search<JDrama::TViewObj>("Group 2D")->unkC.on(0xB);
 		JDrama::TNameRefGen::search<JDrama::TViewObj>("Guide")->unkC.off(0xB);
-		if (gpMSound->gateCheck(0x4817))
-			SMSGetMSound()->startSoundSystemSE(0x4817, 0, nullptr, 0);
+		if (gpMSound->gateCheck(MSD_SE_SY_WIPE_IN))
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_WIPE_IN, 0, nullptr, 0);
 		gpApplication.mFader->startWipe(6, 1.0f, 0.0f);
 		unk78->setup(nullptr);
 		unk78->startMoveCursor();
@@ -741,13 +741,13 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		unk60 = unk5C;
 		gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 0xff));
 		if (TFlagManager::smInstance->getFlag(0x20001) >= 0) {
-			MSBgm::startBGM(0x8001000c);
+			MSBgm::startBGM(MSD_BGM_BOSS);
 			if (unk4E & 8)
 				gpApplication.mFader->startWipe(2, 0.0f, 2.0f);
 			else
 				gpApplication.mFader->startWipe(10, 0.0f, 2.2f);
 		} else {
-			MSBgm::startBGM(0x80010028);
+			MSBgm::startBGM(MSD_BGM_BOSSHANA_2ND3RD);
 			gpApplication.mFader->startWipe(0xD, 0.0f, 2.0f);
 		}
 		break;
@@ -778,7 +778,7 @@ u8 TMarDirector::updateGameMode()
 						break;
 					}
 
-					SMSGetMSound()->startSoundSystemSE(0x483D, 0, nullptr, 0);
+					SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_NOT_COLLECT, 0, nullptr, 0);
 				}
 			}
 		} else {
@@ -796,7 +796,7 @@ u8 TMarDirector::updateGameMode()
 				TGCConsole2* console = gpMarDirector->mConsole;
 				console->unk94->startAppearShineGet();
 				console->unk34[19] = 1;
-				MSBgm::startBGM(0x8001000a);
+				MSBgm::startBGM(MSD_BGM_CHUBOSS);
 				TFlagManager::getInstance()->setBool(true, 0x30006);
 				TFlagManager::getInstance()->setShineFlag(unk25C->unk134);
 				f32 fVar3 = unkDC->mRate;

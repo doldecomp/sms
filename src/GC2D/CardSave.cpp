@@ -1825,7 +1825,7 @@ void TCardSave::execMovement_()
 					}
 				} else {
 					if (unk2DD == 0 && unk2E0 == 0xC8) {
-						gpMSound->startSoundSystemSE(0x481B, 0, nullptr, 0);
+						gpMSound->startSoundSystemSE(MSD_SE_SY_DECIDE_COMMON, 0, nullptr, 0);
 
 						if (unk308 == 0 || unk308 == 6 || unk308 == 8) {
 							unk128->hide();
@@ -2030,11 +2030,11 @@ void TCardSave::execMovement_()
 
 	if (prevMode != unk10) {
 		if (prevMode == 1) {
-			gpMSound->startSoundSystemSE(0x4819, 0, nullptr, 0);
+			gpMSound->startSoundSystemSE(MSD_SE_SY_2D_IN, 0, nullptr, 0);
 		}
 
 		if (unk10 == 3) {
-			gpMSound->startSoundSystemSE(0x481A, 0, nullptr, 0);
+			gpMSound->startSoundSystemSE(MSD_SE_SY_2D_OUT, 0, nullptr, 0);
 		}
 	}
 }

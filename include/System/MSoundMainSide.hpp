@@ -3,6 +3,8 @@
 
 #include <dolphin/mtx.h>
 
+#include <MSound/MSound.hpp>
+
 class MSStage {
 public:
 	MSStage() { }
@@ -24,7 +26,7 @@ public:
 class MSSTageSimpleEnvironment : public MSStage {
 public:
 	MSSTageSimpleEnvironment()
-	    : unk4(0x5012)
+	    : unk4(MSD_SE_EV_CORONA)
 	{
 	}
 

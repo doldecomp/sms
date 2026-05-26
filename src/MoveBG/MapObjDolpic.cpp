@@ -95,7 +95,7 @@ BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->isActorType(0x01000001)) {
 		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
-		SMSGetMSound()->startSoundSet(0x6802, &sender->mPosition, 0, 0.0f, 0, 0,
+		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &sender->mPosition, 0, 0.0f, 0, 0,
 		                              4);
 
 		if (unk13C == 0)
@@ -112,7 +112,7 @@ BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 			    "モニュメントシャインカメラ", mPosition.x, mPosition.y,
 			    mPosition.z);
 
-			SMSGetMSound()->startSoundSystemSE(0x484A, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN, 0, nullptr, 0);
 		}
 
 		return 1;
@@ -288,7 +288,7 @@ BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 				    mPosition.z);
 			}
 
-			SMSGetMSound()->startSoundSystemSE(0x484A, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN, 0, nullptr, 0);
 		}
 
 		return 1;
@@ -323,26 +323,26 @@ void TBellDolpic::control()
 
 		if (unk154 == 0) {
 			if (unk15C) {
-				if (gpMSound->gateCheck(0x38A5)) {
+				if (gpMSound->gateCheck(MSD_SE_OBJ_DOL_BEL_GS4)) {
 					MSoundSESystem::MSoundSE::startSoundActor(
-					    0x38A5, &mPosition, 0, nullptr, 0, 4);
+					    MSD_SE_OBJ_DOL_BEL_GS4, &mPosition, 0, nullptr, 0, 4);
 				}
 			} else {
-				if (gpMSound->gateCheck(0x38A6)) {
+				if (gpMSound->gateCheck(MSD_SE_OBJ_DOL_BEL_E4)) {
 					MSoundSESystem::MSoundSE::startSoundActor(
-					    0x38A6, &mPosition, 0, nullptr, 0, 4);
+					    MSD_SE_OBJ_DOL_BEL_E4, &mPosition, 0, nullptr, 0, 4);
 				}
 			}
 		} else {
 			if (unk15C) {
-				if (gpMSound->gateCheck(0x38A8)) {
+				if (gpMSound->gateCheck(MSD_SE_OBJ_DOL_BEL_GS4_K)) {
 					MSoundSESystem::MSoundSE::startSoundActor(
-					    0x38A8, &mPosition, 0, nullptr, 0, 4);
+					    MSD_SE_OBJ_DOL_BEL_GS4_K, &mPosition, 0, nullptr, 0, 4);
 				}
 			} else {
-				if (gpMSound->gateCheck(0x38A9)) {
+				if (gpMSound->gateCheck(MSD_SE_OBJ_DOL_BEL_E4_K)) {
 					MSoundSESystem::MSoundSE::startSoundActor(
-					    0x38A9, &mPosition, 0, nullptr, 0, 4);
+					    MSD_SE_OBJ_DOL_BEL_E4_K, &mPosition, 0, nullptr, 0, 4);
 				}
 			}
 		}
@@ -358,12 +358,12 @@ void TBellDolpic::control()
 void TDptMonteFence::touchPlayer(THitActor* actor)
 {
 	if (SMS_IsMarioStatusThrownDown()) {
-		if (gpMSound->gateCheck(0x380A)) {
-			MSoundSESystem::MSoundSE::startSoundActor(0x380A, &mPosition, 0,
+		if (gpMSound->gateCheck(MSD_SE_IT_BARREL_CRASH)) {
+			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_IT_BARREL_CRASH, &mPosition, 0,
 			                                          nullptr, 0, 4);
 		}
-		if (gpMSound->gateCheck(0x3857)) {
-			MSoundSESystem::MSoundSE::startSoundActor(0x3857, &mPosition, 0,
+		if (gpMSound->gateCheck(MSD_SE_OBJ_GLASS_BREAK)) {
+			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_OBJ_GLASS_BREAK, &mPosition, 0,
 			                                          nullptr, 0, 4);
 		}
 		kill();
@@ -398,8 +398,8 @@ void TMareGate::control()
 
 	// TODO: some kind of an MSound inline that keeps the sound in unk7C, hmmm
 	MSound* sound = gpMSound;
-	if (sound->gateCheck(0x3085)) {
-		MSoundSESystem::MSoundSE::startSoundActor(0x3085, &mPosition, 0,
+	if (sound->gateCheck(MSD_SE_OBJ_MAHRE_GATE_LIGHT)) {
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_OBJ_MAHRE_GATE_LIGHT, &mPosition, 0,
 		                                          &sound->unk7C, 0, 4);
 	}
 }

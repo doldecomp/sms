@@ -573,8 +573,8 @@ DEFINE_NERVE(TNervePoihanaSleep, TLiveActor)
 
 	self->mGoToSleepTimer += 1;
 	if ((self->unk194 || self->unsetUnk165()) && !self->isBckAnm(10)) {
-		if (gpMSound->gateCheck(0x2955))
-			MSoundSESystem::MSoundSE::startSoundActor(0x2955, &self->mPosition,
+		if (gpMSound->gateCheck(MSD_SE_EN_KOHANA_WAKEUP3))
+			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_KOHANA_WAKEUP3, &self->mPosition,
 			                                          0, nullptr, 0, 4);
 
 		self->setBckAnm(10);

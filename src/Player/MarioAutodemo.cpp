@@ -116,7 +116,7 @@ BOOL TMario::jumpingDemoCommon(u32 playerStatus, int animationId, f32 velocity)
 BOOL TMario::openDoor()
 {
 	if (mStatusState == 0) {
-		startVoice(0x7884);
+		startVoice(MSD_SE_MV13_ACTION_SMALL_01);
 		mStatusState = 1;
 	}
 	stopProcess();
@@ -472,7 +472,7 @@ BOOL TMario::warpOut()
 BOOL TMario::electricDamage()
 {
 	if (mStatusState == 0) {
-		startVoice(0x7844);
+		startVoice(MSD_SE_MV04_DAMAGE_ELEC_01);
 		setAnimation(ANIM_SHOCK, 1.0f);
 		decHP(mDmgParamsGraffitoElec.mDamage.get());
 		rumbleStart(0x16, 1);
@@ -486,7 +486,7 @@ BOOL TMario::electricDamage()
 		J3DFrameCtrl& frameCtrl = getMotionFrameCtrl();
 		frameCtrl.setFrame(0.0f);
 		mStatusTimer += 1;
-		startVoice(0x7852);
+		startVoice(MSD_SE_MV07_DAMAGE_REACT_01);
 
 		if (mTrembleModelEffect != nullptr) {
 			mTrembleModelEffect->tremble(5.0f, 2.0f, 0.99f, 600);

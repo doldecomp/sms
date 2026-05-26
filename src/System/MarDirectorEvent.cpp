@@ -117,8 +117,8 @@ void TMarDirector::fireGetBlueCoin(TCoin* coin)
 	                                          coin->unk134);
 	unk4C |= 0x200;
 	unk261 = 1;
-	if (gpMSound->gateCheck(0x4845))
-		MSoundSESystem::MSoundSE::startSoundActor(0x4845, coin->mPosition, 0,
+	if (gpMSound->gateCheck(MSD_SE_SY_BLUE_COIN_GET))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_SY_BLUE_COIN_GET, coin->mPosition, 0,
 		                                          nullptr, 0, 4);
 }
 

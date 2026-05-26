@@ -97,7 +97,7 @@ bool TMapEventSink::control()
 	if (unk4C > unk48
 	    && (gpMarDirector->mMap != 2 || unk54[1 - unk24] == 0 || unk28 != 1)) {
 		SMSRumbleMgr->start(0x13, (f32*)nullptr);
-		SMSGetMSound()->startSoundActor(0x3008, unk50[unk28], 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, unk50[unk28], 0, nullptr, 0, 4);
 	}
 
 	if (unk4C > 0) {

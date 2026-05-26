@@ -404,12 +404,12 @@ void MSound::setPlayerInfo(Vec* param_1, Vec* param_2, MtxPtr param_3,
 		unkAC[i].unk0 = param_1;
 		unkAC[i].unk4 = param_2;
 		unkAC[i].unk8 = param_3;
-		MSoundSESystem::MSRandPlay::createRandPlayVec(0x7865, 1);
-		MSoundSESystem::MSRandPlay::registerTrans(0x7865, param_1);
-		MSoundSESystem::MSRandPlay::createRandPlayVec(0x7094, 1);
-		MSoundSESystem::MSRandPlay::registerTrans(0x7094, param_1);
-		MSoundSESystem::MSRandPlay::createRandPlayVec(0x1950, 1);
-		MSoundSESystem::MSRandPlay::registerTrans(0x1950, param_1);
+		MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_MV10A_CRY_SHORT_01, 1);
+		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_MV10A_CRY_SHORT_01, param_1);
+		MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_MV16_EXERT_CONT_01, 1);
+		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_MV16_EXERT_CONT_01, param_1);
+		MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_MA_WATER_WAIT, 1);
+		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_MA_WATER_WAIT, param_1);
 	}
 }
 
@@ -507,7 +507,7 @@ void MSound::mainLoop()
 		return;
 
 	if (unkD1 == 1) {
-		MSBgm::startBGM(0x8001002D);
+		MSBgm::startBGM(MSD_BGM_KUPPA);
 		unkD1 = 0;
 	}
 
@@ -571,7 +571,7 @@ void MSound::pauseOn(bool param_1)
 {
 	if (param_1)
 		if (checkUnkA8(2))
-			MSoundSESystem::MSoundSE::startSoundSystemSE(0x4802, 0, nullptr, 0);
+			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_PAUSE_ON, 0, nullptr, 0);
 
 	for (u8 i = 0; i < 16; ++i)
 		if (i != 4 && MSGMSound->unk0->unk88.unk2[i] != 0)
@@ -588,7 +588,7 @@ void MSound::pauseOff(u8 param_1)
 	switch (param_1) {
 	case 0:
 		if (checkUnkA8(2))
-			MSoundSESystem::MSoundSE::startSoundSystemSE(0x4803, 0, nullptr, 0);
+			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_PAUSE_OFF, 0, nullptr, 0);
 		// FALLTHROUGH!!!
 
 	case 2:
@@ -605,7 +605,7 @@ void MSound::pauseOff(u8 param_1)
 
 	case 1:
 		if (checkUnkA8(2))
-			MSoundSESystem::MSoundSE::startSoundSystemSE(0x481B, 0, nullptr, 0);
+			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_DECIDE_COMMON, 0, nullptr, 0);
 
 		for (u8 i = 0; i < 16; ++i)
 			if (MSGMSound->unk0->unk88.unk2[i] != 0)
@@ -645,7 +645,7 @@ void MSound::demoModeOut(bool param_1)
 void MSound::talkModeIn(bool param_1)
 {
 	if (param_1 && checkUnkA8(2)) {
-		MSoundSESystem::MSoundSE::startSoundSystemSE(0x4804, 0, nullptr, 0);
+		MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_TALK_MODE_IN, 0, nullptr, 0);
 	}
 
 	for (u8 i = 0; i < 16; ++i)
@@ -658,7 +658,7 @@ void MSound::talkModeIn(bool param_1)
 void MSound::talkModeOut()
 {
 	if (checkUnkA8(2)) {
-		MSoundSESystem::MSoundSE::startSoundSystemSE(0x4805, 0, nullptr, 0);
+		MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_TALK_MODE_OUT, 0, nullptr, 0);
 	}
 
 	for (u8 i = 0; i < 16; ++i) {
@@ -763,7 +763,7 @@ void MSound::playTimer(u32 time)
 {
 	if (checkUnkA8(1)) {
 		MSoundSESystem::MSoundSE::startSoundActorInner(
-		    0x403A, nullptr, (JAIActor*)0xffffffff, 0, 4);
+		    MSD_SE_SY_TIMER, nullptr, (JAIActor*)0xffffffff, 0, 4);
 
 		if (time > 0x7530) {
 			unk94 = 0x6e;
@@ -811,16 +811,16 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 
 	if (param_3 == 6) {
 		switch (param_1) {
-		case 0x78ab:
-		case 0x78b1:
-		case 0x78b6:
-		case 0x78b9:
-		case 0x78bf:
+		case MSD_SE_MV21_JUMP_SMALL_01:
+		case MSD_SE_MV22_JUMP_MID_01:
+		case MSD_SE_MV23_JUMP_LARGE_01:
+		case MSD_SE_MV24_JUMP_SPECIAL_01:
+		case MSD_SE_MV25A_JUMP_HUGE_01:
 			JAIActor local_38(unkAC[iVar3].unk0, unkAC[iVar3].unk0,
 			                  unkAC[iVar3].unk0, 0);
 			MSoundSESystem::MSoundSE::startSoundActorInner(
-			    0x898C, unk8C + iVar6, &local_38, 1, 4);
-			return 0x898C;
+			    MSD_SE_NPC_VA_MTMAN_JUMP1, unk8C + iVar6, &local_38, 1, 4);
+			return MSD_SE_NPC_VA_MTMAN_JUMP1;
 		}
 
 		return -1;
@@ -828,14 +828,14 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 
 	if (unk8C[iVar6] != nullptr) {
 		switch (param_1) {
-		case 0x78CF:
-		case 0x78A8:
-		case 0x7865:
-		case 0x7852:
-		case 0x78C7:
-		case 0x78D9:
-		case 0x78D3:
-		case 0x78E0:
+		case MSD_SE_MV27_SPRISE_01:
+		case MSD_SE_MV20_JMP_PT_REACT_01:
+		case MSD_SE_MV10A_CRY_SHORT_01:
+		case MSD_SE_MV07_DAMAGE_REACT_01:
+		case MSD_SE_MV26_JUMP_REACT_01:
+		case MSD_SE_MV29_SPRISE_REACT_01:
+		case MSD_SE_MV28_SPRISE_SMALL_01:
+		case MSD_SE_MV30_FRIGHT_01:
 			r3 = 0;
 			break;
 		}
@@ -850,137 +850,137 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 	switch (param_1) {
 	case 0xffff0003:
 		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.5f)
-			param_1 = 0x7806;
+			param_1 = MSD_SE_MA_VO_JUMP_MID_3;
 		if (param_1 + 0x10000 == 3)
-			param_1 = 0x7817;
+			param_1 = MSD_SE_MA_VO_LAND_LOW_4;
 		break;
 
-	case 0x7094:
-	case 0x7849:
-	case 0x7844:
-	case 0x784F:
-	case 0x786B:
-	case 0x789E:
-	case 0x78C1:
-	case 0x78a3:
-	case 0x78c4:
+	case MSD_SE_MV16_EXERT_CONT_01:
+	case MSD_SE_MV05_DAMAGE_FIRE_01:
+	case MSD_SE_MV04_DAMAGE_ELEC_01:
+	case MSD_SE_MV06_DAMAGE_WATER_01:
+	case MSD_SE_MV10B_CRY_JUMP_01:
+	case MSD_SE_MV18_FALL_AFTER_01:
+	case MSD_SE_MV25A_WIRE_ROLL_01A:
+	case MSD_SE_MV19_JMP_PT_01:
+	case MSD_SE_MV25A_WIRE_ROLL_02A:
 		break;
 
-	case 0x7830:
+	case MSD_SE_MV01_DAMAGE_BIG_01:
 		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.25f)
-			param_1 = 0x7818;
+			param_1 = MSD_SE_MA_VO_DAMAGE_BIG;
 		break;
 
-	case 0x7833:
+	case MSD_SE_MV02_DAMAGE_MID_01:
 		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.25f)
-			param_1 = 0x781C;
+			param_1 = MSD_SE_MA_VO_DAMAGE_SMALL;
 		break;
 
-	case 0x783B:
+	case MSD_SE_MV03_DAMAGE_LITLE_01:
 		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.25f)
-			param_1 = 0x781C;
+			param_1 = MSD_SE_MA_VO_DAMAGE_SMALL;
 		break;
 
-	case 0x7852:
+	case MSD_SE_MV07_DAMAGE_REACT_01:
 		if (param_2 <= 2)
-			param_1 = 0x78EE;
+			param_1 = MSD_SE_MV33_T_01;
 		break;
 
-	case 0x785D:
+	case MSD_SE_MV08A_DOWN_01:
 		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.15f)
-			param_1 = 0x781B;
+			param_1 = MSD_SE_MA_VO_DEAD;
 		break;
 
-	case 0x7865:
+	case MSD_SE_MV10A_CRY_SHORT_01:
 		if (checkUnkA8(2))
-			MSoundSESystem::MSRandPlay::startSeRandPlay(0x7865, 0);
+			MSoundSESystem::MSRandPlay::startSeRandPlay(MSD_SE_MV10A_CRY_SHORT_01, 0);
 		if (unk8C[0] != nullptr)
 			return unk8C[0]->unk8;
 		return -1;
 		break;
 
-	case 0x7881:
+	case MSD_SE_MV12_REACT_01:
 		if (param_2 <= 2)
-			param_1 = 0x78EE;
+			param_1 = MSD_SE_MV33_T_01;
 		break;
 
-	case 0x7884:
+	case MSD_SE_MV13_ACTION_SMALL_01:
 		if (param_2 <= 2)
-			param_1 = 0x78FB;
+			param_1 = MSD_SE_MV34_ACTION_T_01;
 		break;
 
-	case 0x788F:
+	case MSD_SE_MV15_EXERT_INST_01:
 		if (param_2 <= 2)
-			param_1 = 0x78FE;
+			param_1 = MSD_SE_MV38_EXERT_INST_T_01;
 		break;
 
-	case 0x7899:
+	case MSD_SE_MV17_EXERT_REACT_01:
 		if (param_2 <= 2)
-			param_1 = 0x78FB;
+			param_1 = MSD_SE_MV34_ACTION_T_01;
 		break;
 
-	case 0x78AB:
+	case MSD_SE_MV21_JUMP_SMALL_01:
 		if (param_2 <= 2) {
-			param_1 = 0x7901;
+			param_1 = MSD_SE_MV41_JUMP_T_01;
 			break;
 		}
 		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.3f)
-			param_1 = 0x7807;
+			param_1 = MSD_SE_MA_VO_JUMP_SMALL_0;
 		break;
 
-	case 0x78B1:
+	case MSD_SE_MV22_JUMP_MID_01:
 		if (param_2 <= 2) {
-			param_1 = 0x7901;
+			param_1 = MSD_SE_MV41_JUMP_T_01;
 			break;
 		}
 		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.7f)
-			param_1 = 0x7803;
+			param_1 = MSD_SE_MA_VO_JUMP_MID_0;
 		break;
 
-	case 0x78B6:
+	case MSD_SE_MV23_JUMP_LARGE_01:
 		if (param_2 <= 2) {
-			param_1 = 0x7901;
+			param_1 = MSD_SE_MV41_JUMP_T_01;
 			break;
 		}
 		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.5f)
-			param_1 = 0x7800;
+			param_1 = MSD_SE_MA_VO_JUMP_BIG_0;
 		break;
 
-	case 0x78B9:
+	case MSD_SE_MV24_JUMP_SPECIAL_01:
 		if (param_2 <= 2) {
-			param_1 = 0x7901;
+			param_1 = MSD_SE_MV41_JUMP_T_01;
 			break;
 		}
 		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.5f)
-			param_1 = 0x780A;
+			param_1 = MSD_SE_MA_VO_JUMP_SPECIAL_0;
 		break;
 
-	case 0x78BF:
+	case MSD_SE_MV25A_JUMP_HUGE_01:
 		if (param_2 <= 2)
-			param_1 = 0x7906;
+			param_1 = MSD_SE_MV42_JUMP_HUGE_T_01;
 		break;
 
-	case 0x78C7:
+	case MSD_SE_MV26_JUMP_REACT_01:
 		if (param_2 <= 2) {
-			param_1 = 0x78EE;
+			param_1 = MSD_SE_MV33_T_01;
 			break;
 		}
 		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.5f)
-			param_1 = 0x780E;
+			param_1 = MSD_SE_MA_VO_LAND_HI_0;
 		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.5f)
-			param_1 = 0x7813;
+			param_1 = MSD_SE_MA_VO_LAND_LOW_0;
 		break;
 
-	case 0x78E5:
+	case MSD_SE_MV31_OPEN_DOOR_01:
 		if (param_2 <= 2)
-			param_1 = 0x790B;
+			param_1 = MSD_SE_MV46A_OPEN_DOOR_T_01;
 		break;
 
 	case -2:
 		if (param_2 <= 2)
-			param_1 = 0x790E;
+			param_1 = MSD_SE_MV46B_NEXT_STG_T_01;
 		else
-			param_1 = 0x78E5;
+			param_1 = MSD_SE_MV31_OPEN_DOOR_01;
 		break;
 	}
 
@@ -1037,22 +1037,22 @@ u32 MSound::getWallSound(u32 param_1, f32 param_2)
 {
 	if (param_2 < 15.0f) {
 		if (param_1 == 0x1C)
-			return 0x194B;
+			return MSD_SE_MA_WALL_COL_VERYSOFT;
 		else
-			return 0x194A;
+			return MSD_SE_MA_WALL_COL_CMN_VS;
 	}
 
 	if (param_2 < 30.0f) {
 		if (param_1 == 0x1C)
-			return 0x1802;
+			return MSD_SE_MA_WALL_COL_SOFT;
 		else
-			return 0x1949;
+			return MSD_SE_MA_WALL_COL_CMN_S;
 	}
 
 	if (param_1 == 0x1C)
-		return 0x1803;
+		return MSD_SE_MA_WALL_COL_HARD;
 	else
-		return 0x1948;
+		return MSD_SE_MA_WALL_COL_CMN_H;
 }
 
 void MSound::startBeeSe(Vec* param_1, u32 param_2)
@@ -1061,7 +1061,7 @@ void MSound::startBeeSe(Vec* param_1, u32 param_2)
 		JAISound* sound = !checkUnkA8(1)
 		                      ? nullptr
 		                      : MSoundSESystem::MSoundSE::startSoundActor(
-		                            0x2106, param_1, 0, nullptr, 0, 4);
+		                            MSD_SE_EN_BEE_GROUP, param_1, 0, nullptr, 0, 4);
 
 		if (sound != nullptr)
 			sound->setVolume(JALCalc::linearTransform(param_2, 3.0f, 50.0f,
@@ -1071,15 +1071,15 @@ void MSound::startBeeSe(Vec* param_1, u32 param_2)
 
 	if (param_2 > 2) {
 		if (checkUnkA8(1))
-			MSoundSESystem::MSoundSE::startSoundActor(0x2107, param_1, 0,
+			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_3, param_1, 0,
 			                                          nullptr, 0, 4);
 	} else if (param_2 == 2) {
 		if (checkUnkA8(1))
-			MSoundSESystem::MSoundSE::startSoundActor(0x2108, param_1, 0,
+			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_2, param_1, 0,
 			                                          nullptr, 0, 4);
 	} else if (param_2 == 1) {
 		if (checkUnkA8(1))
-			MSoundSESystem::MSoundSE::startSoundActor(0x2109, param_1, 0,
+			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_1, param_1, 0,
 			                                          nullptr, 0, 4);
 	}
 }
@@ -1095,7 +1095,7 @@ void MSound::startSoundActorSpecial(u32 param_1, const Vec* param_2,
 		    param_1, param_6, &actor, param_7, param_8);
 		if (sound != nullptr) {
 			switch (param_1) {
-			case 0x212F:
+			case MSD_SE_EN_IGAIGA_ROLL:
 				f32 local_40 = 1.0f;
 				f32 local_44 = 1.0f;
 				if (JALSeModData<JALSeModVolFunk>::calc(param_1, param_3,

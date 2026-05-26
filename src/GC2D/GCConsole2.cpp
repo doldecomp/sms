@@ -493,8 +493,8 @@ void TGCConsole2::startAppearTelop(bool param_1)
 		J2DPrint print(gpSystemFont, 0);
 		mTelopTextWidth = print.getWidth(unk528->getStringPtr());
 
-		if (gpMSound->gateCheck(0x4812)) {
-			MSoundSESystem::MSoundSE::startSoundSystemSE(0x4812, 0, nullptr, 0);
+		if (gpMSound->gateCheck(MSD_SE_SY_NEWS)) {
+			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_NEWS, 0, nullptr, 0);
 		}
 	}
 }

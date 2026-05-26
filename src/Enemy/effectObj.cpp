@@ -50,8 +50,8 @@ void TEffectPinnaFunsui::emitEffect()
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(0x1A8, getUnk48(), 1, this);
 
-	if (gpMSound->gateCheck(0x5006))
-		MSoundSESystem::MSoundSE::startSoundActor(0x5006, &mPosition, 0,
+	if (gpMSound->gateCheck(MSD_SE_EV_ARCHED_FOUNTAIN))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EV_ARCHED_FOUNTAIN, &mPosition, 0,
 		                                          nullptr, 0, 4);
 }
 
@@ -68,8 +68,8 @@ void TEffectBiancoFunsui::emitEffect()
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(0x1A9, getUnk48(), 1, this);
 
-	if (gpMSound->gateCheck(0x5006))
-		MSoundSESystem::MSoundSE::startSoundActor(0x5006, &mPosition, 0,
+	if (gpMSound->gateCheck(MSD_SE_EV_ARCHED_FOUNTAIN))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EV_ARCHED_FOUNTAIN, &mPosition, 0,
 		                                          nullptr, 0, 4);
 }
 
@@ -163,8 +163,8 @@ void TEffectObjBase::moveObject()
 			emitter->unk174.set(x, y, z);
 		}
 
-		if (gpMSound->gateCheck(0x30B2))
-			MSoundSESystem::MSoundSE::startSoundActor(0x30B2, &mPosition, 0,
+		if (gpMSound->gateCheck(MSD_SE_OBJ_CALM_FLAME))
+			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_OBJ_CALM_FLAME, &mPosition, 0,
 			                                          nullptr, 0, 4);
 	}
 
@@ -186,8 +186,8 @@ void TEffectObjBase::behaveToWater(THitActor* param_1)
 		return;
 	}
 
-	if (gpMSound->gateCheck(0x28C5))
-		MSoundSESystem::MSoundSE::startSoundActor(0x28C5, &mPosition, 0,
+	if (gpMSound->gateCheck(MSD_SE_BS_WANWAN_TO_COOL))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
 		                                          nullptr, 0, 4);
 	unk68 = 3;
 	onHitFlag(HIT_FLAG_NO_COLLISION);

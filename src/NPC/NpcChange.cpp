@@ -260,46 +260,46 @@ void TBaseNPC::behaveToBeTrampled_()
 {
 	bool cVar7 = isChild();
 
-	u32 uVar10 = 0x8826;
+	u32 uVar10 = MSD_SE_NPC_COMMON_PRESS;
 	if (isMonteM()) {
 		if (cVar7)
-			uVar10 = 0x88AB;
+			uVar10 = MSD_SE_NPC_VAS_CMONTM_PRESS;
 		else
-			uVar10 = 0x8844;
+			uVar10 = MSD_SE_NPC_VAS_MONTEM_PRESS;
 	} else if (isMonteW()) {
 		if (cVar7)
-			uVar10 = 0x88AC;
+			uVar10 = MSD_SE_NPC_VAS_CMONTW_PRESS;
 		else
-			uVar10 = 0x8845;
+			uVar10 = MSD_SE_NPC_VAS_MONTEW_PRESS;
 	} else if (isMareM()) {
 		if (cVar7) {
-			uVar10 = 0x88AD;
+			uVar10 = MSD_SE_NPC_VAS_CMAREM_PRESS;
 		} else {
 			switch (mActorType) {
 			case 0x4000010:
 			case 0x4000011:
-				uVar10 = 0x88AF;
+				uVar10 = MSD_SE_NPC_VAS_MAREJ_PRESS;
 				break;
 
 			default:
-				uVar10 = 0x8846;
+				uVar10 = MSD_SE_NPC_VAS_MAREM_PRESS;
 				break;
 			}
 		}
 	} else if (isMareW()) {
 		if (cVar7) {
-			uVar10 = 0x88AE;
+			uVar10 = MSD_SE_NPC_VAS_CMAREW_PRESS;
 		} else {
-			uVar10 = 0x8847;
+			uVar10 = MSD_SE_NPC_VAS_MAREW_PRESS;
 		}
 	} else {
 		switch (mActorType) {
 		case 0x4000016:
-			uVar10 = 0x8849;
+			uVar10 = MSD_SE_NPC_VAS_KINOPI_PRESS;
 			break;
 
 		case 0x4000017:
-			uVar10 = 0x8848;
+			uVar10 = MSD_SE_NPC_VAS_KINOJI_PRESS;
 			break;
 		}
 	}
@@ -348,9 +348,9 @@ void TBaseNPC::behaveToHitObject_(THitActor* param_1,
 			return;
 
 		gpMarioParticleManager->emit(0xE7, &mPosition, 0, nullptr);
-		SMSGetMSound()->startSoundSet(0x6802, &mPosition, 0, 0.0f, 0, 0, 4);
-		if (SMSGetMSound()->gateCheck(0x8837))
-			MSoundSESystem::MSoundSE::startSoundNpcActor(0x8837, &mPosition, 0,
+		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0, 0.0f, 0, 0, 4);
+		if (SMSGetMSound()->gateCheck(MSD_SE_NPC_FIRE_FIGHTING))
+			MSoundSESystem::MSoundSE::startSoundNpcActor(MSD_SE_NPC_FIRE_FIGHTING, &mPosition, 0,
 			                                             nullptr, 0, 4);
 		mBurnStrength -= mPtrSaveNormal->mSLFireDecSpeed.get();
 		if (!isExtinguished_())
@@ -551,8 +551,8 @@ void TBaseNPC::changeNerveProc_()
 		offHitFlag(HIT_FLAG_NO_COLLISION);
 		offLiveFlag(LIVE_FLAG_SINK_BOTTOM);
 		requestNpcAnm_(NPC_ANM_KIND_UNK1A, NPC_STOP_MOTION_BLEND_ON);
-		if (SMSGetMSound()->gateCheck(0x3811))
-			MSoundSESystem::MSoundSE::startSoundNpcActor(0x3811, &mPosition, 0,
+		if (SMSGetMSound()->gateCheck(MSD_SE_NPC_APPEAR))
+			MSoundSESystem::MSoundSE::startSoundNpcActor(MSD_SE_NPC_APPEAR, &mPosition, 0,
 			                                             nullptr, 0, 4);
 		return;
 	}

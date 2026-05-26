@@ -304,7 +304,7 @@ void TYoshiTongue::movement()
 			if (rem.length() < 200.0f
 			    && target->receiveMessage(this, HIT_MESSAGE_TAKE) == true) {
 				mHeldObject = (TTakeActor*)target;
-				SMSGetMSound()->startSoundActor(0x7920, &mTipPos, 0, nullptr, 0,
+				SMSGetMSound()->startSoundActor(MSD_SE_YV_PERON, &mTipPos, 0, nullptr, 0,
 				                                4);
 				mProgress = 0;
 				mState    = STATE_GRABBED;

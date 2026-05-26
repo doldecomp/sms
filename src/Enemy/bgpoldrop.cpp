@@ -53,8 +53,8 @@ void TBGPolDrop::move()
 
 			gpMarioParticleManager->emit(0x9E, &local_14, 0, nullptr);
 			gpMarioParticleManager->emit(0x9F, &local_14, 0, nullptr);
-			if (gpMSound->gateCheck(0x2871))
-				MSoundSESystem::MSoundSE::startSoundActor(0x2871, mPosition, 0,
+			if (gpMSound->gateCheck(MSD_SE_BS_GESO_GERO_LAND))
+				MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_GESO_GERO_LAND, mPosition, 0,
 				                                          nullptr, 0, 4);
 		} else if (!unk50->checkCurBckFromIndex(11)
 		           || unk50->curAnmEndsNext()) {

@@ -106,9 +106,9 @@ const u32 cSoundToggleItems[] = {
 const TOptionSoundUnit::FabricatedSoundSettings
     TOptionSoundUnit::cSoundSettings[]
     = {
-	      { 0x8843, 0 },
-	      { 0x884A, 1 },
-	      { 0x884B, 2 },
+	      { MSD_SE_SY_SOUT_MONO, 0 },
+	      { MSD_SE_SY_SOUT_STEREO, 1 },
+	      { MSD_SE_SY_SOUT_SURROUND, 2 },
       };
 
 const TOptionSoundUnit::FabricatedFlagInfo TOptionSoundUnit::cFlagInfos[] = {
@@ -412,7 +412,7 @@ void TOptionRumbleUnit::toggle()
 	mShouldRumble = true;
 	mSelectionText->toggle();
 	adjust();
-	SMSGetMSound()->startSoundSystemSE(0x481C, 0, nullptr, 0);
+	SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0, nullptr, 0);
 	SMSRumbleMgr->start(8, (float*)nullptr);
 }
 
@@ -899,7 +899,7 @@ void TOptionControl::setType(TOptionControl::SelectType type,
 		}
 
 		if (!initial_options_entry)
-			SMSGetMSound()->startSoundSystemSE(0x4815, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CURSOR_COMMON, 0, nullptr, 0);
 	}
 }
 

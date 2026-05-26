@@ -351,9 +351,9 @@ static s32 ReviveSunflowerCallBack(u32 param_1, u32 param_2)
 	if (param_2 == 0) {
 		TBaseNPC* sunflower = (TBaseNPC*)param_1;
 		sunflower->sunflowerReviveIn();
-		u32 sound = 0x8808;
+		u32 sound = MSD_SE_NPC_MONTE_C_CLEANUP;
 		if (TNpcEvent::mDownSunflowerNum == 0)
-			sound = 0x4847;
+			sound = MSD_SE_SY_PROBLEM_SOLVED;
 		if (SMSGetMSound()->gateCheck(sound))
 			MSoundSESystem::MSoundSE::startSoundNpcActor(
 			    sound, &sunflower->mPosition, 0, nullptr, 0, 4);
