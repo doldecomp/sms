@@ -2135,9 +2135,9 @@ void TMario::thinkWaterSurface()
 	J3DGetTranslateRotateMtx(0, mModelFaceAngle, 0, mPosition.x,
 	                         mFloorPosition.z, mPosition.z, unk220);
 
-	unk190 = mPosition.x;
-	unk194 = mFloorPosition.z;
-	unk198 = mPosition.z;
+	unk190.x = mPosition.x;
+	unk190.y = mFloorPosition.z;
+	unk190.z = mPosition.z;
 	MTXCopy(mModel->unk8->getAnmMtx(mBoneIDs[10]), unk1C0);
 
 	if (nowInWater != wasInWater) {

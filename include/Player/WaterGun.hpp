@@ -276,6 +276,9 @@ public:
 		return ((TNozzleTrigger*)getCurrentNozzle())->unk385 == pState;
 	}
 
+	// Fabricated (maybe should be indexed?)
+	const JGeometry::TVec3<f32>& getEmitPos0() const { return mEmitPos[0]; }
+
 public:
 	/* 0x0004 */ u16 mFlags;
 	/* 0x0008 */ TMario* mMario;

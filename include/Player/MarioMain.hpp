@@ -16,6 +16,7 @@ class J3DModelData;
 class J3DAnmTransform;
 struct TBGWallCheckRecord;
 class TMarioCap;
+class TMarioEffect;
 class TWaterEmitInfo;
 class TBaseNPC;
 class J3DFrameCtrl;
@@ -1073,9 +1074,9 @@ public:
 	// Particle stuff
 	void initParticle();
 	void moveParticle();
-	void emitParticle(int);
-	void emitParticle(int, const JGeometry::TVec3<f32>*);
-	void emitParticle(int, s16);
+	bool emitParticle(int);
+	bool emitParticle(int, const JGeometry::TVec3<f32>*);
+	bool emitParticle(int, s16);
 	void emitSmoke(s16);
 	void emitSweat(s16);
 	void emitSweatSometimes();
@@ -1865,11 +1866,9 @@ public:
 	/* 0x15C */ f32 unk15C;
 	/* 0x160 */ JGeometry::TVec3<f32>
 	    unk160[4]; // Bone position, probably larger array
-	/* 0x190 */ f32 unk190;
-	/* 0x194 */ f32 unk194;
-	/* 0x198 */ f32 unk198;
+	/* 0x190 */ JGeometry::TVec3<f32> unk190;
 	/* 0x19C */ JGeometry::TVec3<f32> unk19C; // damage pos
-	/* 0x1A8 */ char unk1A8[0xC];
+	/* 0x1A8 */ JGeometry::TVec3<f32> unk1A8;
 	/* 0x1B4 */ JGeometry::TVec3<f32> unk1B4;
 	/* 0x1C0 */ Mtx unk1C0;
 	/* 0x1F0 */ Mtx unk1F0;
@@ -1948,7 +1947,7 @@ public:
 	/* 0x412 */ s16 mRailType;                     // type of rail
 	/* 0x414 */ JGeometry::TVec3<f32> unk414;
 	/* 0x420 */ TMultiMtxEffect* mMultiMtxEffect;
-	/* 0x424 */ void* mMarioEffect; // TMarioEffect*
+	/* 0x424 */ TMarioEffect* mMarioEffect;
 	/* 0x428 */ JGeometry::TVec3<f32> mWireStartPos;
 	/* 0x434 */ JGeometry::TVec3<f32> mWireEndPos;
 	/* 0x440 */ f32 mWirePosRatio; // ratio from 0.0 to 1.0 of mario on the wire
@@ -1969,7 +1968,7 @@ public:
 	/* 0x4E8 */ u32 mSoundFlags;
 	/* 0x4EC */ s8 unk4EC; // Bool if should do draw logic?
 	/* 0x4ED */ u8 mBlendLogicOp;
-	/* 0x4EE */ u16 mWaterWakeAlpha; // should be verified
+	/* 0x4EE */ s16 mWaterWakeAlpha;
 	/* 0x4F0 */ JGeometry::TVec3<f32> unk4F0;
 	/* 0x4FC */ TMarioGamePad* mGamePad;
 	/* 0x500 */ TMarioSoundValues mSoundValues;
