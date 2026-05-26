@@ -306,7 +306,7 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 	}
 
 	if (damageAnimType == 3) {
-		if (mStatus == 0x4000440 || mStatus == STATUS_OIL_RUN) {
+		if (mStatus == STATUS_RUN || mStatus == STATUS_OIL_RUN) {
 			setUpperDamageRun();
 		}
 	} else {

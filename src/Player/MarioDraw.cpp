@@ -2072,7 +2072,7 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (mStatus == 0x4000440 && mAnimationId != ANIM_SSTEP) {
+	if (mStatus == STATUS_RUN && mAnimationId != ANIM_SSTEP) {
 		f32 blendRatio = unk414.z;
 		if (blendRatio < 0.3f) {
 			changeHand(2);
