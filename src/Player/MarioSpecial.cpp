@@ -48,7 +48,8 @@ BOOL TMario::barWait()
 		mPosition.y += mVel.y;
 		mHolderHeightDiff = mPosition.y - mHolder->mPosition.y;
 		treeSlipEffect();
-		SMSGetMSound()->startSoundActor(0x1140, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_TREE, &mPosition, 0,
+		                                nullptr, 0, 4);
 	}
 
 	if (mHolder->getActorType() == 0x400000bb) {
@@ -383,7 +384,7 @@ BOOL TMario::kickRoofRollUp()
 	kickRoofEffect();
 
 	if (mStatusTimer++ == 8)
-		startVoice(0x7890);
+		startVoice(MSD_SE_MV15_EXERT_INST_02);
 
 	if (isLast1AnimeFrame()) {
 		mPosition.y += 160.0f;
@@ -448,7 +449,7 @@ BOOL TMario::hanging()
 	}
 
 	if ((mInput & 0x2) && onCeil) {
-		startVoice(0x788f);
+		startVoice(MSD_SE_MV15_EXERT_INST_01);
 		return changePlayerStatus(STATUS_HANG_JUMPING, 0, false);
 	}
 
@@ -573,7 +574,7 @@ BOOL TMario::hanging()
 
 	f32 below = mPosition.y - checkPlayerAround(-0x8000, 30.0f);
 	if (onCeil && below < 100.0f) {
-		startVoice(0x788f);
+		startVoice(MSD_SE_MV15_EXERT_INST_01);
 		return changePlayerStatus(STATUS_HANG_JUMPING, 0, false);
 	}
 
@@ -712,11 +713,11 @@ BOOL TMario::wireWait()
 
 			u32 sfx;
 			if (mWireBounceVel < mWireSfx1MinVel)
-				sfx = 0x1812;
+				sfx = MSD_SE_MA_ROPE_JUMP_C;
 			else if (mWireBounceVel < mWireSfx0MinVel)
-				sfx = 0x1811;
+				sfx = MSD_SE_MA_ROPE_JUMP_B;
 			else
-				sfx = 0x1810;
+				sfx = MSD_SE_MA_ROPE_JUMP_A;
 			if (gpMSound->gateCheck(sfx))
 				MSoundSESystem::MSoundSE::startSoundActorWithInfo(
 				    sfx, &mPosition, nullptr, mWireSag, 0, 0, nullptr, 0, 4);
@@ -744,11 +745,11 @@ BOOL TMario::wireWait()
 			}
 		}
 		if (diff < -0x2000) {
-			startVoice(0x78e0);
+			startVoice(MSD_SE_MV30_FRIGHT_01);
 			return changePlayerStatus(STATUS_WIRE_WAIT_TO_S_WAIT_L, 0, false);
 		}
 		if (diff > 0x2000) {
-			startVoice(0x78e0);
+			startVoice(MSD_SE_MV30_FRIGHT_01);
 			return changePlayerStatus(STATUS_WIRE_WAIT_TO_S_WAIT_R, 0, false);
 		}
 	} else {
@@ -783,7 +784,7 @@ BOOL TMario::wireSWait()
 
 	if (mInput & 0x10000) {
 		mWireBounceVelPrev = 5.0f;
-		startVoice(0x78e0);
+		startVoice(MSD_SE_MV30_FRIGHT_01);
 		return changePlayerStatus(0x10000554, 0, false);
 	}
 
@@ -1068,8 +1069,8 @@ BOOL TMario::wireRolling()
 	if (mStatusState & 2) {
 		if (mFaceAngle.x < mWireSwingPosAngle
 		    && mWireSwingPosAngle <= initialAngle) {
-			mWireQueuedSfxID = 0x381e;
-			sfxId            = 0x1817;
+			mWireQueuedSfxID = MSD_SE_OBJ_ROPE_CLEAK_ROLL;
+			sfxId            = MSD_SE_MA_ROPE_ROLL_FULL_A;
 			playSfx          = TRUE;
 			mWireSfxTimer    = mWireSfxDelay;
 			if (!(mStatusState & 0xc)) {
@@ -1079,31 +1080,31 @@ BOOL TMario::wireRolling()
 					mStatusState |= 8;
 			}
 			if ((mStatusState & 0xc) == 4)
-				startVoice(0x78c1);
+				startVoice(MSD_SE_MV25A_WIRE_ROLL_01A);
 			if ((mStatusState & 0xc) == 8)
-				startVoice(0x78c4);
+				startVoice(MSD_SE_MV25A_WIRE_ROLL_02A);
 		}
 
 		if (mFaceAngle.x < mWireSwingNegAngle
 		    && mWireSwingNegAngle <= initialAngle) {
-			sfxId   = 0x180f;
+			sfxId   = MSD_SE_MA_ROPE_ROLL_FULL_B;
 			playSfx = TRUE;
 		}
 
 		if (initialAngle > 0 && mFaceAngle.x <= 0) {
-			mWireQueuedSfxID = 0x381e;
+			mWireQueuedSfxID = MSD_SE_OBJ_ROPE_CLEAK_ROLL;
 			mWireSfxTimer    = mWireSfxDelay;
 		}
 	} else {
 		if (mFaceAngle.x < mWireRollAngle && mWireRollAngle <= initialAngle) {
-			mWireQueuedSfxID = 0x381f;
-			sfxId            = 0x1815;
+			mWireQueuedSfxID = MSD_SE_OBJ_ROPE_CLEAK_HALFA;
+			sfxId            = MSD_SE_MA_ROPE_ROLL_HALF_A;
 			playSfx          = TRUE;
 			mWireSfxTimer    = mWireSfxDelay;
 		}
 		if (initialAngle < mWireRollAngle && mWireRollAngle <= mFaceAngle.x) {
-			mWireQueuedSfxID = 0x3820;
-			sfxId            = 0x1816;
+			mWireQueuedSfxID = MSD_SE_OBJ_ROPE_CLEAK_HALFB;
+			sfxId            = MSD_SE_MA_ROPE_ROLL_HALF_B;
 			playSfx          = TRUE;
 			mWireSfxTimer    = mWireSfxDelay;
 		}
@@ -1197,14 +1198,14 @@ BOOL TMario::pulling()
 	if (mInput & 0x4) {
 		((THitActor*)mHeldObject)->receiveMessage(this, 8);
 		mHeldObject = nullptr;
-		startVoice(0x78e0);
+		startVoice(MSD_SE_MV30_FRIGHT_01);
 		return changePlayerStatus(0x88c, 0, false);
 	}
 
 	if (!(unk108->mInput & 0x400)) {
 		((THitActor*)mHeldObject)->receiveMessage(this, 8);
 		mHeldObject = nullptr;
-		startVoice(0x78e0);
+		startVoice(MSD_SE_MV30_FRIGHT_01);
 		return changePlayerStatus(0xc0022f, 0, false);
 	}
 
@@ -1411,8 +1412,8 @@ BOOL TMario::fenceMove()
 		}
 
 		if (mInput & 0x2) {
-			SMSGetMSound()->startSoundActor(0x193a, &mPosition, 0, nullptr, 0,
-			                                4);
+			SMSGetMSound()->startSoundActor(MSD_SE_MA_FENCE_PUNCH, &mPosition,
+			                                0, nullptr, 0, 4);
 			rumbleStart(0x15, mMotorParams.mMotorWall.get());
 			return startJumpWall();
 		}
@@ -1471,7 +1472,8 @@ BOOL TMario::fencePunch()
 	TBGCheckData* wall = checkWallPlane(&pos, 80.0f, 50.0f);
 
 	if (mInput & 0x2) {
-		SMSGetMSound()->startSoundActor(0x193a, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_FENCE_PUNCH, &mPosition, 0,
+		                                nullptr, 0, 4);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 		return startJumpWall();
 	}
@@ -1496,7 +1498,7 @@ BOOL TMario::fencePunch()
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 		if (unk2C0 != nullptr) {
 			((THitActor*)unk2C0)->receiveMessage(this, 3);
-			startVoice(0x7890);
+			startVoice(MSD_SE_MV15_EXERT_INST_02);
 			if (unk2C0->mActorType == 0x4000006a) {
 				f32 x = unk2F4.x;
 				f32 z = unk2F4.y;

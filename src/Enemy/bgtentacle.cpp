@@ -1118,9 +1118,9 @@ void TBGTentacle::calcAtkParticleAndSE()
 				unk4C = 1;
 
 				const JGeometry::TVec3<f32>& p = mTakeHit->getPosition();
-				if (gpMSound->gateCheck(0x286F))
-					MSoundSESystem::MSoundSE::startSoundActor(0x286F, p, 0,
-					                                          nullptr, 0, 4);
+				if (gpMSound->gateCheck(MSD_SE_BS_GESO_ATK_IMPACT))
+					MSoundSESystem::MSoundSE::startSoundActor(
+					    MSD_SE_BS_GESO_ATK_IMPACT, p, 0, nullptr, 0, 4);
 
 				mOwner->rumblePad(2, mOwner->getPosition());
 			}
@@ -1165,17 +1165,17 @@ void TBGTentacle::calcAtkParticleAndSE()
 	if (unk80->checkBckPass(endFrame - atkSoundTime)) {
 		if (mState != 10) {
 			const JGeometry::TVec3<f32>& p = mTakeHit->getPosition();
-			if (gpMSound->gateCheck(0x286E))
-				MSoundSESystem::MSoundSE::startSoundActor(0x286E, p, 0, nullptr,
-				                                          0, 4);
+			if (gpMSound->gateCheck(MSD_SE_BS_GESO_ATK))
+				MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_GESO_ATK, p,
+				                                          0, nullptr, 0, 4);
 
 			if (!mOwner->unk1AC) {
 				mOwner->unk1AC = 0xF0;
 
 				const JGeometry::TVec3<f32>& p = mTakeHit->getPosition();
-				if (gpMSound->gateCheck(0x2902))
-					MSoundSESystem::MSoundSE::startSoundActor(0x2902, p, 0,
-					                                          nullptr, 0, 4);
+				if (gpMSound->gateCheck(MSD_SE_BS_GESO_VO_ATTACK))
+					MSoundSESystem::MSoundSE::startSoundActor(
+					    MSD_SE_BS_GESO_VO_ATTACK, p, 0, nullptr, 0, 4);
 			}
 		}
 	}
@@ -1400,9 +1400,9 @@ void TBGTentacle::perform(u32 param_1, JDrama::TGraphics* param_2)
 	    && mTimeInCurrentState
 	           < mOwner->getSaveParam()->getSLAmputeeTime() - 240) {
 		const JGeometry::TVec3<f32>& pos = mTakeHit->getPosition();
-		if (gpMSound->gateCheck(0x206B))
-			MSoundSESystem::MSoundSE::startSoundActor(0x206B, &pos, 0, nullptr,
-			                                          0, 4);
+		if (gpMSound->gateCheck(MSD_SE_BS_GESO_TAKEN_HAND))
+			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_GESO_TAKEN_HAND,
+			                                          &pos, 0, nullptr, 0, 4);
 	}
 
 	if (mState != 6)

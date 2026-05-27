@@ -991,7 +991,7 @@ void TMario::setDivHelm()
 	if (mCap == nullptr)
 		return;
 	emitGetEffect();
-	startSoundActor(0x1968);
+	startSoundActor(MSD_SE_MA_HELMET);
 	mCap->setModelActive(TMarioCap::E_CAP_MODEL_HELMET);
 }
 
@@ -1985,12 +1985,12 @@ void TMario::addUpper()
 				if (frameCtrl.getRate() >= 0.0f) {
 					frameCtrl.setRate(unk348);
 					if (frameCtrl.checkPass(8.0f)) {
-						startSoundActor(0x816);
+						startSoundActor(MSD_SE_PO_POMPING1);
 					}
 				} else {
 					frameCtrl.setRate(-unk348);
 					if (frameCtrl.checkPass(13.0f)) {
-						startSoundActor(0x817);
+						startSoundActor(MSD_SE_PO_POMPING2);
 					}
 				}
 			}

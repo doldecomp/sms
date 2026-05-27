@@ -7,6 +7,7 @@
 #include <Map/Map.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorAnm.hpp>
+#include <MSound/SoundEffects.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <Strategic/ObjModel.hpp>
@@ -34,8 +35,8 @@ static void dummy4(Vec& v)
 }
 
 TMapObjSoundData TMapObjGeneral::mDefaultSound = {
-	{ 0xFFFFFFFF, 0x3802, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-	  0xFFFFFFFF, 0xFFFFFFFF, 0x3812, 0xFFFFFFFF },
+	{ 0xFFFFFFFF, MSD_SE_IT_COMMON_APPEAR, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	  0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, MSD_SE_IT_APPEAR, 0xFFFFFFFF },
 };
 
 static TMapObjSoundData normal_sound_data = {

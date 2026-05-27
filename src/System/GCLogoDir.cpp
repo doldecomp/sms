@@ -174,7 +174,7 @@ bool TGCLogoDir::direct_nlogo()
 			else
 				nextState = 1;
 
-			SMSGetMSound()->startSoundSystemSE(0x7914, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_MV_CHAO, 0, nullptr, 0);
 			mLogoShowTimer = 0;
 		} else {
 			if (mProgSelect->unkC.mValue != 0 && VIGetTvFormat() == 0

@@ -70,7 +70,7 @@ void TMario::getCoin()
 	incHP(1);
 	if ((TFlagManager::smInstance->getFlag(0x40002) % 50) == 0) {
 		TFlagManager::smInstance->incMario(1);
-		SMSGetMSound()->startSoundSystemSE(0x4841, 0, nullptr, 0);
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_1UP, 0, nullptr, 0);
 	}
 }
 
@@ -116,8 +116,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			playThump = false;
 
 		if (playThump == true)
-			SMSGetMSound()->startSoundActor(0x180C, &mPosition, 0, nullptr, 0,
-			                                4);
+			SMSGetMSound()->startSoundActor(MSD_SE_MA_GET_ITEM, &mPosition, 0,
+			                                nullptr, 0, 4);
 	}
 
 	// HIT_MESSAGE_UNK7 - damage trigger.
@@ -126,19 +126,19 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		    || sender->checkActorType(ACTOR_TYPE_UNK4000000)
 		    || sender->checkActorType(ACTOR_TYPE_ENEMY)
 		    || sender->checkActorType(ACTOR_TYPE_BOSS)) {
-			SMSGetMSound()->startSoundActor(0x193D, &mPosition, 0, &mSound, 0,
-			                                4);
+			SMSGetMSound()->startSoundActor(MSD_SE_MA_HANEAGARI, &mPosition, 0,
+			                                &mSound, 0, 4);
 		}
 		if (sender->mActorType == 0x10000015)
-			startVoice(0x78CF);
+			startVoice(MSD_SE_MV27_SPRISE_01);
 
 		if (sender->checkActorType(ACTOR_TYPE_UNK40000000)
-		    && gpMSound->getMarioVoiceID(0) != 0x78D3) {
-			startVoice(0x78D3);
+		    && gpMSound->getMarioVoiceID(0) != MSD_SE_MV28_SPRISE_SMALL_01) {
+			startVoice(MSD_SE_MV28_SPRISE_SMALL_01);
 		}
 		if (onYoshi())
-			SMSGetMSound()->startSoundActor(0x791C, &mPosition, 0, nullptr, 0,
-			                                4);
+			SMSGetMSound()->startSoundActor(MSD_SE_YV_SURPRISED, &mPosition, 0,
+			                                nullptr, 0, 4);
 
 		changePlayerStatus(STATUS_THROWN_DOWN, 0, false);
 		return TRUE;
@@ -264,8 +264,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				           mDmgParamsLampTrapIron.mDirty.get(),
 				           mDmgParamsLampTrapIron.mInvincibleTime.get());
 				changePlayerStatus(STATUS_FIRE_DOWN, 1, false);
-				SMSGetMSound()->startSoundActor(0x1813, &mPosition, 0, nullptr,
-				                                0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE,
+				                                &mPosition, 0, nullptr, 0, 4);
 
 				gpMarioParticleManager->emitAndBindToPosPtr(6, &mPosition, 0,
 				                                            nullptr);
@@ -306,7 +306,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 					           mDmgParamsFire.mMotor.get(),
 					           mDmgParamsFire.mDirty.get(),
 					           mDmgParamsFire.mInvincibleTime.get());
-					startVoice(0x78CF);
+					startVoice(MSD_SE_MV27_SPRISE_01);
 					changePlayerStatus(STATUS_THROWN_DOWN, 1, false);
 					return TRUE;
 				}
@@ -449,8 +449,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				           mDmgParamsKiller.mDirty.get(),
 				           mDmgParamsKiller.mInvincibleTime.get());
 				changePlayerStatus(STATUS_FIRE_DOWN, 1, false);
-				SMSGetMSound()->startSoundActor(0x1813, &mPosition, 0, nullptr,
-				                                0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE,
+				                                &mPosition, 0, nullptr, 0, 4);
 
 				gpMarioParticleManager->emitAndBindToPosPtr(6, &mPosition, 0,
 				                                            nullptr);
@@ -560,8 +560,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				           mDmgParamsFire.mDirty.get(),
 				           mDmgParamsFire.mInvincibleTime.get());
 				changePlayerStatus(STATUS_FIRE_DOWN, 1, false);
-				SMSGetMSound()->startSoundActor(0x1813, &mPosition, 0, nullptr,
-				                                0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE,
+				                                &mPosition, 0, nullptr, 0, 4);
 
 				gpMarioParticleManager->emitAndBindToPosPtr(6, &mPosition, 0,
 				                                            nullptr);
@@ -584,8 +584,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				           mDmgParamsFire.mDirty.get(),
 				           mDmgParamsFire.mInvincibleTime.get());
 				changePlayerStatus(STATUS_FIRE_DOWN, 1, false);
-				SMSGetMSound()->startSoundActor(0x1813, &mPosition, 0, nullptr,
-				                                0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE,
+				                                &mPosition, 0, nullptr, 0, 4);
 
 				gpMarioParticleManager->emitAndBindToPosPtr(6, &mPosition, 0,
 				                                            nullptr);
@@ -675,8 +675,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			           mDmgParamsFire.mMotor.get(), mDmgParamsFire.mDirty.get(),
 			           mDmgParamsFire.mInvincibleTime.get());
 			changePlayerStatus(STATUS_FIRE_DOWN, 1, false);
-			SMSGetMSound()->startSoundActor(0x1813, &mPosition, 0, nullptr, 0,
-			                                4);
+			SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE, &mPosition,
+			                                0, nullptr, 0, 4);
 
 			gpMarioParticleManager->emitAndBindToPosPtr(6, &mPosition, 0,
 			                                            nullptr);
@@ -777,7 +777,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 					} else {
 						setAnimation(ANIM_DOOR_OPENR, 1.0f);
 					}
-					startVoice(0x78E5);
+					startVoice(MSD_SE_MV31_OPEN_DOOR_01);
 					return TRUE;
 				}
 				if (frontDiff < -0x6000 || frontDiff > 0x6000) {
@@ -791,7 +791,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 						} else {
 							setAnimation(ANIM_DOOR_OPENL, 1.0f);
 						}
-						startVoice(0x78E5);
+						startVoice(MSD_SE_MV31_OPEN_DOOR_01);
 						return TRUE;
 					}
 					if (!isHolding()) {

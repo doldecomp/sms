@@ -228,9 +228,10 @@ void TCoasterKiller::perform(u32 param_1, JDrama::TGraphics* param_2)
 			JGeometry::TVec3<f32> dist;
 			dist.sub(getPosition(), *gpMarioPos);
 			f32 len = dist.length2();
-			if (gpMSound->gateCheck(0x20FF)) {
+			if (gpMSound->gateCheck(MSD_SE_EN_KILLER_FLY_KUPPA)) {
 				MSoundSESystem::MSoundSE::startSoundActorWithInfo(
-				    0x20FF, &mPosition, nullptr, len, 0, 0, nullptr, 0, 4);
+				    MSD_SE_EN_KILLER_FLY_KUPPA, &mPosition, nullptr, len, 0, 0,
+				    nullptr, 0, 4);
 			}
 		}
 	}

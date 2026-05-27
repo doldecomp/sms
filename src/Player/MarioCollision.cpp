@@ -30,7 +30,8 @@ void TMario::incHP(int hp)
 		if (unk12C > unk130) {
 			unk12C = unk130;
 		} else {
-			SMSGetMSound()->startSoundSystemSE(0x4801, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_HP_RECOVER, 0, nullptr,
+			                                   0);
 		}
 		return;
 	}
@@ -39,7 +40,7 @@ void TMario::incHP(int hp)
 	if (mHealth > mDeParams.mHpMax.get()) {
 		mHealth = mDeParams.mHpMax.get();
 	} else {
-		SMSGetMSound()->startSoundSystemSE(0x4801, 0, nullptr, 0);
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_HP_RECOVER, 0, nullptr, 0);
 	}
 }
 
@@ -181,9 +182,10 @@ bool TMario::trampleExec(THitActor* param_1)
 	    && !param_1->isActorType(0x2000000a)) {
 		u32 trampleCt = getTrampleCt();
 		// Probably an inline
-		if (SMSGetMSound()->gateCheck(0x1818)) {
+		if (SMSGetMSound()->gateCheck(MSD_SE_MA_KICK_ENEMY)) {
 			MSoundSESystem::MSoundSE::startSoundActorWithInfo(
-			    0x1818, &mPosition, nullptr, 0.0f, trampleCt, 0, nullptr, 0, 4);
+			    MSD_SE_MA_KICK_ENEMY, &mPosition, nullptr, 0.0f, trampleCt, 0,
+			    nullptr, 0, 4);
 		}
 	}
 	return true;
@@ -209,7 +211,7 @@ void TMario::loserExec()
 		unk118 |= MARIO_FLAG_GAME_OVER;
 		mHealth = 0;
 
-		gpMSound->startSoundSystemSE(0x480c, 0, nullptr, 0);
+		gpMSound->startSoundSystemSE(MSD_SE_SY_HP_DOWN, 0, nullptr, 0);
 
 		mAnmSound->stop();
 
@@ -293,9 +295,9 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 	if (onYoshi()) {
 		getOffYoshi(true);
 		// Probably an inline
-		if (gpMSound->gateCheck(0x7918)) {
-			MSoundSESystem::MSoundSE::startSoundActor(0x7918, &mPosition, 0,
-			                                          nullptr, 0, 4);
+		if (gpMSound->gateCheck(MSD_SE_YV_DAMAGE)) {
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_YV_DAMAGE, &mPosition, 0, nullptr, 0, 4);
 		}
 		return;
 	}
@@ -381,12 +383,12 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 
 	if (mHealth > 0) {
 		if (damage > 1) {
-			startVoice(0x7830);
+			startVoice(MSD_SE_MV01_DAMAGE_BIG_01);
 		} else {
 			if (damageAnimType == 0) {
-				startVoice(0x783b);
+				startVoice(MSD_SE_MV03_DAMAGE_LITLE_01);
 			} else {
-				startVoice(0x7833);
+				startVoice(MSD_SE_MV02_DAMAGE_MID_01);
 			}
 		}
 	}

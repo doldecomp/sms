@@ -11,6 +11,7 @@
 #include <JSystem/JAudio/JAInterface/JAIBasic.hpp>
 #include <MSound/MSSceneWave.hpp>
 #include <MSound/MSoundSE.hpp>
+#include <MSound/SoundEffects.hpp>
 
 class JAIActor;
 class JAICamera;
@@ -138,17 +139,17 @@ public:
 		case 0x15:
 		case 0x17:
 		case 0x1D:
-			r31 = 0x180A;
+			r31 = MSD_SE_MA_STALL_JUMP;
 			break;
 
 		case 0x1E:
 		default:
 			if (param_4 < 0x1770)
-				r31 = 0x1810;
+				r31 = MSD_SE_MA_ROPE_JUMP_A;
 			else if (param_4 < 0x2EE0)
-				r31 = 0x1811;
+				r31 = MSD_SE_MA_ROPE_JUMP_B;
 			else
-				r31 = 0x1812;
+				r31 = MSD_SE_MA_ROPE_JUMP_C;
 			break;
 		}
 

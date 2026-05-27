@@ -22,8 +22,8 @@ JAISound* MSBgm::startBGM(u32 param)
 {
 	MSBgm* iVar1 = JALListS<MSBgm, u32>::search(param & 0x3FF);
 	if (iVar1) {
-		if ((param == 0x8001000a) || (param == 0x8001000c)
-		    || (param == 0x80010028)) {
+		if ((param == MSD_BGM_CHUBOSS) || (param == MSD_BGM_BOSS)
+		    || (param == MSD_BGM_BOSSHANA_2ND3RD)) {
 			for (u8 i = 0; i < 3; i++) {
 				if ((3 >> i & 1) != 0) {
 					stopTrackBGM(i, 0);
@@ -180,97 +180,97 @@ bool MSBgm::checkPlaying(u32 param) { return false; }
 MS_SCENE_WAVE MSBgm::getSceneNo(u32 param)
 {
 	switch (param) {
-	case 0x80010001:
+	case MSD_BGM_BIANCO:
 		return MS_WAVE_DOLPIC;
-	case 0x80010002:
+	case MSD_BGM_MAMMA:
 		return MS_WAVE_BIANCO;
-	case 0x80010003:
+	case MSD_BGM_PINNAPACO_SEA:
 		return MS_WAVE_MANMA;
-	case 0x80010004:
+	case MSD_BGM_PINNAPACO:
 		return MS_WAVE_PINNAPACO_S;
-	case 0x80010005:
+	case MSD_BGM_MARE_SEA:
 		return MS_WAVE_PINNAPACO;
-	case 0x80010006:
+	case MSD_BGM_MONTEVILLAGE:
 		return MS_WAVE_MARE_SEA;
-	case 0x80010007:
+	case MSD_BGM_SHILENA:
 		return MS_WAVE_MONTEVILLAGE;
-	case 0x80010008:
+	case MSD_BGM_RICCO:
 		return MS_WAVE_SHILENA;
-	case 0x80010009:
+	case MSD_BGM_GET_SHINE:
 		return MS_WAVE_RICO;
-	case 0x8001000a:
+	case MSD_BGM_CHUBOSS:
 		return MS_WAVE_UNK210;
-	case 0x8001000b:
+	case MSD_BGM_MISS:
 		return MS_WAVE_UNK210;
-	case 0x8001000c:
+	case MSD_BGM_BOSS:
 		return MS_WAVE_UNK210;
-	case 0x8001000d:
+	case MSD_BGM_MAP_SELECT:
 		return MS_WAVE_UNK210;
-	case 0x8001000e:
+	case MSD_BGM_BOSSPAKU_DEMO:
 		return MS_WAVE_UNK20A;
-	case 0x8001000f:
+	case MSD_BGM_MAIN_TITLE:
 		return MS_WAVE_CLEAR;
-	case 0x80010010:
+	case MSD_BGM_CHUBOSS2:
 		return MS_WAVE_UNK20A;
-	case 0x80010011:
+	case MSD_BGM_EXTRA:
 		return MS_WAVE_INVALID;
-	case 0x80010012:
+	case MSD_BGM_DELFINO:
 		return MS_WAVE_UNK20C;
-	case 0x80010013:
+	case MSD_BGM_MAREVILLAGE:
 		return MS_WAVE_UNK20D;
-	case 0x80010014:
+	case MSD_BGM_CORONA:
 		return MS_WAVE_UNK20E;
-	case 0x80010015:
+	case MSD_BGM_KAGEMARIO:
 		return MS_WAVE_UNK20F;
-	case 0x80010016:
+	case MSD_BGM_CAMERA:
 		return MS_WAVE_UNK210;
-	case 0x80010017:
+	case MSD_BGM_MONTE_ONSEN:
 		return MS_WAVE_UNK210;
-	case 0x80010018:
+	case MSD_BGM_MECHAKUPPA:
 		return MS_WAVE_MONTEVILLAGE;
-	case 0x80010019:
+	case MSD_BGM_AIRPORT:
 		return MS_WAVE_UNK211;
-	case 0x8001001a:
+	case MSD_BGM_UNDERGROUND:
 		return MS_WAVE_UNK212;
-	case 0x8001001b:
+	case MSD_BGM_TITLEBACK:
 		return MS_WAVE_UNK210;
-	case 0x8001001c:
+	case MSD_BGM_MONTE_NIGHT:
 		return MS_WAVE_UNK20A;
-	case 0x8001001d:
+	case MSD_BGM_CASINO:
 		return MS_WAVE_MONTEVILLAGE;
-	case 0x8001001e:
+	case MSD_BGM_EVENT:
 		return MS_WAVE_UNK20D;
-	case 0x8001001f:
+	case MSD_BGM_TIME_IVENT:
 		return MS_WAVE_UNK210;
-	case 0x80010020:
+	case MSD_BGM_SKY_AND_SEA:
 		return MS_WAVE_UNK210;
-	case 0x80010021:
+	case MSD_BGM_MONTE_RESCUE:
 		return MS_WAVE_UNK214;
-	case 0x80010022:
+	case MSD_BGM_MERRY_GO_ROUND:
 		return MS_WAVE_MONTEVILLAGE;
-	case 0x80010023:
+	case MSD_BGM_SCENARIO_SELECT:
 		return MS_WAVE_PINNAPACO_S;
-	case 0x80010024:
+	case MSD_BGM_FANFARE_CASINO:
 		return MS_WAVE_UNK210;
-	case 0x80010025:
+	case MSD_BGM_FANFARE_RACE:
 		return MS_WAVE_UNK20D;
-	case 0x80010026:
+	case MSD_BGM_CAMERA_KAGE:
 		return MS_WAVE_UNK210;
-	case 0x80010027:
+	case MSD_BGM_GAMEOVER:
 		return MS_WAVE_UNK210;
-	case 0x80010028:
+	case MSD_BGM_BOSSHANA_2ND3RD:
 		return MS_WAVE_UNK210;
-	case 0x80010029:
+	case MSD_BGM_BOSSGESO_2DN3RD:
 		return MS_WAVE_UNK210;
-	case 0x8001002a:
+	case MSD_BGM_CHUBOSS_MANTA:
 		return MS_WAVE_UNK210;
-	case 0x8001002b:
+	case MSD_BGM_MONTE_LAST:
 		return MS_WAVE_UNK210;
-	case 0x8001002c:
+	case MSD_BGM_SHINE_APPEAR:
 		return MS_WAVE_MONTEVILLAGE;
-	case 0x8001002e:
+	case MSD_BGM_MONTEMAN_RACE:
 		return MS_WAVE_UNK215;
-	case 0x8001002f:
+	case MSD_STR_SPACEWORLD:
 		return MS_WAVE_UNK210;
 	default:
 		return MS_WAVE_INVALID;

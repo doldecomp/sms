@@ -433,9 +433,9 @@ inline void playCoinSound(const JGeometry::TVec3<f32>& pos,
                           const JGeometry::TVec3<f32>& vel)
 {
 	f32 a = abs(JGeometry::TVec3<f32>(vel).y);
-	if (gpMSound->gateCheck(0x4842)) {
+	if (gpMSound->gateCheck(MSD_SE_SY_COIN_BOUND)) {
 		MSoundSESystem::MSoundSE::startSoundActorWithInfo(
-		    0x4842, pos, nullptr, a, 0, 0, nullptr, 0, 4);
+		    MSD_SE_SY_COIN_BOUND, pos, nullptr, a, 0, 0, nullptr, 0, 4);
 	}
 }
 

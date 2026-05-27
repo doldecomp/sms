@@ -267,7 +267,7 @@ int TMovieDirector::direct()
 	if (!unk18) {
 		switch (Hx_MovieStartSyncEx()) {
 		case 1:
-			SMSGetMSound()->startSoundSystemSE(0x2972, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_TITLE_M, 0, nullptr, 0);
 			break;
 		case 2:
 			unk18 = true;

@@ -161,7 +161,7 @@ void MSRandPlay::randPlay(u32 param_1)
 	switch (self->unk4) {
 	case 2:
 		switch (unk1C) {
-		case 0x3813:
+		case MSD_SE_OBJ_KAMOME_SOLO:
 			MSGMSound->startSoundSetGrp(unk1C, self->unk0, 0, 0.0f, 0, 0, 4);
 			break;
 		default:
@@ -186,159 +186,159 @@ void MSoundSE::construct()
 
 	MSRandVol::construct(0);
 	// clang-format off
-	MSRandPlay::construct(0x3813, 0x1e, 0xf0,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-	MSRandPlay::construct(0x7865, 3,    0x14,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-	MSRandPlay::construct(0x7094, 3,    0x14,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-	MSRandPlay::construct(0x1950, 5,    0x3c,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-	MSRandPlay::construct(0x3869, 0x66, 0x181, JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-	MSRandPlay::construct(0x386d, 0x66, 0x181, JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-	MSRandPlay::construct(0x5814, 0x66, 0x181, JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-	MSRandPlay::construct(0x581b, 0x66, 0x181, JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-	MSRandPlay::construct(0x5820, 0x66, 0x181, JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-	MSRandPlay::construct(0x3870, 0x66, 0x181, JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-	MSRandPlay::construct(0x5814, 0x56, 0xf3,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-	MSRandPlay::construct(0x581b, 0x56, 0xf3,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-	MSRandPlay::construct(0x5820, 8,    0xd,   JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+	MSRandPlay::construct(MSD_SE_OBJ_KAMOME_SOLO, 0x1e, 0xf0,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+	MSRandPlay::construct(MSD_SE_MV10A_CRY_SHORT_01, 3,    0x14,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+	MSRandPlay::construct(MSD_SE_MV16_EXERT_CONT_01, 3,    0x14,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+	MSRandPlay::construct(MSD_SE_MA_WATER_WAIT, 5,    0x3c,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+	MSRandPlay::construct(MSD_SE_OBJ_BIRD_DOL_FLYING1, 0x66, 0x181, JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+	MSRandPlay::construct(MSD_SE_OBJ_BIRD_MAH_A1, 0x66, 0x181, JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+	MSRandPlay::construct(MSD_SE_OBJ_BIRD_BIA_1, 0x66, 0x181, JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+	MSRandPlay::construct(MSD_SE_OBJ_MONTE_DAY_A1, 0x66, 0x181, JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+	MSRandPlay::construct(MSD_SE_OBJ_MONTE_NIGHT_A1, 0x66, 0x181, JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+	MSRandPlay::construct(MSD_SE_OBJ_BIRD_DOL_CHUN, 0x66, 0x181, JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+	MSRandPlay::construct(MSD_SE_OBJ_BIRD_BIA_1, 0x56, 0xf3,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+	MSRandPlay::construct(MSD_SE_OBJ_MONTE_DAY_A1, 0x56, 0xf3,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+	MSRandPlay::construct(MSD_SE_OBJ_MONTE_NIGHT_A1, 8,    0xd,   JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
 	// clang-format on
 
 	// clang-format off
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ボスパックン・汚染飛行擬音",
-    0x2052, 0.0f,     55000.0f, 6.0f,  0.5f,  2.0f, JALCalc::CS_NEGATIVE_CURVE,  0.0f, 100000.0f, 0);
+    MSD_SE_BS_BSPAKU_POLLUT_IMI, 0.0f,     55000.0f, 6.0f,  0.5f,  2.0f, JALCalc::CS_NEGATIVE_CURVE,  0.0f, 100000.0f, 0);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "水音・距離によるピッチ下げ",
-    0x6800, 2000.0f,  0.0f,     6.0f,  0.82f, 1.0f, JALCalc::CS_NEGATIVE_CURVE,  0.0f, 20000.0f,  0);
+    MSD_SE_WT_GND, 2000.0f,  0.0f,     6.0f,  0.82f, 1.0f, JALCalc::CS_NEGATIVE_CURVE,  0.0f, 20000.0f,  0);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "潜水艦の風車ピッチ",
-    0x3031, 0.0f,     3.5f,     3.4f,  0.2f,  1.35f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 5.0f,      0);
+    MSD_SE_OBJ_SUBMARINE_MILL, 0.0f,     3.5f,     3.4f,  0.2f,  1.35f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 5.0f,      0);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "潜水艦の鎖のこすれる音",
-    0x3030, 0.0f,     0.7f,     6.0f,  0.5f,  1.0f,  JALCalc::CS_UNKNOWN_2,      0.0f, 1.0f,      0);
+    MSD_SE_OBJ_SUBMARINE_CRANE, 0.0f,     0.7f,     6.0f,  0.5f,  1.0f,  JALCalc::CS_UNKNOWN_2,      0.0f, 1.0f,      0);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "潜水艦の風車音量",
-    0x3031, 0.0f,     3.5f,     3.4f,  0.0f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 1.0f,      0);
+    MSD_SE_OBJ_SUBMARINE_MILL, 0.0f,     3.5f,     3.4f,  0.0f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 1.0f,      0);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "潜水艦の浮上する水音",
-    0x3023, 0.0f,     0.7f,     6.0f,  0.5f,  1.0f,  JALCalc::CS_UNKNOWN_2,      0.0f, 1.0f,      0);
+    MSD_SE_OBJ_SUBMARINE_SINK, 0.0f,     0.7f,     6.0f,  0.5f,  1.0f,  JALCalc::CS_UNKNOWN_2,      0.0f, 1.0f,      0);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "コイン風車",
-    0x3045, 0.14f,    10.5f,    0.78f, 0.2f,  1.93f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 20.0f,     1);
+    MSD_SE_OBJ_BI_COINMILL, 0.14f,    10.5f,    0.78f, 0.2f,  1.93f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 20.0f,     1);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "コイン風車",
-    0x3045, 0.14f,    10.5f,    0.78f, 0.5f,  1.0f,  JALCalc::CS_UNKNOWN_2,      0.0f, 20.0f,     0);
+    MSD_SE_OBJ_BI_COINMILL, 0.14f,    10.5f,    0.78f, 0.5f,  1.0f,  JALCalc::CS_UNKNOWN_2,      0.0f, 20.0f,     0);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "上下向回転門",
-    0x3044, 0.0f,     10.0f,    3.4f,  0.2f,  1.35f, JALCalc::CS_UNKNOWN_2,      0.0f, 20.0f,     0);
+    MSD_SE_OBJ_BI_UPDOWNMILL, 0.0f,     10.0f,    3.4f,  0.2f,  1.35f, JALCalc::CS_UNKNOWN_2,      0.0f, 20.0f,     0);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "上下向回転門",
-    0x3044, 0.0f,     10.0f,    3.4f,  0.44f, 1.35f, JALCalc::CS_UNKNOWN_2,      0.0f, 20.0f,     0);
+    MSD_SE_OBJ_BI_UPDOWNMILL, 0.0f,     10.0f,    3.4f,  0.44f, 1.35f, JALCalc::CS_UNKNOWN_2,      0.0f, 20.0f,     0);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "足台風車(足台移動音)",
-    0x3042, 0.0f,     0.05f,    6.0f,  0.0f,  1.0f,  JALCalc::CS_UNKNOWN_2,      0.0f, 20.0f,     1);
+    MSD_SE_OBJ_BI_STEPMILL_MOVE, 0.0f,     0.05f,    6.0f,  0.0f,  1.0f,  JALCalc::CS_UNKNOWN_2,      0.0f, 20.0f,     1);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "足台風車(風車音)",
-    0x3040, 0.0f,     2.36f,    6.0f,  0.3f,  1.5f,  JALCalc::CS_UNKNOWN_2,      0.0f, 20.0f,     0);
+    MSD_SE_OBJ_BI_STEPMILL_WIND, 0.0f,     2.36f,    6.0f,  0.3f,  1.5f,  JALCalc::CS_UNKNOWN_2,      0.0f, 20.0f,     0);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "足台風車(風車音)",
-    0x3040, 0.0f,     2.36f,    6.0f,  0.2f,  1.0f,  JALCalc::CS_UNKNOWN_2,      0.0f, 20.0f,     0);
+    MSD_SE_OBJ_BI_STEPMILL_WIND, 0.0f,     2.36f,    6.0f,  0.2f,  1.0f,  JALCalc::CS_UNKNOWN_2,      0.0f, 20.0f,     0);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "放水音",
     0,      0.01f,    1.0f,     6.0f,  0.3f,  1.0f,  JALCalc::CS_UNKNOWN_2,      0.0f, 5.0f,      1);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "マリオしりもち音",
-    0x195a, 0.01f,    50.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_POSITIVE_CURVE, 0.0f, 100.0f,    1);
+    MSD_SE_MA_BOUND, 0.01f,    50.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_POSITIVE_CURVE, 0.0f, 100.0f,    1);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ジャンプキノコ",
-    0x3866, 15000.0f, 3000.0f,  1.0f,  1.0f,  1.3f,  JALCalc::CS_UNKNOWN_2,      0.0f, 30000.0f,  0);
+    MSD_SE_OBJ_JUMP_KINOKO, 15000.0f, 3000.0f,  1.0f,  1.0f,  1.3f,  JALCalc::CS_UNKNOWN_2,      0.0f, 30000.0f,  0);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "ジャンプキノコ",
-    0x3866, 3000.0f,  15000.0f, 1.0f,  0.68f, 1.0f,  JALCalc::CS_UNKNOWN_2,      0.0f, 30000.0f,  0);
+    MSD_SE_OBJ_JUMP_KINOKO, 3000.0f,  15000.0f, 1.0f,  0.68f, 1.0f,  JALCalc::CS_UNKNOWN_2,      0.0f, 30000.0f,  0);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "マーレー壷を支えるロープ",
-    0x3060, 0.0f,     20.0f,    1.0f,  0.0f,  1.0f,  JALCalc::CS_UNKNOWN_2,      0.0f, 50.0f,     1);
+    MSD_SE_OBJ_MR_TSUBO_PULL, 0.0f,     20.0f,    1.0f,  0.0f,  1.0f,  JALCalc::CS_UNKNOWN_2,      0.0f, 50.0f,     1);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "マーレー壷を支えるロープ",
-    0x3060, 0.0f,     20.0f,    1.0f,  0.5f,  1.0f,  JALCalc::CS_UNKNOWN_2,      0.0f, 50.0f,     1);
+    MSD_SE_OBJ_MR_TSUBO_PULL, 0.0f,     20.0f,    1.0f,  0.5f,  1.0f,  JALCalc::CS_UNKNOWN_2,      0.0f, 50.0f,     1);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "マーレー壷",
-    0x3061, 0.0f,     20.0f,    1.0f,  0.5f,  1.5f,  JALCalc::CS_UNKNOWN_2,      0.0f, 300.0f,    0);
+    MSD_SE_OBJ_MR_TSUBO_WATER, 0.0f,     20.0f,    1.0f,  0.5f,  1.5f,  JALCalc::CS_UNKNOWN_2,      0.0f, 300.0f,    0);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "コインバウンド音",
-    0x4842, 0.0f,     20.0f,    1.0f,  0.0f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 100.0f,    1);
+    MSD_SE_SY_COIN_BOUND, 0.0f,     20.0f,    1.0f,  0.0f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 100.0f,    1);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ノーマルノズルのエアノイズ",
     0x24,   0.01f,    0.56f,    5.0f,  0.25f, 1.5f,  JALCalc::CS_POSITIVE_CURVE, 0.0f, 100.0f,    1);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "お化けスイカバウンド",
-    0x3889, 0.7f,     15.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
+    MSD_SE_OBJ_WATERMELON_BBUND, 0.7f,     15.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "通常スイカバウンド",
-    0x388c, 0.7f,     15.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
+    MSD_SE_OBJ_WATERMELON_SBUND, 0.7f,     15.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "お化けスイカ回転",
-    0x308a, 0.01f,    10.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
+    MSD_SE_OBJ_WATERMELON_BROLL, 0.01f,    10.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "通常スイカバ回転",
-    0x308b, 0.01f,    10.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
+    MSD_SE_OBJ_WATERMELON_SROLL, 0.01f,    10.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "お化けスイカ回転",
-    0x308a, 0.01f,    10.0f,    1.0f,  0.8f,  1.2f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
+    MSD_SE_OBJ_WATERMELON_BROLL, 0.01f,    10.0f,    1.0f,  0.8f,  1.2f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "通常スイカバ回転",
-    0x308b, 0.01f,    10.0f,    1.0f,  0.8f,  1.2f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
+    MSD_SE_OBJ_WATERMELON_SROLL, 0.01f,    10.0f,    1.0f,  0.8f,  1.2f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
 
   JALSystem::append(JALSystem::ModType_JALSeModVolFGrp, "ロープ揺れ音",
     0,      1.0f,     52.0f,    3.98f, 0.0f,  1.0f,  JALCalc::CS_UNKNOWN_2,      0.0f, 300.0f,    1);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, 0x381c);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, 0x381d);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, 0x381e);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, 0x381f);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, 0x3820);
+  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, MSD_SE_OBJ_ROPE_CLEAK_A);
+  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, MSD_SE_OBJ_ROPE_CLEAK_B);
+  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, MSD_SE_OBJ_ROPE_CLEAK_ROLL);
+  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, MSD_SE_OBJ_ROPE_CLEAK_HALFA);
+  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, MSD_SE_OBJ_ROPE_CLEAK_HALFB);
 
   JALSystem::append(JALSystem::ModType_JALSeModVolFGrp, "ロープ揺れ時のマリオの風切音",
     1,      1.0f,     83.0f,    1.2f,  0.0f,  1.0f, JALCalc::CS_UNKNOWN_2,       0.0f, 300.0f,    1);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 1, 0x1815);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 1, 0x1816);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 1, 0x1817);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 1, 0x180f);
+  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 1, MSD_SE_MA_ROPE_ROLL_HALF_A);
+  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 1, MSD_SE_MA_ROPE_ROLL_HALF_B);
+  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 1, MSD_SE_MA_ROPE_ROLL_FULL_A);
+  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 1, MSD_SE_MA_ROPE_ROLL_FULL_B);
 
   JALSystem::append(JALSystem::ModType_JALSeModPitFGrp, "ボール系のバウンド音(ピッチ上昇)",
     2,      30.0f,    0.0f,     1.0f,  1.0f,  2.0f, JALCalc::CS_UNKNOWN_2,       0.0f, 100.0f,    1);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModPitFGrp, 2, 0x3804);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModPitFGrp, 2, 0x3862);
+  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModPitFGrp, 2, MSD_SE_IT_EGG_BOUND);
+  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModPitFGrp, 2, MSD_SE_IT_DRIAN_BOUND);
 
   JALSystem::append(JALSystem::ModType_JALSeModVolFGrp, "ボール系のバウンド音(ボリューム減少)",
     2,      0.0f,     20.0f,    1.0f,  0.0f,  1.0f, JALCalc::CS_NEGATIVE_CURVE,  0.0f, 100.0f,    1);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 2, 0x3804);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 2, 0x3862);
+  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 2, MSD_SE_IT_EGG_BOUND);
+  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 2, MSD_SE_IT_DRIAN_BOUND);
 
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ジェットコースター実音",
-    0x305a, 0.0f,     50.0f,    2.87f, 1.0f,  2.3f, JALCalc::CS_NEGATIVE_CURVE,  0.0f, 300.0f,    0);
+    MSD_SE_OBJ_JET_COASTER, 0.0f,     50.0f,    2.87f, 1.0f,  2.3f, JALCalc::CS_NEGATIVE_CURVE,  0.0f, 300.0f,    0);
 
   JALSystem::append(JALSystem::ModType_JALSeModVolFGrp, "ブランコ(vol)",
     3,      0.0f,     30.0f,    1.0f,  0.0f,  1.0f, JALCalc::CS_UNKNOWN_2,       0.0f, 100.0f,    1);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 3, 0x3867);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 3, 0x3868);
+  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 3, MSD_SE_OBJ_SWING1);
+  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 3, MSD_SE_OBJ_SWING2);
 
   JALSystem::append(JALSystem::ModType_JALSeModPitFGrp, "ブランコ(pitch)",
     3,      0.0f,     30.0f,    1.0f, 0.3f,   1.0f, JALCalc::CS_UNKNOWN_2,       0.0f, 100.0f,    1);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModPitFGrp, 3, 0x3867);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModPitFGrp, 3, 0x3868);
+  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModPitFGrp, 3, MSD_SE_OBJ_SWING1);
+  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModPitFGrp, 3, MSD_SE_OBJ_SWING2);
 
   JALSystem::append(JALSystem::ModType_JALSeModVolDist, "コロパク着地音",
-    0x2844, 38468.0f, 0.0f,    12.2f, 0.0f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 100000.0f, 0);
+    MSD_SE_BS_KRPAKU_GND, 38468.0f, 0.0f,    12.2f, 0.0f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 100000.0f, 0);
   JALSystem::append(JALSystem::ModType_JALSeModVolDist, "コロパク回転音",
-    0x2054, 40966.0f, 0.0f,    16.8f, 0.0f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 100000.0f, 0);
+    MSD_SE_BS_KRPAKU_ROLL, 40966.0f, 0.0f,    16.8f, 0.0f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 100000.0f, 0);
   JALSystem::append(JALSystem::ModType_JALSeModVolDist, "ボスパックン汚染飛行音(real)",
-    0x2045, 50000.0f, 0.0f,    20.0f, 0.0f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 100000.0f, 0);
+    MSD_SE_BS_BSPAKU_POLLUT_FLY, 50000.0f, 0.0f,    20.0f, 0.0f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 100000.0f, 0);
   JALSystem::append(JALSystem::ModType_JALSeModVolDist, "ボスパックン汚染飛行音(imit)",
-    0x2052, 50000.0f, 0.0f,    28.2f, 0.0f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 100000.0f, 0);
+    MSD_SE_BS_BSPAKU_POLLUT_IMI, 50000.0f, 0.0f,    28.2f, 0.0f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 100000.0f, 0);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "メカクッパ戦・キラー飛行音",
-    0x20ff, 5000.0f,  50.0f,   1.0f,  0.7f,  1.2f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 50000.0f,  0);
+    MSD_SE_EN_KILLER_FLY_KUPPA, 5000.0f,  50.0f,   1.0f,  0.7f,  1.2f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 50000.0f,  0);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ポポのふくらみ音",
-    0x20c2, 2.5f,     1.0f,    3.0f,  0.54f, 1.1f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 3.0f,      0);
+    MSD_SE_EN_POPO_GROW, 2.5f,     1.0f,    3.0f,  0.54f, 1.1f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 3.0f,      0);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "ポポのふくらみ音",
-    0x20c2, 2.5f,     1.0f,    3.0f,  0.55f, 1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 3.0f,      0);
+    MSD_SE_EN_POPO_GROW, 2.5f,     1.0f,    3.0f,  0.55f, 1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 3.0f,      0);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "キャンキャン尻尾ひっぱり音",
-    0x20df, 100.0f,   500.0f,  5.0f,  0.0f,  1.3f, JALCalc::CS_UNKNOWN_2,      0.0f, 500.0f,    0);
+    MSD_SE_EN_WANWAN_PULL, 100.0f,   500.0f,  5.0f,  0.0f,  1.3f, JALCalc::CS_UNKNOWN_2,      0.0f, 500.0f,    0);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "ハチの巣揺れ音",
-    0x28f7, 0.04f,    1.2f,    1.0f,  0.0f,  1.0f, JALCalc::CS_UNKNOWN_2,      0.0f, 150.0f,    0);
+    MSD_SE_EN_BEENEST_SWING, 0.04f,    1.2f,    1.0f,  0.0f,  1.0f, JALCalc::CS_UNKNOWN_2,      0.0f, 150.0f,    0);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "イガイガバウンド音",
-    0x28ad, 0.8f,     1.01f,   10.0f, 0.4f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 1.5f,      0);
+    MSD_SE_EN_IGAIGA_BOUND, 0.8f,     1.01f,   10.0f, 0.4f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 1.5f,      0);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "イガイガバウンド音",
-    0x28ad, 0.8f,     1.01f,   10.0f, 0.4f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 1.5f,      0);
+    MSD_SE_EN_IGAIGA_BOUND, 0.8f,     1.01f,   10.0f, 0.4f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 1.5f,      0);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "イガイガ転がり音",
-    0x212f, 0.95f,    2.3f,    4.0f,  0.2f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 2.5f,      0);
+    MSD_SE_EN_IGAIGA_ROLL, 0.95f,    2.3f,    4.0f,  0.2f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 2.5f,      0);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "イガイガ転がり音",
-    0x212f, 100.0f,   500.0f,  5.0f,  0.0f,  1.3f, JALCalc::CS_UNKNOWN_2,      0.0f, 500.0f,    0);
+    MSD_SE_EN_IGAIGA_ROLL, 100.0f,   500.0f,  5.0f,  0.0f,  1.3f, JALCalc::CS_UNKNOWN_2,      0.0f, 500.0f,    0);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ボスパックン竜巻音",
-    0x210c, 1538.0f,  500.0f,  3.0f,  0.65f, 1.7f, JALCalc::CS_UNKNOWN_2,      0.0f, 10000.0f,  0);
+    MSD_SE_BS_BSPAKU_TORNADO, 1538.0f,  500.0f,  3.0f,  0.65f, 1.7f, JALCalc::CS_UNKNOWN_2,      0.0f, 10000.0f,  0);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ボスゲッソー回転攻撃音",
-    0x215c, 13500.0f, 9700.0f, 4.0f,  0.6f,  1.8f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 14000.0f,  0);
+    MSD_SE_BS_GESO_ROLL, 13500.0f, 9700.0f, 4.0f,  0.6f,  1.8f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 14000.0f,  0);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "ボスゲッソー回転攻撃音",
-    0x215c, 13500.0f, 9700.0f, 5.0f,  0.3f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 14000.0f,  0);
+    MSD_SE_BS_GESO_ROLL, 13500.0f, 9700.0f, 5.0f,  0.3f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 14000.0f,  0);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ボスワンワン引きずり音",
-    0x20d2, 4.0f,     8.0f,    1.0f,  0.9f,  1.1f, JALCalc::CS_NEGATIVE_CURVE, 0.0f, 500.0f,    0);
+    MSD_SE_BS_WANWAN_M_DRAG, 4.0f,     8.0f,    1.0f,  0.9f,  1.1f, JALCalc::CS_NEGATIVE_CURVE, 0.0f, 500.0f,    0);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "メカクッパ火炎",
-    0x8135, 0.3f,     1.6f,    2.0f,  0.3f,  1.0f, JALCalc::CS_NEGATIVE_CURVE, 0.0f, 2.0f,      1);
+    MSD_SE_BS_MKP_FIRE, 0.3f,     1.6f,    2.0f,  0.3f,  1.0f, JALCalc::CS_NEGATIVE_CURVE, 0.0f, 2.0f,      1);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ウナギ回転",
-    0x8921, 0.0f,     9.0f,    2.0f,  0.2f,  1.0f, JALCalc::CS_NEGATIVE_CURVE, 0.0f, 2.0f,      0);
+    MSD_SE_BS_UNG_ROLL, 0.0f,     9.0f,    2.0f,  0.2f,  1.0f, JALCalc::CS_NEGATIVE_CURVE, 0.0f, 2.0f,      0);
   JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "ウナギ回転",
-    0x8921, 0.0f,     9.0f,    2.0f,  0.2f,  1.0f, JALCalc::CS_NEGATIVE_CURVE, 0.0f, 2.0f,      0);
+    MSD_SE_BS_UNG_ROLL, 0.0f,     9.0f,    2.0f,  0.2f,  1.0f, JALCalc::CS_NEGATIVE_CURVE, 0.0f, 2.0f,      0);
   JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "クッパ風呂あふれ水",
-    0x819d, 0.0f,     1.0f,    2.0f,  0.3f,  1.0f, JALCalc::CS_UNKNOWN_2,      0.0f, 2.0f,      0);
+    MSD_SE_BS_KOOPA_FLOOD, 0.0f,     1.0f,    2.0f,  0.3f,  1.0f, JALCalc::CS_UNKNOWN_2,      0.0f, 2.0f,      0);
   MSSetSound::init();
 	// clang-format on
 
@@ -347,15 +347,15 @@ void MSoundSE::construct()
 		    0, "カモメ", 3, 2, 13, 2, 3.0f, 1, 44.0f, 3.0f, 1.0f, 1.0f, 0.0f,
 		    0xf, 200.0f, 0xb4, 1.0f, 1.0f, 0.0f, false);
 		// clang-format off
-		grp->append(new MSSetSoundMember(0x3813, nullptr, 60.0f));
-		grp->append(new MSSetSoundMember(0x3813, nullptr, 60.0f));
-		grp->append(new MSSetSoundMember(0x3813, nullptr, 60.0f));
-		grp->append(new MSSetSoundMember(0x3813, nullptr, 60.0f));
-		grp->append(new MSSetSoundMember(0x3813, nullptr, 60.0f));
-		grp->append(new MSSetSoundMember(0x3813, nullptr, 60.0f));
-		grp->append(new MSSetSoundMember(0x3813, nullptr, 60.0f));
-		grp->append(new MSSetSoundMember(0x3813, nullptr, 60.0f));
-		grp->append(new MSSetSoundMember(0x3813, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
 		// clang-format on
 	}
 }
@@ -421,15 +421,15 @@ JAISound* MSoundSE::startSoundSystemSE(u32 param_1, u32 param_2,
 {
 	u32 tmp = param_1;
 	switch (param_1) {
-	case 0x481E:
+	case MSD_SE_SY_E3_MENU_CURSOR:
 		--param_2;
 		switch (param_2) {
 			// clang-format off
-		case 1: tmp = 0x482E; break;
-		case 2: tmp = 0x482F; break;
-		case 3: tmp = 0x4830; break;
-		case 4: tmp = 0x4831; break;
-		case 5: tmp = 0x4832; break;
+		case 1: tmp = MSD_SE_SY_E3_MENU_CURSOR1; break;
+		case 2: tmp = MSD_SE_SY_E3_MENU_CURSOR2; break;
+		case 3: tmp = MSD_SE_SY_E3_MENU_CURSOR3; break;
+		case 4: tmp = MSD_SE_SY_E3_MENU_CURSOR4; break;
+		case 5: tmp = MSD_SE_SY_E3_MENU_CURSOR5; break;
 			// clang-format on
 		}
 		break;
@@ -442,7 +442,7 @@ JAISound* MSoundSE::startSoundSystemSE(u32 param_1, u32 param_2,
 		return nullptr;
 
 	switch (param_1) {
-	case 0x481E:
+	case MSD_SE_SY_E3_MENU_CURSOR:
 		f32 f1  = 0.5f;
 		f32 f31 = 0.5f;
 		switch (param_2) {
@@ -475,25 +475,25 @@ void MSoundSE::startSoundActorWithInfo(u32 param_1, const Vec* param_2,
 {
 	f32 fVar7 = param_4;
 	switch (param_1) {
-	case 0x2052:
+	case MSD_SE_BS_BSPAKU_POLLUT_IMI:
 		fVar7 = param_2->y;
 		break;
 
-	case 0x381C:
+	case MSD_SE_OBJ_ROPE_CLEAK_A:
 		fVar7 = abs(fVar7);
 		break;
 
-	case 0x305B:
+	case MSD_SE_OBJ_JET_COASTER_IMI:
 		fVar7 = param_2->y;
 		break;
 
-	case 0x3804:
-	case 0x3862:
+	case MSD_SE_IT_EGG_BOUND:
+	case MSD_SE_IT_DRIAN_BOUND:
 		fVar7 = vecLength(*param_3);
 		fVar7 = abs(fVar7);
 		break;
 
-	case 0x1818:
+	case MSD_SE_MA_KICK_ENEMY:
 		if (param_5 < 4)
 			param_1 += param_5;
 		else
@@ -507,7 +507,7 @@ void MSoundSE::startSoundActorWithInfo(u32 param_1, const Vec* param_2,
 		    = startSoundActorInner(param_1, param_7, &actor, param_8, param_9);
 		if (sound) {
 			switch (param_1) {
-			case 0x2007: {
+			case MSD_SE_BS_HINO_SEED_LQ_LEV: {
 				f32 fVar1 = SeInfo::smSeSetting.unk4;
 				for (u32 i = 0; i < sound->unk14; ++i)
 					fVar1 *= SeInfo::smSeSetting.unk0;
@@ -515,7 +515,7 @@ void MSoundSE::startSoundActorWithInfo(u32 param_1, const Vec* param_2,
 				break;
 			}
 
-			case 0x305B:
+			case MSD_SE_OBJ_JET_COASTER_IMI:
 				f32 d = JALCalc::linearTransform(param_4, 0.0f, 20.0f, 0.0f,
 				                                 1.0f, true);
 				sound->setVolume(d, 0, 0);
@@ -611,17 +611,17 @@ JAISound* MSoundSE::startSoundActorInner(u32 param_1, JAISound** param_2,
 			}
 
 			switch (param_1) {
-			case 0x3824:
-				param_1 = 0x38AD;
+			case MSD_SE_OBJ_FENCE_REVERSE1:
+				param_1 = MSD_SE_OBJ_BBFENCE_TURN1;
 				break;
-			case 0x3825:
-				param_1 = 0x38AF;
+			case MSD_SE_OBJ_FENCE_REVERSE2:
+				param_1 = MSD_SE_OBJ_BBFENCE_TURN2;
 				break;
-			case 0x193A:
-				param_1 = 0x38AB;
+			case MSD_SE_MA_FENCE_PUNCH:
+				param_1 = MSD_SE_OBJ_BBFENCE_PUNCH;
 				break;
-			case 0x193B:
-				param_1 = 0x38AC;
+			case MSD_SE_MA_FENCE_CATCH:
+				param_1 = MSD_SE_OBJ_BBFENCE_CATCH;
 				break;
 			}
 			break;
@@ -631,14 +631,14 @@ JAISound* MSoundSE::startSoundActorInner(u32 param_1, JAISound** param_2,
 			u32 uVar3 = param_3->unkC & 0x10000000;
 			if (uVar3) {
 				switch (param_1) {
-				case 0x1820:
-					startSoundActorInner(0x1942, nullptr, param_3, param_4,
-					                     param_5);
+				case MSD_SE_MA_WALK_STONE_L_HEEL:
+					startSoundActorInner(MSD_SE_YO_WALK_L, nullptr, param_3,
+					                     param_4, param_5);
 					break;
 
-				case 0x1824:
-					return startSoundActorInner(0x1943, nullptr, param_3,
-					                            param_4, param_5);
+				case MSD_SE_MA_WALK_STONE_R_HEEL:
+					return startSoundActorInner(MSD_SE_YO_WALK_R, nullptr,
+					                            param_3, param_4, param_5);
 				}
 			}
 
@@ -652,10 +652,10 @@ JAISound* MSoundSE::startSoundActorInner(u32 param_1, JAISound** param_2,
 			} else {
 				copy = param_1;
 				switch (param_1) {
-				case 0x1820:
-				case 0x1822:
-				case 0x1824:
-				case 0x1826:
+				case MSD_SE_MA_WALK_STONE_L_HEEL:
+				case MSD_SE_MA_WALK_STONE_L_TIP:
+				case MSD_SE_MA_WALK_STONE_R_HEEL:
+				case MSD_SE_MA_WALK_STONE_R_TIP:
 					copy += param_3->unkC << 3 & 0x7F8;
 					break;
 				}
@@ -667,12 +667,12 @@ JAISound* MSoundSE::startSoundActorInner(u32 param_1, JAISound** param_2,
 
 			if (uVar3) {
 				switch (param_1) {
-				case 0x1820:
-				case 0x1824:
-				case 0x1828:
-				case 0x182C:
-				case 0x1830:
-				case 0x1834:
+				case MSD_SE_MA_WALK_STONE_L_HEEL:
+				case MSD_SE_MA_WALK_STONE_R_HEEL:
+				case MSD_SE_MA_WALK_STN_SND_LH:
+				case MSD_SE_MA_WALK_STN_SND_RH:
+				case MSD_SE_MA_WALK_MARBLE_L_H:
+				case MSD_SE_MA_WALK_MARBLE_R_H:
 					return nullptr;
 				}
 			}
@@ -682,7 +682,8 @@ JAISound* MSoundSE::startSoundActorInner(u32 param_1, JAISound** param_2,
 	if (uVar2 & 0x80000000)
 		param_1 = getRandomID(param_1);
 
-	if (MSGMSound->unkCD == 8 && param_1 >= 0x1878 && param_1 <= 0x187F) {
+	if (MSGMSound->unkCD == 8 && param_1 >= MSD_SE_MA_WALK_METALNET_LH1
+	    && param_1 <= MSD_SE_MA_WALK_METALNET_RT2) {
 		param_1 -= 8;
 	}
 
@@ -715,40 +716,40 @@ u32 MSoundSE::getNewIDBySurfaceCode(u32 param_1, JAIActor* param_2)
 		return param_1;
 
 	switch (param_1) {
-	case 0x1820:
+	case MSD_SE_MA_WALK_STONE_L_HEEL:
 		switch (uVar1) {
 		case 0x100:
 		case 0x700:
-			return 0x1924;
+			return MSD_SE_MA_WALK_WATER_S_L;
 		case 0x200:
-			return 0x1928;
+			return MSD_SE_MA_WALK_WATER_D_L;
 		case 0x300:
 		case 0x500:
-			return 0x192C;
+			return MSD_SE_MA_WALK_MUD_S_L;
 		case 0x400:
 		case 0x600:
 			return 0x1930;
 		}
 		break;
 
-	case 0x1824:
+	case MSD_SE_MA_WALK_STONE_R_HEEL:
 		switch (uVar1) {
 		case 0x100:
 		case 0x700:
-			return 0x1926;
+			return MSD_SE_MA_WALK_WATER_S_R;
 		case 0x200:
-			return 0x192A;
+			return MSD_SE_MA_WALK_WATER_D_R;
 		case 0x300:
 		case 0x500:
-			return 0x192e;
+			return MSD_SE_MA_WALK_MUD_S_R;
 		case 0x400:
 		case 0x600:
-			return 0x1932;
+			return MSD_SE_MA_WALK_MUD_D_R;
 		}
 		break;
 
-	case 0x1822:
-	case 0x1826:
+	case MSD_SE_MA_WALK_STONE_L_TIP:
+	case MSD_SE_MA_WALK_STONE_R_TIP:
 		return -1;
 
 	case 0x1821:

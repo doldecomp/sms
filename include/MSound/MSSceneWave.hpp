@@ -1,6 +1,7 @@
 #ifndef MS_SCENE_WAVE_HPP
 #define MS_SCENE_WAVE_HPP
 
+// TODO: Update these names
 enum MS_SCENE_WAVE {
 
 	MS_WAVE_UNK0         = 0,

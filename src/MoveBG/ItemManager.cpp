@@ -31,9 +31,9 @@ void TItemManager::resetNozzleBoxesModel(int param_1)
 				emitter->unk174.set(2.0f, 2.0f, 2.0f);
 			}
 
-			if (gpMSound->gateCheck(0x387D)) {
+			if (gpMSound->gateCheck(MSD_SE_SMOKE_EFFECT)) {
 				MSoundSESystem::MSoundSE::startSoundActor(
-				    0x387D, box->mPosition, 0, nullptr, 0, 4);
+				    MSD_SE_SMOKE_EFFECT, box->mPosition, 0, nullptr, 0, 4);
 			}
 		}
 		box->makeModelValid();

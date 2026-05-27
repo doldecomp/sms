@@ -711,9 +711,9 @@ void THinokuri2::updateAnmSound()
 {
 	TSpineEnemy::updateAnmSound();
 	if (unk158 > 0)
-		if (gpMSound->gateCheck(0x2007))
-			MSoundSESystem::MSoundSE::startSoundActor(0x2007, &mPosition, 0,
-			                                          nullptr, 0, 4);
+		if (gpMSound->gateCheck(MSD_SE_BS_HINO_SEED_LQ_LEV))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_BS_HINO_SEED_LQ_LEV, &mPosition, 0, nullptr, 0, 4);
 }
 
 void THinokuri2::changeBck(int param_1)

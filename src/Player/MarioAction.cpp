@@ -14,7 +14,7 @@ BOOL TMario::taking()
 	setAnimation(ANIM_RAISE, 1.0f);
 	if (unk384 != nullptr && mModel->getFrameCtrl(0).checkPass(11.0f)) {
 		if (unk384->receiveMessage(this, HIT_MESSAGE_TAKE) == true) {
-			startVoice(0x788F);
+			startVoice(MSD_SE_MV15_EXERT_INST_01);
 			mHeldObject = (TTakeActor*)unk384;
 		} else {
 			return changePlayerStatus(STATUS_WAIT, 0, false);

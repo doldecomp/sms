@@ -520,7 +520,7 @@ static void evAppearMushroom1up(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->verifyArgNum(1, &arg_num);
 	TMushroom1up* mushroom = get_name_ref<TMushroom1up>(interp->pop());
 	mushroom->appear();
-	SMSGetMSound()->startSoundSystemSE(0x4854, 0, nullptr, 0);
+	SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_1UP_APPEAR, 0, nullptr, 0);
 	interp->push();
 }
 

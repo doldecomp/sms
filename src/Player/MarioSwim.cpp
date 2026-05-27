@@ -95,7 +95,7 @@ BOOL TMario::checkSwimJump()
 	if (mInput & 0x2) {
 		if (checkFlag(MARIO_FLAG_FLUDD_EMITTING) && !isUnderWater()) {
 			mPosition.y = 1.0f + mFloorPosition.z;
-			startSoundActor(0x828);
+			startSoundActor(MSD_SE_MA_SURF_JUMP);
 			return changePlayerJumping(0x888, 0);
 		}
 
@@ -167,8 +167,8 @@ BOOL TMario::swimWait()
 
 	setAnimation(ANIM_PADDLE_SWIM_WAIT, 1.0f);
 
-	if (gpMSound->gateCheck(0x1950))
-		MSoundSESystem::MSRandPlay::startSeRandPlay(0x1950, 0);
+	if (gpMSound->gateCheck(MSD_SE_MA_WATER_WAIT))
+		MSoundSESystem::MSRandPlay::startSeRandPlay(MSD_SE_MA_WATER_WAIT, 0);
 	return 0;
 }
 
@@ -213,8 +213,8 @@ BOOL TMario::swimPaddle()
 
 	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
 		setPlayerVelocity(mDeParams.mDashMax.get());
-		startSoundActor(0x19);
-		startSoundActor(0x117d);
+		startSoundActor(MSD_SE_PO_SPREAD);
+		startSoundActor(MSD_SE_MA_SURF_WATER);
 	}
 
 	if (mIntendedMag == 0.0f)
