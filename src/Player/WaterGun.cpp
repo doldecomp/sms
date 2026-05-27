@@ -537,9 +537,9 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 		if (unk38C != 0xffffffff) {
 			u32 soundId;
 			if (unk378 < 1.0f) {
-				soundId = 0x806;
+				soundId = MSD_SE_PO_WATER_LOW_TRG;
 			} else {
-				soundId = 0x805;
+				soundId = MSD_SE_PO_WATER_HI_TRG;
 			}
 			SMSGetMSound()->startSoundActor(soundId, mFludd->mEmitPos[0], 0,
 			                                nullptr, 0, 4);
@@ -565,8 +565,8 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 		}
 		if (unk384 && unk385 == TNozzleTrigger::INACTIVE
 		    && controllerWork.mAnalogR > 0.0f) {
-			SMSGetMSound()->startSoundActor(0x4022, mFludd->mEmitPos[0], 0,
-			                                nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(
+			    MSD_SE_SY_NEWP_AIR_TAME, mFludd->mEmitPos[0], 0, nullptr, 0, 4);
 		}
 	}
 	unk388 -= mEmitParams.mInsidePressureDec.get();
@@ -1206,9 +1206,9 @@ void TWaterGun::init()
 	mNozzleList[Turbo]         = &mNozzleTurbo;
 	mCurrentNozzle             = Spray;
 	mSecondNozzle              = Hover;
-	mNozzleRocket.unk38C       = 0x81b;
-	mNozzleTurbo.unk38C        = 0x814;
-	mNozzleDeform.mBomb.unk38C = 0x813;
+	mNozzleRocket.unk38C       = MSD_SE_PO_ROCKET_TRIGGER;
+	mNozzleTurbo.unk38C        = MSD_SE_PO_SNIPER_TRIGGER;
+	mNozzleDeform.mBomb.unk38C = MSD_SE_PO_SHOTGUN_TRIGGER;
 	mCurrentWater = mNozzleList[mCurrentNozzle]->mEmitParams.mAmountMax.get();
 	mIsEmitWater  = false;
 	unk1C88       = 0.0f;
@@ -1818,7 +1818,8 @@ void TWaterGun::emit()
 		switch (currentNozzleType) {
 		case Spray: {
 			JGeometry::TVec3<f32>* emitPos = &mEmitPos[0];
-			playSoundWithInfo(0x24, emitPos, 0, getCurrentNozzle()->unk374);
+			playSoundWithInfo(MSD_SE_PO_NORMAL_NOZZLE_IMI, emitPos, 0,
+			                  getCurrentNozzle()->unk374);
 		}
 		case Yoshi:
 		case Turbo: {
@@ -1828,9 +1829,9 @@ void TWaterGun::emit()
 		}
 		case Underwater: {
 			JGeometry::TVec3<f32>* emitPos = &mEmitPos[0];
-			if (gpMSound->gateCheck(0x18)) {
-				MSoundSESystem::MSoundSE::startSoundActor(0x18, emitPos, 0,
-				                                          nullptr, 0, 4);
+			if (gpMSound->gateCheck(MSD_SE_PO_HOVER)) {
+				MSoundSESystem::MSoundSE::startSoundActor(
+				    MSD_SE_PO_HOVER, emitPos, 0, nullptr, 0, 4);
 			}
 		} break;
 		case Rocket:
@@ -1838,9 +1839,9 @@ void TWaterGun::emit()
 		case Hover:
 			if (mIsEmitWater) {
 				JGeometry::TVec3<f32>* emitPos = &mEmitPos[0];
-				if (gpMSound->gateCheck(0x18)) {
-					MSoundSESystem::MSoundSE::startSoundActor(0x18, emitPos, 0,
-					                                          nullptr, 0, 4);
+				if (gpMSound->gateCheck(MSD_SE_PO_HOVER)) {
+					MSoundSESystem::MSoundSE::startSoundActor(
+					    MSD_SE_PO_HOVER, emitPos, 0, nullptr, 0, 4);
 				}
 			}
 			break;
@@ -1868,9 +1869,9 @@ BOOL TWaterGun::suck()
 			      >= getCurrentNozzle()->mEmitParams.mAmountMax.get())) {
 				JGeometry::TVec3<f32>* emitPos = &mEmitPos[0];
 				MSound* sound                  = gpMSound;
-				if (sound->gateCheck(0xf)) {
-					MSoundSESystem::MSoundSE::startSoundActor(0xf, emitPos, 0,
-					                                          nullptr, 0, 4);
+				if (sound->gateCheck(MSD_SE_PO_SUCK_WATER_B)) {
+					MSoundSESystem::MSoundSE::startSoundActor(
+					    MSD_SE_PO_SUCK_WATER_B, emitPos, 0, nullptr, 0, 4);
 				}
 			}
 			return true;
@@ -1899,12 +1900,14 @@ void TWaterGun::changeBackup()
 	// TODO: Missing stack space
 	// volatile u32 unused2[5];
 	if (unk1CFC == 0.0f) {
-		SMSGetMSound()->startSoundSystemSE(0x812, 0, nullptr, 0);
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_POMP_BACK, 0,
+		                                   nullptr, 0);
 		unk1D00 = mWatergunParams.mChangeSpeed.get();
 	}
 
 	if (unk1CFC == 1.0f) {
-		SMSGetMSound()->startSoundSystemSE(0x811, 0, nullptr, 0);
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_POMP, 0, nullptr,
+		                                   0);
 		unk1D00 = -mWatergunParams.mChangeSpeed.get();
 	}
 }

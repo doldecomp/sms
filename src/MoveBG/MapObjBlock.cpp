@@ -73,7 +73,8 @@ void TSandBlock::control()
 		break;
 	case TSandBlock::STATE_FALLING:
 		mScaling.y -= mSandScaleDown;
-		gpMSound->startSoundActor(0x30AA, &mPosition, 0, nullptr, 0, 0x4);
+		gpMSound->startSoundActor(MSD_SE_OBJ_SANDBLOCK_BREAK, &mPosition, 0,
+		                          nullptr, 0, 0x4);
 		JGeometry::TVec3<f32> particleScale(mScaling.x, mInitialScaling.y,
 		                                    mScaling.z);
 		emitAndScale(0x147, 0x1, &mPosition, particleScale);
@@ -207,8 +208,10 @@ u32 TIceBlock::touchWater(THitActor* param_1)
 	int id = getWaterID(param_1);
 	if (gpModelWaterManager->checkFlagBottom4Bits(id, 0x1)) {
 		gpMarioParticleManager->emit(0xE7, &param_1->getPosition(), 0, nullptr);
-		gpMSound->startSoundSet(0x6802, &mPosition, 0, 0.0f, 0, 0, 4);
-		gpMSound->startSoundActor(0x3079, &mPosition, 0, nullptr, 0, 4);
+		gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0, 0.0f,
+		                        0, 0, 4);
+		gpMSound->startSoundActor(MSD_SE_OBJ_ICE_BLOCK_MELT, &mPosition, 0,
+		                          nullptr, 0, 4);
 
 		mScaling.x -= mMeltSpeedWater;
 		mScaling.y -= mMeltSpeedWater;
@@ -253,7 +256,8 @@ void TIceBlock::control()
 
 		mScaledBodyRadius = mScaling.x * mMapObjData->unk30;
 
-		gpMSound->startSoundActor(0x3079, &mPosition, 0, nullptr, 0, 4);
+		gpMSound->startSoundActor(MSD_SE_OBJ_ICE_BLOCK_MELT, &mPosition, 0,
+		                          nullptr, 0, 4);
 
 		setObjHitData(0);
 		onHitFlag(HIT_FLAG_NO_COLLISION);
@@ -287,7 +291,8 @@ void TBrickBlock::kill()
 	emitAndScale(0x60, 0, &mPosition);
 	emitAndScale(0x61, 0, &mPosition);
 	emitAndScale(0x62, 0, &mPosition);
-	gpMSound->startSoundActor(0x3878, &mPosition, 0, nullptr, 0, 4);
+	gpMSound->startSoundActor(MSD_SE_OBJ_CLASSIC_BLOCK_B, &mPosition, 0,
+	                          nullptr, 0, 4);
 	SMSRumbleMgr->start(0x15, 0x14, &mPosition);
 	appearObj(100.0f);
 }
@@ -381,7 +386,8 @@ BOOL TSuperHipDropBlock::receiveMessage(THitActor* sender, u32 message)
 			TFlagManager::getInstance()->setBool(true, 0x1038C);
 		}
 
-		gpMSound->startSoundActor(0x3821, &mPosition, 0, nullptr, 0, 4);
+		gpMSound->startSoundActor(MSD_SE_OBJ_SUPERBLOCK_BREAK, &mPosition, 0,
+		                          nullptr, 0, 4);
 		return TRUE;
 	}
 	return FALSE;

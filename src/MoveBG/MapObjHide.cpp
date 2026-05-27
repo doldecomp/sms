@@ -186,19 +186,23 @@ void TFruitBasket::countFruit(THitActor* param_1)
 	if (unk138 != nullptr) {
 		appearObj(0.0f);
 
-		SMSGetMSound()->startSoundActor(0x3809, &mPosition, 0, nullptr, 0, 4);
-		SMSGetMSound()->startSoundSystemSE(0x480A, 0, nullptr, 0);
+		SMSGetMSound()->startSoundActor(MSD_SE_IT_SOCCER_GOAL, &mPosition, 0,
+		                                nullptr, 0, 4);
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_FGM_SOCCER_GOAL, 0, nullptr,
+		                                   0);
 	} else {
 		if (unk150 == 0) {
-			SMSGetMSound()->startSoundActor(0x384E, &mPosition, 0, nullptr, 0,
-			                                4);
+			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_BASKET_BOUND, &mPosition,
+			                                0, nullptr, 0, 4);
 		} else if (param_1->isActorType(unk150)) {
 
-			SMSGetMSound()->startSoundActor(0x3809, &mPosition, 0, nullptr, 0,
-			                                4);
-			SMSGetMSound()->startSoundSystemSE(0x480A, 0, nullptr, 0);
+			SMSGetMSound()->startSoundActor(MSD_SE_IT_SOCCER_GOAL, &mPosition,
+			                                0, nullptr, 0, 4);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_FGM_SOCCER_GOAL, 0,
+			                                   nullptr, 0);
 		} else {
-			SMSGetMSound()->startSoundSystemSE(0x483D, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_NOT_COLLECT, 0,
+			                                   nullptr, 0);
 		}
 	}
 	((TResetFruit*)param_1)->makeObjWaitingToAppear();
@@ -298,8 +302,10 @@ THipDropHideObj::THipDropHideObj(const char* name)
 void TWaterHitPictureHideObj::afterFinishedAnim()
 {
 	if (isActorType(0x400001A1)) {
-		SMSGetMSound()->startSoundActor(0x296F, &mPosition, 0, nullptr, 0, 4);
-		SMSGetMSound()->startSoundSystemSE(0x484D, 0, nullptr, 0);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_POSTER_RIP2, &mPosition, 0,
+		                                nullptr, 0, 4);
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN_BIG, 0, nullptr,
+		                                   0);
 	}
 
 	removeMapCollision();
@@ -339,11 +345,12 @@ u32 TWaterHitPictureHideObj::touchWater(THitActor* param_1)
 	int id = getWaterID(param_1);
 	if (gpModelWaterManager->checkFlagBottom4Bits(id, 0x1)) {
 		gpMarioParticleManager->emit(0xe7, &mPosition, 0, nullptr);
-		SMSGetMSound()->startSoundSet(0x6802, &mPosition, 0, 0, 0, 0, 4);
+		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
+		                              0, 0, 0, 4);
 	}
 	forward(unk154);
 	if (isActorType(0x400001A1)) {
-		soundBas(0x296E, 200.0f, unk154);
+		soundBas(MSD_SE_OBJ_POSTER_RIP1, 200.0f, unk154);
 	}
 	return 1;
 }
@@ -601,7 +608,8 @@ void THideObjPictureTwin::afterFinishedAnim()
 			coin->unk148 = this;
 			coin->unk14C = unk148;
 		}
-		SMSGetMSound()->startSoundSystemSE(0x4843, 0, nullptr, 0);
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_TIMECOIN_APPEAR, 0,
+		                                   nullptr, 0);
 
 		// Possible getter?
 		TMarDirector* director = gpMarDirector;
@@ -668,8 +676,8 @@ BOOL TBreakHideObj::receiveMessage(THitActor* sender, u32 message)
 		if (isActorType(0x400002C3)) {
 			emitAndScale(0x6B, 0, &mPosition);
 			emitAndScale(0x6C, 0, &mPosition);
-			SMSGetMSound()->startSoundActor(0x38A3, &mPosition, 0, nullptr, 0,
-			                                4);
+			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_WATERMELON_BLOCK,
+			                                &mPosition, 0, nullptr, 0, 4);
 		}
 		kill();
 		return TRUE;
@@ -724,7 +732,8 @@ void TWoodBox::kill()
 	mTimeTilAppear = -1;
 	mState         = 2;
 
-	SMSGetMSound()->startSoundActor(0x380A, &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_IT_BARREL_CRASH, &mPosition, 0,
+	                                nullptr, 0, 4);
 
 	fabricatedGroundKillCheck(50.0f, 50.0f);
 	fabricatedGroundKillCheck(50.0f, -50.0f);

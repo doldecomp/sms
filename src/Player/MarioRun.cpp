@@ -629,7 +629,7 @@ void TMario::doPushingAnimation(const Vec& vec)
 
 	if (mWallPlane == nullptr || angDiff < -0x71C7 || angDiff > 0x71C7) {
 		setAnimation(ANIM_PUSH, 1.0f);
-		startVoice(0x7094);
+		startVoice(MSD_SE_MV16_EXERT_CONT_01);
 		return;
 	}
 
@@ -767,7 +767,7 @@ BOOL TMario::running()
 	checkDescent();
 	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
 		setPlayerVelocity(mDeParams.mDashMax.get());
-		startSoundActor(0x19);
+		startSoundActor(MSD_SE_PO_SPREAD);
 	}
 	return 0;
 }
@@ -1215,7 +1215,8 @@ BOOL TMario::catching()
 
 	slippingBasic(STATUS_CATCH_LOST, 0x88C, 0x88);
 
-	SMSGetMSound()->startSoundActor(0x1009, &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP, &mPosition, 0, nullptr, 0,
+	                                4);
 
 	if (getMotionFrameCtrl().getFrame() > 50.0f)
 		getMotionFrameCtrl().setFrame(50.0f);
@@ -1291,8 +1292,9 @@ BOOL TMario::oilRun()
 	} else {
 		setAnimation(ANIM_RUN2,
 		             0.5f * mIntendedMag * mDirtyParams.mSlipAnmSpeed.get());
-		startVoiceIfNoVoice(0x78D3);
-		SMSGetMSound()->startSoundActor(0x1001, &mPosition, 0, nullptr, 0, 4);
+		startVoiceIfNoVoice(MSD_SE_MV28_SPRISE_SMALL_01);
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_POLLUT, &mPosition, 0,
+		                                nullptr, 0, 4);
 	}
 
 	switch (walkProcess()) {
@@ -1329,7 +1331,8 @@ BOOL TMario::oilSlip()
 
 	f32 tmp = mDirtyParams.mPolSizeSlip.get();
 	gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, tmp);
-	SMSGetMSound()->startSoundActor(0x1141, &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_POLLUT_CP, &mPosition, 0,
+	                                nullptr, 0, 4);
 
 	mForwardVel += mIntendedMag * JMASCos((s16)(mFaceAngle.y - mIntendedYaw))
 	               * mDirtyParams.mSlipCatchSp.get();
@@ -1483,7 +1486,7 @@ BOOL TMario::loserDown()
 	setAnimation(ANIM_DIE, 1.0f);
 	switch (mStatusState) {
 	case 0:
-		startVoice(0x785D);
+		startVoice(MSD_SE_MV08A_DOWN_01);
 		mStatusState++;
 		break;
 	case 1:
@@ -1497,7 +1500,7 @@ BOOL TMario::loserDown()
 			mStatusState++;
 		break;
 	case 3:
-		startVoice(0x7861);
+		startVoice(MSD_SE_MV08B_DOWN_REACT_01);
 		mStatusState++;
 		break;
 	case 4:
@@ -1664,8 +1667,8 @@ BOOL TMario::moveMain()
 	if ((mStatus & STATUS_FLAG_UNK40000) ? true : false) {
 		if (!((mStatus & STATUS_OIL_RUN) ? true : false)) {
 			if (!((mStatus & 0x84045D) ? true : false)) {
-				SMSGetMSound()->startSoundActor(0x1009, &mPosition, 0, nullptr,
-				                                0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP, &mPosition, 0,
+				                                nullptr, 0, 4);
 			}
 		}
 	}

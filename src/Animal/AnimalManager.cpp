@@ -1,5 +1,6 @@
 #include <Animal/AnimalManager.hpp>
 #include <Animal/AnimalSave.hpp>
+#include <MSound/SoundEffects.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundSE.hpp>
@@ -21,7 +22,8 @@ void TMewManager::createModelData()
 void TMewManager::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
-	MSoundSESystem::MSRandPlay::createRandPlayVec(0x3813, mObjNum);
+	MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_OBJ_KAMOME_SOLO,
+	                                              mObjNum);
 }
 
 void TMewManager::load(JSUMemoryInputStream& stream)

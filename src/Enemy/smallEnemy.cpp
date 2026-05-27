@@ -427,9 +427,9 @@ void TSmallEnemy::setAfterDeadEffect()
 		emitter->unk174.set(mScaling);
 	}
 
-	if (gpMSound->gateCheck(0x295F))
-		MSoundSESystem::MSoundSE::startSoundActor(0x295F, &mPosition, 0,
-		                                          nullptr, 0, 4);
+	if (gpMSound->gateCheck(MSD_SE_EN_COMMON_SMOKE))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_COMMON_SMOKE,
+		                                          &mPosition, 0, nullptr, 0, 4);
 }
 
 void TSmallEnemy::generateItem()
@@ -562,7 +562,8 @@ BOOL TSmallEnemy::receiveMessage(THitActor* sender, u32 message)
 
 	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
-		gpMSound->startSoundSet(0x6802, &mPosition, 0, 0.0f, 0, 0, 4);
+		gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0, 0.0f,
+		                        0, 0, 4);
 		if (mSprayedByWaterCooldown == 0) {
 			mSprayedByWaterCooldown = 1;
 			if (!changeByJuice()) {
@@ -743,9 +744,9 @@ void TSmallEnemy::scalingChangeActor()
 
 void TSmallEnemy::changeOut()
 {
-	if (gpMSound->gateCheck(0x293D))
-		MSoundSESystem::MSoundSE::startSoundActor(0x293D, &mPosition, 0,
-		                                          nullptr, 0, 4);
+	if (gpMSound->gateCheck(MSD_SE_EN_TELSA_RECOVER))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_TELSA_RECOVER,
+		                                          &mPosition, 0, nullptr, 0, 4);
 
 	kill();
 	mJuiceBlock->mPosition = mPosition;
@@ -862,9 +863,9 @@ void TSmallEnemy::generateEffectColumWater()
 
 	enemy->generate(mPosition, mScaling);
 
-	if (gpMSound->gateCheck(0x286D))
-		MSoundSESystem::MSoundSE::startSoundActor(0x286D, &mPosition, 0,
-		                                          nullptr, 0, 4);
+	if (gpMSound->gateCheck(MSD_SE_EN_TOBIPUKU_TOWATER))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_TOBIPUKU_TOWATER,
+		                                          &mPosition, 0, nullptr, 0, 4);
 }
 
 void TSmallEnemy::setBckAnm(int index)

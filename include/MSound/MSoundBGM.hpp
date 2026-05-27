@@ -2,6 +2,7 @@
 #define MSOUNDBGM_HPP
 
 #include <MSound/MSSceneWave.hpp>
+#include <MSound/BackgroundMusic.hpp>
 #include <JSystem/JAudio/JALibrary/JALList.hpp>
 #include <JSystem/JAudio/JASystem/JASTrack.hpp>
 

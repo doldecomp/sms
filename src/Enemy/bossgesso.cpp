@@ -464,9 +464,10 @@ void TBGBinder::bind(TLiveActor* param_1)
 					enemy->generate(gesso->mPosition, local_5c);
 				}
 
-				if (gpMSound->gateCheck(0x286A))
+				if (gpMSound->gateCheck(MSD_SE_BS_GESO_DOWN_DIVE))
 					MSoundSESystem::MSoundSE::startSoundActor(
-					    0x286A, &gesso->mPosition, 0, nullptr, 0, 4);
+					    MSD_SE_BS_GESO_DOWN_DIVE, &gesso->mPosition, 0, nullptr,
+					    0, 4);
 
 				gesso->unk1A4 = 1.0f;
 				SMSRumbleMgr->start(8, &gesso->unk1A4);
@@ -1368,9 +1369,9 @@ DEFINE_NERVE(TNerveBGEyeDamage, TLiveActor)
 
 	if (self->unk1AE == 0) {
 		self->unk1AE = 0x78;
-		if (gpMSound->gateCheck(0x2912))
-			MSoundSESystem::MSoundSE::startSoundActor(0x2912, &self->mPosition,
-			                                          0, nullptr, 0, 4);
+		if (gpMSound->gateCheck(MSD_SE_BS_GESO_WATER_HIT))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_BS_GESO_WATER_HIT, &self->mPosition, 0, nullptr, 0, 4);
 	}
 
 	if (self->unk190.color.a != 0) {
@@ -1403,7 +1404,7 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 		self->getMActor()->resetDL();
 
 		if (gpMarDirector->mMap == 3 || gpMarDirector->mMap == 59) {
-			MSBgm::stopBGM(0x8001000D, 10);
+			MSBgm::stopBGM(MSD_BGM_MAP_SELECT, 10);
 			MSMainProc::setBossNotDamagedFlag(false);
 		}
 	}
@@ -1462,7 +1463,7 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 
 		spine->pushAfterCurrent(&TNerveBGPollute::theNerve());
 		if (gpMarDirector->mMap == 3 || gpMarDirector->mMap == 59)
-			MSBgm::startBGM(0x8001002A);
+			MSBgm::startBGM(MSD_BGM_CHUBOSS_MANTA);
 
 		return true;
 	}
@@ -1602,16 +1603,17 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		if (nameKuriMgr)
 			nameKuriMgr->killChildren();
 
-		if (gpMSound->gateCheck(0x2953))
-			MSoundSESystem::MSoundSE::startSoundActor(0x2953, &self->mPosition,
-			                                          0, nullptr, 0, 4);
+		if (gpMSound->gateCheck(MSD_SE_BS_GESO_MHIT_NOBOICE))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_BS_GESO_MHIT_NOBOICE, &self->mPosition, 0, nullptr, 0,
+			    4);
 	}
 
 	if (gpMarDirector->mMap == 9 && spine->getTime() >= 740
 	    && spine->getTime() <= 750) {
-		if (gpMSound->gateCheck(0x3008))
-			MSoundSESystem::MSoundSE::startSoundActor(0x3008, &self->mPosition,
-			                                          0, nullptr, 0, 4);
+		if (gpMSound->gateCheck(MSD_SE_OBJ_QUAKE))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_OBJ_QUAKE, &self->mPosition, 0, nullptr, 0, 4);
 
 		if (spine->getTime() == 745) {
 			self->unk1A4 = 1.0f;

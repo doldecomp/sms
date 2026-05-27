@@ -411,7 +411,7 @@ bool TYoshi::disappear()
 
 		if (mMario->checkFlag(MARIO_FLAG_IN_ANY_WATER)) {
 			mState = STATE_DROWNING;
-			changeAnimation(0x19);
+			changeAnimation(MSD_SE_PO_SPREAD);
 		} else {
 			mState = STATE_DYING;
 		}
@@ -440,7 +440,8 @@ void TYoshi::ride()
 
 	gpModelWaterManager->unk5D5F = mType;
 
-	SMSGetMSound()->startSoundActor(0x7921, &mTranslation, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_YV_DELICIOUS, &mTranslation, 0,
+	                                nullptr, 0, 4);
 
 	SMSGetMSound()->unk88 = 1;
 	MSBgm::setStageBgmYoshiPercussion(true);
@@ -459,15 +460,15 @@ void TYoshi::getOff(bool param_1)
 	if (param_1 == true) {
 		changeAnimation(1);
 
-		SMSGetMSound()->startSoundActor(0x7918, &mTranslation, 0, nullptr, 0,
-		                                4);
+		SMSGetMSound()->startSoundActor(MSD_SE_YV_DAMAGE, &mTranslation, 0,
+		                                nullptr, 0, 4);
 
 		SMSRumbleMgr->start(0x15, 0x14, (f32*)nullptr);
 	} else {
 		changeAnimation(0x17);
 
-		SMSGetMSound()->startSoundActor(0x7924, &mTranslation, 0, nullptr, 0,
-		                                4);
+		SMSGetMSound()->startSoundActor(MSD_SE_YV_PURU_PURU, &mTranslation, 0,
+		                                nullptr, 0, 4);
 	}
 
 	SMS_RideMoveCalcLocalPos(unk94, mTranslation);
@@ -763,8 +764,8 @@ void TYoshi::doEat(u32 param_1)
 		mType = r31;
 		unkC  = unk8;
 		gpMarioParticleManager->emitAndBindToPosPtr(0x3E, &unk108, 0, this);
-		SMSGetMSound()->startSoundActor(0x1947, &mTongue->mTipPos, 0, nullptr,
-		                                0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_YO_TONGUE_GOKKUN,
+		                                &mTongue->mTipPos, 0, nullptr, 0, 4);
 	}
 }
 
@@ -791,8 +792,8 @@ void TYoshi::thinkHoldOut()
 		    0x119, mActor->getModel()->getAnmMtx(unkF6), 1, this);
 		if (mMario->mVel.y < 0.0f
 		    && 0.0f <= mFlutterAcceleration + mMario->mVel.y)
-			SMSGetMSound()->startSoundActor(0x7926, &mTranslation, 0, nullptr,
-			                                0, 4);
+			SMSGetMSound()->startSoundActor(MSD_SE_YV_FUNBARI, &mTranslation, 0,
+			                                nullptr, 0, 4);
 		if (mFlutterTimer != 0) {
 			mFlutterTimer -= 1;
 			mMario->mVel.y += mFlutterAcceleration;
@@ -825,7 +826,7 @@ void TYoshi::movement()
 		if (mActor->curAnmEndsNext(0, nullptr)) {
 			mState = STATE_UNMOUNTED;
 			changeAnimation(0x17);
-			gpMSound->startMarioVoice(0x7919, 1, 1);
+			gpMSound->startMarioVoice(MSD_SE_YV_YOSHI1, 1, 1);
 		}
 		break;
 
