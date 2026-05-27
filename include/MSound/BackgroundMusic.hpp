@@ -1,3 +1,6 @@
+#ifndef MSOUND_BACKGROUND_MUSIC_HPP
+#define MSOUND_BACKGROUND_MUSIC_HPP
+
 // Exact order and names were pulled from mSound.asn
 enum MSoundBGMId {
 	MSD_BGM_DOLPIC          = 0x80010800,
@@ -49,3 +52,5 @@ enum MSoundBGMId {
 	MSD_BGM_MONTEMAN_RACE   = 0x8001002E,
 	MSD_STR_SPACEWORLD      = 0x8001002F
 };
+
+#endif

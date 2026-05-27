@@ -1,3 +1,6 @@
+#ifndef MSOUND_SOUND_EFFECTS_HPP
+#define MSOUND_SOUND_EFFECTS_HPP
+
 // Exact order and names were pulled from mSound.asn
 enum MSoundSEId {
 	MSD_SE_PO_WATER_HI          = 0x0000,
@@ -1633,3 +1636,5 @@ enum MSoundSEId {
 	MSD_SE_OBJ_FLOWER_OPEN_7    = 0x89C0,
 	MSD_SE_SHINE_EXIST          = 0x81C1,
 };
+
+#endif
