@@ -705,7 +705,7 @@ public:
 	void loserExec();
 	void normalizeNozzle();
 	void resetNozzle();
-	bool trampleExec(THitActor*);
+	BOOL trampleExec(THitActor*);
 	bool canTake(THitActor*);
 	bool isTakeSituation(THitActor*);
 	void dropObject();
@@ -1335,6 +1335,7 @@ public:
 		STATUS_FLAG_UNK20000    = 0x20000,
 		STATUS_FLAG_UNK40000    = 0x40000,
 		STATUS_FLAG_UNK100000   = 0x100000,
+		STATUS_FLAG_UNK200000   = 0x200000,
 		STATUS_FLAG_UNK800000   = 0x800000,
 		STATUS_FLAG_UNK2000000  = 0x2000000,
 		STATUS_FLAG_UNK4000000  = 0x4000000,

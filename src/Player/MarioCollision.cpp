@@ -132,7 +132,7 @@ bool TMario::canTake(THitActor* object)
 	       && isTakeSituation(object);
 }
 
-bool TMario::trampleExec(THitActor* param_1)
+BOOL TMario::trampleExec(THitActor* param_1)
 {
 	if (!checkStatusFlag(STATUS_FLAG_JUMPING))
 		return false;
