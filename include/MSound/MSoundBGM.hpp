@@ -49,6 +49,7 @@ public:
 	/* 0x14 */ JAISound* unk14;
 };
 
+// Exact order and names were pulled from mSound.asn
 enum MSoundBGMId {
 	MSD_BGM_DOLPIC          = 0x80010800,
 	MSD_BGM_BIANCO          = 0x80010001,

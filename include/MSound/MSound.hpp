@@ -18,7 +18,8 @@ class JAIAnimeFrameSoundData;
 class MSModBgm;
 class MSBgmXFade;
 
-// Exact order of this comes from 
+// Exact order and names were pulled from mSound.asn
+// NOTE: Moving this to the bottom of the file will cause startForceJumpSound to error!
 enum MSoundSEId {
     MSD_SE_PO_WATER_HI = 0x0000,
     MSD_SE_PO_WATER_LOW = 0x0001,
@@ -757,7 +758,7 @@ enum MSoundSEId {
     MSD_SE_MV24_JUMP_SPECIAL_04 = 0x78BC,
     MSD_SE_MV24_JUMP_SPECIAL_05 = 0x78BD,
     MSD_SE_MV24_JUMP_SPECIAL_06 = 0x78BE,
-    MSD_SE_MV25A_JUMP_HUGE_01 = 0x78BF, // we stop here for now...
+    MSD_SE_MV25A_JUMP_HUGE_01 = 0x78BF,
     MSD_SE_MV25A_JUMP_HUGE_02 = 0x78C0,
     MSD_SE_MV25A_WIRE_ROLL_01A = 0x78C1,
     MSD_SE_MV25A_WIRE_ROLL_01B = 0x78C2,
