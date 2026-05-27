@@ -53,8 +53,8 @@ void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
 		case 2:
 			emitHappyEffect_();
 			if (SMSGetMSound()->gateCheck(MSD_SE_NPC_MONTE_C_CLEANUP))
-				MSoundSESystem::MSoundSE::startSoundNpcActor(MSD_SE_NPC_MONTE_C_CLEANUP, &mPosition,
-				                                             0, nullptr, 0, 4);
+				MSoundSESystem::MSoundSE::startSoundNpcActor(
+				    MSD_SE_NPC_MONTE_C_CLEANUP, &mPosition, 0, nullptr, 0, 4);
 			break;
 		}
 	}

@@ -116,8 +116,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			playThump = false;
 
 		if (playThump == true)
-			SMSGetMSound()->startSoundActor(MSD_SE_MA_GET_ITEM, &mPosition, 0, nullptr, 0,
-			                                4);
+			SMSGetMSound()->startSoundActor(MSD_SE_MA_GET_ITEM, &mPosition, 0,
+			                                nullptr, 0, 4);
 	}
 
 	// HIT_MESSAGE_UNK7 - damage trigger.
@@ -126,8 +126,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		    || sender->checkActorType(ACTOR_TYPE_UNK4000000)
 		    || sender->checkActorType(ACTOR_TYPE_ENEMY)
 		    || sender->checkActorType(ACTOR_TYPE_BOSS)) {
-			SMSGetMSound()->startSoundActor(MSD_SE_MA_HANEAGARI, &mPosition, 0, &mSound, 0,
-			                                4);
+			SMSGetMSound()->startSoundActor(MSD_SE_MA_HANEAGARI, &mPosition, 0,
+			                                &mSound, 0, 4);
 		}
 		if (sender->mActorType == 0x10000015)
 			startVoice(MSD_SE_MV27_SPRISE_01);
@@ -137,8 +137,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			startVoice(MSD_SE_MV28_SPRISE_SMALL_01);
 		}
 		if (onYoshi())
-			SMSGetMSound()->startSoundActor(MSD_SE_YV_SURPRISED, &mPosition, 0, nullptr, 0,
-			                                4);
+			SMSGetMSound()->startSoundActor(MSD_SE_YV_SURPRISED, &mPosition, 0,
+			                                nullptr, 0, 4);
 
 		changePlayerStatus(STATUS_THROWN_DOWN, 0, false);
 		return TRUE;
@@ -264,8 +264,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				           mDmgParamsLampTrapIron.mDirty.get(),
 				           mDmgParamsLampTrapIron.mInvincibleTime.get());
 				changePlayerStatus(STATUS_FIRE_DOWN, 1, false);
-				SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE, &mPosition, 0, nullptr,
-				                                0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE,
+				                                &mPosition, 0, nullptr, 0, 4);
 
 				gpMarioParticleManager->emitAndBindToPosPtr(6, &mPosition, 0,
 				                                            nullptr);
@@ -449,8 +449,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				           mDmgParamsKiller.mDirty.get(),
 				           mDmgParamsKiller.mInvincibleTime.get());
 				changePlayerStatus(STATUS_FIRE_DOWN, 1, false);
-				SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE, &mPosition, 0, nullptr,
-				                                0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE,
+				                                &mPosition, 0, nullptr, 0, 4);
 
 				gpMarioParticleManager->emitAndBindToPosPtr(6, &mPosition, 0,
 				                                            nullptr);
@@ -560,8 +560,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				           mDmgParamsFire.mDirty.get(),
 				           mDmgParamsFire.mInvincibleTime.get());
 				changePlayerStatus(STATUS_FIRE_DOWN, 1, false);
-				SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE, &mPosition, 0, nullptr,
-				                                0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE,
+				                                &mPosition, 0, nullptr, 0, 4);
 
 				gpMarioParticleManager->emitAndBindToPosPtr(6, &mPosition, 0,
 				                                            nullptr);
@@ -584,8 +584,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				           mDmgParamsFire.mDirty.get(),
 				           mDmgParamsFire.mInvincibleTime.get());
 				changePlayerStatus(STATUS_FIRE_DOWN, 1, false);
-				SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE, &mPosition, 0, nullptr,
-				                                0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE,
+				                                &mPosition, 0, nullptr, 0, 4);
 
 				gpMarioParticleManager->emitAndBindToPosPtr(6, &mPosition, 0,
 				                                            nullptr);
@@ -675,8 +675,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			           mDmgParamsFire.mMotor.get(), mDmgParamsFire.mDirty.get(),
 			           mDmgParamsFire.mInvincibleTime.get());
 			changePlayerStatus(STATUS_FIRE_DOWN, 1, false);
-			SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE, &mPosition, 0, nullptr, 0,
-			                                4);
+			SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE, &mPosition,
+			                                0, nullptr, 0, 4);
 
 			gpMarioParticleManager->emitAndBindToPosPtr(6, &mPosition, 0,
 			                                            nullptr);

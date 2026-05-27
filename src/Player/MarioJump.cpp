@@ -133,8 +133,8 @@ BOOL TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 				rumbleStart(0x15, mMotorParams.mMotorHipDrop.get());
 				didTrample = true;
 				startVoice(0x789EU);
-				SMSGetMSound()->startSoundActor(MSD_SE_MA_FALL_AFTER, &mPosition, 0, nullptr,
-				                                0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_FALL_AFTER,
+				                                &mPosition, 0, nullptr, 0, 4);
 				strongTouchDownEffect();
 				floorDamageExec(1, 3, 0, mMotorParams.mMotorTrample.get());
 			}
@@ -609,7 +609,8 @@ BOOL TMario::stayWall()
 	setAnimation(ANIM_WSLD, 1.0f);
 	if (mVel.y < -10.0f) {
 		wallSlipEffect();
-		SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_WALL, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_WALL, &mPosition, 0,
+		                                nullptr, 0, 4);
 	}
 
 	return false;
@@ -1185,8 +1186,8 @@ BOOL TMario::hipAttacking()
 			changePlayerStatus(0x208B0, 0, 0);
 			rumbleStart(0x15, mMotorParams.mMotorWall.get());
 			if (gpMSound->gateCheck(MSD_SE_MA_HIP_ATTACK))
-				MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_MA_HIP_ATTACK, &mPosition, 0,
-				                                          nullptr, 0, 4);
+				MSoundSESystem::MSoundSE::startSoundActor(
+				    MSD_SE_MA_HIP_ATTACK, &mPosition, 0, nullptr, 0, 4);
 		}
 		break;
 	}
@@ -1264,8 +1265,8 @@ BOOL TMario::diving()
 	}
 
 	if (gpMSound->gateCheck(MSD_SE_MA_DIVE_IN_MAHRE))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_MA_DIVE_IN_MAHRE, nullptr, 0, nullptr,
-		                                          0, 4);
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_MA_DIVE_IN_MAHRE,
+		                                          nullptr, 0, nullptr, 0, 4);
 
 	bubbleFromBody();
 	mForwardVel *= mDivingParams.mSeaBrake.get();

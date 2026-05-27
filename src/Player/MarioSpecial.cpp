@@ -48,7 +48,8 @@ BOOL TMario::barWait()
 		mPosition.y += mVel.y;
 		mHolderHeightDiff = mPosition.y - mHolder->mPosition.y;
 		treeSlipEffect();
-		SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_TREE, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_TREE, &mPosition, 0,
+		                                nullptr, 0, 4);
 	}
 
 	if (mHolder->getActorType() == 0x400000bb) {
@@ -1411,8 +1412,8 @@ BOOL TMario::fenceMove()
 		}
 
 		if (mInput & 0x2) {
-			SMSGetMSound()->startSoundActor(MSD_SE_MA_FENCE_PUNCH, &mPosition, 0, nullptr, 0,
-			                                4);
+			SMSGetMSound()->startSoundActor(MSD_SE_MA_FENCE_PUNCH, &mPosition,
+			                                0, nullptr, 0, 4);
 			rumbleStart(0x15, mMotorParams.mMotorWall.get());
 			return startJumpWall();
 		}
@@ -1471,7 +1472,8 @@ BOOL TMario::fencePunch()
 	TBGCheckData* wall = checkWallPlane(&pos, 80.0f, 50.0f);
 
 	if (mInput & 0x2) {
-		SMSGetMSound()->startSoundActor(MSD_SE_MA_FENCE_PUNCH, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_FENCE_PUNCH, &mPosition, 0,
+		                                nullptr, 0, 4);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 		return startJumpWall();
 	}

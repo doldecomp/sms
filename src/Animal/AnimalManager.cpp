@@ -22,7 +22,8 @@ void TMewManager::createModelData()
 void TMewManager::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
-	MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_OBJ_KAMOME_SOLO, mObjNum);
+	MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_OBJ_KAMOME_SOLO,
+	                                              mObjNum);
 }
 
 void TMewManager::load(JSUMemoryInputStream& stream)

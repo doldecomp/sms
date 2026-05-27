@@ -1215,7 +1215,8 @@ BOOL TMario::catching()
 
 	slippingBasic(STATUS_CATCH_LOST, 0x88C, 0x88);
 
-	SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP, &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP, &mPosition, 0, nullptr, 0,
+	                                4);
 
 	if (getMotionFrameCtrl().getFrame() > 50.0f)
 		getMotionFrameCtrl().setFrame(50.0f);
@@ -1292,7 +1293,8 @@ BOOL TMario::oilRun()
 		setAnimation(ANIM_RUN2,
 		             0.5f * mIntendedMag * mDirtyParams.mSlipAnmSpeed.get());
 		startVoiceIfNoVoice(MSD_SE_MV28_SPRISE_SMALL_01);
-		SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_POLLUT, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_POLLUT, &mPosition, 0,
+		                                nullptr, 0, 4);
 	}
 
 	switch (walkProcess()) {
@@ -1329,7 +1331,8 @@ BOOL TMario::oilSlip()
 
 	f32 tmp = mDirtyParams.mPolSizeSlip.get();
 	gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, tmp);
-	SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_POLLUT_CP, &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_POLLUT_CP, &mPosition, 0,
+	                                nullptr, 0, 4);
 
 	mForwardVel += mIntendedMag * JMASCos((s16)(mFaceAngle.y - mIntendedYaw))
 	               * mDirtyParams.mSlipCatchSp.get();
@@ -1664,8 +1667,8 @@ BOOL TMario::moveMain()
 	if ((mStatus & STATUS_FLAG_UNK40000) ? true : false) {
 		if (!((mStatus & STATUS_OIL_RUN) ? true : false)) {
 			if (!((mStatus & 0x84045D) ? true : false)) {
-				SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP, &mPosition, 0, nullptr,
-				                                0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP, &mPosition, 0,
+				                                nullptr, 0, 4);
 			}
 		}
 	}

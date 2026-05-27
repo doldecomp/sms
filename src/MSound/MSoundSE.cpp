@@ -632,13 +632,13 @@ JAISound* MSoundSE::startSoundActorInner(u32 param_1, JAISound** param_2,
 			if (uVar3) {
 				switch (param_1) {
 				case MSD_SE_MA_WALK_STONE_L_HEEL:
-					startSoundActorInner(MSD_SE_YO_WALK_L, nullptr, param_3, param_4,
-					                     param_5);
+					startSoundActorInner(MSD_SE_YO_WALK_L, nullptr, param_3,
+					                     param_4, param_5);
 					break;
 
 				case MSD_SE_MA_WALK_STONE_R_HEEL:
-					return startSoundActorInner(MSD_SE_YO_WALK_R, nullptr, param_3,
-					                            param_4, param_5);
+					return startSoundActorInner(MSD_SE_YO_WALK_R, nullptr,
+					                            param_3, param_4, param_5);
 				}
 			}
 
@@ -682,7 +682,8 @@ JAISound* MSoundSE::startSoundActorInner(u32 param_1, JAISound** param_2,
 	if (uVar2 & 0x80000000)
 		param_1 = getRandomID(param_1);
 
-	if (MSGMSound->unkCD == 8 && param_1 >= MSD_SE_MA_WALK_METALNET_LH1 && param_1 <= MSD_SE_MA_WALK_METALNET_RT2) {
+	if (MSGMSound->unkCD == 8 && param_1 >= MSD_SE_MA_WALK_METALNET_LH1
+	    && param_1 <= MSD_SE_MA_WALK_METALNET_RT2) {
 		param_1 -= 8;
 	}
 

@@ -35,8 +35,8 @@ void TNpcCoin::execAppearCoin_()
 	}
 
 	if (SMSGetMSound()->gateCheck(MSD_SE_NPC_APPEAR_ITEM))
-		MSoundSESystem::MSoundSE::startSoundNpcActor(MSD_SE_NPC_APPEAR_ITEM, &unk8, 0, nullptr,
-		                                             0, 4);
+		MSoundSESystem::MSoundSE::startSoundNpcActor(MSD_SE_NPC_APPEAR_ITEM,
+		                                             &unk8, 0, nullptr, 0, 4);
 }
 
 void TNpcCoin::requestAppearCoin(const Vec& param_1, f32 param_2, int param_3)

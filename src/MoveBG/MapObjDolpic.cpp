@@ -95,8 +95,8 @@ BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->isActorType(0x01000001)) {
 		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
-		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &sender->mPosition, 0, 0.0f, 0, 0,
-		                              4);
+		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
+		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
 
 		if (unk13C == 0)
 			return 1;
@@ -112,7 +112,8 @@ BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 			    "モニュメントシャインカメラ", mPosition.x, mPosition.y,
 			    mPosition.z);
 
-			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN, 0, nullptr,
+			                                   0);
 		}
 
 		return 1;
@@ -288,7 +289,8 @@ BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 				    mPosition.z);
 			}
 
-			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN, 0, nullptr,
+			                                   0);
 		}
 
 		return 1;
@@ -359,12 +361,12 @@ void TDptMonteFence::touchPlayer(THitActor* actor)
 {
 	if (SMS_IsMarioStatusThrownDown()) {
 		if (gpMSound->gateCheck(MSD_SE_IT_BARREL_CRASH)) {
-			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_IT_BARREL_CRASH, &mPosition, 0,
-			                                          nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_IT_BARREL_CRASH, &mPosition, 0, nullptr, 0, 4);
 		}
 		if (gpMSound->gateCheck(MSD_SE_OBJ_GLASS_BREAK)) {
-			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_OBJ_GLASS_BREAK, &mPosition, 0,
-			                                          nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_OBJ_GLASS_BREAK, &mPosition, 0, nullptr, 0, 4);
 		}
 		kill();
 	}
@@ -399,8 +401,8 @@ void TMareGate::control()
 	// TODO: some kind of an MSound inline that keeps the sound in unk7C, hmmm
 	MSound* sound = gpMSound;
 	if (sound->gateCheck(MSD_SE_OBJ_MAHRE_GATE_LIGHT)) {
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_OBJ_MAHRE_GATE_LIGHT, &mPosition, 0,
-		                                          &sound->unk7C, 0, 4);
+		MSoundSESystem::MSoundSE::startSoundActor(
+		    MSD_SE_OBJ_MAHRE_GATE_LIGHT, &mPosition, 0, &sound->unk7C, 0, 4);
 	}
 }
 

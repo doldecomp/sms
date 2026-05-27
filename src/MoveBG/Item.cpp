@@ -38,8 +38,8 @@ void TItem::appeared()
 
 		if (isActorType(0x2000000f) || isActorType(0x20000010)) {
 			if (gpMSound->gateCheck(MSD_SE_SY_COIN_DISAPPEAR))
-				MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_SY_COIN_DISAPPEAR, mPosition, 0,
-				                                          nullptr, 0, 4);
+				MSoundSESystem::MSoundSE::startSoundActor(
+				    MSD_SE_SY_COIN_DISAPPEAR, mPosition, 0, nullptr, 0, 4);
 		}
 	}
 
@@ -192,8 +192,8 @@ void TCoin::taken(THitActor* param_1)
 	TFlagManager::getInstance()->incGoldCoinFlag(SMS_getShineStage(thing), 1);
 
 	if (gpMSound->gateCheck(MSD_SE_SY_COIN))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_SY_COIN, mPosition, 0, nullptr,
-		                                          0, 4);
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_SY_COIN, mPosition, 0,
+		                                          nullptr, 0, 4);
 
 	if (unk148)
 		unk148->receiveMessage(this, HIT_MESSAGE_UNK8);
@@ -232,9 +232,11 @@ void TCoin::appear()
 	if (isActorType(0x20000010)) {
 		if (!TFlagManager::smInstance->getBlueCoinFlag(
 		        gpMarDirector->getCurrentMap(), unk134))
-			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_TIMECOIN_APPEAR, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_TIMECOIN_APPEAR, 0,
+			                                   nullptr, 0);
 	} else {
-		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_COIN_APPEAR, 0, nullptr, 0);
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_COIN_APPEAR, 0, nullptr,
+		                                   0);
 	}
 
 	appearWithoutSound();
@@ -350,8 +352,8 @@ void TCoinRed::taken(THitActor* param_1)
 	TFlagManager::getInstance()->incFlag(0x60000, 1);
 
 	if (gpMSound->gateCheck(MSD_SE_SY_RED_COIN_GET))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_SY_RED_COIN_GET, mPosition, 0, nullptr,
-		                                          0, 4);
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_SY_RED_COIN_GET,
+		                                          mPosition, 0, nullptr, 0, 4);
 
 	if (unk148)
 		unk148->receiveMessage(this, HIT_MESSAGE_UNK8);
@@ -524,12 +526,14 @@ void TEggYoshi::touchFruit(THitActor* fruit)
 		mState = 0xB;
 		unk150 = fruit;
 		if (gpMSound->gateCheck(MSD_SE_SY_COLLECT_PRETTY))
-			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_COLLECT_PRETTY, 0, nullptr, 0);
+			MSoundSESystem::MSoundSE::startSoundSystemSE(
+			    MSD_SE_SY_COLLECT_PRETTY, 0, nullptr, 0);
 	} else if (animIsFinished()) {
 		startAnim(2);
 		unk148->getFrameCtrl(3)->setFrame(12.0f);
 		if (gpMSound->gateCheck(MSD_SE_SY_NOT_COLLECT_YOSHI))
-			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_NOT_COLLECT_YOSHI, 0, nullptr, 0);
+			MSoundSESystem::MSoundSE::startSoundSystemSE(
+			    MSD_SE_SY_NOT_COLLECT_YOSHI, 0, nullptr, 0);
 		mState = 0xD;
 	}
 }

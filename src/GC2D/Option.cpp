@@ -899,7 +899,8 @@ void TOptionControl::setType(TOptionControl::SelectType type,
 		}
 
 		if (!initial_options_entry)
-			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CURSOR_COMMON, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CURSOR_COMMON, 0,
+			                                   nullptr, 0);
 	}
 }
 

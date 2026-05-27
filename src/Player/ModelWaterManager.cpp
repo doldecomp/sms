@@ -489,8 +489,9 @@ void TModelWaterManager::move()
 
 				mParticleLifetimeSOA[i] = 0.0f;
 
-				gpMSound->startSoundSet(MSD_SE_WT_INTO_WATER, &mParticlePositionSOA[i], 0.0f,
-				                        0.0f, 0.0f, 0, 4);
+				gpMSound->startSoundSet(MSD_SE_WT_INTO_WATER,
+				                        &mParticlePositionSOA[i], 0.0f, 0.0f,
+				                        0.0f, 0, 4);
 				continue;
 			}
 
@@ -652,8 +653,8 @@ void TModelWaterManager::move()
 		case 2: {
 			if (mParticleLifetimeSOA[i] > unk5D68)
 				mParticleLifetimeSOA[i] = unk5D68;
-			gpMSound->startSoundSet(MSD_SE_PO_WT_DRY_UP, &mParticlePositionSOA[i], 0, 0.0f, 0,
-			                        0, 4);
+			gpMSound->startSoundSet(MSD_SE_PO_WT_DRY_UP,
+			                        &mParticlePositionSOA[i], 0, 0.0f, 0, 0, 4);
 
 			splashGround(i); // TODO: probably wrong inline
 

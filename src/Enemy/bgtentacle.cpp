@@ -1119,8 +1119,8 @@ void TBGTentacle::calcAtkParticleAndSE()
 
 				const JGeometry::TVec3<f32>& p = mTakeHit->getPosition();
 				if (gpMSound->gateCheck(MSD_SE_BS_GESO_ATK_IMPACT))
-					MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_GESO_ATK_IMPACT, p, 0,
-					                                          nullptr, 0, 4);
+					MSoundSESystem::MSoundSE::startSoundActor(
+					    MSD_SE_BS_GESO_ATK_IMPACT, p, 0, nullptr, 0, 4);
 
 				mOwner->rumblePad(2, mOwner->getPosition());
 			}
@@ -1166,16 +1166,16 @@ void TBGTentacle::calcAtkParticleAndSE()
 		if (mState != 10) {
 			const JGeometry::TVec3<f32>& p = mTakeHit->getPosition();
 			if (gpMSound->gateCheck(MSD_SE_BS_GESO_ATK))
-				MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_GESO_ATK, p, 0, nullptr,
-				                                          0, 4);
+				MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_GESO_ATK, p,
+				                                          0, nullptr, 0, 4);
 
 			if (!mOwner->unk1AC) {
 				mOwner->unk1AC = 0xF0;
 
 				const JGeometry::TVec3<f32>& p = mTakeHit->getPosition();
 				if (gpMSound->gateCheck(MSD_SE_BS_GESO_VO_ATTACK))
-					MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_GESO_VO_ATTACK, p, 0,
-					                                          nullptr, 0, 4);
+					MSoundSESystem::MSoundSE::startSoundActor(
+					    MSD_SE_BS_GESO_VO_ATTACK, p, 0, nullptr, 0, 4);
 			}
 		}
 	}
@@ -1401,8 +1401,8 @@ void TBGTentacle::perform(u32 param_1, JDrama::TGraphics* param_2)
 	           < mOwner->getSaveParam()->getSLAmputeeTime() - 240) {
 		const JGeometry::TVec3<f32>& pos = mTakeHit->getPosition();
 		if (gpMSound->gateCheck(MSD_SE_BS_GESO_TAKEN_HAND))
-			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_GESO_TAKEN_HAND, &pos, 0, nullptr,
-			                                          0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_GESO_TAKEN_HAND,
+			                                          &pos, 0, nullptr, 0, 4);
 	}
 
 	if (mState != 6)

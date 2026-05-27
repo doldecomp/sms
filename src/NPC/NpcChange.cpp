@@ -348,10 +348,11 @@ void TBaseNPC::behaveToHitObject_(THitActor* param_1,
 			return;
 
 		gpMarioParticleManager->emit(0xE7, &mPosition, 0, nullptr);
-		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0, 0.0f, 0, 0, 4);
+		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
+		                              0.0f, 0, 0, 4);
 		if (SMSGetMSound()->gateCheck(MSD_SE_NPC_FIRE_FIGHTING))
-			MSoundSESystem::MSoundSE::startSoundNpcActor(MSD_SE_NPC_FIRE_FIGHTING, &mPosition, 0,
-			                                             nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundNpcActor(
+			    MSD_SE_NPC_FIRE_FIGHTING, &mPosition, 0, nullptr, 0, 4);
 		mBurnStrength -= mPtrSaveNormal->mSLFireDecSpeed.get();
 		if (!isExtinguished_())
 			return;
@@ -552,8 +553,8 @@ void TBaseNPC::changeNerveProc_()
 		offLiveFlag(LIVE_FLAG_SINK_BOTTOM);
 		requestNpcAnm_(NPC_ANM_KIND_UNK1A, NPC_STOP_MOTION_BLEND_ON);
 		if (SMSGetMSound()->gateCheck(MSD_SE_NPC_APPEAR))
-			MSoundSESystem::MSoundSE::startSoundNpcActor(MSD_SE_NPC_APPEAR, &mPosition, 0,
-			                                             nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundNpcActor(
+			    MSD_SE_NPC_APPEAR, &mPosition, 0, nullptr, 0, 4);
 		return;
 	}
 

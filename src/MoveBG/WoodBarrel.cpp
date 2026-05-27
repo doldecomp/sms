@@ -83,8 +83,8 @@ void TWoodBarrel::appear()
 	makeObjAppeared();
 	gpMarioParticleManager->emitAndBindToPosPtr(0xE5, &mPosition, 0, nullptr);
 	if (gpMSound->gateCheck(MSD_SE_SMOKE_EFFECT))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition, 0,
-		                                          nullptr, 0, 4);
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_SMOKE_EFFECT,
+		                                          &mPosition, 0, nullptr, 0, 4);
 }
 
 void TWoodBarrel::touchWall(JGeometry::TVec3<f32>*, TBGWallCheckRecord*)

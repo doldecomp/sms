@@ -1825,7 +1825,8 @@ void TCardSave::execMovement_()
 					}
 				} else {
 					if (unk2DD == 0 && unk2E0 == 0xC8) {
-						gpMSound->startSoundSystemSE(MSD_SE_SY_DECIDE_COMMON, 0, nullptr, 0);
+						gpMSound->startSoundSystemSE(MSD_SE_SY_DECIDE_COMMON, 0,
+						                             nullptr, 0);
 
 						if (unk308 == 0 || unk308 == 6 || unk308 == 8) {
 							unk128->hide();

@@ -813,8 +813,8 @@ void THamuKuri::jumpToSearchActor()
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 
 		if (gpMSound->gateCheck(MSD_SE_EN_DOROKURI_JUMP))
-			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_DOROKURI_JUMP, &mPosition, 0,
-			                                          nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_EN_DOROKURI_JUMP, &mPosition, 0, nullptr, 0, 4);
 	}
 }
 
@@ -825,8 +825,8 @@ void THamuKuri::behaveToFindMario()
 	TWalkerEnemy::behaveToFindMario();
 
 	if (gpMSound->gateCheck(MSD_SE_EN_HMKRI_VO_ATTACK))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_HMKRI_VO_ATTACK, &mPosition, 0,
-		                                          nullptr, 0, 4);
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_HMKRI_VO_ATTACK,
+		                                          &mPosition, 0, nullptr, 0, 4);
 }
 
 void THamuKuri::attackToMario()
@@ -1025,8 +1025,8 @@ void THamuKuri::setAfterDeadEffect()
 		emitter->setScale(mScaling);
 
 	if (gpMSound->gateCheck(MSD_SE_EN_COMMON_SMOKE))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_COMMON_SMOKE, &mPosition, 0,
-		                                          nullptr, 0, 4);
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_COMMON_SMOKE,
+		                                          &mPosition, 0, nullptr, 0, 4);
 }
 
 void THamuKuri::endHitWaterJump()
@@ -1339,8 +1339,8 @@ BOOL THaneHamuKuri::isReachedToGoal() const
 void THaneHamuKuri::attackToMario()
 {
 	if (gpMSound->gateCheck(MSD_SE_EN_HANEKURI_ATTACK))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_HANEKURI_ATTACK, &mPosition, 0,
-		                                          nullptr, 0, 4);
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_HANEKURI_ATTACK,
+		                                          &mPosition, 0, nullptr, 0, 4);
 	sendAttackMsgToMario();
 }
 
@@ -1434,13 +1434,13 @@ void TDoroHaneKuri::attackToMario()
 	if (!gpMarioOriginal->isWearingCap()) {
 		if (SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK))
 			if (gpMSound->gateCheck(MSD_SE_EN_HANEKURI_ATTACK))
-				MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_HANEKURI_ATTACK, &mPosition, 0,
-				                                          nullptr, 0, 4);
+				MSoundSESystem::MSoundSE::startSoundActor(
+				    MSD_SE_EN_HANEKURI_ATTACK, &mPosition, 0, nullptr, 0, 4);
 	} else {
 		if (SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK)) {
 			if (gpMSound->gateCheck(MSD_SE_EN_HANEKURI_ATTACK))
-				MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_HANEKURI_ATTACK, &mPosition, 0,
-				                                          nullptr, 0, 4);
+				MSoundSESystem::MSoundSE::startSoundActor(
+				    MSD_SE_EN_HANEKURI_ATTACK, &mPosition, 0, nullptr, 0, 4);
 
 			mSpine->pushNerve(&TNerveDoroHaneRise::theNerve());
 			onHaveCap();
@@ -1753,7 +1753,8 @@ BOOL TDangoHamuKuri::receiveMessage(THitActor* param_1, u32 param_2)
 
 	if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		gpMarioParticleManager->emit(0xE7, &mPosition, 0, nullptr);
-		gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0.0f, 0.0f, 0, 0, 4);
+		gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0.0f,
+		                        0.0f, 0, 0, 4);
 		if (mSprayedByWaterCooldown == 0) {
 			mSprayedByWaterCooldown = 1;
 			if (!changeByJuice()) {
@@ -1836,8 +1837,8 @@ void TDangoHamuKuri::behaveToWater(THitActor* param_1)
 		unk230 = 1;
 		unk210 = 1.0f;
 		if (gpMSound->gateCheck(MSD_SE_EN_DANGOKURI_TURN))
-			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_DANGOKURI_TURN, &mPosition, 0,
-			                                          nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_EN_DANGOKURI_TURN, &mPosition, 0, nullptr, 0, 4);
 	}
 }
 
@@ -2018,8 +2019,8 @@ void TFireHamuKuri::behaveToWater(THitActor* param_1)
 			unk150 &= ~0x1;
 			unk214 = 1;
 			if (gpMSound->gateCheck(MSD_SE_EN_MOEKURI_COOL))
-				MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_MOEKURI_COOL, &mPosition, 0,
-				                                          nullptr, 0, 4);
+				MSoundSESystem::MSoundSE::startSoundActor(
+				    MSD_SE_EN_MOEKURI_COOL, &mPosition, 0, nullptr, 0, 4);
 			if (JPABaseEmitter* emitter
 			    = gpMarioParticleManager->emitAndBindToMtxPtr(
 			        0x8B, mMActor->getModel()->getAnmMtx(unk1AC), 0, nullptr)) {
@@ -2137,8 +2138,8 @@ bool TFireHamuKuri::recoverFire()
 		}
 	} else {
 		if (gpMSound->gateCheck(MSD_SE_EN_MOEKURI_FLAME))
-			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_MOEKURI_FLAME, &mPosition, 0,
-			                                          nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_EN_MOEKURI_FLAME, &mPosition, 0, nullptr, 0, 4);
 		if (unk218 > 0) {
 			unk218 -= 1;
 			result = true;
@@ -2414,7 +2415,8 @@ DEFINE_NERVE(TNerveHamuKuriWallDie, TLiveActor)
 
 		if (gpMSound->gateCheck(MSD_SE_EN_HAMUKURI_CRUSHED))
 			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_HAMUKURI_CRUSHED, &self->getPosition(), 0, nullptr, 0, 4);
+			    MSD_SE_EN_HAMUKURI_CRUSHED, &self->getPosition(), 0, nullptr, 0,
+			    4);
 
 		self->onHitFlag(HIT_FLAG_NO_COLLISION);
 		self->mHitPoints = 0;

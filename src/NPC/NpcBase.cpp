@@ -723,8 +723,8 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (param_1 & 0x2) {
 		if (checkActionFlag(NPC_ACTION_BURNING)) {
 			if (SMSGetMSound()->gateCheck(MSD_SE_NPC_BURNING))
-				MSoundSESystem::MSoundSE::startSoundNpcActor(MSD_SE_NPC_BURNING, &mPosition,
-				                                             0, nullptr, 0, 4);
+				MSoundSESystem::MSoundSE::startSoundNpcActor(
+				    MSD_SE_NPC_BURNING, &mPosition, 0, nullptr, 0, 4);
 		}
 
 		if (!checkLiveFlag(LIVE_FLAG_UNK1000000 | LIVE_FLAG_HIDDEN

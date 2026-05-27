@@ -30,7 +30,8 @@ void TMario::incHP(int hp)
 		if (unk12C > unk130) {
 			unk12C = unk130;
 		} else {
-			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_HP_RECOVER, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_HP_RECOVER, 0, nullptr,
+			                                   0);
 		}
 		return;
 	}
@@ -183,7 +184,8 @@ bool TMario::trampleExec(THitActor* param_1)
 		// Probably an inline
 		if (SMSGetMSound()->gateCheck(MSD_SE_MA_KICK_ENEMY)) {
 			MSoundSESystem::MSoundSE::startSoundActorWithInfo(
-			    MSD_SE_MA_KICK_ENEMY, &mPosition, nullptr, 0.0f, trampleCt, 0, nullptr, 0, 4);
+			    MSD_SE_MA_KICK_ENEMY, &mPosition, nullptr, 0.0f, trampleCt, 0,
+			    nullptr, 0, 4);
 		}
 	}
 	return true;
@@ -294,8 +296,8 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 		getOffYoshi(true);
 		// Probably an inline
 		if (gpMSound->gateCheck(MSD_SE_YV_DAMAGE)) {
-			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_YV_DAMAGE, &mPosition, 0,
-			                                          nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_YV_DAMAGE, &mPosition, 0, nullptr, 0, 4);
 		}
 		return;
 	}

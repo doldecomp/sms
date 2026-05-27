@@ -118,8 +118,8 @@ void TMarDirector::fireGetBlueCoin(TCoin* coin)
 	unk4C |= 0x200;
 	unk261 = 1;
 	if (gpMSound->gateCheck(MSD_SE_SY_BLUE_COIN_GET))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_SY_BLUE_COIN_GET, coin->mPosition, 0,
-		                                          nullptr, 0, 4);
+		MSoundSESystem::MSoundSE::startSoundActor(
+		    MSD_SE_SY_BLUE_COIN_GET, coin->mPosition, 0, nullptr, 0, 4);
 }
 
 void TMarDirector::fireGetNozzle(TItemNozzle* nozzle)

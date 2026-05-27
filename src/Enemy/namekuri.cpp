@@ -475,8 +475,8 @@ void TNameKuri::moveObject()
 
 	if (!isAirborne() && isBckAnm(7)) {
 		if (gpMSound->gateCheck(MSD_SE_EN_NAMEKURI_WALK))
-			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_NAMEKURI_WALK, mPosition, 0,
-			                                          nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_EN_NAMEKURI_WALK, mPosition, 0, nullptr, 0, 4);
 	}
 
 	if (!checkLiveFlag(LIVE_FLAG_HIDDEN)) {
@@ -533,8 +533,8 @@ void TNameKuri::setDeadAnm()
 	setBckAnm(0);
 
 	if (gpMSound->gateCheck(MSD_SE_EN_NAMEKURI_DOWN))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_NAMEKURI_DOWN, &mPosition, 0,
-		                                          nullptr, 0, 4);
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_NAMEKURI_DOWN,
+		                                          &mPosition, 0, nullptr, 0, 4);
 
 	MtxPtr mtx = getMActor()->getModel()->getAnmMtx(2);
 

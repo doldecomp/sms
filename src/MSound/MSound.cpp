@@ -404,12 +404,17 @@ void MSound::setPlayerInfo(Vec* param_1, Vec* param_2, MtxPtr param_3,
 		unkAC[i].unk0 = param_1;
 		unkAC[i].unk4 = param_2;
 		unkAC[i].unk8 = param_3;
-		MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_MV10A_CRY_SHORT_01, 1);
-		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_MV10A_CRY_SHORT_01, param_1);
-		MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_MV16_EXERT_CONT_01, 1);
-		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_MV16_EXERT_CONT_01, param_1);
+		MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_MV10A_CRY_SHORT_01,
+		                                              1);
+		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_MV10A_CRY_SHORT_01,
+		                                          param_1);
+		MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_MV16_EXERT_CONT_01,
+		                                              1);
+		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_MV16_EXERT_CONT_01,
+		                                          param_1);
 		MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_MA_WATER_WAIT, 1);
-		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_MA_WATER_WAIT, param_1);
+		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_MA_WATER_WAIT,
+		                                          param_1);
 	}
 }
 
@@ -571,7 +576,8 @@ void MSound::pauseOn(bool param_1)
 {
 	if (param_1)
 		if (checkUnkA8(2))
-			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_PAUSE_ON, 0, nullptr, 0);
+			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_PAUSE_ON, 0,
+			                                             nullptr, 0);
 
 	for (u8 i = 0; i < 16; ++i)
 		if (i != 4 && MSGMSound->unk0->unk88.unk2[i] != 0)
@@ -588,7 +594,8 @@ void MSound::pauseOff(u8 param_1)
 	switch (param_1) {
 	case 0:
 		if (checkUnkA8(2))
-			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_PAUSE_OFF, 0, nullptr, 0);
+			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_PAUSE_OFF, 0,
+			                                             nullptr, 0);
 		// FALLTHROUGH!!!
 
 	case 2:
@@ -605,7 +612,8 @@ void MSound::pauseOff(u8 param_1)
 
 	case 1:
 		if (checkUnkA8(2))
-			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_DECIDE_COMMON, 0, nullptr, 0);
+			MSoundSESystem::MSoundSE::startSoundSystemSE(
+			    MSD_SE_SY_DECIDE_COMMON, 0, nullptr, 0);
 
 		for (u8 i = 0; i < 16; ++i)
 			if (MSGMSound->unk0->unk88.unk2[i] != 0)
@@ -645,7 +653,8 @@ void MSound::demoModeOut(bool param_1)
 void MSound::talkModeIn(bool param_1)
 {
 	if (param_1 && checkUnkA8(2)) {
-		MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_TALK_MODE_IN, 0, nullptr, 0);
+		MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_TALK_MODE_IN, 0,
+		                                             nullptr, 0);
 	}
 
 	for (u8 i = 0; i < 16; ++i)
@@ -658,7 +667,8 @@ void MSound::talkModeIn(bool param_1)
 void MSound::talkModeOut()
 {
 	if (checkUnkA8(2)) {
-		MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_TALK_MODE_OUT, 0, nullptr, 0);
+		MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_TALK_MODE_OUT, 0,
+		                                             nullptr, 0);
 	}
 
 	for (u8 i = 0; i < 16; ++i) {
@@ -893,7 +903,8 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 
 	case MSD_SE_MV10A_CRY_SHORT_01:
 		if (checkUnkA8(2))
-			MSoundSESystem::MSRandPlay::startSeRandPlay(MSD_SE_MV10A_CRY_SHORT_01, 0);
+			MSoundSESystem::MSRandPlay::startSeRandPlay(
+			    MSD_SE_MV10A_CRY_SHORT_01, 0);
 		if (unk8C[0] != nullptr)
 			return unk8C[0]->unk8;
 		return -1;
@@ -1058,10 +1069,11 @@ u32 MSound::getWallSound(u32 param_1, f32 param_2)
 void MSound::startBeeSe(Vec* param_1, u32 param_2)
 {
 	if (param_2 > 3) {
-		JAISound* sound = !checkUnkA8(1)
-		                      ? nullptr
-		                      : MSoundSESystem::MSoundSE::startSoundActor(
-		                            MSD_SE_EN_BEE_GROUP, param_1, 0, nullptr, 0, 4);
+		JAISound* sound
+		    = !checkUnkA8(1)
+		          ? nullptr
+		          : MSoundSESystem::MSoundSE::startSoundActor(
+		                MSD_SE_EN_BEE_GROUP, param_1, 0, nullptr, 0, 4);
 
 		if (sound != nullptr)
 			sound->setVolume(JALCalc::linearTransform(param_2, 3.0f, 50.0f,
@@ -1071,16 +1083,16 @@ void MSound::startBeeSe(Vec* param_1, u32 param_2)
 
 	if (param_2 > 2) {
 		if (checkUnkA8(1))
-			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_3, param_1, 0,
-			                                          nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_3, param_1,
+			                                          0, nullptr, 0, 4);
 	} else if (param_2 == 2) {
 		if (checkUnkA8(1))
-			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_2, param_1, 0,
-			                                          nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_2, param_1,
+			                                          0, nullptr, 0, 4);
 	} else if (param_2 == 1) {
 		if (checkUnkA8(1))
-			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_1, param_1, 0,
-			                                          nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_1, param_1,
+			                                          0, nullptr, 0, 4);
 	}
 }
 

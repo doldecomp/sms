@@ -75,7 +75,8 @@ BOOL TLauncher::receiveMessage(THitActor* param_1, u32 param_2)
 	if (param_1->getActorType() == 0x1000001) {
 		if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
 			gpMarioParticleManager->emit(0xE7, &mPosition, 0, nullptr);
-			gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0, 0.0f, 0, 0, 4);
+			gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
+			                        0.0f, 0, 0, 4);
 			if (mState == STATE_HITBYWATER)
 				return true;
 

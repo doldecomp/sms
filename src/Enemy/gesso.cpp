@@ -935,8 +935,8 @@ void TGessoPolluteObj::rebirth()
 		gpMarioParticleManager->emit(0xBC, &mPosition, 0, nullptr);
 		gpMarioParticleManager->emit(0xBD, &mPosition, 0, nullptr);
 		if (gpMSound->gateCheck(MSD_SE_EN_GESO_GERO_LAND))
-			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_GESO_GERO_LAND, &mPosition, 0,
-			                                          nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_EN_GESO_GERO_LAND, &mPosition, 0, nullptr, 0, 4);
 	}
 
 	unk158 += 1;
@@ -999,8 +999,8 @@ void TGessoPolluteObj::calcRootMatrix()
 	// TODO: I think the stack frame size is explicitly telling us that
 	// there IS an inline for this pattern after all...
 	if (gpMSound->gateCheck(MSD_SE_EN_GESO_GERO_FLY))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_GESO_GERO_FLY, &mPosition, 0,
-		                                          nullptr, 0, 4);
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_GESO_GERO_FLY,
+		                                          &mPosition, 0, nullptr, 0, 4);
 
 	gpMarioParticleManager->emitAndBindToPosPtr(0x165, &mPosition, 1, this);
 }

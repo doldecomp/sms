@@ -867,7 +867,8 @@ void TMario::checkGraffitoFire()
 	dropObject();
 	changePlayerStatus(STATUS_FIRE_DOWN, 1, false);
 	gpMarioParticleManager->emitAndBindToPosPtr(6, &mPosition, 0, nullptr);
-	SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE, &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE, &mPosition, 0,
+	                                nullptr, 0, 4);
 }
 
 void TMario::checkGraffitoLava() { }
@@ -954,8 +955,10 @@ void TMario::checkGraffitoElec()
 	     || (mStatus & STATUS_TYPE_MASK) == STATUS_TYPE_RUNNING)
 	    && unk360 <= 0) {
 		changePlayerStatus(STATUS_ELECTRIC_DAMAGE, 0, false);
-		SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_ELEC, &mPosition, 0, nullptr, 0, 4);
-		SMSGetMSound()->startSoundActor(MSD_SE_EF_LIGHTNING, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_ELEC, &mPosition, 0,
+		                                nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EF_LIGHTNING, &mPosition, 0,
+		                                nullptr, 0, 4);
 	}
 }
 
@@ -1221,8 +1224,8 @@ void TMario::checkSink()
 				floorDamageExec(1, 3, 0, mMotorParams.mMotorReturn.get());
 			}
 
-			SMSGetMSound()->startSoundActor(MSD_SE_MA_SINK_IN_MUD, &mPosition, 0, nullptr, 0,
-			                                4);
+			SMSGetMSound()->startSoundActor(MSD_SE_MA_SINK_IN_MUD, &mPosition,
+			                                0, nullptr, 0, 4);
 
 			if (unk368 > mGraffitoParams.mSinkTime.get()) {
 				loserExec();
@@ -2147,26 +2150,26 @@ void TMario::thinkWaterSurface()
 			// exited water
 			unk362 = 0x78;
 			if (depth < 32.0f) {
-				SMSGetMSound()->startSoundActor(MSD_SE_MA_JUMP_FR_WATER_VSL, &mPosition, 0, nullptr,
-				                                0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_JUMP_FR_WATER_VSL,
+				                                &mPosition, 0, nullptr, 0, 4);
 			} else if (depth < 80.0f) {
-				SMSGetMSound()->startSoundActor(MSD_SE_MA_JUMP_FR_WATER_SLW, &mPosition, 0, nullptr,
-				                                0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_JUMP_FR_WATER_SLW,
+				                                &mPosition, 0, nullptr, 0, 4);
 			} else {
-				SMSGetMSound()->startSoundActor(MSD_SE_MA_JUMP_FR_WATER_DEP, &mPosition, 0, nullptr,
-				                                0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_JUMP_FR_WATER_DEP,
+				                                &mPosition, 0, nullptr, 0, 4);
 			}
 		} else {
 			// entered water
 			if (depth < 32.0f) {
-				SMSGetMSound()->startSoundActor(MSD_SE_MA_FALL_IN_WATER_VSL, &mPosition, 0, nullptr,
-				                                0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_FALL_IN_WATER_VSL,
+				                                &mPosition, 0, nullptr, 0, 4);
 			} else if (depth < 80.0f) {
-				SMSGetMSound()->startSoundActor(MSD_SE_MA_FALL_IN_WATER_SLW, &mPosition, 0, nullptr,
-				                                0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_FALL_IN_WATER_SLW,
+				                                &mPosition, 0, nullptr, 0, 4);
 			} else {
-				SMSGetMSound()->startSoundActor(MSD_SE_MA_FALL_IN_WATER_DEP, &mPosition, 0, nullptr,
-				                                0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_FALL_IN_WATER_DEP,
+				                                &mPosition, 0, nullptr, 0, 4);
 			}
 		}
 	}
@@ -2239,8 +2242,8 @@ void TMario::thinkParams()
 					unk126 += 1;
 					if (unk126 > unk128) {
 						decHP(1);
-						SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_HP_DOWN, 0, nullptr,
-						                                   0);
+						SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_HP_DOWN, 0,
+						                                   nullptr, 0);
 						unk128 = mDeParams.mHotTimer.get();
 						unk126 = 0;
 						rumbleStart(0x14, mMotorParams.mMotorWall.get());

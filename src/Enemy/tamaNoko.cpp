@@ -387,7 +387,8 @@ BOOL TTamaNoko::receiveMessage(THitActor* param_1, u32 param_2)
 	if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
 		                             &param_1->mPosition, 0, nullptr);
-		gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0, 0.0f, 0, 0, 4);
+		gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0, 0.0f,
+		                        0, 0, 4);
 
 		if (mSprayedByWaterCooldown == 0) {
 			mSprayedByWaterCooldown = 1;
@@ -600,8 +601,8 @@ void TTamaNoko::setAfterDeadEffect()
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_TAMA_FLOWER,
 	                                            &mPosition, 0, nullptr);
 	if (gpMSound->gateCheck(MSD_SE_EN_COMMON_SMOKE))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_COMMON_SMOKE, &mPosition, 0,
-		                                          nullptr, 0, 4);
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_COMMON_SMOKE,
+		                                          &mPosition, 0, nullptr, 0, 4);
 }
 
 const char** TTamaNoko::getBasNameTable() const { return tamaNoko_bastable; }
@@ -807,8 +808,8 @@ DEFINE_NERVE(TNerveTamaNokoDown, TLiveActor)
 		}
 
 		if (gpMSound->gateCheck(MSD_SE_EN_TAMANOKO_DROPOK))
-			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_TAMANOKO_DROPOK, &self->mPosition,
-			                                          0, nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_EN_TAMANOKO_DROPOK, &self->mPosition, 0, nullptr, 0, 4);
 		self->unk164 = 1;
 		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK7, 1.0f);
 		self->setBckAnm(4);

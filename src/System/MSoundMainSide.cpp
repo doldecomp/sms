@@ -745,7 +745,8 @@ void MSStageDistFadeMonte::proc()
 
 	unk1C = SMS_GetMonteVillageAreaInMario();
 	if (unk1C == 0) {
-		MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_ENV_MONTE_UPPER_WIND, 0, nullptr, 0);
+		MSoundSESystem::MSoundSE::startSoundSystemSE(
+		    MSD_SE_ENV_MONTE_UPPER_WIND, 0, nullptr, 0);
 		if (unk20 != 0) {
 			MSBgm::setTrackVolume(1, 0.0f, 10, 0);
 			MSBgm::setTrackVolume(0, 1.0f, 10, 0);
@@ -901,7 +902,8 @@ void MSStageCubeFadeMonte::proc()
 	}
 
 	if (unk10 == 0) {
-		MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_ENV_MONTE_UPPER_WIND, 0, nullptr, 0);
+		MSoundSESystem::MSoundSE::startSoundSystemSE(
+		    MSD_SE_ENV_MONTE_UPPER_WIND, 0, nullptr, 0);
 		if (unk14 != 0) {
 			MSBgm::setTrackVolume(1, 0.0f, 10, 0);
 			MSBgm::setTrackVolume(0, 1.0f, 10, 0);

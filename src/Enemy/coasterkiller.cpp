@@ -230,7 +230,8 @@ void TCoasterKiller::perform(u32 param_1, JDrama::TGraphics* param_2)
 			f32 len = dist.length2();
 			if (gpMSound->gateCheck(MSD_SE_EN_KILLER_FLY_KUPPA)) {
 				MSoundSESystem::MSoundSE::startSoundActorWithInfo(
-				    MSD_SE_EN_KILLER_FLY_KUPPA, &mPosition, nullptr, len, 0, 0, nullptr, 0, 4);
+				    MSD_SE_EN_KILLER_FLY_KUPPA, &mPosition, nullptr, len, 0, 0,
+				    nullptr, 0, 4);
 			}
 		}
 	}
@@ -368,15 +369,13 @@ DEFINE_NERVE(TNerveCoasterKillerExplosion, TLiveActor)
 
 TCoasterKillerManager::TCoasterKillerManager(const char* name)
     : TSmallEnemyManager(name)
-    , unk60(0)
-{
-}
+    , unk60(0) {}
 
 #define ASSERT_MSG(msg, line) (void)((msg), (line))
 #define ASSERT_TEST(expr)                                                      \
 	(void)((expr) ? true : (ASSERT_MSG(__FILE__, __LINE__), false));
 
-void TCoasterKillerManager::load(JSUMemoryInputStream& stream)
+    void TCoasterKillerManager::load(JSUMemoryInputStream & stream)
 {
 	(void)(unk38 ? unk38 : unk38); // @hack to force cmplwi
 	TSmallEnemyManager::load(stream);

@@ -494,7 +494,8 @@ void TGCConsole2::startAppearTelop(bool param_1)
 		mTelopTextWidth = print.getWidth(unk528->getStringPtr());
 
 		if (gpMSound->gateCheck(MSD_SE_SY_NEWS)) {
-			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_NEWS, 0, nullptr, 0);
+			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_NEWS, 0,
+			                                             nullptr, 0);
 		}
 	}
 }
