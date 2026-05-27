@@ -1030,23 +1030,23 @@ void TMario::takeOffGlass()
 void TMario::setPositions()
 {
 	MtxPtr root = getRootAnmMtx()[1];
-	unk160[0].x = root[0][3];
-	unk160[0].y = root[1][3];
-	unk160[0].z = root[2][3];
+	unk160.x    = root[0][3];
+	unk160.y    = root[1][3];
+	unk160.z    = root[2][3];
 
-	unk160[1].x = unk1C0[0][3];
-	unk160[1].y = unk1C0[1][3];
-	unk160[1].z = unk1C0[2][3];
+	unk16C.x = unk1C0[0][3];
+	unk16C.y = unk1C0[1][3];
+	unk16C.z = unk1C0[2][3];
 
 	MtxPtr centerMtx = getCenterAnmMtx();
-	unk160[2].x      = centerMtx[0][3];
-	unk160[2].y      = centerMtx[1][3];
-	unk160[2].z      = centerMtx[2][3];
+	unk178.x         = centerMtx[0][3];
+	unk178.y         = centerMtx[1][3];
+	unk178.z         = centerMtx[2][3];
 
 	MtxPtr takingMtx = getRootAnmMtx()[mBoneIDs[4]];
-	unk160[3].x      = takingMtx[0][3];
-	unk160[3].y      = takingMtx[1][3];
-	unk160[3].z      = takingMtx[2][3];
+	unk184.x         = takingMtx[0][3];
+	unk184.y         = takingMtx[1][3];
+	unk184.z         = takingMtx[2][3];
 }
 
 u32 TMario::getTrampleCt()

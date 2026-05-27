@@ -43,13 +43,13 @@ void TMario::thinkCube()
 	JGeometry::TVec3<f32> pos = mPosition;
 	pos.y += 75.0f;
 	TCubeManagerArea* mgrArea = gpCubeArea;
-	mgrArea->unk1C            = mgrArea->getInCubeNo((const Vec&)pos);
+	mgrArea->unk1C            = mgrArea->getInCubeNo(pos);
 	TCubeManagerFast* mgrA    = gpCubeFastA;
-	mgrA->unk1C               = mgrA->getInCubeNo((const Vec&)pos);
+	mgrA->unk1C               = mgrA->getInCubeNo(pos);
 	TCubeManagerFast* mgrB    = gpCubeFastB;
-	mgrB->unk1C               = mgrB->getInCubeNo((const Vec&)pos);
+	mgrB->unk1C               = mgrB->getInCubeNo(pos);
 	TCubeManagerFast* mgrC    = gpCubeFastC;
-	mgrC->unk1C               = mgrC->getInCubeNo((const Vec&)pos);
+	mgrC->unk1C               = mgrC->getInCubeNo(pos);
 }
 
 void TMario::thinkAloha()
