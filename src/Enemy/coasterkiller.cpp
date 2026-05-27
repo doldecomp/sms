@@ -369,7 +369,7 @@ DEFINE_NERVE(TNerveCoasterKillerExplosion, TLiveActor)
 
 TCoasterKillerManager::TCoasterKillerManager(const char* name)
     : TSmallEnemyManager(name)
-    , unk60(0) 
+    , unk60(0)
 {
 }
 
