@@ -1,6 +1,6 @@
 #include <Animal/AnimalManager.hpp>
 #include <Animal/AnimalSave.hpp>
-#include <MSound/MSound.hpp>
+#include <MSound/SoundEffects.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundSE.hpp>

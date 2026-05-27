@@ -7,7 +7,7 @@
 #include <Map/Map.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorAnm.hpp>
-#include <MSound/MSound.hpp>
+#include <MSound/SoundEffects.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <Strategic/ObjModel.hpp>
