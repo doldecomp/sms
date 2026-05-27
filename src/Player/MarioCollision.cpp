@@ -94,7 +94,7 @@ bool TMario::isTakeSituation(THitActor* object)
 	if (checkStatusFlag(STATUS_FLAG_UNK10000000))
 		return false;
 
-	if (mStatus == 0x800456)
+	if (mStatus == STATUS_CATCH)
 		return false;
 
 	if (onYoshi())
@@ -280,9 +280,22 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 {
 	// volatile u32 padding[10];
 	u32 animationTypes[16] = {
-		0x20464, 0x20462,     0x20460, STATUS_WAIT, 0x208b0, 0x208b0,
-		0x208b3, STATUS_WAIT, 0x20465, 0x20463,     0x20461, STATUS_WAIT,
-		0x208B1, 0x208B1,     0x208B2, STATUS_WAIT,
+		STATUS_SAFE_BACK_DOWN,
+		STATUS_SHORT_BACK_DOWN,
+		STATUS_BACK_DOWN,
+		STATUS_WAIT,
+		STATUS_JUMP_SHORT_BACK_DOWN,
+		STATUS_JUMP_SHORT_BACK_DOWN,
+		STATUS_JUMP_BACK_DOWN,
+		STATUS_WAIT,
+		STATUS_SAFE_FORE_DOWN,
+		STATUS_SHORT_FORE_DOWN,
+		STATUS_FORE_DOWN,
+		STATUS_WAIT,
+		STATUS_JUMP_SHORT_FORE_DOWN,
+		STATUS_JUMP_SHORT_FORE_DOWN,
+		STATUS_JUMP_FORE_DOWN,
+		STATUS_WAIT,
 	};
 
 	if (isInvincible())
@@ -345,10 +358,9 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 			// I don't think this is correct, but was the closest i could get
 			u32 statusIdx = animationTypes[damageAnimType + animOffset1 * 4
 			                               + animOffset2 * 8];
-			// Possibly inlined check for held by specific thing
-			// M art in shine gates?
 			if (mHolder == nullptr || mHolder->isActorType(0x40000098)) {
-				changePlayerDropping(0x208BA, 0);
+				// Knocked from a wire hang by damage?
+				changePlayerDropping(STATUS_WIRE_HANG_LAND_SAFE_DOWN, 0);
 			} else {
 				changePlayerDropping(statusIdx, 0);
 			}
@@ -410,11 +422,12 @@ void TMario::considerTake()
 		check = true;
 	}
 
-	if (mStatus == 899 || checkStatusFlag(STATUS_FLAG_UNK80000000)) {
+	if (mStatus == STATUS_TAKE || checkStatusFlag(STATUS_FLAG_UNK80000000)) {
 		check = true;
 	}
 
-	if (mStatus == 0x560 || mStatus == STATUS_PULL_JUMP || mStatus == 0x40561) {
+	if (mStatus == STATUS_PULLING || mStatus == STATUS_PULL_JUMP
+	    || mStatus == STATUS_OIL_PULLING) {
 		check = true;
 	}
 

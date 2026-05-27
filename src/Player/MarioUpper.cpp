@@ -38,9 +38,11 @@ BOOL TMario::checkPumpEnable()
 	        || !((unk368 / (float)mGraffitoParams.mSinkTime.get()
 	              > mGraffitoParams.mSinkPumpLimit.get())))
 	    && unk380 != 4 && unk380 != 3 && unk380 != 2
-	    && (mStatus != 0x88d || !mWaterGun->checkCurrentNozzleRocketType(1u))
-	    && (!mWaterGun->checkCurrentNozzleKind(1)
-	        || !mWaterGun->checkCurrentNozzleTriggerSprayState(2))
+	    && (mStatus != STATUS_ROCKET_LANDING
+	        || !mWaterGun->checkCurrentNozzleRocketType(TWaterGun::Rocket))
+	    && (!mWaterGun->checkCurrentNozzleKind(TWaterGun::Rocket)
+	        || !mWaterGun->checkCurrentNozzleTriggerSprayState(
+	            TNozzleTrigger::DEAD))
 	    && !mWaterGun->isUnk1D00LessThanZero()
 	    && !mWaterGun->isUnk1D00GreaterThanZero() && !checkActionThing()) {
 		return TRUE;

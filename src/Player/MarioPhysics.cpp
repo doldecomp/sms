@@ -201,7 +201,7 @@ int TMario::waitProcess()
 	setPlayerVelocity(0.0f);
 	if (fabsf(mPosition.y - mFloorPosition.y) > 100000.0f) {
 		mPosition = unk29C;
-		changePlayerStatus(0x88d, 0, false);
+		changePlayerStatus(STATUS_ROCKET_LANDING, 0, false);
 	} else {
 		mPosition.y = mFloorPosition.y;
 	}
@@ -467,7 +467,9 @@ void TMario::fallProcess()
 	} else {
 		if (isFallCancel()) {
 			mVel.y *= 0.75f;
-		} else if (mStatus - 0x895 <= 1 && mVel.y < 0.0f) {
+		} else if ((mStatus == STATUS_LEFT_ROTATE_JUMP
+		            || mStatus == STATUS_RIGHT_ROTATE_JUMP)
+		           && mVel.y < 0.0f) {
 			mVel.y -= mJumpParams.mSpinJumpGravity.get();
 		} else {
 			mVel.y -= mJumpParams.mGravity.get();

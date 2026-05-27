@@ -24,7 +24,7 @@ public:
 
 	// Inactive = not holding R, Active = charging R, Dead = R Waiting to be
 	// depressed
-	enum SPRAYSTATE { INACTIVE, ACTIVE, DEAD };
+	enum SPRAYSTATE { INACTIVE = 0, ACTIVE = 1, DEAD = 2 };
 
 	/* 0x384 */ bool unk384; // mRumbleOnCharge
 	/* 0x385 */ s8 unk385;   // mSprayState, Current spray state

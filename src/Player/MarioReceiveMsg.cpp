@@ -319,7 +319,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 					return FALSE;
 				if (mStatus == STATUS_WIRE_ROLL_JUMP && mVel.y > 0.0f)
 					return FALSE;
-				if (mStatus == 0x208BA)
+				if (mStatus == STATUS_WIRE_HANG_LAND_SAFE_DOWN)
 					return FALSE;
 				if (onYoshi())
 					return FALSE;
