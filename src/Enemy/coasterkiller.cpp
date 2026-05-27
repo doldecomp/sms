@@ -369,13 +369,15 @@ DEFINE_NERVE(TNerveCoasterKillerExplosion, TLiveActor)
 
 TCoasterKillerManager::TCoasterKillerManager(const char* name)
     : TSmallEnemyManager(name)
-    , unk60(0) {}
+    , unk60(0) 
+{
+}
 
 #define ASSERT_MSG(msg, line) (void)((msg), (line))
 #define ASSERT_TEST(expr)                                                      \
 	(void)((expr) ? true : (ASSERT_MSG(__FILE__, __LINE__), false));
 
-    void TCoasterKillerManager::load(JSUMemoryInputStream & stream)
+void TCoasterKillerManager::load(JSUMemoryInputStream& stream)
 {
 	(void)(unk38 ? unk38 : unk38); // @hack to force cmplwi
 	TSmallEnemyManager::load(stream);
