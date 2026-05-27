@@ -57,7 +57,7 @@ bool TMario::canSquat() const
 bool TMario::isUnderWater() const
 {
 	if (checkFlag(MARIO_FLAG_IN_ANY_WATER)
-	    && unk160[1].y < mFloorPosition.z - mSwimParams.mCanBreathDepth.get())
+	    && unk16C.y < mFloorPosition.z - mSwimParams.mCanBreathDepth.get())
 		return true;
 	else
 		return false;
@@ -123,7 +123,7 @@ BOOL TMario::moveRequest(const JGeometry::TVec3<f32>& pos)
 	JGeometry::TVec3<f32> offset = pos - mPosition;
 	mPosition                    = pos;
 
-	unk160[0] += offset;
+	unk160 += offset;
 	unk29C += offset;
 	mWireStartPos += offset;
 	mWireEndPos += offset;
@@ -2171,14 +2171,7 @@ void TMario::thinkWaterSurface()
 		}
 	}
 
-	bool deepUnderwater;
-	if (checkFlag(MARIO_FLAG_IN_ANY_WATER)
-	    && unk160[1].y < mFloorPosition.z - mSwimParams.mCanBreathDepth.get())
-		deepUnderwater = true;
-	else
-		deepUnderwater = false;
-
-	if (deepUnderwater || checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
+	if (isUnderWater() || checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
 		f32 prevAir = unk12C;
 		if (isWearingHelm()) {
 			if (mStatus != STATUS_TAKEN) {
@@ -2226,7 +2219,7 @@ void TMario::thinkParams()
 			// TODO: inline
 			bool b;
 			if (checkFlag(MARIO_FLAG_IN_ANY_WATER)
-			    && unk160[1].y
+			    && unk16C.y
 			           < mFloorPosition.z - mSwimParams.mCanBreathDepth.get())
 				b = true;
 			else
