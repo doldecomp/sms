@@ -285,7 +285,7 @@ BOOL TMario::roofCommonEvents()
 		if (actor != nullptr) {
 			((THitActor*)actor)->receiveMessage(this, 3);
 			if (actor->mActorType == 0x4000006a) {
-				emitParticle(0x39, &unk160[1]);
+				emitParticle(0x39, &unk16C);
 				rumbleStart(0x15, mMotorParams.mMotorWall.get());
 				return changePlayerStatus(STATUS_KICK_ROOF_ROLL_UP, 0, false);
 			}
@@ -1492,7 +1492,7 @@ BOOL TMario::fencePunch()
 	mModelFaceAngle = mFaceAngle.y;
 
 	if (getMotionFrameCtrl().checkPass(5.0f)) {
-		emitParticle(0x39, &unk160[3]);
+		emitParticle(0x39, &unk184);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 		if (unk2C0 != nullptr) {
 			((THitActor*)unk2C0)->receiveMessage(this, 3);

@@ -30,6 +30,7 @@ class JAIAnimeSound;
 class JAISound;
 class J3DModel;
 class TTrembleModelEffect;
+class TMBindShadowBody;
 class SampleCtrlModelData;
 class TMultiMtxEffect;
 
@@ -1811,7 +1812,13 @@ public:
 	/* 0xBC */ f32 unkBC;
 	/* 0xC0 */ f32 unkC0;
 	/* 0xC4 */ s16 unkC4;
-	/* 0xC6 */ char unkC6[0xD8 - 0xC6];
+	/* 0xC6 */ s16 unkC6;
+	/* 0xC8 */ f32 unkC8;
+	/* 0xCC */ f32 unkCC;
+	/* 0xD0 */ f32 unkD0;
+	/* 0xD4 */ u8 unkD4;
+	/* 0xD5 */ u8 unkD5;
+	/* 0xD6 */ s16 unkD6;
 
 	/* 0xD8 */ const TBGCheckData* mWallPlane;   // TBGCheckData 0xD8
 	/* 0xDC */ const TBGCheckData* mRoofPlane;   // TBGCheckData 0xDC
@@ -1850,12 +1857,14 @@ public:
 	/* 0x124 */ u16 unk124;
 	/* 0x126 */ u16 unk126;
 	/* 0x128 */ s16 unk128;
+	/* 0x12A */ s16 unk12A;
 	/* 0x12C */ f32 unk12C;
 	/* 0x130 */ f32 unk130;
 	/* 0x134 */ f32 unk134; // Amount of dirty?
 	/* 0x138 */ f32 unk138;
 	/* 0x13C */ s16 unk13C;
-	/* 0x140 */ u32 unk140;
+	/* 0x13E */ s16 unk13E;
+	/* 0x140 */ f32 unk140;
 	/* 0x144 */ u32 unk144;
 	/* 0x148 */ THitActor* unk148;
 	/* 0x14C */ s16 unk14C;
@@ -1864,8 +1873,11 @@ public:
 	/* 0x154 */ TWaterEmitInfo* unk154;
 	/* 0x158 */ TWaterEmitInfo* unk158;
 	/* 0x15C */ f32 unk15C;
-	/* 0x160 */ JGeometry::TVec3<f32>
-	    unk160[4]; // Bone position, probably larger array
+	// Bone positions
+	/* 0x160 */ JGeometry::TVec3<f32> unk160;
+	/* 0x16C */ JGeometry::TVec3<f32> unk16C;
+	/* 0x178 */ JGeometry::TVec3<f32> unk178; // center anm mtx?
+	/* 0x184 */ JGeometry::TVec3<f32> unk184;
 	/* 0x190 */ JGeometry::TVec3<f32> unk190;
 	/* 0x19C */ JGeometry::TVec3<f32> unk19C; // damage pos
 	/* 0x1A8 */ JGeometry::TVec3<f32> unk1A8;
@@ -1874,7 +1886,9 @@ public:
 	/* 0x1F0 */ Mtx unk1F0;
 	/* 0x220 */ Mtx unk220;
 	/* 0x250 */ Mtx unk250;
-	/* 0x280 */ char unk280[0x29C - 0x280];
+	/* 0x280 */ JGeometry::TVec3<f32> unk280;
+	/* 0x28C */ JGeometry::TVec3<f32> unk28C;
+	/* 0x298 */ u32 unk298;
 	/* 0x29C */ JGeometry::TVec3<f32> unk29C;
 	/* 0x2A8 */ JGeometry::TVec3<f32> unk2A8;
 	/* 0x2B4 */ S16Vec unk2B4;
@@ -1885,17 +1899,19 @@ public:
 	/* 0x2F4 */ JGeometry::TVec3<f32> unk2F4;
 	/* 0x300 */ JGeometry::TVec3<f32> unk300;
 	/* 0x30C */ f32 unk30C;
-	/* 0x310 */ char unk310[0x4];
+	/* 0x310 */ u32 unk310;
 	/* 0x314 */ f32 unk314;
 	/* 0x318 */ Mtx unk318;
 	/* 0x348 */ f32 unk348;
 	/* 0x34C */ u16 unk34C;
 	/* 0x34E */ u16 unk34E;
 	/* 0x350 */ s32 unk350;
-	/* 0x354 */ char unk354[0x360 - 0x354];
+	/* 0x354 */ f32 unk354;
+	/* 0x358 */ f32 unk358;
+	/* 0x35C */ f32 unk35C;
 	/* 0x360 */ s16 unk360;
 	/* 0x362 */ s16 unk362;
-	/* 0x364 */ char unk364[0x2];
+	/* 0x364 */ s16 unk364;
 	/* 0x366 */ s16 unk366;
 	/* 0x368 */ f32 unk368;
 	/* 0x36C */ f32 unk36C;
@@ -1911,7 +1927,7 @@ public:
 	/* 0x389 */ u8 unk389; // Blooper color
 	/* 0x38A */ u16 unk38A;
 	/* 0x38C */ f32 mHolderHeightDiff;
-	/* 0x390 */ u32 unk390;
+	/* 0x390 */ TMBindShadowBody* unk390;
 	/* 0x394 */ J3DDrawBuffer* unk394;
 	/* 0x398 */ J3DDrawBuffer* unk398;
 	/* 0x39C */ J3DDrawBuffer* unk39C;
@@ -1924,8 +1940,7 @@ public:
 	/* 0x3C4 */ u8 unk3C4;       // Cemter Anm mtx idx
 	/* 0x3C5 */ u8 mBoneIDs[12]; // Array of bone ids
 	/* 0x3D1 */ u8 unk3D1;
-	/* 0x3D2 */ u8 unk3D2;
-	/* 0x3D3 */ u8 unk3D3;
+	/* 0x3D2 */ s16 unk3D2;
 	/* 0x3D4 */ u16 unk3D4; // _mat_eye_L idx
 	/* 0x3D6 */ u16 unk3D6; // _mat_eye_R idx
 	/* 0x3D8 */ f32 unk3D8;
@@ -1935,7 +1950,7 @@ public:
 	/* 0x3E4 */ TWaterGun* mWaterGun;
 
 	/* 0x3E8 */ u32 unk3E8;
-	/* 0x3EC */ u32 unk3EC;
+	/* 0x3EC */ f32 unk3EC;
 
 	/* 0x3F0 */ TYoshi* mYoshi;
 	/* 0x3F4 */ MActor* mSurfGesso;
