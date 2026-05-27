@@ -300,7 +300,7 @@ u16 TYoshi::changeHand()
 	if (status & TMario::STATUS_FLAG_RUNNING) {
 		if (curIdx == 12)
 			return 11;
-		if (status == 0x800456 || status == TMario::STATUS_OIL_SLIP
+		if (status == TMario::STATUS_CATCH || status == TMario::STATUS_OIL_SLIP
 		    || status == TMario::STATUS_OIL_SLOPE
 		    || ((status & TMario::STATUS_FLAG_UNK40000) ? true : false))
 			return 19;
@@ -497,7 +497,8 @@ void TYoshi::thinkAnimation()
 
 		if (!tmp) {
 			newIdx = 15;
-			if (status == 0x800456 || status == TMario::STATUS_OIL_SLIP
+			if (status == TMario::STATUS_CATCH
+			    || status == TMario::STATUS_OIL_SLIP
 			    || status == TMario::STATUS_OIL_SLOPE
 			    || (status & TMario::STATUS_FLAG_UNK40000 ? true : false)) {
 				newIdx = 19;

@@ -424,7 +424,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		if (!mGroundPlane->isIllegalData()) {
 			if (mGroundPlane->isThing2()) {
 				mVel.y     = 0.01f * mGroundPlane->getActiveJumpPower();
-				nextStatus = 0x884;
+				nextStatus = STATUS_FORCE_JUMP;
 				break;
 			} else if (mGroundPlane->isThing3()) {
 				mVel.y += -unkBC
@@ -436,7 +436,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 					((THitActor*)mGroundPlane->mActor)->receiveMessage(this, 0);
 
 				startVoice(MSD_SE_MV24_JUMP_SPECIAL_01);
-				nextStatus = 0x884;
+				nextStatus = STATUS_FORCE_JUMP;
 				break;
 			}
 		}
@@ -461,7 +461,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		startVoice(MSD_SE_MV23_JUMP_LARGE_01);
 		break;
 
-	case 0x884:
+	case STATUS_FORCE_JUMP:
 		mVel.y = mGroundPlane != nullptr
 		             ? 0.01f * mGroundPlane->getActiveJumpPower()
 		             : 0.0f;
@@ -681,14 +681,14 @@ u32 TMario::setStatusToRunning(u32 status, u32)
 			mForwardVel = mag;
 		break;
 
-	case 0x50:
+	case STATUS_SLIP:
 		s16 diff     = mSlopeAngle - mFaceAngle.y;
 		bool inFront = diff > -0x4000 && diff < 0x4000;
 
 		if (inFront)
-			status = 0x00840452;
+			status = STATUS_SLIP_FORE;
 		else
-			status = 0x00840453;
+			status = STATUS_SLIP_BACK;
 		startVoice(MSD_SE_MV27_SPRISE_01);
 		break;
 	}
@@ -815,13 +815,13 @@ int TMario::checkAllMotions()
 	}
 
 	if (mInput & 4)
-		return changePlayerStatus(0x88C, 0, 0);
+		return changePlayerStatus(STATUS_LANDING, 0, 0);
 
 	if (mInput & 1)
 		return changePlayerStatus(STATUS_RUN, 0, 0);
 
 	if (mInput & 8)
-		return changePlayerStatus(0x50, 0, 0);
+		return changePlayerStatus(STATUS_SLIP, 0, 0);
 
 	return 0;
 }
@@ -883,7 +883,7 @@ void TMario::checkGraffitoSlip()
 			unk13C = mDirtyParams.mDirtyTimeSlip.get();
 		}
 
-		if (mStatus == STATUS_OIL_RUN || mStatus == 0x40561) {
+		if (mStatus == STATUS_OIL_RUN || mStatus == STATUS_OIL_PULLING) {
 			unk138 = mDirtyParams.mBrakeStartValRun.get();
 			unk13C = mDirtyParams.mDirtyTimeRun.get();
 		}
@@ -894,25 +894,23 @@ void TMario::checkGraffitoSlip()
 
 			changePlayerStatus(STATUS_OIL_SLOPE, 0, false);
 			startVoice(MSD_SE_MV28_SPRISE_SMALL_01);
-		} else if (mStatus == STATUS_JUMP_CATCH || mStatus == 0x800456
+		} else if (mStatus == STATUS_JUMP_CATCH || mStatus == STATUS_CATCH
 		           || mStatus == STATUS_OIL_SLIP
 		           || mStatus == STATUS_OIL_SLOPE) {
 			unk138 = mDirtyParams.mBrakeStartValSlip.get();
 			unk13C = mDirtyParams.mDirtyTimeSlip.get();
 
 			changePlayerStatus(STATUS_OIL_SLIP, 0, false);
-			if (this->mPrevStatus != STATUS_OIL_SLIP) {
+			if (mPrevStatus != STATUS_OIL_SLIP)
 				startVoice(MSD_SE_MV28_SPRISE_SMALL_01);
-			}
 		} else if (mStatus != STATUS_CATCH_LOST) {
 			unk138 = mDirtyParams.mBrakeStartValRun.get();
 			unk13C = mDirtyParams.mDirtyTimeRun.get();
 
-			if (this->mStatus == 0x560) {
-				changePlayerStatus(0x40561, 0, false);
-			} else {
+			if (mStatus == STATUS_PULLING)
+				changePlayerStatus(STATUS_OIL_PULLING, 0, false);
+			else
 				changePlayerStatus(STATUS_OIL_RUN, 0, false);
-			}
 		}
 
 		if (!checkFlag(MARIO_FLAG_UNK_40))
@@ -1142,10 +1140,10 @@ void TMario::thinkDirty()
 	if (checkFlag(MARIO_FLAG_UNK_40)) {
 		if (mStatus == STATUS_RUN || mStatus == STATUS_OIL_RUN)
 			unk134 += mDirtyParams.mIncRunning.get();
-		if (mStatus == 0x800456 || mStatus == STATUS_OIL_SLIP
+		if (mStatus == STATUS_CATCH || mStatus == STATUS_OIL_SLIP
 		    || mStatus == STATUS_OIL_SLOPE)
 			unk134 += mDirtyParams.mIncCatching.get();
-		if (mStatus == 0x50)
+		if (mStatus == STATUS_SLIP)
 			unk134 += mDirtyParams.mIncSlipping.get();
 	}
 
@@ -1267,12 +1265,12 @@ static void startForceJumpSound2(Vec* param_1, u32 param_2, f32 param_3,
 void TMario::checkEnforceJump()
 {
 	if (mGroundPlane->isLegal() && mGroundPlane->isBounceOnLanding()
-	    && (isTouchGround4cm()) && (mPrevStatus & STATUS_FLAG_JUMPING)) {
+	    && isTouchGround4cm() && (mPrevStatus & STATUS_FLAG_JUMPING)) {
 
 		startForceJumpSound2(&mPosition, mSoundFlags, 0.0f,
 		                     mGroundPlane->getData());
 		startVoice(MSD_SE_MV24_JUMP_SPECIAL_01);
-		changePlayerStatus(0x884, 0, 0);
+		changePlayerStatus(STATUS_FORCE_JUMP, 0, 0);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 		if (mGroundPlane->mActor != nullptr)
 			((THitActor*)mGroundPlane->mActor)->receiveMessage(this, 0);

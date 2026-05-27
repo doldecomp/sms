@@ -156,7 +156,7 @@ s16 SMS_GetMarioHP() { return gpMarioOriginal->mHealth; }
 
 bool SMS_IsMarioHeadSlideAttack()
 {
-	if (gpMarioOriginal->mStatus == 0x800456
+	if (gpMarioOriginal->mStatus == TMario::STATUS_CATCH
 	    || gpMarioOriginal->mStatus == TMario::STATUS_JUMP_CATCH) {
 		return 1;
 	} else {

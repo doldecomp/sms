@@ -34,7 +34,7 @@ void TMario::hitNormal(THitActor* actor)
 		return;
 	}
 
-	if (mStatus == 0x800456 || mStatus == STATUS_OIL_SLIP
+	if (mStatus == STATUS_CATCH || mStatus == STATUS_OIL_SLIP
 	    || mStatus == STATUS_JUMP_CATCH) {
 		actor->receiveMessage(this, HIT_MESSAGE_PUNCH);
 		actor->receiveMessage(this, HIT_MESSAGE_TRAMPLE);

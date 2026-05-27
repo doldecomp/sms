@@ -327,7 +327,7 @@ void TMario::treeSlipEffect()
 void TMario::frontSlipEffect()
 {
 	if (mGroundPlane->isWetGround()
-	    || (mStatus == 0x800456 && mStatusState == 1)) {
+	    || (mStatus == STATUS_CATCH && mStatusState == 1)) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_M_WATSLIDE_A,
 		                                            getCenterAnmMtx(), 3, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_M_WATSLIDE_B,

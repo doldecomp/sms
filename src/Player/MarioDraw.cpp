@@ -622,7 +622,7 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 
 			s16 angle = -matan(mult, other.y);
 			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(angle));
-		} else if (gpMarioForCallBack->mStatus == 0x88b) {
+		} else if (gpMarioForCallBack->mStatus == TMario::STATUS_ROCKET) {
 			if (gpMarioForCallBack->mWaterGun->canSpray() == true) {
 
 				s16 headAngle = gpMarioForCallBack->mUpperBodyParams

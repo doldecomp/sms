@@ -87,9 +87,9 @@ BOOL TMario::waitingCommonEvents()
 	}
 
 	if (mInput & 0x4)
-		return changePlayerStatus(0x88c, 0, false);
+		return changePlayerStatus(STATUS_LANDING, 0, false);
 	if (mInput & 0x8)
-		return changePlayerStatus(0x50, 0, false);
+		return changePlayerStatus(STATUS_SLIP, 0, false);
 	if (mInput & 0x10)
 		return changePlayerStatus(0xc000227, 0, false);
 
@@ -118,7 +118,7 @@ BOOL TMario::waitingCommonEvents()
 	if (rocketCheck()) {
 		unk314
 		    = mFloorPosition.y + mWaterGun->mWatergunParams.mHoverHeight.get();
-		return changePlayerStatus(0x88b, 0, false);
+		return changePlayerStatus(STATUS_ROCKET, 0, false);
 	}
 
 	if (considerRotateStart())
@@ -261,12 +261,12 @@ BOOL TMario::wakeup()
 {
 	if (mInput & 0x4) {
 		sleepingEffectKill();
-		return changePlayerStatus(0x88c, 0, false);
+		return changePlayerStatus(STATUS_LANDING, 0, false);
 	}
 
 	if (mInput & 0x8) {
 		sleepingEffectKill();
-		return changePlayerStatus(0x50, 0, false);
+		return changePlayerStatus(STATUS_SLIP, 0, false);
 	}
 
 	if (waitingCommonEvents()) {
@@ -308,19 +308,19 @@ void TMario::getSideWalkValues(E_SIDEWALK_TYPE* type, f32* val1, f32* val2)
 BOOL TMario::squating()
 {
 	if (mInput & 0x4)
-		return changePlayerStatus(0x88c, 0, false);
+		return changePlayerStatus(STATUS_LANDING, 0, false);
 
 	if (mInput & 0x8)
-		return changePlayerStatus(0x50, 0, false);
+		return changePlayerStatus(STATUS_SLIP, 0, false);
 
 	if (mInput & 0x10)
-		return changePlayerStatus(0xc008222, 0, false);
+		return changePlayerStatus(STATUS_SQUAT_STANDUP, 0, false);
 
 	if (!(mInput & 0x4000) && !(mInput & 0x200))
-		return changePlayerStatus(0xc008222, 0, false);
+		return changePlayerStatus(STATUS_SQUAT_STANDUP, 0, false);
 
 	if (mWaterGun == nullptr || !checkFlag(MARIO_FLAG_HAS_FLUDD))
-		return changePlayerStatus(0xc008222, 0, false);
+		return changePlayerStatus(STATUS_SQUAT_STANDUP, 0, false);
 
 	if (mInput & 0x2) {
 		if ((mGamePad->mMeaning & TMarioGamePad::MEANING_0x400)
@@ -337,7 +337,7 @@ BOOL TMario::squating()
 	    && mWaterGun->isEmitting()) {
 		unk314
 		    = mFloorPosition.y + mWaterGun->mWatergunParams.mHoverHeight.get();
-		return changePlayerStatus(0x88b, 0, false);
+		return changePlayerStatus(STATUS_ROCKET, 0, false);
 	}
 
 	if (mGamePad->mMeaning & TMarioGamePad::MEANING_0x2000) {
@@ -387,9 +387,9 @@ BOOL TMario::squatStart() { return 0; }
 BOOL TMario::squatStandup()
 {
 	if (mInput & 0x4)
-		return changePlayerStatus(0x88c, 0, false);
+		return changePlayerStatus(STATUS_LANDING, 0, false);
 	if (mInput & 0x8)
-		return changePlayerStatus(0x50, 0, false);
+		return changePlayerStatus(STATUS_SLIP, 0, false);
 	if (mInput & 0x2)
 		return changePlayerStatus(STATUS_JUMP, 0, false);
 	if (mInput & 0x1)
@@ -397,7 +397,7 @@ BOOL TMario::squatStandup()
 
 	waitProcess();
 
-	if (mStatus == 0xc000223)
+	if (mStatus == STATUS_THROWN_END)
 		setAnimation(ANIM_THROWN_END, 1.0f);
 	else
 		setAnimation(ANIM_SQEND, 1.0f);
@@ -410,10 +410,10 @@ BOOL TMario::squatStandup()
 BOOL TMario::pullEnd()
 {
 	if (mInput & 0x4)
-		return changePlayerStatus(0x88c, 0, false);
+		return changePlayerStatus(STATUS_LANDING, 0, false);
 
 	if (mInput & 0x8)
-		return changePlayerStatus(0x50, 0, false);
+		return changePlayerStatus(STATUS_SLIP, 0, false);
 
 	waitProcess();
 	setAnimation(ANIM_HOLD_RETURN, 1.0f);
@@ -516,11 +516,11 @@ BOOL TMario::broadJumpEnd()
 	mInput &= ~0x2000;
 	if (jumpEndEvents(STATUS_JUMP)) {
 		if (mStatus == STATUS_RUN)
-			return changePlayerStatus(0xC008222, 0, false);
+			return changePlayerStatus(STATUS_SQUAT_STANDUP, 0, false);
 		else
 			return 1;
 	} else {
-		jumpEndCommon(ANIM_SQWAT, 0xC008222);
+		jumpEndCommon(ANIM_SQWAT, STATUS_SQUAT_STANDUP);
 	}
 	return 0;
 }
@@ -529,9 +529,9 @@ BOOL TMario::hipAttackEnd()
 {
 	mStatusState = 1;
 	if (mInput & 0x4) {
-		return changePlayerStatus(0x88c, 0, false);
+		return changePlayerStatus(STATUS_LANDING, 0, false);
 	} else if (mInput & 0x8) {
-		return changePlayerStatus(0x840452, 0, false);
+		return changePlayerStatus(STATUS_SLIP_FORE, 0, false);
 	} else {
 		jumpEndCommon(ANIM_HIPED, STATUS_SLIP_END);
 	}
@@ -552,7 +552,7 @@ BOOL TMario::slipEnd()
 	if (mInput & 0xF)
 		return checkAllMotions();
 
-	stopCommon(0x8F, STATUS_WAIT);
+	stopCommon(ANIM_SLPED, STATUS_WAIT);
 	return 0;
 }
 
@@ -602,8 +602,8 @@ BOOL TMario::waitMain()
 		result = squatStart();
 		break;
 
-	case 0xC000223:
-	case 0xC008222:
+	case STATUS_THROWN_END:
+	case STATUS_SQUAT_STANDUP:
 		result = squatStandup();
 		break;
 

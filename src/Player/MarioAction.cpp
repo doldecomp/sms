@@ -8,7 +8,7 @@
 BOOL TMario::taking()
 {
 	if ((mInput & 4) != 0) {
-		return changePlayerDropping(0x88C, 0);
+		return changePlayerDropping(STATUS_LANDING, 0);
 	}
 
 	setAnimation(ANIM_RAISE, 1.0f);
@@ -34,45 +34,42 @@ BOOL TMario::taking()
 BOOL TMario::takePose()
 {
 	if ((mInput & 4) != 0)
-		return changePlayerDropping(0x88C, 0);
+		return changePlayerDropping(STATUS_LANDING, 0);
 
 	if (isLast1AnimeFrame()) {
 		setAnimation(ANIM_WAIT, 1.0f);
 		return changePlayerStatus(STATUS_WAIT, 0, false);
 	}
 
-	stopCommon(0x110, STATUS_WAIT);
+	stopCommon(ANIM_GET_FAIL, STATUS_WAIT);
 	return FALSE;
 }
 
 BOOL TMario::catchLost()
 {
 	if ((mInput & 2) != 0) {
-		if (considerRotateJumpStart()) {
+		if (considerRotateJumpStart())
 			return TRUE;
-		} else {
-			return changePlayerJumping(STATUS_JUMP, false);
-		}
-	} else {
-		if ((mInput & 4) != 0) {
-			return changePlayerStatus(0x88C, 0, false);
-		} else {
-			if ((mInput & 8) != 0) {
-				return changePlayerStatus(0x50, 0, false);
-			} else {
-				stopCommon(0x5A, STATUS_WAIT);
-				return FALSE;
-			}
-		}
+
+		return changePlayerJumping(STATUS_JUMP, false);
 	}
+
+	if ((mInput & 4) != 0)
+		return changePlayerStatus(STATUS_LANDING, 0, false);
+
+	if ((mInput & 8) != 0)
+		return changePlayerStatus(STATUS_SLIP, 0, false);
+
+	stopCommon(ANIM_LOST, STATUS_WAIT);
+	return FALSE;
 }
 
 BOOL TMario::putting()
 {
 	if ((mInput & 4) != 0)
-		return changePlayerDropping(0x88c, 0);
+		return changePlayerDropping(STATUS_LANDING, 0);
 
-	stopCommon(0x6E, STATUS_WAIT);
+	stopCommon(ANIM_PUT, STATUS_WAIT);
 	if (mHeldObject != nullptr && mModel->getFrameCtrl(0).checkPass(20.0f)) {
 		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK6);
 		mHeldObject = nullptr;
@@ -84,9 +81,9 @@ BOOL TMario::putting()
 BOOL TMario::pitching()
 {
 	if ((mInput & 4) != 0)
-		return changePlayerDropping(0x88C, 0);
+		return changePlayerDropping(STATUS_LANDING, 0);
 
-	stopCommon(0x65, STATUS_WAIT);
+	stopCommon(ANIM_THROW, STATUS_WAIT);
 	checkThrowObject();
 	return FALSE;
 }

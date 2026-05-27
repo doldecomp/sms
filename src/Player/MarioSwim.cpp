@@ -67,7 +67,7 @@ void TMario::doSwimming()
 				mForwardVel = 0.8f * -mForwardVel;
 				changePlayerStatus(STATUS_SWIM_P_DAMAGE, 0, true);
 			} else {
-				changePlayerStatus(0x208b3, 0, true);
+				changePlayerStatus(STATUS_JUMP_BACK_DOWN, 0, true);
 				mForwardVel = 0.8f * -mForwardVel;
 				mVel.y      = 50.0f;
 			}
