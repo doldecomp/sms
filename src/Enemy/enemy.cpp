@@ -581,7 +581,8 @@ void TSpineEnemy::doShortCut()
 		return;
 	}
 
-	TPathNode node = unk114.pop();
+	TPathNode node;
+	node = unk114.pop();
 
 	JGeometry::TVec3<f32> local_28 = node.getPoint() - mPosition;
 	if (local_28.x == 0.0f && local_28.y == 0.0f && local_28.z == 0.0f)

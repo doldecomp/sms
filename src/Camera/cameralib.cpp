@@ -9,6 +9,8 @@
 static const f32 SHORTANGLE_TO_DEGREES = 0.005493164f; // 360/65536
 static const f32 DEGREES_TO_RADIANS    = 0.017453294f; // pi/180
 
+JGeometry::TVec3<f32> CLBConstUpVec(0.0f, 1.0f, 0.0f);
+
 // TODO: Almost definitely fake, this is probably inlined somewhere else
 static inline f32 fastSqrt(f32 x)
 {
@@ -38,8 +40,8 @@ static inline void RotateAboutAxis(const JGeometry::TVec3<f32>& param_axis,
 }
 
 // TODO: Explore how this is used, and add documentation
-void CLBCalc2DFPos(JGeometry::TVec2<f32>* param_1, MtxPtr param_2,
-                   const MtxPtr param_3, const Vec& param_4, u32* param_5,
+void CLBCalc2DFPos(JGeometry::TVec2<f32>* param_1, const f32 (*param_2)[4],
+                   const f32 (*param_3)[4], const Vec& param_4, u32* param_5,
                    bool param_6)
 {
 	Vec prod;
@@ -322,8 +324,8 @@ BOOL CLBChaseDecrease(f32* dstValue, f32 targetValue, f32 ratio, f32 threshold)
 	}
 }
 
-bool CLBChaseSpecialDecrease(f32* param_1, f32 param_2, f32 param_3,
-                             f32 param_4)
+BOOL CLBChaseSpecialDecrease(f32* param_1, f32 param_2, f32 param_3,
+                              f32 param_4)
 {
 	if (param_3 > 1.0f) {
 		param_3 = 1.0f;
