@@ -21,7 +21,9 @@ TMarioCap::TMarioCap(TMario* mario)
 	    JKRFileLoader::getGlbResource("/mario/bmd/ma_cap1.bmd"), 0x10100000);
 	// Might be an inlined function?
 	maCap1ModelData->getTexture()->setResTIMG(
-	    0, *mMario->mModel->unk8->getModelData()->getTexture()->getResTIMG(0));
+	    0,
+	    *mMario->mModel->getModel()->getModelData()->getTexture()->getResTIMG(
+	        0));
 	DCFlushRange(maCap1ModelData->getTexture()->mResources, 0x20);
 	unk10[0] = new J3DModel(maCap1ModelData, 0, 1);
 
@@ -29,7 +31,9 @@ TMarioCap::TMarioCap(TMario* mario)
 	    JKRFileLoader::getGlbResource("/mario/bmd/ma_cap3.bmd"), 0x10100000);
 	// I could see this being an inlined
 	maCap3ModelData->getTexture()->setResTIMG(
-	    0, *mMario->mModel->unk8->getModelData()->getTexture()->getResTIMG(0));
+	    0,
+	    *mMario->mModel->getModel()->getModelData()->getTexture()->getResTIMG(
+	        0));
 	DCFlushRange(maCap3ModelData->getTexture()->mResources, 0x20);
 	unk10[1] = new J3DModel(maCap3ModelData, 0, 1);
 
@@ -51,15 +55,15 @@ TMarioCap::TMarioCap(TMario* mario)
 
 	// Mmmh, nintendo plz? I hope this is forgotten and not a check to crash the
 	// game if it is missing this bone
-	unk10[2]->getModelData()->unkB0->getIndex("null_airtube");
-	MtxPtr mtx = mMario->mModel->unk8->getAnmMtx(mMario->mBoneIDs[11]);
+	unk10[2]->getModelData()->getJointName()->getIndex("null_airtube");
+	MtxPtr mtx = mMario->mModel->getModel()->getAnmMtx(mMario->mBoneIDs[11]);
 
-	unk10[0]->setAnmMtx(0, mtx);
+	unk10[0]->setBaseTRMtx(mtx);
 	unk10[0]->calc();
-	unk10[1]->setAnmMtx(0, mtx);
+	unk10[1]->setBaseTRMtx(mtx);
 	unk10[1]->calc();
-	mMario->mModel->unk8->setAnmMtx(mMario->mBoneIDs[10],
-	                                unk10[2]->getBaseTRMtx());
+	mMario->mModel->getModel()->setAnmMtx(mMario->mBoneIDs[10],
+	                                      unk10[2]->getBaseTRMtx());
 	unk10[2]->calc();
 
 	unk20 = new TMultiMtxEffect();
@@ -84,17 +88,17 @@ TMarioCap::TMarioCap(TMario* mario)
 	unk24unk4Ptr[0]       = TMTX_EFFECT_TIME_LAG;
 	unk24->mMtxEffectType = unk24unk4Ptr;
 	unk24->setup(unk10[1], "Mario/MarioCap");
+	unk4 = E_CAP_MODEL_HAT;
 
-	setModelActive(E_CAP_MODEL_HAT);
 	unkC = unk10[0];
 
-	// TMultiMtxEffect stuff
-	unk30 = new TTrembleModelEffect();
-	unk30->init(unk10[0]);
+	int thingIdx = 0;
+	unk30        = new TTrembleModelEffect;
+	unk30->init(unk10[thingIdx]);
 	unk34 = 4.0f;
 
 	for (int idx = 0; idx < 2; idx++) {
-		for (int matIdx = 0;
+		for (u16 matIdx = 0;
 		     matIdx < unk10[idx]->getModelData()->getMaterialNum(); matIdx++) {
 			SMS_InitPacket_OneTevKColorAndFog(unk10[idx], matIdx, GX_KCOLOR0,
 			                                  nullptr);
@@ -120,23 +124,25 @@ void TMarioCap::perform(unsigned long param_1, JDrama::TGraphics* param_2)
 			J3DFrameCtrl& frameCtrl = mMario->getMotionFrameCtrl();
 			if (frameCtrl.getFrame() < 157.0f) {
 				unkC = unk10[1];
-				onFlagAllShapes(unk10[0]->mModelData);
-				offFlagAllShapes(unk10[1]->mModelData);
+				unk10[0]->getModelData()->onFlag1OnAllShapes();
+				unk10[1]->getModelData()->offFlag1OnAllShapes();
 			} else {
 				unkC = unk10[0];
-				offFlagAllShapes(unk10[0]->mModelData);
-				onFlagAllShapes(unk10[1]->mModelData);
+				unk10[0]->getModelData()->offFlag1OnAllShapes();
+				unk10[1]->getModelData()->onFlag1OnAllShapes();
 			}
 		} else if (isModelActive(E_CAP_MODEL_HAT)) {
 			unkC = unk10[0];
-			offFlagAllShapes(unk10[0]->mModelData);
-			onFlagAllShapes(unk10[1]->mModelData);
+			unk10[0]->getModelData()->offFlag1OnAllShapes();
+			unk10[1]->getModelData()->onFlag1OnAllShapes();
 
 			bool doTremble = false;
 
 			// Missing a copy of TVec3, i still suspect that operations should
 			// do a copy
-			f32 distance = (mMario->mPosition - mMario->unk29C).length();
+			f32 distance
+			    = JGeometry::TVec3<f32>(mMario->mPosition - mMario->unk29C)
+			          .length();
 			if (mMario->mStatus == TMario::STATUS_SURF && distance > 20.0f) {
 				doTremble = true;
 			}
@@ -163,32 +169,24 @@ void TMarioCap::perform(unsigned long param_1, JDrama::TGraphics* param_2)
 		} else {
 
 			unkC = unk10[1];
-			onFlagAllShapes(unk10[0]->mModelData);
-			offFlagAllShapes(unk10[1]->mModelData);
+			unk10[0]->getModelData()->onFlag1OnAllShapes();
+			unk10[1]->getModelData()->offFlag1OnAllShapes();
 		}
 
 		if (mMario->checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
 			setModelActive(E_CAP_MODEL_HELMET);
 		}
 
-		if (isModelActive(E_CAP_MODEL_HELMET)) {
-
-			J3DModelData* modelData = unk10[2]->mModelData;
-			for (u16 i = 0; i < modelData->getShapeNum(); ++i) {
-				modelData->getShapeNodePointer(i)->onFlag(1);
-			}
-		} else {
-			J3DModelData* modelData = unk10[2]->mModelData;
-			for (u16 i = 0; i < modelData->getShapeNum(); ++i) {
-				modelData->getShapeNodePointer(i)->offFlag(1);
-			}
-		}
+		if (isModelActive(E_CAP_MODEL_HELMET))
+			unk10[2]->getModelData()->offFlag1OnAllShapes();
+		else
+			unk10[2]->getModelData()->onFlag1OnAllShapes();
 
 		if (isModelActive(E_CAP_MODEL_SUNGLASSES)) {
-			unk10[3]->update();
+			unk10[3]->calc();
 		}
-		unkC->update();
-		unk10[2]->update();
+		unkC->calc();
+		unk10[2]->calc();
 
 		for (u16 i = 0; i < unkC->getModelData()->getMaterialNum(); i++) {
 			J3DGXColor* color
