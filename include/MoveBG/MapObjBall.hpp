@@ -30,6 +30,8 @@ public:
 
 	void boundByActor(THitActor*);
 
+	inline void kick();
+
 	/* 0x148 */ f32 unk148;
 	/* 0x14C */ f32 unk14C;
 	/* 0x150 */ f32 unk150;
@@ -93,7 +95,7 @@ public:
 	static f32 mBreakingScaleSpeed;
 
 	f32 unk198;
-	GXColorS10 mRottenColor;
+	GXColorS10 mFruitColor;
 	u8 unk1A4;
 };
 
