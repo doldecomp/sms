@@ -1,4 +1,4 @@
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Player/WaterGun.hpp>
 #include <Player/Yoshi.hpp>
 #include <Player/ModelWaterManager.hpp>

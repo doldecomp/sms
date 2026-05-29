@@ -37,7 +37,7 @@
 #include <Enemy/EnemyTable.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <Player/SplashManager.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Player/MarioPositionObj.hpp>
 #include <Camera/CubeManagerBase.hpp>
 #include <Camera/Camera.hpp>

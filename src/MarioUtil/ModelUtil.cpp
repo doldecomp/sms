@@ -7,7 +7,7 @@
 #include <M3DUtil/SDLModel.hpp>
 #include <MarioUtil/MtxUtil.hpp>
 #include <Strategic/LiveActor.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <dolphin/mtx.h>
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>

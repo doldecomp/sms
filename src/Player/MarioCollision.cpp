@@ -1,4 +1,4 @@
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 
 #include <M3DUtil/M3UModelMario.hpp>
 #include <MarioUtil/RumbleMgr.hpp>

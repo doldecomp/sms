@@ -2,7 +2,7 @@
 #include <Enemy/BossGesso.hpp>
 #include <Enemy/Spline.hpp>
 #include <Player/MarioAccess.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Map/Map.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <System/MarDirector.hpp>

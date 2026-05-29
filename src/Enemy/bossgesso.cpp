@@ -9,7 +9,7 @@
 #include <Map/Map.hpp>
 #include <MoveBG/ItemManager.hpp>
 #include <GC2D/GCConsole2.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <Camera/CameraShake.hpp>

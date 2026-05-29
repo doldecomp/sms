@@ -1,5 +1,5 @@
 #include <Player/MarioAnimeData.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
 
 // rogue includes needed for matching sinit & bss

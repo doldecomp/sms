@@ -3,7 +3,7 @@
 #include <System/MarDirector.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
 #include <MarioUtil/MtxUtil.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Camera/Camera.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>

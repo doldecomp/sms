@@ -1,4 +1,4 @@
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Player/MarioEffect.hpp>
 #include <System/Particles.hpp>
 #include <System/EmitterViewObj.hpp>

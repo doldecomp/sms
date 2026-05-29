@@ -1,4 +1,4 @@
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Player/WaterGun.hpp>
 #include <Player/NozzleTrigger.hpp>
 #include <Map/MapData.hpp>

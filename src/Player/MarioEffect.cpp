@@ -1,5 +1,5 @@
 #include <Player/MarioEffect.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Player/WaterGun.hpp>
 #include <Enemy/Conductor.hpp>
 #include <System/Application.hpp>

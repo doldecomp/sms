@@ -1,4 +1,4 @@
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Player/MarioCap.hpp>
 #include <Player/MarioEffect.hpp>

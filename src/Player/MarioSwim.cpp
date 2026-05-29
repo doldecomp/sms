@@ -1,4 +1,4 @@
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <System/Particles.hpp>
 #include <Map/MapData.hpp>

@@ -1,4 +1,4 @@
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <System/MarioGamePad.hpp>
 #include <JSystem/JMath.hpp>
 #include <Strategic/LiveActor.hpp>

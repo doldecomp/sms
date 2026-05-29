@@ -9,7 +9,7 @@
 #include <System/StageUtil.hpp>
 #include <System/FlagManager.hpp>
 #include <System/CardManager.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Player/WaterGun.hpp>
 #include <Strategic/ObjHitCheck.hpp>
 #include <MarioUtil/DrawUtil.hpp>

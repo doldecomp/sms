@@ -1,4 +1,4 @@
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Player/Yoshi.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <Map/Map.hpp>
