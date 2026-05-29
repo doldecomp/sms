@@ -38,7 +38,7 @@ void TMario::getGesso(THitActor* param_1)
 	if (mStatus != 0x10000) {
 		mFaceAngle.y    = DEG2SHORTANGLE(param_1->mRotation.y);
 		mModelFaceAngle = mFaceAngle.y;
-		changePlayerStatus(STATUS_SURF, 0, false);
+		changePlayerStatus(MARIO_STATUS_SURF, 0, false);
 		mStatusTimer = mDeParams.mSurfStartFreezeTime.get();
 		emitGetEffect();
 		switch (param_1->getActorType()) {
@@ -140,7 +140,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			SMSGetMSound()->startSoundActor(MSD_SE_YV_SURPRISED, &mPosition, 0,
 			                                nullptr, 0, 4);
 
-		changePlayerStatus(STATUS_THROWN_DOWN, 0, false);
+		changePlayerStatus(MARIO_STATUS_THROWN_DOWN, 0, false);
 		return TRUE;
 	}
 
@@ -214,7 +214,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		case 0x2000002A: // pickup turbo nozzle
 			return getNozzle(sender, TWaterGun::Turbo);
 		case 0x2000002B: // pickup underwater (helmet) nozzle
-			changePlayerStatus(STATUS_DIVE, 0, false);
+			changePlayerStatus(MARIO_STATUS_DIVE, 0, false);
 			return getNozzle(sender, TWaterGun::Underwater);
 		case 0x2000001F: // pickup spray nozzle
 			getNozzle(sender, TWaterGun::Spray);
@@ -235,7 +235,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			getCoinBlue();
 			return TRUE;
 		case 0x20000013: // 1-up shroom / pickup-action
-			if (message == HIT_MESSAGE_ATTACK && mStatus != STATUS_WIN_DEMO) {
+			if (message == HIT_MESSAGE_ATTACK
+			    && mStatus != MARIO_STATUS_WIN_DEMO) {
 				unk384          = sender;
 				mPosition.x     = sender->mPosition.x;
 				mPosition.z     = sender->mPosition.z;
@@ -244,7 +245,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				setPlayerVelocity(0.0f);
 				mHealth = mDeParams.mHpMax.get();
 				unk12C  = unk130;
-				changePlayerStatus(STATUS_WIN_DEMO, 0, true);
+				changePlayerStatus(MARIO_STATUS_WIN_DEMO, 0, true);
 				return TRUE;
 			}
 			break;
@@ -263,7 +264,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				           mDmgParamsLampTrapIron.mMotor.get(),
 				           mDmgParamsLampTrapIron.mDirty.get(),
 				           mDmgParamsLampTrapIron.mInvincibleTime.get());
-				changePlayerStatus(STATUS_FIRE_DOWN, 1, false);
+				changePlayerStatus(MARIO_STATUS_FIRE_DOWN, 1, false);
 				SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE,
 				                                &mPosition, 0, nullptr, 0, 4);
 
@@ -292,7 +293,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		case 0x40000258: // grabbable hangable thing
 			if (message == HIT_MESSAGE_TAKE) {
 				mHolder = (TTakeActor*)sender;
-				changePlayerStatus(STATUS_NOMOTION, 0, false);
+				changePlayerStatus(MARIO_STATUS_NOMOTION, 0, false);
 				return TRUE;
 			}
 			break;
@@ -307,7 +308,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 					           mDmgParamsFire.mDirty.get(),
 					           mDmgParamsFire.mInvincibleTime.get());
 					startVoice(MSD_SE_MV27_SPRISE_01);
-					changePlayerStatus(STATUS_THROWN_DOWN, 1, false);
+					changePlayerStatus(MARIO_STATUS_THROWN_DOWN, 1, false);
 					return TRUE;
 				}
 				return FALSE;
@@ -315,11 +316,11 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			break;
 		case 0x40000098: { // wire/zipline
 			if (mHolder == nullptr) {
-				if (mStatus == STATUS_WIRE_JUMP && mVel.y > 0.0f)
+				if (mStatus == MARIO_STATUS_WIRE_JUMP && mVel.y > 0.0f)
 					return FALSE;
-				if (mStatus == STATUS_WIRE_ROLL_JUMP && mVel.y > 0.0f)
+				if (mStatus == MARIO_STATUS_WIRE_ROLL_JUMP && mVel.y > 0.0f)
 					return FALSE;
-				if (mStatus == STATUS_WIRE_HANG_LAND_SAFE_DOWN)
+				if (mStatus == MARIO_STATUS_WIRE_HANG_LAND_SAFE_DOWN)
 					return FALSE;
 				if (onYoshi())
 					return FALSE;
@@ -336,8 +337,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				mWireSag       = 0.0f;
 
 				bool flipDir;
-				if (mStatus == STATUS_WIRE_ROLL_JUMP
-				    || mStatus == STATUS_JUMP_CATCH) {
+				if (mStatus == MARIO_STATUS_WIRE_ROLL_JUMP
+				    || mStatus == MARIO_STATUS_JUMP_CATCH) {
 					flipDir = true;
 				} else if (mVel.y < 0.0f) {
 					flipDir = false;
@@ -360,7 +361,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 					mWireEndPos               = tmp;
 					mWirePosRatio             = 1.0f - mWirePosRatio;
 				}
-				changePlayerStatus(STATUS_WIRE_WAIT, 0, false);
+				changePlayerStatus(MARIO_STATUS_WIRE_WAIT, 0, false);
 				return TRUE;
 			} else {
 				return FALSE;
@@ -431,7 +432,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		case 0x10000034: // elec attacker
 			if (message == 9 && !isInvincible()) {
 				elecEffect();
-				changePlayerStatus(STATUS_ELECTRIC_DAMAGE, 0, false);
+				changePlayerStatus(MARIO_STATUS_ELECTRIC_DAMAGE, 0, false);
 				return TRUE;
 			}
 			keepDistance(sender->mPosition, sender->getDamageRadius() + 30.0f,
@@ -448,7 +449,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				           mDmgParamsKiller.mMotor.get(),
 				           mDmgParamsKiller.mDirty.get(),
 				           mDmgParamsKiller.mInvincibleTime.get());
-				changePlayerStatus(STATUS_FIRE_DOWN, 1, false);
+				changePlayerStatus(MARIO_STATUS_FIRE_DOWN, 1, false);
 				SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE,
 				                                &mPosition, 0, nullptr, 0, 4);
 
@@ -559,7 +560,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				           mDmgParamsFire.mMotor.get(),
 				           mDmgParamsFire.mDirty.get(),
 				           mDmgParamsFire.mInvincibleTime.get());
-				changePlayerStatus(STATUS_FIRE_DOWN, 1, false);
+				changePlayerStatus(MARIO_STATUS_FIRE_DOWN, 1, false);
 				SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE,
 				                                &mPosition, 0, nullptr, 0, 4);
 
@@ -583,7 +584,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				           mDmgParamsFire.mMotor.get(),
 				           mDmgParamsFire.mDirty.get(),
 				           mDmgParamsFire.mInvincibleTime.get());
-				changePlayerStatus(STATUS_FIRE_DOWN, 1, false);
+				changePlayerStatus(MARIO_STATUS_FIRE_DOWN, 1, false);
 				SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE,
 				                                &mPosition, 0, nullptr, 0, 4);
 
@@ -621,7 +622,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		}
 		if (message == HIT_MESSAGE_UNK3 && !isInvincible()) {
 			unk118 |= MARIO_FLAG_GROUND_POUND_SIT_UP;
-			if (!checkStatusFlag(STATUS_FLAG_JUMPING)) {
+			if (!checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)) {
 				rumbleStart(0x15, 0x0A);
 			}
 			return TRUE;
@@ -636,7 +637,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		case HIT_MESSAGE_TAKE:
 			if (mHeldObject == nullptr && mHolder == nullptr) {
 				mHolder = (TTakeActor*)sender;
-				changePlayerStatus(STATUS_WAIT, 0, false);
+				changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 				return TRUE;
 			}
 			break;
@@ -654,9 +655,9 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			break;
 		case HIT_MESSAGE_UNK8:
 			if (checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
-				changePlayerStatus(STATUS_DIVE, 0, true);
+				changePlayerStatus(MARIO_STATUS_DIVE, 0, true);
 			} else {
-				changePlayerStatus(STATUS_WAIT, 0, false);
+				changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 			}
 			mHolder = nullptr;
 			return TRUE;
@@ -674,7 +675,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			           mDmgParamsFire.mMinSpeed.get(),
 			           mDmgParamsFire.mMotor.get(), mDmgParamsFire.mDirty.get(),
 			           mDmgParamsFire.mInvincibleTime.get());
-			changePlayerStatus(STATUS_FIRE_DOWN, 1, false);
+			changePlayerStatus(MARIO_STATUS_FIRE_DOWN, 1, false);
 			SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE, &mPosition,
 			                                0, nullptr, 0, 4);
 
@@ -701,7 +702,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			if (!isInvincible() && mHeldObject == nullptr
 			    && mHolder == nullptr) {
 				mHolder = (TTakeActor*)sender;
-				changePlayerStatus(STATUS_TAKEN, 0, false);
+				changePlayerStatus(MARIO_STATUS_TAKEN, 0, false);
 				return TRUE;
 			}
 			break;
@@ -719,9 +720,9 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			break;
 		case HIT_MESSAGE_UNK8:
 			if (checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
-				changePlayerStatus(STATUS_DIVE, 0, true);
+				changePlayerStatus(MARIO_STATUS_DIVE, 0, true);
 			} else {
-				changePlayerStatus(STATUS_WAIT, 0, false);
+				changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 			}
 			mHolder = nullptr;
 			return TRUE;
@@ -738,7 +739,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			           mDmgParamsBGTentacle.mMotor.get(),
 			           mDmgParamsBGTentacle.mDirty.get(),
 			           mDmgParamsBGTentacle.mInvincibleTime.get());
-			changePlayerStatus(STATUS_THROWN_DOWN, 0, false);
+			changePlayerStatus(MARIO_STATUS_THROWN_DOWN, 0, false);
 			return TRUE;
 		}
 		// fallthrough
@@ -770,7 +771,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				if (frontDiff > -0x2000 && frontDiff < 0x2000) {
 					mPosition    = sender->mPosition;
 					mFaceAngle.y = frontYaw;
-					changePlayerStatus(STATUS_DOOR_OPEN_R, 0, false);
+					changePlayerStatus(MARIO_STATUS_DOOR_OPEN_R, 0, false);
 					if (isHolding()) {
 						unk380 = 2;
 						setAnimation(ANIM_DOOR_KICK, 1.0f);
@@ -784,7 +785,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 					if (message == 0x11) {
 						mPosition    = sender->mPosition;
 						mFaceAngle.y = frontYaw + 0x8000;
-						changePlayerStatus(STATUS_DOOR_OPEN_L, 0, false);
+						changePlayerStatus(MARIO_STATUS_DOOR_OPEN_L, 0, false);
 						if (isHolding()) {
 							unk380 = 2;
 							setAnimation(ANIM_DOOR_KICK, 1.0f);
@@ -797,7 +798,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 					if (!isHolding()) {
 						mPosition    = sender->mPosition;
 						mFaceAngle.y = frontYaw + 0x8000;
-						changePlayerStatus(STATUS_DOOR_OPEN_L, 0, false);
+						changePlayerStatus(MARIO_STATUS_DOOR_OPEN_L, 0, false);
 						setAnimation(ANIM_DOOR_GACHA_L, 1.0f);
 						return FALSE;
 					}
@@ -814,14 +815,14 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			case HIT_MESSAGE_TAKE:
 				if (mHeldObject == nullptr && mHolder == nullptr) {
 					mHolder = (TTakeActor*)sender;
-					changePlayerStatus(STATUS_TAKEN, 0, false);
+					changePlayerStatus(MARIO_STATUS_TAKEN, 0, false);
 					return TRUE;
 				}
 				break;
 			case HIT_MESSAGE_UNK6:
 			case HIT_MESSAGE_UNK7:
 				mHolder = nullptr;
-				changePlayerStatus(STATUS_JUMP, 0, false);
+				changePlayerStatus(MARIO_STATUS_JUMP, 0, false);
 				setPlayerVelocity(40.0f);
 				mVel.y = 10.0f;
 				unk78 &= ~0x100;
@@ -850,20 +851,20 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 	case 0x4000003A:
 	case 0x4000005A:
 		if (message == HIT_MESSAGE_UNK8) {
-			changePlayerStatus(STATUS_WAIT, 0, false);
+			changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 			mHeldObject = nullptr;
 		}
 		break;
 
 	case 0x080000C0:
-		if (mStatus != STATUS_WARP_IN && message == HIT_MESSAGE_TAKE) {
+		if (mStatus != MARIO_STATUS_WARP_IN && message == HIT_MESSAGE_TAKE) {
 			mHolder = (TTakeActor*)sender;
-			if (!checkStatusFlag(STATUS_FLAG_JUMPING)) {
+			if (!checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)) {
 				setAnimation(ANIM_JUMP, 1.0f);
 				s16 endFrame = getMotionFrameCtrl().getEnd();
 				getMotionFrameCtrl().setFrame((f32)endFrame);
 			}
-			changePlayerDropping(STATUS_WARP_IN, 0);
+			changePlayerDropping(MARIO_STATUS_WARP_IN, 0);
 			return TRUE;
 		}
 		break;

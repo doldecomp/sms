@@ -20,13 +20,13 @@ void TMario::barJumpSetting() { }
 BOOL TMario::barWait()
 {
 	if (mHolder == nullptr)
-		return changePlayerStatus(STATUS_WALL_JUMP, 0, false);
+		return changePlayerStatus(MARIO_STATUS_WALL_JUMP, 0, false);
 
 	if (mInput & 0x2) {
 		mPosition.x -= 200.0f * JMASSin(mFaceAngle.y);
 		mPosition.z -= 200.0f * JMASCos(mFaceAngle.y);
 		mFaceAngle.y += 0x8000;
-		return changePlayerStatus(STATUS_WALL_JUMP, 0, false);
+		return changePlayerStatus(MARIO_STATUS_WALL_JUMP, 0, false);
 	}
 
 	mPosition.x = mHolder->mPosition.x;
@@ -37,11 +37,11 @@ BOOL TMario::barWait()
 		setPlayerVelocity(-2.0f);
 		mPosition.x -= 200.0f * JMASSin(mFaceAngle.y);
 		mPosition.z -= 200.0f * JMASCos(mFaceAngle.y);
-		return changePlayerStatus(STATUS_LAND_SAFE_DOWN, 0, false);
+		return changePlayerStatus(MARIO_STATUS_LAND_SAFE_DOWN, 0, false);
 	}
 
 	if (unk108->mStickV > 16.0f)
-		return changePlayerStatus(STATUS_BAR_CLIMB, 0, false);
+		return changePlayerStatus(MARIO_STATUS_BAR_CLIMB, 0, false);
 
 	if (unk108->mStickV < -16.0f) {
 		mVel.y += unk108->mStickV * 0.001953125f;
@@ -110,13 +110,13 @@ BOOL TMario::barWait()
 BOOL TMario::barClimb()
 {
 	if (mHolder == nullptr)
-		return changePlayerStatus(STATUS_LAND_SAFE_DOWN, 0, false);
+		return changePlayerStatus(MARIO_STATUS_LAND_SAFE_DOWN, 0, false);
 
 	if (mInput & 0x2) {
 		mPosition.x -= 200.0f * JMASSin(mFaceAngle.y);
 		mPosition.z -= 200.0f * JMASCos(mFaceAngle.y);
 		mFaceAngle.y += 0x8000;
-		return changePlayerStatus(STATUS_WALL_JUMP, 0, false);
+		return changePlayerStatus(MARIO_STATUS_WALL_JUMP, 0, false);
 	}
 
 	mPosition.x = mHolder->mPosition.x;
@@ -124,7 +124,7 @@ BOOL TMario::barClimb()
 	mPosition.z = mHolder->mPosition.z;
 
 	if (unk108->mStickV < 8.0f)
-		return changePlayerStatus(STATUS_BAR_WAIT, 0, false);
+		return changePlayerStatus(MARIO_STATUS_BAR_WAIT, 0, false);
 
 	mVel.y = 0.0f;
 	mPosition.y += unk108->mStickV * mBarParams.mClimbSp.get();
@@ -132,7 +132,7 @@ BOOL TMario::barClimb()
 
 	if (mPosition.y > mHolder->mPosition.y + mHolder->getDamageHeight()) {
 		setPlayerVelocity(0.0f);
-		changePlayerStatus(STATUS_JUMP, 0, false);
+		changePlayerStatus(MARIO_STATUS_JUMP, 0, false);
 		unk78 &= ~0x100;
 	}
 
@@ -180,14 +180,14 @@ BOOL TMario::barHang()
 	}
 
 	if (mHolder == nullptr)
-		return changePlayerStatus(STATUS_LAND_SAFE_DOWN, 0, false);
+		return changePlayerStatus(MARIO_STATUS_LAND_SAFE_DOWN, 0, false);
 
 	mVel.y = 0.0f;
 
 	if (barProcess() == 0) {
 		setAnimation(ANIM_TREE_CATCH, 1.0f);
 		if (isLast1AnimeFrame())
-			changePlayerStatus(STATUS_BAR_WAIT, 0, false);
+			changePlayerStatus(MARIO_STATUS_BAR_WAIT, 0, false);
 	}
 
 	mFaceAngle.x    = 0;
@@ -279,7 +279,7 @@ BOOL TMario::roofCommonEvents()
 {
 	if (mInput & 0x8000) {
 		mInput &= ~0x8000;
-		return changePlayerStatus(STATUS_LANDING, 0, false);
+		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 	}
 	if (mInput & 0x2) {
 		const TLiveActor* actor = mRoofPlane->mActor;
@@ -288,10 +288,11 @@ BOOL TMario::roofCommonEvents()
 			if (actor->mActorType == 0x4000006a) {
 				emitParticle(0x39, &unk16C);
 				rumbleStart(0x15, mMotorParams.mMotorWall.get());
-				return changePlayerStatus(STATUS_KICK_ROOF_ROLL_UP, 0, false);
+				return changePlayerStatus(MARIO_STATUS_KICK_ROOF_ROLL_UP, 0,
+				                          false);
 			}
 		}
-		return changePlayerStatus(STATUS_KICK_ROOF, 0, false);
+		return changePlayerStatus(MARIO_STATUS_KICK_ROOF, 0, false);
 	}
 	return 0;
 }
@@ -303,7 +304,7 @@ BOOL TMario::hangRoof()
 	mStatusTimer += 1;
 
 	if ((mInput & 0x1) && mStatusTimer > 120)
-		return changePlayerStatus(STATUS_WAIT_ROOF, 0, false);
+		return changePlayerStatus(MARIO_STATUS_WAIT_ROOF, 0, false);
 
 	if (roofCommonEvents())
 		return 1;
@@ -314,7 +315,7 @@ BOOL TMario::hangRoof()
 	doRoofWaitingProcess();
 
 	if (isLast1AnimeFrame())
-		changePlayerStatus(STATUS_WAIT_ROOF, 0, false);
+		changePlayerStatus(MARIO_STATUS_WAIT_ROOF, 0, false);
 	return 0;
 }
 
@@ -323,7 +324,7 @@ BOOL TMario::waitRoof()
 	if (roofCommonEvents())
 		return 1;
 	if (mInput & 0x1)
-		return changePlayerStatus(TMario::STATUS_MOVE_ROOF, mStatusArg, false);
+		return changePlayerStatus(MARIO_STATUS_MOVE_ROOF, mStatusArg, false);
 	if (mStatusArg & 1)
 		setAnimation(ANIM_LADDER_HANG_WAIT_L, 1.0f);
 	else
@@ -341,15 +342,15 @@ BOOL TMario::moveRoof()
 	if (mInput & 0x1) {
 		switch (doRoofMovingProcess()) {
 		case 2:
-			return changePlayerStatus(STATUS_LANDING, 0, false);
+			return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 		case 3:
-			changePlayerStatus(STATUS_FENCE_CATCH, 0, false);
+			changePlayerStatus(MARIO_STATUS_FENCE_CATCH, 0, false);
 			break;
 		}
 	}
 
 	if (mInput & 0x20)
-		return changePlayerStatus(STATUS_WAIT_ROOF, mStatusArg, false);
+		return changePlayerStatus(MARIO_STATUS_WAIT_ROOF, mStatusArg, false);
 
 	f32 dist = JGeometry::TVec3<f32>(mPosition - unk29C).length();
 	dist *= mHangRoofParams.mAnmMult.get();
@@ -373,7 +374,7 @@ BOOL TMario::kickRoof()
 
 	if (isLast1AnimeFrame()) {
 		mInput &= ~0x2;
-		return changePlayerStatus(STATUS_WAIT_ROOF, 0, false);
+		return changePlayerStatus(MARIO_STATUS_WAIT_ROOF, 0, false);
 	}
 	return 0;
 }
@@ -390,7 +391,7 @@ BOOL TMario::kickRoofRollUp()
 		mPosition.y += 160.0f;
 		mFloorPosition.y = mPosition.y;
 		mInput &= ~0x4;
-		return changePlayerStatus(STATUS_WAIT, 0, false);
+		return changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 	}
 
 	return 0;
@@ -401,7 +402,7 @@ BOOL TMario::kickRoofRollDown()
 	setAnimation(ANIM_LADDER_ROLL_DOWN, 1.0f);
 
 	if (isLast1AnimeFrame())
-		return changePlayerStatus(STATUS_WAIT_ROOF, 0, false);
+		return changePlayerStatus(MARIO_STATUS_WAIT_ROOF, 0, false);
 
 	return 0;
 }
@@ -445,12 +446,12 @@ BOOL TMario::hanging()
 		mInput &= ~0x4;
 		mInput &= ~0x8000;
 
-		return startHangLanding(STATUS_WALL_SLIDE);
+		return startHangLanding(MARIO_STATUS_WALL_SLIDE);
 	}
 
 	if ((mInput & 0x2) && onCeil) {
 		startVoice(MSD_SE_MV15_EXERT_INST_01);
-		return changePlayerStatus(STATUS_HANG_JUMPING, 0, false);
+		return changePlayerStatus(MARIO_STATUS_HANG_JUMPING, 0, false);
 	}
 
 	TBGCheckData* foundWall = nullptr;
@@ -472,13 +473,13 @@ BOOL TMario::hanging()
 	}
 
 	if (foundWall == nullptr)
-		changePlayerStatus(STATUS_LANDING, 0, false);
+		changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 
 	if (foundWall != nullptr && foundWall->isFence()) {
 		mPosition.x -= 40.0f * JMASSin(mFaceAngle.y);
 		mPosition.y -= 160.0f;
 		mPosition.z -= 40.0f * JMASCos(mFaceAngle.y);
-		return changePlayerStatus(STATUS_FENCE_CATCH, 0, false);
+		return changePlayerStatus(MARIO_STATUS_FENCE_CATCH, 0, false);
 	}
 
 	TBGWallCheckRecord record2(mPosition.x, 10.0f + mPosition.y, mPosition.z,
@@ -489,11 +490,11 @@ BOOL TMario::hanging()
 	if (mStatusTimer >= 0x28 && (mInput & 0x1)) {
 		if (yawDiff >= -0x400 && yawDiff <= 0x400 && onCeil) {
 			setAnimation(ANIM_HGUP, 1.0f);
-			return changePlayerStatus(STATUS_ASCEND, 0, false);
+			return changePlayerStatus(MARIO_STATUS_ASCEND, 0, false);
 		}
 
 		if (yawDiff <= -0x71c7 || yawDiff >= 0x71c7)
-			return startHangLanding(STATUS_LAND_SAFE_DOWN);
+			return startHangLanding(MARIO_STATUS_LAND_SAFE_DOWN);
 
 		if (mStatusTimer < mHangingParams.mRapidTime.get()
 		    && record.mResultWallsNum > 0) {
@@ -570,12 +571,12 @@ BOOL TMario::hanging()
 	}
 
 	if (mStatusTimer >= mHangingParams.mLimitTime.get())
-		return startHangLanding(STATUS_LAND_SAFE_DOWN);
+		return startHangLanding(MARIO_STATUS_LAND_SAFE_DOWN);
 
 	f32 below = mPosition.y - checkPlayerAround(-0x8000, 30.0f);
 	if (onCeil && below < 100.0f) {
 		startVoice(MSD_SE_MV15_EXERT_INST_01);
-		return changePlayerStatus(STATUS_HANG_JUMPING, 0, false);
+		return changePlayerStatus(MARIO_STATUS_HANG_JUMPING, 0, false);
 	}
 
 	setPlayerVelocity(0.0f);
@@ -603,33 +604,33 @@ BOOL TMario::hanging()
 BOOL TMario::ascend()
 {
 	if (mInput & 0x4)
-		return startHangLanding(STATUS_LAND_SAFE_DOWN);
+		return startHangLanding(MARIO_STATUS_LAND_SAFE_DOWN);
 	waitProcess();
 	setAnimation(ANIM_HGUP, 1.0f);
 	if (isLast1AnimeFrame())
-		changePlayerStatus(STATUS_WAIT, 0, false);
+		changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 	return 0;
 }
 
 BOOL TMario::descend()
 {
 	if (mInput & 0x4)
-		return startHangLanding(STATUS_LAND_SAFE_DOWN);
+		return startHangLanding(MARIO_STATUS_LAND_SAFE_DOWN);
 	waitProcess();
 	setAnimation(ANIM_HGDWN, 1.0f);
 	if (isLast1AnimeFrame())
-		changePlayerStatus(STATUS_HANGING, 0, false);
+		changePlayerStatus(MARIO_STATUS_HANGING, 0, false);
 	return 0;
 }
 
 BOOL TMario::hangJumping()
 {
 	if (mInput & 0x4)
-		return startHangLanding(STATUS_LAND_SAFE_DOWN);
+		return startHangLanding(MARIO_STATUS_LAND_SAFE_DOWN);
 	waitProcess();
 	setAnimation(ANIM_HGJMP, 1.0f);
 	if (isLast1AnimeFrame())
-		changePlayerStatus(STATUS_WAIT, 0, false);
+		changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 	return 0;
 }
 
@@ -705,7 +706,7 @@ BOOL TMario::wireWait()
 		if (mWireSag <= 0.0f) {
 			((THitActor*)mHolder)->receiveMessage(this, 8);
 			mHolder  = nullptr;
-			BOOL ret = changePlayerStatus(STATUS_WIRE_JUMP, 0, false);
+			BOOL ret = changePlayerStatus(MARIO_STATUS_WIRE_JUMP, 0, false);
 			setPlayerVelocity(0.0f);
 			if (mWireBounceVel < 0.0f)
 				mVel.y -= mWireParams.mWireJumpMult.get() * mWireBounceVel;
@@ -728,7 +729,7 @@ BOOL TMario::wireWait()
 
 	if (mInput & 0x10000) {
 		mWireBounceVel = 5.0f;
-		return changePlayerStatus(STATUS_WIRE_WAIT_TO_HANG, 0, false);
+		return changePlayerStatus(MARIO_STATUS_WIRE_WAIT_TO_HANG, 0, false);
 	}
 
 	if (mInput & 0x1) {
@@ -746,11 +747,13 @@ BOOL TMario::wireWait()
 		}
 		if (diff < -0x2000) {
 			startVoice(MSD_SE_MV30_FRIGHT_01);
-			return changePlayerStatus(STATUS_WIRE_WAIT_TO_S_WAIT_L, 0, false);
+			return changePlayerStatus(MARIO_STATUS_WIRE_WAIT_TO_S_WAIT_L, 0,
+			                          false);
 		}
 		if (diff > 0x2000) {
 			startVoice(MSD_SE_MV30_FRIGHT_01);
-			return changePlayerStatus(STATUS_WIRE_WAIT_TO_S_WAIT_R, 0, false);
+			return changePlayerStatus(MARIO_STATUS_WIRE_WAIT_TO_S_WAIT_R, 0,
+			                          false);
 		}
 	} else {
 		setAnimation(ANIM_ROPE_WAIT, 1.0f);
@@ -774,7 +777,7 @@ BOOL TMario::wireSWait()
 		if (mWireSag < 0.0f) {
 			((THitActor*)mHolder)->receiveMessage(this, 8);
 			mHolder  = nullptr;
-			BOOL ret = changePlayerStatus(STATUS_WIRE_JUMP, 0, false);
+			BOOL ret = changePlayerStatus(MARIO_STATUS_WIRE_JUMP, 0, false);
 			setPlayerVelocity(0.0f);
 			if (mWireBounceVelPrev < 0.0f)
 				mVel.y -= 5.0f * mWireBounceVelPrev;
@@ -785,19 +788,20 @@ BOOL TMario::wireSWait()
 	if (mInput & 0x10000) {
 		mWireBounceVelPrev = 5.0f;
 		startVoice(MSD_SE_MV30_FRIGHT_01);
-		return changePlayerStatus(STATUS_WIRE_WAIT_TO_HANG, 0, false);
+		return changePlayerStatus(MARIO_STATUS_WIRE_WAIT_TO_HANG, 0, false);
 	}
 
 	if (mInput & 0x1) {
 		s16 diff = mIntendedYaw - wireAngle;
 		if (diff > -0x4000 && diff < 0x4000)
-			return changePlayerStatus(STATUS_WIRE_S_WAIT_TO_WAIT_L, 0, false);
+			return changePlayerStatus(MARIO_STATUS_WIRE_S_WAIT_TO_WAIT_L, 0,
+			                          false);
 
 		JGeometry::TVec3<f32> tmp = mWireStartPos;
 		mWireStartPos             = mWireEndPos;
 		mWireEndPos               = tmp;
 		mWirePosRatio             = 1.0f - mWirePosRatio;
-		return changePlayerStatus(STATUS_WIRE_S_WAIT_TO_WAIT_R, 0, false);
+		return changePlayerStatus(MARIO_STATUS_WIRE_S_WAIT_TO_WAIT_R, 0, false);
 	}
 
 	setAnimation(ANIM_ROPE_SWAIT, 1.0f);
@@ -812,7 +816,7 @@ BOOL TMario::wireWaitToSWaitL()
 	mFaceAngle.y = mModelFaceAngle + 0x4000;
 	setAnimation(ANIM_ROPE_WTOSW, 1.0f);
 	if (isLast1AnimeFrame())
-		changePlayerStatus(STATUS_WIRE_S_WAIT, 0, false);
+		changePlayerStatus(MARIO_STATUS_WIRE_S_WAIT, 0, false);
 	return 0;
 }
 
@@ -822,7 +826,7 @@ BOOL TMario::wireWaitToSWaitR()
 	mFaceAngle.y = mModelFaceAngle - 0x4000;
 	setAnimation(ANIM_ROPE_WTOSW_R, 1.0f);
 	if (isLast1AnimeFrame()) {
-		changePlayerStatus(STATUS_WIRE_S_WAIT, 0, false);
+		changePlayerStatus(MARIO_STATUS_WIRE_S_WAIT, 0, false);
 		JGeometry::TVec3<f32> tmp = mWireStartPos;
 		mWireStartPos             = mWireEndPos;
 		mWireEndPos               = tmp;
@@ -837,9 +841,9 @@ void TMario::changeWireHanging()
 	if (mHeldObject == nullptr && !onYoshi())
 		ok = true;
 	if (ok) {
-		changePlayerStatus(STATUS_WIRE_HANGING, 0, false);
+		changePlayerStatus(MARIO_STATUS_WIRE_HANGING, 0, false);
 	} else {
-		changePlayerStatus(STATUS_LANDING, 0, false);
+		changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 	}
 }
 
@@ -853,8 +857,8 @@ BOOL TMario::wireWaitToHang()
 		if (mHeldObject == nullptr && !onYoshi())
 			noHold = TRUE;
 		if (noHold)
-			return changePlayerStatus(STATUS_WIRE_HANGING, 0, false);
-		return changePlayerStatus(STATUS_LANDING, 0, false);
+			return changePlayerStatus(MARIO_STATUS_WIRE_HANGING, 0, false);
+		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 	}
 	return 0;
 }
@@ -869,8 +873,8 @@ BOOL TMario::wireSWaitToHang()
 		if (mHeldObject == nullptr && !onYoshi())
 			noHold = TRUE;
 		if (noHold)
-			return changePlayerStatus(STATUS_WIRE_HANGING, 0, false);
-		return changePlayerStatus(STATUS_LANDING, 0, false);
+			return changePlayerStatus(MARIO_STATUS_WIRE_HANGING, 0, false);
+		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 	}
 	return 0;
 }
@@ -881,7 +885,7 @@ BOOL TMario::wireReturn()
 	mModelFaceAngle = mFaceAngle.y;
 	setAnimation(ANIM_ROPE_RETURN, 1.0f);
 	if (isLast1AnimeFrame())
-		changePlayerStatus(STATUS_WIRE_WAIT, 0, false);
+		changePlayerStatus(MARIO_STATUS_WIRE_WAIT, 0, false);
 	return 0;
 }
 
@@ -894,14 +898,14 @@ BOOL TMario::wireHanging()
 
 	if ((mInput & 0x2) && b) {
 		mWireBounceVel = 5.0f;
-		return changePlayerStatus(STATUS_WIRE_RETURN, 0, false);
+		return changePlayerStatus(MARIO_STATUS_WIRE_RETURN, 0, false);
 	}
 
 	if (mInput & 0x8000) {
 		((THitActor*)mHolder)->receiveMessage(this, HIT_MESSAGE_UNK8);
 		mHolder = nullptr;
 
-		return startHangLanding(STATUS_WIRE_HANG_LAND_SAFE_DOWN);
+		return startHangLanding(MARIO_STATUS_WIRE_HANG_LAND_SAFE_DOWN);
 	}
 
 	unkF6           = 0;
@@ -927,11 +931,11 @@ BOOL TMario::wireHanging()
 
 		if (diff >= -0x6000 && diff <= -0x2000) {
 			mWireBounceVel = 5.0f;
-			return changePlayerStatus(STATUS_WIRE_RETURN, 0, false);
+			return changePlayerStatus(MARIO_STATUS_WIRE_RETURN, 0, false);
 		}
 
 		if (diff >= 0x3555 && diff <= 0x4aaa)
-			startHangLanding(STATUS_WIRE_HANG_LAND_SAFE_DOWN);
+			startHangLanding(MARIO_STATUS_WIRE_HANG_LAND_SAFE_DOWN);
 
 		return 0;
 	}
@@ -981,7 +985,7 @@ BOOL TMario::wireHanging()
 			}
 		}
 		unkF6 += rotSp2;
-		return changePlayerStatus(STATUS_WIRE_ROLLING, 0, false);
+		return changePlayerStatus(MARIO_STATUS_WIRE_ROLLING, 0, false);
 	}
 
 	setAnimation(ANIM_ROPE_HGWAT, 1.0f);
@@ -1005,12 +1009,12 @@ BOOL TMario::wireRolling()
 	if ((mStatusState & 1) && unkF6 < 0) {
 		s16 ang = mFaceAngle.x;
 		if (ang > -0x2000 && ang <= rotSpeedMax - 0x2000)
-			return changePlayerStatus(STATUS_WIRE_ROLL_JUMP, 0, false);
+			return changePlayerStatus(MARIO_STATUS_WIRE_ROLL_JUMP, 0, false);
 	}
 	if ((mStatusState & 1) && unkF6 > 0) {
 		s16 ang = mFaceAngle.x;
 		if (0x6000 - rotSpeedMax <= ang && ang < 0x6000)
-			return changePlayerStatus(STATUS_WIRE_ROLL_JUMP, 1, false);
+			return changePlayerStatus(MARIO_STATUS_WIRE_ROLL_JUMP, 1, false);
 	}
 
 	if (mInput & 0x1) {
@@ -1131,8 +1135,8 @@ BOOL TMario::wireRolling()
 			if (mHeldObject == nullptr && !onYoshi())
 				noHold = TRUE;
 			if (noHold)
-				return changePlayerStatus(STATUS_WIRE_HANGING, 0, false);
-			return changePlayerStatus(STATUS_LANDING, 0, false);
+				return changePlayerStatus(MARIO_STATUS_WIRE_HANGING, 0, false);
+			return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 		}
 	}
 
@@ -1148,7 +1152,7 @@ BOOL TMario::wireSWaitToWaitL()
 	mFaceAngle.y = mModelFaceAngle + 0x4000;
 	setReverseAnimation(ANIM_ROPE_WTOSW, 1.0f);
 	if (isAnimeLoopOrStop())
-		changePlayerStatus(STATUS_WIRE_WAIT, 0, false);
+		changePlayerStatus(MARIO_STATUS_WIRE_WAIT, 0, false);
 	return 0;
 }
 
@@ -1158,7 +1162,7 @@ BOOL TMario::wireSWaitToWaitR()
 	mFaceAngle.y = mModelFaceAngle - 0x4000;
 	setReverseAnimation(ANIM_ROPE_WTOSW_R, 1.0f);
 	if (isAnimeLoopOrStop())
-		changePlayerStatus(STATUS_WIRE_WAIT, 0, false);
+		changePlayerStatus(MARIO_STATUS_WIRE_WAIT, 0, false);
 	return 0;
 }
 
@@ -1182,7 +1186,7 @@ void TMario::getCurrentPullParams(f32* outV, f32* outH)
 
 	if (params == nullptr)
 		return;
-	if (mStatus == STATUS_PULLING) {
+	if (mStatus == MARIO_STATUS_PULLING) {
 		*outV = params->mPullRateV.get();
 		*outH = params->mPullRateH.get();
 	} else {
@@ -1199,7 +1203,7 @@ BOOL TMario::pulling()
 		((THitActor*)mHeldObject)->receiveMessage(this, 8);
 		mHeldObject = nullptr;
 		startVoice(MSD_SE_MV30_FRIGHT_01);
-		return changePlayerStatus(STATUS_LANDING, 0, false);
+		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 	}
 
 	if (!(unk108->mInput & 0x400)) {
@@ -1211,11 +1215,11 @@ BOOL TMario::pulling()
 
 	if (mInput & 0x2) {
 		setAnimation(ANIM_HOLD_TO_HANG, 1.0f);
-		return changePlayerJumping(STATUS_PULL_JUMP, 0);
+		return changePlayerJumping(MARIO_STATUS_PULL_JUMP, 0);
 	}
 
-	if (mStatus == STATUS_OIL_PULLING && !checkFlag(MARIO_FLAG_UNK_40))
-		changePlayerStatus(STATUS_PULLING, 0, false);
+	if (mStatus == MARIO_STATUS_OIL_PULLING && !checkFlag(MARIO_FLAG_UNK_40))
+		changePlayerStatus(MARIO_STATUS_PULLING, 0, false);
 
 	MtxPtr mtx      = mHeldObject->getTakingMtx();
 	mFaceAngle.y    = matan(-mtx[2][2], -mtx[0][2]);
@@ -1247,7 +1251,7 @@ BOOL TMario::pulling()
 	stopProcess();
 
 	f32 animRate = 1.0f;
-	if (mStatus == STATUS_OIL_PULLING)
+	if (mStatus == MARIO_STATUS_OIL_PULLING)
 		animRate = 5.0f;
 
 	switch (mAnimationId) {
@@ -1296,7 +1300,7 @@ void TMario::fenceFootCheck()
 		mFaceAngle.y += 0x8000;
 		setPlayerVelocity(0.0f);
 		mVel.y = 0.0f;
-		changePlayerStatus(STATUS_LAND_SAFE_DOWN, 0, false);
+		changePlayerStatus(MARIO_STATUS_LAND_SAFE_DOWN, 0, false);
 	}
 }
 
@@ -1310,7 +1314,7 @@ BOOL TMario::fenceCatch()
 			mPosition.y += 5.0f;
 		if (mFloorPosition.x - 5.0f < mPosition.y)
 			mPosition.y -= 5.0f;
-		return changePlayerStatus(STATUS_FENCE_MOVE, 0, false);
+		return changePlayerStatus(MARIO_STATUS_FENCE_MOVE, 0, false);
 	}
 
 	return 0;
@@ -1322,7 +1326,7 @@ BOOL TMario::fenceJumpCatch()
 	fenceFootCheck();
 
 	if (isLast1AnimeFrame())
-		return changePlayerStatus(STATUS_FENCE_MOVE, 0, false);
+		return changePlayerStatus(MARIO_STATUS_FENCE_MOVE, 0, false);
 
 	return 0;
 }
@@ -1365,13 +1369,13 @@ BOOL TMario::fenceMove()
 			    = checkWallPlane(&sideFront2, 140.0f, 50.0f);
 			if (sideWall1 != nullptr && (sideWall1->isFence())
 			    && sideWall2 != nullptr && (sideWall2->isFence())) {
-				if (mStatus == STATUS_FENCE_MOVE)
+				if (mStatus == MARIO_STATUS_FENCE_MOVE)
 					changePlayerStatus(0x30000569, 0, false);
 				mPosition = newPos;
 			}
 		} else {
 			setAnimation(ANIM_FENCE_WAIT, 1.0f);
-			changePlayerStatus(STATUS_FENCE_MOVE, 0, false);
+			changePlayerStatus(MARIO_STATUS_FENCE_MOVE, 0, false);
 		}
 
 		mFaceAngle.y = matan(wall->mNormal.z, wall->mNormal.x) + 0x8000;
@@ -1379,7 +1383,7 @@ BOOL TMario::fenceMove()
 		mFaceAngle.y += 0x8000;
 		mModelFaceAngle = mFaceAngle.y;
 		setPlayerVelocity(0.0f);
-		return changePlayerStatus(STATUS_LANDING, 0, false);
+		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 	}
 
 	mModelFaceAngle = mFaceAngle.y;
@@ -1393,21 +1397,21 @@ BOOL TMario::fenceMove()
 	switch (jumpProcess(1)) {
 	case 1:
 		mFaceAngle.y += 0x8000;
-		return changePlayerStatus(STATUS_LANDING, 0, false);
+		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 	case 3:
 		mPosition.x += 50.0f * JMASSin(mFaceAngle.y);
 		mPosition.y = 1.0f + mFloorPosition.y;
 		mPosition.z += 50.0f * JMASCos(mFaceAngle.y);
 		setAnimation(ANIM_HGUP, 1.0f);
 		mInput &= ~0x4;
-		return changePlayerDropping(STATUS_ASCEND, 0);
+		return changePlayerDropping(MARIO_STATUS_ASCEND, 0);
 	case 2:
 	default:
 		if (mRoofPlane != nullptr) {
 			f32 roofY = mFloorPosition.x;
 			if (roofY < 160.0f + mPosition.y) {
 				mPosition.y = roofY - 160.0f;
-				changePlayerStatus(STATUS_FENCE_MOVE, 0, false);
+				changePlayerStatus(MARIO_STATUS_FENCE_MOVE, 0, false);
 			}
 		}
 
@@ -1420,7 +1424,7 @@ BOOL TMario::fenceMove()
 
 		if (mInput & 0x8000) {
 			mInput &= ~0x8000;
-			return changePlayerStatus(STATUS_FENCE_PUNCH, 0, false);
+			return changePlayerStatus(MARIO_STATUS_FENCE_PUNCH, 0, false);
 		}
 
 		if (mIntendedMag > 0.0f) {
@@ -1484,7 +1488,7 @@ BOOL TMario::fencePunch()
 		mFaceAngle.y += 0x8000;
 		mModelFaceAngle = mFaceAngle.y;
 		setPlayerVelocity(0.0f);
-		return changePlayerStatus(STATUS_LANDING, 0, false);
+		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 	}
 
 	setAnimation(ANIM_FENCE_PUNCH, 1.0f);
@@ -1520,7 +1524,7 @@ BOOL TMario::fencePunch()
 	}
 
 	if (isLast1AnimeFrame()) {
-		changePlayerStatus(STATUS_FENCE_MOVE, 0, false);
+		changePlayerStatus(MARIO_STATUS_FENCE_MOVE, 0, false);
 		return 1;
 	}
 	return 0;
@@ -1542,125 +1546,125 @@ BOOL TMario::specMain()
 
 	switch (mStatus) {
 		// The "bars" here are, in fact, trees.
-	case STATUS_BAR_WAIT:
+	case MARIO_STATUS_BAR_WAIT:
 		result = barWait();
 		break;
 
-	case STATUS_BAR_HANG:
+	case MARIO_STATUS_BAR_HANG:
 		result = barHang();
 		break;
 
-	case STATUS_BAR_CLIMB:
+	case MARIO_STATUS_BAR_CLIMB:
 		result = barClimb();
 		break;
 
-	case STATUS_KICK_ROOF_ROLL_UP:
+	case MARIO_STATUS_KICK_ROOF_ROLL_UP:
 		result = kickRoofRollUp();
 		break;
 
-	case STATUS_KICK_ROOF_ROLL_DOWN:
+	case MARIO_STATUS_KICK_ROOF_ROLL_DOWN:
 		result = kickRoofRollDown();
 		break;
 
-	case STATUS_KICK_ROOF:
+	case MARIO_STATUS_KICK_ROOF:
 		result = kickRoof();
 		break;
 
-	case STATUS_HANG_ROOF:
+	case MARIO_STATUS_HANG_ROOF:
 		result = hangRoof();
 		break;
 
-	case STATUS_WAIT_ROOF:
+	case MARIO_STATUS_WAIT_ROOF:
 		result = waitRoof();
 		break;
 
-	case STATUS_MOVE_ROOF:
+	case MARIO_STATUS_MOVE_ROOF:
 		result = moveRoof();
 		break;
 
-	case STATUS_HANGING:
+	case MARIO_STATUS_HANGING:
 		result = hanging();
 		break;
 
-	case STATUS_ASCEND:
+	case MARIO_STATUS_ASCEND:
 		result = ascend();
 		break;
 
-	case STATUS_DESCEND:
+	case MARIO_STATUS_DESCEND:
 		result = descend();
 		break;
 
-	case STATUS_HANG_JUMPING:
+	case MARIO_STATUS_HANG_JUMPING:
 		result = hangJumping();
 		break;
 
-	case STATUS_TAKEN:
+	case MARIO_STATUS_TAKEN:
 		result = taken();
 		break;
 
-	case STATUS_WIRE_WAIT:
+	case MARIO_STATUS_WIRE_WAIT:
 		result = wireWait();
 		break;
 
-	case STATUS_WIRE_S_WAIT:
+	case MARIO_STATUS_WIRE_S_WAIT:
 		result = wireSWait();
 		break;
 
-	case STATUS_WIRE_WAIT_TO_S_WAIT_L:
+	case MARIO_STATUS_WIRE_WAIT_TO_S_WAIT_L:
 		result = wireWaitToSWaitL();
 		break;
 
-	case STATUS_WIRE_WAIT_TO_S_WAIT_R:
+	case MARIO_STATUS_WIRE_WAIT_TO_S_WAIT_R:
 		result = wireWaitToSWaitR();
 		break;
 
-	case STATUS_WIRE_WAIT_TO_HANG:
+	case MARIO_STATUS_WIRE_WAIT_TO_HANG:
 		result = wireWaitToHang();
 		break;
 
-	case STATUS_WIRE_S_WAIT_TO_HANG:
+	case MARIO_STATUS_WIRE_S_WAIT_TO_HANG:
 		result = wireSWaitToHang();
 		break;
 
-	case STATUS_WIRE_RETURN:
+	case MARIO_STATUS_WIRE_RETURN:
 		result = wireReturn();
 		break;
 
-	case STATUS_WIRE_HANGING:
+	case MARIO_STATUS_WIRE_HANGING:
 		result = wireHanging();
 		break;
 
-	case STATUS_WIRE_ROLLING:
+	case MARIO_STATUS_WIRE_ROLLING:
 		result = wireRolling();
 		break;
 
-	case STATUS_WIRE_S_WAIT_TO_WAIT_R:
+	case MARIO_STATUS_WIRE_S_WAIT_TO_WAIT_R:
 		result = wireSWaitToWaitR();
 		break;
 
-	case STATUS_WIRE_S_WAIT_TO_WAIT_L:
+	case MARIO_STATUS_WIRE_S_WAIT_TO_WAIT_L:
 		result = wireSWaitToWaitL();
 		break;
 
-	case STATUS_PULLING:
-	case STATUS_OIL_PULLING:
+	case MARIO_STATUS_PULLING:
+	case MARIO_STATUS_OIL_PULLING:
 		result = pulling();
 		break;
 
-	case STATUS_FENCE_CATCH:
+	case MARIO_STATUS_FENCE_CATCH:
 		result = fenceCatch();
 		break;
 
-	case STATUS_FENCE_JUMP_CATCH:
+	case MARIO_STATUS_FENCE_JUMP_CATCH:
 		result = fenceJumpCatch();
 		break;
 
 	case 0x30000569:
-	case STATUS_FENCE_MOVE:
+	case MARIO_STATUS_FENCE_MOVE:
 		result = fenceMove();
 		break;
 
-	case STATUS_FENCE_PUNCH:
+	case MARIO_STATUS_FENCE_PUNCH:
 		result = fencePunch();
 		break;
 	}

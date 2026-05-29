@@ -17,10 +17,10 @@ void TMario::checkPumping()
 		    && checkPumpEnable()) {
 			unk380 = 1;
 			unk37E = 0;
-		} else if (mStatus == STATUS_TOROCCO) {
+		} else if (mStatus == MARIO_STATUS_TOROCCO) {
 			unk380 = 1;
 			unk37E = 0;
-		} else if (mStatus == STATUS_SQUAT && unk380 == 5) {
+		} else if (mStatus == MARIO_STATUS_SQUAT && unk380 == 5) {
 			unk380 = 1;
 			unk37E = 0;
 		} else if (checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
@@ -38,7 +38,7 @@ BOOL TMario::checkPumpEnable()
 	        || !((unk368 / (float)mGraffitoParams.mSinkTime.get()
 	              > mGraffitoParams.mSinkPumpLimit.get())))
 	    && unk380 != 4 && unk380 != 3 && unk380 != 2
-	    && (mStatus != STATUS_ROCKET_LANDING
+	    && (mStatus != MARIO_STATUS_ROCKET_LANDING
 	        || !mWaterGun->checkCurrentNozzleRocketType(TWaterGun::Rocket))
 	    && (!mWaterGun->checkCurrentNozzleKind(TWaterGun::Rocket)
 	        || !mWaterGun->checkCurrentNozzleTriggerSprayState(
@@ -105,13 +105,13 @@ void TMario::stateMachineUpper()
 		checkPumping();
 		break;
 	case 2:
-		if (mStatus == STATUS_PUTTING)
+		if (mStatus == MARIO_STATUS_PUTTING)
 			unk380 = 5;
 
 		if (mHeldObject == nullptr)
 			unk380 = 5;
 
-		if (mStatus == STATUS_RUN && mForwardVel > 20.0f)
+		if (mStatus == MARIO_STATUS_RUN && mForwardVel > 20.0f)
 			emitSweatSometimes();
 		break;
 	case 4:

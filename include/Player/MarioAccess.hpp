@@ -2,6 +2,7 @@
 #define PLAYER_MARIO_ACCESS_HPP
 
 #include <JSystem/JGeometry.hpp>
+#include <Player/MarioStatus.hpp>
 #include <stddef.h>
 
 class TLiveActor;

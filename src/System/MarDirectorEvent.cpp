@@ -34,7 +34,7 @@ void TMarDirector::updateFlag(TBaseNPC*, u32, u32) { }
 TBaseNPC* TMarDirector::findNearestTalkNPC()
 {
 	TBaseNPC* result = nullptr;
-	if (gpMarioOriginal->mStatus == TMario::STATUS_WAIT) {
+	if (gpMarioOriginal->mStatus == MARIO_STATUS_WAIT) {
 		f32 bestDist                   = 5000000.0f;
 		JGeometry::TVec3<f32> marioPos = *gpMarioPos;
 		JGadget::TVector_pointer<TBaseNPC>::iterator it;

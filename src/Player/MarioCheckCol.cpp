@@ -14,9 +14,9 @@
 
 void TMario::hitNormal(THitActor* actor)
 {
-	if (checkStatusFlag(STATUS_FLAG_JUMPING) && mVel.y < 0.0f
+	if (checkStatusFlag(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
 	    && actor->mPosition.y < mPosition.y) {
-		if (mStatus == STATUS_HIP_DROP) {
+		if (mStatus == MARIO_STATUS_HIP_DROP) {
 			if (actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP)) {
 				if (actor->isActorType(0x8000001)) {
 					changePlayerTriJump();
@@ -36,8 +36,8 @@ void TMario::hitNormal(THitActor* actor)
 		return;
 	}
 
-	if (mStatus == STATUS_CATCH || mStatus == STATUS_OIL_SLIP
-	    || mStatus == STATUS_JUMP_CATCH) {
+	if (mStatus == MARIO_STATUS_CATCH || mStatus == MARIO_STATUS_OIL_SLIP
+	    || mStatus == MARIO_STATUS_JUMP_CATCH) {
 		actor->receiveMessage(this, HIT_MESSAGE_PUNCH);
 		actor->receiveMessage(this, HIT_MESSAGE_TRAMPLE);
 	}
@@ -55,7 +55,7 @@ void TMario::hitNormal(THitActor* actor)
 // TODO: wrong size! maybe we return the receiveMessage result?
 void TMario::hitHipDrop(THitActor* actor)
 {
-	if (mStatus == STATUS_HIP_DROP && mStatusState == 2
+	if (mStatus == MARIO_STATUS_HIP_DROP && mStatusState == 2
 	    && actor->mPosition.y < mPosition.y) {
 		actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 	}
@@ -63,7 +63,7 @@ void TMario::hitHipDrop(THitActor* actor)
 
 void TMario::hitPushup(THitActor* actor)
 {
-	if (checkStatusFlag(STATUS_FLAG_JUMPING) && mVel.y > 0.0f)
+	if (checkStatusFlag(MARIO_STATUS_FLAG_JUMPING) && mVel.y > 0.0f)
 		actor->receiveMessage(this, HIT_MESSAGE_UNK2);
 	hitNormal(actor);
 }
@@ -82,8 +82,9 @@ void TMario::hitNpc(THitActor* actor)
 {
 	if (!checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)
 	    && !checkStatusFlag(MARIO_FLAG_HELMET)
-	    && checkStatusFlag(STATUS_FLAG_JUMPING) && mStatus != STATUS_HIP_DROP
-	    && mVel.y < 0.0f && actor->mPosition.y < mPosition.y
+	    && checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)
+	    && mStatus != MARIO_STATUS_HIP_DROP && mVel.y < 0.0f
+	    && actor->mPosition.y < mPosition.y
 	    && ((TBaseNPC*)actor)->isBeTrampledNpc()) {
 		if (trampleExec(actor) == TRUE)
 			return;
@@ -101,7 +102,7 @@ void TMario::wantToTakeActor(THitActor* actor)
 {
 	if (canTake(actor)) {
 		unk384 = actor;
-		changePlayerStatus(STATUS_TAKE, 0, false);
+		changePlayerStatus(MARIO_STATUS_TAKE, 0, false);
 	}
 }
 
@@ -114,8 +115,9 @@ void TMario::hitWantToTake(THitActor* actor)
 void TMario::hitBarrel(THitActor* actor)
 {
 	hitWantToTake(actor);
-	if (checkStatusFlag(STATUS_FLAG_JUMPING) && mVel.y < 0.0f
-	    && actor->mPosition.y < mPosition.y && mStatus == STATUS_HIP_DROP) {
+	if (checkStatusFlag(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
+	    && actor->mPosition.y < mPosition.y
+	    && mStatus == MARIO_STATUS_HIP_DROP) {
 		actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 			TWaterGun* wg     = mWaterGun;
@@ -135,15 +137,16 @@ void TMario::hitJumpBase(THitActor* actor)
 
 void TMario::hitBrakable(THitActor* actor)
 {
-	if (checkStatusFlag(STATUS_FLAG_JUMPING) && mVel.y < 0.0f
-	    && actor->mPosition.y < mPosition.y && mStatus == STATUS_HIP_DROP) {
+	if (checkStatusFlag(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
+	    && actor->mPosition.y < mPosition.y
+	    && mStatus == MARIO_STATUS_HIP_DROP) {
 		actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 	}
 }
 
 void TMario::hangPole(THitActor* actor)
 {
-	if (!checkStatusFlag(STATUS_FLAG_UNK100000)) {
+	if (!checkStatusFlag(MARIO_STATUS_FLAG_UNK100000)) {
 		u8 canHang = 0;
 		if (mHeldObject == nullptr && !onYoshi())
 			canHang = 1;
@@ -152,11 +155,11 @@ void TMario::hangPole(THitActor* actor)
 		if (canHang == 0) {
 			inHangStatus = 0;
 		} else {
-			u32 statLo = mStatus & STATUS_TYPE_AND_ID_MASK;
+			u32 statLo = mStatus & MARIO_STATUS_TYPE_AND_ID_MASK;
 			if (statLo >= 0x80 && statLo <= 0x9F) {
 				inHangStatus = 1;
 			} else {
-				if (checkStatusFlag(STATUS_FLAG_UNK200000))
+				if (checkStatusFlag(MARIO_STATUS_FLAG_UNK200000))
 					inHangStatus = 1;
 				else
 					inHangStatus = 0;
@@ -177,7 +180,7 @@ void TMario::hangPole(THitActor* actor)
 			        + mBarParams.mCatchRadius.get();
 
 			bool canCatch = true;
-			if (mPrevStatus & STATUS_FLAG_UNK100000)
+			if (mPrevStatus & MARIO_STATUS_FLAG_UNK100000)
 				canCatch = false;
 
 			if (a < mBarParams.mCatchAngle.get())
@@ -194,7 +197,7 @@ void TMario::hangPole(THitActor* actor)
 				mHolder     = (TTakeActor*)actor;
 				mVel.y      = 0.0f;
 				mForwardVel = 0.0f;
-				changePlayerStatus(STATUS_BAR_HANG, 0, false);
+				changePlayerStatus(MARIO_STATUS_BAR_HANG, 0, false);
 				actor->receiveMessage(this, HIT_MESSAGE_UNK5);
 				mHolderHeightDiff = mPosition.y - actor->mPosition.y;
 				return;
@@ -209,7 +212,7 @@ void TMario::hangPole(THitActor* actor)
 void TMario::hitPickUpEnemy(THitActor* actor)
 {
 	if (((TSmallEnemy*)actor)->unk164 != 0
-	    && !checkStatusFlag(STATUS_FLAG_JUMPING)) {
+	    && !checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)) {
 		hitWantToTake(actor);
 		return;
 	}
@@ -223,9 +226,9 @@ void TMario::hitSurfingBoard(THitActor*) { }
 // As in we pull but don't "keep" the object, cuz it's a tentacle/tail?
 void TMario::hitNoKeepPull(THitActor* actor)
 {
-	if (mStatus != STATUS_PULLING && mStatus != STATUS_PULL_JUMP
+	if (mStatus != MARIO_STATUS_PULLING && mStatus != MARIO_STATUS_PULL_JUMP
 	    && canTake(actor) && actor->receiveMessage(this, HIT_MESSAGE_TAKE)) {
-		changePlayerStatus(STATUS_PULLING, 0, false);
+		changePlayerStatus(MARIO_STATUS_PULLING, 0, false);
 		setAnimation(ANIM_HOLD, 1.0f);
 		mHeldObject = (TTakeActor*)actor;
 	} else {
@@ -235,7 +238,7 @@ void TMario::hitNoKeepPull(THitActor* actor)
 
 void TMario::checkCollision()
 {
-	if (checkStatusFlag(STATUS_FLAG_UNK1000))
+	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK1000))
 		return;
 
 	TYoshi* yoshi = mYoshi;
@@ -253,10 +256,10 @@ void TMario::checkCollision()
 			f32 dx   = yt.x - mPosition.x;
 			f32 dist = std::sqrtf(dx * dx + dz * dz);
 
-			if (checkStatusFlag(STATUS_FLAG_JUMPING) && isHolding()
+			if (checkStatusFlag(MARIO_STATUS_FLAG_JUMPING) && isHolding()
 			    && mVel.y < 0.0f && yt.y < mPosition.y && mStatus != 0x89C
-			    && mStatus != STATUS_THROWN_DOWN && mStatus != STATUS_BACK_JUMP
-			    && dist < 180.0f) {
+			    && mStatus != MARIO_STATUS_THROWN_DOWN
+			    && mStatus != MARIO_STATUS_BACK_JUMP && dist < 180.0f) {
 				mPosition       = mYoshi->getTranslation();
 				mFaceAngle.y    = mYoshi->mEggRotSpeed;
 				mModelFaceAngle = mFaceAngle.y;
@@ -273,7 +276,7 @@ void TMario::checkCollision()
 				if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 					mWaterGun->changeNozzle(TWaterGun::Yoshi, true);
 				}
-				changePlayerStatus(STATUS_WAIT, 0, false);
+				changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 				return;
 			}
 
@@ -366,12 +369,12 @@ void TMario::checkCollision()
 
 		// Amiking
 		case 0x10000034:
-			if (mStatus == STATUS_FENCE_PUNCH
+			if (mStatus == MARIO_STATUS_FENCE_PUNCH
 			    && 5.0f <= getMotionFrameCtrl().getFrame()
 			    && getMotionFrameCtrl().getFrame() < 9.0f) {
 				mCollisions[i]->receiveMessage(this, HIT_MESSAGE_PUNCH);
 			}
-			if (mStatus == STATUS_KICK_ROOF
+			if (mStatus == MARIO_STATUS_KICK_ROOF
 			    && 9.0f <= getMotionFrameCtrl().getFrame()
 			    && getMotionFrameCtrl().getFrame() < 13.0f) {
 				mCollisions[i]->receiveMessage(this, HIT_MESSAGE_PUNCH);

@@ -50,7 +50,7 @@ void TMario::keepDistance(const JGeometry::TVec3<f32>& target, f32 param_2,
 
 		if (burst == true) {
 			emitParticle(0xc);
-			changePlayerDropping(STATUS_JUMP_SHORT_BACK_DOWN, 0);
+			changePlayerDropping(MARIO_STATUS_JUMP_SHORT_BACK_DOWN, 0);
 			return;
 		}
 	}
@@ -128,7 +128,7 @@ void TMario::checkDescent()
 		mPosition.x  = rec.mCenter.x - dist * wall->mNormal.x;
 		mPosition.z  = rec.mCenter.z - dist * wall->mNormal.z;
 		mFaceAngle.y = wallAng + 0x8000;
-		changePlayerStatus(STATUS_DESCEND, 0, false);
+		changePlayerStatus(MARIO_STATUS_DESCEND, 0, false);
 		setAnimation(ANIM_HGDWN, 1.0f);
 	}
 }
@@ -201,7 +201,7 @@ int TMario::waitProcess()
 	setPlayerVelocity(0.0f);
 	if (fabsf(mPosition.y - mFloorPosition.y) > 100000.0f) {
 		mPosition = unk29C;
-		changePlayerStatus(STATUS_ROCKET_LANDING, 0, false);
+		changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, false);
 	} else {
 		mPosition.y = mFloorPosition.y;
 	}
@@ -277,7 +277,7 @@ int TMario::barProcess()
 	checkGroundPlane(mPosition.x, mPosition.y, mPosition.z, &floorY, &ground);
 	if (mPosition.y < floorY) {
 		mPosition.y = floorY;
-		changePlayerStatus(STATUS_WAIT, 0, false);
+		changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 		result = 1;
 	}
 
@@ -355,7 +355,7 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 		if (mGroundPlane->isMarioThrough())
 			passable = true;
 
-		if (mStatus == STATUS_HIP_DROP
+		if (mStatus == MARIO_STATUS_HIP_DROP
 		    && mGroundPlane->isGroundPoundToPassThrough())
 			passable = true;
 
@@ -460,15 +460,15 @@ BOOL TMario::isFallCancel()
 
 void TMario::fallProcess()
 {
-	if (mStatus == STATUS_DIVE) {
+	if (mStatus == MARIO_STATUS_DIVE) {
 		mVel.y -= mDivingParams.mGravity.get();
 		if (mVel.y < -75.0f)
 			mVel.y = -75.0f;
 	} else {
 		if (isFallCancel()) {
 			mVel.y *= 0.75f;
-		} else if ((mStatus == STATUS_LEFT_ROTATE_JUMP
-		            || mStatus == STATUS_RIGHT_ROTATE_JUMP)
+		} else if ((mStatus == MARIO_STATUS_LEFT_ROTATE_JUMP
+		            || mStatus == MARIO_STATUS_RIGHT_ROTATE_JUMP)
 		           && mVel.y < 0.0f) {
 			mVel.y -= mJumpParams.mSpinJumpGravity.get();
 		} else {
@@ -505,7 +505,7 @@ int TMario::jumpProcess(int param_1)
 
 	fallProcess();
 
-	if (mStatus != STATUS_JUMP_CATCH)
+	if (mStatus != MARIO_STATUS_JUMP_CATCH)
 		mFaceAngle.x = 0;
 
 	mModelFaceAngle = mFaceAngle.y;

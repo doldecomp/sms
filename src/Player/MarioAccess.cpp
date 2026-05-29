@@ -51,17 +51,17 @@ TLiveActor* SMS_GetMarioLiveActor() { return (TLiveActor*)gpMarioAddress; }
 
 bool SMS_IsMarioStatusTypeJumping()
 {
-	return gpMarioOriginal->checkStatusFlag(TMario::STATUS_FLAG_JUMPING);
+	return gpMarioOriginal->checkStatusFlag(MARIO_STATUS_FLAG_JUMPING);
 }
 
 bool SMS_IsMarioStatusTypeSwimming()
 {
-	return gpMarioOriginal->checkStatusFlag(TMario::STATUS_FLAG_SWIMMING);
+	return gpMarioOriginal->checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING);
 }
 
 bool SMS_IsMarioStatusHipDrop()
 {
-	if (gpMarioOriginal->mStatus == TMario::STATUS_HIP_DROP) {
+	if (gpMarioOriginal->mStatus == MARIO_STATUS_HIP_DROP) {
 		return 1;
 	} else {
 		return 0;
@@ -70,7 +70,7 @@ bool SMS_IsMarioStatusHipDrop()
 
 bool SMS_IsMarioStatusThrownDown()
 {
-	if (gpMarioOriginal->mStatus == TMario::STATUS_THROWN_DOWN) {
+	if (gpMarioOriginal->mStatus == MARIO_STATUS_THROWN_DOWN) {
 		return 1;
 	} else {
 		return 0;
@@ -79,7 +79,7 @@ bool SMS_IsMarioStatusThrownDown()
 
 bool SMS_IsMarioStatusElecDamage()
 {
-	if (gpMarioOriginal->mStatus == TMario::STATUS_ELECTRIC_DAMAGE) {
+	if (gpMarioOriginal->mStatus == MARIO_STATUS_ELECTRIC_DAMAGE) {
 		return 1;
 	} else {
 		return 0;
@@ -88,8 +88,8 @@ bool SMS_IsMarioStatusElecDamage()
 
 bool SMS_IsMarioHeadSlideAttack()
 {
-	if (gpMarioOriginal->mStatus == TMario::STATUS_CATCH
-	    || gpMarioOriginal->mStatus == TMario::STATUS_JUMP_CATCH) {
+	if (gpMarioOriginal->mStatus == MARIO_STATUS_CATCH
+	    || gpMarioOriginal->mStatus == MARIO_STATUS_JUMP_CATCH) {
 		return 1;
 	} else {
 		return 0;
@@ -144,8 +144,8 @@ bool SMS_IsMarioOnWire()
 
 bool SMS_IsMarioOpeningDoor()
 {
-	if (gpMarioOriginal->mStatus == TMario::STATUS_DOOR_OPEN_R
-	    || gpMarioOriginal->mStatus == TMario::STATUS_DOOR_OPEN_L) {
+	if (gpMarioOriginal->mStatus == MARIO_STATUS_DOOR_OPEN_R
+	    || gpMarioOriginal->mStatus == MARIO_STATUS_DOOR_OPEN_L) {
 		return true;
 	} else {
 		return false;

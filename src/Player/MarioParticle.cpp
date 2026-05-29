@@ -163,7 +163,7 @@ void TMario::rippleEffect()
 		SMS_EmitRipplePool(unk220, this);
 	} else {
 		SMS_EmitRippleSea(unk220, this);
-		if ((checkStatusFlag(STATUS_FLAG_SWIMMING))
+		if ((checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
 		    && mForwardVel > mParticleParams.mWaveEmitSpeed.get()) {
 			mWaterWakeAlpha = 0xFF;
 		}
@@ -192,7 +192,7 @@ void TMario::inOutWaterEffect(f32 waterY)
 	if (absVelY > mWaterEffectParams.mJumpIntoMdlEffectSpY.get()) {
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 
-		if (!checkStatusFlag(STATUS_FLAG_UNK200))
+		if (!checkStatusFlag(MARIO_STATUS_FLAG_UNK200))
 			gpMarioParticleManager->emit(PARTICLE_MS_M_TOBIKOMI_A, &pos, 0,
 			                             nullptr);
 
@@ -202,7 +202,7 @@ void TMario::inOutWaterEffect(f32 waterY)
 		return;
 	}
 
-	if (!checkStatusFlag(STATUS_FLAG_UNK200))
+	if (!checkStatusFlag(MARIO_STATUS_FLAG_UNK200))
 		gpMarioParticleManager->emit(PARTICLE_MS_M_TOBIKOMI_S_A, &pos, 0,
 		                             nullptr);
 
@@ -327,7 +327,7 @@ void TMario::treeSlipEffect()
 void TMario::frontSlipEffect()
 {
 	if (mGroundPlane->isWetGround()
-	    || (mStatus == STATUS_CATCH && mStatusState == 1)) {
+	    || (mStatus == MARIO_STATUS_CATCH && mStatusState == 1)) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_M_WATSLIDE_A,
 		                                            getCenterAnmMtx(), 3, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_M_WATSLIDE_B,
@@ -589,7 +589,7 @@ void TMario::emitFootPrintWithEffect(int effectId, int printId)
 {
 	int foot   = 2;
 	MtxPtr mtx = nullptr;
-	if (mStatus == STATUS_RUN) {
+	if (mStatus == MARIO_STATUS_RUN) {
 		if (onYoshi()) {
 			if (mYoshi->getFrameCtrl()->checkPass(47.0f)) {
 				mtx  = mYoshi->getMtxPtrFootL();
@@ -611,7 +611,7 @@ void TMario::emitFootPrintWithEffect(int effectId, int printId)
 		}
 	}
 
-	if (mStatus == STATUS_WAIT && onYoshi()) {
+	if (mStatus == MARIO_STATUS_WAIT && onYoshi()) {
 		if (mYoshi->getFrameCtrl()->checkPass(20.0f)
 		    || mYoshi->getFrameCtrl()->checkPass(71.0f)
 		    || mYoshi->getFrameCtrl()->checkPass(134.0f)) {
@@ -634,7 +634,7 @@ void TMario::emitFootPrintWithEffect(int effectId, int printId)
 		// wtf is this bs?
 		u32 b2 = printId > 0;
 		u32 b  = mForwardVel > 20.0f;
-		if (mStatus == STATUS_RUN && b && b2)
+		if (mStatus == MARIO_STATUS_RUN && b && b2)
 			gpMarioParticleManager->emit(printId, &unk1A8, 0, nullptr);
 
 		if (effectId > 0) {

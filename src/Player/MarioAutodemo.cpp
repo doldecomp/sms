@@ -81,7 +81,7 @@ BOOL TMario::readBillboard()
 	}
 	case 2:
 		if (gpMarDirector->unk124 == 0 || gpMarDirector->unk124 == 5) {
-			changePlayerStatus(STATUS_WAIT, 0, true);
+			changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 		}
 		break;
 	}
@@ -130,7 +130,7 @@ BOOL TMario::openDoor()
 			mPosition.x -= JMASSin(mFaceAngle.y) * 150.0f;
 			mPosition.z -= JMASCos(mFaceAngle.y) * 150.0f;
 		}
-		return changePlayerStatus(STATUS_WAIT, 0, true);
+		return changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 	}
 	return FALSE;
 }
@@ -140,7 +140,7 @@ BOOL TMario::sinkLoser()
 	setPlayerVelocity(0.0f);
 	setAnimation(ANIM_SINK_DOWN, 1.0f);
 	if (jumpProcess(0) == TRUE) {
-		changePlayerStatus(STATUS_LOSER_DOWN, 0, true);
+		changePlayerStatus(MARIO_STATUS_LOSER_DOWN, 0, true);
 	}
 	return FALSE;
 }
@@ -150,7 +150,7 @@ BOOL TMario::downLoser()
 	setPlayerVelocity(0.0f);
 	setAnimation(ANIM_LAND, 1.0f);
 	if (jumpProcess(0) == TRUE)
-		changePlayerStatus(STATUS_LOSER_DOWN, 0, true);
+		changePlayerStatus(MARIO_STATUS_LOSER_DOWN, 0, true);
 	return FALSE;
 }
 
@@ -257,7 +257,7 @@ BOOL TMario::isUnUsualStageStart()
 	// Pinna rollercoaster
 	if ((gpMarDirector->mMap == 0x3A)
 	    && (gpMarDirector->unk7D == 0 || gpMarDirector->unk7D == 1)) {
-		changePlayerStatus(STATUS_TOROCCO, 0, true);
+		changePlayerStatus(MARIO_STATUS_TOROCCO, 0, true);
 		unk114 |= 2;
 		if (mPinaRail != nullptr) {
 			mPinaRail->setBckFromIndex(0);
@@ -293,7 +293,7 @@ BOOL TMario::isUnUsualStageStart()
 		if (mCap != nullptr) {
 			mCap->unk4 |= 2;
 		}
-		changePlayerStatus(STATUS_DIVE, 0, true);
+		changePlayerStatus(MARIO_STATUS_DIVE, 0, true);
 		return TRUE;
 	}
 	return FALSE;
@@ -307,7 +307,7 @@ BOOL TMario::rollingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 	if (result != 0) {
 		return TRUE;
 	} else {
-		if (mStatus == STATUS_DISAPPEAR) {
+		if (mStatus == MARIO_STATUS_DISAPPEAR) {
 			unk114 &= ~2;
 			if (warpPos != nullptr) {
 				warpRequest(*warpPos, rotation);
@@ -318,7 +318,7 @@ BOOL TMario::rollingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 			                 &mFloorPosition.y, &mGroundPlane);
 			unk2BC = mFloorPosition.y;
 			setAnimation(ANIM_WAIT, 1.0f);
-			changePlayerStatus(STATUS_WARP_OUT, 0x200, true);
+			changePlayerStatus(MARIO_STATUS_WARP_OUT, 0x200, true);
 			return TRUE;
 		}
 	}
@@ -328,7 +328,7 @@ BOOL TMario::rollingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 BOOL TMario::returnStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation,
                          bool flag, int playerStatus)
 {
-	if (mStatus == STATUS_DISAPPEAR) {
+	if (mStatus == MARIO_STATUS_DISAPPEAR) {
 		int offsetPlayerStatus = playerStatus << 8;
 		if (flag == TRUE) {
 			unk114 &= ~2;
@@ -340,7 +340,8 @@ BOOL TMario::returnStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation,
 			                 &mFloorPosition.y, &mGroundPlane);
 			unk2BC = mFloorPosition.y;
 			setAnimation(ANIM_WAIT, 1.0f);
-			changePlayerStatus(STATUS_WARP_OUT, offsetPlayerStatus | 2, true);
+			changePlayerStatus(MARIO_STATUS_WARP_OUT, offsetPlayerStatus | 2,
+			                   true);
 		} else {
 			unk114 &= ~2;
 			if (warpPos != nullptr) {
@@ -352,7 +353,8 @@ BOOL TMario::returnStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation,
 			                 &mFloorPosition.y, &mGroundPlane);
 			unk2BC = mFloorPosition.y;
 			setAnimation(ANIM_WAIT, 1.0f);
-			changePlayerStatus(STATUS_WARP_OUT, offsetPlayerStatus | 1, true);
+			changePlayerStatus(MARIO_STATUS_WARP_OUT, offsetPlayerStatus | 1,
+			                   true);
 		}
 		return TRUE;
 	}
@@ -376,7 +378,7 @@ BOOL TMario::waitingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 		unk2BC = mFloorPosition.y;
 		setAnimation(ANIM_WAIT, 1.0f);
 		unk114 |= 2;
-		changePlayerStatus(STATUS_WAIT, 0, true);
+		changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 		return TRUE;
 	}
 	return FALSE;
@@ -384,7 +386,7 @@ BOOL TMario::waitingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 
 BOOL TMario::toroccoStart()
 {
-	changePlayerStatus(STATUS_TOROCCO, 0, true);
+	changePlayerStatus(MARIO_STATUS_TOROCCO, 0, true);
 	unk114 |= 2;
 	if (mPinaRail != nullptr) {
 		mPinaRail->setBckFromIndex(0);
@@ -430,7 +432,7 @@ BOOL TMario::warpOut()
 		if (mStatusTimer >= unkDelay) {
 			if (checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
 				unk114 |= 2;
-				return changePlayerStatus(STATUS_DIVE, 0, true);
+				return changePlayerStatus(MARIO_STATUS_DIVE, 0, true);
 			}
 			mStatusState = 2;
 		}
@@ -450,17 +452,17 @@ BOOL TMario::warpOut()
 		unk114 |= 2;
 		switch (mStatusArg & 0xff) {
 		case 0:
-			return changePlayerStatus(STATUS_JUMP_END, 0, true);
+			return changePlayerStatus(MARIO_STATUS_JUMP_END, 0, true);
 		case 1:
 			setAnimation(ANIM_DEMO_GATE_OUT, 1.0f);
 			if (isLast1AnimeFrame()) {
-				return changePlayerStatus(STATUS_WAIT, 0, true);
+				return changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 			}
 			break;
 		case 2:
 			setAnimation(ANIM_DEMO_GATE_OUT_GET2, 1.0f);
 			if (isLast1AnimeFrame()) {
-				return changePlayerStatus(STATUS_WAIT, 0, true);
+				return changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 			}
 			break;
 		}
@@ -502,7 +504,7 @@ BOOL TMario::electricDamage()
 		           mDmgParamsGraffitoElec.mMinSpeed.get(),
 		           mDmgParamsGraffitoElec.mMotor.get(), 0.0f, 0x3C);
 
-		return changePlayerStatus(STATUS_WAIT, 0, true);
+		return changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 	}
 	return false;
 }
@@ -525,7 +527,7 @@ BOOL TMario::footDowning()
 	case 2:
 		setAnimation(ANIM_SANDFILL_LEG_END, 1.0f);
 		if (isLast1AnimeFrame()) {
-			return changePlayerStatus(STATUS_WAIT, 0, false);
+			return changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 		}
 		break;
 	case 3:
@@ -535,7 +537,7 @@ BOOL TMario::footDowning()
 			sinkInSandEffect();
 		}
 		if (isLast1AnimeFrame()) {
-			return changePlayerStatus(STATUS_WAIT, 0, false);
+			return changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 		}
 		break;
 	}
@@ -562,56 +564,56 @@ BOOL TMario::demoMain()
 
 	BOOL result = FALSE;
 	switch (mStatus) {
-	case STATUS_WIN_DEMO:
+	case MARIO_STATUS_WIN_DEMO:
 		result = winDemo();
 		break;
 
-	case STATUS_READ_BILLBOARD:
+	case MARIO_STATUS_READ_BILLBOARD:
 		result = readBillboard();
 		break;
 
-	case STATUS_BOTTLE_IN:
+	case MARIO_STATUS_BOTTLE_IN:
 		result = bottleIn();
 		break;
 
-	case STATUS_ELEC_DOWN:
+	case MARIO_STATUS_ELEC_DOWN:
 		result = elecDowning();
 		break;
 
-	case STATUS_DOOR_OPEN_R:
-	case STATUS_DOOR_OPEN_L:
+	case MARIO_STATUS_DOOR_OPEN_R:
+	case MARIO_STATUS_DOOR_OPEN_L:
 		result = openDoor();
 		break;
 
-	case STATUS_SINK_LOSER:
+	case MARIO_STATUS_SINK_LOSER:
 		result = sinkLoser();
 		break;
 
-	case STATUS_DOWN_LOSER:
+	case MARIO_STATUS_DOWN_LOSER:
 		result = downLoser();
 		break;
 
-	case STATUS_WARP_OUT:
+	case MARIO_STATUS_WARP_OUT:
 		result = warpOut();
 		break;
 
-	case STATUS_WARP_IN:
+	case MARIO_STATUS_WARP_IN:
 		result = warpIn();
 		break;
 
-	case STATUS_ELECTRIC_DAMAGE:
+	case MARIO_STATUS_ELECTRIC_DAMAGE:
 		result = electricDamage();
 		break;
 
-	case STATUS_FOOT_DOWN:
+	case MARIO_STATUS_FOOT_DOWN:
 		result = footDowning();
 		break;
 
-	case STATUS_NOMOTION:
+	case MARIO_STATUS_NOMOTION:
 		result = nomotion();
 		break;
 
-	case STATUS_DISAPPEAR:
+	case MARIO_STATUS_DISAPPEAR:
 		result = disappear();
 		break;
 	}

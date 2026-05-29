@@ -56,7 +56,7 @@ void TMario::decHP(int hp)
 
 		if (unk12C < 1.0f) {
 			loserExec();
-			changePlayerStatus(STATUS_SWIM_DOWN, 0, true);
+			changePlayerStatus(MARIO_STATUS_SWIM_DOWN, 0, true);
 		}
 		return;
 	}
@@ -88,13 +88,13 @@ bool TMario::isTakeSituation(THitActor* object)
 	if (unk14C > 0)
 		return false;
 
-	if (checkStatusFlag(STATUS_FLAG_UNK80000000))
+	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK80000000))
 		return false; // Airborn?
 
-	if (checkStatusFlag(STATUS_FLAG_UNK10000000))
+	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK10000000))
 		return false;
 
-	if (mStatus == STATUS_CATCH)
+	if (mStatus == MARIO_STATUS_CATCH)
 		return false;
 
 	if (onYoshi())
@@ -134,17 +134,17 @@ bool TMario::canTake(THitActor* object)
 
 BOOL TMario::trampleExec(THitActor* param_1)
 {
-	if (!checkStatusFlag(STATUS_FLAG_JUMPING))
+	if (!checkStatusFlag(MARIO_STATUS_FLAG_JUMPING))
 		return false;
 
-	if (mStatus == STATUS_DIVE)
+	if (mStatus == MARIO_STATUS_DIVE)
 		return false;
 
 	if (param_1->receiveMessage(this, HIT_MESSAGE_TRAMPLE) == FALSE)
 		return false;
 
-	if (mStatus == STATUS_BROAD_JUMP) {
-		changePlayerStatus(STATUS_BACK_JUMP, 0, false);
+	if (mStatus == MARIO_STATUS_BROAD_JUMP) {
+		changePlayerStatus(MARIO_STATUS_BACK_JUMP, 0, false);
 	} else {
 		switch (mAnimationId) {
 		case ANIM_STEP1:
@@ -159,8 +159,8 @@ BOOL TMario::trampleExec(THitActor* param_1)
 			setAnimation(ANIM_STEP1, 1.0f);
 			break;
 		}
-		changePlayerStatus(STATUS_TRAMPLE, 0, false);
-		setStatusToJumping(STATUS_TRAMPLE, 0);
+		changePlayerStatus(MARIO_STATUS_TRAMPLE, 0, false);
+		setStatusToJumping(MARIO_STATUS_TRAMPLE, 0);
 	}
 
 	rumbleStart(0x15, mMotorParams.mMotorTrample.get());
@@ -206,8 +206,9 @@ void TMario::normalizeNozzle()
 void TMario::loserExec()
 {
 	// volatile u32 padding[2];
-	if (mStatus != STATUS_SWIM_DOWN && mStatus != STATUS_ELEC_DOWN
-	    && mStatus != STATUS_SWIM_P_DOWN && mStatus != STATUS_DOWN_LOSER) {
+	if (mStatus != MARIO_STATUS_SWIM_DOWN && mStatus != MARIO_STATUS_ELEC_DOWN
+	    && mStatus != MARIO_STATUS_SWIM_P_DOWN
+	    && mStatus != MARIO_STATUS_DOWN_LOSER) {
 		unk118 |= MARIO_FLAG_GAME_OVER;
 		mHealth = 0;
 
@@ -219,18 +220,18 @@ void TMario::loserExec()
 			mYoshi->kill();
 		}
 
-		if (checkStatusFlag(STATUS_FLAG_SWIMMING)) {
+		if (checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING)) {
 			if (unk12C < 1.0f) {
-				changePlayerStatus(STATUS_SWIM_DOWN, 0, true);
+				changePlayerStatus(MARIO_STATUS_SWIM_DOWN, 0, true);
 			} else {
-				changePlayerStatus(STATUS_SWIM_P_DOWN, 0, true);
+				changePlayerStatus(MARIO_STATUS_SWIM_P_DOWN, 0, true);
 			}
 			return;
 		}
-		if (mStatus == STATUS_ELECTRIC_DAMAGE) {
-			changePlayerStatus(STATUS_ELEC_DOWN, 0, true);
+		if (mStatus == MARIO_STATUS_ELECTRIC_DAMAGE) {
+			changePlayerStatus(MARIO_STATUS_ELEC_DOWN, 0, true);
 		} else {
-			changePlayerStatus(STATUS_DOWN_LOSER, 0, true);
+			changePlayerStatus(MARIO_STATUS_DOWN_LOSER, 0, true);
 		}
 	}
 }
@@ -280,22 +281,22 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 {
 	// volatile u32 padding[10];
 	u32 animationTypes[16] = {
-		STATUS_SAFE_BACK_DOWN,
-		STATUS_SHORT_BACK_DOWN,
-		STATUS_BACK_DOWN,
-		STATUS_WAIT,
-		STATUS_JUMP_SHORT_BACK_DOWN,
-		STATUS_JUMP_SHORT_BACK_DOWN,
-		STATUS_JUMP_BACK_DOWN,
-		STATUS_WAIT,
-		STATUS_SAFE_FORE_DOWN,
-		STATUS_SHORT_FORE_DOWN,
-		STATUS_FORE_DOWN,
-		STATUS_WAIT,
-		STATUS_JUMP_SHORT_FORE_DOWN,
-		STATUS_JUMP_SHORT_FORE_DOWN,
-		STATUS_JUMP_FORE_DOWN,
-		STATUS_WAIT,
+		MARIO_STATUS_SAFE_BACK_DOWN,
+		MARIO_STATUS_SHORT_BACK_DOWN,
+		MARIO_STATUS_BACK_DOWN,
+		MARIO_STATUS_WAIT,
+		MARIO_STATUS_JUMP_SHORT_BACK_DOWN,
+		MARIO_STATUS_JUMP_SHORT_BACK_DOWN,
+		MARIO_STATUS_JUMP_BACK_DOWN,
+		MARIO_STATUS_WAIT,
+		MARIO_STATUS_SAFE_FORE_DOWN,
+		MARIO_STATUS_SHORT_FORE_DOWN,
+		MARIO_STATUS_FORE_DOWN,
+		MARIO_STATUS_WAIT,
+		MARIO_STATUS_JUMP_SHORT_FORE_DOWN,
+		MARIO_STATUS_JUMP_SHORT_FORE_DOWN,
+		MARIO_STATUS_JUMP_FORE_DOWN,
+		MARIO_STATUS_WAIT,
 	};
 
 	if (isInvincible())
@@ -315,13 +316,13 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 		return;
 	}
 
-	u32 animOffset1 = checkStatusFlag(STATUS_FLAG_JUMPING) ? 1 : 0;
+	u32 animOffset1 = checkStatusFlag(MARIO_STATUS_FLAG_JUMPING) ? 1 : 0;
 	if (onYoshi()) {
 		animOffset1 = true;
 	}
 
 	if (damageAnimType == 3) {
-		if (mStatus == STATUS_RUN || mStatus == STATUS_OIL_RUN) {
+		if (mStatus == MARIO_STATUS_RUN || mStatus == MARIO_STATUS_OIL_RUN) {
 			setUpperDamageRun();
 		}
 	} else {
@@ -345,13 +346,13 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 
 		// Inline?
 		bool canPlayAnimation = true;
-		if (mStatus == STATUS_TOROCCO)
+		if (mStatus == MARIO_STATUS_TOROCCO)
 			canPlayAnimation = false;
 
-		if (mStatus == STATUS_DIVE)
+		if (mStatus == MARIO_STATUS_DIVE)
 			canPlayAnimation = false;
 
-		if (checkStatusFlag(STATUS_FLAG_SWIMMING))
+		if (checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
 			canPlayAnimation = true;
 
 		if (canPlayAnimation) {
@@ -360,7 +361,7 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 			                               + animOffset2 * 8];
 			if (mHolder == nullptr || mHolder->isActorType(0x40000098)) {
 				// Knocked from a wire hang by damage?
-				changePlayerDropping(STATUS_WIRE_HANG_LAND_SAFE_DOWN, 0);
+				changePlayerDropping(MARIO_STATUS_WIRE_HANG_LAND_SAFE_DOWN, 0);
 			} else {
 				changePlayerDropping(statusIdx, 0);
 			}
@@ -422,12 +423,13 @@ void TMario::considerTake()
 		check = true;
 	}
 
-	if (mStatus == STATUS_TAKE || checkStatusFlag(STATUS_FLAG_UNK80000000)) {
+	if (mStatus == MARIO_STATUS_TAKE
+	    || checkStatusFlag(MARIO_STATUS_FLAG_UNK80000000)) {
 		check = true;
 	}
 
-	if (mStatus == STATUS_PULLING || mStatus == STATUS_PULL_JUMP
-	    || mStatus == STATUS_OIL_PULLING) {
+	if (mStatus == MARIO_STATUS_PULLING || mStatus == MARIO_STATUS_PULL_JUMP
+	    || mStatus == MARIO_STATUS_OIL_PULLING) {
 		check = true;
 	}
 
@@ -448,10 +450,10 @@ void TMario::considerTake()
 	if (mHolder != nullptr) {
 		// Probably an inline
 		BOOL check2 = false;
-		u32 test    = mStatus & STATUS_TYPE_AND_ID_MASK;
+		u32 test    = mStatus & MARIO_STATUS_TYPE_AND_ID_MASK;
 		if ((0x150 <= test && 0x15c >= test) || (0x140 <= test && test <= 0x143)
-		    || checkStatusFlag(STATUS_FLAG_UNK1000)
-		    || mStatus == STATUS_TAKEN) {
+		    || checkStatusFlag(MARIO_STATUS_FLAG_UNK1000)
+		    || mStatus == MARIO_STATUS_TAKEN) {
 			check2 = true;
 		}
 

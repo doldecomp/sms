@@ -224,7 +224,7 @@ void TNozzleBase::calcGunAngle(const TMarioControllerWork& work)
 	}
 
 	s16 angle;
-	if (mFludd->mMario->mStatus == TMario::STATUS_SQUAT) {
+	if (mFludd->mMario->mStatus == MARIO_STATUS_SQUAT) {
 		// TODO: Wrong reguster used, using r3 instead of r4
 		angle = unk36E
 		        + (s16)(mFludd->mMario->mGamePad->mCompSPos[0 * 2 + 1]

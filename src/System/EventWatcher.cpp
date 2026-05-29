@@ -685,7 +685,7 @@ static void evSetMarioWaiting(TSpcTypedInterp<TEventWatcher>* interp,
                               u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
-	gpMarioOriginal->changePlayerStatus(TMario::STATUS_WAIT, 0, true);
+	gpMarioOriginal->changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 	interp->push();
 }
 
