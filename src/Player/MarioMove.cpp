@@ -24,7 +24,7 @@
 
 f32 TMario::getJumpAccelControl() const
 {
-	if (mStatus == STATUS_WIRE_JUMP)
+	if (mStatus == MARIO_STATUS_WIRE_JUMP)
 		return mWireParams.mWireJumpAccelControl.get();
 
 	return mJumpParams.mJumpAccelControl.get();
@@ -32,7 +32,7 @@ f32 TMario::getJumpAccelControl() const
 
 f32 TMario::getJumpSlideControl() const
 {
-	if (mStatus == STATUS_WIRE_JUMP)
+	if (mStatus == MARIO_STATUS_WIRE_JUMP)
 		return mWireParams.mWireJumpSlideControl.get();
 
 	if (onYoshi() && (mYoshi->mFlutterState == 1 ? true : false))
@@ -76,7 +76,7 @@ bool TMario::isInvincible() const
 
 	if (gpMarDirector->isDemoMode3() || gpMarDirector->isDemoMode4()
 	    || gpMarDirector->isTalkModeNow()
-	    || checkStatusFlag(STATUS_FLAG_UNK1000))
+	    || checkStatusFlag(MARIO_STATUS_FLAG_UNK1000))
 		return true;
 
 	return false;
@@ -156,12 +156,12 @@ void TMario::warpRequest(const JGeometry::TVec3<f32>& pos, f32 angle)
 	gpCamera->addMoveCameraAndMario(offset);
 	if (gpMarDirector->mMap != 7)
 		mGamePad->onNeutralMarioKey();
-	changePlayerStatus(STATUS_WAIT, 0, 1);
+	changePlayerStatus(MARIO_STATUS_WAIT, 0, 1);
 }
 
 void TMario::flowMove(const JGeometry::TVec3<f32>& flow)
 {
-	if (checkStatusFlag(STATUS_FLAG_SWIMMING) == true) {
+	if (checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING) == true) {
 		mPosition.x += flow.x;
 		mPosition.y += flow.y;
 		mPosition.z += flow.z;
@@ -193,10 +193,10 @@ BOOL TMario::considerRotateJumpStart()
 	if (checkStickRotate(&spC)) {
 		switch (spC) {
 		case 2:
-			changePlayerStatus(STATUS_RIGHT_ROTATE_JUMP, 0, 0);
+			changePlayerStatus(MARIO_STATUS_RIGHT_ROTATE_JUMP, 0, 0);
 			break;
 		case 3:
-			changePlayerStatus(STATUS_LEFT_ROTATE_JUMP, 0, 0);
+			changePlayerStatus(MARIO_STATUS_LEFT_ROTATE_JUMP, 0, 0);
 			break;
 		}
 		return 1;
@@ -207,7 +207,7 @@ BOOL TMario::considerRotateJumpStart()
 
 BOOL TMario::canBendBody()
 {
-	u32 act = mStatus & STATUS_TYPE_AND_ID_MASK;
+	u32 act = mStatus & MARIO_STATUS_TYPE_AND_ID_MASK;
 	if (act >= 0x14B && act <= 0x14F)
 		return FALSE;
 	if (act >= 0x140 && act <= 0x143)
@@ -416,7 +416,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		                   mDirtyParams.mPolSizeJump.get());
 
 	switch (status) {
-	case STATUS_JUMP:
+	case MARIO_STATUS_JUMP:
 	case 0x89C:
 		setPlayerJumpSpeed(0.25f, 42.0f);
 		mForwardVel *= 0.8f;
@@ -424,7 +424,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		if (!mGroundPlane->isIllegalData()) {
 			if (mGroundPlane->isThing2()) {
 				mVel.y     = 0.01f * mGroundPlane->getActiveJumpPower();
-				nextStatus = STATUS_FORCE_JUMP;
+				nextStatus = MARIO_STATUS_FORCE_JUMP;
 				break;
 			} else if (mGroundPlane->isThing3()) {
 				mVel.y += -unkBC
@@ -436,7 +436,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 					((THitActor*)mGroundPlane->mActor)->receiveMessage(this, 0);
 
 				startVoice(MSD_SE_MV24_JUMP_SPECIAL_01);
-				nextStatus = STATUS_FORCE_JUMP;
+				nextStatus = MARIO_STATUS_FORCE_JUMP;
 				break;
 			}
 		}
@@ -447,35 +447,35 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 			startVoice(MSD_SE_MV21_JUMP_SMALL_01);
 		break;
 
-	case STATUS_SECOND_JUMP:
+	case MARIO_STATUS_SECOND_JUMP:
 		setPlayerJumpSpeed(mJumpParams.mSecJumpSpeedMult.get(),
 		                   mJumpParams.mSecJumpForce.get());
 		mForwardVel *= mJumpParams.mSecJumpXZMult.get();
 		startVoice(MSD_SE_MV22_JUMP_MID_01);
 		break;
 
-	case STATUS_ULTRA_JUMP:
+	case MARIO_STATUS_ULTRA_JUMP:
 		setPlayerJumpSpeed(mJumpParams.mUltraJumpSpeedMult.get(),
 		                   mJumpParams.mUltraJumpForce.get());
 		mForwardVel *= mJumpParams.mUltraJumpXZMult.get();
 		startVoice(MSD_SE_MV23_JUMP_LARGE_01);
 		break;
 
-	case STATUS_FORCE_JUMP:
+	case MARIO_STATUS_FORCE_JUMP:
 		mVel.y = mGroundPlane != nullptr
 		             ? 0.01f * mGroundPlane->getActiveJumpPower()
 		             : 0.0f;
 		startVoice(MSD_SE_MV22_JUMP_MID_01);
 		break;
 
-	case STATUS_LEFT_ROTATE_JUMP:
-	case STATUS_RIGHT_ROTATE_JUMP:
+	case MARIO_STATUS_LEFT_ROTATE_JUMP:
+	case MARIO_STATUS_RIGHT_ROTATE_JUMP:
 		setPlayerJumpSpeed(0.25f, mJumpParams.mRotateJumpForceY.get());
 		mForwardVel *= 0.8f;
 		startVoice(MSD_SE_MV23_JUMP_LARGE_01);
 		break;
 
-	case STATUS_FIRE_JUMP:
+	case MARIO_STATUS_FIRE_JUMP:
 		mVel.y      = 31.5f;
 		mForwardVel = 8.0f;
 		break;
@@ -496,34 +496,34 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		break;
 	}
 
-	case STATUS_BACK_JUMP:
+	case MARIO_STATUS_BACK_JUMP:
 		mForwardVel = mJumpParams.mBackJumpForce.get();
 		setPlayerJumpSpeed(0.0f, mJumpParams.mBackJumpForceY.get());
 		startVoice(MSD_SE_MV23_JUMP_LARGE_01);
 		break;
 
-	case STATUS_WALL_JUMP:
+	case MARIO_STATUS_WALL_JUMP:
 		setPlayerJumpSpeed(0.0f, 62.0f);
 		mForwardVel = 24.0f;
 		startVoice(MSD_SE_MV22_JUMP_MID_01);
 		break;
 
-	case STATUS_U_TURN_JUMP:
+	case MARIO_STATUS_U_TURN_JUMP:
 		setPlayerJumpSpeed(0.0f, mJumpParams.mTurnJumpForce.get());
 		mForwardVel  = 8.0f;
 		mFaceAngle.y = mIntendedYaw;
 		startVoice(MSD_SE_MV23_JUMP_LARGE_01);
 		break;
 
-	case STATUS_MISS_JUMP:
+	case MARIO_STATUS_MISS_JUMP:
 		startVoice(MSD_SE_MV21_JUMP_SMALL_01);
 		setPlayerJumpSpeed(0.25f, 42.0f);
 		break;
 
-	case STATUS_THROWN_DOWN:
+	case MARIO_STATUS_THROWN_DOWN:
 		break;
 
-	case STATUS_FIRE_DOWN:
+	case MARIO_STATUS_FIRE_DOWN:
 		if (mStatusArg != 2) {
 			mVel.y = mJumpParams.mFireDownForce.get();
 			if (mStatusArg == 0)
@@ -531,7 +531,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		}
 		break;
 
-	case STATUS_JUMP_CATCH: {
+	case MARIO_STATUS_JUMP_CATCH: {
 		startVoice(MSD_SE_MV13_ACTION_SMALL_01);
 
 		f32 jumpSpeed = 15.0f + mForwardVel;
@@ -546,19 +546,19 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		break;
 	}
 
-	case STATUS_BROAD_JUMP:
+	case MARIO_STATUS_BROAD_JUMP:
 		startVoice(MSD_SE_MV22_JUMP_MID_01);
 		mForwardVel = mJumpParams.mBroadJumpForce.get();
 		mVel.y      = mJumpParams.mBroadJumpForceY.get();
 		break;
 
-	case STATUS_ROTATE_BROAD_JUMP:
+	case MARIO_STATUS_ROTATE_BROAD_JUMP:
 		startVoice(MSD_SE_MV22_JUMP_MID_01);
 		mForwardVel = mJumpParams.mRotBroadJumpForce.get();
 		mVel.y      = mJumpParams.mRotBroadJumpForceY.get();
 		break;
 
-	case STATUS_ROCKET: {
+	case MARIO_STATUS_ROCKET: {
 		if (mWaterGun != nullptr) {
 			if ((int)mWaterGun->mCurrentNozzle == TWaterGun::Rocket) {
 				startVoice(MSD_SE_MV24_JUMP_SPECIAL_01);
@@ -573,7 +573,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		break;
 	}
 
-	case STATUS_TRAMPLE:
+	case MARIO_STATUS_TRAMPLE:
 		switch (mAnimationId) {
 		case ANIM_STEP2:
 			startVoice(MSD_SE_MV22_JUMP_MID_01);
@@ -591,7 +591,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		mForwardVel *= 0.8f;
 		break;
 
-	case STATUS_WIRE_JUMP:
+	case MARIO_STATUS_WIRE_JUMP:
 		setPlayerJumpSpeed(0.25f, 42.0f);
 
 		mForwardVel = 0.0f;
@@ -603,7 +603,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		startVoice(MSD_SE_MV23_JUMP_LARGE_01);
 		break;
 
-	case STATUS_WIRE_ROLL_JUMP: {
+	case MARIO_STATUS_WIRE_ROLL_JUMP: {
 		if (arg == 0) {
 			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * 1.0f;
 			mVel.y        = jumpPower * JMASSin(0xE000);
@@ -627,7 +627,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		break;
 	}
 
-	case STATUS_PULL_JUMP:
+	case MARIO_STATUS_PULL_JUMP:
 		setPlayerJumpSpeed(0.0f, 42.0f);
 
 		mForwardVel = 0.0f;
@@ -663,7 +663,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	}
 
 	unk104 = mPosition.y;
-	if (nextStatus & STATUS_FLAG_UNK2000000)
+	if (nextStatus & MARIO_STATUS_FLAG_UNK2000000)
 		unk78 |= 0x100;
 	else
 		unk78 &= 0xFFFFFEFF;
@@ -676,19 +676,19 @@ u32 TMario::setStatusToRunning(u32 status, u32)
 	f32 mag = mIntendedMag <= 8.0f ? 8.0f : mIntendedMag;
 
 	switch (status) {
-	case STATUS_RUN:
+	case MARIO_STATUS_RUN:
 		if (0.0f <= mForwardVel && mForwardVel < mag)
 			mForwardVel = mag;
 		break;
 
-	case STATUS_SLIP:
+	case MARIO_STATUS_SLIP:
 		s16 diff     = mSlopeAngle - mFaceAngle.y;
 		bool inFront = diff > -0x4000 && diff < 0x4000;
 
 		if (inFront)
-			status = STATUS_SLIP_FORE;
+			status = MARIO_STATUS_SLIP_FORE;
 		else
-			status = STATUS_SLIP_BACK;
+			status = MARIO_STATUS_SLIP_BACK;
 		startVoice(MSD_SE_MV27_SPRISE_01);
 		break;
 	}
@@ -716,24 +716,24 @@ int TMario::changePlayerStatus(u32 status, u32 arg, bool force)
 	if (!force) {
 		if (status == mStatus)
 			return 0;
-		if (checkStatusFlag(STATUS_FLAG_UNK1000))
+		if (checkStatusFlag(MARIO_STATUS_FLAG_UNK1000))
 			return 0;
 	}
 
-	if (mStatus == STATUS_LOSER_DOWN)
+	if (mStatus == MARIO_STATUS_LOSER_DOWN)
 		return 0;
 
 	if (SMS_isDivingMap()) {
-		if (status != STATUS_TAKEN && status != STATUS_DIVE
-		    && status != STATUS_WIN_DEMO)
+		if (status != MARIO_STATUS_TAKEN && status != MARIO_STATUS_DIVE
+		    && status != MARIO_STATUS_WIN_DEMO)
 			return 0;
 	}
 
-	switch (status & STATUS_TYPE_MASK) {
-	case STATUS_TYPE_RUNNING:
+	switch (status & MARIO_STATUS_TYPE_MASK) {
+	case MARIO_STATUS_TYPE_RUNNING:
 		status = setStatusToRunning(status, arg);
 		break;
-	case STATUS_TYPE_JUMPING:
+	case MARIO_STATUS_TYPE_JUMPING:
 		status = setStatusToJumping(status, arg);
 		break;
 	}
@@ -762,12 +762,12 @@ BOOL TMario::changePlayerTriJump()
 			mFaceAngle.y = a + matan(z, x);
 		}
 		dropObject();
-		changePlayerStatus(STATUS_MISS_JUMP, 0, false);
+		changePlayerStatus(MARIO_STATUS_MISS_JUMP, 0, false);
 	} else {
 		if (considerRotateJumpStart())
 			return 1;
 
-		changePlayerStatus(STATUS_JUMP, 0, false);
+		changePlayerStatus(MARIO_STATUS_JUMP, 0, false);
 	}
 
 	return 1;
@@ -789,7 +789,7 @@ int TMario::changePlayerJumping(u32 param_1, u32 param_2)
 			mFaceAngle.y = a + matan(z, x);
 		}
 		dropObject();
-		changePlayerStatus(STATUS_MISS_JUMP, 0, false);
+		changePlayerStatus(MARIO_STATUS_MISS_JUMP, 0, false);
 	} else {
 		if (considerRotateJumpStart())
 			return 1;
@@ -811,17 +811,17 @@ int TMario::checkAllMotions()
 	if (mInput & 2) {
 		if (considerRotateJumpStart())
 			return 1;
-		return changePlayerStatus(STATUS_JUMP, 0, 0);
+		return changePlayerStatus(MARIO_STATUS_JUMP, 0, 0);
 	}
 
 	if (mInput & 4)
-		return changePlayerStatus(STATUS_LANDING, 0, 0);
+		return changePlayerStatus(MARIO_STATUS_LANDING, 0, 0);
 
 	if (mInput & 1)
-		return changePlayerStatus(STATUS_RUN, 0, 0);
+		return changePlayerStatus(MARIO_STATUS_RUN, 0, 0);
 
 	if (mInput & 8)
-		return changePlayerStatus(STATUS_SLIP, 0, 0);
+		return changePlayerStatus(MARIO_STATUS_SLIP, 0, 0);
 
 	return 0;
 }
@@ -850,7 +850,8 @@ void TMario::checkGraffitoFire()
 	if (mPosition.y - mFloorPosition.y > mGraffitoParams.mFireHeight.get())
 		return;
 
-	if (mStatus == STATUS_FIRE_DOWN || mStatus == STATUS_FIRE_JUMP_END)
+	if (mStatus == MARIO_STATUS_FIRE_DOWN
+	    || mStatus == MARIO_STATUS_FIRE_JUMP_END)
 		mFaceAngle.y += 0x8000;
 
 	f32 fVar2 = mForwardVel;
@@ -865,7 +866,7 @@ void TMario::checkGraffitoFire()
 
 	unk14C = mGraffitoParams.mFireInvincibleTime.get();
 	dropObject();
-	changePlayerStatus(STATUS_FIRE_DOWN, 1, false);
+	changePlayerStatus(MARIO_STATUS_FIRE_DOWN, 1, false);
 	gpMarioParticleManager->emitAndBindToPosPtr(6, &mPosition, 0, nullptr);
 	SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE, &mPosition, 0,
 	                                nullptr, 0, 4);
@@ -878,12 +879,14 @@ void TMario::checkGraffitoSlip()
 	if (isTouchGround4cm()) {
 		unk360 = mDeParams.mFootPrintTimerMax.get();
 
-		if (mStatus == STATUS_OIL_SLIP || mStatus == STATUS_OIL_SLOPE) {
+		if (mStatus == MARIO_STATUS_OIL_SLIP
+		    || mStatus == MARIO_STATUS_OIL_SLOPE) {
 			unk138 = mDirtyParams.mBrakeStartValSlip.get();
 			unk13C = mDirtyParams.mDirtyTimeSlip.get();
 		}
 
-		if (mStatus == STATUS_OIL_RUN || mStatus == STATUS_OIL_PULLING) {
+		if (mStatus == MARIO_STATUS_OIL_RUN
+		    || mStatus == MARIO_STATUS_OIL_PULLING) {
 			unk138 = mDirtyParams.mBrakeStartValRun.get();
 			unk13C = mDirtyParams.mDirtyTimeRun.get();
 		}
@@ -892,25 +895,26 @@ void TMario::checkGraffitoSlip()
 			unk138 = mDirtyParams.mBrakeStartValSlip.get();
 			unk13C = mDirtyParams.mDirtyTimeSlip.get();
 
-			changePlayerStatus(STATUS_OIL_SLOPE, 0, false);
+			changePlayerStatus(MARIO_STATUS_OIL_SLOPE, 0, false);
 			startVoice(MSD_SE_MV28_SPRISE_SMALL_01);
-		} else if (mStatus == STATUS_JUMP_CATCH || mStatus == STATUS_CATCH
-		           || mStatus == STATUS_OIL_SLIP
-		           || mStatus == STATUS_OIL_SLOPE) {
+		} else if (mStatus == MARIO_STATUS_JUMP_CATCH
+		           || mStatus == MARIO_STATUS_CATCH
+		           || mStatus == MARIO_STATUS_OIL_SLIP
+		           || mStatus == MARIO_STATUS_OIL_SLOPE) {
 			unk138 = mDirtyParams.mBrakeStartValSlip.get();
 			unk13C = mDirtyParams.mDirtyTimeSlip.get();
 
-			changePlayerStatus(STATUS_OIL_SLIP, 0, false);
-			if (mPrevStatus != STATUS_OIL_SLIP)
+			changePlayerStatus(MARIO_STATUS_OIL_SLIP, 0, false);
+			if (mPrevStatus != MARIO_STATUS_OIL_SLIP)
 				startVoice(MSD_SE_MV28_SPRISE_SMALL_01);
-		} else if (mStatus != STATUS_CATCH_LOST) {
+		} else if (mStatus != MARIO_STATUS_CATCH_LOST) {
 			unk138 = mDirtyParams.mBrakeStartValRun.get();
 			unk13C = mDirtyParams.mDirtyTimeRun.get();
 
-			if (mStatus == STATUS_PULLING)
-				changePlayerStatus(STATUS_OIL_PULLING, 0, false);
+			if (mStatus == MARIO_STATUS_PULLING)
+				changePlayerStatus(MARIO_STATUS_OIL_PULLING, 0, false);
 			else
-				changePlayerStatus(STATUS_OIL_RUN, 0, false);
+				changePlayerStatus(MARIO_STATUS_OIL_RUN, 0, false);
 		}
 
 		if (!checkFlag(MARIO_FLAG_UNK_40))
@@ -925,7 +929,8 @@ void TMario::checkGraffitoSlip()
 			unk34E = mDirtyParams.mFogTimeYellow.get()
 			         + mDirtyParams.mFogTimeRed.get();
 		}
-	} else if (mStatus == STATUS_OIL_SLIP || mStatus == STATUS_OIL_SLOPE) {
+	} else if (mStatus == MARIO_STATUS_OIL_SLIP
+	           || mStatus == MARIO_STATUS_OIL_SLOPE) {
 		unk138 = mDirtyParams.mBrakeSlipNoPollute.get();
 		unk13C = mDirtyParams.mDirtyTimeSlip.get();
 	}
@@ -949,10 +954,10 @@ void TMario::checkGraffitoElec()
 	if (isInvincible())
 		return;
 
-	if (((mStatus & STATUS_TYPE_MASK) == STATUS_TYPE_WAITING
-	     || (mStatus & STATUS_TYPE_MASK) == STATUS_TYPE_RUNNING)
+	if (((mStatus & MARIO_STATUS_TYPE_MASK) == MARIO_STATUS_TYPE_WAITING
+	     || (mStatus & MARIO_STATUS_TYPE_MASK) == MARIO_STATUS_TYPE_RUNNING)
 	    && unk360 <= 0) {
-		changePlayerStatus(STATUS_ELECTRIC_DAMAGE, 0, false);
+		changePlayerStatus(MARIO_STATUS_ELECTRIC_DAMAGE, 0, false);
 		SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_ELEC, &mPosition, 0,
 		                                nullptr, 0, 4);
 		SMSGetMSound()->startSoundActor(MSD_SE_EF_LIGHTNING, &mPosition, 0,
@@ -1138,12 +1143,12 @@ void TMario::dirtyLimitCheck()
 void TMario::thinkDirty()
 {
 	if (checkFlag(MARIO_FLAG_UNK_40)) {
-		if (mStatus == STATUS_RUN || mStatus == STATUS_OIL_RUN)
+		if (mStatus == MARIO_STATUS_RUN || mStatus == MARIO_STATUS_OIL_RUN)
 			unk134 += mDirtyParams.mIncRunning.get();
-		if (mStatus == STATUS_CATCH || mStatus == STATUS_OIL_SLIP
-		    || mStatus == STATUS_OIL_SLOPE)
+		if (mStatus == MARIO_STATUS_CATCH || mStatus == MARIO_STATUS_OIL_SLIP
+		    || mStatus == MARIO_STATUS_OIL_SLOPE)
 			unk134 += mDirtyParams.mIncCatching.get();
-		if (mStatus == STATUS_SLIP)
+		if (mStatus == MARIO_STATUS_SLIP)
 			unk134 += mDirtyParams.mIncSlipping.get();
 	}
 
@@ -1154,8 +1159,8 @@ void TMario::thinkDirty()
 		unk134 -= mDirtyParams.mDecSwimming.get();
 	}
 
-	if (mStatus == STATUS_LEFT_ROTATE_JUMP
-	    || mStatus == STATUS_RIGHT_ROTATE_JUMP) {
+	if (mStatus == MARIO_STATUS_LEFT_ROTATE_JUMP
+	    || mStatus == MARIO_STATUS_RIGHT_ROTATE_JUMP) {
 		unk134 -= mDirtyParams.mDecRotJump.get();
 		unk360 = 0;
 	}
@@ -1174,7 +1179,7 @@ void TMario::thinkDirty()
 
 void TMario::thinkHeight()
 {
-	if (checkStatusFlag(STATUS_FLAG_JUMPING)) {
+	if (checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)) {
 		f32 height = mPosition.y - mFloorPosition.y;
 		if (unk36C < height)
 			unk36C = height;
@@ -1227,7 +1232,7 @@ void TMario::checkSink()
 
 			if (unk368 > mGraffitoParams.mSinkTime.get()) {
 				loserExec();
-				changePlayerStatus(STATUS_SINK_LOSER, 0, false);
+				changePlayerStatus(MARIO_STATUS_SINK_LOSER, 0, false);
 			}
 			SMS_EmitSinkInPollutionEffect(mPosition, mGroundPlane->getNormal(),
 			                              true);
@@ -1245,7 +1250,7 @@ void TMario::checkSink()
 			mSlideVelX  = 0.0f;
 			mSlideVelZ  = 0.0f;
 			loserExec();
-			changePlayerStatus(STATUS_SINK_LOSER, 0, false);
+			changePlayerStatus(MARIO_STATUS_SINK_LOSER, 0, false);
 			return;
 		}
 	}
@@ -1265,12 +1270,12 @@ static void startForceJumpSound2(Vec* param_1, u32 param_2, f32 param_3,
 void TMario::checkEnforceJump()
 {
 	if (mGroundPlane->isLegal() && mGroundPlane->isBounceOnLanding()
-	    && isTouchGround4cm() && (mPrevStatus & STATUS_FLAG_JUMPING)) {
+	    && isTouchGround4cm() && (mPrevStatus & MARIO_STATUS_FLAG_JUMPING)) {
 
 		startForceJumpSound2(&mPosition, mSoundFlags, 0.0f,
 		                     mGroundPlane->getData());
 		startVoice(MSD_SE_MV24_JUMP_SPECIAL_01);
-		changePlayerStatus(STATUS_FORCE_JUMP, 0, 0);
+		changePlayerStatus(MARIO_STATUS_FORCE_JUMP, 0, 0);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 		if (mGroundPlane->mActor != nullptr)
 			((THitActor*)mGroundPlane->mActor)->receiveMessage(this, 0);
@@ -1507,12 +1512,13 @@ void TMario::checkController(JDrama::TGraphics*)
 					           == 1) {
 						unk118 |= MARIO_FLAG_FLUDD_EMITTING;
 						startSoundActor(MSD_SE_PO_SNIPER_TRIGGER);
-						if (checkStatusFlag(STATUS_FLAG_SWIMMING))
-							changePlayerStatus(STATUS_SWIM_PADDLE, 0, false);
+						if (checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
+							changePlayerStatus(MARIO_STATUS_SWIM_PADDLE, 0,
+							                   false);
 					}
 				}
 				if (((mStatus + 0xFC000000) & 0xFFFFFFFF) != 0x440
-				    && mStatus != STATUS_SWIM_PADDLE) {
+				    && mStatus != MARIO_STATUS_SWIM_PADDLE) {
 					unkC4 = 0;
 					unk118 &= ~MARIO_FLAG_FLUDD_EMITTING;
 				}
@@ -1567,7 +1573,7 @@ void TMario::checkController(JDrama::TGraphics*)
 
 	if ((mGamePad->mEnabledFrameMeaning & 0x2000)
 	    || (unk108->mFrameInput & 0x40)) {
-		if (checkStatusFlag(STATUS_FLAG_JUMPING) == true)
+		if (checkStatusFlag(MARIO_STATUS_FLAG_JUMPING) == true)
 			mInput |= 0x8000;
 	}
 
@@ -1685,7 +1691,7 @@ BOOL TMario::checkGroundPlane(f32 x, f32 y, f32 z, f32* outHeight,
 
 void TMario::checkCurrentPlane()
 {
-	if (checkStatusFlag(STATUS_FLAG_UNK1000))
+	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK1000))
 		return;
 
 	if (onYoshi())
@@ -1746,7 +1752,7 @@ void TMario::checkCurrentPlane()
 	                                    mPosition.z, &mRoofPlane);
 	if (!isInvincible()) {
 		if ((isTouchGround4cm()) && mGroundPlane->isThing5()
-		    && !checkStatusFlag(STATUS_FLAG_UNK10000)) {
+		    && !checkStatusFlag(MARIO_STATUS_FLAG_UNK10000)) {
 
 			damageExec(&mFloorHitActor, mGroundPlane->getData());
 		}
@@ -1785,15 +1791,15 @@ void TMario::checkRideMovement()
 
 	const TLiveActor* groundActor = mGroundPlane->getActor();
 
-	if (wall != nullptr && !checkStatusFlag(STATUS_FLAG_JUMPING)
+	if (wall != nullptr && !checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)
 	    && (isTouchGround4cm()))
 		actor = groundActor;
 
-	if (groundActor != nullptr && mStatus == STATUS_HIP_DROP
+	if (groundActor != nullptr && mStatus == MARIO_STATUS_HIP_DROP
 	    && (mStatusState == 2 || mStatusState == 3))
 		actor = groundActor;
 
-	if (checkStatusFlag(STATUS_FLAG_UNK20000000) && wall != nullptr
+	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK20000000) && wall != nullptr
 	    && wall->getActor() != nullptr)
 		actor = wall->getActor();
 
@@ -1843,26 +1849,26 @@ void TMario::stateMachine()
 {
 	int result = 1;
 	while (result != 0) {
-		switch (mStatus & STATUS_TYPE_MASK) {
-		case STATUS_TYPE_WAITING:
+		switch (mStatus & MARIO_STATUS_TYPE_MASK) {
+		case MARIO_STATUS_TYPE_WAITING:
 			result = waitMain();
 			break;
-		case STATUS_TYPE_RUNNING:
+		case MARIO_STATUS_TYPE_RUNNING:
 			result = moveMain();
 			break;
-		case STATUS_TYPE_JUMPING:
+		case MARIO_STATUS_TYPE_JUMPING:
 			result = jumpMain();
 			break;
-		case STATUS_TYPE_SWIMMING:
+		case MARIO_STATUS_TYPE_SWIMMING:
 			result = swimMain();
 			break;
-		case STATUS_TYPE_DEMO:
+		case MARIO_STATUS_TYPE_DEMO:
 			result = demoMain();
 			break;
-		case STATUS_TYPE_SPECIAL:
+		case MARIO_STATUS_TYPE_SPECIAL:
 			result = specMain();
 			break;
-		case STATUS_TYPE_ACTION:
+		case MARIO_STATUS_TYPE_ACTION:
 			result = actnMain();
 			break;
 		}
@@ -1931,7 +1937,7 @@ void TMario::thinkSituation()
 	if (mGroundPlane->isUnderground())
 		unk118 |= MARIO_FLAG_VISIBLE;
 
-	if (isMario() && isTouchGround4cm() && mStatus != STATUS_DISAPPEAR
+	if (isMario() && isTouchGround4cm() && mStatus != MARIO_STATUS_DISAPPEAR
 	    && (mGroundPlane->isIllegalData() || mGroundPlane->isOob())) {
 		unk2BA += mDeParams.mIllegalPlaneCtInc.get();
 		if (unk2BA > mDeParams.mIllegalPlaneTime.get())
@@ -1962,7 +1968,7 @@ void TMario::thinkSituation()
 		mAnmSound->stop();
 		if (mYoshi)
 			mYoshi->kill();
-		changePlayerStatus(STATUS_FALL_DEAD, 0, true);
+		changePlayerStatus(MARIO_STATUS_FALL_DEAD, 0, true);
 		if (mAnimationId != ANIM_THROWN)
 			startSoundActor(MSD_SE_MV10B_CRY_JUMP_01);
 		gpCamera->unk64 |= 0x800;
@@ -2008,14 +2014,14 @@ void TMario::thinkSituation()
 			mPosition.x = mOptionParams.mXMax.get();
 	}
 
-	if (!checkStatusFlag(STATUS_FLAG_JUMPING))
+	if (!checkStatusFlag(MARIO_STATUS_FLAG_JUMPING))
 		unk2BC = mPosition.y;
 
 	calcGroundMtx(mPosition);
 
 	if (gpMarDirector->isDemoMode3() || gpMarDirector->isDemoMode4()
 	    || gpMarDirector->isTalkModeNow()
-	    || checkStatusFlag(STATUS_FLAG_UNK1000))
+	    || checkStatusFlag(MARIO_STATUS_FLAG_UNK1000))
 		unk118 = MARIO_FLAG_NPC_TALKING;
 	else
 		unk118 &= ~MARIO_FLAG_NPC_TALKING;
@@ -2023,7 +2029,7 @@ void TMario::thinkSituation()
 
 void TMario::thinkWaterSurface()
 {
-	if (checkStatusFlag(STATUS_FLAG_UNK10000))
+	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK10000))
 		return;
 
 	BOOL wasInWater = checkFlag(MARIO_FLAG_IN_ANY_WATER);
@@ -2084,9 +2090,9 @@ void TMario::thinkWaterSurface()
 				rippleEffect();
 			swimmingBubbleEffect();
 
-			u32 statusId  = mStatus & STATUS_TYPE_AND_ID_MASK;
+			u32 statusId  = mStatus & MARIO_STATUS_TYPE_AND_ID_MASK;
 			bool canEnter = true;
-			if (checkStatusFlag(STATUS_FLAG_SWIMMING))
+			if (checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
 				canEnter = false;
 			if (isFencing())
 				canEnter = false;
@@ -2102,20 +2108,20 @@ void TMario::thinkWaterSurface()
 				mVel.y *= mSwimParams.mStartVYMult.get();
 
 				if (checkStatusFlag(MARIO_FLAG_IN_WATER)) {
-					changePlayerStatus(STATUS_SWIM_P_DAMAGE, 0, true);
+					changePlayerStatus(MARIO_STATUS_SWIM_P_DAMAGE, 0, true);
 				} else if (checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
-					changePlayerStatus(STATUS_SWIM_PADDLE, 0, true);
+					changePlayerStatus(MARIO_STATUS_SWIM_PADDLE, 0, true);
 					mVel.y      = 0.0f;
 					mPosition.y = mFloorPosition.z;
 					startSoundActor(MSD_SE_MA_SURF_JUMP);
 				} else {
-					changePlayerStatus(STATUS_SWIM_START, 0, true);
+					changePlayerStatus(MARIO_STATUS_SWIM_START, 0, true);
 				}
 			}
 		} else if (mFloorPosition.z
 		           < mPosition.y
 		                 + mWaterEffectParams.mRunningRippleDepth.get()) {
-			if (mStatus == STATUS_RUN) {
+			if (mStatus == MARIO_STATUS_RUN) {
 				if (getMotionFrameCtrl().checkPass(38.0f)
 				    || getMotionFrameCtrl().checkPass(8.0f))
 					runningRippleEffect();
@@ -2125,7 +2131,7 @@ void TMario::thinkWaterSurface()
 		}
 	}
 
-	if (mGroundPlane->isWetGround() && mStatus == STATUS_RUN) {
+	if (mGroundPlane->isWetGround() && mStatus == MARIO_STATUS_RUN) {
 		if (getMotionFrameCtrl().checkPass(38.0f)
 		    || getMotionFrameCtrl().checkPass(8.0f))
 			runningRippleEffect();
@@ -2175,7 +2181,7 @@ void TMario::thinkWaterSurface()
 	if (isUnderWater() || checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
 		f32 prevAir = unk12C;
 		if (isWearingHelm()) {
-			if (mStatus != STATUS_TAKEN) {
+			if (mStatus != MARIO_STATUS_TAKEN) {
 				unk12C -= mSwimParams.mAirDecDive.get();
 			}
 		} else {
@@ -2190,7 +2196,7 @@ void TMario::thinkWaterSurface()
 		if (unk12C < 1.0f) {
 			unk12C = 0.0f;
 			loserExec();
-			changePlayerStatus(STATUS_SWIM_DOWN, 0, false);
+			changePlayerStatus(MARIO_STATUS_SWIM_DOWN, 0, false);
 		}
 	} else {
 		unk12C += mSwimParams.mAirInc.get();
@@ -2227,7 +2233,7 @@ void TMario::thinkParams()
 				b = false;
 			if (!b) {
 				if (mWaterFloor->isThing5() && mWaterFloor->isThing5()
-				    && !checkStatusFlag(STATUS_FLAG_UNK10000)) {
+				    && !checkStatusFlag(MARIO_STATUS_FLAG_UNK10000)) {
 					floorDamageExec(getDmgMapCode(mWaterFloor->getData()));
 				}
 			}
@@ -2268,7 +2274,7 @@ void TMario::getOffYoshi(bool fly)
 		changePlayerStatus(0x89C, 0, 0);
 		mYoshi->getOff(true);
 	} else {
-		changePlayerStatus(STATUS_BACK_JUMP, 0, 0);
+		changePlayerStatus(MARIO_STATUS_BACK_JUMP, 0, 0);
 		mVel.y = mJumpParams.mGetOffYoshiY.get();
 		mYoshi->getOff(false);
 	}
@@ -2334,7 +2340,7 @@ void TMario::thinkTorocco()
 
 void TMario::thinkSound()
 {
-	if (mStatus != STATUS_THROWN_DOWN && mSound != nullptr)
+	if (mStatus != MARIO_STATUS_THROWN_DOWN && mSound != nullptr)
 		mSound->stop(1);
 }
 
@@ -2362,7 +2368,7 @@ void TMario::checkWet()
 	if (mFloorPosition.z > mPosition.y)
 		return;
 
-	if (checkStatusFlag(STATUS_FLAG_UNK200))
+	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK200))
 		return;
 
 	if (unk362 & 7)
@@ -2412,9 +2418,9 @@ void TMario::gunExec()
 	if (unk114 & 0x80 ? true : false)
 		mWaterGun->resetWaterToFull();
 
-	if (mStatus != STATUS_BACK_JUMP && mStatus != STATUS_THROWN_DOWN
+	if (mStatus != MARIO_STATUS_BACK_JUMP && mStatus != MARIO_STATUS_THROWN_DOWN
 	    && mGamePad->checkFrameMeaning(0x200000) && !onYoshi()
-	    && mStatus != STATUS_TOROCCO)
+	    && mStatus != MARIO_STATUS_TOROCCO)
 		mWaterGun->changeBackup();
 
 	if ((int)mWaterGun->mCurrentNozzle == TWaterGun::Spray
@@ -2438,8 +2444,8 @@ void TMario::playerControl(JDrama::TGraphics* param_1)
 	unk9C  = mFaceAngle.y;
 	unk29C = mPosition;
 	unk114 &= ~0x1;
-	if (gpMarDirector->unk124 == 1 && mStatus != STATUS_READ_BILLBOARD)
-		changePlayerStatus(STATUS_READ_BILLBOARD, 0, false);
+	if (gpMarDirector->unk124 == 1 && mStatus != MARIO_STATUS_READ_BILLBOARD)
+		changePlayerStatus(MARIO_STATUS_READ_BILLBOARD, 0, false);
 
 	if (gpMarioOriginal == this) {
 		if (gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode)

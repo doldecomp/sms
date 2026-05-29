@@ -297,20 +297,20 @@ u16 TYoshi::changeHand()
 	u16 curIdx = mActor->getCurAnmIdx(0);
 	u32 status = mMario->mStatus;
 
-	if (status & TMario::STATUS_FLAG_RUNNING) {
+	if (status & MARIO_STATUS_FLAG_RUNNING) {
 		if (curIdx == 12)
 			return 11;
-		if (status == TMario::STATUS_CATCH || status == TMario::STATUS_OIL_SLIP
-		    || status == TMario::STATUS_OIL_SLOPE
-		    || ((status & TMario::STATUS_FLAG_UNK40000) ? true : false))
+		if (status == MARIO_STATUS_CATCH || status == MARIO_STATUS_OIL_SLIP
+		    || status == MARIO_STATUS_OIL_SLOPE
+		    || ((status & MARIO_STATUS_FLAG_UNK40000) ? true : false))
 			return 19;
 		return 15;
 	}
 
-	if (status & TMario::STATUS_FLAG_JUMPING) {
+	if (status & MARIO_STATUS_FLAG_JUMPING) {
 		if (mFlutterState == 1)
 			return 9;
-		if (status == TMario::STATUS_HIP_DROP) {
+		if (status == MARIO_STATUS_HIP_DROP) {
 			u16 actionState = mMario->mStatusState;
 			if ((s16)actionState < 2) {
 				if ((s16)actionState >= 0)
@@ -323,14 +323,14 @@ u16 TYoshi::changeHand()
 			return 10;
 		return 12;
 	}
-	if ((status & TMario::STATUS_FLAG_UNK200)
-	    && (status == TMario::STATUS_CATCH_LOST
-	        || status == TMario::STATUS_BRAKE_END
-	        || status == TMario::STATUS_SLIP_END)) {
+	if ((status & MARIO_STATUS_FLAG_UNK200)
+	    && (status == MARIO_STATUS_CATCH_LOST
+	        || status == MARIO_STATUS_BRAKE_END
+	        || status == MARIO_STATUS_SLIP_END)) {
 		return 18;
 	}
 
-	if ((status & TMario::STATUS_FLAG_UNK8000) ? true : false) {
+	if ((status & MARIO_STATUS_FLAG_UNK8000) ? true : false) {
 		if (mMario->mGamePad->checkMeaning(0x2000)) {
 			E_SIDEWALK_TYPE type;
 			f32 a, b;
@@ -351,7 +351,7 @@ u16 TYoshi::changeHand()
 	u32 a2 = mMario->mStatus;
 	if (a2 == 0x8023C)
 		return 6;
-	if (a2 == TMario::STATUS_WIN_DEMO)
+	if (a2 == MARIO_STATUS_WIN_DEMO)
 		return 2;
 	return 22;
 }
@@ -486,7 +486,7 @@ void TYoshi::thinkAnimation()
 	u16 newIdx    = curIdx;
 	u32 status    = mMario->mStatus;
 
-	if (status & TMario::STATUS_FLAG_RUNNING) {
+	if (status & MARIO_STATUS_FLAG_RUNNING) {
 		BOOL tmp;
 		if (curIdx == 12) {
 			newIdx = 11;
@@ -497,17 +497,16 @@ void TYoshi::thinkAnimation()
 
 		if (!tmp) {
 			newIdx = 15;
-			if (status == TMario::STATUS_CATCH
-			    || status == TMario::STATUS_OIL_SLIP
-			    || status == TMario::STATUS_OIL_SLOPE
-			    || (status & TMario::STATUS_FLAG_UNK40000 ? true : false)) {
+			if (status == MARIO_STATUS_CATCH || status == MARIO_STATUS_OIL_SLIP
+			    || status == MARIO_STATUS_OIL_SLOPE
+			    || (status & MARIO_STATUS_FLAG_UNK40000 ? true : false)) {
 				newIdx = 19;
 			}
 		}
-	} else if (status & TMario::STATUS_FLAG_JUMPING) {
+	} else if (status & MARIO_STATUS_FLAG_JUMPING) {
 		if (mFlutterState == 1) {
 			newIdx = 9;
-		} else if (status == TMario::STATUS_HIP_DROP) {
+		} else if (status == MARIO_STATUS_HIP_DROP) {
 			switch (mMario->mStatusState) {
 			case 0:
 			case 1:
@@ -527,12 +526,12 @@ void TYoshi::thinkAnimation()
 			else
 				newIdx = 12;
 		}
-	} else if ((status & TMario::STATUS_FLAG_UNK200)
-	           && (status == TMario::STATUS_CATCH_LOST || status == 0xC000023D
+	} else if ((status & MARIO_STATUS_FLAG_UNK200)
+	           && (status == MARIO_STATUS_CATCH_LOST || status == 0xC000023D
 	               || status == 0xC000023E)) {
 		newIdx = 18;
 	} else {
-		bool sliding = (status & TMario::STATUS_FLAG_UNK8000) ? true : false;
+		bool sliding = (status & MARIO_STATUS_FLAG_UNK8000) ? true : false;
 		if (sliding) {
 			if (mMario->mGamePad->checkMeaning(0x2000)) {
 				E_SIDEWALK_TYPE type;
@@ -559,7 +558,7 @@ void TYoshi::thinkAnimation()
 			u32 act = mMario->mStatus;
 			if (act == 0x8023C)
 				newIdx = 6;
-			else if (act == TMario::STATUS_WIN_DEMO)
+			else if (act == MARIO_STATUS_WIN_DEMO)
 				newIdx = 2;
 			else
 				newIdx = 22;
@@ -596,7 +595,7 @@ void TYoshi::thinkAnimation()
 		J3DAnmTransform* oldAnm = mActor->getBckOldMotionBlendAnmPtr();
 		oldAnm->mFrame          = mActor->getFrameCtrl(0)->getFrame();
 
-		if (mMario->mStatus == TMario::STATUS_OIL_RUN)
+		if (mMario->mStatus == MARIO_STATUS_OIL_RUN)
 			nextFrame = mMario->getMotionFrameCtrl().getRate();
 		else
 			nextFrame = unkA0 + unkA4 * mMario->mForwardVel;
@@ -815,7 +814,7 @@ void TYoshi::movement()
 {
 	if (!gpMarDirector->isDemoMode3() && !gpMarDirector->isDemoMode4()
 	    && !gpMarDirector->isTalkModeNow()) {
-		if (!mMario->checkStatusFlag(TMario::STATUS_FLAG_UNK1000) && unkC > 0) {
+		if (!mMario->checkStatusFlag(MARIO_STATUS_FLAG_UNK1000) && unkC > 0) {
 			unkC -= 1;
 		}
 	}

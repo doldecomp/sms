@@ -13,12 +13,12 @@ void TMario::isSwimWaiting() { }
 void TMario::doSwimming()
 {
 	if (mInput & 0x8000) {
-		changePlayerStatus(STATUS_SWIM_DIVE, 0, false);
+		changePlayerStatus(MARIO_STATUS_SWIM_DIVE, 0, false);
 		return;
 	}
 
 	if (mFloorPosition.y + mSwimParams.mEndDepth.get() > mFloorPosition.z) {
-		changePlayerStatus(STATUS_WAIT, 0, false);
+		changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 		return;
 	}
 
@@ -50,7 +50,7 @@ void TMario::doSwimming()
 		depthRatio = 1.0f;
 
 	if (mAnimationId == ANIM_SWIM_WAIT || mAnimationId == ANIM_SWIM_START
-	    || mStatus == STATUS_SWIM_WAIT)
+	    || mStatus == MARIO_STATUS_SWIM_WAIT)
 		depthRatio *= mSwimParams.mWaitBouyancy.get();
 	else
 		depthRatio *= mSwimParams.mMoveBouyancy.get();
@@ -65,9 +65,9 @@ void TMario::doSwimming()
 		if (checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
 			if (isUnderWater()) {
 				mForwardVel = 0.8f * -mForwardVel;
-				changePlayerStatus(STATUS_SWIM_P_DAMAGE, 0, true);
+				changePlayerStatus(MARIO_STATUS_SWIM_P_DAMAGE, 0, true);
 			} else {
-				changePlayerStatus(STATUS_JUMP_BACK_DOWN, 0, true);
+				changePlayerStatus(MARIO_STATUS_JUMP_BACK_DOWN, 0, true);
 				mForwardVel = 0.8f * -mForwardVel;
 				mVel.y      = 50.0f;
 			}
@@ -80,7 +80,7 @@ void TMario::doSwimming()
 
 	if (mFloorPosition.z > mFloorPosition.y + 400.0f
 	    && mPosition.y < mFloorPosition.y + 100.0f
-	    && mStatus != STATUS_SWIM_WAIT) {
+	    && mStatus != MARIO_STATUS_SWIM_WAIT) {
 		unk1B4   = mPosition;
 		unk1B4.y = mFloorPosition.y;
 		gpMarioParticleManager->emitAndBindToPosPtr(0x11e, &unk1B4, 1, this);
@@ -110,14 +110,14 @@ BOOL TMario::checkSwimJump()
 				doJump = true;
 			if (doJump == true) {
 				inOutWaterEffect(mFloorPosition.z);
-				changePlayerStatus(STATUS_JUMP, 0, false);
+				changePlayerStatus(MARIO_STATUS_JUMP, 0, false);
 				return 1;
 			}
 		}
 
 		if (mIntendedMag == 0.0f)
-			return changePlayerStatus(STATUS_SWIM_UP, 0, false);
-		return changePlayerStatus(STATUS_SWIM_PADDLE_START, 0, false);
+			return changePlayerStatus(MARIO_STATUS_SWIM_UP, 0, false);
+		return changePlayerStatus(MARIO_STATUS_SWIM_PADDLE_START, 0, false);
 	}
 	return 0;
 }
@@ -132,7 +132,7 @@ BOOL TMario::checkSwimToHangFence()
 			mFaceAngle.y    = wallAng + 0x8000;
 			mModelFaceAngle = mFaceAngle.y;
 			mPosition.y += 100.0f;
-			return changePlayerStatus(STATUS_FENCE_CATCH, 0, false);
+			return changePlayerStatus(MARIO_STATUS_FENCE_CATCH, 0, false);
 		}
 	}
 	return 0;
@@ -142,13 +142,13 @@ BOOL TMario::swimStart()
 {
 	doSwimming();
 
-	if (!checkStatusFlag(STATUS_FLAG_SWIMMING))
+	if (!checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
 		return 1;
 
 	setAnimation(ANIM_PADDLE_SWIM_START, 1.0f);
 
 	if (isLast1AnimeFrame())
-		changePlayerStatus(STATUS_SWIM_WAIT, 0, false);
+		changePlayerStatus(MARIO_STATUS_SWIM_WAIT, 0, false);
 
 	return 0;
 }
@@ -158,11 +158,11 @@ BOOL TMario::swimWait()
 	setAnimation(ANIM_PADDLE_SWIM_WAIT, 1.0f);
 
 	if (mInput & 0x1)
-		return changePlayerStatus(STATUS_SWIM_WAIT_TO_PADDLE, 0, false);
+		return changePlayerStatus(MARIO_STATUS_SWIM_WAIT_TO_PADDLE, 0, false);
 
 	doSwimming();
 
-	if (!checkStatusFlag(STATUS_FLAG_SWIMMING))
+	if (!checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
 		return 1;
 
 	setAnimation(ANIM_PADDLE_SWIM_WAIT, 1.0f);
@@ -177,11 +177,11 @@ BOOL TMario::swimWaitToPaddle()
 	setAnimation(ANIM_WAIT_TO_PADDLE, 1.0f);
 
 	if (isLast1AnimeFrame())
-		changePlayerStatus(STATUS_SWIM_PADDLE_START, 0, false);
+		changePlayerStatus(MARIO_STATUS_SWIM_PADDLE_START, 0, false);
 
 	doSwimming();
 
-	if (!checkStatusFlag(STATUS_FLAG_SWIMMING))
+	if (!checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
 		return 1;
 
 	return 0;
@@ -194,11 +194,11 @@ BOOL TMario::swimPaddleStart()
 	mVel.y += mSwimParams.mPaddleJumpUp.get();
 
 	if (isLast1AnimeFrame())
-		changePlayerStatus(STATUS_SWIM_PADDLE, 0, false);
+		changePlayerStatus(MARIO_STATUS_SWIM_PADDLE, 0, false);
 
 	doSwimming();
 
-	if (!checkStatusFlag(STATUS_FLAG_SWIMMING))
+	if (!checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
 		return 1;
 
 	return 0;
@@ -218,11 +218,11 @@ BOOL TMario::swimPaddle()
 	}
 
 	if (mIntendedMag == 0.0f)
-		changePlayerStatus(STATUS_SWIM_PADDLE_END, 0, false);
+		changePlayerStatus(MARIO_STATUS_SWIM_PADDLE_END, 0, false);
 
 	doSwimming();
 
-	if (!checkStatusFlag(STATUS_FLAG_SWIMMING))
+	if (!checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
 		return 1;
 
 	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING) && !isUnderWater())
@@ -236,11 +236,12 @@ BOOL TMario::swimPaddleEnd()
 	setAnimation(ANIM_PADDLE_END, 1.0f);
 
 	if (isLast1AnimeFrame())
-		return changePlayerStatus(STATUS_SWIM_PADDLE_END_TO_WAIT, 0, false);
+		return changePlayerStatus(MARIO_STATUS_SWIM_PADDLE_END_TO_WAIT, 0,
+		                          false);
 
 	doSwimming();
 
-	if (!checkStatusFlag(STATUS_FLAG_SWIMMING))
+	if (!checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
 		return 1;
 
 	return 0;
@@ -251,11 +252,11 @@ BOOL TMario::swimPaddleEndToWait()
 	setAnimation(ANIM_PADDLE_TO_WAIT, 1.0f);
 
 	if (isLast1AnimeFrame())
-		return changePlayerStatus(STATUS_SWIM_WAIT, 0, false);
+		return changePlayerStatus(MARIO_STATUS_SWIM_WAIT, 0, false);
 
 	doSwimming();
 
-	if (!checkStatusFlag(STATUS_FLAG_SWIMMING))
+	if (!checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
 		return 1;
 
 	return 0;
@@ -268,12 +269,12 @@ BOOL TMario::swimUp()
 
 	if (isLast1AnimeFrame()) {
 		setAnimation(ANIM_PADDLE_SWIM_WAIT, 1.0f);
-		return changePlayerStatus(STATUS_SWIM_WAIT, 0, false);
+		return changePlayerStatus(MARIO_STATUS_SWIM_WAIT, 0, false);
 	}
 
 	doSwimming();
 
-	if (!checkStatusFlag(STATUS_FLAG_SWIMMING))
+	if (!checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
 		return 1;
 
 	return 0;
@@ -293,12 +294,12 @@ BOOL TMario::swimDive()
 
 	if (isLast1AnimeFrame()) {
 		setAnimation(ANIM_PADDLE_SWIM_WAIT, 1.0f);
-		return changePlayerStatus(STATUS_SWIM_PADDLE_END, 0, false);
+		return changePlayerStatus(MARIO_STATUS_SWIM_PADDLE_END, 0, false);
 	}
 
 	doSwimming();
 
-	if (!checkStatusFlag(STATUS_FLAG_SWIMMING))
+	if (!checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
 		return 1;
 
 	return 0;
@@ -307,10 +308,10 @@ BOOL TMario::swimDive()
 BOOL TMario::swimPDamage()
 {
 	doSwimming();
-	jumpingDemoCommon(STATUS_SWIM_P_DAMAGE, ANIM_SWIM_P_DAMAGE, 0.0f);
+	jumpingDemoCommon(MARIO_STATUS_SWIM_P_DAMAGE, ANIM_SWIM_P_DAMAGE, 0.0f);
 
 	if (isLast1AnimeFrame())
-		changePlayerStatus(STATUS_SWIM_WAIT, 0, false);
+		changePlayerStatus(MARIO_STATUS_SWIM_WAIT, 0, false);
 
 	return 0;
 }
@@ -318,21 +319,21 @@ BOOL TMario::swimPDamage()
 BOOL TMario::swimDown()
 {
 	doSwimming();
-	jumpingDemoCommon(STATUS_SWIM_DOWN, ANIM_SWIM_DOWN, 0.0f);
+	jumpingDemoCommon(MARIO_STATUS_SWIM_DOWN, ANIM_SWIM_DOWN, 0.0f);
 	return 0;
 }
 
 BOOL TMario::swimPDown()
 {
 	doSwimming();
-	jumpingDemoCommon(STATUS_SWIM_P_DOWN, ANIM_SWIM_P_DOWN, 0.0f);
+	jumpingDemoCommon(MARIO_STATUS_SWIM_P_DOWN, ANIM_SWIM_P_DOWN, 0.0f);
 	return 0;
 }
 
 BOOL TMario::swimMain()
 {
 	if (checkFlag(MARIO_FLAG_GAME_OVER))
-		changePlayerStatus(STATUS_SWIM_P_DOWN, 0, false);
+		changePlayerStatus(MARIO_STATUS_SWIM_P_DOWN, 0, false);
 
 	if (checkSwimJump() == 1)
 		return 0;
@@ -346,45 +347,45 @@ BOOL TMario::swimMain()
 	unk2A8.y = mFloorPosition.z;
 
 	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING))
-		if (mStatus != STATUS_SWIM_PADDLE_START
-		    && mStatus != STATUS_SWIM_PADDLE)
-			return changePlayerStatus(STATUS_SWIM_PADDLE_START, 0, false);
+		if (mStatus != MARIO_STATUS_SWIM_PADDLE_START
+		    && mStatus != MARIO_STATUS_SWIM_PADDLE)
+			return changePlayerStatus(MARIO_STATUS_SWIM_PADDLE_START, 0, false);
 
 	switch (mStatus) {
-	case STATUS_SWIM_START:
+	case MARIO_STATUS_SWIM_START:
 		return swimStart();
 
-	case STATUS_SWIM_WAIT:
+	case MARIO_STATUS_SWIM_WAIT:
 		return swimWait();
 
-	case STATUS_SWIM_WAIT_TO_PADDLE:
+	case MARIO_STATUS_SWIM_WAIT_TO_PADDLE:
 		return swimWaitToPaddle();
 
-	case STATUS_SWIM_PADDLE_START:
+	case MARIO_STATUS_SWIM_PADDLE_START:
 		return swimPaddleStart();
 
-	case STATUS_SWIM_PADDLE:
+	case MARIO_STATUS_SWIM_PADDLE:
 		return swimPaddle();
 
-	case STATUS_SWIM_PADDLE_END:
+	case MARIO_STATUS_SWIM_PADDLE_END:
 		return swimPaddleEnd();
 
-	case STATUS_SWIM_PADDLE_END_TO_WAIT:
+	case MARIO_STATUS_SWIM_PADDLE_END_TO_WAIT:
 		return swimPaddleEndToWait();
 
-	case STATUS_SWIM_UP:
+	case MARIO_STATUS_SWIM_UP:
 		return swimUp();
 
-	case STATUS_SWIM_DIVE:
+	case MARIO_STATUS_SWIM_DIVE:
 		return swimDive();
 
-	case STATUS_SWIM_P_DAMAGE:
+	case MARIO_STATUS_SWIM_P_DAMAGE:
 		return swimPDamage();
 
-	case STATUS_SWIM_DOWN:
+	case MARIO_STATUS_SWIM_DOWN:
 		return swimDown();
 
-	case STATUS_SWIM_P_DOWN:
+	case MARIO_STATUS_SWIM_P_DOWN:
 		return swimPDown();
 	}
 

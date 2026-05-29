@@ -606,7 +606,7 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 	// volatile u32 padding[34];
 	Mtx transform;
 	if (param_2 == 0) {
-		if (gpMarioForCallBack->mStatus == TMario::STATUS_READ_BILLBOARD) {
+		if (gpMarioForCallBack->mStatus == MARIO_STATUS_READ_BILLBOARD) {
 			if (gpMarDirector->unkA0 == nullptr)
 				return 0;
 
@@ -622,7 +622,7 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 
 			s16 angle = -matan(mult, other.y);
 			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(angle));
-		} else if (gpMarioForCallBack->mStatus == TMario::STATUS_ROCKET) {
+		} else if (gpMarioForCallBack->mStatus == MARIO_STATUS_ROCKET) {
 			if (gpMarioForCallBack->mWaterGun->canSpray() == true) {
 
 				s16 headAngle = gpMarioForCallBack->mUpperBodyParams
@@ -630,7 +630,7 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 				MsMtxSetRotRPH(transform, 0.0f, 0.0f,
 				               SHORTANGLE2DEG(headAngle));
 			}
-		} else if (gpMarioForCallBack->mStatus == TMario::STATUS_WAIT
+		} else if (gpMarioForCallBack->mStatus == MARIO_STATUS_WAIT
 		           && (gpMarioForCallBack->unk370
 		                       > gpMarioForCallBack->mDeParams.mFeelDeep.get()
 		                   ? true
@@ -733,13 +733,13 @@ static int MarioFootPosRCtrl(J3DNode* param_1, int param_2)
 
 		// Definitely some inline shenanigans
 		// And this is wrong
-		if ((gpMarioForCallBack->mStatus & TMario::STATUS_TYPE_MASK)
-		        == TMario::STATUS_TYPE_WAITING
-		    && gpMarioForCallBack->mStatus != TMario::STATUS_BRAKE_END
+		if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK)
+		        == MARIO_STATUS_TYPE_WAITING
+		    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
 		    && gpMarioForCallBack->onYoshi() == 0) {
 
-			check2 = !(gpMarioForCallBack->mStatus != TMario::STATUS_SLEEPY
-			           && gpMarioForCallBack->mStatus != TMario::STATUS_SLEEP)
+			check2 = !(gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEPY
+			           && gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEP)
 			             ? TRUE
 			             : FALSE;
 		}
@@ -777,13 +777,13 @@ static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 
 		// Definitely some inline shenanigans
 		// And this is wrong
-		if ((gpMarioForCallBack->mStatus & TMario::STATUS_TYPE_MASK)
-		        == TMario::STATUS_TYPE_WAITING
-		    && gpMarioForCallBack->mStatus != TMario::STATUS_BRAKE_END
+		if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK)
+		        == MARIO_STATUS_TYPE_WAITING
+		    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
 		    && gpMarioForCallBack->onYoshi() == 0) {
 
-			check2 = !(gpMarioForCallBack->mStatus != TMario::STATUS_SLEEPY
-			           && gpMarioForCallBack->mStatus != TMario::STATUS_SLEEP)
+			check2 = !(gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEPY
+			           && gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEP)
 			             ? TRUE
 			             : FALSE;
 		}
@@ -857,13 +857,13 @@ static int MarioFootPosLCtrl(J3DNode* param_1, int param_2)
 
 		// Definitely some inline shenanigans
 		// And this is wrong
-		if ((gpMarioForCallBack->mStatus & TMario::STATUS_TYPE_MASK)
-		        == TMario::STATUS_TYPE_WAITING
-		    && gpMarioForCallBack->mStatus != TMario::STATUS_BRAKE_END
+		if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK)
+		        == MARIO_STATUS_TYPE_WAITING
+		    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
 		    && gpMarioForCallBack->onYoshi() == 0) {
 
-			check2 = !(gpMarioForCallBack->mStatus != TMario::STATUS_SLEEPY
-			           && gpMarioForCallBack->mStatus != TMario::STATUS_SLEEP)
+			check2 = !(gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEPY
+			           && gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEP)
 			             ? TRUE
 			             : FALSE;
 		}
@@ -901,13 +901,13 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 
 		// Definitely some inline shenanigans
 		// And this is wrong
-		if ((gpMarioForCallBack->mStatus & TMario::STATUS_TYPE_MASK)
-		        == TMario::STATUS_TYPE_WAITING
-		    && gpMarioForCallBack->mStatus != TMario::STATUS_BRAKE_END
+		if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK)
+		        == MARIO_STATUS_TYPE_WAITING
+		    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
 		    && gpMarioForCallBack->onYoshi() == 0) {
 
-			check2 = !(gpMarioForCallBack->mStatus != TMario::STATUS_SLEEPY
-			           && gpMarioForCallBack->mStatus != TMario::STATUS_SLEEP)
+			check2 = !(gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEPY
+			           && gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEP)
 			             ? TRUE
 			             : FALSE;
 		}
@@ -1215,7 +1215,7 @@ f32 TMario::setAnimation(int anm_id, f32 rate)
 			check = true;
 		}
 
-		if (mStatus == STATUS_READ_BILLBOARD) {
+		if (mStatus == MARIO_STATUS_READ_BILLBOARD) {
 			check = true;
 		}
 
@@ -1663,7 +1663,7 @@ void TMario::considerWaist()
 	f32 angleChangeRate;
 
 	// Possibly unused get params function?
-	if (checkStatusFlag(STATUS_FLAG_UNK10000)) {
+	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK10000)) {
 		if (mGroundPlane->isWaterSurface()) {
 			maxPitch    = mSurfingParamsWaterRed.mWaistPitchMax.get();
 			targetPitch = mSurfingParamsWaterRed.mWaistPitch.get();
@@ -1703,7 +1703,7 @@ void TMario::considerWaist()
 	f32 targetRoll;
 	s16 diffAngle = mFaceAngle.y - unk9C;
 	// Possibly unused get params function?
-	if (checkStatusFlag(STATUS_FLAG_UNK10000)) {
+	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK10000)) {
 		if (mGroundPlane->isWaterSurface()) {
 			rollMax    = mSurfingParamsWaterRed.mWaistRollMax.get();
 			targetRoll = mSurfingParamsWaterRed.mWaistRoll.get();
@@ -1744,7 +1744,7 @@ void TMario::considerWaist()
 // This needs work!
 void TMario::calcBaseMtx(MtxPtr mtx)
 {
-	if (mStatus == STATUS_TOROCCO) {
+	if (mStatus == MARIO_STATUS_TOROCCO) {
 		if (mRailType == 0) {
 			mPinaRail->calcAnm();
 			MTXCopy(mPinaRail->getModel()->getAnmMtx(0),
@@ -1765,7 +1765,7 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		mPosition.x = mtx[0][3];
 		mPosition.y = mtx[1][3];
 		mPosition.z = mtx[2][3];
-	} else if (checkStatusFlag(STATUS_FLAG_UNK100000)) {
+	} else if (checkStatusFlag(MARIO_STATUS_FLAG_UNK100000)) {
 		J3DTransformInfo ti;
 		ti.mScale.x     = 1.0f;
 		ti.mScale.y     = 1.0f;
@@ -1779,7 +1779,7 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		ti.mTranslate.z = mPosition.z - radiusAtY * JMASCos(mModelFaceAngle);
 		J3DGetTranslateRotateMtx(ti, mtx);
 	} else {
-		if (!checkStatusFlag(STATUS_FLAG_SWIMMING)) {
+		if (!checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING)) {
 			J3DTransformInfo ti;
 			ti.mScale.x     = 1.0f;
 			ti.mScale.y     = 1.0f;
@@ -1799,8 +1799,8 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 				MTXCopy(mHolder->getTakingMtx(), mtx);
 			} else {
 
-				if (mStatus != STATUS_JUMP_CATCH
-				    && mStatus != STATUS_WIRE_ROLLING) {
+				if (mStatus != MARIO_STATUS_JUMP_CATCH
+				    && mStatus != MARIO_STATUS_WIRE_ROLLING) {
 					mFaceAngle.x = 0;
 				}
 				// Probably another checkFlag inline
@@ -2038,12 +2038,12 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 		mCap->perform(2, graphics);
 	}
 
-	if (checkStatusFlag(STATUS_FLAG_UNK10000)) {
+	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK10000)) {
 		mSurfGesso->getModel()->setBaseTRMtx(mModel->unk8->getBaseTRMtx());
 		mSurfGesso->perform(2, graphics);
 	}
 
-	if (mStatus == STATUS_TOROCCO) {
+	if (mStatus == MARIO_STATUS_TOROCCO) {
 		mTorocco->perform(2, graphics);
 	}
 
@@ -2072,7 +2072,7 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (mStatus == STATUS_RUN && mAnimationId != ANIM_SSTEP) {
+	if (mStatus == MARIO_STATUS_RUN && mAnimationId != ANIM_SSTEP) {
 		f32 blendRatio = unk414.z;
 		if (blendRatio < 0.3f) {
 			changeHand(2);
@@ -2119,11 +2119,11 @@ void TMario::calcView(JDrama::TGraphics* graphics)
 		mCap->perform(4, graphics);
 	}
 
-	if (checkStatusFlag(STATUS_FLAG_UNK10000)) {
+	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK10000)) {
 		mSurfGesso->perform(4, graphics);
 	}
 
-	if (mStatus == STATUS_TOROCCO) {
+	if (mStatus == MARIO_STATUS_TOROCCO) {
 		mTorocco->perform(4, graphics);
 	}
 }
@@ -2143,18 +2143,18 @@ void TMario::entryModels(JDrama::TGraphics* graphics)
 		mCap->perform(0x200, graphics);
 	}
 
-	if (checkStatusFlag(STATUS_FLAG_UNK10000)) {
+	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK10000)) {
 		mSurfGesso->setLightData(mGroundPlane, mPosition);
 		mSurfGesso->perform(0x200, graphics);
 	}
 
-	if (mStatus == STATUS_TOROCCO)
+	if (mStatus == MARIO_STATUS_TOROCCO)
 		mTorocco->perform(0x200, graphics);
 }
 
 void TMario::drawSpecial(JDrama::TGraphics* graphics)
 {
-	if (mStatus == STATUS_ELECTRIC_DAMAGE) {
+	if (mStatus == MARIO_STATUS_ELECTRIC_DAMAGE) {
 		unk4EC = 1;
 		unk114 |= 0x20;
 	} else {

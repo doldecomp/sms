@@ -8,7 +8,7 @@
 BOOL TMario::taking()
 {
 	if ((mInput & 4) != 0) {
-		return changePlayerDropping(STATUS_LANDING, 0);
+		return changePlayerDropping(MARIO_STATUS_LANDING, 0);
 	}
 
 	setAnimation(ANIM_RAISE, 1.0f);
@@ -17,14 +17,14 @@ BOOL TMario::taking()
 			startVoice(MSD_SE_MV15_EXERT_INST_01);
 			mHeldObject = (TTakeActor*)unk384;
 		} else {
-			return changePlayerStatus(STATUS_WAIT, 0, false);
+			return changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 		}
 		unk384 = nullptr;
 	}
 	if (isLast1AnimeFrame()) {
 		unk380 = 2;
 		unk37E = 0;
-		return changePlayerStatus(STATUS_WAIT, 0, false);
+		return changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 	} else {
 		waitProcess();
 		return FALSE;
@@ -34,14 +34,14 @@ BOOL TMario::taking()
 BOOL TMario::takePose()
 {
 	if ((mInput & 4) != 0)
-		return changePlayerDropping(STATUS_LANDING, 0);
+		return changePlayerDropping(MARIO_STATUS_LANDING, 0);
 
 	if (isLast1AnimeFrame()) {
 		setAnimation(ANIM_WAIT, 1.0f);
-		return changePlayerStatus(STATUS_WAIT, 0, false);
+		return changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 	}
 
-	stopCommon(ANIM_GET_FAIL, STATUS_WAIT);
+	stopCommon(ANIM_GET_FAIL, MARIO_STATUS_WAIT);
 	return FALSE;
 }
 
@@ -51,25 +51,25 @@ BOOL TMario::catchLost()
 		if (considerRotateJumpStart())
 			return TRUE;
 
-		return changePlayerJumping(STATUS_JUMP, false);
+		return changePlayerJumping(MARIO_STATUS_JUMP, false);
 	}
 
 	if ((mInput & 4) != 0)
-		return changePlayerStatus(STATUS_LANDING, 0, false);
+		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 
 	if ((mInput & 8) != 0)
-		return changePlayerStatus(STATUS_SLIP, 0, false);
+		return changePlayerStatus(MARIO_STATUS_SLIP, 0, false);
 
-	stopCommon(ANIM_LOST, STATUS_WAIT);
+	stopCommon(ANIM_LOST, MARIO_STATUS_WAIT);
 	return FALSE;
 }
 
 BOOL TMario::putting()
 {
 	if ((mInput & 4) != 0)
-		return changePlayerDropping(STATUS_LANDING, 0);
+		return changePlayerDropping(MARIO_STATUS_LANDING, 0);
 
-	stopCommon(ANIM_PUT, STATUS_WAIT);
+	stopCommon(ANIM_PUT, MARIO_STATUS_WAIT);
 	if (mHeldObject != nullptr && mModel->getFrameCtrl(0).checkPass(20.0f)) {
 		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK6);
 		mHeldObject = nullptr;
@@ -81,9 +81,9 @@ BOOL TMario::putting()
 BOOL TMario::pitching()
 {
 	if ((mInput & 4) != 0)
-		return changePlayerDropping(STATUS_LANDING, 0);
+		return changePlayerDropping(MARIO_STATUS_LANDING, 0);
 
-	stopCommon(ANIM_THROW, STATUS_WAIT);
+	stopCommon(ANIM_THROW, MARIO_STATUS_WAIT);
 	checkThrowObject();
 	return FALSE;
 }
@@ -95,23 +95,23 @@ BOOL TMario::actnMain()
 	BOOL result = FALSE;
 
 	switch (status) {
-	case STATUS_TAKE:
+	case MARIO_STATUS_TAKE:
 		result = taking();
 		break;
 
-	case STATUS_TAKE_POSE:
+	case MARIO_STATUS_TAKE_POSE:
 		result = takePose();
 		break;
 
-	case STATUS_CATCH_LOST:
+	case MARIO_STATUS_CATCH_LOST:
 		result = catchLost();
 		break;
 
-	case STATUS_PUTTING:
+	case MARIO_STATUS_PUTTING:
 		result = putting();
 		break;
 
-	case STATUS_PITCHING:
+	case MARIO_STATUS_PITCHING:
 		result = pitching();
 		break;
 	}

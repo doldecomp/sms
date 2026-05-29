@@ -143,7 +143,7 @@ void TMarioCap::perform(unsigned long param_1, JDrama::TGraphics* param_2)
 			f32 distance
 			    = JGeometry::TVec3<f32>(mMario->mPosition - mMario->unk29C)
 			          .length();
-			if (mMario->mStatus == TMario::STATUS_SURF && distance > 20.0f) {
+			if (mMario->mStatus == MARIO_STATUS_SURF && distance > 20.0f) {
 				doTremble = true;
 			}
 			if (mMario->mStatus == 0x281089A) {
@@ -153,11 +153,11 @@ void TMarioCap::perform(unsigned long param_1, JDrama::TGraphics* param_2)
 				doTremble = true;
 			}
 
-			if (mMario->checkStatusFlag(TMario::STATUS_FLAG_JUMPING)
+			if (mMario->checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)
 			    && distance > 20.0f) {
 				doTremble = true;
 			}
-			if (mMario->mStatus == TMario::STATUS_DIVE) {
+			if (mMario->mStatus == MARIO_STATUS_DIVE) {
 				doTremble = false;
 			}
 

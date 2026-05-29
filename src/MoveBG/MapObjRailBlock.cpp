@@ -101,7 +101,8 @@ bool TRailMapObj::checkMarioRiding()
 	if (!checkRailFlag(1)) {
 		if (data && data->getActor() == this && SMS_IsMarioTouchGround4cm()) {
 			u32 status = SMS_GetMarioStatus(SMS_GetMarioHitActor());
-			if ((status & 0x200) && !(status & 0x200000)) {
+			if ((status & MARIO_STATUS_FLAG_UNK200)
+			    && !(status & MARIO_STATUS_FLAG_UNK200000)) {
 				onRailFlag(1);
 				offRailFlag(2);
 			}

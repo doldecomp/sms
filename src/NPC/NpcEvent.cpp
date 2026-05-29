@@ -95,7 +95,7 @@ static void ev__ForceStartTalkExceptNpc(TSpcTypedInterp<TEventWatcher>* interp,
 	(void)interp->pop();
 
 	if (!gpMarDirector->isTalkOrDemoModeNow() && SMS_IsMarioTouchGround4cm()
-	    && !gpMarioOriginal->checkStatusFlag(TMario::STATUS_FLAG_JUMPING)) {
+	    && !gpMarioOriginal->checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)) {
 
 		TBaseNPC* dummyNpc
 		    = JDrama::TNameRefGen::search<TBaseNPC>("ダミーＮＰＣ");
@@ -118,7 +118,7 @@ static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
 	int result = 0;
 
 	if (!gpMarDirector->isTalkOrDemoModeNow() && SMS_IsMarioTouchGround4cm()
-	    && !gpMarioOriginal->checkStatusFlag(TMario::STATUS_FLAG_JUMPING)) {
+	    && !gpMarioOriginal->checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)) {
 
 		gpMarDirector->unkA0  = (TBaseNPC*)interp->pop().getDataInt();
 		gpMarDirector->unk126 = 1;
