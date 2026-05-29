@@ -8,7 +8,7 @@
 #include <Map/MapData.hpp>
 #include <Map/Map.hpp>
 #include <Player/MarioAccess.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <M3DUtil/MActorData.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/SDLModel.hpp>

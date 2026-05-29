@@ -1,5 +1,5 @@
 #include <Map/MapWireManager.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Camera/CubeManagerBase.hpp>
 #include <Strategic/Strategy.hpp>
 #include <Map/MapWire.hpp>

@@ -20,7 +20,7 @@
 #include <GC2D/ExPane.hpp>
 #include <GC2D/MessageUtil.hpp>
 #include <MoveBG/MapObjOption.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Camera/CameraOption.hpp>
 
 // rogue includes needed for matching sinit & bss

@@ -8,7 +8,7 @@
 #include <System/StageEventInfo.hpp>
 #include <Map/PollutionManager.hpp>
 #include <Map/MapEventSink.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Camera/SunMgr.hpp>
 #include <GC2D/GCConsole2.hpp>
 #include <GC2D/ScrnFader.hpp>

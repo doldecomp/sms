@@ -21,7 +21,7 @@
 #include <MoveBG/MapObjItem2.hpp>
 #include <MoveBG/MapObjBall.hpp>
 #include <Enemy/Conductor.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Player/WaterGun.hpp>
 #include <Camera/CubeManagerBase.hpp>
 

@@ -1,4 +1,4 @@
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Enemy/Conductor.hpp>
 #include <System/MarDirector.hpp>
 #include <NPC/NpcBase.hpp>

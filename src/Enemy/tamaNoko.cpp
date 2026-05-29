@@ -19,7 +19,7 @@
 #include <MoveBG/ItemManager.hpp>
 #include <MoveBG/MapObjBase.hpp>
 #include <Player/MarioAccess.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Camera/CameraShake.hpp>
 #include <Enemy/EffectObj.hpp>
 #include <Enemy/Conductor.hpp>

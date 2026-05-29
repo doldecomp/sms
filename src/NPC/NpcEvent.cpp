@@ -9,7 +9,7 @@
 #include <MSound/MSound.hpp>
 #include <NPC/NpcBase.hpp>
 #include <Player/MarioAccess.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>

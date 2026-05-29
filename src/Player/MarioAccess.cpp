@@ -1,7 +1,7 @@
 #include <Player/MarioAccess.hpp>
 
 #include <Strategic/LiveActor.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <JSystem/JGeometry.hpp>
 
 void* gpMarioAddress;

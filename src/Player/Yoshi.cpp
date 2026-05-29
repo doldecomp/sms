@@ -24,7 +24,7 @@
 #include <MSound/MSoundBGM.hpp>
 #include <MoveBG/Item.hpp>
 #include <Player/Tongue.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Player/WaterGun.hpp>
