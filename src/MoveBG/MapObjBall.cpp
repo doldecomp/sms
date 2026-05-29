@@ -71,7 +71,7 @@ inline f32 vecLength(JGeometry::TVec3<f32> vec) { return vec.length(); }
 void TMapObjBall::touchWall(JGeometry::TVec3<f32>* param1,
                             TBGWallCheckRecord* param2)
 {
-	if (!checkLiveFlag2(0x80) && !isActorType(0x400000d0)) {
+	if (!checkLiveFlag2(LIVE_FLAG_AIRBORNE) && !isActorType(0x400000d0)) {
 		f32 velMag = vecLength(mVelocity);
 		mVelocity.y += unk184 * velMag;
 	}
@@ -167,7 +167,7 @@ void TMapObjBall::touchGround(JGeometry::TVec3<f32>* ground)
 				rebound(ground);
 			}
 
-			if (!checkLiveFlag2(0x80)) {
+			if (!checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
 				mVelocity.x += unk180 * mGroundPlane->mNormal.x;
 				mVelocity.z += unk180 * mGroundPlane->mNormal.z;
 			}
@@ -826,6 +826,7 @@ void TResetFruit::thrown()
 
 void TResetFruit::hold(TTakeActor* actor)
 {
+	// Most likely a call to TMapObjBall::hold, but calling it doesn't match
 	if (!(vecLength(mVelocity) > 10.0f)) {
 		TMapObjGeneral::hold(actor);
 		mVelocity.zero();
@@ -841,7 +842,6 @@ void TResetFruit::hold(TTakeActor* actor)
 
 void TResetFruit::touchKillSurface()
 {
-	makeObjDefault();
 	mState = 11;
 	makeObjDefault();
 	makeObjDead();
@@ -860,6 +860,7 @@ void TResetFruit::touchPollution()
 	gpMarioParticleManager->emitAndBindToPosPtr(0x8b, &mPosition, 0, nullptr);
 	gpMSound->startSoundActor(0x3881, &mPosition, nullptr, nullptr, 0, 4);
 
+	makeObjDefault();
 	touchKillSurface();
 }
 
@@ -867,7 +868,6 @@ void TResetFruit::touchWaterSurface()
 {
 	TMapObjBase::emitColumnWater();
 	gpMSound->startSoundActor(0x3875, &mPosition, nullptr, nullptr, 0, 4);
-
 	touchKillSurface();
 }
 
@@ -1002,9 +1002,23 @@ void TResetFruit::appearing()
 	}
 }
 
+void TResetFruit::unknownInline()
+{
+	TMapObjBall::control();
+	if (!checkMapObjFlag(0x4000000) && !isWaitingToAppear()) {
+		if (mHolder != nullptr) {
+			mHolder->receiveMessage(this, 8);
+			mHolder->mHeldObject = nullptr;
+			mHolder              = nullptr;
+		}
+
+		mVelocity.setAll(0.0f);
+		mState = 12;
+	}
+}
+
 void TResetFruit::control()
 {
-	f32 unused4C;
 	switch (mState) {
 	case 1: {
 		unk64 &= ~0x1;
@@ -1044,31 +1058,11 @@ void TResetFruit::control()
 			unk198 = 0.0f;
 		}
 
-		TMapObjBall::control();
-		if (!checkMapObjFlag(0x4000000) && !isWaitingToAppear()) {
-			if (mHolder != nullptr) {
-				mHolder->receiveMessage(this, 8);
-				mHolder->mHeldObject = nullptr;
-				mHolder              = nullptr;
-			}
-
-			mVelocity.setAll(0.0f);
-			mState = 12;
-		}
+		unknownInline();
 		break;
 	}
 	case 6: {
-		TMapObjBall::control();
-		if (!checkMapObjFlag(0x4000000) && !isWaitingToAppear()) {
-			if (mHolder != nullptr) {
-				mHolder->receiveMessage(this, 8);
-				mHolder->mHeldObject = nullptr;
-				mHolder              = nullptr;
-			}
-
-			mVelocity.setAll(0.0f);
-			mState = 12;
-		}
+		unknownInline();
 		break;
 	}
 	case 2:
@@ -1081,11 +1075,10 @@ void TResetFruit::control()
 		if (isState(6)) {
 			Mtx takingMtx;
 			PSMTXCopy(mHolder->getTakingMtx(), takingMtx);
-			unused4C += unk190;
+			takingMtx[2][2] += unk190;
 			PSMTXCopy(takingMtx, getModel()->getAnmMtx(0));
 		} else {
-			if (!(3.8146973e-06f <= mVelocity.squared())
-			    || mGroundPlane->mActor != nullptr) {
+			if (!objIsNotMoving(mVelocity) || mGroundPlane->mActor != nullptr) {
 				calcCurrentMtx();
 			}
 		}
@@ -1179,8 +1172,6 @@ void TResetFruit::makeObjAppeared()
 		mState = 11;
 	}
 }
-
-u32 TResetFruit::getLivingTime() const { return TResetFruit::mFruitLivingTime; }
 
 BOOL TResetFruit::receiveMessage(THitActor* actor, u32 msg)
 {
@@ -1491,13 +1482,12 @@ void TBigWatermelon::control()
 		unk194 -= 1;
 	}
 
-	f32 local3C;
 	if (isState(6)) {
 		TTakeActor* holder = mHolder;
 		MtxPtr takingMtx   = holder->getTakingMtx();
 		Mtx takingMtxCopy;
 		PSMTXCopy(takingMtx, takingMtxCopy);
-		local3C += unk190;
+		takingMtxCopy[2][2] += unk190;
 		J3DModel* model = TLiveActor::getModel();
 		PSMTXCopy(takingMtxCopy, model->getAnmMtx(0));
 	} else {

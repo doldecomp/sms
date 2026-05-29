@@ -65,7 +65,7 @@ public:
 	virtual void initMapObj();
 	virtual void touchActor(THitActor*);
 	virtual u32 touchWater(THitActor*);
-	virtual u32 getLivingTime() const;
+	virtual u32 getLivingTime() const { return mFruitLivingTime; };
 	virtual void appearing();
 	virtual void breaking();
 	virtual void waitingToAppear();
@@ -88,6 +88,7 @@ public:
 	void touchKillSurface();
 
 	inline void hideTouchActor(THitActor*);
+	inline void unknownInline();
 
 	static u32 mFruitWaitTimeToAppear;
 	static f32 mScaleUpSpeed;
