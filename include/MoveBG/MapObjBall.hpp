@@ -65,7 +65,9 @@ public:
 	virtual void initMapObj();
 	virtual void touchActor(THitActor*);
 	virtual u32 touchWater(THitActor*);
-	virtual u32 getLivingTime() const { return mFruitLivingTime; };
+	// This definition is being occluded by TMapObjGeneral::getLivingTime for
+	// some reason
+	virtual u32 getLivingTime() const { return mFruitLivingTime; }
 	virtual void appearing();
 	virtual void breaking();
 	virtual void waitingToAppear();
