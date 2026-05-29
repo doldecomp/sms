@@ -68,6 +68,8 @@ public:
 
 	BOOL isHatched() const { return mState == STATE_EGG ? FALSE : TRUE; }
 
+	const JGeometry::TVec3<f32>& getTranslation() const { return mTranslation; }
+
 public:
 	/* 0x0 */ u8 mState;
 	/* 0x1 */ u8 unk1;

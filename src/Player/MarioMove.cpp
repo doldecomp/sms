@@ -1789,7 +1789,7 @@ void TMario::checkRideMovement()
 	    && (isTouchGround4cm()))
 		actor = groundActor;
 
-	if (groundActor != nullptr && mStatus == 0x8008a9
+	if (groundActor != nullptr && mStatus == STATUS_HIP_DROP
 	    && (mStatusState == 2 || mStatusState == 3))
 		actor = groundActor;
 

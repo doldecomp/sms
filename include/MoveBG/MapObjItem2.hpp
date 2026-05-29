@@ -31,6 +31,10 @@ public:
 	virtual void calcRootMatrix();
 	virtual void control();
 	virtual void initMapObj();
+
+public:
+	/* 0x138 */ u8 unk138;
+	/* 0x13C */ int unk13C;
 };
 
 #endif
