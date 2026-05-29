@@ -97,7 +97,7 @@ BOOL TRailMapObj::moveToNextNode(float param_1)
 
 bool TRailMapObj::checkMarioRiding()
 {
-	TBGCheckData* data = SMS_GetMarioGrPlane();
+	const TBGCheckData* data = SMS_GetMarioGrPlane();
 	if (!checkRailFlag(1)) {
 		if (data && data->getActor() == this && SMS_IsMarioTouchGround4cm()) {
 			u32 status = SMS_GetMarioStatus(SMS_GetMarioHitActor());

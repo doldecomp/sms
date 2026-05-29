@@ -351,7 +351,7 @@ void TBGTakeHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 				if (!col->isActorType(0x80000001))
 					continue;
 
-				if (gpMarioOriginal->isActionCoolOrSomethingIdk())
+				if (gpMarioOriginal->isRoofing())
 					continue;
 
 				if (mOwner->mOwner->getAttackMode() == 7)
@@ -392,7 +392,7 @@ void TBGAttackHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 		    || mOwner->mOwner->getAttackMode() == 7) {
 			for (int i = 0; i < mColCount; ++i) {
 				THitActor* col = mCollisions[i];
-				if (gpMarioOriginal->isActionCoolOrSomethingIdk())
+				if (gpMarioOriginal->isRoofing())
 					continue;
 
 				// TODO: this is an inline, see TBGTakeHit::perform
@@ -709,7 +709,7 @@ void TBGTentacle::setAttackTarget()
 
 	if (mOwner->getAttackMode() == 2) {
 		if (gpMarioOriginal->isTouchGround4cm()
-		    || gpMarioOriginal->isActionCoolOrSomethingIdk()) {
+		    || gpMarioOriginal->isRoofing()) {
 			unk80->setBckFromIndex(23);
 		} else {
 			unk80->setBckFromIndex(21);
@@ -720,7 +720,7 @@ void TBGTentacle::setAttackTarget()
 		unk80->setBckFromIndex(24);
 	} else {
 		if (gpMarioOriginal->isTouchGround4cm()
-		    || gpMarioOriginal->isActionCoolOrSomethingIdk()) {
+		    || gpMarioOriginal->isRoofing()) {
 			unk80->setBckFromIndex(20);
 		} else {
 			unk80->setBckFromIndex(21);

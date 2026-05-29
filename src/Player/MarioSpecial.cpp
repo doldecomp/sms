@@ -1310,7 +1310,7 @@ BOOL TMario::fenceCatch()
 			mPosition.y += 5.0f;
 		if (mFloorPosition.x - 5.0f < mPosition.y)
 			mPosition.y -= 5.0f;
-		return changePlayerStatus(0x38000368, 0, false);
+		return changePlayerStatus(STATUS_FENCE_MOVE, 0, false);
 	}
 
 	return 0;
@@ -1322,7 +1322,7 @@ BOOL TMario::fenceJumpCatch()
 	fenceFootCheck();
 
 	if (isLast1AnimeFrame())
-		return changePlayerStatus(0x38000368, 0, false);
+		return changePlayerStatus(STATUS_FENCE_MOVE, 0, false);
 
 	return 0;
 }
@@ -1365,13 +1365,13 @@ BOOL TMario::fenceMove()
 			    = checkWallPlane(&sideFront2, 140.0f, 50.0f);
 			if (sideWall1 != nullptr && (sideWall1->isFence())
 			    && sideWall2 != nullptr && (sideWall2->isFence())) {
-				if (mStatus == 0x38000368)
+				if (mStatus == STATUS_FENCE_MOVE)
 					changePlayerStatus(0x30000569, 0, false);
 				mPosition = newPos;
 			}
 		} else {
 			setAnimation(ANIM_FENCE_WAIT, 1.0f);
-			changePlayerStatus(0x38000368, 0, false);
+			changePlayerStatus(STATUS_FENCE_MOVE, 0, false);
 		}
 
 		mFaceAngle.y = matan(wall->mNormal.z, wall->mNormal.x) + 0x8000;
@@ -1407,7 +1407,7 @@ BOOL TMario::fenceMove()
 			f32 roofY = mFloorPosition.x;
 			if (roofY < 160.0f + mPosition.y) {
 				mPosition.y = roofY - 160.0f;
-				changePlayerStatus(0x38000368, 0, false);
+				changePlayerStatus(STATUS_FENCE_MOVE, 0, false);
 			}
 		}
 
@@ -1520,7 +1520,7 @@ BOOL TMario::fencePunch()
 	}
 
 	if (isLast1AnimeFrame()) {
-		changePlayerStatus(0x38000368, 0, false);
+		changePlayerStatus(STATUS_FENCE_MOVE, 0, false);
 		return 1;
 	}
 	return 0;
@@ -1656,7 +1656,7 @@ BOOL TMario::specMain()
 		break;
 
 	case 0x30000569:
-	case 0x38000368:
+	case STATUS_FENCE_MOVE:
 		result = fenceMove();
 		break;
 

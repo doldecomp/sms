@@ -13,213 +13,6 @@ u32* gpMarioFlag;
 f32* gpMarioThrowPower;
 const TBGCheckData** gpMarioGroundPlane;
 
-bool SMS_IsMarioRoofing()
-{
-	bool ret;
-
-	u32 val = gpMarioOriginal->mStatus & TMario::STATUS_TYPE_AND_ID_MASK;
-
-	if (val >= 0x147 and val <= 0x14A) {
-		ret = true;
-	} else {
-		ret = false;
-	}
-
-	return ret;
-}
-
-bool SMS_IsMarioFencing()
-{
-	bool ret;
-
-	u32 val = gpMarioOriginal->mStatus & TMario::STATUS_TYPE_AND_ID_MASK;
-
-	if (val >= 0x168 and val <= 0x16C) {
-		ret = true;
-	} else {
-		ret = false;
-	}
-
-	return ret;
-}
-
-u32 SMS_GetMarioStatus(THitActor* actor) { return ((TMario*)actor)->mStatus; }
-
-const TBGCheckData* SMS_GetMarioRfPlane()
-{
-	return gpMarioOriginal->mRoofPlane;
-}
-
-const TBGCheckData* SMS_GetMarioWlPlane()
-{
-	return gpMarioOriginal->mWallPlane;
-}
-
-const TBGCheckData* SMS_GetMarioGrPlane()
-{
-	return gpMarioOriginal->mGroundPlane;
-}
-
-u32 SMS_GetMarioStatus() { return gpMarioOriginal->mStatus; }
-
-void SMS_WindMoveMario(const JGeometry::TVec3<float>& vec)
-{
-	gpMarioOriginal->windMove(vec);
-}
-
-void SMS_FlowMoveMario(const JGeometry::TVec3<float>& vec)
-{
-	gpMarioOriginal->flowMove(vec);
-}
-
-void SMS_MarioWarpRequest(const JGeometry::TVec3<float>& vec, float f)
-{
-	gpMarioOriginal->warpRequest(vec, f);
-}
-
-void SMS_MarioMoveRequest(const JGeometry::TVec3<float>& vec)
-{
-	gpMarioOriginal->moveRequest(vec);
-}
-
-bool SMS_IsMarioDashing()
-{
-	return !!gpMarioOriginal->checkFlag(MARIO_FLAG_FLUDD_EMITTING);
-}
-
-bool SMS_IsMarioOnYoshi() { return gpMarioOriginal->onYoshi(); }
-
-bool SMS_IsMarioOpeningDoor()
-{
-	if (gpMarioOriginal->mStatus == TMario::STATUS_DOOR_OPEN_R
-	    || gpMarioOriginal->mStatus == TMario::STATUS_DOOR_OPEN_L) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
-bool SMS_IsMarioOnWire()
-{
-	bool ret;
-	if (gpMarioOriginal->mHolder
-	    && gpMarioOriginal->mHolder->mActorType == 0x40000098)
-		ret = true;
-	else
-		ret = false;
-
-	return !!ret;
-}
-
-bool SMS_IsMarioTouchGround4cm()
-{
-	bool ret;
-
-	if (gpMarioOriginal->mPosition.y
-	    <= 4.0f + gpMarioOriginal->mFloorPosition.y) {
-		ret = 1;
-	} else {
-		ret = 0;
-	}
-
-	if (ret)
-		return 1;
-	else
-		return 0;
-}
-
-void SMS_ThrowMario(const JGeometry::TVec3<float>& vec, float f)
-{
-	gpMarioOriginal->throwMario(vec, f);
-}
-
-bool SMS_SendMessageToMario(THitActor* m, u32 mesg)
-{
-	if (gpMarioOriginal->receiveMessage(m, mesg))
-		return true;
-
-	return false;
-}
-
-TWaterGun* SMS_GetMarioWaterGun() { return gpMarioOriginal->mWaterGun; }
-
-f32 SMS_GetMarioGravity()
-{
-	return gpMarioOriginal->mJumpParams.mGravity.value;
-}
-
-f32 SMS_GetMarioGrLevel() { return gpMarioOriginal->mFloorPosition.y; }
-
-f32 SMS_GetMarioDamageRadius() { return gpMarioOriginal->mDamageRadius; }
-
-s16 SMS_GetMarioHP() { return gpMarioOriginal->mHealth; }
-
-bool SMS_IsMarioHeadSlideAttack()
-{
-	if (gpMarioOriginal->mStatus == TMario::STATUS_CATCH
-	    || gpMarioOriginal->mStatus == TMario::STATUS_JUMP_CATCH) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
-bool SMS_IsMarioStatusElecDamage()
-{
-	if (gpMarioOriginal->mStatus == TMario::STATUS_ELECTRIC_DAMAGE) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
-bool SMS_IsMarioStatusThrownDown()
-{
-	if (gpMarioOriginal->mStatus == TMario::STATUS_THROWN_DOWN) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
-bool SMS_IsMarioStatusHipDrop()
-{
-	if (gpMarioOriginal->mStatus == TMario::STATUS_HIP_DROP) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
-bool SMS_IsMarioStatusTypeSwimming()
-{
-	if (gpMarioOriginal->mStatus & TMario::STATUS_FLAG_SWIMMING) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
-bool SMS_IsMarioStatusTypeJumping()
-{
-	if (gpMarioOriginal->mStatus & TMario::STATUS_FLAG_JUMPING) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
-TLiveActor* SMS_GetMarioLiveActor() { return (TLiveActor*)gpMarioAddress; }
-
-THitActor* SMS_GetMarioHitActor() { return (THitActor*)gpMarioAddress; }
-
-bool SMS_AskJumpIntoWaterEffectExist()
-{
-	return gpMarioOriginal->askJumpIntoWaterEffectExist();
-}
-
-TYoshi* SMS_GetYoshi() { return gpMarioOriginal->mYoshi; }
-
 void SMS_SetMarioAccessParams()
 {
 	s16* angle;
@@ -244,3 +37,167 @@ void SMS_SetMarioAccessParams()
 	gpMarioThrowPower  = &gpMarioOriginal->mDeParams.mThrowPower.value;
 	gpMarioGroundPlane = &gpMarioOriginal->mGroundPlane;
 }
+
+TYoshi* SMS_GetYoshi() { return gpMarioOriginal->mYoshi; }
+
+bool SMS_AskJumpIntoWaterEffectExist()
+{
+	return gpMarioOriginal->askJumpIntoWaterEffectExist();
+}
+
+THitActor* SMS_GetMarioHitActor() { return (THitActor*)gpMarioAddress; }
+
+TLiveActor* SMS_GetMarioLiveActor() { return (TLiveActor*)gpMarioAddress; }
+
+bool SMS_IsMarioStatusTypeJumping()
+{
+	return gpMarioOriginal->checkStatusFlag(TMario::STATUS_FLAG_JUMPING);
+}
+
+bool SMS_IsMarioStatusTypeSwimming()
+{
+	return gpMarioOriginal->checkStatusFlag(TMario::STATUS_FLAG_SWIMMING);
+}
+
+bool SMS_IsMarioStatusHipDrop()
+{
+	if (gpMarioOriginal->mStatus == TMario::STATUS_HIP_DROP) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+bool SMS_IsMarioStatusThrownDown()
+{
+	if (gpMarioOriginal->mStatus == TMario::STATUS_THROWN_DOWN) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+bool SMS_IsMarioStatusElecDamage()
+{
+	if (gpMarioOriginal->mStatus == TMario::STATUS_ELECTRIC_DAMAGE) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+bool SMS_IsMarioHeadSlideAttack()
+{
+	if (gpMarioOriginal->mStatus == TMario::STATUS_CATCH
+	    || gpMarioOriginal->mStatus == TMario::STATUS_JUMP_CATCH) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+s16 SMS_GetMarioHP() { return gpMarioOriginal->mHealth; }
+
+f32 SMS_GetMarioDamageRadius() { return gpMarioOriginal->mDamageRadius; }
+
+f32 SMS_GetMarioGrLevel() { return gpMarioOriginal->mFloorPosition.y; }
+
+f32 SMS_GetMarioGravity()
+{
+	return gpMarioOriginal->mJumpParams.mGravity.value;
+}
+
+TWaterGun* SMS_GetMarioWaterGun() { return gpMarioOriginal->mWaterGun; }
+
+bool SMS_SendMessageToMario(THitActor* m, u32 mesg)
+{
+	if (gpMarioOriginal->receiveMessage(m, mesg))
+		return true;
+
+	return false;
+}
+
+void SMS_ThrowMario(const JGeometry::TVec3<float>& vec, float f)
+{
+	gpMarioOriginal->throwMario(vec, f);
+}
+
+bool SMS_IsMarioTouchGround4cm()
+{
+	if (gpMarioOriginal->isTouchGround4cm())
+		return true;
+	else
+		return false;
+}
+
+bool SMS_IsMarioOnWire()
+{
+	bool ret;
+	if (gpMarioOriginal->mHolder
+	    && gpMarioOriginal->mHolder->mActorType == 0x40000098)
+		ret = true;
+	else
+		ret = false;
+
+	return !!ret;
+}
+
+bool SMS_IsMarioOpeningDoor()
+{
+	if (gpMarioOriginal->mStatus == TMario::STATUS_DOOR_OPEN_R
+	    || gpMarioOriginal->mStatus == TMario::STATUS_DOOR_OPEN_L) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+bool SMS_IsMarioOnYoshi() { return gpMarioOriginal->onYoshi(); }
+
+bool SMS_IsMarioDashing()
+{
+	return !!gpMarioOriginal->checkFlag(MARIO_FLAG_FLUDD_EMITTING);
+}
+
+void SMS_MarioMoveRequest(const JGeometry::TVec3<float>& vec)
+{
+	gpMarioOriginal->moveRequest(vec);
+}
+
+void SMS_MarioWarpRequest(const JGeometry::TVec3<float>& vec, float f)
+{
+	gpMarioOriginal->warpRequest(vec, f);
+}
+
+void SMS_FlowMoveMario(const JGeometry::TVec3<float>& vec)
+{
+	gpMarioOriginal->flowMove(vec);
+}
+
+void SMS_WindMoveMario(const JGeometry::TVec3<float>& vec)
+{
+	gpMarioOriginal->windMove(vec);
+}
+
+u32 SMS_GetMarioStatus() { return gpMarioOriginal->mStatus; }
+
+const TBGCheckData* SMS_GetMarioGrPlane()
+{
+	return gpMarioOriginal->mGroundPlane;
+}
+
+const TBGCheckData* SMS_GetMarioWlPlane()
+{
+	return gpMarioOriginal->mWallPlane;
+}
+
+const TBGCheckData* SMS_GetMarioRfPlane()
+{
+	return gpMarioOriginal->mRoofPlane;
+}
+
+u32 SMS_GetMarioStatus(THitActor* actor) { return ((TMario*)actor)->mStatus; }
+
+bool SMS_IsMarioFencing() { return gpMarioOriginal->isFencing(); }
+
+bool SMS_IsMarioRoofing() { return gpMarioOriginal->isRoofing(); }

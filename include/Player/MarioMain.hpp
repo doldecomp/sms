@@ -1273,7 +1273,7 @@ public:
 	// TODO: rename and sort out the status category checks
 
 	// fabricated
-	bool isActionCoolOrSomethingIdk() const
+	bool isRoofing() const
 	{
 		if ((mStatus & STATUS_TYPE_AND_ID_MASK)
 		        >= (STATUS_KICK_ROOF & STATUS_TYPE_AND_ID_MASK)
@@ -1285,10 +1285,12 @@ public:
 	}
 
 	// Fabricated
-	bool fabricatedActionInline() const
+	bool isFencing() const
 	{
-		if ((mStatus & STATUS_TYPE_AND_ID_MASK) >= 0x168
-		    && 0x16c >= (mStatus & STATUS_TYPE_AND_ID_MASK))
+		if ((mStatus & STATUS_TYPE_AND_ID_MASK)
+		        >= (STATUS_FENCE_MOVE & STATUS_TYPE_AND_ID_MASK)
+		    && (STATUS_FENCE_JUMP_CATCH & STATUS_TYPE_AND_ID_MASK)
+		           >= (mStatus & STATUS_TYPE_AND_ID_MASK))
 			return true;
 
 		return false;
@@ -1328,6 +1330,8 @@ public:
 	/* 0x74 */ u32 mInput;
 	/* 0x78 */ u32 unk78;
 
+	// TODO: these need to be defined outside of TMario because some code
+	// accesses 'em without including TMario
 	enum {
 		STATUS_FLAG_UNK200      = 0x200,
 		STATUS_FLAG_RUNNING     = 0x400,
@@ -1615,6 +1619,9 @@ public:
 		= STATUS_FLAG_RUNNING | STATUS_TYPE_SPECIAL | 0x20, // 0x560
 		STATUS_OIL_PULLING = STATUS_FLAG_UNK40000 | STATUS_FLAG_RUNNING
 		                     | STATUS_TYPE_SPECIAL | 0x21, // 0x40561
+		STATUS_FENCE_MOVE = STATUS_FLAG_UNK20000000 | STATUS_FLAG_UNK10000000
+		                    | STATUS_FLAG_UNK8000000 | STATUS_FLAG_UNK200
+		                    | STATUS_TYPE_SPECIAL | 0x28, // 0x38000368
 		STATUS_FENCE_PUNCH = STATUS_FLAG_UNK20000000 | STATUS_FLAG_UNK10000000
 		                     | STATUS_FLAG_UNK200 | STATUS_TYPE_SPECIAL
 		                     | 0x2A, // 0x3000036A

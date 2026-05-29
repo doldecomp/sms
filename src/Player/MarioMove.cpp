@@ -2088,7 +2088,7 @@ void TMario::thinkWaterSurface()
 			bool canEnter = true;
 			if (checkStatusFlag(STATUS_FLAG_SWIMMING))
 				canEnter = false;
-			if (fabricatedActionInline())
+			if (isFencing())
 				canEnter = false;
 			if (statusId >= 0x145 && statusId <= 0x14A)
 				canEnter = false;
