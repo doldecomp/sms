@@ -333,8 +333,6 @@ void TMapObjGeneral::kill()
 	breaking();
 }
 
-u32 TMapObjGeneral::getLivingTime() const { return mNormalLivingTime; }
-
 void TMapObjGeneral::appear()
 {
 	makeObjAppeared();
