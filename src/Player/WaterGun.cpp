@@ -1570,7 +1570,7 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 	case 1:
 	case 0:
 		if (unk1CEC == 0.0f) {
-			if (mMario->fabricatedActionInline()) {
+			if (mMario->isFencing()) {
 				mFluddModel->setBck("wg_fepmp");
 			} else if (mMario->checkFlag(MARIO_FLAG_IN_SHALLOW_WATER
 			                             | MARIO_FLAG_IN_WATER)) {
