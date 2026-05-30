@@ -26,7 +26,7 @@ void TMario::doSwimming()
 	mForwardVel *= mSwimParams.mMoveBrake.get();
 
 	f32 rotMinF, rotMaxF;
-	if (fabricatedUnk380Inline()) {
+	if (isUpperPumpingStyle()) {
 		rotMinF = (f32)mSwimParams.mPumpingRotSpMin.get();
 		rotMaxF = (f32)mSwimParams.mPumpingRotSpMax.get();
 	} else {

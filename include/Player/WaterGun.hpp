@@ -253,10 +253,16 @@ public:
 	}
 
 	// Fabricated
-	bool isUnk1D00LessThanZero() { return unk1D00 < 0.0f ? true : false; }
+	bool isSwitchingToSprayNozzle()
+	{
+		return mSwitchToSecondNozzleSpeed < 0.0f ? true : false;
+	}
 
 	// Fabricated
-	bool isUnk1D00GreaterThanZero() { return unk1D00 > 0.0f ? true : false; }
+	bool isSwitchingToSecondaryNozzle()
+	{
+		return mSwitchToSecondNozzleSpeed > 0.0f ? true : false;
+	}
 
 	// Fabricated
 	bool checkCurrentNozzleRocketType(u32 pType) const
@@ -321,8 +327,8 @@ public:
 	/* 0x1CF4 */ f32 unk1CF4;
 	/* 0x1CF8 */ u16 unk1CF8;
 	/* 0x1CFA */ u16 unk1CFA;
-	/* 0x1CFC */ f32 unk1CFC; // mFluddSwitchTween
-	/* 0x1D00 */ f32 unk1D00;
+	/* 0x1CFC */ f32 mSwitchToSecondNozzleProgress;
+	/* 0x1D00 */ f32 mSwitchToSecondNozzleSpeed;
 	/* 0x1D04 */ s16 unk1D04;
 	/* 0x1D06 */ s16 unk1D06;
 	/* 0x1D08 */ s16 unk1D08;

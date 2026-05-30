@@ -1493,7 +1493,8 @@ void TMario::checkController(JDrama::TGraphics*)
 
 	// Rocket-nozzle pump rotation latch
 	if (mWaterGun != nullptr) {
-		if ((s32)mWaterGun->mCurrentNozzle == 5 && (unk380 == 0 ? true : false)
+		if ((s32)mWaterGun->mCurrentNozzle == TWaterGun::Turbo
+		    && isUpperState(UPPER_STATE_PUMPING)
 		    && mGamePad->mCompSPos[3] > 0.0f
 		    && (f32)mWaterGun->mCurrentWater > 0.0f) {
 			if (mIntendedMag == 0.0f)
@@ -1509,7 +1510,7 @@ void TMario::checkController(JDrama::TGraphics*)
 					    && ((TNozzleTrigger*)((const TWaterGun*)mWaterGun)
 					            ->getCurrentNozzle())
 					               ->unk385
-					           == 1) {
+					           == TNozzleTrigger::ACTIVE) {
 						onFlag(MARIO_FLAG_FLUDD_EMITTING);
 						startSoundActor(MSD_SE_PO_SNIPER_TRIGGER);
 						if (checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
@@ -2404,7 +2405,7 @@ void TMario::gunExec()
 		}
 
 		if (mWaterGun->mCurrentWater == mWaterGun->getMaxWater()
-		    && unk380 == 0) {
+		    && mUpperState == UPPER_STATE_PUMPING) {
 			mWaterGun->emit();
 			mWaterGun->resetWaterToFull();
 		}

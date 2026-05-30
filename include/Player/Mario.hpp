@@ -718,7 +718,14 @@ public:
 	void loadAnmTexPattern(J3DAnmTexPattern**, char*, J3DModelData*);
 	void initMirrorModel();
 	void finalDrawInitialize();
-	bool isUpperPumpingStyle() const;
+	bool isUpperPumpingStyle() const
+	{
+		if (mUpperState == UPPER_STATE_PUMPING
+		    || mUpperState == UPPER_STATE_HOLDING_PUMP) {
+			return true;
+		}
+		return false;
+	}
 	void considerWaist();
 	void calcBaseMtxTorocco(MtxPtr);
 	void calcBaseMtxPole(MtxPtr);
@@ -1223,18 +1230,9 @@ public:
 	}
 
 	// Fabricated
-	bool checkUnk380(u32 message) const
+	bool isUpperState(u32 state) const
 	{
-		return unk380 == message ? true : false;
-	}
-
-	// Fabricated
-	bool fabricatedUnk380Inline() const
-	{
-		if (unk380 == 0 || unk380 == 1) {
-			return true;
-		}
-		return false;
+		return mUpperState == state ? true : false;
 	}
 
 	// Fabricated
@@ -1296,8 +1294,6 @@ public:
 
 	// Fabricated
 	s32 checkUnk368() const { return unk368 > 0.0f ? 1 : 0; }
-
-	bool checkActionThing() { return mStatus & 0x1000 ? true : false; }
 
 public:
 	/* 0x74 */ u32 mInput;
@@ -1645,8 +1641,19 @@ public:
 	/* 0x374 */ f32 unk374;
 	/* 0x378 */ f32 unk378;
 	/* 0x37C */ u16 unk37C;
-	/* 0x37E */ u16 unk37E;        // some kind of timer for the pump?
-	/* 0x380 */ u32 unk380;        // pump state?
+	/* 0x37E */ u16 mPumpCooldown;
+
+	enum {
+		UPPER_STATE_PUMPING,
+		UPPER_STATE_HOLDING_PUMP,
+		UPPER_STATE_HOLDING_OBJECT,
+		UPPER_STATE_UNK3,
+		// Mario holding his bum when on fire
+		UPPER_STATE_FIXED_ANIMATION,
+		UPPER_STATE_IDLE,
+	};
+
+	/* 0x380 */ u32 mUpperState;   // pump state?
 	/* 0x384 */ THitActor* unk384; // Last receiveMessage sender
 	/* 0x388 */ u8 unk388;
 	// TODO: Make enum (0 = red, 1 = yellow, 2 = green)

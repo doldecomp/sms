@@ -366,10 +366,10 @@ void TNozzleBase::animation(int param_1)
 	if (param_1 != 2)
 		return;
 
-	if (mFludd->unk1D00 > 0.0f ? true : false)
+	if (mFludd->isSwitchingToSecondaryNozzle())
 		unk36C = 4;
 
-	if (mFludd->unk1D00 < 0.0f ? true : false)
+	if (mFludd->isSwitchingToSprayNozzle())
 		unk36C = 3;
 
 	switch (unk36C) {
@@ -472,8 +472,9 @@ void TNozzleBase::animation(int param_1)
 			mactor->setBckFromIndex(1);
 
 		// Use external tween value
-		ctrl->setFrame(-(2.0f * (mFludd->unk1CFC - 0.5f) - 1.0f)
-		               * ctrl->getEnd());
+		ctrl->setFrame(
+		    -(2.0f * (mFludd->mSwitchToSecondNozzleProgress - 0.5f) - 1.0f)
+		    * ctrl->getEnd());
 		ctrl->setRate(0.0f);
 		break;
 	}
@@ -484,10 +485,11 @@ void TNozzleBase::animation(int param_1)
 			mactor->setBckFromIndex(0);
 
 		// Use external tween value
-		ctrl->setFrame(2.0f * (mFludd->unk1CFC - 0.5f) * ctrl->getEnd());
+		ctrl->setFrame(2.0f * (mFludd->mSwitchToSecondNozzleProgress - 0.5f)
+		               * ctrl->getEnd());
 		ctrl->setRate(0.0f);
 
-		if (mFludd->unk1CFC >= 1.0f)
+		if (mFludd->mSwitchToSecondNozzleProgress >= 1.0f)
 			unk36C = 0;
 
 		break;
@@ -517,7 +519,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 
 		// Very likely an inline
 		bool check;
-		if (mFludd->mMario->unk380 == 0) {
+		if (mFludd->mMario->mUpperState == TMario::UPPER_STATE_PUMPING) {
 			check = true;
 		} else {
 			check = false;
@@ -549,7 +551,8 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 
 	bool canSpray = true;
 
-	if (!(mFludd->mMario->unk380 == 0 ? true : false))
+	if (!(mFludd->mMario->mUpperState == TMario::UPPER_STATE_PUMPING ? true
+	                                                                 : false))
 		canSpray = false;
 
 	if (mFludd->mMario->checkFlag(MARIO_FLAG_IN_ANY_WATER) == true
@@ -724,10 +727,10 @@ void TNozzleTrigger::animation(int param_1)
 		return;
 	}
 
-	if (mFludd->unk1D00 > 0.0f ? true : false)
+	if (mFludd->isSwitchingToSecondaryNozzle())
 		unk36C = 4;
 
-	if (mFludd->unk1D00 < 0.0f ? true : false)
+	if (mFludd->isSwitchingToSprayNozzle())
 		unk36C = 3;
 
 	switch (unk36C) {
@@ -824,8 +827,9 @@ void TNozzleTrigger::animation(int param_1)
 			mactor->setBckFromIndex(bckSwapOut);
 
 		// Use external tween value
-		ctrl->setFrame(-(2.0f * (mFludd->unk1CFC - 0.5f) - 1.0f)
-		               * ctrl->getEnd());
+		ctrl->setFrame(
+		    -(2.0f * (mFludd->mSwitchToSecondNozzleProgress - 0.5f) - 1.0f)
+		    * ctrl->getEnd());
 		ctrl->setRate(0.0f);
 		break;
 	}
@@ -836,10 +840,11 @@ void TNozzleTrigger::animation(int param_1)
 			mactor->setBckFromIndex(bckSwapIn);
 
 		// Use external tween value
-		ctrl->setFrame(2.0f * (mFludd->unk1CFC - 0.5f) * ctrl->getEnd());
+		ctrl->setFrame(2.0f * (mFludd->mSwitchToSecondNozzleProgress - 0.5f)
+		               * ctrl->getEnd());
 		ctrl->setRate(0.0f);
 
-		if (mFludd->unk1CFC >= 1.0f)
+		if (mFludd->mSwitchToSecondNozzleProgress >= 1.0f)
 			unk36C = 0;
 
 		break;
@@ -1002,7 +1007,7 @@ void TNozzleDeform::animation(int param)
 	if (gpMarDirector->unk124 == 3)
 		return;
 
-	if (mFludd->unk1D00 > 0.0f ? true : false) {
+	if (mFludd->isSwitchingToSecondaryNozzle()) {
 		if (unk36C != 4 && unk36C != 6) {
 			if (mFludd->unk1CEC > 0.5f) {
 				unk36C = 4;
@@ -1011,7 +1016,7 @@ void TNozzleDeform::animation(int param)
 			}
 		}
 	} else {
-		if (mFludd->unk1D00 < 0.0f ? true : false) {
+		if (mFludd->isSwitchingToSprayNozzle()) {
 			if (unk36C != 5 && unk36C != 7) {
 				if (mFludd->unk1CEC > 0.5f) {
 					unk36C = 5;
@@ -1133,7 +1138,8 @@ void TNozzleDeform::animation(int param)
 		if (!mactor->checkCurBckFromIndex(1))
 			mactor->setBckFromIndex(1);
 
-		ctrl->setFrame(2.0f * mFludd->unk1CFC * ctrl->getEnd());
+		ctrl->setFrame(2.0f * mFludd->mSwitchToSecondNozzleProgress
+		               * ctrl->getEnd());
 		ctrl->setRate(0.0f);
 		break;
 	}
@@ -1142,9 +1148,10 @@ void TNozzleDeform::animation(int param)
 		if (!mactor->checkCurBckFromIndex(0))
 			mactor->setBckFromIndex(0);
 
-		ctrl->setFrame((1.0f - 2.0f * mFludd->unk1CFC) * ctrl->getEnd());
+		ctrl->setFrame((1.0f - 2.0f * mFludd->mSwitchToSecondNozzleProgress)
+		               * ctrl->getEnd());
 		ctrl->setRate(0.0f);
-		if (mFludd->unk1CFC <= 0.0f) {
+		if (mFludd->mSwitchToSecondNozzleProgress <= 0.0f) {
 			unk36C          = 0;
 			mFludd->unk1CEC = 0.0f;
 		}
@@ -1155,7 +1162,8 @@ void TNozzleDeform::animation(int param)
 		if (!mactor->checkCurBckFromIndex(3))
 			mactor->setBckFromIndex(3);
 
-		ctrl->setFrame(2.0f * mFludd->unk1CFC * ctrl->getEnd());
+		ctrl->setFrame(2.0f * mFludd->mSwitchToSecondNozzleProgress
+		               * ctrl->getEnd());
 		ctrl->setRate(0.0f);
 		break;
 	}
@@ -1164,9 +1172,10 @@ void TNozzleDeform::animation(int param)
 		if (!mactor->checkCurBckFromIndex(2))
 			mactor->setBckFromIndex(2);
 
-		ctrl->setFrame((1.0f - 2.0f * mFludd->unk1CFC) * ctrl->getEnd());
+		ctrl->setFrame((1.0f - 2.0f * mFludd->mSwitchToSecondNozzleProgress)
+		               * ctrl->getEnd());
 		ctrl->setRate(0.0f);
-		if (mFludd->unk1CFC <= 0.0f) {
+		if (mFludd->mSwitchToSecondNozzleProgress <= 0.0f) {
 			unk36C          = 2;
 			mFludd->unk1CEC = 0.0f;
 		}
@@ -1212,18 +1221,18 @@ void TWaterGun::init()
 	mCurrentWater = mNozzleList[mCurrentNozzle]->mEmitParams.mAmountMax.get();
 	mIsEmitWater  = false;
 	unk1C88       = 0.0f;
-	mCurrentPressure  = 0;
-	mPreviousPressure = 0;
-	unk1CEC           = 1.0f;
-	unk1CF0           = 0.1f;
-	unk1CF4           = 0.0049999999f;
-	unk1CF8           = 0x168;
-	unk1CFA           = 0;
-	unk1CFC           = 0.0f;
-	unk1D00           = 0.0f;
-	unk1D04           = 0;
-	unk1D06           = -0x1800;
-	unk1D08           = 0;
+	mCurrentPressure              = 0;
+	mPreviousPressure             = 0;
+	unk1CEC                       = 1.0f;
+	unk1CF0                       = 0.1f;
+	unk1CF4                       = 0.0049999999f;
+	unk1CF8                       = 0x168;
+	unk1CFA                       = 0;
+	mSwitchToSecondNozzleProgress = 0.0f;
+	mSwitchToSecondNozzleSpeed    = 0.0f;
+	unk1D04                       = 0;
+	unk1D06                       = -0x1800;
+	unk1D08                       = 0;
 
 	mEmitInfo = new TWaterEmitInfo("/Mario/GunEmit.prm");
 
@@ -1441,12 +1450,12 @@ void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 	                / mNozzleList[mCurrentNozzle]->mEmitParams.mAmountMax.get();
 	if (nozzleType == Spray) {
 		if (animate == true) {
-			unk1CFC = 0.0f;
+			mSwitchToSecondNozzleProgress = 0.0f;
 		}
 	} else {
 		mSecondNozzle = nozzleType;
 		if (animate == true) {
-			unk1CFC = 1.0f;
+			mSwitchToSecondNozzleProgress = 1.0f;
 		}
 	}
 	mCurrentNozzle = nozzleType;
@@ -1501,25 +1510,25 @@ void TWaterGun::movement()
 	}
 
 	// Nozzle swapping
-	if (unk1D00 != 0.0f) {
-		f32 unk = unk1CFC;
-		f32 sum = unk + unk1D00;
-		unk1CFC = sum;
+	if (mSwitchToSecondNozzleSpeed != 0.0f) {
+		f32 before                    = mSwitchToSecondNozzleProgress;
+		f32 after                     = before + mSwitchToSecondNozzleSpeed;
+		mSwitchToSecondNozzleProgress = after;
 
-		if (unk < 0.5f && 0.5f <= sum)
+		if (before < 0.5f && 0.5f <= after)
 			changeNozzle((TNozzleType)mSecondNozzle, false);
 
-		if (sum < 0.5f && 0.5f <= unk)
+		if (after < 0.5f && 0.5f <= before)
 			changeNozzle(Spray, false);
 
-		if (unk1CFC < 0.0f) {
-			unk1CFC = 0.0f;
-			unk1D00 = 0.0f;
+		if (mSwitchToSecondNozzleProgress < 0.0f) {
+			mSwitchToSecondNozzleProgress = 0.0f;
+			mSwitchToSecondNozzleSpeed    = 0.0f;
 		}
 
-		if (1.0f < unk1CFC) {
-			unk1CFC = 1.0f;
-			unk1D00 = 0.0f;
+		if (1.0f < mSwitchToSecondNozzleProgress) {
+			mSwitchToSecondNozzleProgress = 1.0f;
+			mSwitchToSecondNozzleSpeed    = 0.0f;
 		}
 	}
 
@@ -1553,22 +1562,15 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 {
 	gpMarioForCallBack      = mMario;
 	J3DFrameCtrl* frameCtrl = mFluddModel->getFrameCtrl(MActor::ANM_TYPE_BCK);
-	if (mMario == nullptr) {
+	if (mMario == nullptr)
 		return;
-	}
 
-	// TODO: This is probably an enum.
-	s32 var380 = mMario->unk380;
-	if ((var380 & 0x8000) != 0) {
-		var380 = 0;
-	}
+	// TODO: Wut? There's no 0x8000 flag for this state anywhere else?
+	s32 var380 = (mMario->mUpperState & 0x8000) != 0 ? 0 : mMario->mUpperState;
 
-	// TODO: Definitely a fake match.
-	// Maybe nested inlined switch statements?
 	switch (var380) {
-
-	case 1:
-	case 0:
+	case TMario::UPPER_STATE_PUMPING:
+	case TMario::UPPER_STATE_HOLDING_PUMP:
 		if (unk1CEC == 0.0f) {
 			if (mMario->isFencing()) {
 				mFluddModel->setBck("wg_fepmp");
@@ -1576,12 +1578,9 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 			                             | MARIO_FLAG_IN_WATER)) {
 				mFluddModel->setBck("wg_swpmp");
 			} else {
-				// TODO: Cast would be weird here, probably an inlined
-				// getter that converts to s32
-
-				switch ((s32)mMario->mAnimationId) {
+				switch (mMario->mAnimationId) {
 				case TMario::ANIM_HANG:
-					mFluddModel->setBck("wg_pump");
+					mFluddModel->setBck("wg_hgpmp");
 					break;
 				default:
 					mFluddModel->setBck("wg_pump");
@@ -1589,27 +1588,26 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 				}
 			}
 
-			(void)"wg_hgpmp"; // NOTE: from unreachable code maybe?
-
 			frameCtrl->setRate(0.0f);
 			frameCtrl->setFrame(mMario->getPumpFrame());
 			unk1CFA = unk1CF8;
 		} else {
 			mFluddModel->setBck("wg_house");
-			if ((unk1CEC > 0.0f)
-			    && (unk1CEC = unk1CEC - 0.1f, unk1CEC <= 0.0f)) {
-				unk1CEC = 0.0f;
+			if (unk1CEC > 0.0f) {
+				unk1CEC -= 0.1f;
+				if (unk1CEC <= 0.0f)
+					unk1CEC = 0.0f;
 			}
 			frameCtrl->setRate(0.0f);
 			frameCtrl->setFrame(unk1CEC * frameCtrl->getEnd());
 		}
 		break;
 
-	case 5:
+	case TMario::UPPER_STATE_IDLE:
 	default:
 		if (unk1CFA == 0) {
 			if (unk1CEC < 1.0f) {
-				unk1CEC = unk1CEC + unk1CF4;
+				unk1CEC += unk1CF4;
 				mFluddModel->setBck("wg_house");
 				frameCtrl->setRate(0.0f);
 				frameCtrl->setFrame(unk1CEC * frameCtrl->getEnd());
@@ -1620,7 +1618,7 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 				frameCtrl->setFrame(unk1CEC * frameCtrl->getEnd());
 			}
 		} else {
-			unk1CFA = unk1CFA - 1;
+			unk1CFA -= 1;
 		}
 		break;
 	}
@@ -1899,15 +1897,15 @@ void TWaterGun::changeBackup()
 {
 	// TODO: Missing stack space
 	// volatile u32 unused2[5];
-	if (unk1CFC == 0.0f) {
+	if (mSwitchToSecondNozzleProgress == 0.0f) {
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_POMP_BACK, 0,
 		                                   nullptr, 0);
-		unk1D00 = mWatergunParams.mChangeSpeed.get();
+		mSwitchToSecondNozzleSpeed = mWatergunParams.mChangeSpeed.get();
 	}
 
-	if (unk1CFC == 1.0f) {
+	if (mSwitchToSecondNozzleProgress == 1.0f) {
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_POMP, 0, nullptr,
 		                                   0);
-		unk1D00 = -mWatergunParams.mChangeSpeed.get();
+		mSwitchToSecondNozzleSpeed = -mWatergunParams.mChangeSpeed.get();
 	}
 }

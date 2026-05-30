@@ -74,7 +74,11 @@ public:
 	J3DModel* getModel() { return unk8; }
 
 	// Fabricated
-	BOOL checkModelState() const { return (unkC[1].getState() & 3) ? 1 : 0; }
+	BOOL someAnimationCompleted() const
+	{
+		return unkC[1].checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
+		                          | J3DFrameCtrl::STATE_LOOPED_ONCE);
+	}
 
 public:
 	/* 0x4 */ M3UModelCommon* unk4;

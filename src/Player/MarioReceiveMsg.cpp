@@ -773,7 +773,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 					mFaceAngle.y = frontYaw;
 					changePlayerStatus(MARIO_STATUS_DOOR_OPEN_R, 0, false);
 					if (isHolding()) {
-						unk380 = 2;
+						mUpperState = UPPER_STATE_HOLDING_OBJECT;
 						setAnimation(ANIM_DOOR_KICK, 1.0f);
 					} else {
 						setAnimation(ANIM_DOOR_OPENR, 1.0f);
@@ -787,7 +787,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 						mFaceAngle.y = frontYaw + 0x8000;
 						changePlayerStatus(MARIO_STATUS_DOOR_OPEN_L, 0, false);
 						if (isHolding()) {
-							unk380 = 2;
+							mUpperState = UPPER_STATE_HOLDING_OBJECT;
 							setAnimation(ANIM_DOOR_KICK, 1.0f);
 						} else {
 							setAnimation(ANIM_DOOR_OPENL, 1.0f);

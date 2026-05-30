@@ -100,7 +100,7 @@ bool TMario::isTakeSituation(THitActor* object)
 	if (onYoshi())
 		return false;
 
-	if (!checkUnk380(5))
+	if (!isUpperState(UPPER_STATE_IDLE))
 		return false;
 
 	if (mHeldObject != nullptr)
@@ -415,31 +415,26 @@ void TMario::considerTake()
 	// volatile u32 missingStack[6];
 	bool check = false;
 
-	if (checkUnk380(2)) {
+	if (isUpperState(UPPER_STATE_HOLDING_OBJECT))
 		check = true;
-	}
 
-	if (checkUnk380(3)) {
+	if (isUpperState(UPPER_STATE_UNK3))
 		check = true;
-	}
 
 	if (mStatus == MARIO_STATUS_TAKE
-	    || checkStatusFlag(MARIO_STATUS_FLAG_UNK80000000)) {
+	    || checkStatusFlag(MARIO_STATUS_FLAG_UNK80000000))
 		check = true;
-	}
 
 	if (mStatus == MARIO_STATUS_PULLING || mStatus == MARIO_STATUS_PULL_JUMP
-	    || mStatus == MARIO_STATUS_OIL_PULLING) {
+	    || mStatus == MARIO_STATUS_OIL_PULLING)
 		check = true;
-	}
 
 	if (mHeldObject != nullptr && mHeldObject->mHolder != this) {
 		mHeldObject = nullptr;
 	}
 
-	if (mHolder != nullptr && mHolder->mHeldObject != this) {
+	if (mHolder != nullptr && mHolder->mHeldObject != this)
 		mHolder = nullptr;
-	}
 
 	if (mHeldObject != nullptr && !check) {
 		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK7);
