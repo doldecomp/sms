@@ -658,7 +658,7 @@ public:
 	BOOL sinkLoser();
 	BOOL downLoser();
 	BOOL warpIn();
-	BOOL isUnUsualStageStart();
+	bool isUnUsualStageStart();
 	void startCommon(const JGeometry::TVec3<f32>*, f32);
 	BOOL rollingStart(const JGeometry::TVec3<f32>*, f32);
 	BOOL returnStart(const JGeometry::TVec3<f32>*, f32, bool, int);
