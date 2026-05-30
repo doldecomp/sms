@@ -35,7 +35,7 @@ public:
 	}
 	virtual void moveTrans(const JGeometry::TVec3<f32>&) { }
 	virtual void moveMtx(MtxPtr) { }
-	virtual void setUp() { }
+	virtual void setUp() { unk5C &= ~1; }
 	virtual void setUpTrans(const JGeometry::TVec3<f32>& param_1)
 	{
 		JGeometry::TVec3<f32> vec3;
