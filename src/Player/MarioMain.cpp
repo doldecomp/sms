@@ -21,6 +21,8 @@
 
 static JGeometry::TVec3<f32> cDeformedTerrainCenter(0.0f, 5000.0f, 0.0f);
 
+TMario* gpMarioOriginal;
+
 BOOL TMario::isMario() { return gpMarioOriginal == this ? TRUE : FALSE; }
 
 void TMario::thinkFreeze()

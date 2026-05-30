@@ -964,11 +964,11 @@ BOOL TMario::rocketing()
 				if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 					mWaterGun->unk1CC2 = -nozzleAngle;
 					mWaterGun->unk1CC4 = nozzleAngle;
+					s16 rotSp          = mHoverParams.mRotSp.get();
 					mFaceAngle.y
 					    = mIntendedYaw
 					      - IConverge((s16)(mIntendedYaw - mFaceAngle.y), 0,
-					                  mHoverParams.mRotSp.get(),
-					                  mHoverParams.mRotSp.get());
+					                  rotSp, rotSp);
 				}
 			}
 			break;
@@ -991,6 +991,10 @@ BOOL TMario::rocketing()
 	}
 
 	switch (jumpProcess(2)) {
+	case 1:
+	case 2:
+		break;
+
 	case 4:
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 		changePlayerStatus(MARIO_STATUS_HANG_ROOF, 0, 0);
