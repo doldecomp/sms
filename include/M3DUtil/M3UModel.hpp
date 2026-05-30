@@ -87,7 +87,11 @@ public:
 	/* 0x10 */ u16 unk10;
 	/* 0x14 */ M3UMtxCalcSetInfo* unk14; // Size matches unk1C
 	/* 0x18 */ u32 unk18;
-	/* 0x1C */ u8* unk1C; // Another small item of 2 u8
+	struct Unk1CStruct {
+		u8 unk0;
+		u8 unk1;
+	};
+	/* 0x1C */ Unk1CStruct* unk1C;
 };
 
 #endif

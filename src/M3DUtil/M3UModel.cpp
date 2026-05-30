@@ -28,10 +28,10 @@ void M3UModel::changeMtxCalcAnmTransform(int param_1, u8 param_2)
 
 void M3UModel::changeAnmTexPattern(int param_1, u8 param_2)
 {
-	u8* ptr = &unk1C[param_1 * 2];
-	ptr[0]  = param_2;
+	Unk1CStruct& tmp = unk1C[param_1];
+	tmp.unk0         = param_2;
 
-	J3DFrameCtrl& ctrl = getFrameCtrl(ptr[1]);
+	J3DFrameCtrl& ctrl = getFrameCtrl(tmp.unk1);
 	ctrl.setEnd(unk4->unk8[param_2]->getFrameMax());
 	ctrl.setFrame(0.0f);
 }
@@ -71,14 +71,14 @@ void M3UModel::updateInMotion()
 void M3UModel::updateInTexPatternAnm()
 {
 	if (unk1C)
-		getFrameCtrl(unk1C[1]).update();
+		getFrameCtrl(unk1C->unk1).update();
 }
 
 void M3UModel::updateIn()
 {
 	updateInMotion();
 	if (unk1C != nullptr) {
-		getFrameCtrl(unk1C[1]).update();
+		getFrameCtrl(unk1C->unk1).update();
 	}
 }
 
@@ -93,23 +93,20 @@ void M3UModel::updateOut()
 void M3UModel::entryIn()
 {
 	if (unk1C != nullptr) {
-		u8* ids                 = unk1C;
-		u8 patternId            = ids[0];
-		u8 frameCtrlId          = ids[1];
-		J3DFrameCtrl& frameCtrl = getFrameCtrl(frameCtrlId);
-		if (patternId != 0xff) {
-			J3DAnmTexPattern* pattern = unk4->unk8[patternId];
+		Unk1CStruct& tmp        = unk1C[0];
+		J3DFrameCtrl& frameCtrl = getFrameCtrl(tmp.unk1);
+		if (tmp.unk0 != 0xff) {
+			J3DAnmTexPattern* pattern = unk4->unk8[tmp.unk0];
 			pattern->setFrame(frameCtrl.getFrame());
-			unk8->mModelData->setTexNoAnimator(pattern, unk4->unkC[ids[0]]);
+			unk8->mModelData->setTexNoAnimator(pattern, unk4->unkC[tmp.unk0]);
 		}
 	}
 }
 
 void M3UModel::entryOut()
 {
-	if (unk1C != nullptr && *unk1C != 0xff) {
-		unk8->mModelData->removeTexNoAnimator(unk4->unk8[unk1C[0]]);
-	}
+	if (unk1C != nullptr && unk1C->unk0 != 0xff)
+		unk8->mModelData->removeTexNoAnimator(unk4->unk8[unk1C->unk0]);
 }
 
 void M3UModel::perform(u32 param_1, JDrama::TGraphics* param_2)
