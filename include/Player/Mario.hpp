@@ -1772,11 +1772,11 @@ public:
 	TBarParams mBarParams;
 
 	/* 0x1640 */ TSurfingParams mSurfingParamsWaterRed;
-	TSurfingParams mSurfingParamsGroundRed;
-	TSurfingParams mSurfingParamsWaterYellow;
-	TSurfingParams mSurfingParamsGroundYellow;
-	TSurfingParams mSurfingParamsWaterGreen;
-	TSurfingParams mSurfingParamsGroundGreen;
+	/* 0x1814 */ TSurfingParams mSurfingParamsGroundRed;
+	/* 0x19E8 */ TSurfingParams mSurfingParamsWaterYellow;
+	/* 0x1BBC */ TSurfingParams mSurfingParamsGroundYellow;
+	/* 0x1D90 */ TSurfingParams mSurfingParamsWaterGreen;
+	/* 0x1F64 */ TSurfingParams mSurfingParamsGroundGreen;
 
 	/* 0x2138 */ THHoverParams mHoverParams;
 	/* 0x217C */ TDivingParams mDivingParams;

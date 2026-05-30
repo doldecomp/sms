@@ -1453,31 +1453,21 @@ void TMario::initModel()
 
 	frameCtrl[2].setRate(SMSGetAnmFrameRate());
 
-	// Something weird is going on around here
-	// M3UMarioMtxCalcSetInfo might be a wrong assumption?
-	M3UMarioMtxCalcSetInfo* setInfo = new M3UMarioMtxCalcSetInfo();
-	setInfo->mJointIdx              = 0;
-	setInfo->unk2                   = 2;
-	setInfo->mMtxCalcIdx            = 0;
-	setInfo->mAnmTransformIdx[0]    = 0x14;
-	setInfo->mAnmTransformIdx[1]    = 0x41;
-	setInfo->mFrameCtrlIdx          = 0;
-	setInfo->unkA                   = mBoneIDs[0]; // Probably wrong?
-	setInfo->unkE                   = 0;
-	setInfo->unk12                  = 0x100;
-	modelMario->unk10               = 2;
-	modelMario->unk24               = setInfo;
+	SomeModelMarioStruct* setInfo = new SomeModelMarioStruct[2];
+	setInfo[0]        = (SomeModelMarioStruct) { 0, 2, 0, 0x14, 0x41, 0 };
+	setInfo[1]        = (SomeModelMarioStruct) { mBoneIDs[0], 2, 1, 0, 0, 1 };
+	modelMario->unk10 = 2;
+	modelMario->unk24 = setInfo;
 
-	u8* unk           = new u8[2];
-	unk[0]            = 0;
-	unk[1]            = 2;
-	modelMario->unk1C = unk;
+	M3UModel::Unk1CStruct* unk = new M3UModel::Unk1CStruct;
+	*unk                       = (M3UModel::Unk1CStruct) { 0, 2 };
+	modelMario->unk1C          = unk;
 
 	modelMario->changeMtxCalcSIAnmBQAnmTransform(0, 0, 0x3e);
 	modelMario->changeMtxCalcSIAnmBQAnmTransform(1, 0, 0x41);
 
-	frameCtrl[1].setRate(0.0f);
-	marioCommon->unk18[1].unk58 = nullptr;
+	modelMario->unkC[1].setRate(0.0f);
+	marioCommon->unk18[1].unk50 = 0.0f;
 	mModel                      = modelMario;
 
 	setAnimation(ANIM_WAIT, 1.0f);
@@ -1523,24 +1513,24 @@ void TMario::initModel()
 			anmData->init("/scene/map/map/Torocco", nullptr);
 			mTorocco = new MActor(anmData);
 
-			J3DModelData* toroccoData = J3DModelLoaderDataBase::load(
-			    JKRFileLoader::getGlbResource(
-			        "/scene/map/map/Torocco/Torocco.bmd"),
-			    0x10040000);
-			J3DModel* toroccoModel = new J3DModel(toroccoData, 0, 1);
-			mTorocco->setModel(toroccoModel, 0);
+			void* toroccoRes = JKRFileLoader::getGlbResource(
+			    "/scene/map/map/Torocco/Torocco.bmd");
+			mTorocco->setModel(
+			    new J3DModel(
+			        J3DModelLoaderDataBase::load(toroccoRes, 0x10040000), 0, 1),
+			    0);
 			if (gpMarDirector->unk7D == 0) {
 				mRailType              = 0;
 				MActorAnmData* anmData = new MActorAnmData();
 				anmData->init("/scene/map/map/Pinna_rail", nullptr);
 				mPinaRail = new MActor(anmData);
 
-				J3DModelData* pinaRailData = J3DModelLoaderDataBase::load(
-				    JKRFileLoader::getGlbResource(
-				        "/scene/map/map/Pinna_rail/Pinna_rail.bmd"),
-				    0x10040000);
-				J3DModel* pinaRailModel = new J3DModel(pinaRailData, 0, 1);
-				mPinaRail->setModel(pinaRailModel, 0);
+				void* pinaRailRes = JKRFileLoader::getGlbResource(
+				    "/scene/map/map/Pinna_rail/Pinna_rail.bmd");
+				mPinaRail->setModel(new J3DModel(J3DModelLoaderDataBase::load(
+				                                     pinaRailRes, 0x10040000),
+				                                 0, 1),
+				                    0);
 
 				mPinaRail->getFrameCtrl(0)->setRate(0.5f);
 
@@ -1557,12 +1547,12 @@ void TMario::initModel()
 				anmData->init("/scene/map/map/Koopa_rail", nullptr);
 				mKoopaRail = new MActor(anmData);
 
-				J3DModelData* pinaRailData = J3DModelLoaderDataBase::load(
-				    JKRFileLoader::getGlbResource(
-				        "/scene/map/map/Koopa_rail/Koopa_rail.bmd"),
-				    0x10040000);
-				J3DModel* pinaRailModel = new J3DModel(pinaRailData, 0, 1);
-				mKoopaRail->setModel(pinaRailModel, 0);
+				void* koopaRailRes = JKRFileLoader::getGlbResource(
+				    "/scene/map/map/Koopa_rail/Koopa_rail.bmd");
+				mKoopaRail->setModel(new J3DModel(J3DModelLoaderDataBase::load(
+				                                      koopaRailRes, 0x10040000),
+				                                  0, 1),
+				                     0);
 
 				mKoopaRail->getFrameCtrl(0)->setRate(0.5f);
 
@@ -1587,7 +1577,7 @@ void TMario::initModel()
 		mKoopaRail = nullptr;
 	}
 
-	mMultiMtxEffect                 = new TMultiMtxEffect();
+	mMultiMtxEffect                 = new TMultiMtxEffect;
 	mMultiMtxEffect->mNumBones      = 3;
 	u16* boneIds                    = new u16[3];
 	boneIds[0]                      = mBoneIDs[0];
@@ -1733,7 +1723,6 @@ void TMario::considerWaist()
 	unk3D8 += angleChangeRate * (targetRoll - unk3D8);
 }
 
-// This needs work!
 void TMario::calcBaseMtx(MtxPtr mtx)
 {
 	if (mStatus == MARIO_STATUS_TOROCCO) {
@@ -1757,7 +1746,10 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		mPosition.x = mtx[0][3];
 		mPosition.y = mtx[1][3];
 		mPosition.z = mtx[2][3];
-	} else if (checkStatusFlag(MARIO_STATUS_FLAG_UNK100000)) {
+		return;
+	}
+
+	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK100000)) {
 		J3DTransformInfo ti;
 		ti.mScale.x     = 1.0f;
 		ti.mScale.y     = 1.0f;
@@ -1770,99 +1762,203 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		ti.mTranslate.y = mPosition.y;
 		ti.mTranslate.z = mPosition.z - radiusAtY * JMASCos(mModelFaceAngle);
 		J3DGetTranslateRotateMtx(ti, mtx);
+		return;
+	}
+
+	if (!checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING)) {
+		J3DTransformInfo ti;
+		ti.mScale.x     = 1.0f;
+		ti.mScale.y     = 1.0f;
+		ti.mScale.z     = 1.0f;
+		ti.mRotation.x  = 0;
+		ti.mRotation.y  = mModelFaceAngle;
+		ti.mRotation.z  = 0;
+		ti.mTranslate.x = mPosition.x;
+		ti.mTranslate.y = mPosition.y;
+		ti.mTranslate.z = mPosition.z;
+		ti.mTranslate.y += gpMapObjWave->getHeight(
+		                       mPosition.x, mFloorPosition.z, mPosition.z)
+		                   - mFloorPosition.z;
+		J3DGetTranslateRotateMtx(ti, mtx);
+		return;
+	}
+
+	// Swimming
+	if (mHolder != nullptr && mHolder->getTakingMtx() != nullptr) {
+		MTXCopy(mHolder->getTakingMtx(), mtx);
+		return;
+	}
+
+	if (mStatus != MARIO_STATUS_JUMP_CATCH
+	    && mStatus != MARIO_STATUS_WIRE_ROLLING) {
+		mFaceAngle.x = 0;
+	}
+
+	if ((unk114 & 8) ? true : false) {
+		// Sample ground heights at three points around mario to form a
+		// triangle, then build a rotation matrix oriented to its normal.
+		JGeometry::TVec3<f32> p1, p2, p3;
+		p1.x = JMASSin(mFaceAngle.y + 0x2AAA) * 40.0f + mPosition.x;
+		p1.z = JMASCos(mFaceAngle.y + 0x2AAA) * 40.0f + mPosition.z;
+		p2.x = JMASSin(mFaceAngle.y + 0x8000) * 40.0f + mPosition.x;
+		p2.z = JMASCos(mFaceAngle.y + 0x8000) * 40.0f + mPosition.z;
+		p3.x = JMASSin(mFaceAngle.y + 0xD555) * 40.0f + mPosition.x;
+		p3.z = JMASCos(mFaceAngle.y + 0xD555) * 40.0f + mPosition.z;
+
+		const TBGCheckData* groundData;
+		checkGroundPlane(p1.x, mPosition.y + 160.0f, p1.z, &p1.y, &groundData);
+		checkGroundPlane(p2.x, mPosition.y + 160.0f, p2.z, &p2.y, &groundData);
+		checkGroundPlane(p3.x, mPosition.y + 160.0f, p3.z, &p3.y, &groundData);
+
+		if (p1.y - mPosition.y < -120.0f)
+			p1.y = mPosition.y;
+		if (p2.y - mPosition.y < -120.0f)
+			p2.y = mPosition.y;
+		if (p3.y - mPosition.y < -120.0f)
+			p3.y = mPosition.y;
+
+		f32 avgY = (p1.y + p2.y + p3.y) / 3.0f;
+
+		JGeometry::TVec3<f32> forward;
+		forward.x = JMASSin(mFaceAngle.y);
+		forward.y = 0.0f;
+		forward.z = JMASCos(mFaceAngle.y);
+
+		JGeometry::TVec3<f32> v1;
+		v1.sub(p2, p1);
+		JGeometry::TVec3<f32> v2;
+		v2.sub(p3, p2);
+
+		JGeometry::TVec3<f32> cross;
+		cross.cross(v2, v1);
+		cross.normalize();
+
+		f32 d = cross.dot(p1);
+
+		JGeometry::TVec3<f32> ncross;
+		ncross.x = -cross.x;
+		ncross.y = -cross.y;
+		ncross.z = -cross.z;
+
+		JGeometry::TVec3<f32> axis;
+		axis.cross(ncross, forward);
+		MsVECNormalize(&axis, &axis);
+
+		JGeometry::TVec3<f32> bin;
+		bin.cross(axis, ncross);
+		MsVECNormalize(&bin, &bin);
+
+		mtx[0][0] = axis.x;
+		mtx[0][1] = ncross.x;
+		mtx[0][2] = bin.z;
+		mtx[0][3] = mPosition.x;
+		mtx[1][0] = axis.y;
+		mtx[1][1] = ncross.y;
+		mtx[1][2] = bin.x;
+		mtx[1][3] = (avgY < mPosition.y) ? mPosition.y : avgY;
+		mtx[2][0] = axis.z;
+		mtx[2][1] = ncross.z;
+		mtx[2][2] = bin.y;
+		mtx[2][3] = mPosition.z;
+		(void)d;
 	} else {
-		if (!checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING)) {
-			J3DTransformInfo ti;
-			ti.mScale.x     = 1.0f;
-			ti.mScale.y     = 1.0f;
-			ti.mScale.z     = 1.0f;
-			ti.mRotation.x  = 0;
-			ti.mRotation.y  = mModelFaceAngle;
-			ti.mRotation.z  = 0;
-			ti.mTranslate.x = mPosition.x;
-			ti.mTranslate.y = mPosition.y;
-			ti.mTranslate.z = mPosition.z;
-			ti.mTranslate.y += gpMapObjWave->getHeight(
-			                       mPosition.x, mFloorPosition.z, mPosition.z)
-			                   - mFloorPosition.z;
-			J3DGetTranslateRotateMtx(ti, mtx);
+		J3DTransformInfo ti;
+		ti.mScale.x     = 1.0f;
+		ti.mScale.y     = 1.0f;
+		ti.mScale.z     = 1.0f;
+		ti.mRotation.x  = mFaceAngle.x;
+		ti.mRotation.y  = mModelFaceAngle;
+		ti.mRotation.z  = mFaceAngle.z;
+		ti.mTranslate.x = mPosition.x;
+		ti.mTranslate.y = mPosition.y;
+		ti.mTranslate.z = mPosition.z;
+		J3DGetTranslateRotateMtx(ti, mtx);
+	}
+
+	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK10000)) {
+
+		if (mGroundPlane->isWaterSurface()) {
+			// Use water-side surf params
+			s16 rMax = mSurfingParamsWaterRed.mPitchMax.get();
+			s16 pMax = mSurfingParamsWaterRed.mPitchMax.get();
+
+			f32 rollScale  = mSurfingParamsWaterRed.mPitch.get();
+			f32 pitchScale = mSurfingParamsWaterRed.mWaistRoll.get();
+
+			s16 limitR = (s16)(mForwardVel * rollScale);
+			s16 delta  = mFaceAngle.y - unk9C;
+			s16 limitP = (s16)((f32)delta * mForwardVel * pitchScale);
+			if (limitR > rMax)
+				limitR = rMax;
+			if (limitR < -rMax)
+				limitR = -rMax;
+
+			if (limitP > pMax)
+				limitP = pMax;
+			if (limitP < -pMax)
+				limitP = -pMax;
+
+			unk414.y = ((f32)limitR - unk414.y)
+			               * mSurfingParamsWaterRed.mAngleChangeRate.get()
+			           + unk414.y;
+			unk414.x = ((f32)limitP - unk414.x)
+			               * mSurfingParamsWaterRed.mAngleChangeRate.get()
+			           + unk414.x;
 		} else {
-			if (mHolder != nullptr && mHolder->getTakingMtx() != nullptr) {
-				MTXCopy(mHolder->getTakingMtx(), mtx);
-			} else {
+			// Use ground-side surf params
+			s16 rMax       = mSurfingParamsGroundRed.mRollMax.get();
+			s16 pMax       = mSurfingParamsGroundRed.mPitchMax.get();
+			f32 rollScale  = mSurfingParamsGroundRed.mWaistRoll.get();
+			f32 pitchScale = mSurfingParamsGroundRed.mPitch.get();
 
-				if (mStatus != MARIO_STATUS_JUMP_CATCH
-				    && mStatus != MARIO_STATUS_WIRE_ROLLING) {
-					mFaceAngle.x = 0;
-				}
-				// Probably another checkFlag inline
-				if ((unk114 & 8) ? true : false) {
-					// This is too many inlines for me to try even figure out,
-					// so i won't even attempt it rn...
-					// Keeping my working draft, but it is 100% wrong
+			s16 limitR = (s16)(mForwardVel * rollScale);
+			s16 delta  = mFaceAngle.y - unk9C;
+			s16 limitP = (s16)((f32)delta * mForwardVel * pitchScale);
+			if (limitR > rMax)
+				limitR = rMax;
+			if (limitR < -rMax)
+				limitR = -rMax;
+			if (limitP > pMax)
+				limitP = pMax;
+			if (limitP < -pMax)
+				limitP = -pMax;
 
-					// JGeometry::TVec3<f32> norm1;
-					// JGeometry::TVec3<f32> norm2;
-					// JGeometry::TVec3<f32> norm3;
-					// norm1.x
-					//     = JMASSin(mFaceAngle.y + 0x2AAA) * 40.0f +
-					//     mPosition.x;
-					// norm1.z
-					//     = JMASCos(mFaceAngle.y + 0x2AAA) * 40.0f +
-					//     mPosition.z;
-					// norm2.x
-					//     = JMASSin(mFaceAngle.y + 0x8000) * 40.0f +
-					//     mPosition.x;
-					// norm2.z
-					//     = JMASCos(mFaceAngle.y + 0x8000) * 40.0f +
-					//     mPosition.z;
-					// norm3.x
-					//     = JMASSin(mFaceAngle.y + 0xD555) * 40.0f +
-					//     mPosition.x;
-					// norm3.z
-					//     = JMASCos(mFaceAngle.y + 0xD555) * 40.0f +
-					//     mPosition.z;
+			unk414.y = ((f32)limitR - unk414.y)
+			               * mSurfingParamsGroundRed.mAngleChangeRate.get()
+			           + unk414.y;
+			unk414.x = ((f32)limitP - unk414.x)
+			               * mSurfingParamsGroundRed.mAngleChangeRate.get()
+			           + unk414.x;
+		}
 
-					// const TBGCheckData* unkResultData1;
-					// checkGroundPlane(norm1.x, mPosition.y + 160.0f, norm1.z,
-					//                  &norm1.y, &unkResultData1);
-					// checkGroundPlane(norm2.x, mPosition.y + 160.0f, norm2.z,
-					//                  &norm2.y, &unkResultData1);
-					// checkGroundPlane(norm3.x, mPosition.y + 160.0f, norm3.z,
-					//                  &norm3.y, &unkResultData1);
+		Mtx rot;
+		MsMtxSetRotRPH(rot, SHORTANGLE2DEG((s16)unk414.y), 0.0f,
+		               SHORTANGLE2DEG((s16)unk414.x));
+		MTXConcat(mtx, rot, mtx);
+	}
 
-					// if (norm1.y - mPosition.y < -120.0f) {
-					// 	norm1.y = mPosition.y;
-					// }
-					// if (norm2.y - mPosition.y < -120.0f) {
-					// 	norm2.y = mPosition.y;
-					// }
-					// if (norm3.y - mPosition.y < -120.0f) {
-					// 	norm3.y = mPosition.y;
-					// }
+	MTXIdentity(unk318);
+	if (checkUnk368()) {
+		MTXTrans(unk318, 0.0f,
+		         -(unk368 / mGraffitoParams.mSinkTime.get())
+		             * mGraffitoParams.mSinkHeight.get(),
+		         0.0f);
+	}
 
-					// f32 avg = (norm1.y + norm2.y + norm3.y) / 3.0f;
+	if (unk378 < 0.0f ? TRUE : FALSE)
+		MTXTrans(unk318, 0.0f, unk378, 0.0f);
 
-					// JGeometry::TVec3<f32> prod;
-					// prod.cross(norm3, norm2);
-					// prod.cross(prod, norm1);
-					// prod.normalize();
-				} else {
-					J3DTransformInfo ti;
-					ti.mScale.x     = 1.0f;
-					ti.mScale.y     = 1.0f;
-					ti.mScale.z     = 1.0f;
-					ti.mRotation.x  = mFaceAngle.x;
-					ti.mRotation.y  = mModelFaceAngle;
-					ti.mRotation.z  = mFaceAngle.z;
-					ti.mTranslate.x = mPosition.x;
-					ti.mTranslate.y = mPosition.y;
-					ti.mTranslate.z = mPosition.z;
-					J3DGetTranslateRotateMtx(ti, mtx);
-				}
-			}
+	if (mStatus == MARIO_STATUS_SURF) {
+		const TBGCheckData* gp;
+		gpMap->checkGround(mPosition.x, mPosition.y + 160.0f, mPosition.z, &gp);
+		if (gp->isWaterSurface()) {
+			MTXTrans(
+			    unk318, 0.0f,
+			    gpMapObjWave->getHeight(mPosition.x, mPosition.y, mPosition.z),
+			    0.0f);
 		}
 	}
+	MTXConcat(mtx, unk318, mtx);
 }
 
 void TMario::addCallBack(JDrama::TGraphics* graphics)
@@ -1934,8 +2030,8 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 
 void TMario::setUpperDamageRun()
 {
-	J3DFrameCtrl& frameCtrl      = mModel->getFrameCtrl(1);
-	mModel->unk24[1].mMtxCalcIdx = 1;
+	J3DFrameCtrl& frameCtrl = mModel->getFrameCtrl(1);
+	mModel->unk24[1].unk3   = 1;
 	mModel->changeMtxCalcSIAnmBQAnmTransform(1, 0, 0x4a);
 	frameCtrl.setFrame(frameCtrl.getStart());
 	frameCtrl.setRate(1.0f);
@@ -1952,21 +2048,21 @@ void TMario::addUpper()
 		case UPPER_STATE_PUMPING:
 		case UPPER_STATE_HOLDING_PUMP:
 			if (onYoshi()) {
-				mModel->unk24[1].mMtxCalcIdx = 0xff;
+				mModel->unk24[1].unk3 = -1;
 				return;
 			}
 			if (gMarioAnimeData[mAnimationId].unk2 != 0xC8) {
-				mModel->unk24[1].mMtxCalcIdx = 1;
+				mModel->unk24[1].unk3 = 1;
 				mModel->changeMtxCalcSIAnmBQAnmTransform(
 				    1, 0, gMarioAnimeData[mAnimationId].unk2);
 			}
 			break;
 		case UPPER_STATE_HOLDING_OBJECT:
-			mModel->unk24[1].mMtxCalcIdx = 1;
+			mModel->unk24[1].unk3 = 1;
 			mModel->changeMtxCalcSIAnmBQAnmTransform(1, 0, 0x4b);
 			break;
 		case UPPER_STATE_IDLE:
-			mModel->unk24[1].mMtxCalcIdx = 0xff;
+			mModel->unk24[1].unk3 = -1;
 			break;
 		}
 
@@ -2245,8 +2341,9 @@ void TMario::boxDrawPrepare(MtxPtr mtx)
 
 void TMario::addDirty()
 {
+	u16 i; // why...
 
-	for (u16 i = 0; i < mBodyModelData->getMaterialNum(); ++i) {
+	for (i = 0; i < mBodyModelData->getMaterialNum(); ++i) {
 		J3DGXColor* konstColor = mBodyModelData->getMaterialNodePointer(i)
 		                             ->getTevBlock()
 		                             ->getTevKColor(0);
@@ -2258,7 +2355,7 @@ void TMario::addDirty()
 			for (int modelIdx = 0; modelIdx < 2; ++modelIdx) {
 				J3DModelData* mHandModelData
 				    = mHandModels[handIdx][modelIdx]->getModelData();
-				for (u16 i = 0; i < mHandModelData->getMaterialNum(); ++i) {
+				for (i = 0; i < mHandModelData->getMaterialNum(); ++i) {
 					J3DGXColor* konstColor
 					    = mHandModelData->getMaterialNodePointer(i)
 					          ->getTevBlock()
