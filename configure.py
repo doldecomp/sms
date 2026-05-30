@@ -905,7 +905,7 @@ config.libs = [
         "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength"],
         "progress_category": "game",
         "objects": [
-            Object(NonMatching, "Player/Atom.cpp"),
+            Object(Matching, "Player/Atom.cpp"),
             Object(Matching, "Player/MarioAction.cpp"),
             Object(NonMatching, "Player/MarioAutodemo.cpp"),
             Object(NonMatching, "Player/MarioBlend.cpp"),
