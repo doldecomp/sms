@@ -749,7 +749,7 @@ DEFINE_NERVE(TNerveTamaNokoAttack, TLiveActor)
 					return true;
 				}
 
-				if (SMS_CheckMarioFlag(0x10000)
+				if (SMS_CheckMarioFlag(MARIO_FLAG_IN_SHALLOW_WATER)
 				    || SMS_IsMarioStatusTypeSwimming()
 				    || SMS_GetMarioGrPlane()->isWaterSurface()) {
 					spine->pushAfterCurrent(

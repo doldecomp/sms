@@ -19,7 +19,7 @@ bool TMario::getNozzle(THitActor* sender, TWaterGun::TNozzleType type)
 {
 	if (onYoshi())
 		return FALSE;
-	unk118 |= MARIO_FLAG_HAS_FLUDD;
+	onFlag(MARIO_FLAG_HAS_FLUDD);
 	if (checkFlag(MARIO_FLAG_HAS_FLUDD))
 		mWaterGun->changeNozzle(type, true);
 
@@ -329,7 +329,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				wire->getTipPoints(&mWireStartPos, &mWireEndPos);
 				mWirePosRatio = wire->getPosInWire();
 				wireMove(0.0f);
-				unk118 &= ~MARIO_FLAG_UNK100;
+				offFlag(MARIO_FLAG_UNK100);
 
 				JGeometry::TVec3<f32> diff = mWireEndPos - mWireStartPos;
 				int dirToEnd   = (s16)(matan(diff.z, diff.x) - mFaceAngle.y);
@@ -621,7 +621,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			return TRUE;
 		}
 		if (message == HIT_MESSAGE_UNK3 && !isInvincible()) {
-			unk118 |= MARIO_FLAG_GROUND_POUND_SIT_UP;
+			onFlag(MARIO_FLAG_GROUND_POUND_SIT_UP);
 			if (!checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)) {
 				rumbleStart(0x15, 0x0A);
 			}

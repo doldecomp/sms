@@ -250,14 +250,14 @@ void TMario::drawSyncCallback(u16)
 		if (mMarioScreenPos.x < 0.0f || mMarioScreenPos.y < 0.0f
 		    || mMarioScreenPos.x >= (u16)SMSGetGameRenderWidth()
 		    || mMarioScreenPos.y >= (u16)SMSGetGameRenderHeight()) {
-			unk118 &= ~MARIO_FLAG_ABOVE_SEWER_FLOOR;
+			offFlag(MARIO_FLAG_ABOVE_SEWER_FLOOR);
 		} else {
 			u32 local_1c;
 			GXPeekARGB(mMarioScreenPos.x, mMarioScreenPos.y, &local_1c);
 			if ((local_1c & 0xff000000) == 0x10000000) {
-				unk118 &= ~MARIO_FLAG_ABOVE_SEWER_FLOOR;
+				offFlag(MARIO_FLAG_ABOVE_SEWER_FLOOR);
 			} else {
-				unk118 |= MARIO_FLAG_ABOVE_SEWER_FLOOR;
+				onFlag(MARIO_FLAG_ABOVE_SEWER_FLOOR);
 			}
 		}
 	}

@@ -338,7 +338,7 @@ void TMario::frontSlipEffect()
 	}
 
 	if (!(mPosition.y < mFloorPosition.z)) {
-		if (checkFlag(MARIO_FLAG_UNK40000)) {
+		if (checkFlag(MARIO_FLAG_ON_SAND)) {
 			calcGroundMtx(unk178);
 			gpMarioParticleManager->emitAndBindToMtxPtr(
 			    PARTICLE_MS_M_SLIDESAND_B, unk250, 1, this);

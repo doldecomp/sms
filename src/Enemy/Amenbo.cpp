@@ -409,9 +409,9 @@ bool TAmenbo::isStartMoving() const
 
 bool TAmenbo::isFindOutMario() const
 {
-	if (!SMS_CheckMarioFlag(0x10000)
+	if (!SMS_CheckMarioFlag(MARIO_FLAG_IN_SHALLOW_WATER)
 	    && !SMS_GetMarioGroundPlane()->isWaterSurface()
-	    && !SMS_CheckMarioFlag(0x20000))
+	    && !SMS_CheckMarioFlag(MARIO_FLAG_IN_WATER))
 		return false;
 
 	JGeometry::TVec3<f32> diff = SMS_GetMarioPos();

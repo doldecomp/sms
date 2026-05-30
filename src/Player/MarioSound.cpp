@@ -622,7 +622,7 @@ void TMario::animSound()
 {
 	mSoundFlags = mGroundPlane->unk6;
 
-	if (checkFlag(MARIO_FLAG_UNK_40)) {
+	if (checkFlag(MARIO_FLAG_DIRTY)) {
 		if (unk350 == 0
 		    && unk368 >= mGraffitoParams.mSinkTime.get()
 		                     * mGraffitoParams.mSinkDmgDepth.get())

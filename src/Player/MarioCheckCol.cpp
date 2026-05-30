@@ -272,7 +272,7 @@ void TMario::checkCollision()
                                          ->mEmitParams.mAmountMax.get());
 				}
 				mYoshi->ride();
-				unk118 |= 0x8000;
+				onFlag(MARIO_FLAG_HAS_FLUDD);
 				if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 					mWaterGun->changeNozzle(TWaterGun::Yoshi, true);
 				}
