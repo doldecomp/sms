@@ -46,7 +46,8 @@ TMarioCap::TMarioCap(TMario* mario)
 	}
 
 	J3DModelData* diverHelmModelData = J3DModelLoaderDataBase::load(
-	    JKRFileLoader::getGlbResource("/mario/bmd/diver_helm.bmd"), 0x10100000);
+	    JKRFileLoader::getGlbResource("/mario/watergun2/body/diver_helm.bmd"),
+	    0x10100000);
 	unk10[2] = new J3DModel(diverHelmModelData, 0, 1);
 
 	J3DModelData* maGlass1 = J3DModelLoaderDataBase::load(
