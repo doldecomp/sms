@@ -759,8 +759,8 @@ bool THamuKuri::isFindMario(f32 param_1)
 	if (unk198)
 		return false;
 
-	if (gpMarioOriginal->unk380 == 0
-	    && !*(int*)((u8*)gpMarioOriginal->mWaterGun + 0x1C80) /* TODO: */) {
+	if (gpMarioOriginal->mUpperState == TMario::UPPER_STATE_PUMPING
+	    && gpMarioOriginal->mWaterGun->mCurrentWater == 0) {
 		unk194 = unk1F4->mSLGiveUpLength.get();
 		unk194 *= 3.0f;
 		return TSmallEnemy::isFindMario(param_1 * 5.0f);

@@ -902,7 +902,7 @@ BOOL TMario::rocketCheck()
 		if (mWaterGun->getEmitParams().mRocketType.get() != 1)
 			bVar2 = false;
 
-		if (!(unk380 == 0 ? true : false))
+		if (!isUpperState(UPPER_STATE_PUMPING))
 			bVar2 = false;
 
 		if (!mWaterGun->canSpray())
@@ -929,7 +929,7 @@ BOOL TMario::rocketing()
 			return changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, 0);
 	}
 
-	if (!(unk380 == 0 ? true : false) || !mWaterGun->canSpray())
+	if (!isUpperState(UPPER_STATE_PUMPING) || !mWaterGun->canSpray())
 		return changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, 0);
 
 	if (mInput & 1) {

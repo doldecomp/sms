@@ -939,7 +939,8 @@ BOOL TMario::wireHanging()
 		return 0;
 	}
 
-	if (unk380 == 0 && mWaterGun != nullptr && mWaterGun->canSpray()) {
+	if (mUpperState == UPPER_STATE_PUMPING && mWaterGun != nullptr
+	    && mWaterGun->canSpray()) {
 		s16 rotSp;
 		if (mWaterGun == nullptr) {
 			rotSp = 0;
@@ -1024,7 +1025,8 @@ BOOL TMario::wireRolling()
 			wireMove(-3.0f);
 	}
 
-	if (unk380 == 0 && mWaterGun != nullptr && mWaterGun->canSpray()) {
+	if (mUpperState == UPPER_STATE_PUMPING && mWaterGun != nullptr
+	    && mWaterGun->canSpray()) {
 		s16 rotSp;
 		if (mWaterGun == nullptr) {
 			rotSp = 0;

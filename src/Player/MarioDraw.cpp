@@ -1647,14 +1647,6 @@ void TMario::finalDrawInitialize()
 		                                  nullptr);
 }
 
-bool TMario::isUpperPumpingStyle() const
-{
-	if (unk380 == 0 || unk380 == 1) {
-		return true;
-	}
-	return false;
-}
-
 void TMario::considerWaist()
 {
 	// volatile u32 padding[6];
@@ -1885,7 +1877,7 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 
 	modelData->getJointNodePointer(mBoneIDs[1])->setCallBack(MarioWaistCtrl);
 
-	if (0x4B0 > gpMarDirector->unk58 || fabricatedUnk380Inline()) {
+	if (0x4B0 > gpMarDirector->unk58 || isUpperPumpingStyle()) {
 		if (mMultiMtxEffect != nullptr) {
 			mMultiMtxEffect->flagOff(0x1);
 		}
@@ -1898,7 +1890,8 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 			mCap->mtxEffectHide();
 		}
 	} else {
-		if ((gMarioAnimeData[mAnimationId].unk6 & 2) != 0 && unk380 == 5) {
+		if ((gMarioAnimeData[mAnimationId].unk6 & 2) != 0
+		    && mUpperState == UPPER_STATE_IDLE) {
 			if (mMultiMtxEffect != nullptr) {
 				mMultiMtxEffect->flagOn(0x1);
 			}
@@ -1913,7 +1906,8 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 		}
 	}
 
-	if ((gMarioAnimeData[mAnimationId].unk6 & 4) != 0 && unk380 == 5) {
+	if ((gMarioAnimeData[mAnimationId].unk6 & 4) != 0
+	    && mUpperState == UPPER_STATE_IDLE) {
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 			mWaterGun->unk1CDC->mMtxEffectTbl[1]->mFlags |= 1;
 		}
@@ -1940,24 +1934,23 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 
 void TMario::setUpperDamageRun()
 {
-
 	J3DFrameCtrl& frameCtrl      = mModel->getFrameCtrl(1);
 	mModel->unk24[1].mMtxCalcIdx = 1;
 	mModel->changeMtxCalcSIAnmBQAnmTransform(1, 0, 0x4a);
 	frameCtrl.setFrame(frameCtrl.getStart());
 	frameCtrl.setRate(1.0f);
 	frameCtrl.setRate(0.5f);
-	unk380 = 4;
+	mUpperState = UPPER_STATE_FIXED_ANIMATION;
 }
 
 void TMario::addUpper()
 {
 	// volatile u32 padding[17];
 	J3DFrameCtrl& frameCtrl = mModel->getFrameCtrl(1);
-	if (unk380 != 4) {
-		switch (unk380) {
-		case 0:
-		case 1:
+	if (mUpperState != UPPER_STATE_FIXED_ANIMATION) {
+		switch (mUpperState) {
+		case UPPER_STATE_PUMPING:
+		case UPPER_STATE_HOLDING_PUMP:
 			if (onYoshi()) {
 				mModel->unk24[1].mMtxCalcIdx = 0xff;
 				return;
@@ -1968,16 +1961,16 @@ void TMario::addUpper()
 				    1, 0, gMarioAnimeData[mAnimationId].unk2);
 			}
 			break;
-		case 2:
+		case UPPER_STATE_HOLDING_OBJECT:
 			mModel->unk24[1].mMtxCalcIdx = 1;
 			mModel->changeMtxCalcSIAnmBQAnmTransform(1, 0, 0x4b);
 			break;
-		case 5:
+		case UPPER_STATE_IDLE:
 			mModel->unk24[1].mMtxCalcIdx = 0xff;
 			break;
 		}
 
-		if (unk380 == 0) {
+		if (mUpperState == UPPER_STATE_PUMPING) {
 			frameCtrl.setAttribute(J3DFrameCtrl::ATTR_PING_PONG_LOOP);
 			unk348
 			    = mGamePad->mCompSPos[3] * mUpperBodyParams.mPumpAnmSpeed.get();

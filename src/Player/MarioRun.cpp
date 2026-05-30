@@ -34,14 +34,6 @@ BOOL TMario::considerRotateStart()
 	return 0;
 }
 
-static bool unknown_inline_2(TMario* mario)
-{
-	if (mario->unk380 == 0 || mario->unk380 == 1)
-		return true;
-	else
-		return false;
-}
-
 static int unknown_inline_10(TMario* mario)
 {
 	if ((mario->mInput & 0x8000)
@@ -93,7 +85,7 @@ BOOL TMario::isRunningSlipStart()
 
 BOOL TMario::isRunningTurnning()
 {
-	if (unknown_inline_2(this))
+	if (isUpperPumpingStyle())
 		return false;
 
 	if (onYoshi())
@@ -497,7 +489,7 @@ void TMario::doRunning()
 		mForwardVel = 0.0f;
 
 	s16 rotSp;
-	if (unk380 == 0 || unk380 == 1) {
+	if (isUpperPumpingStyle()) {
 		s16 base = mDeParams.mPumpingRotSpMin.get();
 		rotSp    = (s16)(0.03125f
                           * (mForwardVel

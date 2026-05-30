@@ -149,7 +149,7 @@ BOOL TMario::waiting()
 	if (waitingCommonEvents())
 		return 1;
 
-	if (isMario() && (unk380 == 5 ? true : false) && canSleep()
+	if (isMario() && isUpperState(UPPER_STATE_IDLE) && canSleep()
 	    && mAnimationId == ANIM_WAIT && isAnimeLoopOrStop()
 	    && mGroundPlane != nullptr && mGroundPlane->getNormal().y > 0.99f) {
 		mStatusTimer += 1;
@@ -163,7 +163,7 @@ BOOL TMario::waiting()
 		setAnimation(ANIM_T_WAIT, 1.0f);
 	} else if (unk368 > 0.0f ? TRUE : FALSE) {
 		setAnimation(ANIM_SINKING, 1.0f);
-	} else if (unk380 == 5
+	} else if (mUpperState == UPPER_STATE_IDLE
 	           && (mPrevStatus == MARIO_STATUS_BRAKE_END
 	               || checkFlag(MARIO_FLAG_UNK_20))
 	           && !(mStatusState & 0x1)) {

@@ -22,8 +22,8 @@ BOOL TMario::taking()
 		unk384 = nullptr;
 	}
 	if (isLast1AnimeFrame()) {
-		unk380 = 2;
-		unk37E = 0;
+		mUpperState   = UPPER_STATE_HOLDING_OBJECT;
+		mPumpCooldown = 0;
 		return changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 	} else {
 		waitProcess();
