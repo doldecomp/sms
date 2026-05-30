@@ -202,11 +202,16 @@ void TMapObjBall::hold(TTakeActor* holder)
 	mVelocity.zero();
 }
 
+// This inline probably lives on a class higher up the inheritance chain
+inline bool isFalling(JGeometry::TVec3<f32>& vel)
+{
+	JGeometry::TVec3<f32> velCopy(vel);
+	return velCopy.y < 0.0f;
+}
+
 void TMapObjBall::kicked()
 {
-	JGeometry::TVec3<f32> velCopy  = mVelocity;
-	JGeometry::TVec3<f32> velCopy2 = velCopy;
-	if (velCopy2.y > 0.0f) {
+	if (!isFalling(mVelocity)) {
 		return;
 	}
 
@@ -339,6 +344,7 @@ void TMapObjBall::touchActor(THitActor* actor)
 
 void TMapObjBall::calcCurrentMtx()
 {
+
 	Mtx local48;
 	local48[2][3]             = 0.0f;
 	local48[1][3]             = 0.0f;
@@ -1279,14 +1285,8 @@ void TCoverFruit::calcRootMatrix()
 		PSMTXCopy(takingMtx, model->unk20);
 		mPosition.set(takingMtx[0][3], takingMtx[1][3], takingMtx[2][3]);
 	} else {
-		f32 fVar1 = mRotation.z;
-		f32 fVar2 = (mPosition.y - mYOffset);
-		f32 fVar3 = mRotation.y;
-		f32 fVar4 = mRotation.x;
-		f32 fVar5 = mPosition.z;
-		f32 fVar6 = mPosition.x;
-		MsMtxSetXYZRPH(getModel()->unk20, fVar6, fVar5, fVar4, fVar3, fVar2,
-		               fVar1);
+		MsMtxSetXYZRPH(getModel()->unk20, mPosition.x, mPosition.z, mRotation.x,
+		               mRotation.y, mPosition.y - mYOffset, mRotation.z);
 	}
 
 	J3DModel* model = getModel();
@@ -1364,13 +1364,6 @@ void TBigWatermelon::rebound(JGeometry::TVec3<f32>* surface)
 void TBigWatermelon::touchGround(JGeometry::TVec3<f32>* ground)
 {
 	TMapObjBall::touchGround(ground);
-}
-
-// This inline probably lives on a class higher up the inheritance chain
-inline bool isFalling(JGeometry::TVec3<f32>& vel)
-{
-	JGeometry::TVec3<f32> velCopy(vel);
-	return velCopy.y < 0.0f;
 }
 
 void TBigWatermelon::touchActor(THitActor* actor)

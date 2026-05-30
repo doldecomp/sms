@@ -89,6 +89,7 @@ public:
 
 	void touchKillSurface();
 
+	// fabricated
 	inline void hideTouchActor(THitActor*);
 	inline void unknownInline();
 
