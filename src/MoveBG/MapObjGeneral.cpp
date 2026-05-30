@@ -95,7 +95,7 @@ void TMapObjGeneral::put()
 	s32 preservedTimeTilAppear = getTimeTilAppear();
 	makeObjAppeared();
 	mTimeTilAppear = preservedTimeTilAppear;
-	mPosition.x = JMASSin(*gpMarioAngleY)
+	mPosition.x    = JMASSin(*gpMarioAngleY)
 	                  * (getDamageRadius() + SMS_GetMarioDamageRadius() + 10.0f)
 	              + SMS_GetMarioPos().x;
 	mPosition.y = SMS_GetMarioPos().y;
