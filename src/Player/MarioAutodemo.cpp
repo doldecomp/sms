@@ -51,9 +51,9 @@ BOOL TMario::readBillboard()
 		const JGeometry::TVec3<f32>& targetPos = talkingNpc->getPosition();
 		f32 dx                                 = mPosition.x - targetPos.x;
 		f32 dz                                 = mPosition.z - targetPos.z;
-		if (dx == 0.0f && dz == 0.0f) {
+		if (dx == 0.0f && dz == 0.0f)
 			dx += 1.0f;
-		}
+
 		f32 dist = std::sqrtf(dx * dx + dz * dz);
 		if (dist < 100.0f) {
 			JGeometry::TVec3<f32> moveDist;
@@ -249,28 +249,16 @@ BOOL TMario::warpIn()
 	return FALSE;
 }
 
-BOOL TMario::isUnUsualStageStart()
+bool TMario::isUnUsualStageStart()
 {
 	// Missing stack space
 	// volatile u32 padding[14];
 
 	// Pinna rollercoaster
-	if ((gpMarDirector->mMap == 0x3A)
-	    && (gpMarDirector->unk7D == 0 || gpMarDirector->unk7D == 1)) {
-		changePlayerStatus(MARIO_STATUS_TOROCCO, 0, true);
-		unk114 |= 2;
-		if (mPinaRail != nullptr) {
-			mPinaRail->setBckFromIndex(0);
-			mPinaRail->getFrameCtrl(0)->setRate(0.5f);
-			mPinaRail->getFrameCtrl(0)->setFrame(0.0f);
-		}
-		if (mKoopaRail != nullptr) {
-			mKoopaRail->setBckFromIndex(0);
-			mKoopaRail->getFrameCtrl(0)->setRate(0.5f);
-			mKoopaRail->getFrameCtrl(0)->setFrame(0.0f);
-		}
-		return TRUE;
-	}
+	if ((gpMarDirector->getCurrentMap() == 0x3A)
+	    && (gpMarDirector->getCurrentStage() == 0
+	        || gpMarDirector->getCurrentStage() == 1))
+		return toroccoStart();
 
 	if (SMS_isDivingMap()) {
 		unk114 |= 2;
@@ -281,47 +269,48 @@ BOOL TMario::isUnUsualStageStart()
 		onFlag(MARIO_FLAG_HELMET);
 		onFlag(MARIO_FLAG_HAS_FLUDD);
 
-		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
+		if (checkFlag(MARIO_FLAG_HAS_FLUDD))
 			mWaterGun->changeNozzle(TWaterGun::Underwater, true);
-		}
 
-		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
+		if (checkFlag(MARIO_FLAG_HAS_FLUDD))
 			mWaterGun->changeNozzle(
 			    (TWaterGun::TNozzleType)mWaterGun->mSecondNozzle, true);
-		}
 
-		if (mCap != nullptr) {
+		if (mCap != nullptr)
 			mCap->unk4 |= 2;
-		}
+
 		changePlayerStatus(MARIO_STATUS_DIVE, 0, true);
 		return TRUE;
 	}
+
 	return FALSE;
 }
 
-void startCommon(const JGeometry::TVec3<f32>*, f32) { }
+void TMario::startCommon(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
+{
+	unk114 &= ~2;
+	if (warpPos != nullptr) {
+		warpRequest(*warpPos, rotation);
+		mFaceAngle.set(0, DEG2SHORTANGLE(rotation), 0);
+	}
+
+	checkGroundPlane(mPosition.x, mPosition.y + 25.0f, mPosition.z,
+	                 &mFloorPosition.y, &mGroundPlane);
+	unk2BC = mFloorPosition.y;
+	setAnimation(ANIM_WAIT, 1.0f);
+}
 
 BOOL TMario::rollingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 {
-	u8 result = isUnUsualStageStart();
-	if (result != 0) {
+	if (isUnUsualStageStart())
 		return TRUE;
-	} else {
-		if (mStatus == MARIO_STATUS_DISAPPEAR) {
-			unk114 &= ~2;
-			if (warpPos != nullptr) {
-				warpRequest(*warpPos, rotation);
-				mFaceAngle.set(0, DEG2SHORTANGLE(rotation), 0);
-			}
 
-			checkGroundPlane(mPosition.x, mPosition.y + 25.0f, mPosition.z,
-			                 &mFloorPosition.y, &mGroundPlane);
-			unk2BC = mFloorPosition.y;
-			setAnimation(ANIM_WAIT, 1.0f);
-			changePlayerStatus(MARIO_STATUS_WARP_OUT, 0x200, true);
-			return TRUE;
-		}
+	if (mStatus == MARIO_STATUS_DISAPPEAR) {
+		startCommon(warpPos, rotation);
+		changePlayerStatus(MARIO_STATUS_WARP_OUT, 0x200, true);
+		return TRUE;
 	}
+
 	return FALSE;
 }
 
@@ -331,28 +320,11 @@ BOOL TMario::returnStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation,
 	if (mStatus == MARIO_STATUS_DISAPPEAR) {
 		int offsetPlayerStatus = playerStatus << 8;
 		if (flag == TRUE) {
-			unk114 &= ~2;
-			if (warpPos != nullptr) {
-				warpRequest(*warpPos, rotation);
-				mFaceAngle.set(0, DEG2SHORTANGLE(rotation), 0);
-			}
-			checkGroundPlane(mPosition.x, mPosition.y + 25.0f, mPosition.z,
-			                 &mFloorPosition.y, &mGroundPlane);
-			unk2BC = mFloorPosition.y;
-			setAnimation(ANIM_WAIT, 1.0f);
+			startCommon(warpPos, rotation);
 			changePlayerStatus(MARIO_STATUS_WARP_OUT, offsetPlayerStatus | 2,
 			                   true);
 		} else {
-			unk114 &= ~2;
-			if (warpPos != nullptr) {
-				f32 flippedAngle = rotation + 180.0f;
-				warpRequest(*warpPos, flippedAngle);
-				mFaceAngle.set(0, DEG2SHORTANGLE(flippedAngle), 0);
-			}
-			checkGroundPlane(mPosition.x, mPosition.y + 25.0f, mPosition.z,
-			                 &mFloorPosition.y, &mGroundPlane);
-			unk2BC = mFloorPosition.y;
-			setAnimation(ANIM_WAIT, 1.0f);
+			startCommon(warpPos, rotation + 180.0f);
 			changePlayerStatus(MARIO_STATUS_WARP_OUT, offsetPlayerStatus | 1,
 			                   true);
 		}
@@ -363,24 +335,14 @@ BOOL TMario::returnStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation,
 
 BOOL TMario::waitingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 {
-	u8 result = isUnUsualStageStart();
-	if (result != 0) {
+	if (isUnUsualStageStart())
 		return TRUE;
-	} else {
-		unk114 &= ~2;
-		if (warpPos != nullptr) {
-			warpRequest(*warpPos, rotation);
-			mFaceAngle.set(0, DEG2SHORTANGLE(rotation), 0);
-		}
 
-		checkGroundPlane(mPosition.x, mPosition.y + 25.0f, mPosition.z,
-		                 &mFloorPosition.y, &mGroundPlane);
-		unk2BC = mFloorPosition.y;
-		setAnimation(ANIM_WAIT, 1.0f);
-		unk114 |= 2;
-		changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
-		return TRUE;
-	}
+	startCommon(warpPos, rotation);
+	unk114 |= 2;
+	changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
+	return TRUE;
+
 	return FALSE;
 }
 
@@ -388,16 +350,19 @@ BOOL TMario::toroccoStart()
 {
 	changePlayerStatus(MARIO_STATUS_TOROCCO, 0, true);
 	unk114 |= 2;
+
 	if (mPinaRail != nullptr) {
 		mPinaRail->setBckFromIndex(0);
 		mPinaRail->getFrameCtrl(0)->setRate(0.5f);
 		mPinaRail->getFrameCtrl(0)->setFrame(0.0f);
 	}
+
 	if (mKoopaRail != nullptr) {
 		mKoopaRail->setBckFromIndex(0);
 		mKoopaRail->getFrameCtrl(0)->setRate(0.5f);
 		mKoopaRail->getFrameCtrl(0)->setFrame(0.0f);
 	}
+
 	return TRUE;
 }
 
