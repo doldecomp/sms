@@ -925,9 +925,10 @@ static inline f32 dist(const JGeometry::TVec3<f32>& a,
 
 bool TFireWanwan::isMissMario() const
 {
-	if (SMS_CheckMarioFlag(0x2) || SMS_CheckMarioFlag(0x10000)
+	if (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE)
+	    || SMS_CheckMarioFlag(MARIO_FLAG_IN_SHALLOW_WATER)
 	    || SMS_GetMarioGroundPlane()->isWaterSurface()
-	    || SMS_CheckMarioFlag(0x20000))
+	    || SMS_CheckMarioFlag(MARIO_FLAG_IN_WATER))
 		return true;
 
 	f32 giveUpHeight = getSaveParam2()->mSLGiveUpHeight.get();

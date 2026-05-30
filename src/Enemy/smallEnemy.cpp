@@ -809,18 +809,10 @@ bool TSmallEnemy::isFindMario(float param_1)
 
 bool TSmallEnemy::isMarioInWater() const
 {
-	bool bVar1 = true;
-	bool bVar3 = true;
-	bool bVar2 = true;
-	if (!SMS_CheckMarioFlag(0x2) && !SMS_CheckMarioFlag(0x10000))
-		bVar2 = false;
-	if (!bVar2 && !(*gpMarioGroundPlane)->isWaterSurface())
-		bVar3 = false;
-
-	if (!bVar3 && !SMS_CheckMarioFlag(0x20000))
-		bVar1 = false;
-
-	return bVar1;
+	return (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE)
+	        || SMS_CheckMarioFlag(MARIO_FLAG_IN_SHALLOW_WATER))
+	       || (*gpMarioGroundPlane)->isWaterSurface()
+	       || SMS_CheckMarioFlag(MARIO_FLAG_IN_WATER);
 }
 
 #pragma dont_inline on

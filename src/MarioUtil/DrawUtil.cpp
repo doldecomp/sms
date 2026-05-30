@@ -92,9 +92,9 @@ void TSilhouette::setting(MtxPtr param_1)
 
 void TSilhouette::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
-
 	if ((param_1 & 1) != 0) {
-		f32 fVar1 = SMS_CheckMarioFlag(1) ? unk50 : 0.0f;
+		f32 fVar1
+		    = SMS_CheckMarioFlag(MARIO_FLAG_ABOVE_SEWER_FLOOR) ? unk50 : 0.0f;
 		unk48 += unk4C * (fVar1 - unk48);
 		unk12.a = unk48;
 	}

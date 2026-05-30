@@ -22,7 +22,7 @@ void TMapModel::perform(u32 param_1, JDrama::TGraphics* param_2)
 		// NOTE: this seems to be the logic for entering delphino plaza
 		// underpasses: if inside, draw them on top of everything and move the
 		// camera to top view
-		if (SMS_CheckMarioFlag(0x2)
+		if (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE)
 		    && SMS_GetMarioPos().y < SMS_GetMarioGrLevel() + 200.0f) {
 			mUnderpass->awake();
 

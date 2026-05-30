@@ -700,7 +700,7 @@ BOOL TMario::wireWait()
 	getOnWirePosAngle(&mPosition, &wireAngle);
 
 	if (mInput & 0x2)
-		unk118 |= MARIO_FLAG_UNK100;
+		onFlag(MARIO_FLAG_UNK100);
 
 	if (checkFlag(MARIO_FLAG_UNK100) == true) {
 		if (mWireSag <= 0.0f) {
@@ -719,9 +719,8 @@ BOOL TMario::wireWait()
 				sfx = MSD_SE_MA_ROPE_JUMP_B;
 			else
 				sfx = MSD_SE_MA_ROPE_JUMP_A;
-			if (gpMSound->gateCheck(sfx))
-				MSoundSESystem::MSoundSE::startSoundActorWithInfo(
-				    sfx, &mPosition, nullptr, mWireSag, 0, 0, nullptr, 0, 4);
+			SMSGetMSound()->startSoundActorWithInfo(
+			    sfx, &mPosition, nullptr, mWireSag, 0, 0, nullptr, 0, 4);
 			unk78 &= ~0x100;
 			return ret;
 		}
@@ -771,7 +770,7 @@ BOOL TMario::wireSWait()
 	getOnWirePosAngle(&mPosition, &wireAngle);
 
 	if (mInput & 0x2)
-		unk118 |= MARIO_FLAG_UNK100;
+		onFlag(MARIO_FLAG_UNK100);
 
 	if (checkFlag(MARIO_FLAG_UNK100) == true) {
 		if (mWireSag < 0.0f) {
@@ -1218,7 +1217,7 @@ BOOL TMario::pulling()
 		return changePlayerJumping(MARIO_STATUS_PULL_JUMP, 0);
 	}
 
-	if (mStatus == MARIO_STATUS_OIL_PULLING && !checkFlag(MARIO_FLAG_UNK_40))
+	if (mStatus == MARIO_STATUS_OIL_PULLING && !checkFlag(MARIO_FLAG_DIRTY))
 		changePlayerStatus(MARIO_STATUS_PULLING, 0, false);
 
 	MtxPtr mtx      = mHeldObject->getTakingMtx();

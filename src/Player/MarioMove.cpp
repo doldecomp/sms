@@ -106,7 +106,7 @@ bool TMario::isForceSlip()
 		return true;
 
 	if (unk350 == 2) {
-		if (checkFlag(MARIO_FLAG_UNK_40)) {
+		if (checkFlag(MARIO_FLAG_DIRTY)) {
 			if (mGroundPlane->mNormal.y < mDirtyParams.mSlopeAngle.get())
 				return true;
 		}
@@ -917,7 +917,7 @@ void TMario::checkGraffitoSlip()
 				changePlayerStatus(MARIO_STATUS_OIL_RUN, 0, false);
 		}
 
-		if (!checkFlag(MARIO_FLAG_UNK_40))
+		if (!checkFlag(MARIO_FLAG_DIRTY))
 			unk34E = mDirtyParams.mFogTimeYellow.get()
 			         + mDirtyParams.mFogTimeRed.get();
 
@@ -943,7 +943,7 @@ void TMario::checkGraffitoElec()
 	(void)0;
 	(void)0;
 
-	if (!checkFlag(MARIO_FLAG_UNK_40))
+	if (!checkFlag(MARIO_FLAG_DIRTY))
 		unk34E = mDeParams.mGraffitoNoDmgTime.get();
 
 	if (unk34E != 0) {
@@ -976,7 +976,7 @@ void TMario::checkGraffito()
 	if (unk388 == 1 || unk388 == 2)
 		return;
 
-	int isFullyPolluted = 0;
+	int isDirty = 0;
 	unk350
 	    = gpPollution->getPollutionType(mPosition.x, mPosition.y, mPosition.z);
 
@@ -987,34 +987,34 @@ void TMario::checkGraffito()
 		JGeometry::TVec3<f32> pos = mPosition;
 		pos.x -= 32.0f;
 		pos.z -= 32.0f;
-		isFullyPolluted = 1;
+		isDirty = 1;
 
 		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
-			isFullyPolluted = 0;
+			isDirty = 0;
 		pos.x += 32.0f;
 		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
-			isFullyPolluted = 0;
+			isDirty = 0;
 		pos.x += 32.0f;
 		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
-			isFullyPolluted = 0;
+			isDirty = 0;
 		pos.z += 32.0f;
 		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
-			isFullyPolluted = 0;
+			isDirty = 0;
 		pos.x -= 32.0f;
 		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
-			isFullyPolluted = 0;
+			isDirty = 0;
 		pos.x -= 32.0f;
 		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
-			isFullyPolluted = 0;
+			isDirty = 0;
 		pos.z += 32.0f;
 		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
-			isFullyPolluted = 0;
+			isDirty = 0;
 		pos.x += 32.0f;
 		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
-			isFullyPolluted = 0;
+			isDirty = 0;
 		pos.x += 32.0f;
 		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
-			isFullyPolluted = 0;
+			isDirty = 0;
 		break;
 	}
 
@@ -1027,29 +1027,29 @@ void TMario::checkGraffito()
 		pos.y = mFloorPosition.y;
 		pos.z = mPosition.z;
 
-		isFullyPolluted = 1;
+		isDirty = 1;
 
 		pos.z -= 32.0f;
 		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
-			isFullyPolluted = 0;
+			isDirty = 0;
 
 		pos.x += 32.0f;
 		pos.z += 32.0f;
 		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
-			isFullyPolluted = 0;
+			isDirty = 0;
 
 		pos.x -= 32.0f;
 		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
-			isFullyPolluted = 0;
+			isDirty = 0;
 
 		pos.x -= 32.0f;
 		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
-			isFullyPolluted = 0;
+			isDirty = 0;
 
 		pos.z += 32.0f;
 		pos.x += 32.0f;
 		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
-			isFullyPolluted = 0;
+			isDirty = 0;
 
 		(void)&pos;
 
@@ -1062,37 +1062,37 @@ void TMario::checkGraffito()
 		pos.y = mFloorPosition.y;
 		pos.z = mPosition.z;
 		if (gpPollution->isPolluted(pos.x, pos.y, pos.z))
-			isFullyPolluted = 1;
+			isDirty = 1;
 		else
-			isFullyPolluted = 0;
+			isDirty = 0;
 		break;
 	}
 
 	case 8:
 	case 10:
-		isFullyPolluted = 0;
+		isDirty = 0;
 		break;
 	}
 
-	if (onYoshi() && isFullyPolluted == 1)
+	if (onYoshi() && isDirty == 1)
 		getOffYoshi(true);
 
 	switch (unk350) {
 	case 4:
-		if (isFullyPolluted == 1)
+		if (isDirty == 1)
 			checkGraffitoElec();
 		break;
 	case 1:
 	case 7:
-		if (isFullyPolluted == 1)
+		if (isDirty == 1)
 			checkGraffitoFire();
 		break;
 	case 2:
-		if (isFullyPolluted == 1)
+		if (isDirty == 1)
 			checkGraffitoSlip();
 		break;
 	case 3:
-		if (isFullyPolluted == 1) {
+		if (isDirty == 1) {
 			mPosition.x = unk29C.x;
 			mPosition.z = unk29C.z;
 		}
@@ -1105,13 +1105,13 @@ void TMario::checkGraffito()
 		break;
 	}
 
-	if (isFullyPolluted == 1)
-		unk118 |= MARIO_FLAG_UNK_40;
+	if (isDirty == 1)
+		onFlag(MARIO_FLAG_DIRTY);
 	else
-		unk118 &= ~MARIO_FLAG_UNK_40;
+		offFlag(MARIO_FLAG_DIRTY);
 
 	if (isTouchGround4cm()) {
-		if (isFullyPolluted == 1)
+		if (isDirty == 1)
 			SMS_EmitSinkInPollutionEffect(mPosition, mGroundPlane->getNormal(),
 			                              false);
 
@@ -1142,7 +1142,7 @@ void TMario::dirtyLimitCheck()
 
 void TMario::thinkDirty()
 {
-	if (checkFlag(MARIO_FLAG_UNK_40)) {
+	if (checkFlag(MARIO_FLAG_DIRTY)) {
 		if (mStatus == MARIO_STATUS_RUN || mStatus == MARIO_STATUS_OIL_RUN)
 			unk134 += mDirtyParams.mIncRunning.get();
 		if (mStatus == MARIO_STATUS_CATCH || mStatus == MARIO_STATUS_OIL_SLIP
@@ -1212,7 +1212,7 @@ void TMario::checkSink()
 	}
 
 	if (unk350 == 0) {
-		if (checkFlag(MARIO_FLAG_UNK_40)) {
+		if (checkFlag(MARIO_FLAG_DIRTY)) {
 			unk368 += 1.0f;
 			unk360 = mDeParams.mFootPrintTimerMax.get();
 			if (mHealth > 0
@@ -1242,7 +1242,7 @@ void TMario::checkSink()
 	}
 
 	if (unk350 == 5) {
-		if (checkFlag(MARIO_FLAG_UNK_40)) {
+		if (checkFlag(MARIO_FLAG_DIRTY)) {
 			unk374 -= mJumpParams.mGravity.get();
 			unk378 += unk374;
 			mVel.set(0.0f, 0.0f, 0.0f);
@@ -1510,7 +1510,7 @@ void TMario::checkController(JDrama::TGraphics*)
 					            ->getCurrentNozzle())
 					               ->unk385
 					           == 1) {
-						unk118 |= MARIO_FLAG_FLUDD_EMITTING;
+						onFlag(MARIO_FLAG_FLUDD_EMITTING);
 						startSoundActor(MSD_SE_PO_SNIPER_TRIGGER);
 						if (checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
 							changePlayerStatus(MARIO_STATUS_SWIM_PADDLE, 0,
@@ -1520,11 +1520,11 @@ void TMario::checkController(JDrama::TGraphics*)
 				if (((mStatus + 0xFC000000) & 0xFFFFFFFF) != 0x440
 				    && mStatus != MARIO_STATUS_SWIM_PADDLE) {
 					unkC4 = 0;
-					unk118 &= ~MARIO_FLAG_FLUDD_EMITTING;
+					offFlag(MARIO_FLAG_FLUDD_EMITTING);
 				}
 			} else {
 				unkC4 = 0;
-				unk118 &= ~MARIO_FLAG_FLUDD_EMITTING;
+				offFlag(MARIO_FLAG_FLUDD_EMITTING);
 			}
 			mIntendedMag = unkC0;
 			mWaterGun->rotateProp(unkC0);
@@ -1538,7 +1538,7 @@ void TMario::checkController(JDrama::TGraphics*)
 				unkC0 = 0.0f;
 			}
 			unkC4 = 0;
-			unk118 &= ~MARIO_FLAG_FLUDD_EMITTING;
+			offFlag(MARIO_FLAG_FLUDD_EMITTING);
 		}
 
 		if ((s32)mWaterGun->mCurrentNozzle == TWaterGun::Turbo
@@ -1772,7 +1772,7 @@ void TMario::checkCurrentPlane()
 		if (mPosition.y > mFloorPosition.y + 100.0f)
 			mInput |= 0x4;
 
-		unk118 &= ~MARIO_FLAG_GROUND_POUND_SIT_UP;
+		offFlag(MARIO_FLAG_GROUND_POUND_SIT_UP);
 	}
 }
 
@@ -1931,11 +1931,11 @@ void TMario::thinkSituation()
 		mPosition.z = mHolder->getTakingMtx()[2][3];
 	}
 
-	unk118 &= ~MARIO_FLAG_VISIBLE;
-	unk118 &= ~MARIO_FLAG_UNK_20;
+	offFlag(MARIO_FLAG_VISIBLE);
+	offFlag(MARIO_FLAG_UNK_20);
 
 	if (mGroundPlane->isUnderground())
-		unk118 |= MARIO_FLAG_VISIBLE;
+		onFlag(MARIO_FLAG_VISIBLE);
 
 	if (isMario() && isTouchGround4cm() && mStatus != MARIO_STATUS_DISAPPEAR
 	    && (mGroundPlane->isIllegalData() || mGroundPlane->isOob())) {
@@ -1963,7 +1963,7 @@ void TMario::thinkSituation()
 	                               mPosition.z, &ground);
 
 	if (ground->isDeathPlane() && dVar7 > mPosition.y) {
-		unk118 |= MARIO_FLAG_GAME_OVER;
+		onFlag(MARIO_FLAG_GAME_OVER);
 		mHealth = 0;
 		mAnmSound->stop();
 		if (mYoshi)
@@ -1983,18 +1983,18 @@ void TMario::thinkSituation()
 	if (mGroundPlane->isShadow() && mFloorPosition.y + 200.0f > mPosition.y) {
 		mLightID = mGroundPlane->getData();
 		if (mLightID == 1)
-			unk118 |= MARIO_FLAG_UNK_20;
+			onFlag(MARIO_FLAG_UNK_20);
 	}
 
 	if (gpCubeShadow != nullptr && gpCubeShadow->getInCubeNo(mPosition) != -1)
 		mLightID = 1;
 
-	unk118 &= ~MARIO_FLAG_RECENTLY_LEFT_WATER;
+	offFlag(MARIO_FLAG_RECENTLY_LEFT_WATER);
 
 	if (isMario()) {
 		if (isTouchGround4cm()) {
 			if (gpModelWaterManager->askHitWaterParticleOnGround(mPosition))
-				unk118 |= MARIO_FLAG_RECENTLY_LEFT_WATER;
+				onFlag(MARIO_FLAG_RECENTLY_LEFT_WATER);
 		}
 	}
 
@@ -2039,14 +2039,14 @@ void TMario::thinkWaterSurface()
 	else
 		mFloorPosition.z = mPosition.y;
 
-	unk118 &= ~MARIO_FLAG_IN_SHALLOW_WATER;
-	unk118 &= ~MARIO_FLAG_IN_WATER;
+	offFlag(MARIO_FLAG_IN_SHALLOW_WATER);
+	offFlag(MARIO_FLAG_IN_WATER);
 
 	if (mGroundPlane->isPool()) {
 		mFloorPosition.z = gpPoolManager->getWaterLevel(mGroundPlane);
 		if (mFloorPosition.z > mPosition.y) {
 			isInWater = true;
-			unk118 |= MARIO_FLAG_IN_SHALLOW_WATER;
+			onFlag(MARIO_FLAG_IN_SHALLOW_WATER);
 		}
 	}
 
@@ -2063,7 +2063,7 @@ void TMario::thinkWaterSurface()
 		mFloorPosition.z = waterFloorY;
 		if (mFloorPosition.z >= mPosition.y) {
 			isInWater = true;
-			unk118 |= MARIO_FLAG_IN_WATER;
+			onFlag(MARIO_FLAG_IN_WATER);
 		}
 	} else {
 		const TBGCheckData* localBg;
@@ -2071,7 +2071,7 @@ void TMario::thinkWaterSurface()
 		// TODO: identify BG type 0x810B (camera-noclip variant of 0x10B)
 		if (localBg->mBGType == 0x810B ? true : false) {
 			isInWater = true;
-			unk118 |= MARIO_FLAG_IN_WATER;
+			onFlag(MARIO_FLAG_IN_WATER);
 		}
 	}
 
@@ -2209,10 +2209,10 @@ void TMario::thinkSand()
 {
 	if (checkFlag(MARIO_FLAG_IN_ANY_WATER) == false
 	    && mGroundPlane->isSand() == true) {
-		unk118 |= MARIO_FLAG_UNK40000;
+		onFlag(MARIO_FLAG_ON_SAND);
 		emitSandEffect();
 	} else {
-		unk118 &= ~MARIO_FLAG_UNK40000;
+		offFlag(MARIO_FLAG_ON_SAND);
 	}
 }
 
@@ -2394,10 +2394,10 @@ void TMario::gunExec()
 	mWaterGun->updateUnk1C88(0);
 	mWaterGun->triggerPressureMovement(*unk108);
 
-	unk118 &= ~MARIO_FLAG_UNK_80;
+	offFlag(MARIO_FLAG_UNK_80);
 	if (checkFlag(MARIO_FLAG_IN_ANY_WATER)) {
 		if (!onYoshi() && mWaterGun->suck() == true) {
-			unk118 |= MARIO_FLAG_UNK_80;
+			onFlag(MARIO_FLAG_UNK_80);
 			if (checkFlag(MARIO_FLAG_IN_SHALLOW_WATER)
 			    && mGroundPlane->isPool())
 				gpPoolManager->subWaterLevel(mGroundPlane);

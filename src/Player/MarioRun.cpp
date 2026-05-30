@@ -760,7 +760,7 @@ BOOL TMario::running()
 
 			doPushingAnimation(prevPos);
 			unkC4 = 0;
-			unk118 &= ~MARIO_FLAG_FLUDD_EMITTING;
+			offFlag(MARIO_FLAG_FLUDD_EMITTING);
 		}
 		break;
 	}

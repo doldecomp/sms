@@ -38,7 +38,8 @@ void TMario::doJumping()
 		f32 mag       = mIntendedMag;
 		s16 angleDiff = mIntendedYaw - mFaceAngle.y;
 
-		if (mStatus == MARIO_STATUS_ROCKET && checkFlag(0x8000)) {
+		if (mStatus == MARIO_STATUS_ROCKET
+		    && checkFlag(MARIO_STATUS_FLAG_UNK8000)) {
 			if (mWaterGun->canSpray())
 				mag = 2.5f * mIntendedMag;
 		}
@@ -119,7 +120,7 @@ BOOL TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 			isStrong = false;
 
 		if (isStrong) {
-			if (checkFlag(MARIO_FLAG_UNK40000)) {
+			if (checkFlag(MARIO_FLAG_ON_SAND)) {
 				sinkInSandEffect();
 				return changePlayerStatus(MARIO_STATUS_FOOT_DOWN, 0, 0);
 			}
@@ -443,7 +444,7 @@ BOOL TMario::jumpCatch()
 		if (mVel.y > -70.0f)
 			isStrong = false;
 
-		if (isStrong && checkFlag(MARIO_FLAG_UNK40000)) {
+		if (isStrong && checkFlag(MARIO_FLAG_ON_SAND)) {
 			sinkInSandEffect();
 			changePlayerStatus(MARIO_STATUS_FOOT_DOWN, 1, false);
 		} else {
@@ -843,7 +844,7 @@ BOOL TMario::fireLanding()
 BOOL TMario::broadJumping()
 {
 	jumpingBasic(MARIO_STATUS_RUN, ANIM_BROAD_JUMP, 1);
-	unk118 |= MARIO_FLAG_FLUDD_EMITTING;
+	onFlag(MARIO_FLAG_FLUDD_EMITTING);
 	return 0;
 }
 

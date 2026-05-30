@@ -3,6 +3,7 @@
 
 #include <JSystem/JGeometry.hpp>
 #include <Player/MarioStatus.hpp>
+#include <Player/MarioFlags.hpp>
 #include <stddef.h>
 
 class TLiveActor;

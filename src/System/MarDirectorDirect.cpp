@@ -600,7 +600,7 @@ void TMarDirector::setMario()
 
 	u32 uVar6 = SMS_getShineIDofExStage(gpApplication.mCurrArea.getStage());
 	if (uVar6 != 0xff && TFlagManager::getInstance()->getShineFlag(uVar6) == 0)
-		gpMarioOriginal->unk118 &= ~MARIO_FLAG_HAS_FLUDD;
+		gpMarioOriginal->offFlag(MARIO_FLAG_HAS_FLUDD);
 }
 
 void TMarDirector::nextStateInitialize(u8 next_state)
@@ -763,7 +763,7 @@ u8 TMarDirector::updateGameMode()
 	switch (unk124) {
 	case 0:
 		if (!(unk4C & 0x1FFF)) {
-			if (SMS_CheckMarioFlag(0x400)) {
+			if (SMS_CheckMarioFlag(MARIO_FLAG_GAME_OVER)) {
 				unk4C |= 0x20;
 				break;
 			}

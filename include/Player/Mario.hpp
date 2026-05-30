@@ -8,6 +8,7 @@
 #include <Strategic/TakeActor.hpp>
 #include <Player/WaterGun.hpp>
 #include <Player/MarioStatus.hpp>
+#include <Player/MarioFlags.hpp>
 
 class TLiveActor;
 class TWaterGun;
@@ -40,34 +41,6 @@ enum E_SIDEWALK_TYPE {
 	SIDEWALK_TYPE_UNK0 = 0,
 	SIDEWALK_TYPE_UNK1 = 1,
 	SIDEWALK_TYPE_UNK2 = 2,
-};
-
-// TODO: check these flag names!
-enum E_MARIO_FLAG {
-	MARIO_FLAG_ABOVE_SEWER_FLOOR   = 0x1,
-	MARIO_FLAG_VISIBLE             = 0x2,
-	MARIO_FLAG_UNK4                = 0x4,
-	MARIO_FLAG_NPC_TALKING         = 0x8,
-	MARIO_FLAG_RECENTLY_LEFT_WATER = 0x10,
-	MARIO_FLAG_UNK_20              = 0x20,
-	MARIO_FLAG_UNK_40              = 0x40, // fully polluted?
-	MARIO_FLAG_UNK_80              = 0x80,
-	MARIO_FLAG_UNK100              = 0x100,
-	MARIO_FLAG_UNK200              = 0x200,
-	MARIO_FLAG_GAME_OVER           = 0x400,
-	MARIO_FLAG_GROUND_POUND_SIT_UP = 0x800,
-	MARIO_FLAG_HELMET_FLW_CAMERA   = 0x1000,
-	MARIO_FLAG_HELMET              = 0x2000,
-	MARIO_FLAG_FLUDD_EMITTING      = 0x4000, // TODO: incorrect?
-	MARIO_FLAG_HAS_FLUDD           = 0x8000,
-	MARIO_FLAG_IN_SHALLOW_WATER    = 0x10000,
-	MARIO_FLAG_IN_WATER            = 0x20000,
-	MARIO_FLAG_UNK40000            = 0x40000, // on sand?
-	MARIO_FLAG_HAS_SHIRT           = 0x100000,
-	MARIO_FLAG_IS_PERFORMING       = 0x200000,
-
-	MARIO_FLAG_IN_ANY_WATER
-	= MARIO_FLAG_IN_SHALLOW_WATER | MARIO_FLAG_IN_WATER, // 0x30000
 };
 
 enum E_MARIO_RAIL_TYPE {
@@ -1239,10 +1212,9 @@ public:
 
 	// Fabricated
 	// See E_MARIO_FLAG
-	bool checkFlag(u32 attribute) const
-	{
-		return unk118 & attribute ? true : false;
-	}
+	bool checkFlag(u32 flag) const { return unk118 & flag ? true : false; }
+	void onFlag(u32 flag) { unk118 |= flag; }
+	void offFlag(u32 flag) { unk118 &= ~flag; }
 
 	// Fabricated
 	bool fabricatedIsPumping() const

@@ -242,7 +242,7 @@ BOOL TMario::warpIn()
 
 		break;
 	case 3:
-		unk118 |= MARIO_FLAG_IS_PERFORMING;
+		onFlag(MARIO_FLAG_IS_PERFORMING);
 		break;
 	}
 
@@ -277,9 +277,9 @@ BOOL TMario::isUnUsualStageStart()
 
 		// I suspect some inline stuff here, weird to check right after you set
 		// it
-		unk118 |= MARIO_FLAG_HELMET_FLW_CAMERA;
-		unk118 |= MARIO_FLAG_HELMET;
-		unk118 |= MARIO_FLAG_HAS_FLUDD;
+		onFlag(MARIO_FLAG_HELMET_FLW_CAMERA);
+		onFlag(MARIO_FLAG_HELMET);
+		onFlag(MARIO_FLAG_HAS_FLUDD);
 
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 			mWaterGun->changeNozzle(TWaterGun::Underwater, true);

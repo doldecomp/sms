@@ -209,7 +209,7 @@ void TMario::loserExec()
 	if (mStatus != MARIO_STATUS_SWIM_DOWN && mStatus != MARIO_STATUS_ELEC_DOWN
 	    && mStatus != MARIO_STATUS_SWIM_P_DOWN
 	    && mStatus != MARIO_STATUS_DOWN_LOSER) {
-		unk118 |= MARIO_FLAG_GAME_OVER;
+		onFlag(MARIO_FLAG_GAME_OVER);
 		mHealth = 0;
 
 		gpMSound->startSoundSystemSE(MSD_SE_SY_HP_DOWN, 0, nullptr, 0);

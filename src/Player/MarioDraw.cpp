@@ -1573,7 +1573,7 @@ void TMario::initModel()
 				mKoopaRail->getModel()->setBaseTRMtx(
 				    mTorocco->getModel()->getAnmMtx(0));
 			}
-			unk118 |= MARIO_FLAG_HAS_FLUDD;
+			onFlag(MARIO_FLAG_HAS_FLUDD);
 			mTorocco->calcAnm();
 			MtxPtr toroccoMtx = mTorocco->getModel()->getAnmMtx(2);
 			mPosition.x       = toroccoMtx[0][3];
@@ -2287,7 +2287,7 @@ void TMario::addDamageFog(JDrama::TGraphics* graphics)
 	if (unk14C == 0) {
 		check = false;
 	}
-	if (checkFlag(MARIO_FLAG_UNK_40) && unk350 == 2) {
+	if (checkFlag(MARIO_FLAG_DIRTY) && unk350 == 2) {
 		check = true;
 		if (unk34E > mDirtyParams.mFogTimeYellow.get()) {
 			fogColor = (GXColor) { 0x82, 0x96, 0x00, 0xff };

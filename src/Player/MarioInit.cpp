@@ -328,9 +328,9 @@ void TMario::load(JSUMemoryInputStream& stream)
 	stream >> local_20;
 	unk118 = 0;
 	if (local_20 & 1)
-		unk118 &= ~MARIO_FLAG_HAS_FLUDD;
+		offFlag(MARIO_FLAG_HAS_FLUDD);
 	else
-		unk118 |= MARIO_FLAG_HAS_FLUDD;
+		onFlag(MARIO_FLAG_HAS_FLUDD);
 	SMS_SetMarioAccessParams();
 	initValues();
 }
