@@ -131,7 +131,7 @@ void TMario::hitBarrel(THitActor* actor)
 void TMario::hitJumpBase(THitActor* actor)
 {
 	keepDistance(*actor, 0.0f);
-	if (((TJumpBase*)actor)->unk134 == 0)
+	if ((s8)((TJumpBase*)actor)->unk138 == 0)
 		wantToTakeActor(actor);
 }
 
@@ -396,7 +396,6 @@ void TMario::checkCollision()
 			break;
 
 		// R1: keepDistance (cases sharing L_80161364 leaf)
-		case 0x8000022:
 		case 0x10000033:
 		case 0x400001A6:
 			keepDistance(*mCollisions[i], 0.0f);
@@ -435,7 +434,6 @@ void TMario::checkCollision()
 		case 0x8000005:
 		case 0x8000007:
 		case 0x10000022:
-		case 0x8000023:
 			keepDistance(*mCollisions[i], 0.0f);
 			break;
 
