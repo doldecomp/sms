@@ -98,7 +98,8 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 		animSound();
 
 		if (mWaterGun != nullptr) {
-			mWaterGun->setBaseTRMtx(mModel->unk8->mNodeMatrices[mBoneIDs[0]]);
+			mWaterGun->setBaseTRMtx(
+			    mModel->unk8->mNodeMatrices[mJointIdChnChest]);
 			mWaterGun->perform(2, graphics);
 		}
 
@@ -141,7 +142,7 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 			mYoshi->entry();
 
 			if (isSinking() == FALSE)
-				((TMBindShadowBody*)unk390)->entryDrawShadow();
+				unk390->entryDrawShadow();
 		} else if (!onYoshi()) {
 			mYoshi->entry();
 		}

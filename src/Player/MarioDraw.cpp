@@ -708,8 +708,8 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 			// Definition from TMario
 			// /* 0x3D8 */ f32 unk3D8;
 			// /* 0x3DC */ f32 unk3DC;
-			s16 unk3D8 = gpMarioForCallBack->unk3D8;
-			s16 unk3DC = gpMarioForCallBack->unk3DC;
+			s16 unk3D8 = gpMarioForCallBack->mWaistRoll;
+			s16 unk3DC = gpMarioForCallBack->mWaistPitch;
 			Mtx transform;
 			MsMtxSetRotRPH(transform, SHORTANGLE2DEG(unk3D8), 0.0f,
 			               SHORTANGLE2DEG(unk3DC));
@@ -747,7 +747,7 @@ static int MarioFootPosRCtrl(J3DNode* param_1, int param_2)
 		if (check2) {
 
 			MtxPtr footMtx = gpMarioForCallBack->mModel->getModel()->getAnmMtx(
-			    gpMarioForCallBack->mBoneIDs[6]);
+			    gpMarioForCallBack->mJointIdChnFootR);
 			const TBGCheckData* checkData;
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
 			                              footMtx[2][3], &checkData);
@@ -791,7 +791,7 @@ static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 		if (check2) {
 
 			MtxPtr footMtx = gpMarioForCallBack->mModel->getModel()->getAnmMtx(
-			    gpMarioForCallBack->mBoneIDs[7]);
+			    gpMarioForCallBack->mJointIdFootR);
 			const TBGCheckData* checkData;
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
 			                              footMtx[2][3], &checkData);
@@ -871,7 +871,7 @@ static int MarioFootPosLCtrl(J3DNode* param_1, int param_2)
 		if (check2) {
 
 			MtxPtr footMtx = gpMarioForCallBack->mModel->getModel()->getAnmMtx(
-			    gpMarioForCallBack->mBoneIDs[8]);
+			    gpMarioForCallBack->mJointIdChnFootL);
 			const TBGCheckData* checkData;
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
 			                              footMtx[2][3], &checkData);
@@ -915,7 +915,7 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 		if (check2) {
 
 			MtxPtr footMtx = gpMarioForCallBack->mModel->getModel()->getAnmMtx(
-			    gpMarioForCallBack->mBoneIDs[9]);
+			    gpMarioForCallBack->mJointIdFootL);
 			const TBGCheckData* checkData;
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
 			                              footMtx[2][3], &checkData);
@@ -977,7 +977,10 @@ void TMario::getHeadRot() { }
 
 Mtx* TMario::getRootAnmMtx() { return mModel->getModel()->mNodeMatrices; }
 
-MtxPtr TMario::getCenterAnmMtx() { return getRootAnmMtx()[unk3C4]; }
+MtxPtr TMario::getCenterAnmMtx()
+{
+	return mModel->getModel()->getAnmMtx(mJointIdCenter);
+}
 
 f32 TMario::getPumpFrame() const { return mModel->getFrameCtrl(1).getFrame(); }
 
@@ -1029,24 +1032,24 @@ void TMario::takeOffGlass()
 
 void TMario::setPositions()
 {
-	MtxPtr root = getRootAnmMtx()[1];
+	MtxPtr root = mModel->getModel()->getAnmMtx(1);
 	unk160.x    = root[0][3];
 	unk160.y    = root[1][3];
 	unk160.z    = root[2][3];
 
-	unk16C.x = unk1C0[0][3];
-	unk16C.y = unk1C0[1][3];
-	unk16C.z = unk1C0[2][3];
+	mHeadPos.x = mHeadMtx[0][3];
+	mHeadPos.y = mHeadMtx[1][3];
+	mHeadPos.z = mHeadMtx[2][3];
 
-	MtxPtr centerMtx = getCenterAnmMtx();
-	unk178.x         = centerMtx[0][3];
-	unk178.y         = centerMtx[1][3];
-	unk178.z         = centerMtx[2][3];
+	MtxPtr centerMtx = mModel->getModel()->getAnmMtx(mJointIdCenter);
+	mCenterPos.x     = centerMtx[0][3];
+	mCenterPos.y     = centerMtx[1][3];
+	mCenterPos.z     = centerMtx[2][3];
 
-	MtxPtr takingMtx = getRootAnmMtx()[mBoneIDs[4]];
-	unk184.x         = takingMtx[0][3];
-	unk184.y         = takingMtx[1][3];
-	unk184.z         = takingMtx[2][3];
+	MtxPtr rightHandMtx = mModel->getModel()->getAnmMtx(mJointIdHandR);
+	mRightHandPos.x     = rightHandMtx[0][3];
+	mRightHandPos.y     = rightHandMtx[1][3];
+	mRightHandPos.z     = rightHandMtx[2][3];
 }
 
 u32 TMario::getTrampleCt()
@@ -1062,7 +1065,7 @@ u32 TMario::getTrampleCt()
 	return 0;
 }
 
-MtxPtr TMario::getTakingMtx() { return getRootAnmMtx()[mBoneIDs[4]]; }
+MtxPtr TMario::getTakingMtx() { return getRootAnmMtx()[mJointIdHandR]; }
 
 MtxPtr TMario::getTakenMtx() { return mModel->unk8->getBaseTRMtx(); }
 
@@ -1324,19 +1327,19 @@ void TMario::initModel()
 	unk3A0         = 0;
 	mBodyModelData = J3DModelLoaderDataBase::load(
 	    JKRFileLoader::getGlbResource("/mario/bmd/ma_mdl1.bmd"), 0x10100000);
-	unk3C4       = mBodyModelData->getJointName()->getIndex("center");
-	mBoneIDs[0]  = mBodyModelData->getJointName()->getIndex("chn_chest");
-	mBoneIDs[1]  = mBodyModelData->getJointName()->getIndex("jnt_chest");
-	mBoneIDs[2]  = mBodyModelData->getJointName()->getIndex("jnt_arm_R1");
-	mBoneIDs[3]  = mBodyModelData->getJointName()->getIndex("jnt_arm_L1");
-	mBoneIDs[4]  = mBodyModelData->getJointName()->getIndex("jnt_hand_R");
-	mBoneIDs[5]  = mBodyModelData->getJointName()->getIndex("jnt_hand_L");
-	mBoneIDs[6]  = mBodyModelData->getJointName()->getIndex("chn_foot_R");
-	mBoneIDs[7]  = mBodyModelData->getJointName()->getIndex("jnt_foot_R");
-	mBoneIDs[8]  = mBodyModelData->getJointName()->getIndex("chn_foot_L");
-	mBoneIDs[9]  = mBodyModelData->getJointName()->getIndex("jnt_foot_L");
-	mBoneIDs[10] = mBodyModelData->getJointName()->getIndex("jnt_head");
-	mBoneIDs[11] = mBodyModelData->getJointName()->getIndex("M_head");
+	mJointIdCenter   = mBodyModelData->getJointName()->getIndex("center");
+	mJointIdChnChest = mBodyModelData->getJointName()->getIndex("chn_chest");
+	mJointIdChest    = mBodyModelData->getJointName()->getIndex("jnt_chest");
+	mJointIdArmR1    = mBodyModelData->getJointName()->getIndex("jnt_arm_R1");
+	mJointIdArmL1    = mBodyModelData->getJointName()->getIndex("jnt_arm_L1");
+	mJointIdHandR    = mBodyModelData->getJointName()->getIndex("jnt_hand_R");
+	mJointIdHandL    = mBodyModelData->getJointName()->getIndex("jnt_hand_L");
+	mJointIdChnFootR = mBodyModelData->getJointName()->getIndex("chn_foot_R");
+	mJointIdFootR    = mBodyModelData->getJointName()->getIndex("jnt_foot_R");
+	mJointIdChnFootL = mBodyModelData->getJointName()->getIndex("chn_foot_L");
+	mJointIdFootL    = mBodyModelData->getJointName()->getIndex("jnt_foot_L");
+	mJointIdHead     = mBodyModelData->getJointName()->getIndex("jnt_head");
+	mJointIdMHead    = mBodyModelData->getJointName()->getIndex("M_head");
 
 	mBodyPollutionTex = (ResTIMG*)JKRFileLoader::getGlbResource(cDirtyFileName);
 	if (mBodyPollutionTex != nullptr) {
@@ -1442,8 +1445,8 @@ void TMario::initModel()
 	mBodyModelData->getMaterialNodePointer(eyeIdxR)->setMaterialAnm(
 	    new J3DMaterialAnm());
 
-	unk3D4 = eyeIdxL;
-	unk3D6 = eyeIdxR;
+	mMaterialIdEyeL = eyeIdxL;
+	mMaterialIdEyeR = eyeIdxR;
 
 	M3UModelMario* modelMario = new M3UModelMario();
 	modelMario->unk8          = bodyModel;
@@ -1454,8 +1457,8 @@ void TMario::initModel()
 	frameCtrl[2].setRate(SMSGetAnmFrameRate());
 
 	SomeModelMarioStruct* setInfo = new SomeModelMarioStruct[2];
-	setInfo[0]        = (SomeModelMarioStruct) { 0, 2, 0, 0x14, 0x41, 0 };
-	setInfo[1]        = (SomeModelMarioStruct) { mBoneIDs[0], 2, 1, 0, 0, 1 };
+	setInfo[0] = (SomeModelMarioStruct) { 0, 2, 0, 0x14, 0x41, 0 };
+	setInfo[1] = (SomeModelMarioStruct) { mJointIdChnChest, 2, 1, 0, 0, 1 };
 	modelMario->unk10 = 2;
 	modelMario->unk24 = setInfo;
 
@@ -1493,11 +1496,11 @@ void TMario::initModel()
 	if (mHandModels[0][0] != nullptr) {
 		// Possibly inline since this exact same thing exists in
 		// TMario::calcAnim
-		mHandModels[0][0]->setBaseTRMtx(mModel->unk8->getAnmMtx(mBoneIDs[4]));
-		mHandModels[0][1]->setBaseTRMtx(mModel->unk8->getAnmMtx(mBoneIDs[5]));
-		mHandModels[1][0]->setBaseTRMtx(mModel->unk8->getAnmMtx(mBoneIDs[4]));
-		mHandModels[1][1]->setBaseTRMtx(mModel->unk8->getAnmMtx(mBoneIDs[5]));
-		mRHand4ndModel->setBaseTRMtx(mModel->unk8->getAnmMtx(mBoneIDs[4]));
+		mHandModels[0][0]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
+		mHandModels[0][1]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandL));
+		mHandModels[1][0]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
+		mHandModels[1][1]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandL));
+		mRHand4ndModel->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
 
 		mHandModels[0][0]->calc();
 		mHandModels[0][1]->calc();
@@ -1580,9 +1583,9 @@ void TMario::initModel()
 	mMultiMtxEffect                 = new TMultiMtxEffect;
 	mMultiMtxEffect->mNumBones      = 3;
 	u16* boneIds                    = new u16[3];
-	boneIds[0]                      = mBoneIDs[0];
-	boneIds[1]                      = mBoneIDs[2];
-	boneIds[2]                      = mBoneIDs[3];
+	boneIds[0]                      = mJointIdChnChest;
+	boneIds[1]                      = mJointIdArmR1;
+	boneIds[2]                      = mJointIdArmL1;
 	mMultiMtxEffect->mBoneIDs       = boneIds;
 	u8* mtxTypes                    = new u8[3];
 	mtxTypes[0]                     = 0;
@@ -1599,13 +1602,12 @@ void TMario::initModel()
 
 void TMario::initMirrorModel()
 {
-	if (unk388 != 0) {
+	if (unk388 != 0)
 		return;
-	}
 
-	if (mCap != nullptr) {
+	if (mCap != nullptr)
 		mCap->createMirrorCap();
-	}
+
 	TMirrorActor* mirrorActor = new TMirrorActor("マリオin鏡");
 	mirrorActor->init(mModel->getModel(), 4);
 
@@ -1626,10 +1628,10 @@ void TMario::finalDrawInitialize()
 {
 	// volatile u32 padding[10];
 	changeHand(0);
-	SMS_MakeDLAndLock(mModel->unk8);
+	SMS_MakeDLAndLock(mModel->getModel());
 
 	for (int i = 0; i < mBodyModelData->getMaterialNum(); ++i)
-		if (i == unk3D4 || i == unk3D6)
+		if (i == mMaterialIdEyeL || i == mMaterialIdEyeR)
 			mModel->getModel()->mMatPackets[i].offFlag(0x1);
 
 	for (int i = 0; i < mBodyModelData->getMaterialNum(); ++i)
@@ -1679,7 +1681,7 @@ void TMario::considerWaist()
 		targetPitchCopy = -maxPitch;
 	}
 	targetPitch = targetPitchCopy;
-	unk3DC += angleChangeRate * (targetPitch - unk3DC);
+	mWaistPitch += angleChangeRate * (targetPitch - mWaistPitch);
 
 	f32 rollMax;
 	f32 targetRoll;
@@ -1720,7 +1722,7 @@ void TMario::considerWaist()
 	}
 	targetRoll = targetRollCopy;
 
-	unk3D8 += angleChangeRate * (targetRoll - unk3D8);
+	mWaistRoll += angleChangeRate * (targetRoll - mWaistRoll);
 }
 
 void TMario::calcBaseMtx(MtxPtr mtx)
@@ -1966,11 +1968,11 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 	gpMarioForCallBack      = this;
 	J3DModelData* modelData = mModel->unk8->getModelData();
 	if (isMario()) {
-		modelData->getJointNodePointer(mBoneIDs[10])
+		modelData->getJointNodePointer(mJointIdHead)
 		    ->setCallBack(MarioHeadCtrl);
 	}
 
-	modelData->getJointNodePointer(mBoneIDs[1])->setCallBack(MarioWaistCtrl);
+	modelData->getJointNodePointer(mJointIdChest)->setCallBack(MarioWaistCtrl);
 
 	if (0x4B0 > gpMarDirector->unk58 || isUpperPumpingStyle()) {
 		if (mMultiMtxEffect != nullptr) {
@@ -2011,19 +2013,19 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 	}
 
 	if ((graphics->unk0 & 2) != 0) {
-		modelData->getJointNodePointer(mBoneIDs[6])
+		modelData->getJointNodePointer(mJointIdChnFootR)
 		    ->setCallBack(MarioFootPosRCtrl);
-		modelData->getJointNodePointer(mBoneIDs[7])
+		modelData->getJointNodePointer(mJointIdFootR)
 		    ->setCallBack(MarioFootDirRCtrl);
-		modelData->getJointNodePointer(mBoneIDs[8])
+		modelData->getJointNodePointer(mJointIdChnFootL)
 		    ->setCallBack(MarioFootPosLCtrl);
-		modelData->getJointNodePointer(mBoneIDs[9])
+		modelData->getJointNodePointer(mJointIdFootL)
 		    ->setCallBack(MarioFootDirLCtrl);
 	} else {
-		modelData->getJointNodePointer(mBoneIDs[6])->setCallBack(nullptr);
-		modelData->getJointNodePointer(mBoneIDs[7])->setCallBack(nullptr);
-		modelData->getJointNodePointer(mBoneIDs[8])->setCallBack(nullptr);
-		modelData->getJointNodePointer(mBoneIDs[9])->setCallBack(nullptr);
+		modelData->getJointNodePointer(mJointIdChnFootR)->setCallBack(nullptr);
+		modelData->getJointNodePointer(mJointIdFootR)->setCallBack(nullptr);
+		modelData->getJointNodePointer(mJointIdChnFootL)->setCallBack(nullptr);
+		modelData->getJointNodePointer(mJointIdFootL)->setCallBack(nullptr);
 	}
 }
 
@@ -2098,19 +2100,19 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 	gpMarioForCallBack = nullptr;
 
 	J3DModelData* modelData = mModel->unk8->getModelData();
-	modelData->getJointNodePointer(mBoneIDs[10])->setCallBack(nullptr);
-	modelData->getJointNodePointer(mBoneIDs[1])->setCallBack(nullptr);
-	modelData->getJointNodePointer(mBoneIDs[6])->setCallBack(nullptr);
-	modelData->getJointNodePointer(mBoneIDs[7])->setCallBack(nullptr);
-	modelData->getJointNodePointer(mBoneIDs[8])->setCallBack(nullptr);
-	modelData->getJointNodePointer(mBoneIDs[9])->setCallBack(nullptr);
+	modelData->getJointNodePointer(mJointIdHead)->setCallBack(nullptr);
+	modelData->getJointNodePointer(mJointIdChest)->setCallBack(nullptr);
+	modelData->getJointNodePointer(mJointIdChnFootR)->setCallBack(nullptr);
+	modelData->getJointNodePointer(mJointIdFootR)->setCallBack(nullptr);
+	modelData->getJointNodePointer(mJointIdChnFootL)->setCallBack(nullptr);
+	modelData->getJointNodePointer(mJointIdFootL)->setCallBack(nullptr);
 
 	if (mHandModels[0][0] != nullptr) {
-		mHandModels[0][0]->setBaseTRMtx(mModel->unk8->getAnmMtx(mBoneIDs[4]));
-		mHandModels[0][1]->setBaseTRMtx(mModel->unk8->getAnmMtx(mBoneIDs[5]));
-		mHandModels[1][0]->setBaseTRMtx(mModel->unk8->getAnmMtx(mBoneIDs[4]));
-		mHandModels[1][1]->setBaseTRMtx(mModel->unk8->getAnmMtx(mBoneIDs[5]));
-		mRHand4ndModel->setBaseTRMtx(mModel->unk8->getAnmMtx(mBoneIDs[4]));
+		mHandModels[0][0]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
+		mHandModels[0][1]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandL));
+		mHandModels[1][0]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
+		mHandModels[1][1]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandL));
+		mRHand4ndModel->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
 
 		mHandModels[0][0]->calc();
 		mHandModels[0][1]->calc();
@@ -2120,9 +2122,9 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 	}
 
 	if (mCap != nullptr) {
-		mCap->unkC->setBaseTRMtx(mModel->unk8->getAnmMtx(mBoneIDs[11]));
-		mCap->unk10[2]->setBaseTRMtx(mModel->unk8->getAnmMtx(mBoneIDs[10]));
-		mCap->unk10[3]->setBaseTRMtx(mModel->unk8->getAnmMtx(mBoneIDs[11]));
+		mCap->unkC->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdMHead));
+		mCap->unk10[2]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHead));
+		mCap->unk10[3]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdMHead));
 		mCap->perform(2, graphics);
 	}
 

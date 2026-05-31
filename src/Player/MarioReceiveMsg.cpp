@@ -43,19 +43,19 @@ void TMario::getGesso(THitActor* param_1)
 		emitGetEffect();
 		switch (param_1->getActorType()) {
 		case 0x400000C5:
-			mSurfGesso = gpMapObjManager->mRedGesso;
-			unk389     = 0;
+			mSurfGesso     = gpMapObjManager->mRedGesso;
+			mSurfGessoType = SURF_GESSO_TYPE_RED;
 			break;
 
 		case 0x400000C6:
-			mSurfGesso = gpMapObjManager->mYellowGesso;
-			unk389     = 1;
+			mSurfGesso     = gpMapObjManager->mYellowGesso;
+			mSurfGessoType = SURF_GESSO_TYPE_YELLOW;
 			break;
 
 		default:
 		case 0x400000C7:
-			unk389     = 2;
-			mSurfGesso = gpMapObjManager->mGreenGesso;
+			mSurfGessoType = SURF_GESSO_TYPE_GREEN;
+			mSurfGesso     = gpMapObjManager->mGreenGesso;
 			break;
 		}
 		mSurfGesso->setBck("surfgeso_run1");

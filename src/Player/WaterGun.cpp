@@ -1241,7 +1241,7 @@ void TWaterGun::init()
 	mNozzleYoshiDeform.mBomb.unk384 = true;
 
 	// TODO: wrong
-	MtxPtr r24 = mMario->mModel->unk8->getAnmMtx(mMario->mBoneIDs[0]);
+	MtxPtr r24 = mMario->mModel->unk8->getAnmMtx(mMario->mJointIdChnChest);
 
 	mEmitPos[3] = mMario->mPosition;
 
@@ -1267,7 +1267,7 @@ void TWaterGun::init()
 	    J3DModelLoaderDataBase::load(fluddModelData, 0x10040000), 0, 1);
 	mFluddModel->setModel(fluddModel, 0);
 
-	MTXCopy(mMario->mModel->unk8->getAnmMtx(mMario->mBoneIDs[0]),
+	MTXCopy(mMario->mModel->unk8->getAnmMtx(mMario->mJointIdChnChest),
 	        mFluddModel->unk4->unk20);
 
 	mFluddModel->unk4->calc();

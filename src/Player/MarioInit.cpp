@@ -102,7 +102,7 @@ TMario::TMario()
 	mModelFaceAngle = 0;
 	unk9C           = 0;
 	unk9E           = 0;
-	unkA0           = 0;
+	mDizzyTimer     = 0;
 	mVel.x          = 0.0f;
 	mVel.y          = 0.0f;
 	mVel.z          = 0.0f;
@@ -110,14 +110,14 @@ TMario::TMario()
 	mSlideVelX      = 0.0f;
 	mSlideVelZ      = 0.0f;
 
-	unkBC = 0.0f;
-	unkC0 = 0.0f;
-	unkC4 = 0;
-	unkC8 = 0.0f;
-	unkCC = 0.033333335f;
-	unkD0 = 0.016666668f;
-	unkD4 = 0xb4;
-	unkD5 = 0xb4;
+	unkBC      = 0.0f;
+	mDashSpeed = 0.0f;
+	mDashTimer = 0;
+	unkC8      = 0.0f;
+	unkCC      = 0.033333335f;
+	unkD0      = 0.016666668f;
+	unkD4      = 0xb4;
+	unkD5      = 0xb4;
 
 	mWallPlane   = nullptr;
 	mRoofPlane   = nullptr;
@@ -153,14 +153,14 @@ TMario::TMario()
 	unk158               = nullptr;
 	unk15C               = 0.0f;
 	unk160.zero();
-	unk16C.zero();
-	unk178.zero();
-	unk184.zero();
-	unk190.zero();
-	unk1A8.zero();
+	mHeadPos.zero();
+	mCenterPos.zero();
+	mRightHandPos.zero();
+	mWaterRipplePos.zero();
+	mFootprintPos.zero();
 	unk1B4.zero();
-	unk19C.zero();
-	MTXIdentity(unk1C0);
+	mDamagePos.zero();
+	MTXIdentity(mHeadMtx);
 	MTXIdentity(unk1F0);
 	MTXIdentity(unk220);
 	MTXIdentity(unk250);
@@ -193,7 +193,7 @@ TMario::TMario()
 	unk358                   = 0.0f;
 	unk35C                   = 0.0f;
 	mFootPrintTimer          = 0;
-	unk362                   = 0;
+	mWetWaterParticleTimer   = 0;
 	unk364                   = 0;
 	unk366                   = 0;
 	mSinkTimer               = 0.0f;
@@ -217,28 +217,28 @@ TMario::TMario()
 	mHandModels[1][0] = nullptr;
 	mHandModels[1][1] = nullptr;
 
-	mBoneIDs[0]  = 0;
-	mBoneIDs[1]  = 0;
-	mBoneIDs[2]  = 0;
-	mBoneIDs[3]  = 0;
-	mBoneIDs[4]  = 0;
-	mBoneIDs[5]  = 0;
-	mBoneIDs[6]  = 0;
-	mBoneIDs[7]  = 0;
-	mBoneIDs[8]  = 0;
-	mBoneIDs[9]  = 0;
-	mBoneIDs[10] = 0;
-	mBoneIDs[11] = 0;
+	mJointIdChnChest = 0;
+	mJointIdChest    = 0;
+	mJointIdArmR1    = 0;
+	mJointIdArmL1    = 0;
+	mJointIdHandR    = 0;
+	mJointIdHandL    = 0;
+	mJointIdChnFootR = 0;
+	mJointIdFootR    = 0;
+	mJointIdChnFootL = 0;
+	mJointIdFootL    = 0;
+	mJointIdHead     = 0;
+	mJointIdMHead    = 0;
 
-	unk3D4 = 0;
-	unk3D6 = 0;
+	mMaterialIdEyeL = 0;
+	mMaterialIdEyeR = 0;
 
-	unk3D8    = 0.0f;
-	unk3DC    = 0.0f;
-	mCap      = nullptr;
-	mWaterGun = nullptr;
-	unk3E8    = 4;
-	unk3EC    = 0.0f;
+	mWaistRoll  = 0.0f;
+	mWaistPitch = 0.0f;
+	mCap        = nullptr;
+	mWaterGun   = nullptr;
+	unk3E8      = 4;
+	unk3EC      = 0.0f;
 
 	mYoshi     = nullptr;
 	mSurfGesso = nullptr;
@@ -363,11 +363,11 @@ void TMario::loadAfter()
 
 void TMario::initValues()
 {
-	mHealth = mDeParams.mHpMax.get();
-	mDirty  = 0.0f;
-	unk138  = 1.0f;
-	unk13C  = 0;
-	unk140  = 0.0f;
+	mHealth     = mDeParams.mHpMax.get();
+	mDirty      = 0.0f;
+	mOilBrake   = 1.0f;
+	mDirtyTimer = 0;
+	unk140      = 0.0f;
 
 	unk108              = new TMarioControllerWork;
 	unk108->mStickHS16  = 0;
@@ -387,13 +387,13 @@ void TMario::initValues()
 	unk158 = new TWaterEmitInfo("/Mario/WetWaterEmit.prm");
 
 	unk388            = 0;
-	unk389            = 0;
+	mSurfGessoType    = SURF_GESSO_TYPE_RED;
 	mHolderHeightDiff = 0.0f;
 
 	initModel();
 
-	unk3D8 = 0.0f;
-	unk3DC = 0.0f;
+	mWaistRoll  = 0.0f;
+	mWaistPitch = 0.0f;
 
 	mCap      = new TMarioCap(this);
 	mWaterGun = new TWaterGun(this);

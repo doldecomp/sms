@@ -1,5 +1,6 @@
 #include <Player/Mario.hpp>
 #include <Player/Yoshi.hpp>
+#include <System/Particles.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
@@ -49,7 +50,7 @@ void TMario::keepDistance(const JGeometry::TVec3<f32>& target, f32 param_2,
 			burst = true;
 
 		if (burst == true) {
-			emitParticle(0xc);
+			emitParticle(PARTICLE_MS_DMG_C);
 			changePlayerDropping(MARIO_STATUS_JUMP_SHORT_BACK_DOWN, 0);
 			return;
 		}
