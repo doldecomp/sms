@@ -5,6 +5,7 @@
 #include <MarioUtil/RumbleMgr.hpp>
 #include <Map/MapData.hpp>
 #include <Camera/CameraShake.hpp>
+#include <System/Particles.hpp>
 #include <System/MarDirector.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 
@@ -17,8 +18,8 @@ BOOL TMario::startJumpWall()
 	if (mWallPlane != NULL) {
 		const JGeometry::TVec3<f32>& normal = mWallPlane->getNormal();
 		s16 angle = matan(mWallPlane->mMinY, normal.x) + 0x8000;
-		emitParticle(0x18, angle);
-		emitParticle(0x19, angle);
+		emitParticle(PARTICLE_MS_WALLKICK_A, angle);
+		emitParticle(PARTICLE_MS_WALLKICK_B, angle);
 	}
 
 	mVel.y = 52.0f;
@@ -160,7 +161,7 @@ BOOL TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 	case 2:
 		if (mStatus != MARIO_STATUS_WIRE_ROLL_JUMP
 		    && mForwardVel > mDeParams.mClashSpeed.get()) {
-			emitParticle(0xC);
+			emitParticle(PARTICLE_MS_DMG_C);
 			changePlayerDropping(MARIO_STATUS_JUMP_SHORT_BACK_DOWN, 0U);
 			return result;
 		}
@@ -460,7 +461,7 @@ BOOL TMario::jumpCatch()
 		if (mVel.y > 0.0f) {
 			mVel.y = 0.0f;
 		}
-		emitParticle(0xC);
+		emitParticle(PARTICLE_MS_DMG_C);
 		changePlayerDropping(MARIO_STATUS_JUMP_SHORT_BACK_DOWN, 0);
 		break;
 	}
@@ -569,8 +570,8 @@ BOOL TMario::stayWall()
 			s16 sVar5
 			    = matan(mWallPlane->getNormal().z, mWallPlane->getNormal().x)
 			      + 0x8000;
-			emitParticle(0x18, sVar5);
-			emitParticle(0x19, sVar5);
+			emitParticle(PARTICLE_MS_WALLKICK_A, sVar5);
+			emitParticle(PARTICLE_MS_WALLKICK_B, sVar5);
 		}
 
 		mVel.y = 52.0f;
@@ -1160,31 +1161,35 @@ BOOL TMario::hipAttacking()
 			if (mGroundPlane->mActor != nullptr) {
 				if (!onYoshi()
 				    && mGroundPlane->mActor->mActorType == 0x4000006A) {
-					emitParticle(0x39, &mPosition);
+					emitParticle(PARTICLE_MS_M_AMIATTACK, &mPosition);
 					f32 oldY    = mPosition.y;
 					mPosition.y = oldY - 160.0f;
-					((THitActor*)mGroundPlane->mActor)->receiveMessage(this, 3);
+					((THitActor*)mGroundPlane->mActor)
+					    ->receiveMessage(this, HIT_MESSAGE_UNK3);
 					startVoice(MSD_SE_MV28_SPRISE_SMALL_01);
 					return changePlayerStatus(MARIO_STATUS_KICK_ROOF_ROLL_DOWN,
 					                          0, 0);
 				}
 				if (mStatusState == 2) {
-					((THitActor*)mGroundPlane->mActor)->receiveMessage(this, 1);
+					((THitActor*)mGroundPlane->mActor)
+					    ->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 				} else {
-					((THitActor*)mGroundPlane->mActor)->receiveMessage(this, 3);
-					((THitActor*)mGroundPlane->mActor)->receiveMessage(this, 1);
+					((THitActor*)mGroundPlane->mActor)
+					    ->receiveMessage(this, HIT_MESSAGE_UNK3);
+					((THitActor*)mGroundPlane->mActor)
+					    ->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 				}
 			}
 
 			if (mStatusState == 2) {
-				emitParticle(0x14);
-				emitParticle(0x13);
-				emitParticle(0x12);
+				emitParticle(PARTICLE_MS_HIPDROP_C);
+				emitParticle(PARTICLE_MS_HIPDROP_B);
+				emitParticle(PARTICLE_MS_HIPDROP_A);
 			} else {
-				emitParticle(0x43);
-				emitParticle(0x44);
-				emitParticle(0x45);
-				emitParticle(0x46);
+				emitParticle(PARTICLE_MS_M_SPHIPD_HIT_A);
+				emitParticle(PARTICLE_MS_M_SPHIPD_HIT_B);
+				emitParticle(PARTICLE_MS_M_SPHIPD_HIT_C);
+				emitParticle(PARTICLE_MS_M_SPHIPD_HIT_D);
 			}
 			changePlayerStatus(MARIO_STATUS_HIP_ATTACK_END, 0, 0);
 		} else if (r == 2) {
@@ -1193,9 +1198,8 @@ BOOL TMario::hipAttacking()
 				mVel.y = 0.0f;
 			changePlayerStatus(MARIO_STATUS_JUMP_SHORT_BACK_DOWN, 0, 0);
 			rumbleStart(0x15, mMotorParams.mMotorWall.get());
-			if (gpMSound->gateCheck(MSD_SE_MA_HIP_ATTACK))
-				MSoundSESystem::MSoundSE::startSoundActor(
-				    MSD_SE_MA_HIP_ATTACK, &mPosition, 0, nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(MSD_SE_MA_HIP_ATTACK, &mPosition, 0,
+			                                nullptr, 0, 4);
 		}
 		break;
 	}

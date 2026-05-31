@@ -170,9 +170,9 @@ BOOL TMario::trampleExec(THitActor* param_1)
 		SMS_EasyEmitParticle(PARTICLE_MS_FUMI_B, &mPosition, this, scale);
 		SMS_EasyEmitParticle(PARTICLE_MS_FUMI_C, &mPosition, this, scale);
 	} else {
-		emitParticle(7);
-		emitParticle(8);
-		emitParticle(9);
+		emitParticle(PARTICLE_MS_FUMI_A);
+		emitParticle(PARTICLE_MS_FUMI_B);
+		emitParticle(PARTICLE_MS_FUMI_C);
 	}
 
 	unk78 &= ~0x100;
@@ -268,11 +268,11 @@ void TMario::calcDamagePos(const JGeometry::TVec3<f32>& pos)
 {
 	JGeometry::TVec3<f32> offset = pos - mPosition;
 	if (offset.isZero()) {
-		unk19C = mPosition;
+		mDamagePos = mPosition;
 		return;
 	}
 	offset.normalize();
-	unk19C = mPosition + offset * 50.0f;
+	mDamagePos = mPosition + offset * 50.0f;
 }
 
 void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
@@ -389,9 +389,9 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 
 	if (damageAnimType != 3) {
 		calcDamagePos(hittingActor->mPosition);
-		emitParticle(0xb, &unk19C);
-		emitParticle(0xc, &unk19C);
-		emitParticle(0xa, &unk19C);
+		emitParticle(PARTICLE_MS_DMG_B, &mDamagePos);
+		emitParticle(PARTICLE_MS_DMG_C, &mDamagePos);
+		emitParticle(PARTICLE_MS_DMG_A, &mDamagePos);
 	}
 
 	if (mHealth > 0) {

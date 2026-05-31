@@ -57,13 +57,13 @@ TMarioCap::TMarioCap(TMario* mario)
 	// Mmmh, nintendo plz? I hope this is forgotten and not a check to crash the
 	// game if it is missing this bone
 	unk10[2]->getModelData()->getJointName()->getIndex("null_airtube");
-	MtxPtr mtx = mMario->mModel->getModel()->getAnmMtx(mMario->mBoneIDs[11]);
+	MtxPtr mtx = mMario->mModel->getModel()->getAnmMtx(mMario->mJointIdMHead);
 
 	unk10[0]->setBaseTRMtx(mtx);
 	unk10[0]->calc();
 	unk10[1]->setBaseTRMtx(mtx);
 	unk10[1]->calc();
-	mMario->mModel->getModel()->setAnmMtx(mMario->mBoneIDs[10],
+	mMario->mModel->getModel()->setAnmMtx(mMario->mJointIdHead,
 	                                      unk10[2]->getBaseTRMtx());
 	unk10[2]->calc();
 

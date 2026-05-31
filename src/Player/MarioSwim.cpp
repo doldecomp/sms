@@ -83,7 +83,8 @@ void TMario::doSwimming()
 	    && mStatus != MARIO_STATUS_SWIM_WAIT) {
 		unk1B4   = mPosition;
 		unk1B4.y = mFloorPosition.y;
-		gpMarioParticleManager->emitAndBindToPosPtr(0x11e, &unk1B4, 1, this);
+		gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_M_SEASMOKE,
+		                                            &unk1B4, 1, this);
 	}
 
 	if (mPosition.y < mFloorPosition.y + 35.0f)
@@ -96,7 +97,7 @@ BOOL TMario::checkSwimJump()
 		if (checkFlag(MARIO_FLAG_FLUDD_EMITTING) && !isUnderWater()) {
 			mPosition.y = 1.0f + mFloorPosition.z;
 			startSoundActor(MSD_SE_MA_SURF_JUMP);
-			return changePlayerJumping(0x888, 0);
+			return changePlayerJumping(MARIO_STATUS_BROAD_JUMP, 0);
 		}
 
 		if (mFloorPosition.z - mSwimParams.mCanJumpDepth.get() < mPosition.y) {

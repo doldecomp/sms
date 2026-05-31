@@ -57,7 +57,7 @@ bool TMario::canSquat() const
 bool TMario::isUnderWater() const
 {
 	if (checkFlag(MARIO_FLAG_IN_ANY_WATER)
-	    && unk16C.y < mFloorPosition.z - mSwimParams.mCanBreathDepth.get())
+	    && mHeadPos.y < mFloorPosition.z - mSwimParams.mCanBreathDepth.get())
 		return true;
 	else
 		return false;
@@ -129,9 +129,9 @@ BOOL TMario::moveRequest(const JGeometry::TVec3<f32>& pos)
 	mWireEndPos += offset;
 	unk2A8 += offset;
 	unk2BC += offset.y;
-	unk1C0[0][3] += offset.x;
-	unk1C0[1][3] += offset.y;
-	unk1C0[2][3] += offset.z;
+	mHeadMtx[0][3] += offset.x;
+	mHeadMtx[1][3] += offset.y;
+	mHeadMtx[2][3] += offset.z;
 	unk1F0[0][3] += offset.x;
 	unk1F0[1][3] += offset.y;
 	unk1F0[2][3] += offset.z;
@@ -881,19 +881,19 @@ void TMario::checkGraffitoSlip()
 
 		if (mStatus == MARIO_STATUS_OIL_SLIP
 		    || mStatus == MARIO_STATUS_OIL_SLOPE) {
-			unk138 = mDirtyParams.mBrakeStartValSlip.get();
-			unk13C = mDirtyParams.mDirtyTimeSlip.get();
+			mOilBrake   = mDirtyParams.mBrakeStartValSlip.get();
+			mDirtyTimer = mDirtyParams.mDirtyTimeSlip.get();
 		}
 
 		if (mStatus == MARIO_STATUS_OIL_RUN
 		    || mStatus == MARIO_STATUS_OIL_PULLING) {
-			unk138 = mDirtyParams.mBrakeStartValRun.get();
-			unk13C = mDirtyParams.mDirtyTimeRun.get();
+			mOilBrake   = mDirtyParams.mBrakeStartValRun.get();
+			mDirtyTimer = mDirtyParams.mDirtyTimeRun.get();
 		}
 
 		if (mGroundPlane->getNormal().y <= mDirtyParams.mSlopeAngle.get()) {
-			unk138 = mDirtyParams.mBrakeStartValSlip.get();
-			unk13C = mDirtyParams.mDirtyTimeSlip.get();
+			mOilBrake   = mDirtyParams.mBrakeStartValSlip.get();
+			mDirtyTimer = mDirtyParams.mDirtyTimeSlip.get();
 
 			changePlayerStatus(MARIO_STATUS_OIL_SLOPE, 0, false);
 			startVoice(MSD_SE_MV28_SPRISE_SMALL_01);
@@ -901,15 +901,15 @@ void TMario::checkGraffitoSlip()
 		           || mStatus == MARIO_STATUS_CATCH
 		           || mStatus == MARIO_STATUS_OIL_SLIP
 		           || mStatus == MARIO_STATUS_OIL_SLOPE) {
-			unk138 = mDirtyParams.mBrakeStartValSlip.get();
-			unk13C = mDirtyParams.mDirtyTimeSlip.get();
+			mOilBrake   = mDirtyParams.mBrakeStartValSlip.get();
+			mDirtyTimer = mDirtyParams.mDirtyTimeSlip.get();
 
 			changePlayerStatus(MARIO_STATUS_OIL_SLIP, 0, false);
 			if (mPrevStatus != MARIO_STATUS_OIL_SLIP)
 				startVoice(MSD_SE_MV28_SPRISE_SMALL_01);
 		} else if (mStatus != MARIO_STATUS_CATCH_LOST) {
-			unk138 = mDirtyParams.mBrakeStartValRun.get();
-			unk13C = mDirtyParams.mDirtyTimeRun.get();
+			mOilBrake   = mDirtyParams.mBrakeStartValRun.get();
+			mDirtyTimer = mDirtyParams.mDirtyTimeRun.get();
 
 			if (mStatus == MARIO_STATUS_PULLING)
 				changePlayerStatus(MARIO_STATUS_OIL_PULLING, 0, false);
@@ -931,8 +931,8 @@ void TMario::checkGraffitoSlip()
 		}
 	} else if (mStatus == MARIO_STATUS_OIL_SLIP
 	           || mStatus == MARIO_STATUS_OIL_SLOPE) {
-		unk138 = mDirtyParams.mBrakeSlipNoPollute.get();
-		unk13C = mDirtyParams.mDirtyTimeSlip.get();
+		mOilBrake   = mDirtyParams.mBrakeSlipNoPollute.get();
+		mDirtyTimer = mDirtyParams.mDirtyTimeSlip.get();
 	}
 }
 
@@ -1467,17 +1467,20 @@ void TMario::checkController(JDrama::TGraphics*)
 		mIntendedMag = 32.0f * (norm * norm);
 	}
 
-	// Dizzy jitter applied to yaw and magnitude when unkA0 > 0
-	if (unkA0 > 0)
-		unkA0 = unkA0 - 1;
+	if (mDizzyTimer > 0)
+		mDizzyTimer -= 1;
 
 	s32 yawJitter = 0;
-	if (unkA0 > 0) {
-		yawJitter = JMASSin(unkA0 * mGraffitoParams.mDizzyAngleRate.get())
-		            * mGraffitoParams.mDizzyAngleY.get() * unkA0
+	if (mDizzyTimer > 0) {
+		yawJitter = JMASSin(mDizzyTimer * mGraffitoParams.mDizzyAngleRate.get())
+		            * mGraffitoParams.mDizzyAngleY.get() * mDizzyTimer
 		            / mGraffitoParams.mDizzyWalkCtMax.get();
-		mIntendedMag += JMASCos(unkA0 * mGraffitoParams.mDizzyPowerRate.get())
-		                * mGraffitoParams.mDizzyPower.get();
+
+		f32 magDizzy
+		    = JMASCos(mDizzyTimer * mGraffitoParams.mDizzyPowerRate.get())
+		      * mGraffitoParams.mDizzyPower.get();
+
+		mIntendedMag += magDizzy;
 		if (mIntendedMag < 0.0f)
 			mIntendedMag = 0.0f;
 	}
@@ -1500,12 +1503,12 @@ void TMario::checkController(JDrama::TGraphics*)
 			if (mIntendedMag == 0.0f)
 				mIntendedYaw = mFaceAngle.y;
 
-			unkC0 += mDeParams.mDashAcc.get();
-			if (unkC0 > 32.0f) {
-				unkC0 = 32.0f;
-				unkC4 += 1;
-				if ((f32)unkC4 > (f32)mDeParams.mDashStartTime.get()) {
-					unkC4 = mDeParams.mDashStartTime.get();
+			mDashSpeed += mDeParams.mDashAcc.get();
+			if (mDashSpeed > 32.0f) {
+				mDashSpeed = 32.0f;
+				mDashTimer += 1;
+				if ((f32)mDashTimer > (f32)mDeParams.mDashStartTime.get()) {
+					mDashTimer = mDeParams.mDashStartTime.get();
 					if (!checkFlag(MARIO_FLAG_FLUDD_EMITTING)
 					    && ((TNozzleTrigger*)((const TWaterGun*)mWaterGun)
 					            ->getCurrentNozzle())
@@ -1520,25 +1523,25 @@ void TMario::checkController(JDrama::TGraphics*)
 				}
 				if (((mStatus + 0xFC000000) & 0xFFFFFFFF) != 0x440
 				    && mStatus != MARIO_STATUS_SWIM_PADDLE) {
-					unkC4 = 0;
+					mDashTimer = 0;
 					offFlag(MARIO_FLAG_FLUDD_EMITTING);
 				}
 			} else {
-				unkC4 = 0;
+				mDashTimer = 0;
 				offFlag(MARIO_FLAG_FLUDD_EMITTING);
 			}
-			mIntendedMag = unkC0;
-			mWaterGun->rotateProp(unkC0);
+			mIntendedMag = mDashSpeed;
+			mWaterGun->rotateProp(mDashSpeed);
 		} else {
-			if (unkC0 > 0.1f) {
+			if (mDashSpeed > 0.1f) {
 				if (mIntendedMag == 0.0f)
 					mIntendedYaw = mFaceAngle.y;
-				unkC0 *= mDeParams.mDashBrake.get();
-				mIntendedMag = unkC0;
+				mDashSpeed *= mDeParams.mDashBrake.get();
+				mIntendedMag = mDashSpeed;
 			} else {
-				unkC0 = 0.0f;
+				mDashSpeed = 0.0f;
 			}
-			unkC4 = 0;
+			mDashTimer = 0;
 			offFlag(MARIO_FLAG_FLUDD_EMITTING);
 		}
 
@@ -1922,7 +1925,7 @@ void TMario::thinkSituation()
 {
 	mPrevFlag = mFlag;
 	if (unkBC < 0.0f)
-		unkBC += mBodyAngleParamsFree.mWaistAngleChangeRate.get();
+		unkBC += mJumpParams.mTrampolineDec.get();
 	else
 		unkBC = 0.0f;
 
@@ -2143,17 +2146,17 @@ void TMario::thinkWaterSurface()
 	J3DGetTranslateRotateMtx(0, mModelFaceAngle, 0, mPosition.x,
 	                         mFloorPosition.z, mPosition.z, unk220);
 
-	unk190.x = mPosition.x;
-	unk190.y = mFloorPosition.z;
-	unk190.z = mPosition.z;
-	MTXCopy(mModel->unk8->getAnmMtx(mBoneIDs[10]), unk1C0);
+	mWaterRipplePos.x = mPosition.x;
+	mWaterRipplePos.y = mFloorPosition.z;
+	mWaterRipplePos.z = mPosition.z;
+	MTXCopy(mModel->getModel()->getAnmMtx(mJointIdHead), mHeadMtx);
 
 	if (nowInWater != wasInWater) {
 		inOutWaterEffect(mFloorPosition.z);
 		f32 depth = mFloorPosition.z - mFloorPosition.y;
 		if (wasInWater == true && nowInWater == false) {
 			// exited water
-			unk362 = 120;
+			mWetWaterParticleTimer = 120;
 			if (depth < 32.0f) {
 				SMSGetMSound()->startSoundActor(MSD_SE_MA_JUMP_FR_WATER_VSL,
 				                                &mPosition, 0, nullptr, 0, 4);
@@ -2224,15 +2227,7 @@ void TMario::thinkParams()
 		mInvincibilityFrames -= 1;
 	if (!checkFlag(MARIO_FLAG_GAME_OVER)) {
 		if (checkFlag(MARIO_FLAG_IN_ANY_WATER)) {
-			// TODO: inline
-			bool b;
-			if (checkFlag(MARIO_FLAG_IN_ANY_WATER)
-			    && unk16C.y
-			           < mFloorPosition.z - mSwimParams.mCanBreathDepth.get())
-				b = true;
-			else
-				b = false;
-			if (!b) {
+			if (!isUnderWater()) {
 				if (mWaterFloor->isThing5() && mWaterFloor->isThing5()
 				    && !checkStatusFlag(MARIO_STATUS_FLAG_UNK10000)) {
 					floorDamageExec(getDmgMapCode(mWaterFloor->getData()));
@@ -2353,10 +2348,10 @@ void TMario::checkWet()
 	if (onYoshi())
 		return;
 
-	if (unk362 <= 0)
+	if (mWetWaterParticleTimer <= 0)
 		return;
 
-	unk362 -= 1;
+	mWetWaterParticleTimer -= 1;
 
 	const TBGCheckData* floor;
 	f32 tmp;
@@ -2372,15 +2367,14 @@ void TMario::checkWet()
 	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK200))
 		return;
 
-	if (unk362 & 7)
+	if (mWetWaterParticleTimer & 7)
 		return;
 
 	unk158->mPos.value = mPosition;
 	unk158->mPos.value.y += 5.0f;
-
-	JGeometry::TVec3<f32> v = mVel;
-	v *= 0.3f;
-	unk158->mV.value = v;
+	// Why??? Are we missing THAT many inlines?
+	(Vec&)unk158->mV.value
+	    = (Vec) { mVel.x * 0.3f, mVel.y * 0.3f, mVel.z * 0.3f };
 	gpModelWaterManager->emitRequest(*unk158);
 }
 

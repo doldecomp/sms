@@ -4,6 +4,7 @@
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
 #include <Map/MapCollisionData.hpp>
+#include <System/Particles.hpp>
 #include <System/MarDirector.hpp>
 #include <System/MarioGamePad.hpp>
 #include <MSound/MSound.hpp>
@@ -286,7 +287,7 @@ BOOL TMario::roofCommonEvents()
 		if (actor != nullptr) {
 			((THitActor*)actor)->receiveMessage(this, 3);
 			if (actor->mActorType == 0x4000006a) {
-				emitParticle(0x39, &unk16C);
+				emitParticle(PARTICLE_MS_M_AMIATTACK, &mHeadPos);
 				rumbleStart(0x15, mMotorParams.mMotorWall.get());
 				return changePlayerStatus(MARIO_STATUS_KICK_ROOF_ROLL_UP, 0,
 				                          false);
@@ -1499,7 +1500,7 @@ BOOL TMario::fencePunch()
 	mModelFaceAngle = mFaceAngle.y;
 
 	if (getMotionFrameCtrl().checkPass(5.0f)) {
-		emitParticle(0x39, &unk184);
+		emitParticle(PARTICLE_MS_M_AMIATTACK, &mRightHandPos);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 		if (unk2C0 != nullptr) {
 			((THitActor*)unk2C0)->receiveMessage(this, 3);

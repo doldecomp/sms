@@ -1,6 +1,7 @@
 #include <Player/Mario.hpp>
 #include <Player/WaterGun.hpp>
 #include <Player/NozzleTrigger.hpp>
+#include <System/Particles.hpp>
 #include <Map/MapData.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
@@ -525,10 +526,10 @@ void TMario::doRunning()
 
 TMario::TSurfingParams* TMario::getSurfingParamsWater()
 {
-	switch (unk389) {
-	case 1:
+	switch (mSurfGessoType) {
+	case SURF_GESSO_TYPE_YELLOW:
 		return &mSurfingParamsWaterYellow;
-	case 2:
+	case SURF_GESSO_TYPE_GREEN:
 		return &mSurfingParamsWaterGreen;
 	default:
 		return &mSurfingParamsWaterRed;
@@ -537,10 +538,10 @@ TMario::TSurfingParams* TMario::getSurfingParamsWater()
 
 TMario::TSurfingParams* TMario::getSurfingParamsGround()
 {
-	switch (unk389) {
-	case 1:
+	switch (mSurfGessoType) {
+	case SURF_GESSO_TYPE_YELLOW:
 		return &mSurfingParamsGroundYellow;
-	case 2:
+	case SURF_GESSO_TYPE_GREEN:
 		return &mSurfingParamsGroundGreen;
 	default:
 		return &mSurfingParamsGroundRed;
@@ -683,9 +684,9 @@ BOOL TMario::running()
 	}
 
 	if (isRunningTurnning() && mForwardVel >= mRunParams.mTurnNeedSp.get()) {
-		emitParticle(0x15, mFaceAngle.y + 0x8000);
-		emitParticle(0x17, mFaceAngle.y + 0x8000);
-		emitParticle(0x16, mFaceAngle.y + 0x8000);
+		emitParticle(PARTICLE_MS_MARIWALK1_A, mFaceAngle.y + 0x8000);
+		emitParticle(PARTICLE_MS_MARIWALK1_C, mFaceAngle.y + 0x8000);
+		emitParticle(PARTICLE_MS_MARIWALK1_B, mFaceAngle.y + 0x8000);
 		return changePlayerStatus(MARIO_STATUS_TURN, 0, false);
 	}
 
@@ -725,7 +726,7 @@ BOOL TMario::running()
 
 		if (!pushed) {
 			if (mForwardVel > mDeParams.mClashSpeed.get()) {
-				emitParticle(0xC);
+				emitParticle(PARTICLE_MS_DMG_C);
 				return changePlayerDropping(MARIO_STATUS_JUMP_SHORT_BACK_DOWN,
 				                            0);
 			}
@@ -751,7 +752,7 @@ BOOL TMario::running()
 			}
 
 			doPushingAnimation(prevPos);
-			unkC4 = 0;
+			mDashTimer = 0;
 			offFlag(MARIO_FLAG_FLUDD_EMITTING);
 		}
 		break;
@@ -1111,7 +1112,7 @@ void TMario::slippingBasic(int statusOnStop, int statusOnFall, int slipAnim)
 			if (absVel < 0.0f)
 				absVel = -absVel;
 			if (absVel > mDeParams.mClashSpeed.get())
-				emitParticle(0xC);
+				emitParticle(PARTICLE_MS_DMG_C);
 		}
 		if (isSlipStart()) {
 			if (mWallPlane != nullptr) {
@@ -1268,13 +1269,13 @@ BOOL TMario::oilRun()
 	    += mIntendedMag * JMASSin(mFaceAngle.y) * mDirtyParams.mSlipRunSp.get();
 	mVel.z
 	    += mIntendedMag * JMASCos(mFaceAngle.y) * mDirtyParams.mSlipRunSp.get();
-	unk13C--;
-	if (unk13C <= 0) {
-		unk13C = 0;
-		unk138 = 0.0f;
+	mDirtyTimer--;
+	if (mDirtyTimer <= 0) {
+		mDirtyTimer = 0;
+		mOilBrake   = 0.0f;
 	}
-	mVel.x *= unk138;
-	mVel.z *= unk138;
+	mVel.x *= mOilBrake;
+	mVel.z *= mOilBrake;
 	mForwardVel = 0.0f;
 	mSlideVelX  = 0.0f;
 	mSlideVelZ  = 0.0f;
@@ -1317,10 +1318,10 @@ BOOL TMario::oilSlip()
 		    = mIntendedYaw - IConverge(diff, 0, (s16)rotSp, (s16)rotSp);
 	}
 
-	unk13C--;
-	if (unk13C <= 0) {
-		unk13C = 0;
-		unk138 = 0.0f;
+	mDirtyTimer--;
+	if (mDirtyTimer <= 0) {
+		mDirtyTimer = 0;
+		mOilBrake   = 0.0f;
 		changePlayerStatus(MARIO_STATUS_CATCH, 0, false);
 	}
 
@@ -1331,7 +1332,7 @@ BOOL TMario::oilSlip()
 
 	mForwardVel += mIntendedMag * JMASCos((s16)(mFaceAngle.y - mIntendedYaw))
 	               * mDirtyParams.mSlipCatchSp.get();
-	mForwardVel *= unk138;
+	mForwardVel *= mOilBrake;
 	setPlayerVelocity(mForwardVel);
 
 	if (-1.0f < mForwardVel && mForwardVel < 1.0f) {
@@ -1354,10 +1355,10 @@ BOOL TMario::oilSlip()
 
 BOOL TMario::oilSlope()
 {
-	unk13C--;
-	if (unk13C <= 0) {
-		unk13C = 0;
-		unk138 = 0.0f;
+	mDirtyTimer--;
+	if (mDirtyTimer <= 0) {
+		mDirtyTimer = 0;
+		mOilBrake   = 0.0f;
 		changePlayerStatus(MARIO_STATUS_CATCH, 0, false);
 	}
 	gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
@@ -1397,7 +1398,7 @@ BOOL TMario::backDown()
 {
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
-		emitParticle(0xC);
+		emitParticle(PARTICLE_MS_DMG_C);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
 	downingCommon(1, 86.0f, mStatusArg);
@@ -1409,7 +1410,7 @@ BOOL TMario::foreDown()
 
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
-		emitParticle(0xC);
+		emitParticle(PARTICLE_MS_DMG_C);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
 	downingCommon(ANIM_SDWNF, 42.0f, mStatusArg);
@@ -1420,7 +1421,7 @@ BOOL TMario::shortBackDown()
 {
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
-		emitParticle(0xC);
+		emitParticle(PARTICLE_MS_DMG_C);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
 	downingCommon(ANIM_SDOWN, 88.0f, mStatusArg);
@@ -1431,7 +1432,7 @@ BOOL TMario::shortForeDown()
 {
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
-		emitParticle(0xC);
+		emitParticle(PARTICLE_MS_DMG_C);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
 	downingCommon(ANIM_SHFDN, 80.0f, mStatusArg);
@@ -1442,7 +1443,7 @@ BOOL TMario::safeBackDown()
 {
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
-		emitParticle(0xC);
+		emitParticle(PARTICLE_MS_DMG_C);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
 	downingCommon(ANIM_SFBDN, 200.0f, mStatusArg);
@@ -1453,7 +1454,7 @@ BOOL TMario::safeForeDown()
 {
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
-		emitParticle(0xC);
+		emitParticle(PARTICLE_MS_DMG_C);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
 	downingCommon(ANIM_SFFDN, 100.0f, mStatusArg);
@@ -1464,7 +1465,7 @@ BOOL TMario::catchDown()
 {
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
-		emitParticle(0xC);
+		emitParticle(PARTICLE_MS_DMG_C);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
 	downingCommon(ANIM_SLDWN, 128.0f, mStatusArg);
