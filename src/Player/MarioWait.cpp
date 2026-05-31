@@ -232,7 +232,7 @@ BOOL TMario::sleeping()
 	}
 
 	waitProcess();
-	if ((unk114 & 0x2) ? true : false) {
+	if (checkUnk114(UNK114_FLAG_VISIBLE)) {
 		unk1B4 = mPosition;
 		sleepingEffect();
 	}

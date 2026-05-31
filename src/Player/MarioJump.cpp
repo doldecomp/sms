@@ -104,7 +104,7 @@ BOOL TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 		bool didTrample = false;
 
 		bool isStrong = true;
-		if ((unk114 & 0x100 ? true : false) == true)
+		if (checkUnk114(UNK114_FLAG_UNK100) == true)
 			isStrong = false;
 
 		if (unk2A8.y - mPosition.y <= mDeParams.mDamageFallHeight.get())
@@ -429,7 +429,7 @@ BOOL TMario::jumpCatch()
 
 	case 1: {
 		bool isStrong = true;
-		if ((unk114 & 0x100 ? true : false) == true)
+		if (checkUnk114(UNK114_FLAG_UNK100) == true)
 			isStrong = false;
 
 		if (unk2A8.y - mPosition.y <= mDeParams.mDamageFallHeight.get())

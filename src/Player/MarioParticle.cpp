@@ -176,7 +176,7 @@ void TMario::inOutWaterEffect(f32 waterY)
 	pos.y                     = mFloorPosition.z;
 
 	if (checkFlag(MARIO_FLAG_IN_SHALLOW_WATER)
-	    || (unk11C & 0x10000 ? true : false)) {
+	    || checkPrevFlag(MARIO_FLAG_IN_SHALLOW_WATER)) {
 		mMarioEffect->setJumpIntoWaterEffectSmall();
 		gpMarioParticleManager->emit(PARTICLE_MS_M_TOBIKOMI_S_A, &pos, 0,
 		                             nullptr);

@@ -1920,7 +1920,7 @@ void TMario::calcGroundMtx(const JGeometry::TVec3<f32>& param_1)
 
 void TMario::thinkSituation()
 {
-	unk11C = unk118;
+	mPrevFlag = mFlag;
 	if (unkBC < 0.0f)
 		unkBC += mBodyAngleParamsFree.mWaistAngleChangeRate.get();
 	else
@@ -1951,11 +1951,11 @@ void TMario::thinkSituation()
 
 	if (isMario()) {
 		if (checkFlag(MARIO_FLAG_VISIBLE) == true
-		    && (unk11C & 2 ? true : false) == false)
+		    && checkPrevFlag(MARIO_FLAG_VISIBLE) == false)
 			MSBgm::startBGM(MSD_BGM_TITLEBACK);
 
 		if (checkFlag(MARIO_FLAG_VISIBLE) == false
-		    && (unk11C & 2 ? true : false) == true)
+		    && checkPrevFlag(MARIO_FLAG_VISIBLE) == true)
 			MSBgm::stopBGM(MSD_BGM_TITLEBACK, 10);
 	}
 
@@ -2003,8 +2003,8 @@ void TMario::thinkSituation()
 		if (onYoshi())
 			getOffYoshi(false);
 		gpMarDirector->setNextStage(mGroundPlane->getData(), nullptr);
-		unk114 &= ~MARIO_FLAG_VISIBLE;
-		unk114 &= ~MARIO_FLAG_GAME_OVER;
+		offUnk114(UNK114_FLAG_VISIBLE);
+		offUnk114(UNK114_FLAG_DO_OCCLUSION_PROBE);
 	}
 
 	if (SMS_isOptionMap()) {
@@ -2023,9 +2023,9 @@ void TMario::thinkSituation()
 	if (gpMarDirector->isDemoMode3() || gpMarDirector->isDemoMode4()
 	    || gpMarDirector->isTalkModeNow()
 	    || checkStatusFlag(MARIO_STATUS_FLAG_UNK1000))
-		unk118 = MARIO_FLAG_NPC_TALKING;
+		onFlag(MARIO_FLAG_NPC_TALKING);
 	else
-		unk118 &= ~MARIO_FLAG_NPC_TALKING;
+		offFlag(MARIO_FLAG_NPC_TALKING);
 }
 
 void TMario::thinkWaterSurface()
@@ -2416,7 +2416,7 @@ void TMario::gunExec()
 	if (onYoshi() && unk108->mAnalogR > 0.0f)
 		mWaterGun->emit();
 
-	if (unk114 & 0x80 ? true : false)
+	if (checkUnk114(UNK114_FLAG_UNK80))
 		mWaterGun->resetWaterToFull();
 
 	if (mStatus != MARIO_STATUS_BACK_JUMP && mStatus != MARIO_STATUS_THROWN_DOWN
@@ -2444,7 +2444,7 @@ void TMario::playerControl(JDrama::TGraphics* param_1)
 {
 	unk9C  = mFaceAngle.y;
 	unk29C = mPosition;
-	unk114 &= ~0x1;
+	offUnk114(UNK114_FLAG_PROFILE);
 	if (gpMarDirector->unk124 == 1 && mStatus != MARIO_STATUS_READ_BILLBOARD)
 		changePlayerStatus(MARIO_STATUS_READ_BILLBOARD, 0, false);
 
