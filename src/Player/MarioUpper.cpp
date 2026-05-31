@@ -45,8 +45,8 @@ BOOL TMario::checkPumpEnable()
 {
 	if ((mWaterGun != nullptr) && checkFlag(MARIO_FLAG_HAS_FLUDD)
 	    && gMarioAnimeData[mAnimationId].isPumpOK() && !onYoshi()
-	    && (!checkUnk368()
-	        || !((unk368 / (float)mGraffitoParams.mSinkTime.get()
+	    && (!isSinking()
+	        || !((mSinkTimer / (float)mGraffitoParams.mSinkTime.get()
 	              > mGraffitoParams.mSinkPumpLimit.get())))
 	    && mUpperState != UPPER_STATE_FIXED_ANIMATION
 	    && mUpperState != UPPER_STATE_UNK3

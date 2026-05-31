@@ -27,14 +27,14 @@ BOOL TMario::isMario() { return gpMarioOriginal == this ? TRUE : FALSE; }
 
 void TMario::thinkFreeze()
 {
-	if (unk14E > 0) {
-		unk14E -= 1;
-		if (unk14E <= 0)
-			unk150 = mDeParams.mNoFreezeTime.get();
+	if (mFreezeTimer > 0) {
+		mFreezeTimer -= 1;
+		if (mFreezeTimer <= 0)
+			mFreezeImmunityTimer = mDeParams.mNoFreezeTime.get();
 	}
 
-	if (unk150 > 0)
-		unk150 -= 1;
+	if (mFreezeImmunityTimer > 0)
+		mFreezeImmunityTimer -= 1;
 }
 
 void TMario::thinkCube()
@@ -76,7 +76,7 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 	if (param_1 & 1) {
 		thinkFreeze();
 
-		if (unk14E <= 0) {
+		if (mFreezeTimer <= 0) {
 			playerControl(graphics);
 			setPositions();
 			if (mCap != nullptr)
@@ -92,7 +92,7 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 		soundMovement();
 	}
 
-	if ((param_1 & 1) && unk14E <= 0) {
+	if ((param_1 & 1) && mFreezeTimer <= 0) {
 		thinkAloha();
 		calcAnim(2, graphics);
 		animSound();
@@ -140,8 +140,7 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 			entryModels(graphics);
 			mYoshi->entry();
 
-			BOOL hasUnk368 = unk368 > 0.0f ? TRUE : FALSE;
-			if (hasUnk368 == FALSE)
+			if (isSinking() == FALSE)
 				((TMBindShadowBody*)unk390)->entryDrawShadow();
 		} else if (!onYoshi()) {
 			mYoshi->entry();

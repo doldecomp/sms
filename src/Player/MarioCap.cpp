@@ -194,7 +194,7 @@ void TMarioCap::perform(unsigned long param_1, JDrama::TGraphics* param_2)
 			    = unkC->getModelData()->getMaterialNodePointer(i)->getTevKColor(
 			        0);
 
-			color->color.a = mMario->unk134;
+			color->color.a = mMario->mDirty;
 		}
 	}
 

@@ -1302,7 +1302,7 @@ public:
 	}
 
 	// Fabricated
-	s32 checkUnk368() const { return unk368 > 0.0f ? 1 : 0; }
+	BOOL isSinking() const { return mSinkTimer > 0.0f ? TRUE : FALSE; }
 
 public:
 	/* 0x74 */ u32 mInput;
@@ -1604,23 +1604,27 @@ public:
 	/* 0x120 */ s16 mHealth;
 
 	/* 0x122 */ u16 unk122;
-
 	/* 0x124 */ u16 unk124;
-	/* 0x126 */ u16 unk126;
-	/* 0x128 */ s16 unk128;
+
+	// no cap -> mHotTimer counts up to mHotTimerMax and then mario is damaged
+	/* 0x126 */ u16 mHotTimer;
+	/* 0x128 */ s16 mHotTimerMax;
+
 	/* 0x12A */ s16 unk12A;
-	/* 0x12C */ f32 unk12C;
-	/* 0x130 */ f32 unk130;
-	/* 0x134 */ f32 unk134; // Amount of dirty?
+
+	/* 0x12C */ f32 mAir;
+	/* 0x130 */ f32 mMaxAir;
+
+	/* 0x134 */ f32 mDirty;
 	/* 0x138 */ f32 unk138;
 	/* 0x13C */ s16 unk13C;
 	/* 0x13E */ s16 unk13E;
 	/* 0x140 */ f32 unk140;
 	/* 0x144 */ u32 unk144;
 	/* 0x148 */ THitActor* unk148;
-	/* 0x14C */ s16 unk14C;
-	/* 0x14E */ s16 unk14E;
-	/* 0x150 */ s16 unk150;
+	/* 0x14C */ s16 mInvincibilityFrames;
+	/* 0x14E */ s16 mFreezeTimer;
+	/* 0x150 */ s16 mFreezeImmunityTimer;
 	/* 0x154 */ TWaterEmitInfo* unk154;
 	/* 0x158 */ TWaterEmitInfo* unk158;
 	/* 0x15C */ f32 unk15C;
@@ -1643,7 +1647,7 @@ public:
 	/* 0x29C */ JGeometry::TVec3<f32> unk29C;
 	/* 0x2A8 */ JGeometry::TVec3<f32> unk2A8;
 	/* 0x2B4 */ S16Vec unk2B4;
-	/* 0x2BA */ s16 unk2BA;
+	/* 0x2BA */ s16 mOobKillTimer;
 	/* 0x2BC */ f32 unk2BC;
 	/* 0x2C0 */ const TLiveActor* unk2C0;
 	/* 0x2C4 */ Mtx unk2C4;
@@ -1653,18 +1657,18 @@ public:
 	/* 0x310 */ u32 unk310;
 	/* 0x314 */ f32 unk314;
 	/* 0x318 */ Mtx unk318;
-	/* 0x348 */ f32 unk348;
+	/* 0x348 */ f32 mPumpAnmRate;
 	/* 0x34C */ u16 unk34C;
-	/* 0x34E */ u16 unk34E;
-	/* 0x350 */ s32 unk350;
+	/* 0x34E */ u16 mStandingOnGraffitoTimer;
+	/* 0x350 */ s32 mPollutionTypeStandingOn;
 	/* 0x354 */ f32 unk354;
 	/* 0x358 */ f32 unk358;
 	/* 0x35C */ f32 unk35C;
-	/* 0x360 */ s16 unk360;
+	/* 0x360 */ s16 mFootPrintTimer;
 	/* 0x362 */ s16 unk362;
 	/* 0x364 */ s16 unk364;
 	/* 0x366 */ s16 unk366;
-	/* 0x368 */ f32 unk368;
+	/* 0x368 */ f32 mSinkTimer;
 	/* 0x36C */ f32 unk36C;
 	/* 0x370 */ f32 unk370;
 	/* 0x374 */ f32 unk374;
