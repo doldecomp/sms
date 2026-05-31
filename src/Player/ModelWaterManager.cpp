@@ -336,7 +336,10 @@ struct UnknownMWMStruct {
 	f32 unkC;
 	f32 unk10;
 	f32 unk14;
-} gWaterManagerPlaneInfo;
+};
+
+UnknownMWMStruct gWaterManagerPlaneInfo
+    = { 0.93f, -3.0f, 2.0f, 0.7f, -1.0f, 1.0f };
 
 // TODO: these 3 inlines could be confused with one another
 

@@ -1276,18 +1276,6 @@ public:
 		return false;
 	}
 
-	// Fabricated
-	bool isActionThing() const
-	{
-		if ((mStatus & MARIO_STATUS_TYPE_AND_ID_MASK)
-		        >= (MARIO_STATUS_ASCEND & MARIO_STATUS_TYPE_AND_ID_MASK)
-		    && (MARIO_STATUS_WIRE_WAIT & MARIO_STATUS_TYPE_AND_ID_MASK)
-		           >= (mStatus & MARIO_STATUS_TYPE_AND_ID_MASK))
-			return true;
-
-		return false;
-	}
-
 	// Fabricated and probably wrong
 	void damageExec(THitActor* hittingActor, int code)
 	{

@@ -2439,14 +2439,19 @@ void TMario::playerControl(JDrama::TGraphics* param_1)
 	unk9C  = mFaceAngle.y;
 	unk29C = mPosition;
 	offUnk114(UNK114_FLAG_PROFILE);
+
 	if (gpMarDirector->unk124 == 1 && mStatus != MARIO_STATUS_READ_BILLBOARD)
 		changePlayerStatus(MARIO_STATUS_READ_BILLBOARD, 0, false);
 
 	if (gpMarioOriginal == this) {
 		if (gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode)
-		    && !isActionThing() && gpMarDirector->unk124 != 1) {
-			mFaceAngle.y
-			    = (gpCamera->unk258 - 0x8000) - gpCamera->getOffsetAngleY();
+		    && !((mStatus & MARIO_STATUS_TYPE_AND_ID_MASK)
+		             >= (MARIO_STATUS_HANGING & MARIO_STATUS_TYPE_AND_ID_MASK)
+		         && (MARIO_STATUS_HANG_JUMPING & MARIO_STATUS_TYPE_AND_ID_MASK)
+		                >= (mStatus & MARIO_STATUS_TYPE_AND_ID_MASK))
+		    && gpMarDirector->unk124 != 1) {
+			mFaceAngle.y = (gpCamera->getUnk258() + 0x8000)
+			               - gpCamera->getOffsetAngleY();
 		}
 	}
 
