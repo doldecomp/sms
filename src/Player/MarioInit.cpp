@@ -83,7 +83,9 @@ TMario::TMario()
     , mDmgMapParams9("/Mario/DmgMapCode9.prm")
     , mOptionParams("/Mario/Option.prm")
 {
-	unk114          = 0x412;
+	unk114 = UNK114_FLAG_DO_OCCLUSION_PROBE | UNK114_FLAG_UNK10
+	         | UNK114_FLAG_VISIBLE;
+
 	unk116          = 0;
 	mInput          = 0;
 	unk78           = 0;
@@ -134,8 +136,8 @@ TMario::TMario()
 	unk100           = 0;
 	unk104           = 0.0f;
 	unk108           = nullptr;
-	unk118           = 0;
-	unk11C           = 0;
+	mFlag            = 0;
+	mPrevFlag        = 0;
 	mHealth          = mDeParams.mHpMax.get();
 	unk122           = 0;
 	unk124           = 0;
@@ -326,7 +328,7 @@ void TMario::load(JSUMemoryInputStream& stream)
 	stream >> unk298;
 	u32 local_20;
 	stream >> local_20;
-	unk118 = 0;
+	mFlag = 0;
 	if (local_20 & 1)
 		offFlag(MARIO_FLAG_HAS_FLUDD);
 	else

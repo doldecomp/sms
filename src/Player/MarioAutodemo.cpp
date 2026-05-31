@@ -192,7 +192,7 @@ BOOL TMario::warpIn()
 			gpMarDirector->setNextStage(nextStage, mHolder);
 		}
 
-		unk114 |= 2;
+		onUnk114(UNK114_FLAG_VISIBLE);
 		J3DFrameCtrl& frameCtrl = getMotionFrameCtrl();
 		frameCtrl.setRate(0.0f);
 
@@ -218,7 +218,7 @@ BOOL TMario::warpIn()
 	}
 	case 1: {
 		if ((f32)mStatusTimer > mAutoDemoParams.mWarpInBallsDispTime.get()) {
-			unk114 &= ~(1 << 1);
+			offUnk114(UNK114_FLAG_VISIBLE);
 			rumbleStart(0x15, 0x14);
 		}
 		if (mAutoDemoParams.mWarpInBallsTime.get() > (f32)mStatusTimer) {
@@ -230,11 +230,11 @@ BOOL TMario::warpIn()
 		break;
 	}
 	case 2:
-		unk114 &= ~(1 << 1);
+		offUnk114(UNK114_FLAG_VISIBLE);
 		rumbleStart(0x14, mMotorParams.mMotorWall.get() / 2);
 
 		if ((f32)mStatusTimer > mAutoDemoParams.mWarpInCapturedTime.get()) {
-			unk114 &= ~(1 << 1);
+			offUnk114(UNK114_FLAG_VISIBLE);
 			mStatusTimer = 0;
 			mHolder->receiveMessage(this, HIT_MESSAGE_ATTACK);
 			mStatusState = 3;
@@ -261,7 +261,7 @@ bool TMario::isUnUsualStageStart()
 		return toroccoStart();
 
 	if (SMS_isDivingMap()) {
-		unk114 |= 2;
+		onUnk114(UNK114_FLAG_VISIBLE);
 
 		// I suspect some inline stuff here, weird to check right after you set
 		// it
@@ -288,7 +288,7 @@ bool TMario::isUnUsualStageStart()
 
 void TMario::startCommon(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 {
-	unk114 &= ~2;
+	offUnk114(UNK114_FLAG_VISIBLE);
 	if (warpPos != nullptr) {
 		warpRequest(*warpPos, rotation);
 		mFaceAngle.set(0, DEG2SHORTANGLE(rotation), 0);
@@ -339,17 +339,15 @@ BOOL TMario::waitingStart(const JGeometry::TVec3<f32>* warpPos, f32 rotation)
 		return TRUE;
 
 	startCommon(warpPos, rotation);
-	unk114 |= 2;
+	onUnk114(UNK114_FLAG_VISIBLE);
 	changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 	return TRUE;
-
-	return FALSE;
 }
 
 BOOL TMario::toroccoStart()
 {
 	changePlayerStatus(MARIO_STATUS_TOROCCO, 0, true);
-	unk114 |= 2;
+	onUnk114(UNK114_FLAG_VISIBLE);
 
 	if (mPinaRail != nullptr) {
 		mPinaRail->setBckFromIndex(0);
@@ -372,10 +370,10 @@ BOOL TMario::warpOut()
 	// volatile u32 padding[4];
 
 	mStatusTimer += 1;
-	unk114 |= 2;
+	onUnk114(UNK114_FLAG_VISIBLE);
 	switch (mStatusState) {
 	case 0:
-		unk114 |= 2;
+		onUnk114(UNK114_FLAG_VISIBLE);
 		if ((mStatusArg & 0xff) == 2) {
 			setAnimation(ANIM_DEMO_GATE_OUT_APPEAR_GET, 1.0f);
 		} else {
@@ -396,14 +394,14 @@ BOOL TMario::warpOut()
 		}
 		if (mStatusTimer >= unkDelay) {
 			if (checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
-				unk114 |= 2;
+				onUnk114(UNK114_FLAG_VISIBLE);
 				return changePlayerStatus(MARIO_STATUS_DIVE, 0, true);
 			}
 			mStatusState = 2;
 		}
 		break;
 	case 2:
-		unk114 |= 2;
+		onUnk114(UNK114_FLAG_VISIBLE);
 		if ((mStatusArg & 0xff) == 2) {
 			setAnimation(ANIM_DEMO_GATE_OUT_ROLLING_GET, 1.0f);
 		} else {
@@ -414,7 +412,7 @@ BOOL TMario::warpOut()
 		}
 		break;
 	case 3:
-		unk114 |= 2;
+		onUnk114(UNK114_FLAG_VISIBLE);
 		switch (mStatusArg & 0xff) {
 		case 0:
 			return changePlayerStatus(MARIO_STATUS_JUMP_END, 0, true);
@@ -518,7 +516,7 @@ BOOL TMario::nomotion()
 
 BOOL TMario::disappear()
 {
-	unk114 &= ~2;
+	offUnk114(UNK114_FLAG_VISIBLE);
 	return FALSE;
 }
 

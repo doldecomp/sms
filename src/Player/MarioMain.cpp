@@ -67,7 +67,7 @@ void TMario::thinkAloha()
 
 void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 {
-	if (unk114 & 1)
+	if (unk114 & UNK114_FLAG_PROFILE)
 		TTimeRec::startTimer(0xff, 0x00, 0x00, 0x80);
 
 	if (checkFlag(MARIO_FLAG_IS_PERFORMING))
@@ -125,7 +125,7 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 	if (param_1 & 0x200) {
 		// TODO: inline?
 		BOOL doEntry = TRUE;
-		if (!(unk114 & 0x2))
+		if (!(unk114 & UNK114_FLAG_VISIBLE))
 			doEntry = FALSE;
 		if (checkFlag(MARIO_FLAG_UNK4))
 			doEntry = FALSE;
@@ -172,7 +172,7 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 	}
 
 	if (param_1 & 0x40000000) {
-		if ((unk114 & 0x10) ? true : false) {
+		if (checkUnk114(UNK114_FLAG_UNK10)) {
 			j3dSys.setUnk4C(3);
 			unk394->draw();
 			mYoshi->unkA8->draw();
@@ -180,7 +180,7 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 	}
 
 	if (param_1 & 0x20000000) {
-		if ((unk114 & 0x10) ? true : false) {
+		if (checkUnk114(UNK114_FLAG_UNK10)) {
 			j3dSys.setUnk4C(4);
 			unk398->draw();
 			mYoshi->unkAC->draw();
@@ -191,7 +191,7 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 		drawSpecial(graphics);
 
 	if (param_1 & 0x02000000) {
-		if ((unk114 & 0x400) ? true : false) {
+		if (checkUnk114(UNK114_FLAG_DO_OCCLUSION_PROBE)) {
 			boxDrawPrepare(graphics->mViewMtx);
 			GXSetColorUpdate(GX_FALSE);
 			GXSetAlphaUpdate(GX_TRUE);
@@ -204,7 +204,7 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 	}
 
 	if (param_1 & 0x00800000) {
-		if ((unk114 & 0x400) ? true : false) {
+		if (checkUnk114(UNK114_FLAG_DO_OCCLUSION_PROBE)) {
 			boxDrawPrepare(graphics->mViewMtx);
 			GXSetColorUpdate(GX_FALSE);
 			GXSetAlphaUpdate(GX_TRUE);
@@ -216,7 +216,7 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if ((param_1 & 0x80000000) && (unk114 & 0x2)) {
+	if ((param_1 & 0x80000000) && (unk114 & UNK114_FLAG_VISIBLE)) {
 		j3dSys.onFlag(0x2);
 		GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0xff, 0xff, 0xff, 0xff });
 		GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
@@ -242,25 +242,27 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 		j3dSys.offFlag(0x2);
 	}
 
-	if (unk114 & 1)
+	if (unk114 & UNK114_FLAG_PROFILE)
 		TTimeRec::endTimer();
 }
 
 void TMario::drawSyncCallback(u16)
 {
-	if (unk114 & 0x400 ? true : false) {
-		if (mMarioScreenPos.x < 0.0f || mMarioScreenPos.y < 0.0f
-		    || mMarioScreenPos.x >= (u16)SMSGetGameRenderWidth()
-		    || mMarioScreenPos.y >= (u16)SMSGetGameRenderHeight()) {
-			offFlag(MARIO_FLAG_ABOVE_SEWER_FLOOR);
-		} else {
-			u32 local_1c;
-			GXPeekARGB(mMarioScreenPos.x, mMarioScreenPos.y, &local_1c);
-			if ((local_1c & 0xff000000) == 0x10000000) {
-				offFlag(MARIO_FLAG_ABOVE_SEWER_FLOOR);
-			} else {
-				onFlag(MARIO_FLAG_ABOVE_SEWER_FLOOR);
-			}
-		}
+	if (!checkUnk114(UNK114_FLAG_DO_OCCLUSION_PROBE))
+		return;
+
+	if (mMarioScreenPos.x < 0.0f || mMarioScreenPos.y < 0.0f
+	    || mMarioScreenPos.x >= (u16)SMSGetGameRenderWidth()
+	    || mMarioScreenPos.y >= (u16)SMSGetGameRenderHeight()) {
+		offFlag(MARIO_FLAG_OCCLUDED);
+		return;
+	}
+
+	u32 local_1c;
+	GXPeekARGB(mMarioScreenPos.x, mMarioScreenPos.y, &local_1c);
+	if ((local_1c & 0xff000000) == 0x10000000) {
+		offFlag(MARIO_FLAG_OCCLUDED);
+	} else {
+		onFlag(MARIO_FLAG_OCCLUDED);
 	}
 }

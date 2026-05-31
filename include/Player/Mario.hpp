@@ -1219,9 +1219,18 @@ public:
 
 	// Fabricated
 	// See E_MARIO_FLAG
-	bool checkFlag(u32 flag) const { return unk118 & flag ? true : false; }
-	void onFlag(u32 flag) { unk118 |= flag; }
-	void offFlag(u32 flag) { unk118 &= ~flag; }
+	bool checkFlag(u32 flag) const { return mFlag & flag ? true : false; }
+	bool checkPrevFlag(u32 flag) const
+	{
+		return mPrevFlag & flag ? true : false;
+	}
+	void onFlag(u32 flag) { mFlag |= flag; }
+	void offFlag(u32 flag) { mFlag &= ~flag; }
+
+	// Fabricated
+	bool checkUnk114(u32 flag) const { return unk114 & flag ? true : false; }
+	void onUnk114(u32 flag) { unk114 |= flag; }
+	void offUnk114(u32 flag) { unk114 &= ~flag; }
 
 	// Fabricated
 	bool fabricatedIsPumping() const
@@ -1566,11 +1575,31 @@ public:
 	/* 0x10C */ f32 unk10C;
 	/* 0x110 */ f32 unk110;
 
+	enum {
+		// turns on `perform` profiling
+		UNK114_FLAG_PROFILE = 0x1,
+		// turns on mario drawing
+		UNK114_FLAG_VISIBLE = 0x2,
+		// tilts mario towards ground slope?
+		UNK114_FLAG_UNK8 = 0x8,
+		// sillhouette drawing?
+		UNK114_FLAG_UNK10 = 0x10,
+		// Some electroshock related effect drawing?
+		UNK114_FLAG_UNK20 = 0x20,
+		// Cheat to always have max FLUDD water?
+		UNK114_FLAG_UNK80 = 0x80,
+		// No fall damage cheat?
+		UNK114_FLAG_UNK100 = 0x100,
+		// Enables/disables invisible box drawing that's used to probe
+		// for mario visibility to the camera, which in turn controls drawing of
+		// mario's sillhouette.
+		UNK114_FLAG_DO_OCCLUSION_PROBE = 0x400,
+	};
+
 	/* 0x114 */ u16 unk114;
 	/* 0x116 */ u16 unk116;
-	/* 0x118 */ u32 unk118; // see E_MARIO_FLAG
-
-	/* 0x11C */ u32 unk11C;
+	/* 0x118 */ u32 mFlag; // see E_MARIO_FLAG
+	/* 0x11C */ u32 mPrevFlag;
 
 	/* 0x120 */ s16 mHealth;
 

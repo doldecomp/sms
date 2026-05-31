@@ -32,7 +32,7 @@ void SMS_SetMarioAccessParams()
 	gpMarioSpeedZ = speed + 2;
 
 	gpMarioLightID = &gpMarioOriginal->mLightID;
-	gpMarioFlag    = &gpMarioOriginal->unk118;
+	gpMarioFlag    = &gpMarioOriginal->mFlag;
 
 	gpMarioThrowPower  = &gpMarioOriginal->mDeParams.mThrowPower.value;
 	gpMarioGroundPlane = &gpMarioOriginal->mGroundPlane;

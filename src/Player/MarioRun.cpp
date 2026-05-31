@@ -720,7 +720,7 @@ BOOL TMario::running()
 			break;
 		}
 
-		if (unk118 & MARIO_FLAG_VISIBLE)
+		if (mFlag & MARIO_FLAG_VISIBLE)
 			pushed = true;
 
 		if (!pushed) {
@@ -1098,7 +1098,7 @@ void TMario::slippingBasic(int statusOnStop, int statusOnFall, int slipAnim)
 		return;
 	case 1:
 		setAnimation(slipAnim, 1.0f);
-		unk114 |= 8;
+		onUnk114(UNK114_FLAG_UNK8);
 		frontSlipEffect();
 		return;
 	case 2:
@@ -1139,7 +1139,7 @@ void TMario::slippingBasic(int statusOnStop, int statusOnFall, int slipAnim)
 			setPlayerVelocity(0.0f);
 			changePlayerStatus(statusOnStop, 0, false);
 		}
-		unk114 |= 8;
+		onUnk114(UNK114_FLAG_UNK8);
 		return;
 	}
 }

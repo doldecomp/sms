@@ -3,8 +3,10 @@
 
 // TODO: check these flag names!
 enum E_MARIO_FLAG {
-	MARIO_FLAG_ABOVE_SEWER_FLOOR   = 0x1,
-	MARIO_FLAG_VISIBLE             = 0x2,
+	// True when mario is occluded by geometry and so
+	// isn't visible to the camera
+	MARIO_FLAG_OCCLUDED            = 0x1,
+	MARIO_FLAG_VISIBLE             = 0x2, // TODO: wrong-ish name
 	MARIO_FLAG_UNK4                = 0x4,
 	MARIO_FLAG_NPC_TALKING         = 0x8,
 	MARIO_FLAG_RECENTLY_LEFT_WATER = 0x10,

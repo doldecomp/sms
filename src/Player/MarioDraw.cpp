@@ -1794,7 +1794,7 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		mFaceAngle.x = 0;
 	}
 
-	if ((unk114 & 8) ? true : false) {
+	if (checkUnk114(UNK114_FLAG_UNK8)) {
 		// Sample ground heights at three points around mario to form a
 		// triangle, then build a rotation matrix oriented to its normal.
 		JGeometry::TVec3<f32> p1, p2, p3;
@@ -1876,7 +1876,6 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 	}
 
 	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK10000)) {
-
 		if (mGroundPlane->isWaterSurface()) {
 			// Use water-side surf params
 			s16 rMax = mSurfingParamsWaterRed.mPitchMax.get();
@@ -2245,10 +2244,10 @@ void TMario::drawSpecial(JDrama::TGraphics* graphics)
 {
 	if (mStatus == MARIO_STATUS_ELECTRIC_DAMAGE) {
 		unk4EC = 1;
-		unk114 |= 0x20;
+		onUnk114(UNK114_FLAG_UNK20);
 	} else {
 		unk4EC = 0;
-		unk114 &= ~0x20;
+		offUnk114(UNK114_FLAG_UNK20);
 	}
 	// Probably some enum? I see no reason why this is a switch...
 	switch (unk4EC) {
@@ -2285,7 +2284,7 @@ void TMario::drawLogic()
 	unk398->draw();
 	GXSetColorUpdate(GX_TRUE);
 	GXSetAlphaUpdate(GX_FALSE);
-	if (unk114 & 0x20 ? true : false) {
+	if (checkUnk114(UNK114_FLAG_UNK20)) {
 		unk394->draw();
 		unk398->draw();
 	}
