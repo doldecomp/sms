@@ -244,7 +244,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				mModelFaceAngle = mFaceAngle.y;
 				setPlayerVelocity(0.0f);
 				mHealth = mDeParams.mHpMax.get();
-				unk12C  = unk130;
+				mAir    = mMaxAir;
 				changePlayerStatus(MARIO_STATUS_WIN_DEMO, 0, true);
 				return TRUE;
 			}
@@ -879,9 +879,9 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		break;
 
 	case 0x40000064:
-	case 0x40000393: // fruit kick targets
-		if (unk150 <= 0) {
-			unk14E = mDeParams.mKickFreezeTime.get();
+	case 0x40000393: // fruit kick targets (durian & smth else)
+		if (mFreezeImmunityTimer <= 0) {
+			mFreezeTimer = mDeParams.mKickFreezeTime.get();
 			rumbleStart(0x15, mMotorParams.mMotorTrample.get());
 			calcDamagePos(sender->mPosition);
 			kickFruitEffect();

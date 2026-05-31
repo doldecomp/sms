@@ -568,11 +568,11 @@ void TMario::emitBlurSpinJump()
 	                                            getCenterAnmMtx(), 1, this);
 	gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_M_BLUR2SP,
 	                                            getCenterAnmMtx(), 1, this);
-	if (unk134 > 0.0f) {
+	if (mDirty > 0.0f) {
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 		    MAP_POLLUTION_MS_M_SPINOS, getCenterAnmMtx(), 1, this);
 		if (emitter != nullptr) {
-			emitter->mChildSpawnRate = 0.003921569f * (1.75f * unk134);
+			emitter->mChildSpawnRate = 0.003921569f * (1.75f * mDirty);
 		}
 	}
 }
@@ -657,13 +657,13 @@ void TMario::emitSandEffect()
 
 void TMario::meltInWaterEffect()
 {
-	if (unk134 > 0.0f) {
+	if (mDirty > 0.0f) {
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 		    MAP_POLLUTION_MS_M_TOKEOS, unk220, 1, this);
 		if (emitter != nullptr) {
 			emitter->mChildSpawnRate
 			    = 0.003921569f
-			      * (unk134 * mParticleParams.mMeltInWaterMax.get());
+			      * (mDirty * mParticleParams.mMeltInWaterMax.get());
 			if (checkFlag(MARIO_FLAG_IN_SHALLOW_WATER)) {
 				JGeometry::TVec3<f32> scale(0.6f, 0.6f, 0.6f);
 				emitter->setScale(scale);

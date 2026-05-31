@@ -1937,9 +1937,9 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 	}
 
 	MTXIdentity(unk318);
-	if (checkUnk368()) {
+	if (isSinking()) {
 		MTXTrans(unk318, 0.0f,
-		         -(unk368 / mGraffitoParams.mSinkTime.get())
+		         -(mSinkTimer / mGraffitoParams.mSinkTime.get())
 		             * mGraffitoParams.mSinkHeight.get(),
 		         0.0f);
 	}
@@ -2067,16 +2067,16 @@ void TMario::addUpper()
 
 		if (mUpperState == UPPER_STATE_PUMPING) {
 			frameCtrl.setAttribute(J3DFrameCtrl::ATTR_PING_PONG_LOOP);
-			unk348
+			mPumpAnmRate
 			    = mGamePad->mCompSPos[3] * mUpperBodyParams.mPumpAnmSpeed.get();
 			if (mWaterGun->mCurrentWater <= 0) {
 				if (frameCtrl.getRate() >= 0.0f) {
-					frameCtrl.setRate(unk348);
+					frameCtrl.setRate(mPumpAnmRate);
 					if (frameCtrl.checkPass(8.0f)) {
 						startSoundActor(MSD_SE_PO_POMPING1);
 					}
 				} else {
-					frameCtrl.setRate(-unk348);
+					frameCtrl.setRate(-mPumpAnmRate);
 					if (frameCtrl.checkPass(13.0f)) {
 						startSoundActor(MSD_SE_PO_POMPING2);
 					}
@@ -2346,7 +2346,7 @@ void TMario::addDirty()
 		J3DGXColor* konstColor = mBodyModelData->getMaterialNodePointer(i)
 		                             ->getTevBlock()
 		                             ->getTevKColor(0);
-		konstColor->color.a = unk134;
+		konstColor->color.a = mDirty;
 	}
 
 	if (mHandModels[0][0] != nullptr) {
@@ -2359,7 +2359,7 @@ void TMario::addDirty()
 					    = mHandModelData->getMaterialNodePointer(i)
 					          ->getTevBlock()
 					          ->getTevKColor(0);
-					konstColor->color.a = unk134;
+					konstColor->color.a = mDirty;
 				}
 			}
 		}
@@ -2373,12 +2373,12 @@ void TMario::addDamageFog(JDrama::TGraphics* graphics)
 	GXColor fogColor = (GXColor) { 0xff, 0x00, 0x80, 0xff };
 
 	// Inlined "bool getFogColor(GXColor* color)"?
-	if (unk14C == 0) {
+	if (mInvincibilityFrames == 0)
 		check = false;
-	}
-	if (checkFlag(MARIO_FLAG_DIRTY) && unk350 == 2) {
+
+	if (checkFlag(MARIO_FLAG_DIRTY) && mPollutionTypeStandingOn == 2) {
 		check = true;
-		if (unk34E > mDirtyParams.mFogTimeYellow.get()) {
+		if (mStandingOnGraffitoTimer > mDirtyParams.mFogTimeYellow.get()) {
 			fogColor = (GXColor) { 0x82, 0x96, 0x00, 0xff };
 		} else {
 			fogColor = (GXColor) { 0xff, 0x00, 0x80, 0xff };

@@ -26,9 +26,9 @@ void TMario::incHP(int hp)
 {
 	// volatile u32 padding[10];
 	if (isUnderWater() || checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
-		unk12C += hp;
-		if (unk12C > unk130) {
-			unk12C = unk130;
+		mAir += hp;
+		if (mAir > mMaxAir) {
+			mAir = mMaxAir;
 		} else {
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_HP_RECOVER, 0, nullptr,
 			                                   0);
@@ -48,13 +48,13 @@ void TMario::decHP(int hp)
 {
 	// volatile u32 padding[2];
 	if (isUnderWater() || checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
-		unk12C -= hp;
+		mAir -= hp;
 
 		for (int i = 0; i < 10; ++i) {
 			bubbleFromMouth(i);
 		}
 
-		if (unk12C < 1.0f) {
+		if (mAir < 1.0f) {
 			loserExec();
 			changePlayerStatus(MARIO_STATUS_SWIM_DOWN, 0, true);
 		}
@@ -85,7 +85,7 @@ void TMario::dropObject()
 
 bool TMario::isTakeSituation(THitActor* object)
 {
-	if (unk14C > 0)
+	if (mInvincibilityFrames > 0)
 		return false;
 
 	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK80000000))
@@ -221,7 +221,7 @@ void TMario::loserExec()
 		}
 
 		if (checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING)) {
-			if (unk12C < 1.0f) {
+			if (mAir < 1.0f) {
 				changePlayerStatus(MARIO_STATUS_SWIM_DOWN, 0, true);
 			} else {
 				changePlayerStatus(MARIO_STATUS_SWIM_P_DOWN, 0, true);
@@ -367,7 +367,7 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 			}
 		}
 	}
-	unk14C = invincibilityFrames;
+	mInvincibilityFrames = invincibilityFrames;
 	decHP(damage);
 	if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 		for (int i = 0; i < waterEmit; ++i) {
@@ -406,7 +406,7 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 		}
 	}
 
-	unk134 += pollutionAmount;
+	mDirty += pollutionAmount;
 	dirtyLimitCheck();
 }
 

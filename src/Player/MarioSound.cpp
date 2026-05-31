@@ -623,9 +623,9 @@ void TMario::animSound()
 	mSoundFlags = mGroundPlane->unk6;
 
 	if (checkFlag(MARIO_FLAG_DIRTY)) {
-		if (unk350 == 0
-		    && unk368 >= mGraffitoParams.mSinkTime.get()
-		                     * mGraffitoParams.mSinkDmgDepth.get())
+		if (mPollutionTypeStandingOn == 0
+		    && mSinkTimer >= mGraffitoParams.mSinkTime.get()
+		                         * mGraffitoParams.mSinkDmgDepth.get())
 			mSoundFlags |= 0x600;
 		else
 			mSoundFlags |= 0x500;
@@ -643,8 +643,8 @@ void TMario::animSound()
 		}
 	}
 
-	if (unk368 > 0.0f ? TRUE : FALSE) {
-		if (-(unk368 / mGraffitoParams.mSinkTime.get())
+	if (isSinking()) {
+		if (-(mSinkTimer / mGraffitoParams.mSinkTime.get())
 		        * mGraffitoParams.mSinkHeight.get()
 		    > 30.0f)
 			mSoundFlags |= 0x400;
