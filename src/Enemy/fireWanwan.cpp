@@ -1186,6 +1186,7 @@ void TFireWanwan::updateCollisionFromParam()
 	             getSaveParam2()->mSLDamageHeight.get());
 }
 
+#pragma dont_inline on
 // Tiny size mismatch
 void TFireWanwan::updateCameraShake()
 {
@@ -1217,6 +1218,7 @@ void TFireWanwan::updateRumble()
 		mHungTailRumbleTimer = 0;
 	}
 }
+#pragma dont_inline off
 
 void TFireWanwan::updatePollute()
 {
