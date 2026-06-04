@@ -677,11 +677,12 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 		s16* unk      = &mario->unkFC; // This feels wrong
 		if (mario == gpMarioOriginal
 		    && gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode) == 1
-		    && gpMarioForCallBack->canBendBody() != 0 && gpCamera->unkA4 > 0) {
-			*unk = gpCamera->unkA4;
+		    && gpMarioForCallBack->canBendBody() != 0
+		    && gpCamera->unk80.unk24 > 0) {
+			*unk = gpCamera->unk80.unk24;
 			Mtx transform;
 			MsMtxSetRotRPH(transform, SHORTANGLE2DEG(-mario->unk100), 0.0f,
-			               SHORTANGLE2DEG(gpCamera->unkA4));
+			               SHORTANGLE2DEG(gpCamera->unk80.unk24));
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
 		} else if (gpMarioForCallBack->checkStatusFlag(MARIO_FLAG_HAS_FLUDD)

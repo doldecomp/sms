@@ -15,6 +15,9 @@ public:
 	void calcPosAndAt(JGeometry::TVec3<f32>*, JGeometry::TVec3<f32>*) const;
 	void load(JSUMemoryInputStream&);
 
+	// Fabricated
+	f32 getThing() const { return unk18.y; }
+
 public:
 	/* 0xC */ JGeometry::TVec3<f32> unkC;
 	/* 0x18 */ JGeometry::TVec2<f32> unk18;

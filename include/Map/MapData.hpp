@@ -365,7 +365,7 @@ public:
 			return false;
 	}
 
-	bool isUnkC() const
+	bool isSlider() const
 	{
 		// TODO: wtf is 0xA000? 0x8000 | 0x2000 the later being a new flag?
 		if (mBGType == BG_TYPE_UNKC || mBGType == BG_TYPE_CAM_NOCLIP_UNKC
@@ -416,6 +416,14 @@ public:
 	bool isShadow() const
 	{
 		if (mBGType & BG_PROPERTY_FLAG_SHADOW)
+			return true;
+		else
+			return false;
+	}
+
+	bool isCameraWontClip() const
+	{
+		if (mBGType & BG_PROPERTY_FLAG_CAMERA_WONT_CLIP)
 			return true;
 		else
 			return false;
