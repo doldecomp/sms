@@ -255,6 +255,14 @@ public:
 
 	f32 squared() const { return dot(*this); }
 
+	f32 squared(const TVec3& other) const
+	{
+		f32 dx = x - other.x;
+		f32 dy = y - other.y;
+		f32 dz = z - other.z;
+		return dx * dx + dy * dy + dz * dz;
+	}
+
 	f32 length() const { return TUtil<f32>::sqrt(squared()); }
 
 	// @fabricated

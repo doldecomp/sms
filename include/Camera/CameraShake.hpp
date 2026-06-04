@@ -37,6 +37,8 @@ public:
 	void keepShake(EnumCamShakeMode, f32);
 	void execShake(const JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>*,
 	               JGeometry::TVec3<f32>*);
+
+	static const char* mCamShakeNameSave[41];
 };
 
 #endif

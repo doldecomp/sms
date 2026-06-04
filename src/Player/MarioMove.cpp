@@ -284,7 +284,7 @@ BOOL TMario::isSlipStart()
 	if (isForceSlip())
 		return true;
 
-	if (mGroundPlane->isUnkC())
+	if (mGroundPlane->isSlider())
 		return true;
 
 	if (mGroundPlane->isUnk2() && mGroundPlane->getNormal().y < 0.8660254f)
@@ -304,7 +304,7 @@ BOOL TMario::canSlipJump()
 	if (isForceSlip())
 		return mSlipParamsAll.mJumpEnable.get();
 
-	if (mGroundPlane->isUnkC())
+	if (mGroundPlane->isSlider())
 		return mSlipParamsAllSlider.mJumpEnable.get();
 
 	if (mGroundPlane->isUnk2())
@@ -328,7 +328,7 @@ f32 TMario::getSlideStopNormal()
 	if (isForceSlip())
 		return mSlipParamsAll.mSlideStopNormal.get();
 
-	if (mGroundPlane->isUnkC())
+	if (mGroundPlane->isSlider())
 		return mSlipParamsAllSlider.mSlideStopNormal.get();
 
 	if (mGroundPlane->isUnk2() && mGroundPlane->getNormal().y < 0.8660254f)
@@ -345,7 +345,7 @@ f32 TMario::getSlideStopCatch()
 	if (isForceSlip())
 		return mSlipParamsAll.mSlideStopCatch.get();
 
-	if (mGroundPlane->isUnkC())
+	if (mGroundPlane->isSlider())
 		return mSlipParamsAllSlider.mSlideStopCatch.get();
 
 	if (mGroundPlane->isUnk2() && mGroundPlane->getNormal().y < 0.8660254f)
@@ -368,7 +368,7 @@ BOOL TMario::isJumpMiss()
 	if (isForceSlip())
 		return mSlipParamsAll.mMissJump.get();
 
-	if (mGroundPlane->isUnkC())
+	if (mGroundPlane->isSlider())
 		return mSlipParamsAllSlider.mMissJump.get();
 
 	if (mGroundPlane->isUnk2() && mGroundPlane->getNormal().y < 0.8660254f)

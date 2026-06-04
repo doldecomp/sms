@@ -183,6 +183,6 @@ extern JAIBasic* MSGBasic;
 extern MSound* gpMSound;
 
 // real
-MSound* SMSGetMSound() { return gpMSound; }
+inline MSound* SMSGetMSound() { return gpMSound; }
 
 #endif // MSOUND_HPP

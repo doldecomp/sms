@@ -42,7 +42,6 @@ public:
 	{
 	}
 
-	virtual ~TCubeStreamInfo() { }
 	virtual void load(JSUMemoryInputStream&);
 
 public:
@@ -50,6 +49,8 @@ public:
 	/* 0x3C */ f32 unk3C;
 	/* 0x40 */ f32 unk40;
 };
+
+class TCameraMapTool;
 
 class TCubeCameraInfo : public TCubeGeneralInfo {
 public:
@@ -59,11 +60,13 @@ public:
 	{
 	}
 
-	virtual ~TCubeCameraInfo() { }
 	virtual void load(JSUMemoryInputStream&);
 
+	// fabricated
+	TCameraMapTool* getCameraMapTool() const { return unk38; }
+
 public:
-	/* 0x38 */ JDrama::TNameRef* unk38;
+	/* 0x38 */ TCameraMapTool* unk38;
 };
 
 #endif

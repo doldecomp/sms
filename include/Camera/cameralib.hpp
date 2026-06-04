@@ -5,7 +5,8 @@
 
 extern f32 SMSGetAnmFrameRate(); // avoid including Application.hpp
 
-void CLBCalc2DFPos(JGeometry::TVec2<f32>*, const MtxPtr, const MtxPtr,
+// NOTE: can't use MtxPtr here, maybe need new ConstMtxPtr typedef here?
+void CLBCalc2DFPos(JGeometry::TVec2<f32>*, const f32 (*)[4], const f32 (*)[4],
                    const Vec&, u32*, bool);
 
 void CLBCalcNearClipAngle(JGeometry::TVec3<f32>*, S16Vec*,
@@ -56,7 +57,7 @@ void CLBCalcScaleTranslateMatrix(MtxPtr mtx, const Vec& scale,
  * @param invSpeed a constant inversely proportional to the rate of change
  * @return whether another iteration may refine the angle even further
  */
-bool CLBChaseAngleDecrease(s16* out, s16 target, s16 invSpeed);
+BOOL CLBChaseAngleDecrease(s16* out, s16 target, s16 invSpeed);
 
 /**
  * @brief Moves dstValue toward targetValue by a fraction defined by ratio.
@@ -152,7 +153,11 @@ BOOL CLBChaseGeneralConstantSpecifySpeed(T* param_1, T param_2, T param_3)
 	return true;
 }
 
-template <class T> T CLBEaseInInbetween(T, T, f32);
+template <class T> T CLBEaseInInbetween(T param_1, T param_2, f32 param_3)
+{
+	return CLBTwoDegreeGeneralInbetween(param_1, param_2, param_3,
+	                                    param_2 - param_1);
+}
 
 template <class T> T CLBLinearInbetween(T a, T b, f32 f)
 {

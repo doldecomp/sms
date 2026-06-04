@@ -1221,7 +1221,7 @@ config.libs = [
             Object(NonMatching, "Camera/cameragc.cpp"),
             Object(NonMatching, "Camera/CameraHeightPan.cpp"),
             Object(NonMatching, "Camera/CameraInbetween.cpp"),
-            Object(NonMatching, "Camera/CameraKindParam.cpp"),
+            Object(Matching, "Camera/CameraKindParam.cpp"),
             Object(NonMatching, "Camera/cameralib.cpp"),
             Object(NonMatching, "Camera/CameraMarioData.cpp"),
             Object(NonMatching, "Camera/CameraNotice.cpp"),
@@ -1244,7 +1244,7 @@ config.libs = [
             Object(NonMatching, "Camera/CameraWarp.cpp"),
             Object(NonMatching, "Camera/CameraMode.cpp"),
             Object(NonMatching, "Camera/CameraSecureView.cpp"),
-            Object(NonMatching, "Camera/CamShakeDefine.cpp"),
+            Object(Matching, "Camera/CamShakeDefine.cpp"),
         ],
     },
     {

@@ -201,7 +201,7 @@ void TMario::getSlopeNormalAccele(f32* arg0, f32* arg1)
 		return;
 	}
 
-	if (mGroundPlane->isUnkC()) {
+	if (mGroundPlane->isSlider()) {
 		*arg0 = mSlipParamsAllSlider.mSlopeAcceleUp.get();
 		*arg1 = mSlipParamsAllSlider.mSlopeAcceleDown.get();
 		return;
@@ -236,7 +236,7 @@ void TMario::getSlopeSlideAccele(f32* arg0, f32* arg1)
 		return;
 	}
 
-	if (mGroundPlane->isUnkC()) {
+	if (mGroundPlane->isSlider()) {
 		*arg0 = mSlipParamsAllSlider.mSlideAcceleUp.get();
 		*arg1 = mSlipParamsAllSlider.mSlideAcceleDown.get();
 		return;
@@ -268,7 +268,7 @@ f32 TMario::getChangeAngleSpeed()
 	if (isForceSlip()) {
 		angSp = (f32)mSlipParamsAll.mSlideAngleYSp.get();
 	} else {
-		if (mGroundPlane->isUnkC()) {
+		if (mGroundPlane->isSlider()) {
 			angSp = (f32)mSlipParamsAllSlider.mSlideAngleYSp.get();
 		} else if (mGroundPlane->isUnk2()) {
 			angSp = (f32)mSlipParams45.mSlideAngleYSp.get();
@@ -302,7 +302,7 @@ f32 TMario::getSlideStickMult()
 	if (isForceSlip())
 		return mSlipParamsAll.mStickSlideMult.get();
 
-	if (mGroundPlane->isUnkC())
+	if (mGroundPlane->isSlider())
 		return mSlipParamsAllSlider.mStickSlideMult.get();
 
 	if (mGroundPlane->isUnk2())
@@ -387,7 +387,7 @@ BOOL TMario::doSliding(f32 stopThreshold)
 		slipFr = mSlipParamsOil.mSlipFriction.get();
 	} else if (isForceSlip()) {
 		slipFr = mSlipParamsAll.mSlipFriction.get();
-	} else if (mGroundPlane->isUnkC()) {
+	} else if (mGroundPlane->isSlider()) {
 		slipFr = mSlipParamsAllSlider.mSlipFriction.get();
 	} else if (mGroundPlane->isUnk2()) {
 		slipFr = mSlipParams45.mSlipFriction.get();
@@ -425,7 +425,7 @@ BOOL TMario::doSliding(f32 stopThreshold)
 
 	slideProcess(0.0f, mult);
 
-	if (!mGroundPlane->isUnk1() && !mGroundPlane->isUnkC()) {
+	if (!mGroundPlane->isUnk1() && !mGroundPlane->isSlider()) {
 		if (mForwardVel * mForwardVel < stopThreshold * stopThreshold) {
 			setPlayerVelocity(0.0f);
 			stopped = true;
