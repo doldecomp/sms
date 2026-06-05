@@ -22,8 +22,8 @@ public:
 	/* 0xC */ JGeometry::TVec3<f32> unkC;
 	/* 0x18 */ JGeometry::TVec2<f32> unk18;
 	/* 0x20 */ u32 unk20;
-	/* 0x24 */ int unk24;
-	/* 0x28 */ int unk28;
+	/* 0x24 */ s32 unk24;
+	/* 0x28 */ s32 unk28;
 	/* 0x2C */ u32 unk2C;
 };
 

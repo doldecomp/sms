@@ -1,11 +1,24 @@
 #include <Camera/CubeManagerBase.hpp>
-#include <Camera/cameralib.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <System/MarDirector.hpp>
+#include <Camera/cameralib.hpp>
+#include <Player/MarioAccess.hpp>
+#include <string.h>
 
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+
+TCubeManagerBase* gpCubeCamera;
+TCubeManagerBase* gpCubeMirror;
+TCubeManagerBase* gpCubeWire;
+TCubeManagerBase* gpCubeStream;
+TCubeManagerBase* gpCubeShadow;
 TCubeManagerArea* gpCubeArea;
 TCubeManagerFast* gpCubeFastA;
 TCubeManagerFast* gpCubeFastB;
 TCubeManagerFast* gpCubeFastC;
+TCubeManagerBase* gpCubeSoundChange;
+TCubeManagerBase* gpCubeSoundEffect;
 
 TCubeManagerBase::TCubeManagerBase(const char* name, const char* param_2)
     : JDrama::TViewObj(name)
@@ -90,10 +103,59 @@ void TCubeManagerBase::calcPointInCubeRatio(const Vec& param_1, s32 param_2,
 	                        info.getUnk24(), param_3, param_4, param_5);
 }
 
-bool TCubeManagerArea::isInAreaCube(const Vec&) const { }
+bool TCubeManagerArea::isInAreaCube(const Vec& pos) const
+{
+	int found = getInCubeNo(pos);
 
-bool TCubeManagerFast::isInOtherCube(const Vec&) const { }
+	if (unk1C == found)
+		return true;
 
-bool SMS_IsInOtherFastCube(const Vec&) { }
+	// Presumably hotel delphino floor transitions?
+	if (gpMarDirector->getCurrentMap() == 7 && unk1C != -1 && found != -1) {
+		const char* curName = (*unk14)[unk1C].getName();
+		const char* newName = (*unk14)[found].getName();
 
-bool SMS_IsInSameCameraCube(const Vec&) { }
+		if (strcmp(curName, "３階") == 0) {
+			if (strcmp(newName, "２階") == 0 || strcmp(newName, "１階") == 0)
+				return true;
+		} else if (strcmp(curName, "２階") == 0) {
+			if (strcmp(newName, "１階") == 0)
+				return true;
+		}
+	}
+
+	return false;
+}
+
+inline bool TCubeManagerFast::isInOtherCube(const Vec& pos) const
+{
+	bool result = false;
+	int in      = getInCubeNo(pos);
+	if (unk1C != -1 && in != -1 && unk1C != in)
+		result = true;
+
+	return result;
+}
+
+bool SMS_IsInOtherFastCube(const Vec& pos)
+{
+	bool result = false;
+	if (!gpMarDirector->isDemoModeNow()
+	    && (gpCubeFastA->isInOtherCube(pos) || gpCubeFastB->isInOtherCube(pos)
+	        || gpCubeFastC->isInOtherCube(pos)))
+		result = true;
+
+	return result;
+}
+
+bool SMS_IsInSameCameraCube(const Vec& pos)
+{
+	bool result  = false;
+	Vec marioPos = SMS_GetMarioPos();
+	marioPos.y += 75.0f;
+	int uVar7 = gpCubeCamera->getInCubeNo(marioPos);
+	int uVar4 = gpCubeCamera->getInCubeNo(pos);
+	if (uVar7 == uVar4 && uVar7 != -1)
+		result = true;
+	return result;
+}

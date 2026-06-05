@@ -9,6 +9,9 @@
 
 class TCubeManagerBase;
 
+extern TCubeManagerBase* gpCubeCamera;
+extern TCubeManagerBase* gpCubeMirror;
+extern TCubeManagerBase* gpCubeWire;
 extern TCubeManagerBase* gpCubeStream;
 extern TCubeManagerBase* gpCubeShadow;
 extern TCubeManagerBase* gpCubeSoundChange;
@@ -46,7 +49,7 @@ public:
 	{
 	}
 
-	/* 0x1C */ u32 unk1C;
+	/* 0x1C */ int unk1C;
 };
 
 class TCubeManagerArea;
@@ -81,9 +84,5 @@ public:
 
 bool SMS_IsInOtherFastCube(const Vec&);
 bool SMS_IsInSameCameraCube(const Vec&);
-
-extern TCubeManagerBase* gpCubeCamera;
-extern TCubeManagerBase* gpCubeMirror;
-extern TCubeManagerBase* gpCubeWire;
 
 #endif

@@ -14,20 +14,35 @@ class TBossGesso;
 class TCameraBck;
 class TCamSaveKindParam;
 class TCameraJetCoaster;
+class TCameraMultiPlayer;
 class TCamSaveNotice;
 class TCamSaveEx;
 class TLiveActor;
 
 class TTargetCamera {
 public:
+	TTargetCamera& operator=(const TTargetCamera& other)
+	{
+		unk0  = other.unk0;
+		unkC  = other.unkC;
+		unk18 = other.unk18;
+		unk24 = other.unk24;
+		unk26 = other.unk26;
+		unk28 = other.unk28;
+		unk2C = other.unk2C;
+		unk30 = other.unk30;
+
+		return *this;
+	}
+
 	/* 0x0 */ JGeometry::TVec3<f32> unk0;
 	/* 0xC */ JGeometry::TVec3<f32> unkC;
-	/* 0x18 */ Vec unk18;
+	/* 0x18 */ JGeometry::TVec3<f32> unk18;
 	/* 0x24 */ s16 unk24;
 	/* 0x26 */ s16 unk26;
 	/* 0x28 */ f32 unk28;
 	/* 0x2C */ s16 unk2C;
-	/* 0x30 */ u32 unk30;
+	/* 0x30 */ f32 unk30;
 };
 
 class CPolarSubCamera : public JDrama::TLookAtCamera {
@@ -64,13 +79,13 @@ public:
 	void getTotalDemoFrames() const;
 	int getRestDemoFrames() const;
 
-	void isHellDeadDemo() const;
-	void isNormalDeadDemo() const;
+	bool isHellDeadDemo() const;
+	bool isNormalDeadDemo() const;
 	void setNoticeInfo();
 
 	void createMultiPlayer(u8);
-	void addMultiPlayer(const JGeometry::TVec3<f32>*, f32, f32);
-	void removeMultiPlayer(const JGeometry::TVec3<f32>*);
+	bool addMultiPlayer(const JGeometry::TVec3<f32>*, f32, f32);
+	bool removeMultiPlayer(const JGeometry::TVec3<f32>*);
 	void makeMtxForTalk(const TBaseNPC*);
 	void makeMtxForPrevTalk();
 
@@ -113,7 +128,7 @@ private:
 	void calcSecureViewTarget_(s16, f32*, f32*);
 	void execSecureView_(s16, Vec*);
 
-	void getToroccoMtx_() const;
+	MtxPtr getToroccoMtx_() const;
 	void setMarioLookat_();
 
 	void startReproduceDemoCamera_(const char*, const JGeometry::TVec3<f32>*);
@@ -123,8 +138,8 @@ private:
 	void updateDemoCamera_(bool);
 	void updateGateDemoCamera_();
 
-	void calcAngleXFromXRotRatio_() const;
-	void calcDistFromXRotRatio_() const;
+	s16 calcAngleXFromXRotRatio_() const;
+	f32 calcDistFromXRotRatio_() const;
 	void calcNowTargetFromPosAndAt_(const Vec&, const Vec&);
 	void rotateX_ByStickY_(f32);
 	void rotateY_ByStickX_(f32);
@@ -140,6 +155,8 @@ private:
 	void calcFinalPosAndAt_();
 	void calcExternalData_();
 	void ctrlGameCamera_();
+
+	void drawJetCoasterBalloonMessage_();
 
 	void ctrlNormalDeadDemo_();
 	void execDeadDemoProc_();
@@ -227,9 +244,9 @@ public:
 	/* 0x276 */ s16 unk276;
 	/* 0x278 */ u16 unk278;
 	/* 0x27A */ u16 unk27A;
-	/* 0x27C */ s16 unk27C;
-	/* 0x27E */ s16 unk27E;
-	/* 0x280 */ s16 unk280;
+	/* 0x27C */ u16 unk27C;
+	/* 0x27E */ u16 unk27E;
+	/* 0x280 */ u16 unk280;
 	/* 0x282 */ s16 unk282;
 	/* 0x284 */ s32 unk284;
 	/* 0x288 */ f32 unk288;
@@ -254,17 +271,24 @@ public:
 	/* 0x2B0 */ TCameraBck* unk2B0;
 
 	struct CameraUnk2B4Struct {
-		/* 0x0 */ u32 unk0;
+
+		void setThing(int value)
+		{
+			unk10 = value;
+			unk14 = value;
+		}
+
+		/* 0x0 */ const JGeometry::TVec3<f32>* unk0;
 		/* 0x4 */ f32 unk4;
-		/* 0x8 */ u32 unk8;
+		/* 0x8 */ TCameraMapTool* unk8;
 		/* 0xC */ u8 unkC;
-		/* 0x10 */ u32 unk10;
-		/* 0x14 */ u32 unk14;
+		/* 0x10 */ int unk10;
+		/* 0x14 */ int unk14;
 	};
 
 	/* 0x2B4 */ CameraUnk2B4Struct* unk2B4;
 	/* 0x2B8 */ TCameraJetCoaster* unk2B8;
-	/* 0x2BC */ int unk2BC;
+	/* 0x2BC */ TCameraMultiPlayer* unk2BC;
 	/* 0x2C0 */ f32 unk2C0;
 	/* 0x2C4 */ f32 unk2C4;
 	/* 0x2C8 */ s16 unk2C8;
