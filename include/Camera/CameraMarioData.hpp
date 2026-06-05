@@ -1,6 +1,7 @@
 #ifndef CAMERA_CAMERA_MARIO_DATA_HPP
 #define CAMERA_CAMERA_MARIO_DATA_HPP
 
+#include <JSystem/JGeometry/JGVec3.hpp>
 #include <dolphin/mtx.h>
 
 class TCameraMarioData {
@@ -18,7 +19,7 @@ public:
 	bool isMarioClimb(u32) const;
 
 public:
-	/* 0x0 */ Vec unk0;
+	/* 0x0 */ JGeometry::TVec3<f32> unk0;
 	/* 0xC */ f32 unkC;
 	/* 0x10 */ f32 unk10;
 	/* 0x14 */ u32 unk14;

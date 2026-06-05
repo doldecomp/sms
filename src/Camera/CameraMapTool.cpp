@@ -8,17 +8,14 @@ void TCameraMapTool::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TNameRef::load(stream);
 
-	stream.read(&unkC.x, 4);
-	stream.read(&unkC.y, 4);
-	stream.read(&unkC.z, 4);
+	stream >> unkC.x >> unkC.y >> unkC.z;
 
-	stream.read(&unk18.x, 4);
-	stream.read(&unk18.y, 4);
+	stream >> unk18.x >> unk18.y;
 
-	stream.read(&unk20, sizeof(unk20));
-	stream.read(&unk24, sizeof(unk24));
-	stream.read(&unk28, sizeof(unk28));
-	stream.read(&unk2C, sizeof(unk2C));
+	stream >> unk20;
+	stream >> unk24;
+	stream >> unk28;
+	stream >> unk2C;
 
 	if (unk28 < 0)
 		unk28 = 0;

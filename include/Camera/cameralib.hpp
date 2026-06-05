@@ -70,6 +70,15 @@ BOOL CLBChaseAngleDecrease(s16* out, s16 target, s16 invSpeed);
  */
 BOOL CLBChaseDecrease(f32* dstValue, f32 targetValue, f32 ratio, f32 threshold);
 
+// Fabricated overload
+void CLBChaseDecrease(Vec* dstValue, const Vec& targetValue, f32 ratio,
+                      f32 threshold)
+{
+	CLBChaseDecrease(&dstValue->x, targetValue.x, ratio, threshold);
+	CLBChaseDecrease(&dstValue->y, targetValue.y, ratio, threshold);
+	CLBChaseDecrease(&dstValue->z, targetValue.z, ratio, threshold);
+}
+
 bool CLBChaseSpecialDecrease(f32*, f32, f32, f32);
 
 /**
