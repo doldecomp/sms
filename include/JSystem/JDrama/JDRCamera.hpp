@@ -26,6 +26,9 @@ public:
 	virtual f32 JSGGetProjectionFar() const;
 	virtual void JSGSetProjectionFar(f32);
 
+	f32 getNear() const { return mNear; }
+	f32 getFar() const { return mFar; }
+
 public:
 	/* 0x24 */ TFlagT<u16> mFlag;
 	/* 0x28 */ f32 mNear;

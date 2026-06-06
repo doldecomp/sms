@@ -123,6 +123,8 @@ public:
 		return isFixCameraSpecifyMode(mode)
 		       || isDefiniteCameraSpecifyMode(mode);
 	}
+	MtxPtr getUnk16C() { return unk16C; }
+	MtxPtr getUnk1AC() { return unk1AC; }
 
 private:
 	void calcSecureViewTarget_(s16, f32*, f32*);

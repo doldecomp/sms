@@ -44,7 +44,7 @@ void CLBCalc2DFPos(JGeometry::TVec2<f32>* param_1, const f32 (*param_2)[4],
 {
 	Vec prod;
 
-	PSMTXMultVec((MtxPtr)param_3, (Vec*)&param_4, &prod);
+	MTXMultVec((MtxPtr)param_3, (Vec*)&param_4, &prod);
 
 	if (prod.z == 0.0f) {
 		param_1->x = param_1->y = 10000.0f;
@@ -65,12 +65,13 @@ void CLBCalc2DFPos(JGeometry::TVec2<f32>* param_1, const f32 (*param_2)[4],
 	}
 }
 
-// TODO: This needs matching work, but it's mathematically correct
-void CLBCalcNearNinePos(JGeometry::TVec3<f32>* param_2, S16Vec* param_3,
-                        const JGeometry::TVec3<f32>& param_4,
-                        const JGeometry::TVec3<f32>& param_5, s16 param_6,
-                        f32 distance, const JGeometry::TVec2<f32>& param_7)
+void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
+                        const JGeometry::TVec3<f32>& origin,
+                        const JGeometry::TVec3<f32>& lookat, s16 roll,
+                        f32 near_dist, const JGeometry::TVec2<f32>& near_dims)
 {
+	// TODO: This needs matching work, but it's mathematically correct
+
 	JGeometry::TVec3<f32> fVar16;
 	JGeometry::TVec3<f32> fVar19;
 
@@ -84,34 +85,35 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* param_2, S16Vec* param_3,
 	JGeometry::TVec3<f32> local_74;
 	JGeometry::TVec3<f32> local_68;
 
-	local_a8.sub(param_5, param_4);
+	local_a8.sub(lookat, origin);
 	normalizeInner2(local_a8);
 
-	param_2[4].scaleAdd(distance, param_4, local_a8);
+	// Center point
+	out_grid[4].scaleAdd(near_dist, origin, local_a8);
 
-	f32 xzDistance
-	    = MsSqrtf(((param_4.x - param_5.x) * (param_4.x - param_5.x)
-	               + (param_4.z - param_5.z) * (param_4.z - param_5.z)));
-	param_3->x = -matan(xzDistance, param_4.y - param_5.y);
-	param_3->y = matan(param_4.z - param_5.z, param_4.x - param_5.x);
-	param_3->z = param_6;
+	f32 xzDistance = MsSqrtf(((origin.x - lookat.x) * (origin.x - lookat.x)
+	                          + (origin.z - lookat.z) * (origin.z - lookat.z)));
+	out_euler->x   = -matan(xzDistance, origin.y - lookat.y);
+	out_euler->y   = matan(origin.z - lookat.z, origin.x - lookat.x);
+	out_euler->z   = roll;
 
 	local_68.set(0.0f, 1.0f, 0.0f);
 	local_74.set(1.0f, 0.0f, 0.0f);
 
 	// We already did this, so maybe we're calling another function here?
-	local_80.sub(param_5, param_4);
+	local_80.sub(lookat, origin);
 	normalizeInner1(local_80);
 
-	fVar16.z = param_3->z * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
+	fVar16.z = out_euler->z * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
 
-	// Putting these in separate scopes for now because this feels like an
-	// inlined function
+	// Basically transform the up/right vectors from cam space into world space.
+	// TODO: Definitely inlines...
+
 	{
-		f32 sinX = JMASSin(param_3->x);
-		f32 cosX = JMASCos(param_3->x);
-		f32 sinY = JMASSin(param_3->y);
-		f32 cosY = JMASCos(param_3->y);
+		f32 sinX = JMASSin(out_euler->x);
+		f32 cosX = JMASCos(out_euler->x);
+		f32 sinY = JMASSin(out_euler->y);
+		f32 cosY = JMASCos(out_euler->y);
 
 		// This transformation appears to be the following:
 		// [ cosY, 0, sinY]   [1,   0,     0 ]
@@ -130,10 +132,10 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* param_2, S16Vec* param_3,
 	}
 
 	{
-		f32 sinX = JMASSin(param_3->x);
-		f32 cosX = JMASCos(param_3->x);
-		f32 sinY = JMASSin(param_3->y);
-		f32 cosY = JMASCos(param_3->y);
+		f32 sinX = JMASSin(out_euler->x);
+		f32 cosX = JMASCos(out_euler->x);
+		f32 sinY = JMASSin(out_euler->y);
+		f32 cosY = JMASCos(out_euler->y);
 
 		local_74.set(local_74.x * cosY
 		                 + (local_74.y * sinX + local_74.z * cosX) * sinY,
@@ -147,15 +149,15 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* param_2, S16Vec* param_3,
 		local_118.mult33(local_74);
 	}
 
-	f32 fVar3 = param_7.y * 0.5f;
-	f32 fVar5 = param_7.x * 0.5f;
+	f32 fVar3 = near_dims.y * 0.5f;
+	f32 fVar5 = near_dims.x * 0.5f;
 	f32 fVar6 = -fVar3;
 	f32 fVar7 = -fVar5;
 
-	param_2[1].scaleAdd(fVar3, param_2[4], local_68);
-	param_2[7].scaleAdd(fVar6, param_2[4], local_68);
-	param_2[3].scaleAdd(fVar7, param_2[4], local_74);
-	param_2[5].scaleAdd(fVar5, param_2[4], local_74);
+	out_grid[1].scaleAdd(fVar3, out_grid[4], local_68);
+	out_grid[7].scaleAdd(fVar6, out_grid[4], local_68);
+	out_grid[3].scaleAdd(fVar7, out_grid[4], local_74);
+	out_grid[5].scaleAdd(fVar5, out_grid[4], local_74);
 
 	// Anything below here could be part of CLBCalcNearFourPos?
 
@@ -167,18 +169,18 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* param_2, S16Vec* param_3,
 	local_90.scaleAdd(fVar7, fVar19, local_74);
 	MsVECNormalize(&local_90, &local_90);
 
-	param_2[0].scaleAdd(halfPlaneDiagonal, param_2[4], local_90);
+	out_grid[0].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
 	local_90.negate();
-	param_2[8].scaleAdd(halfPlaneDiagonal, param_2[4], local_90);
+	out_grid[8].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
 
 	local_90.x = (f32)(fVar16.x + fVar19.x);
 	local_90.y = (f32)(fVar16.y + fVar19.y);
 	local_90.z = (f32)(fVar16.z + fVar19.z);
 	MsVECNormalize(&local_90, &local_90);
 
-	param_2[2].scaleAdd(halfPlaneDiagonal, param_2[4], local_90);
+	out_grid[2].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
 	local_90.negate();
-	param_2[6].scaleAdd(halfPlaneDiagonal, param_2[4], local_90);
+	out_grid[6].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
 }
 
 void CLBCalcPointInCubeRatio(const Vec& param_1, const Vec& param_2,
