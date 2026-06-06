@@ -38,17 +38,11 @@ void CPolarSubCamera::calcInHouseNo_(bool param_1)
 		}
 
 		JGeometry::TVec3<f32> local_120[18];
-		f32 aspect = mAspect;
-		f32 fov    = mFovy;
-		f32 near   = mNear;
-		s16 sVar7  = getFinalAngleZ();
-		s16 uVar7  = CLBDegToShortAngle(fov * 0.5f);
 		S16Vec SStack_134[9];
-		JGeometry::TVec2<f32> local_140;
-		local_140.y = near * JMASSin(uVar7) * (1.0f / JMASCos(uVar7)) * 2.0f;
-		local_140.x = local_140.y * aspect;
-		CLBCalcNearNinePos(local_120, SStack_134, unk124, unk148, sVar7, near,
-		                   local_140);
+
+		CLBCalcNearNinePos(local_120, SStack_134, unk124, unk148,
+		                   getFinalAngleZ(), mNear, mFovy, mAspect);
+
 		f32 fVar1 = unk2C4;
 		for (int i = 0; i < 9; ++i) {
 			local_120[9 + i].scaleAdd(fVar1, local_120[i], unk25C);

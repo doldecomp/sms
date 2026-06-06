@@ -39,7 +39,16 @@ inline void MsMtxSetXYZRPH(MtxPtr mtx, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h)
 	               static_cast<s16>(p * (65536.0f / 360.0f)),
 	               static_cast<s16>(h * (65536.0f / 360.0f)));
 }
-void MsMtxSetTRS(MtxPtr, f32, f32, f32, f32, f32, f32, f32, f32, f32);
+void MsMtxSetTRS(MtxPtr result, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h,
+                 f32 sx, f32 sy, f32 sz);
+
+// Fabricated AND wrong!
+inline void MsMtxSetTRS(MtxPtr result, f32 x, f32 y, f32 z, s16 r, s16 p, s16 h,
+                 f32 sx, f32 sy, f32 sz)
+{
+	MsMtxSetTRS(result, x, y, z, r * (360.0f / 65536.0f),
+	            p * (360.0f / 65536.0f), h * (360.0f / 65536.0f), sx, sy, sz);
+}
 
 template <class T> inline T MsWrap(T t, T l, T r)
 {

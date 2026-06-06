@@ -3,7 +3,7 @@
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
-const char* TCameraShake::mCamShakeNameSave[41] = {
+const char* TCameraShake::mCamShakeNameSave[] = {
 	"/Camera/shakeHipDrop.prm",
 	"/Camera/shakeWallJump.prm",
 	"/Camera/shakeDamage.prm",

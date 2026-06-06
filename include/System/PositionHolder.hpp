@@ -1,7 +1,7 @@
 #ifndef SYSTEM_POSITION_HOLDER_HPP
 #define SYSTEM_POSITION_HOLDER_HPP
 
-#include <dolphin/mtx.h>
+#include <JSystem/JGeometry/JGVec3.hpp>
 #include <JSystem/JDrama/JDRNameRef.hpp>
 #include <Strategic/NameRefAry.hpp>
 
@@ -19,7 +19,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 
 public:
-	/* 0xC */ Vec unkC;
+	/* 0xC */ JGeometry::TVec3<f32> unkC;
 };
 
 #endif

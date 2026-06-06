@@ -1,7 +1,6 @@
 #include <Map/MapDraw.hpp>
 #include <Map/Map.hpp>
 #include <Camera/Camera.hpp>
-#include <System/Resolution.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <dolphin/gx.h>
@@ -9,6 +8,12 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+
+// NOTE: Yes, this is an ODR violation, and I'm pretty sure they had it
+// in the original code as well, because everywhere else these functions
+// return a u16, but here they MUST return an int for some reason???
+int SMSGetGameRenderHeight();
+int SMSGetGameRenderWidth();
 
 void TMapDrawWall::perform(u32 param_1, JDrama::TGraphics* param_2)
 {

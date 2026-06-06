@@ -14,9 +14,7 @@ public:
 public:
 	/* 0x10 */ J3DModelData* unk10;
 	/* 0x14 */ J3DModel* unk14;
-	/* 0x18 */ f32 unk18;
-	/* 0x1C */ f32 unk1C;
-	/* 0x20 */ f32 unk20;
+	/* 0x18 */ JGeometry::TVec3<f32> unk18;
 	/* 0x24 */ f32 unk24;
 	/* 0x28 */ f32 unk28;
 	/* 0x2C */ f32 unk2C;

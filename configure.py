@@ -1212,7 +1212,7 @@ config.libs = [
     {
         "lib": "Camera",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-inline deferred"],
+        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "Camera/CameraBGCheck.cpp"),
@@ -1226,7 +1226,7 @@ config.libs = [
             Object(NonMatching, "Camera/CameraMarioData.cpp"),
             Object(NonMatching, "Camera/CameraNotice.cpp"),
             Object(NonMatching, "Camera/CameraNormal.cpp"),
-            Object(NonMatching, "Camera/camerasave.cpp"),
+            Object(Matching, "Camera/camerasave.cpp"),
             Object(NonMatching, "Camera/camerashake.cpp"),
             Object(NonMatching, "Camera/CameraTalk.cpp"),
             Object(NonMatching, "Camera/lensflare.cpp"),

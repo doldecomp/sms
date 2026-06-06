@@ -875,7 +875,7 @@ bool TKumokun::isWalking() const
 
 bool TKumokun::isAttack() const
 {
-	TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
+	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
 
 	if (isOnRoof() && SMS_GetMarioPos().y + 5.0f > mPosition.y)
 		return false;
