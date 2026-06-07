@@ -27,23 +27,23 @@ class TTargetCamera {
 public:
 	TTargetCamera& operator=(const TTargetCamera& other)
 	{
-		unk0  = other.unk0;
-		unkC  = other.unkC;
-		unk18 = other.unk18;
-		unk24 = other.unk24;
-		unk26 = other.unk26;
-		unk28 = other.unk28;
-		unk2C = other.unk2C;
-		unk30 = other.unk30;
+		mPosition = other.mPosition;
+		mTarget   = other.mTarget;
+		unk18     = other.unk18;
+		mPitch    = other.mPitch;
+		mYaw      = other.mYaw;
+		unk28     = other.unk28;
+		unk2C     = other.unk2C;
+		unk30     = other.unk30;
 
 		return *this;
 	}
 
-	/* 0x0 */ JGeometry::TVec3<f32> unk0;
-	/* 0xC */ JGeometry::TVec3<f32> unkC;
+	/* 0x0 */ JGeometry::TVec3<f32> mPosition;
+	/* 0xC */ JGeometry::TVec3<f32> mTarget;
 	/* 0x18 */ JGeometry::TVec3<f32> unk18;
-	/* 0x24 */ s16 unk24;
-	/* 0x26 */ s16 unk26;
+	/* 0x24 */ s16 mPitch;
+	/* 0x26 */ s16 mYaw;
 	/* 0x28 */ f32 unk28;
 	/* 0x2C */ s16 unk2C;
 	/* 0x30 */ f32 unk30;
@@ -125,7 +125,7 @@ public:
 			result = true;
 		return result;
 	}
-	bool isThing4(int mode) const
+	bool isFixOrDefiniteCameraSpecifyMode(int mode) const
 	{
 		return isFixCameraSpecifyMode(mode)
 		       || isDefiniteCameraSpecifyMode(mode);
@@ -154,9 +154,9 @@ private:
 		unk25C.set(unk148.x - unk124.x, unk148.y - unk124.y,
 		           unk148.z - unk124.z);
 		unk25C.normalize();
-		unk270 = MsClamp(
-		    CLBCalcRatio(unk68->mXAngleMin, unk68->mXAngleMax, unk256), 0.0f,
-		    1.0f);
+		unk270 = MsClamp(CLBCalcRatio(mCurrentParams->mXAngleMin,
+		                              mCurrentParams->mXAngleMax, unk256),
+		                 0.0f, 1.0f);
 	}
 
 	void calcSecureViewTarget_(s16, f32*, f32*);
@@ -329,15 +329,15 @@ public:
 
 	/* 0x60 */ CameraUnk60Struct* unk60;
 	/* 0x64 */ u16 unk64;
-	/* 0x68 */ TCameraKindParam* unk68;
-	/* 0x6C */ TCameraInbetween* unk6C;
+	/* 0x68 */ TCameraKindParam* mCurrentParams;
+	/* 0x6C */ TCameraInbetween* mInbetween;
 	/* 0x70 */ const TCameraMapTool* unk70;
 	/* 0x74 */ const TCameraMapTool* unk74;
 	/* 0x78 */ u32 unk78;
 	/* 0x7C */ u32 unk7C;
-	/* 0x80 */ TTargetCamera unk80;
-	/* 0xB4 */ TTargetCamera unkB4;
-	/* 0xE8 */ TTargetCamera unkE8;
+	/* 0x80 */ TTargetCamera mCurrentTarget;
+	/* 0xB4 */ TTargetCamera mPreviousTarget;
+	/* 0xE8 */ TTargetCamera mTargetBeforeFixedMode;
 	/* 0x11C */ u32 unk11C;
 	/* 0x120 */ TMarioGamePad* unk120;
 	/* 0x124 */ JGeometry::TVec3<f32> unk124;
@@ -432,9 +432,9 @@ public:
 	/* 0x2C8 */ s16 unk2C8;
 	/* 0x2CA */ s16 unk2CA;
 	/* 0x2CC */ u8 unk2CC;
-	/* 0x2D0 */ TCamSaveNotice* unk2D0;
-	/* 0x2D4 */ TCamSaveEx* unk2D4;
-	/* 0x2D8 */ TCamSaveKindParam* unk2D8[73];
+	/* 0x2D0 */ TCamSaveNotice* mSaveNotice;
+	/* 0x2D4 */ TCamSaveEx* mSaveEx;
+	/* 0x2D8 */ TCamSaveKindParam* mSaveKindParam[73];
 
 	static const char* mCamKindNameSaveFile[73];
 };

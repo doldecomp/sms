@@ -113,21 +113,21 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 
 		f32 stickY = -unk120->mCompSPos[5];
 		if (unk7C == 0)
-			getNozzleTopPos_(&unk80.unkC);
+			getNozzleTopPos_(&mCurrentTarget.mTarget);
 
 		if (unk78 == 0) {
 			rotateX_ByStickY_(stickY);
-			unk80.unk24 = calcAngleXFromXRotRatio_();
-			unk80.unk26 = gpMarioOriginal->mToroccoAngle;
+			mCurrentTarget.mPitch = calcAngleXFromXRotRatio_();
+			mCurrentTarget.mYaw   = gpMarioOriginal->mToroccoAngle;
 		}
 
-		newTarget                        = unk80.unkC;
-		JGeometry::TVec3<f32>& cameraPos = unk80.unk18;
+		newTarget                        = mCurrentTarget.mTarget;
+		JGeometry::TVec3<f32>& cameraPos = mCurrentTarget.unk18;
 
 		s16 offsetAngleX  = getOffsetAngleX();
-		s16 angleX        = unk80.unk24;
+		s16 angleX        = mCurrentTarget.mPitch;
 		s16 offsetAngleY  = getOffsetAngleY();
-		s16 angleY        = unk80.unk26;
+		s16 angleY        = mCurrentTarget.mYaw;
 		MtxPtr toroccoMtx = getToroccoMtx_();
 
 		JGeometry::TVec3<f32> toroccoAxisX;
@@ -150,7 +150,8 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 		JGeometry::TVec3<f32> lookUp = mUp;
 		MsVECNormalize(&lookUp, &lookUp);
 
-		lookUp *= unk80.unk28 * unk68->mXRotRatioAtOffsetY + unk68->mAtOffsetY;
+		lookUp *= mCurrentTarget.unk28 * mCurrentParams->mXRotRatioAtOffsetY
+		          + mCurrentParams->mAtOffsetY;
 
 		cameraPos += lookUp;
 		newTarget += lookUp;
@@ -159,14 +160,14 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 		JGeometry::TRotation3<TMtx33f> rotation(toTarget, -1.570796f);
 		JGeometry::TVec3<f32> offsetUpTmp = offsetUp;
 		rotation.mult33(offsetUpTmp, offsetUp);
-		offsetUp *= unk68->mOffsetLookatXZ;
+		offsetUp *= mCurrentParams->mOffsetLookatXZ;
 
 		cameraPos += offsetUpTmp;
 		newTarget += offsetUpTmp;
 
 		// TODO: MsGetRotFromZaxisY is the wrong axis function? Need new one?
 		unk254 = CLBDegToShortAngle(MsGetRotFromZaxisY(newTarget));
-		mFovy  = unk68->mFovy;
+		mFovy  = mCurrentParams->mFovy;
 	} else {
 		if (startedLButton)
 			setUpFromLButtonCamera_();
@@ -198,43 +199,46 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 		}
 		// TODO: probably an inline ends here because unk2B8 is re-loaded?
 
-		unk80.unk18 = unk2B8->unk10;
-		unk80.unkC  = unk2B8->unk1C;
-		mUp         = unk2B8->unk28;
-		mFovy       = unk2B8->unk34;
+		mCurrentTarget.unk18   = unk2B8->unk10;
+		mCurrentTarget.mTarget = unk2B8->unk1C;
+		mUp                    = unk2B8->unk28;
+		mFovy                  = unk2B8->unk34;
 
-		newTarget = unk80.unkC;
+		newTarget = mCurrentTarget.mTarget;
 
 		JGeometry::TVec3<f32> local_bc;
-		unitVecTo(unk80.unk18, *gpMarioPos, &local_bc);
+		unitVecTo(mCurrentTarget.unk18, *gpMarioPos, &local_bc);
 
 		JGeometry::TVec3<f32> local_b0;
 		local_b0.cross(mUp, local_bc);
 		MsVECNormalize(&local_b0, &local_b0);
 
 		CLBRotatePosAndUp(unk2B8->unk4, unk2B8->unk6, local_b0, mUp,
-		                  SMS_GetMarioPos(), &unk80.unk18, &mUp);
+		                  SMS_GetMarioPos(), &mCurrentTarget.unk18, &mUp);
 	}
 
-	unk80.unk0 = unk80.unk18;
+	mCurrentTarget.mPosition = mCurrentTarget.unk18;
 
 	if (startedLButton) {
 		if (unk78 == 0)
-			mPosition = unk80.unk0;
+			mPosition = mCurrentTarget.mPosition;
 
 		if (unk7C == 0)
 			mTarget = newTarget;
 	} else {
 		if (unk78 == 0) {
-			f32 chaseXZ = unk68->mPosChaseRateXZ;
-			f32 chaseY  = unk68->mPosChaseRateY;
-			CLBChaseDecrease(&mPosition.x, unk80.unk0.x, chaseXZ, 0.0f);
-			CLBChaseDecrease(&mPosition.y, unk80.unk0.y, chaseY, 0.0f);
-			CLBChaseDecrease(&mPosition.z, unk80.unk0.z, chaseXZ, 0.0f);
+			f32 chaseXZ = mCurrentParams->mPosChaseRateXZ;
+			f32 chaseY  = mCurrentParams->mPosChaseRateY;
+			CLBChaseDecrease(&mPosition.x, mCurrentTarget.mPosition.x, chaseXZ,
+			                 0.0f);
+			CLBChaseDecrease(&mPosition.y, mCurrentTarget.mPosition.y, chaseY,
+			                 0.0f);
+			CLBChaseDecrease(&mPosition.z, mCurrentTarget.mPosition.z, chaseXZ,
+			                 0.0f);
 		}
 		if (unk7C == 0) {
-			f32 chaseXZ = unk68->mAtChaseRateXZ;
-			f32 chaseY  = unk68->mAtChaseRateY;
+			f32 chaseXZ = mCurrentParams->mAtChaseRateXZ;
+			f32 chaseY  = mCurrentParams->mAtChaseRateY;
 			CLBChaseDecrease(&mTarget.x, newTarget.x, chaseXZ, 0.0f);
 			CLBChaseDecrease(&mTarget.y, newTarget.y, chaseY, 0.0f);
 			CLBChaseDecrease(&mTarget.z, newTarget.z, chaseXZ, 0.0f);

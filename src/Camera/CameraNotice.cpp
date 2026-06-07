@@ -51,14 +51,14 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 	    && !unk2A4->checkLiveFlag(LIVE_FLAG_HIDDEN)) {
 
 		if (unk2A4->mPosition.squared(*gpMarioPos)
-		    < CLBSquared<f32>(unk2D0->mOffDist.get())) {
+		    < CLBSquared<f32>(mSaveNotice->mOffDist.get())) {
 			JGeometry::TVec2<f32> clipPos;
 			CLBCalc2DFPos(&clipPos, unk16C, unk1EC, unk2A4->mPosition, nullptr,
 			              false);
 
 			// TODO: inline
-			f32 clipMax  = unk2D0->mOffClipRatio.get();
-			f32 clipMin  = unk2D0->mOffClipRatio.get();
+			f32 clipMax  = mSaveNotice->mOffClipRatio.get();
+			f32 clipMin  = mSaveNotice->mOffClipRatio.get();
 			bool inClipX = false;
 			bool inClipY = false;
 			if (clipMin <= clipPos.x && clipPos.x <= clipMax)
@@ -73,7 +73,7 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 	}
 
 	TLiveActor* noticeActor = nullptr;
-	f32 closestDist2        = CLBSquared<f32>(unk2D0->mOnDist.get());
+	f32 closestDist2        = CLBSquared<f32>(mSaveNotice->mOnDist.get());
 
 	for (int i = 0; i < unk29C; i++) {
 		if (unk2A0[i]->checkLiveFlag(LIVE_FLAG_DEAD)
@@ -94,8 +94,8 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 		              false);
 
 		// TODO: inline
-		f32 clipMax  = unk2D0->mOnClipRatio.get();
-		f32 clipMin  = unk2D0->mOnClipRatio.get();
+		f32 clipMax  = mSaveNotice->mOnClipRatio.get();
+		f32 clipMin  = mSaveNotice->mOnClipRatio.get();
 		bool inClipX = false;
 		bool inClipY = false;
 		if (clipMin <= clipPos.x && clipPos.x <= clipMax) {
@@ -109,8 +109,8 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 		}
 
 		if (!MsIsInSight(*gpMarioPos, DEG2SHORTANGLE(*gpMarioAngleY),
-		                 unk2A0[i]->mPosition, dist2, unk2D0->mOnDegree.get(),
-		                 -1.0f)) {
+		                 unk2A0[i]->mPosition, dist2,
+		                 mSaveNotice->mOnDegree.get(), -1.0f)) {
 			continue;
 		}
 
@@ -153,20 +153,22 @@ void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
 	f32 dz2      = CLBSquared<f32>(mPos.z - target.z);
 	f32 dx2      = CLBSquared<f32>(mPos.x - target.x);
 	f32 dist2    = dx2 + dz2;
-	f32 farClip2 = CLBSquared<f32>(unk2D0->mRotateMinDistXZ.get());
-	f32 near2    = CLBSquared<f32>(unk2D0->mRotateFastMinDistXZ.get());
+	f32 farClip2 = CLBSquared<f32>(mSaveNotice->mRotateMinDistXZ.get());
+	f32 near2    = CLBSquared<f32>(mSaveNotice->mRotateFastMinDistXZ.get());
 
 	if (dist2 > near2) {
 		JGeometry::TVec3<f32> diff(mPos.x - target.x, mPos.y - target.y,
 		                           mPos.z - target.z);
 		MsVECNormalize(&diff, &diff);
 		// TODO: many inlines from cameralib maybe?
-		f32 dx  = diff.x * 500.0f + mPos.x;
-		f32 dz  = diff.z * 500.0f + mPos.z;
-		s16 ang = matan(dz - unk80.unkC.z, dx - unk80.unkC.x);
-		int absAngle
-		    = ang - unk80.unk26 >= 0 ? ang - unk80.unk26 : -(ang - unk80.unk26);
-		f32 ratio = DEG2SHORTANGLE(1.0f) * (f32)absAngle;
+		f32 dx       = diff.x * 500.0f + mPos.x;
+		f32 dz       = diff.z * 500.0f + mPos.z;
+		s16 ang      = matan(dz - mCurrentTarget.mTarget.z,
+		                     dx - mCurrentTarget.mTarget.x);
+		int absAngle = ang - mCurrentTarget.mYaw >= 0
+		                   ? ang - mCurrentTarget.mYaw
+		                   : -(ang - mCurrentTarget.mYaw);
+		f32 ratio    = DEG2SHORTANGLE(1.0f) * (f32)absAngle;
 
 		f32 chase;
 		if (dist2 > farClip2) {
@@ -175,14 +177,16 @@ void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
 			chase = CLBCalcRatio<f32>(near2, farClip2, dist2);
 		}
 		f32 base = CLBLinearInbetween<f32>(
-		    1.0f, unk2D0->mRotateMagnifXmax.get(), unk80.unk28);
+		    1.0f, mSaveNotice->mRotateMagnifXmax.get(), mCurrentTarget.unk28);
 		f32 speed
 		    = unk288
-		      * (chase * (ratio * ((f32)unk2D0->mRotateYSpeed.get() * base)));
+		      * (chase
+		         * (ratio * ((f32)mSaveNotice->mRotateYSpeed.get() * base)));
 		if (speed > 32766.998f)
 			speed = 32766.998f;
 		s16 delta = CLBRoundf<s16>(speed);
-		CLBChaseGeneralConstantSpecifySpeed<s16>(&unk80.unk26, ang, delta);
+		CLBChaseGeneralConstantSpecifySpeed<s16>(&mCurrentTarget.mYaw, ang,
+		                                         delta);
 	}
 }
 
@@ -210,9 +214,9 @@ void CPolarSubCamera::ctrlLButtonCamera_()
 
 	if (unk7C == 0) {
 		if (!SMS_CheckMarioFlag(MARIO_FLAG_HAS_FLUDD)) {
-			unk80.unkC.set(gpCameraMario->unk0);
+			mCurrentTarget.mTarget.set(gpCameraMario->unk0);
 		} else {
-			getNozzleTopPos_(&unk80.unkC);
+			getNozzleTopPos_(&mCurrentTarget.mTarget);
 		}
 	}
 

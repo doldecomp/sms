@@ -96,9 +96,9 @@ void CPolarSubCamera::updateGateDemoCamera_()
 	f32 fovy;
 	unk2B0->updateDemo(nullptr, nullptr, nullptr, &fovy);
 
-	int v = unk6C->unk4;
+	int v = mInbetween->unk4;
 	if (unk70 != unk2B4->unk8 && v > 0)
-		CLBChaseConstantSpecifyFrame<f32>(&mFovy, fovy, (f32)unk6C->unk4);
+		CLBChaseConstantSpecifyFrame<f32>(&mFovy, fovy, (f32)mInbetween->unk4);
 	else
 		mFovy = fovy;
 
@@ -147,7 +147,7 @@ void CPolarSubCamera::startDemoCamera(const char* name,
 		unk2B0->startDemo(name, offset);
 		unk2B4->setThing(unk2B0->getTotalDemoFrames());
 		changeCamModeSpecifyFrame_(CAMERA_MODE_COUNT, 1);
-		mNear   = unk2D4->mSLReproduceDemoNearClip.get();
+		mNear   = mSaveEx->mSLReproduceDemoNearClip.get();
 		started = true;
 	}
 
@@ -210,10 +210,11 @@ int CPolarSubCamera::getRestDemoFrames() const { return unk2B4->unk14; }
 
 void CPolarSubCamera::ctrlNormalDeadDemo_()
 {
-	unk80.unkC.set(gpCameraMario->unk0);
-	unk6C->execCameraInbetween(mPosition, unk80.unkC, SMS_GetMarioPos());
+	mCurrentTarget.mTarget.set(gpCameraMario->unk0);
+	mInbetween->execCameraInbetween(mPosition, mCurrentTarget.mTarget,
+	                                SMS_GetMarioPos());
 
-	CLBChaseDecrease(&mTarget, unk6C->unk24, 0.03f, 0.0f);
+	CLBChaseDecrease(&mTarget, mInbetween->unk24, 0.03f, 0.0f);
 
 	if (gpMarioOriginal->checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA))
 		return;

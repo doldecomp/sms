@@ -26,7 +26,7 @@ s16 CPolarSubCamera::getCameraInbetweenFrame_(int param_1)
 
 	int iVar3 = 1;
 	if (mMode < CAMERA_MODE_COUNT && param_1 < CAMERA_MODE_COUNT) {
-		TCamSaveKindParam* pTVar4 = unk2D8[mMode];
+		TCamSaveKindParam* pTVar4 = mSaveKindParam[mMode];
 		switch (param_1) {
 		case CAMERA_MODE_FOLLOW:
 			iVar3 = pTVar4->mSLInbetFollow.get();
@@ -254,10 +254,10 @@ s16 CPolarSubCamera::getCameraInbetweenFrame_(int param_1)
 
 void CPolarSubCamera::setUpToLButtonCamera_(int param_1)
 {
-	unk80.unk30 = unk80.unk28;
+	mCurrentTarget.unk30 = mCurrentTarget.unk28;
 	TCameraKindParam param;
-	param.copySaveParam(*unk2D8[param_1]);
-	unkB4.unk28 = unk80.unk28
+	param.copySaveParam(*mSaveKindParam[param_1]);
+	mPreviousTarget.unk28 = mCurrentTarget.unk28
 	    = MsClamp(CLBCalcRatio<s16>(param.mXAngleMin, param.mXAngleMax,
 	                                -param.mOffsetAngleX),
 	              0.0f, 1.0f);
@@ -265,7 +265,7 @@ void CPolarSubCamera::setUpToLButtonCamera_(int param_1)
 
 void CPolarSubCamera::setUpFromLButtonCamera_()
 {
-	unkB4.unk28 = unk80.unk28 = unk80.unk30;
+	mPreviousTarget.unk28 = mCurrentTarget.unk28 = mCurrentTarget.unk30;
 }
 
 void CPolarSubCamera::changeCamModeSub_(int param_1, int param_2, bool param_3)
@@ -295,12 +295,12 @@ void CPolarSubCamera::changeCamModeSub_(int param_1, int param_2, bool param_3)
 
 	if (param_1 < CAMERA_MODE_COUNT) {
 		if (mMode == CAMERA_MODE_DELFINO && param_1 == CAMERA_MODE_DELFINO_B) {
-			unk80.unk28 = 1.0f;
-			unkB4.unk28 = 1.0f;
+			mCurrentTarget.unk28  = 1.0f;
+			mPreviousTarget.unk28 = 1.0f;
 		} else if (mMode == CAMERA_MODE_LOOK_DOWN
 		           && param_1 == CAMERA_MODE_MONTE_HANG) {
-			unk80.unk28 = 1.0f;
-			unkB4.unk28 = 1.0f;
+			mCurrentTarget.unk28  = 1.0f;
+			mPreviousTarget.unk28 = 1.0f;
 		} else {
 			if (!isLButtonCameraSpecifyMode(mMode)) {
 				if (isLButtonCameraSpecifyMode(param_1)) {
@@ -314,21 +314,23 @@ void CPolarSubCamera::changeCamModeSub_(int param_1, int param_2, bool param_3)
 				}
 			}
 		}
-		unk6C->startCameraInbetween(param_2);
+		mInbetween->startCameraInbetween(param_2);
 	}
 
 	mMode = param_1;
 
 	if (mMode < CAMERA_MODE_COUNT && mPrevMode < CAMERA_MODE_COUNT) {
-		bool bVar1  = isThing4(mMode) && unk70 != nullptr;
-		bool bVar11 = isThing4(mPrevMode);
-		if (!bVar11 && bVar1 == true) {
-			unkE8  = unk80;
-			unk11C = unk70->unk28;
+		bool willBeFixedMode
+		    = isFixOrDefiniteCameraSpecifyMode(mMode) && unk70 != nullptr;
+		bool wasFixedMode = isFixOrDefiniteCameraSpecifyMode(mPrevMode);
+		if (wasFixedMode == false && willBeFixedMode == true) {
+			mTargetBeforeFixedMode = mCurrentTarget;
+			unk11C                 = unk70->unk28;
 		}
-		if (bVar11) {
+
+		if (wasFixedMode) {
 			if (unk11C & 1) {
-				unkB4 = unk80 = unkE8;
+				mPreviousTarget = mCurrentTarget = mTargetBeforeFixedMode;
 				killHeightPan_();
 			} else {
 				calcNowTargetFromPosAndAt_(mPosition, mTarget);
@@ -340,20 +342,20 @@ void CPolarSubCamera::changeCamModeSub_(int param_1, int param_2, bool param_3)
 			case CAMERA_MODE_FIX_D:
 			case CAMERA_MODE_DEFINITE_B:
 			case CAMERA_MODE_DEFINITE_D:
-				warpPosAndAt(unk80.unk28, unk80.unk26);
+				warpPosAndAt(mCurrentTarget.unk28, mCurrentTarget.mYaw);
 				break;
 			case CAMERA_MODE_FIX_H:
 			case CAMERA_MODE_DEFINITE_H:
-				unk80.unk26 = *gpMarioAngleY - 0x8000;
+				mCurrentTarget.mYaw = *gpMarioAngleY - 0x8000;
 				break;
 			case CAMERA_MODE_FIX_I:
 			case CAMERA_MODE_DEFINITE_I:
-				unk80.unk26 = *gpMarioAngleY - 0x8000;
-				warpPosAndAt(unk80.unk28, unk80.unk26);
+				mCurrentTarget.mYaw = *gpMarioAngleY - 0x8000;
+				warpPosAndAt(mCurrentTarget.unk28, mCurrentTarget.mYaw);
 			}
 		}
 
-		if (bVar1) {
+		if (willBeFixedMode) {
 			const TCameraMapTool* tool = unk70;
 			bool bVar11                = (tool->unk28 & 0x2) != 0;
 			switch (mMode) {
@@ -363,10 +365,11 @@ void CPolarSubCamera::changeCamModeSub_(int param_1, int param_2, bool param_3)
 			case CAMERA_MODE_DEFINITE_B: {
 				JGeometry::TVec3<f32> save;
 				if (bVar11)
-					save = unk80.unk0;
-				tool->calcPosAndAt(&unk80.unk0, &unk80.unkC);
+					save = mCurrentTarget.mPosition;
+				tool->calcPosAndAt(&mCurrentTarget.mPosition,
+				                   &mCurrentTarget.mTarget);
 				if (bVar11)
-					unk80.unk0.set(save);
+					mCurrentTarget.mPosition.set(save);
 			} break;
 
 			default: {
@@ -451,10 +454,10 @@ void CPolarSubCamera::execFrontRotate_()
 		unk64 |= 0x4;
 		unk274 = *gpMarioAngleY - 0x8000;
 		if (unk120->checkFrameMeaning(0x4000)) {
-			unk276 = unk2D4->mYButtonRotateChase.get();
+			unk276 = mSaveEx->mYButtonRotateChase.get();
 			unk64 |= 0x8;
 		} else if (unk120->checkFrameMeaning(0x8000)) {
-			unk276 = unk2D4->mLButtonRotateChase.get();
+			unk276 = mSaveEx->mLButtonRotateChase.get();
 			unk64 &= ~0x8;
 			SMSGetMSound()->startSoundSystemSE(0x4826, 0, nullptr, 0);
 		}
@@ -572,7 +575,7 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 		return;
 	}
 
-	if (isThing4(param_1))
+	if (isFixOrDefiniteCameraSpecifyMode(param_1))
 		return;
 
 	if (unk64 & 0x20)
