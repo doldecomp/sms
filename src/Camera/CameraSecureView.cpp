@@ -11,17 +11,18 @@ void CPolarSubCamera::calcSecureViewTarget_(s16 angle, f32* outX, f32* outZ)
 	s16 base = *gpMarioAngleY - 0x8000;
 	s16 diff = angle - base;
 
-	f32 first = CLBLinearInbetween<f32>(
-	    unk68->mSecureViewDistXMin, unk68->mSecureViewDistXMax, unk80.unk28);
+	f32 first = CLBLinearInbetween<f32>(mCurrentParams->mSecureViewDistXMin,
+	                                    mCurrentParams->mSecureViewDistXMax,
+	                                    mCurrentTarget.unk28);
 	f32 cos_d = JMASCos(diff);
 
 	f32 second;
 	if (cos_d >= 0.0f) {
 		second = 0.0f;
 	} else {
-		second
-		    = CLBLinearInbetween<f32>(unk68->mSecureViewDistZMin,
-		                              unk68->mSecureViewDistZMax, unk80.unk28);
+		second = CLBLinearInbetween<f32>(mCurrentParams->mSecureViewDistZMin,
+		                                 mCurrentParams->mSecureViewDistZMax,
+		                                 mCurrentTarget.unk28);
 	}
 
 	f32 sin_d = JMASSin(diff);
@@ -52,7 +53,7 @@ void CPolarSubCamera::execSecureView_(s16 angle, Vec* out)
 	else
 		inv = 1.0f / ratio;
 
-	f32 v = MsClamp(unk68->mSecureViewChase * inv, 0.0f, 1.0f);
+	f32 v = MsClamp(mCurrentParams->mSecureViewChase * inv, 0.0f, 1.0f);
 
 	CLBChaseDecrease(&unk294, px, v, 0.0f);
 	CLBChaseDecrease(&unk298, pz, v, 0.0f);

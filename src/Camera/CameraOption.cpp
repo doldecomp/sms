@@ -15,12 +15,18 @@ const char* cLoadCamName = "ロードカメラ";
 
 void CPolarSubCamera::chaseOptionCamera_(f32 param_1)
 {
-	CLBChaseConstantSpecifyFrame<f32>(&mPosition.x, unk80.unk0.x, param_1);
-	CLBChaseConstantSpecifyFrame<f32>(&mPosition.y, unk80.unk0.y, param_1);
-	CLBChaseConstantSpecifyFrame<f32>(&mPosition.z, unk80.unk0.z, param_1);
-	CLBChaseConstantSpecifyFrame<f32>(&mTarget.x, unk80.unkC.x, param_1);
-	CLBChaseConstantSpecifyFrame<f32>(&mTarget.y, unk80.unkC.y, param_1);
-	CLBChaseConstantSpecifyFrame<f32>(&mTarget.z, unk80.unkC.z, param_1);
+	CLBChaseConstantSpecifyFrame<f32>(&mPosition.x, mCurrentTarget.mPosition.x,
+	                                  param_1);
+	CLBChaseConstantSpecifyFrame<f32>(&mPosition.y, mCurrentTarget.mPosition.y,
+	                                  param_1);
+	CLBChaseConstantSpecifyFrame<f32>(&mPosition.z, mCurrentTarget.mPosition.z,
+	                                  param_1);
+	CLBChaseConstantSpecifyFrame<f32>(&mTarget.x, mCurrentTarget.mTarget.x,
+	                                  param_1);
+	CLBChaseConstantSpecifyFrame<f32>(&mTarget.y, mCurrentTarget.mTarget.y,
+	                                  param_1);
+	CLBChaseConstantSpecifyFrame<f32>(&mTarget.z, mCurrentTarget.mTarget.z,
+	                                  param_1);
 }
 
 void CPolarSubCamera::ctrlOptionCamera_()
@@ -44,7 +50,8 @@ void CPolarSubCamera::ctrlOptionCamera_()
 			if (tool != nullptr && tool != unk70) {
 				gpCameraOption->unk0 ^= 0x1;
 				unk70 = tool;
-				unk70->calcPosAndAt(&unk80.unk0, &unk80.unkC);
+				unk70->calcPosAndAt(&mCurrentTarget.mPosition,
+				                    &mCurrentTarget.mTarget);
 				gpCameraOption->unk12 = gpCameraOption->unk10;
 			}
 		}

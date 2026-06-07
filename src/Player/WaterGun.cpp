@@ -219,7 +219,7 @@ void TNozzleBase::calcGunAngle(const TMarioControllerWork& work)
 	if (mFludd->mMario == gpMarioAddress
 	    && (gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode)
 	        || gpCamera->isJetCoaster1stCamera())) {
-		unk36E = gpCamera->unk80.unk24;
+		unk36E = gpCamera->mCurrentTarget.mPitch;
 		return;
 	}
 

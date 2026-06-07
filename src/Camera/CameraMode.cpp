@@ -271,7 +271,7 @@ bool CPolarSubCamera::isDefiniteCameraSpecifyMode(int param) const
 bool CPolarSubCamera::isOverHipAttackSpecifyMode(int param) const
 {
 	bool result = false;
-	if (isThing4(param)) {
+	if (isFixOrDefiniteCameraSpecifyMode(param)) {
 		result = true;
 	} else {
 		switch (param) {

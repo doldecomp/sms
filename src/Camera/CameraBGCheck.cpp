@@ -12,10 +12,10 @@ void CPolarSubCamera::calcInHouseNoSub_()
 {
 	if (unk2CA != -1) {
 		unk2C8 = unk2CA;
-		if ((f32)unk2D4->mInHouseMinFrame.get() < (f32)unk2CC)
+		if ((f32)mSaveEx->mInHouseMinFrame.get() < (f32)unk2CC)
 			unk2CC += 1;
 	} else if (unk2C8 != -1) {
-		if ((f32)unk2CC < (f32)unk2D4->mInHouseMinFrame.get()) {
+		if ((f32)unk2CC < (f32)mSaveEx->mInHouseMinFrame.get()) {
 			unk2CC += 1;
 		} else {
 			unk2C8 = -1;
@@ -87,8 +87,8 @@ bool CPolarSubCamera::isNeedGroundCheck_()
 	} else if (mMode != CAMERA_MODE_SLIDER
 	           && (isNormalCameraSpecifyMode(mMode)
 	               || isTowerCameraSpecifyMode(mMode))) {
-		f32 a     = unk68->mDistMin * JMASSin(unk68->mXAngleMin);
-		f32 b     = unk68->mDistMax * JMASSin(unk68->mXAngleMax);
+		f32 a = mCurrentParams->mDistMin * JMASSin(mCurrentParams->mXAngleMin);
+		f32 b = mCurrentParams->mDistMax * JMASSin(mCurrentParams->mXAngleMax);
 		f32 distY = mPosition.y - mTarget.y;
 		if (a > b)
 			b = a;
@@ -141,17 +141,18 @@ static bool should_clip_fabricated(const TBGCheckData* data)
 bool CPolarSubCamera::execWallCheck_(Vec* param_1)
 {
 	bool moved = false;
-	f32 radius = unk2D4->mSLWallCheckRadius.get();
+	f32 radius = mSaveEx->mSLWallCheckRadius.get();
 	if (radius > 0.0f) {
-		TBGWallCheckRecord record(unk80.unk0.x, unkB4.unk0.y + 10.0f,
-		                          unk80.unk0.z, radius, 4, 0);
+		TBGWallCheckRecord record(mCurrentTarget.mPosition.x,
+		                          mPreviousTarget.mPosition.y + 10.0f,
+		                          mCurrentTarget.mPosition.z, radius, 4, 0);
 
 		if (gpMap->isTouchedWallsAndMoveXZ(&record)) {
 			int n = record.mResultWallsNum;
 			for (int i = 0; i < n; ++i) {
 				TBGCheckData* wall = record.mResultWalls[i];
 				if (should_clip_fabricated(wall)) {
-					JGeometry::TVec3<f32> posArg = unk80.unk0;
+					JGeometry::TVec3<f32> posArg = mCurrentTarget.mPosition;
 					JGeometry::TVec3<f32> posCam = posArg;
 
 					f32 sd = posCam.dot(wall->getNormal())
@@ -160,12 +161,12 @@ bool CPolarSubCamera::execWallCheck_(Vec* param_1)
 					if (absSd < radius) {
 						moved      = true;
 						f32 pushSd = (radius - sd)
-						             * unk2D4->mSLWallRevisionRatio.get();
+						             * mSaveEx->mSLWallRevisionRatio.get();
 						posCam.x += pushSd * wall->getNormal().x;
 						posCam.z += pushSd * wall->getNormal().z;
-						unk80.unk0.x = posCam.x;
-						unk80.unk0.z = posCam.z;
-						f32 pushArg  = radius - sd;
+						mCurrentTarget.mPosition.x = posCam.x;
+						mCurrentTarget.mPosition.z = posCam.z;
+						f32 pushArg                = radius - sd;
 						posArg.x += pushArg * wall->getNormal().x;
 						posArg.z += pushArg * wall->getNormal().z;
 						param_1->x = posArg.x;
@@ -189,15 +190,18 @@ bool CPolarSubCamera::execRoofCheck_(Vec param_1)
 		roofHeight = -512.5f;
 		skipCheck  = true;
 	} else {
-		roofHeight = gpMap->checkRoof(
-		    param_1.x, unkB4.unk0.y - unk2D4->mSLRoofChangeY.get(), param_1.z,
-		    &roof);
+		roofHeight = gpMap->checkRoof(param_1.x,
+		                              mPreviousTarget.mPosition.y
+		                                  - mSaveEx->mSLRoofChangeY.get(),
+		                              param_1.z, &roof);
 	}
 
 	if (skipCheck || should_clip_fabricated(roof)) {
-		if (unk80.unk0.y > roofHeight - unk2D4->mSLRoofHeight.get()) {
-			unk80.unk0.y = roofHeight - unk2D4->mSLRoofHeight.get();
-			moved        = true;
+		if (mCurrentTarget.mPosition.y
+		    > roofHeight - mSaveEx->mSLRoofHeight.get()) {
+			mCurrentTarget.mPosition.y
+			    = roofHeight - mSaveEx->mSLRoofHeight.get();
+			moved = true;
 		}
 	}
 	return moved;
@@ -206,10 +210,10 @@ bool CPolarSubCamera::execRoofCheck_(Vec param_1)
 bool CPolarSubCamera::execGroundCheck_(Vec param_1)
 {
 	bool moved    = false;
-	f32 groundChg = unk2D4->mGroundChangeY.get();
+	f32 groundChg = mSaveEx->mGroundChangeY.get();
 	f32 groundOff = CLBLinearInbetween<f32>(
-	    unk2D4->mSLGroundHeightNormal.get(),
-	    unk2D4->mSLGroundHeightReadyGun.get(), unk2AC->unk8);
+	    mSaveEx->mSLGroundHeightNormal.get(),
+	    mSaveEx->mSLGroundHeightReadyGun.get(), unk2AC->unk8);
 
 	if (mMode == CAMERA_MODE_SLIDER) {
 		groundChg = groundChg > 200.0f ? groundChg : 200.0f;
@@ -218,12 +222,12 @@ bool CPolarSubCamera::execGroundCheck_(Vec param_1)
 
 	const TBGCheckData* ground;
 	f32 groundY = gpMap->checkGroundIgnoreWaterSurface(
-	    param_1.x, unkB4.unk0.y + groundChg, param_1.z, &ground);
+	    param_1.x, mPreviousTarget.mPosition.y + groundChg, param_1.z, &ground);
 
 	if (should_clip_fabricated(ground)) {
-		if (unk80.unk0.y < groundY + groundOff) {
-			unk80.unk0.y = groundY + groundOff;
-			moved        = true;
+		if (mCurrentTarget.mPosition.y < groundY + groundOff) {
+			mCurrentTarget.mPosition.y = groundY + groundOff;
+			moved                      = true;
 		}
 	}
 	return moved;

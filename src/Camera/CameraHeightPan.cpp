@@ -28,25 +28,25 @@ void CPolarSubCamera::execHeightPan_()
 	bool marioIsAirborne = SMS_IsMarioTouchGround4cm() == false;
 	f32 fVar10           = 0.0;
 	if (marioIsAirborne)
-		fVar10 = unk68->mTargetAtJumpOffsetY;
+		fVar10 = mCurrentParams->mTargetAtJumpOffsetY;
 
 	CLBChaseGeneralConstantSpecifySpeed(&unk24C, fVar10,
-	                                    unk68->mAtJumpOffsetSpeed);
-	unk80.unkC.y += unk24C;
-	f32 fVar1 = unk80.unk18.y - unkB4.unk18.y;
+	                                    mCurrentParams->mAtJumpOffsetSpeed);
+	mCurrentTarget.mTarget.y += unk24C;
+	f32 fVar1 = mCurrentTarget.unk18.y - mPreviousTarget.unk18.y;
 
 	if (fabricatedInline()) {
 		unk64 |= 0x1;
 		unk64 &= ~0x2;
-		unk80.unk0.y = unkB4.unk0.y;
-		CLBChaseDecrease(&unk80.unk0.y, unk80.unk18.y,
-		                 unk68->mHeightPanChaseRateY, 0.0f);
-		if (unk80.unk28 != unkB4.unk28)
-			unk80.unk0.y += fVar1;
+		mCurrentTarget.mPosition.y = mPreviousTarget.mPosition.y;
+		CLBChaseDecrease(&mCurrentTarget.mPosition.y, mCurrentTarget.unk18.y,
+		                 mCurrentParams->mHeightPanChaseRateY, 0.0f);
+		if (mCurrentTarget.unk28 != mPreviousTarget.unk28)
+			mCurrentTarget.mPosition.y += fVar1;
 	} else {
 		if (unk64 & 0x3) {
-			if (unk80.unk28 != unkB4.unk28)
-				unk80.unk0.y += fVar1;
+			if (mCurrentTarget.unk28 != mPreviousTarget.unk28)
+				mCurrentTarget.mPosition.y += fVar1;
 
 			if (unk64 & 0x1) {
 				unk64 &= ~0x1;
@@ -55,23 +55,25 @@ void CPolarSubCamera::execHeightPan_()
 				switch (mMode) {
 				case CAMERA_MODE_JUMP_CODE:
 				case CAMERA_MODE_ROCKET_JUMP:
-					if (unk256 < unk2D4->mPanWarpAngleX.get())
+					if (unk256 < mSaveEx->mPanWarpAngleX.get())
 						bVar7 = true;
 					break;
 				}
 
 				if (bVar7) {
-					mPosition.y = unk80.unk0.y = unk80.unk18.y;
+					mPosition.y = mCurrentTarget.mPosition.y
+					    = mCurrentTarget.unk18.y;
 					unk64 &= ~0x2;
 				} else {
 					unk64 |= 0x2;
 				}
 			}
 
-			if (unk80.unk0.y != unk80.unk18.y) {
+			if (mCurrentTarget.mPosition.y != mCurrentTarget.unk18.y) {
 				BOOL pTVar5 = CLBChaseSpecialDecrease(
-				    &unk80.unk0.y, unk80.unk18.y, unk2D4->mPanAfterMagnif.get(),
-				    unk2D4->mPanAfterMinHeight.get());
+				    &mCurrentTarget.mPosition.y, mCurrentTarget.unk18.y,
+				    mSaveEx->mPanAfterMagnif.get(),
+				    mSaveEx->mPanAfterMinHeight.get());
 				if (!pTVar5 && !marioIsAirborne)
 					unk64 &= ~0x2;
 
@@ -80,7 +82,7 @@ void CPolarSubCamera::execHeightPan_()
 					unk64 &= ~0x2;
 			}
 		} else {
-			unk80.unk0.y = unk80.unk18.y;
+			mCurrentTarget.mPosition.y = mCurrentTarget.unk18.y;
 		}
 	}
 }
@@ -89,6 +91,7 @@ void CPolarSubCamera::killHeightPan_()
 {
 	unk64 &= ~0x1;
 	unk64 &= ~0x2;
-	unk80.unk0.y = unk80.unk18.y;
-	unk24C       = 0.0f;
+	mCurrentTarget.mPosition.y = mCurrentTarget.unk18.y;
+
+	unk24C = 0.0f;
 }

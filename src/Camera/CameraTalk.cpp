@@ -8,8 +8,8 @@
 void CPolarSubCamera::makeMtxForTalk(const TBaseNPC* param_1)
 {
 	killHeightPan_();
-	unk80.unk2C          = unk80.unk26;
-	unk80.unk26          = *gpMarioAngleY - 0x8000;
+	mCurrentTarget.unk2C = mCurrentTarget.mYaw;
+	mCurrentTarget.mYaw  = *gpMarioAngleY - 0x8000;
 	mSavedModeBeforeTalk = mMode;
 
 	int r31 = CAMERA_MODE_TALK_A;
@@ -35,7 +35,7 @@ void CPolarSubCamera::makeMtxForTalk(const TBaseNPC* param_1)
 void CPolarSubCamera::makeMtxForPrevTalk()
 {
 	if (isTalkCameraSpecifyMode(mMode)) {
-		unk80.unk26 = unk80.unk2C;
+		mCurrentTarget.mYaw = mCurrentTarget.unk2C;
 
 		changeCamMode_(mSavedModeBeforeTalk);
 
@@ -50,7 +50,7 @@ void CPolarSubCamera::makeMtxForPrevTalk()
 void CPolarSubCamera::ctrlTalkCamera_()
 {
 	if (unk7C == 0)
-		unk80.unkC.set(gpCameraMario->unk0);
+		mCurrentTarget.mTarget.set(gpCameraMario->unk0);
 
 	calcPosAndAt_();
 }

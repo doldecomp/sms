@@ -89,15 +89,15 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 	gpCameraOption              = nullptr;
 	gpCameraMario               = marioData;
 	unk60                       = new CameraUnk60Struct(4);
-	unk68                       = new TCameraKindParam;
-	unk6C                       = new TCameraInbetween;
+	mCurrentParams              = new TCameraKindParam;
+	mInbetween                  = new TCameraInbetween;
 	unk2AC                      = new CameraUnk2ACStruct;
 	unk2B0                      = new TCameraBck;
 	unk2B4                      = new CameraUnk2B4Struct;
-	unk2D0                      = new TCamSaveNotice;
-	unk2D4                      = new TCamSaveEx;
-	for (int i = 0; i < ARRAY_COUNT(unk2D8); ++i)
-		unk2D8[i] = new TCamSaveKindParam(mCamKindNameSaveFile[i]);
+	mSaveNotice                 = new TCamSaveNotice;
+	mSaveEx                     = new TCamSaveEx;
+	for (int i = 0; i < ARRAY_COUNT(mSaveKindParam); ++i)
+		mSaveKindParam[i] = new TCamSaveKindParam(mCamKindNameSaveFile[i]);
 	if (SMS_isMultiPlayerMap())
 		createMultiPlayer(4);
 	int stage = gpMarDirector->getCurrentStage();
@@ -152,9 +152,9 @@ void CPolarSubCamera::loadAfter()
 	else
 		changeCamModeSpecifyFrame_(mInitialMode, 1);
 
-	unk68->copySaveParam(*unk2D8[mMode]);
-	mFovy = unk68->mFovy;
-	mNear = unk68->mNearClip;
+	mCurrentParams->copySaveParam(*mSaveKindParam[mMode]);
+	mFovy = mCurrentParams->mFovy;
+	mNear = mCurrentParams->mNearClip;
 
 	char acStack_54[0x40];
 	snprintf(acStack_54, 0x40, "%s%d", cStartAfterCamName,
@@ -162,26 +162,29 @@ void CPolarSubCamera::loadAfter()
 	TCameraMapTool* tool2 = (TCameraMapTool*)gpCamMapToolTable->searchF(
 	    JDrama::TNameRef::calcKeyCode(acStack_54), acStack_54);
 	if (tool2) {
-		unk80.unk28 = MsClamp(tool2->unkC.y, unk268, unk26C);
-		unk80.unk26 = CLBDegToShortAngle(tool2->unk18.y) - 0x8000;
+		mCurrentTarget.unk28 = MsClamp(tool2->unkC.y, unk268, unk26C);
+		mCurrentTarget.mYaw  = CLBDegToShortAngle(tool2->unk18.y) - 0x8000;
 	} else {
-		unk80.unk28 = MsClamp(unk2D4->mXRotStart.get(), unk268, unk26C);
-		unk80.unk26 = *gpMarioAngleY - 0x8000;
+		mCurrentTarget.unk28
+		    = MsClamp(mSaveEx->mXRotStart.get(), unk268, unk26C);
+		mCurrentTarget.mYaw = *gpMarioAngleY - 0x8000;
 	}
 
 	if ((unk64 & 0x1000) && unk2B8 != nullptr && (unk2B8->unkC & 0x1))
 		setUpToLButtonCamera_(CAMERA_MODE_JET_COASTER);
 
-	unk270 = unk80.unk28;
-	unk80.unk24
-	    = CLBLinearInbetween(unk68->mXAngleMin, unk68->mXAngleMax, unk80.unk28);
+	unk270 = mCurrentTarget.unk28;
+	mCurrentTarget.mPitch
+	    = CLBLinearInbetween(mCurrentParams->mXAngleMin,
+	                         mCurrentParams->mXAngleMax, mCurrentTarget.unk28);
 
 	JGeometry::TVec3<f32> marPos = SMS_GetMarioPos();
 	f32 fVar1;
 	if (isNormalDeadDemo()) {
 		fVar1 = 35.0f;
 	} else {
-		fVar1 = unk80.unk28 * unk68->mXRotRatioAtOffsetY + unk68->mAtOffsetY;
+		fVar1 = mCurrentTarget.unk28 * mCurrentParams->mXRotRatioAtOffsetY
+		        + mCurrentParams->mAtOffsetY;
 		if (SMS_GetMarioStatus() == MARIO_STATUS_KICK_ROOF_ROLL_UP)
 			fVar1 += 260.0f;
 		if (mMode == CAMERA_MODE_DEFINITE_D2)
@@ -195,12 +198,14 @@ void CPolarSubCamera::loadAfter()
 		unk70->calcPosAndAt(&mPosition, &mTarget);
 	} else {
 		mTarget.set(gpCameraMario->unk0);
-		f32 fVar7
-		    = CLBLinearInbetween(unk68->mDistMin, unk68->mDistMax, unk80.unk28);
-		CLBPolarToCross(mTarget, &mPosition, fVar7, unk80.unk24, unk80.unk26);
+		f32 fVar7 = CLBLinearInbetween(mCurrentParams->mDistMin,
+		                               mCurrentParams->mDistMax,
+		                               mCurrentTarget.unk28);
+		CLBPolarToCross(mTarget, &mPosition, fVar7, mCurrentTarget.mPitch,
+		                mCurrentTarget.mYaw);
 	}
 
-	calcSecureViewTarget_(unk80.unk26, &unk294, &unk298);
+	calcSecureViewTarget_(mCurrentTarget.mYaw, &unk294, &unk298);
 
 	mPosition.x += unk294;
 	mPosition.z += unk298;
@@ -208,23 +213,23 @@ void CPolarSubCamera::loadAfter()
 	mTarget.x += unk294;
 	mTarget.z += unk298;
 
-	unk80.unk0.set(mPosition);
-	unk80.unk18.set(mPosition);
-	unk80.unkC.set(mTarget);
+	mCurrentTarget.mPosition.set(mPosition);
+	mCurrentTarget.unk18.set(mPosition);
+	mCurrentTarget.mTarget.set(mTarget);
 
 	TCameraOption* option = gpCameraOption;
 	if (SMS_isOptionMap()) {
-		unk80.unk0 = mPosition;
-		unk80.unkC = mTarget;
-		option     = new TCameraOption(mPosition, &unk80.unkC);
+		mCurrentTarget.mPosition = mPosition;
+		mCurrentTarget.mTarget   = mTarget;
+		option = new TCameraOption(mPosition, &mCurrentTarget.mTarget);
 	}
 	gpCameraOption = option;
 
-	unk256 = unk80.unk24;
-	unk258 = unk80.unk26;
+	unk256 = mCurrentTarget.mPitch;
+	unk258 = mCurrentTarget.mYaw;
 
-	unkB4 = unk80;
-	unkE8 = unkB4;
+	mPreviousTarget        = mCurrentTarget;
+	mTargetBeforeFixedMode = mPreviousTarget;
 
 	unk124.set(mPosition);
 	unk130.set(mPosition);
@@ -238,7 +243,7 @@ void CPolarSubCamera::loadAfter()
 		unk2B8->unk1C.set(mTarget);
 	}
 
-	unk6C->initCameraInbetween(mPosition, mTarget, SMS_GetMarioPos());
+	mInbetween->initCameraInbetween(mPosition, mTarget, SMS_GetMarioPos());
 
 	C_MTXPerspective(unk16C, mFovy, mAspect, mNear, mFar);
 	C_MTXLookAt(unk1EC, unk124, mUp, unk148);
@@ -263,7 +268,7 @@ void CPolarSubCamera::loadAfter()
 
 bool CPolarSubCamera::isNowInbetween() const
 {
-	if (unk6C->unk4 > 0)
+	if (mInbetween->getUnk4() > 0)
 		return true;
 	else
 		return false;
@@ -289,13 +294,14 @@ JGeometry::TVec3<f32> CPolarSubCamera::getUsualLookat() const
 
 s16 CPolarSubCamera::calcAngleXFromXRotRatio_() const
 {
-	return CLBLinearInbetween(unk68->mXAngleMin, unk68->mXAngleMax,
-	                          unk80.unk28);
+	return CLBLinearInbetween(mCurrentParams->mXAngleMin,
+	                          mCurrentParams->mXAngleMax, mCurrentTarget.unk28);
 }
 
 f32 CPolarSubCamera::calcDistFromXRotRatio_() const
 {
-	return CLBLinearInbetween(unk68->mDistMin, unk68->mDistMax, unk80.unk28);
+	return CLBLinearInbetween(mCurrentParams->mDistMin,
+	                          mCurrentParams->mDistMax, mCurrentTarget.unk28);
 }
 
 void CPolarSubCamera::calcNowTargetFromPosAndAt_(const Vec& pos, const Vec& at)
@@ -304,19 +310,21 @@ void CPolarSubCamera::calcNowTargetFromPosAndAt_(const Vec& pos, const Vec& at)
 	s16 xAngle;
 	s16 yAngle;
 	CLBCrossToPolar(at, pos, &radius, &xAngle, &yAngle);
-	unk80.unk28 = CLBCalcRatio(unk68->mXAngleMin, unk68->mXAngleMax, xAngle);
+	mCurrentTarget.unk28 = CLBCalcRatio(mCurrentParams->mXAngleMin,
+	                                    mCurrentParams->mXAngleMax, xAngle);
 	if (isLButtonCameraSpecifyMode(mMode)) {
-		unk80.unk28 = MsClamp(unk80.unk28, 0.0f, 1.0f);
+		mCurrentTarget.unk28 = MsClamp(mCurrentTarget.unk28, 0.0f, 1.0f);
 	} else {
-		unk80.unk28 = MsClamp(unk80.unk28, unk268, unk26C);
+		mCurrentTarget.unk28 = MsClamp(mCurrentTarget.unk28, unk268, unk26C);
 	}
 
-	unk80.unk24
-	    = CLBLinearInbetween(unk68->mXAngleMin, unk68->mXAngleMax, unk80.unk28);
-	unk80.unk26 = yAngle;
-	unk80.unk0.set(pos);
-	unk80.unk18.set(pos);
-	unk80.unkC.set(at);
+	mCurrentTarget.mPitch
+	    = CLBLinearInbetween(mCurrentParams->mXAngleMin,
+	                         mCurrentParams->mXAngleMax, mCurrentTarget.unk28);
+	mCurrentTarget.mYaw = yAngle;
+	mCurrentTarget.mPosition.set(pos);
+	mCurrentTarget.unk18.set(pos);
+	mCurrentTarget.mTarget.set(at);
 }
 
 void CPolarSubCamera::rotateX_ByStickY_(f32 param_1)
@@ -324,11 +332,11 @@ void CPolarSubCamera::rotateX_ByStickY_(f32 param_1)
 	if (SMS_IsMarioOpeningDoor())
 		return;
 
-	unk80.unk28 -= param_1 * unk68->mXRotRatioManualSpeed;
+	mCurrentTarget.unk28 -= param_1 * mCurrentParams->mXRotRatioManualSpeed;
 	if (isLButtonCameraSpecifyMode(mMode)) {
-		unk80.unk28 = MsClamp(unk80.unk28, 0.0f, 1.0f);
+		mCurrentTarget.unk28 = MsClamp(mCurrentTarget.unk28, 0.0f, 1.0f);
 	} else {
-		unk80.unk28 = MsClamp(unk80.unk28, unk268, unk26C);
+		mCurrentTarget.unk28 = MsClamp(mCurrentTarget.unk28, unk268, unk26C);
 	}
 }
 
@@ -337,14 +345,14 @@ void CPolarSubCamera::rotateY_ByStickX_(f32 param_1)
 	if (SMS_IsMarioOpeningDoor())
 		return;
 
-	s16 thing
-	    = param_1
-	      * CLBLinearInbetween(unk68->mYAngleManualSpeedXMin,
-	                           unk68->mYAngleManualSpeedXMax, unk80.unk28);
-	unk80.unk26 += thing;
+	s16 thing = param_1
+	            * CLBLinearInbetween(mCurrentParams->mYAngleManualSpeedXMin,
+	                                 mCurrentParams->mYAngleManualSpeedXMax,
+	                                 mCurrentTarget.unk28);
+	mCurrentTarget.mYaw += thing;
 }
 
-void CPolarSubCamera::offMoveApproach_() { unk6C->unk44 = 0.0f; }
+void CPolarSubCamera::offMoveApproach_() { mInbetween->unk44 = 0.0f; }
 
 void CPolarSubCamera::onMoveApproach_()
 {
@@ -352,8 +360,10 @@ void CPolarSubCamera::onMoveApproach_()
 	f32 d = MsSqrtf((mPosition.x - mTarget.x) * (mPosition.x - mTarget.x)
 	                + (mPosition.y - mTarget.y) * (mPosition.y - mTarget.y)
 	                + (mPosition.z - mTarget.z) * (mPosition.z - mTarget.z));
-	unk6C->unk44
-	    = d - CLBLinearInbetween(unk68->mDistMin, unk68->mDistMax, unk80.unk28);
+	mInbetween->unk44
+	    = d
+	      - CLBLinearInbetween(mCurrentParams->mDistMin,
+	                           mCurrentParams->mDistMax, mCurrentTarget.unk28);
 }
 
 bool CPolarSubCamera::isMarioReadyGun_() const { }
@@ -374,15 +384,15 @@ bool CPolarSubCamera::isMarioCrabWalk_() const
 
 void CPolarSubCamera::execInvalidAutoChase_()
 {
-	unk284 = unk68->mAutoChaseCompleteFrame;
+	unk284 = mCurrentParams->mAutoChaseCompleteFrame;
 }
 
 bool CPolarSubCamera::isMomentDefinite_() const
 {
 	bool result = false;
 	if (!(unk64 & 0x100) && isNormalCameraCompletely() && unk250 > 0.001f
-	    && CLBLinearInbetween(unk68->mCushionMin, unk68->mCushionMax,
-	                          unk80.unk28)
+	    && CLBLinearInbetween(mCurrentParams->mCushionMin,
+	                          mCurrentParams->mCushionMax, mCurrentTarget.unk28)
 	           > 0.001f)
 		result = true;
 	return result;
@@ -409,8 +419,8 @@ void CPolarSubCamera::calcSlopeAngleX_(s16* param_1)
 			bool b = diff.isZero();
 			if (!b) {
 				f32 grLevel = SMS_GetMarioGrLevel();
-				s16 maxAng  = unk2D4->mSLSlopeMaxAngleX.get();
-				f32 fwdDist = unk2D4->mSLSlopeForwardDistXZ.get();
+				s16 maxAng  = mSaveEx->mSLSlopeMaxAngleX.get();
+				f32 fwdDist = mSaveEx->mSLSlopeForwardDistXZ.get();
 
 				JGeometry::TVec3<f32> norm;
 				MsVECNormalize(&diff, &norm);
@@ -439,11 +449,11 @@ void CPolarSubCamera::calcSlopeAngleX_(s16* param_1)
 		}
 	}
 
-	CLBChaseGeneralConstantSpecifySpeed<s16>(&unk28C, result,
-	                                         unk2D4->mSLSlopeSpeedAngleX.get());
+	CLBChaseGeneralConstantSpecifySpeed<s16>(
+	    &unk28C, result, mSaveEx->mSLSlopeSpeedAngleX.get());
 	*param_1 -= unk28C;
-	*param_1 = MsClamp(*param_1, unk2D4->mSLLimitMinAngleX.get(),
-	                   unk2D4->mSLLimitMaxAngleX.get());
+	*param_1 = MsClamp(*param_1, mSaveEx->mSLLimitMinAngleX.get(),
+	                   mSaveEx->mSLLimitMaxAngleX.get());
 }
 
 void CPolarSubCamera::calcPosAndAt_()
@@ -453,8 +463,8 @@ void CPolarSubCamera::calcPosAndAt_()
 
 	if (!(unk64 & 0x80)) {
 		if (unk284 > 0) {
-			s32 acf   = unk68->mAutoChaseCompleteFrame;
-			s32 acs   = unk68->mAutoChaseStartFrame;
+			s32 acf   = mCurrentParams->mAutoChaseCompleteFrame;
+			s32 acs   = mCurrentParams->mAutoChaseStartFrame;
 			s32 delta = (acf - unk284) + 1;
 			if (delta <= acs)
 				unk288 = 0.0f;
@@ -467,11 +477,12 @@ void CPolarSubCamera::calcPosAndAt_()
 
 	s16 yawDelta  = 0;
 	f32 distDelta = 0.0f;
-	s16 yawSpeed
-	    = CLBLinearInbetween<s16>(unk68->mYAngleManualSpeedXMin,
-	                              unk68->mYAngleManualSpeedXMax, unk80.unk28);
-	f32 distSpeed = CLBLinearInbetween<f32>(
-	    unk68->mHoldAddDistXZMin, unk68->mHoldAddDistXZMax, unk80.unk28);
+	s16 yawSpeed  = CLBLinearInbetween<s16>(
+        mCurrentParams->mYAngleManualSpeedXMin,
+        mCurrentParams->mYAngleManualSpeedXMax, mCurrentTarget.unk28);
+	f32 distSpeed = CLBLinearInbetween<f32>(mCurrentParams->mHoldAddDistXZMin,
+	                                        mCurrentParams->mHoldAddDistXZMax,
+	                                        mCurrentTarget.unk28);
 
 	if (isNormalCameraSpecifyMode(mMode)) {
 		if (gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)
@@ -483,8 +494,8 @@ void CPolarSubCamera::calcPosAndAt_()
 	}
 
 	CLBChaseAngleDecrease(&unk2AC->unk0, yawDelta,
-	                      unk2D4->mSLAimAngleYChaseMin.get());
-	CLBChaseDecrease(&unk2AC->unk4, distDelta, unk2D4->mSLHoldDistChase.get(),
+	                      mSaveEx->mSLAimAngleYChaseMin.get());
+	CLBChaseDecrease(&unk2AC->unk4, distDelta, mSaveEx->mSLHoldDistChase.get(),
 	                 0.0f);
 
 	if (distSpeed < 0.001f) {
@@ -506,7 +517,7 @@ void CPolarSubCamera::calcPosAndAt_()
 	}
 
 	CLBChaseDecrease(&unk2AC->unk8, unk2AC->unkC,
-	                 unk2D4->mSLHoldDistChase.get(), 0.0f);
+	                 mSaveEx->mSLHoldDistChase.get(), 0.0f);
 
 	unk64 &= ~0x100;
 	if (unk78 != 0)
@@ -559,7 +570,7 @@ void CPolarSubCamera::calcPosAndAt_()
 		if (unk78 == 0 && unk7C == 0)
 			unk64 &= ~0x40;
 
-		if (!unk6C->isThing() || freeze || inputActive) {
+		if (!mInbetween->isThing() || freeze || inputActive) {
 			if (unk7C == 0 && isDefiniteCameraSpecifyMode(mMode)) {
 				const JGeometry::TVec3<f32>* ovr = unk2B4->unk0;
 				JGeometry::TVec3<f32> origin;
@@ -568,29 +579,32 @@ void CPolarSubCamera::calcPosAndAt_()
 				else
 					origin = gpCameraMario->unk0;
 				JGeometry::TVec3<f32> copy = origin;
-				unk80.unkC.set(copy);
+				mCurrentTarget.mTarget.set(copy);
 			}
 
-			if (isThing4(mMode)) {
-				finalAt = unk80.unkC;
+			if (isFixOrDefiniteCameraSpecifyMode(mMode)) {
+				finalAt = mCurrentTarget.mTarget;
 				unk28C  = 0;
 			} else {
-				unk80.unk24 = CLBLinearInbetween<s16>(
-				    unk68->mXAngleMin, unk68->mXAngleMax, unk80.unk28);
-				s16 xAngle = unk80.unk24 + unk68->mOffsetAngleX + unk2AC->unk0;
-				s16 yAngle = unk80.unk26 + unk68->mOffsetAngleY;
+				mCurrentTarget.mPitch = CLBLinearInbetween<s16>(
+				    mCurrentParams->mXAngleMin, mCurrentParams->mXAngleMax,
+				    mCurrentTarget.unk28);
+				s16 xAngle = mCurrentTarget.mPitch
+				             + mCurrentParams->mOffsetAngleX + unk2AC->unk0;
+				s16 yAngle
+				    = mCurrentTarget.mYaw + mCurrentParams->mOffsetAngleY;
 
 				if (gpCameraMario->unkC >= 0.05f) {
 					s16 mAngle = *gpMarioAngleY - 0x8000;
 					f32 m      = MsClamp<f32>(
-                        (f32)unk68->mMaxAddAngleY
+                        (f32)mCurrentParams->mMaxAddAngleY
                             * (0.5f * (1.0f - JMASCos((mAngle - unk258) * 2))),
                         -32766.998f, 32766.998f);
 
 					if ((s16)(mAngle - yAngle) < 0)
 						m = -m;
 
-					s16 addAngleYSpeed = unk2D4->mSLAddAngleYSpeed.get();
+					s16 addAngleYSpeed = mSaveEx->mSLAddAngleYSpeed.get();
 					CLBChaseGeneralConstantSpecifySpeed<s16>(
 					    &unk28E, CLBRoundf<s16>(m), addAngleYSpeed);
 				}
@@ -600,17 +614,19 @@ void CPolarSubCamera::calcPosAndAt_()
 
 				if (mMode == CAMERA_MODE_TOWER_E) {
 					if (gpCameraMario->isMarioRocketing()) {
-						xAngle = unk2D4->mSLLimitMaxAngleX.get() - 0x1770;
+						xAngle = mSaveEx->mSLLimitMaxAngleX.get() - 0x1770;
 					} else if (SMS_GetMarioStatus() == MARIO_STATUS_HIP_DROP) {
 						xAngle = 0x3E8;
 					}
 				}
 
-				finalAt.x = -(unk68->mOffsetLookatXZ * JMASSin(yAngle - 0x4000)
-				              - unk80.unkC.x);
-				finalAt.y = unk80.unkC.y;
-				finalAt.z = -(unk68->mOffsetLookatXZ * JMASCos(yAngle - 0x4000)
-				              - unk80.unkC.z);
+				finalAt.x = -(mCurrentParams->mOffsetLookatXZ
+				                  * JMASSin(yAngle - 0x4000)
+				              - mCurrentTarget.mTarget.x);
+				finalAt.y = mCurrentTarget.mTarget.y;
+				finalAt.z = -(mCurrentParams->mOffsetLookatXZ
+				                  * JMASCos(yAngle - 0x4000)
+				              - mCurrentTarget.mTarget.z);
 
 				if (mMode != CAMERA_MODE_MULTI_PLAYER) {
 					execSecureView_(yAngle, finalAt);
@@ -619,34 +635,39 @@ void CPolarSubCamera::calcPosAndAt_()
 						JGeometry::TVec3<f32> saveAt;
 						saveAt.set(finalAt);
 						f32 dist = CLBLinearInbetween<f32>(
-						    unk68->mDistMin, unk68->mDistMax, unk80.unk28);
+						    mCurrentParams->mDistMin, mCurrentParams->mDistMax,
+						    mCurrentTarget.unk28);
 						s16 cushAng = CLBLinearInbetween<s16>(
-						    unk68->mXAngleMin, unk68->mXAngleMax, unk80.unk28);
+						    mCurrentParams->mXAngleMin,
+						    mCurrentParams->mXAngleMax, mCurrentTarget.unk28);
 						f32 cushion = JMASCos(cushAng);
 
 						JGeometry::TVec3<f32> newPos;
-						CLBPolarToCross(saveAt, newPos, dist + unk6C->unk44,
-						                xAngle, yAngle);
+						CLBPolarToCross(saveAt, newPos,
+						                dist + mInbetween->unk44, xAngle,
+						                yAngle);
 
 						if (isNormalCameraCompletely()) {
-							JGeometry::TVec3<f32> base = unkB4.unk0;
-							base.y                     = unkB4.unk18.y;
+							JGeometry::TVec3<f32> base
+							    = mPreviousTarget.mPosition;
+							base.y = mPreviousTarget.unk18.y;
 							f32 nDist;
 							s16 nVA, nHA;
 							CLBCrossToPolar(saveAt, base, &nDist, &nVA, &nHA);
 							f32 cushDist = cushion * nDist;
 							if (cushDist > cushion * dist) {
 								unk64 |= 0x100;
-								unk80.unk0 = newPos;
+								mCurrentTarget.mPosition = newPos;
 							} else {
 								f32 minDist
 								    = cushion
 								      * (dist
 								         - CLBLinearInbetween<f32>(
-								             unk68->mCushionMin,
-								             unk68->mCushionMax, unk80.unk28));
-								if (minDist < unk2D4->mSLMinCushionXZ.get())
-									minDist = unk2D4->mSLMinCushionXZ.get();
+								             mCurrentParams->mCushionMin,
+								             mCurrentParams->mCushionMax,
+								             mCurrentTarget.unk28));
+								if (minDist < mSaveEx->mSLMinCushionXZ.get())
+									minDist = mSaveEx->mSLMinCushionXZ.get();
 
 								if (fabricatedInline3() && cushDist < minDist) {
 									f32 diff = minDist - cushDist;
@@ -661,37 +682,39 @@ void CPolarSubCamera::calcPosAndAt_()
 								    && isNormalCameraCompletely()
 								    && unk250 > 0.001f) {
 									if (CLBLinearInbetween<f32>(
-									        unk68->mCushionMin,
-									        unk68->mCushionMax, unk80.unk28)
+									        mCurrentParams->mCushionMin,
+									        mCurrentParams->mCushionMax,
+									        mCurrentTarget.unk28)
 									    > 0.001f)
 										useMid = true;
 								}
 								if (useMid) {
-									unk80.unk0.set(base);
+									mCurrentTarget.mPosition.set(base);
 								} else {
-									CLBPolarToCross(saveAt, unk80.unk0, nDist,
-									                nVA, yAngle);
+									CLBPolarToCross(saveAt,
+									                mCurrentTarget.mPosition,
+									                nDist, nVA, yAngle);
 								}
-								unk80.unk0.y = newPos.y;
+								mCurrentTarget.mPosition.y = newPos.y;
 							}
 						} else {
-							unk80.unk0 = newPos;
+							mCurrentTarget.mPosition = newPos;
 						}
 
 						f32 sY = JMASSin(yAngle);
 						f32 cY = JMASCos(yAngle);
 
 						if (fabricatedInline3()) {
-							f32 dx   = gpMarioPos->x - unk80.unk0.x;
-							f32 dz   = gpMarioPos->z - unk80.unk0.z;
-							f32 d    = MsSqrtf(dx * dx + dz * dz);
-							f32 minD = unk2D4->mSLMinCushionXZ.get();
+							f32 dx = gpMarioPos->x - mCurrentTarget.mPosition.x;
+							f32 dz = gpMarioPos->z - mCurrentTarget.mPosition.z;
+							f32 d  = MsSqrtf(dx * dx + dz * dz);
+							f32 minD = mSaveEx->mSLMinCushionXZ.get();
 							f32 mD2
 							    = minD < dist * cushion ? dist * cushion : minD;
 							if (d < mD2) {
 								f32 add = mD2 - d;
-								unk80.unk0.x += sY * add;
-								unk80.unk0.z += cY * add;
+								mCurrentTarget.mPosition.x += sY * add;
+								mCurrentTarget.mPosition.z += cY * add;
 							}
 						}
 
@@ -700,31 +723,37 @@ void CPolarSubCamera::calcPosAndAt_()
 						case CAMERA_MODE_MARE_UNDER_GROUND:
 							break;
 						default:
-							unk80.unk0.x = -(unk2AC->unk4 * sY - unk80.unk0.x);
-							unk80.unk0.z = -(unk2AC->unk4 * cY - unk80.unk0.z);
+							mCurrentTarget.mPosition.x = -(
+							    unk2AC->unk4 * sY - mCurrentTarget.mPosition.x);
+							mCurrentTarget.mPosition.z = -(
+							    unk2AC->unk4 * cY - mCurrentTarget.mPosition.z);
 							break;
 						}
 
-						if (unk6C->isThing() && inputActive) {
+						if (mInbetween->isThing() && inputActive) {
 							JGeometry::TVec3<f32> warpPos;
 							f32 d = CLBLinearInbetween<f32>(
-							    unk68->mDistMin, unk68->mDistMax, unk80.unk28);
-							CLBPolarToCross(unk6C->unk24, warpPos,
-							                d + unk6C->unk44, xAngle, yAngle);
-							unk6C->warpPosAndAt(warpPos, unk6C->unk24);
+							    mCurrentParams->mDistMin,
+							    mCurrentParams->mDistMax, mCurrentTarget.unk28);
+							CLBPolarToCross(mInbetween->unk24, warpPos,
+							                d + mInbetween->unk44, xAngle,
+							                yAngle);
+							mInbetween->warpPosAndAt(warpPos,
+							                         mInbetween->unk24);
 						}
 					}
 				}
-				mPosition.x = unk80.unk0.x;
-				mPosition.z = unk80.unk0.z;
+				mPosition.x = mCurrentTarget.mPosition.x;
+				mPosition.z = mCurrentTarget.mPosition.z;
 				execHeightPan_();
-				finalAt.y = unk80.unk18.y;
+				finalAt.y = mCurrentTarget.unk18.y;
 				Vec posCpy;
 				posCpy = mPosition;
 				if (isNeedWallCheck_() && execWallCheck_(&posCpy)) {
-					CLBCrossToPolar(unk80.unkC, mPosition, &unk80.unk24,
-					                &unk80.unk26);
-					unk80.unk28 = unk80.unk30;
+					CLBCrossToPolar(mCurrentTarget.mTarget, mPosition,
+					                &mCurrentTarget.mPitch,
+					                &mCurrentTarget.mYaw);
+					mCurrentTarget.unk28 = mCurrentTarget.unk30;
 				}
 				if (isNeedRoofCheck_()) {
 					Vec roofCheck = posCpy;
@@ -737,7 +766,8 @@ void CPolarSubCamera::calcPosAndAt_()
 			}
 			JGeometry::TVec3<f32> copy;
 			copy.set(finalAt);
-			unk6C->execCameraInbetween(unk80.unk0, copy, SMS_GetMarioPos());
+			mInbetween->execCameraInbetween(mCurrentTarget.mPosition, copy,
+			                                SMS_GetMarioPos());
 		}
 	}
 
@@ -749,14 +779,15 @@ void CPolarSubCamera::calcPosAndAt_()
 			chaseXZ = 1.0f;
 			chaseY  = 1.0f;
 		} else {
-			chaseXZ = unk68->mPosChaseRateXZ;
-			chaseY  = unk68->mPosChaseRateY;
+			chaseXZ = mCurrentParams->mPosChaseRateXZ;
+			chaseY  = mCurrentParams->mPosChaseRateY;
 			if (mMode == CAMERA_MODE_TOWER_E
 			    && SMS_GetMarioStatus() == MARIO_STATUS_HIP_DROP) {
 				u32 v = gpCameraMario->unk18;
 				if (v < 0x78) {
 					chaseY = CLBLinearInbetween<f32>(
-					    unk68->mPosChaseRateY, 0.0f, (f32)(0x78 - v) / 120.0f);
+					    mCurrentParams->mPosChaseRateY, 0.0f,
+					    (f32)(0x78 - v) / 120.0f);
 				}
 			}
 			if (unk64 & 4) {
@@ -767,7 +798,8 @@ void CPolarSubCamera::calcPosAndAt_()
 				if (v > 20.0f)
 					v = 20.0f;
 				chaseXZ = CLBEaseInInbetween<f32>(
-				    unk68->mPosChaseRateXZ, unk68->mPosChaseRateXZ_C,
+				    mCurrentParams->mPosChaseRateXZ,
+				    mCurrentParams->mPosChaseRateXZ_C,
 				    CLBCalcRatio<f32>(20.0f, 0.0f, v));
 			}
 			if (unk120->mCompSPos[6] != 0.0f) {
@@ -775,21 +807,22 @@ void CPolarSubCamera::calcPosAndAt_()
 				if (v > 20.0f)
 					v = 20.0f;
 				chaseY = CLBEaseInInbetween<f32>(
-				    unk68->mPosChaseRateY, unk68->mPosChaseRateY_C,
+				    mCurrentParams->mPosChaseRateY,
+				    mCurrentParams->mPosChaseRateY_C,
 				    CLBCalcRatio<f32>(20.0f, 0.0f, v));
 			}
 		}
-		const JGeometry::TVec3<f32>& v = unk6C->unk18;
+		const JGeometry::TVec3<f32>& v = mInbetween->unk18;
 		CLBChaseDecrease(&mPosition.x, v.x, chaseXZ, 0.0f);
 		CLBChaseDecrease(&mPosition.y, v.y, chaseY, 0.0f);
 		CLBChaseDecrease(&mPosition.z, v.z, chaseXZ, 0.0f);
 	}
 
 	if (unk7C == 0) {
-		f32 atXZ = unk68->mAtChaseRateXZ;
-		f32 atY  = unk68->mAtChaseRateY;
+		f32 atXZ = mCurrentParams->mAtChaseRateXZ;
+		f32 atY  = mCurrentParams->mAtChaseRateY;
 
-		const JGeometry::TVec3<f32>& v = unk6C->unk24;
+		const JGeometry::TVec3<f32>& v = mInbetween->unk24;
 		CLBChaseDecrease(&mTarget.x, v.x, atXZ, 0.0f);
 		CLBChaseDecrease(&mTarget.y, v.y, atY, 0.0f);
 		CLBChaseDecrease(&mTarget.z, v.z, atXZ, 0.0f);
@@ -803,13 +836,13 @@ void CPolarSubCamera::calcFinalPosAndAt_()
 		if (mMode != CAMERA_MODE_JET_COASTER) {
 			if (!isFixCameraSpecifyMode(mMode) || isNowInbetween()) {
 				if (isHellDeadDemo()) {
-					if (unk256 > unk2D4->mSLLimitMaxAngleX.get()) {
+					if (unk256 > mSaveEx->mSLLimitMaxAngleX.get()) {
 						unk7C = 1;
 						unk64 |= 0x40;
 					}
 				} else {
-					CLBRevisionLookatByAngleX(unk2D4->mSLLimitMinAngleX.get(),
-					                          unk2D4->mSLLimitMaxAngleX.get(),
+					CLBRevisionLookatByAngleX(mSaveEx->mSLLimitMinAngleX.get(),
+					                          mSaveEx->mSLLimitMaxAngleX.get(),
 					                          unk124, &unk148);
 				}
 			}
@@ -848,7 +881,8 @@ void CPolarSubCamera::ctrlGameCamera_()
 	if (isNormalDeadDemo()) {
 		yOffset = 35.0f;
 	} else {
-		yOffset = unk80.unk28 * unk68->mXRotRatioAtOffsetY + unk68->mAtOffsetY;
+		yOffset = mCurrentTarget.unk28 * mCurrentParams->mXRotRatioAtOffsetY
+		          + mCurrentParams->mAtOffsetY;
 		if (SMS_GetMarioStatus() == MARIO_STATUS_KICK_ROOF_ROLL_UP)
 			yOffset += 260.0f;
 		if (mMode == CAMERA_MODE_DEFINITE_D2)
@@ -858,7 +892,7 @@ void CPolarSubCamera::ctrlGameCamera_()
 	gpCameraMario->unk0.set(marPos);
 	gpCameraMario->calcAndSetMarioData();
 
-	unkB4 = unk80;
+	mPreviousTarget = mCurrentTarget;
 
 	if (gpMarDirector->mState == 4 && !(unk64 & 0x400)) {
 		if (isTalkCameraSpecifyMode(mMode)) {
@@ -872,19 +906,19 @@ void CPolarSubCamera::ctrlGameCamera_()
 	}
 
 	TCameraKindParam param;
-	param.copySaveParam(*unk2D8[mMode]);
+	param.copySaveParam(*mSaveKindParam[mMode]);
 
-	if (unk6C->unk4 > 0)
-		unk68->inbetweenData(param, (f32)unk6C->unk4);
+	if (isNowInbetween())
+		mCurrentParams->inbetweenData(param, (f32)mInbetween->getUnk4());
 	else
-		*unk68 = param;
+		*mCurrentParams = param;
 
-	if (unk284 > unk68->mAutoChaseCompleteFrame)
-		unk284 = unk68->mAutoChaseCompleteFrame;
+	if (unk284 > mCurrentParams->mAutoChaseCompleteFrame)
+		unk284 = mCurrentParams->mAutoChaseCompleteFrame;
 
 	if (!isNormalDeadDemo() && !(unk64 & 0x1200))
-		mFovy = unk68->mFovy;
-	mNear = unk68->mNearClip;
+		mFovy = mCurrentParams->mFovy;
+	mNear = mCurrentParams->mNearClip;
 	mFar  = 300000.0f;
 
 	if (isNormalDeadDemo()) {
@@ -898,7 +932,7 @@ void CPolarSubCamera::ctrlGameCamera_()
 			ctrlJetCoasterCamera_();
 			break;
 		default:
-			if (isThing4(mMode))
+			if (isFixOrDefiniteCameraSpecifyMode(mMode))
 				calcPosAndAt_();
 			else if (isLButtonCameraSpecifyMode(mMode))
 				ctrlLButtonCamera_();
@@ -976,9 +1010,15 @@ void CPolarSubCamera::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 }
 
-s16 CPolarSubCamera::getOffsetAngleX() const { return unk68->mOffsetAngleX; }
+s16 CPolarSubCamera::getOffsetAngleX() const
+{
+	return mCurrentParams->mOffsetAngleX;
+}
 
-s16 CPolarSubCamera::getOffsetAngleY() const { return unk68->mOffsetAngleY; }
+s16 CPolarSubCamera::getOffsetAngleY() const
+{
+	return mCurrentParams->mOffsetAngleY;
+}
 
 s16 CPolarSubCamera::getFinalAngleZ() const
 {

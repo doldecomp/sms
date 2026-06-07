@@ -78,8 +78,8 @@ void CPolarSubCamera::ctrlMultiPlayerCamera_()
 {
 	int count = unk2BC->unk1;
 	if (count <= 0) {
-		unk80.unkC.set(unk148);
-		unk80.unk18.set(unk124);
+		mCurrentTarget.mTarget.set(unk148);
+		mCurrentTarget.unk18.set(unk124);
 	} else {
 		JGeometry::TVec3<f32> sum(0.0f, 0.0f, 0.0f);
 		TMultiPlayerData* data = unk2BC->unk4;
@@ -90,7 +90,7 @@ void CPolarSubCamera::ctrlMultiPlayerCamera_()
 
 		sum *= 1.0f / (f32)count;
 
-		sum.y += unk68->mAtOffsetY;
+		sum.y += mCurrentParams->mAtOffsetY;
 
 		f32 maxSqDist       = 0.0f;
 		TMultiPlayerData* a = data;
@@ -103,15 +103,17 @@ void CPolarSubCamera::ctrlMultiPlayerCamera_()
 			}
 		}
 
-		f32 radius = MsClamp(1.5f * MsSqrtf(maxSqDist) + 300.0f,
-		                     unk68->mDistMin, unk68->mDistMax);
+		f32 radius
+		    = MsClamp(1.5f * MsSqrtf(maxSqDist) + 300.0f,
+		              mCurrentParams->mDistMin, mCurrentParams->mDistMax);
 
 		s16 angle = CLBLinearInbetween<s16>(
-		    unk68->mXAngleMin, unk68->mXAngleMax,
-		    CLBCalcRatio<f32>(unk68->mDistMin, unk68->mDistMax, radius));
+		    mCurrentParams->mXAngleMin, mCurrentParams->mXAngleMax,
+		    CLBCalcRatio<f32>(mCurrentParams->mDistMin,
+		                      mCurrentParams->mDistMax, radius));
 
-		unk80.unkC.set(sum);
-		CLBPolarToCross(sum, &unk80.unk18, radius, angle, 0);
+		mCurrentTarget.mTarget.set(sum);
+		CLBPolarToCross(sum, &mCurrentTarget.unk18, radius, angle, 0);
 	}
 
 	calcPosAndAt_();

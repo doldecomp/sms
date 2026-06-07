@@ -30,6 +30,8 @@ public:
 
 	bool isThing() const { return unk44 != 0.0f ? true : false; }
 
+	s32 getUnk4() const { return unk4; }
+
 public:
 	/* 0x0 */ u32 unk0;
 	/* 0x4 */ s32 unk4;
