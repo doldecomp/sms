@@ -88,10 +88,10 @@ bool TMario::isTakeSituation(THitActor* object)
 	if (mInvincibilityFrames > 0)
 		return false;
 
-	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK80000000))
+	if (checkStatusType(MARIO_STATUS_FLAG_UNK80000000))
 		return false; // Airborn?
 
-	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK10000000))
+	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000000))
 		return false;
 
 	if (mStatus == MARIO_STATUS_CATCH)
@@ -134,7 +134,7 @@ bool TMario::canTake(THitActor* object)
 
 BOOL TMario::trampleExec(THitActor* param_1)
 {
-	if (!checkStatusFlag(MARIO_STATUS_FLAG_JUMPING))
+	if (!checkStatusType(MARIO_STATUS_FLAG_JUMPING))
 		return false;
 
 	if (mStatus == MARIO_STATUS_DIVE)
@@ -220,7 +220,7 @@ void TMario::loserExec()
 			mYoshi->kill();
 		}
 
-		if (checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING)) {
+		if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING)) {
 			if (mAir < 1.0f) {
 				changePlayerStatus(MARIO_STATUS_SWIM_DOWN, 0, true);
 			} else {
@@ -316,7 +316,7 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 		return;
 	}
 
-	u32 animOffset1 = checkStatusFlag(MARIO_STATUS_FLAG_JUMPING) ? 1 : 0;
+	u32 animOffset1 = checkStatusType(MARIO_STATUS_FLAG_JUMPING) ? 1 : 0;
 	if (onYoshi()) {
 		animOffset1 = true;
 	}
@@ -352,7 +352,7 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 		if (mStatus == MARIO_STATUS_DIVE)
 			canPlayAnimation = false;
 
-		if (checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
+		if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
 			canPlayAnimation = true;
 
 		if (canPlayAnimation) {
@@ -422,7 +422,7 @@ void TMario::considerTake()
 		check = true;
 
 	if (mStatus == MARIO_STATUS_TAKE
-	    || checkStatusFlag(MARIO_STATUS_FLAG_UNK80000000))
+	    || checkStatusType(MARIO_STATUS_FLAG_UNK80000000))
 		check = true;
 
 	if (mStatus == MARIO_STATUS_PULLING || mStatus == MARIO_STATUS_PULL_JUMP
@@ -447,7 +447,7 @@ void TMario::considerTake()
 		BOOL check2 = false;
 		u32 test    = mStatus & MARIO_STATUS_TYPE_AND_ID_MASK;
 		if ((0x150 <= test && 0x15c >= test) || (0x140 <= test && test <= 0x143)
-		    || checkStatusFlag(MARIO_STATUS_FLAG_UNK1000)
+		    || checkStatusType(MARIO_STATUS_FLAG_UNK1000)
 		    || mStatus == MARIO_STATUS_TAKEN) {
 			check2 = true;
 		}

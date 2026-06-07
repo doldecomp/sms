@@ -6,16 +6,30 @@
 
 class TCameraInbetween {
 public:
+	enum EnumAngleInbetMode {
+
+	};
+
 	TCameraInbetween();
-	void execCameraInbetween(const JGeometry::TVec3<f32>&,
-	                         const JGeometry::TVec3<f32>&,
-	                         const JGeometry::TVec3<f32>&);
+	void calcPolarData_();
+	void warpPosAndAt(const Vec&, const Vec&);
+	void addMoveCameraAndMario(const Vec&);
+	void startCameraInbetween(int);
 	void initCameraInbetween(const JGeometry::TVec3<f32>&,
 	                         const JGeometry::TVec3<f32>&,
 	                         const JGeometry::TVec3<f32>&);
-	void startCameraInbetween(int);
-	void addMoveCameraAndMario(const Vec&);
-	void warpPosAndAt(const Vec&, const Vec&);
+	void execCameraInbetween(const JGeometry::TVec3<f32>&,
+	                         const JGeometry::TVec3<f32>&,
+	                         const JGeometry::TVec3<f32>&);
+	void execInbetweenAndCalcPosAndAt(const JGeometry::TVec3<f32>&,
+	                                  const JGeometry::TVec3<f32>&,
+	                                  const JGeometry::TVec3<f32>&, f32, f32,
+	                                  f32, f32, JGeometry::TVec3<f32>*,
+	                                  JGeometry::TVec3<f32>*);
+	void setInbetModePosAngleY(TCameraInbetween::EnumAngleInbetMode, s16, s16);
+
+	bool isThing() const { return unk44 != 0.0f ? true : false; }
+	bool isThing2() const { return unk4 > 0 ? true : false; }
 
 public:
 	/* 0x0 */ u32 unk0;
@@ -29,7 +43,7 @@ public:
 	/* 0x18 */ JGeometry::TVec3<f32> unk18;
 	/* 0x24 */ JGeometry::TVec3<f32> unk24;
 	/* 0x30 */ JGeometry::TVec3<f32> unk30;
-	/* 0x3C */ u32 unk3C;
+	/* 0x3C */ s32 unk3C;
 	/* 0x40 */ u32 unk40;
 	/* 0x44 */ f32 unk44;
 };

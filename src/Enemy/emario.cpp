@@ -221,7 +221,7 @@ void TEMario::perform(u32 flags, JDrama::TGraphics* gfx)
 		} break;
 
 		case 0x400000bc: {
-			if (!mEnemyMario->checkStatusFlag(0x10000)) {
+			if (!mEnemyMario->checkStatusType(0x10000)) {
 				const f32 dmgRadius = mEnemyMario->getDamageRadius();
 				const f32 atkRadius = mCollisions[i]->getAttackRadius();
 				const f32 d = vecDist(mCollisions[i]->getPosition(), mPosition);

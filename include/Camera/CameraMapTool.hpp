@@ -17,6 +17,7 @@ public:
 
 	// Fabricated
 	f32 getThing() const { return unk18.y; }
+	int getCameraMode() const { return unk24; }
 
 public:
 	/* 0xC */ JGeometry::TVec3<f32> unkC;

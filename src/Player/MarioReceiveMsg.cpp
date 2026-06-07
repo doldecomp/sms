@@ -622,7 +622,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		}
 		if (message == HIT_MESSAGE_UNK3 && !isInvincible()) {
 			onFlag(MARIO_FLAG_GROUND_POUND_SIT_UP);
-			if (!checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)) {
+			if (!checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
 				rumbleStart(0x15, 0x0A);
 			}
 			return TRUE;
@@ -859,7 +859,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 	case 0x080000C0:
 		if (mStatus != MARIO_STATUS_WARP_IN && message == HIT_MESSAGE_TAKE) {
 			mHolder = (TTakeActor*)sender;
-			if (!checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)) {
+			if (!checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
 				setAnimation(ANIM_JUMP, 1.0f);
 				s16 endFrame = getMotionFrameCtrl().getEnd();
 				getMotionFrameCtrl().setFrame((f32)endFrame);

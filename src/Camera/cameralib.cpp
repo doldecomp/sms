@@ -6,19 +6,10 @@
 // TODO: This macro should probably be consolidated elsewhere
 #define ABS(x) ((x) >= 0 ? (x) : -(x))
 
+const JGeometry::TVec3<f32> CLBConstUpVec(0.0f, 1.0f, 0.0f);
+
 static const f32 SHORTANGLE_TO_DEGREES = 0.005493164f; // 360/65536
 static const f32 DEGREES_TO_RADIANS    = 0.017453294f; // pi/180
-
-// TODO: Almost definitely fake, this is probably inlined somewhere else
-static inline f32 fastSqrt(f32 x)
-{
-	if (x > 0.0f) {
-		double guess = __frsqrte((double)x);
-		return 0.5 * guess * (3.0 - x * (guess * guess)) * x;
-	} else {
-		return x;
-	}
-}
 
 // TODO: These are very fake
 static void normalizeInner1(JGeometry::TVec3<f32>& vec) { vec.normalize(); }
@@ -48,139 +39,189 @@ void CLBCalc2DFPos(JGeometry::TVec2<f32>* param_1, const f32 (*param_2)[4],
 
 	if (prod.z == 0.0f) {
 		param_1->x = param_1->y = 10000.0f;
+		return;
+	}
+
+	f32 fVar3 = 1.0f / -prod.z;
+	f32 fVar4 = param_2[2][2] * prod.z + param_2[2][3];
+	fVar4 *= fVar3;
+	if (!param_6 && (fVar4 > 0.0f || fVar4 < -1.0f)) {
+		param_1->x = param_1->y = 10000.0f;
+		return;
+	}
+
+	f32 x = (param_2[0][0] * prod.x + param_2[0][2] * prod.z);
+	f32 y = (param_2[1][1] * prod.y + param_2[1][2] * prod.z);
+	param_1->set(x * fVar3, y * fVar3);
+
+	if (param_5 != nullptr)
+		*param_5 = CLBLinearInbetween<u32>(0, 0xffffff, fVar4 + 1.0f);
+}
+
+BOOL CLBChaseAngleDecrease(s16* value, s16 target, s16 ratio)
+{
+	if (ratio == 0) {
+		*value = target;
 	} else {
-		f32 fVar3 = 1.0f / -prod.z;
-		f32 fVar4 = (param_2[2][2] * prod.z + param_2[2][3]) * fVar3;
-		if (!param_6 && (fVar4 > 0.0f || fVar4 < -1.0f)) {
-			param_1->x = param_1->y = 10000.0f;
-		} else {
-			param_1->set(
-			    fVar3 * (param_2[0][0] * prod.x + param_2[0][2] * prod.z),
-			    fVar3 * (param_2[1][1] * prod.y + param_2[1][2] * prod.z));
-			if (param_5 != nullptr) {
-				*param_5
-				    = CLBLinearInbetween((u32)0, (u32)0xffffff, fVar4 + 1.0f);
-			}
-		}
+		s16 newValue = *value - target;
+		newValue -= newValue / ratio;
+		newValue += target;
+		if (newValue == *value)
+			return false;
+
+		*value = newValue;
+	}
+
+	if (*value == target)
+		return false;
+
+	return true;
+}
+
+BOOL CLBChaseDecrease(f32* dstValue, f32 targetValue, f32 ratio, f32 threshold)
+{
+	if (ratio > 1.0f) {
+		ratio = 1.0f;
+	}
+
+	*dstValue += ratio * (targetValue - *dstValue);
+
+	// You'd think this would just be
+	// "return ABS(*dstValue - targetValue) > ABS(threshold);"
+	// but this gives an exact match
+	if (ABS(*dstValue - targetValue) <= ABS(threshold)) {
+		return false;
+	} else {
+		return true;
 	}
 }
 
-void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
-                        const JGeometry::TVec3<f32>& origin,
-                        const JGeometry::TVec3<f32>& lookat, s16 roll,
-                        f32 near_dist, const JGeometry::TVec2<f32>& near_dims)
+BOOL CLBChaseSpecialDecrease(f32* param_1, f32 param_2, f32 param_3,
+                             f32 param_4)
 {
-	// TODO: This needs matching work, but it's mathematically correct
-
-	JGeometry::TVec3<f32> fVar16;
-	JGeometry::TVec3<f32> fVar19;
-
-	JGeometry::TRotation3<TMtx33f> local_118;
-
-	JGeometry::TRotation3<TMtx33f> local_e4;
-
-	JGeometry::TVec3<f32> local_a8;
-	JGeometry::TVec3<f32> local_90;
-	JGeometry::TVec3<f32> local_80;
-	JGeometry::TVec3<f32> local_74;
-	JGeometry::TVec3<f32> local_68;
-
-	local_a8.sub(lookat, origin);
-	normalizeInner2(local_a8);
-
-	// Center point
-	out_grid[4].scaleAdd(near_dist, origin, local_a8);
-
-	f32 xzDistance = MsSqrtf(((origin.x - lookat.x) * (origin.x - lookat.x)
-	                          + (origin.z - lookat.z) * (origin.z - lookat.z)));
-	out_euler->x   = -matan(xzDistance, origin.y - lookat.y);
-	out_euler->y   = matan(origin.z - lookat.z, origin.x - lookat.x);
-	out_euler->z   = roll;
-
-	local_68.set(0.0f, 1.0f, 0.0f);
-	local_74.set(1.0f, 0.0f, 0.0f);
-
-	// We already did this, so maybe we're calling another function here?
-	local_80.sub(lookat, origin);
-	normalizeInner1(local_80);
-
-	fVar16.z = out_euler->z * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
-
-	// Basically transform the up/right vectors from cam space into world space.
-	// TODO: Definitely inlines...
-
-	{
-		f32 sinX = JMASSin(out_euler->x);
-		f32 cosX = JMASCos(out_euler->x);
-		f32 sinY = JMASSin(out_euler->y);
-		f32 cosY = JMASCos(out_euler->y);
-
-		// This transformation appears to be the following:
-		// [ cosY, 0, sinY]   [1,   0,     0 ]
-		// [   0,  1,   0 ] * [0, cosX, -sinX]
-		// [-sinY, 0, cosY]   [0, sinX,  cosX]
-		local_68.set(local_68.x * cosY
-		                 + (local_68.y * sinX + local_68.z * cosX) * sinY,
-		             local_68.y * cosX - local_68.z * sinX,
-		             -local_68.x * sinY
-		                 + (local_68.y * sinX + local_68.z * cosX) * cosY);
-
-		local_e4.identity33();
-		local_e4.setRotate(local_80, fVar16.z);
-
-		local_e4.mult33(local_68);
+	if (param_3 > 1.0f) {
+		param_3 = 1.0f;
 	}
 
-	{
-		f32 sinX = JMASSin(out_euler->x);
-		f32 cosX = JMASCos(out_euler->x);
-		f32 sinY = JMASSin(out_euler->y);
-		f32 cosY = JMASCos(out_euler->y);
+	f32 fVar2 = param_3 * (param_2 - *param_1);
+	f32 fVar3 = ABS(param_4);
+	f32 fVar1 = ABS(fVar2);
 
-		local_74.set(local_74.x * cosY
-		                 + (local_74.y * sinX + local_74.z * cosX) * sinY,
-		             local_74.y * cosX - local_74.z * sinX,
-		             -local_74.x * sinY
-		                 + (local_74.y * sinX + local_74.z * cosX) * cosY);
-
-		local_118.identity33();
-		local_118.setRotate(local_80, fVar16.z);
-
-		local_118.mult33(local_74);
+	if (fVar1 < fVar3) {
+		fVar2 = param_4;
 	}
 
-	f32 fVar3 = near_dims.y * 0.5f;
-	f32 fVar5 = near_dims.x * 0.5f;
-	f32 fVar6 = -fVar3;
-	f32 fVar7 = -fVar5;
+	return CLBChaseGeneralConstantSpecifySpeed(param_1, param_2, fVar2);
+}
 
-	out_grid[1].scaleAdd(fVar3, out_grid[4], local_68);
-	out_grid[7].scaleAdd(fVar6, out_grid[4], local_68);
-	out_grid[3].scaleAdd(fVar7, out_grid[4], local_74);
-	out_grid[5].scaleAdd(fVar5, out_grid[4], local_74);
+void CLBCrossToPolar(const Vec& origin, const Vec& in, f32* out_radius,
+                     s16* out_pitch, s16* out_yaw)
+{
+	f32 dx = in.x - origin.x;
+	f32 dy = in.y - origin.y;
+	f32 dz = in.z - origin.z;
 
-	// Anything below here could be part of CLBCalcNearFourPos?
+	*out_radius = MsSqrtf(dx * dx + dy * dy + dz * dz);
 
-	fVar16.scale(fVar5, local_74);
-	fVar19.scale(fVar3, local_68);
+	*out_pitch = matan(MsSqrtf(dx * dx + dz * dz), dy);
+	*out_yaw   = matan(dz, dx);
+}
 
-	f32 halfPlaneDiagonal = fastSqrt(fVar3 * fVar3 + fVar5 * fVar5);
+void CLBPolarToCross(const Vec& origin, Vec* out, f32 radius, s16 vAngle,
+                     s16 hAngle)
+{
+	out->x = origin.x + radius * JMASCos(vAngle) * JMASSin(hAngle);
+	out->y = origin.y + radius * JMASSin(vAngle);
+	out->z = origin.z + radius * JMASCos(vAngle) * JMASCos(hAngle);
+}
 
-	local_90.scaleAdd(fVar7, fVar19, local_74);
-	MsVECNormalize(&local_90, &local_90);
+void CLBRevisionLookatByAngleX(s16 vAngleMin, s16 vAngleMax, const Vec& origin,
+                               Vec* inOut)
+{
+	f32 radius;
+	s16 vAngle;
+	s16 hAngle;
 
-	out_grid[0].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
-	local_90.negate();
-	out_grid[8].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
+	CLBCrossToPolar(origin, *inOut, &radius, &vAngle, &hAngle);
+	vAngle = MsClamp(vAngle, vAngleMin, vAngleMax);
+	CLBPolarToCross(origin, inOut, radius, vAngle, hAngle);
+}
 
-	local_90.x = (f32)(fVar16.x + fVar19.x);
-	local_90.y = (f32)(fVar16.y + fVar19.y);
-	local_90.z = (f32)(fVar16.z + fVar19.z);
-	MsVECNormalize(&local_90, &local_90);
+void CLBRotatePosAndUp(s16 sAngle1, s16 sAngle2,
+                       const JGeometry::TVec3<f32>& axis1,
+                       const JGeometry::TVec3<f32>& axis2,
+                       const JGeometry::TVec3<f32>& offset,
+                       JGeometry::TVec3<f32>* param_6,
+                       JGeometry::TVec3<f32>* param_7)
 
-	out_grid[2].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
-	local_90.negate();
-	out_grid[6].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
+{
+	f32 angle1 = sAngle1 * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
+	f32 angle2 = sAngle2 * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
+
+	JGeometry::TVec3<f32> v1 = *param_6 - offset;
+	RotateAboutAxis(axis1, -angle1, &v1);
+	*param_6 = offset + v1;
+	RotateAboutAxis(axis1, -angle1, param_7);
+
+	JGeometry::TVec3<f32> v2 = *param_6 - offset;
+	RotateAboutAxis(axis2, -angle2, &v2);
+	*param_6 = offset + v2;
+	RotateAboutAxis(axis2, -angle2, param_7);
+}
+
+bool CLBIsPointInCube(const Vec& param_1, const Vec& param_2,
+                      const Vec& param_3, const Vec& param_4)
+{
+	// TODO: Why is so much of this copy-pasted from CLBCalcPointInCubeRatio?
+
+	f32 dx = param_1.x - param_2.x;
+	f32 dy = param_1.y - param_2.y;
+	f32 dz = param_1.z - param_2.z;
+
+	bool result = false;
+
+	if (param_3.y != 0.0f || param_3.x != 0.0f || param_3.z != 0.0f) {
+		if (param_3.z != 0.0f) {
+			s16 zAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.z));
+			f32 cosZ   = JMASCos(zAngle);
+			f32 sinZ   = JMASSin(zAngle);
+
+			f32 dySinZ = dy * sinZ;
+
+			dy = dx * sinZ + dy * cosZ;
+			dx = dx * cosZ - dySinZ;
+		}
+
+		if (param_3.y != 0.0f) {
+			s16 yAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.y));
+			f32 cosY   = JMASCos(yAngle);
+			f32 sinY   = JMASSin(yAngle);
+
+			f32 dzSinY = dz * sinY;
+
+			dz = -dx * sinY + dz * cosY;
+			dx = dx * cosY + dzSinY;
+		}
+
+		if (param_3.x != 0.0f) {
+			s16 xAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.x));
+			f32 cosX   = JMASCos(xAngle);
+			f32 sinX   = JMASSin(xAngle);
+
+			f32 dzSinX = dz * sinX;
+
+			dz = dy * sinX + dz * cosX;
+			dy = dy * cosX - dzSinX;
+		}
+	}
+
+	if ((-param_4.x * 0.5f < dx && dx < param_4.x * 0.5f)
+	    && (0.0f < dy && dy < param_4.y)
+	    && (-param_4.z * 0.5f < dz && dz < param_4.z * 0.5f)) {
+		result = true;
+	}
+
+	return result;
 }
 
 void CLBCalcPointInCubeRatio(const Vec& param_1, const Vec& param_2,
@@ -286,168 +327,120 @@ void CLBCalcScaleTranslateMatrix(MtxPtr mtx, const Vec& scale,
 	mtx[2][3] = translate.z;
 }
 
-BOOL CLBChaseAngleDecrease(s16* out, s16 target, s16 invSpeed)
+void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
+                        const JGeometry::TVec3<f32>& origin,
+                        const JGeometry::TVec3<f32>& lookat, s16 roll,
+                        f32 near_dist, const JGeometry::TVec2<f32>& near_dims)
 {
-	if (invSpeed == 0) {
-		*out = target;
-	} else {
-		s16 difference = *out - target;
-		s16 newValue   = difference - difference / invSpeed + target;
-		if (newValue == *out) {
-			// No further calls will update the angle
-			return false;
-		}
-		*out = newValue;
-	}
-	if (*out == target) {
-		// Destination angle reached!
-		return false;
-	}
-	return true;
-}
+	// TODO: This needs matching work, but it's mathematically correct
 
-BOOL CLBChaseDecrease(f32* dstValue, f32 targetValue, f32 ratio, f32 threshold)
-{
-	if (ratio > 1.0f) {
-		ratio = 1.0f;
-	}
+	JGeometry::TVec3<f32> fVar16;
+	JGeometry::TVec3<f32> fVar19;
 
-	*dstValue += ratio * (targetValue - *dstValue);
+	JGeometry::TRotation3<TMtx33f> local_118;
 
-	// You'd think this would just be
-	// "return ABS(*dstValue - targetValue) > ABS(threshold);"
-	// but this gives an exact match
-	if (ABS(*dstValue - targetValue) <= ABS(threshold)) {
-		return false;
-	} else {
-		return true;
-	}
-}
+	JGeometry::TRotation3<TMtx33f> local_e4;
 
-bool CLBChaseSpecialDecrease(f32* param_1, f32 param_2, f32 param_3,
-                             f32 param_4)
-{
-	if (param_3 > 1.0f) {
-		param_3 = 1.0f;
-	}
+	JGeometry::TVec3<f32> local_a8;
+	JGeometry::TVec3<f32> local_90;
+	JGeometry::TVec3<f32> local_80;
+	JGeometry::TVec3<f32> local_74;
+	JGeometry::TVec3<f32> local_68;
 
-	f32 fVar2 = param_3 * (param_2 - *param_1);
-	f32 fVar3 = ABS(param_4);
-	f32 fVar1 = ABS(fVar2);
+	local_a8.sub(lookat, origin);
+	normalizeInner2(local_a8);
 
-	if (fVar1 < fVar3) {
-		fVar2 = param_4;
-	}
+	// Center point
+	out_grid[4].scaleAdd(near_dist, origin, local_a8);
 
-	return CLBChaseGeneralConstantSpecifySpeed(param_1, param_2, fVar2);
-}
+	f32 xzDistance = MsSqrtf(((origin.x - lookat.x) * (origin.x - lookat.x)
+	                          + (origin.z - lookat.z) * (origin.z - lookat.z)));
+	out_euler->x   = -matan(xzDistance, origin.y - lookat.y);
+	out_euler->y   = matan(origin.z - lookat.z, origin.x - lookat.x);
+	out_euler->z   = roll;
 
-void CLBCrossToPolar(const Vec& origin, const Vec& in, f32* outRadius,
-                     s16* outVAngle, s16* outHAngle)
-{
-	f32 dx = in.x - origin.x;
-	f32 dy = in.y - origin.y;
-	f32 dz = in.z - origin.z;
+	local_68.set(0.0f, 1.0f, 0.0f);
+	local_74.set(1.0f, 0.0f, 0.0f);
 
-	*outRadius = fastSqrt(dx * dx + dy * dy + dz * dz);
+	// We already did this, so maybe we're calling another function here?
+	local_80.sub(lookat, origin);
+	normalizeInner1(local_80);
 
-	*outVAngle = matan(fastSqrt(dx * dx + dz * dz), dy);
-	*outHAngle = matan(dz, dx);
-}
+	fVar16.z = out_euler->z * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
 
-bool CLBIsPointInCube(const Vec& param_1, const Vec& param_2,
-                      const Vec& param_3, const Vec& param_4)
-{
-	// TODO: Why is so much of this copy-pasted from CLBCalcPointInCubeRatio?
+	// Basically transform the up/right vectors from cam space into world space.
+	// TODO: Definitely inlines...
 
-	f32 dx = param_1.x - param_2.x;
-	f32 dy = param_1.y - param_2.y;
-	f32 dz = param_1.z - param_2.z;
+	{
+		f32 sinX = JMASSin(out_euler->x);
+		f32 cosX = JMASCos(out_euler->x);
+		f32 sinY = JMASSin(out_euler->y);
+		f32 cosY = JMASCos(out_euler->y);
 
-	bool result = false;
+		// This transformation appears to be the following:
+		// [ cosY, 0, sinY]   [1,   0,     0 ]
+		// [   0,  1,   0 ] * [0, cosX, -sinX]
+		// [-sinY, 0, cosY]   [0, sinX,  cosX]
+		local_68.set(local_68.x * cosY
+		                 + (local_68.y * sinX + local_68.z * cosX) * sinY,
+		             local_68.y * cosX - local_68.z * sinX,
+		             -local_68.x * sinY
+		                 + (local_68.y * sinX + local_68.z * cosX) * cosY);
 
-	if (param_3.y != 0.0f || param_3.x != 0.0f || param_3.z != 0.0f) {
-		if (param_3.z != 0.0f) {
-			s16 zAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.z));
-			f32 cosZ   = JMASCos(zAngle);
-			f32 sinZ   = JMASSin(zAngle);
+		local_e4.identity33();
+		local_e4.setRotate(local_80, fVar16.z);
 
-			f32 dySinZ = dy * sinZ;
-
-			dy = dx * sinZ + dy * cosZ;
-			dx = dx * cosZ - dySinZ;
-		}
-
-		if (param_3.y != 0.0f) {
-			s16 yAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.y));
-			f32 cosY   = JMASCos(yAngle);
-			f32 sinY   = JMASSin(yAngle);
-
-			f32 dzSinY = dz * sinY;
-
-			dz = -dx * sinY + dz * cosY;
-			dx = dx * cosY + dzSinY;
-		}
-
-		if (param_3.x != 0.0f) {
-			s16 xAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.x));
-			f32 cosX   = JMASCos(xAngle);
-			f32 sinX   = JMASSin(xAngle);
-
-			f32 dzSinX = dz * sinX;
-
-			dz = dy * sinX + dz * cosX;
-			dy = dy * cosX - dzSinX;
-		}
+		local_e4.mult33(local_68);
 	}
 
-	if ((-param_4.x * 0.5f < dx && dx < param_4.x * 0.5f)
-	    && (0.0f < dy && dy < param_4.y)
-	    && (-param_4.z * 0.5f < dz && dz < param_4.z * 0.5f)) {
-		result = true;
+	{
+		f32 sinX = JMASSin(out_euler->x);
+		f32 cosX = JMASCos(out_euler->x);
+		f32 sinY = JMASSin(out_euler->y);
+		f32 cosY = JMASCos(out_euler->y);
+
+		local_74.set(local_74.x * cosY
+		                 + (local_74.y * sinX + local_74.z * cosX) * sinY,
+		             local_74.y * cosX - local_74.z * sinX,
+		             -local_74.x * sinY
+		                 + (local_74.y * sinX + local_74.z * cosX) * cosY);
+
+		local_118.identity33();
+		local_118.setRotate(local_80, fVar16.z);
+
+		local_118.mult33(local_74);
 	}
 
-	return result;
-}
+	f32 fVar3 = near_dims.y * 0.5f;
+	f32 fVar5 = near_dims.x * 0.5f;
+	f32 fVar6 = -fVar3;
+	f32 fVar7 = -fVar5;
 
-void CLBPolarToCross(const Vec& origin, Vec* out, f32 radius, s16 vAngle,
-                     s16 hAngle)
-{
-	out->x = origin.x + radius * JMASCos(vAngle) * JMASSin(hAngle);
-	out->y = origin.y + radius * JMASSin(vAngle);
-	out->z = origin.z + radius * JMASCos(vAngle) * JMASCos(hAngle);
-}
+	out_grid[1].scaleAdd(fVar3, out_grid[4], local_68);
+	out_grid[7].scaleAdd(fVar6, out_grid[4], local_68);
+	out_grid[3].scaleAdd(fVar7, out_grid[4], local_74);
+	out_grid[5].scaleAdd(fVar5, out_grid[4], local_74);
 
-void CLBRevisionLookatByAngleX(s16 vAngleMin, s16 vAngleMax, const Vec& origin,
-                               Vec* inOut)
-{
-	f32 radius;
-	s16 vAngle;
-	s16 hAngle;
+	// Anything below here could be part of CLBCalcNearFourPos?
 
-	CLBCrossToPolar(origin, *inOut, &radius, &vAngle, &hAngle);
-	vAngle = MsClamp(vAngle, vAngleMin, vAngleMax);
-	CLBPolarToCross(origin, inOut, radius, vAngle, hAngle);
-}
+	fVar16.scale(fVar5, local_74);
+	fVar19.scale(fVar3, local_68);
 
-void CLBRotatePosAndUp(s16 sAngle1, s16 sAngle2,
-                       const JGeometry::TVec3<f32>& axis1,
-                       const JGeometry::TVec3<f32>& axis2,
-                       const JGeometry::TVec3<f32>& offset,
-                       JGeometry::TVec3<f32>* param_6,
-                       JGeometry::TVec3<f32>* param_7)
+	f32 halfPlaneDiagonal = MsSqrtf(fVar3 * fVar3 + fVar5 * fVar5);
 
-{
-	f32 angle1 = sAngle1 * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
-	f32 angle2 = sAngle2 * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
+	local_90.scaleAdd(fVar7, fVar19, local_74);
+	MsVECNormalize(&local_90, &local_90);
 
-	JGeometry::TVec3<f32> v1 = *param_6 - offset;
-	RotateAboutAxis(axis1, -angle1, &v1);
-	*param_6 = offset + v1;
-	RotateAboutAxis(axis1, -angle1, param_7);
+	out_grid[0].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
+	local_90.negate();
+	out_grid[8].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
 
-	JGeometry::TVec3<f32> v2 = *param_6 - offset;
-	RotateAboutAxis(axis2, -angle2, &v2);
-	*param_6 = offset + v2;
-	RotateAboutAxis(axis2, -angle2, param_7);
+	local_90.x = (f32)(fVar16.x + fVar19.x);
+	local_90.y = (f32)(fVar16.y + fVar19.y);
+	local_90.z = (f32)(fVar16.z + fVar19.z);
+	MsVECNormalize(&local_90, &local_90);
+
+	out_grid[2].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
+	local_90.negate();
+	out_grid[6].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
 }

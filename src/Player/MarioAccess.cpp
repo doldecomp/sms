@@ -51,12 +51,12 @@ TLiveActor* SMS_GetMarioLiveActor() { return (TLiveActor*)gpMarioAddress; }
 
 bool SMS_IsMarioStatusTypeJumping()
 {
-	return gpMarioOriginal->checkStatusFlag(MARIO_STATUS_FLAG_JUMPING);
+	return gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING);
 }
 
 bool SMS_IsMarioStatusTypeSwimming()
 {
-	return gpMarioOriginal->checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING);
+	return gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_SWIMMING);
 }
 
 bool SMS_IsMarioStatusHipDrop()
