@@ -8,7 +8,7 @@
 
 void CPolarSubCamera::warpPosAndAt(const Vec& pos, const Vec& at)
 {
-	if (mMode < 0x49) {
+	if (mMode < CAMERA_MODE_COUNT) {
 		unk68->copySaveParam(*unk2D8[mMode]);
 		killHeightPan_();
 
@@ -28,7 +28,7 @@ void CPolarSubCamera::warpPosAndAt(const Vec& pos, const Vec& at)
 
 void CPolarSubCamera::warpPosAndAt(f32 ratio, s16 yAngle)
 {
-	if (mMode < 0x49) {
+	if (mMode < CAMERA_MODE_COUNT) {
 		unk68->copySaveParam(*unk2D8[mMode]);
 
 		JGeometry::TVec3<f32> usualLookat;

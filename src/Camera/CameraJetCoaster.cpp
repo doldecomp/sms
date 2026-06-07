@@ -109,7 +109,7 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 
 	if (unk2B8->unkC & 1) {
 		if (startedLButton)
-			setUpToLButtonCamera_(0x2E);
+			setUpToLButtonCamera_(CAMERA_MODE_JET_COASTER);
 
 		f32 stickY = -unk120->mCompSPos[5];
 		if (unk7C == 0)

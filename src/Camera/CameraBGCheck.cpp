@@ -78,12 +78,13 @@ void CPolarSubCamera::calcInHouseNo_(bool param_1)
 bool CPolarSubCamera::isNeedGroundCheck_()
 {
 	bool result = true;
-	if (mMode == 0x49
+	if (mMode == CAMERA_MODE_COUNT
 	    || (isLButtonCameraSpecifyMode(mMode) && !isNowInbetween() ? true
 	                                                               : false)
-	    || isRailCameraSpecifyMode(mMode) || mMode == 2 || unk278 != 0) {
+	    || isRailCameraSpecifyMode(mMode) || mMode == CAMERA_MODE_MULTI_PLAYER
+	    || unk278 != 0) {
 		result = false;
-	} else if (mMode != 0x2a
+	} else if (mMode != CAMERA_MODE_SLIDER
 	           && (isNormalCameraSpecifyMode(mMode)
 	               || isTowerCameraSpecifyMode(mMode))) {
 		f32 a     = unk68->mDistMin * JMASSin(unk68->mXAngleMin);
@@ -104,10 +105,11 @@ bool CPolarSubCamera::isNeedRoofCheck_() const
 {
 	bool result = true;
 	// TODO: inline for the ternary thing
-	if (mMode == 0x49
+	if (mMode == CAMERA_MODE_COUNT
 	    || (isLButtonCameraSpecifyMode(mMode) && !isNowInbetween() ? true
 	                                                               : false)
-	    || isRailCameraSpecifyMode(mMode) || mMode == 2 || unk27A != 0)
+	    || isRailCameraSpecifyMode(mMode) || mMode == CAMERA_MODE_MULTI_PLAYER
+	    || unk27A != 0)
 		result = false;
 
 	return result;
@@ -116,10 +118,11 @@ bool CPolarSubCamera::isNeedRoofCheck_() const
 bool CPolarSubCamera::isNeedWallCheck_() const
 {
 	bool result = true;
-	if (mMode == 0x49 || isLButtonCameraSpecifyMode(mMode)
+	if (mMode == CAMERA_MODE_COUNT || isLButtonCameraSpecifyMode(mMode)
 	    || isLButtonCameraInbetween() || isTalkCameraSpecifyMode(mMode)
 	    || isTalkCameraInbetween() || isRailCameraSpecifyMode(mMode)
-	    || mMode == 2 || mMode == 0xd || (unk64 & 4U)) {
+	    || mMode == CAMERA_MODE_MULTI_PLAYER
+	    || mMode == CAMERA_MODE_UNDER_GROUND || (unk64 & 4U)) {
 		result = false;
 	}
 	return result;
@@ -181,7 +184,8 @@ bool CPolarSubCamera::execRoofCheck_(Vec param_1)
 	bool skipCheck           = false;
 	const TBGCheckData* roof = nullptr;
 	f32 roofHeight           = 0.0f;
-	if (SMS_GetMonteVillageAreaInMario() == 0 && gpCamera->mMode != 0x3e) {
+	if (SMS_GetMonteVillageAreaInMario() == 0
+	    && gpCamera->mMode != CAMERA_MODE_MONTE_HANG) {
 		roofHeight = -512.5f;
 		skipCheck  = true;
 	} else {
@@ -207,7 +211,7 @@ bool CPolarSubCamera::execGroundCheck_(Vec param_1)
 	    unk2D4->mSLGroundHeightNormal.get(),
 	    unk2D4->mSLGroundHeightReadyGun.get(), unk2AC->unk8);
 
-	if (mMode == 0x2a) {
+	if (mMode == CAMERA_MODE_SLIDER) {
 		groundChg = groundChg > 200.0f ? groundChg : 200.0f;
 		groundOff = groundOff > 400.0f ? groundOff : 400.0f;
 	}

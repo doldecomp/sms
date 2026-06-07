@@ -43,10 +43,10 @@ const char* cStartCamBckFileName   = "/scene/map/camera/StartCamera.bck";
 
 CPolarSubCamera::CPolarSubCamera(const char* name)
     : JDrama::TLookAtCamera(CLBConstUpVec, name)
-    , mMode(-1)
-    , unk54(-1)
-    , unk58(-1)
-    , unk5C(-1)
+    , mMode(CAMERA_MODE_INVALID)
+    , mPrevMode(CAMERA_MODE_INVALID)
+    , mSavedModeBeforeTalk(CAMERA_MODE_INVALID)
+    , mInitialMode(CAMERA_MODE_INVALID)
     , unk60(nullptr)
     , unk64(0)
     , unk70(nullptr)
@@ -133,15 +133,15 @@ static s32 JetCoasterDemoCallBack(u32 param_1, u32 param_2)
 void CPolarSubCamera::loadAfter()
 {
 	JDrama::TLookAtCamera::loadAfter();
-	unk5C = 0;
+	mInitialMode = CAMERA_MODE_FOLLOW;
 	if (gpMarDirector->getCurrentMap() == 7) {
-		unk5C = 0x14;
+		mInitialMode = CAMERA_MODE_DELFINO;
 	} else if (SMS_isExMap()) {
-		unk5C = 0x26;
+		mInitialMode = CAMERA_MODE_EX_MAP_0;
 	} else if (SMS_isMultiPlayerMap()) {
-		unk5C = 2;
+		mInitialMode = CAMERA_MODE_MULTI_PLAYER;
 	} else if (unk64 & 0x1000) {
-		unk5C = 0x2E;
+		mInitialMode = CAMERA_MODE_JET_COASTER;
 	}
 
 	TCameraMapTool* tool = (TCameraMapTool*)gpCamMapToolTable->searchF(
@@ -150,7 +150,7 @@ void CPolarSubCamera::loadAfter()
 	if (tool)
 		changeCamModeSpecifyCamMapToolAndFrame_(tool, 1);
 	else
-		changeCamModeSpecifyFrame_(unk5C, 1);
+		changeCamModeSpecifyFrame_(mInitialMode, 1);
 
 	unk68->copySaveParam(*unk2D8[mMode]);
 	mFovy = unk68->mFovy;
@@ -170,7 +170,7 @@ void CPolarSubCamera::loadAfter()
 	}
 
 	if ((unk64 & 0x1000) && unk2B8 != nullptr && (unk2B8->unkC & 0x1))
-		setUpToLButtonCamera_(0x2E);
+		setUpToLButtonCamera_(CAMERA_MODE_JET_COASTER);
 
 	unk270 = unk80.unk28;
 	unk80.unk24
@@ -184,7 +184,7 @@ void CPolarSubCamera::loadAfter()
 		fVar1 = unk80.unk28 * unk68->mXRotRatioAtOffsetY + unk68->mAtOffsetY;
 		if (SMS_GetMarioStatus() == MARIO_STATUS_KICK_ROOF_ROLL_UP)
 			fVar1 += 260.0f;
-		if (mMode == 9)
+		if (mMode == CAMERA_MODE_DEFINITE_D2)
 			fVar1 += unk290;
 	}
 
@@ -598,7 +598,7 @@ void CPolarSubCamera::calcPosAndAt_()
 
 				calcSlopeAngleX_(&xAngle);
 
-				if (mMode == 0x41) {
+				if (mMode == CAMERA_MODE_TOWER_E) {
 					if (gpCameraMario->isMarioRocketing()) {
 						xAngle = unk2D4->mSLLimitMaxAngleX.get() - 0x1770;
 					} else if (SMS_GetMarioStatus() == MARIO_STATUS_HIP_DROP) {
@@ -612,7 +612,7 @@ void CPolarSubCamera::calcPosAndAt_()
 				finalAt.z = -(unk68->mOffsetLookatXZ * JMASCos(yAngle - 0x4000)
 				              - unk80.unkC.z);
 
-				if (mMode != 2) {
+				if (mMode != CAMERA_MODE_MULTI_PLAYER) {
 					execSecureView_(yAngle, finalAt);
 
 					if (!isRailCameraSpecifyMode(mMode)) {
@@ -696,8 +696,8 @@ void CPolarSubCamera::calcPosAndAt_()
 						}
 
 						switch (mMode) {
-						case 0xD:
-						case 0x8:
+						case CAMERA_MODE_UNDER_GROUND:
+						case CAMERA_MODE_MARE_UNDER_GROUND:
 							break;
 						default:
 							unk80.unk0.x = -(unk2AC->unk4 * sY - unk80.unk0.x);
@@ -744,14 +744,14 @@ void CPolarSubCamera::calcPosAndAt_()
 	if (unk78 == 0) {
 		f32 chaseXZ;
 		f32 chaseY;
-		if (isRailCameraSpecifyMode(unk54) && isRailCameraSpecifyMode(mMode)
-		    && unk6C->isThing2()) {
+		if (isRailCameraSpecifyMode(mPrevMode) && isRailCameraSpecifyMode(mMode)
+		    && isNowInbetween()) {
 			chaseXZ = 1.0f;
 			chaseY  = 1.0f;
 		} else {
 			chaseXZ = unk68->mPosChaseRateXZ;
 			chaseY  = unk68->mPosChaseRateY;
-			if (mMode == 0x41
+			if (mMode == CAMERA_MODE_TOWER_E
 			    && SMS_GetMarioStatus() == MARIO_STATUS_HIP_DROP) {
 				u32 v = gpCameraMario->unk18;
 				if (v < 0x78) {
@@ -798,10 +798,10 @@ void CPolarSubCamera::calcPosAndAt_()
 
 void CPolarSubCamera::calcFinalPosAndAt_()
 {
-	if (mMode != 0x49) {
+	if (mMode != CAMERA_MODE_COUNT) {
 		gpCameraShake->execShake(unk124, &unk148, &mUp);
-		if (mMode != 0x2E) {
-			if (!isFixCameraSpecifyMode(mMode) || unk6C->isThing2()) {
+		if (mMode != CAMERA_MODE_JET_COASTER) {
+			if (!isFixCameraSpecifyMode(mMode) || isNowInbetween()) {
 				if (isHellDeadDemo()) {
 					if (unk256 > unk2D4->mSLLimitMaxAngleX.get()) {
 						unk7C = 1;
@@ -851,7 +851,7 @@ void CPolarSubCamera::ctrlGameCamera_()
 		yOffset = unk80.unk28 * unk68->mXRotRatioAtOffsetY + unk68->mAtOffsetY;
 		if (SMS_GetMarioStatus() == MARIO_STATUS_KICK_ROOF_ROLL_UP)
 			yOffset += 260.0f;
-		if (mMode == 9)
+		if (mMode == CAMERA_MODE_DEFINITE_D2)
 			yOffset += unk290;
 	}
 	marPos.y += yOffset;
@@ -862,15 +862,8 @@ void CPolarSubCamera::ctrlGameCamera_()
 
 	if (gpMarDirector->mState == 4 && !(unk64 & 0x400)) {
 		if (isTalkCameraSpecifyMode(mMode)) {
-			bool inTalk = true;
-			u8 v        = gpMarDirector->unk124;
-			if (v != 1 && v != 2)
-				inTalk = false;
-			if (!inTalk) {
-				int mode = unk5C;
-				changeCamModeSpecifyFrame_(mode,
-				                           getCameraInbetweenFrame_(mode));
-			}
+			if (!gpMarDirector->isTalkModeNow())
+				changeCamMode_(mInitialMode);
 		} else if (!isSimpleDemoCamera()) {
 			int code;
 			if (controlByCameraCode_(&code))
@@ -898,10 +891,10 @@ void CPolarSubCamera::ctrlGameCamera_()
 		ctrlNormalDeadDemo_();
 	} else {
 		switch (mMode) {
-		case 2:
+		case CAMERA_MODE_MULTI_PLAYER:
 			ctrlMultiPlayerCamera_();
 			break;
-		case 0x2E:
+		case CAMERA_MODE_JET_COASTER:
 			ctrlJetCoasterCamera_();
 			break;
 		default:
@@ -934,7 +927,7 @@ void CPolarSubCamera::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 		mUp.set(CLBConstUpVec);
 		unk254 = 0;
-		if (mMode != 0x49) {
+		if (mMode != CAMERA_MODE_COUNT) {
 			if (SMS_isOptionMap())
 				ctrlOptionCamera_();
 			else
@@ -944,14 +937,14 @@ void CPolarSubCamera::perform(u32 param_1, JDrama::TGraphics* param_2)
 			fabricatedInline2();
 		}
 
-		if (mMode != 0x49) {
+		if (mMode != CAMERA_MODE_COUNT) {
 			C_MTXPerspective(unk16C, mFovy, mAspect, mNear, mFar);
 			C_MTXLookAt(unk1EC, unk124, mUp, unk148);
 		}
 
 		bool flag2 = (param_2->unk0 & 2) ? true : false;
 		if (flag2) {
-			if (mMode != 0x49) {
+			if (mMode != CAMERA_MODE_COUNT) {
 				u16 flags = unk64;
 				if (!(flags & 0x400)) {
 					if (flags & 0x200) {
@@ -963,7 +956,8 @@ void CPolarSubCamera::perform(u32 param_1, JDrama::TGraphics* param_2)
 				}
 			}
 			if (!SMS_isOptionMap()) {
-				if (mMode != 0x2E && mMode != 0x49)
+				if (mMode != CAMERA_MODE_JET_COASTER
+				    && mMode != CAMERA_MODE_COUNT)
 					calcInHouseNo_(false);
 			}
 		}

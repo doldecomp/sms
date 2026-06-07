@@ -7,6 +7,7 @@
 #include <Camera/CameraMarioData.hpp>
 #include <Camera/CameraKindParam.hpp>
 #include <Camera/CameraInbetween.hpp>
+#include <Camera/CameraMode.hpp>
 #include <Camera/cameralib.hpp>
 
 class TBaseNPC;
@@ -132,6 +133,18 @@ public:
 	MtxPtr getUnk16C() { return unk16C; }
 	MtxPtr getUnk1AC() { return unk1AC; }
 
+	// Fabricated name but real inline
+	bool fabricatedInline3()
+	{
+		bool result = true;
+		if (mMode == CAMERA_MODE_UNDER_GROUND
+		    || (mPrevMode == CAMERA_MODE_UNDER_GROUND
+		        && (isNowInbetween() || mMode == CAMERA_MODE_JUMP_CODE)))
+			result = false;
+
+		return result;
+	}
+
 private:
 	// fabricated
 	void fabricatedInline2()
@@ -144,16 +157,6 @@ private:
 		unk270 = MsClamp(
 		    CLBCalcRatio(unk68->mXAngleMin, unk68->mXAngleMax, unk256), 0.0f,
 		    1.0f);
-	}
-	// fabricated
-	bool fabricatedInline3()
-	{
-		bool result = true;
-		if (mMode == 0xD
-		    || (unk54 == 0xD && (unk6C->isThing2() || mMode == 0x13)))
-			result = false;
-
-		return result;
 	}
 
 	void calcSecureViewTarget_(s16, f32*, f32*);
@@ -222,16 +225,16 @@ private:
 			bVar1 = true;
 		} else {
 			switch (mMode) {
-			case 0x8:
-			case 0xd:
-			case 0xf:
-			case 0x12:
-			case 0x13:
-			case 0x2b:
-			case 0x31:
-			case 0x33:
-			case 0x3e:
-			case 0x41:
+			case CAMERA_MODE_MARE_UNDER_GROUND:
+			case CAMERA_MODE_UNDER_GROUND:
+			case CAMERA_MODE_HANG:
+			case CAMERA_MODE_HOVERING:
+			case CAMERA_MODE_JUMP_CODE:
+			case CAMERA_MODE_DIVING:
+			case CAMERA_MODE_SWIMMING:
+			case CAMERA_MODE_LOOK_DOWN:
+			case CAMERA_MODE_MONTE_HANG:
+			case CAMERA_MODE_TOWER_E:
 				bVar1 = true;
 			}
 		}
@@ -279,9 +282,9 @@ private:
 
 public:
 	/* 0x50 */ int mMode;
-	/* 0x54 */ int unk54;
-	/* 0x58 */ u32 unk58;
-	/* 0x5C */ u32 unk5C;
+	/* 0x54 */ int mPrevMode;
+	/* 0x58 */ int mSavedModeBeforeTalk;
+	/* 0x5C */ int mInitialMode;
 
 	struct CameraUnk60Struct {
 

@@ -32,19 +32,19 @@ void CPolarSubCamera::calcTowerCenterPos_(Vec* result)
 
 	const char* name;
 	switch (mMode) {
-	case 0x27:
+	case CAMERA_MODE_TOWER_A:
 		name = sPositionNameTable[0];
 		break;
-	case 0x28:
+	case CAMERA_MODE_TOWER_B:
 		name = sPositionNameTable[1];
 		break;
-	case 0x29:
+	case CAMERA_MODE_TOWER_C:
 		name = sPositionNameTable[2];
 		break;
-	case 0x37:
+	case CAMERA_MODE_TOWER_D:
 		name = sPositionNameTable[3];
 		break;
-	case 0x41:
+	case CAMERA_MODE_TOWER_E:
 		name = sPositionNameTable[4];
 		break;
 	default:
@@ -99,10 +99,10 @@ void CPolarSubCamera::ctrlNormalOrTowerCamera_()
 		} else if (fVar2 != 0.0f) {
 			rotateY_ByStickX_(fVar2);
 			execInvalidAutoChase_();
-		} else if (mMode == 0x39) {
+		} else if (mMode == CAMERA_MODE_BOSS_GESO) {
 			if (isChangeToBossGesoCamera_())
 				calcNoticeTargetYrot_(unk2A8->mPosition);
-		} else if (mMode == 0x43) {
+		} else if (mMode == CAMERA_MODE_CANCAN) {
 			if (isChangeToCancanCamera_())
 				calcNoticeTargetYrot_(
 				    ((TFireWanwanTailHit*)gpMarioOriginal->getHeldObject())
@@ -137,8 +137,8 @@ void CPolarSubCamera::ctrlNormalOrTowerCamera_()
 					f32 fVar2;
 					s16 sVar9 = *gpMarioAngleY - 0x8000;
 					switch (mMode) {
-					case 0x2B:
-					case 0x12:
+					case CAMERA_MODE_DIVING:
+					case CAMERA_MODE_HOVERING:
 						fVar2 = DEG2SHORTANGLE(sVar9 - unk258 < 0
 						                           ? -(sVar9 - unk258)
 						                           : sVar9 - unk258);
@@ -169,8 +169,8 @@ void CPolarSubCamera::ctrlNormalOrTowerCamera_()
 					}
 					f32 fVar4;
 					switch (mMode) {
-					case 0x2B:
-					case 0x12:
+					case CAMERA_MODE_DIVING:
+					case CAMERA_MODE_HOVERING:
 						fVar4 = 100.0f;
 						break;
 					default:
