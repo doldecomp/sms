@@ -163,7 +163,7 @@ void TMario::rippleEffect()
 		SMS_EmitRipplePool(unk220, this);
 	} else {
 		SMS_EmitRippleSea(unk220, this);
-		if ((checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
+		if ((checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
 		    && mForwardVel > mParticleParams.mWaveEmitSpeed.get()) {
 			mWaterWakeAlpha = 0xFF;
 		}
@@ -192,7 +192,7 @@ void TMario::inOutWaterEffect(f32 waterY)
 	if (absVelY > mWaterEffectParams.mJumpIntoMdlEffectSpY.get()) {
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 
-		if (!checkStatusFlag(MARIO_STATUS_FLAG_UNK200))
+		if (!checkStatusType(MARIO_STATUS_FLAG_UNK200))
 			gpMarioParticleManager->emit(PARTICLE_MS_M_TOBIKOMI_A, &pos, 0,
 			                             nullptr);
 
@@ -202,7 +202,7 @@ void TMario::inOutWaterEffect(f32 waterY)
 		return;
 	}
 
-	if (!checkStatusFlag(MARIO_STATUS_FLAG_UNK200))
+	if (!checkStatusType(MARIO_STATUS_FLAG_UNK200))
 		gpMarioParticleManager->emit(PARTICLE_MS_M_TOBIKOMI_S_A, &pos, 0,
 		                             nullptr);
 

@@ -685,7 +685,7 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 			               SHORTANGLE2DEG(gpCamera->unk80.unk24));
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
-		} else if (gpMarioForCallBack->checkStatusFlag(MARIO_FLAG_HAS_FLUDD)
+		} else if (gpMarioForCallBack->checkStatusType(MARIO_FLAG_HAS_FLUDD)
 		           && !gpMarioForCallBack->onYoshi()) {
 			const TWaterGun* gun       = gpMarioForCallBack->mWaterGun;
 			TNozzleBase* currentNozzle = gun->getCurrentNozzle();
@@ -700,7 +700,7 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 		           || gpMarioForCallBack->mAnimationId == TMario::ANIM_RUN2
 		           || gpMarioForCallBack->mAnimationId
 		                      == TMario::ANIM_RIDE_SHELL
-		                  && !gpMarioForCallBack->checkStatusFlag(
+		                  && !gpMarioForCallBack->checkStatusType(
 		                      MARIO_FLAG_FLUDD_EMITTING)) {
 
 			// Ah, i love storing floats, casting them to s16
@@ -1648,7 +1648,7 @@ void TMario::considerWaist()
 	f32 angleChangeRate;
 
 	// Possibly unused get params function?
-	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK10000)) {
+	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
 		if (mGroundPlane->isWaterSurface()) {
 			maxPitch    = mSurfingParamsWaterRed.mWaistPitchMax.get();
 			targetPitch = mSurfingParamsWaterRed.mWaistPitch.get();
@@ -1688,7 +1688,7 @@ void TMario::considerWaist()
 	f32 targetRoll;
 	s16 diffAngle = mFaceAngle.y - unk9C;
 	// Possibly unused get params function?
-	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK10000)) {
+	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
 		if (mGroundPlane->isWaterSurface()) {
 			rollMax    = mSurfingParamsWaterRed.mWaistRollMax.get();
 			targetRoll = mSurfingParamsWaterRed.mWaistRoll.get();
@@ -1752,7 +1752,7 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		return;
 	}
 
-	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK100000)) {
+	if (checkStatusType(MARIO_STATUS_FLAG_UNK100000)) {
 		J3DTransformInfo ti;
 		ti.mScale.x     = 1.0f;
 		ti.mScale.y     = 1.0f;
@@ -1768,7 +1768,7 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		return;
 	}
 
-	if (!checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING)) {
+	if (!checkStatusType(MARIO_STATUS_FLAG_SWIMMING)) {
 		J3DTransformInfo ti;
 		ti.mScale.x     = 1.0f;
 		ti.mScale.y     = 1.0f;
@@ -1878,7 +1878,7 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		J3DGetTranslateRotateMtx(ti, mtx);
 	}
 
-	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK10000)) {
+	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
 		if (mGroundPlane->isWaterSurface()) {
 			// Use water-side surf params
 			s16 rMax = mSurfingParamsWaterRed.mPitchMax.get();
@@ -2129,7 +2129,7 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 		mCap->perform(2, graphics);
 	}
 
-	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK10000)) {
+	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
 		mSurfGesso->getModel()->setBaseTRMtx(mModel->unk8->getBaseTRMtx());
 		mSurfGesso->perform(2, graphics);
 	}
@@ -2210,7 +2210,7 @@ void TMario::calcView(JDrama::TGraphics* graphics)
 		mCap->perform(4, graphics);
 	}
 
-	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK10000)) {
+	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
 		mSurfGesso->perform(4, graphics);
 	}
 
@@ -2234,7 +2234,7 @@ void TMario::entryModels(JDrama::TGraphics* graphics)
 		mCap->perform(0x200, graphics);
 	}
 
-	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK10000)) {
+	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
 		mSurfGesso->setLightData(mGroundPlane, mPosition);
 		mSurfGesso->perform(0x200, graphics);
 	}

@@ -141,7 +141,7 @@ int TMario::checkGroundAtWalking(Vec* v)
 
 	f32 floorY;
 	const TBGCheckData* ground;
-	if (checkStatusFlag(0x10000)) {
+	if (checkStatusType(0x10000)) {
 		floorY = gpMap->checkGround(v->x, v->y + 30.0f, v->z, &ground);
 	} else {
 		checkGroundPlane(v->x, v->y + 30.0f, v->z, &floorY, &ground);
@@ -332,7 +332,7 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 	TBGCheckData* wall1 = checkWallPlane(&pos, 150.0f, unk15C);
 	TBGCheckData* wall2 = checkWallPlane(&pos, 30.0f, unk15C);
 
-	if (checkStatusFlag(0x10000)) {
+	if (checkStatusType(0x10000)) {
 		mFloorPosition.y
 		    = gpMap->checkGround(pos.x, pos.y + 30.0f, pos.z, &mGroundPlane);
 	} else {
@@ -360,7 +360,7 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 		    && mGroundPlane->isGroundPoundToPassThrough())
 			passable = true;
 
-		if (checkStatusFlag(0x10000) && mGroundPlane->isWaterSurface())
+		if (checkStatusType(0x10000) && mGroundPlane->isWaterSurface())
 			passable = false;
 
 		if (passable == 0 && pos.y <= mFloorPosition.y) {

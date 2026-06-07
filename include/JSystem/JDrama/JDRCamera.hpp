@@ -70,7 +70,16 @@ public:
 
 class TLookAtCamera : public TCamera {
 public:
-	TLookAtCamera();
+	// TODO: arguments probably wrong
+	TLookAtCamera(const JGeometry::TVec3<f32>& thing, const char* name)
+	    : TCamera(10.0f, 300000.0, name)
+	{
+		mUp       = thing;
+		mTarget   = thing;
+		mFovy     = 0;
+		mAspect   = 0;
+		mPosition = thing;
+	}
 
 	virtual ~TLookAtCamera() { }
 	virtual void perform(u32, TGraphics*);

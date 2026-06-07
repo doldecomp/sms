@@ -1666,9 +1666,9 @@ BOOL TMario::moveMain()
 	checkEnforceJump();
 	checkReturn();
 
-	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK40000)
-	    && !checkStatusFlag(MARIO_STATUS_OIL_RUN)
-	    && !checkStatusFlag(MARIO_STATUS_OIL_SLIP)) {
+	if (checkStatusType(MARIO_STATUS_FLAG_UNK40000)
+	    && !checkStatusType(MARIO_STATUS_OIL_RUN)
+	    && !checkStatusType(MARIO_STATUS_OIL_SLIP)) {
 		SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP, &mPosition, 0, nullptr,
 		                                0, 4);
 	}

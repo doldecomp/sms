@@ -58,7 +58,7 @@ BOOL TMario::checkPumpEnable()
 	            TNozzleTrigger::DEAD))
 	    && !mWaterGun->isSwitchingToSprayNozzle()
 	    && !mWaterGun->isSwitchingToSecondaryNozzle()
-	    && !checkStatusFlag(MARIO_STATUS_FLAG_UNK1000)) {
+	    && !checkStatusType(MARIO_STATUS_FLAG_UNK1000)) {
 		return TRUE;
 	}
 

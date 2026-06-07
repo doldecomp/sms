@@ -815,7 +815,7 @@ void TYoshi::movement()
 {
 	if (!gpMarDirector->isDemoMode3() && !gpMarDirector->isDemoMode4()
 	    && !gpMarDirector->isTalkModeNow()) {
-		if (!mMario->checkStatusFlag(MARIO_STATUS_FLAG_UNK1000) && unkC > 0) {
+		if (!mMario->checkStatusType(MARIO_STATUS_FLAG_UNK1000) && unkC > 0) {
 			unkC -= 1;
 		}
 	}

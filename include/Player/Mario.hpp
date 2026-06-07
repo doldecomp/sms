@@ -1193,7 +1193,10 @@ public:
 	void animSound();
 	void soundMovement();
 	void startVoiceYoshi(u32);
-	void checkStatusType(s32) const;
+	bool checkStatusType(s32 flag) const
+	{
+		return mStatus & flag ? true : false;
+	}
 
 	// fabricated
 	f32 getIntendedMag() const { return mIntendedMag; }
@@ -1210,7 +1213,7 @@ public:
 	{
 		if (checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA))
 			return true;
-		if (checkStatusFlag(MARIO_STATUS_FLAG_JUMPING))
+		if (checkStatusType(MARIO_STATUS_FLAG_JUMPING))
 			return false;
 		return true;
 	}
@@ -1245,14 +1248,18 @@ public:
 	}
 
 	// Fabricated
-	bool checkStatusFlag(u32 actionFlag) const
+	int getPreviousStatus() const { return mPrevStatus; }
+
+	// Fabricated
+	bool isSleeping() const
 	{
-		return mStatus & actionFlag ? true : false;
+		bool sleepKind = true;
+		if (mStatus != MARIO_STATUS_SLEEPY && mStatus != MARIO_STATUS_SLEEP)
+			sleepKind = false;
+		return sleepKind;
 	}
 
-	// TODO: rename and sort out the status category checks
-
-	// fabricated
+	// Fabricated
 	bool isRoofing() const
 	{
 		if ((mStatus & MARIO_STATUS_TYPE_AND_ID_MASK)

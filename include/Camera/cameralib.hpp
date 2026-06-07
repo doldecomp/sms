@@ -1,10 +1,12 @@
 #ifndef CAMERA_CAMERALIB_HPP
 #define CAMERA_CAMERALIB_HPP
 
-#include <System/Resolution.hpp>
+#include <MarioUtil/MathUtil.hpp>
 #include <JSystem/JGeometry.hpp>
 
 extern f32 SMSGetAnmFrameRate(); // avoid including Application.hpp
+
+extern const JGeometry::TVec3<f32> CLBConstUpVec;
 
 template <class T>
 void CLBChaseConstantSpecifyFrame(T* param_1, T param_2, T param_3)
@@ -96,6 +98,9 @@ template <class T> f32 CLBCalcRatio(T a, T b, T c)
 template <class T> T CLBSquared(T v) { return v * v; }
 
 // fabricated
+template <class T> inline T CLBAbs(T v) { return v >= 0 ? v : -v; }
+
+// fabricated
 inline s16 CLBDegToShortAngle(f32 deg)
 {
 	return CLBRoundf<s16>(deg * (65536.0f / 360.0f));
@@ -183,12 +188,12 @@ void CLBCalcScaleTranslateMatrix(MtxPtr mtx, const Vec& scale,
 /**
  * @brief Moves a SHORTANGLE towards another SHORTANGLE by a specified ratio.
  *
- * @param out the value to be modified
+ * @param value the value to be modified
  * @param target the target value to approach
- * @param invSpeed a constant inversely proportional to the rate of change
- * @return whether another iteration may refine the angle even further
+ * @param ratio the ratio by which value approaches target
+ * @return whether more calls are needed to reach the target
  */
-BOOL CLBChaseAngleDecrease(s16* out, s16 target, s16 invSpeed);
+BOOL CLBChaseAngleDecrease(s16* value, s16 target, s16 ratio);
 
 /**
  * @brief Moves dstValue toward targetValue by a fraction defined by ratio.
@@ -210,19 +215,38 @@ inline void CLBChaseDecrease(Vec* dstValue, const Vec& targetValue, f32 ratio,
 	CLBChaseDecrease(&dstValue->z, targetValue.z, ratio, threshold);
 }
 
-bool CLBChaseSpecialDecrease(f32*, f32, f32, f32);
+// Fabricated overload
+inline void CLBChaseDecrease(Vec* dstValue, const Vec& targetValue, f32 ratioX,
+                             f32 ratioY, f32 ratioZ, f32 threshold)
+{
+	CLBChaseDecrease(&dstValue->x, targetValue.x, ratioX, threshold);
+	CLBChaseDecrease(&dstValue->y, targetValue.y, ratioY, threshold);
+	CLBChaseDecrease(&dstValue->z, targetValue.z, ratioZ, threshold);
+}
+
+BOOL CLBChaseSpecialDecrease(f32*, f32, f32, f32);
 
 /**
  * @brief Converts Cartesian coordinates to spherical coordinates.
  *
- * @param origin the point to use as the origin
- * @param in the input vector
- * @param outRadius the output radius
- * @param outVAngle the output vertical angle
- * @param outHAngle the output horizontal angle
+ * @param origin the origin point
+ * @param in cartesian coordinates of the radius-vector of the input point
+ * @param out_radius distance from origin of the point
+ * @param out_pitch first polar angle
+ * @param out_yaw second polar angle
  */
-void CLBCrossToPolar(const Vec& origin, const Vec& in, f32* outRadius,
-                     s16* outVAngle, s16* outHAngle);
+void CLBCrossToPolar(const Vec& origin, const Vec& in, f32* out_radius,
+                     s16* pitch, s16* yaw);
+
+inline void CLBCrossToPolar(const Vec& origin, const Vec& in, s16* out_pitch,
+                            s16* out_yaw)
+{
+	f32 dx = in.x - origin.x;
+	f32 dz = in.z - origin.z;
+
+	*out_pitch = matan(MsSqrtf(dx * dx + dz * dz), in.y - origin.y);
+	*out_yaw   = matan(in.z - origin.z, in.x - origin.x);
+}
 
 bool CLBIsPointInCube(const Vec&, const Vec&, const Vec&, const Vec&);
 
@@ -257,6 +281,10 @@ void CLBRotatePosAndUp(s16, s16, const JGeometry::TVec3<f32>&,
 inline void CLBScreenFPosToSPos(JGeometry::TVec2<s16>* out,
                                 const JGeometry::TVec2<f32>& in)
 {
+	// can't include Resolution.hpp because of troubles with MapDraw.cpp
+	extern s16 SMSGetGameRenderHeight();
+	extern s16 SMSGetGameRenderWidth();
+
 	f32 x = in.x;
 	// TODO: definitely more inlines but I couldn't get it to work out...
 	if (x < -1.0f || 1.0f < x)

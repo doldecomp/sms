@@ -76,7 +76,7 @@ bool TMario::isInvincible() const
 
 	if (gpMarDirector->isDemoMode3() || gpMarDirector->isDemoMode4()
 	    || gpMarDirector->isTalkModeNow()
-	    || checkStatusFlag(MARIO_STATUS_FLAG_UNK1000))
+	    || checkStatusType(MARIO_STATUS_FLAG_UNK1000))
 		return true;
 
 	return false;
@@ -161,7 +161,7 @@ void TMario::warpRequest(const JGeometry::TVec3<f32>& pos, f32 angle)
 
 void TMario::flowMove(const JGeometry::TVec3<f32>& flow)
 {
-	if (checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING) == true) {
+	if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING) == true) {
 		mPosition.x += flow.x;
 		mPosition.y += flow.y;
 		mPosition.z += flow.z;
@@ -716,7 +716,7 @@ int TMario::changePlayerStatus(u32 status, u32 arg, bool force)
 	if (!force) {
 		if (status == mStatus)
 			return 0;
-		if (checkStatusFlag(MARIO_STATUS_FLAG_UNK1000))
+		if (checkStatusType(MARIO_STATUS_FLAG_UNK1000))
 			return 0;
 	}
 
@@ -1179,7 +1179,7 @@ void TMario::thinkDirty()
 
 void TMario::thinkHeight()
 {
-	if (checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)) {
+	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
 		f32 height = mPosition.y - mFloorPosition.y;
 		if (unk36C < height)
 			unk36C = height;
@@ -1516,7 +1516,7 @@ void TMario::checkController(JDrama::TGraphics*)
 					           == TNozzleTrigger::ACTIVE) {
 						onFlag(MARIO_FLAG_FLUDD_EMITTING);
 						startSoundActor(MSD_SE_PO_SNIPER_TRIGGER);
-						if (checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
+						if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
 							changePlayerStatus(MARIO_STATUS_SWIM_PADDLE, 0,
 							                   false);
 					}
@@ -1577,7 +1577,7 @@ void TMario::checkController(JDrama::TGraphics*)
 
 	if ((mGamePad->mEnabledFrameMeaning & 0x2000)
 	    || (unk108->mFrameInput & 0x40)) {
-		if (checkStatusFlag(MARIO_STATUS_FLAG_JUMPING) == true)
+		if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) == true)
 			mInput |= 0x8000;
 	}
 
@@ -1695,7 +1695,7 @@ BOOL TMario::checkGroundPlane(f32 x, f32 y, f32 z, f32* outHeight,
 
 void TMario::checkCurrentPlane()
 {
-	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK1000))
+	if (checkStatusType(MARIO_STATUS_FLAG_UNK1000))
 		return;
 
 	if (onYoshi())
@@ -1756,7 +1756,7 @@ void TMario::checkCurrentPlane()
 	                                    mPosition.z, &mRoofPlane);
 	if (!isInvincible()) {
 		if ((isTouchGround4cm()) && mGroundPlane->isThing5()
-		    && !checkStatusFlag(MARIO_STATUS_FLAG_UNK10000)) {
+		    && !checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
 
 			damageExec(&mFloorHitActor, mGroundPlane->getData());
 		}
@@ -1795,7 +1795,7 @@ void TMario::checkRideMovement()
 
 	const TLiveActor* groundActor = mGroundPlane->getActor();
 
-	if (wall != nullptr && !checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)
+	if (wall != nullptr && !checkStatusType(MARIO_STATUS_FLAG_JUMPING)
 	    && (isTouchGround4cm()))
 		actor = groundActor;
 
@@ -1803,7 +1803,7 @@ void TMario::checkRideMovement()
 	    && (mStatusState == 2 || mStatusState == 3))
 		actor = groundActor;
 
-	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK20000000) && wall != nullptr
+	if (checkStatusType(MARIO_STATUS_FLAG_UNK20000000) && wall != nullptr
 	    && wall->getActor() != nullptr)
 		actor = wall->getActor();
 
@@ -2018,14 +2018,14 @@ void TMario::thinkSituation()
 			mPosition.x = mOptionParams.mXMax.get();
 	}
 
-	if (!checkStatusFlag(MARIO_STATUS_FLAG_JUMPING))
+	if (!checkStatusType(MARIO_STATUS_FLAG_JUMPING))
 		unk2BC = mPosition.y;
 
 	calcGroundMtx(mPosition);
 
 	if (gpMarDirector->isDemoMode3() || gpMarDirector->isDemoMode4()
 	    || gpMarDirector->isTalkModeNow()
-	    || checkStatusFlag(MARIO_STATUS_FLAG_UNK1000))
+	    || checkStatusType(MARIO_STATUS_FLAG_UNK1000))
 		onFlag(MARIO_FLAG_NPC_TALKING);
 	else
 		offFlag(MARIO_FLAG_NPC_TALKING);
@@ -2033,7 +2033,7 @@ void TMario::thinkSituation()
 
 void TMario::thinkWaterSurface()
 {
-	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK10000))
+	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000))
 		return;
 
 	BOOL wasInWater = checkFlag(MARIO_FLAG_IN_ANY_WATER);
@@ -2096,7 +2096,7 @@ void TMario::thinkWaterSurface()
 
 			u32 statusId  = mStatus & MARIO_STATUS_TYPE_AND_ID_MASK;
 			bool canEnter = true;
-			if (checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
+			if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
 				canEnter = false;
 			if (isFencing())
 				canEnter = false;
@@ -2111,7 +2111,7 @@ void TMario::thinkWaterSurface()
 				mForwardVel *= mSwimParams.mStartVMult.get();
 				mVel.y *= mSwimParams.mStartVYMult.get();
 
-				if (checkStatusFlag(MARIO_FLAG_IN_WATER)) {
+				if (checkStatusType(MARIO_FLAG_IN_WATER)) {
 					changePlayerStatus(MARIO_STATUS_SWIM_P_DAMAGE, 0, true);
 				} else if (checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
 					changePlayerStatus(MARIO_STATUS_SWIM_PADDLE, 0, true);
@@ -2229,7 +2229,7 @@ void TMario::thinkParams()
 		if (checkFlag(MARIO_FLAG_IN_ANY_WATER)) {
 			if (!isUnderWater()) {
 				if (mWaterFloor->isThing5() && mWaterFloor->isThing5()
-				    && !checkStatusFlag(MARIO_STATUS_FLAG_UNK10000)) {
+				    && !checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
 					floorDamageExec(getDmgMapCode(mWaterFloor->getData()));
 				}
 			}
@@ -2364,7 +2364,7 @@ void TMario::checkWet()
 	if (mFloorPosition.z > mPosition.y)
 		return;
 
-	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK200))
+	if (checkStatusType(MARIO_STATUS_FLAG_UNK200))
 		return;
 
 	if (mWetWaterParticleTimer & 7)

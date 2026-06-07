@@ -3,14 +3,17 @@
 
 #include <JSystem/JDrama/JDRActor.hpp>
 #include <JSystem/JDrama/JDRCamera.hpp>
-#include <dolphin/mtx.h>
+#include <Player/MarioAccess.hpp>
+#include <Camera/CameraMarioData.hpp>
+#include <Camera/CameraKindParam.hpp>
+#include <Camera/CameraInbetween.hpp>
+#include <Camera/cameralib.hpp>
 
 class TBaseNPC;
 class TCameraMapTool;
 class TMarioGamePad;
 class TCameraInbetween;
 class TCameraKindParam;
-class TBossGesso;
 class TCameraBck;
 class TCamSaveKindParam;
 class TCameraJetCoaster;
@@ -47,7 +50,10 @@ public:
 
 class CPolarSubCamera : public JDrama::TLookAtCamera {
 public:
-	enum EnumNoticeOnOffMode { };
+	enum EnumNoticeOnOffMode {
+		NOTICE_MODE_UNK0 = 0,
+		NOTICE_MODE_UNK2 = 2,
+	};
 
 	CPolarSubCamera(const char* = "<CPolarCamera>");
 
@@ -127,6 +133,29 @@ public:
 	MtxPtr getUnk1AC() { return unk1AC; }
 
 private:
+	// fabricated
+	void fabricatedInline2()
+	{
+		CLBCrossToPolar(mTarget, mPosition, &unk256, &unk258);
+
+		unk25C.set(unk148.x - unk124.x, unk148.y - unk124.y,
+		           unk148.z - unk124.z);
+		unk25C.normalize();
+		unk270 = MsClamp(
+		    CLBCalcRatio(unk68->mXAngleMin, unk68->mXAngleMax, unk256), 0.0f,
+		    1.0f);
+	}
+	// fabricated
+	bool fabricatedInline3()
+	{
+		bool result = true;
+		if (mMode == 0xD
+		    || (unk54 == 0xD && (unk6C->isThing2() || mMode == 0x13)))
+			result = false;
+
+		return result;
+	}
+
 	void calcSecureViewTarget_(s16, f32*, f32*);
 	void execSecureView_(s16, Vec*);
 
@@ -142,7 +171,7 @@ private:
 
 	s16 calcAngleXFromXRotRatio_() const;
 	f32 calcDistFromXRotRatio_() const;
-	void calcNowTargetFromPosAndAt_(const Vec&, const Vec&);
+	void calcNowTargetFromPosAndAt_(const Vec& pos, const Vec& at);
 	void rotateX_ByStickY_(f32);
 	void rotateY_ByStickX_(f32);
 	void offMoveApproach_();
@@ -175,15 +204,58 @@ private:
 	void getNozzleTopPos_(JGeometry::TVec3<f32>*) const;
 	void ctrlLButtonCamera_();
 	void killHeightPanWhenChangeCamMode_();
-	void isNotHeightPanCamMode_() const;
 	void execHeightPan_();
 	void killHeightPan_();
+
+	bool isNotHeightPanCamMode_() const
+	{
+		(void)0;
+		(void)0;
+		(void)0;
+		(void)0;
+		(void)0;
+		(void)0;
+		(void)0;
+		bool bVar1 = false;
+		if (isLButtonCameraSpecifyMode(mMode)
+		    || isRailCameraSpecifyMode(mMode)) {
+			bVar1 = true;
+		} else {
+			switch (mMode) {
+			case 0x8:
+			case 0xd:
+			case 0xf:
+			case 0x12:
+			case 0x13:
+			case 0x2b:
+			case 0x31:
+			case 0x33:
+			case 0x3e:
+			case 0x41:
+				bVar1 = true;
+			}
+		}
+		return bVar1;
+	}
+	bool fabricatedInline()
+	{
+		bool result = false;
+		if (!isNotHeightPanCamMode_() && !SMS_IsMarioTouchGround4cm()
+		    && !gpCameraMario->isMarioGoDown() && !SMS_IsMarioOnWire()
+		    && SMS_GetMarioStatus() != MARIO_STATUS_KICK_ROOF_ROLL_UP)
+			result = true;
+		return result;
+	}
 
 	bool controlByCameraCode_(int*);
 	void getLButtonCameraModeByNozzle_();
 	s16 getCameraInbetweenFrame_(int);
 	void setUpToLButtonCamera_(int);
 	void setUpFromLButtonCamera_();
+	void changeCamMode_(int mode)
+	{
+		changeCamModeSpecifyFrame_(mode, getCameraInbetweenFrame_(mode));
+	}
 	void changeCamModeSub_(int, int, bool);
 	void changeCamModeSpecifyFrame_(int, int);
 	void changeCamModeSpecifyCamMapTool_(const TCameraMapTool*);
@@ -210,12 +282,54 @@ public:
 	/* 0x54 */ int unk54;
 	/* 0x58 */ u32 unk58;
 	/* 0x5C */ u32 unk5C;
-	/* 0x60 */ u32 unk60;
+
+	struct CameraUnk60Struct {
+
+		CameraUnk60Struct(int count)
+		    : unk0(count)
+		    , unk4(0)
+		    , unk8(nullptr)
+		{
+			unk8 = new int[unk0];
+		}
+
+		int getThing() const
+		{
+			if (unk4 <= 0)
+				return (int)unk8; // what
+
+			return unk8[unk4 - 1];
+		}
+
+		void popThing()
+		{
+			if (unk4 > 0)
+				--unk4;
+		}
+
+		void doStuff(const int& param_1)
+		{
+			if (unk4 >= unk0) {
+				for (int i = 0; i < unk0 - 1; ++i)
+					unk8[i] = unk8[i + 1];
+				unk8[unk0 - 1] = param_1;
+			} else {
+				unk8[unk4] = param_1;
+				++unk4;
+			}
+		}
+
+		/* 0x0 */ int unk0;
+		/* 0x4 */ int unk4;
+		/* 0x8 */ int* unk8;
+	};
+
+	/* 0x60 */ CameraUnk60Struct* unk60;
 	/* 0x64 */ u16 unk64;
 	/* 0x68 */ TCameraKindParam* unk68;
 	/* 0x6C */ TCameraInbetween* unk6C;
-	/* 0x70 */ TCameraMapTool* unk70;
-	/* 0x74 */ u32 unk74;
+	/* 0x70 */ const TCameraMapTool* unk70;
+	/* 0x74 */ const TCameraMapTool* unk74;
 	/* 0x78 */ u32 unk78;
 	/* 0x7C */ u32 unk7C;
 	/* 0x80 */ TTargetCamera unk80;
@@ -224,10 +338,10 @@ public:
 	/* 0x11C */ u32 unk11C;
 	/* 0x120 */ TMarioGamePad* unk120;
 	/* 0x124 */ JGeometry::TVec3<f32> unk124;
-	/* 0x130 */ Vec unk130;
+	/* 0x130 */ JGeometry::TVec3<f32> unk130;
 	/* 0x13C */ JGeometry::TVec3<f32> unk13C;
 	/* 0x148 */ JGeometry::TVec3<f32> unk148;
-	/* 0x154 */ Vec unk154;
+	/* 0x154 */ JGeometry::TVec3<f32> unk154;
 	/* 0x160 */ JGeometry::TVec3<f32> unk160;
 	/* 0x16C */ Mtx44 unk16C;
 	/* 0x1AC */ Mtx44 unk1AC;
@@ -238,7 +352,7 @@ public:
 	/* 0x254 */ s16 unk254;
 	/* 0x256 */ s16 unk256;
 	/* 0x258 */ s16 unk258;
-	/* 0x25C */ Vec unk25C;
+	/* 0x25C */ JGeometry::TVec3<f32> unk25C;
 	/* 0x268 */ f32 unk268;
 	/* 0x26C */ f32 unk26C;
 	/* 0x270 */ f32 unk270;
@@ -249,7 +363,7 @@ public:
 	/* 0x27C */ u16 unk27C;
 	/* 0x27E */ u16 unk27E;
 	/* 0x280 */ u16 unk280;
-	/* 0x282 */ s16 unk282;
+	/* 0x282 */ u16 unk282;
 	/* 0x284 */ s32 unk284;
 	/* 0x288 */ f32 unk288;
 	/* 0x28C */ s16 unk28C;
@@ -263,6 +377,16 @@ public:
 	/* 0x2A8 */ TLiveActor* unk2A8;
 
 	struct CameraUnk2ACStruct {
+		CameraUnk2ACStruct() { reset(); }
+
+		void reset()
+		{
+			unk0 = 0;
+			unk4 = 0.0f;
+			unk8 = 0.0f;
+			unkC = 0.0f;
+		}
+
 		/* 0x0 */ s16 unk0;
 		/* 0x4 */ f32 unk4;
 		/* 0x8 */ f32 unk8;
@@ -273,6 +397,15 @@ public:
 	/* 0x2B0 */ TCameraBck* unk2B0;
 
 	struct CameraUnk2B4Struct {
+		CameraUnk2B4Struct()
+		    : unk0(nullptr)
+		    , unk4(0.0f)
+		    , unk8(nullptr)
+		    , unkC(0)
+		    , unk10(0)
+		    , unk14(0)
+		{
+		}
 
 		void setThing(int value)
 		{

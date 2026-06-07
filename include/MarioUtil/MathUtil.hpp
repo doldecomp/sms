@@ -44,7 +44,7 @@ void MsMtxSetTRS(MtxPtr result, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h,
 
 // Fabricated AND wrong!
 inline void MsMtxSetTRS(MtxPtr result, f32 x, f32 y, f32 z, s16 r, s16 p, s16 h,
-                 f32 sx, f32 sy, f32 sz)
+                        f32 sx, f32 sy, f32 sz)
 {
 	MsMtxSetTRS(result, x, y, z, r * (360.0f / 65536.0f),
 	            p * (360.0f / 65536.0f), h * (360.0f / 65536.0f), sx, sy, sz);

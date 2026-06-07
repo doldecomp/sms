@@ -14,7 +14,7 @@
 
 void TMario::hitNormal(THitActor* actor)
 {
-	if (checkStatusFlag(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
+	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
 	    && actor->mPosition.y < mPosition.y) {
 		if (mStatus == MARIO_STATUS_HIP_DROP) {
 			if (actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP)) {
@@ -63,7 +63,7 @@ void TMario::hitHipDrop(THitActor* actor)
 
 void TMario::hitPushup(THitActor* actor)
 {
-	if (checkStatusFlag(MARIO_STATUS_FLAG_JUMPING) && mVel.y > 0.0f)
+	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && mVel.y > 0.0f)
 		actor->receiveMessage(this, HIT_MESSAGE_UNK2);
 	hitNormal(actor);
 }
@@ -81,8 +81,8 @@ void TMario::hitMario(THitActor* actor)
 void TMario::hitNpc(THitActor* actor)
 {
 	if (!checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)
-	    && !checkStatusFlag(MARIO_FLAG_HELMET)
-	    && checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)
+	    && !checkStatusType(MARIO_FLAG_HELMET)
+	    && checkStatusType(MARIO_STATUS_FLAG_JUMPING)
 	    && mStatus != MARIO_STATUS_HIP_DROP && mVel.y < 0.0f
 	    && actor->mPosition.y < mPosition.y
 	    && ((TBaseNPC*)actor)->isBeTrampledNpc()) {
@@ -115,7 +115,7 @@ void TMario::hitWantToTake(THitActor* actor)
 void TMario::hitBarrel(THitActor* actor)
 {
 	hitWantToTake(actor);
-	if (checkStatusFlag(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
+	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
 	    && actor->mPosition.y < mPosition.y
 	    && mStatus == MARIO_STATUS_HIP_DROP) {
 		actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
@@ -137,7 +137,7 @@ void TMario::hitJumpBase(THitActor* actor)
 
 void TMario::hitBrakable(THitActor* actor)
 {
-	if (checkStatusFlag(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
+	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
 	    && actor->mPosition.y < mPosition.y
 	    && mStatus == MARIO_STATUS_HIP_DROP) {
 		actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
@@ -146,7 +146,7 @@ void TMario::hitBrakable(THitActor* actor)
 
 void TMario::hangPole(THitActor* actor)
 {
-	if (!checkStatusFlag(MARIO_STATUS_FLAG_UNK100000)) {
+	if (!checkStatusType(MARIO_STATUS_FLAG_UNK100000)) {
 		u8 canHang = 0;
 		if (mHeldObject == nullptr && !onYoshi())
 			canHang = 1;
@@ -159,7 +159,7 @@ void TMario::hangPole(THitActor* actor)
 			if (statLo >= 0x80 && statLo <= 0x9F) {
 				inHangStatus = 1;
 			} else {
-				if (checkStatusFlag(MARIO_STATUS_FLAG_UNK200000))
+				if (checkStatusType(MARIO_STATUS_FLAG_UNK200000))
 					inHangStatus = 1;
 				else
 					inHangStatus = 0;
@@ -212,7 +212,7 @@ void TMario::hangPole(THitActor* actor)
 void TMario::hitPickUpEnemy(THitActor* actor)
 {
 	if (((TSmallEnemy*)actor)->unk164 != 0
-	    && !checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)) {
+	    && !checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
 		hitWantToTake(actor);
 		return;
 	}
@@ -238,7 +238,7 @@ void TMario::hitNoKeepPull(THitActor* actor)
 
 void TMario::checkCollision()
 {
-	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK1000))
+	if (checkStatusType(MARIO_STATUS_FLAG_UNK1000))
 		return;
 
 	TYoshi* yoshi = mYoshi;
@@ -256,7 +256,7 @@ void TMario::checkCollision()
 			f32 dx   = yt.x - mPosition.x;
 			f32 dist = std::sqrtf(dx * dx + dz * dz);
 
-			if (checkStatusFlag(MARIO_STATUS_FLAG_JUMPING) && isHolding()
+			if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && isHolding()
 			    && mVel.y < 0.0f && yt.y < mPosition.y && mStatus != 0x89C
 			    && mStatus != MARIO_STATUS_THROWN_DOWN
 			    && mStatus != MARIO_STATUS_BACK_JUMP && dist < 180.0f) {

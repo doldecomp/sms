@@ -154,7 +154,7 @@ void TMarioCap::perform(unsigned long param_1, JDrama::TGraphics* param_2)
 				doTremble = true;
 			}
 
-			if (mMario->checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)
+			if (mMario->checkStatusType(MARIO_STATUS_FLAG_JUMPING)
 			    && distance > 20.0f) {
 				doTremble = true;
 			}
