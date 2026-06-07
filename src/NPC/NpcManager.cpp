@@ -233,16 +233,14 @@ void TNPCManager::clipEnemies(JDrama::TGraphics* graphics)
 	if (gpMarDirector->mMap == 1) {
 		CPolarSubCamera* cam = gpCamera;
 
-		// TODO: need camera inlines!
+		// TODO: figure out these inlines. fabricatedInline3 matches in camera
+		// itself but not here for some reason...
 		bool shouldClamp = !cam->isSimpleDemoCamera()
 		                   && ((cam->mMode == 0x49) ? true : false);
 
-		if (!(shouldClamp ? true : false) && gpCamera->mMode != 0xD
-		    && gpCamera->unk54 == 0xD
-		    && (gpCamera->isNowInbetween() || gpCamera->mMode == 0x13)) {
-
-		} else if (farClip < 15000.0f)
-			farClip = 15000.0f;
+		if ((shouldClamp ? true : false) || gpCamera->fabricatedInline3())
+			if (farClip < 15000.0f)
+				farClip = 15000.0f;
 	}
 
 	SetViewFrustumClipCheckPerspective(gpCamera->mAspect, gpCamera->mFovy,

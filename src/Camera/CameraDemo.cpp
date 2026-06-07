@@ -31,7 +31,7 @@ void CPolarSubCamera::endSimpleDemoCamera_() { }
 void CPolarSubCamera::updateDemoCamera_(bool param_1)
 {
 	if (param_1) {
-		if ((mMode == 0x49) ? true : false) {
+		if ((mMode == CAMERA_MODE_COUNT) ? true : false) {
 			unk2B0->updateDemo(&unk124, &unk148, &mUp, &mFovy);
 
 			if (unk2B4->unk4 != 0.0f) {
@@ -84,7 +84,7 @@ void CPolarSubCamera::updateDemoCamera_(bool param_1)
 		if (unk2B4->unk14 == 0) {
 			unk120->onNeutralMarioKey();
 			unk2B4->setThing(0);
-			if (mMode == 0x49 ? true : false)
+			if (mMode == CAMERA_MODE_COUNT ? true : false)
 				return;
 			unk2B4->unkC |= 1;
 		}
@@ -146,7 +146,7 @@ void CPolarSubCamera::startDemoCamera(const char* name,
 	if (unk2B0->isFileExist(name)) {
 		unk2B0->startDemo(name, offset);
 		unk2B4->setThing(unk2B0->getTotalDemoFrames());
-		changeCamModeSpecifyFrame_(0x49, 1);
+		changeCamModeSpecifyFrame_(CAMERA_MODE_COUNT, 1);
 		mNear   = unk2D4->mSLReproduceDemoNearClip.get();
 		started = true;
 	}
@@ -154,7 +154,7 @@ void CPolarSubCamera::startDemoCamera(const char* name,
 	if (started)
 		return;
 
-	if ((mMode == 0x49) ? true : false)
+	if ((mMode == CAMERA_MODE_COUNT) ? true : false)
 		return;
 
 	TCameraMapTool* tool = (TCameraMapTool*)gpCamMapToolTable->searchF(
@@ -175,8 +175,8 @@ void CPolarSubCamera::startDemoCamera(const char* name,
 
 void CPolarSubCamera::endDemoCamera()
 {
-	if ((mMode == 0x49) ? true : false) {
-		if (mMode == 0x49) {
+	if ((mMode == CAMERA_MODE_COUNT) ? true : false) {
+		if (mMode == CAMERA_MODE_COUNT) {
 			unk2B0->endDemo();
 			unk2B4->setThing(0);
 			changeCamModeSpecifyFrame_(-1, 1);
@@ -197,7 +197,7 @@ void CPolarSubCamera::endDemoCamera()
 bool CPolarSubCamera::isSimpleDemoCamera() const
 {
 	bool result = false;
-	if (((mMode == 0x49) ? true : false) == false) {
+	if (((mMode == CAMERA_MODE_COUNT) ? true : false) == false) {
 		if (unk2B4->unk14 > 0 || (unk2B4->unkC & 1U))
 			result = true;
 	}

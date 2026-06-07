@@ -83,7 +83,7 @@ bool CPolarSubCamera::isLButtonCameraSpecifyMode(int mode) const
 {
 	bool result = false;
 	switch (mode) {
-	case 0x7:
+	case CAMERA_MODE_L_NORMAL:
 		result = true;
 		break;
 	}
@@ -95,7 +95,7 @@ bool CPolarSubCamera::isLButtonCameraInbetween() const
 	bool result = false;
 	if (isNowInbetween()) {
 		if (isLButtonCameraSpecifyMode(mMode)
-		    || isLButtonCameraSpecifyMode(unk54))
+		    || isLButtonCameraSpecifyMode(mPrevMode))
 			result = true;
 	}
 	return result;
@@ -104,7 +104,8 @@ bool CPolarSubCamera::isLButtonCameraInbetween() const
 bool CPolarSubCamera::isJetCoaster1stCamera() const
 {
 	bool result = false;
-	if (mMode == 0x2E && unk2B8 != nullptr && (*((u8*)unk2B8 + 0xC) & 0x1))
+	if (mMode == CAMERA_MODE_JET_COASTER && unk2B8 != nullptr
+	    && (*((u8*)unk2B8 + 0xC) & 0x1))
 		result = true;
 	return result;
 }
@@ -113,11 +114,11 @@ bool CPolarSubCamera::isTalkCameraSpecifyMode(int param) const
 {
 	bool result = false;
 	switch (param) {
-	case 0xA:
-	case 0xC:
-	case 0x2D:
-	case 0x3F:
-	case 0x40:
+	case CAMERA_MODE_TALK_E:
+	case CAMERA_MODE_TALK_A:
+	case CAMERA_MODE_TALK_B:
+	case CAMERA_MODE_TALK_C:
+	case CAMERA_MODE_TALK_D:
 		result = true;
 		break;
 	}
@@ -128,7 +129,8 @@ bool CPolarSubCamera::isTalkCameraInbetween() const
 {
 	bool result = false;
 	if (isNowInbetween()) {
-		if (isTalkCameraSpecifyMode(mMode) || isTalkCameraSpecifyMode(unk54))
+		if (isTalkCameraSpecifyMode(mMode)
+		    || isTalkCameraSpecifyMode(mPrevMode))
 			result = true;
 	}
 	return result;
@@ -138,47 +140,47 @@ bool CPolarSubCamera::isNormalCameraSpecifyMode(int param) const
 {
 	bool result = false;
 	switch (param) {
-	case 0x0:
-	case 0x1:
-	case 0x3:
-	case 0x4:
-	case 0x5:
-	case 0x6:
-	case 0x8:
-	case 0xB:
-	case 0xD:
-	case 0xE:
-	case 0xF:
-	case 0x10:
-	case 0x11:
-	case 0x12:
-	case 0x13:
-	case 0x14:
-	case 0x15:
-	case 0x26:
-	case 0x2A:
-	case 0x2B:
-	case 0x2C:
-	case 0x2F:
-	case 0x30:
-	case 0x31:
-	case 0x32:
-	case 0x33:
-	case 0x34:
-	case 0x35:
-	case 0x36:
-	case 0x38:
-	case 0x39:
-	case 0x3C:
-	case 0x3D:
-	case 0x3E:
-	case 0x42:
-	case 0x43:
-	case 0x44:
-	case 0x45:
-	case 0x46:
-	case 0x47:
-	case 0x48:
+	case CAMERA_MODE_FOLLOW:
+	case CAMERA_MODE_PARALLEL:
+	case CAMERA_MODE_WALL_JUMP:
+	case CAMERA_MODE_HIP_ATTACK:
+	case CAMERA_MODE_ROCKET_JUMP:
+	case CAMERA_MODE_WIRE:
+	case CAMERA_MODE_MARE_UNDER_GROUND:
+	case CAMERA_MODE_LEAN_MIRROR:
+	case CAMERA_MODE_UNDER_GROUND:
+	case CAMERA_MODE_INDOOR:
+	case CAMERA_MODE_HANG:
+	case CAMERA_MODE_WIRE_HANG:
+	case CAMERA_MODE_SAND_BIRD:
+	case CAMERA_MODE_HOVERING:
+	case CAMERA_MODE_JUMP_CODE:
+	case CAMERA_MODE_DELFINO:
+	case CAMERA_MODE_CLIMB:
+	case CAMERA_MODE_EX_MAP_0:
+	case CAMERA_MODE_SLIDER:
+	case CAMERA_MODE_DIVING:
+	case CAMERA_MODE_TURBO:
+	case CAMERA_MODE_PARALLEL_B:
+	case CAMERA_MODE_SURFING:
+	case CAMERA_MODE_SWIMMING:
+	case CAMERA_MODE_CLIMB_JUMP:
+	case CAMERA_MODE_LOOK_DOWN:
+	case CAMERA_MODE_RAIL_FENCE:
+	case CAMERA_MODE_FOLLOW_B:
+	case CAMERA_MODE_FOLLOW_C:
+	case CAMERA_MODE_DELFINO_ATTIC:
+	case CAMERA_MODE_BOSS_GESO:
+	case CAMERA_MODE_FENCE:
+	case CAMERA_MODE_MONTE_FENCE:
+	case CAMERA_MODE_MONTE_HANG:
+	case CAMERA_MODE_DELFINO_B:
+	case CAMERA_MODE_CANCAN:
+	case CAMERA_MODE_AQUATIC_TURBO:
+	case CAMERA_MODE_FOLLOW_D:
+	case CAMERA_MODE_FOLLOW_E:
+	case CAMERA_MODE_PARALLEL_C:
+	case CAMERA_MODE_PARALLEL_D:
 		result = true;
 		break;
 	}
@@ -189,7 +191,7 @@ bool CPolarSubCamera::isNormalCameraCompletely() const
 {
 	bool result = false;
 	if (isNormalCameraSpecifyMode(mMode)
-	    && (!isNowInbetween() || isNormalCameraSpecifyMode(unk54)))
+	    && (!isNowInbetween() || isNormalCameraSpecifyMode(mPrevMode)))
 		result = true;
 
 	return result;
@@ -199,11 +201,11 @@ bool CPolarSubCamera::isTowerCameraSpecifyMode(int param) const
 {
 	bool result = false;
 	switch (param) {
-	case 0x27:
-	case 0x28:
-	case 0x29:
-	case 0x37:
-	case 0x41:
+	case CAMERA_MODE_TOWER_A:
+	case CAMERA_MODE_TOWER_B:
+	case CAMERA_MODE_TOWER_C:
+	case CAMERA_MODE_TOWER_D:
+	case CAMERA_MODE_TOWER_E:
 		result = true;
 		break;
 	}
@@ -214,11 +216,11 @@ bool CPolarSubCamera::isFollowCameraSpecifyMode(int param) const
 {
 	bool result = false;
 	switch (param) {
-	case 0x0:
-	case 0x35:
-	case 0x36:
-	case 0x45:
-	case 0x46:
+	case CAMERA_MODE_FOLLOW:
+	case CAMERA_MODE_FOLLOW_B:
+	case CAMERA_MODE_FOLLOW_C:
+	case CAMERA_MODE_FOLLOW_D:
+	case CAMERA_MODE_FOLLOW_E:
 		result = true;
 		break;
 	}
@@ -231,15 +233,15 @@ bool CPolarSubCamera::isFixCameraSpecifyMode(int param) const
 {
 	bool result = false;
 	switch (param) {
-	case 0x16:
-	case 0x17:
-	case 0x18:
-	case 0x19:
-	case 0x1A:
-	case 0x1B:
-	case 0x1C:
-	case 0x1D:
-	case 0x3A:
+	case CAMERA_MODE_FIX_A:
+	case CAMERA_MODE_FIX_B:
+	case CAMERA_MODE_FIX_C:
+	case CAMERA_MODE_FIX_D:
+	case CAMERA_MODE_FIX_E:
+	case CAMERA_MODE_FIX_F:
+	case CAMERA_MODE_FIX_G:
+	case CAMERA_MODE_FIX_H:
+	case CAMERA_MODE_FIX_I:
 		result = true;
 		break;
 	}
@@ -250,16 +252,16 @@ bool CPolarSubCamera::isDefiniteCameraSpecifyMode(int param) const
 {
 	bool result = false;
 	switch (param) {
-	case 0x9:
-	case 0x1E:
-	case 0x1F:
-	case 0x20:
-	case 0x21:
-	case 0x22:
-	case 0x23:
-	case 0x24:
-	case 0x25:
-	case 0x3B:
+	case CAMERA_MODE_DEFINITE_D2:
+	case CAMERA_MODE_DEFINITE_A:
+	case CAMERA_MODE_DEFINITE_B:
+	case CAMERA_MODE_DEFINITE_C:
+	case CAMERA_MODE_DEFINITE_D:
+	case CAMERA_MODE_DEFINITE_E:
+	case CAMERA_MODE_DEFINITE_F:
+	case CAMERA_MODE_DEFINITE_G:
+	case CAMERA_MODE_DEFINITE_H:
+	case CAMERA_MODE_DEFINITE_I:
 		result = true;
 		break;
 	}
@@ -273,27 +275,27 @@ bool CPolarSubCamera::isOverHipAttackSpecifyMode(int param) const
 		result = true;
 	} else {
 		switch (param) {
-		case 0x8:
-		case 0xB:
-		case 0xD:
-		case 0xE:
-		case 0x11:
-		case 0x14:
-		case 0x26:
-		case 0x27:
-		case 0x28:
-		case 0x29:
-		case 0x2A:
-		case 0x2F:
-		case 0x33:
-		case 0x37:
-		case 0x38:
-		case 0x39:
-		case 0x41:
-		case 0x42:
-		case 0x43:
-		case 0x47:
-		case 0x48:
+		case CAMERA_MODE_MARE_UNDER_GROUND:
+		case CAMERA_MODE_LEAN_MIRROR:
+		case CAMERA_MODE_UNDER_GROUND:
+		case CAMERA_MODE_INDOOR:
+		case CAMERA_MODE_SAND_BIRD:
+		case CAMERA_MODE_DELFINO:
+		case CAMERA_MODE_EX_MAP_0:
+		case CAMERA_MODE_TOWER_A:
+		case CAMERA_MODE_TOWER_B:
+		case CAMERA_MODE_TOWER_C:
+		case CAMERA_MODE_SLIDER:
+		case CAMERA_MODE_PARALLEL_B:
+		case CAMERA_MODE_LOOK_DOWN:
+		case CAMERA_MODE_TOWER_D:
+		case CAMERA_MODE_DELFINO_ATTIC:
+		case CAMERA_MODE_BOSS_GESO:
+		case CAMERA_MODE_TOWER_E:
+		case CAMERA_MODE_DELFINO_B:
+		case CAMERA_MODE_CANCAN:
+		case CAMERA_MODE_PARALLEL_C:
+		case CAMERA_MODE_PARALLEL_D:
 			result = true;
 			break;
 		}
@@ -305,29 +307,29 @@ bool CPolarSubCamera::isSlopeCameraMode() const
 {
 	bool result = false;
 	switch (mMode) {
-	case 0x0:
-	case 0x1:
-	case 0x4:
-	case 0xB:
-	case 0xE:
-	case 0x14:
-	case 0x26:
-	case 0x27:
-	case 0x28:
-	case 0x29:
-	case 0x2A:
-	case 0x2C:
-	case 0x2F:
-	case 0x35:
-	case 0x36:
-	case 0x37:
-	case 0x38:
-	case 0x41:
-	case 0x42:
-	case 0x45:
-	case 0x46:
-	case 0x47:
-	case 0x48:
+	case CAMERA_MODE_FOLLOW:
+	case CAMERA_MODE_PARALLEL:
+	case CAMERA_MODE_HIP_ATTACK:
+	case CAMERA_MODE_LEAN_MIRROR:
+	case CAMERA_MODE_INDOOR:
+	case CAMERA_MODE_DELFINO:
+	case CAMERA_MODE_EX_MAP_0:
+	case CAMERA_MODE_TOWER_A:
+	case CAMERA_MODE_TOWER_B:
+	case CAMERA_MODE_TOWER_C:
+	case CAMERA_MODE_SLIDER:
+	case CAMERA_MODE_TURBO:
+	case CAMERA_MODE_PARALLEL_B:
+	case CAMERA_MODE_FOLLOW_B:
+	case CAMERA_MODE_FOLLOW_C:
+	case CAMERA_MODE_TOWER_D:
+	case CAMERA_MODE_DELFINO_ATTIC:
+	case CAMERA_MODE_TOWER_E:
+	case CAMERA_MODE_DELFINO_B:
+	case CAMERA_MODE_FOLLOW_D:
+	case CAMERA_MODE_FOLLOW_E:
+	case CAMERA_MODE_PARALLEL_C:
+	case CAMERA_MODE_PARALLEL_D:
 		result = true;
 		break;
 	}

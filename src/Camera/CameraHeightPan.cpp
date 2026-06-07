@@ -12,9 +12,9 @@ void CPolarSubCamera::killHeightPanWhenChangeCamMode_()
 	if (isNotHeightPanCamMode_())
 		bVar2 = true;
 
-	switch (unk54) {
-	case 0x3E:
-	case 0xF:
+	switch (mPrevMode) {
+	case CAMERA_MODE_MONTE_HANG:
+	case CAMERA_MODE_HANG:
 		bVar2 = true;
 		break;
 	}
@@ -53,8 +53,8 @@ void CPolarSubCamera::execHeightPan_()
 
 				bool bVar7 = false;
 				switch (mMode) {
-				case 0x13:
-				case 0x5:
+				case CAMERA_MODE_JUMP_CODE:
+				case CAMERA_MODE_ROCKET_JUMP:
 					if (unk256 < unk2D4->mPanWarpAngleX.get())
 						bVar7 = true;
 					break;

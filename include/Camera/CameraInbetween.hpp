@@ -29,7 +29,6 @@ public:
 	void setInbetModePosAngleY(TCameraInbetween::EnumAngleInbetMode, s16, s16);
 
 	bool isThing() const { return unk44 != 0.0f ? true : false; }
-	bool isThing2() const { return unk4 > 0 ? true : false; }
 
 public:
 	/* 0x0 */ u32 unk0;
