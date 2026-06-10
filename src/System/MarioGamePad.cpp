@@ -77,8 +77,7 @@ void TMarioGamePad::updateMeaning()
 	}
 
 	if (mDisabledFrames <= 0) {
-		bool isLButtonCameraSpecifyMode
-		    = gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode);
+		bool isLButtonCameraSpecifyMode = gpCamera->isLButtonCamera();
 		if (isLButtonCameraSpecifyMode) {
 			// This is for when in y camera
 			mCompSPos[1 * 2]     = (f32)mButton.mAnalogL;

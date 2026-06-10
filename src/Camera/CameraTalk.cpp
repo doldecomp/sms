@@ -49,7 +49,7 @@ void CPolarSubCamera::makeMtxForPrevTalk()
 
 void CPolarSubCamera::ctrlTalkCamera_()
 {
-	if (unk7C == 0)
+	if (mTargetFreezeFrames == 0)
 		mCurrentTarget.mTarget.set(gpCameraMario->unk0);
 
 	calcPosAndAt_();

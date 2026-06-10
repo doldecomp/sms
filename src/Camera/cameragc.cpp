@@ -51,11 +51,11 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
     , unk64(0)
     , unk70(nullptr)
     , unk74(0)
-    , unk78(0)
-    , unk7C(0)
+    , mPosFreezeFrames(0)
+    , mTargetFreezeFrames(0)
     , unk11C(0)
     , unk120(nullptr)
-    , unk24C(0.0f)
+    , mHeightPanOffset(0.0f)
     , unk250(0.0f)
     , unk254(0)
     , unk268(0.0f)
@@ -64,9 +64,9 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
     , unk276(0)
     , unk278(0)
     , unk27A(0)
-    , unk27C(0)
-    , unk27E(0)
-    , unk280(0)
+    , mDeadDemoCountdown(0)
+    , mDeadDemoCountdownToFovZoom(0)
+    , mDeadDemoFovZoomTimer(0)
     , unk282(0)
     , unk284(0)
     , unk288(1.0f)
@@ -77,7 +77,7 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
     , unk298(0.0f)
     , unk2AC(nullptr)
     , unk2B0(nullptr)
-    , unk2B4(nullptr)
+    , mCameraDemo(nullptr)
     , unk2B8(nullptr)
     , unk2BC(nullptr)
     , unk2C0(3.0f)
@@ -93,7 +93,7 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 	mInbetween                  = new TCameraInbetween;
 	unk2AC                      = new CameraUnk2ACStruct;
 	unk2B0                      = new TCameraBck;
-	unk2B4                      = new CameraUnk2B4Struct;
+	mCameraDemo                 = new TCameraDemo;
 	mSaveNotice                 = new TCamSaveNotice;
 	mSaveEx                     = new TCamSaveEx;
 	for (int i = 0; i < ARRAY_COUNT(mSaveKindParam); ++i)
@@ -102,7 +102,7 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 		createMultiPlayer(4);
 	int stage = gpMarDirector->getCurrentStage();
 	if (gpMarDirector->getCurrentMap() == 58 && (stage == 0 || stage == 1)) {
-		unk64 |= 0x1000;
+		unk64 |= CAMERA_FLAG_JET_COASTER_SCENE;
 		unk2B8 = new TCameraJetCoaster;
 		switch (stage) {
 		case 0:
@@ -140,7 +140,7 @@ void CPolarSubCamera::loadAfter()
 		mInitialMode = CAMERA_MODE_EX_MAP_0;
 	} else if (SMS_isMultiPlayerMap()) {
 		mInitialMode = CAMERA_MODE_MULTI_PLAYER;
-	} else if (unk64 & 0x1000) {
+	} else if (unk64 & CAMERA_FLAG_JET_COASTER_SCENE) {
 		mInitialMode = CAMERA_MODE_JET_COASTER;
 	}
 
@@ -170,7 +170,8 @@ void CPolarSubCamera::loadAfter()
 		mCurrentTarget.mYaw = *gpMarioAngleY - 0x8000;
 	}
 
-	if ((unk64 & 0x1000) && unk2B8 != nullptr && (unk2B8->unkC & 0x1))
+	if ((unk64 & CAMERA_FLAG_JET_COASTER_SCENE) && unk2B8 != nullptr
+	    && (unk2B8->isLButtonMode()))
 		setUpToLButtonCamera_(CAMERA_MODE_JET_COASTER);
 
 	unk270 = mCurrentTarget.unk28;
@@ -238,7 +239,7 @@ void CPolarSubCamera::loadAfter()
 	unk154.set(mTarget);
 	unk160.set(mTarget);
 
-	if (unk64 & 0x1000) {
+	if (unk64 & CAMERA_FLAG_JET_COASTER_SCENE) {
 		unk2B8->unk10.set(mPosition);
 		unk2B8->unk1C.set(mTarget);
 	}
@@ -256,7 +257,7 @@ void CPolarSubCamera::loadAfter()
 
 	fabricatedInline2();
 
-	if ((unk64 & 0x1000) && gpMarDirector->unk7D == 1) {
+	if ((unk64 & CAMERA_FLAG_JET_COASTER_SCENE) && gpMarDirector->unk7D == 1) {
 		gpMarDirector->fireStartDemoCamera(
 		    cJetCoasterDemoBckName, nullptr, -1, 0.0f, true,
 		    &JetCoasterDemoCallBack, (u32)this, nullptr, JDrama::TFlagT<u16>());
@@ -284,7 +285,7 @@ void CPolarSubCamera::setMarioLookat_() { }
 JGeometry::TVec3<f32> CPolarSubCamera::getUsualLookat() const
 {
 	JGeometry::TVec3<f32> result;
-	const JGeometry::TVec3<f32>* thing = unk2B4->unk0;
+	const JGeometry::TVec3<f32>* thing = mCameraDemo->unk0;
 	if (thing)
 		result = *thing;
 	else
@@ -366,20 +367,22 @@ void CPolarSubCamera::onMoveApproach_()
 	                           mCurrentParams->mDistMax, mCurrentTarget.unk28);
 }
 
-bool CPolarSubCamera::isMarioReadyGun_() const { }
+bool CPolarSubCamera::isMarioReadyGun_() const
+{
+	// NOTE: it is a complete MYSTERY to me as to why this
+	// checkStatusType isn't inlined...
+	return gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)
+	       && gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_UNK8000);
+}
 
 bool CPolarSubCamera::isMarioAimWithGun_() const
 {
-	return gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)
-	       && gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_UNK8000)
-	       && unk120->checkFrameMeaning(0x400);
+	return isMarioReadyGun_() && unk120->checkFrameMeaning(0x400);
 }
 
 bool CPolarSubCamera::isMarioCrabWalk_() const
 {
-	return gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)
-	       && gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_UNK8000)
-	       && unk120->checkFrameMeaning(0x8000);
+	return isMarioReadyGun_() && unk120->checkFrameMeaning(0x8000);
 }
 
 void CPolarSubCamera::execInvalidAutoChase_()
@@ -390,7 +393,8 @@ void CPolarSubCamera::execInvalidAutoChase_()
 bool CPolarSubCamera::isMomentDefinite_() const
 {
 	bool result = false;
-	if (!(unk64 & 0x100) && isNormalCameraCompletely() && unk250 > 0.001f
+	if (!(unk64 & CAMERA_FLAG_UNK100) && isNormalCameraCompletely()
+	    && unk250 > 0.001f
 	    && CLBLinearInbetween(mCurrentParams->mCushionMin,
 	                          mCurrentParams->mCushionMax, mCurrentTarget.unk28)
 	           > 0.001f)
@@ -400,16 +404,13 @@ bool CPolarSubCamera::isMomentDefinite_() const
 
 void CPolarSubCamera::calcSlopeAngleX_(s16* param_1)
 {
-	s16 result        = 0;
-	bool isAimingFlag = false;
-	if (gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)
-	    && gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_UNK8000))
-		isAimingFlag = true;
+	s16 result = 0;
 
-	if (!isAimingFlag) {
+	if (!isMarioReadyGun_()) {
+		// TODO: MarioAccess inline?
 		bool groundOK             = false;
 		const TBGCheckData* plane = *gpMarioGroundPlane;
-		if (plane != nullptr && (plane->mBGType & 0xA000 ? true : false))
+		if (plane != nullptr && plane->isThing())
 			groundOK = true;
 
 		if (groundOK && isSlopeCameraMode()) {
@@ -449,8 +450,9 @@ void CPolarSubCamera::calcSlopeAngleX_(s16* param_1)
 		}
 	}
 
-	CLBChaseGeneralConstantSpecifySpeed<s16>(
-	    &unk28C, result, mSaveEx->mSLSlopeSpeedAngleX.get());
+	s16 speed = mSaveEx->mSLSlopeSpeedAngleX.get();
+	CLBChaseGeneralConstantSpecifySpeed<s16>(&unk28C, result, speed);
+
 	*param_1 -= unk28C;
 	*param_1 = MsClamp(*param_1, mSaveEx->mSLLimitMinAngleX.get(),
 	                   mSaveEx->mSLLimitMaxAngleX.get());
@@ -459,9 +461,9 @@ void CPolarSubCamera::calcSlopeAngleX_(s16* param_1)
 void CPolarSubCamera::calcPosAndAt_()
 {
 	if (gpCameraMario->unkC >= 0.05f)
-		unk64 &= ~0x80;
+		unk64 &= ~CAMERA_FLAG_UNK80;
 
-	if (!(unk64 & 0x80)) {
+	if (!(unk64 & CAMERA_FLAG_UNK80)) {
 		if (unk284 > 0) {
 			s32 acf   = mCurrentParams->mAutoChaseCompleteFrame;
 			s32 acs   = mCurrentParams->mAutoChaseStartFrame;
@@ -485,8 +487,7 @@ void CPolarSubCamera::calcPosAndAt_()
 	                                        mCurrentTarget.unk28);
 
 	if (isNormalCameraSpecifyMode(mMode)) {
-		if (gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)
-		    && gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_UNK8000)) {
+		if (isMarioReadyGun_()) {
 			f32 mag   = gpCameraMario->unk1C;
 			distDelta = mag * distSpeed;
 			yawDelta  = (s16)(mag * (f32)yawSpeed);
@@ -503,42 +504,33 @@ void CPolarSubCamera::calcPosAndAt_()
 			s16 absSpeed = CLBAbs(yawSpeed);
 			s16 absDelta = CLBAbs(yawDelta);
 			unk2AC->unkC = (f32)absDelta * (1.0f / (f32)absSpeed);
-			if (unk2AC->unkC > 1.0f)
-				unk2AC->unkC = 1.0f;
-			else if (unk2AC->unkC < 0.0f)
-				unk2AC->unkC = 0.0f;
+			unk2AC->unkC = MsClamp(unk2AC->unkC, 0.0f, 1.0f);
 		}
 	} else {
 		unk2AC->unkC = distDelta * (1.0f / distSpeed);
-		if (unk2AC->unkC > 1.0f)
-			unk2AC->unkC = 1.0f;
-		else if (unk2AC->unkC < 0.0f)
-			unk2AC->unkC = 0.0f;
+		unk2AC->unkC = MsClamp(unk2AC->unkC, 0.0f, 1.0f);
 	}
 
 	CLBChaseDecrease(&unk2AC->unk8, unk2AC->unkC,
 	                 mSaveEx->mSLHoldDistChase.get(), 0.0f);
 
-	unk64 &= ~0x100;
-	if (unk78 != 0)
-		unk78 -= 1;
-	if (unk7C != 0)
-		unk7C -= 1;
+	unk64 &= ~CAMERA_FLAG_UNK100;
+	if (mPosFreezeFrames != 0)
+		mPosFreezeFrames -= 1;
+	if (mTargetFreezeFrames != 0)
+		mTargetFreezeFrames -= 1;
 
 	bool freeze = true;
-	if (gpCameraMario->unkC >= 0.05f && gpCameraMario->unk10 >= 0.05f)
+	if (!(gpCameraMario->unkC >= 0.05f || gpCameraMario->unk10 >= 0.05f))
 		freeze = false;
 
+	bool inputActive = true;
+
 	bool checkInput = true;
-	bool isAiming   = false;
-	if (gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)
-	    && gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_UNK8000))
-		isAiming = true;
-	if (!isAiming && !(unk64 & 4))
+	if (!isMarioReadyGun_() && !(unk64 & CAMERA_FLAG_UNK4))
 		checkInput = false;
 
-	bool inputActive = true;
-	if (checkInput) {
+	if (!checkInput) {
 		bool hasInput = false;
 		if (unk120 != nullptr) {
 			bool nonZero = true;
@@ -551,28 +543,29 @@ void CPolarSubCamera::calcPosAndAt_()
 			inputActive = false;
 	}
 
-	if (unk64 & 0x40) {
-		if (unk78 == 0)
-			unk78 = 1;
-		if (unk7C == 0)
-			unk7C = 1;
+	if (unk64 & CAMERA_FLAG_UNK40) {
+		if (mPosFreezeFrames == 0)
+			mPosFreezeFrames = 1;
+		if (mTargetFreezeFrames == 0)
+			mTargetFreezeFrames = 1;
 	} else {
 		if (freeze || inputActive) {
-			unk7C = 0;
-			unk78 = 0;
+			mTargetFreezeFrames = 0;
+			mPosFreezeFrames    = 0;
 		}
-		if ((unk64 & 0x400) && unk78 == 0)
-			unk78 = 1;
+		if ((unk64 & CAMERA_FLAG_DEAD_DEMO) && mPosFreezeFrames == 0)
+			mPosFreezeFrames = 1;
 	}
 
 	JGeometry::TVec3<f32> finalAt;
-	if (unk78 == 0 || unk7C == 0) {
-		if (unk78 == 0 && unk7C == 0)
-			unk64 &= ~0x40;
+	if (mPosFreezeFrames == 0 || mTargetFreezeFrames == 0) {
+		if (mPosFreezeFrames == 0 && mTargetFreezeFrames == 0)
+			unk64 &= ~CAMERA_FLAG_UNK40;
 
 		if (!mInbetween->isThing() || freeze || inputActive) {
-			if (unk7C == 0 && isDefiniteCameraSpecifyMode(mMode)) {
-				const JGeometry::TVec3<f32>* ovr = unk2B4->unk0;
+			if (mTargetFreezeFrames == 0
+			    && isDefiniteCameraSpecifyMode(mMode)) {
+				const JGeometry::TVec3<f32>* ovr = mCameraDemo->unk0;
 				JGeometry::TVec3<f32> origin;
 				if (ovr != nullptr)
 					origin = *ovr;
@@ -656,7 +649,7 @@ void CPolarSubCamera::calcPosAndAt_()
 							CLBCrossToPolar(saveAt, base, &nDist, &nVA, &nHA);
 							f32 cushDist = cushion * nDist;
 							if (cushDist > cushion * dist) {
-								unk64 |= 0x100;
+								unk64 |= CAMERA_FLAG_UNK100;
 								mCurrentTarget.mPosition = newPos;
 							} else {
 								f32 minDist
@@ -678,7 +671,7 @@ void CPolarSubCamera::calcPosAndAt_()
 								}
 
 								bool useMid = false;
-								if (!(unk64 & 0x100)
+								if (!(unk64 & CAMERA_FLAG_UNK100)
 								    && isNormalCameraCompletely()
 								    && unk250 > 0.001f) {
 									if (CLBLinearInbetween<f32>(
@@ -771,7 +764,7 @@ void CPolarSubCamera::calcPosAndAt_()
 		}
 	}
 
-	if (unk78 == 0) {
+	if (mPosFreezeFrames == 0) {
 		f32 chaseXZ;
 		f32 chaseY;
 		if (isRailCameraSpecifyMode(mPrevMode) && isRailCameraSpecifyMode(mMode)
@@ -790,7 +783,7 @@ void CPolarSubCamera::calcPosAndAt_()
 					    (f32)(0x78 - v) / 120.0f);
 				}
 			}
-			if (unk64 & 4) {
+			if (unk64 & CAMERA_FLAG_UNK4) {
 				chaseXZ = 1.0f;
 			} else if (unk120->mCompSPos[6] != 0.0f
 			           || unk120->mCompSPos[7] != 0.0f) {
@@ -818,7 +811,7 @@ void CPolarSubCamera::calcPosAndAt_()
 		CLBChaseDecrease(&mPosition.z, v.z, chaseXZ, 0.0f);
 	}
 
-	if (unk7C == 0) {
+	if (mTargetFreezeFrames == 0) {
 		f32 atXZ = mCurrentParams->mAtChaseRateXZ;
 		f32 atY  = mCurrentParams->mAtChaseRateY;
 
@@ -831,14 +824,14 @@ void CPolarSubCamera::calcPosAndAt_()
 
 void CPolarSubCamera::calcFinalPosAndAt_()
 {
-	if (mMode != CAMERA_MODE_COUNT) {
+	if (mMode != CAMERA_MODE_REPRODUCE_DEMO) {
 		gpCameraShake->execShake(unk124, &unk148, &mUp);
 		if (mMode != CAMERA_MODE_JET_COASTER) {
 			if (!isFixCameraSpecifyMode(mMode) || isNowInbetween()) {
 				if (isHellDeadDemo()) {
 					if (unk256 > mSaveEx->mSLLimitMaxAngleX.get()) {
-						unk7C = 1;
-						unk64 |= 0x40;
+						mTargetFreezeFrames = 1;
+						unk64 |= CAMERA_FLAG_UNK40;
 					}
 				} else {
 					CLBRevisionLookatByAngleX(mSaveEx->mSLLimitMinAngleX.get(),
@@ -863,9 +856,9 @@ void CPolarSubCamera::calcExternalData_() { }
 // TODO: this should be weak/inline
 void CPolarSubCamera::ctrlGameCamera_()
 {
-	if (!(unk64 & 0x400))
+	if (!(unk64 & CAMERA_FLAG_DEAD_DEMO))
 		execDeadDemoProc_();
-	if (!(unk64 & 0x80)) {
+	if (!(unk64 & CAMERA_FLAG_UNK80)) {
 		if (unk284 > 0)
 			unk284 -= 1;
 	}
@@ -894,7 +887,7 @@ void CPolarSubCamera::ctrlGameCamera_()
 
 	mPreviousTarget = mCurrentTarget;
 
-	if (gpMarDirector->mState == 4 && !(unk64 & 0x400)) {
+	if (gpMarDirector->mState == 4 && !(unk64 & CAMERA_FLAG_DEAD_DEMO)) {
 		if (isTalkCameraSpecifyMode(mMode)) {
 			if (!gpMarDirector->isTalkModeNow())
 				changeCamMode_(mInitialMode);
@@ -916,7 +909,8 @@ void CPolarSubCamera::ctrlGameCamera_()
 	if (unk284 > mCurrentParams->mAutoChaseCompleteFrame)
 		unk284 = mCurrentParams->mAutoChaseCompleteFrame;
 
-	if (!isNormalDeadDemo() && !(unk64 & 0x1200))
+	if (!isNormalDeadDemo()
+	    && !(unk64 & (CAMERA_FLAG_JET_COASTER_SCENE | CAMERA_FLAG_GATE_DEMO)))
 		mFovy = mCurrentParams->mFovy;
 	mNear = mCurrentParams->mNearClip;
 	mFar  = 300000.0f;
@@ -961,7 +955,7 @@ void CPolarSubCamera::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 		mUp.set(CLBConstUpVec);
 		unk254 = 0;
-		if (mMode != CAMERA_MODE_COUNT) {
+		if (mMode != CAMERA_MODE_REPRODUCE_DEMO) {
 			if (SMS_isOptionMap())
 				ctrlOptionCamera_();
 			else
@@ -971,19 +965,18 @@ void CPolarSubCamera::perform(u32 param_1, JDrama::TGraphics* param_2)
 			fabricatedInline2();
 		}
 
-		if (mMode != CAMERA_MODE_COUNT) {
+		if (mMode != CAMERA_MODE_REPRODUCE_DEMO) {
 			C_MTXPerspective(unk16C, mFovy, mAspect, mNear, mFar);
 			C_MTXLookAt(unk1EC, unk124, mUp, unk148);
 		}
 
 		bool flag2 = (param_2->unk0 & 2) ? true : false;
 		if (flag2) {
-			if (mMode != CAMERA_MODE_COUNT) {
-				u16 flags = unk64;
-				if (!(flags & 0x400)) {
-					if (flags & 0x200) {
+			if (mMode != CAMERA_MODE_REPRODUCE_DEMO) {
+				if (!(unk64 & CAMERA_FLAG_DEAD_DEMO)) {
+					if (unk64 & CAMERA_FLAG_GATE_DEMO) {
 						updateGateDemoCamera_();
-					} else if (flags & 0x1000) {
+					} else if (unk64 & CAMERA_FLAG_JET_COASTER_SCENE) {
 						unk2B0->updateDemo(&unk2B8->unk10, &unk2B8->unk1C,
 						                   &unk2B8->unk28, &unk2B8->unk34);
 					}
@@ -991,7 +984,7 @@ void CPolarSubCamera::perform(u32 param_1, JDrama::TGraphics* param_2)
 			}
 			if (!SMS_isOptionMap()) {
 				if (mMode != CAMERA_MODE_JET_COASTER
-				    && mMode != CAMERA_MODE_COUNT)
+				    && mMode != CAMERA_MODE_REPRODUCE_DEMO)
 					calcInHouseNo_(false);
 			}
 		}

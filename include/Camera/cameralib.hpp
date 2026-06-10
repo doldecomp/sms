@@ -8,39 +8,56 @@ extern f32 SMSGetAnmFrameRate(); // avoid including Application.hpp
 
 extern const JGeometry::TVec3<f32> CLBConstUpVec;
 
+/**
+ * @brief Chases @p value towards @p desired over @p frames calls.
+ *
+ * @tparam T numeric type
+ * @param value the value to mutate
+ * @param desired value to chase towards
+ * @param frames amount of calls to this function over which to chase
+ */
 template <class T>
-void CLBChaseConstantSpecifyFrame(T* param_1, T param_2, T param_3)
+void CLBChaseConstantSpecifyFrame(T* value, T desired, T frames)
 {
-	if (param_3 < 0.001f) {
-		*param_1 = param_2;
+	if (frames < 0.001f) {
+		*value = desired;
 		return;
 	}
 
-	*param_1 = (1.0f / param_3) * (param_2 - *param_1) + *param_1;
+	*value = (1.0f / frames) * (desired - *value) + *value;
 }
 
+/**
+ * @brief Linearly chases a numeric @p value towards a @p desired quantity.
+ *
+ * @tparam T numeric type
+ * @param value value to mutate
+ * @param desired the desired value
+ * @param speed speed of chase, value is decremented or incremented by this
+ * @return BOOL whether more calls are required to achieve the desired value
+ */
 template <class T>
-BOOL CLBChaseGeneralConstantSpecifySpeed(T* param_1, T param_2, T param_3)
+BOOL CLBChaseGeneralConstantSpecifySpeed(T* value, T desired, T speed)
 {
-	T sVar1 = param_2 - *param_1;
-	if (param_3 < 0)
-		param_3 = -param_3;
+	T delta = desired - *value;
+	if (speed < 0)
+		speed = -speed;
 
-	if (sVar1 > 0) {
-		sVar1 -= param_3;
-		if (sVar1 > 0)
-			*param_1 = param_2 - sVar1;
+	if (delta > 0) {
+		delta -= speed;
+		if (delta > 0)
+			*value = desired - delta;
 		else
-			*param_1 = param_2;
+			*value = desired;
 	} else {
-		sVar1 += param_3;
-		if (sVar1 < 0)
-			*param_1 = param_2 - sVar1;
+		delta += speed;
+		if (delta < 0)
+			*value = desired - delta;
 		else
-			*param_1 = param_2;
+			*value = desired;
 	}
 
-	if (*param_1 == param_2)
+	if (*value == desired)
 		return false;
 
 	return true;
@@ -97,6 +114,7 @@ template <class T> f32 CLBCalcRatio(T a, T b, T c)
 
 template <class T> T CLBSquared(T v) { return v * v; }
 
+// TODO: should this be a macro actually?
 // fabricated
 template <class T> inline T CLBAbs(T v) { return v >= 0 ? v : -v; }
 
@@ -131,10 +149,10 @@ void CLBCalcNearFourPos(JGeometry::TVec3<f32>*, JGeometry::TVec3<f32>*, S16Vec*,
  * @param near_dist distance to the near plane.
  * @param near_dims dimensions of the near plane.
  */
-void CLBCalcNearNinePos(JGeometry::TVec3<f32>*, S16Vec*,
-                        const JGeometry::TVec3<f32>&,
-                        const JGeometry::TVec3<f32>&, s16, f32,
-                        const JGeometry::TVec2<f32>&);
+void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
+                        const JGeometry::TVec3<f32>& origin,
+                        const JGeometry::TVec3<f32>& lookat, s16 roll,
+                        f32 near_dist, const JGeometry::TVec2<f32>& near_dims);
 
 // fabricated
 inline f32 fakeTan(s16 angle)
@@ -186,25 +204,26 @@ void CLBCalcScaleTranslateMatrix(MtxPtr mtx, const Vec& scale,
                                  const Vec& translate);
 
 /**
- * @brief Moves a SHORTANGLE towards another SHORTANGLE by a specified ratio.
+ * @brief Moves a SHORTANGLE @p value towards a @p desired SHORTANGLE
+ * by a specified @p ratio.
  *
  * @param value the value to be modified
- * @param target the target value to approach
- * @param ratio the ratio by which value approaches target
+ * @param desired the target value to chase
+ * @param ratio the ratio by which @p value chases @p desired
  * @return whether more calls are needed to reach the target
  */
-BOOL CLBChaseAngleDecrease(s16* value, s16 target, s16 ratio);
+BOOL CLBChaseAngleDecrease(s16* value, s16 desired, s16 ratio);
 
 /**
- * @brief Moves dstValue toward targetValue by a fraction defined by ratio.
+ * @brief Moves @p value toward @p desired by a fraction defined by @p ratio.
  *
- * @param dstValue the value to be modified
- * @param targetValue the target value to approach
- * @param ratio the ratio by which dstValue approaches targetValue
+ * @param value the value to be modified
+ * @param desired the target value to chase
+ * @param ratio the ratio by which @p value chases @p desired
  * @param threshold a threshold for if we're close enough
- * @return whether dstValue is still outside the threshold of targetValue
+ * @return whether @p value is still outside the @p threshold of @p desired
  */
-BOOL CLBChaseDecrease(f32* dstValue, f32 targetValue, f32 ratio, f32 threshold);
+BOOL CLBChaseDecrease(f32* value, f32 desired, f32 ratio, f32 threshold);
 
 // Fabricated overload
 inline void CLBChaseDecrease(Vec* dstValue, const Vec& targetValue, f32 ratio,
@@ -216,15 +235,25 @@ inline void CLBChaseDecrease(Vec* dstValue, const Vec& targetValue, f32 ratio,
 }
 
 // Fabricated overload
-inline void CLBChaseDecrease(Vec* dstValue, const Vec& targetValue, f32 ratioX,
+inline void CLBChaseDecrease(Vec* value, const Vec& desired, f32 ratioX,
                              f32 ratioY, f32 ratioZ, f32 threshold)
 {
-	CLBChaseDecrease(&dstValue->x, targetValue.x, ratioX, threshold);
-	CLBChaseDecrease(&dstValue->y, targetValue.y, ratioY, threshold);
-	CLBChaseDecrease(&dstValue->z, targetValue.z, ratioZ, threshold);
+	CLBChaseDecrease(&value->x, desired.x, ratioX, threshold);
+	CLBChaseDecrease(&value->y, desired.y, ratioY, threshold);
+	CLBChaseDecrease(&value->z, desired.z, ratioZ, threshold);
 }
 
-BOOL CLBChaseSpecialDecrease(f32*, f32, f32, f32);
+/**
+ * @brief Moves @p value toward @p desired at a certain fraction defined by
+ * @p ratio, but never slower than a specified @p speed.
+ *
+ * @param value the value to be modified
+ * @param desired the target value to chase
+ * @param ratio the ratio by which @p value chases targetValue
+ * @param speed the minimum speed at which to chase
+ * @return whether more calls are required to reach the desired value
+ */
+BOOL CLBChaseSpecialDecrease(f32* value, f32 desired, f32 ratio, f32 speed);
 
 /**
  * @brief Converts Cartesian coordinates to spherical coordinates.

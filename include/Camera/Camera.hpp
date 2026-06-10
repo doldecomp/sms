@@ -53,6 +53,7 @@ class CPolarSubCamera : public JDrama::TLookAtCamera {
 public:
 	enum EnumNoticeOnOffMode {
 		NOTICE_MODE_UNK0 = 0,
+		NOTICE_MODE_UNK1 = 1,
 		NOTICE_MODE_UNK2 = 2,
 	};
 
@@ -83,7 +84,8 @@ public:
 	                     bool);
 	void endDemoCamera();
 	bool isSimpleDemoCamera() const;
-	void getTotalDemoFrames() const;
+	int getTotalDemoFrames() const;
+	// "Rest" as in "nokori" as in REMAINING frames
 	int getRestDemoFrames() const;
 
 	bool isHellDeadDemo() const;
@@ -125,11 +127,6 @@ public:
 			result = true;
 		return result;
 	}
-	bool isFixOrDefiniteCameraSpecifyMode(int mode) const
-	{
-		return isFixCameraSpecifyMode(mode)
-		       || isDefiniteCameraSpecifyMode(mode);
-	}
 	MtxPtr getUnk16C() { return unk16C; }
 	MtxPtr getUnk1AC() { return unk1AC; }
 
@@ -143,6 +140,22 @@ public:
 			result = false;
 
 		return result;
+	}
+
+	bool isLButtonCamera() const { return isLButtonCameraSpecifyMode(mMode); }
+	bool isBckDemoCamera() const
+	{
+		return mMode == CAMERA_MODE_REPRODUCE_DEMO ? true : false;
+	}
+	bool isDemoCamera() const
+	{
+		return isSimpleDemoCamera() || isBckDemoCamera() ? true : false;
+	}
+
+	bool isFixOrDefiniteCameraSpecifyMode(int mode) const
+	{
+		return isFixCameraSpecifyMode(mode)
+		       || isDefiniteCameraSpecifyMode(mode);
 	}
 
 private:
@@ -165,7 +178,7 @@ private:
 	MtxPtr getToroccoMtx_() const;
 	void setMarioLookat_();
 
-	void startReproduceDemoCamera_(const char*, const JGeometry::TVec3<f32>*);
+	bool startReproduceDemoCamera_(const char*, const JGeometry::TVec3<f32>*);
 	void restartReproduceDemoCamera_();
 	void endReproduceDemoCamera_();
 	void endSimpleDemoCamera_();
@@ -259,10 +272,11 @@ private:
 	{
 		changeCamModeSpecifyFrame_(mode, getCameraInbetweenFrame_(mode));
 	}
-	void changeCamModeSub_(int, int, bool);
-	void changeCamModeSpecifyFrame_(int, int);
+	void changeCamModeSub_(int mode, int tween_frames, bool force);
+	void changeCamModeSpecifyFrame_(int mode, int tween_frames);
 	void changeCamModeSpecifyCamMapTool_(const TCameraMapTool*);
-	void changeCamModeSpecifyCamMapToolAndFrame_(const TCameraMapTool*, int);
+	void changeCamModeSpecifyCamMapToolAndFrame_(const TCameraMapTool* tool,
+	                                             int tween_frames);
 	void execFrontRotate_();
 	void doLButtonCameraOn_();
 	void doLButtonCameraOff_(bool);
@@ -328,13 +342,30 @@ public:
 	};
 
 	/* 0x60 */ CameraUnk60Struct* unk60;
+
+	enum {
+		CAMERA_FLAG_UNK1              = 0x1,
+		CAMERA_FLAG_UNK2              = 0x2,
+		CAMERA_FLAG_UNK4              = 0x4,
+		CAMERA_FLAG_UNK8              = 0x8,
+		CAMERA_FLAG_UNK10             = 0x10,
+		CAMERA_FLAG_NOTICE_ACTIVE     = 0x20,
+		CAMERA_FLAG_UNK40             = 0x40,
+		CAMERA_FLAG_UNK80             = 0x80,
+		CAMERA_FLAG_UNK100            = 0x100,
+		CAMERA_FLAG_GATE_DEMO         = 0x200,
+		CAMERA_FLAG_DEAD_DEMO         = 0x400,
+		CAMERA_FLAG_HELL_DEAD_DEMO    = 0x800,
+		CAMERA_FLAG_JET_COASTER_SCENE = 0x1000,
+	};
+
 	/* 0x64 */ u16 unk64;
 	/* 0x68 */ TCameraKindParam* mCurrentParams;
 	/* 0x6C */ TCameraInbetween* mInbetween;
 	/* 0x70 */ const TCameraMapTool* unk70;
 	/* 0x74 */ const TCameraMapTool* unk74;
-	/* 0x78 */ u32 unk78;
-	/* 0x7C */ u32 unk7C;
+	/* 0x78 */ u32 mPosFreezeFrames;
+	/* 0x7C */ u32 mTargetFreezeFrames;
 	/* 0x80 */ TTargetCamera mCurrentTarget;
 	/* 0xB4 */ TTargetCamera mPreviousTarget;
 	/* 0xE8 */ TTargetCamera mTargetBeforeFixedMode;
@@ -350,7 +381,7 @@ public:
 	/* 0x1AC */ Mtx44 unk1AC;
 	/* 0x1EC */ Mtx unk1EC;
 	/* 0x21C */ Mtx unk21C;
-	/* 0x24C */ f32 unk24C;
+	/* 0x24C */ f32 mHeightPanOffset;
 	/* 0x250 */ f32 unk250;
 	/* 0x254 */ s16 unk254;
 	/* 0x256 */ s16 unk256;
@@ -363,9 +394,9 @@ public:
 	/* 0x276 */ s16 unk276;
 	/* 0x278 */ u16 unk278;
 	/* 0x27A */ u16 unk27A;
-	/* 0x27C */ u16 unk27C;
-	/* 0x27E */ u16 unk27E;
-	/* 0x280 */ u16 unk280;
+	/* 0x27C */ u16 mDeadDemoCountdown;
+	/* 0x27E */ u16 mDeadDemoCountdownToFovZoom;
+	/* 0x280 */ u16 mDeadDemoFovZoomTimer;
 	/* 0x282 */ u16 unk282;
 	/* 0x284 */ s32 unk284;
 	/* 0x288 */ f32 unk288;
@@ -376,7 +407,7 @@ public:
 	/* 0x298 */ f32 unk298;
 	/* 0x29C */ int unk29C;
 	/* 0x2A0 */ TLiveActor** unk2A0;
-	/* 0x2A4 */ TLiveActor* unk2A4;
+	/* 0x2A4 */ TLiveActor* mNoticeActor;
 	/* 0x2A8 */ TLiveActor* unk2A8;
 
 	struct CameraUnk2ACStruct {
@@ -399,32 +430,33 @@ public:
 	/* 0x2AC */ CameraUnk2ACStruct* unk2AC;
 	/* 0x2B0 */ TCameraBck* unk2B0;
 
-	struct CameraUnk2B4Struct {
-		CameraUnk2B4Struct()
+	// Fabricated, it all got inlined D:
+	struct TCameraDemo {
+		TCameraDemo()
 		    : unk0(nullptr)
 		    , unk4(0.0f)
 		    , unk8(nullptr)
 		    , unkC(0)
-		    , unk10(0)
-		    , unk14(0)
+		    , mTotalFrames(0)
+		    , mRemainingFrames(0)
 		{
 		}
 
-		void setThing(int value)
+		void setLengthFrames(int frames)
 		{
-			unk10 = value;
-			unk14 = value;
+			mTotalFrames     = frames;
+			mRemainingFrames = frames;
 		}
 
 		/* 0x0 */ const JGeometry::TVec3<f32>* unk0;
 		/* 0x4 */ f32 unk4;
 		/* 0x8 */ TCameraMapTool* unk8;
 		/* 0xC */ u8 unkC;
-		/* 0x10 */ int unk10;
-		/* 0x14 */ int unk14;
+		/* 0x10 */ int mTotalFrames;
+		/* 0x14 */ int mRemainingFrames;
 	};
 
-	/* 0x2B4 */ CameraUnk2B4Struct* unk2B4;
+	/* 0x2B4 */ TCameraDemo* mCameraDemo;
 	/* 0x2B8 */ TCameraJetCoaster* unk2B8;
 	/* 0x2BC */ TCameraMultiPlayer* unk2BC;
 	/* 0x2C0 */ f32 unk2C0;

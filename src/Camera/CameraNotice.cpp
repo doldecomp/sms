@@ -12,7 +12,6 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JMath.hpp>
-#include <Enemy/BossGesso.hpp>
 #include <Enemy/Enemy.hpp>
 
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
@@ -29,9 +28,9 @@ const char* bossGesoViewObjName = "ボスゲッソー";
 
 void CPolarSubCamera::setNoticeInfo()
 {
-	unk2A0 = new TLiveActor*[0x10];
-	unk2A4 = nullptr;
-	unk29C = 0;
+	unk2A0       = new TLiveActor*[0x10];
+	mNoticeActor = nullptr;
+	unk29C       = 0;
 
 	for (int i = 0; sNoticeActorManagerName[i] != nullptr; ++i) {
 		TLiveManager* mgr
@@ -42,19 +41,19 @@ void CPolarSubCamera::setNoticeInfo()
 				unk2A0[unk29C++] = (TLiveActor*)mgr->unk18[j];
 	}
 
-	unk2A8 = JDrama::TNameRefGen::search<TBossGesso>(bossGesoViewObjName);
+	unk2A8 = JDrama::TNameRefGen::search<TLiveActor>(bossGesoViewObjName);
 }
 
 TLiveActor* CPolarSubCamera::getNoticeActor_()
 {
-	if (unk2A4 != nullptr && !unk2A4->checkLiveFlag(LIVE_FLAG_DEAD)
-	    && !unk2A4->checkLiveFlag(LIVE_FLAG_HIDDEN)) {
+	if (mNoticeActor != nullptr && !mNoticeActor->checkLiveFlag(LIVE_FLAG_DEAD)
+	    && !mNoticeActor->checkLiveFlag(LIVE_FLAG_HIDDEN)) {
 
-		if (unk2A4->mPosition.squared(*gpMarioPos)
+		if (mNoticeActor->mPosition.squared(*gpMarioPos)
 		    < CLBSquared<f32>(mSaveNotice->mOffDist.get())) {
 			JGeometry::TVec2<f32> clipPos;
-			CLBCalc2DFPos(&clipPos, unk16C, unk1EC, unk2A4->mPosition, nullptr,
-			              false);
+			CLBCalc2DFPos(&clipPos, unk16C, unk1EC, mNoticeActor->mPosition,
+			              nullptr, false);
 
 			// TODO: inline
 			f32 clipMax  = mSaveNotice->mOffClipRatio.get();
@@ -68,7 +67,7 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 				inClipY = true;
 
 			if (inClipY)
-				return unk2A4;
+				return mNoticeActor;
 		}
 	}
 
@@ -77,13 +76,11 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 
 	for (int i = 0; i < unk29C; i++) {
 		if (unk2A0[i]->checkLiveFlag(LIVE_FLAG_DEAD)
-		    || unk2A0[i]->checkLiveFlag(LIVE_FLAG_HIDDEN)) {
+		    || unk2A0[i]->checkLiveFlag(LIVE_FLAG_HIDDEN))
 			continue;
-		}
 
-		if (unk2A4 != nullptr && unk2A0[i] == unk2A4) {
+		if (mNoticeActor != nullptr && unk2A0[i] == mNoticeActor)
 			continue;
-		}
 
 		f32 dist2 = unk2A0[i]->mPosition.squared(*gpMarioPos);
 		if (dist2 >= closestDist2)
@@ -104,15 +101,13 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 		if (inClipX && clipMin <= clipPos.y && clipPos.y <= clipMax) {
 			inClipY = true;
 		}
-		if (!inClipY) {
+		if (!inClipY)
 			continue;
-		}
 
 		if (!MsIsInSight(*gpMarioPos, DEG2SHORTANGLE(*gpMarioAngleY),
 		                 unk2A0[i]->mPosition, dist2,
-		                 mSaveNotice->mOnDegree.get(), -1.0f)) {
+		                 mSaveNotice->mOnDegree.get(), -1.0f))
 			continue;
-		}
 
 		closestDist2 = dist2;
 		noticeActor  = unk2A0[i];
@@ -124,23 +119,23 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 void CPolarSubCamera::execNoticeOnOffProc_(EnumNoticeOnOffMode mode)
 {
 	switch (mode) {
-	case 0:
-		unk2A4 = nullptr;
-		unk64 &= ~0x20U;
+	case NOTICE_MODE_UNK0:
+		mNoticeActor = nullptr;
+		unk64 &= ~CAMERA_FLAG_NOTICE_ACTIVE;
 		break;
-	case 1: {
+	case NOTICE_MODE_UNK1: {
 		TLiveActor* actor = getNoticeActor_();
-		if (actor != unk2A4 && actor == nullptr) {
-			unk2A4 = nullptr;
-			unk64 &= ~0x20U;
+		if (actor != mNoticeActor && actor == nullptr) {
+			mNoticeActor = nullptr;
+			unk64 &= ~CAMERA_FLAG_NOTICE_ACTIVE;
 		}
 		break;
 	}
-	case 2: {
+	case NOTICE_MODE_UNK2: {
 		TLiveActor* actor = getNoticeActor_();
-		if (actor != unk2A4 && actor != nullptr) {
-			unk2A4 = actor;
-			unk64 |= 0x20U;
+		if (actor != mNoticeActor && actor != nullptr) {
+			mNoticeActor = actor;
+			unk64 |= CAMERA_FLAG_NOTICE_ACTIVE;
 		}
 		break;
 	}
@@ -212,20 +207,19 @@ void CPolarSubCamera::ctrlLButtonCamera_()
 	f32 stickX = -unk120->mCompSPos[4];
 	f32 stickY = -unk120->mCompSPos[5];
 
-	if (unk7C == 0) {
-		if (!SMS_CheckMarioFlag(MARIO_FLAG_HAS_FLUDD)) {
+	if (mTargetFreezeFrames == 0) {
+		if (!SMS_CheckMarioFlag(MARIO_FLAG_HAS_FLUDD))
 			mCurrentTarget.mTarget.set(gpCameraMario->unk0);
-		} else {
+		else
 			getNozzleTopPos_(&mCurrentTarget.mTarget);
-		}
 	}
 
-	if (unk78 == 0) {
-		if (unk64 & 0x20) {
+	if (mPosFreezeFrames == 0) {
+		if (unk64 & CAMERA_FLAG_NOTICE_ACTIVE) {
 			if (stickX != 0.0f) {
 				rotateY_ByStickX_(stickX);
 			} else {
-				calcNoticeTargetYrot_(unk2A4->mPosition);
+				calcNoticeTargetYrot_(mNoticeActor->mPosition);
 			}
 		} else {
 			rotateY_ByStickX_(stickX);

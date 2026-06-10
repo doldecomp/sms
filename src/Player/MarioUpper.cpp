@@ -14,8 +14,7 @@ void TMario::checkPumping()
 		return;
 	}
 
-	if ((gpMarioOriginal == this)
-	    && (gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode) != 0)
+	if ((gpMarioOriginal == this) && gpCamera->isLButtonCamera() != false
 	    && checkPumpEnable()) {
 		mUpperState   = UPPER_STATE_HOLDING_PUMP;
 		mPumpCooldown = 0;

@@ -8,14 +8,12 @@ void TCameraMapTool::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TNameRef::load(stream);
 
-	stream >> unkC.x >> unkC.y >> unkC.z;
-
-	stream >> unk18.x >> unk18.y;
+	stream >> unkC.x >> unkC.y >> unkC.z >> unk18.x >> unk18.y;
 
 	stream >> unk20;
-	stream >> unk24;
+	stream >> mCameraMode;
 	stream >> unk28;
-	stream >> unk2C;
+	stream >> mDemoLengthFrames;
 
 	if (unk28 < 0)
 		unk28 = 0;
@@ -26,7 +24,7 @@ void TCameraMapTool::calcPosAndAt(JGeometry::TVec3<f32>* param_1,
 {
 	param_1->set(unkC);
 
-	if (gpCamera->isFixCameraSpecifyMode(unk24)) {
+	if (gpCamera->isFixCameraSpecifyMode(mCameraMode)) {
 		CLBPolarToCross(*param_1, param_2, 1000.0f,
 		                CLBDegToShortAngle(-unk18.x),
 		                CLBDegToShortAngle(unk18.y));

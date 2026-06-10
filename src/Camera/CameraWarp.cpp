@@ -8,7 +8,7 @@
 
 void CPolarSubCamera::warpPosAndAt(const Vec& pos, const Vec& at)
 {
-	if (mMode < CAMERA_MODE_COUNT) {
+	if (mMode < CAMERA_MODE_REPRODUCE_DEMO) {
 		mCurrentParams->copySaveParam(*mSaveKindParam[mMode]);
 		killHeightPan_();
 
@@ -28,7 +28,7 @@ void CPolarSubCamera::warpPosAndAt(const Vec& pos, const Vec& at)
 
 void CPolarSubCamera::warpPosAndAt(f32 ratio, s16 yAngle)
 {
-	if (mMode < CAMERA_MODE_COUNT) {
+	if (mMode < CAMERA_MODE_REPRODUCE_DEMO) {
 		mCurrentParams->copySaveParam(*mSaveKindParam[mMode]);
 
 		JGeometry::TVec3<f32> usualLookat;
@@ -57,7 +57,7 @@ void CPolarSubCamera::addMoveCameraAndMario(const Vec& v)
 	unk124 += v;
 	unk148 += v;
 
-	gpCameraMario->unk0 += v;
+	gpCameraMario->addMoveCameraAndMario(v);
 
 	mInbetween->addMoveCameraAndMario(v);
 

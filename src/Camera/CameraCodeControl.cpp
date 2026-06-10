@@ -28,9 +28,9 @@ bool CPolarSubCamera::controlByCameraCode_(int* param_1)
 
 				TCameraMapTool* tool = info->getCameraMapTool();
 				if (tool) {
-					if (mMode != tool->unk24 || tool != unk70)
+					if (mMode != tool->mCameraMode || tool != unk70)
 						changeCamModeSpecifyCamMapTool_(tool);
-					*param_1 = tool->unk24;
+					*param_1 = tool->mCameraMode;
 				} else {
 					*param_1 = gpCubeCamera->getDataNo(i);
 				}

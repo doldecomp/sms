@@ -46,7 +46,7 @@ template <> class TVec3<f32> : public Vec {
 public:
 	TVec3() { }
 
-	TVec3(const Vec& b) { set(b.x, b.y, b.z); }
+	TVec3(const Vec& b) { set(b); }
 
 	template <class T> TVec3(T x_, T y_, T z_) { set(x_, y_, z_); }
 
