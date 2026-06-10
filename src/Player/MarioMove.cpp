@@ -1975,7 +1975,7 @@ void TMario::thinkSituation()
 		changePlayerStatus(MARIO_STATUS_FALL_DEAD, 0, true);
 		if (mAnimationId != ANIM_THROWN)
 			startSoundActor(MSD_SE_MV10B_CRY_JUMP_01);
-		gpCamera->unk64 |= 0x800;
+		gpCamera->unk64 |= CPolarSubCamera::CAMERA_FLAG_HELL_DEAD_DEMO;
 		gpMarDirector->unk4E |= 0x8;
 		return;
 	}
@@ -2444,7 +2444,7 @@ void TMario::playerControl(JDrama::TGraphics* param_1)
 		changePlayerStatus(MARIO_STATUS_READ_BILLBOARD, 0, false);
 
 	if (gpMarioOriginal == this) {
-		if (gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode)
+		if (gpCamera->isLButtonCamera()
 		    && !((mStatus & MARIO_STATUS_TYPE_AND_ID_MASK)
 		             >= (MARIO_STATUS_HANGING & MARIO_STATUS_TYPE_AND_ID_MASK)
 		         && (MARIO_STATUS_HANG_JUMPING & MARIO_STATUS_TYPE_AND_ID_MASK)

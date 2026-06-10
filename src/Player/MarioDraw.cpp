@@ -675,8 +675,7 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 	if (param_2 == 0) {
 		TMario* mario = gpMarioForCallBack;
 		s16* unk      = &mario->unkFC; // This feels wrong
-		if (mario == gpMarioOriginal
-		    && gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode) == 1
+		if (mario == gpMarioOriginal && gpCamera->isLButtonCamera() == true
 		    && gpMarioForCallBack->canBendBody() != 0
 		    && gpCamera->mCurrentTarget.mPitch > 0) {
 			*unk = gpCamera->mCurrentTarget.mPitch;

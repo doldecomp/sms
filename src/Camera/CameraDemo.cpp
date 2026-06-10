@@ -17,29 +17,53 @@
 
 extern const char* cCameraBckNameGate;
 
-void CPolarSubCamera::startReproduceDemoCamera_(const char*,
-                                                const JGeometry::TVec3<f32>*)
+bool CPolarSubCamera::startReproduceDemoCamera_(
+    const char* name, const JGeometry::TVec3<f32>* offset)
 {
+	bool started = false;
+	if (unk2B0->isFileExist(name)) {
+		unk2B0->startDemo(name, offset);
+		mCameraDemo->setLengthFrames(unk2B0->getTotalDemoFrames());
+		changeCamModeSpecifyFrame_(CAMERA_MODE_REPRODUCE_DEMO, 1);
+		mNear   = mSaveEx->mSLReproduceDemoNearClip.get();
+		started = true;
+	}
+	return started;
 }
 
 void CPolarSubCamera::restartReproduceDemoCamera_() { }
 
-void CPolarSubCamera::endReproduceDemoCamera_() { }
+void CPolarSubCamera::endReproduceDemoCamera_()
+{
+	if (mMode == CAMERA_MODE_REPRODUCE_DEMO) {
+		unk2B0->endDemo();
+		mCameraDemo->setLengthFrames(0);
+		changeCamModeSpecifyFrame_(-1, 1);
+		unk120->onNeutralMarioKey();
+	}
+}
 
-void CPolarSubCamera::endSimpleDemoCamera_() { }
+void CPolarSubCamera::endSimpleDemoCamera_()
+{
+	if (isSimpleDemoCamera()) {
+		mCameraDemo->setLengthFrames(0);
+		mCameraDemo->unkC &= ~1U;
+		unk120->onNeutralMarioKey();
+	}
+}
 
 void CPolarSubCamera::updateDemoCamera_(bool param_1)
 {
 	if (param_1) {
-		if ((mMode == CAMERA_MODE_COUNT) ? true : false) {
+		if (isBckDemoCamera()) {
 			unk2B0->updateDemo(&unk124, &unk148, &mUp, &mFovy);
 
-			if (unk2B4->unk4 != 0.0f) {
-				s16 angle = CLBRoundf<s16>(182.04445f * unk2B4->unk4);
+			if (mCameraDemo->unk4 != 0.0f) {
+				s16 angle = CLBDegToShortAngle(mCameraDemo->unk4);
 
 				JGeometry::TVec3<f32> origin(0.0f, 0.0f, 0.0f);
-				if (unk2B4->unk0 != nullptr)
-					origin = *unk2B4->unk0;
+				if (mCameraDemo->unk0 != nullptr)
+					origin = *mCameraDemo->unk0;
 
 				{
 					JGeometry::TVec3<f32> result = origin;
@@ -79,14 +103,14 @@ void CPolarSubCamera::updateDemoCamera_(bool param_1)
 		}
 	}
 
-	if (unk2B4->unk14 > 0) {
-		unk2B4->unk14--;
-		if (unk2B4->unk14 == 0) {
+	if (mCameraDemo->mRemainingFrames > 0) {
+		mCameraDemo->mRemainingFrames -= 1;
+		if (mCameraDemo->mRemainingFrames == 0) {
 			unk120->onNeutralMarioKey();
-			unk2B4->setThing(0);
-			if (mMode == CAMERA_MODE_COUNT ? true : false)
+			mCameraDemo->setLengthFrames(0);
+			if (isBckDemoCamera())
 				return;
-			unk2B4->unkC |= 1;
+			mCameraDemo->unkC |= 1;
 		}
 	}
 }
@@ -97,17 +121,16 @@ void CPolarSubCamera::updateGateDemoCamera_()
 	unk2B0->updateDemo(nullptr, nullptr, nullptr, &fovy);
 
 	int v = mInbetween->unk4;
-	if (unk70 != unk2B4->unk8 && v > 0)
-		CLBChaseConstantSpecifyFrame<f32>(&mFovy, fovy, (f32)mInbetween->unk4);
+	if (unk70 != mCameraDemo->unk8 && v > 0)
+		CLBChaseConstantSpecifyFrame<f32>(&mFovy, fovy, (f32)v);
 	else
 		mFovy = fovy;
 
 	C_MTXPerspective(unk16C, mFovy, mAspect, mNear, mFar);
 
-	if (unk70 != unk2B4->unk8) {
-		if ((unk2B4->unk10 - unk2B4->unk14) > 0xF0)
-			changeCamModeSpecifyCamMapToolAndFrame_(unk2B4->unk8, 0x78);
-	}
+	if (unk70 != mCameraDemo->unk8)
+		if (mCameraDemo->mTotalFrames - mCameraDemo->mRemainingFrames > 240)
+			changeCamModeSpecifyCamMapToolAndFrame_(mCameraDemo->unk8, 120);
 }
 
 void CPolarSubCamera::startGateDemoCamera(const JDrama::TActor* actor)
@@ -118,95 +141,80 @@ void CPolarSubCamera::startGateDemoCamera(const JDrama::TActor* actor)
 	TCameraMapTool* tool = (TCameraMapTool*)gpCamMapToolTable->searchF(
 	    JDrama::TNameRef::calcKeyCode(buf), buf);
 	if (tool) {
-		unk2B4->unkC |= 1;
+		mCameraDemo->unkC |= 1;
 		changeCamModeSpecifyCamMapToolAndFrame_(tool, 0x3C);
-		unk64 |= 0x200;
+		unk64 |= CAMERA_FLAG_GATE_DEMO;
 		unk2B0->startDemo(cCameraBckNameGate, nullptr);
-		unk2B4->setThing(unk2B0->getTotalDemoFrames());
+		mCameraDemo->setLengthFrames(unk2B0->getTotalDemoFrames());
 	}
 
 	snprintf(buf, 0x80, "%sカメラ", actor->getName());
 	TCameraMapTool* tool2 = (TCameraMapTool*)gpCamMapToolTable->searchF(
 	    JDrama::TNameRef::calcKeyCode(buf), buf);
 	if (tool2)
-		unk2B4->unk8 = tool2;
+		mCameraDemo->unk8 = tool2;
 }
 
 void CPolarSubCamera::startDemoCamera(const char* name,
                                       const JGeometry::TVec3<f32>* offset,
-                                      long longArg, f32 f, bool boolArg)
+                                      s32 length_frames, f32 f, bool boolArg)
 {
-	unk2B4->unk0 = offset;
-	unk2B4->unk4 = f;
+	mCameraDemo->unk0 = offset;
+	mCameraDemo->unk4 = f;
 
 	if (name == nullptr)
 		return;
 
-	bool started = false;
-	if (unk2B0->isFileExist(name)) {
-		unk2B0->startDemo(name, offset);
-		unk2B4->setThing(unk2B0->getTotalDemoFrames());
-		changeCamModeSpecifyFrame_(CAMERA_MODE_COUNT, 1);
-		mNear   = mSaveEx->mSLReproduceDemoNearClip.get();
-		started = true;
-	}
-
-	if (started)
+	if (startReproduceDemoCamera_(name, offset))
 		return;
 
-	if ((mMode == CAMERA_MODE_COUNT) ? true : false)
+	if (isBckDemoCamera())
 		return;
 
 	TCameraMapTool* tool = (TCameraMapTool*)gpCamMapToolTable->searchF(
 	    JDrama::TNameRef::calcKeyCode(name), name);
-	if (tool == nullptr)
-		return;
-
-	if (!boolArg) {
-		unk2B4->setThing(-1);
-		unk2B4->unkC |= 1;
-	} else if (longArg == -1) {
-		unk2B4->setThing(tool->unk2C);
-	} else {
-		unk2B4->setThing(longArg);
+	if (tool != nullptr) {
+		if (!boolArg) {
+			mCameraDemo->setLengthFrames(-1);
+			mCameraDemo->unkC |= 1;
+		} else if (length_frames == -1) {
+			mCameraDemo->setLengthFrames(tool->getDemoLengthFrames());
+		} else {
+			mCameraDemo->setLengthFrames(length_frames);
+		}
+		changeCamModeSpecifyCamMapTool_(tool);
 	}
-	changeCamModeSpecifyCamMapTool_(tool);
 }
 
 void CPolarSubCamera::endDemoCamera()
 {
-	if ((mMode == CAMERA_MODE_COUNT) ? true : false) {
-		if (mMode == CAMERA_MODE_COUNT) {
-			unk2B0->endDemo();
-			unk2B4->setThing(0);
-			changeCamModeSpecifyFrame_(-1, 1);
-			unk120->onNeutralMarioKey();
-		}
-	} else {
-		if (isSimpleDemoCamera()) {
-			if (isSimpleDemoCamera()) {
-				unk2B4->setThing(0);
-				unk2B4->unkC &= ~1U;
-				unk120->onNeutralMarioKey();
-			}
-		}
-	}
-	unk2B4->unk0 = nullptr;
+	if (isBckDemoCamera())
+		endReproduceDemoCamera_();
+	else if (isSimpleDemoCamera())
+		endSimpleDemoCamera_();
+
+	mCameraDemo->unk0 = nullptr;
 }
 
 bool CPolarSubCamera::isSimpleDemoCamera() const
 {
 	bool result = false;
-	if (((mMode == CAMERA_MODE_COUNT) ? true : false) == false) {
-		if (unk2B4->unk14 > 0 || (unk2B4->unkC & 1U))
+	if (isBckDemoCamera() == false)
+		if (mCameraDemo->mRemainingFrames > 0 || (mCameraDemo->unkC & 1U))
 			result = true;
-	}
+
 	return result;
 }
 
-void CPolarSubCamera::getTotalDemoFrames() const { }
+int CPolarSubCamera::getTotalDemoFrames() const
+{
+	return mCameraDemo->mTotalFrames;
+}
 
-int CPolarSubCamera::getRestDemoFrames() const { return unk2B4->unk14; }
+int CPolarSubCamera::getRestDemoFrames() const
+{
+	return mCameraDemo->mRemainingFrames;
+}
 
 void CPolarSubCamera::ctrlNormalDeadDemo_()
 {
@@ -219,57 +227,54 @@ void CPolarSubCamera::ctrlNormalDeadDemo_()
 	if (gpMarioOriginal->checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA))
 		return;
 
-	if (unk27E > 0) {
-		unk27E--;
-		if (unk27E > 0)
+	if (mDeadDemoCountdownToFovZoom > 0) {
+		mDeadDemoCountdownToFovZoom -= 1;
+		if (mDeadDemoCountdownToFovZoom > 0)
 			return;
-		unk280 = 0x157;
+		mDeadDemoFovZoomTimer = 343;
 		return;
 	}
 
-	if (unk280 <= 0)
-		return;
+	if (mDeadDemoFovZoomTimer > 0) {
+		mDeadDemoFovZoomTimer -= 1;
 
-	unk280--;
-
-	Vec diff;
-	diff.x   = mTarget.x - mPosition.x;
-	diff.y   = mTarget.y - mPosition.y;
-	diff.z   = mTarget.z - mPosition.z;
-	f32 mag2 = MsVECMag2(&diff);
-	if (mag2 > 0.001f) {
-		f32 r = MsClamp(10500.0f * (1.0f / mag2), 5.0f, 80.0f);
-		CLBChaseConstantSpecifyFrame<f32>(&mFovy, r, (f32)unk280);
+		Vec diff;
+		diff.x           = mTarget.x - mPosition.x;
+		diff.y           = mTarget.y - mPosition.y;
+		diff.z           = mTarget.z - mPosition.z;
+		f32 distToTarget = MsVECMag2(&diff);
+		if (distToTarget > 0.001f) {
+			f32 r = MsClamp(10500.0f * (1.0f / distToTarget), 5.0f, 80.0f);
+			CLBChaseConstantSpecifyFrame<f32>(&mFovy, r,
+			                                  (f32)mDeadDemoFovZoomTimer);
+		}
 	}
 }
 
 void CPolarSubCamera::execDeadDemoProc_()
 {
-	if (unk27C > 0) {
-		unk27C--;
-		if (unk27C > 0)
+	if (mDeadDemoCountdown > 0) {
+		mDeadDemoCountdown -= 1;
+		if (mDeadDemoCountdown > 0)
 			return;
-		unk64 |= 0x400;
-		unk78 = 1;
-		if (unk64 & 0x800)
+		unk64 |= CAMERA_FLAG_DEAD_DEMO;
+		mPosFreezeFrames = 1;
+		if (unk64 & CAMERA_FLAG_HELL_DEAD_DEMO)
 			return;
-		unk27E = 1;
+		mDeadDemoCountdownToFovZoom = 1;
 		return;
 	}
 
-	if (!SMS_CheckMarioFlag(MARIO_FLAG_GAME_OVER))
-		return;
-
-	if (gpMarDirector->isTalkOrDemoModeNow())
-		return;
-	unk27C = 0x10;
+	if (SMS_CheckMarioFlag(MARIO_FLAG_GAME_OVER)
+	    && !gpMarDirector->isTalkOrDemoModeNow())
+		mDeadDemoCountdown = 16;
 }
 
 bool CPolarSubCamera::isHellDeadDemo() const
 {
 	bool result = false;
-	if (unk64 & 0x400)
-		if (unk64 & 0x800)
+	if (unk64 & CAMERA_FLAG_DEAD_DEMO)
+		if (unk64 & CAMERA_FLAG_HELL_DEAD_DEMO)
 			result = true;
 	return result;
 }
@@ -277,8 +282,8 @@ bool CPolarSubCamera::isHellDeadDemo() const
 bool CPolarSubCamera::isNormalDeadDemo() const
 {
 	bool result = false;
-	if (unk64 & 0x400)
-		if (!(unk64 & 0x800))
+	if (unk64 & CAMERA_FLAG_DEAD_DEMO)
+		if (!(unk64 & CAMERA_FLAG_HELL_DEAD_DEMO))
 			result = true;
 	return result;
 }

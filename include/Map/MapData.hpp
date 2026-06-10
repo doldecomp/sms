@@ -429,6 +429,14 @@ public:
 			return false;
 	}
 
+	bool isThing() const
+	{
+		if (mBGType & 0xA000)
+			return true;
+		else
+			return false;
+	}
+
 	const JGeometry::TVec3<f32>& getPoint1() const { return mPoint1; }
 	const JGeometry::TVec3<f32>& getPoint2() const { return mPoint2; }
 	const JGeometry::TVec3<f32>& getPoint3() const { return mPoint3; }

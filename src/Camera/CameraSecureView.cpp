@@ -6,6 +6,9 @@
 #include <Player/MarioAccess.hpp>
 #include <JSystem/JMath.hpp>
 
+// TODO: macro in cameralib?
+#define ABS(x) ((x) >= 0 ? (x) : -(x))
+
 void CPolarSubCamera::calcSecureViewTarget_(s16 angle, f32* outX, f32* outZ)
 {
 	s16 base = *gpMarioAngleY - 0x8000;
@@ -25,12 +28,7 @@ void CPolarSubCamera::calcSecureViewTarget_(s16 angle, f32* outX, f32* outZ)
 		                                 mCurrentTarget.unk28);
 	}
 
-	f32 sin_d = JMASSin(diff);
-
-	// TODO: inline?..
-	f32 mag = -(first * sin_d + second * cos_d >= 0.0f
-	                ? first * sin_d + second * cos_d
-	                : -(first * sin_d + second * cos_d));
+	f32 mag = -ABS(first * JMASSin(diff) + second * cos_d);
 
 	*outX = mag * JMASSin(base);
 	*outZ = mag * JMASCos(base);
@@ -42,11 +40,8 @@ void CPolarSubCamera::execSecureView_(s16 angle, Vec* out)
 	f32 pz;
 	calcSecureViewTarget_(angle, &px, &pz);
 
-	s16 mDiff = *gpMarioAngleY - gpMarioOriginal->unk9C >= 0
-	                ? *gpMarioAngleY - gpMarioOriginal->unk9C
-	                : -(*gpMarioAngleY - gpMarioOriginal->unk9C);
-
-	f32 ratio = SHORTANGLE2DEG(1.0f) * (f32)mDiff;
+	s16 diff  = ABS(*gpMarioAngleY - gpMarioOriginal->getUnk9C());
+	f32 ratio = SHORTANGLE2DEG(diff);
 	f32 inv;
 	if (ratio <= 1.0f)
 		inv = 1.0f;

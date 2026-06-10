@@ -52,8 +52,7 @@ void TMapObjWaterFilter::perform(u32 param_1, JDrama::TGraphics* param_2)
 		return;
 
 	bool bVar1 = true;
-	if (!gpCamera->isSimpleDemoCamera()
-	    && !(gpCamera->mMode == 0x49 ? true : false)) {
+	if (!gpCamera->isSimpleDemoCamera() && !gpCamera->isBckDemoCamera()) {
 		bVar1 = false;
 	}
 

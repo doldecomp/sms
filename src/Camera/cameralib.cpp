@@ -58,60 +58,53 @@ void CLBCalc2DFPos(JGeometry::TVec2<f32>* param_1, const f32 (*param_2)[4],
 		*param_5 = CLBLinearInbetween<u32>(0, 0xffffff, fVar4 + 1.0f);
 }
 
-BOOL CLBChaseAngleDecrease(s16* value, s16 target, s16 ratio)
+BOOL CLBChaseAngleDecrease(s16* value, s16 desired, s16 ratio)
 {
 	if (ratio == 0) {
-		*value = target;
+		*value = desired;
 	} else {
-		s16 newValue = *value - target;
+		s16 newValue = *value - desired;
 		newValue -= newValue / ratio;
-		newValue += target;
+		newValue += desired;
 		if (newValue == *value)
 			return false;
 
 		*value = newValue;
 	}
 
-	if (*value == target)
+	if (*value == desired)
 		return false;
 
 	return true;
 }
 
-BOOL CLBChaseDecrease(f32* dstValue, f32 targetValue, f32 ratio, f32 threshold)
+BOOL CLBChaseDecrease(f32* value, f32 desired, f32 ratio, f32 threshold)
 {
-	if (ratio > 1.0f) {
+	if (ratio > 1.0f)
 		ratio = 1.0f;
-	}
 
-	*dstValue += ratio * (targetValue - *dstValue);
+	*value += ratio * (desired - *value);
 
 	// You'd think this would just be
 	// "return ABS(*dstValue - targetValue) > ABS(threshold);"
 	// but this gives an exact match
-	if (ABS(*dstValue - targetValue) <= ABS(threshold)) {
+	if (ABS(*value - desired) <= ABS(threshold))
 		return false;
-	} else {
-		return true;
-	}
+
+	return true;
 }
 
-BOOL CLBChaseSpecialDecrease(f32* param_1, f32 param_2, f32 param_3,
-                             f32 param_4)
+BOOL CLBChaseSpecialDecrease(f32* value, f32 desired, f32 ratio, f32 speed)
 {
-	if (param_3 > 1.0f) {
-		param_3 = 1.0f;
-	}
+	if (ratio > 1.0f)
+		ratio = 1.0f;
 
-	f32 fVar2 = param_3 * (param_2 - *param_1);
-	f32 fVar3 = ABS(param_4);
-	f32 fVar1 = ABS(fVar2);
+	f32 actualSpeed = ratio * (desired - *value);
 
-	if (fVar1 < fVar3) {
-		fVar2 = param_4;
-	}
+	if (CLBAbs(actualSpeed) < CLBAbs(speed))
+		actualSpeed = speed;
 
-	return CLBChaseGeneralConstantSpecifySpeed(param_1, param_2, fVar2);
+	return CLBChaseGeneralConstantSpecifySpeed(value, desired, actualSpeed);
 }
 
 void CLBCrossToPolar(const Vec& origin, const Vec& in, f32* out_radius,

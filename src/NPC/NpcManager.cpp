@@ -235,10 +235,7 @@ void TNPCManager::clipEnemies(JDrama::TGraphics* graphics)
 
 		// TODO: figure out these inlines. fabricatedInline3 matches in camera
 		// itself but not here for some reason...
-		bool shouldClamp = !cam->isSimpleDemoCamera()
-		                   && ((cam->mMode == 0x49) ? true : false);
-
-		if ((shouldClamp ? true : false) || gpCamera->fabricatedInline3())
+		if (gpCamera->isDemoCamera() || gpCamera->fabricatedInline3())
 			if (farClip < 15000.0f)
 				farClip = 15000.0f;
 	}

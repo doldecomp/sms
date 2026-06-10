@@ -1235,6 +1235,8 @@ public:
 	void onUnk114(u32 flag) { unk114 |= flag; }
 	void offUnk114(u32 flag) { unk114 &= ~flag; }
 
+	s16 getUnk9C() { return unk9C; }
+
 	// Fabricated
 	bool fabricatedIsPumping() const
 	{

@@ -25,7 +25,8 @@ s16 CPolarSubCamera::getCameraInbetweenFrame_(int param_1)
 		param_1 = unk60->getThing();
 
 	int iVar3 = 1;
-	if (mMode < CAMERA_MODE_COUNT && param_1 < CAMERA_MODE_COUNT) {
+	if (mMode < CAMERA_MODE_REPRODUCE_DEMO
+	    && param_1 < CAMERA_MODE_REPRODUCE_DEMO) {
 		TCamSaveKindParam* pTVar4 = mSaveKindParam[mMode];
 		switch (param_1) {
 		case CAMERA_MODE_FOLLOW:
@@ -268,22 +269,22 @@ void CPolarSubCamera::setUpFromLButtonCamera_()
 	mPreviousTarget.unk28 = mCurrentTarget.unk28 = mCurrentTarget.unk30;
 }
 
-void CPolarSubCamera::changeCamModeSub_(int param_1, int param_2, bool param_3)
+void CPolarSubCamera::changeCamModeSub_(int mode, int tween_frames, bool force)
 {
 	bool bVar11 = false;
-	if (param_1 == -1) {
-		param_1 = unk60->getThing();
-		bVar11  = true;
+	if (mode == -1) {
+		mode   = unk60->getThing();
+		bVar11 = true;
 	}
 
-	if (!param_3 && mMode == param_1)
+	if (!force && mMode == mode)
 		return;
 
-	if (param_2 < 0)
+	if (tween_frames < 0)
 		return;
 
-	if (param_2 == 0)
-		param_2 = 1;
+	if (tween_frames == 0)
+		tween_frames = 1;
 
 	mPrevMode = mMode;
 
@@ -293,33 +294,34 @@ void CPolarSubCamera::changeCamModeSub_(int param_1, int param_2, bool param_3)
 		unk60->doStuff(mMode);
 	}
 
-	if (param_1 < CAMERA_MODE_COUNT) {
-		if (mMode == CAMERA_MODE_DELFINO && param_1 == CAMERA_MODE_DELFINO_B) {
+	if (mode < CAMERA_MODE_REPRODUCE_DEMO) {
+		if (mMode == CAMERA_MODE_DELFINO && mode == CAMERA_MODE_DELFINO_B) {
 			mCurrentTarget.unk28  = 1.0f;
 			mPreviousTarget.unk28 = 1.0f;
 		} else if (mMode == CAMERA_MODE_LOOK_DOWN
-		           && param_1 == CAMERA_MODE_MONTE_HANG) {
+		           && mode == CAMERA_MODE_MONTE_HANG) {
 			mCurrentTarget.unk28  = 1.0f;
 			mPreviousTarget.unk28 = 1.0f;
 		} else {
 			if (!isLButtonCameraSpecifyMode(mMode)) {
-				if (isLButtonCameraSpecifyMode(param_1)) {
-					setUpToLButtonCamera_(param_1);
+				if (isLButtonCameraSpecifyMode(mode)) {
+					setUpToLButtonCamera_(mode);
 					unk120->onNeutralMarioKey();
 				}
 			} else {
-				if (!isLButtonCameraSpecifyMode(param_1)) {
+				if (!isLButtonCameraSpecifyMode(mode)) {
 					setUpFromLButtonCamera_();
 					unk120->onNeutralMarioKey();
 				}
 			}
 		}
-		mInbetween->startCameraInbetween(param_2);
+		mInbetween->startCameraInbetween(tween_frames);
 	}
 
-	mMode = param_1;
+	mMode = mode;
 
-	if (mMode < CAMERA_MODE_COUNT && mPrevMode < CAMERA_MODE_COUNT) {
+	if (mMode < CAMERA_MODE_REPRODUCE_DEMO
+	    && mPrevMode < CAMERA_MODE_REPRODUCE_DEMO) {
 		bool willBeFixedMode
 		    = isFixOrDefiniteCameraSpecifyMode(mMode) && unk70 != nullptr;
 		bool wasFixedMode = isFixOrDefiniteCameraSpecifyMode(mPrevMode);
@@ -384,8 +386,8 @@ void CPolarSubCamera::changeCamModeSub_(int param_1, int param_2, bool param_3)
 			}
 		}
 
-		unk78 = 0;
-		unk7C = 0;
+		mPosFreezeFrames    = 0;
+		mTargetFreezeFrames = 0;
 		switch (mPrevMode) {
 		case CAMERA_MODE_DEFINITE_G:
 		case CAMERA_MODE_FIX_G:
@@ -398,7 +400,7 @@ void CPolarSubCamera::changeCamModeSub_(int param_1, int param_2, bool param_3)
 	}
 
 	if (!isNormalCameraSpecifyMode(mMode) && !isTowerCameraSpecifyMode(mMode))
-		unk64 &= ~0x1C;
+		unk64 &= ~(CAMERA_FLAG_UNK10 | CAMERA_FLAG_UNK8 | CAMERA_FLAG_UNK4);
 
 	if (mPrevMode == CAMERA_MODE_LOOK_DOWN && mMode == CAMERA_MODE_MONTE_HANG) {
 		if (unk278 < 120)
@@ -413,32 +415,32 @@ void CPolarSubCamera::changeCamModeSub_(int param_1, int param_2, bool param_3)
 	unk2AC->reset();
 }
 
-void CPolarSubCamera::changeCamModeSpecifyFrame_(int param_1, int param_2)
+void CPolarSubCamera::changeCamModeSpecifyFrame_(int mode, int tween_frames)
 {
 	unk74 = unk70;
 	unk70 = nullptr;
-	changeCamModeSub_(param_1, param_2, false);
+	changeCamModeSub_(mode, tween_frames, false);
 }
 
 void CPolarSubCamera::changeCamModeSpecifyCamMapTool_(
-    const TCameraMapTool* param_1)
+    const TCameraMapTool* tool)
 {
-	int newMode = param_1->getCameraMode();
-	if (mMode != newMode || unk70 != param_1) {
+	int newMode = tool->getCameraMode();
+	if (mMode != newMode || unk70 != tool) {
 		unk74 = unk70;
-		unk70 = param_1;
+		unk70 = tool;
 		changeCamModeSub_(newMode, getCameraInbetweenFrame_(newMode), true);
 	}
 }
 
 void CPolarSubCamera::changeCamModeSpecifyCamMapToolAndFrame_(
-    const TCameraMapTool* param_1, int param_2)
+    const TCameraMapTool* tool, int tween_frames)
 {
-	int newMode = param_1->getCameraMode();
-	if (mMode != newMode || unk70 != param_1) {
+	int newMode = tool->getCameraMode();
+	if (mMode != newMode || unk70 != tool) {
 		unk74 = unk70;
-		unk70 = param_1;
-		changeCamModeSub_(newMode, param_2, true);
+		unk70 = tool;
+		changeCamModeSub_(newMode, tween_frames, true);
 	}
 }
 
@@ -450,15 +452,15 @@ void CPolarSubCamera::execFrontRotate_()
 	(void)0;
 	if (!isLButtonCameraSpecifyMode(mMode)
 	    && SMS_GetMarioStatus() != MARIO_STATUS_HIP_DROP) {
-		unk64 &= ~0x10;
-		unk64 |= 0x4;
+		unk64 &= ~CAMERA_FLAG_UNK10;
+		unk64 |= CAMERA_FLAG_UNK4;
 		unk274 = *gpMarioAngleY - 0x8000;
 		if (unk120->checkFrameMeaning(0x4000)) {
 			unk276 = mSaveEx->mYButtonRotateChase.get();
-			unk64 |= 0x8;
+			unk64 |= CAMERA_FLAG_UNK8;
 		} else if (unk120->checkFrameMeaning(0x8000)) {
 			unk276 = mSaveEx->mLButtonRotateChase.get();
-			unk64 &= ~0x8;
+			unk64 &= ~CAMERA_FLAG_UNK8;
 			SMSGetMSound()->startSoundSystemSE(0x4826, 0, nullptr, 0);
 		}
 	}
@@ -485,7 +487,7 @@ void CPolarSubCamera::doLButtonCameraOff_(bool param_1)
 			changeCamMode_(-1);
 		}
 
-		if (unk64 & 0x20)
+		if (unk64 & CAMERA_FLAG_NOTICE_ACTIVE)
 			execNoticeOnOffProc_(NOTICE_MODE_UNK0);
 	}
 }
@@ -578,7 +580,7 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 	if (isFixOrDefiniteCameraSpecifyMode(param_1))
 		return;
 
-	if (unk64 & 0x20)
+	if (unk64 & CAMERA_FLAG_NOTICE_ACTIVE)
 		execNoticeOnOffProc_(NOTICE_MODE_UNK0);
 
 	int prevMode = mMode;
@@ -602,8 +604,8 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 			}
 		} else if (isNormalCameraSpecifyMode(mMode)
 		           || isTowerCameraSpecifyMode(mMode)) {
-			if (unk64 & 0x10) {
-				unk64 &= ~0x10;
+			if (unk64 & CAMERA_FLAG_UNK10) {
+				unk64 &= ~CAMERA_FLAG_UNK10;
 				doLButtonCameraOn_();
 			} else if (unk120->checkFrameMeaning(0xC000)) {
 				bool doCheck = true;
@@ -614,7 +616,7 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 						execNoticeOnOffProc_((EnumNoticeOnOffMode)2);
 				}
 				if (doCheck) {
-					if (unk64 & 0x20) {
+					if (unk64 & CAMERA_FLAG_NOTICE_ACTIVE) {
 						doLButtonCameraOn_();
 					} else if (!isLButtonCameraInbetween()) {
 						execFrontRotate_();
@@ -688,7 +690,7 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 			} else if (gpCameraMario->isMarioLeanMirror()) {
 				newMode = CAMERA_MODE_LEAN_MIRROR;
 			} else if (gpCameraMario->isMarioIndoor()) {
-				if (param_1 >= 0 && param_1 < CAMERA_MODE_COUNT)
+				if (param_1 >= 0 && param_1 < CAMERA_MODE_REPRODUCE_DEMO)
 					newMode = param_1;
 				else if (currentMap == 7)
 					newMode = CAMERA_MODE_DELFINO;
@@ -754,7 +756,8 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 								else
 									newMode = CAMERA_MODE_HIP_ATTACK;
 							}
-						} else if (param_1 >= 0 && param_1 < CAMERA_MODE_COUNT
+						} else if (param_1 >= 0
+						           && param_1 < CAMERA_MODE_REPRODUCE_DEMO
 						           && !isFollowCameraSpecifyMode(param_1)) {
 							newMode = param_1;
 						} else if (gpCameraMario->isMarioClimb(status)) {

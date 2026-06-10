@@ -34,10 +34,10 @@ void TCameraInbetween::addMoveCameraAndMario(const Vec& param_1)
 	calcPolarData_();
 }
 
-void TCameraInbetween::startCameraInbetween(int param_1)
+void TCameraInbetween::startCameraInbetween(int frames)
 {
-	unk4  = param_1;
-	unk0  = param_1;
+	unk4  = frames;
+	unk0  = frames;
 	unk3C = 0;
 	calcPolarData_();
 }

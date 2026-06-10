@@ -92,7 +92,9 @@ bool TMapEventSink::control()
 	if (unk4C < unk40 - unk44 && unk4C > unk48)
 		rising();
 
-	unk5C[unk28]->moveTrans(unk30->getTransformInfo().mTranslate);
+	const J3DTransformInfo& info = unk30->getTransformInfo();
+	unk5C[unk28]->moveTrans(JGeometry::TVec3<f32>(
+	    info.mTranslate.x, info.mTranslate.y, info.mTranslate.z));
 
 	if (unk4C > unk48
 	    && (gpMarDirector->mMap != 2 || unk54[1 - unk24] == 0 || unk28 != 1)) {
@@ -115,7 +117,9 @@ void TMapEventSink::startControl()
 	unk2C = getBuilding(unk28);
 	unk2C->alive();
 	unk30 = getBuilding(unk28)->getJoint();
-	unk34 = unk30->getTransformInfo().mTranslate.y;
+
+	J3DTransformInfo& info = unk30->getTransformInfo();
+	unk34                  = info.mTranslate.y;
 
 	f32 dVar4;
 	if (unk38 != 0.0f)
@@ -123,7 +127,6 @@ void TMapEventSink::startControl()
 	else
 		dVar4 = getSinkOffsetY();
 
-	J3DTransformInfo& info = unk30->getTransformInfo();
 	info.mTranslate.y -= dVar4;
 	unk30->setTransformInfo(info);
 
@@ -132,7 +135,8 @@ void TMapEventSink::startControl()
 	unk3C     = dVar4 / iVar3;
 	unk4C     = unk40;
 
-	unk5C[unk28]->moveTrans(unk30->getTransformInfo().mTranslate);
+	unk5C[unk28]->moveTrans(JGeometry::TVec3<f32>(
+	    info.mTranslate.x, info.mTranslate.y, info.mTranslate.z));
 }
 
 void TMapEventSink::initBuilding(int index, JSUMemoryInputStream& stream)

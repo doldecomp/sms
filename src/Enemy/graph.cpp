@@ -676,7 +676,8 @@ void TGraphWeb::calcGraphDirection(int n)
 
 void TGraphWeb::initGoalIndex(const Vec& param_1)
 {
-	unk10 = findNearestNodeIndex(param_1, 0xffffffff);
+	unk10 = findNearestNodeIndex(
+	    JGeometry::TVec3<f32>(param_1.x, param_1.y, param_1.z), 0xffffffff);
 	for (int i = 0; i < unk8; ++i)
 		getGraphNode(i).unk4 = 0;
 	getCurrentNode().unk4 += 1;

@@ -30,6 +30,23 @@ inline f32 MsGetRotFromZaxisY(const JGeometry::TVec3<f32>& axis)
 	}
 }
 
+inline f32 MsGetRotFromYaxisZ(const JGeometry::TVec3<f32>& axis)
+{
+	if (axis.y == 0.0f) {
+		if (axis.x >= 0.0f)
+			return -90.0f;
+		else
+			return 90.0f;
+	}
+
+	if (axis.y >= 0.0f) {
+		return -((360.0f / 65536.0f) * matan(axis.y, axis.x));
+	} else {
+		f32 theta = matan(-axis.y, axis.x) * (360.0f / 65536.0f);
+		return 180.0f + theta;
+	}
+}
+
 JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>&);
 void MsMtxSetRotRPH(MtxPtr mtx, f32 x, f32 y, f32 z);
 void MsMtxSetXYZRPH(MtxPtr mtx, f32 x, f32 y, f32 z, s16 r, s16 p, s16 h);

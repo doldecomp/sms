@@ -18,6 +18,8 @@ public:
 	bool isMarioDoorDemoEnd() const;
 	bool isMarioClimb(u32) const;
 
+	void addMoveCameraAndMario(const Vec& v) { unk0 += v; }
+
 public:
 	/* 0x0 */ JGeometry::TVec3<f32> unk0;
 	/* 0xC */ f32 unkC;

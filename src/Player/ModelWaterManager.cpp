@@ -523,7 +523,7 @@ void TModelWaterManager::move()
 				mParticleSizeSOA[i]
 				    *= mWaterParticleTypes[mParticleTypeSOA[i]]->mMagnify.get();
 				f32 fVar1;
-				if (gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode))
+				if (gpCamera->isLButtonCamera())
 					fVar1 = unk5D88[0];
 				else
 					fVar1 = unk5D88[1];
