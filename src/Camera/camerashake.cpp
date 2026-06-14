@@ -81,7 +81,7 @@ void TCameraShake::setShakeAngleAll_(TCameraShake::TCamShakeInfo* info,
 void TCameraShake::startShake(EnumCamShakeMode mode, f32 scale)
 {
 	TCamSaveShake* save = mShakeData[mode];
-	u16 duration        = (u16)save->mShakeTime.get();
+	u16 duration        = save->mShakeTime.get();
 	if (duration != 0) {
 		TCamShakeInfo* info = getUseShakeData_();
 		info->mMode         = mode;

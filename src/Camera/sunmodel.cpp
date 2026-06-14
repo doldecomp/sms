@@ -53,13 +53,13 @@ TSunModel::TSunModel(bool param_1, const char* name)
 		unk80 = 0;
 	}
 
-	JGeometry::TVec2<s16>* it1 = unkB4;
 	JGeometry::TVec2<f32>* it2 = unkF8;
+	JGeometry::TVec2<s16>* it1 = unkB4;
 	bool* it3                  = unk180;
 	for (int i = 0; i < 17; ++i) {
-		it1->set(-1, -1);
+		it1->x = it1->y = -1;
 		++it1;
-		it2->set(10000.0f, 10000.0f);
+		it2->x = it2->y = 10000.0f;
 		++it2;
 		*it3 = false;
 		++it3;
@@ -81,13 +81,12 @@ void TSunModel::load(JSUMemoryInputStream& param_1)
 
 	char path[0x100];
 	snprintf(path, sizeof(path), "%s/%s", volumeName, "model.bmd");
-	unk44 = J3DModelLoaderDataBase::load(JKRFileLoader::getGlbResource(path),
-	                                     modelFlags);
+	unk44 = J3DModelLoaderDataBase::load(JKRGetResource(path), modelFlags);
 	unk48 = new J3DModel(unk44, 0, 1);
 
 	snprintf(path, sizeof(path), "%s/%s", volumeName, "model.btk");
 	unk4C = (J3DAnmTextureSRTKey*)J3DAnmLoaderDataBase::load(
-	    JKRFileLoader::getGlbResource(path));
+	    JKRGetResource(path));
 	unk4C->searchUpdateMaterialID(unk44);
 
 	u16 i;
@@ -95,13 +94,13 @@ void TSunModel::load(JSUMemoryInputStream& param_1)
 	for (i = 0; i < e; ++i) {
 		J3DMaterialAnm* materialAnm = new J3DMaterialAnm;
 
-		unk44->mMaterials[i]->change();
-		unk44->mMaterials[i]->setMaterialAnm(materialAnm);
+		unk44->getMaterialNodePointer(i)->change();
+		unk44->getMaterialNodePointer(i)->setMaterialAnm(materialAnm);
 	}
 
 	unk44->entryTexMtxAnimator(unk4C);
-	unk8C = *unk44->mMaterials[0]->getTevColor(0);
-	unk94 = *unk44->mMaterials[1]->getTevColor(0);
+	unk8C = *unk44->getMaterialNodePointer(0)->getTevColor(0);
+	unk94 = *unk44->getMaterialNodePointer(1)->getTevColor(0);
 
 	unk9C = unkA4 = (f32)unk68;
 	unkA0 = unkA8 = (f32)unk74;
@@ -271,9 +270,9 @@ void TSunModel::getZBufValue()
 	for (int i = 0; i < 17; ++i, ++it, ++it2) {
 		*it2 = 0;
 		if (!cVar1 && it->x != -1 && it->y != -1) {
-			u32 local_1c;
-			GXPeekZ(it->x, it->y, &local_1c);
-			if (local_1c == 0xffffff)
+			u32 depth;
+			GXPeekZ(it->x, it->y, &depth);
+			if (depth == 0xffffff)
 				*it2 = 1;
 		}
 	}

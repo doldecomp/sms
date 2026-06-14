@@ -1,11 +1,14 @@
 #include <Camera/CameraInbetween.hpp>
 #include <Camera/cameralib.hpp>
 
+// TODO: move to cameralib & replace CLBAbs with this
+#define ABS(x) ((x) >= 0 ? (x) : -(x))
+
 TCameraInbetween::TCameraInbetween()
     : unk0(1)
-    , unk4(0)
-    , unk18(0.0f, 0.0f, 0.0f)
-    , unk24(0.0f, 0.0f, 0.0f)
+    , mFramesRemaining(0)
+    , mPos(0.0f, 0.0f, 0.0f)
+    , mAt(0.0f, 0.0f, 0.0f)
     , unk30(0.0f, 0.0f, 0.0f)
     , unk3C(0)
     , unk40(0)
@@ -15,94 +18,83 @@ TCameraInbetween::TCameraInbetween()
 
 void TCameraInbetween::calcPolarData_()
 {
-	CLBCrossToPolar(unk24, unk18, &unk8, &unkC, &unkE);
-	CLBCrossToPolar(unk30, unk24, &unk10, &unk14, &unk16);
+	CLBCrossToPolar(mAt, mPos, &unk8, &unkC, &unkE);
+	CLBCrossToPolar(unk30, mAt, &unk10, &unk14, &unk16);
 }
 
-void TCameraInbetween::warpPosAndAt(const Vec& param_1, const Vec& param_2)
+void TCameraInbetween::warpPosAndAt(const Vec& pos, const Vec& at)
 {
-	unk18.set(param_1);
-	unk24.set(param_2);
+	mPos.set(pos);
+	mAt.set(at);
 	calcPolarData_();
 }
 
-void TCameraInbetween::addMoveCameraAndMario(const Vec& param_1)
+void TCameraInbetween::addMoveCameraAndMario(const Vec& offset)
 {
-	unk18 += param_1;
-	unk24 += param_1;
-	unk30 += param_1;
+	mPos += offset;
+	mAt += offset;
+	unk30 += offset;
 	calcPolarData_();
 }
 
 void TCameraInbetween::startCameraInbetween(int frames)
 {
-	unk4  = frames;
-	unk0  = frames;
-	unk3C = 0;
+	mFramesRemaining = frames;
+	unk0             = frames;
+	unk3C            = 0;
 	calcPolarData_();
 }
 
-void TCameraInbetween::initCameraInbetween(const JGeometry::TVec3<f32>& param_1,
-                                           const JGeometry::TVec3<f32>& param_2,
+void TCameraInbetween::initCameraInbetween(const JGeometry::TVec3<f32>& pos,
+                                           const JGeometry::TVec3<f32>& at,
                                            const JGeometry::TVec3<f32>& param_3)
 {
-	unk18.set(param_1);
-	unk24.set(param_2);
+	mPos.set(pos);
+	mAt.set(at);
 	unk30.set(param_3);
 	calcPolarData_();
 }
 
-static void fakeInline(s16* param_1, f32 param_2, s16 param_3)
-{
-	if (param_2 < 0.001f) {
-		*param_1 = param_3;
-	} else {
-		s16 thing = param_3 - *param_1;
-		*param_1 += CLBRoundf<s16>(1.0f / param_2 * thing);
-	}
-}
-
-void TCameraInbetween::execCameraInbetween(const JGeometry::TVec3<f32>& param_1,
-                                           const JGeometry::TVec3<f32>& param_2,
+void TCameraInbetween::execCameraInbetween(const JGeometry::TVec3<f32>& pos,
+                                           const JGeometry::TVec3<f32>& at,
                                            const JGeometry::TVec3<f32>& param_3)
 {
-	unk18.set(param_1);
-	unk24.set(param_2);
+	mPos.set(pos);
+	mAt.set(at);
 
-	if (unk4 > 0) {
-		f32 dVar5 = unk4;
+	if (mFramesRemaining > 0) {
+		f32 remFrames = mFramesRemaining;
 
 		if (isThing())
-			CLBChaseConstantSpecifyFrame(&unk44, 0.0f, dVar5);
+			CLBChaseConstantSpecifyFrame(&unk44, 0.0f, remFrames);
 		f32 radius;
-		s16 vAngle;
-		s16 hAngle;
-		CLBCrossToPolar(param_3, param_2, &radius, &vAngle, &hAngle);
-		CLBChaseConstantSpecifyFrame(&unk10, radius, dVar5);
+		s16 pitch;
+		s16 yaw;
+		CLBCrossToPolar(param_3, at, &radius, &pitch, &yaw);
 
-		fakeInline(&unk14, dVar5, vAngle);
-		fakeInline(&unk16, dVar5, hAngle);
+		CLBChaseConstantSpecifyFrame(&unk10, radius, remFrames);
+		CLBChaseConstantSpecifyFrame(&unk14, pitch, remFrames);
+		CLBChaseConstantSpecifyFrame(&unk16, yaw, remFrames);
 
-		if (CLBAbs(param_3.x - param_2.x) > 0.1f
-		    || CLBAbs(param_3.z - param_2.z) > 0.1f) {
+		if (ABS(param_3.x - at.x) > 0.1f || ABS(param_3.z - at.z) > 0.1f) {
 			JGeometry::TVec3<f32> tmp;
 			CLBPolarToCross(param_3, &tmp, unk10, unk14, unk16);
-			unk24.x = tmp.x;
-			unk24.z = tmp.z;
+			mAt.x = tmp.x;
+			mAt.z = tmp.z;
 		}
 
-		CLBCrossToPolar(param_3, param_2, &radius, &vAngle, &hAngle);
-		CLBChaseConstantSpecifyFrame(&unk8, radius, dVar5);
-		fakeInline(&unkC, dVar5, vAngle);
+		CLBCrossToPolar(mAt, pos, &radius, &pitch, &yaw);
+		CLBChaseConstantSpecifyFrame(&unk8, radius, remFrames);
+		CLBChaseConstantSpecifyFrame(&unkC, pitch, remFrames);
 		if (unk3C == 0) {
-			fakeInline(&unkE, dVar5, hAngle);
+			CLBChaseConstantSpecifyFrame(&unkE, yaw, remFrames);
 		} else {
 			unkE += unk40;
 		}
 
-		CLBPolarToCross(unk24, &unk18, unk8, unkC, unkE);
-		unk4 -= 1;
-		if (unk4 == 0)
+		CLBPolarToCross(mAt, &mPos, unk8, unkC, unkE);
+		mFramesRemaining -= 1;
+		if (mFramesRemaining == 0)
 			unk3C = 0;
 	}
 

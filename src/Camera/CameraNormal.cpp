@@ -178,7 +178,7 @@ void CPolarSubCamera::ctrlNormalOrTowerCamera_()
 						fVar4 = 100.0f;
 						break;
 					default:
-						fVar4 = gpCameraMario->unkC;
+						fVar4 = gpCameraMario->mFrameMoveDistHorizontal;
 						break;
 					}
 					f32 kek = unk250 * f30 * f29 * fVar4 * unk288;

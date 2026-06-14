@@ -10,7 +10,8 @@ bool CPolarSubCamera::controlByCameraCode_(int* param_1)
 	bool result = true;
 	*param_1    = -1;
 	if (SMS_IsMarioOpeningDoor()) {
-		if (mMode == CAMERA_MODE_DELFINO_B && gpCameraMario->unk18 == 0x78) {
+		if (mMode == CAMERA_MODE_DELFINO_B
+		    && gpCameraMario->mFramesSinceMarioStatusChange == 120) {
 			changeCamModeSpecifyFrame_(CAMERA_MODE_DELFINO, 1);
 			warpPosAndAt(mCurrentTarget.unk28, *gpMarioAngleY + 0x9C4);
 		}

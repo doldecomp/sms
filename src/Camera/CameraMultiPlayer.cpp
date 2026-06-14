@@ -5,26 +5,26 @@
 #include <Camera/cameralib.hpp>
 #include <JSystem/JGeometry/JGUtil.hpp>
 
-TCameraMultiPlayer::TCameraMultiPlayer(u8 param_1)
-    : unk0(param_1)
-    , unk1(0)
-    , unk4(nullptr)
+TCameraMultiPlayer::TCameraMultiPlayer(u8 max_player_count)
+    : mMaxPlayers(max_player_count)
+    , mPlayerCount(0)
+    , mPlayers(nullptr)
 {
-	unk4 = new TMultiPlayerData[param_1];
+	mPlayers = new TMultiPlayerData[max_player_count];
 }
 
 bool TCameraMultiPlayer::addPlayer(const JGeometry::TVec3<f32>* param_1,
                                    f32 param_2, f32 param_3)
 {
 	bool added;
-	if (unk1 >= unk0)
+	if (mPlayerCount >= mMaxPlayers)
 		return false;
 
-	TMultiPlayerData* data = &unk4[unk1];
+	TMultiPlayerData* data = &mPlayers[mPlayerCount];
 	data->unk0             = param_1;
 	data->unk4             = param_2;
 	data->unk8             = param_3;
-	unk1 += 1;
+	mPlayerCount += 1;
 
 	return true;
 }
@@ -35,10 +35,10 @@ TCameraMultiPlayer::removePlayer(const JGeometry::TVec3<f32>* param_1)
 {
 	bool found = false;
 	int i;
-	TMultiPlayerData* it = unk4;
-	for (i = 0; i < unk1; ++i, ++it) {
+	TMultiPlayerData* it = mPlayers;
+	for (i = 0; i < mPlayerCount; ++i, ++it) {
 		if (found == true || (found == false && it->unk0 == param_1)) {
-			if (i != unk1 - 1)
+			if (i != mPlayerCount - 1)
 				*it = *(it + 1);
 			found = true;
 		}
@@ -47,7 +47,7 @@ TCameraMultiPlayer::removePlayer(const JGeometry::TVec3<f32>* param_1)
 	if (found != true)
 		return found;
 
-	unk1 -= 1;
+	mPlayerCount -= 1;
 	return found;
 }
 
@@ -60,10 +60,13 @@ void CPolarSubCamera::createMultiPlayer(u8 param_1)
 bool CPolarSubCamera::addMultiPlayer(const JGeometry::TVec3<f32>* param_1,
                                      f32 param_2, f32 param_3)
 {
+	bool result;
 	if (!unk2BC)
-		return false;
+		result = false;
+	else
+		result = unk2BC->addPlayer(param_1, param_2, param_3);
 
-	return unk2BC->addPlayer(param_1, param_2, param_3);
+	return result;
 }
 
 bool CPolarSubCamera::removeMultiPlayer(const JGeometry::TVec3<f32>* param_1)
@@ -76,44 +79,57 @@ bool CPolarSubCamera::removeMultiPlayer(const JGeometry::TVec3<f32>* param_1)
 
 void CPolarSubCamera::ctrlMultiPlayerCamera_()
 {
-	int count = unk2BC->unk1;
+	int count = unk2BC->mPlayerCount;
 	if (count <= 0) {
 		mCurrentTarget.mTarget.set(unk148);
 		mCurrentTarget.unk18.set(unk124);
 	} else {
-		JGeometry::TVec3<f32> sum(0.0f, 0.0f, 0.0f);
-		TMultiPlayerData* data = unk2BC->unk4;
+		JGeometry::TVec3<f32> center(0.0f, 0.0f, 0.0f);
 
-		TMultiPlayerData* it = data;
-		for (int i = 0; i < count; ++i, ++it)
-			sum += *it->unk0;
+		{
+			TMultiPlayerData* it = unk2BC->mPlayers;
+			for (int i = 0; i < count; ++i, ++it)
+				center += *it->unk0;
+			center *= 1.0f / (f32)count;
+		}
 
-		sum *= 1.0f / (f32)count;
+		center.y += mCurrentParams->mAtOffsetY;
 
-		sum.y += mCurrentParams->mAtOffsetY;
-
-		f32 maxSqDist       = 0.0f;
-		TMultiPlayerData* a = data;
-		for (int i = 0; i < count - 1; ++i, ++a) {
-			TMultiPlayerData* b = a + 1;
-			for (int j = i + 1; j < count; ++j, ++b) {
-				f32 sq = a->unk0->squared(*b->unk0);
-				if (sq > maxSqDist)
-					maxSqDist = sq;
+		f32 maxSqDist = 0.0f;
+		{
+			int i;
+			int j;
+			TMultiPlayerData* it;
+			TMultiPlayerData* jt;
+			it = unk2BC->mPlayers;
+			for (i = 0; i < count - 1; ++i, ++it) {
+				jt = it + 1;
+				for (j = i + 1; j < count; ++j, ++jt) {
+					JGeometry::TVec3<f32> diff;
+					diff.sub(*it->unk0, *jt->unk0);
+					f32 x2 = diff.x * diff.x;
+					f32 y2 = diff.y * diff.y;
+					f32 z2 = diff.z * diff.z;
+					f32 sq = x2 + y2 + z2;
+					if (sq > maxSqDist)
+						maxSqDist = sq;
+				}
 			}
 		}
 
-		f32 radius
-		    = MsClamp(1.5f * MsSqrtf(maxSqDist) + 300.0f,
-		              mCurrentParams->mDistMin, mCurrentParams->mDistMax);
+		f32 camDistance = 1.5f * MsSqrtf(maxSqDist) + 300.0f;
+		camDistance     = MsClamp(camDistance, mCurrentParams->mDistMin,
+		                          mCurrentParams->mDistMax);
 
-		s16 angle = CLBLinearInbetween<s16>(
-		    mCurrentParams->mXAngleMin, mCurrentParams->mXAngleMax,
-		    CLBCalcRatio<f32>(mCurrentParams->mDistMin,
-		                      mCurrentParams->mDistMax, radius));
+		f32 ratio = CLBCalcRatio<f32>(mCurrentParams->mDistMin,
+		                              mCurrentParams->mDistMax, camDistance);
 
-		mCurrentTarget.mTarget.set(sum);
-		CLBPolarToCross(sum, &mCurrentTarget.unk18, radius, angle, 0);
+		s16 camPitch = CLBLinearInbetween<s16>(
+		    mCurrentParams->mXAngleMin, mCurrentParams->mXAngleMax, ratio);
+
+		mCurrentTarget.mTarget.set(center);
+		CLBPolarToCross(center, &mCurrentTarget.unk18, camDistance, camPitch,
+		                0);
 	}
 
 	calcPosAndAt_();

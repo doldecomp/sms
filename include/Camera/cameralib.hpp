@@ -8,6 +8,11 @@ extern f32 SMSGetAnmFrameRate(); // avoid including Application.hpp
 
 extern const JGeometry::TVec3<f32> CLBConstUpVec;
 
+template <class T> T CLBRoundf(f32 param_1)
+{
+	return (T)(param_1 + (param_1 > 0.0f ? 0.5f : -0.5f));
+}
+
 /**
  * @brief Chases @p value towards @p desired over @p frames calls.
  *
@@ -24,7 +29,20 @@ void CLBChaseConstantSpecifyFrame(T* value, T desired, T frames)
 		return;
 	}
 
-	*value = (1.0f / frames) * (desired - *value) + *value;
+	f32 delta = desired - *value;
+	*value += (1.0f / frames) * delta;
+}
+
+// TODO: should the two overloads be unified?
+inline void CLBChaseConstantSpecifyFrame(s16* value, s16 desired, f32 frames)
+{
+	if (frames < 0.001f) {
+		*value = desired;
+		return;
+	}
+
+	s16 delta = desired - *value;
+	*value += CLBRoundf<s16>(1.0f / frames * delta);
 }
 
 /**
@@ -74,11 +92,6 @@ template <class T> T CLBLinearInbetween(T a, T b, f32 f)
 	return (T)(a + f * (b - a));
 }
 
-template <class T> T CLBRoundf(f32 param_1)
-{
-	return (T)(param_1 + (param_1 > 0.0f ? 0.5f : -0.5f));
-}
-
 template <class T> T CLBPalFrame(T param_1)
 {
 	f32 rate = SMSGetAnmFrameRate();
@@ -125,8 +138,20 @@ inline s16 CLBDegToShortAngle(f32 deg)
 }
 
 // NOTE: can't use MtxPtr here, maybe need new ConstMtxPtr typedef here?
-void CLBCalc2DFPos(JGeometry::TVec2<f32>*, const f32 (*)[4], const f32 (*)[4],
-                   const Vec&, u32*, bool);
+/**
+ * @brief Converts a world-space position into NDC space.
+ *
+ * @param out_ndc_pos result ndc coord of @p world_pos
+ * @param proj_mtx projection matrix
+ * @param view_mtx view matrix
+ * @param world_pos input world-space point
+ * @param out_depth optional depth output
+ * @param disable_z_clip if false, sentinel coords of 10000 will be returned for
+ * points who's Z doesn't fit into [0, 0xffffff] range
+ */
+void CLBCalc2DFPos(JGeometry::TVec2<f32>* out_ndc_pos, const f32 (*proj_mtx)[4],
+                   const f32 (*view_mtx)[4], const Vec& world_pos,
+                   u32* out_depth, bool disable_z_clip);
 
 void CLBCalcNearClipAngle(JGeometry::TVec3<f32>*, S16Vec*,
                           const JGeometry::TVec3<f32>&,

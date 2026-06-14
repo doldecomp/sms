@@ -36,9 +36,11 @@ void CPolarSubCamera::setNoticeInfo()
 		TLiveManager* mgr
 		    = gpConductor->getManagerByName(sNoticeActorManagerName[i]);
 
-		if (mgr != nullptr)
-			for (int j = 0, e = mgr->getObjNum(); j < e; ++j)
-				unk2A0[unk29C++] = (TLiveActor*)mgr->unk18[j];
+		if (mgr != nullptr) {
+			s32 e = mgr->getObjNum();
+			for (int j = 0; j < e; ++unk29C, ++j)
+				unk2A0[unk29C] = mgr->getObj(j);
+		}
 	}
 
 	unk2A8 = JDrama::TNameRefGen::search<TLiveActor>(bossGesoViewObjName);

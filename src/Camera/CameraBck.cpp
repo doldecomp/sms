@@ -89,9 +89,8 @@ void TCameraBck::restartDemo() { }
 
 bool TCameraBck::updateDemo(JGeometry::TVec3<f32>* pos,
                             JGeometry::TVec3<f32>* lookat,
-                            JGeometry::TVec3<f32>* up, f32* extra)
+                            JGeometry::TVec3<f32>* up, f32* out_y_scale)
 {
-	J3DTransformInfo info;
 
 	unk0->calcAnm();
 
@@ -104,20 +103,20 @@ bool TCameraBck::updateDemo(JGeometry::TVec3<f32>* pos,
 	if (up != nullptr)
 		up->set(unkC[0][1], unkC[1][1], unkC[2][1]);
 
-	if (extra != nullptr) {
-		MActorAnmBck* bck       = unk0->unkC;
-		J3DAnmTransformKey* anm = bck == nullptr ? nullptr : bck->unk24;
+	if (out_y_scale != nullptr) {
+		J3DAnmTransformKey* anm = unk0->getBckAnm();
 		if (anm != nullptr) {
+			J3DTransformInfo info;
 			anm->getTransform((u16)unk8, &info);
-			*extra = info.mScale.y;
+			*out_y_scale = info.mScale.y;
 		}
 	}
 
 	if (unk14 != nullptr) {
 		if (pos != nullptr)
-			pos->add(*unk14);
+			*pos += *unk14;
 		if (lookat != nullptr)
-			lookat->add(*unk14);
+			*lookat += *unk14;
 	}
 
 	bool result      = true;

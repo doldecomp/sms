@@ -30,6 +30,8 @@ void TCubeStreamInfo::load(JSUMemoryInputStream& stream)
 	TCubeGeneralInfo::load(stream);
 
 	unk3C = unk34;
-	unk40 = stream.readS32();
-	stream.readU32();
+	s32 tmp;
+	stream >> tmp;
+	unk40 = tmp;
+	stream >> unk38;
 }

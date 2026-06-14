@@ -14,7 +14,7 @@ public:
 
 public:
 	/* 0x0 */ u8 unk0;
-	/* 0x4 */ f32 mFovYunk4;
+	/* 0x4 */ f32 mFovY;
 	/* 0x8 */ s16 unk8;
 	/* 0xA */ s16 unkA;
 	/* 0xC */ s16 unkC;

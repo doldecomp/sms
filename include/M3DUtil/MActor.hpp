@@ -148,6 +148,14 @@ public:
 		unkC->initNormalMotionBlend();
 	}
 
+	J3DAnmTransformKey* getBckAnm()
+	{
+		if (!unkC)
+			return nullptr;
+
+		return unkC->unk24;
+	}
+
 	void setBck(int index)
 	{
 		if (!checkCurBckFromIndex(index))

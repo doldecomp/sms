@@ -21,14 +21,14 @@ public:
 
 class TCameraMultiPlayer {
 public:
-	TCameraMultiPlayer(u8);
+	TCameraMultiPlayer(u8 max_player_count);
 	bool addPlayer(const JGeometry::TVec3<f32>*, f32, f32);
 	bool removePlayer(const JGeometry::TVec3<f32>*);
 
 public:
-	/* 0x0 */ u8 unk0;
-	/* 0x1 */ u8 unk1;
-	/* 0x4 */ TMultiPlayerData* unk4;
+	/* 0x0 */ u8 mMaxPlayers;
+	/* 0x1 */ u8 mPlayerCount;
+	/* 0x4 */ TMultiPlayerData* mPlayers;
 };
 
 #endif
