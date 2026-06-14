@@ -18,7 +18,7 @@ void CPolarSubCamera::warpPosAndAt(const Vec& pos, const Vec& at)
 		unk148.set(at);
 
 		mInbetween->warpPosAndAt(pos, at);
-		mInbetween->unk4 = 0;
+		mInbetween->mFramesRemaining = 0;
 
 		calcNowTargetFromPosAndAt_(pos, at);
 

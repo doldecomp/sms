@@ -22,10 +22,10 @@ public:
 
 public:
 	/* 0x0 */ JGeometry::TVec3<f32> unk0;
-	/* 0xC */ f32 unkC;
-	/* 0x10 */ f32 unk10;
-	/* 0x14 */ u32 unk14;
-	/* 0x18 */ u32 unk18;
+	/* 0xC */ f32 mFrameMoveDistHorizontal;
+	/* 0x10 */ f32 mFrameMoveDistVertical;
+	/* 0x14 */ u32 mLastMarioStatus;
+	/* 0x18 */ u32 mFramesSinceMarioStatusChange;
 	/* 0x1C */ f32 unk1C;
 };
 

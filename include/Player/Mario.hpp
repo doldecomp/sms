@@ -1301,6 +1301,8 @@ public:
 	// Fabricated
 	BOOL isSinking() const { return mSinkTimer > 0.0f ? TRUE : FALSE; }
 
+	const JGeometry::TVec3<f32>& getPrevPosition() const { return unk29C; }
+
 public:
 	/* 0x74 */ u32 mInput;
 	/* 0x78 */ u32 unk78;

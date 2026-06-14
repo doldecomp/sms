@@ -34,6 +34,8 @@ public:
 
 	u8 getUnk191() { return unk191; }
 	f32 getUnk194() { return unk194; }
+
+	// TODO: incorrect! Maybe a cameralib inline or even TVec3?
 	bool isInBounds(f32 bounds)
 	{
 		return -bounds <= unkF8[0].x && unkF8[0].x <= bounds

@@ -71,22 +71,22 @@ void CPolarSubCamera::ctrlOptionCamera_()
 	unk148.x = mTarget.x;
 	unk148.y = mTarget.y;
 	unk148.z = mTarget.z;
-	mFovy    = gpCameraOption->mFovYunk4;
+	mFovy    = gpCameraOption->mFovY;
 }
 
 TCameraOption::TCameraOption(JGeometry::TVec3<f32> param1,
                              JGeometry::TVec3<f32>* param2)
 {
-	unk0      = 2;
-	mFovYunk4 = 40.0f;
-	unk8      = 300;
-	unkA      = 300;
-	unkC      = 120;
-	unkE      = 0;
-	unk10     = 80;
-	unk12     = 0;
-	unk14     = 60;
-	unk16     = 0;
+	unk0  = 2;
+	mFovY = 40.0f;
+	unk8  = 300;
+	unkA  = 300;
+	unkC  = 120;
+	unkE  = 0;
+	unk10 = 80;
+	unk12 = 0;
+	unk14 = 60;
+	unk16 = 0;
 	unk18.set(0.0f, 0.0f, 0.0f);
 	unk24.set(0.0f, 0.0f, 0.0f);
 	unk30.set(0.0f, 0.0f, 0.0f);
@@ -104,7 +104,7 @@ TCameraOption::TCameraOption(JGeometry::TVec3<f32> param1,
 	if (tool != nullptr) {
 		JGeometry::TVec3<f32> origin;
 		tool->calcPosAndAt(&origin, &unk24);
-		s16 a = CLBRoundf<s16>(DEG2SHORTANGLE(tool->getThing()));
+		s16 a = CLBRoundf<s16>(DEG2SHORTANGLE(tool->getYaw()));
 		s16 b = CLBRoundf<s16>(DEG2SHORTANGLE(60.0f));
 		CLBPolarToCross(origin, &unk30, 1000.0f, b, a);
 	}

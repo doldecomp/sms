@@ -28,34 +28,34 @@ static inline void RotateAboutAxis(const JGeometry::TVec3<f32>& param_axis,
 	mtxT.mult33(*vec);
 }
 
-// TODO: Explore how this is used, and add documentation
-void CLBCalc2DFPos(JGeometry::TVec2<f32>* param_1, const f32 (*param_2)[4],
-                   const f32 (*param_3)[4], const Vec& param_4, u32* param_5,
-                   bool param_6)
+void CLBCalc2DFPos(JGeometry::TVec2<f32>* out_ndc_pos, const f32 (*proj_mtx)[4],
+                   const f32 (*view_mtx)[4], const Vec& world_pos,
+                   u32* out_depth, bool disable_z_clip)
 {
-	Vec prod;
+	Vec camSpacePos;
 
-	MTXMultVec((MtxPtr)param_3, (Vec*)&param_4, &prod);
+	MTXMultVec((MtxPtr)view_mtx, (Vec*)&world_pos, &camSpacePos);
 
-	if (prod.z == 0.0f) {
-		param_1->x = param_1->y = 10000.0f;
+	if (camSpacePos.z == 0.0f) {
+		out_ndc_pos->x = out_ndc_pos->y = 10000.0f;
 		return;
 	}
 
-	f32 fVar3 = 1.0f / -prod.z;
-	f32 fVar4 = param_2[2][2] * prod.z + param_2[2][3];
-	fVar4 *= fVar3;
-	if (!param_6 && (fVar4 > 0.0f || fVar4 < -1.0f)) {
-		param_1->x = param_1->y = 10000.0f;
+	f32 perspectiveFactor = 1.0f / -camSpacePos.z;
+
+	f32 z = proj_mtx[2][2] * camSpacePos.z + proj_mtx[2][3];
+	z *= perspectiveFactor;
+	if (!disable_z_clip && (z > 0.0f || z < -1.0f)) {
+		out_ndc_pos->x = out_ndc_pos->y = 10000.0f;
 		return;
 	}
 
-	f32 x = (param_2[0][0] * prod.x + param_2[0][2] * prod.z);
-	f32 y = (param_2[1][1] * prod.y + param_2[1][2] * prod.z);
-	param_1->set(x * fVar3, y * fVar3);
+	f32 x = proj_mtx[0][0] * camSpacePos.x + proj_mtx[0][2] * camSpacePos.z;
+	f32 y = proj_mtx[1][1] * camSpacePos.y + proj_mtx[1][2] * camSpacePos.z;
+	out_ndc_pos->set(x * perspectiveFactor, y * perspectiveFactor);
 
-	if (param_5 != nullptr)
-		*param_5 = CLBLinearInbetween<u32>(0, 0xffffff, fVar4 + 1.0f);
+	if (out_depth != nullptr)
+		*out_depth = CLBLinearInbetween<u32>(0, 0xffffff, z + 1.0f);
 }
 
 BOOL CLBChaseAngleDecrease(s16* value, s16 desired, s16 ratio)
@@ -274,9 +274,9 @@ void CLBCalcPointInCubeRatio(const Vec& param_1, const Vec& param_2,
 void CLBCalcRotateZXYTranslateMatrix(MtxPtr mtx, const Vec& rotate,
                                      const Vec& translate)
 {
-	s16 sAngleX = CLBRoundf<s16>(DEG2SHORTANGLE(rotate.x));
-	s16 sAngleY = CLBRoundf<s16>(DEG2SHORTANGLE(rotate.y));
-	s16 sAngleZ = CLBRoundf<s16>(DEG2SHORTANGLE(rotate.z));
+	s16 sAngleX = CLBDegToShortAngle(rotate.x);
+	s16 sAngleY = CLBDegToShortAngle(rotate.y);
+	s16 sAngleZ = CLBDegToShortAngle(rotate.z);
 
 	f32 sinX = JMASSin(sAngleX);
 	f32 cosX = JMASCos(sAngleX);

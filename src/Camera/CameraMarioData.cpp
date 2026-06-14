@@ -10,14 +10,14 @@ TCameraMarioData* gpCameraMario;
 
 TCameraMarioData::TCameraMarioData()
 {
-	unk0.x = 0.0f;
-	unk0.y = 0.0f;
-	unk0.z = 0.0f;
-	unkC   = 0.0f;
-	unk10  = 0.0f;
-	unk14  = 0;
-	unk18  = 0;
-	unk1C  = 0.0f;
+	unk0.x                        = 0.0f;
+	unk0.y                        = 0.0f;
+	unk0.z                        = 0.0f;
+	mFrameMoveDistHorizontal      = 0.0f;
+	mFrameMoveDistVertical        = 0.0f;
+	mLastMarioStatus              = 0;
+	mFramesSinceMarioStatusChange = 0;
+	unk1C                         = 0.0f;
 }
 
 void TCameraMarioData::calcAndSetMarioData()
@@ -26,27 +26,27 @@ void TCameraMarioData::calcAndSetMarioData()
 	switch (status) {
 	case MARIO_STATUS_HANGING:
 	case MARIO_STATUS_ASCEND:
-		unkC  = 0.0f;
-		unk10 = 0.0f;
+		mFrameMoveDistHorizontal = 0.0f;
+		mFrameMoveDistVertical   = 0.0f;
 		break;
 
 	default:
 		JGeometry::TVec3<f32> offset;
-		offset.sub(*gpMarioPos, gpMarioOriginal->unk29C);
-		unkC  = offset.x * offset.x + offset.z * offset.z;
-		unk10 = offset.y * offset.y;
-		if (unkC > 100.0f)
-			unkC = 100.0f;
-		if (unk10 > 100.0f)
-			unk10 = 100.0f;
+		offset.sub(SMS_GetMarioPos(), gpMarioOriginal->getPrevPosition());
+		mFrameMoveDistHorizontal = offset.x * offset.x + offset.z * offset.z;
+		mFrameMoveDistVertical   = offset.y * offset.y;
+		if (mFrameMoveDistHorizontal > 100.0f)
+			mFrameMoveDistHorizontal = 100.0f;
+		if (mFrameMoveDistVertical > 100.0f)
+			mFrameMoveDistVertical = 100.0f;
 		break;
 	}
 
-	if (unk14 != status) {
-		unk14 = status;
-		unk18 = 0;
+	if (mLastMarioStatus != status) {
+		mLastMarioStatus              = status;
+		mFramesSinceMarioStatusChange = 0;
 	} else {
-		unk18 += 1;
+		mFramesSinceMarioStatusChange += 1;
 	}
 
 	s16 angleMin = SMS_GetMarioWaterGun()->getEmitParams().mLAngleMin.get();
@@ -60,7 +60,8 @@ void TCameraMarioData::calcAndSetMarioData()
 bool TCameraMarioData::isMarioGoDown() const
 {
 	bool result = false;
-	if (unk10 != 0.0f && gpMarioPos->y - gpMarioOriginal->unk29C.y < 0.0f)
+	if (mFrameMoveDistVertical != 0.0f
+	    && gpMarioPos->y - gpMarioOriginal->unk29C.y < 0.0f)
 		result = true;
 	return result;
 }

@@ -8,7 +8,8 @@ void TCameraMapTool::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TNameRef::load(stream);
 
-	stream >> unkC.x >> unkC.y >> unkC.z >> unk18.x >> unk18.y;
+	stream >> mPosition.x >> mPosition.y >> mPosition.z >> mPitchYaw.x
+	    >> mPitchYaw.y;
 
 	stream >> unk20;
 	stream >> mCameraMode;
@@ -19,16 +20,15 @@ void TCameraMapTool::load(JSUMemoryInputStream& stream)
 		unk28 = 0;
 }
 
-void TCameraMapTool::calcPosAndAt(JGeometry::TVec3<f32>* param_1,
-                                  JGeometry::TVec3<f32>* param_2) const
+void TCameraMapTool::calcPosAndAt(JGeometry::TVec3<f32>* pos,
+                                  JGeometry::TVec3<f32>* at) const
 {
-	param_1->set(unkC);
+	pos->set(mPosition);
 
 	if (gpCamera->isFixCameraSpecifyMode(mCameraMode)) {
-		CLBPolarToCross(*param_1, param_2, 1000.0f,
-		                CLBDegToShortAngle(-unk18.x),
-		                CLBDegToShortAngle(unk18.y));
+		CLBPolarToCross(*pos, at, 1000.0f, CLBDegToShortAngle(-mPitchYaw.x),
+		                CLBDegToShortAngle(mPitchYaw.y));
 	} else {
-		param_2->set(gpCamera->getUsualLookat());
+		at->set(gpCamera->getUsualLookat());
 	}
 }

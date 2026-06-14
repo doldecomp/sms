@@ -94,8 +94,8 @@ bool CPolarSubCamera::isNeedGroundCheck_()
 			b = a;
 		if (distY > 1.25f * b) {
 			result = false;
-			if (unk278 < 0x78)
-				unk278 = 0x78;
+			if (unk278 < 120)
+				unk278 = 120;
 		}
 	}
 	return result;

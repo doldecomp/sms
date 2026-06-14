@@ -16,13 +16,13 @@ public:
 	void load(JSUMemoryInputStream&);
 
 	// Fabricated
-	f32 getThing() const { return unk18.y; }
+	f32 getYaw() const { return mPitchYaw.y; }
 	int getCameraMode() const { return mCameraMode; }
 	int getDemoLengthFrames() const { return mDemoLengthFrames; }
 
 public:
-	/* 0xC */ JGeometry::TVec3<f32> unkC;
-	/* 0x18 */ JGeometry::TVec2<f32> unk18;
+	/* 0xC */ JGeometry::TVec3<f32> mPosition;
+	/* 0x18 */ JGeometry::TVec2<f32> mPitchYaw;
 	/* 0x20 */ u32 unk20;
 	/* 0x24 */ s32 mCameraMode;
 	/* 0x28 */ s32 unk28;

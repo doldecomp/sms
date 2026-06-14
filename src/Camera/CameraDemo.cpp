@@ -120,7 +120,7 @@ void CPolarSubCamera::updateGateDemoCamera_()
 	f32 fovy;
 	unk2B0->updateDemo(nullptr, nullptr, nullptr, &fovy);
 
-	int v = mInbetween->unk4;
+	int v = mInbetween->getUnk4();
 	if (unk70 != mCameraDemo->unk8 && v > 0)
 		CLBChaseConstantSpecifyFrame<f32>(&mFovy, fovy, (f32)v);
 	else
@@ -222,7 +222,7 @@ void CPolarSubCamera::ctrlNormalDeadDemo_()
 	mInbetween->execCameraInbetween(mPosition, mCurrentTarget.mTarget,
 	                                SMS_GetMarioPos());
 
-	CLBChaseDecrease(&mTarget, mInbetween->unk24, 0.03f, 0.0f);
+	CLBChaseDecrease(&mTarget, mInbetween->mAt, 0.03f, 0.0f);
 
 	if (gpMarioOriginal->checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA))
 		return;
