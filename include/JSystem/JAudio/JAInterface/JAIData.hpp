@@ -94,7 +94,7 @@ public:
 	void initStreamUpdateParameter();
 
 	void setSeMovePara(JAIMoveParaSet* moveParaSet);
-	bool moveParameter(JAIMoveParaSet* moveParaSet);
+	BOOL moveParameter(JAIMoveParaSet* moveParaSet);
 
 	void* checkOnMemory(u32 param1, u8* param2);
 	u8 checkUsefulAutoHeapPosition();

@@ -12,7 +12,7 @@ namespace StreamLib {
 	void setOutputMode(u32 mode);
 	void setPauseFlag(u8 flag);
 	void clearPauseFlag(u8 flag);
-	bool getPlayingFlag();
+	u8 getPlayingFlag();
 	void setVolume(f32 volume);
 	void setPitch(f32 pitch);
 	void setPan(f32 pan);

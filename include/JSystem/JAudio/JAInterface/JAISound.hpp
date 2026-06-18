@@ -24,7 +24,7 @@ public:
 	/* 0x3 */ u8 unk3;
 	/* 0x4 */ u8 unk4;
 	/* 0x5 */ u8 unk5;
-	/* 0x6 */ u16 unk6;
+	/* 0x6 */ s16 unk6;
 	/* 0x8 */ u32 unk8;
 	/* 0xC */ u32 unkC;
 	/* 0x10 */ u32 unk10;
@@ -154,6 +154,8 @@ public:
 	void getSeInfoPointer();
 
 	u32 getUnk8() { return unk8; }
+
+	u32 getUnk8Lo() { return unk8 & 0x3FF; }
 
 	static JAIBasic* interPointer;
 };

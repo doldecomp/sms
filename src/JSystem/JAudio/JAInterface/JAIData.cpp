@@ -322,7 +322,7 @@ void JAIData::setSeMovePara(JAIMoveParaSet* moveParaSet)
 	}
 }
 
-bool JAIData::moveParameter(JAIMoveParaSet* moveParaSet)
+BOOL JAIData::moveParameter(JAIMoveParaSet* moveParaSet)
 {
 	if (moveParaSet->unkC == 0)
 		return false;
