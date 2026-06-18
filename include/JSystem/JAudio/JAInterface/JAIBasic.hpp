@@ -51,7 +51,7 @@ public:
 
 	virtual void initStream();
 	virtual JAISound* makeSound(u32 param);
-	virtual BOOL getMapInfoFxline(u32 param);
+	virtual u16 getMapInfoFxline(u32 param);
 	virtual u32 getMapInfoGround(u32 param);
 	virtual f32 getMapInfoFxParameter(u32 param);
 	virtual void sendPlayingSeCommand();
