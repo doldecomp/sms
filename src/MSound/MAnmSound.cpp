@@ -76,10 +76,10 @@ void MAnmSoundNPC::startAnimSound(void* param_1, u32 param_2,
                                   u8 param_5)
 {
 	if (MSGMSound->gateCheck(param_2)) {
-		UnkStruct* ptr = mData;
+		JAIAnimeSoundData* ptr = mData;
 
-		if (ptr[mDataCounter].unk18 & 0xFFFF0000) {
-			if (ptr[mDataCounter].unk18 & 0xFF000000) {
+		if (ptr->mEntries[mDataCounter].unk10 & 0xFFFF0000) {
+			if (ptr->mEntries[mDataCounter].unk10 & 0xFF000000) {
 				u32 uVar5 = mLoopCount;
 				u32 uVar6 = (uVar5 >> 24) + 1;
 				if (uVar5 != 0) {
@@ -89,8 +89,8 @@ void MAnmSoundNPC::startAnimSound(void* param_1, u32 param_2,
 				}
 			}
 
-			if (ptr[mDataCounter].unk18 & 0xFF0000) {
-				u8 b = ptr[mDataCounter].unk18 >> 16;
+			if (ptr->mEntries[mDataCounter].unk10 & 0xFF0000) {
+				u8 b = ptr->mEntries[mDataCounter].unk10 >> 16;
 				b += 1;
 				b *= JAIConst::random.get_ufloat_1();
 				if (b != 0)
@@ -102,7 +102,7 @@ void MAnmSoundNPC::startAnimSound(void* param_1, u32 param_2,
 			MSoundSESystem::MSoundSE::startSoundActorInner(param_2, param_3,
 			                                               param_4, 0, param_5);
 
-			if (*param_3 != nullptr && !(ptr[mDataCounter].unk18 & 0x8000)) {
+			if (*param_3 != nullptr && !(ptr->mEntries[mDataCounter].unk10 & 0x8000)) {
 
 				f32 dVar10 = 1.0f;
 
@@ -121,7 +121,7 @@ void MAnmSoundNPC::startAnimSound(void* param_1, u32 param_2,
 				if (fVar11 != 0.0f)
 					dVar10 = MSHandle::calcVolume(
 					    fVar11, 2000.0f, 600.0f,
-					    ptr[mDataCounter].unk18 >> 12 & 7, 8);
+					    ptr->mEntries[mDataCounter].unk10 >> 12 & 7, 8);
 
 				(*param_3)->setSeInterVolume(0, dVar10, 0, 0);
 			}
