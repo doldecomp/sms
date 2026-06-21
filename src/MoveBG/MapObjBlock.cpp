@@ -380,14 +380,13 @@ void TTelesaBlock::setGroundCollision()
 
 BOOL TSuperHipDropBlock::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == HIT_MESSAGE_UNK3) {
+	if (message == HIT_MESSAGE_SUPER_HIP_DROP) {
 		kill();
-		if (mMonteBlockBroken) {
+		if (mMonteBlockBroken)
 			TFlagManager::getInstance()->setBool(true, 0x1038C);
-		}
 
-		gpMSound->startSoundActor(MSD_SE_OBJ_SUPERBLOCK_BREAK, &mPosition, 0,
-		                          nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_SUPERBLOCK_BREAK, &mPosition,
+		                                0, nullptr, 0, 4);
 		return TRUE;
 	}
 	return FALSE;

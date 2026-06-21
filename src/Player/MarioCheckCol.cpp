@@ -32,7 +32,7 @@ void TMario::hitNormal(THitActor* actor)
 	}
 
 	if (checkFlag(MARIO_FLAG_UNK200) && actor->mPosition.y > mPosition.y) {
-		actor->receiveMessage(this, HIT_MESSAGE_UNK3);
+		actor->receiveMessage(this, HIT_MESSAGE_SUPER_HIP_DROP);
 		return;
 	}
 

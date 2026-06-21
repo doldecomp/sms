@@ -202,7 +202,7 @@ void TMapObjGeneral::breaking()
 {
 	if (animIsFinished()) {
 		makeObjDead();
-		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK80000)) {
+		if (checkMapObjFlag(MAP_OBJ_FLAG_RESPAWNING)) {
 			makeObjDefault();
 			waitToAppear(0);
 		}
@@ -237,7 +237,7 @@ uuuh:
 
 void TMapObjGeneral::appeared()
 {
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK40000) && !isStateTimerEngaged())
+	if (checkMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING) && !isStateTimerEngaged())
 		makeObjDead();
 }
 
@@ -349,7 +349,7 @@ void TMapObjGeneral::appear()
 		startSound(1);
 
 	appearing();
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK40000))
+	if (checkMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING))
 		mStateTimer = getLivingTime();
 
 	mState = STATE_APPEARING;
@@ -503,51 +503,54 @@ void TMapObjGeneral::calcVelocity()
 
 void TMapObjGeneral::bind()
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK10) == 0) {
-		if (mBinder != nullptr) {
-			mBinder->bind(this);
-		} else {
-			calcVelocity();
-			JGeometry::TVec3<f32> vec = getPosition();
-			vec.add(mLinearVelocity);
-			vec.add(mVelocity);
-			checkGroundCollision(&vec);
-			if (checkMapObjFlag(MAP_OBJ_FLAG_UNK10000) != 0) {
-				checkWallCollision(&vec);
-			}
-			if (checkMapObjFlag(MAP_OBJ_FLAG_UNK20000) != 0) {
-				JGeometry::TVec3<f32> vel = mVelocity;
-				if (vel.y > 0.0f) {
-					checkRoofCollision(&vec);
-				}
-			}
-			if (mGroundPlane->checkFlag(0x10)) {
-				kill();
-			} else {
-				if (!checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
-					JGeometry::TVec3<f32> vel     = mVelocity;
-					JGeometry::TVec3<f32> velCopy = vel;
-					if (velCopy.x == 0.0f) {
-						JGeometry::TVec3<f32> velCopy2 = vel;
-						if (velCopy2.y == 0.0f) {
-							JGeometry::TVec3<f32> velCopy3 = vel;
-							if (velCopy3.z == 0.0f) {
-								onLiveFlag(LIVE_FLAG_UNK10);
-							}
-						}
-					}
-				}
+	if (checkLiveFlag(LIVE_FLAG_UNK10))
+		return;
 
-				mLinearVelocity = vec - mLinearVelocity;
+	if (mBinder != nullptr) {
+		mBinder->bind(this);
+		return;
+	}
+
+	calcVelocity();
+	JGeometry::TVec3<f32> vec = getPosition();
+	vec.add(mLinearVelocity);
+	vec.add(mVelocity);
+	checkGroundCollision(&vec);
+	if (checkMapObjFlag(MAP_OBJ_FLAG_ENABLE_WALL_COLLISION))
+		checkWallCollision(&vec);
+
+	if (checkMapObjFlag(MAP_OBJ_FLAG_ENABLE_ROOF_COLLISION)) {
+		JGeometry::TVec3<f32> vel = mVelocity;
+		if (vel.y > 0.0f)
+			checkRoofCollision(&vec);
+	}
+
+	if (mGroundPlane->isIllegalData()) {
+		kill();
+		return;
+	}
+
+	if (!checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
+		JGeometry::TVec3<f32> vel     = mVelocity;
+		JGeometry::TVec3<f32> velCopy = vel;
+		if (velCopy.x == 0.0f) {
+			JGeometry::TVec3<f32> velCopy2 = vel;
+			if (velCopy2.y == 0.0f) {
+				JGeometry::TVec3<f32> velCopy3 = vel;
+				if (velCopy3.z == 0.0f) {
+					onLiveFlag(LIVE_FLAG_UNK10);
+				}
 			}
 		}
 	}
+
+	mLinearVelocity = vec - mLinearVelocity;
 }
 
 void TMapObjGeneral::control()
 {
 	TMapObjBase::control();
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK1000000) && isState(STATE_NORMAL)
+	if (checkMapObjFlag(MAP_OBJ_FLAG_CAN_SINK) && isState(STATE_NORMAL)
 	    && !isAirborne() && isPollutedGround(mPosition))
 		sink();
 
@@ -591,7 +594,7 @@ void TMapObjGeneral::perform(u32 param_1, JDrama::TGraphics* param_2)
 		if (isState(STATE_WAITING_TO_APPEAR))
 			waitingToAppear();
 	} else {
-		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK40000) && isStateTimerEngaged()
+		if (checkMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING) && isStateTimerEngaged()
 		    && getStateTimer() < getFlushTime()
 		    && ((getStateTimer() / mNormalFlushInterval) & 1) != 0) {
 			return;
@@ -607,9 +610,8 @@ BOOL TMapObjGeneral::receiveMessage(THitActor* sender, u32 message)
 	if (ret)
 		return true;
 
-	// TODO: concerning. Is unkAC actually a Vec?
 	if (message == HIT_MESSAGE_TAKE && checkMapObjFlag(MAP_OBJ_FLAG_UNK100000)
-	    && JGeometry::TVec3<f32>(mVelocity).squared() <= 3.814697e-06f
+	    && JGeometry::TVec3<f32>(mVelocity).isZero()
 	    && (isState(STATE_APPEARING) || isState(STATE_NORMAL)
 	        || isState(STATE_TOUCHING_PLAYER)
 	        || isState(STATE_TOUCHING_WATER))) {
@@ -658,7 +660,7 @@ BOOL TMapObjGeneral::receiveMessage(THitActor* sender, u32 message)
 void TMapObjGeneral::loadAfter()
 {
 	TMapObjBase::loadAfter();
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK1000000) && isPollutedGround(mPosition))
+	if (checkMapObjFlag(MAP_OBJ_FLAG_CAN_SINK) && isPollutedGround(mPosition))
 		makeObjBuried();
 }
 

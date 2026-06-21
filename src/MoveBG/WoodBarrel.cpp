@@ -44,7 +44,7 @@ void TWoodBarrel::breaking()
 	if (animIsFinished()) {
 		makeObjDefault();
 		makeObjDead();
-		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK80000))
+		if (checkMapObjFlag(MAP_OBJ_FLAG_RESPAWNING))
 			waitToAppear(mWaitAppearTime);
 	}
 }

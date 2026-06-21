@@ -1165,7 +1165,7 @@ BOOL TMario::hipAttacking()
 					f32 oldY    = mPosition.y;
 					mPosition.y = oldY - 160.0f;
 					((THitActor*)mGroundPlane->mActor)
-					    ->receiveMessage(this, HIT_MESSAGE_UNK3);
+					    ->receiveMessage(this, HIT_MESSAGE_SUPER_HIP_DROP);
 					startVoice(MSD_SE_MV28_SPRISE_SMALL_01);
 					return changePlayerStatus(MARIO_STATUS_KICK_ROOF_ROLL_DOWN,
 					                          0, 0);
@@ -1175,7 +1175,7 @@ BOOL TMario::hipAttacking()
 					    ->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 				} else {
 					((THitActor*)mGroundPlane->mActor)
-					    ->receiveMessage(this, HIT_MESSAGE_UNK3);
+					    ->receiveMessage(this, HIT_MESSAGE_SUPER_HIP_DROP);
 					((THitActor*)mGroundPlane->mActor)
 					    ->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 				}

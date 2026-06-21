@@ -18,7 +18,7 @@ enum THitMessageType {
 	HIT_MESSAGE_TRAMPLE          = 0x0,
 	HIT_MESSAGE_HIP_DROP         = 0x1,
 	HIT_MESSAGE_PUSH_UP          = 0x2,
-	HIT_MESSAGE_UNK3             = 0x3, // super hip drop?
+	HIT_MESSAGE_SUPER_HIP_DROP   = 0x3,
 	HIT_MESSAGE_TAKE             = 0x4,
 	HIT_MESSAGE_UNK5             = 0x5,
 	HIT_MESSAGE_PUT              = 0x6,
