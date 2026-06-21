@@ -619,7 +619,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			           mDmgParamsHinokuri.mInvincibleTime.get());
 			return TRUE;
 		}
-		if (message == HIT_MESSAGE_UNK3 && !isInvincible()) {
+		if (message == HIT_MESSAGE_SUPER_HIP_DROP && !isInvincible()) {
 			onFlag(MARIO_FLAG_GROUND_POUND_SIT_UP);
 			if (!checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
 				rumbleStart(0x15, 0x0A);

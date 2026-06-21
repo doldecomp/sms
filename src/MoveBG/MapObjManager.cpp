@@ -193,12 +193,22 @@ TMapObjManager::TMapObjManager(const char* name)
 	unkB8.a = 0xff;
 }
 
-void TMapObjBaseManager::canAppear(const TMapObjBase*, u32) const { }
+bool TMapObjBaseManager::canAppear(const TMapObjBase* param_1,
+                                   u32 param_2) const
+{
+	if (param_1->isActorType(param_2)
+	    && !param_1->checkMapObjFlag(TMapObjBase::MAP_OBJ_FLAG_RESPAWNING)
+	    && param_1->checkLiveFlag(LIVE_FLAG_DEAD)
+	    && (!param_1->isActorType(0x2000000E)
+	        || param_1->getMActor() != nullptr))
+		return true;
+
+	return false;
+}
 
 TMapObjBase* TMapObjBaseManager::makeObjAppear(f32 x, f32 y, f32 z, u32 param_4,
                                                bool param_5)
 {
-
 	f32 y2;
 	if (param_5) {
 		const TBGCheckData* checkData;
@@ -211,16 +221,8 @@ TMapObjBase* TMapObjBaseManager::makeObjAppear(f32 x, f32 y, f32 z, u32 param_4,
 
 	for (int i = 0; i < getObjNum(); ++i) {
 		TMapObjBase* obj = (TMapObjBase*)getObj(i);
-		bool bVar1;
-		if (obj->isActorType(param_4)
-		    && !obj->checkMapObjFlag(TMapObjBase::MAP_OBJ_FLAG_UNK80000)
-		    && obj->checkLiveFlag(LIVE_FLAG_DEAD)
-		    && (!obj->isActorType(0x2000000e) || obj->getMActor() != nullptr))
-			bVar1 = true;
-		else
-			bVar1 = false;
 
-		if (bVar1) {
+		if (canAppear(obj, param_4)) {
 			obj->mPosition.set(x, y2, z);
 			obj->appear();
 			return obj;
@@ -234,16 +236,8 @@ TMapObjBase* TMapObjBaseManager::makeObjAppear(u32 param_1)
 {
 	for (int i = 0; i < getObjNum(); ++i) {
 		TMapObjBase* obj = (TMapObjBase*)getObj(i);
-		bool bVar1;
-		if (obj->isActorType(param_1)
-		    && !obj->checkMapObjFlag(TMapObjBase::MAP_OBJ_FLAG_UNK80000)
-		    && obj->checkLiveFlag(LIVE_FLAG_DEAD)
-		    && (!obj->isActorType(0x2000000e) || obj->getMActor() != nullptr))
-			bVar1 = true;
-		else
-			bVar1 = false;
 
-		if (bVar1) {
+		if (canAppear(obj, param_1)) {
 			obj->appear();
 			return obj;
 		}
@@ -256,16 +250,8 @@ TMapObjBase* TMapObjBaseManager::makeObjAppeared(u32 param_1)
 {
 	for (int i = 0; i < getObjNum(); ++i) {
 		TMapObjBase* obj = (TMapObjBase*)getObj(i);
-		bool bVar1;
-		if (obj->isActorType(param_1)
-		    && !obj->checkMapObjFlag(TMapObjBase::MAP_OBJ_FLAG_UNK80000)
-		    && obj->checkLiveFlag(LIVE_FLAG_DEAD)
-		    && (!obj->isActorType(0x2000000e) || obj->getMActor() != nullptr))
-			bVar1 = true;
-		else
-			bVar1 = false;
 
-		if (bVar1) {
+		if (canAppear(obj, param_1)) {
 			obj->makeObjAppeared();
 			return obj;
 		}

@@ -40,7 +40,7 @@ f32 TItem::mAppearedScaleSpeed = 0.01f;
 
 void TItem::appeared()
 {
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK40000) && !isStateTimerEngaged()) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING) && !isStateTimerEngaged()) {
 		if (mContainer != nullptr)
 			mContainer->receiveMessage(this, HIT_MESSAGE_UNK5);
 
@@ -58,7 +58,7 @@ void TItem::taken(THitActor* param_1)
 {
 	param_1->receiveMessage(this, HIT_MESSAGE_ATTACK);
 	kill();
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK80000)) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_RESPAWNING)) {
 		makeObjDefault();
 		appear();
 	}
@@ -123,7 +123,7 @@ void TItem::calc()
 
 void TItem::appearing()
 {
-	if (unkF8 & MAP_OBJ_FLAG_UNK2000000) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000)) {
 		if (mScaling.x < 2.0f) {
 			mScaling.add((Vec) { mAppearedScaleSpeed * 2.0f,
 			                     mAppearedScaleSpeed * 2.0f,
@@ -131,7 +131,7 @@ void TItem::appearing()
 		} else {
 			makeObjAppeared();
 			onHitFlag(HIT_FLAG_NO_COLLISION);
-			unkF8 &= ~MAP_OBJ_FLAG_UNK40000;
+			offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 		}
 	} else {
 		TMapObjGeneral::appearing();
@@ -145,7 +145,7 @@ void TItem::killByTimer(int param_1)
 
 	offMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
 	onHitFlag(HIT_FLAG_NO_COLLISION);
-	offMapObjFlag(MAP_OBJ_FLAG_UNK40000);
+	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 }
 
 void TItem::appear()
@@ -153,7 +153,7 @@ void TItem::appear()
 	TMapObjGeneral::appear();
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 	mStateTimer = unk150;
-	offMapObjFlag(MAP_OBJ_FLAG_UNK40000);
+	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 }
 
 void TItem::perform(u32 param_1, JDrama::TGraphics* param_2)
@@ -165,7 +165,7 @@ void TItem::perform(u32 param_1, JDrama::TGraphics* param_2)
 	    && !isStateTimerEngaged()) {
 		offHitFlag(HIT_FLAG_NO_COLLISION);
 		if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK10000000)) {
-			onMapObjFlag(MAP_OBJ_FLAG_UNK40000);
+			onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 			mStateTimer = unk14C;
 		}
 	}
@@ -273,7 +273,7 @@ void TCoin::perform(u32 param_1, JDrama::TGraphics* param_2)
 			if (checkHitFlag(HIT_FLAG_NO_COLLISION)) {
 				offHitFlag(HIT_FLAG_NO_COLLISION);
 				if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK10000000)) {
-					onMapObjFlag(MAP_OBJ_FLAG_UNK40000);
+					onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 					mStateTimer = unk14C;
 				}
 			} else {
@@ -696,7 +696,7 @@ void TShine::appearWithTime(int param_1, int param_2, int param_3, int param_4)
 	TMapObjGeneral::appear();
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 	mStateTimer = unk150;
-	offMapObjFlag(MAP_OBJ_FLAG_UNK40000);
+	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 	TFlagManager::smInstance->setBool(true, 0x50000);
 
 	if (param_2 >= 0)
@@ -748,7 +748,7 @@ void TShine::appearSimple(int param_1)
 	TMapObjGeneral::appear();
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 	mStateTimer = unk150;
-	offMapObjFlag(MAP_OBJ_FLAG_UNK40000);
+	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 	TFlagManager::smInstance->setBool(true, 0x50000);
 
 	unk174   = 60;
@@ -1170,15 +1170,7 @@ BOOL TItemNozzle::receiveMessage(THitActor* sender, u32 message)
 		return TRUE;
 	}
 
-	if (message == HIT_MESSAGE_SPRAYED_BY_WATER)
-		return FALSE;
-
-	if (message == HIT_MESSAGE_UNKB) {
-		taken(sender);
-		return TRUE;
-	}
-
-	return TMapObjGeneral::receiveMessage(sender, message);
+	return TItem::receiveMessage(sender, message);
 }
 
 void TItemNozzle::appearing()

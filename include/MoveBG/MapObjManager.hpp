@@ -35,7 +35,7 @@ public:
 	TMapObjBase* makeObjAppeared(u32);
 	TMapObjBase* makeObjAppear(u32);
 	TMapObjBase* makeObjAppear(f32, f32, f32, u32, bool);
-	void canAppear(const TMapObjBase*, u32) const;
+	bool canAppear(const TMapObjBase*, u32) const;
 
 public:
 	/* 0x38 */ f32 unk38;

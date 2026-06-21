@@ -218,7 +218,7 @@ void TMapObjBase::startControlAnim(u16 param_1)
 
 void TMapObjBase::startBck(const char* param_1)
 {
-	unkF8 &= ~MAP_OBJ_FLAG_UNK100;
+	offMapObjFlag(MAP_OBJ_FLAG_UNK100);
 	mMActor->setBck(param_1);
 }
 
@@ -413,15 +413,13 @@ void TMapObjBase::load(JSUMemoryInputStream& stream)
 	unkF4 = stream.readString();
 	loadBeforeInit(stream);
 	initMapObj();
-	unkF8 &= ~MAP_OBJ_FLAG_UNK40000;
+	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 	makeObjAppeared();
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK80)) {
 		f32 value;
 		stream >> value;
-		mDamageHeight = value;
-		calcEntryRadius();
-		mAttackHeight = value;
-		calcEntryRadius();
+		setDamageHeight(value);
+		setAttackHeight(value);
 		unk64 &= ~HIT_FLAG_UNK4;
 		unk64 &= ~HIT_FLAG_UNK2;
 	}

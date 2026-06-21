@@ -11082,7 +11082,7 @@ void TMapObjBase::makeMActors()
 		return;
 
 	mMActorKeeper = new TMActorKeeper(mManager, uVar6);
-	if (unkF8 & MAP_OBJ_FLAG_UNK8000)
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8000))
 		mMActorKeeper->mModelLoaderFlags = 0x11220000;
 	else
 		mMActorKeeper->mModelLoaderFlags = 0x10220000;

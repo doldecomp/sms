@@ -546,7 +546,7 @@ BOOL TSmallEnemy::receiveMessage(THitActor* sender, u32 message)
 	}
 
 	if (message == HIT_MESSAGE_TRAMPLE || message == HIT_MESSAGE_HIP_DROP
-	    || message == HIT_MESSAGE_UNK3 || message == HIT_MESSAGE_UNKB
+	    || message == HIT_MESSAGE_SUPER_HIP_DROP || message == HIT_MESSAGE_UNKB
 	    || (mActorType == 0x10000021 && message == HIT_MESSAGE_PUNCH)) {
 		if (isHitValid(message)) {
 			unk184 = 0;
