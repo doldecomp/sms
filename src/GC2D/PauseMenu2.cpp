@@ -26,15 +26,14 @@
 #include <System/MarDirector.hpp>
 #include <System/MarioGamePad.hpp>
 #include <System/StageUtil.hpp>
+#include <stdio.h>
 
 extern JPAEmitterManager* gpEmitterManager4D2;
-MSound* gpMSound;
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
-#include <stdio.h>
 
 // fabricated
 void TPauseMenu2::draw(JDrama::TGraphics* gfx)
