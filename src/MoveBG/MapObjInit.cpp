@@ -11112,14 +11112,16 @@ void TMapObjBase::initModelData()
 	makeMActors();
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK800) && getMActor()) {
 		mGroundHeight = gpMap->checkGround(getPosition(), &mGroundPlane);
-		if (getGroundPlane()->isShadow() && !checkMapObjFlag(MAP_OBJ_FLAG_UNK4000))
+		if (getGroundPlane()->isShadow()
+		    && !checkMapObjFlag(MAP_OBJ_FLAG_UNK4000))
 			gpMapObjManager->entryStaticDrawBufferShadow(
 			    getMActor()->getModel());
 		else
 			gpMapObjManager->entryStaticDrawBufferSun(getMActor()->getModel());
 	}
 
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK10) || checkMapObjFlag(MAP_OBJ_FLAG_UNK20)) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK10)
+	    || checkMapObjFlag(MAP_OBJ_FLAG_UNK20)) {
 		TMirrorActor* ma = new TMirrorActor(getName());
 		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK20))
 			ma->init(getModel(), 0x1A);
