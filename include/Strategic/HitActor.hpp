@@ -15,16 +15,16 @@ enum TActorTypeBits {
 };
 
 enum THitMessageType {
-	HIT_MESSAGE_TRAMPLE          = 0,
-	HIT_MESSAGE_HIP_DROP         = 1,
-	HIT_MESSAGE_UNK2             = 2,
-	HIT_MESSAGE_UNK3             = 3,
-	HIT_MESSAGE_TAKE             = 4,
-	HIT_MESSAGE_UNK5             = 5,
-	HIT_MESSAGE_UNK6             = 6,
-	HIT_MESSAGE_UNK7             = 7,
-	HIT_MESSAGE_UNK8             = 8,
-	HIT_MESSAGE_UNKA             = 0xA,
+	HIT_MESSAGE_TRAMPLE          = 0x0,
+	HIT_MESSAGE_HIP_DROP         = 0x1,
+	HIT_MESSAGE_PUSH_UP          = 0x2,
+	HIT_MESSAGE_UNK3             = 0x3, // super hip drop?
+	HIT_MESSAGE_TAKE             = 0x4,
+	HIT_MESSAGE_UNK5             = 0x5,
+	HIT_MESSAGE_PUT              = 0x6,
+	HIT_MESSAGE_THROWN           = 0x7,
+	HIT_MESSAGE_UNK8             = 0x8,
+	HIT_MESSAGE_UNKA             = 0xA, // burn?
 	HIT_MESSAGE_UNKB             = 0xB,
 	HIT_MESSAGE_PUNCH            = 0xC,
 	HIT_MESSAGE_UNKD             = 0xD,
@@ -54,9 +54,9 @@ public:
 		return false;
 	}
 
-	float initHitActor(u32, u16, int, f32 attack_radius, f32 attack_height,
-	                   f32 damage_radius, f32 damage_height);
-	float calcEntryRadius();
+	f32 initHitActor(u32, u16, int, f32 attack_radius, f32 attack_height,
+	                 f32 damage_radius, f32 damage_height);
+	f32 calcEntryRadius();
 
 	// fabricated
 	u32 getActorType() const { return mActorType; }

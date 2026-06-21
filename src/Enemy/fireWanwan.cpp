@@ -430,18 +430,18 @@ TFireWanwanTailHit::TFireWanwanTailHit(TFireWanwan& param_1)
 	MTXIdentity(unk74);
 }
 
-BOOL TFireWanwanTailHit::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TFireWanwanTailHit::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_1->getActorType() == 0x80000001) {
-		if (param_2 == HIT_MESSAGE_TAKE) {
+	if (sender->getActorType() == 0x80000001) {
+		if (message == HIT_MESSAGE_TAKE) {
 			if (!mOwner->canTakenByMario())
 				return false;
 
-			behaveTaken(param_1);
+			behaveTaken(sender);
 			return true;
 		}
 
-		if (param_2 == HIT_MESSAGE_UNK7 || param_2 == HIT_MESSAGE_UNK8) {
+		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_UNK8) {
 			behaveApart();
 			return true;
 		}
@@ -952,30 +952,30 @@ bool TFireWanwan::isOverHungTailRumble() const
 	return mHungTailRumbleTimer > 3600;
 }
 
-BOOL TFireWanwan::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TFireWanwan::receiveMessage(THitActor* sender, u32 message)
 {
-	switch (param_2) {
+	switch (message) {
 	case HIT_MESSAGE_TRAMPLE:
 	case HIT_MESSAGE_HIP_DROP:
 		return false;
 
 	case HIT_MESSAGE_SPRAYED_BY_WATER: {
-		SMS_EasyEmitParticle(PARTICLE_MS_ENM_WATHIT, &param_1->getPosition(),
+		SMS_EasyEmitParticle(PARTICLE_MS_ENM_WATHIT, &sender->getPosition(),
 		                     nullptr, JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 		u8 maxHp = getMaxHitPoints();
 		if (maxHp == mHitPoints)
 			if (gpMSound->gateCheck(MSD_SE_EN_WANWAN_1ST_WATER))
 				MSoundSESystem::MSoundSE::startSoundActor(
 				    MSD_SE_EN_WANWAN_1ST_WATER, &mPosition, 0, nullptr, 0, 4);
-		decHpByWater(param_1);
-		behaveToWater(param_1);
+		decHpByWater(sender);
+		behaveToWater(sender);
 		if (mSprayedByWaterCooldown == 0)
 			mSprayedByWaterCooldown = 1;
 		return true;
 	}
 
 	default:
-		return TSmallEnemy::receiveMessage(param_1, param_2);
+		return TSmallEnemy::receiveMessage(sender, message);
 	}
 }
 

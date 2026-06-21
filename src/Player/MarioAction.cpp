@@ -71,7 +71,7 @@ BOOL TMario::putting()
 
 	stopCommon(ANIM_PUT, MARIO_STATUS_WAIT);
 	if (mHeldObject != nullptr && mModel->getFrameCtrl(0).checkPass(20.0f)) {
-		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK6);
+		mHeldObject->receiveMessage(this, HIT_MESSAGE_PUT);
 		mHeldObject = nullptr;
 	}
 

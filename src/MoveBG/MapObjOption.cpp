@@ -23,13 +23,13 @@ void TFileLoadBlock::makeBlockNoCard() { }
 void TFileLoadBlock::makeBlockNormal()
 {
 	startAnim(0);
-	mState = 1;
+	mState = STATE_NORMAL;
 }
 
 void TFileLoadBlock::makeBlockRock()
 {
 	startAnim(1);
-	mState = 2;
+	mState = STATE_ROCKING;
 }
 
 static int sRumbleTime = 8;
@@ -40,23 +40,22 @@ void TFileLoadBlock::pushed()
 	gpCardLoad->setSelected(unk138);
 	SMSRumbleMgr->start(0x15, sRumbleTime, (float*)nullptr);
 	gpMarioParticleManager->emit(0x6E, &unk144, 0, nullptr);
-	gpMarioParticleManager->emit(0x39, &unk144, 0, nullptr);
-	mTimeTilAppear         = 0x78;
-	unk13C->mTimeTilAppear = 0x78;
-	unk140->mTimeTilAppear = 0x78;
+	gpMarioParticleManager->emit(PARTICLE_MS_M_AMIATTACK, &unk144, 0, nullptr);
+	mTimeTilAppear         = 120;
+	unk13C->mTimeTilAppear = 120;
+	unk140->mTimeTilAppear = 120;
 }
 
 void TFileLoadBlock::touchPlayer(THitActor* param_1)
 {
-	if (isState(1) && marioHeadAttack() && !isWaitingToAppear()) {
+	if (isState(STATE_NORMAL) && marioHeadAttack() && !isWaitingToAppear())
 		pushed();
-	}
 }
 
 BOOL TFileLoadBlock::receiveMessage(THitActor* sender, u32 message)
 {
-
-	if (isState(1) && message == HIT_MESSAGE_UNK2 && !isWaitingToAppear()) {
+	if (isState(STATE_NORMAL) && message == HIT_MESSAGE_PUSH_UP
+	    && !isWaitingToAppear()) {
 		pushed();
 		return true;
 	}

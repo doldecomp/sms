@@ -378,7 +378,7 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 
 			if (mRoofPlane->getActor() != nullptr)
 				((THitActor*)mRoofPlane->getActor())
-				    ->receiveMessage(this, HIT_MESSAGE_UNK2);
+				    ->receiveMessage(this, HIT_MESSAGE_PUSH_UP);
 
 			setPlayerVelocity(0.0f);
 

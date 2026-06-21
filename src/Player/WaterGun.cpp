@@ -318,7 +318,7 @@ void TNozzleBase::emit(int param_1)
 		                   + emitPow * (1.0f - emitCtrl));
 
 		refEmitFlag = 0x40;
-		if (mFludd->hasFlag(0x2)) {
+		if (mFludd->hasFlag(TWaterGun::WATER_GUN_FLAG_UNK2)) {
 			refEmitFlag = (refEmitFlag | 0x80);
 		}
 
@@ -642,7 +642,7 @@ void TNozzleTrigger::emit(int param_1)
 		emitInfo->mPow.set(pressure * (emitPow - emitPowMin) + emitPowMin);
 
 		refEmitFlag = 0x40;
-		if (mFludd->hasFlag(0x2)) {
+		if (mFludd->hasFlag(TWaterGun::WATER_GUN_FLAG_UNK2)) {
 			refEmitFlag = (refEmitFlag | 0x80);
 		}
 
@@ -924,7 +924,7 @@ void TNozzleDeform::emit(int param_1)
 		emitInfo->mPow.set(localUnk378 * (emitPow - emitPowMin) + emitPowMin);
 
 		refEmitFlag = 0x40;
-		if (mFludd->hasFlag(0x2)) {
+		if (mFludd->hasFlag(TWaterGun::WATER_GUN_FLAG_UNK2)) {
 			refEmitFlag = (refEmitFlag | 0x80);
 		}
 
@@ -1629,7 +1629,7 @@ void TWaterGun::perform(u32 flags, JDrama::TGraphics* graphics)
 	// volatile u32 unused2[24];
 
 	if ((flags & 0x1) != 0) {
-		if ((mFlags & 0x10) != 0) {
+		if ((mFlags & WATER_GUN_FLAG_UNK10) != 0) {
 			mCurrentWater = 0;
 		}
 		movement();
@@ -1799,10 +1799,8 @@ void TWaterGun::emit()
 		}
 	}
 
-	// TODO: Probably an enum
-	// TODO: Probably inline function?
-	if (hasFlag(0x4)) {
-		offFlag(0x4);
+	if (hasFlag(WATER_GUN_FLAG_UNK4)) {
+		offFlag(WATER_GUN_FLAG_UNK4);
 		return;
 	}
 

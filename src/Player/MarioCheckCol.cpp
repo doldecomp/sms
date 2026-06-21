@@ -64,7 +64,7 @@ void TMario::hitHipDrop(THitActor* actor)
 void TMario::hitPushup(THitActor* actor)
 {
 	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && mVel.y > 0.0f)
-		actor->receiveMessage(this, HIT_MESSAGE_UNK2);
+		actor->receiveMessage(this, HIT_MESSAGE_PUSH_UP);
 	hitNormal(actor);
 }
 
@@ -147,6 +147,7 @@ void TMario::hitBrakable(THitActor* actor)
 void TMario::hangPole(THitActor* actor)
 {
 	if (!checkStatusType(MARIO_STATUS_FLAG_UNK100000)) {
+		// TODO: dirty, needs inlines
 		u8 canHang = 0;
 		if (mHeldObject == nullptr && !onYoshi())
 			canHang = 1;
@@ -155,6 +156,7 @@ void TMario::hangPole(THitActor* actor)
 		if (canHang == 0) {
 			inHangStatus = 0;
 		} else {
+			// TODO: inlines
 			u32 statLo = mStatus & MARIO_STATUS_TYPE_AND_ID_MASK;
 			if (statLo >= 0x80 && statLo <= 0x9F) {
 				inHangStatus = 1;

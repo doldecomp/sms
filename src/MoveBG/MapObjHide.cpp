@@ -24,44 +24,47 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <M3DUtil/MActor.hpp>
 
-void THideObjBase::appearObj(f32 param1)
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
+
+void THideObjBase::appearObj(f32 y_offset)
 {
 	JGeometry::TVec3<f32> pos;
-	pos.set(mPosition.x, mPosition.y + param1, mPosition.z);
+	pos.set(mPosition.x, mPosition.y + y_offset, mPosition.z);
 	appearObjFromPoint(pos);
 }
 
-void THideObjBase::appearObjFromPoint(const JGeometry::TVec3<f32>& param1)
+void THideObjBase::appearObjFromPoint(const JGeometry::TVec3<f32>& point)
 {
-	if (unk138 != nullptr && unk14C != 0) {
-		if (isActorType(0x20000013)) {
-			onLiveFlag(0x10);
-			unk138->mPosition.set(mPosition);
-			((TShine*)unk138)->appearWithDemo(unk144);
+	if (mHiddenObj != nullptr && mAllowReveal) {
+		if (mHiddenObj->isActorType(0x20000013)) {
+			mHiddenObj->onLiveFlag(LIVE_FLAG_UNK10);
+			mHiddenObj->mPosition.set(mPosition);
+			((TShine*)mHiddenObj)->appearWithDemo(mHiddenShineDemoName);
 		} else {
 			TMapObjBase* obj;
-			if (isActorType(0x2000000E)) {
+			if (mHiddenObj->isActorType(0x2000000E)) {
 				obj = gpItemManager->makeObjAppear(0x2000000E);
-				if (!obj) {
+				if (!obj)
 					return;
-				}
 			} else {
-				obj = unk138;
+				obj = mHiddenObj;
 			}
 
-			throwObjToFrontFromPoint(obj, param1, unk13C, unk140);
+			throwObjToFrontFromPoint(obj, point, mAppearSpeed, mAppearYSpeed);
 			if (TMapObjBase::isCoin(obj)) {
 				TCoin* coin  = (TCoin*)obj;
 				coin->unk148 = this;
 				coin->unk14C = unk148;
 			}
 
-			if (TMapObjBase::isFruit(obj)) {
+			if (TMapObjBase::isFruit(obj))
 				((TResetFruit*)obj)->makeObjLiving();
-			}
 		}
 		emitEffect();
-		unk14C = false;
+		mAllowReveal = false;
 	}
 }
 
@@ -72,33 +75,33 @@ void THideObjBase::emitEffect()
 
 BOOL THideObjBase::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == 5
-	    && (isActorType(0x2000000E) || isActorType(0x2000000F)
-	        || isActorType(0x20000010))) {
-		unk14C = true;
-	}
-	TMapObjBase::receiveMessage(sender, message);
+	if (message == HIT_MESSAGE_UNK5
+	    && (sender->isActorType(0x2000000E) || sender->isActorType(0x2000000F)
+	        || sender->isActorType(0x20000010)))
+		mAllowReveal = true;
+
+	return TMapObjBase::receiveMessage(sender, message);
 }
 
 void THideObjBase::loadAfter()
 {
 	TMapObjBase::loadAfter();
-	const char* name = mName;
-	unk138 = TMapObjBaseManager::newAndRegisterObjByEventID(unk134, name);
-	if (unk138 != nullptr) {
-		if (unk138->isActorType(0x20000010)) {
+	mHiddenObj
+	    = TMapObjBaseManager::newAndRegisterObjByEventID(mEventId, getName());
+	if (mHiddenObj != nullptr) {
+		if (mHiddenObj->isActorType(0x20000010)) {
 			bool isBlueCollected = TFlagManager::smInstance->getBlueCoinFlag(
-			    gpMarDirector->getCurrentMap(), unk134);
-			if (isBlueCollected) {
-				unk14C = false;
-			}
+			    gpMarDirector->getCurrentMap(), mEventId);
+			if (isBlueCollected)
+				mAllowReveal = false;
 		}
 
-		if (unk138->isActorType(0x20000013)) {
-			size_t nameLen    = strlen(mName);
-			unk144            = new char[nameLen + 0x13];
-			const char* name2 = mName;
-			snprintf(unk144, nameLen + 0x13, "シャイン（%s）カメラ", name2);
+		if (mHiddenObj->isActorType(0x20000013)) {
+			size_t nameLen       = strlen(mName);
+			mHiddenShineDemoName = new char[nameLen + 0x13];
+			const char* name2    = mName;
+			snprintf(mHiddenShineDemoName, nameLen + 0x13,
+			         "シャイン（%s）カメラ", name2);
 		}
 	}
 }
@@ -107,26 +110,27 @@ void THideObjBase::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
 
-	s32 unk134Val;
-	TMapObjBase::loadHideObjInfo(stream, &unk134Val, &unk13C, &unk140, &unk148);
-	unk134 = unk134Val;
+	s32 eventId;
+	TMapObjBase::loadHideObjInfo(stream, &eventId, &mAppearSpeed,
+	                             &mAppearYSpeed, &unk148);
+	setEventId(eventId);
 	SMS_LoadParticle("/scene/mapObj/ms_watcoin_hit.jpa", 0x57);
 }
 
 THideObjBase::THideObjBase(const char* name)
     : TMapObjBase(name)
-    , unk138(nullptr)
-    , unk13C(0.0f)
-    , unk140(0.0f)
-    , unk144(nullptr)
+    , mHiddenObj(nullptr)
+    , mAppearSpeed(0.0f)
+    , mAppearYSpeed(0.0f)
+    , mHiddenShineDemoName(nullptr)
     , unk148(0)
-    , unk14C(true)
+    , mAllowReveal(true)
 {
 }
 
 void THideObj::touchPlayer(THitActor* param_1)
 {
-	if (marioHeadAttack() && unk138 != nullptr) {
+	if (marioHeadAttack() && mHiddenObj != nullptr) {
 		appearObj(100.0f);
 		makeObjDead();
 	}
@@ -134,8 +138,8 @@ void THideObj::touchPlayer(THitActor* param_1)
 
 u32 TWaterHitHideObj::touchWater(THitActor* param_1)
 {
-	if (unk138 != 0) {
-		appearObj(100.0f);
+	if (mHiddenObj != nullptr) {
+		appearObj(50.0f);
 		makeObjDead();
 	}
 	return 1;
@@ -153,7 +157,7 @@ TWaterHitHideObj::TWaterHitHideObj(const char* name)
 
 void TFruitHitHideObj::touchFruit(THitActor* param_1)
 {
-	if (unk138 != 0) {
+	if (mHiddenObj != nullptr) {
 		appearObj(50.0f);
 		emitEffect();
 		makeObjDead();
@@ -164,9 +168,8 @@ void TFruitHitHideObj::touchFruit(THitActor* param_1)
 
 void TFruitHitHideObj::touchActor(THitActor* param_1)
 {
-	if (TMapObjBase::isFruit(param_1)) {
+	if (TMapObjBase::isFruit(param_1))
 		touchFruit(param_1);
-	}
 }
 
 void TFruitHitHideObj::load(JSUMemoryInputStream& stream)
@@ -183,7 +186,7 @@ void TFruitBasket::countFruit(THitActor* param_1)
 {
 	mMActor->setBck("basket");
 
-	if (unk138 != nullptr) {
+	if (mHiddenObj != nullptr) {
 		appearObj(0.0f);
 
 		SMSGetMSound()->startSoundActor(MSD_SE_IT_SOCCER_GOAL, &mPosition, 0,
@@ -195,7 +198,6 @@ void TFruitBasket::countFruit(THitActor* param_1)
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_BASKET_BOUND, &mPosition,
 			                                0, nullptr, 0, 4);
 		} else if (param_1->isActorType(unk150)) {
-
 			SMSGetMSound()->startSoundActor(MSD_SE_IT_SOCCER_GOAL, &mPosition,
 			                                0, nullptr, 0, 4);
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_FGM_SOCCER_GOAL, 0,
@@ -211,13 +213,16 @@ void TFruitBasket::countFruit(THitActor* param_1)
 void TFruitBasket::touchFruit(THitActor* param_1)
 {
 	if (fabsf(mRotation.x) < 45.0f) {
+		// Upwards facing basket -- check that the fruit's on top of us
 		if (((TLiveActor*)param_1)->getGroundPlane()->getActor() != this)
 			return;
 	} else {
+		// Basket lying on it's side -- check that the fruit rolled inside
+		// enough to be under our side
 		const TBGCheckData* roofPlane;
 		gpMap->checkRoof(param_1->mPosition.x, param_1->mPosition.y,
 		                 param_1->mPosition.z, &roofPlane);
-		if ((TFruitBasket*)roofPlane->getActor() != this)
+		if (roofPlane->getActor() != this)
 			return;
 	}
 
@@ -265,8 +270,7 @@ void TFruitBasketEvent::countFruit(THitActor* fruit)
 	default:
 		return;
 	}
-	// This feels wrong... symbols say param is a THitActor tho..
-	// Sane approach would be to cast after validating earlier
+
 	((TResetFruit*)fruit)->makeObjWaitingToAppear();
 	mColCount = 0;
 }
@@ -275,9 +279,8 @@ int TFruitBasketEvent::getFruitNum(int idx) const { return unk154[idx]; }
 
 void TFruitBasketEvent::reset()
 {
-	for (int i = 0; i < 5; ++i) {
+	for (int i = 0; i < 5; ++i)
 		unk154[i] = 0;
-	}
 }
 
 TFruitBasketEvent::TFruitBasketEvent(const char* name)
@@ -289,7 +292,7 @@ TFruitBasketEvent::TFruitBasketEvent(const char* name)
 void THipDropHideObj::touchPlayer(THitActor* param_1)
 {
 	if (SMS_IsMarioStatusHipDrop()) {
-		appearObj(0);
+		appearObj(0.0f);
 		makeObjDead();
 	}
 }
@@ -311,140 +314,111 @@ void TWaterHitPictureHideObj::afterFinishedAnim()
 	removeMapCollision();
 	onHitFlag(HIT_FLAG_UNK4);
 	appearObjFromPoint(getObjAppearPos());
-	mState = 3;
+	mState = STATE_FINISHED;
 }
 
 void TWaterHitPictureHideObj::forward(f32 param_1)
 {
-	if (unk150) {
-		unk160 -= param_1;
-		if (unk160 < unk164) {
+	if (mReverse) {
+		mProgress -= param_1;
+		if (mProgress < mMinProgress)
 			afterFinishedAnim();
-		}
 	} else {
-		unk160 += param_1;
-		if (unk160 > unk168) {
+		mProgress += param_1;
+		if (mProgress > mMaxProgress)
 			afterFinishedAnim();
-		}
 	}
-	unk160   = MsClamp(unk160, unk164, unk168);
-	unk16C.a = (u16)unk160 & 0xff;
+
+	mProgress = MsClamp(mProgress, mMinProgress, mMaxProgress);
+	mColor.a  = (u16)mProgress & 0xff;
 }
 
 u32 TWaterHitPictureHideObj::touchWater(THitActor* param_1)
 {
-	volatile u32 padding[12];
 	const JGeometry::TVec3<f32>& waterSpeed = getWaterSpeed(param_1);
 
 	MtxPtr rootMtx = getModel()->getAnmMtx(0);
 	if ((rootMtx[0][2] * waterSpeed.x + rootMtx[1][2] * waterSpeed.y
 	     + rootMtx[2][2] * waterSpeed.z)
-	    > 0.0f) {
+	    > 0.0f)
 		return 0;
-	}
+
 	int id = getWaterID(param_1);
 	if (gpModelWaterManager->checkFlagBottom4Bits(id, 0x1)) {
-		gpMarioParticleManager->emit(0xe7, &mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
+		                             &param_1->mPosition, 0, nullptr);
 		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
 		                              0, 0, 0, 4);
 	}
-	forward(unk154);
-	if (isActorType(0x400001A1)) {
-		soundBas(MSD_SE_OBJ_POSTER_RIP1, 200.0f, unk154);
-	}
+	forward(mSprayProgressSpeed);
+	if (isActorType(0x400001A1))
+		soundBas(MSD_SE_OBJ_POSTER_RIP1, 200.0f, mSprayProgressSpeed);
+
 	return 1;
 }
 
 void TWaterHitPictureHideObj::touchActor(THitActor* param_1)
 {
-	if (param_1->isActorType(0x4000005A)) {
-		mState = 2;
-	}
+	if (param_1->isActorType(0x4000005A))
+		mState = STATE_HIT_BY_BARREL;
 }
 
 void TWaterHitPictureHideObj::control()
 {
 	TMapObjBase::control();
 	switch (mState) {
-	case 1:
-		if (unk150) {
-			unk160 += unk15C;
-			if (unk160 > unk168) {
-				unk160 = unk168;
-			}
+	case STATE_NORMAL:
+		if (mReverse) {
+			mProgress += unk15C;
+			if (mProgress > mMaxProgress)
+				mProgress = mMaxProgress;
 		} else {
-			unk160 -= unk15C;
-			if (unk160 < unk164) {
-				unk160 = unk164;
-			}
+			mProgress -= unk15C;
+			if (mProgress < mMinProgress)
+				mProgress = mMinProgress;
 		}
-		unk16C.a = (u16)unk160 & 0xff;
+		mColor.a = (u16)mProgress & 0xff;
 		break;
-	case 2:
-		forward(unk158);
+	case STATE_HIT_BY_BARREL:
+		forward(mBarrelProgressSpeed);
 		break;
-	case 3:
+	case STATE_FINISHED:
 		break;
 	}
 }
 
 BOOL TWaterHitPictureHideObj::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == 5
+	if (message == HIT_MESSAGE_UNK5
 	    && (sender->isActorType(0x2000000E) || sender->isActorType(0x2000000F)
 	        || sender->isActorType(0x20000010))) {
 		offHitFlag(HIT_FLAG_NO_COLLISION);
 		offHitFlag(HIT_FLAG_UNK4);
 		offHitFlag(HIT_FLAG_UNK2);
-		mState = 1;
-		unk14C = 1;
-		return TRUE;
-	}
-	if (isState(3)) {
-		return FALSE;
-	}
-	if (sender->isActorType(0x4000005A)) {
-		mState = 2;
+		mState       = STATE_NORMAL;
+		mAllowReveal = true;
 		return TRUE;
 	}
 
-	if (message == 5
-	    && (sender->isActorType(0x2000000E) || sender->isActorType(0x2000000F)
-	        || sender->isActorType(0x20000010))) {
-		unk14C = true;
+	if (isState(STATE_FINISHED))
+		return FALSE;
+
+	if (sender->isActorType(0x4000005A)) {
+		mState = STATE_HIT_BY_BARREL;
+		return TRUE;
 	}
-	return TMapObjBase::receiveMessage(sender, message);
+
+	return THideObjBase::receiveMessage(sender, message);
 }
 
 void TWaterHitPictureHideObj::loadAfter()
 {
-	volatile u32 padding[10];
-	TMapObjBase::loadAfter();
+	THideObjBase::loadAfter();
 
-	const char* name = mName;
-	unk138 = TMapObjBaseManager::newAndRegisterObjByEventID(unk134, name);
-
-	// very likely inline, duplicate from another function
-	if (unk138 != nullptr) {
-		if (unk138->isActorType(0x20000010)) {
+	if (mHiddenObj != nullptr) {
+		if (mHiddenObj->isActorType(0x20000010)) {
 			bool isBlueCollected = TFlagManager::smInstance->getBlueCoinFlag(
-			    gpMarDirector->getCurrentMap(), unk134);
-			if (isBlueCollected) {
-				unk14C = false;
-			}
-		}
-		if (unk138->isActorType(0x20000013)) {
-			size_t nameLen    = strlen(mName);
-			unk144            = new char[nameLen + 0x13];
-			const char* name2 = mName;
-			snprintf(unk144, nameLen + 0x13, "シャイン（%s）カメラ", name2);
-		}
-	}
-
-	if (unk138 != nullptr) {
-		if (unk138->isActorType(0x20000010)) {
-			bool isBlueCollected = TFlagManager::smInstance->getBlueCoinFlag(
-			    gpMarDirector->getCurrentMap(), unk134);
+			    gpMarDirector->getCurrentMap(), mEventId);
 			if (isBlueCollected) {
 				makeObjDead();
 				return;
@@ -453,65 +427,62 @@ void TWaterHitPictureHideObj::loadAfter()
 	}
 	switch (mActorType) {
 	case 0x40000012:
-		unk164 = 32.0f;
-		unk168 = 100.0f;
+		mMinProgress = 32.0f;
+		mMaxProgress = 100.0f;
 		if (getModel()->getAnmMtx(0)[1][2] > 0.7f) {
-			unk154 = 1.5f;
+			mSprayProgressSpeed = 1.5f;
 		} else {
-			unk154 = 0.48f;
+			mSprayProgressSpeed = 0.48f;
 		}
-		unk15C = 0.2f;
-		unk150 = false;
+		unk15C   = 0.2f;
+		mReverse = false;
 		break;
 	case 0x40000013:
 	case 0x40000018:
 	case 0x40000019:
 	case 0x4000001A:
-		unk164 = 20.0f;
-		unk150 = true;
+		mMinProgress = 20.0f;
+		mReverse     = true;
 		break;
 	case 0x40000020:
-		unk154 = 1.2f;
-		unk164 = 30.0f;
-		unk168 = 170.0f;
-		unk150 = false;
+		mSprayProgressSpeed = 1.2f;
+		mMinProgress        = 30.0f;
+		mMaxProgress        = 170.0f;
+		mReverse            = false;
 		break;
 	case 0x400001A2:
-		unk164 = 0.0f;
-		unk168 = 200.0f;
-		unk154 = 0.4f;
-		unk150 = false;
+		mMinProgress        = 0.0f;
+		mMaxProgress        = 200.0f;
+		mSprayProgressSpeed = 0.4f;
+		mReverse            = false;
 		break;
 	case 0x400001A1:
-		unk164 = 0.0f;
-		unk168 = 255.0f;
-		unk150 = true;
+		mMinProgress = 0.0f;
+		mMaxProgress = 255.0f;
+		mReverse     = true;
 		break;
 	}
 
-	if (unk150) {
-		unk160 = unk168;
-	} else {
-		unk160 = unk164;
-	}
+	if (mReverse)
+		mProgress = mMaxProgress;
+	else
+		mProgress = mMinProgress;
 
-	if (unk138 != nullptr) {
-		if (TMapObjBase::isCoin(unk138)) {
-			unk138->offMapObjFlag(0x10000000);
-		}
+	if (mHiddenObj != nullptr) {
+		if (TMapObjBase::isCoin(mHiddenObj))
+			mHiddenObj->offMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
 
-		if (unk138->isActorType(0x20000013)) {
-
+		if (mHiddenObj->isActorType(0x20000013)) {
 			bool isShineCollected
-			    = TFlagManager::smInstance->getShineFlag(unk138->unk134);
+			    = TFlagManager::smInstance->getShineFlag(mHiddenObj->mEventId);
 			if (isShineCollected) {
-				if (unk150) {
-					unk160 = unk164;
-				} else {
-					unk160 = unk168;
-				}
-				unk16C.a = (u16)unk160 & 0xff;
-				mState   = 3;
+				if (mReverse)
+					mProgress = mMinProgress;
+				else
+					mProgress = mMaxProgress;
+
+				mColor.a = (u16)mProgress & 0xff;
+				mState   = STATE_FINISHED;
 			}
 		}
 	}
@@ -521,90 +492,81 @@ void TWaterHitPictureHideObj::load(JSUMemoryInputStream& stream)
 {
 	THideObjBase::load(stream);
 
-	u32 r;
-	u32 g;
-	u32 b;
+	u32 r, g, b;
+	stream >> r >> g >> b;
+	mColor.r = r & 0xff;
+	mColor.g = g & 0xff;
+	mColor.b = b & 0xff;
 
-	stream.read(r);
-	stream.read(g);
-	stream.read(b);
-	unk16C.r = r & 0xff;
-	unk16C.g = g & 0xff;
-	unk16C.b = b & 0xff;
+	mColor.a             = 0xFF;
+	mSprayProgressSpeed  = 1.8f;
+	mBarrelProgressSpeed = 1.0f;
+	unk15C               = 0.4f;
 
-	unk16C.a = 0xFF;
-	unk154   = 1.8f;
-	unk158   = 1.0f;
-	unk15C   = 0.4f;
-
-	f32 unk = getModel()->getAnmMtx(0)[1][2];
-	if (unk > 0.7f) {
+	f32 yOffset = getModel()->getAnmMtx(0)[1][2];
+	if (yOffset > 0.7f) {
 		mYOffset = 0.0f;
 		setDamageHeight(40.0f);
-		mPosition.y = mInitialPosition.y + mYOffset;
-		unk154      = 2.8f;
+		mPosition.y         = mInitialPosition.y + mYOffset;
+		mSprayProgressSpeed = 2.8f;
+	} else if (yOffset < -0.7f) {
+		mYOffset = mScaling.y * -10.0f;
+		setDamageHeight(30.0f);
+		mPosition.y         = mInitialPosition.y + mYOffset;
+		mSprayProgressSpeed = 2.5f;
 	} else {
-		if (unk < -0.7f) {
-			mYOffset = mScaling.y * -10.0f;
-			setDamageHeight(30.0f);
-			mPosition.y = mInitialPosition.y + mYOffset;
-			unk154      = 2.5f;
-		} else {
-			unk154 = 1.8f;
-		}
+		mSprayProgressSpeed = 1.8f;
 	}
 
-	initPacketMatColor(getModel(), GX_TEVREG0, &unk16C);
+	initPacketMatColor(getModel(), GX_TEVREG0, &mColor);
 }
 
 TWaterHitPictureHideObj::TWaterHitPictureHideObj(const char* name)
     : THideObjBase(name)
-    , unk150(true)
-    , unk154(0.0f)
-    , unk158(0.0f)
+    , mReverse(true)
+    , mSprayProgressSpeed(0.0f)
+    , mBarrelProgressSpeed(0.0f)
     , unk15C(0.0f)
-    , unk160(0.0f)
-    , unk164(0.0f)
-    , unk168(255.0f)
+    , mProgress(0.0f)
+    , mMinProgress(0.0f)
+    , mMaxProgress(255.0f)
 {
-	unk16C.r = 0;
-	unk16C.g = 0;
-	unk16C.b = 0;
-	unk16C.a = 0;
+	mColor.r = 0;
+	mColor.g = 0;
+	mColor.b = 0;
+	mColor.a = 0;
 }
 
-// A lot in this function is likely wrong still
-// Some stuff feels pretty fof
 void THideObjPictureTwin::afterFinishedAnim()
 {
 	removeMapCollision();
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 
-	TMapObjBase* target = unk138;
-	if (target != nullptr && unk14C != 0) {
-		if (TMapObjBase::isCoin(target)) {
-			TCoin* coin = (TCoin*)target;
+	if (mHiddenObj != nullptr && mAllowReveal) {
+		TMapObjBase* obj = mHiddenObj;
+		if (TMapObjBase::isCoin(obj)) {
+			TCoin* coin = (TCoin*)obj;
 			if (coin->isActorType(0x2000000E)) {
-				target = gpItemManager->makeObjAppear(0x2000000E);
-				if (target == nullptr) {
+				obj = gpItemManager->makeObjAppear(0x2000000E);
+				if (obj == nullptr)
 					return;
-				}
 			}
-			((TCoin*)target)->appearWithoutSound();
+			((TCoin*)obj)->appearWithoutSound();
 		} else {
-			appear();
+			obj->appear();
 		}
 
-		target->mPosition.set(unk174->mPosition);
+		obj->mPosition.set(unk174->mPosition);
 		Mtx mtx;
 		MsMtxSetRotRPH(mtx, unk174->mRotation.x, unk174->mRotation.y,
 		               unk174->mRotation.z);
-		target->mVelocity.set(mtx[0][2] * unk13C, mtx[1][2] * unk13C + unk140,
-		                      mtx[2][2] * unk13C);
-		target->offLiveFlag(LIVE_FLAG_UNK10);
+		obj->mVelocity.set(mtx[0][2] * mAppearSpeed,
+		                   mtx[1][2] * mAppearSpeed + mAppearYSpeed,
+		                   mtx[2][2] * mAppearSpeed);
+		obj->offLiveFlag(LIVE_FLAG_UNK10);
 
-		if (TMapObjBase::isCoin(target)) {
-			TCoin* coin  = (TCoin*)target;
+		if (TMapObjBase::isCoin(obj)) {
+			TCoin* coin  = (TCoin*)obj;
 			coin->unk148 = this;
 			coin->unk14C = unk148;
 		}
@@ -639,9 +601,8 @@ void THideObjPictureTwin::loadAfter()
 		buffer2[len + 3] = buffer[3];
 
 		THideObjPictureTwin* hitActor
-		    = (THideObjPictureTwin*)JDrama::TNameRefGen::getInstance()
-		          ->getRootNameRef()
-		          ->searchF(TNameRef::calcKeyCode(buffer2), buffer2);
+		    = JDrama::TNameRefGen::getInstance()->search<THideObjPictureTwin>(
+		        buffer2);
 		unk174         = hitActor;
 		unk174->unk174 = this;
 	}
@@ -694,7 +655,7 @@ void TBreakHideObj::control()
 		break;
 	case 2:
 		if (animIsFinished()) {
-			appearObj(0);
+			appearObj(0.0f);
 			makeObjDead();
 		}
 		break;

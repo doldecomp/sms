@@ -755,9 +755,9 @@ static void evSetEventID(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->verifyArgNum(2, &arg_num);
 	int p1          = interp->pop().getDataInt();
 	TSpcSlice slice = interp->pop();
-	// TODO: type unconfirmed
+
 	TMapObjBase* event = get_name_ref<TMapObjBase>(slice);
-	event->unk134      = p1;
+	event->setEventId(p1);
 	interp->push();
 }
 

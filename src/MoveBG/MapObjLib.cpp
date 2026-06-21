@@ -58,18 +58,19 @@ bool TMapObjBase::isDemo()
 }
 
 void TMapObjBase::loadHideObjInfo(JSUMemoryInputStream& stream, s32* param_2,
-                                  f32* param_3, f32* param_4, s32* param_5)
+                                  f32* appear_speed, f32* appear_y_speed,
+                                  s32* param_5)
 {
-	stream.read(param_2, 4);
+	stream >> *param_2;
 	f32 val;
-	stream.read(&val, 4);
-	*param_3 = val * 0.06f;
-	stream.read(&val, 4);
+	stream >> val;
+	*appear_speed = val * 0.06f;
+	stream >> val;
 	if (val < 0.0f)
 		val = 20.0f;
-	*param_4 = val;
+	*appear_y_speed = val;
 	s32 val2;
-	stream.read(&val2, 4);
+	stream >> val2;
 	if (val2 <= 0)
 		val2 = 1200;
 	else
@@ -91,46 +92,44 @@ void TMapObjBase::throwObjToOverhead(TMapObjBase* param_1, f32 param_2,
 {
 }
 
-void TMapObjBase::throwObjToFront(TMapObjBase* param_1, f32 param_2,
-                                  f32 param_3, f32 param_4) const
+void TMapObjBase::throwObjToFront(TMapObjBase* object, f32 y_offset, f32 speed,
+                                  f32 vertical_speed) const
 {
-	param_1->appear();
-	param_1->mPosition.set(mPosition.x, mPosition.y + param_2, mPosition.z);
+	object->appear();
+	object->mPosition.set(mPosition.x, mPosition.y + y_offset, mPosition.z);
 	if (mMActor) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
-		param_1->mVelocity.set(mtx[0][2] * param_3,
-		                       mtx[1][2] * param_3 + param_4,
-		                       mtx[2][2] * param_3);
-		param_1->offLiveFlag(LIVE_FLAG_UNK10);
+		object->mVelocity.set(mtx[0][2] * speed,
+		                      mtx[1][2] * speed + vertical_speed,
+		                      mtx[2][2] * speed);
+		object->offLiveFlag(LIVE_FLAG_UNK10);
 	} else {
 		Mtx mtx;
 		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
-		param_1->mVelocity.set(mtx[0][2] * param_3,
-		                       mtx[1][2] * param_3 + param_4,
-		                       mtx[2][2] * param_3);
-		param_1->offLiveFlag(LIVE_FLAG_UNK10);
+		object->mVelocity.set(mtx[0][2] * speed,
+		                      mtx[1][2] * speed + vertical_speed,
+		                      mtx[2][2] * speed);
+		object->offLiveFlag(LIVE_FLAG_UNK10);
 	}
 }
 
-void TMapObjBase::throwObjToFrontFromPoint(TMapObjBase* param_1,
-                                           const JGeometry::TVec3<f32>& param_2,
-                                           f32 param_3, f32 param_4) const
+void TMapObjBase::throwObjToFrontFromPoint(TMapObjBase* object,
+                                           const JGeometry::TVec3<f32>& point,
+                                           f32 speed, f32 y_speed) const
 {
-	param_1->appear();
-	param_1->mPosition.set(param_2);
+	object->appear();
+	object->mPosition.set(point);
 	if (mMActor) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
-		param_1->mVelocity.set(mtx[0][2] * param_3,
-		                       mtx[1][2] * param_3 + param_4,
-		                       mtx[2][2] * param_3);
-		param_1->offLiveFlag(LIVE_FLAG_UNK10);
+		object->mVelocity.set(mtx[0][2] * speed, mtx[1][2] * speed + y_speed,
+		                      mtx[2][2] * speed);
+		object->offLiveFlag(LIVE_FLAG_UNK10);
 	} else {
 		Mtx mtx;
 		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
-		param_1->mVelocity.set(mtx[0][2] * param_3,
-		                       mtx[1][2] * param_3 + param_4,
-		                       mtx[2][2] * param_3);
-		param_1->offLiveFlag(LIVE_FLAG_UNK10);
+		object->mVelocity.set(mtx[0][2] * speed, mtx[1][2] * speed + y_speed,
+		                      mtx[2][2] * speed);
+		object->offLiveFlag(LIVE_FLAG_UNK10);
 	}
 }
 
@@ -830,7 +829,7 @@ BOOL TMapObjTurn::receiveMessage(THitActor* sender, u32 message)
 void TMapObjTurn::loadAfter()
 {
 	THideObjBase::loadAfter();
-	if (unk138)
+	if (mHiddenObj)
 		unk168 = 1;
 }
 

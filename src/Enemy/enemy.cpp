@@ -254,7 +254,7 @@ BOOL TSpineEnemy::receiveMessage(THitActor* sender, u32 message)
 		return true;
 	}
 
-	if (message <= HIT_MESSAGE_UNK2) {
+	if (message <= HIT_MESSAGE_PUSH_UP) {
 		kill();
 		return true;
 	}

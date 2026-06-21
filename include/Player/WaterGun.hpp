@@ -168,6 +168,7 @@ public:
 	}
 
 	// Fabricated
+	void onFlag(u16 flag) { mFlags |= flag; }
 	void offFlag(u16 flag) { mFlags &= ~flag; }
 
 	// Fabricated
@@ -286,6 +287,12 @@ public:
 	const JGeometry::TVec3<f32>& getEmitPos0() const { return mEmitPos[0]; }
 
 public:
+	enum {
+		WATER_GUN_FLAG_UNK2  = 0x2,
+		WATER_GUN_FLAG_UNK4  = 0x4,
+		WATER_GUN_FLAG_UNK10 = 0x10,
+	};
+
 	/* 0x0004 */ u16 mFlags;
 	/* 0x0008 */ TMario* mMario;
 	/* 0x000C */ TNozzleDeform mNozzleDeform;

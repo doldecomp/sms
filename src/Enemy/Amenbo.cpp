@@ -190,18 +190,18 @@ void TAmenbo::updateCollision()
 	}
 }
 
-BOOL TAmenbo::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TAmenbo::receiveMessage(THitActor* sender, u32 message)
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return false;
 
-	switch (param_2) {
+	switch (message) {
 	case HIT_MESSAGE_TRAMPLE:
 	case HIT_MESSAGE_HIP_DROP:
 		return false;
 
 	default:
-		return TSmallEnemy::receiveMessage(param_1, param_2);
+		return TSmallEnemy::receiveMessage(sender, message);
 	}
 }
 

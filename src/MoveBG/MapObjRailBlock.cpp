@@ -196,7 +196,8 @@ void TRailMapObj::setGroundCollision()
 	if (!mMapCollisionManager)
 		return;
 
-	if (unk14A != 0 && (!checkMapObjFlag(2) || getColNum() != 0)) {
+	if (unk14A != 0
+	    && (!checkMapObjFlag(MAP_OBJ_FLAG_UNK2) || getColNum() != 0)) {
 		TMtx34f mtx;
 		mtx.set(getModel()->getAnmMtx(0));
 		if (TMapCollisionBase* col = mMapCollisionManager->unk8)

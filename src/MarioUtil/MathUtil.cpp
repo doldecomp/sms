@@ -189,16 +189,6 @@ static inline void MsGetRotFromZaxisY2(const JGeometry::TVec3<f32>& axis,
 }
 
 // TODO: very much fake
-static inline f32 fake_sqrt(f32 mag)
-{
-	if (mag > 0.0f) {
-		f64 root = __frsqrte(mag);
-		return 0.5f * root * (3.0f - mag * (root * root)) * mag;
-	}
-	return 0.0f;
-}
-
-// TODO: very much fake
 static inline void MsGetRotFromZaxisX2(const JGeometry::TVec3<f32>& axis,
                                        f32* out)
 {
@@ -214,9 +204,8 @@ static inline void MsGetRotFromZaxisX2(const JGeometry::TVec3<f32>& axis,
 
 	// TODO: it smells to me like this entire function is not real but a result
 	// of MWCC optimizing out stuff for once
-	f32 dVar3 = fake_sqrt(a);
 
-	*out = -(matan(dVar3, axis.y) * (360.0f / 65536.0f));
+	*out = -(matan(MsSqrtf(a), axis.y) * (360.0f / 65536.0f));
 }
 
 JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>& param_1)

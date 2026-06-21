@@ -801,7 +801,7 @@ u8 TMarDirector::updateGameMode()
 				console->unk34[19] = 1;
 				MSBgm::startBGM(MSD_BGM_CHUBOSS);
 				TFlagManager::getInstance()->setBool(true, 0x30006);
-				TFlagManager::getInstance()->setShineFlag(unk25C->unk134);
+				TFlagManager::getInstance()->setShineFlag(unk25C->getEventId());
 				f32 fVar3 = unkDC->mRate;
 				unkDC->registFadeout(fVar3 * 1.0f, fVar3 * 5.3333333f);
 				unk4C |= 0x8202;

@@ -108,7 +108,7 @@ void TMarDirector::fireGetBlueCoin(TCoin* coin)
 		return;
 
 	TFlagManager::smInstance->setBlueCoinFlag(gpApplication.mCurrArea.unk0,
-	                                          coin->unk134);
+	                                          coin->getEventId());
 	unk4C |= 0x200;
 	unk261 = 1;
 	if (gpMSound->gateCheck(MSD_SE_SY_BLUE_COIN_GET))

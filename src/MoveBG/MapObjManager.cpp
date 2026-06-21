@@ -212,7 +212,8 @@ TMapObjBase* TMapObjBaseManager::makeObjAppear(f32 x, f32 y, f32 z, u32 param_4,
 	for (int i = 0; i < getObjNum(); ++i) {
 		TMapObjBase* obj = (TMapObjBase*)getObj(i);
 		bool bVar1;
-		if (obj->isActorType(param_4) && !obj->checkMapObjFlag(0x80000)
+		if (obj->isActorType(param_4)
+		    && !obj->checkMapObjFlag(TMapObjBase::MAP_OBJ_FLAG_UNK80000)
 		    && obj->checkLiveFlag(LIVE_FLAG_DEAD)
 		    && (!obj->isActorType(0x2000000e) || obj->getMActor() != nullptr))
 			bVar1 = true;
@@ -234,7 +235,8 @@ TMapObjBase* TMapObjBaseManager::makeObjAppear(u32 param_1)
 	for (int i = 0; i < getObjNum(); ++i) {
 		TMapObjBase* obj = (TMapObjBase*)getObj(i);
 		bool bVar1;
-		if (obj->isActorType(param_1) && !obj->checkMapObjFlag(0x80000)
+		if (obj->isActorType(param_1)
+		    && !obj->checkMapObjFlag(TMapObjBase::MAP_OBJ_FLAG_UNK80000)
 		    && obj->checkLiveFlag(LIVE_FLAG_DEAD)
 		    && (!obj->isActorType(0x2000000e) || obj->getMActor() != nullptr))
 			bVar1 = true;
@@ -255,7 +257,8 @@ TMapObjBase* TMapObjBaseManager::makeObjAppeared(u32 param_1)
 	for (int i = 0; i < getObjNum(); ++i) {
 		TMapObjBase* obj = (TMapObjBase*)getObj(i);
 		bool bVar1;
-		if (obj->isActorType(param_1) && !obj->checkMapObjFlag(0x80000)
+		if (obj->isActorType(param_1)
+		    && !obj->checkMapObjFlag(TMapObjBase::MAP_OBJ_FLAG_UNK80000)
 		    && obj->checkLiveFlag(LIVE_FLAG_DEAD)
 		    && (!obj->isActorType(0x2000000e) || obj->getMActor() != nullptr))
 			bVar1 = true;
@@ -393,17 +396,17 @@ TMapObjBase* TMapObjBaseManager::newAndRegisterObj(
 	return ret;
 }
 
-TMapObjBase* TMapObjBaseManager::newAndRegisterObjByEventID(u32 param_1,
-                                                            const char* param_2)
+TMapObjBase* TMapObjBaseManager::newAndRegisterObjByEventID(u32 event_id,
+                                                            const char* name)
 {
-	TMapObjBase* ret = TItemManager::newAndRegisterCoin(param_1);
+	TMapObjBase* ret = TItemManager::newAndRegisterCoin(event_id);
 	if (ret)
 		return ret;
 
-	switch (param_1) {
+	switch (event_id) {
 	case 777: {
 		char buffer[64];
-		snprintf(buffer, 64, "シャイン（%s）", param_2);
+		snprintf(buffer, 64, "シャイン（%s）", name);
 		return JDrama::TNameRefGen::search<TMapObjBase>(buffer);
 	} break;
 

@@ -16,6 +16,10 @@ public:
 	void pushed();
 	TFileLoadBlock(const char* name = "ファイル読み込みブロック");
 
+	enum {
+		STATE_ROCKING = 2,
+	};
+
 public:
 	/* 0x138 */ u8 unk138;
 	/* 0x13C */ TFileLoadBlock* unk13C;

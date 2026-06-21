@@ -44,7 +44,7 @@ void TWoodBarrel::breaking()
 	if (animIsFinished()) {
 		makeObjDefault();
 		makeObjDead();
-		if (checkMapObjFlag(0x80000))
+		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK80000))
 			waitToAppear(mWaitAppearTime);
 	}
 }
@@ -131,7 +131,8 @@ BOOL TWoodBarrel::receiveMessage(THitActor* sender, u32 message)
 void TWoodBarrel::control()
 {
 	TMapObjGeneral::control();
-	if (isActorType(0x4000005c) && isState(6) && !isWaitingToAppear())
+	if (isActorType(0x4000005c) && isState(STATE_HOLDING)
+	    && !isWaitingToAppear())
 		kill();
 }
 
