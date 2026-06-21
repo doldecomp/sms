@@ -365,7 +365,7 @@ int TMarDirector::changeState()
 		break;
 
 	case STATE_UNK11: {
-		switch (unkAC->unk118->getNextState()) {
+		switch (unkAC->mCardSave->getNextState()) {
 		case 0:
 			if (unk261 == 7) {
 				TFlagManager::smInstance->restore();
@@ -731,7 +731,7 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		if (currSeq.unk0 == 1)
 			THPPlayerPause();
 		SMSRumbleMgr->startPause();
-		unkAC->unk118->init(unk261);
+		unkAC->mCardSave->init(unk261);
 		for (int i = 0; i < 4; ++i)
 			JUTGamePad::CRumble::stopMotor(unk18[i]->mPortNum);
 		unk18[0]->onFlag(0x1);

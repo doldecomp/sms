@@ -100,7 +100,14 @@ public:
 	// fabricated
 	const JUTRect& getBounds() const { return mBounds; }
 	void setBounds(const JUTRect& bounds) { mBounds = bounds; }
+	void setBounds(s32 x1, s32 x2, s32 y1, s32 y2)
+	{
+		mBounds = JUTRect(x1, x2, y1, y2);
+	}
 	const JUTRect& getGlobalBounds() const { return mGlobalBounds; }
+	f32 getRotation() const { return mRotation; }
+
+	const JUTRect& getScissorBounds() const { return mScissorBounds; }
 
 	void setInfluenceAlpha(bool influence) { mIsInfluencedAlpha = influence; }
 
