@@ -20,9 +20,7 @@ public:
 
 class TSandBlock : public TMapObjBase {
 public:
-	// Fabricated
-	enum EState {
-		STATE_WAITING   = 1,
+	enum {
 		STATE_RESTORING = 2,
 		STATE_TOUCHED   = 3,
 		STATE_FALLING   = 4,

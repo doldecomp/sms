@@ -31,14 +31,14 @@ BOOL TMapObjNail::receiveMessage(THitActor* sender, u32 message)
 			MSoundSESystem::MSoundSE::startSoundActor(
 			    MSD_SE_OBJ_KUGI_IMPACT, mPosition, 0, nullptr, 0, 4);
 
-		mTimeTilAppear = 0x78;
+		mTimeTilAppear = 120;
 		++unk150;
-		if (unk150 == 3 && unk138) {
-			TMapObjBase* obj = unk138;
+		if (unk150 == 3 && mHiddenObj != nullptr) {
+			TMapObjBase* obj = mHiddenObj;
 			if (obj->isActorType(0x2000000e))
 				obj = gpItemManager->makeObjAppear(0x2000000e);
 			if (obj)
-				throwObjToFront(obj, 200.0f, unk13C, unk140);
+				throwObjToFront(obj, 200.0f, mAppearSpeed, mAppearYSpeed);
 		}
 		return true;
 	}
@@ -88,13 +88,13 @@ TMapObjBase* TJointCoin::makeObj(const char* name, u16 i)
 
 	unk140[unk13C] = pTVar2;
 	if (pTVar2->isActorType(0x2000000e)) {
-		pTVar2->offMapObjFlag(0x40000);
-		pTVar2->onMapObjFlag(0x10000000);
+		pTVar2->offMapObjFlag(MAP_OBJ_FLAG_UNK40000);
+		pTVar2->onMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
 	}
 
 	unk140[unk13C]->makeObjAppeared();
-	unk140[unk13C]->onMapObjFlag(0x100);
-	unk140[unk13C]->offMapObjFlag(0x40000);
+	unk140[unk13C]->onMapObjFlag(MAP_OBJ_FLAG_UNK100);
+	unk140[unk13C]->offMapObjFlag(MAP_OBJ_FLAG_UNK40000);
 	unk140[unk13C]->offLiveFlag(LIVE_FLAG_UNK100);
 	unk140[unk13C]->offHitFlag(HIT_FLAG_NO_COLLISION);
 	unk144[unk13C] = i;

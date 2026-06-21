@@ -58,7 +58,7 @@ void TMonumentShine::initMapObj()
 	}
 
 	SMS_InitPacket_OneTevKColor(getModel(), 0, GX_KCOLOR0, &unk138);
-	unk64 &= ~1;
+	unk64 &= ~HIT_FLAG_NO_COLLISION;
 }
 
 void TMonumentShine::hitByWater(THitActor* actor)
@@ -221,7 +221,7 @@ void TBellDolpic::initMapObj()
 	}
 
 	SMS_InitPacket_OneTevKColor(getModel(), 0, GX_KCOLOR0, &unk138);
-	unk64 &= ~1;
+	unk64 &= ~HIT_FLAG_NO_COLLISION;
 }
 
 void TBellDolpic::calcRootMatrix()
@@ -541,12 +541,8 @@ void TTurboNozzleDoor::touchPlayer(THitActor* player)
 		((TMapObjBase*)unk144)->makeObjDead();
 	}
 
-	if (gpMSound->gateCheck(14346))
-		MSoundSESystem::MSoundSE::startSoundActor(14346, &mPosition, 0, nullptr,
-		                                          0, 4);
-	if (gpMSound->gateCheck(14423))
-		MSoundSESystem::MSoundSE::startSoundActor(14423, &mPosition, 0, nullptr,
-		                                          0, 4);
+	SMSGetMSound()->startSoundActor(14346, &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(14423, &mPosition, 0, nullptr, 0, 4);
 
 	JGeometry::TVec3<f32> scale(1.3f);
 
@@ -557,5 +553,5 @@ void TTurboNozzleDoor::touchPlayer(THitActor* player)
 	emitAndScale(57, 0, &unk138, scale);
 
 	removeMapCollision();
-	unk64 |= 1;
+	unk64 |= HIT_FLAG_NO_COLLISION;
 }

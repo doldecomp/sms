@@ -190,7 +190,7 @@ BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
 			return true;
 		}
 
-		if (message == HIT_MESSAGE_UNK7 || message == HIT_MESSAGE_UNK8) {
+		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_UNK8) {
 			// TODO: inlined from TBossGesso?
 			JGeometry::TVec3<f32> delta = mPosition;
 			TBossGesso* gesso           = mOwner;

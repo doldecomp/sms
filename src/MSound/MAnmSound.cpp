@@ -102,7 +102,8 @@ void MAnmSoundNPC::startAnimSound(void* param_1, u32 param_2,
 			MSoundSESystem::MSoundSE::startSoundActorInner(param_2, param_3,
 			                                               param_4, 0, param_5);
 
-			if (*param_3 != nullptr && !(ptr->mEntries[mDataCounter].unk10 & 0x8000)) {
+			if (*param_3 != nullptr
+			    && !(ptr->mEntries[mDataCounter].unk10 & 0x8000)) {
 
 				f32 dVar10 = 1.0f;
 

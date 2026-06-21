@@ -752,14 +752,14 @@ void THinokuri2::changeBck(int param_1)
 	}
 }
 
-BOOL THinokuri2::receiveMessageLv0(THitActor* param_1, u32 param_2)
+BOOL THinokuri2::receiveMessageLv0(THitActor* sender, u32 message)
 {
-	if (mJointIdxMessageCameFrom == 0x13 && param_1->getActorType() == 0x1000001
-	    && param_2 == HIT_MESSAGE_SPRAYED_BY_WATER)
+	if (mJointIdxMessageCameFrom == 0x13 && sender->getActorType() == 0x1000001
+	    && message == HIT_MESSAGE_SPRAYED_BY_WATER)
 		return true;
 
-	if (param_1->getActorType() == 0x1000001
-	    && param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
+	if (sender->getActorType() == 0x1000001
+	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (mJointIdxMessageCameFrom != 0x19)
 			return true;
 
@@ -767,8 +767,8 @@ BOOL THinokuri2::receiveMessageLv0(THitActor* param_1, u32 param_2)
 			mSpine->pushNerve(&TNerveHino2Freeze::theNerve());
 	}
 
-	if (param_1->getActorType() == 0x80000001
-	    && param_2 == HIT_MESSAGE_TRAMPLE) {
+	if (sender->getActorType() == 0x80000001
+	    && message == HIT_MESSAGE_TRAMPLE) {
 		if (mJointIdxMessageCameFrom != 0x19)
 			return true;
 
@@ -782,19 +782,19 @@ BOOL THinokuri2::receiveMessageLv0(THitActor* param_1, u32 param_2)
 	return false;
 }
 
-BOOL THinokuri2::receiveMessageLv1(THitActor* param_1, u32 param_2)
+BOOL THinokuri2::receiveMessageLv1(THitActor* sender, u32 message)
 {
-	if (mJointIdxMessageCameFrom == 0x13 && param_1->getActorType() == 0x1000001
-	    && param_2 == HIT_MESSAGE_SPRAYED_BY_WATER)
+	if (mJointIdxMessageCameFrom == 0x13 && sender->getActorType() == 0x1000001
+	    && message == HIT_MESSAGE_SPRAYED_BY_WATER)
 		return true;
 
-	if (unk180 && param_1->getActorType() == 0x1000001
-	    && param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
+	if (unk180 && sender->getActorType() == 0x1000001
+	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (mJointIdxMessageCameFrom != 0x19)
 			return true;
 
 		int dmgAmount
-		    = gpModelWaterManager->getParticleAttack((TWaterHitActor*)param_1);
+		    = gpModelWaterManager->getParticleAttack((TWaterHitActor*)sender);
 
 		if (dmgAmount <= 0)
 			return true;
@@ -812,7 +812,7 @@ BOOL THinokuri2::receiveMessageLv1(THitActor* param_1, u32 param_2)
 		return true;
 	}
 
-	if (unk180 && param_1->getActorType() == 0x4000005A) {
+	if (unk180 && sender->getActorType() == 0x4000005A) {
 		if (mJointIdxMessageCameFrom != 0x19)
 			return true;
 
@@ -828,15 +828,15 @@ BOOL THinokuri2::receiveMessageLv1(THitActor* param_1, u32 param_2)
 	return false;
 }
 
-BOOL THinokuri2::receiveMessageLv2(THitActor* param_1, u32 param_2)
+BOOL THinokuri2::receiveMessageLv2(THitActor* sender, u32 message)
 {
-	if (param_1->getActorType() == 0x1000001
-	    && param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
+	if (sender->getActorType() == 0x1000001
+	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (mJointIdxMessageCameFrom != 0x13)
 			return true;
 
 		int dmgAmount
-		    = gpModelWaterManager->getParticleAttack((TWaterHitActor*)param_1);
+		    = gpModelWaterManager->getParticleAttack((TWaterHitActor*)sender);
 
 		if (dmgAmount <= 1)
 			return true;
@@ -858,7 +858,7 @@ BOOL THinokuri2::receiveMessageLv2(THitActor* param_1, u32 param_2)
 		return true;
 	}
 
-	if (param_1->getActorType() == 0x4000005A) {
+	if (sender->getActorType() == 0x4000005A) {
 		if (mJointIdxMessageCameFrom != 0x13)
 			return true;
 

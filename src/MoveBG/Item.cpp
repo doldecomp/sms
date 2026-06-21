@@ -32,8 +32,8 @@ f32 TItem::mAppearedScaleSpeed = 0.01f;
 
 void TItem::appeared()
 {
-	if (checkMapObjFlag(0x40000) && !isWaitingToAppear()) {
-		if (unk148)
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK40000) && !isWaitingToAppear()) {
+		if (unk148 != nullptr)
 			unk148->receiveMessage(this, HIT_MESSAGE_UNK5);
 
 		if (isActorType(0x2000000f) || isActorType(0x20000010)) {
@@ -50,7 +50,7 @@ void TItem::taken(THitActor* param_1)
 {
 	param_1->receiveMessage(this, HIT_MESSAGE_ATTACK);
 	kill();
-	if (checkMapObjFlag(0x80000)) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK80000)) {
 		makeObjDefault();
 		appear();
 	}
@@ -78,17 +78,17 @@ BOOL TItem::receiveMessage(THitActor* sender, u32 message)
 
 void TItem::calcRootMatrix()
 {
-	if (!checkMapObjFlag(0x8000000))
+	if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK8000000))
 		TMapObjGeneral::calcRootMatrix();
 }
 
 void TItem::calc()
 {
-	if (!checkMapObjFlag(0x4000000) && !isState(6)) {
+	if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000) && !isState(STATE_HOLDING)) {
 		MtxPtr src = gpItemManager->unk40;
 
 		MtxPtr mtx;
-		if (checkMapObjFlag(0x100))
+		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK100))
 			mtx = getModel()->getAnmMtx(0);
 		else
 			mtx = getModel()->getBaseTRMtx();
@@ -109,21 +109,21 @@ void TItem::calc()
 		mtx[2][3] = mPosition.z;
 	}
 
-	if (isState(6) && checkMapObjFlag(0x100))
+	if (isState(STATE_HOLDING) && checkMapObjFlag(MAP_OBJ_FLAG_UNK100))
 		TMapObjGeneral::calcRootMatrix();
 }
 
 void TItem::appearing()
 {
-	if (unkF8 & 0x2000000) {
+	if (unkF8 & MAP_OBJ_FLAG_UNK2000000) {
 		if (mScaling.x < 2.0f) {
 			mScaling.add((Vec) { mAppearedScaleSpeed * 2.0f,
 			                     mAppearedScaleSpeed * 2.0f,
 			                     mAppearedScaleSpeed * 2.0f });
 		} else {
 			makeObjAppeared();
-			unk64 |= 1;
-			unkF8 &= ~0x40000;
+			unk64 |= HIT_FLAG_NO_COLLISION;
+			unkF8 &= ~MAP_OBJ_FLAG_UNK40000;
 		}
 	} else {
 		TMapObjGeneral::appearing();
@@ -135,9 +135,9 @@ void TItem::killByTimer(int param_1)
 	unk14C         = param_1;
 	mTimeTilAppear = unk150;
 
-	offMapObjFlag(0x10000000);
+	offMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
 	onHitFlag(HIT_FLAG_NO_COLLISION);
-	offMapObjFlag(0x40000);
+	offMapObjFlag(MAP_OBJ_FLAG_UNK40000);
 }
 
 void TItem::appear()
@@ -145,7 +145,7 @@ void TItem::appear()
 	TMapObjGeneral::appear();
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 	mTimeTilAppear = unk150;
-	offMapObjFlag(0x40000);
+	offMapObjFlag(MAP_OBJ_FLAG_UNK40000);
 }
 
 void TItem::perform(u32 param_1, JDrama::TGraphics* param_2)
@@ -156,8 +156,8 @@ void TItem::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if ((param_1 & 1) && checkHitFlag(HIT_FLAG_NO_COLLISION)
 	    && !isWaitingToAppear()) {
 		offHitFlag(HIT_FLAG_NO_COLLISION);
-		if (!checkMapObjFlag(0x10000000)) {
-			onMapObjFlag(0x40000);
+		if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK10000000)) {
+			onMapObjFlag(MAP_OBJ_FLAG_UNK40000);
 			mTimeTilAppear = unk14C;
 		}
 	}
@@ -175,12 +175,12 @@ void TItem::initMapObj()
 void TItem::load(JSUMemoryInputStream& stream)
 {
 	TMapObjGeneral::load(stream);
-	onMapObjFlag(0x10000000);
+	onMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
 }
 
 TItem::TItem(const char* name)
     : TMapObjGeneral(name)
-    , unk148(0)
+    , unk148(nullptr)
     , unk14C(0)
     , unk150(0)
 {
@@ -224,14 +224,14 @@ void TCoin::appearWithoutSound()
 	gpMarioParticleManager->emitAndBindToMtxPtr(0x58, getModel()->getAnmMtx(0),
 	                                            0, this);
 	if (isActorType(0x2000000e))
-		offMapObjFlag(0x10000000);
+		offMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
 }
 
 void TCoin::appear()
 {
 	if (isActorType(0x20000010)) {
 		if (!TFlagManager::smInstance->getBlueCoinFlag(
-		        gpMarDirector->getCurrentMap(), unk134))
+		        gpMarDirector->getCurrentMap(), mEventId))
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_TIMECOIN_APPEAR, 0,
 			                                   nullptr, 0);
 	} else {
@@ -255,31 +255,22 @@ void TCoin::perform(u32 param_1, JDrama::TGraphics* param_2)
 		return;
 
 	if ((param_1 & 1) && checkLiveFlag(LIVE_FLAG_UNK10)) {
-		// TODO: this is some kind of a tricky inline, used in a few places
-		bool bVar2 = true;
-		if (gpMarDirector->unk124 != 1 && gpMarDirector->unk124 != 2)
-			bVar2 = false;
 
-		if (bVar2) {
-			bVar2 = true;
-			if (gpMarDirector->unk124 != 3 && gpMarDirector->unk124 != 4)
-				bVar2 = false;
-			if (!bVar2)
-				return;
-		}
+		if (gpMarDirector->isTalkModeNow() && !gpMarDirector->isDemoModeNow())
+			return;
 
 		if (isWaitingToAppear()) {
 			--mTimeTilAppear;
 		} else {
 			if (checkHitFlag(HIT_FLAG_NO_COLLISION)) {
 				offHitFlag(HIT_FLAG_NO_COLLISION);
-				if (!checkMapObjFlag(0x10000000)) {
-					onMapObjFlag(0x40000);
+				if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK10000000)) {
+					onMapObjFlag(MAP_OBJ_FLAG_UNK40000);
 					mTimeTilAppear = unk14C;
 				}
 			} else {
-				if (!checkMapObjFlag(0x10000000)) {
-					if (unk148 != 0)
+				if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK10000000)) {
+					if (unk148 != nullptr)
 						unk148->receiveMessage(this, HIT_MESSAGE_UNK5);
 					makeObjDead();
 				}
@@ -369,7 +360,7 @@ TCoinRed::TCoinRed(const char* name)
 void TCoinBlue::makeObjAppeared()
 {
 	if (TFlagManager::getInstance()->getBlueCoinFlag(
-	        gpMarDirector->getCurrentMap(), getUnk134()))
+	        gpMarDirector->getCurrentMap(), getEventId()))
 		return;
 
 	TCoin::makeObjAppeared();
@@ -387,18 +378,18 @@ void TCoinBlue::taken(THitActor* param_1)
 
 void TCoinBlue::loadBeforeInit(JSUMemoryInputStream& stream)
 {
-	int thing;
-	stream.read(&thing, 4);
-	if (thing == -1)
-		thing = 0;
-	setUnk134(thing);
+	s32 eventId;
+	stream >> eventId;
+	if (eventId == -1)
+		eventId = 0;
+	setEventId(eventId);
 }
 
 void TCoinBlue::load(JSUMemoryInputStream& stream)
 {
 	TCoin::load(stream);
 	if (TFlagManager::getInstance()->getBlueCoinFlag(
-	        gpMarDirector->getCurrentMap(), getUnk134()))
+	        gpMarDirector->getCurrentMap(), getEventId()))
 		makeObjDead();
 }
 
@@ -514,7 +505,7 @@ void TEggYoshi::startBalloonAnim()
 
 void TEggYoshi::touchFruit(THitActor* fruit)
 {
-	if (isState(0xE) || isState(6))
+	if (isState(0xE) || isState(STATE_HOLDING))
 		return;
 
 	if (unk14C == (u32)fruit->mActorType) {
@@ -540,7 +531,7 @@ void TEggYoshi::touchFruit(THitActor* fruit)
 
 void TEggYoshi::touchActor(THitActor* other)
 {
-	if (!isState(1) && !isState(0xD))
+	if (!isState(STATE_NORMAL) && !isState(0xD))
 		return;
 
 	if (other->isActorType(0x80000001)) {
@@ -563,7 +554,7 @@ void TEggYoshi::control()
 		if (animIsFinished()) {
 			startAnim(0);
 			startBalloonAnim();
-			mState = 1;
+			mState = STATE_NORMAL;
 		}
 		break;
 	case 0xB:
@@ -581,7 +572,7 @@ void TEggYoshi::control()
 	case 0xC:
 		if (animIsFinished()) {
 			kill();
-			mState = 0;
+			mState = STATE_DEAD;
 		}
 		break;
 	case 0xF: {
@@ -611,8 +602,9 @@ void TEggYoshi::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	TMapObjGeneral::perform(param_1, param_2);
 
-	if (!isState(0xC) && !isState(0) && !isState(6) && !isState(2)
-	    && !isState(0xE) && !isState(0xF) && !isState(0x10)) {
+	if (!isState(0xC) && !isState(STATE_DEAD) && !isState(STATE_HOLDING)
+	    && !isState(STATE_APPEARING) && !isState(0xE) && !isState(0xF)
+	    && !isState(0x10)) {
 		if (param_1 & 2)
 			unk148->getModel()->setBaseTRMtx(getModel()->getAnmMtx(0));
 
@@ -634,7 +626,7 @@ BOOL TEggYoshi::receiveMessage(THitActor* sender, u32 message)
 		return TRUE;
 	}
 
-	if (message == HIT_MESSAGE_UNK7 || message == HIT_MESSAGE_UNK8) {
+	if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_UNK8) {
 		mVelocity.y = 10.0f;
 		offLiveFlag(LIVE_FLAG_UNK10);
 		mState = 0xF;
@@ -648,11 +640,11 @@ BOOL TEggYoshi::receiveMessage(THitActor* sender, u32 message)
 		offLiveFlag(LIVE_FLAG_UNK10);
 		decideRandomLoveFruit();
 		startBalloonAnim();
-		mState = 1;
+		mState = STATE_NORMAL;
 		return TRUE;
 	}
 
-	if (message == HIT_MESSAGE_UNK6) {
+	if (message == HIT_MESSAGE_PUT) {
 		makeObjAppeared();
 		decideRandomLoveFruit();
 		startBalloonAnim();

@@ -93,9 +93,9 @@ void TPoiHanaManager::initSetEnemies()
 	}
 }
 
-BOOL TPoiHanaCollision::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TPoiHanaCollision::receiveMessage(THitActor* sender, u32 message)
 {
-	return unk68->receiveMessage(param_1, param_2);
+	return unk68->receiveMessage(sender, message);
 }
 
 void TPoiHanaCollision::checkHit()
@@ -660,7 +660,7 @@ DEFINE_NERVE(TNervePoihanaThrow, TLiveActor)
 	if (self->mThrowTimer > 0) {
 		self->mThrowTimer += 1;
 		if (self->mThrowTimer > 16) {
-			SMS_SendMessageToMario(self, HIT_MESSAGE_UNK7);
+			SMS_SendMessageToMario(self, HIT_MESSAGE_THROWN);
 			f32 backThrowVal = self->unk19C->mSLBackThrowVal.get();
 			Mtx afStack_4c;
 			MsMtxSetRotRPH(afStack_4c, self->mPosition.x, self->mPosition.y,

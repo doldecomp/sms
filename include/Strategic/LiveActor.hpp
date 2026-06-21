@@ -169,7 +169,7 @@ public:
 	/* 0xE4 */ f32 mGroundActorYaw;
 	/* 0xE8 */ s8 unkE8; // riding mode?
 	/* 0xEC */ TMapCollisionManager* mMapCollisionManager;
-	/* 0xF0 */ u32 mLiveFlag; // LiveFlagBits
+	/* 0xF0 */ u32 mLiveFlag;
 };
 
 #endif

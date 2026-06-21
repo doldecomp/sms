@@ -314,7 +314,8 @@ public:
 	                                     f32);
 	void throwObjToFrontFromPoint(TMapObjBase*, const JGeometry::TVec3<f32>&,
 	                              f32, f32) const;
-	void throwObjToFront(TMapObjBase*, f32, f32, f32) const;
+	void throwObjToFront(TMapObjBase* object, f32 y_offset, f32 speed,
+	                     f32 vertical_speed) const;
 	void throwObjToOverhead(TMapObjBase*, f32, f32) const;
 	void checkOnManhole();
 	static void loadHideObjInfo(JSUMemoryInputStream&, long*, f32*, f32*,
@@ -331,8 +332,8 @@ public:
 	bool isState(u32 v) { return mState == v ? true : false; }
 	bool isWaitingToAppear() { return mTimeTilAppear > 0 ? true : false; }
 	int getTimeTilAppear() { return mTimeTilAppear; }
-	u32 getUnk134() { return unk134; }
-	void setUnk134(u32 v) { unk134 = v; }
+	u32 getEventId() { return mEventId; }
+	void setEventId(u32 v) { mEventId = v; }
 	const char* getUnkF4() { return unkF4; }
 
 	// Fabricated
@@ -351,6 +352,39 @@ public:
 	const JGeometry::TVec3<f32>& getInitialScaling() { return mInitialScaling; }
 
 public:
+	enum {
+		MAP_OBJ_FLAG_UNK1        = 0x1,
+		MAP_OBJ_FLAG_UNK2        = 0x2,
+		MAP_OBJ_FLAG_UNK8        = 0x8,
+		MAP_OBJ_FLAG_UNK10       = 0x10,
+		MAP_OBJ_FLAG_UNK20       = 0x20,
+		MAP_OBJ_FLAG_UNK40       = 0x40,
+		MAP_OBJ_FLAG_UNK80       = 0x80,
+		MAP_OBJ_FLAG_UNK100      = 0x100,
+		MAP_OBJ_FLAG_UNK800      = 0x800,
+		MAP_OBJ_FLAG_UNK2000     = 0x2000,
+		MAP_OBJ_FLAG_UNK4000     = 0x4000,
+		MAP_OBJ_FLAG_UNK8000     = 0x8000,
+		MAP_OBJ_FLAG_UNK10000    = 0x10000,
+		MAP_OBJ_FLAG_UNK20000    = 0x20000,
+		MAP_OBJ_FLAG_UNK40000    = 0x40000,
+		MAP_OBJ_FLAG_UNK80000    = 0x80000,
+		MAP_OBJ_FLAG_UNK100000   = 0x100000,
+		MAP_OBJ_FLAG_UNK200000   = 0x200000,
+		MAP_OBJ_FLAG_UNK400000   = 0x400000,
+		MAP_OBJ_FLAG_UNK800000   = 0x800000,
+		MAP_OBJ_FLAG_UNK1000000  = 0x1000000,
+		MAP_OBJ_FLAG_UNK2000000  = 0x2000000,
+		MAP_OBJ_FLAG_UNK4000000  = 0x4000000,
+		MAP_OBJ_FLAG_UNK8000000  = 0x8000000,
+		MAP_OBJ_FLAG_UNK10000000 = 0x10000000,
+	};
+
+	enum {
+		STATE_DEAD   = 0,
+		STATE_NORMAL = 1,
+	};
+
 	/* 0xF4 */ const char* unkF4;
 	/* 0xF8 */ u32 unkF8;
 	/* 0xFC */ u16 mState;
@@ -363,7 +397,7 @@ public:
 	/* 0x118 */ JGeometry::TVec3<f32> mInitialRotation;
 	/* 0x124 */ JGeometry::TVec3<f32> mInitialScaling;
 	/* 0x130 */ TMapObjData* mMapObjData;
-	/* 0x134 */ u32 unk134;
+	/* 0x134 */ u32 mEventId;
 };
 
 #endif

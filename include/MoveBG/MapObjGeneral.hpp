@@ -64,6 +64,18 @@ public:
 	static f32 mNormalAppearingScaleUp;
 	static f32 mNormalThrowSpeedRate;
 
+	enum {
+		STATE_APPEARING         = 2,
+		STATE_BREAKING          = 3,
+		STATE_TOUCHING_PLAYER   = 4,
+		STATE_TOUCHING_WATER    = 5,
+		STATE_HOLDING           = 6,
+		STATE_SINKING           = 7,
+		STATE_BURIED            = 8,
+		STATE_RECOVERING        = 9,
+		STATE_WAITING_TO_APPEAR = 10,
+	};
+
 public:
 	/* 0x138 */ const TBGCheckData* unk138; // TODO: maybe not const
 	/* 0x13C */ const TBGCheckData* unk13C;

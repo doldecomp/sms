@@ -514,12 +514,12 @@ void TKumokun::control()
 
 void TKumokun::calcShadowPos() { }
 
-BOOL TKumokun::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TKumokun::receiveMessage(THitActor* sender, u32 message)
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return false;
 
-	switch (param_2) {
+	switch (message) {
 	case HIT_MESSAGE_PUNCH:
 		return behaveHitPunch();
 
@@ -530,7 +530,7 @@ BOOL TKumokun::receiveMessage(THitActor* param_1, u32 param_2)
 		return behaveHitTrample();
 
 	default:
-		return TSmallEnemy::receiveMessage(param_1, param_2);
+		return TSmallEnemy::receiveMessage(sender, message);
 	}
 
 	return false;

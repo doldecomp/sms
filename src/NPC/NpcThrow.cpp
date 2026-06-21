@@ -25,6 +25,6 @@ void TNpcThrow::throwMario(THitActor* param_1)
 	local_14.x = x * JMASCos(sYaw) + local_14.z * JMASSin(sYaw);
 	local_14.z = -x * JMASSin(sYaw) + local_14.z * JMASCos(sYaw);
 
-	SMS_SendMessageToMario(param_1, HIT_MESSAGE_UNK7);
+	SMS_SendMessageToMario(param_1, HIT_MESSAGE_THROWN);
 	SMS_ThrowMario(local_14, unk0);
 }

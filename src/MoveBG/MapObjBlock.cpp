@@ -43,9 +43,9 @@ void TBreakableBlock::touchPlayer(THitActor* player)
 
 void TSandBlock::touchPlayer(THitActor* player)
 {
-	if (marioIsOn() && checkState(TSandBlock::STATE_WAITING)) {
+	if (marioIsOn() && checkState(STATE_NORMAL)) {
 		setTimeTilAppear(mWaitTimeToFall);
-		setState(TSandBlock::STATE_TOUCHED);
+		setState(STATE_TOUCHED);
 	}
 }
 
@@ -54,24 +54,24 @@ void TSandBlock::control()
 	TMapObjBase::control();
 
 	switch (mState) {
-	case TSandBlock::STATE_WAITING:
+	case STATE_NORMAL:
 		break;
-	case TSandBlock::STATE_RESTORING:
+	case STATE_RESTORING:
 		mScaling.x += mSandScaleUp;
 		mScaling.y += mSandScaleUp;
 		mScaling.z += mSandScaleUp;
 		if (mScaling.y >= mInitialScaling.x) {
 			mScaling.set(mInitialScaling);
-			setState(TSandBlock::STATE_WAITING);
+			setState(STATE_NORMAL);
 		}
 		break;
-	case TSandBlock::STATE_TOUCHED:
+	case STATE_TOUCHED:
 		if (!isAppearTimeFinished()) {
 			setUpMapCollision(1);
-			setState(TSandBlock::STATE_FALLING);
+			setState(STATE_FALLING);
 		}
 		break;
-	case TSandBlock::STATE_FALLING:
+	case STATE_FALLING: {
 		mScaling.y -= mSandScaleDown;
 		gpMSound->startSoundActor(MSD_SE_OBJ_SANDBLOCK_BREAK, &mPosition, 0,
 		                          nullptr, 0, 0x4);
@@ -84,11 +84,10 @@ void TSandBlock::control()
 			mScaling.z = mScaling.y;
 			TMapObjBase::sleep();
 			setTimeTilAppear(mSandWaitTime);
-			setState(TSandBlock::STATE_GONE);
+			setState(STATE_GONE);
 		}
-
-		break;
-	case TSandBlock::STATE_GONE:
+	} break;
+	case STATE_GONE:
 		if (!isAppearTimeFinished()
 		    && getDistance(SMS_GetMarioPos()) > mScaling.x * 100.0f) {
 			TMapObjBase::awake();
@@ -96,7 +95,7 @@ void TSandBlock::control()
 			mScaling.set(mInitialScaling);
 			setUpMapCollision(0);
 			mScaling.set(scaleCopy);
-			setState(TSandBlock::STATE_RESTORING);
+			setState(STATE_RESTORING);
 		}
 		break;
 	}
@@ -302,7 +301,8 @@ BOOL TBrickBlock::receiveMessage(THitActor* sender, u32 message)
 	if (sender->isActorType(0x80000001) && marioHeadAttack()) {
 		kill();
 		return TRUE;
-	} else if (sender->isActorType(0x8000005) && message == 0xe) {
+	} else if (sender->isActorType(0x8000005)
+	           && message == HIT_MESSAGE_ATTACK) {
 		kill();
 		return TRUE;
 	}
@@ -380,7 +380,7 @@ void TTelesaBlock::setGroundCollision()
 
 BOOL TSuperHipDropBlock::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == 3) {
+	if (message == HIT_MESSAGE_UNK3) {
 		kill();
 		if (mMonteBlockBroken) {
 			TFlagManager::getInstance()->setBool(true, 0x1038C);

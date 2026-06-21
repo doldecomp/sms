@@ -11006,10 +11006,10 @@ void TMapObjBase::initObjCollisionData()
 	}
 
 	if (mAttackRadius == 0.0f || mAttackHeight == 0.0f)
-		unk64 |= 2;
+		unk64 |= HIT_FLAG_UNK2;
 
 	if (mDamageRadius == 0.0f || mDamageHeight == 0.0f)
-		unk64 |= 4;
+		unk64 |= HIT_FLAG_UNK4;
 }
 
 #pragma dont_inline on
@@ -11061,7 +11061,7 @@ MActor* TMapObjBase::initMActor(const char* param_1, const char* param_2,
 	MActor* oldActor = mMActor;
 	MActor* newActor = getActorKeeper()->createMActor(param_1, param_3);
 	mMActor          = newActor;
-	if (checkMapObjFlag(0x4000)) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4000)) {
 		mMActor->setLightID(0);
 		mMActor->unmarkUnk40();
 	}
@@ -11082,7 +11082,7 @@ void TMapObjBase::makeMActors()
 		return;
 
 	mMActorKeeper = new TMActorKeeper(mManager, uVar6);
-	if (unkF8 & 0x8000)
+	if (unkF8 & MAP_OBJ_FLAG_UNK8000)
 		mMActorKeeper->mModelLoaderFlags = 0x11220000;
 	else
 		mMActorKeeper->mModelLoaderFlags = 0x10220000;
@@ -11110,18 +11110,18 @@ void TMapObjBase::makeMActors()
 void TMapObjBase::initModelData()
 {
 	makeMActors();
-	if (checkMapObjFlag(0x800) && getMActor()) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK800) && getMActor()) {
 		mGroundHeight = gpMap->checkGround(getPosition(), &mGroundPlane);
-		if (getGroundPlane()->isShadow() && !checkMapObjFlag(0x4000))
+		if (getGroundPlane()->isShadow() && !checkMapObjFlag(MAP_OBJ_FLAG_UNK4000))
 			gpMapObjManager->entryStaticDrawBufferShadow(
 			    getMActor()->getModel());
 		else
 			gpMapObjManager->entryStaticDrawBufferSun(getMActor()->getModel());
 	}
 
-	if (checkMapObjFlag(0x10) || checkMapObjFlag(0x20)) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK10) || checkMapObjFlag(MAP_OBJ_FLAG_UNK20)) {
 		TMirrorActor* ma = new TMirrorActor(getName());
-		if (checkMapObjFlag(0x20))
+		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK20))
 			ma->init(getModel(), 0x1A);
 		else
 			ma->init(getModel(), 0x18);
@@ -11150,9 +11150,9 @@ void TMapObjBase::initActorData()
 		mYOffset = mScaling.y * mMapObjData->mHit->unk8;
 	mPosition.y += mYOffset;
 	mScaledBodyRadius = mMapObjData->unk30 * mScaling.x;
-	if (checkMapObjFlag(0x1))
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK1))
 		offLiveFlag(LIVE_FLAG_UNK100);
-	if (checkMapObjFlag(0x100000))
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK100000))
 		unkE8 = 2;
 }
 
@@ -11175,9 +11175,9 @@ void TMapObjBase::initMapObj()
 		mMActor->setLightType(2);
 
 	if (getMapObjData()->unk30 == 0.0f)
-		mLiveFlag |= 0x8;
+		mLiveFlag |= LIVE_FLAG_UNK8;
 
-	if (checkMapObjFlag(0x8000) && !isActorType(0x40000084)) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8000) && !isActorType(0x40000084)) {
 		TScreenTexture* ref = JDrama::TNameRefGen::search<TScreenTexture>(
 		    "スクリーンテクスチャ");
 		const ResTIMG* img = ref->getTexture()->getTexInfo();

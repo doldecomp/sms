@@ -78,7 +78,7 @@ s16 TMario::getAttackAngle(const THitActor* other)
 void TMario::dropObject()
 {
 	if (mHeldObject != nullptr) {
-		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK7);
+		mHeldObject->receiveMessage(this, HIT_MESSAGE_THROWN);
 		mHeldObject = nullptr;
 	}
 }
@@ -437,15 +437,15 @@ void TMario::considerTake()
 		mHolder = nullptr;
 
 	if (mHeldObject != nullptr && !check) {
-		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK7);
+		mHeldObject->receiveMessage(this, HIT_MESSAGE_THROWN);
 		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK8);
 		mHeldObject = nullptr;
 	}
 
 	if (mHolder != nullptr) {
-		// Probably an inline
 		BOOL check2 = false;
-		u32 test    = mStatus & MARIO_STATUS_TYPE_AND_ID_MASK;
+		// TODO: status check inline
+		u32 test = mStatus & MARIO_STATUS_TYPE_AND_ID_MASK;
 		if ((0x150 <= test && 0x15c >= test) || (0x140 <= test && test <= 0x143)
 		    || checkStatusType(MARIO_STATUS_FLAG_UNK1000)
 		    || mStatus == MARIO_STATUS_TAKEN) {
@@ -454,7 +454,7 @@ void TMario::considerTake()
 
 		if (!check2) {
 			mHolder->receiveMessage(this, HIT_MESSAGE_UNK8);
-			mHolder->receiveMessage(this, HIT_MESSAGE_UNK7);
+			mHolder->receiveMessage(this, HIT_MESSAGE_THROWN);
 			mHolder = nullptr;
 		}
 	}

@@ -79,17 +79,17 @@ TShine* TItemManager::makeShineAppearWithDemoOffset(const char* param_1,
 	return shine;
 }
 
-TCoin* TItemManager::newAndRegisterCoin(u32 param_1)
+TCoin* TItemManager::newAndRegisterCoin(u32 event_id)
 {
 	TCoin* result;
-	if (param_1 < 0x32) {
+	if (event_id < 0x32) {
 		result = (TCoin*)newAndRegisterObj(
 		    "coin_blue", JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
 		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
 		    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
-	} else if (param_1 == 100) {
+	} else if (event_id == 100) {
 		result = gpItemManager->unk78;
-	} else if (param_1 == 200) {
+	} else if (event_id == 200) {
 		result = (TCoin*)newAndRegisterObj(
 		    "coin_red", JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
 		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
@@ -97,7 +97,7 @@ TCoin* TItemManager::newAndRegisterCoin(u32 param_1)
 	} else {
 		return nullptr;
 	}
-	result->unk134 = param_1;
+	result->mEventId = event_id;
 	return result;
 }
 

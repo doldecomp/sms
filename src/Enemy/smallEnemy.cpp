@@ -537,7 +537,7 @@ BOOL TSmallEnemy::receiveMessage(THitActor* sender, u32 message)
 		return true;
 	}
 
-	if ((message == HIT_MESSAGE_UNK6 || message == HIT_MESSAGE_UNK7)
+	if ((message == HIT_MESSAGE_PUT || message == HIT_MESSAGE_THROWN)
 	    && mHolder == sender) {
 		mHolder = nullptr;
 		behaveToRelease();

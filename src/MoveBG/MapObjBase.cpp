@@ -26,7 +26,7 @@ void TMapObjBase::changeObjMtx(MtxPtr mtx)
 	mPosition.y = mtx[3][1] + mYOffset;
 	mPosition.z = mtx[3][2];
 	if (mMActor) {
-		if (checkMapObjFlag(0x100)) {
+		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK100)) {
 			setModelMtx(mtx);
 		} else {
 			calcRootMatrix();
@@ -52,14 +52,14 @@ u32 TMapObjBase::getSDLModelFlag() const { return 3; }
 void TMapObjBase::awake()
 {
 	offLiveFlag(LIVE_FLAG_UNK4000);
-	unk64 &= ~1;
+	unk64 &= ~HIT_FLAG_NO_COLLISION;
 	setUpCurrentMapCollision();
 }
 
 void TMapObjBase::sleep()
 {
 	onLiveFlag(LIVE_FLAG_UNK4000);
-	unk64 |= 1;
+	unk64 |= HIT_FLAG_NO_COLLISION;
 	removeMapCollision();
 }
 
@@ -102,7 +102,7 @@ void TMapObjBase::setUpCurrentMapCollision()
 	if (!colman)
 		return;
 
-	if (checkMapObjFlag(8)) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8)) {
 		J3DModel* model        = getModel();
 		TMapCollisionBase* col = mMapCollisionManager->getUnk8();
 		MTXCopy(model->getAnmMtx(0), col->unk20);
@@ -129,7 +129,7 @@ void TMapObjBase::setUpMapCollision(u16 param_1)
 
 	mMapCollisionManager->changeCollision(param_1);
 
-	if (checkMapObjFlag(8)) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8)) {
 		J3DModel* model        = getModel();
 		TMapCollisionBase* col = mMapCollisionManager->getUnk8();
 		MTXCopy(model->getAnmMtx(0), col->unk20);
@@ -218,7 +218,7 @@ void TMapObjBase::startControlAnim(u16 param_1)
 
 void TMapObjBase::startBck(const char* param_1)
 {
-	unkF8 &= ~0x100;
+	unkF8 &= ~MAP_OBJ_FLAG_UNK100;
 	mMActor->setBck(param_1);
 }
 
@@ -245,7 +245,7 @@ void TMapObjBase::makeObjDefault()
 void TMapObjBase::makeObjDead()
 {
 	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
-	mLiveFlag |= 0x10;
+	mLiveFlag |= LIVE_FLAG_UNK10;
 
 	if (unkFE != 0xffff && mMapObjData->mAnim && mMapObjData->mAnim->unk0 > 0
 	    && mMapObjData->mAnim->unk4[unkFE].unk4) {
@@ -257,7 +257,7 @@ void TMapObjBase::makeObjDead()
 	}
 
 	unk100 = 0xffff;
-	unk64 |= 1;
+	unk64 |= HIT_FLAG_NO_COLLISION;
 	removeMapCollision();
 	mTimeTilAppear = 0;
 	if (mHeldObject) {
@@ -271,7 +271,7 @@ void TMapObjBase::makeObjDead()
 	}
 
 	onLiveFlag(0xD9);
-	mState = 0;
+	mState = STATE_DEAD;
 	if (mMActor)
 		SMS_HideAllShapePacket(getModel());
 }
@@ -312,7 +312,7 @@ void TMapObjBase::ensureTakeSituation()
 
 	if (mHolder && mHolder->mHeldObject != this) {
 		if (mPosition.y != mGroundHeight)
-			mLiveFlag &= ~0x10;
+			mLiveFlag &= ~LIVE_FLAG_UNK10;
 
 		mHolder = nullptr;
 	}
@@ -355,7 +355,7 @@ u32 TMapObjBase::getShadowType()
 	    || isActorType(0x40000036) || isActorType(0x40000037)
 	    || isActorType(0x40000039)) {
 		return 2;
-	} else if (checkMapObjFlag(0x2000)) {
+	} else if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2000)) {
 		return 1;
 	} else {
 		return 0;
@@ -364,7 +364,7 @@ u32 TMapObjBase::getShadowType()
 
 Mtx* TMapObjBase::getRootJointMtx() const
 {
-	if (checkMapObjFlag(0x8) || mYOffset != 0.0f)
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8) || mYOffset != 0.0f)
 		return (Mtx*)mMActor->getModel()->getAnmMtx(0);
 	return nullptr;
 }
@@ -379,14 +379,15 @@ void TMapObjBase::calcRootMatrix()
 
 BOOL TMapObjBase::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == HIT_MESSAGE_UNK5 && checkMapObjFlag(0x40)) {
+	if (message == HIT_MESSAGE_UNK5 && checkMapObjFlag(MAP_OBJ_FLAG_UNK40)) {
 		mHeldObject = (TTakeActor*)sender;
-		return 1;
-	} else if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		return touchWater(sender);
-	} else {
-		return false;
+		return true;
 	}
+
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER)
+		return touchWater(sender);
+
+	return false;
 }
 
 void TMapObjBase::initAndRegister(const char* param_1)
@@ -412,17 +413,17 @@ void TMapObjBase::load(JSUMemoryInputStream& stream)
 	unkF4 = stream.readString();
 	loadBeforeInit(stream);
 	initMapObj();
-	unkF8 &= ~0x40000;
+	unkF8 &= ~MAP_OBJ_FLAG_UNK40000;
 	makeObjAppeared();
-	if (checkMapObjFlag(0x80)) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK80)) {
 		f32 value;
-		stream.read(&value, 4);
+		stream >> value;
 		mDamageHeight = value;
 		calcEntryRadius();
 		mAttackHeight = value;
 		calcEntryRadius();
-		unk64 &= ~4;
-		unk64 &= ~2;
+		unk64 &= ~HIT_FLAG_UNK4;
+		unk64 &= ~HIT_FLAG_UNK2;
 	}
 }
 
@@ -430,14 +431,14 @@ TMapObjBase::TMapObjBase(const char* name)
     : TLiveActor(name)
     , unkF4(nullptr)
     , unkF8(0)
-    , mState(1)
+    , mState(STATE_NORMAL)
     , unkFE(0xffff)
     , unk100(0xffff)
     , unk102(0)
     , mTimeTilAppear(0)
     , mYOffset(0.0f)
     , mMapObjData(nullptr)
-    , unk134(0)
+    , mEventId(0)
 {
 	mInitialPosition.zero();
 	mInitialRotation.zero();
