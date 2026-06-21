@@ -328,28 +328,27 @@ public:
 	bool checkMapObjFlag(u32 flag) const { return unkF8 & flag; }
 	void onMapObjFlag(u32 flag) { unkF8 |= flag; }
 	void offMapObjFlag(u32 flag) { unkF8 &= ~flag; }
+
+	// fabricated
 	TMapObjData* getMapObjData() { return mMapObjData; }
-	bool isState(u32 v) { return mState == v ? true : false; }
-	bool isWaitingToAppear() { return mTimeTilAppear > 0 ? true : false; }
-	int getTimeTilAppear() { return mTimeTilAppear; }
+
+	// fabricated
 	u32 getEventId() { return mEventId; }
 	void setEventId(u32 v) { mEventId = v; }
-	const char* getUnkF4() { return unkF4; }
 
 	// Fabricated
-	bool checkState(u32 state) { return mState == state; }
-
-	// Fabricated
+	bool isState(u32 v) { return mState == v ? true : false; }
 	void setState(u32 state) { mState = state; }
 
 	// Fabricated
-	void setTimeTilAppear(int timeTilAppear) { mTimeTilAppear = timeTilAppear; }
-
-	// Fabricated
-	bool isAppearTimeFinished() { return mTimeTilAppear > 0 ? true : false; }
+	void startStateTimer(int time) { mStateTimer = time; }
+	bool isStateTimerEngaged() { return mStateTimer > 0 ? true : false; }
+	int getStateTimer() { return mStateTimer; }
 
 	// Fabricated
 	const JGeometry::TVec3<f32>& getInitialScaling() { return mInitialScaling; }
+
+	const char* getUnkF4() { return unkF4; }
 
 public:
 	enum {
@@ -381,8 +380,8 @@ public:
 	};
 
 	enum {
-		STATE_DEAD   = 0,
-		STATE_NORMAL = 1,
+		STATE_DEAD   = 0x0,
+		STATE_NORMAL = 0x1,
 	};
 
 	/* 0xF4 */ const char* unkF4;
@@ -391,7 +390,7 @@ public:
 	/* 0xFE */ u16 unkFE;
 	/* 0x100 */ u16 unk100;
 	/* 0x102 */ u16 unk102;
-	/* 0x104 */ int mTimeTilAppear;
+	/* 0x104 */ int mStateTimer;
 	/* 0x108 */ f32 mYOffset; // TODO: offset from what to what?
 	/* 0x10C */ JGeometry::TVec3<f32> mInitialPosition;
 	/* 0x118 */ JGeometry::TVec3<f32> mInitialRotation;

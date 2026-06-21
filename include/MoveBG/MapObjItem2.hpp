@@ -15,9 +15,9 @@ public:
 	virtual void touchPlayer(THitActor*);
 
 public:
-	/* 0x138 */ u8 unk138;
-	/* 0x139 */ u8 unk139;
-	/* 0x13A */ u8 unk13A;
+	/* 0x138 */ s8 unk138;
+	/* 0x139 */ s8 unk139;
+	/* 0x13A */ s8 unk13A;
 	/* 0x13C */ int unk13C;
 };
 
@@ -33,8 +33,8 @@ public:
 	virtual void initMapObj();
 
 public:
-	/* 0x138 */ u8 unk138;
-	/* 0x13C */ int unk13C;
+	/* 0x138 */ s8 unk138;
+	/* 0x13C */ u32 unk13C;
 };
 
 #endif

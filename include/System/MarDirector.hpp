@@ -38,6 +38,7 @@ class TDemoCannon;
 class TMarDirector;
 
 extern TMarDirector* gpMarDirector;
+inline TMarDirector* SMSGetMarDirector() { return gpMarDirector; }
 
 class TMarDirector : public JDrama::TDirector {
 public:

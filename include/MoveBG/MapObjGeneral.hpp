@@ -65,15 +65,15 @@ public:
 	static f32 mNormalThrowSpeedRate;
 
 	enum {
-		STATE_APPEARING         = 2,
-		STATE_BREAKING          = 3,
-		STATE_TOUCHING_PLAYER   = 4,
-		STATE_TOUCHING_WATER    = 5,
-		STATE_HOLDING           = 6,
-		STATE_SINKING           = 7,
-		STATE_BURIED            = 8,
-		STATE_RECOVERING        = 9,
-		STATE_WAITING_TO_APPEAR = 10,
+		STATE_APPEARING         = 0x2,
+		STATE_BREAKING          = 0x3,
+		STATE_TOUCHING_PLAYER   = 0x4,
+		STATE_TOUCHING_WATER    = 0x5,
+		STATE_HOLDING           = 0x6,
+		STATE_SINKING           = 0x7,
+		STATE_BURIED            = 0x8,
+		STATE_RECOVERING        = 0x9,
+		STATE_WAITING_TO_APPEAR = 0xA,
 	};
 
 public:

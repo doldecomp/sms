@@ -43,8 +43,8 @@ void TBreakableBlock::touchPlayer(THitActor* player)
 
 void TSandBlock::touchPlayer(THitActor* player)
 {
-	if (marioIsOn() && checkState(STATE_NORMAL)) {
-		setTimeTilAppear(mWaitTimeToFall);
+	if (marioIsOn() && mState == STATE_NORMAL) {
+		startStateTimer(mWaitTimeToFall);
 		setState(STATE_TOUCHED);
 	}
 }
@@ -66,7 +66,7 @@ void TSandBlock::control()
 		}
 		break;
 	case STATE_TOUCHED:
-		if (!isAppearTimeFinished()) {
+		if (!isStateTimerEngaged()) {
 			setUpMapCollision(1);
 			setState(STATE_FALLING);
 		}
@@ -83,12 +83,12 @@ void TSandBlock::control()
 			mScaling.x = mScaling.y;
 			mScaling.z = mScaling.y;
 			TMapObjBase::sleep();
-			setTimeTilAppear(mSandWaitTime);
+			startStateTimer(mSandWaitTime);
 			setState(STATE_GONE);
 		}
 	} break;
 	case STATE_GONE:
-		if (!isAppearTimeFinished()
+		if (!isStateTimerEngaged()
 		    && getDistance(SMS_GetMarioPos()) > mScaling.x * 100.0f) {
 			TMapObjBase::awake();
 			JGeometry::TVec3<f32> scaleCopy = mScaling;
