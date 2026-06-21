@@ -98,6 +98,9 @@ public:
 		setBlendKonstAlpha();
 	}
 
+	// fabricated
+	JUtility::TColor getWhite() const { return mWhite; }
+
 public:
 	/* 0xEC */ JUTTexture* mTextures[4];
 	/* 0xFC */ u8 mTextureNum;

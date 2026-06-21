@@ -147,6 +147,12 @@ public:
 
 	void setUnk190(f32 x, f32 y, f32 z) { mScale.set(x, y, z); }
 
+	// fabricated
+	void setScale2(JGeometry::TVec3<f32> scale)
+	{
+		mScale.x = scale.x, mScale.y = scale.y, mScale.z = scale.z;
+	}
+
 	void setRotation(s16 x, s16 y, s16 z)
 	{
 		unk16C.x = x;
