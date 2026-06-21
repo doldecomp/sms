@@ -22,7 +22,8 @@ f32 TMapObjNail::mDownHeight = 50.0f;
 
 BOOL TMapObjNail::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == HIT_MESSAGE_HIP_DROP && !isWaitingToAppear() && unk150 < 3) {
+	if (message == HIT_MESSAGE_HIP_DROP && !isStateTimerEngaged()
+	    && unk150 < 3) {
 		mPosition.y -= mDownHeight;
 		removeMapCollision();
 		setUpCurrentMapCollision();
@@ -31,7 +32,7 @@ BOOL TMapObjNail::receiveMessage(THitActor* sender, u32 message)
 			MSoundSESystem::MSoundSE::startSoundActor(
 			    MSD_SE_OBJ_KUGI_IMPACT, mPosition, 0, nullptr, 0, 4);
 
-		mTimeTilAppear = 120;
+		mStateTimer = 120;
 		++unk150;
 		if (unk150 == 3 && mHiddenObj != nullptr) {
 			TMapObjBase* obj = mHiddenObj;

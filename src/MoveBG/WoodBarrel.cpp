@@ -36,7 +36,7 @@ void TWoodBarrel::hold(TTakeActor* param_1)
 {
 	TMapObjGeneral::hold(param_1);
 	if (isActorType(0x4000005c))
-		mTimeTilAppear = mBreakTime;
+		mStateTimer = mBreakTime;
 }
 
 void TWoodBarrel::breaking()
@@ -132,7 +132,7 @@ void TWoodBarrel::control()
 {
 	TMapObjGeneral::control();
 	if (isActorType(0x4000005c) && isState(STATE_HOLDING)
-	    && !isWaitingToAppear())
+	    && !isStateTimerEngaged())
 		kill();
 }
 

@@ -22,14 +22,16 @@ public:
 
 	TCoin* newAndRegisterCoinReal();
 	static TCoin* newAndRegisterCoin(u32);
-	TShine* makeShineAppearWithDemoOffset(const char*, const char*, f32, f32,
-	                                      f32);
-	TShine* makeShineAppearWithDemo(const char*, const char*, f32, f32, f32);
+	TShine* makeShineAppearWithDemoOffset(const char* shine_name,
+	                                      const char* demo_name, f32 offset_x,
+	                                      f32 offset_y, f32 offset_z);
+	TShine* makeShineAppearWithDemo(const char* shine_name,
+	                                const char* demo_name, f32 x, f32 y, f32 z);
 	TShine* makeShineAppearWithTimeOffset(const char*, int, f32, f32, f32, int,
 	                                      int, int);
 	TShine* makeShineAppearWithTime(const char*, int, f32, f32, f32, int, int,
 	                                int);
-	void resetNozzleBoxesModel(int);
+	void resetNozzleBoxesModel(int nozzle_type);
 
 public:
 	/* 0x40 */ TMtx34f unk40;

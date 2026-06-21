@@ -47,7 +47,7 @@ inline f32 distToMario(const JGeometry::TVec3<f32>& v)
 
 void TMapObjGeneral::waitingToAppear()
 {
-	if (isWaitingToAppear())
+	if (isStateTimerEngaged())
 		return;
 
 	if (isActorType(0x4000005a)) {
@@ -72,9 +72,9 @@ void TMapObjGeneral::waitingToRecover()
 void TMapObjGeneral::waitToAppear(s32 waitTime)
 {
 	if (waitTime == 0)
-		mTimeTilAppear = mNormalWaitToAppearTime;
+		mStateTimer = mNormalWaitToAppearTime;
 	else
-		mTimeTilAppear = waitTime;
+		mStateTimer = waitTime;
 	mState = STATE_WAITING_TO_APPEAR;
 }
 
@@ -92,10 +92,10 @@ void TMapObjGeneral::put()
 {
 	mHolder                    = nullptr;
 	mHolder                    = nullptr;
-	s32 preservedTimeTilAppear = getTimeTilAppear();
+	s32 preservedTimeTilAppear = getStateTimer();
 	makeObjAppeared();
-	mTimeTilAppear = preservedTimeTilAppear;
-	mPosition.x    = JMASSin(*gpMarioAngleY)
+	mStateTimer = preservedTimeTilAppear;
+	mPosition.x = JMASSin(*gpMarioAngleY)
 	                  * (getDamageRadius() + SMS_GetMarioDamageRadius() + 10.0f)
 	              + SMS_GetMarioPos().x;
 	mPosition.y = SMS_GetMarioPos().y;
@@ -237,7 +237,7 @@ uuuh:
 
 void TMapObjGeneral::appeared()
 {
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK40000) && !isWaitingToAppear())
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK40000) && !isStateTimerEngaged())
 		makeObjDead();
 }
 
@@ -326,7 +326,7 @@ void TMapObjGeneral::kill()
 	unk64 |= HIT_FLAG_NO_COLLISION;
 	removeMapCollision();
 	onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
-	mTimeTilAppear = -1;
+	mStateTimer = -1;
 	startAnim(2);
 	mState = STATE_BREAKING;
 	startSound(2);
@@ -350,7 +350,7 @@ void TMapObjGeneral::appear()
 
 	appearing();
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK40000))
-		mTimeTilAppear = getLivingTime();
+		mStateTimer = getLivingTime();
 
 	mState = STATE_APPEARING;
 }
@@ -591,9 +591,9 @@ void TMapObjGeneral::perform(u32 param_1, JDrama::TGraphics* param_2)
 		if (isState(STATE_WAITING_TO_APPEAR))
 			waitingToAppear();
 	} else {
-		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK40000) && isWaitingToAppear()
-		    && getTimeTilAppear() < getFlushTime()
-		    && ((getTimeTilAppear() / mNormalFlushInterval) & 1) != 0) {
+		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK40000) && isStateTimerEngaged()
+		    && getStateTimer() < getFlushTime()
+		    && ((getStateTimer() / mNormalFlushInterval) & 1) != 0) {
 			return;
 		}
 	}

@@ -55,9 +55,9 @@ void THideObjBase::appearObjFromPoint(const JGeometry::TVec3<f32>& point)
 
 			throwObjToFrontFromPoint(obj, point, mAppearSpeed, mAppearYSpeed);
 			if (TMapObjBase::isCoin(obj)) {
-				TCoin* coin  = (TCoin*)obj;
-				coin->unk148 = this;
-				coin->unk14C = unk148;
+				TCoin* coin      = (TCoin*)obj;
+				coin->mContainer = this;
+				coin->unk14C     = unk148;
 			}
 
 			if (TMapObjBase::isFruit(obj))
@@ -566,17 +566,15 @@ void THideObjPictureTwin::afterFinishedAnim()
 		obj->offLiveFlag(LIVE_FLAG_UNK10);
 
 		if (TMapObjBase::isCoin(obj)) {
-			TCoin* coin  = (TCoin*)obj;
-			coin->unk148 = this;
-			coin->unk14C = unk148;
+			TCoin* coin      = (TCoin*)obj;
+			coin->mContainer = this;
+			coin->unk14C     = unk148;
 		}
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_TIMECOIN_APPEAR, 0,
 		                                   nullptr, 0);
 
-		// Possible getter?
-		TMarDirector* director = gpMarDirector;
-		director->fireStartDemoCamera(unk178, &mPosition, -1, 0.0f, true,
-		                              nullptr, 0, nullptr, 0);
+		SMSGetMarDirector()->fireStartDemoCamera(unk178, &mPosition, -1, 0.0f,
+		                                         true, nullptr, 0, nullptr, 0);
 	}
 	mState = 3;
 }
@@ -627,8 +625,8 @@ void TBreakHideObj::kill()
 	removeMapCollision();
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 	onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
-	mTimeTilAppear = -1;
-	mState         = 2;
+	mStateTimer = -1;
+	mState      = 2;
 }
 
 BOOL TBreakHideObj::receiveMessage(THitActor* sender, u32 message)
@@ -690,8 +688,8 @@ void TWoodBox::kill()
 	removeMapCollision();
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 	onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
-	mTimeTilAppear = -1;
-	mState         = 2;
+	mStateTimer = -1;
+	mState      = 2;
 
 	SMSGetMSound()->startSoundActor(MSD_SE_IT_BARREL_CRASH, &mPosition, 0,
 	                                nullptr, 0, 4);

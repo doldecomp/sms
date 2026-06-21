@@ -12,7 +12,7 @@
 
 TItemManager* gpItemManager;
 
-void TItemManager::resetNozzleBoxesModel(int param_1)
+void TItemManager::resetNozzleBoxesModel(int nozzle_type)
 {
 	for (int i = 0; i < getObjNum(); ++i) {
 		THitActor* maybeBox = getObj(i);
@@ -20,33 +20,30 @@ void TItemManager::resetNozzleBoxesModel(int param_1)
 			continue;
 
 		TNozzleBox* box = (TNozzleBox*)maybeBox;
-		if (param_1 != box->unk148)
+		if (nozzle_type != box->mContainedNozzleType)
 			continue;
 
-		if (box->checkLiveFlag(1)) {
+		if (box->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 			    0xE4, &box->mPosition, 0, nullptr);
-			if (emitter) {
-				emitter->unk154.set(2.0f, 2.0f, 2.0f);
-				emitter->unk174.set(2.0f, 2.0f, 2.0f);
-			}
+			if (emitter)
+				emitter->setScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
 
-			if (gpMSound->gateCheck(MSD_SE_SMOKE_EFFECT)) {
+			if (gpMSound->gateCheck(MSD_SE_SMOKE_EFFECT))
 				MSoundSESystem::MSoundSE::startSoundActor(
 				    MSD_SE_SMOKE_EFFECT, box->mPosition, 0, nullptr, 0, 4);
-			}
 		}
 		box->makeModelValid();
 	}
 }
 
-TShine* TItemManager::makeShineAppearWithTime(const char* param_1, int param_2,
-                                              f32 param_3, f32 param_4,
-                                              f32 param_5, int param_6,
-                                              int param_7, int param_8)
+TShine* TItemManager::makeShineAppearWithTime(const char* shine_name,
+                                              int param_2, f32 x, f32 y, f32 z,
+                                              int param_6, int param_7,
+                                              int param_8)
 {
-	TShine* shine = JDrama::TNameRefGen::search<TShine>(param_1);
-	shine->mPosition.set(param_3, param_4, param_5);
+	TShine* shine = JDrama::TNameRefGen::search<TShine>(shine_name);
+	shine->mPosition.set(x, y, z);
 	shine->appearWithTime(param_2, param_6, param_7, param_8);
 	return shine;
 }
@@ -56,26 +53,26 @@ TShine* TItemManager::makeShineAppearWithTimeOffset(const char*, int, f32, f32,
 {
 }
 
-TShine* TItemManager::makeShineAppearWithDemo(const char* param_1,
-                                              const char* param_2, f32 param_3,
-                                              f32 param_4, f32 param_5)
+TShine* TItemManager::makeShineAppearWithDemo(const char* shine_name,
+                                              const char* demo_name, f32 x,
+                                              f32 y, f32 z)
 {
-	TShine* shine = JDrama::TNameRefGen::search<TShine>(param_1);
-	shine->mPosition.set(param_3, param_4, param_5);
-	shine->appearWithDemo(param_2);
+	TShine* shine = JDrama::TNameRefGen::search<TShine>(shine_name);
+	shine->mPosition.set(x, y, z);
+	shine->appearWithDemo(demo_name);
 	return shine;
 }
 
-TShine* TItemManager::makeShineAppearWithDemoOffset(const char* param_1,
-                                                    const char* param_2,
-                                                    f32 param_3, f32 param_4,
-                                                    f32 param_5)
+TShine* TItemManager::makeShineAppearWithDemoOffset(const char* shine_name,
+                                                    const char* demo_name,
+                                                    f32 offset_x, f32 offset_y,
+                                                    f32 offset_z)
 {
-	TShine* shine = JDrama::TNameRefGen::search<TShine>(param_1);
-	shine->mPosition.x += param_3;
-	shine->mPosition.y += param_4;
-	shine->mPosition.z += param_5;
-	shine->appearWithDemo(param_2);
+	TShine* shine = JDrama::TNameRefGen::search<TShine>(shine_name);
+	shine->mPosition.x += offset_x;
+	shine->mPosition.y += offset_y;
+	shine->mPosition.z += offset_z;
+	shine->appearWithDemo(demo_name);
 	return shine;
 }
 
