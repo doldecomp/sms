@@ -1,5 +1,6 @@
 #include <MoveBG/MapObjBase.hpp>
 #include <MoveBG/MapObjGeneral.hpp>
+#include <System/MarDirector.hpp>
 #include <Map/Map.hpp>
 #include <Map/MapCollisionManager.hpp>
 #include <Map/MapCollisionEntry.hpp>
@@ -13,6 +14,7 @@
 #include <MSound/MSoundSE.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 
@@ -52,14 +54,14 @@ u32 TMapObjBase::getSDLModelFlag() const { return 3; }
 void TMapObjBase::awake()
 {
 	offLiveFlag(LIVE_FLAG_UNK4000);
-	unk64 &= ~HIT_FLAG_NO_COLLISION;
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 	setUpCurrentMapCollision();
 }
 
 void TMapObjBase::sleep()
 {
 	onLiveFlag(LIVE_FLAG_UNK4000);
-	unk64 |= HIT_FLAG_NO_COLLISION;
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 	removeMapCollision();
 }
 
@@ -74,13 +76,10 @@ void TMapObjBase::setObjHitData(u16 param_1)
 	const TMapObjHitDataTable* table = &mMapObjData->mHit->unkC[param_1];
 
 	if (table->unk0 >= 0.0f) {
-		f32 fVar2     = mScaling.x > mScaling.z ? mScaling.x : mScaling.z;
-		f32 fVar3     = mScaling.y;
-		mAttackRadius = table->unk0 * fVar2;
-		mAttackHeight = table->unk4 * fVar3;
-		mDamageRadius = table->unk8 * fVar2;
-		mDamageHeight = table->unkC * fVar3;
-		calcEntryRadius();
+		f32 fVar2 = mScaling.x > mScaling.z ? mScaling.x : mScaling.z;
+		f32 fVar3 = mScaling.y;
+		setHitParams(table->unk0 * fVar2, table->unk4 * fVar3,
+		             table->unk8 * fVar2, table->unkC * fVar3);
 	}
 }
 
@@ -89,11 +88,11 @@ void TMapObjBase::removeMapCollision()
 	if (!mMapCollisionManager)
 		return;
 
-	if (!mMapCollisionManager->unk8)
-		return;
-
-	if (mMapCollisionManager->unk8 && mMapCollisionManager)
-		mMapCollisionManager->unk8->remove();
+	// TODO: fakematch fix properly!!!1111
+	if (mMapCollisionManager->unk8 && mMapCollisionManager->unk8->unk8)
+		if (mMapCollisionManager->unk8)
+			((volatile TMapCollisionManager*)mMapCollisionManager)
+			    ->unk8->remove();
 }
 
 void TMapObjBase::setUpCurrentMapCollision()
@@ -149,8 +148,8 @@ void TMapObjBase::soundBas(u32 param_1, f32 param_2, f32 param_3)
 {
 	f32 currFrame = mMActor->getFrameCtrl(0)->getFrame();
 	if (currFrame <= param_2 && param_2 < currFrame + param_3) {
-		if (gpMSound->gateCheck(param_1))
-			MSoundSESystem::MSoundSE::startSoundActor(param_1, getPosition(), 0,
+		if (SMSGetMSound()->gateCheck(param_1))
+			MSoundSESystem::MSoundSE::startSoundActor(param_1, &mPosition, 0,
 			                                          nullptr, 0, 4);
 	}
 }
@@ -162,13 +161,13 @@ void TMapObjBase::startSound(u16 param_1)
 
 	if (!mMapObjData->mSound) {
 		u32 uVar3 = TMapObjGeneral::mDefaultSound.unk0[unk100];
-		if (uVar3 != 0xffffffff && gpMSound->gateCheck(uVar3))
-			MSoundSESystem::MSoundSE::startSoundActor(uVar3, mPosition, 0,
+		if (uVar3 != 0xffffffff && SMSGetMSound()->gateCheck(uVar3))
+			MSoundSESystem::MSoundSE::startSoundActor(uVar3, &mPosition, 0,
 			                                          nullptr, 0, 4);
 	} else {
 		u32 uVar3 = mMapObjData->mSound->unk4->unk0[unk100];
-		if (uVar3 != 0xffffffff && gpMSound->gateCheck(uVar3))
-			MSoundSESystem::MSoundSE::startSoundActor(uVar3, mPosition, 0,
+		if (uVar3 != 0xffffffff && SMSGetMSound()->gateCheck(uVar3))
+			MSoundSESystem::MSoundSE::startSoundActor(uVar3, &mPosition, 0,
 			                                          nullptr, 0, 4);
 	}
 }
@@ -222,18 +221,67 @@ void TMapObjBase::startBck(const char* param_1)
 	mMActor->setBck(param_1);
 }
 
-void TMapObjBase::startAnim(u16 param_1) { }
+void TMapObjBase::startAnim(u16 param_1)
+{
+	if (mAnmSound)
+		setAnmSound(nullptr);
+
+	if (!mMActor) {
+		const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
+		if (anim->unk0 != 0)
+			mMActor = mMActorKeeper->getMActor(anim->unk4[0].unk0);
+	}
+
+	const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
+	if (!anim)
+		return;
+
+	if (param_1 >= anim->unk0)
+		return;
+
+	const TMapObjAnimData* data = &anim->unk4[param_1];
+	if (data->unk8 == 0) {
+		if (unkFE != 0xffff && anim && anim->unk0 != 0) {
+			const TMapObjAnimData* d2 = &anim->unk4[unkFE];
+			if (d2->unk4 != nullptr) {
+				u8 idx = d2->unk8;
+				mMActor->getFrameCtrl(idx)->setRate(0.0f);
+				mMActor->getFrameCtrl(idx)->setFrame(0.0f);
+				mMActor->getUnk28(idx)->unk0 = 0xffffffff;
+				unkFE                        = 0xffff;
+			}
+		}
+		stopAnmSound();
+		if (unkFE != param_1) {
+			unkFE = param_1;
+			if (data->unk0)
+				mMActor = mMActorKeeper->getMActor(data->unk0);
+		}
+	}
+
+	if (data->unk4) {
+		offMapObjFlag(MAP_OBJ_FLAG_UNK100);
+		mMActor->setAnimation(data->unk4, data->unk8);
+		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK200))
+			offMapObjFlag(MAP_OBJ_FLAG_UNK100);
+		if (data->unk10)
+			setAnmSound(data->unk10);
+	} else {
+		MActor* actor = mMActor;
+		actor->getModel()->mModelData->mJointNodePointer[0]->mMtxCalc
+		    = actor->unk8;
+	}
+}
 
 void TMapObjBase::makeObjDefault()
 {
-	mPosition.x = mInitialPosition.x;
-	mPosition.y = mInitialPosition.y + mYOffset;
-	mPosition.z = mInitialPosition.z;
+	mPosition.set(mInitialPosition.x, mInitialPosition.y + mYOffset,
+	              mInitialPosition.z);
 
 	mRotation = mInitialRotation;
 	mScaling  = mInitialScaling;
 
-	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
+	mVelocity.zero();
 	onLiveFlag(LIVE_FLAG_UNK10);
 	if (mMActor) {
 		calcRootMatrix();
@@ -245,7 +293,7 @@ void TMapObjBase::makeObjDefault()
 void TMapObjBase::makeObjDead()
 {
 	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
-	mLiveFlag |= LIVE_FLAG_UNK10;
+	onLiveFlag(LIVE_FLAG_UNK10);
 
 	if (unkFE != 0xffff && mMapObjData->mAnim && mMapObjData->mAnim->unk0 > 0
 	    && mMapObjData->mAnim->unk4[unkFE].unk4) {
@@ -257,7 +305,7 @@ void TMapObjBase::makeObjDead()
 	}
 
 	unk100 = 0xffff;
-	unk64 |= HIT_FLAG_NO_COLLISION;
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 	removeMapCollision();
 	mStateTimer = 0;
 	if (mHeldObject) {
@@ -276,7 +324,73 @@ void TMapObjBase::makeObjDead()
 		SMS_HideAllShapePacket(getModel());
 }
 
-void TMapObjBase::makeObjAppeared() { }
+void TMapObjBase::makeObjAppeared()
+{
+	offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK8);
+	mVelocity.x = 0.0f;
+	mVelocity.y = 0.0f;
+	mVelocity.z = 0.0f;
+	onLiveFlag(LIVE_FLAG_UNK10);
+	mStateTimer = 0;
+	offHitFlag(HIT_FLAG_NO_COLLISION);
+	setObjHitData(0);
+	if (unk100 != 0)
+		unk100 = 0;
+
+	if (!mMapObjData->mSound) {
+		u32 sound = TMapObjGeneral::mDefaultSound.unk0[unk100];
+		if (sound != 0xffffffff)
+			SMSGetMSound()->startSoundActor(sound, &mPosition, 0, nullptr, 0,
+			                                4);
+	} else {
+		u32 sound = mMapObjData->mSound->unk4->unk0[unk100];
+		if (sound != 0xffffffff)
+			SMSGetMSound()->startSoundActor(sound, &mPosition, 0, nullptr, 0,
+			                                4);
+	}
+
+	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
+	if (checkLiveFlag(LIVE_FLAG_UNK10))
+		onLiveFlag(LIVE_FLAG_AIRBORNE);
+
+	if (mMapObjData->mMove) {
+		J3DFrameCtrl* ctrl = mMapObjData->mMove->unk8;
+		ctrl->setFrame((f32)ctrl->getStart());
+		ctrl->setRate(1.0f);
+
+		mMapObjData->mMove->unk8->setRate(SMSGetAnmFrameRate());
+	}
+
+	startAnim(0);
+	if (mMActor)
+		SMS_ShowAllShapePacket(getModel());
+
+	mPosition.y -= mYOffset;
+	if (mMapObjData->mCollision && mMapObjData->mCollision->unk4[0].unk0 != 0) {
+		f32 x = mPosition.x;
+		f32 y = mPosition.y - mYOffset;
+		f32 z = mPosition.z;
+		mMapCollisionManager->changeCollision(0);
+		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8)) {
+			MtxPtr mtx = getModel()->getAnmMtx(0);
+
+			TMapCollisionBase* col = mMapCollisionManager->getUnk8();
+			col->setMtx(mtx);
+			col->setUp();
+		} else {
+			Mtx mtx;
+			TMapCollisionManager* manager = mMapCollisionManager;
+			MsMtxSetTRS(mtx, x, y, z, mRotation.x, mRotation.y, mRotation.z,
+			            mScaling.x, mScaling.y, mScaling.z);
+
+			TMapCollisionBase* col = manager->getUnk8();
+			col->setMtx(mtx);
+			col->setUp();
+		}
+	}
+	mPosition.y += mYOffset;
+	mState = STATE_NORMAL;
+}
 
 void TMapObjBase::moveByBck() { }
 
@@ -312,7 +426,7 @@ void TMapObjBase::ensureTakeSituation()
 
 	if (mHolder && mHolder->mHeldObject != this) {
 		if (mPosition.y != mGroundHeight)
-			mLiveFlag &= ~LIVE_FLAG_UNK10;
+			offLiveFlag(LIVE_FLAG_UNK10);
 
 		mHolder = nullptr;
 	}
@@ -345,9 +459,142 @@ void TMapObjBase::control()
 	}
 }
 
-void TMapObjBase::setGroundCollision() { }
+void TMapObjBase::setGroundCollision()
+{
+	if (!mMapCollisionManager)
+		return;
+	if ((s32)mMapCollisionManager->unk8->unk8 != 1)
+		return;
 
-void TMapObjBase::perform(u32, JDrama::TGraphics*) { }
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2)) {
+		if (mColCount == 0 && unk102 == 0)
+			return;
+		--unk102;
+		if (mColCount != 0)
+			unk102 = 4;
+	}
+
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8)) {
+		MtxPtr mtx = getModel()->getAnmMtx(0);
+		if (mMapCollisionManager->unk8)
+			mMapCollisionManager->unk8->moveMtx(mtx);
+	} else {
+		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,
+		                          mPosition.z);
+		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4)) {
+			mMapCollisionManager->unk8->unk5C &= ~0x8000;
+			mMapCollisionManager->unk8->unk5C &= ~0x4000;
+			if (mMapCollisionManager->unk8)
+				mMapCollisionManager->unk8->moveSRT(pos, mRotation, mScaling);
+		} else {
+			mMapCollisionManager->unk8->unk5C &= ~0x4000;
+			if (mMapCollisionManager->unk8)
+				mMapCollisionManager->unk8->moveTrans(pos);
+		}
+	}
+}
+
+void TMapObjBase::perform(u32 param_1, JDrama::TGraphics* graphics)
+{
+	if (gpMarDirector->isTalkModeNow() && !gpMarDirector->isDemoModeNow()) {
+		if (checkLiveFlag(LIVE_FLAG_DEAD))
+			return;
+
+		if (isActorType(0x4000003B))
+			return;
+
+		if (param_1 & 1) {
+			setGroundCollision();
+			param_1 &= ~1;
+		}
+
+		if ((param_1 & 2) && mMActor) {
+			if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK200)) {
+				if (getModel()->mShapePackets->unk30 != 0)
+					SMS_HideAllShapePacket(getModel());
+			} else {
+				if (getModel()->mShapePackets->unk30 == 0)
+					SMS_ShowAllShapePacket(getModel());
+			}
+		}
+
+		if (checkLiveFlag(LIVE_FLAG_UNK200))
+			return;
+
+		if (hasMapCollision())
+			param_1 &= ~2;
+	}
+
+	if (param_1 & 1) {
+		if (isStateTimerEngaged())
+			--mStateTimer;
+
+		if (unk100 == 0) {
+			if (!mMapObjData->mSound) {
+				u32 sound = TMapObjGeneral::mDefaultSound.unk0[unk100];
+				if (sound != 0xffffffff && SMSGetMSound()->gateCheck(sound))
+					MSoundSESystem::MSoundSE::startSoundActor(sound, &mPosition,
+					                                          0, nullptr, 0, 4);
+			} else {
+				u32 sound = mMapObjData->mSound->unk4->unk0[unk100];
+				if (sound != 0xffffffff && SMSGetMSound()->gateCheck(sound))
+					MSoundSESystem::MSoundSE::startSoundActor(sound, &mPosition,
+					                                          0, nullptr, 0, 4);
+			}
+		}
+		if (checkLiveFlag(LIVE_FLAG_DEAD))
+			dead();
+	}
+
+	if (checkLiveFlag(LIVE_FLAG_DEAD))
+		return;
+
+	if (param_1 & 8)
+		draw();
+
+	if (checkLiveFlag(LIVE_FLAG_UNK4000)) {
+		if (param_1 & 2)
+			param_1 &= ~2;
+		if (param_1 & 0x200)
+			param_1 &= ~0x200;
+		if (param_1 & 4)
+			param_1 &= ~4;
+	}
+
+	if (param_1 & 2) {
+		calc();
+		if (mMActor) {
+			if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK200)) {
+				if (getModel()->mShapePackets->unk30 != 0)
+					SMS_HideAllShapePacket(getModel());
+			} else {
+				if (getModel()->mShapePackets->unk30 == 0)
+					SMS_ShowAllShapePacket(getModel());
+			}
+		}
+		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK100)) {
+			param_1 &= ~2;
+		} else if (checkMapObjFlag(MAP_OBJ_FLAG_UNK200)) {
+			if (mMActor && mMActor->curAnmEndsNext(0, nullptr))
+				onMapObjFlag(MAP_OBJ_FLAG_UNK100);
+		}
+	}
+
+	if (param_1 & 0x200) {
+		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK1000))
+			param_1 &= ~0x200;
+		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK800))
+			param_1 &= ~0x200;
+	}
+
+	if ((param_1 & 4) && mMActor && checkMapObjFlag(MAP_OBJ_FLAG_UNK400)) {
+		getModel()->viewCalc();
+		param_1 &= ~4;
+		requestShadow();
+	}
+
+	TLiveActor::perform(param_1, graphics);
+}
 
 u32 TMapObjBase::getShadowType()
 {
@@ -420,8 +667,8 @@ void TMapObjBase::load(JSUMemoryInputStream& stream)
 		stream >> value;
 		setDamageHeight(value);
 		setAttackHeight(value);
-		unk64 &= ~HIT_FLAG_UNK4;
-		unk64 &= ~HIT_FLAG_UNK2;
+		offHitFlag(HIT_FLAG_UNK4);
+		offHitFlag(HIT_FLAG_UNK2);
 	}
 }
 

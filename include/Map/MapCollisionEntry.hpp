@@ -2,6 +2,7 @@
 #define MAP_MAP_COLLISION_ENTRY_HPP
 
 #include <dolphin/types.h>
+#include <dolphin/mtx.h>
 #include <JSystem/JGeometry.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <types.h>
@@ -48,7 +49,7 @@ public:
 	}
 	virtual void remove() { unk5C |= 1; }
 
-	void setMtx(MtxPtr);
+	void setMtx(MtxPtr mtx) { MTXCopy(mtx, unk20); }
 	void setAllActor(const TLiveActor*);
 	void setAllData(s16);
 	void setAllBGType(u16);
@@ -78,12 +79,12 @@ public:
 	}
 	void onFlag(u16 flag) { unk5C |= flag; }
 	void offFlag(u16 flag) { unk5C &= ~flag; }
-	u32 getUnk8() const { return unk8; }
+	s32 getUnk8() const { return unk8; }
 	u32 getUnkC() const { return unkC; }
 
 public:
 	/* 0x4 */ TBGCheckData* unk4;
-	/* 0x8 */ u32 unk8;
+	/* 0x8 */ s32 unk8;
 	/* 0xC */ u32 unkC;
 	/* 0x10 */ u32 unk10;
 	/* 0x14 */ Vec* unk14;
