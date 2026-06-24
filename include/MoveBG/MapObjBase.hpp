@@ -208,22 +208,16 @@ public:
 	void initUnique();
 	void setMatTableTex(J3DMaterialTable*);
 	void setMatTable(J3DMaterialTable*);
-	JPABaseEmitter* emitAndRotate(long, unsigned char,
-	                              const JGeometry::TVec3<f32>*) const;
-	JPABaseEmitter* emitAndScale(long, unsigned char,
-	                             const JGeometry::TVec3<f32>*,
+	JPABaseEmitter* emitAndRotate(s32, u8, const JGeometry::TVec3<f32>*) const;
+	JPABaseEmitter* emitAndScale(s32, u8, const JGeometry::TVec3<f32>*,
 	                             const JGeometry::TVec3<f32>&) const;
-	JPABaseEmitter* emitAndBindScale(long, unsigned char,
-	                                 const JGeometry::TVec3<f32>*,
+	JPABaseEmitter* emitAndBindScale(s32, u8, const JGeometry::TVec3<f32>*,
 	                                 const JGeometry::TVec3<f32>&) const;
-	JPABaseEmitter* emitAndScale(long, unsigned char,
-	                             const JGeometry::TVec3<f32>*) const;
-	JPABaseEmitter* emitAndRotateScale(long, unsigned char,
-	                                   const JGeometry::TVec3<f32>*) const;
-	JPABaseEmitter* emitAndSRT(long, unsigned char,
-	                           const JGeometry::TVec3<f32>*,
-	                           const JGeometry::TVec3<f32>&,
-	                           const JGeometry::TVec3<f32>&);
+	JPABaseEmitter* emitAndScale(s32, u8, const JGeometry::TVec3<f32>*) const;
+	void emitAndRotateScale(s32, u8, const JGeometry::TVec3<f32>*) const;
+	static void emitAndSRT(s32, u8, const JGeometry::TVec3<f32>*,
+	                       const JGeometry::TVec3<f32>&,
+	                       const JGeometry::TVec3<f32>&);
 	void emitColumnWater();
 	bool marioHipAttack() const;
 	bool marioHeadAttack() const;
@@ -232,10 +226,10 @@ public:
 	void actorIsOn(TLiveActor*) const;
 	void sendMsgToAll(u32);
 	void sendMsg(u32, u32);
-	void waterHitPlane(THitActor*);
-	void getWaterPos(THitActor*);
+	static BOOL waterHitPlane(THitActor*);
+	static const JGeometry::TVec3<f32>& getWaterPos(THitActor*);
 	static const JGeometry::TVec3<f32>& getWaterSpeed(THitActor*);
-	static void getWaterPlane(THitActor*);
+	static const TBGCheckData* getWaterPlane(THitActor*);
 	static int getWaterID(THitActor*);
 	f32 getDistance(const JGeometry::TVec3<f32>&) const;
 	f32 getDistanceXZ(const JGeometry::TVec3<f32>&) const;
@@ -253,7 +247,7 @@ public:
 	void calcReflectingVelocity(const TBGCheckData* wall, f32,
 	                            JGeometry::TVec3<f32>* velocity) const;
 	void makeObjMtxRotByAxis(const JGeometry::TVec3<f32>&, f32, MtxPtr) const;
-	void makeMtxRotByAxis(const JGeometry::TVec3<f32>&, f32, MtxPtr);
+	static void makeMtxRotByAxis(const JGeometry::TVec3<f32>&, f32, MtxPtr);
 	static void concatOnlyRotFromRight(MtxPtr, MtxPtr, MtxPtr);
 	static void concatOnlyRotFromLeft(MtxPtr, MtxPtr, MtxPtr);
 	void setRootMtxTrans();
@@ -318,8 +312,7 @@ public:
 	                     f32 vertical_speed) const;
 	void throwObjToOverhead(TMapObjBase*, f32, f32) const;
 	void checkOnManhole();
-	static void loadHideObjInfo(JSUMemoryInputStream&, long*, f32*, f32*,
-	                            long*);
+	static void loadHideObjInfo(JSUMemoryInputStream&, s32*, f32*, f32*, s32*);
 	static bool isDemo();
 	static bool isHideObj(THitActor*);
 	void getObjCollisionHeightOffset() const { }
@@ -354,13 +347,17 @@ public:
 	enum {
 		MAP_OBJ_FLAG_UNK1                  = 0x1,
 		MAP_OBJ_FLAG_UNK2                  = 0x2,
+		MAP_OBJ_FLAG_UNK4                  = 0x4,
 		MAP_OBJ_FLAG_UNK8                  = 0x8,
 		MAP_OBJ_FLAG_UNK10                 = 0x10,
 		MAP_OBJ_FLAG_UNK20                 = 0x20,
 		MAP_OBJ_FLAG_UNK40                 = 0x40,
 		MAP_OBJ_FLAG_UNK80                 = 0x80,
 		MAP_OBJ_FLAG_UNK100                = 0x100,
+		MAP_OBJ_FLAG_UNK200                = 0x200,
+		MAP_OBJ_FLAG_UNK400                = 0x400,
 		MAP_OBJ_FLAG_UNK800                = 0x800,
+		MAP_OBJ_FLAG_UNK1000               = 0x1000,
 		MAP_OBJ_FLAG_UNK2000               = 0x2000,
 		MAP_OBJ_FLAG_UNK4000               = 0x4000,
 		MAP_OBJ_FLAG_UNK8000               = 0x8000,
@@ -391,7 +388,7 @@ public:
 	/* 0xFC */ u16 mState;
 	/* 0xFE */ u16 unkFE;
 	/* 0x100 */ u16 unk100;
-	/* 0x102 */ u16 unk102;
+	/* 0x102 */ s16 unk102;
 	/* 0x104 */ int mStateTimer;
 	/* 0x108 */ f32 mYOffset; // TODO: offset from what to what?
 	/* 0x10C */ JGeometry::TVec3<f32> mInitialPosition;
