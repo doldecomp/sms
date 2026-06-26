@@ -81,6 +81,11 @@ public:
 	void offFlag(u16 flag) { unk5C &= ~flag; }
 	s32 getUnk8() const { return unk8; }
 	u32 getUnkC() const { return unkC; }
+	void setMtxAndSetUp(MtxPtr mtx)
+	{
+		setMtx(mtx);
+		setUp();
+	}
 
 public:
 	/* 0x4 */ TBGCheckData* unk4;
