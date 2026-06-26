@@ -31,6 +31,8 @@ enum THitMessageType {
 	HIT_MESSAGE_ATTACK           = 0xE, // TODO: attack -> touch?!
 	HIT_MESSAGE_SPRAYED_BY_WATER = 0xF,
 	HIT_MESSAGE_UNK10            = 0x10,
+	HIT_MESSAGE_UNK11            = 0x11,
+	HIT_MESSAGE_UNK12            = 0x12,
 };
 
 enum THitFlagBits {
