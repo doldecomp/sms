@@ -11,13 +11,15 @@ TMarineSnow::TMarineSnow(const char* name)
 
 void TMarineSnow::loadAfter()
 {
-	SMS_LoadParticle("/scene/others/marinesnow/ms_mare_marinsnow.jpa", 0x14B);
+	SMS_LoadParticle("/scene/others/marinesnow/ms_mare_marinsnow.jpa",
+	                 OTHERS_MARINESNOW_MS_MARE_MARINSNOW);
 }
 
 void TMarineSnow::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (param_1 & 2) {
-		mPosition.set(gpCamera->unk124);
-		gpMarioParticleManager->emitAndBindToPosPtr(0x14B, &mPosition, 1, this);
+		mPosition.set(gpCamera->getUnk124());
+		gpMarioParticleManager->emitAndBindToPosPtr(
+		    OTHERS_MARINESNOW_MS_MARE_MARINSNOW, &mPosition, 1, this);
 	}
 }
