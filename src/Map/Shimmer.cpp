@@ -47,27 +47,31 @@ void TShimmer::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 		Mtx effectMtx;
 		SMS_GetLightPerspectiveForEffectMtx(effectMtx);
-		// TODO: how do we make setEffectMtx not inline
+
 		unk48->getModelData()
 		    ->getMaterialNodePointer(0)
 		    ->getTexGenBlock()
 		    ->getTexMtx(1)
 		    ->setEffectMtx(effectMtx);
 
+		MtxPtr viewMtx = param_2->mViewMtx;
+
 		J3DTransformInfo info;
-		info.mScale.x    = 1.0f;
-		info.mScale.y    = 1.0f;
-		info.mScale.z    = 1.0f;
-		info.mRotation.x = 0.0f;
-		info.mRotation.y = 0.0f;
-		info.mRotation.z = 0.0f;
-		info.mTranslate  = mPosition;
+		info.mScale.x     = 1.0f;
+		info.mScale.y     = 1.0f;
+		info.mScale.z     = 1.0f;
+		info.mRotation.x  = 0.0f;
+		info.mRotation.y  = 0.0f;
+		info.mRotation.z  = 0.0f;
+		info.mTranslate.x = mPosition.x;
+		info.mTranslate.y = mPosition.y;
+		info.mTranslate.z = mPosition.z;
 		Mtx afStack_b0;
 		J3DGetTranslateRotateMtx(info, afStack_b0);
 		Mtx afStack_e0;
 		MTXScale(afStack_e0, mScaling.x, mScaling.y, mScaling.z);
 		Mtx afStack_80;
-		MTXInverse(param_2->mViewMtx, afStack_80);
+		MTXInverse(viewMtx, afStack_80);
 		MTXConcat(afStack_80, afStack_b0, afStack_80);
 		MTXConcat(afStack_80, afStack_e0, afStack_80);
 		unk48->setBaseTRMtx(afStack_80);
