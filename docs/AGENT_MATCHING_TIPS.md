@@ -232,6 +232,29 @@ The compiler hoists constant loads (`lfs`, `lfd` from SDA/SDA2) before loops. Th
 
 If the target hoists a constant (e.g., `lfd f28, @5181@sda21`) before a loop but our build does not, it means the compiler sees a different code structure. This is usually a symptom of a deeper structural mismatch in the loop body or inlined functions, not fixable by just moving the load.
 
+## Function-local statics with non-trivial initializers: `init$NNN` is the guard
+
+When a function-local `static` has a non-trivial initializer that has to run at first call — typically a constructor call like `static JGeometry::TVec3<f32> pos(1815.0f, 1500.0f, 1550.0f);` — MWCC emits **two symbols in `.sbss`**:
+
+- The variable itself (e.g. `pos$NNN`), sized for the type (a Vec is 12 bytes).
+- A 1-byte construction guard named `init$NNN` (note the literal name `init`, regardless of what your source variable is called).
+
+The function-entry codegen is:
+
+```asm
+lbz   r0, init$NNN@sda21       ; load the guard byte
+extsb. r0, r0                  ; sign-extend with dot (sets CR)
+bne   .L_skip_init             ; already constructed → skip
+... initializer code, writes to pos$NNN ...
+li    r0, 1
+stb   r0, init$NNN@sda21       ; mark constructed
+.L_skip_init:
+```
+
+So when the target shows an `init$NNN` byte that is loaded with `lbz` + `extsb.` and tested, **don't** model it as a plain `static bool foo;` in your source — model it as the *guard* for some other static local with a real constructor. Pick the source statement that produces the matching initializer body (commonly a `JGeometry::TVec3<f32>(x, y, z)` if the init code writes three floats).
+
+Aggregate-initialized PODs (`static Vec pos = { 1.0f, 2.0f, 3.0f };`) and zero-initialized statics (`static Vec pos;`) do NOT produce a guard — they sit in `.data` / `.bss` with no first-call check. The `init$NNN` pattern only appears when MWCC needs to run constructor code at first entry.
+
 ## Local Symbol Mangling: `@unnamed@` vs `static`
 
 MWCC mangles symbols inside anonymous namespaces with an `@unnamed@` prefix.

@@ -161,6 +161,11 @@ public:
 		JPAGetXYZRotateMtx(unk16C.x, unk16C.y, unk16C.z, unk124);
 	}
 
+	void setRotation(const JGeometry::TVec3<f32>& rot)
+	{
+		setRotation(rot.x, rot.y, rot.z);
+	}
+
 	void setParamColor(u8 r, u8 g, u8 b)
 	{
 		unk180.r = r;
