@@ -30,6 +30,13 @@ public:
 	int getDepth(int x, int y) const { return mMap[index(x, y)]; }
 	void setDepth(int x, int y, int v) const { mMap[index(x, y)] = v; }
 
+	bool isInArea(int x, int z)
+	{
+		if (x < 0 || mWidth <= x || z < 0 || mHeight <= z)
+			return false;
+		return true;
+	}
+
 public:
 	/* 0x0 */ int mWidth;
 	/* 0x4 */ int mHeight;
