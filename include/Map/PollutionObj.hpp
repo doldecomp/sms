@@ -11,7 +11,7 @@ public:
 	void initAreaInfo(TPollutionLayer*);
 	bool isCleaned() const;
 	void updateDepthMap();
-	void getDepthFromMap(int, int);
+	u8 getDepthFromMap(int, int);
 	virtual TJointObj* newJointObj() const { return new TPollutionObj; }
 
 public:
