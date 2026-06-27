@@ -285,7 +285,7 @@ public:
 	static void setJointScaleX(J3DJoint*, f32);
 	static void setJointScaleY(J3DJoint*, f32);
 	static void setJointScaleZ(J3DJoint*, f32);
-	void calcMap();
+	static void calcMap();
 	void getMapModel();
 	void getMapModelData();
 	void getMapMActor();

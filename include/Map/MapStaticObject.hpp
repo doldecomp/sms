@@ -58,8 +58,16 @@ public:
 
 class TMapModelActor : public THitActor {
 public:
-	TMapModelActor();
+	TMapModelActor(const char* name)
+	    : THitActor(name)
+	    , unk68(nullptr)
+	{
+	}
+
 	virtual void perform(u32, JDrama::TGraphics*);
+
+	// fabricated
+	void setActor(MActor* actor) { unk68 = actor; }
 
 public:
 	/* 0x68 */ MActor* unk68;

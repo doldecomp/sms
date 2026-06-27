@@ -67,7 +67,7 @@ public:
 
 public:
 	/* 0x40 */ MActorAnmData* unk40;
-	/* 0x44 */ Vec unk44;
+	/* 0x44 */ JGeometry::TVec3<f32> unk44;
 	/* 0x50 */ JDrama::TDrawBufObj* unk50;
 	/* 0x54 */ JDrama::TDrawBufObj* unk54;
 	/* 0x58 */ JDrama::TDrawBufObj* unk58;
