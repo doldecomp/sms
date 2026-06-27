@@ -6,6 +6,7 @@
 #include <Map/PollutionObj.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
+#include <JSystem/JKernel/JKRHeap.hpp>
 
 struct TPollutionLayerInfo {
 	/* 0x0 */ u16 unk0;
@@ -33,9 +34,15 @@ public:
 	                            MActorAnmData*);
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual u32 getJ3DModelDataFlag() const { return 0x11220000; }
-	virtual int getPlaneType() const;
-	virtual int getTexPosS(f32) const;
-	virtual int getTexPosT(f32) const;
+	virtual int getPlaneType() const { return 0; }
+	virtual int getTexPosS(f32 param_1) const
+	{
+		return unk5C.worldToTexSize(param_1 - unk38);
+	}
+	virtual int getTexPosT(f32 param_1) const
+	{
+		return unk5C.worldToTexSize(param_1 - unk40);
+	}
 	virtual void initLayerInfo(const TPollutionLayerInfo*);
 	virtual ResTIMG* getTexResource(const char*)
 	{
@@ -44,7 +51,13 @@ public:
 	virtual void stamp(u16, f32 x, f32 y, f32 z, f32 range);
 	virtual void stampModel(J3DModel*);
 	virtual bool isPolluted(f32, f32, f32) const;
-	virtual bool isInArea(f32, f32, f32) const;
+	virtual bool isInArea(f32 param_1, f32 param_2, f32 param_3) const
+	{
+		if (param_1 < unk38 || unk3C < param_1 || param_3 < unk40
+		    || unk44 < param_3)
+			return false;
+		return true;
+	}
 	virtual bool isInAreaSize(f32, f32, f32, f32) const { }
 
 	void action();
@@ -53,8 +66,8 @@ public:
 	void electric();
 	void spread();
 	void changeEffectScale(const JGeometry::TVec3<f32>&, f32);
-	void getPollutedPos(f32, JGeometry::TVec3<f32>*);
-	void getPollutedPosNear(f32, JGeometry::TVec3<f32>*);
+	bool getPollutedPos(f32, JGeometry::TVec3<f32>*);
+	bool getPollutedPosNear(f32, JGeometry::TVec3<f32>*);
 	void changeType(u16);
 	void initPollutionTex(const char*);
 	void initTex(const char*);
@@ -67,14 +80,14 @@ public:
 
 	static f32 mAreaMinRate;
 	static f32 mSpreadArea;
-	static u32 mSpreadFrequency;
+	static s32 mSpreadFrequency;
 	static f32 mFireArea;
-	static u32 mFireEffectWaitTime;
+	static s32 mFireEffectWaitTime;
 	static f32 mThunderArea;
 	static u32 mThunderScaleRate;
 	static f32 mGlassWallArea;
 	static u32 mGlassWallScaleRate;
-	static u32 mGlassWallEffectTime;
+	static s32 mGlassWallEffectTime;
 	static u32 mEffectTime;
 
 	// fabricated
@@ -94,7 +107,7 @@ public:
 	/* 0x40 */ f32 unk40;
 	/* 0x44 */ f32 unk44;
 	/* 0x48 */ u32 unk48;
-	/* 0x4C */ u32 unk4C;
+	/* 0x4C */ s32 unk4C;
 	/* 0x50 */ u8 unk50;
 	/* 0x54 */ u8* unk54;
 	/* 0x58 */ ResTIMG* unk58;
@@ -103,9 +116,9 @@ public:
 	/* 0x84 */ u8 unk84;
 	/* 0x85 */ u8 unk85;
 	/* 0x88 */ u32 unk88;
-	/* 0x8C */ u32 unk8C;
-	/* 0x90 */ u32 unk90;
-	/* 0x94 */ u32 unk94;
+	/* 0x8C */ s32 unk8C;
+	/* 0x90 */ s32 unk90;
+	/* 0x94 */ s32 unk94;
 	/* 0x98 */ JGeometry::TVec3<f32>* unk98;
 	/* 0x9C */ u32 unk9C;
 	/* 0xA0 */ u32 unkA0;
