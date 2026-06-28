@@ -99,7 +99,7 @@ public:
 
 class TPollutionTexStamp {
 public:
-	void pushTask(u8, u16, u16, u16, short);
+	void pushTask(u8, u16, u16, u16, s16);
 	void registerTexStamp(u16, u16, ResTIMG*);
 	TPollutionTexStamp();
 
@@ -155,6 +155,12 @@ public:
 	void onLayer(int);
 	void offLayer(int);
 	void init(int, u16, u16);
+
+	void pushStampTask(u16 param_1, u8 param_2, u16 param_3, u16 param_4,
+	                   u16 param_5, s16 param_6)
+	{
+		unk1C[param_1].pushTask(param_2, param_3, param_4, param_5, param_6);
+	}
 
 public:
 	/* 0x14 */ const TPollutionLayer** unk14;
