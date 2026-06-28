@@ -5,13 +5,29 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-int TPollutionPos::getEdgeDegree(int x, int y) const { }
+int TPollutionPos::getEdgeDegree(int x, int y) const
+{
+	if (!isInArea(x, y))
+		return 0;
+
+	int count = 0;
+	for (int dy = -1; dy <= 1; ++dy) {
+		int yy = y + dy;
+		for (int dx = -1; dx <= 1; ++dx) {
+			if (dx != 0 || dy != 0) {
+				if (mMap[index(x + dx, yy)] == 0xFF)
+					count += 1;
+			}
+		}
+	}
+	return count;
+}
 
 f32 TPollutionPos::getDepthWorld(int x, int y) const
 {
 	if (getDepth(x, y) < 0xff) {
 		f32 d = getDepth(x, y) * mVerticalScale;
-		return d + mVerticalOffset;
+		return mVerticalOffset + d;
 	} else {
 		return -9999.0f;
 	}
@@ -19,12 +35,15 @@ f32 TPollutionPos::getDepthWorld(int x, int y) const
 
 bool TPollutionPos::isSame(int x, int y, f32 param_3) const
 {
-	if (!isProhibit(x, y)) {
-		int uVar3 = getDepth(x, y);
+	if (!isInArea(x, y))
+		return false;
+
+	int d = getDepth(x, y);
+	if (d < 0xff) {
 		int uVar4 = mOwner->unk48;
 		int iVar1 = worldToDepth(param_3);
-		if (uVar3 - uVar4 <= iVar1 && iVar1 <= uVar3 + uVar4)
-			return 1;
+		if (d - uVar4 <= iVar1 && iVar1 <= d + uVar4)
+			return true;
 	}
 	return false;
 }

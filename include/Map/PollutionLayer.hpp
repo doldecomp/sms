@@ -58,7 +58,12 @@ public:
 			return false;
 		return true;
 	}
-	virtual bool isInAreaSize(f32, f32, f32, f32) const { }
+	virtual bool isInAreaSize(f32 x, f32 y, f32 z, f32 s) const
+	{
+		if (x < unk38 - s || unk3C + s < x || z < unk40 - s || unk44 + s < z)
+			return false;
+		return true;
+	}
 
 	void action();
 	void fire();
@@ -88,7 +93,7 @@ public:
 	static f32 mGlassWallArea;
 	static u32 mGlassWallScaleRate;
 	static s32 mGlassWallEffectTime;
-	static u32 mEffectTime;
+	static int mEffectTime;
 
 	// fabricated
 	const ResTIMG* getUnk58() const { return unk58; }
@@ -97,6 +102,7 @@ public:
 	u32 getPollutionDegree() const { return unk34; }
 	TPollutionObj* getObj(int i) { return (TPollutionObj*)getChild(i); }
 	void onUnk32(u32 flag) { unk32 |= flag; }
+	TPollutionPos& getUnk5C() { return unk5C; }
 
 public:
 	/* 0x30 */ u16 unk30;
@@ -123,7 +129,7 @@ public:
 	/* 0x9C */ u32 unk9C;
 	/* 0xA0 */ u32 unkA0;
 	/* 0xA4 */ u32 unkA4;
-	/* 0xA8 */ u32 unkA8;
+	/* 0xA8 */ s32 unkA8;
 };
 
 class TPollutionLayerWallBase : public TPollutionLayer {
@@ -141,8 +147,11 @@ public:
 
 class TPollutionLayerWallPlusX : public TPollutionLayerWallBase {
 public:
-	virtual int getPlaneType() const { }
-	virtual int getTexPosS(f32) const { }
+	virtual int getPlaneType() const { return 2; }
+	virtual int getTexPosS(f32 v) const
+	{
+		return unk5C.worldToTexSize(unk44 - v);
+	}
 	virtual bool isInArea(f32 x, f32 y, f32 z) const
 	{
 		if (z < unk40 || unk44 < z || y < unkAC || unkB0 < y)
@@ -171,7 +180,7 @@ public:
 
 class TPollutionLayerWallPlusZ : public TPollutionLayerWallBase {
 public:
-	virtual int getPlaneType() const { }
+	virtual int getPlaneType() const { return 4; }
 	virtual bool isInArea(f32 x, f32 y, f32 z) const
 	{
 		if (x < unk38 || unk3C < x || y < unkAC || unkB0 < y)
@@ -203,14 +212,14 @@ public:
 	virtual void initJointModel(TJointModelManager*, const char*,
 	                            MActorAnmData*);
 	virtual void perform(unsigned long, JDrama::TGraphics*);
-	virtual int getPlaneType() const { }
+	virtual int getPlaneType() const { return 6; }
 	virtual ResTIMG* getTexResource(const char*);
 
 	void draw() const;
 	void initGX() const;
 
-	static u32 mInterval;
-	static u32 mAlpha;
+	static f32 mInterval;
+	static u8 mAlpha;
 };
 
 #endif

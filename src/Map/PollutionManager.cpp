@@ -8,6 +8,9 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
+int TPollutionManager::mFlushTime = 200;
+u8 TPollutionManager::mEdgeAlpha  = 50;
+
 TPollutionManager* gpPollution;
 
 void TPollutionManager::stampModel(J3DModel* model)
