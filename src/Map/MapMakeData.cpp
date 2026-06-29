@@ -42,19 +42,19 @@ void TBGCheckData::setVertex(const JGeometry::TVec3<f32>& point1,
 
 void TMapCollisionMove::setList()
 {
-	TBGCheckData* data = unk4;
-	for (u32 i = unkC; i != 0; --i) {
-		gpMapCollisionData->addCheckDataToGrid(data, getUnk8());
-		++data;
+	TBGCheckData* checkDataIt = mCheckDatas;
+	for (u32 i = mCheckDataNum; i != 0; --i) {
+		gpMapCollisionData->addCheckDataToGrid(checkDataIt, getUnk8());
+		++checkDataIt;
 	}
 }
 
-void TMapCollisionBase::setCheckData(const f32* param_1, const s16* param_2,
-                                     TBGCheckData* param_3, int param_4)
+void TMapCollisionBase::setCheckData(const f32* vertices, const s16* indices,
+                                     TBGCheckData* param_3, int kind)
 {
-	const f32* p1raw = param_1 + param_2[0] * 3;
-	const f32* p2raw = param_1 + param_2[1] * 3;
-	const f32* p3raw = param_1 + param_2[2] * 3;
+	const f32* p1raw = vertices + indices[0] * 3;
+	const f32* p2raw = vertices + indices[1] * 3;
+	const f32* p3raw = vertices + indices[2] * 3;
 
 	JGeometry::TVec3<f32> p1(p1raw[0], p1raw[1], p1raw[2]);
 	JGeometry::TVec3<f32> p2(p2raw[0], p2raw[1], p2raw[2]);
@@ -62,7 +62,7 @@ void TMapCollisionBase::setCheckData(const f32* param_1, const s16* param_2,
 
 	param_3->setVertex(p1, p2, p3);
 
-	if (param_4 != 3)
+	if (kind != 3)
 		gpMapCollisionData->addCheckDataToGrid(param_3, getUnk8());
 }
 
@@ -81,93 +81,98 @@ void TBGCheckData::updateTrans(const JGeometry::TVec3<f32>& translate_by)
 
 void TMapCollisionBase::updateTrans(const JGeometry::TVec3<f32>& param_1)
 {
-	JGeometry::TVec3<f32> copy = param_1 - unk50;
+	JGeometry::TVec3<f32> delta = param_1 - mPrevTranslation;
 
-	TBGCheckData* it = unk4;
-	for (int i = 0; i < unkC; ++it, ++i) {
-		it->updateTrans(copy);
-		gpMapCollisionData->addCheckDataToGrid(it, getUnk8());
+	TBGCheckData* checkDataIt = mCheckDatas;
+	for (int i = 0; i < mCheckDataNum; ++checkDataIt, ++i) {
+		checkDataIt->updateTrans(delta);
+		gpMapCollisionData->addCheckDataToGrid(checkDataIt, mKind);
 	}
 
-	unk50 = param_1;
+	mPrevTranslation = param_1;
 }
 
-void TMapCollisionBase::updateVertexPos(f32*) { }
+void TMapCollisionBase::updateVertexPos(f32* vecs)
+{
+	MTXMultVecArray(unk20, mVertices, (Vec*)vecs, mVertexNum);
+}
 
 void TMapCollisionBase::updateCheckData(const f32* data)
 {
-	TBGCheckData* unk4it = unk4;
-	s16* it              = unk1C->unk8;
-	for (u32 i = unkC; i != 0; --i) {
-		setCheckData(data, it, unk4it, unk8);
-		it += 3;
-		unk4it += 1;
+	TBGCheckData* checkDataIt = mCheckDatas;
+	// BUG: one group of triangles assumed
+	s16* indexIt = mCollisionGroups[0].mIndices;
+	for (u32 i = mCheckDataNum; i != 0; --i) {
+		setCheckData(data, indexIt, checkDataIt, mKind);
+		indexIt += 3;
+		checkDataIt += 1;
 	}
 }
 
 void TMapCollisionBase::update()
 {
-	Vec vecs[350]; // TODO: size?
-	MTXMultVecArray(unk20, unk14, vecs, unk10);
-	updateCheckData((f32*)vecs);
+	f32 vecs[350 * 3];
+	updateVertexPos(vecs);
+	updateCheckData(vecs);
 }
 
-void TMapCollisionBase::initAllCheckData(s16 param_1, const f32* param_2,
-                                         u16 param_3, const TLiveActor* actor)
+void TMapCollisionBase::initAllCheckData(s16 default_additional_data,
+                                         const f32* vertices, u16 param_3,
+                                         const TLiveActor* actor)
 {
-	unk4 = gpMapCollisionData->unk28 + gpMapCollisionData->unk34;
-	unkC = 0;
+	mCheckDatas   = gpMapCollisionData->getCheckDataPoolTop();
+	mCheckDataNum = 0;
 
-	for (s16 i = 0; i < unk18; ++i) {
-		FabricatedUnk1CStruct* thing = &unk1C[i];
+	for (s16 i = 0; i < mCollisionGroupNum; ++i) {
+		TMapCollisionGroup* thing = &mCollisionGroups[i];
 
-		int sVar2  = thing->unk2;
-		int bgType = thing->unk0;
-		int uVar3  = thing->unk4 & 1;
+		int numTris            = thing->mTriangleNum;
+		int bgType             = thing->mBGType;
+		BOOL useAdditionalData = thing->mFlags & HAS_ADDITIONAL_DATA;
 
-		u8* unkCit    = thing->unkC;
-		u8* unk10it   = thing->unk10;
-		s16* unk8it   = thing->unk8;
-		s16* unk14ptr = thing->unk14;
+		u8* unkCit            = thing->unkC;
+		u8* unk10it           = thing->unk10;
+		s16* indexIt          = thing->mIndices;
+		s16* additionalDataIt = thing->mAdditionalDatas;
 
-		TBGCheckData* checkData = gpMapCollisionData->allocCheckData(sVar2);
-		for (int j = 0; j < sVar2; ++j) {
+		TBGCheckData* checkData = gpMapCollisionData->allocCheckData(numTris);
+		for (int j = 0; j < numTris; ++j) {
 			checkData->mBGType = bgType;
 			checkData->mActor  = actor;
 
 			if (param_3 & 2)
-				setCheckData(param_2, unk8it, checkData, 3);
+				setCheckData(vertices, indexIt, checkData, 3);
 			else
-				setCheckData(param_2, unk8it, checkData, 0);
+				setCheckData(vertices, indexIt, checkData, 0);
 
-			if (uVar3)
-				checkData->mData = unk14ptr[j];
+			if (useAdditionalData)
+				checkData->mData = additionalDataIt[j];
 			else
-				checkData->mData = param_1;
+				checkData->mData = default_additional_data;
 
 			checkData->unk6 = unkCit[j];
 			checkData->unk7 = unk10it[j];
 
-			unk8it += 3;
+			indexIt += 3;
 
 			++checkData;
-			++unkC;
+			++mCheckDataNum;
 		}
 	}
 }
 
 void TMapCollisionBase::initCheckData(s16 param_1, u16 param_2,
-                                      const TLiveActor* param_3)
+                                      const TLiveActor* owner_actor)
 {
-	unk50.x = unk20[0][3];
-	unk50.y = unk20[1][3];
-	unk50.z = unk20[2][3];
+	mPrevTranslation.x = unk20[0][3];
+	mPrevTranslation.y = unk20[1][3];
+	mPrevTranslation.z = unk20[2][3];
 
 	if (param_2 & 4) {
-		initAllCheckData(param_1, &unk14->x, param_2, param_3);
+		initAllCheckData(param_1, &mVertices->x, param_2, owner_actor);
 	} else {
-		Vec vecs[350]; // TODO: is size correct?
-		MTXMultVecArray(unk20, unk14, vecs, unk10);
-		initAllCheckData(param_1, &vecs[0].x, param_2, param_3);
+		f32 vecs[350 * 3];
+		updateVertexPos(vecs);
+		initAllCheckData(param_1, vecs, param_2, owner_actor);
 	}
 }

@@ -1044,16 +1044,16 @@ void* MSound::checkMarioVoicePlaying(u8 param_1)
 	return unk8C[iVar1];
 }
 
-u32 MSound::getWallSound(u32 param_1, f32 param_2)
+u32 MSound::getWallSound(u32 param_1, f32 velocity)
 {
-	if (param_2 < 15.0f) {
+	if (velocity < 15.0f) {
 		if (param_1 == 0x1C)
 			return MSD_SE_MA_WALL_COL_VERYSOFT;
 		else
 			return MSD_SE_MA_WALL_COL_CMN_VS;
 	}
 
-	if (param_2 < 30.0f) {
+	if (velocity < 30.0f) {
 		if (param_1 == 0x1C)
 			return MSD_SE_MA_WALL_COL_SOFT;
 		else

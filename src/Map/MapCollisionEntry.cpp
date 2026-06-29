@@ -15,8 +15,8 @@ void TMapCollisionBase::setVertexData(u32 param_1,
                                       const JGeometry::TVec3<f32>& param_3,
                                       const JGeometry::TVec3<f32>& param_4)
 {
-	unk4[param_1].setVertex(param_2, param_3, param_4);
-	gpMapCollisionData->addCheckDataToGrid(&unk4[param_1], getUnk8());
+	mCheckDatas[param_1].setVertex(param_2, param_3, param_4);
+	gpMapCollisionData->addCheckDataToGrid(&mCheckDatas[param_1], getUnk8());
 }
 
 static void* loadCollisionData(const char* param_1)
@@ -40,20 +40,20 @@ static void* loadCollisionData(const char* param_1)
 
 void TMapCollisionBase::setAllBGType(u16 param_1)
 {
-	for (int i = 0; i < unkC; ++i)
-		unk4[i].mBGType = param_1;
+	for (int i = 0; i < mCheckDataNum; ++i)
+		mCheckDatas[i].mBGType = param_1;
 }
 
 void TMapCollisionBase::setAllData(s16 param_1)
 {
-	for (int i = 0; i < unkC; ++i)
-		unk4[i].mData = param_1;
+	for (int i = 0; i < mCheckDataNum; ++i)
+		mCheckDatas[i].mData = param_1;
 }
 
 void TMapCollisionBase::setAllActor(const TLiveActor* param_1)
 {
-	for (int i = 0; i < unkC; ++i)
-		unk4[i].mActor = param_1;
+	for (int i = 0; i < mCheckDataNum; ++i)
+		mCheckDatas[i].mActor = param_1;
 }
 
 // fabricated
@@ -69,70 +69,75 @@ void TMapCollisionBase::init(const char* param_1, u16 param_2,
 {
 	CollisionDataHeader* hdr = (CollisionDataHeader*)loadCollisionData(param_1);
 
-	unk10 = hdr->unk0;
-	unk14 = (Vec*)((u8*)hdr + hdr->unk4);
-	unk18 = hdr->unk8;
-	unk1C = (FabricatedUnk1CStruct*)((u8*)hdr + hdr->unkC);
+	mVertexNum         = hdr->unk0;
+	mVertices          = (Vec*)((u8*)hdr + hdr->unk4);
+	mCollisionGroupNum = hdr->unk8;
+	mCollisionGroups   = (TMapCollisionGroup*)((u8*)hdr + hdr->unkC);
 
 	if (param_2 & 0x8000)
-		unk5C |= 0x8000;
+		onFlag(FLAG_UNK8000);
 
-	if (!(unk1C->unk4 & 0x8000)) {
-		for (s16 i = 0; i < unk18; ++i) {
-			unk1C[i].unk8  = (s16*)((int)unk1C[i].unk8 + (u8*)hdr);
-			unk1C[i].unkC  = (u8*)((int)unk1C[i].unkC + (u8*)hdr);
-			unk1C[i].unk10 = (u8*)((int)unk1C[i].unk10 + (u8*)hdr);
+	if (!(mCollisionGroups->mFlags & WAS_PATCHED)) {
+		for (s16 i = 0; i < mCollisionGroupNum; ++i) {
+			mCollisionGroups[i].mIndices
+			    = (s16*)((int)mCollisionGroups[i].mIndices + (u8*)hdr);
+			mCollisionGroups[i].unkC
+			    = (u8*)((int)mCollisionGroups[i].unkC + (u8*)hdr);
+			mCollisionGroups[i].unk10
+			    = (u8*)((int)mCollisionGroups[i].unk10 + (u8*)hdr);
 
-			if (unk1C[i].unk14)
-				unk1C[i].unk14 = (s16*)((int)unk1C[i].unk14 + (u8*)hdr);
+			if (mCollisionGroups[i].mAdditionalDatas)
+				mCollisionGroups[i].mAdditionalDatas
+				    = (s16*)((int)mCollisionGroups[i].mAdditionalDatas
+				             + (u8*)hdr);
 
-			unk1C[i].unk4 |= 0x8000;
+			mCollisionGroups[i].mFlags |= WAS_PATCHED;
 		}
 	}
 }
 
 void TMapCollisionStatic::setUp()
 {
-	if (unk4)
+	if (mCheckDatas)
 		return;
 
-	offFlag(1);
+	offFlag(FLAG_NEEDS_SETUP);
 
 	u16 thing = 0;
-	if (unk10 >= 0x15E)
+	if (mVertexNum >= 350)
 		thing |= 4;
-	TMapCollisionBase::initCheckData(-9999, thing, unk60);
+	TMapCollisionBase::initCheckData(-9999, thing, mOwnerActor);
 }
 
 void TMapCollisionStatic::init(const char* param_1, u16 param_2,
                                const TLiveActor* param_3)
 {
 	TMapCollisionBase::init(param_1, param_2, param_3);
-	unk8 = 0;
+	mKind = KIND_STATIC;
 	if (!(param_2 & 2)) {
 		initCheckData(-9999, param_2, param_3);
 	} else {
-		unk60 = param_3;
-		onFlag(1);
+		mOwnerActor = param_3;
+		onFlag(FLAG_NEEDS_SETUP);
 	}
 }
 
 TMapCollisionStatic::TMapCollisionStatic()
-    : unk60(nullptr)
+    : mOwnerActor(nullptr)
 {
 }
 
 void TMapCollisionMove::move()
 {
-	if (checkFlag(0x1))
+	if (checkFlag(FLAG_NEEDS_SETUP))
 		return;
 
-	if (checkFlag(0x4000)) {
+	if (checkFlag(FLAG_UNK4000)) {
 		setList();
 		return;
 	}
 
-	if (checkFlag(0x8000)) {
+	if (checkFlag(FLAG_UNK8000)) {
 		JGeometry::TVec3<f32> local_18;
 		local_18.x = unk20[0][3];
 		local_18.y = unk20[1][3];
@@ -145,10 +150,10 @@ void TMapCollisionMove::move()
 
 void TMapCollisionMove::moveTrans(const JGeometry::TVec3<f32>& param_1)
 {
-	if (checkFlag(0x1))
+	if (checkFlag(FLAG_NEEDS_SETUP))
 		return;
 
-	if (checkFlag(0x4000)) {
+	if (checkFlag(FLAG_UNK4000)) {
 		setList();
 		return;
 	}
@@ -159,13 +164,13 @@ void TMapCollisionMove::moveTrans(const JGeometry::TVec3<f32>& param_1)
 void TMapCollisionMove::init(u32 param_1, u16 bg_type, s16 data,
                              const TLiveActor* actor)
 {
-	unk8 = 1;
-	unkC = param_1;
-	unk4 = gpMapCollisionData->allocCheckData(getUnkC());
+	mKind         = 1;
+	mCheckDataNum = param_1;
+	mCheckDatas   = gpMapCollisionData->allocCheckData(getUnkC());
 	for (int i = 0; i < getUnkC(); ++i) {
-		unk4[i].mBGType = bg_type;
-		unk4[i].mData   = data;
-		unk4[i].mActor  = actor;
+		mCheckDatas[i].mBGType = bg_type;
+		mCheckDatas[i].mData   = data;
+		mCheckDatas[i].mActor  = actor;
 	}
 }
 
@@ -173,64 +178,64 @@ void TMapCollisionMove::init(const char* param_1, u16 param_2,
                              const TLiveActor* param_3)
 {
 	TMapCollisionBase::init(param_1, param_2, param_3);
-	unk8 = 1;
+	mKind = 1;
 	TMapCollisionBase::initCheckData(-9999, param_2 | 2, param_3);
-	onFlag(1);
+	onFlag(FLAG_NEEDS_SETUP);
 }
 
 TMapCollisionMove::TMapCollisionMove() { }
 
 void TMapCollisionWarp::setUp()
 {
-	if (!checkFlag(1))
+	if (!checkFlag(FLAG_NEEDS_SETUP))
 		return;
 
-	offFlag(1);
+	offFlag(FLAG_NEEDS_SETUP);
 
-	unk60 = gpMapCollisionData->getEntryID();
+	mEntryId = gpMapCollisionData->getEntryID();
 
-	if (checkFlag(0x8000)) {
+	if (checkFlag(FLAG_UNK8000)) {
 		JGeometry::TVec3<f32> local_18(unk20[0][3], unk20[1][3], unk20[2][3]);
 		TMapCollisionBase::updateTrans(local_18);
 	} else {
 		TMapCollisionBase::update();
 	}
 
-	unk64 = gpMapCollisionData->getEntryRelatedThing(unk60);
+	mEntrySize = gpMapCollisionData->getEntrySize(mEntryId);
 }
 
 void TMapCollisionWarp::setUpTrans(const JGeometry::TVec3<f32>& param_1)
 {
-	if (!checkFlag(1))
+	if (!checkFlag(FLAG_NEEDS_SETUP))
 		return;
 
-	offFlag(1);
+	offFlag(FLAG_NEEDS_SETUP);
 
-	unk60 = gpMapCollisionData->getEntryID();
+	mEntryId = gpMapCollisionData->getEntryID();
 	TMapCollisionBase::updateTrans(param_1);
-	unk64 = gpMapCollisionData->getEntryRelatedThing(unk60);
+	mEntrySize = gpMapCollisionData->getEntrySize(mEntryId);
 }
 
 void TMapCollisionWarp::remove()
 {
-	if (!(checkFlag(1) ? false : true))
+	if (!isSetUp())
 		return;
 
-	onFlag(1);
-	gpMapCollisionData->removeCheckListData(unk60, unk64);
+	onFlag(FLAG_NEEDS_SETUP);
+	gpMapCollisionData->removeCheckListData(mEntryId, mEntrySize);
 }
 
 void TMapCollisionWarp::init(const char* param_1, u16 param_2,
                              const TLiveActor* param_3)
 {
 	TMapCollisionBase::init(param_1, param_2, param_3);
-	unk8 = 2;
+	mKind = 2;
 	TMapCollisionBase::initCheckData(-9999, param_2 | 2, param_3);
-	onFlag(1);
+	onFlag(FLAG_NEEDS_SETUP);
 }
 
 TMapCollisionWarp::TMapCollisionWarp()
-    : unk60(0)
-    , unk64(0)
+    : mEntryId(0)
+    , mEntrySize(0)
 {
 }
