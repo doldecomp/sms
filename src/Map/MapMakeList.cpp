@@ -1,4 +1,5 @@
 #include <Map/MapCollisionData.hpp>
+#include <Map/MapCollisionEntry.hpp>
 #include <Map/MapData.hpp>
 #include <types.h>
 
@@ -20,15 +21,15 @@ u32 TMapCollisionData::getEntryID()
 }
 
 #pragma dont_inline on
-TBGCheckList* TMapCollisionData::allocCheckList(int type, int count)
+TBGCheckList* TMapCollisionData::allocCheckList(int kind, int count)
 {
 	TBGCheckList* result;
-	switch (type) {
-	case 1:
+	switch (kind) {
+	case TMapCollisionBase::KIND_MOVE:
 		result = &unk2C[unk3C];
 		unk3C -= count;
 		break;
-	case 2:
+	case TMapCollisionBase::KIND_WARP:
 		result = &unk30[unk40];
 		unk40 += count;
 		break;
@@ -41,16 +42,16 @@ TBGCheckList* TMapCollisionData::allocCheckList(int type, int count)
 }
 #pragma dont_inline off
 
-TBGCheckList* TMapCollisionData::getListRoot(int i, int j, int param_3,
+TBGCheckList* TMapCollisionData::getListRoot(int i, int j, int kind,
                                              int param_4) const
 {
 	TBGCheckList* result;
-	switch (param_3) {
-	case 2:
-	case 0:
+	switch (kind) {
+	case TMapCollisionBase::KIND_WARP:
+	case TMapCollisionBase::KIND_STATIC:
 		result = &unk14[j + i * unk8].unk0[param_4];
 		break;
-	case 1:
+	case TMapCollisionBase::KIND_MOVE:
 		result = &unk18[j + i * unk8].unk0[param_4];
 		break;
 	default:
@@ -62,10 +63,10 @@ TBGCheckList* TMapCollisionData::getListRoot(int i, int j, int param_3,
 
 #pragma dont_inline on
 static void addAfterPreNode(int param_1, int param_2, TBGCheckList* param_3,
-                            TBGCheckList* param_4, int param_5)
+                            TBGCheckList* param_4, int kind)
 {
 	param_4->setNext(param_3->getNext());
-	if (param_5 == 2) {
+	if (kind == TMapCollisionBase::KIND_WARP) {
 		TBGCheckListWarp* casted = static_cast<TBGCheckListWarp*>(param_4);
 		casted->unk10            = param_1;
 		casted->unk12            = param_2;
@@ -196,7 +197,7 @@ bool TMapCollisionData::getGridArea(const TBGCheckData* param_1, int param_2,
 	return true;
 }
 
-void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int param_2)
+void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int kind)
 {
 	int iVar7 = param_1->getPlaneType();
 	int local_ac;
@@ -207,8 +208,8 @@ void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int param_2)
 	                &local_b8)) {
 		for (int i = local_b4; i <= local_b8; ++i) {
 			for (int j = local_ac; j <= local_b0; ++j) {
-				if (param_2 == 1) {
-					TBGCheckList* list = getListRoot(i, j, param_2, iVar7);
+				if (kind == TMapCollisionBase::KIND_MOVE) {
+					TBGCheckList* list = getListRoot(i, j, kind, iVar7);
 					TBGCheckList* list2;
 					switch (iVar7) {
 					case 0:
@@ -222,16 +223,16 @@ void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int param_2)
 						break;
 					}
 
-					TBGCheckList* list3 = allocCheckList(param_2, 1);
+					TBGCheckList* list3 = allocCheckList(kind, 1);
 					list3->unk8         = param_1;
-					addAfterPreNode(j, i, list2, list3, param_2);
+					addAfterPreNode(j, i, list2, list3, kind);
 				} else if (iVar7 != 2) {
 					int iVar1 = (i + 1) * 1024.0f - mGridExtentY;
 					int iVar2 = (i * 1024.0f) - mGridExtentY;
 					int iVar3 = (j + 1) * 1024.0f - mGridExtentX;
 					int iVar4 = j * 1024.0f - mGridExtentX;
 					if (polygonIsInGrid(iVar4, iVar2, iVar3, iVar1, param_1)) {
-						TBGCheckList* list = getListRoot(i, j, param_2, iVar7);
+						TBGCheckList* list = getListRoot(i, j, kind, iVar7);
 						TBGCheckList* list2;
 						switch (iVar7) {
 						case 0:
@@ -244,9 +245,9 @@ void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int param_2)
 							list2 = addWallNode(list, param_1);
 							break;
 						}
-						TBGCheckList* list3 = allocCheckList(param_2, 1);
+						TBGCheckList* list3 = allocCheckList(kind, 1);
 						list3->unk8         = param_1;
-						addAfterPreNode(j, i, list2, list3, param_2);
+						addAfterPreNode(j, i, list2, list3, kind);
 					}
 				} else {
 					int iVar1 = (i + 1) * 1024.0f - mGridExtentY;
@@ -256,7 +257,7 @@ void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int param_2)
 					if (polygonIsInGrid(iVar4 - 80.0f, iVar2 - 80.0f,
 					                    iVar3 + 80.0f, iVar1 + 80.0f,
 					                    param_1)) {
-						TBGCheckList* list = getListRoot(i, j, param_2, iVar7);
+						TBGCheckList* list = getListRoot(i, j, kind, iVar7);
 						TBGCheckList* list2;
 						switch (iVar7) {
 						case 0:
@@ -270,9 +271,9 @@ void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int param_2)
 							break;
 						}
 
-						TBGCheckList* list3 = allocCheckList(param_2, 1);
+						TBGCheckList* list3 = allocCheckList(kind, 1);
 						list3->unk8         = param_1;
-						addAfterPreNode(j, i, list2, list3, param_2);
+						addAfterPreNode(j, i, list2, list3, kind);
 					}
 				}
 			}
@@ -315,7 +316,7 @@ void printData(const TBGCheckListWarp*, int) { }
 
 void printList(const TBGCheckList*) { }
 
-void TMapCollisionData::removeCheckListData(u16 param_1, s32 count)
+void TMapCollisionData::removeCheckListData(u16 start, s32 count)
 {
 	TBGCheckListWarp* curr;
 	int rangeEnd;
@@ -325,11 +326,11 @@ void TMapCollisionData::removeCheckListData(u16 param_1, s32 count)
 	if (!count)
 		return;
 
-	rangeStart = unk42[param_1];
-	rangeEnd   = unk42[param_1] + count;
+	rangeStart = unk42[start];
+	rangeEnd   = unk42[start] + count;
 
-	unk42[param_1] = 9999;
-	unk242         = param_1;
+	unk42[start] = 9999;
+	unk242       = start;
 
 	for (i = rangeStart; i < rangeEnd; ++i) {
 		curr = &unk30[i];

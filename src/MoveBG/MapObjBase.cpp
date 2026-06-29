@@ -89,7 +89,8 @@ void TMapObjBase::removeMapCollision()
 		return;
 
 	// TODO: fakematch fix properly!!!1111
-	if (mMapCollisionManager->unk8 && mMapCollisionManager->unk8->unk8)
+	if (mMapCollisionManager->unk8
+	    && mMapCollisionManager->unk8->mKind != TMapCollisionBase::KIND_STATIC)
 		if (mMapCollisionManager->unk8)
 			((volatile TMapCollisionManager*)mMapCollisionManager)
 			    ->unk8->remove();
@@ -463,7 +464,7 @@ void TMapObjBase::setGroundCollision()
 {
 	if (!mMapCollisionManager)
 		return;
-	if ((s32)mMapCollisionManager->unk8->unk8 != 1)
+	if (mMapCollisionManager->unk8->mKind != TMapCollisionBase::KIND_MOVE)
 		return;
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2)) {
@@ -482,12 +483,15 @@ void TMapObjBase::setGroundCollision()
 		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,
 		                          mPosition.z);
 		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4)) {
-			mMapCollisionManager->unk8->unk5C &= ~0x8000;
-			mMapCollisionManager->unk8->unk5C &= ~0x4000;
+			mMapCollisionManager->unk8->offFlag(
+			    TMapCollisionBase::FLAG_UNK8000);
+			mMapCollisionManager->unk8->offFlag(
+			    TMapCollisionBase::FLAG_UNK4000);
 			if (mMapCollisionManager->unk8)
 				mMapCollisionManager->unk8->moveSRT(pos, mRotation, mScaling);
 		} else {
-			mMapCollisionManager->unk8->unk5C &= ~0x4000;
+			mMapCollisionManager->unk8->offFlag(
+			    TMapCollisionBase::FLAG_UNK4000);
 			if (mMapCollisionManager->unk8)
 				mMapCollisionManager->unk8->moveTrans(pos);
 		}
