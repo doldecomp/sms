@@ -56,8 +56,9 @@ public:
 		return false;
 	}
 
-	f32 initHitActor(u32, u16, int, f32 attack_radius, f32 attack_height,
-	                 f32 damage_radius, f32 damage_height);
+	f32 initHitActor(u32 actor_type, u16 max_collisions, int hit_flags,
+	                 f32 attack_radius, f32 attack_height, f32 damage_radius,
+	                 f32 damage_height);
 	f32 calcEntryRadius();
 
 	// fabricated

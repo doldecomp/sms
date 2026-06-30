@@ -5,6 +5,7 @@
 
 class JPABaseEmitter;
 class J3DModelData;
+class J3DModel;
 class TGraphWeb;
 class MSSceneSE;
 class MActor;
@@ -23,37 +24,49 @@ public:
 	void initUnique();
 	void perform(u32, JDrama::TGraphics*);
 	void calcUnique(JPABaseEmitter*);
-	void getModel() const;
+	J3DModel* getModel() const;
 	J3DModelData* getModelData() const;
 
-	struct ActorDataTableEntry {
-		/* 0x0 */ const char* unk0;
-		/* 0x4 */ u32 unk4;
-		/* 0x8 */ u32 unk8;
-		/* 0xC */ f32 unkC;
-		/* 0x10 */ f32 unk10;
-		/* 0x14 */ f32 unk14;
-		/* 0x18 */ f32 unk18;
-		/* 0x1C */ const char* unk1C;
-		/* 0x20 */ const char* unk20;
+	struct TActorData {
+		/* 0x0 */ const char* mActorName;
+		/* 0x4 */ u32 mActorType;
+		/* 0x8 */ u32 mHitFlags;
+		/* 0xC */ f32 mAttackRadius;
+		/* 0x10 */ f32 mAttackHeight;
+		/* 0x14 */ f32 mDamageRadius;
+		/* 0x18 */ f32 mDamageHeight;
+		/* 0x1C */ const char* mIdxGroupName;
+		/* 0x20 */ const char* mModelFileName;
 		/* 0x24 */ u32 unk24;
-		/* 0x28 */ const char* unk28;
+		/* 0x28 */ const char* mColFileName;
 		/* 0x2C */ u32 unk2C;
-		/* 0x30 */ u32 unk30;
-		/* 0x34 */ const char* unk34;
-		/* 0x38 */ u32 unk38;
-		/* 0x3C */ u8 unk3C;
-		/* 0x40 */ u32 unk40;
+		/* 0x30 */ u32 mSoundId;
+		/* 0x34 */ const char* mParticlePath;
+		/* 0x38 */ u32 mParticleId;
+		/* 0x3C */ u8 mParticleType;
+
+		enum {
+			FLAG_IS_INDIRECT = 0x1,
+			FLAG_UNK2        = 0x2,
+			FLAG_UNK4        = 0x4,
+			FLAG_UNK8        = 0x8,
+			FLAG_UNK10       = 0x10,
+			FLAG_UNK20       = 0x20,
+			FLAG_UNK40       = 0x40,
+			FLAG_UNK80       = 0x80,
+		};
+
+		/* 0x40 */ u32 mFlags;
 	};
 
 	static f32 mEffectCoronaScale;
 
 public:
-	/* 0x68 */ const ActorDataTableEntry* unk68;
-	/* 0x6C */ const char* unk6C;
-	/* 0x70 */ MActor* unk70;
-	/* 0x74 */ TMapCollisionManager* unk74;
-	/* 0x78 */ u32 unk78;
+	/* 0x68 */ const TActorData* mActorData;
+	/* 0x6C */ const char* mActorName;
+	/* 0x70 */ MActor* mMActor;
+	/* 0x74 */ TMapCollisionManager* mCollisionManager;
+	/* 0x78 */ u32 mSoundId;
 };
 
 class TMapModelActor : public THitActor {

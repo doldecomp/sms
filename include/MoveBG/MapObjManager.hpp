@@ -1,6 +1,7 @@
 #ifndef MOVE_BG_MOVE_OBJ_MANAGER_HPP
 #define MOVE_BG_MOVE_OBJ_MANAGER_HPP
 
+#include <JSystem/JDrama/JDRDrawBufObj.hpp>
 #include <Strategic/LiveManager.hpp>
 
 class TMapObjBase;
@@ -64,16 +65,24 @@ public:
 	MActorAnmData* getUnk40() { return unk40; }
 	J3DMaterialTable* getUnk68() { return unk68; }
 	TMapObjBase* getObj(int i) { return (TMapObjBase*)unk18[i]; }
+	J3DDrawBuffer* getDrawBufferAfterIndirectOpa()
+	{
+		return mDrawBufferAfterIndirectOpa->getDrawBuffer();
+	}
+	J3DDrawBuffer* getDrawBufferAfterIndirectXlu()
+	{
+		return mDrawBufferAfterIndirectXlu->getDrawBuffer();
+	}
 
 public:
 	/* 0x40 */ MActorAnmData* unk40;
 	/* 0x44 */ JGeometry::TVec3<f32> unk44;
-	/* 0x50 */ JDrama::TDrawBufObj* unk50;
-	/* 0x54 */ JDrama::TDrawBufObj* unk54;
-	/* 0x58 */ JDrama::TDrawBufObj* unk58;
-	/* 0x5C */ JDrama::TDrawBufObj* unk5C;
-	/* 0x60 */ JDrama::TDrawBufObj* unk60;
-	/* 0x64 */ JDrama::TDrawBufObj* unk64;
+	/* 0x50 */ JDrama::TDrawBufObj* mDrawBufferSunOpa;
+	/* 0x54 */ JDrama::TDrawBufObj* mDrawBufferSunXlu;
+	/* 0x58 */ JDrama::TDrawBufObj* mDrawBufferShadowOpa;
+	/* 0x5C */ JDrama::TDrawBufObj* mDrawBufferShadowXlu;
+	/* 0x60 */ JDrama::TDrawBufObj* mDrawBufferAfterIndirectOpa;
+	/* 0x64 */ JDrama::TDrawBufObj* mDrawBufferAfterIndirectXlu;
 	/* 0x68 */ J3DMaterialTable* unk68;
 	/* 0x6C */ J3DMaterialTable* unk6C;
 	/* 0x70 */ J3DMaterialTable* unk70;

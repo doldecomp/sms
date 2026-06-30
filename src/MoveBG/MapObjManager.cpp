@@ -40,15 +40,15 @@ static TMapObjBase* newUniqueObjByName(const char*);
 
 void TMapObjManager::entryStaticDrawBufferShadow(J3DModel* model)
 {
-	j3dSys.setDrawBuffer(unk58->getDrawBuffer(), 0);
-	j3dSys.setDrawBuffer(unk5C->getDrawBuffer(), 1);
+	j3dSys.setDrawBuffer(mDrawBufferShadowOpa->getDrawBuffer(), 0);
+	j3dSys.setDrawBuffer(mDrawBufferShadowXlu->getDrawBuffer(), 1);
 	model->entry();
 }
 
 void TMapObjManager::entryStaticDrawBufferSun(J3DModel* model)
 {
-	j3dSys.setDrawBuffer(unk50->getDrawBuffer(), 0);
-	j3dSys.setDrawBuffer(unk54->getDrawBuffer(), 1);
+	j3dSys.setDrawBuffer(mDrawBufferSunOpa->getDrawBuffer(), 0);
+	j3dSys.setDrawBuffer(mDrawBufferSunXlu->getDrawBuffer(), 1);
 	model->entry();
 }
 
@@ -67,18 +67,20 @@ void TMapObjManager::loadAfter()
 
 void TMapObjManager::initDrawBuffer()
 {
-	unk50 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	mDrawBufferSunOpa = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
 	    "DrawBuf StaticMapObj SunOpa");
-	unk54 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	mDrawBufferSunXlu = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
 	    "DrawBuf StaticMapObj SunXlu");
-	unk58 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	mDrawBufferShadowOpa = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
 	    "DrawBuf StaticMapObj ShadowOpa");
-	unk5C = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	mDrawBufferShadowXlu = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
 	    "DrawBuf StaticMapObj ShadowXlu");
-	unk60 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	    "DrawBuf AfterIndirect Opa");
-	unk64 = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	    "DrawBuf AfterIndirect Xlu");
+	mDrawBufferAfterIndirectOpa
+	    = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	        "DrawBuf AfterIndirect Opa");
+	mDrawBufferAfterIndirectXlu
+	    = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	        "DrawBuf AfterIndirect Xlu");
 }
 
 J3DMaterialTable* TMapObjManager::loadMatTable(const char* name)
@@ -145,12 +147,12 @@ void TMapObjManager::load(JSUMemoryInputStream& stream)
 TMapObjManager::TMapObjManager(const char* name)
     : TMapObjBaseManager(name)
     , unk40(nullptr)
-    , unk50(nullptr)
-    , unk54(nullptr)
-    , unk58(nullptr)
-    , unk5C(nullptr)
-    , unk60(nullptr)
-    , unk64(nullptr)
+    , mDrawBufferSunOpa(nullptr)
+    , mDrawBufferSunXlu(nullptr)
+    , mDrawBufferShadowOpa(nullptr)
+    , mDrawBufferShadowXlu(nullptr)
+    , mDrawBufferAfterIndirectOpa(nullptr)
+    , mDrawBufferAfterIndirectXlu(nullptr)
     , unk68(nullptr)
     , unk6C(nullptr)
     , unk70(nullptr)

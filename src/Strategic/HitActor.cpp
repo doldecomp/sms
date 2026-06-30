@@ -34,18 +34,18 @@ void THitActor::perform(u32 param_1, JDrama::TGraphics* param_2)
 	JDrama::TActor::perform(param_1, param_2);
 }
 
-f32 THitActor::initHitActor(u32 param_1, u16 param_2, int param_3,
+f32 THitActor::initHitActor(u32 actor_type, u16 max_collisions, int hit_flags,
                             f32 attack_radius, f32 attack_height,
                             f32 damage_radius, f32 damage_height)
 {
-	mActorType   = param_1;
-	mColCapacity = param_2;
+	mActorType   = actor_type;
+	mColCapacity = max_collisions;
 	mCollisions  = new THitActor*[mColCapacity];
 
 	for (int i = 0; i < mColCapacity; ++i)
 		mCollisions[i] = nullptr;
 
-	unk64 |= param_3;
+	unk64 |= hit_flags;
 
 	mAttackRadius = attack_radius;
 	mAttackHeight = attack_height;

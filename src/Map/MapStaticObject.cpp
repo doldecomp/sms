@@ -1,27 +1,10 @@
 #include <Map/MapStaticObject.hpp>
-#include <Map/MapCollisionManager.hpp>
-#include <Map/MapCollisionEntry.hpp>
-#include <Map/MapModel.hpp>
-#include <Map/MapMirror.hpp>
-#include <Map/Map.hpp>
-#include <MoveBG/MapObjManager.hpp>
-#include <MoveBG/MapObjBase.hpp>
-#include <Camera/Camera.hpp>
-#include <Enemy/Conductor.hpp>
-#include <Enemy/Graph.hpp>
-#include <Strategic/MirrorActor.hpp>
-#include <System/MarDirector.hpp>
-#include <System/Particles.hpp>
-#include <System/EmitterViewObj.hpp>
-#include <MSound/MSoundScene.hpp>
-#include <MSound/MSound.hpp>
-#include <MSound/MSoundSE.hpp>
-#include <MarioUtil/MathUtil.hpp>
-#include <MarioUtil/TexUtil.hpp>
-#include <MarioUtil/ScreenUtil.hpp>
-#include <MarioUtil/MtxUtil.hpp>
-#include <M3DUtil/MActor.hpp>
-#include <M3DUtil/MActorUtil.hpp>
+
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
+
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JDrama/JDRDrawBufObj.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
@@ -29,34 +12,56 @@
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <JSystem/JParticle/JPAResourceManager.hpp>
+#include <System/MarDirector.hpp>
+#include <System/Particles.hpp>
+#include <System/EmitterViewObj.hpp>
+#include <Strategic/MirrorActor.hpp>
+#include <Strategic/Strategy.hpp>
+#include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/TexUtil.hpp>
+#include <MarioUtil/ScreenUtil.hpp>
+#include <MarioUtil/MtxUtil.hpp>
+#include <M3DUtil/MActor.hpp>
+#include <M3DUtil/MActorUtil.hpp>
+#include <Map/MapCollisionManager.hpp>
+#include <Map/MapCollisionEntry.hpp>
+#include <Map/MapModel.hpp>
+#include <Map/MapMirror.hpp>
+#include <Map/Map.hpp>
+#include <Map/Sky.hpp>
+#include <MoveBG/MapObjManager.hpp>
+#include <MoveBG/MapObjBase.hpp>
+#include <Camera/Camera.hpp>
+#include <Enemy/Conductor.hpp>
+#include <Enemy/Graph.hpp>
+#include <MSound/MSoundScene.hpp>
+#include <MSound/MSound.hpp>
+#include <MSound/MSoundSE.hpp>
 #include <stdio.h>
 
-// rogue includes needed for matching sinit & bss
-#include <MSound/MSSetSound.hpp>
-#include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
-
-static void dummy(Vec& v)
-{
-	v = (Vec) { 0.0f, 0.0f, 0.0f };
-	v = (Vec) { 1.0f, 1.0f, 1.0f };
-}
-
-static const TMapStaticObj::ActorDataTableEntry actor_data_table[] = {
+static const TMapStaticObj::TActorData actor_data_table[] = {
 	{ "SeaIndirect", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "SeaIndirect",
-	  0x11210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0, 0x41 },
+	  0x11210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  TMapStaticObj::TActorData::FLAG_UNK40
+	      | TMapStaticObj::TActorData::FLAG_IS_INDIRECT },
 
 	{ "ReflectParts", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "ReflectParts",
-	  0x10210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0, 0x10 },
+	  0x10210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  TMapStaticObj::TActorData::FLAG_UNK10 },
 
 	{ "ReflectSky", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "ReflectSky",
-	  0x10210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0, 0x8 },
+	  0x10210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  TMapStaticObj::TActorData::FLAG_UNK8 },
 
 	{ "sun_mirror", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "sun_mirror",
-	  0x10220000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0, 0x62 },
+	  0x10220000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  TMapStaticObj::TActorData::FLAG_UNK40
+	      | TMapStaticObj::TActorData::FLAG_UNK20
+	      | TMapStaticObj::TActorData::FLAG_UNK2 },
 
 	{ "sea", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, "マップグループ", "sea",
-	  0x10220000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0, 0x80 },
+	  0x10220000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  TMapStaticObj::TActorData::FLAG_UNK80 },
 
 	{ "falls", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr, 0x10210000,
 	  nullptr, 0x0, MSD_SE_OBJ_FALL_SMALL, 0x0, 0x0, 0x0, 0x0 },
@@ -66,10 +71,11 @@ static const TMapStaticObj::ActorDataTableEntry actor_data_table[] = {
 
 	{ "TopOfCorona", 0x40000024, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr,
 	  0x10210000, nullptr, 0x0, 0xFFFFFFFF, "/scene/mapObj/ms_coronasmoke.jpa",
-	  0x146, 0x1000000, 0x0 },
+	  0x146, 0x1, 0x0 },
 
 	{ "BiancoRiver", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "BiancoRiver",
-	  0x10210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0, 0x40 },
+	  0x10210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  TMapStaticObj::TActorData::FLAG_UNK40 },
 
 	{ "SoundObjRiver", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr,
 	  0x10210000, nullptr, 0x0, MSD_SE_EV_STREAM, 0x0, 0x0, 0x0, 0x0 },
@@ -79,38 +85,39 @@ static const TMapStaticObj::ActorDataTableEntry actor_data_table[] = {
 	  0x0 },
 
 	{ "BiancoAirWall", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr,
-	  0x10210000, "BiaAirWall", 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0, 0x2 },
+	  0x10210000, "BiaAirWall", 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  TMapStaticObj::TActorData::FLAG_UNK2 },
 
 	{ "BiancoBossEffectLight", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr,
 	  nullptr, 0x10210000, nullptr, 0x0, 0xFFFFFFFF,
-	  "/scene/map/map/ms_wmlin_light.jpa", 0x151, 0x1000000, 0x0 },
+	  "/scene/map/map/ms_wmlin_light.jpa", 0x151, 0x1, 0x0 },
 
 	{ "BiaWaterPollution", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr,
 	  "BiaWaterPollution", 0x11220000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
-	  0x40 },
+	  TMapStaticObj::TActorData::FLAG_UNK40 },
 
 	{ "riccoSea", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr,
 	  0x10210000, "riccoSea", 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0, 0x0 },
 
 	{ "riccoSeaPollutionS0", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr,
 	  "riccoSeaPollutionS0", 0x11210000, "riccoSeaPollutionS0", 0x0, 0xFFFFFFFF,
-	  0x0, 0x0, 0x0, 0x40 },
+	  0x0, 0x0, 0x0, TMapStaticObj::TActorData::FLAG_UNK40 },
 
 	{ "riccoSeaPollutionS1", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr,
 	  "riccoSeaPollutionS1", 0x11210000, "riccoSeaPollutionS1", 0x0, 0xFFFFFFFF,
-	  0x0, 0x0, 0x0, 0x40 },
+	  0x0, 0x0, 0x0, TMapStaticObj::TActorData::FLAG_UNK40 },
 
 	{ "riccoSeaPollutionS2", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr,
 	  "riccoSeaPollutionS2", 0x11210000, "riccoSeaPollutionS2", 0x0, 0xFFFFFFFF,
-	  0x0, 0x0, 0x0, 0x40 },
+	  0x0, 0x0, 0x0, TMapStaticObj::TActorData::FLAG_UNK40 },
 
 	{ "riccoSeaPollutionS3", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr,
 	  "riccoSeaPollutionS3", 0x11210000, "riccoSeaPollutionS3", 0x0, 0xFFFFFFFF,
-	  0x0, 0x0, 0x0, 0x40 },
+	  0x0, 0x0, 0x0, TMapStaticObj::TActorData::FLAG_UNK40 },
 
 	{ "riccoSeaPollutionS4", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr,
 	  "riccoSeaPollutionS4", 0x11210000, "riccoSeaPollutionS4", 0x0, 0xFFFFFFFF,
-	  0x0, 0x0, 0x0, 0x40 },
+	  0x0, 0x0, 0x0, TMapStaticObj::TActorData::FLAG_UNK40 },
 
 	{ "MareFalls", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr,
 	  0x10210000, nullptr, 0x0, MSD_SE_OBJ_FOUNTAIN, 0x0, 0x0, 0x0, 0x0 },
@@ -128,16 +135,21 @@ static const TMapStaticObj::ActorDataTableEntry actor_data_table[] = {
 	  0x0, 0x0 },
 
 	{ "Mare5ExGate", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "Mare5ExGate",
-	  0x10210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0, 0x40 },
+	  0x10210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  TMapStaticObj::TActorData::FLAG_UNK40 },
 
 	{ "MonteRiver", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "MonteRiver",
-	  0x10210000, "MonteRiver", 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0, 0x40 },
+	  0x10210000, "MonteRiver", 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  TMapStaticObj::TActorData::FLAG_UNK40 },
 
 	{ "IndirectObj", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "IndirectObj",
-	  0x11210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0, 0x41 },
+	  0x11210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  TMapStaticObj::TActorData::FLAG_UNK40
+	      | TMapStaticObj::TActorData::FLAG_IS_INDIRECT },
 
 	{ "TargetArrow", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "TargetArrow",
-	  0x10210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0, 0x4 },
+	  0x10210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  TMapStaticObj::TActorData::FLAG_UNK4 },
 
 	{ nullptr, 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr, 0x10210000,
 	  nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0, 0x0 },
@@ -147,75 +159,86 @@ f32 TMapStaticObj::mEffectCoronaScale;
 
 J3DModelData* TMapStaticObj::getModelData() const
 {
-	return unk70->getModel()->getModelData();
+	return mMActor->getModel()->getModelData();
 }
 
-void TMapStaticObj::getModel() const { }
+J3DModel* TMapStaticObj::getModel() const { return mMActor->getModel(); }
 
-void TMapStaticObj::calcUnique(JPABaseEmitter*) { }
+void TMapStaticObj::calcUnique(JPABaseEmitter* emitter)
+{
+	switch (mActorType) {
+	case 0x40000024:
+		if (emitter) {
+			JGeometry::TVec3<f32> scale(mEffectCoronaScale, mEffectCoronaScale,
+			                            mEffectCoronaScale);
+			emitter->setScale(scale);
+		}
+		break;
+	default:
+		break;
+	}
+}
 
 void TMapStaticObj::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (param_1 & 2) {
-		u32 sfx = unk78;
-		if (sfx != 0xffffffff) {
-			if (gpMSound->gateCheck(sfx))
-				MSoundSESystem::MSoundSE::startSoundActor(sfx, &mPosition, 0,
-				                                          nullptr, 0, 4);
-		}
+		if (mSoundId != -1)
+			SMSGetMSound()->startSoundActor(mSoundId, &mPosition, 0, nullptr, 0,
+			                                4);
 
 		JPABaseEmitter* emitter = nullptr;
-		if (unk68->unk3C == 1)
-			emitter = gpMarioParticleManager->emit(unk68->unk38, &mPosition,
-			                                       unk68->unk3C, this);
-		else if (unk68->unk3C == 3)
-			emitter = gpMarioParticleManager->emit(unk68->unk38, &mPosition,
-			                                       unk68->unk3C, this);
+		if (mActorData->mParticleType == 1)
+			emitter = gpMarioParticleManager->emit(
+			    mActorData->mParticleId, &mPosition, mActorData->mParticleType,
+			    this);
+		else if (mActorData->mParticleType == 3)
+			emitter = gpMarioParticleManager->emit(
+			    mActorData->mParticleId, &mPosition, mActorData->mParticleType,
+			    this);
 
-		if (mActorType == 0x40000024 && emitter) {
-			f32 scale = mEffectCoronaScale;
-			emitter->unk154.set(scale, scale, scale);
-			emitter->unk174.set(scale, scale, scale);
-		}
+		calcUnique(emitter);
 	}
 
-	if ((param_1 & 4) && (unk68->unk40 & 1)) {
+	if ((param_1 & 4) && (mActorData->mFlags & TActorData::FLAG_IS_INDIRECT)) {
 		Mtx afStack_7c;
 		SMS_GetLightPerspectiveForEffectMtx(afStack_7c);
 
-		unk70->getModel()
-		    ->getModelData()
+		getModelData()
 		    ->getMaterialNodePointer(0)
 		    ->getTexGenBlock()
 		    ->getTexMtx(1)
 		    ->setEffectMtx(afStack_7c);
 	}
 
-	if ((param_1 & 0x200) && ((unk68->unk40 & 0x8) || (unk68->unk40 & 0x20))) {
+	if ((param_1 & 0x200)
+	    && ((mActorData->mFlags & TActorData::FLAG_UNK8)
+	        || (mActorData->mFlags & TActorData::FLAG_UNK20))) {
 		param_1 &= ~0x200;
-		unk70->updateMatAnm();
+		mMActor->updateMatAnm();
 	}
 
-	if ((!(param_1 & 0x200) || !(unk68->unk40 & 0x10)
-	     || (gpMirrorModelManager->unk18 != -1 ? true : false))
-	    && unk70) {
+	if ((!(param_1 & 0x200) || !(mActorData->mFlags & TActorData::FLAG_UNK10)
+	     || gpMirrorModelManager->isUnk18Present())
+	    && mMActor) {
 		if (param_1 & 0x2) {
-			MsMtxSetXYZRPH(unk70->getModel()->getBaseTRMtx(), mPosition.x,
-			               mPosition.y, mPosition.z, mRotation.x, mRotation.y,
-			               mRotation.z);
-			unk70->getModel()->setBaseScale(mScaling);
+			MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x, mPosition.y,
+			               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
+			getModel()->setBaseScale(mScaling);
 		}
 
-		if ((param_1 & 0x200) && (unk68->unk40 & 0x80)) {
+		if ((param_1 & 0x200)
+		    && (mActorData->mFlags & TActorData::FLAG_UNK80)) {
 			J3DDrawBuffer* oldOpaBuf = j3dSys.getDrawBuffer(0);
 			J3DDrawBuffer* oldXluBuf = j3dSys.getDrawBuffer(1);
-			j3dSys.setDrawBuffer(gpMapObjManager->unk60->mDrawBuffer, 0);
-			j3dSys.setDrawBuffer(gpMapObjManager->unk64->mDrawBuffer, 1);
-			unk70->perform(param_1, param_2);
+			j3dSys.setDrawBuffer(
+			    gpMapObjManager->getDrawBufferAfterIndirectOpa(), 0);
+			j3dSys.setDrawBuffer(
+			    gpMapObjManager->getDrawBufferAfterIndirectXlu(), 1);
+			mMActor->perform(param_1, param_2);
 			j3dSys.setDrawBuffer(oldOpaBuf, 0);
 			j3dSys.setDrawBuffer(oldXluBuf, 1);
 		} else {
-			unk70->perform(param_1, param_2);
+			mMActor->perform(param_1, param_2);
 		}
 	}
 }
@@ -224,51 +247,43 @@ void TMapStaticObj::initUnique()
 {
 	switch (getActorType()) {
 	case 0x40000024:
-		if (gpMarDirector->mMap == 4)
+		if (gpMarDirector->getCurrentMap() == 4)
 			mEffectCoronaScale = 1.8f;
 		else
 			mEffectCoronaScale = 1.8f;
 		break;
 	}
 
-	if (strcmp(unk6C, "ReflectSky") == 0) {
-		JDrama::TNameRefGen::getInstance()->getRootNameRef()->search("空");
+	if (strcmp(mActorName, "ReflectSky") == 0) {
+		TSky* sky = JDrama::TNameRefGen::getInstance()->search<TSky>("空");
 
-		unk70->getModel()->getModelData()->setMaterialTable(
-		    gpMapObjManager->getUnk68(), J3DMatCopyFlag_All);
-		unk70->initDL();
+		getModelData()->setMaterialTable(gpMapObjManager->getUnk68(),
+		                                 J3DMatCopyFlag_All);
+		mMActor->initDL();
 
-		j3dSys.setDrawBuffer(
-		    ((JDrama::TDrawBufObj*)JDrama::TNameRefGen::getInstance()
-		         ->getRootNameRef()
-		         ->search("DrawBuf MirrorSky Opa"))
-		        ->getDrawBuffer(),
-		    0);
-		j3dSys.setDrawBuffer(
-		    ((JDrama::TDrawBufObj*)JDrama::TNameRefGen::getInstance()
-		         ->getRootNameRef()
-		         ->search("DrawBuf MirrorSky Xlu"))
-		        ->getDrawBuffer(),
-		    1);
+		JDrama::TDrawBufObj* dboOpa
+		    = JDrama::TNameRefGen::getInstance()->search<JDrama::TDrawBufObj>(
+		        "DrawBuf MirrorSky Opa");
+		j3dSys.setDrawBuffer(dboOpa->getDrawBuffer(), 0);
+		JDrama::TDrawBufObj* dboXlu
+		    = JDrama::TNameRefGen::getInstance()->search<JDrama::TDrawBufObj>(
+		        "DrawBuf MirrorSky Xlu");
+		j3dSys.setDrawBuffer(dboXlu->getDrawBuffer(), 1);
 
-		unk70->getModel()->calc();
-		unk70->getModel()->viewCalc();
-		unk70->getModel()->entry();
+		getModel()->calc();
+		getModel()->viewCalc();
+		getModel()->entry();
 	}
 }
 
 void TMapStaticObj::initMapCollision(const char* name)
 {
-	if ((unk68->unk40 & 2) == 0)
-		unk74 = new TMapCollisionManager(1, "/map/map", nullptr);
+	if ((mActorData->mFlags & TActorData::FLAG_UNK2) != 0)
+		mCollisionManager = new TMapCollisionManager(1, "/mapObj", nullptr);
 	else
-		unk74 = new TMapCollisionManager(1, "/mapObj", nullptr);
-	unk74->init(name, 0, nullptr);
-	Mtx mtx;
-	MsMtxSetTRS(mtx, mPosition.x, mPosition.y, mPosition.z, mRotation.x,
-	            mRotation.y, mRotation.z, mScaling.x, mScaling.y, mScaling.z);
-	unk74->unk8->setMtx(mtx);
-	unk74->unk8->setUp();
+		mCollisionManager = new TMapCollisionManager(1, "/map/map", nullptr);
+	mCollisionManager->init(name, 0, nullptr);
+	mCollisionManager->setUpUnk8TRS(mPosition, mRotation, mScaling);
 }
 
 #pragma dont_inline on
@@ -277,102 +292,109 @@ void TMapStaticObj::initModel(const char* name)
 	char buffer[256];
 
 	u32 uVar4 = 3;
-	if (unk68->unk40 & 0x40)
+	if (mActorData->mFlags & TActorData::FLAG_UNK40)
 		uVar4 &= ~1;
 
-	if (unk68->unk40 & 0x2) {
+	if (mActorData->mFlags & TActorData::FLAG_UNK2) {
 		snprintf(buffer, 256, "/common/map/%s.bmd", name);
-		unk70 = SMS_MakeMActorWithAnmData(buffer, gpMapObjManager->getUnk40(),
-		                                  uVar4, unk68->unk24);
-	} else if (unk68->unk40 & 0x4) {
+		mMActor = SMS_MakeMActorWithAnmData(buffer, gpMapObjManager->getUnk40(),
+		                                    uVar4, mActorData->unk24);
+	} else if (mActorData->mFlags & TActorData::FLAG_UNK4) {
 		snprintf(buffer, 256, "/scene/mapObj/%s.bmd", name);
-		unk70 = SMS_MakeMActorWithAnmData(
-		    buffer, gpMapObjManager->getMActorAnmData(), uVar4, unk68->unk24);
+		mMActor = SMS_MakeMActorWithAnmData(buffer,
+		                                    gpMapObjManager->getMActorAnmData(),
+		                                    uVar4, mActorData->unk24);
 	} else {
 		snprintf(buffer, 256, "/scene/map/map/%s.bmd", name);
-		unk70 = SMS_MakeMActorWithAnmData(
+		mMActor = SMS_MakeMActorWithAnmData(
 		    buffer, gpMap->getModelManager()->getMActorAnmData(), uVar4,
-		    unk68->unk24);
+		    mActorData->unk24);
 	}
 
-	TMapObjBase::startAllAnim(unk70, name);
+	TMapObjBase::startAllAnim(mMActor, name);
 }
 #pragma dont_inline off
 
 void TMapStaticObj::init(const char* name)
 {
-	unk6C = name;
-	const ActorDataTableEntry* entry;
-	for (int i = 0;; ++i) {
-		entry = &actor_data_table[i];
-		if (strcmp(name, actor_data_table[i].unk0))
+	mActorName = name;
+
+	int i = 0;
+	while (strcmp(name, actor_data_table[i].mActorName) != 0)
+		++i;
+
+	mActorData = &actor_data_table[i];
+
+	initHitActor(mActorData->mActorType, 5, mActorData->mHitFlags,
+	             mActorData->mAttackRadius, mActorData->mAttackHeight,
+	             mActorData->mDamageRadius, mActorData->mDamageHeight);
+
+	if (mActorData->mModelFileName != nullptr)
+		initModel(mActorData->mModelFileName);
+
+	if (mActorData->mColFileName != nullptr)
+		initMapCollision(mActorData->mColFileName);
+
+	mSoundId = mActorData->mSoundId;
+
+	if (mActorData->mParticlePath != nullptr) {
+		switch (mActorData->mParticleType) {
+		case 0:
 			break;
-	}
-	unk68 = entry;
-
-	initHitActor(unk68->unk4, 5, unk68->unk8, unk68->unkC, unk68->unk10,
-	             unk68->unk14, unk68->unk18);
-
-	if (unk68->unk20 != nullptr)
-		initModel(unk68->unk20);
-
-	if (unk68->unk28 != nullptr)
-		initMapCollision(unk68->unk28);
-
-	unk78 = unk68->unk30;
-
-	if (unk68->unk34 != nullptr) {
-		switch (unk68->unk3C) {
 		case 1:
-			SMS_LoadParticle(unk68->unk34, unk68->unk38);
+			SMS_LoadParticle(mActorData->mParticlePath,
+			                 mActorData->mParticleId);
+			break;
+		case 2:
 			break;
 		case 3:
-			SMS_LoadParticle(unk68->unk34, unk68->unk38);
+			SMS_LoadParticle(mActorData->mParticlePath,
+			                 mActorData->mParticleId);
 			break;
 		}
 	}
 
-	if (unk68->unk1C != nullptr) {
-		JDrama::TNameRef* ref
-		    = JDrama::TNameRefGen::getInstance()->getRootNameRef()->search(
-		        unk68->unk1C);
-		// TODO: insert into some list?
+	if (mActorData->mIdxGroupName != nullptr) {
+		TIdxGroupObj* group
+		    = JDrama::TNameRefGen::getInstance()->search<TIdxGroupObj>(
+		        mActorData->mIdxGroupName);
+		group->getChildren().push_back(this);
 	}
 
-	if (unk68->unk40 & 1) {
+	if (mActorData->mFlags & TActorData::FLAG_IS_INDIRECT) {
 		TScreenTexture* ref = JDrama::TNameRefGen::search<TScreenTexture>(
 		    "スクリーンテクスチャ");
 		const ResTIMG* img = ref->getTexture()->getTexInfo();
-		unk70->getModel()->getModelData()->getTexture()->setResTIMG(1, *img);
+		mMActor->getModel()->getModelData()->getTexture()->setResTIMG(1, *img);
 
-		SMS_ChangeTextureAll(unk70->getModel()->getModelData(), "indirectdummy",
-		                     *img);
+		SMS_ChangeTextureAll(mMActor->getModel()->getModelData(),
+		                     "indirectdummy", *img);
 	}
 	initUnique();
-	if (unk68->unk40 & 0x20)
-		TMirrorActor::entryMirrorDrawBufferAlways(unk70->getModel());
+	if (mActorData->mFlags & TActorData::FLAG_UNK20)
+		TMirrorActor::entryMirrorDrawBufferAlways(mMActor->getModel());
 }
 
 void TMapStaticObj::loadAfter()
 {
 	THitActor::loadAfter();
-	if (unk68 == nullptr)
-		init(unk6C);
+	if (mActorData == nullptr)
+		init(mActorName);
 }
 
 void TMapStaticObj::load(JSUMemoryInputStream& stream)
 {
 	THitActor::load(stream);
-	unk6C = stream.readString();
+	mActorName = stream.readString();
 }
 
 TMapStaticObj::TMapStaticObj(const char* name)
     : THitActor(name)
-    , unk68(nullptr)
-    , unk6C(nullptr)
-    , unk70(nullptr)
-    , unk74(nullptr)
-    , unk78(0xFFFFFFFF)
+    , mActorData(nullptr)
+    , mActorName(nullptr)
+    , mMActor(nullptr)
+    , mCollisionManager(nullptr)
+    , mSoundId(-1)
 {
 }
 
@@ -399,20 +421,32 @@ void TMapObjSoundGroup::perform(u32 param_1, JDrama::TGraphics* param_2)
 		JGeometry::TVec3<f32> local_c18[0x100];
 		JGeometry::TVec3<f32> local_c24;
 		unk14->unk0->getPoint(&local_c24);
-		for (int i = 1; i < unk14->unk8; ++i) {
-			Vec local_c30;
-			unk14->unk0[i].getPoint(&local_c30);
 
-			// TODO: camera?
-			JGeometry::TVec3<f32> local_c54; // gpCamera->unk124;
-			local_c18[i]
-			    = MsPerpendicFootToLineR(local_c24, local_c30, local_c54);
+		JGeometry::TVec3<f32> tmp;
+		JGeometry::TVec3<f32>& camPos = tmp;
 
-			if (unk14->unk0[i].unkC == 1 && i < unk14->unk8 - 1) {
-				unk14->unk0[i].getPoint(local_c24);
+		int count = 0;
+		for (int i = 1; i < unk14->getNodeNum(); ++i) {
+			JGeometry::TVec3<f32> local_c30;
+			unk14->getGraphNode(i).getPoint(&local_c30);
+
+			camPos.set(gpCamera->unk124);
+
+			JGeometry::TVec3<f32> tmp
+			    = MsPerpendicFootToLineR(local_c24, local_c30, camPos);
+			local_c18[count].set(tmp);
+
+			local_c24 = local_c30;
+
+			if (unk14->getGraphNode(i).getRailNode()->mConnectionNum == 1
+			    && i < unk14->getNodeNum() - 1) {
+				++i;
+				unk14->getGraphNode(i).getPoint(&local_c24);
 			}
+
+			++count;
 		}
-		unk10->frameLoop(unk18, local_c18, unk14->unk8);
+		unk10->frameLoop(unk18, local_c18, count);
 	}
 }
 
