@@ -45,7 +45,7 @@ f32 THitActor::initHitActor(u32 actor_type, u16 max_collisions, int hit_flags,
 	for (int i = 0; i < mColCapacity; ++i)
 		mCollisions[i] = nullptr;
 
-	unk64 |= hit_flags;
+	onHitFlag(hit_flags);
 
 	mAttackRadius = attack_radius;
 	mAttackHeight = attack_height;
@@ -66,6 +66,6 @@ THitActor::THitActor(const char* name)
     , mDamageRadius(0.0f)
     , mDamageHeight(0.0f)
     , mEntryRadius(0.0f)
-    , unk64(0)
+    , mHitFlags(0)
 {
 }

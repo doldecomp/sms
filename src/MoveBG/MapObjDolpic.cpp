@@ -58,7 +58,7 @@ void TMonumentShine::initMapObj()
 	}
 
 	SMS_InitPacket_OneTevKColor(getModel(), 0, GX_KCOLOR0, &unk138);
-	unk64 &= ~HIT_FLAG_NO_COLLISION;
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void TMonumentShine::hitByWater(THitActor* actor)
@@ -221,7 +221,7 @@ void TBellDolpic::initMapObj()
 	}
 
 	SMS_InitPacket_OneTevKColor(getModel(), 0, GX_KCOLOR0, &unk138);
-	unk64 &= ~HIT_FLAG_NO_COLLISION;
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void TBellDolpic::calcRootMatrix()
@@ -553,5 +553,5 @@ void TTurboNozzleDoor::touchPlayer(THitActor* player)
 	emitAndScale(57, 0, &unk138, scale);
 
 	removeMapCollision();
-	unk64 |= HIT_FLAG_NO_COLLISION;
+	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
