@@ -64,10 +64,10 @@ struct CollisionDataHeader {
 	/* 0xC */ u32 unkC;
 };
 
-void TMapCollisionBase::init(const char* param_1, u16 param_2,
+void TMapCollisionBase::init(const char* path, u16 param_2,
                              const TLiveActor* param_3)
 {
-	CollisionDataHeader* hdr = (CollisionDataHeader*)loadCollisionData(param_1);
+	CollisionDataHeader* hdr = (CollisionDataHeader*)loadCollisionData(path);
 
 	mVertexNum         = hdr->unk0;
 	mVertices          = (Vec*)((u8*)hdr + hdr->unk4);
