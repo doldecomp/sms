@@ -73,6 +73,7 @@ public:
 	{
 		return mDrawBufferAfterIndirectXlu->getDrawBuffer();
 	}
+	const JGeometry::TVec3<f32>& getUnk44() { return unk44; }
 
 public:
 	/* 0x40 */ MActorAnmData* unk40;
