@@ -25,19 +25,19 @@ static bool checkDistance(const JGeometry::TVec3<f32>& param_1, f32 param_2,
 	return true;
 }
 
-void TObjHitCheck::suffererIsInAttackArea(THitActor* param_1,
-                                          THitActor* param_2)
+void TObjHitCheck::suffererIsInAttackArea(THitActor* attacker,
+                                          THitActor* sufferer)
 {
-	if (param_1->mColCount >= param_1->mColCapacity)
+	if (attacker->mColCount >= attacker->mColCapacity)
 		return;
 
 	u32 i;
-	for (i = 0; i < param_1->mColCount; ++i)
-		if (param_1->mCollisions[i] == param_2)
+	for (i = 0; i < attacker->mColCount; ++i)
+		if (attacker->mCollisions[i] == sufferer)
 			return;
 
-	param_1->mCollisions[param_1->mColCount] = param_2;
-	++param_1->mColCount;
+	attacker->mCollisions[attacker->mColCount] = sufferer;
+	++attacker->mColCount;
 }
 
 void TObjHitCheck::checkActorsInList(THitActor* actor, TObjCheckList* list)
@@ -46,9 +46,9 @@ void TObjHitCheck::checkActorsInList(THitActor* actor, TObjCheckList* list)
 		THitActor* candidate = list->unk4;
 		list                 = list->unk0;
 
-		if (!actor->checkHitFlag(HIT_FLAG_UNK2)
-		    && !candidate->checkHitFlag(HIT_FLAG_UNK4)
-		    && actor->checkHitFlag2(candidate->getActorType() & 0xFFFF0000)
+		if (!actor->checkHitFlag(HIT_FLAG_CANNOT_ATTACK)
+		    && !candidate->checkHitFlag(HIT_FLAG_CANNOT_GET_HIT)
+		    && actor->canAttack(candidate)
 		    && checkDistance(actor->mPosition, actor->getAttackRadius(),
 		                     actor->getAttackHeight(), candidate->mPosition,
 		                     candidate->getDamageRadius(),
@@ -56,9 +56,9 @@ void TObjHitCheck::checkActorsInList(THitActor* actor, TObjCheckList* list)
 			suffererIsInAttackArea(actor, candidate);
 		}
 
-		if (!candidate->checkHitFlag(HIT_FLAG_UNK2)
-		    && !actor->checkHitFlag(HIT_FLAG_UNK4)
-		    && candidate->checkHitFlag2(actor->getActorType() & 0xFFFF0000)
+		if (!candidate->checkHitFlag(HIT_FLAG_CANNOT_ATTACK)
+		    && !actor->checkHitFlag(HIT_FLAG_CANNOT_GET_HIT)
+		    && candidate->canAttack(actor)
 		    && checkDistance(candidate->mPosition, candidate->getAttackRadius(),
 		                     candidate->getAttackHeight(), actor->mPosition,
 		                     actor->getDamageRadius(),
@@ -77,7 +77,7 @@ TObjHitCheck::checkWaterWithActorsInList(const JGeometry::TVec3<f32>& pos,
 		list                 = list->unk0;
 
 		if (candidate->checkActorType(ACTOR_TYPE_PLAYER)
-		    || candidate->checkHitFlag(HIT_FLAG_UNK4))
+		    || candidate->checkHitFlag(HIT_FLAG_CANNOT_GET_HIT))
 			continue;
 
 		if (!checkDistance(
@@ -121,8 +121,8 @@ void TObjHitCheck::checkWater()
 
 void TObjHitCheck::entryActor(THitActor* actor, TObjCheckList* head)
 {
-	if (!actor->checkHitFlag(HIT_FLAG_UNK2)
-	    || !actor->checkHitFlag(HIT_FLAG_UNK4)) {
+	if (!actor->checkHitFlag(HIT_FLAG_CANNOT_ATTACK)
+	    || !actor->checkHitFlag(HIT_FLAG_CANNOT_GET_HIT)) {
 		TObjCheckList* newList = &unk800[unk804];
 
 		newList->unk4 = actor;

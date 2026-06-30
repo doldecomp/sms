@@ -27,7 +27,7 @@ void TBaseNPC::initNpcObjCollision_(const TNpcInitInfo* init_info)
 	             init_info->mDamageHeight * mScaling.y);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 	if (uVar5 == 0)
-		onHitFlag(HIT_FLAG_UNK2);
+		onHitFlag(HIT_FLAG_CANNOT_ATTACK);
 }
 
 void TBaseNPC::execNpcObjCollision_()

@@ -231,7 +231,7 @@ void TYoshiTongue::movement()
 	default:
 		mAttackRadius = 300.0f;
 		calcEntryRadius();
-		offHitFlag(HIT_FLAG_UNK2);
+		offHitFlag(HIT_FLAG_CANNOT_ATTACK);
 		break;
 
 	case STATE_EXTENDING:

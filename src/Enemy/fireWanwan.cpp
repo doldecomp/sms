@@ -520,7 +520,7 @@ void TFireWanwanTailHit::init()
 	    .push_back(this);
 	initHitActor(0x10000028, 0, 0, 0.0f, 0.0f, 30.0f, 200.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
-	onHitFlag(HIT_FLAG_UNK2);
+	onHitFlag(HIT_FLAG_CANNOT_ATTACK);
 	mIsOnFire = false;
 }
 
