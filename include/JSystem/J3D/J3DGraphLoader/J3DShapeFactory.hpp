@@ -61,7 +61,7 @@ public:
 	J3DShape* create(int, J3DMdlDataFlag, GXVtxDescList*);
 	J3DShapeMtx* newShapeMtx(int, int) const;
 	J3DShapeDraw* newShapeDraw(int, int, J3DMdlDataFlag) const;
-	void allocVcdVatCmdBuffer(unsigned long);
+	void allocVcdVatCmdBuffer(u32);
 
 	u32 getMtxGroupNum(int no) const
 	{

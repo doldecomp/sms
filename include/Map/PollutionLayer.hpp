@@ -6,6 +6,7 @@
 #include <Map/PollutionObj.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
 
 struct TPollutionLayerInfo {
@@ -33,7 +34,11 @@ public:
 	virtual void initJointModel(TJointModelManager*, const char*,
 	                            MActorAnmData*);
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual u32 getJ3DModelDataFlag() const { return 0x11220000; }
+	virtual u32 getJ3DModelDataFlag() const
+	{
+		return J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		       | J3DMLF_UseUniqueMaterials | (2 << J3DMLF_TevStageNumShift);
+	}
 	virtual int getPlaneType() const { return 0; }
 	virtual int getTexPosS(f32 param_1) const
 	{

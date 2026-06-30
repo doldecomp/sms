@@ -94,7 +94,9 @@ void TSky::load(JSUMemoryInputStream& stream)
 	JDrama::TActor::load(stream);
 	unk44 = SMS_MakeMActorWithAnmData(
 	    "/scene/map/map/sky.bmd", gpMap->getModelManager()->getMActorAnmData(),
-	    3, 0x10220000);
+	    3,
+	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	        | (2 << J3DMLF_TevStageNumShift));
 
 	if (gpMapObjManager->unk68) {
 		unk44->getModel()->getModelData()->setMaterialTable(

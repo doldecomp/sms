@@ -34,7 +34,7 @@ void TMarioEffect::init(TMario* mario)
 
 	void* tobikomiBmd
 	    = JKRFileLoader::getGlbResource("/mario/04_tobikomi/04_tobikomi.bmd");
-	u32 flag = 0x10040000;
+	u32 flag = J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift);
 	for (int i = 0; i < 2; ++i) {
 		J3DModel* model = new J3DModel(
 		    J3DModelLoaderDataBase::load(tobikomiBmd, flag), 0, 1);
@@ -49,8 +49,11 @@ void TMarioEffect::init(TMario* mario)
 
 	void* waterboostBmd = JKRFileLoader::getGlbResource(
 	    "/mario/01_waterboost/01_waterboost.bmd");
-	J3DModel* waterboostModel = new J3DModel(
-	    J3DModelLoaderDataBase::load(waterboostBmd, 0x10040000), 0, 1);
+	J3DModel* waterboostModel
+	    = new J3DModel(J3DModelLoaderDataBase::load(
+	                       waterboostBmd, J3DMLF_MaterialPEFull
+	                                          | (4 << J3DMLF_TevStageNumShift)),
+	                   0, 1);
 	unk80->setModel(waterboostModel, 0);
 	unk80->setBck("01_waterboost_in");
 	unk80->setBtk("01_waterboost");

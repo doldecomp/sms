@@ -11,6 +11,7 @@
 #include <JSystem/JUtility/JUTNameTab.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <JSystem/JParticle/JPAResourceManager.hpp>
 
 // rogue includes needed for matching sinit & bss
@@ -150,14 +151,16 @@ void TJointCoin::initMapObj()
 	unk144 = new u16[unk13C];
 
 	if (isActorType(0x40000232)) {
-		unk138 = SMS_MakeMActorWithAnmData("/scene/mapObj/CoinFishRail.bmd",
-		                                   mManager->getMActorAnmData(), 3,
-		                                   0x10210000);
+		unk138 = SMS_MakeMActorWithAnmData(
+		    "/scene/mapObj/CoinFishRail.bmd", mManager->getMActorAnmData(), 3,
+		    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		        | (1 << J3DMLF_TevStageNumShift));
 		unk138->setBck("coinfishrail");
 	} else if (isActorType(0x400000c9)) {
-		unk138 = SMS_MakeMActorWithAnmData("/scene/mapObj/SandBirdRail.bmd",
-		                                   mManager->getMActorAnmData(), 3,
-		                                   0x10210000);
+		unk138 = SMS_MakeMActorWithAnmData(
+		    "/scene/mapObj/SandBirdRail.bmd", mManager->getMActorAnmData(), 3,
+		    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		        | (1 << J3DMLF_TevStageNumShift));
 		unk138->setBck("sandbirdrail");
 	}
 

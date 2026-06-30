@@ -98,9 +98,10 @@ void TTelesaManager::load(JSUMemoryInputStream& stream)
 {
 	unk38 = new TTelesaSaveLoadParams("/enemy/telesa.prm");
 
-	void* data = JKRGetResource("/scene/telesa/modoki.bmd");
-	mModokiTelesaModel
-	    = new SDLModelData(J3DModelLoaderDataBase::load(data, 0x11020000));
+	void* data         = JKRGetResource("/scene/telesa/modoki.bmd");
+	mModokiTelesaModel = new SDLModelData(J3DModelLoaderDataBase::load(
+	    data, J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+	              | (2 << J3DMLF_TevStageNumShift)));
 
 	TSmallEnemyManager::load(stream);
 }
@@ -961,63 +962,63 @@ void TMarioModokiTelesa::load(JSUMemoryInputStream& stream)
 
 	case 1:
 		if (void* data = JKRGetResource("/scene/mapObj/coin.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 2:
 		if (void* data = JKRGetResource("/scene/mapObj/coin_red.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 3:
 		if (void* data = JKRGetResource("/scene/mapObj/coin_blue.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 4:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitBanana.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 5:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitDurian.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 6:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitPapaya.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 7:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitPine.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 8:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitCoconut.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 9:
 		if (void* data = JKRGetResource("/scene/mapObj/mashroom1up.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 10:
 		if (void* data = JKRGetResource("/scene/mapObj/kibako.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 11:
 		if (void* data = JKRGetResource("/scene/mapObj/woodbarrel.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 12:
 		if (void* data = JKRGetResource("/scene/monteM/mom_model.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	}
 
@@ -1228,7 +1229,10 @@ TSmallEnemy* TKageMarioModokiManager::createEnemyInstance()
 void TKageMarioModokiManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "default.bmd", 0x11020000, 0 },
+		{ "default.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

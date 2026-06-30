@@ -436,8 +436,8 @@ void TDemoCannon::initMapObj()
 
 	void* res
 	    = JKRFileLoader::getGlbResource("/scene/mapObj/demoCannon_dom.bmd");
-	SDLModelData* sdlData
-	    = new SDLModelData(J3DModelLoaderDataBase::load(res, 0x10050000));
+	SDLModelData* sdlData = new SDLModelData(J3DModelLoaderDataBase::load(
+	    res, J3DMLF_MaterialPEFull | (5 << J3DMLF_TevStageNumShift)));
 
 	JUTNameTab* jointName = mMActor->getModel()->getModelData()->getJointName();
 
@@ -446,8 +446,8 @@ void TDemoCannon::initMapObj()
 	unk138              = parts;
 
 	res = JKRFileLoader::getGlbResource("/scene/mapObj/demoCannon_mario.bmd");
-	SDLModelData* sdlData2
-	    = new SDLModelData(J3DModelLoaderDataBase::load(res, 0x10010000));
+	SDLModelData* sdlData2 = new SDLModelData(J3DModelLoaderDataBase::load(
+	    res, J3DMLF_MaterialPEFull | (1 << J3DMLF_TevStageNumShift)));
 
 	parts  = new TSharedParts(this, 0, sdlData2, 3, "<TSharedParts>");
 	unk13C = parts;

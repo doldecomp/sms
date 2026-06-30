@@ -15,8 +15,11 @@ void TTalkCursor::loadAfter()
 
 	MActor* actor = unk10;
 	void* bmd     = JKRGetResource("/common/cursor_b/default.bmd");
-	actor->setModel(
-	    new J3DModel(J3DModelLoaderDataBase::load(bmd, 0x10020000), 0, 1), 0);
+	actor->setModel(new J3DModel(J3DModelLoaderDataBase::load(
+	                                 bmd, J3DMLF_MaterialPEFull
+	                                          | (2 << J3DMLF_TevStageNumShift)),
+	                             0, 1),
+	                0);
 	actor->setBck("icon_rot");
 	actor->setBrk("icon_flash");
 	unkC.on(0x204);

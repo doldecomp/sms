@@ -118,8 +118,10 @@ void TMapObjManager::load(JSUMemoryInputStream& stream)
 	if ((gpMarDirector->getCurrentMap() == 3
 	     && (gpMarDirector->unk7D == 1 || gpMarDirector->unk7D == 5))
 	    || gpMarDirector->getCurrentMap() == 0x1E) {
-		mSurfGessoModelData
-		    = SMS_MakeSDLModelData("/scene/mapObj/surfgeso.bmd", 0x10220000);
+		mSurfGessoModelData = SMS_MakeSDLModelData(
+		    "/scene/mapObj/surfgeso.bmd", J3DMLF_MaterialPEFull
+		                                      | J3DMLF_UseUniqueMaterials
+		                                      | (2 << J3DMLF_TevStageNumShift));
 		mRedGesso    = SMS_MakeMActorFromSDLModelData(mSurfGessoModelData,
 		                                              getMActorAnmData(), 3);
 		mYellowGesso = SMS_MakeMActorFromSDLModelData(mSurfGessoModelData,

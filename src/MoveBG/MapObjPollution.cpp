@@ -5,6 +5,7 @@
 #include <M3DUtil/MActorUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <stdio.h>
 
 // rogue includes needed for matching sinit & bss
@@ -26,7 +27,9 @@ void TPolluterBase::load(JSUMemoryInputStream& stream)
 	char buffer[64];
 	snprintf(buffer, 64, "/scene/mapObj/%s.bmd", unkF4);
 	unk138 = SMS_MakeMActorWithAnmData(
-	    buffer, gpMapObjManager->getMActorAnmData(), 3, 0x10210000);
+	    buffer, gpMapObjManager->getMActorAnmData(), 3,
+	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	        | (1 << J3DMLF_TevStageNumShift));
 	makeLowerStr(unkF4, buffer);
 	unk138->setBck(buffer);
 	unk138->setBpk(buffer);

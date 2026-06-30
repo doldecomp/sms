@@ -18,7 +18,8 @@ TMarioCap::TMarioCap(TMario* mario)
 	mMario = mario;
 
 	J3DModelData* maCap1ModelData = J3DModelLoaderDataBase::load(
-	    JKRFileLoader::getGlbResource("/mario/bmd/ma_cap1.bmd"), 0x10100000);
+	    JKRFileLoader::getGlbResource("/mario/bmd/ma_cap1.bmd"),
+	    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift));
 	// Might be an inlined function?
 	maCap1ModelData->getTexture()->setResTIMG(
 	    0,
@@ -28,7 +29,8 @@ TMarioCap::TMarioCap(TMario* mario)
 	unk10[0] = new J3DModel(maCap1ModelData, 0, 1);
 
 	J3DModelData* maCap3ModelData = J3DModelLoaderDataBase::load(
-	    JKRFileLoader::getGlbResource("/mario/bmd/ma_cap3.bmd"), 0x10100000);
+	    JKRFileLoader::getGlbResource("/mario/bmd/ma_cap3.bmd"),
+	    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift));
 	// I could see this being an inlined
 	maCap3ModelData->getTexture()->setResTIMG(
 	    0,
@@ -47,11 +49,12 @@ TMarioCap::TMarioCap(TMario* mario)
 
 	J3DModelData* diverHelmModelData = J3DModelLoaderDataBase::load(
 	    JKRFileLoader::getGlbResource("/mario/watergun2/body/diver_helm.bmd"),
-	    0x10100000);
+	    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift));
 	unk10[2] = new J3DModel(diverHelmModelData, 0, 1);
 
 	J3DModelData* maGlass1 = J3DModelLoaderDataBase::load(
-	    JKRFileLoader::getGlbResource("/mario/bmd/ma_glass1.bmd"), 0x10100000);
+	    JKRFileLoader::getGlbResource("/mario/bmd/ma_glass1.bmd"),
+	    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift));
 	unk10[3] = new J3DModel(maGlass1, 0, 1);
 
 	// Mmmh, nintendo plz? I hope this is forgotten and not a check to crash the

@@ -100,7 +100,10 @@ void TShimmer::load(JSUMemoryInputStream& stream)
 	stream.readString(modelName, 32);
 	char buffer[64];
 	snprintf(buffer, 64, "/scene/mapObj/%s.bmd", modelName);
-	unk44 = J3DModelLoaderDataBase::load(JKRGetResource(buffer), 0x11010000);
+	unk44 = J3DModelLoaderDataBase::load(JKRGetResource(buffer),
+	                                     J3DMLF_MaterialPEFull
+	                                         | J3DMLF_MaterialUseIndirect
+	                                         | (1 << J3DMLF_TevStageNumShift));
 	unk48 = new J3DModel(unk44, 0, 1);
 	snprintf(buffer, 64, "/scene/mapObj/%s.btk", modelName);
 	unk54 = (J3DAnmTextureSRTKey*)J3DAnmLoaderDataBase::load(

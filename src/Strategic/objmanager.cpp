@@ -1,5 +1,6 @@
 #include <Strategic/ObjManager.hpp>
 #include <Strategic/ObjModel.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <Strategic/HitActor.hpp>
 #include <System/TimeRec.hpp>
 #include <M3DUtil/MActor.hpp>
@@ -102,7 +103,11 @@ void TObjManager::createModelDataArrayBase(const TModelDataLoadEntry* entries,
 void TObjManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[2]
-	    = { { "default.bmd", 0x10210000, 0 }, { nullptr, 0, 0 } };
+	    = { { "default.bmd",
+		      J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		          | (1 << J3DMLF_TevStageNumShift),
+		      0 },
+		    { nullptr, 0, 0 } };
 	createModelDataArray(entry);
 }
 

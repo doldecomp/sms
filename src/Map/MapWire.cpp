@@ -6,6 +6,7 @@
 #include <types.h>
 
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <JSystem/JMath.hpp>
 #include <Camera/CubeMapTool.hpp>
 #include <Map/MapCollisionEntry.hpp>
@@ -466,9 +467,14 @@ void TMapWire::init(const TCubeGeneralInfo* cubeInfo)
 	mDrawAxes.rotate(M_PI / 2);
 
 	mStartFittingModel
-	    = SMS_CreatePartsModel("/common/map/WireFitting.bmd", 0x10210000);
+	    = SMS_CreatePartsModel("/common/map/WireFitting.bmd",
+	                           J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	                               | (1 << J3DMLF_TevStageNumShift));
 	mEndFittingModel
-	    = new J3DModel(mStartFittingModel->getModelData(), 0x10210000, 1);
+	    = new J3DModel(mStartFittingModel->getModelData(),
+	                   J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	                       | (1 << J3DMLF_TevStageNumShift),
+	                   1);
 
 	Mtx mtx;
 

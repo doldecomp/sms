@@ -131,15 +131,25 @@ void TModelWaterManager::load(JSUMemoryInputStream& stream)
 	unk5D44 = new JUTTexture(waterJumping);
 
 	unk5D48 = J3DModelLoaderDataBase::load(
-	    JKRGetResource("/mario/bmd/water_shadow_yuka.bmd"), 0x10210000);
+	    JKRGetResource("/mario/bmd/water_shadow_yuka.bmd"),
+	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	        | (1 << J3DMLF_TevStageNumShift));
 	unk5D4C = J3DModelLoaderDataBase::load(
-	    JKRGetResource("/mario/bmd/water_shadow_kabe.bmd"), 0x10210000);
+	    JKRGetResource("/mario/bmd/water_shadow_kabe.bmd"),
+	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	        | (1 << J3DMLF_TevStageNumShift));
 	unk5D50 = J3DModelLoaderDataBase::load(
-	    JKRGetResource("/mario/bmd/watermask.bmd"), 0x10210000);
+	    JKRGetResource("/mario/bmd/watermask.bmd"),
+	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	        | (1 << J3DMLF_TevStageNumShift));
 	unk5D54 = J3DModelLoaderDataBase::load(
-	    JKRGetResource("/mario/bmd/water_hide_yuka_s.bmd"), 0x10210000);
+	    JKRGetResource("/mario/bmd/water_hide_yuka_s.bmd"),
+	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	        | (1 << J3DMLF_TevStageNumShift));
 	unk5D58 = J3DModelLoaderDataBase::load(
-	    JKRGetResource("/mario/bmd/water_hide_kabe_s.bmd"), 0x10210000);
+	    JKRGetResource("/mario/bmd/water_hide_kabe_s.bmd"),
+	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	        | (1 << J3DMLF_TevStageNumShift));
 
 	unk5D5C = 128;
 	unk5D5D = 80;

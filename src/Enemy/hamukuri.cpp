@@ -203,7 +203,10 @@ static const char* anmlist[] = {
 void THamuKuriManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "default.bmd", 0x10220000, 0 },
+		{ "default.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
@@ -446,8 +449,9 @@ void TDoroHaneKuriManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 void TDoroHaneKuriManager::createHige()
 {
 	void* rawModelData = JKRGetResource("/scene/hanekuri/dorokuriHige.bmd");
-	SDLModelData* modelData = new SDLModelData(
-	    J3DModelLoaderDataBase::load(rawModelData, 0x10210000));
+	SDLModelData* modelData = new SDLModelData(J3DModelLoaderDataBase::load(
+	    rawModelData, J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	                      | (1 << J3DMLF_TevStageNumShift)));
 	unk74 = new TDoroHige((TLiveActor*)unk18[0], 7, modelData);
 }
 
@@ -625,8 +629,9 @@ void TDoroHamuKuriManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 void TDoroHamuKuriManager::createHige()
 {
 	void* rawModelData = JKRGetResource("/scene/dorokuri/dorokuriHige.bmd");
-	SDLModelData* modelData = new SDLModelData(
-	    J3DModelLoaderDataBase::load(rawModelData, 0x10210000));
+	SDLModelData* modelData = new SDLModelData(J3DModelLoaderDataBase::load(
+	    rawModelData, J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	                      | (1 << J3DMLF_TevStageNumShift)));
 	unk74 = new TDoroHige((TLiveActor*)unk18[0], 5, modelData);
 }
 

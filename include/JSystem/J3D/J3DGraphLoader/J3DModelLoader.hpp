@@ -3,6 +3,7 @@
 
 #include <types.h>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <JSystem/JUtility/JUTDataHeader.hpp>
 
 struct J3DModelInfoBlock : public JUTDataBlockHeader {
