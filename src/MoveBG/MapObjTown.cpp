@@ -356,7 +356,7 @@ void TDamageObj::init(u32 param_1)
 {
 	initHitActor(param_1, 1, 0x80000000, 50.0f * mScaling.x,
 	             100.0f * mScaling.y, 0.0f, 0.0f);
-	unk64 &= ~1;
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 	TMapObjBase::joinToGroup("マップグループ", this);
 }
 
@@ -368,14 +368,14 @@ void TDamageObj::load(JSUMemoryInputStream& stream)
 	if (strcmp(name, "normal") == 0) {
 		initHitActor(0x10000036, 1, 0x80000000, 50.0f * mScaling.x,
 		             100.0f * mScaling.y, 0.0f, 0.0f);
-		unk64 &= ~1;
+		offHitFlag(HIT_FLAG_NO_COLLISION);
 		TMapObjBase::joinToGroup("マップグループ", this);
 		return;
 	}
 	if (strcmp(name, "water") == 0) {
 		initHitActor(0x40000053, 1, 0x80000000, 50.0f * mScaling.x,
 		             100.0f * mScaling.y, 0.0f, 0.0f);
-		unk64 &= ~1;
+		offHitFlag(HIT_FLAG_NO_COLLISION);
 		TMapObjBase::joinToGroup("マップグループ", this);
 	}
 }

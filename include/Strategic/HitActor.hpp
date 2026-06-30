@@ -73,10 +73,13 @@ public:
 	}
 	THitActor* getCollision(int i) { return mCollisions[i]; }
 	u16 getColNum() { return mColCount; }
-	bool checkHitFlag(u32 flag) const { return unk64 & flag; }
-	bool checkHitFlag2(u32 flag) const { return unk64 & flag ? true : false; }
-	void onHitFlag(u32 flag) { unk64 |= flag; }
-	void offHitFlag(u32 flag) { unk64 &= ~flag; }
+	bool checkHitFlag(u32 flag) const { return mHitFlags & flag; }
+	bool checkHitFlag2(u32 flag) const
+	{
+		return mHitFlags & flag ? true : false;
+	}
+	void onHitFlag(u32 flag) { mHitFlags |= flag; }
+	void offHitFlag(u32 flag) { mHitFlags &= ~flag; }
 	f32 getAttackRadius() const { return mAttackRadius; }
 	f32 getAttackHeight() const { return mAttackHeight; }
 	f32 getDamageRadius() const { return mDamageRadius; }
@@ -129,7 +132,7 @@ public:
 	/* 0x58 */ f32 mDamageRadius;
 	/* 0x5C */ f32 mDamageHeight;
 	/* 0x60 */ f32 mEntryRadius;
-	/* 0x64 */ u32 unk64;
+	/* 0x64 */ u32 mHitFlags;
 };
 
 #endif

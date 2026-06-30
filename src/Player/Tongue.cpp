@@ -68,7 +68,7 @@ void TYoshiTongue::init(TYoshi* yoshi)
 	unkD4             = 0;
 
 	initHitActor(0x08000083U, 5U, 0x70000000, 1000.0f, 500.0f, 50.0f, 500.0f);
-	unk64 &= ~HIT_FLAG_NO_COLLISION;
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void TYoshiTongue::initInLoadAfter()
@@ -231,7 +231,7 @@ void TYoshiTongue::movement()
 	default:
 		mAttackRadius = 300.0f;
 		calcEntryRadius();
-		unk64 &= ~HIT_FLAG_UNK2;
+		offHitFlag(HIT_FLAG_UNK2);
 		break;
 
 	case STATE_EXTENDING:
