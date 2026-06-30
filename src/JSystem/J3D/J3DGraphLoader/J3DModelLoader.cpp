@@ -180,14 +180,14 @@ void J3DModelLoader::readInformation(const J3DModelInfoBlock* i_block,
                                      u32 i_flags)
 {
 	mpModelData->unkC = i_flags | i_block->mFlags;
-	switch (mpModelData->unkC & 0xF) {
-	case 0: // TODO: enum for mtxcalc type (and other load flags)
+	switch (mpModelData->unkC & J3DMLF_MtxCalcMask) {
+	case J3DMLF_MtxCalcBasic:
 		mpModelData->unk14 = new J3DMtxCalcBasic();
 		break;
-	case 1:
+	case J3DMLF_MtxCalcSoftImage:
 		mpModelData->unk14 = new J3DMtxCalcSoftimage();
 		break;
-	case 2:
+	case J3DMLF_MtxCalcMaya:
 		mpModelData->unk14 = new J3DMtxCalcMaya();
 		break;
 	}
@@ -323,12 +323,12 @@ void J3DModelLoader_v26::readMaterial(const J3DMaterialBlock* i_block,
 		mpModelData->mMaterialName = nullptr;
 	}
 	mpModelData->mMaterials = new J3DMaterial*[mpModelData->mMaterialNum];
-	if (i_flags & 0x200000) {
+	if (i_flags & J3DMLF_UseUniqueMaterials) {
 		mpModelData->unk38 = new (0x20) J3DMaterial[mpModelData->unk34];
 	} else {
 		mpModelData->unk38 = nullptr;
 	}
-	if (i_flags & 0x200000) {
+	if (i_flags & J3DMLF_UseUniqueMaterials) {
 		for (u16 i = 0; i < mpModelData->unk34; i++) {
 			factory.create(&mpModelData->unk38[i], i, i_flags);
 			mpModelData->unk38[i].unk18 = (u32)&mpModelData->unk38[i] >> 4;
@@ -337,7 +337,7 @@ void J3DModelLoader_v26::readMaterial(const J3DMaterialBlock* i_block,
 	for (u16 i = 0; i < mpModelData->mMaterialNum; i++) {
 		mpModelData->mMaterials[i] = factory.create(nullptr, i, i_flags);
 	}
-	if (i_flags & 0x200000) {
+	if (i_flags & J3DMLF_UseUniqueMaterials) {
 		for (u16 i = 0; i < mpModelData->mMaterialNum; i++) {
 			mpModelData->mMaterials[i]->unk18
 			    = (u32)&mpModelData->unk38[factory.getMaterialID(i)] >> 4;
@@ -364,12 +364,12 @@ void J3DModelLoader_v21::readMaterial_v21(const J3DMaterialBlock_v21* i_block,
 		mpModelData->mMaterialName = nullptr;
 	}
 	mpModelData->mMaterials = new J3DMaterial*[mpModelData->mMaterialNum];
-	if (i_flags & 0x200000) {
+	if (i_flags & J3DMLF_UseUniqueMaterials) {
 		mpModelData->unk38 = new (0x20) J3DMaterial[mpModelData->unk34];
 	} else {
 		mpModelData->unk38 = nullptr;
 	}
-	if (i_flags & 0x200000) {
+	if (i_flags & J3DMLF_UseUniqueMaterials) {
 		for (u16 i = 0; i < mpModelData->unk34; i++) {
 			factory.create(&mpModelData->unk38[i], i, i_flags);
 			mpModelData->unk38[i].unk18 = (u32)&mpModelData->unk38[i] >> 4;
@@ -378,7 +378,7 @@ void J3DModelLoader_v21::readMaterial_v21(const J3DMaterialBlock_v21* i_block,
 	for (u16 i = 0; i < mpModelData->mMaterialNum; i++) {
 		mpModelData->mMaterials[i] = factory.create(nullptr, i, i_flags);
 	}
-	if (i_flags & 0x200000) {
+	if (i_flags & J3DMLF_UseUniqueMaterials) {
 		for (u16 i = 0; i < mpModelData->mMaterialNum; i++) {
 			mpModelData->mMaterials[i]->unk18
 			    = (u32)&mpModelData->unk38[factory.getMaterialID(i)] >> 4;

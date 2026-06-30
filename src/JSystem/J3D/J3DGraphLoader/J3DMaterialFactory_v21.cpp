@@ -1,4 +1,5 @@
 #include <JSystem/J3D/J3DGraphLoader/J3DMaterialFactory_v21.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DColorBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DPEBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
@@ -96,10 +97,10 @@ J3DMaterial* J3DMaterialFactory_v21::create(J3DMaterial* mat, int idx,
 	u32 texGenFlag;
 	u32 indFlag;
 
-	colorFlag  = flag & 0x40000000 ? 0 : 1;
-	texGenFlag = flag & 0x04000000 ? 0 : 1;
-	peFlag     = flag & 0x10000000 ? 0 : 1;
-	indFlag    = flag & 0x01000000 ? 1 : 0;
+	colorFlag  = flag & J3DMLF_MaterialColorLightOn ? 0 : 1;
+	texGenFlag = flag & J3DMLF_MaterialTexGenFull ? 0 : 1;
+	peFlag     = flag & J3DMLF_MaterialPEFull ? 0 : 1;
+	indFlag    = flag & J3DMLF_MaterialUseIndirect ? 1 : 0;
 
 	if (mat == nullptr)
 		mat = new J3DMaterial();

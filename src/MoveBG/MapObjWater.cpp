@@ -9,6 +9,7 @@
 #include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 
@@ -27,9 +28,10 @@ void TMapObjSeaIndirect::perform(u32, JDrama::TGraphics*) { }
 
 void TMapObjSeaIndirect::init()
 {
-	unk44
-	    = SMS_MakeMActorWithAnmData("/common/map/UNDERwater.bmd",
-	                                gpMapObjManager->getUnk40(), 3, 0x11210000);
+	unk44 = SMS_MakeMActorWithAnmData(
+	    "/common/map/UNDERwater.bmd", gpMapObjManager->getUnk40(), 3,
+	    J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+	        | J3DMLF_UseUniqueMaterials | (1 << J3DMLF_TevStageNumShift));
 
 	unk44->setBtk("underwater");
 	TScreenTexture* ref
@@ -90,9 +92,10 @@ void TMapObjWaterFilter::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 void TMapObjWaterFilter::init()
 {
-	unk44
-	    = SMS_MakeMActorWithAnmData("/common/map/UnderWaterFilter.bmd",
-	                                gpMapObjManager->getUnk40(), 3, 0x11210000);
+	unk44 = SMS_MakeMActorWithAnmData(
+	    "/common/map/UnderWaterFilter.bmd", gpMapObjManager->getUnk40(), 3,
+	    J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+	        | J3DMLF_UseUniqueMaterials | (1 << J3DMLF_TevStageNumShift));
 }
 
 TMapObjWaterFilter::TMapObjWaterFilter(const char* name)

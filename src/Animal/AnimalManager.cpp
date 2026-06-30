@@ -1,5 +1,6 @@
 #include <Animal/AnimalManager.hpp>
 #include <Animal/AnimalSave.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <MSound/SoundEffects.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <MSound/MSSetSound.hpp>
@@ -13,7 +14,10 @@
 void TMewManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "kamome_high.bmd", 0x10210000, 1 },
+		{ "kamome_high.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  1 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

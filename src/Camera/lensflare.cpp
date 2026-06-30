@@ -35,7 +35,9 @@ TLensFlare::TLensFlare(const char* name)
 	char buf[0x100];
 	snprintf(buf, 0x100, "%s/%s", cSunVolumeName, "sun_lensfx.bmd");
 
-	unk10 = J3DModelLoaderDataBase::load(JKRGetResource(buf), 0x10020000);
+	unk10 = J3DModelLoaderDataBase::load(JKRGetResource(buf),
+	                                     J3DMLF_MaterialPEFull
+	                                         | (2 << J3DMLF_TevStageNumShift));
 	unk14 = new J3DModel(unk10, 0, 1);
 }
 

@@ -10956,8 +10956,9 @@ void TMapObjBase::initHoldData()
 {
 	if (getMapObjData()->mHold != nullptr) {
 		TMapObjHoldData* hold = getMapObjData()->mHold;
-		hold->unk8  = J3DModelLoaderDataBase::load(JKRGetResource(hold->unk0),
-		                                           0x240000);
+		hold->unk8            = J3DModelLoaderDataBase::load(
+            JKRGetResource(hold->unk0),
+            J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift));
 		hold->unkC  = new J3DModel(hold->unk8, 0, 1);
 		u16 idx     = hold->unk8->unkB0->getIndex(hold->unk4);
 		hold->unk10 = hold->unkC->getAnmMtx(idx);
@@ -11083,9 +11084,13 @@ void TMapObjBase::makeMActors()
 
 	mMActorKeeper = new TMActorKeeper(mManager, uVar6);
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8000))
-		mMActorKeeper->mModelLoaderFlags = 0x11220000;
+		mMActorKeeper->mModelLoaderFlags
+		    = J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		      | J3DMLF_UseUniqueMaterials | (2 << J3DMLF_TevStageNumShift);
 	else
-		mMActorKeeper->mModelLoaderFlags = 0x10220000;
+		mMActorKeeper->mModelLoaderFlags = J3DMLF_MaterialPEFull
+		                                   | J3DMLF_UseUniqueMaterials
+		                                   | (2 << J3DMLF_TevStageNumShift);
 
 	if (mMapObjData->mAnim) {
 		const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;

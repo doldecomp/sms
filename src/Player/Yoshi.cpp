@@ -86,10 +86,13 @@ void TYoshi::init(TMario* param_1)
 	unk72        = 0x180;
 	unk30        = new MActorAnmData;
 	unk30->init("yoshi", nullptr);
-	mActor               = new MActor(unk30);
-	void* yoshiModelRaw  = JKRGetResource("/yoshi/yoshi_model.bmd");
-	J3DModel* yoshiModel = new J3DModel(
-	    J3DModelLoaderDataBase::load(yoshiModelRaw, 0x10040000), 0, 1);
+	mActor              = new MActor(unk30);
+	void* yoshiModelRaw = JKRGetResource("/yoshi/yoshi_model.bmd");
+	J3DModel* yoshiModel
+	    = new J3DModel(J3DModelLoaderDataBase::load(
+	                       yoshiModelRaw, J3DMLF_MaterialPEFull
+	                                          | (4 << J3DMLF_TevStageNumShift)),
+	                   0, 1);
 	mActor->setModel(yoshiModel, 0);
 	mActor->initNormalMotionBlend();
 	mActor->offMakeDL();
@@ -107,10 +110,12 @@ void TYoshi::init(TMario* param_1)
 	    = (u8)mActor->getModel()->getModelData()->getJointName()->getIndex(
 	        "center");
 
-	mMirrorModels[0]
-	    = SMS_CreatePartsModel("/yoshi/yoshi_hand2_l.bmd", 0x10040000);
-	mMirrorModels[1]
-	    = SMS_CreatePartsModel("/yoshi/yoshi_hand2_r.bmd", 0x10040000);
+	mMirrorModels[0] = SMS_CreatePartsModel(
+	    "/yoshi/yoshi_hand2_l.bmd",
+	    J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift));
+	mMirrorModels[1] = SMS_CreatePartsModel(
+	    "/yoshi/yoshi_hand2_r.bmd",
+	    J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift));
 
 	{
 		J3DModelData* modelData = mMirrorModels[0]->getModelData();

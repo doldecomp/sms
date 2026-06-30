@@ -1263,7 +1263,10 @@ void TWaterGun::init()
 	void* fluddModelData
 	    = JKRFileLoader::getGlbResource("/mario/watergun2/body/wg_mdl1.bmd");
 	J3DModel* fluddModel = new J3DModel(
-	    J3DModelLoaderDataBase::load(fluddModelData, 0x10040000), 0, 1);
+	    J3DModelLoaderDataBase::load(fluddModelData,
+	                                 J3DMLF_MaterialPEFull
+	                                     | (4 << J3DMLF_TevStageNumShift)),
+	    0, 1);
 	mFluddModel->setModel(fluddModel, 0);
 
 	MTXCopy(mMario->mModel->unk8->getAnmMtx(mMario->mJointIdChnChest),
@@ -1303,8 +1306,10 @@ void TWaterGun::init()
 			void* nozzleModelData
 			    = JKRFileLoader::getGlbResource(nozzleBmdData.getBmdPath(i));
 			J3DModel* nozzleModel = new J3DModel(
-			    J3DModelLoaderDataBase::load(nozzleModelData, 0x10040000), 0,
-			    1);
+			    J3DModelLoaderDataBase::load(
+			        nozzleModelData,
+			        J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift)),
+			    0, 1);
 			mNozzleList[i]->unk380->setModel(nozzleModel, 0);
 
 			J3DModelData* modelData

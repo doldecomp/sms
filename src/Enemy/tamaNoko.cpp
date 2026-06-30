@@ -200,8 +200,9 @@ void TTamaNokoManager::loadAfter()
 void TTamaNokoManager::initSetEnemies()
 {
 	void* data = JKRGetResource("/scene/tamaNoko/tamaflower_model1.bmd");
-	SDLModelData* modelData
-	    = new SDLModelData(J3DModelLoaderDataBase::load(data, 0x10220000));
+	SDLModelData* modelData = new SDLModelData(J3DModelLoaderDataBase::load(
+	    data, J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	              | (2 << J3DMLF_TevStageNumShift)));
 
 	for (int i = 0; i < mObjNum; ++i) {
 		TTamaNoko* enemy = (TTamaNoko*)unk18[i];
@@ -215,7 +216,10 @@ TSmallEnemy* TTamaNokoManager::createEnemyInstance() { return new TTamaNoko; }
 void TTamaNokoManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "tamanoko_model1.bmd", 0x10220000, 0 },
+		{ "tamanoko_model1.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

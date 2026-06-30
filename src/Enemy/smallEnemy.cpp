@@ -25,6 +25,7 @@
 #include <JSystem/JMath.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <stdlib.h>
 
 // rogue includes needed for matching sinit & bss
@@ -109,7 +110,11 @@ TSmallEnemyManager::TSmallEnemyManager(const char* name)
 
 void TSmallEnemyManager::createModelData()
 {
-	static TModelDataLoadEntry entry = { "default.bmd", 0x10220000, 0 };
+	static TModelDataLoadEntry entry
+	    = { "default.bmd",
+		    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		        | (2 << J3DMLF_TevStageNumShift),
+		    0 };
 	createModelDataArray(&entry);
 }
 

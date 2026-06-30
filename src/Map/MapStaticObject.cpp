@@ -39,119 +39,134 @@
 #include <MSound/MSoundSE.hpp>
 #include <stdio.h>
 
+// Common J3DModelLoaderFlag combinations used by the actor data table below.
+// Spelled out as named constants to keep the table rows compact.
+enum {
+	kMdlF_PE1 = J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	            | (1 << J3DMLF_TevStageNumShift), // kMdlF_PE1
+	kMdlF_PE2 = J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	            | (2 << J3DMLF_TevStageNumShift), // kMdlF_PE2
+	kMdlF_IndPE1 = J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+	               | J3DMLF_UseUniqueMaterials
+	               | (1 << J3DMLF_TevStageNumShift), // kMdlF_IndPE1
+	kMdlF_IndPE2 = J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+	               | J3DMLF_UseUniqueMaterials
+	               | (2 << J3DMLF_TevStageNumShift), // kMdlF_IndPE2
+};
+
 static const TMapStaticObj::TActorData actor_data_table[] = {
 	{ "SeaIndirect", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "SeaIndirect",
-	  0x11210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  kMdlF_IndPE1, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
 	  TMapStaticObj::TActorData::FLAG_UNK40
 	      | TMapStaticObj::TActorData::FLAG_IS_INDIRECT },
 
 	{ "ReflectParts", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "ReflectParts",
-	  0x10210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  kMdlF_PE1, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
 	  TMapStaticObj::TActorData::FLAG_UNK10 },
 
 	{ "ReflectSky", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "ReflectSky",
-	  0x10210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  kMdlF_PE1, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
 	  TMapStaticObj::TActorData::FLAG_UNK8 },
 
 	{ "sun_mirror", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "sun_mirror",
-	  0x10220000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  kMdlF_PE2, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
 	  TMapStaticObj::TActorData::FLAG_UNK40
 	      | TMapStaticObj::TActorData::FLAG_UNK20
 	      | TMapStaticObj::TActorData::FLAG_UNK2 },
 
 	{ "sea", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, "マップグループ", "sea",
-	  0x10220000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  kMdlF_PE2, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
 	  TMapStaticObj::TActorData::FLAG_UNK80 },
 
-	{ "falls", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr, 0x10210000,
+	{ "falls", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr, kMdlF_PE1,
 	  nullptr, 0x0, MSD_SE_OBJ_FALL_SMALL, 0x0, 0x0, 0x0, 0x0 },
 
-	{ "fountain", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr,
-	  0x10210000, nullptr, 0x0, MSD_SE_OBJ_FOUNTAIN, 0x0, 0x0, 0x0, 0x0 },
+	{ "fountain", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr, kMdlF_PE1,
+	  nullptr, 0x0, MSD_SE_OBJ_FOUNTAIN, 0x0, 0x0, 0x0, 0x0 },
 
 	{ "TopOfCorona", 0x40000024, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr,
-	  0x10210000, nullptr, 0x0, 0xFFFFFFFF, "/scene/mapObj/ms_coronasmoke.jpa",
+	  kMdlF_PE1, nullptr, 0x0, 0xFFFFFFFF, "/scene/mapObj/ms_coronasmoke.jpa",
 	  0x146, 0x1, 0x0 },
 
 	{ "BiancoRiver", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "BiancoRiver",
-	  0x10210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  kMdlF_PE1, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
 	  TMapStaticObj::TActorData::FLAG_UNK40 },
 
 	{ "SoundObjRiver", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr,
-	  0x10210000, nullptr, 0x0, MSD_SE_EV_STREAM, 0x0, 0x0, 0x0, 0x0 },
+	  kMdlF_PE1, nullptr, 0x0, MSD_SE_EV_STREAM, 0x0, 0x0, 0x0, 0x0 },
 
 	{ "SoundObjWaterIntoWater", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr,
-	  nullptr, 0x10210000, nullptr, 0x0, MSD_SE_EV_STREAM_DOWN, 0x0, 0x0, 0x0,
+	  nullptr, kMdlF_PE1, nullptr, 0x0, MSD_SE_EV_STREAM_DOWN, 0x0, 0x0, 0x0,
 	  0x0 },
 
 	{ "BiancoAirWall", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr,
-	  0x10210000, "BiaAirWall", 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  kMdlF_PE1, "BiaAirWall", 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
 	  TMapStaticObj::TActorData::FLAG_UNK2 },
 
 	{ "BiancoBossEffectLight", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr,
-	  nullptr, 0x10210000, nullptr, 0x0, 0xFFFFFFFF,
+	  nullptr, kMdlF_PE1, nullptr, 0x0, 0xFFFFFFFF,
 	  "/scene/map/map/ms_wmlin_light.jpa", 0x151, 0x1, 0x0 },
 
 	{ "BiaWaterPollution", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr,
-	  "BiaWaterPollution", 0x11220000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
-	  TMapStaticObj::TActorData::FLAG_UNK40 },
+	  "BiaWaterPollution", kMdlF_IndPE2, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0,
+	  0x0, TMapStaticObj::TActorData::FLAG_UNK40 },
 
-	{ "riccoSea", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr,
-	  0x10210000, "riccoSea", 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0, 0x0 },
+	{ "riccoSea", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr, kMdlF_PE1,
+	  "riccoSea", 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0, 0x0 },
 
 	{ "riccoSeaPollutionS0", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr,
-	  "riccoSeaPollutionS0", 0x11210000, "riccoSeaPollutionS0", 0x0, 0xFFFFFFFF,
-	  0x0, 0x0, 0x0, TMapStaticObj::TActorData::FLAG_UNK40 },
+	  "riccoSeaPollutionS0", kMdlF_IndPE1, "riccoSeaPollutionS0", 0x0,
+	  0xFFFFFFFF, 0x0, 0x0, 0x0, TMapStaticObj::TActorData::FLAG_UNK40 },
 
 	{ "riccoSeaPollutionS1", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr,
-	  "riccoSeaPollutionS1", 0x11210000, "riccoSeaPollutionS1", 0x0, 0xFFFFFFFF,
-	  0x0, 0x0, 0x0, TMapStaticObj::TActorData::FLAG_UNK40 },
+	  "riccoSeaPollutionS1", kMdlF_IndPE1, "riccoSeaPollutionS1", 0x0,
+	  0xFFFFFFFF, 0x0, 0x0, 0x0, TMapStaticObj::TActorData::FLAG_UNK40 },
 
 	{ "riccoSeaPollutionS2", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr,
-	  "riccoSeaPollutionS2", 0x11210000, "riccoSeaPollutionS2", 0x0, 0xFFFFFFFF,
-	  0x0, 0x0, 0x0, TMapStaticObj::TActorData::FLAG_UNK40 },
+	  "riccoSeaPollutionS2", kMdlF_IndPE1, "riccoSeaPollutionS2", 0x0,
+	  0xFFFFFFFF, 0x0, 0x0, 0x0, TMapStaticObj::TActorData::FLAG_UNK40 },
 
 	{ "riccoSeaPollutionS3", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr,
-	  "riccoSeaPollutionS3", 0x11210000, "riccoSeaPollutionS3", 0x0, 0xFFFFFFFF,
-	  0x0, 0x0, 0x0, TMapStaticObj::TActorData::FLAG_UNK40 },
+	  "riccoSeaPollutionS3", kMdlF_IndPE1, "riccoSeaPollutionS3", 0x0,
+	  0xFFFFFFFF, 0x0, 0x0, 0x0, TMapStaticObj::TActorData::FLAG_UNK40 },
 
 	{ "riccoSeaPollutionS4", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr,
-	  "riccoSeaPollutionS4", 0x11210000, "riccoSeaPollutionS4", 0x0, 0xFFFFFFFF,
-	  0x0, 0x0, 0x0, TMapStaticObj::TActorData::FLAG_UNK40 },
+	  "riccoSeaPollutionS4", kMdlF_IndPE1, "riccoSeaPollutionS4", 0x0,
+	  0xFFFFFFFF, 0x0, 0x0, 0x0, TMapStaticObj::TActorData::FLAG_UNK40 },
 
 	{ "MareFalls", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr,
-	  0x10210000, nullptr, 0x0, MSD_SE_OBJ_FOUNTAIN, 0x0, 0x0, 0x0, 0x0 },
+	  kMdlF_PE1, nullptr, 0x0, MSD_SE_OBJ_FOUNTAIN, 0x0, 0x0, 0x0, 0x0 },
 
 	{ "mareSeaPollutionS0", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr,
-	  "mareSeaPollutionS0", 0x10210000, "mareSeaPollutionS0", 0x0, 0xFFFFFFFF,
+	  "mareSeaPollutionS0", kMdlF_PE1, "mareSeaPollutionS0", 0x0, 0xFFFFFFFF,
 	  0x0, 0x0, 0x0, 0x0 },
 
 	{ "mareSeaPollutionS12", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr,
-	  "mareSeaPollutionS12", 0x10210000, "mareSeaPollutionS12", 0x0, 0xFFFFFFFF,
+	  "mareSeaPollutionS12", kMdlF_PE1, "mareSeaPollutionS12", 0x0, 0xFFFFFFFF,
 	  0x0, 0x0, 0x0, 0x0 },
 
 	{ "mareSeaPollutionS34567", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr,
-	  nullptr, 0x10210000, "mareSeaPollutionS34567", 0x0, 0xFFFFFFFF, 0x0, 0x0,
+	  nullptr, kMdlF_PE1, "mareSeaPollutionS34567", 0x0, 0xFFFFFFFF, 0x0, 0x0,
 	  0x0, 0x0 },
 
 	{ "Mare5ExGate", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "Mare5ExGate",
-	  0x10210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  kMdlF_PE1, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
 	  TMapStaticObj::TActorData::FLAG_UNK40 },
 
 	{ "MonteRiver", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "MonteRiver",
-	  0x10210000, "MonteRiver", 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  kMdlF_PE1, "MonteRiver", 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
 	  TMapStaticObj::TActorData::FLAG_UNK40 },
 
 	{ "IndirectObj", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "IndirectObj",
-	  0x11210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  kMdlF_IndPE1, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
 	  TMapStaticObj::TActorData::FLAG_UNK40
 	      | TMapStaticObj::TActorData::FLAG_IS_INDIRECT },
 
 	{ "TargetArrow", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "TargetArrow",
-	  0x10210000, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
+	  kMdlF_PE1, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
 	  TMapStaticObj::TActorData::FLAG_UNK4 },
 
-	{ nullptr, 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr, 0x10210000,
+	{ nullptr, 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr, kMdlF_PE1,
 	  nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0, 0x0 },
 };
 

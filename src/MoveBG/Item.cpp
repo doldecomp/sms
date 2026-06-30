@@ -30,6 +30,7 @@
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/JParticle/JPAResourceManager.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -789,7 +790,9 @@ void TShine::kill()
 void TShine::makeMActors()
 {
 	mMActorKeeper                    = new TMActorKeeper(mManager, 1);
-	mMActorKeeper->mModelLoaderFlags = 0x10220000;
+	mMActorKeeper->mModelLoaderFlags = J3DMLF_MaterialPEFull
+	                                   | J3DMLF_UseUniqueMaterials
+	                                   | (2 << J3DMLF_TevStageNumShift);
 	MActor* result;
 	if (TFlagManager::smInstance->getShineFlag(mEventId)
 	    && strcmp("シャイン（１００枚コイン用）", getName()) != 0) {
@@ -1097,9 +1100,10 @@ void TEggYoshi::load(JSUMemoryInputStream& stream)
 		return;
 	}
 
-	unk148 = SMS_MakeMActorWithAnmData("/scene/mapObj/eggYoshi_fukidashi.bmd",
-	                                   mManager->getMActorAnmData(), 3,
-	                                   0x10210000);
+	unk148 = SMS_MakeMActorWithAnmData(
+	    "/scene/mapObj/eggYoshi_fukidashi.bmd", mManager->getMActorAnmData(), 3,
+	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	        | (1 << J3DMLF_TevStageNumShift));
 	MtxPtr src = getModel()->getAnmMtx(0);
 	PSMTXCopy(src, unk148->getModel()->getBaseTRMtx());
 	unk148->setBck("eggyoshi_fukidashi_wait");

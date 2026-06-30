@@ -1326,7 +1326,8 @@ void TMario::initModel()
 	unk39C         = 0;
 	unk3A0         = 0;
 	mBodyModelData = J3DModelLoaderDataBase::load(
-	    JKRFileLoader::getGlbResource("/mario/bmd/ma_mdl1.bmd"), 0x10100000);
+	    JKRFileLoader::getGlbResource("/mario/bmd/ma_mdl1.bmd"),
+	    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift));
 	mJointIdCenter   = mBodyModelData->getJointName()->getIndex("center");
 	mJointIdChnChest = mBodyModelData->getJointName()->getIndex("chn_chest");
 	mJointIdChest    = mBodyModelData->getJointName()->getIndex("jnt_chest");
@@ -1348,16 +1349,21 @@ void TMario::initModel()
 
 	J3DModel* bodyModel = new J3DModel(mBodyModelData, 0, 1);
 
-	mHandModels[0][0]
-	    = SMS_CreatePartsModel("/mario/bmd/ma_hnd2r.bmd", 0x10100000);
-	mHandModels[0][1]
-	    = SMS_CreatePartsModel("/mario/bmd/ma_hnd2l.bmd", 0x10100000);
-	mHandModels[1][0]
-	    = SMS_CreatePartsModel("/mario/bmd/ma_hnd3r.bmd", 0x10100000);
-	mHandModels[1][1]
-	    = SMS_CreatePartsModel("/mario/bmd/ma_hnd3l.bmd", 0x10100000);
-	mRHand4ndModel
-	    = SMS_CreatePartsModel("/mario/bmd/ma_hnd4r.bmd", 0x10100000);
+	mHandModels[0][0] = SMS_CreatePartsModel(
+	    "/mario/bmd/ma_hnd2r.bmd",
+	    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift));
+	mHandModels[0][1] = SMS_CreatePartsModel(
+	    "/mario/bmd/ma_hnd2l.bmd",
+	    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift));
+	mHandModels[1][0] = SMS_CreatePartsModel(
+	    "/mario/bmd/ma_hnd3r.bmd",
+	    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift));
+	mHandModels[1][1] = SMS_CreatePartsModel(
+	    "/mario/bmd/ma_hnd3l.bmd",
+	    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift));
+	mRHand4ndModel = SMS_CreatePartsModel(
+	    "/mario/bmd/ma_hnd4r.bmd",
+	    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift));
 
 	// possible inlines around setting ResTIMG through J3DTexture?
 	mHandModels[0][0]->getModelData()->getTexture()->setResTIMG(
@@ -1520,7 +1526,10 @@ void TMario::initModel()
 			    "/scene/map/map/Torocco/Torocco.bmd");
 			mTorocco->setModel(
 			    new J3DModel(
-			        J3DModelLoaderDataBase::load(toroccoRes, 0x10040000), 0, 1),
+			        J3DModelLoaderDataBase::load(
+			            toroccoRes,
+			            J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift)),
+			        0, 1),
 			    0);
 			if (gpMarDirector->unk7D == 0) {
 				mRailType              = 0;
@@ -1530,10 +1539,13 @@ void TMario::initModel()
 
 				void* pinaRailRes = JKRFileLoader::getGlbResource(
 				    "/scene/map/map/Pinna_rail/Pinna_rail.bmd");
-				mPinaRail->setModel(new J3DModel(J3DModelLoaderDataBase::load(
-				                                     pinaRailRes, 0x10040000),
-				                                 0, 1),
-				                    0);
+				mPinaRail->setModel(
+				    new J3DModel(
+				        J3DModelLoaderDataBase::load(
+				            pinaRailRes, J3DMLF_MaterialPEFull
+				                             | (4 << J3DMLF_TevStageNumShift)),
+				        0, 1),
+				    0);
 
 				mPinaRail->getFrameCtrl(0)->setRate(0.5f);
 
@@ -1552,10 +1564,13 @@ void TMario::initModel()
 
 				void* koopaRailRes = JKRFileLoader::getGlbResource(
 				    "/scene/map/map/Koopa_rail/Koopa_rail.bmd");
-				mKoopaRail->setModel(new J3DModel(J3DModelLoaderDataBase::load(
-				                                      koopaRailRes, 0x10040000),
-				                                  0, 1),
-				                     0);
+				mKoopaRail->setModel(
+				    new J3DModel(
+				        J3DModelLoaderDataBase::load(
+				            koopaRailRes, J3DMLF_MaterialPEFull
+				                              | (4 << J3DMLF_TevStageNumShift)),
+				        0, 1),
+				    0);
 
 				mKoopaRail->getFrameCtrl(0)->setRate(0.5f);
 

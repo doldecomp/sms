@@ -84,8 +84,9 @@ void TGessoPolluteModelManager::init(TLiveActor* param_1)
 
 	void* res = JKRFileLoader::getGlbResource(
 	    "/scene/rikuGesso/stamp_gero_model1.bmd");
-	SDLModelData* modelData
-	    = new SDLModelData(J3DModelLoaderDataBase::load(res, 0x10220000));
+	SDLModelData* modelData = new SDLModelData(J3DModelLoaderDataBase::load(
+	    res, J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	             | (2 << J3DMLF_TevStageNumShift)));
 
 	for (int i = 0; i < 5; ++i)
 		unk18[i] = new TGessoPolluteModel(param_1, modelData);

@@ -26,9 +26,9 @@ static const char cDirtyTexName[]  = "H_ma_rak_dummy";
 
 void TYoshiTongue::init(TYoshi* yoshi)
 {
-
 	J3DModelData* modelData = J3DModelLoaderDataBase::load(
-	    JKRGetResource("/mario/bmd/yoshi_tongue.bmd"), 0x10040000);
+	    JKRGetResource("/mario/bmd/yoshi_tongue.bmd"),
+	    J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift));
 
 	mYoshi = yoshi;
 	mModel = new J3DModel(modelData, 0x10000, 1);
@@ -39,7 +39,8 @@ void TYoshiTongue::init(TYoshi* yoshi)
 
 	mTipModel = new J3DModel(
 	    J3DModelLoaderDataBase::load(
-	        JKRGetResource("/mario/bmd/yoshi_tongue_tip.bmd"), 0x10040000),
+	        JKRGetResource("/mario/bmd/yoshi_tongue_tip.bmd"),
+	        J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift)),
 	    0x10000, 1);
 
 	J3DModelData* modelData3 = mTipModel->getModelData();
