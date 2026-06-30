@@ -387,7 +387,8 @@ void TBGAttackHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (param_1 & 1) {
 		mPosition = mOwner->mSpline->getPoint(mPosOnSpline);
 
-		if (mOwner->mTakeHit->checkHitFlag(HIT_FLAG_UNK2) && mOwner->isThing3()
+		if (mOwner->mTakeHit->checkHitFlag(HIT_FLAG_CANNOT_ATTACK)
+		        && mOwner->isThing3()
 		    || mOwner->getState() == 1
 		    || mOwner->mOwner->getAttackMode() == 7) {
 			for (int i = 0; i < mColCount; ++i) {
@@ -816,9 +817,9 @@ void TBGTentacle::changeStateAndFixNodes(int new_state)
 		mTakeHit->offHitFlag(HIT_FLAG_NO_COLLISION);
 
 	if (mState == 9)
-		mTakeHit->onHitFlag(HIT_FLAG_UNK2);
+		mTakeHit->onHitFlag(HIT_FLAG_CANNOT_ATTACK);
 
-	mTakeHit->offHitFlag(HIT_FLAG_UNK4);
+	mTakeHit->offHitFlag(HIT_FLAG_CANNOT_GET_HIT);
 }
 
 void TBGTentacle::returnToDefaultState() { }
@@ -1183,7 +1184,7 @@ void TBGTentacle::calcAtkParticleAndSE()
 
 void TBGTentacle::decideAtkColExists()
 {
-	mTakeHit->onHitFlag(HIT_FLAG_UNK2);
+	mTakeHit->onHitFlag(HIT_FLAG_CANNOT_ATTACK);
 
 	f32 frame = unk80->getFrameCtrl(0)->getFrame();
 
@@ -1216,9 +1217,9 @@ void TBGTentacle::decideAtkColExists()
 	}
 
 	if (shouldCollisionExist) {
-		mTakeHit->offHitFlag(HIT_FLAG_UNK2);
+		mTakeHit->offHitFlag(HIT_FLAG_CANNOT_ATTACK);
 	} else {
-		mTakeHit->onHitFlag(HIT_FLAG_UNK2);
+		mTakeHit->onHitFlag(HIT_FLAG_CANNOT_ATTACK);
 	}
 }
 

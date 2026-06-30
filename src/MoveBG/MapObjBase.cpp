@@ -671,8 +671,8 @@ void TMapObjBase::load(JSUMemoryInputStream& stream)
 		stream >> value;
 		setDamageHeight(value);
 		setAttackHeight(value);
-		offHitFlag(HIT_FLAG_UNK4);
-		offHitFlag(HIT_FLAG_UNK2);
+		offHitFlag(HIT_FLAG_CANNOT_GET_HIT);
+		offHitFlag(HIT_FLAG_CANNOT_ATTACK);
 	}
 }
 

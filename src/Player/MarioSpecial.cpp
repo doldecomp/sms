@@ -1496,7 +1496,7 @@ BOOL TMario::fencePunch()
 	setAnimation(ANIM_FENCE_PUNCH, 1.0f);
 	setAttackRadius(mAttackParamsFencePunch.mRadius.get());
 	setAttackHeight(mAttackParamsFencePunch.mHeight.get());
-	offHitFlag(HIT_FLAG_UNK2);
+	offHitFlag(HIT_FLAG_CANNOT_ATTACK);
 	mModelFaceAngle = mFaceAngle.y;
 
 	if (getMotionFrameCtrl().checkPass(5.0f)) {

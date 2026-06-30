@@ -36,12 +36,17 @@ enum THitMessageType {
 };
 
 enum THitFlagBits {
-	HIT_FLAG_NO_COLLISION = 0x1,
-	HIT_FLAG_UNK2         = 0x2,
-	HIT_FLAG_UNK4         = 0x4,
-	HIT_FLAG_UNK8000000   = 0x8000000,
-	HIT_FLAG_UNK10000000  = 0x10000000,
-	HIT_FLAG_UNK40000000  = 0x40000000,
+	HIT_FLAG_NO_COLLISION   = 0x1,
+	HIT_FLAG_CANNOT_ATTACK  = 0x2,
+	HIT_FLAG_CANNOT_GET_HIT = 0x4,
+
+	// TODO: these are the same as TActorTypeBits! See canAttack
+	// basically, they are "hit categories" where the hit flags can
+	// filter what we can and can't hit
+	// Maybe these entire flags should be renamed to "hit filter"?
+	HIT_FLAG_UNK8000000  = 0x8000000,
+	HIT_FLAG_UNK10000000 = 0x10000000,
+	HIT_FLAG_UNK40000000 = 0x40000000,
 };
 
 class THitActor : public JDrama::TActor {
@@ -71,13 +76,16 @@ public:
 	{
 		return mActorType == flag ? true : false;
 	}
+
+	bool canAttack(THitActor* other) const
+	{
+		return checkHitFlag(other->getActorType() & ACTOR_TYPE_MASK) ? true
+		                                                             : false;
+	}
+
 	THitActor* getCollision(int i) { return mCollisions[i]; }
 	u16 getColNum() { return mColCount; }
 	bool checkHitFlag(u32 flag) const { return mHitFlags & flag; }
-	bool checkHitFlag2(u32 flag) const
-	{
-		return mHitFlags & flag ? true : false;
-	}
 	void onHitFlag(u32 flag) { mHitFlags |= flag; }
 	void offHitFlag(u32 flag) { mHitFlags &= ~flag; }
 	f32 getAttackRadius() const { return mAttackRadius; }

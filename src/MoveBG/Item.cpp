@@ -1214,7 +1214,7 @@ void TNozzleBox::makeModelValid()
 		appear();
 	}
 	makeObjAppeared();
-	offHitFlag(HIT_FLAG_UNK4);
+	offHitFlag(HIT_FLAG_CANNOT_GET_HIT);
 	SMS_ShowAllShapePacket(getModel());
 	unk15C = true;
 }
@@ -1225,7 +1225,7 @@ void TNozzleBox::makeModelInvalid()
 		mContainedNozzleItem->kill();
 		appear();
 	}
-	onHitFlag(HIT_FLAG_UNK4);
+	onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
 	startAnim(3);
 	unk15C = false;
 }

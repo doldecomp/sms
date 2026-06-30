@@ -11007,10 +11007,10 @@ void TMapObjBase::initObjCollisionData()
 	}
 
 	if (mAttackRadius == 0.0f || mAttackHeight == 0.0f)
-		onHitFlag(HIT_FLAG_UNK2);
+		onHitFlag(HIT_FLAG_CANNOT_ATTACK);
 
 	if (mDamageRadius == 0.0f || mDamageHeight == 0.0f)
-		onHitFlag(HIT_FLAG_UNK4);
+		onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
 }
 
 #pragma dont_inline on

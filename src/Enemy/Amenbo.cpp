@@ -471,7 +471,7 @@ void TAmenbo::activateJumpBase()
 		deactivateJumpBase();
 
 	unk1E4->setUpTrans(mPosition);
-	onHitFlag(HIT_FLAG_UNK2);
+	onHitFlag(HIT_FLAG_CANNOT_ATTACK);
 	mDamageRadius = 215.0f;
 	mDamageHeight = 120.0f;
 	calcEntryRadius();
@@ -484,7 +484,7 @@ void TAmenbo::deactivateJumpBase()
 		return;
 
 	unk1E4->remove();
-	offHitFlag(HIT_FLAG_UNK2);
+	offHitFlag(HIT_FLAG_CANNOT_ATTACK);
 	setDamageParams(100.0f, 150.0f);
 	offLiveFlag(LIVE_FLAG_UNK10);
 }
