@@ -81,6 +81,19 @@ public:
 		mPosition = thing;
 	}
 
+	TLookAtCamera(const JGeometry::TVec3<f32>& position,
+	              const JGeometry::TVec3<f32>& target,
+	              const JGeometry::TVec3<f32>& up, f32 fovy, f32 aspect,
+	              const char* name)
+	    : TCamera(50.0f, 10000.0f, name)
+	{
+		mUp       = up;
+		mTarget   = target;
+		mFovy     = fovy;
+		mAspect   = aspect;
+		mPosition = position;
+	}
+
 	virtual ~TLookAtCamera() { }
 	virtual void perform(u32 cue, TGraphics* graphics);
 
@@ -111,6 +124,15 @@ class TOrthoProj : public TCamera {
 public:
 	TOrthoProj(f32 a, f32 b, f32 c, f32 d)
 	    : TCamera(-1.0f, 1.0f, "<TOrthoProj>")
+	{
+		mField[0] = a;
+		mField[1] = b;
+		mField[2] = c;
+		mField[3] = d;
+	}
+
+	TOrthoProj(f32 near, f32 far, f32 a, f32 b, f32 c, f32 d)
+	    : TCamera(near, far, "<TOrthoProj>")
 	{
 		mField[0] = a;
 		mField[1] = b;
