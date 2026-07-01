@@ -10,6 +10,8 @@ class TPollutionObj;
 
 class TMapEventSink : public TMapEvent {
 public:
+	TMapEventSink(const char*);
+
 	virtual void load(JSUMemoryInputStream&);
 	virtual bool isFinishedAll() const;
 	virtual bool watch() { return false; }
@@ -25,7 +27,6 @@ public:
 
 	bool isBuried(int) const;
 	TPollutionObj* getPollutionObj(int);
-	TMapEventSink(const char*);
 
 	static u32 mCleanedDegree;
 

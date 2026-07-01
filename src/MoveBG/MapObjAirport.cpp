@@ -70,7 +70,7 @@ bool TAirportEventSink::watch()
 		director->fireStartDemoCamera("空港坂上げカメラ", &unk6C->mPosition, -1,
 		                              0.0f, true, nullptr, 0, nullptr,
 		                              JDrama::TFlagT<u16>(0));
-		getPollution()->getLayer(0)->onUnk32(0x2);
+		getPollution()->getLayer(0)->startDecay();
 		return true;
 	}
 

@@ -28,9 +28,9 @@ void TPollutionLayer::changeType(u16) { }
 
 bool TPollutionLayer::getPollutedPosNear(f32 range, JGeometry::TVec3<f32>* dest)
 {
-	TPollutionPos& pos = unk5C;
+	TPollutionPos& pos = mPos;
 	for (int i = 0; i < 5; ++i) {
-		f32 x   = (MsRandF() - 0.5f) * (mAreaMinRate + (MsRandF()));
+		f32 x   = (MsRandF() - 0.5f) * (mAreaMinRate + MsRandF());
 		dest->x = x * range + SMS_GetMarioPos().x;
 		f32 z   = (MsRandF() - 0.5f) * (mAreaMinRate + MsRandF());
 		dest->z = z * range + SMS_GetMarioPos().z;
@@ -42,7 +42,7 @@ bool TPollutionLayer::getPollutedPosNear(f32 range, JGeometry::TVec3<f32>* dest)
 				dest->y = pos.getDepthWorld(texX, texZ);
 				if (dest->y > SMS_GetMarioPos().y)
 					return false;
-				if (unk54[unk5C.index(texX, texZ)] != 0)
+				if (mPollutionMap[mPos.index(texX, texZ)] != 0)
 					return true;
 			}
 		}
@@ -66,10 +66,10 @@ void TPollutionLayer::changeEffectScale(const JGeometry::TVec3<f32>&, f32) { }
 
 void TPollutionLayer::spread()
 {
-	if (unk4C < mSpreadFrequency) {
-		unk4C += 1;
+	if (mSpreadTimer < mSpreadFrequency) {
+		mSpreadTimer += 1;
 	} else {
-		unk4C = 0;
+		mSpreadTimer = 0;
 		JGeometry::TVec3<f32> spread;
 		if (getPollutedPosNear(mSpreadArea, &spread))
 			gpPollution->stamp(1, spread.x, spread.y, spread.z, 128.0f);
@@ -78,17 +78,20 @@ void TPollutionLayer::spread()
 
 void TPollutionLayer::electric()
 {
-	if (getPollutedPosNear(mThunderArea, &unk98[unk90])) {
-		unk8C += 1;
-		if (unk8C > 15) {
-			SMSGetMSound()->startSoundSet(MSD_SE_EF_ELEC, &unk98[unk90], 0,
-			                              0.0f, 0, 0, 4);
+	if (getPollutedPosNear(mThunderArea,
+	                       &mEffectPositions[mCurEffectPosIndex])) {
+		mEffectTimer += 1;
+		if (mEffectTimer > 15) {
+			SMSGetMSound()->startSoundSet(MSD_SE_EF_ELEC,
+			                              &mEffectPositions[mCurEffectPosIndex],
+			                              0, 0.0f, 0, 0, 4);
 			gpMarioParticleManager->emit(MAP_POLLUTION_MS_THUNDER_S,
-			                             &unk98[unk90], 0, this);
-			unk90 += 1;
-			if (unk90 >= unk94)
-				unk90 = 0;
-			unk8C = 0;
+			                             &mEffectPositions[mCurEffectPosIndex],
+			                             0, this);
+			mCurEffectPosIndex += 1;
+			if (mCurEffectPosIndex >= mEffectPositionsCapacity)
+				mCurEffectPosIndex = 0;
+			mEffectTimer = 0;
 		}
 	}
 }
@@ -108,23 +111,26 @@ void TPollutionLayer::glassWall()
 #pragma dont_inline on
 void TPollutionLayer::fire()
 {
-	if (getPollutedPosNear(mFireArea, &unk98[unk90])) {
-		unk8C += 1;
-		if (unk8C > mFireEffectWaitTime) {
-			SMSGetMSound()->startSoundSet(MSD_SE_EF_FIRE, &unk98[unk90], 0,
-			                              0.0f, 0, 0, 4);
+	if (getPollutedPosNear(mFireArea, &mEffectPositions[mCurEffectPosIndex])) {
+		mEffectTimer += 1;
+		if (mEffectTimer > mFireEffectWaitTime) {
+			SMSGetMSound()->startSoundSet(MSD_SE_EF_FIRE,
+			                              &mEffectPositions[mCurEffectPosIndex],
+			                              0, 0.0f, 0, 0, 4);
 			if (JPABaseEmitter* em = gpMarioParticleManager->emit(
-			        MAP_POLLUTION_MS_NEWFIRE_B, &unk98[unk90], 2, this)) {
+			        MAP_POLLUTION_MS_NEWFIRE_B,
+			        &mEffectPositions[mCurEffectPosIndex], 2, this)) {
 				em->setScale(JGeometry::TVec3<f32>(1.5f, 1.5f, 1.5f));
 			}
 			if (JPABaseEmitter* em = gpMarioParticleManager->emit(
-			        MAP_POLLUTION_MS_NEWFIRE_A, &unk98[unk90], 0, this)) {
+			        MAP_POLLUTION_MS_NEWFIRE_A,
+			        &mEffectPositions[mCurEffectPosIndex], 0, this)) {
 				em->setScale(JGeometry::TVec3<f32>(1.5f, 1.5f, 1.5f));
 			}
-			unk90 += 1;
-			if (unk90 >= unk94)
-				unk90 = 0;
-			unk8C = 0;
+			mCurEffectPosIndex += 1;
+			if (mCurEffectPosIndex >= mEffectPositionsCapacity)
+				mCurEffectPosIndex = 0;
+			mEffectTimer = 0;
 		}
 	}
 }
@@ -135,21 +141,21 @@ void TPollutionLayer::action()
 	if (getPlaneType() != 0)
 		return;
 
-	switch (unk30) {
-	case 1:
+	switch (mPollutionType) {
+	case POLLUTION_TYPE_FIRE:
 		fire();
 		break;
-	case 4:
+	case POLLUTION_TYPE_ELECTRIC:
 		electric();
 		break;
-	case 3:
+	case POLLUTION_TYPE_GLASS_WALL:
 		glassWall();
 		break;
 	}
 
 	int tries = 0;
 	bool ok;
-	JGeometry::TVec3<f32>* pos = &unk98[unk90];
+	JGeometry::TVec3<f32>* pos = &mEffectPositions[mCurEffectPosIndex];
 
 	f32 area = mSpreadArea;
 
@@ -169,20 +175,22 @@ void TPollutionLayer::action()
 	}
 
 	if (ok) {
-		if ((s32)unk30 != 1 && (s32)unk30 != 7) {
-			if (unk8C > 15) {
+		if (getPollutionType() != POLLUTION_TYPE_FIRE
+		    && getPollutionType() != POLLUTION_TYPE_UNK7) {
+			if (mEffectTimer > 15) {
 				gpMarioParticleManager->emitWithRotate(
-				    PARTICLE_MS_RAKU_INDAWA, &unk98[unk90], 0,
+				    PARTICLE_MS_RAKU_INDAWA,
+				    &mEffectPositions[mCurEffectPosIndex], 0,
 				    (s16)(0.005493164f * (f32)*gpMarioAngleY), 0, 2, nullptr);
-				unk90 += 1;
-				if (unk90 >= unk94)
-					unk90 = 0;
-				unk8C = 0;
+				mCurEffectPosIndex += 1;
+				if (mCurEffectPosIndex >= mEffectPositionsCapacity)
+					mCurEffectPosIndex = 0;
+				mEffectTimer = 0;
 			}
-			unk8C += 1;
+			mEffectTimer += 1;
 		}
 
-		if (unk32 & 1)
+		if (mFlags & FLAG_CAN_SPREAD)
 			spread();
 	}
 }

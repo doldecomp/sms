@@ -1,6 +1,7 @@
 #include <Player/Mario.hpp>
 #include <Player/NozzleTrigger.hpp>
 #include <Player/Yoshi.hpp>
+#include <Map/PollutionLayer.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
 #include <Map/MapData.hpp>
 #include <System/Application.hpp>
@@ -623,7 +624,7 @@ void TMario::animSound()
 	mSoundFlags = mGroundPlane->unk6;
 
 	if (checkFlag(MARIO_FLAG_DIRTY)) {
-		if (mPollutionTypeStandingOn == 0
+		if (mPollutionTypeStandingOn == POLLUTION_TYPE_SINK
 		    && mSinkTimer >= mGraffitoParams.mSinkTime.get()
 		                         * mGraffitoParams.mSinkDmgDepth.get())
 			mSoundFlags |= 0x600;

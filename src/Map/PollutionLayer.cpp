@@ -36,7 +36,7 @@ void TPollutionLayerWave::initGX() const
 	              GX_AF_NONE);
 	GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0, 0, 0, mAlpha });
 
-	JUTTexture texture(unk58);
+	JUTTexture texture(mPollutionImage);
 	texture.load(GX_TEXMAP0);
 
 	GXSetNumTexGens(1);
@@ -65,22 +65,22 @@ void TPollutionLayerWave::initGX() const
 
 void TPollutionLayerWave::draw() const
 {
-	u16 xCount   = (u16)((unk3C - unk38) / mInterval);
-	f32 invXSize = 1.0f / (unk3C - unk38);
-	f32 invYSize = 1.0f / (unk44 - unk40);
+	u16 xCount   = (u16)((mMaxX - mMinX) / mInterval);
+	f32 invXSize = 1.0f / (mMaxX - mMinX);
+	f32 invZSize = 1.0f / (mMaxZ - mMinZ);
 
-	for (f32 z = unk40; z < unk44 - mInterval; z += mInterval) {
+	for (f32 z = mMinZ; z < mMaxZ - mInterval; z += mInterval) {
 		GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, xCount * 2);
-		for (f32 x = unk38; x < unk3C - mInterval; x += mInterval) {
+		for (f32 x = mMinX; x < mMaxX - mInterval; x += mInterval) {
 			f32 zNext = z + mInterval;
 
 			f32 h1 = gpMapObjWave->getWaveHeight(x, z);
 			GXPosition3f32(x, h1 - 10.0f, z);
-			GXTexCoord2f32(invXSize * (x - unk38), invYSize * (z - unk40));
+			GXTexCoord2f32(invXSize * (x - mMinX), invZSize * (z - mMinZ));
 
 			f32 h2 = gpMapObjWave->getWaveHeight(x, zNext);
 			GXPosition3f32(x, h2 - 10.0f, zNext);
-			GXTexCoord2f32(invXSize * (x - unk38), invYSize * (zNext - unk40));
+			GXTexCoord2f32(invXSize * (x - mMinX), invZSize * (zNext - mMinZ));
 		}
 	}
 }
@@ -104,27 +104,15 @@ void TPollutionLayerWave::initJointModel(TJointModelManager* mgr,
                                          const char* name, MActorAnmData*)
 {
 	mManager = mgr;
-	const TPollutionLayerInfo* info
-	    = &((TPollutionManager*)mManager)->unk6C[mIndexInParent];
-	initLayerInfo(info);
-	unk5C.init(this, info->unk8, info->unkC, info->unk28, info->unk20,
-	           info->unk22);
-	unk88 = info->unk24;
 
-	unk58               = getTexResource(name);
-	unk58->alphaEnabled = 2;
-	unk54               = (u8*)unk58 + unk58->imageDataOffset;
-	initTexImage(name);
-
-	if ((int)unk30 == 4)
-		SMS_LoadParticle("/scene/map/pollution/ms_thunder_s.jpa", 0x6F);
+	initPollutionTex(name);
 }
 
 void TPollutionLayerWallPlusZ::stamp(u16 type, f32 x, f32 y, f32 z, f32 s)
 {
 	if (!isInAreaSize(x, y, z, s))
 		return;
-	TPollutionPos* pos = &unk5C;
+	TPollutionPos* pos = &mPos;
 	gpPollution->getCounterLayer().pushStampTask(
 	    type, mIndexInParent, pos->worldToTexSize(s), getTexPosS(x),
 	    getTexPosT(y), pos->worldToDepth(z));
@@ -133,8 +121,8 @@ void TPollutionLayerWallPlusZ::stamp(u16 type, f32 x, f32 y, f32 z, f32 s)
 void TPollutionLayerWallPlusZ::initLayerInfo(const TPollutionLayerInfo* info)
 {
 	TPollutionLayer::initLayerInfo(info);
-	unkAC = unk40;
-	unkB0 = unk44;
+	mMinY = mMinZ;
+	mMaxY = mMaxZ;
 	unk48 = 20;
 }
 
@@ -142,7 +130,7 @@ void TPollutionLayerWallPlusX::stamp(u16 type, f32 x, f32 y, f32 z, f32 s)
 {
 	if (!isInAreaSize(x, y, z, s))
 		return;
-	TPollutionPos* pos = &unk5C;
+	TPollutionPos* pos = &mPos;
 	gpPollution->getCounterLayer().pushStampTask(
 	    type, mIndexInParent, pos->worldToTexSize(s), getTexPosS(z),
 	    getTexPosT(y), pos->worldToDepth(x));
@@ -151,24 +139,25 @@ void TPollutionLayerWallPlusX::stamp(u16 type, f32 x, f32 y, f32 z, f32 s)
 void TPollutionLayerWallPlusX::initLayerInfo(const TPollutionLayerInfo* info)
 {
 	TPollutionLayer::initLayerInfo(info);
-	unkAC = unk40;
-	unkB0 = unk44;
-	unk40 = unk38;
-	unk44 = unk3C;
+	mMinY = mMinZ;
+	mMaxY = mMaxZ;
+	mMinZ = mMinX;
+	mMaxZ = mMaxX;
 	unk48 = 20;
 }
 
 TPollutionLayerWallBase::TPollutionLayerWallBase()
-    : unkAC(0.0f)
-    , unkB0(0.0f)
+    : mMinY(0.0f)
+    , mMaxY(0.0f)
 {
 }
 
 void TPollutionLayer::stampModel(J3DModel* model)
 {
-	f32 x = model->unk20[0][3];
-	f32 z = model->unk20[2][3];
-	if (x < unk38 || z < unk40 || x >= unk3C || z >= unk44)
+	MtxPtr mtx = model->getBaseTRMtx();
+	f32 x      = mtx[0][3];
+	f32 z      = mtx[2][3];
+	if (x < mMinX || z < mMinZ || x >= mMaxX || z >= mMaxZ)
 		return;
 	gpPollution->unk70.pushModelStampTask(mIndexInParent & 0xff, model);
 }
@@ -210,7 +199,7 @@ void TPollutionLayer::cleaned(f32 x, f32 y, f32 z, f32 s)
 		               pos[now_pos_no].z)) {
 			int texT = getTexPosT(pos[now_pos_no].z);
 			int texS = getTexPosS(pos[now_pos_no].x);
-			if (unk54[unk5C.index(texS, texT)] > 0x64) {
+			if (mPollutionMap[mPos.index(texS, texT)] > 100) {
 				if (unkA8 <= 0)
 					unkA8 = TPollutionManager::mFlushTime;
 
@@ -240,17 +229,18 @@ void TPollutionLayer::cleaned(f32 x, f32 y, f32 z, f32 s)
 	appearItem(x, y, z);
 }
 
-void TPollutionLayer::stamp(u16 type, f32 x, f32 y, f32 z, f32 s)
+void TPollutionLayer::stamp(u16 stamp_type, f32 x, f32 y, f32 z, f32 size)
 {
-	if (!isInAreaSize(x, y, z, s))
+	if (!isInAreaSize(x, y, z, size))
 		return;
+
 	gpPollution->getCounterLayer().pushStampTask(
-	    type, mIndexInParent, getUnk5C().worldToTexSize(s), getTexPosS(x),
-	    getTexPosT(z), unk5C.worldToDepth(y));
+	    stamp_type, mIndexInParent, getPos().worldToTexSize(size),
+	    getTexPosS(x), getTexPosT(z), mPos.worldToDepth(y));
 
 	if (getPlaneType() != 6
-	    && gpPollution->getCounterLayer().stampIsCleanType(type))
-		cleaned(x, y, z, s);
+	    && gpPollution->getCounterLayer().stampIsCleanType(stamp_type))
+		cleaned(x, y, z, size);
 }
 
 void TPollutionLayer::isProhibit(f32, f32, f32) const { }
@@ -263,14 +253,17 @@ bool TPollutionLayer::isPolluted(f32 x, f32 y, f32 z) const
 		return false;
 	int texS = getTexPosS(x);
 	int texT = getTexPosT(z);
-	if (!unk5C.isSame(texS, texT, y))
+	return isPolluted(texS, texT, y);
+}
+
+bool TPollutionLayer::isPolluted(int s, int t, f32 y) const
+{
+	if (!mPos.isSame(s, t, y))
 		return false;
-	if (unk54[unk5C.index(texS, texT)] > unk50)
+	if (mPollutionMap[mPos.index(s, t)] > mPollutedThreshold)
 		return true;
 	return false;
 }
-
-void TPollutionLayer::isPolluted(int, int, f32) const { }
 
 void TPollutionLayer::subtractFromYMap(f32, f32, f32) const { }
 
@@ -290,84 +283,91 @@ void TPollutionLayer::initTexImage(const char* name)
 {
 	char fullPath[256];
 	snprintf(fullPath, 256, "/scene/map/pollution/%s.bmp", name);
-	unk80 = (u8*)JKRGetResource(fullPath);
+	mPollutionBmp = (u8*)JKRGetResource(fullPath);
 
 	bool cVar1 = false;
-	if (gpMarDirector->mMap == 9)
+	if (gpMarDirector->getCurrentMap() == 9)
 		cVar1 = true;
 
-	for (int y = 0; y < unk5C.mHeight; ++y) {
-		for (int x = 0; x < unk5C.mWidth; ++x) {
-			int w    = unk5C.mWidth;
-			int h    = unk5C.mHeight;
-			u8 depth = readBmpPixel(unk80, x, y, w, h);
+	for (int y = 0; y < mPos.getHeight(); ++y) {
+		for (int x = 0; x < mPos.getWidth(); ++x) {
+			int w    = mPos.getWidth();
+			int h    = mPos.getHeight();
+			u8 depth = readBmpPixel(mPollutionBmp, x, y, w, h);
 
 			if ((!cVar1 || (x > 0 && x < w - 1 && y > 0 && y < h - 1))
-			    && depth != 0 && !unk5C.isProhibit(x, y)) {
-				int degree = unk5C.getEdgeDegree(x, y);
+			    && depth != 0 && !mPos.isProhibit(x, y)) {
+				int degree = mPos.getEdgeDegree(x, y);
 				if (degree != 0) {
-					unk54[unk5C.index(x, y)]
+					mPollutionMap[mPos.index(x, y)]
 					    = depth - degree * TPollutionManager::mEdgeAlpha;
 				} else {
-					unk54[unk5C.index(x, y)] = depth;
+					mPollutionMap[mPos.index(x, y)] = depth;
 				}
 			} else {
-				unk54[unk5C.index(x, y)] = 0;
+				mPollutionMap[mPos.index(x, y)] = 0;
 			}
 		}
 	}
-	DCStoreRange(unk54, unk5C.mWidth * unk5C.mHeight);
+	DCStoreRange(mPollutionMap, mPos.getWidth() * mPos.getHeight());
 }
 
 void TPollutionLayer::initTex(const char*) { }
 
 void TPollutionLayer::initLayerInfo(const TPollutionLayerInfo* param_1)
 {
-	unk30 = param_1->unk0;
-	unk32 = param_1->unk2;
-	unk38 = param_1->unk10;
-	unk40 = param_1->unk14;
-	unk3C = param_1->unk18;
-	unk44 = param_1->unk1C;
-	unk48 = 2;
+	mPollutionType = param_1->mPollutionType;
+	mFlags         = param_1->mFlags;
+	mMinX          = param_1->mLeft;
+	mMinZ          = param_1->mTop;
+	mMaxX          = param_1->mRight;
+	mMaxZ          = param_1->mBottom;
+	unk48          = 2;
 
-	if ((int)unk30 == 7) {
-		unk50 = 200;
-		unk85 = 0xA0;
-	} else if ((int)unk30 == 1) {
-		unk50 = 0x80;
-		unk85 = 0x80;
+	if (getPollutionType() == POLLUTION_TYPE_UNK7) {
+		mPollutedThreshold       = 200;
+		mPerFrameChangeThreshold = 160;
+	} else if (getPollutionType() == POLLUTION_TYPE_FIRE) {
+		mPollutedThreshold       = 128;
+		mPerFrameChangeThreshold = 128;
 	} else {
-		unk50 = 30;
-		unk85 = 50;
+		mPollutedThreshold       = 30;
+		mPerFrameChangeThreshold = 50;
 	}
 
-	unk94 = 0x1E;
-	unk98 = new JGeometry::TVec3<f32>[unk94];
-	memset(unk98, 0, unk94 * sizeof(unk98[0]));
+	mEffectPositionsCapacity = 30;
+	mEffectPositions = new JGeometry::TVec3<f32>[mEffectPositionsCapacity];
+	memset(mEffectPositions, 0,
+	       mEffectPositionsCapacity * sizeof(mEffectPositions[0]));
 }
 
-void TPollutionLayer::initPollutionTex(const char*) { }
+void TPollutionLayer::initPollutionTex(const char* depth_tex_name)
+{
+	const TPollutionLayerInfo* info
+	    = ((TPollutionManager*)mManager)->getLayerInfo(mIndexInParent);
+	initLayerInfo(info);
+	mPos.init(this, info->mVerticalOffset, info->mTexelSize, info->mHeightMap,
+	          info->mLog2Width, info->mLog2Height);
+	unk88 = info->unk24;
+
+	mPollutionImage               = getTexResource(depth_tex_name);
+	mPollutionImage->alphaEnabled = 2;
+
+	mPollutionMap = (u8*)mPollutionImage + mPollutionImage->imageDataOffset;
+	initTexImage(depth_tex_name);
+
+	if ((int)mPollutionType == POLLUTION_TYPE_ELECTRIC)
+		SMS_LoadParticle("/scene/map/pollution/ms_thunder_s.jpa",
+		                 MAP_POLLUTION_MS_THUNDER_S);
+}
 
 void TPollutionLayer::initJointModel(TJointModelManager* param_1,
                                      const char* param_2,
                                      MActorAnmData* param_3)
 {
 	TJointModel::initJointModel(param_1, param_2, param_3);
-	const TPollutionLayerInfo* info
-	    = ((TPollutionManager*)mManager)->getLayerInfo(mIndexInParent);
-	initLayerInfo(info);
-	unk5C.init(this, info->unk8, info->unkC, info->unk28, info->unk20,
-	           info->unk22);
-	unk88 = info->unk24;
 
-	unk58               = getTexResource(param_2);
-	unk58->alphaEnabled = 2;
-
-	unk54 = (u8*)unk58 + unk58->imageDataOffset;
-	initTexImage(param_2);
-	if ((int)unk30 == 4)
-		SMS_LoadParticle("/scene/map/pollution/ms_thunder_s.jpa", 0x6F);
+	initPollutionTex(param_2);
 
 	if (mActor->checkAnmFileExist(param_2, 4))
 		mActor->setBtk(param_2);
@@ -383,25 +383,25 @@ void TPollutionLayer::initJointModel(TJointModelManager* param_1,
 }
 
 TPollutionLayer::TPollutionLayer()
-    : unk30(0)
-    , unk32(0)
-    , unk34(0)
-    , unk38(0.0f)
-    , unk3C(0.0f)
-    , unk40(0.0f)
-    , unk44(0.0f)
+    : mPollutionType(0)
+    , mFlags(0)
+    , mCounter(0)
+    , mMinX(0.0f)
+    , mMaxX(0.0f)
+    , mMinZ(0.0f)
+    , mMaxZ(0.0f)
     , unk48(0)
-    , unk4C(0)
-    , unk50(0)
-    , unk54(nullptr)
-    , unk58(nullptr)
-    , unk80(nullptr)
-    , unk84(8)
-    , unk85(0)
-    , unk8C(0)
-    , unk90(0)
-    , unk94(0)
-    , unk98(nullptr)
+    , mSpreadTimer(0)
+    , mPollutedThreshold(0)
+    , mPollutionMap(nullptr)
+    , mPollutionImage(nullptr)
+    , mPollutionBmp(nullptr)
+    , mPerFrameChangeDelta(8)
+    , mPerFrameChangeThreshold(0)
+    , mEffectTimer(0)
+    , mCurEffectPosIndex(0)
+    , mEffectPositionsCapacity(0)
+    , mEffectPositions(nullptr)
     , unk9C(1)
     , unkA0(1000)
     , unkA4(100)

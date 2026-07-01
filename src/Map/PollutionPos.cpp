@@ -12,10 +12,9 @@ int TPollutionPos::getEdgeDegree(int x, int y) const
 
 	int count = 0;
 	for (int dy = -1; dy <= 1; ++dy) {
-		int yy = y + dy;
 		for (int dx = -1; dx <= 1; ++dx) {
 			if (dx != 0 || dy != 0) {
-				if (mMap[index(x + dx, yy)] == 0xFF)
+				if (mHeightMap[index(x + dx, y + dy)] == 0xFF)
 					count += 1;
 			}
 		}
@@ -26,7 +25,7 @@ int TPollutionPos::getEdgeDegree(int x, int y) const
 f32 TPollutionPos::getDepthWorld(int x, int y) const
 {
 	if (getDepth(x, y) < 0xff) {
-		f32 d = getDepth(x, y) * mVerticalScale;
+		f32 d = getDepth(x, y) * mTexelSize;
 		return mVerticalOffset + d;
 	} else {
 		return -9999.0f;
@@ -70,32 +69,33 @@ int TPollutionPos::worldToDepth(f32 v) const
 
 int TPollutionPos::worldToTexSize(f32 v) const
 {
-	return v * mInverseVerticalScale;
+	return v * mInverseTexelScale;
 }
 
-void TPollutionPos::init(TPollutionLayer* param_1, f32 param_2, f32 param_3,
-                         u8* param_4, int param_5, int param_6)
+void TPollutionPos::init(TPollutionLayer* owner, f32 vertical_offset,
+                         f32 texel_size, u8* height_map, int log2_width,
+                         int log2_height)
 {
-	mOwner                = param_1;
-	mMap                  = param_4;
-	mVerticalOffset       = param_2;
-	mVerticalScale        = param_3;
-	mInverseVerticalScale = 1.0f / mVerticalScale;
-	unk8                  = param_5;
-	unkC                  = param_6;
-	mWidth                = 1 << unk8;
-	mHeight               = 1 << unkC;
+	mOwner             = owner;
+	mHeightMap         = height_map;
+	mVerticalOffset    = vertical_offset;
+	mTexelSize         = texel_size;
+	mInverseTexelScale = 1.0f / mTexelSize;
+	mLog2Width         = log2_width;
+	mLog2Height        = log2_height;
+	mWidth             = 1 << mLog2Width;
+	mHeight            = 1 << mLog2Height;
 }
 
 TPollutionPos::TPollutionPos()
 {
-	mWidth                = 0;
-	mHeight               = 0;
-	unk8                  = 0;
-	unkC                  = 0;
-	mVerticalOffset       = 0.0f;
-	mVerticalScale        = 0.0f;
-	mInverseVerticalScale = 0.0f;
-	mMap                  = nullptr;
-	mOwner                = nullptr;
+	mWidth             = 0;
+	mHeight            = 0;
+	mLog2Width         = 0;
+	mLog2Height        = 0;
+	mVerticalOffset    = 0.0f;
+	mTexelSize         = 0.0f;
+	mInverseTexelScale = 0.0f;
+	mHeightMap         = nullptr;
+	mOwner             = nullptr;
 }

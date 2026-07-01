@@ -24,7 +24,7 @@ static void dummy(Vec* v)
 bool TMapEventSirenaSink::watch()
 {
 	if (unk64) {
-		gpPollution->getLayer(0)->onUnk32(2);
+		gpPollution->getLayer(0)->startDecay();
 		unk28 = 0;
 		SMSGetMarDirector()->fireStartDemoCamera(
 		    "ホテル上げカメラ", &unk68, -1, 0.0f, true, nullptr, 0, nullptr,
