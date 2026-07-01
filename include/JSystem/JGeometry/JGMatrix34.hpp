@@ -55,6 +55,13 @@ public:
 		ref(2, 3) = m23;
 	}
 
+	void zero()
+	{
+		ref(0, 0) = ref(1, 0) = ref(2, 0) = ref(0, 1) = ref(1, 1) = ref(2, 1)
+		    = ref(0, 2) = ref(1, 2) = ref(2, 2) = ref(0, 3) = ref(1, 3)
+		    = ref(2, 3)                                     = 0.0f;
+	}
+
 	typedef f32 ArrType[4];
 	operator ArrType*() { return mMtx; } // Real!
 	operator const ArrType*() const { return mMtx; }

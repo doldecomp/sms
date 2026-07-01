@@ -144,7 +144,7 @@ bool TDolpicEventRiccoMammaGate::watch()
 			                             this);
 			gpMarioParticleManager->emit(MAP_MAP_MS_OBJUP_MANIYA_B, &unk48, 2,
 			                             this);
-			gpPollution->getLayer(0)->onUnk32(2);
+			gpPollution->getLayer(0)->startDecay();
 		} else {
 			SMSGetMarDirector()->fireStartDemoCamera(
 			    "灯台上げデモカメラ", &unk48, -1, 0.0f, false, nullptr, 0,
@@ -153,7 +153,7 @@ bool TDolpicEventRiccoMammaGate::watch()
 			                             this);
 			gpMarioParticleManager->emit(MAP_MAP_MS_OBJUP_TOUDAI_B, &unk48, 2,
 			                             this);
-			gpPollution->getLayer(1)->onUnk32(2);
+			gpPollution->getLayer(1)->startDecay();
 		}
 
 		SMS_MarioWarpRequest(unk54, unk60);

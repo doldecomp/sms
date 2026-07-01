@@ -53,7 +53,7 @@ void TSilhouette::loadAfter()
 	if (gpPollution->getJointModelNum() > 0) {
 		TPollutionLayer* pJVar9
 		    = (TPollutionLayer*)gpPollution->getJointModel(0);
-		ResTIMG* img = pJVar9->unk58;
+		ResTIMG* img = pJVar9->mPollutionImage;
 		unk40        = new JUTTexture(img);
 	}
 	ResTIMG* pRVar8 = (ResTIMG*)JKRFileLoader::getGlbResource(

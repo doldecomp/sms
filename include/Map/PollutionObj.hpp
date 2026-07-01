@@ -5,6 +5,11 @@
 
 class TPollutionLayer;
 
+/**
+ * @brief A subregion of a layer that has it's own pollution counter.
+ * @details Used for checking whether a particular building or other such thing
+ * is fully cleaned or not.
+ */
 class TPollutionObj : public TJointObj {
 public:
 	TPollutionObj();
@@ -14,13 +19,18 @@ public:
 	u8 getDepthFromMap(int, int);
 	virtual TJointObj* newJointObj() const { return new TPollutionObj; }
 
+	TPollutionObj* getChild(int idx)
+	{
+		return (TPollutionObj*)TJointObj::getChild(idx);
+	}
+
 public:
-	/* 0x20 */ int unk20;
-	/* 0x24 */ int unk24;
-	/* 0x28 */ int unk28;
-	/* 0x2C */ int unk2C;
-	/* 0x30 */ u32 unk30;
-	/* 0x34 */ TPollutionLayer* unk34;
+	/* 0x20 */ int mMinS;
+	/* 0x24 */ int mMaxS;
+	/* 0x28 */ int mMinT;
+	/* 0x2C */ int mMaxT;
+	/* 0x30 */ u32 mCounter;
+	/* 0x34 */ TPollutionLayer* mLayer;
 };
 
 #endif

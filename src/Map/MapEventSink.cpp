@@ -28,7 +28,7 @@ u32 TMapEventSink::mCleanedDegree = 10;
 
 TJointObj* TMapEventSink::getBuilding(int i) const
 {
-	return unk1C->mChildren[0]->mChildren[i + unk24];
+	return unk1C->getChild(0)->getChild(i + unk24);
 }
 
 bool TMapEventSink::isBuried(int i) const { return !unk54[i - unk24]; }
@@ -41,7 +41,7 @@ f32 TMapEventSink::getSinkOffsetY() const
 TPollutionObj* TMapEventSink::getPollutionObj(int i)
 {
 	return (TPollutionObj*)gpPollution->getJointModel(unk60[i].unk0)
-	    ->mChildren[unk60[i].unk2];
+	    ->getChild(unk60[i].unk2);
 }
 
 bool TMapEventSink::isFinishedAll() const
@@ -237,7 +237,7 @@ void TMapEventSinkInPollution::loadAfter()
 	for (int i = 0; i < mBuildingNum; ++i) {
 		TPollutionObj* obj
 		    = gpPollution->getLayer(unk60[i].unk0)->getObj(unk60[i].unk2);
-		gpPollution->getCounterObj().registerPollutionObj(obj, &obj->unk30);
+		gpPollution->getCounterObj().registerPollutionObj(obj, &obj->mCounter);
 	}
 }
 
@@ -292,7 +292,7 @@ void TMapEventSinkBianco::finishControl()
 
 	TPollutionManager* polman = gpPollution;
 	for (int i = 0; i < polman->getJointModelNum(); ++i)
-		polman->getLayer(i)->unk32 &= ~2;
+		polman->getLayer(i)->stopDecay();
 }
 
 void TMapEventSinkBianco::rising()

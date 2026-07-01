@@ -52,31 +52,32 @@ void TRevivalPolluter::pollute() { }
 void TRevivalPolluter::registerPolluteTex()
 {
 	// TODO: inlines make me cry
-	TPollutionLayer* layer = gpPollution->getLayer(unk0);
+	TPollutionLayer* layer = gpPollution->getLayer(mLayerIndex);
 	unk8 = gpPollution->getCounterLayer().registerRevivalTexStamp(
-	    unk0, 0, 0, layer->unk5C.mWidth, layer->unk5C.mHeight, unk18, unk4);
+	    mLayerIndex, 0, 0, layer->mPos.mWidth, layer->mPos.mHeight,
+	    mStampInterval, mRevivalStampTex);
 }
 
 void TRevivalPolluter::loadInfo(JSUMemoryInputStream& stream)
 {
 	u32 value;
-	stream.read(&value, 4);
-	unk0 = value;
-	stream.read(&unk18, 4);
+	stream >> value;
+	mLayerIndex = value;
+	stream >> mStampInterval;
 
 	char buffer[64];
-	snprintf(buffer, 64, "/scene/map/pollution/pollute%02d.bti", unk0);
-	unk4 = (ResTIMG*)JKRGetResource(buffer);
+	snprintf(buffer, 64, "/scene/map/pollution/pollute%02d.bti", mLayerIndex);
+	mRevivalStampTex = (ResTIMG*)JKRGetResource(buffer);
 }
 
 TRevivalPolluter::TRevivalPolluter()
-    : unk0(0)
-    , unk4(nullptr)
+    : mLayerIndex(0)
+    , mRevivalStampTex(nullptr)
     , unk8(0)
     , unkC(0.0f)
     , unk10(0.0f)
     , unk14(0.0f)
-    , unk18(0)
+    , mStampInterval(0)
 {
 }
 

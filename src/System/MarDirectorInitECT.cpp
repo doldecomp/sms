@@ -52,7 +52,7 @@ void TMarDirector::initECTGft(
 		for (int i = 0; i < gpPollution->getJointModelNum(); ++i) {
 			JDrama::TEfbCtrlTex* efbTex = new JDrama::TEfbCtrlTex("graffito");
 			scene->insert(efbTex);
-			const ResTIMG* img = gpPollution->getLayer(i)->getUnk58();
+			const ResTIMG* img = gpPollution->getLayer(i)->getPollutionImage();
 			efbTex->mImagePtr  = (u8*)&img + img->imageDataOffset;
 			efbTex->mWidth     = img->width;
 			efbTex->mHeight    = img->height;
