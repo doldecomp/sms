@@ -50,7 +50,7 @@ int TPollutionManager::getPollutionType(f32 x, f32 y, f32 z) const
 		if (getLayer(i)->isInArea(x, y, z))
 			return getLayer(i)->getPollutionType();
 
-	return 10;
+	return POLLUTION_TYPE_UNK10;
 }
 
 u32 TPollutionManager::getPollutionDegree() const

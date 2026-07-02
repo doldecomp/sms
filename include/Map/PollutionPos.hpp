@@ -49,6 +49,11 @@ public:
 	int getHeight() const { return mHeight; }
 	f32 getTexelSize() const { return mTexelSize; }
 	f32 texToWorldSize(int v) const { return v * mTexelSize; }
+	f32 depthToWorld(int v) const
+	{
+		f32 f = v * mTexelSize;
+		return mVerticalOffset + f;
+	}
 
 public:
 	/* 0x0 */ int mWidth;

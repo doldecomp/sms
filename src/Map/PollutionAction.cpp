@@ -24,7 +24,7 @@ f32 TPollutionLayer::mGlassWallArea       = 1000.0f;
 u32 TPollutionLayer::mGlassWallScaleRate  = 0; // UNUSED
 s32 TPollutionLayer::mGlassWallEffectTime = 120;
 
-void TPollutionLayer::changeType(u16) { }
+void TPollutionLayer::changeType(u16 type) { mPollutionType = type; }
 
 bool TPollutionLayer::getPollutedPosNear(f32 range, JGeometry::TVec3<f32>* dest)
 {
@@ -53,9 +53,9 @@ bool TPollutionLayer::getPollutedPosNear(f32 range, JGeometry::TVec3<f32>* dest)
 bool TPollutionLayer::getPollutedPos(f32 range, JGeometry::TVec3<f32>* dest)
 {
 	for (int i = 0; i < 5; ++i) {
-		dest->x = range * (MsRandF() - 0.5f) + gpMarioPos->x;
-		dest->y = gpMarioPos->y;
-		dest->z = range * (MsRandF() - 0.5f) + gpMarioPos->z;
+		dest->x = range * (MsRandF() - 0.5f) + SMS_GetMarioX();
+		dest->y = SMS_GetMarioY();
+		dest->z = range * (MsRandF() - 0.5f) + SMS_GetMarioZ();
 		if (isPolluted(dest->x, dest->y, dest->z))
 			return true;
 	}
@@ -72,7 +72,7 @@ void TPollutionLayer::spread()
 		mSpreadTimer = 0;
 		JGeometry::TVec3<f32> spread;
 		if (getPollutedPosNear(mSpreadArea, &spread))
-			gpPollution->stamp(1, spread.x, spread.y, spread.z, 128.0f);
+			gpPollution->pollute(spread.x, spread.y, spread.z, 128.0f);
 	}
 }
 
@@ -151,37 +151,25 @@ void TPollutionLayer::action()
 	case POLLUTION_TYPE_GLASS_WALL:
 		glassWall();
 		break;
+	case POLLUTION_TYPE_SINK:
+	case POLLUTION_TYPE_SLIP:
+	case POLLUTION_TYPE_INSTAKILL:
+	case POLLUTION_TYPE_SAFE:
+	case POLLUTION_TYPE_UNK7:
+	case POLLUTION_TYPE_UNK8:
+		break;
 	}
 
-	int tries = 0;
-	bool ok;
 	JGeometry::TVec3<f32>* pos = &mEffectPositions[mCurEffectPosIndex];
 
-	f32 area = mSpreadArea;
-
-	while (true) {
-		pos->x = area * (MsRandF() - 0.5f) + gpMarioPos->x;
-		pos->y = gpMarioPos->y;
-		pos->z = area * (MsRandF() - 0.5f) + gpMarioPos->z;
-		if (isPolluted(pos->x, pos->y, pos->z)) {
-			ok = true;
-			break;
-		}
-		tries += 1;
-		if (tries >= 5) {
-			ok = false;
-			break;
-		}
-	}
-
-	if (ok) {
+	if (getPollutedPos(mSpreadArea, pos)) {
 		if (getPollutionType() != POLLUTION_TYPE_FIRE
 		    && getPollutionType() != POLLUTION_TYPE_UNK7) {
 			if (mEffectTimer > 15) {
 				gpMarioParticleManager->emitWithRotate(
 				    PARTICLE_MS_RAKU_INDAWA,
 				    &mEffectPositions[mCurEffectPosIndex], 0,
-				    (s16)(0.005493164f * (f32)*gpMarioAngleY), 0, 2, nullptr);
+				    (s16)(0.005493164f * SMS_GetMarioAngleY()), 0, 2, nullptr);
 				mCurEffectPosIndex += 1;
 				if (mCurEffectPosIndex >= mEffectPositionsCapacity)
 					mCurEffectPosIndex = 0;

@@ -79,6 +79,7 @@ public:
 	}
 	TPollutionLayerInfo* getLayerInfo(int i) { return &mLayerInfos[i]; }
 	void offLayer(int i) { unk70.offLayer(i); }
+	void pollute(f32 x, f32 y, f32 z, f32 size) { stamp(1, x, y, z, size); }
 
 	static u8 mEdgeAlpha;
 	static int mFlushTime;

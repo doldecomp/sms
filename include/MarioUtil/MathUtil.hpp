@@ -59,6 +59,14 @@ inline void MsMtxSetXYZRPH(MtxPtr mtx, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h)
 void MsMtxSetTRS(MtxPtr result, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h,
                  f32 sx, f32 sy, f32 sz);
 
+inline void MsMtxSetTRS(MtxPtr result, const JGeometry::TVec3<f32>& trans,
+                        const JGeometry::TVec3<f32>& rot,
+                        const JGeometry::TVec3<f32>& scale)
+{
+	MsMtxSetTRS(result, trans.x, trans.y, trans.z, rot.x, rot.y, rot.z, scale.x,
+	            scale.y, scale.z);
+}
+
 // Fabricated AND wrong!
 inline void MsMtxSetTRS(MtxPtr result, f32 x, f32 y, f32 z, s16 r, s16 p, s16 h,
                         f32 sx, f32 sy, f32 sz)

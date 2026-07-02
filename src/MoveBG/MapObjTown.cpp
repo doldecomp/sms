@@ -232,7 +232,7 @@ void TManhole::makeManholeUnuseful(const TMapObjBase* param_1)
 {
 	if (unk154 == nullptr) {
 		unk154 = param_1;
-		unk158->setMtxAndSetUp(getModel()->getAnmMtx(0));
+		unk158->setUpMtx(getModel()->getAnmMtx(0));
 	}
 }
 
