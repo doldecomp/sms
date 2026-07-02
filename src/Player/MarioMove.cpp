@@ -1068,8 +1068,8 @@ void TMario::checkGraffito()
 		break;
 	}
 
-	case 8:
-	case 10:
+	case POLLUTION_TYPE_UNK8:
+	case POLLUTION_TYPE_UNK10:
 		isDirty = 0;
 		break;
 	}

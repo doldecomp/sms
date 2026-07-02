@@ -356,7 +356,7 @@ void TPollutionLayer::initPollutionTex(const char* depth_tex_name)
 	mPollutionMap = (u8*)mPollutionImage + mPollutionImage->imageDataOffset;
 	initTexImage(depth_tex_name);
 
-	if ((int)mPollutionType == POLLUTION_TYPE_ELECTRIC)
+	if (getPollutionType() == POLLUTION_TYPE_ELECTRIC)
 		SMS_LoadParticle("/scene/map/pollution/ms_thunder_s.jpa",
 		                 MAP_POLLUTION_MS_THUNDER_S);
 }

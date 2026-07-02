@@ -103,19 +103,11 @@ void TMapObjBase::setUpCurrentMapCollision()
 		return;
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8)) {
-		J3DModel* model        = getModel();
-		TMapCollisionBase* col = mMapCollisionManager->getUnk8();
-		MTXCopy(model->getAnmMtx(0), col->unk20);
-		col->setUp();
+		mMapCollisionManager->getUnk8()->setUpMtx(getModel()->getAnmMtx(0));
 	} else {
-		Mtx mtx;
 		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,
 		                          mPosition.z);
-		MsMtxSetTRS(mtx, pos.x, pos.y, pos.z, mRotation.x, mRotation.y,
-		            mRotation.z, mScaling.x, mScaling.y, mScaling.z);
-		TMapCollisionBase* col = colman->getUnk8();
-		MTXCopy(mtx, col->unk20);
-		col->setUp();
+		colman->setUpUnk8TRS(pos, mRotation, mScaling);
 	}
 }
 
@@ -130,18 +122,9 @@ void TMapObjBase::setUpMapCollision(u16 param_1)
 	mMapCollisionManager->changeCollision(param_1);
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8)) {
-		J3DModel* model        = getModel();
-		TMapCollisionBase* col = mMapCollisionManager->getUnk8();
-		MTXCopy(model->getAnmMtx(0), col->unk20);
-		col->setUp();
+		mMapCollisionManager->getUnk8()->setUpMtx(getModel()->getAnmMtx(0));
 	} else {
-		Mtx mtx;
-		TMapCollisionManager* colman = mMapCollisionManager;
-		MsMtxSetTRS(mtx, pos.x, pos.y, pos.z, mRotation.x, mRotation.y,
-		            mRotation.z, mScaling.x, mScaling.y, mScaling.z);
-		TMapCollisionBase* col = colman->getUnk8();
-		MTXCopy(mtx, col->unk20);
-		col->setUp();
+		mMapCollisionManager->setUpUnk8TRS(pos, mRotation, mScaling);
 	}
 }
 

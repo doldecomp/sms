@@ -27,7 +27,7 @@ public:
 		Mtx mtx;
 		MsMtxSetTRS(mtx, trans.x, trans.y, trans.z, rot.x, rot.y, rot.z,
 		            scale.x, scale.y, scale.z);
-		unk8->setMtxAndSetUp(mtx);
+		unk8->setUpMtx(mtx);
 	}
 
 public:

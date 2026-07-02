@@ -495,13 +495,11 @@ void TMapWire::init(const TCubeGeneralInfo* cubeInfo)
 
 	TMapCollisionStatic* collision1 = new TMapCollisionStatic;
 	collision1->init("/common/map/WireFitting.col", 2, nullptr);
-	MTXCopy(mStartFittingModel->getAnmMtx(0), collision1->unk20);
-	collision1->setUp();
+	collision1->setUpMtx(mStartFittingModel->getAnmMtx(0));
 
 	TMapCollisionStatic* collision2 = new TMapCollisionStatic;
 	collision2->init("/common/map/WireFitting.col", 2, nullptr);
-	MTXCopy(mEndFittingModel->getAnmMtx(0), collision2->unk20);
-	collision2->setUp();
+	collision2->setUpMtx(mEndFittingModel->getAnmMtx(0));
 }
 
 TMapWire::TMapWire()

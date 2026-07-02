@@ -83,6 +83,13 @@ void SMS_SetMarioAccessParams();
 // Real, see bossgesso
 inline JGeometry::TVec3<f32>& SMS_GetMarioPos() { return *gpMarioPos; }
 
+inline f32 SMS_GetMarioX() { return gpMarioPos->x; }
+inline f32 SMS_GetMarioY() { return gpMarioPos->y; }
+inline f32 SMS_GetMarioZ() { return gpMarioPos->z; }
+inline s16 SMS_GetMarioAngleX() { return *gpMarioAngleX; }
+inline s16 SMS_GetMarioAngleY() { return *gpMarioAngleY; }
+inline s16 SMS_GetMarioAngleZ() { return *gpMarioAngleZ; }
+
 inline JGeometry::TVec3<f32>
 SMS_DistanceFromMarioVec(const JGeometry::TVec3<f32>& pos)
 {

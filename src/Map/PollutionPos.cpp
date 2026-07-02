@@ -25,36 +25,35 @@ int TPollutionPos::getEdgeDegree(int x, int y) const
 f32 TPollutionPos::getDepthWorld(int x, int y) const
 {
 	if (getDepth(x, y) < 0xff) {
-		f32 d = getDepth(x, y) * mTexelSize;
-		return mVerticalOffset + d;
+		return depthToWorld(getDepth(x, y));
 	} else {
 		return -9999.0f;
 	}
 }
 
-bool TPollutionPos::isSame(int x, int y, f32 param_3) const
+bool TPollutionPos::isSame(int x, int z, f32 y) const
 {
-	if (!isInArea(x, y))
+	if (!isInArea(x, z))
 		return false;
 
-	int d = getDepth(x, y);
+	int d = getDepth(x, z);
 	if (d < 0xff) {
-		int uVar4 = mOwner->unk48;
-		int iVar1 = worldToDepth(param_3);
+		s32 iVar1 = worldToDepth(y);
+		int uVar4 = mOwner->getUnk48();
 		if (d - uVar4 <= iVar1 && iVar1 <= d + uVar4)
 			return true;
 	}
 	return false;
 }
 
-void TPollutionPos::subtractFromYMap(int x, int y, f32) const { }
+void TPollutionPos::subtractFromYMap(int x, int z, f32 y) const { }
 
-bool TPollutionPos::isProhibit(int x, int y) const
+bool TPollutionPos::isProhibit(int x, int z) const
 {
-	if (x < 0 || mWidth <= x || y < 0 || mHeight <= y) {
+	if (x < 0 || mWidth <= x || z < 0 || mHeight <= z) {
 		return 1;
 	} else {
-		if (getDepth(x, y) < 0xff) {
+		if (getDepth(x, z) < 0xff) {
 			return 0;
 		} else {
 			return 1;
@@ -64,12 +63,15 @@ bool TPollutionPos::isProhibit(int x, int y) const
 
 int TPollutionPos::worldToDepth(f32 v) const
 {
-	return (v - mVerticalOffset) * 0.025f;
+	v -= mVerticalOffset;
+	v *= 0.025f;
+	return v;
 }
 
 int TPollutionPos::worldToTexSize(f32 v) const
 {
-	return v * mInverseTexelScale;
+	v *= mInverseTexelScale;
+	return v;
 }
 
 void TPollutionPos::init(TPollutionLayer* owner, f32 vertical_offset,

@@ -39,12 +39,8 @@ public:
 	virtual void setUp() { offFlag(FLAG_NEEDS_SETUP); }
 	virtual void setUpTrans(const JGeometry::TVec3<f32>& param_1)
 	{
-		JGeometry::TVec3<f32> vec3;
-		JGeometry::TVec3<f32> vec2;
-		vec3.set((Vec) { 0.0f, 0.0f, 0.0f });
-		vec2.set((Vec) { 1.0f, 1.0f, 1.0f });
-		MsMtxSetTRS(unk20, param_1.x, param_1.y, param_1.z, vec2.x, vec2.y,
-		            vec2.z, vec3.x, vec3.y, vec3.z);
+		MsMtxSetTRS(unk20, param_1, (Vec) { 0.0f, 0.0f, 0.0f },
+		            (Vec) { 1.0f, 1.0f, 1.0f });
 		setUp();
 	}
 	virtual void remove() { onFlag(FLAG_NEEDS_SETUP); }
@@ -81,7 +77,7 @@ public:
 	void offFlag(u16 flag) { mFlags &= ~flag; }
 	s32 getUnk8() const { return mKind; }
 	u32 getUnkC() const { return mCheckDataNum; }
-	void setMtxAndSetUp(MtxPtr mtx)
+	void setUpMtx(MtxPtr mtx)
 	{
 		setMtx(mtx);
 		setUp();
@@ -163,8 +159,7 @@ public:
 	                     const JGeometry::TVec3<f32>& param_2,
 	                     const JGeometry::TVec3<f32>& param_3)
 	{
-		MsMtxSetTRS(unk20, param_1.x, param_1.y, param_1.z, param_2.x,
-		            param_2.y, param_2.z, param_3.x, param_3.y, param_3.z);
+		MsMtxSetTRS(unk20, param_1, param_2, param_3);
 		move();
 	}
 	virtual void moveTrans(const JGeometry::TVec3<f32>&);

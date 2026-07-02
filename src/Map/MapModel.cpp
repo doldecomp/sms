@@ -64,25 +64,26 @@ void TMapModel::initUnderpass()
 		return;
 
 	J3DJoint* underpass = mModelData->getJointNodePointer(nameIdx);
-	int i;
-	for (i = 0; i < mChildrenNum && mChildren[i]->getJoint() != underpass; ++i)
-		;
+
+	int i = 0;
+	while (i < mChildrenNum && mChildren[i]->getJoint() != underpass)
+		++i;
 
 	mUnderpass         = mChildren[i];
 	mUnderpassMaterial = underpass->getMesh();
 	mUnderpassMaterial->change();
 	mUnderpassMaterial->setSomeFlag();
 
-	J3DTexCoord* texCoord
-	    = mUnderpassMaterial->getTexGenBlock()->getTexCoord(0);
+	J3DTexCoord* texCoord = mUnderpassMaterial->getTexCoord(0);
 	texCoord->setTexGenType(GX_TG_MTX2x4);
 	texCoord->setTexGenSrc(GX_TG_POS);
 	texCoord->setTexGenMtx(GX_TEXMTX0);
+
 	J3DTexMtx* texMtxInfo = new J3DTexMtx;
 	texMtxInfo->mInfo     = 2;
-	mUnderpassMaterial->getTexGenBlock()->setTexMtx(0, texMtxInfo);
-	J3DZMode* zmode = mUnderpassMaterial->getPEBlock()->getZMode();
+	mUnderpassMaterial->setTexMtx(0, texMtxInfo);
 
+	J3DZMode* zmode = mUnderpassMaterial->getZMode();
 	zmode->setCompareFunc(GX_ALWAYS);
 	zmode->setUpdateEnable(GX_FALSE);
 }

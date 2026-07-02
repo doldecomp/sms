@@ -20,6 +20,10 @@ enum EPollutionType {
 	POLLUTION_TYPE_INSTAKILL  = 5,
 	POLLUTION_TYPE_SAFE       = 6,
 	POLLUTION_TYPE_UNK7       = 7,
+
+	// Both act as "not polluted" I think
+	POLLUTION_TYPE_UNK8  = 8,
+	POLLUTION_TYPE_UNK10 = 10,
 };
 
 /// Serialized layer data from on-disk assets
@@ -125,7 +129,7 @@ public:
 
 	// fabricated
 	const ResTIMG* getPollutionImage() const { return mPollutionImage; }
-	u32 getUnk48() const { return unk48; }
+	int getUnk48() const { return unk48; }
 	int getPollutionType() const { return mPollutionType; }
 	u32 getPollutionDegree() const { return mCounter; }
 	TPollutionObj* getObj(int i) { return (TPollutionObj*)getChild(i); }

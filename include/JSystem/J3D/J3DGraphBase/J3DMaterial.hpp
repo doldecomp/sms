@@ -4,6 +4,7 @@
 #include <types.h>
 #include <JSystem/J3d/J3DGraphBase/Blocks/J3DTevBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DTexGenBlocks.hpp>
+#include <JSystem/J3D/J3DGraphBase/Blocks/J3DPEBlocks.hpp>
 
 class J3DMaterialAnm;
 class J3DShape;
@@ -59,6 +60,7 @@ public:
 	J3DTexMtx* getTexMtx(u32 idx) { return mTexGenBlock->getTexMtx(idx); }
 	J3DTexCoord* getTexCoord(u32 idx) { return mTexGenBlock->getTexCoord(idx); }
 	J3DNBTScale* getNBTScale() { return mTexGenBlock->getNBTScale(); }
+	J3DZMode* getZMode() { return mPEBlock->getZMode(); }
 
 	void setTevColor(u32 i, const J3DGXColorS10* i_color)
 	{
