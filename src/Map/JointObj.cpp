@@ -15,11 +15,11 @@ void TJointObj::stand()
 	for (int i = 0; i < getChildrenNum(); ++i)
 		mChildren[i]->stand();
 
-	if (checkFlag(4)) {
+	if (checkFlag(FLAG_SITTING)) {
 		for (int i = 0; i < getShapeNum(); ++i)
 			mShapes[i]->offFlag(1);
 
-		offFlag(4);
+		offFlag(FLAG_SITTING);
 	}
 }
 
@@ -28,11 +28,11 @@ void TJointObj::sit()
 	for (int i = 0; i < getChildrenNum(); ++i)
 		mChildren[i]->sit();
 
-	if (!checkFlag(4 | 2 | 1)) {
+	if (!checkFlag(FLAG_SITTING | FLAG_ASLEEP | FLAG_DEAD)) {
 		for (int i = 0; i < getShapeNum(); ++i)
 			mShapes[i]->onFlag(1);
 
-		onFlag(4);
+		onFlag(FLAG_SITTING);
 	}
 }
 
@@ -41,12 +41,12 @@ void TJointObj::awake()
 	for (int i = 0; i < getChildrenNum(); ++i)
 		mChildren[i]->awake();
 
-	if (checkFlag(4 | 2)) {
+	if (checkFlag(FLAG_SITTING | FLAG_ASLEEP)) {
 		for (int i = 0; i < getShapeNum(); ++i)
 			mShapes[i]->offFlag(1);
 
-		offFlag(4);
-		offFlag(2);
+		offFlag(FLAG_SITTING);
+		offFlag(FLAG_ASLEEP);
 	}
 }
 
@@ -55,12 +55,12 @@ void TJointObj::sleep()
 	for (int i = 0; i < getChildrenNum(); ++i)
 		mChildren[i]->sleep();
 
-	if (!checkFlag(1) && !checkFlag(2)) {
+	if (!checkFlag(FLAG_DEAD) && !checkFlag(FLAG_ASLEEP)) {
 		for (int i = 0; i < getShapeNum(); ++i)
 			mShapes[i]->onFlag(1);
 
-		offFlag(4);
-		onFlag(2);
+		offFlag(FLAG_SITTING);
+		onFlag(FLAG_ASLEEP);
 	}
 }
 
@@ -72,9 +72,9 @@ void TJointObj::alive()
 	for (int i = 0; i < getShapeNum(); ++i)
 		mShapes[i]->offFlag(1);
 
-	offFlag(1);
-	offFlag(2);
-	offFlag(4);
+	offFlag(FLAG_DEAD);
+	offFlag(FLAG_ASLEEP);
+	offFlag(FLAG_SITTING);
 }
 
 void TJointObj::kill()
@@ -82,13 +82,13 @@ void TJointObj::kill()
 	for (int i = 0; i < getChildrenNum(); ++i)
 		mChildren[i]->kill();
 
-	if (!checkFlag(1)) {
+	if (!checkFlag(FLAG_DEAD)) {
 		for (int i = 0; i < getShapeNum(); ++i)
 			mShapes[i]->onFlag(1);
 
-		onFlag(1);
-		offFlag(2);
-		offFlag(4);
+		onFlag(FLAG_DEAD);
+		offFlag(FLAG_ASLEEP);
+		offFlag(FLAG_SITTING);
 	}
 }
 

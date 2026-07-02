@@ -33,6 +33,12 @@ public:
 	J3DJoint* getJoint() { return mJoint; }
 
 public:
+	enum {
+		FLAG_DEAD    = 0x1,
+		FLAG_ASLEEP  = 0x2,
+		FLAG_SITTING = 0x4,
+	};
+
 	/* 0x4 */ u32 mIndexInParent;
 	/* 0x8 */ u32 mFlags;
 	/* 0xC */ J3DJoint* mJoint;
