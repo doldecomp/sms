@@ -11,7 +11,7 @@
 
 void TJointModel::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
-	if (!checkFlag(1))
+	if (!checkFlag(FLAG_DEAD))
 		mActor->perform(param_1, param_2);
 }
 

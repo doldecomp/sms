@@ -15,7 +15,7 @@
 
 void TMapModel::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
-	if (checkFlag(1))
+	if (checkFlag(FLAG_DEAD))
 		return;
 
 	if ((param_1 & 2) != 0 && mUnderpass != nullptr) {
