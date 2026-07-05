@@ -255,6 +255,36 @@ So when the target shows an `init$NNN` byte that is loaded with `lbz` + `extsb.`
 
 Aggregate-initialized PODs (`static Vec pos = { 1.0f, 2.0f, 3.0f };`) and zero-initialized statics (`static Vec pos;`) do NOT produce a guard — they sit in `.data` / `.bss` with no first-call check. The `init$NNN` pattern only appears when MWCC needs to run constructor code at first entry.
 
+## Default arguments vs. spelling them out changes inlining
+
+When a base/member constructor is invoked with a value that happens to be that
+constructor's own default argument, prefer the default-arg call form over
+repeating the literal. It is not just cosmetic: it can change MWCC's inline
+depth decisions.
+
+Concrete case (`BathWaterManager.cpp`): `JDrama::TViewObj`'s ctor defaults its
+name to `"<TViewObj>"`. Writing a member's base as `JDrama::TViewObj("<TViewObj>")`
+inlined the nested `TNameRef`/`TFlagT` ctors one level too deep; writing it as
+`JDrama::TViewObj()` (letting the default supply the identical string) kept those
+nested ctors as real `bl` calls, exactly like the target. This took the
+enclosing constructor from 90.6% to 100%. If a nested ctor inlines when the
+target keeps it as a call (or vice-versa), check whether the original used a
+default argument.
+
+## Unsized arrays go to `.data`, sized ones may go to `.sdata`
+
+An array declared with an explicit size that is small enough (≤ the `-sdata`
+threshold, default 8 bytes) can be placed in `.sdata` and addressed GP-relative
+(`@sda21`, giving an indexed `lwzx` load). An array declared **unsized** — e.g.
+`static const char* fileNames[]` with the size deduced from the initializer —
+is always placed in `.data` instead, and addressed absolutely (`lis/addi @ha/@l`
++ `add`/`lwz`).
+
+So if a small global array should live in `.data` (target uses `lis/addi`) but
+yours lands in `.sdata` (`@sda21`), drop the explicit array bound and let the
+initializer size it. Concrete case (`BathWaterManager.cpp`): `fileNames[2]` →
+`.sdata` (nonmatching); `fileNames[]` → `.data` (match).
+
 ## Local Symbol Mangling: `@unnamed@` vs `static`
 
 MWCC mangles symbols inside anonymous namespaces with an `@unnamed@` prefix.
@@ -317,3 +347,33 @@ node.mPos.set(expr_x, expr_y, expr_z);
 ```
 
 The target assembly will clearly show `lwz`/`stw` (integer move) vs `lfs`/`stfs` (float move). Choose the source pattern that matches.
+
+### Constructor with a zero component + `+=` vs direct component init
+
+When building a vector where some components are `0.0f + <expr>` and one is a
+real value, the target may show *literal* `0.0` adds on the zero components:
+```
+lfs f4, @zero ; fadds f4, f4, f0   ; component = 0.0 + src.x
+```
+This is the signature of the original writing a base vector with literal-zero
+components and then adding another vector, e.g.
+```cpp
+// point2 = (0, -unkC.y, 0) then add unk58 -> emits the "0.0 + unk58.x" adds
+JGeometry::TVec3<f32> point2(0.0f, -1.0f * unkC.y, 0.0f);
+point2 += data.unk58;
+```
+Writing the fully-fused form `TVec3(unk58.x, -unkC.y + unk58.y, unk58.z)`
+instead reads the components directly with no zero-adds and does not match.
+Concrete case (`BathWaterManager.cpp` `calcBathtub` inner-band branch): the
+`+=` form recovered the `0.0 + x`/`0.0 + z` adds; see next tip for the `-1.0f *`.
+
+### Negation as `-1.0f * x` (fmuls) vs `-x` (fneg)
+
+`-x` compiles to `fneg`. But the target sometimes shows a standalone
+`fmuls f_, f(-1.0), f(x)` (multiply by the `-1.0` SDA constant) where you'd
+expect a negation — and crucially kept as a *separate* fmuls, not fused into a
+following `fmadds`/`fnmsubs`. This happens when the original literally wrote
+`-1.0f * x` (MWCC in does not algebraically fold
+`-1.0f * x` -> `fneg x`). Prefer `-1.0f * x` over `-x` when the target shows the
+extra `-1.0` load + `fmuls`. Concrete case (`BathWaterManager.cpp`
+`calcBathtub`): `-1.0f * unkC.y` matched; `-unkC.y` gave `fneg` and did not.

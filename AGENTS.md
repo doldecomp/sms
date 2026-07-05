@@ -12,7 +12,7 @@ The work is fundamentally about getting into the heads of the original developer
 
 When progress stalls because a tough choice must be made and strong evidence is lacking, **leave the code nonmatching and move on**. New evidence often emerges later — from matching a neighboring function, finding a pattern in another TU, or discovering a debug string. Premature commitment to a wrong approach creates technical debt that's harder to undo than a TODO comment. The final goal is still always a 100% match, but trying to headbutt a particular function into matching 100% usually results in fakematches and technical debt. Case-by-case judgement should be used.
 
-Truly hard judgment calls — ambiguous code structure, naming disputes, architectural decisions — should be deferred to humans. The ultimate goal of the project is not just a matching binary but **human-readable, modifiable source code**.
+Truly hard judgment calls — ambiguous code structure, naming disputes, architectural decisions — should be deferred to humans. Do that by leaving TODOs around places that feel especially fake and wrong rather than refusing to tackle complicated-looking code. The ultimate goal of the project is not just a matching binary but **human-readable, modifiable source code**.
 
 ## Repository Layout
 

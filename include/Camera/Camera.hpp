@@ -379,7 +379,7 @@ public:
 	/* 0x160 */ JGeometry::TVec3<f32> unk160;
 	/* 0x16C */ Mtx44 unk16C;
 	/* 0x1AC */ Mtx44 unk1AC;
-	/* 0x1EC */ Mtx unk1EC;
+	/* 0x1EC */ TPosition3f unk1EC;
 	/* 0x21C */ Mtx unk21C;
 	/* 0x24C */ f32 mHeightPanOffset;
 	/* 0x250 */ f32 unk250;

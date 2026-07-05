@@ -59,12 +59,16 @@ inline static void GDWrite_u8(u8 data)
 	__GDWrite(data & 0xFF);
 }
 
+inline static void GDWrite_s8(u8 data) { GDWrite_u8(data); }
+
 inline static void GDWrite_u16(u16 data)
 {
 	GDOverflowCheck(sizeof(u16));
 	__GDWrite(data >> 8);
 	__GDWrite(data & 0xFF);
 }
+
+inline static void GDWrite_s16(u8 data) { GDWrite_u16(data); }
 
 inline static void GDWrite_u32(u32 data)
 {
@@ -74,6 +78,8 @@ inline static void GDWrite_u32(u32 data)
 	__GDWrite((data >> 8) & 0xFF);
 	__GDWrite(data & 0xFF);
 }
+
+inline static void GDWrite_s32(u8 data) { GDWrite_u32(data); }
 
 inline static void GDWrite_f32(float data)
 {
