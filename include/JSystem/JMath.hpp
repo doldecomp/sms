@@ -50,7 +50,8 @@ private:
 };
 
 // Reconstructed from TP and TWW
-template <class T> class TRandom_ : T {
+template <class T> class TRandom_ : public T {
+public:
 	TRandom_(u32 seed)
 	    : T(seed)
 	{
@@ -60,7 +61,19 @@ template <class T> class TRandom_ : T {
 	f32 get_ufloat(f32);
 	u32 get_uint32(u32);
 	u8 get_uint8(u8 param_1) { return param_1 * this->get_ufloat_1(); }
+
+	// fabricated
+	f32 get_float(f32 min, f32 max)
+	{
+		f32 f = (max - min) * this->get_ufloat_1();
+		return min + f;
+	}
+
+	// fabricated
+	f32 get_float01() { return get_float(0.0f, 1.0f); }
 };
+
+typedef TRandom_<TRandom_fast_> TRandomFast;
 
 } // namespace JMath
 

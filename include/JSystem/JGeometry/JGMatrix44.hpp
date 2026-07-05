@@ -15,6 +15,9 @@ template <typename T> struct SMatrix44C {
 template <> struct SMatrix44C<f32> {
 	SMatrix44C() { }
 
+	typedef f32 ArrType[4];
+	operator ArrType*() { return mMtx; }
+
 	f32 mMtx[4][4];
 };
 

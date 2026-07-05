@@ -64,7 +64,6 @@ public:
 
 	typedef f32 ArrType[4];
 	operator ArrType*() { return mMtx; } // Real!
-	operator const ArrType*() const { return mMtx; }
 
 	void set(const ArrType* src)
 	{
