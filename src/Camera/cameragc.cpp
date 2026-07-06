@@ -995,7 +995,7 @@ void CPolarSubCamera::perform(u32 param_1, JDrama::TGraphics* param_2)
 		for (int i = 0; i < 4; ++i)
 			for (int j = 0; j < 4; ++j)
 				param_2->mProjMtx.mMtx[i][j] = unk16C[i][j];
-		MTXCopy(unk1EC, param_2->getUnkB4());
+		param_2->setViewMtx(unk1EC);
 		param_2->mNearPlane = mNear;
 		param_2->mFarPlane  = mFar;
 		if (param_1 & 0x10)

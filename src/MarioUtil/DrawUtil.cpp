@@ -105,13 +105,13 @@ void TSilhouette::perform(u32 param_1, JDrama::TGraphics* param_2)
 		GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0,
 		              GX_DF_NONE, GX_AF_NONE);
 		GXSetChanMatColor(GX_COLOR0A0, unk12);
-		setting(param_2->getUnkB4());
+		setting(param_2->getViewMtx());
 	}
 	if ((param_1 & 0x80) != 0) {
 		GXColor color = unk12;
 		color.a       = gpSunMgr->getUnk1CAlpha();
 		GXSetChanMatColor(GX_COLOR0A0, color);
-		setting(param_2->getUnkB4());
+		setting(param_2->getViewMtx());
 	}
 	if (((param_1 & 0x10) != 0) && gpPollution->getJointModelNum()) {
 		Mtx afStack_80;

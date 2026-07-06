@@ -31,7 +31,7 @@ void TEmitterViewObj::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (param_1 & 0x8) {
-		JPADrawInfo drawInfo(param_2->getUnkB4());
+		JPADrawInfo drawInfo(param_2->getViewMtx());
 		unk10->draw(&drawInfo);
 	}
 }
@@ -45,7 +45,7 @@ void TEmitterIndirectViewObj::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 	if (param_1 & 0x8) {
 		SMS_DrawInit();
-		JPADrawInfo drawInfo(param_2->getUnkB4());
+		JPADrawInfo drawInfo(param_2->getViewMtx());
 		drawInfo.setFovy(gpCamera->getFovy());
 		drawInfo.setAspect(gpCamera->getAspect());
 		unk10->draw(&drawInfo);
@@ -172,7 +172,7 @@ void TMarioParticleManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (param_1 & 0x8) {
 		if (param_1 & 0x40000000) {
 			SMS_DrawInit();
-			JPADrawInfo drawInfo(param_2->getUnkB4());
+			JPADrawInfo drawInfo(param_2->getViewMtx());
 			drawInfo.setFovy(gpCamera->getFovy());
 			drawInfo.setAspect(gpCamera->getAspect());
 			unk3B8->draw(&drawInfo, 2);
@@ -180,7 +180,7 @@ void TMarioParticleManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 
 		if (param_1 & 0x80000000) {
-			JPADrawInfo drawInfo(param_2->getUnkB4());
+			JPADrawInfo drawInfo(param_2->getViewMtx());
 			unk3B8->draw(&drawInfo, 0);
 			unk3B8->draw(&drawInfo, 1);
 		}
