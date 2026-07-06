@@ -40,8 +40,8 @@ bool TDolpicEventBiancoGate::control()
 		JGeometry::TVec3<f32>& pos = unk20->mPosition;
 		gpPollution->clean(pos.x, pos.y, pos.z, 10000.0f);
 	}
-	if (unk20->mPosition.y >= unk20->mInitialPosition.y) {
-		unk20->mPosition.y = unk20->mInitialPosition.y;
+	if (unk20->mPosition.y >= unk20->getInitialPosition().y) {
+		unk20->mPosition.y = unk20->getInitialPosition().y;
 		unk20->setUpMapCollision(0);
 		unk18 = 0;
 		return true;
@@ -104,7 +104,8 @@ bool TDolpicEventRiccoMammaGate::control()
 
 	if (unk44 > unk40) {
 		SMSRumbleMgr->start(0x13, (f32*)nullptr);
-		gpMSound->startSoundActor(MSD_SE_OBJ_QUAKE, &unk48, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &unk48, 0, nullptr, 0,
+		                                4);
 	}
 
 	if (unk44 > 0) {
@@ -115,7 +116,7 @@ bool TDolpicEventRiccoMammaGate::control()
 	TMapObjBase::setJointScaleY(unk20, 1.0f);
 	unk24->remove();
 	unk28->setUp();
-	gpMarDirector->fireEndDemoCamera();
+	SMSGetMarDirector()->fireEndDemoCamera();
 	MSBgm::setTrackVolume(0, 1.0f, 15, 0);
 	unk18 = 0;
 	return true;

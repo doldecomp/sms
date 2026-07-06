@@ -340,6 +340,10 @@ public:
 
 	// Fabricated
 	const JGeometry::TVec3<f32>& getInitialScaling() { return mInitialScaling; }
+	const JGeometry::TVec3<f32>& getInitialPosition() const
+	{
+		return mInitialPosition;
+	}
 
 	const char* getUnkF4() { return unkF4; }
 
