@@ -128,7 +128,11 @@ void TAmbColor::perform(u32 param_1, TGraphics* param_2)
 
 GXColor TAmbColor::JSGGetColor() const { return mColor; }
 
-void TAmbColor::JSGSetColor(GXColor color) { mColor = color; }
+void TAmbColor::JSGSetColor(GXColor color)
+{
+	volatile u32 unused[2];
+	mColor = color;
+}
 
 void TAmbAry::load(JSUMemoryInputStream& stream)
 {
