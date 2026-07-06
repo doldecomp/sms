@@ -133,7 +133,7 @@ void TAfterEffect::perform(u32 param_1, JDrama::TGraphics* param_2)
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
 	GXSetCullMode(GX_CULL_BACK);
 	GXSetCurrentMtx(GX_PNMTX0);
-	GXLoadPosMtxImm(param_2->getUnkB4(), GX_PNMTX0);
+	GXLoadPosMtxImm(param_2->getViewMtx(), GX_PNMTX0);
 	GXSetNumChans(1);
 	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_VTX, GX_SRC_VTX, 0, GX_DF_NONE,
 	              GX_AF_NONE);

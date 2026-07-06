@@ -1,6 +1,10 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <JSystem/JMath.hpp>
 
+static Vec dummy1   = { 1.0f, 1.0f, 1.0f };
+static Vec dummy2   = { 1.0f, 1.0f, 1.0f };
+static int dummy3[] = { 0, 2, 1, 3 };
+
 static u16 atntable[] = {
 	0,    10,   20,   31,   41,   51,   61,   71,   81,   92,   102,  112,
 	122,  132,  143,  153,  163,  173,  183,  194,  204,  214,  224,  234,
@@ -127,44 +131,45 @@ static u16 GetAtanTable(f32 param_1, f32 param_2)
 	if (param_1 == 0)
 		return atntable[0];
 
-	int idx = param_2 * __fres(param_1) * 1024.0f + 0.5f;
-	return atntable[idx];
+	return atntable[(int)(param_2 * __fres(param_1) * 1024.0f + 0.5f)];
 }
 
 s16 matan(f32 param_1, f32 param_2)
 {
+	u16 result;
 	// TODO: currently too lazy to figure out how exactly they use symmetries
 	// here and what exact result transforms are needed in various branches.
 	// Probably should be something nice and symmetric and not this.
 	if (param_2 >= 0.0f) {
 		if (param_1 >= 0.0f) {
 			if (param_1 >= param_2)
-				return 0x0000 + GetAtanTable(param_1, param_2);
+				result = 0x0000 + GetAtanTable(param_1, param_2);
 			else
-				return 0x4000 - GetAtanTable(param_1, param_2);
+				result = 0x4000 - GetAtanTable(param_2, param_1);
 		} else {
 			param_1 = -param_1;
 			if (param_1 < param_2)
-				return GetAtanTable(param_1, param_2) + 0x4000;
+				result = 0x4000 + GetAtanTable(param_2, param_1);
 			else
-				return GetAtanTable(param_1, param_2) + 0x8000;
+				result = 0x8000 - GetAtanTable(param_1, param_2);
 		}
 	} else {
 		param_2 = -param_2;
 
 		if (param_1 < 0.0f) {
 			param_1 = -param_1;
-			if (param_1 <= param_2)
-				return GetAtanTable(param_1, param_2) + 0x8000;
+			if (param_1 >= param_2)
+				result = 0x8000 + GetAtanTable(param_1, param_2);
 			else
-				return GetAtanTable(param_1, param_2) + -0x4000;
+				result = 0xC000 - GetAtanTable(param_2, param_1);
 		} else {
 			if (param_1 < param_2)
-				return GetAtanTable(param_1, param_2) - 0x4000;
+				result = 0xC000 + GetAtanTable(param_2, param_1);
 			else
-				return -GetAtanTable(param_1, param_2);
+				result = 0x0000 - GetAtanTable(param_1, param_2);
 		}
 	}
+	return result;
 }
 
 static inline void MsGetRotFromZaxisY2(const JGeometry::TVec3<f32>& axis,
