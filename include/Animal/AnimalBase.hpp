@@ -18,6 +18,7 @@ public:
 	                         const JGeometry::TVec3<f32>&, f32, f32);
 	void resetRandomCurPathNode();
 	void loadAfter();
+	void initNoLoad_(TAnimalBase*);
 
 public:
 	/* 0x150 */ int* mFrameTimer;
