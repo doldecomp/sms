@@ -175,6 +175,9 @@ Important limitations:
 
 When a user requests to decompile a fresh TU for which no stubs or header exists, `docs/PROGRAM_STRUCTURE_REVVING.md` **must** be followed to reconstruct the scaffolding like declarations/definitions of methods/functions, class definitions, global variables, etc.
 
+**Important**: as soon as you notice some method declaration and/or definition missing, thats a sure-sign of someone forgetting to scan the entire `mario.MAP` file properly for all known methods of some class and/or all known symbols in a TU.
+Do the rescan yourself for relevant classes and TUs using relevant regular expressions containing file name or the correct mangling suffix that all such class members have.
+
 ## Source Organization
 
 Each `.o` file maps 1:1 to a `.cpp` file. The path is listed in `configure.py` under `config.libs`. Each object has a status:
