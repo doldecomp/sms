@@ -165,6 +165,10 @@ Important limitations:
 - `m2c` does **not** support the C++ context flow needed for this repository's real types, so do not try to feed it SMS C++ context files and expect good typed output.
 - use `m2c` for orientation only; never trust it over the asm or decomp-diff.
 
+### Decompiling brand-new code without existing scaffolding
+
+When a user requests to decompile a fresh TU for which no stubs or header exists, `docs/PROGRAM_STRUCTURE_REVVING.md` **must** be followed to reconstruct the scaffolding like declarations/definitions of methods/functions, class definitions, global variables, etc.
+
 ## Source Organization
 
 Each `.o` file maps 1:1 to a `.cpp` file. The path is listed in `configure.py` under `config.libs`. Each object has a status:
@@ -264,8 +268,6 @@ Game-tunable parameters use `TParamRT<T>` fields initialized via the `PARAM_INIT
 ## Code Conventions
 
 ### Naming
-
-These are general guidelines, but 
 
 - **Use original names wherever possible.** The symbol map (`mario.MAP`, `symbols.txt`) and debug strings embedded in the binary are the primary sources for names. For example, `PARAM_INIT` stringifies its field name argument, so all parameter struct members have their original names recoverable from the binary's `.rodata` section. Another source of debug names can be debug builds of other games that share libraries with this one, but this is left for humans to figure out.
 - Try to follow existing conventions of the subsystem whenever possible (e.g. conventions in MSL, dolphin SDK, JSystem and gameplay code are all slightly different).
