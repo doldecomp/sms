@@ -7,6 +7,8 @@ TAnimalBase::TAnimalBase(u32 actorType, const char* name)
 	mActorType = actorType;
 }
 
+TAnimalBase::~TAnimalBase() { }
+
 BOOL TAnimalBase::receiveMessage(THitActor* sender, u32 msg)
 {
 	return FALSE;
