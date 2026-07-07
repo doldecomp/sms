@@ -9,7 +9,7 @@ TAnimalBase::TAnimalBase(u32 actorType, const char* name)
 
 BOOL TAnimalBase::receiveMessage(THitActor* sender, u32 msg)
 {
-	return 0;
+	return FALSE;
 }
 
 void TAnimalBase::calcRootMatrix() { }
