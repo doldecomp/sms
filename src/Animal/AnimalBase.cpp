@@ -1,5 +1,6 @@
 #include <Animal/AnimalBase.hpp>
 #include <MSound/MSoundSE.hpp>
+#include <MSound/SoundEffects.hpp>
 
 TAnimalBase::TAnimalBase(u32 actorType, const char* name)
     : TSpineEnemy(name)
@@ -22,7 +23,8 @@ void TAnimalBase::loadAfter()
 	// from an unresolved inline); logic is otherwise byte-identical.
 	TNameRef::loadAfter();
 	if (mActorType == 0x800001)
-		MSoundSESystem::MSRandPlay::registerTrans(0x3813, &mPosition);
+		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_OBJ_KAMOME_SOLO,
+		                                          &mPosition);
 }
 
 void TAnimalBase::load(JSUMemoryInputStream& stream)
