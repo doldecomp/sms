@@ -377,3 +377,29 @@ following `fmadds`/`fnmsubs`. This happens when the original literally wrote
 `-1.0f * x` -> `fneg x`). Prefer `-1.0f * x` over `-x` when the target shows the
 extra `-1.0` load + `fmuls`. Concrete case (`BathWaterManager.cpp`
 `calcBathtub`): `-1.0f * unkC.y` matched; `-unkC.y` gave `fneg` and did not.
+
+## Reading a source array through `void*` defeats CSE (controls loop unroll)
+
+When a loop copies the same source element to several destinations, e.g.
+```cpp
+TVec3<s16>* src = (TVec3<s16>*)getVtxPosArray();
+for (...) { a[i] = src[i]; b[i] = src[i]; c[i] = src[i]; }
+```
+MWCC's alias analysis can prove `src` (a clean typed pointer) doesn't alias the
+`new`-allocated destinations and **CSEs the `src[i]` load** — reading it once and
+reusing it for all three stores. That shrinks the loop body, and MWCC's `-O4`
+unroller then unrolls it *more* (e.g. ×8). The target often reloads `src[i]` for
+every store (no CSE) and unrolls only ×2.
+
+To reproduce the reloads (and the smaller unroll factor), read the source
+through a `void*` and cast at each use, which blocks the alias analysis:
+```cpp
+void* src = getVtxPosArray();
+for (...) {
+    a[i] = ((TVec3<s16>*)src)[i];
+    b[i] = ((TVec3<s16>*)src)[i];
+    c[i] = ((TVec3<s16>*)src)[i];
+}
+```
+Concrete case (`DrawUtil.cpp` `TTrembleModelEffect::init`): the typed-`src` form
+CSE'd + unrolled ×8 (54%); the `void*`-cast form reloaded + unrolled ×2 (100%).
