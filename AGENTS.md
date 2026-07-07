@@ -47,6 +47,12 @@ configure.py          — main build configuration; lists ALL objects and their 
 docs/                 — documentation on reverse-engineering methodology
 ```
 
+**MOST IMPORTANT NOTE OF ALL IMPORTANT NOTES**: autonomous agents are **strictly prohibited** from working on:
+- MSL runtime, MetroTRK and THPPlayer,
+- dolphin SDK,
+- JSystem middleware.
+Under the supervision of a human programmer, some degree of work might be acceptable on a narrow subset of these libraries known to be leak-free, but when working without a human programmer's supervision work on these libraries is strictly prohibited and such PRs will not be accepted. Work on game code instead.
+
 ## Build & Diff Workflow
 
 Note that on windows, all tool names should be suffixed with `.exe`, while the following documentation uses the UNIX spelling (without `.exe`) for simplicity.
