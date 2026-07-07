@@ -8,8 +8,6 @@ TAnimalBase::TAnimalBase(u32 actorType, const char* name)
 	mActorType = actorType;
 }
 
-TAnimalBase::~TAnimalBase() { }
-
 BOOL TAnimalBase::receiveMessage(THitActor* sender, u32 msg)
 {
 	return FALSE;
@@ -29,16 +27,12 @@ void TAnimalBase::loadAfter()
 
 void TAnimalBase::load(JSUMemoryInputStream& stream)
 {
-	// TODO: 95.6% - logic matches; residual is register allocation cascading
-	// from the same 16-byte MWCC stack-padding seen in loadAfter (likely a
-	// shared inline in this class yet to be identified).
 	TSpineEnemy::load(stream);
 
-	int count;
-	stream.read(&count, 4);
+	s32 count;
+	stream >> count;
 
-	int n = count;
-	for (int i = 0; i < n - 1; ++i) {
+	for (int i = 0; i < count - 1; ++i) {
 		initNoLoad_(new TAnimalBase(mActorType, getName()));
 	}
 }
