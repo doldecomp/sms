@@ -403,3 +403,10 @@ for (...) {
 ```
 Concrete case (`DrawUtil.cpp` `TTrembleModelEffect::init`): the typed-`src` form
 CSE'd + unrolled ×8 (54%); the `void*`-cast form reloaded + unrolled ×2 (100%).
+
+## Working with JSUMemoryInputStream
+
+Practice shows that most of the time in game code `operator>>` overloads were used for reading from them, and sometimes they were chained together.
+This fact was derived from stack frame padding issues in various `JDRama::TNameRef::load` overloads -- only by using `operator>>` and sometimes chaining them (e.g. `stream >> vec.x >> vec.y >> vec.z;`) does stack the stack frame size matches the original.
+However, methods like `stream.readU16()` were also occasionally used, but codegen differs a bit when it is used and so judgement must be made on a case-by-case basis.
+Doing raw `stream.read(&someInt, 4);` calls is the least likely option, because humans are lazy and wouldn't want to specify the size manually -- always prefer avoiding it.
