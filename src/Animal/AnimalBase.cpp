@@ -8,10 +8,7 @@ TAnimalBase::TAnimalBase(u32 actorType, const char* name)
 	mActorType = actorType;
 }
 
-BOOL TAnimalBase::receiveMessage(THitActor* sender, u32 msg)
-{
-	return FALSE;
-}
+BOOL TAnimalBase::receiveMessage(THitActor* sender, u32 msg) { return FALSE; }
 
 void TAnimalBase::calcRootMatrix() { }
 
