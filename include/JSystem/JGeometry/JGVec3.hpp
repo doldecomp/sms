@@ -15,22 +15,8 @@ public:
 
 	TVec3(const S16Vec& b) { set(b.x, b.y, b.z); }
 
-	void sub(const JGeometry::TVec3<s16>&);
-	void add(const JGeometry::TVec3<s16>&);
-
 	// fabricated
 	TVec3(s16 x_, s16 y_, s16 z_) { set(x_, y_, z_); }
-
-	// I replaced this with the one in TP and it matched perfectly for me
-	// I could not see it was in use anywhere, so i suspect the
-	// replacement below is more correct. Yell at me to move it back if needed
-	// in PR :) Or else i will remove this! -AZ template <class TY> void set(TY
-	// x_, TY y_, TY z_)
-	// {
-	// 	x = x_;
-	// 	y = y_;
-	// 	z = z_;
-	// }
 
 	void set(s16 x_, s16 y_, s16 z_)
 	{
@@ -40,6 +26,60 @@ public:
 	}
 
 	void zero() { x = y = z = 0; }
+
+	void add(const TVec3& operand)
+	{
+		x += operand.x;
+		y += operand.y;
+		z += operand.z;
+	}
+
+	void add(const TVec3& a, const TVec3& b)
+	{
+		x = a.x + b.x;
+		y = a.y + b.y;
+		z = a.z + b.z;
+	}
+
+	void sub(const TVec3& translate)
+	{
+		x -= translate.x;
+		y -= translate.y;
+		z -= translate.z;
+	}
+
+	void sub(const TVec3& fst, const TVec3& snd)
+	{
+		x = fst.x - snd.x;
+		y = fst.y - snd.y;
+		z = fst.z - snd.z;
+	}
+
+	TVec3& operator+=(const TVec3& other)
+	{
+		add(other);
+		return *this;
+	}
+
+	TVec3& operator-=(const TVec3& other)
+	{
+		sub(other);
+		return *this;
+	}
+
+	// fabricated and fake and UB but it makes things match??
+	friend const TVec3& operator-(TVec3 fst, const TVec3& snd)
+	{
+		fst -= snd;
+		return fst;
+	}
+
+	// fabricated and fake and UB but it makes things match??
+	friend const TVec3& operator+(TVec3 fst, const TVec3& snd)
+	{
+		fst += snd;
+		return fst;
+	}
 };
 
 template <> class TVec3<f32> : public Vec {

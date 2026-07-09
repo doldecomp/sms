@@ -410,3 +410,38 @@ Practice shows that most of the time in game code `operator>>` overloads were us
 This fact was derived from stack frame padding issues in various `JDRama::TNameRef::load` overloads -- only by using `operator>>` and sometimes chaining them (e.g. `stream >> vec.x >> vec.y >> vec.z;`) does stack the stack frame size matches the original.
 However, methods like `stream.readU16()` were also occasionally used, but codegen differs a bit when it is used and so judgement must be made on a case-by-case basis.
 Doing raw `stream.read(&someInt, 4);` calls is the least likely option, because humans are lazy and wouldn't want to specify the size manually -- always prefer avoiding it.
+
+## Forcing local arrays onto the stack with unrolled loops
+
+Small local arrays (e.g. `f32 dist[3]`, `f32 m[3][2]`) as well as structures are prime candidates for MWCC's *scalar replacement of aggregates* — it promotes the elements into FP or GP registers, drops the stack storage entirely, and is then free to reorder/fuse the element computations.
+If the target keeps such an array on the stack (you see `stfs`/`lfs` of consecutive slots, computed in a strict order), your straight-line, element-by-element source will usually mismatch because yours got scalarized.
+
+Two ways to force the array back onto the stack:
+
+1. `(void)&arr;` — taking the address marks it address-taken so it must live in
+   memory. Works, but it's an obviously-fake artifact.
+   Still useful as an intermediate step in figuring out the other details of the function to then replace with a proper match.
+2. **Write the init/compute as a `for` loop that MWCC unrolls.** Iterating over
+   the array with an index the compiler can fully unroll (small constant trip
+   count) makes MWCC materialize the array on the stack and emit the element
+   stores/loads in loop order — no address-of hack, and it reads like plausible
+   original code. This also tends to fix the *ordering* of the stores, not just
+   their presence.
+
+```cpp
+// scalarized into registers + reordered (mismatch), or needs (void)&:
+f32 dist[3];
+dist[0] = unk24[0]; dist[1] = unk24[1]; dist[2] = unk24[2];
+
+// unrolled loop: array is spilled to the stack in order (match):
+f32 dist[3];
+for (int i = 0; i < 3; ++i)
+    dist[i] = unk24[i];
+```
+
+Concrete case (`DrawUtil.cpp` `TSilhouette::loadAfter`, a Cramer's-rule solve
+over `f32 atten[3]`/`dist[3]`/`m[3][2]`): element-by-element assignment needed
+three `(void)&` hacks and still only reached ~92% (residual store scheduling);
+rewriting the `dist` copy and the `m` fill as small unrolled `for` loops removed
+the hacks and took it to 99.7%. Prefer the loop form — it's both cleaner and a
+better structural match than address-of forcing.
