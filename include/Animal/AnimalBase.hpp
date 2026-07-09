@@ -14,9 +14,9 @@ public:
 	virtual void calcRootMatrix();
 
 	void execWalk(bool);
-	JGeometry::TVec3<f32> getRotationFlyToDir(JGeometry::TVec3<f32>*,
-	                                          const JGeometry::TVec3<f32>&, f32,
-	                                          f32);
+	static JGeometry::TVec3<f32>
+	getRotationFlyToDir(JGeometry::TVec3<f32>*, const JGeometry::TVec3<f32>&,
+	                    f32, f32);
 	void resetRandomCurPathNode();
 	void loadAfter();
 	void initNoLoad_(TAnimalBase*);
