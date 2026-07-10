@@ -13,8 +13,7 @@ TLiveManager::TLiveManager(const char* name)
     , unk34(nullptr)
 {
 	gpConductor->registerManager(this);
-	// TODO: inlines
-	gpLightManager->getUnk14(1)->unk20 = 1;
+	gpLightManager->getUnk14(1)->enable();
 }
 
 void TLiveManager::createSpcBinary()
