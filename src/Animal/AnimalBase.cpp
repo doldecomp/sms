@@ -6,11 +6,32 @@
 #include <M3DUtil/MActor.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <MSound/SoundEffects.hpp>
+#include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/Spine.hpp>
 #include <System/Application.hpp>
 #include <MarioUtil/RandomUtil.hpp>
+
+JGeometry::TQuat4<f32> SMS_Eular2Quat(const JGeometry::TVec3<f32>& rot)
+{
+	// TODO: 61.8% - logic confirmed correct (result = qy * (qx * qz), axis
+	// quaternions from half-angle sin/cos). Remaining diff is MWCC FP
+	// scheduling: the original emits cosf before sinf per axis and keeps qy in
+	// registers rather than spilling it. Not yet reproducible from source.
+	f32 rad;
+	rad = 0.5f * (0.017453294f * rot.z);
+	JGeometry::TQuat4<f32> qz(0.0f, 0.0f, sinf(rad), cosf(rad));
+	rad = 0.5f * (0.017453294f * rot.y);
+	JGeometry::TQuat4<f32> qy(0.0f, sinf(rad), 0.0f, cosf(rad));
+	rad = 0.5f * (0.017453294f * rot.x);
+	JGeometry::TQuat4<f32> qx(sinf(rad), 0.0f, 0.0f, cosf(rad));
+
+	JGeometry::TQuat4<f32> result;
+	result.mul(qx, qz);
+	result.mul(qy, result);
+	return result;
+}
 
 TAnimalBase::TAnimalBase(u32 actorType, const char* name)
     : TSpineEnemy(name)
