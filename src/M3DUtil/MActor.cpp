@@ -310,7 +310,7 @@ void MActor::viewCalc()
 		unk4->viewCalc();
 }
 
-void MActor::setLightID(short light_id)
+void MActor::setLightID(s16 light_id)
 {
 	unk3C = 0;
 	unk3C = light_id;
@@ -332,18 +332,14 @@ void MActor::setLightData(const TBGCheckData* param_1,
 
 	unk3C = 0;
 	if (param_1->isShadow()) {
-		s16 data = param_1->getData();
-
-		unk3C = 0;
-		unk3C = data;
+		setLightID(param_1->getData());
 	}
 }
 
 void MActor::setLightType(int param_1)
 {
 	unk44 = param_1;
-
-	gpLightManager->unk14[param_1]->unk20 = 1;
+	gpLightManager->getUnk14(param_1)->enable();
 }
 
 void MActor::entry()

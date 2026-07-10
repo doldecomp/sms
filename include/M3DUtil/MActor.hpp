@@ -41,7 +41,7 @@ public:
 	void setAnimation(const char*, int);
 	void initDL();
 	void resetDL();
-	void initDLByIndex(unsigned short);
+	void initDLByIndex(u16);
 	void unlockDLIfNeed();
 	void onMakeDL();
 	void offMakeDL();
@@ -53,7 +53,7 @@ public:
 	void calc();
 	void viewCalc();
 	void loadSetDeformData(const char*);
-	void setLightID(short);
+	void setLightID(s16);
 	void setLightData(const TBGCheckData*, const JGeometry::TVec3<f32>&);
 	void setLightType(int);
 	void update();

@@ -6,6 +6,7 @@
 #include <JSystem/JDrama/JDRPlacement.hpp>
 #include <JSystem/JStage/JSGAmbientLight.hpp>
 #include <dolphin/gx/GXLighting.h>
+#include <dolphin/gx/GXGet.h>
 
 namespace JDrama {
 
@@ -65,6 +66,13 @@ public:
 
 	void correct(TGraphics*) const;
 
+	GXColor getColor()
+	{
+		GXColor result;
+		GXGetLightColor(&unk24, &result);
+		return result;
+	}
+
 public:
 	/* 0x24 */ GXLightObj unk24;
 	/* 0x64 */ JStage::TELight mLightType;
@@ -98,7 +106,11 @@ public:
 	virtual TNameRef* searchF(u16, const char*);
 	virtual void perform(u32, TGraphics*);
 
-	void setLightNum(long);
+	void setLightNum(s32);
+
+	// fabricated
+	TIdxLight* getLight(int idx) { return &mLights[idx]; }
+	s32 getLightNum() const { return mLightCount; }
 
 public:
 	/* 0x10 */ TIdxLight* mLights;
@@ -118,6 +130,8 @@ public:
 	virtual GXColor JSGGetColor() const;
 	virtual void JSGSetColor(GXColor color);
 
+	const JUtility::TColor& getColor() const { return mColor; }
+
 public:
 	/* 0x14 */ JUtility::TColor mColor;
 };
@@ -136,7 +150,11 @@ public:
 	virtual TNameRef* searchF(u16, const char*);
 	virtual void perform(u32, TGraphics*) { }
 
-	void setAmbNum(long);
+	void setAmbNum(s32);
+
+	// fabricated
+	TAmbColor* getAmb(int idx) { return &mAmbColors[idx]; }
+	s32 getAmbNum() const { return mAmbColorCount; }
 
 public:
 	/* 0x10 */ TAmbColor* mAmbColors;
