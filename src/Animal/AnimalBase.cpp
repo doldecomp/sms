@@ -1,6 +1,15 @@
 #include <Animal/AnimalBase.hpp>
+#include <Animal/AnimalManager.hpp>
+#include <Animal/AnimalNerve.hpp>
+#include <Animal/AnimalSave.hpp>
+#include <Enemy/Graph.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <MSound/SoundEffects.hpp>
+#include <MarioUtil/RandomUtil.hpp>
+#include <Strategic/ObjModel.hpp>
+#include <Strategic/Spine.hpp>
+#include <System/Application.hpp>
 #include <MarioUtil/RandomUtil.hpp>
 
 TAnimalBase::TAnimalBase(u32 actorType, const char* name)
@@ -12,6 +21,54 @@ TAnimalBase::TAnimalBase(u32 actorType, const char* name)
 BOOL TAnimalBase::receiveMessage(THitActor* sender, u32 msg) { return FALSE; }
 
 void TAnimalBase::calcRootMatrix() { }
+
+void TAnimalBase::init(TLiveManager* manager)
+{
+	// TODO: 99.8% - all logic matches; original frame is 0x28 larger (MWCC
+	// stack padding from an unresolved inline).
+	mManager = manager;
+	manager->manageActor(this);
+
+	mMActorKeeper = new TMActorKeeper(manager);
+	mMActorKeeper->createMActorFromAllBmd(3);
+	mMActor = mMActorKeeper->getMActor(0);
+
+	initHitActor(mActorType, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f);
+	mHitFlags |= 1;
+	mBodyScale  = 1.0f;
+	mMarchSpeed = 0.0f;
+	mBodyRadius = 10.0f;
+	mWallRadius = 20.0f;
+	mLiveFlag |= 0x38;
+
+	mSpine->initWith(&TNerveAnimalGraphWander::theNerve());
+	unk124->reset();
+	goToShortestNextGraphNode();
+
+	mFrameTimer = (int*)new TAnimalBaseUnk150;
+
+	mMActor->setBckFromIndex(0);
+	mMarchSpeed = 0.0f;
+	f32 turnSpeed
+	    = ((TAnimalManagerBase*)mManager)->mAnimalSave->mSLWalkTurnSpeed.get();
+	mTurnSpeed = turnSpeed * SMSGetAnmFrameRate();
+
+	J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(0);
+	if (frameCtrl) {
+		s32 sharedAnmNum = ((TAnimalManagerBase*)manager)
+		                       ->mAnimalSave->mSLSharedAnmNum.get();
+		f32 phase;
+		if (sharedAnmNum == 0)
+			phase = MsRandF();
+		else
+			phase = (1.0f / sharedAnmNum) * (mInstanceIndex % sharedAnmNum);
+		frameCtrl->setFrame(phase * frameCtrl->getEnd());
+	}
+
+	J3DFrameCtrl* frameCtrl2 = mMActor->getFrameCtrl(3);
+	if (frameCtrl2)
+		frameCtrl2->setFrame(frameCtrl2->getEnd() * MsRandF());
+}
 
 void TAnimalBase::resetRandomCurPathNode()
 {

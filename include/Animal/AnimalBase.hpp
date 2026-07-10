@@ -3,6 +3,17 @@
 
 #include <Enemy/Enemy.hpp>
 
+struct TAnimalBaseUnk150 {
+	TAnimalBaseUnk150()
+	{
+		unk0 = 0;
+		unk4 = 1;
+	}
+
+	int unk0;
+	int unk4;
+};
+
 class TAnimalBase : public TSpineEnemy {
 public:
 	TAnimalBase(u32, const char* name = "?");
