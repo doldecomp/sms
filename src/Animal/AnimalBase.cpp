@@ -4,7 +4,9 @@
 #include <Animal/AnimalSave.hpp>
 #include <Camera/cameralib.hpp>
 #include <Enemy/Graph.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <M3DUtil/MActor.hpp>
+#include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <MSound/SoundEffects.hpp>
 #include <MarioUtil/MathUtil.hpp>
@@ -43,6 +45,103 @@ TAnimalBase::TAnimalBase(u32 actorType, const char* name)
 BOOL TAnimalBase::receiveMessage(THitActor* sender, u32 msg) { return FALSE; }
 
 void TAnimalBase::calcRootMatrix() { }
+
+void TAnimalBase::perform(u32 flags, JDrama::TGraphics* graphics)
+{
+	// TODO: 79.6% - full logic reversed and correct (move: control() +
+	// integrate velocity + kamome SE; update:
+	// updateAnmSound/frameUpdate/calcRootMatrix + MActor calc; draw: build
+	// world matrix, then either MActor viewCalc or the shared-animation path
+	// that borrows a flock member's animated joint matrices into this model's
+	// draw-matrix buffers). Remaining diff is MWCC register allocation (the
+	// original keeps model/data pointers in callee- saved GPRs) and
+	// addressing-mode scheduling in the shared-anim loop.
+	if (flags & 1) {
+		if (graphics->unk0 & 2) {
+			mLinearVelocity.z = 0.0f;
+			mLinearVelocity.y = 0.0f;
+			mLinearVelocity.x = 0.0f;
+			control();
+			mPosition.x += mLinearVelocity.x;
+			mPosition.y += mLinearVelocity.y;
+			mPosition.z += mLinearVelocity.z;
+			if (mActorType == 0x800001) {
+				s16 idx = mInstanceIndex;
+				if (gpMSound->gateCheck(MSD_SE_OBJ_KAMOME_SOLO))
+					MSoundSESystem::MSRandPlay::startSeRandPlay(
+					    MSD_SE_OBJ_KAMOME_SOLO, idx);
+			}
+		}
+		flags &= ~1;
+	}
+
+	s32 sharedAnmNum
+	    = ((TAnimalManagerBase*)mManager)->mAnimalSave->mSLSharedAnmNum.get();
+
+	if (flags & 2) {
+		updateAnmSound();
+		mMActor->frameUpdate();
+		if (!(mLiveFlag & 6))
+			calcRootMatrix();
+		if ((sharedAnmNum != 0 && mInstanceIndex < sharedAnmNum)
+		    || (sharedAnmNum == 0 && !(mLiveFlag & 6)))
+			mMActor->calc();
+		flags &= ~2;
+	}
+
+	if (flags & 4) {
+		if (!(mLiveFlag & 6)) {
+			Mtx save;
+			Mtx local;
+			Mtx world;
+			PSMTXCopy(j3dSys.mViewMtx, save);
+			CLBCalcRotateZXYTranslateMatrix(local, (const Vec&)mRotation,
+			                                (const Vec&)mPosition);
+			PSMTXConcat(save, local, world);
+			PSMTXCopy(world, j3dSys.mViewMtx);
+
+			if (sharedAnmNum == 0 || mInstanceIndex < sharedAnmNum) {
+				mMActor->viewCalc();
+			} else {
+				J3DModel* shared
+				    = mManager->getObj(mInstanceIndex % sharedAnmNum)
+				          ->getModel();
+				J3DModel* model    = getModel();
+				J3DModelData* data = model->mModelData;
+				u16 count          = data->getDrawMtxNum();
+				u32 view           = model->mCurrentViewNo;
+
+				Mtx* tmp                    = model->mDrawMtxBuf[0][view];
+				model->mDrawMtxBuf[0][view] = model->mDrawMtxBuf[1][view];
+				model->mDrawMtxBuf[1][view] = tmp;
+				Mtx33* tmpN                 = model->mNrmMtxBuf[0][view];
+				model->mNrmMtxBuf[0][view]  = model->mNrmMtxBuf[1][view];
+				model->mNrmMtxBuf[1][view]  = tmpN;
+
+				Mtx* srcArrays[2];
+				srcArrays[0] = shared->mNodeMatrices;
+				srcArrays[1] = shared->unk5C;
+
+				for (u16 i = 0; i < count; ++i) {
+					PSMTXConcat(world,
+					            srcArrays[data->getDrawMtxFlag(i)]
+					                     [data->getDrawMtxIndex(i)],
+					            model->mDrawMtxBuf[1][view][i]);
+				}
+
+				model->calcNrmMtx();
+				DCStoreRange(model->mDrawMtxBuf[1][view], count * 0x30);
+				DCStoreRange(model->mNrmMtxBuf[1][view], count * 0x24);
+				model->prepareShapePackets();
+			}
+
+			PSMTXCopy(save, j3dSys.mViewMtx);
+		}
+		flags &= ~4;
+	}
+
+	TSpineEnemy::perform(flags, graphics);
+}
 
 void TAnimalBase::init(TLiveManager* manager)
 {
