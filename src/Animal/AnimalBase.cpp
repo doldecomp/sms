@@ -5,6 +5,8 @@
 #include <Camera/cameralib.hpp>
 #include <Enemy/Graph.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <Map/Map.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
@@ -13,6 +15,7 @@
 #include <MarioUtil/RandomUtil.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/Spine.hpp>
+#include <Strategic/Strategy.hpp>
 #include <System/Application.hpp>
 #include <MarioUtil/RandomUtil.hpp>
 
@@ -279,6 +282,41 @@ void TAnimalBase::resetRandomCurPathNode()
 	}
 
 	setGoalPath(TPathNode(pos));
+}
+
+void TAnimalBase::initNoLoad_(TAnimalBase* other)
+{
+	// TODO: 89.3% - logic reversed and correct (jitter the new flock member's
+	// position/rotation off this one, copy scaling/character/graph, set illegal
+	// ground plane, init() with our manager, register into the enemy group).
+	// Remaining diff is MWCC register allocation: the original spills `this` to
+	// the stack and reloads it across the calls.
+	other->mPosition.x = 1000.0f * (MsRandF() - 0.5f) + mPosition.x;
+	other->mPosition.z = 1000.0f * (MsRandF() - 0.5f) + mPosition.z;
+	if (mActorType == 0x800001)
+		other->mPosition.y = 1000.0f * MsRandF() + mPosition.y;
+	else
+		other->mPosition.y = mPosition.y - 250.0f * MsRandF();
+
+	other->mScaling = mScaling;
+
+	other->mRotation.x = 0.0f;
+	f32 rotY           = 150.0f * (MsRandF() - 0.5f) + mRotation.y;
+	while (rotY >= 360.0f)
+		rotY -= 360.0f;
+	while (rotY < 0.0f)
+		rotY += 360.0f;
+	other->mRotation.y = rotY;
+	other->mRotation.z = 0.0f;
+
+	other->unk3C = unk3C;
+	other->unk124->setGraph(unk124->getGraph());
+	other->mGroundPlane = TMap::getIllegalCheckData();
+	other->init(mManager);
+
+	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	    ->getChildren()
+	    .push_back(other);
 }
 
 void TAnimalBase::loadAfter()
