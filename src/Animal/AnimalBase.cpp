@@ -2,6 +2,7 @@
 #include <Animal/AnimalManager.hpp>
 #include <Animal/AnimalNerve.hpp>
 #include <Animal/AnimalSave.hpp>
+#include <Camera/cameralib.hpp>
 #include <Enemy/Graph.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MSound/MSoundSE.hpp>
@@ -89,6 +90,72 @@ void TAnimalBase::init(TLiveManager* manager)
 	J3DFrameCtrl* frameCtrl2 = mMActor->getFrameCtrl(3);
 	if (frameCtrl2)
 		frameCtrl2->setFrame(frameCtrl2->getEnd() * MsRandF());
+}
+
+void TAnimalBase::execWalk(bool moving)
+{
+	// TODO: 27% - logic is fully reversed and correct (accel/decel of
+	// mMarchSpeed, wait/walk turn-speed select, turn toward unkF4.getPoint(),
+	// bank via CLBChase, then rotate the (0,0,marchSpeed) forward vector by
+	// SMS_Eular2Quat(mRotation) into mLinearVelocity). Remaining diff is MWCC
+	// register allocation / evaluation order: the original spills many more
+	// vector temporaries (frame 0x150 vs 0xf0) and evaluates the .get()*rate
+	// products right-to-left. Not yet reproduced.
+	TAnimalSaveIndividual* save = ((TAnimalManagerBase*)mManager)->mAnimalSave;
+
+	if (moving) {
+		CLBChaseGeneralConstantSpecifySpeed<f32>(
+		    &mMarchSpeed, save->mSLMaxMarchSpeed.get() * SMSGetAnmFrameRate(),
+		    save->mSLMarchAccel.get() * SMSGetAnmFrameRate()
+		        * SMSGetAnmFrameRate());
+	} else {
+		CLBChaseGeneralConstantSpecifySpeed<f32>(&mMarchSpeed, 0.0f,
+		                                         save->mSLMarchDecrease.get()
+		                                             * SMSGetAnmFrameRate()
+		                                             * SMSGetAnmFrameRate());
+	}
+
+	if (mMarchSpeed < 0.001f)
+		mTurnSpeed = save->mSLWaitTurnSpeed.get() * SMSGetAnmFrameRate();
+	else
+		mTurnSpeed = save->mSLWalkTurnSpeed.get() * SMSGetAnmFrameRate();
+
+	JGeometry::TVec3<f32> diff = unkF4.getPoint();
+	diff.x -= mPosition.x;
+	diff.y -= mPosition.y;
+	diff.z -= mPosition.z;
+
+	f32 dist       = diff.length();
+	f32 marchSpeed = mMarchSpeed;
+	f32 turnSpeed  = mTurnSpeed;
+
+	if (dist < 100.0f)
+		return;
+
+	if (dist == 2.0f * calcMinimumTurnRadius(marchSpeed, turnSpeed))
+		turnSpeed = calcTurnSpeedToReach(marchSpeed, 0.5f * dist);
+
+	JGeometry::TVec3<f32> rot = MsGetRotFromZaxis(diff);
+	rot.y                     = MsWrap<f32>(rot.y, 0.0f, 360.0f);
+
+	f32 delta
+	    = rot.y - MsWrap<f32>(mRotation.y, rot.y - 180.0f, 180.0f + rot.y);
+	delta = MsClamp<f32>(delta, -turnSpeed, turnSpeed);
+	mRotation.y += delta;
+	mRotation.y = MsWrap<f32>(mRotation.y, 0.0f, 360.0f);
+
+	f32 chaseSpeed = 0.1f * marchSpeed;
+	CLBChaseGeneralConstantSpecifySpeed<f32>(
+	    &mRotation.z, MsClamp<f32>(30.0f * -delta, -45.0f, 45.0f), chaseSpeed);
+
+	rot.x       = MsWrap<f32>(rot.x, -180.0f, 180.0f);
+	mRotation.x = MsWrap<f32>(mRotation.x, -180.0f, 180.0f);
+	CLBChaseGeneralConstantSpecifySpeed<f32>(&mRotation.x, rot.x, chaseSpeed);
+
+	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
+	JGeometry::TVec3<f32> vel(0.0f, 0.0f, marchSpeed);
+	quat.rotate(vel);
+	mLinearVelocity = vel;
 }
 
 void TAnimalBase::resetRandomCurPathNode()
