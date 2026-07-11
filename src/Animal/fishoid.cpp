@@ -51,7 +51,7 @@ void TRealoidActor::calcRootMatrix(TBoid* boid)
 	mPosition = boid->unk0;
 
 	if (mHolder != nullptr) {
-		MtxPtr hm = mHolder->getTakingMtx();
+		MtxPtr hm    = mHolder->getTakingMtx();
 		boid->unk0.x = hm[0][3];
 		boid->unk0.y = hm[1][3];
 		boid->unk0.z = hm[2][3];
@@ -82,18 +82,18 @@ void TRealoidActor::calcRootMatrix(TBoid* boid)
 	PSVECNormalize(&dir, &dir);
 
 	MtxPtr root = unk70->getModel()->unk20;
-	root[0][0] = -dir.x;
-	root[1][0] = -dir.y;
-	root[2][0] = -dir.z;
-	root[0][1] = up.x;
-	root[1][1] = up.y;
-	root[2][1] = up.z;
-	root[0][2] = n.x;
-	root[1][2] = n.y;
-	root[2][2] = n.z;
-	root[0][3] = trans.x;
-	root[1][3] = trans.y;
-	root[2][3] = trans.z;
+	root[0][0]  = -dir.x;
+	root[1][0]  = -dir.y;
+	root[2][0]  = -dir.z;
+	root[0][1]  = up.x;
+	root[1][1]  = up.y;
+	root[2][1]  = up.z;
+	root[0][2]  = n.x;
+	root[1][2]  = n.y;
+	root[2][2]  = n.z;
+	root[0][3]  = trans.x;
+	root[1][3]  = trans.y;
+	root[2][3]  = trans.z;
 }
 
 void TRealoidActor::checkHitActors()
@@ -119,7 +119,7 @@ TRealoid::TRealoid(const char* name)
 }
 
 void TRealoid::loadDefault(JSUMemoryInputStream& stream, const char* name,
-                          int arg2)
+                           int arg2)
 {
 	// TODO: 89.9% - logic exact. Residual = frame padding + TPathNode setup
 	// staged via stack (struct-copy) + regalloc cascade.
