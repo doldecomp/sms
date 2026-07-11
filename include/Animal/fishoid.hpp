@@ -10,6 +10,7 @@ class MActor;
 class TBoid;
 class TBoidLeader;
 class TRealoidActor;
+class TMapObjBase;
 
 class TRealoid : public TSpineEnemy {
 public:
@@ -42,6 +43,33 @@ public:
 	/* 0x70 */ MActor* unk70;
 	/* 0x74 */ u32 unk74;
 	/* 0x78 */ Mtx unk78;
+};
+
+class TFish : public TRealoidActor {
+public:
+	TFish(MActor* actor)
+	    : TRealoidActor(actor)
+	{
+	}
+
+	virtual ~TFish();
+
+	void init();
+};
+
+class TFishoid : public TRealoid {
+public:
+	TFishoid(int, const char*);
+
+	virtual ~TFishoid();
+	virtual void load(JSUMemoryInputStream&);
+	virtual void init(TLiveManager*);
+	virtual void perform(u32, JDrama::TGraphics*);
+	virtual TRealoidActor* createRealoidActor(MActor*);
+
+public:
+	/* 0x158 */ int unk158;
+	/* 0x15C */ TMapObjBase* unk15C;
 };
 
 class TFishoidManager : public TEnemyManager {

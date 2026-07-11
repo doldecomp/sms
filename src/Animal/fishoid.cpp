@@ -1,12 +1,23 @@
 #include <Animal/fishoid.hpp>
 #include <Animal/boid.hpp>
 #include <Camera/Camera.hpp>
+#include <Enemy/Launcher.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/DrawUtil.hpp>
+#include <MoveBG/Item.hpp>
+#include <MoveBG/ItemManager.hpp>
+#include <MoveBG/MapObjBase.hpp>
+#include <MoveBG/MapObjManager.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Strategic/ObjManager.hpp>
 #include <Strategic/ObjModel.hpp>
+#include <Strategic/Spine.hpp>
+
+namespace {
+const char* cFishoidMdlNames[]
+    = { "fishA.bmd", "fishB.bmd", "fishC.bmd", "fishD.bmd" };
+} // namespace
 
 TRealoid::TRealoid(const char* name)
     : TSpineEnemy(name)
@@ -198,4 +209,87 @@ void TFishoidManager::createModelData()
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
+}
+
+TFish::~TFish() { }
+
+void TFish::init() { mHitFlags |= 1; }
+
+TFishoid::TFishoid(int arg0, const char* name)
+    : TRealoid(name)
+{
+	unk158 = arg0;
+	unk15C = nullptr;
+}
+
+TFishoid::~TFishoid() { }
+
+TRealoidActor* TFishoid::createRealoidActor(MActor* actor)
+{
+	// TODO: 71.9% - inlines TFish/TRealoidActor ctor; residual is regalloc
+	return new TFish(actor);
+}
+
+void TFishoid::init(TLiveManager* manager)
+{
+	mManager = manager;
+	mManager->manageActor(this);
+	mSpine->initWith(&TNerveWaitForever<TLiveActor>::theNerve());
+	initHitActor(0, 1, 0, 0.0f, 0.0f, 0.0f, 0.0f);
+	mHitFlags |= 1;
+}
+
+void TFishoid::load(JSUMemoryInputStream& stream)
+{
+	// TODO: 66.2% - logic drafted; residual + coin-type check (0x2000000E) and
+	// scheduling need refinement.
+	loadDefault(stream, cFishoidMdlNames[unk158], 0);
+
+	u32 eventId;
+	stream.read(&eventId, 4);
+
+	unk15C = TMapObjBaseManager::newAndRegisterObjByEventID(eventId, "");
+	if (unk15C != nullptr) {
+		if (unk15C->getActorType() == 0x2000000E)
+			unk15C = gpItemManager->newAndRegisterCoinReal();
+	}
+
+	unk150->unk20 = 4.0f;
+	unk150->unk24 = 200.0f;
+	unk150->unk28 = 1.0f;
+	unk150->unk2C = 0.5f;
+	unk150->unk30 = 5.0f;
+	unk150->unk34 = 0.5f;
+
+	JGeometry::TVec3<f32> mpos;
+	SMS_GetMarioPosStupid(&mpos);
+	unk150->unk5C.unk0 = (THitActor*)gpMarioAddress;
+	unk150->unk5C.unk4 = mpos;
+
+	unk150->unk6C = 400.0f;
+	unk150->unk70 = 3.0f;
+	unk150->unk1C |= 2;
+
+	for (int i = 0; i < unk150->mNumBoids; ++i)
+		unk154[i]->unk70->setBck("fish_swim");
+}
+
+void TFishoid::perform(u32 flags, JDrama::TGraphics* graphics)
+{
+	// TODO: 81.3% - inlines TRealoid::perform; residual = frame/regalloc.
+	TRealoid::perform(flags, graphics);
+
+	for (int i = 0; i < unk150->mNumBoids; ++i) {
+		JGeometry::TVec3<f32> pos = unk150->mBoids[i].unk0;
+		if (pos.y > 0.0f)
+			pos.y = 0.0f;
+		unk150->mBoids[i].unk0 = pos;
+	}
+
+	if (unk15C != nullptr && (flags & 1)) {
+		TBoid& last          = unk150->mBoids[unk150->mNumBoids - 1];
+		unk15C->mPosition.x = last.unk0.x;
+		unk15C->mPosition.y = last.unk0.y;
+		unk15C->mPosition.z = last.unk0.z;
+	}
 }
