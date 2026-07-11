@@ -99,23 +99,8 @@ public:
 		return getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 	}
 
-	// fabricated
-	void setGoalPathMario()
-	{
-		TPathNode node((THitActor*)gpMarioAddress);
-
-		// the hell
-		if (gpMarioAddress) {
-			node.unk4.set(*(f32*)((u8*)gpMarioAddress + 0x10),
-			              *(f32*)((u8*)gpMarioAddress + 0x14),
-			              *(f32*)((u8*)gpMarioAddress + 0x18));
-		}
-
-		unkF4  = node;
-		unk104 = node;
-
-		unk114.clear();
-	}
+	// fabricated TODO: remove
+	void setGoalPathMario() { setGoalPath((THitActor*)gpMarioAddress); }
 	void setGoalPath(const TPathNode& point)
 	{
 		unkF4  = point;

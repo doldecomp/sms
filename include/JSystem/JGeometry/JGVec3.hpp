@@ -185,7 +185,11 @@ public:
 		z = fst.z * snd.z;
 	}
 
-	void div(f32 divisor) { scale(1.0f / divisor); }
+	void div(f32 divisor)
+	{
+		divisor = 1.0f / divisor;
+		scale(divisor);
+	}
 
 	TVec3& operator+=(const TVec3& other)
 	{
@@ -202,10 +206,14 @@ public:
 		mul(other);
 		return *this;
 	}
-	// @fabricated
 	TVec3& operator*=(f32 other)
 	{
 		scale(other);
+		return *this;
+	}
+	TVec3& operator/=(f32 other)
+	{
+		div(other);
 		return *this;
 	}
 
@@ -227,6 +235,11 @@ public:
 	friend TVec3 operator*(TVec3 fst, f32 snd)
 	{
 		fst *= snd;
+		return fst;
+	}
+	friend TVec3 operator/(TVec3 fst, f32 snd)
+	{
+		fst /= snd;
 		return fst;
 	}
 

@@ -172,7 +172,7 @@ public:
 	{
 		return getGraph()->getGraphNode(mCurrIdx);
 	}
-	int getPrevIndex() { return mPrevIdx; }
+	int getPrevIndex() const { return mPrevIdx; }
 	void init(TGraphWeb* web) { unk0 = web; }
 	void reset() { mPrevIdx = -1; }
 	void reset2() { mCurrIdx = -1; }
@@ -211,6 +211,11 @@ public:
 		if (getCurrent().getRailNode()->mConnectionNum == 1)
 			return true;
 		return false;
+	}
+	void moveToRandomNext()
+	{
+		moveTo(
+		    unk0->getRandomNextIndex(getCurGraphIndex(), getPrevIndex(), -1));
 	}
 
 public:

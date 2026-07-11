@@ -10,7 +10,7 @@ class TMirrorActor;
 
 class TAmenbo : public TSmallEnemy {
 public:
-	TAmenbo(const char*);
+	TAmenbo(const char* name = "アメンボくん");
 
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual BOOL receiveMessage(THitActor*, u32);
@@ -101,7 +101,7 @@ public:
 
 class TAmenboManager : public TSmallEnemyManager {
 public:
-	TAmenboManager(const char*);
+	TAmenboManager(const char* name = "アメンボくんマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();
