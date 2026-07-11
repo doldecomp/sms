@@ -347,6 +347,14 @@ public:
 			z = min.z;
 	}
 
+	// fabricated but based on SMG minus the epsilon parameter
+	bool epsilonEquals(const TVec3& other) const
+	{
+		return TUtil<f32>::epsilonEquals(x, other.x)
+		       && TUtil<f32>::epsilonEquals(y, other.y)
+		       && TUtil<f32>::epsilonEquals(z, other.z);
+	}
+
 	// TODO: SMG's operator== uses epsilonEquals. Maybe this wasn't operator==
 	// but a separate function? Eh, whatever.
 	bool operator==(const TVec3& other) const
