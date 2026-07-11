@@ -48,6 +48,7 @@ inline f32 MsGetRotFromYaxisZ(const JGeometry::TVec3<f32>& axis)
 }
 
 JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>&);
+JGeometry::TQuat4<f32> SMS_Eular2Quat(const JGeometry::TVec3<f32>&);
 void MsMtxSetRotRPH(MtxPtr mtx, f32 x, f32 y, f32 z);
 void MsMtxSetXYZRPH(MtxPtr mtx, f32 x, f32 y, f32 z, s16 r, s16 p, s16 h);
 inline void MsMtxSetXYZRPH(MtxPtr mtx, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h)
