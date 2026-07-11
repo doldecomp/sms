@@ -4,28 +4,28 @@
 TBoidLeader::TBoidLeader(int num, const char* name)
     : JDrama::TViewObj(name)
 {
-	mNumBoids = num;
-	mBoids    = new TBoid[num];
-	unk18     = 0;
-	unk1C     = 0;
-	unk20     = 6.0f;
-	unk24     = 150.0f;
-	unk28     = 2.0f;
-	unk2C     = 2.0f;
-	unk30     = 10.0f;
-	unk34     = 0.01f;
-	unk38     = 0;
-	unk3C     = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
-	unk48     = 1.0f;
-	unk58     = 0;
-	unk5C     = 0;
-	unk60     = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
-	unk6C     = 0.0f;
-	unk70     = 1.0f;
-	unk74     = 0.0f;
-	unk78     = 0.0f;
-	unk7C     = 0.0f;
-	unk4C     = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
+	mNumBoids  = num;
+	mBoids     = new TBoid[num];
+	unk18      = 0;
+	unk1C      = 0;
+	unk20      = 6.0f;
+	unk24      = 150.0f;
+	unk28      = 2.0f;
+	unk2C      = 2.0f;
+	unk30      = 10.0f;
+	unk34      = 0.01f;
+	unk38.unk0 = nullptr;
+	unk38.unk4 = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
+	unk48      = 1.0f;
+	unk58      = 0;
+	unk5C      = 0;
+	unk60      = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
+	unk6C      = 0.0f;
+	unk70      = 1.0f;
+	unk74      = 0.0f;
+	unk78      = 0.0f;
+	unk7C      = 0.0f;
+	unk4C      = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 	unk1C |= 1;
 }
 
@@ -54,6 +54,31 @@ void TBoidLeader::setGraph(TGraphWeb* web, const JGeometry::TVec3<f32>& pos)
 	unk7C = pt.z;
 
 	unk1C |= 4;
+}
+
+JGeometry::TVec3<f32>
+TBoidLeader::calcGoalForce(const JGeometry::TVec3<f32>& pos) const
+{
+	// TODO: logic-complete; by-value TVec3 return hits the unsolved MWCC
+	// copy-count problem (same as getRotationFlyToDir in AnimalBase).
+	JGeometry::TVec3<f32> force;
+	if (unk1C & 4) {
+		force.set(unk74, unk78, unk7C);
+		force.sub(pos);
+		force.setLength(1.0f);
+	} else {
+		const JGeometry::TVec3<f32>& node = unk38.getPoint();
+		force.set(node.x + unk4C.x, node.y + unk4C.y, node.z + unk4C.z);
+		force.sub(pos);
+		f32 len = force.length();
+		if (len > 0.0f) {
+			force.scale(1.0f / len);
+			force.scale(unk48);
+		} else {
+			force.set(0.0f, 0.0f, 0.0f);
+		}
+	}
+	return force;
 }
 
 TBoid::TBoid()

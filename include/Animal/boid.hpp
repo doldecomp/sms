@@ -2,6 +2,7 @@
 #define ANIMAL_BOID_HPP
 
 #include <Enemy/Graph.hpp>
+#include <Enemy/PathNode.hpp>
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/JGeometry.hpp>
 
@@ -30,8 +31,7 @@ public:
 	/* 0x2C */ f32 unk2C;
 	/* 0x30 */ f32 unk30;
 	/* 0x34 */ f32 unk34;
-	/* 0x38 */ s32 unk38;
-	/* 0x3C */ JGeometry::TVec3<f32> unk3C;
+	/* 0x38 */ TPathNode unk38;
 	/* 0x48 */ f32 unk48;
 	/* 0x4C */ JGeometry::TVec3<f32> unk4C;
 	/* 0x58 */ s32 unk58;
