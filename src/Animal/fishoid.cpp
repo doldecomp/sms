@@ -66,6 +66,22 @@ void TRealoid::clipBoids(JDrama::TGraphics* graphics)
 	}
 }
 
+void TRealoid::perform(u32 flags, JDrama::TGraphics* graphics)
+{
+	// TODO: 92.7% - inlines clipBoids; residual inherits clipBoids' frame/
+	// regalloc padding wall.
+	unk150->perform(flags, graphics);
+
+	if (flags & 2) {
+		clipBoids(graphics);
+		for (int i = 0; i < unk150->mNumBoids; ++i)
+			unk154[i]->calcRootMatrix(&unk150->mBoids[i]);
+	}
+
+	for (int i = 0; i < unk150->mNumBoids; ++i)
+		unk154[i]->perform(flags, graphics);
+}
+
 void TRealoidActor::calcRootMatrix(TBoid* boid)
 {
 	// TODO: 91.6% - logic exact (look-at basis from boid dir). Residual =
