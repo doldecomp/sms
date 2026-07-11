@@ -19,37 +19,15 @@ const char* cFishoidMdlNames[]
     = { "fishA.bmd", "fishB.bmd", "fishC.bmd", "fishD.bmd" };
 } // namespace
 
-TRealoid::TRealoid(const char* name)
-    : TSpineEnemy(name)
-{
-	unk150 = 0;
-	mLiveFlag |= 0x38;
-}
+TFish::~TFish() { }
 
-TRealoid::~TRealoid() { }
+TFishoid::~TFishoid() { }
 
 TRealoidActor::TRealoidActor(MActor* actor)
     : TTakeActor("boid")
 {
 	unk70 = actor;
 	unk74 = 0;
-}
-
-TRealoidActor::~TRealoidActor() { }
-
-MtxPtr TRealoidActor::getTakingMtx() { return unk78; }
-
-void TRealoidActor::checkHitActors()
-{
-	if (unk74 & 6)
-		return;
-
-	THitActor** it  = mCollisions;
-	THitActor** end = mCollisions + mColCount;
-	for (; it != end; ++it) {
-		if ((*it)->getActorType() == 0x80000001)
-			SMS_SendMessageToMario(this, 0xE);
-	}
 }
 
 void TRealoidActor::perform(u32 flags, JDrama::TGraphics* graphics)
@@ -60,68 +38,6 @@ void TRealoidActor::perform(u32 flags, JDrama::TGraphics* graphics)
 	THitActor::perform(flags, graphics);
 	if (!(unk74 & 1))
 		unk70->perform(flags, graphics);
-}
-
-void TRealoid::clipBoids(JDrama::TGraphics* graphics)
-{
-	// TODO: 97.2% - logic exact; retail frame +0x30 (inline) + induction-var
-	// regalloc numbering differ. Not a fakematch; leave as-is.
-	SetViewFrustumClipCheckPerspective(gpCamera->mFovy, gpCamera->getAspect(),
-	                                   graphics->mNearPlane, 10000.0f);
-
-	for (int i = 0; i < unk150->mNumBoids; ++i) {
-		JGeometry::TVec3<f32> pos = unk150->mBoids[i].unk0;
-		if (ViewFrustumClipCheck(graphics, &pos, 100.0f))
-			unk154[i]->unk74 &= ~1;
-		else
-			unk154[i]->unk74 |= 1;
-	}
-}
-
-void TRealoid::loadDefault(JSUMemoryInputStream& stream, const char* name,
-                          int arg2)
-{
-	// TODO: 89.9% - logic exact. Residual = frame padding + TPathNode setup
-	// staged via stack (struct-copy) + regalloc cascade.
-	TSpineEnemy::load(stream);
-
-	int count;
-	stream.read(&count, 4);
-
-	mMActorKeeper = new TMActorKeeper(mManager, count + arg2);
-	unk150        = new TBoidLeader(count, "コントローラ");
-
-	unk150->unk38.unk0 = nullptr;
-	unk150->unk38.unk4 = mPosition;
-
-	unk150->setGraph(unk124->getGraph(), mPosition);
-
-	unk154 = new TRealoidActor*[count];
-
-	JGeometry::TVec3<f32> pos = mPosition;
-	for (int i = 0; i < count; ++i) {
-		MActor* actor = mMActorKeeper->createMActor(name, 3);
-		TBoid* boid   = &unk150->mBoids[i];
-		boid->unk0    = pos;
-		unk154[i]     = createRealoidActor(actor);
-		pos.y += 10.0f;
-	}
-}
-
-void TRealoid::perform(u32 flags, JDrama::TGraphics* graphics)
-{
-	// TODO: 92.7% - inlines clipBoids; residual inherits clipBoids' frame/
-	// regalloc padding wall.
-	unk150->perform(flags, graphics);
-
-	if (flags & 2) {
-		clipBoids(graphics);
-		for (int i = 0; i < unk150->mNumBoids; ++i)
-			unk154[i]->calcRootMatrix(&unk150->mBoids[i]);
-	}
-
-	for (int i = 0; i < unk150->mNumBoids; ++i)
-		unk154[i]->perform(flags, graphics);
 }
 
 void TRealoidActor::calcRootMatrix(TBoid* boid)
@@ -180,40 +96,93 @@ void TRealoidActor::calcRootMatrix(TBoid* boid)
 	root[2][3] = trans.z;
 }
 
-TFishoidManager::TFishoidManager(const char* name)
-    : TEnemyManager(name)
+void TRealoidActor::checkHitActors()
 {
+	if (unk74 & 6)
+		return;
+
+	THitActor** it  = mCollisions;
+	THitActor** end = mCollisions + mColCount;
+	for (; it != end; ++it) {
+		if ((*it)->getActorType() == 0x80000001)
+			SMS_SendMessageToMario(this, 0xE);
+	}
 }
 
-TFishoidManager::~TFishoidManager() { }
+MtxPtr TRealoidActor::getTakingMtx() { return unk78; }
 
-void TFishoidManager::createModelData()
+TRealoid::TRealoid(const char* name)
+    : TSpineEnemy(name)
 {
-	static TModelDataLoadEntry entry[] = {
-		{ "fishA.bmd",
-		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
-		      | (1 << J3DMLF_TevStageNumShift),
-		  0 },
-		{ "fishB.bmd",
-		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
-		      | (1 << J3DMLF_TevStageNumShift),
-		  0 },
-		{ "fishC.bmd",
-		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
-		      | (1 << J3DMLF_TevStageNumShift),
-		  0 },
-		{ "fishD.bmd",
-		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
-		      | (1 << J3DMLF_TevStageNumShift),
-		  0 },
-		{ nullptr, 0, 0 },
-	};
-	createModelDataArray(entry);
+	unk150 = 0;
+	mLiveFlag |= 0x38;
 }
 
-TFish::~TFish() { }
+void TRealoid::loadDefault(JSUMemoryInputStream& stream, const char* name,
+                          int arg2)
+{
+	// TODO: 89.9% - logic exact. Residual = frame padding + TPathNode setup
+	// staged via stack (struct-copy) + regalloc cascade.
+	TSpineEnemy::load(stream);
+
+	int count;
+	stream.read(&count, 4);
+
+	mMActorKeeper = new TMActorKeeper(mManager, count + arg2);
+	unk150        = new TBoidLeader(count, "コントローラ");
+
+	unk150->unk38.unk0 = nullptr;
+	unk150->unk38.unk4 = mPosition;
+
+	unk150->setGraph(unk124->getGraph(), mPosition);
+
+	unk154 = new TRealoidActor*[count];
+
+	JGeometry::TVec3<f32> pos = mPosition;
+	for (int i = 0; i < count; ++i) {
+		MActor* actor = mMActorKeeper->createMActor(name, 3);
+		TBoid* boid   = &unk150->mBoids[i];
+		boid->unk0    = pos;
+		unk154[i]     = createRealoidActor(actor);
+		pos.y += 10.0f;
+	}
+}
+
+void TRealoid::clipBoids(JDrama::TGraphics* graphics)
+{
+	// TODO: 97.2% - logic exact; retail frame +0x30 (inline) + induction-var
+	// regalloc numbering differ. Not a fakematch; leave as-is.
+	SetViewFrustumClipCheckPerspective(gpCamera->mFovy, gpCamera->getAspect(),
+	                                   graphics->mNearPlane, 10000.0f);
+
+	for (int i = 0; i < unk150->mNumBoids; ++i) {
+		JGeometry::TVec3<f32> pos = unk150->mBoids[i].unk0;
+		if (ViewFrustumClipCheck(graphics, &pos, 100.0f))
+			unk154[i]->unk74 &= ~1;
+		else
+			unk154[i]->unk74 |= 1;
+	}
+}
+
+void TRealoid::perform(u32 flags, JDrama::TGraphics* graphics)
+{
+	// TODO: 92.7% - inlines clipBoids; residual inherits clipBoids' frame/
+	// regalloc padding wall.
+	unk150->perform(flags, graphics);
+
+	if (flags & 2) {
+		clipBoids(graphics);
+		for (int i = 0; i < unk150->mNumBoids; ++i)
+			unk154[i]->calcRootMatrix(&unk150->mBoids[i]);
+	}
+
+	for (int i = 0; i < unk150->mNumBoids; ++i)
+		unk154[i]->perform(flags, graphics);
+}
 
 void TFish::init() { mHitFlags |= 1; }
+
+TRealoid::~TRealoid() { }
 
 TFishoid::TFishoid(int arg0, const char* name)
     : TRealoid(name)
@@ -222,12 +191,24 @@ TFishoid::TFishoid(int arg0, const char* name)
 	unk15C = nullptr;
 }
 
-TFishoid::~TFishoid() { }
-
-TRealoidActor* TFishoid::createRealoidActor(MActor* actor)
+void TFishoid::perform(u32 flags, JDrama::TGraphics* graphics)
 {
-	// TODO: 71.9% - inlines TFish/TRealoidActor ctor; residual is regalloc
-	return new TFish(actor);
+	// TODO: 81.3% - inlines TRealoid::perform; residual = frame/regalloc.
+	TRealoid::perform(flags, graphics);
+
+	for (int i = 0; i < unk150->mNumBoids; ++i) {
+		JGeometry::TVec3<f32> pos = unk150->mBoids[i].unk0;
+		if (pos.y > 0.0f)
+			pos.y = 0.0f;
+		unk150->mBoids[i].unk0 = pos;
+	}
+
+	if (unk15C != nullptr && (flags & 1)) {
+		TBoid& last         = unk150->mBoids[unk150->mNumBoids - 1];
+		unk15C->mPosition.x = last.unk0.x;
+		unk15C->mPosition.y = last.unk0.y;
+		unk15C->mPosition.z = last.unk0.z;
+	}
 }
 
 void TFishoid::init(TLiveManager* manager)
@@ -274,22 +255,41 @@ void TFishoid::load(JSUMemoryInputStream& stream)
 		unk154[i]->unk70->setBck("fish_swim");
 }
 
-void TFishoid::perform(u32 flags, JDrama::TGraphics* graphics)
+TRealoidActor::~TRealoidActor() { }
+
+TRealoidActor* TFishoid::createRealoidActor(MActor* actor)
 {
-	// TODO: 81.3% - inlines TRealoid::perform; residual = frame/regalloc.
-	TRealoid::perform(flags, graphics);
-
-	for (int i = 0; i < unk150->mNumBoids; ++i) {
-		JGeometry::TVec3<f32> pos = unk150->mBoids[i].unk0;
-		if (pos.y > 0.0f)
-			pos.y = 0.0f;
-		unk150->mBoids[i].unk0 = pos;
-	}
-
-	if (unk15C != nullptr && (flags & 1)) {
-		TBoid& last          = unk150->mBoids[unk150->mNumBoids - 1];
-		unk15C->mPosition.x = last.unk0.x;
-		unk15C->mPosition.y = last.unk0.y;
-		unk15C->mPosition.z = last.unk0.z;
-	}
+	// TODO: 71.9% - inlines TFish/TRealoidActor ctor; residual is regalloc
+	return new TFish(actor);
 }
+
+TFishoidManager::TFishoidManager(const char* name)
+    : TEnemyManager(name)
+{
+}
+
+void TFishoidManager::createModelData()
+{
+	static TModelDataLoadEntry entry[] = {
+		{ "fishA.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "fishB.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "fishC.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "fishD.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ nullptr, 0, 0 },
+	};
+	createModelDataArray(entry);
+}
+
+TFishoidManager::~TFishoidManager() { }
