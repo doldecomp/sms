@@ -25,7 +25,7 @@ public:
 	virtual void calcRootMatrix();
 
 	void execWalk(bool);
-	static JGeometry::TVec3<f32>
+	static void
 	getRotationFlyToDir(JGeometry::TVec3<f32>*, const JGeometry::TVec3<f32>&,
 	                    f32, f32);
 	void resetRandomCurPathNode();
@@ -39,5 +39,4 @@ public:
 public:
 	/* 0x150 */ int* mFrameTimer;
 };
-
 #endif

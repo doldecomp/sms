@@ -17,27 +17,6 @@
 #include <Strategic/Spine.hpp>
 #include <Strategic/Strategy.hpp>
 #include <System/Application.hpp>
-#include <MarioUtil/RandomUtil.hpp>
-
-JGeometry::TQuat4<f32> SMS_Eular2Quat(const JGeometry::TVec3<f32>& rot)
-{
-	// TODO: 61.8% - logic confirmed correct (result = qy * (qx * qz), axis
-	// quaternions from half-angle sin/cos). Remaining diff is MWCC FP
-	// scheduling: the original emits cosf before sinf per axis and keeps qy in
-	// registers rather than spilling it. Not yet reproducible from source.
-	f32 rad;
-	rad = 0.5f * (0.017453294f * rot.z);
-	JGeometry::TQuat4<f32> qz(0.0f, 0.0f, sinf(rad), cosf(rad));
-	rad = 0.5f * (0.017453294f * rot.y);
-	JGeometry::TQuat4<f32> qy(0.0f, sinf(rad), 0.0f, cosf(rad));
-	rad = 0.5f * (0.017453294f * rot.x);
-	JGeometry::TQuat4<f32> qx(sinf(rad), 0.0f, 0.0f, cosf(rad));
-
-	JGeometry::TQuat4<f32> result;
-	result.mul(qx, qz);
-	result.mul(qy, result);
-	return result;
-}
 
 TAnimalBase::TAnimalBase(u32 actorType, const char* name)
     : TSpineEnemy(name)
@@ -45,20 +24,111 @@ TAnimalBase::TAnimalBase(u32 actorType, const char* name)
 	mActorType = actorType;
 }
 
-BOOL TAnimalBase::receiveMessage(THitActor* sender, u32 msg) { return FALSE; }
+// UNUSED (Size: 0x5c in MAP)
+void TAnimalBase::animalWalkIn()
+{
+}
 
-void TAnimalBase::calcRootMatrix() { }
+void TAnimalBase::execWalk(bool moving)
+{
+	TAnimalSaveIndividual* save = ((TAnimalManagerBase*)mManager)->mAnimalSave;
+
+	if (moving) {
+		f32 rate = SMSGetAnmFrameRate();
+		CLBChaseGeneralConstantSpecifySpeed<f32>(
+		    &mMarchSpeed, save->mSLMaxMarchSpeed.get() * SMSGetAnmFrameRate(),
+		    (save->mSLMarchAccel.get() * SMSGetAnmFrameRate()) * rate);
+	} else {
+		f32 rate = SMSGetAnmFrameRate();
+		CLBChaseGeneralConstantSpecifySpeed<f32>(
+		    &mMarchSpeed, 0.0f,
+		    (save->mSLMarchDecrease.get() * SMSGetAnmFrameRate()) * rate);
+	}
+
+	if (mMarchSpeed < 0.001f) {
+		f32 waitSpeed = save->mSLWaitTurnSpeed.get();
+		mTurnSpeed = waitSpeed * SMSGetAnmFrameRate();
+	} else {
+		f32 walkSpeed = save->mSLWalkTurnSpeed.get();
+		mTurnSpeed = walkSpeed * SMSGetAnmFrameRate();
+	}
+
+	JGeometry::TVec3<f32> diff = unkF4.getPoint();
+	diff.x -= mPosition.x;
+	diff.y -= mPosition.y;
+	diff.z -= mPosition.z;
+
+	f32 dist       = diff.length();
+	f32 marchSpeed = mMarchSpeed;
+	f32 turnSpeed  = mTurnSpeed;
+
+	if (dist < 100.0f)
+		return;
+
+	if (dist == 2.0f * calcMinimumTurnRadius(marchSpeed, turnSpeed))
+		turnSpeed = calcTurnSpeedToReach(marchSpeed, 0.5f * dist);
+
+	getRotationFlyToDir(&mRotation, diff, marchSpeed, turnSpeed);
+
+	SMS_Eular2Quat(mRotation).rotate(JGeometry::TVec3<f32>(0.0f, 0.0f, marchSpeed), mLinearVelocity);
+}
+
+// UNUSED (Size: 0x4a0 in MAP)
+void TAnimalBase::flyToCurPathNode(f32 a1, f32 a2)
+{
+}
+
+void TAnimalBase::getRotationFlyToDir(JGeometry::TVec3<f32>* current_rot, const JGeometry::TVec3<f32>& target_diff, f32 speedX, f32 speedY)
+{
+	JGeometry::TVec3<f32> rot = MsGetRotFromZaxis(target_diff);
+	rot.y = MsWrap<f32>(rot.y, 0.0f, 360.0f);
+
+	f32 delta = MsAngleDiff(rot.y, current_rot->y);
+	f32 clampedDelta;
+	if (delta < -speedY)
+		clampedDelta = -speedY;
+	else if (delta > speedY)
+		clampedDelta = speedY;
+	else
+		clampedDelta = delta;
+
+	current_rot->y += clampedDelta;
+	current_rot->y = MsWrap<f32>(current_rot->y, 0.0f, 360.0f);
+
+	f32 targetRoll = MsClamp<f32>(30.0f * -clampedDelta, -45.0f, 45.0f);
+	CLBChaseGeneralConstantSpecifySpeed<f32>(&current_rot->z, targetRoll, 0.1f * speedX);
+
+	rot.x = MsWrap<f32>(rot.x, -180.0f, 180.0f);
+	current_rot->x = MsWrap<f32>(current_rot->x, -180.0f, 180.0f);
+	CLBChaseGeneralConstantSpecifySpeed<f32>(&current_rot->x, rot.x, 0.1f * speedX);
+}
+
+void TAnimalBase::resetRandomCurPathNode()
+{
+	TPathNode curNode = unkF4;
+	if (curNode.unk0 != nullptr)
+		return;
+
+	JGeometry::TVec3<f32> pos = curNode.getPoint();
+	pos.x += 1000.0f * (MsRandF() - 0.5f);
+	pos.z += 1000.0f * (MsRandF() - 0.5f);
+
+	if (mActorType == 0x800001) {
+		f32 r;
+		if (pos.y <= 1000.0f)
+			r = MsRandF();
+		else
+			r = MsRandF() - 0.5f;
+		pos.y += 1000.0f * r;
+	} else {
+		pos.y -= 250.0f * MsRandF();
+	}
+
+	setGoalPath(TPathNode(pos));
+}
 
 void TAnimalBase::perform(u32 flags, JDrama::TGraphics* graphics)
 {
-	// TODO: 79.6% - full logic reversed and correct (move: control() +
-	// integrate velocity + kamome SE; update:
-	// updateAnmSound/frameUpdate/calcRootMatrix + MActor calc; draw: build
-	// world matrix, then either MActor viewCalc or the shared-animation path
-	// that borrows a flock member's animated joint matrices into this model's
-	// draw-matrix buffers). Remaining diff is MWCC register allocation (the
-	// original keeps model/data pointers in callee- saved GPRs) and
-	// addressing-mode scheduling in the shared-anim loop.
 	if (flags & 1) {
 		if (graphics->unk0 & 2) {
 			mLinearVelocity.z = 0.0f;
@@ -146,10 +216,62 @@ void TAnimalBase::perform(u32 flags, JDrama::TGraphics* graphics)
 	TSpineEnemy::perform(flags, graphics);
 }
 
+BOOL TAnimalBase::receiveMessage(THitActor* sender, u32 msg) { return FALSE; }
+
+void TAnimalBase::calcRootMatrix() { }
+
+void TAnimalBase::loadAfter()
+{
+	TNameRef::loadAfter();
+	if (mActorType == 0x800001)
+		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_OBJ_KAMOME_SOLO,
+ 		                                          &mPosition);
+}
+
+void TAnimalBase::load(JSUMemoryInputStream& stream)
+{
+	TSpineEnemy::load(stream);
+
+	s32 count;
+	stream >> count;
+
+	for (int i = 0; i < count - 1; ++i) {
+		initNoLoad_(new TAnimalBase(mActorType, getName()));
+	}
+}
+
+void TAnimalBase::initNoLoad_(TAnimalBase* other)
+{
+	other->mPosition.x = 1000.0f * (MsRandF() - 0.5f) + mPosition.x;
+	other->mPosition.z = 1000.0f * (MsRandF() - 0.5f) + mPosition.z;
+	if (mActorType == 0x800001)
+		other->mPosition.y = 1000.0f * MsRandF() + mPosition.y;
+	else
+		other->mPosition.y = mPosition.y - 250.0f * MsRandF();
+
+	other->mScaling = mScaling;
+
+	other->mRotation.x = 0.0f;
+	f32 rotY           = 150.0f * (MsRandF() - 0.5f) + mRotation.y;
+	while (rotY >= 360.0f)
+		rotY -= 360.0f;
+	while (rotY < 0.0f)
+		rotY += 360.0f;
+	other->mRotation.y = rotY;
+	other->mRotation.z = 0.0f;
+
+	other->unk3C = unk3C;
+	other->unk124->setGraph(unk124->getGraph());
+	other->mGroundPlane = TMap::getIllegalCheckData();
+	other->init(mManager);
+
+	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	    ->getChildren()
+	    .push_back(other);
+}
+
 void TAnimalBase::init(TLiveManager* manager)
 {
-	// TODO: 99.8% - all logic matches; original frame is 0x28 larger (MWCC
-	// stack padding from an unresolved inline).
 	mManager = manager;
 	manager->manageActor(this);
 
@@ -194,149 +316,19 @@ void TAnimalBase::init(TLiveManager* manager)
 		frameCtrl2->setFrame(frameCtrl2->getEnd() * MsRandF());
 }
 
-void TAnimalBase::execWalk(bool moving)
+
+JGeometry::TQuat4<f32> SMS_Eular2Quat(const JGeometry::TVec3<f32>& rot)
 {
-	// TODO: 27% - logic is fully reversed and correct (accel/decel of
-	// mMarchSpeed, wait/walk turn-speed select, turn toward unkF4.getPoint(),
-	// bank via CLBChase, then rotate the (0,0,marchSpeed) forward vector by
-	// SMS_Eular2Quat(mRotation) into mLinearVelocity). Remaining diff is MWCC
-	// register allocation / evaluation order: the original spills many more
-	// vector temporaries (frame 0x150 vs 0xf0) and evaluates the .get()*rate
-	// products right-to-left. Not yet reproduced.
-	TAnimalSaveIndividual* save = ((TAnimalManagerBase*)mManager)->mAnimalSave;
+	f32 rad;
+	rad = 0.5f * (0.017453294f * rot.z);
+	JGeometry::TQuat4<f32> qz(0.0f, 0.0f, sinf(rad), cosf(rad));
+	rad = 0.5f * (0.017453294f * rot.y);
+	JGeometry::TQuat4<f32> qy(0.0f, sinf(rad), 0.0f, cosf(rad));
+	rad = 0.5f * (0.017453294f * rot.x);
+	JGeometry::TQuat4<f32> qx(sinf(rad), 0.0f, 0.0f, cosf(rad));
 
-	if (moving) {
-		CLBChaseGeneralConstantSpecifySpeed<f32>(
-		    &mMarchSpeed, save->mSLMaxMarchSpeed.get() * SMSGetAnmFrameRate(),
-		    save->mSLMarchAccel.get() * SMSGetAnmFrameRate()
-		        * SMSGetAnmFrameRate());
-	} else {
-		CLBChaseGeneralConstantSpecifySpeed<f32>(&mMarchSpeed, 0.0f,
-		                                         save->mSLMarchDecrease.get()
-		                                             * SMSGetAnmFrameRate()
-		                                             * SMSGetAnmFrameRate());
-	}
-
-	if (mMarchSpeed < 0.001f)
-		mTurnSpeed = save->mSLWaitTurnSpeed.get() * SMSGetAnmFrameRate();
-	else
-		mTurnSpeed = save->mSLWalkTurnSpeed.get() * SMSGetAnmFrameRate();
-
-	JGeometry::TVec3<f32> diff = unkF4.getPoint();
-	diff.x -= mPosition.x;
-	diff.y -= mPosition.y;
-	diff.z -= mPosition.z;
-
-	f32 dist       = diff.length();
-	f32 marchSpeed = mMarchSpeed;
-	f32 turnSpeed  = mTurnSpeed;
-
-	if (dist < 100.0f)
-		return;
-
-	if (dist == 2.0f * calcMinimumTurnRadius(marchSpeed, turnSpeed))
-		turnSpeed = calcTurnSpeedToReach(marchSpeed, 0.5f * dist);
-
-	JGeometry::TVec3<f32> rot = MsGetRotFromZaxis(diff);
-	rot.y                     = MsWrap<f32>(rot.y, 0.0f, 360.0f);
-
-	f32 delta
-	    = rot.y - MsWrap<f32>(mRotation.y, rot.y - 180.0f, 180.0f + rot.y);
-	delta = MsClamp<f32>(delta, -turnSpeed, turnSpeed);
-	mRotation.y += delta;
-	mRotation.y = MsWrap<f32>(mRotation.y, 0.0f, 360.0f);
-
-	f32 chaseSpeed = 0.1f * marchSpeed;
-	CLBChaseGeneralConstantSpecifySpeed<f32>(
-	    &mRotation.z, MsClamp<f32>(30.0f * -delta, -45.0f, 45.0f), chaseSpeed);
-
-	rot.x       = MsWrap<f32>(rot.x, -180.0f, 180.0f);
-	mRotation.x = MsWrap<f32>(mRotation.x, -180.0f, 180.0f);
-	CLBChaseGeneralConstantSpecifySpeed<f32>(&mRotation.x, rot.x, chaseSpeed);
-
-	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
-	JGeometry::TVec3<f32> vel(0.0f, 0.0f, marchSpeed);
-	quat.rotate(vel);
-	mLinearVelocity = vel;
-}
-
-void TAnimalBase::resetRandomCurPathNode()
-{
-	TPathNode curNode = unkF4;
-	if (curNode.unk0 != nullptr)
-		return;
-
-	JGeometry::TVec3<f32> pos = curNode.getPoint();
-	pos.x += 1000.0f * (MsRandF() - 0.5f);
-	pos.z += 1000.0f * (MsRandF() - 0.5f);
-
-	if (mActorType == 0x800001) {
-		f32 r;
-		if (pos.y <= 1000.0f)
-			r = MsRandF();
-		else
-			r = MsRandF() - 0.5f;
-		pos.y += 1000.0f * r;
-	} else {
-		pos.y -= 250.0f * MsRandF();
-	}
-
-	setGoalPath(TPathNode(pos));
-}
-
-void TAnimalBase::initNoLoad_(TAnimalBase* other)
-{
-	// TODO: 89.3% - logic reversed and correct (jitter the new flock member's
-	// position/rotation off this one, copy scaling/character/graph, set illegal
-	// ground plane, init() with our manager, register into the enemy group).
-	// Remaining diff is MWCC register allocation: the original spills `this` to
-	// the stack and reloads it across the calls.
-	other->mPosition.x = 1000.0f * (MsRandF() - 0.5f) + mPosition.x;
-	other->mPosition.z = 1000.0f * (MsRandF() - 0.5f) + mPosition.z;
-	if (mActorType == 0x800001)
-		other->mPosition.y = 1000.0f * MsRandF() + mPosition.y;
-	else
-		other->mPosition.y = mPosition.y - 250.0f * MsRandF();
-
-	other->mScaling = mScaling;
-
-	other->mRotation.x = 0.0f;
-	f32 rotY           = 150.0f * (MsRandF() - 0.5f) + mRotation.y;
-	while (rotY >= 360.0f)
-		rotY -= 360.0f;
-	while (rotY < 0.0f)
-		rotY += 360.0f;
-	other->mRotation.y = rotY;
-	other->mRotation.z = 0.0f;
-
-	other->unk3C = unk3C;
-	other->unk124->setGraph(unk124->getGraph());
-	other->mGroundPlane = TMap::getIllegalCheckData();
-	other->init(mManager);
-
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
-	    ->getChildren()
-	    .push_back(other);
-}
-
-void TAnimalBase::loadAfter()
-{
-	// TODO: 99.7% - stack frame is 0x10 larger in the original (MWCC padding
-	// from an unresolved inline); logic is otherwise byte-identical.
-	TNameRef::loadAfter();
-	if (mActorType == 0x800001)
-		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_OBJ_KAMOME_SOLO,
-		                                          &mPosition);
-}
-
-void TAnimalBase::load(JSUMemoryInputStream& stream)
-{
-	TSpineEnemy::load(stream);
-
-	s32 count;
-	stream >> count;
-
-	for (int i = 0; i < count - 1; ++i) {
-		initNoLoad_(new TAnimalBase(mActorType, getName()));
-	}
+	JGeometry::TQuat4<f32> result;
+	result.mul(qx, qz);
+	result.mul(qy, result);
+	return result;
 }

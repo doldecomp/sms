@@ -19,6 +19,7 @@ public:
 	JGeometry::TVec3<f32> calcGoalForce(const JGeometry::TVec3<f32>&) const;
 	void setGraph(TGraphWeb*, const JGeometry::TVec3<f32>&);
 	void calcBoids();
+	void updateGoal();
 
 public:
 	/* 0x10 */ int mNumBoids;
