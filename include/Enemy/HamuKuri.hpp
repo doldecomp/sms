@@ -94,6 +94,7 @@ public:
 	// fabricated
 	int getUnk6C() const { return unk6C; }
 	void setUnk6C(int v) { unk6C = v; }
+	THamuKuri* getUnk70() { return unk70; }
 
 public:
 	/* 0x60 */ u32 unk60;

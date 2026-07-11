@@ -2578,15 +2578,9 @@ DEFINE_NERVE(TNerveDoroHamuKuriRobCap, TLiveActor)
 	if (spine->getTime() == 0 || self->unk1F8 == nullptr) {
 		self->unk1F8 = manager->unk70;
 		self->setRunAnm();
-		// TODO: one more inline?
-		TPathNode target(manager->unk70);
-		if (manager->unk70)
-			target.unk4.set(manager->unk70->mPosition.x,
-			                manager->unk70->mPosition.y,
-			                manager->unk70->mPosition.z);
-		self->setGoalPath(target);
+		self->setGoalPath(manager->unk70);
 	} else if (self->unk1F8 != manager->unk70) {
-		self->setGoalPathMario();
+		self->setGoalPath((THitActor*)gpMarioAddress);
 		return true;
 	}
 

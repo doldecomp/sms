@@ -40,4 +40,6 @@ public:
 	int mBeamCount;
 };
 
+extern TBeamManager* gpBeamManager;
+
 #endif /* BEAM_H */

@@ -13,7 +13,7 @@ public:
 
 public:
 	/* 0x54 */ f32 mViewClipNear;
-	/* 0x58 */ f32* mViewClipFarPtr;
+	/* 0x58 */ const f32* mViewClipFarPtr;
 	/* 0x5C */ TAnimalSaveIndividual* mAnimalSave;
 };
 

@@ -1250,7 +1250,7 @@ config.libs = [
     {
         "lib": "Animal",
         "mw_version": "GC/1.2.5",
-        "cflags": cflags_game,
+        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "Animal/boid.cpp"),

@@ -93,6 +93,15 @@ public:
 
 	void getEuler(TVec3<T>& rDest) const;
 	void setEuler(T _x, T _y, T _z);
+	void setEulerX(T _x)
+	{
+		f32 s   = sin(0.5f * _x);
+		f32 c   = cos(0.5f * _x);
+		this->x = s;
+		this->y = 0.0f;
+		this->z = 0.0f;
+		this->w = c;
+	}
 	void setEulerY(T _y)
 	{
 		f32 s   = sin(0.5f * _y);

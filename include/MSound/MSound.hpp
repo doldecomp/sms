@@ -131,6 +131,12 @@ public:
 			    param_8, param_9);
 	}
 
+	void startSeRandPlay(u32 param_1, u32 param_2)
+	{
+		if (gateCheck(param_1))
+			MSoundSESystem::MSRandPlay::startSeRandPlay(param_1, param_2);
+	}
+
 	void startForceJumpSound(Vec* param_1, u32 param_2, f32 param_3,
 	                         u32 param_4)
 	{

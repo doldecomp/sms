@@ -104,7 +104,7 @@ public:
 		BODY_MSG_RECOVERED,
 	};
 
-	TFireWanwanManager(const char*);
+	TFireWanwanManager(const char* name = "ファイアーわんわんマネージャー");
 	void load(JSUMemoryInputStream&);
 	void createModelData();
 	void perform(u32, JDrama::TGraphics*);
@@ -190,7 +190,7 @@ public:
 
 class TFireWanwan : public TSmallEnemy {
 public:
-	TFireWanwan(const char*);
+	TFireWanwan(const char* name = "ファイアーわんわん");
 
 	void init(TLiveManager*);
 	void setMActorAndKeeper();

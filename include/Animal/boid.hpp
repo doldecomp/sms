@@ -6,13 +6,25 @@
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/JGeometry.hpp>
 
-class TBoid;
+class TBoid {
+public:
+	TBoid();
+
+public:
+	/* 0x00 */ JGeometry::TVec3<f32> unk0;
+	/* 0x0C */ JGeometry::TVec3<f32> unkC;
+	/* 0x18 */ JGeometry::TVec3<f32> unk18;
+	/* 0x24 */ JGeometry::TVec3<f32> unk24;
+	/* 0x30 */ JGeometry::TVec3<f32> unk30;
+	/* 0x3C */ JGeometry::TVec3<f32> unk3C;
+	/* 0x48 */ s32 unk48;
+	/* 0x4C */ f32 unk4C;
+};
 
 class TBoidLeader : public JDrama::TViewObj {
 public:
 	TBoidLeader(int, const char*);
 
-	virtual ~TBoidLeader();
 	virtual void perform(u32, JDrama::TGraphics*);
 
 	JGeometry::TVec3<f32> calcForces(const TBoid*) const;
@@ -20,6 +32,10 @@ public:
 	void setGraph(TGraphWeb*, const JGeometry::TVec3<f32>&);
 	void calcBoids();
 	void updateGoal();
+
+	void setUnk38(const JGeometry::TVec3<f32>& v) { unk38 = v; }
+	TBoid* getBoid(int idx) { return &mBoids[idx]; }
+	int getBoidNum() const { return mNumBoids; }
 
 public:
 	/* 0x10 */ int mNumBoids;
@@ -39,24 +55,7 @@ public:
 	/* 0x5C */ TPathNode unk5C;
 	/* 0x6C */ f32 unk6C;
 	/* 0x70 */ f32 unk70;
-	/* 0x74 */ f32 unk74;
-	/* 0x78 */ f32 unk78;
-	/* 0x7C */ f32 unk7C;
-};
-
-class TBoid {
-public:
-	TBoid();
-
-public:
-	/* 0x00 */ JGeometry::TVec3<f32> unk0;
-	/* 0x0C */ JGeometry::TVec3<f32> unkC;
-	/* 0x18 */ JGeometry::TVec3<f32> unk18;
-	/* 0x24 */ JGeometry::TVec3<f32> unk24;
-	/* 0x30 */ JGeometry::TVec3<f32> unk30;
-	/* 0x3C */ JGeometry::TVec3<f32> unk3C;
-	/* 0x48 */ s32 unk48;
-	/* 0x4C */ f32 unk4C;
+	/* 0x74 */ JGeometry::TVec3<f32> unk74;
 };
 
 #endif
