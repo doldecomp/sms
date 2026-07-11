@@ -1,10 +1,10 @@
 #ifndef ANIMAL_BOID_HPP
 #define ANIMAL_BOID_HPP
 
+#include <Enemy/Graph.hpp>
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/JGeometry.hpp>
 
-class TGraphWeb;
 class TBoid;
 
 class TBoidLeader : public JDrama::TViewObj {
@@ -22,7 +22,7 @@ public:
 public:
 	/* 0x10 */ int mNumBoids;
 	/* 0x14 */ TBoid* mBoids;
-	/* 0x18 */ s32 unk18;
+	/* 0x18 */ TGraphTracer* unk18;
 	/* 0x1C */ u32 unk1C;
 	/* 0x20 */ f32 unk20;
 	/* 0x24 */ f32 unk24;

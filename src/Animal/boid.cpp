@@ -29,6 +29,33 @@ TBoidLeader::TBoidLeader(int num, const char* name)
 	unk1C |= 1;
 }
 
+TBoidLeader::~TBoidLeader() { }
+
+void TBoidLeader::setGraph(TGraphWeb* web, const JGeometry::TVec3<f32>& pos)
+{
+	if (web == nullptr)
+		return;
+	if (web->isDummy())
+		return;
+
+	if (unk18 == nullptr)
+		unk18 = new TGraphTracer();
+
+	unk18->setGraph(web);
+	unk18->setTo(web->findNearestNodeIndex(pos, 0xffffffff));
+
+	// TODO: 86.8% - logic correct; the original keeps a separate TVec3 copy of
+	// indexToPoint's by-value return that MWCC elides here (unsolved
+	// copy-count).
+	JGeometry::TVec3<f32> pt
+	    = unk18->getGraph()->indexToPoint(unk18->getCurGraphIndex());
+	unk74 = pt.x;
+	unk78 = pt.y;
+	unk7C = pt.z;
+
+	unk1C |= 4;
+}
+
 TBoid::TBoid()
 {
 	unk48 = 0;
