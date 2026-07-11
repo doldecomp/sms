@@ -7,6 +7,9 @@
 #include <Strategic/ObjModel.hpp>
 #include <dolphin/mtx.h>
 
+// rogue includes needed for matching sinit & bss
+#include <M3DUtil/InfectiousStrings.hpp>
+
 TEggGenerator::TEggGenerator(const char* name)
     : TSpineEnemy(name)
 {
