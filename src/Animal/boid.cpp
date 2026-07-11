@@ -18,8 +18,8 @@ TBoidLeader::TBoidLeader(int num, const char* name)
 	unk38.unk4 = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 	unk48      = 1.0f;
 	unk58      = 0;
-	unk5C      = 0;
-	unk60      = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
+	unk5C.unk0 = nullptr;
+	unk5C.unk4 = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 	unk6C      = 0.0f;
 	unk70      = 1.0f;
 	unk74      = 0.0f;
@@ -78,6 +78,40 @@ TBoidLeader::calcGoalForce(const JGeometry::TVec3<f32>& pos) const
 			force.set(0.0f, 0.0f, 0.0f);
 		}
 	}
+	return force;
+}
+
+JGeometry::TVec3<f32> TBoidLeader::calcForces(const TBoid* boid) const
+{
+	// TODO: logic-complete; by-value TVec3 return hits the unsolved MWCC
+	// copy-count problem (same as getRotationFlyToDir in AnimalBase).
+	JGeometry::TVec3<f32> force(boid->unk24);
+
+	JGeometry::TVec3<f32> heading(boid->unk30);
+	heading.scale(unk34);
+	force.add(heading);
+
+	force.add(boid->unk3C);
+	force.add(calcGoalForce(boid->unk0));
+
+	if (force.squared() == 0.0f) {
+		JGeometry::TVec3<f32> zero(0.0f, 0.0f, 0.0f);
+		return zero;
+	}
+
+	force.scale(0.01f * (5.0f * MsRandF() + 95.0f));
+	force.setLength(1.0f);
+
+	if (unk6C > 0.0f) {
+		JGeometry::TVec3<f32> away(boid->unk0);
+		away.sub(unk5C.getPoint());
+		f32 d2 = away.squared();
+		if (d2 > 0.0f && d2 < unk6C * unk6C) {
+			away.setLength(unk70);
+			force = away;
+		}
+	}
+
 	return force;
 }
 

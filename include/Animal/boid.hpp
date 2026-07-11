@@ -15,7 +15,7 @@ public:
 	virtual ~TBoidLeader();
 	virtual void perform(u32, JDrama::TGraphics*);
 
-	void calcForces(const TBoid*) const;
+	JGeometry::TVec3<f32> calcForces(const TBoid*) const;
 	JGeometry::TVec3<f32> calcGoalForce(const JGeometry::TVec3<f32>&) const;
 	void setGraph(TGraphWeb*, const JGeometry::TVec3<f32>&);
 	void calcBoids();
@@ -35,8 +35,7 @@ public:
 	/* 0x48 */ f32 unk48;
 	/* 0x4C */ JGeometry::TVec3<f32> unk4C;
 	/* 0x58 */ s32 unk58;
-	/* 0x5C */ s32 unk5C;
-	/* 0x60 */ JGeometry::TVec3<f32> unk60;
+	/* 0x5C */ TPathNode unk5C;
 	/* 0x6C */ f32 unk6C;
 	/* 0x70 */ f32 unk70;
 	/* 0x74 */ f32 unk74;
@@ -54,7 +53,9 @@ public:
 	/* 0x18 */ f32 unk18;
 	/* 0x1C */ f32 unk1C;
 	/* 0x20 */ f32 unk20;
-	/* 0x24 */ u8 unk24[0x48 - 0x24];
+	/* 0x24 */ JGeometry::TVec3<f32> unk24;
+	/* 0x30 */ JGeometry::TVec3<f32> unk30;
+	/* 0x3C */ JGeometry::TVec3<f32> unk3C;
 	/* 0x48 */ s32 unk48;
 	/* 0x4C */ f32 unk4C;
 };
