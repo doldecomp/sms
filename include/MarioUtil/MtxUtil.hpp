@@ -21,7 +21,16 @@ void MtxToQuat(MtxPtr, Quaternion*);
 
 class TMtxEffectBase {
 public:
+	TMtxEffectBase()
+	    : mFlags(0)
+	{
+	}
+
 	virtual TParams* getParams() { return nullptr; }
+
+	bool checkFlag(int flag) const { return mFlags & flag; }
+	void offFlag(int flag) { mFlags &= ~flag; }
+	void onFlag(int flag) { mFlags |= flag; }
 
 	u16 mFlags;
 };
@@ -30,17 +39,7 @@ class TMtxTimeLag : public TMtxEffectBase {
 public:
 	class TDeParams : public TParams {
 	public:
-		// ctor exists unused in symbol map (inlined)
-		TDeParams(const char* prm)
-		    : TParams(prm)
-		    , PARAM_INIT(mPosAccel, 0.0f)
-		    , PARAM_INIT(mPosBrake, 0.0f)
-		    , PARAM_INIT(mPosLimit, 0.0f)
-		    , PARAM_INIT(mQuatAccel, 0.0f)
-		    , PARAM_INIT(mQuatBrake, 0.0f)
-		{
-			TParams::load(mPrmPath);
-		}
+		TDeParams(const char* prm);
 
 		/* 0x08 */ TParamRT<f32> mPosAccel;
 		/* 0x1C */ TParamRT<f32> mPosBrake;
@@ -59,10 +58,10 @@ public:
 	void calc(MtxPtr);
 	TDeParams* getSwingRZParams() { return (TDeParams*)getParams(); }
 
-	/* 0x08 */ JGeometry::TVec3<f32> unk08;
-	/* 0x14 */ JGeometry::TVec3<f32> unk14;
-	/* 0x20 */ JGeometry::TQuat4<f32> unk20;
-	/* 0x30 */ JGeometry::TQuat4<f32> unk30;
+	/* 0x08 */ Vec unk08;
+	/* 0x14 */ Vec unk14;
+	/* 0x20 */ Quaternion unk20;
+	/* 0x30 */ Quaternion unk30;
 	/* 0x40 */ TDeParams mParams;
 };
 
@@ -83,7 +82,7 @@ public:
 			TParams::load(mPrmPath);
 		}
 
-		/* 0x08 */ TParamRT<JGeometry::TVec3<f32> > mAcc;
+		/* 0x08 */ TParamVec mAcc;
 		/* 0x24 */ TParamRT<f32> mL;
 		/* 0x38 */ TParamRT<f32> mBrake;
 		/* 0x4C */ TParamRT<f32> mVelScale;
@@ -100,8 +99,9 @@ public:
 	void calc(MtxPtr);
 	TDeParams* getSwingRZParams() { return (TDeParams*)getParams(); }
 
-	/* 0x08 */ JGeometry::TVec3<f32> unk08;
-	/* 0x14 */ JGeometry::TVec3<f32> unk14;
+public:
+	/* 0x08 */ Vec unk08;
+	/* 0x14 */ Vec unk14;
 	/* 0x20 */ TDeParams mParams;
 };
 
@@ -162,6 +162,12 @@ void SMS_GetLightPerspectiveForEffectMtx(MtxPtr);
 class TRopePoint {
 public:
 	TRopePoint();
+
+	/* 0x00 */ JGeometry::TVec3<f32> unk0;
+	/* 0x0C */ JGeometry::TVec3<f32> unkC;
+	/* 0x18 */ JGeometry::TVec3<f32> unk18;
+	/* 0x24 */ f32 unk24;
+	/* 0x28 */ u32 unk28;
 };
 
 class TRope {
@@ -173,6 +179,13 @@ public:
 	void moveHead(const JGeometry::TVec3<f32>&);
 	void moveHeadAndTail(const JGeometry::TVec3<f32>&,
 	                     const JGeometry::TVec3<f32>&);
+
+public:
+	/* 0x00 */ u16 mNumPoints;
+	/* 0x04 */ TRopePoint* mPoints;
+	/* 0x08 */ f32 unk8;
+	/* 0x0C */ f32 unkC;
+	/* 0x10 */ f32 unk10;
 };
 
 void SMS_GetActorMtx(const THitActor&, MtxPtr);

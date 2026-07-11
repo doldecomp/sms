@@ -75,6 +75,33 @@ int b = thing == nullptr ? thing->field : 0;
 
 Whe MWCC sees code like `if (a == 8 || a == 9 || a == 10)` it can optimize it to be `if (a - 8 <= 2)` sometimes. When the latter pattern is encountered with enums -- it should be reversed into multiple disjuncted equality comparisons.
 
+## Assigning a `&&`/`||` chain to a bool synthesizes intermediate bools
+
+When a multi-term short-circuit expression is **assigned to a `bool` variable**, MWCC materializes its own intermediate boolean temporaries for the chain — it initializes a flag register to `0`, sets it to `1` when a sub-condition passes, and merges flags for each grouping level.
+This produces a distinctive shape: several `li rN, 0` up front, then
+`li rN, 1` at the deep success points, then `clrlwi.`/`beq` merges.
+
+```cpp
+// Target has flag-register merges (r0/r4/r3 = 0, then =1 at success, then merged).
+// This form reproduces them:
+bool same = (-e <= dx && dx <= e) && (-e <= dy && dy <= e) && (-e <= dz && dz <= e);
+if (!same) { ... }
+
+// Nested ifs do NOT — they compile to early-exit branches straight to the body,
+// with no intermediate flag bools:
+bool same = false;
+if (-e <= dx && dx <= e)
+    if (-e <= dy && dy <= e)
+        if (-e <= dz && dz <= e)
+            same = true;
+```
+
+When the target shows those `li 0`/`li 1`/merge flags for a compound predicate, spell it as a single `bool x = cond && cond && ...;` assignment (grouped to match the flag nesting), not as nested `if`s.
+
+Concrete case (`MtxUtil.cpp` `TRope::constraintTail`): nested-if near-zero test 89.3%;
+`bool same = (-e<=dx&&dx<=e) && ...;` with `<=` and inline `-JGeometry::TUtil<f32>::epsilon()`
+→ 99.8%.
+
 ## Switches
 
 MWCC can compile switches in one of two ways: jump table or branching.
