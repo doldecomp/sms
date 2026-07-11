@@ -50,9 +50,7 @@ public:
 public:
 	/* 0x00 */ JGeometry::TVec3<f32> unk0;
 	/* 0x0C */ JGeometry::TVec3<f32> unkC;
-	/* 0x18 */ f32 unk18;
-	/* 0x1C */ f32 unk1C;
-	/* 0x20 */ f32 unk20;
+	/* 0x18 */ JGeometry::TVec3<f32> unk18;
 	/* 0x24 */ JGeometry::TVec3<f32> unk24;
 	/* 0x30 */ JGeometry::TVec3<f32> unk30;
 	/* 0x3C */ JGeometry::TVec3<f32> unk3C;

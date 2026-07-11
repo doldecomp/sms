@@ -1,5 +1,6 @@
 #include <Animal/boid.hpp>
 #include <MarioUtil/RandomUtil.hpp>
+#include <dolphin/mtx.h>
 
 TBoidLeader::TBoidLeader(int num, const char* name)
     : JDrama::TViewObj(name)
@@ -115,14 +116,40 @@ JGeometry::TVec3<f32> TBoidLeader::calcForces(const TBoid* boid) const
 	return force;
 }
 
+void TBoidLeader::perform(u32 flags, JDrama::TGraphics* graphics)
+{
+	if (flags & 2) {
+		if (unk1C & 4) {
+			JGeometry::TVec3<f32> dir
+			    = unk18->getGraph()->indexToPoint(unk18->getCurGraphIndex());
+			dir.x -= unk74;
+			dir.y -= unk78;
+			dir.z -= unk7C;
+			if (dir.squared() < 10000.0f) {
+				unk18->moveTo(unk18->getGraph()->getRandomNextIndex(
+				    unk18->getCurGraphIndex(), unk18->getPrevIndex(),
+				    0xffffffff));
+			} else {
+				PSVECNormalize(&dir, &dir);
+				f32 step = 0.9f * unk20;
+				dir.scale(step);
+				unk74 += dir.x;
+				unk78 += dir.y;
+				unk7C += dir.z;
+			}
+		}
+		calcBoids();
+	}
+}
+
+void TBoidLeader::calcBoids() { }
+
 TBoid::TBoid()
 {
 	unk48 = 0;
 	unk4C = 0.0f;
 	unk0.set(0.0f, 0.0f, 0.0f);
 	unkC.set(0.0f, 0.0f, 0.0f);
-	unk18 = 0.0f;
-	unk1C = 0.0f;
-	unk20 = 1.0f;
+	unk18.set(0.0f, 0.0f, 1.0f);
 	unk4C = MsRandF();
 }
