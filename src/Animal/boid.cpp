@@ -1,4 +1,5 @@
 #include <Animal/boid.hpp>
+#include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
 #include <dolphin/mtx.h>
 
@@ -142,7 +143,110 @@ void TBoidLeader::perform(u32 flags, JDrama::TGraphics* graphics)
 	}
 }
 
-void TBoidLeader::calcBoids() { }
+void TBoidLeader::calcBoids()
+{
+	// TODO: logic-complete; nested pair loop over the flock. The by-value
+	// calcForces call and heavy TVec3 math leave MWCC copy-count residuals.
+	if (unk1C & 1) {
+		TBoid* end = mBoids + mNumBoids;
+
+		for (TBoid* b = mBoids; b != end; ++b) {
+			b->unk24.set(0.0f, 0.0f, 0.0f);
+			b->unk3C.set(0.0f, 0.0f, 0.0f);
+			b->unk30.set(0.0f, 0.0f, 0.0f);
+			b->unk48 = 0;
+		}
+
+		for (TBoid* i = mBoids; i != end; ++i) {
+			for (TBoid* j = i + 1; j != end; ++j) {
+				JGeometry::TVec3<f32> d;
+				d.sub(i->unk0, j->unk0);
+				f32 d2 = d.squared();
+				if (d2 < 0.001f)
+					continue;
+
+				f32 radius = unk24;
+				if (d2 < radius * radius) {
+					JGeometry::TVec3<f32> sep = d;
+					sep.div(d2);
+					sep.scale(radius);
+					i->unk24.add(sep);
+
+					JGeometry::TVec3<f32> sep2 = d;
+					sep2.div(d2);
+					sep2.scale(radius);
+					j->unk24.sub(sep2);
+
+					i->unk30.add(j->unk18);
+					j->unk30.add(i->unk18);
+					i->unk3C.add(j->unk0);
+					j->unk3C.add(i->unk0);
+					i->unk48++;
+					j->unk48++;
+				}
+			}
+
+			if (i->unk48 > 0) {
+				f32 inv = 1.0f / i->unk48;
+				i->unk3C.scale(inv);
+				i->unk3C.sub(i->unk0);
+				i->unk3C.setLength(1.0f);
+
+				i->unk30.scale(inv);
+				f32 mag = PSVECMag(&i->unk30);
+				if (mag > 0.0f) {
+					i->unk30.scale(1.0f / mag);
+					i->unk30.sub(i->unk18);
+					i->unk30.setLength(1.0f);
+				}
+			}
+		}
+
+		for (TBoid* b = mBoids; b != end; ++b) {
+			JGeometry::TVec3<f32> force = calcForces(b);
+			if (force.squared() != 0.0000038146973f) {
+				if (force.y < -0.01f) {
+					b->unkC.x += unk2C;
+					if (b->unkC.x > unk30)
+						b->unkC.x = unk30;
+				} else if (force.y > 0.01f) {
+					b->unkC.x -= unk2C;
+					if (b->unkC.x < -unk30)
+						b->unkC.x = -unk30;
+				} else {
+					b->unkC.x *= 0.98f;
+				}
+
+				f32 targetYaw = MsGetRotFromZaxisY(force);
+				f32 diff      = targetYaw
+				           - MsWrap(b->unkC.y, targetYaw - 180.0f,
+				                    targetYaw + 180.0f);
+				if (diff < -0.01f)
+					diff = -unk28;
+				else if (diff > 0.01f)
+					diff = unk28;
+
+				f32 newYaw = b->unkC.y + diff;
+				while (newYaw >= 360.0f)
+					newYaw -= 360.0f;
+				while (newYaw < 0.0f)
+					newYaw += 360.0f;
+				b->unkC.y = newYaw;
+			}
+
+			Mtx m;
+			MsMtxSetRotRPH(m, b->unkC.x, b->unkC.y, b->unkC.z);
+			b->unk18.set(m[0][2], m[1][2], m[2][2]);
+			PSVECNormalize(&b->unk18, &b->unk18);
+
+			f32 speed                  = force.length();
+			JGeometry::TVec3<f32> step = b->unk18;
+			step.scale(unk20 + b->unk4C);
+			step.scale(speed);
+			b->unk0.add(step);
+		}
+	}
+}
 
 TBoid::TBoid()
 {
