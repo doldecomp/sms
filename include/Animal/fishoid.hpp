@@ -17,6 +17,7 @@ public:
 
 	virtual ~TRealoid();
 	virtual void perform(u32, JDrama::TGraphics*);
+	virtual TRealoidActor* createRealoidActor(MActor*) = 0;
 
 	void clipBoids(JDrama::TGraphics*);
 	void loadDefault(JSUMemoryInputStream&, const char*, int);

@@ -6,6 +6,7 @@
 #include <MarioUtil/DrawUtil.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Strategic/ObjManager.hpp>
+#include <Strategic/ObjModel.hpp>
 
 TRealoid::TRealoid(const char* name)
     : TSpineEnemy(name)
@@ -63,6 +64,36 @@ void TRealoid::clipBoids(JDrama::TGraphics* graphics)
 			unk154[i]->unk74 &= ~1;
 		else
 			unk154[i]->unk74 |= 1;
+	}
+}
+
+void TRealoid::loadDefault(JSUMemoryInputStream& stream, const char* name,
+                          int arg2)
+{
+	// TODO: 89.9% - logic exact. Residual = frame padding + TPathNode setup
+	// staged via stack (struct-copy) + regalloc cascade.
+	TSpineEnemy::load(stream);
+
+	int count;
+	stream.read(&count, 4);
+
+	mMActorKeeper = new TMActorKeeper(mManager, count + arg2);
+	unk150        = new TBoidLeader(count, "コントローラ");
+
+	unk150->unk38.unk0 = nullptr;
+	unk150->unk38.unk4 = mPosition;
+
+	unk150->setGraph(unk124->getGraph(), mPosition);
+
+	unk154 = new TRealoidActor*[count];
+
+	JGeometry::TVec3<f32> pos = mPosition;
+	for (int i = 0; i < count; ++i) {
+		MActor* actor = mMActorKeeper->createMActor(name, 3);
+		TBoid* boid   = &unk150->mBoids[i];
+		boid->unk0    = pos;
+		unk154[i]     = createRealoidActor(actor);
+		pos.y += 10.0f;
 	}
 }
 
