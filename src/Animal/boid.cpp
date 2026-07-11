@@ -42,9 +42,9 @@ TBoidLeader::calcGoalForce(const JGeometry::TVec3<f32>& pos) const
 		force.setLength(1.0f);
 	} else {
 		const JGeometry::TVec3<f32>& node = unk38.getPoint();
-		force.x = node.x;
-		force.y = node.y;
-		force.z = node.z;
+		force.x                           = node.x;
+		force.y                           = node.y;
+		force.z                           = node.z;
 		force.add(unk4C);
 		force.sub(pos);
 		f32 len = force.length();
@@ -59,9 +59,7 @@ TBoidLeader::calcGoalForce(const JGeometry::TVec3<f32>& pos) const
 }
 
 // UNUSED (Size: 0x150 in MAP)
-void TBoidLeader::updateGoal()
-{
-}
+void TBoidLeader::updateGoal() { }
 
 void TBoidLeader::perform(u32 flags, JDrama::TGraphics* graphics)
 {
@@ -200,7 +198,7 @@ void TBoidLeader::calcBoids()
 			b->unk18.set(m[0][2], m[1][2], m[2][2]);
 			PSVECNormalize(&b->unk18, &b->unk18);
 
-			f32 speed                  = PSVECMag(&force);
+			f32 speed = PSVECMag(&force);
 			b->unk0 += b->unk18 * (unk20 + b->unk4C) * speed;
 		}
 	}
@@ -228,7 +226,7 @@ TBoidLeader::TBoidLeader(int num, const char* name)
     , unk78(0.0f)
     , unk7C(0.0f)
 {
-	unk4C      = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
+	unk4C = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 	unk1C |= 1;
 }
 
