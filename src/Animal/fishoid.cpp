@@ -66,6 +66,62 @@ void TRealoid::clipBoids(JDrama::TGraphics* graphics)
 	}
 }
 
+void TRealoidActor::calcRootMatrix(TBoid* boid)
+{
+	// TODO: 91.6% - logic exact (look-at basis from boid dir). Residual =
+	// retail frame padding + stfsu streaming matrix stores + holder-branch
+	// model-mtx recompute. Not a fakematch.
+	if (unk74 & 6)
+		return;
+
+	mPosition = boid->unk0;
+
+	if (mHolder != nullptr) {
+		MtxPtr hm = mHolder->getTakingMtx();
+		boid->unk0.x = hm[0][3];
+		boid->unk0.y = hm[1][3];
+		boid->unk0.z = hm[2][3];
+		PSMTXCopy(mHolder->getTakingMtx(), unk70->getModel()->unk20);
+		return;
+	}
+
+	mPosition = boid->unk0;
+
+	JGeometry::TVec3<f32> trans = boid->unk0;
+	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
+	JGeometry::TVec3<f32> dir = boid->unk18;
+	JGeometry::TVec3<f32> n;
+
+	n.x = up.y * dir.z - up.z * dir.y;
+	n.y = up.z * dir.x - up.x * dir.z;
+	n.z = up.x * dir.y - up.y * dir.x;
+	PSVECNormalize(&n, &n);
+
+	up.x = dir.y * n.z - dir.z * n.y;
+	up.y = dir.z * n.x - dir.x * n.z;
+	up.z = dir.x * n.y - dir.y * n.x;
+	PSVECNormalize(&up, &up);
+
+	dir.x = n.y * up.z - n.z * up.y;
+	dir.y = n.z * up.x - n.x * up.z;
+	dir.z = n.x * up.y - n.y * up.x;
+	PSVECNormalize(&dir, &dir);
+
+	MtxPtr root = unk70->getModel()->unk20;
+	root[0][0] = -dir.x;
+	root[1][0] = -dir.y;
+	root[2][0] = -dir.z;
+	root[0][1] = up.x;
+	root[1][1] = up.y;
+	root[2][1] = up.z;
+	root[0][2] = n.x;
+	root[1][2] = n.y;
+	root[2][2] = n.z;
+	root[0][3] = trans.x;
+	root[1][3] = trans.y;
+	root[2][3] = trans.z;
+}
+
 TFishoidManager::TFishoidManager(const char* name)
     : TEnemyManager(name)
 {
