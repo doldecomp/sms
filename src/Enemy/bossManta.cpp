@@ -8,6 +8,7 @@
 #include <MSound/SoundEffects.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <Strategic/Spine.hpp>
+#include <Player/MarioAccess.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
@@ -117,14 +118,48 @@ void TBossManta::initNthGeneration(int gen)
 BOOL TBossManta::collidedWithWater() { return FALSE; }
 void TBossManta::getIntoGraphVec(JGeometry::TVec3<f32>*) { }
 
-void TBossMantaAdditionalCollision::perform(u32, JDrama::TGraphics*) { }
-BOOL TBossMantaAdditionalCollision::receiveMessage(THitActor*, u32)
+void TBossMantaAdditionalCollision::perform(u32 flags,
+                                            JDrama::TGraphics* graphics)
 {
-	return FALSE;
+	// TODO: WIP - push-away response; vector-op codegen needs work.
+	THitActor::perform(flags, graphics);
+	if (flags & 1) {
+		for (int i = 0; i < mColCount; ++i) {
+			if (mCollisions[i]->getActorType() != 0x80000001)
+				continue;
+			JGeometry::TVec3<f32> dir;
+			dir.x = gpMarioPos->x - mPosition.x;
+			dir.y = gpMarioPos->y - mPosition.y;
+			dir.z = gpMarioPos->z - mPosition.z;
+			if (dir.dot(dir) == 0.0000038146973f)
+				dir.set(0.0f, 0.0f, 0.0f);
+			else
+				dir.setLength(1.0f);
+			SMS_SendMessageToMario(this, 0xE);
+		}
+	}
+}
+BOOL TBossMantaAdditionalCollision::receiveMessage(THitActor* sender,
+                                                   u32 message)
+{
+	if (unk68 == nullptr)
+		return FALSE;
+	return unk68->receiveMessage(sender, message);
 }
 
 TBossMantaAdditionalCollisionSet::TBossMantaAdditionalCollisionSet() { }
-void TBossMantaAdditionalCollisionSet::update(u32, JDrama::TGraphics*) { }
+void TBossMantaAdditionalCollisionSet::update(u32 flags,
+                                              JDrama::TGraphics* graphics)
+{
+	if (unkC != nullptr) {
+		if (unkC->mLiveFlag & 1) {
+			unkC = nullptr;
+			return;
+		}
+		for (int i = 0; i < 3; ++i)
+			(&unk0)[i]->perform(flags, graphics);
+	}
+}
 void TBossMantaAdditionalCollisionSet::adapt(TBossManta* manta)
 {
 	unkC                = manta;
