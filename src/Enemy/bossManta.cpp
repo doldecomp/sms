@@ -192,7 +192,37 @@ TSpineEnemy* TBossMantaManager::createEnemyInstance()
 void TBossMantaManager::TMantaMessageState::update() { }
 void TBossMantaManager::TMantaBattleState::update() { }
 
-DEFINE_NERVE(TNerveMantaSpawn, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveMantaSpawn, TLiveActor)
+{
+	TBossManta* self = (TBossManta*)spine->getBody();
+
+	if (spine->getTime() < 5) {
+		self->mScaling.x *= 1.01f;
+		self->mScaling.y *= 1.01f;
+		self->mScaling.z *= 1.01f;
+	} else {
+		self->mScaling.x *= 0.9f;
+		self->mScaling.y *= 0.9f;
+		self->mScaling.z *= 0.9f;
+	}
+
+	if (spine->getTime() == 0) {
+		static const int particles[] = { 0xFC, 0xFB, 0xFA, 0xF9 };
+		gpMarioParticleManager->emitAndBindToPosPtr(particles[self->unk18C],
+		                                            &self->unk17C, 0, self);
+		static const u32 sounds[] = { 0x8994, 0x8995, 0x8996, 0x8997 };
+		u32 snd                   = sounds[self->unk18C];
+		if (gpMSound->gateCheck(snd))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    snd, (const Vec*)&self->mPosition, 0, nullptr, 0, 4);
+		((TBossMantaManager*)self->getManager())
+		    ->spawn(self->unk18C + 1, self->mPosition);
+	}
+
+	if (spine->getTime() == 0x1E)
+		return TRUE;
+	return FALSE;
+}
 DEFINE_NERVE(TNerveMantaMove, TLiveActor) { return FALSE; }
 DEFINE_NERVE(TNerveMantaAppearDemo, TLiveActor) { return FALSE; }
 DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
