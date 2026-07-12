@@ -2,31 +2,37 @@
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <Strategic/ObjManager.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <M3DUtil/MActor.hpp>
+#include <MSound/MSound.hpp>
+#include <MSound/MSoundSE.hpp>
+#include <MSound/SoundEffects.hpp>
+#include <System/EmitterViewObj.hpp>
+#include <Strategic/Spine.hpp>
 #include <System/ParamInst.hpp>
 #include <System/Resolution.hpp>
 
 TBossManta::TBossManta(const char* name)
     : TSpineEnemy(name)
 {
-	unk158 = 0.0f;
-	unk15C = 0.0f;
-	unk160 = 0.0f;
-	unk164 = 0.0f;
-	unk168 = 0.0f;
-	unk16C = 0.0f;
-	unk170 = 0.0f;
-	unk174 = 0.0f;
-	unk178 = 1.0f;
-	unk17C = 0.0f;
-	unk180 = 0.0f;
-	unk184 = 0.0f;
-	unk188 = 0;
-	unk18C = 0;
-	unk190 = 0.0f;
-	unk194 = 0.0f;
-	unk198 = 0.0f;
-	unk19C = 0;
-	unk1A0 = 0;
+	unk158   = 0.0f;
+	unk15C   = 0.0f;
+	unk160   = 0.0f;
+	unk164   = 0.0f;
+	unk168   = 0.0f;
+	unk16C   = 0.0f;
+	unk170   = 0.0f;
+	unk174   = 0.0f;
+	unk178   = 1.0f;
+	unk17C.x = 0.0f;
+	unk17C.y = 0.0f;
+	unk17C.z = 0.0f;
+	unk188   = 0;
+	unk18C   = 0;
+	unk190   = 0.0f;
+	unk194   = 0.0f;
+	unk198   = 0.0f;
+	unk19C   = 0;
+	unk1A0   = 0;
 }
 
 void TBossManta::init(TLiveManager*) { }
@@ -55,9 +61,9 @@ void TBossManta::calcRootMatrix()
 
 	J3DModel* model    = getModel();
 	MtxPtr joint       = model->mNodeMatrices[sCenterJointIndex];
-	unk17C             = joint[0][3];
-	unk180             = mPosition.y;
-	unk184             = joint[2][3];
+	unk17C.x           = joint[0][3];
+	unk17C.y           = mPosition.y;
+	unk17C.z           = joint[2][3];
 	(Vec&)model->unk14 = (Vec&)mScaling;
 	MTXCopy(m, model->unk20);
 }
@@ -161,5 +167,28 @@ void TBossMantaManager::TMantaBattleState::update() { }
 DEFINE_NERVE(TNerveMantaSpawn, TLiveActor) { return FALSE; }
 DEFINE_NERVE(TNerveMantaMove, TLiveActor) { return FALSE; }
 DEFINE_NERVE(TNerveMantaAppearDemo, TLiveActor) { return FALSE; }
-DEFINE_NERVE(TNerveMantaDeath, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
+{
+	TBossManta* self = (TBossManta*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		self->getMActor()->setBckFromIndex(0);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+		MActorAnmBck* bck = self->getMActor()->getAnmBck();
+		if (bck != nullptr)
+			bck->setMotionBlendRatio(0.0f);
+	}
+
+	if (self->checkCurAnmEnd(0)) {
+		gpMarioParticleManager->emitAndBindToPosPtr(0xF8, &self->unk17C, 0,
+		                                            self);
+		if (gpMSound->gateCheck(MSD_SE_BS_MANTA_VANISH))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_BS_MANTA_VANISH, (const Vec*)&self->mPosition, 0,
+			    nullptr, 0, 4);
+		self->kill();
+	}
+
+	return FALSE;
+}
 DEFINE_NERVE(TNerveMantaHitWater, TLiveActor) { return FALSE; }

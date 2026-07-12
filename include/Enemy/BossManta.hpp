@@ -37,9 +37,7 @@ public:
 	/* 0x170 */ f32 unk170;
 	/* 0x174 */ f32 unk174;
 	/* 0x178 */ f32 unk178;
-	/* 0x17C */ f32 unk17C;
-	/* 0x180 */ f32 unk180;
-	/* 0x184 */ f32 unk184;
+	/* 0x17C */ JGeometry::TVec3<f32> unk17C;
 	/* 0x188 */ s32 unk188;
 	/* 0x18C */ s32 unk18C;
 	/* 0x190 */ f32 unk190;
