@@ -143,7 +143,22 @@ BOOL TBossManta::receiveMessage(THitActor* sender, u32 message)
 		return collidedWithWater();
 	return FALSE;
 }
-void TBossManta::updateAttractor() { }
+void TBossManta::updateAttractor()
+{
+	// TODO: WIP - full attractor/pusher force accumulation is complex vector
+	// math; drafted the attractor-direction core only.
+	JGeometry::TVec3<f32> v;
+	v.x = unk158 - mPosition.x;
+	v.y = 0.0f;
+	v.z = unk160 - mPosition.z;
+	if (v.dot(v) == 0.0000038146973f)
+		v.set(0.0f, 0.0f, 0.0f);
+	else
+		v.setLength(1.0f);
+	unk164 = v.x;
+	unk168 = v.y;
+	unk16C = v.z;
+}
 f32 TBossManta::getPolluteRadius()
 {
 	if (unk18C < 4) {
