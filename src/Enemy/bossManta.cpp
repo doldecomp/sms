@@ -9,6 +9,8 @@
 #include <System/EmitterViewObj.hpp>
 #include <Strategic/Spine.hpp>
 #include <Player/ModelWaterManager.hpp>
+#include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 #include <System/ParamInst.hpp>
 #include <System/Resolution.hpp>
 
@@ -180,7 +182,30 @@ void TBossMantaManager::createModelData()
 	};
 	createModelDataArray(entry);
 }
-void TBossMantaManager::spawn(int, const JGeometry::TVec3<f32>&) { }
+void TBossMantaManager::spawn(int gen, const JGeometry::TVec3<f32>& pos)
+{
+	// TODO: 1.5% - logic correct (ring spawn of counts[gen] manta), but the
+	// Y-rotation matrix-mult codegen shape needs work.
+	static const int counts[] = { 1, 2, 3, 4, 4 };
+
+	int count     = counts[gen];
+	f32 baseAngle = 3.1415927f * (2.0f * MsRandF());
+	for (int i = 0; i < count; ++i) {
+		TBossManta* manta = (TBossManta*)getDeadEnemy();
+		if (manta != nullptr) {
+			JGeometry::TVec3<f32> dir(0.0f, 0.0f, 1.0f);
+			f32 angle = baseAngle + (2.0f * (f32)i * 3.1415927f) / (f32)count;
+			Mtx m;
+			MTXRotRad(m, 'y', angle);
+			MTXMultVec(m, &dir, &dir);
+			manta->unk170    = dir.x;
+			manta->unk174    = dir.y;
+			manta->unk178    = dir.z;
+			manta->mPosition = pos;
+			manta->initNthGeneration(gen);
+		}
+	}
+}
 void TBossMantaManager::createEnemies(int) { }
 void TBossMantaManager::setupEfbAlpha(JDrama::TGraphics*) { }
 void TBossMantaManager::updateMantaEscape() { }
