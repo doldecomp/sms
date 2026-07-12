@@ -41,7 +41,26 @@ TBossManta::TBossManta(const char* name)
 }
 
 void TBossManta::init(TLiveManager*) { }
-void TBossManta::control() { }
+void TBossManta::control()
+{
+	// TODO: WIP - force-turn lerp drafted; anim-frame blend table (@3118) TODO.
+	if (unk1A0 > 0)
+		unk1A0--;
+
+	if (getMActor()->checkCurBckFromIndex(3)) {
+		JGeometry::TVec3<f32> f(unk164, unk168, unk16C);
+		if (f.dot(f) == 0.0000038146973f)
+			f.set(0.0f, 0.0f, 0.0f);
+		else
+			f.setLength(1.0f);
+
+		static const f32 blend[]
+		    = { 0.005f, 0.008f, 0.01f, 0.03f, 0.05f, 0.05f };
+		f32 b    = blend[unk18C];
+		f32 turn = -(0.4f * (unk178 * f.x - unk170 * f.z) - 0.5f);
+		unk150   = (1.0f - b) * unk150 + b * turn;
+	}
+}
 void TBossManta::moveObject()
 {
 	// TODO: WIP - pollution stamp + push-away loop; vector codegen needs work.
