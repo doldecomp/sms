@@ -92,7 +92,26 @@ f32 TBossManta::getPolluteRadius()
 		return 100.0f;
 	return 0.0f;
 }
-void TBossManta::initNthGeneration(int) { }
+f32 TBossManta::sScale[] = { 20.0f, 10.0f, 5.0f, 2.0f, 1.0f, 1.0f };
+
+void TBossManta::initNthGeneration(int gen)
+{
+	static const f32 heights[] = { 10.0f, 5.0f, 1.0f, 0.42f, 0.42f, 0.42f };
+
+	unk18C     = gen;
+	f32 s      = sScale[unk18C];
+	mScaling.z = s;
+	mScaling.x = s;
+	mScaling.y = heights[unk18C];
+	unk19C     = 0;
+	unk150     = 0.5f;
+	unk154     = 0x31;
+
+	if (unk18C == 0)
+		mSpine->initWith(&TNerveMantaAppearDemo::theNerve());
+	else
+		mSpine->setNext(&TNerveMantaMove::theNerve());
+}
 BOOL TBossManta::collidedWithWater() { return FALSE; }
 void TBossManta::getIntoGraphVec(JGeometry::TVec3<f32>*) { }
 

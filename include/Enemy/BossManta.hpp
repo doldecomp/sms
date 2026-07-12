@@ -24,9 +24,10 @@ public:
 	void getIntoGraphVec(JGeometry::TVec3<f32>*);
 
 	static int sCenterJointIndex;
+	static f32 sScale[];
 
 public:
-	/* 0x150 */ s32 unk150;
+	/* 0x150 */ f32 unk150;
 	/* 0x154 */ s32 unk154;
 	/* 0x158 */ f32 unk158;
 	/* 0x15C */ f32 unk15C;
