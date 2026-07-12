@@ -66,6 +66,25 @@ public:
 class TBossMantaParams : public TSpineEnemyParams {
 public:
 	TBossMantaParams(const char*);
+
+public:
+	/* 0xA8 */ TParamRT<f32> mSLPolluteRadius;
+	/* 0xBC */ TParamRT<int> mSLDamageEffectNum;
+	/* 0xD0 */ TParamRT<f32> mSLAppearDemoInitialZ;
+	/* 0xE4 */ TParamRT<f32> mSLAppearDemoWalkSpeed;
+	/* 0xF8 */ TParamRT<int> mSLMantaRed;
+	/* 0x10C */ TParamRT<int> mSLMantaGreen;
+	/* 0x120 */ TParamRT<int> mSLMantaBlue;
+	/* 0x134 */ TParamRT<int> mSLMantaAlpha;
+	/* 0x148 */ TParamRT<int> mSLAngryMantaRed;
+	/* 0x15C */ TParamRT<int> mSLAngryMantaGreen;
+	/* 0x170 */ TParamRT<int> mSLAngryMantaBlue;
+	/* 0x184 */ TParamRT<int> mSLAngryMantaAlpha;
+	/* 0x198 */ TParamRT<f32> mSLAttractorPower;
+	/* 0x1AC */ TParamRT<f32> mSLPusherPower;
+	/* 0x1C0 */ TParamRT<f32> mSLEscapeLookPoint;
+	/* 0x1D4 */ TParamRT<f32> mSLEscapeLookedPoint;
+	/* 0x1E8 */ TParamRT<f32> mSLEscapeRegion;
 };
 
 class TBossMantaManager : public TEnemyManager {

@@ -1,4 +1,5 @@
 #include <Enemy/BossManta.hpp>
+#include <System/ParamInst.hpp>
 
 TBossManta::TBossManta(const char* name)
     : TSpineEnemy(name)
@@ -32,7 +33,18 @@ void TBossManta::drawObject(JDrama::TGraphics*) { }
 void TBossManta::reset() { }
 BOOL TBossManta::receiveMessage(THitActor*, u32) { return FALSE; }
 void TBossManta::updateAttractor() { }
-f32 TBossManta::getPolluteRadius() { return 0.0f; }
+f32 TBossManta::getPolluteRadius()
+{
+	if (unk18C < 4) {
+		if (unk18C < 0)
+			return 0.0f;
+		return ((TBossMantaParams*)getSaveParam())->mSLPolluteRadius.get()
+		       * mScaling.x;
+	}
+	if (unk18C < 6)
+		return 100.0f;
+	return 0.0f;
+}
 void TBossManta::initNthGeneration(int) { }
 void TBossManta::collidedWithWater() { }
 void TBossManta::getIntoGraphVec(JGeometry::TVec3<f32>*) { }
@@ -49,7 +61,25 @@ void TBossMantaAdditionalCollisionSet::adapt(TBossManta*) { }
 
 TBossMantaParams::TBossMantaParams(const char* name)
     : TSpineEnemyParams(name)
+    , PARAM_INIT(mSLPolluteRadius, 100.0f)
+    , PARAM_INIT(mSLDamageEffectNum, 3)
+    , PARAM_INIT(mSLAppearDemoInitialZ, 7600.0f)
+    , PARAM_INIT(mSLAppearDemoWalkSpeed, 3.0f)
+    , PARAM_INIT(mSLMantaRed, 0xC4)
+    , PARAM_INIT(mSLMantaGreen, 0x80)
+    , PARAM_INIT(mSLMantaBlue, 0x5F)
+    , PARAM_INIT(mSLMantaAlpha, 0x80)
+    , PARAM_INIT(mSLAngryMantaRed, 0xD2)
+    , PARAM_INIT(mSLAngryMantaGreen, 0x1E)
+    , PARAM_INIT(mSLAngryMantaBlue, 0x5A)
+    , PARAM_INIT(mSLAngryMantaAlpha, 0x80)
+    , PARAM_INIT(mSLAttractorPower, 622.0f)
+    , PARAM_INIT(mSLPusherPower, 23559.0f)
+    , PARAM_INIT(mSLEscapeLookPoint, 1000.0f)
+    , PARAM_INIT(mSLEscapeLookedPoint, 1000.0f)
+    , PARAM_INIT(mSLEscapeRegion, 500.0f)
 {
+	TParams::load(mPrmPath);
 }
 
 TBossMantaManager::TBossMantaManager(const char* name)
