@@ -10,6 +10,7 @@
 #include <Strategic/Spine.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Player/ModelWaterManager.hpp>
+#include <Map/PollutionManager.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
 #include <System/ParamInst.hpp>
@@ -41,7 +42,30 @@ TBossManta::TBossManta(const char* name)
 
 void TBossManta::init(TLiveManager*) { }
 void TBossManta::control() { }
-void TBossManta::moveObject() { }
+void TBossManta::moveObject()
+{
+	// TODO: WIP - pollution stamp + push-away loop; vector codegen needs work.
+	TLiveActor::moveObject();
+
+	static const u8 pollute[] = { 1, 1, 1, 1, 1, 1 };
+	if (pollute[unk18C])
+		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
+		                   getPolluteRadius());
+
+	for (int i = 0; i < mColCount; ++i) {
+		if (mCollisions[i]->getActorType() != 0x80000001)
+			continue;
+		JGeometry::TVec3<f32> dir;
+		dir.x = gpMarioPos->x - mPosition.x;
+		dir.y = gpMarioPos->y - mPosition.y;
+		dir.z = gpMarioPos->z - mPosition.z;
+		if (dir.dot(dir) == 0.0000038146973f)
+			dir.set(0.0f, 0.0f, 0.0f);
+		else
+			dir.setLength(1.0f);
+		SMS_SendMessageToMario(this, 0xE);
+	}
+}
 int TBossManta::sCenterJointIndex;
 
 void TBossManta::calcRootMatrix()
