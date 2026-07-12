@@ -8,6 +8,7 @@
 #include <MSound/SoundEffects.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <Strategic/Spine.hpp>
+#include <Player/ModelWaterManager.hpp>
 #include <System/ParamInst.hpp>
 #include <System/Resolution.hpp>
 
@@ -69,7 +70,15 @@ void TBossManta::calcRootMatrix()
 }
 void TBossManta::drawObject(JDrama::TGraphics*) { }
 void TBossManta::reset() { }
-BOOL TBossManta::receiveMessage(THitActor*, u32) { return FALSE; }
+BOOL TBossManta::receiveMessage(THitActor* sender, u32 message)
+{
+	if (message == 0xF
+	    && gpModelWaterManager
+	               ->mParticleFlagSOA[((TWaterHitActor*)sender)->unk68]
+	           & 0x40)
+		return collidedWithWater();
+	return FALSE;
+}
 void TBossManta::updateAttractor() { }
 f32 TBossManta::getPolluteRadius()
 {
@@ -84,7 +93,7 @@ f32 TBossManta::getPolluteRadius()
 	return 0.0f;
 }
 void TBossManta::initNthGeneration(int) { }
-void TBossManta::collidedWithWater() { }
+BOOL TBossManta::collidedWithWater() { return FALSE; }
 void TBossManta::getIntoGraphVec(JGeometry::TVec3<f32>*) { }
 
 void TBossMantaAdditionalCollision::perform(u32, JDrama::TGraphics*) { }

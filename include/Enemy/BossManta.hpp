@@ -20,7 +20,7 @@ public:
 	void updateAttractor();
 	f32 getPolluteRadius();
 	void initNthGeneration(int);
-	void collidedWithWater();
+	BOOL collidedWithWater();
 	void getIntoGraphVec(JGeometry::TVec3<f32>*);
 
 	static int sCenterJointIndex;
