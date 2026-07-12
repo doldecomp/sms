@@ -122,7 +122,10 @@ void TBossMantaManager::createEnemies(int) { }
 void TBossMantaManager::setupEfbAlpha(JDrama::TGraphics*) { }
 void TBossMantaManager::updateMantaEscape() { }
 void TBossMantaManager::drawMantaShadow(JDrama::TGraphics*) { }
-TSpineEnemy* TBossMantaManager::createEnemyInstance() { return nullptr; }
+TSpineEnemy* TBossMantaManager::createEnemyInstance()
+{
+	return new TBossManta("マンタ");
+}
 void TBossMantaManager::TMantaMessageState::update() { }
 void TBossMantaManager::TMantaBattleState::update() { }
 
