@@ -46,6 +46,7 @@ public:
 	/* 0x198 */ f32 unk198;
 	/* 0x19C */ s32 unk19C;
 	/* 0x1A0 */ s32 unk1A0;
+	/* 0x1A4 */ s32 unk1A4;
 };
 
 class TBossMantaAdditionalCollision : public THitActor {

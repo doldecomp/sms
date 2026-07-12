@@ -1,6 +1,7 @@
 #include <Enemy/BossManta.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <Strategic/ObjManager.hpp>
+#include <Strategic/ObjModel.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MSound/MSound.hpp>
@@ -40,7 +41,24 @@ TBossManta::TBossManta(const char* name)
 	unk1A0   = 0;
 }
 
-void TBossManta::init(TLiveManager*) { }
+void TBossManta::init(TLiveManager* manager)
+{
+	// TODO: WIP - core init; tail (unk7C branch) simplified.
+	mManager = manager;
+	mManager->manageActor(this);
+	mMActor     = mMActorKeeper->createMActor("manta.bmd", 0);
+	mHeadHeight = 5000.0f;
+	initHitActor(0x08000004, 1, 0x80000000, 0.0f, 0.0f, 0.0f, 0.0f);
+	unk170 = 0.0f;
+	unk174 = 0.0f;
+	unk178 = 1.0f;
+	calcRootMatrix();
+	kill();
+	mLiveFlag |= LIVE_FLAG_UNK8;
+	mLiveFlag &= ~0x100;
+	unk1A4 = 0;
+	unk150 = 0.5f;
+}
 void TBossManta::control()
 {
 	// TODO: WIP - force-turn lerp drafted; anim-frame blend table (@3118) TODO.
