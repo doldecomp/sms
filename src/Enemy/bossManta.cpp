@@ -125,7 +125,25 @@ BOOL TBossMantaAdditionalCollision::receiveMessage(THitActor*, u32)
 
 TBossMantaAdditionalCollisionSet::TBossMantaAdditionalCollisionSet() { }
 void TBossMantaAdditionalCollisionSet::update(u32, JDrama::TGraphics*) { }
-void TBossMantaAdditionalCollisionSet::adapt(TBossManta*) { }
+void TBossMantaAdditionalCollisionSet::adapt(TBossManta* manta)
+{
+	unkC                = manta;
+	unk0->mAttackRadius = 54.0f * unkC->mScaling.x;
+	unk0->mAttackHeight = 100.0f;
+	unk0->mDamageRadius = 54.0f * unkC->mScaling.x;
+	unk0->mDamageHeight = 100.0f;
+	unk4->mAttackRadius = 26.0f * unkC->mScaling.x;
+	unk4->mAttackHeight = 100.0f;
+	unk4->mDamageRadius = 26.0f * unkC->mScaling.x;
+	unk4->mDamageHeight = 100.0f;
+	unk8->mAttackRadius = 26.0f * unkC->mScaling.x;
+	unk8->mAttackHeight = 100.0f;
+	unk8->mDamageRadius = 26.0f * unkC->mScaling.x;
+	unk8->mDamageHeight = 100.0f;
+	unk0->unk68         = unkC;
+	unk4->unk68         = unkC;
+	unk8->unk68         = unkC;
+}
 
 TBossMantaParams::TBossMantaParams(const char* name)
     : TSpineEnemyParams(name)

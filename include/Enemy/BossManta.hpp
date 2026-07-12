@@ -52,6 +52,9 @@ class TBossMantaAdditionalCollision : public THitActor {
 public:
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual BOOL receiveMessage(THitActor*, u32);
+
+public:
+	/* 0x68 */ TBossManta* unk68;
 };
 
 class TBossMantaAdditionalCollisionSet {
@@ -61,8 +64,9 @@ public:
 	void adapt(TBossManta*);
 
 public:
-	/* 0x0 */ THitActor* unk0;
-	/* 0x4 */ u8 pad4[8];
+	/* 0x0 */ TBossMantaAdditionalCollision* unk0;
+	/* 0x4 */ TBossMantaAdditionalCollision* unk4;
+	/* 0x8 */ TBossMantaAdditionalCollision* unk8;
 	/* 0xC */ TBossManta* unkC;
 };
 
