@@ -1,6 +1,7 @@
 #include <Enemy/BossManta.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <Strategic/ObjManager.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <System/ParamInst.hpp>
 #include <System/Resolution.hpp>
 
@@ -31,7 +32,35 @@ TBossManta::TBossManta(const char* name)
 void TBossManta::init(TLiveManager*) { }
 void TBossManta::control() { }
 void TBossManta::moveObject() { }
-void TBossManta::calcRootMatrix() { }
+int TBossManta::sCenterJointIndex;
+
+void TBossManta::calcRootMatrix()
+{
+	if (unk154 < 0x31)
+		unk154++;
+
+	Mtx m;
+	m[0][3] = mPosition.x;
+	m[1][3] = mPosition.y;
+	m[2][3] = mPosition.z;
+	m[0][0] = 1.0f * unk178 - 0.0f * unk174;
+	m[1][0] = 0.0f * unk170 - 0.0f * unk178;
+	m[2][0] = -(1.0f * unk170 - 0.0f * unk174);
+	m[0][1] = 0.0f;
+	m[1][1] = 1.0f;
+	m[2][1] = 0.0f;
+	m[0][2] = unk170;
+	m[1][2] = unk174;
+	m[2][2] = unk178;
+
+	J3DModel* model    = getModel();
+	MtxPtr joint       = model->mNodeMatrices[sCenterJointIndex];
+	unk17C             = joint[0][3];
+	unk180             = mPosition.y;
+	unk184             = joint[2][3];
+	(Vec&)model->unk14 = (Vec&)mScaling;
+	MTXCopy(m, model->unk20);
+}
 void TBossManta::drawObject(JDrama::TGraphics*) { }
 void TBossManta::reset() { }
 BOOL TBossManta::receiveMessage(THitActor*, u32) { return FALSE; }
