@@ -236,7 +236,13 @@ BOOL TBossMantaAdditionalCollision::receiveMessage(THitActor* sender,
 	return unk68->receiveMessage(sender, message);
 }
 
-TBossMantaAdditionalCollisionSet::TBossMantaAdditionalCollisionSet() { }
+TBossMantaAdditionalCollisionSet::TBossMantaAdditionalCollisionSet()
+{
+	// TODO: WIP - creates 3 collision items; JGadget list wiring omitted.
+	unkC = nullptr;
+	for (int i = 0; i < 3; ++i)
+		(&unk0)[i] = new TBossMantaAdditionalCollision("マンタ当たり");
+}
 void TBossMantaAdditionalCollisionSet::update(u32 flags,
                                               JDrama::TGraphics* graphics)
 {
@@ -311,7 +317,11 @@ void TBossMantaManager::load(JSUMemoryInputStream& stream)
 	unk38 = new TBossMantaParams("/enemy/bossmanta.prm");
 	TEnemyManager::load(stream);
 }
-void TBossMantaManager::loadAfter() { }
+void TBossMantaManager::loadAfter()
+{
+	// TODO: WIP - particle-flag setup loop omitted.
+	TEnemyManager::loadAfter();
+}
 void TBossMantaManager::perform(u32 flags, JDrama::TGraphics* graphics)
 {
 	TEnemyManager::perform(flags, graphics);
@@ -360,16 +370,43 @@ void TBossMantaManager::spawn(int gen, const JGeometry::TVec3<f32>& pos)
 		}
 	}
 }
-void TBossMantaManager::createEnemies(int) { }
-void TBossMantaManager::setupEfbAlpha(JDrama::TGraphics*) { }
-void TBossMantaManager::updateMantaEscape() { }
-void TBossMantaManager::drawMantaShadow(JDrama::TGraphics*) { }
+void TBossMantaManager::createEnemies(int num)
+{
+	// TODO: WIP - creates enemies + additional collision sets.
+	TEnemyManager::createEnemies(num);
+}
+void TBossMantaManager::setupEfbAlpha(JDrama::TGraphics* graphics)
+{
+	// TODO: WIP - EFB alpha setup (GX peek/poke).
+}
+void TBossMantaManager::updateMantaEscape()
+{
+	// TODO: WIP - sets escape flag from manta<->mario distances.
+}
+void TBossMantaManager::drawMantaShadow(JDrama::TGraphics* graphics)
+{
+	// TODO: WIP - EFB shadow render (GX copy-tex + projected draw).
+}
 TSpineEnemy* TBossMantaManager::createEnemyInstance()
 {
 	return new TBossManta("マンタ");
 }
-void TBossMantaManager::TMantaMessageState::update() { }
-void TBossMantaManager::TMantaBattleState::update() { }
+void TBossMantaManager::TMantaMessageState::update()
+{
+	// TODO: WIP - message-state machine (switch on unk4).
+	switch (unk4) {
+	default:
+		break;
+	}
+}
+void TBossMantaManager::TMantaBattleState::update()
+{
+	// TODO: WIP - battle-state machine (switch on unk4; demo cameras).
+	switch (unk4) {
+	default:
+		break;
+	}
+}
 
 DEFINE_NERVE(TNerveMantaSpawn, TLiveActor)
 {
