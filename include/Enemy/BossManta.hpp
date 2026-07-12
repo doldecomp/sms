@@ -21,7 +21,7 @@ public:
 	f32 getPolluteRadius();
 	void initNthGeneration(int);
 	BOOL collidedWithWater();
-	void getIntoGraphVec(JGeometry::TVec3<f32>*);
+	BOOL getIntoGraphVec(JGeometry::TVec3<f32>*);
 
 	static int sCenterJointIndex;
 	static f32 sScale[];

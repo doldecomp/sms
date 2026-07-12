@@ -191,8 +191,21 @@ void TBossManta::initNthGeneration(int gen)
 	else
 		mSpine->setNext(&TNerveMantaMove::theNerve());
 }
-BOOL TBossManta::collidedWithWater() { return FALSE; }
-void TBossManta::getIntoGraphVec(JGeometry::TVec3<f32>*) { }
+BOOL TBossManta::collidedWithWater()
+{
+	if (unk1A0 > 0) {
+		unk1A0 = 0x1E;
+		mSpine->setNext(&TNerveMantaHitWater::theNerve());
+		return TRUE;
+	}
+	return FALSE;
+}
+BOOL TBossManta::getIntoGraphVec(JGeometry::TVec3<f32>* out)
+{
+	// TODO: WIP - graph containment; core returns zero vec.
+	out->set(0.0f, 0.0f, 0.0f);
+	return TRUE;
+}
 
 void TBossMantaAdditionalCollision::perform(u32 flags,
                                             JDrama::TGraphics* graphics)
