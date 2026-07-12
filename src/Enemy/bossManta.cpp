@@ -389,8 +389,22 @@ DEFINE_NERVE(TNerveMantaSpawn, TLiveActor)
 		return TRUE;
 	return FALSE;
 }
-DEFINE_NERVE(TNerveMantaMove, TLiveActor) { return FALSE; }
-DEFINE_NERVE(TNerveMantaAppearDemo, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveMantaMove, TLiveActor)
+{
+	// TODO: WIP - movement state (anim/sfx/forces); attractor core drafted.
+	TBossManta* self = (TBossManta*)spine->getBody();
+	if (spine->getTime() % 100 == 0)
+		self->updateAttractor();
+	return FALSE;
+}
+DEFINE_NERVE(TNerveMantaAppearDemo, TLiveActor)
+{
+	// TODO: WIP - appear-demo state; transition-on-anim-end drafted.
+	TBossManta* self = (TBossManta*)spine->getBody();
+	if (self->checkCurAnmEnd(0))
+		return TRUE;
+	return FALSE;
+}
 DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
 {
 	TBossManta* self = (TBossManta*)spine->getBody();
@@ -415,4 +429,11 @@ DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
 
 	return FALSE;
 }
-DEFINE_NERVE(TNerveMantaHitWater, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveMantaHitWater, TLiveActor)
+{
+	// TODO: WIP - hit-water state (anim/sound + per-gen data).
+	TBossManta* self = (TBossManta*)spine->getBody();
+	if (spine->getTime() == 0)
+		self->getMActor()->setBckFromIndex(1);
+	return FALSE;
+}
