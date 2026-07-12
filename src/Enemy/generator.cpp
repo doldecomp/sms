@@ -22,21 +22,16 @@ TGenerator::TGenerator(const char* name)
 
 void TGenerator::load(JSUMemoryInputStream& stream)
 {
-	// TODO: 89.9% - logic exact. Residual = the 3 discarded reads land in 3
-	// stack slots vs the target's 1 (stack-coalescing/frame-padding family).
-	JDrama::TNameRef::load(stream);
+	JDrama::TViewObj::load(stream);
 
 	stream >> mPos.x >> mPos.y >> mPos.z;
 	stream >> mRot.x >> mRot.y >> mRot.z;
 
 	f32 unused;
-	stream >> unused;
-	stream >> unused;
-	stream >> unused;
+	stream >> unused >> unused >> unused;
 	stream.readString();
 
-	s32 count;
-	stream >> count;
+	s32 count = stream.readS32();
 	for (int i = 0; i < count; ++i) {
 		s32 dummy;
 		stream >> dummy;
@@ -47,7 +42,10 @@ void TGenerator::load(JSUMemoryInputStream& stream)
 	mManagerName = stream.readString();
 
 	stream >> mInterval;
-	mTimer = (s32)(mInterval * MsRandF());
+
+	s32 timer = mInterval;
+	timer *= MsRandF();
+	mTimer = timer;
 
 	gpConductor->registerGenerator(this);
 }
@@ -76,7 +74,7 @@ void TGenerator::perform(u32 flags, JDrama::TGraphics* graphics)
 
 				Mtx m;
 				MsMtxSetRotRPH(m, mRot.x, mRot.y, mRot.z);
-				PSMTXMultVec(m, &vel, &vel);
+				MTXMultVec(m, &vel, &vel);
 
 				enemy->resetSRTV(mPos, rot, enemy->mScaling, vel);
 			}
@@ -86,12 +84,12 @@ void TGenerator::perform(u32 flags, JDrama::TGraphics* graphics)
 
 TOneShotGenerator::TOneShotGenerator(const char* name)
     : THitActor(name)
+    , mManagerName(nullptr)
+    , mManager(nullptr)
+    , mGraphName(nullptr)
+    , mGraph(nullptr)
+    , mCount(1)
 {
-	mManagerName = nullptr;
-	mManager     = nullptr;
-	mGraphName   = nullptr;
-	mGraph       = nullptr;
-	mCount       = 1;
 }
 
 void TOneShotGenerator::load(JSUMemoryInputStream& stream)
@@ -108,8 +106,8 @@ void TOneShotGenerator::loadAfter()
 		if (mGraph == nullptr)
 			mGraph = gpConductor->getGraphByName(mGraphName);
 
-		initHitActor(0x02000001, 1, 0x80000000, 80.0f, 120.0f, 80.0f, 120.0f);
-		mHitFlags &= ~1;
+		initHitActor(0x2000001, 1, 0x80000000, 80.0f, 120.0f, 80.0f, 120.0f);
+		offHitFlag(HIT_FLAG_NO_COLLISION);
 
 		JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
 		    ->getChildren()
@@ -120,7 +118,7 @@ void TOneShotGenerator::loadAfter()
 
 BOOL TOneShotGenerator::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->isActorType(0x01000001)) {
+	if (sender->isActorType(0x1000001)) {
 		if (mCount != 0) {
 			TSpineEnemy* enemy = mManager->getFarOutEnemy();
 			if (enemy != nullptr) {
@@ -131,7 +129,7 @@ BOOL TOneShotGenerator::receiveMessage(THitActor* sender, u32 message)
 
 				Mtx m;
 				MsMtxSetRotRPH(m, mRotation.x, mRotation.y, mRotation.z);
-				PSMTXMultVec(m, &vel, &vel);
+				MTXMultVec(m, &vel, &vel);
 
 				enemy->resetSRTV(mPosition, rot, enemy->mScaling, vel);
 			}

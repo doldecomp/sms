@@ -304,6 +304,16 @@ Don't be afraid to leave notes that would be useful to the next person trying to
 - C++98 style: no auto, no range-for, no lambdas, no `nullptr` keyword (it's a macro).
 - `#include` paths use angle brackets with project-relative paths: `#include <Enemy/FireWanwan.hpp>`.
 - Header guards use `#ifndef FOLDER_FILENAME_HPP` / `#define` / `#endif` pattern.
+- When working with dolphin's mtx.h library, always prefer routing calls to PSMTX* or PSVEC* functions through the non-PS-prefixed macros MTX* and VEC*.
+  This is so that when a debug build of the game is eventually built, we still can easily switch between paired-singles PowerPC assembly implementation or a regular C implementation (C_MTX* and C_VEC*).
+  However, sometimes the game code directly calls C_ prefixed versions of the functions, in which case we should too.
+- Always keep track of available enums and inlines:
+  * Sound effect IDs should always go through the enum in SoundEffects.hpp
+  * Live actor flags should use the LIVE_FLAG_* enum and onLiveFlag/checkLiveFlag/offLiveFlag
+  * Hit actor flags should use HIT_FLAG_* and onHitFlag/checkHitFlag/offHitFlag
+  * Etc. Many enums in the codebase are already named, look for prior usages of relevant fields and stylize things analogously.
+- When encountering a new enum-like thing (e.g. states or flags  of some class), make an enum for it.
+  Name the enumerands as `THING_FLAG_UNK10` if it's not immediately clear what the different states/flags represent -- sometimes running the game in an emulator and inspecting the memory state is required to truly understand what the different states or flags represent, but having them named already makes working with the code simpler.
 
 ### Fakematches (**IMPORTANT**)
 
