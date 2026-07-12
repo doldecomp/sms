@@ -1,5 +1,8 @@
 #include <Enemy/BossManta.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
+#include <Strategic/ObjManager.hpp>
 #include <System/ParamInst.hpp>
+#include <System/Resolution.hpp>
 
 TBossManta::TBossManta(const char* name)
     : TSpineEnemy(name)
@@ -85,12 +88,35 @@ TBossMantaParams::TBossMantaParams(const char* name)
 TBossMantaManager::TBossMantaManager(const char* name)
     : TEnemyManager(name)
 {
+	unk7C = 0;
+	unk80 = 0;
+	unk88 = this;
+	unk8C = 0;
+	unk90 = this;
+	unk94 = 0;
+	unk7C = new (0x20) u8[SMSGetGameRenderWidth() * SMSGetGameRenderHeight()];
+	unk74 = new JGeometry::TVec3<f32>[7];
+	unk78 = new JGeometry::TVec3<f32>[2];
 }
 
-void TBossMantaManager::load(JSUMemoryInputStream&) { }
+void TBossMantaManager::load(JSUMemoryInputStream& stream)
+{
+	unk38 = new TBossMantaParams("/enemy/bossmanta.prm");
+	TEnemyManager::load(stream);
+}
 void TBossMantaManager::loadAfter() { }
 void TBossMantaManager::perform(u32, JDrama::TGraphics*) { }
-void TBossMantaManager::createModelData() { }
+void TBossMantaManager::createModelData()
+{
+	static const TModelDataLoadEntry entry[] = {
+		{ "manta.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ nullptr, 0, 0 },
+	};
+	createModelDataArray(entry);
+}
 void TBossMantaManager::spawn(int, const JGeometry::TVec3<f32>&) { }
 void TBossMantaManager::createEnemies(int) { }
 void TBossMantaManager::setupEfbAlpha(JDrama::TGraphics*) { }
