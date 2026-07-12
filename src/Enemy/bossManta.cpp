@@ -153,12 +153,12 @@ TBossMantaParams::TBossMantaParams(const char* name)
 TBossMantaManager::TBossMantaManager(const char* name)
     : TEnemyManager(name)
 {
-	unk7C = 0;
-	unk80 = 0;
-	unk88 = this;
-	unk8C = 0;
-	unk90 = this;
-	unk94 = 0;
+	unk7C      = 0;
+	unk80      = 0;
+	unk88.unk0 = this;
+	unk88.unk4 = 0;
+	unk90.unk0 = this;
+	unk90.unk4 = 0;
 	unk7C = new (0x20) u8[SMSGetGameRenderWidth() * SMSGetGameRenderHeight()];
 	unk74 = new JGeometry::TVec3<f32>[7];
 	unk78 = new JGeometry::TVec3<f32>[2];
@@ -170,7 +170,19 @@ void TBossMantaManager::load(JSUMemoryInputStream& stream)
 	TEnemyManager::load(stream);
 }
 void TBossMantaManager::loadAfter() { }
-void TBossMantaManager::perform(u32, JDrama::TGraphics*) { }
+void TBossMantaManager::perform(u32 flags, JDrama::TGraphics* graphics)
+{
+	TEnemyManager::perform(flags, graphics);
+	if (flags & 8)
+		drawMantaShadow(graphics);
+	if (flags & 1) {
+		unk88.update();
+		unk90.update();
+		updateMantaEscape();
+	}
+	for (int i = 0; i < 8; ++i)
+		mCollisionSets[i]->update(flags, graphics);
+}
 void TBossMantaManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {

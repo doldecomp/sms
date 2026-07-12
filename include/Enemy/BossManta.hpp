@@ -95,10 +95,14 @@ public:
 	class TMantaMessageState {
 	public:
 		void update();
+		TBossMantaManager* unk0;
+		u8 unk4;
 	};
 	class TMantaBattleState {
 	public:
 		void update();
+		TBossMantaManager* unk0;
+		u8 unk4;
 	};
 
 	TBossMantaManager(const char*);
@@ -116,15 +120,14 @@ public:
 	virtual TSpineEnemy* createEnemyInstance();
 
 public:
+	/* 0x54 */ TBossMantaAdditionalCollisionSet* mCollisionSets[8];
 	/* 0x74 */ JGeometry::TVec3<f32>* unk74;
 	/* 0x78 */ JGeometry::TVec3<f32>* unk78;
 	/* 0x7C */ u8* unk7C;
 	/* 0x80 */ s32 unk80;
 	/* 0x84 */ s32 unk84;
-	/* 0x88 */ TBossMantaManager* unk88;
-	/* 0x8C */ s32 unk8C;
-	/* 0x90 */ TBossMantaManager* unk90;
-	/* 0x94 */ s32 unk94;
+	/* 0x88 */ TMantaBattleState unk88;
+	/* 0x90 */ TMantaMessageState unk90;
 };
 
 DECLARE_NERVE(TNerveMantaSpawn, TLiveActor);
