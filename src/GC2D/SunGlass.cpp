@@ -11,7 +11,7 @@ extern JPAEmitterManager* gpEmitterManager4D2;
 
 void TSunGlass::load(JSUMemoryInputStream& stream)
 {
-	JDrama::TNameRef::load(stream);
+	JDrama::TViewObj::load(stream);
 	unk10 = gpMarDirector->unk18[1];
 }
 
@@ -56,7 +56,7 @@ void TSunGlass::draw(const JDrama::TRect& rect, JUtility::TColor color)
 	              GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
 
 	Mtx m;
-	PSMTXTrans(m, 0.0f, 0.0f, 0.0f);
+	MTXTrans(m, 0.0f, 0.0f, 0.0f);
 	GXLoadPosMtxImm(m, GX_PNMTX0);
 	GXSetCurrentMtx(GX_PNMTX0);
 	GXSetZMode(GX_DISABLE, GX_LEQUAL, GX_DISABLE);
@@ -122,7 +122,7 @@ void TSunGlass::startFade(int type, bool arg1)
 
 void TSunShine::loadAfter()
 {
-	JDrama::TNameRef::loadAfter();
+	JDrama::TViewObj::loadAfter();
 	if (gpMarDirector->mMap == 6) {
 		unk14.r = 0x48;
 		unk14.g = 0x30;
