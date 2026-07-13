@@ -28,7 +28,7 @@ public:
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual void draw(const JDrama::TRect&, JUtility::TColor);
 
-	void getShineAlpha();
+	u8 getShineAlpha();
 	void changeAlpha(u8*);
 	void startFade(int, bool);
 
