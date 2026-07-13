@@ -189,10 +189,49 @@ DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
 }
 DEFINE_NERVE(TNerveMantaAppearDemo, TLiveActor)
 {
-	// TODO: WIP - appear-demo state; transition-on-anim-end drafted.
-	TBossManta* self = (TBossManta*)spine->getBody();
-	if (self->checkCurAnmEnd(0))
+	TBossManta* self         = (TBossManta*)spine->getBody();
+	TBossMantaParams* params = (TBossMantaParams*)self->getSaveParam();
+
+	if (spine->getTime() == 0) {
+		self->mPosition.x = 0.0f;
+		self->mPosition.y = 0.0f;
+		self->mPosition.z = params->mSLAppearDemoInitialZ.get();
+		self->unk170      = 0.0f;
+		self->unk174      = 0.0f;
+		self->unk178      = -1.0f;
+		self->unk158      = 0.0f;
+		self->unk15C      = 0.0f;
+		self->unk160      = -10000.0f;
+
+		if (self->getMActor()->getAnmBck())
+			self->getMActor()->getAnmBck()->initNormalMotionBlend();
+		self->getMActor()->setBckFromIndex(3);
+
+		// TODO: WIP - old-motion-blend anim pointer chain
+		// (mMActorKeeper->unkC->unk2C) hits an undocumented
+		// TMActorKeeper-internal field; oldAnm left null.
+		J3DAnmTransform* oldAnm = nullptr;
+		if (self->getMActor()->getAnmBck())
+			self->getMActor()->getAnmBck()->setOldMotionBlendAnmPtr(oldAnm);
+		if (self->getMActor()->getAnmBck())
+			self->getMActor()->getAnmBck()->setMotionBlendRatio(0.5f);
+
+		self->getMActor()->setFrameRate(
+		    TBossManta::sFrameRate[self->unk18C] * SMSGetAnmFrameRate(), 0);
+	}
+
+	if (spine->getTime() == 0x2D0)
+		MSBgm::startBGM(0x8001002B);
+
+	if (spine->getTime() == 0x690)
 		return TRUE;
+
+	if (gpMSound->gateCheck(MSD_SE_BS_MANTA_DRAW_DEMO))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_MANTA_DRAW_DEMO,
+		                                          (const Vec*)&self->mPosition,
+		                                          0, nullptr, 0, 4);
+
+	self->unk190 = params->mSLAppearDemoWalkSpeed.get();
 	return FALSE;
 }
 
