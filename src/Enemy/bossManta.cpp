@@ -276,12 +276,40 @@ void TBossManta::moveObject()
 }
 BOOL TBossManta::collidedWithWater()
 {
+	BOOL allowed;
 	if (unk1A0 > 0) {
-		unk1A0 = 0x1E;
-		mSpine->setNext(&TNerveMantaHitWater::theNerve());
-		return TRUE;
+		allowed = FALSE;
+	} else {
+		allowed = TRUE;
+		if (mSpine->getLatestNerve() != &TNerveMantaMove::theNerve()) {
+			if (mSpine->getLatestNerve() != &TNerveMantaHitWater::theNerve())
+				allowed = FALSE;
+		}
 	}
-	return FALSE;
+
+	if (!allowed)
+		return FALSE;
+
+	BOOL isHitWater
+	    = mSpine->getLatestNerve() == &TNerveMantaHitWater::theNerve();
+
+	static const int hitCounts[6] = { 16, 8, 4, 2, 1, 1 };
+	if (unk19C < hitCounts[unk18C]) {
+		unk1A0 = 0x1E;
+		if (!isHitWater)
+			mSpine->setNext(&TNerveMantaHitWater::theNerve());
+		unk19C++;
+
+		if (unk19C == hitCounts[unk18C]) {
+			if (unk18C >= 4)
+				mSpine->pushAfterCurrent(&TNerveMantaDeath::theNerve());
+			else
+				mSpine->pushAfterCurrent(&TNerveMantaSpawn::theNerve());
+		} else if (mSpine->getVertebraeCount() < 7) {
+			mSpine->pushAfterCurrent(&TNerveMantaMove::theNerve());
+		}
+	}
+	return TRUE;
 }
 BOOL TBossManta::receiveMessage(THitActor* sender, u32 message)
 {
