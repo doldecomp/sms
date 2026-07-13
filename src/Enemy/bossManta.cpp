@@ -1145,8 +1145,22 @@ void TBossMantaManager::setupEfbAlpha(JDrama::TGraphics* graphics)
 }
 void TBossMantaManager::createEnemies(int num)
 {
-	// TODO: WIP - creates enemies + additional collision sets.
-	TEnemyManager::createEnemies(num);
+	if (num + getObjNum() > getCapacity())
+		num = getCapacity() - getObjNum();
+	if (unk38 != nullptr) {
+		u8 limit = unk38->mSLActiveEnemyNum.get();
+		if (num + getObjNum() > limit)
+			num = limit - getObjNum();
+	}
+	for (int i = 0; i < num; ++i) {
+		TSpineEnemy* enemy = createEnemyInstance();
+		if (enemy != nullptr) {
+			JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+			    ->getChildren()
+			    .push_back(enemy);
+			enemy->init(this);
+		}
+	}
 }
 void TBossMantaManager::spawn(int gen, const JGeometry::TVec3<f32>& pos)
 {
