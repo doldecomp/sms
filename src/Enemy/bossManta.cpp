@@ -609,13 +609,12 @@ void TBossManta::calcRootMatrix()
 	m[1][2] = unk174;
 	m[2][2] = unk178;
 
-	J3DModel* model    = getModel();
-	MtxPtr joint       = model->mNodeMatrices[sCenterJointIndex];
-	unk17C.x           = joint[0][3];
-	unk17C.y           = mPosition.y;
-	unk17C.z           = joint[2][3];
-	(Vec&)model->unk14 = (Vec&)mScaling;
-	MTXCopy(m, model->unk20);
+	MtxPtr joint            = getModel()->mNodeMatrices[sCenterJointIndex];
+	unk17C.x                = joint[0][3];
+	unk17C.y                = mPosition.y;
+	unk17C.z                = joint[2][3];
+	(Vec&)getModel()->unk14 = (Vec&)mScaling;
+	MTXCopy(m, getModel()->unk20);
 }
 BOOL TBossManta::isPolluting()
 {
