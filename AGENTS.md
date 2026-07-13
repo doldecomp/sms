@@ -391,3 +391,18 @@ UNUSED functions must still be reconstructed in the source because:
 - **Use temporary marker calls to map source to asm when anchors are missing**. If there are no obvious anchors (for example, no calls to known functions nearby), temporarily add a fake external marker like `extern void marker__();` and call it at a candidate point in the function. The call will show up clearly in diff output and helps bracket surrounding instructions, and you can repeat this process to narrow correspondence precisely.
 - **Always remove marker calls after mapping**. Any extra call can change register allocation/scheduling and inhibit matching, so markers are strictly temporary debugging aids.
 - **Read [docs/AGENT_MATCHING_TIPS.md](docs/AGENT_MATCHING_TIPS.md)** for detailed MWCC codegen patterns that come up repeatedly.
+
+### Pre-PR checklist
+
+Before submitting a PR with matching work, make sure to check the following:
+- Whether all code entities available from mario.MAP are declared and defined
+  * Every type related to the TU seen from the symbols (including ones with all methods marked as UNUSED)
+  * For each class, every method available from the entire map (including ones that are emitted as weak symbols into other TUs)
+  * For each TU, every function available in the map, including UNUSED ones
+- Whether functions inside of each TU are defined in the same order as they are listed in the mario.MAP file (or reverse order if the unit is -inline deferred)
+- If some UNUSED symbols were filled out with guessed code from inline sites -- check that the function size matches the size listed in mario.MAP
+- Whether the code uses properly uses available inlines of other classes (e.g. checkLiveFlag instead of direct access)
+- Re-validate GX code using decomp-diff.py to see whether correct constants were used everywhere (e.g. GX_COLOR0 vs GX_COLOR0A0)
+- Validate const-ness of global variables -- they get emitted to different sections depending on if const is present or not
+- Validate that all weak symbols are actually marked as inline
+  * In case of methods, they should be defined in-line in the header rather than in the cpp file and the inline keyword should not be used
