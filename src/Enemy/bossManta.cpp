@@ -836,12 +836,25 @@ void TBossMantaManager::TMantaMessageState::update()
 	}
 }
 
+// UNUSED (__ct__29TBossMantaAdditionalCollisionFPCc, mario.MAP, 0x114,
+// fully inlined at its only call site below).
+TBossMantaAdditionalCollision::TBossMantaAdditionalCollision(const char* name)
+    : THitActor(name)
+    , unk68(nullptr)
+{
+	initHitActor(0x08000004, 1, 0x80000000, 0.0f, 0.0f, 0.0f, 0.0f);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
+
+	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	    ->getChildren()
+	    .push_back(this);
+}
+
 TBossMantaAdditionalCollisionSet::TBossMantaAdditionalCollisionSet()
 {
-	// TODO: WIP - creates 3 collision items; JGadget list wiring omitted.
 	unkC = nullptr;
 	for (int i = 0; i < 3; ++i)
-		(&unk0)[i] = new TBossMantaAdditionalCollision("マンタ当たり");
+		(&unk0)[i] = new TBossMantaAdditionalCollision("マンタ追加コリジョン");
 }
 BOOL TBossMantaAdditionalCollisionSet::isUsed()
 {
