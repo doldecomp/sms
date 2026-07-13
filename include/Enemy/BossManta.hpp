@@ -108,7 +108,7 @@ public:
 	public:
 		void update();
 		TBossMantaManager* unk0;
-		u8 unk4;
+		s32 unk4;
 	};
 	class TMantaBattleState {
 	public:

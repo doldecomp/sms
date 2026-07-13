@@ -17,6 +17,10 @@
 #include <System/ParamInst.hpp>
 #include <System/Resolution.hpp>
 #include <MarioUtil/ReinitGX.hpp>
+#include <GC2D/GCConsole2.hpp>
+#include <System/MarDirector.hpp>
+#include <System/FlagManager.hpp>
+#include <MSound/MSoundBGM.hpp>
 #include <dolphin/gx.h>
 #include <dolphin/mtx.h>
 
@@ -546,16 +550,101 @@ TSpineEnemy* TBossMantaManager::createEnemyInstance()
 }
 void TBossMantaManager::TMantaMessageState::update()
 {
-	// TODO: WIP - message-state machine (switch on unk4).
 	switch (unk4) {
+	case 0:
+		if (unk0->getObj(0)->mSpine->getLatestNerve()
+		    == &TNerveMantaSpawn::theNerve()) {
+			gpMarDirector->getConsole()->startAppearBalloon(0xE000C, true);
+			unk4++;
+		}
+		break;
+	case 1: {
+		int i;
+		int aliveCount = 0;
+		for (i = 0; i < unk0->getActiveObjNum(); ++i) {
+			if (!unk0->getObj(i)->checkLiveFlag(LIVE_FLAG_DEAD))
+				aliveCount++;
+		}
+		if (aliveCount > 50) {
+			gpMarDirector->getConsole()->startAppearBalloon(0xE000D, true);
+			unk4++;
+		}
+		break;
+	}
+	case 2:
+		if (unk0->unk88.unk4 == 2) {
+			gpMarDirector->getConsole()->startAppearBalloon(0xE000E, true);
+			unk4++;
+		}
+		break;
 	default:
 		break;
 	}
 }
+static JAISound* sDefeatSE;
+
 void TBossMantaManager::TMantaBattleState::update()
 {
-	// TODO: WIP - battle-state machine (switch on unk4; demo cameras).
 	switch (unk4) {
+	case 0:
+		if (TFlagManager::getInstance()->getBool(0x50007)) {
+			gpMarDirector->fireStartDemoCamera("sirena_manta", nullptr, -1,
+			                                   0.0f, true, nullptr, 0, nullptr,
+			                                   JDrama::TFlagT<u16>(0));
+			((TBossManta*)unk0->getObj(0))->initNthGeneration(0);
+			MSBgm::stopTrackBGMs(7, 10);
+			unk4++;
+		}
+		break;
+	case 1: {
+		bool allMaxGen = true;
+		for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
+			TBossManta* m = (TBossManta*)unk0->getObj(i);
+			if (m->checkLiveFlag(LIVE_FLAG_DEAD))
+				continue;
+			if (m->unk18C != 4) {
+				allMaxGen = false;
+				break;
+			}
+		}
+		if (allMaxGen) {
+			for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
+				TBossManta* m = (TBossManta*)unk0->getObj(i);
+				if (!m->checkLiveFlag(LIVE_FLAG_DEAD))
+					m->initNthGeneration(5);
+			}
+			unk4++;
+		}
+		break;
+	}
+	case 2: {
+		bool victory = true;
+		for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
+			TBossManta* m = (TBossManta*)unk0->getObj(i);
+			if (m->unk18C != 5)
+				continue;
+			if (m->checkLiveFlag(LIVE_FLAG_DEAD))
+				continue;
+			victory = false;
+			break;
+		}
+		if (victory) {
+			MSBgm::stopTrackBGMs(7, 10);
+			sDefeatSE = nullptr;
+			if (gpMSound->gateCheck(0x898F))
+				MSoundSESystem::MSoundSE::startSoundActor(0x898F, nullptr, 0,
+				                                          &sDefeatSE, 0, 4);
+			unk4++;
+		}
+		break;
+	}
+	case 3:
+		if (sDefeatSE == nullptr) {
+			// TODO: WIP - post-boss event flag trigger (name lookup + flag
+			// set, exact field/type unconfirmed).
+			unk4++;
+		}
+		break;
 	default:
 		break;
 	}
