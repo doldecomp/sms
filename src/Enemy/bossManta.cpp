@@ -188,11 +188,11 @@ DEFINE_NERVE(TNerveMantaSpawn, TLiveActor)
 	}
 
 	if (spine->getTime() == 0) {
-		static const int particles[] = { 0xFC, 0xFB, 0xFA, 0xF9 };
+		const int particles[4] = { 0xFC, 0xFB, 0xFA, 0xF9 };
 		gpMarioParticleManager->emitAndBindToPosPtr(particles[self->unk18C],
 		                                            &self->unk17C, 0, self);
-		static const u32 sounds[] = { 0x8994, 0x8995, 0x8996, 0x8997 };
-		u32 snd                   = sounds[self->unk18C];
+		const u32 sounds[4] = { 0x8994, 0x8995, 0x8996, 0x8997 };
+		u32 snd             = sounds[self->unk18C];
 		if (gpMSound->gateCheck(snd))
 			MSoundSESystem::MSoundSE::startSoundActor(
 			    snd, (const Vec*)&self->mPosition, 0, nullptr, 0, 4);
@@ -200,8 +200,10 @@ DEFINE_NERVE(TNerveMantaSpawn, TLiveActor)
 		    ->spawn(self->unk18C + 1, self->mPosition);
 	}
 
-	if (spine->getTime() == 0x1E)
+	if (spine->getTime() == 0x1E) {
+		self->kill();
 		return TRUE;
+	}
 	return FALSE;
 }
 DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
