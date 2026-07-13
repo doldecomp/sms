@@ -883,6 +883,42 @@ void TBossMantaAdditionalCollisionSet::update(u32 flags,
 		}
 		for (int i = 0; i < 3; ++i)
 			(&unk0)[i]->perform(flags, graphics);
+
+		MtxPtr centerMtx
+		    = unkC->getModel()->mNodeMatrices[TBossManta::sCenterJointIndex];
+		f32 centerX = centerMtx[0][3];
+		f32 centerY = centerMtx[1][3];
+		f32 centerZ = centerMtx[2][3];
+
+		MtxPtr bodyMtx
+		    = unkC->getModel()->mNodeMatrices[TBossManta::sBodyJointIndex];
+		f32 bodyX = bodyMtx[0][3];
+		f32 bodyY = bodyMtx[1][3];
+		f32 bodyZ = bodyMtx[2][3];
+
+		MtxPtr rwingMtx
+		    = unkC->getModel()->mNodeMatrices[TBossManta::sRwingJointIndex];
+		f32 rwingX = rwingMtx[0][3];
+		f32 rwingY = rwingMtx[1][3];
+		f32 rwingZ = rwingMtx[2][3];
+
+		MtxPtr lwingMtx
+		    = unkC->getModel()->mNodeMatrices[TBossManta::sLwingJointIndex];
+		f32 lwingX = lwingMtx[0][3];
+		f32 lwingY = lwingMtx[1][3];
+		f32 lwingZ = lwingMtx[2][3];
+
+		unk0->mPosition.x = -0.15f * (bodyX - centerX) + centerX;
+		unk0->mPosition.y = -0.15f * (bodyY - centerY) + centerY;
+		unk0->mPosition.z = -0.15f * (bodyZ - centerZ) + centerZ;
+
+		unk4->mPosition.x = 0.75f * (rwingX - centerX) + centerX;
+		unk4->mPosition.y = 0.75f * (rwingY - centerY) + centerY;
+		unk4->mPosition.z = 0.75f * (rwingZ - centerZ) + centerZ;
+
+		unk8->mPosition.x = 0.75f * (lwingX - centerX) + centerX;
+		unk8->mPosition.y = 0.75f * (lwingY - centerY) + centerY;
+		unk8->mPosition.z = 0.75f * (lwingZ - centerZ) + centerZ;
 	}
 }
 BOOL TBossMantaAdditionalCollision::receiveMessage(THitActor* sender,
