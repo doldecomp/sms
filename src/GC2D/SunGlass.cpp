@@ -9,13 +9,14 @@
 
 extern JPAEmitterManager* gpEmitterManager4D2;
 
-void TSunGlass::load(JSUMemoryInputStream& stream)
-{
-	JDrama::TViewObj::load(stream);
-	unk10 = gpMarDirector->unk18[1];
-}
-
-void TSunGlass::loadAfter()
+// UNUSED (getShineAlpha__9TSunGlassFv, changeAlpha__9TSunGlassFPUc, mario.MAP,
+// 0xA4 each): both fully inlined at every call site in retail, so neither is
+// emitted standalone. MWCC keeps a standalone copy of each here instead
+// (168B/180B) - the extraction is structurally right (matches the MAP
+// signatures and the duplicated inline blocks it replaces) but something
+// about this reconstruction isn't tripping the compiler's inline-away
+// heuristic yet. TODO: find what's blocking the inline.
+void TSunGlass::changeAlpha(u8* out)
 {
 	u8 alpha = 0;
 	if (gpMarDirector->mMap == 1)
@@ -23,25 +24,23 @@ void TSunGlass::loadAfter()
 		             * (1.0f
 		                - (f32)TFlagManager::getInstance()->getFlag(0x40000)
 		                      / 120.0f));
-	unk14.a = alpha;
+	*out = alpha;
 }
 
-void TSunGlass::perform(u32 flags, JDrama::TGraphics* graphics)
+void TSunGlass::startFade(int type, bool arg1)
 {
-	if ((flags & 1) && unk26 != 0) {
-		// TODO: 81.9% - logic exact; residual is int->float conversion
-		// scheduling in the alpha interp.
-		u8 from = unk1D;
-		unk14.a
-		    = (u8)((f32)from + (f32)(unk24 * (unk1C - from)) / (f32)(s16)unk22);
-		if (unk24 < (s16)unk22)
-			unk24++;
-		else
-			unk26 = 0;
+	TFlagManager::getInstance()->getFlag(0x40000);
+
+	if (type == 2) {
+		changeAlpha(&unk1D);
+		unk1C = 0x64;
+	} else {
+		unk1D = 0x64;
+		changeAlpha(&unk1C);
 	}
 
-	if (flags & 8)
-		draw(graphics->getViewport(), unk14);
+	unk26 = arg1;
+	unk24 = 0;
 }
 
 void TSunGlass::draw(const JDrama::TRect& rect, JUtility::TColor color)
@@ -50,9 +49,9 @@ void TSunGlass::draw(const JDrama::TRect& rect, JUtility::TColor color)
 		return;
 
 	GXSetNumChans(1);
-	GXSetChanCtrl(GX_ALPHA0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL,
-	              GX_DF_NONE, GX_AF_NONE);
-	GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_REG, GX_SRC_REG,
+	GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX,
+	              GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+	GXSetChanCtrl(GX_COLOR1A1, GX_DISABLE, GX_SRC_REG, GX_SRC_REG,
 	              GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
 
 	Mtx m;
@@ -74,7 +73,7 @@ void TSunGlass::draw(const JDrama::TRect& rect, JUtility::TColor color)
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
 
 	if (unk1A & 2)
-		GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_DSTALPHA, GX_LO_NOOP);
+		GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
 	else
 		GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA,
 		               GX_LO_NOOP);
@@ -92,43 +91,41 @@ void TSunGlass::draw(const JDrama::TRect& rect, JUtility::TColor color)
 	GXEnd();
 }
 
-void TSunGlass::startFade(int type, bool arg1)
+void TSunGlass::perform(u32 flags, JDrama::TGraphics* graphics)
 {
-	TFlagManager::getInstance()->getFlag(0x40000);
-
-	if (type == 2) {
-		u8 alpha = 0;
-		if (gpMarDirector->mMap == 1)
-			alpha = (u8)((f32)(unk1E - unk1F)
-			             * (1.0f
-			                - (f32)TFlagManager::getInstance()->getFlag(0x40000)
-			                      / 120.0f));
-		unk1D = alpha;
-		unk1C = 0x64;
-	} else {
-		unk1D    = 0x64;
-		u8 alpha = 0;
-		if (gpMarDirector->mMap == 1)
-			alpha = (u8)((f32)(unk1E - unk1F)
-			             * (1.0f
-			                - (f32)TFlagManager::getInstance()->getFlag(0x40000)
-			                      / 120.0f));
-		unk1C = alpha;
+	if ((flags & 1) && unk26 != 0) {
+		// TODO: 81.9% - logic exact; residual is int->float conversion
+		// scheduling in the alpha interp.
+		u8 from = unk1D;
+		unk14.a
+		    = (u8)((f32)from + (f32)(unk24 * (unk1C - from)) / (f32)(s16)unk22);
+		if (unk24 < (s16)unk22)
+			unk24++;
+		else
+			unk26 = 0;
 	}
 
-	unk26 = arg1;
-	unk24 = 0;
+	if (flags & 8)
+		draw(graphics->getViewport(), unk14);
 }
 
-void TSunShine::loadAfter()
+void TSunGlass::getShineAlpha()
 {
-	JDrama::TViewObj::loadAfter();
-	if (gpMarDirector->mMap == 6) {
-		unk14.r = 0x48;
-		unk14.g = 0x30;
-		unk14.b = 0;
-		unk14.a = 0xFF;
-	}
+	u8 alpha = 0;
+	if (gpMarDirector->mMap == 1)
+		alpha = (u8)((f32)(unk1E - unk1F)
+		             * (1.0f
+		                - (f32)TFlagManager::getInstance()->getFlag(0x40000)
+		                      / 120.0f));
+	unk14.a = alpha;
+}
+
+void TSunGlass::loadAfter() { getShineAlpha(); }
+
+void TSunGlass::load(JSUMemoryInputStream& stream)
+{
+	JDrama::TViewObj::load(stream);
+	unk10 = gpMarDirector->unk18[1];
 }
 
 void TSunShine::perform(u32 flags, JDrama::TGraphics* graphics)
@@ -146,5 +143,16 @@ void TSunShine::perform(u32 flags, JDrama::TGraphics* graphics)
 			JGeometry::TVec3<f32> pos(300.0f, 224.0f, 0.0f);
 			gpEmitterManager4D2->createEmitter(pos, 0x200, nullptr, nullptr);
 		}
+	}
+}
+
+void TSunShine::loadAfter()
+{
+	JDrama::TViewObj::loadAfter();
+	if (gpMarDirector->mMap == 6) {
+		unk14.r = 0x48;
+		unk14.g = 0x30;
+		unk14.b = 0;
+		unk14.a = 0xFF;
 	}
 }
