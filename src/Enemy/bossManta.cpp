@@ -16,6 +16,9 @@
 #include <MarioUtil/RandomUtil.hpp>
 #include <System/ParamInst.hpp>
 #include <System/Resolution.hpp>
+#include <MarioUtil/ReinitGX.hpp>
+#include <dolphin/gx.h>
+#include <dolphin/mtx.h>
 
 TBossManta::TBossManta(const char* name)
     : TSpineEnemy(name)
@@ -375,9 +378,54 @@ void TBossMantaManager::createEnemies(int num)
 	// TODO: WIP - creates enemies + additional collision sets.
 	TEnemyManager::createEnemies(num);
 }
+static const GXColor sMantaEfbMatColor = { 0, 0, 0, 0xFF };
+
 void TBossMantaManager::setupEfbAlpha(JDrama::TGraphics* graphics)
 {
-	// TODO: WIP - EFB alpha setup (GX peek/poke).
+	ReInitializeGX();
+
+	Mtx44 proj;
+	C_MTXOrtho(proj, (f32)SMSGetGameRenderHeight(), 0.0f, 0.0f,
+	           (f32)SMSGetGameRenderWidth(), 0.0f, 1.0f);
+	GXSetProjection(proj, GX_ORTHOGRAPHIC);
+	GXSetColorUpdate(GX_FALSE);
+	GXSetAlphaUpdate(GX_TRUE);
+	GXSetDstAlpha(GX_TRUE, 0);
+	GXSetZMode(GX_TRUE, GX_ALWAYS, GX_FALSE);
+
+	Mtx m;
+	PSMTXIdentity(m);
+	GXLoadPosMtxImm(m, GX_PNMTX0);
+	GXSetCurrentMtx(GX_PNMTX0);
+	GXSetCullMode(GX_CULL_NONE);
+	GXClearVtxDesc();
+	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+
+	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+	GXPosition3f32(0.0f, (f32)SMSGetGameRenderHeight(), -1.0f);
+	GXPosition3f32((f32)SMSGetGameRenderWidth(), (f32)SMSGetGameRenderHeight(),
+	               -1.0f);
+	GXPosition3f32((f32)SMSGetGameRenderWidth(), 0.0f, -1.0f);
+	GXPosition3f32(0.0f, 0.0f, -1.0f);
+	GXEnd();
+
+	GXSetNumChans(1);
+	GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_REG, GX_SRC_REG,
+	              GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+	GXSetChanCtrl(GX_COLOR1A1, GX_DISABLE, GX_SRC_REG, GX_SRC_REG,
+	              GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+	GXSetNumTexGens(0);
+	GXSetNumTevStages(1);
+	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
+	GXColor matColor = sMantaEfbMatColor;
+	GXSetChanMatColor(GX_COLOR0A0, matColor);
+	GXSetAlphaUpdate(GX_TRUE);
+	GXSetDstAlpha(GX_FALSE, 0);
+	GXSetZMode(GX_TRUE, GX_GEQUAL, GX_FALSE);
+	GXSetAlphaUpdate(GX_TRUE);
+	GXSetProjection(graphics->mProjMtx.mMtx, GX_PERSPECTIVE);
 }
 void TBossMantaManager::updateMantaEscape()
 {
