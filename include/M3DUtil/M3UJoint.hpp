@@ -9,9 +9,9 @@ public:
 	M3UMtxCalcSIAnmBlendQuat();
 	M3UMtxCalcSIAnmBlendQuat(bool);
 
-	void calc(u16);
-	void init(const Vec&, const Mtx&);
-	void calcTransform(u16, const J3DTransformInfo&);
+	virtual void init(const Vec&, const Mtx&);
+	virtual void calcTransform(u16, const J3DTransformInfo&);
+	virtual void calc(u16);
 
 public:
 	/* 0x50 */ float unk50;
