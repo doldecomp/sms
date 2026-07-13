@@ -456,7 +456,6 @@ void TBossManta::initNthGeneration(int gen)
 }
 void TBossManta::control()
 {
-	// TODO: WIP - force-turn lerp drafted; anim-frame blend table (@3118) TODO.
 	if (unk1A0 > 0)
 		unk1A0--;
 
@@ -472,7 +471,39 @@ void TBossManta::control()
 		f32 b    = blend[unk18C];
 		f32 turn = -(0.4f * (unk178 * f.x - unk170 * f.z) - 0.5f);
 		unk150   = (1.0f - b) * unk150 + b * turn;
+
+		const f32 animBlend[50] = {
+			0.0f,    0.046f,  0.107f,  0.177f,  0.227f,  0.256f,  0.273f,
+			0.279f,  0.274f,  0.26f,   0.237f,  0.209f,  0.175f,  0.138f,
+			0.1f,    0.061f,  0.024f,  -0.011f, -0.043f, -0.07f,  -0.092f,
+			-0.108f, -0.12f,  -0.126f, -0.127f, -0.123f, -0.115f, -0.104f,
+			-0.09f,  -0.074f, -0.057f, -0.04f,  -0.022f, -0.005f, 0.01f,
+			0.024f,  0.035f,  0.045f,  0.051f,  0.056f,  0.058f,  0.057f,
+			0.055f,  0.051f,  0.046f,  0.039f,  0.031f,  0.023f,  0.015f,
+			0.007f,
+		};
+
+		f32 blendedFrame = unk150 + animBlend[unk154];
+		f32 ratio;
+		if (blendedFrame < 0.0f)
+			ratio = 0.0f;
+		else if (blendedFrame > 1.0f)
+			ratio = 1.0f;
+		else
+			ratio = blendedFrame;
+
+		if (getMActor()->getAnmBck())
+			getMActor()->getAnmBck()->setMotionBlendRatio(ratio);
+	} else {
+		if (getMActor()->getAnmBck())
+			getMActor()->getAnmBck()->setMotionBlendRatio(0.0f);
 	}
+
+	mVelocity.x = unk170 * unk190;
+	mVelocity.y = unk174 * unk190;
+	mVelocity.z = unk178 * unk190;
+
+	TLiveActor::control();
 }
 void TBossManta::calcRootMatrix()
 {
