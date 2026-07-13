@@ -1,4 +1,5 @@
 #include <Enemy/BossManta.hpp>
+#include <Enemy/Graph.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <Strategic/ObjManager.hpp>
 #include <Strategic/ObjModel.hpp>
@@ -26,10 +27,98 @@
 
 DEFINE_NERVE(TNerveMantaMove, TLiveActor)
 {
-	// TODO: WIP - movement state (anim/sfx/forces); attractor core drafted.
 	TBossManta* self = (TBossManta*)spine->getBody();
+	TGraphWeb* graph = self->getTracer()->getGraph();
+
+	if (spine->getTime() == 0) {
+		if (self->getMActor()->getAnmBck())
+			self->getMActor()->getAnmBck()->initNormalMotionBlend();
+		self->getMActor()->setBckFromIndex(3);
+
+		// TODO: WIP - old-motion-blend anim pointer chain
+		// (mMActorKeeper->unkC->unk2C) hits an undocumented
+		// TMActorKeeper-internal field; oldAnm left null.
+		J3DAnmTransform* oldAnm = nullptr;
+		if (self->getMActor()->getAnmBck())
+			self->getMActor()->getAnmBck()->setOldMotionBlendAnmPtr(oldAnm);
+		if (self->getMActor()->getAnmBck())
+			self->getMActor()->getAnmBck()->setMotionBlendRatio(0.5f);
+
+		self->getMActor()->setFrameRate(
+		    TBossManta::sFrameRate[self->unk18C] * SMSGetAnmFrameRate(), 0);
+
+		JGeometry::TVec3<f32> pt
+		    = graph->indexToPoint((int)((f32)graph->unk8 * MsRandF()));
+		self->unk158 = pt.x + 1.0f * (gpMarioPos->x - pt.x);
+		self->unk15C = pt.y + 1.0f * (gpMarioPos->y - pt.y);
+		self->unk160 = pt.z + 1.0f * (gpMarioPos->z - pt.z);
+	}
+
+	if (self->unk18C < 3 && gpMSound->gateCheck(MSD_SE_BS_MANTA_DRAW_LV))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_MANTA_DRAW_LV,
+		                                          (const Vec*)&self->mPosition,
+		                                          0, nullptr, 0, 4);
+
+	if (self->unk18C == 5 && spine->getTime() % 96 == self->getInstanceIndex())
+		gpMSound->startSoundSet(MSD_SE_BS_MANTA_ATTACK,
+		                        (const Vec*)&self->mPosition, 0, 0.0f, 0, 0, 4);
+
+	JGeometry::TVec3<f32> toTarget;
+	toTarget.x = self->mPosition.x - self->unk158;
+	toTarget.y = self->mPosition.y - self->unk15C;
+	toTarget.z = self->mPosition.z - self->unk160;
+
+	if (JGeometry::TUtil<f32>::sqrt(toTarget.dot(toTarget)) < 500.0f
+	    || spine->getTime() % 150 == 0) {
+		JGeometry::TVec3<f32> pt
+		    = graph->indexToPoint((int)((f32)graph->unk8 * MsRandF()));
+
+		static const f32 chaseSpeed[6] = { 1.0f, 0.8f, 0.8f, 0.6f, 0.8f, 1.0f };
+		f32 speed = self->unk1A4 ? 1.0f : chaseSpeed[self->unk18C];
+
+		pt.x += speed * (gpMarioPos->x - pt.x);
+		pt.y += speed * (gpMarioPos->y - pt.y);
+		pt.z += speed * (gpMarioPos->z - pt.z);
+		self->unk158 = pt.x;
+		self->unk15C = pt.y;
+		self->unk160 = pt.z;
+	}
+
+	if (spine->getTime() % self->unk188 == 0)
+		self->unk1A4 ^= 1;
+
 	if (spine->getTime() % 100 == 0)
 		self->updateAttractor();
+
+	JGeometry::TVec3<f32> dir(self->unk164, self->unk168, self->unk16C);
+	f32 lenSq = dir.dot(dir);
+	if (lenSq == 0.0000038146973f) {
+		dir.set(0.0f, 0.0f, 0.0f);
+	} else {
+		f32 invLen = 1.0f * JGeometry::TUtil<f32>::inv_sqrt(lenSq);
+		dir.x *= invLen;
+		dir.y *= invLen;
+		dir.z *= invLen;
+	}
+
+	f32 speed2 = self->unk194;
+	self->unk170 += dir.x * speed2;
+	self->unk174 += dir.y * speed2;
+	self->unk178 += dir.z * speed2;
+
+	JGeometry::TVec3<f32> facing(self->unk170, self->unk174, self->unk178);
+	f32 facingLenSq = facing.dot(facing);
+	if (facingLenSq == 0.0000038146973f) {
+		self->unk178 = 0.0f;
+		self->unk174 = 0.0f;
+		self->unk170 = 0.0f;
+	} else {
+		f32 invLen = 1.0f * JGeometry::TUtil<f32>::inv_sqrt(facingLenSq);
+		self->unk170 *= invLen;
+		self->unk174 *= invLen;
+		self->unk178 *= invLen;
+	}
+
 	return FALSE;
 }
 DEFINE_NERVE(TNerveMantaHitWater, TLiveActor)
