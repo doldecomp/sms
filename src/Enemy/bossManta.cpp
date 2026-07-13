@@ -229,9 +229,29 @@ void TBossManta::drawObject(JDrama::TGraphics*) { }
 void TBossManta::reset() { }
 BOOL TBossManta::getIntoGraphVec(JGeometry::TVec3<f32>* out)
 {
-	// TODO: WIP - graph containment; core returns zero vec.
-	out->set(0.0f, 0.0f, 0.0f);
-	return TRUE;
+	TGraphWeb* graph = getTracer()->getGraph();
+	for (int idx = 0; idx <= 12; ++idx) {
+		JGeometry::TVec3<f32> a = graph->indexToPoint(idx);
+		JGeometry::TVec3<f32> b = graph->indexToPoint(idx + 1);
+		JGeometry::TVec3<f32> c = graph->indexToPoint(idx);
+
+		f32 ax = a.x - mPosition.x;
+		f32 az = a.z - mPosition.z;
+		f32 dx = c.x - b.x;
+		f32 dz = c.z - b.z;
+
+		if (ax * dz - az * dx < 0.0f) {
+			out->x = dz;
+			out->y = 0.0f;
+			out->z = -dx;
+			if (out->dot(*out) == 0.0000038146973f)
+				out->set(0.0f, 0.0f, 0.0f);
+			else
+				out->setLength(1.0f);
+			return TRUE;
+		}
+	}
+	return FALSE;
 }
 void TBossManta::init(TLiveManager* manager)
 {
