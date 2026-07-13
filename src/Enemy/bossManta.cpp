@@ -296,7 +296,7 @@ f32 TBossManta::sScale[] = { 20.0f, 10.0f, 5.0f, 2.0f, 1.0f, 1.0f };
 
 void TBossManta::initNthGeneration(int gen)
 {
-	static const f32 heights[] = { 10.0f, 5.0f, 1.0f, 0.42f, 0.42f, 0.42f };
+	const f32 heights[6] = { 10.0f, 5.0f, 1.0f, 0.42f, 0.42f, 0.42f };
 
 	unk18C     = gen;
 	f32 s      = sScale[unk18C];
@@ -307,10 +307,77 @@ void TBossManta::initNthGeneration(int gen)
 	unk150     = 0.5f;
 	unk154     = 0x31;
 
-	if (unk18C == 0)
+	switch (unk18C) {
+	case 0:
 		mSpine->initWith(&TNerveMantaAppearDemo::theNerve());
-	else
-		mSpine->setNext(&TNerveMantaMove::theNerve());
+		mSpine->pushAfterCurrent(&TNerveMantaMove::theNerve());
+		unk188 = 0x258;
+		unk190 = 2.0f;
+		unk194 = 0.009f;
+		unk198 = 1000.0f;
+		unk1A0 = 0;
+		break;
+	case 1:
+		mSpine->initWith(&TNerveMantaMove::theNerve());
+		unk188 = (s32)(100.0f * MsRandF()) + 0x258;
+		unk190 = 2.0f;
+		unk194 = 0.009f;
+		unk198 = 1000.0f;
+		unk1A0 = 0x78;
+		break;
+	case 2:
+		mSpine->initWith(&TNerveMantaMove::theNerve());
+		unk188 = (s32)(100.0f * MsRandF()) + 0xC8;
+		unk190 = 3.0f;
+		unk194 = 0.009f;
+		unk198 = 1000.0f;
+		unk1A0 = 0x78;
+		break;
+	case 3:
+		mSpine->initWith(&TNerveMantaMove::theNerve());
+		unk188 = (s32)(100.0f * MsRandF()) + 0x64;
+		unk190 = 4.0f;
+		unk194 = 0.019f;
+		unk198 = 700.0f;
+		unk1A0 = 0x78;
+		break;
+	case 4:
+		mSpine->initWith(&TNerveMantaMove::theNerve());
+		unk188 = (s32)(100.0f * MsRandF()) + 0x64;
+		unk190 = 7.0f;
+		unk194 = 0.03f;
+		unk198 = 400.0f;
+		unk1A0 = 0x168;
+		break;
+	case 5:
+		mSpine->initWith(&TNerveMantaMove::theNerve());
+		unk188 = (s32)(100.0f * MsRandF()) + 0x64;
+		unk190 = 3.0f;
+		unk194 = 0.03f;
+		unk198 = 200.0f;
+		unk1A0 = 0;
+		break;
+	}
+
+	if (unk18C <= 2) {
+		setHitParams(0.0f, 0.0f, 0.0f, 0.0f);
+	} else {
+		f32 r = 80.0f * mScaling.x;
+		setHitParams(r, 100.0f, r, 100.0f);
+	}
+
+	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offLiveFlag(LIVE_FLAG_DEAD);
+
+	if (unk18C <= 2) {
+		TBossMantaManager* manager = (TBossMantaManager*)mManager;
+		for (int i = 0; i < 8; ++i) {
+			if (!manager->mCollisionSets[i]->isUsed()) {
+				manager->mCollisionSets[i]->adapt(this);
+				return;
+			}
+		}
+	}
 }
 void TBossManta::control()
 {
@@ -507,6 +574,10 @@ TBossMantaAdditionalCollisionSet::TBossMantaAdditionalCollisionSet()
 	unkC = nullptr;
 	for (int i = 0; i < 3; ++i)
 		(&unk0)[i] = new TBossMantaAdditionalCollision("マンタ当たり");
+}
+BOOL TBossMantaAdditionalCollisionSet::isUsed()
+{
+	return unkC != nullptr && !unkC->checkLiveFlag(LIVE_FLAG_DEAD);
 }
 void TBossMantaAdditionalCollisionSet::adapt(TBossManta* manta)
 {
