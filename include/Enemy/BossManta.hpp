@@ -19,13 +19,32 @@ public:
 	virtual BOOL receiveMessage(THitActor*, u32);
 
 	void updateAttractor();
+	BOOL isPolluting();
 	f32 getPolluteRadius();
 	void initNthGeneration(int);
 	BOOL collidedWithWater();
 	BOOL getIntoGraphVec(JGeometry::TVec3<f32>*);
 
+	// UNUSED (mario.MAP, fully inlined at every call site) - not yet
+	// reconstructed, TODO.
+	BOOL isDamageable();            // 0xD8
+	void updateEpilogueFrame();     // 0x18
+	f32 getEpilogueValue();         // 0x48
+	void resetDamageAnimEpilogue(); // 0x14
+	void startDamageAnimEpilogue(); // 0x14
+	BOOL isSpawnState();            // 0x90
+	void updateAnimBlend();         // 0x1F0
+	void startDamageAnim();         // 0x84
+	void startWalkAnim();           // 0xD4
+	void setCollision();            // 0x88
+	f32 getTailAnimSpeed();         // 0x54
+
 	static int sCenterJointIndex;
-	static f32 sScale[];
+	static int sRwingJointIndex;
+	static int sLwingJointIndex;
+	static u8 sEscapeFromMario;
+	static f32 sFrameRate[6];
+	static f32 sScale[6];
 
 public:
 	/* 0x150 */ f32 unk150;
@@ -61,6 +80,9 @@ public:
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual BOOL receiveMessage(THitActor*, u32);
 
+	// UNUSED (mario.MAP, fully inlined) - TODO.
+	void setManta(TBossManta*); // 0x8
+
 public:
 	/* 0x68 */ TBossManta* unk68;
 };
@@ -70,6 +92,9 @@ public:
 	TBossMantaAdditionalCollisionSet();
 	void update(u32, JDrama::TGraphics*);
 	void adapt(TBossManta*);
+
+	// UNUSED (mario.MAP, fully inlined) - TODO.
+	BOOL isUsed(); // 0x28
 
 public:
 	/* 0x0 */ TBossMantaAdditionalCollision* unk0;
@@ -130,6 +155,13 @@ public:
 	void updateMantaEscape();
 	void drawMantaShadow(JDrama::TGraphics*);
 	virtual TSpineEnemy* createEnemyInstance();
+
+	// UNUSED (mario.MAP, fully inlined) - TODO.
+	void initAdditionalCollision();             // 0x9C
+	void createEnemy();                         // 0xF8
+	void getMantaColor();                       // 0x18C
+	void loadEffects();                         // 0xD4
+	void adaptAdditionalCollision(TBossManta*); // 0x124
 
 public:
 	/* 0x54 */ TBossMantaAdditionalCollisionSet* mCollisionSets[8];
