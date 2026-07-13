@@ -1,6 +1,7 @@
 #include <MoveBG/MapObjAirport.hpp>
 #include <MoveBG/ItemManager.hpp>
 #include <Map/PollutionManager.hpp>
+#include <Enemy/GateKeeper.hpp>
 #include <Camera/CameraShake.hpp>
 #include <System/MarDirector.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
@@ -37,7 +38,7 @@ TAirportSwitch::TAirportSwitch(const char* name)
 void TAirportEventSink::finishControl()
 {
 	gpPollution->getCounterLayer().pushJointObjStampTask(
-	    0, 0, getPollutionObj(unk28));
+	    0, 0, getPollutionObj(mRaisingBuildingIdx));
 	gpItemManager->makeShineAppearWithDemoOffset(
 	    "シャイン（落書き用）", "落書きシャインカメラ", 0.0f, 0.0f, 0.0f);
 	gpPollution->offLayer(0);
@@ -63,8 +64,8 @@ inline TPollutionManager* getPollution() { return gpPollution; }
 
 bool TAirportEventSink::watch()
 {
-	if (!unk54[0] && unk6C->checkLiveFlag(LIVE_FLAG_DEAD)) {
-		unk28                  = 0;
+	if (!mIsBuildingRecovered[0] && unk6C->checkLiveFlag(LIVE_FLAG_DEAD)) {
+		mRaisingBuildingIdx    = 0;
 		TMarDirector* director = getMarDirector();
 
 		director->fireStartDemoCamera("空港坂上げカメラ", &unk6C->mPosition, -1,
@@ -81,8 +82,8 @@ void TAirportEventSink::loadAfter()
 {
 	TMapEventSinkInPollutionReset::loadAfter();
 
-	unk6C
-	    = JDrama::TNameRefGen::search<TLiveActor>("ゲートキーパー（ビアンコ）");
+	unk6C = JDrama::TNameRefGen::search<TGateKeeperBase>(
+	    "ゲートキーパー（ビアンコ）");
 	unk40 = 720;
 	unk44 = 480;
 	unk48 = 60;
