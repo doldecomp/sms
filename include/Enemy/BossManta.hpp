@@ -40,6 +40,7 @@ public:
 	f32 getTailAnimSpeed();         // 0x54
 
 	static int sCenterJointIndex;
+	static int sBodyJointIndex;
 	static int sRwingJointIndex;
 	static int sLwingJointIndex;
 	static u8 sEscapeFromMario;

@@ -1,5 +1,8 @@
 #include <Enemy/BossManta.hpp>
+#include <Enemy/Conductor.hpp>
 #include <Enemy/Graph.hpp>
+#include <Strategic/Strategy.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <Strategic/ObjManager.hpp>
 #include <Strategic/ObjModel.hpp>
@@ -255,10 +258,17 @@ BOOL TBossManta::getIntoGraphVec(JGeometry::TVec3<f32>* out)
 }
 void TBossManta::init(TLiveManager* manager)
 {
-	// TODO: WIP - core init; tail (unk7C branch) simplified.
 	mManager = manager;
 	mManager->manageActor(this);
-	mMActor     = mMActorKeeper->createMActor("manta.bmd", 0);
+	mMActorKeeper = new TMActorKeeper(mManager, 1);
+	mMActor       = mMActorKeeper->createMActor("manta.bmd", 0);
+	getTracer()->setGraph(gpConductor->getGraphByName("main"));
+
+	// TODO: unconfirmed - the retail source checks something off
+	// getSaveParam() to seed mHitPoints; defaulted to the params-absent
+	// branch's value (1) rather than guess the condition.
+	mHitPoints = 1;
+
 	mHeadHeight = 5000.0f;
 	initHitActor(0x08000004, 1, 0x80000000, 0.0f, 0.0f, 0.0f, 0.0f);
 	unk170 = 0.0f;
@@ -266,6 +276,23 @@ void TBossManta::init(TLiveManager* manager)
 	unk178 = 1.0f;
 	calcRootMatrix();
 	kill();
+
+	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	    ->getChildren()
+	    .push_back(this);
+
+	if (getInstanceIndex() == 0) {
+		JUTNameTab* jointNames = getModel()->getModelData()->getJointName();
+		sCenterJointIndex      = jointNames->getIndex("center");
+		sBodyJointIndex        = jointNames->getIndex("jnt_body");
+		sRwingJointIndex       = jointNames->getIndex("jnt_Rwing2");
+		sLwingJointIndex       = jointNames->getIndex("jnt_Lwing2");
+
+		TBossMantaManager* manager = (TBossMantaManager*)mManager;
+		for (int i = 0; i < 8; ++i)
+			manager->mCollisionSets[i] = new TBossMantaAdditionalCollisionSet();
+	}
+
 	mLiveFlag |= LIVE_FLAG_UNK8;
 	mLiveFlag &= ~0x100;
 	unk1A4 = 0;
