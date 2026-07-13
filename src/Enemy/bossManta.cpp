@@ -12,6 +12,7 @@
 #include <MSound/MSoundSE.hpp>
 #include <MSound/SoundEffects.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <Strategic/Spine.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Player/ModelWaterManager.hpp>
@@ -980,7 +981,50 @@ void TBossMantaManager::load(JSUMemoryInputStream& stream)
 }
 void TBossMantaManager::loadAfter()
 {
-	// TODO: WIP - particle-flag setup loop omitted.
+	static const char* onetimeFilenames[5] = {
+		"/scene/manta/jpa/ms_man_dead.jpa", "/scene/manta/jpa/ms_man_div1.jpa",
+		"/scene/manta/jpa/ms_man_div2.jpa", "/scene/manta/jpa/ms_man_div3.jpa",
+		"/scene/manta/jpa/ms_man_div4.jpa",
+	};
+	for (int i = 0; i < 5; ++i)
+		SMS_LoadParticle(onetimeFilenames[i], 0xF8 + i);
+
+	static const char* loopFilenames[10] = {
+		"/scene/manta/jpa/ms_man_hit1_a.jpa",
+		"/scene/manta/jpa/ms_man_hit1_b.jpa",
+		"/scene/manta/jpa/ms_man_hit2_a.jpa",
+		"/scene/manta/jpa/ms_man_hit2_b.jpa",
+		"/scene/manta/jpa/ms_man_hit3_a1.jpa",
+		"/scene/manta/jpa/ms_man_hit3_a2.jpa",
+		"/scene/manta/jpa/ms_man_hit3_b.jpa",
+		"/scene/manta/jpa/ms_man_hit4_a1.jpa",
+		"/scene/manta/jpa/ms_man_hit4_a2.jpa",
+		"/scene/manta/jpa/ms_man_hit4_b.jpa",
+	};
+	for (int i = 0; i < 10; ++i)
+		SMS_LoadParticle(loopFilenames[i], 0x1C7 + i);
+
+	for (int i = 0; i < 7; ++i) {
+		char name[0x40];
+		snprintf(name, 0x40, "palmOugi %d", i);
+		TLiveActor* palm = JDrama::TNameRefGen::search<TLiveActor>(name);
+		unk74[i].x       = palm->mPosition.x;
+		unk74[i].y       = 0.0f;
+		unk74[i].z       = palm->mPosition.z;
+	}
+
+	unk78[0].x = 1549.0f;
+	unk78[0].y = 0.0f;
+	unk78[0].z = -435.0f;
+	unk78[1].x = -1457.0f;
+	unk78[1].y = 0.0f;
+	unk78[1].z = -533.0f;
+
+	unk88.unk4                   = 0;
+	unk90.unk4                   = 0;
+	unk84                        = 0;
+	TBossManta::sEscapeFromMario = 0;
+
 	TEnemyManager::loadAfter();
 }
 void TBossMantaManager::createModelData()
@@ -1217,7 +1261,7 @@ void TBossMantaManager::createEnemies(int num)
 }
 void TBossMantaManager::spawn(int gen, const JGeometry::TVec3<f32>& pos)
 {
-	// TODO: 1.5% - logic correct (ring spawn of counts[gen] manta), but the
+	// TODO: logic correct (ring spawn of counts[gen] manta), but the
 	// Y-rotation matrix-mult codegen shape needs work.
 	static const int counts[] = { 1, 2, 3, 4, 4 };
 
