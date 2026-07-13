@@ -397,7 +397,12 @@ void TBossManta::moveObject()
 			dir.set(0.0f, 0.0f, 0.0f);
 		else
 			dir.setLength(1.0f);
+		dir.x *= 2.0f;
+		dir.y = dir.y * 2.0f + 1.0f;
+		dir.z *= 2.0f;
 		SMS_SendMessageToMario(this, 0xE);
+		SMS_SendMessageToMario(this, 7);
+		SMS_ThrowMario(dir, 60.0f);
 	}
 }
 BOOL TBossManta::collidedWithWater()
@@ -613,7 +618,7 @@ void TBossManta::calcRootMatrix()
 }
 BOOL TBossManta::isPolluting()
 {
-	static const u8 pollute[] = { 1, 1, 1, 1, 1, 1 };
+	const u8 pollute[6] = { 1, 1, 1, 1, 1, 1 };
 	return pollute[unk18C];
 }
 f32 TBossManta::getPolluteRadius()
