@@ -445,19 +445,102 @@ f32 TBossManta::getPolluteRadius()
 }
 void TBossManta::updateAttractor()
 {
-	// TODO: WIP - full attractor/pusher force accumulation is complex vector
-	// math; drafted the attractor-direction core only.
-	JGeometry::TVec3<f32> v;
-	v.x = unk158 - mPosition.x;
-	v.y = 0.0f;
-	v.z = unk160 - mPosition.z;
-	if (v.dot(v) == 0.0000038146973f)
-		v.set(0.0f, 0.0f, 0.0f);
+	TBossMantaParams* params = (TBossMantaParams*)getSaveParam();
+
+	JGeometry::TVec3<f32> force;
+	force.x = mPosition.x - unk158;
+	force.y = mPosition.y - unk15C;
+	force.z = mPosition.z - unk160;
+	force.y = 0.0f;
+	if (force.dot(force) == 0.0000038146973f)
+		force.set(0.0f, 0.0f, 0.0f);
 	else
-		v.setLength(1.0f);
-	unk164 = v.x;
-	unk168 = v.y;
-	unk16C = v.z;
+		force.setLength(1.0f);
+	force.x *= params->mSLAttractorPower.get();
+	force.y *= params->mSLAttractorPower.get();
+	force.z *= params->mSLAttractorPower.get();
+
+	JGeometry::TVec3<f32> facing(unk170, unk174, unk178);
+	facing.x *= params->mSLPusherPower.get();
+	facing.y *= params->mSLPusherPower.get();
+	facing.z *= params->mSLPusherPower.get();
+
+	JGeometry::TVec3<f32> selfPos;
+	selfPos.x = mPosition.x + facing.x;
+	selfPos.y = mPosition.y + facing.y;
+	selfPos.z = mPosition.z + facing.z;
+
+	TEnemyManager* manager = (TEnemyManager*)mManager;
+	for (int i = 0; i < manager->getActiveObjNum(); ++i) {
+		TBossManta* other = (TBossManta*)manager->getObj(i);
+		if (checkLiveFlag(LIVE_FLAG_DEAD)
+		    || other->checkLiveFlag(LIVE_FLAG_DEAD)
+		    || other->getInstanceIndex() == getInstanceIndex())
+			continue;
+
+		JGeometry::TVec3<f32> otherFacing(other->unk170, other->unk174,
+		                                  other->unk178);
+		otherFacing.x *= params->mSLPusherPower.get();
+		otherFacing.y *= params->mSLPusherPower.get();
+		otherFacing.z *= params->mSLPusherPower.get();
+
+		JGeometry::TVec3<f32> otherPos;
+		otherPos.x = other->mPosition.x + otherFacing.x;
+		otherPos.y = other->mPosition.y + otherFacing.y;
+		otherPos.z = other->mPosition.z + otherFacing.z;
+
+		JGeometry::TVec3<f32> delta;
+		delta.x = selfPos.x - otherPos.x;
+		delta.y = selfPos.y - otherPos.y;
+		delta.z = selfPos.z - otherPos.z;
+		delta.y = 0.0f;
+
+		f32 distSq = delta.dot(delta);
+		f32 dist   = JGeometry::TUtil<f32>::sqrt(distSq);
+		if (dist > 0.1f) {
+			dist = JGeometry::TUtil<f32>::sqrt(distSq);
+			if (dist < params->mSLEscapeRegion.get()) {
+				if (distSq == 0.0000038146973f)
+					delta.set(0.0f, 0.0f, 0.0f);
+				else
+					delta.setLength(1.0f);
+				f32 pushScale = params->mSLPusherPower.get()
+				                / JGeometry::TUtil<f32>::sqrt(delta.dot(delta));
+				delta.x *= pushScale;
+				delta.y *= pushScale;
+				delta.z *= pushScale;
+				force.x += delta.x;
+				force.y += delta.y;
+				force.z += delta.z;
+			}
+		}
+	}
+
+	JGeometry::TVec3<f32> toMario;
+	toMario.x     = mPosition.x - gpMarioPos->x;
+	toMario.y     = mPosition.y - gpMarioPos->y;
+	toMario.z     = mPosition.z - gpMarioPos->z;
+	toMario.y     = 0.0f;
+	f32 marioDist = JGeometry::TUtil<f32>::sqrt(toMario.dot(toMario));
+	if ((sEscapeFromMario != 0 || unk18C == 4) && marioDist < 6000.0f) {
+		force.x += toMario.x;
+		force.y += toMario.y;
+		force.z += toMario.z;
+	}
+
+	JGeometry::TVec3<f32> graphVec;
+	if (getIntoGraphVec(&graphVec)) {
+		graphVec.x *= 10000.0f;
+		graphVec.y *= 10000.0f;
+		graphVec.z *= 10000.0f;
+		force.x += graphVec.x;
+		force.y += graphVec.y;
+		force.z += graphVec.z;
+	}
+
+	unk164 = force.x;
+	unk168 = force.y;
+	unk16C = force.z;
 }
 
 int TBossManta::sCenterJointIndex;
