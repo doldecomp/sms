@@ -77,7 +77,7 @@ DEFINE_NERVE(TNerveMantaMove, TLiveActor)
 		JGeometry::TVec3<f32> pt
 		    = graph->indexToPoint((int)((f32)graph->unk8 * MsRandF()));
 
-		static const f32 chaseSpeed[6] = { 1.0f, 0.8f, 0.8f, 0.6f, 0.8f, 1.0f };
+		const f32 chaseSpeed[6] = { 1.0f, 0.8f, 0.8f, 0.6f, 0.8f, 1.0f };
 		f32 speed = self->unk1A4 ? 1.0f : chaseSpeed[self->unk18C];
 
 		pt.x += speed * (gpMarioPos->x - pt.x);
@@ -136,7 +136,7 @@ DEFINE_NERVE(TNerveMantaHitWater, TLiveActor)
 		if (self->getMActor()->getAnmBck())
 			self->getMActor()->getAnmBck()->setMotionBlendRatio(0.0f);
 
-		static const u32 hitSounds[6]
+		const u32 hitSounds[6]
 		    = { MSD_SE_BS_MANTA_DAMAGE_1, MSD_SE_BS_MANTA_DAMAGE_2,
 			    MSD_SE_BS_MANTA_DAMAGE_3, MSD_SE_BS_MANTA_DAMAGE_4,
 			    MSD_SE_BS_MANTA_DAMAGE_5, MSD_SE_BS_MANTA_DAMAGE_5 };
@@ -427,7 +427,7 @@ BOOL TBossManta::collidedWithWater()
 	BOOL isHitWater
 	    = mSpine->getLatestNerve() == &TNerveMantaHitWater::theNerve();
 
-	static const int hitCounts[6] = { 16, 8, 4, 2, 1, 1 };
+	const int hitCounts[6] = { 16, 8, 4, 2, 1, 1 };
 	if (unk19C < hitCounts[unk18C]) {
 		unk1A0 = 0x1E;
 		if (!isHitWater)
@@ -553,11 +553,10 @@ void TBossManta::control()
 		else
 			f.setLength(1.0f);
 
-		static const f32 blend[]
-		    = { 0.005f, 0.008f, 0.01f, 0.03f, 0.05f, 0.05f };
-		f32 b    = blend[unk18C];
-		f32 turn = -(0.4f * (unk178 * f.x - unk170 * f.z) - 0.5f);
-		unk150   = (1.0f - b) * unk150 + b * turn;
+		const f32 blend[6] = { 0.005f, 0.008f, 0.01f, 0.03f, 0.05f, 0.05f };
+		f32 b              = blend[unk18C];
+		f32 turn           = -(0.4f * (unk178 * f.x - unk170 * f.z) - 0.5f);
+		unk150             = (1.0f - b) * unk150 + b * turn;
 
 		const f32 animBlend[50] = {
 			0.0f,    0.046f,  0.107f,  0.177f,  0.227f,  0.256f,  0.273f,
