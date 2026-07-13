@@ -1056,7 +1056,30 @@ void TBossMantaManager::drawMantaShadow(JDrama::TGraphics* graphics)
 }
 void TBossMantaManager::updateMantaEscape()
 {
-	// TODO: WIP - sets escape flag from manta<->mario distances.
+	TBossManta::sEscapeFromMario = 0;
+
+	f32 marioX = gpMarioPos->x;
+	f32 marioZ = gpMarioPos->z;
+
+	int count                = 7;
+	JGeometry::TVec3<f32>* p = unk74;
+	do {
+		f32 dx = p->x - marioX;
+		f32 dz = p->z - marioZ;
+		if (JGeometry::TUtil<f32>::sqrt(dx * dx + dz * dz) < 350.0f)
+			TBossManta::sEscapeFromMario = 1;
+		++p;
+	} while (--count);
+
+	count = 2;
+	p     = unk78;
+	do {
+		f32 dx = p->x - marioX;
+		f32 dz = p->z - marioZ;
+		if (JGeometry::TUtil<f32>::sqrt(dx * dx + dz * dz) < 820.0f)
+			TBossManta::sEscapeFromMario = 1;
+		++p;
+	} while (--count);
 }
 void TBossMantaManager::perform(u32 flags, JDrama::TGraphics* graphics)
 {
