@@ -25,7 +25,7 @@ bool TMapEventSirenaSink::watch()
 {
 	if (unk64) {
 		gpPollution->getLayer(0)->startDecay();
-		unk28 = 0;
+		mRaisingBuildingIdx = 0;
 		SMSGetMarDirector()->fireStartDemoCamera(
 		    "ホテル上げカメラ", &unk68, -1, 0.0f, true, nullptr, 0, nullptr,
 		    JDrama::TFlagT<u16>(0));
