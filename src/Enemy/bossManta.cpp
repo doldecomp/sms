@@ -433,7 +433,112 @@ void TBossMantaManager::updateMantaEscape()
 }
 void TBossMantaManager::drawMantaShadow(JDrama::TGraphics* graphics)
 {
-	// TODO: WIP - EFB shadow render (GX copy-tex + projected draw).
+	setupEfbAlpha(graphics);
+
+	for (int i = 0; i < getActiveObjNum(); ++i) {
+		TSpineEnemy* enemy = getObj(i);
+		if (enemy->checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_CLIPPED_OUT))
+			continue;
+
+		GXSetCullMode(GX_CULL_FRONT);
+		GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ONE, GX_LO_NOOP);
+		for (u16 j = 0; j < enemy->getModel()->getModelData()->getShapeNum();
+		     ++j)
+			enemy->getModel()->getShapePacket(j)->draw();
+
+		GXSetCullMode(GX_CULL_BACK);
+		GXSetBlendMode(GX_BM_SUBTRACT, GX_BL_ONE, GX_BL_ONE, GX_LO_NOOP);
+		for (u16 j = 0; j < enemy->getModel()->getModelData()->getShapeNum();
+		     ++j)
+			enemy->getModel()->getShapePacket(j)->draw();
+	}
+
+	GXSetTexCopySrc(0, 0, (u16)SMSGetGameRenderWidth(),
+	                (u16)SMSGetGameRenderHeight());
+	GXSetTexCopyDst((u16)SMSGetGameRenderWidth(), (u16)SMSGetGameRenderHeight(),
+	                GX_TF_A8, GX_FALSE);
+	GXCopyTex(unk7C, GX_FALSE);
+	GXPixModeSync();
+
+	Mtx44 proj;
+	C_MTXOrtho(proj, (f32)SMSGetGameRenderHeight(), 0.0f, 0.0f,
+	           (f32)SMSGetGameRenderWidth(), 0.0f, 1.0f);
+	GXSetProjection(proj, GX_ORTHOGRAPHIC);
+	GXSetNumTevStages(1);
+	GXSetNumChans(0);
+	GXSetNumTexGens(1);
+	GXSetZCompLoc(GX_FALSE);
+
+	GXTexObj texObj;
+	GXInitTexObj(&texObj, unk7C, (u16)SMSGetGameRenderWidth(),
+	             (u16)SMSGetGameRenderHeight(), GX_TF_I8, GX_CLAMP, GX_CLAMP,
+	             GX_FALSE);
+	GXInitTexObjLOD(&texObj, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, GX_FALSE,
+	                GX_FALSE, GX_ANISO_1);
+	GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
+	GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
+
+	if (unk88.unk4 == 2) {
+		unk84 = (unk84 + 1 > 15) ? 15 : unk84 + 1;
+	}
+
+	TBossMantaParams* params = (TBossMantaParams*)getSaveParam();
+	f32 t                    = (f32)unk84 / 15.0f;
+	unk80.r                  = (u8)((1.0f - t) * (f32)params->mSLMantaRed.get()
+                   + t * (f32)params->mSLAngryMantaRed.get());
+	unk80.g = (u8)((1.0f - t) * (f32)params->mSLMantaGreen.get()
+	               + t * (f32)params->mSLAngryMantaGreen.get());
+	unk80.b = (u8)((1.0f - t) * (f32)params->mSLMantaBlue.get()
+	               + t * (f32)params->mSLAngryMantaBlue.get());
+	unk80.a = (u8)((1.0f - t) * (f32)params->mSLMantaAlpha.get()
+	               + t * (f32)params->mSLAngryMantaAlpha.get());
+	GXSetTevKColor(GX_KCOLOR0, unk80);
+
+	GXLoadTexObj(&texObj, GX_TEXMAP0);
+	GXSetDstAlpha(GX_TRUE, 0xFF);
+	GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
+	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
+	GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
+	              GX_COLOR_NULL);
+	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY,
+	                  GX_FALSE, GX_PTIDENTITY);
+	GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_TEXA, GX_CA_ZERO, GX_CA_KONST,
+	                GX_CA_ZERO);
+	GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_COMP_R8_GT, GX_TB_ZERO, GX_CS_SCALE_1,
+	                GX_TRUE, GX_TEVPREV);
+	GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_TEXA, GX_CC_ZERO, GX_CC_KONST,
+	                GX_CC_ZERO);
+	GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_COMP_R8_GT, GX_TB_ZERO, GX_CS_SCALE_1,
+	                GX_TRUE, GX_TEVPREV);
+	GXSetDstAlpha(GX_FALSE, 0);
+	GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_INVSRCALPHA, GX_LO_NOOP);
+	GXSetAlphaUpdate(GX_FALSE);
+	GXSetColorUpdate(GX_TRUE);
+
+	Mtx m;
+	PSMTXIdentity(m);
+	GXLoadPosMtxImm(m, GX_PNMTX0);
+	GXSetCurrentMtx(GX_PNMTX0);
+	GXSetCullMode(GX_CULL_NONE);
+	GXClearVtxDesc();
+	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+	GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
+
+	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+	GXPosition3f32(0.0f, (f32)SMSGetGameRenderHeight(), -10.0f);
+	GXTexCoord2f32(0.0f, 0.0f);
+	GXPosition3f32((f32)SMSGetGameRenderWidth(), (f32)SMSGetGameRenderHeight(),
+	               -10.0f);
+	GXTexCoord2f32(1.0f, 0.0f);
+	GXPosition3f32((f32)SMSGetGameRenderWidth(), 0.0f, -10.0f);
+	GXTexCoord2f32(1.0f, 1.0f);
+	GXPosition3f32(0.0f, 0.0f, -10.0f);
+	GXTexCoord2f32(0.0f, 1.0f);
+	GXEnd();
+
+	GXSetProjection(graphics->mProjMtx.mMtx, GX_PERSPECTIVE);
 }
 TSpineEnemy* TBossMantaManager::createEnemyInstance()
 {

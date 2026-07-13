@@ -4,6 +4,7 @@
 #include <Enemy/Enemy.hpp>
 #include <Enemy/EnemyManager.hpp>
 #include <Strategic/Nerve.hpp>
+#include <JSystem/JUtility/JUTColor.hpp>
 
 class TBossManta : public TSpineEnemy {
 public:
@@ -113,7 +114,7 @@ public:
 	public:
 		void update();
 		TBossMantaManager* unk0;
-		u8 unk4;
+		s32 unk4;
 	};
 
 	TBossMantaManager(const char*);
@@ -135,7 +136,7 @@ public:
 	/* 0x74 */ JGeometry::TVec3<f32>* unk74;
 	/* 0x78 */ JGeometry::TVec3<f32>* unk78;
 	/* 0x7C */ u8* unk7C;
-	/* 0x80 */ s32 unk80;
+	/* 0x80 */ JUtility::TColor unk80;
 	/* 0x84 */ s32 unk84;
 	/* 0x88 */ TMantaBattleState unk88;
 	/* 0x90 */ TMantaMessageState unk90;
