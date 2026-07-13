@@ -126,10 +126,50 @@ DEFINE_NERVE(TNerveMantaMove, TLiveActor)
 }
 DEFINE_NERVE(TNerveMantaHitWater, TLiveActor)
 {
-	// TODO: WIP - hit-water state (anim/sound + per-gen data).
 	TBossManta* self = (TBossManta*)spine->getBody();
-	if (spine->getTime() == 0)
+
+	if (spine->getTime() == 0) {
 		self->getMActor()->setBckFromIndex(1);
+		self->getMActor()->setFrameRate(
+		    TBossManta::sFrameRate[self->unk18C] * SMSGetAnmFrameRate(), 0);
+		if (self->getMActor()->getAnmBck())
+			self->getMActor()->getAnmBck()->setMotionBlendRatio(0.0f);
+
+		static const u32 hitSounds[6]
+		    = { MSD_SE_BS_MANTA_DAMAGE_1, MSD_SE_BS_MANTA_DAMAGE_2,
+			    MSD_SE_BS_MANTA_DAMAGE_3, MSD_SE_BS_MANTA_DAMAGE_4,
+			    MSD_SE_BS_MANTA_DAMAGE_5, MSD_SE_BS_MANTA_DAMAGE_5 };
+		u32 snd = hitSounds[self->unk18C];
+		if (gpMSound->gateCheck(snd))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    snd, (const Vec*)&self->mPosition, 0, nullptr, 0, 4);
+	}
+
+	int effectCount
+	    = ((TBossMantaParams*)self->getSaveParam())->mSLDamageEffectNum.get();
+
+	const int particles[6][3] = {
+		{ 0x1CE, 0x1CF, 0x1D0 }, { 0x1CB, 0x1CC, 0x1CD }, { 0x1C9, -1, 0x1CA },
+		{ 0x1C7, -1, 0x1C8 },    { 0x1C7, -1, 0x1C8 },    { 0x1C7, -1, 0x1C8 },
+	};
+
+	for (int j = 0; j < 3; ++j) {
+		if (particles[self->unk18C][j] > 0) {
+			for (int i = 0; i < effectCount; ++i) {
+				gpMarioParticleManager->emitAndBindToPosPtr(
+				    particles[self->unk18C][j], &self->unk17C, 1,
+				    (u8*)self + i * sizeof(TBossManta));
+				if (j == 2)
+					break;
+			}
+		}
+	}
+
+	if (self->checkCurAnmEnd(0)) {
+		self->unk150 = 0.5f;
+		self->unk154 = 0;
+		return TRUE;
+	}
 	return FALSE;
 }
 DEFINE_NERVE(TNerveMantaSpawn, TLiveActor)
