@@ -14,7 +14,7 @@ public:
 
 	virtual ~TDrawBufObj() { }
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, TGraphics*);
+	virtual void perform(u32 cue, TGraphics* graphics);
 
 	// fabricated
 	J3DDrawBuffer* getDrawBuffer() { return mDrawBuffer; }

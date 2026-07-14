@@ -11,7 +11,7 @@ public:
 	TNPCManager(const char*);
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void clipEnemies(JDrama::TGraphics*);
 	virtual J3DMaterialTable* getBmt_(bool);
 
@@ -37,7 +37,7 @@ public:
 class TMareJellyFishManager : public TObjManager {
 public:
 	TMareJellyFishManager(const char*);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 };
 

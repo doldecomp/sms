@@ -24,7 +24,7 @@ public:
 	MtxPtr getKoopaJrMtxInDemo();
 	BOOL receiveMessage(THitActor* sender, u32 message);
 	Mtx* getRootJointMtx() const;
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	void control();
 	void calcBathtubData();
 	void setupCollisions_();

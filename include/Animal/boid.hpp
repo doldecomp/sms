@@ -25,7 +25,7 @@ class TBoidLeader : public JDrama::TViewObj {
 public:
 	TBoidLeader(int, const char*);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	JGeometry::TVec3<f32> calcForces(const TBoid*) const;
 	JGeometry::TVec3<f32> calcGoalForce(const JGeometry::TVec3<f32>&) const;

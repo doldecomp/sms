@@ -22,10 +22,10 @@ void TTargetArrow::loadAfter()
 	unk10->setBck("target_arrow_spin");
 }
 
-void TTargetArrow::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TTargetArrow::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk10 && unk14)
-		unk10->perform(param_1, param_2);
+		unk10->perform(cue, graphics);
 }
 
 void TTargetArrow::setPos(const JGeometry::TVec3<f32>& pos)

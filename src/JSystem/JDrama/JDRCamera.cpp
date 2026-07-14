@@ -18,15 +18,15 @@ void TPolarCamera::load(JSUMemoryInputStream& stream)
 	unk3C = stream.readF32();
 	unk38 = stream.readF32();
 }
-void TPolarCamera::perform(u32 param_1, TGraphics* param_2)
+void TPolarCamera::perform(u32 cue, TGraphics* graphics)
 {
-	if (!(param_1 & 0x14))
+	if (!(cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)))
 		return;
 
-	MtxPtr projMtx = param_2->mProjMtx.mMtx;
+	MtxPtr projMtx = graphics->mProjMtx.mMtx;
 	C_MTXPerspective(projMtx, mFovy, mAspect, mNear, mFar);
-	param_2->mNearPlane = mNear;
-	param_2->mFarPlane  = mFar;
+	graphics->mNearPlane = mNear;
+	graphics->mFarPlane  = mFar;
 
 	TPosition3f tmp;
 	tmp.identity33();
@@ -47,8 +47,8 @@ void TPolarCamera::perform(u32 param_1, TGraphics* param_2)
 	tmp.setTrans(0.0f, 0.0f, 0.0f);
 	local_A4.concat(local_D4, tmp);
 
-	MTXCopy(local_A4, param_2->mViewMtx);
-	if (param_1 & 0x10)
+	MTXCopy(local_A4, graphics->mViewMtx);
+	if (cue & CUE_SET_PROJECTION)
 		GXSetProjection(projMtx, GX_PERSPECTIVE);
 }
 JStage::TECameraProjection TPolarCamera::JSGGetProjectionType() const
@@ -61,18 +61,18 @@ void TPolarCamera::JSGSetProjectionFovy(float fovy) { mFovy = fovy; }
 float TPolarCamera::JSGGetProjectionAspect() const { return mAspect; }
 void TPolarCamera::JSGSetProjectionAspect(float aspect) { mAspect = aspect; }
 
-void TLookAtCamera::perform(u32 param_1, TGraphics* param_2)
+void TLookAtCamera::perform(u32 cue, TGraphics* graphics)
 {
-	if (!(param_1 & 0x14))
+	if (!(cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)))
 		return;
 
-	MtxPtr projMtx = param_2->mProjMtx.mMtx;
+	MtxPtr projMtx = graphics->mProjMtx.mMtx;
 	C_MTXPerspective(projMtx, mFovy, mAspect, mNear, mFar);
-	param_2->mNearPlane = mNear;
-	param_2->mFarPlane  = mFar;
-	C_MTXLookAt(param_2->mViewMtx, &mPosition, &mUp, &mTarget);
+	graphics->mNearPlane = mNear;
+	graphics->mFarPlane  = mFar;
+	C_MTXLookAt(graphics->mViewMtx, &mPosition, &mUp, &mTarget);
 
-	if (param_1 & 0x10)
+	if (cue & CUE_SET_PROJECTION)
 		GXSetProjection(projMtx, GX_PERSPECTIVE);
 }
 JStage::TECameraProjection TLookAtCamera::JSGGetProjectionType() const
@@ -102,19 +102,19 @@ void TOrthoProj::load(JSUMemoryInputStream& stream)
 	stream.read(&mField[2], sizeof(float));
 	stream.read(&mField[3], sizeof(float));
 }
-void TOrthoProj::perform(u32 param_1, TGraphics* param_2)
+void TOrthoProj::perform(u32 cue, TGraphics* graphics)
 {
-	if (!(param_1 & 0x14))
+	if (!(cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)))
 		return;
 
-	MtxPtr projMtx = param_2->mProjMtx.mMtx;
+	MtxPtr projMtx = graphics->mProjMtx.mMtx;
 	C_MTXOrtho(projMtx, mField[1], mField[3], mField[0], mField[2], mNear,
 	           mFar);
-	param_2->mNearPlane = mNear;
-	param_2->mFarPlane  = mFar;
-	MTXTrans(param_2->mViewMtx, mPosition.x, mPosition.y, mPosition.z);
+	graphics->mNearPlane = mNear;
+	graphics->mFarPlane  = mFar;
+	MTXTrans(graphics->mViewMtx, mPosition.x, mPosition.y, mPosition.z);
 
-	if (param_1 & 0x10)
+	if (cue & CUE_SET_PROJECTION)
 		GXSetProjection(projMtx, GX_ORTHOGRAPHIC);
 }
 JStage::TECameraProjection TOrthoProj::JSGGetProjectionType() const

@@ -197,13 +197,13 @@ void TEMario::startGateDrawing() { mEnemyMario->startGateDrawing(); }
 
 void TEMario::forceDisappear() { mEnemyMario->startDisappear(9); }
 
-void TEMario::perform(u32 flags, JDrama::TGraphics* gfx)
+void TEMario::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (checkLiveFlag(LIVE_FLAG_UNK40)) {
 		return;
 	}
 
-	if (!(flags & 0x1)) {
+	if (!(cue & CUE_MOVE)) {
 		return;
 	}
 
@@ -235,9 +235,9 @@ void TEMario::perform(u32 flags, JDrama::TGraphics* gfx)
 		}
 	}
 
-	mEnemyMario->perform(flags, gfx);
+	mEnemyMario->perform(cue, graphics);
 
-	if (flags & 0x1) {
+	if (cue & 0x1) {
 		mPosition = mEnemyMario->getPosition();
 		mRotation = mEnemyMario->getRotation();
 		mScaling  = mEnemyMario->getScaling();

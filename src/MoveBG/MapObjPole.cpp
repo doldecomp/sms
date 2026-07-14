@@ -84,9 +84,9 @@ void TMapObjPoleManager::initDraw()
 	GXSetCullMode(GX_CULL_NONE);
 }
 
-void TMapObjPoleManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMapObjPoleManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((param_1 & 8)) {
+	if ((cue & CUE_DRAW)) {
 		initDraw();
 		if (unk10[0].unk0 != 0) {
 			JUTTexture texture(unk10[0].unk54);

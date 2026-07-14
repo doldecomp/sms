@@ -163,9 +163,9 @@ void TRideCloud::control()
 	}
 }
 
-void TRideCloud::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TRideCloud::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 4)
+	if (cue & CUE_CALC_VIEW)
 		mScaledBodyRadius = unk154 * mScaling.x;
-	TRailMapObj::perform(param_1, param_2);
+	TRailMapObj::perform(cue, graphics);
 }

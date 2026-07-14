@@ -12,10 +12,9 @@ void TPerformList::forEachPerform(
 	}
 }
 
-void TPerformList::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TPerformList::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	forEachPerform(getChildren().begin(), getChildren().end(), param_2,
-	               param_1);
+	forEachPerform(getChildren().begin(), getChildren().end(), graphics, cue);
 }
 
 void TPerformList::load(JSUMemoryInputStream& stream)
@@ -31,8 +30,8 @@ void TPerformList::load(JSUMemoryInputStream& stream)
 		u32 value;
 		stream.read(&value, 4);
 		u32 uVar5 = value;
-		if (value & 1)
-			uVar5 = value | 0x3000;
+		if (value & CUE_MOVE)
+			uVar5 = value | (CUE_MOVEMENT_GATE_A | CUE_MOVEMENT_GATE_B);
 		if (obj)
 			push_back(obj, uVar5);
 	}

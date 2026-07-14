@@ -60,7 +60,7 @@ public:
 	CPolarSubCamera(const char* = "<CPolarCamera>");
 
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	bool isLButtonCameraSpecifyMode(int) const;
 	bool isLButtonCameraInbetween() const;

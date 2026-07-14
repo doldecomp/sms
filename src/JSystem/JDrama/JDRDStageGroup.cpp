@@ -2,12 +2,12 @@
 
 using namespace JDrama;
 
-void TDStageGroup::perform(u32 param_1, TGraphics* param_2)
+void TDStageGroup::perform(u32 cue, TGraphics* graphics)
 {
-	if (!(param_1 & 8))
+	if (!(cue & CUE_DRAW))
 		return;
 
-	unk20.perform(param_1, param_2);
-	TViewObjPtrListT::perform(param_1, param_2);
-	unk20.perform(param_1 & ~0x8 | 0x100, param_2);
+	unk20.perform(cue, graphics);
+	TViewObjPtrListT::perform(cue, graphics);
+	unk20.perform(cue & ~CUE_DRAW | CUE_DRAW_STAGE_END, graphics);
 }

@@ -89,12 +89,12 @@ void TAfterEffect::calcDashBlurValue()
 	unk15 = 0;
 }
 
-void TAfterEffect::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TAfterEffect::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!(unk14 & 1))
 		return;
 
-	if (!(param_1 & 0x10))
+	if (!(cue & CUE_SET_PROJECTION))
 		return;
 
 	switch (unk15) {
@@ -115,7 +115,7 @@ void TAfterEffect::perform(u32 param_1, JDrama::TGraphics* param_2)
 	color.b = 0;
 	color.a = 0;
 
-	const JDrama::TRect& rect = param_2->getViewport();
+	const JDrama::TRect& rect = graphics->getViewport();
 
 	unk20 += unk48 * (unk1B - unk20);
 	unk24 += unk48 * (unk1C - unk24);
@@ -133,7 +133,7 @@ void TAfterEffect::perform(u32 param_1, JDrama::TGraphics* param_2)
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
 	GXSetCullMode(GX_CULL_BACK);
 	GXSetCurrentMtx(GX_PNMTX0);
-	GXLoadPosMtxImm(param_2->getViewMtx(), GX_PNMTX0);
+	GXLoadPosMtxImm(graphics->getViewMtx(), GX_PNMTX0);
 	GXSetNumChans(1);
 	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_VTX, GX_SRC_VTX, 0, GX_DF_NONE,
 	              GX_AF_NONE);
@@ -162,7 +162,7 @@ void TAfterEffect::perform(u32 param_1, JDrama::TGraphics* param_2)
 	f32 fVar3  = (fVar4 + fVar5) * 0.5f;
 	f32 fVar10 = (fVar6 + fVar7) * 0.5f;
 
-	u16 uVar14 = -param_2->getNearPlane();
+	u16 uVar14 = -graphics->getNearPlane();
 
 	GXBegin(GX_TRIANGLEFAN, GX_VTXFMT0, 8);
 

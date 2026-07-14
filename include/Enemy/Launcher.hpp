@@ -64,7 +64,7 @@ public:
 	TCommonLauncher(const char* name = "コモンランチャー");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void init(TLiveManager*);
 	virtual const char** getBasNameTable() const;
 	virtual void stateInitial();

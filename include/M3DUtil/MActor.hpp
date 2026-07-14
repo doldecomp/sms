@@ -60,7 +60,7 @@ public:
 	void entry();
 	void frameUpdate();
 	void matAnmFrameUpdate();
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	BOOL checkCurAnm(const char*, int);
 	bool checkCurAnmFromIndex(int, int);
 	bool checkAnmFileExist(const char*, int);

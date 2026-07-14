@@ -19,10 +19,10 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-void TNintendo2D::perform(u32 param_1, JDrama::TGraphics*)
+void TNintendo2D::perform(u32 cue, JDrama::TGraphics*)
 {
 
-	if (param_1 & 8) {
+	if (cue & CUE_DRAW) {
 		GXSetCullMode(GX_CULL_BACK);
 		Mtx afStack_3c;
 		MTXTrans(afStack_3c, 0.0, 0.0, 0.0);

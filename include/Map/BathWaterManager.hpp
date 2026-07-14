@@ -144,7 +144,7 @@ class TBathWaterManager;
 class TBathWaterPreprocessor : public JDrama::TViewObj {
 public:
 	TBathWaterPreprocessor(TBathWaterManager*);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:
 	/* 0x10 */ TBathWaterManager* unk10;
@@ -155,7 +155,7 @@ public:
 	TBathWaterManager();
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void wave(JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>&, f32, f32) const;
 	void initializeIfYet_();

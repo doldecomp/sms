@@ -65,7 +65,7 @@ void TMario::thinkAloha()
 	}
 }
 
-void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
+void TMario::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk114 & UNK114_FLAG_PROFILE)
 		TTimeRec::startTimer(0xff, 0x00, 0x00, 0x80);
@@ -73,16 +73,16 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 	if (checkFlag(MARIO_FLAG_IS_PERFORMING))
 		return;
 
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		thinkFreeze();
 
 		if (mFreezeTimer <= 0) {
 			playerControl(graphics);
 			setPositions();
 			if (mCap != nullptr)
-				mCap->perform(1, graphics);
+				mCap->perform(CUE_MOVE, graphics);
 			if (mWaterGun != nullptr)
-				mWaterGun->perform(1, graphics);
+				mWaterGun->perform(CUE_MOVE, graphics);
 			if (mYoshi != nullptr)
 				mYoshi->movement();
 			moveParticle();
@@ -92,25 +92,25 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 		soundMovement();
 	}
 
-	if ((param_1 & 1) && mFreezeTimer <= 0) {
+	if ((cue & CUE_MOVE) && mFreezeTimer <= 0) {
 		thinkAloha();
-		calcAnim(2, graphics);
+		calcAnim(CUE_CALC_ANIM, graphics);
 		animSound();
 
 		if (mWaterGun != nullptr) {
 			mWaterGun->setBaseTRMtx(
 			    mModel->unk8->mNodeMatrices[mJointIdChnChest]);
-			mWaterGun->perform(2, graphics);
+			mWaterGun->perform(CUE_CALC_ANIM, graphics);
 		}
 
 		if (mYoshi != nullptr)
 			mYoshi->calcAnim();
 	}
 
-	if (param_1 & 0x4) {
+	if (cue & CUE_CALC_VIEW) {
 		calcView(graphics);
 		if (mWaterGun != nullptr)
-			mWaterGun->perform(0x4, graphics);
+			mWaterGun->perform(CUE_CALC_VIEW, graphics);
 		if (mYoshi != nullptr)
 			mYoshi->viewCalc();
 
@@ -123,7 +123,7 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (param_1 & 0x200) {
+	if (cue & CUE_ENTRY) {
 		// TODO: inline?
 		BOOL doEntry = TRUE;
 		if (!(unk114 & UNK114_FLAG_VISIBLE))
@@ -136,7 +136,7 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 			addDamageFog(graphics);
 
 			if (checkFlag(MARIO_FLAG_HAS_FLUDD))
-				mWaterGun->perform(0x200, graphics);
+				mWaterGun->perform(CUE_ENTRY, graphics);
 
 			entryModels(graphics);
 			mYoshi->entry();
@@ -148,11 +148,11 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (param_1 & 0x04000000)
+	if (cue & 0x04000000)
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD))
 			mWaterGun->perform(0x04000000, graphics);
 
-	if (param_1 & 0x10000000) {
+	if (cue & 0x10000000) {
 		unk394->frameInit();
 		unk398->frameInit();
 
@@ -166,12 +166,12 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 		mCap->perform(0x10000000, graphics);
 	}
 
-	if (param_1 & 0x08000000) {
+	if (cue & 0x08000000) {
 		j3dSys.mDrawBuffer[0] = unk39C;
 		j3dSys.mDrawBuffer[1] = unk3A0;
 	}
 
-	if (param_1 & 0x40000000) {
+	if (cue & 0x40000000) {
 		if (checkUnk114(UNK114_FLAG_UNK10)) {
 			j3dSys.setUnk4C(3);
 			unk394->draw();
@@ -179,7 +179,7 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (param_1 & 0x20000000) {
+	if (cue & 0x20000000) {
 		if (checkUnk114(UNK114_FLAG_UNK10)) {
 			j3dSys.setUnk4C(4);
 			unk398->draw();
@@ -187,10 +187,10 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (param_1 & 0x01000000)
+	if (cue & 0x01000000)
 		drawSpecial(graphics);
 
-	if (param_1 & 0x02000000) {
+	if (cue & 0x02000000) {
 		if (checkUnk114(UNK114_FLAG_DO_OCCLUSION_PROBE)) {
 			boxDrawPrepare(graphics->mViewMtx);
 			GXSetColorUpdate(GX_FALSE);
@@ -203,7 +203,7 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (param_1 & 0x00800000) {
+	if (cue & 0x00800000) {
 		if (checkUnk114(UNK114_FLAG_DO_OCCLUSION_PROBE)) {
 			boxDrawPrepare(graphics->mViewMtx);
 			GXSetColorUpdate(GX_FALSE);
@@ -216,7 +216,7 @@ void TMario::perform(u32 param_1, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if ((param_1 & 0x80000000) && (unk114 & UNK114_FLAG_VISIBLE)) {
+	if ((cue & 0x80000000) && (unk114 & UNK114_FLAG_VISIBLE)) {
 		j3dSys.onFlag(0x2);
 		GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0xff, 0xff, 0xff, 0xff });
 		GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,

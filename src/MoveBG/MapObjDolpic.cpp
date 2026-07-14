@@ -466,17 +466,17 @@ void TDemoCannon::startDemo()
 	unk13C->getMActor()->setBck("democannon_mario_fly1");
 }
 
-void TDemoCannon::perform(u32 flags, JDrama::TGraphics* gfx)
+void TDemoCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TMapObjBase::perform(flags, gfx);
+	TMapObjBase::perform(cue, graphics);
 
 	if (!unk14C)
 		return;
 
-	unk138->perform(flags, gfx);
-	unk13C->getMActor()->perform(flags, gfx);
+	unk138->perform(cue, graphics);
+	unk13C->getMActor()->perform(cue, graphics);
 
-	if (!(flags & 2))
+	if (!(cue & CUE_CALC_ANIM))
 		return;
 
 	J3DFrameCtrl* frameCtrl = unk13C->getMActor()->getFrameCtrl(0);

@@ -28,9 +28,9 @@ void TSmJ3DAct::load(JSUMemoryInputStream& stream)
 	}
 }
 
-void TSmJ3DAct::perform(u32 param_1, TGraphics* param_2)
+void TSmJ3DAct::perform(u32 cue, TGraphics* graphics)
 {
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		TPosition3f local_148;
 		local_148.identity();
 		local_148.setTrans(mPosition);
@@ -67,9 +67,9 @@ void TSmJ3DAct::perform(u32 param_1, TGraphics* param_2)
 		}
 	}
 
-	if (param_1 & 0x200)
+	if (cue & CUE_ENTRY)
 		unk48->entry();
 
-	if (param_1 & 0x4)
+	if (cue & CUE_CALC_VIEW)
 		unk48->viewCalc();
 }

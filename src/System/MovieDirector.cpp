@@ -281,14 +281,14 @@ int TMovieDirector::direct()
 	if (unk1C == STATE_SAVE_TO_TITLE || unk1C == STATE_SAVE_AND_CONTINUE) {
 		JDrama::TGraphics graphics;
 		graphics.unk2 = 1;
-		unk10->testPerform(1, &graphics);
+		unk10->testPerform(CUE_MOVE, &graphics);
 		graphics.unk2 = 0;
-		unk10->testPerform(1, &graphics);
+		unk10->testPerform(CUE_MOVE, &graphics);
 		graphics.unk2 = 0;
-		unk10->testPerform(1, &graphics);
+		unk10->testPerform(CUE_MOVE, &graphics);
 		graphics.unk2 = 0;
-		unk10->testPerform(3, &graphics);
-		unk14->testPerform(8, &graphics);
+		unk10->testPerform(CUE_MOVE | CUE_CALC_ANIM, &graphics);
+		unk14->testPerform(CUE_DRAW, &graphics);
 	} else {
 		JDrama::TDirector::direct();
 	}
@@ -359,8 +359,8 @@ int TMovieDirector::direct()
 	    && !unk30.check(0x2)) {
 		unk30.on(0x2);
 		nextState = STATE_FADE_OUT;
-		unk28->unkC.on(0x9);
-		unk2C->unkC.on(0x9);
+		unk28->unkC.on(CUE_DRAW | CUE_MOVE);
+		unk2C->unkC.on(CUE_DRAW | CUE_MOVE);
 		THPPlayerPause();
 	}
 
@@ -368,8 +368,8 @@ int TMovieDirector::direct()
 		switch (nextState) {
 		case STATE_SAVE_TO_TITLE:
 			THPPlayerStop();
-			unk28->unkC.on(0x9);
-			unk2C->unkC.on(0x9);
+			unk28->unkC.on(CUE_DRAW | CUE_MOVE);
+			unk2C->unkC.on(CUE_DRAW | CUE_MOVE);
 			gpApplication.mFader->startWipe(15, 0.3f, 0.0f);
 			gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 255));
 			unk24->init(gpApplication.getMovie() == 17 ? 8 : 0);
@@ -377,8 +377,8 @@ int TMovieDirector::direct()
 
 		case STATE_SAVE_AND_CONTINUE:
 			THPPlayerStop();
-			unk28->unkC.on(0x9);
-			unk2C->unkC.on(0x9);
+			unk28->unkC.on(CUE_DRAW | CUE_MOVE);
+			unk2C->unkC.on(CUE_DRAW | CUE_MOVE);
 			gpApplication.mFader->startWipe(14, 0.3f, 0.0f);
 			gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 255));
 			unk24->init(9);

@@ -25,7 +25,7 @@ public:
 	TCardLoad(const char* name = "<TCardLoad>");
 
 	virtual void load(JSUMemoryInputStream& stream);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void changePattern(J2DPicture*, s16, u32);
 	void setupTitleScreen();

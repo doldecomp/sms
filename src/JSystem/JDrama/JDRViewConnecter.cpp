@@ -11,17 +11,17 @@ TViewConnecter::TViewConnecter(TViewObj* param_1, TViewObj* param_2,
 {
 }
 
-void TViewConnecter::perform(u32 param_1, TGraphics* param_2)
+void TViewConnecter::perform(u32 cue, TGraphics* graphics)
 {
-	if (!(param_1 & 8))
+	if (!(cue & CUE_DRAW))
 		return;
 
 	if (unk10)
-		unk10->testPerform(0x80, param_2);
+		unk10->testPerform(CUE_DRAW_INIT, graphics);
 
 	if (unk14)
-		unk14->testPerform(param_1, param_2);
+		unk14->testPerform(cue, graphics);
 
 	if (unk10 && unk18.check(0x1))
-		unk10->testPerform(8, param_2);
+		unk10->testPerform(CUE_DRAW, graphics);
 }

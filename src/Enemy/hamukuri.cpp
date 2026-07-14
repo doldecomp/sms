@@ -219,15 +219,15 @@ void THamuKuriManager::createAnmData()
 	unk20 = data;
 }
 
-void THamuKuriManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void THamuKuriManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (unk68 > 0 && mSearchActSw && (param_1 & 2))
+	if (unk68 > 0 && mSearchActSw && (cue & CUE_CALC_ANIM))
 		setSearchHamuKuri();
 
-	if (param_1 & 1)
+	if (cue & CUE_MOVE)
 		checkSerialKill();
 
-	TEnemyManager::perform(param_1, param_2);
+	TEnemyManager::perform(cue, graphics);
 }
 
 void THamuKuriManager::setSearchHamuKuri()
@@ -438,12 +438,12 @@ void TDangoHamuKuriManager::createModelDataArray(
 	}
 }
 
-void TDoroHaneKuriManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TDoroHaneKuriManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	THamuKuriManager::perform(param_1, param_2);
+	THamuKuriManager::perform(cue, graphics);
 
 	if (unk74)
-		unk74->perform(param_1, param_2);
+		unk74->perform(cue, graphics);
 }
 
 void TDoroHaneKuriManager::createHige()
@@ -576,14 +576,14 @@ void TFireHamuKuriManager::createModelData()
 	createModelDataArray(entry);
 }
 
-void TDoroHige::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TDoroHige::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!unk1C->isUnk198()
 	    || unk1C->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_HIDDEN
 	                            | LIVE_FLAG_DEAD))
 		return;
 
-	TSharedParts::perform(param_1, param_2);
+	TSharedParts::perform(cue, graphics);
 }
 
 TDoroHamuKuriManager::TDoroHamuKuriManager(const char* name)
@@ -618,12 +618,12 @@ void TDoroHamuKuriManager::createModelData()
 	createModelDataArray(entry);
 }
 
-void TDoroHamuKuriManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TDoroHamuKuriManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	THamuKuriManager::perform(param_1, param_2);
+	THamuKuriManager::perform(cue, graphics);
 
 	if (unk74)
-		unk74->perform(param_1, param_2);
+		unk74->perform(cue, graphics);
 }
 
 void TDoroHamuKuriManager::createHige()
@@ -1594,14 +1594,14 @@ void TDangoHamuKuri::init(TLiveManager* param_1)
 	mActorType = 0x10000010;
 }
 
-void TDangoHamuKuri::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TDangoHamuKuri::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (mBoss
 	    && !(mBoss->mSpine->getCurrentNerve()
 	                 == &TNerveWalkerGenerate::theNerve()
 	             ? true
 	             : false))
-		TSmallEnemy::perform(param_1, param_2);
+		TSmallEnemy::perform(cue, graphics);
 }
 
 bool TDangoHamuKuri::changeByJuice()
@@ -1894,9 +1894,9 @@ void TBossDangoHamuKuri::init(TLiveManager* param_1)
 	mBoss = this;
 }
 
-void TBossDangoHamuKuri::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TBossDangoHamuKuri::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSmallEnemy::perform(param_1, param_2);
+	TSmallEnemy::perform(cue, graphics);
 }
 
 void TBossDangoHamuKuri::reset()

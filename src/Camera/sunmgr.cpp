@@ -70,13 +70,13 @@ void TSunMgr::load(JSUMemoryInputStream& stream)
 	}
 }
 
-void TSunMgr::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSunMgr::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!(unk15 & 1))
 		return;
-	if (!(param_1 & 1))
+	if (!(cue & CUE_MOVE))
 		return;
-	if (!(param_2->unk0 & 2))
+	if (!(graphics->unk0 & 2))
 		return;
 
 	if (!gpCamera->isThing2())

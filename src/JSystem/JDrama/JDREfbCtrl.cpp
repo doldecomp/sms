@@ -5,16 +5,16 @@
 
 using namespace JDrama;
 
-void TEfbCtrl::perform(u32 param_1, TGraphics* param_2)
+void TEfbCtrl::perform(u32 cue, TGraphics* graphics)
 {
-	if (param_1 & 0x80) {
+	if (cue & CUE_DRAW_INIT) {
 		GXSetColorUpdate(!unk20.check(0x100));
 		GXSetAlphaUpdate(!unk20.check(0x200));
 		GXSetZMode(!unk20.check(0x400), GX_LEQUAL, GX_TRUE);
-		param_2->setDisplayRect(unk10);
+		graphics->setDisplayRect(unk10);
 	}
 
-	if (param_1 & 0x8) {
+	if (cue & CUE_DRAW) {
 		// no-op
 	}
 }
@@ -32,22 +32,23 @@ void TEfbCtrl::setSrcRect(const TRect& param_1)
 	unk10.normalize();
 }
 
-void TEfbCtrlDisp::perform(u32 param_1, TGraphics* param_2)
+void TEfbCtrlDisp::perform(u32 cue, TGraphics* graphics)
 {
-	if (param_1 & 0x80) {
-		IssueGXPixelFormatSetting(param_2->getRenderMode(),
-		                          param_2->getUnkFC().check(0x8),
-		                          param_2->getUnkFC().check(0x10));
+	if (cue & CUE_DRAW_INIT) {
+		IssueGXPixelFormatSetting(graphics->getRenderMode(),
+		                          graphics->getUnkFC().check(0x8),
+		                          graphics->getUnkFC().check(0x10));
 	}
 
-	TEfbCtrl::perform(param_1, param_2);
+	TEfbCtrl::perform(cue, graphics);
 
-	if (param_1 & 0x8) {
-		if (!param_2->getUnkFC().check(0x40))
-			IssueGXCopyDisp(param_2->getFrameBuffer(),
-			                param_2->getDisplayRect(), param_2->getRenderMode(),
-			                param_2->getClearColor(), param_2->getClearZ(),
-			                param_2->getFBClamp(), param_2->getUnkFC().get());
+	if (cue & CUE_DRAW) {
+		if (!graphics->getUnkFC().check(0x40))
+			IssueGXCopyDisp(graphics->getFrameBuffer(),
+			                graphics->getDisplayRect(),
+			                graphics->getRenderMode(),
+			                graphics->getClearColor(), graphics->getClearZ(),
+			                graphics->getFBClamp(), graphics->getUnkFC().get());
 	}
 }
 
@@ -77,16 +78,16 @@ void TEfbCtrlTex::setTexAttb(const GXTexObj& param_1)
 	mHeight = (u32)height;
 }
 
-void TEfbCtrlTex::perform(u32 param_1, TGraphics* param_2)
+void TEfbCtrlTex::perform(u32 cue, TGraphics* graphics)
 {
-	if (param_1 & 0x80) {
+	if (cue & CUE_DRAW_INIT) {
 		IssueGXPixelFormatSetting(unk20.check(0x800), unk20.check(0x8),
 		                          unk20.check(0x10), false, false);
 	}
 
-	TEfbCtrl::perform(param_1, param_2);
+	TEfbCtrl::perform(cue, graphics);
 
-	if (param_1 & 0x8) {
+	if (cue & CUE_DRAW) {
 		GXSetCopyClamp(mFbClamp);
 		IssueGXSetCopyFilter(unk20.check(0x800), unk40, unk20.check(0x20),
 		                     unk44);

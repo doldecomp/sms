@@ -20,16 +20,16 @@
 
 void TMirrorCamera::makeMirrorViewMtx() { }
 
-void TMirrorCamera::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMirrorCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x14) {
-		C_MTXPerspective(param_2->mProjMtx.mMtx, unk80 * gpCamera->mFovy,
+	if (cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)) {
+		C_MTXPerspective(graphics->mProjMtx.mMtx, unk80 * gpCamera->mFovy,
 		                 gpCamera->mAspect, gpCamera->mNear, gpCamera->mFar);
-		MTXCopy(unk30, param_2->mViewMtx);
-		param_2->mNearPlane = gpCamera->mNear;
-		param_2->mFarPlane  = gpCamera->mFar;
-		if (param_1 & 0x10)
-			GXSetProjection(param_2->mProjMtx.mMtx, GX_PERSPECTIVE);
+		MTXCopy(unk30, graphics->mViewMtx);
+		graphics->mNearPlane = gpCamera->mNear;
+		graphics->mFarPlane  = gpCamera->mFar;
+		if (cue & CUE_SET_PROJECTION)
+			GXSetProjection(graphics->mProjMtx.mMtx, GX_PERSPECTIVE);
 		GXSetAlphaUpdate(GX_TRUE);
 	}
 }
@@ -255,7 +255,7 @@ bool TMirrorModelManager::isInMirror(JGeometry::TVec3<f32>& param_1) const
 	           : false;
 }
 
-void TMirrorModelManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMirrorModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	JGeometry::TVec3<f32> local_44 = *gpMarioPos;
 	unk18 = gpCubeMirror->getDataNo(gpCubeMirror->getInCubeNo(local_44));
@@ -272,13 +272,13 @@ void TMirrorModelManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (unk18 != -1) {
-		if (param_1 & 2)
+		if (cue & CUE_CALC_ANIM)
 			unk1C[unk18]->calc();
 
-		if (param_1 & 4)
+		if (cue & CUE_CALC_VIEW)
 			unk1C[unk18]->unk4->viewCalc();
 
-		if (param_1 & 0x200) {
+		if (cue & CUE_ENTRY) {
 			unk1C[unk18]->setPlane();
 
 			// TODO: awful vector math, one of unused functions inlined
@@ -360,8 +360,8 @@ TMirrorModelManager::TMirrorModelManager(const char* name)
 	gpMirrorModelManager = this;
 }
 
-void TMirrorMapDrawBuf::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMirrorMapDrawBuf::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (!(param_1 & 8) || (gpMirrorModelManager->unk18 != -1 ? true : false))
-		JDrama::TDrawBufObj::perform(param_1, param_2);
+	if (!(cue & CUE_DRAW) || (gpMirrorModelManager->unk18 != -1 ? true : false))
+		JDrama::TDrawBufObj::perform(cue, graphics);
 }

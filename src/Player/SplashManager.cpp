@@ -157,16 +157,16 @@ void TSplashManager::draw() const
 	GXSetClipMode(GX_CLIP_ENABLE);
 }
 
-void TSplashManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSplashManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 2)
+	if (cue & CUE_CALC_ANIM)
 		move();
 
 	if (unk10 & 1) {
-		if (param_1 & 4)
-			makeDL(param_2);
+		if (cue & CUE_CALC_VIEW)
+			makeDL(graphics);
 
-		if (param_1 & 8)
+		if (cue & CUE_DRAW)
 			draw();
 	}
 }

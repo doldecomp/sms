@@ -701,4 +701,4 @@ void TGCConsole2::stopMoveTimer()
 
 int TGCConsole2::getFinishedTime() { return unk4FC; }
 
-void TGCConsole2::perform(u32, JDrama::TGraphics*) { }
+void TGCConsole2::perform(u32 cue, JDrama::TGraphics* graphics) { }

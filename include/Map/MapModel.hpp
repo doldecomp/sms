@@ -15,7 +15,7 @@ public:
 
 	virtual void initJointModel(TJointModelManager*, const char*,
 	                            MActorAnmData*);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual u32 getJ3DModelDataFlag() const
 	{
 		return J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift);

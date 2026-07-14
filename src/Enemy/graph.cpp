@@ -729,7 +729,7 @@ JGeometry::TVec3<f32> TGraphWeb::indexToPoint(int param_1) const
 	return result;
 }
 
-void TGraphWeb::perform(u32, JDrama::TGraphics*) { }
+void TGraphWeb::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 BOOL TGraphWeb::isDummy() const
 {
@@ -847,10 +847,10 @@ TGraphWeb* TGraphGroup::getGraphByName(const char* name)
 	return unkC;
 }
 
-void TGraphGroup::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TGraphGroup::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	for (int i = 0; i < unk4; ++i)
-		unk8[i]->perform(param_1, param_2);
+		unk8[i]->perform(cue, graphics);
 }
 
 TGraphTracer::TGraphTracer()

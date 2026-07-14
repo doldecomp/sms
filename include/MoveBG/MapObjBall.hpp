@@ -34,7 +34,7 @@ class TResetFruit : public TMapObjBall {
 public:
 	TResetFruit(const char* name = "無限フルーツ");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
 	virtual void makeObjAppeared();

@@ -107,7 +107,7 @@ public:
 	TFireWanwanManager(const char* name = "ファイアーわんわんマネージャー");
 	void load(JSUMemoryInputStream&);
 	void createModelData();
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void checkBalloonHelpBoss22();
 	void checkBalloonHelpBoss23();
@@ -137,8 +137,8 @@ class TFireWanwanTailNode {
 public:
 	TFireWanwanTailNode(MActor*);
 	void setBarAnmMtx(MtxPtr);
-	void perform(u32, JDrama::TGraphics*, const JGeometry::TVec3<f32>&,
-	             const JGeometry::TVec3<f32>&);
+	void perform(u32 cue, JDrama::TGraphics* graphics,
+	             const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&);
 
 	void setScale(const JGeometry::TVec3<f32>& scale) { mScale.set(scale); }
 
@@ -159,7 +159,7 @@ public:
 	void behaveTaken(THitActor*);
 	void behaveApart();
 	void init();
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	void performNodes(u32, JDrama::TGraphics*);
 	void clipNodes(JDrama::TGraphics*);
 	void movementBody(const JGeometry::TVec3<f32>&);
@@ -217,7 +217,7 @@ public:
 	void checkInPond();
 	void kill();
 	bool isHitValid(u32);
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	void calcRootMatrix();
 	void moveObject();
 	void updateCollisionFromParam();

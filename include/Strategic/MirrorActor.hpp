@@ -9,7 +9,7 @@ class TMirrorActor : public JDrama::TViewObj {
 public:
 	void isInMirror() const;
 	void checkIsInMirror();
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	static void entryMirrorDrawBufferAlways(J3DModel*);
 	void init(J3DModel*, u16);
 	TMirrorActor(const char*);

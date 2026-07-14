@@ -157,12 +157,12 @@ void TItem::appear()
 	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 }
 
-void TItem::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TItem::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
-	if ((param_1 & 1) && checkHitFlag(HIT_FLAG_NO_COLLISION)
+	if ((cue & CUE_MOVE) && checkHitFlag(HIT_FLAG_NO_COLLISION)
 	    && !isStateTimerEngaged()) {
 		offHitFlag(HIT_FLAG_NO_COLLISION);
 		if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK10000000)) {
@@ -171,7 +171,7 @@ void TItem::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	TMapObjGeneral::perform(param_1, param_2);
+	TMapObjGeneral::perform(cue, graphics);
 }
 
 void TItem::initMapObj()
@@ -258,12 +258,12 @@ void TCoin::makeObjAppeared()
 		unk154->unk1A &= ~1;
 }
 
-void TCoin::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
-	if ((param_1 & 1) && checkLiveFlag(LIVE_FLAG_UNK10)) {
+	if ((cue & CUE_MOVE) && checkLiveFlag(LIVE_FLAG_UNK10)) {
 
 		if (gpMarDirector->isTalkModeNow() && !gpMarDirector->isDemoModeNow())
 			return;
@@ -291,11 +291,11 @@ void TCoin::perform(u32 param_1, JDrama::TGraphics* param_2)
 				touchActor(mCollisions[i]);
 
 	} else {
-		if ((param_1 & 4) && getMActor() == nullptr) {
+		if ((cue & CUE_CALC_VIEW) && getMActor() == nullptr) {
 			gpQuestionManager->request(mPosition, 60.0f);
 		}
 
-		TItem::perform(param_1, param_2);
+		TItem::perform(cue, graphics);
 	}
 }
 
@@ -644,13 +644,13 @@ void TShine::control()
 	}
 }
 
-void TShine::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TShine::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((param_1 & 2) && !checkLiveFlag(LIVE_FLAG_DEAD)) {
+	if ((cue & CUE_CALC_ANIM) && !checkLiveFlag(LIVE_FLAG_DEAD)) {
 		if (!isState(STATE_NORMAL))
 			offLiveFlag(LIVE_FLAG_UNK200);
 	}
-	TMapObjGeneral::perform(param_1, param_2);
+	TMapObjGeneral::perform(cue, graphics);
 }
 
 BOOL TShine::receiveMessage(THitActor* sender, u32 message)
@@ -1024,17 +1024,17 @@ void TEggYoshi::control()
 	}
 }
 
-void TEggYoshi::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TEggYoshi::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TMapObjGeneral::perform(param_1, param_2);
+	TMapObjGeneral::perform(cue, graphics);
 
 	if (!isState(0xC) && !isState(STATE_DEAD) && !isState(STATE_HOLDING)
 	    && !isState(STATE_APPEARING) && !isState(0xE) && !isState(0xF)
 	    && !isState(0x10)) {
-		if (param_1 & 2)
+		if (cue & CUE_CALC_ANIM)
 			unk148->getModel()->setBaseTRMtx(getModel()->getAnmMtx(0));
 
-		unk148->perform(param_1, param_2);
+		unk148->perform(cue, graphics);
 	}
 }
 

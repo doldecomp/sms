@@ -60,7 +60,7 @@ void TCubeManagerBase::load(JSUMemoryInputStream& stream)
 	unk10 = unk14->size();
 }
 
-void TCubeManagerBase::perform(u32, JDrama::TGraphics*) { }
+void TCubeManagerBase::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 s32 TCubeManagerBase::getDataNo(s32 i) const
 {

@@ -24,7 +24,7 @@ static void dummy(Vec* v)
 	*v = (Vec) { 1.0f, 1.0f, 1.0f };
 }
 
-void TMapObjSeaIndirect::perform(u32, JDrama::TGraphics*) { }
+void TMapObjSeaIndirect::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 void TMapObjSeaIndirect::init()
 {
@@ -46,7 +46,7 @@ TMapObjSeaIndirect::TMapObjSeaIndirect(const char* name)
 {
 }
 
-void TMapObjWaterFilter::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMapObjWaterFilter::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	// TODO: mother of all intern codes...
 
@@ -66,7 +66,7 @@ void TMapObjWaterFilter::perform(u32 param_1, JDrama::TGraphics* param_2)
 	           gpCamera->unk124.x, gpCamera->unk124.y, gpCamera->unk124.z))
 		return;
 
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		J3DTransformInfo info;
 		info.mScale.x     = 1.0f;
 		info.mScale.y     = 1.0f;
@@ -82,12 +82,12 @@ void TMapObjWaterFilter::perform(u32 param_1, JDrama::TGraphics* param_2)
 		Mtx afStack_a8;
 		PSMTXScale(afStack_a8, mScaling.x, mScaling.y, mScaling.z);
 		Mtx afStack_48;
-		MTXInverse(param_2->mViewMtx, afStack_48);
+		MTXInverse(graphics->mViewMtx, afStack_48);
 		MTXConcat(afStack_48, afStack_78, afStack_48);
 		MTXConcat(afStack_48, afStack_a8, afStack_48);
 		unk44->getModel()->setBaseTRMtx(afStack_48);
 	}
-	unk44->perform(param_1, param_2);
+	unk44->perform(cue, graphics);
 }
 
 void TMapObjWaterFilter::init()

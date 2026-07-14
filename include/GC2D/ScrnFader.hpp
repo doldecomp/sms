@@ -34,7 +34,7 @@ public:
 	TSMSFader(JUtility::TColor, f32, const char* name);
 
 	virtual void load(JSUMemoryInputStream& stream);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void update();
 	virtual void draw(const JDrama::TRect&);
 
@@ -98,7 +98,7 @@ public:
 	}
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	virtual void update();
 

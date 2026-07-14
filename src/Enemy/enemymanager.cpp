@@ -273,7 +273,7 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 		return;
 	}
 
-	if (param_1 & 2) {
+	if (param_1 & CUE_CALC_ANIM) {
 		clipEnemies(param_2);
 		for (int i = 0; i < unk44; ++i)
 			for (int j = 0; j < unk40[i].unk4; ++j)
@@ -282,7 +282,7 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 		updateAnmSoundShared();
 	}
 
-	if (param_1 & 4)
+	if (param_1 & CUE_CALC_VIEW)
 		copyFromShared();
 
 	if (unk30 & 1) {
@@ -291,7 +291,7 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	int num = getActiveObjNum();
-	if (param_1 & 1) {
+	if (param_1 & CUE_MOVE) {
 		for (int i = num; i < mObjNum; ++i)
 			getObj(i)->onHitFlag(HIT_FLAG_NO_COLLISION);
 	}
@@ -301,10 +301,10 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 		if (enemy->checkLiveFlag(LIVE_FLAG_DEAD))
 			continue;
 
-		if (param_1 & 1)
+		if (param_1 & CUE_MOVE)
 			enemy->moveObject();
 
-		if (param_1 & 2) {
+		if (param_1 & CUE_CALC_ANIM) {
 			enemy->updateSquareToMario();
 			enemy->calcRootMatrix();
 			if (!enemy->checkLiveFlag(LIVE_FLAG_UNK4000)) {
@@ -318,14 +318,15 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 				enemy->getMActor()->matAnmFrameUpdate();
 			}
 
-			if (param_1 & 4)
+			if (param_1 & CUE_CALC_VIEW)
 				enemy->requestShadow();
 
 			if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN
 			                          | LIVE_FLAG_CLIPPED_OUT)) {
-				if ((param_1 & 4) && !enemy->checkLiveFlag(LIVE_FLAG_UNK4000))
+				if ((param_1 & CUE_CALC_VIEW)
+				    && !enemy->checkLiveFlag(LIVE_FLAG_UNK4000))
 					enemy->getMActor()->viewCalc();
-				if (param_1 & 0x200) {
+				if (param_1 & CUE_ENTRY) {
 					enemy->getMActor()->setLightData(enemy->getGroundPlane(),
 					                                 enemy->mPosition);
 					enemy->getMActor()->entry();
@@ -338,20 +339,20 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 		TTimeRec::endTimer();
 }
 
-void TEnemyManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TEnemyManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	changeDrawBuffer(param_1);
+	changeDrawBuffer(cue);
 	if (unk40) {
-		performShared(param_1, param_2);
-		restoreDrawBuffer(param_1);
+		performShared(cue, graphics);
+		restoreDrawBuffer(cue);
 		return;
 	}
 
 	if (unk30 & 1)
 		TTimeRec::startTimer();
 
-	if (param_1 & 2) {
-		clipEnemies(param_2);
+	if (cue & CUE_CALC_ANIM) {
+		clipEnemies(graphics);
 		setFlagOutOfCube();
 	}
 
@@ -361,7 +362,7 @@ void TEnemyManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	int num = getActiveObjNum();
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		for (int i = num; i < mObjNum; ++i)
 			getObj(i)->onLiveFlag(LIVE_FLAG_DEAD);
 	} else {
@@ -370,9 +371,9 @@ void TEnemyManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	for (int i = 0; i < num; ++i)
-		getObj(i)->testPerform(param_1, param_2);
+		getObj(i)->testPerform(cue, graphics);
 
-	restoreDrawBuffer(param_1);
+	restoreDrawBuffer(cue);
 	if (unk30 & 1)
 		TTimeRec::endTimer();
 }

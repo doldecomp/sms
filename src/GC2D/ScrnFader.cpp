@@ -136,12 +136,12 @@ TSMSFader::TSMSFader(JUtility::TColor param_1, f32 param_2, const char* param_3)
 	mWipeRequest.unk0 = UNK30_UNK_18;
 }
 
-void TSMSFader::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSMSFader::perform(u32 cue, JDrama::TGraphics*)
 {
-	if (param_1 & 0x1)
+	if (cue & CUE_MOVE)
 		update();
 
-	if (param_1 & 0x8)
+	if (cue & CUE_DRAW)
 		draw(JDrama::TRect(0, 0, 640, 480));
 }
 

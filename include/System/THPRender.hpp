@@ -12,7 +12,7 @@ class TTHPRender : public JDrama::TViewObj {
 public:
 	TTHPRender(const char* name = "<THPRender>");
 
-	virtual void perform(u32, JDrama::TGraphics*); /* override */
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics); /* override */
 
 	s32 getFrameNumber() const { return frameNumber; }
 

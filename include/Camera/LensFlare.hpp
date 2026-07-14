@@ -9,7 +9,7 @@ class J3DModel;
 class TLensFlare : public JDrama::TViewObj {
 public:
 	TLensFlare(const char*);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:
 	/* 0x10 */ J3DModelData* unk10;

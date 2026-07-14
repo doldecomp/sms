@@ -142,16 +142,16 @@ void TMushroom1up::control()
 	mLinearVelocity.add(diff);
 }
 
-void TMushroom1up::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMushroom1up::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (unk139 != 2 && mStateTimer < 240 && (param_1 & 0x200)
+	if (unk139 != 2 && mStateTimer < 240 && (cue & CUE_ENTRY)
 	    && gpMarDirector->unk58 % 6 > 2)
-		param_1 &= ~0x200;
+		cue &= ~CUE_ENTRY;
 
-	if ((param_1 & 1) && unk13A == 0 && unk139 != 2 && mStateTimer <= 0)
+	if ((cue & CUE_MOVE) && unk13A == 0 && unk139 != 2 && mStateTimer <= 0)
 		kill();
 
-	TMapObjBase::perform(param_1, param_2);
+	TMapObjBase::perform(cue, graphics);
 }
 
 TJumpBase::TJumpBase(const char* name)

@@ -33,7 +33,7 @@ public:
 	}
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(unsigned long, TGraphics*);
+	virtual void perform(unsigned long cue, TGraphics* graphics);
 
 public:
 	/* 0x10 */ s32 mLightInfoCount;
@@ -53,7 +53,7 @@ public:
 	}
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, TGraphics*);
+	virtual void perform(u32 cue, TGraphics* graphics);
 
 	virtual JStage::TELight JSGGetLightType() const;
 	virtual void JSGSetLightType(JStage::TELight);
@@ -104,7 +104,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual TNameRef* searchF(u16, const char*);
-	virtual void perform(u32, TGraphics*);
+	virtual void perform(u32 cue, TGraphics* graphics);
 
 	void setLightNum(s32);
 
@@ -126,7 +126,7 @@ public:
 	}
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, TGraphics*);
+	virtual void perform(u32 cue, TGraphics* graphics);
 	virtual GXColor JSGGetColor() const;
 	virtual void JSGSetColor(GXColor color);
 
@@ -148,7 +148,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual TNameRef* searchF(u16, const char*);
-	virtual void perform(u32, TGraphics*) { }
+	virtual void perform(u32 cue, TGraphics* graphics) { }
 
 	void setAmbNum(s32);
 

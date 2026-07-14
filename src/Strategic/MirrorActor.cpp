@@ -59,9 +59,9 @@ void TMirrorActor::checkIsInMirror()
 	}
 }
 
-void TMirrorActor::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMirrorActor::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		checkIsInMirror();
 		if (unk18 == 0)
 			return;
@@ -73,10 +73,10 @@ void TMirrorActor::perform(u32 param_1, JDrama::TGraphics* param_2)
 			unk14->setWeightAnmMtx(i, unk10->getWeightAnmMtx(i));
 	}
 
-	if ((param_1 & 4) && unk18 != 0)
+	if ((cue & CUE_CALC_VIEW) && unk18 != 0)
 		unk14->viewCalc();
 
-	if ((param_1 & 0x200) && unk18 && !(unk1A & 2))
+	if ((cue & CUE_ENTRY) && unk18 && !(unk1A & 2))
 		unk14->entry();
 }
 

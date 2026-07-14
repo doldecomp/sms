@@ -15,7 +15,7 @@ class TMovieSubTitle : public JDrama::TViewObj {
 public:
 	TMovieSubTitle(const TTHPRender*);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void setupResource(const char*, JKRArchive*);
 	void movement();

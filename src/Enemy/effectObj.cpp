@@ -31,9 +31,9 @@ TEffectObjManager* gpEffectObjManager;
 // JGadget::TAllocator<TEffectObjBase*>>::insert(JGadget::TList<TEffectObjBase*,
 // JGadget::TAllocator<TEffectObjBase*>>::iterator, TEffectObjBase* const&) {}
 
-void TSimpleEffect::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSimpleEffect::perform(u32 cue, JDrama::TGraphics*)
 {
-	if (param_1 & 2)
+	if (cue & CUE_CALC_ANIM)
 		emitEffect();
 }
 
@@ -104,9 +104,9 @@ void TEffectObjBase::reset()
 	unk74 = 0;
 }
 
-void TEffectObjBase::perform(u32 param_1, JDrama::TGraphics*)
+void TEffectObjBase::perform(u32 cue, JDrama::TGraphics*)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		if (unk68 == 1) {
 			unk74 = 0;
 			unk68 = 2;
@@ -220,15 +220,15 @@ void TEffectObjManager::load(JSUMemoryInputStream& stream)
 	JDrama::TViewObj::load(stream);
 }
 
-void TEffectObjManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TEffectObjManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x9) {
+	if (cue & (CUE_DRAW | CUE_MOVE)) {
 		JGadget::TList<TEffectObjBase*>::iterator it = unk14.begin();
 		for (; it != unk14.end(); ++it)
-			(*it)->perform(param_1, param_2);
+			(*it)->perform(cue, graphics);
 
 		for (int i = 0; i < COOL_EFFECT_OBJ_NUM; ++i)
-			unk24[i]->perform(param_1, param_2);
+			unk24[i]->perform(cue, graphics);
 	}
 }
 

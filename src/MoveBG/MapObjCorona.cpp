@@ -23,7 +23,7 @@ BOOL TBathtub::receiveMessage(THitActor* sender, u32 message) { return false; }
 
 Mtx* TBathtub::getRootJointMtx() const { return nullptr; }
 
-void TBathtub::perform(u32, JDrama::TGraphics*) { }
+void TBathtub::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 void TBathtub::control() { }
 

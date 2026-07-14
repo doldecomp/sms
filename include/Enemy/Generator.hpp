@@ -11,7 +11,7 @@ public:
 	TGenerator(const char* name = "<TGenerator>");
 
 	virtual void load(JSUMemoryInputStream& stream);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:
 	/* 0x10 */ JGeometry::TVec3<f32> mPos;

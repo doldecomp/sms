@@ -16,7 +16,7 @@ public:
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void kill();
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	BOOL isGoal();
 	BOOL isReachedToGate() const;

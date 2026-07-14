@@ -80,7 +80,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 	virtual void createAnmData();
 	virtual TSpineEnemy* createEnemyInstance();
@@ -122,7 +122,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 
@@ -173,7 +173,7 @@ public:
 	{
 	}
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void setOwner(THamuKuri* hamu)
 	{
@@ -191,7 +191,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 
@@ -369,7 +369,7 @@ class TDangoHamuKuri : public THamuKuri {
 public:
 	TDangoHamuKuri(const char* = "だんごハムクリ");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual MtxPtr getTakingMtx();
 	virtual void init(TLiveManager*);
@@ -408,7 +408,7 @@ class TBossDangoHamuKuri : public TDangoHamuKuri {
 public:
 	TBossDangoHamuKuri(const char* = "ボスだんごハムクリ");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void init(TLiveManager*);
 	virtual void moveObject();
 	virtual void reset();

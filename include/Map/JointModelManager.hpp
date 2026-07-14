@@ -12,7 +12,7 @@ public:
 	TJointModelManager(const char*);
 
 	virtual ~TJointModelManager() { }
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual TJointModel* newJointModel(int) const { return new TJointModel; }
 
 	void initJointModel(const char*, const char**);

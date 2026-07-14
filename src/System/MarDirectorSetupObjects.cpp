@@ -380,7 +380,7 @@ bool TMarDirector::setupObjects()
 	    ->mSortType
 	    = J3DDrawBuffer::SORT_MAT_ANM;
 	gpLightManager->addChildGroupObj(drawBufferGroup);
-	unk40->push_back(drawBufferGroup, 8);
+	unk40->push_back(drawBufferGroup, CUE_DRAW);
 	initECTGft(unk38, unk3C, perfEventGroup, normalScene);
 	initECTMir(mPerformListGX, perfEventGroup);
 
@@ -440,11 +440,11 @@ bool TMarDirector::setupObjects()
 	initECDisp(mPerformListGXPost, perfEventGroup, normalScene);
 
 	mPerformListMovement->push_back(
-	    JDrama::TNameRefGen::search<JDrama::TViewObj>("合成3"), 1);
+	    JDrama::TNameRefGen::search<JDrama::TViewObj>("合成3"), CUE_MOVE);
 	JDrama::TViewObj* specularSheen
 	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("スペキュラシーン");
 	if (specularSheen)
-		mPerformListMovement->push_back(specularSheen, 1);
+		mPerformListMovement->push_back(specularSheen, CUE_MOVE);
 
 	JDrama::TViewObj* lensFlare
 	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("レンズフレア");
@@ -452,8 +452,8 @@ bool TMarDirector::setupObjects()
 	if (lensFlare) {
 		sunOcclusionGlow
 		    = JDrama::TNameRefGen::search<JDrama::TViewObj>("太陽遮蔽物グロー");
-		mPerformListMovement->push_back(sunOcclusionGlow, 1);
-		mPerformListMovement->push_back(lensFlare, 1);
+		mPerformListMovement->push_back(sunOcclusionGlow, CUE_MOVE);
+		mPerformListMovement->push_back(lensFlare, CUE_MOVE);
 	}
 
 	JDrama::TViewObj* dialogueCursor
@@ -461,20 +461,20 @@ bool TMarDirector::setupObjects()
 	JDrama::TViewObj* targetArrow
 	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("ターゲット矢印");
 
-	mPerformListMovement->push_back(dialogueCursor, 1);
-	mPerformListCalcAnim->push_back(dialogueCursor, 2);
+	mPerformListMovement->push_back(dialogueCursor, CUE_MOVE);
+	mPerformListCalcAnim->push_back(dialogueCursor, CUE_CALC_ANIM);
 
 	if (specularSheen)
-		mPerformListCalcAnim->push_back(specularSheen, 2);
+		mPerformListCalcAnim->push_back(specularSheen, CUE_CALC_ANIM);
 	if (lensFlare) {
-		mPerformListCalcAnim->push_back(lensFlare, 2);
-		mPerformListCalcAnim->push_back(sunOcclusionGlow, 2);
+		mPerformListCalcAnim->push_back(lensFlare, CUE_CALC_ANIM);
+		mPerformListCalcAnim->push_back(sunOcclusionGlow, CUE_CALC_ANIM);
 	}
 
-	mPerformListCalcAnim->push_back(dialogueCursor, 2);
-	mPerformListCalcAnim->push_back(targetArrow, 2);
+	mPerformListCalcAnim->push_back(dialogueCursor, CUE_CALC_ANIM);
+	mPerformListCalcAnim->push_back(targetArrow, CUE_CALC_ANIM);
 	setupPerformList_console();
-	mPerformListGXPost->push_back(drawInit, 0x100);
+	mPerformListGXPost->push_back(drawInit, CUE_DRAW_STAGE_END);
 	preEntry(unk34);
 	setup2();
 	JKRHeap::getCurrentHeap()->freeTail();

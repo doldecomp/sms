@@ -60,7 +60,7 @@ public:
 	TTelesa(const char* name = "テレサ");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
 	virtual void bind();

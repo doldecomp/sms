@@ -23,7 +23,7 @@ public:
 	TRiccoHookManager(const char* name = "フックマネージャ");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void createModelData();
 
@@ -39,7 +39,7 @@ public:
 	virtual void init(TLiveManager*);
 	virtual void kill();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	THookParams* getSaveLoadParam() const
 	{
@@ -57,7 +57,7 @@ public:
 
 	virtual ~THookTake() { }
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
 	virtual f32 getRadiusAtY(f32 y) const;

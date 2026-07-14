@@ -23,7 +23,7 @@ public:
 
 	virtual ~TLightWithDBSetManager() { }
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void calcLightBorder();
 	GXColor getEffectLightColor() const;
@@ -62,7 +62,7 @@ public:
 	TLightCommon(const char* = "<TLightCommon>");
 
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual GXColor getLightColor(int) const;
 	virtual GXColor getAmbColor(int) const;
 	virtual Vec* getLightPosition(int);
@@ -92,7 +92,7 @@ public:
 	TLightDrawBuffer(int, u32, const char*);
 
 	virtual ~TLightDrawBuffer() { }
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void setLight(TLightCommon* light)
 	{
 		unk10 = light;
@@ -116,7 +116,7 @@ public:
 	TLightWithDBSet(int, const char*);
 
 	virtual ~TLightWithDBSet() { }
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void makeDrawBuffer() = 0;
 
 	int getAmbIndex(const char*);
@@ -178,7 +178,7 @@ public:
 	{
 	}
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual GXColor getLightColor(int) const;
 	virtual GXColor getAmbColor(int) const;
 	virtual void setLight(const JDrama::TGraphics*, int);
@@ -192,7 +192,7 @@ public:
 	}
 
 	virtual ~TLightShadow() { }
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 #endif

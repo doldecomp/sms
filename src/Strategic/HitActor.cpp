@@ -29,9 +29,9 @@ f32 THitActor::calcEntryRadius()
 	return height2;
 }
 
-void THitActor::perform(u32 param_1, JDrama::TGraphics* param_2)
+void THitActor::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	JDrama::TActor::perform(param_1, param_2);
+	JDrama::TActor::perform(cue, graphics);
 }
 
 f32 THitActor::initHitActor(u32 actor_type, u16 max_collisions, int hit_flags,

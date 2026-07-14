@@ -149,14 +149,14 @@ void TGessoManager::clipEnemies(JDrama::TGraphics* param_1)
 	}
 }
 
-void TGessoManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TGessoManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	gpCurGesso = nullptr;
-	TEnemyManager::perform(param_1, param_2);
+	TEnemyManager::perform(cue, graphics);
 	for (int i = 0; i < getActiveObjNum(); ++i)
-		getObj(i)->mPolluteObj->perform(param_1, param_2);
+		getObj(i)->mPolluteObj->perform(cue, graphics);
 
-	unk60->perform(param_1, param_2);
+	unk60->perform(cue, graphics);
 }
 
 void TGessoManager::initSetEnemies()
@@ -871,11 +871,11 @@ void TSurfGesso::load(JSUMemoryInputStream& stream)
 	reset();
 }
 
-void TSurfGesso::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSurfGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 2)
+	if (cue & CUE_CALC_ANIM)
 		offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-	TGesso::perform(param_1, param_2);
+	TGesso::perform(cue, graphics);
 }
 
 void TLandGesso::load(JSUMemoryInputStream& stream)

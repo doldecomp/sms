@@ -65,7 +65,7 @@ public:
 	void clipGenerators(JDrama::TGraphics*);
 
 	virtual JDrama::TNameRef* searchF(u16, const char*);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	const TCondParams& getCondParams() const { return unk84; }
 	const TNpcParams* getNpcParams() const { return unkF4; }

@@ -1,14 +1,14 @@
 #include <System/SnapTimeObj.hpp>
 #include <System/TimeRec.hpp>
 
-void TSnapTimeObj::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSnapTimeObj::perform(u32 cue, JDrama::TGraphics*)
 {
 	if ((unk14 & 1)) {
-		if ((param_1 & 0x80) != 0) {
+		if ((cue & CUE_DRAW_INIT) != 0) {
 			TTimeRec::snapGxTimeStatic(0);
 			TTimeRec::endTimer();
 		}
-		if ((param_1 & 8) != 0) {
+		if ((cue & CUE_DRAW) != 0) {
 			TTimeRec::startTimer(unk10);
 			TTimeRec::snapGxTimeStatic(unk10);
 		}

@@ -61,7 +61,7 @@ void TMarDirector::setup2()
 
 	mConsole = JDrama::TNameRefGen::search<TGCConsole2>("GCコンソール");
 
-	mConsole->unkC = 0xB;
+	mConsole->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 
 	unkDC = JDrama::TNameRefGen::search<TShineFader>("シャインフェーダー");
 
@@ -79,11 +79,11 @@ void TMarDirector::setup2()
 
 	unk18[0]->mFlags = 0;
 	if (mMap == 15) {
-		unkAC->unkC = 0xB;
-		unkB0->unkC = 0xB;
+		unkAC->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
+		unkB0->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 		unk18[0]->onFlag(0x20);
 	} else {
-		unk70->unkC = 0xB;
+		unk70->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 	}
 
 	unk254 = JDrama::TNameRefGen::search<TDemoCannon>("デモ砲台");

@@ -70,9 +70,9 @@ TTamaNokoFlower::TTamaNokoFlower(const TLiveActor* param_1, int param_2,
 	unk2C->initAnmSound(nullptr, 1, 0.0f);
 }
 
-void TTamaNokoFlower::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		if (!gpMarDirector->isTalkModeNow()) {
 			if (unk35 != 0 && unk1C == 0) {
 				if (!gpMarDirector->isDemoModeNow()) {
@@ -124,7 +124,7 @@ void TTamaNokoFlower::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		TPosition3f magic;
 		magic.translation(unk10->mPosition.x, unk10->mPosition.y,
 		                  unk10->mPosition.z);
@@ -139,16 +139,16 @@ void TTamaNokoFlower::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (!gpMarDirector->isDemoModeNow() && gpMarDirector->isTalkModeNow()) {
-		if (param_1 & 0x4)
+		if (cue & CUE_CALC_VIEW)
 			unk18->viewCalc();
 
-		if (param_1 & 0x200) {
+		if (cue & CUE_ENTRY) {
 			unk18->entry();
 			return;
 		}
 	}
 
-	unk18->perform(param_1, param_2);
+	unk18->perform(cue, graphics);
 }
 
 // TODO: 4 bytes too big
@@ -272,11 +272,11 @@ void TTamaNoko::reset()
 	onLiveFlag(LIVE_FLAG_UNK1000);
 }
 
-void TTamaNoko::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TTamaNoko::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSmallEnemy::perform(param_1, param_2);
+	TSmallEnemy::perform(cue, graphics);
 	if (unk19C->unk34)
-		unk19C->perform(param_1, param_2);
+		unk19C->perform(cue, graphics);
 }
 
 void TTamaNoko::moveObject()

@@ -26,7 +26,7 @@ class TBGTakeHit : public TTakeActor {
 public:
 	TBGTakeHit(TBGTentacle*, const char* name = "イカ足（つかみ）");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
 	virtual BOOL moveRequest(const JGeometry::TVec3<f32>&);
@@ -44,7 +44,7 @@ class TBGAttackHit : public THitActor {
 public:
 	TBGAttackHit(TBGTentacle* owner, f32 pos_on_spline,
 	             const char* name = "イカ足（当たり）");
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	f32 getPosOnSpline() const { return mPosOnSpline; }
 	void setPosOnSpline(f32 v) { mPosOnSpline = v; }
@@ -125,7 +125,7 @@ public:
 
 	TBGTentacle(TBossGesso* owner, int node_num, int index);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void incDamage();
 	void throwMario(THitActor*, THitActor*);

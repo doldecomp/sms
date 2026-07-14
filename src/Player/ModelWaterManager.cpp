@@ -1548,28 +1548,28 @@ void TModelWaterManager::drawRefracAndSpec() const
 		unk5D30->draw();
 }
 
-void TModelWaterManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TModelWaterManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	MtxPtr r29 = param_2->mViewMtx;
+	MtxPtr r29 = graphics->mViewMtx;
 
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		move();
 		calcWorldMinMax();
 		unk5E00 += 1;
 	}
 
-	if (param_1 & 4) {
+	if (cue & CUE_CALC_VIEW) {
 		if (unk5D60 & 0x80)
 			TTimeRec::startTimer(0xFF, 0x00, 0x00, 0xFE);
 
-		calcDrawVtx(param_2->mViewMtx);
-		calcVMAll(param_2->mViewMtx);
+		calcDrawVtx(graphics->mViewMtx);
+		calcVMAll(graphics->mViewMtx);
 
 		if (unk5D60 & 0x80)
 			TTimeRec::endTimer();
 	}
 
-	if (param_1 & 8) {
+	if (cue & CUE_DRAW) {
 		if (unk5D60 & 0x80)
 			TTimeRec::snapGxTimeStart(0xFF, 0x00, 0x00, 0xFD);
 
@@ -1581,20 +1581,20 @@ void TModelWaterManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 		MTXCopy(r29, unk5E10);
 		if ((unk5D60 & 0x100) && !(unk5D60 & 0x200))
-			drawShineShadowVolume(param_2->mViewMtx);
+			drawShineShadowVolume(graphics->mViewMtx);
 
 		if (unk5D60 & 0x80)
 			TTimeRec::snapGxTimeEnd();
 	}
 
-	if (param_1 & 0x80) {
+	if (cue & CUE_DRAW_INIT) {
 		if (unk5D60 & 0x80)
 			TTimeRec::snapGxTimeStart(0xFF, 0x00, 0x00, 0xFC);
 
 		drawRefracAndSpec();
 
 		if ((unk5D60 & 0x100) && (unk5D60 & 0x200))
-			drawShineShadowVolume(param_2->mViewMtx);
+			drawShineShadowVolume(graphics->mViewMtx);
 
 		if (unk5D60 & 0x80)
 			TTimeRec::snapGxTimeEnd();

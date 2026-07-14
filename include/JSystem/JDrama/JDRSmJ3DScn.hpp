@@ -16,7 +16,7 @@ class TSmJ3DScn : public TViewObjPtrListT<TViewObj, TViewObj> {
 public:
 	TSmJ3DScn(const char* name = "<SmJ3DScn>", s32 = 2);
 
-	virtual void perform(u32, TGraphics*);
+	virtual void perform(u32 cue, TGraphics* graphics);
 	virtual void loadSuper(JSUMemoryInputStream& stream);
 
 public:

@@ -954,7 +954,7 @@ void TSmallEnemy::behaveToHitOthers(THitActor* param_1)
 	mLinearVelocity = result;
 }
 
-void TSmallEnemy::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSmallEnemy::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	// TODO: wtf is this inline???
 	bool bVar2 = true;
@@ -966,12 +966,12 @@ void TSmallEnemy::perform(u32 param_1, JDrama::TGraphics* param_2)
 		if (gpMarDirector->unk124 != 1 && gpMarDirector->unk124 != 2)
 			bVar2 = false;
 		if (bVar2) {
-			performOnlyDraw(param_1, param_2);
+			performOnlyDraw(cue, graphics);
 			return;
 		}
 	}
 
-	TSpineEnemy::perform(param_1, param_2);
+	TSpineEnemy::perform(cue, graphics);
 }
 
 DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)

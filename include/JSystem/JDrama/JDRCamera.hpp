@@ -50,7 +50,7 @@ public:
 	virtual ~TPolarCamera() { }
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, TGraphics*);
+	virtual void perform(u32 cue, TGraphics* graphics);
 
 	virtual JStage::TECameraProjection JSGGetProjectionType() const;
 	virtual void JSGSetProjectionType(JStage::TECameraProjection);
@@ -82,7 +82,7 @@ public:
 	}
 
 	virtual ~TLookAtCamera() { }
-	virtual void perform(u32, TGraphics*);
+	virtual void perform(u32 cue, TGraphics* graphics);
 
 	virtual JStage::TECameraProjection JSGGetProjectionType() const;
 	virtual void JSGSetProjectionType(JStage::TECameraProjection);
@@ -121,7 +121,7 @@ public:
 	virtual ~TOrthoProj() { }
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	virtual JStage::TECameraProjection JSGGetProjectionType() const;
 	virtual void JSGSetProjectionType(JStage::TECameraProjection);

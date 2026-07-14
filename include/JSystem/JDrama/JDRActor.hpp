@@ -27,7 +27,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	void issueGXLight(unsigned long, JDrama::TGraphics*);
 
-	virtual void perform(u32, TGraphics*);
+	virtual void perform(u32 cue, TGraphics* graphics);
 
 	virtual void JSGGetTranslation(Vec*) const;
 	virtual void JSGSetTranslation(const Vec&);

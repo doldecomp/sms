@@ -378,19 +378,19 @@ f32 TMap::checkGround(f32 x, f32 y, f32 z, const TBGCheckData** result) const
 
 void TMap::changeModel(s16 param_1) const { mWarp->changeModel(param_1); }
 
-void TMap::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMap::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		update();
 		mCollisionData->initMoveCollision();
 		mWarp->watchToWarp();
 	}
 
-	if (param_1 & 0x200) {
-		if ((param_1 & 0x2000000)) {
+	if (cue & CUE_ENTRY) {
+		if ((cue & 0x2000000)) {
 			if (!mXlu->changeXluJoint(1))
 				return;
-		} else if ((param_1 & 0x4000000)) {
+		} else if ((cue & 0x4000000)) {
 			if (!mXlu->changeXluJoint(0))
 				return;
 		} else {
@@ -398,10 +398,10 @@ void TMap::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if (param_1 & 8)
-		draw(param_1, param_2);
+	if (cue & CUE_DRAW)
+		draw(cue, graphics);
 
-	mModelManager->perform(param_1, param_2);
+	mModelManager->perform(cue, graphics);
 }
 
 void TMap::loadAfter()

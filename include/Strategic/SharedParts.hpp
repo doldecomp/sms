@@ -16,7 +16,7 @@ public:
 	TSharedParts(const TLiveActor*, int, MActor*,
 	             const char* name = "<TSharedParts>");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	MtxPtr getConnectedMtx() const;
 	MActor* getMActor() { return unk18; }
 

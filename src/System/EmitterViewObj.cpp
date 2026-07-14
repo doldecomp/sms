@@ -23,29 +23,29 @@ TEmitterViewObj::TEmitterViewObj(JPAEmitterManager* param_1, const char* name)
 {
 }
 
-void TEmitterViewObj::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TEmitterViewObj::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x2) {
+	if (cue & CUE_CALC_ANIM) {
 		for (int i = SMSGetAnmFrameRate(); i > 0; --i)
 			unk10->calc();
 	}
 
-	if (param_1 & 0x8) {
-		JPADrawInfo drawInfo(param_2->getViewMtx());
+	if (cue & CUE_DRAW) {
+		JPADrawInfo drawInfo(graphics->getViewMtx());
 		unk10->draw(&drawInfo);
 	}
 }
 
-void TEmitterIndirectViewObj::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TEmitterIndirectViewObj::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x2) {
+	if (cue & CUE_CALC_ANIM) {
 		for (int i = SMSGetAnmFrameRate(); i > 0; --i)
 			unk10->calc();
 	}
 
-	if (param_1 & 0x8) {
+	if (cue & CUE_DRAW) {
 		SMS_DrawInit();
-		JPADrawInfo drawInfo(param_2->getViewMtx());
+		JPADrawInfo drawInfo(graphics->getViewMtx());
 		drawInfo.setFovy(gpCamera->getFovy());
 		drawInfo.setAspect(gpCamera->getAspect());
 		unk10->draw(&drawInfo);
@@ -104,9 +104,9 @@ void TMarioParticleManager::createEffectInfoAry(int param_1)
 		unk368[i] = new TInfo[unk3B4];
 }
 
-void TMarioParticleManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMarioParticleManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x2) {
+	if (cue & CUE_CALC_ANIM) {
 		for (int i = SMSGetAnmFrameRate(); i > 0; --i)
 			unk3B8->calc();
 
@@ -169,18 +169,18 @@ void TMarioParticleManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if (param_1 & 0x8) {
-		if (param_1 & 0x40000000) {
+	if (cue & CUE_DRAW) {
+		if (cue & 0x40000000) {
 			SMS_DrawInit();
-			JPADrawInfo drawInfo(param_2->getViewMtx());
+			JPADrawInfo drawInfo(graphics->getViewMtx());
 			drawInfo.setFovy(gpCamera->getFovy());
 			drawInfo.setAspect(gpCamera->getAspect());
 			unk3B8->draw(&drawInfo, 2);
 			unk3B8->draw(&drawInfo, 3);
 		}
 
-		if (param_1 & 0x80000000) {
-			JPADrawInfo drawInfo(param_2->getViewMtx());
+		if (cue & 0x80000000) {
+			JPADrawInfo drawInfo(graphics->getViewMtx());
 			unk3B8->draw(&drawInfo, 0);
 			unk3B8->draw(&drawInfo, 1);
 		}

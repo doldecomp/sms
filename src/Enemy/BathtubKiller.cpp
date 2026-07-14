@@ -119,7 +119,7 @@ void TBathtubKiller::explodeBathtubKiller() { }
 
 void TBathtubKiller::bind() { }
 
-void TBathtubKiller::perform(u32, JDrama::TGraphics*) { }
+void TBathtubKiller::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 void TBathtubKiller::makeNoseColor() { }
 

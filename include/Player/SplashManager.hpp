@@ -19,7 +19,7 @@ struct TWaterSplash {
 class TSplashManager : public JDrama::TViewObj {
 public:
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void newSplash(JGeometry::TVec3<f32>, f32);
 	void move();

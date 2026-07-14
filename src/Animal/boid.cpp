@@ -148,9 +148,9 @@ void TBoidLeader::setGraph(TGraphWeb* web, const JGeometry::TVec3<f32>& pos)
 	unk1C |= 4;
 }
 
-void TBoidLeader::perform(u32 flags, JDrama::TGraphics* graphics)
+void TBoidLeader::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (flags & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		updateGoal();
 		calcBoids();
 	}
