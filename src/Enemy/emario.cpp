@@ -237,7 +237,7 @@ void TEMario::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	mEnemyMario->perform(cue, graphics);
 
-	if (cue & 0x1) {
+	if (cue & CUE_MOVE) {
 		mPosition = mEnemyMario->getPosition();
 		mRotation = mEnemyMario->getRotation();
 		mScaling  = mEnemyMario->getScaling();

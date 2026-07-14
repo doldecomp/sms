@@ -4,6 +4,7 @@
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JDrama/JDRLighting.hpp>
+#include <System/MarDirector.hpp>
 #include <Player/MarioAccess.hpp>
 #include <stdio.h>
 #include <string.h>
@@ -223,9 +224,9 @@ void TLightWithDBSet::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_LIGHT) {
 		for (int i = 0; i < unk1C; ++i) {
 			unk10[i]->perform(CUE_LIGHT, graphics);
-			if (cue & 0x10000)
+			if (cue & CUE_UNK10000)
 				unk10[i]->getOpaDbo()->perform(CUE_DRAW, graphics);
-			if (cue & 0x20000)
+			if (cue & CUE_UNK20000)
 				unk10[i]->getXluDbo()->perform(CUE_DRAW, graphics);
 		}
 	}
@@ -437,10 +438,10 @@ void TLightWithDBSetManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_LIGHT) {
 		int start;
 		int end;
-		if (cue & 0x80000) {
+		if (cue & CUE_UNK80000) {
 			start = 3;
 			end   = 4;
-		} else if (cue & 0x40000) {
+		} else if (cue & CUE_UNK40000) {
 			start = 2;
 			end   = 3;
 		} else {

@@ -93,9 +93,9 @@ void TPollutionManager::draw() { }
 
 void TPollutionManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (cue & 0x1000000) {
+	if (cue & CUE_UNK1000000) {
 		getCounterObj().countObjDegree();
-	} else if (cue & 0x2000000) {
+	} else if (cue & CUE_SEMITRANSPARENT_PRIO_2) {
 		u8 uVar1 = cue >> 0x10;
 		if (uVar1 == 0)
 			getCounterLayer().calcViewMtx();

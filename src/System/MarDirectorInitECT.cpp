@@ -46,7 +46,7 @@ void TMarDirector::initECTGft(
 		param_1->push_back(new JDrama::TOrthoProj(0.0f, 0.0f, 512.0f, 512.0f),
 		                   CUE_SET_PROJECTION);
 		param_1->push_back(drawInit, CUE_DRAW);
-		param_1->push_back(graffitiGroup, 0x1000000);
+		param_1->push_back(graffitiGroup, CUE_UNK1000000);
 		param_1->push_back(graffitiEfbTex, CUE_DRAW);
 
 		for (int i = 0; i < gpPollution->getJointModelNum(); ++i) {
@@ -67,7 +67,10 @@ void TMarDirector::initECTGft(
 			    new JDrama::TOrthoProj(0.0f, 0.0f, img->width, img->height),
 			    CUE_SET_PROJECTION);
 			param_1->push_back(drawInit, CUE_DRAW);
-			param_1->push_back(graffitiGroup, (i << 16) | 0x2000008);
+			// TODO: what's with the cue here? Layer ID encoded inside?
+			param_1->push_back(graffitiGroup, (i << 16)
+			                                      | CUE_SEMITRANSPARENT_PRIO_2
+			                                      | CUE_DRAW);
 			param_1->push_back(efbTex, CUE_DRAW);
 		}
 	}

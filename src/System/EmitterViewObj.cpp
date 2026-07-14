@@ -170,7 +170,7 @@ void TMarioParticleManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_DRAW) {
-		if (cue & 0x40000000) {
+		if (cue & CUE_UNK40000000) {
 			SMS_DrawInit();
 			JPADrawInfo drawInfo(graphics->getViewMtx());
 			drawInfo.setFovy(gpCamera->getFovy());
@@ -179,7 +179,7 @@ void TMarioParticleManager::perform(u32 cue, JDrama::TGraphics* graphics)
 			unk3B8->draw(&drawInfo, 3);
 		}
 
-		if (cue & 0x80000000) {
+		if (cue & CUE_UNK80000000) {
 			JPADrawInfo drawInfo(graphics->getViewMtx());
 			unk3B8->draw(&drawInfo, 0);
 			unk3B8->draw(&drawInfo, 1);
