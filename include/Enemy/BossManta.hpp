@@ -74,7 +74,7 @@ class TBossMantaAdditionalCollision : public THitActor {
 public:
 	TBossMantaAdditionalCollision(const char* name);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor*, u32);
 
 	// UNUSED (mario.MAP, fully inlined) - TODO.
@@ -87,7 +87,7 @@ public:
 class TBossMantaAdditionalCollisionSet {
 public:
 	TBossMantaAdditionalCollisionSet();
-	void update(u32, JDrama::TGraphics*);
+	void update(u32 cue, JDrama::TGraphics* graphics);
 	void adapt(TBossManta*);
 
 	// UNUSED (mario.MAP, fully inlined) - TODO.
@@ -143,7 +143,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 
 	void spawn(int, const JGeometry::TVec3<f32>&);

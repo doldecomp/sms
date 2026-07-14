@@ -868,7 +868,7 @@ void TBossMantaAdditionalCollisionSet::adapt(TBossManta* manta)
 	unk4->unk68 = unkC;
 	unk8->unk68 = unkC;
 }
-void TBossMantaAdditionalCollisionSet::update(u32 flags,
+void TBossMantaAdditionalCollisionSet::update(u32 cue,
                                               JDrama::TGraphics* graphics)
 {
 	if (unkC != nullptr) {
@@ -877,7 +877,7 @@ void TBossMantaAdditionalCollisionSet::update(u32 flags,
 			return;
 		}
 		for (int i = 0; i < 3; ++i)
-			(&unk0)[i]->perform(flags, graphics);
+			(&unk0)[i]->perform(cue, graphics);
 
 		MtxPtr centerMtx
 		    = unkC->getModel()->mNodeMatrices[TBossManta::sCenterJointIndex];
@@ -923,12 +923,12 @@ BOOL TBossMantaAdditionalCollision::receiveMessage(THitActor* sender,
 		return FALSE;
 	return unk68->receiveMessage(sender, message);
 }
-void TBossMantaAdditionalCollision::perform(u32 flags,
+void TBossMantaAdditionalCollision::perform(u32 cue,
                                             JDrama::TGraphics* graphics)
 {
 	// TODO: WIP - push-away response; vector-op codegen needs work.
-	THitActor::perform(flags, graphics);
-	if (flags & 1) {
+	THitActor::perform(cue, graphics);
+	if (cue & CUE_MOVE) {
 		for (int i = 0; i < mColCount; ++i) {
 			if (mCollisions[i]->getActorType() != 0x80000001)
 				continue;
@@ -1167,18 +1167,18 @@ void TBossMantaManager::updateMantaEscape()
 		++p;
 	} while (--count);
 }
-void TBossMantaManager::perform(u32 flags, JDrama::TGraphics* graphics)
+void TBossMantaManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TEnemyManager::perform(flags, graphics);
-	if (flags & 8)
+	TEnemyManager::perform(cue, graphics);
+	if (cue & CUE_DRAW)
 		drawMantaShadow(graphics);
-	if (flags & 1) {
+	if (cue & CUE_MOVE) {
 		unk88.update();
 		unk90.update();
 		updateMantaEscape();
 	}
 	for (int i = 0; i < 8; ++i)
-		mCollisionSets[i]->update(flags, graphics);
+		mCollisionSets[i]->update(cue, graphics);
 }
 static const GXColor sMantaEfbMatColor = { 0, 0, 0, 0xFF };
 
