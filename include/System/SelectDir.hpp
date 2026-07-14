@@ -5,6 +5,7 @@
 
 namespace JDrama {
 class TDisplay;
+class TScreen;
 };
 
 class JKRArchive;
@@ -38,8 +39,8 @@ public:
 	/* 0x38 */ bool unk38;
 	/* 0x3C */ void* unk3C;
 	/* 0x40 */ u8 unk40;
-	/* 0x44 */ JDrama::TViewObj* unk44;
-	/* 0x48 */ JDrama::TViewObj* unk48;
+	/* 0x44 */ JDrama::TScreen* unk44;
+	/* 0x48 */ JDrama::TScreen* unk48;
 	/* 0x4C */ bool unk4C;
 };
 

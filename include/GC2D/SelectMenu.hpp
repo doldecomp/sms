@@ -2,21 +2,25 @@
 #define GC2D_SELECT_MENU_HPP
 
 #include <dolphin/types.h>
+#include <JSystem/JDrama/JDRViewObj.hpp>
 
 class JKRArchive;
 class TSelectDir;
 class TSelectShineManager;
 class TMarioGamePad;
 
-class TSelectMenu {
+class TSelectMenu : public JDrama::TViewObj {
 public:
 	TSelectMenu(const char*);
+	virtual ~TSelectMenu();
+	virtual void perform(u32, JDrama::TGraphics*);
+
 	void initData(u8, JKRArchive*, TSelectShineManager*, TSelectDir*);
 	void startMove();
 	void startOpenWindow();
 
 public:
-	/* 0x000 */ u8 unk0[0x100];
+	/* 0x010 */ u8 unk10[0xF0];
 	/* 0x100 */ TMarioGamePad* unk100;
 	/* 0x104 */ u8 unk104[0x37];
 	/* 0x13B */ u8 unk13B;
@@ -26,21 +30,26 @@ public:
 	/* 0x14C */ u8 unk14C[0x24];
 };
 
-class TSelectGrad {
+class TSelectGrad : public JDrama::TViewObj {
 public:
 	TSelectGrad(const char*);
+	virtual ~TSelectGrad();
+	virtual void perform(u32, JDrama::TGraphics*);
+
 	void setStageColor(u8);
 
 private:
-	/* 0x00 */ u8 unk0[0x24];
+	/* 0x10 */ u8 unk10[0x14];
 };
 
-class TSelectShineManager {
+class TSelectShineManager : public JDrama::TViewObj {
 public:
 	TSelectShineManager(const char*);
+	virtual ~TSelectShineManager();
+	virtual void perform(u32, JDrama::TGraphics*);
 
 private:
-	/* 0x000 */ u8 unk0[0x120];
+	/* 0x010 */ u8 unk10[0x110];
 };
 
 #endif

@@ -21,10 +21,6 @@
 #include <System/MarioGamePad.hpp>
 #include <System/Resolution.hpp>
 
-// rogue includes needed for matching sinit & bss
-#include <MSound/MSSetSound.hpp>
-#include <MSound/MSoundBGM.hpp>
-
 extern OSThread gSetupThread;
 extern u8* gpSetupThreadStack;
 
@@ -111,9 +107,9 @@ int TSelectDir::rsetup()
 	root->getChildren().push_back(groupGrad);
 	root->getChildren().push_back(group2DParticle);
 
-	group2D->getChildren().push_back((JDrama::TViewObj*)unk20);
-	group3D->getChildren().push_back((JDrama::TViewObj*)unk28);
-	groupGrad->getChildren().push_back((JDrama::TViewObj*)unk24);
+	group2D->getChildren().push_back(unk20);
+	group3D->getChildren().push_back(unk28);
+	groupGrad->getChildren().push_back(unk24);
 
 	unk18->mFlags = 1;
 	unk20->unk100 = unk18;
@@ -166,11 +162,11 @@ int TSelectDir::rsetup()
 	screen2D->assignViewObj(group2D);
 	unk48 = screen2D;
 
-	JGeometry::TVec3<f32> position(300.0f, 240.0f, 1300.0f);
-	JGeometry::TVec3<f32> target(300.0f, 240.0f, 0.0f);
-	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 	JDrama::TLookAtCamera* camera3D = new JDrama::TLookAtCamera(
-	    position, target, up, 30.0f, 1.3333334f, "<TLookAtCamera>");
+	    JGeometry::TVec3<f32>(300.0f, 240.0f, 1300.0f),
+	    JGeometry::TVec3<f32>(300.0f, 240.0f, 0.0f),
+	    JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), 30.0f, 1.3333334f,
+	    "<TLookAtCamera>");
 	group3D->getChildren().push_back(camera3D);
 
 	JDrama::TScreen* screen3D = new JDrama::TScreen(rect, "Screen 3D");
@@ -203,6 +199,9 @@ int TSelectDir::rsetup()
 	return 0;
 }
 
+// TODO: The target uses a 0xD0-byte frame while this uses 0x50. All 177
+// instructions otherwise match in sequence, so this is the same unresolved
+// stack-allocation issue seen in rsetup rather than missing direct behavior.
 int TSelectDir::direct()
 {
 	if (!unk38) {
@@ -220,22 +219,18 @@ int TSelectDir::direct()
 		unk20->startOpenWindow();
 
 		gpApplication.mFader->startWipe(0xe, 0.4f, 0.0f);
-		JUtility::TColor color;
-		if (unk40 == 9)
-			color.set(0xff, 0xff, 0xff, 0xff);
-		else
-			color.set(0, 0, 0, 0xff);
-		gpApplication.mFader->setColor(color);
+		gpApplication.mFader->setColor(
+		    unk40 == 9 ? JUtility::TColor(0xff, 0xff, 0xff, 0xff)
+		               : JUtility::TColor(0, 0, 0, 0xff));
 		gpMSound->initSound();
 		return TApplication::APP_STATE_WAIT;
 	}
 
 	JDrama::TDirector::direct();
 
-	if (gpApplication.mFader->mFadeStatus
-	        >= TSMSFader::FADE_STATUS_FULLY_FADED_IN
-	    && gpApplication.mFader->mFadeStatus
-	           < TSMSFader::FADE_STATUS_FADING_OUT) {
+	switch (gpApplication.mFader->mFadeStatus) {
+	case TSMSFader::FADE_STATUS_FULLY_FADED_IN:
+	case TSMSFader::FADE_STATUS_FADING_IN:
 		if (unk20->unk14B)
 			return TApplication::APP_STATE_DONE;
 
@@ -248,6 +243,7 @@ int TSelectDir::direct()
 			MSound* sound = gpMSound;
 			sound->fadeOutAllSound(SMSGetVSyncTimesPerSec());
 		}
+		break;
 	}
 
 	if (unk18->isSomethingPushed() && !unk4C) {
