@@ -77,7 +77,6 @@ void TSelectDir::changeOrder()
 	unk48->unkC.off(0xb);
 }
 
-#pragma dont_inline on
 int TSelectDir::rsetup()
 {
 	void* arcData = SMSLoadArchive("/data/select.arc", 0, 0, 0);
@@ -149,8 +148,7 @@ int TSelectDir::rsetup()
 	stageDisp->getEfbCtrlDisp()->TEfbCtrl::setSrcRect(rect);
 
 	JDrama::TOrthoProj* gradCamera
-	    = new JDrama::TOrthoProj(-100.0f, 100.0f, 0.0f, 16.0f, 600.0f,
-	                             464.0f);
+	    = new JDrama::TOrthoProj(-100.0f, 100.0f, 0.0f, 16.0f, 600.0f, 464.0f);
 	groupGrad->getChildren().push_back(gradCamera);
 
 	JDrama::TScreen* gradScreen = new JDrama::TScreen(rect, "Screen Grad");
@@ -159,8 +157,7 @@ int TSelectDir::rsetup()
 	gradScreen->assignViewObj(groupGrad);
 
 	JDrama::TOrthoProj* screen2DCamera
-	    = new JDrama::TOrthoProj(-100.0f, 100.0f, 0.0f, 16.0f, 600.0f,
-	                             464.0f);
+	    = new JDrama::TOrthoProj(-100.0f, 100.0f, 0.0f, 16.0f, 600.0f, 464.0f);
 	group2D->getChildren().push_back(screen2DCamera);
 
 	JDrama::TScreen* screen2D = new JDrama::TScreen(rect, "Screen 2D");
@@ -172,9 +169,8 @@ int TSelectDir::rsetup()
 	JGeometry::TVec3<f32> position(300.0f, 240.0f, 1300.0f);
 	JGeometry::TVec3<f32> target(300.0f, 240.0f, 0.0f);
 	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
-	JDrama::TLookAtCamera* camera3D
-	    = new JDrama::TLookAtCamera(position, target, up, 30.0f, 1.3333334f,
-	                                "<TLookAtCamera>");
+	JDrama::TLookAtCamera* camera3D = new JDrama::TLookAtCamera(
+	    position, target, up, 30.0f, 1.3333334f, "<TLookAtCamera>");
 	group3D->getChildren().push_back(camera3D);
 
 	JDrama::TScreen* screen3D = new JDrama::TScreen(rect, "Screen 3D");
@@ -183,8 +179,7 @@ int TSelectDir::rsetup()
 	screen3D->assignViewObj(group3D);
 
 	JDrama::TOrthoProj* screen2DCamera2
-	    = new JDrama::TOrthoProj(-100.0f, 100.0f, 0.0f, 16.0f, 600.0f,
-	                             464.0f);
+	    = new JDrama::TOrthoProj(-100.0f, 100.0f, 0.0f, 16.0f, 600.0f, 464.0f);
 	group2D->getChildren().push_back(screen2DCamera2);
 
 	JDrama::TScreen* screen2D2 = new JDrama::TScreen(rect, "Screen 2D");
@@ -194,8 +189,7 @@ int TSelectDir::rsetup()
 	unk44 = screen2D2;
 
 	JDrama::TOrthoProj* particleCamera
-	    = new JDrama::TOrthoProj(-500.0f, 500.0f, 0.0f, 16.0f, 600.0f,
-	                             464.0f);
+	    = new JDrama::TOrthoProj(-500.0f, 500.0f, 0.0f, 16.0f, 600.0f, 464.0f);
 	group2DParticle->getChildren().push_back(particleCamera);
 
 	JDrama::TScreen* particleScreen = new JDrama::TScreen(rect, "Screen Grad");
@@ -208,7 +202,6 @@ int TSelectDir::rsetup()
 
 	return 0;
 }
-#pragma dont_inline off
 
 int TSelectDir::direct()
 {
@@ -239,8 +232,10 @@ int TSelectDir::direct()
 
 	JDrama::TDirector::direct();
 
-	if (gpApplication.mFader->mFadeStatus >= TSMSFader::FADE_STATUS_FULLY_FADED_IN
-	    && gpApplication.mFader->mFadeStatus < TSMSFader::FADE_STATUS_FADING_OUT) {
+	if (gpApplication.mFader->mFadeStatus
+	        >= TSMSFader::FADE_STATUS_FULLY_FADED_IN
+	    && gpApplication.mFader->mFadeStatus
+	           < TSMSFader::FADE_STATUS_FADING_OUT) {
 		if (unk20->unk14B)
 			return TApplication::APP_STATE_DONE;
 
@@ -263,7 +258,8 @@ int TSelectDir::direct()
 		unk10->unkC.on(3);
 	}
 
-	if (gpApplication.mFader->mFadeStatus == TSMSFader::FADE_STATUS_FULLY_FADED_OUT) {
+	if (gpApplication.mFader->mFadeStatus
+	    == TSMSFader::FADE_STATUS_FULLY_FADED_OUT) {
 		gpMSound->stopAllSound();
 		if (unk18->isSomethingPushed())
 			return TApplication::APP_STATE_DONE;
