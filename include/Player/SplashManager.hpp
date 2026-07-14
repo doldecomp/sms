@@ -2,6 +2,7 @@
 #define PLAYER_SPLASH_MANAGER_HPP
 
 #include <JSystem/JDrama/JDRViewObj.hpp>
+#include <JSystem/JSupport/JSUList.hpp>
 
 class TSplashManager;
 class JUTTexture;
