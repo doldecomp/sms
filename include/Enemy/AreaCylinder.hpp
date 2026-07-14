@@ -8,7 +8,7 @@ public:
 	TAreaCylinder(const char* name = "<TAreaCylinder>");
 
 	virtual void load(JSUMemoryInputStream& stream);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:
 	/* 0x10 */ f32 unk10;
@@ -23,7 +23,7 @@ class TAreaCylinderManager : public JDrama::TViewObj {
 public:
 	TAreaCylinderManager(const char* name);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void registerCylinder(TAreaCylinder*);
 	void contain(const JGeometry::TVec3<f32>&);

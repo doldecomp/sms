@@ -340,19 +340,19 @@ void TJuiceBlock::kill()
 
 void TTelesaBlock::initMapObj() { TMapObjBase::initMapObj(); }
 
-void TTelesaBlock::perform(u32 flags, JDrama::TGraphics* graphics)
+void TTelesaBlock::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	mLiveFlag &= ~LIVE_FLAG_UNK200;
 	if (!gpMarDirector->isTalkModeNow()) {
-		TMapObjBase::perform(flags, graphics);
+		TMapObjBase::perform(cue, graphics);
 	} else {
-		if (flags & 1) {
+		if (cue & CUE_MOVE) {
 			TJuiceBlock::moveObject();
 		}
-		mMActor->perform(flags, graphics);
+		mMActor->perform(cue, graphics);
 	}
 
-	if (flags & 2) {
+	if (cue & CUE_CALC_ANIM) {
 
 		// TODO: Possibly more TRotation3f inlines?
 		TRotation3f mtx;

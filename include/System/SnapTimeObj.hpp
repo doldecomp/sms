@@ -12,7 +12,7 @@ public:
 	{
 	}
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:
 	/* 0x10 */ u32 unk10;

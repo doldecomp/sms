@@ -28,16 +28,16 @@ BOOL THookTake::receiveMessage(THitActor* sender, u32 message)
 	return FALSE;
 }
 
-void THookTake::perform(u32 param_1, JDrama::TGraphics* param_2)
+void THookTake::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((param_1 & 1) != 0) {
+	if ((cue & CUE_MOVE) != 0) {
 		mPosition = mOwner->getPosition();
 		mPosition.y -= 900.0f;
 	}
 
-	THitActor::perform(param_1, param_2);
+	THitActor::perform(cue, graphics);
 
-	if ((param_1 & 1) != 0 && mHeldObject != nullptr) {
+	if ((cue & CUE_MOVE) != 0 && mHeldObject != nullptr) {
 		moveHeldObject();
 	}
 }
@@ -87,11 +87,11 @@ BOOL TRiccoHook::receiveMessage(THitActor* sender, u32 message)
 	return FALSE;
 }
 
-void TRiccoHook::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TRiccoHook::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSpineEnemy::perform(param_1, param_2);
-	mHookTake->perform(param_1, param_2);
-	if ((param_1 & 1) && mTimer > 0) {
+	TSpineEnemy::perform(cue, graphics);
+	mHookTake->perform(cue, graphics);
+	if ((cue & CUE_MOVE) && mTimer > 0) {
 		mTimer--;
 	}
 }

@@ -176,7 +176,7 @@ void TSunModel::calcDispRatioAndScreenPos_()
 	}
 }
 
-void TSunModel::perform(u32 flags, JDrama::TGraphics*)
+void TSunModel::perform(u32 cue, JDrama::TGraphics*)
 {
 	bool sunInBounds;
 	if (gpCameraMario->isMarioIndoor()) {
@@ -185,7 +185,7 @@ void TSunModel::perform(u32 flags, JDrama::TGraphics*)
 		sunInBounds = isInBounds(unk1A8);
 	}
 
-	if (flags & 1) {
+	if (cue & CUE_MOVE) {
 		unkA4 = CLBLinearInbetween<f32>((f32)unk68, 255.0f, unk194);
 		unkA8 = CLBEaseOutInbetween<f32>((f32)unk74, 255.0f, unk194);
 
@@ -238,7 +238,7 @@ void TSunModel::perform(u32 flags, JDrama::TGraphics*)
 		calcDispRatioAndScreenPos_();
 	}
 
-	if (flags & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		unk50.update();
 		if (sunInBounds) {
 			Mtx mtx;
@@ -250,14 +250,14 @@ void TSunModel::perform(u32 flags, JDrama::TGraphics*)
 		}
 	}
 
-	if (flags & 0x200 && sunInBounds) {
+	if (cue & CUE_ENTRY && sunInBounds) {
 		unk4C->setFrame(unk50.getFrame());
 		unk44->mMaterials[0]->getTevBlock()->setTevColor(0, &unk8C);
 		unk44->mMaterials[1]->getTevBlock()->setTevColor(0, &unk94);
 		unk48->entry();
 	}
 
-	if (flags & 4 && sunInBounds)
+	if (cue & CUE_CALC_VIEW && sunInBounds)
 		unk48->viewCalc();
 }
 

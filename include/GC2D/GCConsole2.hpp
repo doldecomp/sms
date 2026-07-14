@@ -63,7 +63,7 @@ public:
 	void stopMoveTimer();
 	int getFinishedTime();
 
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void processAppearLife(int) { }
 	void processInsertLife(int) { }

@@ -284,11 +284,11 @@ void TPauseMenu2::disappearWindow()
 	mFadeAnim += 0.5f;
 }
 
-void TPauseMenu2::perform(u32 flags, JDrama::TGraphics* gfx)
+void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (gpMarDirector->mState == TMarDirector::STATE_UNK5) {
 		if (mState == MENU_SAVING) {
-			if (flags & 0x1) {
+			if (cue & CUE_MOVE) {
 				if (mCardSave->unk2DF != 0) {
 					mSelectionConfirmed = false;
 					mState              = MENU_OPEN;
@@ -303,24 +303,24 @@ void TPauseMenu2::perform(u32 flags, JDrama::TGraphics* gfx)
 
 				mMenuPane->setAlpha(alpha);
 			}
-			if (flags & 0x8) {
+			if (cue & CUE_DRAW) {
 				switch (mState) {
 
 				case MENU_APPEARING:
-					draw(gfx);
+					draw(graphics);
 					break;
 				case MENU_OPEN:
 				case UNK2:
 				case MENU_SAVING:
 				case MENU_DISAPPEARING:
-					draw(gfx);
+					draw(graphics);
 					break;
 				default:
 					break;
 				}
 			}
 		} else {
-			if (flags & 0x1) {
+			if (cue & CUE_MOVE) {
 				switch (mState) {
 				case MENU_APPEARING:
 					appearWindow();
@@ -473,16 +473,16 @@ void TPauseMenu2::perform(u32 flags, JDrama::TGraphics* gfx)
 				}
 			}
 
-			if (flags & 0x8) {
+			if (cue & CUE_DRAW) {
 				switch (mState) {
 				case MENU_APPEARING:
-					draw(gfx);
+					draw(graphics);
 					break;
 				case MENU_OPEN:
 				case UNK2:
 				case MENU_SAVING:
 				case MENU_DISAPPEARING:
-					draw(gfx);
+					draw(graphics);
 					break;
 				default:
 					break;

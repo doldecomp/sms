@@ -50,16 +50,16 @@ MtxPtr TSharedParts::getConnectedMtx() const
 	                 : unk10->getModel()->getAnmMtx(idx);
 }
 
-void TSharedParts::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSharedParts::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk10->checkLiveFlag(7))
 		return;
 
-	if (param_1 & 2)
+	if (cue & CUE_CALC_ANIM)
 		unk18->unk4->setBaseTRMtx(getConnectedMtx());
 
-	if (param_1 & 0x200)
+	if (cue & CUE_ENTRY)
 		unk18->setLightData(unk10->getGroundPlane(), unk10->getPosition());
 
-	unk18->perform(param_1, param_2);
+	unk18->perform(cue, graphics);
 }

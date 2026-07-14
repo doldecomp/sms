@@ -12,7 +12,7 @@ class TAmenbo : public TSmallEnemy {
 public:
 	TAmenbo(const char* name = "アメンボくん");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();

@@ -17,7 +17,7 @@ public:
 	}
 
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	void setPos(const JGeometry::TVec3<f32>&);
 
 public:

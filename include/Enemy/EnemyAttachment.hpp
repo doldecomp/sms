@@ -10,7 +10,7 @@ class TEnemyAttachment : public TSpineEnemy {
 public:
 	TEnemyAttachment(const char*);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor*, u32) { return FALSE; }
 	virtual void calcRootMatrix();
 	virtual void bind();
@@ -57,7 +57,7 @@ public:
 	{
 	}
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void init(TLiveActor*);
 
 	void generatePolluteModel(JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>&);
@@ -72,7 +72,7 @@ class TEnemyPolluteModel : public JDrama::TViewObj {
 public:
 	TEnemyPolluteModel(TLiveActor*, int, SDLModelData*, const char*);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void setAnm() { }
 
 	void generate(JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>&);

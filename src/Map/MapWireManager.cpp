@@ -175,9 +175,9 @@ void TMapWireManager::getPointPosInWire(const JGeometry::TVec3<f32>&,
 {
 }
 
-void TMapWireManager::perform(u32 param_1, JDrama::TGraphics*)
+void TMapWireManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		for (int i = 0; i < unk1C; ++i)
 			unk24[i]->doActorToWire();
 
@@ -195,7 +195,7 @@ void TMapWireManager::perform(u32 param_1, JDrama::TGraphics*)
 			}
 		}
 	}
-	if (param_1 & 8) {
+	if (cue & CUE_DRAW) {
 		initDraw();
 		GXSetChanMatColor(GX_COLOR0A0, mUpperSurface);
 		for (int i = 0; i < unk10; ++i)
@@ -204,7 +204,7 @@ void TMapWireManager::perform(u32 param_1, JDrama::TGraphics*)
 		for (int i = 0; i < unk10; ++i)
 			unk18[i]->drawLower();
 	}
-	if (param_1 & 0x200) {
+	if (cue & CUE_ENTRY) {
 		for (int i = 0; i < unk10; ++i)
 			unk18[i]->calcViewAndDBEntry();
 	}

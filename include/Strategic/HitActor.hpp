@@ -55,7 +55,7 @@ public:
 
 	virtual ~THitActor() { }
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message)
 	{
 		return false;

@@ -7,14 +7,14 @@ class TAlphaCatch : public JDrama::TViewObj {
 public:
 	TAlphaCatch() { }
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 class TZBufferCatch : public JDrama::TViewObj {
 public:
 	TZBufferCatch() { }
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 #endif

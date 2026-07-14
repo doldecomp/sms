@@ -32,7 +32,7 @@ public:
 	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual JDrama::TNameRef* searchF(u16, const char*);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:
 	/* 0x10 */ TIdxGroupObj* unk10[16];

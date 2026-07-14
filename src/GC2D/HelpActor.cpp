@@ -46,9 +46,9 @@ int THelpActor::getHelpID()
 	return -1;
 }
 
-void THelpActor::perform(u32 param_1, JDrama::TGraphics* param_2)
+void THelpActor::perform(u32 cue, JDrama::TGraphics*)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		if (unk74) {
 			if (getHelpID() == -1)
 				if (gpMarDirector->getConsole()->startDisappearBalloon(unk68,
@@ -61,8 +61,6 @@ void THelpActor::perform(u32 param_1, JDrama::TGraphics* param_2)
 					unk74 = true;
 		}
 	}
-	// TODO: skill issue
-	char trash[0x10];
 }
 
 bool THelpActor::check() { return unk70->checkLiveFlag(LIVE_FLAG_DEAD); }

@@ -1519,9 +1519,9 @@ TBathWaterPreprocessor::TBathWaterPreprocessor(TBathWaterManager* manager)
 {
 }
 
-void TBathWaterPreprocessor::perform(u32 param, JDrama::TGraphics* graphics)
+void TBathWaterPreprocessor::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param & 8)
+	if (cue & CUE_DRAW)
 		unk10->preprocess(graphics);
 }
 
@@ -1791,14 +1791,14 @@ static inline bool fakeCalcPos(const TBathtubData& data, f32 radius, f32 rnd1,
 	return true;
 }
 
-void TBathWaterManager::perform(u32 param, JDrama::TGraphics* graphics)
+void TBathWaterManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk24 == nullptr) {
 		initializeIfYet_();
 		return;
 	}
 
-	if (param & 1) {
+	if (cue & CUE_MOVE) {
 		unk30 = unk28[unk18->displaysMesh.get()];
 		unk1C += 1;
 		if (!(unk1C & 3)) {
@@ -1846,6 +1846,6 @@ void TBathWaterManager::perform(u32 param, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (param & 8)
+	if (cue & CUE_DRAW)
 		unk30->prerender(graphics, unk24->getBathtubData(), unk20, unk14, 2);
 }

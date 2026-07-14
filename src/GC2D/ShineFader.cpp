@@ -25,14 +25,14 @@ void TShineFader::update()
 	}
 }
 
-void TShineFader::perform(u32 param1, JDrama::TGraphics* param2)
+void TShineFader::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((param1 & 0x1) != 0) {
+	if ((cue & CUE_MOVE) != 0) {
 		update();
 	}
 
-	if ((param1 & 0x8) != 0) {
-		draw(param2->getViewport());
+	if ((cue & CUE_DRAW) != 0) {
+		draw(graphics->getViewport());
 	}
 }
 

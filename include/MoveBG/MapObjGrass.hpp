@@ -27,7 +27,7 @@ extern TMapObjGrassManager* gpMapObjGrassManager;
 class TMapObjGrassManager : public JDrama::TViewObj {
 public:
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void initDrawNear() const;
 	void initDrawFar() const;

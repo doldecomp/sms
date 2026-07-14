@@ -16,7 +16,7 @@ class TRealoid : public TSpineEnemy {
 public:
 	TRealoid(const char*);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual TRealoidActor* createRealoidActor(MActor*) = 0;
 
 	void clipBoids(JDrama::TGraphics*);
@@ -33,7 +33,7 @@ class TRealoidActor : public TTakeActor {
 public:
 	TRealoidActor(MActor*);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual MtxPtr getTakingMtx();
 	virtual void init() = 0;
 
@@ -66,7 +66,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void init(TLiveManager*);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual TRealoidActor* createRealoidActor(MActor*);
 
 	void initBoids();

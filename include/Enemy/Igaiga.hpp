@@ -50,7 +50,7 @@ public:
 	void createModelData();
 	TSmallEnemy* createEnemyInstance();
 	void initSetEnemies();
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	void requestPolluteModel(JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>&);
 };
 
@@ -58,7 +58,7 @@ class TIgaiga : public TRollEnemy {
 public:
 	TIgaiga(const char*);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
 	virtual void moveObject();
@@ -107,7 +107,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 	virtual void createEnemyInstance();
 	virtual void initSetEnemies();
@@ -120,7 +120,7 @@ class TGorogoro : public TRollEnemy {
 public:
 	TGorogoro(const char*);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
 	virtual void kill();

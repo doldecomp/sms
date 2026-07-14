@@ -20,7 +20,7 @@ public:
 	void loadAfter();
 	void appearWindow();
 	void disappearWindow();
-	void perform(u32 flags, JDrama::TGraphics* gfx);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	u8 getNextState();
 	void setDrawStart();
 	void setDrawEnd();

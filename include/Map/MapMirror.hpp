@@ -14,7 +14,7 @@ class TMirrorCamera : public JDrama::TCamera {
 public:
 	TMirrorCamera(const char* name = "鏡用カメラ");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void makeMirrorViewMtx();
 	void drawSetting(MtxPtr);
@@ -85,7 +85,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	bool isUpperThanMirrorPlane(const JGeometry::TVec3<f32>&) const;
 	bool isInMirror(JGeometry::TVec3<f32>&) const;
@@ -107,7 +107,7 @@ public:
 };
 
 class TMirrorMapDrawBuf : public JDrama::TDrawBufObj {
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 #endif

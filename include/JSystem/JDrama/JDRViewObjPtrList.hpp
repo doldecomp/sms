@@ -59,7 +59,7 @@ public:
 		return nullptr;
 	}
 
-	virtual void perform(u32 param_1, TGraphics* param_2);
+	virtual void perform(u32 cue, TGraphics* graphics);
 
 	virtual void loadSuper(JSUMemoryInputStream& stream);
 
@@ -73,12 +73,12 @@ public:
 };
 
 template <class T, class U>
-void TViewObjPtrListT<T, U>::perform(u32 param_1, TGraphics* param_2)
+void TViewObjPtrListT<T, U>::perform(u32 cue, TGraphics* graphics)
 {
 	typedef typename JGadget::TList_pointer<T*>::iterator I;
 
 	for (I it = getChildren().begin(); it != getChildren().end(); ++it)
-		it->testPerform(param_1, param_2);
+		it->testPerform(cue, graphics);
 }
 
 template <class T, class U>

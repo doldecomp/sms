@@ -25,7 +25,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void draw(const JDrama::TRect&, JUtility::TColor);
 
 	u8 getShineAlpha();
@@ -61,7 +61,7 @@ public:
 	}
 
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 #endif

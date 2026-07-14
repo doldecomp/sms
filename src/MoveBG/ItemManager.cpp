@@ -98,9 +98,9 @@ TCoin* TItemManager::newAndRegisterCoin(u32 event_id)
 	return result;
 }
 
-void TItemManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TItemManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		unk74 += unk70;
 		if (unk74 > 360.0f)
 			unk74 -= 360.0f;
@@ -121,7 +121,7 @@ void TItemManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 		unk40.mMtx[2][3] = 0.0;
 	}
 
-	TMapObjBaseManager::perform(param_1, param_2);
+	TMapObjBaseManager::perform(cue, graphics);
 }
 
 TCoin* TItemManager::newAndRegisterCoinReal()

@@ -230,9 +230,9 @@ void TBeamManager::requestCone(const JGeometry::TVec3<f32>& pos,
 	beam.calcVertices(mBeamVtxCount);
 }
 
-void TBeamManager::perform(u32 param_1, JDrama::TGraphics* graphics)
+void TBeamManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x8) {
+	if (cue & CUE_DRAW) {
 		setupMaterial();
 		drawAllBeam();
 		mBeamCount = 0;

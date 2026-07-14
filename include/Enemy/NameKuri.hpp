@@ -43,7 +43,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 	virtual TSmallEnemy* createEnemyInstance();
 	virtual void initSetEnemies();
@@ -72,7 +72,7 @@ class TNameKuri : public TWalkerEnemy {
 public:
 	TNameKuri(const char* name = "ナメクリ");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
 	virtual void moveObject();

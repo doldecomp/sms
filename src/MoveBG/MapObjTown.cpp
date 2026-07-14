@@ -345,9 +345,9 @@ void TMapObjStartDemo::load(JSUMemoryInputStream& stream)
 	unk138 = v;
 }
 
-void TDamageObj::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TDamageObj::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	THitActor::perform(param_1, param_2);
+	THitActor::perform(cue, graphics);
 	if (mColCount)
 		mCollisions[0]->receiveMessage(this, HIT_MESSAGE_ATTACK);
 }

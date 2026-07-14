@@ -11,7 +11,7 @@ class TProgSelect : public JDrama::TViewObj {
 public:
 	TProgSelect(u8, const char* name = "ProgSelect");
 
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	// fabricated
 	bool thing()

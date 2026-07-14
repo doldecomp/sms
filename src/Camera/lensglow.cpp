@@ -92,7 +92,7 @@ TLensGlow::TLensGlow(bool param_1, const char* name)
 	unk60 = unk64 = unk6C;
 }
 
-void TLensGlow::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLensGlow::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	bool inBounds = false;
 	if (gpCameraMario->isMarioIndoor()) {
@@ -101,7 +101,7 @@ void TLensGlow::perform(u32 param_1, JDrama::TGraphics* param_2)
 		inBounds = gpSunModel->isInBounds(unk94);
 	}
 
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		f32 dispRatio = gpSunModel->getUnk194();
 		u8 thing      = gpSunModel->getUnk191();
 
@@ -174,7 +174,7 @@ void TLensGlow::perform(u32 param_1, JDrama::TGraphics* param_2)
 		unk74.y = cy + unk84;
 	}
 
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		unk1C.update();
 		unk34.update();
 
@@ -188,7 +188,7 @@ void TLensGlow::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if ((param_1 & 0x200) != 0 && inBounds) {
+	if ((cue & CUE_ENTRY) != 0 && inBounds) {
 		int matCount = unk10->getMaterialNum();
 		for (u16 i = 0; i < matCount; ++i) {
 			J3DGXColorS10 c;
@@ -203,7 +203,7 @@ void TLensGlow::perform(u32 param_1, JDrama::TGraphics* param_2)
 		unk14->entry();
 	}
 
-	if ((param_1 & 4) && inBounds) {
+	if ((cue & CUE_CALC_VIEW) && inBounds) {
 		unk14->viewCalc();
 	}
 }

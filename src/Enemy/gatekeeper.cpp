@@ -93,10 +93,10 @@ BOOL TGKHitObj::receiveMessage(THitActor* sender, u32 message)
 	return mOwner->receiveMessage(sender, message);
 }
 
-void TGKHitObj::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TGKHitObj::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!mOwner->checkLiveFlag(LIVE_FLAG_DEAD)) {
-		if (param_1 & 2) {
+		if (cue & CUE_CALC_ANIM) {
 			if (!mOwner->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 				MtxPtr mtx
 				    = mOwner->getMActor()->getModel()->getAnmMtx(mJointIndex);
@@ -105,7 +105,7 @@ void TGKHitObj::perform(u32 param_1, JDrama::TGraphics* param_2)
 				mPosition = mOwner->mPosition;
 			}
 		}
-		THitActor::perform(param_1, param_2);
+		THitActor::perform(cue, graphics);
 	}
 }
 
@@ -138,13 +138,13 @@ BOOL TGateKeeperBase::receiveMessage(THitActor* sender, u32 message)
 	return false;
 }
 
-void TGateKeeperBase::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TGateKeeperBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!checkLiveFlag(LIVE_FLAG_DEAD)) {
-		if (param_1 & 2)
+		if (cue & CUE_CALC_ANIM)
 			mMultiBtk->update();
 
-		if (param_1 & 1) {
+		if (cue & CUE_MOVE) {
 			f32 ratio = mMActor->getMotionBlendRatioForBck();
 			ratio -= unk158;
 			if (ratio < 0.0f)
@@ -152,20 +152,20 @@ void TGateKeeperBase::perform(u32 param_1, JDrama::TGraphics* param_2)
 			mMActor->setMotionBlendRatioForBck(ratio);
 		}
 
-		TSpineEnemy::perform(param_1, param_2);
+		TSpineEnemy::perform(cue, graphics);
 
 		if (mStampEnabled && mStampModel) {
-			if (param_1 & 2) {
+			if (cue & CUE_CALC_ANIM) {
 				MtxPtr rootMtx = getModel()->getBaseTRMtx();
 				mStampModel->getModel()->setBaseScale(mStampScale);
 				mStampModel->getModel()->setBaseTRMtx(rootMtx);
 				mStampModel->calcAnm();
 			}
-			if (param_1 & 0x200)
+			if (cue & CUE_ENTRY)
 				gpPollution->stampModel(mStampModel->getModel());
 		}
 
-		if (param_1 & 1)
+		if (cue & CUE_MOVE)
 			unk154 = 0;
 	}
 }
@@ -688,17 +688,17 @@ void TBiancoGateKeeper::controlCollision()
 	mVulnerable        = FALSE;
 }
 
-void TBiancoGateKeeper::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TBiancoGateKeeper::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
 	if (!gpMarDirector->isDemoModeNow()) {
 		if (gpMarDirector->isTalkModeNow())
-			param_1 &= ~1;
+			cue &= ~CUE_MOVE;
 	}
 
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		for (int i = 0; i < getColNum(); i++) {
 			if (getCollision(i)->isActorType(0x80000001))
 				SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
@@ -723,7 +723,7 @@ void TBiancoGateKeeper::perform(u32 param_1, JDrama::TGraphics* param_2)
 			unk17E--;
 	}
 
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		TBGKMtxCalc* mc = unk178;
 		f32 delta       = -unk158;
 		mc->unk50 += delta;
@@ -733,35 +733,35 @@ void TBiancoGateKeeper::perform(u32 param_1, JDrama::TGraphics* param_2)
 			mc->unk50 = 1.0f;
 	}
 
-	if (param_1 & 1)
+	if (cue & CUE_MOVE)
 		controlCollision();
 
-	if (param_1 & 2)
+	if (cue & CUE_CALC_ANIM)
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_GATEKEEPER_BASE, &mPosition,
 		                                0, nullptr, 0, 4);
 
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		mMActor->getModel()->getModelData()->getJointNodePointer(0)->setMtxCalc(
 		    unk178);
 	}
 
-	if (param_1 & 0x200) {
+	if (cue & CUE_ENTRY) {
 		if (isDamageFogSituation()) {
 			mMActor->offMakeDL();
 			SMS_AddDamageFogEffect(mMActor->getModel()->getModelData(),
-			                       mPosition, param_2);
+			                       mPosition, graphics);
 		} else {
 			SMS_ResetDamageFogEffect(mMActor->getModel()->getModelData());
 		}
 	}
 
-	mHead->perform(param_1, param_2);
-	mObstacle->perform(param_1, param_2);
+	mHead->perform(cue, graphics);
+	mObstacle->perform(cue, graphics);
 
-	if (param_1 & 2)
+	if (cue & CUE_CALC_ANIM)
 		mMultiBtk->update();
 
-	if (param_1 & 1 && !mHintShown && mMActor->checkCurBckFromIndex(7)
+	if (cue & CUE_MOVE && !mHintShown && mMActor->checkCurBckFromIndex(7)
 	    && unk154 > 0) {
 		mHintTimer += 1;
 		if (mHintTimer > 160) {
@@ -771,9 +771,9 @@ void TBiancoGateKeeper::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	TGateKeeperBase::perform(param_1, param_2);
+	TGateKeeperBase::perform(cue, graphics);
 
-	if (param_1 & 2 && !checkLiveFlag(LIVE_FLAG_CLIPPED_OUT))
+	if (cue & CUE_CALC_ANIM && !checkLiveFlag(LIVE_FLAG_CLIPPED_OUT))
 		emitParticles();
 }
 

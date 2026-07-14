@@ -141,9 +141,9 @@ void TAnimalBase::calcRootMatrix() { }
 
 BOOL TAnimalBase::receiveMessage(THitActor* sender, u32 msg) { return FALSE; }
 
-void TAnimalBase::perform(u32 flags, JDrama::TGraphics* graphics)
+void TAnimalBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (flags & 1) {
+	if (cue & CUE_MOVE) {
 		if (graphics->unk0 & 2) {
 			mLinearVelocity.zero();
 			control();
@@ -153,14 +153,14 @@ void TAnimalBase::perform(u32 flags, JDrama::TGraphics* graphics)
 				                                mInstanceIndex);
 			}
 		}
-		flags &= ~1;
+		cue &= ~CUE_MOVE;
 	}
 
 	TLiveManager* manager = mManager;
 	s32 sharedAnmNum
 	    = ((TAnimalManagerBase*)manager)->mAnimalSave->mSLSharedAnmNum.get();
 
-	if (flags & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		updateAnmSound();
 		mMActor->frameUpdate();
 		if (!(mLiveFlag & 6))
@@ -168,10 +168,10 @@ void TAnimalBase::perform(u32 flags, JDrama::TGraphics* graphics)
 		if ((sharedAnmNum != 0 && mInstanceIndex < sharedAnmNum)
 		    || (sharedAnmNum == 0 && !(mLiveFlag & 6)))
 			mMActor->calc();
-		flags &= ~2;
+		cue &= ~CUE_CALC_ANIM;
 	}
 
-	if (flags & 4) {
+	if (cue & CUE_CALC_VIEW) {
 		if (!(mLiveFlag & 6)) {
 			Mtx save;
 			Mtx local;
@@ -212,10 +212,10 @@ void TAnimalBase::perform(u32 flags, JDrama::TGraphics* graphics)
 
 			MTXCopy(save, j3dSys.mViewMtx);
 		}
-		flags &= ~4;
+		cue &= ~CUE_CALC_VIEW;
 	}
 
-	TSpineEnemy::perform(flags, graphics);
+	TSpineEnemy::perform(cue, graphics);
 }
 
 void TAnimalBase::resetRandomCurPathNode()

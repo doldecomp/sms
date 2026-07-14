@@ -10,7 +10,7 @@ public:
 	TItem(const char* name = "アイテム");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void calcRootMatrix();
 	virtual void appear();
@@ -37,7 +37,7 @@ public:
 	TCoin(const char* name = "コイン");
 
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void appear();
 	virtual void makeObjAppeared();
 	virtual void makeObjDead();
@@ -92,7 +92,7 @@ public:
 	TShine(const char* name = "シャイン");
 
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
 	virtual void kill();
@@ -160,7 +160,7 @@ public:
 	TEggYoshi(const char* name = "ヨッシーの卵");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
 	virtual void touchActor(THitActor*);

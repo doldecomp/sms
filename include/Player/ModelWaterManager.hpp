@@ -100,7 +100,7 @@ public:
 	void drawMirror(MtxPtr);
 	void drawShineShadowVolume(MtxPtr);
 	void drawRefracAndSpec() const;
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	static TWaterHitActor mStaticHitActor;
 

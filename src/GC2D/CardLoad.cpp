@@ -484,9 +484,9 @@ void TCardLoad::loadAfter()
 	unk284 = JDrama::TNameRefGen::search<TMapObjOptionWall>("オプション用壁");
 }
 
-void TCardLoad::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		switch (unk14) {
 		case 0: {
 			changeScene();
@@ -750,9 +750,9 @@ void TCardLoad::perform(u32 param_1, JDrama::TGraphics* param_2)
 			unkC0 += 1;
 	}
 
-	if (param_1 & 8) {
-		const JDrama::TRect& rect = param_2->getScissor();
-		J2DOrthoGraph graph(param_2->getViewport());
+	if (cue & CUE_DRAW) {
+		const JDrama::TRect& rect = graphics->getScissor();
+		J2DOrthoGraph graph(graphics->getViewport());
 		graph.setup2D();
 		switch (unk14) {
 		case 0:
@@ -777,7 +777,7 @@ void TCardLoad::perform(u32 param_1, JDrama::TGraphics* param_2)
 			break;
 		}
 
-		param_2->setScissor(rect);
+		graphics->setScissor(rect);
 	}
 }
 

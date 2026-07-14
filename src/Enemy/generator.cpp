@@ -50,9 +50,9 @@ void TGenerator::load(JSUMemoryInputStream& stream)
 	gpConductor->registerGenerator(this);
 }
 
-void TGenerator::perform(u32 flags, JDrama::TGraphics* graphics)
+void TGenerator::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (flags & 1) {
+	if (cue & CUE_MOVE) {
 		mTimer -= 1;
 		if (mTimer < 0)
 			mTimer = mInterval;

@@ -2140,16 +2140,16 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 		mCap->unkC->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdMHead));
 		mCap->unk10[2]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHead));
 		mCap->unk10[3]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdMHead));
-		mCap->perform(2, graphics);
+		mCap->perform(CUE_CALC_ANIM, graphics);
 	}
 
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
 		mSurfGesso->getModel()->setBaseTRMtx(mModel->unk8->getBaseTRMtx());
-		mSurfGesso->perform(2, graphics);
+		mSurfGesso->perform(CUE_CALC_ANIM, graphics);
 	}
 
 	if (mStatus == MARIO_STATUS_TOROCCO) {
-		mTorocco->perform(2, graphics);
+		mTorocco->perform(CUE_CALC_ANIM, graphics);
 	}
 
 	if (mYoshi != nullptr) {
@@ -2221,21 +2221,21 @@ void TMario::calcView(JDrama::TGraphics* graphics)
 	}
 
 	if (mCap != nullptr) {
-		mCap->perform(4, graphics);
+		mCap->perform(CUE_CALC_VIEW, graphics);
 	}
 
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
-		mSurfGesso->perform(4, graphics);
+		mSurfGesso->perform(CUE_CALC_VIEW, graphics);
 	}
 
 	if (mStatus == MARIO_STATUS_TOROCCO) {
-		mTorocco->perform(4, graphics);
+		mTorocco->perform(CUE_CALC_VIEW, graphics);
 	}
 }
 
 void TMario::entryModels(JDrama::TGraphics* graphics)
 {
-	mModel->perform(0x200, graphics);
+	mModel->perform(CUE_ENTRY, graphics);
 	if (mHandModels[0][0] != nullptr) {
 		mHandModels[0][0]->entry();
 		mHandModels[0][1]->entry();
@@ -2245,16 +2245,16 @@ void TMario::entryModels(JDrama::TGraphics* graphics)
 	}
 
 	if (mCap != nullptr) {
-		mCap->perform(0x200, graphics);
+		mCap->perform(CUE_ENTRY, graphics);
 	}
 
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
 		mSurfGesso->setLightData(mGroundPlane, mPosition);
-		mSurfGesso->perform(0x200, graphics);
+		mSurfGesso->perform(CUE_ENTRY, graphics);
 	}
 
 	if (mStatus == MARIO_STATUS_TOROCCO)
-		mTorocco->perform(0x200, graphics);
+		mTorocco->perform(CUE_ENTRY, graphics);
 }
 
 void TMario::drawSpecial(JDrama::TGraphics* graphics)

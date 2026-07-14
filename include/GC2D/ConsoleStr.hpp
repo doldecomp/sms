@@ -15,7 +15,7 @@ public:
 	f32 getWipeCloseTime();
 	void load(JSUMemoryInputStream&);
 	void loadAfter();
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	void startAppearReady();
 	void startAppearGo();
 	void startAppearShineGet();

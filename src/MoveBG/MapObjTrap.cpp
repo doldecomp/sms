@@ -38,10 +38,10 @@ BOOL TLampTrapSpikeHit::receiveMessage(THitActor* sender, u32 message)
 	return unk68->receiveMessage(sender, message);
 }
 
-void TLampTrapSpikeHit::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLampTrapSpikeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	THitActor::perform(param_1, param_2);
-	if (param_1 & 1) {
+	THitActor::perform(cue, graphics);
+	if (cue & CUE_MOVE) {
 		mPosition = unk68->mPosition;
 		mPosition.y += 2300.0f;
 		if (unk68->unk138 == 2 || unk68->unk138 == 0 || unk68->unk138 == 1) {
@@ -183,16 +183,16 @@ void TLampTrapSpike::control()
 	}
 
 	TMapObjBase::control();
-	TBGCheckData* plane = SMS_GetMarioGrPlane();
+	const TBGCheckData* plane = SMS_GetMarioGrPlane();
 	if (bVar1 && plane && plane->getActor() == this
 	    && SMS_IsMarioTouchGround4cm())
 		SMS_SendMessageToMario(this, 0xA);
 }
 
-void TLampTrapSpike::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLampTrapSpike::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TMapObjBase::perform(param_1, param_2);
-	unk140->perform(param_1, param_2);
+	TMapObjBase::perform(cue, graphics);
+	unk140->perform(cue, graphics);
 }
 
 TLampTrapIronHit::TLampTrapIronHit(TLampTrapIron* trap, const char* name)
@@ -211,10 +211,10 @@ BOOL TLampTrapIronHit::receiveMessage(THitActor* sender, u32 message)
 	return unk68->receiveMessage(sender, message);
 }
 
-void TLampTrapIronHit::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLampTrapIronHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	THitActor::perform(param_1, param_2);
-	if (param_1 & 1) {
+	THitActor::perform(cue, graphics);
+	if (cue & CUE_MOVE) {
 		mPosition = unk68->mPosition;
 		mPosition.y += 2300.0f;
 		if (unk68->unk13C > 0)
@@ -270,7 +270,7 @@ void TLampTrapIron::control()
 {
 	TMapObjBase::control();
 	if (unk140 <= 0) {
-		TBGCheckData* plane = SMS_GetMarioGrPlane();
+		const TBGCheckData* plane = SMS_GetMarioGrPlane();
 		if (plane && plane->getActor() == this && SMS_IsMarioTouchGround4cm())
 			SMS_SendMessageToMario(this, 10);
 	} else {
@@ -280,11 +280,11 @@ void TLampTrapIron::control()
 	}
 }
 
-void TLampTrapIron::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLampTrapIron::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TMapObjBase::perform(param_1, param_2);
-	unk138->perform(param_1, param_2);
-	if ((param_1 & 2) && unk13C > 0) {
+	TMapObjBase::perform(cue, graphics);
+	unk138->perform(cue, graphics);
+	if ((cue & CUE_CALC_ANIM) && unk13C > 0) {
 		gpMarioParticleManager->emit(0x1F1, &mPosition, 3, this);
 		gpMarioParticleManager->emit(0x12C, &mPosition, 1, this);
 	}

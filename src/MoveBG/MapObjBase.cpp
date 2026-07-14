@@ -481,7 +481,7 @@ void TMapObjBase::setGroundCollision()
 	}
 }
 
-void TMapObjBase::perform(u32 param_1, JDrama::TGraphics* graphics)
+void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (gpMarDirector->isTalkModeNow() && !gpMarDirector->isDemoModeNow()) {
 		if (checkLiveFlag(LIVE_FLAG_DEAD))
@@ -490,12 +490,12 @@ void TMapObjBase::perform(u32 param_1, JDrama::TGraphics* graphics)
 		if (isActorType(0x4000003B))
 			return;
 
-		if (param_1 & 1) {
+		if (cue & CUE_MOVE) {
 			setGroundCollision();
-			param_1 &= ~1;
+			cue &= ~CUE_MOVE;
 		}
 
-		if ((param_1 & 2) && mMActor) {
+		if ((cue & CUE_CALC_ANIM) && mMActor) {
 			if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK200)) {
 				if (getModel()->mShapePackets->unk30 != 0)
 					SMS_HideAllShapePacket(getModel());
@@ -509,10 +509,10 @@ void TMapObjBase::perform(u32 param_1, JDrama::TGraphics* graphics)
 			return;
 
 		if (hasMapCollision())
-			param_1 &= ~2;
+			cue &= ~CUE_CALC_ANIM;
 	}
 
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		if (isStateTimerEngaged())
 			--mStateTimer;
 
@@ -536,19 +536,19 @@ void TMapObjBase::perform(u32 param_1, JDrama::TGraphics* graphics)
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
-	if (param_1 & 8)
+	if (cue & CUE_DRAW)
 		draw();
 
 	if (checkLiveFlag(LIVE_FLAG_UNK4000)) {
-		if (param_1 & 2)
-			param_1 &= ~2;
-		if (param_1 & 0x200)
-			param_1 &= ~0x200;
-		if (param_1 & 4)
-			param_1 &= ~4;
+		if (cue & CUE_CALC_ANIM)
+			cue &= ~CUE_CALC_ANIM;
+		if (cue & CUE_ENTRY)
+			cue &= ~CUE_ENTRY;
+		if (cue & CUE_CALC_VIEW)
+			cue &= ~CUE_CALC_VIEW;
 	}
 
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		calc();
 		if (mMActor) {
 			if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK200)) {
@@ -560,27 +560,28 @@ void TMapObjBase::perform(u32 param_1, JDrama::TGraphics* graphics)
 			}
 		}
 		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK100)) {
-			param_1 &= ~2;
+			cue &= ~CUE_CALC_ANIM;
 		} else if (checkMapObjFlag(MAP_OBJ_FLAG_UNK200)) {
 			if (mMActor && mMActor->curAnmEndsNext(0, nullptr))
 				onMapObjFlag(MAP_OBJ_FLAG_UNK100);
 		}
 	}
 
-	if (param_1 & 0x200) {
+	if (cue & CUE_ENTRY) {
 		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK1000))
-			param_1 &= ~0x200;
+			cue &= ~CUE_ENTRY;
 		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK800))
-			param_1 &= ~0x200;
+			cue &= ~CUE_ENTRY;
 	}
 
-	if ((param_1 & 4) && mMActor && checkMapObjFlag(MAP_OBJ_FLAG_UNK400)) {
+	if ((cue & CUE_CALC_VIEW) && mMActor
+	    && checkMapObjFlag(MAP_OBJ_FLAG_UNK400)) {
 		getModel()->viewCalc();
-		param_1 &= ~4;
+		cue &= ~CUE_CALC_VIEW;
 		requestShadow();
 	}
 
-	TLiveActor::perform(param_1, graphics);
+	TLiveActor::perform(cue, graphics);
 }
 
 u32 TMapObjBase::getShadowType()

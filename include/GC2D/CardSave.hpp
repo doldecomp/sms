@@ -24,7 +24,7 @@ public:
 	void load(JSUMemoryInputStream& stream);
 	void initData(TMarioGamePad*);
 	void init(int);
-	void perform(unsigned long, JDrama::TGraphics*);
+	void perform(unsigned long cue, JDrama::TGraphics* graphics);
 	void makeBuffer(J2DTextBox*, int);
 	void setMessage(J2DTextBox*, long, unsigned long);
 	s8 waitForStop(TEProgress);

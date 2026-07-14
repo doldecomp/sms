@@ -194,9 +194,9 @@ void TMapStaticObj::calcUnique(JPABaseEmitter* emitter)
 	}
 }
 
-void TMapStaticObj::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMapStaticObj::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		if (mSoundId != -1)
 			SMSGetMSound()->startSoundActor(mSoundId, &mPosition, 0, nullptr, 0,
 			                                4);
@@ -214,7 +214,8 @@ void TMapStaticObj::perform(u32 param_1, JDrama::TGraphics* param_2)
 		calcUnique(emitter);
 	}
 
-	if ((param_1 & 4) && (mActorData->mFlags & TActorData::FLAG_IS_INDIRECT)) {
+	if ((cue & CUE_CALC_VIEW)
+	    && (mActorData->mFlags & TActorData::FLAG_IS_INDIRECT)) {
 		Mtx afStack_7c;
 		SMS_GetLightPerspectiveForEffectMtx(afStack_7c);
 
@@ -225,23 +226,23 @@ void TMapStaticObj::perform(u32 param_1, JDrama::TGraphics* param_2)
 		    ->setEffectMtx(afStack_7c);
 	}
 
-	if ((param_1 & 0x200)
+	if ((cue & CUE_ENTRY)
 	    && ((mActorData->mFlags & TActorData::FLAG_UNK8)
 	        || (mActorData->mFlags & TActorData::FLAG_UNK20))) {
-		param_1 &= ~0x200;
+		cue &= ~CUE_ENTRY;
 		mMActor->updateMatAnm();
 	}
 
-	if ((!(param_1 & 0x200) || !(mActorData->mFlags & TActorData::FLAG_UNK10)
+	if ((!(cue & CUE_ENTRY) || !(mActorData->mFlags & TActorData::FLAG_UNK10)
 	     || gpMirrorModelManager->isUnk18Present())
 	    && mMActor) {
-		if (param_1 & 0x2) {
+		if (cue & CUE_CALC_ANIM) {
 			MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x, mPosition.y,
 			               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
 			getModel()->setBaseScale(mScaling);
 		}
 
-		if ((param_1 & 0x200)
+		if ((cue & CUE_ENTRY)
 		    && (mActorData->mFlags & TActorData::FLAG_UNK80)) {
 			J3DDrawBuffer* oldOpaBuf = j3dSys.getDrawBuffer(0);
 			J3DDrawBuffer* oldXluBuf = j3dSys.getDrawBuffer(1);
@@ -249,11 +250,11 @@ void TMapStaticObj::perform(u32 param_1, JDrama::TGraphics* param_2)
 			    gpMapObjManager->getDrawBufferAfterIndirectOpa(), 0);
 			j3dSys.setDrawBuffer(
 			    gpMapObjManager->getDrawBufferAfterIndirectXlu(), 1);
-			mMActor->perform(param_1, param_2);
+			mMActor->perform(cue, graphics);
 			j3dSys.setDrawBuffer(oldOpaBuf, 0);
 			j3dSys.setDrawBuffer(oldXluBuf, 1);
 		} else {
-			mMActor->perform(param_1, param_2);
+			mMActor->perform(cue, graphics);
 		}
 	}
 }
@@ -413,26 +414,26 @@ TMapStaticObj::TMapStaticObj(const char* name)
 {
 }
 
-void TMapModelActor::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMapModelActor::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!unk68)
 		return;
 
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		MsMtxSetXYZRPH(unk68->getModel()->getBaseTRMtx(), mPosition.x,
 		               mPosition.y, mPosition.z, mRotation.x, mRotation.y,
 		               mRotation.z);
 		unk68->getModel()->setBaseScale(mScaling);
 	}
-	unk68->perform(param_1, param_2);
+	unk68->perform(cue, graphics);
 }
 
-void TMapObjSoundGroup::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMapObjSoundGroup::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk14->isDummy())
 		return;
 
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		JGeometry::TVec3<f32> local_c18[0x100];
 		JGeometry::TVec3<f32> local_c24;
 		unk14->unk0->getPoint(&local_c24);

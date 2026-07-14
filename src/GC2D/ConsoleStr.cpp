@@ -104,9 +104,9 @@ void TConsoleStr::loadAfter()
 	unk2B4 = 0;
 }
 
-void TConsoleStr::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		if (gpMarDirector->mState != 5) {
 			bool bVar6 = false;
 
@@ -218,10 +218,10 @@ void TConsoleStr::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if ((param_1 & 0x8) && unk2B8 != 0) {
-		const JDrama::TRect& rect = param_2->getScissor();
+	if ((cue & CUE_DRAW) && unk2B8 != 0) {
+		const JDrama::TRect& rect = graphics->getScissor();
 
-		J2DOrthoGraph local_1a0(param_2->getViewport());
+		J2DOrthoGraph local_1a0(graphics->getViewport());
 		local_1a0.setup2D();
 
 		if (unk2B8 == 1 && unk18 > 60.0f) {
@@ -261,7 +261,7 @@ void TConsoleStr::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 
 		local_1a0.setup2D();
-		param_2->setScissor(rect);
+		graphics->setScissor(rect);
 	}
 }
 

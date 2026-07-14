@@ -113,9 +113,9 @@ void TLightCommon::setLight(const JDrama::TGraphics* gfx, int index)
 	GXSetChanAmbColor(GX_COLOR0A0, getAmbColor(index));
 }
 
-void TLightCommon::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLightCommon::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x80) {
+	if (cue & CUE_DRAW_INIT) {
 		ReInitializeGX();
 		SMS_DrawInit();
 		GXLightObj light;
@@ -127,20 +127,20 @@ void TLightCommon::perform(u32 param_1, JDrama::TGraphics* param_2)
 		GXLoadLightObjImm(&light, GX_LIGHT1);
 		GXLoadLightObjImm(&light, GX_LIGHT2);
 	}
-	if (param_1 & 0x20)
-		setLight(param_2, 0);
+	if (cue & CUE_LIGHT)
+		setLight(graphics, 0);
 }
 
-void TLightShadow::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLightShadow::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x20)
-		setLight(param_2, 1);
+	if (cue & CUE_LIGHT)
+		setLight(graphics, 1);
 }
 
-void TLightMario::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLightMario::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x20)
-		setLight(param_2, *gpMarioLightID);
+	if (cue & CUE_LIGHT)
+		setLight(graphics, *gpMarioLightID);
 }
 
 void TLightMario::setLight(const JDrama::TGraphics* gfx, int index)
@@ -202,10 +202,10 @@ TLightDrawBuffer::TLightDrawBuffer(int param_1, u32 param_2, const char* name)
 }
 #pragma dont_inline reset
 
-void TLightDrawBuffer::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLightDrawBuffer::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x20)
-		unk10->setLight(param_2, unk80);
+	if (cue & CUE_LIGHT)
+		unk10->setLight(graphics, unk80);
 }
 
 TLightWithDBSet::TLightWithDBSet(int param_1, const char* name)
@@ -218,21 +218,23 @@ TLightWithDBSet::TLightWithDBSet(int param_1, const char* name)
 	unk20 = 0;
 }
 
-void TLightWithDBSet::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLightWithDBSet::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x20) {
+	if (cue & CUE_LIGHT) {
 		for (int i = 0; i < unk1C; ++i) {
-			unk10[i]->perform(0x20, param_2);
-			if (param_1 & 0x10000)
-				unk10[i]->getOpaDbo()->perform(0x8, param_2);
-			if (param_1 & 0x20000)
-				unk10[i]->getXluDbo()->perform(0x8, param_2);
+			unk10[i]->perform(CUE_LIGHT, graphics);
+			if (cue & 0x10000)
+				unk10[i]->getOpaDbo()->perform(CUE_DRAW, graphics);
+			if (cue & 0x20000)
+				unk10[i]->getXluDbo()->perform(CUE_DRAW, graphics);
 		}
 	}
-	if (param_1 & 0x400) {
+	if (cue & CUE_SET_DRAW_BUFFER) {
 		for (int i = 0; i < unk1C; ++i) {
-			unk10[i]->getOpaDbo()->perform(0x480, param_2);
-			unk10[i]->getXluDbo()->perform(0x480, param_2);
+			unk10[i]->getOpaDbo()->perform(CUE_SET_DRAW_BUFFER | CUE_DRAW_INIT,
+			                               graphics);
+			unk10[i]->getXluDbo()->perform(CUE_SET_DRAW_BUFFER | CUE_DRAW_INIT,
+			                               graphics);
 		}
 	}
 }
@@ -430,15 +432,15 @@ void TLightWithDBSetManager::loadAfter()
 	unk1C = group->getLight(0)->mPosition;
 }
 
-void TLightWithDBSetManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLightWithDBSetManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x20) {
+	if (cue & CUE_LIGHT) {
 		int start;
 		int end;
-		if (param_1 & 0x80000) {
+		if (cue & 0x80000) {
 			start = 3;
 			end   = 4;
-		} else if (param_1 & 0x40000) {
+		} else if (cue & 0x40000) {
 			start = 2;
 			end   = 3;
 		} else {
@@ -447,12 +449,12 @@ void TLightWithDBSetManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 		for (int i = start; i < end; ++i)
 			if (unk14[i]->isEnabled())
-				unk14[i]->perform(param_1, param_2);
+				unk14[i]->perform(cue, graphics);
 	}
-	if (param_1 & 0x400) {
+	if (cue & CUE_SET_DRAW_BUFFER) {
 		for (int i = 0; i < 4; ++i)
 			if (unk14[i]->isEnabled())
-				unk14[i]->perform(param_1, param_2);
+				unk14[i]->perform(cue, graphics);
 	}
 }
 

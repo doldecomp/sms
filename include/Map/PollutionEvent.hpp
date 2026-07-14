@@ -6,21 +6,21 @@
 class TPollutionTest : public JDrama::TViewObj {
 public:
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*) { }
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 	void registerEvent(JDrama::TViewObj*);
 };
 
 class TPollutionEventModelStampMario {
 public:
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 class TPollutionEventModelStamp {
 public:
 	TPollutionEventModelStamp(const char*);
 
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	void init(const char*);
 };
 
@@ -28,7 +28,7 @@ class TPollutionEventMaze {
 public:
 	TPollutionEventMaze(const char*);
 
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	void init();
 };
 
@@ -36,7 +36,7 @@ class TPollutionEventAreaObj {
 public:
 	TPollutionEventAreaObj(const char*);
 
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	void init(const char*);
 };
 

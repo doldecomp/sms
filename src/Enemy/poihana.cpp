@@ -75,9 +75,9 @@ TSmallEnemy* TPoiHanaManager::createEnemyInstance()
 	return nullptr;
 }
 
-void TPoiHanaManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TPoiHanaManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TEnemyManager::perform(param_1, param_2);
+	TEnemyManager::perform(cue, graphics);
 }
 
 void TPoiHanaManager::initSetEnemies()
@@ -212,10 +212,10 @@ void TPoiHana::moveObject()
 	}
 }
 
-void TPoiHana::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TPoiHana::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSmallEnemy::perform(param_1, param_2);
-	unk1BC->THitActor::perform(param_1, param_2);
+	TSmallEnemy::perform(cue, graphics);
+	unk1BC->THitActor::perform(cue, graphics);
 }
 
 void TPoiHana::bind()

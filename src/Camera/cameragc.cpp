@@ -942,10 +942,10 @@ void CPolarSubCamera::ctrlGameCamera_()
 	unk148.set(mTarget);
 }
 
-void CPolarSubCamera::perform(u32 param_1, JDrama::TGraphics* param_2)
+void CPolarSubCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 1) {
-		if (param_2->unk0 & 1) {
+	if (cue & CUE_MOVE) {
+		if (graphics->unk0 & 1) {
 			unk13C.set(unk124);
 			unk160.set(unk148);
 			for (int i = 0; i < 4; ++i)
@@ -970,7 +970,7 @@ void CPolarSubCamera::perform(u32 param_1, JDrama::TGraphics* param_2)
 			C_MTXLookAt(unk1EC, unk124, mUp, unk148);
 		}
 
-		bool flag2 = (param_2->unk0 & 2) ? true : false;
+		bool flag2 = (graphics->unk0 & 2) ? true : false;
 		if (flag2) {
 			if (mMode != CAMERA_MODE_REPRODUCE_DEMO) {
 				if (!(unk64 & CAMERA_FLAG_DEAD_DEMO)) {
@@ -991,15 +991,15 @@ void CPolarSubCamera::perform(u32 param_1, JDrama::TGraphics* param_2)
 		updateDemoCamera_(flag2);
 	}
 
-	if (param_1 & 0x14) {
+	if (cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)) {
 		for (int i = 0; i < 4; ++i)
 			for (int j = 0; j < 4; ++j)
-				param_2->mProjMtx.mMtx[i][j] = unk16C[i][j];
-		param_2->setViewMtx(unk1EC);
-		param_2->mNearPlane = mNear;
-		param_2->mFarPlane  = mFar;
-		if (param_1 & 0x10)
-			GXSetProjection(param_2->mProjMtx.mMtx, GX_PERSPECTIVE);
+				graphics->mProjMtx.mMtx[i][j] = unk16C[i][j];
+		graphics->setViewMtx(unk1EC);
+		graphics->mNearPlane = mNear;
+		graphics->mFarPlane  = mFar;
+		if (cue & CUE_SET_PROJECTION)
+			GXSetProjection(graphics->mProjMtx.mMtx, GX_PERSPECTIVE);
 	}
 }
 

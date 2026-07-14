@@ -384,15 +384,15 @@ void MActor::matAnmFrameUpdate()
 			unk28[i]->getFrameCtrl()->update();
 }
 
-void MActor::perform(u32 param_1, JDrama::TGraphics* param_2)
+void MActor::perform(u32 cue, JDrama::TGraphics*)
 {
-	if (param_1 & 0x2)
+	if (cue & CUE_CALC_ANIM)
 		calcAnm();
 
-	if (param_1 & 0x4)
+	if (cue & CUE_CALC_VIEW)
 		viewCalc();
 
-	if (param_1 & 0x200)
+	if (cue & CUE_ENTRY)
 		entry();
 }
 

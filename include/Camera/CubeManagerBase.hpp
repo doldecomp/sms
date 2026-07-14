@@ -27,7 +27,7 @@ public:
 
 	virtual ~TCubeManagerBase() { }
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	s32 getDataNo(s32) const;
 	int getInCubeNo(const Vec&) const;

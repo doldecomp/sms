@@ -21,7 +21,7 @@ public:
 
 	void load(JSUMemoryInputStream&);
 	void loadAfter();
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	void changeModel(s16) const;
 
 	f32 checkGround(f32 x, f32 y, f32 z, const TBGCheckData** result) const;

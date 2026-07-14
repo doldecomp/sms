@@ -89,12 +89,12 @@ void TQuestionManager::draw() const
 	GXSetClipMode(GX_CLIP_ENABLE);
 }
 
-void TQuestionManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TQuestionManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((param_1 & 4) != 0) {
+	if ((cue & CUE_CALC_VIEW) != 0) {
 		if (gpSilhouetteManager->isUnk48Positive()) {
 			unk20->reset();
-			makeDL(param_2);
+			makeDL(graphics);
 			unk10 |= 2;
 		} else {
 			unk10 &= ~2;
@@ -102,7 +102,7 @@ void TQuestionManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 		unk12 = 0;
 	}
 
-	if ((param_1 & 8) != 0 && gpSilhouetteManager->isUnk48Positive()
+	if ((cue & CUE_DRAW) != 0 && gpSilhouetteManager->isUnk48Positive()
 	    && (unk10 & 2) != 0) {
 		draw();
 	}

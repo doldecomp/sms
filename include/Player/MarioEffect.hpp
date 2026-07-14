@@ -13,7 +13,7 @@ public:
 	{
 	}
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void init(TMario*);
 	void setJumpIntoWaterEffect();

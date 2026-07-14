@@ -91,12 +91,12 @@ bool TPollutionManager::cleanedAll() const
 
 void TPollutionManager::draw() { }
 
-void TPollutionManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TPollutionManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x1000000) {
+	if (cue & 0x1000000) {
 		getCounterObj().countObjDegree();
-	} else if (param_1 & 0x2000000) {
-		u8 uVar1 = param_1 >> 0x10;
+	} else if (cue & 0x2000000) {
+		u8 uVar1 = cue >> 0x10;
 		if (uVar1 == 0)
 			getCounterLayer().calcViewMtx();
 
@@ -106,7 +106,7 @@ void TPollutionManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 		if (uVar1 == last)
 			getCounterLayer().resetTask();
 	} else {
-		TJointModelManager::perform(param_1, param_2);
+		TJointModelManager::perform(cue, graphics);
 	}
 }
 

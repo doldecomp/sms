@@ -29,14 +29,14 @@ TRealoidActor::TRealoidActor(MActor* actor)
 {
 }
 
-void TRealoidActor::perform(u32 flags, JDrama::TGraphics* graphics)
+void TRealoidActor::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk74 & 6)
 		return;
 
-	THitActor::perform(flags, graphics);
+	THitActor::perform(cue, graphics);
 	if (!(unk74 & 1))
-		unk70->perform(flags, graphics);
+		unk70->perform(cue, graphics);
 }
 
 void TRealoidActor::calcRootMatrix(TBoid* boid)
@@ -164,18 +164,18 @@ void TRealoid::clipBoids(JDrama::TGraphics* graphics)
 	}
 }
 
-void TRealoid::perform(u32 flags, JDrama::TGraphics* graphics)
+void TRealoid::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	unk150->perform(flags, graphics);
+	unk150->perform(cue, graphics);
 
-	if (flags & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		clipBoids(graphics);
 		for (int i = 0; i < unk150->getBoidNum(); ++i)
 			unk154[i]->calcRootMatrix(unk150->getBoid(i));
 	}
 
 	for (int i = 0; i < unk150->getBoidNum(); ++i)
-		unk154[i]->perform(flags, graphics);
+		unk154[i]->perform(cue, graphics);
 }
 
 void TFish::init() { mHitFlags |= HIT_FLAG_NO_COLLISION; }
@@ -187,9 +187,9 @@ TFishoid::TFishoid(int type, const char* name)
 	unk15C = nullptr;
 }
 
-void TFishoid::perform(u32 flags, JDrama::TGraphics* graphics)
+void TFishoid::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TRealoid::perform(flags, graphics);
+	TRealoid::perform(cue, graphics);
 
 	for (int i = 0; i < unk150->getBoidNum(); ++i) {
 		TBoid* boid = unk150->getBoid(i);
@@ -200,7 +200,7 @@ void TFishoid::perform(u32 flags, JDrama::TGraphics* graphics)
 		boid->unk0 = pos;
 	}
 
-	if (unk15C != nullptr && (flags & 1)) {
+	if (unk15C != nullptr && (cue & CUE_MOVE)) {
 		unk15C->mPosition = unk150->getBoid(unk150->getBoidNum() - 1)->unk0;
 	}
 }

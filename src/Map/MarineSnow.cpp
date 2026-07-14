@@ -15,9 +15,9 @@ void TMarineSnow::loadAfter()
 	                 OTHERS_MARINESNOW_MS_MARE_MARINSNOW);
 }
 
-void TMarineSnow::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMarineSnow::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		mPosition.set(gpCamera->getUnk124());
 		gpMarioParticleManager->emitAndBindToPosPtr(
 		    OTHERS_MARINESNOW_MS_MARE_MARINSNOW, &mPosition, 1, this);

@@ -9,7 +9,7 @@ class TViewConnecter : public TViewObj {
 public:
 	TViewConnecter(TViewObj*, TViewObj*, TFlagT<u16>, const char*);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:
 	/* 0x10 */ TViewObj* unk10;

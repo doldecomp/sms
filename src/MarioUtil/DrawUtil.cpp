@@ -109,30 +109,30 @@ void TSilhouette::setting(MtxPtr param_1)
 	GXSetZMode(GX_TRUE, GX_GEQUAL, GX_FALSE);
 }
 
-void TSilhouette::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSilhouette::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((param_1 & 1) != 0) {
+	if ((cue & CUE_MOVE) != 0) {
 		f32 fVar1 = SMS_CheckMarioFlag(MARIO_FLAG_OCCLUDED) ? unk50 : 0.0f;
 		unk48 += unk4C * (fVar1 - unk48);
 		unk12.a = unk48;
 	}
 
-	if ((param_1 & 8) != 0) {
+	if ((cue & CUE_DRAW) != 0) {
 		GXSetNumChans(1);
 		GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 1,
 		              GX_DF_NONE, GX_AF_SPOT);
 		GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0,
 		              GX_DF_NONE, GX_AF_NONE);
 		GXSetChanMatColor(GX_COLOR0A0, unk12);
-		setting(param_2->getViewMtx());
+		setting(graphics->getViewMtx());
 	}
-	if ((param_1 & 0x80) != 0) {
+	if ((cue & CUE_DRAW_INIT) != 0) {
 		GXColor color = unk12;
 		color.a       = gpSunMgr->getUnk1CAlpha();
 		GXSetChanMatColor(GX_COLOR0A0, color);
-		setting(param_2->getViewMtx());
+		setting(graphics->getViewMtx());
 	}
-	if (((param_1 & 0x10) != 0) && gpPollution->getJointModelNum()) {
+	if (((cue & CUE_SET_PROJECTION) != 0) && gpPollution->getJointModelNum()) {
 		Mtx afStack_80;
 		C_MTXLightFrustum(afStack_80, -1.0f, 1.0f, -1.0f, 1.0f, 10.0f, 0.5f,
 		                  0.5f, 0.5f, 0.5f);

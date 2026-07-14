@@ -12,7 +12,7 @@ public:
 	TMapObjWave(const char* name = "波の表現");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void movement();
 	void updateTime();

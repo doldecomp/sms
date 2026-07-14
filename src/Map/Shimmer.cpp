@@ -25,17 +25,17 @@ void TShimmer::near() { }
 
 void TShimmer::far() { }
 
-void TShimmer::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (gpMarioOriginal->checkFlag(MARIO_FLAG_FLUDD_EMITTING))
 		return;
 
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		unk54->setFrame(unk58->getFrame());
 		unk58->update();
 	}
 
-	if (param_1 & 4) {
+	if (cue & CUE_CALC_VIEW) {
 		if (!gpMarioOriginal->isWearingCap()
 		    && !gpMarioOriginal->getGroundPlane()->isShadow()
 		    && !gpMarioOriginal->getGroundPlane()->isIndoors()
@@ -54,7 +54,7 @@ void TShimmer::perform(u32 param_1, JDrama::TGraphics* param_2)
 		    ->getTexMtx(1)
 		    ->setEffectMtx(effectMtx);
 
-		MtxPtr viewMtx = param_2->mViewMtx;
+		MtxPtr viewMtx = graphics->mViewMtx;
 
 		J3DTransformInfo info;
 		info.mScale.x     = 1.0f;
@@ -79,7 +79,7 @@ void TShimmer::perform(u32 param_1, JDrama::TGraphics* param_2)
 		unk48->calc();
 	}
 
-	if (param_1 & 0x200) {
+	if (cue & CUE_ENTRY) {
 		if (gpMarDirector->mMap == 2 || !(gpCamera->unk124.y < 0.0f))
 			unk48->update();
 	}

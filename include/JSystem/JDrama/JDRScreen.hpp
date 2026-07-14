@@ -11,7 +11,7 @@ public:
 	}
 
 	virtual ~TCamConnecter() { }
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 namespace JDrama {

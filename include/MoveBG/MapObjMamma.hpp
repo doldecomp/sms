@@ -106,7 +106,7 @@ class TShiningStone : public THitActor {
 public:
 	void endDemo();
 	void putOnLight(TLiveActor*);
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	void load(JSUMemoryInputStream&);
 	TShiningStone(const char* name = "太陽石");
 };
@@ -150,7 +150,7 @@ class TMammaMirrorMapOperator : public JDrama::TViewObj {
 public:
 	void show(int);
 	void hide(int);
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	void loadAfter();
 	TMammaMirrorMapOperator(const char* name = "鏡内地形操作");
 };

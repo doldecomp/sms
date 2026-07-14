@@ -75,9 +75,9 @@ void TSunGlass::draw(const JDrama::TRect& rect, JUtility::TColor color)
 	GXEnd();
 }
 
-void TSunGlass::perform(u32 flags, JDrama::TGraphics* graphics)
+void TSunGlass::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((flags & 1) && unk26 != 0) {
+	if ((cue & CUE_MOVE) && unk26 != 0) {
 		unk14.a = (u8)((f32)unk1D
 		               + (f32)(unk24 * (unk1C - unk1D)) / (f32)(s16)unk22);
 		if (unk24 < (s16)unk22)
@@ -86,7 +86,7 @@ void TSunGlass::perform(u32 flags, JDrama::TGraphics* graphics)
 			unk26 = 0;
 	}
 
-	if (flags & 8)
+	if (cue & CUE_DRAW)
 		draw(graphics->getViewport(), unk14);
 }
 
@@ -111,12 +111,12 @@ void TSunGlass::load(JSUMemoryInputStream& stream)
 	unk10 = gpMarDirector->unk18[1];
 }
 
-void TSunShine::perform(u32 flags, JDrama::TGraphics* graphics)
+void TSunShine::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (flags & 8)
+	if (cue & CUE_DRAW)
 		draw(graphics->getViewport(), unk14);
 
-	if (flags & 1) {
+	if (cue & CUE_MOVE) {
 		unk14.a = gpSunMgr->getAddColor();
 		if (unk28 != 0) {
 			if (!SMS_IsMarioStatusElecDamage())

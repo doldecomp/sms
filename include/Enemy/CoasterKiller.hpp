@@ -52,7 +52,7 @@ public:
 	virtual void moveObject();
 	virtual void init(TLiveManager* manager);
 	virtual void bind();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void reset();
 
 	TCoasterEnemyParams* getSaveParam2() const
@@ -90,7 +90,7 @@ public:
 
 	virtual void init(TLiveManager* manager);
 	virtual void reset();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void setMActorAndKeeper();
 	virtual void attackToMario();
 	virtual bool isCollidMove(THitActor*);

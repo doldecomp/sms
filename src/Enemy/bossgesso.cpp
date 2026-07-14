@@ -208,9 +208,9 @@ BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
 	return false;
 }
 
-void TBGBeakHit::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TBGBeakHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		mOwner->getJointTransByIndex(26, &mPosition);
 		mPosition.y -= mDamageHeight * 0.5f;
 
@@ -305,10 +305,10 @@ BOOL TBGEyeHit::receiveMessage(THitActor* sender, u32 message)
 	return mOwner->receiveMessage(sender, message);
 }
 
-void TBGEyeHit::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TBGEyeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	THitActor::perform(param_1, param_2);
-	if (param_1 & 2)
+	THitActor::perform(cue, graphics);
+	if (cue & CUE_CALC_ANIM)
 		mOwner->getJointTransByIndex(mJointIndex, &mPosition);
 }
 
@@ -335,11 +335,11 @@ BOOL TBGBodyHit::receiveMessage(THitActor* sender, u32 message)
 	return mOwner->receiveMessage(sender, message);
 }
 
-void TBGBodyHit::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TBGBodyHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 2)
+	if (cue & CUE_CALC_ANIM)
 		mOwner->getJointTransByIndex(mJointIndex, &mPosition);
-	THitActor::perform(param_1, param_2);
+	THitActor::perform(cue, graphics);
 }
 
 TBossGessoMtxCalc::TBossGessoMtxCalc(TBossGesso* owner)
@@ -535,7 +535,7 @@ void TBGCork::crush()
 	unkC = 1;
 }
 
-void TBGCork::perform(u32, JDrama::TGraphics*) { }
+void TBGCork::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 TBossGesso::TBossGesso(const char* name)
     : TSpineEnemy(name)
@@ -1247,7 +1247,7 @@ void TBossGesso::calcRootMatrix()
 
 void TBossGesso::performInContainer(u32, JDrama::TGraphics*) { }
 
-void TBossGesso::perform(u32, JDrama::TGraphics*) { }
+void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 TBossGessoManager::TBossGessoManager(const char* name)
     : TEnemyManager(name)

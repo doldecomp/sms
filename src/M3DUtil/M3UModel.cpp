@@ -2,6 +2,7 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
+#include <JSystem/JDrama/JDRViewObj.hpp>
 
 J3DMtxCalc* M3UModelCommon::getMtxCalc(const M3UMtxCalcSetInfo& param_1)
 {
@@ -109,19 +110,19 @@ void M3UModel::entryOut()
 		unk8->mModelData->removeTexNoAnimator(unk4->unk8[unk1C->unk0]);
 }
 
-void M3UModel::perform(u32 param_1, JDrama::TGraphics* param_2)
+void M3UModel::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		updateIn();
 		unk8->calc();
 		updateOut();
 	}
 
-	if (param_1 & 4) {
+	if (cue & CUE_CALC_VIEW) {
 		unk8->viewCalc();
 	}
 
-	if (param_1 & 0x200) {
+	if (cue & CUE_ENTRY) {
 		entryIn();
 		unk8->entry();
 		entryOut();

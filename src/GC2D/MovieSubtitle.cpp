@@ -61,13 +61,13 @@ void TMovieSubTitle::setupResource(const char* param_1, JKRArchive* param_2)
 	unk24 = 0;
 }
 
-void TMovieSubTitle::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMovieSubTitle::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 1)
+	if (cue & CUE_MOVE)
 		movement();
 
-	if (param_1 & 8)
-		draw(param_2);
+	if (cue & CUE_DRAW)
+		draw(graphics);
 }
 
 void TMovieSubTitle::movement()
