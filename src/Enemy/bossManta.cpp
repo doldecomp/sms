@@ -59,13 +59,12 @@ DEFINE_NERVE(TNerveMantaMove, TLiveActor)
 	}
 
 	if (self->unk18C < 3 && gpMSound->gateCheck(MSD_SE_BS_MANTA_DRAW_LV))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_MANTA_DRAW_LV,
-		                                          (const Vec*)&self->mPosition,
-		                                          0, nullptr, 0, 4);
+		MSoundSESystem::MSoundSE::startSoundActor(
+		    MSD_SE_BS_MANTA_DRAW_LV, &self->mPosition, 0, nullptr, 0, 4);
 
 	if (self->unk18C == 5 && spine->getTime() % 96 == self->getInstanceIndex())
-		gpMSound->startSoundSet(MSD_SE_BS_MANTA_ATTACK,
-		                        (const Vec*)&self->mPosition, 0, 0.0f, 0, 0, 4);
+		gpMSound->startSoundSet(MSD_SE_BS_MANTA_ATTACK, &self->mPosition, 0,
+		                        0.0f, 0, 0, 4);
 
 	JGeometry::TVec3<f32> toTarget;
 	toTarget.x = self->mPosition.x - self->unk158;
@@ -142,8 +141,8 @@ DEFINE_NERVE(TNerveMantaHitWater, TLiveActor)
 			    MSD_SE_BS_MANTA_DAMAGE_5, MSD_SE_BS_MANTA_DAMAGE_5 };
 		u32 snd = hitSounds[self->unk18C];
 		if (gpMSound->gateCheck(snd))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    snd, (const Vec*)&self->mPosition, 0, nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(snd, &self->mPosition, 0,
+			                                          nullptr, 0, 4);
 	}
 
 	int effectCount
@@ -194,8 +193,8 @@ DEFINE_NERVE(TNerveMantaSpawn, TLiveActor)
 		const u32 sounds[4] = { 0x8994, 0x8995, 0x8996, 0x8997 };
 		u32 snd             = sounds[self->unk18C];
 		if (gpMSound->gateCheck(snd))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    snd, (const Vec*)&self->mPosition, 0, nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActor(snd, &self->mPosition, 0,
+			                                          nullptr, 0, 4);
 		((TBossMantaManager*)self->getManager())
 		    ->spawn(self->unk18C + 1, self->mPosition);
 	}
@@ -223,8 +222,7 @@ DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
 		                                            self);
 		if (gpMSound->gateCheck(MSD_SE_BS_MANTA_VANISH))
 			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_BS_MANTA_VANISH, (const Vec*)&self->mPosition, 0,
-			    nullptr, 0, 4);
+			    MSD_SE_BS_MANTA_VANISH, &self->mPosition, 0, nullptr, 0, 4);
 		self->kill();
 	}
 
@@ -270,9 +268,8 @@ DEFINE_NERVE(TNerveMantaAppearDemo, TLiveActor)
 		return TRUE;
 
 	if (gpMSound->gateCheck(MSD_SE_BS_MANTA_DRAW_DEMO))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_MANTA_DRAW_DEMO,
-		                                          (const Vec*)&self->mPosition,
-		                                          0, nullptr, 0, 4);
+		MSoundSESystem::MSoundSE::startSoundActor(
+		    MSD_SE_BS_MANTA_DRAW_DEMO, &self->mPosition, 0, nullptr, 0, 4);
 
 	self->unk190 = params->mSLAppearDemoWalkSpeed.get();
 	return FALSE;
