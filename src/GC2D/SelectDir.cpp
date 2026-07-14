@@ -199,9 +199,6 @@ int TSelectDir::rsetup()
 	return 0;
 }
 
-// TODO: The target uses a 0xD0-byte frame while this uses 0x50. All 177
-// instructions otherwise match in sequence, so this is the same unresolved
-// stack-allocation issue seen in rsetup rather than missing direct behavior.
 int TSelectDir::direct()
 {
 	if (!unk38) {
@@ -240,8 +237,7 @@ int TSelectDir::direct()
 			gpApplication.mFader->startWipe(0xf, 1.0f, 0.0f);
 			gpApplication.mFader->setColor(
 			    JUtility::TColor(0xff, 0xff, 0xff, 0xff));
-			MSound* sound = gpMSound;
-			sound->fadeOutAllSound(SMSGetVSyncTimesPerSec());
+			SMSGetMSound()->fadeOutAllSound(SMSGetVSyncTimesPerSec());
 		}
 		break;
 	}
@@ -249,8 +245,7 @@ int TSelectDir::direct()
 	if (unk18->isSomethingPushed() && !unk4C) {
 		unk4C = true;
 		gpApplication.mFader->startWipe(4, 1.0f, 0.0f);
-		MSound* sound = gpMSound;
-		sound->fadeOutAllSound(SMSGetVSyncTimesPerSec() * 0.4f);
+		SMSGetMSound()->fadeOutAllSound(SMSGetVSyncTimesPerSec() * 0.4f);
 		unk10->unkC.on(3);
 	}
 
