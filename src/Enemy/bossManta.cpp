@@ -58,9 +58,9 @@ DEFINE_NERVE(TNerveMantaMove, TLiveActor)
 		self->unk160 = pt.z + 1.0f * (gpMarioPos->z - pt.z);
 	}
 
-	if (self->unk18C < 3 && gpMSound->gateCheck(MSD_SE_BS_MANTA_DRAW_LV))
-		MSoundSESystem::MSoundSE::startSoundActor(
-		    MSD_SE_BS_MANTA_DRAW_LV, &self->mPosition, 0, nullptr, 0, 4);
+	if (self->unk18C < 3)
+		gpMSound->startSoundActor(MSD_SE_BS_MANTA_DRAW_LV, &self->mPosition, 0,
+		                          nullptr, 0, 4);
 
 	if (self->unk18C == 5 && spine->getTime() % 96 == self->getInstanceIndex())
 		gpMSound->startSoundSet(MSD_SE_BS_MANTA_ATTACK, &self->mPosition, 0,
@@ -140,9 +140,7 @@ DEFINE_NERVE(TNerveMantaHitWater, TLiveActor)
 			    MSD_SE_BS_MANTA_DAMAGE_3, MSD_SE_BS_MANTA_DAMAGE_4,
 			    MSD_SE_BS_MANTA_DAMAGE_5, MSD_SE_BS_MANTA_DAMAGE_5 };
 		u32 snd = hitSounds[self->unk18C];
-		if (gpMSound->gateCheck(snd))
-			MSoundSESystem::MSoundSE::startSoundActor(snd, &self->mPosition, 0,
-			                                          nullptr, 0, 4);
+		gpMSound->startSoundActor(snd, &self->mPosition, 0, nullptr, 0, 4);
 	}
 
 	int effectCount
@@ -192,9 +190,7 @@ DEFINE_NERVE(TNerveMantaSpawn, TLiveActor)
 		                                            &self->unk17C, 0, self);
 		const u32 sounds[4] = { 0x8994, 0x8995, 0x8996, 0x8997 };
 		u32 snd             = sounds[self->unk18C];
-		if (gpMSound->gateCheck(snd))
-			MSoundSESystem::MSoundSE::startSoundActor(snd, &self->mPosition, 0,
-			                                          nullptr, 0, 4);
+		gpMSound->startSoundActor(snd, &self->mPosition, 0, nullptr, 0, 4);
 		((TBossMantaManager*)self->getManager())
 		    ->spawn(self->unk18C + 1, self->mPosition);
 	}
@@ -220,9 +216,8 @@ DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
 	if (self->checkCurAnmEnd(0)) {
 		gpMarioParticleManager->emitAndBindToPosPtr(0xF8, &self->unk17C, 0,
 		                                            self);
-		if (gpMSound->gateCheck(MSD_SE_BS_MANTA_VANISH))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_BS_MANTA_VANISH, &self->mPosition, 0, nullptr, 0, 4);
+		gpMSound->startSoundActor(MSD_SE_BS_MANTA_VANISH, &self->mPosition, 0,
+		                          nullptr, 0, 4);
 		self->kill();
 	}
 
@@ -267,9 +262,8 @@ DEFINE_NERVE(TNerveMantaAppearDemo, TLiveActor)
 	if (spine->getTime() == 0x690)
 		return TRUE;
 
-	if (gpMSound->gateCheck(MSD_SE_BS_MANTA_DRAW_DEMO))
-		MSoundSESystem::MSoundSE::startSoundActor(
-		    MSD_SE_BS_MANTA_DRAW_DEMO, &self->mPosition, 0, nullptr, 0, 4);
+	gpMSound->startSoundActor(MSD_SE_BS_MANTA_DRAW_DEMO, &self->mPosition, 0,
+	                          nullptr, 0, 4);
 
 	self->unk190 = params->mSLAppearDemoWalkSpeed.get();
 	return FALSE;
@@ -787,9 +781,7 @@ void TBossMantaManager::TMantaBattleState::update()
 		if (victory) {
 			MSBgm::stopTrackBGMs(7, 10);
 			sDefeatSE = nullptr;
-			if (gpMSound->gateCheck(0x898F))
-				MSoundSESystem::MSoundSE::startSoundActor(0x898F, nullptr, 0,
-				                                          &sDefeatSE, 0, 4);
+			gpMSound->startSoundActor(0x898F, nullptr, 0, &sDefeatSE, 0, 4);
 			unk4++;
 		}
 		break;
