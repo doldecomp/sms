@@ -67,8 +67,7 @@ void TMarDirector::initECTGft(
 			    new JDrama::TOrthoProj(0.0f, 0.0f, img->width, img->height),
 			    CUE_SET_PROJECTION);
 			param_1->push_back(drawInit, CUE_DRAW);
-			// TODO: what's with the cue here? Layer ID encoded inside?
-			param_1->push_back(graffitiGroup, (i << 16)
+			param_1->push_back(graffitiGroup, (i << CUE_OFFSET_POLLUTION_LAYER)
 			                                      | CUE_SEMITRANSPARENT_PRIO_2
 			                                      | CUE_DRAW);
 			param_1->push_back(efbTex, CUE_DRAW);

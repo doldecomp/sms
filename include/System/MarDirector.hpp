@@ -47,7 +47,9 @@ enum {
 	CUE_UNK40000 = 0x40000,
 	CUE_UNK80000 = 0x80000,
 
-	// NOTE: for 0x400000 see TMarDirector::initECTGft
+	// Bits 16-17 can store the pollution layer sometimes.
+	// If more than 4 layers -- everything breaks horribly.
+	CUE_OFFSET_POLLUTION_LAYER = 16,
 
 	CUE_UNK800000              = 0x800000,
 	CUE_UNK1000000             = 0x1000000,
