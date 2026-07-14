@@ -1,0 +1,180 @@
+#ifndef ENEMY_BOSSMANTA_HPP
+#define ENEMY_BOSSMANTA_HPP
+
+#include <Enemy/Enemy.hpp>
+#include <Enemy/EnemyManager.hpp>
+#include <Strategic/Nerve.hpp>
+#include <JSystem/JUtility/JUTColor.hpp>
+
+class TBossManta : public TSpineEnemy {
+public:
+	TBossManta(const char*);
+
+	virtual void init(TLiveManager*);
+	virtual void control();
+	virtual void moveObject();
+	virtual void calcRootMatrix();
+	virtual void drawObject(JDrama::TGraphics*);
+	virtual void reset();
+	virtual BOOL receiveMessage(THitActor*, u32);
+
+	void updateAttractor();
+	BOOL isPolluting();
+	f32 getPolluteRadius();
+	void initNthGeneration(int);
+	BOOL collidedWithWater();
+	BOOL getIntoGraphVec(JGeometry::TVec3<f32>*);
+
+	// UNUSED (mario.MAP, fully inlined at every call site) - not yet
+	// reconstructed, TODO.
+	BOOL isDamageable();            // 0xD8
+	void updateEpilogueFrame();     // 0x18
+	f32 getEpilogueValue();         // 0x48
+	void resetDamageAnimEpilogue(); // 0x14
+	void startDamageAnimEpilogue(); // 0x14
+	BOOL isSpawnState();            // 0x90
+	void updateAnimBlend();         // 0x1F0
+	void startDamageAnim();         // 0x84
+	void startWalkAnim();           // 0xD4
+	void setCollision();            // 0x88
+	f32 getTailAnimSpeed();         // 0x54
+
+	static int sCenterJointIndex;
+	static int sBodyJointIndex;
+	static int sRwingJointIndex;
+	static int sLwingJointIndex;
+	static u8 sEscapeFromMario;
+	static f32 sFrameRate[6];
+	static f32 sScale[6];
+
+public:
+	/* 0x150 */ f32 unk150;
+	/* 0x154 */ s32 unk154;
+	/* 0x158 */ f32 unk158;
+	/* 0x15C */ f32 unk15C;
+	/* 0x160 */ f32 unk160;
+	/* 0x164 */ f32 unk164;
+	/* 0x168 */ f32 unk168;
+	/* 0x16C */ f32 unk16C;
+	/* 0x170 */ f32 unk170;
+	/* 0x174 */ f32 unk174;
+	/* 0x178 */ f32 unk178;
+	/* 0x17C */ JGeometry::TVec3<f32> unk17C;
+	/* 0x188 */ s32 unk188;
+	/* 0x18C */ s32 unk18C;
+	/* 0x190 */ f32 unk190;
+	/* 0x194 */ f32 unk194;
+	/* 0x198 */ f32 unk198;
+	/* 0x19C */ s32 unk19C;
+	/* 0x1A0 */ s32 unk1A0;
+	/* 0x1A4 */ s32 unk1A4;
+};
+
+class TBossMantaAdditionalCollision : public THitActor {
+public:
+	TBossMantaAdditionalCollision(const char* name);
+
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor*, u32);
+
+	// UNUSED (mario.MAP, fully inlined) - TODO.
+	void setManta(TBossManta*); // 0x8
+
+public:
+	/* 0x68 */ TBossManta* unk68;
+};
+
+class TBossMantaAdditionalCollisionSet {
+public:
+	TBossMantaAdditionalCollisionSet();
+	void update(u32 cue, JDrama::TGraphics* graphics);
+	void adapt(TBossManta*);
+
+	// UNUSED (mario.MAP, fully inlined) - TODO.
+	BOOL isUsed(); // 0x28
+
+public:
+	/* 0x0 */ TBossMantaAdditionalCollision* unk0;
+	/* 0x4 */ TBossMantaAdditionalCollision* unk4;
+	/* 0x8 */ TBossMantaAdditionalCollision* unk8;
+	/* 0xC */ TBossManta* unkC;
+};
+
+class TBossMantaParams : public TSpineEnemyParams {
+public:
+	TBossMantaParams(const char*);
+
+public:
+	/* 0xA8 */ TParamRT<f32> mSLPolluteRadius;
+	/* 0xBC */ TParamRT<int> mSLDamageEffectNum;
+	/* 0xD0 */ TParamRT<f32> mSLAppearDemoInitialZ;
+	/* 0xE4 */ TParamRT<f32> mSLAppearDemoWalkSpeed;
+	/* 0xF8 */ TParamRT<int> mSLMantaRed;
+	/* 0x10C */ TParamRT<int> mSLMantaGreen;
+	/* 0x120 */ TParamRT<int> mSLMantaBlue;
+	/* 0x134 */ TParamRT<int> mSLMantaAlpha;
+	/* 0x148 */ TParamRT<int> mSLAngryMantaRed;
+	/* 0x15C */ TParamRT<int> mSLAngryMantaGreen;
+	/* 0x170 */ TParamRT<int> mSLAngryMantaBlue;
+	/* 0x184 */ TParamRT<int> mSLAngryMantaAlpha;
+	/* 0x198 */ TParamRT<f32> mSLAttractorPower;
+	/* 0x1AC */ TParamRT<f32> mSLPusherPower;
+	/* 0x1C0 */ TParamRT<f32> mSLEscapeLookPoint;
+	/* 0x1D4 */ TParamRT<f32> mSLEscapeLookedPoint;
+	/* 0x1E8 */ TParamRT<f32> mSLEscapeRegion;
+};
+
+class TBossMantaManager : public TEnemyManager {
+public:
+	class TMantaMessageState {
+	public:
+		void update();
+		TBossMantaManager* unk0;
+		s32 unk4;
+	};
+	class TMantaBattleState {
+	public:
+		void update();
+		TBossMantaManager* unk0;
+		s32 unk4;
+	};
+
+	TBossMantaManager(const char*);
+
+	virtual void load(JSUMemoryInputStream&);
+	virtual void loadAfter();
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual void createModelData();
+
+	void spawn(int, const JGeometry::TVec3<f32>&);
+	virtual void createEnemies(int);
+	void setupEfbAlpha(JDrama::TGraphics*);
+	void updateMantaEscape();
+	void drawMantaShadow(JDrama::TGraphics*);
+	virtual TSpineEnemy* createEnemyInstance();
+
+	// UNUSED (mario.MAP, fully inlined) - TODO.
+	void initAdditionalCollision();             // 0x9C
+	void createEnemy();                         // 0xF8
+	void getMantaColor();                       // 0x18C
+	void loadEffects();                         // 0xD4
+	void adaptAdditionalCollision(TBossManta*); // 0x124
+
+public:
+	/* 0x54 */ TBossMantaAdditionalCollisionSet* mCollisionSets[8];
+	/* 0x74 */ JGeometry::TVec3<f32>* unk74;
+	/* 0x78 */ JGeometry::TVec3<f32>* unk78;
+	/* 0x7C */ u8* unk7C;
+	/* 0x80 */ JUtility::TColor unk80;
+	/* 0x84 */ s32 unk84;
+	/* 0x88 */ TMantaBattleState unk88;
+	/* 0x90 */ TMantaMessageState unk90;
+};
+
+DECLARE_NERVE(TNerveMantaSpawn, TLiveActor);
+DECLARE_NERVE(TNerveMantaMove, TLiveActor);
+DECLARE_NERVE(TNerveMantaAppearDemo, TLiveActor);
+DECLARE_NERVE(TNerveMantaDeath, TLiveActor);
+DECLARE_NERVE(TNerveMantaHitWater, TLiveActor);
+
+#endif
