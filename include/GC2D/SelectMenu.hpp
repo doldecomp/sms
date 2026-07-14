@@ -13,7 +13,7 @@ class TSelectMenu : public JDrama::TViewObj {
 public:
 	TSelectMenu(const char*);
 	virtual ~TSelectMenu();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void initData(u8, JKRArchive*, TSelectShineManager*, TSelectDir*);
 	void startMove();
@@ -34,7 +34,7 @@ class TSelectGrad : public JDrama::TViewObj {
 public:
 	TSelectGrad(const char*);
 	virtual ~TSelectGrad();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void setStageColor(u8);
 
@@ -46,7 +46,7 @@ class TSelectShineManager : public JDrama::TViewObj {
 public:
 	TSelectShineManager(const char*);
 	virtual ~TSelectShineManager();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 private:
 	/* 0x010 */ u8 unk10[0x110];

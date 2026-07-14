@@ -42,7 +42,7 @@ void TMarDirector::initECTGft(
 		graffitiEfbTex->setSrcRect(rect);
 		param_1->push_back(graffitiEfbTex, CUE_DRAW_INIT);
 
-		param_1->push_back(new JDrama::TViewport(rect, "graffito"), 0x8);
+		param_1->push_back(new JDrama::TViewport(rect, "graffito"), CUE_DRAW);
 		param_1->push_back(
 		    new JDrama::TOrthoProj(-1.0f, 1.0f, 0.0f, 0.0f, 512.0f, 512.0f),
 		    CUE_SET_PROJECTION);

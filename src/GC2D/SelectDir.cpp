@@ -69,8 +69,8 @@ void TSelectDir::setup(JDrama::TDisplay* display, TMarioGamePad* gamePad,
 
 void TSelectDir::changeOrder()
 {
-	unk44->unkC.on(0xb);
-	unk48->unkC.off(0xb);
+	unk44->unkC.on(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
+	unk48->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 }
 
 int TSelectDir::rsetup()
@@ -193,8 +193,8 @@ int TSelectDir::rsetup()
 	particleScreen->assignCamera(particleCamera);
 	particleScreen->assignViewObj(group2DParticle);
 
-	unk44->unkC.off(0xb);
-	unk48->unkC.on(0xb);
+	unk44->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
+	unk48->unkC.on(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 
 	return 0;
 }
@@ -246,7 +246,7 @@ int TSelectDir::direct()
 		unk4C = true;
 		gpApplication.mFader->startWipe(4, 1.0f, 0.0f);
 		SMSGetMSound()->fadeOutAllSound(SMSGetVSyncTimesPerSec() * 0.4f);
-		unk10->unkC.on(3);
+		unk10->unkC.on(CUE_MOVE | CUE_CALC_ANIM);
 	}
 
 	if (gpApplication.mFader->mFadeStatus
