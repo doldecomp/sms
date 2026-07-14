@@ -13,6 +13,7 @@
 #include <JSystem/JParticle/JPAResourceManager.hpp>
 #include <GC2D/ScrnFader.hpp>
 #include <GC2D/SelectMenu.hpp>
+#include <GC2D/SelectShine2.hpp>
 #include <MSound/MSound.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <System/Application.hpp>
@@ -111,8 +112,8 @@ int TSelectDir::rsetup()
 	group3D->getChildren().push_back(unk28);
 	groupGrad->getChildren().push_back(unk24);
 
-	unk18->mFlags = 1;
-	unk20->unk100 = unk18;
+	unk18->mFlags   = 1;
+	unk20->mGamePad = unk18;
 
 	JPAResourceManager* resourceManager2D = new JPAResourceManager(9, 0x200, 0);
 	JPAResourceManager* resourceManager3D = new JPAResourceManager(9, 0x200, 0);
@@ -231,9 +232,9 @@ int TSelectDir::direct()
 		if (unk20->unk14B)
 			return TApplication::APP_STATE_DONE;
 
-		if (unk20->unk14A) {
-			gpApplication.mNextArea.unk1 = unk20->unk13B;
-			TFlagManager::smInstance->setFlag(0x40003, unk20->unk13B);
+		if (unk20->mCloseMenu) {
+			gpApplication.mNextArea.unk1 = unk20->mSelectedShine;
+			TFlagManager::smInstance->setFlag(0x40003, unk20->mSelectedShine);
 			gpApplication.mFader->startWipe(0xf, 1.0f, 0.0f);
 			gpApplication.mFader->setColor(
 			    JUtility::TColor(0xff, 0xff, 0xff, 0xff));
