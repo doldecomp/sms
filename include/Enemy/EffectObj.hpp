@@ -3,6 +3,7 @@
 
 #include <Enemy/Enemy.hpp>
 #include <Enemy/EnemyManager.hpp>
+#include <JSystem/JGadget/std-list.hpp>
 
 class TSimpleEffect : public JDrama::TActor {
 public:
