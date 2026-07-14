@@ -42,9 +42,10 @@ void TMarDirector::initECTGft(
 		graffitiEfbTex->setSrcRect(rect);
 		param_1->push_back(graffitiEfbTex, CUE_DRAW_INIT);
 
-		param_1->push_back(new JDrama::TViewport(rect, "graffito"), CUE_DRAW);
-		param_1->push_back(new JDrama::TOrthoProj(0.0f, 0.0f, 512.0f, 512.0f),
-		                   CUE_SET_PROJECTION);
+		param_1->push_back(new JDrama::TViewport(rect, "graffito"), 0x8);
+		param_1->push_back(
+		    new JDrama::TOrthoProj(-1.0f, 1.0f, 0.0f, 0.0f, 512.0f, 512.0f),
+		    CUE_SET_PROJECTION);
 		param_1->push_back(drawInit, CUE_DRAW);
 		param_1->push_back(graffitiGroup, CUE_UNK1000000);
 		param_1->push_back(graffitiEfbTex, CUE_DRAW);
@@ -63,9 +64,9 @@ void TMarDirector::initECTGft(
 			param_2->push_back(efbTex, CUE_DRAW_INIT);
 			param_2->push_back(new JDrama::TViewport(rect, "graffito"),
 			                   CUE_DRAW);
-			param_2->push_back(
-			    new JDrama::TOrthoProj(0.0f, 0.0f, img->width, img->height),
-			    CUE_SET_PROJECTION);
+			param_2->push_back(new JDrama::TOrthoProj(-1.0f, 1.0f, 0.0f, 0.0f,
+			                                          img->width, img->height),
+			                   CUE_SET_PROJECTION);
 			param_1->push_back(drawInit, CUE_DRAW);
 			param_1->push_back(graffitiGroup, (i << CUE_OFFSET_POLLUTION_LAYER)
 			                                      | CUE_SEMITRANSPARENT_PRIO_2
@@ -138,12 +139,12 @@ void TMarDirector::initECDisp(
 	if (specularSheen || lensFlare || lensGlow) {
 		f32 w = (u16)SMSGetGameRenderWidth() / 2;
 		f32 h = (u16)SMSGetGameRenderHeight() / 2;
-		ortho = new JDrama::TOrthoProj(-w, h, w, -h);
+		ortho = new JDrama::TOrthoProj(-1.0f, 1.0f, -w, h, w, -h);
 	}
 
-	JDrama::TOrthoProj* ortho2
-	    = new JDrama::TOrthoProj(0.0f, 0.0f, (u16)SMSGetGameRenderHeight(),
-	                             (u16)SMSGetGameRenderWidth());
+	JDrama::TOrthoProj* ortho2 = new JDrama::TOrthoProj(
+	    10.0f, 300000.0f, 0.0f, 0.0f, (u16)SMSGetGameRenderHeight(),
+	    (u16)SMSGetGameRenderWidth());
 
 	param_1->push_back(stageDisp, CUE_DRAW_INIT);
 	param_1->push_back(
@@ -197,9 +198,9 @@ void TMarDirector::initECDisp(
 	param_1->push_back(drawBufChrOpa, CUE_DRAW);
 	param_1->push_back(drawBufChrXlu, CUE_DRAW);
 
-	JDrama::TOrthoProj* ortho3
-	    = new JDrama::TOrthoProj(0.0f, 0.0f, (u16)SMSGetGameRenderHeight(),
-	                             (u16)SMSGetGameRenderWidth());
+	JDrama::TOrthoProj* ortho3 = new JDrama::TOrthoProj(
+	    -1.0f, 1.0f, 0.0f, 0.0f, (u16)SMSGetGameRenderHeight(),
+	    (u16)SMSGetGameRenderWidth());
 	param_1->push_back(ortho3, CUE_SET_PROJECTION);
 
 	JDrama::TViewObj* group2D2
@@ -207,7 +208,7 @@ void TMarDirector::initECDisp(
 	param_1->push_back(group2D2, CUE_DRAW);
 
 	JDrama::TOrthoProj* ortho4
-	    = new JDrama::TOrthoProj(0.0f, 16.0f, 600.0f, 464.0f);
+	    = new JDrama::TOrthoProj(-500.0f, 500.0f, 0.0f, 16.0f, 600.0f, 464.0f);
 	param_1->push_back(ortho4, CUE_SET_PROJECTION);
 
 	JDrama::TViewObj* group2D
