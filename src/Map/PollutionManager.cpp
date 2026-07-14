@@ -96,14 +96,14 @@ void TPollutionManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_UNK1000000) {
 		getCounterObj().countObjDegree();
 	} else if (cue & CUE_SEMITRANSPARENT_PRIO_2) {
-		u8 uVar1 = cue >> 0x10;
-		if (uVar1 == 0)
+		u8 layer = cue >> CUE_OFFSET_POLLUTION_LAYER;
+		if (layer == 0)
 			getCounterLayer().calcViewMtx();
 
-		getCounterLayer().countTexDegree(uVar1);
+		getCounterLayer().countTexDegree(layer);
 
 		int last = getJointModelNum() - 1;
-		if (uVar1 == last)
+		if (layer == last)
 			getCounterLayer().resetTask();
 	} else {
 		TJointModelManager::perform(cue, graphics);
