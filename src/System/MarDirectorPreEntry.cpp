@@ -36,12 +36,12 @@ void TMarDirector::preEntry(TPerformList* list)
 	                CUE_SET_DRAW_BUFFER | CUE_DRAW_INIT);
 	list->push_back("DrawBuf Map 半透明優先 (xlu)",
 	                CUE_SET_DRAW_BUFFER | CUE_DRAW_INIT);
-	list->push_back("マップ", 0x4000200);
+	list->push_back("マップ", CUE_SEMITRANSPARENT_PRIO_1 | CUE_ENTRY);
 	list->push_back("DrawBuf Map 半透明優先2 (opa)",
 	                CUE_SET_DRAW_BUFFER | CUE_DRAW_INIT);
 	list->push_back("DrawBuf Map 半透明優先2 (xlu)",
 	                CUE_SET_DRAW_BUFFER | CUE_DRAW_INIT);
-	list->push_back("マップ", 0x2000200);
+	list->push_back("マップ", CUE_SEMITRANSPARENT_PRIO_2 | CUE_ENTRY);
 	list->push_back("DrawBuf Graffito", CUE_SET_DRAW_BUFFER | CUE_DRAW_INIT);
 	list->push_back("落書きグループ", CUE_CALC_VIEW | CUE_ENTRY);
 	list->push_back("ライトマネージャー", CUE_SET_DRAW_BUFFER);
@@ -62,11 +62,12 @@ void TMarDirector::preEntry(TPerformList* list)
 	if (indirectSheen) {
 		list->push_back("DrawBuf Indirect",
 		                CUE_SET_DRAW_BUFFER | CUE_DRAW_INIT);
-		list->push_back(indirectSheen, 0x40000204);
+		list->push_back(indirectSheen,
+		                CUE_UNK40000000 | CUE_ENTRY | CUE_CALC_VIEW);
 	}
 	list->push_back(camera1, CUE_SET_PROJECTION);
 	list->push_back(setViewMtx, CUE_CALC_VIEW);
-	list->push_back("プレーヤーグループ", 0x10000000);
+	list->push_back("プレーヤーグループ", CUE_UNK10000000);
 	list->push_back("プレーヤーグループ", CUE_CALC_VIEW | CUE_ENTRY);
-	list->push_back("プレーヤーグループ", 0x8000000);
+	list->push_back("プレーヤーグループ", CUE_UNK8000000);
 }

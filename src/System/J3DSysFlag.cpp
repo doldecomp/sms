@@ -1,5 +1,6 @@
 #include <System/J3DSysFlag.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
+#include <System/MarDirector.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 
 void TJ3DSysFlag::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -37,10 +38,10 @@ void TReInitGX::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TGXAlphaUpdate::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (cue & 0x40000000)
+	if (cue & CUE_UNK40000000)
 		GXSetAlphaUpdate(GX_TRUE);
 
-	if (cue & 0x20000000) {
+	if (cue & CUE_UNK20000000) {
 		GXSetAlphaUpdate(GX_FALSE);
 		GXSetDstAlpha(GX_FALSE, 0);
 	}

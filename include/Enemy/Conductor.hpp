@@ -3,6 +3,7 @@
 
 #include <System/ParamInst.hpp>
 #include <System/Params.hpp>
+#include <JSystem/JGadget/std-list.hpp>
 #include <JSystem/JDrama/JDRViewObj.hpp>
 
 class TLiveManager;

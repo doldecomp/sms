@@ -160,20 +160,20 @@ int TMarDirector::direct()
 
 			if (unk4C & 0x4000) {
 				local_140.unk2 = 0;
-				unk34->perform(0xffffffff, &local_140);
+				unk34->perform(CUE_ALL, &local_140);
 				break;
 			}
 		} else {
 			local_140.unk2 = 0;
-			unk40->perform(0xffffffff, &local_140);
-			unk38->perform(0xffffffff, &local_140);
-			unk3C->perform(0xffffffff, &local_140);
-			mPerformListGX->perform(0xffffffff, &local_140);
+			unk40->perform(CUE_ALL, &local_140);
+			unk38->perform(CUE_ALL, &local_140);
+			unk3C->perform(CUE_ALL, &local_140);
+			mPerformListGX->perform(CUE_ALL, &local_140);
 			if ((gpSilhouetteManager->unk48 > 0.0f ? true : false)
 			    || gpCamera->unk2C8 != -1) {
-				mPerformListSilhouette->perform(0xffffffff, &local_140);
+				mPerformListSilhouette->perform(CUE_ALL, &local_140);
 			}
-			mPerformListGXPost->perform(0xffffffff, &local_140);
+			mPerformListGXPost->perform(CUE_ALL, &local_140);
 			GXInvalidateTexAll();
 		}
 		desiredAppState = changeState();

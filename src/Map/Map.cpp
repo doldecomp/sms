@@ -387,10 +387,10 @@ void TMap::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_ENTRY) {
-		if ((cue & 0x2000000)) {
+		if ((cue & CUE_SEMITRANSPARENT_PRIO_2)) {
 			if (!mXlu->changeXluJoint(1))
 				return;
-		} else if ((cue & 0x4000000)) {
+		} else if ((cue & CUE_SEMITRANSPARENT_PRIO_1)) {
 			if (!mXlu->changeXluJoint(0))
 				return;
 		} else {
