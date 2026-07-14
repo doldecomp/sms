@@ -161,6 +161,9 @@ public:
 
 	// fabricated
 	bool isIdle() const { return mCurrent == nullptr && mVertebrae.empty(); }
+
+	// fabricated
+	int getVertebraeCount() const { return mVertebrae.size(); }
 };
 
 #endif
