@@ -43,7 +43,7 @@ const char* cStartCamBckFileName   = "/scene/map/camera/StartCamera.bck";
 
 CPolarSubCamera::CPolarSubCamera(const char* name)
     : JDrama::TLookAtCamera(CLBConstUpVec, CLBConstUpVec, CLBConstUpVec, 0.0f,
-                           0.0f, name)
+                            0.0f, name)
     , mMode(CAMERA_MODE_INVALID)
     , mPrevMode(CAMERA_MODE_INVALID)
     , mSavedModeBeforeTalk(CAMERA_MODE_INVALID)

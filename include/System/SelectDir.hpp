@@ -6,7 +6,7 @@
 namespace JDrama {
 class TDisplay;
 class TScreen;
-};
+}; // namespace JDrama
 
 class JKRArchive;
 class JPAEmitterManager;
