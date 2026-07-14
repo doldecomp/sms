@@ -406,3 +406,4 @@ Before submitting a PR with matching work, make sure to check the following:
 - Validate const-ness of global variables -- they get emitted to different sections depending on if const is present or not
 - Validate that all weak symbols are actually marked as inline
   * In case of methods, they should be defined in-line in the header rather than in the cpp file and the inline keyword should not be used
+- Validate that all virtual functions in each class are properly marked as virtual (even if they are overriden) and are sorted in the order they appear inside of the virtual table

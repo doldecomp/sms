@@ -10,13 +10,13 @@ class TBossManta : public TSpineEnemy {
 public:
 	TBossManta(const char*);
 
+	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void init(TLiveManager*);
+	virtual void calcRootMatrix();
 	virtual void control();
 	virtual void moveObject();
-	virtual void calcRootMatrix();
-	virtual void drawObject(JDrama::TGraphics*);
-	virtual void reset();
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual void drawObject(JDrama::TGraphics*) { }
+	virtual void reset() { }
 
 	void updateAttractor();
 	BOOL isPolluting();
@@ -106,17 +106,17 @@ public:
 
 public:
 	/* 0xA8 */ TParamRT<f32> mSLPolluteRadius;
-	/* 0xBC */ TParamRT<int> mSLDamageEffectNum;
+	/* 0xBC */ TParamRT<s32> mSLDamageEffectNum;
 	/* 0xD0 */ TParamRT<f32> mSLAppearDemoInitialZ;
 	/* 0xE4 */ TParamRT<f32> mSLAppearDemoWalkSpeed;
-	/* 0xF8 */ TParamRT<int> mSLMantaRed;
-	/* 0x10C */ TParamRT<int> mSLMantaGreen;
-	/* 0x120 */ TParamRT<int> mSLMantaBlue;
-	/* 0x134 */ TParamRT<int> mSLMantaAlpha;
-	/* 0x148 */ TParamRT<int> mSLAngryMantaRed;
-	/* 0x15C */ TParamRT<int> mSLAngryMantaGreen;
-	/* 0x170 */ TParamRT<int> mSLAngryMantaBlue;
-	/* 0x184 */ TParamRT<int> mSLAngryMantaAlpha;
+	/* 0xF8 */ TParamRT<s32> mSLMantaRed;
+	/* 0x10C */ TParamRT<s32> mSLMantaGreen;
+	/* 0x120 */ TParamRT<s32> mSLMantaBlue;
+	/* 0x134 */ TParamRT<s32> mSLMantaAlpha;
+	/* 0x148 */ TParamRT<s32> mSLAngryMantaRed;
+	/* 0x15C */ TParamRT<s32> mSLAngryMantaGreen;
+	/* 0x170 */ TParamRT<s32> mSLAngryMantaBlue;
+	/* 0x184 */ TParamRT<s32> mSLAngryMantaAlpha;
 	/* 0x198 */ TParamRT<f32> mSLAttractorPower;
 	/* 0x1AC */ TParamRT<f32> mSLPusherPower;
 	/* 0x1C0 */ TParamRT<f32> mSLEscapeLookPoint;
@@ -145,13 +145,13 @@ public:
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
+	virtual TSpineEnemy* createEnemyInstance();
+	virtual void createEnemies(int);
 
 	void spawn(int, const JGeometry::TVec3<f32>&);
-	virtual void createEnemies(int);
 	void setupEfbAlpha(JDrama::TGraphics*);
 	void updateMantaEscape();
 	void drawMantaShadow(JDrama::TGraphics*);
-	virtual TSpineEnemy* createEnemyInstance();
 
 	// UNUSED (mario.MAP, fully inlined) - TODO.
 	void initAdditionalCollision();             // 0x9C
