@@ -111,7 +111,7 @@ void TGCLogoDir::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 	f32 fVar2 = (480 - h) / 2;
 
 	JDrama::TOrthoProj* proj = new JDrama::TOrthoProj(
-	    fVar3, fVar2, fVar3 + logoRendArea.getWidth(), fVar2 + h);
+	    -1.0f, 1.0f, fVar3, fVar2, fVar3 + logoRendArea.getWidth(), fVar2 + h);
 	group2d->getChildren().push_back(proj);
 
 	JDrama::TScreen* screen = new JDrama::TScreen(logoRendArea, "Screen 2D");
