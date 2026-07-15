@@ -1,4 +1,5 @@
 #include <Enemy/BossManta.hpp>
+#include <Map/MapEventSirena.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Enemy/Graph.hpp>
 #include <Strategic/Strategy.hpp>
@@ -25,28 +26,9 @@
 #include <GC2D/GCConsole2.hpp>
 #include <System/MarDirector.hpp>
 #include <System/FlagManager.hpp>
+#include <MSound/MSoundBGM.hpp>
 #include <dolphin/gx.h>
 #include <dolphin/mtx.h>
-
-// rogue includes needed for matching sinit & bss
-#include <MSound/MSSetSound.hpp>
-#include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
-
-f32 TBossManta::sScale[] = { 20.0f, 10.0f, 5.0f, 2.0f, 1.0f, 1.0f };
-int TBossManta::sCenterJointIndex;
-int TBossManta::sBodyJointIndex;
-int TBossManta::sRwingJointIndex;
-int TBossManta::sLwingJointIndex;
-u8 TBossManta::sEscapeFromMario;
-f32 TBossManta::sFrameRate[6] = { 0.3f, 0.5f, 1.2f, 2.0f, 5.0f, 5.3f };
-
-namespace {
-
-// TODO:
-void AttackMario(THitActor*) { }
-
-} // namespace
 
 DEFINE_NERVE(TNerveMantaMove, TLiveActor)
 {
@@ -143,7 +125,6 @@ DEFINE_NERVE(TNerveMantaMove, TLiveActor)
 
 	return FALSE;
 }
-
 DEFINE_NERVE(TNerveMantaHitWater, TLiveActor)
 {
 	TBossManta* self = (TBossManta*)spine->getBody();
@@ -164,7 +145,7 @@ DEFINE_NERVE(TNerveMantaHitWater, TLiveActor)
 	}
 
 	int effectCount
-	    = ((TBossMantaParams*)self->getSaveParam())->mSLDamageEffectNum.get();
+	    = ((TBossMantaParams*)self->getSaveParam())->mSLDamageEffectNum.value;
 
 	const int particles[6][3] = {
 		{ 0x1CE, 0x1CF, 0x1D0 }, { 0x1CB, 0x1CC, 0x1CD }, { 0x1C9, -1, 0x1CA },
@@ -190,7 +171,6 @@ DEFINE_NERVE(TNerveMantaHitWater, TLiveActor)
 	}
 	return FALSE;
 }
-
 DEFINE_NERVE(TNerveMantaSpawn, TLiveActor)
 {
 	TBossManta* self = (TBossManta*)spine->getBody();
@@ -222,7 +202,6 @@ DEFINE_NERVE(TNerveMantaSpawn, TLiveActor)
 	}
 	return FALSE;
 }
-
 DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
 {
 	TBossManta* self = (TBossManta*)spine->getBody();
@@ -230,9 +209,8 @@ DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->getMActor()->setBckFromIndex(0);
 		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
-		MActorAnmBck* bck = self->getMActor()->getAnmBck();
-		if (bck != nullptr)
-			bck->setMotionBlendRatio(0.0f);
+		if (self->getMActor()->getAnmBck() != nullptr)
+			self->getMActor()->getAnmBck()->setMotionBlendRatio(0.0f);
 	}
 
 	if (self->checkCurAnmEnd(0)) {
@@ -245,7 +223,6 @@ DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
 
 	return FALSE;
 }
-
 DEFINE_NERVE(TNerveMantaAppearDemo, TLiveActor)
 {
 	TBossManta* self         = (TBossManta*)spine->getBody();
@@ -254,7 +231,7 @@ DEFINE_NERVE(TNerveMantaAppearDemo, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->mPosition.x = 0.0f;
 		self->mPosition.y = 0.0f;
-		self->mPosition.z = params->mSLAppearDemoInitialZ.get();
+		self->mPosition.z = params->mSLAppearDemoInitialZ.value;
 		self->unk170      = 0.0f;
 		self->unk174      = 0.0f;
 		self->unk178      = -1.0f;
@@ -288,9 +265,18 @@ DEFINE_NERVE(TNerveMantaAppearDemo, TLiveActor)
 	gpMSound->startSoundActor(MSD_SE_BS_MANTA_DRAW_DEMO, &self->mPosition, 0,
 	                          nullptr, 0, 4);
 
-	self->unk190 = params->mSLAppearDemoWalkSpeed.get();
+	self->unk190 = params->mSLAppearDemoWalkSpeed.value;
 	return FALSE;
 }
+
+// UNUSED (AttackMario__9@unnamed@FP9THitActor, mario.MAP, 0x144, fully
+// inlined at every call site) - moveObject() and
+// TBossMantaAdditionalCollision::perform() both duplicate this exact
+// dir-normalize + SMS_SendMessageToMario loop, which is almost certainly
+// this anonymous-namespace helper. A direct extraction regressed both
+// callers (MWCC didn't fold the call away as it does in retail), so the
+// duplication is kept inline for now. TODO: figure out what retail did
+// differently to get this to inline away.
 
 TBossManta::TBossManta(const char* name)
     : TSpineEnemy(name)
@@ -315,7 +301,6 @@ TBossManta::TBossManta(const char* name)
 	unk19C   = 0;
 	unk1A0   = 0;
 }
-
 BOOL TBossManta::getIntoGraphVec(JGeometry::TVec3<f32>* out)
 {
 	TGraphWeb* graph = getTracer()->getGraph();
@@ -342,7 +327,6 @@ BOOL TBossManta::getIntoGraphVec(JGeometry::TVec3<f32>* out)
 	}
 	return FALSE;
 }
-
 void TBossManta::init(TLiveManager* manager)
 {
 	mManager = manager;
@@ -385,7 +369,6 @@ void TBossManta::init(TLiveManager* manager)
 	unk1A4 = 0;
 	unk150 = 0.5f;
 }
-
 void TBossManta::moveObject()
 {
 	// TODO: WIP - pollution stamp + push-away loop; vector codegen needs work.
@@ -414,7 +397,6 @@ void TBossManta::moveObject()
 		SMS_ThrowMario(dir, 60.0f);
 	}
 }
-
 BOOL TBossManta::collidedWithWater()
 {
 	BOOL allowed;
@@ -452,7 +434,6 @@ BOOL TBossManta::collidedWithWater()
 	}
 	return TRUE;
 }
-
 BOOL TBossManta::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == 0xF
@@ -462,6 +443,7 @@ BOOL TBossManta::receiveMessage(THitActor* sender, u32 message)
 		return collidedWithWater();
 	return FALSE;
 }
+f32 TBossManta::sScale[] = { 20.0f, 10.0f, 5.0f, 2.0f, 1.0f, 1.0f };
 
 void TBossManta::initNthGeneration(int gen)
 {
@@ -548,7 +530,6 @@ void TBossManta::initNthGeneration(int gen)
 		}
 	}
 }
-
 void TBossManta::control()
 {
 	if (unk1A0 > 0)
@@ -599,7 +580,6 @@ void TBossManta::control()
 
 	TLiveActor::control();
 }
-
 void TBossManta::calcRootMatrix()
 {
 	if (unk154 < 0x31)
@@ -626,19 +606,17 @@ void TBossManta::calcRootMatrix()
 	(Vec&)getModel()->unk14 = (Vec&)mScaling;
 	MTXCopy(m, getModel()->unk20);
 }
-
 BOOL TBossManta::isPolluting()
 {
 	const u8 pollute[6] = { 1, 1, 1, 1, 1, 1 };
 	return pollute[unk18C];
 }
-
 f32 TBossManta::getPolluteRadius()
 {
 	if (unk18C < 4) {
 		if (unk18C < 0)
 			return 0.0f;
-		return ((TBossMantaParams*)getSaveParam())->mSLPolluteRadius.get()
+		return ((TBossMantaParams*)getSaveParam())->mSLPolluteRadius.value
 		       * mScaling.x;
 	}
 	if (unk18C < 6)
@@ -658,14 +636,14 @@ void TBossManta::updateAttractor()
 		force.set(0.0f, 0.0f, 0.0f);
 	else
 		force.setLength(1.0f);
-	force.x *= params->mSLAttractorPower.get();
-	force.y *= params->mSLAttractorPower.get();
-	force.z *= params->mSLAttractorPower.get();
+	force.x *= params->mSLAttractorPower.value;
+	force.y *= params->mSLAttractorPower.value;
+	force.z *= params->mSLAttractorPower.value;
 
 	JGeometry::TVec3<f32> facing(unk170, unk174, unk178);
-	facing.x *= params->mSLPusherPower.get();
-	facing.y *= params->mSLPusherPower.get();
-	facing.z *= params->mSLPusherPower.get();
+	facing.x *= params->mSLPusherPower.value;
+	facing.y *= params->mSLPusherPower.value;
+	facing.z *= params->mSLPusherPower.value;
 
 	JGeometry::TVec3<f32> selfPos;
 	selfPos.x = mPosition.x + facing.x;
@@ -682,9 +660,9 @@ void TBossManta::updateAttractor()
 
 		JGeometry::TVec3<f32> otherFacing(other->unk170, other->unk174,
 		                                  other->unk178);
-		otherFacing.x *= params->mSLPusherPower.get();
-		otherFacing.y *= params->mSLPusherPower.get();
-		otherFacing.z *= params->mSLPusherPower.get();
+		otherFacing.x *= params->mSLPusherPower.value;
+		otherFacing.y *= params->mSLPusherPower.value;
+		otherFacing.z *= params->mSLPusherPower.value;
 
 		JGeometry::TVec3<f32> otherPos;
 		otherPos.x = other->mPosition.x + otherFacing.x;
@@ -701,12 +679,12 @@ void TBossManta::updateAttractor()
 		f32 dist   = JGeometry::TUtil<f32>::sqrt(distSq);
 		if (dist > 0.1f) {
 			dist = JGeometry::TUtil<f32>::sqrt(distSq);
-			if (dist < params->mSLEscapeRegion.get()) {
+			if (dist < params->mSLEscapeRegion.value) {
 				if (distSq == 0.0000038146973f)
 					delta.set(0.0f, 0.0f, 0.0f);
 				else
 					delta.setLength(1.0f);
-				f32 pushScale = params->mSLPusherPower.get()
+				f32 pushScale = params->mSLPusherPower.value
 				                / JGeometry::TUtil<f32>::sqrt(delta.dot(delta));
 				delta.x *= pushScale;
 				delta.y *= pushScale;
@@ -745,24 +723,32 @@ void TBossManta::updateAttractor()
 	unk16C = force.z;
 }
 
+int TBossManta::sCenterJointIndex;
+int TBossManta::sRwingJointIndex;
+int TBossManta::sLwingJointIndex;
+u8 TBossManta::sEscapeFromMario;
+f32 TBossManta::sFrameRate[6] = { 0.3f, 0.5f, 1.2f, 2.0f, 5.0f, 5.3f };
+
 void TBossMantaManager::TMantaBattleState::update()
 {
+	int pad[4];
 	static JAISound* sDefeatSE;
-
 	switch (unk4) {
 	case 0:
 		if (TFlagManager::getInstance()->getBool(0x50007)) {
-			gpMarDirector->fireStartDemoCamera("sirena_manta", nullptr, -1,
-			                                   0.0f, true, nullptr, 0, nullptr,
-			                                   JDrama::TFlagT<u16>(0));
+			TMarDirector* director = gpMarDirector;
+			director->fireStartDemoCamera("sirena_manta", nullptr, -1,
+			                              0.0f, true, nullptr, 0, nullptr,
+			                              JDrama::TFlagT<u16>(0));
 			((TBossManta*)unk0->getObj(0))->initNthGeneration(0);
 			MSBgm::stopTrackBGMs(7, 10);
 			unk4++;
 		}
 		break;
 	case 1: {
+		int i;
 		bool allMaxGen = true;
-		for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
+		for (i = 0; i < unk0->getActiveObjNum(); ++i) {
 			TBossManta* m = (TBossManta*)unk0->getObj(i);
 			if (m->checkLiveFlag(LIVE_FLAG_DEAD))
 				continue;
@@ -772,7 +758,7 @@ void TBossMantaManager::TMantaBattleState::update()
 			}
 		}
 		if (allMaxGen) {
-			for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
+			for (i = 0; i < unk0->getActiveObjNum(); ++i) {
 				TBossManta* m = (TBossManta*)unk0->getObj(i);
 				if (!m->checkLiveFlag(LIVE_FLAG_DEAD))
 					m->initNthGeneration(5);
@@ -782,8 +768,9 @@ void TBossMantaManager::TMantaBattleState::update()
 		break;
 	}
 	case 2: {
+		int i;
 		bool victory = true;
-		for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
+		for (i = 0; i < unk0->getActiveObjNum(); ++i) {
 			TBossManta* m = (TBossManta*)unk0->getObj(i);
 			if (m->unk18C != 5)
 				continue;
@@ -802,16 +789,18 @@ void TBossMantaManager::TMantaBattleState::update()
 	}
 	case 3:
 		if (sDefeatSE == nullptr) {
-			// TODO: WIP - post-boss event flag trigger (name lookup + flag
-			// set, exact field/type unconfirmed).
+			JDrama::TNameRefGen::search<TMapEventSirenaSink>(
+			    "\x83\x43\x83\x78\x83\x93\x83\x67\x81\x69\x83\x7a\x83\x65\x83\x8b\x92\xbe\x82\xde\x81\x6a")
+			    ->unk64 = true;
 			unk4++;
 		}
+		break;
+	case 4:
 		break;
 	default:
 		break;
 	}
 }
-
 void TBossMantaManager::TMantaMessageState::update()
 {
 	switch (unk4) {
@@ -866,14 +855,13 @@ TBossMantaAdditionalCollisionSet::TBossMantaAdditionalCollisionSet()
 	for (int i = 0; i < 3; ++i)
 		(&unk0)[i] = new TBossMantaAdditionalCollision("マンタ追加コリジョン");
 }
-
 BOOL TBossMantaAdditionalCollisionSet::isUsed()
 {
 	return unkC != nullptr && !unkC->checkLiveFlag(LIVE_FLAG_DEAD);
 }
-
 void TBossMantaAdditionalCollisionSet::adapt(TBossManta* manta)
 {
+	int pad[22];
 	unkC = manta;
 	unk0->setHitParams(54.0f * unkC->mScaling.x, 100.0f,
 	                   54.0f * unkC->mScaling.x, 100.0f);
@@ -885,7 +873,6 @@ void TBossMantaAdditionalCollisionSet::adapt(TBossManta* manta)
 	unk4->unk68 = unkC;
 	unk8->unk68 = unkC;
 }
-
 void TBossMantaAdditionalCollisionSet::update(u32 cue,
                                               JDrama::TGraphics* graphics)
 {
@@ -934,7 +921,6 @@ void TBossMantaAdditionalCollisionSet::update(u32 cue,
 		unk8->mPosition.z = 0.75f * (lwingZ - centerZ) + centerZ;
 	}
 }
-
 BOOL TBossMantaAdditionalCollision::receiveMessage(THitActor* sender,
                                                    u32 message)
 {
@@ -942,7 +928,6 @@ BOOL TBossMantaAdditionalCollision::receiveMessage(THitActor* sender,
 		return FALSE;
 	return unk68->receiveMessage(sender, message);
 }
-
 void TBossMantaAdditionalCollision::perform(u32 cue,
                                             JDrama::TGraphics* graphics)
 {
@@ -983,13 +968,11 @@ TBossMantaManager::TBossMantaManager(const char* name)
 	unk74 = new JGeometry::TVec3<f32>[7];
 	unk78 = new JGeometry::TVec3<f32>[2];
 }
-
 void TBossMantaManager::load(JSUMemoryInputStream& stream)
 {
 	unk38 = new TBossMantaParams("/enemy/bossmanta.prm");
 	TEnemyManager::load(stream);
 }
-
 void TBossMantaManager::loadAfter()
 {
 	static const char* onetimeFilenames[5] = {
@@ -1038,7 +1021,6 @@ void TBossMantaManager::loadAfter()
 
 	TEnemyManager::loadAfter();
 }
-
 void TBossMantaManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
@@ -1050,12 +1032,10 @@ void TBossMantaManager::createModelData()
 	};
 	createModelDataArray(entry);
 }
-
 TSpineEnemy* TBossMantaManager::createEnemyInstance()
 {
 	return new TBossManta("マンタ");
 }
-
 void TBossMantaManager::drawMantaShadow(JDrama::TGraphics* graphics)
 {
 	setupEfbAlpha(graphics);
@@ -1109,19 +1089,19 @@ void TBossMantaManager::drawMantaShadow(JDrama::TGraphics* graphics)
 
 	TBossMantaParams* params = (TBossMantaParams*)getSaveParam();
 	f32 t                    = (f32)unk84 / 15.0f;
-	unk80.r                  = (u8)((1.0f - t) * (f32)params->mSLMantaRed.get()
-                   + t * (f32)params->mSLAngryMantaRed.get());
-	unk80.g = (u8)((1.0f - t) * (f32)params->mSLMantaGreen.get()
-	               + t * (f32)params->mSLAngryMantaGreen.get());
-	unk80.b = (u8)((1.0f - t) * (f32)params->mSLMantaBlue.get()
-	               + t * (f32)params->mSLAngryMantaBlue.get());
-	unk80.a = (u8)((1.0f - t) * (f32)params->mSLMantaAlpha.get()
-	               + t * (f32)params->mSLAngryMantaAlpha.get());
+	unk80.r                  = (u8)((1.0f - t) * (f32)params->mSLMantaRed.value
+                   + t * (f32)params->mSLAngryMantaRed.value);
+	unk80.g = (u8)((1.0f - t) * (f32)params->mSLMantaGreen.value
+	               + t * (f32)params->mSLAngryMantaGreen.value);
+	unk80.b = (u8)((1.0f - t) * (f32)params->mSLMantaBlue.value
+	               + t * (f32)params->mSLAngryMantaBlue.value);
+	unk80.a = (u8)((1.0f - t) * (f32)params->mSLMantaAlpha.value
+	               + t * (f32)params->mSLAngryMantaAlpha.value);
 	GXSetTevKColor(GX_KCOLOR0, unk80);
 
 	GXLoadTexObj(&texObj, GX_TEXMAP0);
 	GXSetDstAlpha(GX_TRUE, 0xFF);
-	GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
+	GXSetZMode(GX_FALSE, GX_NEVER, GX_FALSE);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
 	GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
 	              GX_COLOR_NULL);
@@ -1141,7 +1121,7 @@ void TBossMantaManager::drawMantaShadow(JDrama::TGraphics* graphics)
 	GXSetColorUpdate(GX_TRUE);
 
 	Mtx m;
-	MTXIdentity(m);
+	PSMTXIdentity(m);
 	GXLoadPosMtxImm(m, GX_PNMTX0);
 	GXSetCurrentMtx(GX_PNMTX0);
 	GXSetCullMode(GX_CULL_NONE);
@@ -1165,7 +1145,6 @@ void TBossMantaManager::drawMantaShadow(JDrama::TGraphics* graphics)
 
 	GXSetProjection(graphics->mProjMtx.mMtx, GX_PERSPECTIVE);
 }
-
 void TBossMantaManager::updateMantaEscape()
 {
 	TBossManta::sEscapeFromMario = 0;
@@ -1193,7 +1172,6 @@ void TBossMantaManager::updateMantaEscape()
 		++p;
 	} while (--count);
 }
-
 void TBossMantaManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TEnemyManager::perform(cue, graphics);
@@ -1207,7 +1185,6 @@ void TBossMantaManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	for (int i = 0; i < 8; ++i)
 		mCollisionSets[i]->update(cue, graphics);
 }
-
 void TBossMantaManager::setupEfbAlpha(JDrama::TGraphics* graphics)
 {
 	ReInitializeGX();
@@ -1222,7 +1199,7 @@ void TBossMantaManager::setupEfbAlpha(JDrama::TGraphics* graphics)
 	GXSetZMode(GX_TRUE, GX_ALWAYS, GX_FALSE);
 
 	Mtx m;
-	MTXIdentity(m);
+	PSMTXIdentity(m);
 	GXLoadPosMtxImm(m, GX_PNMTX0);
 	GXSetCurrentMtx(GX_PNMTX0);
 	GXSetCullMode(GX_CULL_NONE);
@@ -1247,7 +1224,7 @@ void TBossMantaManager::setupEfbAlpha(JDrama::TGraphics* graphics)
 	GXSetNumTevStages(1);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
 	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
-	GXColor matColor = (GXColor) { 0, 0, 0, 0x4 };
+	static const GXColor matColor = { 0, 0, 0, 0xFF };
 	GXSetChanMatColor(GX_COLOR0A0, matColor);
 	GXSetAlphaUpdate(GX_TRUE);
 	GXSetDstAlpha(GX_FALSE, 0);
@@ -1255,13 +1232,12 @@ void TBossMantaManager::setupEfbAlpha(JDrama::TGraphics* graphics)
 	GXSetAlphaUpdate(GX_TRUE);
 	GXSetProjection(graphics->mProjMtx.mMtx, GX_PERSPECTIVE);
 }
-
 void TBossMantaManager::createEnemies(int num)
 {
 	if (num + getObjNum() > getCapacity())
 		num = getCapacity() - getObjNum();
 	if (unk38 != nullptr) {
-		u8 limit = unk38->mSLActiveEnemyNum.get();
+		u8 limit = unk38->mSLActiveEnemyNum.value;
 		if (num + getObjNum() > limit)
 			num = limit - getObjNum();
 	}
@@ -1275,12 +1251,11 @@ void TBossMantaManager::createEnemies(int num)
 		}
 	}
 }
-
 void TBossMantaManager::spawn(int gen, const JGeometry::TVec3<f32>& pos)
 {
 	// TODO: logic correct (ring spawn of counts[gen] manta), but the
 	// Y-rotation matrix-mult codegen shape needs work.
-	const int counts[] = { 1, 2, 3, 4, 4 };
+	static const int counts[] = { 1, 2, 3, 4, 4 };
 
 	int count     = counts[gen];
 	f32 baseAngle = 3.1415927f * (2.0f * MsRandF());
