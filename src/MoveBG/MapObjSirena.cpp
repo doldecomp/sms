@@ -629,3 +629,20 @@ void TPanelRevolve::control()
 		break;
 	}
 }
+
+void TPictureTelesa::afterFinishedAnim()
+{
+	TWaterHitPictureHideObj::afterFinishedAnim();
+	if (isActorType(0x400001A2)) {
+		gpMSound->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN_BIG, 0, nullptr, 0);
+		gpMSound->startSoundActor(MSD_SE_BS_TELESA_V_LAUGH2, &mPosition, 0,
+		                          nullptr, 0, 4);
+	}
+}
+
+void TPictureTelesa::control()
+{
+	TWaterHitPictureHideObj::control();
+	if (unk174 != 0 && getColNum() == 0)
+		unk174 = 0;
+}

@@ -36,6 +36,9 @@ public:
 	void control();
 	void touchActor(THitActor*);
 	void afterFinishedAnim();
+
+public:
+	/* 0x174 */ u8 unk174;
 };
 
 class TPanelRevolve : public TMapObjBase {
