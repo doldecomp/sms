@@ -4,6 +4,8 @@
 #include <MSound/MSound.hpp>
 #include <MSound/SoundEffects.hpp>
 #include <Player/MarioAccess.hpp>
+#include <M3DUtil/MActorData.hpp>
+#include <Strategic/ObjModel.hpp>
 
 // Definition order in this file is the REVERSE of the order symbols appear in
 // mario.MAP, because MoveBG is compiled with -inline deferred.
@@ -32,6 +34,58 @@ TCloset::TCloset(const char* name)
     , unk16C(false)
     , unk16D(0)
 {
+}
+
+void TSirenabossWall::initMapObj()
+{
+	TMapObjBase::initMapObj();
+	mMActor->offMakeDL();
+	MActorAnmData* anmData = mMActorKeeper->getMActorAnmData();
+	mMultiBtk               = new TMultiBtk(3, getModel()->getModelData());
+	for (int i = 0; i <= 2; i++) {
+		J3DAnmTextureSRTKey* data;
+		if (i < anmData->getUnk38()->getAnmNum())
+			data = (J3DAnmTextureSRTKey*)anmData->getUnk38()->unkC[i];
+		else
+			data = nullptr;
+		mMultiBtk->setNthData(i, data);
+	}
+}
+
+void TSirenabossWall::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	if (cue & CUE_CALC_ANIM)
+		mMultiBtk->update();
+	TMapObjBase::perform(cue, graphics);
+}
+
+void TSirenabossWall::drawObject(JDrama::TGraphics* graphics)
+{
+	mMActor->getModel()->calc();
+}
+
+void TSirenaCasinoRoof::initMapObj()
+{
+	TMapObjBase::initMapObj();
+	mMActor->offMakeDL();
+	MActorAnmData* anmData = mMActorKeeper->getMActorAnmData();
+	mMultiBtk               = new TMultiBtk(3, getModel()->getModelData());
+	for (int i = 0; i <= 2; i++) {
+		J3DAnmTextureSRTKey* data;
+		if (i < anmData->getUnk38()->getAnmNum())
+			data = (J3DAnmTextureSRTKey*)anmData->getUnk38()->unkC[i];
+		else
+			data = nullptr;
+		mMultiBtk->setNthData(i, data);
+	}
+	mMActor->setBrk("casino_lighting");
+}
+
+void TSirenaCasinoRoof::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	if (cue & CUE_CALC_ANIM)
+		mMultiBtk->update();
+	TMapObjBase::perform(cue, graphics);
 }
 
 void TWarpAreaActor::perform(u32 cue, JDrama::TGraphics* graphics)
