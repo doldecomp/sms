@@ -8,6 +8,8 @@
 
 // TODO: mark virtual methods as such
 
+class TCasinoPanelGate;
+
 // TODO: TMsRange<T> is only evidenced by two UNUSED dtor symbols in this TU
 // (__dt__11TMsRange<f>Fv / __dt__11TMsRange<l>Fv, 0x40 each). Its members and
 // whether the dtor is virtual are unknown - the shape below is a guess needed
@@ -107,7 +109,7 @@ public:
 	/* 0x138 */ TMapCollisionWarp* unk138;
 	/* 0x13C */ u8 unk13C;
 	/* 0x140 */ f32 unk140;
-	/* 0x144 */ THitActor* unk144;
+	/* 0x144 */ TCasinoPanelGate* unk144;
 };
 
 class TSirenaRollMapObj : public TMapObjBase {
@@ -164,6 +166,11 @@ public:
 	void moveObject();
 	void initMapObj();
 	virtual f32 getRollAngX(int idx) const { return unk13C[idx]; }
+
+public:
+	/* 0x168 */ TMapCollisionWarp* mMapCollisionWarp;
+	/* 0x16C */ bool unk16C;
+	/* 0x16D */ u8 unk16D;
 };
 
 class TItemSlotDrum : public TSirenaRollMapObj {

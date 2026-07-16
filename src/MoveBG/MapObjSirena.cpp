@@ -5,7 +5,10 @@
 #include <MSound/SoundEffects.hpp>
 #include <Player/MarioAccess.hpp>
 #include <M3DUtil/MActorData.hpp>
+#include <Map/MapCollisionEntry.hpp>
+#include <MarioUtil/MathUtil.hpp>
 #include <Strategic/ObjModel.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
 
 // Definition order in this file is the REVERSE of the order symbols appear in
 // mario.MAP, because MoveBG is compiled with -inline deferred.
@@ -19,7 +22,7 @@ TSirenaRollMapObj::TSirenaRollMapObj(const char* name)
     , unk148(0)
     , unk14C(0.0f)
     , unk150(0.0f)
-    , unk154(0.5f)
+    , unk154(1.0f)
     , unk158(10.0f)
     , unk15C(0.1f)
     , unk160(0.2f)
@@ -34,6 +37,55 @@ TCloset::TCloset(const char* name)
     , unk16C(false)
     , unk16D(0)
 {
+}
+
+TSakuCasino::TSakuCasino(const char* name)
+    : TMapObjBase(name)
+    , unk138(nullptr)
+    , unk13C(0)
+    , unk140(0.0f)
+    , unk144(nullptr)
+{
+}
+
+void TSakuCasino::initMapObj()
+{
+	unk140 = 0.0f;
+	unk13C = 0;
+	TMapObjBase::initMapObj();
+	getModel();
+	Mtx mtx;
+	MsMtxSetXYZRPH(mtx, mPosition.x, 2.0f * unk140 + mPosition.y, mPosition.z,
+	               mRotation.x, mRotation.y, mRotation.z);
+	unk138 = new TMapCollisionWarp();
+	unk138->init("/mapObj/SakuCasino", 0, this);
+	PSMTXCopy(mtx, unk138->unk20);
+	unk138->setUp();
+}
+
+void TSakuCasino::loadAfter()
+{
+	TMapObjBase::loadAfter();
+	unk144 = JDrama::TNameRefGen::search<TCasinoPanelGate>("pazul");
+}
+
+void TSakuCasino::calcRootMatrix()
+{
+	J3DModel* model = getModel();
+	Mtx mtx;
+	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y + unk140, mPosition.z,
+	               mRotation.x, mRotation.y, mRotation.z);
+	PSMTXCopy(mtx, model->getBaseTRMtx());
+	model->setBaseScale(mScaling);
+	mtx[1][3] += unk140;
+	if (unk144 != nullptr && unk144->unk16D != 0) {
+		unk13C = 1;
+		unk138->remove();
+	}
+	if (unk13C != 0) {
+		unk140 -= 1.0f;
+		mScaling.y *= 0.99f;
+	}
 }
 
 void TSirenabossWall::initMapObj()
