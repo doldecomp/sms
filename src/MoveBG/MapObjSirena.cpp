@@ -174,6 +174,106 @@ u32 TSlotDrum::touchWater(THitActor* water)
 	return 0;
 }
 
+TCasinoPanelGate::TCasinoPanelGate(const char* name)
+    : TSirenaRollMapObj(name)
+    , mMapCollisionWarp(nullptr)
+    , unk16C(false)
+    , unk16D(0)
+{
+}
+
+void TCasinoPanelGate::initMapObj()
+{
+	unk148 = 16;
+	unk14C = 410.0f;
+	unk150 = mPosition.y;
+	unk154 = 4.0f;
+	unk158 = 15.0f;
+	unk15C = 0.2f;
+	unk160 = 0.5f;
+	unk164 = 0;
+	unk138 = new f32[unk148];
+	unk13C = new f32[unk148];
+	for (int i = 0; i < unk148; i++) {
+		unk138[i] = 0.0f;
+		unk13C[i] = 0.0f;
+	}
+	TMapObjBase::initMapObj();
+	for (u16 i = 1; i <= unk148; i++)
+		mMActor->setJointCallback(i, partsRollCallback);
+}
+
+void TCasinoPanelGate::calcRootMatrix()
+{
+	gpCurObject     = this;
+	J3DModel* model = getModel();
+	MsMtxSetXYZRPH(model->getBaseTRMtx(), mPosition.x, mPosition.y + unk14C,
+	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
+	model->setBaseScale(mScaling);
+	unk140 = 0.25f * mDamageRadius;
+	unk144 = 0.25f * mDamageHeight;
+}
+
+u32 TCasinoPanelGate::touchWater(THitActor* water)
+{
+	if (unk16D != 0)
+		return 1;
+	if (fabsf(mPosition.z - water->mPosition.z) < 50.0f) {
+		unk164 = 1;
+		int idx;
+		if (water->mPosition.y > 3.0f * unk144 + mPosition.y) {
+			if (water->mPosition.x < mPosition.x - unk140)
+				idx = 12;
+			else if (water->mPosition.x < mPosition.x)
+				idx = 13;
+			else if (water->mPosition.x > mPosition.x + unk140)
+				idx = 15;
+			else
+				idx = 14;
+			if (water->mPosition.y < 3.5f * unk144 + mPosition.y)
+				unk164 = -1;
+		} else if (water->mPosition.y > 2.0f * unk144 + mPosition.y) {
+			if (water->mPosition.x < mPosition.x - unk140)
+				idx = 8;
+			else if (water->mPosition.x < mPosition.x)
+				idx = 9;
+			else if (water->mPosition.x > mPosition.x + unk140)
+				idx = 11;
+			else
+				idx = 10;
+			if (water->mPosition.y < 2.5f * unk144 + mPosition.y)
+				unk164 = -1;
+		} else if (water->mPosition.y > mPosition.y + unk144) {
+			if (water->mPosition.x < mPosition.x - unk140)
+				idx = 4;
+			else if (water->mPosition.x < mPosition.x)
+				idx = 5;
+			else if (water->mPosition.x > mPosition.x + unk140)
+				idx = 7;
+			else
+				idx = 6;
+			if (water->mPosition.y < 1.5f * unk144 + mPosition.y)
+				unk164 = -1;
+		} else {
+			if (water->mPosition.x < mPosition.x - unk140)
+				idx = 0;
+			else if (water->mPosition.x < mPosition.x)
+				idx = 1;
+			else if (water->mPosition.x > mPosition.x + unk140)
+				idx = 3;
+			else
+				idx = 2;
+			if (water->mPosition.y < 0.5f * unk144 + mPosition.y)
+				unk164 = -1;
+		}
+		unk138[idx] += unk154 * unk164;
+		if (fabsf(unk138[idx]) > unk158)
+			unk138[idx] = unk158 * unk164;
+		return 1;
+	}
+	return 0;
+}
+
 TDonchou::TDonchou(const char* name)
     : TMapObjBase(name)
     , unk138(nullptr)
