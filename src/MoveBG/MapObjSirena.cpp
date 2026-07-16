@@ -120,6 +120,40 @@ TCloset::TCloset(const char* name)
 {
 }
 
+void TCloset::initMapObj()
+{
+	unk148 = 4;
+	unk14C = 0.0f;
+	unk150 = mPosition.y;
+	unk154 = 2.5f;
+	unk158 = 8.0f;
+	unk15C = 0.1f;
+	unk160 = 0.5f;
+	unk164 = 0;
+	unk16C = false;
+	unk16D = 0;
+	unk138 = new f32[unk148];
+	unk13C = new f32[unk148];
+	for (int i = 0; i < unk148; i++) {
+		unk138[i] = 0.0f;
+		unk13C[i] = 180.0f;
+	}
+	TMapObjBase::initMapObj();
+	for (int i = 1; i <= unk148; i++)
+		mMActor->setJointCallback(i, partsRollCallback);
+	unk140 = 0.25f * mDamageRadius;
+	unk144 = mDamageHeight;
+	getModel();
+	Mtx mtx;
+	MsMtxSetXYZRPH(mtx, mPosition.x, 2.0f * unk14C + mPosition.y, mPosition.z,
+	               mRotation.x, mRotation.y, mRotation.z);
+	mMapCollisionWarp = new TMapCollisionWarp();
+	mMapCollisionWarp->init("/mapObj/Closet", 0, this);
+	PSMTXCopy(mtx, mMapCollisionWarp->unk20);
+	mMapCollisionWarp->setUp();
+	initAnmSound();
+}
+
 TSakuCasino::TSakuCasino(const char* name)
     : TMapObjBase(name)
     , unk138(nullptr)
