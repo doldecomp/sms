@@ -134,7 +134,7 @@ public:
 	/* 0x158 */ f32 unk158;
 	/* 0x15C */ f32 unk15C;
 	/* 0x160 */ f32 unk160;
-	/* 0x164 */ u16 unk164;
+	/* 0x164 */ s16 unk164;
 };
 
 class TCloset : public TSirenaRollMapObj {
@@ -206,9 +206,16 @@ public:
 	u32 touchWater(THitActor*);
 	void calcRootMatrix();
 	void moveObject();
-	void initNeonMatColor();
+	virtual void initNeonMatColor();
 	void initMapObj();
 	virtual f32 getRollAngX(int idx) const { return unk13C[idx]; }
+
+public:
+	/* 0x168 */ s32 unk168;
+	/* 0x16C */ u32 unk16C;
+	/* 0x170 */ GXColorS10 unk170[3];
+	/* 0x188 */ f32 unk188[3];
+	/* 0x194 */ u8 unk194;
 };
 
 class TRoulette : public TMapObjBase {
