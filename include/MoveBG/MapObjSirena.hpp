@@ -9,6 +9,8 @@
 // TODO: mark virtual methods as such
 
 class TCasinoPanelGate;
+class TSlotDrum;
+class TItemSlotDrum;
 
 // TODO: TMsRange<T> is only evidenced by two UNUSED dtor symbols in this TU
 // (__dt__11TMsRange<f>Fv / __dt__11TMsRange<l>Fv, 0x40 each). Its members and
@@ -156,6 +158,14 @@ public:
 	void calcRootMatrix();
 	void loadAfter();
 	void initMapObj();
+
+public:
+	/* 0x138 */ TMapCollisionWarp* unk138;
+	/* 0x13C */ u8 unk13C;
+	/* 0x140 */ f32 unk140;
+	/* 0x144 */ TSlotDrum* unk144;
+	/* 0x148 */ TItemSlotDrum* unk148;
+	/* 0x14C */ u32 unk14C;
 };
 
 class TCasinoPanelGate : public TSirenaRollMapObj {

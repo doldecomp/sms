@@ -9,6 +9,9 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <System/Application.hpp>
+#include <System/MarDirector.hpp>
+#include <math.h>
 
 // Definition order in this file is the REVERSE of the order symbols appear in
 // mario.MAP, because MoveBG is compiled with -inline deferred.
@@ -29,6 +32,48 @@ TSirenaRollMapObj::TSirenaRollMapObj(const char* name)
     , unk164(1)
 {
 	gpCurObject = nullptr;
+}
+
+TDonchou::TDonchou(const char* name)
+    : TMapObjBase(name)
+    , unk138(nullptr)
+    , unk13C(0)
+    , unk140(0.0f)
+    , unk14C(0)
+{
+}
+
+void TDonchou::initMapObj()
+{
+	unk140 = 0.0f;
+	unk13C = 0;
+	unk148 = nullptr;
+	unk144 = nullptr;
+	TMapObjBase::initMapObj();
+	getModel();
+	Mtx mtx;
+	MsMtxSetXYZRPH(mtx, mPosition.x, 2.0f * unk140 + mPosition.y, mPosition.z,
+	               mRotation.x, mRotation.y, mRotation.z);
+	unk138 = new TMapCollisionWarp();
+	unk138->init("/mapObj/Donchou", 0, this);
+	PSMTXCopy(mtx, unk138->unk20);
+	unk138->setUp();
+}
+
+void TDonchou::loadAfter()
+{
+	TMapObjBase::loadAfter();
+	if (gpApplication.mCurrArea.unk0 == 14 && gpMarDirector->unk7D == 0) {
+		unk144 = JDrama::TNameRefGen::search<TSlotDrum>("srotdram");
+		unk148 = JDrama::TNameRefGen::search<TItemSlotDrum>("itemsrotdram");
+	}
+}
+
+u32 TDonchou::touchWater(THitActor* water)
+{
+	if (fabsf(mPosition.z - water->mPosition.z) < 50.0f)
+		return 1;
+	return 0;
 }
 
 TCloset::TCloset(const char* name)
