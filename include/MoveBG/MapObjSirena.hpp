@@ -184,22 +184,6 @@ public:
 	/* 0x16D */ u8 unk16D;
 };
 
-class TItemSlotDrum : public TSirenaRollMapObj {
-public:
-	TItemSlotDrum(const char* name = "スロットマシーン");
-	f32 getResultFromAng(f32);
-	int getForcastResult(int);
-	// UNUSED (MAP: size 0x50) - never called, but must exist for inlining
-	int getDrumResult(int);
-	// UNUSED (MAP: size 0x8C) - never called, but must exist for inlining
-	int getSlotResult();
-	void generateItem();
-	u32 touchWater(THitActor*);
-	void calcRootMatrix();
-	void moveObject();
-	void loadAfter();
-};
-
 class TSlotDrum : public TSirenaRollMapObj {
 public:
 	TSlotDrum(const char* name = "スロットマシーン");
@@ -216,6 +200,30 @@ public:
 	/* 0x170 */ GXColorS10 unk170[3];
 	/* 0x188 */ f32 unk188[3];
 	/* 0x194 */ u8 unk194;
+};
+
+class TItemSlotDrum : public TSlotDrum {
+public:
+	TItemSlotDrum(const char* name = "スロットマシーン");
+	int getResultFromAng(f32);
+	int getForcastResult(int);
+	// UNUSED (MAP: size 0x50) - never called, but must exist for inlining
+	int getDrumResult(int);
+	// UNUSED (MAP: size 0x8C) - never called, but must exist for inlining
+	int getSlotResult();
+	void generateItem();
+	u32 touchWater(THitActor*);
+	void calcRootMatrix();
+	void moveObject();
+	void loadAfter();
+
+public:
+	/* 0x198 */ u32 unk198;
+	/* 0x19C */ u8 unk19C[3];
+	/* 0x19F */ u8 unk19F[3];
+	/* 0x1A2 */ u8 unk1A2;
+	/* 0x1A4 */ u32 unk1A4;
+	/* 0x1A8 */ f32 unk1A8;
 };
 
 class TRoulette : public TMapObjBase {

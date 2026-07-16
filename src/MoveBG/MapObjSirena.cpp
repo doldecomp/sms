@@ -174,6 +174,47 @@ u32 TSlotDrum::touchWater(THitActor* water)
 	return 0;
 }
 
+TItemSlotDrum::TItemSlotDrum(const char* name)
+    : TSlotDrum(name)
+    , unk198(0)
+    , unk1A4(0)
+    , unk1A8(5.0f)
+{
+	for (int i = 0; i < 3; i++) {
+		unk19C[i] = 0;
+		unk19F[i] = 1;
+	}
+	unk1A2 = 1;
+}
+
+void TItemSlotDrum::calcRootMatrix()
+{
+	gpCurObject = this;
+	u8 spinning = 0;
+	for (int i = 0; i < 3; i++) {
+		if (0.0f != unk138[i])
+			spinning = 1;
+	}
+	if (spinning)
+		gpMSound->startSoundActor(MSD_SE_OBJ_SLOT_SPIN, &mPosition, 0, nullptr,
+		                          0, 4);
+	J3DModel* model = getModel();
+	MsMtxSetXYZRPH(model->getBaseTRMtx(), mPosition.x, mPosition.y - unk14C,
+	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
+	model->setBaseScale(mScaling);
+}
+
+int TItemSlotDrum::getResultFromAng(f32 ang)
+{
+	if (ang < 89.0f)
+		return 0;
+	if (ang < 179.0f)
+		return 1;
+	if (ang < 269.0f)
+		return 2;
+	return 3;
+}
+
 TCasinoPanelGate::TCasinoPanelGate(const char* name)
     : TSirenaRollMapObj(name)
     , mMapCollisionWarp(nullptr)
