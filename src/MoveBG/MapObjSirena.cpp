@@ -9,6 +9,8 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <System/Application.hpp>
 #include <System/MarDirector.hpp>
 #include <math.h>
@@ -17,6 +19,40 @@
 // mario.MAP, because MoveBG is compiled with -inline deferred.
 
 static TSirenaRollMapObj* gpCurObject;
+
+static int partsRollCallback(J3DNode* node, int flag)
+{
+	if (flag == 0) {
+		if (gpCurObject == nullptr)
+			return 1;
+		int jntNo     = ((J3DJoint*)node)->getJntNo();
+		MtxPtr jntMtx = &gpCurObject->getModel()->getAnmMtx(jntNo)[0];
+		int idx       = jntNo - 1;
+		Mtx rot;
+		Mtx scale;
+		scale[0][3] = 0.0f;
+		scale[1][3] = 0.0f;
+		scale[2][3] = 0.0f;
+		scale[0][0] = gpCurObject->mScaling.x;
+		scale[0][1] = 0.0f;
+		scale[0][2] = 0.0f;
+		scale[1][0] = 0.0f;
+		scale[1][1] = gpCurObject->mScaling.y;
+		scale[1][2] = 0.0f;
+		scale[2][0] = 0.0f;
+		scale[2][1] = 0.0f;
+		scale[2][2] = gpCurObject->mScaling.z;
+		f32 rollZ = gpCurObject->getRollAngZ(idx);
+		f32 rollY = gpCurObject->getRollAngY(idx);
+		f32 rollX = gpCurObject->getRollAngX(idx);
+		MsMtxSetRotRPH(rot, rollX, rollY, rollZ);
+		PSMTXConcat(jntMtx, rot, jntMtx);
+		PSMTXConcat(jntMtx, scale, jntMtx);
+		PSMTXConcat(J3DSys::mCurrentMtx, rot, J3DSys::mCurrentMtx);
+		PSMTXConcat(J3DSys::mCurrentMtx, scale, J3DSys::mCurrentMtx);
+	}
+	return 1;
+}
 
 TSirenaRollMapObj::TSirenaRollMapObj(const char* name)
     : TMapObjBase(name)
