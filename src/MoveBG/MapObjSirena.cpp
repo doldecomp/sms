@@ -20,6 +20,68 @@
 
 static TSirenaRollMapObj* gpCurObject;
 
+BOOL TRouletteSw::receiveMessage(THitActor* sender, u32 message)
+{
+	if (message == 1) {
+		unk6C = 1;
+		return 1;
+	}
+	return 0;
+}
+
+void TRouletteSw::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	THitActor::perform(cue, graphics);
+	unk68->switchStop();
+}
+
+TRoulette::TRoulette(const char* name)
+    : TMapObjBase(name)
+    , unk138(500.0f)
+    , unk13C(0.0f)
+    , unk140(0)
+    , unk141(0)
+    , unk142(0)
+    , unk144(0.2f)
+    , unk150(nullptr)
+{
+	unk148 = 0;
+	unk14A = 0;
+	unk14C = 0;
+	unk14E = 255;
+	if (gpApplication.mCurrArea.unk0 == 14 && gpMarDirector->unk7D == 1) {
+		unk141 = 1;
+		unk14C = 255;
+	}
+	if (gpApplication.mCurrArea.unk0 == 56) {
+		unk14C = 255;
+		unk142 = 1;
+	}
+}
+
+void TRoulette::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	TMapObjBase::perform(cue, graphics);
+	unk150->perform(cue, graphics);
+}
+
+void TRoulette::calcRootMatrix()
+{
+	J3DModel* model = getModel();
+	MsMtxSetXYZRPH(model->getBaseTRMtx(), mPosition.x, mPosition.y, mPosition.z,
+	               mRotation.x, mRotation.y, mRotation.z);
+	model->setBaseScale(mScaling);
+}
+
+void TRoulette::setRollSp(f32 sp)
+{
+	unk13C          = sp;
+	unk148          = 0;
+	unk14A          = 0;
+	unk14C          = 255;
+	unk150->unk6C = 0;
+}
+
 static int partsRollCallback(J3DNode* node, int flag)
 {
 	if (flag == 0) {

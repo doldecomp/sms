@@ -11,6 +11,7 @@
 class TCasinoPanelGate;
 class TSlotDrum;
 class TItemSlotDrum;
+class TRouletteSw;
 
 // TODO: TMsRange<T> is only evidenced by two UNUSED dtor symbols in this TU
 // (__dt__11TMsRange<f>Fv / __dt__11TMsRange<l>Fv, 0x40 each). Its members and
@@ -219,18 +220,33 @@ public:
 	void moveObject();
 	void perform(u32 cue, JDrama::TGraphics* graphics);
 	void initMapObj();
+
+public:
+	/* 0x138 */ f32 unk138;
+	/* 0x13C */ f32 unk13C;
+	/* 0x140 */ u8 unk140;
+	/* 0x141 */ u8 unk141;
+	/* 0x142 */ u8 unk142;
+	/* 0x144 */ f32 unk144;
+	/* 0x148 */ s16 unk148;
+	/* 0x14A */ s16 unk14A;
+	/* 0x14C */ s16 unk14C;
+	/* 0x14E */ s16 unk14E;
+	/* 0x150 */ TRouletteSw* unk150;
 };
 
-// TODO: TRouletteSw has a @32@ thunk for its dtor in the MAP, which means
-// multiple inheritance. The second base is not yet identified.
-class TRouletteSw : public TMapObjBase {
+class TRouletteSw : public THitActor {
 public:
 	TRouletteSw(const char* name = "ルーレットスイッチ")
-	    : TMapObjBase(name)
+	    : THitActor(name)
 	{
 	}
 	void perform(u32 cue, JDrama::TGraphics* graphics);
 	BOOL receiveMessage(THitActor*, u32);
+
+public:
+	/* 0x68 */ TRoulette* unk68;
+	/* 0x6C */ u8 unk6C;
 };
 
 #endif
