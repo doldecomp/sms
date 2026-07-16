@@ -258,6 +258,39 @@ void TCloset::initMapObj()
 	initAnmSound();
 }
 
+u32 TCloset::touchWater(THitActor* water)
+{
+	if (unk16C != 0)
+		return 0;
+	if (fabsf(mPosition.x - water->mPosition.x) < 50.0f) {
+		f32 halfDepth = 1.1f * unk140;
+		int idx;
+		if (water->mPosition.z < mPosition.z - halfDepth) {
+			idx = 0;
+			if (mRotation.y < 0.0f)
+				idx = 3;
+		} else if (water->mPosition.z < mPosition.z) {
+			idx = 1;
+			if (mRotation.y < 0.0f)
+				idx = 2;
+		} else if (water->mPosition.z < mPosition.z + halfDepth) {
+			idx = 2;
+			if (mRotation.y < 0.0f)
+				idx = 1;
+		} else {
+			idx = 3;
+			if (mRotation.y < 0.0f)
+				idx = 0;
+		}
+		unk164 = 1;
+		unk138[idx] += unk154 * unk164;
+		if (fabsf(unk138[idx]) > unk158)
+			unk138[idx] = unk158 * unk164;
+		return 1;
+	}
+	return 0;
+}
+
 TSakuCasino::TSakuCasino(const char* name)
     : TMapObjBase(name)
     , unk138(nullptr)
