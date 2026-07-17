@@ -3,6 +3,8 @@
 #include <Map/Map.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/SoundEffects.hpp>
+#include <MSound/MSoundBGM.hpp>
+#include <MSound/BackgroundMusic.hpp>
 #include <Player/MarioAccess.hpp>
 #include <M3DUtil/MActorData.hpp>
 #include <Map/MapCollisionEntry.hpp>
@@ -236,6 +238,83 @@ void TSlotDrum::calcRootMatrix()
 	MsMtxSetXYZRPH(model->getBaseTRMtx(), mPosition.x, mPosition.y - unk14C,
 	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
 	model->setBaseScale(mScaling);
+}
+
+void TSlotDrum::moveObject()
+{
+	TLiveActor::moveObject();
+	mPosition.y = unk150 + unk14C;
+	for (int i = 0; i < unk148; i++) {
+		if (unk138[i] != 0.0f) {
+			unk188[i] += fabsf(unk138[i]);
+			if (unk188[i] > 360.0f / (f32)unk168) {
+				unk188[i] = 0.0f;
+				switch (i) {
+				case 0:
+					gpMSound->startSoundActor(MSD_SE_OBJ_SLOT_INC_L, &mPosition,
+					                          0, nullptr, 0, 4);
+					break;
+				case 1:
+					gpMSound->startSoundActor(MSD_SE_OBJ_SLOT_INC_C, &mPosition,
+					                          0, nullptr, 0, 4);
+					break;
+				case 2:
+					gpMSound->startSoundActor(MSD_SE_OBJ_SLOT_INC_R, &mPosition,
+					                          0, nullptr, 0, 4);
+					break;
+				}
+			}
+			if (fabsf(unk138[i]) > unk160) {
+				unk13C[i] += unk138[i];
+				if (unk138[i] > 0.0f)
+					unk138[i] -= unk15C;
+				else
+					unk138[i] += unk15C;
+				if (unk13C[i] >= 360.0f)
+					unk13C[i] -= 360.0f;
+				if (unk13C[i] <= 0.0f)
+					unk13C[i] += 360.0f;
+			} else {
+				unk13C[i] += unk138[i];
+				if (unk13C[i] >= 360.0f)
+					unk13C[i] -= 360.0f;
+				if (unk13C[i] <= 0.0f)
+					unk13C[i] += 360.0f;
+				if ((int)fabsf(unk13C[i]) % unk168 == 0) {
+					unk138[i] = 0.0f;
+					if (unk13C[i] < (f32)unk168) {
+						unk170[i].r = 255;
+						unk170[i].g = 255;
+						unk170[i].b = 70;
+						gpMSound->startSoundActor(MSD_SE_SY_COLLECT_DELIGHT,
+						                          &mPosition, 0, nullptr, 0, 4);
+					} else {
+						unk170[i].r = 120;
+						unk170[i].g = 230;
+						unk170[i].b = 255;
+					}
+					if (unk13C[i] < (f32)unk168 || unk13C[i] == 360.0f) {
+						bool allStopped = true;
+						for (int j = 0; j < unk148; j++) {
+							if (i == j)
+								continue;
+							if (unk138[j] != 0.0f)
+								return;
+							if (!(unk13C[j] < (f32)unk168
+							      || unk13C[j] >= 360.0f)) {
+								allStopped = false;
+								break;
+							}
+						}
+						if (allStopped) {
+							MSBgm::startBGM(MSD_BGM_FANFARE_RACE);
+							unk194 = 1;
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 u32 TSlotDrum::touchWater(THitActor* water)
