@@ -259,8 +259,7 @@ DEFINE_NERVE(TNerveMantaSpawn, TLiveActor)
 		u32 snd = sounds[self->mGeneration];
 		SMSGetMSound()->startSoundActor(snd, &self->mPosition, 0, nullptr, 0,
 		                                4);
-		((TBossMantaManager*)self->getManager())
-		    ->spawn(self->mGeneration + 1, self->mPosition);
+		self->getManager()->spawn(self->mGeneration + 1, self->mPosition);
 	}
 
 	if (spine->getTime() == 0x1E) {
@@ -444,20 +443,17 @@ void TBossManta::init(TLiveManager* manager)
 	mManager->manageActor(this);
 	mMActorKeeper = new TMActorKeeper(mManager, 1);
 	mMActor       = mMActorKeeper->createMActor("manta.bmd", 0);
-	getTracer()->setGraph(gpConductor->getGraphByName("main"));
+	unk124->setGraph(gpConductor->getGraphByName("main"));
 
-	mHitPoints
-	    = getSaveParam() != nullptr ? getSaveParam()->mSLHitPointMax.get() : 1;
+	mHitPoints = getMaxHitPoints();
 
 	mHeadHeight = 5000.0f;
-	initHitActor(0x08000004, 1, 0x80000000, 0.0f, 0.0f, 0.0f, 0.0f);
-	unk170.x = 0.0f;
-	unk170.y = 0.0f;
-	unk170.z = 1.0f;
+	initHitActor(0x8000004, 1, 0x80000000, 0.0f, 0.0f, 0.0f, 0.0f);
+	unk170.set(0.0f, 0.0f, 1.0f);
 	calcRootMatrix();
 	kill();
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
 	    ->getChildren()
 	    .push_back(this);
 
@@ -468,8 +464,7 @@ void TBossManta::init(TLiveManager* manager)
 		sRwingJointIndex       = jointNames->getIndex("jnt_Rwing2");
 		sLwingJointIndex       = jointNames->getIndex("jnt_Lwing2");
 
-		TBossMantaManager* manager = (TBossMantaManager*)mManager;
-		manager->initAdditionalCollision();
+		getManager()->initAdditionalCollision();
 	}
 
 	onLiveFlag(LIVE_FLAG_UNK8);
@@ -483,8 +478,8 @@ void TBossManta::moveObject()
 	TLiveActor::moveObject();
 
 	if (isPolluting())
-		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
-		                   getPolluteRadius());
+		gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z,
+		                     getPolluteRadius());
 
 	for (int i = 0; i < mColCount; ++i)
 		if (mCollisions[i]->isActorType(0x80000001))
@@ -610,7 +605,7 @@ void TBossManta::initNthGeneration(int gen)
 
 	offLiveFlag(LIVE_FLAG_DEAD);
 	if (mGeneration <= 2)
-		((TBossMantaManager*)mManager)->adaptAdditionalCollision(this);
+		getManager()->adaptAdditionalCollision(this);
 }
 
 void TBossManta::control()
@@ -691,7 +686,7 @@ bool TBossManta::isDamageable()
 	       || mSpine->getLatestNerve() == &TNerveMantaHitWater::theNerve();
 }
 
-BOOL TBossManta::isPolluting()
+bool TBossManta::isPolluting()
 {
 	const u8 pollute[6] = { 1, 1, 1, 1, 1, 1 };
 	return pollute[mGeneration];
@@ -714,8 +709,8 @@ f32 TBossManta::getPolluteRadius()
 
 void TBossManta::updateAttractor()
 {
-	JGeometry::TVec3<f32> local_108;
-	local_108.sub(mPosition, unk158);
+	JGeometry::TVec3<f32> local_108 = mPosition;
+	local_108 -= unk158;
 	local_108.y = 0.0f;
 	local_108.normalize();
 	local_108 *= getSaveParams()->mSLAttractorPower.get();
@@ -726,9 +721,8 @@ void TBossManta::updateAttractor()
 	JGeometry::TVec3<f32> selfPos = mPosition;
 	selfPos += facing;
 
-	TBossMantaManager* manager = (TBossMantaManager*)mManager;
-	for (int i = 0; i < manager->getActiveObjNum(); ++i) {
-		TBossManta* other = (TBossManta*)manager->getObj(i);
+	for (int i = 0; i < getManager()->getActiveObjNum(); ++i) {
+		TBossManta* other = (TBossManta*)getManager()->getObj(i);
 		if (checkLiveFlag(LIVE_FLAG_DEAD)
 		    || other->checkLiveFlag(LIVE_FLAG_DEAD)
 		    || other->getInstanceIndex() == getInstanceIndex())
