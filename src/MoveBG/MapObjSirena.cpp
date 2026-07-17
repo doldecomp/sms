@@ -75,6 +75,31 @@ void TRoulette::calcRootMatrix()
 	model->setBaseScale(mScaling);
 }
 
+void TRoulette::switchStop()
+{
+	if (unk150->unk6C != 0) {
+		if (SMS_GetMarioPos().y < 20.0f + SMS_GetMarioGrLevel()
+		    && unk13C != 0.0f) {
+			unk150->unk6C = 0;
+			unk13C        = 0.0f;
+			unk148        = 0;
+			unk14A        = 0;
+			unk14C        = 0;
+			gpMSound->startSoundActor(MSD_SE_BS_TELESA_RLT_STOP, &mPosition, 0,
+			                          nullptr, 0, 4);
+		}
+		if (unk150->unk6C != 0 && unk141 != 0) {
+			unk150->unk6C = 0;
+			unk148        = 0;
+			unk14A        = 0;
+			unk14C        = 0;
+			gpMSound->startSoundActor(MSD_SE_BS_TELESA_RLT_STOP, &mPosition, 0,
+			                          nullptr, 0, 4);
+			unk140 = 1;
+		}
+	}
+}
+
 void TRoulette::setRollSp(f32 sp)
 {
 	unk13C          = sp;
