@@ -15,6 +15,8 @@
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <System/Application.hpp>
 #include <System/MarDirector.hpp>
+#include <System/MarioGamePad.hpp>
+#include <Player/Mario.hpp>
 #include <math.h>
 
 // Definition order in this file is the REVERSE of the order symbols appear in
@@ -58,6 +60,24 @@ TRoulette::TRoulette(const char* name)
 	if (gpApplication.mCurrArea.unk0 == 56) {
 		unk14C = 255;
 		unk142 = 1;
+	}
+}
+
+void TRoulette::moveObject()
+{
+	TLiveActor::moveObject();
+	if (unk142 != 0) {
+		mRotation.x += unk13C;
+		if (unk141 != 0 && unk140 != 0) {
+			gpMarioOriginal->mGamePad->onNeutralMarioKey();
+			gpMarioOriginal->mGamePad->mDisabledFrames = 5;
+			gpMSound->startSoundActor(MSD_SE_BS_TELESA_RLT_DOWN, &mPosition, 0,
+			                          nullptr, 0, 4);
+			mPosition.y -= 0.5f;
+			MtxPtr jnt                   = mMActor->getModel()->getAnmMtx(1);
+			JGeometry::TVec3<f32>& swPos = unk150->mPosition;
+			swPos.set(jnt[0][3], mPosition.y - 100.0f, jnt[2][3]);
+		}
 	}
 }
 
