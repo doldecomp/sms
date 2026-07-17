@@ -18,10 +18,8 @@ public:
 	// fabricated
 	TPathNode(THitActor* actor)
 	{
-		unk0   = actor;
-		unk4.x = 0;
-		unk4.y = 0;
-		unk4.z = 0;
+		unk0 = actor;
+		unk4.set(0.0f, 0.0f, 0.0f);
 		if (actor) {
 			unk4.set(actor->mPosition.x, actor->mPosition.y,
 			         actor->mPosition.z);
