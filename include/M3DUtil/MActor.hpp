@@ -97,6 +97,8 @@ public:
 	void unmarkUnk40() { unk40 = false; }
 	BOOL curAnmEndsNext() { return curAnmEndsNext(0, 0); }
 
+	// TODO: cleanup the names of all these stupid wrappers
+
 	// fabricated
 	void setCalcForBck(J3DMtxCalc* calc)
 	{
@@ -112,6 +114,14 @@ public:
 			return nullptr;
 
 		return unkC->getOldMotionBlendAnmPtr();
+	}
+
+	void setBckOldMotionBlendAnmPtr(J3DAnmTransform* ptr)
+	{
+		if (!unkC)
+			return;
+
+		unkC->setOldMotionBlendAnmPtr(ptr);
 	}
 
 	f32 getBckOldMotionBlendFrame() const

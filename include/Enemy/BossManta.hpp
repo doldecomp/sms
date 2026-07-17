@@ -6,9 +6,11 @@
 #include <Strategic/Nerve.hpp>
 #include <JSystem/JUtility/JUTColor.hpp>
 
+class TBossMantaParams;
+
 class TBossManta : public TSpineEnemy {
 public:
-	TBossManta(const char*);
+	TBossManta(const char* name = "ボスマンタ");
 
 	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void init(TLiveManager*);
@@ -22,22 +24,26 @@ public:
 	BOOL isPolluting();
 	f32 getPolluteRadius();
 	void initNthGeneration(int);
-	BOOL collidedWithWater();
-	BOOL getIntoGraphVec(JGeometry::TVec3<f32>*);
+	bool collidedWithWater();
+	bool getIntoGraphVec(JGeometry::TVec3<f32>*);
 
-	// UNUSED (mario.MAP, fully inlined at every call site) - not yet
-	// reconstructed, TODO.
-	BOOL isDamageable();            // 0xD8
-	void updateEpilogueFrame();     // 0x18
-	f32 getEpilogueValue();         // 0x48
-	void resetDamageAnimEpilogue(); // 0x14
-	void startDamageAnimEpilogue(); // 0x14
-	BOOL isSpawnState();            // 0x90
-	void updateAnimBlend();         // 0x1F0
-	void startDamageAnim();         // 0x84
-	void startWalkAnim();           // 0xD4
-	void setCollision();            // 0x88
-	f32 getTailAnimSpeed();         // 0x54
+	bool isDamageable();
+	void updateEpilogueFrame();
+	f32 getEpilogueValue();
+	void resetDamageAnimEpilogue();
+	void startDamageAnimEpilogue();
+	BOOL isSpawnState();
+	void updateAnimBlend();
+	void startDamageAnim();
+	void startWalkAnim();
+	void setCollision();
+	f32 getTailAnimSpeed();
+
+	// fabricated
+	const TBossMantaParams* getSaveParams() const
+	{
+		return (const TBossMantaParams*)getSaveParam();
+	}
 
 	static int sCenterJointIndex;
 	static int sBodyJointIndex;
@@ -50,18 +56,12 @@ public:
 public:
 	/* 0x150 */ f32 unk150;
 	/* 0x154 */ s32 unk154;
-	/* 0x158 */ f32 unk158;
-	/* 0x15C */ f32 unk15C;
-	/* 0x160 */ f32 unk160;
-	/* 0x164 */ f32 unk164;
-	/* 0x168 */ f32 unk168;
-	/* 0x16C */ f32 unk16C;
-	/* 0x170 */ f32 unk170;
-	/* 0x174 */ f32 unk174;
-	/* 0x178 */ f32 unk178;
+	/* 0x158 */ JGeometry::TVec3<f32> unk158;
+	/* 0x164 */ JGeometry::TVec3<f32> unk164;
+	/* 0x170 */ JGeometry::TVec3<f32> unk170;
 	/* 0x17C */ JGeometry::TVec3<f32> unk17C;
 	/* 0x188 */ s32 unk188;
-	/* 0x18C */ s32 unk18C;
+	/* 0x18C */ s32 mGeneration;
 	/* 0x190 */ f32 unk190;
 	/* 0x194 */ f32 unk194;
 	/* 0x198 */ f32 unk198;
@@ -77,10 +77,9 @@ public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor*, u32);
 
-	// UNUSED (mario.MAP, fully inlined) - TODO.
-	void setManta(TBossManta*); // 0x8
+	void setManta(TBossManta*);
 
-public:
+private:
 	/* 0x68 */ TBossManta* unk68;
 };
 
@@ -90,13 +89,10 @@ public:
 	void update(u32 cue, JDrama::TGraphics* graphics);
 	void adapt(TBossManta*);
 
-	// UNUSED (mario.MAP, fully inlined) - TODO.
-	BOOL isUsed(); // 0x28
+	bool isUsed();
 
 public:
-	/* 0x0 */ TBossMantaAdditionalCollision* unk0;
-	/* 0x4 */ TBossMantaAdditionalCollision* unk4;
-	/* 0x8 */ TBossMantaAdditionalCollision* unk8;
+	/* 0x0 */ TBossMantaAdditionalCollision* unk0[3];
 	/* 0xC */ TBossManta* unkC;
 };
 
@@ -128,15 +124,31 @@ class TBossMantaManager : public TEnemyManager {
 public:
 	class TMantaMessageState {
 	public:
+		TMantaMessageState(TBossMantaManager* owner)
+		    : unk0(owner)
+		    , unk4(0)
+		{
+		}
+
 		void update();
+
+	public:
 		TBossMantaManager* unk0;
 		s32 unk4;
 	};
 	class TMantaBattleState {
 	public:
+		TMantaBattleState(TBossMantaManager* owner)
+		    : unk0(owner)
+		    , mState(0)
+		{
+		}
+
 		void update();
+
+	public:
 		TBossMantaManager* unk0;
-		s32 unk4;
+		s32 mState;
 	};
 
 	TBossMantaManager(const char*);
@@ -153,12 +165,11 @@ public:
 	void updateMantaEscape();
 	void drawMantaShadow(JDrama::TGraphics*);
 
-	// UNUSED (mario.MAP, fully inlined) - TODO.
-	void initAdditionalCollision();             // 0x9C
-	void createEnemy();                         // 0xF8
-	void getMantaColor();                       // 0x18C
-	void loadEffects();                         // 0xD4
-	void adaptAdditionalCollision(TBossManta*); // 0x124
+	void initAdditionalCollision();
+	void createEnemy();
+	const JUtility::TColor& getMantaColor();
+	void loadEffects();
+	void adaptAdditionalCollision(TBossManta*);
 
 public:
 	/* 0x54 */ TBossMantaAdditionalCollisionSet* mCollisionSets[8];

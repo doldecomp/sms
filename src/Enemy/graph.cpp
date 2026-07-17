@@ -269,8 +269,6 @@ int TGraphWeb::getShortestNextIndex(int param_1, int param_2, u32 param_3) const
 	return result;
 }
 
-static inline f32 MsRandF() { return rand() * (1.f / (RAND_MAX + 1)); }
-
 int TGraphWeb::getRandomNextIndex(int param_1, int param_2, u32 param_3) const
 {
 	const TGraphNode* graphNode = &getGraphNode(param_1);

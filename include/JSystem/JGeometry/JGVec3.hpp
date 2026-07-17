@@ -300,10 +300,9 @@ public:
 
 	f32 distance(const TVec3& other) const
 	{
-		f32 dx = x - other.x;
-		f32 dy = y - other.y;
-		f32 dz = z - other.z;
-		return TUtil<f32>::sqrt(dx * dx + dy * dy + dz * dz);
+		return TUtil<f32>::sqrt((x - other.x) * (x - other.x)
+		                        + (y - other.y) * (y - other.y)
+		                        + (z - other.z) * (z - other.z));
 	}
 
 	f32 squared() const { return dot(*this); }

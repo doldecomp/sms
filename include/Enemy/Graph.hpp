@@ -3,6 +3,7 @@
 
 #include <JSystem/JGeometry/JGVec3.hpp>
 #include <JSystem/JDrama/JDRGraphics.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 
 class TGraphWeb;
 class TSplinePath;
@@ -40,7 +41,7 @@ public:
 	void setUnk8(f32 v) { unk8 = v; }
 	void incUnk4() { ++unk4; }
 	int getUnk4() { return unk4; }
-	int setUnk4(int v) { unk4 = v; }
+	void setUnk4(int v) { unk4 = v; }
 	bool checkFlag(u32 f) const { return unk0->mFlags & f; }
 
 public:
