@@ -294,22 +294,17 @@ void TSlotDrum::moveObject()
 						unk170[i].b = 255;
 					}
 					if (unk13C[i] < (f32)unk168 || unk13C[i] == 360.0f) {
-						bool allStopped = true;
 						for (int j = 0; j < unk148; j++) {
 							if (i == j)
 								continue;
 							if (unk138[j] != 0.0f)
 								return;
 							if (!(unk13C[j] < (f32)unk168
-							      || unk13C[j] >= 360.0f)) {
-								allStopped = false;
-								break;
-							}
+							      || unk13C[j] >= 360.0f))
+								return;
 						}
-						if (allStopped) {
-							MSBgm::startBGM(MSD_BGM_FANFARE_RACE);
-							unk194 = 1;
-						}
+						MSBgm::startBGM(MSD_BGM_FANFARE_RACE);
+						unk194 = 1;
 					}
 				}
 			}
@@ -598,6 +593,75 @@ void TCloset::initMapObj()
 	PSMTXCopy(mtx, mMapCollisionWarp->unk20);
 	mMapCollisionWarp->setUp();
 	initAnmSound();
+}
+
+void TCloset::moveObject()
+{
+	TLiveActor::moveObject();
+	if (unk16C != 0 && !mMActor->checkCurAnm("closetopen", 0)) {
+		unk16D++;
+		if (unk16D == 60) {
+			mMActor->setBck("closetopen");
+			setAnmSound("/scene/mapObj/closetopen.bas");
+		}
+	} else {
+		for (int i = 0; i < unk148; i++) {
+			if (unk138[i] != 0.0f) {
+				if (fabsf(unk138[i]) > unk160) {
+					unk13C[i] += unk138[i];
+					if (unk138[i] > 0.0f)
+						unk138[i] -= unk15C;
+					else
+						unk138[i] += unk15C;
+					bool wrapped = false;
+					if (unk13C[i] >= 360.0f) {
+						unk13C[i] -= 360.0f;
+						wrapped = true;
+					}
+					if (unk13C[i] <= 0.0f) {
+						unk13C[i] += 360.0f;
+						wrapped = true;
+					}
+					if (wrapped)
+						gpMSound->startSoundActorWithInfo(
+						    MSD_SE_OBJ_TEL_CLOSET_ROLL, &mPosition, nullptr,
+						    fabsf(unk138[i]), 0, 0, nullptr, 0, 4);
+				} else {
+					unk13C[i] += unk138[i];
+					bool wrapped = false;
+					if (unk13C[i] >= 360.0f) {
+						unk13C[i] -= 360.0f;
+						wrapped = true;
+					}
+					if (unk13C[i] <= 0.0f) {
+						unk13C[i] += 360.0f;
+						wrapped = true;
+					}
+					if (wrapped)
+						gpMSound->startSoundActorWithInfo(
+						    MSD_SE_OBJ_TEL_CLOSET_ROLL, &mPosition, nullptr,
+						    fabsf(unk138[i]), 0, 0, nullptr, 0, 4);
+					if ((int)fabsf(unk13C[i]) % 180 == 0) {
+						unk138[i] = 0.0f;
+						if (unk13C[i] < 180.0f || unk13C[i] == 360.0f) {
+							for (int j = 0; j < unk148; j++) {
+								if (i == j)
+									continue;
+								if (unk138[j] != 0.0f)
+									return;
+								if (!(unk13C[j] < 180.0f
+								      || unk13C[j] >= 360.0f))
+									return;
+							}
+							unk16C = 1;
+							gpMSound->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN_BIG,
+							                             0, nullptr, 0);
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 void TCloset::calcRootMatrix()
