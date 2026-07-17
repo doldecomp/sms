@@ -395,6 +395,34 @@ u32 TItemSlotDrum::touchWater(THitActor* water)
 	return 1;
 }
 
+int TItemSlotDrum::getForcastResult(int idx)
+{
+	f32 angle = unk13C[idx];
+	f32 speed = unk138[idx];
+	for (;;) {
+		if (fabsf(speed) > unk160) {
+			angle += speed;
+			if (speed > 0.0f)
+				speed -= unk15C;
+			else
+				speed += unk15C;
+			if (angle >= 360.0f)
+				angle -= 360.0f;
+			if (angle <= 0.0f)
+				angle += 360.0f;
+		} else {
+			angle += speed;
+			if (angle >= 360.0f)
+				angle -= 360.0f;
+			if (angle <= 0.0f)
+				angle += 360.0f;
+			if ((int)fabsf(angle) % unk168 == 0)
+				break;
+		}
+	}
+	return getResultFromAng((f32)(unk168 * (int)(angle / (f32)unk168)));
+}
+
 int TItemSlotDrum::getResultFromAng(f32 ang)
 {
 	if (ang < 89.0f)
