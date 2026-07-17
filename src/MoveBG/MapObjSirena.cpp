@@ -7,6 +7,8 @@
 #include <M3DUtil/MActorData.hpp>
 #include <Map/MapCollisionEntry.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/PacketUtil.hpp>
+#include <JSystem/JUtility/JUTNameTab.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
@@ -136,6 +138,50 @@ TSlotDrum::TSlotDrum(const char* name)
     : TSirenaRollMapObj(name)
     , unk194(0)
 {
+}
+
+void TSlotDrum::initNeonMatColor()
+{
+	const char* matNames[3] = { "_NEON_A", "_NEON_B", "_NEON_C" };
+	for (int i = 0; i < 3; i++) {
+		unk170[i].r = 120;
+		unk170[i].g = 230;
+		unk170[i].b = 255;
+		unk170[i].a = 255;
+		SMS_InitPacket_OneTevColor(
+		    mMActor->getModel(),
+		    getModel()->getModelData()->getMaterialName()->getIndex(matNames[i]),
+		    GX_TEVREG0, &unk170[i]);
+	}
+}
+
+void TSlotDrum::initMapObj()
+{
+	unk148 = 3;
+	unk14C = 400.0f;
+	unk150 = mPosition.y;
+	unk194 = 0;
+	unk154 = 2.0f;
+	unk158 = 10.0f;
+	unk15C = 0.1f;
+	unk160 = 0.5f;
+	unk164 = 0;
+	unk168 = 90;
+	unk138 = new f32[unk148];
+	unk13C = new f32[unk148];
+	for (int i = 0; i < unk148; i++) {
+		unk138[i] = 0.0f;
+		unk13C[i] = 90.0f * (i + 1);
+		unk188[i] = 0.0f;
+	}
+	TMapObjBase::initMapObj();
+	for (u8 i = 0; i < getModel()->getModelData()->getJointNum(); i++)
+		;
+	for (int i = 1; i <= unk148; i++)
+		mMActor->setJointCallback(i, partsRollCallback);
+	unk140 = mDamageRadius / 3.0f;
+	unk144 = mDamageHeight;
+	initNeonMatColor();
 }
 
 void TSlotDrum::calcRootMatrix()
