@@ -169,7 +169,7 @@ public:
 	/* 0x140 */ f32 unk140;
 	/* 0x144 */ TSlotDrum* unk144;
 	/* 0x148 */ TItemSlotDrum* unk148;
-	/* 0x14C */ u32 unk14C;
+	/* 0x14C */ s32 unk14C;
 };
 
 class TCasinoPanelGate : public TSirenaRollMapObj {

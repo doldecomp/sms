@@ -432,6 +432,37 @@ void TDonchou::initMapObj()
 	unk138->setUp();
 }
 
+void TDonchou::calcRootMatrix()
+{
+	J3DModel* model = getModel();
+	Mtx mtx;
+	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y + unk140, mPosition.z,
+	               mRotation.x, mRotation.y, mRotation.z);
+	PSMTXCopy(mtx, model->getBaseTRMtx());
+	model->setBaseScale(mScaling);
+	mtx[1][3] += unk140;
+	if (unk144 != nullptr && unk144->unk194 != 0 && unk148->unk194 != 0)
+		unk13C = 1;
+	if (unk13C != 0) {
+		unk14C++;
+		if (unk14C > 100) {
+			if (mMActor->checkCurAnm("donchou", 0)) {
+				if (mMActor->curAnmEndsNext(0, 0))
+					unk138->remove();
+			} else {
+				gpMSound->startSoundActor(MSD_SE_SY_DONCHO_OPEN, &mPosition, 0,
+				                          nullptr, 0, 4);
+				mMActor->setBck("donchou");
+				gpMarDirector->fireStartDemoCamera("どんちょカメラ", &mPosition,
+				                                   -1, 0.0f, true, nullptr, 0,
+				                                   nullptr, JDrama::TFlagT<u16>(0));
+				J3DFrameCtrl* fc = mMActor->getFrameCtrl(0);
+				fc->setRate(0.5f * fc->getRate());
+			}
+		}
+	}
+}
+
 void TDonchou::loadAfter()
 {
 	TMapObjBase::loadAfter();
