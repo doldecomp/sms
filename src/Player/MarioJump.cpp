@@ -1073,9 +1073,8 @@ BOOL TMario::pullJumping()
 BOOL TMario::hipAttacking()
 {
 	for (int i = 0; i < mColCount; i++) {
-		THitActor* col = mCollisions[i];
-		if (col->mActorType == 0x4000000B ? true : false) {
-			if (col->mPosition.distance(mPosition) > 70.0f) {
+		if (mCollisions[i]->isActorType(0x4000000B)) {
+			if (mCollisions[i]->mPosition.distance(mPosition) > 70.0f) {
 				mPosition.x = mCollisions[i]->mPosition.x;
 				mPosition.z = mCollisions[i]->mPosition.z;
 			}
@@ -1096,8 +1095,8 @@ BOOL TMario::hipAttacking()
 		if (mStatusTimer < 0x28) {
 			f32 lift = (f32)(0x28 - mStatusTimer) * 0.5f;
 			if (160.0f + (mPosition.y + lift) < mFloorPosition.x) {
-				mPosition.y                = lift * 0.25f + mPosition.y;
-				*(f32*)((u8*)this + 0x104) = mPosition.y;
+				mPosition.y = lift * 0.25f + mPosition.y;
+				unk104      = mPosition.y;
 			}
 		}
 		setPlayerVelocity(0.0f);

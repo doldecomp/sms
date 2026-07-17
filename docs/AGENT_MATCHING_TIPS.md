@@ -29,6 +29,7 @@ Instead, introduce the relevant fields and use them, or rather even getters/sett
 
 The compiler never reorders memory stores, loads and function calls relative to one another.
 They always should be performed in source code in the exact order they appear in target assembly.
+This a good first place to focus on when matching, as it helps shape the rest of the function.
 
 ## MWCC can eliminate redundant reads, but not writes
 
@@ -330,6 +331,17 @@ When a TU is compiled with `-inline deferred` (see TU-specific flags in `configu
 
 `JGeometry::TVec3<f32>` is a 12-byte struct with `x`, `y`, `z` float members. How you read/write it drastically affects code generation.
 
+### Use the inlines
+
+`TVec3` and related `JGeometry` types have lots of inlines, and most of the time the original code would have used those.
+When naive decompilation of the math doesn't work out, try using the inlines.
+
+### Multiplication by zero/one
+
+MWCC can optimize out multiplication by floating point one or zero written out explicitly in code, but fails to do so when the multiplication comes from an inlined function.
+This routinely occurs when an "up" vector is created and then cross-multiplied with another vector -- codegen contains trivial multiplications by zero or one.
+When decompiled naively as `1.0f * unk170.z - 0.0f * unk170.y`, MWCC will optimize the multiplications out, but if the "up" vector is properly created and the `cross` inline is used, it will fail to optimize them out, achieving the desired codegen.
+
 ### Construction: component-by-component vs constructor
 
 ```cpp
@@ -404,6 +416,13 @@ following `fmadds`/`fnmsubs`. This happens when the original literally wrote
 `-1.0f * x` -> `fneg x`). Prefer `-1.0f * x` over `-x` when the target shows the
 extra `-1.0` load + `fmuls`. Concrete case (`BathWaterManager.cpp`
 `calcBathtub`): `-1.0f * unkC.y` matched; `-unkC.y` gave `fneg` and did not.
+
+### Trouble in fnmsubs town
+
+Computation-heavy code commonly has code like `B - A * C` or `A * C - B`  for floating-point A, B, C. E.g. any cross product will have analogous code.
+MWCC likes to compile such code into PowerPC `fmsubs` and `fnmsubs` instructions, but they have a quirk in how they are implemented related to double to single precision conversions: technically, fnmsubs is `-float(A * C - B)`, but MWCC uses it for `B - A * C`.
+Decompilers like ghidra and m2c like to preserve this technicality and commonly emit code like `-(a * b - c * d)` in code like vector cross products.
+Rewriting it as `c * d - a * b`, opening the braces, usually helps matching it better.
 
 ## Reading a source array through `void*` defeats CSE (controls loop unroll)
 

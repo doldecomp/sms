@@ -417,10 +417,10 @@ f32 TShine::mSpeedDownRate = 0.99f;
 
 void TShine::calc()
 {
-	MtxPtr mtxPos
-	    = (MtxPtr)((u8*)getMActor()->getModel()->mNodeMatrices + 0x60);
+	MtxPtr mtxPos = getMActor()->getModel()->getAnmMtx(2);
 
-	if (mLiveFlag & 0x205)
+	if (checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_CLIPPED_OUT
+	                  | LIVE_FLAG_DEAD))
 		return;
 
 	unk198 = gpMarioParticleManager->emitAndBindToMtxPtr(
