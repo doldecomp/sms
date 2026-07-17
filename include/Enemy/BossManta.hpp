@@ -7,6 +7,7 @@
 #include <JSystem/JUtility/JUTColor.hpp>
 
 class TBossMantaParams;
+class TBossMantaManager;
 
 class TBossManta : public TSpineEnemy {
 public:
@@ -21,7 +22,7 @@ public:
 	virtual void reset() { }
 
 	void updateAttractor();
-	BOOL isPolluting();
+	bool isPolluting();
 	f32 getPolluteRadius();
 	void initNthGeneration(int);
 	bool collidedWithWater();
@@ -44,6 +45,7 @@ public:
 	{
 		return (const TBossMantaParams*)getSaveParam();
 	}
+	TBossMantaManager* getManager() { return (TBossMantaManager*)mManager; }
 
 	static int sCenterJointIndex;
 	static int sBodyJointIndex;
