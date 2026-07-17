@@ -15,6 +15,7 @@
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <System/Application.hpp>
 #include <System/MarDirector.hpp>
 #include <System/MarioGamePad.hpp>
@@ -407,6 +408,84 @@ void TCasinoPanelGate::initMapObj()
 	TMapObjBase::initMapObj();
 	for (u16 i = 1; i <= unk148; i++)
 		mMActor->setJointCallback(i, partsRollCallback);
+}
+
+void TCasinoPanelGate::moveObject()
+{
+	TLiveActor::moveObject();
+	mPosition.y = unk150 - unk14C;
+	if (unk16D != 0) {
+		J3DFrameCtrl* fc = mMActor->getFrameCtrl(0);
+		if (fc->getFrame() >= (f32)fc->getEnd() - 8.0f) {
+			gpMSound->startSoundSystemSE(MSD_SE_SY_PANELPUZZLE_OPEN, 0, nullptr,
+			                             0);
+			if (unk16C == 0 && fc->checkPass((f32)fc->getEnd() - 2.0f)) {
+				unk16C = 1;
+				gpMSound->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN_BIG, 0,
+				                             nullptr, 0);
+			}
+		}
+	} else {
+		bool allOpen = true;
+		for (int i = 0; i < unk148; i++) {
+			if (unk138[i] == 0.0f) {
+				if (unk13C[i] < 180.0f)
+					allOpen = false;
+			} else {
+				allOpen = false;
+				if (fabsf(unk138[i]) > unk160) {
+					unk13C[i] += unk138[i];
+					if (unk138[i] > 0.0f)
+						unk138[i] -= unk15C;
+					else
+						unk138[i] += unk15C;
+					bool wrapped = false;
+					if (unk13C[i] >= 360.0f) {
+						unk13C[i] -= 360.0f;
+						wrapped = true;
+					}
+					if (unk13C[i] <= 0.0f) {
+						unk13C[i] += 360.0f;
+						wrapped = true;
+					}
+					if (wrapped)
+						gpMSound->startSoundActorWithInfo(
+						    MSD_SE_OBJ_PANELPUZZLE_WIND, &mPosition, nullptr,
+						    fabsf(unk138[i]), 0, 0, nullptr, 0, 4);
+				} else {
+					unk13C[i] += unk138[i];
+					bool wrapped = false;
+					if (unk13C[i] >= 360.0f) {
+						unk13C[i] -= 360.0f;
+						wrapped = true;
+					}
+					if (unk13C[i] <= 0.0f) {
+						unk13C[i] += 360.0f;
+						wrapped = true;
+					}
+					if (wrapped)
+						gpMSound->startSoundActorWithInfo(
+						    MSD_SE_OBJ_PANELPUZZLE_WIND, &mPosition, nullptr,
+						    fabsf(unk138[i]), 0, 0, nullptr, 0, 4);
+					if ((int)fabsf(unk13C[i]) % 180 == 0) {
+						if (unk13C[i] < 180.0f)
+							unk13C[i] = 180.0f;
+						else if (unk13C[i] < 360.0f)
+							unk13C[i] = 0.0f;
+						unk138[i] = 0.0f;
+					}
+				}
+			}
+		}
+		if (allOpen) {
+			unk16D = 1;
+			mMActor->setBck("pazul");
+			MSBgm::startBGM(MSD_BGM_FANFARE_RACE);
+			gpMSound->startSoundActor(MSD_SE_SY_COLLECT_DELIGHT, &mPosition, 0,
+			                          nullptr, 0, 4);
+			removeMapCollision();
+		}
+	}
 }
 
 void TCasinoPanelGate::calcRootMatrix()
