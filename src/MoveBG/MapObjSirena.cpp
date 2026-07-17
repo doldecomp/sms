@@ -371,6 +371,17 @@ void TItemSlotDrum::calcRootMatrix()
 	model->setBaseScale(mScaling);
 }
 
+void TItemSlotDrum::loadAfter()
+{
+	TMapObjBase::loadAfter();
+	for (int i = 0; i < 6; i++) {
+		TMapObjBaseManager::newAndRegisterObj(
+		    "coin", JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
+		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
+		    JGeometry::TVec3<f32>(0.5f, 0.5f, 0.5f));
+	}
+}
+
 u32 TItemSlotDrum::touchWater(THitActor* water)
 {
 	if (unk194 != 0)

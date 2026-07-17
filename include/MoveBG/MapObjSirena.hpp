@@ -4,6 +4,7 @@
 #include <MarioUtil/ModelUtil.hpp>
 #include <MoveBG/MapObjBase.hpp>
 #include <MoveBG/MapObjHide.hpp>
+#include <MoveBG/MapObjManager.hpp>
 #include <Strategic/HitActor.hpp>
 
 // TODO: mark virtual methods as such
