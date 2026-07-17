@@ -210,10 +210,18 @@ public:
 	TItemSlotDrum(const char* name = "スロットマシーン");
 	int getResultFromAng(f32);
 	int getForcastResult(int);
-	// UNUSED (MAP: size 0x50) - never called, but must exist for inlining
-	int getDrumResult(int);
-	// UNUSED (MAP: size 0x8C) - never called, but must exist for inlining
-	int getSlotResult();
+	// UNUSED as standalone symbols (MAP: 0x50 / 0x8C) - fully inlined into
+	// generateItem, so defined in-class.
+	int getDrumResult(int i) { return getResultFromAng(unk13C[i]); }
+	int getSlotResult()
+	{
+		int result = getDrumResult(0);
+		for (int i = 1; i < 3; i++) {
+			if (result != getDrumResult(i))
+				return -1;
+		}
+		return result;
+	}
 	void generateItem();
 	u32 touchWater(THitActor*);
 	void calcRootMatrix();
