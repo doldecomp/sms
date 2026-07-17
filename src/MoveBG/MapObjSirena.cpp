@@ -490,6 +490,21 @@ void TCloset::initMapObj()
 	initAnmSound();
 }
 
+void TCloset::calcRootMatrix()
+{
+	gpCurObject     = this;
+	J3DModel* model = getModel();
+	Mtx mtx;
+	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y + unk14C, mPosition.z,
+	               mRotation.x, mRotation.y, mRotation.z);
+	PSMTXCopy(mtx, model->getBaseTRMtx());
+	model->setBaseScale(mScaling);
+	mtx[1][3] += unk14C;
+	if (unk16C != 0 && mMActor->checkCurAnm("closetopen", 0)
+	    && mMActor->curAnmEndsNext(0, 0))
+		mMapCollisionWarp->remove();
+}
+
 u32 TCloset::touchWater(THitActor* water)
 {
 	if (unk16C != 0)
