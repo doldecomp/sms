@@ -21,6 +21,7 @@
 #include <System/MarioGamePad.hpp>
 #include <Player/Mario.hpp>
 #include <math.h>
+#include <stdlib.h>
 
 // Definition order in this file is the REVERSE of the order symbols appear in
 // mario.MAP, because MoveBG is compiled with -inline deferred.
@@ -368,6 +369,30 @@ void TItemSlotDrum::calcRootMatrix()
 	MsMtxSetXYZRPH(model->getBaseTRMtx(), mPosition.x, mPosition.y - unk14C,
 	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
 	model->setBaseScale(mScaling);
+}
+
+u32 TItemSlotDrum::touchWater(THitActor* water)
+{
+	if (unk194 != 0)
+		return 1;
+	if (unk1A2 != 0) {
+		// TODO: ~55%. The target keeps lo/hi as int stack locals and computes
+		// hi - lo at runtime (rather than folding to 50), which looks like an
+		// inlined random-in-range helper that isn't identified yet.
+		int lo   = 100;
+		int hi   = 150;
+		unk1A4   = lo + (int)((f32)(hi - lo) * ((f32)rand() * (1.0f / 32768.0f)));
+		for (int i = 0; i < unk148; i++) {
+			unk19F[i] = 1;
+			unk19C[i] = 0;
+			f32 spLo  = 0.5f;
+			f32 spHi  = 0.8f;
+			unk138[i] = unk158
+			          * (spLo + (spHi - spLo) * ((f32)rand() * (1.0f / 32768.0f)));
+		}
+		unk1A2 = 0;
+	}
+	return 1;
 }
 
 int TItemSlotDrum::getResultFromAng(f32 ang)
