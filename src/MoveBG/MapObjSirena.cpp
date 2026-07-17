@@ -777,6 +777,20 @@ void TPictureTelesa::afterFinishedAnim()
 	}
 }
 
+void TPictureTelesa::touchActor(THitActor* actor)
+{
+	TWaterHitPictureHideObj::touchActor(actor);
+	if (isActorType(0x400001A2) && unk174 == 0 && isState(3)
+	    && !isStateTimerEngaged()) {
+		if (actor->mPosition.distance(mPosition) < 200.0f) {
+			startStateTimer(60);
+			gpMSound->startSoundActor(MSD_SE_BS_TELESA_DISAPPEAR, &mPosition, 0,
+			                          nullptr, 0, 4);
+			unk174 = 1;
+		}
+	}
+}
+
 void TPictureTelesa::control()
 {
 	TWaterHitPictureHideObj::control();
