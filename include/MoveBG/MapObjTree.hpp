@@ -8,11 +8,10 @@ public:
 	TMapObjLeaf();
 
 public:
-	/* 0x0 */ f32 unk0;                // Leaf angle
-	/* 0x4 */ f32 unk4;                // Leaf angular velocity
-	/* 0x8 */ TMapCollisionMove* unk8; // Leaf collision
-	/* 0xC */ JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> >
-	    unkC; // Base matrix
+	/* 0x0 */ f32 mAngle;
+	/* 0x4 */ f32 mAngularVelocity;
+	/* 0x8 */ TMapCollisionMove* mCollision;
+	/* 0xC */ TMtx34f mTransform;
 };
 
 class TMapObjTree : public TMapObjGeneral {
@@ -20,9 +19,9 @@ public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual f32 getRadiusAtY(f32 param_1) const
 	{
-		return unk148
-		       + (unk14C - unk148) * (mPosition.y + mDamageHeight - param_1)
-		             / mDamageHeight;
+		return mMinCanopyRadius
+		       + (mMaxCanopyRadius - mMinCanopyRadius)
+		             * (mPosition.y + mDamageHeight - param_1) / mDamageHeight;
 	}
 	virtual void initMapObj();
 	virtual void touchPlayer(THitActor*);
@@ -36,15 +35,15 @@ public:
 	static f32 mBananaTreeJumpPower;
 
 public:
-	/* 0x148 */ f32 unk148;          // Upper canopy radius
-	/* 0x14C */ f32 unk14C;          // Lower canopy radius
-	/* 0x150 */ s32 unk150;          // Leaf count
-	/* 0x154 */ TMapObjLeaf* unk154; // Leaf data
-	/* 0x158 */ bool unk158; // Probably true when all leaf motion has settled
-	/* 0x15C */ f32 unk15C;  // Probably standard leaf movement speed
-	/* 0x160 */ f32 unk160;  // Hip-drop leaf movement speed
-	/* 0x164 */ f32 unk164;  // Leaf return strength
-	/* 0x168 */ f32 unk168;  // Leaf damping
+	/* 0x148 */ f32 mMinCanopyRadius;
+	/* 0x14C */ f32 mMaxCanopyRadius;
+	/* 0x150 */ s32 mLeafNum;
+	/* 0x154 */ TMapObjLeaf* mLeaves;
+	/* 0x158 */ bool mFreezeLeaves;
+	/* 0x15C */ f32 mLeafTouchImpulse;
+	/* 0x160 */ f32 mLeafHipDropImpulse; // Hip-drop leaf movement speed
+	/* 0x164 */ f32 mLeafStiffness;
+	/* 0x168 */ f32 mLeafDamping;
 	/* 0x16C */ u32 unk16C;
 };
 
@@ -53,22 +52,16 @@ class TMapEventSink;
 class TMapObjTreeScale : public TMapObjTree {
 public:
 	enum {
-		STATE_UNKB = 0xB, // Fully shrunken
-		STATE_UNKC = 0xC, // Growing vertically
-		STATE_UNKD = 0xD, // Growing horizontally
+		STATE_SMALL             = 0xB,
+		STATE_SCALING_UP_Y_ONLY = 0xC,
+		STATE_SCALING_UP        = 0xD,
 	};
 
 	virtual void loadAfter();
 	virtual void control();
 	virtual u32 touchWater(THitActor*);
 
-	void startScaleUp()
-	{
-		awake();
-		mActorType = 0x40000039;
-		removeMapCollision();
-		mState = STATE_UNKC;
-	}
+	void startScaleUp();
 	void beSmall();
 	TMapObjTreeScale(const char* name = "スケールの木");
 
@@ -78,9 +71,9 @@ public:
 	static f32 mScaleMin;
 
 public:
-	/* 0x170 */ JGeometry::TVec3<f32> unk170[30]; // Particle positions
-	/* 0x2D8 */ s32 unk2D8;                       // Index into unk170
-	/* 0x2DC */ s32 unk2DC;                       // Particle timer
+	/* 0x170 */ JGeometry::TVec3<f32> mParticlePositions[30];
+	/* 0x2D8 */ s32 mNextFreeParticlePos;
+	/* 0x2DC */ s32 mParticleEmitTimer;
 	/* 0x2E0 */ TMapEventSink* unk2E0; // Bianco terrain-sinking event
 };
 

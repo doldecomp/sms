@@ -17,45 +17,48 @@
 void TSky::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
-		Mtx local_4c;
-		MTXInverse(gpCamera->unk1EC, local_4c);
+		MtxPtr mtx = gpCamera->unk1EC;
 
-		Mtx afStack_7c;
-		MTXIdentity(afStack_7c);
+		Mtx local_EC;
+		MTXInverse(mtx, local_EC);
 
-		// TODO: match this awfulness
-		afStack_7c[0][3] = -(local_4c[0][2] * gpCamera->unk1EC[2][3]
-		                     - (-local_4c[0][0] * gpCamera->unk1EC[0][3]
-		                        - local_4c[0][1] * gpCamera->unk1EC[1][3]));
-		afStack_7c[1][3] = -(local_4c[1][2] * gpCamera->unk1EC[2][3]
-		                     - (-local_4c[1][0] * gpCamera->unk1EC[0][3]
-		                        - local_4c[1][1] * gpCamera->unk1EC[1][3]));
-		afStack_7c[2][3] = -(local_4c[2][2] * gpCamera->unk1EC[2][3]
-		                     - (-local_4c[2][0] * gpCamera->unk1EC[0][3]
-		                        - local_4c[2][1] * gpCamera->unk1EC[1][3]));
+		Mtx local_BC;
+		MTXIdentity(local_BC);
 
-		if (gpMarDirector->mMap == 15) {
-			Mtx local_ac;
+		local_BC[0][3] = -local_EC[0][0] * mtx[0][3]
+		                 - local_EC[0][1] * mtx[1][3]
+		                 - local_EC[0][2] * mtx[2][3];
+		local_BC[1][3] = -local_EC[1][0] * mtx[0][3]
+		                 - local_EC[1][1] * mtx[1][3]
+		                 - local_EC[1][2] * mtx[2][3];
+		local_BC[2][3] = -local_EC[2][0] * mtx[0][3]
+		                 - local_EC[2][1] * mtx[1][3]
+		                 - local_EC[2][2] * mtx[2][3];
+
+		if (SMSGetMarDirector()->getCurrentMap() == 15) {
+			Mtx local_8C;
 			f32 fVar2 = sinf(unk48 * 0.017453294f);
 			f32 fVar3 = cosf(unk48 * 0.017453294f);
 
-			local_ac[0][0] = fVar3;
-			local_ac[2][0] = -fVar2;
-			local_ac[0][1] = 0.0f;
-			local_ac[0][3] = 0.0f;
-			local_ac[1][0] = 0.0f;
-			local_ac[1][1] = 1.0f;
-			local_ac[1][2] = 0.0f;
-			local_ac[1][3] = 0.0f;
-			local_ac[2][1] = 0.0f;
-			local_ac[2][3] = 0.0f;
-			local_ac[0][2] = fVar2;
-			local_ac[2][2] = fVar3;
-			MTXConcat(local_ac, afStack_7c, afStack_7c);
+			local_8C[0][0] = fVar3;
+			local_8C[0][1] = 0.0f;
+			local_8C[0][2] = fVar2;
+			local_8C[0][3] = 0.0f;
+
+			local_8C[1][0] = 0.0f;
+			local_8C[1][1] = 1.0f;
+			local_8C[1][2] = 0.0f;
+			local_8C[1][3] = 0.0f;
+
+			local_8C[2][0] = -fVar2;
+			local_8C[2][1] = 0.0f;
+			local_8C[2][2] = fVar3;
+			local_8C[2][3] = 0.0f;
+			MTXConcat(local_8C, local_BC, local_BC);
 			unk48 += unk4C;
 			unk48 = MsWrap<f32>(unk48, 0.0f, 360.0f);
 		}
-		unk44->getModel()->setBaseTRMtx(afStack_7c);
+		unk44->getModel()->setBaseTRMtx(local_BC);
 	}
 	unk44->perform(cue, graphics);
 	if ((cue & CUE_DRAW) != 0) {
