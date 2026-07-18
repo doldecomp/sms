@@ -3,7 +3,9 @@
 #include <Enemy/Telesa.hpp>
 #include <MoveBG/ItemManager.hpp>
 #include <JSystem/JMath.hpp>
+#include <Strategic/Strategy.hpp>
 #include <dolphin/mtx.h>
+#include <string.h>
 #include <Map/Map.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/SoundEffects.hpp>
@@ -69,6 +71,38 @@ TRoulette::TRoulette(const char* name)
 		unk14C = 255;
 		unk142 = 1;
 	}
+}
+
+void TRoulette::initMapObj()
+{
+	mPosition.y += 500.0f;
+	TMapObjBase::initMapObj();
+	for (u16 i = 0; i < getModel()->getModelData()->getMaterialNum(); i++) {
+		if (strstr(getModel()->getModelData()->getMaterialName()->getName(i),
+		           "_switch")
+		    != nullptr) {
+			SMS_InitPacket_OneTevColor(mMActor->getModel(), i, GX_TEVREG0,
+			                           (GXColorS10*)&unk148);
+		}
+	}
+	TRouletteSw* sw = new TRouletteSw("ルーレットスイッチ");
+	if (sw != nullptr) {
+		sw->unk68 = this;
+		sw->unk6C = 0;
+	}
+	unk150 = sw;
+	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
+	    ->getChildren()
+	    .push_back(unk150);
+	f32 attackR = 500.0f;
+	f32 attackH = 100.0f;
+	if (gpApplication.mCurrArea.unk0 == 14) {
+		attackR = 40.0f;
+		attackH = 80.0f;
+	}
+	unk150->initHitActor(0x4000019A, 2, 0x80000000, attackR, attackH, attackR,
+	                     attackH);
+	unk150->offHitFlag(1);
 }
 
 void TRoulette::moveObject()
