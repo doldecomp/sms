@@ -18,6 +18,7 @@
 #include <Player/MarioAccess.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <Map/PollutionManager.hpp>
+#include <Map/MapEventSirena.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
 #include <System/ParamInst.hpp>
@@ -826,7 +827,10 @@ void TBossMantaManager::TMantaBattleState::update()
 	}
 	case 3:
 		if (sDefeatSE == nullptr) {
-			// TODO: event crap, raise the hotel and all
+			JDrama::TNameRefGen::search<TMapEventSirenaSink>(
+			    "イベント（ホテル沈む）")
+			    ->unk64
+			    = true;
 			mState++;
 		}
 		break;
