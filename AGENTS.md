@@ -401,6 +401,8 @@ Before submitting a PR with matching work, make sure to check the following:
   * For each TU, every function available in the map, including UNUSED ones
 - Whether functions inside of each TU are defined in the same order as they are listed in the mario.MAP file (or reverse order if the unit is -inline deferred)
 - If some UNUSED symbols were filled out with guessed code from inline sites -- check that the function size matches the size listed in mario.MAP
+- Check that UNUSED symbols are defined inside of the **cpp file** and not the header -- UNUSED symbols are never weak so cannot be inline
+- Check that all weak symbols are actually marked as inline in case of free functions or define in-line inside of the class in case of methods. Note that this does not include UNUSED symbols, as they are **never** weak
 - Whether the code uses properly uses available inlines of other classes (e.g. checkLiveFlag instead of direct access)
 - Re-validate GX code using decomp-diff.py to see whether correct constants were used everywhere (e.g. GX_COLOR0 vs GX_COLOR0A0)
 - Validate const-ness of global variables -- they get emitted to different sections depending on if const is present or not
