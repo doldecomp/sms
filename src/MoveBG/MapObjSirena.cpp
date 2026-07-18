@@ -372,6 +372,87 @@ void TItemSlotDrum::calcRootMatrix()
 	model->setBaseScale(mScaling);
 }
 
+void TItemSlotDrum::moveObject()
+{
+	TLiveActor::moveObject();
+	mPosition.y = unk150 + unk14C;
+	if (unk1A4 > 0) {
+		unk1A4++;
+		if (unk1A4 > 160) {
+			unk1A4                             = 0;
+			unk19C[TMsRange<s32>(0, 2).rand()] = 1;
+			f32 v = TMsRange<f32>(0.0f, 100.0f).rand();
+			if (v < unk1A8 && unk1A8 > 10.0f)
+				unk198 = 0;
+			else if (v < 30.0f)
+				unk198 = 2;
+			else if (v < 60.0f)
+				unk198 = 3;
+			else
+				unk198 = 1;
+			unk1A8 += 2.0f;
+		}
+	}
+	for (int i = 0; i < unk148; i++) {
+		if (unk19C[i] != 0 && unk198 == getForcastResult(i)) {
+			unk19C[i] = 0;
+			unk19F[i] = 0;
+		}
+		if (unk138[i] != 0.0f) {
+			if (fabsf(unk138[i]) > unk160) {
+				unk13C[i] += unk138[i];
+				if (unk19F[i] == 0) {
+					if (unk138[i] > 0.0f)
+						unk138[i] -= unk15C;
+					else
+						unk138[i] += unk15C;
+				}
+				if (unk13C[i] >= 360.0f)
+					unk13C[i] -= 360.0f;
+				if (unk13C[i] <= 0.0f)
+					unk13C[i] += 360.0f;
+			} else {
+				unk13C[i] += unk138[i];
+				if (unk13C[i] >= 360.0f)
+					unk13C[i] -= 360.0f;
+				if (unk13C[i] <= 0.0f)
+					unk13C[i] += 360.0f;
+				if (unk19F[i] == 0 && (int)fabsf(unk13C[i]) % unk168 == 0) {
+					unk13C[i] = (f32)(unk168 * (int)(unk13C[i] / (f32)unk168));
+					unk138[i] = 0.0f;
+					gpMSound->startSoundActor(MSD_SE_BS_TELESA_SLT_STOP,
+					                          &mPosition, 0, nullptr, 0, 4);
+					bool allStopped = 0.0f == unk138[0] && 0.0f == unk138[1]
+					                  && 0.0f == unk138[2];
+					if (allStopped) {
+						unk1A2 = 1;
+						generateItem();
+					}
+					for (int j = 0; j < unk148; j++) {
+						if (unk19F[j] != 0) {
+							if (TMsRange<f32>(0.0f, 1.0f).rand() < 0.9f)
+								unk19C[j] = 1;
+							else
+								unk19F[j] = 0;
+						}
+					}
+					if (unk13C[i] < (f32)unk168) {
+						unk170[i].r = 255;
+						unk170[i].g = 255;
+						unk170[i].b = 70;
+						gpMSound->startSoundActor(MSD_SE_SY_COLLECT_DELIGHT,
+						                          &mPosition, 0, nullptr, 0, 4);
+					} else {
+						unk170[i].r = 120;
+						unk170[i].g = 230;
+						unk170[i].b = 255;
+					}
+				}
+			}
+		}
+	}
+}
+
 void TItemSlotDrum::loadAfter()
 {
 	TMapObjBase::loadAfter();
