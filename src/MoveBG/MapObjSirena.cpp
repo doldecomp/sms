@@ -1,5 +1,9 @@
 #include <MoveBG/MapObjSirena.hpp>
 #include <Enemy/Conductor.hpp>
+#include <Enemy/Telesa.hpp>
+#include <MoveBG/ItemManager.hpp>
+#include <JSystem/JMath.hpp>
+#include <dolphin/mtx.h>
 #include <Map/Map.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/SoundEffects.hpp>
@@ -478,6 +482,89 @@ u32 TItemSlotDrum::touchWater(THitActor* water)
 		unk1A2 = 0;
 	}
 	return 1;
+}
+
+void TItemSlotDrum::generateItem()
+{
+	if (getSlotResult() == 0) {
+		MSBgm::startBGM(MSD_BGM_FANFARE_RACE);
+		unk194 = 1;
+		return;
+	}
+	if (getSlotResult() == 1) {
+		TTelesa* item = (TTelesa*)gpConductor->makeOneEnemyAppear(
+		    getPosition(), "テレサマネージャー", 1);
+		if (item != nullptr) {
+			s16 ang = (s16)DEG2SHORTANGLE(mRotation.x);
+			f32 s   = JMASSin(ang);
+			f32 c   = JMASCos(ang);
+			Mtx m;
+			m[0][0] = c;
+			m[0][1] = 0.0f;
+			m[0][2] = s;
+			m[0][3] = 0.0f;
+			m[1][0] = 0.0f;
+			m[1][1] = 1.0f;
+			m[1][2] = 0.0f;
+			m[1][3] = 0.0f;
+			m[2][0] = -s;
+			m[2][1] = 0.0f;
+			m[2][2] = c;
+			m[2][3] = 0.0f;
+			JGeometry::TVec3<f32> off(0.0f, -350.0f, 300.0f);
+			PSMTXMultVec(m, &off, &off);
+			item->mPosition.x += off.x;
+			item->mPosition.y += off.y;
+			item->mPosition.z += off.z;
+			item->initItemAttacker(this);
+		}
+		return;
+	}
+	if (getSlotResult() != -1) {
+		int count  = 1;
+		f32 spread = 0.0f;
+		if (getSlotResult() == 2) {
+			count  = 3;
+			spread = 20.0f;
+		}
+		for (int i = 0; i < count; i++) {
+			s16 ang = (s16)DEG2SHORTANGLE(spread * ((f32)i - 1.0f)
+			                              + (mRotation.x - spread));
+			f32 s   = JMASSin(ang);
+			f32 c   = JMASCos(ang);
+			Mtx m;
+			m[0][0] = c;
+			m[0][1] = 0.0f;
+			m[0][2] = s;
+			m[0][3] = 0.0f;
+			m[1][0] = 0.0f;
+			m[1][1] = 1.0f;
+			m[1][2] = 0.0f;
+			m[1][3] = 0.0f;
+			m[2][0] = -s;
+			m[2][1] = 0.0f;
+			m[2][2] = c;
+			m[2][3] = 0.0f;
+			JGeometry::TVec3<f32> off(0.0f, -350.0f, 200.0f);
+			PSMTXMultVec(m, &off, &off);
+			TMapObjBase* item = gpItemManager->makeObjAppear(
+			    mPosition.x + off.x, mPosition.y, mPosition.z + off.z,
+			    0x2000000E, false);
+			if (item != nullptr) {
+				item->mPosition.x += off.x;
+				item->mPosition.y += off.y;
+				item->mPosition.z += off.z;
+				MsVECNormalize(&off, &off);
+				item->mVelocity.x = 12.0f * off.x;
+				item->mVelocity.y = TMsRange<f32>(5.0f, 10.0f).rand();
+				item->mVelocity.z = 12.0f * off.z;
+				item->offLiveFlag(0x10);
+			}
+		}
+	} else {
+		gpMSound->startSoundActor(MSD_SE_SY_NOT_COLLECT, &mPosition, 0, nullptr,
+		                          0, 4);
+	}
 }
 
 int TItemSlotDrum::getForcastResult(int idx)
