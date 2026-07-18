@@ -21,7 +21,7 @@ public:
 		if (mHolder != nullptr && mHolder->mHeldObject != this)
 			mHolder = nullptr;
 	}
-	virtual bool moveRequest(const JGeometry::TVec3<f32>& where_to)
+	virtual BOOL moveRequest(const JGeometry::TVec3<f32>& where_to)
 	{
 		mPosition = where_to;
 		return true;

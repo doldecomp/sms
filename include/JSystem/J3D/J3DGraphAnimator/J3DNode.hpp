@@ -5,7 +5,7 @@
 
 class J3DNode;
 class J3DModelData;
-typedef int (*J3DNodeCallBack)(J3DNode*, int);
+typedef BOOL (*J3DNodeCallBack)(J3DNode*, BOOL);
 
 class J3DNode {
 public:

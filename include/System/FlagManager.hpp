@@ -42,6 +42,8 @@ public:
 
 	static TFlagManager* smInstance;
 
+	s64 getLastSaveTime() const { return mLastSaveTime; }
+
 private:
 	TFlagManager();
 

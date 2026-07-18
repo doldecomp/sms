@@ -57,8 +57,12 @@ void C_MTXLookAt(Mtx m, Point3dPtr camPos, VecPtr camUp, Point3dPtr target);
 #define MTXTranspose      C_MTXTranspose
 #define MTXIdentity       C_MTXIdentity
 #define MTXRotRad         C_MTXRotRad
+#define MTXRotTrig        C_MTXRotTrig
+#define MTXRotAxisRad     C_MTXRotAxisRad
 #define MTXTrans          C_MTXTrans
+#define MTXTransApply     C_MTXTransApply
 #define MTXScaleApply     C_MTXScaleApply
+#define MTXQuat           C_MTXQuat
 #else
 #define VECSquareMag      PSVECSquareMag
 #define VECNormalize      PSVECNormalize
@@ -80,8 +84,12 @@ void C_MTXLookAt(Mtx m, Point3dPtr camPos, VecPtr camUp, Point3dPtr target);
 #define MTXTranspose      PSMTXTranspose
 #define MTXIdentity       PSMTXIdentity
 #define MTXRotRad         PSMTXRotRad
+#define MTXRotTrig        PSMTXRotTrig
+#define MTXRotAxisRad     PSMTXRotAxisRad
 #define MTXTrans          PSMTXTrans
+#define MTXTransApply     PSMTXTransApply
 #define MTXScaleApply     PSMTXScaleApply
+#define MTXQuat           PSMTXQuat
 #endif
 
 // asm only
@@ -94,15 +102,16 @@ void C_MTXLookAt(Mtx m, Point3dPtr camPos, VecPtr camUp, Point3dPtr target);
 // mtx.c
 // functions
 void PSMTXRotRad(Mtx m, char axis, f32 rad);
-void MTXRotTrig(Mtx m, char axis, f32 sinA, f32 cosA);
-void MTXRotAxisRad(Mtx m, Vec* axis, f32 rad);
 void PSMTXTrans(Mtx m, f32 xT, f32 yT, f32 zT);
-void MTXTransApply(Mtx src, Mtx dst, f32 xT, f32 yT, f32 zT);
+
+void C_MTXRotTrig(Mtx m, char axis, f32 sinA, f32 cosA);
+void C_MTXRotAxisRad(Mtx m, Vec* axis, f32 rad);
+void C_MTXTransApply(Mtx src, Mtx dst, f32 xT, f32 yT, f32 zT);
 void C_MTXScale(Mtx m, f32 xS, f32 yS, f32 zS);
 void C_MTXScaleApply(Mtx src, Mtx dst, f32 xS, f32 yS, f32 zS);
-void MTXQuat(Mtx m, QuaternionPtr q);
-void MTXReflect(Mtx m, Vec* p, Vec* n);
-void MTXLookAt(Mtx m, Vec* camPos, Vec* camUp, Vec* target);
+void C_MTXQuat(Mtx m, QuaternionPtr q);
+void C_MTXReflect(Mtx m, Vec* p, Vec* n);
+void C_MTXLookAt(Mtx m, Vec* camPos, Vec* camUp, Vec* target);
 void C_MTXLightFrustum(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 scaleS,
                        f32 scaleT, f32 transS, f32 transT);
 void C_MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT,

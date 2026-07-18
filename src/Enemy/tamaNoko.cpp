@@ -19,7 +19,7 @@
 #include <MoveBG/ItemManager.hpp>
 #include <MoveBG/MapObjBase.hpp>
 #include <Player/MarioAccess.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Camera/CameraShake.hpp>
 #include <Enemy/EffectObj.hpp>
 #include <Enemy/Conductor.hpp>
@@ -70,12 +70,12 @@ TTamaNokoFlower::TTamaNokoFlower(const TLiveActor* param_1, int param_2,
 	unk2C->initAnmSound(nullptr, 1, 0.0f);
 }
 
-void TTamaNokoFlower::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 1) {
-		if (gpMarDirector->isTalkModeNow()) {
+	if (cue & CUE_MOVE) {
+		if (!gpMarDirector->isTalkModeNow()) {
 			if (unk35 != 0 && unk1C == 0) {
-				if (gpMarDirector->checkUnk124Thing2()) {
+				if (!gpMarDirector->isDemoModeNow()) {
 					unk1C = 1;
 
 					for (int i = 0; i < 5; ++i) {
@@ -124,7 +124,7 @@ void TTamaNokoFlower::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		TPosition3f magic;
 		magic.translation(unk10->mPosition.x, unk10->mPosition.y,
 		                  unk10->mPosition.z);
@@ -138,17 +138,17 @@ void TTamaNokoFlower::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if (gpMarDirector->checkUnk124Thing2() && gpMarDirector->isTalkModeNow()) {
-		if (param_1 & 0x4)
+	if (!gpMarDirector->isDemoModeNow() && gpMarDirector->isTalkModeNow()) {
+		if (cue & CUE_CALC_VIEW)
 			unk18->viewCalc();
 
-		if (param_1 & 0x200) {
+		if (cue & CUE_ENTRY) {
 			unk18->entry();
 			return;
 		}
 	}
 
-	unk18->perform(param_1, param_2);
+	unk18->perform(cue, graphics);
 }
 
 // TODO: 4 bytes too big
@@ -200,8 +200,9 @@ void TTamaNokoManager::loadAfter()
 void TTamaNokoManager::initSetEnemies()
 {
 	void* data = JKRGetResource("/scene/tamaNoko/tamaflower_model1.bmd");
-	SDLModelData* modelData
-	    = new SDLModelData(J3DModelLoaderDataBase::load(data, 0x10220000));
+	SDLModelData* modelData = new SDLModelData(J3DModelLoaderDataBase::load(
+	    data, J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	              | (2 << J3DMLF_TevStageNumShift)));
 
 	for (int i = 0; i < mObjNum; ++i) {
 		TTamaNoko* enemy = (TTamaNoko*)unk18[i];
@@ -215,7 +216,10 @@ TSmallEnemy* TTamaNokoManager::createEnemyInstance() { return new TTamaNoko; }
 void TTamaNokoManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "tamanoko_model1.bmd", 0x10220000, 0 },
+		{ "tamanoko_model1.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
@@ -268,11 +272,11 @@ void TTamaNoko::reset()
 	onLiveFlag(LIVE_FLAG_UNK1000);
 }
 
-void TTamaNoko::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TTamaNoko::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSmallEnemy::perform(param_1, param_2);
+	TSmallEnemy::perform(cue, graphics);
 	if (unk19C->unk34)
-		unk19C->perform(param_1, param_2);
+		unk19C->perform(cue, graphics);
 }
 
 void TTamaNoko::moveObject()
@@ -368,32 +372,33 @@ void TTamaNoko::behaveToRelease()
 		mSpine->pushNerve(&TNerveTamaNokoThrown::theNerve());
 }
 
-BOOL TTamaNoko::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TTamaNoko::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == HIT_MESSAGE_TRAMPLE || param_2 == HIT_MESSAGE_HIP_DROP) {
-		if (isHitValid(param_2)) {
+	if (message == HIT_MESSAGE_TRAMPLE || message == HIT_MESSAGE_HIP_DROP) {
+		if (isHitValid(message)) {
 			unk184 = 0;
 			kill();
 		}
 		return true;
 	}
 
-	if (param_2 == HIT_MESSAGE_UNKD) {
+	if (message == HIT_MESSAGE_UNKD) {
 		mHitPoints = 0;
 		onLiveFlag(LIVE_FLAG_DEAD);
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 	}
 
-	if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
-		                             &param_1->mPosition, 0, nullptr);
-		gpMSound->startSoundSet(0x6802, &mPosition, 0, 0.0f, 0, 0, 4);
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
+		                             0, nullptr);
+		gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0, 0.0f,
+		                        0, 0, 4);
 
 		if (mSprayedByWaterCooldown == 0) {
 			mSprayedByWaterCooldown = 1;
 			if (!changeByJuice()) {
-				decHpByWater(param_1);
-				behaveToWater(param_1);
+				decHpByWater(sender);
+				behaveToWater(sender);
 			}
 		}
 
@@ -599,9 +604,9 @@ void TTamaNoko::setAfterDeadEffect()
 
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_TAMA_FLOWER,
 	                                            &mPosition, 0, nullptr);
-	if (gpMSound->gateCheck(0x295F))
-		MSoundSESystem::MSoundSE::startSoundActor(0x295F, &mPosition, 0,
-		                                          nullptr, 0, 4);
+	if (gpMSound->gateCheck(MSD_SE_EN_COMMON_SMOKE))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_COMMON_SMOKE,
+		                                          &mPosition, 0, nullptr, 0, 4);
 }
 
 const char** TTamaNoko::getBasNameTable() const { return tamaNoko_bastable; }
@@ -748,7 +753,7 @@ DEFINE_NERVE(TNerveTamaNokoAttack, TLiveActor)
 					return true;
 				}
 
-				if (SMS_CheckMarioFlag(0x10000)
+				if (SMS_CheckMarioFlag(MARIO_FLAG_IN_SHALLOW_WATER)
 				    || SMS_IsMarioStatusTypeSwimming()
 				    || SMS_GetMarioGrPlane()->isWaterSurface()) {
 					spine->pushAfterCurrent(
@@ -806,9 +811,9 @@ DEFINE_NERVE(TNerveTamaNokoDown, TLiveActor)
 			return true;
 		}
 
-		if (gpMSound->gateCheck(0x28F9))
-			MSoundSESystem::MSoundSE::startSoundActor(0x28F9, &self->mPosition,
-			                                          0, nullptr, 0, 4);
+		if (gpMSound->gateCheck(MSD_SE_EN_TAMANOKO_DROPOK))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_EN_TAMANOKO_DROPOK, &self->mPosition, 0, nullptr, 0, 4);
 		self->unk164 = 1;
 		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK7, 1.0f);
 		self->setBckAnm(4);

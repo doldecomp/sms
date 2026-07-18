@@ -27,13 +27,13 @@ extern TMapObjGrassManager* gpMapObjGrassManager;
 class TMapObjGrassManager : public JDrama::TViewObj {
 public:
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void initDrawNear() const;
 	void initDrawFar() const;
 	void draw() const;
 	void entryGrassGroup(TMapObjGrassGroup*, long);
-	TMapObjGrassManager(const char*);
+	TMapObjGrassManager(const char* name = "草管理");
 
 	static f32 mWidth;
 	static f32 mSwingWidth;

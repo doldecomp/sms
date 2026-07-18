@@ -69,8 +69,23 @@ public:
 		    info.mAttnFn, info.mAmbSrc == 0xFFFF ? (u8)0 : info.mAmbSrc);
 	}
 
-	GXAttnFn getAttnFn();
-	void load(u32 idx);
+	GXAttnFn getAttnFn()
+	{
+		// TODO: pch issues with this symbol being in sdata2 instead of sdata...
+		u8 attnFnTbl[] = { GX_AF_NONE, GX_AF_SPEC, GX_AF_NONE, GX_AF_SPOT };
+		return (GXAttnFn)attnFnTbl[mChanCtrl >> 9 & 0x03];
+	}
+
+	// different from TP, but eh, probably correct?
+	void load(u32 idx)
+	{
+		const GXChannelID chanTbl[]
+		    = { GX_COLOR0, GX_ALPHA0, GX_COLOR1, GX_ALPHA1 };
+
+		J3DGDSetChanCtrl(chanTbl[idx], getEnable(), getAmbSrc(), getMatSrc(),
+		                 getLightMask(), getDiffuseFn(), getAttnFn());
+	}
+
 	GXDiffuseFn getDiffuseFn() { return (GXDiffuseFn)(mChanCtrl >> 7 & 3); }
 	u8 getLightMask()
 	{

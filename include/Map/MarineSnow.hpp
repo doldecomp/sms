@@ -5,9 +5,9 @@
 
 class TMarineSnow : public JDrama::TActor {
 public:
-	TMarineSnow(const char*);
+	TMarineSnow(const char* name = "MarineSnow");
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 #endif

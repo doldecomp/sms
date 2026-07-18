@@ -45,8 +45,27 @@ public:
 		mTevColorOp = mTevColorOp & ~(0x01 << 3) | param_4 << 3;
 		mTevColorOp = mTevColorOp & ~(0x03 << 6) | param_5 << 6;
 	}
+
+	u8 getColorOpSomething1() const
+	{
+		if ((mTevColorOp & 3) != 3U)
+			return mTevColorOp >> 2 & 1;
+		else
+			return 0x8 + (mTevColorOp >> 2 & 1) + (mTevColorOp >> 3 & 6);
+	}
+
+	u8 getColorOpSomething2() const { return mTevColorOp & 3; }
+	u8 getColorOpSomething3() const { return mTevColorOp >> 4 & 3; }
+	u8 getColorOpSomething4() const { return mTevColorOp >> 3 & 1; }
+	u8 getColorOpSomething5() const { return mTevColorOp >> 6 & 3; }
+
 	void setTevColorAB(u8 a, u8 b) { mTevColorAB = a << 4 | b; }
 	void setTevColorCD(u8 c, u8 d) { mTevColorCD = c << 4 | d; }
+
+	u8 getTevColorA() const { return mTevColorAB >> 4 & 0xf; }
+	u8 getTevColorB() const { return mTevColorAB & 0xf; }
+	u8 getTevColorC() const { return mTevColorCD >> 4 & 0xf; }
+	u8 getTevColorD() const { return mTevColorCD & 0xf; }
 
 	void setTevAlphaOp(u8 param_1, u8 param_2, u8 param_3, u8 param_4,
 	                   u8 param_5)
@@ -62,6 +81,18 @@ public:
 		mTevAlphaOp = mTevAlphaOp & ~(0x01 << 3) | param_4 << 3;
 		mTevAlphaOp = mTevAlphaOp & ~(0x03 << 6) | param_5 << 6;
 	}
+
+	u8 getAlphaOpSomething1() const
+	{
+		if ((mTevAlphaOp & 3) != 3U)
+			return mTevAlphaOp >> 2 & 1;
+		else
+			return 0x8 + (mTevAlphaOp >> 2 & 1) + (mTevAlphaOp >> 3 & 6);
+	}
+	u8 getAlphaOpSomething2() const { return mTevAlphaOp & 3; }
+	u8 getAlphaOpSomething3() const { return mTevAlphaOp >> 4 & 3; }
+	u8 getAlphaOpSomething4() const { return mTevAlphaOp >> 3 & 1; }
+	u8 getAlphaOpSomething5() const { return mTevAlphaOp >> 6 & 3; }
 
 	void setAlphaA(u8 a) { mTevAlphaAB = mTevAlphaAB & ~(0x07 << 5) | a << 5; }
 	void setAlphaB(u8 b) { mTevAlphaAB = mTevAlphaAB & ~(0x07 << 2) | b << 2; }
@@ -81,6 +112,14 @@ public:
 		setAlphaC(c);
 		setAlphaD(d);
 	}
+
+	u8 getAlphaA() const { return mTevAlphaAB >> 5 & 7; }
+	u8 getAlphaB() const { return mTevAlphaAB >> 2 & 7; }
+	u8 getAlphaC() const
+	{
+		return (mTevAlphaAB << 1 & 0x6) | (mTevSwapModeInfo >> 7 & 1);
+	}
+	u8 getAlphaD() const { return mTevSwapModeInfo >> 4 & 7; }
 
 	void setTexSel(u8 param_0)
 	{

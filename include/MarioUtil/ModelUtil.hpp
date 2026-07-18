@@ -1,7 +1,7 @@
 #ifndef MODEL_UTIL_HPP
 #define MODEL_UTIL_HPP
 
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DAnmLoader.hpp>
 
 class J3DFrameCtrl;

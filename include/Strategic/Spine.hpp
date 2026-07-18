@@ -31,7 +31,7 @@ public:
 	{
 	}
 
-	TNerveBase<T>* getLatestNerve() const
+	Nerve getLatestNerve() const
 	{
 		if (mCurrent)
 			return mCurrent;
@@ -87,6 +87,13 @@ public:
 	// I still don't completely understand how this abstraction
 	// is supposed to actually work
 
+	Nerve getTop() const
+	{
+		if (mVertebrae.empty())
+			return nullptr;
+		return mVertebrae.top();
+	}
+
 	// fabricated
 	Nerve popNerve()
 	{
@@ -104,6 +111,19 @@ public:
 
 		mTime    = 0;
 		mCurrent = nerve;
+	}
+
+	void skip()
+	{
+		Nerve nerve = popNerve();
+
+		if (nerve) {
+			if (mCurrent != nullptr)
+				mPrevious = mCurrent;
+
+			mCurrent = nerve;
+			mTime    = 0;
+		}
 	}
 
 	// fabricated
@@ -141,6 +161,9 @@ public:
 
 	// fabricated
 	bool isIdle() const { return mCurrent == nullptr && mVertebrae.empty(); }
+
+	// fabricated
+	int getVertebraeCount() const { return mVertebrae.size(); }
 };
 
 #endif

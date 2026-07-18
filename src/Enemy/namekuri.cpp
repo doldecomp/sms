@@ -1,4 +1,3 @@
-#include "JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp"
 #include <Enemy/NameKuri.hpp>
 #include <Enemy/Walker.hpp>
 #include <Enemy/Graph.hpp>
@@ -29,6 +28,7 @@
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DNode.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -117,9 +117,10 @@ static const GXColorS10 nameKuriTevColorData[7] = {
 
 void TNameKuriManager::initSetEnemies()
 {
-	void* brainBmd = JKRGetResource("/scene/namekuri2/brain.bmd");
-	SDLModelData* brainModel
-	    = new SDLModelData(J3DModelLoaderDataBase::load(brainBmd, 0x10210000));
+	void* brainBmd           = JKRGetResource("/scene/namekuri2/brain.bmd");
+	SDLModelData* brainModel = new SDLModelData(J3DModelLoaderDataBase::load(
+	    brainBmd, J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	                  | (1 << J3DMLF_TevStageNumShift)));
 
 	if (unk18[0] != nullptr) {
 		s32 idx = ((TNameKuri*)unk18[0])
@@ -167,9 +168,9 @@ void TNameKuriManager::createModelData()
 	createModelDataArray(entry);
 }
 
-void TNameKuriManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TNameKuriManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TEnemyManager::perform(param_1, param_2);
+	TEnemyManager::perform(cue, graphics);
 }
 
 TNameIndParCallback::TNameIndParCallback(TNameKuri* owner)
@@ -444,11 +445,11 @@ void TNameKuri::calcRootMatrix()
 	anmMtx[2][3] = mPosition.z;
 }
 
-void TNameKuri::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TNameKuri::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TWalkerEnemy::perform(param_1, param_2);
-	unk1CC->perform(param_1, param_2);
-	if (param_1 & 2) {
+	TWalkerEnemy::perform(cue, graphics);
+	unk1CC->perform(cue, graphics);
+	if (cue & CUE_CALC_ANIM) {
 		Mtx afStack_50;
 		SMS_GetLightPerspectiveForEffectMtx(afStack_50);
 
@@ -474,9 +475,9 @@ void TNameKuri::moveObject()
 	}
 
 	if (!isAirborne() && isBckAnm(7)) {
-		if (gpMSound->gateCheck(0x2006))
-			MSoundSESystem::MSoundSE::startSoundActor(0x2006, mPosition, 0,
-			                                          nullptr, 0, 4);
+		if (gpMSound->gateCheck(MSD_SE_EN_NAMEKURI_WALK))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_EN_NAMEKURI_WALK, mPosition, 0, nullptr, 0, 4);
 	}
 
 	if (!checkLiveFlag(LIVE_FLAG_HIDDEN)) {
@@ -532,9 +533,9 @@ void TNameKuri::setDeadAnm()
 {
 	setBckAnm(0);
 
-	if (gpMSound->gateCheck(0x2800))
-		MSoundSESystem::MSoundSE::startSoundActor(0x2800, &mPosition, 0,
-		                                          nullptr, 0, 4);
+	if (gpMSound->gateCheck(MSD_SE_EN_NAMEKURI_DOWN))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_NAMEKURI_DOWN,
+		                                          &mPosition, 0, nullptr, 0, 4);
 
 	MtxPtr mtx = getMActor()->getModel()->getAnmMtx(2);
 

@@ -73,6 +73,7 @@ public:
 	static JUTException* create(JUTDirectPrint*);
 	static void errorHandler(OSError, OSContext*, u32, u32);
 	static u32 getFpscr();
+	static void setFpscr(u32);
 	static bool searchPartialModule(u32, u32*, u32*, u32*, u32*);
 	static OSErrorHandler setPreUserCallback(OSErrorHandler);
 	static OSErrorHandler setPostUserCallback(OSErrorHandler);

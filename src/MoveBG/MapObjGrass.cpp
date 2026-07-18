@@ -133,7 +133,7 @@ void TMapObjGrassManager::initDrawNear() const
 	GXClearVtxDesc();
 	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 	GXSetVtxDesc(GX_VA_CLR0, GX_INDEX8);
-	GXSetCurrentMtx(0);
+	GXSetCurrentMtx(GX_PNMTX0);
 	GXSetArray(GX_VA_CLR0, color_table, 4);
 	GXSetNumChans(1);
 	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_VTX, GX_SRC_VTX, 0, GX_DF_NONE,
@@ -179,9 +179,9 @@ void TMapObjGrassManager::draw() const
 		unk14[i]->drawFar();
 }
 
-void TMapObjGrassManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMapObjGrassManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		f32 fVar1 = 0.0f;
 		for (int i = 0; i < 10; ++i) {
 			unk20[i] = mSwingWidth * sinf(unk18 + fVar1);
@@ -216,7 +216,7 @@ void TMapObjGrassManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if (param_1 & 8) {
+	if (cue & CUE_DRAW) {
 		draw();
 	}
 }

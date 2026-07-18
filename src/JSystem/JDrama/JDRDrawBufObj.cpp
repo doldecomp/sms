@@ -28,20 +28,20 @@ void TDrawBufObj::load(JSUMemoryInputStream& stream)
 	mDrawBuffer = new J3DDrawBuffer(mDrawBufferSize);
 }
 
-void TDrawBufObj::perform(u32 param_1, TGraphics* param_2)
+void TDrawBufObj::perform(u32 cue, TGraphics* graphics)
 {
-	if ((param_1 & 0x80))
+	if (cue & CUE_DRAW_INIT)
 		mDrawBuffer->frameInit();
 
-	if ((param_1 & 0x400)) {
-		if ((unk18 & 3))
-			j3dSys.mDrawBuffer[0] = mDrawBuffer;
+	if (cue & CUE_SET_DRAW_BUFFER) {
+		if (unk18 & 3)
+			j3dSys.setDrawBuffer(mDrawBuffer, 0);
 
-		if ((unk18 & 4))
-			j3dSys.mDrawBuffer[1] = mDrawBuffer;
+		if (unk18 & 4)
+			j3dSys.setDrawBuffer(mDrawBuffer, 1);
 	}
 
-	if ((param_1 & 8)) {
+	if (cue & CUE_DRAW) {
 		j3dSys.unk4C = unk18;
 		mDrawBuffer->draw();
 	}

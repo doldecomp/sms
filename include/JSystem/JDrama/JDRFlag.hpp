@@ -5,7 +5,7 @@ namespace JDrama {
 
 template <class T> class TFlagT {
 public:
-	TFlagT(T v = T()) { set(v); }
+	TFlagT(T v = T()) { mValue = v; }
 
 	TFlagT(const TFlagT<T>& other)
 	    : mValue(other.mValue)

@@ -254,7 +254,7 @@ BOOL TSpineEnemy::receiveMessage(THitActor* sender, u32 message)
 		return true;
 	}
 
-	if (message <= HIT_MESSAGE_UNK2) {
+	if (message <= HIT_MESSAGE_PUSH_UP) {
 		kill();
 		return true;
 	}
@@ -324,11 +324,11 @@ int TSpineEnemy::jumpToNextGraphNode()
 
 void TSpineEnemy::goToRandomNextGraphNode()
 {
-	if (unk124->getCurrentIndex() < 0)
+	if (unk124->getCurGraphIndex() < 0)
 		unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
 	else
 		unk124->moveTo(unk124->unk0->getRandomNextIndex(
-		    unk124->getCurrentIndex(), unk124->getPrevIndex(), -1));
+		    unk124->getCurGraphIndex(), unk124->getPrevIndex(), -1));
 
 	setGoalPathFromGraph();
 	unk128 = 0;
@@ -337,11 +337,11 @@ void TSpineEnemy::goToRandomNextGraphNode()
 
 void TSpineEnemy::goToRandomEscapeGraphNode()
 {
-	if (unk124->getCurrentIndex() < 0)
+	if (unk124->getCurGraphIndex() < 0)
 		unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
 	else
 		unk124->moveTo(unk124->unk0->getEscapeFromMarioIndex(
-		    unk124->getCurrentIndex(), -1, mPosition, -1));
+		    unk124->getCurGraphIndex(), -1, mPosition, -1));
 
 	setGoalPathFromGraph();
 	unk128 = 0;
@@ -357,12 +357,12 @@ void TSpineEnemy::goToExclusiveNextGraphNode()
 			unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
 		} else {
 			int idx = unk124->unk0->getRandomNextIndex(
-			    unk124->getCurrentIndex(), unk124->getPrevIndex(), -1);
+			    unk124->getCurGraphIndex(), unk124->getPrevIndex(), -1);
 			for (int i = 0; i < mManager->getObjNum(); ++i) {
 				TSpineEnemy* enemy = (TSpineEnemy*)mManager->getObj(i);
 				if (this != enemy && idx == enemy->unk124->mCurrIdx)
 					idx = unk124->unk0->getRandomNextIndex(
-					    unk124->getCurrentIndex(), idx, -1);
+					    unk124->getCurGraphIndex(), idx, -1);
 			}
 			unk124->moveTo(idx);
 		}
@@ -628,12 +628,12 @@ BOOL TSpineEnemy::checkCurAnmEnd(int param_1) const
 	}
 }
 
-void TSpineEnemy::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSpineEnemy::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TEnemyManager* mgr = (TEnemyManager*)getManager();
 
 	if (mgr != nullptr) {
-		if ((param_1 & 2)
+		if ((cue & CUE_CALC_ANIM)
 		    && !checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT)
 		    && TEnemyManager::mIsCopyAnmMtx && mgr->unk4C >= 0) {
 			if (checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK200))
@@ -643,12 +643,12 @@ void TSpineEnemy::perform(u32 param_1, JDrama::TGraphics* param_2)
 				return;
 		}
 	} else {
-		if ((param_1 & 2)
+		if ((cue & CUE_CALC_ANIM)
 		    && !checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT)
 		    && checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK200)) {
 			return;
 		}
 	}
 
-	TLiveActor::perform(param_1, param_2);
+	TLiveActor::perform(cue, graphics);
 }

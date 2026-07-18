@@ -11,7 +11,7 @@ struct TColor : public GXColor {
 	TColor(u32 u32Color) { set(u32Color); }
 	TColor(GXColor color) { set(color); }
 
-	// TColor(const TColor& other) { set(other.toUInt32()); }
+	// TColor(const TColor& other) { *(GXColor*)this = *(GXColor*)&other; }
 
 	operator u32() const { return toUInt32(); }
 	u32 toUInt32() const { return *(u32*)&r; }

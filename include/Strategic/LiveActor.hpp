@@ -23,6 +23,7 @@ enum TLiveFlagBits {
 	LIVE_FLAG_CLIPPED_OUT = 0x4,
 	LIVE_FLAG_UNK8        = 0x8,
 	LIVE_FLAG_UNK10       = 0x10,
+	LIVE_FLAG_UNK20       = 0x20,
 	LIVE_FLAG_UNK40       = 0x40,
 	LIVE_FLAG_AIRBORNE    = 0x80,
 	LIVE_FLAG_UNK100      = 0x100,
@@ -36,7 +37,17 @@ enum TLiveFlagBits {
 	LIVE_FLAG_UNK10000    = 0x10000,
 	LIVE_FLAG_UNK20000    = 0x20000,
 	LIVE_FLAG_UNK40000    = 0x40000,
+	LIVE_FLAG_UNK80000    = 0x80000,
 	LIVE_FLAG_UNK100000   = 0x100000,
+	LIVE_FLAG_UNK200000   = 0x200000,
+	LIVE_FLAG_UNK400000   = 0x400000,
+	LIVE_FLAG_SINK_BOTTOM = 0x800000, // for NPCs only
+	LIVE_FLAG_UNK1000000  = 0x1000000,
+	LIVE_FLAG_UNK2000000  = 0x2000000,
+	LIVE_FLAG_UNK4000000  = 0x4000000,
+	LIVE_FLAG_UNK8000000  = 0x8000000,
+	LIVE_FLAG_UNK10000000 = 0x10000000,
+	LIVE_FLAG_UNK20000000 = 0x20000000,
 };
 
 class TLiveActor : public TTakeActor {
@@ -61,7 +72,7 @@ public:
 	virtual void kill();
 	virtual f32 getGravityY() const;
 	virtual BOOL hasMapCollision() const;
-	virtual Vec getFocalPoint() const;
+	virtual JGeometry::TVec3<f32> getFocalPoint() const;
 	virtual void updateAnmSound();
 	virtual const char** getBasNameTable() const;
 
@@ -74,7 +85,7 @@ public:
 	JGeometry::TVec3<f32> calcVelocityToJumpToY(const JGeometry::TVec3<f32>&,
 	                                            f32 speed, f32 gravity) const;
 	void calcVelocityToJumpToXZ(const JGeometry::TVec3<f32>&, f32, f32) const;
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	void load(JSUMemoryInputStream&);
 	void initLodAnm(const TLodAnmIndex*, int, f32);
 	J3DModel* getModel() const;
@@ -90,7 +101,10 @@ public:
 	f32 getGroundHeight() const { return mGroundHeight; }
 	// TODO: which one is real?
 	bool checkLiveFlag(u32 flag) const { return mLiveFlag & flag; }
-	bool checkLiveFlag2(u32 flag) const { return mLiveFlag & flag ? 1 : 0; }
+	bool checkLiveFlag2(u32 flag) const
+	{
+		return mLiveFlag & flag ? true : false;
+	}
 	bool isAirborne() const
 	{
 		return checkLiveFlag(LIVE_FLAG_AIRBORNE) ? 1 : 0;
@@ -118,10 +132,16 @@ public:
 	}
 	const JGeometry::TVec3<f32>& getVelocity() const { return mVelocity; }
 	void setVelocity(const JGeometry::TVec3<f32>& v) { mVelocity = v; }
+	void setVelocityAndFlag10(f32 x, f32 y, f32 z)
+	{
+		mVelocity.set(x, y, z);
+		offLiveFlag(LIVE_FLAG_UNK10);
+	}
 	void setLinearVelocity(const JGeometry::TVec3<f32>& v)
 	{
 		mLinearVelocity = v;
 	}
+	TLodAnm* getLodAnm() { return unkD0; }
 
 public:
 	/* 0x70 */ TLiveManager* mManager;
@@ -150,7 +170,7 @@ public:
 	/* 0xE4 */ f32 mGroundActorYaw;
 	/* 0xE8 */ s8 unkE8; // riding mode?
 	/* 0xEC */ TMapCollisionManager* mMapCollisionManager;
-	/* 0xF0 */ u32 mLiveFlag; // LiveFlagBits
+	/* 0xF0 */ u32 mLiveFlag;
 };
 
 #endif

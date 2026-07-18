@@ -38,6 +38,29 @@ class TDemoCannon;
 class TMarDirector;
 
 extern TMarDirector* gpMarDirector;
+inline TMarDirector* SMSGetMarDirector() { return gpMarDirector; }
+
+enum {
+	// Some kind of light-related cues?
+	CUE_UNK10000 = 0x10000,
+	CUE_UNK20000 = 0x20000,
+	CUE_UNK40000 = 0x40000,
+	CUE_UNK80000 = 0x80000,
+
+	// Bits 16-17 can store the pollution layer sometimes.
+	// If more than 4 layers -- everything breaks horribly.
+	CUE_OFFSET_POLLUTION_LAYER = 16,
+
+	CUE_UNK800000              = 0x800000,
+	CUE_UNK1000000             = 0x1000000,
+	CUE_SEMITRANSPARENT_PRIO_2 = 0x2000000,
+	CUE_SEMITRANSPARENT_PRIO_1 = 0x4000000,
+	CUE_UNK8000000             = 0x8000000,
+	CUE_UNK10000000            = 0x10000000,
+	CUE_UNK20000000            = 0x20000000,
+	CUE_UNK40000000            = 0x40000000,
+	CUE_UNK80000000            = 0x80000000,
+};
 
 class TMarDirector : public JDrama::TDirector {
 public:
@@ -119,19 +142,20 @@ public:
 	void offUnk4CFlag(int flag) { unk4C &= ~flag; }
 	TGCConsole2* getConsole() { return mConsole; }
 
-	bool isTalkModeNow() const
+	bool isTalkModeNow() const { return unk124 == 1 || unk124 == 2; }
+
+	bool isDemoModeNow() const { return unk124 == 3 || unk124 == 4; }
+
+	// TODO: better names
+	bool isDemoMode3() const { return unk124 == 3; }
+	bool isDemoMode4() const { return unk124 == 4; }
+
+	bool isTalkOrDemoModeNow() const
 	{
-		if (unk124 == 1 || unk124 == 2)
-			return true;
-		return false;
+		return isTalkModeNow() || isDemoModeNow();
 	}
 
-	bool checkUnk124Thing2() const
-	{
-		if (unk124 == 3 || unk124 == 4)
-			return true;
-		return false;
-	}
+	bool isThing() const { return isTalkModeNow() || unk124 == 4; }
 
 	void* getUnkD4() { return unkD4; }
 	TBaseNPC* getTalkingNPC() { return unkA0; }

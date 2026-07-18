@@ -57,7 +57,7 @@ public:
 
 class THinokuri2Manager : public TEnemyManager {
 public:
-	THinokuri2Manager(const char*);
+	THinokuri2Manager(const char* name = "ヒノクリ２マネージャ");
 
 	virtual void load(JSUMemoryInputStream&);
 	void createModelData();
@@ -89,7 +89,7 @@ class THinokuri2;
 class THino2Hit : public THitActor {
 public:
 	THino2Hit(THinokuri2* owner, int joint_idx, const char* name);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 public:
@@ -103,7 +103,7 @@ public:
 	void setMatrix(MtxPtr);
 	void breakMask();
 	void startDamageMotion();
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	// fabricated
 	void reset()
@@ -135,9 +135,9 @@ public:
 
 class THinokuri2 : public TSpineEnemy {
 public:
-	THinokuri2(const char*);
+	THinokuri2(const char* name = "ヒノクリ２");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void init(TLiveManager*);
 	virtual void moveObject();

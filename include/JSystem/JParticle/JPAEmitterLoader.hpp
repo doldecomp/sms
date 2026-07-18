@@ -38,13 +38,13 @@ public:
 		unk8  = param_2;
 		unkC  = param_3;
 		unk10 = 0;
-		unk4  = param_1;
+		mHeap = param_1;
 	}
 
 	virtual ~JPAEmitterLoader() { }
 
 public:
-	/* 0x4 */ JKRHeap* unk4;
+	/* 0x4 */ JKRHeap* mHeap;
 	/* 0x8 */ const u8* unk8;
 	/* 0xC */ const JPABinaryHeader* unkC;
 	/* 0x10 */ JPAEmitterData* unk10;

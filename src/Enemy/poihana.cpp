@@ -75,9 +75,9 @@ TSmallEnemy* TPoiHanaManager::createEnemyInstance()
 	return nullptr;
 }
 
-void TPoiHanaManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TPoiHanaManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TEnemyManager::perform(param_1, param_2);
+	TEnemyManager::perform(cue, graphics);
 }
 
 void TPoiHanaManager::initSetEnemies()
@@ -93,9 +93,9 @@ void TPoiHanaManager::initSetEnemies()
 	}
 }
 
-BOOL TPoiHanaCollision::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TPoiHanaCollision::receiveMessage(THitActor* sender, u32 message)
 {
-	return unk68->receiveMessage(param_1, param_2);
+	return unk68->receiveMessage(sender, message);
 }
 
 void TPoiHanaCollision::checkHit()
@@ -212,10 +212,10 @@ void TPoiHana::moveObject()
 	}
 }
 
-void TPoiHana::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TPoiHana::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSmallEnemy::perform(param_1, param_2);
-	unk1BC->THitActor::perform(param_1, param_2);
+	TSmallEnemy::perform(cue, graphics);
+	unk1BC->THitActor::perform(cue, graphics);
 }
 
 void TPoiHana::bind()
@@ -573,9 +573,9 @@ DEFINE_NERVE(TNervePoihanaSleep, TLiveActor)
 
 	self->mGoToSleepTimer += 1;
 	if ((self->unk194 || self->unsetUnk165()) && !self->isBckAnm(10)) {
-		if (gpMSound->gateCheck(0x2955))
-			MSoundSESystem::MSoundSE::startSoundActor(0x2955, &self->mPosition,
-			                                          0, nullptr, 0, 4);
+		if (gpMSound->gateCheck(MSD_SE_EN_KOHANA_WAKEUP3))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_EN_KOHANA_WAKEUP3, &self->mPosition, 0, nullptr, 0, 4);
 
 		self->setBckAnm(10);
 		self->getMActor()->getFrameCtrl(0)->setFrame(148.0f);
@@ -660,7 +660,7 @@ DEFINE_NERVE(TNervePoihanaThrow, TLiveActor)
 	if (self->mThrowTimer > 0) {
 		self->mThrowTimer += 1;
 		if (self->mThrowTimer > 16) {
-			SMS_SendMessageToMario(self, HIT_MESSAGE_UNK7);
+			SMS_SendMessageToMario(self, HIT_MESSAGE_THROWN);
 			f32 backThrowVal = self->unk19C->mSLBackThrowVal.get();
 			Mtx afStack_4c;
 			MsMtxSetRotRPH(afStack_4c, self->mPosition.x, self->mPosition.y,

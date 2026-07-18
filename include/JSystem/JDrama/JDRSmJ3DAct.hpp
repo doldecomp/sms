@@ -13,8 +13,8 @@ namespace JDrama {
 
 class TSmJ3DAct : public TActor {
 public:
-	TSmJ3DAct()
-	    : TActor("<SmJ3DAct>")
+	TSmJ3DAct(const char* name = "<SmJ3DAct>")
+	    : TActor(name)
 	    , unk44(nullptr)
 	    , unk48(nullptr)
 	    , unk4C(nullptr)
@@ -25,7 +25,7 @@ public:
 
 	void initModDat();
 	void load(JSUMemoryInputStream&);
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	~TSmJ3DAct() { }
 
 public:

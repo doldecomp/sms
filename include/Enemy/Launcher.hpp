@@ -61,10 +61,10 @@ public:
 
 class TCommonLauncher : public TLauncher {
 public:
-	TCommonLauncher(const char*);
+	TCommonLauncher(const char* name = "コモンランチャー");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void init(TLiveManager*);
 	virtual const char** getBasNameTable() const;
 	virtual void stateInitial();
@@ -82,7 +82,7 @@ public:
 
 class TCommonLauncherManager : public TLauncherManager {
 public:
-	TCommonLauncherManager(const char*);
+	TCommonLauncherManager(const char* name = "コモンランチャーマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();

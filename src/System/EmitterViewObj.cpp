@@ -23,38 +23,31 @@ TEmitterViewObj::TEmitterViewObj(JPAEmitterManager* param_1, const char* name)
 {
 }
 
-void TEmitterViewObj::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TEmitterViewObj::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x2) {
+	if (cue & CUE_CALC_ANIM) {
 		for (int i = SMSGetAnmFrameRate(); i > 0; --i)
 			unk10->calc();
 	}
 
-	if (param_1 & 0x8) {
-		JPADrawInfo drawInfo;
-		drawInfo.unk0 = param_2->getUnkB4();
-		drawInfo.unk4 = 45.0f;
-		drawInfo.unk8 = 1.218f;
+	if (cue & CUE_DRAW) {
+		JPADrawInfo drawInfo(graphics->getViewMtx());
 		unk10->draw(&drawInfo);
 	}
 }
 
-void TEmitterIndirectViewObj::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TEmitterIndirectViewObj::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x2) {
+	if (cue & CUE_CALC_ANIM) {
 		for (int i = SMSGetAnmFrameRate(); i > 0; --i)
 			unk10->calc();
 	}
 
-	if (param_1 & 0x8) {
+	if (cue & CUE_DRAW) {
 		SMS_DrawInit();
-		JPADrawInfo drawInfo;
-		drawInfo.unk0 = param_2->getUnkB4();
-		drawInfo.unk4 = 45.0f;
-		drawInfo.unk8 = 1.218f;
-
-		drawInfo.unk4 = gpCamera->getFovy();
-		drawInfo.unk8 = gpCamera->getAspect();
+		JPADrawInfo drawInfo(graphics->getViewMtx());
+		drawInfo.setFovy(gpCamera->getFovy());
+		drawInfo.setAspect(gpCamera->getAspect());
 		unk10->draw(&drawInfo);
 	}
 }
@@ -111,9 +104,9 @@ void TMarioParticleManager::createEffectInfoAry(int param_1)
 		unk368[i] = new TInfo[unk3B4];
 }
 
-void TMarioParticleManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMarioParticleManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x2) {
+	if (cue & CUE_CALC_ANIM) {
 		for (int i = SMSGetAnmFrameRate(); i > 0; --i)
 			unk3B8->calc();
 
@@ -125,9 +118,8 @@ void TMarioParticleManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 					JPABaseEmitter* emitter = info->mEmitter;
 					if (emitter == nullptr) {
 						emitTry(i, info, 3);
-					} else if (emitter->isThing()) {
-						emitter->unk1E8 = -1;
-						emitter->unk11C |= 0x1;
+					} else if (emitter->isEnableDeleteEmitter()) {
+						emitter->becomeInvalidEmitter();
 						info->mEmitter = nullptr;
 						emitTry(i, info, 3);
 					}
@@ -135,8 +127,7 @@ void TMarioParticleManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 				if ((info->mPrevFrameFlags & INFO_FLAG_UNK4)
 				    && !(info->mFlags & INFO_FLAG_UNK4)) {
 					if (JPABaseEmitter* emitter = info->mEmitter) {
-						emitter->unk1E8 = -1;
-						emitter->unk11C |= 0x1;
+						emitter->becomeInvalidEmitter();
 						info->mEmitter = nullptr;
 						info->unk0     = nullptr;
 						info->unk4     = nullptr;
@@ -155,19 +146,17 @@ void TMarioParticleManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 				    && (info->mFlags & INFO_FLAG_UNK4)) {
 					JPABaseEmitter* emitter = info->mEmitter;
 					if (emitter == nullptr) {
-						emitTry(i, info, 3);
-					} else if (emitter->isThing()) {
-						emitter->unk1E8 = -1;
-						emitter->unk11C |= 0x1;
+						emitTry(i, info, 1);
+					} else if (emitter->isEnableDeleteEmitter()) {
+						emitter->becomeInvalidEmitter();
 						info->mEmitter = nullptr;
-						emitTry(i, info, 3);
+						emitTry(i, info, 1);
 					}
 				}
 				if ((info->mPrevFrameFlags & INFO_FLAG_UNK4)
 				    && !(info->mFlags & INFO_FLAG_UNK4)) {
 					if (JPABaseEmitter* emitter = info->mEmitter) {
-						emitter->unk1E8 = -1;
-						emitter->unk11C |= 0x1;
+						emitter->becomeInvalidEmitter();
 						info->mEmitter = nullptr;
 						info->unk0     = nullptr;
 						info->unk4     = nullptr;
@@ -180,24 +169,18 @@ void TMarioParticleManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if (param_1 & 0x8) {
-		if (param_1 & 0x40000000) {
+	if (cue & CUE_DRAW) {
+		if (cue & CUE_UNK40000000) {
 			SMS_DrawInit();
-			JPADrawInfo drawInfo;
-			drawInfo.unk0 = param_2->getUnkB4();
-			drawInfo.unk4 = 45.0f;
-			drawInfo.unk8 = 1.218f;
-			drawInfo.unk4 = gpCamera->getFovy();
-			drawInfo.unk8 = gpCamera->getAspect();
+			JPADrawInfo drawInfo(graphics->getViewMtx());
+			drawInfo.setFovy(gpCamera->getFovy());
+			drawInfo.setAspect(gpCamera->getAspect());
 			unk3B8->draw(&drawInfo, 2);
 			unk3B8->draw(&drawInfo, 3);
 		}
 
-		if (param_1 & 0x80000000) {
-			JPADrawInfo drawInfo;
-			drawInfo.unk0 = param_2->getUnkB4();
-			drawInfo.unk4 = 45.0f;
-			drawInfo.unk8 = 1.218f;
+		if (cue & CUE_UNK80000000) {
+			JPADrawInfo drawInfo(graphics->getViewMtx());
 			unk3B8->draw(&drawInfo, 0);
 			unk3B8->draw(&drawInfo, 1);
 		}

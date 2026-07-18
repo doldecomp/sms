@@ -25,7 +25,7 @@ public:
 
 	virtual ~TQuestionManager() { }
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	bool request(JGeometry::TVec3<f32>, f32);
 	void makeDL(JDrama::TGraphics*) const;

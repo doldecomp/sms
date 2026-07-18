@@ -6,10 +6,10 @@
 
 class TModelGate : public TTakeActor {
 public:
-	TModelGate(const char*);
+	TModelGate(const char* name = "<TModelGate>");
 
 	virtual MtxPtr getTakingMtx();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void loadAfter();
 

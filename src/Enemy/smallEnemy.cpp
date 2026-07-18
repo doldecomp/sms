@@ -25,6 +25,7 @@
 #include <JSystem/JMath.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <stdlib.h>
 
 // rogue includes needed for matching sinit & bss
@@ -109,7 +110,11 @@ TSmallEnemyManager::TSmallEnemyManager(const char* name)
 
 void TSmallEnemyManager::createModelData()
 {
-	static TModelDataLoadEntry entry = { "default.bmd", 0x10220000, 0 };
+	static TModelDataLoadEntry entry
+	    = { "default.bmd",
+		    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		        | (2 << J3DMLF_TevStageNumShift),
+		    0 };
 	createModelDataArray(&entry);
 }
 
@@ -240,10 +245,11 @@ void TSmallEnemy::attackToMario()
 	sendAttackMsgToMario();
 
 	// TODO: wtf
-	volatile JGeometry::TVec3<f32> local_14(0, 0, 0);
+	JGeometry::TVec3<f32> local_14(0, 0, 0);
+	(void)&local_14;
 
 	JGeometry::TVec3<f32> local_20;
-	local_20.sub(mPosition, *gpMarioPos);
+	local_20.sub(mPosition, SMS_GetMarioPos());
 	MsVECNormalize(&local_20, &local_20);
 	mVelocity.set(local_20);
 
@@ -427,9 +433,9 @@ void TSmallEnemy::setAfterDeadEffect()
 		emitter->unk174.set(mScaling);
 	}
 
-	if (gpMSound->gateCheck(0x295F))
-		MSoundSESystem::MSoundSE::startSoundActor(0x295F, &mPosition, 0,
-		                                          nullptr, 0, 4);
+	if (gpMSound->gateCheck(MSD_SE_EN_COMMON_SMOKE))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_COMMON_SMOKE,
+		                                          &mPosition, 0, nullptr, 0, 4);
 }
 
 void TSmallEnemy::generateItem()
@@ -536,7 +542,7 @@ BOOL TSmallEnemy::receiveMessage(THitActor* sender, u32 message)
 		return true;
 	}
 
-	if ((message == HIT_MESSAGE_UNK6 || message == HIT_MESSAGE_UNK7)
+	if ((message == HIT_MESSAGE_PUT || message == HIT_MESSAGE_THROWN)
 	    && mHolder == sender) {
 		mHolder = nullptr;
 		behaveToRelease();
@@ -545,7 +551,7 @@ BOOL TSmallEnemy::receiveMessage(THitActor* sender, u32 message)
 	}
 
 	if (message == HIT_MESSAGE_TRAMPLE || message == HIT_MESSAGE_HIP_DROP
-	    || message == HIT_MESSAGE_UNK3 || message == HIT_MESSAGE_UNKB
+	    || message == HIT_MESSAGE_SUPER_HIP_DROP || message == HIT_MESSAGE_UNKB
 	    || (mActorType == 0x10000021 && message == HIT_MESSAGE_PUNCH)) {
 		if (isHitValid(message)) {
 			unk184 = 0;
@@ -562,7 +568,8 @@ BOOL TSmallEnemy::receiveMessage(THitActor* sender, u32 message)
 
 	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
-		gpMSound->startSoundSet(0x6802, &mPosition, 0, 0.0f, 0, 0, 4);
+		gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0, 0.0f,
+		                        0, 0, 4);
 		if (mSprayedByWaterCooldown == 0) {
 			mSprayedByWaterCooldown = 1;
 			if (!changeByJuice()) {
@@ -611,19 +618,19 @@ bool TSmallEnemy::changeByJuice()
 
 		switch (unk185) {
 		case 1:
-			block->unk138.x = 0x1C2;
-			block->unk138.y = 0xDC;
-			block->unk138.z = 0x50;
+			block->unk138.r = 0x1C2;
+			block->unk138.g = 0xDC;
+			block->unk138.b = 0x50;
 			break;
 		case 2:
-			block->unk138.x = 0x118;
-			block->unk138.y = 0x6E;
-			block->unk138.z = 0x154;
+			block->unk138.r = 0x118;
+			block->unk138.g = 0x6E;
+			block->unk138.b = 0x154;
 			break;
 		case 3:
-			block->unk138.x = 0x1E0;
-			block->unk138.y = 0xFA;
-			block->unk138.z = 0x154;
+			block->unk138.r = 0x1E0;
+			block->unk138.g = 0xFA;
+			block->unk138.b = 0x154;
 			break;
 		}
 
@@ -743,9 +750,9 @@ void TSmallEnemy::scalingChangeActor()
 
 void TSmallEnemy::changeOut()
 {
-	if (gpMSound->gateCheck(0x293D))
-		MSoundSESystem::MSoundSE::startSoundActor(0x293D, &mPosition, 0,
-		                                          nullptr, 0, 4);
+	if (gpMSound->gateCheck(MSD_SE_EN_TELSA_RECOVER))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_TELSA_RECOVER,
+		                                          &mPosition, 0, nullptr, 0, 4);
 
 	kill();
 	mJuiceBlock->mPosition = mPosition;
@@ -808,18 +815,10 @@ bool TSmallEnemy::isFindMario(float param_1)
 
 bool TSmallEnemy::isMarioInWater() const
 {
-	bool bVar1 = true;
-	bool bVar3 = true;
-	bool bVar2 = true;
-	if (!SMS_CheckMarioFlag(0x2) && !SMS_CheckMarioFlag(0x10000))
-		bVar2 = false;
-	if (!bVar2 && !(*gpMarioGroundPlane)->isWaterSurface())
-		bVar3 = false;
-
-	if (!bVar3 && !SMS_CheckMarioFlag(0x20000))
-		bVar1 = false;
-
-	return bVar1;
+	return (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE)
+	        || SMS_CheckMarioFlag(MARIO_FLAG_IN_SHALLOW_WATER))
+	       || (*gpMarioGroundPlane)->isWaterSurface()
+	       || SMS_CheckMarioFlag(MARIO_FLAG_IN_WATER);
 }
 
 #pragma dont_inline on
@@ -862,9 +861,9 @@ void TSmallEnemy::generateEffectColumWater()
 
 	enemy->generate(mPosition, mScaling);
 
-	if (gpMSound->gateCheck(0x286D))
-		MSoundSESystem::MSoundSE::startSoundActor(0x286D, &mPosition, 0,
-		                                          nullptr, 0, 4);
+	if (gpMSound->gateCheck(MSD_SE_EN_TOBIPUKU_TOWATER))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_TOBIPUKU_TOWATER,
+		                                          &mPosition, 0, nullptr, 0, 4);
 }
 
 void TSmallEnemy::setBckAnm(int index)
@@ -955,7 +954,7 @@ void TSmallEnemy::behaveToHitOthers(THitActor* param_1)
 	mLinearVelocity = result;
 }
 
-void TSmallEnemy::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSmallEnemy::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	// TODO: wtf is this inline???
 	bool bVar2 = true;
@@ -967,12 +966,12 @@ void TSmallEnemy::perform(u32 param_1, JDrama::TGraphics* param_2)
 		if (gpMarDirector->unk124 != 1 && gpMarDirector->unk124 != 2)
 			bVar2 = false;
 		if (bVar2) {
-			performOnlyDraw(param_1, param_2);
+			performOnlyDraw(cue, graphics);
 			return;
 		}
 	}
 
-	TSpineEnemy::perform(param_1, param_2);
+	TSpineEnemy::perform(cue, graphics);
 }
 
 DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)

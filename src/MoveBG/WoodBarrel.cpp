@@ -36,7 +36,7 @@ void TWoodBarrel::hold(TTakeActor* param_1)
 {
 	TMapObjGeneral::hold(param_1);
 	if (isActorType(0x4000005c))
-		unk104 = mBreakTime;
+		mStateTimer = mBreakTime;
 }
 
 void TWoodBarrel::breaking()
@@ -44,7 +44,7 @@ void TWoodBarrel::breaking()
 	if (animIsFinished()) {
 		makeObjDefault();
 		makeObjDead();
-		if (checkMapObjFlag(0x80000))
+		if (checkMapObjFlag(MAP_OBJ_FLAG_RESPAWNING))
 			waitToAppear(mWaitAppearTime);
 	}
 }
@@ -82,9 +82,9 @@ void TWoodBarrel::appear()
 {
 	makeObjAppeared();
 	gpMarioParticleManager->emitAndBindToPosPtr(0xE5, &mPosition, 0, nullptr);
-	if (gpMSound->gateCheck(0x387D))
-		MSoundSESystem::MSoundSE::startSoundActor(0x387D, &mPosition, 0,
-		                                          nullptr, 0, 4);
+	if (gpMSound->gateCheck(MSD_SE_SMOKE_EFFECT))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_SMOKE_EFFECT,
+		                                          &mPosition, 0, nullptr, 0, 4);
 }
 
 void TWoodBarrel::touchWall(JGeometry::TVec3<f32>*, TBGWallCheckRecord*)
@@ -131,7 +131,8 @@ BOOL TWoodBarrel::receiveMessage(THitActor* sender, u32 message)
 void TWoodBarrel::control()
 {
 	TMapObjGeneral::control();
-	if (isActorType(0x4000005c) && isState(6) && !isUnk104Positive())
+	if (isActorType(0x4000005c) && isState(STATE_HOLDING)
+	    && !isStateTimerEngaged())
 		kill();
 }
 

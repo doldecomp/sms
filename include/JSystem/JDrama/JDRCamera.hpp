@@ -8,7 +8,7 @@ namespace JDrama {
 
 class TCamera : public TPlacement, public JStage::TCamera {
 public:
-	TCamera(float near, float far, const char* name)
+	TCamera(f32 near, f32 far, const char* name)
 	    : TPlacement(name)
 	    , mFlag(0)
 	    , mNear(near)
@@ -21,21 +21,24 @@ public:
 
 	virtual u32 JSGGetFlag() const;
 	virtual void JSGSetFlag(u32);
-	virtual float JSGGetProjectionNear() const;
-	virtual void JSGSetProjectionNear(float);
-	virtual float JSGGetProjectionFar() const;
-	virtual void JSGSetProjectionFar(float);
+	virtual f32 JSGGetProjectionNear() const;
+	virtual void JSGSetProjectionNear(f32);
+	virtual f32 JSGGetProjectionFar() const;
+	virtual void JSGSetProjectionFar(f32);
+
+	f32 getNear() const { return mNear; }
+	f32 getFar() const { return mFar; }
 
 public:
 	/* 0x24 */ TFlagT<u16> mFlag;
-	/* 0x28 */ float mNear;
-	/* 0x2C */ float mFar;
+	/* 0x28 */ f32 mNear;
+	/* 0x2C */ f32 mFar;
 };
 
 class TPolarCamera : public TCamera {
 public:
-	TPolarCamera()
-	    : TCamera(50.0f, 10000.0f, "<TPolarCamera>")
+	TPolarCamera(const char* name = "<TPolarCamera>")
+	    : TCamera(50.0f, 10000.0f, name)
 	    , mFovy(45.0f)
 	    , mAspect(1.3333334f)
 	    , unk38(0.0f)
@@ -47,37 +50,48 @@ public:
 	virtual ~TPolarCamera() { }
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, TGraphics*);
+	virtual void perform(u32 cue, TGraphics* graphics);
 
 	virtual JStage::TECameraProjection JSGGetProjectionType() const;
 	virtual void JSGSetProjectionType(JStage::TECameraProjection);
-	virtual float JSGGetProjectionFovy() const;
-	virtual void JSGSetProjectionFovy(float);
-	virtual float JSGGetProjectionAspect() const;
-	virtual void JSGSetProjectionAspect(float);
+	virtual f32 JSGGetProjectionFovy() const;
+	virtual void JSGSetProjectionFovy(f32);
+	virtual f32 JSGGetProjectionAspect() const;
+	virtual void JSGSetProjectionAspect(f32);
 
 public:
-	/* 0x30 */ float mFovy;
-	/* 0x34 */ float mAspect;
-	/* 0x38 */ float unk38;
-	/* 0x3C */ float unk3C;
-	/* 0x40 */ float unk40;
-	/* 0x44 */ float unk44;
+	/* 0x30 */ f32 mFovy;
+	/* 0x34 */ f32 mAspect;
+	/* 0x38 */ f32 unk38;
+	/* 0x3C */ f32 unk3C;
+	/* 0x40 */ f32 unk40;
+	/* 0x44 */ f32 unk44;
 };
 
 class TLookAtCamera : public TCamera {
 public:
-	TLookAtCamera();
+	TLookAtCamera(const JGeometry::TVec3<f32>& position,
+	              const JGeometry::TVec3<f32>& target,
+	              const JGeometry::TVec3<f32>& up, f32 fovy, f32 aspect,
+	              const char* name)
+	    : TCamera(50.0f, 10000.0f, name)
+	{
+		mUp       = up;
+		mTarget   = target;
+		mFovy     = fovy;
+		mAspect   = aspect;
+		mPosition = position;
+	}
 
 	virtual ~TLookAtCamera() { }
-	virtual void perform(u32, TGraphics*);
+	virtual void perform(u32 cue, TGraphics* graphics);
 
 	virtual JStage::TECameraProjection JSGGetProjectionType() const;
 	virtual void JSGSetProjectionType(JStage::TECameraProjection);
-	virtual float JSGGetProjectionFovy() const;
-	virtual void JSGSetProjectionFovy(float);
-	virtual float JSGGetProjectionAspect() const;
-	virtual void JSGSetProjectionAspect(float);
+	virtual f32 JSGGetProjectionFovy() const;
+	virtual void JSGSetProjectionFovy(f32);
+	virtual f32 JSGGetProjectionAspect() const;
+	virtual void JSGSetProjectionAspect(f32);
 	virtual void JSGGetViewPosition(Vec*) const;
 	virtual void JSGSetViewPosition(const Vec&);
 	virtual void JSGGetViewUpVector(Vec*) const;
@@ -91,14 +105,14 @@ public:
 public:
 	/* 0x30 */ JGeometry::TVec3<f32> mUp;
 	/* 0x3C */ JGeometry::TVec3<f32> mTarget;
-	/* 0x48 */ float mFovy;
-	/* 0x4C */ float mAspect;
+	/* 0x48 */ f32 mFovy;
+	/* 0x4C */ f32 mAspect;
 };
 
 class TOrthoProj : public TCamera {
 public:
-	TOrthoProj(f32 a, f32 b, f32 c, f32 d)
-	    : TCamera(-1.0f, 1.0f, "<TOrthoProj>")
+	TOrthoProj(f32 near, f32 far, f32 a, f32 b, f32 c, f32 d)
+	    : TCamera(near, far, "<TOrthoProj>")
 	{
 		mField[0] = a;
 		mField[1] = b;
@@ -109,15 +123,15 @@ public:
 	virtual ~TOrthoProj() { }
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	virtual JStage::TECameraProjection JSGGetProjectionType() const;
 	virtual void JSGSetProjectionType(JStage::TECameraProjection);
-	virtual void JSGGetProjectionField(float*) const;
-	virtual void JSGSetProjectionField(const float*);
+	virtual void JSGGetProjectionField(f32*) const;
+	virtual void JSGSetProjectionField(const f32*);
 
 public:
-	/* 0x30 */ float mField[4]; // TODO: maybe a TBox?
+	/* 0x30 */ f32 mField[4]; // TODO: maybe a TBox?
 };
 
 }; // namespace JDrama

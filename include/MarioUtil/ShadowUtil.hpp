@@ -15,9 +15,9 @@ public:
 	    , unk18(0.0f)
 	    , unk1C(0)
 	    , unk1D(1)
-	    , unk20(0.0f)
+	    , unk20(0)
 	{
-		unk0.zero();
+		unk0.set(0.0f, 0.0f, 0.0f);
 	}
 
 public:
@@ -28,7 +28,7 @@ public:
 	/* 0x18 */ f32 unk18;
 	/* 0x1C */ u8 unk1C;
 	/* 0x1D */ u8 unk1D;
-	/* 0x20 */ f32 unk20;
+	/* 0x20 */ u32 unk20;
 };
 
 class TMBindShadowBody {
@@ -52,7 +52,7 @@ public:
 	TMBindShadowManager(const char* name = "<TMBindShadowManager>");
 
 	virtual void load(JSUMemoryInputStream& stream);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void reset();
 	void initEntry(TMBindShadowBody*);

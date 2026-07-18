@@ -21,8 +21,8 @@
 #include <MoveBG/MapObjItem2.hpp>
 #include <MoveBG/MapObjBall.hpp>
 #include <Enemy/Conductor.hpp>
-#include <Player/MarioMain.hpp>
-#include <Player/Watergun.hpp>
+#include <Player/Mario.hpp>
+#include <Player/WaterGun.hpp>
 #include <Camera/CubeManagerBase.hpp>
 
 // rogue includes needed for matching sinit & bss
@@ -520,7 +520,7 @@ static void evAppearMushroom1up(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->verifyArgNum(1, &arg_num);
 	TMushroom1up* mushroom = get_name_ref<TMushroom1up>(interp->pop());
 	mushroom->appear();
-	SMSGetMSound()->startSoundSystemSE(0x4854, 0, nullptr, 0);
+	SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_1UP_APPEAR, 0, nullptr, 0);
 	interp->push();
 }
 
@@ -580,8 +580,9 @@ static void evAppearShineForWoodBox(TSpcTypedInterp<TEventWatcher>* interp,
 static void evChangeNozzle(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
-	int id = interp->pop().getDataInt();
-	if (id == 7)
+	TWaterGun::TNozzleType id
+	    = (TWaterGun::TNozzleType)interp->pop().getDataInt();
+	if (id == TWaterGun::DivingHelmet)
 		gpMarioOriginal->setDivHelm();
 	else
 		gpMarioOriginal->mWaterGun->changeNozzle(id, true);
@@ -684,7 +685,7 @@ static void evSetMarioWaiting(TSpcTypedInterp<TEventWatcher>* interp,
                               u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
-	gpMarioOriginal->changePlayerStatus(0xC400201, 0, true);
+	gpMarioOriginal->changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 	interp->push();
 }
 
@@ -754,9 +755,9 @@ static void evSetEventID(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->verifyArgNum(2, &arg_num);
 	int p1          = interp->pop().getDataInt();
 	TSpcSlice slice = interp->pop();
-	// TODO: type unconfirmed
+
 	TMapObjBase* event = get_name_ref<TMapObjBase>(slice);
-	event->unk134      = p1;
+	event->setEventId(p1);
 	interp->push();
 }
 
@@ -1037,8 +1038,8 @@ void TEventWatcher::launchScript(const char* script)
 	}
 }
 
-void TEventWatcher::perform(u32 param_1, JDrama::TGraphics*)
+void TEventWatcher::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((param_1 & 1) && mInterp)
+	if ((cue & CUE_MOVE) && mInterp)
 		mInterp->update();
 }

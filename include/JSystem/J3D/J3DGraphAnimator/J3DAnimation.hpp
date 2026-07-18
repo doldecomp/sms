@@ -301,11 +301,15 @@ public:
 		calcTransform(mFrame, idx, srt_info);
 	}
 
+	bool isValidUpdateMaterialID(u16 idx) const
+	{
+		return mUpdateMaterialID[idx] != 0xffff;
+	}
 	u16 getUpdateMaterialID(u16 idx) const { return mUpdateMaterialID[idx]; }
 	JUTNameTab* getUpdateMaterialName() { return mUpdateMaterialName; }
-	u16 getUpdateTexMtxID(u16 idx) const { return mUpdateTexMtxID[idx]; }
+	u8 getUpdateTexMtxID(u16 idx) const { return mUpdateTexMtxID[idx]; }
 	u32 getTexMtxCalcType() { return mTexMtxCalcType; }
-	Vec& getSRTCenter(u16 idx) { return mSRTCenter[idx]; }
+	Vec* getSRTCenter(u16 idx) { return &mSRTCenter[idx]; }
 
 	virtual ~J3DAnmTextureSRTKey() { }
 

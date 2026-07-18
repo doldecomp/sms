@@ -25,9 +25,9 @@ u16 SMSGetTitleVideoWidth() { return 660; }
 
 u16 SMSGetTitleVideoHeight() { return SMSGetGameVideoHeight(); }
 
-s32 SMSGetGameRenderWidth() { return 640; }
+u16 SMSGetGameRenderWidth() { return 640; }
 
-s32 SMSGetGameRenderHeight() { return 448; }
+u16 SMSGetGameRenderHeight() { return 448; }
 
 u16 SMSGetTitleRenderWidth() { return 640; }
 

@@ -1,10 +1,11 @@
 #ifndef MARIOCAP_HPP
 #define MARIOCAP_HPP
 
-#include <Player/MarioMain.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
+#include <Player/Mario.hpp>
 #include <MarioUtil/MtxUtil.hpp>
 #include <Strategic/MirrorActor.hpp>
-#include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
 
 class TMarioCap {
 public:
@@ -17,7 +18,7 @@ public:
 
 	TMarioCap(TMario*);
 
-	virtual void perform(unsigned long, JDrama::TGraphics*);
+	virtual void perform(unsigned long cue, JDrama::TGraphics* graphics);
 
 	void createMirrorCap();
 	void mtxEffectHide();
@@ -34,22 +35,6 @@ public:
 
 	// Fabricated
 	void setModelInactive(u16 type) { unk4 &= ~type; }
-
-	// Fabricated
-	void onFlagAllShapes(J3DModelData* modelData)
-	{
-		for (u16 i = 0; i < modelData->getShapeNum(); ++i) {
-			modelData->getShapeNodePointer(i)->onFlag(1);
-		}
-	}
-
-	// Fabricated
-	void offFlagAllShapes(J3DModelData* modelData)
-	{
-		for (u16 i = 0; i < modelData->getShapeNum(); ++i) {
-			modelData->getShapeNodePointer(i)->offFlag(1);
-		}
-	}
 
 public:
 	/* 0x4 */ u16 unk4; // E_CAP_MODEL flag

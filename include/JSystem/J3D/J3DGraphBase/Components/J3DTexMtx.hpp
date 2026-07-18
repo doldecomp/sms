@@ -16,8 +16,12 @@ public:
 	Mtx& getViewMtx() { return mViewMtx; }
 	void setViewMtx(const Mtx viewMtx) { MTXCopy((MtxPtr)viewMtx, mViewMtx); }
 
+	void setEffectMtx(Mtx effectMtx) { J3DTexMtxInfo::setEffectMtx(effectMtx); }
+	void setInfo(u8 info) { mInfo = info; }
+
 	// Made up
 	u32 getInfo() { return mInfo; }
+	MtxPtr getTotalMtx() { return mTotalMtx; }
 
 	/* 0x64 */ Mtx mTotalMtx;
 	/* 0x94 */ Mtx mViewMtx;

@@ -3,11 +3,19 @@
 
 #include <JSystem/JDrama/JDRDrawBufObj.hpp>
 #include <JSystem/JDrama/JDRViewObjPtrList.hpp>
+#include <JSystem/JGeometry/JGVec3.hpp>
+#include <dolphin/gx.h>
+#include <dolphin/mtx.h>
 
 class J3DDrawBuffer;
 
 class TLightWithDBSet;
 class TLightMario;
+
+namespace JDrama {
+class TAmbAry;
+class TLightAry;
+} // namespace JDrama
 
 class TLightWithDBSetManager : public JDrama::TViewObj {
 public:
@@ -15,26 +23,25 @@ public:
 
 	virtual ~TLightWithDBSetManager() { }
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void calcLightBorder();
-	void getEffectLightColor() const;
+	GXColor getEffectLightColor() const;
 	void setEffectLight(const JDrama::TGraphics*, GXLightObj*);
-	void getLightPos() const;
+	Vec* getLightPos() const;
 	void makeDrawBuffer();
-	void addChildGroupObj(
-	    JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*);
+	void addChildGroupObj(JDrama::TViewObjPtrListT<JDrama::TViewObj>*);
 
 	// fabricated
 	TLightWithDBSet* getUnk14(int i) { return unk14[i]; }
+	GXColor getUnk18() const { return unk18; }
+	f32 getUnk28() const { return unk28; }
 
 public:
 	/* 0x10 */ TLightMario* unk10;
 	/* 0x14 */ TLightWithDBSet** unk14;
 	/* 0x18 */ GXColor unk18;
-	/* 0x1C */ u32 unk1C;
-	/* 0x20 */ u32 unk20;
-	/* 0x24 */ u32 unk24;
+	/* 0x1C */ JGeometry::TVec3<f32> unk1C;
 	/* 0x28 */ float unk28;
 	/* 0x2C */ float unk2C;
 	/* 0x30 */ float unk30;
@@ -55,11 +62,29 @@ public:
 	TLightCommon(const char* = "<TLightCommon>");
 
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual void getLightColor(int) const;
-	virtual void getAmbColor(int) const;
-	virtual void getLightPosition(int);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual GXColor getLightColor(int) const;
+	virtual GXColor getAmbColor(int) const;
+	virtual Vec* getLightPosition(int);
 	virtual void setLight(const JDrama::TGraphics*, int);
+
+	static JDrama::TAmbAry* mAmbAry;
+	static JDrama::TLightAry* mLightAry;
+	static Vec* mLightPos;
+
+public:
+	/* 0x10 */ f32 unk10;
+	/* 0x14 */ f32 unk14;
+	/* 0x18 */ f32 unk18;
+	/* 0x1C */ f32 unk1C;
+	/* 0x20 */ int unk20;
+	/* 0x24 */ int unk24;
+	/* 0x28 */ u8 unk28;
+	/* 0x29 */ GXColor unk29[2];
+	/* 0x31 */ GXColor unk31[4];
+	/* 0x41 */ u8 unk41;
+	/* 0x42 */ char pad42[2];
+	/* 0x44 */ JGeometry::TVec3<f32> unk44[4];
 };
 
 class TLightDrawBuffer : public JDrama::TViewObj {
@@ -67,14 +92,22 @@ public:
 	TLightDrawBuffer(int, u32, const char*);
 
 	virtual ~TLightDrawBuffer() { }
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual void setLight(TLightCommon*) { }
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual void setLight(TLightCommon* light)
+	{
+		unk10 = light;
+		unk10->loadAfter();
+	}
+
+	JDrama::TDrawBufObj* getOpaDbo() { return mOpaDrawBufferObject; }
+	JDrama::TDrawBufObj* getXluDbo() { return mXluDrawBufferObject; }
 
 public:
 	/* 0x10 */ TLightCommon* unk10;
-	/* 0x14 */ JDrama::TDrawBufObj* unk14;
-	/* 0x18 */ JDrama::TDrawBufObj* unk18;
-	/* 0x1C */ char unk1C[0x64];
+	/* 0x14 */ JDrama::TDrawBufObj* mOpaDrawBufferObject;
+	/* 0x18 */ JDrama::TDrawBufObj* mXluDrawBufferObject;
+	/* 0x1C */ char unk1C[0x32];
+	/* 0x4E */ char unk4E[0x32];
 	/* 0x80 */ int unk80;
 };
 
@@ -83,25 +116,27 @@ public:
 	TLightWithDBSet(int, const char*);
 
 	virtual ~TLightWithDBSet() { }
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void makeDrawBuffer() = 0;
 
-	void getAmbIndex(const char*);
-	void getLightIndex(const char*);
+	int getAmbIndex(const char*);
+	int getLightIndex(const char*);
 	void getLightDrawBuffer(int);
 	void getXluDrawBuffer(int);
 	void getOpaDrawBuffer(int);
 	void resetLightDrawBuffer();
 	void changeLightDrawBuffer(int);
-	void addChildGroupObj(
-	    JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*);
+	void addChildGroupObj(JDrama::TViewObjPtrListT<JDrama::TViewObj>*);
 
-public:
+	bool isEnabled() const { return unk20; }
+	void enable() { unk20 = true; }
+
+protected:
 	/* 0x10 */ TLightDrawBuffer** unk10;
 	/* 0x14 */ J3DDrawBuffer* unk14;
 	/* 0x18 */ J3DDrawBuffer* unk18;
 	/* 0x1C */ int unk1C;
-	/* 0x20 */ u8 unk20;
+	/* 0x20 */ bool unk20;
 };
 
 class TIndirectLightWithDBSet : public TLightWithDBSet {
@@ -143,12 +178,10 @@ public:
 	{
 	}
 
-	virtual ~TLightMario() { }
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual GXColor getLightColor(int) const;
+	virtual GXColor getAmbColor(int) const;
 	virtual void setLight(const JDrama::TGraphics*, int);
-
-	void getAmbColor(int) const;
-	void getLightColor(int) const;
 };
 
 class TLightShadow : public TLightCommon {
@@ -159,7 +192,7 @@ public:
 	}
 
 	virtual ~TLightShadow() { }
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 #endif

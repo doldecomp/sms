@@ -62,8 +62,7 @@ f32 getRandom(f32 p1, f32 p2, f32 p3)
 f32 getRandom_0_1()
 {
 	static JMath::TRandom_fast_ oRandom(0);
-	u32 next = (oRandom.next() >> 9) | 0x3F800000;
-	return *(f32*)(void*)&next - 1.0f;
+	return oRandom.get_ufloat_1();
 }
 
 f32 getDist(Vec* vec1, Vec* vec2) { return std::sqrtf(getDistPow(vec1, vec2)); }

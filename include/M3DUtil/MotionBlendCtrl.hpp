@@ -11,18 +11,18 @@ public:
 	TMotionBlendCtrl(bool);
 	TMotionBlendCtrl(bool, int);
 
-	float getOldMotionBlendFrame() const;
+	f32 getOldMotionBlendFrame() const;
 	void setOldMotionBlendAnmPtr(J3DAnmTransform*);
 	J3DAnmTransform* getOldMotionBlendAnmPtr() const;
 	void setNewAnm(J3DAnmTransform*);
-	void keepCurAnm(J3DAnmTransform*, float);
-	void setMotionBlendRatio(float);
-	float getMotionBlendRatio() const;
+	void keepCurAnm(J3DAnmTransform*, f32);
+	void setMotionBlendRatio(f32);
+	f32 getMotionBlendRatio() const;
 	void execSimpleMotionBlend();
 
 public:
 	/* 0x0 */ u8 unk0;
-	/* 0x4 */ float unk4;
+	/* 0x4 */ f32 unk4;
 	/* 0x8 */ M3UMtxCalcSIAnmBlendQuat* unk8;
 };
 

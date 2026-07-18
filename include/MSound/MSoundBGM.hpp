@@ -1,13 +1,13 @@
 #ifndef MSOUNDBGM_HPP
 #define MSOUNDBGM_HPP
 
-#include <dolphin/types.h>
-#include <JSystem/JAudio/JAInterface/JAISound.hpp>
+#include <MSound/MSSceneWave.hpp>
+#include <MSound/BackgroundMusic.hpp>
 #include <JSystem/JAudio/JALibrary/JALList.hpp>
-#include <JSystem/JSupport/JSUList.hpp>
 #include <JSystem/JAudio/JASystem/JASTrack.hpp>
 
-template <typename T, typename U> class JALListVirtualNode;
+class JAISound;
+
 class MSBgm : public JALListHioNode<MSBgm, u32> {
 public:
 	MSBgm(int i)
@@ -34,18 +34,16 @@ public:
 	static void setSeqTRACKsMuteH(JAISound*, bool, u16);
 	static void setStageBgmYoshiPercussion(bool);
 	static bool checkPlaying(u32);
-	static u32 getSceneNo(u32);
+	static MS_SCENE_WAVE getSceneNo(u32);
 	static JAISound* getHandle(u8);
-	static JAISound* getJASTrack(JAISound*, u8);
+	static JASystem::TTrack* getJASTrack(JAISound*, u8);
 
-	// TODO: Found out where this inline is from.
-	static JAISound* someInline()
+	// fabricated
+	static void setAllTracksVolume(f32 param_1, u32 param_2)
 	{
-		if (smBgmInTrack[0] != 0) {
-			return smBgmInTrack[0]->unk14;
-		} else {
-			return nullptr;
-		}
+		for (u8 i = 0; i < 3; ++i)
+			if (0x7 >> i & 1)
+				MSBgm::setTrackVolume(i, param_1, param_2, 3);
 	}
 
 public:

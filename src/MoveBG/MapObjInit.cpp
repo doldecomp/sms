@@ -7,6 +7,7 @@
 #include <Map/Map.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorAnm.hpp>
+#include <MSound/SoundEffects.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <Strategic/ObjModel.hpp>
@@ -34,8 +35,8 @@ static void dummy4(Vec& v)
 }
 
 TMapObjSoundData TMapObjGeneral::mDefaultSound = {
-	{ 0xFFFFFFFF, 0x3802, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-	  0xFFFFFFFF, 0xFFFFFFFF, 0x3812, 0xFFFFFFFF },
+	{ 0xFFFFFFFF, MSD_SE_IT_COMMON_APPEAR, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	  0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, MSD_SE_IT_APPEAR, 0xFFFFFFFF },
 };
 
 static TMapObjSoundData normal_sound_data = {
@@ -10955,8 +10956,9 @@ void TMapObjBase::initHoldData()
 {
 	if (getMapObjData()->mHold != nullptr) {
 		TMapObjHoldData* hold = getMapObjData()->mHold;
-		hold->unk8  = J3DModelLoaderDataBase::load(JKRGetResource(hold->unk0),
-		                                           0x240000);
+		hold->unk8            = J3DModelLoaderDataBase::load(
+            JKRGetResource(hold->unk0),
+            J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift));
 		hold->unkC  = new J3DModel(hold->unk8, 0, 1);
 		u16 idx     = hold->unk8->unkB0->getIndex(hold->unk4);
 		hold->unk10 = hold->unkC->getAnmMtx(idx);
@@ -11005,10 +11007,10 @@ void TMapObjBase::initObjCollisionData()
 	}
 
 	if (mAttackRadius == 0.0f || mAttackHeight == 0.0f)
-		unk64 |= 2;
+		onHitFlag(HIT_FLAG_CANNOT_ATTACK);
 
 	if (mDamageRadius == 0.0f || mDamageHeight == 0.0f)
-		unk64 |= 4;
+		onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
 }
 
 #pragma dont_inline on
@@ -11060,7 +11062,7 @@ MActor* TMapObjBase::initMActor(const char* param_1, const char* param_2,
 	MActor* oldActor = mMActor;
 	MActor* newActor = getActorKeeper()->createMActor(param_1, param_3);
 	mMActor          = newActor;
-	if (checkMapObjFlag(0x4000)) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4000)) {
 		mMActor->setLightID(0);
 		mMActor->unmarkUnk40();
 	}
@@ -11081,10 +11083,14 @@ void TMapObjBase::makeMActors()
 		return;
 
 	mMActorKeeper = new TMActorKeeper(mManager, uVar6);
-	if (unkF8 & 0x8000)
-		mMActorKeeper->mModelLoaderFlags = 0x11220000;
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8000))
+		mMActorKeeper->mModelLoaderFlags
+		    = J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		      | J3DMLF_UseUniqueMaterials | (2 << J3DMLF_TevStageNumShift);
 	else
-		mMActorKeeper->mModelLoaderFlags = 0x10220000;
+		mMActorKeeper->mModelLoaderFlags = J3DMLF_MaterialPEFull
+		                                   | J3DMLF_UseUniqueMaterials
+		                                   | (2 << J3DMLF_TevStageNumShift);
 
 	if (mMapObjData->mAnim) {
 		const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
@@ -11109,18 +11115,20 @@ void TMapObjBase::makeMActors()
 void TMapObjBase::initModelData()
 {
 	makeMActors();
-	if (checkMapObjFlag(0x800) && getMActor()) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK800) && getMActor()) {
 		mGroundHeight = gpMap->checkGround(getPosition(), &mGroundPlane);
-		if (getGroundPlane()->isShadow() && !checkMapObjFlag(0x4000))
+		if (getGroundPlane()->isShadow()
+		    && !checkMapObjFlag(MAP_OBJ_FLAG_UNK4000))
 			gpMapObjManager->entryStaticDrawBufferShadow(
 			    getMActor()->getModel());
 		else
 			gpMapObjManager->entryStaticDrawBufferSun(getMActor()->getModel());
 	}
 
-	if (checkMapObjFlag(0x10) || checkMapObjFlag(0x20)) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK10)
+	    || checkMapObjFlag(MAP_OBJ_FLAG_UNK20)) {
 		TMirrorActor* ma = new TMirrorActor(getName());
-		if (checkMapObjFlag(0x20))
+		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK20))
 			ma->init(getModel(), 0x1A);
 		else
 			ma->init(getModel(), 0x18);
@@ -11149,9 +11157,9 @@ void TMapObjBase::initActorData()
 		mYOffset = mScaling.y * mMapObjData->mHit->unk8;
 	mPosition.y += mYOffset;
 	mScaledBodyRadius = mMapObjData->unk30 * mScaling.x;
-	if (checkMapObjFlag(0x1))
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK1))
 		offLiveFlag(LIVE_FLAG_UNK100);
-	if (checkMapObjFlag(0x100000))
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK100000))
 		unkE8 = 2;
 }
 
@@ -11174,9 +11182,9 @@ void TMapObjBase::initMapObj()
 		mMActor->setLightType(2);
 
 	if (getMapObjData()->unk30 == 0.0f)
-		mLiveFlag |= 0x8;
+		mLiveFlag |= LIVE_FLAG_UNK8;
 
-	if (checkMapObjFlag(0x8000) && !isActorType(0x40000084)) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8000) && !isActorType(0x40000084)) {
 		TScreenTexture* ref = JDrama::TNameRefGen::search<TScreenTexture>(
 		    "スクリーンテクスチャ");
 		const ResTIMG* img = ref->getTexture()->getTexInfo();

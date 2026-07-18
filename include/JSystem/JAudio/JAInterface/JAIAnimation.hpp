@@ -7,13 +7,25 @@
 class JAIActor;
 
 struct JAIAnimeFrameSoundData {
-	/* 0x0 */ char unk0[0xC];
-	/* 0xC */ f32 unkC;
-	/* 0x10 */ char unk10[0x4];
+	/* 0x00 */ u32 unk0;
+	/* 0x04 */ f32 unk4;
+	/* 0x08 */ f32 unk8;
+	/* 0x0C */ f32 unkC;
+	/* 0x10 */ u32 unk10;
 	/* 0x14 */ u8 unk14;
 	/* 0x15 */ s8 unk15;
-	/* 0x16 */ char unk16[0x2];
+	/* 0x16 */ u8 unk16;
+	/* 0x17 */ u8 unk17;
 	/* 0x18 */ s8 unk18;
+	/* 0x19 */ u8 unk19[7];
+};
+
+// Fabricated
+// Basically, contents of a .bas sound (binary animated sound?)
+struct JAIAnimeSoundData {
+	/* 0x00 */ u16 mCount;
+	/* 0x02 */ u8 unk2[6];
+	/* 0x08 */ JAIAnimeFrameSoundData mEntries[];
 };
 
 class JAIAnimeSound {
@@ -21,7 +33,7 @@ public:
 	struct Slot {
 		/* 0x0 */ u8 mIsPlaying;
 		/* 0x4 */ JAISound* mSound;
-		/* 0x8 */ void* mData;
+		/* 0x8 */ JAIAnimeFrameSoundData* mData;
 	};
 
 	/* 0x00 */ Slot mSlots[8];
@@ -30,14 +42,14 @@ public:
 	/* 0x68 */ u32 unk68;
 	/* 0x6C */ u32 unk6C;
 	/* 0x70 */ void* unk70[2];
-	/* 0x78 */ int mDataCounterInc;
-	/* 0x7C */ int mDataCounterLimit;
+	/* 0x78 */ u32 mDataCounterInc;
+	/* 0x7C */ u32 mDataCounterLimit;
 	/* 0x80 */ u32 mDataCounter;
-	/* 0x84 */ int mLoopCount;
+	/* 0x84 */ u32 mLoopCount;
 	/* 0x88 */ f32 mCurrentTime;
 	/* 0x8C */ u8 unk8C[0x4];
-	// TODO: not JUST u16...
-	/* 0x90 */ u16* mData;
+
+	/* 0x90 */ JAIAnimeSoundData* mData;
 	/* 0x94 */ // vtable
 
 public:

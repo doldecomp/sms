@@ -1,470 +1,460 @@
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
+#include <Player/MarioAccess.hpp>
+#include <Player/MarioCap.hpp>
+#include <Player/MarioEffect.hpp>
+#include <Player/WaterGun.hpp>
+#include <Player/Yoshi.hpp>
+#include <Player/ModelWaterManager.hpp>
+#include <MarioUtil/ShadowUtil.hpp>
+#include <System/StageUtil.hpp>
+#include <System/MarioGamePad.hpp>
+#include <M3DUtil/M3UModelMario.hpp>
+#include <Map/Map.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
 // TODO: stuff from other rogue includes
-static JGeometry::TVec3<f32> cDeformedTerrainCenter
-    = JGeometry::TVec3<f32>(0.0f, 5000.0f, 0.0f);
+static JGeometry::TVec3<f32> cDeformedTerrainCenter(0.0f, 5000.0f, 0.0f);
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
 const char cDirtyTexName[]  = "H_ma_rak_dummy";
 
-TMario::TOptionParams::TOptionParams(const char* prm)
-    : TParams(prm)
-    , PARAM_INIT(mZ, -1000.0f)
-    , PARAM_INIT(mXMin, 846.0f)
-    , PARAM_INIT(mXMax, 2000.0f)
+TMario::TMario()
+    : TTakeActor("HitActor")
+    , mYoshi(nullptr)
+    , mGamePad(nullptr)
+    , mBodyAngleParamsFree("/Mario/BodyAngleFree.prm")
+    , mBodyAngleParamsWaterGun("/Mario/BodyAngleWaterGun.prm")
+    , mAttackParamsFencePunch("/Mario/AttackFencePunch.prm")
+    , mAttackParamsKickRoof("/Mario/AttackKickRoof.prm")
+    , mPullParamsBGBeak("/Mario/PullParamBGBeak.prm")
+    , mPullParamsBGTentacle("/Mario/PullParamBGTentacle.prm")
+    , mPullParamsBGFireWanWanBossTail(
+          "/Mario/PullParamBGFireWanWanBossTail.prm")
+    , mPullParamsFireWanWanTail("/Mario/PullParamFireWanWanTail.prm")
+    , mSurfingParamsWaterRed("/Mario/SurfingWaterRed.prm")
+    , mSurfingParamsGroundRed("/Mario/SurfingGroundRed.prm")
+    , mSurfingParamsWaterYellow("/Mario/SurfingWaterYellow.prm")
+    , mSurfingParamsGroundYellow("/Mario/SurfingGroundYellow.prm")
+    , mSurfingParamsWaterGreen("/Mario/SurfingWaterGreen.prm")
+    , mSurfingParamsGroundGreen("/Mario/SurfingGroundGreen.prm")
+    , mHoverParams("/Mario/HHover.prm")
+    , mDivingParams("/Mario/Diving.prm")
+    , mSlipParamsNormal("/Mario/SlipParamNormal.prm")
+    , mSlipParamsOil("/Mario/SlipParamOil.prm")
+    , mSlipParamsAll("/Mario/SlipParamAll.prm")
+    , mSlipParamsAllSlider("/Mario/SlipParamAll_Slider.prm")
+    , mSlipParams45("/Mario/SlipParam45.prm")
+    , mSlipParamsWaterSlope("/Mario/SlipParamWaterSlope.prm")
+    , mSlipParamsWaterGround("/Mario/SlipParamWaterGround.prm")
+    , mSlipParamsYoshi("/Mario/SlipParamYoshi.prm")
+    , mUpperBodyParams("/Mario/UpperBody.prm")
+    , mDmgParamsEnemyCommon("/Mario/DmgEnemyCommon.prm")
+    , mDmgParamsHamakuri("/Mario/DmgHamakuri.prm")
+    , mDmgParamsNamekuri("/Mario/DmgNamekuri.prm")
+    , mDmgParamsHinokuri("/Mario/DmgHinokuri.prm")
+    , mDmgParamsFire("/Mario/DmgFire.prm")
+    , mDmgParamsBGTentacle("/Mario/DmgBGTentacle.prm")
+    , mDmgParamsBossEel("/Mario/DmgBossEel.prm")
+    , mDmgParamsHanachanBoss("/Mario/DmgHanachanBoss.prm")
+    , mDmgParamsPoihana("/Mario/DmgPoihana.prm")
+    , mDmgParamsKiller("/Mario/DmgKiller.prm")
+    , mDmgParamsLampTrapIron("/Mario/DmgLampTrapIron.prm")
+    , mDmgParamsLampTrapSpike("/Mario/DmgLampTrapSpike.prm")
+    , mDmgParamsEnemyMario("/Mario/DmgEnemyMario.prm")
+    , mDmgParamsCannotBreath("/Mario/DmgCannotBreath.prm")
+    , mDmgParamsGraffitoFire("/Mario/DmgGraffitoFire.prm")
+    , mDmgParamsGraffitoPoison("/Mario/DmgGraffitoPoison.prm")
+    , mDmgParamsGraffitoElec("/Mario/DmgGraffitoElec.prm")
+    , mDmgParamsGraffitoLava("/Mario/DmgGraffitoLava.prm")
+    , mDmgParamsWaterSurface("/Mario/DmgGraffitoWaterSurface.prm")
+    , mDmgMapParams0("/Mario/DmgMapCode0.prm")
+    , mDmgMapParams1("/Mario/DmgMapCode1.prm")
+    , mDmgMapParams2("/Mario/DmgMapCode2.prm")
+    , mDmgMapParams3("/Mario/DmgMapCode3.prm")
+    , mDmgMapParams4("/Mario/DmgMapCode4.prm")
+    , mDmgMapParams5("/Mario/DmgMapCode5.prm")
+    , mDmgMapParams6("/Mario/DmgMapCode6.prm")
+    , mDmgMapParams7("/Mario/DmgMapCode7.prm")
+    , mDmgMapParams8("/Mario/DmgMapCode8.prm")
+    , mDmgMapParams9("/Mario/DmgMapCode9.prm")
+    , mOptionParams("/Mario/Option.prm")
 {
-	TParams::load(mPrmPath);
+	unk114 = UNK114_FLAG_DO_OCCLUSION_PROBE | UNK114_FLAG_UNK10
+	         | UNK114_FLAG_VISIBLE;
+
+	unk116          = 0;
+	mInput          = 0;
+	unk78           = 0;
+	mStatus         = 0x133f;
+	mPrevStatus     = 0x133f;
+	mStatusState    = 0;
+	mStatusTimer    = 0;
+	mStatusArg      = 0;
+	mIntendedMag    = 0.0f;
+	mIntendedYaw    = 0;
+	mFaceAngle.x    = 0;
+	mFaceAngle.y    = 0;
+	mFaceAngle.z    = 0;
+	mModelFaceAngle = 0;
+	unk9C           = 0;
+	unk9E           = 0;
+	mDizzyTimer     = 0;
+	mVel.x          = 0.0f;
+	mVel.y          = 0.0f;
+	mVel.z          = 0.0f;
+	mForwardVel     = 0.0f;
+	mSlideVelX      = 0.0f;
+	mSlideVelZ      = 0.0f;
+
+	unkBC      = 0.0f;
+	mDashSpeed = 0.0f;
+	mDashTimer = 0;
+	unkC8      = 0.0f;
+	unkCC      = 0.033333335f;
+	unkD0      = 0.016666668f;
+	unkD4      = 0xb4;
+	unkD5      = 0xb4;
+
+	mWallPlane   = nullptr;
+	mRoofPlane   = nullptr;
+	mGroundPlane = TMap::getIllegalCheckData();
+	mWaterFloor  = nullptr;
+
+	mFloorPosition.x     = 0.0f;
+	mFloorPosition.y     = 0.0f;
+	mFloorPosition.z     = 0.0f;
+	mSlopeAngle          = 0;
+	unkF6                = 0;
+	mLightID             = 0;
+	mAnimationId         = 0xc3;
+	unkFC                = 0;
+	unkFE                = 0;
+	unk100               = 0;
+	unk104               = 0.0f;
+	unk108               = nullptr;
+	mFlag                = 0;
+	mPrevFlag            = 0;
+	mHealth              = mDeParams.mHpMax.get();
+	unk122               = 0;
+	unk124               = 0;
+	mHotTimer            = 0;
+	mHotTimerMax         = 0;
+	mMaxAir              = (f32)(mHealth + 1) - 1e-05f;
+	mAir                 = mMaxAir;
+	unk144               = 0xffffffff;
+	unk148               = 0;
+	mInvincibilityFrames = 0;
+	mFreezeTimer         = 0;
+	unk154               = 0;
+	unk158               = nullptr;
+	unk15C               = 0.0f;
+	unk160.zero();
+	mHeadPos.zero();
+	mCenterPos.zero();
+	mRightHandPos.zero();
+	mWaterRipplePos.zero();
+	mFootprintPos.zero();
+	unk1B4.zero();
+	mDamagePos.zero();
+	MTXIdentity(mHeadMtx);
+	MTXIdentity(unk1F0);
+	MTXIdentity(unk220);
+	MTXIdentity(unk250);
+	unk280        = mPosition;
+	unk28C        = mRotation;
+	unk29C        = mPosition;
+	unk2A8        = mPosition;
+	unk2B4        = mFaceAngle;
+	mOobKillTimer = 0;
+	unk2BC        = 0.0f;
+	unk2C0        = nullptr;
+	MTXIdentity(unk2C4);
+
+	unk2F4.x = 0.0f;
+	unk2F4.y = 0.0f;
+	unk2F4.z = 0.0f;
+	unk300.x = 0.0f;
+	unk300.y = 0.0f;
+	unk300.z = 0.0f;
+
+	unk30C = 0.0f;
+	unk314 = 0.0f;
+	unk310 = 0;
+	MTXIdentity(unk318);
+	mPumpAnmRate             = 0.0f;
+	unk34C                   = 0;
+	mStandingOnGraffitoTimer = 0;
+	mPollutionTypeStandingOn = 0;
+	unk354                   = 0.0f;
+	unk358                   = 0.0f;
+	unk35C                   = 0.0f;
+	mFootPrintTimer          = 0;
+	mWetWaterParticleTimer   = 0;
+	unk364                   = 0;
+	unk366                   = 0;
+	mSinkTimer               = 0.0f;
+	unk36C                   = 0.0f;
+	unk370                   = 0.0f;
+	unk374                   = 0.0f;
+	unk378                   = 0.0f;
+	mPumpCooldown            = 0;
+	mUpperState              = UPPER_STATE_IDLE;
+	unk384                   = 0;
+	unk388                   = 6;
+	unk390                   = 0;
+	unk394                   = nullptr;
+	unk398                   = nullptr;
+	unk39C                   = 0;
+	unk3A0                   = 0;
+	mModel                   = nullptr;
+
+	mHandModels[0][0] = nullptr;
+	mHandModels[0][1] = nullptr;
+	mHandModels[1][0] = nullptr;
+	mHandModels[1][1] = nullptr;
+
+	mJointIdChnChest = 0;
+	mJointIdChest    = 0;
+	mJointIdArmR1    = 0;
+	mJointIdArmL1    = 0;
+	mJointIdHandR    = 0;
+	mJointIdHandL    = 0;
+	mJointIdChnFootR = 0;
+	mJointIdFootR    = 0;
+	mJointIdChnFootL = 0;
+	mJointIdFootL    = 0;
+	mJointIdHead     = 0;
+	mJointIdMHead    = 0;
+
+	mMaterialIdEyeL = 0;
+	mMaterialIdEyeR = 0;
+
+	mWaistRoll  = 0.0f;
+	mWaistPitch = 0.0f;
+	mCap        = nullptr;
+	mWaterGun   = nullptr;
+	unk3E8      = 4;
+	unk3EC      = 0.0f;
+
+	mYoshi     = nullptr;
+	mSurfGesso = nullptr;
+	mTorocco   = nullptr;
+	mPinaRail  = nullptr;
+	mKoopaRail = nullptr;
+
+	mToroccoPos.zero();
+	mToroccoAngle = 0;
+	mRailType     = 0;
+
+	unk414.x = 0.0f;
+	unk414.y = 0.0f;
+	unk414.z = 0.0f;
+
+	mMultiMtxEffect = nullptr;
+	mMarioEffect    = nullptr;
+
+	mWireStartPos.x = -1000.0f;
+	mWireStartPos.y = 3000.0f;
+	mWireStartPos.z = -1000.0f;
+
+	mWireEndPos.x = 1000.0f;
+	mWireEndPos.y = 3000.0f;
+	mWireEndPos.z = 1000.0f;
+
+	mWirePosRatio      = 0.5f;
+	mWireBounceVel     = 0.0f;
+	mWireBounceVelPrev = 0.0f;
+	mWireSag           = 0.0f;
+	mMarioScreenPos.zero();
+
+	mAnmSound     = nullptr;
+	mAnmSoundTbl  = nullptr;
+	mSound        = nullptr;
+	mSoundFlags   = 0;
+	unk4EC        = 0;
+	mBlendLogicOp = 0;
+
+	unk4F0.x = 0.0f;
+	unk4F0.y = 0.0f;
+	unk4F0.z = 0.0f;
+
+	mGamePad = nullptr;
+
+	unk530 = nullptr;
+	unk534 = 0;
+	unk536 = 0;
+	unk538 = 0;
+
+	unk53A              = 0;
+	unk53B              = 0;
+	mTrembleModelEffect = nullptr;
+
+	mWireSfx0MinVel = -5.0f;
+	mWireSfx1MinVel = -10.0f;
+
+	mWireSfxTimer    = 0;
+	mWireSfxDelay    = 20;
+	mWireQueuedSfxID = 0;
+
+	unk54E             = 0x4000;
+	mWireSwingPosAngle = 0x4000;
+	mWireSwingNegAngle = 0xC000;
+
+	mWireRollAngle = 0;
+	mCoinCount     = 0;
+	unk55C         = 50.0f;
+	unk560         = 200.0f;
+	unk564         = 8.0f;
+	unk568         = 128.0f;
+	unk56C         = 10.0f;
+	unk570         = 0.0f;
+	unk390         = 0;
 }
 
-TMario::TSoundParams::TSoundParams()
-    : TParams("/Mario/Sound.prm")
-    , PARAM_INIT(mStartFallVoiceSpeed, 60.0f)
+void TMario::load(JSUMemoryInputStream& stream)
 {
-	TParams::load(mPrmPath);
+	TTakeActor::load(stream);
+	mFaceAngle.x = 0;
+	mFaceAngle.y = DEG2SHORTANGLE(mRotation.y);
+	mFaceAngle.z = 0;
+
+	mModelFaceAngle = mFaceAngle.y;
+	unk9C           = mFaceAngle.y;
+	unk9E           = mFaceAngle.y;
+	stream >> unk298;
+	u32 local_20;
+	stream >> local_20;
+	mFlag = 0;
+	if (local_20 & 1)
+		offFlag(MARIO_FLAG_HAS_FLUDD);
+	else
+		onFlag(MARIO_FLAG_HAS_FLUDD);
+	SMS_SetMarioAccessParams();
+	initValues();
 }
 
-TMario::TAutoDemoParams::TAutoDemoParams()
-    : TParams("/Mario/AutoDemo.prm")
-    , PARAM_INIT(mWarpInBallsDispTime, 6)
-    , PARAM_INIT(mWarpInBallsTime, 0x46)
-    , PARAM_INIT(mWarpInCapturedTime, 0x78)
-    , PARAM_INIT(mWarpInTremble, 15.0f)
-    , PARAM_INIT(mWarpInVecBase, 0.3f)
-    , PARAM_INIT(mWarpTransTremble, 50.0f)
-    , PARAM_INIT(mReadRotSp, 0x400f)
+void TMario::loadAfter()
 {
-	TParams::load(mPrmPath);
+	if (checkFlag(MARIO_FLAG_HAS_FLUDD))
+		mWaterGun->initInLoadAfter();
+
+	if (mYoshi != nullptr)
+		mYoshi->initInLoadAfter();
+
+	if (SMS_isMultiPlayerMap())
+		gpCamera->addMultiPlayer(&mPosition, 60.0f, 150.0f);
+
+	initParticle();
+
+	if (isMario())
+		SMSGetMSound()->setPlayerInfo(&mPosition, &unk29C,
+		                              mModel->getModel()->getAnmMtx(1), true);
+	else
+		SMSGetMSound()->setPlayerInfo(&mPosition, &unk29C,
+		                              mModel->getModel()->getAnmMtx(1), false);
+
+	finalDrawInitialize();
+	initMirrorModel();
 }
 
-TMario::TEParams::TEParams(const char* prm)
-    : TParams(prm)
-    , PARAM_INIT(mDamage, 1)
-    , PARAM_INIT(mDownType, 0)
-    , PARAM_INIT(mWaterEmit, 0)
-    , PARAM_INIT(mMotor, 0)
-    , PARAM_INIT(mMinSpeed, 0.0f)
-    , PARAM_INIT(mDirty, 0.0f)
-    , PARAM_INIT(mInvincibleTime, 0)
+void TMario::initValues()
 {
-	TParams::load(mPrmPath);
+	mHealth     = mDeParams.mHpMax.get();
+	mDirty      = 0.0f;
+	mOilBrake   = 1.0f;
+	mDirtyTimer = 0;
+	unk140      = 0.0f;
+
+	unk108              = new TMarioControllerWork;
+	unk108->mStickHS16  = 0;
+	unk108->mStickVS16  = 0;
+	unk108->mStickH     = 0.0f;
+	unk108->mStickV     = 0.0f;
+	unk108->mStickDist  = 0.0f;
+	unk108->mInput      = 0;
+	unk108->mFrameInput = 0;
+	unk108->mAnalogRU8  = 0;
+	unk108->mAnalogLU8  = 0;
+
+	unk10C = 0.0f;
+	unk110 = 0.0f;
+
+	unk154 = new TWaterEmitInfo("/Mario/DamageWaterEmit.prm");
+	unk158 = new TWaterEmitInfo("/Mario/WetWaterEmit.prm");
+
+	unk388            = 0;
+	mSurfGessoType    = SURF_GESSO_TYPE_RED;
+	mHolderHeightDiff = 0.0f;
+
+	initModel();
+
+	mWaistRoll  = 0.0f;
+	mWaistPitch = 0.0f;
+
+	mCap      = new TMarioCap(this);
+	mWaterGun = new TWaterGun(this);
+	mWaterGun->init();
+	mWaterGun->setAmountToRate((f32)unk298 / 100.0f);
+
+	mYoshi = new TYoshi;
+	mYoshi->init(this);
+
+	mMarioEffect = new TMarioEffect;
+	mMarioEffect->init(this);
+
+	unk414.set(0.0f, 0.0f, 1.0f);
+	mMarioScreenPos.set(0.0f, 0.0f, 0.0f);
+	mWarpInDir.set(0.0f, 0.0f, 0.0f);
+	unk468 = 0.0f;
+	unk46C = 0.0f;
+
+	mAnmSound = new MAnmSound(SMSGetMSound());
+	mAnmSound->initAnmSound(nullptr, 1, 0.0f);
+
+	unk4EC          = 0;
+	mBlendLogicOp   = 10;
+	mWaterWakeAlpha = 0;
+
+	unk530 = new s16[60];
+	resetHistory();
+
+	initHitActor(0x80000001, 5, 0xFC000000, mDeParams.mTrampleRadius.get(),
+	             mDeParams.mAttackHeight.get(), mDeParams.mDamageRadius.get(),
+	             mDeParams.mDamageHeight.get());
+
+	unk390 = new TMBindShadowBody(this, mModel->getModel(), 1.0f);
+
+	unk92  = 0x11;
+	unkA2  = 0xAD;
+	unkC6  = 0x22;
+	unkD6  = 0x33;
+	unk102 = 0xAD;
+	unk12A = 0x44;
+	unk13E = 0x55;
+	unk37C = 0x99;
+	unk3D1 = 0xAA;
+	unk3D2 = 0xBB;
+	unk535 = 0xCC;
+	unk556 = 0xEE;
 }
 
-TMario::TDivingParams::TDivingParams(const char* prm)
-    : TParams(prm)
-    , PARAM_INIT(mRotSp, 0x80)
-    , PARAM_INIT(mGravity, 0.5f)
-    , PARAM_INIT(mAccelControl, 0.02f)
-    , PARAM_INIT(mSeaBrake, 0.999f)
-    , PARAM_INIT(mSeaBrakeY, 0.98f)
+void TMario::resetHistory()
 {
-	TParams::load(mPrmPath);
+	for (int i = 0; i < 60; ++i)
+		unk530[i] = 0;
+
+	unk534 = 0;
+	unk536 = 0;
+	unk538 = 0;
+	unk53A = 0;
+	unk53B = 0;
 }
 
-TMario::THHoverParams::THHoverParams(const char* prm)
-    : TParams(prm)
-    , PARAM_INIT(mRotSp, 0x80)
-    , PARAM_INIT(mAccelRate, 0.029999999f)
-    , PARAM_INIT(mBrake, 0.94999999f)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TSurfingParams::TSurfingParams(const char* prm)
-    : TParams(prm)
-    , PARAM_INIT(mRotMin, 2048.0f)
-    , PARAM_INIT(mRotMax, 1024.0f)
-    , PARAM_INIT(mPowMin, 24.0f)
-    , PARAM_INIT(mPowMax, 64.0f)
-    , PARAM_INIT(mAccel, 58.0f)
-    , PARAM_INIT(mWaistRoll, 0.25f)
-    , PARAM_INIT(mWaistPitch, 170.0f)
-    , PARAM_INIT(mWaistRollMax, 0x400)
-    , PARAM_INIT(mWaistPitchMax, 0x1555)
-    , PARAM_INIT(mRoll, -0.45f)
-    , PARAM_INIT(mPitch, -170.0f)
-    , PARAM_INIT(mRollMax, 0x4000)
-    , PARAM_INIT(mPitchMax, 0x1555)
-    , PARAM_INIT(mAngleChangeRate, 0.01f)
-    , PARAM_INIT(mWaistAngleChangeRate, 0.01f)
-    , PARAM_INIT(mScaleMin, 0.5f)
-    , PARAM_INIT(mScaleMax, 1.0f)
-    , PARAM_INIT(mScaleMinSpeed, 24.0f)
-    , PARAM_INIT(mScaleMaxSpeed, 60.0f)
-    , PARAM_INIT(mJumpPow, 42.0f)
-    , PARAM_INIT(mJumpXZRatio, 0.25f)
-    , PARAM_INIT(mClashSpeed, 40.0f)
-    , PARAM_INIT(mClashAngle, 0x5555)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TUpperParams::TUpperParams(const char* prm)
-    : TParams(prm)
-    , PARAM_INIT(mPumpWaitTime, 10)
-    , PARAM_INIT(mPumpAnmSpeed, 0.01f)
-    , PARAM_INIT(mHoverHeadAngle, 0xe000)
-    , PARAM_INIT(mFeelDeepHeadAngle, 0x2000)
-    , PARAM_INIT(mFrontWallHeadAngle, 0xe000)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TSlipParams::TSlipParams(const char* prm)
-    : TParams(prm)
-    , PARAM_INIT(mSlipFriction, 0.9f)
-    , PARAM_INIT(mSlopeAcceleUp, 0.0f)
-    , PARAM_INIT(mSlopeAcceleDown, 0.0f)
-    , PARAM_INIT(mSlideAcceleUp, 0.0f)
-    , PARAM_INIT(mSlideAcceleDown, 0.0f)
-    , PARAM_INIT(mSlideStopNormal, 15.0f)
-    , PARAM_INIT(mSlideStopCatch, 15.0f)
-    , PARAM_INIT(mJumpEnable, 1)
-    , PARAM_INIT(mMissJump, 1)
-    , PARAM_INIT(mSlideAngleYSp, 0x200)
-    , PARAM_INIT(mStickSlideMult, 0.05f)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TEffectParams::TEffectParams()
-    : TParams("/Mario/MarioEffect.prm")
-    , PARAM_INIT(mDashInc, 0.033333335f)
-    , PARAM_INIT(mDashDec, 0.016666668f)
-    , PARAM_INIT(mDashMaxBlendInBlur, 0xb4)
-    , PARAM_INIT(mDashMaxBlendInIris, 0xb4)
-    , PARAM_INIT(mDashBlendScale, 0.2f)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TParticleParams::TParticleParams()
-    : TParams("/Mario/MarioParticle.prm")
-    , PARAM_INIT(mMeltInWaterMax, 0.5f)
-    , PARAM_INIT(mWaveEmitSpeed, 5.0f)
-    , PARAM_INIT(mWaveAlphaDec, 5)
-    , PARAM_INIT(mBubbleDepth, 10.0f)
-    , PARAM_INIT(mBodyBubbleSpMin, 0.0f)
-    , PARAM_INIT(mBodyBubbleSpMax, 40.0f)
-    , PARAM_INIT(mBodyBubbleEmitMin, 0.0f)
-    , PARAM_INIT(mBodyBubbleEmitMax, 0.5f)
-    , PARAM_INIT(mBubbleToRipple, 0.3f)
-    , PARAM_INIT(mToroccoWind, 0.001f)
-    , PARAM_INIT(mToroccoSpark, 0.001f)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TMotorParams::TMotorParams()
-    : TParams("/Mario/MarioMotor.prm")
-    , PARAM_INIT(mMotorReturn, 0x19)
-    , PARAM_INIT(mMotorTrample, 8)
-    , PARAM_INIT(mMotorHipDrop, 0xf)
-    , PARAM_INIT(mMotorWall, 6)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TDirtyParams::TDirtyParams()
-    : TParams("/Mario/Dirty.prm")
-    , PARAM_INIT(mIncRunning, 0.1f)
-    , PARAM_INIT(mIncCatching, 0.3f)
-    , PARAM_INIT(mIncSlipping, 0.2f)
-    , PARAM_INIT(mDecSwimming, 0.5f)
-    , PARAM_INIT(mDecWaterHit, 0.2f)
-    , PARAM_INIT(mDecRotJump, 0.1f)
-    , PARAM_INIT(mBrakeStartValSlip, 0.99f)
-    , PARAM_INIT(mBrakeStartValRun, 0.98f)
-    , PARAM_INIT(mDirtyTimeSlip, 600)
-    , PARAM_INIT(mDirtyTimeRun, 600)
-    , PARAM_INIT(mPolSizeSlip, 200.0f)
-    , PARAM_INIT(mPolSizeRun, 80.0f)
-    , PARAM_INIT(mPolSizeFootPrint, 200.0f)
-    , PARAM_INIT(mPolSizeJump, 200.0f)
-    , PARAM_INIT(mSlopeAngle, 0.99f)
-    , PARAM_INIT(mDirtyMax, 200.0f)
-    , PARAM_INIT(mSlipAnmSpeed, 3.0f)
-    , PARAM_INIT(mSlipRunSp, 0.01f)
-    , PARAM_INIT(mSlipCatchSp, 0.01f)
-    , PARAM_INIT(mSlipRotate, 0x100)
-    , PARAM_INIT(mSlipCatchRotate, 0x100)
-    , PARAM_INIT(mBrakeSlipNoPollute, 0.98f)
-    , PARAM_INIT(mFogTimeYellow, 0xf0)
-    , PARAM_INIT(mFogTimeRed, 600)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TGraffitoParams::TGraffitoParams()
-    : TParams("/Mario/Graffito.prm")
-    , PARAM_INIT(mSinkTime, 0xf0)
-    , PARAM_INIT(mSinkDmgTime, 0xf0)
-    , PARAM_INIT(mSinkHeight, 150.0f)
-    , PARAM_INIT(mSinkMoveMin, 0.3f)
-    , PARAM_INIT(mSinkMoveMax, 0.5f)
-    , PARAM_INIT(mSinkRecover, 0.05f)
-    , PARAM_INIT(mSinkJumpRateMin, 0.1f)
-    , PARAM_INIT(mSinkJumpRateMax, 0.3f)
-    , PARAM_INIT(mSinkPumpLimit, 0.25f)
-    , PARAM_INIT(mSinkDmgDepth, 0.25f)
-    , PARAM_INIT(mFireHeight, 1000.0f)
-    , PARAM_INIT(mDizzySlipCtMax, 1000)
-    , PARAM_INIT(mDizzyWalkCtMax, 1000)
-    , PARAM_INIT(mDizzyAngleY, 0x7fff)
-    , PARAM_INIT(mDizzyAngleRate, 400.0f)
-    , PARAM_INIT(mDizzyPowerRate, 120.0f)
-    , PARAM_INIT(mDizzyPower, 20.0f)
-    , PARAM_INIT(mFireInvincibleTime, 0x96)
-    , PARAM_INIT(mFootEraseTimes, 4)
-    , PARAM_INIT(mFootEraseSize, 400.0f)
-    , PARAM_INIT(mFootEraseFront, 200.0f)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TControllerParams::TControllerParams()
-    : TParams("/Mario/Controller.prm")
-    , PARAM_INIT(mAnalogLRToZeroVal, 0x1e)
-    , PARAM_INIT(mAnalogLRToMiddleVal, 0x5a)
-    , PARAM_INIT(mAnalogLRToMaxVal, 0x96)
-    , PARAM_INIT(mAnalogLRMiddleLevel, 0.1f)
-    , PARAM_INIT(mStartToWalkLevel, 15.0f)
-    , PARAM_INIT(mStickRotateTime, 0x18)
-    , PARAM_INIT(mLengthMultTimes, 10)
-    , PARAM_INIT(mLengthMult, 0.935f)
-    , PARAM_INIT(mSquatRotMidAnalog, 0.69999999f)
-    , PARAM_INIT(mSquatRotMidValue, 0.05f)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TYoshiParams::TYoshiParams()
-    : TParams("/Mario/Yoshi.prm")
-    , PARAM_INIT(mRunYoshiMult, 1.2f)
-    , PARAM_INIT(mJumpYoshiMult, 1.0f)
-    , PARAM_INIT(mRotYoshiMult, 1.5f)
-    , PARAM_INIT(mHeadFront, 80.0f)
-    , PARAM_INIT(mHeadRadius, 50.0f)
-    , PARAM_INIT(mHoldOutAccCtrlF, 0.01f)
-    , PARAM_INIT(mHoldOutAccCtrlB, 0.023f)
-    , PARAM_INIT(mHoldOutSldCtrl, 0.3f)
-    , PARAM_INIT(mDecBrake, 1.0f)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TWaterEffectParams::TWaterEffectParams()
-    : TParams("/Mario/WaterEffect.prm")
-    , PARAM_INIT(mJumpIntoMdlEffectSpY, 10.0f)
-    , PARAM_INIT(mJumpIntoMinY, 20.0f)
-    , PARAM_INIT(mJumpIntoMaxY, 50.0f)
-    , PARAM_INIT(mJumpIntoScaleMin, 0.75f)
-    , PARAM_INIT(mJumpIntoScaleWidth, 1.0f)
-    , PARAM_INIT(mRunningRippleSpeed, 30.0f)
-    , PARAM_INIT(mRunningRippleDepth, 30.0f)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TBarParams::TBarParams()
-    : TParams("/Mario/Bar.prm")
-    , PARAM_INIT(mClimbSp, 0.035f)
-    , PARAM_INIT(mRotateSp, 3.0f)
-    , PARAM_INIT(mClimbAnmRate, 0.00390625f)
-    , PARAM_INIT(mCatchRadius, 100.0f)
-    , PARAM_INIT(mCatchAngle, 0.8f)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TPullParams::TPullParams(const char* prm)
-    : TParams(prm)
-    , PARAM_INIT(mPullRateV, 0.3f)
-    , PARAM_INIT(mPullRateH, 0.05f)
-    , PARAM_INIT(mOilPullRateV, 0.1f)
-    , PARAM_INIT(mOilPullRateH, 0.01f)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TWireParams::TWireParams()
-    : TParams("/Mario/Wire.prm")
-    , PARAM_INIT(mRotSpeed, -8)
-    , PARAM_INIT(mRotSpeedTrgHover, 8)
-    , PARAM_INIT(mRotSpeedTrgTurbo, 1000)
-    , PARAM_INIT(mRotSpeedTrgRocket, 1000)
-    , PARAM_INIT(mRotSpeedMax, 0x578)
-    , PARAM_INIT(mRotStop, 100)
-    , PARAM_INIT(mRotGravity, 0x14)
-    , PARAM_INIT(mRotBrake, 0.98f)
-    , PARAM_INIT(mJumpRate, 0.09f)
-    , PARAM_INIT(mSwingRate, 0.005f)
-    , PARAM_INIT(mWireJumpAccelControl, 0.01f)
-    , PARAM_INIT(mWireJumpSlideControl, 0.3f)
-    , PARAM_INIT(mWireJumpMult, 5.0f)
-    , PARAM_INIT(mWireJumpBase, 20.0f)
-    , PARAM_INIT(mWireSwingBrake, 0.99f)
-    , PARAM_INIT(mWireSwingMax, 100.0f)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::THangRoofParams::THangRoofParams()
-    : TParams("/Mario/HangRoof.prm")
-    , PARAM_INIT(mAnmMult, 0.3f)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::THangingParams::THangingParams()
-    : TParams("/Mario/Hanging.prm")
-    , PARAM_INIT(mMoveSp, 0.1f)
-    , PARAM_INIT(mAnmRate, 0.5f)
-    , PARAM_INIT(mRapidTime, 2000)
-    , PARAM_INIT(mLimitTime, 0x960)
-    , PARAM_INIT(mAnmRapid, 8.0f)
-    , PARAM_INIT(mDescentSp, 10.0f)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TSwimParams::TSwimParams()
-    : TParams("/Mario/Swim.prm")
-    , PARAM_INIT(mStartSp, 1.0f)
-    , PARAM_INIT(mMoveSp, 0.8f)
-    , PARAM_INIT(mMoveBrake, 1.0f)
-    , PARAM_INIT(mSwimmingRotSpMin, 0x200)
-    , PARAM_INIT(mSwimmingRotSpMax, 0x400)
-    , PARAM_INIT(mPumpingRotSpMin, 0x100)
-    , PARAM_INIT(mPumpingRotSpMax, 0x200)
-    , PARAM_INIT(mGravity, 0.1f)
-    , PARAM_INIT(mWaitBouyancy, 1.0f)
-    , PARAM_INIT(mMoveBouyancy, 1.0f)
-    , PARAM_INIT(mUpDownBrake, 0.94999999f)
-    , PARAM_INIT(mCanJumpDepth, 1.0f)
-    , PARAM_INIT(mEndDepth, 80.0f)
-    , PARAM_INIT(mFloatHeight, 120.0f)
-    , PARAM_INIT(mStartVMult, 0.1f)
-    , PARAM_INIT(mStartVYMult, 0.1f)
-    , PARAM_INIT(mRush, 3.0f)
-    , PARAM_INIT(mAnmBrake, 0.02f)
-    , PARAM_INIT(mPaddleSpeedUp, 0.3f)
-    , PARAM_INIT(mPaddleJumpUp, 1.0f)
-    , PARAM_INIT(mFloatUp, 2.0f)
-    , PARAM_INIT(mWaterLevelCheckHeight, 10.0f)
-    , PARAM_INIT(mPaddleDown, 1.0f)
-    , PARAM_INIT(mWaitSinkTime, 0x32)
-    , PARAM_INIT(mCanBreathDepth, 50.0f)
-    , PARAM_INIT(mWaitSinkSpeed, 5.0f)
-    , PARAM_INIT(mAirDec, 0.001f)
-    , PARAM_INIT(mAirDecDive, 0.001f)
-    , PARAM_INIT(mAirInc, 0.029999999f)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TRunParams::TRunParams()
-    : TParams("/Mario/Run.prm")
-    , PARAM_INIT(mMaxSpeed, 32.0f)
-    , PARAM_INIT(mVelMinusBrake, 1.1f)
-    , PARAM_INIT(mAddBase, 1.1f)
-    , PARAM_INIT(mAddVelDiv, 0.023255814f)
-    , PARAM_INIT(mDecStartNrmY, 0.94999999f)
-    , PARAM_INIT(mDecBrake, 1.0f)
-    , PARAM_INIT(mSoft2Walk, 8.0f)
-    , PARAM_INIT(mWalk2Soft, 5.0f)
-    , PARAM_INIT(mSoftStepAnmMult, 0.125f)
-    , PARAM_INIT(mRunAnmSpeedBase, 1.0f)
-    , PARAM_INIT(mRunAnmSpeedMult, 0.059999999f)
-    , PARAM_INIT(mMotBlendWalkSp, 1.0f)
-    , PARAM_INIT(mMotBlendRunSp, 3.0f)
-    , PARAM_INIT(mSwimDepth, 120.0f)
-    , PARAM_INIT(mInWaterBrake, 0.9f)
-    , PARAM_INIT(mInWaterAnmBrake, 0.6f)
-    , PARAM_INIT(mPumpingSlideSp, 0.1f)
-    , PARAM_INIT(mPumpingSlideAnmSp, 0.5f)
-    , PARAM_INIT(mDoJumpCatchSp, 15.0f)
-    , PARAM_INIT(mTurnNeedSp, 10.0f)
-    , PARAM_INIT(mDashRotSp, 100)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TJumpParams::TJumpParams()
-    : TParams("/Mario/Jump.prm")
-    , PARAM_INIT(mGravity, 0.8f)
-    , PARAM_INIT(mSpinJumpGravity, 0.6f)
-    , PARAM_INIT(mJumpingMax, 80.0f)
-    , PARAM_INIT(mJumpSpeedBrake, 0.999f)
-    , PARAM_INIT(mJumpAccelControl, 0.5f)
-    , PARAM_INIT(mJumpSlideControl, 0.5f)
-    , PARAM_INIT(mTurnJumpForce, 62.0f)
-    , PARAM_INIT(mFenceSpeed, 2.0f)
-    , PARAM_INIT(mFireDownForce, 80.0f)
-    , PARAM_INIT(mFireDownControl, 1.0f)
-    , PARAM_INIT(mFireBackVelocity, 1.0f)
-    , PARAM_INIT(mBroadJumpForce, 80.0f)
-    , PARAM_INIT(mBroadJumpForceY, 30.0f)
-    , PARAM_INIT(mRotateJumpForceY, 62.0f)
-    , PARAM_INIT(mPopUpSpeedY, 5.0f)
-    , PARAM_INIT(mPopUpForceYMult, 10.0f)
-    , PARAM_INIT(mBackJumpForce, -16.0f)
-    , PARAM_INIT(mBackJumpForceY, 62.0f)
-    , PARAM_INIT(mHipAttackSpeedY, -50.0f)
-    , PARAM_INIT(mSuperHipAttackSpeedY, -80.0f)
-    , PARAM_INIT(mJumpCatchRotXSp, 0x100)
-    , PARAM_INIT(mJumpCatchRotXMax, 0x2aaa)
-    , PARAM_INIT(mRotBroadEnableV, 30.0f)
-    , PARAM_INIT(mRotBroadJumpForce, 60.0f)
-    , PARAM_INIT(mRotBroadJumpForceY, 20.0f)
-    , PARAM_INIT(mTrampolineDec, 1.0f)
-    , PARAM_INIT(mSecJumpEnableSp, 20.0f)
-    , PARAM_INIT(mSecJumpForce, 52.0f)
-    , PARAM_INIT(mSecJumpSpeedMult, 0.0f)
-    , PARAM_INIT(mSecJumpXZMult, 0.8f)
-    , PARAM_INIT(mTriJumpEnableSp, 20.0f)
-    , PARAM_INIT(mUltraJumpForce, 70.0f)
-    , PARAM_INIT(mUltraJumpSpeedMult, 0.25f)
-    , PARAM_INIT(mUltraJumpXZMult, 0.8f)
-    , PARAM_INIT(mValleyDepth, 500.0f)
-    , PARAM_INIT(mThrownAccel, 0.5f)
-    , PARAM_INIT(mThrownSlide, 0.5f)
-    , PARAM_INIT(mThrownBrake, 0.98f)
-    , PARAM_INIT(mTremblePower, 5.0f)
-    , PARAM_INIT(mTrembleAccele, 2.0f)
-    , PARAM_INIT(mTrembleBrake, 0.99f)
-    , PARAM_INIT(mTrembleTime, 600)
-    , PARAM_INIT(mClashAngle, 0x3555)
-    , PARAM_INIT(mJumpJumpCatchSp, 50.0f)
-    , PARAM_INIT(mGetOffYoshiY, 30.0f)
-    , PARAM_INIT(mSuperHipAttackCt, 0x32)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TAttackParams::TAttackParams(const char* prm)
-    : TParams(prm)
-    , PARAM_INIT(mRadius, 100.0f)
-    , PARAM_INIT(mHeight, 50.0f)
-{
-	TParams::load(mPrmPath);
-}
-
-TMario::TBodyAngleParams::TBodyAngleParams(const char* prm)
-    : TParams(prm)
-    , PARAM_INIT(mHeadRot, 0.0f)
-    , PARAM_INIT(mWaistRoll, 0.0f)
-    , PARAM_INIT(mWaistPitch, 80.0f)
-    , PARAM_INIT(mWaistRollMax, 0)
-    , PARAM_INIT(mWaistPitchMax, 1000)
-    , PARAM_INIT(mWaistAngleChangeRate, 0.07f)
-{
-	TParams::load(mPrmPath);
-}
+void TMario::setGamePad(TMarioGamePad* pad) { mGamePad = pad; }
 
 TMario::TDeParams::TDeParams()
     : TParams("/Mario/Mario.prm")
@@ -525,73 +515,456 @@ TMario::TDeParams::TDeParams()
 	TParams::load(mPrmPath);
 }
 
-void TMario::setGamePad(TMarioGamePad* pad) { mGamePad = pad; }
-
-void TMario::resetHistory() { }
-
-void TMario::initValues() { }
-
-void TMario::loadAfter() { }
-
-void TMario::load(JSUMemoryInputStream&) { }
-
-TMario::TMario()
-    : TTakeActor("HitActor")
-    , mBodyAngleParamsFree("/Mario/BodyAngleFree.prm")
-    , mBodyAngleParamsWaterGun("/Mario/BodyAngleWaterGun.prm")
-    , mAttackParamsFencePunch("/Mario/AttackFencePunch.prm")
-    , mAttackParamsKickRoof("/Mario/AttackKickRoof.prm")
-    , mPullParamsBGBeak("/Mario/PullParamBGBeak.prm")
-    , mPullParamsBGTentacle("/Mario/PullParamBGTentacle.prm")
-    , mPullParamsBGFireWanWanBossTail(
-          "/Mario/PullParamBGFireWanWanBossTail.prm")
-    , mPullParamsFireWanWanTail("/Mario/PullParamFireWanWanTail.prm")
-    , mSurfingParamsWaterRed("/Mario/SurfingWaterRed.prm")
-    , mSurfingParamsGroundRed("/Mario/SurfingGroundRed.prm")
-    , mSurfingParamsWaterYellow("/Mario/SurfingWaterYellow.prm")
-    , mSurfingParamsGroundYellow("/Mario/SurfingGroundYellow.prm")
-    , mSurfingParamsWaterGreen("/Mario/SurfingWaterGreen.prm")
-    , mSurfingParamsGroundGreen("/Mario/SurfingGroundGreen.prm")
-    , mHoverParams("/Mario/HHover.prm")
-    , mDivingParams("/Mario/Diving.prm")
-    , mSlipParamsNormal("/Mario/SlipParamNormal.prm")
-    , mSlipParamsOil("/Mario/SlipParamOil.prm")
-    , mSlipParamsAll("/Mario/SlipParamAll.prm")
-    , mSlipParamsAllSlider("/Mario/SlipParamAll_Slider.prm")
-    , mSlipParams45("/Mario/SlipParam45.prm")
-    , mSlipParamsWaterSlope("/Mario/SlipParamWaterSlope.prm")
-    , mSlipParamsWaterGround("/Mario/SlipParamWaterGround.prm")
-    , mSlipParamsYoshi("/Mario/SlipParamYoshi.prm")
-    , mUpperBodyParams("/Mario/UpperBody.prm")
-    , mDmgParamsEnemyCommon("/Mario/DmgEnemyCommon.prm")
-    , mDmgParamsHamakuri("/Mario/DmgHamakuri.prm")
-    , mDmgParamsNamekuri("/Mario/DmgNamekuri.prm")
-    , mDmgParamsHinokuri("/Mario/DmgHinokuri.prm")
-    , mDmgParamsFire("/Mario/DmgFire.prm")
-    , mDmgParamsBGTentacle("/Mario/DmgBGTentacle.prm")
-    , mDmgParamsBossEel("/Mario/DmgBossEel.prm")
-    , mDmgParamsHanachanBoss("/Mario/DmgHanachanBoss.prm")
-    , mDmgParamsPoihana("/Mario/DmgPoihana.prm")
-    , mDmgParamsKiller("/Mario/DmgKiller.prm")
-    , mDmgParamsLampTrapIron("/Mario/DmgLampTrapIron.prm")
-    , mDmgParamsLampTrapSpike("/Mario/DmgLampTrapSpike.prm")
-    , mDmgParamsEnemyMario("/Mario/DmgEnemyMario.prm")
-    , mDmgParamsCannotBreath("/Mario/DmgCannotBreath.prm")
-    , mDmgParamsGraffitoFire("/Mario/DmgGraffitoFire.prm")
-    , mDmgParamsGraffitoPoison("/Mario/DmgGraffitoPoison.prm")
-    , mDmgParamsGraffitoElec("/Mario/DmgGraffitoElec.prm")
-    , mDmgParamsGraffitoLava("/Mario/DmgGraffitoLava.prm")
-    , mDmgParamsWaterSurface("/Mario/DmgGraffitoWaterSurface.prm")
-    , mDmgMapParams0("/Mario/DmgMapCode0.prm")
-    , mDmgMapParams1("/Mario/DmgMapCode1.prm")
-    , mDmgMapParams2("/Mario/DmgMapCode2.prm")
-    , mDmgMapParams3("/Mario/DmgMapCode3.prm")
-    , mDmgMapParams4("/Mario/DmgMapCode4.prm")
-    , mDmgMapParams5("/Mario/DmgMapCode5.prm")
-    , mDmgMapParams6("/Mario/DmgMapCode6.prm")
-    , mDmgMapParams7("/Mario/DmgMapCode7.prm")
-    , mDmgMapParams8("/Mario/DmgMapCode8.prm")
-    , mDmgMapParams9("/Mario/DmgMapCode9.prm")
-    , mOptionParams("/Mario/Option.prm")
+TMario::TBodyAngleParams::TBodyAngleParams(const char* prm)
+    : TParams(prm)
+    , PARAM_INIT(mHeadRot, 0.0f)
+    , PARAM_INIT(mWaistRoll, 0.0f)
+    , PARAM_INIT(mWaistPitch, 80.0f)
+    , PARAM_INIT(mWaistRollMax, 0)
+    , PARAM_INIT(mWaistPitchMax, 1000)
+    , PARAM_INIT(mWaistAngleChangeRate, 0.07f)
 {
+	TParams::load(mPrmPath);
+}
+
+TMario::TAttackParams::TAttackParams(const char* prm)
+    : TParams(prm)
+    , PARAM_INIT(mRadius, 100.0f)
+    , PARAM_INIT(mHeight, 50.0f)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TJumpParams::TJumpParams()
+    : TParams("/Mario/Jump.prm")
+    , PARAM_INIT(mGravity, 0.8f)
+    , PARAM_INIT(mSpinJumpGravity, 0.6f)
+    , PARAM_INIT(mJumpingMax, 80.0f)
+    , PARAM_INIT(mJumpSpeedBrake, 0.999f)
+    , PARAM_INIT(mJumpAccelControl, 0.5f)
+    , PARAM_INIT(mJumpSlideControl, 0.5f)
+    , PARAM_INIT(mTurnJumpForce, 62.0f)
+    , PARAM_INIT(mFenceSpeed, 2.0f)
+    , PARAM_INIT(mFireDownForce, 80.0f)
+    , PARAM_INIT(mFireDownControl, 1.0f)
+    , PARAM_INIT(mFireBackVelocity, 1.0f)
+    , PARAM_INIT(mBroadJumpForce, 80.0f)
+    , PARAM_INIT(mBroadJumpForceY, 30.0f)
+    , PARAM_INIT(mRotateJumpForceY, 62.0f)
+    , PARAM_INIT(mPopUpSpeedY, 5.0f)
+    , PARAM_INIT(mPopUpForceYMult, 10.0f)
+    , PARAM_INIT(mBackJumpForce, -16.0f)
+    , PARAM_INIT(mBackJumpForceY, 62.0f)
+    , PARAM_INIT(mHipAttackSpeedY, -50.0f)
+    , PARAM_INIT(mSuperHipAttackSpeedY, -80.0f)
+    , PARAM_INIT(mJumpCatchRotXSp, 0x100)
+    , PARAM_INIT(mJumpCatchRotXMax, 0x2aaa)
+    , PARAM_INIT(mRotBroadEnableV, 30.0f)
+    , PARAM_INIT(mRotBroadJumpForce, 60.0f)
+    , PARAM_INIT(mRotBroadJumpForceY, 20.0f)
+    , PARAM_INIT(mTrampolineDec, 1.0f)
+    , PARAM_INIT(mSecJumpEnableSp, 20.0f)
+    , PARAM_INIT(mSecJumpForce, 52.0f)
+    , PARAM_INIT(mSecJumpSpeedMult, 0.0f)
+    , PARAM_INIT(mSecJumpXZMult, 0.8f)
+    , PARAM_INIT(mTriJumpEnableSp, 20.0f)
+    , PARAM_INIT(mUltraJumpForce, 70.0f)
+    , PARAM_INIT(mUltraJumpSpeedMult, 0.25f)
+    , PARAM_INIT(mUltraJumpXZMult, 0.8f)
+    , PARAM_INIT(mValleyDepth, 500.0f)
+    , PARAM_INIT(mThrownAccel, 0.5f)
+    , PARAM_INIT(mThrownSlide, 0.5f)
+    , PARAM_INIT(mThrownBrake, 0.98f)
+    , PARAM_INIT(mTremblePower, 5.0f)
+    , PARAM_INIT(mTrembleAccele, 2.0f)
+    , PARAM_INIT(mTrembleBrake, 0.99f)
+    , PARAM_INIT(mTrembleTime, 600)
+    , PARAM_INIT(mClashAngle, 0x3555)
+    , PARAM_INIT(mJumpJumpCatchSp, 50.0f)
+    , PARAM_INIT(mGetOffYoshiY, 30.0f)
+    , PARAM_INIT(mSuperHipAttackCt, 0x32)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TRunParams::TRunParams()
+    : TParams("/Mario/Run.prm")
+    , PARAM_INIT(mMaxSpeed, 32.0f)
+    , PARAM_INIT(mVelMinusBrake, 1.1f)
+    , PARAM_INIT(mAddBase, 1.1f)
+    , PARAM_INIT(mAddVelDiv, 0.023255814f)
+    , PARAM_INIT(mDecStartNrmY, 0.94999999f)
+    , PARAM_INIT(mDecBrake, 1.0f)
+    , PARAM_INIT(mSoft2Walk, 8.0f)
+    , PARAM_INIT(mWalk2Soft, 5.0f)
+    , PARAM_INIT(mSoftStepAnmMult, 0.125f)
+    , PARAM_INIT(mRunAnmSpeedBase, 1.0f)
+    , PARAM_INIT(mRunAnmSpeedMult, 0.059999999f)
+    , PARAM_INIT(mMotBlendWalkSp, 1.0f)
+    , PARAM_INIT(mMotBlendRunSp, 3.0f)
+    , PARAM_INIT(mSwimDepth, 120.0f)
+    , PARAM_INIT(mInWaterBrake, 0.9f)
+    , PARAM_INIT(mInWaterAnmBrake, 0.6f)
+    , PARAM_INIT(mPumpingSlideSp, 0.1f)
+    , PARAM_INIT(mPumpingSlideAnmSp, 0.5f)
+    , PARAM_INIT(mDoJumpCatchSp, 15.0f)
+    , PARAM_INIT(mTurnNeedSp, 10.0f)
+    , PARAM_INIT(mDashRotSp, 100)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TSwimParams::TSwimParams()
+    : TParams("/Mario/Swim.prm")
+    , PARAM_INIT(mStartSp, 1.0f)
+    , PARAM_INIT(mMoveSp, 0.8f)
+    , PARAM_INIT(mMoveBrake, 1.0f)
+    , PARAM_INIT(mSwimmingRotSpMin, 0x200)
+    , PARAM_INIT(mSwimmingRotSpMax, 0x400)
+    , PARAM_INIT(mPumpingRotSpMin, 0x100)
+    , PARAM_INIT(mPumpingRotSpMax, 0x200)
+    , PARAM_INIT(mGravity, 0.1f)
+    , PARAM_INIT(mWaitBouyancy, 1.0f)
+    , PARAM_INIT(mMoveBouyancy, 1.0f)
+    , PARAM_INIT(mUpDownBrake, 0.94999999f)
+    , PARAM_INIT(mCanJumpDepth, 1.0f)
+    , PARAM_INIT(mEndDepth, 80.0f)
+    , PARAM_INIT(mFloatHeight, 120.0f)
+    , PARAM_INIT(mStartVMult, 0.1f)
+    , PARAM_INIT(mStartVYMult, 0.1f)
+    , PARAM_INIT(mRush, 3.0f)
+    , PARAM_INIT(mAnmBrake, 0.02f)
+    , PARAM_INIT(mPaddleSpeedUp, 0.3f)
+    , PARAM_INIT(mPaddleJumpUp, 1.0f)
+    , PARAM_INIT(mFloatUp, 2.0f)
+    , PARAM_INIT(mWaterLevelCheckHeight, 10.0f)
+    , PARAM_INIT(mPaddleDown, 1.0f)
+    , PARAM_INIT(mWaitSinkTime, 0x32)
+    , PARAM_INIT(mCanBreathDepth, 50.0f)
+    , PARAM_INIT(mWaitSinkSpeed, 5.0f)
+    , PARAM_INIT(mAirDec, 0.001f)
+    , PARAM_INIT(mAirDecDive, 0.001f)
+    , PARAM_INIT(mAirInc, 0.029999999f)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::THangingParams::THangingParams()
+    : TParams("/Mario/Hanging.prm")
+    , PARAM_INIT(mMoveSp, 0.1f)
+    , PARAM_INIT(mAnmRate, 0.5f)
+    , PARAM_INIT(mRapidTime, 2000)
+    , PARAM_INIT(mLimitTime, 0x960)
+    , PARAM_INIT(mAnmRapid, 8.0f)
+    , PARAM_INIT(mDescentSp, 10.0f)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::THangRoofParams::THangRoofParams()
+    : TParams("/Mario/HangRoof.prm")
+    , PARAM_INIT(mAnmMult, 0.3f)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TWireParams::TWireParams()
+    : TParams("/Mario/Wire.prm")
+    , PARAM_INIT(mRotSpeed, -8)
+    , PARAM_INIT(mRotSpeedTrgHover, 8)
+    , PARAM_INIT(mRotSpeedTrgTurbo, 1000)
+    , PARAM_INIT(mRotSpeedTrgRocket, 1000)
+    , PARAM_INIT(mRotSpeedMax, 0x578)
+    , PARAM_INIT(mRotStop, 100)
+    , PARAM_INIT(mRotGravity, 0x14)
+    , PARAM_INIT(mRotBrake, 0.98f)
+    , PARAM_INIT(mJumpRate, 0.09f)
+    , PARAM_INIT(mSwingRate, 0.005f)
+    , PARAM_INIT(mWireJumpAccelControl, 0.01f)
+    , PARAM_INIT(mWireJumpSlideControl, 0.3f)
+    , PARAM_INIT(mWireJumpMult, 5.0f)
+    , PARAM_INIT(mWireJumpBase, 20.0f)
+    , PARAM_INIT(mWireSwingBrake, 0.99f)
+    , PARAM_INIT(mWireSwingMax, 100.0f)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TPullParams::TPullParams(const char* prm)
+    : TParams(prm)
+    , PARAM_INIT(mPullRateV, 0.3f)
+    , PARAM_INIT(mPullRateH, 0.05f)
+    , PARAM_INIT(mOilPullRateV, 0.1f)
+    , PARAM_INIT(mOilPullRateH, 0.01f)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TBarParams::TBarParams()
+    : TParams("/Mario/Bar.prm")
+    , PARAM_INIT(mClimbSp, 0.035f)
+    , PARAM_INIT(mRotateSp, 3.0f)
+    , PARAM_INIT(mClimbAnmRate, 0.00390625f)
+    , PARAM_INIT(mCatchRadius, 100.0f)
+    , PARAM_INIT(mCatchAngle, 0.8f)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TWaterEffectParams::TWaterEffectParams()
+    : TParams("/Mario/WaterEffect.prm")
+    , PARAM_INIT(mJumpIntoMdlEffectSpY, 10.0f)
+    , PARAM_INIT(mJumpIntoMinY, 20.0f)
+    , PARAM_INIT(mJumpIntoMaxY, 50.0f)
+    , PARAM_INIT(mJumpIntoScaleMin, 0.75f)
+    , PARAM_INIT(mJumpIntoScaleWidth, 1.0f)
+    , PARAM_INIT(mRunningRippleSpeed, 30.0f)
+    , PARAM_INIT(mRunningRippleDepth, 30.0f)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TYoshiParams::TYoshiParams()
+    : TParams("/Mario/Yoshi.prm")
+    , PARAM_INIT(mRunYoshiMult, 1.2f)
+    , PARAM_INIT(mJumpYoshiMult, 1.0f)
+    , PARAM_INIT(mRotYoshiMult, 1.5f)
+    , PARAM_INIT(mHeadFront, 80.0f)
+    , PARAM_INIT(mHeadRadius, 50.0f)
+    , PARAM_INIT(mHoldOutAccCtrlF, 0.01f)
+    , PARAM_INIT(mHoldOutAccCtrlB, 0.023f)
+    , PARAM_INIT(mHoldOutSldCtrl, 0.3f)
+    , PARAM_INIT(mDecBrake, 1.0f)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TControllerParams::TControllerParams()
+    : TParams("/Mario/Controller.prm")
+    , PARAM_INIT(mAnalogLRToZeroVal, 0x1e)
+    , PARAM_INIT(mAnalogLRToMiddleVal, 0x5a)
+    , PARAM_INIT(mAnalogLRToMaxVal, 0x96)
+    , PARAM_INIT(mAnalogLRMiddleLevel, 0.1f)
+    , PARAM_INIT(mStartToWalkLevel, 15.0f)
+    , PARAM_INIT(mStickRotateTime, 0x18)
+    , PARAM_INIT(mLengthMultTimes, 10)
+    , PARAM_INIT(mLengthMult, 0.935f)
+    , PARAM_INIT(mSquatRotMidAnalog, 0.69999999f)
+    , PARAM_INIT(mSquatRotMidValue, 0.05f)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TGraffitoParams::TGraffitoParams()
+    : TParams("/Mario/Graffito.prm")
+    , PARAM_INIT(mSinkTime, 0xf0)
+    , PARAM_INIT(mSinkDmgTime, 0xf0)
+    , PARAM_INIT(mSinkHeight, 150.0f)
+    , PARAM_INIT(mSinkMoveMin, 0.3f)
+    , PARAM_INIT(mSinkMoveMax, 0.5f)
+    , PARAM_INIT(mSinkRecover, 0.05f)
+    , PARAM_INIT(mSinkJumpRateMin, 0.1f)
+    , PARAM_INIT(mSinkJumpRateMax, 0.3f)
+    , PARAM_INIT(mSinkPumpLimit, 0.25f)
+    , PARAM_INIT(mSinkDmgDepth, 0.25f)
+    , PARAM_INIT(mFireHeight, 1000.0f)
+    , PARAM_INIT(mDizzySlipCtMax, 1000)
+    , PARAM_INIT(mDizzyWalkCtMax, 1000)
+    , PARAM_INIT(mDizzyAngleY, 0x7fff)
+    , PARAM_INIT(mDizzyAngleRate, 400.0f)
+    , PARAM_INIT(mDizzyPowerRate, 120.0f)
+    , PARAM_INIT(mDizzyPower, 20.0f)
+    , PARAM_INIT(mFireInvincibleTime, 0x96)
+    , PARAM_INIT(mFootEraseTimes, 4)
+    , PARAM_INIT(mFootEraseSize, 400.0f)
+    , PARAM_INIT(mFootEraseFront, 200.0f)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TDirtyParams::TDirtyParams()
+    : TParams("/Mario/Dirty.prm")
+    , PARAM_INIT(mIncRunning, 0.1f)
+    , PARAM_INIT(mIncCatching, 0.3f)
+    , PARAM_INIT(mIncSlipping, 0.2f)
+    , PARAM_INIT(mDecSwimming, 0.5f)
+    , PARAM_INIT(mDecWaterHit, 0.2f)
+    , PARAM_INIT(mDecRotJump, 0.1f)
+    , PARAM_INIT(mBrakeStartValSlip, 0.99f)
+    , PARAM_INIT(mBrakeStartValRun, 0.98f)
+    , PARAM_INIT(mDirtyTimeSlip, 600)
+    , PARAM_INIT(mDirtyTimeRun, 600)
+    , PARAM_INIT(mPolSizeSlip, 200.0f)
+    , PARAM_INIT(mPolSizeRun, 80.0f)
+    , PARAM_INIT(mPolSizeFootPrint, 200.0f)
+    , PARAM_INIT(mPolSizeJump, 200.0f)
+    , PARAM_INIT(mSlopeAngle, 0.99f)
+    , PARAM_INIT(mDirtyMax, 200.0f)
+    , PARAM_INIT(mSlipAnmSpeed, 3.0f)
+    , PARAM_INIT(mSlipRunSp, 0.01f)
+    , PARAM_INIT(mSlipCatchSp, 0.01f)
+    , PARAM_INIT(mSlipRotate, 0x100)
+    , PARAM_INIT(mSlipCatchRotate, 0x100)
+    , PARAM_INIT(mBrakeSlipNoPollute, 0.98f)
+    , PARAM_INIT(mFogTimeYellow, 0xf0)
+    , PARAM_INIT(mFogTimeRed, 600)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TMotorParams::TMotorParams()
+    : TParams("/Mario/MarioMotor.prm")
+    , PARAM_INIT(mMotorReturn, 0x19)
+    , PARAM_INIT(mMotorTrample, 8)
+    , PARAM_INIT(mMotorHipDrop, 0xf)
+    , PARAM_INIT(mMotorWall, 6)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TParticleParams::TParticleParams()
+    : TParams("/Mario/MarioParticle.prm")
+    , PARAM_INIT(mMeltInWaterMax, 0.5f)
+    , PARAM_INIT(mWaveEmitSpeed, 5.0f)
+    , PARAM_INIT(mWaveAlphaDec, 5)
+    , PARAM_INIT(mBubbleDepth, 10.0f)
+    , PARAM_INIT(mBodyBubbleSpMin, 0.0f)
+    , PARAM_INIT(mBodyBubbleSpMax, 40.0f)
+    , PARAM_INIT(mBodyBubbleEmitMin, 0.0f)
+    , PARAM_INIT(mBodyBubbleEmitMax, 0.5f)
+    , PARAM_INIT(mBubbleToRipple, 0.3f)
+    , PARAM_INIT(mToroccoWind, 0.001f)
+    , PARAM_INIT(mToroccoSpark, 0.001f)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TEffectParams::TEffectParams()
+    : TParams("/Mario/MarioEffect.prm")
+    , PARAM_INIT(mDashInc, 0.033333335f)
+    , PARAM_INIT(mDashDec, 0.016666668f)
+    , PARAM_INIT(mDashMaxBlendInBlur, 0xb4)
+    , PARAM_INIT(mDashMaxBlendInIris, 0xb4)
+    , PARAM_INIT(mDashBlendScale, 0.2f)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TSlipParams::TSlipParams(const char* prm)
+    : TParams(prm)
+    , PARAM_INIT(mSlipFriction, 0.9f)
+    , PARAM_INIT(mSlopeAcceleUp, 0.0f)
+    , PARAM_INIT(mSlopeAcceleDown, 0.0f)
+    , PARAM_INIT(mSlideAcceleUp, 0.0f)
+    , PARAM_INIT(mSlideAcceleDown, 0.0f)
+    , PARAM_INIT(mSlideStopNormal, 15.0f)
+    , PARAM_INIT(mSlideStopCatch, 15.0f)
+    , PARAM_INIT(mJumpEnable, 1)
+    , PARAM_INIT(mMissJump, 1)
+    , PARAM_INIT(mSlideAngleYSp, 0x200)
+    , PARAM_INIT(mStickSlideMult, 0.05f)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TUpperParams::TUpperParams(const char* prm)
+    : TParams(prm)
+    , PARAM_INIT(mPumpWaitTime, 10)
+    , PARAM_INIT(mPumpAnmSpeed, 0.01f)
+    , PARAM_INIT(mHoverHeadAngle, 0xe000)
+    , PARAM_INIT(mFeelDeepHeadAngle, 0x2000)
+    , PARAM_INIT(mFrontWallHeadAngle, 0xe000)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TSurfingParams::TSurfingParams(const char* prm)
+    : TParams(prm)
+    , PARAM_INIT(mRotMin, 2048.0f)
+    , PARAM_INIT(mRotMax, 1024.0f)
+    , PARAM_INIT(mPowMin, 24.0f)
+    , PARAM_INIT(mPowMax, 64.0f)
+    , PARAM_INIT(mAccel, 58.0f)
+    , PARAM_INIT(mWaistRoll, 0.25f)
+    , PARAM_INIT(mWaistPitch, 170.0f)
+    , PARAM_INIT(mWaistRollMax, 0x400)
+    , PARAM_INIT(mWaistPitchMax, 0x1555)
+    , PARAM_INIT(mRoll, -0.45f)
+    , PARAM_INIT(mPitch, -170.0f)
+    , PARAM_INIT(mRollMax, 0x4000)
+    , PARAM_INIT(mPitchMax, 0x1555)
+    , PARAM_INIT(mAngleChangeRate, 0.01f)
+    , PARAM_INIT(mWaistAngleChangeRate, 0.01f)
+    , PARAM_INIT(mScaleMin, 0.5f)
+    , PARAM_INIT(mScaleMax, 1.0f)
+    , PARAM_INIT(mScaleMinSpeed, 24.0f)
+    , PARAM_INIT(mScaleMaxSpeed, 60.0f)
+    , PARAM_INIT(mJumpPow, 42.0f)
+    , PARAM_INIT(mJumpXZRatio, 0.25f)
+    , PARAM_INIT(mClashSpeed, 40.0f)
+    , PARAM_INIT(mClashAngle, 0x5555)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::THHoverParams::THHoverParams(const char* prm)
+    : TParams(prm)
+    , PARAM_INIT(mRotSp, 0x80)
+    , PARAM_INIT(mAccelRate, 0.029999999f)
+    , PARAM_INIT(mBrake, 0.94999999f)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TDivingParams::TDivingParams(const char* prm)
+    : TParams(prm)
+    , PARAM_INIT(mRotSp, 0x80)
+    , PARAM_INIT(mGravity, 0.5f)
+    , PARAM_INIT(mAccelControl, 0.02f)
+    , PARAM_INIT(mSeaBrake, 0.999f)
+    , PARAM_INIT(mSeaBrakeY, 0.98f)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TEParams::TEParams(const char* prm)
+    : TParams(prm)
+    , PARAM_INIT(mDamage, 1)
+    , PARAM_INIT(mDownType, 0)
+    , PARAM_INIT(mWaterEmit, 0)
+    , PARAM_INIT(mMotor, 0)
+    , PARAM_INIT(mMinSpeed, 0.0f)
+    , PARAM_INIT(mDirty, 0.0f)
+    , PARAM_INIT(mInvincibleTime, 0)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TAutoDemoParams::TAutoDemoParams()
+    : TParams("/Mario/AutoDemo.prm")
+    , PARAM_INIT(mWarpInBallsDispTime, 6)
+    , PARAM_INIT(mWarpInBallsTime, 0x46)
+    , PARAM_INIT(mWarpInCapturedTime, 0x78)
+    , PARAM_INIT(mWarpInTremble, 15.0f)
+    , PARAM_INIT(mWarpInVecBase, 0.3f)
+    , PARAM_INIT(mWarpTransTremble, 50.0f)
+    , PARAM_INIT(mReadRotSp, 0x400f)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TSoundParams::TSoundParams()
+    : TParams("/Mario/Sound.prm")
+    , PARAM_INIT(mStartFallVoiceSpeed, 60.0f)
+{
+	TParams::load(mPrmPath);
+}
+
+TMario::TOptionParams::TOptionParams(const char* prm)
+    : TParams(prm)
+    , PARAM_INIT(mZ, -1000.0f)
+    , PARAM_INIT(mXMin, 846.0f)
+    , PARAM_INIT(mXMax, 2000.0f)
+{
+	TParams::load(mPrmPath);
 }

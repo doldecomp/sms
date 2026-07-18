@@ -20,9 +20,9 @@ public:
 
 class TPoiHanaManager : public TSmallEnemyManager {
 public:
-	TPoiHanaManager(const char* name);
+	TPoiHanaManager(const char* name = "ポイハナマネージャー");
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual TSmallEnemy* createEnemyInstance();
 	virtual void initSetEnemies();
 };
@@ -47,7 +47,7 @@ public:
 	TPoiHana(const char* name = "ポイハナ");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
 	virtual void bind();

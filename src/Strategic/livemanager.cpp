@@ -13,8 +13,7 @@ TLiveManager::TLiveManager(const char* name)
     , unk34(nullptr)
 {
 	gpConductor->registerManager(this);
-	// TODO: inlines
-	gpLightManager->getUnk14(1)->unk20 = 1;
+	gpLightManager->getUnk14(1)->enable();
 }
 
 void TLiveManager::createSpcBinary()
@@ -84,19 +83,19 @@ void TLiveManager::setFlagOutOfCube()
 	}
 }
 
-void TLiveManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLiveManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		if (unk30 & 1)
 			TTimeRec::startTimer();
-		clipActors(param_2);
+		clipActors(graphics);
 		setFlagOutOfCube();
 		if (unk30 & 1)
 			TTimeRec::endTimer();
 	}
 
-	TObjManager::perform(param_1, param_2);
+	TObjManager::perform(cue, graphics);
 }
 
 const TLiveActor* TLiveManager::getActorByFlag(u32 flag) const

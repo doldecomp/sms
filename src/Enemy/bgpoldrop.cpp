@@ -53,9 +53,9 @@ void TBGPolDrop::move()
 
 			gpMarioParticleManager->emit(0x9E, &local_14, 0, nullptr);
 			gpMarioParticleManager->emit(0x9F, &local_14, 0, nullptr);
-			if (gpMSound->gateCheck(0x2871))
-				MSoundSESystem::MSoundSE::startSoundActor(0x2871, mPosition, 0,
-				                                          nullptr, 0, 4);
+			if (gpMSound->gateCheck(MSD_SE_BS_GESO_GERO_LAND))
+				MSoundSESystem::MSoundSE::startSoundActor(
+				    MSD_SE_BS_GESO_GERO_LAND, mPosition, 0, nullptr, 0, 4);
 		} else if (!unk50->checkCurBckFromIndex(11)
 		           || unk50->curAnmEndsNext()) {
 			unk50->setBckFromIndex(11);
@@ -84,15 +84,15 @@ void TBGPolDrop::launch(const JGeometry::TVec3<f32>& param_1,
 	unk58 = 1;
 }
 
-void TBGPolDrop::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TBGPolDrop::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!unk58)
 		return;
 
-	if (param_1 & 1)
+	if (cue & CUE_MOVE)
 		move();
 
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		MtxPtr m = unk50->getModel()->getBaseTRMtx();
 		if (unk58 == 1) {
 			Mtx local_60;
@@ -135,11 +135,11 @@ void TBGPolDrop::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	unk50->perform(param_1, param_2);
+	unk50->perform(cue, graphics);
 	if (unk58 == 2) {
-		if (param_1 & 0x2)
+		if (cue & CUE_CALC_ANIM)
 			unk54->calcAnm();
-		if (param_1 & 0x200)
+		if (cue & CUE_ENTRY)
 			gpPollution->stampModel(unk54->getModel());
 	}
 }

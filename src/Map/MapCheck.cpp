@@ -324,25 +324,175 @@ f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 flags,
 	}
 }
 
-bool bgIntersectLine(const TBGCheckData*, const JGeometry::TVec3<f32>&,
-                     const JGeometry::TVec3<f32>&, bool, JGeometry::TVec3<f32>*)
+static f32 angle_between(const JGeometry::TVec3<f32>& a,
+                         const JGeometry::TVec3<f32>& b)
 {
+	JGeometry::TVec3<f32> cross;
+	cross.cross(a, b);
+	f32 crossMag = cross.length();
+	f32 dot      = a.x * b.x + a.y * b.y + a.z * b.z;
+	f32 angle    = atan2f(crossMag, dot);
+	return fabsf(angle);
 }
 
-void intersectLineList(const TBGCheckList*, const JGeometry::TVec3<f32>&,
-                       const JGeometry::TVec3<f32>&, bool,
-                       JGeometry::TVec3<f32>*)
+static bool bgIntersectLine(const TBGCheckData* data,
+                            const JGeometry::TVec3<f32>& start,
+                            const JGeometry::TVec3<f32>& end, bool front_only,
+                            JGeometry::TVec3<f32>* hit_pos)
 {
+	if (!data)
+		return false;
+
+	if (data->isMarioThrough())
+		return false;
+
+	JGeometry::TVec3<f32> normal = data->getNormal();
+	JGeometry::TVec3<f32> dir    = end;
+	dir -= start;
+
+	f32 nDotDir = normal.dot(dir);
+	if (front_only && nDotDir >= 0.0f)
+		return false;
+
+	if (fabsf(nDotDir) < 0.00001f)
+		return false;
+
+	f32 planeDist = -(data->getPlaneDistance() + normal.dot(start)) / nDotDir;
+
+	if (planeDist < 0.0f)
+		return false;
+
+	if (1.0f < planeDist)
+		return false;
+
+	dir *= planeDist;
+
+	JGeometry::TVec3<f32> hit = start + dir;
+
+	JGeometry::TVec3<f32> a;
+	a.sub(data->getPoint1(), hit);
+	JGeometry::TVec3<f32> b;
+	b.sub(data->getPoint2(), hit);
+	JGeometry::TVec3<f32> c;
+	c.sub(data->getPoint3(), hit);
+
+	f32 angleSum = 0.0f;
+
+	angleSum += fabsf(angle_between(a, b));
+	angleSum += fabsf(angle_between(b, c));
+	angleSum += fabsf(angle_between(c, a));
+
+	if (fabsf(6.2831855f - angleSum) > 0.001f)
+		return false;
+
+	if (hit_pos)
+		*hit_pos = hit;
+
+	return true;
 }
 
-void LineInLineXZ(const JGeometry::TVec2<f32>&, const JGeometry::TVec2<f32>&,
-                  const JGeometry::TVec2<f32>&, const JGeometry::TVec2<f32>&)
+inline const TBGCheckData* intersectLineList(const TBGCheckList* head,
+                                             const JGeometry::TVec3<f32>& start,
+                                             const JGeometry::TVec3<f32>& end,
+                                             bool front_only,
+                                             JGeometry::TVec3<f32>* hit_pos)
 {
+	while (head) {
+		TBGCheckData* data = head->unk8;
+		head               = head->mNext;
+
+		if (bgIntersectLine(data, start, end, front_only, hit_pos))
+			return data;
+	}
+
+	return nullptr;
 }
 
-const TBGCheckData*
-TMapCollisionData::intersectLine(const JGeometry::TVec3<f32>&,
-                                 const JGeometry::TVec3<f32>&, bool,
-                                 JGeometry::TVec3<f32>*) const
+static bool LineInLineXZ(const JGeometry::TVec2<f32>& a0,
+                         const JGeometry::TVec2<f32>& a1,
+                         const JGeometry::TVec2<f32>& b0,
+                         const JGeometry::TVec2<f32>& b1)
 {
+	if ((b0 - a0).cross(a1 - a0) * (b1 - a0).cross(a1 - a0) <= 0.0f
+	    && (a0 - b0).cross(b1 - b0) * (a1 - b0).cross(b1 - b0) <= 0.0f)
+		return true;
+
+	return false;
+}
+
+const TBGCheckData* TMapCollisionData::intersectLine(
+    const JGeometry::TVec3<f32>& start, const JGeometry::TVec3<f32>& end,
+    bool front_only, JGeometry::TVec3<f32>* hit_pos) const
+{
+	JGeometry::TVec2<int> start2d(start.x, start.z);
+	JGeometry::TVec2<int> end2d(end.x, end.z);
+
+	int minXi = start2d.x;
+	int maxXi = end2d.x;
+	if (start2d.x > end2d.x) {
+		minXi = end2d.x;
+		maxXi = start2d.x;
+	}
+
+	int minZi = start2d.y;
+	int maxZi = end2d.y;
+	if (start2d.y > end2d.y) {
+		minZi = end2d.y;
+		maxZi = start2d.y;
+	}
+
+	int minGridZ = (int)((minZi + mGridExtentY) * (1.0f / 1024));
+	int minGridX = (int)((minXi + mGridExtentX) * (1.0f / 1024));
+	int maxGridX = (int)((maxXi + mGridExtentX) * (1.0f / 1024));
+	int maxGridZ = (int)((maxZi + mGridExtentY) * (1.0f / 1024));
+
+	for (int gridZ = minGridZ; gridZ <= maxGridZ; ++gridZ) {
+		for (int gridX = minGridX; gridX <= maxGridX; ++gridX) {
+			if (gridX == minGridX && gridZ == minGridZ) {
+			} else {
+				f32 x0i = gridX * 1024.0f;
+				f32 z0i = gridZ * 1024.0f;
+				f32 x1i = (gridX + 1) * 1024.0f;
+				f32 z1i = (gridZ + 1) * 1024.0f;
+
+				JGeometry::TVec2<f32> p00((s32)(x0i - mGridExtentX),
+				                          (s32)(z0i - mGridExtentY));
+				JGeometry::TVec2<f32> p10((s32)(x1i - mGridExtentX),
+				                          (s32)(z0i - mGridExtentY));
+				JGeometry::TVec2<f32> p01((s32)(x0i - mGridExtentX),
+				                          (s32)(z1i - mGridExtentY));
+				JGeometry::TVec2<f32> p11((s32)(x1i - mGridExtentX),
+				                          (s32)(z1i - mGridExtentY));
+
+				JGeometry::TVec2<f32> lineA(start.x, start.z);
+				JGeometry::TVec2<f32> lineB(end.x, end.z);
+
+				if (!LineInLineXZ(lineA, lineB, p10, p00)
+				    && !LineInLineXZ(lineA, lineB, p01, p00)
+				    && !LineInLineXZ(lineA, lineB, p11, p01)
+				    && !LineInLineXZ(lineA, lineB, p10, p11))
+					continue;
+			}
+
+			const TBGCheckData* hit = intersectLineList(
+			    getGridRoot14(gridX, gridZ).unk0[0].getNext(), start, end,
+			    front_only, hit_pos);
+			if (hit)
+				return hit;
+
+			hit = intersectLineList(
+			    getGridRoot14(gridX, gridZ).unk0[2].getNext(), start, end,
+			    front_only, hit_pos);
+			if (hit)
+				return hit;
+
+			hit = intersectLineList(
+			    getGridRoot14(gridX, gridZ).unk0[1].getNext(), start, end,
+			    front_only, hit_pos);
+			if (hit)
+				return hit;
+		}
+	}
+
+	return nullptr;
 }

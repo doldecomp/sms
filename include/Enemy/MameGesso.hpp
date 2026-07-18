@@ -30,11 +30,11 @@ class TMameGesso;
 
 class TMameGessoManager : public TSmallEnemyManager {
 public:
-	TMameGessoManager(const char* name);
+	TMameGessoManager(const char* name = "まめゲッソーマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual TSmallEnemy* createEnemyInstance();
 	virtual void initSetEnemies();
 

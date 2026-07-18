@@ -49,14 +49,15 @@ template <class T> class JSULink;
 
 template <class T> class JSUList : public JSUPtrList {
 public:
-	JSUList(bool thing)
-	    : JSUPtrList(thing)
-	{
-	}
 	JSUList()
 	    : JSUPtrList()
 	{
 	}
+	JSUList(bool thing)
+	    : JSUPtrList(thing)
+	{
+	}
+	~JSUList() { }
 
 	bool append(JSULink<T>* link)
 	{

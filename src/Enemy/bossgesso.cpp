@@ -9,7 +9,7 @@
 #include <Map/Map.hpp>
 #include <MoveBG/ItemManager.hpp>
 #include <GC2D/GCConsole2.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <Camera/CameraShake.hpp>
@@ -140,7 +140,7 @@ static inline JGeometry::TVec3<f32> fromPolar(f32 theta, f32 radius)
 	                             radius * JMASCos(theta * (65536.0f / 360.0f)));
 }
 
-bool TBGBeakHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
+BOOL TBGBeakHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 {
 	TBossGessoParams* params = mOwner->getSaveParam();
 
@@ -190,7 +190,7 @@ BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
 			return true;
 		}
 
-		if (message == HIT_MESSAGE_UNK7 || message == HIT_MESSAGE_UNK8) {
+		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_UNK8) {
 			// TODO: inlined from TBossGesso?
 			JGeometry::TVec3<f32> delta = mPosition;
 			TBossGesso* gesso           = mOwner;
@@ -208,9 +208,9 @@ BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
 	return false;
 }
 
-void TBGBeakHit::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TBGBeakHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		mOwner->getJointTransByIndex(26, &mPosition);
 		mPosition.y -= mDamageHeight * 0.5f;
 
@@ -305,10 +305,10 @@ BOOL TBGEyeHit::receiveMessage(THitActor* sender, u32 message)
 	return mOwner->receiveMessage(sender, message);
 }
 
-void TBGEyeHit::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TBGEyeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	THitActor::perform(param_1, param_2);
-	if (param_1 & 2)
+	THitActor::perform(cue, graphics);
+	if (cue & CUE_CALC_ANIM)
 		mOwner->getJointTransByIndex(mJointIndex, &mPosition);
 }
 
@@ -335,11 +335,11 @@ BOOL TBGBodyHit::receiveMessage(THitActor* sender, u32 message)
 	return mOwner->receiveMessage(sender, message);
 }
 
-void TBGBodyHit::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TBGBodyHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 2)
+	if (cue & CUE_CALC_ANIM)
 		mOwner->getJointTransByIndex(mJointIndex, &mPosition);
-	THitActor::perform(param_1, param_2);
+	THitActor::perform(cue, graphics);
 }
 
 TBossGessoMtxCalc::TBossGessoMtxCalc(TBossGesso* owner)
@@ -464,9 +464,10 @@ void TBGBinder::bind(TLiveActor* param_1)
 					enemy->generate(gesso->mPosition, local_5c);
 				}
 
-				if (gpMSound->gateCheck(0x286A))
+				if (gpMSound->gateCheck(MSD_SE_BS_GESO_DOWN_DIVE))
 					MSoundSESystem::MSoundSE::startSoundActor(
-					    0x286A, &gesso->mPosition, 0, nullptr, 0, 4);
+					    MSD_SE_BS_GESO_DOWN_DIVE, &gesso->mPosition, 0, nullptr,
+					    0, 4);
 
 				gesso->unk1A4 = 1.0f;
 				SMSRumbleMgr->start(8, &gesso->unk1A4);
@@ -534,7 +535,7 @@ void TBGCork::crush()
 	unkC = 1;
 }
 
-void TBGCork::perform(u32, JDrama::TGraphics*) { }
+void TBGCork::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 TBossGesso::TBossGesso(const char* name)
     : TSpineEnemy(name)
@@ -906,7 +907,7 @@ void TBossGesso::doAttackSingle()
 	if (gpMarDirector->unk58 < 0x1E0)
 		return;
 
-	if (gpMarDirector->isTalkModeNow() || gpMarDirector->checkUnk124Thing2())
+	if (gpMarDirector->isTalkOrDemoModeNow())
 		return;
 
 	if (unk1A8 > 0) {
@@ -1246,7 +1247,7 @@ void TBossGesso::calcRootMatrix()
 
 void TBossGesso::performInContainer(u32, JDrama::TGraphics*) { }
 
-void TBossGesso::perform(u32, JDrama::TGraphics*) { }
+void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 TBossGessoManager::TBossGessoManager(const char* name)
     : TEnemyManager(name)
@@ -1368,9 +1369,9 @@ DEFINE_NERVE(TNerveBGEyeDamage, TLiveActor)
 
 	if (self->unk1AE == 0) {
 		self->unk1AE = 0x78;
-		if (gpMSound->gateCheck(0x2912))
-			MSoundSESystem::MSoundSE::startSoundActor(0x2912, &self->mPosition,
-			                                          0, nullptr, 0, 4);
+		if (gpMSound->gateCheck(MSD_SE_BS_GESO_WATER_HIT))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_BS_GESO_WATER_HIT, &self->mPosition, 0, nullptr, 0, 4);
 	}
 
 	if (self->unk190.color.a != 0) {
@@ -1403,7 +1404,7 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 		self->getMActor()->resetDL();
 
 		if (gpMarDirector->mMap == 3 || gpMarDirector->mMap == 59) {
-			MSBgm::stopBGM(0x8001000D, 10);
+			MSBgm::stopBGM(MSD_BGM_MAP_SELECT, 10);
 			MSMainProc::setBossNotDamagedFlag(false);
 		}
 	}
@@ -1462,7 +1463,7 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 
 		spine->pushAfterCurrent(&TNerveBGPollute::theNerve());
 		if (gpMarDirector->mMap == 3 || gpMarDirector->mMap == 59)
-			MSBgm::startBGM(0x8001002A);
+			MSBgm::startBGM(MSD_BGM_CHUBOSS_MANTA);
 
 		return true;
 	}
@@ -1602,16 +1603,17 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		if (nameKuriMgr)
 			nameKuriMgr->killChildren();
 
-		if (gpMSound->gateCheck(0x2953))
-			MSoundSESystem::MSoundSE::startSoundActor(0x2953, &self->mPosition,
-			                                          0, nullptr, 0, 4);
+		if (gpMSound->gateCheck(MSD_SE_BS_GESO_MHIT_NOBOICE))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_BS_GESO_MHIT_NOBOICE, &self->mPosition, 0, nullptr, 0,
+			    4);
 	}
 
 	if (gpMarDirector->mMap == 9 && spine->getTime() >= 740
 	    && spine->getTime() <= 750) {
-		if (gpMSound->gateCheck(0x3008))
-			MSoundSESystem::MSoundSE::startSoundActor(0x3008, &self->mPosition,
-			                                          0, nullptr, 0, 4);
+		if (gpMSound->gateCheck(MSD_SE_OBJ_QUAKE))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_OBJ_QUAKE, &self->mPosition, 0, nullptr, 0, 4);
 
 		if (spine->getTime() == 745) {
 			self->unk1A4 = 1.0f;

@@ -16,28 +16,51 @@ class TPollutionLayerInfo;
 class TPollutionManager : public TJointModelManager {
 public:
 	struct TPollutionInfo {
-		/* 0x0 */ u16 unk0;
-		/* 0x4 */ TPollutionLayerInfo* unk4;
+		/* 0x0 */ u16 mLayerCount;
+		/* 0x4 */ TPollutionLayerInfo* mLayerInfos;
 	};
 
+	TPollutionManager(const char* name = "落書き管理");
+
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual TJointModel* newJointModel(int) const;
 
-	void stampModel(J3DModel*);
-	void stamp(u16, f32 x, f32 y, f32 z, f32 range);
-	void clean(f32, f32, f32, f32);
-	void stampGround(u16, f32, f32, f32, f32);
-	u16 getPollutionType(f32, f32, f32) const;
-	u32 getPollutionDegree() const;
-	void isProhibit(f32, f32, f32) const;
-	bool isPolluted(f32, f32, f32) const;
-	void subtractFromYMap(f32, f32, f32) const;
-	bool cleanedAll() const;
-	void draw();
-	void setDataAddress(TPollutionManager::TPollutionInfo*);
+	void setDataAddress(TPollutionManager::TPollutionInfo* info);
 	void initPollutionInfo();
-	TPollutionManager(const char*);
+
+	/// Stamps the top-down ortho projection of the model onto
+	/// ground pollution layers
+	void stampModel(J3DModel* model);
+
+	/// Stamps the the specified stamp type at the specified position
+	/// with the specified size
+	void stamp(u16 stamp_type, f32 x, f32 y, f32 z, f32 size);
+
+	/// Cleans the specified area of pollution
+	void clean(f32 x, f32 y, f32 z, f32 size);
+
+	/// Stamps the specified stamp type at the specified position
+	/// affecting only ground polution layers
+	void stampGround(u16 stamp_type, f32 x, f32 y, f32 z, f32 size);
+
+	/// Queries the pollution type of the layer that covers the specified point
+	int getPollutionType(f32 x, f32 y, f32 z) const;
+
+	/// Queries the total pollution degree of the entire map
+	u32 getPollutionDegree() const;
+
+	void isProhibit(f32 x, f32 y, f32 z) const;
+
+	/// Queries whether the specified position is polluted by any layer
+	bool isPolluted(f32 x, f32 y, f32 z) const;
+
+	void subtractFromYMap(f32 x, f32 y, f32 z) const;
+
+	/// Queries whether the entire map is cleared
+	bool cleanedAll() const;
+
+	void draw();
 
 	// fabricated
 	TPollutionCounterLayer& getCounterLayer() { return unk70; }
@@ -50,18 +73,23 @@ public:
 	{
 		return (TPollutionLayer*)getJointModel(i);
 	}
-	const TPollutionLayerInfo* getLayerInfo(int i) const { return &unk6C[i]; }
-	TPollutionLayerInfo* getLayerInfo(int i) { return &unk6C[i]; }
+	const TPollutionLayerInfo* getLayerInfo(int i) const
+	{
+		return &mLayerInfos[i];
+	}
+	TPollutionLayerInfo* getLayerInfo(int i) { return &mLayerInfos[i]; }
 	void offLayer(int i) { unk70.offLayer(i); }
+	void pollute(f32 x, f32 y, f32 z, f32 size) { stamp(1, x, y, z, size); }
 
-	static int mEdgeAlpha;
+	static u8 mEdgeAlpha;
+	static int mFlushTime;
 
 public:
-	/* 0x6C */ TPollutionLayerInfo* unk6C;
+	/* 0x6C */ TPollutionLayerInfo* mLayerInfos;
 	/* 0x70 */ TPollutionCounterLayer unk70;
 	/* 0x1EC */ TPollutionCounterObj unk1EC;
-	/* 0x204 */ ResTIMG* unk204;
-	/* 0x208 */ ResTIMG* unk208;
+	/* 0x204 */ ResTIMG* mDefaultPolluteStampTex;
+	/* 0x208 */ ResTIMG* mDefaultCleanStampTex;
 	/* 0x20C */ u16 unk20C;
 };
 

@@ -237,7 +237,8 @@ void TApplication::initialize()
 
 	SMSRumbleMgr = new RumbleMgr(true, true, true, true);
 	SMSRumbleMgr->init();
-	mFader = new TSmplFader(SMSGetVSyncTimesPerSec(), "ルートフェーダー");
+	mFader = new TSmplFader(JUtility::TColor(0, 0, 0, 0),
+	                        SMSGetVSyncTimesPerSec(), "ルートフェーダー");
 	mFader->setDisplaySize(SMSGetGCLogoRenderWidth(),
 	                       SMSGetGCLogoRenderHeight());
 	TFlagManager::start(JKRGetCurrentHeap());
@@ -261,7 +262,7 @@ void* TApplication::setupThreadFuncLogo()
 {
 	while (!gpMSound->checkWaveOnAram(MS_WAVE_UNK0))
 		OSYieldThread();
-	while (!gpMSound->checkWaveOnAram(MS_WAVE_UNK528))
+	while (!gpMSound->checkWaveOnAram(MS_WAVE_UNK210))
 		OSYieldThread();
 
 	arcBufMario
@@ -308,7 +309,7 @@ void TApplication::initialize_bootAfter()
 
 	JAIGlobalParameter::setParamSoundOutputMode(!OSGetSoundMode() ? 0 : 1);
 	gpMSound->loadWave(MS_WAVE_UNK0);
-	gpMSound->loadWave(MS_WAVE_UNK528);
+	gpMSound->loadWave(MS_WAVE_UNK210);
 	prevHeap->becomeCurrentHeap();
 
 	CARDInit();
@@ -640,6 +641,7 @@ int TApplication::gameLoop()
 			}
 
 			JDrama::TGraphics graphics;
+			graphics.unkFE = 0;
 
 			JDrama::TVideo* video = mDisplay->unk60;
 			GXSetViewport(0.0f, 0.0f, video->mNextRenderMode.fbWidth,
@@ -743,7 +745,7 @@ int TApplication::drawDVDErr()
 		C_MTXOrtho(afStack_260, 16.0f, 464.0f, 0.0f, 600.0f, -1.0f, 1.0f);
 		GXSetProjection(afStack_260, GX_ORTHOGRAPHIC);
 		MTXIdentity(afStack_260);
-		GXLoadPosMtxImm(afStack_260, 0);
+		GXLoadPosMtxImm(afStack_260, GX_PNMTX0);
 		GXSetCullMode(GX_CULL_BACK);
 		GXSetNumTexGens(1);
 		GXSetNumTevStages(1);

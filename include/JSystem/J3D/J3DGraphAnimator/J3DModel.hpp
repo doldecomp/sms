@@ -4,6 +4,7 @@
 #include <types.h>
 #include <JSystem/J3D/J3DGraphBase/J3DVertex.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DPacket.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAttach.hpp>
 #include <JSystem/ResTIMG.hpp>
 #include <dolphin/mtx.h>
@@ -102,7 +103,7 @@ public:
 	u32 getVtxNum() const { return mVertexData.getVtxNum(); }
 	u32 getNrmNum() const { return mVertexData.getNrmNum(); }
 
-	bool checkBBoardFlag() const { return unk1A == 1; }
+	bool checkBBoardFlag() const { return mbHasBillboard == 1; }
 
 	u16 getDrawFullWgtMtxNum() const { return mDrawMtxData.mDrawFullWgtMtxNum; }
 
@@ -115,8 +116,22 @@ public:
 
 	void* getVtxPosArray() const { return mVertexData.getVtxPosArray(); }
 
+	J3DJoint* getRootNode() { return mRootNode; }
+
 	// This is the J3DMtxCalcAnm type this model needs supposedly
 	u32 getUnkC() const { return unkC & 0xf; }
+
+	void onFlag1OnAllShapes()
+	{
+		for (u16 j = 0; j < mShapeNum; ++j)
+			mShapeNodePointer[j]->onFlag(1);
+	}
+
+	void offFlag1OnAllShapes()
+	{
+		for (u16 j = 0; j < mShapeNum; ++j)
+			mShapeNodePointer[j]->offFlag(1);
+	}
 
 public:
 	/* 0x04 */ const void* unk4;
@@ -125,7 +140,7 @@ public:
 	/* 0x10 */ J3DJoint* mRootNode;
 	/* 0x14 */ J3DMtxCalc* unk14;
 	/* 0x18 */ u16 unk18;
-	/* 0x1A */ u16 unk1A;
+	/* 0x1A */ u16 mbHasBillboard;
 	/* 0x1C */ u16 mJointNum;
 
 	/* 0x20 */ J3DJoint** mJointNodePointer;
@@ -162,8 +177,23 @@ public:
 
 struct J3DDeformData;
 struct J3DSkinDeform;
-struct J3DVtxColorCalc;
 struct J3DVtxShader;
+
+// Stolen from TP, unused in sms
+struct J3DVtxColorCalc {
+	virtual void calc(J3DModel*);
+};
+
+// fake and unknowable
+struct J3DUnkCalc1 {
+	virtual void calc(J3DModel* model);
+};
+
+// fake and unknowable
+struct J3DUnkCalc2 {
+	virtual void unk();
+	virtual void calc(J3DModelData* mpModelData);
+};
 
 // size should be 0xa0
 class J3DModel {
@@ -211,9 +241,9 @@ public:
 	bool checkFlag(u32 flag) const { return (unk8 & flag) ? 1 : 0; }
 
 	Mtx* getDrawMtxPtr() { return mDrawMtxBuf[1][mCurrentViewNo]; }
-	Mtx& getDrawMtx(int idx) { return getDrawMtxPtr()[idx]; }
+	Mtx& getDrawMtx(int idx) { return mDrawMtxBuf[1][mCurrentViewNo][idx]; }
 	Mtx33* getNrmMtxPtr() { return mNrmMtxBuf[1][mCurrentViewNo]; }
-	Mtx33& getNrmMtx(int idx) { return getNrmMtxPtr()[idx]; }
+	Mtx33& getNrmMtx(int idx) { return mNrmMtxBuf[1][mCurrentViewNo][idx]; }
 	Mtx33* getBumpMtxPtr(int idx)
 	{
 		return mBumpMtxArr[1][idx][mCurrentViewNo];
@@ -270,10 +300,10 @@ public:
 	/* 0x84 */ J3DShapePacket* mShapePackets;
 	/* 0x88 */ J3DDeformData* mDeformData;
 	/* 0x8C */ J3DSkinDeform* mSkinDeform;
-	/* 0x90 */ void* unk90;
-	/* 0x94 */ void* unk94;
+	/* 0x90 */ J3DVtxColorCalc* unk90;
+	/* 0x94 */ J3DUnkCalc1* unk94;
 	/* 0x98 */ J3DVertexBuffer* mVertexBuffer;
-	/* 0x9C */ void* unk9C;
+	/* 0x9C */ J3DUnkCalc2* unk9C;
 };
 
 #endif

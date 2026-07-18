@@ -16,6 +16,12 @@ template <class T> class TRotation3 : public T {
 public:
 	TRotation3() { }
 
+	TRotation3(const JGeometry::TVec3<f32>& axis, f32 angle)
+	{
+		this->identity();
+		setRotate(axis, angle);
+	}
+
 	void identity33()
 	{
 		this->ref(0, 0) = 1.0f;
@@ -37,30 +43,23 @@ public:
 		f27f28f29.normalize(param_1);
 		f32 f30 = sin(param_2);
 		f32 f1  = cos(param_2);
+
 		f32 f11 = 1.0f - f1;
 
-		f32 f2    = f27f28f29.x * f27f28f29.x;
-		f32 f3    = f27f28f29.y * f27f28f29.y;
-		f32 f0    = f27f28f29.z * f27f28f29.z;
-		f32 f6    = f30 * f27f28f29.x;
-		f32 f9    = f30 * f27f28f29.y;
-		f32 f7    = f30 * f27f28f29.z;
-		f32 fVar6 = f27f28f29.y * (f11 * f27f28f29.x);
-		f32 fVar5 = f27f28f29.z * (f11 * f27f28f29.y);
-		f32 fVar4 = f27f28f29.z * (f11 * f27f28f29.x);
+		TVec3<f32> f2f3f0;
+		f2f3f0.mul(f27f28f29, f27f28f29);
 
-		// TODO: regswaps + stack size
-		this->ref(0, 0) = f11 * f2 + f1;
-		this->ref(0, 1) = fVar6 - f7;
-		this->ref(0, 2) = fVar4 + f9;
+		this->ref(0, 0) = f11 * f2f3f0.x + f1;
+		this->ref(0, 1) = f11 * f27f28f29.x * f27f28f29.y - f30 * f27f28f29.z;
+		this->ref(0, 2) = f11 * f27f28f29.x * f27f28f29.z + f30 * f27f28f29.y;
 
-		this->ref(1, 0) = fVar6 + f7;
-		this->ref(1, 1) = f11 * f3 + f1;
-		this->ref(1, 2) = fVar5 - f6;
+		this->ref(1, 0) = f11 * f27f28f29.x * f27f28f29.y + f30 * f27f28f29.z;
+		this->ref(1, 1) = f11 * f2f3f0.y + f1;
+		this->ref(1, 2) = f11 * f27f28f29.y * f27f28f29.z - f30 * f27f28f29.x;
 
-		this->ref(2, 0) = fVar4 - f9;
-		this->ref(2, 1) = fVar5 + f6;
-		this->ref(2, 2) = f11 * f0 + f1;
+		this->ref(2, 0) = f11 * f27f28f29.x * f27f28f29.z - f30 * f27f28f29.y;
+		this->ref(2, 1) = f11 * f27f28f29.y * f27f28f29.z + f30 * f27f28f29.x;
+		this->ref(2, 2) = f11 * f2f3f0.z + f1;
 	}
 
 	void setEular(s16 yaw, s16 pitch, s16 roll)

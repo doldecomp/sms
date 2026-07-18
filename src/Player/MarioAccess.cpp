@@ -1,110 +1,133 @@
 #include <Player/MarioAccess.hpp>
 
 #include <Strategic/LiveActor.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <JSystem/JGeometry.hpp>
 
-size_t gpMarioAddress;
+void* gpMarioAddress;
 JGeometry::TVec3<f32>* gpMarioPos;
 s16 *gpMarioAngleX, *gpMarioAngleY, *gpMarioAngleZ;
 f32 *gpMarioSpeedX, *gpMarioSpeedY, *gpMarioSpeedZ;
-u16* gpMarioLightID;
+s16* gpMarioLightID;
 u32* gpMarioFlag;
 f32* gpMarioThrowPower;
 const TBGCheckData** gpMarioGroundPlane;
 
-bool SMS_IsMarioRoofing()
+void SMS_SetMarioAccessParams()
 {
-	bool ret;
+	s16* angle;
+	f32* speed;
 
-	u32 val = gpMarioOriginal->mAction & 0x1FF;
+	gpMarioAddress = gpMarioOriginal;
+	gpMarioPos     = &gpMarioOriginal->mPosition;
 
-	if (val >= 0x147 and val <= 0x14A) {
-		ret = true;
+	angle         = &gpMarioOriginal->mFaceAngle.x;
+	gpMarioAngleX = angle;
+	gpMarioAngleY = angle + 1;
+	gpMarioAngleZ = angle + 2;
+
+	speed         = &gpMarioOriginal->mVel.x;
+	gpMarioSpeedX = speed;
+	gpMarioSpeedY = speed + 1;
+	gpMarioSpeedZ = speed + 2;
+
+	gpMarioLightID = &gpMarioOriginal->mLightID;
+	gpMarioFlag    = &gpMarioOriginal->mFlag;
+
+	gpMarioThrowPower  = &gpMarioOriginal->mDeParams.mThrowPower.value;
+	gpMarioGroundPlane = &gpMarioOriginal->mGroundPlane;
+}
+
+TYoshi* SMS_GetYoshi() { return gpMarioOriginal->mYoshi; }
+
+bool SMS_AskJumpIntoWaterEffectExist()
+{
+	return gpMarioOriginal->askJumpIntoWaterEffectExist();
+}
+
+THitActor* SMS_GetMarioHitActor() { return (THitActor*)gpMarioAddress; }
+
+TLiveActor* SMS_GetMarioLiveActor() { return (TLiveActor*)gpMarioAddress; }
+
+bool SMS_IsMarioStatusTypeJumping()
+{
+	return gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING);
+}
+
+bool SMS_IsMarioStatusTypeSwimming()
+{
+	return gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_SWIMMING);
+}
+
+bool SMS_IsMarioStatusHipDrop()
+{
+	if (gpMarioOriginal->mStatus == MARIO_STATUS_HIP_DROP) {
+		return 1;
 	} else {
-		ret = false;
+		return 0;
 	}
-
-	return ret;
 }
 
-bool SMS_IsMarioFencing()
+bool SMS_IsMarioStatusThrownDown()
 {
-	bool ret;
-
-	u32 val = gpMarioOriginal->mAction & 0x1FF;
-
-	if (val >= 0x168 and val <= 0x16C) {
-		ret = true;
+	if (gpMarioOriginal->mStatus == MARIO_STATUS_THROWN_DOWN) {
+		return 1;
 	} else {
-		ret = false;
+		return 0;
 	}
-
-	return ret;
 }
 
-u32 SMS_GetMarioStatus(THitActor* actor) { return ((TMario*)actor)->mAction; }
-
-const TBGCheckData* SMS_GetMarioRfPlane()
+bool SMS_IsMarioStatusElecDamage()
 {
-	return gpMarioOriginal->mRoofPlane;
-}
-
-const TBGCheckData* SMS_GetMarioWlPlane()
-{
-	return gpMarioOriginal->mWallPlane;
-}
-
-const TBGCheckData* SMS_GetMarioGrPlane()
-{
-	return gpMarioOriginal->mGroundPlane;
-}
-
-u32 SMS_GetMarioStatus() { return gpMarioOriginal->mAction; }
-
-void SMS_WindMoveMario(const JGeometry::TVec3<float>& vec)
-{
-	gpMarioOriginal->windMove(vec);
-}
-
-void SMS_FlowMoveMario(const JGeometry::TVec3<float>& vec)
-{
-	gpMarioOriginal->flowMove(vec);
-}
-
-void SMS_MarioWarpRequest(const JGeometry::TVec3<float>& vec, float f)
-{
-	gpMarioOriginal->warpRequest(vec, f);
-}
-
-void SMS_MarioMoveRequest(const JGeometry::TVec3<float>& vec)
-{
-	gpMarioOriginal->moveRequest(vec);
-}
-
-bool SMS_IsMarioDashing()
-{
-	bool ret;
-
-	if ((gpMarioOriginal->unk118 & 0x4000) != 0) {
-		ret = true;
+	if (gpMarioOriginal->mStatus == MARIO_STATUS_ELECTRIC_DAMAGE) {
+		return 1;
 	} else {
-		ret = false;
+		return 0;
 	}
-
-	return !!ret;
 }
 
-bool SMS_IsMarioOnYoshi() { return gpMarioOriginal->onYoshi(); }
-
-bool SMS_IsMarioOpeningDoor()
+bool SMS_IsMarioHeadSlideAttack()
 {
-	if (gpMarioOriginal->mAction == 0x1320
-	    || gpMarioOriginal->mAction == 0x1321) {
+	if (gpMarioOriginal->mStatus == MARIO_STATUS_CATCH
+	    || gpMarioOriginal->mStatus == MARIO_STATUS_JUMP_CATCH) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+s16 SMS_GetMarioHP() { return gpMarioOriginal->mHealth; }
+
+f32 SMS_GetMarioDamageRadius() { return gpMarioOriginal->mDamageRadius; }
+
+f32 SMS_GetMarioGrLevel() { return gpMarioOriginal->mFloorPosition.y; }
+
+f32 SMS_GetMarioGravity()
+{
+	return gpMarioOriginal->mJumpParams.mGravity.value;
+}
+
+TWaterGun* SMS_GetMarioWaterGun() { return gpMarioOriginal->mWaterGun; }
+
+bool SMS_SendMessageToMario(THitActor* m, u32 mesg)
+{
+	if (gpMarioOriginal->receiveMessage(m, mesg))
 		return true;
-	} else {
+
+	return false;
+}
+
+void SMS_ThrowMario(const JGeometry::TVec3<float>& vec, float f)
+{
+	gpMarioOriginal->throwMario(vec, f);
+}
+
+bool SMS_IsMarioTouchGround4cm()
+{
+	if (gpMarioOriginal->isTouchGround4cm())
+		return true;
+	else
 		return false;
-	}
 }
 
 bool SMS_IsMarioOnWire()
@@ -119,142 +142,62 @@ bool SMS_IsMarioOnWire()
 	return !!ret;
 }
 
-bool SMS_IsMarioTouchGround4cm()
+bool SMS_IsMarioOpeningDoor()
 {
-	bool ret;
-
-	if (gpMarioOriginal->mPosition.y
-	    <= 4.0f + gpMarioOriginal->mFloorPosition.y) {
-		ret = 1;
-	} else {
-		ret = 0;
-	}
-
-	if (ret)
-		return 1;
-	else
-		return 0;
-}
-
-void SMS_ThrowMario(const JGeometry::TVec3<float>& vec, float f)
-{
-	gpMarioOriginal->throwMario(vec, f);
-}
-
-bool SMS_SendMessageToMario(THitActor* m, u32 mesg)
-{
-	if (gpMarioOriginal->receiveMessage(m, mesg))
+	if (gpMarioOriginal->mStatus == MARIO_STATUS_DOOR_OPEN_R
+	    || gpMarioOriginal->mStatus == MARIO_STATUS_DOOR_OPEN_L) {
 		return true;
-
-	return false;
-}
-
-void* SMS_GetMarioWaterGun()
-{ // TODO: returns TWaterGun
-	return gpMarioOriginal->mWaterGun;
-}
-
-f32 SMS_GetMarioGravity()
-{
-	return gpMarioOriginal->mJumpParams.mGravity.value;
-}
-
-f32 SMS_GetMarioGrLevel() { return gpMarioOriginal->mFloorPosition.y; }
-
-f32 SMS_GetMarioDamageRadius() { return gpMarioOriginal->mDamageRadius; }
-
-s16 SMS_GetMarioHP() { return gpMarioOriginal->mHealth; }
-
-bool SMS_IsMarioHeadSlideAttack()
-{
-	if (gpMarioOriginal->mAction == 0x00800456
-	    || gpMarioOriginal->mAction == 0x0080088A) {
-		return 1;
 	} else {
-		return 0;
+		return false;
 	}
 }
 
-bool SMS_IsMarioStatusElecDamage()
+bool SMS_IsMarioOnYoshi() { return gpMarioOriginal->onYoshi(); }
+
+bool SMS_IsMarioDashing()
 {
-	if (gpMarioOriginal->mAction == 0x00020338) {
-		return 1;
-	} else {
-		return 0;
-	}
+	return !!gpMarioOriginal->checkFlag(MARIO_FLAG_FLUDD_EMITTING);
 }
 
-bool SMS_IsMarioStatusThrownDown()
+void SMS_MarioMoveRequest(const JGeometry::TVec3<float>& vec)
 {
-	if (gpMarioOriginal->mAction == 0x000208B8) {
-		return 1;
-	} else {
-		return 0;
-	}
+	gpMarioOriginal->moveRequest(vec);
 }
 
-bool SMS_IsMarioStatusHipDrop()
+void SMS_MarioWarpRequest(const JGeometry::TVec3<float>& vec, float f)
 {
-	if (gpMarioOriginal->mAction == 0x008008A9) {
-		return 1;
-	} else {
-		return 0;
-	}
+	gpMarioOriginal->warpRequest(vec, f);
 }
 
-bool SMS_IsMarioStatusTypeSwimming()
+void SMS_FlowMoveMario(const JGeometry::TVec3<float>& vec)
 {
-	if (gpMarioOriginal->mAction & (1 << 13)) {
-		return 1;
-	} else {
-		return 0;
-	}
+	gpMarioOriginal->flowMove(vec);
 }
 
-bool SMS_IsMarioStatusTypeJumping()
+void SMS_WindMoveMario(const JGeometry::TVec3<float>& vec)
 {
-	if (gpMarioOriginal->mAction & (1 << 11)) {
-		return 1;
-	} else {
-		return 0;
-	}
+	gpMarioOriginal->windMove(vec);
 }
 
-TLiveActor* SMS_GetMarioLiveActor() { return (TLiveActor*)gpMarioAddress; }
+u32 SMS_GetMarioStatus() { return gpMarioOriginal->mStatus; }
 
-THitActor* SMS_GetMarioHitActor() { return (THitActor*)gpMarioAddress; }
-
-bool SMS_AskJumpIntoWaterEffectExist()
+const TBGCheckData* SMS_GetMarioGrPlane()
 {
-	return gpMarioOriginal->askJumpIntoWaterEffectExist();
+	return gpMarioOriginal->mGroundPlane;
 }
 
-void* SMS_GetYoshi()
-{ // TODO: returns TYoshi
-	return gpMarioOriginal->mYoshi;
-}
-
-void SMS_SetMarioAccessParams()
+const TBGCheckData* SMS_GetMarioWlPlane()
 {
-	s16* angle;
-	f32* speed;
-
-	gpMarioAddress = (size_t)gpMarioOriginal;
-	gpMarioPos     = &gpMarioOriginal->mPosition;
-
-	angle         = &gpMarioOriginal->mFaceAngle.x;
-	gpMarioAngleX = angle;
-	gpMarioAngleY = angle + 1;
-	gpMarioAngleZ = angle + 2;
-
-	speed         = &gpMarioOriginal->mVel.x;
-	gpMarioSpeedX = speed;
-	gpMarioSpeedY = speed + 1;
-	gpMarioSpeedZ = speed + 2;
-
-	gpMarioLightID = &gpMarioOriginal->mLightID;
-	gpMarioFlag    = &gpMarioOriginal->unk118;
-
-	gpMarioThrowPower  = &gpMarioOriginal->mDeParams.mThrowPower.value;
-	gpMarioGroundPlane = &gpMarioOriginal->mGroundPlane;
+	return gpMarioOriginal->mWallPlane;
 }
+
+const TBGCheckData* SMS_GetMarioRfPlane()
+{
+	return gpMarioOriginal->mRoofPlane;
+}
+
+u32 SMS_GetMarioStatus(THitActor* actor) { return ((TMario*)actor)->mStatus; }
+
+bool SMS_IsMarioFencing() { return gpMarioOriginal->isFencing(); }
+
+bool SMS_IsMarioRoofing() { return gpMarioOriginal->isRoofing(); }

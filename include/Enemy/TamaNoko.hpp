@@ -8,7 +8,7 @@ class TTamaNokoFlower : public TSharedParts {
 public:
 	TTamaNokoFlower(const TLiveActor*, int, SDLModelData*, u32, const char*);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void setBckAnm(int);
 
@@ -40,7 +40,7 @@ public:
 
 class TTamaNokoManager : public TSmallEnemyManager {
 public:
-	TTamaNokoManager(const char*);
+	TTamaNokoManager(const char* name = "タマノコマネージャー");
 
 	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
@@ -54,7 +54,7 @@ public:
 	TTamaNoko(const char* name = "タマノコ");
 
 	virtual void load(JSUMemoryInputStream& stream);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();

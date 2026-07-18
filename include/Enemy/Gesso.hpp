@@ -53,7 +53,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 	virtual TSmallEnemy* createEnemyInstance();
 	virtual void clipEnemies(JDrama::TGraphics*);
@@ -199,7 +199,7 @@ public:
 	TSurfGesso(const char* name = "サーフゲッソー");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual bool isFindMario(f32) { return false; }
 };
 

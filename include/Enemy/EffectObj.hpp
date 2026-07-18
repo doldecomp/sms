@@ -3,16 +3,13 @@
 
 #include <Enemy/Enemy.hpp>
 #include <Enemy/EnemyManager.hpp>
-
-// rogue includes needed for matching sinit & bss
-#include <MSound/MSSetSound.hpp>
-#include <MSound/MSoundBGM.hpp>
+#include <JSystem/JGadget/std-list.hpp>
 
 class TSimpleEffect : public JDrama::TActor {
 public:
 	TSimpleEffect(const char* name);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void emitEffect() = 0;
 
 	MtxPtr getUnk48() { return unk48; }
@@ -24,7 +21,7 @@ public:
 
 class TEffectPinnaFunsui : public TSimpleEffect {
 public:
-	TEffectPinnaFunsui(const char*);
+	TEffectPinnaFunsui(const char* name = "ピンナ噴水エフェクト");
 
 	virtual void loadAfter();
 	virtual void emitEffect();
@@ -32,7 +29,7 @@ public:
 
 class TEffectBiancoFunsui : public TSimpleEffect {
 public:
-	TEffectBiancoFunsui(const char*);
+	TEffectBiancoFunsui(const char* name = "ビアンコ噴水エフェクト");
 
 	virtual void loadAfter();
 	virtual void emitEffect();
@@ -43,7 +40,7 @@ public:
 	TEffectObjBase(const char* name = "<EffectObjBase>");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void init();
 	virtual void reset();
@@ -67,7 +64,7 @@ public:
 	TEffectObjManager(const char* name = "<EffectObjManager>");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void generateEffect(Vec);
 	void addListEffectObj(TEffectObjBase*);
@@ -105,7 +102,7 @@ public:
 
 class TEffectColumWaterManager : public TEffectModelManager {
 public:
-	TEffectColumWaterManager(const char* name);
+	TEffectColumWaterManager(const char* name = "エフェクト水柱マネージャー");
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual void createModelData();
@@ -124,7 +121,8 @@ public:
 
 class TEffectBombColumWaterManager : public TEffectModelManager {
 public:
-	TEffectBombColumWaterManager(const char* name);
+	TEffectBombColumWaterManager(const char* name
+	                             = "エフェクト爆発水柱マネージャー");
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual void createModelData();
@@ -143,7 +141,7 @@ public:
 
 class TEffectColumSandManager : public TEffectModelManager {
 public:
-	TEffectColumSandManager(const char* name);
+	TEffectColumSandManager(const char* name = "エフェクト砂柱マネージャー");
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual void createModelData();
@@ -162,7 +160,7 @@ public:
 
 class TEffectExplosionManager : public TEffectModelManager {
 public:
-	TEffectExplosionManager(const char* name);
+	TEffectExplosionManager(const char* name = "エフェクト爆発マネージャー");
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual void createModelData();

@@ -81,10 +81,10 @@ TSmallEnemy* TMameGessoManager::createEnemyInstance() { return new TMameGesso; }
 
 void TMameGessoManager::initSetEnemies() { }
 
-void TMameGessoManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMameGessoManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	for (int i = 0; i < mObjNum; i++) {
-		if (!(param_1 & 1))
+		if (!(cue & CUE_MOVE))
 			continue;
 		TMameGesso* gesso = getObj(i);
 		if (gesso->checkLiveFlag(LIVE_FLAG_DEAD) && gesso->unk1D2) {
@@ -94,7 +94,7 @@ void TMameGessoManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 			}
 		}
 	}
-	TSmallEnemyManager::perform(param_1, param_2);
+	TSmallEnemyManager::perform(cue, graphics);
 }
 
 TMameGesso::TMameGesso(const char* name)

@@ -117,7 +117,7 @@ void J3DSys::drawInit()
 {
 	GXSetMisc(GX_MT_DL_SAVE_CONTEXT, 0);
 	GXInvalidateVtxCache();
-	GXSetCurrentMtx(0);
+	GXSetCurrentMtx(GX_PNMTX0);
 	GXSetCullMode(GX_CULL_BACK);
 	GXSetCoPlanar(GX_FALSE);
 	GXSetClipMode(GX_CLIP_ENABLE);

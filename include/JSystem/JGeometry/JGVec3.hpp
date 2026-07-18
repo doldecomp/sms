@@ -11,26 +11,12 @@ template <class T> class TVec3 { };
 
 template <> struct TVec3<s16> : public S16Vec {
 public:
-	TVec3();
+	TVec3() { }
 
 	TVec3(const S16Vec& b) { set(b.x, b.y, b.z); }
 
-	void sub(const JGeometry::TVec3<s16>&);
-	void add(const JGeometry::TVec3<s16>&);
-
 	// fabricated
 	TVec3(s16 x_, s16 y_, s16 z_) { set(x_, y_, z_); }
-
-	// I replaced this with the one in TP and it matched perfectly for me
-	// I could not see it was in use anywhere, so i suspect the
-	// replacement below is more correct. Yell at me to move it back if needed
-	// in PR :) Or else i will remove this! -AZ template <class TY> void set(TY
-	// x_, TY y_, TY z_)
-	// {
-	// 	x = x_;
-	// 	y = y_;
-	// 	z = z_;
-	// }
 
 	void set(s16 x_, s16 y_, s16 z_)
 	{
@@ -38,13 +24,69 @@ public:
 		y = (s16)y_;
 		z = (s16)z_;
 	}
+
+	void zero() { x = y = z = 0; }
+
+	void add(const TVec3& operand)
+	{
+		x += operand.x;
+		y += operand.y;
+		z += operand.z;
+	}
+
+	void add(const TVec3& a, const TVec3& b)
+	{
+		x = a.x + b.x;
+		y = a.y + b.y;
+		z = a.z + b.z;
+	}
+
+	void sub(const TVec3& translate)
+	{
+		x -= translate.x;
+		y -= translate.y;
+		z -= translate.z;
+	}
+
+	void sub(const TVec3& fst, const TVec3& snd)
+	{
+		x = fst.x - snd.x;
+		y = fst.y - snd.y;
+		z = fst.z - snd.z;
+	}
+
+	TVec3& operator+=(const TVec3& other)
+	{
+		add(other);
+		return *this;
+	}
+
+	TVec3& operator-=(const TVec3& other)
+	{
+		sub(other);
+		return *this;
+	}
+
+	// fabricated and fake and UB but it makes things match??
+	friend const TVec3& operator-(TVec3 fst, const TVec3& snd)
+	{
+		fst -= snd;
+		return fst;
+	}
+
+	// fabricated and fake and UB but it makes things match??
+	friend const TVec3& operator+(TVec3 fst, const TVec3& snd)
+	{
+		fst += snd;
+		return fst;
+	}
 };
 
 template <> class TVec3<f32> : public Vec {
 public:
 	TVec3() { }
 
-	TVec3(const Vec& b) { set(b.x, b.y, b.z); }
+	TVec3(const Vec& b) { set(b); }
 
 	template <class T> TVec3(T x_, T y_, T z_) { set(x_, y_, z_); }
 
@@ -136,7 +178,18 @@ public:
 		z *= b.z;
 	}
 
-	void div(f32 divisor) { scale(1.0f / divisor); }
+	void mul(const TVec3& fst, const TVec3& snd)
+	{
+		x = fst.x * snd.x;
+		y = fst.y * snd.y;
+		z = fst.z * snd.z;
+	}
+
+	void div(f32 divisor)
+	{
+		divisor = 1.0f / divisor;
+		scale(divisor);
+	}
 
 	TVec3& operator+=(const TVec3& other)
 	{
@@ -153,10 +206,14 @@ public:
 		mul(other);
 		return *this;
 	}
-	// @fabricated
 	TVec3& operator*=(f32 other)
 	{
 		scale(other);
+		return *this;
+	}
+	TVec3& operator/=(f32 other)
+	{
+		div(other);
 		return *this;
 	}
 
@@ -180,6 +237,11 @@ public:
 		fst *= snd;
 		return fst;
 	}
+	friend TVec3 operator/(TVec3 fst, f32 snd)
+	{
+		fst /= snd;
+		return fst;
+	}
 
 	f32 dot(const TVec3& other) const
 	{
@@ -196,14 +258,14 @@ public:
 		x = _x;
 		y = _y;
 		z = _z;
+	}
 
-		// Second version, both are wrong in some places.
-		// Were they literally two different functions or something?
-		// TWW also has problems matching this.
-
-		// set(a.y * b.z - a.z * b.y, //
-		//     a.z * b.x - a.x * b.z, //
-		//     a.x * b.y - a.y * b.x);
+	// Incorrect!!!
+	void cross2(const TVec3& a, const TVec3& b)
+	{
+		set(a.y * b.z - a.z * b.y, //
+		    a.z * b.x - a.x * b.z, //
+		    a.x * b.y - a.y * b.x);
 	}
 
 	void negate()
@@ -238,13 +300,20 @@ public:
 
 	f32 distance(const TVec3& other) const
 	{
-		f32 dx = x - other.x;
-		f32 dy = y - other.y;
-		f32 dz = z - other.z;
-		return TUtil<f32>::sqrt(dx * dx + dy * dy + dz * dz);
+		return TUtil<f32>::sqrt((x - other.x) * (x - other.x)
+		                        + (y - other.y) * (y - other.y)
+		                        + (z - other.z) * (z - other.z));
 	}
 
 	f32 squared() const { return dot(*this); }
+
+	f32 squared(const TVec3& other) const
+	{
+		f32 dx = x - other.x;
+		f32 dy = y - other.y;
+		f32 dz = z - other.z;
+		return dx * dx + dy * dy + dz * dz;
+	}
 
 	f32 length() const { return TUtil<f32>::sqrt(squared()); }
 
@@ -288,6 +357,14 @@ public:
 			y = min.y;
 		if (z >= min.z)
 			z = min.z;
+	}
+
+	// fabricated but based on SMG minus the epsilon parameter
+	bool epsilonEquals(const TVec3& other) const
+	{
+		return TUtil<f32>::epsilonEquals(x, other.x)
+		       && TUtil<f32>::epsilonEquals(y, other.y)
+		       && TUtil<f32>::epsilonEquals(z, other.z);
 	}
 
 	// TODO: SMG's operator== uses epsilonEquals. Maybe this wasn't operator==

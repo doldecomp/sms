@@ -1,3 +1,4 @@
+#include <MarioUtil/MapUtil.hpp>
 #include <Strategic/TakeActor.hpp>
 #include <Strategic/HitActor.hpp>
 #include <Strategic/LiveActor.hpp>
@@ -12,7 +13,7 @@ int SMS_GetMonteVillageAreaInMario()
 {
 	int retvar = 4;
 	if (gpMarDirector->mMap == 8) {
-		if (gpCamera->mMode == 0x33) {
+		if (gpCamera->mMode == CAMERA_MODE_LOOK_DOWN) {
 			return retvar = 1;
 		}
 		switch (gpCubeFastC->unk1C) {
@@ -30,19 +31,18 @@ int SMS_GetMonteVillageAreaInMario()
 	return retvar;
 }
 
-void* SMS_GetGroundActor(const TBGCheckData* bgData, u32 value)
+const TLiveActor* SMS_GetGroundActor(const TBGCheckData* check_data,
+                                     u32 type_filter)
 {
-	void* actor = nullptr;
-	if (bgData) {
-		actor = bgData->mActor;
-		// TODO: this does not match and I have no idea what the original
-		// author was thinking, the entire THitActor hierarchy needs to be
-		// figured out
-		if (bgData->mActor && value != bgData->mActor->mActorType) {
-			actor = nullptr;
-		}
+	const TLiveActor* result = nullptr;
+	if (check_data) {
+		result = check_data->getActor();
+
+		if (check_data->getActor()
+		    && type_filter != check_data->getActor()->getActorType())
+			result = nullptr;
 	}
-	return actor;
+	return result;
 }
 
 float SMS_GetSandRiseUpRatio(const TLiveActor* actor)

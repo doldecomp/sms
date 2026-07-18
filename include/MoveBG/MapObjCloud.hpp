@@ -5,10 +5,10 @@
 
 class TRideCloud : public TRailMapObj {
 public:
-	TRideCloud(const char*);
+	TRideCloud(const char* name = "乗れる雲");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void calcRootMatrix();
 	virtual void setGroundCollision();
 	virtual void control();

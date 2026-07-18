@@ -8,9 +8,9 @@ struct ResTIMG;
 class TPolluterBase : public TMapObjBase {
 public:
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
-	TPolluterBase(const char*);
+	TPolluterBase(const char* name = "汚染オブジェ");
 
 public:
 	/* 0x138 */ MActor* unk138;
@@ -25,22 +25,22 @@ public:
 	TRevivalPolluter();
 
 public:
-	/* 0x0 */ u32 unk0;
-	/* 0x4 */ ResTIMG* unk4;
+	/* 0x0 */ u32 mLayerIndex;
+	/* 0x4 */ ResTIMG* mRevivalStampTex;
 	/* 0x8 */ u16 unk8;
 	/* 0xC */ f32 unkC;
 	/* 0x10 */ f32 unk10;
 	/* 0x14 */ f32 unk14;
-	/* 0x18 */ u32 unk18;
+	/* 0x18 */ u32 mStampInterval;
 };
 
 class TMapObjRevivalPollution : public JDrama::TViewObj {
 public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
-	TMapObjRevivalPollution(const char*);
+	TMapObjRevivalPollution(const char* name = "復活落書き");
 
 public:
 	/* 0x10 */ s32 unk10;

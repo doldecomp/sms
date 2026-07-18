@@ -1,6 +1,7 @@
 #ifndef JG_MATRIX33_HPP
 #define JG_MATRIX33_HPP
 
+#include <JSystem/JGeometry/JGVec3.hpp>
 #include <dolphin/types.h>
 
 namespace JGeometry {
@@ -11,6 +12,8 @@ template <typename T> struct SMatrix33C {
 
 // Same explicit specialization trick as with 3x4 and 4x4 versions
 template <> struct SMatrix33C<f32> {
+	SMatrix33C() { }
+
 	f32 at(u32 i, u32 j) const { return mMtx[i][j]; }
 	f32& ref(u32 i, u32 j) { return mMtx[i][j]; }
 

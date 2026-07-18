@@ -31,9 +31,9 @@ TEffectObjManager* gpEffectObjManager;
 // JGadget::TAllocator<TEffectObjBase*>>::insert(JGadget::TList<TEffectObjBase*,
 // JGadget::TAllocator<TEffectObjBase*>>::iterator, TEffectObjBase* const&) {}
 
-void TSimpleEffect::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSimpleEffect::perform(u32 cue, JDrama::TGraphics*)
 {
-	if (param_1 & 2)
+	if (cue & CUE_CALC_ANIM)
 		emitEffect();
 }
 
@@ -50,9 +50,9 @@ void TEffectPinnaFunsui::emitEffect()
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(0x1A8, getUnk48(), 1, this);
 
-	if (gpMSound->gateCheck(0x5006))
-		MSoundSESystem::MSoundSE::startSoundActor(0x5006, &mPosition, 0,
-		                                          nullptr, 0, 4);
+	if (gpMSound->gateCheck(MSD_SE_EV_ARCHED_FOUNTAIN))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EV_ARCHED_FOUNTAIN,
+		                                          &mPosition, 0, nullptr, 0, 4);
 }
 
 void TEffectBiancoFunsui::loadAfter()
@@ -68,9 +68,9 @@ void TEffectBiancoFunsui::emitEffect()
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(0x1A9, getUnk48(), 1, this);
 
-	if (gpMSound->gateCheck(0x5006))
-		MSoundSESystem::MSoundSE::startSoundActor(0x5006, &mPosition, 0,
-		                                          nullptr, 0, 4);
+	if (gpMSound->gateCheck(MSD_SE_EV_ARCHED_FOUNTAIN))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EV_ARCHED_FOUNTAIN,
+		                                          &mPosition, 0, nullptr, 0, 4);
 }
 
 TEffectObjBase::TEffectObjBase(const char* name)
@@ -104,9 +104,9 @@ void TEffectObjBase::reset()
 	unk74 = 0;
 }
 
-void TEffectObjBase::perform(u32 param_1, JDrama::TGraphics*)
+void TEffectObjBase::perform(u32 cue, JDrama::TGraphics*)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		if (unk68 == 1) {
 			unk74 = 0;
 			unk68 = 2;
@@ -163,9 +163,9 @@ void TEffectObjBase::moveObject()
 			emitter->unk174.set(x, y, z);
 		}
 
-		if (gpMSound->gateCheck(0x30B2))
-			MSoundSESystem::MSoundSE::startSoundActor(0x30B2, &mPosition, 0,
-			                                          nullptr, 0, 4);
+		if (gpMSound->gateCheck(MSD_SE_OBJ_CALM_FLAME))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_OBJ_CALM_FLAME, &mPosition, 0, nullptr, 0, 4);
 	}
 
 	if (unk68 == 3)
@@ -186,9 +186,9 @@ void TEffectObjBase::behaveToWater(THitActor* param_1)
 		return;
 	}
 
-	if (gpMSound->gateCheck(0x28C5))
-		MSoundSESystem::MSoundSE::startSoundActor(0x28C5, &mPosition, 0,
-		                                          nullptr, 0, 4);
+	if (gpMSound->gateCheck(MSD_SE_BS_WANWAN_TO_COOL))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_WANWAN_TO_COOL,
+		                                          &mPosition, 0, nullptr, 0, 4);
 	unk68 = 3;
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 
@@ -220,15 +220,15 @@ void TEffectObjManager::load(JSUMemoryInputStream& stream)
 	JDrama::TViewObj::load(stream);
 }
 
-void TEffectObjManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TEffectObjManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x9) {
+	if (cue & (CUE_DRAW | CUE_MOVE)) {
 		JGadget::TList<TEffectObjBase*>::iterator it = unk14.begin();
 		for (; it != unk14.end(); ++it)
-			(*it)->perform(param_1, param_2);
+			(*it)->perform(cue, graphics);
 
 		for (int i = 0; i < COOL_EFFECT_OBJ_NUM; ++i)
-			unk24[i]->perform(param_1, param_2);
+			unk24[i]->perform(cue, graphics);
 	}
 }
 

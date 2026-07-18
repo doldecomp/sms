@@ -29,8 +29,8 @@ void TMapObjPlane::initDraw()
 	GXSetVtxDesc(GX_VA_NRM, GX_DIRECT);
 	GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
 
-	GXLoadPosMtxImm(j3dSys.getViewMtx(), 0);
-	GXSetCurrentMtx(0);
+	GXLoadPosMtxImm(j3dSys.getViewMtx(), GX_PNMTX0);
+	GXSetCurrentMtx(GX_PNMTX0);
 
 	GXSetNumChans(1);
 	GXSetChanCtrl(GX_COLOR0A0, GX_TRUE, GX_SRC_REG, GX_SRC_REG, 1, GX_DF_CLAMP,
@@ -218,9 +218,9 @@ BOOL TMapObjPlane::receiveMessage(THitActor* sender, u32 message)
 	return false;
 }
 
-void TMapObjPlane::perform(u32 param_1, JDrama::TGraphics*)
+void TMapObjPlane::perform(u32 cue, JDrama::TGraphics*)
 {
-	if (mAlbedo != nullptr && (param_1 & 8)) {
+	if (mAlbedo != nullptr && (cue & CUE_DRAW)) {
 		initDraw();
 		draw();
 	}

@@ -13,13 +13,13 @@ public:
 
 public:
 	/* 0x54 */ f32 mViewClipNear;
-	/* 0x58 */ f32* mViewClipFarPtr;
+	/* 0x58 */ const f32* mViewClipFarPtr;
 	/* 0x5C */ TAnimalSaveIndividual* mAnimalSave;
 };
 
 class TMewManager : public TAnimalManagerBase {
 public:
-	TMewManager(const char* name);
+	TMewManager(const char* name = "?");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();

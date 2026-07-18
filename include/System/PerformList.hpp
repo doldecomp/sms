@@ -7,7 +7,8 @@
 class TPerformLink {
 public:
 	TPerformLink(JDrama::TViewObj* param_1, u32 param_2)
-	    : unk4(param_1)
+	    : unk0(nullptr)
+	    , unk4(param_1)
 	    , unk8(param_2)
 	{
 	}
@@ -28,7 +29,7 @@ public:
 	}
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	// Filters are &ed with the first param in perform
 	void push_back(JDrama::TViewObj* object, u32 filter);

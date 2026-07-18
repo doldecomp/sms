@@ -38,16 +38,15 @@ public:
 
 	class CArcName {
 	public:
+		CArcName() { }
+		CArcName(const char* data) { store(data); }
 		CArcName(const char** p1, char p2) { p1[0] = store(p1[0], p2); }
 
-		const char* getString() const { return mString; }
-		u16 getHash() const { return mHash; }
 		void store(const char*);
 		const char* store(const char*, char);
 
-		// Unused/inlined:
-		CArcName() { }
-		CArcName(const char* data) { store(data); }
+		const char* getString() const { return mString; }
+		u16 getHash() const { return mHash; }
 
 		u16 mHash;         // _00
 		u16 mLength;       // _02
@@ -55,34 +54,12 @@ public:
 	};
 
 	struct SDIFileEntry {
-		u16 getNameHash() const { return mHash; }
-		u32 getNameOffset() const { return mFlag & 0xFFFFFF; }
-		u32 getFlags() const { return mFlag >> 24; }
-		u32 getAttr() const { return getFlags(); }
-		u32 getSize() { return mSize; }
-		u16 getFileID() const { return mFileID; }
-		bool isDirectory() const { return (mFlag >> 24 & 0x02) != 0; }
-		bool isUnknownFlag1() const { return (getFlags() & 0x01) != 0; }
-		bool isCompressed() const { return (getFlags() & 0x04) != 0; }
-		u8 getCompressFlag() const
-		{
-			return (getFlags() & 0x04);
-		} // apparently both necessary?
-		bool isYAZ0Compressed() const { return (getFlags() & 0x80) != 0; }
-
-		bool getFlag01() const { return (getFlags() & 0x01) != 0; }
-		bool getFlag04() { return mFlag >> 0x18 & 0x04; }
-		bool getFlag10() { return getFlags() & 0x10; }
-		bool getFlag20() { return mFlag >> 0x18 & 0x20; }
-		bool getFlag40() { return mFlag >> 0x18 & 0x40; }
-		bool getFlag80() { return mFlag >> 0x18 & 0x80; }
-
-		u16 mFileID;     // _00
-		u16 mHash;       // _02
-		u32 mFlag;       // _04
-		u32 mDataOffset; // _08
-		u32 mSize;       // _0C
-		void* mData;     // _10
+		u16 mFileID;             // _00
+		u16 mHash;               // _02
+		u32 mFlagsAndNameOffset; // _04
+		u32 mDataOffset;         // _08
+		u32 mSize;               // _0C
+		void* mData;             // _10
 	};
 
 	struct SDirEntry {
@@ -172,11 +149,11 @@ public:
 	SDIDirEntry* findResType(u32) const;
 	SDIFileEntry* findTypeResource(u32, u32) const;
 
-	static int convertAttrToCompressionType(int attr)
+	static JKRCompression convertAttrToCompressionType(int attr)
 	{
-		if (FLAG_ON(attr, JKRARCHIVE_ATTR_COMPRESSION))
+		if (!(attr & JKRARCHIVE_ATTR_COMPRESSION))
 			return JKR_COMPRESSION_NONE;
-		else if (!FLAG_ON(attr, JKRARCHIVE_ATTR_YAY0))
+		else if (attr & JKRARCHIVE_ATTR_YAY0)
 			return JKR_COMPRESSION_YAZ0;
 		else
 			return JKR_COMPRESSION_YAY0;
@@ -207,7 +184,7 @@ protected:
 
 enum JKRMemBreakFlag { MBF_0 = 0, MBF_1 = 1 };
 
-inline int JKRConvertAttrToCompressionType(int attr)
+inline JKRCompression JKRConvertAttrToCompressionType(int attr)
 {
 	return JKRArchive::convertAttrToCompressionType(attr);
 }

@@ -10,7 +10,7 @@ public:
 	{
 	}
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 class TReInitGX : public JDrama::TViewObj {
@@ -20,7 +20,7 @@ public:
 	{
 	}
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 class TSMSDrawInit : public JDrama::TViewObj {
@@ -30,7 +30,7 @@ public:
 	{
 	}
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 class TJ3DSysSetViewMtx : public JDrama::TViewObj {
@@ -40,7 +40,7 @@ public:
 	{
 	}
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 class TJ3DSysFlag : public JDrama::TViewObj {
@@ -50,7 +50,7 @@ public:
 	{
 	}
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 #endif

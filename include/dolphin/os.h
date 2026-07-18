@@ -157,8 +157,8 @@ BOOL OSRestoreInterrupts(BOOL level);
 u32 OSGetSoundMode(void);
 void OSSetSoundMode(u32 mode);
 
-void OSReport(char*, ...);
-void OSPanic(char* file, int line, char* msg, ...);
+void OSReport(const char*, ...);
+void OSPanic(const char* file, int line, const char* msg, ...);
 
 #define OSErrorLine(line, ...) OSPanic(__FILE__, line, __VA_ARGS__)
 

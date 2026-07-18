@@ -134,6 +134,10 @@ public:
 
 	void setScaleFlagArray(u8* pScaleFlagArray) { unk4C = pScaleFlagArray; }
 
+	void setDrawMtxDataPointer(J3DDrawMtxData* pMtxData) { unk48 = pMtxData; }
+
+	void setVertexDataPointer(J3DVertexData* pVtxData) { unk44 = pVtxData; }
+
 	// fabricated
 	void* getDrawList() { return mGDCommands; }
 

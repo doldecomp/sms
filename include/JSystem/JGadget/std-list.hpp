@@ -266,6 +266,12 @@ public:
 		}
 	};
 
+	TList_pointer(const JGadget::TAllocator<void*>& allocator
+	              = JGadget::TAllocator<void*>())
+	    : TList_pointer_void(allocator)
+	{
+	}
+
 	iterator begin() { return iterator(Base::begin()); }
 	iterator end() { return iterator(Base::end()); }
 

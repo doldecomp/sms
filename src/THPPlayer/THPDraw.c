@@ -45,7 +45,7 @@ void THPGXYuv2RgbSetup(GXRenderModeObj* rmode)
 
 		PSMTXIdentity(e_m);
 		GXLoadPosMtxImm(e_m, GX_PNMTX0);
-		GXSetCurrentMtx(0);
+		GXSetCurrentMtx(GX_PNMTX0);
 	}
 
 	GXSetZMode(GX_TRUE, GX_ALWAYS, GX_FALSE);

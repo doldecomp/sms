@@ -13,6 +13,23 @@ u32 JSUInputStream::read(void* buf, s32 size)
 	return len;
 }
 
+char* JSUInputStream::read(char* str)
+{
+	u16 sp8;
+	if (readData(&sp8, sizeof(sp8)) != sizeof(sp8)) {
+		str[0] = '\0';
+		setState(EOF);
+		return nullptr;
+	}
+
+	s32 len  = readData(str, sp8);
+	str[len] = '\0';
+	if (len != sp8) {
+		setState(EOF);
+	}
+	return str;
+}
+
 char* JSUInputStream::readString()
 {
 	u16 strLen;
@@ -23,7 +40,7 @@ char* JSUInputStream::readString()
 
 	char* buf = new char[strLen + 1];
 
-	int r;
+	s32 r;
 	if (buf == nullptr) {
 		r = skip(strLen);
 	} else {

@@ -1,6 +1,7 @@
 #include <MSound/MSound.hpp>
 #include <MSound/MSRandVol.hpp>
 #include <MSound/MSHandle.hpp>
+#include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <MSound/MSModBgm.hpp>
@@ -9,19 +10,37 @@
 #include <JSystem/JAudio/JAInterface/JAIDebug.hpp>
 #include <JSystem/JAudio/JAInterface/JAIGlobalParameter.hpp>
 #include <JSystem/JAudio/JAInterface/JAIAsnData.hpp>
+#include <JSystem/JAudio/JAInterface/JAIConst.hpp>
 #include <JSystem/JAudio/JASystem/JASSystemHeap.hpp>
 #include <JSystem/JAudio/JASystem/JASWaveBankMgr.hpp>
 #include <JSystem/JAudio/JASystem/JASWaveBank.hpp>
 #include <JSystem/JAudio/JASystem/JASBasicWaveBank.hpp>
 #include <JSystem/JAudio/JASystem/JASSimpleWaveBank.hpp>
 #include <JSystem/JAudio/JASystem/JASDvdThread.hpp>
+#include <JSystem/JAudio/JASystem/JASDriverIF.hpp>
+#include <JSystem/JAudio/JASystem/JASAudioThread.hpp>
 #include <JSystem/JAudio/JALibrary/JALSystem.hpp>
+#include <math.h>
+
+// rogue
+#include <M3DUtil/InfectiousStrings.hpp>
+
+// TODO: place in correct header
+template <class T> static inline T min(T a, T b) { return a < b ? a : b; }
+template <class T> static inline T max(T a, T b) { return a < b ? b : a; }
 
 MSound* MSGMSound  = 0;
 JAIBasic* MSGBasic = 0;
 
-u8 MSSeCallBack::smTrackCategory;
-u8 MSSeCallBack::smPolifonic;
+u16 MSSeCallBack::smTrackCategory[32] = {
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+};
+
+u8 MSSeCallBack::smPolifonic[16] = {
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+};
+
 u16 MSSeCallBack::smWaterFilter;
 
 bool MSLoadWave::loadWaveBackword(int param_1, int param_2)
@@ -31,8 +50,10 @@ bool MSLoadWave::loadWaveBackword(int param_1, int param_2)
 		return false;
 
 	if (bank->getType() == 'BSIC') {
+		JASystem::TBasicWaveBank* basicBank = (JASystem::TBasicWaveBank*)bank;
+
 		JASystem::TBasicWaveBank::TWaveGroup* grp
-		    = ((JASystem::TBasicWaveBank*)bank)->getWaveGroup(param_2);
+		    = basicBank->getWaveGroup(param_2);
 
 		if (!grp)
 			return false;
@@ -40,14 +61,17 @@ bool MSLoadWave::loadWaveBackword(int param_1, int param_2)
 		if (!loadWaveBackword(grp))
 			return false;
 
-		((JASystem::TBasicWaveBank*)bank)->incWaveTable(grp);
+		basicBank->incWaveTable(grp);
 		return true;
-	} else if (bank->getType() == 'SMPL') {
-		JASystem::TSimpleWaveBank* obj = (JASystem::TSimpleWaveBank*)bank;
-		return loadWaveBackword(obj);
-	} else {
-		return false;
 	}
+
+	if (bank->getType() == 'SMPL') {
+		JASystem::TSimpleWaveBank* simpleBank
+		    = (JASystem::TSimpleWaveBank*)bank;
+		return loadWaveBackword(simpleBank);
+	}
+
+	return false;
 }
 
 bool MSLoadWave::loadWaveBackword(JASystem::WaveArcLoader::TObject* obj)
@@ -90,11 +114,161 @@ void MSSeCallBack::setWaterCameraFir(bool enabled)
 		smWaterFilter = 0;
 }
 
-void MSSeCallBack::setWaterFilter(u16 param) { }
+void MSSeCallBack::setWaterFilter(u16 param_1) { }
 
-u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* track, u16 param) { }
+u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
+{
+	switch (param_2) {
+	case 15:
+		return MSGMSound->unk94;
 
-MSound* MSound::getMSound() { return nullptr; }
+	case 20:
+		for (u16 i = 0; i < 2; ++i) {
+			for (u16 j = 0; j < 16; ++j) {
+				JASystem::TTrack* pTVar1 = param_1->getChild(i)->getChild(j);
+				if (pTVar1 == nullptr)
+					break;
+
+				u16 tmp = i << 4 | j;
+				pTVar1->readPortAppDirect(9, &smTrackCategory[tmp]);
+
+				smPolifonic[smTrackCategory[tmp]] += 1;
+			}
+		}
+
+		for (u16 uVar3 = 0; uVar3 < JAIGlobalParameter::getParamSeCategoryMax();
+		     ++uVar3) {
+			(void)uVar3;
+		}
+		return 0;
+
+	case 12: {
+		u16 local_26;
+		u16 local_28;
+		param_1->unk2C0->readPortAppDirect(8, &local_26);
+		param_1->readPortAppDirect(0xf, &local_28);
+		u16 uVar4 = local_26 > smWaterFilter ? smWaterFilter : local_26;
+
+		u16 local_2c;
+		if (uVar4 != local_28) {
+			u16 local_2a;
+			param_1->readPortAppDirect(14, &local_2a);
+			if (local_2a > uVar4) {
+				local_2c = 0xFFEC;
+			} else {
+				local_2c = 0x14;
+			}
+			param_1->writePortAppDirect(13, local_2c);
+			param_1->writePortAppDirect(15, uVar4);
+			local_28 = uVar4;
+		} else {
+			param_1->readPortAppDirect(13, &local_2c);
+		}
+
+		if (local_2c != 0) {
+			u16 local_2a;
+			param_1->readPortAppDirect(14, &local_2a);
+			local_2a += local_2c;
+			if (local_2a > 0x7FFF || local_2a == 0) {
+				local_2c = 0;
+				local_2a = 0;
+				param_1->writePortAppDirect(13, local_2a);
+			} else if (local_28 != 0 && local_2a > local_28) {
+				local_2a = local_28;
+				local_2c = 0;
+				param_1->writePortAppDirect(13, local_2c);
+			}
+
+			param_1->writePortAppDirect(14, local_2a);
+			return 0x7f - local_2a;
+		}
+
+		return 0xff;
+	}
+
+	case 13: {
+		u16 local_26;
+		param_1->unk2C0->readPortAppDirect(8, &local_26);
+		u16 uVar3 = local_26 > smWaterFilter ? smWaterFilter : local_26;
+		param_1->writePortAppDirect(0xe, uVar3);
+		param_1->writePortAppDirect(0xf, uVar3);
+		return 0x7f - uVar3;
+	}
+
+	case 0: {
+		u16 uVar3 = JAIBasic::setParameterSeqSync(param_1, param_2);
+
+		param_1->unk3C1 = 74;
+		if (param_1->unk2C0->unk2C4[15] == param_1)
+			param_1->unk3C2 = 1;
+
+		return uVar3;
+	}
+
+	case 1:
+		break;
+
+	case 30: {
+		u16 uVar3 = JAIBasic::setParameterSeqSync(param_1, 0);
+		param_1->setPanSwitchParent(1, 0);
+		param_1->setPanSwitchParent(1, 1);
+		param_1->setPanSwitchParent(1, 2);
+		param_1->writeRegDirect(8, 0);
+		param_1->writeRegDirect(10, 0);
+		param_1->writeRegDirect(11, 0);
+		param_1->writeRegDirect(12, 0x7fff);
+		JASystem::TTrack* pTVar1 = param_1->unk2C0;
+		if (pTVar1 != nullptr) {
+			pTVar1->setPanSwitchExt(1, 0);
+			pTVar1->setPanSwitchExt(1, 1);
+			pTVar1->setPanSwitchExt(1, 2);
+			pTVar1->writeRegDirect(8, 0);
+			pTVar1->writeRegDirect(10, 0);
+			pTVar1->writeRegDirect(11, 0x7fff);
+			pTVar1->writeRegDirect(12, 0);
+			if (pTVar1->mOuterParam != nullptr) {
+				pTVar1->mOuterParam->onSwitch(8);
+				pTVar1->mOuterParam->onSwitch(4);
+				pTVar1->mOuterParam->onSwitch(0x10);
+			}
+		}
+		param_1->mChannelUpdater.unk4E[0] = 0xffff;
+		return uVar3;
+	}
+
+	case 40:
+		MSGMSound->unkD1 = 1;
+		return 0;
+
+	case 110: {
+		u8 a = MSGMSound->unkCD;
+		u8 b = MSGMSound->unkCE;
+		if (a == 8 && b == 6)
+			return 0xffff;
+		return MSGMSound->unkCD;
+	}
+
+	case 120:
+		static bool ukuleleFlag = 0;
+		ukuleleFlag ^= true;
+		return ukuleleFlag;
+
+	case 121:
+	case 123:
+	case 124:
+	case 125:
+	case 126:
+		return ukuleleFlag;
+
+	// TODO: how to get bge? :(
+	case 127:
+		break;
+	}
+
+	return JAIBasic::setParameterSeqSync(param_1, param_2);
+}
+
+MSound* MSound::getMSound() { return MSGMSound; }
 
 JAISound* MSound::makeSound(u32 count)
 {
@@ -125,7 +299,7 @@ void MSound::loadGroupWave(s32 param_1, s32 param_2)
 	}
 }
 
-void MSound::cleanUpAramWave(u8 param) { }
+void MSound::cleanUpAramWave(u8 param_1) { }
 
 void MSound::loadWave(MS_SCENE_WAVE wave)
 {
@@ -140,9 +314,9 @@ void MSound::loadWave(MS_SCENE_WAVE wave)
 		loadSceneWave(hi, lo);
 }
 
-void MSound::enterStage(MS_SCENE_WAVE wave, u8 param2, u8 param3)
+void MSound::enterStage(MS_SCENE_WAVE wave, u8 param_2, u8 param3)
 {
-	unkCD = param2;
+	unkCD = param_2;
 	unkCE = param3;
 
 	if (wave == -1)
@@ -168,9 +342,9 @@ void MSound::exitStage()
 	unkAC[1] = JAICamera();
 	unkAC[1] = JAInullCamera;
 
-	unkCD = 0xff;
-	unkCE = 0xff;
-	unkC8 = 0;
+	unkCD    = 0xff;
+	unkCE    = 0xff;
+	unkC8[0] = 0;
 }
 
 bool MSound::checkWaveOnAram(MS_SCENE_WAVE wave)
@@ -230,12 +404,17 @@ void MSound::setPlayerInfo(Vec* param_1, Vec* param_2, MtxPtr param_3,
 		unkAC[i].unk0 = param_1;
 		unkAC[i].unk4 = param_2;
 		unkAC[i].unk8 = param_3;
-		MSoundSESystem::MSRandPlay::createRandPlayVec(0x7865, 1);
-		MSoundSESystem::MSRandPlay::registerTrans(0x7865, param_1);
-		MSoundSESystem::MSRandPlay::createRandPlayVec(0x7094, 1);
-		MSoundSESystem::MSRandPlay::registerTrans(0x7094, param_1);
-		MSoundSESystem::MSRandPlay::createRandPlayVec(0x1950, 1);
-		MSoundSESystem::MSRandPlay::registerTrans(0x1950, param_1);
+		MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_MV10A_CRY_SHORT_01,
+		                                              1);
+		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_MV10A_CRY_SHORT_01,
+		                                          param_1);
+		MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_MV16_EXERT_CONT_01,
+		                                              1);
+		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_MV16_EXERT_CONT_01,
+		                                          param_1);
+		MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_MA_WATER_WAIT, 1);
+		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_MA_WATER_WAIT,
+		                                          param_1);
 	}
 }
 
@@ -281,48 +460,40 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 	f32 fVar1 = 0.0f;
 	for (u8 i = 0; i < 16; ++i) {
 		if (unk0->unk88.unk2[i] != 0) {
-			if (fVar1 < MSHandle::smSeCategory[i].unk4)
-				fVar1 = MSHandle::smSeCategory[i].unk4;
-			u8 uVar2 = (u8)(MSHandle::smSeCategory[i].unk4 * 127.0f);
-			if ((u8)(MSHandle::smSeCategory[i].unk4 * 127.0f) > 0x7E)
-				uVar2 = 0x7F;
+			f32 tmp  = MSHandle::smSeCategory[i].unk4;
+			fVar1    = max(fVar1, tmp);
+			u8 uVar2 = min<u8>(MSHandle::smSeCategory[i].unk8 * 127.0f, 127);
 			setSeCategoryVolume(i, uVar2);
 		}
 	}
 
 	JAIGlobalParameter::setParamDistanceMax(fVar1);
-	JAIGlobalParameter::setParamMinDistanceVolume(0.0);
-	JAIGlobalParameter::setParamMaxVolumeDistance(1200.0);
-	unkA8     = 3;
+	JAIGlobalParameter::setParamMinDistanceVolume(0.0f);
+	JAIGlobalParameter::setParamMaxVolumeDistance(1200.0f);
+	unkA8     = 0x1 | 0x2;
 	MSGBasic  = JAIBasic::basic;
 	MSGMSound = this;
 	JALSystem::init();
 	MSoundSESystem::MSoundSE::construct();
 	MSBgm::init();
-	unk88  = 0;
-	unk98  = new u64; // TODO: wrong type & size
-	f32* p = new f32; // TODO: wrong type & size
-	if (p)
-		*p = 0.0f;
-	unk9C = p;
+	unk88 = 0;
+	unk98 = new MSModBgm;
+	unk9C = new MSBgmXFade;
 
 	unk7C = 0;
 	unk80 = 0;
 
-	unkC8 = 0;
-	unkC9 = 0;
-	unkCA = 0;
-	unkCB = 0;
-	unkCC = 0;
+	for (int i = 0; i < 5; ++i)
+		unkC8[i] = 0;
 
 	unkAC[0] = JAInullCamera;
 	unkAC[1] = JAInullCamera;
 
-	unk84 = 0;
-	unk94 = 0;
-	unk8C = 0;
-	unk90 = 0;
-	unkC4 = 0;
+	unk84    = 0;
+	unk94    = 0;
+	unk8C[0] = 0;
+	unk8C[1] = 0;
+	unkC4    = 0;
 
 	unkCF = 1;
 	unkD0 = 1;
@@ -341,11 +512,11 @@ void MSound::mainLoop()
 		return;
 
 	if (unkD1 == 1) {
-		MSBgm::startBGM(0x8001002D);
+		MSBgm::startBGM(MSD_BGM_KUPPA);
 		unkD1 = 0;
 	}
 
-	if (unkC9 != 0) {
+	if (unkC8[1] != 0) {
 		MSMainProc::entranceDemoLoop(unkA4);
 		++unkA4;
 	}
@@ -361,116 +532,641 @@ void MSound::mainLoop()
 		it.getObject()->frameLoopDyna();
 
 	startFrameInterfaceWork();
-	((MSModBgm*)unk98)->loop();
+	unk98->loop();
 }
 
-JAISound* MSound::startSoundSet(u32 id, const Vec* pos, u32 param3, f32 volume,
-                                u32 param5, u32 param6, u8 param7)
+void MSound::startSoundSet(u32 param_1, const Vec* param_2, u32 param_3,
+                           f32 param_4, u32 param_5, u32 param_6, u8 param_7)
 {
-	return nullptr;
+	if (gateCheck(param_1))
+		MSSetSound::startSoundSet(param_1, param_2, param_3, param_4, param_5,
+		                          param_6, param_7);
 }
 
-JAISound* MSound::startSoundSetGrp(u32 id, const Vec* pos, u32 param3,
-                                   f32 volume, u32 param5, u32 param6,
-                                   u8 param7)
+void MSound::startSoundSetGrp(u32 param_1, const Vec* param_2, u32 param_3,
+                              f32 param_4, u32 param_5, u32 param_6, u8 param_7)
 {
-	return nullptr;
+	if (gateCheck(param_1))
+		MSSetSoundGrp::startSoundSetGrp(param_1, param_2, param_3, param_4,
+		                                param_5, param_6, param_7);
 }
 
-void MSound::initSound() { }
-
-void MSound::pauseOn(bool param) { }
-
-void MSound::pauseOff(u8 param) { }
-
-void MSound::demoModeIn(u16 param1, bool param2) { }
-
-void MSound::demoModeOut(bool param) { }
-
-void MSound::talkModeIn(bool param) { }
-
-void MSound::talkModeOut() { }
-
-void MSound::setCategoryVOLsDefault(u16 param) { }
-
-void MSound::setCategoryVOLs(u16 param1, f32 volume) { }
-
-bool MSound::resetAudioAll(u16 param) { }
-
-void MSound::stopAllSeInCategory(u8 category, u32 param2) { }
-
-void MSound::setCategoryAllVolume(u8 category, f32 volume, u32 param3,
-                                  u8 param4)
+void MSound::initSound()
 {
-}
-
-void MSound::fadeOutAllSound(u32 fadeTime) { }
-
-void MSound::stopAllSound() { }
-
-f32 MSoundSESystem::MSRandVol::getRandomVolumeNormal(u32) { return 0.0f; }
-
-void MSound::setSeExtParameter(JAISound* sound) { }
-
-void MSound::playTimer(u32 time) { }
-
-void MSound::startMarioVoice(u32 id, s16 param2, u8 param3) { }
-
-u8 MSound::getMarioVoiceID(u8 param) { return 0; }
-
-void MSound::stopMarioVoice(u32 id, u8 param2) { }
-
-bool MSound::checkMarioVoicePlaying(u8 param) { return false; }
-
-u32 MSound::getWallSound(u32 param1, f32 param2)
-{
-	if (param2 < 15.0f) {
-		if (param1 == 0x1C)
-			return 0x194B;
-		else
-			return 0x194A;
+	unkA8 |= 0x2;
+	for (u8 i = 0; i < 16; ++i) {
+		if (MSGMSound->unk0->unk88.unk2[i] != 0 && JAIBasic::basic != nullptr) {
+			JAIBasic::basic->setSeCategoryVolume(
+			    i, min<u8>(MSHandle::smSeCategory[i].unk8 * 127.0f, 127));
+		}
 	}
 
-	if (param2 < 30.0f) {
-		if (param1 == 0x1C)
-			return 0x1802;
-		else
-			return 0x1949;
+	if (unk7C != nullptr) {
+		unk7C->stop(1);
+		unk7C = nullptr;
 	}
 
-	if (param1 == 0x1C)
-		return 0x1803;
+	if (unk80 != nullptr) {
+		unk80->stop(1);
+		unk80 = nullptr;
+	}
+}
+
+void MSound::pauseOn(bool param_1)
+{
+	if (param_1)
+		if (checkUnkA8(2))
+			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_PAUSE_ON, 0,
+			                                             nullptr, 0);
+
+	for (u8 i = 0; i < 16; ++i)
+		if (i != 4 && MSGMSound->unk0->unk88.unk2[i] != 0)
+			MSGMSound->setSeCategoryVolume(i, 0);
+
+	if (param_1)
+		MSBgm::setAllTracksVolume(0.0f, 60);
 	else
-		return 0x1948;
+		MSBgm::setAllTracksVolume(0.0f, 0);
 }
 
-JAISound* MSound::startBeeSe(Vec* pos, u32 id) { return nullptr; }
-
-JAISound* MSound::startSoundActorSpecial(u32 id, const Vec* pos, f32 param3,
-                                         f32 param4, u32 param5,
-                                         JAISound** soundPtr, u32 param7,
-                                         u8 param8)
+void MSound::pauseOff(u8 param_1)
 {
-	return nullptr;
+	switch (param_1) {
+	case 0:
+		if (checkUnkA8(2))
+			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_PAUSE_OFF, 0,
+			                                             nullptr, 0);
+		// FALLTHROUGH!!!
+
+	case 2:
+		for (u8 i = 0; i < 16; ++i) {
+			if (i != 4 && MSGMSound->unk0->unk88.unk2[i] != 0)
+				if (JAIBasic::basic != nullptr) {
+					JAIBasic::basic->setSeCategoryVolume(
+					    i,
+					    min<u8>(MSHandle::smSeCategory[i].unk8 * 127.0f, 127));
+				}
+		}
+		MSBgm::setAllTracksVolume(1.0f, 10);
+		break;
+
+	case 1:
+		if (checkUnkA8(2))
+			MSoundSESystem::MSoundSE::startSoundSystemSE(
+			    MSD_SE_SY_DECIDE_COMMON, 0, nullptr, 0);
+
+		for (u8 i = 0; i < 16; ++i)
+			if (MSGMSound->unk0->unk88.unk2[i] != 0)
+				MSGMSound->setSeCategoryVolume(i, 0);
+
+		MSBgm::setAllTracksVolume(0.0f, 15);
+		break;
+	}
 }
 
-bool MSound::cameraLooksAtMario() { return false; }
-
-bool MSound::gateCheck(u32 param) { return false; }
-
-u32 MSound::getBstSwitch(u32 param)
+void MSound::demoModeIn(u16 param_1, bool param_2)
 {
-	JAISoundInfo* info = MSGBasic->getSoundInfoFromID(param);
+	for (u8 i = 0; i < 16; ++i) {
+		if (param_1 >> i & 1)
+			if (MSGMSound->unk0->unk88.unk2[i] != 0)
+				MSGMSound->setSeCategoryVolume(i, 0);
+	}
+
+	if (param_2)
+		MSBgm::setAllTracksVolume(0.0f, 15);
+}
+
+void MSound::demoModeOut(bool param_1)
+{
+	for (u8 i = 0; i < 16; ++i) {
+		if (MSGMSound->unk0->unk88.unk2[i] != 0)
+			if (JAIBasic::basic != nullptr) {
+				JAIBasic::basic->setSeCategoryVolume(
+				    i, min<u8>(MSHandle::smSeCategory[i].unk8 * 127.0f, 127));
+			}
+	}
+
+	if (param_1)
+		MSBgm::setAllTracksVolume(1.0f, 15);
+}
+
+void MSound::talkModeIn(bool param_1)
+{
+	if (param_1 && checkUnkA8(2)) {
+		MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_TALK_MODE_IN, 0,
+		                                             nullptr, 0);
+	}
+
+	for (u8 i = 0; i < 16; ++i)
+		if (MSGMSound->unk0->unk88.unk2[i] != 0 && (0x44 >> i) & 1)
+			MSGMSound->setSeCategoryVolume(i, 0);
+
+	MSBgm::setAllTracksVolume(0.6f, 30);
+}
+
+void MSound::talkModeOut()
+{
+	if (checkUnkA8(2)) {
+		MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_TALK_MODE_OUT, 0,
+		                                             nullptr, 0);
+	}
+
+	for (u8 i = 0; i < 16; ++i) {
+		if (MSGMSound->unk0->unk88.unk2[i] != 0 && 0x1FF >> i & 1)
+			if (JAIBasic::basic != nullptr) {
+				JAIBasic::basic->setSeCategoryVolume(
+				    i, min<u8>(MSHandle::smSeCategory[i].unk8 * 127.0f, 127));
+			}
+	}
+
+	MSBgm::setAllTracksVolume(1.0f, 15);
+}
+
+void MSound::setCategoryVOLsDefault(u16 param_1) { }
+
+void MSound::setCategoryVOLs(u16 param_1, f32 param_2)
+{
+	u8 tmp   = param_2 * 127.0f;
+	u8 uVar2 = min<u8>(127, tmp);
+
+	for (u8 i = 0; i < 16; ++i) {
+		if (MSGMSound->unk0->unk88.unk2[i] != 0 && param_1 >> i & 1)
+			MSGMSound->setSeCategoryVolume(i, uVar2);
+	}
+}
+
+bool MSound::resetAudioAll(u16 param_1)
+{
+	if (!unkD0)
+		return true;
+
+	f32 dVar2 = JAIGlobalParameter::getParamOutputGainUp();
+	if (dVar2 <= 0.002f) {
+		JASystem::Driver::setMixerLevel(0.802f, 0.0f);
+		JASystem::AudioThread::stop();
+		unkA8 = 0;
+		unkD0 = 0;
+		return true;
+	}
+
+	f32 fVar3 = dVar2 * std::powf(0.00020000001f, 1.0f / param_1);
+	JASystem::Driver::setMixerLevel(0.802f, fVar3);
+	JAIGlobalParameter::setParamOutputGainUp(fVar3);
+	return false;
+}
+
+void MSound::stopAllSeInCategory(u8 param_1, u32 param_2) { }
+
+void MSound::setCategoryAllVolume(u8 param_1, f32 param_2, u32 param_3,
+                                  u8 param_4)
+{
+}
+
+void MSound::fadeOutAllSound(u32 param_1)
+{
+	unkA8 &= 1;
+
+	for (u8 i = 0; i < JAIGlobalParameter::getParamSeCategoryMax(); ++i) {
+		if (unk0->unk88.unk2[i] != 0 && i != 4) {
+			for (JAISound* sound = unk0->unk1E8[i].unk4; sound != nullptr;
+			     sound           = sound->unk30)
+                sound->setVolume(0.0f, param_1, 2);
+		}
+	}
+
+	MSBgm::setAllTracksVolume(0.0f, param_1);
+
+	if (unkC4)
+		unkC4->stop(param_1);
+}
+
+void MSound::stopAllSound()
+{
+	for (u8 i = 0; i < JAIGlobalParameter::getParamSeCategoryMax(); ++i) {
+		if (unk0->unk88.unk2[i] != 0)
+			JAIBasic::stopAllSe(i);
+	}
+
+	MSBgm::stopTrackBGMs(7, 0);
+	if (unkC4)
+		unkC4->stop(0);
+}
+
+void MSound::setSeExtParameter(JAISound* sound)
+{
+	if (sound != nullptr) {
+		u32 id               = sound->unk8;
+		JAISoundTable* table = JAIBasic::getInfoPointerFromID(id);
+		JAISoundInfo* ptr    = (JAISoundInfo*)sound->unk3C;
+		JAIBasic::getInfoFormat(table, id);
+		f32 dVar5
+		    = (ptr->unk0 & 0xC00000)
+		          ? MSoundSESystem::MSRandVol::getRandomVolumeNormal(ptr->unk0)
+		          : 1.0f;
+		f32 fVar1 = dVar5 * (ptr->unkC / 127.0f);
+		sound->setVolume(fVar1 > 1.0f ? 1.0f : fVar1, 0, 1);
+		sound->setPitch(ptr->unk8, 0, 1);
+	}
+}
+
+void MSound::playTimer(u32 time)
+{
+	if (checkUnkA8(1)) {
+		MSoundSESystem::MSoundSE::startSoundActorInner(
+		    MSD_SE_SY_TIMER, nullptr, (JAIActor*)0xffffffff, 0, 4);
+
+		if (time > 0x7530) {
+			unk94 = 0x6e;
+			return;
+		}
+
+		if (time > 0x3A98) {
+			unk94 = 0x32;
+			return;
+		}
+
+		if (time > 0x2710) {
+			unk94 = 0x23;
+			return;
+		}
+
+		if (time > 0x1388) {
+			unk94 = 0x19;
+			return;
+		}
+
+		if (time > 0x7D0) {
+			unk94 = 10;
+			return;
+		}
+
+		if (time > 0x3E8) {
+			unk94 = 3;
+			return;
+		}
+
+		unk94 = 0;
+	}
+}
+
+u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
+{
+	if (((param_3 & 0x1) ? true : false) == 1)
+		return 0;
+
+	bool iVar6 = param_3 & 0x2 ? true : false;
+	u32 iVar3  = param_3 & 0x2 ? true : false;
+
+	bool r3 = 1;
+
+	if (param_3 == 6) {
+		switch (param_1) {
+		case MSD_SE_MV21_JUMP_SMALL_01:
+		case MSD_SE_MV22_JUMP_MID_01:
+		case MSD_SE_MV23_JUMP_LARGE_01:
+		case MSD_SE_MV24_JUMP_SPECIAL_01:
+		case MSD_SE_MV25A_JUMP_HUGE_01:
+			JAIActor local_38(unkAC[iVar3].unk0, unkAC[iVar3].unk0,
+			                  unkAC[iVar3].unk0, 0);
+			MSoundSESystem::MSoundSE::startSoundActorInner(
+			    MSD_SE_NPC_VA_MTMAN_JUMP1, unk8C + iVar6, &local_38, 1, 4);
+			return MSD_SE_NPC_VA_MTMAN_JUMP1;
+		}
+
+		return -1;
+	}
+
+	if (unk8C[iVar6] != nullptr) {
+		switch (param_1) {
+		case MSD_SE_MV27_SPRISE_01:
+		case MSD_SE_MV20_JMP_PT_REACT_01:
+		case MSD_SE_MV10A_CRY_SHORT_01:
+		case MSD_SE_MV07_DAMAGE_REACT_01:
+		case MSD_SE_MV26_JUMP_REACT_01:
+		case MSD_SE_MV29_SPRISE_REACT_01:
+		case MSD_SE_MV28_SPRISE_SMALL_01:
+		case MSD_SE_MV30_FRIGHT_01:
+			r3 = 0;
+			break;
+		}
+
+		if (!r3) {
+			if (unk8C[0])
+				return unk8C[0]->unk8;
+			return -1;
+		}
+	}
+
+	switch (param_1) {
+	case 0xffff0003:
+		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.5f)
+			param_1 = MSD_SE_MA_VO_JUMP_MID_3;
+		if (param_1 + 0x10000 == 3)
+			param_1 = MSD_SE_MA_VO_LAND_LOW_4;
+		break;
+
+	case MSD_SE_MV16_EXERT_CONT_01:
+	case MSD_SE_MV05_DAMAGE_FIRE_01:
+	case MSD_SE_MV04_DAMAGE_ELEC_01:
+	case MSD_SE_MV06_DAMAGE_WATER_01:
+	case MSD_SE_MV10B_CRY_JUMP_01:
+	case MSD_SE_MV18_FALL_AFTER_01:
+	case MSD_SE_MV25A_WIRE_ROLL_01A:
+	case MSD_SE_MV19_JMP_PT_01:
+	case MSD_SE_MV25A_WIRE_ROLL_02A:
+		break;
+
+	case MSD_SE_MV01_DAMAGE_BIG_01:
+		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.25f)
+			param_1 = MSD_SE_MA_VO_DAMAGE_BIG;
+		break;
+
+	case MSD_SE_MV02_DAMAGE_MID_01:
+		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.25f)
+			param_1 = MSD_SE_MA_VO_DAMAGE_SMALL;
+		break;
+
+	case MSD_SE_MV03_DAMAGE_LITLE_01:
+		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.25f)
+			param_1 = MSD_SE_MA_VO_DAMAGE_SMALL;
+		break;
+
+	case MSD_SE_MV07_DAMAGE_REACT_01:
+		if (param_2 <= 2)
+			param_1 = MSD_SE_MV33_T_01;
+		break;
+
+	case MSD_SE_MV08A_DOWN_01:
+		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.15f)
+			param_1 = MSD_SE_MA_VO_DEAD;
+		break;
+
+	case MSD_SE_MV10A_CRY_SHORT_01:
+		if (checkUnkA8(2))
+			MSoundSESystem::MSRandPlay::startSeRandPlay(
+			    MSD_SE_MV10A_CRY_SHORT_01, 0);
+		if (unk8C[0] != nullptr)
+			return unk8C[0]->unk8;
+		return -1;
+		break;
+
+	case MSD_SE_MV12_REACT_01:
+		if (param_2 <= 2)
+			param_1 = MSD_SE_MV33_T_01;
+		break;
+
+	case MSD_SE_MV13_ACTION_SMALL_01:
+		if (param_2 <= 2)
+			param_1 = MSD_SE_MV34_ACTION_T_01;
+		break;
+
+	case MSD_SE_MV15_EXERT_INST_01:
+		if (param_2 <= 2)
+			param_1 = MSD_SE_MV38_EXERT_INST_T_01;
+		break;
+
+	case MSD_SE_MV17_EXERT_REACT_01:
+		if (param_2 <= 2)
+			param_1 = MSD_SE_MV34_ACTION_T_01;
+		break;
+
+	case MSD_SE_MV21_JUMP_SMALL_01:
+		if (param_2 <= 2) {
+			param_1 = MSD_SE_MV41_JUMP_T_01;
+			break;
+		}
+		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.3f)
+			param_1 = MSD_SE_MA_VO_JUMP_SMALL_0;
+		break;
+
+	case MSD_SE_MV22_JUMP_MID_01:
+		if (param_2 <= 2) {
+			param_1 = MSD_SE_MV41_JUMP_T_01;
+			break;
+		}
+		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.7f)
+			param_1 = MSD_SE_MA_VO_JUMP_MID_0;
+		break;
+
+	case MSD_SE_MV23_JUMP_LARGE_01:
+		if (param_2 <= 2) {
+			param_1 = MSD_SE_MV41_JUMP_T_01;
+			break;
+		}
+		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.5f)
+			param_1 = MSD_SE_MA_VO_JUMP_BIG_0;
+		break;
+
+	case MSD_SE_MV24_JUMP_SPECIAL_01:
+		if (param_2 <= 2) {
+			param_1 = MSD_SE_MV41_JUMP_T_01;
+			break;
+		}
+		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.5f)
+			param_1 = MSD_SE_MA_VO_JUMP_SPECIAL_0;
+		break;
+
+	case MSD_SE_MV25A_JUMP_HUGE_01:
+		if (param_2 <= 2)
+			param_1 = MSD_SE_MV42_JUMP_HUGE_T_01;
+		break;
+
+	case MSD_SE_MV26_JUMP_REACT_01:
+		if (param_2 <= 2) {
+			param_1 = MSD_SE_MV33_T_01;
+			break;
+		}
+		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.5f)
+			param_1 = MSD_SE_MA_VO_LAND_HI_0;
+		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.5f)
+			param_1 = MSD_SE_MA_VO_LAND_LOW_0;
+		break;
+
+	case MSD_SE_MV31_OPEN_DOOR_01:
+		if (param_2 <= 2)
+			param_1 = MSD_SE_MV46A_OPEN_DOOR_T_01;
+		break;
+
+	case -2:
+		if (param_2 <= 2)
+			param_1 = MSD_SE_MV46B_NEXT_STG_T_01;
+		else
+			param_1 = MSD_SE_MV31_OPEN_DOOR_01;
+		break;
+	}
+
+	JAIActor local_48(unkAC[iVar3].unk0, unkAC[iVar3].unk0, unkAC[iVar3].unk0,
+	                  0);
+	MSoundSESystem::MSoundSE::startSoundActorInner(param_1, unk8C + iVar6,
+	                                               &local_48, 1, 4);
+	if (unk8C[iVar6] != nullptr) {
+		if (param_3 == 2) {
+			unk8C[iVar6]->setPortData(11, 1);
+			unk8C[iVar6]->setPitch(1.2f, 0, 0);
+			unk8C[iVar6]->setVolume(0.9f, 0, 0);
+		} else {
+			unk8C[iVar6]->setPortData(11, 0);
+		}
+	}
+
+	u8 iVar62 = param_3 & 0x2 ? 1 : 0;
+	if (unk8C[iVar62] != nullptr)
+		return unk8C[iVar62]->unk8;
+
+	return -1;
+}
+
+u32 MSound::getMarioVoiceID(u8 param_1)
+{
+	u8 iVar1 = param_1 & 2 ? 1 : 0;
+	if (unk8C[iVar1])
+		return unk8C[iVar1]->unk8;
+
+	return -1;
+}
+
+void MSound::stopMarioVoice(u32 id, u8 param_2)
+{
+	u8 iVar1 = param_2 & 2 ? 1 : 0;
+	if (unk8C[iVar1] != nullptr) {
+		if (id != 0xffffffff) {
+			if (id == unk8C[iVar1]->unk8)
+				unk8C[iVar1]->stop(1);
+		} else {
+			unk8C[iVar1]->stop(1);
+		}
+	}
+}
+
+void* MSound::checkMarioVoicePlaying(u8 param_1)
+{
+	u8 iVar1 = param_1 & 2 ? 1 : 0;
+	return unk8C[iVar1];
+}
+
+u32 MSound::getWallSound(u32 param_1, f32 velocity)
+{
+	if (velocity < 15.0f) {
+		if (param_1 == 0x1C)
+			return MSD_SE_MA_WALL_COL_VERYSOFT;
+		else
+			return MSD_SE_MA_WALL_COL_CMN_VS;
+	}
+
+	if (velocity < 30.0f) {
+		if (param_1 == 0x1C)
+			return MSD_SE_MA_WALL_COL_SOFT;
+		else
+			return MSD_SE_MA_WALL_COL_CMN_S;
+	}
+
+	if (param_1 == 0x1C)
+		return MSD_SE_MA_WALL_COL_HARD;
+	else
+		return MSD_SE_MA_WALL_COL_CMN_H;
+}
+
+void MSound::startBeeSe(Vec* param_1, u32 param_2)
+{
+	if (param_2 > 3) {
+		JAISound* sound
+		    = !checkUnkA8(1)
+		          ? nullptr
+		          : MSoundSESystem::MSoundSE::startSoundActor(
+		                MSD_SE_EN_BEE_GROUP, param_1, 0, nullptr, 0, 4);
+
+		if (sound != nullptr)
+			sound->setVolume(JALCalc::linearTransform(param_2, 3.0f, 50.0f,
+			                                          0.0f, 1.0f, false),
+			                 0, 0);
+	}
+
+	if (param_2 > 2) {
+		if (checkUnkA8(1))
+			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_3, param_1,
+			                                          0, nullptr, 0, 4);
+	} else if (param_2 == 2) {
+		if (checkUnkA8(1))
+			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_2, param_1,
+			                                          0, nullptr, 0, 4);
+	} else if (param_2 == 1) {
+		if (checkUnkA8(1))
+			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_1, param_1,
+			                                          0, nullptr, 0, 4);
+	}
+}
+
+void MSound::startSoundActorSpecial(u32 param_1, const Vec* param_2,
+                                    f32 param_3, f32 param_4, u32 param_5,
+                                    JAISound** param_6, u32 param_7, u8 param_8)
+{
+	if (gateCheck(param_1) && !JALSystem::gateCheckFunc(param_1, param_3)
+	    && !JALSystem::gateCheckFunc(param_1, param_4)) {
+		JAIActor actor(param_2, param_2, param_2, param_5);
+		JAISound* sound = MSoundSESystem::MSoundSE::startSoundActorInner(
+		    param_1, param_6, &actor, param_7, param_8);
+		if (sound != nullptr) {
+			switch (param_1) {
+			case MSD_SE_EN_IGAIGA_ROLL:
+				f32 local_40 = 1.0f;
+				f32 local_44 = 1.0f;
+				if (JALSeModData<JALSeModVolFunk>::calc(param_1, param_3,
+				                                        &local_40))
+					sound->setVolume(local_40, 0, 0);
+				if (JALSeModDataGrp<JALSeModPitFGrp>::calcGrp(param_1, param_4,
+				                                              &local_44))
+					sound->setPitch(local_44, 0, 0);
+				break;
+			}
+		}
+	}
+}
+
+bool MSound::cameraLooksAtMario()
+{
+	for (u8 i = 0; i < 5; ++i) {
+		u32 i2 = i;
+		if (i2 == 0) {
+			if (unkC8[i2] == 0)
+				return false;
+		} else if (unkC8[i2] == 1) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool MSound::gateCheck(u32 param_1)
+{
+	if (!(unkA8 & 1)) {
+		u8 tmp = (param_1 >> 11 & 1) | (param_1 >> 24 & 0xC0);
+		if (tmp == 0)
+			return false;
+	}
+
+	if (!(unkA8 & 2)) {
+		u8 tmp = (param_1 >> 11 & 1) | (param_1 >> 24 & 0xC0);
+		if (tmp == 1)
+			return false;
+	}
+
+	return true;
+}
+
+u32 MSound::getBstSwitch(u32 param_1)
+{
+	JAISoundInfo* info = MSGBasic->getSoundInfoFromID(param_1);
 	if (!info)
 		return -1;
 
 	return info->unk0;
 }
 
-u32 MSound::getSwitch(u32 param1, u32 param2, u32 param3)
+u32 MSound::getSwitch(u32 param_1, u32 param_2, u32 param3)
 {
-	u32 bstSwitch = getBstSwitch(param1);
-	return (bstSwitch & param2) >> param3;
+	u32 bstSwitch = getBstSwitch(param_1);
+	return (bstSwitch & param_2) >> param3;
 }
 
-u32 MSound::getBstPitch(u32 param) { return 0; }
+u32 MSound::getBstPitch(u32 param_1) { return 0; }

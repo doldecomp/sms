@@ -3,6 +3,7 @@
 
 #include <Map/JointModel.hpp>
 #include <Map/JointModelManager.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 
 class MActorAnmData;
 class TMapCollisionStatic;
@@ -10,18 +11,15 @@ class J3DMaterial;
 
 class TMapModel : public TJointModel {
 public:
-	TMapModel()
-	    : mUnderpass(nullptr)
-	    , mUnderpassMaterial(nullptr)
-	    , unk38(0.5f)
-	    , unk3C(1.0f)
-	{
-	}
+	TMapModel();
 
 	virtual void initJointModel(TJointModelManager*, const char*,
 	                            MActorAnmData*);
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual u32 getJ3DModelDataFlag() const { return 0x10020000; }
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual u32 getJ3DModelDataFlag() const
+	{
+		return J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift);
+	}
 
 	void initUnderpass();
 

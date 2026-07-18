@@ -152,16 +152,16 @@ void TAmenbo::control()
 	TLiveActor::control();
 }
 
-void TAmenbo::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TAmenbo::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSmallEnemy::perform(param_1, param_2);
+	TSmallEnemy::perform(cue, graphics);
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		if (gpMirrorModelManager->isInMirror(mPosition)) {
-			if (param_1 & 2) {
+			if (cue & CUE_CALC_ANIM) {
 				calcRootMatrix();
 				mMActor->calc();
 			}
-			if (param_1 & 4)
+			if (cue & CUE_CALC_VIEW)
 				mMActor->viewCalc();
 		}
 	}
@@ -190,18 +190,18 @@ void TAmenbo::updateCollision()
 	}
 }
 
-BOOL TAmenbo::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TAmenbo::receiveMessage(THitActor* sender, u32 message)
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return false;
 
-	switch (param_2) {
+	switch (message) {
 	case HIT_MESSAGE_TRAMPLE:
 	case HIT_MESSAGE_HIP_DROP:
 		return false;
 
 	default:
-		return TSmallEnemy::receiveMessage(param_1, param_2);
+		return TSmallEnemy::receiveMessage(sender, message);
 	}
 }
 
@@ -409,9 +409,9 @@ bool TAmenbo::isStartMoving() const
 
 bool TAmenbo::isFindOutMario() const
 {
-	if (!SMS_CheckMarioFlag(0x10000)
+	if (!SMS_CheckMarioFlag(MARIO_FLAG_IN_SHALLOW_WATER)
 	    && !SMS_GetMarioGroundPlane()->isWaterSurface()
-	    && !SMS_CheckMarioFlag(0x20000))
+	    && !SMS_CheckMarioFlag(MARIO_FLAG_IN_WATER))
 		return false;
 
 	JGeometry::TVec3<f32> diff = SMS_GetMarioPos();
@@ -471,7 +471,7 @@ void TAmenbo::activateJumpBase()
 		deactivateJumpBase();
 
 	unk1E4->setUpTrans(mPosition);
-	onHitFlag(HIT_FLAG_UNK2);
+	onHitFlag(HIT_FLAG_CANNOT_ATTACK);
 	mDamageRadius = 215.0f;
 	mDamageHeight = 120.0f;
 	calcEntryRadius();
@@ -484,7 +484,7 @@ void TAmenbo::deactivateJumpBase()
 		return;
 
 	unk1E4->remove();
-	offHitFlag(HIT_FLAG_UNK2);
+	offHitFlag(HIT_FLAG_CANNOT_ATTACK);
 	setDamageParams(100.0f, 150.0f);
 	offLiveFlag(LIVE_FLAG_UNK10);
 }

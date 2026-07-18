@@ -9,36 +9,23 @@
 #include <JSystem/JAudio/JASystem/JASWaveArcLoader.hpp>
 #include <JSystem/JAudio/JAInterface/JAISound.hpp>
 #include <JSystem/JAudio/JAInterface/JAIBasic.hpp>
+#include <MSound/MSSceneWave.hpp>
 #include <MSound/MSoundSE.hpp>
+#include <MSound/SoundEffects.hpp>
 
 class JAIActor;
 class JAICamera;
 class JAIAnimeFrameSoundData;
-
-enum MS_SCENE_WAVE {
-	MS_WAVE_UNK0         = 0,
-	MS_WAVE_UNK128       = 128,
-	MS_WAVE_DEFAULT      = 256,
-	MS_WAVE_DOLPIC       = 513,
-	MS_WAVE_BIANCO       = 514,
-	MS_WAVE_MANMA        = 515,
-	MS_WAVE_PINNAPACO_S  = 516,
-	MS_WAVE_PINNAPACO    = 516,
-	MS_WAVE_MARE_SEA     = 517,
-	MS_WAVE_MONTEVILLAGE = 518,
-	MS_WAVE_SHILENA      = 519,
-	MS_WAVE_RICO         = 520,
-	MS_WAVE_CLEAR        = 521,
-	MS_WAVE_UNK528       = 528,
-};
+class MSModBgm;
+class MSBgmXFade;
 
 class MSSeCallBack {
 public:
 	static u16 setParameterSeqSync(JASystem::TTrack*, u16);
 	static void setWaterFilter(u16);
 	static void setWaterCameraFir(bool);
-	static u8 smTrackCategory;
-	static u8 smPolifonic;
+	static u16 smTrackCategory[];
+	static u8 smPolifonic[];
 	static u16 smWaterFilter;
 };
 
@@ -94,16 +81,16 @@ public:
 	f32 getDistFromCamera(Vec*);
 	bool cameraLooksAtMario();
 
-	JAISound* startSoundSet(u32, const Vec*, u32, f32, u32, u32, u8);
-	JAISound* startSoundSetGrp(u32, const Vec*, u32, f32, u32, u32, u8);
-	JAISound* startSoundActorSpecial(u32, const Vec*, f32, f32, u32, JAISound**,
-	                                 u32, u8);
-	JAISound* startBeeSe(Vec*, u32);
+	void startSoundSet(u32, const Vec*, u32, f32, u32, u32, u8);
+	void startSoundSetGrp(u32, const Vec*, u32, f32, u32, u32, u8);
+	void startSoundActorSpecial(u32, const Vec*, f32, f32, u32, JAISound**, u32,
+	                            u8);
+	void startBeeSe(Vec*, u32);
 
-	void startMarioVoice(u32, s16, u8);
+	u32 startMarioVoice(u32, s16, u8);
 	void stopMarioVoice(u32, u8);
-	u8 getMarioVoiceID(u8);
-	bool checkMarioVoicePlaying(u8);
+	u32 getMarioVoiceID(u8);
+	void* checkMarioVoicePlaying(u8);
 
 	void playTimer(u32);
 	void requestShineAppearFanfare();
@@ -124,9 +111,77 @@ public:
 			MSoundSESystem::MSoundSE::startSoundSystemSE(param_1, param_2,
 			                                             param_3, param_4);
 	}
-	// TODO: startSoundActor was also very likely here
 
-	void startForceJumpSound(Vec*, u32, f32, u32) { }
+	// Fabricated, very likely due to real startSoundSystemSE
+	void startSoundActor(u32 param_1, const Vec* param_2, u32 param_3,
+	                     JAISound** param_4, u32 param_5, u8 param_6)
+	{
+		if (gateCheck(param_1))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    param_1, param_2, param_3, param_4, param_5, param_6);
+	}
+
+	void startSoundActorWithInfo(u32 param_1, const Vec* param_2, Vec* param_3,
+	                             f32 param_4, u32 param_5, u32 param_6,
+	                             JAISound** param_7, u32 param_8, u8 param_9)
+	{
+		if (gateCheck(param_1))
+			MSoundSESystem::MSoundSE::startSoundActorWithInfo(
+			    param_1, param_2, param_3, param_4, param_5, param_6, param_7,
+			    param_8, param_9);
+	}
+
+	void startSeRandPlay(u32 param_1, u32 param_2)
+	{
+		if (gateCheck(param_1))
+			MSoundSESystem::MSRandPlay::startSeRandPlay(param_1, param_2);
+	}
+
+	void startForceJumpSound(Vec* param_1, u32 param_2, f32 param_3,
+	                         u32 param_4)
+	{
+		u32 r31;
+		switch (param_2 & 0xff) {
+		case 0x15:
+		case 0x17:
+		case 0x1D:
+			r31 = MSD_SE_MA_STALL_JUMP;
+			break;
+
+		case 0x1E:
+		default:
+			if (param_4 < 0x1770)
+				r31 = MSD_SE_MA_ROPE_JUMP_A;
+			else if (param_4 < 0x2EE0)
+				r31 = MSD_SE_MA_ROPE_JUMP_B;
+			else
+				r31 = MSD_SE_MA_ROPE_JUMP_C;
+			break;
+		}
+
+		if (gateCheck(r31))
+			startSoundActor(r31, param_1, 0, nullptr, 0, 4);
+	}
+
+	bool checkUnkA8(u32 flag) { return !(unkA8 & flag) ? false : true; }
+
+public:
+	/* 0x98 */ MSModBgm* unk98;
+	/* 0x9C */ MSBgmXFade* unk9C;
+	/* 0xA0 */ u32 unkA0;
+	/* 0xA4 */ u32 unkA4;
+	/* 0xA8 */ u8 unkA8;
+	/* 0xAC */ JAICamera unkAC[2];
+	/* 0xC4 */ JAISound* unkC4;
+	/* 0xC8 */ u8 unkC8[5];
+	/* 0xCD */ u8 unkCD;
+	/* 0xCE */ u8 unkCE;
+	/* 0xCF */ u8 unkCF;
+	/* 0xD0 */ u8 unkD0;
+	/* 0xD1 */ u8 unkD1;
+	/* 0xD2 */ char unkD2[0x304 - 0xD2];
+	/* 0x304 */ JASystem::TTrack::TOuterParam* unk304;
+	/* 0x308 */ char unk308[0x4];
 };
 
 extern MSound* MSGMSound;
@@ -134,6 +189,6 @@ extern JAIBasic* MSGBasic;
 extern MSound* gpMSound;
 
 // real
-MSound* SMSGetMSound() { return gpMSound; }
+inline MSound* SMSGetMSound() { return gpMSound; }
 
 #endif // MSOUND_HPP

@@ -2,7 +2,7 @@
 #include <Enemy/BossGesso.hpp>
 #include <Enemy/Spline.hpp>
 #include <Player/MarioAccess.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Map/Map.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <System/MarDirector.hpp>
@@ -216,7 +216,7 @@ static inline JGeometry::TVec3<f32> fromPolar(f32 theta, f32 radius)
 	                             radius * JMASCos(theta * (65536.0f / 360.0f)));
 }
 
-bool TBGTakeHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
+BOOL TBGTakeHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 {
 	JGeometry::TVec3<f32> local_EC = where_to;
 	gpMap->isTouchedOneWallAndMoveXZ(&local_EC.x, local_EC.y, &local_EC.z,
@@ -251,7 +251,7 @@ bool TBGTakeHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 BOOL TBGTakeHit::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->getActorType() == 0x80000001) {
-		if (message == 4) {
+		if (message == HIT_MESSAGE_TAKE) {
 			TTakeActor* casted = (TTakeActor*)sender;
 			if (casted->getHeldObject() != nullptr
 			    && casted->getHeldObject() != this)
@@ -264,7 +264,7 @@ BOOL TBGTakeHit::receiveMessage(THitActor* sender, u32 message)
 			}
 		}
 
-		if (message == 7 || message == 8) {
+		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_UNK8) {
 			mHolder               = nullptr;
 			TBGTentacle* tentacle = mOwner;
 			if (tentacle->mState != 4) {
@@ -276,7 +276,7 @@ BOOL TBGTakeHit::receiveMessage(THitActor* sender, u32 message)
 			return true;
 		}
 
-		if (message == 0 || message == 1) {
+		if (message == HIT_MESSAGE_TRAMPLE || message == HIT_MESSAGE_HIP_DROP) {
 			if (mOwner->mState != 4 && mOwner->mState != 5
 			    && mOwner->mState != 3 && mOwner->mState != 6
 			    && mOwner->mState != 10) {
@@ -289,9 +289,9 @@ BOOL TBGTakeHit::receiveMessage(THitActor* sender, u32 message)
 	return false;
 }
 
-void TBGTakeHit::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		mPosition = mOwner->mSpline->getPoint(1.0f);
 		mPosition.y -= mDamageHeight * 0.5f;
 
@@ -351,7 +351,7 @@ void TBGTakeHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 				if (!col->isActorType(0x80000001))
 					continue;
 
-				if (gpMarioOriginal->isActionCoolOrSomethingIdk())
+				if (gpMarioOriginal->isRoofing())
 					continue;
 
 				if (mOwner->mOwner->getAttackMode() == 7)
@@ -382,17 +382,18 @@ TBGAttackHit::TBGAttackHit(TBGTentacle* owner, f32 pos_on_spline,
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
-void TBGAttackHit::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TBGAttackHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		mPosition = mOwner->mSpline->getPoint(mPosOnSpline);
 
-		if (mOwner->mTakeHit->checkHitFlag(HIT_FLAG_UNK2) && mOwner->isThing3()
+		if (mOwner->mTakeHit->checkHitFlag(HIT_FLAG_CANNOT_ATTACK)
+		        && mOwner->isThing3()
 		    || mOwner->getState() == 1
 		    || mOwner->mOwner->getAttackMode() == 7) {
 			for (int i = 0; i < mColCount; ++i) {
 				THitActor* col = mCollisions[i];
-				if (gpMarioOriginal->isActionCoolOrSomethingIdk())
+				if (gpMarioOriginal->isRoofing())
 					continue;
 
 				// TODO: this is an inline, see TBGTakeHit::perform
@@ -709,7 +710,7 @@ void TBGTentacle::setAttackTarget()
 
 	if (mOwner->getAttackMode() == 2) {
 		if (gpMarioOriginal->isTouchGround4cm()
-		    || gpMarioOriginal->isActionCoolOrSomethingIdk()) {
+		    || gpMarioOriginal->isRoofing()) {
 			unk80->setBckFromIndex(23);
 		} else {
 			unk80->setBckFromIndex(21);
@@ -720,7 +721,7 @@ void TBGTentacle::setAttackTarget()
 		unk80->setBckFromIndex(24);
 	} else {
 		if (gpMarioOriginal->isTouchGround4cm()
-		    || gpMarioOriginal->isActionCoolOrSomethingIdk()) {
+		    || gpMarioOriginal->isRoofing()) {
 			unk80->setBckFromIndex(20);
 		} else {
 			unk80->setBckFromIndex(21);
@@ -816,9 +817,9 @@ void TBGTentacle::changeStateAndFixNodes(int new_state)
 		mTakeHit->offHitFlag(HIT_FLAG_NO_COLLISION);
 
 	if (mState == 9)
-		mTakeHit->onHitFlag(HIT_FLAG_UNK2);
+		mTakeHit->onHitFlag(HIT_FLAG_CANNOT_ATTACK);
 
-	mTakeHit->offHitFlag(HIT_FLAG_UNK4);
+	mTakeHit->offHitFlag(HIT_FLAG_CANNOT_GET_HIT);
 }
 
 void TBGTentacle::returnToDefaultState() { }
@@ -1118,9 +1119,9 @@ void TBGTentacle::calcAtkParticleAndSE()
 				unk4C = 1;
 
 				const JGeometry::TVec3<f32>& p = mTakeHit->getPosition();
-				if (gpMSound->gateCheck(0x286F))
-					MSoundSESystem::MSoundSE::startSoundActor(0x286F, p, 0,
-					                                          nullptr, 0, 4);
+				if (gpMSound->gateCheck(MSD_SE_BS_GESO_ATK_IMPACT))
+					MSoundSESystem::MSoundSE::startSoundActor(
+					    MSD_SE_BS_GESO_ATK_IMPACT, p, 0, nullptr, 0, 4);
 
 				mOwner->rumblePad(2, mOwner->getPosition());
 			}
@@ -1165,17 +1166,17 @@ void TBGTentacle::calcAtkParticleAndSE()
 	if (unk80->checkBckPass(endFrame - atkSoundTime)) {
 		if (mState != 10) {
 			const JGeometry::TVec3<f32>& p = mTakeHit->getPosition();
-			if (gpMSound->gateCheck(0x286E))
-				MSoundSESystem::MSoundSE::startSoundActor(0x286E, p, 0, nullptr,
-				                                          0, 4);
+			if (gpMSound->gateCheck(MSD_SE_BS_GESO_ATK))
+				MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_GESO_ATK, p,
+				                                          0, nullptr, 0, 4);
 
 			if (!mOwner->unk1AC) {
 				mOwner->unk1AC = 0xF0;
 
 				const JGeometry::TVec3<f32>& p = mTakeHit->getPosition();
-				if (gpMSound->gateCheck(0x2902))
-					MSoundSESystem::MSoundSE::startSoundActor(0x2902, p, 0,
-					                                          nullptr, 0, 4);
+				if (gpMSound->gateCheck(MSD_SE_BS_GESO_VO_ATTACK))
+					MSoundSESystem::MSoundSE::startSoundActor(
+					    MSD_SE_BS_GESO_VO_ATTACK, p, 0, nullptr, 0, 4);
 			}
 		}
 	}
@@ -1183,7 +1184,7 @@ void TBGTentacle::calcAtkParticleAndSE()
 
 void TBGTentacle::decideAtkColExists()
 {
-	mTakeHit->onHitFlag(HIT_FLAG_UNK2);
+	mTakeHit->onHitFlag(HIT_FLAG_CANNOT_ATTACK);
 
 	f32 frame = unk80->getFrameCtrl(0)->getFrame();
 
@@ -1216,9 +1217,9 @@ void TBGTentacle::decideAtkColExists()
 	}
 
 	if (shouldCollisionExist) {
-		mTakeHit->offHitFlag(HIT_FLAG_UNK2);
+		mTakeHit->offHitFlag(HIT_FLAG_CANNOT_ATTACK);
 	} else {
-		mTakeHit->onHitFlag(HIT_FLAG_UNK2);
+		mTakeHit->onHitFlag(HIT_FLAG_CANNOT_ATTACK);
 	}
 }
 
@@ -1348,11 +1349,11 @@ void TBGTentacle::resetAllNodes(const JGeometry::TVec3<f32>& param_1)
 	unk80->calc();
 }
 
-void TBGTentacle::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TBGTentacle::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	mTakeHit->perform(param_1, param_2);
+	mTakeHit->perform(cue, graphics);
 
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		// Uuuuh... the hit boxes move along the tentacle's spline,
 		// looping back after reaching the end? Why?!
 		for (int i = 0; i < 5; ++i) {
@@ -1364,12 +1365,12 @@ void TBGTentacle::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	for (int i = 0; i < 5; ++i)
-		mAttackHit[i]->perform(param_1, param_2);
+		mAttackHit[i]->perform(cue, graphics);
 
-	if (param_1 & 2)
+	if (cue & CUE_CALC_ANIM)
 		calcAttackGuideAnm();
 
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		decideAtkColExists();
 		moveConstraint();
 		moveNode();
@@ -1380,31 +1381,31 @@ void TBGTentacle::perform(u32 param_1, JDrama::TGraphics* param_2)
 		++mTimeInCurrentState;
 	}
 
-	if (param_1 & 2)
+	if (cue & CUE_CALC_ANIM)
 		unk2C->getModel()->getModelData()->getJointNodePointer(0)->setMtxCalc(
 		    mMtxCalc);
 
-	if (param_1 & 0x200) {
+	if (cue & CUE_ENTRY) {
 		unk2C->setLightData(mOwner->getGroundPlane(), mOwner->getPosition());
 
 		if (mState == 4) {
 			if (mTimeInCurrentState
 			        >= mOwner->getSaveParam()->getSLAmputeeTime() - 240
 			    && mTimeInCurrentState % 6 >= 3) {
-				param_1 &= ~0x200;
+				cue &= ~CUE_ENTRY;
 			}
 		}
 	}
 
-	if ((param_1 & 1) && mState == 4
+	if ((cue & CUE_MOVE) && mState == 4
 	    && mTimeInCurrentState
 	           < mOwner->getSaveParam()->getSLAmputeeTime() - 240) {
 		const JGeometry::TVec3<f32>& pos = mTakeHit->getPosition();
-		if (gpMSound->gateCheck(0x206B))
-			MSoundSESystem::MSoundSE::startSoundActor(0x206B, &pos, 0, nullptr,
-			                                          0, 4);
+		if (gpMSound->gateCheck(MSD_SE_BS_GESO_TAKEN_HAND))
+			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_GESO_TAKEN_HAND,
+			                                          &pos, 0, nullptr, 0, 4);
 	}
 
 	if (mState != 6)
-		unk2C->perform(param_1, param_2);
+		unk2C->perform(cue, graphics);
 }

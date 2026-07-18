@@ -4,23 +4,25 @@
 
 bool TWireBinder::init(const JGeometry::TVec3<f32>& param_1)
 {
+	return reset(param_1);
+}
+
+bool TWireBinder::reset(const JGeometry::TVec3<f32>& param_1)
+{
 	JGeometry::TVec3<f32> local24;
 	JGeometry::TVec3<f32> local30;
 
 	mWireNumber = gpMapWireManager->getWireNo(param_1);
-	if ((s32)mWireNumber == -1) {
+	if (mWireNumber == -1)
 		return false;
-	}
 
-	TMapWire* wire = TMapWireManager::getGlobalWire(mWireNumber);
+	TMapWire* wire = gpMapWireManager->getWire(mWireNumber);
 
 	local24 = wire->getStartPoint();
 	local30 = wire->getEndPoint();
-	local30.sub(local24);
+	local30 -= local24;
 
-	// TODO: Why does the compiler inline stuff here but not in the target?
-	// See also: TMapObjPlane::calcNrm, TBGAttackHit::perform, etc.
-	mDir.setLength(local30, 1.0f);
+	mDir.normalize(local30);
 	return true;
 }
 
@@ -30,17 +32,10 @@ void TWireBinder::bind(TLiveActor* actor)
 	actor->getNextFramePosition(unk_14);
 
 	JGeometry::TVec3<f32> unk_20;
-	// Not sure why we use a different getWire here, but it matches
-	TMapWire* wire = gpMapWireManager->getWire(mWireNumber);
+	getPoint(&unk_20, unk_14);
 
-	f32 posInWire = wire->getPosInWire(unk_14);
-
-	TMapWireManager::getGlobalWire(mWireNumber)
-	    ->getPointPosOnWire(posInWire, &unk_20);
-
-	if (isnan(unk_20.x) || isnan(unk_20.y) || isnan(unk_20.z)) {
+	if (isnan(unk_20.x) || isnan(unk_20.y) || isnan(unk_20.z))
 		unk_20.set(actor->getPosition());
-	}
 
 	f32 fVar = 0.05f + unk_20.y;
 
@@ -57,8 +52,7 @@ JGeometry::TVec3<f32>
 TWireBinder::getDirAtPos(const JGeometry::TVec3<f32>& param_1,
                          f32 param_2) const
 {
-	f32 posInWire
-	    = TMapWireManager::getGlobalWire(mWireNumber)->getPosInWire(param_1);
+	f32 posInWire = getRangePos(param_1);
 
 	f32 fVar1;
 	f32 fVar2;
@@ -74,37 +68,23 @@ TWireBinder::getDirAtPos(const JGeometry::TVec3<f32>& param_1,
 
 	JGeometry::TVec3<f32> vec1;
 	JGeometry::TVec3<f32> vec2;
-	TMapWireManager::getGlobalWire(mWireNumber)
-	    ->getPointPosOnWire(fVar1, &vec1);
-	TMapWireManager::getGlobalWire(mWireNumber)
-	    ->getPointPosOnWire(fVar2, &vec2);
+	getPoint(&vec1, fVar1);
+	getPoint(&vec2, fVar2);
 
-	vec2.sub(vec1);
+	vec2 -= vec1;
+
 	return vec2;
 }
 
 void TWireBinder::getPoint(JGeometry::TVec3<f32>* param_1, f32 param_2) const
 {
-	TMapWireManager::getGlobalWire(mWireNumber)
-	    ->getPointPosOnWire(param_2, param_1);
+	getWire()->getPointPosOnWire(param_2, param_1);
 }
 
-void TWireBinder::getPoint(JGeometry::TVec3<float>* param_1,
-                           const JGeometry::TVec3<float>& param_2) const
+void TWireBinder::getPoint(JGeometry::TVec3<f32>* param_1,
+                           const JGeometry::TVec3<f32>& param_2) const
 {
-	f32 posInWire
-	    = TMapWireManager::getGlobalWire(mWireNumber)->getPosInWire(param_2);
-	getPoint(param_1, posInWire);
-}
-
-bool TWireBinder::isEndWire(const JGeometry::TVec3<float>& param_1,
-                            f32 param_2) const
-{
-	f32 posInWire
-	    = TMapWireManager::getGlobalWire(mWireNumber)->getPosInWire(param_1);
-	f32 targetPos = 0.0f < param_2 ? 1.0f : 0.0f;
-
-	return fabsf(posInWire - targetPos) < 0.015f;
+	getPoint(param_1, getRangePos(param_2));
 }
 
 bool TWireBinder::isOnWire(const JGeometry::TVec3<f32>& param_1)
@@ -112,4 +92,27 @@ bool TWireBinder::isOnWire(const JGeometry::TVec3<f32>& param_1)
 	return gpMapWireManager->getWireNo(param_1) != -1;
 }
 
-TWireBinder::~TWireBinder() { }
+f32 TWireBinder::getRangePos(const JGeometry::TVec3<f32>& param_1) const
+{
+	return getWire()->getPosInWire(param_1);
+}
+
+TMapWire* TWireBinder::getWire() const
+{
+	return gpMapWireManager->getWire(mWireNumber);
+}
+
+void TWireBinder::isStartWire(const JGeometry::TVec3<f32>&, f32) const { }
+
+bool TWireBinder::isEndWire(const JGeometry::TVec3<f32>& param_1,
+                            f32 param_2) const
+{
+	f32 posInWire = getRangePos(param_1);
+	f32 targetPos = 0.0f < param_2 ? 1.0f : 0.0f;
+
+	return fabsf(posInWire - targetPos) < 0.015f;
+}
+
+void TWireBinder::getStartRangePos(f32) { }
+
+void TWireBinder::getEndRangePos(f32) { }

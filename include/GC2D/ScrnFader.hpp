@@ -34,7 +34,7 @@ public:
 	TSMSFader(JUtility::TColor, f32, const char* name);
 
 	virtual void load(JSUMemoryInputStream& stream);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void update();
 	virtual void draw(const JDrama::TRect&);
 
@@ -80,25 +80,31 @@ public:
 
 class TSmplFader : public TSMSFader {
 public:
-	TSmplFader(f32 param_1, const char* name = "<ScrnFader>")
-	    : TSMSFader(JUtility::TColor(0, 0, 0, 0), param_1, name)
+	TSmplFader(JUtility::TColor param_1 = JUtility::TColor(0, 0, 0, 0),
+	           f32 param_2 = 60.0f, const char* name = "<ScrnFader>")
+	    : TSMSFader(param_1, param_2, name)
 	{
 	}
 };
 
 class TShineFader : public TSmplFader {
 public:
-	TShineFader(f32 param_1, const char* name = "<ShineFader>")
-	    : TSmplFader(param_1, name)
+	TShineFader(JUtility::TColor param_1 = JUtility::TColor(0, 0, 0, 0),
+	            f32 param_2 = 60.0f, const char* name = "<ShineFader>")
+	    : TSmplFader(param_1, param_2, name)
+	    , unk38(0)
 	{
+		mFadeStatus = TSMSFader::FADE_STATUS_FULLY_FADED_IN;
 	}
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	virtual void update();
 
-	void registFadeout(u16, u16);
+	bool registFadeout(u16, u16);
+
+	/* 0x38 */ u16 unk38;
 };
 
 #endif

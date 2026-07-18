@@ -212,9 +212,9 @@ THino2Hit::THino2Hit(THinokuri2* owner, int joint_idx, const char* name)
 {
 }
 
-void THino2Hit::perform(u32 param_1, JDrama::TGraphics* param_2)
+void THino2Hit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (!(param_1 & 1))
+	if (!(cue & CUE_MOVE))
 		return;
 
 	if (mOwner->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
@@ -306,22 +306,22 @@ void THino2Mask::breakMask() { }
 
 void THino2Mask::startDamageMotion() { }
 
-void THino2Mask::perform(u32 param_1, JDrama::TGraphics* param_2)
+void THino2Mask::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk4 == 0)
 		return;
 
 	if (unk4 == 1) {
-		if (param_1 & 2) {
+		if (cue & CUE_CALC_ANIM) {
 			unk10->getModel()->setBaseTRMtx(unk4C);
 			J3DFrameCtrl* ctrl = unk10->getFrameCtrl(3);
 			ctrl->setFrame(unkC);
 			ctrl->setRate(0.0f);
 			unk10->resetDL();
 		}
-		unk10->perform(param_1, param_2);
+		unk10->perform(cue, graphics);
 	} else {
-		if (param_1 & 2) {
+		if (cue & CUE_CALC_ANIM) {
 			if (unk8 > 240) {
 				unk4 = 0;
 				return;
@@ -338,7 +338,7 @@ void THino2Mask::perform(u32 param_1, JDrama::TGraphics* param_2)
 			++unk8;
 		}
 
-		if (param_1 & 2) {
+		if (cue & CUE_CALC_ANIM) {
 			Mtx afStack_58;
 			Mtx afStack_88;
 			{
@@ -364,11 +364,11 @@ void THino2Mask::perform(u32 param_1, JDrama::TGraphics* param_2)
 			}
 		}
 
-		if ((param_1 & 0x200) && unk8 > 60 && unk8 % 6 >= 3)
-			param_1 &= ~0x200;
+		if ((cue & CUE_ENTRY) && unk8 > 60 && unk8 % 6 >= 3)
+			cue &= ~CUE_ENTRY;
 
-		unk14->perform(param_1, param_2);
-		unk18->perform(param_1, param_2);
+		unk14->perform(cue, graphics);
+		unk18->perform(cue, graphics);
 	}
 }
 
@@ -711,9 +711,9 @@ void THinokuri2::updateAnmSound()
 {
 	TSpineEnemy::updateAnmSound();
 	if (unk158 > 0)
-		if (gpMSound->gateCheck(0x2007))
-			MSoundSESystem::MSoundSE::startSoundActor(0x2007, &mPosition, 0,
-			                                          nullptr, 0, 4);
+		if (gpMSound->gateCheck(MSD_SE_BS_HINO_SEED_LQ_LEV))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_BS_HINO_SEED_LQ_LEV, &mPosition, 0, nullptr, 0, 4);
 }
 
 void THinokuri2::changeBck(int param_1)
@@ -752,14 +752,14 @@ void THinokuri2::changeBck(int param_1)
 	}
 }
 
-BOOL THinokuri2::receiveMessageLv0(THitActor* param_1, u32 param_2)
+BOOL THinokuri2::receiveMessageLv0(THitActor* sender, u32 message)
 {
-	if (mJointIdxMessageCameFrom == 0x13 && param_1->getActorType() == 0x1000001
-	    && param_2 == HIT_MESSAGE_SPRAYED_BY_WATER)
+	if (mJointIdxMessageCameFrom == 0x13 && sender->getActorType() == 0x1000001
+	    && message == HIT_MESSAGE_SPRAYED_BY_WATER)
 		return true;
 
-	if (param_1->getActorType() == 0x1000001
-	    && param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
+	if (sender->getActorType() == 0x1000001
+	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (mJointIdxMessageCameFrom != 0x19)
 			return true;
 
@@ -767,8 +767,8 @@ BOOL THinokuri2::receiveMessageLv0(THitActor* param_1, u32 param_2)
 			mSpine->pushNerve(&TNerveHino2Freeze::theNerve());
 	}
 
-	if (param_1->getActorType() == 0x80000001
-	    && param_2 == HIT_MESSAGE_TRAMPLE) {
+	if (sender->getActorType() == 0x80000001
+	    && message == HIT_MESSAGE_TRAMPLE) {
 		if (mJointIdxMessageCameFrom != 0x19)
 			return true;
 
@@ -782,19 +782,19 @@ BOOL THinokuri2::receiveMessageLv0(THitActor* param_1, u32 param_2)
 	return false;
 }
 
-BOOL THinokuri2::receiveMessageLv1(THitActor* param_1, u32 param_2)
+BOOL THinokuri2::receiveMessageLv1(THitActor* sender, u32 message)
 {
-	if (mJointIdxMessageCameFrom == 0x13 && param_1->getActorType() == 0x1000001
-	    && param_2 == HIT_MESSAGE_SPRAYED_BY_WATER)
+	if (mJointIdxMessageCameFrom == 0x13 && sender->getActorType() == 0x1000001
+	    && message == HIT_MESSAGE_SPRAYED_BY_WATER)
 		return true;
 
-	if (unk180 && param_1->getActorType() == 0x1000001
-	    && param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
+	if (unk180 && sender->getActorType() == 0x1000001
+	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (mJointIdxMessageCameFrom != 0x19)
 			return true;
 
 		int dmgAmount
-		    = gpModelWaterManager->getParticleAttack((TWaterHitActor*)param_1);
+		    = gpModelWaterManager->getParticleAttack((TWaterHitActor*)sender);
 
 		if (dmgAmount <= 0)
 			return true;
@@ -812,7 +812,7 @@ BOOL THinokuri2::receiveMessageLv1(THitActor* param_1, u32 param_2)
 		return true;
 	}
 
-	if (unk180 && param_1->getActorType() == 0x4000005A) {
+	if (unk180 && sender->getActorType() == 0x4000005A) {
 		if (mJointIdxMessageCameFrom != 0x19)
 			return true;
 
@@ -828,15 +828,15 @@ BOOL THinokuri2::receiveMessageLv1(THitActor* param_1, u32 param_2)
 	return false;
 }
 
-BOOL THinokuri2::receiveMessageLv2(THitActor* param_1, u32 param_2)
+BOOL THinokuri2::receiveMessageLv2(THitActor* sender, u32 message)
 {
-	if (param_1->getActorType() == 0x1000001
-	    && param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
+	if (sender->getActorType() == 0x1000001
+	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (mJointIdxMessageCameFrom != 0x13)
 			return true;
 
 		int dmgAmount
-		    = gpModelWaterManager->getParticleAttack((TWaterHitActor*)param_1);
+		    = gpModelWaterManager->getParticleAttack((TWaterHitActor*)sender);
 
 		if (dmgAmount <= 1)
 			return true;
@@ -858,7 +858,7 @@ BOOL THinokuri2::receiveMessageLv2(THitActor* param_1, u32 param_2)
 		return true;
 	}
 
-	if (param_1->getActorType() == 0x4000005A) {
+	if (sender->getActorType() == 0x4000005A) {
 		if (mJointIdxMessageCameFrom != 0x13)
 			return true;
 
@@ -995,16 +995,16 @@ void THinokuri2::moveObject()
 		--unk168;
 }
 
-void THinokuri2::perform(u32 param_1, JDrama::TGraphics* param_2)
+void THinokuri2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	gpCurHinokuri = this;
 
-	mHead->perform(param_1, param_2);
-	mBody->perform(param_1, param_2);
-	unk174->perform(param_1, param_2);
-	unk178->perform(param_1, param_2);
+	mHead->perform(cue, graphics);
+	mBody->perform(cue, graphics);
+	unk174->perform(cue, graphics);
+	unk178->perform(cue, graphics);
 
-	if (param_1 & 0x200) {
+	if (cue & CUE_ENTRY) {
 		mMActor->resetDL();
 		for (u16 i = 2; i < 5; ++i) {
 			J3DShape* shape
@@ -1018,7 +1018,7 @@ void THinokuri2::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if (param_1 & 0x2) {
+	if (cue & CUE_CALC_ANIM) {
 		calcRootMatrix();
 		getMActor()->frameUpdate();
 		if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_CLIPPED_OUT)) {
@@ -1027,18 +1027,18 @@ void THinokuri2::perform(u32 param_1, JDrama::TGraphics* param_2)
 			getMActor()->updateOut();
 		}
 	} else {
-		TSpineEnemy::perform(param_1, param_2);
+		TSpineEnemy::perform(cue, graphics);
 	}
 
 	if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_CLIPPED_OUT)) {
 		if (mLevel == 2 || unk1A4->unk4 == 2) {
-			if (param_1 & 2) {
+			if (cue & CUE_CALC_ANIM) {
 				unk1A4->setMatrix(getModel()->getAnmMtx(0x17));
 			}
-			unk1A4->perform(param_1, param_2);
+			unk1A4->perform(cue, graphics);
 		}
 
-		if (param_1 & 04) {
+		if (cue & CUE_CALC_VIEW) {
 			unk150->entryDrawShadow();
 			gpQuestionManager->request(mPosition, mScaledBodyRadius);
 		}

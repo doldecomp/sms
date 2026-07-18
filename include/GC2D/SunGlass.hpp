@@ -7,14 +7,28 @@ class TMarioGamePad;
 
 class TSunGlass : public JDrama::TViewObj {
 public:
-	TSunGlass(JUtility::TColor, const char* name = "<SunGlass>");
+	TSunGlass(JUtility::TColor param_1, const char* name = "<SunGlass>")
+	    : JDrama::TViewObj(name)
+	    , unk10(nullptr)
+	    , unk14(param_1)
+	    , unk18(0)
+	    , unk19(3)
+	    , unk1A(0)
+	    , unk1E(60)
+	    , unk1F(0)
+	    , unk20(100)
+	    , unk22(100)
+	    , unk24(0)
+	    , unk26(0)
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual void draw(const JDrama::TRect&, JUtility::TColor);
 
-	void getShineAlpha();
-	void draw(const JDrama::TRect&, JUtility::TColor);
+	u8 getShineAlpha();
 	void changeAlpha(u8*);
 	void startFade(int, bool);
 
@@ -32,6 +46,8 @@ public:
 	/* 0x22 */ u16 unk22;
 	/* 0x24 */ u16 unk24;
 	/* 0x26 */ u8 unk26;
+	/* 0x27 */ u8 unk27;
+	/* 0x28 */ u8 unk28;
 };
 
 class TSunShine : public TSunGlass {
@@ -39,10 +55,13 @@ public:
 	TSunShine(const char* name = "<SunShine>")
 	    : TSunGlass(JUtility::TColor(135, 135, 135, 0), name)
 	{
+		unk14 = JUtility::TColor(135, 135, 135, 0);
+		unk1A = 0;
+		unk28 = 0;
 	}
 
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 #endif

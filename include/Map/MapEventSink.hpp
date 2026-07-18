@@ -7,9 +7,15 @@ class TMapCollisionWarp;
 class TMapCollisionMove;
 class TMapObjBase;
 class TPollutionObj;
+class TGateKeeperBase;
+namespace JDrama {
+class TPlacement;
+}
 
 class TMapEventSink : public TMapEvent {
 public:
+	TMapEventSink(const char*);
+
 	virtual void load(JSUMemoryInputStream&);
 	virtual bool isFinishedAll() const;
 	virtual bool watch() { return false; }
@@ -25,14 +31,15 @@ public:
 
 	bool isBuried(int) const;
 	TPollutionObj* getPollutionObj(int);
-	TMapEventSink(const char*);
 
 	static u32 mCleanedDegree;
+
+	int getRaisingBuildingIdx() { return mRaisingBuildingIdx; }
 
 public:
 	/* 0x20 */ int mBuildingNum;
 	/* 0x24 */ int unk24;
-	/* 0x28 */ int unk28;
+	/* 0x28 */ int mRaisingBuildingIdx;
 	/* 0x2C */ TJointObj* unk2C;
 	/* 0x30 */ J3DJoint* unk30;
 	/* 0x34 */ f32 unk34;
@@ -43,7 +50,7 @@ public:
 	/* 0x48 */ int unk48;
 	/* 0x4C */ int unk4C;
 	/* 0x50 */ JGeometry::TVec3<f32>* unk50;
-	/* 0x54 */ bool* unk54;
+	/* 0x54 */ bool* mIsBuildingRecovered;
 	/* 0x58 */ TMapCollisionWarp** unk58;
 	/* 0x5C */ TMapCollisionMove** unk5C;
 	struct Unk60Struct {
@@ -76,7 +83,7 @@ public:
 
 	virtual void loadAfter();
 
-	void getResetPollutionObj(int);
+	TPollutionObj* getResetPollutionObj(int);
 	void makeBuildingRecovered(int);
 };
 
@@ -97,7 +104,7 @@ public:
 
 public:
 	/* 0x64 */ J3DJoint* unk64;
-	/* 0x68 */ JDrama::TNameRef* mGateKeeper;
+	/* 0x68 */ TGateKeeperBase* mGateKeeper;
 	/* 0x6C */ JGeometry::TVec3<f32> unk6C;
 	/* 0x78 */ f32 unk78;
 	/* 0x7C */ int unk7C;
@@ -117,7 +124,7 @@ public:
 	void raiseBuilding(int);
 
 public:
-	/* 0x64 */ JDrama::TNameRef** unk64; // TODO: derived type
+	/* 0x64 */ JDrama::TPlacement** unk64;
 	/* 0x68 */ const char** unk68;
 };
 

@@ -8,12 +8,13 @@
 struct ResTIMG;
 class MActor;
 class MActorAnmData;
+class J3DModel;
 
 class TMirrorCamera : public JDrama::TCamera {
 public:
 	TMirrorCamera(const char* name = "鏡用カメラ");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void makeMirrorViewMtx();
 	void drawSetting(MtxPtr);
@@ -25,6 +26,8 @@ public:
 		unk84.set(x, y, z);
 		unk90 = dot;
 	}
+
+	const ResTIMG* getUnk94() const { return unk94; }
 
 public:
 	/* 0x30 */ Mtx unk30;
@@ -51,6 +54,9 @@ public:
 
 	TMirrorModel();
 
+	// fabricated
+	MActor* getUnk4() { return unk4; }
+
 public:
 	/* 0x4 */ MActor* unk4;
 	/* 0x8 */ TMirrorCamera* unk8;
@@ -66,7 +72,7 @@ public:
 	virtual void setPlane();
 
 public:
-	/* 0x28 */ void* unk28;
+	/* 0x28 */ J3DModel* unk28;
 };
 
 class TMirrorModelManager;
@@ -79,7 +85,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	bool isUpperThanMirrorPlane(const JGeometry::TVec3<f32>&) const;
 	bool isInMirror(JGeometry::TVec3<f32>&) const;
@@ -91,7 +97,7 @@ public:
 	bool isUnk18Present() { return unk18 != -1 ? true : false; }
 
 public:
-	/* 0x10 */ u32 unk10;
+	/* 0x10 */ int unk10;
 	/* 0x14 */ int unk14;
 	/* 0x18 */ int unk18;
 	/* 0x1C */ TMirrorModel** unk1C;
@@ -101,7 +107,7 @@ public:
 };
 
 class TMirrorMapDrawBuf : public JDrama::TDrawBufObj {
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 #endif

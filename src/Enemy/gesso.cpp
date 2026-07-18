@@ -84,8 +84,9 @@ void TGessoPolluteModelManager::init(TLiveActor* param_1)
 
 	void* res = JKRFileLoader::getGlbResource(
 	    "/scene/rikuGesso/stamp_gero_model1.bmd");
-	SDLModelData* modelData
-	    = new SDLModelData(J3DModelLoaderDataBase::load(res, 0x10220000));
+	SDLModelData* modelData = new SDLModelData(J3DModelLoaderDataBase::load(
+	    res, J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	             | (2 << J3DMLF_TevStageNumShift)));
 
 	for (int i = 0; i < 5; ++i)
 		unk18[i] = new TGessoPolluteModel(param_1, modelData);
@@ -148,14 +149,14 @@ void TGessoManager::clipEnemies(JDrama::TGraphics* param_1)
 	}
 }
 
-void TGessoManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TGessoManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	gpCurGesso = nullptr;
-	TEnemyManager::perform(param_1, param_2);
+	TEnemyManager::perform(cue, graphics);
 	for (int i = 0; i < getActiveObjNum(); ++i)
-		getObj(i)->mPolluteObj->perform(param_1, param_2);
+		getObj(i)->mPolluteObj->perform(cue, graphics);
 
-	unk60->perform(param_1, param_2);
+	unk60->perform(cue, graphics);
 }
 
 void TGessoManager::initSetEnemies()
@@ -870,11 +871,11 @@ void TSurfGesso::load(JSUMemoryInputStream& stream)
 	reset();
 }
 
-void TSurfGesso::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSurfGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 2)
+	if (cue & CUE_CALC_ANIM)
 		offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-	TGesso::perform(param_1, param_2);
+	TGesso::perform(cue, graphics);
 }
 
 void TLandGesso::load(JSUMemoryInputStream& stream)
@@ -934,9 +935,9 @@ void TGessoPolluteObj::rebirth()
 	if (unk158 == 0) {
 		gpMarioParticleManager->emit(0xBC, &mPosition, 0, nullptr);
 		gpMarioParticleManager->emit(0xBD, &mPosition, 0, nullptr);
-		if (gpMSound->gateCheck(0x2867))
-			MSoundSESystem::MSoundSE::startSoundActor(0x2867, &mPosition, 0,
-			                                          nullptr, 0, 4);
+		if (gpMSound->gateCheck(MSD_SE_EN_GESO_GERO_LAND))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_EN_GESO_GERO_LAND, &mPosition, 0, nullptr, 0, 4);
 	}
 
 	unk158 += 1;
@@ -998,9 +999,9 @@ void TGessoPolluteObj::calcRootMatrix()
 
 	// TODO: I think the stack frame size is explicitly telling us that
 	// there IS an inline for this pattern after all...
-	if (gpMSound->gateCheck(0x2012))
-		MSoundSESystem::MSoundSE::startSoundActor(0x2012, &mPosition, 0,
-		                                          nullptr, 0, 4);
+	if (gpMSound->gateCheck(MSD_SE_EN_GESO_GERO_FLY))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_GESO_GERO_FLY,
+		                                          &mPosition, 0, nullptr, 0, 4);
 
 	gpMarioParticleManager->emitAndBindToPosPtr(0x165, &mPosition, 1, this);
 }

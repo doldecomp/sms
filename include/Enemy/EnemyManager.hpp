@@ -33,11 +33,11 @@ public:
 
 class TEnemyManager : public TLiveManager {
 public:
-	TEnemyManager(const char*);
+	TEnemyManager(const char* name = "エネミーマネージャ基底型");
 
 	virtual ~TEnemyManager();
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void clipEnemies(JDrama::TGraphics*);
 	virtual void restoreDrawBuffer(u32) { }

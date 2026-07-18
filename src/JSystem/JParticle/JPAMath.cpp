@@ -15,81 +15,107 @@ f32 JPASqrtf(f32 x)
 
 void JPAGetXYZRotateMtx(s16 x, s16 y, s16 z, MtxPtr dst)
 {
-	dst[0][0] = JMASCos(y) * JMASCos(z);
-	dst[0][1] = JMASSin(y) * JMASCos(z) * JMASSin(x) + -JMASCos(x) * JMASSin(z);
-	dst[0][2] = JMASSin(x) * JMASSin(z) + JMASCos(x) * JMASCos(z) * JMASSin(y);
-	dst[0][3] = 0.0f;
+	f32* ptr = &dst[0][0];
 
-	dst[1][0] = JMASCos(y) * JMASSin(z);
-	dst[1][1] = JMASCos(x) * JMASCos(z) + JMASSin(x) * JMASSin(z) * JMASSin(y);
-	dst[1][2] = JMASCos(x) * JMASSin(z) * JMASSin(y) - JMASSin(x) * JMASCos(z);
-	dst[1][3] = 0.0f;
+	*ptr++ = JMASCos(z) * JMASCos(y);
+	*ptr++ = -JMASSin(z) * JMASCos(x) + JMASCos(z) * JMASSin(y) * JMASSin(x);
+	*ptr++ = JMASSin(z) * JMASSin(x) + JMASCos(z) * JMASSin(y) * JMASCos(x);
+	*ptr++ = 0.0f;
 
-	dst[2][0] = -JMASSin(y);
-	dst[2][1] = JMASSin(x) * JMASCos(y);
-	dst[2][2] = JMASCos(x) * JMASCos(y);
-	dst[2][3] = 0.0f;
+	*ptr++ = JMASSin(z) * JMASCos(y);
+	*ptr++ = JMASCos(z) * JMASCos(x) + JMASSin(z) * JMASSin(y) * JMASSin(x);
+	*ptr++ = -JMASCos(z) * JMASSin(x) + JMASSin(z) * JMASSin(y) * JMASCos(x);
+	*ptr++ = 0.0f;
+
+	*ptr++ = -JMASSin(y);
+	*ptr++ = JMASCos(y) * JMASSin(x);
+	*ptr++ = JMASCos(y) * JMASCos(x);
+	*ptr++ = 0.0f;
 }
 
 void JPAGetXYRotateMtx(s16 x, s16 y, MtxPtr dst)
 {
-	dst[0][0] = JMASCos(y);
-	dst[0][1] = JMASSin(y) * JMASSin(x);
-	dst[0][2] = JMASSin(y) * JMASCos(x);
-	dst[0][3] = 0.0f;
+	f32* ptr = &dst[0][0];
 
-	dst[1][0] = 0.0f;
-	dst[1][1] = JMASCos(x);
-	dst[1][2] = -JMASSin(x);
-	dst[1][3] = 0.0f;
+	*ptr++ = JMASCos(y);
+	*ptr++ = JMASSin(y) * JMASSin(x);
+	*ptr++ = JMASSin(y) * JMASCos(x);
+	*ptr++ = 0.0f;
 
-	dst[2][0] = -JMASSin(y);
-	dst[2][1] = JMASCos(y) * JMASSin(x);
-	dst[2][2] = JMASCos(x) * JMASCos(y);
-	dst[2][3] = 0.0f;
+	*ptr++ = 0.0f;
+	*ptr++ = JMASCos(x);
+	*ptr++ = -JMASSin(x);
+	*ptr++ = 0.0f;
+
+	*ptr++ = -JMASSin(y);
+	*ptr++ = JMASCos(y) * JMASSin(x);
+	*ptr++ = JMASCos(y) * JMASCos(x);
+	*ptr++ = 0.0f;
 }
 
 void JPAGetScaleXYRotateMtx(JGeometry::TVec3<f32>&, s16, s16, MtxPtr) { }
 
 void JPAGetYZRotateMtx(s16 y, s16 z, MtxPtr dst)
 {
-	dst[0][0] = JMASCos(y) * JMASCos(z);
-	dst[0][1] = -JMASSin(z);
-	dst[0][2] = JMASCos(z) * JMASSin(y);
-	dst[0][3] = 0.0f;
+	f32* ptr = &dst[0][0];
 
-	dst[1][0] = JMASSin(z) * JMASCos(y);
-	dst[1][1] = JMASCos(z);
-	dst[1][2] = JMASSin(z) * JMASSin(y);
-	dst[1][3] = 0.0f;
+	*ptr++ = JMASCos(z) * JMASCos(y);
+	*ptr++ = -JMASSin(z);
+	*ptr++ = JMASCos(z) * JMASSin(y);
+	*ptr++ = 0.0f;
 
-	dst[2][0] = -JMASSin(y);
-	dst[2][1] = 0.0f;
-	dst[2][2] = JMASCos(y);
-	dst[2][3] = 0.0f;
+	*ptr++ = JMASSin(z) * JMASCos(y);
+	*ptr++ = JMASCos(z);
+	*ptr++ = JMASSin(z) * JMASSin(y);
+	*ptr++ = 0.0f;
+
+	*ptr++ = -JMASSin(y);
+	*ptr++ = 0.0f;
+	*ptr++ = JMASCos(y);
+	*ptr++ = 0.0f;
 }
 
 void JPAGetScaleYZRotateMtx(JGeometry::TVec3<f32>&, s16, s16, MtxPtr) { }
 
 void JPAGetYRotateMtx(s16 y, MtxPtr dst)
 {
-	dst[0][0] = JMASCos(y);
-	dst[0][1] = 0.0f;
-	dst[0][2] = JMASSin(y);
-	dst[0][3] = 0.0f;
+	f32* ptr = &dst[0][0];
 
-	dst[1][0] = 0.0f;
-	dst[1][1] = 1.0f;
-	dst[1][2] = 0.0f;
-	dst[1][3] = 0.0f;
+	*ptr++ = JMASCos(y);
+	*ptr++ = 0.0f;
+	*ptr++ = JMASSin(y);
+	*ptr++ = 0.0f;
 
-	dst[2][0] = -JMASSin(y);
-	dst[2][1] = 0.0f;
-	dst[2][2] = JMASCos(y);
-	dst[2][3] = 0.0f;
+	*ptr++ = 0.0f;
+	*ptr++ = 1.0f;
+	*ptr++ = 0.0f;
+	*ptr++ = 0.0f;
+
+	*ptr++ = -JMASSin(y);
+	*ptr++ = 0.0f;
+	*ptr++ = JMASCos(y);
+	*ptr++ = 0.0f;
 }
 
-void JPAGetZRotateMtx(s16, MtxPtr) { }
+void JPAGetZRotateMtx(s16 z, MtxPtr dst)
+{
+	f32* ptr = &dst[0][0];
+
+	*ptr++ = JMASCos(z);
+	*ptr++ = JMASSin(z);
+	*ptr++ = 0.0f;
+	*ptr++ = 0.0f;
+
+	*ptr++ = -JMASSin(z);
+	*ptr++ = JMASCos(z);
+	*ptr++ = 0.0f;
+	*ptr++ = 0.0f;
+
+	*ptr++ = 0.0f;
+	*ptr++ = 0.0f;
+	*ptr++ = 1.0f;
+	*ptr++ = 0.0f;
+}
 
 void JPAVecToRotaMtx(MtxPtr dst, JGeometry::TVec3<f32> a,
                      JGeometry::TVec3<f32> b)
@@ -136,7 +162,7 @@ f32 JPAConvertFixToFloat(s16 param_1)
 	if (param_1 == 0x7fff)
 		return 1.0f;
 
-	f32 f0 = (float)param_1 * 3.051758e-05f * 100000.0f;
+	f32 f0 = (float)param_1 * (1.0f / 32768.0f) * 100000.0f;
 	int r5 = (int)f0;
 	int r0 = (int)f0 % 10;
 	if (r0 >= 5) {
@@ -169,12 +195,72 @@ void JPABound(JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&,
 
 void JPAGetSVecElement(MtxPtr, JGeometry::TVec3<f32>&) { }
 
-void JPAGetRMtxSTVecElement(MtxPtr, MtxPtr, JGeometry::TVec3<f32>&,
-                            JGeometry::TVec3<f32>&)
+void JPAGetRMtxSTVecElement(MtxPtr param_1, MtxPtr param_2,
+                            JGeometry::TVec3<f32>& param_3,
+                            JGeometry::TVec3<f32>& param_4)
 {
+	param_3.x = std::sqrtf(param_1[0][0] * param_1[0][0]
+	                       + param_1[1][0] * param_1[1][0]
+	                       + param_1[2][0] * param_1[2][0]);
+	param_3.y = std::sqrtf(param_1[0][1] * param_1[0][1]
+	                       + param_1[1][1] * param_1[1][1]
+	                       + param_1[2][1] * param_1[2][1]);
+	param_3.z = std::sqrtf(param_1[0][2] * param_1[0][2]
+	                       + param_1[1][2] * param_1[1][2]
+	                       + param_1[2][2] * param_1[2][2]);
+
+	MTXIdentity(param_2);
+	if (param_3.x != 0.0f) {
+		param_2[0][0] = param_1[0][0] / param_3.x;
+		param_2[1][0] = param_1[1][0] / param_3.x;
+		param_2[2][0] = param_1[2][0] / param_3.x;
+	}
+	if (param_3.y != 0.0f) {
+		param_2[0][1] = param_1[0][1] / param_3.y;
+		param_2[1][1] = param_1[1][1] / param_3.y;
+		param_2[2][1] = param_1[2][1] / param_3.y;
+	}
+	if (param_3.z != 0.0f) {
+		param_2[0][2] = param_1[0][2] / param_3.z;
+		param_2[1][2] = param_1[1][2] / param_3.z;
+		param_2[2][2] = param_1[2][2] / param_3.z;
+	}
+
+	param_4.set(param_1[0][3], param_1[1][3], param_1[2][3]);
 }
 
-void JPAGetRMtxTVecElement(MtxPtr, MtxPtr, JGeometry::TVec3<f32>&) { }
+void JPAGetRMtxTVecElement(MtxPtr param_1, MtxPtr param_2,
+                           JGeometry::TVec3<f32>& param_3)
+{
+	f32 l1 = std::sqrtf(param_1[0][0] * param_1[0][0]
+	                    + param_1[1][0] * param_1[1][0]
+	                    + param_1[2][0] * param_1[2][0]);
+	f32 l2 = std::sqrtf(param_1[0][1] * param_1[0][1]
+	                    + param_1[1][1] * param_1[1][1]
+	                    + param_1[2][1] * param_1[2][1]);
+	f32 l3 = std::sqrtf(param_1[0][2] * param_1[0][2]
+	                    + param_1[1][2] * param_1[1][2]
+	                    + param_1[2][2] * param_1[2][2]);
+
+	MTXIdentity(param_2);
+	if (l1 != 0.0f) {
+		param_2[0][0] = param_1[0][0] / l1;
+		param_2[1][0] = param_1[1][0] / l1;
+		param_2[2][0] = param_1[2][0] / l1;
+	}
+	if (l2 != 0.0f) {
+		param_2[0][1] = param_1[0][1] / l2;
+		param_2[1][1] = param_1[1][1] / l2;
+		param_2[2][1] = param_1[2][1] / l2;
+	}
+	if (l3 != 0.0f) {
+		param_2[0][2] = param_1[0][2] / l3;
+		param_2[1][2] = param_1[1][2] / l3;
+		param_2[2][2] = param_1[2][2] / l3;
+	}
+
+	param_3.set(param_1[0][3], param_1[1][3], param_1[2][3]);
+}
 
 void JPAGetRMtxElement(MtxPtr, MtxPtr) { }
 

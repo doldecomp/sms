@@ -13,9 +13,7 @@ void M3UMtxCalcBlendAux(u16 param_1, J3DTransformInfo* param_2,
 		local_8c.y = 1.0f;
 		local_8c.x = 1.0f;
 	} else {
-		local_8c.x = J3DSys::mCurrentS.x;
-		local_8c.y = J3DSys::mCurrentS.y;
-		local_8c.z = J3DSys::mCurrentS.z;
+		local_8c = J3DSys::mCurrentS;
 	}
 
 	float fVar4 = param_2->mScale.x * fVar1 + param_3->mScale.x * param_4;

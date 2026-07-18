@@ -18,7 +18,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void setBlurDefaultValue();
 	void calcDashBlurValue();
@@ -66,7 +66,7 @@ public:
 	TScreenTexture() { }
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*) { }
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 	bool replace(J3DModelData*, const char*);
 

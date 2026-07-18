@@ -21,7 +21,7 @@ public:
 	virtual ~TSilhouette() { };
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	bool isUnk48Positive()
 	{
@@ -34,9 +34,7 @@ public:
 	/* 0x16 */ GXColor unk16;
 	/* 0x1C */ f32 unk1C;
 	/* 0x20 */ f32 unk20;
-	/* 0x24 */ f32 unk24;
-	/* 0x28 */ f32 unk28;
-	/* 0x2C */ f32 unk2C;
+	/* 0x24 */ f32 unk24[3];
 	/* 0x30 */ f32 unk30;
 	/* 0x34 */ f32 unk34;
 	/* 0x38 */ f32 unk38;
@@ -54,31 +52,32 @@ class TTrembleModelEffect {
 public:
 	void reset();
 	void movement();
-	void clash(float);
-	void tremble(float, float, float, int);
+	void clash(f32);
+	void tremble(f32, f32, f32, int);
 	void init(J3DModel*);
 
 	// Fabricated
-	bool checkUnk8(u8 flag) { return unk8 & flag ? true : false; }
+	BOOL checkUnk8(u8 flag) { return unk8 & flag ? TRUE : FALSE; }
 
 public:
 	/* 0x0 */ J3DModel* unk0;
 	/* 0x4 */ void* unk4;
 	/* 0x8 */ u8 unk8;
-	/* 0xA */ u16 unkA;
-	/* 0xC */ u32 unkC;
-	/* 0x10 */ u32 unk10;
-	/* 0x14 */ u32 unk14;
-	/* 0x18 */ u32 unk18;
-	/* 0x1C */ u32 unk1C;
-	/* 0x20 */ u32 unk20;
-	/* 0x24 */ u32 unk24;
-	/* 0x28 */ u32 unk28;
-	/* 0x2C */ u32 unk2C;
-	/* 0x30 */ u32 unk30;
-	/* 0x34 */ u32 unk34;
-	/* 0x38 */ u32 unk38;
-	/* 0x3C */ u32 unk3C;
+	/* 0x9 */ u8 unk9;
+	/* 0xA */ u8 unkA;
+	/* 0xB */ char unkB;
+	/* 0xC */ s16 unkC;
+	/* 0x10 */ s32 unk10;
+	/* 0x14 */ JGeometry::TVec3<s16>* unk14;
+	/* 0x18 */ JGeometry::TVec3<s16>* unk18[2];
+	/* 0x20 */ JGeometry::TVec3<s16>* unk20;
+	/* 0x24 */ s16 unk24;
+	/* 0x26 */ s16 unk26;
+	/* 0x28 */ JGeometry::TVec3<f32>* unk28;
+	/* 0x2C */ JGeometry::TVec3<f32>* unk2C[2];
+	/* 0x34 */ JGeometry::TVec3<f32>* unk34;
+	/* 0x38 */ f32 unk38;
+	/* 0x3C */ f32 unk3C;
 };
 
 class J3DMaterial;
@@ -92,11 +91,10 @@ void SMS_DrawInit();
 void SMS_MakeDLAndLock(J3DModel*);
 void SMS_DrawShape(J3DModelData*, u16);
 void SMS_SettingDrawShape(J3DModelData*, u16);
-void SMS_DrawCube(const JGeometry::TVec3<float>&,
-                  const JGeometry::TVec3<float>&);
+void SMS_DrawCube(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&);
 int SMS_CountPolygonNumInShape(J3DShape*);
 void SMS_ResetDamageFogEffect(J3DModelData*);
-void SMS_AddDamageFogEffect(J3DModelData*, const JGeometry::TVec3<float>&,
+void SMS_AddDamageFogEffect(J3DModelData*, const JGeometry::TVec3<f32>&,
                             JDrama::TGraphics*);
 
 /**

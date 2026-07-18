@@ -41,7 +41,7 @@ public:
 	void setAnimation(const char*, int);
 	void initDL();
 	void resetDL();
-	void initDLByIndex(unsigned short);
+	void initDLByIndex(u16);
 	void unlockDLIfNeed();
 	void onMakeDL();
 	void offMakeDL();
@@ -53,14 +53,14 @@ public:
 	void calc();
 	void viewCalc();
 	void loadSetDeformData(const char*);
-	void setLightID(short);
+	void setLightID(s16);
 	void setLightData(const TBGCheckData*, const JGeometry::TVec3<f32>&);
 	void setLightType(int);
 	void update();
 	void entry();
 	void frameUpdate();
 	void matAnmFrameUpdate();
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	BOOL checkCurAnm(const char*, int);
 	bool checkCurAnmFromIndex(int, int);
 	bool checkAnmFileExist(const char*, int);
@@ -93,9 +93,11 @@ public:
 	// fabricated
 	MActorAnmBase* getUnk28(int i) { return unk28[i]; }
 	MActorAnmBck* getAnmBck() { return unkC; }
-	J3DModel* getModel() { return unk4; }
+	J3DModel* getModel() const { return unk4; }
 	void unmarkUnk40() { unk40 = false; }
 	BOOL curAnmEndsNext() { return curAnmEndsNext(0, 0); }
+
+	// TODO: cleanup the names of all these stupid wrappers
 
 	// fabricated
 	void setCalcForBck(J3DMtxCalc* calc)
@@ -106,7 +108,81 @@ public:
 		unkC->setCalc(calc);
 	}
 
+	J3DAnmTransform* getBckOldMotionBlendAnmPtr() const
+	{
+		if (!unkC)
+			return nullptr;
+
+		return unkC->getOldMotionBlendAnmPtr();
+	}
+
+	void setBckOldMotionBlendAnmPtr(J3DAnmTransform* ptr)
+	{
+		if (!unkC)
+			return;
+
+		unkC->setOldMotionBlendAnmPtr(ptr);
+	}
+
+	f32 getBckOldMotionBlendFrame() const
+	{
+		if (!unkC)
+			return 0.0f;
+
+		return unkC->getOldMotionBlendFrame();
+	}
+
 	void setFrameCtrlForBck(int param_1) { unkC->setFrameCtrl(param_1); }
+
+	void setMotionBlendRatioForBck(f32 ratio)
+	{
+		if (!unkC)
+			return;
+
+		unkC->setMotionBlendRatio(ratio);
+	}
+
+	f32 getMotionBlendRatioForBck()
+	{
+		if (!unkC)
+			return 0.0f;
+
+		return unkC->getMotionBlendRatio();
+	}
+
+	void initSimpleMotionBlend(int frame)
+	{
+		if (!unkC)
+			return;
+
+		unkC->initSimpleMotionBlend(frame);
+	}
+
+	void initNormalMotionBlend()
+	{
+		if (!unkC)
+			return;
+
+		unkC->initNormalMotionBlend();
+	}
+
+	J3DAnmTransformKey* getBckAnm()
+	{
+		if (!unkC)
+			return nullptr;
+
+		return unkC->unk24;
+	}
+
+	void setBck(int index)
+	{
+		if (!checkCurBckFromIndex(index))
+			setBckFromIndex(index);
+	}
+
+	void copyBckFrmCtrl(J3DFrameCtrl ctrl) { }
+
+	void copyBtpFrmCtrl(J3DFrameCtrl ctrl) { }
 
 public:
 	/* 0x00 */ MActorAnmData* unk0;

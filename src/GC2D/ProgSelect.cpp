@@ -32,9 +32,9 @@ TProgSelect::TProgSelect(u8 param_1, const char* name)
 	}
 }
 
-void TProgSelect::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TProgSelect::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		if (mIncreasePulsing) {
 			mPulsingTimer += 16;
 			if (mPulsingTimer > 255) {
@@ -94,8 +94,8 @@ void TProgSelect::perform(u32 param_1, JDrama::TGraphics* param_2)
 		                                  mPulsingTimer + 0x00ff0000);
 	}
 
-	if (param_1 & 0x8) {
-		J2DOrthoGraph local_110(param_2->getUnk54());
+	if (cue & CUE_DRAW) {
+		J2DOrthoGraph local_110(graphics->getViewport());
 		local_110.setup2D();
 		J2DPrint JStack_174(gpSystemFont, 0);
 		JStack_174.setUnk50(32);

@@ -67,9 +67,9 @@ void TQuestionManager::draw() const
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_U8, 7);
 
 	MTXIdentity(mtx);
-	GXSetCurrentMtx(0);
-	GXLoadPosMtxImm(mtx, 0);
-	GXLoadNrmMtxImm(mtx, 0);
+	GXSetCurrentMtx(GX_PNMTX0);
+	GXLoadPosMtxImm(mtx, GX_PNMTX0);
+	GXLoadNrmMtxImm(mtx, GX_PNMTX0);
 	GXSetNumTexGens(1);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, 0, 0x7d);
 	GXSetCullMode(GX_CULL_NONE);
@@ -89,12 +89,12 @@ void TQuestionManager::draw() const
 	GXSetClipMode(GX_CLIP_ENABLE);
 }
 
-void TQuestionManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TQuestionManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((param_1 & 4) != 0) {
+	if ((cue & CUE_CALC_VIEW) != 0) {
 		if (gpSilhouetteManager->isUnk48Positive()) {
 			unk20->reset();
-			makeDL(param_2);
+			makeDL(graphics);
 			unk10 |= 2;
 		} else {
 			unk10 &= ~2;
@@ -102,7 +102,7 @@ void TQuestionManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 		unk12 = 0;
 	}
 
-	if ((param_1 & 8) != 0 && gpSilhouetteManager->isUnk48Positive()
+	if ((cue & CUE_DRAW) != 0 && gpSilhouetteManager->isUnk48Positive()
 	    && (unk10 & 2) != 0) {
 		draw();
 	}

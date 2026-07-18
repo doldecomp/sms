@@ -98,9 +98,10 @@ void TTelesaManager::load(JSUMemoryInputStream& stream)
 {
 	unk38 = new TTelesaSaveLoadParams("/enemy/telesa.prm");
 
-	void* data = JKRGetResource("/scene/telesa/modoki.bmd");
-	mModokiTelesaModel
-	    = new SDLModelData(J3DModelLoaderDataBase::load(data, 0x11020000));
+	void* data         = JKRGetResource("/scene/telesa/modoki.bmd");
+	mModokiTelesaModel = new SDLModelData(J3DModelLoaderDataBase::load(
+	    data, J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+	              | (2 << J3DMLF_TevStageNumShift)));
 
 	TSmallEnemyManager::load(stream);
 }
@@ -154,9 +155,9 @@ void TTelesaManager::telesaForceKill()
 	}
 	if (anyKilled) {
 		Vec* pos = &getObj(0)->mPosition;
-		if (gpMSound->gateCheck(0x2943))
-			MSoundSESystem::MSoundSE::startSoundActor(0x2943, pos, 0, nullptr,
-			                                          0, 4);
+		if (gpMSound->gateCheck(MSD_SE_EN_TELESA_DISAPPEAR))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_EN_TELESA_DISAPPEAR, pos, 0, nullptr, 0, 4);
 	}
 }
 
@@ -279,12 +280,12 @@ void TTelesa::reset()
 	mTelesaBaseColor = cTelesaColor[0];
 }
 
-void TTelesa::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TTelesa::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSmallEnemy::perform(param_1, param_2);
+	TSmallEnemy::perform(cue, graphics);
 	if (!checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_DEAD)) {
 		if (mImitatedBmd) {
-			if (param_1 & 2) {
+			if (cue & CUE_CALC_ANIM) {
 				const TBGCheckData* pTStack_5c;
 				gpMap->checkGround(mPosition.x, mPosition.y, mPosition.z,
 				                   &pTStack_5c);
@@ -297,11 +298,11 @@ void TTelesa::perform(u32 param_1, JDrama::TGraphics* param_2)
 				model->unk14    = JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f);
 			}
 
-			if (param_1 & 0x200)
+			if (cue & CUE_ENTRY)
 				mImitatedBmd->getMActor()->setLightData(mGroundPlane,
 				                                        mPosition);
 
-			mImitatedBmd->getMActor()->perform(param_1, param_2);
+			mImitatedBmd->getMActor()->perform(cue, graphics);
 		}
 	}
 }
@@ -444,7 +445,7 @@ void TTelesa::calcRootMatrix()
 			    ->getMaterialNodePointer(i)
 			    ->getTexGenBlock()
 			    ->getTexMtx(2)
-			    ->setEffectMtx2(afStack_94);
+			    ->setEffectMtx(afStack_94);
 		}
 
 		if (JPABaseEmitter* emitter
@@ -554,13 +555,13 @@ bool TTelesa::changeByJuice()
 		mSpine->pushNerve(&TNerveSmallEnemyChange::theNerve());
 		mSpine->pushAfterCurrent(&TNerveTelesaFreeze::theNerve());
 
-		if (gpMSound->gateCheck(0x28CB))
-			MSoundSESystem::MSoundSE::startSoundActor(0x28CB, &mPosition, 0,
-			                                          nullptr, 0, 4);
+		if (gpMSound->gateCheck(MSD_SE_EN_TELESA_FIX))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_EN_TELESA_FIX, &mPosition, 0, nullptr, 0, 4);
 
-		if (gpMSound->gateCheck(0x3881))
-			MSoundSESystem::MSoundSE::startSoundActor(0x3881, &mPosition, 0,
-			                                          nullptr, 0, 4);
+		if (gpMSound->gateCheck(MSD_SE_OBJ_AWAY_INTO_GRAF))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_OBJ_AWAY_INTO_GRAF, &mPosition, 0, nullptr, 0, 4);
 
 		unk185 = 1;
 
@@ -582,9 +583,9 @@ void TTelesa::scalingChangeActor()
 void TTelesa::changeOut()
 {
 	onHitFlag(HIT_FLAG_NO_COLLISION);
-	if (gpMSound->gateCheck(0x293D))
-		MSoundSESystem::MSoundSE::startSoundActor(0x293D, &mPosition, 0,
-		                                          nullptr, 0, 4);
+	if (gpMSound->gateCheck(MSD_SE_EN_TELSA_RECOVER))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_TELSA_RECOVER,
+		                                          &mPosition, 0, nullptr, 0, 4);
 	offLiveFlag(LIVE_FLAG_HIDDEN);
 	mPosition = mJuiceBlock->mPosition;
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
@@ -703,9 +704,9 @@ void TTelesa::initAttacker(THitActor* param_1)
 	mMActor->getFrameCtrl(0)->setFrame(0.0f);
 	mHeadHeight = 250.0f;
 
-	if (gpMSound->gateCheck(0x28D8))
-		MSoundSESystem::MSoundSE::startSoundActor(0x28D8, &mPosition, 0,
-		                                          nullptr, 0, 4);
+	if (gpMSound->gateCheck(MSD_SE_EN_TELESA_APPEAR))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_TELESA_APPEAR,
+		                                          &mPosition, 0, nullptr, 0, 4);
 }
 
 void TTelesa::initItemAttacker(THitActor* param_1)
@@ -722,9 +723,9 @@ void TTelesa::initItemAttacker(THitActor* param_1)
 	unk150 &= ~0x40;
 	mMActor->getFrameCtrl(0)->setFrame(0.0f);
 	mHeadHeight = 250.0f;
-	if (gpMSound->gateCheck(0x28D8))
-		MSoundSESystem::MSoundSE::startSoundActor(0x28D8, &mPosition, 0,
-		                                          nullptr, 0, 4);
+	if (gpMSound->gateCheck(MSD_SE_EN_TELESA_APPEAR))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_TELESA_APPEAR,
+		                                          &mPosition, 0, nullptr, 0, 4);
 }
 
 void TTelesa::setAttacker()
@@ -961,63 +962,63 @@ void TMarioModokiTelesa::load(JSUMemoryInputStream& stream)
 
 	case 1:
 		if (void* data = JKRGetResource("/scene/mapObj/coin.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 2:
 		if (void* data = JKRGetResource("/scene/mapObj/coin_red.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 3:
 		if (void* data = JKRGetResource("/scene/mapObj/coin_blue.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 4:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitBanana.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 5:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitDurian.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 6:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitPapaya.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 7:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitPine.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 8:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitCoconut.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 9:
 		if (void* data = JKRGetResource("/scene/mapObj/mashroom1up.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 10:
 		if (void* data = JKRGetResource("/scene/mapObj/kibako.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 11:
 		if (void* data = JKRGetResource("/scene/mapObj/woodbarrel.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 12:
 		if (void* data = JKRGetResource("/scene/monteM/mom_model.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	}
 
@@ -1095,9 +1096,9 @@ DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 
 		spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
 
-		if (gpMSound->gateCheck(0x2937))
-			MSoundSESystem::MSoundSE::startSoundActor(0x2937, &self->mPosition,
-			                                          0, nullptr, 0, 4);
+		if (gpMSound->gateCheck(MSD_SE_EN_KM_TELSA_REVEAL))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_EN_KM_TELSA_REVEAL, &self->mPosition, 0, nullptr, 0, 4);
 
 		// end of inline
 
@@ -1228,7 +1229,10 @@ TSmallEnemy* TKageMarioModokiManager::createEnemyInstance()
 void TKageMarioModokiManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "default.bmd", 0x11020000, 0 },
+		{ "default.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

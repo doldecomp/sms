@@ -30,7 +30,25 @@ inline f32 MsGetRotFromZaxisY(const JGeometry::TVec3<f32>& axis)
 	}
 }
 
+inline f32 MsGetRotFromYaxisZ(const JGeometry::TVec3<f32>& axis)
+{
+	if (axis.y == 0.0f) {
+		if (axis.x >= 0.0f)
+			return -90.0f;
+		else
+			return 90.0f;
+	}
+
+	if (axis.y >= 0.0f) {
+		return -((360.0f / 65536.0f) * matan(axis.y, axis.x));
+	} else {
+		f32 theta = matan(-axis.y, axis.x) * (360.0f / 65536.0f);
+		return 180.0f + theta;
+	}
+}
+
 JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>&);
+JGeometry::TQuat4<f32> SMS_Eular2Quat(const JGeometry::TVec3<f32>&);
 void MsMtxSetRotRPH(MtxPtr mtx, f32 x, f32 y, f32 z);
 void MsMtxSetXYZRPH(MtxPtr mtx, f32 x, f32 y, f32 z, s16 r, s16 p, s16 h);
 inline void MsMtxSetXYZRPH(MtxPtr mtx, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h)
@@ -39,7 +57,24 @@ inline void MsMtxSetXYZRPH(MtxPtr mtx, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h)
 	               static_cast<s16>(p * (65536.0f / 360.0f)),
 	               static_cast<s16>(h * (65536.0f / 360.0f)));
 }
-void MsMtxSetTRS(MtxPtr, f32, f32, f32, f32, f32, f32, f32, f32, f32);
+void MsMtxSetTRS(MtxPtr result, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h,
+                 f32 sx, f32 sy, f32 sz);
+
+inline void MsMtxSetTRS(MtxPtr result, const JGeometry::TVec3<f32>& trans,
+                        const JGeometry::TVec3<f32>& rot,
+                        const JGeometry::TVec3<f32>& scale)
+{
+	MsMtxSetTRS(result, trans.x, trans.y, trans.z, rot.x, rot.y, rot.z, scale.x,
+	            scale.y, scale.z);
+}
+
+// Fabricated AND wrong!
+inline void MsMtxSetTRS(MtxPtr result, f32 x, f32 y, f32 z, s16 r, s16 p, s16 h,
+                        f32 sx, f32 sy, f32 sz)
+{
+	MsMtxSetTRS(result, x, y, z, r * (360.0f / 65536.0f),
+	            p * (360.0f / 65536.0f), h * (360.0f / 65536.0f), sx, sy, sz);
+}
 
 template <class T> inline T MsWrap(T t, T l, T r)
 {
@@ -108,19 +143,34 @@ MsPerpendicFootToLineR(const JGeometry::TVec3<f32>& param_1,
                        const JGeometry::TVec3<f32>& param_3)
 {
 	// TODO: floats are the worst, doesn't match at all...
-	JGeometry::TVec3<f32> diff;
-	diff.sub(param_2, param_1);
+	JGeometry::TVec3<f32> diff = param_2;
+	diff -= param_1;
 	f32 fVar1 = (param_3.dot(diff) - param_1.dot(diff)) / diff.squared();
-	if (fVar1 < 0.0f) {
+
+	if (fVar1 < 0.0f)
 		fVar1 = 0.0f;
-	} else if (fVar1 > 1.0f)
+	else if (fVar1 > 1.0f)
 		fVar1 = 1.0f;
+
 	JGeometry::TVec3<f32> thing;
 	thing.scale(fVar1, diff);
-	thing.add(param_1);
+
+	JGeometry::TVec3<f32> copy = thing;
+	thing += param_1;
 	return thing;
 }
 
-f32 MsSqrtf(f32);
+inline f32 MsSqrtf(f32 x)
+{
+	// We love copy-pasting code, don't we?
+	volatile float y;
+	if (x > 0.0f) {
+		double guess = __frsqrte((double)x);
+		guess        = .5 * guess * (3.0 - guess * guess * x);
+		y            = (float)(x * guess);
+		return y;
+	}
+	return x;
+}
 
 #endif

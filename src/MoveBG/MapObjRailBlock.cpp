@@ -38,7 +38,9 @@ void TRailMapObj::initGraphTracer(TGraphWeb* graph)
 			unk138->moveToShortestNext();
 		}
 
-		if (graph->getGraphNode(unk138->getCurrentIndex()).getRailNode()->mFlags
+		if (graph->getGraphNode(unk138->getCurGraphIndex())
+		        .getRailNode()
+		        ->mFlags
 		    & 0x80)
 			onRailFlag(2);
 
@@ -95,11 +97,12 @@ BOOL TRailMapObj::moveToNextNode(float param_1)
 
 bool TRailMapObj::checkMarioRiding()
 {
-	TBGCheckData* data = SMS_GetMarioGrPlane();
+	const TBGCheckData* data = SMS_GetMarioGrPlane();
 	if (!checkRailFlag(1)) {
 		if (data && data->getActor() == this && SMS_IsMarioTouchGround4cm()) {
 			u32 status = SMS_GetMarioStatus(SMS_GetMarioHitActor());
-			if ((status & 0x200) && !(status & 0x200000)) {
+			if ((status & MARIO_STATUS_FLAG_UNK200)
+			    && !(status & MARIO_STATUS_FLAG_UNK200000)) {
 				onRailFlag(1);
 				offRailFlag(2);
 			}
@@ -193,7 +196,8 @@ void TRailMapObj::setGroundCollision()
 	if (!mMapCollisionManager)
 		return;
 
-	if (unk14A != 0 && (!checkMapObjFlag(2) || getColNum() != 0)) {
+	if (unk14A != 0
+	    && (!checkMapObjFlag(MAP_OBJ_FLAG_UNK2) || getColNum() != 0)) {
 		TMtx34f mtx;
 		mtx.set(getModel()->getAnmMtx(0));
 		if (TMapCollisionBase* col = mMapCollisionManager->unk8)
@@ -229,11 +233,11 @@ void TRailMapObj::control()
 	}
 }
 
-void TRailMapObj::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TRailMapObj::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((param_1 & 0x200) && unk14C == 0)
-		param_1 &= ~0x200;
-	TMapObjBase::perform(param_1, param_2);
+	if ((cue & CUE_ENTRY) && unk14C == 0)
+		cue &= ~CUE_ENTRY;
+	TMapObjBase::perform(cue, graphics);
 }
 
 TNormalLift::TNormalLift(const char* name)
@@ -325,12 +329,12 @@ void TNormalLift::setGroundCollision()
 		TRailMapObj::setGroundCollision();
 }
 
-void TNormalLift::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TNormalLift::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (unk158 && unk152 && (param_1 & 0x200))
-		param_1 &= ~0x200;
+	if (unk158 && unk152 && (cue & CUE_ENTRY))
+		cue &= ~CUE_ENTRY;
 
-	TRailMapObj::perform(param_1, param_2);
+	TRailMapObj::perform(cue, graphics);
 }
 
 TRailBlock::TRailBlock(const char* name)

@@ -9,8 +9,8 @@
 #include <System/StageUtil.hpp>
 #include <System/FlagManager.hpp>
 #include <System/CardManager.hpp>
-#include <Player/MarioMain.hpp>
-#include <Player/Watergun.hpp>
+#include <Player/Mario.hpp>
+#include <Player/WaterGun.hpp>
 #include <Strategic/ObjHitCheck.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
@@ -140,7 +140,7 @@ int TMarDirector::direct()
 			if (unk58 & 1)
 				uVar4 &= ~0x100;
 			if (unk58 & 2)
-				uVar4 &= 0x200;
+				uVar4 &= ~0x200;
 			if (unk4E & 1)
 				mShinePfLstMov->perform(uVar4, &local_140);
 			else
@@ -160,20 +160,20 @@ int TMarDirector::direct()
 
 			if (unk4C & 0x4000) {
 				local_140.unk2 = 0;
-				unk34->perform(0xffffffff, &local_140);
+				unk34->perform(CUE_ALL, &local_140);
 				break;
 			}
 		} else {
 			local_140.unk2 = 0;
-			unk40->perform(0xffffffff, &local_140);
-			unk38->perform(0xffffffff, &local_140);
-			unk3C->perform(0xffffffff, &local_140);
-			mPerformListGX->perform(0xffffffff, &local_140);
+			unk40->perform(CUE_ALL, &local_140);
+			unk38->perform(CUE_ALL, &local_140);
+			unk3C->perform(CUE_ALL, &local_140);
+			mPerformListGX->perform(CUE_ALL, &local_140);
 			if ((gpSilhouetteManager->unk48 > 0.0f ? true : false)
 			    || gpCamera->unk2C8 != -1) {
-				mPerformListSilhouette->perform(0xffffffff, &local_140);
+				mPerformListSilhouette->perform(CUE_ALL, &local_140);
 			}
-			mPerformListGXPost->perform(0xffffffff, &local_140);
+			mPerformListGXPost->perform(CUE_ALL, &local_140);
 			GXInvalidateTexAll();
 		}
 		desiredAppState = changeState();
@@ -192,12 +192,12 @@ static void decideNextStage()
 	int stage = SMS_getShineStage(gpApplication.mCurrArea.getStage());
 	switch (stage) {
 	case 0:
-		local_3C.set(1, 0xff, JDrama::TFlagT<u16>(0));
+		local_3C.set(1, 0xff, JDrama::TFlagT<u16>());
 		break;
 	case 1:
 	case 2:
 	default:
-		local_3C.set(1, 0xff, JDrama::TFlagT<u16>(0));
+		local_3C.set(1, 0xff, JDrama::TFlagT<u16>());
 		break;
 	}
 	gpApplication.setNextArea(local_3C);
@@ -323,13 +323,15 @@ int TMarDirector::changeState()
 			if (mConsole->unk94->unk2BC == 6)
 				nextState = STATE_UNK2;
 		} else if (mConsole->unk94->unk2BC == 6
-		           && !gpMarioOriginal->checkActionThing()) {
+		           && !gpMarioOriginal->checkStatusType(
+		               MARIO_STATUS_FLAG_UNK1000)) {
 			nextState = STATE_UNK4;
 		}
 		break;
 
 	case STATE_UNK2:
-		if (!unkE0->unk26 && !gpMarioOriginal->checkActionThing())
+		if (!unkE0->unk26
+		    && !gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_UNK1000))
 			nextState = STATE_UNK4;
 		break;
 
@@ -363,7 +365,7 @@ int TMarDirector::changeState()
 		break;
 
 	case STATE_UNK11: {
-		switch (unkAC->unk118->getNextState()) {
+		switch (unkAC->mCardSave->getNextState()) {
 		case 0:
 			if (unk261 == 7) {
 				TFlagManager::smInstance->restore();
@@ -456,8 +458,9 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 	switch (mState) {
 	case STATE_UNK0:
 		JDrama::TNameRefGen::search<JDrama::TViewObj>("Group 2D")
-		    ->unkC.off(0xB);
-		JDrama::TNameRefGen::search<JDrama::TViewObj>("Guide")->unkC.on(0xB);
+		    ->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
+		JDrama::TNameRefGen::search<JDrama::TViewObj>("Guide")->unkC.on(
+		    CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 
 		gpApplication.mFader->startWipe(unkE4, 0.4f, 0.0f);
 		SMSRumbleMgr->reset();
@@ -491,8 +494,9 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 		SMSRumbleMgr->finishPause();
 
 		JDrama::TNameRefGen::search<JDrama::TViewObj>("Group 2D")
-		    ->unkC.off(0xB);
-		JDrama::TNameRefGen::search<JDrama::TViewObj>("Guide")->unkC.on(0xB);
+		    ->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
+		JDrama::TNameRefGen::search<JDrama::TViewObj>("Guide")->unkC.on(
+		    CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 
 		SMSSwitch2DArchive("guide", gArBkConsole);
 		if (gpApplication.mCurrArea.unk0 == 1)
@@ -582,21 +586,23 @@ void TMarDirector::setMario()
 
 	switch (gpApplication.mCurrArea.getStage()) {
 	case 0x3C:
-		gpMarioOriginal->mWaterGun->changeNozzle(1, true);
+		gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Rocket, true);
 		break;
 
 		// TODO: crazy cases
 	case 0:
 	case 7:
 		gpMarioOriginal->mWaterGun->changeNozzle(
-		    TFlagManager::getInstance()->getFlag(0x40004), true);
-		gpMarioOriginal->mWaterGun->changeNozzle(0, true);
+		    (TWaterGun::TNozzleType)TFlagManager::getInstance()->getFlag(
+		        0x40004),
+		    true);
+		gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Spray, true);
 		break;
 	}
 
 	u32 uVar6 = SMS_getShineIDofExStage(gpApplication.mCurrArea.getStage());
 	if (uVar6 != 0xff && TFlagManager::getInstance()->getShineFlag(uVar6) == 0)
-		gpMarioOriginal->unk118 &= ~0x8000;
+		gpMarioOriginal->offFlag(MARIO_FLAG_HAS_FLUDD);
 }
 
 void TMarDirector::nextStateInitialize(u8 next_state)
@@ -659,12 +665,12 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 			unk50 |= 1;
 		}
 		if (mMap != 0xf)
-			mConsole->unkC.off(0xB);
+			mConsole->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 		break;
 
 	case 4:
 		if (mState <= STATE_UNK3 && mMap != 0xf)
-			mConsole->unkC.off(0xB);
+			mConsole->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 		if (unk50 & 2) {
 			mConsole->unk94->startAppearGo();
 			unk50 &= ~0x2;
@@ -686,7 +692,8 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 	case 9: {
 		gpApplication.mFader->startWipe(unkE4, 0.4f, 0.0f);
 		if (unkE4 == 8)
-			SMSGetMSound()->startSoundSystemSE(0x4859, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_MA_INTO_DOKAN, 0, nullptr,
+			                                   0);
 		MSound* sound = gpMSound;
 		sound->fadeOutAllSound(SMSGetVSyncTimesPerSec() * 0.4f);
 		SMSRumbleMgr->reset();
@@ -712,10 +719,13 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		for (int i = 0; i < 4; ++i)
 			JUTGamePad::CRumble::stopMotor(unk18[i]->mPortNum);
 		unk18[0]->onFlag(0x1);
-		JDrama::TNameRefGen::search<JDrama::TViewObj>("Group 2D")->unkC.on(0xB);
-		JDrama::TNameRefGen::search<JDrama::TViewObj>("Guide")->unkC.off(0xB);
-		if (gpMSound->gateCheck(0x4817))
-			SMSGetMSound()->startSoundSystemSE(0x4817, 0, nullptr, 0);
+		JDrama::TNameRefGen::search<JDrama::TViewObj>("Group 2D")
+		    ->unkC.on(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
+		JDrama::TNameRefGen::search<JDrama::TViewObj>("Guide")->unkC.off(
+		    CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
+		if (gpMSound->gateCheck(MSD_SE_SY_WIPE_IN))
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_WIPE_IN, 0, nullptr,
+			                                   0);
 		gpApplication.mFader->startWipe(6, 1.0f, 0.0f);
 		unk78->setup(nullptr);
 		unk78->startMoveCursor();
@@ -725,7 +735,7 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		if (currSeq.unk0 == 1)
 			THPPlayerPause();
 		SMSRumbleMgr->startPause();
-		unkAC->unk118->init(unk261);
+		unkAC->mCardSave->init(unk261);
 		for (int i = 0; i < 4; ++i)
 			JUTGamePad::CRumble::stopMotor(unk18[i]->mPortNum);
 		unk18[0]->onFlag(0x1);
@@ -737,13 +747,13 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		unk60 = unk5C;
 		gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 0xff));
 		if (TFlagManager::smInstance->getFlag(0x20001) >= 0) {
-			MSBgm::startBGM(0x8001000c);
+			MSBgm::startBGM(MSD_BGM_BOSS);
 			if (unk4E & 8)
 				gpApplication.mFader->startWipe(2, 0.0f, 2.0f);
 			else
 				gpApplication.mFader->startWipe(10, 0.0f, 2.2f);
 		} else {
-			MSBgm::startBGM(0x80010028);
+			MSBgm::startBGM(MSD_BGM_BOSSHANA_2ND3RD);
 			gpApplication.mFader->startWipe(0xD, 0.0f, 2.0f);
 		}
 		break;
@@ -757,7 +767,7 @@ u8 TMarDirector::updateGameMode()
 	switch (unk124) {
 	case 0:
 		if (!(unk4C & 0x1FFF)) {
-			if (SMS_CheckMarioFlag(0x400)) {
+			if (SMS_CheckMarioFlag(MARIO_FLAG_GAME_OVER)) {
 				unk4C |= 0x20;
 				break;
 			}
@@ -774,7 +784,8 @@ u8 TMarDirector::updateGameMode()
 						break;
 					}
 
-					SMSGetMSound()->startSoundSystemSE(0x483D, 0, nullptr, 0);
+					SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_NOT_COLLECT, 0,
+					                                   nullptr, 0);
 				}
 			}
 		} else {
@@ -792,9 +803,9 @@ u8 TMarDirector::updateGameMode()
 				TGCConsole2* console = gpMarDirector->mConsole;
 				console->unk94->startAppearShineGet();
 				console->unk34[19] = 1;
-				MSBgm::startBGM(0x8001000a);
+				MSBgm::startBGM(MSD_BGM_CHUBOSS);
 				TFlagManager::getInstance()->setBool(true, 0x30006);
-				TFlagManager::getInstance()->setShineFlag(unk25C->unk134);
+				TFlagManager::getInstance()->setShineFlag(unk25C->getEventId());
 				f32 fVar3 = unkDC->mRate;
 				unkDC->registFadeout(fVar3 * 1.0f, fVar3 * 5.3333333f);
 				unk4C |= 0x8202;
@@ -941,7 +952,7 @@ u8 TMarDirector::updateGameMode()
 
 		case 1:
 			unkA0->onLiveFlag(LIVE_FLAG_UNK40000);
-			unkA0->unkC.off(0x3);
+			unkA0->unkC.off(CUE_MOVE | CUE_CALC_ANIM);
 			unk18[0]->mFlags |= 0x8;
 			OSStopStopwatch(&unkE8);
 			break;
@@ -1131,7 +1142,7 @@ void TMarDirector::moveStage()
 		}
 	}
 
-	if (gpMarioOriginal->checkFlag(0x8000)) {
+	if (gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 		u32 r5 = 0;
 		if ((int)gpMarioOriginal->mWaterGun->mSecondNozzle == 3)
 			r5 = 4;

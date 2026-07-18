@@ -19,15 +19,15 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-void TNintendo2D::perform(u32 param_1, JDrama::TGraphics*)
+void TNintendo2D::perform(u32 cue, JDrama::TGraphics*)
 {
 
-	if (param_1 & 8) {
+	if (cue & CUE_DRAW) {
 		GXSetCullMode(GX_CULL_BACK);
 		Mtx afStack_3c;
 		MTXTrans(afStack_3c, 0.0, 0.0, 0.0);
-		GXLoadPosMtxImm(afStack_3c, 0);
-		GXSetCurrentMtx(0);
+		GXLoadPosMtxImm(afStack_3c, GX_PNMTX0);
+		GXSetCurrentMtx(GX_PNMTX0);
 		GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_S16, 0);
 		GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
 		GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_S8, 0);
@@ -111,7 +111,7 @@ void TGCLogoDir::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 	f32 fVar2 = (480 - h) / 2;
 
 	JDrama::TOrthoProj* proj = new JDrama::TOrthoProj(
-	    fVar3, fVar2, fVar3 + logoRendArea.getWidth(), fVar2 + h);
+	    -1.0f, 1.0f, fVar3, fVar2, fVar3 + logoRendArea.getWidth(), fVar2 + h);
 	group2d->getChildren().push_back(proj);
 
 	JDrama::TScreen* screen = new JDrama::TScreen(logoRendArea, "Screen 2D");
@@ -174,7 +174,7 @@ bool TGCLogoDir::direct_nlogo()
 			else
 				nextState = 1;
 
-			SMSGetMSound()->startSoundSystemSE(0x7914, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_MV_CHAO, 0, nullptr, 0);
 			mLogoShowTimer = 0;
 		} else {
 			if (mProgSelect->unkC.mValue != 0 && VIGetTvFormat() == 0

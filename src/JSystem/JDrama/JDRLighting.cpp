@@ -8,16 +8,18 @@ using namespace JDrama;
 void TLight::load(JSUMemoryInputStream& stream)
 {
 	TPlacement::load(stream);
-	JUtility::TColor color = stream.readU32();
+
+	// TODO: this implies an inline, probably?
+	const JUtility::TColor& color = stream.readU32();
 	GXInitLightColor(&unk24, color);
 }
 
-void TLight::perform(u32 param_1, TGraphics* param_2)
+void TLight::perform(u32 cue, TGraphics* graphics)
 {
-	if (!(param_1 & 0x20))
+	if (!(cue & CUE_LIGHT))
 		return;
-	correct(param_2);
-	GXLoadLightObjImm(&unk24, (GXLightID)(param_2->unkE4 + GX_LIGHT0));
+	correct(graphics);
+	GXLoadLightObjImm(&unk24, (GXLightID)(graphics->unkE4 + GX_LIGHT0));
 }
 
 void TLight::correct(TGraphics* param_1) const
@@ -94,20 +96,16 @@ void TLightAry::setLightNum(s32 num)
 		mLights = new TIdxLight[mLightCount];
 
 	for (int i = 0; i < mLightCount; ++i)
-		mLights[i].unk68 = i;
+		mLights[i].setLightIdx(i);
 }
 
-void TLightAry::perform(u32 param_1, TGraphics* param_2)
+void TLightAry::perform(u32 cue, TGraphics* graphics)
 {
-	if (!(param_1 & 0x20))
+	if (!(cue & CUE_LIGHT))
 		return;
 
-	for (int i = 0; i < mLightCount; ++i) {
-		TIdxLight& light = mLights[i];
-		Vec pos;
-		MTXMultVec(param_2->mViewMtx.mMtx, &light.mPosition, &pos);
-		GXInitLightPos(&light.unk24, pos.x, pos.y, pos.z);
-	}
+	for (int i = 0; i < mLightCount; ++i)
+		mLights[i].correct(graphics);
 
 	DCFlushRange(mLights, mLightCount * sizeof(TIdxLight));
 	GXSetArray(GX_LIGHT_ARRAY, &mLights[0].unk24, sizeof(TIdxLight));
@@ -119,10 +117,10 @@ void TAmbColor::load(JSUMemoryInputStream& stream)
 	mColor.set(stream.readU32());
 }
 
-void TAmbColor::perform(u32 param_1, TGraphics* param_2)
+void TAmbColor::perform(u32 cue, TGraphics* graphics)
 {
 
-	if (!(param_1 & 0x20))
+	if (!(cue & CUE_LIGHT))
 		return;
 
 	GXSetChanAmbColor(GX_COLOR0A0, mColor);
@@ -181,15 +179,15 @@ void TLightMap::load(JSUMemoryInputStream& stream)
 	}
 }
 
-void TLightMap::perform(u32 param_1, TGraphics* param_2)
+void TLightMap::perform(u32 cue, TGraphics* graphics)
 {
-	if (!(param_1 & 0x20))
+	if (!(cue & CUE_LIGHT))
 		return;
 
 	for (int i = 0; i < mLightInfoCount; ++i) {
 		if (mLightInfos[i].unk4) {
-			param_2->unkE4 = mLightInfos[i].unk0;
-			mLightInfos[i].unk4->perform(param_1, param_2);
+			graphics->unkE4 = mLightInfos[i].unk0;
+			mLightInfos[i].unk4->perform(cue, graphics);
 		}
 	}
 }

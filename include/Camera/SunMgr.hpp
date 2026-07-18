@@ -10,25 +10,27 @@ extern TSunMgr* gpSunMgr;
 
 class TSunMgr : public JDrama::TViewObj, public TDrawSyncCallback {
 public:
-	TSunMgr(const char*);
-	void load(JSUMemoryInputStream&);
-	void perform(unsigned long, JDrama::TGraphics*);
-	void getAddColor() const;
-	void drawSyncCallback(unsigned short);
-	~TSunMgr();
+	TSunMgr(const char* name = "<TSunMgr>");
+
+	virtual void load(JSUMemoryInputStream&);
+	virtual void perform(unsigned long, JDrama::TGraphics*);
+	virtual void drawSyncCallback(unsigned short);
+
+	int getAddColor() const;
 
 	// fabricated
 	u8 getUnk1CAlpha() { return unk1C.a; }
 
+	bool isThing() const { return unk15 & 2; }
+
 public:
 	/* 0x14 */ u8 unk14;
 	/* 0x15 */ u8 unk15;
-	/* 0x18 */ GXColor unk18;
-	/* 0x1C */ GXColor unk1C;
+	/* 0x16 */ char unk16[2];
+	/* 0x18 */ JUtility::TColor unk18;
+	/* 0x1C */ JUtility::TColor unk1C;
 	/* 0x20 */ f32 unk20;
-	/* 0x24 */ f32 unk24;
-	/* 0x28 */ f32 unk28;
-	/* 0x2C */ f32 unk2C;
+	/* 0x24 */ JGeometry::TVec3<f32> unk24;
 };
 
 #endif

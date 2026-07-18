@@ -5,18 +5,19 @@
 #include <M3DUtil/MActorUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <stdio.h>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-void TPolluterBase::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TPolluterBase::perform(u32 cue, JDrama::TGraphics*)
 {
-	if (param_1 & 2)
+	if (cue & CUE_CALC_ANIM)
 		unk138->calcAnm();
 
-	if (param_1 & 0x200)
+	if (cue & CUE_ENTRY)
 		gpPollution->stampModel(unk138->getModel());
 }
 
@@ -26,7 +27,9 @@ void TPolluterBase::load(JSUMemoryInputStream& stream)
 	char buffer[64];
 	snprintf(buffer, 64, "/scene/mapObj/%s.bmd", unkF4);
 	unk138 = SMS_MakeMActorWithAnmData(
-	    buffer, gpMapObjManager->getMActorAnmData(), 3, 0x10210000);
+	    buffer, gpMapObjManager->getMActorAnmData(), 3,
+	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	        | (1 << J3DMLF_TevStageNumShift));
 	makeLowerStr(unkF4, buffer);
 	unk138->setBck(buffer);
 	unk138->setBpk(buffer);
@@ -49,37 +52,38 @@ void TRevivalPolluter::pollute() { }
 void TRevivalPolluter::registerPolluteTex()
 {
 	// TODO: inlines make me cry
-	TPollutionLayer* layer = gpPollution->getLayer(unk0);
+	TPollutionLayer* layer = gpPollution->getLayer(mLayerIndex);
 	unk8 = gpPollution->getCounterLayer().registerRevivalTexStamp(
-	    unk0, 0, 0, layer->unk5C.mWidth, layer->unk5C.mHeight, unk18, unk4);
+	    mLayerIndex, 0, 0, layer->mPos.mWidth, layer->mPos.mHeight,
+	    mStampInterval, mRevivalStampTex);
 }
 
 void TRevivalPolluter::loadInfo(JSUMemoryInputStream& stream)
 {
 	u32 value;
-	stream.read(&value, 4);
-	unk0 = value;
-	stream.read(&unk18, 4);
+	stream >> value;
+	mLayerIndex = value;
+	stream >> mStampInterval;
 
 	char buffer[64];
-	snprintf(buffer, 64, "/scene/map/pollution/pollute%02d.bti", unk0);
-	unk4 = (ResTIMG*)JKRGetResource(buffer);
+	snprintf(buffer, 64, "/scene/map/pollution/pollute%02d.bti", mLayerIndex);
+	mRevivalStampTex = (ResTIMG*)JKRGetResource(buffer);
 }
 
 TRevivalPolluter::TRevivalPolluter()
-    : unk0(0)
-    , unk4(nullptr)
+    : mLayerIndex(0)
+    , mRevivalStampTex(nullptr)
     , unk8(0)
     , unkC(0.0f)
     , unk10(0.0f)
     , unk14(0.0f)
-    , unk18(0)
+    , mStampInterval(0)
 {
 }
 
-void TMapObjRevivalPollution::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMapObjRevivalPollution::perform(u32 cue, JDrama::TGraphics*)
 {
-	if (!(param_1 & 2))
+	if (!(cue & CUE_CALC_ANIM))
 		return;
 
 	for (int i = 0; i < unk10; ++i)

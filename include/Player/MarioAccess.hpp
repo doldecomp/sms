@@ -2,20 +2,24 @@
 #define PLAYER_MARIO_ACCESS_HPP
 
 #include <JSystem/JGeometry.hpp>
+#include <Player/MarioStatus.hpp>
+#include <Player/MarioFlags.hpp>
 #include <stddef.h>
 
 class TLiveActor;
 class THitActor;
 class TBGCheckData;
+class TWaterGun;
+class TYoshi;
 
-extern size_t gpMarioAddress;
+extern void* gpMarioAddress;
 
 extern JGeometry::TVec3<f32>* gpMarioPos;
 
 extern s16 *gpMarioAngleX, *gpMarioAngleY, *gpMarioAngleZ;
 extern f32 *gpMarioSpeedX, *gpMarioSpeedY, *gpMarioSpeedZ;
 
-extern u16* gpMarioLightID;
+extern s16* gpMarioLightID;
 extern u32* gpMarioFlag;
 extern f32* gpMarioThrowPower;
 extern const TBGCheckData** gpMarioGroundPlane;
@@ -50,7 +54,7 @@ bool SMS_IsMarioTouchGround4cm();
 void SMS_ThrowMario(const JGeometry::TVec3<f32>&, f32);
 bool SMS_SendMessageToMario(THitActor*, u32);
 void SMS_GetMarioJumpIntoWaterModelData();
-void* SMS_GetMarioWaterGun();
+TWaterGun* SMS_GetMarioWaterGun();
 
 f32 SMS_GetMarioGravity();
 f32 SMS_GetMarioGrLevel();
@@ -73,38 +77,33 @@ bool SMS_IsMarioStatusWaiting();
 TLiveActor* SMS_GetMarioLiveActor();
 THitActor* SMS_GetMarioHitActor();
 bool SMS_AskJumpIntoWaterEffectExist();
-void* SMS_GetYoshi();
+TYoshi* SMS_GetYoshi();
 void SMS_SetMarioAccessParams();
 
 // Real, see bossgesso
 inline JGeometry::TVec3<f32>& SMS_GetMarioPos() { return *gpMarioPos; }
 
-JGeometry::TVec3<f32> SMS_DistanceFromMarioVec(const JGeometry::TVec3<f32>& pos)
+inline f32 SMS_GetMarioX() { return gpMarioPos->x; }
+inline f32 SMS_GetMarioY() { return gpMarioPos->y; }
+inline f32 SMS_GetMarioZ() { return gpMarioPos->z; }
+inline s16 SMS_GetMarioAngleX() { return *gpMarioAngleX; }
+inline s16 SMS_GetMarioAngleY() { return *gpMarioAngleY; }
+inline s16 SMS_GetMarioAngleZ() { return *gpMarioAngleZ; }
+inline f32 SMS_GetMarioSpeedX() { return *gpMarioSpeedX; }
+inline f32 SMS_GetMarioSpeedY() { return *gpMarioSpeedY; }
+inline f32 SMS_GetMarioSpeedZ() { return *gpMarioSpeedZ; }
+
+inline JGeometry::TVec3<f32>
+SMS_DistanceFromMarioVec(const JGeometry::TVec3<f32>& pos)
 {
 	JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
 	marioPos.sub(pos);
 	return marioPos;
 }
 
-f32 SMS_DistanceFromMario(const JGeometry::TVec3<f32>& pos)
+inline f32 SMS_DistanceFromMario(const JGeometry::TVec3<f32>& pos)
 {
 	return SMS_DistanceFromMarioVec(pos).length();
-}
-
-// fabricated and very unlikely to be real
-// TODO: removeme
-inline void SMS_GetMarioPosStupid(Vec* result)
-{
-	result->x = 0;
-	result->y = 0;
-	result->z = 0;
-
-	if (!gpMarioAddress)
-		return;
-
-	result->z = *(f32*)(gpMarioAddress + 0x18);
-	result->y = *(f32*)(gpMarioAddress + 0x14);
-	result->x = *(f32*)(gpMarioAddress + 0x10);
 }
 
 // fabricated

@@ -64,7 +64,7 @@ void TLauncher::init(TLiveManager* param_1)
 	offHitFlag(0x1);
 }
 
-BOOL TLauncher::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TLauncher::receiveMessage(THitActor* sender, u32 message)
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return false;
@@ -72,10 +72,11 @@ BOOL TLauncher::receiveMessage(THitActor* param_1, u32 param_2)
 	if (mState == STATE_DIE)
 		return false;
 
-	if (param_1->getActorType() == 0x1000001) {
-		if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
+	if (sender->getActorType() == 0x1000001) {
+		if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 			gpMarioParticleManager->emit(0xE7, &mPosition, 0, nullptr);
-			gpMSound->startSoundSet(0x6802, &mPosition, 0, 0.0f, 0, 0, 4);
+			gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
+			                        0.0f, 0, 0, 4);
 			if (mState == STATE_HITBYWATER)
 				return true;
 
@@ -368,10 +369,10 @@ const char** TCommonLauncher::getBasNameTable() const
 	return clauncher_bastable;
 }
 
-void TCommonLauncher::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TCommonLauncher::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSpineEnemy::perform(param_1, param_2);
-	if ((param_1 & 2) && mMActor->checkCurBckFromIndex(1)) {
+	TSpineEnemy::perform(cue, graphics);
+	if ((cue & CUE_CALC_ANIM) && mMActor->checkCurBckFromIndex(1)) {
 		MtxPtr mtx = mMActor->getModel()->getAnmMtx(0);
 
 		if (JPABaseEmitter* emitter
@@ -382,7 +383,7 @@ void TCommonLauncher::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if ((param_1 & 1) && mState == STATE_NORMAL && mHitPoints < 5) {
+	if ((cue & CUE_MOVE) && mState == STATE_NORMAL && mHitPoints < 5) {
 		mRegenTimer += 1;
 		if (mRegenTimer > 1200) {
 			mRegenTimer = 0;
@@ -390,7 +391,7 @@ void TCommonLauncher::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		for (int i = 0; i < mColCount; ++i)
 			if (mCollisions[i]->isActorType(0x80000001))
 				SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);

@@ -136,12 +136,12 @@ TSMSFader::TSMSFader(JUtility::TColor param_1, f32 param_2, const char* param_3)
 	mWipeRequest.unk0 = UNK30_UNK_18;
 }
 
-void TSMSFader::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSMSFader::perform(u32 cue, JDrama::TGraphics*)
 {
-	if (param_1 & 0x1)
+	if (cue & CUE_MOVE)
 		update();
 
-	if (param_1 & 0x8)
+	if (cue & CUE_DRAW)
 		draw(JDrama::TRect(0, 0, 640, 480));
 }
 
@@ -266,8 +266,8 @@ void TSMSFader::setupGraphicsFadeinout()
 	              GX_AF_NONE);
 	Mtx afStack_40;
 	MTXTrans(afStack_40, 0.0f, 0.0f, 0.0f);
-	GXLoadPosMtxImm(afStack_40, 0);
-	GXSetCurrentMtx(0);
+	GXLoadPosMtxImm(afStack_40, GX_PNMTX0);
+	GXSetCurrentMtx(GX_PNMTX0);
 	GXSetZMode(0, GX_LEQUAL, 0);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, 0, 0x7d);
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_CLR_RGBA, GX_RGBA4, 0);

@@ -236,9 +236,10 @@ DEFINE_NERVE(TNerveWalkerAttack, TLiveActor)
 
 	// TODO: what is the inlines play here?
 	if (self->unkF4.unk0 == (THitActor*)gpMarioAddress) {
-		if (SMS_CheckMarioFlag(0x2) || SMS_CheckMarioFlag(0x10000)
+		if (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE)
+		    || SMS_CheckMarioFlag(MARIO_FLAG_IN_SHALLOW_WATER)
 		    || SMS_GetMarioGroundPlane()->isWaterSurface()
-		    || SMS_CheckMarioFlag(0x20000))
+		    || SMS_CheckMarioFlag(MARIO_FLAG_IN_WATER))
 			return true;
 
 		f32 giveUpHeight = self->getSaveParam2()->mSLGiveUpHeight.get();
@@ -279,7 +280,7 @@ DEFINE_NERVE(TNerveWalkerEscape, TLiveActor)
 
 	self->getSaveParam();
 	self->getSaveParam();
-	if (SMS_CheckMarioFlag(0x2)) {
+	if (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE)) {
 		if (!self->unk114.empty())
 			self->unkF4 = self->unk114.pop();
 		return true;
@@ -308,9 +309,10 @@ DEFINE_NERVE(TNerveWalkerTraceMario, TLiveActor)
 	if (spine->getTime() == 10)
 		self->offLiveFlag(LIVE_FLAG_HIDDEN);
 
-	if (SMS_CheckMarioFlag(0x2) || SMS_CheckMarioFlag(0x10000)
+	if (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE)
+	    || SMS_CheckMarioFlag(MARIO_FLAG_IN_SHALLOW_WATER)
 	    || SMS_GetMarioGroundPlane()->isWaterSurface()
-	    || SMS_CheckMarioFlag(0x20000)) {
+	    || SMS_CheckMarioFlag(MARIO_FLAG_IN_WATER)) {
 
 		spine->pushAfterCurrent(&TNerveWalkerTraceMario::theNerve());
 		spine->pushAfterCurrent(&TNerveSmallEnemyWait::theNerve());

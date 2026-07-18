@@ -11,7 +11,7 @@ public:
 	TLiveManager(const char* = "ライブアクターマネージャ");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void clipActors(JDrama::TGraphics*);
 	virtual void setFlagOutOfCube();
 	virtual void createSpcBinary();

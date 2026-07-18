@@ -9,6 +9,9 @@ public:
 	JPADataBlock(const u8*, JKRHeap*);
 	virtual ~JPADataBlock() { }
 
+	// fabricated
+	u8* getRawData() { return (u8*)mRawData; }
+
 public:
 	/* 0x4 */ void* mRawData;
 };

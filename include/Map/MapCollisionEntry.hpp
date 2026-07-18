@@ -2,6 +2,7 @@
 #define MAP_MAP_COLLISION_ENTRY_HPP
 
 #include <dolphin/types.h>
+#include <dolphin/mtx.h>
 #include <JSystem/JGeometry.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <types.h>
@@ -12,19 +13,19 @@ class TBGCheckData;
 class TMapCollisionBase {
 public:
 	TMapCollisionBase()
-	    : unk4(nullptr)
-	    , unk8(0)
-	    , unkC(0)
-	    , unk10(0)
-	    , unk14(nullptr)
-	    , unk18(0)
-	    , unk1C(nullptr)
-	    , unk5C(0)
+	    : mCheckDatas(nullptr)
+	    , mKind(0)
+	    , mCheckDataNum(0)
+	    , mVertexNum(0)
+	    , mVertices(nullptr)
+	    , mCollisionGroupNum(0)
+	    , mCollisionGroups(nullptr)
+	    , mFlags(0)
 	{
 		MTXIdentity(unk20);
-		unk50.x = 0;
-		unk50.y = 0;
-		unk50.z = 0;
+		mPrevTranslation.x = 0.0f;
+		mPrevTranslation.y = 0.0f;
+		mPrevTranslation.z = 0.0f;
 	}
 
 	virtual void init(const char*, u16, const TLiveActor*);
@@ -35,20 +36,16 @@ public:
 	}
 	virtual void moveTrans(const JGeometry::TVec3<f32>&) { }
 	virtual void moveMtx(MtxPtr) { }
-	virtual void setUp() { }
+	virtual void setUp() { offFlag(FLAG_NEEDS_SETUP); }
 	virtual void setUpTrans(const JGeometry::TVec3<f32>& param_1)
 	{
-		JGeometry::TVec3<f32> vec3;
-		JGeometry::TVec3<f32> vec2;
-		vec3.set((Vec) { 0.0f, 0.0f, 0.0f });
-		vec2.set((Vec) { 1.0f, 1.0f, 1.0f });
-		MsMtxSetTRS(unk20, param_1.x, param_1.y, param_1.z, vec2.x, vec2.y,
-		            vec2.z, vec3.x, vec3.y, vec3.z);
+		MsMtxSetTRS(unk20, param_1, (Vec) { 0.0f, 0.0f, 0.0f },
+		            (Vec) { 1.0f, 1.0f, 1.0f });
 		setUp();
 	}
-	virtual void remove() { unk5C |= 1; }
+	virtual void remove() { onFlag(FLAG_NEEDS_SETUP); }
 
-	void setMtx(MtxPtr);
+	void setMtx(MtxPtr mtx) { MTXCopy(mtx, unk20); }
 	void setAllActor(const TLiveActor*);
 	void setAllData(s16);
 	void setAllBGType(u16);
@@ -64,7 +61,7 @@ public:
 	void setCheckData(const f32*, const s16*, TBGCheckData*, int);
 	bool isSetUp() const
 	{
-		if (checkFlag(0x1))
+		if (checkFlag(FLAG_NEEDS_SETUP))
 			return false;
 		return true;
 	}
@@ -72,43 +69,59 @@ public:
 	// fabricated
 	bool checkFlag(u16 flag) const
 	{
-		if (unk5C & flag)
+		if (mFlags & flag)
 			return true;
 		return false;
 	}
-	void onFlag(u16 flag) { unk5C |= flag; }
-	void offFlag(u16 flag) { unk5C &= ~flag; }
-	u32 getUnk8() const { return unk8; }
-	u32 getUnkC() const { return unkC; }
-
-	JGeometry::TVec3<f32> calcOffset(JGeometry::TVec3<f32> new_trans) const
+	void onFlag(u16 flag) { mFlags |= flag; }
+	void offFlag(u16 flag) { mFlags &= ~flag; }
+	s32 getUnk8() const { return mKind; }
+	u32 getUnkC() const { return mCheckDataNum; }
+	void setUpMtx(MtxPtr mtx)
 	{
-		new_trans -= unk50;
-		return new_trans;
+		setMtx(mtx);
+		setUp();
 	}
 
 public:
-	/* 0x4 */ TBGCheckData* unk4;
-	/* 0x8 */ u32 unk8;
-	/* 0xC */ u32 unkC;
-	/* 0x10 */ u32 unk10;
-	/* 0x14 */ Vec* unk14;
-	/* 0x18 */ u32 unk18;
-
-	struct FabricatedUnk1CStruct {
-		/* 0x0 */ u16 unk0;
-		/* 0x2 */ s16 unk2;
-		/* 0x4 */ u16 unk4;
-		/* 0x8 */ s16* unk8;
-		/* 0xC */ u8* unkC;
-		/* 0x10 */ u8* unk10;
-		/* 0x14 */ s16* unk14;
+	enum {
+		KIND_STATIC = 0,
+		KIND_MOVE   = 1,
+		KIND_WARP   = 2,
 	};
 
-	/* 0x1C */ FabricatedUnk1CStruct* unk1C;
+	enum {
+		FLAG_NEEDS_SETUP = 0x1,
+		FLAG_UNK4000     = 0x4000,
+		FLAG_UNK8000     = 0x8000,
+	};
+
+	/* 0x4 */ TBGCheckData* mCheckDatas;
+	/* 0x8 */ s32 mKind;
+	/* 0xC */ u32 mCheckDataNum;
+	/* 0x10 */ u32 mVertexNum;
+	/* 0x14 */ Vec* mVertices;
+
+	enum {
+		HAS_ADDITIONAL_DATA = 0x1,
+		WAS_PATCHED         = 0x8000,
+	};
+
+	struct TMapCollisionGroup {
+		/* 0x0 */ u16 mBGType;
+		/* 0x2 */ s16 mTriangleNum;
+		/* 0x4 */ u16 mFlags;
+		/* 0x8 */ s16* mIndices;
+		/* 0xC */ u8* unkC;
+		/* 0x10 */ u8* unk10;
+		/* 0x14 */ s16* mAdditionalDatas;
+	};
+
+	/* 0x18 */ u32 mCollisionGroupNum;
+	/* 0x1C */ TMapCollisionGroup* mCollisionGroups;
 	/* 0x20 */ Mtx unk20;
-	/* 0x50 */ JGeometry::TVec3<f32> unk50;
-	/* 0x5C */ u16 unk5C;
+	/* 0x50 */ JGeometry::TVec3<f32> mPrevTranslation;
+	/* 0x5C */ u16 mFlags;
 };
 
 class TMapCollisionStatic : public TMapCollisionBase {
@@ -120,7 +133,7 @@ public:
 	virtual void remove() { }
 
 public:
-	/* 0x60 */ const TLiveActor* unk60;
+	/* 0x60 */ const TLiveActor* mOwnerActor;
 };
 
 class TMapCollisionWarp : public TMapCollisionBase {
@@ -133,8 +146,8 @@ public:
 	virtual void remove();
 
 public:
-	/* 0x60 */ u16 unk60;
-	/* 0x64 */ u32 unk64;
+	/* 0x60 */ u16 mEntryId;
+	/* 0x64 */ u32 mEntrySize;
 };
 
 class TMapCollisionMove : public TMapCollisionBase {
@@ -146,8 +159,7 @@ public:
 	                     const JGeometry::TVec3<f32>& param_2,
 	                     const JGeometry::TVec3<f32>& param_3)
 	{
-		MsMtxSetTRS(unk20, param_1.x, param_1.y, param_1.z, param_2.x,
-		            param_2.y, param_2.z, param_3.x, param_3.y, param_3.z);
+		MsMtxSetTRS(unk20, param_1, param_2, param_3);
 		move();
 	}
 	virtual void moveTrans(const JGeometry::TVec3<f32>&);

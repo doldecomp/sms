@@ -17,17 +17,18 @@ J3DModelData* J3DModelLoaderDataBase::load(const void* i_data, u32 i_flags)
 		return nullptr;
 
 	const JUTDataFileHeader* fileHeader = (const JUTDataFileHeader*)i_data;
+	u32 magic                           = fileHeader->mMagic;
 
-	if (fileHeader->mMagic == 'J3D1' && fileHeader->mType == 'bmd1') {
+	if (magic == 'J3D1' && fileHeader->mType == 'bmd1') {
 		return nullptr;
 	}
 
-	if (fileHeader->mMagic == 'J3D2' && fileHeader->mType == 'bmd2') {
+	if (magic == 'J3D2' && fileHeader->mType == 'bmd2') {
 		J3DModelLoader_v21 loader;
 		return loader.load(i_data, i_flags);
 	}
 
-	if (fileHeader->mMagic == 'J3D2' && fileHeader->mType == 'bmd3') {
+	if (magic == 'J3D2' && fileHeader->mType == 'bmd3') {
 		J3DModelLoader_v26 loader;
 		return loader.load(i_data, i_flags);
 	}
@@ -42,16 +43,17 @@ J3DMaterialTable* J3DModelLoaderDataBase::loadMaterialTable(const void* i_data)
 
 	const JUTDataFileHeader* fileHeader = (const JUTDataFileHeader*)i_data;
 
-	if (fileHeader->mMagic == 'J3D1' && fileHeader->mType == 'bmt1') {
+	u32 magic = fileHeader->mMagic;
+	if (magic == 'J3D1' && fileHeader->mType == 'bmt1') {
 		return nullptr;
 	}
 
-	if (fileHeader->mMagic == 'J3D2' && fileHeader->mType == 'bmt2') {
+	if (magic == 'J3D2' && fileHeader->mType == 'bmt2') {
 		J3DModelLoader_v21 loader;
 		return loader.loadMaterialTable(i_data);
 	}
 
-	if (fileHeader->mMagic == 'J3D2' && fileHeader->mType == 'bmt3') {
+	if (magic == 'J3D2' && fileHeader->mType == 'bmt3') {
 		J3DModelLoader_v26 loader;
 		return loader.loadMaterialTable(i_data);
 	}
@@ -144,31 +146,29 @@ void J3DModelLoader::setupBBoardInfo()
 		if (!mesh)
 			continue;
 
-		u32 shape_index  = mesh->getShape()->getIndex();
-		u16* index_table = JSUConvertOffsetToPtr<u16>(
+		u32 shapeIndex  = mesh->getShape()->getIndex();
+		u16* indexTable = JSUConvertOffsetToPtr<u16>(
 		    mpShapeBlock, (u32)mpShapeBlock->mpIndexTable);
-		J3DShapeInitData* shape_init_data
+		J3DShapeInitData* shapeInitDatas
 		    = JSUConvertOffsetToPtr<J3DShapeInitData>(
 		        mpShapeBlock, (u32)mpShapeBlock->mpShapeInitData);
-		J3DJoint* joint;
-		switch (shape_init_data[index_table[shape_index]].mShapeMtxType) {
+
+		J3DShapeInitData* shapeInitData
+		    = &shapeInitDatas[indexTable[shapeIndex]];
+		switch (shapeInitData->mShapeMtxType) {
 		case 0:
-			joint = mpModelData->getJointNodePointer(i);
-			joint->setMtxType(0);
+			mpModelData->getJointNodePointer(i)->setMtxType(0);
 			break;
 		case 1:
-			joint = mpModelData->getJointNodePointer(i);
-			joint->setMtxType(1);
-			mpModelData->unk1A = true;
+			mpModelData->getJointNodePointer(i)->setMtxType(1);
+			mpModelData->mbHasBillboard = true;
 			break;
 		case 2:
-			joint = mpModelData->getJointNodePointer(i);
-			joint->setMtxType(2);
-			mpModelData->unk1A = true;
+			mpModelData->getJointNodePointer(i)->setMtxType(2);
+			mpModelData->mbHasBillboard = true;
 			break;
 		case 3:
-			joint = mpModelData->getJointNodePointer(i);
-			joint->setMtxType(0);
+			mpModelData->getJointNodePointer(i)->setMtxType(0);
 			break;
 		default:
 			break;
@@ -180,14 +180,14 @@ void J3DModelLoader::readInformation(const J3DModelInfoBlock* i_block,
                                      u32 i_flags)
 {
 	mpModelData->unkC = i_flags | i_block->mFlags;
-	switch (mpModelData->unkC & 0xF) {
-	case 0: // TODO: enum for mtxcalc type (and other load flags)
+	switch (mpModelData->unkC & J3DMLF_MtxCalcMask) {
+	case J3DMLF_MtxCalcBasic:
 		mpModelData->unk14 = new J3DMtxCalcBasic();
 		break;
-	case 1:
+	case J3DMLF_MtxCalcSoftImage:
 		mpModelData->unk14 = new J3DMtxCalcSoftimage();
 		break;
-	case 2:
+	case J3DMLF_MtxCalcMaya:
 		mpModelData->unk14 = new J3DMtxCalcMaya();
 		break;
 	}
@@ -323,12 +323,12 @@ void J3DModelLoader_v26::readMaterial(const J3DMaterialBlock* i_block,
 		mpModelData->mMaterialName = nullptr;
 	}
 	mpModelData->mMaterials = new J3DMaterial*[mpModelData->mMaterialNum];
-	if (i_flags & 0x200000) {
+	if (i_flags & J3DMLF_UseUniqueMaterials) {
 		mpModelData->unk38 = new (0x20) J3DMaterial[mpModelData->unk34];
 	} else {
 		mpModelData->unk38 = nullptr;
 	}
-	if (i_flags & 0x200000) {
+	if (i_flags & J3DMLF_UseUniqueMaterials) {
 		for (u16 i = 0; i < mpModelData->unk34; i++) {
 			factory.create(&mpModelData->unk38[i], i, i_flags);
 			mpModelData->unk38[i].unk18 = (u32)&mpModelData->unk38[i] >> 4;
@@ -337,7 +337,7 @@ void J3DModelLoader_v26::readMaterial(const J3DMaterialBlock* i_block,
 	for (u16 i = 0; i < mpModelData->mMaterialNum; i++) {
 		mpModelData->mMaterials[i] = factory.create(nullptr, i, i_flags);
 	}
-	if (i_flags & 0x200000) {
+	if (i_flags & J3DMLF_UseUniqueMaterials) {
 		for (u16 i = 0; i < mpModelData->mMaterialNum; i++) {
 			mpModelData->mMaterials[i]->unk18
 			    = (u32)&mpModelData->unk38[factory.getMaterialID(i)] >> 4;
@@ -364,12 +364,12 @@ void J3DModelLoader_v21::readMaterial_v21(const J3DMaterialBlock_v21* i_block,
 		mpModelData->mMaterialName = nullptr;
 	}
 	mpModelData->mMaterials = new J3DMaterial*[mpModelData->mMaterialNum];
-	if (i_flags & 0x200000) {
+	if (i_flags & J3DMLF_UseUniqueMaterials) {
 		mpModelData->unk38 = new (0x20) J3DMaterial[mpModelData->unk34];
 	} else {
 		mpModelData->unk38 = nullptr;
 	}
-	if (i_flags & 0x200000) {
+	if (i_flags & J3DMLF_UseUniqueMaterials) {
 		for (u16 i = 0; i < mpModelData->unk34; i++) {
 			factory.create(&mpModelData->unk38[i], i, i_flags);
 			mpModelData->unk38[i].unk18 = (u32)&mpModelData->unk38[i] >> 4;
@@ -378,7 +378,7 @@ void J3DModelLoader_v21::readMaterial_v21(const J3DMaterialBlock_v21* i_block,
 	for (u16 i = 0; i < mpModelData->mMaterialNum; i++) {
 		mpModelData->mMaterials[i] = factory.create(nullptr, i, i_flags);
 	}
-	if (i_flags & 0x200000) {
+	if (i_flags & J3DMLF_UseUniqueMaterials) {
 		for (u16 i = 0; i < mpModelData->mMaterialNum; i++) {
 			mpModelData->mMaterials[i]->unk18
 			    = (u32)&mpModelData->unk38[factory.getMaterialID(i)] >> 4;

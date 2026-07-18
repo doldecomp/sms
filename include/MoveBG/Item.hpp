@@ -7,10 +7,10 @@ class TMirrorActor;
 
 class TItem : public TMapObjGeneral {
 public:
-	TItem(const char*);
+	TItem(const char* name = "アイテム");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void calcRootMatrix();
 	virtual void appear();
@@ -24,18 +24,20 @@ public:
 
 	static f32 mAppearedScaleSpeed;
 
+	void setContainer(THitActor* container) { mContainer = container; }
+
 public:
-	/* 0x148 */ THitActor* unk148;
+	/* 0x148 */ THitActor* mContainer;
 	/* 0x14C */ u32 unk14C;
 	/* 0x150 */ u32 unk150;
 };
 
 class TCoin : public TItem {
 public:
-	TCoin(const char*);
+	TCoin(const char* name = "コイン");
 
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void appear();
 	virtual void makeObjAppeared();
 	virtual void makeObjDead();
@@ -50,7 +52,7 @@ public:
 
 class TFlowerCoin : public TCoin {
 public:
-	TFlowerCoin();
+	TFlowerCoin(const char* name = "コイン(フラワー用)");
 
 	virtual void load(JSUMemoryInputStream&);
 
@@ -60,7 +62,7 @@ public:
 
 class TCoinEmpty : public TCoin {
 public:
-	TCoinEmpty(const char*);
+	TCoinEmpty(const char* name = "空コイン");
 
 	virtual void kill();
 	virtual void appear();
@@ -71,13 +73,13 @@ public:
 
 class TCoinRed : public TCoin {
 public:
-	TCoinRed(const char*);
+	TCoinRed(const char* name = "赤コイン");
 	virtual void taken(THitActor*);
 };
 
 class TCoinBlue : public TCoin {
 public:
-	TCoinBlue(const char*);
+	TCoinBlue(const char* name = "青コイン");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void makeObjAppeared();
@@ -87,10 +89,10 @@ public:
 
 class TShine : public TItem {
 public:
-	TShine(const char*);
+	TShine(const char* name = "シャイン");
 
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
 	virtual void kill();
@@ -102,20 +104,30 @@ public:
 
 	void appearWithDemo(const char*);
 	void appearSimple(int);
-	void appearWithTimeCallback(u32, u32);
+	static s32 appearWithTimeCallback(u32, u32);
 	void appearWithTime(int, int, int, int);
 	void movingDown();
 	void movingUp();
 	void movingCircle();
 
-	static u32 mPromiLife;
-	static u32 mSenkoRate;
-	static u32 mKiraRate;
-	static u32 mBowRate;
-	static u32 mCircleRateY;
-	static u32 mUpSpeed;
-	static u32 mSpeedDownRate;
-	static u32 mSpeedDownTime;
+	static int mPromiLife[4];
+	static f32 mSenkoRate[4];
+	static f32 mKiraRate[4];
+	static f32 mBowRate[4];
+	static f32 mCircleRateY;
+	static f32 mUpSpeed;
+	static f32 mSpeedDownRate;
+
+	enum {
+		STATE_UNKB          = 0xB,
+		STATE_MOVING_UP     = 0xC,
+		STATE_MOVING_CIRCLE = 0xD,
+		STATE_MOVING_DOWN   = 0xE,
+		STATE_UNKF          = 0xF,
+		STATE_UNK10         = 0x10,
+		STATE_UNK11         = 0x11,
+		STATE_UNK12         = 0x12,
+	};
 
 public:
 	/* 0x154 */ u32 unk154;
@@ -123,34 +135,32 @@ public:
 	/* 0x15C */ f32 unk15C;
 	/* 0x160 */ f32 unk160;
 	/* 0x164 */ f32 unk164;
-	/* 0x168 */ u32 unk168;
+	/* 0x168 */ int unk168;
 	/* 0x16C */ f32 unk16C;
-	/* 0x170 */ u32 unk170;
-	/* 0x174 */ u32 unk174;
-	/* 0x178 */ u32 unk178;
-	/* 0x17C */ f32 unk17C;
-	/* 0x180 */ f32 unk180;
-	/* 0x184 */ f32 unk184;
+	/* 0x170 */ int unk170;
+	/* 0x174 */ int unk174;
+	/* 0x178 */ int unk178;
+	/* 0x17C */ JGeometry::TVec3<f32> unk17C;
 	/* 0x188 */ f32 unk188;
 	/* 0x18C */ u32 unk18C;
 	/* 0x190 */ u8 unk190;
-	/* 0x194 */ u32 unk194;
-	/* 0x198 */ u32 unk198;
-	/* 0x19C */ u32 unk19C;
-	/* 0x1A0 */ u32 unk1A0;
-	/* 0x1A4 */ char unk1A4[0x4];
-	/* 0x1A8 */ f32 unk1A8;
-	/* 0x1AC */ f32 unk1AC;
-	/* 0x1B0 */ f32 unk1B0;
+	/* 0x194 */ JPABaseEmitter* unk194;
+	/* 0x198 */ JPABaseEmitter* unk198;
+	/* 0x19C */ JPABaseEmitter* unk19C;
+	/* 0x1A0 */ JPABaseEmitter* unk1A0;
+	/* 0x1A4 */ u8 unk1A4;
+	/* 0x1A8 */ JGeometry::TVec3<f32> unk1A8;
 	/* 0x1B4 */ u8 unk1B4;
 };
 
+class MActor;
+
 class TEggYoshi : public TMapObjGeneral {
 public:
-	TEggYoshi(const char*);
+	TEggYoshi(const char* name = "ヨッシーの卵");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
 	virtual void touchActor(THitActor*);
@@ -160,6 +170,14 @@ public:
 	void touchFruit(THitActor*);
 	void startBalloonAnim();
 	void decideRandomLoveFruit();
+
+	// fabricated
+	THitActor* getFruit() { return unk150; }
+
+public:
+	/* 0x148 */ MActor* unk148;
+	/* 0x14C */ u32 unk14C;
+	/* 0x150 */ THitActor* unk150;
 };
 
 class TItemNozzle : public TItem {
@@ -180,7 +198,7 @@ public:
 
 class TNozzleBox : public TMapObjGeneral {
 public:
-	TNozzleBox(const char*);
+	TNozzleBox(const char* name = "ノズルボックス");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
@@ -193,17 +211,14 @@ public:
 	void makeModelValid();
 
 public:
-	/* 0x148 */ int unk148;
-	/* 0x14C */ u32 unk14C;
+	/* 0x148 */ int mContainedNozzleType;
+	/* 0x14C */ TItemNozzle* mContainedNozzleItem;
 	/* 0x150 */ f32 unk150;
 	/* 0x154 */ f32 unk154;
-	/* 0x158 */ u32 unk158;
-	/* 0x15C */ u8 unk15C;
-	/* 0x15E */ u16 unk15E;
-	/* 0x160 */ u16 unk160;
-	/* 0x162 */ u16 unk162;
-	/* 0x164 */ u16 unk164;
-	/* 0x166 */ u8 unk166;
+	/* 0x158 */ const char* mContainedNozzleName;
+	/* 0x15C */ bool unk15C;
+	/* 0x15E */ GXColorS10 unk15E;
+	/* 0x166 */ bool unk166;
 };
 
 #endif

@@ -11,6 +11,13 @@ public:
 	TPosition3() { }
 
 	// fabricated
+	TPosition3(const Vec& trans)
+	{
+		identity33();
+		setTrans(trans.x, trans.y, trans.z);
+	}
+
+	// fabricated
 	void identity33() { TRotation3<T>::identity33(); }
 	void translation(f32 x, f32 y, f32 z)
 	{
@@ -50,9 +57,9 @@ public:
 		this->setTrans(trans);
 	}
 
-	// from MKDD, may be useful in the future?
 	void makeRotate(const JGeometry::TVec3<f32>&, f32);
 	void setPositionFromLookAt(const TPosition3<T>&);
+	void makeQuat(const TQuat4<f32>&);
 };
 
 } // namespace JGeometry

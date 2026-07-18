@@ -1,4 +1,14 @@
 #include <MSound/MSHandle.hpp>
+#include <JSystem/JAudio/JAInterface/JAIGlobalParameter.hpp>
+#include <JSystem/JAudio/JAInterface/JAIConst.hpp>
+#include <JSystem/JAudio/JAInterface/JAIBasic.hpp>
+#include <JSystem/JAudio/JALibrary/JALSystem.hpp>
+#include <JSystem/JAudio/JALibrary/JALCalc.hpp>
+#include <math.h>
+
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 f32 MSHandle::smACosPrm[101] = {
 	3.141592,   2.941258,   2.857799,   2.793427,   2.738877,   2.690566,
@@ -20,22 +30,22 @@ f32 MSHandle::smACosPrm[101] = {
 	0.402716,   0.34816599, 0.28379399, 0.200335,   0.0,
 };
 SeCategory MSHandle::smSeCategory[16] = {
-	{ 0x02000000, 8000.0f, 0.75999999f, 150.0f },
-	{ 0x02000000, 8000.0f, 1.0f, 150.0f },
-	{ 0x02000000, 6000.0f, 1.0f, 500.0f },
-	{ 0x03000000, 6000.0f, 0.81f, 500.0f },
-	{ 0x02000000, 12000.0f, 0.83999997f, 500.0f },
-	{ 0x04000000, 12000.0f, 0.58999997f, 500.0f },
-	{ 0x02000000, 7000.0f, 0.89999998f, 500.0f },
-	{ 0x02000000, 8000.0f, 1.0f, 500.0f },
-	{ 0x02000000, 6000.0f, 0.75999999f, 500.0f },
-	{ 0x02000000, 8000.0f, 1.0f, 500.0f },
-	{ 0x02000000, 8000.0f, 1.0f, 500.0f },
-	{ 0x02000000, 8000.0f, 1.0f, 500.0f },
-	{ 0x02000000, 8000.0f, 1.0f, 500.0f },
-	{ 0x02000000, 8000.0f, 1.0f, 500.0f },
-	{ 0x02000000, 8000.0f, 1.0f, 500.0f },
-	{ 0x02000000, 8000.0f, 1.0f, 500.0f },
+	{ 0x02, 8000.0f, 0.75999999f, 150.0f },
+	{ 0x02, 8000.0f, 1.0f, 150.0f },
+	{ 0x02, 6000.0f, 1.0f, 500.0f },
+	{ 0x03, 6000.0f, 0.81f, 500.0f },
+	{ 0x02, 12000.0f, 0.83999997f, 500.0f },
+	{ 0x04, 12000.0f, 0.58999997f, 500.0f },
+	{ 0x02, 7000.0f, 0.89999998f, 500.0f },
+	{ 0x02, 8000.0f, 1.0f, 500.0f },
+	{ 0x02, 6000.0f, 0.75999999f, 500.0f },
+	{ 0x02, 8000.0f, 1.0f, 500.0f },
+	{ 0x02, 8000.0f, 1.0f, 500.0f },
+	{ 0x02, 8000.0f, 1.0f, 500.0f },
+	{ 0x02, 8000.0f, 1.0f, 500.0f },
+	{ 0x02, 8000.0f, 1.0f, 500.0f },
+	{ 0x02, 8000.0f, 1.0f, 500.0f },
+	{ 0x02, 8000.0f, 1.0f, 500.0f },
 };
 f32 MSHandle::cPan_MaxAmp           = 0.499f;
 f32 MSHandle::cPan_CAdjust          = 0.02f;
@@ -46,26 +56,218 @@ f32 MSHandle::cDol_0Rad             = 1.0316f;
 f32 MSHandle::cDol_HalfRad          = 1.5707999f;
 f32 MSHandle::cDol_FullRad          = 2.1099999f;
 
-f32 MSHandle::setDistanceVolumeCommon(f32 volume, u8 param) { }
-
-void MSHandle::setSeDistancePitch(u8 param) { }
-
-void MSHandle::setSeDistanceVolume(u8 param) { }
-
-void MSHandle::setSeDistanceDolby(u8 param) { }
-
-void MSHandle::setSeDistancePan(u8 param) { }
-
-void MSHandle::setSeDistanceParameters() { }
-
-f32 MSHandle::calcVolume(f32 param1, f32 param2, f32 param3, u8 param4,
-                         u8 param5)
+// TODO: find a home for this
+static u32 get_thing(u32 param_1)
 {
-	return 0.0f;
+	u32 uVar1 = param_1 >> 30;
+	u32 uVar2 = param_1 >> 12 & 0xF;
+
+	if (uVar1 == 0)
+		return uVar2;
+
+	if (uVar1 == 2)
+		return 0x10;
+
+	if (uVar1 == 3)
+		return 0x11;
+
+	return 0xffffffff;
 }
 
-f32 MSHandle::calcPan(const Vec& vec, f32 param1, f32 param2) { return 0.0f; }
+f32 MSHandle::MSACos(f32 param_1)
+{
+	int iVar1 = (param_1 + 1.0f) * 50.0f;
 
-f32 MSHandle::calcDolby(const Vec& vec, f32 param) { return 0.0f; }
+	if (iVar1 < 0)
+		return smACosPrm[0];
 
-f32 MSHandle::MSACos(f32 param) { return 0.0f; }
+	if (iVar1 >= 101)
+		return smACosPrm[100];
+
+	return smACosPrm[iVar1];
+}
+
+void MSHandle::setSeDistanceParameters()
+{
+	u8 type = smSeCategory[get_thing(unk8)].mType;
+	if (unk1 == 2)
+		type = 0;
+
+	setSeDistanceVolume(type);
+	setSeDistancePan(type);
+	setSeDistancePitch(type);
+	setSePositionDopplar();
+	setSeDistanceFir(type);
+
+	if (!(getSwBit() & 0x400)) {
+		f32 dVar4 = interPointer->getMapInfoFxParameter(unk18);
+		setFxmix(dVar4, 0, 2);
+	}
+
+	setSeDistanceDolby(type);
+}
+
+void MSHandle::setSeDistancePitch(u8 param_1)
+{
+	f32 fVar1 = 1.0f;
+	if (getSwBit() & 0x10) {
+		fVar1 = 1.0f
+		        - (int(JAIConst::random.get_ufloat_1() * 16.0f) & 0xF) / 192.0f;
+	}
+
+	if (getSwBit() & 0xC0) {
+		fVar1 += unk3 / 192.0f;
+	}
+
+	setSeInterPitch(4, fVar1, param_1, 0.0f);
+}
+
+void MSHandle::setSeDistancePan(u8 param_1)
+{
+	FabricatedPositionInfo* ptr = unk1C;
+
+	f32 thing = ptr->unk18;
+
+	f32 d = calcPan(ptr->unk0, thing, smSeCategory[get_thing(unk8)].unk4);
+	setSeInterPan(4, d, param_1, 0);
+}
+
+f32 MSHandle::calcPan(const Vec& param_1, f32 param_2, f32 param_3)
+{
+	f32 fVar2 = cPan_MaxAmp;
+	f32 dVar3 = param_2 <= 0.0f ? 0.0f : MSACos(-param_1.x / param_2);
+
+	f32 fVar4
+	    = cPan_CAdjust + fVar2 * 2.0f * dVar3 / M_PI - fVar2 - cPan_CAdjust;
+
+	f32 shift = cPan_CShift;
+
+	if (fVar4 < 0.0f) {
+		fVar4 = powf(-fVar4 / fVar2, shift);
+		fVar4 = -fVar2 * fVar4;
+	} else {
+		fVar4 = powf(fVar4 / fVar2, shift);
+		fVar4 = fVar2 * fVar4;
+	}
+
+	f32 fVar1;
+	if (param_2 < cPan_HiSence_Dist) {
+		fVar4 *= param_2 / cPan_HiSence_Dist;
+	} else {
+		fVar4 *= (cMS_DistanceMax_Sence - 1.0f) / (param_3 - cPan_HiSence_Dist)
+		             * (param_2 - cPan_HiSence_Dist)
+		         + 1.0f;
+	}
+
+	fVar4 += fVar2;
+
+	if (fVar4 > 1.0f)
+		return 1.0f;
+
+	if (fVar4 < 0.0f)
+		return 0.0f;
+
+	return fVar4;
+}
+
+void MSHandle::setSeDistanceDolby(u8 param_1)
+{
+	f32 d = calcDolby(unk1C->unk0, unk1C->unk18);
+	setSeInterDolby(4, d, param_1, 0);
+}
+
+f32 MSHandle::calcDolby(const Vec& param_1, f32 param_2)
+{
+	f32 dVar2 = param_2 <= 0.0f ? 0.0f : MSACos(-param_1.y / param_2);
+
+	f32 zeroRad = cDol_0Rad;
+	f32 halfRad = cDol_HalfRad;
+	f32 fullRad = cDol_FullRad;
+
+	if (dVar2 < zeroRad) {
+		dVar2 = 0.0f;
+	} else if (dVar2 < halfRad) {
+		dVar2 = 0.5f / (halfRad - zeroRad) * (dVar2 - zeroRad);
+	} else if (dVar2 < fullRad) {
+		dVar2 = 0.5f / (fullRad - halfRad) * (dVar2 - halfRad) + 0.5f;
+	} else {
+		dVar2 = 1.0f;
+	}
+
+	if (param_2 < cPan_HiSence_Dist) {
+		dVar2 = param_2 * ((dVar2 - 0.5f) / cPan_HiSence_Dist) + 0.5f;
+	}
+
+	if (dVar2 > 1.0f)
+		return 1.0f;
+
+	if (dVar2 < 0.0f)
+		return 0.0f;
+
+	return dVar2;
+}
+
+void MSHandle::setSeDistanceVolume(u8 param_1)
+{
+	u32 uVar2 = getSwBit();
+	if (uVar2 & 0x200000) {
+		f32 d = JALSystem::processModDistVolume(unk8, unk1C->unk18);
+		setSeInterVolume(4, d, param_1, 0);
+		return;
+	}
+
+	f32 dVar4;
+	if (!(uVar2 & 0x2)) {
+		// TODO: inline?
+		u32 tmp = getSwBit() >> 16 & 0x7;
+		dVar4
+		    = setDistanceVolumeCommon(smSeCategory[get_thing(unk8)].unk4, tmp);
+	} else {
+		dVar4 = 1.0f;
+	}
+
+	setSeInterVolume(4, dVar4, param_1, 0);
+}
+
+f32 MSHandle::setDistanceVolumeCommon(f32 volume, u8 param_2)
+{
+	f32 fVar1         = unk1C->unk18;
+	f32 maxVolumeDist = JAIGlobalParameter::getParamMaxVolumeDistance();
+	u32 uVar1         = get_thing(unk8);
+	return calcVolume(fVar1, volume, maxVolumeDist, param_2, uVar1);
+}
+
+f32 MSHandle::calcVolume(f32 param_1, f32 param_2, f32 param_3, u8 param_4,
+                         u8 param_5)
+{
+	if (param_1 < param_3)
+		return 1.0f;
+
+	f32 fVar2 = param_1 - param_3;
+	f32 fVar1 = param_2 - param_3;
+
+	switch (param_4) {
+	case 1:
+		fVar1 = fVar1 * 4.0f / 3.0f;
+		break;
+	case 2:
+		fVar1 = fVar1 * 5.0f / 3.0f;
+		break;
+	case 3:
+		fVar1 = fVar1 * 2.0f;
+		break;
+	case 4:
+		fVar1 = fVar1 * 3.0f / 4.0f;
+		break;
+	case 5:
+		fVar1 = fVar1 / 2.0f;
+		break;
+	case 6:
+		fVar1 = fVar1 / 4.0f;
+		break;
+	case 7:
+		fVar1 = smSeCategory[param_5].unkC;
+		break;
+	}
+	return JALCalc::linearTransform(fVar2, 0.0f, fVar1, 1.0f, 0.0f, false);
+}

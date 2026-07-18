@@ -1,5 +1,6 @@
 #include <Strategic/ObjManager.hpp>
 #include <Strategic/ObjModel.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <Strategic/HitActor.hpp>
 #include <System/TimeRec.hpp>
 #include <M3DUtil/MActor.hpp>
@@ -66,13 +67,13 @@ MActorAnmData* TObjManager::getMActorAnmData()
 	return unk20;
 }
 
-void TObjManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TObjManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk30 & 1)
 		TTimeRec::startTimer();
 
 	for (int i = 0; i < mObjNum; ++i)
-		unk18[i]->testPerform(param_1, param_2);
+		unk18[i]->testPerform(cue, graphics);
 
 	if (unk30 & 1)
 		TTimeRec::endTimer();
@@ -102,7 +103,11 @@ void TObjManager::createModelDataArrayBase(const TModelDataLoadEntry* entries,
 void TObjManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[2]
-	    = { { "default.bmd", 0x10210000, 0 }, { nullptr, 0, 0 } };
+	    = { { "default.bmd",
+		      J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		          | (1 << J3DMLF_TevStageNumShift),
+		      0 },
+		    { nullptr, 0, 0 } };
 	createModelDataArray(entry);
 }
 

@@ -2,11 +2,12 @@
 
 using namespace JDrama;
 
-#pragma dont_inline on
-void TDStageGroup::perform(u32 param_1, TGraphics* param_2)
+void TDStageGroup::perform(u32 cue, TGraphics* graphics)
 {
-	if (!(param_1 & 8))
+	if (!(cue & CUE_DRAW))
 		return;
 
-	TViewObjPtrListT::perform(param_1, param_2);
+	unk20.perform(cue, graphics);
+	TViewObjPtrListT::perform(cue, graphics);
+	unk20.perform(cue & ~CUE_DRAW | CUE_DRAW_STAGE_END, graphics);
 }

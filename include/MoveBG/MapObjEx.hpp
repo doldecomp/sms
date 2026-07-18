@@ -7,7 +7,7 @@ class TMapObjNail : public THideObjBase {
 public:
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
-	TMapObjNail(const char*);
+	TMapObjNail(const char* name = "くぎ");
 
 	static f32 mDownHeight;
 
@@ -25,7 +25,7 @@ public:
 	virtual TMapObjBase* makeObjFromJointName(const char*, u16);
 	virtual TMapObjBase* makeObj(const char*, u16);
 
-	TJointCoin(const char*);
+	TJointCoin(const char* name = "ジョイントコイン");
 
 public:
 	/* 0x138 */ MActor* unk138;
@@ -39,7 +39,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void control();
 
-	TMapObjSteam();
+	TMapObjSteam(const char* name = "水蒸気");
 };
 
 #endif

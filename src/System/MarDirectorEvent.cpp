@@ -8,7 +8,7 @@
 #include <MoveBG/Item.hpp>
 #include <NPC/NpcBase.hpp>
 #include <Player/MarioAccess.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -34,7 +34,7 @@ void TMarDirector::updateFlag(TBaseNPC*, u32, u32) { }
 TBaseNPC* TMarDirector::findNearestTalkNPC()
 {
 	TBaseNPC* result = nullptr;
-	if (gpMarioOriginal->mAction == 0xC400201) {
+	if (gpMarioOriginal->mStatus == MARIO_STATUS_WAIT) {
 		f32 bestDist                   = 5000000.0f;
 		JGeometry::TVec3<f32> marioPos = *gpMarioPos;
 		JGadget::TVector_pointer<TBaseNPC>::iterator it;
@@ -81,16 +81,10 @@ void TMarDirector::movement_game()
 		return;
 
 	unk18[0]->offFlag(0x2);
-	if (!gpMarioOriginal->isHolding()
-	    && gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode))
+	if (!gpMarioOriginal->isHolding() && gpCamera->isLButtonCamera())
 		return;
 
-	bool bVar1 = true;
-	if (gpCamera->isSimpleDemoCamera() && gpCamera->mMode != 0x49) {
-		bVar1 = false;
-	}
-
-	if (!bVar1) {
+	if (!gpCamera->isDemoCamera()) {
 		TBaseNPC* takeNpc = findNearestTakeNPC();
 		if (takeNpc != nullptr) {
 			unk84->associateNPC(takeNpc);
@@ -114,12 +108,12 @@ void TMarDirector::fireGetBlueCoin(TCoin* coin)
 		return;
 
 	TFlagManager::smInstance->setBlueCoinFlag(gpApplication.mCurrArea.unk0,
-	                                          coin->unk134);
+	                                          coin->getEventId());
 	unk4C |= 0x200;
 	unk261 = 1;
-	if (gpMSound->gateCheck(0x4845))
-		MSoundSESystem::MSoundSE::startSoundActor(0x4845, coin->mPosition, 0,
-		                                          nullptr, 0, 4);
+	if (gpMSound->gateCheck(MSD_SE_SY_BLUE_COIN_GET))
+		MSoundSESystem::MSoundSE::startSoundActor(
+		    MSD_SE_SY_BLUE_COIN_GET, coin->mPosition, 0, nullptr, 0, 4);
 }
 
 void TMarDirector::fireGetNozzle(TItemNozzle* nozzle)

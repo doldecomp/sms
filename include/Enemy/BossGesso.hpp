@@ -60,10 +60,10 @@ class TBGBeakHit : public TTakeActor {
 public:
 	TBGBeakHit(TBossGesso* owner, const char* name = "クチバシ（つかみ）");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
-	virtual bool moveRequest(const JGeometry::TVec3<f32>&);
+	virtual BOOL moveRequest(const JGeometry::TVec3<f32>&);
 
 private:
 	/* 0x70 */ TBossGesso* mOwner;
@@ -75,7 +75,7 @@ class TBGEyeHit : public THitActor {
 public:
 	TBGEyeHit(TBossGesso* owner, int joint_index, const char* name = "目");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 private:
@@ -87,7 +87,7 @@ class TBGBodyHit : public THitActor {
 public:
 	TBGBodyHit(TBossGesso* owner, int joint_index, const char* name = "胴体");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 private:
@@ -118,7 +118,7 @@ public:
 	TBGCork(TBossGesso* owner);
 
 	void crush();
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:
 	/* 0x0 */ TBossGesso* mOwner;
@@ -140,9 +140,9 @@ public:
 		ASTATE_ROLL      = 7,
 	};
 
-	TBossGesso(const char*);
+	TBossGesso(const char* name = "ボスゲッソー");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
@@ -191,7 +191,7 @@ public:
 	}
 
 	// fabricated
-	TNerveBase<TLiveActor>* getLatestNerve()
+	const TNerveBase<TLiveActor>* getLatestNerve()
 	{
 		return mSpine->getLatestNerve();
 	}
@@ -246,7 +246,7 @@ public:
 
 class TBossGessoManager : public TEnemyManager {
 public:
-	TBossGessoManager(const char*);
+	TBossGessoManager(const char* name = "ボスゲッソーマネージャ");
 
 	virtual void load(JSUMemoryInputStream&);
 

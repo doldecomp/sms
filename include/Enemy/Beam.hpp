@@ -32,12 +32,14 @@ public:
 	void drawAllBeam();
 	void requestCone(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&,
 	                 f32, bool, bool, bool);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	TConeBeam mBeams[5];
 	GXColor mColor;
 	int mBeamVtxCount;
 	int mBeamCount;
 };
+
+extern TBeamManager* gpBeamManager;
 
 #endif /* BEAM_H */

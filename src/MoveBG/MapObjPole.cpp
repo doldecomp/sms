@@ -58,8 +58,8 @@ void TMapObjPoleManager::initDraw()
 	GXClearVtxDesc();
 	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 	GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-	GXSetCurrentMtx(0);
-	GXLoadPosMtxImm(j3dSys.getViewMtx(), 0);
+	GXSetCurrentMtx(GX_PNMTX0);
+	GXLoadPosMtxImm(j3dSys.getViewMtx(), GX_PNMTX0);
 	GXSetNumChans(0);
 	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 	              GX_AF_NONE);
@@ -84,9 +84,9 @@ void TMapObjPoleManager::initDraw()
 	GXSetCullMode(GX_CULL_NONE);
 }
 
-void TMapObjPoleManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMapObjPoleManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((param_1 & 8)) {
+	if ((cue & CUE_DRAW)) {
 		initDraw();
 		if (unk10[0].unk0 != 0) {
 			JUTTexture texture(unk10[0].unk54);

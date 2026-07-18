@@ -14,8 +14,7 @@ public:
 	{
 	}
 
-	virtual ~TFrmGXSet() { }
-	virtual void perform(u32, TGraphics*);
+	virtual void perform(u32 cue, TGraphics* graphics);
 
 public:
 	/* 0x10 */ TDisplay* unk10;

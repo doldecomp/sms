@@ -13,76 +13,77 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-static inline void fake(J3DMaterial* mat, MtxPtr mtx)
+void TMapModel::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	mat->getTexGenBlock()->getTexMtx(0)->setEffectMtx(mtx);
-}
-
-void TMapModel::perform(u32 param_1, JDrama::TGraphics* param_2)
-{
-	if (checkFlag(1))
+	if (checkFlag(FLAG_DEAD))
 		return;
 
-	if ((param_1 & 2) != 0 && mUnderpass != nullptr) {
+	if ((cue & CUE_CALC_ANIM) != 0 && mUnderpass != nullptr) {
 		// NOTE: this seems to be the logic for entering delphino plaza
 		// underpasses: if inside, draw them on top of everything and move the
 		// camera to top view
-		if ((*gpMarioFlag & 2 ? true : false)
+		if (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE)
 		    && SMS_GetMarioPos().y < SMS_GetMarioGrLevel() + 200.0f) {
 			mUnderpass->awake();
-			Vec pos;
-			gpCamera->JSGGetViewPosition(&pos);
-			Vec up;
-			gpCamera->JSGGetViewUpVector(&up);
+
+			Mtx view;
 			Mtx proj;
+			Mtx viewProj;
+
+			Vec up;
+			Vec pos;
+
+			gpCamera->JSGGetViewPosition(&pos);
+			gpCamera->JSGGetViewUpVector(&up);
+
 			C_MTXLightOrtho(proj, unk38 * 1000.0f, unk38 * -1000.0f,
 			                unk38 * -1000.0f, unk38 * 1000.0f, 0.5f, 0.5f, 0.5f,
 			                0.5f);
-			Mtx view;
 			C_MTXLookAt(view, &pos, &up, gpMarioPos);
-			Mtx viewProj;
 			MTXConcat(proj, view, viewProj);
-			fake(mUnderpassMaterial, viewProj);
+
+			mUnderpassMaterial->getTexMtx(0)->setEffectMtx(viewProj);
 		} else {
 			mUnderpass->sleep();
 		}
 	}
 
-	if ((param_1 & 2) != 0) {
+	if ((cue & CUE_CALC_ANIM) != 0) {
 		MActor* actor = mActor;
-		param_1 &= ~2;
+		cue &= ~CUE_CALC_ANIM;
 		actor->frameUpdate();
 	}
 
-	mActor->perform(param_1, param_2);
+	mActor->perform(cue, graphics);
 }
 
 void TMapModel::initUnderpass()
 {
-	s32 nameIdx = mModelData->unkB0->getIndex("underpass");
+	s32 nameIdx = mModelData->getJointName()->getIndex("underpass");
 	if (nameIdx < 0)
 		return;
 
 	J3DJoint* underpass = mModelData->getJointNodePointer(nameIdx);
-	int i;
-	for (i = 0; i < mChildrenNum && mChildren[i]->mJoint != underpass; ++i)
-		;
+
+	int i = 0;
+	while (i < mChildrenNum && mChildren[i]->getJoint() != underpass)
+		++i;
 
 	mUnderpass         = mChildren[i];
 	mUnderpassMaterial = underpass->getMesh();
 	mUnderpassMaterial->change();
-	mUnderpassMaterial->unk1C |= 1;
+	mUnderpassMaterial->setSomeFlag();
 
-	J3DTexCoord* texCoord
-	    = mUnderpassMaterial->getTexGenBlock()->getTexCoord(0);
+	J3DTexCoord* texCoord = mUnderpassMaterial->getTexCoord(0);
 	texCoord->setTexGenType(GX_TG_MTX2x4);
 	texCoord->setTexGenSrc(GX_TG_POS);
 	texCoord->setTexGenMtx(GX_TEXMTX0);
+
 	J3DTexMtx* texMtxInfo = new J3DTexMtx;
 	texMtxInfo->mInfo     = 2;
-	mUnderpassMaterial->getTexGenBlock()->setTexMtx(0, texMtxInfo);
-	J3DZMode* zmode = mUnderpassMaterial->getPEBlock()->getZMode();
+	mUnderpassMaterial->setTexMtx(0, texMtxInfo);
 
+	J3DZMode* zmode = mUnderpassMaterial->getZMode();
 	zmode->setCompareFunc(GX_ALWAYS);
 	zmode->setUpdateEnable(GX_FALSE);
 }
@@ -98,6 +99,14 @@ void TMapModel::initJointModel(TJointModelManager* param_1, const char* param_2,
 
 	mActor->calc();
 	initUnderpass();
+}
+
+TMapModel::TMapModel()
+    : mUnderpass(nullptr)
+    , mUnderpassMaterial(nullptr)
+    , unk38(0.5f)
+    , unk3C(1.0f)
+{
 }
 
 void TMapModelManager::init()

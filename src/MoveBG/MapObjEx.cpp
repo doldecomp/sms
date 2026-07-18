@@ -11,6 +11,7 @@
 #include <JSystem/JUtility/JUTNameTab.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <JSystem/JParticle/JPAResourceManager.hpp>
 
 // rogue includes needed for matching sinit & bss
@@ -22,23 +23,24 @@ f32 TMapObjNail::mDownHeight = 50.0f;
 
 BOOL TMapObjNail::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == HIT_MESSAGE_HIP_DROP && !isUnk104Positive() && unk150 < 3) {
+	if (message == HIT_MESSAGE_HIP_DROP && !isStateTimerEngaged()
+	    && unk150 < 3) {
 		mPosition.y -= mDownHeight;
 		removeMapCollision();
 		setUpCurrentMapCollision();
 
-		if (gpMSound->gateCheck(0x3850))
-			MSoundSESystem::MSoundSE::startSoundActor(0x3850, mPosition, 0,
-			                                          nullptr, 0, 4);
+		if (gpMSound->gateCheck(MSD_SE_OBJ_KUGI_IMPACT))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_OBJ_KUGI_IMPACT, mPosition, 0, nullptr, 0, 4);
 
-		unk104 = 0x78;
+		mStateTimer = 120;
 		++unk150;
-		if (unk150 == 3 && unk138) {
-			TMapObjBase* obj = unk138;
+		if (unk150 == 3 && mHiddenObj != nullptr) {
+			TMapObjBase* obj = mHiddenObj;
 			if (obj->isActorType(0x2000000e))
 				obj = gpItemManager->makeObjAppear(0x2000000e);
 			if (obj)
-				throwObjToFront(obj, 200.0f, unk13C, unk140);
+				throwObjToFront(obj, 200.0f, mAppearSpeed, mAppearYSpeed);
 		}
 		return true;
 	}
@@ -87,14 +89,14 @@ TMapObjBase* TJointCoin::makeObj(const char* name, u16 i)
 	}
 
 	unk140[unk13C] = pTVar2;
-	if (pTVar2->isActorType(0x2000000e)) {
-		pTVar2->offMapObjFlag(0x40000);
-		pTVar2->onMapObjFlag(0x10000000);
+	if (pTVar2->isActorType(0x2000000E)) {
+		pTVar2->offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
+		pTVar2->onMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
 	}
 
 	unk140[unk13C]->makeObjAppeared();
-	unk140[unk13C]->onMapObjFlag(0x100);
-	unk140[unk13C]->offMapObjFlag(0x40000);
+	unk140[unk13C]->onMapObjFlag(MAP_OBJ_FLAG_UNK100);
+	unk140[unk13C]->offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 	unk140[unk13C]->offLiveFlag(LIVE_FLAG_UNK100);
 	unk140[unk13C]->offHitFlag(HIT_FLAG_NO_COLLISION);
 	unk144[unk13C] = i;
@@ -149,14 +151,16 @@ void TJointCoin::initMapObj()
 	unk144 = new u16[unk13C];
 
 	if (isActorType(0x40000232)) {
-		unk138 = SMS_MakeMActorWithAnmData("/scene/mapObj/CoinFishRail.bmd",
-		                                   mManager->getMActorAnmData(), 3,
-		                                   0x10210000);
+		unk138 = SMS_MakeMActorWithAnmData(
+		    "/scene/mapObj/CoinFishRail.bmd", mManager->getMActorAnmData(), 3,
+		    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		        | (1 << J3DMLF_TevStageNumShift));
 		unk138->setBck("coinfishrail");
 	} else if (isActorType(0x400000c9)) {
-		unk138 = SMS_MakeMActorWithAnmData("/scene/mapObj/SandBirdRail.bmd",
-		                                   mManager->getMActorAnmData(), 3,
-		                                   0x10210000);
+		unk138 = SMS_MakeMActorWithAnmData(
+		    "/scene/mapObj/SandBirdRail.bmd", mManager->getMActorAnmData(), 3,
+		    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		        | (1 << J3DMLF_TevStageNumShift));
 		unk138->setBck("sandbirdrail");
 	}
 

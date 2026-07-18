@@ -1,13 +1,14 @@
 #include <System/J3DSysFlag.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
+#include <System/MarDirector.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 
-void TJ3DSysFlag::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TJ3DSysFlag::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x80)
+	if (cue & CUE_DRAW_INIT)
 		j3dSys.mFlags &= ~0x2;
 
-	if (param_1 & 0x8) {
+	if (cue & CUE_DRAW) {
 		j3dSys.mFlags |= 0x2;
 		GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0xff, 0xff, 0xff, 0xff });
 		GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
@@ -15,32 +16,32 @@ void TJ3DSysFlag::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 }
 
-void TJ3DSysSetViewMtx::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TJ3DSysSetViewMtx::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x4)
-		MTXCopy(param_2->mViewMtx, j3dSys.mViewMtx);
+	if (cue & CUE_CALC_VIEW)
+		MTXCopy(graphics->mViewMtx, j3dSys.mViewMtx);
 }
 
-void TSMSDrawInit::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSMSDrawInit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x8)
+	if (cue & CUE_DRAW)
 		SMS_DrawInit();
 }
 
 extern "C" void ReInitializeGX();
 
-void TReInitGX::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TReInitGX::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x80)
+	if (cue & CUE_DRAW_INIT)
 		ReInitializeGX();
 }
 
-void TGXAlphaUpdate::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TGXAlphaUpdate::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x40000000)
+	if (cue & CUE_UNK40000000)
 		GXSetAlphaUpdate(GX_TRUE);
 
-	if (param_1 & 0x20000000) {
+	if (cue & CUE_UNK20000000) {
 		GXSetAlphaUpdate(GX_FALSE);
 		GXSetDstAlpha(GX_FALSE, 0);
 	}

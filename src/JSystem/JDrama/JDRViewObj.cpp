@@ -1,15 +1,15 @@
 #include <JSystem/JDrama/JDRViewObj.hpp>
 
-void JDrama::TViewObj::testPerform(u32 param_1, JDrama::TGraphics* param_2)
+void JDrama::TViewObj::testPerform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (((param_1 & 0x1000) != 0) && unkC.check(0x1000)) {
-		param_1 = param_1 & ~0x1;
+	if (((cue & CUE_MOVEMENT_GATE_A) != 0) && unkC.check(CUE_MOVEMENT_GATE_A)) {
+		cue = cue & ~CUE_MOVE;
 	}
-	if (((param_1 & 0x2000) != 0) && unkC.check(0x2000)) {
-		param_1 = param_1 & ~0x1;
+	if (((cue & CUE_MOVEMENT_GATE_B) != 0) && unkC.check(CUE_MOVEMENT_GATE_B)) {
+		cue = cue & ~CUE_MOVE;
 	}
-	param_1 &= ~unkC.get();
-	if (param_1) {
-		perform(param_1, param_2);
+	cue &= ~unkC.get();
+	if (cue) {
+		perform(cue, graphics);
 	}
 }

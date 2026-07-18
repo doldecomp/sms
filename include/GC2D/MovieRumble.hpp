@@ -9,7 +9,7 @@ class TMovieRumble : public JDrama::TViewObj {
 public:
 	TMovieRumble(const TTHPRender*);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void init(const char*);
 	void movement();

@@ -22,6 +22,13 @@ public:
 	{
 	}
 
+	Vec toCamSpace(Vec in) const
+	{
+		Vec out;
+		MTXMultVec(unk8, &in, &out);
+		return out;
+	}
+
 	/* 0x0 */ VecPtr unk0;
 	/* 0x4 */ VecPtr unk4;
 	/* 0x8 */ MtxPtr unk8;
@@ -44,7 +51,7 @@ public:
 
 	virtual void initStream();
 	virtual JAISound* makeSound(u32 param);
-	virtual BOOL getMapInfoFxline(u32 param);
+	virtual u16 getMapInfoFxline(u32 param);
 	virtual u32 getMapInfoGround(u32 param);
 	virtual f32 getMapInfoFxParameter(u32 param);
 	virtual void sendPlayingSeCommand();
@@ -83,7 +90,7 @@ public:
 	void setSceneSetFinishCallback(s32 param1, s32 param2);
 	static void finishSceneSet(u32 param);
 	void loadSceneWave(s32 param1, s32 param2);
-	BOOL checkSceneWaveOnMemory(s32 param1, s32 param2);
+	bool checkSceneWaveOnMemory(s32 param1, s32 param2);
 	void getWaveGroupNumber(s32 param);
 	void getWaveLoadStatus(s32 param);
 	void checkAllWaveLoadStatus();
@@ -249,33 +256,14 @@ public:
 	/* 0x70 */ u32 unk70;
 	/* 0x74 */ char unk74[0x4];
 	/* 0x78 */ u32 unk78;
-	/* 0x7C */ u32 unk7C;
-	/* 0x80 */ u32 unk80;
+	/* 0x7C */ JAISound* unk7C;
+	/* 0x80 */ JAISound* unk80;
 	/* 0x84 */ u32 unk84;
 	/* 0x88 */ u8 unk88;
-	/* 0x8C */ u32* unk8C;
-	/* 0x90 */ u32 unk90;
+	/* 0x8C */ JAISound* unk8C[2];
 	/* 0x94 */ u16 unk94;
-	/* 0x98 */ void* unk98;
-	/* 0x9C */ void* unk9C;
-	/* 0xA0 */ u32 unkA0;
-	/* 0xA4 */ u32 unkA4;
-	/* 0xA8 */ u8 unkA8;
-	/* 0xAC */ JAICamera unkAC[2];
-	/* 0xC4 */ JAISound* unkC4;
-	/* 0xC8 */ u8 unkC8;
-	/* 0xC9 */ u8 unkC9;
-	/* 0xCA */ u8 unkCA;
-	/* 0xCB */ u8 unkCB;
-	/* 0xCC */ u8 unkCC;
-	/* 0xCD */ u8 unkCD;
-	/* 0xCE */ u8 unkCE;
-	/* 0xCF */ u8 unkCF;
-	/* 0xD0 */ u8 unkD0;
-	/* 0xD1 */ u8 unkD1;
-	/* 0xD2 */ char unkD2[0x304 - 0xD2];
-	/* 0x304 */ JASystem::TTrack::TOuterParam* unk304;
-	/* 0x308 */ char unk308[0x4];
+	// TODO: some of the fields might actually be
+	// from a derived class, MSound.
 };
 
 #endif // JAIBASIC_HPP

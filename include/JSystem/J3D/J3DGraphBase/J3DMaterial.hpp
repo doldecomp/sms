@@ -4,6 +4,7 @@
 #include <types.h>
 #include <JSystem/J3d/J3DGraphBase/Blocks/J3DTevBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DTexGenBlocks.hpp>
+#include <JSystem/J3D/J3DGraphBase/Blocks/J3DPEBlocks.hpp>
 
 class J3DMaterialAnm;
 class J3DShape;
@@ -48,6 +49,7 @@ public:
 	void setMaterialAnm(J3DMaterialAnm* v) { unk38 = v; }
 
 	u16 getTexNo(u32 idx) { return mTevBlock->getTexNo(idx); }
+	void setTexNo(u32 idx, u16 v) { mTevBlock->setTexNo(idx, v); }
 
 	J3DColorBlock* getColorBlock() { return mColorBlock; }
 	J3DTexGenBlock* getTexGenBlock() { return mTexGenBlock; }
@@ -59,6 +61,20 @@ public:
 	J3DTexMtx* getTexMtx(u32 idx) { return mTexGenBlock->getTexMtx(idx); }
 	J3DTexCoord* getTexCoord(u32 idx) { return mTexGenBlock->getTexCoord(idx); }
 	J3DNBTScale* getNBTScale() { return mTexGenBlock->getNBTScale(); }
+	J3DZMode* getZMode() { return mPEBlock->getZMode(); }
+
+	void setTevColor(u32 i, const J3DGXColorS10* i_color)
+	{
+		mTevBlock->setTevColor(i, i_color);
+	}
+	void setTevKColor(u32 i, const J3DGXColor* i_color)
+	{
+		mTevBlock->setTevKColor(i, i_color);
+	}
+	void setTexMtx(u32 idx, J3DTexMtx* mtx)
+	{
+		mTexGenBlock->setTexMtx(idx, mtx);
+	}
 
 	J3DMaterial* getNext() { return mNext; }
 	void setNext(J3DMaterial* material) { mNext = material; }

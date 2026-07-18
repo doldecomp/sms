@@ -61,7 +61,7 @@ public:
 	virtual void entryIn();
 	virtual void entryOut();
 
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	void entryOutTexPatternAnm();
 	void entryInTexPatternAnm();
 	void updateInTexPatternAnm();
@@ -73,6 +73,13 @@ public:
 	// Fabricated
 	J3DModel* getModel() { return unk8; }
 
+	// Fabricated
+	BOOL someAnimationCompleted() const
+	{
+		return unkC[1].checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
+		                          | J3DFrameCtrl::STATE_LOOPED_ONCE);
+	}
+
 public:
 	/* 0x4 */ M3UModelCommon* unk4;
 	/* 0x8 */ J3DModel* unk8;
@@ -80,7 +87,11 @@ public:
 	/* 0x10 */ u16 unk10;
 	/* 0x14 */ M3UMtxCalcSetInfo* unk14; // Size matches unk1C
 	/* 0x18 */ u32 unk18;
-	/* 0x1C */ u8* unk1C; // Another small item of 2 u8
+	struct Unk1CStruct {
+		u8 unk0;
+		u8 unk1;
+	};
+	/* 0x1C */ Unk1CStruct* unk1C;
 };
 
 #endif

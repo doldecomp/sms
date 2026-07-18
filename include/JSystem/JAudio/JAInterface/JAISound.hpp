@@ -24,16 +24,16 @@ public:
 	/* 0x3 */ u8 unk3;
 	/* 0x4 */ u8 unk4;
 	/* 0x5 */ u8 unk5;
-	/* 0x6 */ u16 unk6;
+	/* 0x6 */ s16 unk6;
 	/* 0x8 */ u32 unk8;
 	/* 0xC */ u32 unkC;
 	/* 0x10 */ u32 unk10;
 	/* 0x14 */ u32 unk14;
 	/* 0x18 */ u32 unk18;
 	/* 0x1C */ FabricatedPositionInfo* unk1C;
-	/* 0x20 */ VecPtr unk20;
-	/* 0x24 */ VecPtr unk24;
-	/* 0x28 */ VecPtr unk28;
+	/* 0x20 */ const Vec* unk20;
+	/* 0x24 */ const Vec* unk24;
+	/* 0x28 */ const Vec* unk28;
 	/* 0x2C */ JAISound* unk2C;
 	/* 0x30 */ JAISound* unk30;
 	/* 0x34 */ JAISound** unk34;
@@ -154,6 +154,8 @@ public:
 	void getSeInfoPointer();
 
 	u32 getUnk8() { return unk8; }
+
+	u32 getUnk8Lo() { return unk8 & 0x3FF; }
 
 	static JAIBasic* interPointer;
 };

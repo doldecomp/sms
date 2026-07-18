@@ -61,6 +61,8 @@ public:
 	}
 	TModelDataKeeper* getModelDataKeeper() { return mModelDataKeeper; }
 
+	MActor* getMActor(int index) { return mActors[index]; }
+
 public:
 	/* 0x0 */ TModelDataKeeper* mModelDataKeeper;
 	/* 0x4 */ u16 mModelDataNum;

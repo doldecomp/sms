@@ -37,7 +37,7 @@
 #include <Enemy/EnemyTable.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <Player/SplashManager.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Player/MarioPositionObj.hpp>
 #include <Camera/CubeManagerBase.hpp>
 #include <Camera/Camera.hpp>
@@ -123,7 +123,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 	if (strcmp(name, "Mario") == 0) {
 		TMario* mario   = new TMario;
 		gpMarioOriginal = mario;
-		gpMarioAddress  = (size_t)mario;
+		gpMarioAddress  = mario;
 		return mario;
 	}
 
@@ -143,10 +143,10 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 		return new TSilhouette;
 
 	if (strcmp(name, "ScrnFader") == 0)
-		return new TSmplFader(60.0f);
+		return new TSmplFader;
 
 	if (strcmp(name, "ShineFader") == 0)
-		return new TShineFader(60.0f);
+		return new TShineFader;
 
 	if (strcmp(name, "IdxGroup") == 0)
 		return new TIdxGroupObj;
@@ -190,8 +190,12 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 	if (strcmp(name, "SunShine") == 0)
 		return new TSunShine;
 
-	if (strcmp(name, "CubeCamera") == 0)
-		return new TCubeManagerArea("?", "カメラキューブテーブル");
+	if (strcmp(name, "CubeCamera") == 0) {
+		TCubeManagerBase* mgr
+		    = new TCubeManagerBase("?", "カメラキューブテーブル");
+		gpCubeCamera = mgr;
+		return mgr;
+	}
 
 	if (strcmp(name, "CubeMirror") == 0)
 		return gpCubeMirror = new TCubeManagerBase("?", "鏡キューブテーブル");

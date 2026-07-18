@@ -8,7 +8,7 @@ class TSharedParts;
 
 class TMonumentShine : public TMapObjBase {
 public:
-	TMonumentShine(const char*);
+	TMonumentShine(const char* name = "モニュメントシャイン");
 
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
@@ -27,7 +27,7 @@ public:
 
 class TBellDolpic : public TMapObjBase {
 public:
-	TBellDolpic(int, const char*);
+	TBellDolpic(int, const char* name = "ドルピック鐘");
 
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void calcRootMatrix();
@@ -40,9 +40,7 @@ public:
 public:
 	/* 0x138 */ GXColor unk138;
 	/* 0x13C */ int unk13C;
-	/* 0x140 */ f32 unk140;
-	/* 0x144 */ f32 unk144;
-	/* 0x148 */ f32 unk148;
+	/* 0x140 */ JGeometry::TVec3<f32> unk140;
 	/* 0x14C */ f32 unk14C;
 	/* 0x150 */ f32 unk150;
 	/* 0x154 */ int unk154;
@@ -52,7 +50,7 @@ public:
 
 class TDptMonteFence : public TMapObjBase {
 public:
-	TDptMonteFence(const char* name)
+	TDptMonteFence(const char* name = "投げモンテフェンス")
 	    : TMapObjBase(name)
 	{
 	}
@@ -62,7 +60,7 @@ public:
 
 class TMapObjSmoke : public THideObjBase {
 public:
-	TMapObjSmoke(const char* name)
+	TMapObjSmoke(const char* name = "黒煙")
 	    : THideObjBase(name)
 	{
 	}
@@ -74,7 +72,7 @@ public:
 
 class TMareGate : public TMapObjBase {
 public:
-	TMareGate(const char* name)
+	TMareGate(const char* name = "マーレゲート")
 	    : TMapObjBase(name)
 	{
 	}
@@ -85,7 +83,7 @@ public:
 
 class TDemoCannon : public TMapObjBase {
 public:
-	TDemoCannon(const char* name)
+	TDemoCannon(const char* name = "デモ砲台")
 	    : TMapObjBase(name)
 	    , unk138(nullptr)
 	    , unk13C(nullptr)
@@ -93,7 +91,7 @@ public:
 	{
 	}
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void loadAfter();
 	virtual void initMapObj();
 
@@ -108,7 +106,7 @@ public:
 
 class TTurboNozzleDoor : public TMapObjBase {
 public:
-	TTurboNozzleDoor(const char* name)
+	TTurboNozzleDoor(const char* name = "ターボノズルドア")
 	    : TMapObjBase(name)
 	    , unk138()
 	    , unk144(nullptr)

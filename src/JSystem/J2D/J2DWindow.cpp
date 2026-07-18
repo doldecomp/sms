@@ -123,7 +123,7 @@ void J2DWindow::draw_private(const JUTRect& param_1, const JUTRect& param_2,
 	if (param_1.getWidth() >= unk130 && param_1.getHeight() >= unk134) {
 		Mtx afStack_50;
 		MTXConcat(*param_3, mGlobalMtx, afStack_50);
-		GXLoadPosMtxImm(afStack_50, 0);
+		GXLoadPosMtxImm(afStack_50, GX_PNMTX0);
 		drawContents(param_2);
 		GXClearVtxDesc();
 		GXSetVtxDesc(GX_VA_POS, GX_DIRECT);

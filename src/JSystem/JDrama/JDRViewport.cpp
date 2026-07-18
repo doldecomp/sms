@@ -10,22 +10,19 @@ TViewport::TViewport(const TRect& param_1, const char* name)
 {
 }
 
-void TViewport::perform(u32 param_1, TGraphics* param_2)
+void TViewport::perform(u32 cue, TGraphics* graphics)
 {
-	if (!(param_1 & 0x88))
+	if (!(cue & (CUE_DRAW | CUE_DRAW_INIT)))
 		return;
 
-	param_2->setViewport(unk10, 0.0f, 1.0f);
+	graphics->setViewport(unk10, 0.0f, 1.0f);
 
 	if (unk20 & 1)
 		return;
 
-	TRect rect(param_2->getUnk44());
+	TRect rect(graphics->getDisplayRect());
 	rect.intersect(unk10);
-	param_2->mScissorRect = rect;
-	GXSetScissor(param_2->mScissorRect.x1, param_2->mScissorRect.y1,
-	             param_2->mScissorRect.getWidth(),
-	             param_2->mScissorRect.getHeight());
+	graphics->setScissor(rect);
 }
 
 void TViewport::load(JSUMemoryInputStream& stream)

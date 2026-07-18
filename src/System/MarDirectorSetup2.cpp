@@ -8,7 +8,7 @@
 #include <System/StageEventInfo.hpp>
 #include <Map/PollutionManager.hpp>
 #include <Map/MapEventSink.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Camera/SunMgr.hpp>
 #include <GC2D/GCConsole2.hpp>
 #include <GC2D/ScrnFader.hpp>
@@ -61,7 +61,7 @@ void TMarDirector::setup2()
 
 	mConsole = JDrama::TNameRefGen::search<TGCConsole2>("GCコンソール");
 
-	mConsole->unkC = 0xB;
+	mConsole->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 
 	unkDC = JDrama::TNameRefGen::search<TShineFader>("シャインフェーダー");
 
@@ -79,11 +79,11 @@ void TMarDirector::setup2()
 
 	unk18[0]->mFlags = 0;
 	if (mMap == 15) {
-		unkAC->unkC = 0xB;
-		unkB0->unkC = 0xB;
+		unkAC->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
+		unkB0->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 		unk18[0]->onFlag(0x20);
 	} else {
-		unk70->unkC = 0xB;
+		unk70->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 	}
 
 	unk254 = JDrama::TNameRefGen::search<TDemoCannon>("デモ砲台");
@@ -101,8 +101,9 @@ void TMarDirector::setup2()
 	unk258 = MSStage::init(mMap, unk7D);
 
 	JDrama::TGraphics graphics;
-	unk40->perform(0xffffffff, &graphics);
-	unk38->perform(0xffffffff, &graphics);
+	graphics.unkFE = 0;
+	unk40->perform(CUE_ALL, &graphics);
+	unk38->perform(CUE_ALL, &graphics);
 	GXSetDrawDone();
 	GXWaitDrawDone();
 

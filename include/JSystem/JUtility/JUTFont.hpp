@@ -114,11 +114,11 @@ public:
 		                      visible);
 	}
 
-	void drawString_scale(f32 posX, f32 posY, f32 width, f32 height,
-	                      const char* str, bool visible)
+	f32 drawString_scale(f32 posX, f32 posY, f32 width, f32 height,
+	                     const char* str, bool visible)
 	{
-		drawString_size_scale(posX, posY, width, height, str, strlen(str),
-		                      visible);
+		return (int)drawString_size_scale(posX, posY, width, height, str,
+		                                  strlen(str), visible);
 	}
 
 	int getWidth(int i_no) const

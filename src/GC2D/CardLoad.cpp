@@ -20,7 +20,7 @@
 #include <GC2D/ExPane.hpp>
 #include <GC2D/MessageUtil.hpp>
 #include <MoveBG/MapObjOption.hpp>
-#include <Player/MarioMain.hpp>
+#include <Player/Mario.hpp>
 #include <Camera/CameraOption.hpp>
 
 // rogue includes needed for matching sinit & bss
@@ -484,9 +484,9 @@ void TCardLoad::loadAfter()
 	unk284 = JDrama::TNameRefGen::search<TMapObjOptionWall>("オプション用壁");
 }
 
-void TCardLoad::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		switch (unk14) {
 		case 0: {
 			changeScene();
@@ -620,7 +620,8 @@ void TCardLoad::perform(u32 param_1, JDrama::TGraphics* param_2)
 		case 1:
 			if (unk38->checkFrameMeaning(0x20)
 			    || unk38->checkFrameMeaning(0x40)) {
-				SMSGetMSound()->startSoundSystemSE(0x481D, 0, nullptr, 0);
+				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CANCEL_COMMON, 0,
+				                                   nullptr, 0);
 				unkB8 = 1;
 				unk14 = 5;
 			}
@@ -668,7 +669,7 @@ void TCardLoad::perform(u32 param_1, JDrama::TGraphics* param_2)
 				alpha = 0;
 			unk208->setAlpha(alpha);
 			if (gpCameraOption->unkE == 0) {
-				MSBgm::startBGM(0x8001000E);
+				MSBgm::startBGM(MSD_BGM_BOSSPAKU_DEMO);
 				unk1C = PROGRESS_UNK30;
 				unk14 = 0;
 			}
@@ -680,7 +681,8 @@ void TCardLoad::perform(u32 param_1, JDrama::TGraphics* param_2)
 				if (unk18 >= 4 && unkBC >= 100 && gpCameraOption->unkA == 0
 				    && (unk38->checkFrameMeaning(0x20)
 				        || unk38->getTrigger() & 0x1000)) {
-					SMSGetMSound()->startSoundSystemSE(0x4810, 0, nullptr, 0);
+					SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_DECIDE, 0,
+					                                   nullptr, 0);
 					gpCameraOption->moveToLoadFromTitle();
 					gpMarioOriginal->waitingStart(nullptr, 0.0f);
 					unk14 = 8;
@@ -731,9 +733,9 @@ void TCardLoad::perform(u32 param_1, JDrama::TGraphics* param_2)
 			break;
 
 		case 10:
-			MSBgm::startBGM(0x80010010);
+			MSBgm::startBGM(MSD_BGM_CHUBOSS2);
 			unk38->onFlag(0x1);
-			gpMarioOriginal->unk118 &= ~0x400;
+			gpMarioOriginal->offFlag(MARIO_FLAG_GAME_OVER);
 			unk14 = 9;
 			unk18 = 1;
 			unkF0->getPane()->setAlpha(0);
@@ -748,9 +750,9 @@ void TCardLoad::perform(u32 param_1, JDrama::TGraphics* param_2)
 			unkC0 += 1;
 	}
 
-	if (param_1 & 8) {
-		const JUTRect& rect = param_2->getUnk64();
-		J2DOrthoGraph graph(param_2->getUnk54());
+	if (cue & CUE_DRAW) {
+		const JDrama::TRect& rect = graphics->getScissor();
+		J2DOrthoGraph graph(graphics->getViewport());
 		graph.setup2D();
 		switch (unk14) {
 		case 0:
@@ -775,14 +777,7 @@ void TCardLoad::perform(u32 param_1, JDrama::TGraphics* param_2)
 			break;
 		}
 
-		// TODO: are these actually TVec2s or something?
-		param_2->mScissorRect.x1 = rect.x1;
-		param_2->mScissorRect.y1 = rect.y1;
-		param_2->mScissorRect.x2 = rect.x2;
-		param_2->mScissorRect.y2 = rect.y2;
-		GXSetScissor(param_2->mScissorRect.x1, param_2->mScissorRect.y1,
-		             param_2->mScissorRect.getWidth(),
-		             param_2->mScissorRect.getHeight());
+		graphics->setScissor(rect);
 	}
 }
 
@@ -1027,13 +1022,16 @@ s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 			unkB7 = 1;
 		} else if (unk38->checkFrameMeaning(0x20)) {
 			if (old == 0)
-				SMSGetMSound()->startSoundSystemSE(0x481C, 0, nullptr, 0);
+				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
+				                                   nullptr, 0);
 			else
-				SMSGetMSound()->startSoundSystemSE(0x481D, 0, nullptr, 0);
+				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CANCEL_COMMON, 0,
+				                                   nullptr, 0);
 			unk10 = 3;
 		} else if (unk38->checkFrameMeaning(0x40)) {
 			unkB7 = 1;
-			SMSGetMSound()->startSoundSystemSE(0x481D, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CANCEL_COMMON, 0,
+			                                   nullptr, 0);
 			unk10 = 3;
 		}
 
@@ -1074,7 +1072,8 @@ s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 			unkC4 = 0;
 
 			unk484[old]->getPane()->mBounds = unk48C[old];
-			SMSGetMSound()->startSoundSystemSE(0x481E, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_E3_MENU_CURSOR, 0,
+			                                   nullptr, 0);
 			((J2DPicture*)unk484[old]->getPane())->mWhite   = 0xFFFFFFFF;
 			((J2DPicture*)unk484[unkB7]->getPane())->mWhite = 0x00FF00FF;
 		}
@@ -1206,11 +1205,13 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 		} else if (unk38->checkFrameMeaning(0x10)) {
 			unkB7 = 1;
 		} else if (unk38->checkFrameMeaning(0x20)) {
-			SMSGetMSound()->startSoundSystemSE(0x481C, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
+			                                   nullptr, 0);
 			unk10 = 3;
 		} else if (unk38->checkFrameMeaning(0x40)) {
 			unkB7 = 1;
-			SMSGetMSound()->startSoundSystemSE(0x481D, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CANCEL_COMMON, 0,
+			                                   nullptr, 0);
 			unk10 = 3;
 		}
 
@@ -1251,7 +1252,8 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 			unkC4 = 0;
 
 			unk4D8[old]->getPane()->mBounds = unk4E0[old];
-			SMSGetMSound()->startSoundSystemSE(0x481E, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_E3_MENU_CURSOR, 0,
+			                                   nullptr, 0);
 			((J2DPicture*)unk4D8[old]->getPane())->mWhite   = 0xFFFFFFFF;
 			((J2DPicture*)unk4D8[unkB7]->getPane())->mWhite = 0x00FF00FF;
 		}
@@ -1318,7 +1320,8 @@ s8 TCardLoad::waitForAnyKey(TEProgress progress)
 
 	case 2:
 		if (unkB4 <= 600 && unk38->checkFrameMeaning(0x60)) {
-			SMSGetMSound()->startSoundSystemSE(0x481C, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
+			                                   nullptr, 0);
 			unk10 = 3;
 		} else {
 			++unkB4;
@@ -1425,7 +1428,8 @@ s8 TCardLoad::waitForAnyKeyBM(TEProgress param_1)
 	case 2: {
 		int b4 = unkB4;
 		if (b4 <= 600 && unk38->checkFrameMeaning(0x60)) {
-			SMSGetMSound()->startSoundSystemSE(0x481C, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
+			                                   nullptr, 0);
 			unk10 = 3;
 		} else {
 			unkB4 = b4 + 1;
@@ -1941,9 +1945,11 @@ s8 TCardLoad::selectFunction()
 	case 2:
 		if (unk38->checkFrameMeaning(0x20)) {
 			if (bVar1 == 0)
-				SMSGetMSound()->startSoundSystemSE(0x481B, 0, nullptr, 0);
+				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_DECIDE_COMMON, 0,
+				                                   nullptr, 0);
 			else
-				SMSGetMSound()->startSoundSystemSE(0x481C, 0, nullptr, 0);
+				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
+				                                   nullptr, 0);
 			unk10 = 3;
 		} else if (unk38->checkFrameMeaning(0x4)) {
 			TCardBookmarkInfo* bm = &unk40[unkB0];
@@ -1963,7 +1969,8 @@ s8 TCardLoad::selectFunction()
 				unkB6 = 3;
 		} else if (unk38->checkFrameMeaning(0x40)) {
 			unkB6 = -1;
-			SMSGetMSound()->startSoundSystemSE(0x481D, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CANCEL_COMMON, 0,
+			                                   nullptr, 0);
 			unk10 = 3;
 		}
 
@@ -2007,7 +2014,8 @@ s8 TCardLoad::selectFunction()
 		if (unkB6 != bVar1 && unkB6 != -1) {
 			if (unkAC != nullptr)
 				gpEmitterManager4D2->forceDeleteEmitter(unkAC);
-			SMSGetMSound()->startSoundSystemSE(0x481E, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_E3_MENU_CURSOR, 0,
+			                                   nullptr, 0);
 
 			unkC4 = 0;
 
@@ -2067,7 +2075,8 @@ s8 TCardLoad::selectFunction()
 void TCardLoad::setSelected(u8 param_1)
 {
 	if (unk14 == 0) {
-		SMSGetMSound()->startSoundSystemSE(0x4813, 0, nullptr, 0);
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_COIN_APPEAR, 0, nullptr,
+		                                   0);
 		unkB0 = param_1;
 		setupScoreScreen();
 	}
@@ -2191,7 +2200,8 @@ void TCardLoad::changeScene()
 				drawMessage(PROGRESS_UNKA);
 				gpCardManager->probe();
 				if (unk10 == 5)
-					SMSGetMSound()->startSoundSystemSE(0x4810, 0, nullptr, 0);
+					SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_DECIDE, 0,
+					                                   nullptr, 0);
 			} else {
 				if (unk10 == 2)
 					unk10 = 3;
@@ -2242,7 +2252,8 @@ void TCardLoad::changeScene()
 				drawMessage(PROGRESS_UNK11);
 				gpCardManager->probe();
 				if (unk10 == 5)
-					SMSGetMSound()->startSoundSystemSE(0x4810, 0, nullptr, 0);
+					SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_DECIDE, 0,
+					                                   nullptr, 0);
 			} else {
 				if (unk10 == 2)
 					unk10 = 4;
@@ -2380,7 +2391,8 @@ void TCardLoad::changeScene()
 				drawMessage(PROGRESS_UNK20);
 				gpCardManager->probe();
 				if (unk10 == 5)
-					SMSGetMSound()->startSoundSystemSE(0x4810, 0, nullptr, 0);
+					SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_DECIDE, 0,
+					                                   nullptr, 0);
 			} else {
 				if (unk10 == 2)
 					unk10 = 3;
@@ -2462,7 +2474,8 @@ void TCardLoad::changeScene()
 				drawMessageBM(PROGRESS_UNK27);
 				gpCardManager->probe();
 				if (unk10 == 5)
-					SMSGetMSound()->startSoundSystemSE(0x4810, 0, nullptr, 0);
+					SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_DECIDE, 0,
+					                                   nullptr, 0);
 			} else {
 				if (unk10 == 2)
 					unk10 = 3;
@@ -2543,7 +2556,8 @@ void TCardLoad::changeScene()
 					unk10 = 3;
 				drawMessage(PROGRESS_UNK2);
 				if (unk10 == 5) {
-					SMSGetMSound()->startSoundSystemSE(0x4810, 0, nullptr, 0);
+					SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_DECIDE, 0,
+					                                   nullptr, 0);
 					gpCardManager->getBookmarkInfos(unk40);
 				}
 			} else {
@@ -2608,8 +2622,8 @@ void TCardLoad::changeScene()
 
 	if (prevUnk0 != unk10) {
 		if (prevUnk0 == 0)
-			SMSGetMSound()->startSoundSystemSE(0x4819, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_2D_IN, 0, nullptr, 0);
 		if (unk10 == 4)
-			SMSGetMSound()->startSoundSystemSE(0x481A, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_2D_OUT, 0, nullptr, 0);
 	}
 }

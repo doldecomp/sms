@@ -131,15 +131,25 @@ void TModelWaterManager::load(JSUMemoryInputStream& stream)
 	unk5D44 = new JUTTexture(waterJumping);
 
 	unk5D48 = J3DModelLoaderDataBase::load(
-	    JKRGetResource("/mario/bmd/water_shadow_yuka.bmd"), 0x10210000);
+	    JKRGetResource("/mario/bmd/water_shadow_yuka.bmd"),
+	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	        | (1 << J3DMLF_TevStageNumShift));
 	unk5D4C = J3DModelLoaderDataBase::load(
-	    JKRGetResource("/mario/bmd/water_shadow_kabe.bmd"), 0x10210000);
+	    JKRGetResource("/mario/bmd/water_shadow_kabe.bmd"),
+	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	        | (1 << J3DMLF_TevStageNumShift));
 	unk5D50 = J3DModelLoaderDataBase::load(
-	    JKRGetResource("/mario/bmd/watermask.bmd"), 0x10210000);
+	    JKRGetResource("/mario/bmd/watermask.bmd"),
+	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	        | (1 << J3DMLF_TevStageNumShift));
 	unk5D54 = J3DModelLoaderDataBase::load(
-	    JKRGetResource("/mario/bmd/water_hide_yuka_s.bmd"), 0x10210000);
+	    JKRGetResource("/mario/bmd/water_hide_yuka_s.bmd"),
+	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	        | (1 << J3DMLF_TevStageNumShift));
 	unk5D58 = J3DModelLoaderDataBase::load(
-	    JKRGetResource("/mario/bmd/water_hide_kabe_s.bmd"), 0x10210000);
+	    JKRGetResource("/mario/bmd/water_hide_kabe_s.bmd"),
+	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	        | (1 << J3DMLF_TevStageNumShift));
 
 	unk5D5C = 128;
 	unk5D5D = 80;
@@ -277,7 +287,7 @@ void TModelWaterManager::makeEmit(const TWaterEmitInfo& param_1)
 	unk2514[mParticleCount] = nullptr;
 }
 
-int TModelWaterManager::emitRequest(const TWaterEmitInfo& param_1)
+u8 TModelWaterManager::emitRequest(const TWaterEmitInfo& param_1)
 {
 	int particlesToSpawn = param_1.mNum.get();
 	if (particlesToSpawn == 0)
@@ -298,7 +308,7 @@ void TModelWaterManager::splashSound(const JGeometry::TVec3<f32>& pos,
                                      f32 volume) const
 {
 	// TODO: is this the splash sound or some other sound?
-	gpMSound->startSoundSet(0x6800, &pos, 0, volume, 0.0f, 0, 4);
+	gpMSound->startSoundSet(MSD_SE_WT_GND, &pos, 0, volume, 0.0f, 0, 4);
 }
 
 // TODO: contents of this inline are a wild guess
@@ -336,7 +346,10 @@ struct UnknownMWMStruct {
 	f32 unkC;
 	f32 unk10;
 	f32 unk14;
-} gWaterManagerPlaneInfo;
+};
+
+UnknownMWMStruct gWaterManagerPlaneInfo
+    = { 0.93f, -3.0f, 2.0f, 0.7f, -1.0f, 1.0f };
 
 // TODO: these 3 inlines could be confused with one another
 
@@ -489,8 +502,9 @@ void TModelWaterManager::move()
 
 				mParticleLifetimeSOA[i] = 0.0f;
 
-				gpMSound->startSoundSet(0x6801, &mParticlePositionSOA[i], 0.0f,
-				                        0.0f, 0.0f, 0, 4);
+				gpMSound->startSoundSet(MSD_SE_WT_INTO_WATER,
+				                        &mParticlePositionSOA[i], 0.0f, 0.0f,
+				                        0.0f, 0, 4);
 				continue;
 			}
 
@@ -519,7 +533,7 @@ void TModelWaterManager::move()
 				mParticleSizeSOA[i]
 				    *= mWaterParticleTypes[mParticleTypeSOA[i]]->mMagnify.get();
 				f32 fVar1;
-				if (gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode))
+				if (gpCamera->isLButtonCamera())
 					fVar1 = unk5D88[0];
 				else
 					fVar1 = unk5D88[1];
@@ -652,8 +666,8 @@ void TModelWaterManager::move()
 		case 2: {
 			if (mParticleLifetimeSOA[i] > unk5D68)
 				mParticleLifetimeSOA[i] = unk5D68;
-			gpMSound->startSoundSet(0x804, &mParticlePositionSOA[i], 0, 0.0f, 0,
-			                        0, 4);
+			gpMSound->startSoundSet(MSD_SE_PO_WT_DRY_UP,
+			                        &mParticlePositionSOA[i], 0, 0.0f, 0, 0, 4);
 
 			splashGround(i); // TODO: probably wrong inline
 
@@ -887,7 +901,7 @@ void TModelWaterManager::drawTouching()
 	SMS_SettingDrawShape(unk5D48, 0);
 	for (int i = 0; i < mParticleCount; ++i) {
 		if ((mParticleFlagSOA[i] & 0xf) == 2 && -unk5D2C < unk2D14[i][2][3]) {
-			GXLoadPosMtxImm(unk2D14[i], 0);
+			GXLoadPosMtxImm(unk2D14[i], GX_PNMTX0);
 			SMS_DrawShape(unk5D48, 0);
 		}
 	}
@@ -895,7 +909,7 @@ void TModelWaterManager::drawTouching()
 	SMS_SettingDrawShape(unk5D4C, 0);
 	for (int i = 0; i < mParticleCount; ++i) {
 		if ((mParticleFlagSOA[i] & 0xf) == 3 && -unk5D2C < unk2D14[i][2][3]) {
-			GXLoadPosMtxImm(unk2D14[i], 0);
+			GXLoadPosMtxImm(unk2D14[i], GX_PNMTX0);
 			SMS_DrawShape(unk5D4C, 0);
 		}
 	}
@@ -907,7 +921,7 @@ void TModelWaterManager::drawTouchingMask()
 	for (int iVar2 = 0; iVar2 < mParticleCount; iVar2 = iVar2 + 1) {
 		if ((mParticleFlagSOA[iVar2] & 0xf) == 2
 		    || (mParticleFlagSOA[iVar2] & 0xf) == 3) {
-			GXLoadPosMtxImm(unk2D14[iVar2], 0);
+			GXLoadPosMtxImm(unk2D14[iVar2], GX_PNMTX0);
 			SMS_DrawShape(unk5D50, 0);
 		}
 	}
@@ -925,8 +939,8 @@ void TModelWaterManager::drawSilhouette(MtxPtr param_1)
 	GXSetDstAlpha(GX_FALSE, 0);
 	Mtx afStack_5c;
 	MTXIdentity(afStack_5c);
-	GXSetCurrentMtx(0);
-	GXLoadPosMtxImm(afStack_5c, 0);
+	GXSetCurrentMtx(GX_PNMTX0);
+	GXLoadPosMtxImm(afStack_5c, GX_PNMTX0);
 	GXSetNumChans(1);
 	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 	              GX_AF_NONE);
@@ -952,7 +966,7 @@ void TModelWaterManager::drawSilhouette(MtxPtr param_1)
 	SMS_SettingDrawShape(unk5D54, 0);
 	for (int i = 0; i < mParticleCount; ++i) {
 		if ((mParticleFlagSOA[i] & 0xf) == 2) {
-			GXLoadPosMtxImm(unk2D14[i], 0);
+			GXLoadPosMtxImm(unk2D14[i], GX_PNMTX0);
 			SMS_DrawShape(unk5D54, 0);
 		}
 	}
@@ -960,7 +974,7 @@ void TModelWaterManager::drawSilhouette(MtxPtr param_1)
 	SMS_SettingDrawShape(unk5D58, 0);
 	for (int i = 0; i < mParticleCount; ++i) {
 		if ((mParticleFlagSOA[i] & 0xf) == 2) {
-			GXLoadPosMtxImm(unk2D14[i], 0);
+			GXLoadPosMtxImm(unk2D14[i], GX_PNMTX0);
 			SMS_DrawShape(unk5D58, 0);
 		}
 	}
@@ -968,8 +982,8 @@ void TModelWaterManager::drawSilhouette(MtxPtr param_1)
 	GXClearVtxDesc();
 	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_CLR_RGBA, GX_F32, 0);
-	GXSetCurrentMtx(0);
-	GXLoadPosMtxImm(param_1, 0);
+	GXSetCurrentMtx(GX_PNMTX0);
+	GXLoadPosMtxImm(param_1, GX_PNMTX0);
 	GXSetCullMode(GX_CULL_FRONT);
 	GXSetChanMatColor(
 	    GX_COLOR0A0,
@@ -995,9 +1009,9 @@ void TModelWaterManager::drawWaterVolume(MtxPtr param_1)
 	SMS_FillScreenAlpha(0);
 	Mtx afStack_48;
 	MTXIdentity(afStack_48);
-	GXSetCurrentMtx(0);
-	GXLoadPosMtxImm(afStack_48, 0);
-	GXLoadNrmMtxImm(afStack_48, 0);
+	GXSetCurrentMtx(GX_PNMTX0);
+	GXLoadPosMtxImm(afStack_48, GX_PNMTX0);
+	GXLoadNrmMtxImm(afStack_48, GX_PNMTX0);
 	GXClearVtxDesc();
 	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_CLR_RGBA, GX_F32, 0);
@@ -1019,7 +1033,7 @@ void TModelWaterManager::drawWaterVolume(MtxPtr param_1)
 	SMS_SettingDrawShape(unk5D48, 0);
 	for (int i = 0; i < mParticleCount; ++i) {
 		if ((mParticleFlagSOA[i] & 0xf) == 2 && -unk5D2C < unk2D14[i][2][3]) {
-			GXLoadPosMtxImm(unk2D14[i], 0);
+			GXLoadPosMtxImm(unk2D14[i], GX_PNMTX0);
 			GXSetCullMode(GX_CULL_BACK);
 			GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ONE, GX_LO_NOOP);
 			SMS_DrawShape(unk5D48, 0);
@@ -1032,7 +1046,7 @@ void TModelWaterManager::drawWaterVolume(MtxPtr param_1)
 	SMS_SettingDrawShape(unk5D4C, 0);
 	for (int i = 0; i < mParticleCount; ++i) {
 		if ((mParticleFlagSOA[i] & 0xf) == 3 && -unk5D2C < unk2D14[i][2][3]) {
-			GXLoadPosMtxImm(unk2D14[i], 0);
+			GXLoadPosMtxImm(unk2D14[i], GX_PNMTX0);
 			GXSetCullMode(GX_CULL_BACK);
 			GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ONE, GX_LO_NOOP);
 			SMS_DrawShape(unk5D4C, 0);
@@ -1043,8 +1057,8 @@ void TModelWaterManager::drawWaterVolume(MtxPtr param_1)
 	}
 
 	if ((unk5D7C.x - unk5D70.x) + (unk5D7C.z - unk5D70.z) < unk5D88[3]) {
-		GXSetCurrentMtx(0);
-		GXLoadPosMtxImm(param_1, 0);
+		GXSetCurrentMtx(GX_PNMTX0);
+		GXLoadPosMtxImm(param_1, GX_PNMTX0);
 		GXClearVtxDesc();
 		GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 		GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_CLR_RGBA, GX_F32, 0);
@@ -1066,8 +1080,8 @@ void TModelWaterManager::drawWaterVolume(MtxPtr param_1)
 		GXClearVtxDesc();
 		GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 		GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_CLR_RGBA, GX_F32, 0);
-		GXSetCurrentMtx(0);
-		GXLoadPosMtxImm(param_1, 0);
+		GXSetCurrentMtx(GX_PNMTX0);
+		GXLoadPosMtxImm(param_1, GX_PNMTX0);
 		GXSetCullMode(GX_CULL_FRONT);
 		GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0xff, 0xff, 0xff, unk5D5D });
 		GXSetBlendMode(GX_BM_BLEND, GX_BL_DSTALPHA, GX_BL_ZERO, GX_LO_NOOP);
@@ -1084,8 +1098,8 @@ void TModelWaterManager::drawWaterVolume(MtxPtr param_1)
 
 		SMS_DrawCube(unk5D70, unk5D7C);
 	} else {
-		GXSetCurrentMtx(0);
-		GXLoadPosMtxImm(afStack_48, 0);
+		GXSetCurrentMtx(GX_PNMTX0);
+		GXLoadPosMtxImm(afStack_48, GX_PNMTX0);
 		GXSetCullMode(GX_CULL_BACK);
 		GXSetNumChans(1);
 		GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0,
@@ -1107,8 +1121,8 @@ void TModelWaterManager::drawWaterVolume(MtxPtr param_1)
 			for (int i = 0; i < unk5D63; ++i)
 				drawTouching();
 
-		GXSetCurrentMtx(0);
-		GXLoadPosMtxImm(param_1, 0);
+		GXSetCurrentMtx(GX_PNMTX0);
+		GXLoadPosMtxImm(param_1, GX_PNMTX0);
 		GXClearVtxDesc();
 		GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 		GXSetCullMode(GX_CULL_NONE);
@@ -1157,8 +1171,8 @@ void TModelWaterManager::drawWaterVolume(MtxPtr param_1)
 void TModelWaterManager::drawMirror(MtxPtr param_1)
 {
 
-	GXSetCurrentMtx(0);
-	GXLoadPosMtxImm(param_1, 0);
+	GXSetCurrentMtx(GX_PNMTX0);
+	GXLoadPosMtxImm(param_1, GX_PNMTX0);
 	GXSetCullMode(GX_CULL_NONE);
 	GXSetNumChans(1);
 	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
@@ -1182,7 +1196,7 @@ void TModelWaterManager::drawMirror(MtxPtr param_1)
 	for (int i = 0; i < mParticleCount; ++i) {
 		if ((mParticleFlagSOA[i] & 0xf) == 2
 		    && SMS_GetMarioGroundPlane()->isLegal()) {
-			GXLoadPosMtxImm(unk2D14[i], 0);
+			GXLoadPosMtxImm(unk2D14[i], GX_PNMTX0);
 			SMS_DrawShape(unk5D54, 0);
 		}
 	}
@@ -1217,8 +1231,8 @@ void TModelWaterManager::drawMirror(MtxPtr param_1)
 	MTXIdentity(afStack_ec);
 	gpMirrorModelManager->unk24->drawSetting(afStack_ec);
 	GXSetCullMode(GX_CULL_NONE);
-	GXSetCurrentMtx(0);
-	GXLoadPosMtxImm(param_1, 0);
+	GXSetCurrentMtx(GX_PNMTX0);
+	GXLoadPosMtxImm(param_1, GX_PNMTX0);
 	GXSetNumChans(1);
 	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_VTX, GX_SRC_VTX, 0, GX_DF_NONE,
 	              GX_AF_NONE);
@@ -1365,7 +1379,7 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 		GXSetDstAlpha(GX_FALSE, 0);
 		GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
 		GXSetCullMode(GX_CULL_NONE);
-		GXLoadPosMtxImm(afStack_f8, 0);
+		GXLoadPosMtxImm(afStack_f8, GX_PNMTX0);
 
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 		GXPosition3s16(-1000, 1000, -200);
@@ -1390,7 +1404,7 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 			local_c8[2][2] = iVar5 * f30 + f31;
 			Mtx afStack_98;
 			MTXConcat(param_1, local_c8, afStack_98);
-			GXLoadPosMtxImm(afStack_98, 0);
+			GXLoadPosMtxImm(afStack_98, GX_PNMTX0);
 			GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ONE, GX_LO_NOOP);
 			GXSetCullMode(GX_CULL_FRONT);
 			GXCallDisplayList(sphere_glist_p, 0x760);
@@ -1421,7 +1435,7 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 		GXSetDstAlpha(GX_TRUE, 0);
 		GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
 		GXSetCullMode(GX_CULL_NONE);
-		GXLoadPosMtxImm(afStack_f8, 0);
+		GXLoadPosMtxImm(afStack_f8, GX_PNMTX0);
 
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 		GXPosition3s16(-1000, 1000, -200);
@@ -1440,9 +1454,9 @@ void TModelWaterManager::drawRefracAndSpec() const
 
 	Mtx afStack_3c;
 	PSMTXIdentity(afStack_3c);
-	GXSetCurrentMtx(0);
-	GXLoadPosMtxImm(afStack_3c, 0);
-	GXLoadNrmMtxImm(afStack_3c, 0);
+	GXSetCurrentMtx(GX_PNMTX0);
+	GXLoadPosMtxImm(afStack_3c, GX_PNMTX0);
+	GXLoadNrmMtxImm(afStack_3c, GX_PNMTX0);
 	GXSetNumChans(0);
 	GXSetChanCtrl(GX_COLOR0A0, 0, GX_SRC_VTX, GX_SRC_VTX, 0, GX_DF_NONE,
 	              GX_AF_NONE);
@@ -1534,28 +1548,28 @@ void TModelWaterManager::drawRefracAndSpec() const
 		unk5D30->draw();
 }
 
-void TModelWaterManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TModelWaterManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	MtxPtr r29 = param_2->mViewMtx;
+	MtxPtr r29 = graphics->mViewMtx;
 
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		move();
 		calcWorldMinMax();
 		unk5E00 += 1;
 	}
 
-	if (param_1 & 4) {
+	if (cue & CUE_CALC_VIEW) {
 		if (unk5D60 & 0x80)
 			TTimeRec::startTimer(0xFF, 0x00, 0x00, 0xFE);
 
-		calcDrawVtx(param_2->mViewMtx);
-		calcVMAll(param_2->mViewMtx);
+		calcDrawVtx(graphics->mViewMtx);
+		calcVMAll(graphics->mViewMtx);
 
 		if (unk5D60 & 0x80)
 			TTimeRec::endTimer();
 	}
 
-	if (param_1 & 8) {
+	if (cue & CUE_DRAW) {
 		if (unk5D60 & 0x80)
 			TTimeRec::snapGxTimeStart(0xFF, 0x00, 0x00, 0xFD);
 
@@ -1567,20 +1581,20 @@ void TModelWaterManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 		MTXCopy(r29, unk5E10);
 		if ((unk5D60 & 0x100) && !(unk5D60 & 0x200))
-			drawShineShadowVolume(param_2->mViewMtx);
+			drawShineShadowVolume(graphics->mViewMtx);
 
 		if (unk5D60 & 0x80)
 			TTimeRec::snapGxTimeEnd();
 	}
 
-	if (param_1 & 0x80) {
+	if (cue & CUE_DRAW_INIT) {
 		if (unk5D60 & 0x80)
 			TTimeRec::snapGxTimeStart(0xFF, 0x00, 0x00, 0xFC);
 
 		drawRefracAndSpec();
 
 		if ((unk5D60 & 0x100) && (unk5D60 & 0x200))
-			drawShineShadowVolume(param_2->mViewMtx);
+			drawShineShadowVolume(graphics->mViewMtx);
 
 		if (unk5D60 & 0x80)
 			TTimeRec::snapGxTimeEnd();

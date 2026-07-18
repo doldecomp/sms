@@ -11,7 +11,7 @@ public:
 	TRailMapObj(const char*);
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void setGroundCollision();
 	virtual void control();
 	virtual u32 getShadowType();
@@ -43,14 +43,14 @@ public:
 
 class TNormalLift : public TRailMapObj {
 public:
-	TNormalLift(const char*);
+	TNormalLift(const char* name = "ノーマルリフト");
 	void resetPosition();
 	void load(JSUMemoryInputStream&);
 	void readRailFlag();
 	void initMapObj();
 	void control();
 	void setGroundCollision();
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:
 	/* 0x150 */ u16 unk150;
@@ -61,7 +61,7 @@ public:
 
 class TRailBlock : public TRailMapObj {
 public:
-	TRailBlock(const char*);
+	TRailBlock(const char* name = "移動板");
 	void initMapObj();
 	Mtx* getRootJointMtx() const;
 	void calcRootMatrix();
@@ -78,7 +78,7 @@ public:
 
 class TRollBlock : public TMapObjBase {
 public:
-	TRollBlock(const char*);
+	TRollBlock(const char* name = "回転板");
 	void load(JSUMemoryInputStream&);
 	void setGroundCollision();
 	Mtx* getRootJointMtx() const;
@@ -92,7 +92,7 @@ public:
 
 class TWoodBlock : public TNormalLift {
 public:
-	TWoodBlock(const char*);
+	TWoodBlock(const char* name = "木のブロック");
 	BOOL calcRecycle();
 	void load(JSUMemoryInputStream&);
 

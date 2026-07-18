@@ -9,6 +9,9 @@
 
 class TCubeManagerBase;
 
+extern TCubeManagerBase* gpCubeCamera;
+extern TCubeManagerBase* gpCubeMirror;
+extern TCubeManagerBase* gpCubeWire;
 extern TCubeManagerBase* gpCubeStream;
 extern TCubeManagerBase* gpCubeShadow;
 extern TCubeManagerBase* gpCubeSoundChange;
@@ -24,10 +27,10 @@ public:
 
 	virtual ~TCubeManagerBase() { }
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	s32 getDataNo(s32) const;
-	u32 getInCubeNo(const Vec&) const;
+	int getInCubeNo(const Vec&) const;
 	bool isInCube(const Vec&, s32) const;
 	bool isInCube(const Vec&, const char*) const;
 	void calcPointInCubeRatio(const Vec&, s32, float*, float*, float*) const;
@@ -42,8 +45,11 @@ class TCubeManagerMarioIn : public TCubeManagerBase {
 public:
 	TCubeManagerMarioIn(const char* param_1, const char* param_2)
 	    : TCubeManagerBase(param_1, param_2)
+	    , unk1C(-1)
 	{
 	}
+
+	/* 0x1C */ int unk1C;
 };
 
 class TCubeManagerArea;
@@ -74,15 +80,9 @@ public:
 	}
 
 	bool isInOtherCube(const Vec&) const;
-
-public:
-	/* 0x1C */ u32 unk1C;
 };
 
 bool SMS_IsInOtherFastCube(const Vec&);
 bool SMS_IsInSameCameraCube(const Vec&);
-
-extern TCubeManagerBase* gpCubeMirror;
-extern TCubeManagerBase* gpCubeWire;
 
 #endif

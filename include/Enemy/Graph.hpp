@@ -3,6 +3,7 @@
 
 #include <JSystem/JGeometry/JGVec3.hpp>
 #include <JSystem/JDrama/JDRGraphics.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 
 class TGraphWeb;
 class TSplinePath;
@@ -40,7 +41,7 @@ public:
 	void setUnk8(f32 v) { unk8 = v; }
 	void incUnk4() { ++unk4; }
 	int getUnk4() { return unk4; }
-	int setUnk4(int v) { unk4 = v; }
+	void setUnk4(int v) { unk4 = v; }
 	bool checkFlag(u32 f) const { return unk0->mFlags & f; }
 
 public:
@@ -106,7 +107,7 @@ public:
 	void isOnePath() const;
 	BOOL startIsEnd() const;
 	JGeometry::TVec3<f32> indexToPoint(int) const;
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	BOOL isDummy() const;
 	JGeometry::TVec3<f32>
 	getNearestPosOnGraphLink(const JGeometry::TVec3<f32>&) const;
@@ -129,7 +130,7 @@ public:
 	~TGraphGroup();
 	void initGraphGroup();
 	TGraphWeb* getGraphByName(const char*);
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	TRailNode* getNode(int i)
 	{
@@ -162,14 +163,17 @@ public:
 	int moveTo(int node_idx);
 	f32 calcSplineSpeed(float);
 	bool traceSpline(float);
-	void getCurGraphIndex() const;
-	void getGraph() const;
+	int getCurGraphIndex() const { return mCurrIdx; }
+	const TGraphWeb* getGraph() const { return unk0; }
 
 	// fabricated
-	int getCurrentIndex() { return mCurrIdx; }
-	TGraphNode& getCurrent() { return unk0->getGraphNode(mCurrIdx); }
-	TGraphNode& getPrevious() { return unk0->getGraphNode(mPrevIdx); }
-	int getPrevIndex() { return mPrevIdx; }
+	TGraphNode& getCurrent() { return getGraph()->getGraphNode(mCurrIdx); }
+	TGraphNode& getPrevious() { return getGraph()->getGraphNode(mPrevIdx); }
+	const TGraphNode& getCurrent() const
+	{
+		return getGraph()->getGraphNode(mCurrIdx);
+	}
+	int getPrevIndex() const { return mPrevIdx; }
 	void init(TGraphWeb* web) { unk0 = web; }
 	void reset() { mPrevIdx = -1; }
 	void reset2() { mCurrIdx = -1; }
@@ -179,7 +183,7 @@ public:
 	}
 	void moveToShortestNext()
 	{
-		moveTo(unk0->getShortestNextIndex(getCurrentIndex(), getPrevIndex(),
+		moveTo(unk0->getShortestNextIndex(getCurGraphIndex(), getPrevIndex(),
 		                                  0xffffffff));
 	}
 	void setToNearest(const JGeometry::TVec3<f32>& pos)
@@ -196,6 +200,23 @@ public:
 			result = curr;
 		mPrevIdx = curr;
 		return result;
+	}
+	bool currPitchIsZero() const
+	{
+		if (getCurrent().getRailNode()->mPitch == 0)
+			return true;
+		return false;
+	}
+	bool hasOnlyOneNext() const
+	{
+		if (getCurrent().getRailNode()->mConnectionNum == 1)
+			return true;
+		return false;
+	}
+	void moveToRandomNext()
+	{
+		moveTo(
+		    unk0->getRandomNextIndex(getCurGraphIndex(), getPrevIndex(), -1));
 	}
 
 public:
