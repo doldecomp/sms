@@ -12,6 +12,9 @@ public:
 	void calc();
 	TMapObjGrassGroup();
 
+	bool shouldDrawNear() const { return unk78 == 0 ? true : false; }
+	bool shouldDrawFar() const { return unk78 == 1 ? true : false; }
+
 public:
 	/* 0x68 */ s32 unk68;
 	/* 0x6C */ JGeometry::TVec3<f32>* unk6C;

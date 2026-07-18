@@ -1,6 +1,7 @@
 #include <MoveBG/MapObjGrass.hpp>
 #include <System/MarDirector.hpp>
 #include <Camera/Camera.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <dolphin/gx.h>
 #include <stdlib.h>
@@ -8,8 +9,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-
-TMapObjGrassManager* gpMapObjGrassManager;
 
 f32 TMapObjGrassManager::mWidth      = 12.0f;
 f32 TMapObjGrassManager::mSwingWidth = 50.0f;
@@ -20,29 +19,28 @@ JUtility::TColor TMapObjGrassManager::mColorUpper;
 JUtility::TColor TMapObjGrassManager::mColorLower;
 JUtility::TColor TMapObjGrassManager::mColorFar;
 S16Vec TMapObjGrassManager::mDrawVecS16;
+TMapObjGrassManager* gpMapObjGrassManager;
 Vec TMapObjGrassManager::mDrawVec;
 
 static f32 sGrassAddTime = 0.2f;
-static u16 color_table[] = { 0x3CC8, 0x3CFF, 0x2864, 0x28FF };
+static GXColor color_table[]
+    = { { 0x3C, 0xC8, 0x3C, 0xFF }, { 0x28, 0x64, 0x28, 0xFF } };
 
 void TMapObjGrassGroup::drawNear() const
 {
-	if (!(unk78 == 0 ? true : false))
+	if (!shouldDrawNear())
 		return;
 
 	GXBegin(GX_TRIANGLES, GX_VTXFMT0, unk68 * 3);
-	int iVar7 = 0;
+	int iVar7     = 0;
+	const Vec& dv = TMapObjGrassManager::mDrawVec;
 	for (int i = 0; i < unk68; ++i) {
-		GXPosition3f32(unk6C[i].x - TMapObjGrassManager::mDrawVec.x,
-		               mPosition.y,
-		               unk6C[i].z - TMapObjGrassManager::mDrawVec.z);
+		f32 midx = unk6C[i].x + gpMapObjGrassManager->unk20[iVar7];
+		GXPosition3f32(unk6C[i].x - dv.x, mPosition.y, unk6C[i].z - dv.z);
 		GXColor1x8(1);
-		GXPosition3f32(unk6C[i].x + gpMapObjGrassManager->unk20[iVar7],
-		               unk6C[i].y, unk6C[i].z);
+		GXPosition3f32(midx, unk6C[i].y, unk6C[i].z);
 		GXColor1x8(0);
-		GXPosition3f32(unk6C[i].x + TMapObjGrassManager::mDrawVec.x,
-		               mPosition.y,
-		               unk6C[i].z + TMapObjGrassManager::mDrawVec.z);
+		GXPosition3f32(unk6C[i].x + dv.x, mPosition.y, unk6C[i].z + dv.z);
 		GXColor1x8(1);
 
 		++iVar7;
@@ -54,22 +52,19 @@ void TMapObjGrassGroup::drawNear() const
 
 void TMapObjGrassGroup::drawFar() const
 {
-	if (!(unk78 == 1 ? true : false))
+	if (!shouldDrawFar())
 		return;
 
 	GXBegin(GX_TRIANGLES, GX_VTXFMT0, unk68 * 3);
-	int iVar7 = 0;
+	int iVar7        = 0;
+	const S16Vec& dv = TMapObjGrassManager::mDrawVecS16;
 	for (int i = 0; i < unk68; ++i) {
-		GXPosition3s16(unk70[i].x - TMapObjGrassManager::mDrawVecS16.x,
-		               unk70[i].y,
-		               unk70[i].z - TMapObjGrassManager::mDrawVecS16.z);
+		s16 midx = unk70[i].x + gpMapObjGrassManager->unk24[iVar7];
+		GXPosition3s16(unk70[i].x - dv.x, unk70[i].y, unk70[i].z - dv.z);
 		GXColor1x8(1);
-		GXPosition3s16(unk70[i].x + gpMapObjGrassManager->unk24[iVar7],
-		               unk74[i], unk70[i].z);
+		GXPosition3s16(midx, unk74[i], unk70[i].z);
 		GXColor1x8(0);
-		GXPosition3s16(unk70[i].x + TMapObjGrassManager::mDrawVecS16.x,
-		               unk70[i].y,
-		               unk70[i].z + TMapObjGrassManager::mDrawVecS16.z);
+		GXPosition3s16(unk70[i].x + dv.x, unk70[i].y, unk70[i].z + dv.z);
 		GXColor1x8(1);
 
 		++iVar7;
@@ -79,7 +74,23 @@ void TMapObjGrassGroup::drawFar() const
 	GXEnd();
 }
 
-void TMapObjGrassGroup::calc() { }
+void TMapObjGrassGroup::calc()
+{
+	if (gpMarDirector->getCurrentMap() == 2) {
+		unk78 = 0;
+		return;
+	}
+
+	f32 len = mPosition.distance(gpCamera->unk124);
+
+	if (len < TMapObjGrassManager::mDistNear) {
+		unk78 = 0;
+	} else if (len < TMapObjGrassManager::mDistFar) {
+		unk78 = 1;
+	} else {
+		unk78 = 1;
+	}
+}
 
 void TMapObjGrassGroup::load(JSUMemoryInputStream& stream)
 {
@@ -88,16 +99,13 @@ void TMapObjGrassGroup::load(JSUMemoryInputStream& stream)
 	unk6C = new JGeometry::TVec3<f32>[unk68];
 	unk70 = new JGeometry::TVec3<s16>[unk68];
 	unk74 = new s16[unk68];
-	JGeometry::TVec3<f32> scale(mScaling.x * 100.0f, mScaling.y,
+	JGeometry::TVec3<f32> scale(mScaling.x * 100.0f, mScaling.y * 200.0f,
 	                            mScaling.z * 100.0f);
 
 	for (int i = 0; i < unk68; ++i) {
-		unk6C[i].x
-		    = scale.x * rand() / (f32)RAND_MAX * 2.0f + mPosition.x - scale.x;
-		unk6C[i].y
-		    = scale.y * rand() / (f32)RAND_MAX * 2.0f + mPosition.y - scale.y;
-		unk6C[i].z
-		    = scale.z * rand() / (f32)RAND_MAX * 2.0f + mPosition.z - scale.z;
+		unk6C[i].x = scale.x * MsRandF() * 2.0f + mPosition.x - scale.x;
+		unk6C[i].z = scale.z * MsRandF() * 2.0f + mPosition.z - scale.z;
+		unk6C[i].y = scale.y * MsRandF() + mPosition.y + 100.0f;
 
 		unk70[i].x = unk6C[i].x;
 		unk70[i].y = mPosition.y;
@@ -122,12 +130,17 @@ void TMapObjGrassManager::initDrawNear() const
 {
 	Mtx viewItm;
 	MTXInverse(j3dSys.getViewMtx(), viewItm);
-	mDrawVec.x    = viewItm[0][0] * mWidth;
-	mDrawVec.y    = viewItm[1][0] * mWidth;
-	mDrawVec.z    = viewItm[2][0] * mWidth;
-	mDrawVecS16.x = mDrawVec.x;
-	mDrawVecS16.y = mDrawVec.y;
-	mDrawVecS16.z = mDrawVec.z;
+	JGeometry::TVec3<f32> vec(viewItm[0][0], viewItm[1][0], viewItm[2][0]);
+	vec *= mWidth;
+
+	mDrawVec.x = vec.x;
+	mDrawVec.y = vec.y;
+	mDrawVec.z = vec.z;
+
+	mDrawVecS16.x = vec.x;
+	mDrawVecS16.y = vec.y;
+	mDrawVecS16.z = vec.z;
+
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
 	GXClearVtxDesc();
@@ -189,31 +202,11 @@ void TMapObjGrassManager::perform(u32 cue, JDrama::TGraphics* graphics)
 			fVar1 += sGrassAddTime;
 		}
 		unk18 += mSwingSpeed;
-		if (unk18 > M_PI * 2)
+		if (unk18 > 3.14159f * 2)
 			unk18 = 0.0f;
 
-		for (int i = 0; i < unk10; ++i) {
-			TMapObjGrassGroup* grass = unk14[i];
-			if (gpMarDirector->getCurrentMap() == 2) {
-				grass->unk78 = 0;
-			} else {
-				// TODO: some kind of a vec_distance inline?
-				JGeometry::TVec3<f32> v(grass->mPosition.x - gpCamera->unk124.x,
-				                        grass->mPosition.y - gpCamera->unk124.y,
-				                        grass->mPosition.z
-				                            - gpCamera->unk124.z);
-
-				f32 len = v.length();
-
-				if (len < mDistNear) {
-					grass->unk78 = 0;
-				} else if (len < mDistFar) {
-					grass->unk78 = 1;
-				} else {
-					grass->unk78 = 1;
-				}
-			}
-		}
+		for (int i = 0; i < unk10; ++i)
+			unk14[i]->calc();
 	}
 
 	if (cue & CUE_DRAW) {
