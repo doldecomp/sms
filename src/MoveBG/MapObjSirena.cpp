@@ -13,6 +13,7 @@
 #include <MSound/MSoundBGM.hpp>
 #include <MSound/BackgroundMusic.hpp>
 #include <Player/MarioAccess.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
 #include <M3DUtil/MActorData.hpp>
 #include <Map/MapCollisionEntry.hpp>
 #include <MarioUtil/MathUtil.hpp>
