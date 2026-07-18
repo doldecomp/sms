@@ -126,10 +126,10 @@ void TRoulette::switchStop()
 
 void TRoulette::setRollSp(f32 sp)
 {
-	unk13C          = sp;
-	unk148          = 0;
-	unk14A          = 0;
-	unk14C          = 255;
+	unk13C        = sp;
+	unk148        = 0;
+	unk14A        = 0;
+	unk14C        = 255;
 	unk150->unk6C = 0;
 }
 
@@ -155,9 +155,9 @@ static int partsRollCallback(J3DNode* node, int flag)
 		scale[2][0] = 0.0f;
 		scale[2][1] = 0.0f;
 		scale[2][2] = gpCurObject->mScaling.z;
-		f32 rollZ = gpCurObject->getRollAngZ(idx);
-		f32 rollY = gpCurObject->getRollAngY(idx);
-		f32 rollX = gpCurObject->getRollAngX(idx);
+		f32 rollZ   = gpCurObject->getRollAngZ(idx);
+		f32 rollY   = gpCurObject->getRollAngY(idx);
+		f32 rollX   = gpCurObject->getRollAngX(idx);
 		MsMtxSetRotRPH(rot, rollX, rollY, rollZ);
 		PSMTXConcat(jntMtx, rot, jntMtx);
 		PSMTXConcat(jntMtx, scale, jntMtx);
@@ -199,7 +199,8 @@ void TSlotDrum::initNeonMatColor()
 		unk170[i].a = 255;
 		SMS_InitPacket_OneTevColor(
 		    mMActor->getModel(),
-		    getModel()->getModelData()->getMaterialName()->getIndex(matNames[i]),
+		    getModel()->getModelData()->getMaterialName()->getIndex(
+		        matNames[i]),
 		    GX_TEVREG0, &unk170[i]);
 	}
 }
@@ -387,19 +388,11 @@ u32 TItemSlotDrum::touchWater(THitActor* water)
 	if (unk194 != 0)
 		return 1;
 	if (unk1A2 != 0) {
-		// TODO: ~55%. The target keeps lo/hi as int stack locals and computes
-		// hi - lo at runtime (rather than folding to 50), which looks like an
-		// inlined random-in-range helper that isn't identified yet.
-		int lo   = 100;
-		int hi   = 150;
-		unk1A4   = lo + (int)((f32)(hi - lo) * ((f32)rand() * (1.0f / 32768.0f)));
+		unk1A4 = TMsRange<s32>(100, 150).rand();
 		for (int i = 0; i < unk148; i++) {
 			unk19F[i] = 1;
 			unk19C[i] = 0;
-			f32 spLo  = 0.5f;
-			f32 spHi  = 0.8f;
-			unk138[i] = unk158
-			          * (spLo + (spHi - spLo) * ((f32)rand() * (1.0f / 32768.0f)));
+			unk138[i] = unk158 * TMsRange<f32>(0.5f, 0.8f).rand();
 		}
 		unk1A2 = 0;
 	}
@@ -670,9 +663,9 @@ void TDonchou::calcRootMatrix()
 				gpMSound->startSoundActor(MSD_SE_SY_DONCHO_OPEN, &mPosition, 0,
 				                          nullptr, 0, 4);
 				mMActor->setBck("donchou");
-				gpMarDirector->fireStartDemoCamera("どんちょカメラ", &mPosition,
-				                                   -1, 0.0f, true, nullptr, 0,
-				                                   nullptr, JDrama::TFlagT<u16>(0));
+				gpMarDirector->fireStartDemoCamera(
+				    "どんちょカメラ", &mPosition, -1, 0.0f, true, nullptr, 0,
+				    nullptr, JDrama::TFlagT<u16>(0));
 				J3DFrameCtrl* fc = mMActor->getFrameCtrl(0);
 				fc->setRate(0.5f * fc->getRate());
 			}
@@ -797,8 +790,8 @@ void TCloset::moveObject()
 									return;
 							}
 							unk16C = 1;
-							gpMSound->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN_BIG,
-							                             0, nullptr, 0);
+							gpMSound->startSoundSystemSE(
+							    MSD_SE_SY_CLEAR_SIGN_BIG, 0, nullptr, 0);
 						}
 					}
 				}
@@ -909,7 +902,7 @@ void TSirenabossWall::initMapObj()
 	TMapObjBase::initMapObj();
 	mMActor->offMakeDL();
 	MActorAnmData* anmData = mMActorKeeper->getMActorAnmData();
-	mMultiBtk               = new TMultiBtk(3, getModel()->getModelData());
+	mMultiBtk              = new TMultiBtk(3, getModel()->getModelData());
 	for (int i = 0; i <= 2; i++) {
 		J3DAnmTextureSRTKey* data;
 		if (i < anmData->getUnk38()->getAnmNum())
@@ -937,7 +930,7 @@ void TSirenaCasinoRoof::initMapObj()
 	TMapObjBase::initMapObj();
 	mMActor->offMakeDL();
 	MActorAnmData* anmData = mMActorKeeper->getMActorAnmData();
-	mMultiBtk               = new TMultiBtk(3, getModel()->getModelData());
+	mMultiBtk              = new TMultiBtk(3, getModel()->getModelData());
 	for (int i = 0; i <= 2; i++) {
 		J3DAnmTextureSRTKey* data;
 		if (i < anmData->getUnk38()->getAnmNum())
@@ -1020,8 +1013,8 @@ void TChestRevolve::control()
 BOOL TPanelRevolve::receiveMessage(THitActor* actor, u32 message)
 {
 	if (isState(1)) {
-		gpMSound->startSoundActor(MSD_SE_OBJ_PANEL_ROLL, &mPosition, 0,
-		                          nullptr, 0, 4);
+		gpMSound->startSoundActor(MSD_SE_OBJ_PANEL_ROLL, &mPosition, 0, nullptr,
+		                          0, 4);
 		mState = 2;
 		startAnim(1);
 		removeMapCollision();
@@ -1032,8 +1025,8 @@ BOOL TPanelRevolve::receiveMessage(THitActor* actor, u32 message)
 void TPanelRevolve::touchPlayer(THitActor* actor)
 {
 	if (marioHipAttack() && isState(1)) {
-		gpMSound->startSoundActor(MSD_SE_OBJ_PANEL_ROLL, &mPosition, 0,
-		                          nullptr, 0, 4);
+		gpMSound->startSoundActor(MSD_SE_OBJ_PANEL_ROLL, &mPosition, 0, nullptr,
+		                          0, 4);
 		mState = 2;
 		startAnim(1);
 		removeMapCollision();

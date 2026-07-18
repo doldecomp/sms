@@ -2,6 +2,7 @@
 #define MOVE_BG_MAP_OBJ_SIRENA_HPP
 
 #include <MarioUtil/ModelUtil.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 #include <MoveBG/MapObjBase.hpp>
 #include <MoveBG/MapObjHide.hpp>
 #include <MoveBG/MapObjManager.hpp>
@@ -14,14 +15,20 @@ class TSlotDrum;
 class TItemSlotDrum;
 class TRouletteSw;
 
-// TODO: TMsRange<T> is only evidenced by two UNUSED dtor symbols in this TU
-// (__dt__11TMsRange<f>Fv / __dt__11TMsRange<l>Fv, 0x40 each). Its members and
-// whether the dtor is virtual are unknown - the shape below is a guess needed
-// so TItemSlotDrum's inlining is right. Needs human review.
+// A random-in-range helper. Only ever used fully inlined, so the only trace
+// left in the binary is the two UNUSED dtors for TMsRange<f32> / TMsRange<s32>.
 template <typename T> class TMsRange {
 public:
-	TMsRange() { }
-	~TMsRange() { }
+	TMsRange(T min, T max)
+	    : mMin(min)
+	    , mMax(max)
+	{
+	}
+	T rand() const
+	{
+		T range = mMax - mMin;
+		return mMin + (T)((f32)range * MsRandF());
+	}
 
 public:
 	/* 0x0 */ T mMin;
