@@ -252,7 +252,7 @@ void TCommonLauncher::load(JSUMemoryInputStream& stream)
 {
 	TSpineEnemy::load(stream);
 	unk164 = stream.readString();
-	stream.read(&mLaunchPeriod, 4);
+	stream >> mLaunchPeriod;
 }
 
 void TCommonLauncher::changeBck(int param_1)

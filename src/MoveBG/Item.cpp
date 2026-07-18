@@ -837,13 +837,13 @@ void TShine::loadBeforeInit(JSUMemoryInputStream& stream)
 		unk154 = 1;
 
 	s32 eventId;
-	stream.read(&eventId, 4);
+	stream >> eventId;
 	if (eventId == -1)
 		eventId = 120;
 	setEventId(eventId);
 
 	s32 v;
-	stream.read(&v, 4);
+	stream >> v;
 	eventId = v;
 	if (v + 1 >= 2)
 		eventId = -1;

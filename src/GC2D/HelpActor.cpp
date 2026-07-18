@@ -19,8 +19,8 @@ void THelpActor::load(JSUMemoryInputStream& stream)
 	THitActor::load(stream);
 	u32 auStack_c;
 	u32 local_10;
-	stream.read(&auStack_c, 4);
-	stream.read(&local_10, 4);
+	stream >> auStack_c;
+	stream >> local_10;
 	unk6C = stream.readString();
 	initHitActor(0x40000320, 1, -0x80000000, mScaling.x * 100.0f,
 	             mScaling.y * 100.0f, 1.0f, 1.0f);
@@ -51,13 +51,13 @@ void THelpActor::perform(u32 cue, JDrama::TGraphics*)
 	if (cue & CUE_MOVE) {
 		if (unk74) {
 			if (getHelpID() == -1)
-				if (gpMarDirector->getConsole()->startDisappearBalloon(unk68,
-				                                                       false))
+				if (SMSGetMarDirector()->getConsole()->startDisappearBalloon(
+				        unk68, false))
 					unk74 = false;
 		} else {
 			if (getHelpID() != -1)
-				if (gpMarDirector->getConsole()->startAppearBalloon(unk68,
-				                                                    false))
+				if (SMSGetMarDirector()->getConsole()->startAppearBalloon(
+				        unk68, false))
 					unk74 = true;
 		}
 	}

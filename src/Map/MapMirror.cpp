@@ -320,12 +320,12 @@ void TMirrorModelManager::registerObjMirror(TMirrorModel* model)
 void TMirrorModelManager::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
-	int local_28;
-	int local_2C;
-	int local_30;
-	stream.read(&local_28, 4);
-	stream.read(&local_2C, 4);
-	stream.read(&local_30, 4);
+	s32 local_28;
+	s32 local_2C;
+	s32 local_30;
+	stream >> local_28;
+	stream >> local_2C;
+	stream >> local_30;
 	unk14 = local_28 + local_2C + local_30 * 2;
 
 	if (unk14 != 0) {

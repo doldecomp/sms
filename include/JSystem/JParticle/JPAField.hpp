@@ -16,7 +16,7 @@ public:
 	/* 0x24 */ JGeometry::TVec3<f32> unk24;
 	/* 0x30 */ f32 unk30;
 	/* 0x34 */ f32 unk34;
-	/* 0x38 */ char unk38[4];
+	/* 0x38 */ u32 unk38;
 	/* 0x3C */ f32 mMaxDistance;
 	/* 0x40 */ f32 mFadeInEnd;
 	/* 0x44 */ f32 mFadeOutStart;

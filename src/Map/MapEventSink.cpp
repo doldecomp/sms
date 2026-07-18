@@ -379,15 +379,15 @@ void TMapEventSinkBianco::load(JSUMemoryInputStream& stream)
 {
 	TMapEventSinkInPollutionReset::load(stream);
 	stream.readString();
-	stream.read(&unk6C.x, 4);
-	stream.read(&unk6C.y, 4);
-	stream.read(&unk6C.z, 4);
-	int dummy;
-	stream.read(&dummy, 4);
-	stream.read(&unk78, 4);
+	stream >> unk6C.x >> unk6C.y >> unk6C.z;
+	s32 dummy;
+	stream >> dummy;
+	stream >> unk78;
 
-	SMS_LoadParticle("/scene/map/map/ms_objup_slope_a.jpa", 0x59);
-	SMS_LoadParticle("/scene/map/map/ms_objup_slope_b.jpa", 0x1E1);
+	SMS_LoadParticle("/scene/map/map/ms_objup_slope_a.jpa",
+	                 MAP_MAP_MS_OBJUP_SLOPE_A);
+	SMS_LoadParticle("/scene/map/map/ms_objup_slope_b.jpa",
+	                 MAP_MAP_MS_OBJUP_SLOPE_B);
 }
 
 void TMapEventSinkShadowMario::rising()

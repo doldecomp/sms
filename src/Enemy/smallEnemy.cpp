@@ -216,7 +216,7 @@ void TSmallEnemy::init(TLiveManager* param_1)
 void TSmallEnemy::load(JSUMemoryInputStream& stream)
 {
 	TSpineEnemy::load(stream);
-	stream.read(&mCoinId, 4);
+	stream >> mCoinId;
 	if (mCoinId != 0x65)
 		unk18C = 1;
 	reset();

@@ -101,7 +101,7 @@ void TMapObjRevivalPollution::loadAfter()
 void TMapObjRevivalPollution::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
-	stream.read(&unk10, 4);
+	stream >> unk10;
 	unk14 = new TRevivalPolluter[unk10];
 	for (int i = 0; i < unk10; ++i)
 		unk14[i].loadInfo(stream);

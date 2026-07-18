@@ -2,6 +2,7 @@
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <Player/MarioAccess.hpp>
+#include <System/Particles.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
@@ -17,8 +18,8 @@ int TWoodBarrel::mOilBarrelFlushTime = 600;
 void TWoodBarrel::put()
 {
 	TMapObjGeneral::put();
-	if (mGroundPlane->mActor != nullptr
-	    && mGroundPlane->mActor->isActorType(0x4000007b)) {
+	if (mGroundPlane->getActor() != nullptr
+	    && mGroundPlane->getActor()->isActorType(0x4000007b)) {
 		kill();
 		return;
 	}
@@ -36,7 +37,7 @@ void TWoodBarrel::hold(TTakeActor* param_1)
 {
 	TMapObjGeneral::hold(param_1);
 	if (isActorType(0x4000005c))
-		mStateTimer = mBreakTime;
+		startStateTimer(mBreakTime);
 }
 
 void TWoodBarrel::breaking()
@@ -66,11 +67,9 @@ void TWoodBarrel::appeared()
 {
 	TMapObjGeneral::appeared();
 	if (SMS_IsMarioStatusHipDrop()) {
-		mDamageHeight = mMapObjData->mHit->unkC->unkC + 90.0f;
-		calcEntryRadius();
+		setDamageHeight(mMapObjData->mHit->unkC->unkC + 90.0f);
 	} else {
-		mDamageHeight = mMapObjData->mHit->unkC->unkC;
-		calcEntryRadius();
+		setDamageHeight(mMapObjData->mHit->unkC->unkC);
 	}
 
 	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
@@ -81,10 +80,10 @@ void TWoodBarrel::appeared()
 void TWoodBarrel::appear()
 {
 	makeObjAppeared();
-	gpMarioParticleManager->emitAndBindToPosPtr(0xE5, &mPosition, 0, nullptr);
-	if (gpMSound->gateCheck(MSD_SE_SMOKE_EFFECT))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_SMOKE_EFFECT,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ENM_DISAP_A_W,
+	                                            &mPosition, 0, nullptr);
+	SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition, 0, nullptr,
+	                                0, 4);
 }
 
 void TWoodBarrel::touchWall(JGeometry::TVec3<f32>*, TBGWallCheckRecord*)

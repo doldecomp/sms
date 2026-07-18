@@ -266,21 +266,21 @@ void JPABaseEmitter::loadBaseEmitterBlock(JPADataBlock* block)
 
 	JSUInputStream& stream = stream2;
 	stream.skip(0xC);
-	stream.read(&mScale, 0xC);
-	stream.read(&mTrans, 0xC);
-	stream.read(&mRot, 6);
-	stream.read(&mVolumeType, 1);
-	stream.read(&mEmitInterval, 1);
+	stream.read(&mScale, sizeof(mScale));
+	stream.read(&mTrans, sizeof(mTrans));
+	stream.read(&mRot, sizeof(mRot));
+	stream >> mVolumeType;
+	stream >> mEmitInterval;
 	stream.skip(2);
-	stream.read(&mVolumeSubdivision, 2);
-	stream.read(&mChildSpawnRate, 4);
+	stream >> mVolumeSubdivision;
+	stream >> mChildSpawnRate;
 	mChildSpawnRateVariance = JPAConvertFixToFloat(stream.readS16());
 	mMaxFrame               = stream.readS16();
-	stream.read(&mStartFrame, 2);
-	stream.read(&mVolumeSize, 2);
+	stream >> mStartFrame;
+	stream >> mVolumeSize;
 	mVolumeYawSweep  = JPAConvertFixToFloat(stream.readS16());
 	mVolumeMinRadius = JPAConvertFixToFloat(stream.readS16());
-	stream.read(&mBaseLifetime, 2);
+	stream >> mBaseLifetime;
 	mLifetimeRandomScale   = JPAConvertFixToFloat(stream.readS16());
 	mBaseWeight            = JPAConvertFixToFloat(stream.readS16());
 	mWeightRandomScale     = JPAConvertFixToFloat(stream.readS16());
@@ -288,20 +288,20 @@ void JPABaseEmitter::loadBaseEmitterBlock(JPADataBlock* block)
 	unk1CC                 = JPAConvertFixToFloat(stream.readS16());
 	mBaseAirResistance     = JPAConvertFixToFloat(stream.readS16());
 	mAirResistanceVariance = JPAConvertFixToFloat(stream.readS16());
-	stream.read(&unk1FC, 4);
-	stream.read(&unk200, 4);
-	stream.read(&unk204, 4);
-	stream.read(&unk208, 4);
-	stream.read(&unk1C8, 4);
+	stream >> unk1FC;
+	stream >> unk200;
+	stream >> unk204;
+	stream >> unk208;
+	stream >> unk1C8;
 
 	JGeometry::TVec3<s16> fixVec;
-	stream.read(&fixVec, 6);
+	stream.read(&fixVec, sizeof(fixVec));
 	JGeometry::TVec3<f32> floatVec;
 	JPAConvertFixVecToFloatVec(floatVec, fixVec);
 	mEmitterDirection.normalize(floatVec);
 	unk1E4 = JPAConvertFixToFloat(stream.readS16());
-	stream.read(&mEmitFlags, 4);
-	stream.read(&mKeyAnmTypeMask, 4);
+	stream >> mEmitFlags;
+	stream >> mKeyAnmTypeMask;
 }
 
 void JPABaseEmitter::executeBeforeCallBack()

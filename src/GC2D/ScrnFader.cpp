@@ -387,7 +387,7 @@ void TSMSFader::load(JSUMemoryInputStream& stream)
 	startFadein(local_1c);
 
 	u32 local_18;
-	stream.read(&local_18, 4);
+	stream >> local_18;
 
 	setColor(JUtility::TColor(local_18 >> 24, local_18 >> 16 & 0xFF,
 	                          local_18 >> 8 & 0xFF, local_18 & 0xFF));

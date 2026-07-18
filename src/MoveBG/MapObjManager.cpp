@@ -485,8 +485,8 @@ int TMapObjBaseManager::getObjNumWithActorType(u32 param_1) const
 void TMapObjBaseManager::load(JSUMemoryInputStream& stream)
 {
 	TLiveManager::load(stream);
-	stream.read(&unk38, sizeof(unk38));
-	stream.read(&unk3C, sizeof(unk3C));
+	stream >> unk38;
+	stream >> unk3C;
 }
 
 TMapObjBaseManager::TMapObjBaseManager(const char* name)

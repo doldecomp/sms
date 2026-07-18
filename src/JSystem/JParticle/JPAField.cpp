@@ -119,24 +119,24 @@ void JPABaseField::loadFieldBlock(JPADataBlock* block)
 	JSUInputStream& stream = streamImpl; // TODO: fakematch?
 
 	stream.skip(0xC);
-	stream.read(&unk50, 1);
-	stream.read(&unk51, 1);
-	stream.read(&unk52, 1);
-	stream.read(&unk53, 1);
-	stream.read(&mMaxDistanceSq, 1);
+	stream >> unk50;
+	stream >> unk51;
+	stream >> unk52;
+	stream >> unk53;
+	stream >> mMaxDistanceSq;
 	stream.skip(0x2);
-	stream.read(&unk10, 4);
-	stream.read(&unk14, 4);
-	stream.read(&mMaxDistance, 4);
-	stream.read(&unk18.x, 4);
-	stream.read(&unk18.y, 4);
-	stream.read(&unk18.z, 4);
-	stream.read(&unk24.x, 4);
-	stream.read(&unk24.y, 4);
-	stream.read(&unk24.z, 4);
-	stream.read(&unk30, 4);
-	stream.read(&unk34, 4);
-	stream.read(&unk38, 4);
+	stream >> unk10;
+	stream >> unk14;
+	stream >> mMaxDistance;
+	stream >> unk18.x;
+	stream >> unk18.y;
+	stream >> unk18.z;
+	stream >> unk24.x;
+	stream >> unk24.y;
+	stream >> unk24.z;
+	stream >> unk30;
+	stream >> unk34;
+	stream >> unk38;
 
 	mFadeInEnd    = JPAConvertFixToFloat(stream.readS16());
 	mFadeOutStart = JPAConvertFixToFloat(stream.readS16());

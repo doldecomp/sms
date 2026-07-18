@@ -29,10 +29,10 @@ void TEMario::load(JSUMemoryInputStream& stream)
 {
 	TSpineEnemy::load(stream);
 
-	stream.read(&unk154, 4);
-	stream.read(&unk158, 4);
-	stream.read(&unk15C, 4);
-	stream.read(&unk160, 4);
+	stream >> unk154;
+	stream >> unk158;
+	stream >> unk15C;
+	stream >> unk160;
 
 	stream.readU32();
 	stream.readU32();
