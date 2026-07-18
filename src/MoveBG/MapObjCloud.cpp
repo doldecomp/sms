@@ -73,22 +73,13 @@ void TRideCloud::initMapObj()
 void TRideCloud::load(JSUMemoryInputStream& stream)
 {
 	TRailMapObj::load(stream);
-	u32 r;
-	u32 g;
-	u32 b;
-	u32 a;
-	stream.read(&r, 4);
-	stream.read(&g, 4);
-	stream.read(&b, 4);
-	stream.read(&a, 4);
+	u32 r, g, b, a;
+	stream >> r >> g >> b >> a;
 	unk16E.r = r & 0xff;
 	unk16E.g = g & 0xff;
 	unk16E.b = b & 0xff;
 	unk16E.a = 0xff;
-	stream.read(&r, 4);
-	stream.read(&g, 4);
-	stream.read(&b, 4);
-	stream.read(&a, 4);
+	stream >> r >> g >> b >> a;
 	unk176.r = r & 0xff;
 	unk176.g = g & 0xff;
 	unk176.b = b & 0xff;

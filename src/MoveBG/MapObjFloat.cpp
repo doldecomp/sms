@@ -66,7 +66,7 @@ void TMapObjFloatOnSea::calc()
 
 	if (unk19C > unk198) {
 		JGeometry::TVec3<f32> v(unk1AC, unk1AC, unk1AC);
-		emitAndScale(0x1F6, 3, &unk1A0, v);
+		emitAndScale(SCENE_MAPOBJ_MS_OBJ_HAMON_B, 3, &unk1A0, v);
 		emitAndScale(0x1C6, 1, &unk1A0, v);
 		unk19C = 0;
 	} else {
@@ -90,8 +90,10 @@ void TMapObjFloatOnSea::initMapObj()
 	unk198 = 0xF;
 	unk1AC = param_table[idx].unk28;
 
-	SMS_LoadParticle("/scene/mapObj/ms_obj_hamon_b.jpa", 0x1F6);
-	SMS_LoadParticle("/scene/mapObj/ms_obj_hamon_a.jpa", 0x1C6);
+	SMS_LoadParticle("/scene/mapObj/ms_obj_hamon_b.jpa",
+	                 SCENE_MAPOBJ_MS_OBJ_HAMON_B);
+	SMS_LoadParticle("/scene/mapObj/ms_obj_hamon_a.jpa",
+	                 SCENE_MAPOBJ_MS_OBJ_HAMON_A);
 
 	unk194 = new TMapObjLibWave(param_table[idx].unk18, param_table[idx].unk1C,
 	                            param_table[idx].unk20, param_table[idx].unk24);

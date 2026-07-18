@@ -260,7 +260,7 @@ void TNormalLift::load(JSUMemoryInputStream& stream)
 {
 	TRailMapObj::load(stream);
 
-	stream.read(&unk154, 4);
+	stream >> unk154;
 	if (unk154 > 0.0f && mMapCollisionManager) {
 		TMapCollisionBase* col = mMapCollisionManager->getUnk8();
 		col->setAllBGType(7);
@@ -386,8 +386,8 @@ void TRollBlock::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TActor::load(stream);
 	unkF4 = stream.readString();
-	int local_18;
-	stream.read(&local_18, 4);
+	s32 local_18;
+	stream >> local_18;
 	unk13C = local_18 * 0.01f;
 	initMapObj();
 	makeObjAppeared();
@@ -480,14 +480,8 @@ void TWoodBlock::load(JSUMemoryInputStream& stream)
 {
 	TNormalLift::load(stream);
 
-	int local_20;
-	int local_24;
-	int local_28;
-	int local_2C;
-	stream.read(&local_20, 4);
-	stream.read(&local_24, 4);
-	stream.read(&local_28, 4);
-	stream.read(&local_2C, 4);
+	s32 local_20, local_24, local_28, local_2C;
+	stream >> local_20 >> local_24 >> local_28 >> local_2C;
 	unk164.r = local_20 & 0xff;
 	unk164.g = local_24 & 0xff;
 	unk164.b = local_28 & 0xff;

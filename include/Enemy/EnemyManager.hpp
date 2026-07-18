@@ -84,7 +84,7 @@ public:
 	/* 0x38 */ TSpineEnemyParams* unk38;
 	/* 0x3C */ f32 unk3C;
 	/* 0x40 */ TSharedMActorSet* unk40;
-	/* 0x44 */ int unk44;
+	/* 0x44 */ s32 unk44;
 	/* 0x48 */ Mtx** unk48;
 	/* 0x4C */ s32 unk4C;
 	/* 0x50 */ int unk50;

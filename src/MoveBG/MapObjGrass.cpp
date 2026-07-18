@@ -95,7 +95,7 @@ void TMapObjGrassGroup::calc()
 void TMapObjGrassGroup::load(JSUMemoryInputStream& stream)
 {
 	THitActor::load(stream);
-	stream.read(&unk68, 4);
+	stream >> unk68;
 	unk6C = new JGeometry::TVec3<f32>[unk68];
 	unk70 = new JGeometry::TVec3<s16>[unk68];
 	unk74 = new s16[unk68];

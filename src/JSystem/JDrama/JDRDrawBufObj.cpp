@@ -23,8 +23,8 @@ TDrawBufObj::TDrawBufObj(u32 param_1, u32 param_2, const char* name)
 void TDrawBufObj::load(JSUMemoryInputStream& stream)
 {
 	TNameRef::load(stream);
-	stream.read(&unk18, sizeof(u32));
-	stream.read(&mDrawBufferSize, sizeof(u32));
+	stream >> unk18;
+	stream >> mDrawBufferSize;
 	mDrawBuffer = new J3DDrawBuffer(mDrawBufferSize);
 }
 

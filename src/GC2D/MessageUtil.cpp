@@ -16,14 +16,14 @@ const char* SMSGetMessageData(void* param_1, u32 param_2)
 	if (!param_1)
 		return nullptr;
 
-	int local_88 = 0;
-	int local_84 = 0;
+	s32 local_88 = 0;
+	s32 local_84 = 0;
 
 	{
 		JSUMemoryInputStream local_40(param_1, 0x20);
 		local_40.skip(8);
-		local_40.read(&local_88, 4);
-		local_40.read(&local_84, 4);
+		local_40 >> local_88;
+		local_40 >> local_84;
 	}
 
 	char trash2[0x4];
@@ -47,7 +47,7 @@ const char* SMSGetMessageData(void* param_1, u32 param_2)
 			local_74.skip(4);
 			r24 = param_2 * r24;
 			local_74.skip(r24);
-			local_74.read(&local_68, 4);
+			local_74 >> local_68;
 			if (!local_68)
 				return nullptr;
 			local_74.skip(r27 - r24 - 0x14);

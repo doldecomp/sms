@@ -105,6 +105,12 @@ public:
 		return f;
 	}
 
+	JSUInputStream& operator>>(bool& p)
+	{
+		read(&p, sizeof(bool));
+		return *this;
+	}
+
 	JSUInputStream& operator>>(s8& p)
 	{
 		read(&p, sizeof(s8));

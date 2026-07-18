@@ -954,7 +954,7 @@ void TMarioModokiTelesa::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);
 
-	stream.read(&mImitationIndex, 0x4);
+	stream >> mImitationIndex;
 
 	SDLModelData* modelToUse = ((TTelesaManager*)mManager)->mModokiTelesaModel;
 	switch (mImitationIndex) {

@@ -7,7 +7,7 @@ TStrategy* gpStrategy;
 void TIdxGroupObj::loadSuper(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObjPtrListT<THitActor>::loadSuper(stream);
-	stream.read(&unk20, 4);
+	stream >> unk20;
 }
 
 TStrategy::TStrategy(const char* name)

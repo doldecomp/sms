@@ -166,7 +166,7 @@ public:
 
 public:
 	enum { IMITATION_INDEX_NOT_IMITATING = 0 };
-	/* 0x1E0 */ int mImitationIndex;
+	/* 0x1E0 */ s32 mImitationIndex;
 };
 
 DECLARE_NERVE(TNerveTelesaImitate, TLiveActor);

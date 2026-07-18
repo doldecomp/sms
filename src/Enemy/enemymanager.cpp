@@ -107,7 +107,7 @@ void TEnemyManager::load(JSUMemoryInputStream& stream)
 {
 	TLiveManager::load(stream);
 	createModelData();
-	stream.read(&unk44, 4);
+	stream >> unk44;
 }
 
 TSpineEnemy* TEnemyManager::createEnemyInstance() { return nullptr; }

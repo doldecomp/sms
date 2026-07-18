@@ -7,12 +7,8 @@ void JDrama::TActor::load(JSUMemoryInputStream& stream)
 {
 	TPlacement::load(stream);
 
-	stream.read(&mRotation.x, sizeof(f32));
-	stream.read(&mRotation.y, sizeof(f32));
-	stream.read(&mRotation.z, sizeof(f32));
-	stream.read(&mScaling.x, sizeof(f32));
-	stream.read(&mScaling.y, sizeof(f32));
-	stream.read(&mScaling.z, sizeof(f32));
+	stream >> mRotation.x >> mRotation.y >> mRotation.z;
+	stream >> mScaling.x >> mScaling.y >> mScaling.z;
 
 	char str[0x50];
 	stream.readString(str, 0x50);

@@ -858,7 +858,7 @@ config.libs = [
             Object(Matching, "System/StageEventInfo.cpp"),
             Object(Matching, "System/StageUtil.cpp"),
             Object(Matching, "System/Resolution.cpp"),
-            Object(NonMatching, "System/PositionHolder.cpp"),
+            Object(Matching, "System/PositionHolder.cpp"),
             Object(Matching, "System/ProcessMeter.cpp"),
             Object(NonMatching, "System/TimeRec.cpp"),
             Object(NonMatching, "System/DrawSyncManager.cpp"),
