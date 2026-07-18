@@ -212,6 +212,9 @@ public:
 	void resetWaterToFull() { mCurrentWater = getMaxWater(); }
 
 	// Fabricated
+	s32 getCurrentWater() const { return mCurrentWater; }
+
+	// Fabricated
 	void updateUnk1C88(u8 emittedWater)
 	{
 		mIsEmitWater = emittedWater;
