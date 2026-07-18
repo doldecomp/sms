@@ -73,6 +73,14 @@ public:
 	/* 0x150 */ TRouletteSw* unk150;
 };
 
+class TCasinoRoulette : public TRoulette {
+public:
+	TCasinoRoulette(const char* name = "カジノルーレット")
+	    : TRoulette(name)
+	{
+	}
+};
+
 class TSirenaRollMapObj : public TMapObjBase {
 public:
 	TSirenaRollMapObj(const char* name = "SirenaRollMapObj");
@@ -292,6 +300,14 @@ public:
 
 public:
 	/* 0x174 */ bool unk174;
+};
+
+class TSirenaGate : public TMapObjBase {
+public:
+	TSirenaGate(const char* name = "シレナゲート")
+	    : TMapObjBase(name)
+	{
+	}
 };
 
 #endif
