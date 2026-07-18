@@ -57,7 +57,10 @@ void C_MTXLookAt(Mtx m, Point3dPtr camPos, VecPtr camUp, Point3dPtr target);
 #define MTXTranspose      C_MTXTranspose
 #define MTXIdentity       C_MTXIdentity
 #define MTXRotRad         C_MTXRotRad
+#define MTXRotTrig        C_MTXRotTrig
+#define MTXRotAxisRad     C_MTXRotAxisRad
 #define MTXTrans          C_MTXTrans
+#define MTXTransApply     C_MTXTransApply
 #define MTXScaleApply     C_MTXScaleApply
 #define MTXQuat           C_MTXQuat
 #else
@@ -81,7 +84,10 @@ void C_MTXLookAt(Mtx m, Point3dPtr camPos, VecPtr camUp, Point3dPtr target);
 #define MTXTranspose      PSMTXTranspose
 #define MTXIdentity       PSMTXIdentity
 #define MTXRotRad         PSMTXRotRad
+#define MTXRotTrig        PSMTXRotTrig
+#define MTXRotAxisRad     PSMTXRotAxisRad
 #define MTXTrans          PSMTXTrans
+#define MTXTransApply     PSMTXTransApply
 #define MTXScaleApply     PSMTXScaleApply
 #define MTXQuat           PSMTXQuat
 #endif

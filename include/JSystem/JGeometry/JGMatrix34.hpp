@@ -63,12 +63,21 @@ public:
 	}
 
 	typedef f32 ArrType[4];
-	operator ArrType*() { return mMtx; } // Real!
+	typedef const f32 ConstArrType[4];
+	operator ArrType*() { return mMtx; }            // Real!
+	operator ConstArrType*() const { return mMtx; } // fabricated
 
-	void set(const ArrType* src)
+	void set(ConstArrType* src)
 	{
-		void* ptr = mMtx;
+		ArrType* ptr = *this;
 		gekko_ps_copy12(ptr, (void*)src);
+	}
+	// TODO: this is from SMG but there it's all inlined so
+	// the exact shape isn't known, maybe it calls the other set?
+	void set(const SMatrix34C& other)
+	{
+		ArrType* ptr = *this;
+		gekko_ps_copy12(ptr, (void*)(ConstArrType*)other);
 	}
 
 	f32 at(u32 i, u32 j) const { return mMtx[i][j]; }
@@ -80,6 +89,8 @@ public:
 template <typename T> class TMatrix34 : public T {
 public:
 	TMatrix34() { }
+
+	TMatrix34(const TMatrix34& other) { this->set(other); }
 
 	// from SMG
 	void identity()
