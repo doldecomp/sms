@@ -1,6 +1,7 @@
 #ifndef ENEMY_SMALL_ENEMY_HPP
 #define ENEMY_SMALL_ENEMY_HPP
 
+#include <MarioUtil/RandomUtil.hpp>
 #include <Enemy/Enemy.hpp>
 #include <Enemy/EnemyManager.hpp>
 #include <Strategic/Nerve.hpp>
@@ -11,7 +12,7 @@ class TJuiceBlock;
 
 class TSmallEnemyParams : public TSpineEnemyParams {
 public:
-	TSmallEnemyParams(const char*);
+	TSmallEnemyParams(const char* name);
 
 	f32 getSLJumpForce() const { return mSLJumpForce.get(); }
 	f32 getSLSearchLength() const { return mSLSearchLength.get(); }
@@ -68,10 +69,9 @@ public:
 	/* 0x288 */ TParamRT<u8> mSLStampRange;
 	/* 0x29C */ TParamRT<s32> mSLPolluteInterval;
 	/* 0x2B0 */ TParamRT<u8> mSLGenerateOnlyDead;
-	/* 0x2C4 */ f32 unk2C4;
-	/* 0x2C8 */ f32 unk2C8;
-	/* 0x2CC */ f32 unk2CC;
-	/* 0x2D0 */ f32 unk2D0;
+
+	/* 0x2C4 */ TMsRange<f32> mTurnSpeedRange;
+	/* 0x2CC */ TMsRange<f32> mBodyScaleRange;
 };
 
 class TSmallEnemyManager : public TEnemyManager {
@@ -167,6 +167,12 @@ public:
 	bool isEaten();
 	bool isHitWallInBound();
 	void behaveToHitOthers(THitActor*);
+
+	// fabricated
+	TSmallEnemyParams* getSaveParams() const
+	{
+		return (TSmallEnemyParams*)getSaveParam();
+	}
 
 	// fabricated
 	TSmallEnemyParams* getSaveParam2() const

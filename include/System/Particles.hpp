@@ -198,6 +198,8 @@ enum E_SMS_EFFECT_LOOP_NORMAL /* 1 */ {
 	PARTICLE_MS_KIL_SMOKE               = 0x174,
 	PARTICLE_MS_TAMA_HIT                = 0x185,
 	PARTICLE_MS_TAMA_BLUR               = 0x186,
+	PARTICLE_MS_TLS_YODARE_L            = 0x187,
+	PARTICLE_MS_TLS_YODARE_S            = 0x188,
 	PARTICLE_MS_YNB_ONPU                = 0x18B,
 	AMENBO_JPA_MS_AME_HAMON             = 0x18E,
 	FIREWANWAN_JPA_MS_CAN_HITYUGE       = 0x18F,
