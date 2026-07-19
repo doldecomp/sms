@@ -289,7 +289,7 @@ void TConductor::genEnemyFromPollution()
 			if (MsRandF() > f)
 				return;
 		} else {
-			if (MsRandF() > cyl->unk24)
+			if (MsRandF() > cyl->mProbability)
 				return;
 		}
 	} else {
