@@ -384,8 +384,7 @@ void TPoiHana::walkBehavior(int param_1, float param_2)
 			    > unk19C->mSLWakeFrame.get() + mInstanceIndex * 100) {
 				mGoToSleepTimer = 0;
 
-				// TODO: random interval class
-				mGoToSleepTimer = MsRandF(-500.0f, 500.0f);
+				mGoToSleepTimer = TMsRange<s32>(-500, 500).rand();
 
 				mSpine->setNext(&TNervePoihanaSleep::theNerve());
 				unk195 = true;

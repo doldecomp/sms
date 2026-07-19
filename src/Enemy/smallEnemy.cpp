@@ -1073,26 +1073,6 @@ DEFINE_NERVE(TNerveSmallEnemyJump, TLiveActor)
 		return false;
 }
 
-// TODO: kinda matches below but not for use-cases above...
-struct RandInterval {
-	volatile f32 min;
-	volatile f32 max;
-
-	RandInterval(f32 min, f32 max)
-	    : min(min)
-	    , max(max)
-	{
-	}
-
-	f32 get() const
-	{
-		f32 range = max - min;
-		f32 r     = rand() * (1.f / (RAND_MAX + 1));
-		f32 r2    = r * range;
-		return r2 + min;
-	}
-};
-
 DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 {
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
@@ -1112,13 +1092,10 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 		self->onLiveFlag(LIVE_FLAG_UNK8000);
 		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 
-		// TODO: random interval class?
-		RandInterval ri(30.0f, 100.0f);
-		self->mRotation.y += ri.get();
+		self->mRotation.y += TMsRange<f32>(30.0f, 100.0f).rand();
 	}
 
-	RandInterval ri(4.0f, 10.0f);
-	self->mRotation.y += ri.get();
+	self->mRotation.y += TMsRange<f32>(4.0f, 10.0f).rand();
 
 	if (!self->isAirborne() || spine->getTime() > 360) {
 		self->endHitWaterJump();

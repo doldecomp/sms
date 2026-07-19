@@ -501,10 +501,11 @@ void TGesso::setPolluteGoal()
 		polluteObjSpeed = 0.0f;
 
 	if (unk1D8 == 0) {
-		mPolluteVelocity.set(
-		    SMS_GetMarioPos().x + FakeRandInterval(-100.0f, 100.0f).get(),
-		    SMS_GetMarioPos().y,
-		    SMS_GetMarioPos().z + FakeRandInterval(-100.0f, 100.0f).get());
+		TMsRange<f32> range(-100.0f, 100.0f);
+		(void)&range; // TODO: due to range.rand() being wrong
+		mPolluteVelocity.set(SMS_GetMarioPos().x + range.rand(),
+		                     SMS_GetMarioPos().y,
+		                     SMS_GetMarioPos().z + range.rand());
 
 		JGeometry::TVec3<f32> local;
 		calcVelocityToJumpToY(local, polluteObjSpeed, polluteObjGravity);

@@ -1,6 +1,7 @@
 #ifndef TELESA_HPP
 #define TELESA_HPP
 
+#include <MarioUtil/RandomUtil.hpp>
 #include <Enemy/WalkerEnemy.hpp>
 
 class SDLModelData;
@@ -26,13 +27,9 @@ public:
 	/* 0x430 */ TParamRT<s32> mSLLoopAppearTime;
 	/* 0x444 */ TParamRT<s32> mSLLoopHideTime;
 
-	// TODO: random interval class?
-	/* 0x458 */ f32 unk458;
-	/* 0x45C */ f32 unk45C;
-	/* 0x460 */ f32 unk460;
-	/* 0x464 */ f32 unk464;
-	/* 0x468 */ f32 unk468;
-	/* 0x46C */ f32 unk46C;
+	/* 0x458 */ TMsRange<f32> unk458;
+	/* 0x460 */ TMsRange<f32> unk460;
+	/* 0x468 */ TMsRange<f32> unk468;
 };
 
 class TTelesa;

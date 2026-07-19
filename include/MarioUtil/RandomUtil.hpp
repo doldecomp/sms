@@ -40,8 +40,9 @@ public:
 	T rand() const
 	{
 		T range = mMax - mMin;
-		// mMin needs to be re-loaded here after the rand call but it isn't.
-		return mMin + (T)((f32)range * MsRandF());
+		// why is mMin not getting re-loaded here? we called rand so it might've
+		// changed, c'mon MWCC, are you miscompiling?
+		return mMin + (T)(range * MsRandF());
 	}
 
 public:
