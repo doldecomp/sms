@@ -42,14 +42,16 @@ public:
 		mMax = max;
 	}
 
-	// TODO: not correct yet
 	T rand() const
 	{
 		T range = mMax - mMin;
-		// why is mMin not getting re-loaded here? we called rand so it might've
-		// changed, c'mon MWCC, are you miscompiling?
 		return mMin + (T)(range * MsRandF());
 	}
+
+	// real AND required
+	// Without it, codegen is wrong for `TMsRange::rand` AND every single class
+	// inheriting from TSmallEnemyParams. Why? No idea.
+	~TMsRange() { }
 
 public:
 	/* 0x0 */ T mMin;
