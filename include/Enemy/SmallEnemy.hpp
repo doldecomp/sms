@@ -171,6 +171,8 @@ public:
 	// fabricated
 	TSmallEnemyParams* getSaveParam2() const
 	{
+		// TODO: need 2 different inlines here, one with qualification and one
+		// without
 		return (TSmallEnemyParams*)TSpineEnemy::getSaveParam();
 	}
 	f32 getUnk158() const { return unk158; }

@@ -20,6 +20,7 @@ TWalkerEnemyParams::TWalkerEnemyParams(const char* path)
     , PARAM_INIT(mSLZigzagAngle, 30.0f)
     , PARAM_INIT(mSLMarchSpeedLow, 0.8f)
     , PARAM_INIT(mSLMarchSpeedHigh, 1.5f)
+    , unk324(0.0f, 1.0f)
 {
 	TParams::load(mPrmPath);
 	unk324.mMin = mSLMarchSpeedLow.get();
@@ -38,7 +39,7 @@ void TWalkerEnemy::init(TLiveManager* param_1)
 	getWalker()->reset();
 	getWalker()->unk18 = 150.0f;
 
-	mMarchSpeed = getSaveParam2()->unk324.get();
+	mMarchSpeed = getSaveParam2()->unk324.rand();
 	mSpine->initWith(&TNerveWalkerGenerate::theNerve());
 }
 
@@ -94,7 +95,7 @@ void TWalkerEnemy::reset()
 	unk124->reset();
 	TSmallEnemy::reset();
 
-	mMarchSpeed = getSaveParam2()->unk324.get();
+	mMarchSpeed = getSaveParam2()->unk324.rand();
 
 	((TWalker*)mBinder)->reset();
 	mSpine->reset();
@@ -171,7 +172,7 @@ bool TWalkerEnemy::isResignationAttack()
 
 bool TWalkerEnemy::isReachedToGoalXZ()
 {
-	JGeometry::TVec3<f32> tmp = unk104.getPoint();
+	JGeometry::TVec3<f32> tmp = getUnk104().getPoint();
 	tmp -= mPosition;
 	tmp.y = 0.0f;
 

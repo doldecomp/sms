@@ -70,20 +70,17 @@ TTelesaSaveLoadParams::TTelesaSaveLoadParams(const char* path)
     , PARAM_INIT(mSLTelesaPowerByWater, 40.0f)
     , PARAM_INIT(mSLLoopAppearTime, 100)
     , PARAM_INIT(mSLLoopHideTime, 100)
-    , unk458(0.0f)
-    , unk45C(1.0f)
-    , unk460(0.0f)
-    , unk464(1.0f)
-    , unk468(0.0f)
-    , unk46C(1.0f)
+    , unk458(0.0f, 1.0f)
+    , unk460(0.0f, 1.0f)
+    , unk468(0.0f, 1.0f)
 {
 	TParams::load(mPrmPath);
-	unk458 = mSLFlyHeightMin.get();
-	unk45C = mSLFlyHeightMax.get();
-	unk460 = mSLFlyAmplitudeMin.get();
-	unk464 = mSLFlyAmplitudeMax.get();
-	unk468 = mSLFlyFrequencyMin.get();
-	unk46C = mSLFlyFrequencyMax.get();
+	unk458.mMin = mSLFlyHeightMin.get();
+	unk458.mMax = mSLFlyHeightMax.get();
+	unk460.mMin = mSLFlyAmplitudeMin.get();
+	unk460.mMax = mSLFlyAmplitudeMax.get();
+	unk468.mMin = mSLFlyFrequencyMin.get();
+	unk468.mMax = mSLFlyFrequencyMax.get();
 }
 
 TTelesaManager::TTelesaManager(const char* name)
@@ -316,16 +313,15 @@ void TTelesa::drawObject(JDrama::TGraphics* param_1)
 // TODO: wild guess
 void TTelesa::setFlyParam(f32 param_1)
 {
-	// TODO: random interval stuff :(
-	mTargetFlyHeight = MsRandF(unk194->unk458, unk194->unk45C);
+	mTargetFlyHeight = unk194->unk458.rand();
 	mTargetFlyHeight *= param_1;
 	mCurrentFlyHeight = 0.0f;
 
-	mFlyBobAmplitude = MsRandF(unk194->unk460, unk194->unk464);
+	mFlyBobAmplitude = unk194->unk460.rand();
 	mFlyBobAmplitude *= param_1;
 	mFlyBobPhase = 0.0f;
 
-	mFlyBobFrequency = MsRandF(unk194->unk468, unk194->unk46C);
+	mFlyBobFrequency = unk194->unk468.rand();
 }
 
 void TTelesa::setBehavior()
@@ -764,10 +760,7 @@ void TTelesa::setAttackPoint()
 
 	f32 dx = SMS_GetMarioPos().x - mPosition.x;
 	f32 dz = SMS_GetMarioPos().z - mPosition.z;
-	// TODO: random interval
-	volatile f32 minR = 0.7f;
-	volatile f32 maxR = 1.6f;
-	f32 r             = MsRandF(minR, maxR);
+	f32 r  = TMsRange<f32>(0.7f, 1.6f).rand();
 
 	pos.x += dx * r;
 	pos.z += dz * r;
@@ -777,7 +770,7 @@ void TTelesa::setAttackPoint()
 
 void TTelesa::setFirstAttackPoint()
 {
-	TRotation3f SStack_78; // TODO: uuuuuh...
+	TPosition3f SStack_78;
 
 	if (unk184)
 		mRotation.y = 180.0f - mInstanceIndex * 720.0f;
