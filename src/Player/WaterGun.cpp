@@ -1811,39 +1811,35 @@ void TWaterGun::emit()
 
 	u8 currentNozzleType       = mCurrentNozzle;
 	TNozzleBase* currentNozzle = getNozzle(currentNozzleType);
-	for (int i = 0; i < nozzleBmdData.getEmitterCount(currentNozzleType); ++i) {
+	for (int i = 0; i < nozzleBmdData.getEmitterCount(currentNozzleType); ++i)
 		currentNozzle->emit(i);
-	}
+
 	if (mCurrentWater > 0) {
 		switch (currentNozzleType) {
-		case Spray: {
-			JGeometry::TVec3<f32>* emitPos = &mEmitPos[0];
-			playSoundWithInfo(MSD_SE_PO_NORMAL_NOZZLE_IMI, emitPos, 0,
-			                  getCurrentNozzle()->unk374);
-		}
+		case Spray:
+			SMSGetMSound()->startSoundActorWithInfo(
+			    MSD_SE_PO_NORMAL_NOZZLE_IMI, &getEmitPos0(), nullptr,
+			    getCurrentNozzle()->unk374, 0, 0, nullptr, 0, 4);
+
 		case Yoshi:
-		case Turbo: {
-			JGeometry::TVec3<f32>* emitPos = &mEmitPos[0];
-			playSoundWithInfo(0x0, emitPos, 0, getCurrentNozzle()->unk378);
+		case Turbo:
+			SMSGetMSound()->startSoundActorWithInfo(
+			    0x0, &getEmitPos0(), nullptr, getCurrentNozzle()->unk378, 0, 0,
+			    nullptr, 0, 4);
 			break;
-		}
-		case Underwater: {
-			JGeometry::TVec3<f32>* emitPos = &mEmitPos[0];
-			if (gpMSound->gateCheck(MSD_SE_PO_HOVER)) {
-				MSoundSESystem::MSoundSE::startSoundActor(
-				    MSD_SE_PO_HOVER, emitPos, 0, nullptr, 0, 4);
-			}
-		} break;
+
+		case Underwater:
+			SMSGetMSound()->startSoundActor(MSD_SE_PO_HOVER, &getEmitPos0(), 0,
+			                                nullptr, 0, 4);
+			break;
+
 		case Rocket:
 			break;
+
 		case Hover:
-			if (mIsEmitWater) {
-				JGeometry::TVec3<f32>* emitPos = &mEmitPos[0];
-				if (gpMSound->gateCheck(MSD_SE_PO_HOVER)) {
-					MSoundSESystem::MSoundSE::startSoundActor(
-					    MSD_SE_PO_HOVER, emitPos, 0, nullptr, 0, 4);
-				}
-			}
+			if (mIsEmitWater)
+				SMSGetMSound()->startSoundActor(MSD_SE_PO_HOVER, &getEmitPos0(),
+				                                0, nullptr, 0, 4);
 			break;
 		}
 	}
@@ -1867,12 +1863,8 @@ BOOL TWaterGun::suck()
 
 			if (!(mCurrentWater
 			      >= getCurrentNozzle()->mEmitParams.mAmountMax.get())) {
-				JGeometry::TVec3<f32>* emitPos = &mEmitPos[0];
-				MSound* sound                  = gpMSound;
-				if (sound->gateCheck(MSD_SE_PO_SUCK_WATER_B)) {
-					MSoundSESystem::MSoundSE::startSoundActor(
-					    MSD_SE_PO_SUCK_WATER_B, emitPos, 0, nullptr, 0, 4);
-				}
+				SMSGetMSound()->startSoundActor(
+				    MSD_SE_PO_SUCK_WATER_B, &getEmitPos0(), 0, nullptr, 0, 4);
 			}
 			return true;
 		}

@@ -590,9 +590,8 @@ void TNameKuri::setMeltAnm()
 	setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
 	onLiveFlag(LIVE_FLAG_UNK10);
 
-	if (gpMSound->gateCheck(0x2802))
-		MSoundSESystem::MSoundSE::startSoundActor(0x2802, &mPosition, 0,
-		                                          nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_NAMEKURI_DOWN_WT, &mPosition, 0,
+	                                nullptr, 0, 4);
 }
 
 void TNameKuri::setMActorAndKeeper()

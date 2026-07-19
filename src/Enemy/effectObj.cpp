@@ -50,9 +50,8 @@ void TEffectPinnaFunsui::emitEffect()
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(0x1A8, getUnk48(), 1, this);
 
-	if (gpMSound->gateCheck(MSD_SE_EV_ARCHED_FOUNTAIN))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EV_ARCHED_FOUNTAIN,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EV_ARCHED_FOUNTAIN, &mPosition, 0,
+	                                nullptr, 0, 4);
 }
 
 void TEffectBiancoFunsui::loadAfter()
@@ -68,9 +67,8 @@ void TEffectBiancoFunsui::emitEffect()
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(0x1A9, getUnk48(), 1, this);
 
-	if (gpMSound->gateCheck(MSD_SE_EV_ARCHED_FOUNTAIN))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EV_ARCHED_FOUNTAIN,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EV_ARCHED_FOUNTAIN, &mPosition, 0,
+	                                nullptr, 0, 4);
 }
 
 TEffectObjBase::TEffectObjBase(const char* name)
@@ -163,9 +161,8 @@ void TEffectObjBase::moveObject()
 			emitter->unk174.set(x, y, z);
 		}
 
-		if (gpMSound->gateCheck(MSD_SE_OBJ_CALM_FLAME))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_OBJ_CALM_FLAME, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_CALM_FLAME, &mPosition, 0,
+		                                nullptr, 0, 4);
 	}
 
 	if (unk68 == 3)
@@ -186,16 +183,14 @@ void TEffectObjBase::behaveToWater(THitActor* param_1)
 		return;
 	}
 
-	if (gpMSound->gateCheck(MSD_SE_BS_WANWAN_TO_COOL))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_WANWAN_TO_COOL,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
+	                                nullptr, 0, 4);
 	unk68 = 3;
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
-	        0x8B, &mPosition, 0, nullptr)) {
-		emitter->unk154.set(mScaling);
-		emitter->unk174.set(mScaling);
+	        PARTICLE_MS_MOE_FIRE_OFF, &mPosition, 0, nullptr)) {
+		emitter->setScale(mScaling);
 	}
 }
 

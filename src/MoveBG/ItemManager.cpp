@@ -1,6 +1,7 @@
 #include <MoveBG/ItemManager.hpp>
 #include <MoveBG/Item.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
@@ -25,13 +26,12 @@ void TItemManager::resetNozzleBoxesModel(int nozzle_type)
 
 		if (box->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			JPABaseEmitter* emitter = gpMarioParticleManager->emit(
-			    0xE4, &box->mPosition, 0, nullptr);
+			    PARTICLE_MS_ENM_DISAP_A, &box->mPosition, 0, nullptr);
 			if (emitter)
 				emitter->setScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
 
-			if (gpMSound->gateCheck(MSD_SE_SMOKE_EFFECT))
-				MSoundSESystem::MSoundSE::startSoundActor(
-				    MSD_SE_SMOKE_EFFECT, box->mPosition, 0, nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT,
+			                                &box->mPosition, 0, nullptr, 0, 4);
 		}
 		box->makeModelValid();
 	}

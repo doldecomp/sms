@@ -132,9 +132,7 @@ void TMapObjBase::soundBas(u32 param_1, f32 param_2, f32 param_3)
 {
 	f32 currFrame = mMActor->getFrameCtrl(0)->getFrame();
 	if (currFrame <= param_2 && param_2 < currFrame + param_3) {
-		if (SMSGetMSound()->gateCheck(param_1))
-			MSoundSESystem::MSoundSE::startSoundActor(param_1, &mPosition, 0,
-			                                          nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(param_1, &mPosition, 0, nullptr, 0, 4);
 	}
 }
 
@@ -145,14 +143,14 @@ void TMapObjBase::startSound(u16 param_1)
 
 	if (!mMapObjData->mSound) {
 		u32 uVar3 = TMapObjGeneral::mDefaultSound.unk0[unk100];
-		if (uVar3 != 0xffffffff && SMSGetMSound()->gateCheck(uVar3))
-			MSoundSESystem::MSoundSE::startSoundActor(uVar3, &mPosition, 0,
-			                                          nullptr, 0, 4);
+		if (uVar3 != 0xffffffff)
+			SMSGetMSound()->startSoundActor(uVar3, &mPosition, 0, nullptr, 0,
+			                                4);
 	} else {
 		u32 uVar3 = mMapObjData->mSound->unk4->unk0[unk100];
-		if (uVar3 != 0xffffffff && SMSGetMSound()->gateCheck(uVar3))
-			MSoundSESystem::MSoundSE::startSoundActor(uVar3, &mPosition, 0,
-			                                          nullptr, 0, 4);
+		if (uVar3 != 0xffffffff)
+			SMSGetMSound()->startSoundActor(uVar3, &mPosition, 0, nullptr, 0,
+			                                4);
 	}
 }
 
@@ -519,14 +517,14 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (unk100 == 0) {
 			if (!mMapObjData->mSound) {
 				u32 sound = TMapObjGeneral::mDefaultSound.unk0[unk100];
-				if (sound != 0xffffffff && SMSGetMSound()->gateCheck(sound))
-					MSoundSESystem::MSoundSE::startSoundActor(sound, &mPosition,
-					                                          0, nullptr, 0, 4);
+				if (sound != 0xffffffff)
+					SMSGetMSound()->startSoundActor(sound, &mPosition, 0,
+					                                nullptr, 0, 4);
 			} else {
 				u32 sound = mMapObjData->mSound->unk4->unk0[unk100];
-				if (sound != 0xffffffff && SMSGetMSound()->gateCheck(sound))
-					MSoundSESystem::MSoundSE::startSoundActor(sound, &mPosition,
-					                                          0, nullptr, 0, 4);
+				if (sound != 0xffffffff)
+					SMSGetMSound()->startSoundActor(sound, &mPosition, 0,
+					                                nullptr, 0, 4);
 			}
 		}
 		if (checkLiveFlag(LIVE_FLAG_DEAD))

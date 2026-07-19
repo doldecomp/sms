@@ -604,9 +604,8 @@ void TTamaNoko::setAfterDeadEffect()
 
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_TAMA_FLOWER,
 	                                            &mPosition, 0, nullptr);
-	if (gpMSound->gateCheck(MSD_SE_EN_COMMON_SMOKE))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_COMMON_SMOKE,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_SMOKE, &mPosition, 0,
+	                                nullptr, 0, 4);
 }
 
 const char** TTamaNoko::getBasNameTable() const { return tamaNoko_bastable; }
@@ -811,9 +810,8 @@ DEFINE_NERVE(TNerveTamaNokoDown, TLiveActor)
 			return true;
 		}
 
-		if (gpMSound->gateCheck(MSD_SE_EN_TAMANOKO_DROPOK))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_TAMANOKO_DROPOK, &self->mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_TAMANOKO_DROPOK,
+		                                &self->mPosition, 0, nullptr, 0, 4);
 		self->unk164 = 1;
 		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK7, 1.0f);
 		self->setBckAnm(4);
