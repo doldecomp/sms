@@ -491,3 +491,20 @@ three `(void)&` hacks and still only reached ~92% (residual store scheduling);
 rewriting the `dist` copy and the `m` fill as small unrolled `for` loops removed
 the hacks and took it to 99.7%. Prefer the loop form — it's both cleaner and a
 better structural match than address-of forcing.
+
+## Triviality of a type influences codegen
+
+A user-declared destructor (even an empty `~T() {}`) makes a class non-trivial, and MWCC pins non-trivial types to memory instead of promoting them into registers.
+Triviality propagates: a non-trivial member/base makes the enclosing class non-trivial too.
+
+Two symptoms of a *missing* destructor, both meaning "the target keeps this in memory but our build cached it in a register":
+
+- **Struct fields reload across calls in the target, but ours caches them.**
+  A trivial struct is scalar-replaced (fields live in registers across calls); a non-trivial one is reloaded from memory after any opaque call.
+- **The target spills a freshly-`new`'d object pointer to the stack and reloads it as `this`, but ours keeps it in a register.**
+  For `new T()` with a non-trivial `T`, the constructed object is a separate address-taken temporary with a stack home, so `this` is reloaded from the stack during construction.
+  Only visible when the constructor is inlined (out-of-line ctors call a real `bl` and never show it).
+
+Fix: give the smallest offending value/helper type an empty `~T() {}` and re-check.
+This is a global change, so re-run the baseline — one destructor can fix (or shift) many callsites at once.
+Concrete case: adding `~TMsRange<f32>()` (a field of `TSmallEnemyParams`) took several `TFooManager::load` functions from ~95% to 100%.
