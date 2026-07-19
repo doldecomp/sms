@@ -1275,9 +1275,8 @@ BOOL TMario::diving()
 		}
 	}
 
-	if (gpMSound->gateCheck(MSD_SE_MA_DIVE_IN_MAHRE))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_MA_DIVE_IN_MAHRE,
-		                                          nullptr, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_MA_DIVE_IN_MAHRE, nullptr, 0,
+	                                nullptr, 0, 4);
 
 	bubbleFromBody();
 	mForwardVel *= mDivingParams.mSeaBrake.get();

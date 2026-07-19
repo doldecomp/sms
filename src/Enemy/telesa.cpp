@@ -151,10 +151,9 @@ void TTelesaManager::telesaForceKill()
 		}
 	}
 	if (anyKilled) {
-		Vec* pos = &getObj(0)->mPosition;
-		if (gpMSound->gateCheck(MSD_SE_EN_TELESA_DISAPPEAR))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_TELESA_DISAPPEAR, pos, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_TELESA_DISAPPEAR,
+		                                &getObj(0)->mPosition, 0, nullptr, 0,
+		                                4);
 	}
 }
 
@@ -551,13 +550,11 @@ bool TTelesa::changeByJuice()
 		mSpine->pushNerve(&TNerveSmallEnemyChange::theNerve());
 		mSpine->pushAfterCurrent(&TNerveTelesaFreeze::theNerve());
 
-		if (gpMSound->gateCheck(MSD_SE_EN_TELESA_FIX))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_TELESA_FIX, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_TELESA_FIX, &mPosition, 0,
+		                                nullptr, 0, 4);
 
-		if (gpMSound->gateCheck(MSD_SE_OBJ_AWAY_INTO_GRAF))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_OBJ_AWAY_INTO_GRAF, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_AWAY_INTO_GRAF, &mPosition,
+		                                0, nullptr, 0, 4);
 
 		unk185 = 1;
 
@@ -579,9 +576,8 @@ void TTelesa::scalingChangeActor()
 void TTelesa::changeOut()
 {
 	onHitFlag(HIT_FLAG_NO_COLLISION);
-	if (gpMSound->gateCheck(MSD_SE_EN_TELSA_RECOVER))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_TELSA_RECOVER,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELSA_RECOVER, &mPosition, 0,
+	                                nullptr, 0, 4);
 	offLiveFlag(LIVE_FLAG_HIDDEN);
 	mPosition = mJuiceBlock->mPosition;
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
@@ -700,9 +696,8 @@ void TTelesa::initAttacker(THitActor* param_1)
 	mMActor->getFrameCtrl(0)->setFrame(0.0f);
 	mHeadHeight = 250.0f;
 
-	if (gpMSound->gateCheck(MSD_SE_EN_TELESA_APPEAR))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_TELESA_APPEAR,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELESA_APPEAR, &mPosition, 0,
+	                                nullptr, 0, 4);
 }
 
 void TTelesa::initItemAttacker(THitActor* param_1)
@@ -719,9 +714,8 @@ void TTelesa::initItemAttacker(THitActor* param_1)
 	unk150 &= ~0x40;
 	mMActor->getFrameCtrl(0)->setFrame(0.0f);
 	mHeadHeight = 250.0f;
-	if (gpMSound->gateCheck(MSD_SE_EN_TELESA_APPEAR))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_TELESA_APPEAR,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELESA_APPEAR, &mPosition, 0,
+	                                nullptr, 0, 4);
 }
 
 void TTelesa::setAttacker()
@@ -1089,9 +1083,8 @@ DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 
 		spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
 
-		if (gpMSound->gateCheck(MSD_SE_EN_KM_TELSA_REVEAL))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_KM_TELSA_REVEAL, &self->mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_KM_TELSA_REVEAL,
+		                                &self->mPosition, 0, nullptr, 0, 4);
 
 		// end of inline
 

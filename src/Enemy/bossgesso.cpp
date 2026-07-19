@@ -464,10 +464,9 @@ void TBGBinder::bind(TLiveActor* param_1)
 					enemy->generate(gesso->mPosition, local_5c);
 				}
 
-				if (gpMSound->gateCheck(MSD_SE_BS_GESO_DOWN_DIVE))
-					MSoundSESystem::MSoundSE::startSoundActor(
-					    MSD_SE_BS_GESO_DOWN_DIVE, &gesso->mPosition, 0, nullptr,
-					    0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_BS_GESO_DOWN_DIVE,
+				                                &gesso->mPosition, 0, nullptr,
+				                                0, 4);
 
 				gesso->unk1A4 = 1.0f;
 				SMSRumbleMgr->start(8, &gesso->unk1A4);
@@ -1369,9 +1368,8 @@ DEFINE_NERVE(TNerveBGEyeDamage, TLiveActor)
 
 	if (self->unk1AE == 0) {
 		self->unk1AE = 0x78;
-		if (gpMSound->gateCheck(MSD_SE_BS_GESO_WATER_HIT))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_BS_GESO_WATER_HIT, &self->mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_GESO_WATER_HIT,
+		                                &self->mPosition, 0, nullptr, 0, 4);
 	}
 
 	if (self->unk190.color.a != 0) {
@@ -1603,17 +1601,14 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		if (nameKuriMgr)
 			nameKuriMgr->killChildren();
 
-		if (gpMSound->gateCheck(MSD_SE_BS_GESO_MHIT_NOBOICE))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_BS_GESO_MHIT_NOBOICE, &self->mPosition, 0, nullptr, 0,
-			    4);
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_GESO_MHIT_NOBOICE,
+		                                &self->mPosition, 0, nullptr, 0, 4);
 	}
 
 	if (gpMarDirector->mMap == 9 && spine->getTime() >= 740
 	    && spine->getTime() <= 750) {
-		if (gpMSound->gateCheck(MSD_SE_OBJ_QUAKE))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_OBJ_QUAKE, &self->mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &self->mPosition, 0,
+		                                nullptr, 0, 4);
 
 		if (spine->getTime() == 745) {
 			self->unk1A4 = 1.0f;

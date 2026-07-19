@@ -1117,10 +1117,8 @@ BOOL TMario::wireRolling()
 	}
 
 	if (playSfx == TRUE) {
-		f32 sag = mWireSag;
-		if (gpMSound->gateCheck(sfxId))
-			MSoundSESystem::MSoundSE::startSoundActorWithInfo(
-			    sfxId, &mPosition, nullptr, sag, 0, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActorWithInfo(sfxId, &mPosition, nullptr,
+		                                        mWireSag, 0, 0, nullptr, 0, 4);
 	}
 
 	blurEffect();

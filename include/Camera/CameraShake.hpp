@@ -16,6 +16,7 @@ enum EnumCamShakeMode {
 	CAM_SHAKE_MODE_UNK13 = 0x13,
 	CAM_SHAKE_MODE_UNK14 = 0x14,
 	CAM_SHAKE_MODE_UNK15 = 0x15,
+	CAM_SHAKE_MODE_UNK24 = 0x24,
 };
 
 class TCameraShake;

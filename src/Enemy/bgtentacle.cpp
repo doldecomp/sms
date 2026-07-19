@@ -6,6 +6,7 @@
 #include <Map/Map.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <System/MarDirector.hpp>
+#include <System/Particles.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
 #include <Strategic/ObjModel.hpp>
@@ -1112,16 +1113,19 @@ void TBGTentacle::calcAtkParticleAndSE()
 			                                local_28.z, &pTStack_2c);
 			if (local_28.y < dVar10 + 100.0f) {
 				local_28.y = dVar10 + 5.0f;
-				gpMarioParticleManager->emit(0x8C, &local_28, 0, nullptr);
-				gpMarioParticleManager->emit(0x8D, &local_28, 0, nullptr);
-				gpMarioParticleManager->emit(0x8E, &local_28, 0, nullptr);
-				gpMarioParticleManager->emit(0x8F, &local_28, 0, nullptr);
+				gpMarioParticleManager->emit(BGESO_JPA_MS_BOGE_ATTACK_A,
+				                             &local_28, 0, nullptr);
+				gpMarioParticleManager->emit(BGESO_JPA_MS_BOGE_ATTACK_B,
+				                             &local_28, 0, nullptr);
+				gpMarioParticleManager->emit(BGESO_JPA_MS_BOGE_ATTACK_C,
+				                             &local_28, 0, nullptr);
+				gpMarioParticleManager->emit(BGESO_JPA_MS_BOGE_ATTACK_D,
+				                             &local_28, 0, nullptr);
 				unk4C = 1;
 
-				const JGeometry::TVec3<f32>& p = mTakeHit->getPosition();
-				if (gpMSound->gateCheck(MSD_SE_BS_GESO_ATK_IMPACT))
-					MSoundSESystem::MSoundSE::startSoundActor(
-					    MSD_SE_BS_GESO_ATK_IMPACT, p, 0, nullptr, 0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_BS_GESO_ATK_IMPACT,
+				                                &mTakeHit->mPosition, 0,
+				                                nullptr, 0, 4);
 
 				mOwner->rumblePad(2, mOwner->getPosition());
 			}
@@ -1165,18 +1169,15 @@ void TBGTentacle::calcAtkParticleAndSE()
 	s16 endFrame     = unk80->getFrameCtrl(0)->getEnd();
 	if (unk80->checkBckPass(endFrame - atkSoundTime)) {
 		if (mState != 10) {
-			const JGeometry::TVec3<f32>& p = mTakeHit->getPosition();
-			if (gpMSound->gateCheck(MSD_SE_BS_GESO_ATK))
-				MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_GESO_ATK, p,
-				                                          0, nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(
+			    MSD_SE_BS_GESO_ATK, &mTakeHit->mPosition, 0, nullptr, 0, 4);
 
 			if (!mOwner->unk1AC) {
 				mOwner->unk1AC = 0xF0;
 
-				const JGeometry::TVec3<f32>& p = mTakeHit->getPosition();
-				if (gpMSound->gateCheck(MSD_SE_BS_GESO_VO_ATTACK))
-					MSoundSESystem::MSoundSE::startSoundActor(
-					    MSD_SE_BS_GESO_VO_ATTACK, p, 0, nullptr, 0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_BS_GESO_VO_ATTACK,
+				                                &mTakeHit->mPosition, 0,
+				                                nullptr, 0, 4);
 			}
 		}
 	}
@@ -1400,10 +1401,8 @@ void TBGTentacle::perform(u32 cue, JDrama::TGraphics* graphics)
 	if ((cue & CUE_MOVE) && mState == 4
 	    && mTimeInCurrentState
 	           < mOwner->getSaveParam()->getSLAmputeeTime() - 240) {
-		const JGeometry::TVec3<f32>& pos = mTakeHit->getPosition();
-		if (gpMSound->gateCheck(MSD_SE_BS_GESO_TAKEN_HAND))
-			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_GESO_TAKEN_HAND,
-			                                          &pos, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_GESO_TAKEN_HAND,
+		                                &mTakeHit->mPosition, 0, nullptr, 0, 4);
 	}
 
 	if (mState != 6)

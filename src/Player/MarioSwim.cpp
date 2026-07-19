@@ -168,8 +168,7 @@ BOOL TMario::swimWait()
 
 	setAnimation(ANIM_PADDLE_SWIM_WAIT, 1.0f);
 
-	if (gpMSound->gateCheck(MSD_SE_MA_WATER_WAIT))
-		MSoundSESystem::MSRandPlay::startSeRandPlay(MSD_SE_MA_WATER_WAIT, 0);
+	SMSGetMSound()->startSeRandPlay(MSD_SE_MA_WATER_WAIT, 0);
 	return 0;
 }
 

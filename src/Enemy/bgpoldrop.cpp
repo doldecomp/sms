@@ -3,6 +3,7 @@
 #include <Map/Map.hpp>
 #include <Map/PollutionManager.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MSound/MSound.hpp>
@@ -51,11 +52,12 @@ void TBGPolDrop::move()
 				unk50->setBckFromIndex(13);
 			}
 
-			gpMarioParticleManager->emit(0x9E, &local_14, 0, nullptr);
-			gpMarioParticleManager->emit(0x9F, &local_14, 0, nullptr);
-			if (gpMSound->gateCheck(MSD_SE_BS_GESO_GERO_LAND))
-				MSoundSESystem::MSoundSE::startSoundActor(
-				    MSD_SE_BS_GESO_GERO_LAND, mPosition, 0, nullptr, 0, 4);
+			gpMarioParticleManager->emit(BGESO_JPA_MS_BOGE_ODANHIT_A, &local_14,
+			                             0, nullptr);
+			gpMarioParticleManager->emit(BGESO_JPA_MS_BOGE_ODANHIT_B, &local_14,
+			                             0, nullptr);
+			SMSGetMSound()->startSoundActor(MSD_SE_BS_GESO_GERO_LAND,
+			                                &mPosition, 0, nullptr, 0, 4);
 		} else if (!unk50->checkCurBckFromIndex(11)
 		           || unk50->curAnmEndsNext()) {
 			unk50->setBckFromIndex(11);
@@ -70,8 +72,6 @@ void TBGPolDrop::move()
 	}
 
 	mPosition = local_14;
-
-	char trash[0x10]; // TODO: skill issue
 }
 
 void TBGPolDrop::launch(const JGeometry::TVec3<f32>& param_1,

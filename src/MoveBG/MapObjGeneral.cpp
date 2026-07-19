@@ -429,16 +429,6 @@ void TMapObjGeneral::checkRoofCollision(JGeometry::TVec3<f32>* param_1)
 		touchRoof(param_1);
 }
 
-inline void playCoinSound(const JGeometry::TVec3<f32>& pos,
-                          const JGeometry::TVec3<f32>& vel)
-{
-	f32 a = abs(JGeometry::TVec3<f32>(vel).y);
-	if (gpMSound->gateCheck(MSD_SE_SY_COIN_BOUND)) {
-		MSoundSESystem::MSoundSE::startSoundActorWithInfo(
-		    MSD_SE_SY_COIN_BOUND, pos, nullptr, a, 0, 0, nullptr, 0, 4);
-	}
-}
-
 void TMapObjGeneral::touchGround(JGeometry::TVec3<f32>* param_1)
 {
 	if (mMapObjData->mPhysical ? true : false) {
@@ -452,7 +442,9 @@ void TMapObjGeneral::touchGround(JGeometry::TVec3<f32>* param_1)
 		param_1->y -= JGeometry::TVec3<f32>(mVelocity).y;
 		mVelocity.y *= -mMapObjData->mPhysical->unk4->unk4;
 		if (isCoin(this)) {
-			playCoinSound(mPosition, mVelocity);
+			SMSGetMSound()->startSoundActorWithInfo(
+			    MSD_SE_SY_COIN_BOUND, &mPosition, nullptr,
+			    abs(JGeometry::TVec3<f32>(mVelocity).y), 0, 0, nullptr, 0, 4);
 		} else {
 			startSound(4);
 		}

@@ -29,9 +29,8 @@ BOOL TMapObjNail::receiveMessage(THitActor* sender, u32 message)
 		removeMapCollision();
 		setUpCurrentMapCollision();
 
-		if (gpMSound->gateCheck(MSD_SE_OBJ_KUGI_IMPACT))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_OBJ_KUGI_IMPACT, mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_KUGI_IMPACT, &mPosition, 0,
+		                                nullptr, 0, 4);
 
 		mStateTimer = 120;
 		++unk150;

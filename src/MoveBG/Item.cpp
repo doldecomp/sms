@@ -46,9 +46,8 @@ void TItem::appeared()
 			mContainer->receiveMessage(this, HIT_MESSAGE_UNK5);
 
 		if (isActorType(0x2000000f) || isActorType(0x20000010)) {
-			if (gpMSound->gateCheck(MSD_SE_SY_COIN_DISAPPEAR))
-				MSoundSESystem::MSoundSE::startSoundActor(
-				    MSD_SE_SY_COIN_DISAPPEAR, mPosition, 0, nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(MSD_SE_SY_COIN_DISAPPEAR,
+			                                &mPosition, 0, nullptr, 0, 4);
 		}
 	}
 
@@ -200,9 +199,8 @@ void TCoin::taken(THitActor* param_1)
 	u8 thing = gpApplication.mCurrArea.unk0;
 	TFlagManager::getInstance()->incGoldCoinFlag(SMS_getShineStage(thing), 1);
 
-	if (gpMSound->gateCheck(MSD_SE_SY_COIN))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_SY_COIN, mPosition, 0,
-		                                          nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_SY_COIN, &mPosition, 0, nullptr, 0,
+	                                4);
 
 	if (mContainer)
 		mContainer->receiveMessage(this, HIT_MESSAGE_UNK8);
@@ -351,9 +349,8 @@ void TCoinRed::taken(THitActor* param_1)
 {
 	TFlagManager::getInstance()->incFlag(0x60000, 1);
 
-	if (gpMSound->gateCheck(MSD_SE_SY_RED_COIN_GET))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_SY_RED_COIN_GET,
-		                                          mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_SY_RED_COIN_GET, &mPosition, 0,
+	                                nullptr, 0, 4);
 
 	if (mContainer)
 		mContainer->receiveMessage(this, HIT_MESSAGE_UNK8);
@@ -547,9 +544,8 @@ void TShine::control()
 	switch (mState) {
 	case STATE_NORMAL: {
 		mRotation.y += unk16C;
-		if (gpMSound->gateCheck(MSD_SE_SHINE_EXIST))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_SHINE_EXIST, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_SHINE_EXIST, &mPosition, 0,
+		                                nullptr, 0, 4);
 
 		J3DModel* model      = getMActor()->getModel();
 		MtxPtr mtx           = model->getAnmMtx(2);
@@ -578,30 +574,26 @@ void TShine::control()
 		break;
 
 	case STATE_MOVING_UP:
-		if (gpMSound->gateCheck(MSD_SE_SHINE_EXIST))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_SHINE_EXIST, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_SHINE_EXIST, &mPosition, 0,
+		                                nullptr, 0, 4);
 		movingUp();
 		break;
 
 	case STATE_MOVING_DOWN:
-		if (gpMSound->gateCheck(MSD_SE_SHINE_EXIST))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_SHINE_EXIST, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_SHINE_EXIST, &mPosition, 0,
+		                                nullptr, 0, 4);
 		movingDown();
 		break;
 
 	case STATE_MOVING_CIRCLE:
-		if (gpMSound->gateCheck(MSD_SE_SHINE_EXIST))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_SHINE_EXIST, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_SHINE_EXIST, &mPosition, 0,
+		                                nullptr, 0, 4);
 		movingCircle();
 		break;
 
 	case STATE_UNKF: {
-		if (gpMSound->gateCheck(MSD_SE_SHINE_EXIST))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_SHINE_EXIST, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_SHINE_EXIST, &mPosition, 0,
+		                                nullptr, 0, 4);
 		if (mPosition.y > mInitialPosition.y) {
 			mPosition.y += unk188;
 			unk188 *= mSpeedDownRate;
@@ -624,14 +616,13 @@ void TShine::control()
 		mState = STATE_UNK11;
 	} break;
 
-	case STATE_UNK11: {
+	case STATE_UNK11:
 		mRotation.y += unk16C;
 		// Huh? Result discarded?
 		MsWrap(mRotation.y, 0.0f, 360.0f);
-		if (SMSGetMSound()->gateCheck(MSD_SE_SHINE_EXIST))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_SHINE_EXIST, &mPosition, 0, nullptr, 0, 4);
-	} break;
+		SMSGetMSound()->startSoundActor(MSD_SE_SHINE_EXIST, &mPosition, 0,
+		                                nullptr, 0, 4);
+		break;
 
 	case STATE_UNK12: {
 		if (gpCamera->isDemoCamera())
@@ -685,19 +676,15 @@ void TShine::touchPlayer(THitActor* actor)
 	actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
 	TLightWithDBSetManager* mgr = gpLightManager;
 	mgr->unk1C.set(200000.0f, 500000.0f, 200000.0f);
-	if (gpMSound->gateCheck(MSD_SE_SY_GET_SHINE))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_SY_GET_SHINE,
-		                                          mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_SY_GET_SHINE, &mPosition, 0, nullptr,
+	                                0, 4);
 	getMActor()->setBck("shine_float");
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void TShine::appearWithTime(int param_1, int param_2, int param_3, int param_4)
 {
-	TMapObjGeneral::appear();
-	onHitFlag(HIT_FLAG_NO_COLLISION);
-	mStateTimer = unk150;
-	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
+	TItem::appear();
 	TFlagManager::smInstance->setBool(true, 0x50000);
 
 	if (param_2 >= 0)
@@ -723,9 +710,8 @@ void TShine::appearWithTime(int param_1, int param_2, int param_3, int param_4)
 		unk15C += fabsf(yDelta);
 	unk160 = unk15C * mCircleRateY;
 
-	if (SMSGetMSound()->gateCheck(MSD_SE_SHINE_APPEAR))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_SHINE_APPEAR,
-		                                          mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_SHINE_APPEAR, &mPosition, 0, nullptr,
+	                                0, 4);
 
 	mStateTimer = unk174;
 	mState      = STATE_UNKB;
@@ -746,10 +732,7 @@ s32 TShine::appearWithTimeCallback(u32 param_1, u32 param_2)
 
 void TShine::appearSimple(int param_1)
 {
-	TMapObjGeneral::appear();
-	onHitFlag(HIT_FLAG_NO_COLLISION);
-	mStateTimer = unk150;
-	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
+	TItem::appear();
 	TFlagManager::smInstance->setBool(true, 0x50000);
 
 	unk174   = 60;
@@ -763,9 +746,8 @@ void TShine::appearSimple(int param_1)
 
 	mInitialPosition = mPosition;
 
-	if (SMSGetMSound()->gateCheck(MSD_SE_SHINE_APPEAR))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_SHINE_APPEAR,
-		                                          mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_SHINE_APPEAR, &mPosition, 0, nullptr,
+	                                0, 4);
 
 	mStateTimer = unk174;
 	mState      = STATE_UNKB;
@@ -942,15 +924,13 @@ void TEggYoshi::touchFruit(THitActor* fruit)
 		                      fruit->mPosition.x - mPosition.x);
 		mState = 0xB;
 		unk150 = fruit;
-		if (gpMSound->gateCheck(MSD_SE_SY_COLLECT_PRETTY))
-			MSoundSESystem::MSoundSE::startSoundSystemSE(
-			    MSD_SE_SY_COLLECT_PRETTY, 0, nullptr, 0);
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_COLLECT_PRETTY, 0, nullptr,
+		                                   0);
 	} else if (animIsFinished()) {
 		startAnim(2);
 		unk148->getFrameCtrl(3)->setFrame(12.0f);
-		if (gpMSound->gateCheck(MSD_SE_SY_NOT_COLLECT_YOSHI))
-			MSoundSESystem::MSoundSE::startSoundSystemSE(
-			    MSD_SE_SY_NOT_COLLECT_YOSHI, 0, nullptr, 0);
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_NOT_COLLECT_YOSHI, 0,
+		                                   nullptr, 0);
 		mState = 0xD;
 	}
 }
@@ -1146,9 +1126,8 @@ void TItemNozzle::touchPlayer(THitActor* param_1)
 	else
 		boxKind = 4;
 
-	if (SMSGetMSound()->gateCheck(0x484E))
-		MSoundSESystem::MSoundSE::startSoundActor(0x484E, mPosition, 0, nullptr,
-		                                          0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_SY_GET_NOZZLE, &mPosition, 0,
+	                                nullptr, 0, 4);
 	gpItemManager->resetNozzleBoxesModel(boxKind);
 	gpMarDirector->fireGetNozzle(this);
 }

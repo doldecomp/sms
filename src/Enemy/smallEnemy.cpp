@@ -7,6 +7,7 @@
 #include <System/MarDirector.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <System/Application.hpp>
+#include <System/Particles.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <Map/Map.hpp>
@@ -421,21 +422,18 @@ void TSmallEnemy::genEventCoin()
 
 void TSmallEnemy::setAfterDeadEffect()
 {
-	if (JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(0xE4, &mPosition, 0, nullptr)) {
-		emitter->unk154.set(mScaling);
-		emitter->unk174.set(mScaling);
+	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+	        PARTICLE_MS_ENM_DISAP_A, &mPosition, 0, nullptr)) {
+		emitter->setScale(mScaling);
 	}
 
-	if (JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(0xE6, &mPosition, 0, nullptr)) {
-		emitter->unk154.set(mScaling);
-		emitter->unk174.set(mScaling);
+	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+	        PARTICLE_MS_ENM_DISAP_B, &mPosition, 0, nullptr)) {
+		emitter->setScale(mScaling);
 	}
 
-	if (gpMSound->gateCheck(MSD_SE_EN_COMMON_SMOKE))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_COMMON_SMOKE,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_SMOKE, &mPosition, 0,
+	                                nullptr, 0, 4);
 }
 
 void TSmallEnemy::generateItem()
@@ -750,9 +748,8 @@ void TSmallEnemy::scalingChangeActor()
 
 void TSmallEnemy::changeOut()
 {
-	if (gpMSound->gateCheck(MSD_SE_EN_TELSA_RECOVER))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_TELSA_RECOVER,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELSA_RECOVER, &mPosition, 0,
+	                                nullptr, 0, 4);
 
 	kill();
 	mJuiceBlock->mPosition = mPosition;
@@ -861,9 +858,8 @@ void TSmallEnemy::generateEffectColumWater()
 
 	enemy->generate(mPosition, mScaling);
 
-	if (gpMSound->gateCheck(MSD_SE_EN_TOBIPUKU_TOWATER))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_TOBIPUKU_TOWATER,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_TOBIPUKU_TOWATER, &mPosition, 0,
+	                                nullptr, 0, 4);
 }
 
 void TSmallEnemy::setBckAnm(int index)

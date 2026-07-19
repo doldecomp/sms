@@ -317,9 +317,6 @@ public:
 
 	f32 length() const { return TUtil<f32>::sqrt(squared()); }
 
-	// @fabricated
-	f32 length2() const { return length(); }
-
 	bool isZero() const { return squared() <= TUtil<f32>::epsilon(); }
 
 	void setLength(f32 length) { setLength(*this, length); }
