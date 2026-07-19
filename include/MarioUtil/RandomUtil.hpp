@@ -36,6 +36,12 @@ public:
 	{
 	}
 
+	void set(T min, T max)
+	{
+		mMin = min;
+		mMax = max;
+	}
+
 	// TODO: not correct yet
 	T rand() const
 	{
