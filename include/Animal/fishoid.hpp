@@ -41,12 +41,19 @@ public:
 	void calcRootMatrix(TBoid*);
 	void calcRootMatrixOnTaking();
 
-	void onFlag(int flag) { unk74 |= flag; }
-	void offFlag(int flag) { unk74 &= ~flag; }
+	void onFlag(int flag) { mFlags |= flag; }
+	void offFlag(int flag) { mFlags &= ~flag; }
 
 public:
+	enum {
+		FLAG_CLIPPED_OUT  = 0x1,
+		FLAG_UNK2         = 0x2,
+		FLAG_UNK4         = 0x4,
+		FLAG_UNK2_OR_UNK4 = FLAG_UNK2 | FLAG_UNK4,
+	};
+
 	/* 0x70 */ MActor* unk70;
-	/* 0x74 */ u32 unk74;
+	/* 0x74 */ u32 mFlags;
 	/* 0x78 */ TPosition3f unk78;
 };
 
