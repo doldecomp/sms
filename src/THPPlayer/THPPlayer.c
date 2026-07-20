@@ -12,6 +12,9 @@
 #include <string.h>
 #include <macros.h>
 
+// NOTE: customization of the library by SMS devs
+#include <JSystem/JAudio/JASystem/JASAiCtrl.hpp>
+
 #pragma opt_strength_reduction off
 
 THPPlayer ActivePlayer;
@@ -52,8 +55,6 @@ u16 VolumeTable[128] = {
 };
 // clang-format on
 
-// static function definitions
-static s16* audioCallback(s32 p1);
 static void MixAudio(s16*, s16*, u32);
 static void* PopUsedTextureSet();
 static BOOL ProperTimingForStart();
@@ -78,13 +79,10 @@ static s16* audioCallbackWithMSound(s32 p1)
 
 static void initAudio()
 {
-	// JASDriver::registerMixCallback(audioCallback, MixMode_InterLeave);
+	JASystem::Kernel::registerMixCallback(&audioCallbackWithMSound, 3);
 }
 
-static void quitAudio()
-{
-	// JASDriver::registerMixCallback(nullptr, MixMode_Mono);
-}
+static void quitAudio() { JASystem::Kernel::registerMixCallback(nullptr, 0); }
 
 BOOL THPPlayerInit()
 {
