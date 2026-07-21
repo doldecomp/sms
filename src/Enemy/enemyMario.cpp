@@ -796,9 +796,10 @@ void TEnemyMario::emReplay()
 
 void TEnemyMario::emReplayJumpToNearestNode()
 {
-	TGraphWeb* graph = mEMario->getTracer()->getGraph();
-	int nodeIndex    = graph->findNearestNodeIndex(mPosition, -1);
-	if (graph->getGraphNode(nodeIndex).checkFlag(2)) {
+	int nodeIndex
+	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
+	if (mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
+	        2)) {
 		unk108->mFrameInput |= TMarioControllerWork::A;
 		unk108->mInput |= TMarioControllerWork::A;
 		if (mVel.y > mReplayJumpSpeed) {
@@ -807,16 +808,26 @@ void TEnemyMario::emReplayJumpToNearestNode()
 	}
 
 	++mEMDoingTimer;
-	nodeIndex               = graph->findNearestNodeIndex(mPosition, -1);
-	TGraphNode* currentNode = &graph->getGraphNode(nodeIndex);
+	nodeIndex
+	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
+	TGraphNode* currentNode
+	    = &mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex);
 	JGeometry::TVec3<f32> currentPoint;
 	currentNode->getPoint(&currentPoint);
 	mPosition.x += 0.05f * (currentPoint.x - mPosition.x);
 	mPosition.z += 0.05f * (currentPoint.z - mPosition.z);
 	mPosition.y += 0.05f * (currentPoint.y - mPosition.y);
 
-	if (mStatus != MARIO_STATUS_WAIT && currentNode->checkFlag(2)) {
-		return;
+	if (mStatus != MARIO_STATUS_WAIT) {
+		int nearestIndex
+		    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition,
+		                                                             -1);
+		if (mEMario->getTracer()
+		        ->getGraph()
+		        ->getGraphNode(nearestIndex)
+		        .checkFlag(2)) {
+			return;
+		}
 	}
 
 	mPosition = currentPoint;
@@ -826,7 +837,8 @@ void TEnemyMario::emReplayJumpToNearestNode()
 	changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 	currentNode->getPoint(&mPosition);
 
-	JGeometry::TVec3<f32> marioDirection = *gpMarioPos - currentPoint;
+	JGeometry::TVec3<f32> marioDirection(
+	    JGeometry::TVec3<f32>(*gpMarioPos - currentPoint));
 	marioDirection.normalize();
 	TGraphNode* nextNode = nullptr;
 
@@ -838,11 +850,13 @@ void TEnemyMario::emReplayJumpToNearestNode()
 				continue;
 			}
 
-			TGraphNode* candidate = &graph->getGraphNode(link.mNodeIndex);
+			TGraphNode* candidate
+			    = &mEMario->getTracer()->getGraph()->getGraphNode(
+			        link.mNodeIndex);
 			JGeometry::TVec3<f32> candidatePoint;
 			candidate->getPoint(&candidatePoint);
-			JGeometry::TVec3<f32> candidateDirection
-			    = candidatePoint - currentPoint;
+			JGeometry::TVec3<f32> candidateDirection(
+			    JGeometry::TVec3<f32>(candidatePoint - currentPoint));
 			candidateDirection.normalize();
 			f32 dot = marioDirection.dot(candidateDirection);
 			if (dot < smallestDot) {
@@ -863,9 +877,12 @@ void TEnemyMario::emReplayJumpToNearestNode()
 			}
 
 			JGeometry::TVec3<f32> candidatePoint;
-			graph->getGraphNode(link.mNodeIndex).getPoint(&candidatePoint);
-			JGeometry::TVec3<f32> candidateDirection
-			    = candidatePoint - currentPoint;
+			mEMario->getTracer()
+			    ->getGraph()
+			    ->getGraphNode(link.mNodeIndex)
+			    .getPoint(&candidatePoint);
+			JGeometry::TVec3<f32> candidateDirection(
+			    JGeometry::TVec3<f32>(candidatePoint - currentPoint));
 			candidateDirection.normalize();
 			dots[validCount]       = marioDirection.dot(candidateDirection);
 			validLinks[validCount] = i;
@@ -894,7 +911,8 @@ void TEnemyMario::emReplayJumpToNearestNode()
 
 		TReplayLink& link = mReplayLinks[nodeIndex][validLinks[selected]];
 		mReplayIndex      = link.mReplayIndex;
-		nextNode          = &graph->getGraphNode(link.mNodeIndex);
+		nextNode
+		    = &mEMario->getTracer()->getGraph()->getGraphNode(link.mNodeIndex);
 	}
 
 	JGeometry::TVec3<f32> nextPoint;
@@ -1017,7 +1035,6 @@ void TEnemyMario::emRunAwayToNearestNode()
 
 void TEnemyMario::findRunAwayNearestNode()
 {
-	TGraphWeb* graph    = mEMario->getTracer()->getGraph();
 	s16 nearestIndex    = 0;
 	s16 secondIndex     = 0;
 	f32 nearestDistance = 100000.0f;
@@ -1025,10 +1042,10 @@ void TEnemyMario::findRunAwayNearestNode()
 	JGeometry::TVec3<f32> nearestPoint;
 	JGeometry::TVec3<f32> secondPoint;
 
-	for (s16 i = 0; i < graph->getNodeNum(); ++i) {
+	for (s16 i = 0; i < mEMario->getTracer()->getGraph()->getNodeNum(); ++i) {
 		JGeometry::TVec3<f32> point;
-		graph->getGraphNode(i).getPoint(&point);
-		f32 distance = (point - mPosition).length();
+		mEMario->getTracer()->getGraph()->getGraphNode(i).getPoint(&point);
+		f32 distance = JGeometry::TVec3<f32>(point - mPosition).length();
 		if (distance < nearestDistance) {
 			secondDistance  = nearestDistance;
 			secondIndex     = nearestIndex;
@@ -1043,8 +1060,8 @@ void TEnemyMario::findRunAwayNearestNode()
 		}
 	}
 
-	if ((mPosition - nearestPoint).length()
-	    < (mPosition - secondPoint).length()) {
+	if (JGeometry::TVec3<f32>(mPosition - nearestPoint).length()
+	    < JGeometry::TVec3<f32>(mPosition - secondPoint).length()) {
 		mRunAwayNodeIndex = nearestIndex;
 	} else {
 		mRunAwayNodeIndex = secondIndex;
