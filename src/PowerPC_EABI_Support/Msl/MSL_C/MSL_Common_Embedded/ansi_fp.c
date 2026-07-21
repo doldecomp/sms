@@ -1,28 +1,27 @@
-#include "dolphin/types.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/ansi_fp.h"
 
-static const f64 bit_values[] = {
+static const double bit_values[] = {
 	1e1, 1e2, 1e4, 1e8, 1e16, 1e32, 1e64, 1e128, 1e256,
 };
 
-static const f64 digit_values[] = {
+static const double digit_values[] = {
 	1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8,
 };
 
-void __num2dec(const decform* f, f64 x, decimal* d)
+void __num2dec(const decform* f, double x, decimal* d)
 {
 	int sp30;
 	int exp;
-	u8* p;
+	unsigned char* p;
 	int digits;
 	int var_r4;
-	f64 var_f1;
+	double var_f1;
 	int var_r11;
 	int var_r12;
 	int temp_r5;
 	int var_r6;
 	int var_r6_2;
-	const f64* var_r5;
+	const double* var_r5;
 
 	digits = f->digits;
 	if (digits > 16) {
@@ -76,12 +75,12 @@ void __num2dec(const decform* f, f64 x, decimal* d)
 
 	while (x >= 1.0) {
 		x *= 0.1;
-		exp += 1;
+		exp++;
 	}
 
 	while (x < 0.1) {
 		x *= 10.0;
-		exp -= 1;
+		exp--;
 	}
 
 	p = d->sig.text;
@@ -107,8 +106,8 @@ void __num2dec(const decform* f, f64 x, decimal* d)
 	}
 
 	digits = f->digits;
-	if (f->digits > 36) {
-		digits = 36;
+	if (f->digits > SIGDIGLEN) {
+		digits = SIGDIGLEN;
 	}
 
 	temp_r5 = digits - d->sig.length;
