@@ -143,6 +143,13 @@ public:
 	}
 
 	bool isGoal() const { return mGoalFlags & EM_GOAL_FLAG_REACHED; }
+	bool isEnforceTake() const
+	{
+		if (mGoalFlags & EM_GOAL_FLAG_ENFORCE_TAKE) {
+			return true;
+		}
+		return false;
+	}
 	bool isReachedToGate() const { return mEMDoing == EM_DOING_REACHED_GATE; }
 	bool isDownWaitingToTalk() const
 	{
@@ -167,15 +174,18 @@ public:
 	s16 mTrampleCount;   // 0x42B8
 	s16 mWaterHitTimer;  // 0x42BA
 	f32 mReplayJumpSpeed; // 0x42BC
-	JGeometry::TVec3<f32> mDownPosition; // 0x42C0
-	char unk42CC[0x10];
+	JGeometry::TVec3<f32> mReferencePosition; // 0x42C0
+	s16 mRunAwayNodeIndex; // 0x42CC
+	char unk42CE[0x2];
+	f32 mRunAwaySpeed; // 0x42D0
+	char unk42D4[0x8];
 	J3DModel* mSpecialModel; // 0x42DC
 	JGeometry::TVec3<f32> mDisappearPosition; // 0x42E0
 	J3DModel* mPencilModel; // 0x42EC
 	MActor* mStampActor; // 0x42F0
 	f32 unk42F4;
 	TMarioInputReplay** mInputReplays; // 0x42F8
-	char unk42FC[0x4];
+	TMarioInputReplay** mRunAwayInputReplays; // 0x42FC
 	TMarioInputReplay* mGateReplay; // 0x4300
 	TReplayLink (*mReplayLinks)[3]; // 0x4304
 	char unk4308[0x4];
