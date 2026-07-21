@@ -9,6 +9,11 @@ class TMarioInputReplay;
 
 class TEnemyMario : public TMario {
 public:
+	struct TReplayLink {
+		u8 mNodeIndex;
+		u8 mReplayIndex;
+	};
+
 	enum EMGoalFlag {
 		EM_GOAL_FLAG_REACHED     = 0x1,
 		EM_GOAL_FLAG_DISP_PENCIL = 0x2,
@@ -161,7 +166,7 @@ public:
 	s16 mWaterEffectTimerMax; // 0x42B6
 	s16 mTrampleCount;   // 0x42B8
 	s16 mWaterHitTimer;  // 0x42BA
-	char unk42BC[0x4];
+	f32 mReplayJumpSpeed; // 0x42BC
 	JGeometry::TVec3<f32> mDownPosition; // 0x42C0
 	char unk42CC[0x10];
 	J3DModel* mSpecialModel; // 0x42DC
@@ -172,7 +177,8 @@ public:
 	TMarioInputReplay** mInputReplays; // 0x42F8
 	char unk42FC[0x4];
 	TMarioInputReplay* mGateReplay; // 0x4300
-	char unk4304[0x8];
+	TReplayLink (*mReplayLinks)[3]; // 0x4304
+	char unk4308[0x4];
 	TSettingParams* mSettingParams; // 0x430C
 };
 

@@ -9,6 +9,7 @@
 #include <Map/MapData.hpp>
 #include <Map/PollutionManager.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 #include <Player/MarioRecord.hpp>
 #include <System/Application.hpp>
 #include <System/EmitterViewObj.hpp>
@@ -199,6 +200,126 @@ void TEnemyMario::emReplay()
 		unk108->mInput |= TMarioControllerWork::A;
 	}
 	changeEMDoing(EM_DOING_TRAMPLED);
+}
+
+void TEnemyMario::emReplayJumpToNearestNode()
+{
+	TGraphWeb* graph = mEMario->getTracer()->getGraph();
+	int nodeIndex    = graph->findNearestNodeIndex(mPosition, -1);
+	if (graph->getGraphNode(nodeIndex).checkFlag(2)) {
+		unk108->mFrameInput |= TMarioControllerWork::A;
+		unk108->mInput |= TMarioControllerWork::A;
+		if (mVel.y > mReplayJumpSpeed) {
+			mVel.y = mReplayJumpSpeed;
+		}
+	}
+
+	++mEMDoingTimer;
+	nodeIndex = graph->findNearestNodeIndex(mPosition, -1);
+	TGraphNode* currentNode = &graph->getGraphNode(nodeIndex);
+	JGeometry::TVec3<f32> currentPoint;
+	currentNode->getPoint(&currentPoint);
+	mPosition.x += 0.05f * (currentPoint.x - mPosition.x);
+	mPosition.z += 0.05f * (currentPoint.z - mPosition.z);
+	mPosition.y += 0.05f * (currentPoint.y - mPosition.y);
+
+	if (mStatus != MARIO_STATUS_WAIT && currentNode->checkFlag(2)) {
+		return;
+	}
+
+	mPosition = currentPoint;
+	mVel.set(0.0f, 0.0f, 0.0f);
+	mForwardVel = 0.0f;
+	resetHistory();
+	changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
+	currentNode->getPoint(&mPosition);
+
+	JGeometry::TVec3<f32> marioDirection = *gpMarioPos - currentPoint;
+	marioDirection.normalize();
+	TGraphNode* nextNode = nullptr;
+
+	if (mSettingParams->mRandomFlag.get() == 0) {
+		f32 smallestDot = 1.0f;
+		for (int i = 0; i < 3; ++i) {
+			TReplayLink& link = mReplayLinks[nodeIndex][i];
+			if (link.mNodeIndex == 0xFF) {
+				continue;
+			}
+
+			TGraphNode* candidate = &graph->getGraphNode(link.mNodeIndex);
+			JGeometry::TVec3<f32> candidatePoint;
+			candidate->getPoint(&candidatePoint);
+			JGeometry::TVec3<f32> candidateDirection
+			    = candidatePoint - currentPoint;
+			candidateDirection.normalize();
+			f32 dot = marioDirection.dot(candidateDirection);
+			if (dot < smallestDot) {
+				smallestDot  = dot;
+				nextNode     = candidate;
+				mReplayIndex = link.mReplayIndex;
+			}
+		}
+	} else {
+		f32 dots[3];
+		int validLinks[3];
+		int validCount = 0;
+		for (int i = 0; i < 3; ++i) {
+			dots[i] = 0.0f;
+			TReplayLink& link = mReplayLinks[nodeIndex][i];
+			if (link.mNodeIndex == 0xFF) {
+				continue;
+			}
+
+			JGeometry::TVec3<f32> candidatePoint;
+			graph->getGraphNode(link.mNodeIndex).getPoint(&candidatePoint);
+			JGeometry::TVec3<f32> candidateDirection
+			    = candidatePoint - currentPoint;
+			candidateDirection.normalize();
+			dots[validCount] = marioDirection.dot(candidateDirection);
+			validLinks[validCount] = i;
+			++validCount;
+		}
+
+		f32 weights[3];
+		f32 weightTotal = 0.0f;
+		for (int i = 0; i < validCount; ++i) {
+			weights[i] = powf(1.0f - dots[i],
+			                  mSettingParams->mRandomPow.get());
+			weightTotal += weights[i];
+		}
+		for (int i = 0; i < validCount; ++i) {
+			weights[i] /= weightTotal;
+		}
+
+		f32 choice = MsRandF();
+		int selected = 0;
+		for (int i = 0; i < validCount; ++i) {
+			choice -= weights[i];
+			if (choice <= 0.0f) {
+				selected = i;
+				break;
+			}
+		}
+
+		TReplayLink& link = mReplayLinks[nodeIndex][validLinks[selected]];
+		mReplayIndex      = link.mReplayIndex;
+		nextNode          = &graph->getGraphNode(link.mNodeIndex);
+	}
+
+	JGeometry::TVec3<f32> nextPoint;
+	if (nextNode != nullptr) {
+		nextNode->getPoint(&nextPoint);
+	}
+	mPosition     = currentPoint;
+	mFaceAngle.y  = matan(nextPoint.z - currentPoint.z,
+	                      nextPoint.x - currentPoint.x);
+	mVel.set(0.0f, 0.0f, 0.0f);
+	mForwardVel = 0.0f;
+	resetHistory();
+	changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
+	mInputReplays[mReplayIndex]->reset();
+	mInputReplays[mReplayIndex]->start();
+	changeEMDoing(EM_DOING_REPLAY);
 }
 
 void TEnemyMario::emDownAnimation()
