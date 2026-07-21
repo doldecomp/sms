@@ -931,6 +931,7 @@ void TEnemyMario::emReplayJumpToNearestNode()
 	changeEMDoing(EM_DOING_REPLAY);
 }
 
+#pragma dont_inline on
 void TEnemyMario::emDownAnimation()
 {
 	changePlayerStatus(0x133E, 0, true);
@@ -951,6 +952,7 @@ void TEnemyMario::emDownAnimation()
 		changeEMDoing(EM_DOING_RUN_AWAY);
 	}
 }
+#pragma dont_inline off
 
 void TEnemyMario::emRunAwayToNearestNode()
 {
@@ -1186,8 +1188,6 @@ void TEnemyMario::consider()
 		}
 		break;
 	}
-	default:
-		return;
 	case EM_DOING_TURNING: {
 		s16 angleDifference = mTargetAngle - mFaceAngle.y;
 		if (rand() < 100) {
@@ -1250,7 +1250,8 @@ void TEnemyMario::consider()
 		changePlayerStatus(0x133E, 0, true);
 		setAnimation(ANIM_SDWNF, 1.0f);
 		if (getMotionFrameCtrl().getFrame() > 25.0f) {
-			changeEMDoing(EM_DOING_DOWN_WAIT_TO_TALK);
+			mEMDoingTimer = 0;
+			mEMDoing      = EM_DOING_DOWN_WAIT_TO_TALK;
 		}
 		break;
 	case EM_DOING_DOWN_WAIT_TO_TALK:
@@ -1306,6 +1307,8 @@ void TEnemyMario::consider()
 		TMario::checkController(&graphics);
 		break;
 	}
+	default:
+		return;
 	}
 }
 
