@@ -1085,23 +1085,18 @@ void TEnemyMario::decideDoingAfterCarry()
 
 void TEnemyMario::emWaitingToInviteMario()
 {
-	TGraphWeb* graph = mEMario->getTracer()->getGraph();
 	JGeometry::TVec3<f32> waitingPoint;
-	graph->getGraphNode(7).getPoint(&waitingPoint);
+	mEMario->getTracer()->getGraph()->getGraphNode(7).getPoint(&waitingPoint);
 	mPosition           = waitingPoint;
 	s16 angleDifference = mAngleToMario - mFaceAngle.y;
 	mFaceAngle.y = mAngleToMario - IConverge(angleDifference, 0, 0x180, 0x180);
 	changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 	changeMontemanWaitingAnim();
 
-	f32 dx = mPosition.x - gpMarioPos->x;
-	f32 dy = mPosition.y - gpMarioPos->y;
-	f32 dz = mPosition.z - gpMarioPos->z;
-	if (std::sqrtf(dx * dx + dy * dy + dz * dz)
-	        < mSettingParams->mSearchDist.get()
+	if (mPosition.distance(*gpMarioPos) < mSettingParams->mSearchDist.get()
 	    && gpMarioPos->y < mPosition.y + mSettingParams->mSearchHeight.get()) {
 		JGeometry::TVec3<f32> gatePoint;
-		graph->getGraphNode(8).getPoint(&gatePoint);
+		mEMario->getTracer()->getGraph()->getGraphNode(8).getPoint(&gatePoint);
 		mFaceAngle.y
 		    = matan(gatePoint.z - waitingPoint.z, gatePoint.x - waitingPoint.x);
 		mModelFaceAngle = mFaceAngle.y;
@@ -1155,8 +1150,8 @@ void TEnemyMario::consider()
 		emWalkAround();
 		break;
 	case EM_DOING_WALK_GRAPH: {
-		JGeometry::TVec3<f32> distance
-		    = mEMario->getUnk104().getPoint() - mEMario->mPosition;
+		JGeometry::TVec3<f32> distance(mEMario->getUnk104().getPoint());
+		distance.sub(mEMario->mPosition);
 		if (distance.length() < 100.0f) {
 			if (mDistanceToMario > 3000.0f) {
 				mEMario->goToRandomNextGraphNode();
@@ -1217,11 +1212,7 @@ void TEnemyMario::consider()
 		emDisappearToGate();
 		break;
 	case EM_DOING_SLEEPING: {
-		f32 dx = mPosition.x - gpMarioPos->x;
-		f32 dy = mPosition.y - gpMarioPos->y;
-		f32 dz = mPosition.z - gpMarioPos->z;
-		if (std::sqrtf(dx * dx + dy * dy + dz * dz)
-		        < mSettingParams->mSearchDist.get()
+		if (mPosition.distance(*gpMarioPos) < mSettingParams->mSearchDist.get()
 		    && gpMarioPos->y
 		           < mPosition.y + mSettingParams->mSearchHeight.get()) {
 			TGraphWeb* graph = mEMario->getTracer()->getGraph();
@@ -1381,19 +1372,21 @@ void TEnemyMario::checkReturn()
 		return;
 	}
 
-	TGraphWeb* graph = mEMario->unk124->getGraph();
-	int nodeIndex    = graph->findNearestNodeIndex(mPosition, -1);
-	bool searching   = true;
+	int nodeIndex
+	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
+	int searching = true;
 	while (searching) {
-		Vec point;
-		graph->getGraphNode(nodeIndex).getPoint(&point);
+		JGeometry::TVec3<f32> point;
+		mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).getPoint(
+		    &point);
 
-		if (JGeometry::TVec3<f32>(point - *gpMarioPos).length() > 1000.0f) {
+		if (point.distance(*gpMarioPos) > 1000.0f) {
 			searching = false;
 			mPosition = point;
 		}
 
-		nodeIndex = (nodeIndex + 1) % graph->getNodeNum();
+		nodeIndex
+		    = (nodeIndex + 1) % mEMario->getTracer()->getGraph()->getNodeNum();
 	}
 }
 
