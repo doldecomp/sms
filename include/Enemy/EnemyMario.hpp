@@ -10,6 +10,8 @@ class TMarioInputReplay;
 class TEnemyMario : public TMario {
 public:
 	enum EMDoing {
+		EM_DOING_GET_CLOSER         = 0x1,
+		EM_DOING_WALK_GRAPH         = 0x6,
 		EM_DOING_TRAMPLED          = 0xD,
 		EM_DOING_DOWN_WAIT_TO_TALK = 0xF,
 		EM_DOING_RUN_AWAY          = 0x10,

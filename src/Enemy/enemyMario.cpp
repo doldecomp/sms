@@ -12,10 +12,61 @@
 #include <System/MSoundMainSide.hpp>
 #include <math.h>
 
+void TEnemyMario::setStickToAngle(s16 angle, f32 power)
+{
+	unk108->mStickHS16 = power * (JMASSin(angle) * 64.0f);
+	unk108->mStickVS16 = power * (-JMASCos(angle) * 64.0f);
+}
+
+void TEnemyMario::startMonteReplay(u32 replayIndex)
+{
+	int nodeIndex = mEMario->getTracer()->getGraph()->findNearestNodeIndex(
+	    mPosition, -1);
+	JGeometry::TVec3<f32> currentPoint;
+	mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).getPoint(
+	    &currentPoint);
+	mPosition = currentPoint;
+	JGeometry::TVec3<f32> nextPoint;
+	mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex + 1).getPoint(
+	    &nextPoint);
+	f32 xDifference = nextPoint.x - currentPoint.x;
+	f32 zDifference = nextPoint.z - currentPoint.z;
+	mFaceAngle.y     = matan(zDifference, xDifference);
+	mVel.x       = 0.0f;
+	mVel.y       = 0.0f;
+	mVel.z       = 0.0f;
+	mForwardVel = 0.0f;
+	resetHistory();
+	changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
+	mReplayIndex = replayIndex;
+	mInputReplays[mReplayIndex]->reset();
+	mInputReplays[mReplayIndex]->start();
+	changeEMDoing(EM_DOING_REPLAY_TO_GOAL);
+}
+
 void TEnemyMario::changeEMDoing(u16 doing)
 {
 	mEMDoingTimer = 0;
 	mEMDoing      = doing;
+}
+
+void TEnemyMario::emWaiting()
+{
+	s16 angleDifference = mAngleToMario - mFaceAngle.y;
+	if (angleDifference < -0x1555 || angleDifference > 0x1555) {
+		setStickToAngle(mAngleToMario, 0.2f);
+	}
+
+	if (mDistanceToMario < 800.0f) {
+		changeEMDoing(EM_DOING_GET_CLOSER);
+	}
+
+	if (mDistanceToMario > 1500.0f || rand() < 0x88) {
+		TEMario* emario = mEMario;
+		emario->getTracer()->reset();
+		emario->goToShortestNextGraphNode();
+		changeEMDoing(EM_DOING_WALK_GRAPH);
+	}
 }
 
 void TEnemyMario::startDisappear(u16 doing)
@@ -95,23 +146,6 @@ void TEnemyMario::checkReturn()
 
 		nodeIndex = (nodeIndex + 1) % graph->getNodeNum();
 	}
-}
-
-void TEnemyMario::playerControl(JDrama::TGraphics* graphics)
-{
-	unk9C  = mFaceAngle.y;
-	unk29C = mPosition;
-	offUnk114(UNK114_FLAG_UNK8);
-	checkPlayerAction(graphics);
-	stateMachine();
-	stateMachineUpper();
-	thinkSituation();
-	thinkWaterSurface();
-	thinkSand();
-	thinkHeight();
-	thinkParams();
-	checkRideReCalc();
-	checkWet();
 }
 
 void TEnemyMario::checkController(JDrama::TGraphics*)
@@ -211,6 +245,23 @@ void TEnemyMario::checkController(JDrama::TGraphics*)
 	if (unk108->isBHit()) {
 		mInput |= 0x8000;
 	}
+}
+
+void TEnemyMario::playerControl(JDrama::TGraphics* graphics)
+{
+	unk9C  = mFaceAngle.y;
+	unk29C = mPosition;
+	offUnk114(UNK114_FLAG_UNK8);
+	checkPlayerAction(graphics);
+	stateMachine();
+	stateMachineUpper();
+	thinkSituation();
+	thinkWaterSurface();
+	thinkSand();
+	thinkHeight();
+	thinkParams();
+	checkRideReCalc();
+	checkWet();
 }
 
 void TEnemyMario::damageExec(THitActor*, int, int, int, f32, int, f32, s16) { }
