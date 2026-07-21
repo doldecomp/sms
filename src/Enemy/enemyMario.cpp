@@ -6,18 +6,22 @@
 #include <Enemy/Emario.hpp>
 #include <Enemy/Graph.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAnm.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DDrawBuffer.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <M3DUtil/MActor.hpp>
+#include <M3DUtil/M3UJoint.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
 #include <MSound/MAnmSound.hpp>
 #include <Map/MapData.hpp>
 #include <Map/PollutionManager.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/MtxUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
 #include <MarioUtil/ShadowUtil.hpp>
 #include <Player/MarioRecord.hpp>
+#include <Player/MarioAnimeData.hpp>
 #include <Player/MarioEffect.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <Strategic/question.hpp>
@@ -28,6 +32,12 @@
 #include <System/Particles.hpp>
 #include <dolphin/gx.h>
 #include <math.h>
+
+static unkTMarioAnimeFilesStruct marioAnimeFiles[199] = {
+#include <Player/MarioAnimeFiles.inc>
+};
+
+extern char* marioAnimeTexPatternFilenames[24];
 
 void TEnemyMario::setStickToAngle(s16 angle, f32 power)
 {
@@ -94,6 +104,127 @@ void TEnemyMario::initValues()
 	mWaterWakeAlpha = 0;
 
 	unk390 = new TMBindShadowBody(this, mModel->getModel(), 1.0f);
+}
+
+void TEnemyMario::initModel()
+{
+	unk394 = nullptr;
+	unk398 = nullptr;
+	unk39C = nullptr;
+	unk3A0 = nullptr;
+
+	TMario* original = gpMarioOriginal;
+	mBodyModelData   = original->mModel->getModel()->getModelData();
+	mJointIdCenter   = mBodyModelData->getJointName()->getIndex("center");
+	mJointIdChest    = mBodyModelData->getJointName()->getIndex("chn_chest");
+	mJointIdChnChest = mBodyModelData->getJointName()->getIndex("jnt_chest");
+	mJointIdArmR1    = mBodyModelData->getJointName()->getIndex("jnt_arm_R1");
+	mJointIdArmL1    = mBodyModelData->getJointName()->getIndex("jnt_arm_L1");
+	mJointIdHandR    = mBodyModelData->getJointName()->getIndex("jnt_hand_R");
+	mJointIdHandL    = mBodyModelData->getJointName()->getIndex("jnt_hand_L");
+	mJointIdChnFootR = mBodyModelData->getJointName()->getIndex("chn_foot_R");
+	mJointIdFootR    = mBodyModelData->getJointName()->getIndex("jnt_foot_R");
+	mJointIdChnFootL = mBodyModelData->getJointName()->getIndex("chn_foot_L");
+	mJointIdFootL    = mBodyModelData->getJointName()->getIndex("jnt_foot_L");
+	mJointIdHead     = mBodyModelData->getJointName()->getIndex("jnt_head");
+	mJointIdMHead    = mBodyModelData->getJointName()->getIndex("M_head");
+
+	J3DModel* bodyModel = new J3DModel(mBodyModelData, 0, 1);
+	mHandModels[0][0]   = nullptr;
+	mHandModels[0][1]   = nullptr;
+	mHandModels[1][0]   = nullptr;
+	mHandModels[1][1]   = nullptr;
+
+	mAnmSoundTbl = new JAIAnimeSound*[199];
+	char buffer[0x10C];
+	for (int i = 0; i < 199; ++i) {
+		snprintf(buffer, 0xff, "/mario/bas/ma_%s.bas", marioAnimeFiles[i].unk4);
+		loadBas((void**)&mAnmSoundTbl[i], buffer);
+	}
+
+	J3DAnmTexPattern** anmTexPattern = new J3DAnmTexPattern*[24];
+	J3DTexNoAnm** anmTexNoAnm        = new J3DTexNoAnm*[24];
+	for (int i = 0; i < 24; ++i) {
+		loadAnmTexPattern(&anmTexPattern[i], marioAnimeTexPatternFilenames[i],
+		                  mBodyModelData);
+		u16 materialCount = anmTexPattern[i]->getUpdateMaterialNum();
+		anmTexNoAnm[i]    = new J3DTexNoAnm[materialCount];
+		for (s16 j = 0; j < materialCount; ++j) {
+			anmTexNoAnm[i][j].setAnmIndex(j);
+			anmTexNoAnm[i][j].setAnmTexPattern(anmTexPattern[i]);
+		}
+	}
+
+	M3UMtxCalcSIAnmBlendQuat* anmBlendQuat = new M3UMtxCalcSIAnmBlendQuat[2];
+	anmBlendQuat[0].unk50                  = 0.0f;
+	J3DFrameCtrl* frameCtrl                = new J3DFrameCtrl[3];
+
+	M3UModelCommonMario* marioCommon = new M3UModelCommonMario;
+	marioCommon->unk4                = original->mModel->unk4->unk4;
+	marioCommon->unk18               = anmBlendQuat;
+	marioCommon->unk8                = anmTexPattern;
+	marioCommon->unk8                = original->mModel->unk4->unk8;
+	marioCommon->unkC                = anmTexNoAnm;
+
+	M3UModelMario* modelMario = new M3UModelMario;
+	modelMario->unk8          = bodyModel;
+	modelMario->unk4          = marioCommon;
+	modelMario->unk20         = marioCommon;
+	modelMario->unkC          = frameCtrl;
+	frameCtrl[2].setRate(SMSGetAnmFrameRate());
+
+	SomeModelMarioStruct* setInfo = new SomeModelMarioStruct[2];
+	setInfo[0] = (SomeModelMarioStruct) { 0, 2, 0, 0x14, 0x41, 0 };
+	setInfo[1] = (SomeModelMarioStruct) { mJointIdChnChest, 2, 1, 0, 0, 1 };
+	modelMario->unk10 = 2;
+	modelMario->unk24 = setInfo;
+
+	M3UModel::Unk1CStruct* unk = new M3UModel::Unk1CStruct;
+	*unk                       = (M3UModel::Unk1CStruct) { 0, 2 };
+	modelMario->unk1C          = unk;
+	modelMario->changeMtxCalcSIAnmBQAnmTransform(0, 0, 0x3e);
+	modelMario->changeMtxCalcSIAnmBQAnmTransform(1, 0, 0x41);
+	frameCtrl[1].setRate(0.0f);
+	anmBlendQuat[1].unk50 = 0.0f;
+	mModel                = modelMario;
+
+	setAnimation(ANIM_WAIT, 1.0f);
+
+	J3DTransformInfo transformInfo;
+	transformInfo.mScale.x     = 1.0f;
+	transformInfo.mScale.y     = 1.0f;
+	transformInfo.mScale.z     = 1.0f;
+	transformInfo.mRotation.x  = mFaceAngle.x;
+	transformInfo.mRotation.y  = mModelFaceAngle;
+	transformInfo.mRotation.z  = mFaceAngle.z;
+	transformInfo.mTranslate.x = mPosition.x;
+	transformInfo.mTranslate.y = mPosition.y;
+	transformInfo.mTranslate.z = mPosition.z;
+	Mtx transform;
+	J3DGetTranslateRotateMtx(transformInfo, transform);
+	mModel->getModel()->setBaseTRMtx(transform);
+
+	mModel->updateInMotion();
+	mModel->getModel()->calc();
+
+	mSurfGesso = nullptr;
+	mTorocco   = nullptr;
+	mPinaRail  = nullptr;
+	mKoopaRail = nullptr;
+
+	mMultiMtxEffect                 = new TMultiMtxEffect;
+	mMultiMtxEffect->mNumBones      = 3;
+	u16* boneIDs                    = new u16[3];
+	boneIDs[0]                      = mJointIdChnChest;
+	boneIDs[1]                      = mJointIdArmR1;
+	boneIDs[2]                      = mJointIdArmL1;
+	mMultiMtxEffect->mBoneIDs       = boneIDs;
+	u8* mtxEffectTypes              = new u8[3];
+	mtxEffectTypes[0]               = 0;
+	mtxEffectTypes[1]               = 0;
+	mtxEffectTypes[2]               = 0;
+	mMultiMtxEffect->mMtxEffectType = mtxEffectTypes;
+	mMultiMtxEffect->setup(mModel->getModel(), "Mario");
 }
 
 void TEnemyMario::startMonteReplay(u32 replayIndex)
