@@ -1040,14 +1040,14 @@ void TEnemyMario::emRunAwayToNearestNode()
 
 void TEnemyMario::findRunAwayNearestNode()
 {
-	s16 nearestIndex    = 0;
-	s16 secondIndex     = 0;
+	int nearestIndex    = 0;
+	int secondIndex     = 0;
 	f32 nearestDistance = 100000.0f;
 	f32 secondDistance  = 100000.0f;
 	JGeometry::TVec3<f32> nearestPoint;
 	JGeometry::TVec3<f32> secondPoint;
 
-	for (s16 i = 0; i < mEMario->getTracer()->getGraph()->getNodeNum(); ++i) {
+	for (int i = 0; i < mEMario->getTracer()->getGraph()->getNodeNum(); ++i) {
 		JGeometry::TVec3<f32> point;
 		mEMario->getTracer()->getGraph()->getGraphNode(i).getPoint(&point);
 		f32 distance = JGeometry::TVec3<f32>(point - mPosition).length();
