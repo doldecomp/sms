@@ -10,6 +10,7 @@
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
+#include <MSound/MAnmSound.hpp>
 #include <Map/MapData.hpp>
 #include <Map/PollutionManager.hpp>
 #include <MarioUtil/DrawUtil.hpp>
@@ -17,6 +18,8 @@
 #include <MarioUtil/RandomUtil.hpp>
 #include <MarioUtil/ShadowUtil.hpp>
 #include <Player/MarioRecord.hpp>
+#include <Player/MarioEffect.hpp>
+#include <Player/ModelWaterManager.hpp>
 #include <Strategic/question.hpp>
 #include <System/Application.hpp>
 #include <System/EmitterViewObj.hpp>
@@ -30,6 +33,67 @@ void TEnemyMario::setStickToAngle(s16 angle, f32 power)
 {
 	unk108->mStickHS16 = (JMASSin(angle) * 64.0f) * power;
 	unk108->mStickVS16 = (-JMASCos(angle) * 64.0f) * power;
+}
+
+void TEnemyMario::initValues()
+{
+	mHealth     = mDeParams.mHpMax.get();
+	mDirty      = 0.0f;
+	mOilBrake   = 1.0f;
+	mDirtyTimer = 0;
+	unk140      = 0.0f;
+
+	unk108              = new TMarioControllerWork;
+	unk108->mStickHS16  = 0;
+	unk108->mStickVS16  = 0;
+	unk108->mStickH     = 0.0f;
+	unk108->mStickV     = 0.0f;
+	unk108->mStickDist  = 0.0f;
+	unk108->mInput      = 0;
+	unk108->mFrameInput = 0;
+	unk108->mAnalogRU8  = 0;
+	unk108->mAnalogLU8  = 0;
+	unk10C              = 0.0f;
+	unk110              = 0.0f;
+
+	unk154 = new TWaterEmitInfo("/Mario/DamageWaterEmit.prm");
+	unk158 = new TWaterEmitInfo("/Mario/WetWaterEmit.prm");
+
+	unk388 = 1;
+	unk530 = nullptr;
+	unk534 = 0;
+	unk536 = 0;
+	unk538 = 0;
+	unk53A = 0;
+	unk53B = 0;
+	unk530 = new s16[60];
+	for (int i = 0; i < 60; ++i) {
+		unk530[i] = 0;
+	}
+
+	initModel();
+
+	mWaistRoll  = 0.0f;
+	mWaistPitch = 0.0f;
+	mCap        = nullptr;
+	mWaterGun   = nullptr;
+	mYoshi      = nullptr;
+
+	unk414.set(0.0f, 0.0f, 1.0f);
+	mMarioEffect = new TMarioEffect;
+	mMarioEffect->init(this);
+	mMarioScreenPos.set(0.0f, 0.0f, 0.0f);
+	mWarpInDir.set(0.0f, 0.0f, 0.0f);
+	unk468 = 0.0f;
+	unk46C = 0.0f;
+
+	mAnmSound = new MAnmSound(SMSGetMSound());
+	mAnmSound->initAnmSound(nullptr, 1, 0.0f);
+	unk4EC          = 0;
+	mBlendLogicOp   = 10;
+	mWaterWakeAlpha = 0;
+
+	unk390 = new TMBindShadowBody(this, mModel->getModel(), 1.0f);
 }
 
 void TEnemyMario::startMonteReplay(u32 replayIndex)
