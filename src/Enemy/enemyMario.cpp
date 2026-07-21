@@ -40,6 +40,10 @@
 #include <dolphin/gx.h>
 #include <math.h>
 
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+
 static unkTMarioAnimeFilesStruct marioAnimeFiles[199] = {
 #include <Player/MarioAnimeFiles.inc>
 };
