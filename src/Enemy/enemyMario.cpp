@@ -835,17 +835,18 @@ void TEnemyMario::emReplayJumpToNearestNode()
 	mForwardVel = 0.0f;
 	resetHistory();
 	changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
+	TReplayLink(*replayLinks)[3] = mReplayLinks;
 	currentNode->getPoint(&mPosition);
 
-	JGeometry::TVec3<f32> marioDirection(
-	    JGeometry::TVec3<f32>(*gpMarioPos - currentPoint));
+	JGeometry::TVec3<f32> marioDirection(*gpMarioPos - currentPoint);
 	marioDirection.normalize();
 	TGraphNode* nextNode = nullptr;
 
 	if (mSettingParams->mRandomFlag.get() == 0) {
-		f32 smallestDot = 1.0f;
+		TReplayLink* links = replayLinks[nodeIndex];
+		f32 smallestDot    = 1.0f;
 		for (int i = 0; i < 3; ++i) {
-			TReplayLink& link = mReplayLinks[nodeIndex][i];
+			TReplayLink& link = links[i];
 			if (link.mNodeIndex == 0xFF) {
 				continue;
 			}
@@ -855,8 +856,8 @@ void TEnemyMario::emReplayJumpToNearestNode()
 			        link.mNodeIndex);
 			JGeometry::TVec3<f32> candidatePoint;
 			candidate->getPoint(&candidatePoint);
-			JGeometry::TVec3<f32> candidateDirection(
-			    JGeometry::TVec3<f32>(candidatePoint - currentPoint));
+			JGeometry::TVec3<f32> candidateDirection(candidatePoint
+			                                         - currentPoint);
 			candidateDirection.normalize();
 			f32 dot = marioDirection.dot(candidateDirection);
 			if (dot < smallestDot) {
@@ -866,12 +867,13 @@ void TEnemyMario::emReplayJumpToNearestNode()
 			}
 		}
 	} else {
+		TReplayLink* links = replayLinks[nodeIndex];
 		f32 dots[3];
 		int validLinks[3];
 		int validCount = 0;
 		for (int i = 0; i < 3; ++i) {
 			dots[i]           = 0.0f;
-			TReplayLink& link = mReplayLinks[nodeIndex][i];
+			TReplayLink& link = links[i];
 			if (link.mNodeIndex == 0xFF) {
 				continue;
 			}
@@ -881,8 +883,8 @@ void TEnemyMario::emReplayJumpToNearestNode()
 			    ->getGraph()
 			    ->getGraphNode(link.mNodeIndex)
 			    .getPoint(&candidatePoint);
-			JGeometry::TVec3<f32> candidateDirection(
-			    JGeometry::TVec3<f32>(candidatePoint - currentPoint));
+			JGeometry::TVec3<f32> candidateDirection(candidatePoint
+			                                         - currentPoint);
 			candidateDirection.normalize();
 			dots[validCount]       = marioDirection.dot(candidateDirection);
 			validLinks[validCount] = i;
@@ -892,7 +894,8 @@ void TEnemyMario::emReplayJumpToNearestNode()
 		f32 weights[3];
 		f32 weightTotal = 0.0f;
 		for (int i = 0; i < validCount; ++i) {
-			weights[i] = powf(1.0f - dots[i], mSettingParams->mRandomPow.get());
+			weights[i] = 1.0f - dots[i];
+			weights[i] = powf(weights[i], mSettingParams->mRandomPow.get());
 			weightTotal += weights[i];
 		}
 		for (int i = 0; i < validCount; ++i) {
@@ -909,7 +912,7 @@ void TEnemyMario::emReplayJumpToNearestNode()
 			}
 		}
 
-		TReplayLink& link = mReplayLinks[nodeIndex][validLinks[selected]];
+		TReplayLink& link = links[validLinks[selected]];
 		mReplayIndex      = link.mReplayIndex;
 		nextNode
 		    = &mEMario->getTracer()->getGraph()->getGraphNode(link.mNodeIndex);
