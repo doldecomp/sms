@@ -9,13 +9,24 @@ class TMarioInputReplay;
 
 class TEnemyMario : public TMario {
 public:
+	enum EMGoalFlag {
+		EM_GOAL_FLAG_REACHED     = 0x1,
+		EM_GOAL_FLAG_DISP_PENCIL = 0x2,
+		EM_GOAL_FLAG_ENFORCE_TAKE = 0x20,
+	};
+
 	enum EMDoing {
 		EM_DOING_GET_CLOSER         = 0x1,
 		EM_DOING_WALK_GRAPH         = 0x6,
+		EM_DOING_REPLAY             = 0xB,
+		EM_DOING_SLEEPING           = 0xC,
 		EM_DOING_TRAMPLED          = 0xD,
+		EM_DOING_DOWN_ANIMATION     = 0xE,
 		EM_DOING_DOWN_WAIT_TO_TALK = 0xF,
 		EM_DOING_RUN_AWAY          = 0x10,
 		EM_DOING_REPLAY_RUN_AWAY_TO_GATE = 0x11,
+		EM_DOING_KEEP_STAY          = 0x12,
+		EM_DOING_DRAW_STAMP         = 0x13,
 		EM_DOING_WAITING_TO_INVITE_MARIO = 0x14,
 		EM_DOING_REPLAY_TO_GATE    = 0x15,
 		EM_DOING_GOAL              = 0x16,
@@ -27,6 +38,19 @@ public:
 	class TSettingParams : public TParams {
 	public:
 		TSettingParams(const char*);
+
+		TParamRT<f32> mSearchDist;
+		TParamRT<f32> mSearchHeight;
+		TParamRT<s16> mWaterCtMax;
+		TParamRT<u8> mStopFlag;
+		TParamRT<u8> mStampFlag;
+		TParamRT<u8> mRandomFlag;
+		TParamRT<u8> mCarryFlag;
+		TParamRT<u8> mInvincibleFlag;
+		TParamRT<f32> mRandomPow;
+		TParamRT<s16> mDownTime;
+		TParamRT<u8> mPolluteFlag;
+		TParamRT<f32> mPolluteSize;
 	};
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
@@ -80,7 +104,7 @@ public:
 	void emJumping();
 	void emRunAway();
 	void emWaiting();
-	void tryTake();
+	BOOL tryTake();
 	void changeEMWalkGraph();
 	void changeEMJumping();
 	void changeEMDoing(u16);
@@ -102,7 +126,7 @@ public:
 		return false;
 	}
 
-	bool isGoal() const { return mGoalFlags & 1; }
+	bool isGoal() const { return mGoalFlags & EM_GOAL_FLAG_REACHED; }
 	bool isReachedToGate() const { return mEMDoing == EM_DOING_REACHED_GATE; }
 	bool isDownWaitingToTalk() const
 	{
@@ -112,25 +136,33 @@ public:
 public:
 	u16 mGoalFlags;      // 0x4290
 	u16 mEMDoing;        // 0x4292
-	char unk4294[2];
+	s16 mWaterCounter;     // 0x4294
 	s16 mAngleToMario;    // 0x4296
 	s16 unk4298;
 	char unk429A[2];
 	f32 mDistanceToMario; // 0x429C
 	TEMario* mEMario;    // 0x42A0
-	s32 mEMDoingTimer;   // 0x42A4
+	u32 mEMDoingTimer;   // 0x42A4
 	s32 mReplayIndex;    // 0x42A8
 	char unk42AC[0x4];
 	f32 mAttackRange;    // 0x42B0
-	char unk42B4[0x4];
+	s16 mWaterEffectTimer;    // 0x42B4
+	s16 mWaterEffectTimerMax; // 0x42B6
 	s16 mTrampleCount;   // 0x42B8
-	char unk42BA[0x22];
-	u32 mEMFlags;        // 0x42DC
+	s16 mWaterHitTimer;  // 0x42BA
+	char unk42BC[0x4];
+	JGeometry::TVec3<f32> mDownPosition; // 0x42C0
+	char unk42CC[0x10];
+	J3DModel* mSpecialModel; // 0x42DC
 	JGeometry::TVec3<f32> mDisappearPosition; // 0x42E0
-	char unk42EC[0xC];
+	J3DModel* mPencilModel; // 0x42EC
+	MActor* mStampActor; // 0x42F0
+	f32 unk42F4;
 	TMarioInputReplay** mInputReplays; // 0x42F8
 	char unk42FC[0x4];
 	TMarioInputReplay* mGateReplay; // 0x4300
+	char unk4304[0x8];
+	TSettingParams* mSettingParams; // 0x430C
 };
 
 #endif

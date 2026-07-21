@@ -4,12 +4,16 @@
 #include <Enemy/EnemyMario.hpp>
 #include <Enemy/Emario.hpp>
 #include <Enemy/Graph.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <Map/MapData.hpp>
+#include <Map/PollutionManager.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <Player/MarioRecord.hpp>
+#include <System/Application.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <System/MarDirector.hpp>
 #include <System/MSoundMainSide.hpp>
+#include <System/Particles.hpp>
 #include <math.h>
 
 void TEnemyMario::setStickToAngle(s16 angle, f32 power)
@@ -48,6 +52,28 @@ void TEnemyMario::changeEMDoing(u16 doing)
 {
 	mEMDoingTimer = 0;
 	mEMDoing      = doing;
+}
+
+BOOL TEnemyMario::tryTake()
+{
+	if (mHeldObject != nullptr && mStatus != MARIO_STATUS_TAKE) {
+		return TRUE;
+	}
+
+	for (int i = 0; i < mEMario->getColNum(); ++i) {
+		THitActor* actor = mEMario->getCollision(i);
+		u32 actorType    = actor->getActorType();
+		if (actorType == 0x04000018 || actorType == 0x2000002A
+		    || actorType == 0x20000022 || actorType == 0x20000009) {
+			if (actorType == 0x04000018) {
+				((TLiveActor*)actor)->onLiveFlag(LIVE_FLAG_UNK100000);
+				mGoalFlags |= EM_GOAL_FLAG_ENFORCE_TAKE;
+			}
+			unk384 = actor;
+			changePlayerStatus(MARIO_STATUS_TAKE, 0, false);
+		}
+	}
+	return FALSE;
 }
 
 void TEnemyMario::emWaiting()
@@ -91,6 +117,110 @@ void TEnemyMario::startDisappear(u16 doing)
 	changeEMDoing(doing);
 }
 
+void TEnemyMario::emDisappearToGate()
+{
+	if (mEMDoingTimer >= 8) {
+		mGoalFlags &= ~EM_GOAL_FLAG_DISP_PENCIL;
+	} else {
+		mGoalFlags |= EM_GOAL_FLAG_DISP_PENCIL;
+	}
+
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+	mEMario->onHitFlag(HIT_FLAG_NO_COLLISION);
+	gpMarioParticleManager->emitAndBindToPosPtr(
+	    0x1AA, &mDisappearPosition, 1, this);
+	gpMarioParticleManager->emitAndBindToPosPtr(
+	    0x1AB, &mDisappearPosition, 1, this);
+
+	if (mEMDoingTimer == 0) {
+		mDisappearPosition = mCenterPos;
+		gpMarioParticleManager->emit(0xED, &mDisappearPosition, 0, nullptr);
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_KAGE_FIELD_AWAY, &mPosition,
+		                                 0, nullptr, 0, 4);
+	}
+
+	if (mEMDoingTimer > 100) {
+		mDisappearPosition.y += 0.025f * mEMDoingTimer;
+		mDisappearPosition.z -= 0.03f * mEMDoingTimer;
+	}
+	++mEMDoingTimer;
+}
+
+void TEnemyMario::emReplay()
+{
+	mInputReplays[mReplayIndex]->play(
+	    &mIntendedMag, &mIntendedYaw, &unk108->mInput,
+	    &unk108->mFrameInput, &unk108->mAnalogLU8, &unk108->mAnalogRU8);
+
+	if (mSettingParams->mPolluteFlag.get() && gpPollution != nullptr) {
+		f32 polluteSize = mSettingParams->mPolluteSize.get();
+		gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z,
+		                     polluteSize);
+	}
+
+	if (mInputReplays[mReplayIndex]->canPlay()) {
+		return;
+	}
+
+	if (mSettingParams->mCarryFlag.get() == 1 && mHeldObject == nullptr) {
+		changeEMDoing(EM_DOING_KEEP_STAY);
+		return;
+	}
+
+	if (mStampActor != nullptr && mSettingParams->mStampFlag.get() == 1) {
+		mStampActor->setBck("stamp_koopa_sign_draw1");
+		MActor* stampActor = mStampActor;
+		stampActor->setFrameRate(SMSGetAnmFrameRate(), 0);
+		changeEMDoing(EM_DOING_DRAW_STAMP);
+		startSoundActor(0x1980);
+		startSoundActor(0x1981);
+		return;
+	}
+
+	int nodeIndex = mEMario->getTracer()->getGraph()->findNearestNodeIndex(
+	    mPosition, -1);
+	if (mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
+	        0x40)) {
+		changeEMDoing(EM_DOING_GOAL);
+		return;
+	}
+
+	if (mSettingParams->mStopFlag.get() == 1) {
+		changeEMDoing(EM_DOING_SLEEPING);
+		return;
+	}
+
+	nodeIndex = mEMario->getTracer()->getGraph()->findNearestNodeIndex(
+	    mPosition, -1);
+	if (mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(2)) {
+		mFaceAngle.y = mAngleToMario;
+		unk108->mFrameInput |= TMarioControllerWork::A;
+		unk108->mInput |= TMarioControllerWork::A;
+	}
+	changeEMDoing(EM_DOING_TRAMPLED);
+}
+
+void TEnemyMario::emDownAnimation()
+{
+	changePlayerStatus(0x133E, 0, true);
+	setAnimation(ANIM_FALL_DOWN_WAIT, 1.0f);
+
+	if (gpMarDirector->isDemoModeNow() || gpMarDirector->isTalkModeNow()) {
+		mDownPosition      = mPosition;
+		mDisappearPosition = mDownPosition;
+		return;
+	}
+
+	++mEMDoingTimer;
+	mDownPosition      = mPosition;
+	mDisappearPosition = mDownPosition;
+	if (gpMarDirector->getCurrentMap() != 1
+	    && mEMDoingTimer > mSettingParams->mDownTime.get()) {
+		mWaterCounter = mSettingParams->mWaterCtMax.get();
+		changeEMDoing(EM_DOING_RUN_AWAY);
+	}
+}
+
 void TEnemyMario::startRunAway() { changeEMDoing(EM_DOING_RUN_AWAY); }
 
 void TEnemyMario::startGateDrawing()
@@ -102,9 +232,57 @@ void TEnemyMario::startGateDrawing()
 	startSoundActor(0x1980);
 }
 
+void TEnemyMario::hitWater(THitActor* sender)
+{
+	if (mSpecialModel != nullptr) {
+		return;
+	}
+	if (mSettingParams->mInvincibleFlag.get()) {
+		return;
+	}
+
+	if (mEMDoing != EM_DOING_REPLAY && mEMDoing != EM_DOING_SLEEPING
+	    && mEMDoing != EM_DOING_TRAMPLED) {
+		return;
+	}
+
+	mWaterHitTimer = 600;
+	if (mWaterCounter > 0) {
+		--mWaterCounter;
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
+		                             &sender->mPosition, 0, nullptr);
+		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
+		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
+		mWaterEffectTimer = mWaterEffectTimerMax;
+
+		if (mEMDoing == EM_DOING_SLEEPING) {
+			sleepingEffectKill();
+			int nodeIndex
+			    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(
+			        mPosition, -1);
+			if (mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
+			        2)) {
+				mFaceAngle.y = mAngleToMario;
+				unk108->mFrameInput |= TMarioControllerWork::A;
+				unk108->mInput |= TMarioControllerWork::A;
+			}
+			changeEMDoing(EM_DOING_TRAMPLED);
+		}
+		return;
+	}
+
+	if (mStatus == MARIO_STATUS_RUN && canSleep()) {
+		if (mHeldObject != nullptr) {
+			((TLiveActor*)mHeldObject)->offLiveFlag(LIVE_FLAG_UNK100000);
+			dropObject();
+		}
+		changeEMDoing(EM_DOING_DOWN_ANIMATION);
+	}
+}
+
 u8 TEnemyMario::thinkTrample()
 {
-	if (mEMFlags != 0) {
+	if (mSpecialModel != nullptr) {
 		return FALSE;
 	}
 
@@ -122,7 +300,7 @@ u8 TEnemyMario::thinkTrample()
 
 void TEnemyMario::reachGoal()
 {
-	mGoalFlags |= 1;
+	mGoalFlags |= EM_GOAL_FLAG_REACHED;
 	changeEMDoing(EM_DOING_GOAL);
 }
 
