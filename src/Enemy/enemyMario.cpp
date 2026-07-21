@@ -797,6 +797,9 @@ void TEnemyMario::emReplay()
 
 void TEnemyMario::emReplayJumpToNearestNode()
 {
+	// TODO: Recover the original vector temporary and inline lifetimes; the
+	// logic matches, but retail reserves a larger stack frame and saves two
+	// additional floating-point registers.
 	int nodeIndex
 	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
 	if (mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
@@ -941,6 +944,8 @@ void TEnemyMario::emDownAnimation()
 	changePlayerStatus(0x133E, 0, true);
 	setAnimation(ANIM_FALL_DOWN_WAIT, 1.0f);
 
+	// TODO: Match the retail short-circuit inline shape here; splitting these
+	// accessor checks duplicates the return body and regresses the match.
 	if (gpMarDirector->isDemoModeNow() || gpMarDirector->isTalkModeNow()) {
 		mReferencePosition = mPosition;
 		mDisappearPosition = mReferencePosition;
@@ -1143,6 +1148,9 @@ void TEnemyMario::startGateDrawing()
 	startSoundActor(0x1980);
 }
 
+// TODO: Reconstruct the retail deferred-inline boundaries that emit the
+// TMatrix34/TRotation3 constructors and TPathNode::getPoint without changing
+// shared JGeometry/Graph code generation.
 void TEnemyMario::consider()
 {
 	switch (mEMDoing) {
@@ -1328,6 +1336,8 @@ void TEnemyMario::hitWater(THitActor* sender)
 		return;
 	}
 
+	// TODO: Recover the original switch shape that emits retail's 15-entry
+	// @4414 jump table; straightforward named switches fold into a range check.
 	if (mEMDoing != EM_DOING_REPLAY && mEMDoing != EM_DOING_SLEEPING
 	    && mEMDoing != EM_DOING_TRAMPLED) {
 		return;
