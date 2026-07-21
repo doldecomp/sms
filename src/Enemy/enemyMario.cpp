@@ -665,13 +665,14 @@ void TEnemyMario::emWalkAround()
 		return;
 	}
 	if (rand() < 100) {
-		mTargetAngle = (s16)rand();
+		mTargetAngle = rand();
 		changeEMDoing(EM_DOING_TURNING);
 		return;
 	}
 	if (rand() < 50) {
-		mEMario->getTracer()->reset();
-		mEMario->goToShortestNextGraphNode();
+		TEMario* emario = mEMario;
+		emario->getTracer()->reset();
+		emario->goToShortestNextGraphNode();
 		changeEMDoing(EM_DOING_WALK_GRAPH);
 		return;
 	}
