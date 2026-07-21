@@ -97,6 +97,65 @@ void TEnemyMario::emWaiting()
 	}
 }
 
+void TEnemyMario::emJumping()
+{
+	if (mStatus & MARIO_STATUS_FLAG_JUMPING) {
+		if (mStatus != MARIO_STATUS_WALL_SLIDE || mStatusTimer >= 10) {
+			setStickToAngle(mFaceAngle.y, 1.0f);
+			unk108->mInput |= TMarioControllerWork::A;
+			if (-1.0f < mVel.y && mVel.y < 1.0f && rand() < 0xFFF) {
+				unk108->mInput |= TMarioControllerWork::B;
+			}
+		}
+	} else if (mStatus == MARIO_STATUS_HANGING) {
+		if (mStatusTimer >= 10) {
+			unk108->mInput |= TMarioControllerWork::A;
+		}
+	} else if (mStatus & 0x600) {
+		TPollutionManager* pollution = gpPollution;
+		pollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, 384.0f);
+		changeEMDoing(EM_DOING_WAITING);
+	}
+}
+
+void TEnemyMario::emWalkAround()
+{
+	if (mDistanceToMario < 1500.0f) {
+		changeEMDoing(EM_DOING_WAITING);
+		return;
+	}
+	if (rand() < 10) {
+		changeEMDoing(EM_DOING_RUN_AWAY_FROM_MARIO);
+	}
+	if (rand() < 100) {
+		unk108->mInput |= TMarioControllerWork::A;
+		changeEMDoing(EM_DOING_JUMPING);
+		return;
+	}
+	if (rand() < 100) {
+		mTargetAngle = (s16)rand();
+		changeEMDoing(EM_DOING_TURNING);
+		return;
+	}
+	if (rand() < 50) {
+		mEMario->getTracer()->reset();
+		mEMario->goToShortestNextGraphNode();
+		changeEMDoing(EM_DOING_WALK_GRAPH);
+		return;
+	}
+	if (rand() < 50) {
+		TPollutionManager* pollution = gpPollution;
+		pollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, 384.0f);
+		changeEMDoing(EM_DOING_HIDDEN);
+	}
+	if (mWallPlane != nullptr) {
+		unk108->mInput |= TMarioControllerWork::A;
+		changeEMDoing(EM_DOING_JUMPING);
+		return;
+	}
+	setStickToAngle(mFaceAngle.y, 0.5f);
+}
+
 void TEnemyMario::startDisappear(u16 doing)
 {
 	mDisappearPosition = mPosition;
