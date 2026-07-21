@@ -26,22 +26,24 @@ void TEnemyMario::setStickToAngle(s16 angle, f32 power)
 
 void TEnemyMario::startMonteReplay(u32 replayIndex)
 {
-	int nodeIndex = mEMario->getTracer()->getGraph()->findNearestNodeIndex(
-	    mPosition, -1);
+	int nodeIndex
+	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
 	JGeometry::TVec3<f32> currentPoint;
 	mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).getPoint(
 	    &currentPoint);
 	mPosition = currentPoint;
 	JGeometry::TVec3<f32> nextPoint;
-	mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex + 1).getPoint(
-	    &nextPoint);
+	mEMario->getTracer()
+	    ->getGraph()
+	    ->getGraphNode(nodeIndex + 1)
+	    .getPoint(&nextPoint);
 	f32 xDifference = nextPoint.x - currentPoint.x;
 	f32 zDifference = nextPoint.z - currentPoint.z;
-	mFaceAngle.y     = matan(zDifference, xDifference);
-	mVel.x       = 0.0f;
-	mVel.y       = 0.0f;
-	mVel.z       = 0.0f;
-	mForwardVel = 0.0f;
+	mFaceAngle.y    = matan(zDifference, xDifference);
+	mVel.x          = 0.0f;
+	mVel.y          = 0.0f;
+	mVel.z          = 0.0f;
+	mForwardVel     = 0.0f;
 	resetHistory();
 	changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 	mReplayIndex = replayIndex;
@@ -188,16 +190,16 @@ void TEnemyMario::emDisappearToGate()
 
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 	mEMario->onHitFlag(HIT_FLAG_NO_COLLISION);
-	gpMarioParticleManager->emitAndBindToPosPtr(
-	    0x1AA, &mDisappearPosition, 1, this);
-	gpMarioParticleManager->emitAndBindToPosPtr(
-	    0x1AB, &mDisappearPosition, 1, this);
+	gpMarioParticleManager->emitAndBindToPosPtr(0x1AA, &mDisappearPosition, 1,
+	                                            this);
+	gpMarioParticleManager->emitAndBindToPosPtr(0x1AB, &mDisappearPosition, 1,
+	                                            this);
 
 	if (mEMDoingTimer == 0) {
 		mDisappearPosition = mCenterPos;
 		gpMarioParticleManager->emit(0xED, &mDisappearPosition, 0, nullptr);
 		SMSGetMSound()->startSoundActor(MSD_SE_MA_KAGE_FIELD_AWAY, &mPosition,
-		                                 0, nullptr, 0, 4);
+		                                0, nullptr, 0, 4);
 	}
 
 	if (mEMDoingTimer > 100) {
@@ -209,9 +211,9 @@ void TEnemyMario::emDisappearToGate()
 
 void TEnemyMario::emReplay()
 {
-	mInputReplays[mReplayIndex]->play(
-	    &mIntendedMag, &mIntendedYaw, &unk108->mInput,
-	    &unk108->mFrameInput, &unk108->mAnalogLU8, &unk108->mAnalogRU8);
+	mInputReplays[mReplayIndex]->play(&mIntendedMag, &mIntendedYaw,
+	                                  &unk108->mInput, &unk108->mFrameInput,
+	                                  &unk108->mAnalogLU8, &unk108->mAnalogRU8);
 
 	if (mSettingParams->mPolluteFlag.get() && gpPollution != nullptr) {
 		f32 polluteSize = mSettingParams->mPolluteSize.get();
@@ -238,8 +240,8 @@ void TEnemyMario::emReplay()
 		return;
 	}
 
-	int nodeIndex = mEMario->getTracer()->getGraph()->findNearestNodeIndex(
-	    mPosition, -1);
+	int nodeIndex
+	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
 	if (mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
 	        0x40)) {
 		changeEMDoing(EM_DOING_GOAL);
@@ -251,9 +253,10 @@ void TEnemyMario::emReplay()
 		return;
 	}
 
-	nodeIndex = mEMario->getTracer()->getGraph()->findNearestNodeIndex(
-	    mPosition, -1);
-	if (mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(2)) {
+	nodeIndex
+	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
+	if (mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
+	        2)) {
 		mFaceAngle.y = mAngleToMario;
 		unk108->mFrameInput |= TMarioControllerWork::A;
 		unk108->mInput |= TMarioControllerWork::A;
@@ -274,7 +277,7 @@ void TEnemyMario::emReplayJumpToNearestNode()
 	}
 
 	++mEMDoingTimer;
-	nodeIndex = graph->findNearestNodeIndex(mPosition, -1);
+	nodeIndex               = graph->findNearestNodeIndex(mPosition, -1);
 	TGraphNode* currentNode = &graph->getGraphNode(nodeIndex);
 	JGeometry::TVec3<f32> currentPoint;
 	currentNode->getPoint(&currentPoint);
@@ -323,7 +326,7 @@ void TEnemyMario::emReplayJumpToNearestNode()
 		int validLinks[3];
 		int validCount = 0;
 		for (int i = 0; i < 3; ++i) {
-			dots[i] = 0.0f;
+			dots[i]           = 0.0f;
 			TReplayLink& link = mReplayLinks[nodeIndex][i];
 			if (link.mNodeIndex == 0xFF) {
 				continue;
@@ -334,7 +337,7 @@ void TEnemyMario::emReplayJumpToNearestNode()
 			JGeometry::TVec3<f32> candidateDirection
 			    = candidatePoint - currentPoint;
 			candidateDirection.normalize();
-			dots[validCount] = marioDirection.dot(candidateDirection);
+			dots[validCount]       = marioDirection.dot(candidateDirection);
 			validLinks[validCount] = i;
 			++validCount;
 		}
@@ -342,15 +345,14 @@ void TEnemyMario::emReplayJumpToNearestNode()
 		f32 weights[3];
 		f32 weightTotal = 0.0f;
 		for (int i = 0; i < validCount; ++i) {
-			weights[i] = powf(1.0f - dots[i],
-			                  mSettingParams->mRandomPow.get());
+			weights[i] = powf(1.0f - dots[i], mSettingParams->mRandomPow.get());
 			weightTotal += weights[i];
 		}
 		for (int i = 0; i < validCount; ++i) {
 			weights[i] /= weightTotal;
 		}
 
-		f32 choice = MsRandF();
+		f32 choice   = MsRandF();
 		int selected = 0;
 		for (int i = 0; i < validCount; ++i) {
 			choice -= weights[i];
@@ -369,9 +371,9 @@ void TEnemyMario::emReplayJumpToNearestNode()
 	if (nextNode != nullptr) {
 		nextNode->getPoint(&nextPoint);
 	}
-	mPosition     = currentPoint;
-	mFaceAngle.y  = matan(nextPoint.z - currentPoint.z,
-	                      nextPoint.x - currentPoint.x);
+	mPosition = currentPoint;
+	mFaceAngle.y
+	    = matan(nextPoint.z - currentPoint.z, nextPoint.x - currentPoint.x);
 	mVel.set(0.0f, 0.0f, 0.0f);
 	mForwardVel = 0.0f;
 	resetHistory();
@@ -407,10 +409,10 @@ void TEnemyMario::emRunAwayToNearestNode()
 	TGraphWeb* graph = mEMario->getTracer()->getGraph();
 	JGeometry::TVec3<f32> targetPoint;
 	graph->getGraphNode(mRunAwayNodeIndex).getPoint(&targetPoint);
-	gpMarioParticleManager->emitAndBindToPosPtr(
-	    0x1AA, &mDisappearPosition, 1, this);
-	gpMarioParticleManager->emitAndBindToPosPtr(
-	    0x1AB, &mDisappearPosition, 1, this);
+	gpMarioParticleManager->emitAndBindToPosPtr(0x1AA, &mDisappearPosition, 1,
+	                                            this);
+	gpMarioParticleManager->emitAndBindToPosPtr(0x1AB, &mDisappearPosition, 1,
+	                                            this);
 
 	if (mEMDoingTimer >= 8 && mEMDoingTimer < 300) {
 		mGoalFlags &= ~EM_GOAL_FLAG_DISP_PENCIL;
@@ -423,16 +425,14 @@ void TEnemyMario::emRunAwayToNearestNode()
 		findRunAwayNearestNode();
 		mDisappearPosition = mPosition;
 		mDisappearPosition.y += 80.0f;
-		gpMarioParticleManager->emit(0xED,
-		                             &mDisappearPosition, 0, nullptr);
-		SMSGetMSound()->startSoundActor(MSD_SE_MA_KAGE_FIELD_AWAY,
-		                                 &mPosition, 0, nullptr, 0, 4);
+		gpMarioParticleManager->emit(0xED, &mDisappearPosition, 0, nullptr);
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_KAGE_FIELD_AWAY, &mPosition,
+		                                0, nullptr, 0, 4);
 		break;
 	case 8:
 		break;
 	case 100: {
-		JGeometry::TVec3<f32> direction
-		    = targetPoint - mReferencePosition;
+		JGeometry::TVec3<f32> direction = targetPoint - mReferencePosition;
 		direction.normalize();
 		direction.scale(mRunAwaySpeed);
 		mDisappearPosition += direction;
@@ -449,17 +449,16 @@ void TEnemyMario::emRunAwayToNearestNode()
 		mPosition.y += 5.0f;
 		break;
 	case 220:
-		gpMarioParticleManager->emit(0xED,
-		                             &mDisappearPosition, 0, nullptr);
-		SMSGetMSound()->startSoundActor(MSD_SE_MA_KAGE_FIELD_APPEAR,
-		                                 &mPosition, 0, nullptr, 0, 4);
+		gpMarioParticleManager->emit(0xED, &mDisappearPosition, 0, nullptr);
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_KAGE_FIELD_APPEAR, &mPosition,
+		                                0, nullptr, 0, 4);
 		break;
 	case 300:
 		if (gpMarDirector->getCurrentMap() == 1) {
 			JGeometry::TVec3<f32> waitingPoint;
 			graph->getGraphNode(7).getPoint(&waitingPoint);
-			mFaceAngle.y = matan(waitingPoint.z - targetPoint.z,
-			                     waitingPoint.x - targetPoint.x);
+			mFaceAngle.y    = matan(waitingPoint.z - targetPoint.z,
+			                        waitingPoint.x - targetPoint.x);
 			mModelFaceAngle = mFaceAngle.y;
 			mPosition       = targetPoint;
 			mPosition.y += 5.0f;
@@ -488,9 +487,9 @@ void TEnemyMario::emRunAwayToNearestNode()
 
 void TEnemyMario::findRunAwayNearestNode()
 {
-	TGraphWeb* graph = mEMario->getTracer()->getGraph();
-	s16 nearestIndex = 0;
-	s16 secondIndex  = 0;
+	TGraphWeb* graph    = mEMario->getTracer()->getGraph();
+	s16 nearestIndex    = 0;
+	s16 secondIndex     = 0;
 	f32 nearestDistance = 100000.0f;
 	f32 secondDistance  = 100000.0f;
 	JGeometry::TVec3<f32> nearestPoint;
@@ -529,7 +528,7 @@ void TEnemyMario::decideDoingAfterCarry()
 	if (isEnforceTake()) {
 		mGoalFlags &= ~EM_GOAL_FLAG_ENFORCE_TAKE;
 		TGraphWeb* graph = mEMario->getTracer()->getGraph();
-		int nodeIndex = graph->findNearestNodeIndex(mPosition, -1);
+		int nodeIndex    = graph->findNearestNodeIndex(mPosition, -1);
 		if (graph->getGraphNode(nodeIndex).checkFlag(2)) {
 			mFaceAngle.y = mAngleToMario;
 			unk108->mFrameInput |= TMarioControllerWork::A;
@@ -545,7 +544,7 @@ void TEnemyMario::decideDoingAfterCarry()
 	}
 
 	TGraphWeb* graph = mEMario->getTracer()->getGraph();
-	int nodeIndex = graph->findNearestNodeIndex(mPosition, -1);
+	int nodeIndex    = graph->findNearestNodeIndex(mPosition, -1);
 	if (graph->getGraphNode(nodeIndex).checkFlag(2)) {
 		mFaceAngle.y = mAngleToMario;
 		unk108->mFrameInput |= TMarioControllerWork::A;
@@ -559,10 +558,9 @@ void TEnemyMario::emWaitingToInviteMario()
 	TGraphWeb* graph = mEMario->getTracer()->getGraph();
 	JGeometry::TVec3<f32> waitingPoint;
 	graph->getGraphNode(7).getPoint(&waitingPoint);
-	mPosition = waitingPoint;
+	mPosition           = waitingPoint;
 	s16 angleDifference = mAngleToMario - mFaceAngle.y;
-	mFaceAngle.y = mAngleToMario
-	               - IConverge(angleDifference, 0, 0x180, 0x180);
+	mFaceAngle.y = mAngleToMario - IConverge(angleDifference, 0, 0x180, 0x180);
 	changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 	changeMontemanWaitingAnim();
 
@@ -570,13 +568,12 @@ void TEnemyMario::emWaitingToInviteMario()
 	f32 dy = mPosition.y - gpMarioPos->y;
 	f32 dz = mPosition.z - gpMarioPos->z;
 	if (std::sqrtf(dx * dx + dy * dy + dz * dz)
-	            < mSettingParams->mSearchDist.get()
-	    && gpMarioPos->y
-	           < mPosition.y + mSettingParams->mSearchHeight.get()) {
+	        < mSettingParams->mSearchDist.get()
+	    && gpMarioPos->y < mPosition.y + mSettingParams->mSearchHeight.get()) {
 		JGeometry::TVec3<f32> gatePoint;
 		graph->getGraphNode(8).getPoint(&gatePoint);
-		mFaceAngle.y = matan(gatePoint.z - waitingPoint.z,
-		                     gatePoint.x - waitingPoint.x);
+		mFaceAngle.y
+		    = matan(gatePoint.z - waitingPoint.z, gatePoint.x - waitingPoint.x);
 		mModelFaceAngle = mFaceAngle.y;
 		changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 		mReplayIndex = 0;
@@ -642,8 +639,8 @@ void TEnemyMario::consider()
 		setStickToAngle(angle, 1.0f);
 		++mEMDoingTimer;
 		if (mEMDoingTimer % 100 == 0) {
-			gpConductor->makeEnemyAppear(mPosition, "ハムクリマネージャー",
-			                             1, 0);
+			gpConductor->makeEnemyAppear(mPosition, "ハムクリマネージャー", 1,
+			                             0);
 		}
 		break;
 	}
@@ -654,8 +651,7 @@ void TEnemyMario::consider()
 		if (rand() < 100) {
 			unk108->mInput |= TMarioControllerWork::A;
 			changeEMDoing(EM_DOING_JUMPING);
-		} else if (angleDifference < -0x1555
-		           || angleDifference > 0x1555) {
+		} else if (angleDifference < -0x1555 || angleDifference > 0x1555) {
 			setStickToAngle(mTargetAngle, 0.2f);
 		} else {
 			changeEMDoing(EM_DOING_WAITING);
@@ -668,7 +664,7 @@ void TEnemyMario::consider()
 		++mEMDoingTimer;
 		if (!gpPollution->isPolluted(mPosition.x, mPosition.y, mPosition.z)
 		    || mEMDoingTimer > 7200) {
-			mEMDoingTimer       = 0;
+			mEMDoingTimer        = 0;
 			mInvincibilityFrames = 120;
 			changeEMDoing(EM_DOING_APPEAR);
 		}
@@ -699,7 +695,7 @@ void TEnemyMario::consider()
 		    && gpMarioPos->y
 		           < mPosition.y + mSettingParams->mSearchHeight.get()) {
 			TGraphWeb* graph = mEMario->getTracer()->getGraph();
-			int nodeIndex = graph->findNearestNodeIndex(mPosition, -1);
+			int nodeIndex    = graph->findNearestNodeIndex(mPosition, -1);
 			if (graph->getGraphNode(nodeIndex).checkFlag(2)) {
 				mFaceAngle.y = mAngleToMario;
 				unk108->mFrameInput |= TMarioControllerWork::A;
@@ -727,8 +723,8 @@ void TEnemyMario::consider()
 		break;
 	case EM_DOING_GOAL: {
 		s16 angleDifference = mAngleToMario - mFaceAngle.y;
-		mFaceAngle.y = mAngleToMario
-		               - IConverge(angleDifference, 0, 0x180, 0x180);
+		mFaceAngle.y
+		    = mAngleToMario - IConverge(angleDifference, 0, 0x180, 0x180);
 		changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 		changeMontemanWaitingAnim();
 		break;
@@ -755,8 +751,8 @@ void TEnemyMario::consider()
 	case EM_DOING_REACHED_GATE:
 	case EM_DOING_REPLAY_WAITING: {
 		s16 angleDifference = mAngleToMario - mFaceAngle.y;
-		mFaceAngle.y = mAngleToMario
-		               - IConverge(angleDifference, 0, 0x180, 0x180);
+		mFaceAngle.y
+		    = mAngleToMario - IConverge(angleDifference, 0, 0x180, 0x180);
 		break;
 	}
 	case EM_DOING_GATE_DRAWING:
@@ -792,8 +788,8 @@ void TEnemyMario::hitWater(THitActor* sender)
 	mWaterHitTimer = 600;
 	if (mWaterCounter > 0) {
 		--mWaterCounter;
-		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
-		                             &sender->mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
+		                             0, nullptr);
 		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
 		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
 		mWaterEffectTimer = mWaterEffectTimerMax;
@@ -803,8 +799,10 @@ void TEnemyMario::hitWater(THitActor* sender)
 			int nodeIndex
 			    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(
 			        mPosition, -1);
-			if (mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
-			        2)) {
+			if (mEMario->getTracer()
+			        ->getGraph()
+			        ->getGraphNode(nodeIndex)
+			        .checkFlag(2)) {
 				mFaceAngle.y = mAngleToMario;
 				unk108->mFrameInput |= TMarioControllerWork::A;
 				unk108->mInput |= TMarioControllerWork::A;
@@ -871,18 +869,18 @@ void TEnemyMario::checkReturn()
 
 void TEnemyMario::checkController(JDrama::TGraphics*)
 {
-	f32 dx        = gpMarioPos->x - mPosition.x;
-	f32 dz        = gpMarioPos->z - mPosition.z;
-	mAngleToMario = matan(dz, dx);
+	f32 dx           = gpMarioPos->x - mPosition.x;
+	f32 dz           = gpMarioPos->z - mPosition.z;
+	mAngleToMario    = matan(dz, dx);
 	mDistanceToMario = std::sqrtf(dx * dx + dz * dz);
 
-	u32 previousInput = unk108->mInput;
-	unk108->mStickHS16 = 0;
-	unk108->mStickVS16 = 0;
-	unk108->mInput = 0;
+	u32 previousInput   = unk108->mInput;
+	unk108->mStickHS16  = 0;
+	unk108->mStickVS16  = 0;
+	unk108->mInput      = 0;
 	unk108->mFrameInput = 0;
-	unk108->mAnalogRU8 = 0;
-	unk108->mAnalogLU8 = 0;
+	unk108->mAnalogRU8  = 0;
+	unk108->mAnalogLU8  = 0;
 	consider();
 
 	unk108->mStickH = 0.0f;
@@ -900,9 +898,8 @@ void TEnemyMario::checkController(JDrama::TGraphics*)
 		unk108->mStickV = unk108->mStickVS16 - 6;
 	}
 
-	unk108->mStickDist
-	    = std::sqrtf(unk108->mStickH * unk108->mStickH
-	                 + unk108->mStickV * unk108->mStickV);
+	unk108->mStickDist = std::sqrtf(unk108->mStickH * unk108->mStickH
+	                                + unk108->mStickV * unk108->mStickV);
 	if (unk108->mStickDist > 64.0f) {
 		unk108->mStickH *= 64.0f / unk108->mStickDist;
 		unk108->mStickV *= 64.0f / unk108->mStickDist;
@@ -911,7 +908,7 @@ void TEnemyMario::checkController(JDrama::TGraphics*)
 	unk108->mFrameInput = unk108->mInput & (unk108->mInput ^ previousInput);
 
 	f32 stickRatio = unk108->mStickDist * (1.0f / 64.0f);
-	mIntendedMag = 64.0f * (stickRatio * stickRatio) * 0.5f;
+	mIntendedMag   = 64.0f * (stickRatio * stickRatio) * 0.5f;
 	if (mIntendedMag > 0.0f) {
 		mIntendedYaw = matan(-unk108->mStickV, unk108->mStickH);
 	} else {
@@ -923,8 +920,8 @@ void TEnemyMario::checkController(JDrama::TGraphics*)
 	}
 	if (mEMDoing == EM_DOING_REPLAY_RUN_AWAY_TO_GATE) {
 		mInputReplays[mReplayIndex]->play(
-		    &mIntendedMag, &mIntendedYaw, &unk108->mInput,
-		    &unk108->mFrameInput, &unk108->mAnalogLU8, &unk108->mAnalogRU8);
+		    &mIntendedMag, &mIntendedYaw, &unk108->mInput, &unk108->mFrameInput,
+		    &unk108->mAnalogLU8, &unk108->mAnalogRU8);
 		if (!mInputReplays[mReplayIndex]->canPlay()) {
 			changePlayerStatus(0x133E, 0, true);
 			setAnimation(ANIM_MONTEMAN_WAIT, 1.0f);
@@ -943,8 +940,8 @@ void TEnemyMario::checkController(JDrama::TGraphics*)
 	}
 	if (mEMDoing == EM_DOING_REPLAY_TO_GOAL) {
 		mInputReplays[mReplayIndex]->play(
-		    &mIntendedMag, &mIntendedYaw, &unk108->mInput,
-		    &unk108->mFrameInput, &unk108->mAnalogLU8, &unk108->mAnalogRU8);
+		    &mIntendedMag, &mIntendedYaw, &unk108->mInput, &unk108->mFrameInput,
+		    &unk108->mAnalogLU8, &unk108->mAnalogRU8);
 		if (!mInputReplays[mReplayIndex]->canPlay()) {
 			mGoalFlags |= 1;
 			changeEMDoing(EM_DOING_GOAL);
