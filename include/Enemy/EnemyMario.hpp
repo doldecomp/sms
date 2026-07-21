@@ -15,9 +15,11 @@ public:
 	};
 
 	enum EMGoalFlag {
-		EM_GOAL_FLAG_REACHED      = 0x1,
-		EM_GOAL_FLAG_DISP_PENCIL  = 0x2,
-		EM_GOAL_FLAG_ENFORCE_TAKE = 0x20,
+		EM_GOAL_FLAG_REACHED         = 0x1,
+		EM_GOAL_FLAG_DISP_PENCIL     = 0x2,
+		EM_GOAL_FLAG_FORCE_WATER_HIT = 0x10,
+		EM_GOAL_FLAG_ENFORCE_TAKE    = 0x20,
+		EM_GOAL_FLAG_DISP_HP_METER   = 0x80,
 	};
 
 	enum EMDoing {
@@ -131,7 +133,20 @@ public:
 	f32 getStickPower();
 	void kill();
 	void initEnemyValues();
-	BOOL isDispPencil() const;
+	bool isDispPencil() const
+	{
+		if (mGoalFlags & EM_GOAL_FLAG_DISP_PENCIL) {
+			return true;
+		}
+		return false;
+	}
+	bool isForceWaterHit() const
+	{
+		if (mGoalFlags & EM_GOAL_FLAG_FORCE_WATER_HIT) {
+			return true;
+		}
+		return false;
+	}
 	BOOL canJumpToNode() const;
 
 	bool canControl() const
@@ -143,6 +158,14 @@ public:
 	}
 
 	bool isGoal() const { return mGoalFlags & EM_GOAL_FLAG_REACHED; }
+	bool isDispStamp() const
+	{
+		if (mEMDoing == EM_DOING_DRAW_STAMP
+		    && mSettingParams->mStampFlag.get() == 1) {
+			return true;
+		}
+		return false;
+	}
 	bool isEnforceTake() const
 	{
 		if (mGoalFlags & EM_GOAL_FLAG_ENFORCE_TAKE) {

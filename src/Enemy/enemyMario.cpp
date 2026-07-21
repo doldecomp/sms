@@ -5,12 +5,19 @@
 #include <Enemy/Conductor.hpp>
 #include <Enemy/Emario.hpp>
 #include <Enemy/Graph.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DDrawBuffer.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <M3DUtil/MActor.hpp>
+#include <M3DUtil/M3UModelMario.hpp>
 #include <Map/MapData.hpp>
 #include <Map/PollutionManager.hpp>
+#include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
+#include <MarioUtil/ShadowUtil.hpp>
 #include <Player/MarioRecord.hpp>
+#include <Strategic/question.hpp>
 #include <System/Application.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <System/MarDirector.hpp>
@@ -983,3 +990,157 @@ void TEnemyMario::playerControl(JDrama::TGraphics* graphics)
 }
 
 void TEnemyMario::damageExec(THitActor*, int, int, int, f32, int, f32, s16) { }
+
+void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	MActor* emarioActor   = nullptr;
+	J3DModel* emarioModel = nullptr;
+	if (mSpecialModel == nullptr) {
+		emarioActor = mEMario->getMActor();
+		emarioModel = emarioActor->getModel();
+	}
+
+	if (mFreezeTimer > 0) {
+		--mFreezeTimer;
+	}
+	if (mWaterHitTimer > 0) {
+		--mWaterHitTimer;
+	}
+
+	u32 isMove = cue & CUE_MOVE;
+	if (isMove) {
+		if (isForceWaterHit()) {
+			mWaterCounter = 0;
+			hitWater(this);
+		}
+
+		if (mStatus != MARIO_STATUS_RUN || mFreezeTimer == 0) {
+			playerControl(graphics);
+			setPositions();
+		}
+	}
+
+	if (isMove) {
+		if (mStatus != MARIO_STATUS_RUN || mFreezeTimer == 0) {
+			calcAnim(CUE_CALC_ANIM, graphics);
+		}
+
+		if (mSpecialModel != nullptr) {
+			for (u16 i = 0;
+			     i < mModel->getModel()->getModelData()->getJointNum(); ++i) {
+				MTXCopy(mModel->getModel()->getAnmMtx(i),
+				        mSpecialModel->getAnmMtx(i));
+			}
+			mSpecialModel->calcWeightEnvelopeMtx();
+		} else {
+			emarioActor->calcAnm();
+			for (u16 i = 0;
+			     i < mModel->getModel()->getModelData()->getJointNum(); ++i) {
+				MTXCopy(mModel->getModel()->getAnmMtx(i),
+				        emarioModel->getAnmMtx(i));
+			}
+			emarioModel->calcWeightEnvelopeMtx();
+			MTXCopy(emarioModel->getAnmMtx(mJointIdHandL),
+			        mPencilModel->getBaseTRMtx());
+			mPencilModel->calc();
+
+			if (isDispStamp()) {
+				TPosition3f scaleMtx;
+				TRotation3f rotationMtx;
+				MTXScale(scaleMtx, unk42F4, unk42F4, unk42F4);
+				MsMtxSetRotRPH(rotationMtx, 0.0f, 180.0f, 0.0f);
+				MTXConcat(mModel->getModel()->getBaseTRMtx(), scaleMtx,
+				          scaleMtx);
+				MTXConcat(scaleMtx, rotationMtx, scaleMtx);
+				MTXCopy(scaleMtx, mStampActor->getModel()->getBaseTRMtx());
+				mStampActor->calcAnm();
+			}
+		}
+
+		mAttackRadius = 800.0f;
+		mAttackHeight = 150.0f;
+		mDamageRadius = 60.0f;
+		mDamageHeight = 40.0f;
+		calcEntryRadius();
+		if (mWaterEffectTimer > 0) {
+			--mWaterEffectTimer;
+		} else {
+			mWaterEffectTimer = 0;
+		}
+	}
+
+	if (cue & CUE_CALC_VIEW) {
+		calcView(graphics);
+		if (isDispPencil()) {
+			unk390->entryDrawShadow();
+			gpQuestionManager->request(mPosition, 50.0f);
+		}
+
+		if (mSpecialModel != nullptr) {
+			mSpecialModel->viewCalc();
+		} else {
+			emarioActor->viewCalc();
+			mPencilModel->viewCalc();
+			if (isDispStamp()) {
+				mStampActor->viewCalc();
+			}
+		}
+	}
+
+	if (cue & CUE_ENTRY) {
+		if (mSpecialModel == nullptr) {
+			if (mWaterEffectTimer > 0) {
+				SMS_AddDamageFogEffect(
+				    mEMario->getMActor()->getModel()->getModelData(), mPosition,
+				    graphics);
+			} else {
+				SMS_ResetDamageFogEffect(
+				    mEMario->getMActor()->getModel()->getModelData());
+			}
+			if (isDispStamp()) {
+				gpPollution->stampModel(mStampActor->getModel());
+			}
+		}
+
+		if (isDispPencil()) {
+			if (mSpecialModel == nullptr) {
+				emarioActor->entry();
+				mPencilModel->entry();
+			} else {
+				mSpecialModel->entry();
+			}
+		}
+	}
+
+	if (cue & CUE_DRAW) {
+		if (mTrembleModelEffect != nullptr) {
+			mTrembleModelEffect->movement();
+		}
+
+		int doDraw = 1;
+		if (!(unk114 & UNK114_FLAG_VISIBLE)) {
+			doDraw = 0;
+		}
+		if (mInvincibilityFrames > 0 && !(mInvincibilityFrames & 4)) {
+			doDraw = 0;
+		}
+		if (checkFlag(MARIO_FLAG_UNK4)) {
+			doDraw = 0;
+		}
+		if (mEMDoing == EM_DOING_HIDDEN) {
+			doDraw = 0;
+		}
+		if (mFreezeTimer > 0 && !(mFreezeTimer & 4)) {
+			doDraw = 0;
+		}
+		if (doDraw == 1 && mTrembleModelEffect != nullptr) {
+			j3dSys.setUnk4C(7);
+			unk394->draw();
+			unk398->draw();
+		}
+
+		if ((mGoalFlags & EM_GOAL_FLAG_DISP_HP_METER) && mWaterHitTimer > 0) {
+			drawHPMeter(graphics->getViewMtx());
+		}
+	}
+}
