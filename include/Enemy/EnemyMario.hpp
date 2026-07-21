@@ -55,7 +55,23 @@ public:
 
 	class TSettingParams : public TParams {
 	public:
-		TSettingParams(const char*);
+		TSettingParams(const char* path)
+		    : TParams(path)
+		    , PARAM_INIT(mSearchDist, 1000.0f)
+		    , PARAM_INIT(mSearchHeight, 300.0f)
+		    , PARAM_INIT(mWaterCtMax, 64)
+		    , PARAM_INIT(mStopFlag, 1)
+		    , PARAM_INIT(mStampFlag, 1)
+		    , PARAM_INIT(mRandomFlag, 1)
+		    , PARAM_INIT(mCarryFlag, 0)
+		    , PARAM_INIT(mInvincibleFlag, 0)
+		    , PARAM_INIT(mRandomPow, 1.0f)
+		    , PARAM_INIT(mDownTime, 1200)
+		    , PARAM_INIT(mPolluteFlag, 0)
+		    , PARAM_INIT(mPolluteSize, 160.0f)
+		{
+			TParams::load(mPrmPath);
+		}
 
 		TParamRT<f32> mSearchDist;
 		TParamRT<f32> mSearchHeight;
@@ -190,7 +206,7 @@ public:
 	TEMario* mEMario;     // 0x42A0
 	u32 mEMDoingTimer;    // 0x42A4
 	s32 mReplayIndex;     // 0x42A8
-	char unk42AC[0x4];
+	f32 mTrembleStrength;
 	f32 mAttackRange;                         // 0x42B0
 	s16 mWaterEffectTimer;                    // 0x42B4
 	s16 mWaterEffectTimerMax;                 // 0x42B6
@@ -201,12 +217,13 @@ public:
 	s16 mRunAwayNodeIndex;                    // 0x42CC
 	char unk42CE[0x2];
 	f32 mRunAwaySpeed; // 0x42D0
-	char unk42D4[0x8];
+	u8 mPadIndex;
+	char unk42D5[0x7];
 	J3DModel* mSpecialModel;                  // 0x42DC
 	JGeometry::TVec3<f32> mDisappearPosition; // 0x42E0
 	J3DModel* mPencilModel;                   // 0x42EC
 	MActor* mStampActor;                      // 0x42F0
-	f32 unk42F4;
+	f32 mPencilScale;
 	TMarioInputReplay** mInputReplays;        // 0x42F8
 	TMarioInputReplay** mRunAwayInputReplays; // 0x42FC
 	TMarioInputReplay* mGateReplay;           // 0x4300

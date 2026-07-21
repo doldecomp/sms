@@ -29,28 +29,28 @@ void TEMario::load(JSUMemoryInputStream& stream)
 {
 	TSpineEnemy::load(stream);
 
-	stream >> unk154;
-	stream >> unk158;
-	stream >> unk15C;
-	stream >> unk160;
+	stream >> mInitialState;
+	stream >> mReplayIndexDolpic;
+	stream >> mReplayIndexPad2;
+	stream >> mReplayIndexPad3;
 
 	stream.readU32();
 	stream.readU32();
 
-	if (unk154 == 0xff) {
-		unk154 = 0;
+	if (mInitialState == 0xff) {
+		mInitialState = 0;
 	}
 
-	if (unk158 == 0xFF) {
-		unk158 = 0;
+	if (mReplayIndexDolpic == 0xFF) {
+		mReplayIndexDolpic = 0;
 	}
 
-	if (unk15C == 0xFF) {
-		unk15C = 0;
+	if (mReplayIndexPad2 == 0xFF) {
+		mReplayIndexPad2 = 0;
 	}
 
-	if (unk160 == 0xFF) {
-		unk160 = 0;
+	if (mReplayIndexPad3 == 0xFF) {
+		mReplayIndexPad3 = 0;
 	}
 
 	mEnemyMario          = new TEnemyMario();

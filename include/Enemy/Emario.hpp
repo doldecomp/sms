@@ -25,6 +25,10 @@ public:
 	void startMonteReplay(u32 param1);
 	void startGateDrawing();
 	void forceDisappear();
+	u32 getInitialState() const { return mInitialState; }
+	u32 getReplayIndexDolpic() const { return mReplayIndexDolpic; }
+	u32 getReplayIndexPad2() const { return mReplayIndexPad2; }
+	u32 getReplayIndexPad3() const { return mReplayIndexPad3; }
 
 	// fabricated and fake
 	static f32 vecDist(const JGeometry::TVec3<f32>& a,
@@ -35,10 +39,10 @@ public:
 
 private:
 	TEnemyMario* mEnemyMario; // 0x150
-	u32 unk154;
-	u32 unk158;
-	u32 unk15C;
-	u32 unk160;
+	u32 mInitialState;
+	u32 mReplayIndexDolpic;
+	u32 mReplayIndexPad2;
+	u32 mReplayIndexPad3;
 };
 
 class TEMarioManager : public TEnemyManager {

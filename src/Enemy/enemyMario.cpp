@@ -9,17 +9,23 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAnm.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DDrawBuffer.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
+#include <JSystem/JKernel/JKRFileLoader.hpp>
+#include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 #include <M3DUtil/MActor.hpp>
+#include <M3DUtil/MActorUtil.hpp>
 #include <M3DUtil/M3UJoint.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
 #include <MSound/MAnmSound.hpp>
 #include <Map/MapData.hpp>
 #include <Map/PollutionManager.hpp>
+#include <MoveBG/MapObjWave.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/MtxUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
 #include <MarioUtil/ShadowUtil.hpp>
+#include <MarioUtil/TexUtil.hpp>
 #include <Player/MarioRecord.hpp>
 #include <Player/MarioAnimeData.hpp>
 #include <Player/MarioEffect.hpp>
@@ -27,6 +33,7 @@
 #include <Strategic/question.hpp>
 #include <System/Application.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/FlagManager.hpp>
 #include <System/MarDirector.hpp>
 #include <System/MSoundMainSide.hpp>
 #include <System/Particles.hpp>
@@ -38,6 +45,20 @@ static unkTMarioAnimeFilesStruct marioAnimeFiles[199] = {
 };
 
 extern char* marioAnimeTexPatternFilenames[24];
+
+static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
+static const char cDirtyTexName[]  = "H_ma_rak_dummy";
+
+static const TEnemyMario::TReplayLink replayLinkMonteMan[6] = {
+	{ 1, 0 },       { 1, 1 },       { 1, 2 },
+	{ 0xff, 0xff }, { 0xff, 0xff }, { 0xff, 0xff },
+};
+
+static const char* recordFileNamesDolpic1[8] = {
+	nullptr, "BH", "CH", "DH", "EH", "FH", "GH", nullptr,
+};
+
+static const char* recordFileNamesMonteMan[3] = { "AB0", "AB1", "AB2" };
 
 void TEnemyMario::setStickToAngle(s16 angle, f32 power)
 {
@@ -225,6 +246,308 @@ void TEnemyMario::initModel()
 	mtxEffectTypes[2]               = 0;
 	mMultiMtxEffect->mMtxEffectType = mtxEffectTypes;
 	mMultiMtxEffect->setup(mModel->getModel(), "Mario");
+}
+
+void TEnemyMario::initEnemyValues()
+{
+	static const char* names[5] = {
+		"マリオモドキ_0", "マリオモドキ_1", "マリオモドキ_2",
+		"マリオモドキ_3", "モンテマン",
+	};
+	static const char* bmdFileNames[7] = {
+		"/kagemario/kagemario_model.bmd",
+		"/kagemario/kagemario_model.bmd",
+		"/kagemario/kagemario_model.bmd",
+		"/kagemario/kagemario_model.bmd",
+		"/scene/map/map/pad/monteman_model.bmd",
+		nullptr,
+		nullptr,
+	};
+
+	mGoalFlags           = EM_GOAL_FLAG_DISP_PENCIL;
+	mEMDoing             = EM_DOING_REPLAY_WAITING;
+	mWaterCounter        = 0;
+	mAngleToMario        = 0;
+	mTargetAngle         = 0;
+	mDistanceToMario     = 0.0f;
+	mEMDoingTimer        = 0;
+	mReplayIndex         = 0;
+	mTrembleStrength     = 2.5f;
+	mPadIndex            = 0;
+	mAttackRange         = 120.0f;
+	mWaterEffectTimer    = 0;
+	mWaterEffectTimerMax = 120;
+	mTrampleCount        = 3;
+	mWaterHitTimer       = 0;
+	mReplayJumpSpeed     = 15.0f;
+	mRunAwayNodeIndex    = 0;
+	mRunAwaySpeed        = 10.0f;
+
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+	mEMario->onHitFlag(HIT_FLAG_NO_COLLISION);
+
+	int modelIndex = 6;
+	for (int i = 0; i < 5; ++i) {
+		if (strcmp(names[i], mEMario->getName()) == 0) {
+			modelIndex = i;
+			break;
+		}
+	}
+
+	J3DModelData* specialModelData = nullptr;
+	if (modelIndex >= 0 && modelIndex < 4) {
+		unk388 = 1;
+	} else if (modelIndex == 4) {
+		specialModelData = J3DModelLoaderDataBase::load(
+		    JKRFileLoader::getGlbResource(bmdFileNames[modelIndex]),
+		    0x10040000);
+		unk388 = 2;
+	}
+
+	mPencilModel = nullptr;
+	mStampActor  = nullptr;
+	mPencilScale = 3.0f;
+	if (specialModelData != nullptr) {
+		unk388        = 2;
+		mSpecialModel = new J3DModel(specialModelData, 0, 1);
+	} else {
+		unk388                        = 1;
+		mSpecialModel                 = nullptr;
+		J3DModelData* pencilModelData = J3DModelLoaderDataBase::load(
+		    JKRFileLoader::getGlbResource(
+		        "/scene/kagemario/kagemario_brush.bmd"),
+		    0x11040000);
+		mPencilModel = new J3DModel(pencilModelData, 0, 1);
+		ResTIMG* dirtyTexture
+		    = (ResTIMG*)JKRFileLoader::getGlbResource(cDirtyFileName);
+		if (dirtyTexture != nullptr) {
+			SMS_ChangeTextureAll(pencilModelData, cDirtyTexName, *dirtyTexture);
+		}
+		mStampActor = SMS_MakeMActor(
+		    "/scene/kagemario/stamp_koopa_sign",
+		    "/scene/kagemario/stamp_koopa_sign/stamp_koopa_sign_model1.bmd", 3,
+		    0x10210000);
+		SMS_LoadParticle("/scene/kagemario/jpa/ms_kgm_change.jpa", 0xed);
+		SMS_LoadParticle("/scene/kagemario/jpa/ms_kgm_move_a.jpa", 0x1aa);
+		SMS_LoadParticle("/scene/kagemario/jpa/ms_kgm_move_b.jpa", 0x1ab);
+	}
+
+	mDisappearPosition.z = 0.0f;
+	mDisappearPosition.y = 0.0f;
+	mDisappearPosition.x = 0.0f;
+	int progress         = TFlagManager::getInstance()->getFlag(0x60003);
+	if (progress == 0) {
+		onHitFlag(HIT_FLAG_NO_COLLISION);
+		mEMario->onHitFlag(HIT_FLAG_NO_COLLISION);
+	} else {
+		offHitFlag(HIT_FLAG_NO_COLLISION);
+		mEMario->offHitFlag(HIT_FLAG_NO_COLLISION);
+	}
+
+	if (progress == 2) {
+		mPadIndex      = 1;
+		mSettingParams = new TSettingParams("/../map/pad2/Setting.prm");
+	} else if (progress == 3) {
+		mPadIndex      = 2;
+		mSettingParams = new TSettingParams("/../map/pad3/Setting.prm");
+	} else if (progress == 0 || progress == 1) {
+		mPadIndex      = 0;
+		mSettingParams = new TSettingParams("/../map/pad/Setting.prm");
+	}
+
+	mWaterCounter          = mSettingParams->mWaterCtMax.get();
+	char** replayFileNames = nullptr;
+	int replayCount        = 0;
+	char linkDataPath[0x100];
+	if (mPadIndex == 0) {
+		snprintf(linkDataPath, sizeof(linkDataPath),
+		         "/scene/map/map/pad/linkdata.bin");
+	} else {
+		snprintf(linkDataPath, sizeof(linkDataPath),
+		         "/scene/map/map/pad%d/linkdata.bin", mPadIndex);
+	}
+
+	void* linkData = JKRFileLoader::getGlbResource(linkDataPath);
+	if (linkData != nullptr) {
+		s32 linkDataSize
+		    = JKRFileLoader::getVolume("scene")->getResSize(linkData);
+		JSUMemoryInputStream stream(linkData, linkDataSize);
+		stream.skip(6);
+		stream.readString();
+		stream.skip(2);
+		stream.readString();
+
+		u32 nodeCount;
+		stream.read(&nodeCount, sizeof(nodeCount));
+		mReplayLinks    = new TReplayLink[nodeCount][3];
+		replayFileNames = new char*[nodeCount * 3];
+		for (u32 i = 0; i < nodeCount * 3; ++i) {
+			replayFileNames[i] = new char[3];
+		}
+
+		for (u32 node = 0; node < nodeCount; ++node) {
+			stream.skip(6);
+			stream.readString();
+			stream.skip(2);
+			stream.readString();
+			for (int link = 0; link < 3; ++link) {
+				stream.skip(2);
+				u8 replayLetter;
+				stream.read(&replayLetter, sizeof(replayLetter));
+				if (replayLetter == '*') {
+					mReplayLinks[node][link].mNodeIndex   = 0xff;
+					mReplayLinks[node][link].mReplayIndex = 0xff;
+				} else {
+					snprintf(replayFileNames[replayCount], 3, "%c%c",
+					         (char)(node + 'A'), (char)replayLetter);
+					mReplayLinks[node][link].mNodeIndex   = replayLetter - 'A';
+					mReplayLinks[node][link].mReplayIndex = replayCount;
+					++replayCount;
+				}
+			}
+		}
+	}
+
+	if (mPadIndex != 0) {
+		char graphName[0x100];
+		snprintf(graphName, sizeof(graphName), "mariomodoki%d", mPadIndex);
+		mEMario->getTracer()->setGraph(gpConductor->getGraphByName(graphName));
+	}
+
+	mTrembleStrength = 2.5f;
+	if (unk388 == 2) {
+		replayFileNames = (char**)recordFileNamesMonteMan;
+		replayCount     = 3;
+	}
+
+	if (replayCount > 0) {
+		mInputReplays = new TMarioInputReplay*[replayCount];
+		for (int i = 0; i < replayCount; ++i) {
+			char replayPath[0x100];
+			if (mPadIndex == 0) {
+				snprintf(replayPath, sizeof(replayPath),
+				         "/scene/map/map/pad/tutorial%s.pad",
+				         replayFileNames[i]);
+			} else {
+				snprintf(replayPath, sizeof(replayPath),
+				         "/scene/map/map/pad%d/tutorial%s.pad", mPadIndex,
+				         replayFileNames[i]);
+			}
+			u8* replayData   = (u8*)JKRFileLoader::getGlbResource(replayPath);
+			mInputReplays[i] = new TMarioInputReplay;
+			mInputReplays[i]->init(replayData);
+		}
+	}
+
+	mGamePad   = gpMarDirector->unk18[1];
+	mGoalFlags = EM_GOAL_FLAG_DISP_PENCIL;
+	switch (mEMario->getInitialState()) {
+	case 0:
+		mEMDoing = EM_DOING_SLEEPING;
+		break;
+	case 1:
+		mEMDoing = EM_DOING_REPLAY;
+		break;
+	case 2:
+		mEMDoing = EM_DOING_KEEP_STAY;
+		break;
+	case 3:
+		mEMDoing = EM_DOING_GOAL;
+		break;
+	default:
+		mEMDoing = EM_DOING_DISAPPEAR;
+		break;
+	}
+	if (progress == 0) {
+		mEMDoing = EM_DOING_DISAPPEAR;
+	}
+
+	switch (progress) {
+	case 2:
+		mReplayIndex = mEMario->getReplayIndexPad2();
+		break;
+	case 3:
+		mReplayIndex = mEMario->getReplayIndexPad3();
+		break;
+	default:
+		mReplayIndex = mEMario->getReplayIndexDolpic();
+		break;
+	}
+	mEMario->getTracer()
+	    ->getGraph()
+	    ->getGraphNode(mReplayIndex)
+	    .getPoint(&mPosition);
+	mEMario->mPosition = mPosition;
+	if (replayCount > 0) {
+		mInputReplays[mReplayIndex]->reset();
+		mInputReplays[mReplayIndex]->start();
+	} else {
+		mInputReplays = nullptr;
+	}
+
+	if (gpMarDirector->mMap == 1 && gpMarDirector->unk7D == 1) {
+		mRunAwayInputReplays = new TMarioInputReplay*[8];
+		for (int i = 0; i < 8; ++i) {
+			if (recordFileNamesDolpic1[i] != nullptr) {
+				char runAwayPath[0x100];
+				snprintf(runAwayPath, sizeof(runAwayPath),
+				         "/scene/map/map/pad/tutorial%s.pad",
+				         recordFileNamesDolpic1[i]);
+				u8* replayData
+				    = (u8*)JKRFileLoader::getGlbResource(runAwayPath);
+				mRunAwayInputReplays[i] = new TMarioInputReplay;
+				mRunAwayInputReplays[i]->init(replayData);
+			} else {
+				mRunAwayInputReplays[i] = nullptr;
+			}
+		}
+		u8* gateReplayData = (u8*)JKRFileLoader::getGlbResource(
+		    "/scene/map/map/pad/tutorialHI.pad");
+		mGateReplay = new TMarioInputReplay;
+		mGateReplay->init(gateReplayData);
+	} else {
+		mRunAwayInputReplays = nullptr;
+		mGateReplay          = nullptr;
+	}
+
+	if (gpMarDirector->mMap == 12) {
+		if (strcmp(mEMario->getName(), "マリオ２Ｐ") == 0) {
+			unk388   = 3;
+			mGamePad = gpMarDirector->unk18[1];
+		}
+		if (strcmp(mEMario->getName(), "マリオ３Ｐ") == 0) {
+			unk388   = 4;
+			mGamePad = gpMarDirector->unk18[2];
+		}
+		if (strcmp(mEMario->getName(), "マリオ４Ｐ") == 0) {
+			unk388   = 5;
+			mGamePad = gpMarDirector->unk18[3];
+		}
+		mEMDoing = EM_DOING_GET_PAD;
+		if (unk388 == 3 || unk388 == 4 || unk388 == 5) {
+			mTrembleModelEffect = new TTrembleModelEffect;
+			mTrembleModelEffect->init(mModel->getModel());
+		}
+	}
+	if (mTrembleModelEffect != nullptr) {
+		mTrembleModelEffect->clash(mTrembleStrength);
+	}
+
+	onUnk114(2);
+	mStatus     = 0x0c400201;
+	mPrevStatus = 0x0c400201;
+	offFlag(MARIO_FLAG_HAS_FLUDD);
+	if (mPadIndex == 2) {
+		gpMapObjWave->noWave();
+	}
+	mHandModels[0][0] = nullptr;
+	mHandModels[0][1] = nullptr;
+	mHandModels[1][0] = nullptr;
+	mHandModels[1][1] = nullptr;
+	mWaterGun         = nullptr;
+	mCap              = nullptr;
+	mYoshi            = nullptr;
+	mMultiMtxEffect   = nullptr;
 }
 
 void TEnemyMario::startMonteReplay(u32 replayIndex)
@@ -1297,7 +1620,7 @@ void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 			if (isDispStamp()) {
 				TPosition3f scaleMtx;
 				TRotation3f rotationMtx;
-				MTXScale(scaleMtx, unk42F4, unk42F4, unk42F4);
+				MTXScale(scaleMtx, mPencilScale, mPencilScale, mPencilScale);
 				MsMtxSetRotRPH(rotationMtx, 0.0f, 180.0f, 0.0f);
 				MTXConcat(mModel->getModel()->getBaseTRMtx(), scaleMtx,
 				          scaleMtx);
