@@ -19,8 +19,8 @@ struct TMarioControllerWork {
 
 	/* 0x00 */ s16 mStickHS16;
 	/* 0x02 */ s16 mStickVS16;
-	/* 0x04 */ s32 mInput;
-	/* 0x08 */ s32 mFrameInput;
+	/* 0x04 */ u32 mInput;
+	/* 0x08 */ u32 mFrameInput;
 	/* 0x0C */ u8 mAnalogRU8;
 	/* 0x0D */ u8 mAnalogLU8;
 	/* 0x10 */ f32 mStickH;
@@ -28,6 +28,35 @@ struct TMarioControllerWork {
 	/* 0x18 */ f32 mStickDist;
 	/* 0x1C */ f32 mAnalogR;
 	/* 0x20 */ f32 mAnalogL;
+
+	bool isAHit() const
+	{
+		if (mFrameInput & A) {
+			return true;
+		}
+		return false;
+	}
+	bool isAPressed() const
+	{
+		if (mInput & A) {
+			return true;
+		}
+		return false;
+	}
+	bool isBPressed() const
+	{
+		if (mInput & B) {
+			return true;
+		}
+		return false;
+	}
+	bool isBHit() const
+	{
+		if (mFrameInput & B) {
+			return true;
+		}
+		return false;
+	}
 };
 
 class TMarioGamePad : public JUTGamePad {
