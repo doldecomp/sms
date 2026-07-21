@@ -16,8 +16,17 @@ public:
 	};
 
 	enum EMDoing {
+		EM_DOING_WAITING            = 0x0,
 		EM_DOING_GET_CLOSER         = 0x1,
+		EM_DOING_JUMPING            = 0x2,
+		EM_DOING_RUN_AWAY_FROM_MARIO = 0x3,
+		EM_DOING_TURNING            = 0x4,
+		EM_DOING_WALK_AROUND        = 0x5,
 		EM_DOING_WALK_GRAPH         = 0x6,
+		EM_DOING_HIDDEN             = 0x7,
+		EM_DOING_APPEAR             = 0x8,
+		EM_DOING_DISAPPEAR          = 0x9,
+		EM_DOING_DISAPPEAR_TO_GATE  = 0xA,
 		EM_DOING_REPLAY             = 0xB,
 		EM_DOING_SLEEPING           = 0xC,
 		EM_DOING_TRAMPLED          = 0xD,
@@ -33,6 +42,8 @@ public:
 		EM_DOING_GATE_DRAWING      = 0x17,
 		EM_DOING_REACHED_GATE      = 0x18,
 		EM_DOING_REPLAY_TO_GOAL    = 0x19,
+		EM_DOING_REPLAY_WAITING    = 0x1A,
+		EM_DOING_GET_PAD           = 0x1B,
 	};
 
 	class TSettingParams : public TParams {
@@ -103,8 +114,8 @@ public:
 	void emGetCloser();
 	void emJumping();
 	void emRunAway();
-	void emWaiting();
-	BOOL tryTake();
+	virtual void emWaiting();
+	u8 tryTake();
 	void changeEMWalkGraph();
 	void changeEMJumping();
 	void changeEMDoing(u16);
@@ -138,7 +149,7 @@ public:
 	u16 mEMDoing;        // 0x4292
 	s16 mWaterCounter;     // 0x4294
 	s16 mAngleToMario;    // 0x4296
-	s16 unk4298;
+	s16 mTargetAngle;      // 0x4298
 	char unk429A[2];
 	f32 mDistanceToMario; // 0x429C
 	TEMario* mEMario;    // 0x42A0
