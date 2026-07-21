@@ -23,6 +23,7 @@
 #include <System/MarDirector.hpp>
 #include <System/MSoundMainSide.hpp>
 #include <System/Particles.hpp>
+#include <dolphin/gx.h>
 #include <math.h>
 
 void TEnemyMario::setStickToAngle(s16 angle, f32 power)
@@ -990,6 +991,60 @@ void TEnemyMario::playerControl(JDrama::TGraphics* graphics)
 }
 
 void TEnemyMario::damageExec(THitActor*, int, int, int, f32, int, f32, s16) { }
+
+void TEnemyMario::drawHPMeter(MtxPtr viewMtx)
+{
+	JGeometry::TVec3<f32> worldPosition = mPosition;
+	worldPosition.y += 210.0f;
+	JGeometry::TVec3<f32> screenPosition;
+	MTXMultVec(viewMtx, &worldPosition, &screenPosition);
+
+	TPosition3f identity;
+	MTXIdentity(identity);
+	GXSetCurrentMtx(GX_PNMTX0);
+	GXLoadPosMtxImm(identity, GX_PNMTX0);
+	GXLoadNrmMtxImm(identity, GX_PNMTX0);
+	GXClearVtxDesc();
+	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+	GXSetNumChans(1);
+	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
+	              GX_DF_NONE, GX_AF_NONE);
+	GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
+	              GX_DF_NONE, GX_AF_NONE);
+	GXSetNumTexGens(0);
+	GXSetNumTevStages(1);
+	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
+	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
+	GXSetCullMode(GX_CULL_NONE);
+
+	f32 top             = screenPosition.y - 10.0f;
+	f32 bottom          = screenPosition.y + 10.0f;
+	f32 left            = screenPosition.x - 48.0f;
+	f32 borderLeft      = left - 5.0f;
+	f32 borderRight     = left + 96.0f + 5.0f;
+	f32 borderTop       = top - 5.0f;
+	f32 borderBottom    = bottom + 5.0f;
+	GXColor borderColor = (GXColor) { 0, 0, 0, 0xC0 };
+	GXSetChanMatColor(GX_COLOR0A0, borderColor);
+	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+	GXPosition3f32(borderLeft, borderTop, screenPosition.z);
+	GXPosition3f32(borderRight, borderTop, screenPosition.z);
+	GXPosition3f32(borderRight, borderBottom, screenPosition.z);
+	GXPosition3f32(borderLeft, borderBottom, screenPosition.z);
+	GXEnd();
+
+	GXColor meterColor = (GXColor) { 0x40, 0x40, 0xFF, 0xFF };
+	f32 right          = left + mWaterCounter * 1.5f;
+	GXSetChanMatColor(GX_COLOR0A0, meterColor);
+	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+	GXPosition3f32(left, top, screenPosition.z);
+	GXPosition3f32(right, top, screenPosition.z);
+	GXPosition3f32(right, bottom, screenPosition.z);
+	GXPosition3f32(left, bottom, screenPosition.z);
+	GXEnd();
+}
 
 void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 {
