@@ -5,6 +5,7 @@
 #include "Strategic/HitActor.hpp"
 
 class TEMario;
+class TMarioInputReplay;
 
 class TEnemyMario : public TMario {
 public:
@@ -12,8 +13,13 @@ public:
 		EM_DOING_TRAMPLED          = 0xD,
 		EM_DOING_DOWN_WAIT_TO_TALK = 0xF,
 		EM_DOING_RUN_AWAY          = 0x10,
+		EM_DOING_REPLAY_RUN_AWAY_TO_GATE = 0x11,
+		EM_DOING_WAITING_TO_INVITE_MARIO = 0x14,
+		EM_DOING_REPLAY_TO_GATE    = 0x15,
 		EM_DOING_GOAL              = 0x16,
+		EM_DOING_GATE_DRAWING      = 0x17,
 		EM_DOING_REACHED_GATE      = 0x18,
+		EM_DOING_REPLAY_TO_GOAL    = 0x19,
 	};
 
 	class TSettingParams : public TParams {
@@ -104,16 +110,25 @@ public:
 public:
 	u16 mGoalFlags;      // 0x4290
 	u16 mEMDoing;        // 0x4292
-	char unk4294[0xC];
+	char unk4294[2];
+	s16 mAngleToMario;    // 0x4296
+	s16 unk4298;
+	char unk429A[2];
+	f32 mDistanceToMario; // 0x429C
 	TEMario* mEMario;    // 0x42A0
 	s32 mEMDoingTimer;   // 0x42A4
-	char unk42A8[0x8];
+	s32 mReplayIndex;    // 0x42A8
+	char unk42AC[0x4];
 	f32 mAttackRange;    // 0x42B0
 	char unk42B4[0x4];
 	s16 mTrampleCount;   // 0x42B8
 	char unk42BA[0x22];
 	u32 mEMFlags;        // 0x42DC
 	JGeometry::TVec3<f32> mDisappearPosition; // 0x42E0
+	char unk42EC[0xC];
+	TMarioInputReplay** mInputReplays; // 0x42F8
+	char unk42FC[0x4];
+	TMarioInputReplay* mGateReplay; // 0x4300
 };
 
 #endif
