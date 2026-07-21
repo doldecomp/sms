@@ -578,7 +578,7 @@ TMarioAnimeData gMarioAnimeData[336] = {
 };
 // clang-format on
 
-static char* marioAnimeTexPatternFilenames[24] = {
+char* marioAnimeTexPatternFilenames[24] = {
 	"/mario/btp/ma_wink_tx.btp",        "/mario/btp/ma_bdwn_tx.btp",
 	"/mario/btp/ma_bkdwn_tx.btp",       "/mario/btp/ma_sdwnf_tx.btp",
 	"/mario/btp/ma_jfdwn_tx.btp",       "/mario/btp/ma_sdown_tx.btp",

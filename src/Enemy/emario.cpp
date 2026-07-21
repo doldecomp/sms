@@ -29,28 +29,28 @@ void TEMario::load(JSUMemoryInputStream& stream)
 {
 	TSpineEnemy::load(stream);
 
-	stream >> unk154;
-	stream >> unk158;
-	stream >> unk15C;
-	stream >> unk160;
+	stream >> mInitialState;
+	stream >> mReplayIndexDolpic;
+	stream >> mReplayIndexPad2;
+	stream >> mReplayIndexPad3;
 
 	stream.readU32();
 	stream.readU32();
 
-	if (unk154 == 0xff) {
-		unk154 = 0;
+	if (mInitialState == 0xff) {
+		mInitialState = 0;
 	}
 
-	if (unk158 == 0xFF) {
-		unk158 = 0;
+	if (mReplayIndexDolpic == 0xFF) {
+		mReplayIndexDolpic = 0;
 	}
 
-	if (unk15C == 0xFF) {
-		unk15C = 0;
+	if (mReplayIndexPad2 == 0xFF) {
+		mReplayIndexPad2 = 0;
 	}
 
-	if (unk160 == 0xFF) {
-		unk160 = 0;
+	if (mReplayIndexPad3 == 0xFF) {
+		mReplayIndexPad3 = 0;
 	}
 
 	mEnemyMario          = new TEnemyMario();
@@ -164,7 +164,7 @@ void TEMario::kill()
 
 BOOL TEMario::isGoal()
 {
-	if (mEnemyMario->unk4290 & 1) {
+	if (mEnemyMario->isGoal()) {
 		return TRUE;
 	}
 	return FALSE;
@@ -172,7 +172,7 @@ BOOL TEMario::isGoal()
 
 BOOL TEMario::isReachedToGate() const
 {
-	if (mEnemyMario->unk4292 == 0x18) {
+	if (mEnemyMario->isReachedToGate()) {
 		return TRUE;
 	}
 	return FALSE;
@@ -180,7 +180,7 @@ BOOL TEMario::isReachedToGate() const
 
 BOOL TEMario::isDownWaitingToTalk() const
 {
-	if (mEnemyMario->unk4292 == 0xf) {
+	if (mEnemyMario->isDownWaitingToTalk()) {
 		return TRUE;
 	}
 	return FALSE;
@@ -207,7 +207,7 @@ void TEMario::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 	}
 
-	if (mEnemyMario->checkUnk4292() == 0) {
+	if (mEnemyMario->canControl() == 0) {
 		return;
 	}
 
@@ -215,7 +215,7 @@ void TEMario::perform(u32 cue, JDrama::TGraphics* graphics)
 		switch (mCollisions[i]->mActorType) {
 		case 0x80000001: {
 			const f32 d = vecDist(mPosition, mCollisions[i]->getPosition());
-			if (d < mEnemyMario->unk42B0) {
+			if (d < mEnemyMario->mAttackRange) {
 				mCollisions[i]->receiveMessage(this, HIT_MESSAGE_ATTACK);
 			}
 		} break;
