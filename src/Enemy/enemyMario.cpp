@@ -1076,9 +1076,10 @@ void TEnemyMario::decideDoingAfterCarry()
 {
 	if (isEnforceTake()) {
 		mGoalFlags &= ~EM_GOAL_FLAG_ENFORCE_TAKE;
-		TGraphWeb* graph = mEMario->getTracer()->getGraph();
-		int nodeIndex    = graph->findNearestNodeIndex(mPosition, -1);
-		if (graph->getGraphNode(nodeIndex).checkFlag(2)) {
+		int nodeIndex = mEMario->getTracer()->getGraph()->findNearestNodeIndex(
+		    mPosition, -1);
+		if (mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
+		        2)) {
 			mFaceAngle.y = mAngleToMario;
 			unk108->mFrameInput |= TMarioControllerWork::A;
 			unk108->mInput |= TMarioControllerWork::A;
@@ -1092,9 +1093,10 @@ void TEnemyMario::decideDoingAfterCarry()
 		return;
 	}
 
-	TGraphWeb* graph = mEMario->getTracer()->getGraph();
-	int nodeIndex    = graph->findNearestNodeIndex(mPosition, -1);
-	if (graph->getGraphNode(nodeIndex).checkFlag(2)) {
+	int nodeIndex
+	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
+	if (mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
+	        2)) {
 		mFaceAngle.y = mAngleToMario;
 		unk108->mFrameInput |= TMarioControllerWork::A;
 		unk108->mInput |= TMarioControllerWork::A;
@@ -1112,7 +1114,8 @@ void TEnemyMario::emWaitingToInviteMario()
 	changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 	changeMontemanWaitingAnim();
 
-	if (mPosition.distance(*gpMarioPos) < mSettingParams->mSearchDist.get()
+	f32 distanceToMario = mPosition.distance(*gpMarioPos);
+	if (distanceToMario < mSettingParams->mSearchDist.get()
 	    && gpMarioPos->y < mPosition.y + mSettingParams->mSearchHeight.get()) {
 		JGeometry::TVec3<f32> gatePoint;
 		mEMario->getTracer()->getGraph()->getGraphNode(8).getPoint(&gatePoint);
@@ -1368,16 +1371,17 @@ u8 TEnemyMario::thinkTrample()
 		return FALSE;
 	}
 
-	if (mEMDoing == EM_DOING_DOWN_WAIT_TO_TALK) {
+	switch (mEMDoing) {
+	case (s16)EM_DOING_DOWN_WAIT_TO_TALK:
 		--mTrampleCount;
 		if (mTrampleCount > 0) {
 			changeEMDoing(EM_DOING_TRAMPLED);
 		}
 
 		return TRUE;
+	default:
+		return FALSE;
 	}
-
-	return FALSE;
 }
 
 void TEnemyMario::reachGoal()
