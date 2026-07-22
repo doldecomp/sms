@@ -576,3 +576,72 @@ DEFINE_NERVE(TNerveBEelTearsSplit, TLiveActor)
 	spine->pushAfterCurrent(&TNerveBEelTearsMarioRecover::theNerve());
 	return true;
 }
+
+void TOilBall::load(JSUMemoryInputStream& stream)
+{
+	mHighPoly = false;
+	TSpineEnemy::load(stream);
+	mInitialPosition = mPosition;
+	reset();
+}
+
+void TOilBall::reset()
+{
+	mActorType = 0x08000003;
+	TSpineEnemy::reset();
+	mSpine->initWith(&TNerveBEelTearsGenerate::theNerve());
+	onLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
+	            | LIVE_FLAG_UNK100 | LIVE_FLAG_UNK200 | LIVE_FLAG_UNK400
+	            | LIVE_FLAG_UNK8);
+	mGroundPlane = gpMap->getIllegalCheckData();
+	offHitFlag(HIT_FLAG_NO_COLLISION);
+	mPosition = mInitialPosition;
+	mSpine->initWith(&TNerveOilBallStay::theNerve());
+	mMActor = mMActorKeeper->getMActor("tears.bmd");
+	mMActor->setBckFromIndex(2);
+	mHighPoly = false;
+}
+
+void TOilBall::moveObject()
+{
+	setHitParams(mTearsParams->mSLTearsAttackRadius.get() * mScaling.x,
+	             mTearsParams->mSLTearsAttackHeight.get() * mScaling.x,
+	             mTearsParams->mSLTearsDamageRadius.get() * mScaling.x,
+	             mTearsParams->mSLTearsDamageHeight.get() * mScaling.x);
+
+	for (int i = 0; i < getColNum(); ++i) {
+		THitActor* actor = getCollision(i);
+		if (actor->isActorType(0x80000001)) {
+			if (mSpine->getCurrentNerve() == &TNerveBEelTearsMoveUp::theNerve()
+			    || mSpine->getCurrentNerve()
+			           == &TNerveOilBallStay::theNerve()) {
+				SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+				mSpine->setNext(&TNerveBEelTearsSplit::theNerve());
+			}
+		} else {
+			JGeometry::TVec3<f32> push = mPosition;
+			push.sub(actor->mPosition);
+			if (push.isZero())
+				push.x += 1.0f;
+			MsVECNormalize(&push, &push);
+			push.scale(5.0f);
+			mLinearVelocity = push;
+		}
+	}
+	TLiveActor::moveObject();
+}
+
+void TOilBall::calcRootMatrix() { TSpineEnemy::calcRootMatrix(); }
+
+DEFINE_NERVE(TNerveOilBallStay, TLiveActor)
+{
+	TOilBall* oilBall = static_cast<TOilBall*>(spine->getBody());
+	if (oilBall->mMActor->checkCurBckFromIndex(3)
+	    || (oilBall->checkCurAnmEnd(0)
+	        && !oilBall->mMActor->checkCurBckFromIndex(1))) {
+		oilBall->mMActor = oilBall->mMActorKeeper->getMActor("tears.bmd");
+		oilBall->mMActor->setBckFromIndex(1);
+	}
+	return false;
+}

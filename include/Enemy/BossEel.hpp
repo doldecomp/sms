@@ -101,9 +101,7 @@ public:
 	void setBubble();
 
 public:
-	/* 0x150 */ u32 mUnk150;
-	/* 0x154 */ u32 mUnk154;
-	/* 0x158 */ u32 mUnk158;
+	/* 0x150 */ JGeometry::TVec3<f32> mInitialPosition;
 	/* 0x15C */ TBEelTearsSaveLoadParams* mTearsParams;
 	/* 0x160 */ bool mHighPoly;
 	/* 0x164 */ s32 mStateTimer;
@@ -111,7 +109,7 @@ public:
 	/* 0x16C */ TBossEelTearsRecoverCollision* mRecoverCollision;
 };
 
-class TOilBall : public TSpineEnemy {
+class TOilBall : public TBEelTears {
 public:
 	TOilBall(const char*);
 
