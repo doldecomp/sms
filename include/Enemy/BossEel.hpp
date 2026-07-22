@@ -326,6 +326,7 @@ public:
 
 class TBossEel : public TSpineEnemy {
 public:
+	static f32 mOpenRollSpeed;
 	static f32 mForcePow;
 
 	TBossEel(const char*);
@@ -390,11 +391,11 @@ public:
 	/* 0x1FD */ bool mToothBroken;
 	/* 0x1FE */ bool mIsBiting;
 	/* 0x200 */ s32 mBattleTimer;
-	/* 0x204 */ u32 mActionTimers[3];
+	/* 0x204 */ JGeometry::TVec3<f32> mBreathParticlePosition;
 	/* 0x210 */ TBossEelBarrierCollision* mBarrierCollision;
 	/* 0x214 */ TBossEelAwaCollision* mAwaCollision;
 	/* 0x218 */ TBossEelHeartCoin* mHeartCoin;
-	/* 0x21C */ bool mIsDefeated;
+	/* 0x21C */ bool mMoguCameraActive;
 	/* 0x21D */ bool mCollisionEnabled;
 };
 
@@ -404,7 +405,7 @@ inline const TBossEel* TBossEelEye::getOwner() const
 }
 
 void ExecSpinNerve_Sub(TBossEel*);
-void ExecBackNerve_Sub(TSpineBase<TLiveActor>*, f32);
+BOOL ExecBackNerve_Sub(TSpineBase<TLiveActor>*, f32);
 
 DECLARE_NERVE(TNerveBEelTearsGenerate, TLiveActor);
 DECLARE_NERVE(TNerveBEelTearsMoveUp, TLiveActor);
