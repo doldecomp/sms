@@ -1253,8 +1253,6 @@ TBossEel::TBossEel(const char* name)
     , mHeadCollision(nullptr)
     , mMouthCubeManager(nullptr)
     , mBodyCollision(nullptr)
-    , mCurrentBckIndex(0)
-    , mPreviousBckIndex(0)
     , mBckBlendRatio(1.0f)
     , mTearEyeIndex(0)
     , mTearCycleTimer(0)
@@ -1263,7 +1261,6 @@ TBossEel::TBossEel(const char* name)
     , mMouthOpenAmount(2350.0f)
     , mMouthOpenSpeed(0.75f)
     , mSaveParams(nullptr)
-    , mSpinTimer(nullptr)
     , mInDemo(false)
     , mAppearOffset(0.0f)
     , mToothDamaged(false)
@@ -1327,24 +1324,24 @@ void TBossEelCollision::behaveToMario()
 	marioTarget.add(*gpMarioPos);
 	SMS_MarioMoveRequest(marioTarget);
 
-	if (!mOwner)
-		return;
+	if (mOwner) {
+		bool shouldEat = mOwner->mForceEat;
+		if (!shouldEat) {
+			MtxPtr mouthMtx = mOwner->mMActor->getModel()->getAnmMtx(
+			    mOwner->mMapCollisionJointIndices[0]);
+			JGeometry::TVec3<f32> distance = *gpMarioPos;
+			distance.x -= mouthMtx[0][3];
+			distance.y -= mouthMtx[1][3];
+			distance.z -= mouthMtx[2][3];
+			shouldEat = MsVECMag2(&distance)
+			            < mOwner->mMouthOpenAmount * mOwner->mMouthOpenSpeed;
+		}
 
-	bool shouldEat = mOwner->mForceEat;
-	if (!shouldEat) {
-		MtxPtr mouthMtx = mOwner->getModel()->getAnmMtx(
-		    mOwner->mMapCollisionJointIndices[0]);
-		JGeometry::TVec3<f32> mouthPosition(mouthMtx[0][3], mouthMtx[1][3],
-		                                    mouthMtx[2][3]);
-		JGeometry::TVec3<f32> distance = *gpMarioPos;
-		distance.sub(mouthPosition);
-		shouldEat = MsVECMag2(&distance)
-		            < mOwner->mMouthOpenAmount * mOwner->mMouthOpenSpeed;
+		if (shouldEat
+		    && mOwner->mSpine->getCurrentNerve()
+		           != &TNerveBossEelEat::theNerve())
+			mOwner->mSpine->pushNerve(&TNerveBossEelEat::theNerve());
 	}
-
-	if (shouldEat
-	    && mOwner->mSpine->getCurrentNerve() != &TNerveBossEelEat::theNerve())
-		mOwner->mSpine->pushNerve(&TNerveBossEelEat::theNerve());
 }
 
 void TBossEelBodyCollision::initCollision()
