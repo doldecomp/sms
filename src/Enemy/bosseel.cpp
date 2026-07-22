@@ -227,7 +227,7 @@ TBEelTears::TBEelTears(const char* name)
     , mTearsParams(nullptr)
     , mHighPoly(true)
     , mStateTimer(0)
-    , mWaterSurface(nullptr)
+    , mSpawnMtx(nullptr)
     , mRecoverCollision(nullptr)
 {
 }
@@ -285,9 +285,9 @@ void TBEelTears::moveObject()
 	mPosition.x += mVelocity.x;
 	mPosition.z += mVelocity.z;
 
-	if (!mRecoverCollision->mColliding && mWaterSurface != nullptr
+	if (!mRecoverCollision->mColliding && mSpawnMtx != nullptr
 	    && (mPosition.y > gpMarioPos->y + 3000.0f
-	        || mPosition.y > mWaterSurface->getPoint2().x
+	        || mPosition.y > mSpawnMtx[1][3]
 	                             + mTearsParams->mSLTearsLiveHeight.get())) {
 		kill();
 		return;
@@ -322,13 +322,13 @@ void TBEelTears::moveObject()
 
 void TBEelTears::calcRootMatrix()
 {
-	if (mWaterSurface == nullptr) {
+	if (mSpawnMtx == nullptr) {
 		TSpineEnemy::calcRootMatrix();
 		return;
 	}
 
-	if (mPosition.y < mWaterSurface->getPoint2().x)
-		mPosition.y = mWaterSurface->getPoint2().x;
+	if (mPosition.y < mSpawnMtx[1][3])
+		mPosition.y = mSpawnMtx[1][3];
 	TSpineEnemy::calcRootMatrix();
 
 	if (mSpine->getCurrentNerve() != &TNerveBEelTearsGenerate::theNerve())
@@ -336,9 +336,8 @@ void TBEelTears::calcRootMatrix()
 
 	TPosition3f transform;
 	transform.setTrans(mPosition);
-	transform.ref(0, 3) += (mWaterSurface->mMaxY - transform.at(0, 3)) * 0.1f;
-	transform.ref(2, 3)
-	    += (mWaterSurface->getPoint3().y - transform.at(2, 3)) * 0.1f;
+	transform.ref(0, 3) += (mSpawnMtx[0][3] - transform.at(0, 3)) * 0.1f;
+	transform.ref(2, 3) += (mSpawnMtx[2][3] - transform.at(2, 3)) * 0.1f;
 
 	f32 scale = mTearsParams->mSLBodyScaleLow.get();
 	mScaling.set(scale, scale, scale);
@@ -1175,10 +1174,10 @@ TBossEel::TBossEel(const char* name)
     , mMouthCubeManager(nullptr)
     , mBodyCollision(nullptr)
     , mSpinVelocity(1.0f)
-    , mMouthCollision(nullptr)
-    , mBiteCollision(nullptr)
+    , mTearEyeIndex(0)
+    , mTearCycleTimer(0)
     , mSpinAngle(500.0f)
-    , mToothDamageLevel(1)
+    , mTearEyeToggle(true)
     , mMouthOpenAmount(2350.0f)
     , mMouthOpenSpeed(0.75f)
     , mSaveParams(nullptr)
@@ -1488,8 +1487,8 @@ void TBossEel::init(TLiveManager* manager)
 	    .push_back(mAwaCollision);
 	mAwaCollision->onHitFlag(HIT_FLAG_NO_COLLISION);
 
-	mVortex                     = new TBossEelVortex(this, "めおとウナギ渦");
-	mMouthCubeManager           = new TCubeManagerBase("コリジョンキューブ", 2);
+	mVortex           = new TBossEelVortex(this, "めおとウナギ渦");
+	mMouthCubeManager = new TCubeManagerBase("コリジョンキューブ", 2);
 	TCubeGeneralInfo* mouthCube
 	    = *mMouthCubeManager->unk14->getChildren().begin();
 	mouthCube->unkC.set(mPosition.x, mPosition.y + 9600.0f, mPosition.z);
@@ -1497,4 +1496,97 @@ void TBossEel::init(TLiveManager* manager)
 
 	initAnmSound();
 	getModel()->calc();
+}
+
+MtxPtr TBossEel::getTakingMtx() { return getModel()->getAnmMtx(7); }
+
+// UNUSED: retail mario.MAP size 0xB0.
+// TODO: human-review the dead-stripped bite-cube setup; no linked body
+// survives.
+void TBossEel::calcAndSetCollisionCubeBite_() { }
+
+void TBossEel::updateTearsCnt()
+{
+	static const s32 eyeTable[] = { 0, 2, 1, 3 };
+
+	++mTearCycleTimer;
+	s32 interval = mSaveParams->mSLGenTearsTime.get();
+	f32 height   = fabsf(mPosition.y - gpMarioPos->y);
+	if (height > 30000.0f)
+		interval *= 4;
+	else if (height > 15000.0f)
+		interval *= 3;
+	else if (height > 6000.0f)
+		interval *= 2;
+
+	if (mTearCycleTimer == interval - 100) {
+		TBossEelEye* eye = mEyes[eyeTable[mTearEyeIndex]];
+		eye->setBckAnm(1);
+		eye->mAnimationMode = 1;
+		eye->mPairedEye->setBckAnm(1);
+		eye->mPairedEye->mAnimationMode = 1;
+	}
+
+	if (mTearCycleTimer > interval) {
+		mTearCycleTimer  = 0;
+		TBossEelEye* eye = mEyes[eyeTable[mTearEyeIndex]];
+		MtxPtr spawnMtx  = eye->getConnectedMtx();
+		eye->setBckAnm(1);
+		eye->mAnimationMode      = 1;
+		eye->mAnimationLoopCount = 0;
+		shedTears(spawnMtx);
+		if (++mTearEyeIndex >= 4)
+			mTearEyeIndex = 0;
+	}
+}
+
+// UNUSED: retail mario.MAP size 0x118.
+// TODO: human-review the dead-stripped forced-eat state transition.
+void TBossEel::forceEat() { }
+
+// UNUSED: retail mario.MAP size 0xC8.
+// TODO: human-review the original mouth-volume checks.
+BOOL TBossEel::canEatMario() { return false; }
+
+// UNUSED: retail mario.MAP size 0x8.
+// TODO: human-review which eye-animation flag this queried.
+BOOL TBossEel::isEyeBlurOn() { return false; }
+
+void TBossEel::shedTears(MtxPtr spawnMtx)
+{
+	JGeometry::TVec3<f32> position(spawnMtx[0][3], spawnMtx[1][3],
+	                               spawnMtx[2][3]);
+	TBEelTears* tears
+	    = static_cast<TBEelTears*>(gpConductor->makeOneEnemyAppear(
+	        position, "めおとウナギ涙マネージャー", 0));
+	if (!tears)
+		return;
+
+	tears->mSpawnMtx = spawnMtx;
+	tears->reset();
+
+	JGeometry::TVec3<f32> direction(0.0f, 0.0f, 100.0f);
+	Mtx rotation;
+	MsMtxSetRotRPH(rotation, 0.0f, MsRandF(0.0f, 360.0f), 0.0f);
+	MTXMultVec(rotation, &direction, &direction);
+	tears->mPosition.x += direction.x;
+	tears->mPosition.z += direction.z;
+	MsVECNormalize(&direction, &direction);
+	direction.scale(10.0f);
+	tears->mVelocity = direction;
+}
+
+void TBossEel::forceShedTears(bool rearEyes)
+{
+	mTearEyeToggle = !mTearEyeToggle;
+	s32 eyeIndex   = rearEyes ? 2 : 0;
+	if (mTearEyeToggle)
+		++eyeIndex;
+
+	TBossEelEye* eye = mEyes[eyeIndex];
+	MtxPtr spawnMtx  = eye->getConnectedMtx();
+	eye->setBckAnm(1);
+	eye->mAnimationMode      = 1;
+	eye->mAnimationLoopCount = 0;
+	shedTears(spawnMtx);
 }

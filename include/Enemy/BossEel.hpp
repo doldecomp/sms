@@ -111,7 +111,7 @@ public:
 	/* 0x15C */ TBEelTearsSaveLoadParams* mTearsParams;
 	/* 0x160 */ bool mHighPoly;
 	/* 0x164 */ s32 mStateTimer;
-	/* 0x168 */ const TBGCheckData* mWaterSurface;
+	/* 0x168 */ MtxPtr mSpawnMtx;
 	/* 0x16C */ TBossEelTearsRecoverCollision* mRecoverCollision;
 };
 
@@ -369,11 +369,11 @@ public:
 	/* 0x1B0 */ TBossEelBodyCollision* mBodyCollision;
 	/* 0x1B4 */ u32 mBattleState[2];
 	/* 0x1BC */ f32 mSpinVelocity;
-	/* 0x1C0 */ THitActor* mMouthCollision;
-	/* 0x1C4 */ THitActor* mBiteCollision;
+	/* 0x1C0 */ s32 mTearEyeIndex;
+	/* 0x1C4 */ s32 mTearCycleTimer;
 	/* 0x1C8 */ bool mForceEat;
 	/* 0x1CC */ f32 mSpinAngle;
-	/* 0x1D0 */ u8 mToothDamageLevel;
+	/* 0x1D0 */ bool mTearEyeToggle;
 	/* 0x1D4 */ f32 mMouthOpenAmount;
 	/* 0x1D8 */ f32 mMouthOpenSpeed;
 	/* 0x1DC */ u32 mTimers[3];
