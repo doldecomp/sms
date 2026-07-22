@@ -1163,3 +1163,52 @@ void TBossEelHeartCoin::generate(JGeometry::TVec3<f32>& position)
 		mCoins[i]->mPosition.set(coinMtx[0][3], coinMtx[1][3], coinMtx[2][3]);
 	}
 }
+
+TBossEel::TBossEel(const char* name)
+    : TSpineEnemy(name)
+    , mHeadCollision(nullptr)
+    , mMouthCubeManager(nullptr)
+    , mBodyCollision(nullptr)
+    , mSpinVelocity(1.0f)
+    , mMouthCollision(nullptr)
+    , mBiteCollision(nullptr)
+    , mSpinAngle(500.0f)
+    , mToothDamageLevel(1)
+    , mMouthOpenAmount(2350.0f)
+    , mMouthOpenSpeed(0.75f)
+    , mSaveParams(nullptr)
+    , mDemoState(nullptr)
+    , mInDemo(false)
+    , mTearsAmount(0.0f)
+    , mToothDamaged(false)
+    , mToothBroken(false)
+    , mIsBiting(false)
+    , mMarioCollision(nullptr)
+    , mBarrierCollision(nullptr)
+    , mAwaCollision(nullptr)
+    , mHeartCoin(nullptr)
+    , mIsDefeated(false)
+    , mCollisionEnabled(true)
+{
+	mDemoState    = new u32[2];
+	mDemoState[0] = 0;
+	mDemoState[1] = 1;
+}
+
+// UNUSED: retail mario.MAP size 0x11C.
+// TODO: human-review the original bubble emitter selection and binding path;
+// the dead-stripped body is not recoverable from linked assembly.
+void TBossEel::generateBubble(JGeometry::TVec3<f32>& position) { }
+
+// UNUSED: retail mario.MAP size 0x74. Derived collision constructors inline
+// this initialization in the live paths.
+TBossEelCollision::TBossEelCollision(MtxPtr collisionMtx, const char* name)
+    : THitActor(name)
+    , mCollisionMtx(collisionMtx)
+    , mBaseAttackRadius(0.0f)
+    , mBaseAttackHeight(0.0f)
+    , mBaseDamageRadius(0.0f)
+    , mBaseDamageHeight(0.0f)
+    , mOwner(nullptr)
+{
+}

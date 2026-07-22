@@ -258,16 +258,7 @@ public:
 
 class TBossEelCollision : public THitActor {
 public:
-	TBossEelCollision(MtxPtr collisionMtx, const char* name)
-	    : THitActor(name)
-	    , mCollisionMtx(collisionMtx)
-	    , mUnk6C(0.0f)
-	    , mUnk70(0.0f)
-	    , mUnk74(0.0f)
-	    , mUnk78(0.0f)
-	    , mOwner(nullptr)
-	{
-	}
+	TBossEelCollision(MtxPtr collisionMtx, const char* name);
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void initCollision();
@@ -275,10 +266,10 @@ public:
 
 public:
 	/* 0x68 */ MtxPtr mCollisionMtx;
-	/* 0x6C */ f32 mUnk6C;
-	/* 0x70 */ f32 mUnk70;
-	/* 0x74 */ f32 mUnk74;
-	/* 0x78 */ f32 mUnk78;
+	/* 0x6C */ f32 mBaseAttackRadius;
+	/* 0x70 */ f32 mBaseAttackHeight;
+	/* 0x74 */ f32 mBaseDamageRadius;
+	/* 0x78 */ f32 mBaseDamageHeight;
 	/* 0x7C */ TBossEel* mOwner;
 };
 
