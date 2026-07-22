@@ -1,5 +1,6 @@
 
 #include <Enemy/BossEel.hpp>
+#include <Enemy/Conductor.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/MtxUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
@@ -11,6 +12,7 @@
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/SDLModel.hpp>
 #include <MSound/MSound.hpp>
+#include <MSound/SoundEffects.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Strategic/SharedParts.hpp>
 #include <Strategic/Spine.hpp>
@@ -718,4 +720,218 @@ void TBossEelManager::clipEnemies(JDrama::TGraphics* graphics)
 {
 	clipActorsAux(graphics, mSaveParams.mSLViewClipRadius.get(),
 	              mSaveParams.mSLViewClipFar.get());
+}
+
+TBossEelTooth::TBossEelTooth(u8 toothType, TBossEel* owner,
+                             const char* jointName, SDLModelData* modelData,
+                             const char* name)
+    : THitActor(name)
+    , mSharedParts(nullptr)
+    , mOwner(owner)
+    , mHitPoints(0)
+    , mToothType(toothType)
+    , mTrembleRotation(0.0f, 0.0f, 0.0f)
+    , mDamageCooldown(0)
+    , mCanShedTears(true)
+{
+	s32 jointIndex
+	    = owner->getModel()->getModelData()->getJointName()->getIndex(
+	        jointName);
+	mSharedParts
+	    = new TSharedParts(owner, jointIndex, modelData, 0, "<TSharedParts>");
+
+	MActor* actor = mSharedParts->getMActor();
+	actor->setLightType(1);
+	actor->setBckFromIndex(22);
+	actor->setFrameRate(0.0f, 0);
+
+	J3DModel* model = actor->getModel();
+	for (u16 i = 0; i < model->getModelData()->getMaterialNum(); ++i)
+		SMS_InitPacket_OneTevKColorAndFog(model, i, GX_KCOLOR0, &mColor);
+
+	mColor.a   = 0xFF;
+	mHitPoints = owner->getBossEelParams().mSLToothMaxHitPoint.get();
+	initHitActor(0x08000022, 5, 0x81000000,
+	             owner->getBossEelParams().mSLToothAttackRadius.get(),
+	             owner->getBossEelParams().mSLToothAttackHeight.get(),
+	             owner->getBossEelParams().mSLToothDamageRadius.get(),
+	             owner->getBossEelParams().mSLToothDamageHeight.get());
+
+	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	    ->getChildren()
+	    .push_back(this);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
+}
+
+// UNUSED: retail mario.MAP size 0x8.
+void TBossEelTooth::changeToothAlpha(u8 alpha) { mColor.a = alpha; }
+
+BOOL TBossEelTooth::receiveMessage(THitActor* sender, u32 message)
+{
+	if (message != HIT_MESSAGE_SPRAYED_BY_WATER)
+		return false;
+
+	if (mDamageCooldown != 0 || mOwner->mToothBroken || mHitPoints <= 1)
+		return true;
+
+	mDamageCooldown = 2;
+	--mHitPoints;
+	mSharedParts->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+	mOwner->mToothDamaged = true;
+	mColor.a              = static_cast<u8>(
+        mHitPoints * 0xFF
+        / mOwner->getBossEelParams().mSLToothMaxHitPoint.get());
+
+	if (mToothType == 1 && mHitPoints % 20 == 1)
+		mOwner->forceShedTears(mCanShedTears);
+
+	if (mHitPoints != 1)
+		return true;
+
+	mColor.a = 0;
+	MTXCopy(mSharedParts->getConnectedMtx(), mDetachedMtx);
+	if (mToothType == 1) {
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEATH_COMEOFF, &mPosition,
+		                                0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(mCanShedTears
+		                                    ? MSD_SE_BS_UNG_VOICE_M_CRY
+		                                    : MSD_SE_BS_UNG_VOICE_W_CRY,
+		                                &mOwner->mPosition, 0, nullptr, 0, 4);
+		mOwner->mToothBroken = true;
+
+		JPABaseEmitter* emitter
+		    = gpMarioParticleManager->emit(0xD3, &mPosition, 0, nullptr);
+		if (emitter)
+			emitter->setScale(mOwner->mScaling);
+	} else {
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEATH_FLASH, &mPosition,
+		                                0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(mCanShedTears
+		                                    ? MSD_SE_BS_UNG_VOICE_M_JOY
+		                                    : MSD_SE_BS_UNG_VOICE_W_JOY,
+		                                &mOwner->mPosition, 0, nullptr, 0, 4);
+	}
+	return true;
+}
+
+// UNUSED: retail mario.MAP size 0x4. The retail body is empty.
+void TBossEelTooth::updateTremble() { }
+
+void TBossEelTooth::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	if (mOwner->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT) || mHitPoints == 0)
+		return;
+
+	MActor* actor = mSharedParts->getMActor();
+	if (cue & CUE_MOVE) {
+		f32 scale = mOwner->mScaling.x;
+		mAttackRadius
+		    = mOwner->getBossEelParams().mSLToothAttackRadius.get() * scale;
+		mAttackHeight
+		    = mOwner->getBossEelParams().mSLToothAttackHeight.get() * scale;
+		mDamageRadius
+		    = mOwner->getBossEelParams().mSLToothDamageRadius.get() * scale;
+		mDamageHeight
+		    = mOwner->getBossEelParams().mSLToothDamageHeight.get() * scale;
+		calcEntryRadius();
+
+		for (s32 i = 0; i < mColCount; ++i) {
+			if (mOwner->mSpine->getCurrentNerve()
+			        != &TNerveBossEelEat::theNerve()
+			    && mCollisions[i]->isActorType(0x80000001) && mHitPoints > 1) {
+				SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+			}
+		}
+
+		if (mDamageCooldown > 0) {
+			--mDamageCooldown;
+		} else {
+			if (actor->checkCurBckFromIndex(22)
+			    && actor->curAnmEndsNext(0, nullptr))
+				actor->setFrameRate(0.0f, 0);
+
+			if (mHitPoints == 1 && mToothType == 1) {
+				if (actor->checkCurBckFromIndex(22)) {
+					actor->setBckFromIndex(20);
+					JGeometry::TVec3<f32> tearsPosition(
+					    mDetachedMtx[0][3],
+					    mTrembleRotation.y + mDetachedMtx[1][3],
+					    mDetachedMtx[2][3]);
+					TBEelTears* tears = static_cast<TBEelTears*>(
+					    gpConductor->makeOneEnemyAppear(
+					        tearsPosition, "めおとウナギ涙マネージャー", 0));
+					if (tears) {
+						tears->mRecoverCollision->mColliding = false;
+						tears->mRecoverCollision->offHitFlag(
+						    HIT_FLAG_NO_COLLISION);
+						tears->mRecoverCollision->mRecovering = true;
+						tears->mRecoverCollision->mPosition = tears->mPosition;
+						tears->mSpine->initWith(
+						    &TNerveBEelTearsMarioRecover::theNerve());
+						tears->onLiveFlag(LIVE_FLAG_HIDDEN);
+						tears->mRecoverCollision->mColliding = true;
+					}
+					actor->setFrameRate(SMSGetAnmFrameRate(), 0);
+				}
+				if (actor->checkCurBckFromIndex(20)
+				    && actor->curAnmEndsNext(0, nullptr))
+					actor->setBckFromIndex(21);
+			}
+
+			if (mHitPoints == 1 && mToothType == 1) {
+				mTrembleRotation.y
+				    += mOwner->getBossEelParams().mSLToothUpSpeed.get();
+				if (mTrembleRotation.y
+				        > mOwner->getBossEelParams().mSLToothLiveHeight.get()
+				    || mPosition.y > gpMarioPos->y + 2000.0f) {
+					mHitPoints = 0;
+					onHitFlag(HIT_FLAG_NO_COLLISION);
+				}
+			}
+		}
+	}
+
+	if (cue & CUE_CALC_ANIM) {
+		Mtx toothMtx;
+		if (mHitPoints > 1 || mToothType == 0 || mToothType == 2)
+			MTXCopy(mSharedParts->getConnectedMtx(), toothMtx);
+		else
+			MTXCopy(mDetachedMtx, toothMtx);
+
+		if (mHitPoints > 1) {
+			JPABaseEmitter* emitter
+			    = gpMarioParticleManager->emitAndBindToPosPtr(0x19C, &mPosition,
+			                                                  1, this);
+			if (emitter)
+				emitter->setScale(mOwner->mScaling);
+		}
+		if (actor->checkCurBckFromIndex(22)
+		    && actor->getFrameCtrl(0)->getRate() > 0.0f) {
+			JPABaseEmitter* emitter
+			    = gpMarioParticleManager->emitAndBindToPosPtr(0x19A, &mPosition,
+			                                                  1, this);
+			if (emitter)
+				emitter->setScale(mOwner->mScaling);
+		}
+		if ((mToothType == 0 || mToothType == 2) && mHitPoints == 1) {
+			JPABaseEmitter* emitter
+			    = gpMarioParticleManager->emitAndBindToPosPtr(0x19B, &mPosition,
+			                                                  1, this);
+			if (emitter)
+				emitter->setScale(mOwner->mScaling);
+		}
+
+		Mtx transform;
+		MTXIdentity(transform);
+		transform[2][3] = mTrembleRotation.x;
+		MTXConcat(toothMtx, transform, toothMtx);
+		MsMtxSetRotRPH(transform, mTrembleRotation.z, mTrembleRotation.z, 0.0f);
+		MTXConcat(toothMtx, transform, toothMtx);
+		toothMtx[1][3] += mTrembleRotation.y;
+		mPosition.set(toothMtx[0][3], toothMtx[1][3], toothMtx[2][3]);
+		MTXCopy(toothMtx, actor->getModel()->getBaseTRMtx());
+	}
+
+	THitActor::perform(cue, graphics);
+	actor->perform(cue, graphics);
 }

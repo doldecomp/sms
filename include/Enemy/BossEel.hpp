@@ -4,6 +4,7 @@
 #include <Enemy/Enemy.hpp>
 #include <Enemy/EnemyManager.hpp>
 #include <Strategic/Nerve.hpp>
+#include <dolphin/gx/GXStruct.h>
 
 class MActor;
 class SDLModelData;
@@ -12,6 +13,8 @@ class TBossEel;
 class TBossEelSaveParams;
 class TBEelTears;
 class TBossEelTearsRecoverCollision;
+class TMapCollisionMove;
+class TCubeManagerBase;
 
 class TBEelTearsSaveLoadParams : public TSpineEnemyParams {
 public:
@@ -185,6 +188,17 @@ public:
 
 	void updateTremble();
 	void changeToothAlpha(u8);
+
+public:
+	/* 0x068 */ TSharedParts* mSharedParts;
+	/* 0x06C */ TBossEel* mOwner;
+	/* 0x070 */ s32 mHitPoints;
+	/* 0x074 */ u8 mToothType;
+	/* 0x078 */ JGeometry::TVec3<f32> mTrembleRotation;
+	/* 0x084 */ s32 mDamageCooldown;
+	/* 0x088 */ Mtx mDetachedMtx;
+	/* 0x0B8 */ GXColor mColor;
+	/* 0x0BC */ bool mCanShedTears;
 };
 
 class TBossEelVortex : public THitActor {
@@ -307,6 +321,44 @@ public:
 	void updateTearsCnt();
 	void calcAndSetCollisionCubeBite_();
 	void generateBubble(JGeometry::TVec3<f32>&);
+
+	TBossEelSaveParams& getBossEelParams() const { return *mSaveParams; }
+
+public:
+	/* 0x150 */ JGeometry::TVec3<f32> mInitialPosition;
+	/* 0x15C */ TBossEelEye* mEyes[4];
+	/* 0x16C */ TBossEelTooth* mTeeth[8];
+	/* 0x18C */ TBossEelVortex* mVortex;
+	/* 0x190 */ TMapCollisionMove* mMapCollisions[4];
+	/* 0x1A0 */ s16 mMapCollisionJointIndices[4];
+	/* 0x1A8 */ THitActor* mHeadCollision;
+	/* 0x1AC */ TCubeManagerBase* mMouthCubeManager;
+	/* 0x1B0 */ TBossEelBodyCollision* mBodyCollision;
+	/* 0x1B4 */ u32 mBattleState[2];
+	/* 0x1BC */ f32 mSpinVelocity;
+	/* 0x1C0 */ THitActor* mMouthCollision;
+	/* 0x1C4 */ THitActor* mBiteCollision;
+	/* 0x1C8 */ u32 mMouthState;
+	/* 0x1CC */ f32 mSpinAngle;
+	/* 0x1D0 */ u8 mToothDamageLevel;
+	/* 0x1D4 */ f32 mMouthOpenAmount;
+	/* 0x1D8 */ f32 mMouthOpenSpeed;
+	/* 0x1DC */ u32 mTimers[3];
+	/* 0x1E8 */ TBossEelSaveParams* mSaveParams;
+	/* 0x1EC */ u32* mDemoState;
+	/* 0x1F0 */ bool mInDemo;
+	/* 0x1F4 */ f32 mTearsAmount;
+	/* 0x1F8 */ u32 mTearsTimer;
+	/* 0x1FC */ bool mToothDamaged;
+	/* 0x1FD */ bool mToothBroken;
+	/* 0x1FE */ bool mIsBiting;
+	/* 0x200 */ THitActor* mMarioCollision;
+	/* 0x204 */ u32 mActionTimers[3];
+	/* 0x210 */ TBossEelBarrierCollision* mBarrierCollision;
+	/* 0x214 */ TBossEelAwaCollision* mAwaCollision;
+	/* 0x218 */ TBossEelHeartCoin* mHeartCoin;
+	/* 0x21C */ bool mIsDefeated;
+	/* 0x21D */ bool mCollisionEnabled;
 };
 
 void ExecSpinNerve_Sub(TBossEel*);
