@@ -2,6 +2,8 @@
 #include <Enemy/BossEel.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Camera/Camera.hpp>
+#include <Camera/CameraShake.hpp>
+#include <GC2D/GCConsole2.hpp>
 #include <Camera/CubeManagerBase.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/MtxUtil.hpp>
@@ -26,6 +28,7 @@
 #include <Strategic/ObjModel.hpp>
 #include <System/Application.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/MarDirector.hpp>
 #include <System/Particles.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DCluster.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
@@ -62,6 +65,8 @@ static const char* bosseel_bastable[] = {
 	nullptr,
 	nullptr,
 };
+
+static f32 testHeight;
 
 TBEelTearsDrop::TBEelTearsDrop(TBEelTears* owner, int jointIndex,
                                SDLModelData* modelData, const char* name)
@@ -1200,7 +1205,9 @@ TBossEel::TBossEel(const char* name)
     , mHeadCollision(nullptr)
     , mMouthCubeManager(nullptr)
     , mBodyCollision(nullptr)
-    , mSpinVelocity(1.0f)
+    , mCurrentBckIndex(0)
+    , mPreviousBckIndex(0)
+    , mBckBlendRatio(1.0f)
     , mTearEyeIndex(0)
     , mTearCycleTimer(0)
     , mSpinAngle(500.0f)
@@ -1208,22 +1215,22 @@ TBossEel::TBossEel(const char* name)
     , mMouthOpenAmount(2350.0f)
     , mMouthOpenSpeed(0.75f)
     , mSaveParams(nullptr)
-    , mDemoState(nullptr)
+    , mSpinTimer(nullptr)
     , mInDemo(false)
-    , mTearsAmount(0.0f)
+    , mAppearOffset(0.0f)
     , mToothDamaged(false)
     , mToothBroken(false)
     , mIsBiting(false)
-    , mMarioCollision(nullptr)
+    , mBattleTimer(0)
     , mBarrierCollision(nullptr)
     , mAwaCollision(nullptr)
     , mHeartCoin(nullptr)
     , mIsDefeated(false)
     , mCollisionEnabled(true)
 {
-	mDemoState    = new u32[2];
-	mDemoState[0] = 0;
-	mDemoState[1] = 1;
+	mSpinTimer    = new u32[2];
+	mSpinTimer[0] = 0;
+	mSpinTimer[1] = 1;
 }
 
 // UNUSED: retail mario.MAP size 0x11C.
@@ -1671,9 +1678,19 @@ void TBossEel::collideToMario()
 // orchestration against the retail 0xC34 body.
 void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
-// UNUSED: retail mario.MAP size 0xF8.
-// TODO: human-review the dead-stripped animation/sound switching path.
-void TBossEel::setBckAnm(int index) { }
+// UNUSED: retail mario.MAP size 0xF8. Linked nerve bodies inline this helper.
+void TBossEel::setBckAnm(int index)
+{
+	mPreviousBckIndex = mMActor->getCurAnmIdx(0);
+	mCurrentBckIndex  = index;
+	mBckBlendRatio    = 1.0f;
+	mMActor->setBckOldMotionBlendAnmPtr(mMActor->getBckAnm());
+	mMActor->setBckFromIndex(index);
+	mMActor->setMotionBlendRatioForBck(mBckBlendRatio);
+	mMActor->setFrameRate(0.25f * SMSGetAnmFrameRate(), 0);
+	const char** basTable = getBasNameTable();
+	setAnmSound(basTable ? basTable[index] : nullptr);
+}
 
 // UNUSED: retail mario.MAP size 0x174.
 // TODO: human-review the dead-stripped defeat-state checks.
@@ -1711,3 +1728,192 @@ static u32 hoseiDiveCameraCallback(u32 actorAddress, u32 state)
 void TBossEel::startMoguCamera() { }
 
 const char** TBossEel::getBasNameTable() const { return bosseel_bastable; }
+
+DEFINE_NERVE(TNerveBossEelWaitAppear, TLiveActor)
+{
+	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
+	if (spine->getTime() == 0)
+		eel->setBckAnm(10);
+
+	if (spine->getTime() == 2500)
+		gpMarDirector->getConsole()->startAppearBalloon(0xE0012, true);
+
+	JGeometry::TVec3<f32> marioPosition = *gpMarioPos;
+	marioPosition.y += 75.0f;
+	if (eel->mMouthCubeManager->isInCube(marioPosition, 0)) {
+		spine->pushAfterCurrent(&TNerveBossEelFirstSpin::theNerve());
+		return true;
+	}
+	return false;
+}
+
+DEFINE_NERVE(TNerveBossEelFirstSpin, TLiveActor)
+{
+	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
+	if (spine->getTime() == 0) {
+		eel->mTurnSpeed = 0.0f;
+		SMSGetMSound()->startSoundActorWithInfo(
+		    0x8921, &eel->mPosition, nullptr, 2.0f, 0, 0, nullptr, 0, 4);
+		eel->setBckAnm(10);
+		if (MsRandF() < 0.5f)
+			eel->onLiveFlag(LIVE_FLAG_UNK10000);
+		else
+			eel->offLiveFlag(LIVE_FLAG_UNK10000);
+	}
+
+	f32 spinSpeed = eel->mTurnSpeed;
+	CLBChaseGeneralConstantSpecifySpeed(&spinSpeed,
+	                                    eel->mSaveParams->mSLSpinMaxSpeed.get(),
+	                                    eel->mSaveParams->mSLSpinAccel.get());
+	eel->mTurnSpeed = spinSpeed;
+	gpCameraShake->keepShake(static_cast<EnumCamShakeMode>(0x18), 1.0f);
+
+	if (eel->checkLiveFlag(LIVE_FLAG_UNK10000)) {
+		eel->mRotation.y -= spinSpeed;
+		if (eel->mRotation.y <= 0.0f)
+			SMSGetMSound()->startSoundActorWithInfo(0x8921, &eel->mPosition,
+			                                        nullptr, spinSpeed, 0, 0,
+			                                        nullptr, 0, 4);
+	} else {
+		eel->mRotation.y += spinSpeed;
+		if (eel->mRotation.y >= 360.0f)
+			SMSGetMSound()->startSoundActorWithInfo(0x8921, &eel->mPosition,
+			                                        nullptr, spinSpeed, 0, 0,
+			                                        nullptr, 0, 4);
+	}
+	eel->mRotation.y = MsWrap(eel->mRotation.y, 0.0f, 360.0f);
+
+	if (spine->getTime() >= 360) {
+		spine->pushAfterCurrent(&TNerveBossEelAppear::theNerve());
+		return true;
+	}
+	return false;
+}
+
+DEFINE_NERVE(TNerveBossEelSecondSpin, TLiveActor)
+{
+	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
+	if (spine->getTime() == 0) {
+		eel->setBckAnm(10);
+		eel->mSpinTimer[0] = 0;
+		eel->mSpinTimer[1] = static_cast<s32>(MsRandF() * 960.0f) + 241;
+		eel->mTurnSpeed    = 0.0f;
+		SMSGetMSound()->startSoundActorWithInfo(
+		    0x8921, &eel->mPosition, nullptr, 2.0f, 0, 0, nullptr, 0, 4);
+		if (MsRandF() < 0.5f)
+			eel->onLiveFlag(LIVE_FLAG_UNK10000);
+		else
+			eel->offLiveFlag(LIVE_FLAG_UNK10000);
+	}
+
+	f32 spinSpeed = eel->mTurnSpeed;
+	CLBChaseGeneralConstantSpecifySpeed(&spinSpeed,
+	                                    eel->mSaveParams->mSLSpinMaxSpeed.get(),
+	                                    eel->mSaveParams->mSLSpinAccel.get());
+	eel->mTurnSpeed = spinSpeed;
+	gpCameraShake->keepShake(static_cast<EnumCamShakeMode>(0x18), 1.0f);
+
+	if (eel->checkLiveFlag(LIVE_FLAG_UNK10000)) {
+		eel->mRotation.y -= spinSpeed;
+		if (eel->mRotation.y <= 0.0f)
+			SMSGetMSound()->startSoundActorWithInfo(0x8921, &eel->mPosition,
+			                                        nullptr, spinSpeed, 0, 0,
+			                                        nullptr, 0, 4);
+	} else {
+		eel->mRotation.y += spinSpeed;
+		if (eel->mRotation.y >= 360.0f)
+			SMSGetMSound()->startSoundActorWithInfo(0x8921, &eel->mPosition,
+			                                        nullptr, spinSpeed, 0, 0,
+			                                        nullptr, 0, 4);
+	}
+	eel->mRotation.y = MsWrap(eel->mRotation.y, 0.0f, 360.0f);
+
+	if (++eel->mSpinTimer[0] >= eel->mSpinTimer[1]) {
+		eel->mSpinTimer[0] = eel->mSpinTimer[1];
+		spine->pushAfterCurrent(&TNerveBossEelAppear::theNerve());
+		return true;
+	}
+	return false;
+}
+
+DEFINE_NERVE(TNerveBossEelAppear, TLiveActor)
+{
+	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
+	if (spine->getTime() == 0) {
+		SMSGetMSound()->startSoundActor(0x8922, &eel->mPosition, 0, nullptr, 0,
+		                                4);
+		eel->mBarrierCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
+		eel->setBckAnm(15);
+		eel->mInDemo = true;
+		gpCameraShake->startShake(static_cast<EnumCamShakeMode>(0x19), 1.0f);
+		f32 duration = eel->mMActor->getFrameCtrl(0)->getEnd() * 2.0f;
+		eel->mAppearAcceleration
+		    = (eel->mSaveParams->mSLAppearMoveDistY.get() / duration)
+		      / duration;
+		testHeight = 0.0f;
+	}
+
+	s32 duration = eel->mMActor->getFrameCtrl(0)->getEnd() * 2;
+	if (spine->getTime() < duration) {
+		eel->mAppearOffset
+		    += eel->mSaveParams->mSLAppearMoveDistY.get() / duration;
+		eel->mTurnSpeed *= 0.98f;
+		if (eel->checkLiveFlag(LIVE_FLAG_UNK10000))
+			eel->mRotation.y -= eel->mTurnSpeed;
+		else
+			eel->mRotation.y += eel->mTurnSpeed;
+		eel->mRotation.y = MsWrap(eel->mRotation.y, 0.0f, 360.0f);
+		return false;
+	}
+
+	if (eel->checkCurAnmEnd(0)) {
+		spine->pushAfterCurrent(&TNerveBossEelOutWait::theNerve());
+		eel->mBarrierCollision->onHitFlag(HIT_FLAG_NO_COLLISION);
+		if (eel->mCollisionEnabled) {
+			eel->mCollisionEnabled = false;
+			gpMarDirector->getConsole()->startAppearBalloon(0xE0013, true);
+		}
+		return true;
+	}
+	return false;
+}
+
+DEFINE_NERVE(TNerveBossEelOutWait, TLiveActor)
+{
+	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
+	++eel->mBattleTimer;
+	if (spine->getTime() == 0) {
+		eel->mToothDamaged = false;
+		eel->setBckAnm(16);
+	}
+
+	if (!eel->checkCurAnmEnd(0))
+		return false;
+
+	if (eel->mMActor->checkCurBckFromIndex(19)) {
+		spine->setNext(&TNerveBossEelQuickBack::theNerve());
+		return false;
+	}
+
+	if (eel->mBattleTimer >= 3600) {
+		spine->pushAfterCurrent(&TNerveBossEelSlowBack::theNerve());
+		eel->mBattleTimer = 0;
+		return true;
+	}
+
+	if (spine->getTime() > eel->mSaveParams->mSLMouthOpenInterval.get()) {
+		spine->pushAfterCurrent(&TNerveBossEelOutWait::theNerve());
+		spine->pushAfterCurrent(&TNerveBossEelMouthOpenWait::theNerve());
+		return true;
+	}
+
+	if (eel->mToothBroken) {
+		eel->setBckAnm(19);
+	} else if (eel->mToothDamaged) {
+		eel->mToothDamaged = false;
+		eel->setBckAnm(18);
+	} else {
+		eel->setBckAnm(16);
+	}
+	return false;
+}
