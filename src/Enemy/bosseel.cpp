@@ -1024,3 +1024,76 @@ void TBossEelVortex::reset()
 	onHitFlag(ACTOR_TYPE_PLAYER);
 	mTimer = 0;
 }
+
+TBossEelEye::TBossEelEye(const TLiveActor* owner, int jointIndex,
+                         SDLModelData* modelData, u32 modelFlags,
+                         const char* name)
+    : TSharedParts(owner, jointIndex, modelData, modelFlags, name)
+    , mBlendModel(nullptr)
+    , mCopyConnectedMtx(-1)
+    , mBlinkTimer(0)
+    , mBlinkDelay(0)
+    , mBlurTimer(0)
+    , mBlurDuration(50)
+    , mAnimationMode(0)
+    , mPreviousBckIndex(0)
+    , mBlendRatio(1.0f)
+    , mPairedEye(nullptr)
+    , mAnimationLoopCount(0)
+{
+	mBlendModel = new SDLModel(modelData, modelFlags, 1);
+	mBlendModel->getModelData()->getMaterialName()->getIndex("_mat7");
+	getMActor()->initNormalMotionBlend();
+	mPreviousBckIndex = getMActor()->getCurAnmIdx(0);
+	setBckAnm(0);
+}
+
+void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	const TBossEel* owner = getOwner();
+	if (owner->mLiveFlag
+	    & (LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT))
+		return;
+
+	MActor* actor = getMActor();
+	if (cue & CUE_CALC_ANIM) {
+		MtxPtr connectedMtx = getConnectedMtx();
+		mBlurPosition.set(connectedMtx[0][3], connectedMtx[1][3],
+		                  connectedMtx[2][3]);
+		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
+		    0x192, &mBlurPosition, 1, this);
+		if (emitter)
+			emitter->setScale(owner->mScaling);
+
+		Mtx eyeMtx;
+		MTXCopy(connectedMtx, eyeMtx);
+		MTXCopy(eyeMtx, actor->getModel()->getBaseTRMtx());
+		if (mCopyConnectedMtx == 0)
+			MTXCopy(eyeMtx, mBlendMtx);
+
+		mBlendRatio
+		    = JGeometry::TUtil<f32>::clamp(mBlendRatio - 0.01f, 0.0f, 1.0f);
+		actor->setMotionBlendRatioForBck(mBlendRatio);
+		if (mAnimationMode == 1 && actor->curAnmEndsNext(0, nullptr)) {
+			++mAnimationLoopCount;
+			if (mAnimationLoopCount > 3) {
+				setBckAnm(0);
+				mPairedEye->setBckAnm(0);
+			}
+		}
+	}
+	actor->perform(cue, graphics);
+	mCopyConnectedMtx = -1;
+}
+
+// UNUSED: retail mario.MAP size 0xA0. The linked eye paths inline this helper.
+void TBossEelEye::setBckAnm(int index)
+{
+	MActor* actor     = getMActor();
+	mPreviousBckIndex = actor->getCurAnmIdx(0);
+	mAnimationMode    = 0;
+	mBlendRatio       = 1.0f;
+	actor->setBckOldMotionBlendAnmPtr(actor->getBckAnm());
+	actor->setBckFromIndex(index);
+	actor->setMotionBlendRatioForBck(mBlendRatio);
+}

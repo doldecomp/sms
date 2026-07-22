@@ -4,9 +4,11 @@
 #include <Enemy/Enemy.hpp>
 #include <Enemy/EnemyManager.hpp>
 #include <Strategic/Nerve.hpp>
+#include <Strategic/SharedParts.hpp>
 #include <dolphin/gx/GXStruct.h>
 
 class MActor;
+class SDLModel;
 class SDLModelData;
 class TSharedParts;
 class TBossEel;
@@ -214,12 +216,29 @@ public:
 	/* 0x70 */ s32 mTimer;
 };
 
-class TBossEelEye : public THitActor {
+class TBossEelEye : public TSharedParts {
 public:
 	TBossEelEye(const TLiveActor*, int, SDLModelData*, u32, const char*);
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	void setBckAnm(int);
+
+	const TBossEel* getOwner() const;
+
+public:
+	/* 0x1C */ Mtx mBlendMtx;
+	/* 0x4C */ SDLModel* mBlendModel;
+	/* 0x50 */ s32 mCopyConnectedMtx;
+	/* 0x54 */ s16 mBlinkTimer;
+	/* 0x56 */ s16 mBlinkDelay;
+	/* 0x58 */ s16 mBlurTimer;
+	/* 0x5A */ s16 mBlurDuration;
+	/* 0x5C */ s32 mAnimationMode;
+	/* 0x60 */ s32 mPreviousBckIndex;
+	/* 0x64 */ f32 mBlendRatio;
+	/* 0x68 */ TBossEelEye* mPairedEye;
+	/* 0x6C */ s32 mAnimationLoopCount;
+	/* 0x70 */ JGeometry::TVec3<f32> mBlurPosition;
 };
 
 class TBossEelHeartCoin : public THitActor {
@@ -365,6 +384,11 @@ public:
 	/* 0x21C */ bool mIsDefeated;
 	/* 0x21D */ bool mCollisionEnabled;
 };
+
+inline const TBossEel* TBossEelEye::getOwner() const
+{
+	return static_cast<const TBossEel*>(unk10);
+}
 
 void ExecSpinNerve_Sub(TBossEel*);
 void ExecBackNerve_Sub(TSpineBase<TLiveActor>*, f32);
