@@ -331,11 +331,14 @@ public:
 	TBossEel(const char*);
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message)
+	{
+		return false;
+	}
 	virtual void init(TLiveManager*);
 	virtual MtxPtr getTakingMtx();
 	virtual const char** getBasNameTable() const;
-	virtual BOOL hasMapCollision() const;
+	virtual BOOL hasMapCollision() const { return true; }
 
 	void startMoguCamera();
 	BOOL isInBossEelMoguDemo();
@@ -401,7 +404,6 @@ inline const TBossEel* TBossEelEye::getOwner() const
 
 void ExecSpinNerve_Sub(TBossEel*);
 void ExecBackNerve_Sub(TSpineBase<TLiveActor>*, f32);
-void hoseiDiveCameraCallback(u32, u32);
 
 DECLARE_NERVE(TNerveBEelTearsGenerate, TLiveActor);
 DECLARE_NERVE(TNerveBEelTearsMoveUp, TLiveActor);

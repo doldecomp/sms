@@ -1,6 +1,7 @@
 
 #include <Enemy/BossEel.hpp>
 #include <Enemy/Conductor.hpp>
+#include <Camera/Camera.hpp>
 #include <Camera/CubeManagerBase.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/MtxUtil.hpp>
@@ -35,6 +36,32 @@
 #include <JSystem/JUtility/JUTTexture.hpp>
 
 f32 TBossEel::mForcePow = 10.0f;
+
+static const char* bosseel_bastable[] = {
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	"/scene/bosseel/bas/meoto_in_loop.bas",
+	nullptr,
+	"/scene/bosseel/bas/meoto_mogu.bas",
+	nullptr,
+	nullptr,
+	nullptr,
+	"/scene/bosseel/bas/meoto_out_loop.bas",
+	"/scene/bosseel/bas/meoto_paku.bas",
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+};
 
 TBEelTearsDrop::TBEelTearsDrop(TBEelTears* owner, int jointIndex,
                                SDLModelData* modelData, const char* name)
@@ -1590,3 +1617,97 @@ void TBossEel::forceShedTears(bool rearEyes)
 	eye->mAnimationLoopCount = 0;
 	shedTears(spawnMtx);
 }
+
+// UNUSED: retail mario.MAP size 0xA4.
+// TODO: human-review the dead-stripped vortex activation sequence.
+void TBossEel::generateVortex() { }
+
+// UNUSED: retail mario.MAP size 0x54.
+// TODO: human-review the dead-stripped collision-disable sequence.
+void TBossEel::invalidateAllCollision() { }
+
+void TBossEel::collideToMario()
+{
+	JGeometry::TVec3<f32> marioTarget = *gpMarioPos;
+	JGeometry::TVec3<f32> correction(0.0f, 0.0f, 0.0f);
+
+	for (s32 i = 0; i < 2; ++i) {
+		MtxPtr collisionMtx
+		    = getModel()->getAnmMtx(mMapCollisionJointIndices[i]);
+		JGeometry::TVec3<f32> center(collisionMtx[0][3], collisionMtx[1][3],
+		                             collisionMtx[2][3]);
+		JGeometry::TVec3<f32> axis(collisionMtx[0][1], collisionMtx[1][1],
+		                           collisionMtx[2][1]);
+		if (i == 0)
+			axis.negate();
+		axis.normalize();
+
+		JGeometry::TVec3<f32> distance = marioTarget;
+		distance.sub(center);
+		f32 length = distance.length();
+		if (length == 0.0f || length >= mMouthOpenAmount)
+			continue;
+
+		f32 axialDistance = distance.dot(axis);
+		if (axialDistance >= 0.0f)
+			continue;
+
+		f32 penetration = mMouthOpenAmount - length;
+		if (-axialDistance < penetration) {
+			axis.scale(-axialDistance);
+			correction.add(axis);
+		} else {
+			distance.normalize();
+			distance.scale(penetration);
+			correction.add(distance);
+		}
+	}
+
+	marioTarget.add(correction);
+	SMS_MarioMoveRequest(marioTarget);
+}
+
+// TODO: human-review the remaining Boss Eel render, collision, and animation
+// orchestration against the retail 0xC34 body.
+void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics) { }
+
+// UNUSED: retail mario.MAP size 0xF8.
+// TODO: human-review the dead-stripped animation/sound switching path.
+void TBossEel::setBckAnm(int index) { }
+
+// UNUSED: retail mario.MAP size 0x174.
+// TODO: human-review the dead-stripped defeat-state checks.
+void TBossEel::deadCheck() { }
+
+// UNUSED: retail mario.MAP size 0x8C.
+// TODO: human-review the original bad-tooth damage gate.
+BOOL TBossEel::isValidToothDamage() { return false; }
+
+// UNUSED: retail mario.MAP size 0xE8.
+// TODO: human-review the dead-stripped quick-return nerve transition.
+void TBossEel::quickBack() { }
+
+BOOL TBossEel::isInBossEelMoguDemo()
+{
+	if (mMActor->checkCurBckFromIndex(12) || mMActor->checkCurBckFromIndex(3))
+		return true;
+	return false;
+}
+
+static u32 hoseiDiveCameraCallback(u32 actorAddress, u32 state)
+{
+	if (state == 1) {
+		const TLiveActor* actor
+		    = reinterpret_cast<const TLiveActor*>(actorAddress);
+		JGeometry::TVec3<f32> position = actor->mPosition;
+		position.y += 12300.0f;
+		gpCamera->warpPosAndAt(position, *gpMarioPos);
+	}
+	return 0;
+}
+
+// UNUSED: retail mario.MAP size 0x94.
+// TODO: human-review the original demo-camera registration call.
+void TBossEel::startMoguCamera() { }
+
+const char** TBossEel::getBasNameTable() const { return bosseel_bastable; }
