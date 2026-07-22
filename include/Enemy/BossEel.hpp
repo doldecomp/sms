@@ -287,12 +287,18 @@ class TBossEelAwaCollision : public TBossEelCollision {
 public:
 	TBossEelAwaCollision(MtxPtr collisionMtx, const char* name)
 	    : TBossEelCollision(collisionMtx, name)
+	    , mState(0)
+	    , mTimer(0)
 	{
 	}
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void initCollision();
 	virtual void behaveToMario();
+
+public:
+	/* 0x80 */ s32 mState;
+	/* 0x84 */ s32 mTimer;
 };
 
 class TBossEelBarrierCollision : public TBossEelCollision {
