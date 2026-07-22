@@ -31,6 +31,8 @@
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 
+f32 TBossEel::mForcePow = 10.0f;
+
 TBEelTearsDrop::TBEelTearsDrop(TBEelTears* owner, int jointIndex,
                                SDLModelData* modelData, const char* name)
     : THitActor(name)
@@ -1211,4 +1213,146 @@ TBossEelCollision::TBossEelCollision(MtxPtr collisionMtx, const char* name)
     , mBaseDamageHeight(0.0f)
     , mOwner(nullptr)
 {
+}
+
+void TBossEelCollision::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	if (cue & CUE_MOVE) {
+		calcEntryRadius();
+		for (s32 i = 0; i < mColCount; ++i) {
+			if (mCollisions[i]->isActorType(0x80000001))
+				behaveToMario();
+		}
+	}
+	if (cue & CUE_CALC_ANIM) {
+		mPosition.set(mCollisionMtx[0][3], mCollisionMtx[1][3],
+		              mCollisionMtx[2][3]);
+	}
+	THitActor::perform(cue, graphics);
+}
+
+void TBossEelCollision::initCollision()
+{
+	initHitActor(0x08000023, 5, ACTOR_TYPE_PLAYER, mBaseAttackRadius,
+	             mBaseAttackHeight, mBaseDamageRadius, mBaseDamageHeight);
+}
+
+void TBossEelCollision::behaveToMario()
+{
+	JGeometry::TVec3<f32> marioTarget(0.0f, TBossEel::mForcePow, 0.0f);
+	marioTarget.add(*gpMarioPos);
+	SMS_MarioMoveRequest(marioTarget);
+
+	if (!mOwner)
+		return;
+
+	bool shouldEat = mOwner->mForceEat;
+	if (!shouldEat) {
+		MtxPtr mouthMtx = mOwner->getModel()->getAnmMtx(
+		    mOwner->mMapCollisionJointIndices[0]);
+		JGeometry::TVec3<f32> mouthPosition(mouthMtx[0][3], mouthMtx[1][3],
+		                                    mouthMtx[2][3]);
+		JGeometry::TVec3<f32> distance = *gpMarioPos;
+		distance.sub(mouthPosition);
+		shouldEat = MsVECMag2(&distance)
+		            < mOwner->mMouthOpenAmount * mOwner->mMouthOpenSpeed;
+	}
+
+	if (shouldEat
+	    && mOwner->mSpine->getCurrentNerve() != &TNerveBossEelEat::theNerve())
+		mOwner->mSpine->pushNerve(&TNerveBossEelEat::theNerve());
+}
+
+void TBossEelBodyCollision::initCollision()
+{
+	mBaseAttackRadius = 2000.0f;
+	mBaseDamageRadius = 2000.0f;
+	mBaseAttackHeight = 5800.0f;
+	mBaseDamageHeight = 5000.0f;
+	TBossEelCollision::initCollision();
+}
+
+void TBossEelAwaCollision::initCollision()
+{
+	mBaseDamageRadius = 2000.0f;
+	mBaseAttackRadius = 2000.0f;
+	mBaseDamageHeight = 2000.0f;
+	mBaseAttackHeight = 2000.0f;
+	initHitActor(0x08000003, 2, ACTOR_TYPE_PLAYER, mBaseAttackRadius,
+	             mBaseAttackHeight, mBaseDamageRadius, mBaseDamageHeight);
+}
+
+void TBossEelAwaCollision::behaveToMario()
+{
+	JGeometry::TVec3<f32> marioTarget(0.0f, 15.0f, 0.0f);
+	*gpMarioSpeedY = 0.0f;
+	marioTarget.add(*gpMarioPos);
+	SMS_MarioMoveRequest(marioTarget);
+}
+
+void TBossEelAwaCollision::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	if (cue & CUE_MOVE) {
+		calcEntryRadius();
+		if (gpMarioPos->y < mPosition.y + 500.0f)
+			offHitFlag(HIT_FLAG_NO_COLLISION);
+		if (gpMarioPos->y > mPosition.y + mDamageHeight)
+			onHitFlag(HIT_FLAG_NO_COLLISION);
+
+		for (s32 i = 0; i < mColCount; ++i) {
+			if (mCollisions[i]->isActorType(0x80000001))
+				behaveToMario();
+		}
+	}
+	if (cue & CUE_CALC_ANIM) {
+		mPosition.set(mCollisionMtx[0][3], mCollisionMtx[1][3] + 11000.0f,
+		              mCollisionMtx[2][3]);
+	}
+	THitActor::perform(cue, graphics);
+}
+
+void TBossEelBarrierCollision::initCollision()
+{
+	mBaseDamageRadius = 0.0f;
+	mBaseAttackRadius = 0.0f;
+	mBaseDamageHeight = 0.0f;
+	mBaseAttackHeight = 0.0f;
+	TBossEelCollision::initCollision();
+}
+
+void TBossEelBarrierCollision::behaveToMario()
+{
+	JGeometry::TVec3<f32> marioTarget(0.0f, TBossEel::mForcePow, 0.0f);
+	marioTarget.add(*gpMarioPos);
+	SMS_MarioMoveRequest(marioTarget);
+}
+
+void TBossEelTearsRecoverCollision::initCollision()
+{
+	mBaseDamageRadius = 400.0f;
+	mBaseAttackRadius = 400.0f;
+	mBaseDamageHeight = 400.0f;
+	mBaseAttackHeight = 400.0f;
+	initHitActor(0x2000002C, 3, ACTOR_TYPE_PLAYER, mBaseAttackRadius,
+	             mBaseAttackHeight, mBaseDamageRadius, mBaseDamageHeight);
+}
+
+void TBossEelTearsRecoverCollision::behaveToMario()
+{
+	SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+	mRecovering = false;
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+}
+
+void TBossEelTearsRecoverCollision::perform(u32 cue,
+                                            JDrama::TGraphics* graphics)
+{
+	if (cue & CUE_MOVE) {
+		calcEntryRadius();
+		for (s32 i = 0; i < mColCount; ++i) {
+			if (mCollisions[i]->isActorType(0x80000001))
+				behaveToMario();
+		}
+	}
+	THitActor::perform(cue, graphics);
 }

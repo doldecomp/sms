@@ -275,14 +275,20 @@ public:
 
 class TBossEelBodyCollision : public TBossEelCollision {
 public:
-	TBossEelBodyCollision(MtxPtr, const char*);
+	TBossEelBodyCollision(MtxPtr collisionMtx, const char* name)
+	    : TBossEelCollision(collisionMtx, name)
+	{
+	}
 
 	virtual void initCollision();
 };
 
 class TBossEelAwaCollision : public TBossEelCollision {
 public:
-	TBossEelAwaCollision(MtxPtr, const char*);
+	TBossEelAwaCollision(MtxPtr collisionMtx, const char* name)
+	    : TBossEelCollision(collisionMtx, name)
+	{
+	}
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void initCollision();
@@ -291,7 +297,10 @@ public:
 
 class TBossEelBarrierCollision : public TBossEelCollision {
 public:
-	TBossEelBarrierCollision(MtxPtr, const char*);
+	TBossEelBarrierCollision(MtxPtr collisionMtx, const char* name)
+	    : TBossEelCollision(collisionMtx, name)
+	{
+	}
 
 	virtual void initCollision();
 	virtual void behaveToMario();
@@ -317,6 +326,8 @@ public:
 
 class TBossEel : public TSpineEnemy {
 public:
+	static f32 mForcePow;
+
 	TBossEel(const char*);
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
@@ -360,7 +371,7 @@ public:
 	/* 0x1BC */ f32 mSpinVelocity;
 	/* 0x1C0 */ THitActor* mMouthCollision;
 	/* 0x1C4 */ THitActor* mBiteCollision;
-	/* 0x1C8 */ u32 mMouthState;
+	/* 0x1C8 */ bool mForceEat;
 	/* 0x1CC */ f32 mSpinAngle;
 	/* 0x1D0 */ u8 mToothDamageLevel;
 	/* 0x1D4 */ f32 mMouthOpenAmount;
