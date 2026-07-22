@@ -1,6 +1,7 @@
 
 #include <Enemy/BossEel.hpp>
 #include <Enemy/Conductor.hpp>
+#include <Camera/CubeManagerBase.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/MtxUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
@@ -10,6 +11,7 @@
 #include <MarioUtil/TexUtil.hpp>
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
+#include <Map/MapCollisionEntry.hpp>
 #include <MoveBG/Item.hpp>
 #include <MoveBG/ItemManager.hpp>
 #include <M3DUtil/MActor.hpp>
@@ -25,6 +27,7 @@
 #include <System/EmitterViewObj.hpp>
 #include <System/Particles.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DCluster.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
@@ -1355,4 +1358,143 @@ void TBossEelTearsRecoverCollision::perform(u32 cue,
 		}
 	}
 	THitActor::perform(cue, graphics);
+}
+
+void TBossEel::init(TLiveManager* manager)
+{
+	mManager = manager;
+	manager->manageActor(this);
+	mMActorKeeper = new TMActorKeeper(manager);
+	mMActorKeeper->createMActorFromAllBmd(0);
+	mMActor          = mMActorKeeper->getMActor(0);
+	mSaveParams      = &static_cast<TBossEelManager*>(manager)->mSaveParams;
+	mInitialPosition = mPosition;
+	onLiveFlag(LIVE_FLAG_UNK8 | LIVE_FLAG_UNK10);
+	mGroundHeight = gpMap->checkGround(mPosition.x,
+	                                   mPosition.y + mBodyScale * mHeadHeight,
+	                                   mPosition.z, &mGroundPlane);
+	mMActor->initNormalMotionBlend();
+	mSpine->initWith(&TNerveBossEelWaitAppear::theNerve());
+
+	initHitActor(0x08000003, 1, ACTOR_TYPE_PLAYER,
+	             mSaveParams->mSLBodyAttackRadius.get(),
+	             mSaveParams->mSLBodyAttackHeight.get(),
+	             mSaveParams->mSLBodyDamageRadius.get(),
+	             mSaveParams->mSLBodyDamageHeight.get());
+	offHitFlag(HIT_FLAG_NO_COLLISION);
+	if (!getModel()->getSkinDeform())
+		getModel()->setSkinDeform(new J3DSkinDeform,
+		                          J3D_DEFORM_ATTACH_FLAG_UNK_1);
+	mMActor->resetDL();
+
+	mHeadCollision = new THitActor("めおとウナギの頭部");
+	mHeadCollision->initHitActor(0x08000003, 2, ACTOR_TYPE_PLAYER,
+	                             mSaveParams->mSLHeadAttackRadius.get(),
+	                             mSaveParams->mSLHeadAttackHeight.get(),
+	                             mSaveParams->mSLHeadDamageRadius.get(),
+	                             mSaveParams->mSLHeadDamageHeight.get());
+	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	    ->getChildren()
+	    .push_back(mHeadCollision);
+	mHeadCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
+
+	mBodyCollision
+	    = new TBossEelBodyCollision(getModel()->getBaseTRMtx(), "体コリジョン");
+	mBodyCollision->initCollision();
+	mBodyCollision->mOwner = this;
+	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	    ->getChildren()
+	    .push_back(mBodyCollision);
+	mBodyCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
+
+	mBarrierCollision = new TBossEelBarrierCollision(getModel()->getAnmMtx(7),
+	                                                 "境界コリジョン");
+	mBarrierCollision->initCollision();
+	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	    ->getChildren()
+	    .push_back(mBarrierCollision);
+	mBarrierCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
+
+	static const char* eyeJoints[] = { "eye1", "eye2", "eye3", "eye4" };
+	void* eyeResource = JKRFileLoader::getGlbResource("/scene/bosseel/eye.bmd");
+	SDLModelData* eyeModelData = new SDLModelData(J3DModelLoaderDataBase::load(
+	    eyeResource, J3DMLF_MaterialPEFull | J3DMLF_MaterialTexGenFull
+	                     | (2 << J3DMLF_TevStageNumShift)));
+	for (s32 i = 0; i < 4; ++i) {
+		s32 jointIndex = getModel()->getModelData()->getJointName()->getIndex(
+		    eyeJoints[i]);
+		mEyes[i] = new TBossEelEye(this, jointIndex, eyeModelData, 3,
+		                           "めおとウナギ目");
+	}
+	mEyes[0]->mPairedEye = mEyes[1];
+	mEyes[1]->mPairedEye = mEyes[0];
+	mEyes[2]->mPairedEye = mEyes[3];
+	mEyes[3]->mPairedEye = mEyes[2];
+	mEyes[2]->getMActor()->getFrameCtrl(0)->setEnd(100.0f);
+	mEyes[3]->getMActor()->getFrameCtrl(0)->setEnd(100.0f);
+
+	static const char* toothJoints[]
+	    = { "ha1", "ha2", "ha3", "ha4", "ha5", "ha6", "ha7", "ha8" };
+	static const char* toothModels[]
+	    = { "/scene/bosseel/tooth.bmd", "/scene/bosseel/bad_tooth.bmd",
+		    "/scene/bosseel/gold_tooth.bmd" };
+	SDLModelData* toothModelData[3];
+	for (s32 i = 0; i < 3; ++i) {
+		void* resource    = JKRFileLoader::getGlbResource(toothModels[i]);
+		toothModelData[i] = new SDLModelData(J3DModelLoaderDataBase::load(
+		    resource, J3DMLF_MaterialPEFull | J3DMLF_MaterialTexGenFull
+		                  | (1 << J3DMLF_TevStageNumShift)));
+	}
+	for (s32 i = 0; i < 8; ++i) {
+		u8 toothType = 0;
+		if (i == 1 || i == 4 || i == 7)
+			toothType = 1;
+		if (i == 6)
+			toothType = 2;
+		mTeeth[i]
+		    = new TBossEelTooth(toothType, this, toothJoints[i],
+		                        toothModelData[toothType], "めおとウナギの歯");
+		mTeeth[i]->mCanShedTears = i <= 2 || i == 7;
+	}
+
+	void* heartResource
+	    = JKRFileLoader::getGlbResource("/scene/bosseel/meoto_heartcoin.bmd");
+	SDLModelData* heartModelData
+	    = new SDLModelData(J3DModelLoaderDataBase::load(
+	        heartResource, J3DMLF_MaterialPEFull | J3DMLF_MaterialTexGenFull
+	                           | (2 << J3DMLF_TevStageNumShift)));
+	mHeartCoin = new TBossEelHeartCoin(this, 0, heartModelData, 3,
+	                                   "めおとウナギハートコイン");
+
+	static const char* collisionJoints[]
+	    = { "headcol1", "headcol2", "sebone5", "sebone5" };
+	static const char* collisionFiles[]
+	    = { "/bosseel/meoto_head", "/bosseel/meoto_head2",
+		    "/bosseel/meoto_camera", "/bosseel/meoto_out_loop" };
+	for (s32 i = 0; i < 4; ++i) {
+		mMapCollisionJointIndices[i]
+		    = getModel()->getModelData()->getJointName()->getIndex(
+		        collisionJoints[i]);
+		mMapCollisions[i] = new TMapCollisionMove;
+		mMapCollisions[i]->init(collisionFiles[i], 1, this);
+		mMapCollisions[i]->moveTrans(mPosition);
+	}
+
+	mAwaCollision = new TBossEelAwaCollision(
+	    getModel()->getAnmMtx(mMapCollisionJointIndices[2]), "泡コリジョン");
+	mAwaCollision->initCollision();
+	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	    ->getChildren()
+	    .push_back(mAwaCollision);
+	mAwaCollision->onHitFlag(HIT_FLAG_NO_COLLISION);
+
+	mVortex                     = new TBossEelVortex(this, "めおとウナギ渦");
+	mMouthCubeManager           = new TCubeManagerBase("コリジョンキューブ", 2);
+	TCubeGeneralInfo* mouthCube
+	    = *mMouthCubeManager->unk14->getChildren().begin();
+	mouthCube->unkC.set(mPosition.x, mPosition.y + 9600.0f, mPosition.z);
+	mouthCube->unk24.set(7000.0f, 10000.0f, 7000.0f);
+
+	initAnmSound();
+	getModel()->calc();
 }
