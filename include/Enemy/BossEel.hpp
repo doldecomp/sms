@@ -327,7 +327,11 @@ public:
 class TBossEel : public TSpineEnemy {
 public:
 	static f32 mOpenRollSpeed;
+	static bool mUseObjCollision;
 	static f32 mForcePow;
+	static bool mUseMapCollision;
+	static bool mToothDamageAnm;
+	static f32 mTestAngY;
 
 	TBossEel(const char*);
 

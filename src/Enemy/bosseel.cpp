@@ -40,8 +40,20 @@
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 
-f32 TBossEel::mOpenRollSpeed = 0.3f;
-f32 TBossEel::mForcePow      = 10.0f;
+f32 TBossEel::mOpenRollSpeed    = 0.3f;
+bool TBossEel::mUseObjCollision = true;
+f32 TBossEel::mForcePow         = 10.0f;
+bool TBossEel::mUseMapCollision;
+
+// UNUSED: retail mario.MAP sizes 0x1 and 0x4 respectively.
+bool TBossEel::mToothDamageAnm;
+f32 TBossEel::mTestAngY;
+
+// UNUSED: retail mario.MAP size 0x4. This TU-local allocation diagnostic is
+// emitted by the original runtime headers even though no linked code reads it.
+static const char* SMS_NO_MEMORY_MESSAGE = "メモリが足りません\n";
+// UNUSED: retail mario.MAP also records the compiler-generated local @1211
+// word (size 0x4); it has no source-level identifier to define explicitly.
 
 static const char* bosseel_bastable[] = {
 	nullptr,
@@ -1677,9 +1689,192 @@ void TBossEel::collideToMario()
 	SMS_MarioMoveRequest(marioTarget);
 }
 
-// TODO: human-review the remaining Boss Eel render, collision, and animation
-// orchestration against the retail 0xC34 body.
-void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics) { }
+void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	if ((cue & CUE_CALC_ANIM)
+	    && mSpine->getCurrentNerve() == &TNerveBossEelDie::theNerve()) {
+		JGeometry::TVec3<f32> deathEffectPosition(0.0f, -14000.0f, 0.0f);
+		gpMarioParticleManager->emit(0x198, &deathEffectPosition, 1, this);
+	}
+
+	if (mMActor->checkCurBckFromIndex(4))
+		mAwaCollision->perform(cue, graphics);
+
+	if (checkLiveFlag(LIVE_FLAG_UNK200))
+		return;
+
+	if (cue & CUE_MOVE) {
+		mScaling.set(mSaveParams->mSLBodyScale.get(),
+		             mSaveParams->mSLBodyScale.get(),
+		             mSaveParams->mSLBodyScale.get());
+		mPosition.y = mAppearOffset + mInitialPosition.y
+		              + mSaveParams->mSLInitTransYOffset.get();
+
+		TCubeGeneralInfo* mouthCube
+		    = *mMouthCubeManager->unk14->getChildren().begin();
+		mouthCube->unkC.set(mPosition.x, mPosition.y + 9600.0f * mScaling.y,
+		                    mPosition.z);
+		mouthCube->unk24.set(7000.0f * mScaling.x, 10000.0f * mScaling.y,
+		                     7000.0f * mScaling.z);
+		mMouthCubeManager->perform(cue, graphics);
+
+		mMActor->calcAnm();
+		calcRootMatrix();
+		collideToMario();
+
+		TPosition3f collisionMtx;
+		collisionMtx.set(getModel()->getAnmMtx(mMapCollisionJointIndices[0]));
+		mMapCollisions[2]->moveMtx(collisionMtx);
+		if (mUseMapCollision) {
+			for (s32 i = 0; i < 2; ++i) {
+				collisionMtx.set(
+				    getModel()->getAnmMtx(mMapCollisionJointIndices[i]));
+				mMapCollisions[i]->moveMtx(collisionMtx);
+			}
+		}
+
+		if (mUseObjCollision
+		    && mSpine->getCurrentNerve() != &TNerveBossEelDie::theNerve())
+			mBodyCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
+		else
+			mBodyCollision->onHitFlag(HIT_FLAG_NO_COLLISION);
+
+		mHeadCollision->mPosition = mPosition;
+		mHeadCollision->mPosition.y
+		    += mSaveParams->mSLBodyToHeadDistance.get() * mScaling.y;
+		mHeadCollision->mAttackRadius
+		    = mSaveParams->mSLHeadAttackRadius.get() * mScaling.x;
+		mHeadCollision->mAttackHeight
+		    = mSaveParams->mSLHeadAttackHeight.get() * mScaling.x;
+		mHeadCollision->mDamageRadius
+		    = mSaveParams->mSLHeadDamageRadius.get() * mScaling.x;
+		mHeadCollision->mDamageHeight
+		    = mSaveParams->mSLHeadDamageHeight.get() * mScaling.x;
+		mHeadCollision->calcEntryRadius();
+
+		mAttackRadius = mSaveParams->mSLBodyAttackRadius.get() * mScaling.x;
+		mAttackHeight = mSaveParams->mSLBodyAttackHeight.get() * mScaling.x;
+		mDamageRadius = mSaveParams->mSLBodyDamageRadius.get() * mScaling.x;
+		mDamageHeight = mSaveParams->mSLBodyDamageHeight.get() * mScaling.x;
+		calcEntryRadius();
+
+		mouthCube->unk18 = mRotation;
+		mouthCube->unkC.set(mPosition.x, mPosition.y + 1900.0f, mPosition.z);
+		mouthCube->unk24.set(1100.0f, 1000.0f, 1100.0f);
+		mouthCube->unkC.set(mPosition.x, mPosition.y + 9600.0f * mScaling.y,
+		                    mPosition.z);
+		mouthCube->unk24.set(7000.0f * mScaling.x, 10000.0f * mScaling.y,
+		                     7000.0f * mScaling.z);
+
+		if (mHitPoints != 0) {
+			mForceEat = false;
+			for (s32 i = 0; i < mHeadCollision->getColNum(); ++i) {
+				if (mHeadCollision->getCollision(i)->isActorType(0x80000001))
+					mForceEat = true;
+			}
+
+			const TNerveBase<TLiveActor>* nerve = mSpine->getCurrentNerve();
+			if (nerve != &TNerveBossEelFirstSpin::theNerve()
+			    && nerve != &TNerveBossEelSecondSpin::theNerve()
+			    && nerve != &TNerveBossEelMouthOpenWait::theNerve()
+			    && (mMActor->checkCurBckFromIndex(10)
+			        || mMActor->checkCurBckFromIndex(16)
+			        || mMActor->checkCurBckFromIndex(18)
+			        || mMActor->checkCurBckFromIndex(19)))
+				updateTearsCnt();
+
+			mBckBlendRatio = JGeometry::TUtil<f32>::clamp(
+			    mBckBlendRatio - 0.01f, 0.0f, 1.0f);
+			mMActor->setMotionBlendRatioForBck(mBckBlendRatio);
+		}
+
+		bool allTeethFinished = true;
+		for (s32 i = 0; i < 8; ++i) {
+			if (mTeeth[i]->mHitPoints > 1) {
+				allTeethFinished = false;
+				break;
+			}
+		}
+		if (allTeethFinished
+		    && mSpine->getCurrentNerve() != &TNerveBossEelDie::theNerve()) {
+			mSpine->setNext(&TNerveBossEelDie::theNerve());
+			mHeadCollision->onHitFlag(HIT_FLAG_NO_COLLISION);
+		}
+	}
+
+	if (cue & CUE_CALC_ANIM) {
+		offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
+		updateAnmSound();
+
+		const TNerveBase<TLiveActor>* nerve = mSpine->getCurrentNerve();
+		if (nerve == &TNerveBossEelFirstSpin::theNerve()
+		    || nerve == &TNerveBossEelSecondSpin::theNerve()) {
+			MtxPtr breathMtx = getModel()->getAnmMtx(5);
+			mBreathParticlePosition.set(breathMtx[0][3], breathMtx[1][3],
+			                            breathMtx[2][3]);
+			u32 particles[2] = {
+				checkLiveFlag(LIVE_FLAG_UNK10000) ? 0x193 : 0x194,
+				checkLiveFlag(LIVE_FLAG_UNK10000) ? 0x195 : 0x196,
+			};
+			for (s32 i = 0; i < 2; ++i) {
+				JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+				    particles[i], &mBreathParticlePosition, 1, this);
+				if (emitter)
+					emitter->setScale(mScaling);
+			}
+		}
+
+		if (mMActor->checkCurBckFromIndex(15)) {
+			J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(0);
+			MtxPtr breathMtx        = getModel()->getAnmMtx(5);
+			mBreathParticlePosition.set(breathMtx[0][3], breathMtx[1][3],
+			                            breathMtx[2][3]);
+			if (frameCtrl->checkPass(102.0f)) {
+				JPABaseEmitter* emitter
+				    = gpMarioParticleManager->emitAndBindToPosPtr(
+				        0xD4, &mBreathParticlePosition, 0, nullptr);
+				if (emitter)
+					emitter->setScale(mScaling);
+			}
+			if (frameCtrl->getFrame() < 40.0f) {
+				JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+				    0x197, &mBreathParticlePosition, 1, this);
+				if (emitter)
+					emitter->setScale(mScaling);
+			}
+		}
+
+		if (mMActor->checkCurBckFromIndex(14)) {
+			MtxPtr breathMtx = getModel()->getAnmMtx(5);
+			mBreathParticlePosition.set(breathMtx[0][3], breathMtx[1][3],
+			                            breathMtx[2][3]);
+			if (SMSGetMSound()->gateCheck(0x8120))
+				SMSGetMSound()->startSoundActor(0x8120, &mPosition, 0, nullptr,
+				                                0, 4);
+			JPABaseEmitter* emitter
+			    = gpMarioParticleManager->emitAndBindToPosPtr(
+			        0x199, &mBreathParticlePosition, 1, this);
+			if (emitter) {
+				JGeometry::TVec3<f32> scale(3.0f, 3.0f, 3.0f);
+				emitter->setScale(scale);
+			}
+		}
+	}
+
+	if (cue & CUE_CALC_VIEW)
+		mMActor->viewCalc();
+	if (cue & CUE_ENTRY)
+		mMActor->entry();
+
+	for (s32 i = 0; i < 4; ++i)
+		mEyes[i]->testPerform(cue, graphics);
+	for (s32 i = 0; i < 8; ++i)
+		mTeeth[i]->testPerform(cue, graphics);
+	mHeartCoin->perform(cue, graphics);
+	mVortex->perform(cue, graphics);
+	mBodyCollision->perform(cue, graphics);
+	mBarrierCollision->perform(cue, graphics);
+}
 
 // UNUSED: retail mario.MAP size 0xF8. Linked nerve bodies inline this helper.
 void TBossEel::setBckAnm(int index)
