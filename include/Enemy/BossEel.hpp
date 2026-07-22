@@ -377,7 +377,7 @@ public:
 	/* 0x16C */ TBossEelTooth* mTeeth[8];
 	/* 0x18C */ TBossEelVortex* mVortex;
 	/* 0x190 */ TMapCollisionMove* mMapCollisions[4];
-	/* 0x1A0 */ s16 mMapCollisionJointIndices[4];
+	/* 0x1A0 */ u16 mMapCollisionJointIndices[4];
 	/* 0x1A8 */ THitActor* mHeadCollision;
 	/* 0x1AC */ TCubeManagerBase* mMouthCubeManager;
 	/* 0x1B0 */ TBossEelBodyCollision* mBodyCollision;
