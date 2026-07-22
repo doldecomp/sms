@@ -10,6 +10,8 @@
 #include <MarioUtil/TexUtil.hpp>
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
+#include <MoveBG/Item.hpp>
+#include <MoveBG/ItemManager.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/SDLModel.hpp>
 #include <MSound/MSound.hpp>
@@ -1096,4 +1098,68 @@ void TBossEelEye::setBckAnm(int index)
 	actor->setBckOldMotionBlendAnmPtr(actor->getBckAnm());
 	actor->setBckFromIndex(index);
 	actor->setMotionBlendRatioForBck(mBlendRatio);
+}
+
+// UNUSED: retail mario.MAP size 0xA4. The live BossEel initialization path
+// inlines this constructor.
+TBossEelHeartCoin::TBossEelHeartCoin(const TLiveActor* owner, int jointIndex,
+                                     SDLModelData* modelData, u32 modelFlags,
+                                     const char* name)
+    : TSharedParts(owner, jointIndex, modelData, modelFlags, name)
+    , mActive(false)
+    , mOwner(static_cast<TBossEel*>(const_cast<TLiveActor*>(owner)))
+{
+	for (s32 i = 0; i < 20; ++i) {
+		mCoins[i] = gpItemManager->newAndRegisterCoinReal();
+		// TODO: TItem::setContainer is currently typed too narrowly; retail
+		// accepts this shared-parts controller as the coin container.
+		mCoins[i]->setContainer(reinterpret_cast<THitActor*>(this));
+	}
+}
+
+void TBossEelHeartCoin::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	if (!mActive)
+		return;
+
+	MActor* actor = getMActor();
+	if (cue & CUE_CALC_ANIM) {
+		s32 jointIndex
+		    = mOwner->getModel()->getModelData()->getJointName()->getIndex(
+		        "ha7");
+		MtxPtr jointMtx = mOwner->getModel()->getAnmMtx(jointIndex);
+		if (mOwner->mMActor->checkCurBckFromIndex(3)
+		    && mOwner->mMActor->getFrameCtrl(0)->getEnd() < 700.0f) {
+			mPosition.set(jointMtx[0][3], jointMtx[1][3], jointMtx[2][3]);
+		}
+		mPosition.y = jointMtx[1][3];
+
+		Mtx heartMtx;
+		MTXIdentity(heartMtx);
+		heartMtx[0][3] = mPosition.x;
+		heartMtx[1][3] = mPosition.y;
+		heartMtx[2][3] = mPosition.z;
+		MTXCopy(heartMtx, actor->getModel()->getBaseTRMtx());
+	}
+	actor->perform(cue, graphics);
+
+	if (cue & CUE_CALC_ANIM) {
+		for (s32 i = 0; i < 20; ++i) {
+			MtxPtr coinMtx = actor->getModel()->getAnmMtx(i + 2);
+			mCoins[i]->mPosition.set(coinMtx[0][3], coinMtx[1][3],
+			                         coinMtx[2][3]);
+		}
+	}
+}
+
+void TBossEelHeartCoin::generate(JGeometry::TVec3<f32>& position)
+{
+	mPosition = position;
+	mActive   = true;
+	for (s32 i = 0; i < 20; ++i) {
+		mCoins[i]->appear();
+		mCoins[i]->onMapObjFlag(0x10000000);
+		MtxPtr coinMtx = getMActor()->getModel()->getAnmMtx(0);
+		mCoins[i]->mPosition.set(coinMtx[0][3], coinMtx[1][3], coinMtx[2][3]);
+	}
 }

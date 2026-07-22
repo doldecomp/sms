@@ -17,6 +17,7 @@ class TBEelTears;
 class TBossEelTearsRecoverCollision;
 class TMapCollisionMove;
 class TCubeManagerBase;
+class TCoin;
 
 class TBEelTearsSaveLoadParams : public TSpineEnemyParams {
 public:
@@ -241,12 +242,18 @@ public:
 	/* 0x70 */ JGeometry::TVec3<f32> mBlurPosition;
 };
 
-class TBossEelHeartCoin : public THitActor {
+class TBossEelHeartCoin : public TSharedParts {
 public:
 	TBossEelHeartCoin(const TLiveActor*, int, SDLModelData*, u32, const char*);
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	void generate(JGeometry::TVec3<f32>&);
+
+public:
+	/* 0x1C */ bool mActive;
+	/* 0x20 */ TCoin* mCoins[20];
+	/* 0x70 */ JGeometry::TVec3<f32> mPosition;
+	/* 0x7C */ TBossEel* mOwner;
 };
 
 class TBossEelCollision : public THitActor {
