@@ -5,6 +5,7 @@
 #include <MarioUtil/MtxUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
+#include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <Map/Map.hpp>
@@ -934,4 +935,92 @@ void TBossEelTooth::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	THitActor::perform(cue, graphics);
 	actor->perform(cue, graphics);
+}
+
+// UNUSED: retail mario.MAP size 0x128. This constructor is inlined at the
+// live call site; keep the standalone definition for the retail symbol ledger.
+// TODO: human-review the exact enemy-group insertion sequence.
+TBossEelVortex::TBossEelVortex(TBossEel* owner, const char* name)
+    : THitActor(name)
+    , mOwner(owner)
+    , mInactive(true)
+    , mTimer(0)
+{
+	initHitActor(0x08000003, 3, ACTOR_TYPE_PLAYER,
+	             owner->getBossEelParams().mSLVortexAttackRadius.get(),
+	             owner->getBossEelParams().mSLVortexAttackHeight.get(),
+	             owner->getBossEelParams().mSLVortexDamageRadius.get(),
+	             owner->getBossEelParams().mSLVortexDamageHeight.get());
+	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	    ->getChildren()
+	    .push_back(this);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
+}
+
+void TBossEelVortex::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	if (mInactive)
+		return;
+
+	if (cue & CUE_MOVE) {
+		f32 scale = mOwner->mScaling.x;
+		mAttackRadius
+		    = mOwner->getBossEelParams().mSLVortexAttackRadius.get() * scale;
+		mAttackHeight
+		    = mOwner->getBossEelParams().mSLVortexAttackHeight.get() * scale;
+		mDamageRadius
+		    = mOwner->getBossEelParams().mSLVortexDamageRadius.get() * scale;
+		mDamageHeight
+		    = mOwner->getBossEelParams().mSLVortexDamageHeight.get() * scale;
+		calcEntryRadius();
+
+		++mTimer;
+		if (mTimer > 30) {
+			bool breathAnimation = mOwner->mMActor->checkCurBckFromIndex(14)
+			                       || mOwner->mMActor->checkCurBckFromIndex(17);
+			if (!breathAnimation) {
+				onHitFlag(HIT_FLAG_NO_COLLISION);
+			} else {
+				for (s32 i = 0; i < mColCount; ++i) {
+					if (!mCollisions[i]->isActorType(0x80000001))
+						continue;
+
+					JGeometry::TVec3<f32> marioTarget = mOwner->mPosition;
+					marioTarget.sub(*gpMarioPos);
+					marioTarget.normalize();
+
+					f32 wave = fabsf(JMASSin(
+					    static_cast<s16>(182.04445f * (0.9f * mTimer))));
+					if (wave > 1.0f)
+						wave = 1.0f;
+					else if (wave < 0.1f)
+						wave = 0.1f;
+
+					f32 power
+					    = mOwner->getBossEelParams().mSLBreathInPower.get()
+					      * wave;
+					SMSRumbleMgr->start(8, &mPosition);
+					if (mOwner->mMActor->checkCurBckFromIndex(17))
+						power *= 0.5f;
+					marioTarget.scale(power);
+					marioTarget.add(*gpMarioPos);
+					SMS_MarioMoveRequest(marioTarget);
+				}
+			}
+		}
+	}
+
+	if (cue & CUE_CALC_ANIM) {
+		MtxPtr mouthMtx = mOwner->getModel()->getAnmMtx(
+		    mOwner->mMapCollisionJointIndices[2]);
+		mPosition.set(mouthMtx[0][3], mouthMtx[1][3] + 1000.0f, mouthMtx[2][3]);
+	}
+	THitActor::perform(cue, graphics);
+}
+
+void TBossEelVortex::reset()
+{
+	offHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFlag(ACTOR_TYPE_PLAYER);
+	mTimer = 0;
 }

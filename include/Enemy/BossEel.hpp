@@ -207,6 +207,11 @@ public:
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	void reset();
+
+public:
+	/* 0x68 */ TBossEel* mOwner;
+	/* 0x6C */ bool mInactive;
+	/* 0x70 */ s32 mTimer;
 };
 
 class TBossEelEye : public THitActor {
