@@ -11,6 +11,7 @@ class TSharedParts;
 class TBossEel;
 class TBossEelSaveParams;
 class TBEelTears;
+class TBossEelTearsRecoverCollision;
 
 class TBEelTearsSaveLoadParams : public TSpineEnemyParams {
 public:
@@ -72,6 +73,13 @@ public:
 	virtual void createEnemies(int);
 
 	void splitTears(JGeometry::TVec3<f32>&);
+	TBEelTearsSaveLoadParams* getSaveParam() const
+	{
+		return static_cast<TBEelTearsSaveLoadParams*>(unk38);
+	}
+
+public:
+	/* 0x54 */ TBEelTearsDrop* mTearsDrops[30];
 };
 
 class TBEelTears : public TSpineEnemy {
@@ -99,8 +107,8 @@ public:
 	/* 0x15C */ TBEelTearsSaveLoadParams* mTearsParams;
 	/* 0x160 */ bool mHighPoly;
 	/* 0x164 */ s32 mStateTimer;
-	/* 0x168 */ TBEelTearsDrop* mDrop;
-	/* 0x16C */ s32 mTearsState;
+	/* 0x168 */ const TBGCheckData* mWaterSurface;
+	/* 0x16C */ TBossEelTearsRecoverCollision* mRecoverCollision;
 };
 
 class TOilBall : public TSpineEnemy {
@@ -201,11 +209,28 @@ public:
 
 class TBossEelCollision : public THitActor {
 public:
-	TBossEelCollision(MtxPtr, const char*);
+	TBossEelCollision(MtxPtr collisionMtx, const char* name)
+	    : THitActor(name)
+	    , mCollisionMtx(collisionMtx)
+	    , mUnk6C(0.0f)
+	    , mUnk70(0.0f)
+	    , mUnk74(0.0f)
+	    , mUnk78(0.0f)
+	    , mOwner(nullptr)
+	{
+	}
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void initCollision();
 	virtual void behaveToMario();
+
+public:
+	/* 0x68 */ MtxPtr mCollisionMtx;
+	/* 0x6C */ f32 mUnk6C;
+	/* 0x70 */ f32 mUnk70;
+	/* 0x74 */ f32 mUnk74;
+	/* 0x78 */ f32 mUnk78;
+	/* 0x7C */ TBossEel* mOwner;
 };
 
 class TBossEelBodyCollision : public TBossEelCollision {
@@ -234,11 +259,20 @@ public:
 
 class TBossEelTearsRecoverCollision : public TBossEelCollision {
 public:
-	TBossEelTearsRecoverCollision(MtxPtr, const char*);
+	TBossEelTearsRecoverCollision(MtxPtr collisionMtx, const char* name)
+	    : TBossEelCollision(collisionMtx, name)
+	    , mRecovering(false)
+	    , mColliding(false)
+	{
+	}
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void initCollision();
 	virtual void behaveToMario();
+
+public:
+	/* 0x80 */ bool mRecovering;
+	/* 0x81 */ bool mColliding;
 };
 
 class TBossEel : public TSpineEnemy {
