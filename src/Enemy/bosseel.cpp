@@ -645,3 +645,77 @@ DEFINE_NERVE(TNerveOilBallStay, TLiveActor)
 	}
 	return false;
 }
+
+TBossEelSaveParams::TBossEelSaveParams()
+    : TParams("/enemy/bosseel.prm")
+    , PARAM_INIT(mSLInitTransYOffset, 0.0f)
+    , PARAM_INIT(mSLAppearMoveDistY, 6000.0f)
+    , PARAM_INIT(mSLBodyScale, 0.75f)
+    , PARAM_INIT(mSLViewClipFar, 25000.0f)
+    , PARAM_INIT(mSLViewClipRadius, 12000.0f)
+    , PARAM_INIT(mSLBodyToHeadDistance, 6000.0f)
+    , PARAM_INIT(mSLBodyAttackRadius, 2400.0f)
+    , PARAM_INIT(mSLBodyAttackHeight, 6300.0f)
+    , PARAM_INIT(mSLBodyDamageRadius, 2200.0f)
+    , PARAM_INIT(mSLBodyDamageHeight, 6100.0f)
+    , PARAM_INIT(mSLHeadAttackRadius, 3600.0f)
+    , PARAM_INIT(mSLHeadAttackHeight, 5600.0f)
+    , PARAM_INIT(mSLHeadDamageRadius, 3400.0f)
+    , PARAM_INIT(mSLHeadDamageHeight, 5400.0f)
+    , PARAM_INIT(mSLToothAttackRadius, 500.0f)
+    , PARAM_INIT(mSLToothAttackHeight, 300.0f)
+    , PARAM_INIT(mSLToothDamageRadius, 600.0f)
+    , PARAM_INIT(mSLToothDamageHeight, 400.0f)
+    , PARAM_INIT(mSLSpinAccel, 0.01f)
+    , PARAM_INIT(mSLSpinMaxSpeed, 10.0f)
+    , PARAM_INIT(mSLToothUpSpeed, 5.0f)
+    , PARAM_INIT(mSLToothLiveHeight, 2000.0f)
+    , PARAM_INIT(mSLToothMaxHitPoint, 50)
+    , PARAM_INIT(mSLGenTearsTime, 100)
+    , PARAM_INIT(mSLVortexAttackRadius, 500.0f)
+    , PARAM_INIT(mSLVortexAttackHeight, 300.0f)
+    , PARAM_INIT(mSLVortexDamageRadius, 600.0f)
+    , PARAM_INIT(mSLVortexDamageHeight, 400.0f)
+    , PARAM_INIT(mSLVortexLiveTimer, 300)
+    , PARAM_INIT(mSLVortexScaleXZ, 1.0f)
+    , PARAM_INIT(mSLVortexScaleY, 1.0f)
+    , PARAM_INIT(mSLMouthOpenFrame, 500)
+    , PARAM_INIT(mSLMouthOpenInterval, 2000)
+    , PARAM_INIT(mSLCanEatFrame, 200)
+    , PARAM_INIT(mSLBreathInPower, 10.0f)
+{
+	TParams::load(mPrmPath);
+}
+
+void TBossEelManager::loadAfter()
+{
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_tooth.jpa", 0xD3);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_mouth.jpa", 0xD4);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_eyeblur.jpa", 0x192);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_smoke.jpa", 0x193);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_smoke_l.jpa", 0x194);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_awa.jpa", 0x195);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_awa_l.jpa", 0x196);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_body.jpa", 0x197);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_dead.jpa", 0x198);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_suikomi.jpa", 0x199);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_tooth_wash.jpa", 0x19A);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_tooth_kira.jpa", 0x19B);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_tooth_always.jpa", 0x19C);
+}
+
+void TBossEelManager::createModelData()
+{
+	static const TModelDataLoadEntry entry[] = {
+		{ "meoto_model.bmd",
+		  J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift), 0 },
+		{ nullptr, 0, 0 },
+	};
+	createModelDataArray(entry);
+}
+
+void TBossEelManager::clipEnemies(JDrama::TGraphics* graphics)
+{
+	clipActorsAux(graphics, mSaveParams.mSLViewClipRadius.get(),
+	              mSaveParams.mSLViewClipFar.get());
+}

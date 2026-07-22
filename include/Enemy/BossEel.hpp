@@ -119,55 +119,61 @@ public:
 	virtual void reset();
 };
 
-class TBossEelSaveParams : public TSpineEnemyParams {
+class TBossEelSaveParams : public TParams {
 public:
 	TBossEelSaveParams();
 
 public:
-	/* 0x0A8 */ TParamRT<f32> mSLInitTransYOffset;
-	/* 0x0BC */ TParamRT<f32> mSLAppearMoveDistY;
-	/* 0x0D0 */ TParamRT<f32> mSLBodyScale;
-	/* 0x0E4 */ TParamRT<f32> mSLViewClipFar;
-	/* 0x0F8 */ TParamRT<f32> mSLViewClipRadius;
-	/* 0x10C */ TParamRT<f32> mSLBodyToHeadDistance;
-	/* 0x120 */ TParamRT<f32> mSLBodyAttackRadius;
-	/* 0x134 */ TParamRT<f32> mSLBodyAttackHeight;
-	/* 0x148 */ TParamRT<f32> mSLBodyDamageRadius;
-	/* 0x15C */ TParamRT<f32> mSLBodyDamageHeight;
-	/* 0x170 */ TParamRT<f32> mSLHeadAttackRadius;
-	/* 0x184 */ TParamRT<f32> mSLHeadAttackHeight;
-	/* 0x198 */ TParamRT<f32> mSLHeadDamageRadius;
-	/* 0x1AC */ TParamRT<f32> mSLHeadDamageHeight;
-	/* 0x1C0 */ TParamRT<f32> mSLToothAttackRadius;
-	/* 0x1D4 */ TParamRT<f32> mSLToothAttackHeight;
-	/* 0x1E8 */ TParamRT<f32> mSLToothDamageRadius;
-	/* 0x1FC */ TParamRT<f32> mSLToothDamageHeight;
-	/* 0x210 */ TParamRT<f32> mSLSpinAccel;
-	/* 0x224 */ TParamRT<f32> mSLSpinMaxSpeed;
-	/* 0x238 */ TParamRT<f32> mSLToothUpSpeed;
-	/* 0x24C */ TParamRT<f32> mSLToothLiveHeight;
-	/* 0x260 */ TParamRT<s32> mSLToothMaxHitPoint;
-	/* 0x274 */ TParamRT<s32> mSLGenTearsTime;
-	/* 0x288 */ TParamRT<f32> mSLVortexAttackRadius;
-	/* 0x29C */ TParamRT<f32> mSLVortexAttackHeight;
-	/* 0x2B0 */ TParamRT<f32> mSLVortexDamageRadius;
-	/* 0x2C4 */ TParamRT<f32> mSLVortexDamageHeight;
-	/* 0x2D8 */ TParamRT<s32> mSLVortexLiveTimer;
-	/* 0x2EC */ TParamRT<f32> mSLVortexScaleXZ;
-	/* 0x300 */ TParamRT<f32> mSLVortexScaleY;
-	/* 0x314 */ TParamRT<f32> mSLMouthOpenFrame;
-	/* 0x328 */ TParamRT<s32> mSLMouthOpenInterval;
-	/* 0x33C */ TParamRT<f32> mSLCanEatFrame;
-	/* 0x350 */ TParamRT<f32> mSLBreathInPower;
+	/* 0x008 */ TParamRT<f32> mSLInitTransYOffset;
+	/* 0x01C */ TParamRT<f32> mSLAppearMoveDistY;
+	/* 0x030 */ TParamRT<f32> mSLBodyScale;
+	/* 0x044 */ TParamRT<f32> mSLViewClipFar;
+	/* 0x058 */ TParamRT<f32> mSLViewClipRadius;
+	/* 0x06C */ TParamRT<f32> mSLBodyToHeadDistance;
+	/* 0x080 */ TParamRT<f32> mSLBodyAttackRadius;
+	/* 0x094 */ TParamRT<f32> mSLBodyAttackHeight;
+	/* 0x0A8 */ TParamRT<f32> mSLBodyDamageRadius;
+	/* 0x0BC */ TParamRT<f32> mSLBodyDamageHeight;
+	/* 0x0D0 */ TParamRT<f32> mSLHeadAttackRadius;
+	/* 0x0E4 */ TParamRT<f32> mSLHeadAttackHeight;
+	/* 0x0F8 */ TParamRT<f32> mSLHeadDamageRadius;
+	/* 0x10C */ TParamRT<f32> mSLHeadDamageHeight;
+	/* 0x120 */ TParamRT<f32> mSLToothAttackRadius;
+	/* 0x134 */ TParamRT<f32> mSLToothAttackHeight;
+	/* 0x148 */ TParamRT<f32> mSLToothDamageRadius;
+	/* 0x15C */ TParamRT<f32> mSLToothDamageHeight;
+	/* 0x170 */ TParamRT<f32> mSLSpinAccel;
+	/* 0x184 */ TParamRT<f32> mSLSpinMaxSpeed;
+	/* 0x198 */ TParamRT<f32> mSLToothUpSpeed;
+	/* 0x1AC */ TParamRT<f32> mSLToothLiveHeight;
+	/* 0x1C0 */ TParamRT<s32> mSLToothMaxHitPoint;
+	/* 0x1D4 */ TParamRT<s32> mSLGenTearsTime;
+	/* 0x1E8 */ TParamRT<f32> mSLVortexAttackRadius;
+	/* 0x1FC */ TParamRT<f32> mSLVortexAttackHeight;
+	/* 0x210 */ TParamRT<f32> mSLVortexDamageRadius;
+	/* 0x224 */ TParamRT<f32> mSLVortexDamageHeight;
+	/* 0x238 */ TParamRT<s32> mSLVortexLiveTimer;
+	/* 0x24C */ TParamRT<f32> mSLVortexScaleXZ;
+	/* 0x260 */ TParamRT<f32> mSLVortexScaleY;
+	/* 0x274 */ TParamRT<s32> mSLMouthOpenFrame;
+	/* 0x288 */ TParamRT<s32> mSLMouthOpenInterval;
+	/* 0x29C */ TParamRT<s32> mSLCanEatFrame;
+	/* 0x2B0 */ TParamRT<f32> mSLBreathInPower;
 };
 
 class TBossEelManager : public TEnemyManager {
 public:
-	TBossEelManager(const char*);
+	TBossEelManager(const char* name)
+	    : TEnemyManager(name)
+	{
+	}
 
 	virtual void loadAfter();
 	virtual void createModelData();
 	virtual void clipEnemies(JDrama::TGraphics* graphics);
+
+public:
+	/* 0x054 */ TBossEelSaveParams mSaveParams;
 };
 
 class TBossEelTooth : public THitActor {
