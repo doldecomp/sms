@@ -1495,7 +1495,7 @@ void TBossEel::init(TLiveManager* manager)
 	mMActorKeeper->createMActorFromAllBmd(0);
 	mMActor          = mMActorKeeper->getMActor(0);
 	mSaveParams      = &static_cast<TBossEelManager*>(manager)->mSaveParams;
-	mInitialPosition = mPosition;
+	mInitialPosition.set(mPosition);
 	onLiveFlag(LIVE_FLAG_UNK8 | LIVE_FLAG_UNK10);
 	mGroundHeight = gpMap->checkGround(mPosition.x,
 	                                   mPosition.y + mBodyScale * mHeadHeight,
