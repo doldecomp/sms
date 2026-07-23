@@ -2043,6 +2043,32 @@ DEFINE_NERVE(TNerveBossEelWaitAppear, TLiveActor)
 	return false;
 }
 
+// UNUSED: retail mario.MAP size 0x184. Both spin nerves inline this helper.
+void ExecSpinNerve_Sub(TBossEel* eel)
+{
+	f32 spinSpeed = eel->mTurnSpeed;
+	CLBChaseGeneralConstantSpecifySpeed(&spinSpeed,
+	                                    eel->mSaveParams->mSLSpinMaxSpeed.get(),
+	                                    eel->mSaveParams->mSLSpinAccel.get());
+	eel->mTurnSpeed = spinSpeed;
+	gpCameraShake->keepShake(static_cast<EnumCamShakeMode>(0x18), 1.0f);
+
+	if (eel->checkLiveFlag(LIVE_FLAG_UNK10000)) {
+		eel->mRotation.y -= spinSpeed;
+		if (eel->mRotation.y <= 0.0f)
+			SMSGetMSound()->startSoundActorWithInfo(0x8921, &eel->mPosition,
+			                                        nullptr, spinSpeed, 0, 0,
+			                                        nullptr, 0, 4);
+	} else {
+		eel->mRotation.y += spinSpeed;
+		if (eel->mRotation.y >= 360.0f)
+			SMSGetMSound()->startSoundActorWithInfo(0x8921, &eel->mPosition,
+			                                        nullptr, spinSpeed, 0, 0,
+			                                        nullptr, 0, 4);
+	}
+	eel->mRotation.y = MsWrap(eel->mRotation.y, 0.0f, 360.0f);
+}
+
 DEFINE_NERVE(TNerveBossEelFirstSpin, TLiveActor)
 {
 	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
@@ -2456,30 +2482,4 @@ DEFINE_NERVE(TNerveBossEelSleepOnBottom, TLiveActor)
 	if (spine->getTime() > 1000 && eel->checkCurAnmEnd(0))
 		return true;
 	return false;
-}
-
-// UNUSED: retail mario.MAP size 0x184. Both spin nerves inline this helper.
-void ExecSpinNerve_Sub(TBossEel* eel)
-{
-	f32 spinSpeed = eel->mTurnSpeed;
-	CLBChaseGeneralConstantSpecifySpeed(&spinSpeed,
-	                                    eel->mSaveParams->mSLSpinMaxSpeed.get(),
-	                                    eel->mSaveParams->mSLSpinAccel.get());
-	eel->mTurnSpeed = spinSpeed;
-	gpCameraShake->keepShake(static_cast<EnumCamShakeMode>(0x18), 1.0f);
-
-	if (eel->checkLiveFlag(LIVE_FLAG_UNK10000)) {
-		eel->mRotation.y -= spinSpeed;
-		if (eel->mRotation.y <= 0.0f)
-			SMSGetMSound()->startSoundActorWithInfo(0x8921, &eel->mPosition,
-			                                        nullptr, spinSpeed, 0, 0,
-			                                        nullptr, 0, 4);
-	} else {
-		eel->mRotation.y += spinSpeed;
-		if (eel->mRotation.y >= 360.0f)
-			SMSGetMSound()->startSoundActorWithInfo(0x8921, &eel->mPosition,
-			                                        nullptr, spinSpeed, 0, 0,
-			                                        nullptr, 0, 4);
-	}
-	eel->mRotation.y = MsWrap(eel->mRotation.y, 0.0f, 360.0f);
 }
