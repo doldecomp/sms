@@ -26,6 +26,27 @@ jobs:
     - name: Git config
       run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
+    # Determine which .cpp files changed (PR: vs base branch; push: vs prev commit)
+    - name: Changed .cpp files
+      run: |
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          base="${{ github.event.pull_request.base.sha }}"
+        else
+          base="${{ github.event.before }}"
+        fi
+        if [ -z "$base" ] \
+           || [ "$base" = "0000000000000000000000000000000000000000" ] \
+           || ! git rev-parse -q --verify "$base^{commit}" >/dev/null 2>&1; then
+          base="$(git rev-parse -q --verify HEAD~1 || true)"
+        fi
+        if [ -n "$base" ]; then
+          git diff --name-only --diff-filter=d "$base" HEAD -- '*.cpp' \
+            > changed_cpp.txt
+        else
+          : > changed_cpp.txt
+        fi
+        echo "Changed .cpp files:"; cat changed_cpp.txt
+
     # Normalize file mod times
     - name: Restore timestamps
       run: |
@@ -67,3 +88,22 @@ jobs:
       with:
         name: ${{ matrix.version }}_report
         path: build/${{ matrix.version }}/report.json
+
+    # Validate map symbol presence/order/linkage for each changed .cpp
+    - name: Validate symbol order
+      run: |
+        if [ ! -s changed_cpp.txt ]; then
+          echo "No changed .cpp files; nothing to validate."
+          exit 0
+        fi
+        NM="$(command -v powerpc-eabi-nm || true)"
+        if [ -z "$NM" ]; then
+          NM="$(find /binutils -name powerpc-eabi-nm -type f 2>/dev/null | head -1)"
+        fi
+        if [ -z "$NM" ] || [ ! -x "$NM" ]; then
+          echo "::error:: powerpc-eabi-nm not found; cannot run symbol-order check."
+          exit 1
+        fi
+        export NM
+        echo "Using nm: $NM"
+        python tools/check-changed-symbol-order.py $(cat changed_cpp.txt)
