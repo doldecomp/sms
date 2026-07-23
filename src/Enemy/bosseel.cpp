@@ -1603,7 +1603,7 @@ void TBossEel::init(TLiveManager* manager)
 		    "/bosseel/meoto_camera", "/bosseel/meoto_out_loop" };
 	for (s32 i = 0; i < 4; ++i) {
 		mMapCollisionJointIndices[i]
-		    = getModel()->getModelData()->getJointName()->getIndex(
+		    = mMActor->getModel()->getModelData()->getJointName()->getIndex(
 		        collisionJoints[i]);
 		mMapCollisions[i] = new TMapCollisionMove;
 		mMapCollisions[i]->init(collisionFiles[i], 1, this);
@@ -1611,7 +1611,7 @@ void TBossEel::init(TLiveManager* manager)
 	}
 
 	mAwaCollision = new TBossEelAwaCollision(
-	    getModel()->getAnmMtx(mMapCollisionJointIndices[2]), "泡コリジョン");
+	    mMActor->getModel()->getAnmMtx(mMapCollisionJointIndices[2]), "泡コリジョン");
 	mAwaCollision->initCollision();
 	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
 	    ->getChildren()
@@ -1626,7 +1626,7 @@ void TBossEel::init(TLiveManager* manager)
 	mouthCube->unk24.set(7000.0f, 10000.0f, 7000.0f);
 
 	initAnmSound();
-	getModel()->calc();
+	mMActor->getModel()->calc();
 }
 
 MtxPtr TBossEel::getTakingMtx() { return mMActor->getModel()->getAnmMtx(7); }
