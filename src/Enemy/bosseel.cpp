@@ -2102,7 +2102,7 @@ DEFINE_NERVE(TNerveBossEelAppear, TLiveActor)
 		eel->setBckAnm(15);
 		eel->mInDemo = true;
 		gpCameraShake->startShake(static_cast<EnumCamShakeMode>(0x19), 1.0f);
-		f32 duration = eel->mMActor->getFrameCtrl(0)->getEnd() * 2.0f;
+		f32 duration = eel->mMActor->getFrameCtrl(0)->getEnd() * 2;
 		eel->mAppearAcceleration
 		    = (eel->mSaveParams->mSLAppearMoveDistY.get() / duration)
 		      / duration;
