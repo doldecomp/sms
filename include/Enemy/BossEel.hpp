@@ -208,7 +208,7 @@ public:
 	TBossEelVortex(TBossEel*, const char*);
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	void reset();
+	virtual void reset();
 
 public:
 	/* 0x68 */ TBossEel* mOwner;
