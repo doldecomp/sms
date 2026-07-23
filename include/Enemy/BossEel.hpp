@@ -414,7 +414,6 @@ inline const TBossEel* TBossEelEye::getOwner() const
 }
 
 void ExecSpinNerve_Sub(TBossEel*);
-BOOL ExecBackNerve_Sub(TSpineBase<TLiveActor>*, f32);
 
 DECLARE_NERVE(TNerveBEelTearsGenerate, TLiveActor);
 DECLARE_NERVE(TNerveBEelTearsMoveUp, TLiveActor);
