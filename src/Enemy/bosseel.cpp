@@ -1510,9 +1510,9 @@ void TBossEel::init(TLiveManager* manager)
 	             mSaveParams->mSLBodyDamageRadius.get(),
 	             mSaveParams->mSLBodyDamageHeight.get());
 	offHitFlag(HIT_FLAG_NO_COLLISION);
-	if (!getModel()->getSkinDeform())
-		getModel()->setSkinDeform(new J3DSkinDeform,
-		                          J3D_DEFORM_ATTACH_FLAG_UNK_1);
+	J3DModel* model = mMActor->getModel();
+	if (!model->getSkinDeform())
+		model->setSkinDeform(new J3DSkinDeform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
 	mMActor->resetDL();
 
 	mHeadCollision = new THitActor("めおとウナギの頭部");
@@ -1527,7 +1527,8 @@ void TBossEel::init(TLiveManager* manager)
 	mHeadCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
 
 	mBodyCollision
-	    = new TBossEelBodyCollision(getModel()->getBaseTRMtx(), "体コリジョン");
+	    = new TBossEelBodyCollision(mMActor->getModel()->getBaseTRMtx(),
+	                                "体コリジョン");
 	mBodyCollision->initCollision();
 	mBodyCollision->mOwner = this;
 	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
@@ -1535,8 +1536,8 @@ void TBossEel::init(TLiveManager* manager)
 	    .push_back(mBodyCollision);
 	mBodyCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
 
-	mBarrierCollision = new TBossEelBarrierCollision(getModel()->getAnmMtx(7),
-	                                                 "境界コリジョン");
+	mBarrierCollision = new TBossEelBarrierCollision(
+	    mMActor->getModel()->getAnmMtx(7), "境界コリジョン");
 	mBarrierCollision->initCollision();
 	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
 	    ->getChildren()
@@ -1549,8 +1550,9 @@ void TBossEel::init(TLiveManager* manager)
 	    eyeResource, J3DMLF_MaterialPEFull | J3DMLF_MaterialTexGenFull
 	                     | (2 << J3DMLF_TevStageNumShift)));
 	for (s32 i = 0; i < 4; ++i) {
-		s32 jointIndex = getModel()->getModelData()->getJointName()->getIndex(
-		    eyeJoints[i]);
+		s32 jointIndex
+		    = mMActor->getModel()->getModelData()->getJointName()->getIndex(
+		        eyeJoints[i]);
 		mEyes[i] = new TBossEelEye(this, jointIndex, eyeModelData, 3,
 		                           "めおとウナギ目");
 	}
