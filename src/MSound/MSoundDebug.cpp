@@ -6,8 +6,6 @@
 
 static void dummy() { JADPrm<u8> prm(0, ""); }
 
-MSD* MSD::get() { return 0; }
-
 MSPrintBase::MSPrintBase() { }
 
 MSPrintBase::MSPrintBase(u8 param1, u8 param2, u8 param3, u8 param4, u8 param5)
@@ -25,3 +23,6 @@ void MSPrintEntry::print() { }
 MSPrint::MSPrint() { }
 
 void MSPrint::print() { }
+
+// UNUSED
+MSD* MSD::get() { return 0; }

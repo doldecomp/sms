@@ -39,16 +39,7 @@ struct RumbleTypeInfo _info[23] = {
 
 const char* invalidStr = "Invalid RumbleType";
 
-int RumbleType::getIndex(char* strIn)
-{
-	for (int i = 0; i < channelNum; i++) {
-		if (!strcmp(strIn, _info[i].str)) {
-			return _info[i].unk0;
-		}
-	}
-	return -1;
-}
-
+// UNUSED
 // Size needed: 0x54, current: 0x34
 const char* RumbleType::getName(int index)
 {
@@ -57,4 +48,14 @@ const char* RumbleType::getName(int index)
 	}
 
 	return _info[index].str;
+}
+
+int RumbleType::getIndex(char* strIn)
+{
+	for (int i = 0; i < channelNum; i++) {
+		if (!strcmp(strIn, _info[i].str)) {
+			return _info[i].unk0;
+		}
+	}
+	return -1;
 }

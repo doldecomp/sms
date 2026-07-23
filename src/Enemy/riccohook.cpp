@@ -4,6 +4,23 @@
 #include <JSystem/JMath.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
+// @non-matching -- the issue seems to stem from the JDrama TNameRefGen
+// search/push_back calls.
+THookTake::THookTake(TRiccoHook* owner, const char* name)
+    : TTakeActor(name)
+    , mOwner(owner)
+{
+	initHitActor(0x400000BB, 1, -0x80000000,
+	             mOwner->getSaveLoadParam()->mSLHitRadius.get(),
+	             mOwner->getSaveLoadParam()->mSLHitHeight.get(),
+	             mOwner->getSaveLoadParam()->mSLHitRadius.get(),
+	             mOwner->getSaveLoadParam()->mSLHitHeight.get());
+
+	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
+	    ->getChildren()
+	    .push_back(this);
+}
+
 MtxPtr THookTake::getTakingMtx() { return nullptr; }
 
 f32 THookTake::getRadiusAtY(f32 y) const
@@ -42,21 +59,14 @@ void THookTake::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
-// @non-matching -- the issue seems to stem from the JDrama TNameRefGen
-// search/push_back calls.
-THookTake::THookTake(TRiccoHook* owner, const char* name)
-    : TTakeActor(name)
-    , mOwner(owner)
+THookParams::THookParams(const char* path)
+    : TSpineEnemyParams(path)
+    , PARAM_INIT(mSLHitHeight, 900.0f)
+    , PARAM_INIT(mSLHitRadius, 120.0f)
+    , PARAM_INIT(mSLHangRadius, 30.0f)
+    , PARAM_INIT(mSLMoveSpeed, 4.0f)
 {
-	initHitActor(0x400000BB, 1, -0x80000000,
-	             mOwner->getSaveLoadParam()->mSLHitRadius.get(),
-	             mOwner->getSaveLoadParam()->mSLHitHeight.get(),
-	             mOwner->getSaveLoadParam()->mSLHitRadius.get(),
-	             mOwner->getSaveLoadParam()->mSLHitHeight.get());
-
-	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
-	    ->getChildren()
-	    .push_back(this);
+	TParams::load(mPrmPath);
 }
 
 TRiccoHook::TRiccoHook(const char* name)
@@ -94,16 +104,6 @@ void TRiccoHook::perform(u32 cue, JDrama::TGraphics* graphics)
 	if ((cue & CUE_MOVE) && mTimer > 0) {
 		mTimer--;
 	}
-}
-
-THookParams::THookParams(const char* path)
-    : TSpineEnemyParams(path)
-    , PARAM_INIT(mSLHitHeight, 900.0f)
-    , PARAM_INIT(mSLHitRadius, 120.0f)
-    , PARAM_INIT(mSLHangRadius, 30.0f)
-    , PARAM_INIT(mSLMoveSpeed, 4.0f)
-{
-	TParams::load(mPrmPath);
 }
 
 TRiccoHookManager::TRiccoHookManager(const char* name)

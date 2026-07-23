@@ -4,7 +4,7 @@
 
 static TGDLStatic* currentTGDLStatic;
 
-void TGDLStaticOverFlow() { currentTGDLStatic->unk11 = 1; }
+static void TGDLStaticOverFlow() { currentTGDLStatic->unk11 = 1; }
 
 TGDLStatic::TGDLSentinel::~TGDLSentinel()
 {

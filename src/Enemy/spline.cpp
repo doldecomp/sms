@@ -20,6 +20,9 @@ TSplinePath::TSplinePath(int param_1)
 		mXs[i] = mYs[i] = mZs[i] = i;
 }
 
+// BUG: UNUSED symbol size tells us they even forgot to delete the arrays -_-
+TSplinePath::~TSplinePath() { }
+
 void TSplinePath::makeTable(f32* parametrization, f32* coords, f32* param_3)
 {
 	param_3[0]             = 0.0f;
