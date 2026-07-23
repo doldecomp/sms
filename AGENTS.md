@@ -137,6 +137,48 @@ Options:
 - `--no-collapse` — disable match-run collapsing and show every instruction
 - `--range 100-300` — only show instructions at hex offsets 0x100–0x300
 
+### Using `validate-symbol-order.py` (symbols vs the map)
+
+`tools/validate-symbol-order.py` checks a single TU's **function symbols**
+against the original linker map (`mario.MAP`) — the things `objdiff` can't see,
+because they concern deadstripped (UNUSED) symbols, emission order, and linkage
+rather than instruction bytes. It reads our compiled object with `nm`, so
+**build the TU first**, then compares it to the map's `.text section layout`
+and symbol-closure section.
+
+```
+python tools/validate-symbol-order.py -u mario/MarioUtil/MathUtil
+```
+
+Unit names are the same `mario/<path>` names as `decomp-diff.py`.
+
+What it reports:
+- **MISSING** (error) — a map symbol (used or UNUSED) that our object doesn't
+  define. Just define the function.
+- **ORDER** (error) — non-weak symbols present but in the wrong relative order;
+  reorder the definitions to match the map. (Emission order is the reverse of
+  source order for `-inline deferred` TUs.) A disorder involving **only weak**
+  symbols is downgraded to a *warning*, since weak ordering is compiler-driven
+  and painful to steer.
+- **BINDING** (error) — a *linked* symbol whose weak/local/global linkage
+  disagrees with the map's closure section (e.g. an out-of-line global that
+  should be a weak header inline, or a dropped `static`).
+- **SIZE** (warning) — an UNUSED symbol whose byte size differs from the map.
+  Matching an inlined body's exact size is hard, so this never fails.
+
+Exit codes: `0` pass, `1` a real failure, `2` couldn't run (unit / object /
+map not found).
+
+**Caveat — UNUSED binding is not checked.** Dead-stripping removes weak, local
+and global symbols alike and records no binding in the map, so an UNUSED
+symbol's linkage is *unknowable from the map*: an UNUSED symbol **can** be weak.
+The map's `UNUSED` marker says nothing about linkage, so the tool only validates
+binding for linked symbols.
+
+This runs in CI: `tools/check-changed-symbol-order.py` maps every changed
+`.cpp` in a PR/push to its unit and runs the check, gating the "symbol map"
+items in the Pre-PR checklist below.
+
 ### Always prefer using `m2c` for from-scratch decompilation
 
 Always insist for the user to provide a path to [`m2c`](https://github.com/matt-kempster/m2c) when working on decompiling new functions (as opposed to matching ones that are already very close), it produces rough C-style draft decompilation of a function or an entire translation unit.
@@ -395,6 +437,10 @@ UNUSED functions must still be reconstructed in the source because:
 ### Pre-PR checklist
 
 Before submitting a PR with matching work, make sure to check the following:
+- Run `tools/validate-symbol-order.py -u <unit>` on each changed TU (CI runs it
+  automatically on every changed `.cpp`). It automates several of the items
+  below: symbol **presence**, non-weak **ordering**, and linked-symbol
+  **linkage** against `mario.MAP`
 - Whether all code entities available from mario.MAP are declared and defined
   * Every type related to the TU seen from the symbols (including ones with all methods marked as UNUSED)
   * For each class, every method available from the entire map (including ones that are emitted as weak symbols into other TUs)
