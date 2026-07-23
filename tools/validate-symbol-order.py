@@ -54,7 +54,9 @@ from typing import Dict, List, Optional, Tuple
 script_dir = os.path.dirname(os.path.realpath(__file__))
 root_dir = os.path.abspath(os.path.join(script_dir, ".."))
 
-DEFAULT_MAP = os.path.join(root_dir, "orig", "GMSJ01", "files", "mario.MAP")
+DEFAULT_MAP = os.environ.get(
+    "MARIO_MAP", os.path.join(root_dir, "orig", "GMSJ01", "files", "mario.MAP")
+)
 NM = os.environ.get("NM", os.path.join(root_dir, "build", "binutils", "powerpc-eabi-nm.exe"))
 OBJDIFF_JSON = os.path.join(root_dir, "objdiff.json")
 
