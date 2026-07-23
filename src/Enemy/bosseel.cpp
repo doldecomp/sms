@@ -2191,7 +2191,7 @@ static BOOL ExecBackNerve_Sub(TSpineBase<TLiveActor>* spine, f32 speed)
 	}
 
 	eel->mAppearOffset -= eel->mSaveParams->mSLAppearMoveDistY.get()
-	                      / (eel->mMActor->getFrameCtrl(0)->getEnd() * 2.0f);
+	                      / (eel->mMActor->getFrameCtrl(0)->getEnd() * 2);
 	if (eel->mAppearOffset < 0.0f) {
 		eel->mAppearOffset = 0.0f;
 		if (eel->checkCurAnmEnd(0)) {
