@@ -1816,12 +1816,12 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 		collideToMario();
 
 		TPosition3f collisionMtx;
-		collisionMtx.set(getModel()->getAnmMtx(mMapCollisionJointIndices[0]));
+		collisionMtx.set(mMActor->getModel()->getAnmMtx(mMapCollisionJointIndices[0]));
 		mMapCollisions[2]->moveMtx(collisionMtx);
 		if (mUseMapCollision) {
 			for (s32 i = 0; i < 2; ++i) {
 				collisionMtx.set(
-				    getModel()->getAnmMtx(mMapCollisionJointIndices[i]));
+				    mMActor->getModel()->getAnmMtx(mMapCollisionJointIndices[i]));
 				mMapCollisions[i]->moveMtx(collisionMtx);
 			}
 		}
@@ -1902,7 +1902,7 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 		const TNerveBase<TLiveActor>* nerve = mSpine->getCurrentNerve();
 		if (nerve == &TNerveBossEelFirstSpin::theNerve()
 		    || nerve == &TNerveBossEelSecondSpin::theNerve()) {
-			MtxPtr breathMtx = getModel()->getAnmMtx(5);
+			MtxPtr breathMtx = mMActor->getModel()->getAnmMtx(5);
 			mBreathParticlePosition.set(breathMtx[0][3], breathMtx[1][3],
 			                            breathMtx[2][3]);
 			u32 particles[2] = {
@@ -1919,7 +1919,7 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if (mMActor->checkCurBckFromIndex(15)) {
 			J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(0);
-			MtxPtr breathMtx        = getModel()->getAnmMtx(5);
+			MtxPtr breathMtx        = mMActor->getModel()->getAnmMtx(5);
 			mBreathParticlePosition.set(breathMtx[0][3], breathMtx[1][3],
 			                            breathMtx[2][3]);
 			if (frameCtrl->checkPass(102.0f)) {
@@ -1938,7 +1938,7 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 
 		if (mMActor->checkCurBckFromIndex(14)) {
-			MtxPtr breathMtx = getModel()->getAnmMtx(5);
+			MtxPtr breathMtx = mMActor->getModel()->getAnmMtx(5);
 			mBreathParticlePosition.set(breathMtx[0][3], breathMtx[1][3],
 			                            breathMtx[2][3]);
 			if (SMSGetMSound()->gateCheck(0x8120))
