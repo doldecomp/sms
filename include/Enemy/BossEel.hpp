@@ -3,6 +3,7 @@
 
 #include <Enemy/Enemy.hpp>
 #include <Enemy/EnemyManager.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 #include <Strategic/Nerve.hpp>
 #include <Strategic/SharedParts.hpp>
 #include <dolphin/gx/GXStruct.h>
@@ -42,10 +43,8 @@ public:
 	/* 0x1D4 */ TParamRT<f32> mSLBodyScaleHigh;
 	/* 0x1E8 */ TParamRT<f32> mSLTearsDropScaleLow;
 	/* 0x1FC */ TParamRT<f32> mSLTearsDropScaleHigh;
-	/* 0x210 */ f32 mBodyScaleLow;
-	/* 0x214 */ f32 mBodyScaleHigh;
-	/* 0x218 */ f32 mTearsDropScaleLow;
-	/* 0x21C */ f32 mTearsDropScaleHigh;
+	/* 0x210 */ TMsRange<f32> mBodyScaleRange;
+	/* 0x218 */ TMsRange<f32> mTearsDropScaleRange;
 };
 
 class TBEelTearsDrop : public THitActor {
@@ -393,7 +392,7 @@ public:
 	/* 0x1D8 */ f32 mMouthOpenSpeed;
 	/* 0x1DC */ u32 mTimers[3];
 	/* 0x1E8 */ TBossEelSaveParams* mSaveParams;
-	/* 0x1EC */ u32* mSpinTimer;
+	/* 0x1EC */ JGeometry::TVec2<u32>* mSpinTimer;
 	/* 0x1F0 */ bool mInDemo;
 	/* 0x1F4 */ f32 mAppearOffset;
 	/* 0x1F8 */ f32 mAppearAcceleration;
