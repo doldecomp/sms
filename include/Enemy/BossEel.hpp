@@ -1,9 +1,419 @@
 #ifndef ENEMY_BOSS_EEL_HPP
 #define ENEMY_BOSS_EEL_HPP
 
+#include <Enemy/Enemy.hpp>
+#include <Enemy/EnemyManager.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 #include <Strategic/Nerve.hpp>
+#include <Strategic/SharedParts.hpp>
+#include <dolphin/gx/GXStruct.h>
 
-class TLiveActor;
+class MActor;
+class SDLModel;
+class SDLModelData;
+class TSharedParts;
+class TBossEel;
+class TBossEelSaveParams;
+class TBEelTears;
+class TBossEelTearsRecoverCollision;
+class TMapCollisionMove;
+class TCubeManagerBase;
+class TCoin;
+
+class TBEelTearsSaveLoadParams : public TSpineEnemyParams {
+public:
+	TBEelTearsSaveLoadParams(const char*);
+
+public:
+	/* 0x0A8 */ TParamRT<f32> mSLTearsUpSpeed;
+	/* 0x0BC */ TParamRT<f32> mSLTearsDamageUpSpeed;
+	/* 0x0D0 */ TParamRT<f32> mSLTearsLiveHeight;
+	/* 0x0E4 */ TParamRT<s32> mSLTearsSplitNum;
+	/* 0x0F8 */ TParamRT<s32> mSLTearsDamageRadius;
+	/* 0x10C */ TParamRT<s32> mSLTearsDamageHeight;
+	/* 0x120 */ TParamRT<s32> mSLTearsAttackRadius;
+	/* 0x134 */ TParamRT<s32> mSLTearsAttackHeight;
+	/* 0x148 */ TParamRT<s32> mSLTearsDropDamageRadius;
+	/* 0x15C */ TParamRT<s32> mSLTearsDropDamageHeight;
+	/* 0x170 */ TParamRT<s32> mSLTearsDropAttackRadius;
+	/* 0x184 */ TParamRT<s32> mSLTearsDropAttackHeight;
+	/* 0x198 */ TParamRT<f32> mSLHighPolyDistY;
+	/* 0x1AC */ TParamRT<f32> mSLHitAnmFrameRate;
+	/* 0x1C0 */ TParamRT<f32> mSLBodyScaleLow;
+	/* 0x1D4 */ TParamRT<f32> mSLBodyScaleHigh;
+	/* 0x1E8 */ TParamRT<f32> mSLTearsDropScaleLow;
+	/* 0x1FC */ TParamRT<f32> mSLTearsDropScaleHigh;
+	/* 0x210 */ TMsRange<f32> mBodyScaleRange;
+	/* 0x218 */ TMsRange<f32> mTearsDropScaleRange;
+};
+
+class TBEelTearsDrop : public THitActor {
+public:
+	TBEelTearsDrop(TBEelTears*, int, SDLModelData*, const char*);
+
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message)
+	{
+		return THitActor::receiveMessage(sender, message);
+	}
+
+	void generate(JGeometry::TVec3<f32>&);
+
+public:
+	/* 0x68 */ TSharedParts* mSharedParts;
+	/* 0x6C */ bool mActive;
+	/* 0x70 */ f32 mRiseSpeed;
+	/* 0x74 */ TBEelTears* mOwner;
+};
+
+class TBEelTearsManager : public TEnemyManager {
+public:
+	TBEelTearsManager(const char*);
+
+	virtual void load(JSUMemoryInputStream&);
+	virtual void loadAfter();
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual void createModelData();
+	virtual TSpineEnemy* createEnemyInstance();
+	virtual void createEnemies(int);
+
+	void splitTears(JGeometry::TVec3<f32>&);
+	TBEelTearsSaveLoadParams* getSaveParam() const
+	{
+		return static_cast<TBEelTearsSaveLoadParams*>(unk38);
+	}
+
+public:
+	/* 0x54 */ TBEelTearsDrop* mTearsDrops[30];
+};
+
+class TBEelTears : public TSpineEnemy {
+public:
+	TBEelTears(const char*);
+
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void init(TLiveManager*);
+	virtual void calcRootMatrix();
+	virtual void moveObject();
+	virtual void kill();
+	virtual const char** getBasNameTable() const;
+	virtual void reset();
+	virtual void setMActorAndKeeper();
+
+	void deadEffect();
+	void setRecoverTears();
+	void setBubble();
+
+public:
+	/* 0x150 */ JGeometry::TVec3<f32> mInitialPosition;
+	/* 0x15C */ TBEelTearsSaveLoadParams* mTearsParams;
+	/* 0x160 */ bool mHighPoly;
+	/* 0x164 */ s32 mStateTimer;
+	/* 0x168 */ MtxPtr mSpawnMtx;
+	/* 0x16C */ TBossEelTearsRecoverCollision* mRecoverCollision;
+};
+
+class TOilBall : public TBEelTears {
+public:
+	TOilBall(const char*);
+
+	virtual void load(JSUMemoryInputStream&);
+	virtual void calcRootMatrix();
+	virtual void moveObject();
+	virtual void reset();
+};
+
+class TBossEelSaveParams : public TParams {
+public:
+	TBossEelSaveParams();
+
+public:
+	/* 0x008 */ TParamRT<f32> mSLInitTransYOffset;
+	/* 0x01C */ TParamRT<f32> mSLAppearMoveDistY;
+	/* 0x030 */ TParamRT<f32> mSLBodyScale;
+	/* 0x044 */ TParamRT<f32> mSLViewClipFar;
+	/* 0x058 */ TParamRT<f32> mSLViewClipRadius;
+	/* 0x06C */ TParamRT<f32> mSLBodyToHeadDistance;
+	/* 0x080 */ TParamRT<f32> mSLBodyAttackRadius;
+	/* 0x094 */ TParamRT<f32> mSLBodyAttackHeight;
+	/* 0x0A8 */ TParamRT<f32> mSLBodyDamageRadius;
+	/* 0x0BC */ TParamRT<f32> mSLBodyDamageHeight;
+	/* 0x0D0 */ TParamRT<f32> mSLHeadAttackRadius;
+	/* 0x0E4 */ TParamRT<f32> mSLHeadAttackHeight;
+	/* 0x0F8 */ TParamRT<f32> mSLHeadDamageRadius;
+	/* 0x10C */ TParamRT<f32> mSLHeadDamageHeight;
+	/* 0x120 */ TParamRT<f32> mSLToothAttackRadius;
+	/* 0x134 */ TParamRT<f32> mSLToothAttackHeight;
+	/* 0x148 */ TParamRT<f32> mSLToothDamageRadius;
+	/* 0x15C */ TParamRT<f32> mSLToothDamageHeight;
+	/* 0x170 */ TParamRT<f32> mSLSpinAccel;
+	/* 0x184 */ TParamRT<f32> mSLSpinMaxSpeed;
+	/* 0x198 */ TParamRT<f32> mSLToothUpSpeed;
+	/* 0x1AC */ TParamRT<f32> mSLToothLiveHeight;
+	/* 0x1C0 */ TParamRT<s32> mSLToothMaxHitPoint;
+	/* 0x1D4 */ TParamRT<s32> mSLGenTearsTime;
+	/* 0x1E8 */ TParamRT<f32> mSLVortexAttackRadius;
+	/* 0x1FC */ TParamRT<f32> mSLVortexAttackHeight;
+	/* 0x210 */ TParamRT<f32> mSLVortexDamageRadius;
+	/* 0x224 */ TParamRT<f32> mSLVortexDamageHeight;
+	/* 0x238 */ TParamRT<s32> mSLVortexLiveTimer;
+	/* 0x24C */ TParamRT<f32> mSLVortexScaleXZ;
+	/* 0x260 */ TParamRT<f32> mSLVortexScaleY;
+	/* 0x274 */ TParamRT<s32> mSLMouthOpenFrame;
+	/* 0x288 */ TParamRT<s32> mSLMouthOpenInterval;
+	/* 0x29C */ TParamRT<s32> mSLCanEatFrame;
+	/* 0x2B0 */ TParamRT<f32> mSLBreathInPower;
+};
+
+class TBossEelManager : public TEnemyManager {
+public:
+	TBossEelManager(const char* name)
+	    : TEnemyManager(name)
+	{
+	}
+
+	virtual void loadAfter();
+	virtual void createModelData();
+	virtual void clipEnemies(JDrama::TGraphics* graphics);
+
+public:
+	/* 0x054 */ TBossEelSaveParams mSaveParams;
+};
+
+class TBossEelTooth : public THitActor {
+public:
+	TBossEelTooth(u8, TBossEel*, const char*, SDLModelData*, const char*);
+
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+
+	void updateTremble();
+	void changeToothAlpha(u8);
+
+public:
+	/* 0x068 */ TSharedParts* mSharedParts;
+	/* 0x06C */ TBossEel* mOwner;
+	/* 0x070 */ s32 mHitPoints;
+	/* 0x074 */ u8 mToothType;
+	/* 0x078 */ JGeometry::TVec3<f32> mTrembleRotation;
+	/* 0x084 */ s32 mDamageCooldown;
+	/* 0x088 */ Mtx mDetachedMtx;
+	/* 0x0B8 */ GXColor mColor;
+	/* 0x0BC */ bool mCanShedTears;
+};
+
+class TBossEelVortex : public THitActor {
+public:
+	TBossEelVortex(TBossEel*, const char*);
+
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual void reset();
+
+public:
+	/* 0x68 */ TBossEel* mOwner;
+	/* 0x6C */ bool mInactive;
+	/* 0x70 */ s32 mTimer;
+};
+
+class TBossEelEye : public TSharedParts {
+public:
+	TBossEelEye(const TLiveActor*, int, SDLModelData*, u32, const char*);
+
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	void setBckAnm(int);
+
+	const TBossEel* getOwner() const;
+
+public:
+	/* 0x1C */ Mtx mBlendMtx;
+	/* 0x4C */ SDLModel* mBlendModel;
+	/* 0x50 */ s32 mCopyConnectedMtx;
+	/* 0x54 */ s16 mBlinkTimer;
+	/* 0x56 */ s16 mBlinkDelay;
+	/* 0x58 */ s16 mBlurTimer;
+	/* 0x5A */ s16 mBlurDuration;
+	/* 0x5C */ s32 mAnimationMode;
+	/* 0x60 */ s32 mPreviousBckIndex;
+	/* 0x64 */ f32 mBlendRatio;
+	/* 0x68 */ TBossEelEye* mPairedEye;
+	/* 0x6C */ s32 mAnimationLoopCount;
+	/* 0x70 */ JGeometry::TVec3<f32> mBlurPosition;
+};
+
+class TBossEelHeartCoin : public TSharedParts {
+public:
+	TBossEelHeartCoin(const TLiveActor*, int, SDLModelData*, u32, const char*);
+
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	void generate(JGeometry::TVec3<f32>&);
+
+public:
+	/* 0x1C */ bool mActive;
+	/* 0x20 */ TCoin* mCoins[20];
+	/* 0x70 */ JGeometry::TVec3<f32> mPosition;
+	/* 0x7C */ TBossEel* mOwner;
+};
+
+class TBossEelCollision : public THitActor {
+public:
+	TBossEelCollision(MtxPtr collisionMtx, const char* name);
+
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual void initCollision();
+	virtual void behaveToMario();
+
+public:
+	/* 0x68 */ MtxPtr mCollisionMtx;
+	/* 0x6C */ f32 mBaseAttackRadius;
+	/* 0x70 */ f32 mBaseAttackHeight;
+	/* 0x74 */ f32 mBaseDamageRadius;
+	/* 0x78 */ f32 mBaseDamageHeight;
+	/* 0x7C */ TBossEel* mOwner;
+};
+
+class TBossEelBodyCollision : public TBossEelCollision {
+public:
+	TBossEelBodyCollision(MtxPtr collisionMtx, const char* name)
+	    : TBossEelCollision(collisionMtx, name)
+	{
+	}
+
+	virtual void initCollision();
+};
+
+class TBossEelAwaCollision : public TBossEelCollision {
+public:
+	TBossEelAwaCollision(MtxPtr collisionMtx, const char* name)
+	    : TBossEelCollision(collisionMtx, name)
+	    , mState(0)
+	    , mTimer(0)
+	{
+	}
+
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual void initCollision();
+	virtual void behaveToMario();
+
+public:
+	/* 0x80 */ s32 mState;
+	/* 0x84 */ s32 mTimer;
+};
+
+class TBossEelBarrierCollision : public TBossEelCollision {
+public:
+	TBossEelBarrierCollision(MtxPtr collisionMtx, const char* name)
+	    : TBossEelCollision(collisionMtx, name)
+	{
+	}
+
+	virtual void initCollision();
+	virtual void behaveToMario();
+};
+
+class TBossEelTearsRecoverCollision : public TBossEelCollision {
+public:
+	TBossEelTearsRecoverCollision(MtxPtr collisionMtx, const char* name)
+	    : TBossEelCollision(collisionMtx, name)
+	    , mRecovering(false)
+	    , mColliding(false)
+	{
+	}
+
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual void initCollision();
+	virtual void behaveToMario();
+
+public:
+	/* 0x80 */ bool mRecovering;
+	/* 0x81 */ bool mColliding;
+};
+
+class TBossEel : public TSpineEnemy {
+public:
+	static f32 mOpenRollSpeed;
+	static bool mUseObjCollision;
+	static f32 mForcePow;
+	static bool mUseMapCollision;
+	static bool mToothDamageAnm;
+	static f32 mTestAngY;
+
+	TBossEel(const char*);
+
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message)
+	{
+		return false;
+	}
+	virtual void init(TLiveManager*);
+	virtual MtxPtr getTakingMtx();
+	virtual const char** getBasNameTable() const;
+	virtual BOOL hasMapCollision() const { return true; }
+
+	void startMoguCamera();
+	BOOL isInBossEelMoguDemo();
+	void quickBack();
+	BOOL isValidToothDamage();
+	void deadCheck();
+	void setBckAnm(int);
+	void collideToMario();
+	void invalidateAllCollision();
+	void generateVortex();
+	void forceShedTears(bool);
+	void shedTears(MtxPtr);
+	BOOL isEyeBlurOn();
+	BOOL canEatMario();
+	void forceEat();
+	void updateTearsCnt();
+	void calcAndSetCollisionCubeBite_();
+	void generateBubble(JGeometry::TVec3<f32>&);
+
+	TBossEelSaveParams& getBossEelParams() const { return *mSaveParams; }
+
+public:
+	/* 0x150 */ JGeometry::TVec3<f32> mInitialPosition;
+	/* 0x15C */ TBossEelEye* mEyes[4];
+	/* 0x16C */ TBossEelTooth* mTeeth[8];
+	/* 0x18C */ TBossEelVortex* mVortex;
+	/* 0x190 */ TMapCollisionMove* mMapCollisions[4];
+	/* 0x1A0 */ u16 mMapCollisionJointIndices[4];
+	/* 0x1A8 */ THitActor* mHeadCollision;
+	/* 0x1AC */ TCubeManagerBase* mMouthCubeManager;
+	/* 0x1B0 */ TBossEelBodyCollision* mBodyCollision;
+	/* 0x1B4 */ s32 mCurrentBckIndex;
+	/* 0x1B8 */ s32 mPreviousBckIndex;
+	/* 0x1BC */ f32 mBckBlendRatio;
+	/* 0x1C0 */ s32 mTearEyeIndex;
+	/* 0x1C4 */ s32 mTearCycleTimer;
+	/* 0x1C8 */ bool mForceEat;
+	/* 0x1CC */ f32 mSpinAngle;
+	/* 0x1D0 */ bool mTearEyeToggle;
+	/* 0x1D4 */ f32 mMouthOpenAmount;
+	/* 0x1D8 */ f32 mMouthOpenSpeed;
+	/* 0x1DC */ u32 mTimers[3];
+	/* 0x1E8 */ TBossEelSaveParams* mSaveParams;
+	/* 0x1EC */ JGeometry::TVec2<u32>* mSpinTimer;
+	/* 0x1F0 */ bool mInDemo;
+	/* 0x1F4 */ f32 mAppearOffset;
+	/* 0x1F8 */ f32 mAppearAcceleration;
+	/* 0x1FC */ bool mToothDamaged;
+	/* 0x1FD */ bool mToothBroken;
+	/* 0x1FE */ bool mIsBiting;
+	/* 0x200 */ s32 mBattleTimer;
+	/* 0x204 */ JGeometry::TVec3<f32> mBreathParticlePosition;
+	/* 0x210 */ TBossEelBarrierCollision* mBarrierCollision;
+	/* 0x214 */ TBossEelAwaCollision* mAwaCollision;
+	/* 0x218 */ TBossEelHeartCoin* mHeartCoin;
+	/* 0x21C */ bool mMoguCameraActive;
+	/* 0x21D */ bool mCollisionEnabled;
+};
+
+inline const TBossEel* TBossEelEye::getOwner() const
+{
+	return static_cast<const TBossEel*>(unk10);
+}
+
+void ExecSpinNerve_Sub(TBossEel*);
 
 DECLARE_NERVE(TNerveBEelTearsGenerate, TLiveActor);
 DECLARE_NERVE(TNerveBEelTearsMoveUp, TLiveActor);
