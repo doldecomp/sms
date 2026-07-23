@@ -2174,7 +2174,7 @@ DEFINE_NERVE(TNerveBossEelOutWait, TLiveActor)
 	return false;
 }
 
-BOOL ExecBackNerve_Sub(TSpineBase<TLiveActor>* spine, f32 speed)
+static BOOL ExecBackNerve_Sub(TSpineBase<TLiveActor>* spine, f32 speed)
 {
 	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
 	if (spine->getTime() == 1) {
