@@ -1278,8 +1278,8 @@ void TBossEelHeartCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 #pragma dont_inline on
 void TBossEelHeartCoin::generate(JGeometry::TVec3<f32>& position)
 {
-	mPosition = position;
-	mActive   = true;
+	mPosition.set(position.x, position.y, position.z);
+	mActive = true;
 	for (s32 i = 0; i < 20; ++i) {
 		mCoins[i]->appear();
 		mCoins[i]->onMapObjFlag(0x10000000);
