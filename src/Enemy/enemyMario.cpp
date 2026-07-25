@@ -1,6 +1,3 @@
-
-// This file uses reverse MAP definition order because Enemy is built with
-// -inline deferred.
 #include <Enemy/EnemyMario.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Enemy/Emario.hpp>
@@ -27,7 +24,6 @@
 #include <MarioUtil/ShadowUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <Player/MarioRecord.hpp>
-#include <Player/MarioAnimeData.hpp>
 #include <Player/MarioEffect.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <Strategic/question.hpp>
@@ -43,15 +39,12 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-
-static unkTMarioAnimeFilesStruct marioAnimeFiles[199] = {
-#include <Player/MarioAnimeFiles.inc>
-};
-
-extern char* marioAnimeTexPatternFilenames[24];
+#include <M3DUtil/InfectiousStrings.hpp>
 
 static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
 static const char cDirtyTexName[]  = "H_ma_rak_dummy";
+
+#include <Player/MarioAnimeData.hpp>
 
 static const TEnemyMario::TReplayLink replayLinkMonteMan[6] = {
 	{ 1, 0 },       { 1, 1 },       { 1, 2 },
@@ -64,10 +57,22 @@ static const char* recordFileNamesDolpic1[8] = {
 
 static const char* recordFileNamesMonteMan[3] = { "AB0", "AB1", "AB2" };
 
-void TEnemyMario::setStickToAngle(s16 angle, f32 power)
+TEnemyMario::TSettingParams::TSettingParams(const char* path)
+    : TParams(path)
+    , PARAM_INIT(mSearchDist, 1000.0f)
+    , PARAM_INIT(mSearchHeight, 300.0f)
+    , PARAM_INIT(mWaterCtMax, 64)
+    , PARAM_INIT(mStopFlag, 1)
+    , PARAM_INIT(mStampFlag, 1)
+    , PARAM_INIT(mRandomFlag, 1)
+    , PARAM_INIT(mCarryFlag, 0)
+    , PARAM_INIT(mInvincibleFlag, 0)
+    , PARAM_INIT(mRandomPow, 1.0f)
+    , PARAM_INIT(mDownTime, 1200)
+    , PARAM_INIT(mPolluteFlag, 0)
+    , PARAM_INIT(mPolluteSize, 160.0f)
 {
-	unk108->mStickHS16 = (JMASSin(angle) * 64.0f) * power;
-	unk108->mStickVS16 = (-JMASCos(angle) * 64.0f) * power;
+	TParams::load(mPrmPath);
 }
 
 void TEnemyMario::initValues()
@@ -94,14 +99,14 @@ void TEnemyMario::initValues()
 	unk154 = new TWaterEmitInfo("/Mario/DamageWaterEmit.prm");
 	unk158 = new TWaterEmitInfo("/Mario/WetWaterEmit.prm");
 
-	unk388 = 1;
-	unk530 = nullptr;
-	unk534 = 0;
-	unk536 = 0;
-	unk538 = 0;
-	unk53A = 0;
-	unk53B = 0;
-	unk530 = new s16[60];
+	mPlayerType = PLAYER_TYPE_SHADOW_MARIO;
+	unk530      = nullptr;
+	unk534      = 0;
+	unk536      = 0;
+	unk538      = 0;
+	unk53A      = 0;
+	unk53B      = 0;
+	unk530      = new s16[60];
 	for (int i = 0; i < 60; ++i) {
 		unk530[i] = 0;
 	}
@@ -114,9 +119,9 @@ void TEnemyMario::initValues()
 	mWaterGun   = nullptr;
 	mYoshi      = nullptr;
 
-	unk414.set(0.0f, 0.0f, 1.0f);
 	mMarioEffect = new TMarioEffect;
 	mMarioEffect->init(this);
+	unk414.set(0.0f, 0.0f, 1.0f);
 	mMarioScreenPos.set(0.0f, 0.0f, 0.0f);
 	mWarpInDir.set(0.0f, 0.0f, 0.0f);
 	unk468 = 0.0f;
@@ -172,9 +177,9 @@ void TEnemyMario::initModel()
 	for (int i = 0; i < 24; ++i) {
 		loadAnmTexPattern(&anmTexPattern[i], marioAnimeTexPatternFilenames[i],
 		                  mBodyModelData);
-		u16 materialCount = anmTexPattern[i]->getUpdateMaterialNum();
-		anmTexNoAnm[i]    = new J3DTexNoAnm[materialCount];
-		for (s16 j = 0; j < materialCount; ++j) {
+		anmTexNoAnm[i]
+		    = new J3DTexNoAnm[anmTexPattern[i]->getUpdateMaterialNum()];
+		for (int j = 0; j < anmTexPattern[i]->getUpdateMaterialNum(); ++j) {
 			anmTexNoAnm[i][j].setAnmIndex(j);
 			anmTexNoAnm[i][j].setAnmTexPattern(anmTexPattern[i]);
 		}
@@ -209,9 +214,9 @@ void TEnemyMario::initModel()
 	modelMario->unk1C          = unk;
 	modelMario->changeMtxCalcSIAnmBQAnmTransform(0, 0, 0x3e);
 	modelMario->changeMtxCalcSIAnmBQAnmTransform(1, 0, 0x41);
-	frameCtrl[1].setRate(0.0f);
-	anmBlendQuat[1].unk50 = 0.0f;
-	mModel                = modelMario;
+	modelMario->unkC[1].setRate(0.0f);
+	marioCommon->unk18[1].unk50 = 0.0f;
+	mModel                      = modelMario;
 
 	setAnimation(ANIM_WAIT, 1.0f);
 
@@ -252,6 +257,22 @@ void TEnemyMario::initModel()
 	mMultiMtxEffect->setup(mModel->getModel(), "Mario");
 }
 
+// TODO: wrong! off by 1 instruction!
+BOOL TEnemyMario::canJumpToNode() const
+{
+	// TODO: missing some inlines which getGraph should live inside of
+	int nodeIndex
+	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
+	return mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
+	    2);
+}
+
+// UNUSED in retail (inlined away), size 0x8 = 2 PPC instructions. A plain
+// bit-test compiles to 7 (MWCC's neg/subic/subfe bool normalization). 2 instrs
+// is just a load + blr, i.e. no room to mask — the real body must return a
+// non-normalized value. Exact form is TODO (dead code, no callsite to anchor).
+bool TEnemyMario::isDispPencil() const { return false; }
+
 void TEnemyMario::initEnemyValues()
 {
 	static const char* names[5] = {
@@ -268,8 +289,8 @@ void TEnemyMario::initEnemyValues()
 		nullptr,
 	};
 
-	mGoalFlags           = EM_GOAL_FLAG_DISP_PENCIL;
-	mEMDoing             = EM_DOING_REPLAY_WAITING;
+	mEMFlags             = EM_FLAG_DISP_PENCIL;
+	mEMDoing             = EM_DOING_UNK1A;
 	mWaterCounter        = 0;
 	mAngleToMario        = 0;
 	mTargetAngle         = 0;
@@ -300,47 +321,46 @@ void TEnemyMario::initEnemyValues()
 
 	J3DModelData* specialModelData = nullptr;
 	if (modelIndex >= 0 && modelIndex < 4) {
-		unk388 = 1;
+		mPlayerType = PLAYER_TYPE_SHADOW_MARIO;
 	} else if (modelIndex == 4) {
 		specialModelData = J3DModelLoaderDataBase::load(
-		    JKRFileLoader::getGlbResource(bmdFileNames[modelIndex]),
-		    0x10040000);
-		unk388 = 2;
+		    JKRGetResource(bmdFileNames[modelIndex]), 0x10040000);
+		mPlayerType = PLAYER_TYPE_MONTE_MAN;
 	}
 
-	mPencilModel = nullptr;
-	mStampActor  = nullptr;
-	mPencilScale = 3.0f;
+	mBrushModel                = nullptr;
+	mStampActor                = nullptr;
+	mBrushScaleupDuringDrawing = 3.0f;
 	if (specialModelData != nullptr) {
-		unk388        = 2;
+		mPlayerType   = PLAYER_TYPE_MONTE_MAN;
 		mSpecialModel = new J3DModel(specialModelData, 0, 1);
 	} else {
-		unk388                        = 1;
+		mPlayerType                   = PLAYER_TYPE_SHADOW_MARIO;
 		mSpecialModel                 = nullptr;
 		J3DModelData* pencilModelData = J3DModelLoaderDataBase::load(
-		    JKRFileLoader::getGlbResource(
-		        "/scene/kagemario/kagemario_brush.bmd"),
-		    0x11040000);
-		mPencilModel = new J3DModel(pencilModelData, 0, 1);
-		ResTIMG* dirtyTexture
-		    = (ResTIMG*)JKRFileLoader::getGlbResource(cDirtyFileName);
-		if (dirtyTexture != nullptr) {
+		    JKRGetResource("/scene/kagemario/kagemario_brush.bmd"), 0x11040000);
+		mBrushModel           = new J3DModel(pencilModelData, 0, 1);
+		ResTIMG* dirtyTexture = (ResTIMG*)JKRGetResource(cDirtyFileName);
+		if (dirtyTexture != nullptr)
 			SMS_ChangeTextureAll(pencilModelData, cDirtyTexName, *dirtyTexture);
-		}
+
 		mStampActor = SMS_MakeMActor(
 		    "/scene/kagemario/stamp_koopa_sign",
 		    "/scene/kagemario/stamp_koopa_sign/stamp_koopa_sign_model1.bmd", 3,
 		    0x10210000);
-		SMS_LoadParticle("/scene/kagemario/jpa/ms_kgm_change.jpa", 0xed);
-		SMS_LoadParticle("/scene/kagemario/jpa/ms_kgm_move_a.jpa", 0x1aa);
-		SMS_LoadParticle("/scene/kagemario/jpa/ms_kgm_move_b.jpa", 0x1ab);
+		SMS_LoadParticle("/scene/kagemario/jpa/ms_kgm_change.jpa",
+		                 SCENE_KAGEMARIO_JPA_MS_KGM_CHANGE);
+		SMS_LoadParticle("/scene/kagemario/jpa/ms_kgm_move_a.jpa",
+		                 SCENE_KAGEMARIO_JPA_MS_KGM_MOVE_A);
+		SMS_LoadParticle("/scene/kagemario/jpa/ms_kgm_move_b.jpa",
+		                 SCENE_KAGEMARIO_JPA_MS_KGM_MOVE_B);
 	}
 
 	mDisappearPosition.z = 0.0f;
 	mDisappearPosition.y = 0.0f;
 	mDisappearPosition.x = 0.0f;
-	int progress         = TFlagManager::getInstance()->getFlag(0x60003);
-	if (progress == 0) {
+	int shadowMarioEvent = TFlagManager::getInstance()->getFlag(0x60003);
+	if (shadowMarioEvent == 0) {
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 		mEMario->onHitFlag(HIT_FLAG_NO_COLLISION);
 	} else {
@@ -348,13 +368,13 @@ void TEnemyMario::initEnemyValues()
 		mEMario->offHitFlag(HIT_FLAG_NO_COLLISION);
 	}
 
-	if (progress == 2) {
+	if (shadowMarioEvent == 2) {
 		mPadIndex      = 1;
 		mSettingParams = new TSettingParams("/../map/pad2/Setting.prm");
-	} else if (progress == 3) {
+	} else if (shadowMarioEvent == 3) {
 		mPadIndex      = 2;
 		mSettingParams = new TSettingParams("/../map/pad3/Setting.prm");
-	} else if (progress == 0 || progress == 1) {
+	} else if (shadowMarioEvent == 0 || shadowMarioEvent == 1) {
 		mPadIndex      = 0;
 		mSettingParams = new TSettingParams("/../map/pad/Setting.prm");
 	}
@@ -371,7 +391,7 @@ void TEnemyMario::initEnemyValues()
 		         "/scene/map/map/pad%d/linkdata.bin", mPadIndex);
 	}
 
-	void* linkData = JKRFileLoader::getGlbResource(linkDataPath);
+	void* linkData = JKRGetResource(linkDataPath);
 	if (linkData != nullptr) {
 		s32 linkDataSize
 		    = JKRFileLoader::getVolume("scene")->getResSize(linkData);
@@ -419,7 +439,7 @@ void TEnemyMario::initEnemyValues()
 	}
 
 	mTrembleStrength = 2.5f;
-	if (unk388 == 2) {
+	if (mPlayerType == PLAYER_TYPE_MONTE_MAN) {
 		replayFileNames = (char**)recordFileNamesMonteMan;
 		replayCount     = 3;
 	}
@@ -437,44 +457,44 @@ void TEnemyMario::initEnemyValues()
 				         "/scene/map/map/pad%d/tutorial%s.pad", mPadIndex,
 				         replayFileNames[i]);
 			}
-			u8* replayData   = (u8*)JKRFileLoader::getGlbResource(replayPath);
+			u8* replayData   = (u8*)JKRGetResource(replayPath);
 			mInputReplays[i] = new TMarioInputReplay;
 			mInputReplays[i]->init(replayData);
 		}
 	}
 
-	mGamePad   = gpMarDirector->unk18[1];
-	mGoalFlags = EM_GOAL_FLAG_DISP_PENCIL;
-	switch (mEMario->getInitialState()) {
+	mGamePad = gpMarDirector->unk18[1];
+	mEMFlags = EM_FLAG_DISP_PENCIL;
+	switch (mEMario->mInitialState) {
 	case 0:
-		mEMDoing = EM_DOING_SLEEPING;
+		mEMDoing = EM_DOING_REPLAY_WAITING;
 		break;
 	case 1:
 		mEMDoing = EM_DOING_REPLAY;
 		break;
 	case 2:
-		mEMDoing = EM_DOING_KEEP_STAY;
+		mEMDoing = EM_DOING_UNK12;
 		break;
 	case 3:
-		mEMDoing = EM_DOING_GOAL;
+		mEMDoing = EM_DOING_WAITING_MARIO;
 		break;
 	default:
 		mEMDoing = EM_DOING_DISAPPEAR;
 		break;
-	}
-	if (progress == 0) {
-		mEMDoing = EM_DOING_DISAPPEAR;
 	}
 
-	switch (progress) {
+	if (shadowMarioEvent == 0)
+		mEMDoing = EM_DOING_DISAPPEAR;
+
+	switch (shadowMarioEvent) {
 	case 2:
-		mReplayIndex = mEMario->getReplayIndexPad2();
+		mReplayIndex = mEMario->unk15C;
 		break;
 	case 3:
-		mReplayIndex = mEMario->getReplayIndexPad3();
+		mReplayIndex = mEMario->unk160;
 		break;
 	default:
-		mReplayIndex = mEMario->getReplayIndexDolpic();
+		mReplayIndex = mEMario->unk158;
 		break;
 	}
 	mEMario->getTracer()
@@ -497,16 +517,15 @@ void TEnemyMario::initEnemyValues()
 				snprintf(runAwayPath, sizeof(runAwayPath),
 				         "/scene/map/map/pad/tutorial%s.pad",
 				         recordFileNamesDolpic1[i]);
-				u8* replayData
-				    = (u8*)JKRFileLoader::getGlbResource(runAwayPath);
+				u8* replayData          = (u8*)JKRGetResource(runAwayPath);
 				mRunAwayInputReplays[i] = new TMarioInputReplay;
 				mRunAwayInputReplays[i]->init(replayData);
 			} else {
 				mRunAwayInputReplays[i] = nullptr;
 			}
 		}
-		u8* gateReplayData = (u8*)JKRFileLoader::getGlbResource(
-		    "/scene/map/map/pad/tutorialHI.pad");
+		u8* gateReplayData
+		    = (u8*)JKRGetResource("/scene/map/map/pad/tutorialHI.pad");
 		mGateReplay = new TMarioInputReplay;
 		mGateReplay->init(gateReplayData);
 	} else {
@@ -516,19 +535,21 @@ void TEnemyMario::initEnemyValues()
 
 	if (gpMarDirector->mMap == 12) {
 		if (strcmp(mEMario->getName(), "マリオ２Ｐ") == 0) {
-			unk388   = 3;
-			mGamePad = gpMarDirector->unk18[1];
+			mPlayerType = TMario::PLAYER_TYPE_P2;
+			mGamePad    = gpMarDirector->unk18[1];
 		}
 		if (strcmp(mEMario->getName(), "マリオ３Ｐ") == 0) {
-			unk388   = 4;
-			mGamePad = gpMarDirector->unk18[2];
+			mPlayerType = TMario::PLAYER_TYPE_P3;
+			mGamePad    = gpMarDirector->unk18[2];
 		}
 		if (strcmp(mEMario->getName(), "マリオ４Ｐ") == 0) {
-			unk388   = 5;
-			mGamePad = gpMarDirector->unk18[3];
+			mPlayerType = TMario::PLAYER_TYPE_P4;
+			mGamePad    = gpMarDirector->unk18[3];
 		}
 		mEMDoing = EM_DOING_GET_PAD;
-		if (unk388 == 3 || unk388 == 4 || unk388 == 5) {
+		if (mPlayerType == TMario::PLAYER_TYPE_P2
+		    || mPlayerType == TMario::PLAYER_TYPE_P3
+		    || mPlayerType == TMario::PLAYER_TYPE_P4) {
 			mTrembleModelEffect = new TTrembleModelEffect;
 			mTrembleModelEffect->init(mModel->getModel());
 		}
@@ -538,12 +559,12 @@ void TEnemyMario::initEnemyValues()
 	}
 
 	onUnk114(2);
-	mStatus     = 0x0c400201;
-	mPrevStatus = 0x0c400201;
+	mStatus     = MARIO_STATUS_WAIT;
+	mPrevStatus = MARIO_STATUS_WAIT;
 	offFlag(MARIO_FLAG_HAS_FLUDD);
-	if (mPadIndex == 2) {
+	if (mPadIndex == 2)
 		gpMapObjWave->noWave();
-	}
+
 	mHandModels[0][0] = nullptr;
 	mHandModels[0][1] = nullptr;
 	mHandModels[1][0] = nullptr;
@@ -552,6 +573,26 @@ void TEnemyMario::initEnemyValues()
 	mCap              = nullptr;
 	mYoshi            = nullptr;
 	mMultiMtxEffect   = nullptr;
+}
+
+void TEnemyMario::kill() { }
+
+f32 TEnemyMario::getStickPower() { }
+
+void TEnemyMario::setStickAgainstMario() { }
+
+void TEnemyMario::setStickToAngle(s16 angle, f32 power)
+{
+	unk108->mStickHS16 = (JMASSin(angle) * 64.0f) * power;
+	unk108->mStickVS16 = (-JMASCos(angle) * 64.0f) * power;
+}
+
+void TEnemyMario::resetReplayStatus()
+{
+	mVel.set(0.0f, 0.0f, 0.0f);
+	mForwardVel = 0.0f;
+	resetHistory();
+	changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 }
 
 void TEnemyMario::startMonteReplay(u32 replayIndex)
@@ -570,12 +611,7 @@ void TEnemyMario::startMonteReplay(u32 replayIndex)
 	f32 xDifference = nextPoint.x - currentPoint.x;
 	f32 zDifference = nextPoint.z - currentPoint.z;
 	mFaceAngle.y    = matan(zDifference, xDifference);
-	mVel.x          = 0.0f;
-	mVel.y          = 0.0f;
-	mVel.z          = 0.0f;
-	mForwardVel     = 0.0f;
-	resetHistory();
-	changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
+	resetReplayStatus();
 	mReplayIndex = replayIndex;
 	mInputReplays[mReplayIndex]->reset();
 	mInputReplays[mReplayIndex]->start();
@@ -588,11 +624,24 @@ void TEnemyMario::changeEMDoing(u16 doing)
 	mEMDoing      = doing;
 }
 
-u8 TEnemyMario::tryTake()
+void TEnemyMario::changeEMJumping()
 {
-	if (mHeldObject != nullptr && mStatus != MARIO_STATUS_TAKE) {
+	unk108->mInput |= TMarioControllerWork::A;
+	changeEMDoing(EM_DOING_JUMPING);
+}
+
+void TEnemyMario::changeEMWalkGraph()
+{
+	TEMario* emario = mEMario;
+	emario->getTracer()->reset();
+	emario->goToShortestNextGraphNode();
+	changeEMDoing(EM_DOING_WALK_GRAPH);
+}
+
+bool TEnemyMario::tryTake()
+{
+	if (mHeldObject != nullptr && mStatus != MARIO_STATUS_TAKE)
 		return TRUE;
-	}
 
 	for (int i = 0; i < mEMario->getColNum(); ++i) {
 		THitActor* actor = mEMario->getCollision(i);
@@ -601,7 +650,7 @@ u8 TEnemyMario::tryTake()
 		    || actorType == 0x20000022 || actorType == 0x20000009) {
 			if (actorType == 0x04000018) {
 				((TLiveActor*)actor)->onLiveFlag(LIVE_FLAG_UNK100000);
-				mGoalFlags |= EM_GOAL_FLAG_ENFORCE_TAKE;
+				onEMFlag(EM_FLAG_ENFORCE_TAKE);
 			}
 			unk384 = actor;
 			changePlayerStatus(MARIO_STATUS_TAKE, 0, false);
@@ -613,19 +662,27 @@ u8 TEnemyMario::tryTake()
 void TEnemyMario::emWaiting()
 {
 	s16 angleDifference = mAngleToMario - mFaceAngle.y;
-	if (angleDifference < -0x1555 || angleDifference > 0x1555) {
+	if (angleDifference < -0x1555 || angleDifference > 0x1555)
 		setStickToAngle(mAngleToMario, 0.2f);
-	}
 
-	if (mDistanceToMario < 800.0f) {
-		changeEMDoing(EM_DOING_GET_CLOSER);
-	}
+	if (mDistanceToMario < 800.0f)
+		changeEMDoing(EM_DOING_RUN_AWAY);
 
-	if (mDistanceToMario > 1500.0f || rand() < 0x88) {
-		TEMario* emario = mEMario;
-		emario->getTracer()->reset();
-		emario->goToShortestNextGraphNode();
-		changeEMDoing(EM_DOING_WALK_GRAPH);
+	if (mDistanceToMario > 1500.0f || rand() < 0x88)
+		changeEMWalkGraph();
+}
+
+void TEnemyMario::emRunAway()
+{
+	if (mDistanceToMario < 400.0f)
+		changeEMJumping();
+
+	if (mDistanceToMario < 1300.0f) {
+		setStickToAngle(mAngleToMario, 1.0f);
+		unk108->mStickHS16 = -unk108->mStickHS16;
+		unk108->mStickVS16 = -unk108->mStickVS16;
+	} else {
+		mEMDoing = EM_DOING_WAITING;
 	}
 }
 
@@ -650,6 +707,15 @@ void TEnemyMario::emJumping()
 	}
 }
 
+void TEnemyMario::emGetCloser()
+{
+	if (mDistanceToMario > 1500.0f) {
+		setStickToAngle(mAngleToMario, 1.0f);
+	} else {
+		changeEMDoing(EM_DOING_WAITING);
+	}
+}
+
 void TEnemyMario::emWalkAround()
 {
 	if (mDistanceToMario < 1500.0f) {
@@ -657,11 +723,10 @@ void TEnemyMario::emWalkAround()
 		return;
 	}
 	if (rand() < 10) {
-		changeEMDoing(EM_DOING_RUN_AWAY_FROM_MARIO);
+		changeEMDoing(EM_DOING_GET_CLOSER);
 	}
 	if (rand() < 100) {
-		unk108->mInput |= TMarioControllerWork::A;
-		changeEMDoing(EM_DOING_JUMPING);
+		changeEMJumping();
 		return;
 	}
 	if (rand() < 100) {
@@ -670,23 +735,70 @@ void TEnemyMario::emWalkAround()
 		return;
 	}
 	if (rand() < 50) {
-		TEMario* emario = mEMario;
-		emario->getTracer()->reset();
-		emario->goToShortestNextGraphNode();
-		changeEMDoing(EM_DOING_WALK_GRAPH);
+		changeEMWalkGraph();
 		return;
 	}
 	if (rand() < 50) {
 		TPollutionManager* pollution = gpPollution;
 		pollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, 384.0f);
-		changeEMDoing(EM_DOING_HIDDEN);
+		changeEMDoing(EM_DOING_HIDE);
 	}
 	if (mWallPlane != nullptr) {
-		unk108->mInput |= TMarioControllerWork::A;
-		changeEMDoing(EM_DOING_JUMPING);
+		changeEMJumping();
 		return;
 	}
 	setStickToAngle(mFaceAngle.y, 0.5f);
+}
+
+void TEnemyMario::emWalkGraph()
+{
+	if ((mEMario->getUnk104().getPoint() - mEMario->mPosition).length()
+	    < 100.0f) {
+		if (mDistanceToMario > 3000.0f)
+			mEMario->goToRandomNextGraphNode();
+		else
+			mEMario->goToRandomEscapeGraphNode();
+	}
+	const JGeometry::TVec3<f32>& goal = mEMario->getUnkF4().getPoint();
+	u16 angle = matan(goal.z - mPosition.z, goal.x - mPosition.x);
+	setStickToAngle(angle, 1.0f);
+	++mEMDoingTimer;
+	if (mEMDoingTimer % 100 == 0)
+		gpConductor->makeEnemyAppear(mPosition, "ハムクリマネージャー", 1, 0);
+}
+
+void TEnemyMario::emTurning()
+{
+	s16 angleDifference = mTargetAngle - mFaceAngle.y;
+	if (rand() < 100) {
+		changeEMJumping();
+	} else if (angleDifference < -0x1555 || angleDifference > 0x1555) {
+		setStickToAngle(mTargetAngle, 0.2f);
+	} else {
+		changeEMDoing(EM_DOING_WAITING);
+	}
+}
+
+void TEnemyMario::emHide()
+{
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+	mEMario->onHitFlag(HIT_FLAG_NO_COLLISION);
+	++mEMDoingTimer;
+	if (!gpPollution->isPolluted(mPosition.x, mPosition.y, mPosition.z)
+	    || mEMDoingTimer > 7200) {
+		mEMDoingTimer        = 0;
+		mInvincibilityFrames = 120;
+		changeEMDoing(EM_DOING_APPEAR);
+	}
+}
+
+void TEnemyMario::emAppear()
+{
+	if (mInvincibilityFrames == 0) {
+		changeEMDoing(EM_DOING_WAITING);
+		offHitFlag(HIT_FLAG_NO_COLLISION);
+		mEMario->offHitFlag(HIT_FLAG_NO_COLLISION);
+	}
 }
 
 void TEnemyMario::startDisappear(u16 doing)
@@ -706,29 +818,36 @@ void TEnemyMario::startDisappear(u16 doing)
 		MSMainProc::setBossLivesFlag(false);
 	}
 
-	gpMarioParticleManager->emitAndBindToPosPtr(0xED, &mDisappearPosition, 0,
-	                                            nullptr);
+	gpMarioParticleManager->emitAndBindToPosPtr(
+	    SCENE_KAGEMARIO_JPA_MS_KGM_CHANGE, &mDisappearPosition, 0, nullptr);
 	changeEMDoing(doing);
+}
+
+void TEnemyMario::emDisappear()
+{
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+	mEMario->onHitFlag(HIT_FLAG_NO_COLLISION);
+	offEMFlag(EM_FLAG_DISP_PENCIL);
+	offUnk114(UNK114_FLAG_VISIBLE);
+	changePlayerStatus(MARIO_STATUS_NOMOTION, 0, false);
 }
 
 void TEnemyMario::emDisappearToGate()
 {
 	if (mEMDoingTimer >= 8) {
-		mGoalFlags &= ~EM_GOAL_FLAG_DISP_PENCIL;
+		offEMFlag(EM_FLAG_DISP_PENCIL);
 	} else {
-		mGoalFlags |= EM_GOAL_FLAG_DISP_PENCIL;
+		onEMFlag(EM_FLAG_DISP_PENCIL);
 	}
 
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 	mEMario->onHitFlag(HIT_FLAG_NO_COLLISION);
-	gpMarioParticleManager->emitAndBindToPosPtr(0x1AA, &mDisappearPosition, 1,
-	                                            this);
-	gpMarioParticleManager->emitAndBindToPosPtr(0x1AB, &mDisappearPosition, 1,
-	                                            this);
+	runAwayMoveEffect();
 
 	if (mEMDoingTimer == 0) {
 		mDisappearPosition = mCenterPos;
-		gpMarioParticleManager->emit(0xED, &mDisappearPosition, 0, nullptr);
+		gpMarioParticleManager->emit(SCENE_KAGEMARIO_JPA_MS_KGM_CHANGE,
+		                             &mDisappearPosition, 0, nullptr);
 		SMSGetMSound()->startSoundActor(MSD_SE_MA_KAGE_FIELD_AWAY, &mPosition,
 		                                0, nullptr, 0, 4);
 	}
@@ -747,9 +866,8 @@ void TEnemyMario::emReplay()
 	                                  &unk108->mAnalogLU8, &unk108->mAnalogRU8);
 
 	if (mSettingParams->mPolluteFlag.get() && gpPollution != nullptr) {
-		f32 polluteSize = mSettingParams->mPolluteSize.get();
 		gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z,
-		                     polluteSize);
+		                     mSettingParams->mPolluteSize.get());
 	}
 
 	if (mInputReplays[mReplayIndex]->canPlay()) {
@@ -757,7 +875,7 @@ void TEnemyMario::emReplay()
 	}
 
 	if (mSettingParams->mCarryFlag.get() == 1 && mHeldObject == nullptr) {
-		changeEMDoing(EM_DOING_KEEP_STAY);
+		changeEMDoing(EM_DOING_UNK12);
 		return;
 	}
 
@@ -765,9 +883,9 @@ void TEnemyMario::emReplay()
 		mStampActor->setBck("stamp_koopa_sign_draw1");
 		MActor* stampActor = mStampActor;
 		stampActor->setFrameRate(SMSGetAnmFrameRate(), 0);
-		changeEMDoing(EM_DOING_DRAW_STAMP);
-		startSoundActor(0x1980);
-		startSoundActor(0x1981);
+		changeEMDoing(EM_DOING_UNK13);
+		startSoundActor(MSD_SE_MA_KAGE_PAINTS);
+		startSoundActor(MSD_SE_MA_KAGE_PAINTINGWIND);
 		return;
 	}
 
@@ -775,24 +893,37 @@ void TEnemyMario::emReplay()
 	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
 	if (mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
 	        0x40)) {
-		changeEMDoing(EM_DOING_GOAL);
+		changeEMDoing(EM_DOING_WAITING_MARIO);
 		return;
 	}
 
 	if (mSettingParams->mStopFlag.get() == 1) {
-		changeEMDoing(EM_DOING_SLEEPING);
+		changeEMDoing(EM_DOING_REPLAY_WAITING);
 		return;
 	}
 
-	nodeIndex
-	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
-	if (mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
-	        2)) {
+	emReplayWaitingToReplayJumpToNearestNode();
+}
+
+void TEnemyMario::emReplayWaitingToReplayJumpToNearestNode()
+{
+	if (canJumpToNode()) {
 		mFaceAngle.y = mAngleToMario;
 		unk108->mFrameInput |= TMarioControllerWork::A;
 		unk108->mInput |= TMarioControllerWork::A;
 	}
-	changeEMDoing(EM_DOING_TRAMPLED);
+	changeEMDoing(EM_DOING_REPLAY_JUMP_TO_NEAREST_NODE);
+}
+
+void TEnemyMario::emReplayWaiting()
+{
+	f32 dist = mPosition.distance(SMS_GetMarioPos());
+	if (dist < mSettingParams->mSearchDist.get()) {
+		if (SMS_GetMarioPos().y
+		    < mPosition.y + mSettingParams->mSearchHeight.get()) {
+			emReplayWaitingToReplayJumpToNearestNode();
+		}
+	}
 }
 
 void TEnemyMario::emReplayJumpToNearestNode()
@@ -800,19 +931,15 @@ void TEnemyMario::emReplayJumpToNearestNode()
 	// TODO: Recover the original vector temporary and inline lifetimes; the
 	// logic matches, but retail reserves a larger stack frame and saves two
 	// additional floating-point registers.
-	int nodeIndex
-	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
-	if (mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
-	        2)) {
+	if (canJumpToNode()) {
 		unk108->mFrameInput |= TMarioControllerWork::A;
 		unk108->mInput |= TMarioControllerWork::A;
-		if (mVel.y > mReplayJumpSpeed) {
+		if (mVel.y > mReplayJumpSpeed)
 			mVel.y = mReplayJumpSpeed;
-		}
 	}
 
 	++mEMDoingTimer;
-	nodeIndex
+	int nodeIndex
 	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
 	TGraphNode* currentNode
 	    = &mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex);
@@ -822,23 +949,12 @@ void TEnemyMario::emReplayJumpToNearestNode()
 	mPosition.z += 0.05f * (currentPoint.z - mPosition.z);
 	mPosition.y += 0.05f * (currentPoint.y - mPosition.y);
 
-	if (mStatus != MARIO_STATUS_WAIT) {
-		int nearestIndex
-		    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition,
-		                                                             -1);
-		if (mEMario->getTracer()
-		        ->getGraph()
-		        ->getGraphNode(nearestIndex)
-		        .checkFlag(2)) {
+	if (mStatus != MARIO_STATUS_WAIT)
+		if (canJumpToNode())
 			return;
-		}
-	}
 
 	mPosition = currentPoint;
-	mVel.set(0.0f, 0.0f, 0.0f);
-	mForwardVel = 0.0f;
-	resetHistory();
-	changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
+	resetReplayStatus();
 	TReplayLink(*replayLinks)[3] = mReplayLinks;
 	currentNode->getPoint(&mPosition);
 
@@ -929,24 +1045,30 @@ void TEnemyMario::emReplayJumpToNearestNode()
 	mPosition = currentPoint;
 	mFaceAngle.y
 	    = matan(nextPoint.z - currentPoint.z, nextPoint.x - currentPoint.x);
-	mVel.set(0.0f, 0.0f, 0.0f);
-	mForwardVel = 0.0f;
-	resetHistory();
-	changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
+	resetReplayStatus();
 	mInputReplays[mReplayIndex]->reset();
 	mInputReplays[mReplayIndex]->start();
 	changeEMDoing(EM_DOING_REPLAY);
 }
 
+void TEnemyMario::emPreDownAnimation()
+{
+	changePlayerStatus(MARIO_STATUS_NOMOTION, 0, true);
+	setAnimation(ANIM_SDWNF, 1.0f);
+	if (getMotionFrameCtrl().getFrame() > 25.0f) {
+		mEMDoingTimer = 0;
+		mEMDoing      = EM_DOING_DOWN_ANIMATION;
+	}
+}
+
 #pragma dont_inline on
 void TEnemyMario::emDownAnimation()
 {
-	changePlayerStatus(0x133E, 0, true);
+	changePlayerStatus(MARIO_STATUS_NOMOTION, 0, true);
 	setAnimation(ANIM_FALL_DOWN_WAIT, 1.0f);
 
-	// TODO: Match the retail short-circuit inline shape here; splitting these
-	// accessor checks duplicates the return body and regresses the match.
-	if (gpMarDirector->isDemoModeNow() || gpMarDirector->isTalkModeNow()) {
+	if (gpMarDirector->isDemoMode3() || gpMarDirector->isDemoMode4()
+	    || gpMarDirector->isTalkModeNow()) {
 		mReferencePosition = mPosition;
 		mDisappearPosition = mReferencePosition;
 		return;
@@ -958,90 +1080,14 @@ void TEnemyMario::emDownAnimation()
 	if (gpMarDirector->getCurrentMap() != 1
 	    && mEMDoingTimer > mSettingParams->mDownTime.get()) {
 		mWaterCounter = mSettingParams->mWaterCtMax.get();
-		changeEMDoing(EM_DOING_RUN_AWAY);
+		changeEMDoing(EM_DOING_RUN_AWAY_TO_NEAREST_NODE);
 	}
 }
 #pragma dont_inline off
 
-void TEnemyMario::emRunAwayToNearestNode()
+void TEnemyMario::startRunAway()
 {
-	TGraphWeb* graph = mEMario->getTracer()->getGraph();
-	JGeometry::TVec3<f32> targetPoint;
-	graph->getGraphNode(mRunAwayNodeIndex).getPoint(&targetPoint);
-	gpMarioParticleManager->emitAndBindToPosPtr(0x1AA, &mDisappearPosition, 1,
-	                                            this);
-	gpMarioParticleManager->emitAndBindToPosPtr(0x1AB, &mDisappearPosition, 1,
-	                                            this);
-
-	if (mEMDoingTimer >= 8 && mEMDoingTimer < 300) {
-		mGoalFlags &= ~EM_GOAL_FLAG_DISP_PENCIL;
-	} else {
-		mGoalFlags |= EM_GOAL_FLAG_DISP_PENCIL;
-	}
-
-	switch (mEMDoingTimer) {
-	case 0:
-		findRunAwayNearestNode();
-		mDisappearPosition = mPosition;
-		mDisappearPosition.y += 80.0f;
-		gpMarioParticleManager->emit(0xED, &mDisappearPosition, 0, nullptr);
-		SMSGetMSound()->startSoundActor(MSD_SE_MA_KAGE_FIELD_AWAY, &mPosition,
-		                                0, nullptr, 0, 4);
-		break;
-	case 8:
-		break;
-	case 100: {
-		JGeometry::TVec3<f32> direction = targetPoint - mReferencePosition;
-		direction.normalize();
-		direction.scale(mRunAwaySpeed);
-		mDisappearPosition += direction;
-		f32 dx = targetPoint.x - mDisappearPosition.x;
-		f32 dz = targetPoint.z - mDisappearPosition.z;
-		if (dx * dx + dz * dz < mRunAwaySpeed * mRunAwaySpeed) {
-			mEMDoingTimer = 200;
-		}
-		--mEMDoingTimer;
-		break;
-	}
-	case 200:
-		mPosition = targetPoint;
-		mPosition.y += 5.0f;
-		break;
-	case 220:
-		gpMarioParticleManager->emit(0xED, &mDisappearPosition, 0, nullptr);
-		SMSGetMSound()->startSoundActor(MSD_SE_MA_KAGE_FIELD_APPEAR, &mPosition,
-		                                0, nullptr, 0, 4);
-		break;
-	case 300:
-		if (gpMarDirector->getCurrentMap() == 1) {
-			JGeometry::TVec3<f32> waitingPoint;
-			graph->getGraphNode(7).getPoint(&waitingPoint);
-			mFaceAngle.y    = matan(waitingPoint.z - targetPoint.z,
-			                        waitingPoint.x - targetPoint.x);
-			mModelFaceAngle = mFaceAngle.y;
-			mPosition       = targetPoint;
-			mPosition.y += 5.0f;
-			changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
-			mReplayIndex  = mRunAwayNodeIndex;
-			mInputReplays = mRunAwayInputReplays;
-			mInputReplays[mReplayIndex]->reset();
-			mInputReplays[mReplayIndex]->start();
-			changeEMDoing(EM_DOING_REPLAY_RUN_AWAY_TO_GATE);
-		} else {
-			mPosition = targetPoint;
-			mPosition.y += 5.0f;
-			changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
-			int nodeIndex = graph->findNearestNodeIndex(mPosition, -1);
-			if (graph->getGraphNode(nodeIndex).checkFlag(2)) {
-				mFaceAngle.y = mAngleToMario;
-				unk108->mFrameInput |= TMarioControllerWork::A;
-				unk108->mInput |= TMarioControllerWork::A;
-			}
-			changeEMDoing(EM_DOING_TRAMPLED);
-		}
-		break;
-	}
-	++mEMDoingTimer;
+	changeEMDoing(EM_DOING_RUN_AWAY_TO_NEAREST_NODE);
 }
 
 void TEnemyMario::findRunAwayNearestNode()
@@ -1079,38 +1125,132 @@ void TEnemyMario::findRunAwayNearestNode()
 	}
 }
 
-void TEnemyMario::startRunAway() { changeEMDoing(EM_DOING_RUN_AWAY); }
+void TEnemyMario::runAwayMoveEffect()
+{
+	gpMarioParticleManager->emitAndBindToPosPtr(
+	    SCENE_KAGEMARIO_JPA_MS_KGM_MOVE_A, &mDisappearPosition, 1, this);
+	gpMarioParticleManager->emitAndBindToPosPtr(
+	    SCENE_KAGEMARIO_JPA_MS_KGM_MOVE_B, &mDisappearPosition, 1, this);
+}
+
+void TEnemyMario::emRunAwayToNearestNode()
+{
+	TGraphWeb* graph = mEMario->getTracer()->getGraph();
+	JGeometry::TVec3<f32> targetPoint;
+	graph->getGraphNode(mRunAwayNodeIndex).getPoint(&targetPoint);
+	runAwayMoveEffect();
+
+	if (mEMDoingTimer >= 8 && mEMDoingTimer < 300) {
+		offEMFlag(EM_FLAG_DISP_PENCIL);
+	} else {
+		onEMFlag(EM_FLAG_DISP_PENCIL);
+	}
+
+	switch (mEMDoingTimer) {
+	case 0:
+		findRunAwayNearestNode();
+		mDisappearPosition = mPosition;
+		mDisappearPosition.y += 80.0f;
+		gpMarioParticleManager->emit(SCENE_KAGEMARIO_JPA_MS_KGM_CHANGE,
+		                             &mDisappearPosition, 0, nullptr);
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_KAGE_FIELD_AWAY, &mPosition,
+		                                0, nullptr, 0, 4);
+		break;
+	case 8:
+		break;
+	case 100: {
+		JGeometry::TVec3<f32> direction = targetPoint - mReferencePosition;
+		direction.normalize();
+		direction.scale(mRunAwaySpeed);
+		mDisappearPosition += direction;
+		f32 dx = targetPoint.x - mDisappearPosition.x;
+		f32 dz = targetPoint.z - mDisappearPosition.z;
+		if (dx * dx + dz * dz < mRunAwaySpeed * mRunAwaySpeed) {
+			mEMDoingTimer = 200;
+		}
+		--mEMDoingTimer;
+		break;
+	}
+	case 200:
+		mPosition = targetPoint;
+		mPosition.y += 5.0f;
+		break;
+	case 220:
+		gpMarioParticleManager->emit(SCENE_KAGEMARIO_JPA_MS_KGM_CHANGE,
+		                             &mDisappearPosition, 0, nullptr);
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_KAGE_FIELD_APPEAR, &mPosition,
+		                                0, nullptr, 0, 4);
+		break;
+	case 300:
+		if (gpMarDirector->getCurrentMap() == 1) {
+			JGeometry::TVec3<f32> waitingPoint;
+			graph->getGraphNode(7).getPoint(&waitingPoint);
+			mFaceAngle.y    = matan(waitingPoint.z - targetPoint.z,
+			                        waitingPoint.x - targetPoint.x);
+			mModelFaceAngle = mFaceAngle.y;
+			mPosition       = targetPoint;
+			mPosition.y += 5.0f;
+			changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
+			mReplayIndex  = mRunAwayNodeIndex;
+			mInputReplays = mRunAwayInputReplays;
+			mInputReplays[mReplayIndex]->reset();
+			mInputReplays[mReplayIndex]->start();
+			changeEMDoing(EM_DOING_REPLAY_RUN_AWAY);
+		} else {
+			mPosition = targetPoint;
+			mPosition.y += 5.0f;
+			changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
+			emReplayWaitingToReplayJumpToNearestNode();
+		}
+		break;
+	}
+	++mEMDoingTimer;
+}
+
+void TEnemyMario::emReplayRunAway()
+{
+	mInputReplays[mReplayIndex]->play(&mIntendedMag, &mIntendedYaw,
+	                                  &unk108->mInput, &unk108->mFrameInput,
+	                                  &unk108->mAnalogLU8, &unk108->mAnalogRU8);
+	if (!mInputReplays[mReplayIndex]->canPlay()) {
+		changePlayerStatus(MARIO_STATUS_NOMOTION, 0, true);
+		setAnimation(ANIM_MONTEMAN_WAIT, 1.0f);
+		changeEMDoing(EM_DOING_WAITING_TO_INVITE_MARIO);
+	}
+}
 
 void TEnemyMario::decideDoingAfterCarry()
 {
-	if (isEnforceTake()) {
-		mGoalFlags &= ~EM_GOAL_FLAG_ENFORCE_TAKE;
-		int nodeIndex = mEMario->getTracer()->getGraph()->findNearestNodeIndex(
-		    mPosition, -1);
-		if (mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
-		        2)) {
-			mFaceAngle.y = mAngleToMario;
-			unk108->mFrameInput |= TMarioControllerWork::A;
-			unk108->mInput |= TMarioControllerWork::A;
-		}
-		changeEMDoing(EM_DOING_TRAMPLED);
+	if (checkEMFlag(EM_FLAG_ENFORCE_TAKE)) {
+		offEMFlag(EM_FLAG_ENFORCE_TAKE);
+		emReplayWaitingToReplayJumpToNearestNode();
 		return;
 	}
 
 	if (mSettingParams->mStopFlag.get() == 1) {
-		changeEMDoing(EM_DOING_SLEEPING);
+		changeEMDoing(EM_DOING_REPLAY_WAITING);
 		return;
 	}
 
-	int nodeIndex
-	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
-	if (mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
-	        2)) {
-		mFaceAngle.y = mAngleToMario;
-		unk108->mFrameInput |= TMarioControllerWork::A;
-		unk108->mInput |= TMarioControllerWork::A;
+	emReplayWaitingToReplayJumpToNearestNode();
+}
+
+void TEnemyMario::emEnforceTake()
+{
+	if (tryTake()) {
+		if (mStampActor != nullptr && mSettingParams->mStampFlag.get() == 1) {
+			mStampActor->setBck("stamp_koopa_sign_draw1");
+			changeEMDoing(EM_DOING_UNK13);
+		} else {
+			decideDoingAfterCarry();
+		}
 	}
-	changeEMDoing(EM_DOING_TRAMPLED);
+}
+
+void TEnemyMario::emDrawStamp()
+{
+	if (mStampActor->curAnmEndsNext())
+		decideDoingAfterCarry();
 }
 
 void TEnemyMario::emWaitingToInviteMario()
@@ -1135,17 +1275,66 @@ void TEnemyMario::emWaitingToInviteMario()
 		mReplayIndex = 0;
 		mGateReplay->reset();
 		mGateReplay->start();
-		changeEMDoing(EM_DOING_REPLAY_TO_GATE);
+		changeEMDoing(EM_DOING_REPLAY_RUN_AWAY_TO_GATE);
 	}
+}
+
+void TEnemyMario::emReplayRunAwayToGate()
+{
+	mGateReplay->play(&mIntendedMag, &mIntendedYaw, &unk108->mInput,
+	                  &unk108->mFrameInput, &unk108->mAnalogLU8,
+	                  &unk108->mAnalogRU8);
+	if (!mGateReplay->canPlay()) {
+		changePlayerStatus(MARIO_STATUS_NOMOTION, 0, true);
+		setAnimation(ANIM_MONTEMAN_WAIT, 1.0f);
+		changeEMDoing(EM_DOING_UNK18);
+	}
+}
+
+void TEnemyMario::emReplayToGoal()
+{
+	mInputReplays[mReplayIndex]->play(&mIntendedMag, &mIntendedYaw,
+	                                  &unk108->mInput, &unk108->mFrameInput,
+	                                  &unk108->mAnalogLU8, &unk108->mAnalogRU8);
+	if (!mInputReplays[mReplayIndex]->canPlay())
+		reachGoal();
+}
+
+void TEnemyMario::emWaitingMario()
+{
+	emKeepStay();
+	changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
+	changeMontemanWaitingAnim();
+}
+
+void TEnemyMario::emKeepStay()
+{
+	s16 angleDifference = mAngleToMario - mFaceAngle.y;
+	mFaceAngle.y = mAngleToMario - IConverge(angleDifference, 0, 0x180, 0x180);
 }
 
 void TEnemyMario::startGateDrawing()
 {
-	changePlayerStatus(0x133E, 0, true);
+	changePlayerStatus(MARIO_STATUS_NOMOTION, 0, true);
 	setAnimation(ANIM_DRAW, 1.0f);
 	mEMDoingTimer = 0;
 	mEMDoing      = EM_DOING_GATE_DRAWING;
-	startSoundActor(0x1980);
+	startSoundActor(MSD_SE_MA_KAGE_PAINTS);
+}
+
+void TEnemyMario::emGateDrawing()
+{
+	mEMario->getTracer()->getGraph()->getGraphNode(8).getPoint(&mPosition);
+	mFaceAngle.y    = -0x8000;
+	mModelFaceAngle = -0x8000;
+	if (isLast1AnimeFrame())
+		startDisappear(EM_DOING_DISAPPEAR_TO_GATE);
+}
+
+void TEnemyMario::emGetPad()
+{
+	JDrama::TGraphics graphics;
+	TMario::checkController(&graphics);
 }
 
 // TODO: Reconstruct the retail deferred-inline boundaries that emit the
@@ -1157,242 +1346,169 @@ void TEnemyMario::consider()
 	case EM_DOING_WAITING:
 		emWaiting();
 		break;
-	case EM_DOING_GET_CLOSER:
-		if (mDistanceToMario < 400.0f) {
-			unk108->mInput |= TMarioControllerWork::A;
-			changeEMDoing(EM_DOING_JUMPING);
-		}
-		if (mDistanceToMario < 1300.0f) {
-			setStickToAngle(mAngleToMario, 1.0f);
-			unk108->mStickHS16 = -unk108->mStickHS16;
-			unk108->mStickVS16 = -unk108->mStickVS16;
-		} else {
-			mEMDoing = EM_DOING_WAITING;
-		}
+	case EM_DOING_RUN_AWAY:
+		emRunAway();
 		break;
 	case EM_DOING_JUMPING:
 		emJumping();
 		break;
-	case EM_DOING_RUN_AWAY_FROM_MARIO:
-		if (mDistanceToMario > 1500.0f) {
-			setStickToAngle(mAngleToMario, 1.0f);
-		} else {
-			changeEMDoing(EM_DOING_WAITING);
-		}
+	case EM_DOING_GET_CLOSER:
+		emGetCloser();
 		break;
 	case EM_DOING_WALK_AROUND:
 		emWalkAround();
 		break;
-	case EM_DOING_WALK_GRAPH: {
-		JGeometry::TVec3<f32> distance(mEMario->getUnk104().getPoint());
-		distance.sub(mEMario->mPosition);
-		if (distance.length() < 100.0f) {
-			if (mDistanceToMario > 3000.0f) {
-				mEMario->goToRandomNextGraphNode();
-			} else {
-				mEMario->goToRandomEscapeGraphNode();
-			}
-		}
-		const JGeometry::TVec3<f32>& goal = mEMario->getUnkF4().getPoint();
-		u16 angle = matan(goal.z - mPosition.z, goal.x - mPosition.x);
-		setStickToAngle(angle, 1.0f);
-		++mEMDoingTimer;
-		if (mEMDoingTimer % 100 == 0) {
-			gpConductor->makeEnemyAppear(mPosition, "ハムクリマネージャー", 1,
-			                             0);
-		}
+	case EM_DOING_WALK_GRAPH:
+		emWalkGraph();
 		break;
-	}
-	case EM_DOING_TURNING: {
-		s16 angleDifference = mTargetAngle - mFaceAngle.y;
-		if (rand() < 100) {
-			unk108->mInput |= TMarioControllerWork::A;
-			changeEMDoing(EM_DOING_JUMPING);
-		} else if (angleDifference < -0x1555 || angleDifference > 0x1555) {
-			setStickToAngle(mTargetAngle, 0.2f);
-		} else {
-			changeEMDoing(EM_DOING_WAITING);
-		}
+	case EM_DOING_TURNING:
+		emTurning();
 		break;
-	}
-	case EM_DOING_HIDDEN:
-		onHitFlag(HIT_FLAG_NO_COLLISION);
-		mEMario->onHitFlag(HIT_FLAG_NO_COLLISION);
-		++mEMDoingTimer;
-		if (!gpPollution->isPolluted(mPosition.x, mPosition.y, mPosition.z)
-		    || mEMDoingTimer > 7200) {
-			mEMDoingTimer        = 0;
-			mInvincibilityFrames = 120;
-			changeEMDoing(EM_DOING_APPEAR);
-		}
+	case EM_DOING_HIDE:
+		emHide();
 		break;
 	case EM_DOING_APPEAR:
-		if (mInvincibilityFrames == 0) {
-			changeEMDoing(EM_DOING_WAITING);
-			offHitFlag(HIT_FLAG_NO_COLLISION);
-			mEMario->offHitFlag(HIT_FLAG_NO_COLLISION);
-		}
+		emAppear();
 		break;
 	case EM_DOING_DISAPPEAR:
-		onHitFlag(HIT_FLAG_NO_COLLISION);
-		mEMario->onHitFlag(HIT_FLAG_NO_COLLISION);
-		mGoalFlags &= ~EM_GOAL_FLAG_DISP_PENCIL;
-		offUnk114(UNK114_FLAG_VISIBLE);
-		changePlayerStatus(0x133E, 0, false);
+		emDisappear();
 		break;
 	case EM_DOING_DISAPPEAR_TO_GATE:
 		emDisappearToGate();
 		break;
-	case EM_DOING_SLEEPING: {
-		if (mPosition.distance(*gpMarioPos) < mSettingParams->mSearchDist.get()
-		    && gpMarioPos->y
-		           < mPosition.y + mSettingParams->mSearchHeight.get()) {
-			TGraphWeb* graph = mEMario->getTracer()->getGraph();
-			int nodeIndex    = graph->findNearestNodeIndex(mPosition, -1);
-			if (graph->getGraphNode(nodeIndex).checkFlag(2)) {
-				mFaceAngle.y = mAngleToMario;
-				unk108->mFrameInput |= TMarioControllerWork::A;
-				unk108->mInput |= TMarioControllerWork::A;
-			}
-			changeEMDoing(EM_DOING_TRAMPLED);
-		}
+	case EM_DOING_REPLAY_WAITING:
+		emReplayWaiting();
 		break;
-	}
-	case EM_DOING_TRAMPLED:
+	case EM_DOING_REPLAY_JUMP_TO_NEAREST_NODE:
 		emReplayJumpToNearestNode();
 		break;
-	case EM_DOING_DOWN_ANIMATION:
-		changePlayerStatus(0x133E, 0, true);
-		setAnimation(ANIM_SDWNF, 1.0f);
-		if (getMotionFrameCtrl().getFrame() > 25.0f) {
-			mEMDoingTimer = 0;
-			mEMDoing      = EM_DOING_DOWN_WAIT_TO_TALK;
-		}
+	case EM_DOING_PRE_DOWN_ANIMATION:
+		emPreDownAnimation();
 		break;
-	case EM_DOING_DOWN_WAIT_TO_TALK:
+	case EM_DOING_DOWN_ANIMATION:
 		emDownAnimation();
 		break;
-	case EM_DOING_RUN_AWAY:
+	case EM_DOING_RUN_AWAY_TO_NEAREST_NODE:
 		emRunAwayToNearestNode();
 		break;
-	case EM_DOING_GOAL: {
-		s16 angleDifference = mAngleToMario - mFaceAngle.y;
-		mFaceAngle.y
-		    = mAngleToMario - IConverge(angleDifference, 0, 0x180, 0x180);
-		changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
-		changeMontemanWaitingAnim();
+	case EM_DOING_WAITING_MARIO:
+		emWaitingMario();
 		break;
-	}
-	case EM_DOING_KEEP_STAY:
-		if (tryTake()) {
-			if (mStampActor != nullptr
-			    && mSettingParams->mStampFlag.get() == 1) {
-				mStampActor->setBck("stamp_koopa_sign_draw1");
-				changeEMDoing(EM_DOING_DRAW_STAMP);
-			} else {
-				decideDoingAfterCarry();
-			}
-		}
+	case EM_DOING_UNK12:
+		emEnforceTake();
 		break;
-	case EM_DOING_DRAW_STAMP:
-		if (mStampActor->curAnmEndsNext()) {
-			decideDoingAfterCarry();
-		}
+	case EM_DOING_UNK13:
+		emDrawStamp();
 		break;
 	case EM_DOING_WAITING_TO_INVITE_MARIO:
 		emWaitingToInviteMario();
 		break;
-	case EM_DOING_REACHED_GATE:
-	case EM_DOING_REPLAY_WAITING: {
-		s16 angleDifference = mAngleToMario - mFaceAngle.y;
-		mFaceAngle.y
-		    = mAngleToMario - IConverge(angleDifference, 0, 0x180, 0x180);
+	case EM_DOING_UNK18:
+	case EM_DOING_UNK1A:
+		emKeepStay();
 		break;
-	}
 	case EM_DOING_GATE_DRAWING:
-		mEMario->getTracer()->getGraph()->getGraphNode(8).getPoint(&mPosition);
-		mFaceAngle.y    = -0x8000;
-		mModelFaceAngle = -0x8000;
-		if (isLast1AnimeFrame()) {
-			startDisappear(EM_DOING_DISAPPEAR_TO_GATE);
-		}
+		emGateDrawing();
 		break;
-	case EM_DOING_GET_PAD: {
-		JDrama::TGraphics graphics;
-		TMario::checkController(&graphics);
+	case EM_DOING_GET_PAD:
+		emGetPad();
 		break;
-	}
 	default:
 		return;
 	}
 }
 
+void TEnemyMario::considerAfter()
+{
+	if (mEMDoing == EM_DOING_REPLAY)
+		emReplay();
+
+	if (mEMDoing == EM_DOING_REPLAY_RUN_AWAY)
+		emReplayRunAway();
+
+	if (mEMDoing == EM_DOING_REPLAY_RUN_AWAY_TO_GATE)
+		emReplayRunAwayToGate();
+
+	if (mEMDoing == EM_DOING_REPLAY_TO_GOAL)
+		emReplayToGoal();
+}
+
 void TEnemyMario::hitWater(THitActor* sender)
 {
-	if (mSpecialModel != nullptr) {
+	if (mSpecialModel != nullptr)
 		return;
-	}
-	if (mSettingParams->mInvincibleFlag.get()) {
+
+	if (mSettingParams->mInvincibleFlag.get())
 		return;
-	}
 
-	// TODO: Recover the original switch shape that emits retail's 15-entry
-	// @4414 jump table; straightforward named switches fold into a range check.
-	if (mEMDoing != EM_DOING_REPLAY && mEMDoing != EM_DOING_SLEEPING
-	    && mEMDoing != EM_DOING_TRAMPLED) {
-		return;
-	}
+	switch (mEMDoing) {
+	case EM_DOING_REPLAY:
+	case EM_DOING_REPLAY_WAITING:
+	case EM_DOING_REPLAY_JUMP_TO_NEAREST_NODE:
+		mWaterHitTimer = 600;
+		if (mWaterCounter > 0) {
+			--mWaterCounter;
+			gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
+			                             &sender->mPosition, 0, nullptr);
+			SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
+			                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
+			mWaterEffectTimer = mWaterEffectTimerMax;
 
-	mWaterHitTimer = 600;
-	if (mWaterCounter > 0) {
-		--mWaterCounter;
-		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
-		                             0, nullptr);
-		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
-		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
-		mWaterEffectTimer = mWaterEffectTimerMax;
-
-		if (mEMDoing == EM_DOING_SLEEPING) {
-			sleepingEffectKill();
-			int nodeIndex
-			    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(
-			        mPosition, -1);
-			if (mEMario->getTracer()
-			        ->getGraph()
-			        ->getGraphNode(nodeIndex)
-			        .checkFlag(2)) {
-				mFaceAngle.y = mAngleToMario;
-				unk108->mFrameInput |= TMarioControllerWork::A;
-				unk108->mInput |= TMarioControllerWork::A;
+			if (mEMDoing == EM_DOING_REPLAY_WAITING) {
+				sleepingEffectKill();
+				emReplayWaitingToReplayJumpToNearestNode();
 			}
-			changeEMDoing(EM_DOING_TRAMPLED);
+			break;
 		}
-		return;
-	}
 
-	if (mStatus == MARIO_STATUS_RUN && canSleep()) {
-		if (mHeldObject != nullptr) {
-			((TLiveActor*)mHeldObject)->offLiveFlag(LIVE_FLAG_UNK100000);
-			dropObject();
+		if (mStatus == MARIO_STATUS_RUN && canSleep()) {
+			if (mHeldObject != nullptr) {
+				((TLiveActor*)mHeldObject)->offLiveFlag(LIVE_FLAG_UNK100000);
+				dropObject();
+			}
+			changeEMDoing(EM_DOING_PRE_DOWN_ANIMATION);
 		}
-		changeEMDoing(EM_DOING_DOWN_ANIMATION);
+		break;
+		// NOTE: insane but matches
+	case EM_DOING_PRE_DOWN_ANIMATION:
+		return;
+	case EM_DOING_DOWN_ANIMATION:
+		return;
+	case EM_DOING_RUN_AWAY_TO_NEAREST_NODE:
+		return;
+	case EM_DOING_REPLAY_RUN_AWAY:
+		return;
+	case EM_DOING_UNK12:
+		return;
+	case EM_DOING_UNK13:
+		return;
+	case EM_DOING_WAITING_TO_INVITE_MARIO:
+		return;
+	case EM_DOING_REPLAY_RUN_AWAY_TO_GATE:
+		return;
+	case EM_DOING_WAITING_MARIO:
+		return;
+	case EM_DOING_GATE_DRAWING:
+		return;
+	case EM_DOING_UNK18:
+		return;
+	case EM_DOING_REPLAY_TO_GOAL:
+		return;
 	}
 }
 
 u8 TEnemyMario::thinkTrample()
 {
-	if (mSpecialModel != nullptr) {
+	if (mSpecialModel != nullptr)
 		return FALSE;
-	}
 
 	switch (mEMDoing) {
-	case (s16)EM_DOING_DOWN_WAIT_TO_TALK:
+	case EM_DOING_DOWN_ANIMATION:
 		--mTrampleCount;
-		if (mTrampleCount > 0) {
-			changeEMDoing(EM_DOING_TRAMPLED);
-		}
-
+		if (mTrampleCount > 0)
+			changeEMDoing(EM_DOING_REPLAY_JUMP_TO_NEAREST_NODE);
 		return TRUE;
+
 	default:
 		return FALSE;
 	}
@@ -1400,25 +1516,24 @@ u8 TEnemyMario::thinkTrample()
 
 void TEnemyMario::reachGoal()
 {
-	mGoalFlags |= EM_GOAL_FLAG_REACHED;
-	changeEMDoing(EM_DOING_GOAL);
+	onEMFlag(EM_FLAG_GOAL_REACHED);
+	changeEMDoing(EM_DOING_WAITING_MARIO);
 }
 
 void TEnemyMario::checkReturn()
 {
-	if (!mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
+	if (!mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL))
 		return;
-	}
 
 	int nodeIndex
 	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
-	int searching = true;
+	BOOL searching = true;
 	while (searching) {
 		JGeometry::TVec3<f32> point;
 		mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).getPoint(
 		    &point);
 
-		if (point.distance(*gpMarioPos) > 1000.0f) {
+		if (point.distance(SMS_GetMarioPos()) > 1000.0f) {
 			searching = false;
 			mPosition = point;
 		}
@@ -1446,18 +1561,17 @@ void TEnemyMario::checkController(JDrama::TGraphics*)
 
 	unk108->mStickH = 0.0f;
 	unk108->mStickV = 0.0f;
-	if (unk108->mStickHS16 < -7) {
+	if (unk108->mStickHS16 < -7)
 		unk108->mStickH = unk108->mStickHS16 + 6;
-	}
-	if (unk108->mStickHS16 > 7) {
+
+	if (unk108->mStickHS16 > 7)
 		unk108->mStickH = unk108->mStickHS16 - 6;
-	}
-	if (unk108->mStickVS16 < -7) {
+
+	if (unk108->mStickVS16 < -7)
 		unk108->mStickV = unk108->mStickVS16 + 6;
-	}
-	if (unk108->mStickVS16 > 7) {
+
+	if (unk108->mStickVS16 > 7)
 		unk108->mStickV = unk108->mStickVS16 - 6;
-	}
 
 	unk108->mStickDist = std::sqrtf(unk108->mStickH * unk108->mStickH
 	                                + unk108->mStickV * unk108->mStickV);
@@ -1470,60 +1584,27 @@ void TEnemyMario::checkController(JDrama::TGraphics*)
 
 	f32 stickRatio = unk108->mStickDist * (1.0f / 64.0f);
 	mIntendedMag   = 64.0f * (stickRatio * stickRatio) * 0.5f;
-	if (mIntendedMag > 0.0f) {
+	if (mIntendedMag > 0.0f)
 		mIntendedYaw = matan(-unk108->mStickV, unk108->mStickH);
-	} else {
+	else
 		mIntendedYaw = mFaceAngle.y;
-	}
 
-	if (mEMDoing == 0xB) {
-		emReplay();
-	}
-	if (mEMDoing == EM_DOING_REPLAY_RUN_AWAY_TO_GATE) {
-		mInputReplays[mReplayIndex]->play(
-		    &mIntendedMag, &mIntendedYaw, &unk108->mInput, &unk108->mFrameInput,
-		    &unk108->mAnalogLU8, &unk108->mAnalogRU8);
-		if (!mInputReplays[mReplayIndex]->canPlay()) {
-			changePlayerStatus(0x133E, 0, true);
-			setAnimation(ANIM_MONTEMAN_WAIT, 1.0f);
-			changeEMDoing(EM_DOING_WAITING_TO_INVITE_MARIO);
-		}
-	}
-	if (mEMDoing == EM_DOING_REPLAY_TO_GATE) {
-		mGateReplay->play(&mIntendedMag, &mIntendedYaw, &unk108->mInput,
-		                  &unk108->mFrameInput, &unk108->mAnalogLU8,
-		                  &unk108->mAnalogRU8);
-		if (!mGateReplay->canPlay()) {
-			changePlayerStatus(0x133E, 0, true);
-			setAnimation(ANIM_MONTEMAN_WAIT, 1.0f);
-			changeEMDoing(EM_DOING_REACHED_GATE);
-		}
-	}
-	if (mEMDoing == EM_DOING_REPLAY_TO_GOAL) {
-		mInputReplays[mReplayIndex]->play(
-		    &mIntendedMag, &mIntendedYaw, &unk108->mInput, &unk108->mFrameInput,
-		    &unk108->mAnalogLU8, &unk108->mAnalogRU8);
-		if (!mInputReplays[mReplayIndex]->canPlay()) {
-			mGoalFlags |= 1;
-			changeEMDoing(EM_DOING_GOAL);
-		}
-	}
+	considerAfter();
 
-	if (mIntendedMag > 0.0f) {
+	if (mIntendedMag > 0.0f)
 		mInput |= 1;
-	}
-	if (unk108->isAHit()) {
+
+	if (unk108->isAHit())
 		mInput |= 2;
-	}
-	if (unk108->isAPressed()) {
+
+	if (unk108->isAPressed())
 		mInput |= 0x80;
-	}
-	if (unk108->isBPressed()) {
+
+	if (unk108->isBPressed())
 		mInput |= 0x4000;
-	}
-	if (unk108->isBHit()) {
+
+	if (unk108->isBHit())
 		mInput |= 0x8000;
-	}
 }
 
 void TEnemyMario::playerControl(JDrama::TGraphics* graphics)
@@ -1572,15 +1653,14 @@ void TEnemyMario::drawHPMeter(MtxPtr viewMtx)
 	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
 	GXSetCullMode(GX_CULL_NONE);
 
-	f32 top             = screenPosition.y - 10.0f;
-	f32 bottom          = screenPosition.y + 10.0f;
-	f32 left            = screenPosition.x - 48.0f;
-	f32 borderLeft      = left - 5.0f;
-	f32 borderRight     = left + 96.0f + 5.0f;
-	f32 borderTop       = top - 5.0f;
-	f32 borderBottom    = bottom + 5.0f;
-	GXColor borderColor = (GXColor) { 0, 0, 0, 0xC0 };
-	GXSetChanMatColor(GX_COLOR0A0, borderColor);
+	f32 top          = screenPosition.y - 10.0f;
+	f32 bottom       = screenPosition.y + 10.0f;
+	f32 left         = screenPosition.x - 48.0f;
+	f32 borderLeft   = left - 5.0f;
+	f32 borderRight  = left + 96.0f + 5.0f;
+	f32 borderTop    = top - 5.0f;
+	f32 borderBottom = bottom + 5.0f;
+	GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0, 0, 0, 0xC0 });
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 	GXPosition3f32(borderLeft, borderTop, screenPosition.z);
 	GXPosition3f32(borderRight, borderTop, screenPosition.z);
@@ -1588,9 +1668,8 @@ void TEnemyMario::drawHPMeter(MtxPtr viewMtx)
 	GXPosition3f32(borderLeft, borderBottom, screenPosition.z);
 	GXEnd();
 
-	GXColor meterColor = (GXColor) { 0x40, 0x40, 0xFF, 0xFF };
-	f32 right          = left + mWaterCounter * 1.5f;
-	GXSetChanMatColor(GX_COLOR0A0, meterColor);
+	f32 right = left + mWaterCounter * 1.5f;
+	GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0x40, 0x40, 0xFF, 0xFF });
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 	GXPosition3f32(left, top, screenPosition.z);
 	GXPosition3f32(right, top, screenPosition.z);
@@ -1603,21 +1682,20 @@ void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	MActor* emarioActor   = nullptr;
 	J3DModel* emarioModel = nullptr;
+
 	if (mSpecialModel == nullptr) {
 		emarioActor = mEMario->getMActor();
 		emarioModel = emarioActor->getModel();
 	}
 
-	if (mFreezeTimer > 0) {
+	if (mFreezeTimer > 0)
 		--mFreezeTimer;
-	}
-	if (mWaterHitTimer > 0) {
-		--mWaterHitTimer;
-	}
 
-	u32 isMove = cue & CUE_MOVE;
-	if (isMove) {
-		if (isForceWaterHit()) {
+	if (mWaterHitTimer > 0)
+		--mWaterHitTimer;
+
+	if (cue & CUE_MOVE) {
+		if (checkEMFlag(EM_FLAG_FORCE_WATER_HIT)) {
 			mWaterCounter = 0;
 			hitWater(this);
 		}
@@ -1628,39 +1706,36 @@ void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (isMove) {
-		if (mStatus != MARIO_STATUS_RUN || mFreezeTimer == 0) {
+	if (cue & CUE_MOVE) {
+		if (mStatus != MARIO_STATUS_RUN || mFreezeTimer == 0)
 			calcAnim(CUE_CALC_ANIM, graphics);
-		}
 
 		if (mSpecialModel != nullptr) {
 			for (u16 i = 0;
 			     i < mModel->getModel()->getModelData()->getJointNum(); ++i) {
-				MTXCopy(mModel->getModel()->getAnmMtx(i),
-				        mSpecialModel->getAnmMtx(i));
+				mSpecialModel->setAnmMtx(i, mModel->getModel()->getAnmMtx(i));
 			}
 			mSpecialModel->calcWeightEnvelopeMtx();
 		} else {
 			emarioActor->calcAnm();
 			for (u16 i = 0;
 			     i < mModel->getModel()->getModelData()->getJointNum(); ++i) {
-				MTXCopy(mModel->getModel()->getAnmMtx(i),
-				        emarioModel->getAnmMtx(i));
+				emarioModel->setAnmMtx(i, mModel->getModel()->getAnmMtx(i));
 			}
 			emarioModel->calcWeightEnvelopeMtx();
-			MTXCopy(emarioModel->getAnmMtx(mJointIdHandL),
-			        mPencilModel->getBaseTRMtx());
-			mPencilModel->calc();
+			mBrushModel->setBaseTRMtx(emarioModel->getAnmMtx(mJointIdHandL));
+			mBrushModel->calc();
 
 			if (isDispStamp()) {
-				TPosition3f scaleMtx;
+				TPosition3f trMtx;
 				TRotation3f rotationMtx;
-				MTXScale(scaleMtx, mPencilScale, mPencilScale, mPencilScale);
+				MTXScale(trMtx, mBrushScaleupDuringDrawing,
+				         mBrushScaleupDuringDrawing,
+				         mBrushScaleupDuringDrawing);
 				MsMtxSetRotRPH(rotationMtx, 0.0f, 180.0f, 0.0f);
-				MTXConcat(mModel->getModel()->getBaseTRMtx(), scaleMtx,
-				          scaleMtx);
-				MTXConcat(scaleMtx, rotationMtx, scaleMtx);
-				MTXCopy(scaleMtx, mStampActor->getModel()->getBaseTRMtx());
+				MTXConcat(mModel->getModel()->getBaseTRMtx(), trMtx, trMtx);
+				MTXConcat(trMtx, rotationMtx, trMtx);
+				mStampActor->getModel()->setBaseTRMtx(trMtx);
 				mStampActor->calcAnm();
 			}
 		}
@@ -1679,7 +1754,7 @@ void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_CALC_VIEW) {
 		calcView(graphics);
-		if (isDispPencil()) {
+		if (checkEMFlag(EM_FLAG_DISP_PENCIL)) {
 			unk390->entryDrawShadow();
 			gpQuestionManager->request(mPosition, 50.0f);
 		}
@@ -1688,7 +1763,7 @@ void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 			mSpecialModel->viewCalc();
 		} else {
 			emarioActor->viewCalc();
-			mPencilModel->viewCalc();
+			mBrushModel->viewCalc();
 			if (isDispStamp()) {
 				mStampActor->viewCalc();
 			}
@@ -1710,10 +1785,10 @@ void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 			}
 		}
 
-		if (isDispPencil()) {
+		if (checkEMFlag(EM_FLAG_DISP_PENCIL)) {
 			if (mSpecialModel == nullptr) {
 				emarioActor->entry();
-				mPencilModel->entry();
+				mBrushModel->entry();
 			} else {
 				mSpecialModel->entry();
 			}
@@ -1725,29 +1800,29 @@ void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 			mTrembleModelEffect->movement();
 		}
 
-		int doDraw = 1;
-		if (!(unk114 & UNK114_FLAG_VISIBLE)) {
-			doDraw = 0;
-		}
-		if (mInvincibilityFrames > 0 && !(mInvincibilityFrames & 4)) {
-			doDraw = 0;
-		}
-		if (checkFlag(MARIO_FLAG_UNK4)) {
-			doDraw = 0;
-		}
-		if (mEMDoing == EM_DOING_HIDDEN) {
-			doDraw = 0;
-		}
-		if (mFreezeTimer > 0 && !(mFreezeTimer & 4)) {
-			doDraw = 0;
-		}
-		if (doDraw == 1 && mTrembleModelEffect != nullptr) {
+		BOOL doDraw = TRUE;
+		if (!(unk114 & UNK114_FLAG_VISIBLE))
+			doDraw = FALSE;
+
+		if (mInvincibilityFrames > 0 && !(mInvincibilityFrames & 4))
+			doDraw = FALSE;
+
+		if (checkFlag(MARIO_FLAG_UNK4))
+			doDraw = FALSE;
+
+		if (mEMDoing == EM_DOING_HIDE)
+			doDraw = FALSE;
+
+		if (mFreezeTimer > 0 && !(mFreezeTimer & 4))
+			doDraw = FALSE;
+
+		if (doDraw == TRUE && mTrembleModelEffect != nullptr) {
 			j3dSys.setUnk4C(7);
 			unk394->draw();
 			unk398->draw();
 		}
 
-		if ((mGoalFlags & EM_GOAL_FLAG_DISP_HP_METER) && mWaterHitTimer > 0) {
+		if ((mEMFlags & EM_FLAG_DISP_HP_METER) && mWaterHitTimer > 0) {
 			drawHPMeter(graphics->getViewMtx());
 		}
 	}
