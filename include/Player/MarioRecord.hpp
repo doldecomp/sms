@@ -24,14 +24,6 @@ public:
 	bool play(f32* outIntendedMag, s16* outIntendedYaw, u32* outPressedBtns,
 	          u32* outJustPressedBtns, u8*, u8*);
 	void reset();
-	void start() { mCanPlay = 1; }
-	bool canPlay() const
-	{
-		if (mCanPlay == 1) {
-			return true;
-		}
-		return false;
-	}
 
 	// fabricated
 	void start() { mCanPlay = 1; }
