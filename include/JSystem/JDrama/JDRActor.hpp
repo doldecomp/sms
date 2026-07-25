@@ -40,6 +40,8 @@ public:
 	const JGeometry::TVec3<f32>& getRotation() const { return mRotation; }
 	const JGeometry::TVec3<f32>& getScaling() const { return mScaling; }
 
+	void setCharacter(TCharacter* character) { unk3C = character; }
+
 public:
 	/* 0x24 */ JGeometry::TVec3<f32> mScaling;
 	/* 0x30 */ JGeometry::TVec3<f32> mRotation;

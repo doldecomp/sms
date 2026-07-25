@@ -12,16 +12,6 @@ class TSpineEnemyParams;
 class TEnemyManager;
 extern void* gpMarioAddress;
 
-// TODO: this definitely has a better place to live
-// I took it from walkerEnemy.cpp
-static inline f32 vecdist(const JGeometry::TVec3<f32>& a,
-                          const JGeometry::TVec3<f32>& b)
-{
-	JGeometry::TVec3<f32> tmp = a;
-	tmp.sub(b);
-	return tmp.length();
-}
-
 class TSpineEnemyParams : public TParams {
 public:
 	TSpineEnemyParams(const char*);
@@ -56,7 +46,7 @@ public:
 	virtual f32 getPhaseShift() const { return 0.0f; }
 	virtual BOOL isReachedToGoal() const
 	{
-		return vecdist(unk104.getPoint(), mPosition) < 100.0f ? TRUE : FALSE;
+		return unk104.getPoint().distance(mPosition) < 100.0f ? TRUE : FALSE;
 	}
 
 	void calcEnemyRootMatrix();

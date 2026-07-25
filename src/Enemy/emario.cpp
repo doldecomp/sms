@@ -20,6 +20,19 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+
+static const char* MtxCalcTypeName[] = {
+	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
+	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
+	"MActorMtxCalcType_MotionBlend モーションブレンド",
+	"MActorMtxCalcType_User ユーザー定義",
+};
+
+const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
+const char cDirtyTexName[]  = "H_ma_rak_dummy";
+
 TEMario::TEMario(const char* name)
     : TSpineEnemy(name)
 {
@@ -29,58 +42,48 @@ void TEMario::load(JSUMemoryInputStream& stream)
 {
 	TSpineEnemy::load(stream);
 
-	stream >> mInitialState;
-	stream >> mReplayIndexDolpic;
-	stream >> mReplayIndexPad2;
-	stream >> mReplayIndexPad3;
+	stream >> mInitialState >> unk158 >> unk15C >> unk160;
 
 	stream.readU32();
 	stream.readU32();
 
-	if (mInitialState == 0xff) {
+	if (mInitialState == 0xFF)
 		mInitialState = 0;
-	}
 
-	if (mReplayIndexDolpic == 0xFF) {
-		mReplayIndexDolpic = 0;
-	}
+	if (unk158 == 0xFF)
+		unk158 = 0;
 
-	if (mReplayIndexPad2 == 0xFF) {
-		mReplayIndexPad2 = 0;
-	}
+	if (unk15C == 0xFF)
+		unk15C = 0;
 
-	if (mReplayIndexPad3 == 0xFF) {
-		mReplayIndexPad3 = 0;
-	}
+	if (unk160 == 0xFF)
+		unk160 = 0;
 
-	mEnemyMario          = new TEnemyMario();
+	mEnemyMario          = new TEnemyMario;
 	mEnemyMario->mEMario = this;
 
 	// "Mario 2 P"
 	if (strcmp(mName, "マリオ２Ｐ") == 0) {
 		mEnemyMario->setGamePad(gpMarDirector->unk18[1]);
-		mEnemyMario->unk388 = 3;
+		mEnemyMario->mPlayerType = TMario::PLAYER_TYPE_P2;
 	}
 
 	// "Mario 3 P"
 	if (strcmp(mName, "マリオ３Ｐ") == 0) {
 		mEnemyMario->setGamePad(gpMarDirector->unk18[2]);
-		mEnemyMario->unk388 = 4;
+		mEnemyMario->mPlayerType = TMario::PLAYER_TYPE_P3;
 	}
 
 	// "Mario 4 P
 	if (strcmp(mName, "マリオ４Ｐ") == 0) {
 		mEnemyMario->setGamePad(gpMarDirector->unk18[3]);
-		mEnemyMario->unk388 = 5;
+		mEnemyMario->mPlayerType = TMario::PLAYER_TYPE_P4;
 	}
-
-	TNameRef* rootNameRef
-	    = JDrama::TNameRefGen::getInstance()->getRootNameRef();
 
 	// "Mario Character"
 	const char marioCharName[] = "マリオ キャラ";
-	mEnemyMario->unk3C
-	    = JDrama::TNameRefGen::search<JDrama::TCharacter>(marioCharName);
+	mEnemyMario->setCharacter(
+	    JDrama::TNameRefGen::search<JDrama::TCharacter>(marioCharName));
 
 	mEnemyMario->initValues();
 
@@ -157,33 +160,23 @@ BOOL TEMario::receiveMessage(THitActor* sender, u32 message)
 
 void TEMario::kill()
 {
-	if (SMS_isMultiPlayerMap()) {
+	if (SMS_isMultiPlayerMap())
 		gpCamera->removeMultiPlayer(&mPosition);
-	}
 }
 
 BOOL TEMario::isGoal()
 {
-	if (mEnemyMario->isGoal()) {
-		return TRUE;
-	}
-	return FALSE;
+	// raw read (not checkEMFlag): the BOOL ? TRUE : FALSE return materializes
+	// straight into r3, matching retail; checkEMFlag's own bool adds a clrlwi
+	return (mEnemyMario->mEMFlags & TEnemyMario::EM_FLAG_GOAL_REACHED) ? TRUE
+	                                                                   : FALSE;
 }
 
-BOOL TEMario::isReachedToGate() const
-{
-	if (mEnemyMario->isReachedToGate()) {
-		return TRUE;
-	}
-	return FALSE;
-}
+BOOL TEMario::isReachedToGate() const { return mEnemyMario->isReachedToGate(); }
 
 BOOL TEMario::isDownWaitingToTalk() const
 {
-	if (mEnemyMario->isDownWaitingToTalk()) {
-		return TRUE;
-	}
-	return FALSE;
+	return mEnemyMario->isDownWaitingToTalk();
 }
 
 void TEMario::startRunAway() { mEnemyMario->startRunAway(); }
@@ -214,19 +207,18 @@ void TEMario::perform(u32 cue, JDrama::TGraphics* graphics)
 	for (s32 i = 0; i < mColCount; ++i) {
 		switch (mCollisions[i]->mActorType) {
 		case 0x80000001: {
-			const f32 d = vecDist(mPosition, mCollisions[i]->getPosition());
-			if (d < mEnemyMario->mAttackRange) {
+			if (mPosition.distance(mCollisions[i]->getPosition())
+			    < mEnemyMario->mAttackRange) {
 				mCollisions[i]->receiveMessage(this, HIT_MESSAGE_ATTACK);
 			}
 		} break;
 
 		case 0x400000bc: {
 			if (!mEnemyMario->checkStatusType(0x10000)) {
-				const f32 dmgRadius = mEnemyMario->getDamageRadius();
-				const f32 atkRadius = mCollisions[i]->getAttackRadius();
-				const f32 d = vecDist(mCollisions[i]->getPosition(), mPosition);
 
-				if (d < (dmgRadius + atkRadius)) {
+				if (mCollisions[i]->getPosition().distance(mPosition)
+				    < (mCollisions[i]->getAttackRadius()
+				       + mEnemyMario->getDamageRadius())) {
 					mEnemyMario->changePlayerStatus(0x810446, 0, false);
 					mEnemyMario->emitGetEffect();
 				}

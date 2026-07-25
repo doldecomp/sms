@@ -36,6 +36,13 @@ struct TMarioControllerWork {
 		}
 		return false;
 	}
+	bool isBHit() const
+	{
+		if (mFrameInput & B) {
+			return true;
+		}
+		return false;
+	}
 	bool isAPressed() const
 	{
 		if (mInput & A) {
@@ -46,13 +53,6 @@ struct TMarioControllerWork {
 	bool isBPressed() const
 	{
 		if (mInput & B) {
-			return true;
-		}
-		return false;
-	}
-	bool isBHit() const
-	{
-		if (mFrameInput & B) {
 			return true;
 		}
 		return false;

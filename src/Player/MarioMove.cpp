@@ -973,7 +973,8 @@ void TMario::checkGraffito()
 	if (onYoshi())
 		return;
 
-	if (unk388 == 1 || unk388 == 2)
+	if (mPlayerType == PLAYER_TYPE_SHADOW_MARIO
+	    || mPlayerType == PLAYER_TYPE_MONTE_MAN)
 		return;
 
 	int isDirty = 0;

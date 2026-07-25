@@ -1688,7 +1688,18 @@ public:
 
 	/* 0x380 */ u32 mUpperState;
 	/* 0x384 */ THitActor* unk384; // Last receiveMessage sender
-	/* 0x388 */ u8 unk388;
+
+	enum {
+		PLAYER_TYPE_MARIO        = 0,
+		PLAYER_TYPE_SHADOW_MARIO = 1,
+		PLAYER_TYPE_MONTE_MAN    = 2, // el piantissimo
+		PLAYER_TYPE_P2           = 3,
+		PLAYER_TYPE_P3           = 4,
+		PLAYER_TYPE_P4           = 5,
+		PLAYER_TYPE_INVALID      = 6,
+	};
+
+	/* 0x388 */ u8 mPlayerType;
 	enum {
 		SURF_GESSO_TYPE_RED,
 		SURF_GESSO_TYPE_YELLOW,

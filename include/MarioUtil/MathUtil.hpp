@@ -3,9 +3,49 @@
 
 #include <JSystem/JGeometry.hpp>
 
-int IConverge(int, int, int, int);
-f32 FConverge(f32, f32, f32, f32);
-s16 matan(f32, f32);
+/**
+ * @brief Steps an integer @p value one increment towards @p target without
+ * overshooting, using a separate step size for each direction of travel.
+ *
+ * @details When @p value is below @p target it is raised by @p inc; when it is
+ * at or above @p target it is lowered by @p dec. In either case the result is
+ * clamped so that a single call can never move @p value past @p target.
+ *
+ * @param value the current value
+ * @param target the value to converge towards
+ * @param inc amount added per call while @p value is below @p target
+ * @param dec amount subtracted per call while @p value is at or above @p target
+ * @return @p value advanced by one step towards @p target
+ */
+int IConverge(int value, int target, int inc, int dec);
+
+/**
+ * @brief Floating-point counterpart of IConverge(): steps @p value one
+ * increment towards @p target without overshooting, using a separate step size
+ * for each direction of travel.
+ *
+ * @details When @p value is below @p target it is raised by @p inc; when it is
+ * at or above @p target it is lowered by @p dec. In either case the result is
+ * clamped so that a single call can never move @p value past @p target.
+ *
+ * @param value the current value
+ * @param target the value to converge towards
+ * @param inc amount added per call while @p value is below @p target
+ * @param dec amount subtracted per call while @p value is at or above @p target
+ * @return @p value advanced by one step towards @p target
+ */
+f32 FConverge(f32 value, f32 target, f32 inc, f32 dec);
+
+/**
+ * @brief Computes the direction of the 2D vector (@p x, @p y) as a binary
+ * angle, i.e. atan2(@p y, @p x) measured from the +@p x axis towards the +@p y
+ * axis.
+ *
+ * @param x the component along the zero-angle (reference) axis
+ * @param y the component along the quarter-turn axis
+ * @return the angle of (@p x, @p y) as a signed 16-bit binary angle
+ */
+s16 matan(f32 x, f32 y);
 
 // fabricated
 inline f32 MsAtan2(f32 y, f32 x)

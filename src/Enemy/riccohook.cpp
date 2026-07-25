@@ -146,7 +146,7 @@ DEFINE_NERVE(TNerveRHGraphWander, TLiveActor)
 		self->goToDirectedNextGraphNode(polar);
 	}
 
-	if (vecdist(self->unk104.getPoint(), self->getPosition()) < 10.0f) {
+	if (self->unk104.getPoint().distance(self->getPosition()) < 10.0f) {
 		TGraphNode& node = self->unk124->getCurrent();
 
 		if (node.checkFlag(0x800)) {
