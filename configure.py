@@ -306,11 +306,18 @@ def MatchingFor(*versions):
 
 config.warn_missing_config = True
 config.warn_missing_source = False
+config.precompiled_headers = [
+    {
+        "source": "SMS.pch",
+        "mw_version": "GC/1.2.5",
+        "cflags": ["-lang=c++", *cflags_game],
+    },
+]
 config.libs = [
     {
         "lib": "main",
         "mw_version": "GC/1.2.5",
-        "cflags": cflags_game,
+        "cflags": [*cflags_game, "-prefix SMS.mch"],
         "progress_category": "game",
         "objects": [
             Object(Matching, "main.cpp"),
@@ -768,7 +775,7 @@ config.libs = [
     {
         "lib": "THPPlayer",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_base, "-O4,p", "-inline auto", "-fp_contract on", "-str reuse,readonly", "-lang=c++", "-inline deferred"],
+        "cflags": [*cflags_base, "-O4,p", "-inline auto", "-fp_contract on", "-str reuse,readonly", "-lang=c++", "-inline deferred", "-prefix SMS.mch"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "THPPlayer/THPAudioDecode.c"),
@@ -781,7 +788,7 @@ config.libs = [
     {
         "lib": "MarioUtil",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-inline deferred ", "-opt all,nostrength"],
+        "cflags": [*cflags_game, "-inline deferred ", "-opt all,nostrength", "-prefix SMS.mch"],
         "progress_category": "game",
         "objects": [
             Object(Matching, "MarioUtil/DLUtil.cpp"),
@@ -791,11 +798,31 @@ config.libs = [
             Object(NonMatching, "MarioUtil/MtxUtil.cpp"),
             Object(NonMatching, "MarioUtil/ScreenUtil.cpp"),
             Object(NonMatching, "MarioUtil/ShadowUtil.cpp"),
-            Object(Matching, "MarioUtil/gd-reinit-gx.cpp"),
+            # Retail gd-reinit-gx does not contain the weak literals emitted by
+            # SMS.mch, so it was compiled without the game PCH.
+            Object(
+                Matching,
+                "MarioUtil/gd-reinit-gx.cpp",
+                cflags=[
+                    *cflags_game,
+                    "-inline deferred ",
+                    "-opt all,nostrength",
+                ],
+            ),
             Object(NonMatching, "MarioUtil/EffectUtil.cpp"),
             Object(NonMatching, "MarioUtil/ModelUtil.cpp"),
             Object(Matching, "MarioUtil/RumbleMgr.cpp"),
-            Object(Matching, "MarioUtil/RumbleData.cpp"),
+            # Retail RumbleData does not contain the weak literals emitted by
+            # SMS.mch, so it was compiled without the game PCH.
+            Object(
+                Matching,
+                "MarioUtil/RumbleData.cpp",
+                cflags=[
+                    *cflags_game,
+                    "-inline deferred ",
+                    "-opt all,nostrength",
+                ],
+            ),
             Object(Matching, "MarioUtil/RumbleType.cpp"),
             Object(NonMatching, "MarioUtil/PacketUtil.cpp"),
             Object(Matching, "MarioUtil/GDUtil.cpp"),
@@ -807,7 +834,7 @@ config.libs = [
     {
         "lib": "M3DUtil",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_system, "-inline deferred"],
+        "cflags": [*cflags_system, "-inline deferred", "-prefix SMS.mch"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "M3DUtil/M3UJoint.cpp"),
@@ -826,7 +853,7 @@ config.libs = [
     {
         "lib": "System",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_system, "-inline deferred"],
+        "cflags": [*cflags_system, "-inline deferred", "-prefix SMS.mch"],
         "progress_category": "game",
         "objects": [
             Object(Matching, "System/BaseParam.cpp"),
@@ -880,7 +907,7 @@ config.libs = [
     {
         "lib": "Strategic",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength"],
+        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength", "-prefix SMS.mch"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "Strategic/liveactor.cpp"),
@@ -889,7 +916,17 @@ config.libs = [
             Object(NonMatching, "Strategic/ObjHitCheck.cpp"),
             Object(NonMatching, "Strategic/objmanager.cpp"),
             Object(NonMatching, "Strategic/ObjModel.cpp"),
-            Object(NonMatching, "Strategic/spcinterp.cpp"),
+            # Retail spcinterp does not contain the weak literals emitted by
+            # SMS.mch, so it was compiled without the game PCH.
+            Object(
+                NonMatching,
+                "Strategic/spcinterp.cpp",
+                cflags=[
+                    *cflags_game,
+                    "-inline deferred",
+                    "-opt all,nostrength",
+                ],
+            ),
             Object(NonMatching, "Strategic/Strategy.cpp"),
             Object(NonMatching, "Strategic/question.cpp"),
             Object(Matching, "Strategic/smplcharacter.cpp"),
@@ -902,7 +939,7 @@ config.libs = [
     {
         "lib": "Player",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength"],
+        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength", "-prefix SMS.mch"],
         "progress_category": "game",
         "objects": [
             Object(Matching, "Player/Atom.cpp"),
@@ -940,7 +977,7 @@ config.libs = [
     {
         "lib": "NPC",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength"],
+        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength", "-prefix SMS.mch"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "NPC/NpcAnm.cpp"),
@@ -972,7 +1009,7 @@ config.libs = [
     {
         "lib": "MSound",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength"],
+        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength", "-prefix SMS.mch"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "MSound/MAnmSound.cpp"),
@@ -989,7 +1026,7 @@ config.libs = [
     {
         "lib": "MoveBG",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-opt all,nostrength", "-inline deferred"],
+        "cflags": [*cflags_game, "-opt all,nostrength", "-inline deferred", "-prefix SMS.mch"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "MoveBG/WoodBarrel.cpp"),
@@ -1039,7 +1076,7 @@ config.libs = [
     {
         "lib": "Map",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-opt all,nostrength", "-inline deferred"],
+        "cflags": [*cflags_game, "-opt all,nostrength", "-inline deferred", "-prefix SMS.mch"],
         "progress_category": "game",
         "objects": [
             Object(Matching, "Map/JointModel.cpp"),
@@ -1085,7 +1122,7 @@ config.libs = [
     {
         "lib": "GC2D",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-opt all,nostrength", "-inline deferred"],
+        "cflags": [*cflags_game, "-opt all,nostrength", "-inline deferred", "-prefix SMS.mch"],
         "progress_category": "game",
         "objects": [
             Object(Matching, "GC2D/ChangeValue.cpp"),
@@ -1120,7 +1157,7 @@ config.libs = [
     {
         "lib": "Enemy",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-opt all,nostrength", "-inline deferred"],
+        "cflags": [*cflags_game, "-opt all,nostrength", "-inline deferred", "-prefix SMS.mch"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "Enemy/conductor.cpp"),
@@ -1212,7 +1249,7 @@ config.libs = [
     {
         "lib": "Camera",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength"],
+        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength", "-prefix SMS.mch"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "Camera/CameraBGCheck.cpp"),
@@ -1250,7 +1287,7 @@ config.libs = [
     {
         "lib": "Animal",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength"],
+        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength", "-prefix SMS.mch"],
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "Animal/boid.cpp"),

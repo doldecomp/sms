@@ -1331,7 +1331,10 @@ void TBGTentacle::calcAttackGuideAnm()
 void TBGTentacle::resetAllNodes(const JGeometry::TVec3<f32>& param_1)
 {
 	JGeometry::TVec3<f32> local_78 = param_1;
-	JGeometry::TVec3<f32> zero(0.0f, 0.0f, 0.0f);
+	JGeometry::TVec3<f32> zero;
+	zero.z = 0.0f;
+	zero.y = 0.0f;
+	zero.x = 0.0f;
 
 	getFirstNode()->onUnk24();
 
