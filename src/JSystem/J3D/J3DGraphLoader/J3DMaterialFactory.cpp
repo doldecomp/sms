@@ -110,8 +110,9 @@ J3DMaterial* J3DMaterialFactory::create(J3DMaterial* mat, int idx,
 {
 	u32 stageNum = countStages(idx);
 
-	u32 tevStageNum
-	    = stageNum > ((flag >> 16) & 0x1F) ? stageNum : ((flag >> 16) & 0x1F);
+	u32 tevStageNum = stageNum > ((flag >> J3DMLF_TevStageNumShift) & 0x1F)
+	                      ? stageNum
+	                      : ((flag >> J3DMLF_TevStageNumShift) & 0x1F);
 
 	u32 texNum = tevStageNum > 8 ? 8 : tevStageNum;
 

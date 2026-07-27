@@ -502,14 +502,6 @@ void TSpineEnemy::walkToCurPathNode(f32 march_speed, f32 turn_speed,
 	}
 }
 
-static inline f32 dist(const JGeometry::TVec3<f32>& a,
-                       const JGeometry::TVec3<f32>& b)
-{
-	JGeometry::TVec3<f32> tmp = a;
-	tmp.sub(b);
-	return tmp.length();
-}
-
 void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
                                       f32 cycle, f32 angle)
 {
@@ -520,7 +512,7 @@ void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
 
 	f32 f29 = angle * unk124->unk10;
 
-	f32 dVar9 = dist(unkF4.getPoint(), mPosition);
+	f32 dVar9 = (unkF4.getPoint() - mPosition).length();
 
 	f32 dVar13 = MsWrap(dVar9, 0.0f, cycle);
 
@@ -575,7 +567,7 @@ void TSpineEnemy::doShortCut()
 	if (unk114.size() <= 0)
 		return;
 
-	if (dist(unkF4.getPoint(), mPosition) < getBodyRadius()) {
+	if ((unkF4.getPoint() - mPosition).length() < getBodyRadius()) {
 		if (!unk114.empty())
 			unkF4 = unk114.pop();
 		return;
@@ -587,7 +579,7 @@ void TSpineEnemy::doShortCut()
 	if (local_28.x == 0.0f && local_28.y == 0.0f && local_28.z == 0.0f)
 		local_28.x = 1.0f;
 	local_28.normalize();
-	local_28.scale(mMarchSpeed);
+	local_28 *= mMarchSpeed;
 	local_28 += mPosition;
 	if (!gpMap->isTouchedOneWallAndMoveXZ(
 	        &local_28.x, local_28.y + getHeadHeight(), &local_28.z,
