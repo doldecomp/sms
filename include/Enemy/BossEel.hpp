@@ -43,6 +43,7 @@ public:
 	/* 0x1D4 */ TParamRT<f32> mSLBodyScaleHigh;
 	/* 0x1E8 */ TParamRT<f32> mSLTearsDropScaleLow;
 	/* 0x1FC */ TParamRT<f32> mSLTearsDropScaleHigh;
+
 	/* 0x210 */ TMsRange<f32> mBodyScaleRange;
 	/* 0x218 */ TMsRange<f32> mTearsDropScaleRange;
 };
@@ -196,7 +197,7 @@ public:
 	/* 0x06C */ TBossEel* mOwner;
 	/* 0x070 */ s32 mHitPoints;
 	/* 0x074 */ u8 mToothType;
-	/* 0x078 */ JGeometry::TVec3<f32> mTrembleRotation;
+	/* 0x078 */ JGeometry::TVec3<f32> unk78;
 	/* 0x084 */ s32 mDamageCooldown;
 	/* 0x088 */ Mtx mDetachedMtx;
 	/* 0x0B8 */ GXColor mColor;
@@ -252,7 +253,7 @@ public:
 	/* 0x1C */ bool mActive;
 	/* 0x20 */ TCoin* mCoins[20];
 	/* 0x70 */ JGeometry::TVec3<f32> mPosition;
-	/* 0x7C */ TBossEel* mOwner;
+	/* 0x7C */ const TLiveActor* mOwner;
 };
 
 class TBossEelCollision : public THitActor {
@@ -362,7 +363,7 @@ public:
 	void forceShedTears(bool);
 	void shedTears(MtxPtr);
 	BOOL isEyeBlurOn();
-	BOOL canEatMario();
+	bool canEatMario();
 	void forceEat();
 	void updateTearsCnt();
 	void calcAndSetCollisionCubeBite_();
@@ -390,9 +391,9 @@ public:
 	/* 0x1D0 */ bool mTearEyeToggle;
 	/* 0x1D4 */ f32 mMouthOpenAmount;
 	/* 0x1D8 */ f32 mMouthOpenSpeed;
-	/* 0x1DC */ u32 mTimers[3];
+	/* 0x1DC */ JGeometry::TVec3<f32> mDeathEffectPosition;
 	/* 0x1E8 */ TBossEelSaveParams* mSaveParams;
-	/* 0x1EC */ JGeometry::TVec2<u32>* mSpinTimer;
+	/* 0x1EC */ JGeometry::TVec2<s32>* mSpinTimer;
 	/* 0x1F0 */ bool mInDemo;
 	/* 0x1F4 */ f32 mAppearOffset;
 	/* 0x1F8 */ f32 mAppearAcceleration;
