@@ -56,8 +56,8 @@ DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
 				replyLength   = 0;
 				replyIOResult = DS_IONoError;
 
-				error = TRKRequestSend(buffer, &replyBufferId, read ? 5 : 5,
-				                           3, !(read && file_handle == 0));
+				error = TRKRequestSend(buffer, &replyBufferId, read ? 5 : 5, 3,
+				                       !(read && file_handle == 0));
 				if (error == DS_NoError) {
 					replyBuffer = (TRKBuffer*)TRKGetBuffer(replyBufferId);
 					TRKSetBufferPosition(replyBuffer, 2);
