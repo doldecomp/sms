@@ -384,8 +384,7 @@ void TPoiHana::walkBehavior(int param_1, float param_2)
 			    > unk19C->mSLWakeFrame.get() + mInstanceIndex * 100) {
 				mGoToSleepTimer = 0;
 
-				// TODO: random interval class
-				mGoToSleepTimer = MsRandF(-500.0f, 500.0f);
+				mGoToSleepTimer = TMsRange<s32>(-500, 500).rand();
 
 				mSpine->setNext(&TNervePoihanaSleep::theNerve());
 				unk195 = true;
@@ -573,9 +572,8 @@ DEFINE_NERVE(TNervePoihanaSleep, TLiveActor)
 
 	self->mGoToSleepTimer += 1;
 	if ((self->unk194 || self->unsetUnk165()) && !self->isBckAnm(10)) {
-		if (gpMSound->gateCheck(MSD_SE_EN_KOHANA_WAKEUP3))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_KOHANA_WAKEUP3, &self->mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_KOHANA_WAKEUP3,
+		                                &self->mPosition, 0, nullptr, 0, 4);
 
 		self->setBckAnm(10);
 		self->getMActor()->getFrameCtrl(0)->setFrame(148.0f);

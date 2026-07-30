@@ -668,9 +668,9 @@ void TMario::animSound()
 	else
 		mSoundFlags |= 0x1000;
 
-	if (unk388 == 1)
+	if (mPlayerType == PLAYER_TYPE_SHADOW_MARIO)
 		mSoundFlags |= 0x20000000;
-	else if (unk388 == 2)
+	else if (mPlayerType == PLAYER_TYPE_MONTE_MAN)
 		mSoundFlags |= 0x60000000;
 
 	mSoundFlags += mHealth * 0x1000000;
@@ -695,10 +695,10 @@ u8 TMario::getVoiceStatus()
 	if (onYoshi())
 		return 1;
 
-	switch (unk388) {
-	case 1:
+	switch (mPlayerType) {
+	case PLAYER_TYPE_SHADOW_MARIO:
 		return 2;
-	case 2:
+	case PLAYER_TYPE_MONTE_MAN:
 		return 6;
 	}
 

@@ -1,13 +1,12 @@
-#include "Camera/CameraShake.hpp"
-#include "Enemy/Enemy.hpp"
-#include "Enemy/SmallEnemy.hpp"
-#include "Strategic/LiveActor.hpp"
 #include <Enemy/CoasterKiller.hpp>
+#include <Enemy/Enemy.hpp>
 #include <Enemy/Walker.hpp>
 #include <Enemy/Graph.hpp>
 #include <Enemy/Spider.hpp>
 #include <Enemy/Conductor.hpp>
+#include <Enemy/SmallEnemy.hpp>
 #include <Player/MarioAccess.hpp>
+#include <Camera/CameraShake.hpp>
 #include <MoveBG/MapObjManager.hpp>
 #include <Map/MapData.hpp>
 #include <M3DUtil/MActor.hpp>
@@ -21,6 +20,7 @@
 #include <Strategic/Spine.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <M3DUtil/SDLModel.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
@@ -218,21 +218,16 @@ void TCoasterKiller::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TCoasterEnemy::perform(cue, graphics);
 
-	if ((cue * 2) && (cue & CUE_MOVE) == 0) {
-		mParticlePos.setQT(getQuat(), mPosition);
-		gpMarioParticleManager->emitAndBindToMtxPtr(0x174, mParticlePos.mMtx, 1,
-		                                            this);
+	if ((cue & CUE_CALC_ANIM) && !checkLiveFlag(LIVE_FLAG_DEAD)) {
+		mParticlePos.setQT(mQuat, mPosition);
+		gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_KIL_SMOKE,
+		                                            mParticlePos, 1, this);
 
 		if (mSpine->getCurrentNerve()
 		    != &TNerveCoasterKillerExplosion::theNerve()) {
-			JGeometry::TVec3<f32> dist;
-			dist.sub(getPosition(), *gpMarioPos);
-			f32 len = dist.length2();
-			if (gpMSound->gateCheck(MSD_SE_EN_KILLER_FLY_KUPPA)) {
-				MSoundSESystem::MSoundSE::startSoundActorWithInfo(
-				    MSD_SE_EN_KILLER_FLY_KUPPA, &mPosition, nullptr, len, 0, 0,
-				    nullptr, 0, 4);
-			}
+			SMSGetMSound()->startSoundActorWithInfo(
+			    MSD_SE_EN_KILLER_FLY_KUPPA, &mPosition, nullptr,
+			    mPosition.distance(SMS_GetMarioPos()), 0, 0, nullptr, 0, 4);
 		}
 	}
 }

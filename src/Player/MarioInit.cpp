@@ -204,7 +204,7 @@ TMario::TMario()
 	mPumpCooldown            = 0;
 	mUpperState              = UPPER_STATE_IDLE;
 	unk384                   = 0;
-	unk388                   = 6;
+	mPlayerType              = PLAYER_TYPE_INVALID;
 	unk390                   = 0;
 	unk394                   = nullptr;
 	unk398                   = nullptr;
@@ -386,7 +386,7 @@ void TMario::initValues()
 	unk154 = new TWaterEmitInfo("/Mario/DamageWaterEmit.prm");
 	unk158 = new TWaterEmitInfo("/Mario/WetWaterEmit.prm");
 
-	unk388            = 0;
+	mPlayerType       = PLAYER_TYPE_MARIO;
 	mSurfGessoType    = SURF_GESSO_TYPE_RED;
 	mHolderHeightDiff = 0.0f;
 

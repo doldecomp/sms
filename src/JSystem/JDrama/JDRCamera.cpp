@@ -97,10 +97,7 @@ void TLookAtCamera::JSGSetViewTargetPosition(const Vec& tgt)
 void TOrthoProj::load(JSUMemoryInputStream& stream)
 {
 	TPlacement::load(stream);
-	stream.read(&mField[0], sizeof(float));
-	stream.read(&mField[1], sizeof(float));
-	stream.read(&mField[2], sizeof(float));
-	stream.read(&mField[3], sizeof(float));
+	stream >> mField[0] >> mField[1] >> mField[2] >> mField[3];
 }
 void TOrthoProj::perform(u32 cue, TGraphics* graphics)
 {

@@ -325,27 +325,20 @@ void TBellDolpic::control()
 
 		if (unk154 == 0) {
 			if (unk15C) {
-				if (gpMSound->gateCheck(MSD_SE_OBJ_DOL_BEL_GS4)) {
-					MSoundSESystem::MSoundSE::startSoundActor(
-					    MSD_SE_OBJ_DOL_BEL_GS4, &mPosition, 0, nullptr, 0, 4);
-				}
+				SMSGetMSound()->startSoundActor(MSD_SE_OBJ_DOL_BEL_GS4,
+				                                &mPosition, 0, nullptr, 0, 4);
+
 			} else {
-				if (gpMSound->gateCheck(MSD_SE_OBJ_DOL_BEL_E4)) {
-					MSoundSESystem::MSoundSE::startSoundActor(
-					    MSD_SE_OBJ_DOL_BEL_E4, &mPosition, 0, nullptr, 0, 4);
-				}
+				SMSGetMSound()->startSoundActor(MSD_SE_OBJ_DOL_BEL_E4,
+				                                &mPosition, 0, nullptr, 0, 4);
 			}
 		} else {
 			if (unk15C) {
-				if (gpMSound->gateCheck(MSD_SE_OBJ_DOL_BEL_GS4_K)) {
-					MSoundSESystem::MSoundSE::startSoundActor(
-					    MSD_SE_OBJ_DOL_BEL_GS4_K, &mPosition, 0, nullptr, 0, 4);
-				}
+				SMSGetMSound()->startSoundActor(MSD_SE_OBJ_DOL_BEL_GS4_K,
+				                                &mPosition, 0, nullptr, 0, 4);
 			} else {
-				if (gpMSound->gateCheck(MSD_SE_OBJ_DOL_BEL_E4_K)) {
-					MSoundSESystem::MSoundSE::startSoundActor(
-					    MSD_SE_OBJ_DOL_BEL_E4_K, &mPosition, 0, nullptr, 0, 4);
-				}
+				SMSGetMSound()->startSoundActor(MSD_SE_OBJ_DOL_BEL_E4_K,
+				                                &mPosition, 0, nullptr, 0, 4);
 			}
 		}
 
@@ -360,14 +353,11 @@ void TBellDolpic::control()
 void TDptMonteFence::touchPlayer(THitActor* actor)
 {
 	if (SMS_IsMarioStatusThrownDown()) {
-		if (gpMSound->gateCheck(MSD_SE_IT_BARREL_CRASH)) {
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_IT_BARREL_CRASH, &mPosition, 0, nullptr, 0, 4);
-		}
-		if (gpMSound->gateCheck(MSD_SE_OBJ_GLASS_BREAK)) {
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_OBJ_GLASS_BREAK, &mPosition, 0, nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActor(MSD_SE_IT_BARREL_CRASH, &mPosition, 0,
+		                                nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_GLASS_BREAK, &mPosition, 0,
+		                                nullptr, 0, 4);
+
 		kill();
 	}
 }
@@ -398,12 +388,9 @@ void TMareGate::control()
 {
 	TMapObjBase::control();
 
-	// TODO: some kind of an MSound inline that keeps the sound in unk7C, hmmm
-	MSound* sound = gpMSound;
-	if (sound->gateCheck(MSD_SE_OBJ_MAHRE_GATE_LIGHT)) {
-		MSoundSESystem::MSoundSE::startSoundActor(
-		    MSD_SE_OBJ_MAHRE_GATE_LIGHT, &mPosition, 0, &sound->unk7C, 0, 4);
-	}
+	MSound* sound = SMSGetMSound();
+	sound->startSoundActor(MSD_SE_OBJ_MAHRE_GATE_LIGHT, &mPosition, 0,
+	                       &sound->unk7C, 0, 4);
 }
 
 void TMareGate::loadAfter()
@@ -481,14 +468,13 @@ void TDemoCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	J3DFrameCtrl* frameCtrl = unk13C->getMActor()->getFrameCtrl(0);
 	if (frameCtrl->getFrame() < 174.0f) {
-		if (gpMSound->gateCheck(8392))
-			MSoundSESystem::MSoundSE::startSoundActor(8392, &mPosition, 0,
-			                                          nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_CANNON_MOVE, &mPosition, 0,
+		                                nullptr, 0, 4);
 	}
 
 	frameCtrl = unk13C->getMActor()->getFrameCtrl(0);
 	if (frameCtrl->checkPass(174.0f)) {
-		gpCameraShake->startShake((EnumCamShakeMode)36, 1.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK24, 1.0f);
 		SMSRumbleMgr->start(21, 10, (f32*)nullptr);
 
 		MtxPtr mtx = unk138->getMActor()->getModel()->getAnmMtx(0);
@@ -499,12 +485,10 @@ void TDemoCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 		gpMarioParticleManager->emitAndBindToMtxPtr(235, mtx, 0, nullptr);
 		gpMarioParticleManager->emitAndBindToMtxPtr(236, mtx, 0, nullptr);
 
-		if (gpMSound->gateCheck(10574))
-			MSoundSESystem::MSoundSE::startSoundActor(10574, &mPosition, 0,
-			                                          nullptr, 0, 4);
-		if (gpMSound->gateCheck(10605))
-			MSoundSESystem::MSoundSE::startSoundActor(10605, &mPosition, 0,
-			                                          nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_CANNON_FIRE_MARIO, &mPosition,
+		                                0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_DM_FLY_TO_PINNNA, &mPosition, 0,
+		                                nullptr, 0, 4);
 	}
 
 	frameCtrl = unk13C->getMActor()->getFrameCtrl(0);
@@ -541,8 +525,10 @@ void TTurboNozzleDoor::touchPlayer(THitActor* player)
 		((TMapObjBase*)unk144)->makeObjDead();
 	}
 
-	SMSGetMSound()->startSoundActor(14346, &mPosition, 0, nullptr, 0, 4);
-	SMSGetMSound()->startSoundActor(14423, &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_IT_BARREL_CRASH, &mPosition, 0,
+	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_GLASS_BREAK, &mPosition, 0,
+	                                nullptr, 0, 4);
 
 	JGeometry::TVec3<f32> scale(1.3f);
 

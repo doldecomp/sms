@@ -51,6 +51,14 @@ public:
 	static f32 mExplosionSpeed;
 	static int mStopMinScaleFrame;
 
+	int getNextColorIdx()
+	{
+		unk60 += 1;
+		if (unk60 >= 7)
+			unk60 = 0;
+		return unk60;
+	}
+
 public:
 	/* 0x60 */ int unk60;
 };
@@ -98,6 +106,8 @@ public:
 	bool isAttackJump() const;
 	bool isHitWaterJump() const;
 	bool canJumpAttack() const;
+
+	const TNameKuriSaveLoadParams* getSaveParams() const { return unk1A4; }
 
 public:
 	/* 0x194 */ int unk194;

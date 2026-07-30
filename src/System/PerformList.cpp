@@ -28,7 +28,7 @@ void TPerformList::load(JSUMemoryInputStream& stream)
 		JDrama::TViewObj* obj
 		    = JDrama::TNameRefGen::search<JDrama::TViewObj>(acStack_6c);
 		u32 value;
-		stream.read(&value, 4);
+		stream >> value;
 		u32 uVar5 = value;
 		if (value & CUE_MOVE)
 			uVar5 = value | (CUE_MOVEMENT_GATE_A | CUE_MOVEMENT_GATE_B);

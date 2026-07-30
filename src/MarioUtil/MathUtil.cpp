@@ -96,32 +96,32 @@ static u16 atntable[] = {
 
 #define qr0 0
 
-int IConverge(int param_1, int param_2, int param_3, int param_4)
+int IConverge(int value, int target, int inc, int dec)
 {
-	int result = param_1;
-	if (result < param_2) {
-		result += param_3;
-		if (result > param_2)
-			result = param_2;
+	int result = value;
+	if (result < target) {
+		result += inc;
+		if (result > target)
+			result = target;
 	} else {
-		result -= param_4;
-		if (result < param_2)
-			result = param_2;
+		result -= dec;
+		if (result < target)
+			result = target;
 	}
 	return result;
 }
 
-f32 FConverge(f32 param_1, f32 param_2, f32 param_3, f32 param_4)
+f32 FConverge(f32 value, f32 target, f32 inc, f32 dec)
 {
-	f32 result = param_1;
-	if (result < param_2) {
-		result += param_3;
-		if (result > param_2)
-			result = param_2;
+	f32 result = value;
+	if (result < target) {
+		result += inc;
+		if (result > target)
+			result = target;
 	} else {
-		result -= param_4;
-		if (result < param_2)
-			result = param_2;
+		result -= dec;
+		if (result < target)
+			result = target;
 	}
 	return result;
 }

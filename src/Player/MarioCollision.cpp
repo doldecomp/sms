@@ -180,13 +180,9 @@ BOOL TMario::trampleExec(THitActor* param_1)
 
 	if (!param_1->isActorType(0x20000008)
 	    && !param_1->isActorType(0x2000000a)) {
-		u32 trampleCt = getTrampleCt();
-		// Probably an inline
-		if (SMSGetMSound()->gateCheck(MSD_SE_MA_KICK_ENEMY)) {
-			MSoundSESystem::MSoundSE::startSoundActorWithInfo(
-			    MSD_SE_MA_KICK_ENEMY, &mPosition, nullptr, 0.0f, trampleCt, 0,
-			    nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActorWithInfo(
+		    MSD_SE_MA_KICK_ENEMY, &mPosition, nullptr, 0.0f, getTrampleCt(), 0,
+		    nullptr, 0, 4);
 	}
 	return true;
 }
@@ -308,11 +304,8 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 
 	if (onYoshi()) {
 		getOffYoshi(true);
-		// Probably an inline
-		if (gpMSound->gateCheck(MSD_SE_YV_DAMAGE)) {
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_YV_DAMAGE, &mPosition, 0, nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActor(MSD_SE_YV_DAMAGE, &mPosition, 0,
+		                                nullptr, 0, 4);
 		return;
 	}
 

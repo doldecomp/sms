@@ -25,46 +25,47 @@ const char* const cFishoidMdlNames[]
 TRealoidActor::TRealoidActor(MActor* actor)
     : TTakeActor("boid")
     , unk70(actor)
-    , unk74(0)
+    , mFlags(0)
 {
 }
 
 void TRealoidActor::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (unk74 & 6)
+	if (mFlags & FLAG_UNK2_OR_UNK4)
 		return;
 
 	THitActor::perform(cue, graphics);
-	if (!(unk74 & 1))
+
+	if (!(mFlags & FLAG_CLIPPED_OUT))
 		unk70->perform(cue, graphics);
 }
 
 void TRealoidActor::calcRootMatrix(TBoid* boid)
 {
-	if (unk74 & 6)
+	if (mFlags & FLAG_UNK2_OR_UNK4)
 		return;
 
-	mPosition = boid->unk0;
+	mPosition = boid->mPosition;
 
 	if (mHolder != nullptr) {
 		MtxPtr hm = mHolder->getTakingMtx();
 		JGeometry::TVec3<f32> v;
-		v.x        = hm[0][3];
-		v.y        = hm[1][3];
-		v.z        = hm[2][3];
-		boid->unk0 = v;
+		v.x             = hm[0][3];
+		v.y             = hm[1][3];
+		v.z             = hm[2][3];
+		boid->mPosition = v;
 		unk70->getModel()->setBaseTRMtx(mHolder->getTakingMtx());
 		return;
 	}
 
-	mPosition = boid->unk0;
+	mPosition = boid->mPosition;
 
-	JGeometry::TVec3<f32> trans = boid->unk0;
+	JGeometry::TVec3<f32> trans = boid->mPosition;
 
 	MtxPtr root = unk70->getModel()->getBaseTRMtx();
 
 	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
-	JGeometry::TVec3<f32> dir = boid->unk18;
+	JGeometry::TVec3<f32> dir = boid->mHeading;
 	JGeometry::TVec3<f32> n;
 
 	n.cross(up, dir);
@@ -92,21 +93,20 @@ void TRealoidActor::calcRootMatrix(TBoid* boid)
 
 void TRealoidActor::checkHitActors()
 {
-	if (unk74 & 6)
+	if (mFlags & FLAG_UNK2_OR_UNK4)
 		return;
 
-	s32 desired = 0x80000001;
-	desired += 1;
+	THitActor** end;
+	THitActor** it;
 
-	THitActor** it  = mCollisions;
-	THitActor** end = mCollisions + mColCount;
+	it  = mCollisions;
+	end = mCollisions + mColCount;
 	for (; it != end; ++it) {
-		THitActor* actor = *it;
-		s32 type         = actor->getActorType();
-		if (type != desired)
-			continue;
-
-		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+		switch ((*it)->getActorType()) {
+		case 0x80000001:
+			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+			break;
+		}
 	}
 }
 
@@ -141,10 +141,10 @@ void TRealoid::loadDefault(JSUMemoryInputStream& stream, const char* name,
 	TMActorKeeper* keeper     = mMActorKeeper;
 	JGeometry::TVec3<f32> pos = mPosition;
 	for (int i = 0; i < count; ++i) {
-		MActor* actor = keeper->createMActor(name, 3);
-		TBoid* boid   = &unk150->mBoids[i];
-		boid->unk0    = pos;
-		unk154[i]     = createRealoidActor(actor);
+		MActor* actor   = keeper->createMActor(name, 3);
+		TBoid* boid     = unk150->getBoid(i);
+		boid->mPosition = pos;
+		unk154[i]       = createRealoidActor(actor);
 		pos.y += 10.0f;
 	}
 }
@@ -156,11 +156,11 @@ void TRealoid::clipBoids(JDrama::TGraphics* graphics)
 	                                   graphics->getNearPlane(), 10000.0f);
 
 	for (int i = 0; i < unk150->getBoidNum(); ++i) {
-		JGeometry::TVec3<f32> pos = unk150->getBoid(i)->unk0;
+		JGeometry::TVec3<f32> pos = unk150->getBoid(i)->mPosition;
 		if (ViewFrustumClipCheck(graphics, &pos, 100.0f))
-			unk154[i]->offFlag(1);
+			unk154[i]->offFlag(TRealoidActor::FLAG_CLIPPED_OUT);
 		else
-			unk154[i]->onFlag(1);
+			unk154[i]->onFlag(TRealoidActor::FLAG_CLIPPED_OUT);
 	}
 }
 
@@ -194,14 +194,15 @@ void TFishoid::perform(u32 cue, JDrama::TGraphics* graphics)
 	for (int i = 0; i < unk150->getBoidNum(); ++i) {
 		TBoid* boid = unk150->getBoid(i);
 
-		JGeometry::TVec3<f32> pos = boid->unk0;
+		JGeometry::TVec3<f32> pos = boid->mPosition;
 		if (pos.y > 0.0f)
 			pos.y = 0.0f;
-		boid->unk0 = pos;
+		boid->mPosition = pos;
 	}
 
 	if (unk15C != nullptr && (cue & CUE_MOVE)) {
-		unk15C->mPosition = unk150->getBoid(unk150->getBoidNum() - 1)->unk0;
+		unk15C->mPosition
+		    = unk150->getBoid(unk150->getBoidNum() - 1)->mPosition;
 	}
 }
 
@@ -231,25 +232,25 @@ void TFishoid::load(JSUMemoryInputStream& stream)
 			unk15C = gpItemManager->newAndRegisterCoinReal();
 	}
 
-	unk150->unk20 = 4.0f;
-	unk150->unk24 = 200.0f;
-	unk150->unk28 = 1.0f;
-	unk150->unk2C = 0.5f;
-	unk150->unk30 = 5.0f;
-	unk150->unk34 = 0.5f;
+	unk150->mBaseSpeed         = 4.0f;
+	unk150->mNeighborRadius    = 200.0f;
+	unk150->mYawSpeed          = 1.0f;
+	unk150->mPitchSpeed        = 0.5f;
+	unk150->mMaxPitch          = 5.0f;
+	unk150->mAlignmentStrength = 0.5f;
 
-	unk150->unk5C = (THitActor*)gpMarioAddress;
+	unk150->mFleeTarget = (THitActor*)gpMarioAddress;
 
-	unk150->unk6C = 400.0f;
-	unk150->unk70 = 3.0f;
-	unk150->unk1C |= 2;
+	unk150->mFleeRadius   = 400.0f;
+	unk150->mFleeStrength = 3.0f;
+	unk150->mFlags |= 2;
 
 	for (int i = 0; i < unk150->mNumBoids; ++i)
 		unk154[i]->unk70->setBck("fish_swim");
 
 	if (unk15C) {
 		TRealoidActor* realoid = getRealoid(unk150->mNumBoids - 1);
-		realoid->onFlag(2);
+		realoid->onFlag(TRealoidActor::FLAG_UNK2);
 		unk15C->makeObjAppeared();
 		unk15C->mPosition = realoid->mPosition;
 	}

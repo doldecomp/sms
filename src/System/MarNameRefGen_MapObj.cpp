@@ -27,6 +27,7 @@
 #include "MoveBG/MapObjPollution.hpp"
 #include "MoveBG/MapObjRicco.hpp"
 #include "MoveBG/MapObjSample.hpp"
+#include "MoveBG/MapObjSirena.hpp"
 #include "MoveBG/MapObjTown.hpp"
 #include "MoveBG/MapObjTrap.hpp"
 #include "MoveBG/MapObjTree.hpp"
@@ -236,9 +237,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "AirportPool") == 0)
 		return new TPool;
 
-	// TODO:
-	// if (strcmp(name, "WoodBox") == 0)
-	// 	return new TWoodBox ("木箱");
+	if (strcmp(name, "WoodBox") == 0)
+		return new TWoodBox;
 
 	if (strcmp(name, "AirportEventSink") == 0)
 		return new TAirportEventSink;
@@ -405,9 +405,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "Viking") == 0)
 		return new TViking;
 
-	// TODO:
-	// if ( strcmp(name, "SirenaGate") == 0 )
-	// 	return new TSirenaGate("シレナゲート");
+	if (strcmp(name, "SirenaGate") == 0)
+		return new TSirenaGate;
 
 	if (strcmp(name, "PinnaDoor") == 0)
 		return new TPinnaEntrance;
@@ -466,75 +465,60 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "MareEventPoint") == 0)
 		return new TMareEventPoint;
 
-	// TODO:
-	// if ( strcmp(name, "CasinoRoulette") == 0 )
-	// 	return new TCasinoRoulette("カジノルーレット");
+	if (strcmp(name, "CasinoRoulette") == 0)
+		return new TCasinoRoulette;
 
-	// TODO:
-	// if ( strcmp(name, "Roulette") == 0 )
-	// 	return new TRoulette("ルーレット");
+	if (strcmp(name, "Roulette") == 0)
+		return new TRoulette;
 
-	// TODO:
-	// if ( strcmp(name, "SlotDrum") == 0 )
-	// 	return new TSlotDrum("スロットマシーン");
+	if (strcmp(name, "SlotDrum") == 0)
+		return new TSlotDrum;
 
-	// TODO:
-	// if ( strcmp(name, "ItemSlotDrum") == 0 )
-	// 	return new TItemSlotDrum("スロットマシーン");
+	if (strcmp(name, "ItemSlotDrum") == 0)
+		return new TItemSlotDrum;
 
 	// TODO:
 	// if ( strcmp(name, "TelesaSlot") == 0 )
 	// 	return new TTelesaSlot("btelesaSlot");
 
-	// TODO:
-	// if ( strcmp(name, "CasinoPanelGate") == 0 )
-	// 	return new TCasinoPanelGate("カジノパネルゲート");
+	if (strcmp(name, "CasinoPanelGate") == 0)
+		return new TCasinoPanelGate;
 
-	// TODO:
-	// if ( strcmp(name, "WarpArea") == 0 )
-	// 	return new TWarpAreaActor("ワープエリア");
+	if (strcmp(name, "WarpArea") == 0)
+		return new TWarpAreaActor;
 
 	if (strcmp(name, "GlassBreak") == 0)
 		return new TMapObjGeneral;
 
-	// TODO:
-	// if (strcmp(name, "Closet") == 0)
-	// 	return new TCloset("クローゼット");
+	if (strcmp(name, "Closet") == 0)
+		return new TCloset;
 
-	// TODO:
-	// if (strcmp(name, "Donchou") == 0)
-	// 	return new TDonchou("パネルカーテン");
+	if (strcmp(name, "Donchou") == 0)
+		return new TDonchou;
 
-	// TODO:
-	// if ( strcmp(name, "SakuCasino") == 0 )
-	// 	return new TSakuCasino("パネル柵");
+	if (strcmp(name, "SakuCasino") == 0)
+		return new TSakuCasino;
 
-	// TODO:
-	// if ( strcmp(name, "SirenabossWall") == 0 )
-	// 	return new TSirenabossWall("ボステレサ部屋壁");
+	if (strcmp(name, "SirenabossWall") == 0)
+		return new TSirenabossWall;
 
-	// TODO:
-	// if ( strcmp(name, "SirenaCasinoRoof") == 0 )
-	// 	return new TSirenaCasinoRoof("カジノ部屋天井");
+	if (strcmp(name, "SirenaCasinoRoof") == 0)
+		return new TSirenaCasinoRoof;
 
-	// TODO:
-	// if ( strcmp(name, "ChestRevolve") == 0 )
-	// 	return new TChestRevolve("回転棚");
+	if (strcmp(name, "ChestRevolve") == 0)
+		return new TChestRevolve;
 
-	// TODO:
-	// if ( strcmp(name, "PosterTeresa") == 0 )
-	// 	return new TWaterHitPictureHideObj("オブジェ出現の絵");
+	if (strcmp(name, "PosterTeresa") == 0)
+		return new TWaterHitPictureHideObj;
 
-	// TODO:
-	// if ( strcmp(name, "PictureTeresa") == 0 )
-	// 	return new TPictureTelesa("テルサの絵");
+	if (strcmp(name, "PictureTeresa") == 0)
+		return new TPictureTelesa;
 
 	if (strcmp(name, "PanelBreak") == 0)
 		return new TMapObjGeneral;
 
-	// TODO:
-	// if ( strcmp(name, "PanelRevolve") == 0 )
-	// 	return new TPanelRevolve("回転棚");
+	if (strcmp(name, "PanelRevolve") == 0)
+		return new TPanelRevolve;
 
 	if (strcmp(name, "TelesaBlock") == 0)
 		return new TTelesaBlock;

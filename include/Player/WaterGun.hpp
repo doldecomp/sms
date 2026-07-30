@@ -146,16 +146,6 @@ public:
 	J3DModel* getModel() { return mFluddModel->unk4; }
 
 	// Fabricated
-	// TODO: Definitely not from watergun
-	inline void playSoundWithInfo(u32 id, const Vec* pos, u32 _unk, f32 _unk2)
-	{
-		if (gpMSound->gateCheck(id)) {
-			MSoundSESystem::MSoundSE::startSoundActorWithInfo(
-			    id, pos, nullptr, _unk2, _unk, 0, nullptr, 0, 4);
-		}
-	}
-
-	// Fabricated
 	inline bool hasFlag(u16 flag)
 	{
 		bool hasFlag;
@@ -210,6 +200,9 @@ public:
 
 	// Fabricated
 	void resetWaterToFull() { mCurrentWater = getMaxWater(); }
+
+	// Fabricated
+	s32 getCurrentWater() const { return mCurrentWater; }
 
 	// Fabricated
 	void updateUnk1C88(u8 emittedWater)

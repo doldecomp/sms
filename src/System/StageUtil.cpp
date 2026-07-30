@@ -23,6 +23,9 @@ static u8 exShineTable[] = {
 
 // clang-format on
 
+// UNUSED
+bool SMS_isExMap(u8 stage) { return stage > 0x14 && stage < 0x35; }
+
 bool SMS_isExMap()
 {
 	return (gpApplication.mCurrArea.unk0 > 0x14

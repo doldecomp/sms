@@ -118,9 +118,8 @@ void TLampTrapSpike::control()
 			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
 			ctrl->setFrame(ctrl->getEnd());
 			ctrl->setRate(0.0f);
-			if (gpMSound->gateCheck(MSD_SE_OBJ_MVING_FENCT_SET))
-				MSoundSESystem::MSoundSE::startSoundActor(
-				    MSD_SE_OBJ_MVING_FENCT_SET, mPosition, 0, nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MVING_FENCT_SET,
+			                                &mPosition, 0, nullptr, 0, 4);
 		}
 		if (unk13C >= 360) {
 			unk13C = 0;

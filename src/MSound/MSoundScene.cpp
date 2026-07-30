@@ -108,8 +108,8 @@ void MSSceneSE::sortMaxTrans(Vec* param_1, u8 param_2, u8 param_3)
 	}
 }
 
-void MSSceneSE::calcPosPanSR(Vec* param_1, f32 param_2) { }
+void MSSceneSE::calcPosVolume(Vec* param_1, f32* param_2, u8 param_3) { }
 
 void MSSceneSE::calcPosPanLR(Vec* param_1, f32 param_2) { }
 
-void MSSceneSE::calcPosVolume(Vec* param_1, f32* param_2, u8 param_3) { }
+void MSSceneSE::calcPosPanSR(Vec* param_1, f32 param_2) { }

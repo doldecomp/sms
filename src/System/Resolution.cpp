@@ -21,6 +21,12 @@ u16 SMSGetGameVideoHeight()
 	return ret;
 }
 
+// UNUSED
+s32 SMSGetDisplayWidthMax() { return 720; }
+
+// UNUSED
+s32 SMSGetDisplayHeightMax() { return 574; }
+
 u16 SMSGetTitleVideoWidth() { return 660; }
 
 u16 SMSGetTitleVideoHeight() { return SMSGetGameVideoHeight(); }

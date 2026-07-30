@@ -10,26 +10,6 @@
 
 class TRoulette;
 
-// A random-in-range helper. Only ever used fully inlined, so the only trace
-// left in the binary is the two UNUSED dtors for TMsRange<f32> / TMsRange<s32>.
-template <typename T> class TMsRange {
-public:
-	TMsRange(T min, T max)
-	    : mMin(min)
-	    , mMax(max)
-	{
-	}
-	T rand() const
-	{
-		T range = mMax - mMin;
-		return mMin + (T)((f32)range * MsRandF());
-	}
-
-public:
-	/* 0x0 */ T mMin;
-	/* 0x4 */ T mMax;
-};
-
 class TRouletteSw : public THitActor {
 public:
 	TRouletteSw(TRoulette* owner, const char* name = "ルーレットスイッチ")
@@ -71,6 +51,14 @@ public:
 	/* 0x14C */ s16 unk14C;
 	/* 0x14E */ s16 unk14E;
 	/* 0x150 */ TRouletteSw* unk150;
+};
+
+class TCasinoRoulette : public TRoulette {
+public:
+	TCasinoRoulette(const char* name = "カジノルーレット")
+	    : TRoulette(name)
+	{
+	}
 };
 
 class TSirenaRollMapObj : public TMapObjBase {
@@ -292,6 +280,14 @@ public:
 
 public:
 	/* 0x174 */ bool unk174;
+};
+
+class TSirenaGate : public TMapObjBase {
+public:
+	TSirenaGate(const char* name = "シレナゲート")
+	    : TMapObjBase(name)
+	{
+	}
 };
 
 #endif

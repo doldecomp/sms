@@ -12,3 +12,6 @@ TProcessMeter::TProcessMeter(s32 r4)
 	_01C = 0;
 	_01E = 0;
 }
+
+// UNUSED
+void TProcessMeter::draw(const JUTRect&) { }

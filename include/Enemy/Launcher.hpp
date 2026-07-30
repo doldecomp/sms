@@ -77,7 +77,7 @@ public:
 
 public:
 	/* 0x164 */ const char* unk164;
-	/* 0x168 */ int mLaunchPeriod;
+	/* 0x168 */ s32 mLaunchPeriod;
 };
 
 class TCommonLauncherManager : public TLauncherManager {

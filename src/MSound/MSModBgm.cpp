@@ -48,6 +48,21 @@ JAISound* MSModBgm::modBgm(u8 param_1, u8 param_2)
 	return sound;
 }
 
+void MSModBgm::loop()
+{
+	switch (unk0) {
+	case true:
+		unk4 += 1;
+		break;
+
+	case false:
+	default:
+		unk4 = 0;
+		return;
+	}
+	unk0 = 0;
+}
+
 void MSModBgm::changeTempo(u8 param_1, u8 param_2)
 {
 	JAISound* sound = MSBgm::getHandle(param_2);
@@ -75,21 +90,6 @@ void MSModBgm::changeTempo(u8 param_1, u8 param_2)
 
 		sound->setTempoProportion(fVar1, uVar2);
 	}
-}
-
-void MSModBgm::loop()
-{
-	switch (unk0) {
-	case true:
-		unk4 += 1;
-		break;
-
-	case false:
-	default:
-		unk4 = 0;
-		return;
-	}
-	unk0 = 0;
 }
 
 f32 MSBgmXFade::scTiming[18] = {
@@ -126,15 +126,6 @@ void MSBgmXFade::xFadeBgmForce(f32 param_1)
 	}
 }
 
-u8 MSBgmXFade::getTimingForce(f32 param_1)
-{
-	for (u8 i = 0; i < 17; ++i)
-		if (param_1 >= scTiming[i] && param_1 < scTiming[i + 1])
-			return i;
-
-	return 0xff;
-}
-
 u8 MSBgmXFade::getTiming(f32 param_1, u32* param_2)
 {
 	f32 f1 = unk0;
@@ -144,6 +135,15 @@ u8 MSBgmXFade::getTiming(f32 param_1, u32* param_2)
 		if (param_1 < scTiming[i] && scTiming[i] >= f1)
 			return i;
 	}
+
+	return 0xff;
+}
+
+u8 MSBgmXFade::getTimingForce(f32 param_1)
+{
+	for (u8 i = 0; i < 17; ++i)
+		if (param_1 >= scTiming[i] && param_1 < scTiming[i + 1])
+			return i;
 
 	return 0xff;
 }
