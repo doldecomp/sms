@@ -20,7 +20,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 // NOTE: it is weak but I don't want to put it in the header since it's pretty
 // big and only used in one function. Also, dunno even if the size is correct
