@@ -726,7 +726,10 @@ f32 TBossGesso::inSight()
 
 BOOL TBossGesso::is2ndFightNow() const
 {
-	return gpMarDirector->unk7D == 4 ? true : false;
+	if (gpMarDirector->unk7D == 4)
+		return TRUE;
+
+	return FALSE;
 }
 
 void TBossGesso::stopIfRoll()
