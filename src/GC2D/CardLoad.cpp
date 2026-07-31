@@ -117,15 +117,12 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 
 	for (int i = 0; i < 11; ++i) {
 		unk20C[i] = 25 * i + 150;
+		if (i > 4)
+			unk20C[i] += 20;
 		unk222[i] = 4;
 	}
 
-	for (int i = 0; i < 8; ++i) {
-		unk22E[i] = 400 * i;
-		unk248[i] = 4;
-	}
-
-	for (int i = 0; i < 8; ++i) {
+	for (int i = 0; i < 13; ++i) {
 		unk22E[i] = 400 * i;
 		unk248[i] = 4;
 	}
@@ -490,23 +487,22 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 		switch (unk14) {
 		case 0: {
 			changeScene();
-			int alpha1 = unk25C->getAlpha();
-			if (unk275 && alpha1 < 255) {
-				alpha1 += 8;
-				if (alpha1 > 255)
-					alpha1 = 255;
-				unk25C->setAlpha(alpha1);
+			int alpha = unk25C->getAlpha();
+			if (unk275 && alpha < 255) {
+				alpha += 8;
+				if (alpha > 255)
+					alpha = 255;
+				unk25C->setAlpha(alpha);
 			}
 
-			int alpha2 = unk25C->getAlpha();
-			if (!unk275 && alpha2 > 0) {
-				alpha2 -= 8;
-				if (alpha2 < 0)
-					alpha2 = 0;
-				unk25C->setAlpha(alpha2);
+			if (!unk275 && alpha > 0) {
+				alpha -= 8;
+				if (alpha < 0)
+					alpha = 0;
+				unk25C->setAlpha(alpha);
 			}
 
-			if (unk25C->getAlpha() != 0) {
+			if (alpha != 0) {
 				// TODO: copy-pasta from TArrowControl::calcMoveX? inline?
 				int iVar9 = unk274;
 				int iVar3 = unk274 < 50 ? iVar9 : 100 - iVar9;
@@ -521,7 +517,6 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 					unk274 = 0;
 			}
 
-			int alpha = unk25C->getAlpha();
 			if (unk1C == 19 || unk1C == 12 || unk1C == 13 || unk1C == 3
 			    || unk1C == 4 || unk1C == 5 || unk1C == 45 || unk1C == 16) {
 				unk284->offCollision();
@@ -781,6 +776,14 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+// TODO: retail compiles this switch to an eight entry jump table, with the
+// slots for cases 5 through 7 pointing at the default, while we get a compare
+// chain. That one difference accounts for nearly all of the remaining diff --
+// the rest is register allocation downstream of it. The case set matches
+// retail (our chain does range-check 5 through 7, so they are not being
+// pruned), the body layout order matches, and the frame is 0x20 bytes smaller
+// than retail's. Typing the state as an enum spanning 0-7, moving the empty
+// cases to the front, and making the field unsigned all fail to flip it.
 bool TCardLoad::titleDraw()
 {
 	switch (unk18) {
@@ -792,11 +795,10 @@ bool TCardLoad::titleDraw()
 		for (int i = 0; i < 13; ++i) {
 			switch (unk248[i]) {
 			case 4:
-				if (unk22E[i] < unk258) {
-					TExPane* pane = unk1D4[i];
-					pane->getPane()->show();
-					JUTRect bounds = pane->getPane()->getBounds();
-					pane->setPaneAlpha(40, 180, 0);
+				if (unk258 > unk22E[i]) {
+					unk1D4[i]->getPane()->show();
+					JUTRect bounds = unk1D4[i]->getPane()->getBounds();
+					unk1D4[i]->setPaneAlpha(40, 180, 0);
 					unk248[i] = 0;
 				}
 				break;
@@ -924,7 +926,7 @@ bool TCardLoad::titleDraw()
 		break;
 	}
 
-	return unk18 - 5;
+	return unk18 > 4;
 }
 
 void TCardLoad::makeBuffer(J2DTextBox* text_box, int size)
@@ -2084,8 +2086,8 @@ void TCardLoad::setSelected(u8 param_1)
 
 void TCardLoad::changeScene()
 {
-	u32 prevUnk1C = unk1C;
-	int prevUnk0  = unk10;
+	TEProgress prevUnk1C = unk1C;
+	int prevUnk0         = unk10;
 	switch (prevUnk1C) {
 	case PROGRESS_UNK30:
 		gpCardManager->readOptionBlock();
@@ -2337,7 +2339,7 @@ void TCardLoad::changeScene()
 
 			case 3:
 				for (int i = 0; i < 3; ++i)
-					if (unkB0 == i)
+					if (i == unkB0)
 						unk728[i]->show();
 					else
 						unk728[i]->hide();
