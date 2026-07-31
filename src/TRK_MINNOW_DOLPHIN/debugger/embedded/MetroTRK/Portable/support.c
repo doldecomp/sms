@@ -9,12 +9,12 @@
 DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
                           DSIOResult* io_result, BOOL need_reply, BOOL read)
 {
-	BOOL exit;
 	u32 done;
+	BOOL exit;
 	DSError error;
+	TRKBuffer* replyBuffer;
 	int replyBufferId;
 	TRKBuffer* buffer;
-	TRKBuffer* replyBuffer;
 	u32 length;
 	int bufferId;
 	u16 replyLength;
