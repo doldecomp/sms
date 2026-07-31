@@ -20,6 +20,7 @@
 #include <MSound/MSound.hpp>
 
 // rogue includes needed for matching sinit & bss
+#include <System/DummyStrings.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
