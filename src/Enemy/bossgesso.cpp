@@ -1265,7 +1265,7 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_MOVE) {
 		if (!unk1A0 && !is2ndFightNow() && mAttackMode == 6) {
-			JGeometry::TVec3<f32> toMario = *gpMarioPos;
+			JGeometry::TVec3<f32> toMario = SMS_GetMarioPos();
 			toMario.x -= mPosition.x;
 			toMario.y -= mPosition.y;
 			toMario.z -= mPosition.z;
