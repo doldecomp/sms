@@ -1249,7 +1249,38 @@ void TBossGesso::calcRootMatrix()
 
 void TBossGesso::performInContainer(u32, JDrama::TGraphics*) { }
 
-void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics) { }
+void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	if (cue & CUE_CALC_ANIM) {
+		if (mBeak->getHolder() != nullptr || tentacleHeld()) {
+			if (gpMarioOriginal->mIntendedMag > 0.1f) {
+				SMSGetMSound()->startSoundActor(MSD_SE_BS_GESO_PULL, &mPosition,
+				                                0, nullptr, 0, 4);
+			}
+		}
+	}
+
+	if (cue & CUE_MOVE) {
+		if (!unk1A0 && !is2ndFightNow() && mAttackMode == 6) {
+			JGeometry::TVec3<f32> toMario = *gpMarioPos;
+			toMario.x -= mPosition.x;
+			toMario.y -= mPosition.y;
+			toMario.z -= mPosition.z;
+
+			if (toMario.x * toMario.x + toMario.y * toMario.y
+			        + toMario.z * toMario.z
+			    < 4000000.0f) {
+				unk19C++;
+				if (unk19C >= 1200)
+					showMessage(0xE0004);
+			}
+		}
+	}
+
+	// TODO: the rest of the cue handling is still unwritten -- see the
+	// remaining blocks from 0x35ec onwards in the retail function.
+	TSpineEnemy::perform(cue, graphics);
+}
 
 TBossGessoManager::TBossGessoManager(const char* name)
     : TEnemyManager(name)
