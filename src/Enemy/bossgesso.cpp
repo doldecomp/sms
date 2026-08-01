@@ -7,6 +7,7 @@
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorAnm.hpp>
 #include <Map/Map.hpp>
+#include <Map/PollutionManager.hpp>
 #include <MoveBG/ItemManager.hpp>
 #include <GC2D/GCConsole2.hpp>
 #include <Player/Mario.hpp>
@@ -14,6 +15,7 @@
 #include <Player/ModelWaterManager.hpp>
 #include <Camera/CameraShake.hpp>
 #include <MarioUtil/DrawUtil.hpp>
+#include <MarioUtil/ShadowUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
@@ -1310,10 +1312,10 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_ENTRY) {
 		if (mSpine->getLatestNerve() == &TNerveBGBeakDamage::theNerve()) {
-			SMS_AddDamageFogEffect(getModel()->getModelData(), mPosition,
-			                       graphics);
+			SMS_AddDamageFogEffect(mMActor->getModel()->getModelData(),
+			                       mPosition, graphics);
 		} else {
-			SMS_ResetDamageFogEffect(getModel()->getModelData());
+			SMS_ResetDamageFogEffect(mMActor->getModel()->getModelData());
 		}
 
 		// TODO: a virtual call on the model data's material follows here,
@@ -1347,8 +1349,107 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	cork->perform(cue, graphics);
 
-	// TODO: the remaining cue handling from 0x38ac onwards is still
-	// unwritten -- CUE_CALC_VIEW shadow request and tentacle dispatch.
+	if (cue & CUE_CALC_VIEW) {
+		TCircleShadowRequest request;
+
+		MtxPtr joint = mMActor->getModel()->getAnmMtx(1);
+		request.unk0
+		    = JGeometry::TVec3<f32>(joint[0][3], mPosition.y, joint[2][3]);
+
+		JGeometry::TVec3<f32> right(joint[0][0], joint[1][0], joint[2][0]);
+		JGeometry::TVec3<f32> front(joint[0][2], joint[1][2], joint[2][2]);
+
+		request.unkC  = PSVECMag(right);
+		request.unk10 = PSVECMag(front);
+		request.unkC *= mScaledBodyRadius;
+		request.unk10 *= mScaledBodyRadius;
+		request.unk1C = getShadowType();
+		request.unk14 = mRotation.y;
+
+		gpBindShadowManager->request(request, getActorType());
+	}
+
+	mBeak->testPerform(cue, graphics);
+	mLeftEye->testPerform(cue, graphics);
+	mRightEye->testPerform(cue, graphics);
+	mBody->testPerform(cue, graphics);
+
+	if (cue & CUE_MOVE) {
+		mMtxCalc->unk50 -= unk188;
+		if (mMtxCalc->unk50 < 0.0f)
+			mMtxCalc->unk50 = 0.0f;
+		else if (mMtxCalc->unk50 > 1.0f)
+			mMtxCalc->unk50 = 1.0f;
+	}
+
+	if (unk17C) {
+		if (cue & CUE_CALC_ANIM) {
+			PSMTXCopy(mMActor->getModel()->getBaseTRMtx(),
+			          unk178->getModel()->getBaseTRMtx());
+			unk178->calcAnm();
+		}
+
+		if (cue & CUE_ENTRY)
+			gpPollution->stampModel(unk178->getModel());
+	}
+
+	if (cue & CUE_CALC_ANIM) {
+		if (mLiveFlag & LIVE_FLAG_CLIPPED_OUT) {
+			for (int i = 0; i < TENTACLE_NUM; ++i) {
+				if (mTentacles[i]->mState != 4)
+					mTentacles[i]->mNodes[0].setPosition(mPosition);
+			}
+		} else {
+			static const int rootJoints[] = { 2, 3, 5, 6 };
+
+			for (int i = 0; i < TENTACLE_NUM; ++i) {
+				if (mTentacles[i]->mState == 4)
+					continue;
+
+				JGeometry::TVec3<f32> trans;
+				if (getJointTransByIndex(rootJoints[i], &trans) >= 0)
+					mTentacles[i]->mNodes[0].setPosition(trans);
+			}
+		}
+	}
+
+	for (int i = 0; i < TENTACLE_NUM; ++i) {
+		if (cue & CUE_ENTRY) {
+			if (mSpine->getLatestNerve() == &TNerveBGBeakDamage::theNerve()) {
+				mTentacles[i]->unk2C->offMakeDL();
+				SMS_AddDamageFogEffect(
+				    mTentacles[i]->unk2C->getModel()->getModelData(), mPosition,
+				    graphics);
+			} else {
+				SMS_ResetDamageFogEffect(
+				    mTentacles[i]->unk2C->getModel()->getModelData());
+			}
+		}
+
+		mTentacles[i]->testPerform(cue, graphics);
+	}
+
+	if (cue & CUE_CALC_ANIM) {
+		if (mMActor->checkCurBckFromIndex(14)
+		    || mMActor->checkCurBckFromIndex(15)) {
+			f32 len = lenFromToeToMario();
+			SMSGetMSound()->startSoundActorWithInfo(MSD_SE_BS_GESO_ROLL,
+			                                        &mPosition, nullptr, len, 0,
+			                                        0, nullptr, 0, 4);
+		}
+	}
+
+	if (cue & CUE_MOVE) {
+		if (mBeak->getHolder() != nullptr && unk190.color.a == 0) {
+			int left  = mTentacles[1]->mState;
+			int right = mTentacles[3]->mState;
+
+			if (!((left == 4 || left == 6 || left == 3)
+			      && (right == 4 || right == 6 || right == 3))) {
+				gpMarDirector->mConsole->startAppearBalloon(0xE0003, true);
+			}
+		}
+	}
 }
 
 TBossGessoManager::TBossGessoManager(const char* name)
