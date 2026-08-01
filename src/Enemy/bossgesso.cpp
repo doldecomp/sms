@@ -924,7 +924,7 @@ void TBossGesso::doAttackSingle()
 
 		JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 
-		if (SMS_GetMarioPos().y + 20.0f < mPosition.y)
+		if (delta.y + 20.0f < mPosition.y)
 			return;
 
 		delta -= mPosition;
