@@ -13,6 +13,7 @@
 #include <Player/MarioAccess.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <Camera/CameraShake.hpp>
+#include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
@@ -1271,15 +1272,62 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 			        + toMario.z * toMario.z
 			    < 4000000.0f) {
 				unk19C++;
-				if (unk19C >= 1200)
+				if (unk19C >= 1200) {
 					showMessage(0xE0004);
+					unk1A0 = 1;
+				}
 			}
 		}
+
+		if (mBeak->getHolder() != nullptr
+		    && mTimeInCurrentAttackMode % 4 == 0) {
+			rumblePad(1, mBeak->mPosition);
+		}
+
+		if (unk1AC > 0)
+			unk1AC--;
+
+		if (unk1AE > 0)
+			unk1AE--;
 	}
 
-	// TODO: the rest of the cue handling is still unwritten -- see the
-	// remaining blocks from 0x35ec onwards in the retail function.
+	if (mAttackMode == 6) {
+		if (cue & CUE_CALC_ANIM) {
+			if (JDrama::TNameRefGen::search<THitActor>("container")
+			    == nullptr) {
+				changeAttackMode(0);
+			} else if (mTentacles[0]->mState != 4) {
+				JGeometry::TVec3<f32> pos(11603.0f, 2114.3f, 2411.4f);
+				mTentacles[0]->mNodes[0].setPosition(pos);
+				pos.x = 11510.0f;
+				mTentacles[0]->mNodes[1].setPosition(pos);
+			}
+		}
+
+		mTentacles[0]->testPerform(cue, graphics);
+		return;
+	}
+
+	if (cue & CUE_ENTRY) {
+		if (mSpine->getLatestNerve() == &TNerveBGBeakDamage::theNerve()) {
+			SMS_AddDamageFogEffect(getModel()->getModelData(), mPosition,
+			                       graphics);
+		} else {
+			SMS_ResetDamageFogEffect(getModel()->getModelData());
+		}
+
+		// TODO: a virtual call on the model data's material follows here,
+		// passing unk190 -- slot 0x38, class not pinned down yet.
+	}
+
 	TSpineEnemy::perform(cue, graphics);
+	mPolDrop->testPerform(cue, graphics);
+
+	if (mLiveFlag & LIVE_FLAG_DEAD)
+		return;
+
+	// TODO: the remaining cue handling from 0x381c onwards is still
+	// unwritten -- particle emission, shadow request, tentacle dispatch.
 }
 
 TBossGessoManager::TBossGessoManager(const char* name)
