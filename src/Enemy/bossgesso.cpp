@@ -1326,8 +1326,29 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (mLiveFlag & LIVE_FLAG_DEAD)
 		return;
 
-	// TODO: the remaining cue handling from 0x381c onwards is still
-	// unwritten -- particle emission, shadow request, tentacle dispatch.
+	if (cue & CUE_CALC_ANIM) {
+		if (unk194 > 0) {
+			gpMarioParticleManager->emitAndBindToMtxPtr(
+			    0x13B, getModel()->getAnmMtx(0), 1, this);
+			unk194--;
+		}
+	}
+
+	MActor* cork;
+	if (mCork->unkC == 0) {
+		cork = mCork->unk4;
+		if (cue & CUE_CALC_ANIM) {
+			PSMTXCopy(mCork->mOwner->getModel()->getAnmMtx(27),
+			          mCork->unk4->getModel()->getBaseTRMtx());
+		}
+	} else {
+		cork = mCork->unk8;
+	}
+
+	cork->perform(cue, graphics);
+
+	// TODO: the remaining cue handling from 0x38ac onwards is still
+	// unwritten -- CUE_CALC_VIEW shadow request and tentacle dispatch.
 }
 
 TBossGessoManager::TBossGessoManager(const char* name)
