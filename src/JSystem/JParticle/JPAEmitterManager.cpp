@@ -167,7 +167,7 @@ JPABaseEmitter* JPAEmitterManager::createEmitterBase(
 
 	if (unkA4[param_3]) {
 		JPAEmitterData* emitterData
-		    = unkA4[param_3]->unk4->getByUserIndex(param_1);
+		    = unkA4[param_3]->getEmitterResource()->getByUserIndex(param_1);
 		if (!emitterData)
 			return nullptr;
 

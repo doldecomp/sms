@@ -24,6 +24,22 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
+// FABRICATED
+inline bool TBGTentacle::isAttackable()
+{
+	if (mTakeHit->checkHitFlag(HIT_FLAG_CANNOT_ATTACK))
+		return false;
+	if (mState == 10)
+		return false;
+	if (mState == 4)
+		return false;
+	if (mState == 6)
+		return false;
+	if (mState == 1 || mOwner->getAttackMode() == 7)
+		return true;
+	return false;
+}
+
 const char* tstatestr[] = {
 	"TSTATE_WAIT",     "TSTATE_ATTACK", "TSTATE_REST", "TSTATE_HELD",
 	"TSTATE_AMPUTEE",  "TSTATE_STUN",   "TSTATE_HIDE", "TSTATE_FOLLOWBODY",
@@ -325,13 +341,19 @@ void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 			unk80.mMtx[1][2] = vec3.y;
 			unk80.mMtx[2][2] = vec3.z;
 
-			unk80.mMtx[0][2] = mtx[0][3] + vec3.x * mDamageRadius;
-			unk80.mMtx[1][2] = mtx[1][3] + vec3.y * mDamageRadius;
-			unk80.mMtx[2][2] = mtx[2][3] + vec3.z * mDamageRadius;
+			vec3.scale(mDamageRadius);
 
-			const JGeometry::TVec3<f32>& lastVel
+			JGeometry::TVec3<f32> tip(mtx[0][3], mtx[1][3], mtx[2][3]);
+			tip += vec3;
+
+			unk80.mMtx[0][3] = tip.x;
+			unk80.mMtx[1][3] = tip.y;
+			unk80.mMtx[2][3] = tip.z;
+
+			JGeometry::TVec3<f32> local_8c
 			    = mOwner->getLastNode()->getVelocity();
-			JGeometry::TVec3<f32> local_8c(lastVel.x, 0.0f, lastVel.z);
+			local_8c.y = 0.0f;
+			local_8c.scale(0.1f);
 
 			if (!unk74.isZero()) {
 				// TODO: one more inlining layer?!
@@ -346,7 +368,7 @@ void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 			unk74.zero();
 		}
 
-		if (mOwner->isThing3() || mOwner->mOwner->getAttackMode() == 7) {
+		if (mOwner->isAttackable()) {
 			for (int i = 0; i < mColCount; ++i) {
 				THitActor* col = mCollisions[i];
 				if (!col->isActorType(0x80000001))
@@ -696,7 +718,7 @@ void TBGTentacle::setAttackTarget()
 		local_148 -= mOwner->mPosition;
 
 		JGeometry::TVec3<f32> local_3c;
-		local_3c.cross(local_148, JGeometry::TVec3<f32>(0.0f, 1.0f, 1.0f));
+		local_3c.cross(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), local_148);
 		local_3c.normalize();
 
 		JGeometry::TVec3<f32> local_cc = local_3c;

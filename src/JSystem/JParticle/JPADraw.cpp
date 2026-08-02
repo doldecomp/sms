@@ -241,7 +241,7 @@ void JPADraw::initParticle(JPABaseParticle* particle)
 			params->unk36 = 0;
 		}
 
-		params->unk10 = params->unk14 = params->unkC
+		params->mScaleX = params->mScaleY = params->unkC
 		    = unkB4
 		      * (mDrawCtx.mBaseEmitter->getRandomRF()
 		             * mDrawCtx.mExtraShape->getRandomScale()
@@ -253,7 +253,7 @@ void JPADraw::initParticle(JPABaseParticle* particle)
 	} else {
 		params->unk34 = 0;
 		params->unk36 = 0;
-		params->unkC = params->unk10 = params->unk14 = unkB4;
+		params->unkC = params->mScaleX = params->mScaleY = unkB4;
 
 		params->unk24 = 1.0f;
 	}
@@ -298,13 +298,15 @@ void JPADraw::initChild(JPABaseParticle* parent, JPABaseParticle* child)
 	if (mDrawCtx.mSweepShape->isInheritedScale()) {
 		inheritFactor = mDrawCtx.mSweepShape->getInheritScale();
 
-		childPrms->unk10 = childPrms->unkC = inheritFactor * parentPrms->unk10;
-		childPrms->unk14 = childPrms->unk24 = inheritFactor * parentPrms->unk14;
+		childPrms->mScaleX = childPrms->unkC
+		    = inheritFactor * parentPrms->mScaleX;
+		childPrms->mScaleY = childPrms->unk24
+		    = inheritFactor * parentPrms->mScaleY;
 	} else {
-		childPrms->unk24 = 1.0f;
-		childPrms->unk14 = 1.0f;
-		childPrms->unkC  = 1.0f;
-		childPrms->unk10 = 1.0f;
+		childPrms->unk24   = 1.0f;
+		childPrms->mScaleY = 1.0f;
+		childPrms->unkC    = 1.0f;
+		childPrms->mScaleX = 1.0f;
 	}
 
 	childPrms->unk34 = parentPrms->unk34;
@@ -761,10 +763,10 @@ void JPADraw::setParticleClipBoard()
 
 	GXLoadPosMtxImm(cb.unk68, GX_PNMTX0);
 
-	f32 sx    = mDrawCtx.mBaseEmitter->unk174.x;
-	f32 sy    = mDrawCtx.mBaseEmitter->unk174.y;
-	cb.unk4.x = 25.0f * mDrawCtx.mBaseShape->getBaseSizeX() * sx;
-	cb.unk4.y = 25.0f * mDrawCtx.mBaseShape->getBaseSizeY() * sy;
+	JGeometry::TVec3<f32> scale;
+	mDrawCtx.mBaseEmitter->getGlobalParticleScale(scale);
+	cb.unk4.x = 25.0f * mDrawCtx.mBaseShape->getBaseSizeX() * scale.x;
+	cb.unk4.y = 25.0f * mDrawCtx.mBaseShape->getBaseSizeY() * scale.y;
 
 	if (mDrawCtx.mBaseShape->getType() == 0) {
 		cb.unk4.x *= 1.02f;
@@ -853,7 +855,7 @@ void JPADraw::setParticleClipBoard()
 
 void JPADraw::setChildClipBoard()
 {
-	switch (mDrawCtx.mBaseShape->getType()) {
+	switch (mDrawCtx.mSweepShape->getType()) {
 	case 2:
 	case 9:
 		MTXIdentity(cb.unk68);
@@ -868,14 +870,14 @@ void JPADraw::setChildClipBoard()
 
 	GXLoadPosMtxImm(cb.unk68, GX_PNMTX0);
 
-	f32 sx = mDrawCtx.mBaseEmitter->unk174.x;
-	f32 sy = mDrawCtx.mBaseEmitter->unk174.y;
+	JGeometry::TVec3<f32> scale;
+	mDrawCtx.mBaseEmitter->getGlobalParticleScale(scale);
 	if (!mDrawCtx.mSweepShape->isInheritedScale()) {
-		cb.unk4.x = 25.0f * mDrawCtx.mSweepShape->getScaleX() * sx;
-		cb.unk4.y = 25.0f * mDrawCtx.mSweepShape->getScaleY() * sy;
+		cb.unk4.x = 25.0f * mDrawCtx.mSweepShape->getScaleX() * scale.x;
+		cb.unk4.y = 25.0f * mDrawCtx.mSweepShape->getScaleY() * scale.y;
 	} else {
-		cb.unk4.x = 25.0f * mDrawCtx.mBaseShape->getBaseSizeX() * sx;
-		cb.unk4.y = 25.0f * mDrawCtx.mBaseShape->getBaseSizeY() * sy;
+		cb.unk4.x = 25.0f * mDrawCtx.mBaseShape->getBaseSizeX() * scale.x;
+		cb.unk4.y = 25.0f * mDrawCtx.mBaseShape->getBaseSizeY() * scale.y;
 	}
 
 	if (mDrawCtx.mSweepShape->getType() == 0) {

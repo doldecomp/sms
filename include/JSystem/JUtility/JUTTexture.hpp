@@ -12,9 +12,8 @@ class JUTTexture {
 public:
 	JUTTexture()
 	{
-		setCaptureFlag(false);
+		unk50       = 0;
 		mEmbPalette = nullptr;
-		mTexInfo    = nullptr;
 	}
 
 	JUTTexture(const ResTIMG* p_timg)

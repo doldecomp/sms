@@ -175,6 +175,10 @@ public:
 	}
 
 	// fabricated
+	// fabricated; defined in bgtentacle.cpp because it needs TBossGesso
+	// to be a complete type.
+	bool isAttackable();
+
 	TNode* getFirstNode() { return &mNodes[0]; }
 	TNode* getLastNode() { return &mNodes[mNodeNum - 1]; }
 	int getState() const { return mState; }

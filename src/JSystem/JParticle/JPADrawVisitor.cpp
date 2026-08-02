@@ -75,7 +75,9 @@ void JPADrawExecGenPrjTexMtx::exec(const JPADrawContext* dc)
 	                      dc->mBaseEmitter->getAspect(), 0.5f, -0.5f, 0.5f,
 	                      0.5f);
 
-	f32 tick   = dc->mBaseEmitter->unk10.getFrame();
+	Mtx mtx;
+
+	f32 tick   = dc->mBaseEmitter->getFrame();
 	f32 transX = tick * dc->mBaseShape->getTexScrollTransX()
 	             + dc->mBaseShape->getTexStaticTransX();
 	f32 transY = tick * dc->mBaseShape->getTexScrollTransY()
@@ -88,7 +90,6 @@ void JPADrawExecGenPrjTexMtx::exec(const JPADrawContext* dc)
 	f32 sin   = JMASSin(angle);
 	f32 cos   = JMASCos(angle);
 
-	Mtx mtx;
 	mtx[0][0] = scaleX * cos;
 	mtx[0][1] = -scaleX * sin;
 	mtx[0][2] = scaleX * (sin * (transY + 0.5f) - cos * (transX + 0.5f)) + 0.5f;
@@ -126,6 +127,8 @@ void JPADrawExecGenIdtMtx::exec(const JPADrawContext*)
 
 void JPADrawExecSetTexMtx::exec(const JPADrawContext* dc)
 {
+	Mtx mtx;
+
 	s32 tick = dc->mBaseEmitter->unk10.getFrame();
 
 	f32 tilingX = 0.5f * dc->mBaseShape->getTilingX();
@@ -142,7 +145,6 @@ void JPADrawExecSetTexMtx::exec(const JPADrawContext* dc)
 	f32 sin   = JMASSin(angle);
 	f32 cos   = JMASCos(angle);
 
-	Mtx mtx;
 	mtx[0][0] = scaleX * cos;
 	mtx[0][1] = -scaleX * sin;
 	mtx[0][2] = 0.0f;
@@ -180,14 +182,14 @@ void JPADrawExecLoadTexture::exec(const JPADrawContext* dc)
 void JPADrawExecSetPointSize::exec(const JPADrawContext* dc,
                                    JPABaseParticle* particle)
 {
-	GXSetPointSize(dc->pcb->unk4.x * particle->getDrawParamPPtr()->unk10,
+	GXSetPointSize(dc->pcb->unk4.x * particle->getDrawParamPPtr()->mScaleX,
 	               GX_TO_ONE);
 }
 
 void JPADrawExecSetLineWidth::exec(const JPADrawContext* dc,
                                    JPABaseParticle* particle)
 {
-	GXSetLineWidth(dc->pcb->unk4.x * particle->getDrawParamPPtr()->unk10,
+	GXSetLineWidth(dc->pcb->unk4.x * particle->getDrawParamPPtr()->mScaleX,
 	               GX_TO_ONE);
 }
 
@@ -270,22 +272,26 @@ void JPADrawExecRegisterPrmAEnv::exec(const JPADrawContext* dc,
 void JPADrawExecSetTexMtx::exec(const JPADrawContext* dc,
                                 JPABaseParticle* particle)
 {
+	Mtx mtx;
+
 	s32 tick    = particle->getAge();
 	f32 tilingX = 0.5f * dc->mBaseShape->getTilingX();
 	f32 tilingY = 0.5f * dc->mBaseShape->getTilingY();
-	f32 transX  = tick * dc->mBaseShape->getTexScrollTransX()
+
+	f32 transX = tick * dc->mBaseShape->getTexScrollTransX()
 	             + dc->mBaseShape->getTexStaticTransX();
 	f32 transY = tick * dc->mBaseShape->getTexScrollTransY()
 	             + dc->mBaseShape->getTexStaticTransY();
+
 	f32 scaleX = tick * dc->mBaseShape->getTexScrollScaleX()
 	             + dc->mBaseShape->getTexStaticScaleX();
 	f32 scaleY = tick * dc->mBaseShape->getTexScrollScaleY()
 	             + dc->mBaseShape->getTexStaticScaleY();
+
 	s16 angle = tick * dc->mBaseShape->getTexScrollRotate() * 32768;
 	f32 sin   = JMASSin(angle);
 	f32 cos   = JMASCos(angle);
 
-	Mtx mtx;
 	mtx[0][0] = scaleX * cos;
 	mtx[0][1] = -scaleX * sin;
 	mtx[0][2] = 0.0f;
@@ -320,19 +326,19 @@ void JPADrawExecBillBoard::exec(const JPADrawContext* dc,
 	if (particle->isInvisibleParticle())
 		return;
 
-	f32 scaleX = particle->getDrawParamPPtr()->unk10;
-	f32 scaleY = particle->getDrawParamPPtr()->unk14;
+	f32 scaleX = particle->getDrawParamPPtr()->mScaleX;
+	f32 scaleY = particle->getDrawParamPPtr()->mScaleY;
 
 	f32 x1 = scaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
-	f32 x0 = scaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
-	f32 y0 = scaleY * (dc->pcb->unk4.y + dc->pcb->unkC.y);
+	scaleX *= dc->pcb->unk4.x + dc->pcb->unkC.x;
 	f32 y1 = scaleY * (dc->pcb->unk4.y - dc->pcb->unkC.y);
+	scaleY *= dc->pcb->unk4.y + dc->pcb->unkC.y;
 
 	JGeometry::TVec2<f32> offs[4];
-	offs[0].set(-x0, y0);
-	offs[1].set(x1, y0);
+	offs[0].set(-scaleX, scaleY);
+	offs[1].set(x1, scaleY);
 	offs[2].set(x1, -y1);
-	offs[3].set(-x0, -y1);
+	offs[3].set(-scaleX, -y1);
 
 	JGeometry::TVec3<f32> pt;
 	particle->getGlobalPosition(pt);
@@ -361,16 +367,16 @@ void JPADrawExecRotBillBoard::exec(const JPADrawContext* dc,
 	f32 sin = JMASSin(params->unk34);
 	f32 cos = JMASCos(params->unk34);
 
-	f32 x0 = -params->unk10 * (dc->pcb->unk4.x + dc->pcb->unkC.x);
-	f32 y0 = params->unk14 * (dc->pcb->unk4.y + dc->pcb->unkC.y);
-	f32 x1 = params->unk10 * (dc->pcb->unk4.x - dc->pcb->unkC.x);
-	f32 y1 = -params->unk14 * (dc->pcb->unk4.y - dc->pcb->unkC.y);
+	f32 x0 = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
+	f32 y0 = params->mScaleY * (dc->pcb->unk4.y + dc->pcb->unkC.y);
+	f32 x1 = params->mScaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
+	f32 y1 = -params->mScaleY * (dc->pcb->unk4.y - dc->pcb->unkC.y);
 
 	JGeometry::TVec2<f32> offs[4];
-	offs[0].set((x0 * cos - y0 * sin), (x0 * sin + y0 * cos));
-	offs[1].set((x1 * cos - y0 * sin), (x1 * sin + y0 * cos));
-	offs[2].set((x1 * cos - y1 * sin), (x1 * sin + y1 * cos));
-	offs[3].set((x0 * cos - y1 * sin), (x0 * sin + y1 * cos));
+	offs[0].set((x0 * cos - y0 * sin), (y0 * cos + x0 * sin));
+	offs[1].set((x1 * cos - y0 * sin), (y0 * cos + x1 * sin));
+	offs[2].set((x1 * cos - y1 * sin), (y1 * cos + x1 * sin));
+	offs[3].set((x0 * cos - y1 * sin), (y1 * cos + x0 * sin));
 
 	JGeometry::TVec3<f32> pt;
 	particle->getGlobalPosition(pt);
@@ -394,19 +400,19 @@ void JPADrawExecYBillBoard::exec(const JPADrawContext* dc,
 	if (particle->isInvisibleParticle())
 		return;
 
-	f32 scaleX = particle->getDrawParamPPtr()->unk10;
-	f32 scaleY = particle->getDrawParamPPtr()->unk14;
+	f32 scaleX = particle->getDrawParamPPtr()->mScaleX;
+	f32 scaleY = particle->getDrawParamPPtr()->mScaleY;
 
-	f32 x0 = scaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
-	f32 y0 = scaleY * (dc->pcb->unk4.y + dc->pcb->unkC.y);
 	f32 x1 = scaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
+	scaleX *= dc->pcb->unk4.x + dc->pcb->unkC.x;
 	f32 y1 = scaleY * (dc->pcb->unk4.y - dc->pcb->unkC.y);
+	scaleY *= dc->pcb->unk4.y + dc->pcb->unkC.y;
 
 	JGeometry::TVec3<f32> offs[4];
-	offs[0].set(-x0, +y0, 0.0f);
-	offs[1].set(+x1, +y0, 0.0f);
+	offs[0].set(-scaleX, +scaleY, 0.0f);
+	offs[1].set(+x1, +scaleY, 0.0f);
 	offs[2].set(+x1, -y1, 0.0f);
-	offs[3].set(-x0, -y1, 0.0f);
+	offs[3].set(-scaleX, -y1, 0.0f);
 
 	MTXMultVecArray(dc->pcb->unk38, offs, offs, ARRAY_COUNT(offs));
 
@@ -436,16 +442,16 @@ void JPADrawExecRotYBillBoard::exec(const JPADrawContext* dc,
 	f32 sin = JMASSin(params->unk34);
 	f32 cos = JMASCos(params->unk34);
 
-	f32 x0 = -params->unk10 * (dc->pcb->unk4.x + dc->pcb->unkC.x);
-	f32 y0 = +params->unk14 * (dc->pcb->unk4.y + dc->pcb->unkC.y);
-	f32 x1 = +params->unk10 * (dc->pcb->unk4.x - dc->pcb->unkC.x);
-	f32 y1 = -params->unk14 * (dc->pcb->unk4.y - dc->pcb->unkC.y);
+	f32 x0 = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
+	f32 y0 = +params->mScaleY * (dc->pcb->unk4.y + dc->pcb->unkC.y);
+	f32 x1 = +params->mScaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
+	f32 y1 = -params->mScaleY * (dc->pcb->unk4.y - dc->pcb->unkC.y);
 
 	JGeometry::TVec3<f32> offs[4];
-	offs[0].set((x0 * cos - y0 * sin), (x0 * sin + y0 * cos), 0.0f);
-	offs[1].set((x1 * cos - y0 * sin), (x1 * sin + y0 * cos), 0.0f);
-	offs[2].set((x1 * cos - y1 * sin), (x1 * sin + y1 * cos), 0.0f);
-	offs[3].set((x0 * cos - y1 * sin), (x0 * sin + y1 * cos), 0.0f);
+	offs[0].set((x0 * cos - y0 * sin), (y0 * cos + x0 * sin), 0.0f);
+	offs[1].set((x1 * cos - y0 * sin), (y0 * cos + x1 * sin), 0.0f);
+	offs[2].set((x1 * cos - y1 * sin), (y1 * cos + x1 * sin), 0.0f);
+	offs[3].set((x0 * cos - y1 * sin), (y1 * cos + x0 * sin), 0.0f);
 
 	MTXMultVecArray(dc->pcb->unk38, offs, offs, ARRAY_COUNT(offs));
 
@@ -560,10 +566,11 @@ void rotTypeZ(f32 sin, f32 cos, Mtx& out)
 
 void rotTypeXYZ(f32 sin, f32 cos, Mtx& out)
 {
-	f32 d = (1.0f - cos) * 0.333333f;
-	f32 a = d + cos;
-	f32 b = d - (0.57735f * sin);
-	f32 c = d + (0.57735f * sin);
+	f32 b, a, c;
+	a = (1.0f - cos) * 0.333333f;
+	c = a + (0.57735f * sin);
+	b = a - (0.57735f * sin);
+	a = a + cos;
 
 	out[0][0] = a;
 	out[0][1] = b;
@@ -607,10 +614,10 @@ void JPADrawExecDirectional::exec(const JPADrawContext* dc,
 
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
-	f32 x0 = -params->unk10 * (dc->pcb->unk4.x + dc->pcb->unkC.x);
-	f32 y0 = +params->unk14 * (dc->pcb->unk4.y + dc->pcb->unkC.y);
-	f32 x1 = +params->unk10 * (dc->pcb->unk4.x - dc->pcb->unkC.x);
-	f32 y1 = -params->unk14 * (dc->pcb->unk4.y - dc->pcb->unkC.y);
+	f32 x0 = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
+	f32 y0 = +params->mScaleY * (dc->pcb->unk4.y + dc->pcb->unkC.y);
+	f32 x1 = +params->mScaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
+	f32 y1 = -params->mScaleY * (dc->pcb->unk4.y - dc->pcb->unkC.y);
 
 	JGeometry::TVec3<f32> offs[4];
 	offs[0].set(x0, y0, 0.0f);
@@ -677,10 +684,10 @@ void JPADrawExecRotDirectional::exec(const JPADrawContext* dc,
 	f32 sin = JMASSin(params->unk34);
 	f32 cos = JMASCos(params->unk34);
 
-	f32 x0 = -params->unk10 * (dc->pcb->unk4.x + dc->pcb->unkC.x);
-	f32 y0 = +params->unk14 * (dc->pcb->unk4.y + dc->pcb->unkC.y);
-	f32 x1 = +params->unk10 * (dc->pcb->unk4.x - dc->pcb->unkC.x);
-	f32 y1 = -params->unk14 * (dc->pcb->unk4.y - dc->pcb->unkC.y);
+	f32 x0 = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
+	f32 y0 = +params->mScaleY * (dc->pcb->unk4.y + dc->pcb->unkC.y);
+	f32 x1 = +params->mScaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
+	f32 y1 = -params->mScaleY * (dc->pcb->unk4.y - dc->pcb->unkC.y);
 
 	JGeometry::TVec3<f32> offs[4];
 	offs[0].set(x0, y0, 0.0f);
@@ -749,10 +756,10 @@ void JPADrawExecDirectionalCross::exec(const JPADrawContext* dc,
 
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
-	f32 x0 = -params->unk10 * (dc->pcb->unk4.x + dc->pcb->unkC.x);
-	f32 y0 = params->unk14 * (dc->pcb->unk4.y + dc->pcb->unkC.y);
-	f32 x1 = params->unk10 * (dc->pcb->unk4.x - dc->pcb->unkC.x);
-	f32 y1 = -params->unk14 * (dc->pcb->unk4.y - dc->pcb->unkC.y);
+	f32 x0 = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
+	f32 y0 = params->mScaleY * (dc->pcb->unk4.y + dc->pcb->unkC.y);
+	f32 x1 = params->mScaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
+	f32 y1 = -params->mScaleY * (dc->pcb->unk4.y - dc->pcb->unkC.y);
 
 	JGeometry::TVec3<f32> offs[8];
 	offs[0].set(x0, y0, 0.0f);
@@ -835,10 +842,10 @@ void JPADrawExecRotDirectionalCross::exec(const JPADrawContext* dc,
 	f32 sin = JMASSin(params->unk34);
 	f32 cos = JMASCos(params->unk34);
 
-	f32 x0 = -params->unk10 * (dc->pcb->unk4.x + dc->pcb->unkC.x);
-	f32 y0 = +params->unk14 * (dc->pcb->unk4.y + dc->pcb->unkC.y);
-	f32 x1 = +params->unk10 * (dc->pcb->unk4.x - dc->pcb->unkC.x);
-	f32 y1 = -params->unk14 * (dc->pcb->unk4.y - dc->pcb->unkC.y);
+	f32 x0 = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
+	f32 y0 = +params->mScaleY * (dc->pcb->unk4.y + dc->pcb->unkC.y);
+	f32 x1 = +params->mScaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
+	f32 y1 = -params->mScaleY * (dc->pcb->unk4.y - dc->pcb->unkC.y);
 
 	JGeometry::TVec3<f32> offs[8];
 	offs[0].set(x0, y0, 0.0f);
@@ -925,8 +932,8 @@ void JPADrawExecDirBillBoard::exec(const JPADrawContext* dc,
 
 	JGeometry::TVec3<f32> local_9C;
 	dc->pcb->mDirTypeFunc(particle, dc->mBaseEmitter, local_9C);
-	JGeometry::TVec3<f32> dir(dc->pcb->mViewMtx[0][1], dc->pcb->mViewMtx[1][1],
-	                          dc->pcb->mViewMtx[2][1]);
+	JGeometry::TVec3<f32> dir(dc->pcb->mViewMtx[2][0], dc->pcb->mViewMtx[2][1],
+	                          dc->pcb->mViewMtx[2][2]);
 
 	local_9C.cross(local_9C, dir);
 	if (local_9C.isZero())
@@ -935,16 +942,19 @@ void JPADrawExecDirBillBoard::exec(const JPADrawContext* dc,
 
 	MTXMultVecSR(dc->pcb->mViewMtx, &local_9C, &local_9C);
 
-	f32 x0 = -(params->unk10 * (dc->pcb->unk4.x - dc->pcb->unkC.x));
-	f32 y0 = +(params->unk14 * (dc->pcb->unk4.y - dc->pcb->unkC.y));
-	f32 x1 = +(params->unk10 * (dc->pcb->unk4.x + dc->pcb->unkC.x));
-	f32 y1 = -(params->unk14 * (dc->pcb->unk4.y + dc->pcb->unkC.y));
+	f32 scaleX = params->mScaleX;
+	f32 scaleY = params->mScaleY;
+
+	f32 x1 = scaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
+	scaleX *= dc->pcb->unk4.x + dc->pcb->unkC.x;
+	f32 y1 = scaleY * (dc->pcb->unk4.y - dc->pcb->unkC.y);
+	scaleY *= dc->pcb->unk4.y + dc->pcb->unkC.y;
 
 	JGeometry::TVec2<f32> offs[4];
-	offs[0].set(x0, y0);
-	offs[1].set(x1, y0);
-	offs[2].set(x1, y1);
-	offs[3].set(x0, y1);
+	offs[0].set(-scaleX, scaleY);
+	offs[1].set(x1, scaleY);
+	offs[2].set(x1, -y1);
+	offs[3].set(-scaleX, -y1);
 
 	f32 x = local_9C.x;
 	f32 y = local_9C.y;
@@ -981,10 +991,10 @@ void JPADrawExecRotation::exec(const JPADrawContext* dc,
 	f32 sin = JMASSin(params->unk34);
 	f32 cos = JMASCos(params->unk34);
 
-	f32 x0 = -params->unk10 * (dc->pcb->unk4.x + dc->pcb->unkC.x);
-	f32 x1 = params->unk10 * (dc->pcb->unk4.x - dc->pcb->unkC.x);
-	f32 y0 = params->unk14 * (dc->pcb->unk4.y + dc->pcb->unkC.y);
-	f32 y1 = -params->unk14 * (dc->pcb->unk4.y - dc->pcb->unkC.y);
+	f32 x0 = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
+	f32 x1 = params->mScaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
+	f32 y0 = params->mScaleY * (dc->pcb->unk4.y + dc->pcb->unkC.y);
+	f32 y1 = -params->mScaleY * (dc->pcb->unk4.y - dc->pcb->unkC.y);
 
 	JGeometry::TVec3<f32> offs[4];
 	offs[0].set(x0, y0, 0.0f);
@@ -1022,10 +1032,10 @@ void JPADrawExecRotationCross::exec(const JPADrawContext* dc,
 	f32 sin = JMASSin(params->unk34);
 	f32 cos = JMASCos(params->unk34);
 
-	f32 x0 = -params->unk10 * (dc->pcb->unk4.x + dc->pcb->unkC.x);
-	f32 y0 = +params->unk14 * (dc->pcb->unk4.y + dc->pcb->unkC.y);
-	f32 x1 = +params->unk10 * (dc->pcb->unk4.x - dc->pcb->unkC.x);
-	f32 y1 = -params->unk14 * (dc->pcb->unk4.y - dc->pcb->unkC.y);
+	f32 x0 = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
+	f32 y0 = +params->mScaleY * (dc->pcb->unk4.y + dc->pcb->unkC.y);
+	f32 x1 = +params->mScaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
+	f32 y1 = -params->mScaleY * (dc->pcb->unk4.y - dc->pcb->unkC.y);
 
 	Mtx rotMtx;
 	JGeometry::TVec3<f32> pt[8];
@@ -1043,26 +1053,26 @@ void JPADrawExecRotationCross::exec(const JPADrawContext* dc,
 	dc->pcb->mRotTypeFunc(sin, cos, rotMtx);
 
 	MTXMultVecArray(rotMtx, pt, pt, ARRAY_COUNT(pt));
-	f32 x = particle->mGlobalPosition.x;
-	f32 y = particle->mGlobalPosition.y;
-	f32 z = particle->mGlobalPosition.z;
+
+	JGeometry::TVec3<f32> pos;
+	particle->getGlobalPosition(pos);
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 8);
-	GXPosition3f32(pt[0].x + x, pt[0].y + y, pt[0].z + z);
+	GXPosition3f32(pt[0].x + pos.x, pt[0].y + pos.y, pt[0].z + pos.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[0].x, dc->pcb->mTexCoords[0].y);
-	GXPosition3f32(pt[1].x + x, pt[1].y + y, pt[1].z + z);
+	GXPosition3f32(pt[1].x + pos.x, pt[1].y + pos.y, pt[1].z + pos.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[1].x, dc->pcb->mTexCoords[1].y);
-	GXPosition3f32(pt[2].x + x, pt[2].y + y, pt[2].z + z);
+	GXPosition3f32(pt[2].x + pos.x, pt[2].y + pos.y, pt[2].z + pos.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[2].x, dc->pcb->mTexCoords[2].y);
-	GXPosition3f32(pt[3].x + x, pt[3].y + y, pt[3].z + z);
+	GXPosition3f32(pt[3].x + pos.x, pt[3].y + pos.y, pt[3].z + pos.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[3].x, dc->pcb->mTexCoords[3].y);
-	GXPosition3f32(pt[4].x + x, pt[4].y + y, pt[4].z + z);
+	GXPosition3f32(pt[4].x + pos.x, pt[4].y + pos.y, pt[4].z + pos.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[0].x, dc->pcb->mTexCoords[0].y);
-	GXPosition3f32(pt[5].x + x, pt[5].y + y, pt[5].z + z);
+	GXPosition3f32(pt[5].x + pos.x, pt[5].y + pos.y, pt[5].z + pos.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[1].x, dc->pcb->mTexCoords[1].y);
-	GXPosition3f32(pt[6].x + x, pt[6].y + y, pt[6].z + z);
+	GXPosition3f32(pt[6].x + pos.x, pt[6].y + pos.y, pt[6].z + pos.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[2].x, dc->pcb->mTexCoords[2].y);
-	GXPosition3f32(pt[7].x + x, pt[7].y + y, pt[7].z + z);
+	GXPosition3f32(pt[7].x + pos.x, pt[7].y + pos.y, pt[7].z + pos.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[3].x, dc->pcb->mTexCoords[3].y);
 	GXEnd();
 }
@@ -1088,13 +1098,13 @@ void JPADrawExecLine::exec(const JPADrawContext* dc, JPABaseParticle* particle)
 	JGeometry::TVec3<f32> local_40;
 	JGeometry::TVec3<f32> f31_f30_f39;
 	particle->getGlobalPosition(f31_f30_f39);
-	local_40 = particle->mVelocity;
+	particle->getVelVec(local_40);
 	if (local_40.isZero())
 		return;
 
 	local_40.normalize();
 
-	local_40 *= dc->pcb->unk4.y * particle->getDrawParamPPtr()->unk14;
+	local_40 *= dc->pcb->unk4.y * particle->getDrawParamPPtr()->mScaleY;
 
 	local_40.sub(f31_f30_f39, local_40);
 
@@ -1127,7 +1137,7 @@ void JPADrawExecStripe::exec(const JPADrawContext* dc)
 
 	f32 fVar2 = 0.0f;
 	f32 fVar9 = 1.0f / (elems - 1);
-	if (!(dc->mBaseShape->mFlags & 0x1)) {
+	if (dc->mBaseShape->getListOrder()) {
 		start   = dc->unk18->getFirst();
 		getNext = stripeGetNext;
 	} else {
@@ -1137,21 +1147,22 @@ void JPADrawExecStripe::exec(const JPADrawContext* dc)
 		getNext = stripeGetPrev;
 	}
 
+	JGeometry::TRotation3<JGeometry::TMatrix33<JGeometry::SMatrix33R<f32> > >
+	    mtx;
+
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, elems * 2);
 	for (JSULink<JPABaseParticle>* link = start; link != nullptr;
 	     link                           = getNext(link), fVar2 += fVar9) {
 		JPABaseParticle* particle = link->getObject();
 
 		JPADrawParams* params = particle->getDrawParamPPtr();
+		f32 sin               = JMASSin(params->unk34);
+		f32 cos               = JMASCos(params->unk34);
 
-		f32 sin = JMASSin(params->unk34);
-		f32 cos = JMASCos(params->unk34);
-
-		f32 x = -params->unk10 * (dc->pcb->unk4.x + dc->pcb->unkC.x);
-		f32 y = +params->unk10 * (dc->pcb->unk4.x - dc->pcb->unkC.x);
-
-		JGeometry::TVec3<f32> v1(x * sin, x * cos, 0.0f);
-		JGeometry::TVec3<f32> v2(y * sin, y * cos, 0.0f);
+		f32 x = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
+		JGeometry::TVec3<f32> v1(x * cos, 0.0f, x * sin);
+		f32 y = +params->mScaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
+		JGeometry::TVec3<f32> v2(y * cos, 0.0f, y * sin);
 
 		JGeometry::TVec3<f32> pt0;
 		particle->getGlobalPosition(pt0);
@@ -1166,25 +1177,23 @@ void JPADrawExecStripe::exec(const JPADrawContext* dc)
 		JGeometry::TVec3<f32> f29_f30_f31;
 		f29_f30_f31.cross(params->unk0, local_BC);
 		if (f29_f30_f31.isZero())
-			f29_f30_f31.set(0.0f, 1.0f, 0.0f);
+			f29_f30_f31.set(1.0f, 0.0f, 0.0f);
 		else
 			f29_f30_f31.normalize();
 
 		params->unk0.cross(local_BC, f29_f30_f31);
 		params->unk0.normalize();
 
-		JGeometry::TVec3<f32> u1(params->unk0.x, f29_f30_f31.x, local_BC.x);
-		JGeometry::TVec3<f32> u2(params->unk0.y, f29_f30_f31.y, local_BC.y);
-		JGeometry::TVec3<f32> u3(params->unk0.z, f29_f30_f31.z, local_BC.z);
-		(void)&u1;
-		(void)&u2;
-		(void)&u3;
+		mtx.setXYZDir(f29_f30_f31, local_BC, params->unk0);
 
-		GXPosition3f32(pt0.x + v1.dot(u1), pt0.y + v1.dot(u2),
-		               pt0.z + v1.dot(u3));
+		(void)&mtx;
+
+		mtx.mult(v1);
+		mtx.mult(v2);
+
+		GXPosition3f32(v1.x + pt0.x, v1.y + pt0.y, v1.z + pt0.z);
 		GXTexCoord2f32(0.0f, fVar2);
-		GXPosition3f32(pt0.x + v2.dot(u1), pt0.y + v2.dot(u2),
-		               pt0.z + v2.dot(u3));
+		GXPosition3f32(v2.x + pt0.x, v2.y + pt0.y, v2.z + pt0.z);
 		GXTexCoord2f32(1.0f, fVar2);
 	}
 	GXEnd();
@@ -1202,18 +1211,24 @@ void JPADrawExecStripeCross::exec(const JPADrawContext* dc)
 	NxtFunc getNext;
 	JSULink<JPABaseParticle>* start;
 
+	f32 fVar2_0;
 	f32 fVar2;
 	f32 fVar9 = 1.0f / (elems - 1);
-	if (!(dc->mBaseShape->mFlags & 0x1)) {
-		start   = dc->unk18->getFirst();
-		fVar2   = 0.0f;
-		getNext = &stripeGetNext;
+	if (dc->mBaseShape->getListOrder()) {
+		start = dc->unk18->getFirst();
+		fVar2 = fVar2_0 = 0.0f;
+		getNext         = &stripeGetNext;
 	} else {
-		fVar9   = -fVar9;
-		start   = dc->unk18->getLast();
-		fVar2   = 1.0f;
-		getNext = &stripeGetPrev;
+		fVar9 = -fVar9;
+		start = dc->unk18->getLast();
+		fVar2 = fVar2_0 = 1.0f;
+		getNext         = &stripeGetPrev;
 	}
+
+	JGeometry::TRotation3<JGeometry::TMatrix33<JGeometry::SMatrix33R<f32> > >
+	    mtx;
+	JGeometry::TVec3<f32> pt0;
+	JGeometry::TVec3<f32> local_BC;
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, elems * 2);
 	for (JSULink<JPABaseParticle>* link = start; link != nullptr;
@@ -1225,16 +1240,14 @@ void JPADrawExecStripeCross::exec(const JPADrawContext* dc)
 		f32 sin = JMASSin(params->unk34);
 		f32 cos = JMASCos(params->unk34);
 
-		f32 x = -params->unk10 * (dc->pcb->unk4.x + dc->pcb->unkC.x);
-		f32 y = +params->unk10 * (dc->pcb->unk4.x - dc->pcb->unkC.x);
+		f32 x = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
+		f32 y = +params->mScaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
 
-		JGeometry::TVec3<f32> v1(x * sin, x * cos, 0.0f);
-		JGeometry::TVec3<f32> v2(y * sin, y * cos, 0.0f);
+		JGeometry::TVec3<f32> v1(x * cos, 0.0f, x * sin);
+		JGeometry::TVec3<f32> v2(y * cos, 0.0f, y * sin);
 
-		JGeometry::TVec3<f32> pt0;
 		particle->getGlobalPosition(pt0);
 
-		JGeometry::TVec3<f32> local_BC;
 		dc->pcb->mDirTypeFunc(particle, dc->mBaseEmitter, local_BC);
 		if (local_BC.isZero())
 			local_BC.set(0.0f, 1.0f, 0.0f);
@@ -1251,22 +1264,21 @@ void JPADrawExecStripeCross::exec(const JPADrawContext* dc)
 		params->unk0.cross(local_BC, f29_f30_f31);
 		params->unk0.normalize();
 
-		JGeometry::TVec3<f32> u1(params->unk0.x, f29_f30_f31.x, local_BC.x);
-		JGeometry::TVec3<f32> u2(params->unk0.y, f29_f30_f31.y, local_BC.y);
-		JGeometry::TVec3<f32> u3(params->unk0.z, f29_f30_f31.z, local_BC.z);
-		(void)&u1;
-		(void)&u2;
-		(void)&u3;
+		mtx.setXYZDir(f29_f30_f31, local_BC, params->unk0);
 
-		GXPosition3f32(pt0.x + v1.dot(u1), pt0.y + v1.dot(u2),
-		               pt0.z + v1.dot(u3));
+		(void)&mtx;
+
+		mtx.mult(v1);
+		mtx.mult(v2);
+
+		GXPosition3f32(v1.x + pt0.x, v1.y + pt0.y, v1.z + pt0.z);
 		GXTexCoord2f32(0.0f, fVar2);
-		GXPosition3f32(pt0.x + v2.dot(u1), pt0.y + v2.dot(u2),
-		               pt0.z + v2.dot(u3));
+		GXPosition3f32(v2.x + pt0.x, v2.y + pt0.y, v2.z + pt0.z);
 		GXTexCoord2f32(1.0f, fVar2);
 	}
 	GXEnd();
 
+	fVar2 = fVar2_0;
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, elems * 2);
 	for (JSULink<JPABaseParticle>* link = start; link != nullptr;
 	     link                           = getNext(link), fVar2 += fVar9) {
@@ -1274,20 +1286,17 @@ void JPADrawExecStripeCross::exec(const JPADrawContext* dc)
 
 		JPADrawParams* params = particle->getDrawParamPPtr();
 
-		JGeometry::TVec3<f32> pt0;
 		particle->getGlobalPosition(pt0);
 
 		f32 cos = JMASCos(params->unk34);
 		f32 sin = -JMASSin(params->unk34);
 
-		f32 x = -params->unk14 * (dc->pcb->unk4.x + dc->pcb->unkC.x);
-		f32 y = params->unk14 * (dc->pcb->unk4.x - dc->pcb->unkC.x);
+		f32 x = params->mScaleY * (dc->pcb->unk4.y + dc->pcb->unkC.y);
+		JGeometry::TVec3<f32> v1(x * sin, 0.0f, x * cos);
+		f32 y = -params->mScaleY * (dc->pcb->unk4.y - dc->pcb->unkC.y);
+		JGeometry::TVec3<f32> v2(y * sin, 0.0f, y * cos);
 
-		JGeometry::TVec3<f32> local_BC;
-		local_BC = particle->mVelocity;
-
-		JGeometry::TVec3<f32> v1(x * sin, x * cos, 0.0f);
-		JGeometry::TVec3<f32> v2(y * sin, y * cos, 0.0f);
+		particle->getVelVec(local_BC);
 
 		if (local_BC.isZero())
 			local_BC.set(0.0f, 1.0f, 0.0f);
@@ -1304,18 +1313,16 @@ void JPADrawExecStripeCross::exec(const JPADrawContext* dc)
 		params->unk0.cross(local_BC, f29_f30_f31);
 		params->unk0.normalize();
 
-		JGeometry::TVec3<f32> u1(params->unk0.x, f29_f30_f31.x, local_BC.x);
-		JGeometry::TVec3<f32> u2(params->unk0.y, f29_f30_f31.y, local_BC.y);
-		JGeometry::TVec3<f32> u3(params->unk0.z, f29_f30_f31.z, local_BC.z);
-		(void)&u1;
-		(void)&u2;
-		(void)&u3;
+		mtx.setXYZDir(f29_f30_f31, local_BC, params->unk0);
 
-		GXPosition3f32(pt0.x + v1.dot(u1), pt0.y + v1.dot(u2),
-		               pt0.z + v1.dot(u3));
+		(void)&mtx;
+
+		mtx.mult(v1);
+		mtx.mult(v2);
+
+		GXPosition3f32(v1.x + pt0.x, v1.y + pt0.y, v1.z + pt0.z);
 		GXTexCoord2f32(0.0f, fVar2);
-		GXPosition3f32(pt0.x + v2.dot(u1), pt0.y + v2.dot(u2),
-		               pt0.z + v2.dot(u3));
+		GXPosition3f32(v2.x + pt0.x, v2.y + pt0.y, v2.z + pt0.z);
 		GXTexCoord2f32(1.0f, fVar2);
 	}
 	GXEnd();
@@ -1471,18 +1478,18 @@ void JPADrawCalcScaleX::calc(const JPADrawContext* dc,
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
 	if (dc->pcb->mScaleAnmTimer < dc->mExtraShape->getScaleInTiming()) {
-		params->unk10
+		params->mScaleX
 		    = params->unkC
 		      * ((dc->mExtraShape->getIncreaseRateX() * dc->pcb->mScaleAnmTimer)
 		         + dc->mExtraShape->getScaleInValueX());
 	} else if (dc->pcb->mScaleAnmTimer > dc->mExtraShape->getScaleOutTiming()) {
-		params->unk10 = params->unkC
-		                * ((dc->mExtraShape->getDecreaseRateX()
-		                    * (dc->pcb->mScaleAnmTimer
-		                       - dc->mExtraShape->getScaleOutTiming()))
-		                   + 1.0f);
+		params->mScaleX = params->unkC
+		                  * ((dc->mExtraShape->getDecreaseRateX()
+		                      * (dc->pcb->mScaleAnmTimer
+		                         - dc->mExtraShape->getScaleOutTiming()))
+		                     + 1.0f);
 	} else {
-		params->unk10 = params->unkC;
+		params->mScaleX = params->unkC;
 	}
 }
 
@@ -1492,18 +1499,18 @@ void JPADrawCalcScaleY::calc(const JPADrawContext* dc,
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
 	if (dc->pcb->mScaleAnmTimer < dc->mExtraShape->getScaleInTiming()) {
-		params->unk14
+		params->mScaleY
 		    = params->unkC
 		      * ((dc->mExtraShape->getIncreaseRateY() * dc->pcb->mScaleAnmTimer)
 		         + dc->mExtraShape->getScaleInValueY());
 	} else if (dc->pcb->mScaleAnmTimer > dc->mExtraShape->getScaleOutTiming()) {
-		params->unk14 = params->unkC
-		                * ((dc->mExtraShape->getDecreaseRateY()
-		                    * (dc->pcb->mScaleAnmTimer
-		                       - dc->mExtraShape->getScaleOutTiming()))
-		                   + 1.0f);
+		params->mScaleY = params->unkC
+		                  * ((dc->mExtraShape->getDecreaseRateY()
+		                      * (dc->pcb->mScaleAnmTimer
+		                         - dc->mExtraShape->getScaleOutTiming()))
+		                     + 1.0f);
 	} else {
-		params->unk14 = params->unkC;
+		params->mScaleY = params->unkC;
 	}
 }
 
@@ -1512,23 +1519,24 @@ void JPADrawCalcScaleXBySpeed::calc(const JPADrawContext* dc,
 {
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
-	JGeometry::TVec3<f32> vel = particle->mVelocity;
+	JGeometry::TVec3<f32> vel;
+	particle->getVelVec(vel);
 
 	if (dc->pcb->mScaleAnmTimer < dc->mExtraShape->getScaleInTiming()) {
-		params->unk10
+		params->mScaleX
 		    = params->unkC
 		      * ((dc->mExtraShape->getIncreaseRateX() * dc->pcb->mScaleAnmTimer)
 		         + dc->mExtraShape->getScaleInValueX());
 	} else if (dc->pcb->mScaleAnmTimer > dc->mExtraShape->getScaleOutTiming()) {
-		params->unk10 = params->unkC
-		                * ((dc->mExtraShape->getDecreaseRateX()
-		                    * (dc->pcb->mScaleAnmTimer
-		                       - dc->mExtraShape->getScaleOutTiming()))
-		                   + 1.0f);
+		params->mScaleX = params->unkC
+		                  * ((dc->mExtraShape->getDecreaseRateX()
+		                      * (dc->pcb->mScaleAnmTimer
+		                         - dc->mExtraShape->getScaleOutTiming()))
+		                     + 1.0f);
 	} else {
-		params->unk10 = params->unkC;
+		params->mScaleX = params->unkC;
 	}
-	params->unk10 *= vel.length() * 0.01f;
+	params->mScaleX *= vel.length() * 0.01f;
 }
 
 void JPADrawCalcScaleYBySpeed::calc(const JPADrawContext* dc,
@@ -1536,23 +1544,24 @@ void JPADrawCalcScaleYBySpeed::calc(const JPADrawContext* dc,
 {
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
-	JGeometry::TVec3<f32> vel = particle->mVelocity;
+	JGeometry::TVec3<f32> vel;
+	particle->getVelVec(vel);
 
 	if (dc->pcb->mScaleAnmTimer < dc->mExtraShape->getScaleInTiming()) {
-		params->unk14
+		params->mScaleY
 		    = params->unkC
 		      * ((dc->mExtraShape->getIncreaseRateY() * dc->pcb->mScaleAnmTimer)
 		         + dc->mExtraShape->getScaleInValueY());
 	} else if (dc->pcb->mScaleAnmTimer > dc->mExtraShape->getScaleOutTiming()) {
-		params->unk14 = params->unkC
-		                * ((dc->mExtraShape->getDecreaseRateY()
-		                    * (dc->pcb->mScaleAnmTimer
-		                       - dc->mExtraShape->getScaleOutTiming()))
-		                   + 1.0f);
+		params->mScaleY = params->unkC
+		                  * ((dc->mExtraShape->getDecreaseRateY()
+		                      * (dc->pcb->mScaleAnmTimer
+		                         - dc->mExtraShape->getScaleOutTiming()))
+		                     + 1.0f);
 	} else {
-		params->unk14 = params->unkC;
+		params->mScaleY = params->unkC;
 	}
-	params->unk14 *= vel.length() * 0.01f;
+	params->mScaleY *= vel.length() * 0.01f;
 }
 
 void JPADrawCalcScaleCopyX2Y::calc(const JPADrawContext*,
@@ -1560,13 +1569,13 @@ void JPADrawCalcScaleCopyX2Y::calc(const JPADrawContext*,
 {
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
-	params->unk14 = params->unk10;
+	params->mScaleY = params->mScaleX;
 }
 
 void JPADrawCalcScaleAnmTimingNormal::calc(const JPADrawContext* dc,
                                            JPABaseParticle* particle)
 {
-	dc->pcb->mScaleAnmTimer = particle->mLifeProgress;
+	dc->pcb->mScaleAnmTimer = particle->getLifeTime();
 }
 
 void JPADrawCalcScaleAnmTimingRepeatX::calc(const JPADrawContext* dc,
@@ -1679,7 +1688,7 @@ void JPADrawCalcColorAnmFrameRandom::calc(const JPADrawContext* dc,
 
 void JPADrawCalcAlpha::calc(const JPADrawContext* dc, JPABaseParticle* particle)
 {
-	f32 time = particle->mLifeProgress;
+	f32 time = particle->getLifeTime();
 	f32 alpha;
 	if (time < dc->mExtraShape->getAlphaInTiming()) {
 		alpha = time * dc->mExtraShape->getAlphaIncreaseRate()
@@ -1819,7 +1828,7 @@ void JPADrawCalcTextureAnmIndexRandom::calc(const JPADrawContext* dc,
 void JPADrawCalcChildAlphaOut::calc(const JPADrawContext*,
                                     JPABaseParticle* particles)
 {
-	particles->getDrawParamCPtr()->mAlpha = 1.0f - particles->mLifeProgress;
+	particles->getDrawParamCPtr()->mAlpha = 1.0f - particles->getLifeTime();
 }
 
 void JPADrawCalcChildScaleOut::calc(const JPADrawContext*,
@@ -1827,6 +1836,6 @@ void JPADrawCalcChildScaleOut::calc(const JPADrawContext*,
 {
 	JPADrawParams* params = particles->getDrawParamCPtr();
 
-	params->unk10 = params->unkC * (1.0f - particles->mLifeProgress);
-	params->unk14 = params->unk24 * (1.0f - particles->mLifeProgress);
+	params->mScaleX = params->unkC * (1.0f - particles->getLifeTime());
+	params->mScaleY = params->unk24 * (1.0f - particles->getLifeTime());
 }
