@@ -225,13 +225,13 @@ public:
 	/* 0x170 */ TBGEyeHit* mLeftEye;
 	/* 0x174 */ TBGEyeHit* mRightEye;
 	/* 0x178 */ MActor* unk178;
-	/* 0x17C */ u8 unk17C;
+	/* 0x17C */ s8 unk17C;
 	/* 0x180 */ TBGPolDrop* mPolDrop;
 	/* 0x184 */ TBGBodyHit* mBody;
 	/* 0x188 */ f32 unk188;
 	/* 0x18C */ TBGCork* mCork;
 	/* 0x190 */ J3DGXColor unk190;
-	/* 0x194 */ u8 unk194;
+	/* 0x194 */ s8 unk194;
 	/* 0x195 */ s8 unk195;
 	/* 0x196 */ s8 unk196;
 	/* 0x198 */ u32 unk198;

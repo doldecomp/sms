@@ -537,7 +537,19 @@ void TBGCork::crush()
 	unkC = 1;
 }
 
-void TBGCork::perform(u32 cue, JDrama::TGraphics* graphics) { }
+void TBGCork::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	MActor* cork;
+	if (unkC == 0) {
+		cork = unk4;
+		if (cue & CUE_CALC_ANIM)
+			cork->getModel()->setBaseTRMtx(mOwner->getModel()->getAnmMtx(27));
+	} else {
+		cork = unk8;
+	}
+
+	cork->perform(cue, graphics);
+}
 
 TBossGesso::TBossGesso(const char* name)
     : TSpineEnemy(name)
@@ -1266,13 +1278,9 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_MOVE) {
 		if (!unk1A0 && !is2ndFightNow() && mAttackMode == 6) {
 			JGeometry::TVec3<f32> toMario = SMS_GetMarioPos();
-			toMario.x -= mPosition.x;
-			toMario.y -= mPosition.y;
-			toMario.z -= mPosition.z;
+			toMario -= mPosition;
 
-			if (toMario.x * toMario.x + toMario.y * toMario.y
-			        + toMario.z * toMario.z
-			    < 4000000.0f) {
+			if (toMario.squared() < 4000000.0f) {
 				unk19C++;
 				if (unk19C >= 1200) {
 					showMessage(0xE0004);
@@ -1318,8 +1326,11 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 			SMS_ResetDamageFogEffect(mMActor->getModel()->getModelData());
 		}
 
-		// TODO: a virtual call on the model data's material follows here,
-		// passing unk190 -- slot 0x38, class not pinned down yet.
+		mMActor->getModel()
+		    ->getModelData()
+		    ->getMaterialNodePointer(0)
+		    ->getTevBlock()
+		    ->setTevKColor(0, &unk190);
 	}
 
 	TSpineEnemy::perform(cue, graphics);
@@ -1331,23 +1342,12 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_CALC_ANIM) {
 		if (unk194 > 0) {
 			gpMarioParticleManager->emitAndBindToMtxPtr(
-			    0x13B, getModel()->getAnmMtx(0), 1, this);
+			    BGESO_JPA_MS_BOGE_WASH, getModel()->getAnmMtx(0), 1, this);
 			unk194--;
 		}
 	}
 
-	MActor* cork;
-	if (mCork->unkC == 0) {
-		cork = mCork->unk4;
-		if (cue & CUE_CALC_ANIM) {
-			PSMTXCopy(mCork->mOwner->getModel()->getAnmMtx(27),
-			          mCork->unk4->getModel()->getBaseTRMtx());
-		}
-	} else {
-		cork = mCork->unk8;
-	}
-
-	cork->perform(cue, graphics);
+	mCork->perform(cue, graphics);
 
 	if (cue & CUE_CALC_VIEW) {
 		TCircleShadowRequest request;
@@ -1359,8 +1359,8 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 		JGeometry::TVec3<f32> right(joint[0][0], joint[1][0], joint[2][0]);
 		JGeometry::TVec3<f32> front(joint[0][2], joint[1][2], joint[2][2]);
 
-		request.unkC  = PSVECMag(right);
-		request.unk10 = PSVECMag(front);
+		request.unkC  = VECMag(right);
+		request.unk10 = VECMag(front);
 		request.unkC *= mScaledBodyRadius;
 		request.unk10 *= mScaledBodyRadius;
 		request.unk1C = getShadowType();
@@ -1375,7 +1375,7 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 	mBody->testPerform(cue, graphics);
 
 	if (cue & CUE_MOVE) {
-		mMtxCalc->unk50 -= unk188;
+		mMtxCalc->unk50 += -unk188;
 		if (mMtxCalc->unk50 < 0.0f)
 			mMtxCalc->unk50 = 0.0f;
 		else if (mMtxCalc->unk50 > 1.0f)
@@ -1384,8 +1384,8 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (unk17C) {
 		if (cue & CUE_CALC_ANIM) {
-			PSMTXCopy(mMActor->getModel()->getBaseTRMtx(),
-			          unk178->getModel()->getBaseTRMtx());
+			MTXCopy(mMActor->getModel()->getBaseTRMtx(),
+			        unk178->getModel()->getBaseTRMtx());
 			unk178->calcAnm();
 		}
 
