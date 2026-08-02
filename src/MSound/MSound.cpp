@@ -23,7 +23,7 @@
 #include <math.h>
 
 // rogue
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <System/DummyStrings.hpp>
 
 // TODO: place in correct header
 template <class T> static inline T min(T a, T b) { return a < b ? a : b; }
