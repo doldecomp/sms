@@ -624,40 +624,31 @@ void TGesso::bind()
 	}
 
 	if (isNotWandering()) {
-		f32 f8;
-		f32 f7;
+		JGeometry::TVec3<f32> var1;
 		f32 f1 = 1.0f;
 
 		if (!mIsRightSideUp)
 			f1 = -1.0f;
 
 		if (unk1A1 == 0) {
-			if (unk1C4 != 0) {
-				f8 = f1;
-				f7 = 0.0f;
-			} else {
-				f8 = f1 * -1.0f;
-				f7 = 0.0f;
-			}
+			if (unk1C4 != 0)
+				var1.set(0.0f, 0.0f, f1);
+			else
+				var1.set(0.0f, 0.0f, -1.0f * f1);
 		} else {
-			if (unk1C4 != 0) {
-				f8 = 0.0f;
-				f7 = f1 * -1.0f;
-			} else {
-				f8 = 0.0f;
-				f7 = f1;
-			}
+			if (unk1C4 != 0)
+				var1.set(-1.0f * f1, 0.0f, 0.0f);
+			else
+				var1.set(f1, 0.0f, 0.0f);
 		}
 
 		f32 fVar3 = SMS_GetMarioPos().x - mPosition.x;
 		f32 fVar4 = SMS_GetMarioPos().z - mPosition.z;
-		JGeometry::TVec3<f32> var1(f8, f7, 0.0f);
-		JGeometry::TVec3<f32> var2(fVar3, fVar4, 0.0f);
+		JGeometry::TVec3<f32> var2(fVar3, 0.0f, fVar4);
 		JGeometry::TVec3<f32> local_48;
 		local_48.cross(var1, var2);
 		f32 cos   = var1.dot(var2);
-		f32 sin   = MsVECMag2(&local_48);
-		f32 angle = MsAtan2(sin, cos);
+		f32 angle = MsAtan2(cos, MsVECMag2(&local_48));
 		if (mBodyTrackingAngle != angle) {
 			if (mBodyTrackingAngle < angle) {
 				mBodyTrackingAngle += mBodyRotSpeed;

@@ -13,8 +13,8 @@ class JPABaseEmitter;
 struct JPADrawParams {
 	/* 0x0 */ JGeometry::TVec3<f32> unk0;
 	/* 0x8 */ f32 unkC;
-	/* 0x10 */ f32 unk10;
-	/* 0x14 */ f32 unk14;
+	/* 0x10 */ f32 mScaleX;
+	/* 0x14 */ f32 mScaleY;
 	/* 0x18 */ char unk18[8];
 	/* 0x20 */ f32 mAlpha;
 	/* 0x24 */ f32 unk24;
@@ -91,6 +91,10 @@ public:
 	{
 		out.set(mLocalPosition);
 	}
+	// differs from TWW for some reason???
+	void getVelVec(Vec& out) const { out = mVelocity; }
+
+	f32 getLifeTime() const { return mLifeProgress; }
 
 	// From TP
 	s32 getAge() const { return mAge; }
@@ -164,11 +168,11 @@ public:
 
 	virtual f32 getWidth()
 	{
-		return mDrawParams.unk10 * 2.0f * JPADraw::cb.unk4.x;
+		return mDrawParams.mScaleX * 2.0f * JPADraw::cb.unk4.x;
 	}
 	virtual f32 getHeight()
 	{
-		return mDrawParams.unk14 * 2.0f * JPADraw::cb.unk4.y;
+		return mDrawParams.mScaleY * 2.0f * JPADraw::cb.unk4.y;
 	}
 };
 

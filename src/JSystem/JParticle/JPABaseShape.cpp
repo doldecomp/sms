@@ -186,18 +186,17 @@ JPABaseShape::JPABaseShape(const u8* data, JKRHeap* heap)
 	mPrmColor             = *(GXColor*)(data + 100);
 	mEnvColor             = *(GXColor*)(data + 0x68);
 	mTexStaticTransX      = JPAConvertFixToFloat(*(s16*)(data + 0x80)) * 10.0f;
-	mTexStaticScaleX      = JPAConvertFixToFloat(*(s16*)(data + 0x82)) * 10.0f;
-	mTexStaticTransY      = JPAConvertFixToFloat(*(s16*)(data + 0x84)) * 10.0f;
+	mTexStaticTransY      = JPAConvertFixToFloat(*(s16*)(data + 0x82)) * 10.0f;
+	mTexStaticScaleX      = JPAConvertFixToFloat(*(s16*)(data + 0x84)) * 10.0f;
 	mTexStaticScaleY      = JPAConvertFixToFloat(*(s16*)(data + 0x86)) * 10.0f;
 	mTilingX              = JPAConvertFixToFloat(*(s16*)(data + 0x88)) * 10.0f;
 	mTilingY              = JPAConvertFixToFloat(*(s16*)(data + 0x8a)) * 10.0f;
 	mTexScrollTransX      = JPAConvertFixToFloat(*(s16*)(data + 0x8c));
-	mTexScrollScaleX      = JPAConvertFixToFloat(*(s16*)(data + 0x8e));
-
-	mTexScrollTransY = JPAConvertFixToFloat(*(s16*)(data + 0x90)) * 0.1f;
-	mTexScrollScaleY = JPAConvertFixToFloat(*(s16*)(data + 0x92)) * 0.1f;
-	mTexScrollRotate = JPAConvertFixToFloat(*(s16*)(data + 0x94));
-	unk87            = data[0x96];
+	mTexScrollTransY      = JPAConvertFixToFloat(*(s16*)(data + 0x8e));
+	mTexScrollScaleX      = JPAConvertFixToFloat(*(s16*)(data + 0x90)) * 0.1f;
+	mTexScrollScaleY      = JPAConvertFixToFloat(*(s16*)(data + 0x92)) * 0.1f;
+	mTexScrollRotate      = JPAConvertFixToFloat(*(s16*)(data + 0x94));
+	unk87                 = data[0x96];
 
 	if (unk80 != 0) {
 		mTextureIndices = (u8*)JKRHeap::alloc(mTextureAnmKeyNum, 4, heap);

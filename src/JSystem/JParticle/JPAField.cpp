@@ -6,7 +6,7 @@
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 #include <JSystem/JMath.hpp>
 
-static JMath::TRandom_fast_ FieldRand(0);
+static JMath::TRandomFast FieldRand(0);
 
 JPABaseField::JPABaseField()
     : unk0(this)
@@ -397,7 +397,7 @@ void JPADragField::affect(JPAParticle* particle)
 			unk7C.y = rnd;
 		}
 		f32 scale = calcFieldFadeScale(particle->mLifeProgress);
-		unk7C.z *= -(scale * (1.0f - particle->getDragForce()) - 1.0f);
+		unk7C.z *= 1.0f - scale * (1.0f - particle->getDragForce());
 	} else {
 		unk7C.z *= particle->getDragForce();
 	}

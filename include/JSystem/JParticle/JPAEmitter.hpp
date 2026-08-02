@@ -122,6 +122,10 @@ public:
 	{
 		return &mChildParticleList;
 	}
+	void getGlobalParticleScale(JGeometry::TVec3<f32>& out) const
+	{
+		out.set(unk174);
+	}
 	f32 getRandomF() { return mRng.get_ufloat_1(); }
 	f32 getRandomRF() { return mRng.get_ufloat_1() * 2.0f - 1.0f; }
 	f32 getRandomSF() { return mRng.get_ufloat_1() - 0.5f; }
@@ -230,6 +234,7 @@ public:
 
 	// fabricated
 	JPADraw* getDraw() { return &mDraw; }
+	f32 getFrame() { return unk10.getFrame(); }
 
 public:
 	enum {

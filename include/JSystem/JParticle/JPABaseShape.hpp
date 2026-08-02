@@ -120,14 +120,14 @@ public:
 	/* 0x14 */ f32 mBaseSizeX;
 	/* 0x18 */ f32 mBaseSizeY;
 	/* 0x1C */ f32 mTexStaticTransX;
-	/* 0x20 */ f32 mTexStaticScaleX;
 	/* 0x24 */ f32 mTexStaticTransY;
+	/* 0x20 */ f32 mTexStaticScaleX;
 	/* 0x28 */ f32 mTexStaticScaleY;
 	/* 0x2C */ f32 mTilingX;
 	/* 0x30 */ f32 mTilingY;
 	/* 0x34 */ f32 mTexScrollTransX;
-	/* 0x38 */ f32 mTexScrollScaleX;
 	/* 0x3C */ f32 mTexScrollTransY;
+	/* 0x38 */ f32 mTexScrollScaleX;
 	/* 0x40 */ f32 mTexScrollScaleY;
 	/* 0x44 */ f32 mTexScrollRotate;
 

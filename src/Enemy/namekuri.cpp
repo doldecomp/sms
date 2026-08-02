@@ -368,7 +368,7 @@ void TNameKuri::calcRootMatrix()
 		unk1A8 = true;
 		JGeometry::TVec3<f32> local_30(0.0f, 1.0f, 0.0f);
 
-		JGeometry::TVec3<f32> normal = mGroundPlane->getNormal();
+		JGeometry::TVec3<f32> normal = unk138->getNormal();
 
 		JGeometry::TVec3<f32> local_a0;
 		local_a0.cross(normal, local_30);
@@ -421,7 +421,7 @@ void TNameKuri::calcRootMatrix()
 		JGeometry::TVec3<f32> local_88(JMASin(mRotation.y), 0.0f,
 		                               JMACos(mRotation.y));
 
-		JGeometry::TVec3<f32> normal = mGroundPlane->getNormal();
+		JGeometry::TVec3<f32> normal = unk138->getNormal();
 
 		JGeometry::TVec3<f32> local_a0;
 		local_a0.cross(normal, local_88);

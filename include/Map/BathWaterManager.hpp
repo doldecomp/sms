@@ -18,12 +18,10 @@ public:
 		(void)0;
 		if (!unk65) {
 			JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
-			(void)&up;
 			JGeometry::TQuat4<f32> q;
 			q.setRotate(unk0C, up, amount);
-			JGeometry::TVec3<f32> result;
-			q.rotate(up, result);
-			return result;
+			q.rotate(up, up);
+			return up;
 		} else {
 			return JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f);
 		}
