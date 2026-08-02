@@ -5,14 +5,11 @@
 #include <JSystem/J2D/J2DPicture.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 
-// Keep the data in a non-polymorphic base so MWCC places the vtable at 0x74.
-struct TBlendPaneData {
-	/* 0x0 */ f32 mBlendStep;
-	/* 0x4 */ f32 mBlendProgress;
-	/* 0x8 */ bool mBlendActive;
-};
+class TBlendPane : public TBoundPane {
+	/* 0x68 */ f32 mBlendStep;
+	/* 0x6C */ f32 mBlendProgress;
+	/* 0x70 */ bool mBlendActive;
 
-class TBlendPane : public TBoundPane, public TBlendPaneData {
 public:
 	TBlendPane(J2DScreen*, u32);
 
