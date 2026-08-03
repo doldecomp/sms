@@ -50,16 +50,16 @@ public:
 	/* 0x210 */ TParamRT<s32> mSLSpicyTime;
 };
 
-class TBubbleSaveLoadParams : public TSpineEnemyParams {
+class TBubbleSaveLoadParams : public TWalkerEnemyParams {
 public:
 	TBubbleSaveLoadParams(const char* path);
 
-	/* 0x0A8 */ TParamRT<s32> mSLLiveTime;
-	/* 0x0BC */ TParamRT<s32> mSLNumDivision;
-	/* 0x0D0 */ TParamRT<f32> mSLMaxScale;
-	/* 0x0E4 */ TParamRT<f32> mSLAddPosBase;
-	/* 0x0F8 */ TParamRT<f32> mSLRateExpand;
-	/* 0x10C */ TParamRT<f32> mSLDeadHeight;
+	/* 0x32C */ TParamRT<s32> mSLLiveTime;
+	/* 0x340 */ TParamRT<s32> mSLNumDivision;
+	/* 0x354 */ TParamRT<f32> mSLMaxScale;
+	/* 0x368 */ TParamRT<f32> mSLAddPosBase;
+	/* 0x37C */ TParamRT<f32> mSLRateExpand;
+	/* 0x390 */ TParamRT<f32> mSLDeadHeight;
 };
 
 /* TSlotDrum already owns the geometry, angle and neon material fields. */
@@ -94,8 +94,13 @@ public:
 	/* 0x1A8 */ s8 mStop0;
 	/* 0x1A9 */ s8 mStop1;
 	/* 0x1AA */ s8 mStop2;
+	/* 0x1AB */ u8 mPad1AB[0x31];
 	/* 0x1DC */ TMapCollisionMove* mMapCollisionMove;
 	/* 0x1E0 */ u8 mNeonState;
+	/* 0x1E1 */ u8 mPad1E1[3];
+	/* 0x1E4 */ f32 mUnk1E4;
+	/* 0x1E8 */ f32 mUnk1E8;
+	/* 0x1EC */ f32 mUnk1EC;
 };
 
 class TBossTelesa : public TSpineEnemy {
@@ -151,10 +156,11 @@ public:
 	static f32 mCameraMoveLimit;
 	static f32 mCameraMoveSp;
 
-	/* 0x150 */ s32 mBattleState;
+	/* 0x150 */ u8 mBattleState;
+	/* 0x151 */ u8 mPad151[3];
 	/* 0x154 */ s32 mBattleTimer;
 	/* 0x158 */ s32 mBattlePhase;
-	/* 0x15C */ TLiveActor* mMario;
+	/* 0x15C */ TBossTelesaSaveLoadParams* mSaveParams;
 	/* 0x160 */ s32 mCurrentItem;
 	/* 0x164 */ s32 mCurrentFruit;
 	/* 0x168 */ f32 mFallSpeed;
@@ -163,15 +169,18 @@ public:
 	/* 0x174 */ THitActor* mKillSmallEnemy;
 	/* 0x178 */ void* mItemList;
 	/* 0x17C */ void* mBubbleList;
-	/* 0x180 */ TBossTelesaSaveLoadParams* mSaveParams;
+	/* 0x180 */ void* mUnk180;
 	/* 0x184 */ TTelesaSlot* mSlot;
 	/* 0x188 */ JDrama::TViewObj* mTakingActor;
-	/* 0x18C */ u8 mIsSpicy;
+	/* 0x18C */ s8 mIsSpicy;
+	/* 0x18D */ u8 mPad18D[0xF];
 	/* 0x19C */ f32 mDamageBlend;
 	/* 0x1A0 */ f32 mDamageBlendSpeed;
 	/* 0x1A4 */ f32 mDamageBlendTarget;
 	/* 0x1A8 */ s32 mDamageTimer;
+	/* 0x1AC */ u8 mPad1AC[0xC8];
 	/* 0x274 */ s32 mStateTimer;
+	/* 0x278 */ u8 mPad278[0xD0];
 	/* 0x348 */ u8 mItem0;
 	/* 0x349 */ u8 mItem1;
 	/* 0x34A */ u8 mItem2;
@@ -191,14 +200,20 @@ public:
 	/* 0x368 */ s32 mSlotResult;
 	/* 0x36C */ s32 mSlotItemCount;
 	/* 0x370 */ u8 mSlotStop;
+	/* 0x371 */ u8 mPad371[3];
 	/* 0x374 */ JGeometry::TVec3<f32> mEffectPos;
+	/* 0x380 */ s32 mUnk380;
 	/* 0x384 */ s8 mDead;
+	/* 0x385 */ u8 mPad385[3];
+	/* 0x388 */ s32 mUnk388;
 };
 
 class TBossTelesaKillSmallEnemy : public THitActor {
 public:
 	TBossTelesaKillSmallEnemy(TBossTelesa* owner = nullptr)
-	    : THitActor("ボステレサ小敵キラー"), mOwner(owner), mHit(false)
+	    : THitActor("ボステレサ小敵キラー")
+	    , mOwner(owner)
+	    , mHit(false)
 	{
 	}
 
@@ -212,7 +227,8 @@ public:
 class TBossTelesaTongue : public THitActor {
 public:
 	TBossTelesaTongue(TBossTelesa* owner = nullptr)
-	    : THitActor("ボステレサ舌"), mOwner(owner)
+	    : THitActor("ボステレサ舌")
+	    , mOwner(owner)
 	{
 	}
 
@@ -224,7 +240,8 @@ public:
 class TBossTelesaBody : public THitActor {
 public:
 	TBossTelesaBody(TBossTelesa* owner = nullptr)
-	    : THitActor("ボステレサ本体"), mOwner(owner)
+	    : THitActor("ボステレサ本体")
+	    , mOwner(owner)
 	{
 	}
 
@@ -266,6 +283,7 @@ public:
 
 	/* 0x194 */ TBubbleSaveLoadParams* mSaveParams;
 	/* 0x198 */ TSmallEnemy* mCarriedEnemy;
+	/* 0x19C */ TMtx34f mTakingMatrix;
 	/* 0x1CC */ f32 mHeight;
 	/* 0x1D0 */ u8 mIsSplit;
 	/* 0x1D1 */ u8 mIsMoving;
