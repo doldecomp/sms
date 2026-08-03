@@ -113,7 +113,10 @@ void TBubbleManager::load(JSUMemoryInputStream& stream)
 	TSmallEnemyManager::load(stream);
 }
 
-TSmallEnemy* TBubbleManager::createEnemyInstance() { return new TBubble; }
+TSmallEnemy* TBubbleManager::createEnemyInstance()
+{
+	return new TBubble("バブル");
+}
 
 void TBubbleManager::createModelData()
 {
@@ -1006,11 +1009,13 @@ void TBossTelesa::loadAfter()
 		int found = 0;
 		for (int i = 0; i < gpMapObjManager->getObjNum(); ++i) {
 			TMapObjBase* actor = gpMapObjManager->getObj(i);
-			bool isRoulette    = false;
+			u8 isRoulette;
 			if (actor->mActorType == rouletteType)
-				isRoulette = true;
+				isRoulette = 1;
+			else
+				isRoulette = 0;
 			if (isRoulette) {
-				((TRoulette**)&unk178)[found] = (TRoulette*)actor;
+				(&unk178)[found] = (TRoulette*)actor;
 				found++;
 			}
 		}
@@ -1020,9 +1025,11 @@ void TBossTelesa::loadAfter()
 	if ((u32)gpMapObjManager->getObjNumWithActorType(slotType) != 0) {
 		for (int i = 0; i < gpMapObjManager->getObjNum(); ++i) {
 			TMapObjBase* actor = gpMapObjManager->getObj(i);
-			bool isSlot        = false;
+			u8 isSlot;
 			if (actor->mActorType == slotType)
-				isSlot = true;
+				isSlot = 1;
+			else
+				isSlot = 0;
 			if (isSlot) {
 				unk184         = (TTelesaSlot*)actor;
 				unk184->unk1A0 = this;
@@ -1030,27 +1037,31 @@ void TBossTelesa::loadAfter()
 		}
 	}
 
-	JGeometry::TVec3<f32> position(0.0f, 0.0f, 0.0f);
-	JGeometry::TVec3<f32> rotation(0.0f, 0.0f, 0.0f);
-	JGeometry::TVec3<f32> scale(1.0f, 1.0f, 1.0f);
 	int fruitIndex = 0;
 	for (int i = 0; i < 6; ++i)
 		unk2A8[fruitIndex++] = TMapObjBaseManager::newAndRegisterObj(
-		    "FruitCoconut", position, rotation, scale);
+		    "FruitCoconut", JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
+		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
+		    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 	for (int i = 0; i < 6; ++i)
 		unk2A8[fruitIndex++] = TMapObjBaseManager::newAndRegisterObj(
-		    "FruitPapaya", position, rotation, scale);
+		    "FruitPapaya", JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
+		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
+		    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 	for (int i = 0; i < 2; ++i)
 		unk2A8[fruitIndex++] = TMapObjBaseManager::newAndRegisterObj(
-		    "FruitPine", position, rotation, scale);
+		    "FruitPine", JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
+		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
+		    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 	for (int i = 0; i < 6; ++i)
 		unk2A8[fruitIndex++] = TMapObjBaseManager::newAndRegisterObj(
-		    "FruitDurian", position, rotation, scale);
+		    "FruitDurian", JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
+		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
+		    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 
 	for (int i = 0; i < 20; ++i) {
-		TMapObjBase* actor = (TMapObjBase*)unk2A8[i];
-		actor->onMapObjFlag(0x04000000);
-		actor->makeObjDead();
+		((TMapObjBase*)unk2A8[i])->onMapObjFlag(0x04000000);
+		((TMapObjBase*)unk2A8[i])->makeObjDead();
 	}
 
 	unk2F8[0] = JDrama::TNameRefGen::search<TLiveActor>("唐辛子 0");
@@ -1087,8 +1098,10 @@ void TBossTelesa::loadAfter()
 	unk354 = JDrama::TNameRefGen::search<TObjManager>("テレサマネージャー");
 
 	for (int i = 0; i < 5; ++i)
-		TMapObjBaseManager::newAndRegisterObj("bottle_large", position,
-		                                      rotation, scale);
+		TMapObjBaseManager::newAndRegisterObj(
+		    "bottle_large", JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
+		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
+		    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 
 	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit.jpa", 0xD7);
 	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit_pe.jpa", 0xD8);
