@@ -29,8 +29,10 @@
 #include <MoveBG/MapObjManager.hpp>
 #include <MoveBG/Item.hpp>
 #include <MoveBG/ItemManager.hpp>
-#include <MSound/MSoundBGM.hpp>
 #include <MSound/MSound.hpp>
+#include <MSound/MSSetSound.hpp>
+#include <JSystem/JAudio/JALibrary/JALModSe.hpp>
+#include <MSound/MSoundBGM.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Player/Mario.hpp>
 #include <Strategic/ObjModel.hpp>
@@ -1936,7 +1938,8 @@ void TBossTelesa::generateSlotItem()
 		if (numFruit > 20)
 			numFruit = 20;
 
-		s32 angleIndex = (s32)(numFruit * (rand() * 0.000030517578f));
+		TMsRange<s32> angleIndexRange(0, numFruit);
+		s32 angleIndex = angleIndexRange.rand();
 
 		for (int i = 0; i < numFruit; ++i) {
 			if (unk2A8[i]->mHolder)
@@ -1968,18 +1971,12 @@ void TBossTelesa::generateSlotItem()
 			PSMTXMultVec(rot, &dir, &dir);
 			MsVECNormalize(&dir, &normalizedDir);
 
-			TMapObjBase* actor;
-			if (i == 0 || i == 4)
-				actor = (TMapObjBase*)unk2F8[i];
-			else
-				actor = (TMapObjBase*)unk2A8[i];
-
 			Vec velocity;
 			TMsRange<f32> fruitSpeedRange(6.0f, 10.0f);
 
 			if (i == 0 || i == 4) {
-				actor->makeObjAppeared();
-				actor->offLiveFlag(LIVE_FLAG_HIDDEN);
+				((TMapObjBase*)unk2F8[i])->makeObjAppeared();
+				((TMapObjBase*)unk2F8[i])->offLiveFlag(LIVE_FLAG_HIDDEN);
 
 				velocity.x = normalizedDir.x * fruitSpeedRange.rand();
 				velocity.y = -2.0f;
@@ -1991,22 +1988,23 @@ void TBossTelesa::generateSlotItem()
 					    = normalizedDir.z * fruitSpeedRange.rand() * 2.0f;
 				}
 
-				actor->mVelocity = velocity;
-				actor->offLiveFlag(LIVE_FLAG_UNK10);
-				actor->mRotation.set(0.0f, 90.0f, 0.0f);
+				((TMapObjBase*)unk2F8[i])->mVelocity = velocity;
+				((TMapObjBase*)unk2F8[i])->offLiveFlag(LIVE_FLAG_UNK10);
+				((TMapObjBase*)unk2F8[i])->mRotation.set(0.0f, 90.0f, 0.0f);
+				unk1AC[unk274] = unk2F8[i];
 			} else {
-				actor->makeObjAppeared();
-				actor->offLiveFlag(LIVE_FLAG_HIDDEN);
+				((TMapObjBase*)unk2A8[i])->makeObjAppeared();
+				((TMapObjBase*)unk2A8[i])->offLiveFlag(LIVE_FLAG_HIDDEN);
 
 				velocity.x = normalizedDir.x * fruitSpeedRange.rand();
 				velocity.y = -2.0f;
 				velocity.z = normalizedDir.z * fruitSpeedRange.rand();
 
-				actor->mVelocity = velocity;
-				actor->offLiveFlag(LIVE_FLAG_UNK10);
+				((TMapObjBase*)unk2A8[i])->mVelocity = velocity;
+				((TMapObjBase*)unk2A8[i])->offLiveFlag(LIVE_FLAG_UNK10);
+				unk1AC[unk274] = unk2A8[i];
 			}
 
-			unk1AC[unk274] = actor;
 			unk1AC[i]->onHitFlag(HIT_FLAG_NO_COLLISION);
 			unk1AC[i]->mScaling.set(1.5f, 1.5f, 1.5f);
 			unk1AC[unk274]->mPosition.x = rootMtx[0][3] + dir.x;
@@ -2065,21 +2063,26 @@ void TBossTelesa::generateSlotItem()
 	} else {
 		s32 count = slotItemNum;
 		s32 kind  = 0;
-		if (unk1A8 == -1) {
+		switch (unk1A8) {
+		case -1:
 			count *= 2;
-			kind = 0;
-		} else if (unk1A8 == 1) {
+			break;
+		case 1:
 			if (mHitPoints > 2)
 				kind = 1;
 			else
 				kind = 2;
+			break;
+		case 3:
+			break;
 		}
 
 		s32 maxKind = 7;
 		if (mHitPoints == 1)
 			maxKind = 8;
 
-		s32 randomKind = 1 + (s32)((maxKind - 1) * (rand() * 0.000030517578f));
+		TMsRange<s32> randomKindRange(1, maxKind);
+		s32 randomKind = randomKindRange.rand();
 
 		for (int i = 0; i < count; ++i) {
 			if (unk1A8 == 3) {
