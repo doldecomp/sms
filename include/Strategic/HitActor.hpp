@@ -68,6 +68,10 @@ public:
 
 	// fabricated
 	u32 getActorType() const { return mActorType; }
+	u8 isActorTypeOf(u32 base) const
+	{
+		return (mActorType - base) == 1 ? 1 : 0;
+	}
 	bool checkActorType(u32 flag) const
 	{
 		return mActorType & flag ? true : false;
