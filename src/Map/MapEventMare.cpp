@@ -46,7 +46,7 @@ void TMareWallRock::appear()
 	(void)0;
 
 	unk10C[0]->setUp();
-	unk104->alive();
+	unk104->awake();
 	JGeometry::TVec3<f32> t(0.0f, 0.0f, unkFC);
 	unk10C[0]->moveTrans(t);
 	f32 rotY = unk128;

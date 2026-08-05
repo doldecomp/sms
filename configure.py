@@ -249,7 +249,7 @@ cflags_jsystem_dsp = [
     "-func_align 32",
 ]
 
-cflags_game = [
+cflags_game_base = [
     *cflags_base,
     "-O4,p",
     "-inline auto",
@@ -257,10 +257,10 @@ cflags_game = [
     "-str reuse,readonly",
 ]
 
-cflags_system = [
-    *cflags_game,
-    "-inline auto",
+cflags_game = [
+    *cflags_game_base,
     "-opt all,nostrength",
+    "-inline deferred",
 ]
 
 cflags_dolphin = [
@@ -304,8 +304,20 @@ def MatchingFor(*versions):
     return config.version in versions
 
 
+# The retail build applied the game PCH to a specific subset of translation units.
+def PCHObject(completed: bool, name: str) -> Object:
+    return Object(completed, name, extra_cflags=["-prefix SMS.mch"])
+
+
 config.warn_missing_config = True
 config.warn_missing_source = False
+config.precompiled_headers = [
+    {
+        "source": "SMS.pch",
+        "mw_version": "GC/1.2.5",
+        "cflags": ["-lang=c++", *cflags_game_base],
+    },
+]
 config.libs = [
     {
         "lib": "main",
@@ -781,13 +793,13 @@ config.libs = [
     {
         "lib": "MarioUtil",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-inline deferred ", "-opt all,nostrength"],
+        "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
             Object(Matching, "MarioUtil/DLUtil.cpp"),
             Object(NonMatching, "MarioUtil/DrawUtil.cpp"),
             Object(NonMatching, "MarioUtil/LightUtil.cpp"),
-            Object(NonMatching, "MarioUtil/MathUtil.cpp"),
+            PCHObject(NonMatching, "MarioUtil/MathUtil.cpp"),
             Object(NonMatching, "MarioUtil/MtxUtil.cpp"),
             Object(NonMatching, "MarioUtil/ScreenUtil.cpp"),
             Object(NonMatching, "MarioUtil/ShadowUtil.cpp"),
@@ -807,17 +819,17 @@ config.libs = [
     {
         "lib": "M3DUtil",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_system, "-inline deferred"],
+        "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
-            Object(NonMatching, "M3DUtil/M3UJoint.cpp"),
+            PCHObject(NonMatching, "M3DUtil/M3UJoint.cpp"),
             Object(NonMatching, "M3DUtil/M3UModel.cpp"),
             Object(NonMatching, "M3DUtil/MActor.cpp"),
             Object(NonMatching, "M3DUtil/MActorAnm.cpp"),
             Object(NonMatching, "M3DUtil/MActorData.cpp"),
             Object(NonMatching, "M3DUtil/SDLModel.cpp"),
-            Object(NonMatching, "M3DUtil/MActorUtil.cpp", flags=cflags_system),
-            Object(NonMatching, "M3DUtil/SampleCtrlNode.cpp"),
+            Object(NonMatching, "M3DUtil/MActorUtil.cpp"),
+            PCHObject(NonMatching, "M3DUtil/SampleCtrlNode.cpp"),
             Object(NonMatching, "M3DUtil/SampleCtrlModel.cpp"),
             Object(Matching, "M3DUtil/MotionBlendCtrl.cpp"),
             Object(Matching, "M3DUtil/LodAnm.cpp"),
@@ -826,11 +838,11 @@ config.libs = [
     {
         "lib": "System",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_system, "-inline deferred"],
+        "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
             Object(Matching, "System/BaseParam.cpp"),
-            Object(NonMatching, "System/EmitterViewObj.cpp"),
+            PCHObject(NonMatching, "System/EmitterViewObj.cpp"),
             Object(NonMatching, "System/EventWatcher.cpp"),
             Object(NonMatching, "System/FlagManager.cpp"),
             Object(NonMatching, "System/GCLogoDir.cpp"),
@@ -847,7 +859,7 @@ config.libs = [
             Object(Matching, "System/Params.cpp"),
             Object(Matching, "System/ParamInst.cpp"),
             Object(NonMatching, "System/PerformList.cpp"),
-            Object(NonMatching, "System/RenderModeObj.cpp"),
+            PCHObject(NonMatching, "System/RenderModeObj.cpp"),
             Object(NonMatching, "System/SnapTimeObj.cpp"),
             Object(NonMatching, "System/TalkCursor.cpp"),
             Object(Matching, "System/TexCache.cpp"),
@@ -863,12 +875,12 @@ config.libs = [
             Object(NonMatching, "System/TimeRec.cpp"),
             Object(NonMatching, "System/DrawSyncManager.cpp"),
             Object(Matching, "System/THPRender.cpp"),
-            Object(NonMatching, "System/MarNameRefGen_BossEnemy.cpp"),
+            PCHObject(NonMatching, "System/MarNameRefGen_BossEnemy.cpp"),
             Object(NonMatching, "System/MarNameRefGen_Enemy.cpp"),
             Object(NonMatching, "System/MarNameRefGen_Map.cpp"),
             Object(NonMatching, "System/MarNameRefGen_MapObj.cpp"),
             Object(NonMatching, "System/MarNameRefGen_NPC.cpp"),
-            Object(NonMatching, "System/CardManager.cpp"),
+            PCHObject(NonMatching, "System/CardManager.cpp"),
             Object(NonMatching, "System/MarDirectorLoadResource.cpp"),
             Object(NonMatching, "System/MovieDirector.cpp"),
             Object(Matching, "System/MarDirectorCreateObjects.cpp"),
@@ -880,11 +892,11 @@ config.libs = [
     {
         "lib": "Strategic",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength"],
+        "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "Strategic/liveactor.cpp"),
-            Object(NonMatching, "Strategic/liveinterp.cpp"),
+            PCHObject(NonMatching, "Strategic/liveinterp.cpp"),
             Object(NonMatching, "Strategic/livemanager.cpp"),
             Object(NonMatching, "Strategic/ObjHitCheck.cpp"),
             Object(NonMatching, "Strategic/objmanager.cpp"),
@@ -902,7 +914,7 @@ config.libs = [
     {
         "lib": "Player",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength"],
+        "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
             Object(Matching, "Player/Atom.cpp"),
@@ -911,26 +923,26 @@ config.libs = [
             Object(NonMatching, "Player/MarioBlend.cpp"),
             Object(NonMatching, "Player/MarioCap.cpp"),
             Object(NonMatching, "Player/MarioCollision.cpp"),
-            Object(NonMatching, "Player/MarioDraw.cpp"),
+            PCHObject(NonMatching, "Player/MarioDraw.cpp"),
             Object(NonMatching, "Player/MarioJump.cpp"),
             Object(NonMatching, "Player/MarioMain.cpp"),
             Object(NonMatching, "Player/MarioMove.cpp"),
             Object(NonMatching, "Player/MarioPhysics.cpp"),
             Object(Matching, "Player/MarioRecord.cpp"),
-            Object(NonMatching, "Player/MarioRun.cpp"),
+            PCHObject(NonMatching, "Player/MarioRun.cpp"),
             Object(NonMatching, "Player/MarioSpecial.cpp"),
             Object(NonMatching, "Player/MarioUpper.cpp"),
-            Object(NonMatching, "Player/MarioParticle.cpp"),
+            PCHObject(NonMatching, "Player/MarioParticle.cpp"),
             Object(NonMatching, "Player/MarioWait.cpp"),
             Object(NonMatching, "Player/SplashManager.cpp"),
             Object(NonMatching, "Player/Tongue.cpp"),
             Object(NonMatching, "Player/WaterGun.cpp"),
-            Object(NonMatching, "Player/Yoshi.cpp"),
+            PCHObject(NonMatching, "Player/Yoshi.cpp"),
             Object(NonMatching, "Player/MarioEffect.cpp"),
             Object(NonMatching, "Player/MarioSwim.cpp"),
             Object(NonMatching, "Player/MarioAccess.cpp"),
-            Object(NonMatching, "Player/MarioInit.cpp"),
-            Object(NonMatching, "Player/ModelWaterManager.cpp"),
+            PCHObject(NonMatching, "Player/MarioInit.cpp"),
+            PCHObject(NonMatching, "Player/ModelWaterManager.cpp"),
             Object(Matching, "Player/MarioPositionObj.cpp"),
             Object(NonMatching, "Player/MarioCheckCol.cpp"),
             Object(NonMatching, "Player/MarioReceiveMsg.cpp"),
@@ -940,7 +952,7 @@ config.libs = [
     {
         "lib": "NPC",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength"],
+        "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "NPC/NpcAnm.cpp"),
@@ -950,12 +962,12 @@ config.libs = [
             Object(NonMatching, "NPC/NpcNerve.cpp"),
             Object(Matching, "NPC/NpcSave.cpp"),
             Object(NonMatching, "NPC/NpcEvent.cpp"),
-            Object(Matching, "NPC/NpcInitData.cpp"),
+            PCHObject(Matching, "NPC/NpcInitData.cpp"),
             Object(NonMatching, "NPC/NpcInitPrg.cpp"),
             Object(NonMatching, "NPC/NpcInbetween.cpp"),
             Object(NonMatching, "NPC/NpcParts.cpp"),
             Object(NonMatching, "NPC/NpcColor.cpp"),
-            Object(Matching, "NPC/NpcSound.cpp"),
+            PCHObject(Matching, "NPC/NpcSound.cpp"),
             Object(NonMatching, "NPC/NpcChange.cpp"),
             Object(NonMatching, "NPC/NpcThrow.cpp"),
             Object(Matching, "NPC/NpcTrample.cpp"),
@@ -972,7 +984,7 @@ config.libs = [
     {
         "lib": "MSound",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength"],
+        "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "MSound/MAnmSound.cpp"),
@@ -982,14 +994,14 @@ config.libs = [
             Object(NonMatching, "MSound/MSoundScene.cpp"),
             Object(NonMatching, "MSound/MSoundSE.cpp"),
             Object(NonMatching, "MSound/MSoundStruct.cpp"),
-            Object(NonMatching, "MSound/MSHandle.cpp"),
-            Object(NonMatching, "MSound/MSModBgm.cpp"),
+            PCHObject(NonMatching, "MSound/MSHandle.cpp"),
+            PCHObject(NonMatching, "MSound/MSModBgm.cpp"),
         ],
     },
     {
         "lib": "MoveBG",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-opt all,nostrength", "-inline deferred"],
+        "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "MoveBG/WoodBarrel.cpp"),
@@ -998,12 +1010,12 @@ config.libs = [
             Object(NonMatching, "MoveBG/MapObjGeneral.cpp"),
             Object(NonMatching, "MoveBG/MapObjManager.cpp"),
             Object(NonMatching, "MoveBG/MapObjLib.cpp"),
-            Object(NonMatching, "MoveBG/Item.cpp"),
+            PCHObject(NonMatching, "MoveBG/Item.cpp"),
             Object(NonMatching, "MoveBG/ItemManager.cpp"),
             Object(NonMatching, "MoveBG/MapObjTown.cpp"),
             Object(NonMatching, "MoveBG/MapObjBlock.cpp"),
             Object(NonMatching, "MoveBG/MapObjBianco.cpp"),
-            Object(NonMatching, "MoveBG/MapObjSirena.cpp"),
+            PCHObject(NonMatching, "MoveBG/MapObjSirena.cpp"),
             Object(NonMatching, "MoveBG/MapObjRicco.cpp"),
             Object(NonMatching, "MoveBG/MapObjMamma.cpp"),
             Object(NonMatching, "MoveBG/MapObjPinna.cpp"),
@@ -1021,7 +1033,7 @@ config.libs = [
             Object(NonMatching, "MoveBG/MapObjGrass.cpp"),
             Object(Matching, "MoveBG/MapObjPole.cpp"),
             Object(NonMatching, "MoveBG/MapObjWater.cpp"),
-            Object(NonMatching, "MoveBG/ModelGate.cpp"),
+            PCHObject(NonMatching, "MoveBG/ModelGate.cpp"),
             Object(NonMatching, "MoveBG/MapObjFence.cpp"),
             Object(NonMatching, "MoveBG/MapObjOption.cpp"),
             Object(NonMatching, "MoveBG/MapObjRailBlock.cpp"),
@@ -1039,7 +1051,7 @@ config.libs = [
     {
         "lib": "Map",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-opt all,nostrength", "-inline deferred"],
+        "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
             Object(Matching, "Map/JointModel.cpp"),
@@ -1053,7 +1065,7 @@ config.libs = [
             Object(Matching, "Map/MapCollisionManager.cpp"),
             Object(Matching, "Map/MapDraw.cpp"),
             Object(Matching, "Map/MapEvent.cpp"),
-            Object(NonMatching, "Map/MapEventSink.cpp"),
+            PCHObject(NonMatching, "Map/MapEventSink.cpp"),
             Object(NonMatching, "Map/MapMakeData.cpp"),
             Object(NonMatching, "Map/MapMakeList.cpp"),
             Object(NonMatching, "Map/MapMirror.cpp"),
@@ -1076,7 +1088,7 @@ config.libs = [
             Object(NonMatching, "Map/MapCollisionPlane.cpp"),
             Object(Matching, "Map/MarineSnow.cpp"),
             Object(Matching, "Map/MapData.cpp"),
-            Object(NonMatching, "Map/MapEventDolpic.cpp"),
+            PCHObject(NonMatching, "Map/MapEventDolpic.cpp"),
             Object(NonMatching, "Map/MapEventMare.cpp"),
             Object(NonMatching, "Map/BathWaterManager.cpp"),
             Object(Matching, "Map/StickyStainManager.cpp"),
@@ -1085,7 +1097,7 @@ config.libs = [
     {
         "lib": "GC2D",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-opt all,nostrength", "-inline deferred"],
+        "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
             Object(Matching, "GC2D/ChangeValue.cpp"),
@@ -1093,7 +1105,7 @@ config.libs = [
             Object(Matching, "GC2D/ExPane.cpp"),
             Object(NonMatching, "GC2D/Menu.cpp"),
             Object(NonMatching, "GC2D/ScrnFader.cpp"),
-            Object(NonMatching, "GC2D/GCConsole2.cpp"),
+            PCHObject(NonMatching, "GC2D/GCConsole2.cpp"),
             Object(NonMatching, "GC2D/Talk2D2.cpp"),
             Object(NonMatching, "GC2D/BoundPane.cpp"),
             Object(NonMatching, "GC2D/PauseMenu2.cpp"),
@@ -1103,7 +1115,7 @@ config.libs = [
             Object(NonMatching, "GC2D/CardSave.cpp"),
             Object(NonMatching, "GC2D/CardLoad.cpp"),
             Object(NonMatching, "GC2D/ConsoleStr.cpp"),
-            Object(NonMatching, "GC2D/SelectMenu.cpp"),
+            PCHObject(NonMatching, "GC2D/SelectMenu.cpp"),
             Object(NonMatching, "GC2D/SelectDir.cpp"),
             Object(NonMatching, "GC2D/SelectShine2.cpp"),
             Object(Matching, "GC2D/BlendPane.cpp"),
@@ -1113,14 +1125,14 @@ config.libs = [
             Object(NonMatching, "GC2D/ProgSelect.cpp"),
             Object(NonMatching, "GC2D/hx_wiper.c"),
             Object(NonMatching, "GC2D/MovieSubtitle.cpp"),
-            Object(NonMatching, "GC2D/Option.cpp"),
+            PCHObject(NonMatching, "GC2D/Option.cpp"),
             Object(NonMatching, "GC2D/MovieRumble.cpp"),
         ],
     },
     {
         "lib": "Enemy",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-opt all,nostrength", "-inline deferred"],
+        "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "Enemy/conductor.cpp"),
@@ -1129,14 +1141,14 @@ config.libs = [
             Object(NonMatching, "Enemy/enemy.cpp"),
             Object(NonMatching, "Enemy/enemyAttachment.cpp"),
             Object(NonMatching, "Enemy/enemymanager.cpp"),
-            Object(NonMatching, "Enemy/enemyMario.cpp"),
-            Object(NonMatching, "Enemy/feetinv.cpp"),
-            Object(NonMatching, "Enemy/gesso.cpp"),
-            Object(NonMatching, "Enemy/graph.cpp"),
+            PCHObject(NonMatching, "Enemy/enemyMario.cpp"),
+            PCHObject(NonMatching, "Enemy/feetinv.cpp"),
+            PCHObject(NonMatching, "Enemy/gesso.cpp"),
+            PCHObject(NonMatching, "Enemy/graph.cpp"),
             Object(NonMatching, "Enemy/hamukuri.cpp"),
-            Object(NonMatching, "Enemy/hinokuri2.cpp"),
+            PCHObject(NonMatching, "Enemy/hinokuri2.cpp"),
             Object(NonMatching, "Enemy/mameGesso.cpp"),
-            Object(NonMatching, "Enemy/namekuri.cpp"),
+            PCHObject(NonMatching, "Enemy/namekuri.cpp"),
             Object(NonMatching, "Enemy/pakkun.cpp"),
             Object(NonMatching, "Enemy/smallEnemy.cpp"),
             Object(NonMatching, "Enemy/spider.cpp"),
@@ -1144,7 +1156,7 @@ config.libs = [
             Object(Matching, "Enemy/typicalenemy.cpp"),
             Object(NonMatching, "Enemy/walker.cpp"),
             Object(NonMatching, "Enemy/walkerEnemy.cpp"),
-            Object(NonMatching, "Enemy/bossgesso.cpp"),
+            PCHObject(NonMatching, "Enemy/bossgesso.cpp"),
             Object(NonMatching, "Enemy/elecNokonoko.cpp"),
             Object(NonMatching, "Enemy/telesa.cpp"),
             Object(NonMatching, "Enemy/fireWanwan.cpp"),
@@ -1152,19 +1164,19 @@ config.libs = [
             Object(NonMatching, "Enemy/generator.cpp"),
             Object(NonMatching, "Enemy/bosspakkun.cpp"),
             Object(NonMatching, "Enemy/tobiPuku.cpp"),
-            Object(NonMatching, "Enemy/tinkoopa.cpp"),
+            PCHObject(NonMatching, "Enemy/tinkoopa.cpp"),
             Object(NonMatching, "Enemy/launcher.cpp"),
-            Object(NonMatching, "Enemy/bosswanwan.cpp"),
+            PCHObject(NonMatching, "Enemy/bosswanwan.cpp"),
             Object(NonMatching, "Enemy/chuuhana.cpp"),
             Object(NonMatching, "Enemy/igaiga.cpp"),
             Object(NonMatching, "Enemy/poihana.cpp"),
             Object(NonMatching, "Enemy/tamaNoko.cpp"),
             Object(NonMatching, "Enemy/bosstelesa.cpp"),
             Object(NonMatching, "Enemy/riccohook.cpp"),
-            Object(NonMatching, "Enemy/bombhei.cpp"),
+            PCHObject(NonMatching, "Enemy/bombhei.cpp"),
             Object(NonMatching, "Enemy/cannon.cpp"),
-            Object(NonMatching, "Enemy/bosseel.cpp"),
-            Object(NonMatching, "Enemy/killer.cpp"),
+            PCHObject(NonMatching, "Enemy/bosseel.cpp"),
+            PCHObject(NonMatching, "Enemy/killer.cpp"),
             Object(NonMatching, "Enemy/beam.cpp"),
             Object(NonMatching, "Enemy/hanasambo.cpp"),
             Object(NonMatching, "Enemy/popo.cpp"),
@@ -1178,12 +1190,12 @@ config.libs = [
             Object(NonMatching, "Enemy/BossHanachanParts.cpp"),
             Object(NonMatching, "Enemy/BossHanachanSave.cpp"),
             Object(NonMatching, "Enemy/amiNoko.cpp"),
-            Object(NonMatching, "Enemy/gatekeeper.cpp"),
+            PCHObject(NonMatching, "Enemy/gatekeeper.cpp"),
             Object(NonMatching, "Enemy/BossHanachanEffect.cpp"),
             Object(NonMatching, "Enemy/egggen.cpp"),
             Object(NonMatching, "Enemy/seal.cpp"),
             Object(NonMatching, "Enemy/bgpoldrop.cpp"),
-            Object(NonMatching, "Enemy/bgtentacle.cpp"),
+            PCHObject(NonMatching, "Enemy/bgtentacle.cpp"),
             Object(NonMatching, "Enemy/effectEnemy.cpp"),
             Object(NonMatching, "Enemy/hauntLeg.cpp"),
             Object(NonMatching, "Enemy/areacylinder.cpp"),
@@ -1212,7 +1224,7 @@ config.libs = [
     {
         "lib": "Camera",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength"],
+        "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "Camera/CameraBGCheck.cpp"),
@@ -1250,7 +1262,7 @@ config.libs = [
     {
         "lib": "Animal",
         "mw_version": "GC/1.2.5",
-        "cflags": [*cflags_game, "-inline deferred", "-opt all,nostrength"],
+        "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "Animal/boid.cpp"),
