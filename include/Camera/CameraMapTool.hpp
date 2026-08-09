@@ -5,6 +5,8 @@
 #include <JSystem/JGeometry.hpp>
 #include <Strategic/NameRefAry.hpp>
 
+// TODO: the fields of this class are most definitely incorrect because of how
+// it behaves sinside of a TVector. See InsertRaw for it in MarNameRefGen.
 class TCameraMapTool : public JDrama::TNameRef {
 public:
 	TCameraMapTool(const char* name = "<TCameraMapTool>")
