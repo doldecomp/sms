@@ -21,7 +21,15 @@ public:
 	/* 0x4 */ TLinkListNode* mPrev;
 }; // Size: 0x8
 
-struct TNodeLinkList {
+class TNodeLinkList {
+	void Initialize_()
+	{
+		count           = 0;
+		ocObject_.mNext = &ocObject_;
+		ocObject_.mPrev = &ocObject_;
+	}
+
+public:
 	struct iterator {
 		explicit iterator(TLinkListNode* pNode) { node = pNode; }
 		iterator& operator=(const iterator& other)
@@ -116,19 +124,13 @@ struct TNodeLinkList {
 		/* 0x00 */ TLinkListNode* node;
 	};
 
+public:
 	TNodeLinkList()
 	    : ocObject_()
 	{
 		Initialize_();
 	}
 	~TNodeLinkList();
-
-	void Initialize_()
-	{
-		count           = 0;
-		ocObject_.mNext = &ocObject_;
-		ocObject_.mPrev = &ocObject_;
-	}
 
 	iterator begin() { return iterator(ocObject_.getNext()); }
 	const_iterator begin() const { return const_iterator(ocObject_.getNext()); }

@@ -56,8 +56,8 @@ TSingleNodeLinkList::Insert(JGadget::TSingleNodeLinkList::iterator param_1,
 	param_2->mNext = node;
 	*nodePtr       = param_2;
 	if (node == nullptr)
-		unk8 = param_2;
-	++unk0;
+		mTail = &param_2->mNext;
+	++count;
 
 	return param_1;
 }
