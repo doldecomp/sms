@@ -12,11 +12,6 @@
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 
-static inline f32 callMsWrap(f32 t, f32 l, f32 r)
-{
-	return MsWrap<f32>(t, l, r);
-}
-
 TRailMapObj::TRailMapObj(const char* name)
     : TMapObjBase(name)
     , unk138(nullptr)
@@ -426,12 +421,9 @@ void TRailBlock::control()
 		unk168.y = 0.0f;
 		unk168.z = 0.0f;
 
-		JGeometry::TVec3<f32> xAxis(unk174[0][0], unk174[1][0],
-		                            unk174[2][0]);
-		JGeometry::TVec3<f32> yAxis(unk174[0][1], unk174[1][1],
-		                            unk174[2][1]);
-		JGeometry::TVec3<f32> zAxis(unk174[0][2], unk174[1][2],
-		                            unk174[2][2]);
+		JGeometry::TVec3<f32> xAxis(unk174[0][0], unk174[1][0], unk174[2][0]);
+		JGeometry::TVec3<f32> yAxis(unk174[0][1], unk174[1][1], unk174[2][1]);
+		JGeometry::TVec3<f32> zAxis(unk174[0][2], unk174[1][2], unk174[2][2]);
 		PSVECNormalize(&xAxis, &xAxis);
 		PSVECNormalize(&yAxis, &yAxis);
 		PSVECNormalize(&zAxis, &zAxis);
@@ -449,23 +441,14 @@ void TRailBlock::control()
 		JGeometry::TVec3<f32> point;
 		TGraphNode& rotateNode = unk138->getCurrent();
 		rotateNode.getPoint(&point);
-		f32 rotateStep = VECDistance(&mPosition, &point) / unk144;
+		f32 rotateStep      = VECDistance(&mPosition, &point) / unk144;
 		TRailNode* railNode = rotateNode.getRailNode();
 		unk15C.x            = railNode->mPitch;
 		unk15C.y            = railNode->mYaw;
 		unk15C.z            = railNode->mRoll;
-		unk150 = (unk15C.x
-		          - callMsWrap(unk168.x, unk15C.x - 180.0f,
-		                       unk15C.x + 180.0f))
-		         / rotateStep;
-		unk154 = (unk15C.y
-		          - callMsWrap(unk168.y, unk15C.y - 180.0f,
-		                       unk15C.y + 180.0f))
-		         / rotateStep;
-		unk158 = (unk15C.z
-		          - callMsWrap(unk168.z, unk15C.z - 180.0f,
-		                       unk15C.z + 180.0f))
-		         / rotateStep;
+		unk150              = MsAngleDiff(unk15C.x, unk168.x) / rotateStep;
+		unk154              = MsAngleDiff(unk15C.y, unk168.y) / rotateStep;
+		unk158              = MsAngleDiff(unk15C.z, unk168.z) / rotateStep;
 	} else {
 		mRotation.x += unk150;
 		mRotation.y += unk154;
@@ -474,26 +457,9 @@ void TRailBlock::control()
 		unk168.y += unk154;
 		unk168.z += unk158;
 
-		f32 angleX = mRotation.x;
-		while (angleX >= 360.0f)
-			angleX -= 360.0f;
-		while (angleX < 0.0f)
-			angleX += 360.0f;
-		mRotation.x = angleX;
-
-		f32 angleY = mRotation.y;
-		while (angleY >= 360.0f)
-			angleY -= 360.0f;
-		while (angleY < 0.0f)
-			angleY += 360.0f;
-		mRotation.y = angleY;
-
-		f32 angleZ = mRotation.z;
-		while (angleZ >= 360.0f)
-			angleZ -= 360.0f;
-		while (angleZ < 0.0f)
-			angleZ += 360.0f;
-		mRotation.z = angleZ;
+		mRotation.x = MsWrap<f32>(mRotation.x, 0.0f, 360.0f);
+		mRotation.y = MsWrap<f32>(mRotation.y, 0.0f, 360.0f);
+		mRotation.z = MsWrap<f32>(mRotation.z, 0.0f, 360.0f);
 	}
 }
 
@@ -537,13 +503,12 @@ void TRollBlock::calcRootMatrix()
 	s16 rotZ        = mRotation.z * (65536.0f / 360.0f);
 	s16 rotY        = mRotation.y * (65536.0f / 360.0f);
 	s16 rotX        = mRotation.x * (65536.0f / 360.0f);
-	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y - mYOffset, mPosition.z,
-	               rotX, rotY, rotZ);
+	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y - mYOffset, mPosition.z, rotX,
+	               rotY, rotZ);
 	model->setBaseScale(mScaling);
 
-	s16 angle = unk138 * (65536.0f / 360.0f);
-	f32 sinV  = jmaSinTable[(u16)angle >> jmaSinShift];
-	f32 cosV  = jmaCosTable[(u16)angle >> jmaSinShift];
+	f32 sinV = JMASin(unk138);
+	f32 cosV = JMACos(unk138);
 
 	Mtx rot;
 	rot[0][0] = cosV;
@@ -626,33 +591,12 @@ BOOL TWoodBlock::calcRecycle()
 
 	return 0;
 }
-#pragma dont_inline on
-static void callRailMapObjLoad(TRailMapObj* self, JSUMemoryInputStream& stream)
-{
-	self->TRailMapObj::load(stream);
-}
-#pragma dont_inline off
-
 void TWoodBlock::load(JSUMemoryInputStream& stream)
 {
-	callRailMapObjLoad(this, stream);
+	TNormalLift::load(stream);
 
-	stream.read(&unk154, 4);
-	if (unk154 > 0.0f && mMapCollisionManager) {
-		TMapCollisionBase* col = mMapCollisionManager->getUnk8();
-		col->setAllBGType(7);
-		col->setAllActor(this);
-		col->setAllData(unk154);
-	}
-
-	int local_20;
-	int local_24;
-	int local_28;
-	int local_2C;
-	stream.read(&local_20, 4);
-	stream.read(&local_24, 4);
-	stream.read(&local_28, 4);
-	stream.read(&local_2C, 4);
+	s32 local_20, local_24, local_28, local_2C;
+	stream >> local_20 >> local_24 >> local_28 >> local_2C;
 	unk164.r = local_20 & 0xff;
 	unk164.g = local_24 & 0xff;
 	unk164.b = local_28 & 0xff;
