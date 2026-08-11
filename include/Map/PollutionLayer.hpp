@@ -148,6 +148,8 @@ public:
 	int worldToDepth(f32 d) const { return mPos.worldToDepth(d); }
 	void startDecay() { mFlags |= FLAG_DECAY; }
 	void stopDecay() { mFlags &= ~FLAG_DECAY; }
+	void startSpread() { mFlags |= FLAG_CAN_SPREAD; }
+	void stopSpread() { mFlags &= ~FLAG_CAN_SPREAD; }
 
 public:
 	enum {

@@ -569,6 +569,58 @@ new local lands in the local region and shifts every offset above it, which
 costs more than the temporary saved. The same change in `execadd` dropped it
 from 100.0% to 96.6% for exactly that reason.
 
+## Each inline level in a call chain leaves one dead 4-byte temporary
+
+An expression such as `gpFoo->getBar()->baz()` builds one compiler temporary per
+inline level that it goes through, and each temporary keeps a stack slot even
+when the optimiser removes every instruction that touched it.
+The instruction stream is then identical to the ROM's and only the stack offsets
+disagree — the classic "our frame is 8 bytes short" symptom.
+
+Two levers add a level, and both are ordinary source that a person would write:
+
+- **Go through the global's inline accessor.**
+  `SMSGetMarDirector()->getConsole()` instead of `gpMarDirector->getConsole()`
+  adds exactly one temporary. This only works when the *next* member call is
+  itself inline; if the accessor result feeds an out-of-line `bl` at once, MWCC
+  reads the global in place and no temporary appears.
+- **Hold the chain result in a named local.**
+  `TGCConsole2* console = SMSGetMarDirector()->getConsole(); console->foo();`
+  adds one more temporary than the same expression written in one line, because
+  the local is used as the receiver of the following call.
+
+Concrete case (`System/EventWatcher.cpp` `evManiCoinDown`): the bare
+`gpMarDirector->getConsole()->startAppearStar()` gave 2 temporaries and a 0x28
+frame; the accessor gave 3 and 0x30 with the wrong layout; the accessor plus the
+`console` local gave 4 and a 100% match.
+
+Because the effect depends on what follows the accessor, do not convert a whole
+file blindly — measure each site. In the same file `evSetNextStage` is
+measurably *worse* with the accessor, which is real evidence that the original
+used the bare global there.
+
+## A by-value class parameter forces the copy through memory
+
+When a class is passed by value, MWCC materialises the copy and reads the copy
+back, even for a two-word POD:
+
+```
+lwz  r4, 0(r3)        ; source.mType stays in a register
+lwz  r0, 4(r3)
+stw  r0, 0x38(r1)     ; source.mData
+stw  r4, 0x3c(r1)     ; copy.mType
+lwz  r0, 0x38(r1)
+stw  r0, 0x40(r1)     ; copy.mData
+lwz  r0, 0x3c(r1)     ; the copy is read back from memory
+```
+
+Two stack objects, and the second field never gets forwarded through the
+register. Seeing this shape in the target is a reliable sign that the value goes
+into a by-value parameter — in `EventWatcher.cpp` that parameter is
+`getNameRefPtr(TSpcSlice)`. A named local initialised from the same call gives
+two objects as well, but forwards the first field through a register, so the two
+shapes are easy to tell apart.
+
 ## Working with JSUMemoryInputStream
 
 Practice shows that most of the time in game code `operator>>` overloads were used for reading from them, and sometimes they were chained together.

@@ -168,6 +168,7 @@ public:
 	}
 
 	void startTimer() { unkC8 = OSCheckStopwatch(&unkE8); }
+	TMarioGamePad* getGamePad(int i = 0) { return unk18[i]; }
 
 public:
 	enum {
