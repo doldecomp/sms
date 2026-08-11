@@ -591,6 +591,7 @@ BOOL TWoodBlock::calcRecycle()
 
 	return 0;
 }
+
 void TWoodBlock::load(JSUMemoryInputStream& stream)
 {
 	TNormalLift::load(stream);
