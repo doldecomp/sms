@@ -19,9 +19,9 @@ public:
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
-	BOOL isGoal();
-	BOOL isReachedToGate() const;
-	BOOL isDownWaitingToTalk() const;
+	bool isGoal();
+	bool isReachedToGate() const;
+	bool isDownWaitingToTalk() const;
 	void startRunAway();
 	void startMonteReplay(u32 param1);
 	void startGateDrawing();

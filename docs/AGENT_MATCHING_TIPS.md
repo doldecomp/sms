@@ -450,6 +450,125 @@ for (...) {
 Concrete case (`DrawUtil.cpp` `TTrembleModelEffect::init`): the typed-`src` form
 CSE'd + unrolled ×8 (54%); the `void*`-cast form reloaded + unrolled ×2 (100%).
 
+## `const` on an inline's pointer parameter also defeats CSE
+
+The same effect appears at an inline boundary, and there the fix is one word.
+When an inline reads a field through a pointer parameter and the caller reads
+the *same* field of the *same* object, MWCC normally merges the two into one
+load. Making the parameter point to `const` stops the merge, and both loads
+appear.
+
+```cpp
+// one load of symbol->mNameOffset, shared with the caller
+const char* getSymbolName(TSpcSymbol* symbol);
+// two loads: the inline's own, and the caller's
+const char* getSymbolName(const TSpcSymbol* symbol);
+```
+
+Concrete case (`Strategic/spcinterp.cpp` `TSpcInterp::dump`): the original loads
+`symbol->mNameOffset` twice, once inside the inlined `getSymbolName` and once as
+a `SpcTrace` argument. Adding `const` took `dump` from 98.8% to 100%, and left
+every other caller of `getSymbolName` matching.
+
+This is worth reaching for before restructuring anything: it is a smaller and
+far more plausible change than the usual alternatives (hoisting the field into a
+local, or dropping the intermediate local altogether), both of which were tried
+here and were worse.
+
+## An inline's locals are numbered in reverse when it is inlined
+
+This one explains a whole family of "the out-of-line copy and the inlined copy
+want opposite stack layouts" puzzles, so it is worth knowing the mechanism.
+
+`CParser_NewLocalDataObject` **prepends** each new local to the function's
+`locals` list, so the list is in reverse declaration order. Two consumers then
+walk that list forward:
+
+- `assign_locals_to_memory(locals)` gives out stack offsets, **increasing** —
+  so when a function is compiled normally, the **first-declared** local ends up
+  at the **highest** offset.
+- `CInline_SetupArgsExpression` recreates the callee's locals in the caller,
+  walking the packed array forward and prepending each one — which **reverses
+  the order a second time**. So in an inlined copy the **last-declared** local
+  ends up at the highest offset.
+
+The consequence: any two named locals of an inline function **swap places**
+between its out-of-line copy and every site that inlines it. No declaration
+order satisfies both. Measured on `TSpcInterp::fetchU32`: `src` first gives the
+four inline sites 100% and the out-of-line copy 99.8%; `result` first gives
+exactly the reverse.
+
+The escape is not to reorder but to **reduce the function to a single local
+that needs a stack home** — with nothing to swap, both layouts agree. A local
+whose initialiser carries a type-conversion node gets propagated into a compiler
+temporary and stops needing a home, so writing the accessor to return `void*`
+and casting at the call site is enough:
+
+```cpp
+void* getText(u32 offset);                        // was u8*
+u8* src = (u8*)mBinary->getText(mProgramCounter);  // now a temp, not a local
+u32 result;                                       // the only named local left
+```
+
+That took `fetchU32`, `fetchS32`, `execvar` and `execfunc` to 100% at once
+(`spcinterp` 62.2% -> 67.7% matched code). Note it also fixed the two call sites
+that fetch *twice*: a second named local was what pushed their temporaries out
+of step, not anything about the second fetch itself.
+
+Symptom to recognise: the out-of-line copy of a weak inline and its inline sites
+each want the same pair of slots in opposite orders, and both frames are already
+the right size.
+
+## `T x = f();` costs one more stack object than `T x; x = f();`
+
+When `f` is inlined, initialising a local from the call builds the return value
+in its own temporary and then copies it into `x` — **two** stack objects.
+Declaring first and assigning lands the inlined return straight in `x`'s slot —
+**one**. Neither spelling changes a single instruction; only the frame moves, so
+this is the cheapest knob there is when a frame is off by exactly the size of
+one object.
+
+```cpp
+ExecFunction f = chooseExecFunction(cmd);   // return temp + copy
+ExecFunction f; f = chooseExecFunction(cmd); // return lands in f
+```
+
+Both directions have paid off in `Strategic/spcinterp.cpp`:
+- `TSpcInterp::update` was 8 bytes too big holding an inlined 12-byte
+  pointer-to-member. Declare-then-assign took it to 100%. (Binding a
+  `const T&` instead is in between — it drops the copy but adds an address
+  register: 96.2%.)
+- `TSpcBinary::init` was 8 bytes too *small*. Spelling the inlined `calcKey`
+  result as a local — `u32 hash = calcKey(...); symbol->mNameHash = hash;`
+  instead of assigning the call directly — added exactly the two missing
+  objects and took it to 100%, with `calcAndStoreKeys` still size-exact
+  against the map.
+
+So: frame one object too big, look for an initialisation to split; one object
+too small, look for a call result that should have been named.
+
+## Reading a value into a local removes a bound temporary
+
+`CInline_SetupArgsExpression` binds an argument to a compiler temporary whenever
+the expression is unsafe to repeat — and a call is always unsafe. A read of an
+unmodified local is safe, so it gets substituted instead and **no temporary is
+created**. When a frame holds one 4-byte temporary too many, moving the argument
+into a local is often the whole fix:
+
+```cpp
+interp->push((int)interp->pop().typeof());   // binds a temp for the argument
+u32 type = interp->pop().typeof();           // no temp; `type` stays in a register
+interp->push((int)type);
+```
+
+Concrete case (`Strategic/spcinterp.cpp` `spcTypeof`): 96.3% to 100%.
+
+Beware the mirror image: this only helps when the local itself does not need a
+slot. If the enclosing function already has a settled set of named locals, the
+new local lands in the local region and shifts every offset above it, which
+costs more than the temporary saved. The same change in `execadd` dropped it
+from 100.0% to 96.6% for exactly that reason.
+
 ## Working with JSUMemoryInputStream
 
 Practice shows that most of the time in game code `operator>>` overloads were used for reading from them, and sometimes they were chained together.

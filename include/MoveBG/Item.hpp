@@ -75,6 +75,11 @@ class TCoinRed : public TCoin {
 public:
 	TCoinRed(const char* name = "赤コイン");
 	virtual void taken(THitActor*);
+
+	const JGeometry::TVec3<f32>& getUnk158() { return unk158; }
+
+public:
+	/* 0x158 */ JGeometry::TVec3<f32> unk158;
 };
 
 class TCoinBlue : public TCoin {

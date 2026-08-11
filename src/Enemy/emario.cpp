@@ -164,17 +164,14 @@ void TEMario::kill()
 		gpCamera->removeMultiPlayer(&mPosition);
 }
 
-BOOL TEMario::isGoal()
+bool TEMario::isGoal()
 {
-	// raw read (not checkEMFlag): the BOOL ? TRUE : FALSE return materializes
-	// straight into r3, matching retail; checkEMFlag's own bool adds a clrlwi
-	return (mEnemyMario->mEMFlags & TEnemyMario::EM_FLAG_GOAL_REACHED) ? TRUE
-	                                                                   : FALSE;
+	return mEnemyMario->checkEMFlag(TEnemyMario::EM_FLAG_GOAL_REACHED);
 }
 
-BOOL TEMario::isReachedToGate() const { return mEnemyMario->isReachedToGate(); }
+bool TEMario::isReachedToGate() const { return mEnemyMario->isReachedToGate(); }
 
-BOOL TEMario::isDownWaitingToTalk() const
+bool TEMario::isDownWaitingToTalk() const
 {
 	return mEnemyMario->isDownWaitingToTalk();
 }

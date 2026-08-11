@@ -34,6 +34,10 @@ enum TLiveFlagBits {
 	LIVE_FLAG_UNK2000     = 0x2000,
 	LIVE_FLAG_UNK4000     = 0x4000,
 	LIVE_FLAG_UNK8000     = 0x8000,
+	// TODO: the flags are NOT shared between all live actors, it turns out --
+	// LIVE_FLAG_UNK10000 is reused for both NPC "dont talk", eel boss stuff AND
+	// small enemy stuff. So need to split them between the headers.
+	// TODO: we have names for these from EventWatcher for NPCs
 	LIVE_FLAG_UNK10000    = 0x10000,
 	LIVE_FLAG_UNK20000    = 0x20000,
 	LIVE_FLAG_UNK40000    = 0x40000,
