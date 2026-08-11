@@ -196,6 +196,8 @@ public:
 		return mMainStick.mPosX * x + mMainStick.mPosY * y;
 	}
 
+	void invalidate(s32 frames) { mDisabledFrames = frames; }
+
 public:
 	// NOTE: suprisingly, only flat array matches
 	/* 0xA8 */ f32 mCompSPos[2 * VARIANTS];
