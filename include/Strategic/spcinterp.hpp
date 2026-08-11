@@ -47,10 +47,10 @@ public:
 	}
 
 	s32 size() const { return mSize; }
-	bool empty() const { return mSize <= 0; }
 	T& getFromBottom(u32 idx) { return mData[idx]; }
 	T& getFromTop(u32 idx) { return mData[mSize - 1 - idx]; }
 	void setFromTop(u32 idx, const T& v) { mData[mSize - 1 - idx] = v; }
+	void setFromBottom(u32 idx, const T& v) { mData[idx] = v; }
 };
 
 class TSpcSlice {
@@ -185,7 +185,10 @@ public:
 		return *this;
 	}
 
-	void negate()
+	// Returns *this so the caller can chain it into a push. The reference
+	// return is load-bearing: it makes MWCC force-load the address into a
+	// temporary, which is what the original frames show.
+	TSpcSlice& negate()
 	{
 		switch (mType) {
 		case TSpcSlice::TYPE_INT:
@@ -197,6 +200,7 @@ public:
 		default:
 			break;
 		}
+		return *this;
 	}
 
 	BOOL operator==(const TSpcSlice& other) const
@@ -238,64 +242,42 @@ public:
 		}
 	}
 
+	// The ternary is load-bearing twice over: it keeps the body at 6
+	// statements, so the operator still expands at pass 1 when it sits in
+	// argument position (the verbose if/else form is 12 and would be refused
+	// there, forcing an out-of-line copy the ROM does not have), and returning
+	// TRUE/FALSE rather than the bool literals avoids a bool-to-BOOL
+	// zero-extend.
 	friend BOOL operator>(const TSpcSlice& a, const TSpcSlice& b)
 	{
-		if (a.mType == TYPE_FLOAT || b.mType == TYPE_FLOAT) {
-			if ((float)a > (float)b)
-				return true;
-			else
-				return false;
-		} else {
-			if ((int)a > (int)b)
-				return true;
-			else
-				return false;
-		}
+		if (a.mType == TYPE_FLOAT || b.mType == TYPE_FLOAT)
+			return (float)a > (float)b ? TRUE : FALSE;
+		else
+			return (int)a > (int)b ? TRUE : FALSE;
 	}
 
 	friend BOOL operator<(const TSpcSlice& a, const TSpcSlice& b)
 	{
-		if (a.mType == TYPE_FLOAT || b.mType == TYPE_FLOAT) {
-			if ((float)a < (float)b)
-				return true;
-			else
-				return false;
-		} else {
-			if ((int)a < (int)b)
-				return true;
-			else
-				return false;
-		}
+		if (a.mType == TYPE_FLOAT || b.mType == TYPE_FLOAT)
+			return (float)a < (float)b ? TRUE : FALSE;
+		else
+			return (int)a < (int)b ? TRUE : FALSE;
 	}
 
 	friend BOOL operator>=(const TSpcSlice& a, const TSpcSlice& b)
 	{
-		if (a.mType == TYPE_FLOAT || b.mType == TYPE_FLOAT) {
-			if ((float)a >= (float)b)
-				return true;
-			else
-				return false;
-		} else {
-			if ((int)a >= (int)b)
-				return true;
-			else
-				return false;
-		}
+		if (a.mType == TYPE_FLOAT || b.mType == TYPE_FLOAT)
+			return (float)a >= (float)b ? TRUE : FALSE;
+		else
+			return (int)a >= (int)b ? TRUE : FALSE;
 	}
 
 	friend BOOL operator<=(const TSpcSlice& a, const TSpcSlice& b)
 	{
-		if (a.mType == TYPE_FLOAT || b.mType == TYPE_FLOAT) {
-			if ((float)a <= (float)b)
-				return true;
-			else
-				return false;
-		} else {
-			if ((int)a <= (int)b)
-				return true;
-			else
-				return false;
-		}
+		if (a.mType == TYPE_FLOAT || b.mType == TYPE_FLOAT)
+			return (float)a <= (float)b ? TRUE : FALSE;
+		else
+			return (int)a <= (int)b ? TRUE : FALSE;
 	}
 };
 
@@ -342,7 +324,10 @@ public:
 	{
 		return &((TSpcSymbol*)(mData + getHeader()->mSymbolOffset))[idx];
 	}
-	const char* getSymbolName(TSpcSymbol* symbol)
+	// The const on the parameter is load-bearing. It stops MWCC from merging
+	// this read of mNameOffset with the caller's own read of the same field,
+	// which is what dump() needs: the original loads the field twice.
+	const char* getSymbolName(const TSpcSymbol* symbol)
 	{
 		return (const char*)(mData + getHeader()->mSymbolOffset
 		                     + getHeader()->mSymbolNum * sizeof(TSpcSymbol)
@@ -352,12 +337,16 @@ public:
 	{
 		return *(u32*)(mData + getHeader()->mDataOffset + idx * sizeof(u32));
 	}
-	void* getData(u32 offset)
+	void* getData(u32 idx)
 	{
 		return mData + getHeader()->mDataOffset + getHeader()->mDataNum * 4
-		       + offset;
+		       + getDataOffset(idx);
 	}
-	u8* getText(u32 offset)
+	// Returns void*, like getData above. The cast every caller then writes is
+	// load-bearing: the conversion node lets MWCC propagate the pointer into a
+	// compiler temporary, so the fetches below keep `result` as their only
+	// named local. See the comment on fetchF32.
+	void* getText(u32 offset)
 	{
 		return mData + getHeader()->mTextOffset + offset;
 	}
@@ -378,60 +367,71 @@ public:
 	/* 0x58 */ const char* mCurrentlyExecutingBuiltinName;
 
 public:
-	// TODO: the fetches take up too much stack
-	static void hacky_memcpy(u8* dst, u8* src, u32 count)
-	{
-		for (int i = 0; i < count; ++i)
-			dst[i] = src[i];
-	}
-
+	// The text section is not aligned, so the four bytes are copied one at a
+	// time. The bound is unsigned (sizeof), which is what earns the `lbzu`
+	// peephole. The loop also keeps these three over the inliner's budget from
+	// pass 2 down, which is why execint, execadr and execstr call them instead
+	// of expanding them.
+	//
+	// `result` must be the only named local here, which is why `src` is written
+	// as a cast of a void* rather than kept in a u8* variable of its own. MWCC
+	// numbers a function's locals in declaration order when it compiles the
+	// body, but in *reverse* declaration order when it inlines it, so any two
+	// named locals swap places between the out-of-line copy and every inlined
+	// one. With only `result` needing a stack home there is nothing left to
+	// swap, and both agree.
 	f32 fetchF32()
 	{
+		u8* src = (u8*)mBinary->getText(mProgramCounter);
 		f32 result;
-		hacky_memcpy((u8*)&result, mBinary->getText(mProgramCounter), 4);
-		mProgramCounter += 4;
+		u8* dst = (u8*)&result;
+		for (int i = 0; i < sizeof(f32); ++i)
+			dst[i] = src[i];
+		mProgramCounter += sizeof(f32);
 		return result;
 	}
 	s32 fetchS32()
 	{
+		u8* src = (u8*)mBinary->getText(mProgramCounter);
 		s32 result;
-		hacky_memcpy((u8*)&result, mBinary->getText(mProgramCounter), 4);
-		mProgramCounter += 4;
+		u8* dst = (u8*)&result;
+		for (int i = 0; i < sizeof(s32); ++i)
+			dst[i] = src[i];
+		mProgramCounter += sizeof(s32);
 		return result;
 	}
-
-	s32 fetchS32_2() { return fetchS32(); }
-	s32 fetchS32_3() { return fetchS32_2(); }
-	s32 fetchS32_4() { return fetchS32_3(); }
-	s32 fetchS32_5() { return fetchS32_4(); }
 
 	u32 fetchU32()
 	{
+		u8* src = (u8*)mBinary->getText(mProgramCounter);
 		u32 result;
-		hacky_memcpy((u8*)&result, mBinary->getText(mProgramCounter), 4);
-		mProgramCounter += 4;
+		u8* dst = (u8*)&result;
+		for (int i = 0; i < sizeof(u32); ++i)
+			dst[i] = src[i];
+		mProgramCounter += sizeof(u32);
 		return result;
 	}
 
-	u32 fetchU32_2() { return fetchU32(); }
-	u32 fetchU32_3() { return fetchU32_2(); }
-	u32 fetchU32_4() { return fetchU32_3(); }
-	u32 fetchU32_5() { return fetchU32_4(); }
-
 	u8 fetchU8()
 	{
-		u8 result = *mBinary->getText(mProgramCounter);
+		u8 result = *(u8*)mBinary->getText(mProgramCounter);
 		++mProgramCounter;
 		return result;
 	}
 
 	const char* fetchString()
 	{
-		return (const char*)mBinary->getData(
-		    mBinary->getDataOffset(fetchU32()));
+		return (const char*)mBinary->getData(fetchU32());
 	}
 
+	// The scalar overloads matter for codegen, they are not sugar: passing the
+	// value through a parameter binds it to a temporary, which is what puts the
+	// result of an opcode in the frame's temporary area instead of giving it a
+	// named local slot.
 	void push(const TSpcSlice& slice) { mProcessStack.push(slice); }
+	void push(int v) { mProcessStack.push(TSpcSlice(v)); }
+	void push(f32 v) { mProcessStack.push(TSpcSlice(v)); }
+	void push(const char* v) { mProcessStack.push(TSpcSlice(v)); }
 	void push() { push(TSpcSlice()); }
 	TSpcSlice pop() { return mProcessStack.pop(); }
 
@@ -611,7 +611,8 @@ public:
 	/// Concludes execution of an SPC script
 	void execend();
 
-	void chooseExecFunction(u8);
+	typedef void (TSpcInterp::*ExecFunction)();
+	ExecFunction chooseExecFunction(u8);
 	void dispatchBuiltinDefault(u32 sym_index, u32 arg_count);
 
 	virtual void dispatchBuiltin(u32 sym_index, u32 arg_count);

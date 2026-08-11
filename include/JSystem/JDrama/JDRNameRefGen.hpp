@@ -15,11 +15,18 @@ public:
 	TNameRef* getRootNameRef() { return mRootNameRef; }
 	static TNameRefGen* getInstance() { return instance; }
 
+	// TODO: starting to have real doubts that this was a template.
 	// fabricated
 	template <class T> static T* search(const char* name)
 	{
 		return static_cast<T*>(
 		    JDrama::TNameRefGen::getInstance()->getRootNameRef()->search(name));
+	}
+
+	static JDrama::TNameRef* search2(const char* name)
+	{
+		return JDrama::TNameRefGen::getInstance()->getRootNameRef()->search(
+		    name);
 	}
 
 	static TNameRefGen* instance;
