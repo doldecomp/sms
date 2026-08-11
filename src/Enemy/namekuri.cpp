@@ -505,15 +505,15 @@ void TNameKuri::behaveToWater(THitActor* param_1)
 		mSpine->pushNerve(&TNerveSmallEnemyDie::theNerve());
 
 		if (!isAirborne())
-			onLiveFlag(0x10000);
+			onLiveFlag(LIVE_FLAG_MELT_ON_DEATH);
 
-		onLiveFlag(0x20000);
+		onLiveFlag(LIVE_FLAG_UNK20000);
 	}
 }
 
 f32 TNameKuri::getGravityY() const
 {
-	if (checkLiveFlag(0x10000))
+	if (checkLiveFlag(LIVE_FLAG_MELT_ON_DEATH))
 		return 0.01f;
 
 	if (mSpine->getCurrentNerve() == &TNerveNameKuriJumpAttack::theNerve())
@@ -619,7 +619,7 @@ void TNameKuri::reset()
 	unk1C4 = nameKuriTevColorData[((TNameKuriManager*)mManager)
 	                                  ->getNextColorIdx()];
 
-	offLiveFlag(0x10);
+	offLiveFlag(LIVE_FLAG_UNK10);
 }
 
 void TNameKuri::attackToMario()
@@ -627,7 +627,7 @@ void TNameKuri::attackToMario()
 	SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 	if (mSpine->getCurrentNerve() == &TNerveNameKuriJumpAttack::theNerve()) {
 		setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
-		onLiveFlag(0x20000);
+		onLiveFlag(LIVE_FLAG_UNK20000);
 		kill();
 	}
 }

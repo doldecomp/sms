@@ -17,7 +17,7 @@ class J3DModel;
 class TBinder;
 class TMapCollisionManager;
 
-enum TLiveFlagBits {
+enum {
 	LIVE_FLAG_DEAD        = 0x1,
 	LIVE_FLAG_HIDDEN      = 0x2,
 	LIVE_FLAG_CLIPPED_OUT = 0x4,
@@ -34,24 +34,21 @@ enum TLiveFlagBits {
 	LIVE_FLAG_UNK2000     = 0x2000,
 	LIVE_FLAG_UNK4000     = 0x4000,
 	LIVE_FLAG_UNK8000     = 0x8000,
-	// TODO: the flags are NOT shared between all live actors, it turns out --
-	// LIVE_FLAG_UNK10000 is reused for both NPC "dont talk", eel boss stuff AND
-	// small enemy stuff. So need to split them between the headers.
-	// TODO: we have names for these from EventWatcher for NPCs
-	LIVE_FLAG_UNK10000    = 0x10000,
+	// WARNING: some flag values are overloaded between derived classes. E.g.
+	// LIVE_FLAG_UNK10000 means different things for NPCs and small enemies.
+	// Be careful about placing stuff here -- it might belong to derived classes
+	// instead.
 	LIVE_FLAG_UNK20000    = 0x20000,
 	LIVE_FLAG_UNK40000    = 0x40000,
 	LIVE_FLAG_UNK80000    = 0x80000,
 	LIVE_FLAG_UNK100000   = 0x100000,
 	LIVE_FLAG_UNK200000   = 0x200000,
 	LIVE_FLAG_UNK400000   = 0x400000,
-	LIVE_FLAG_SINK_BOTTOM = 0x800000, // for NPCs only
 	LIVE_FLAG_UNK1000000  = 0x1000000,
 	LIVE_FLAG_UNK2000000  = 0x2000000,
 	LIVE_FLAG_UNK4000000  = 0x4000000,
 	LIVE_FLAG_UNK8000000  = 0x8000000,
 	LIVE_FLAG_UNK10000000 = 0x10000000,
-	LIVE_FLAG_UNK20000000 = 0x20000000,
 };
 
 class TLiveActor : public TTakeActor {

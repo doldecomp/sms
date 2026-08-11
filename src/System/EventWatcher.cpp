@@ -130,9 +130,9 @@ static void evSetFlagNPCDontTalk(TSpcTypedInterp<TEventWatcher>* interp,
 	TBaseNPC* npc = (TBaseNPC*)getNameRefPtr(interp->pop());
 	if (npc) {
 		if (enable)
-			npc->onLiveFlag(LIVE_FLAG_UNK10000);
+			npc->onLiveFlag(TBaseNPC::LIVE_FLAG_DONT_TALK);
 		else
-			npc->offLiveFlag(LIVE_FLAG_UNK10000);
+			npc->offLiveFlag(TBaseNPC::LIVE_FLAG_DONT_TALK);
 	}
 	interp->push();
 }
@@ -145,9 +145,9 @@ static void evSetFlagNPCDontThrow(TSpcTypedInterp<TEventWatcher>* interp,
 	TBaseNPC* npc = (TBaseNPC*)getNameRefPtr(interp->pop());
 	if (npc) {
 		if (enable)
-			npc->onLiveFlag(LIVE_FLAG_UNK20000000);
+			npc->onLiveFlag(TBaseNPC::LIVE_FLAG_DONT_THROW);
 		else
-			npc->offLiveFlag(LIVE_FLAG_UNK20000000);
+			npc->offLiveFlag(TBaseNPC::LIVE_FLAG_DONT_THROW);
 	}
 	interp->push();
 }

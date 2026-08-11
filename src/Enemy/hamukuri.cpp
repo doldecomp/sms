@@ -684,7 +684,7 @@ void THamuKuri::setMActorAndKeeper()
 void THamuKuri::reset()
 {
 	TWalkerEnemy::reset();
-	offLiveFlag(0x2);
+	offLiveFlag(LIVE_FLAG_HIDDEN);
 	unk194 = unk1F4->mSLGiveUpLength.get();
 	unk1F0 = 0;
 	unk1A3 = 0;
@@ -1059,7 +1059,7 @@ void THamuKuri::setDeadAnm()
 	}
 
 	if (unk184) {
-		onLiveFlag(0x20000);
+		onLiveFlag(LIVE_FLAG_UNK20000);
 		gpMarioParticleManager->emit(0xE4, &mPosition, 0, nullptr);
 	} else {
 		if (isBckAnm(3))
@@ -1471,7 +1471,7 @@ void TDoroHaneKuri::setBehavior()
 	    && mHeldObject && mHeldObject->receiveMessage(this, HIT_MESSAGE_PUT)) {
 		TMapObjBase* held = (TMapObjBase*)mHeldObject;
 		held->mHolder     = nullptr;
-		held->offLiveFlag(0x2);
+		held->offLiveFlag(LIVE_FLAG_HIDDEN);
 		held->mPosition   = mPosition;
 		held->mPosition.y = mGroundHeight;
 		held->offHitFlag(HIT_FLAG_NO_COLLISION);
@@ -2425,7 +2425,7 @@ DEFINE_NERVE(TNerveHamuKuriWallDie, TLiveActor)
 				self->onLiveFlag(LIVE_FLAG_DEAD);
 				self->onLiveFlag(LIVE_FLAG_UNK8);
 				self->onLiveFlag(LIVE_FLAG_UNK20000);
-				self->offLiveFlag(LIVE_FLAG_UNK10000);
+				self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 				self->mHolder = nullptr;
 				self->stopAnmSound();
 				spine->reset();

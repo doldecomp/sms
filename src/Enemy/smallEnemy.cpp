@@ -274,7 +274,7 @@ void TSmallEnemy::reset()
 
 	offLiveFlag(LIVE_FLAG_DEAD);
 	offLiveFlag(LIVE_FLAG_UNK20000);
-	offLiveFlag(LIVE_FLAG_UNK10000);
+	offLiveFlag(LIVE_FLAG_MELT_ON_DEATH);
 	offLiveFlag(LIVE_FLAG_HIDDEN);
 
 	if (getSaveParams()->mSLGenerateOnlyDead.get())
@@ -974,7 +974,7 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 				self->generateEffectColumWater();
 		}
 
-		if (self->checkLiveFlag(LIVE_FLAG_UNK10000)) {
+		if (self->checkLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH)) {
 			self->setMeltAnm();
 		} else {
 			if (self->checkUnk150(0x20)) {
@@ -1008,7 +1008,7 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 		self->onLiveFlag(LIVE_FLAG_DEAD);
 		self->onLiveFlag(LIVE_FLAG_UNK8);
 		self->offLiveFlag(LIVE_FLAG_HIDDEN);
-		self->offLiveFlag(LIVE_FLAG_UNK10000);
+		self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		self->mHolder = nullptr;
 		self->stopAnmSound();
 

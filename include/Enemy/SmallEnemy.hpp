@@ -200,6 +200,10 @@ public:
 		return result;
 	}
 
+	enum {
+		LIVE_FLAG_MELT_ON_DEATH = 0x10000,
+	};
+
 public:
 	/* 0x150 */ u32 unk150;
 	/* 0x154 */ f32 unk154;
