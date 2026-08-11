@@ -1119,7 +1119,7 @@ DEFINE_NERVE(TNerveTelesaDie, TLiveActor)
 	if (self->checkCurAnmEnd(0) || self->getUnk184()) {
 		self->onLiveFlag(LIVE_FLAG_DEAD);
 		self->onLiveFlag(LIVE_FLAG_UNK8);
-		self->offLiveFlag(LIVE_FLAG_UNK10000);
+		self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		self->mHolder = nullptr;
 		self->onHitFlag(HIT_FLAG_NO_COLLISION);
 		self->stopAnmSound();

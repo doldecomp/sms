@@ -330,7 +330,7 @@ inline void TBaseNPC::initIndividualAnm_()
 			unkD0->unk18 = sIndividualParentRaccoonDogAnmBck;
 		} else if (strcmp(mName, cManiyaChildViewObjName) == 0) {
 			onActionFlag(NPC_ACTION_UNK800);
-			onLiveFlag(LIVE_FLAG_UNK10000);
+			onLiveFlag(LIVE_FLAG_DONT_TALK);
 			unkD0->unk18 = sIndividualChildRaccoonDogAnmBck;
 		}
 		break;

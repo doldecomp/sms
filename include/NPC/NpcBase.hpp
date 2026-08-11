@@ -204,6 +204,12 @@ public:
 
 	bool isClean() const { return mPollutionAmount == 0.0f; }
 
+	enum {
+		LIVE_FLAG_DONT_TALK   = 0x10000,
+		LIVE_FLAG_SINK_BOTTOM = 0x800000,
+		LIVE_FLAG_DONT_THROW  = 0x20000000,
+	};
+
 private:
 	void setIndividualDifference_(JSUMemoryInputStream&);
 	void initIndividualAnm_();

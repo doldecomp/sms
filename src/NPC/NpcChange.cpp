@@ -191,8 +191,8 @@ void TBaseNPC::changeNerveFromTalk_()
 	mSpine->setNext(nullptr);
 
 	if (mThrowCtrl != nullptr) {
-		if (checkLiveFlag(LIVE_FLAG_UNK20000000)) {
-			offLiveFlag(LIVE_FLAG_UNK20000000);
+		if (checkLiveFlag(LIVE_FLAG_DONT_THROW)) {
+			offLiveFlag(LIVE_FLAG_DONT_THROW);
 		} else {
 			mSpine->setNext(&TNerveNPCThrow::theNerve());
 		}
@@ -456,7 +456,10 @@ void TBaseNPC::changeNerveProc_()
 			bVar5 = true;
 		} else if (mTalkForbidCount == 0 && !isJellyFishMare()
 		           && !gpCamera->isTalkCameraInbetween() && mHolder == nullptr
-		           && !checkLiveFlag(0xc10207)
+		           && !checkLiveFlag(
+		               LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
+		               | LIVE_FLAG_UNK200 | LIVE_FLAG_DONT_TALK
+		               | LIVE_FLAG_SINK_BOTTOM | LIVE_FLAG_UNK400000)
 		           && !checkActionFlag(NPC_ACTION_BURNING) && isClean()) {
 
 			if (isSunflowerReviving() && isNerveCanGoToTalk()

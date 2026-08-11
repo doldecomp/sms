@@ -583,7 +583,7 @@ void TItemSlotDrum::generateItem()
 				item->mVelocity.x = 12.0f * off.x;
 				item->mVelocity.y = TMsRange<f32>(5.0f, 10.0f).rand();
 				item->mVelocity.z = 12.0f * off.z;
-				item->offLiveFlag(0x10);
+				item->offLiveFlag(LIVE_FLAG_UNK10);
 			}
 		}
 	} else {

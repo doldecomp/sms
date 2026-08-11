@@ -371,6 +371,10 @@ public:
 
 	TBossEelSaveParams& getBossEelParams() const { return *mSaveParams; }
 
+	enum {
+		LIVE_FLAG_UNK10000 = 0x10000,
+	};
+
 public:
 	/* 0x150 */ JGeometry::TVec3<f32> mInitialPosition;
 	/* 0x15C */ TBossEelEye* mEyes[4];

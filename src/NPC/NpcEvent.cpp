@@ -73,7 +73,7 @@ static void evCheckLatestNerve4Npc(TSpcTypedInterp<TEventWatcher>* interp,
 static void evIsNpcSinkBottom(TSpcTypedInterp<TEventWatcher>* interp,
                               u32 arg_num)
 {
-	IsNpcFlagOn_(interp, arg_num, LIVE_FLAG_SINK_BOTTOM);
+	IsNpcFlagOn_(interp, arg_num, TBaseNPC::LIVE_FLAG_SINK_BOTTOM);
 }
 
 static void evIsGameModeNormal(TSpcTypedInterp<TEventWatcher>* interp,

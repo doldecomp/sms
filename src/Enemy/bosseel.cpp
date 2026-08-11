@@ -2026,7 +2026,7 @@ void ExecSpinNerve_Sub(TBossEel* eel)
 	eel->mTurnSpeed = spinSpeed;
 	gpCameraShake->keepShake(static_cast<EnumCamShakeMode>(0x18), 1.0f);
 
-	if (eel->checkLiveFlag(LIVE_FLAG_UNK10000)) {
+	if (eel->checkLiveFlag(TBossEel::LIVE_FLAG_UNK10000)) {
 		eel->mRotation.y -= spinSpeed;
 		if (eel->mRotation.y <= 0.0f)
 			SMSGetMSound()->startSoundActorWithInfo(
@@ -2052,9 +2052,9 @@ DEFINE_NERVE(TNerveBossEelFirstSpin, TLiveActor)
 		                                        0, 0, nullptr, 0, 4);
 		eel->setBckAnm(10);
 		if (MsRandF() < 0.5f)
-			eel->onLiveFlag(LIVE_FLAG_UNK10000);
+			eel->onLiveFlag(TBossEel::LIVE_FLAG_UNK10000);
 		else
-			eel->offLiveFlag(LIVE_FLAG_UNK10000);
+			eel->offLiveFlag(TBossEel::LIVE_FLAG_UNK10000);
 	}
 
 	ExecSpinNerve_Sub(eel);
@@ -2079,9 +2079,9 @@ DEFINE_NERVE(TNerveBossEelSecondSpin, TLiveActor)
 		                                        &eel->mPosition, nullptr, 2.0f,
 		                                        0, 0, nullptr, 0, 4);
 		if (MsRandF() < 0.5f)
-			eel->onLiveFlag(LIVE_FLAG_UNK10000);
+			eel->onLiveFlag(TBossEel::LIVE_FLAG_UNK10000);
 		else
-			eel->offLiveFlag(LIVE_FLAG_UNK10000);
+			eel->offLiveFlag(TBossEel::LIVE_FLAG_UNK10000);
 	}
 
 	ExecSpinNerve_Sub(eel);
@@ -2124,7 +2124,7 @@ DEFINE_NERVE(TNerveBossEelAppear, TLiveActor)
 
 		f32 sp = eel->mTurnSpeed *= 0.98f;
 
-		if (eel->checkLiveFlag(LIVE_FLAG_UNK10000))
+		if (eel->checkLiveFlag(TBossEel::LIVE_FLAG_UNK10000))
 			eel->mRotation.y -= sp;
 		else
 			eel->mRotation.y += sp;

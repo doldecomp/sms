@@ -300,7 +300,8 @@ void TMapObjBase::makeObjDead()
 		mHolder = nullptr;
 	}
 
-	onLiveFlag(0xD9);
+	onLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK8 | LIVE_FLAG_UNK10
+	           | LIVE_FLAG_UNK40 | LIVE_FLAG_AIRBORNE);
 	mState = STATE_DEAD;
 	if (mMActor)
 		SMS_HideAllShapePacket(getModel());
