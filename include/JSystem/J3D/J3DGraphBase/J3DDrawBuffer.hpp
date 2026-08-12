@@ -41,23 +41,29 @@ public:
 	void drawTail() const;
 	void setCallBackPacket(J3DCallBackPacket* callback);
 
+	// from TP
+	int getSortMode() { return mSortType; }
+	void setMatSort() { mSortType = SORT_MAT; }
+	void setMatAnmSort() { mSortType = SORT_MAT_ANM; }
+	void setZSort() { mSortType = SORT_Z; }
+	void setNonSort() { mSortType = SORT_NON; }
 	void setZMtx(MtxPtr mtx) { mZMtx = mtx; }
 
 	static int entryNum;
+	static sortFunc sortFuncTable[6];
 
-public:
+private:
+	static drawFunc drawFuncTable[2];
+
 	/* 0x00 */ J3DPacket** mBuffer;
 	/* 0x04 */ u32 mSize;
 	/* 0x08 */ EDrawType mDrawType;
 	/* 0x0C */ ESortType mSortType;
-	/* 0x10 */ float mZNear;
-	/* 0x14 */ float mZFar;
-	/* 0x18 */ float mZRatio;
+	/* 0x10 */ f32 mZNear;
+	/* 0x14 */ f32 mZFar;
+	/* 0x18 */ f32 mZRatio;
 	/* 0x1C */ MtxPtr mZMtx;
 	/* 0x20 */ J3DPacket* mCallBackPacket;
-
-	static sortFunc sortFuncTable[6];
-	static drawFunc drawFuncTable[2];
 };
 
 #endif

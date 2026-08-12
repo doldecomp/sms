@@ -36,6 +36,14 @@ J3DDrawBuffer::J3DDrawBuffer(u32 size)
 	frameInit();
 }
 
+J3DDrawBuffer::~J3DDrawBuffer()
+{
+	if (mBuffer) {
+		delete[] mBuffer;
+		mBuffer = nullptr;
+	}
+}
+
 void J3DDrawBuffer::frameInit()
 {
 	for (int i = 0; i < mSize; ++i)
@@ -58,7 +66,7 @@ bool J3DDrawBuffer::entryMatSort(J3DMatPacket* packet)
 		hash = (u32)texture->getResTIMG(texNo);
 	}
 
-	if (packet->unk3C & 0x80000000) {
+	if (packet->isChanged()) {
 		packet->setNextPacket(mBuffer[0]);
 		mBuffer[0] = packet;
 		return true;
@@ -211,4 +219,9 @@ void J3DDrawBuffer::drawTail() const
 			packet->draw();
 		}
 	}
+}
+
+void J3DDrawBuffer::setCallBackPacket(J3DCallBackPacket* packet)
+{
+	// UNUSED
 }

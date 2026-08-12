@@ -28,16 +28,16 @@ J3DSys::J3DSys()
 	MTXIdentity(mViewMtx);
 	unk4C  = 1;
 	unk50  = 0;
-	mModel = 0;
+	mModel = nullptr;
 	unk40  = 0;
 	for (int i = 0; i < ARRAY_COUNT(mDrawBuffer); ++i)
 		mDrawBuffer[i] = nullptr;
-	mTexture        = 0;
-	mCurrentDrawMtx = 0;
-	mCurrentNormMtx = 0;
-	unk10C          = 0;
-	unk110          = 0;
-	unk114          = 0;
+	mTexture        = nullptr;
+	mCurrentDrawMtx = nullptr;
+	mCurrentNormMtx = nullptr;
+	unk10C          = nullptr;
+	unk110          = nullptr;
+	unk114          = nullptr;
 	unk118          = 0;
 	unk100          = 0;
 	unk11C          = 0;

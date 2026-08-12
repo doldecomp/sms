@@ -539,29 +539,30 @@ void J3DModel::entryModelData(J3DModelData* param_1, u32 param_2, u32 param_3)
 		mShapePackets = new J3DShapePacket[param_1->getShapeNum()];
 
 		for (int i = 0; i < param_1->getShapeNum(); ++i)
-			mShapePackets[i].unk14 = param_1->getShapeNodePointer(i);
+			mShapePackets[i].setShape(param_1->getShapeNodePointer(i));
 	}
 
 	if (param_1->getMaterialNum()) {
 		mMatPackets = new J3DMatPacket[param_1->getMaterialNum()];
 
 		for (int i = 0; i < param_1->getMaterialNum(); ++i) {
-			mMatPackets[i].unk38 = param_1->getMaterialNodePointer(i);
+			mMatPackets[i].setMaterial(param_1->getMaterialNodePointer(i));
 			mMatPackets[i].addShapePacket(
 			    &mShapePackets
 			        [param_1->getMaterialNodePointer(i)->getShape()->unk4]);
-			mMatPackets[i].mTexture = param_1->getTexture();
+			mMatPackets[i].setTexture(param_1->getTexture());
 
 			if (param_2 & 0x20000) {
-				J3DMaterial* mat     = param_1->getMaterialNodePointer(i);
-				u32 dlSize           = mat->countDLSize();
-				mMatPackets[i].unk30 = mat->newSharedDisplayList(dlSize);
+				J3DMaterial* mat = param_1->getMaterialNodePointer(i);
+				u32 dlSize       = mat->countDLSize();
+				mMatPackets[i].setDisplayListObj(
+				    mat->newSharedDisplayList(dlSize));
 			} else {
 				J3DMaterial* mat     = param_1->getMaterialNodePointer(i);
 				u32 dlSize           = mat->countDLSize();
 				J3DMatPacket* packet = &mMatPackets[i];
-				packet->unk30        = new J3DDisplayListObj;
-				packet->unk30->newDisplayList(dlSize);
+				packet->setDisplayListObj(new J3DDisplayListObj);
+				packet->getDisplayListObj()->newDisplayList(dlSize);
 			}
 		}
 	}
@@ -979,9 +980,9 @@ void J3DModel::prepareShapePackets()
 		else
 			shape->offFlag(0x8);
 
-		pkt->unk24 = mVertexBuffer->unk2C;
-		pkt->unk28 = mVertexBuffer->unk30;
-		pkt->unk2C = mVertexBuffer->unk34;
+		pkt->setVtxPos(mVertexBuffer->getCurrentVtxPos());
+		pkt->setVtxNrm(mVertexBuffer->getCurrentVtxNrm());
+		pkt->setVtxCol(mVertexBuffer->getCurrentVtxCol());
 		pkt->setDrawMtx(mDrawMtxBuf[1]);
 		pkt->setNrmMtx(mNrmMtxBuf[1]);
 		pkt->setCurrentViewNoPtr(&mCurrentViewNo);

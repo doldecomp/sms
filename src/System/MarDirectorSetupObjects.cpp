@@ -369,16 +369,13 @@ bool TMarDirector::setupObjects()
 	        JDrama::TViewObjPtrListT<JDrama::TViewObj> >("Draw Buffer Group");
 	JDrama::TNameRefGen::search<JDrama::TDrawBufObj>("DrawBuf Sky Opa")
 	    ->getDrawBuffer()
-	    ->mSortType
-	    = J3DDrawBuffer::SORT_NON;
+	    ->setNonSort();
 	JDrama::TNameRefGen::search<JDrama::TDrawBufObj>("DrawBuf Sky Xlu")
 	    ->getDrawBuffer()
-	    ->mSortType
-	    = J3DDrawBuffer::SORT_NON;
+	    ->setNonSort();
 	JDrama::TNameRefGen::search<JDrama::TDrawBufObj>("DrawBuf Graffito")
 	    ->getDrawBuffer()
-	    ->mSortType
-	    = J3DDrawBuffer::SORT_MAT_ANM;
+	    ->setMatAnmSort();
 	gpLightManager->addChildGroupObj(drawBufferGroup);
 	unk40->push_back(drawBufferGroup, CUE_DRAW);
 	initECTGft(unk38, unk3C, perfEventGroup, normalScene);
