@@ -165,7 +165,7 @@ void SDLModel::entryModelDataSDL(SDLModelData* param_1, u32 param_2,
 			J3DMatPacket* otherMatPackets = param_1->unk4->mMatPackets;
 			for (int i = 0; i < md->getMaterialNum(); ++i) {
 				J3DMatPacket* matPacket = &matPackets[i];
-				matPacket->unk38        = md->getMaterialNodePointer(i);
+				matPacket->setMaterial(md->getMaterialNodePointer(i));
 				matPacket->addShapePacket(
 				    &mShapePackets[md->getMaterialNodePointer(i)
 				                       ->getShape()
@@ -180,7 +180,7 @@ void SDLModel::entryModelDataSDL(SDLModelData* param_1, u32 param_2,
 			J3DMatPacket* matPackets = new SDLMatPacket[md->getMaterialNum()];
 			for (int i = 0; i < md->getMaterialNum(); ++i) {
 				J3DMatPacket* matPacket = &matPackets[i];
-				matPacket->unk38        = md->getMaterialNodePointer(i);
+				matPacket->setMaterial(md->getMaterialNodePointer(i));
 				matPacket->addShapePacket(
 				    &mShapePackets[md->getMaterialNodePointer(i)
 				                       ->getShape()
@@ -189,13 +189,13 @@ void SDLModel::entryModelDataSDL(SDLModelData* param_1, u32 param_2,
 				if (param_2 & 1) {
 					u32 dlSize = md->getMaterialNodePointer(i)->countDLSize();
 					matPacket->setDisplayListObj(new J3DDisplayListObj);
-					matPacket->getDisplayListObj()->unkC
+					matPacket->getDisplayListObj()->mCapacity
 					    = ALIGN_NEXT(dlSize, 0x20);
-					matPacket->getDisplayListObj()->unk0
-					    = new (0x20) u8[matPacket->getDisplayListObj()->unkC];
-					matPacket->getDisplayListObj()->unk4
-					    = matPacket->getDisplayListObj()->unk0;
-					matPacket->getDisplayListObj()->unk8 = 0;
+					matPacket->getDisplayListObj()->mpData[0] = new (0x20)
+					    u8[matPacket->getDisplayListObj()->mCapacity];
+					matPacket->getDisplayListObj()->mpData[1]
+					    = matPacket->getDisplayListObj()->mpData[0];
+					matPacket->getDisplayListObj()->mSize = 0;
 				} else {
 					u32 dlSize = md->getMaterialNodePointer(i)->countDLSize();
 					matPacket->setDisplayListObj(new J3DDisplayListObj);

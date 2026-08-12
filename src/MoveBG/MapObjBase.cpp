@@ -496,10 +496,10 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if ((cue & CUE_CALC_ANIM) && mMActor) {
 			if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK200)) {
-				if (getModel()->mShapePackets->unk30 != 0)
+				if (getModel()->mShapePackets->isVisible())
 					SMS_HideAllShapePacket(getModel());
 			} else {
-				if (getModel()->mShapePackets->unk30 == 0)
+				if (!getModel()->mShapePackets->isVisible())
 					SMS_ShowAllShapePacket(getModel());
 			}
 		}
@@ -551,10 +551,10 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 		calc();
 		if (mMActor) {
 			if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK200)) {
-				if (getModel()->mShapePackets->unk30 != 0)
+				if (getModel()->mShapePackets->isVisible())
 					SMS_HideAllShapePacket(getModel());
 			} else {
-				if (getModel()->mShapePackets->unk30 == 0)
+				if (!getModel()->mShapePackets->isVisible())
 					SMS_ShowAllShapePacket(getModel());
 			}
 		}

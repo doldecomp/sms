@@ -96,6 +96,12 @@ public:
 	void* getVtxPos() const { return unk10C; }
 	void setVtxPos(void* pVtxPos) { unk10C = pVtxPos; }
 
+	void* getVtxNrm() { return unk110; }
+	void setVtxNrm(void* pVtxNrm) { unk110 = pVtxNrm; }
+
+	GXColor* getVtxCol() { return unk114; }
+	void setVtxCol(GXColor* pVtxCol) { unk114 = pVtxCol; }
+
 	void setUnk4C(u32 unk) { unk4C = unk; }
 
 public:
@@ -118,7 +124,7 @@ public:
 	/* 0x108 */ Mtx33* mCurrentNormMtx;
 	/* 0x10C */ void* unk10C;
 	/* 0x110 */ void* unk110;
-	/* 0x114 */ void* unk114;
+	/* 0x114 */ GXColor* unk114;
 	/* 0x118 */ u32 unk118;
 	/* 0x11C */ u32 unk11C;
 	/* 0x120 */ Vec* mNBTScale;

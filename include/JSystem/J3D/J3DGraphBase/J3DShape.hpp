@@ -132,6 +132,10 @@ public:
 	J3DShapeDraw* getShapeDraw(u16 idx) const { return mDraws[idx]; }
 	u32 getBumpMtxOffset() const { return unk5C; }
 
+	void setDrawMtx(Mtx** pDrawMtx) { mDrawMatrices = pDrawMtx; }
+	void setNrmMtx(Mtx33** pNrmMtx) { mNormMatrices = pNrmMtx; }
+	void setCurrentViewNoPtr(u32* pViewNoPtr) { mCurrentViewNo = pViewNoPtr; }
+
 	void setScaleFlagArray(u8* pScaleFlagArray) { unk4C = pScaleFlagArray; }
 
 	void setDrawMtxDataPointer(J3DDrawMtxData* pMtxData) { unk48 = pMtxData; }

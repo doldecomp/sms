@@ -351,9 +351,9 @@ void TTrembleModelEffect::movement()
 		}
 		DCFlushRange(unk18[unk9],
 		             unk0->getModelData()->getVertexData().getVtxNum() * 6);
-		unk0->getVertexBuffer()->unk4[0] = unk18[unk9];
+		unk0->getVertexBuffer()->mVtxPosArray[0] = unk18[unk9];
 		for (int j = 0; j < unk0->getModelData()->getShapeNum(); ++j)
-			unk0->getShapePacket(0)->unk24 = unk18[unk9];
+			unk0->getShapePacket(0)->setVtxPos(unk18[unk9]);
 		break;
 	}
 	case 2: {
@@ -370,9 +370,9 @@ void TTrembleModelEffect::movement()
 		}
 		DCFlushRange(unk2C[unk9],
 		             unk0->getModelData()->getVertexData().getVtxNum() * 12);
-		unk0->getVertexBuffer()->unk4[0] = unk2C[unk9];
+		unk0->getVertexBuffer()->mVtxPosArray[0] = unk2C[unk9];
 		for (int j = 0; j < unk0->getModelData()->getShapeNum(); ++j)
-			unk0->getShapePacket(0)->unk24 = unk2C[unk9];
+			unk0->getShapePacket(0)->setVtxPos(unk2C[unk9]);
 		break;
 	}
 	}
@@ -410,9 +410,9 @@ void TTrembleModelEffect::reset()
 	unk8 &= ~1;
 	GXInvalidateVtxCache();
 	unk0->getModelData()->getVertexData().mVtxPosArray = unk4;
-	unk0->getVertexBuffer()->unk4[0]                   = unk4;
-	unk0->getVertexBuffer()->unk4[1]                   = unk4;
-	unk0->getVertexBuffer()->unk2C                     = unk4;
+	unk0->getVertexBuffer()->mVtxPosArray[0]           = unk4;
+	unk0->getVertexBuffer()->mVtxPosArray[1]           = unk4;
+	unk0->getVertexBuffer()->setCurrentVtxPos(unk4);
 }
 
 void SMS_AddDamageFogEffect(J3DModelData* param_1,

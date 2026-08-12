@@ -413,9 +413,8 @@ void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 				J3DMaterial* mat = modelData->getMaterialNodePointer(i);
 				J3DShapePacket* shape
 				    = model->getShapePacket(mat->getShape()->getIndex());
-				if (shape->unkC == nullptr) {
+				if (shape->getUserArea() == 0)
 					SMS_InitPacket_OneTevKColor(model, i, GX_KCOLOR0, &unk174);
-				}
 			}
 		}
 	}
