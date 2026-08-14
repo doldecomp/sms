@@ -63,7 +63,7 @@ public:
 	void randomReset();
 	void moveStart();
 	void forceStopSlot(int);
-	BOOL isRollDrum();
+	bool isRollDrum();
 	int getSlotResult();
 	int getForcastResult(int);
 	int getResultFromAng(f32);
@@ -125,8 +125,8 @@ public:
 	void onAllCollision();
 	void flashItem(int);
 	void openWaterPlace();
-	BOOL slotFall();
-	BOOL rouletteFall();
+	bool slotFall();
+	bool rouletteFall();
 	void tongueHitWater();
 	void damageRecover();
 	void setSpicy(TLiveActor*);

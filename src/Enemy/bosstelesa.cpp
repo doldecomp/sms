@@ -322,11 +322,11 @@ BOOL TNerveBubbleLive::execute(TSpineBase<TLiveActor>* spine) const
 	if (spine->getTime() == 0) {
 		bubble->offHitFlag(HIT_FLAG_NO_COLLISION);
 
-		if (bubble->unk1D0) {
+		if (!bubble->unk1D0) {
+			bubble->setBckAnm(8);
+		} else {
 			bubble->setBckAnm(10);
 			bubble->setGoalPathMario();
-		} else {
-			bubble->setBckAnm(8);
 		}
 
 		J3DFrameCtrl* frameCtrl = bubble->mMActor->getFrameCtrl(0);
@@ -351,8 +351,8 @@ BOOL TNerveBubbleLive::execute(TSpineBase<TLiveActor>* spine) const
 		}
 
 		if (spine->getTime() == 80) {
-			bubble->unk1D1 = 0;
-			bubble->mVelocity.set(0.0f, 0.0f, 0.0f);
+			bubble->unk1D1    = 0;
+			bubble->mVelocity = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 		}
 	}
 
@@ -772,7 +772,7 @@ void TTelesaSlot::forceStopSlot(int idx)
 #pragma dont_inline off
 
 #pragma dont_inline on
-BOOL TTelesaSlot::isRollDrum()
+bool TTelesaSlot::isRollDrum()
 {
 	if (unk198)
 		return TRUE;
@@ -1546,18 +1546,28 @@ void TBossTelesa::setSpicy(TLiveActor* actor)
 	unk160 = 1;
 	unk168 = 1.0f;
 
-	J3DAnmTransform* oldAnm = nullptr;
-	if (mMActor->unkC)
-		oldAnm = mMActor->unkC->unk24;
-	if (mMActor->unkC)
-		mMActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
+	MActor* oldAnmActor = mMActor;
+	J3DAnmTransform* oldAnm;
+	if (!oldAnmActor->unkC)
+		oldAnm = nullptr;
+	else
+		oldAnm = oldAnmActor->unkC->unk24;
+	if (oldAnmActor->unkC)
+		oldAnmActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
 
 	mMActor->setBckFromIndex(1);
-	if (mMActor->unkC)
-		mMActor->unkC->setMotionBlendRatio(unk168);
+	MActor* blendActor = mMActor;
+	f32 blendRatio     = unk168;
+	if (blendActor->unkC)
+		blendActor->unkC->setMotionBlendRatio(blendRatio);
 
 	const char** basTable = getBasNameTable();
-	setAnmSound(basTable ? basTable[1] : nullptr);
+	const char* basName;
+	if (!basTable)
+		basName = nullptr;
+	else
+		basName = basTable[1];
+	setAnmSound(basName);
 
 	if (unk35B) {
 		unk35B = 0;
@@ -1620,7 +1630,7 @@ void TBossTelesa::damageRecover()
 
 void TBossTelesa::tongueHitWater() { }
 
-BOOL TBossTelesa::rouletteFall()
+bool TBossTelesa::rouletteFall()
 {
 	TRoulette* roulette0 = (TRoulette*)unk178;
 	TRoulette* roulette1 = (TRoulette*)unk17C;
@@ -1660,7 +1670,7 @@ BOOL TBossTelesa::rouletteFall()
 	return FALSE;
 }
 
-BOOL TBossTelesa::slotFall()
+bool TBossTelesa::slotFall()
 {
 	if (unk184->mPosition.y > unk178->mPosition.y - 800.0f) {
 		unk184->mPosition.y -= 5.0f;
@@ -1830,7 +1840,8 @@ void TBossTelesa::genAttacker()
 		bubble->mPosition.y += 10.0f;
 		bubble->onLiveFlag(LIVE_FLAG_AIRBORNE);
 
-		f32 itemRoll = rand() * 0.000030517578f;
+		TMsRange<f32> itemRange(0.0f, 1.0f);
+		f32 itemRoll = itemRange.rand();
 		if (itemRoll < mItemGenRate) {
 			bubble->unk198    = nullptr;
 			TMapObjBase* item = gpItemManager->makeObjAppear(
@@ -1845,7 +1856,8 @@ void TBossTelesa::genAttacker()
 				bubble->unk198      = item;
 			}
 		} else {
-			f32 enemyRoll = rand() * 0.000030517578f;
+			TMsRange<f32> enemyRange(0.0f, 1.0f);
+			f32 enemyRoll = enemyRange.rand();
 			if (enemyRoll < mEnemyGenRate)
 				bubble->appendEnemy();
 		}
@@ -2227,36 +2239,56 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 				boss->unk160 = 2;
 				boss->unk168 = 1.0f;
 
-				J3DAnmTransform* oldAnm = nullptr;
-				if (boss->mMActor->unkC)
-					oldAnm = boss->mMActor->unkC->unk24;
-				if (boss->mMActor->unkC)
-					boss->mMActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
+				MActor* oldAnmActor = boss->mMActor;
+				J3DAnmTransform* oldAnm;
+				if (!oldAnmActor->unkC)
+					oldAnm = nullptr;
+				else
+					oldAnm = oldAnmActor->unkC->unk24;
+				if (oldAnmActor->unkC)
+					oldAnmActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
 
 				boss->mMActor->setBckFromIndex(2);
-				if (boss->mMActor->unkC)
-					boss->mMActor->unkC->setMotionBlendRatio(boss->unk168);
+				MActor* blendActor = boss->mMActor;
+				f32 blendRatio     = boss->unk168;
+				if (blendActor->unkC)
+					blendActor->unkC->setMotionBlendRatio(blendRatio);
 
 				const char** basTable = boss->getBasNameTable();
-				boss->setAnmSound(basTable ? basTable[2] : nullptr);
+				const char* basName;
+				if (!basTable)
+					basName = nullptr;
+				else
+					basName = basTable[2];
+				boss->setAnmSound(basName);
 				gpCameraShake->startShake((EnumCamShakeMode)0x1F, 1.0f);
 			} else {
 				boss->unk164 = boss->mMActor->getCurAnmIdx(0);
 				boss->unk160 = 5;
 				boss->unk168 = 1.0f;
 
-				J3DAnmTransform* oldAnm = nullptr;
-				if (boss->mMActor->unkC)
-					oldAnm = boss->mMActor->unkC->unk24;
-				if (boss->mMActor->unkC)
-					boss->mMActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
+				MActor* oldAnmActor = boss->mMActor;
+				J3DAnmTransform* oldAnm;
+				if (!oldAnmActor->unkC)
+					oldAnm = nullptr;
+				else
+					oldAnm = oldAnmActor->unkC->unk24;
+				if (oldAnmActor->unkC)
+					oldAnmActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
 
 				boss->mMActor->setBckFromIndex(5);
-				if (boss->mMActor->unkC)
-					boss->mMActor->unkC->setMotionBlendRatio(boss->unk168);
+				MActor* blendActor = boss->mMActor;
+				f32 blendRatio     = boss->unk168;
+				if (blendActor->unkC)
+					blendActor->unkC->setMotionBlendRatio(blendRatio);
 
 				const char** basTable = boss->getBasNameTable();
-				boss->setAnmSound(basTable ? basTable[5] : nullptr);
+				const char* basName;
+				if (!basTable)
+					basName = nullptr;
+				else
+					basName = basTable[5];
+				boss->setAnmSound(basName);
 				boss->mMActor->setBrkFromIndex(0);
 				gpCameraShake->startShake((EnumCamShakeMode)0x20, 1.0f);
 			}
@@ -2267,18 +2299,28 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 			boss->unk160 = 3;
 			boss->unk168 = 1.0f;
 
-			J3DAnmTransform* oldAnm = nullptr;
-			if (boss->mMActor->unkC)
-				oldAnm = boss->mMActor->unkC->unk24;
-			if (boss->mMActor->unkC)
-				boss->mMActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
+			MActor* oldAnmActor = boss->mMActor;
+			J3DAnmTransform* oldAnm;
+			if (!oldAnmActor->unkC)
+				oldAnm = nullptr;
+			else
+				oldAnm = oldAnmActor->unkC->unk24;
+			if (oldAnmActor->unkC)
+				oldAnmActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
 
 			boss->mMActor->setBckFromIndex(3);
-			if (boss->mMActor->unkC)
-				boss->mMActor->unkC->setMotionBlendRatio(boss->unk168);
+			MActor* blendActor = boss->mMActor;
+			f32 blendRatio     = boss->unk168;
+			if (blendActor->unkC)
+				blendActor->unkC->setMotionBlendRatio(blendRatio);
 
 			const char** basTable = boss->getBasNameTable();
-			boss->setAnmSound(basTable ? basTable[3] : nullptr);
+			const char* basName;
+			if (!basTable)
+				basName = nullptr;
+			else
+				basName = basTable[3];
+			boss->setAnmSound(basName);
 			boss->mMActor->setBrkFromIndex(1);
 			boss->unk184->mScaling.set(0.0f, 0.0f, 0.0f);
 
@@ -2314,9 +2356,9 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 				boss->unk184->unk1E4[1] = 0.0f;
 				boss->unk180->unk144    = 0.0f;
 				boss->unk184->unk1E4[2] = 0.0f;
-				boss->unk178->setRollSp(boss->unk184->unk1E4[0]);
-				boss->unk17C->setRollSp(boss->unk184->unk1E4[1]);
-				boss->unk180->setRollSp(boss->unk184->unk1E4[2]);
+				for (int i = 0; i < 3; ++i)
+					((TRoulette**)&boss->unk178)[i]->setRollSp(
+					    boss->unk184->unk1E4[i]);
 			}
 
 			if (boss->unk388 > 240) {
@@ -2348,35 +2390,55 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 			boss->unk160 = 7;
 			boss->unk168 = 1.0f;
 
-			J3DAnmTransform* oldAnm = nullptr;
-			if (boss->mMActor->unkC)
-				oldAnm = boss->mMActor->unkC->unk24;
-			if (boss->mMActor->unkC)
-				boss->mMActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
+			MActor* oldAnmActor = boss->mMActor;
+			J3DAnmTransform* oldAnm;
+			if (!oldAnmActor->unkC)
+				oldAnm = nullptr;
+			else
+				oldAnm = oldAnmActor->unkC->unk24;
+			if (oldAnmActor->unkC)
+				oldAnmActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
 
 			boss->mMActor->setBckFromIndex(7);
-			if (boss->mMActor->unkC)
-				boss->mMActor->unkC->setMotionBlendRatio(boss->unk168);
+			MActor* blendActor = boss->mMActor;
+			f32 blendRatio     = boss->unk168;
+			if (blendActor->unkC)
+				blendActor->unkC->setMotionBlendRatio(blendRatio);
 
 			const char** basTable = boss->getBasNameTable();
-			boss->setAnmSound(basTable ? basTable[7] : nullptr);
+			const char* basName;
+			if (!basTable)
+				basName = nullptr;
+			else
+				basName = basTable[7];
+			boss->setAnmSound(basName);
 		} else if (boss->mMActor->checkCurBckFromIndex(7)) {
 			boss->unk164 = boss->mMActor->getCurAnmIdx(0);
 			boss->unk160 = 6;
 			boss->unk168 = 1.0f;
 
-			J3DAnmTransform* oldAnm = nullptr;
-			if (boss->mMActor->unkC)
-				oldAnm = boss->mMActor->unkC->unk24;
-			if (boss->mMActor->unkC)
-				boss->mMActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
+			MActor* oldAnmActor = boss->mMActor;
+			J3DAnmTransform* oldAnm;
+			if (!oldAnmActor->unkC)
+				oldAnm = nullptr;
+			else
+				oldAnm = oldAnmActor->unkC->unk24;
+			if (oldAnmActor->unkC)
+				oldAnmActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
 
 			boss->mMActor->setBckFromIndex(6);
-			if (boss->mMActor->unkC)
-				boss->mMActor->unkC->setMotionBlendRatio(boss->unk168);
+			MActor* blendActor = boss->mMActor;
+			f32 blendRatio     = boss->unk168;
+			if (blendActor->unkC)
+				blendActor->unkC->setMotionBlendRatio(blendRatio);
 
 			const char** basTable = boss->getBasNameTable();
-			boss->setAnmSound(basTable ? basTable[6] : nullptr);
+			const char* basName;
+			if (!basTable)
+				basName = nullptr;
+			else
+				basName = basTable[6];
+			boss->setAnmSound(basName);
 		} else {
 			SMS_ResetDamageFogEffect(boss->mMActor->getModel()->getModelData());
 
@@ -2389,18 +2451,28 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 				boss->unk160 = 15;
 				boss->unk168 = 1.0f;
 
-				J3DAnmTransform* oldAnm = nullptr;
-				if (boss->mMActor->unkC)
-					oldAnm = boss->mMActor->unkC->unk24;
-				if (boss->mMActor->unkC)
-					boss->mMActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
+				MActor* oldAnmActor = boss->mMActor;
+				J3DAnmTransform* oldAnm;
+				if (!oldAnmActor->unkC)
+					oldAnm = nullptr;
+				else
+					oldAnm = oldAnmActor->unkC->unk24;
+				if (oldAnmActor->unkC)
+					oldAnmActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
 
 				boss->mMActor->setBckFromIndex(15);
-				if (boss->mMActor->unkC)
-					boss->mMActor->unkC->setMotionBlendRatio(boss->unk168);
+				MActor* blendActor = boss->mMActor;
+				f32 blendRatio     = boss->unk168;
+				if (blendActor->unkC)
+					blendActor->unkC->setMotionBlendRatio(blendRatio);
 
 				const char** basTable = boss->getBasNameTable();
-				boss->setAnmSound(basTable ? basTable[15] : nullptr);
+				const char* basName;
+				if (!basTable)
+					basName = nullptr;
+				else
+					basName = basTable[15];
+				boss->setAnmSound(basName);
 				boss->mMActor->setBtpFromIndex(2);
 				spine->pushAfterCurrent(
 				    &TNerveBossTelesaPrepareSlot::theNerve());
@@ -2472,8 +2544,10 @@ DEFINE_NERVE(TNerveBossTelesaHide, TLiveActor)
 			oldAnmActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
 
 		boss->mMActor->setBckFromIndex(4);
-		if (boss->mMActor->unkC)
-			boss->mMActor->unkC->setMotionBlendRatio(boss->unk168);
+		MActor* blendActor = boss->mMActor;
+		f32 blendRatio     = boss->unk168;
+		if (blendActor->unkC)
+			blendActor->unkC->setMotionBlendRatio(blendRatio);
 
 		const char** basTable = boss->getBasNameTable();
 		const char* basName;
@@ -2539,18 +2613,28 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 			boss->unk160 = 0;
 			boss->unk168 = 1.0f;
 
-			J3DAnmTransform* oldAnm = nullptr;
-			if (boss->mMActor->unkC)
-				oldAnm = boss->mMActor->unkC->unk24;
-			if (boss->mMActor->unkC)
-				boss->mMActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
+			MActor* oldAnmActor = boss->mMActor;
+			J3DAnmTransform* oldAnm;
+			if (!oldAnmActor->unkC)
+				oldAnm = nullptr;
+			else
+				oldAnm = oldAnmActor->unkC->unk24;
+			if (oldAnmActor->unkC)
+				oldAnmActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
 
 			boss->mMActor->setBckFromIndex(0);
-			if (boss->mMActor->unkC)
-				boss->mMActor->unkC->setMotionBlendRatio(boss->unk168);
+			MActor* blendActor = boss->mMActor;
+			f32 blendRatio     = boss->unk168;
+			if (blendActor->unkC)
+				blendActor->unkC->setMotionBlendRatio(blendRatio);
 
 			const char** basTable = boss->getBasNameTable();
-			boss->setAnmSound(basTable ? basTable[0] : nullptr);
+			const char* basName;
+			if (!basTable)
+				basName = nullptr;
+			else
+				basName = basTable[0];
+			boss->setAnmSound(basName);
 
 			if (!boss->unk384) {
 				boss->unk384 = 1;
@@ -2569,18 +2653,28 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 		boss->unk160 = 15;
 		boss->unk168 = 1.0f;
 
-		J3DAnmTransform* oldAnm = nullptr;
-		if (boss->mMActor->unkC)
-			oldAnm = boss->mMActor->unkC->unk24;
-		if (boss->mMActor->unkC)
-			boss->mMActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
+		MActor* oldAnmActor = boss->mMActor;
+		J3DAnmTransform* oldAnm;
+		if (!oldAnmActor->unkC)
+			oldAnm = nullptr;
+		else
+			oldAnm = oldAnmActor->unkC->unk24;
+		if (oldAnmActor->unkC)
+			oldAnmActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
 
 		boss->mMActor->setBckFromIndex(15);
-		if (boss->mMActor->unkC)
-			boss->mMActor->unkC->setMotionBlendRatio(boss->unk168);
+		MActor* blendActor = boss->mMActor;
+		f32 blendRatio     = boss->unk168;
+		if (blendActor->unkC)
+			blendActor->unkC->setMotionBlendRatio(blendRatio);
 
 		const char** basTable = boss->getBasNameTable();
-		boss->setAnmSound(basTable ? basTable[15] : nullptr);
+		const char* basName;
+		if (!basTable)
+			basName = nullptr;
+		else
+			basName = basTable[15];
+		boss->setAnmSound(basName);
 		boss->mMActor->setBtpFromIndex(2);
 	}
 
@@ -2604,18 +2698,28 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 			boss->unk160 = 14;
 			boss->unk168 = 1.0f;
 
-			J3DAnmTransform* oldAnm = nullptr;
-			if (boss->mMActor->unkC)
-				oldAnm = boss->mMActor->unkC->unk24;
-			if (boss->mMActor->unkC)
-				boss->mMActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
+			MActor* oldAnmActor = boss->mMActor;
+			J3DAnmTransform* oldAnm;
+			if (!oldAnmActor->unkC)
+				oldAnm = nullptr;
+			else
+				oldAnm = oldAnmActor->unkC->unk24;
+			if (oldAnmActor->unkC)
+				oldAnmActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
 
 			boss->mMActor->setBckFromIndex(14);
-			if (boss->mMActor->unkC)
-				boss->mMActor->unkC->setMotionBlendRatio(boss->unk168);
+			MActor* blendActor = boss->mMActor;
+			f32 blendRatio     = boss->unk168;
+			if (blendActor->unkC)
+				blendActor->unkC->setMotionBlendRatio(blendRatio);
 
 			const char** basTable = boss->getBasNameTable();
-			boss->setAnmSound(basTable ? basTable[14] : nullptr);
+			const char* basName;
+			if (!basTable)
+				basName = nullptr;
+			else
+				basName = basTable[14];
+			boss->setAnmSound(basName);
 		}
 	}
 
@@ -2631,18 +2735,28 @@ DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 		boss->unk160 = 11;
 		boss->unk168 = 1.0f;
 
-		J3DAnmTransform* oldAnm = nullptr;
-		if (boss->mMActor->unkC)
-			oldAnm = boss->mMActor->unkC->unk24;
-		if (boss->mMActor->unkC)
-			boss->mMActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
+		MActor* oldAnmActor = boss->mMActor;
+		J3DAnmTransform* oldAnm;
+		if (!oldAnmActor->unkC)
+			oldAnm = nullptr;
+		else
+			oldAnm = oldAnmActor->unkC->unk24;
+		if (oldAnmActor->unkC)
+			oldAnmActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
 
 		boss->mMActor->setBckFromIndex(11);
-		if (boss->mMActor->unkC)
-			boss->mMActor->unkC->setMotionBlendRatio(boss->unk168);
+		MActor* blendActor = boss->mMActor;
+		f32 blendRatio     = boss->unk168;
+		if (blendActor->unkC)
+			blendActor->unkC->setMotionBlendRatio(blendRatio);
 
 		const char** basTable = boss->getBasNameTable();
-		boss->setAnmSound(basTable ? basTable[11] : nullptr);
+		const char* basName;
+		if (!basTable)
+			basName = nullptr;
+		else
+			basName = basTable[11];
+		boss->setAnmSound(basName);
 	}
 
 	if (boss->mMActor->checkCurBckFromIndex(11)) {
@@ -2657,18 +2771,28 @@ DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 			boss->unk160 = 15;
 			boss->unk168 = 1.0f;
 
-			J3DAnmTransform* oldAnm = nullptr;
-			if (boss->mMActor->unkC)
-				oldAnm = boss->mMActor->unkC->unk24;
-			if (boss->mMActor->unkC)
-				boss->mMActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
+			MActor* oldAnmActor = boss->mMActor;
+			J3DAnmTransform* oldAnm;
+			if (!oldAnmActor->unkC)
+				oldAnm = nullptr;
+			else
+				oldAnm = oldAnmActor->unkC->unk24;
+			if (oldAnmActor->unkC)
+				oldAnmActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
 
 			boss->mMActor->setBckFromIndex(15);
-			if (boss->mMActor->unkC)
-				boss->mMActor->unkC->setMotionBlendRatio(boss->unk168);
+			MActor* blendActor = boss->mMActor;
+			f32 blendRatio     = boss->unk168;
+			if (blendActor->unkC)
+				blendActor->unkC->setMotionBlendRatio(blendRatio);
 
 			const char** basTable = boss->getBasNameTable();
-			boss->setAnmSound(basTable ? basTable[15] : nullptr);
+			const char* basName;
+			if (!basTable)
+				basName = nullptr;
+			else
+				basName = basTable[15];
+			boss->setAnmSound(basName);
 			boss->mMActor->setBtpFromIndex(2);
 			boss->unk184->forceStopSlot(1);
 		}
@@ -2741,18 +2865,28 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 		boss->unk160 = 15;
 		boss->unk168 = 1.0f;
 
-		J3DAnmTransform* oldAnm = nullptr;
-		if (boss->mMActor->unkC)
-			oldAnm = boss->mMActor->unkC->unk24;
-		if (boss->mMActor->unkC)
-			boss->mMActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
+		MActor* oldAnmActor = boss->mMActor;
+		J3DAnmTransform* oldAnm;
+		if (!oldAnmActor->unkC)
+			oldAnm = nullptr;
+		else
+			oldAnm = oldAnmActor->unkC->unk24;
+		if (oldAnmActor->unkC)
+			oldAnmActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
 
 		boss->mMActor->setBckFromIndex(15);
-		if (boss->mMActor->unkC)
-			boss->mMActor->unkC->setMotionBlendRatio(boss->unk168);
+		MActor* blendActor = boss->mMActor;
+		f32 blendRatio     = boss->unk168;
+		if (blendActor->unkC)
+			blendActor->unkC->setMotionBlendRatio(blendRatio);
 
 		const char** basTable = boss->getBasNameTable();
-		boss->setAnmSound(basTable ? basTable[15] : nullptr);
+		const char* basName;
+		if (!basTable)
+			basName = nullptr;
+		else
+			basName = basTable[15];
+		boss->setAnmSound(basName);
 		boss->mMActor->setBtpFromIndex(2);
 	}
 
@@ -2764,18 +2898,28 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 				boss->unk160 = 12;
 				boss->unk168 = 1.0f;
 
-				J3DAnmTransform* oldAnm = nullptr;
-				if (boss->mMActor->unkC)
-					oldAnm = boss->mMActor->unkC->unk24;
-				if (boss->mMActor->unkC)
-					boss->mMActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
+				MActor* oldAnmActor = boss->mMActor;
+				J3DAnmTransform* oldAnm;
+				if (!oldAnmActor->unkC)
+					oldAnm = nullptr;
+				else
+					oldAnm = oldAnmActor->unkC->unk24;
+				if (oldAnmActor->unkC)
+					oldAnmActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
 
 				boss->mMActor->setBckFromIndex(12);
-				if (boss->mMActor->unkC)
-					boss->mMActor->unkC->setMotionBlendRatio(boss->unk168);
+				MActor* blendActor = boss->mMActor;
+				f32 blendRatio     = boss->unk168;
+				if (blendActor->unkC)
+					blendActor->unkC->setMotionBlendRatio(blendRatio);
 
 				const char** basTable = boss->getBasNameTable();
-				boss->setAnmSound(basTable ? basTable[12] : nullptr);
+				const char* basName;
+				if (!basTable)
+					basName = nullptr;
+				else
+					basName = basTable[12];
+				boss->setAnmSound(basName);
 				boss->mMActor->setBtpFromIndex(1);
 			} else if (boss->mMActor->checkCurBckFromIndex(12)) {
 				TBossTelesaSaveLoadParams* params
@@ -2785,18 +2929,28 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 					boss->unk160 = 13;
 					boss->unk168 = 1.0f;
 
-					J3DAnmTransform* oldAnm = nullptr;
-					if (boss->mMActor->unkC)
-						oldAnm = boss->mMActor->unkC->unk24;
-					if (boss->mMActor->unkC)
-						boss->mMActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
+					MActor* oldAnmActor = boss->mMActor;
+					J3DAnmTransform* oldAnm;
+					if (!oldAnmActor->unkC)
+						oldAnm = nullptr;
+					else
+						oldAnm = oldAnmActor->unkC->unk24;
+					if (oldAnmActor->unkC)
+						oldAnmActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
 
 					boss->mMActor->setBckFromIndex(13);
-					if (boss->mMActor->unkC)
-						boss->mMActor->unkC->setMotionBlendRatio(boss->unk168);
+					MActor* blendActor = boss->mMActor;
+					f32 blendRatio     = boss->unk168;
+					if (blendActor->unkC)
+						blendActor->unkC->setMotionBlendRatio(blendRatio);
 
 					const char** basTable = boss->getBasNameTable();
-					boss->setAnmSound(basTable ? basTable[13] : nullptr);
+					const char* basName;
+					if (!basTable)
+						basName = nullptr;
+					else
+						basName = basTable[13];
+					boss->setAnmSound(basName);
 				}
 			} else {
 				boss->unk36C = 0;
@@ -2816,18 +2970,28 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 				boss->unk160 = 15;
 				boss->unk168 = 1.0f;
 
-				J3DAnmTransform* oldAnm = nullptr;
-				if (boss->mMActor->unkC)
-					oldAnm = boss->mMActor->unkC->unk24;
-				if (boss->mMActor->unkC)
-					boss->mMActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
+				MActor* oldAnmActor = boss->mMActor;
+				J3DAnmTransform* oldAnm;
+				if (!oldAnmActor->unkC)
+					oldAnm = nullptr;
+				else
+					oldAnm = oldAnmActor->unkC->unk24;
+				if (oldAnmActor->unkC)
+					oldAnmActor->unkC->setOldMotionBlendAnmPtr(oldAnm);
 
 				boss->mMActor->setBckFromIndex(15);
-				if (boss->mMActor->unkC)
-					boss->mMActor->unkC->setMotionBlendRatio(boss->unk168);
+				MActor* blendActor = boss->mMActor;
+				f32 blendRatio     = boss->unk168;
+				if (blendActor->unkC)
+					blendActor->unkC->setMotionBlendRatio(blendRatio);
 
 				const char** basTable = boss->getBasNameTable();
-				boss->setAnmSound(basTable ? basTable[15] : nullptr);
+				const char* basName;
+				if (!basTable)
+					basName = nullptr;
+				else
+					basName = basTable[15];
+				boss->setAnmSound(basName);
 				boss->mMActor->setBtpFromIndex(2);
 			}
 		}
