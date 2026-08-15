@@ -250,10 +250,8 @@ void TBubble::calcRootMatrix()
 		mPosition.y = mGroundHeight + unk1CC + 150.0f;
 
 		MtxPtr mtx = mMActor->getModel()->getBaseTRMtx();
-		MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y, mPosition.z,
-		               (s16)(mRotation.x * 182.04445f),
-		               (s16)(mRotation.y * 182.04445f),
-		               (s16)(mRotation.z * 182.04445f));
+		MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y, mPosition.z, mRotation.x,
+		               mRotation.y, mRotation.z);
 		mMActor->getModel()->setBaseScale(mScaling);
 	}
 }
@@ -484,8 +482,6 @@ BOOL TBossTelesaBody::receiveMessage(THitActor* sender, u32 message)
 
 void TBossTelesaBody::checkHit() { }
 
-MActorAnmBck* MActor::getCurBckAnmPtr() { return unkC; }
-
 void TBossTelesaTongue::checkHit() { }
 
 BOOL TBossTelesaTongue::receiveMessage(THitActor*, u32 message)
@@ -546,8 +542,8 @@ void TTelesaSlot::initMapObj()
 
 	TMsRange<s32> indexRange(0, 8);
 	for (int i = 0; i < 3; ++i) {
-		unk13C[i]      = (f32)(unk168 * indexRange.rand());
-		*(&unk198 + i) = 0;
+		unk13C[i] = (f32)(unk168 * indexRange.rand());
+		unk198[i] = false;
 	}
 }
 
@@ -557,29 +553,27 @@ void TTelesaSlot::randomReset()
 	TMsRange<s32> indexRange(0, 8);
 
 	for (int i = 0; i < 3; ++i) {
-		unk13C[i]      = (f32)(unk168 * indexRange.rand());
-		*(&unk198 + i) = 0;
+		unk13C[i] = (f32)(unk168 * indexRange.rand());
+		unk198[i] = false;
 	}
 }
 #pragma dont_inline off
 
 void TTelesaSlot::calcRootMatrix()
 {
-	u8 rolling = 0;
+	bool rolling = false;
 
 	if (getDrumSpeeds()[0] != 0.0f)
-		rolling = 1;
+		rolling = true;
 	if (getDrumSpeeds()[1] != 0.0f)
-		rolling = 1;
+		rolling = true;
 	if (getDrumSpeeds()[2] != 0.0f)
-		rolling = 1;
+		rolling = true;
 
 	if (rolling) {
 		if (unk1E0) {
-			if (gpMSound->gateCheck(0x308D)) {
-				MSoundSESystem::MSoundSE::startSoundActor(0x308D, &mPosition, 0,
-				                                          nullptr, 0, 4);
-			}
+			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_SLOT_SPIN, &mPosition, 0,
+			                                nullptr, 0, 4);
 		}
 
 		unk1E0 = 1 - unk1E0;
@@ -593,13 +587,10 @@ void TTelesaSlot::moveObject()
 	TLiveActor::moveObject();
 
 	for (int i = 0; i < unk148; ++i) {
-		u8* isRolling = &unk198 + i;
-		u8* doStop    = &unk1A8 + i;
-
-		if (*doStop) {
+		if (unk1A8[i]) {
 			if (getForcastResult(i) == unk1A4) {
-				*isRolling = 0;
-				*doStop    = 0;
+				unk198[i] = false;
+				unk1A8[i] = false;
 			}
 		}
 
@@ -610,7 +601,7 @@ void TTelesaSlot::moveObject()
 		if (fabsf(speed) > unk160) {
 			unk13C[i] += speed;
 
-			if (!*isRolling) {
+			if (!unk198[i]) {
 				if (unk138[i] > 0.0f)
 					unk138[i] -= unk15C;
 				else
@@ -629,7 +620,7 @@ void TTelesaSlot::moveObject()
 			if (unk13C[i] <= 0.0f)
 				unk13C[i] += 360.0f;
 
-			if (*isRolling)
+			if (unk198[i])
 				continue;
 
 			if ((int)fabsf(unk13C[i]) % unk168 != 0)
@@ -638,37 +629,32 @@ void TTelesaSlot::moveObject()
 			unk13C[i] = unk168 * (int)(unk13C[i] / (f32)unk168);
 			unk138[i] = 0.0f;
 
-			if (gpMSound->gateCheck(0x292C)) {
-				MSoundSESystem::MSoundSE::startSoundActor(0x292C, &mPosition, 0,
-				                                          nullptr, 0, 4);
-			}
+			SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_SLT_STOP,
+			                                &mPosition, 0, nullptr, 0, 4);
 
 			for (int j = 0; j < unk148; ++j) {
-				u8* otherRolling = &unk198 + j;
-				if (*otherRolling) {
-					f32 min            = 0.0f;
-					f32 max            = 1.0f;
+				if (unk198[j]) {
 					TBossTelesa* owner = getSlotOwner(this);
 					TBossTelesaSaveLoadParams* params
 					    = (TBossTelesaSaveLoadParams*)owner->unk15C;
 					f32 rate = params->mSLSlotHitCollectRate.get();
 
-					if (min + (max - min) * (rand() * 0.000030517578f)
-					    <= rate) {
-						*(&unk1A8 + j) = 1;
+					TMsRange<f32> collectRange(0.0f, 1.0f);
+					if (collectRange.rand() <= rate) {
+						unk1A8[j] = true;
 					} else {
-						*otherRolling = 0;
+						unk198[j] = false;
 					}
 				}
 			}
 
-			u8 allStopped = 1;
+			bool allStopped = true;
 			if (unk138[0] != 0.0f)
-				allStopped = 0;
+				allStopped = false;
 			if (unk138[1] != 0.0f)
-				allStopped = 0;
+				allStopped = false;
 			if (unk138[2] != 0.0f)
-				allStopped = 0;
+				allStopped = false;
 
 			if (allStopped) {
 				TBossTelesa* owner = getSlotOwner(this);
@@ -678,25 +664,23 @@ void TTelesaSlot::moveObject()
 					owner->unk374.x = 0.0f;
 					owner->unk374.y = 0.0f;
 					owner->unk374.z = 0.0f;
-					gpMarioParticleManager->emit(0xE1, &owner->unk374, 0,
-					                             nullptr);
+					gpMarioParticleManager->emit(
+					    SCENE_BTELESA_JPA_MS_BTLS_FUBUKI, &owner->unk374, 0,
+					    nullptr);
 
 					if (slot->getSlotResult() == 2) {
-						if (gpMSound->gateCheck(0x293F)) {
-							MSoundSESystem::MSoundSE::startSoundActor(
-							    0x293F, &owner->mPosition, 0, nullptr, 0, 4);
-						}
+						SMSGetMSound()->startSoundActor(
+						    MSD_SE_BS_TELESA_FANFALE_1, &owner->mPosition, 0,
+						    nullptr, 0, 4);
 					} else {
-						if (gpMSound->gateCheck(0x2940)) {
-							MSoundSESystem::MSoundSE::startSoundActor(
-							    0x2940, &owner->mPosition, 0, nullptr, 0, 4);
-						}
+						SMSGetMSound()->startSoundActor(
+						    MSD_SE_BS_TELESA_FANFALE_2, &owner->mPosition, 0,
+						    nullptr, 0, 4);
 					}
 				} else {
-					if (gpMSound->gateCheck(0x294D)) {
-						MSoundSESystem::MSoundSE::startSoundActor(
-						    0x294D, &owner->mPosition, 0, nullptr, 0, 4);
-					}
+					SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_FANFALE_3,
+					                                &owner->mPosition, 0,
+					                                nullptr, 0, 4);
 				}
 			}
 		}
@@ -710,8 +694,8 @@ void TTelesaSlot::moveStart()
 	unk19B = 1;
 
 	for (int i = 0; i < 3; ++i) {
-		*(&unk198 + i) = 1;
-		*(&unk1A8 + i) = 0;
+		unk198[i] = true;
+		unk1A8[i] = false;
 
 		f32 speed = 1.0f;
 		if (i == 0)
@@ -729,9 +713,6 @@ u32 TTelesaSlot::touchWater(THitActor*) { return FALSE; }
 #pragma dont_inline on
 void TTelesaSlot::forceStopSlot(int idx)
 {
-	volatile f32 min = 0.0f;
-	volatile f32 max = 1.0f;
-	f32 range;
 	f32 collectRate;
 
 	if (!unk19C)
@@ -744,17 +725,16 @@ void TTelesaSlot::forceStopSlot(int idx)
 	if (SMS_GetMarioHP() == 1)
 		collectRate = 0.9f;
 
-	range           = max - min;
-	f32 randomValue = range * (rand() * 0.000030517578f);
-	randomValue     = min + randomValue;
+	TMsRange<f32> collectRange(0.0f, 1.0f);
+	f32 randomValue = collectRange.rand();
 	if (randomValue <= collectRate) {
 		unk1A4 = 2;
 		if (SMS_GetMarioHP() <= 3)
 			unk1A4 = 0;
-		*(&unk1A8 + idx) = 1;
+		unk1A8[idx] = true;
 	} else {
-		unk1A4           = getForcastResult(idx);
-		*(&unk198 + idx) = 0;
+		unk1A4      = getForcastResult(idx);
+		unk198[idx] = false;
 	}
 
 	if (unk1A4 == getSlotOwner(this)->unk1A8)
@@ -774,15 +754,15 @@ void TTelesaSlot::forceStopSlot(int idx)
 #pragma dont_inline on
 bool TTelesaSlot::isRollDrum()
 {
-	if (unk198)
-		return TRUE;
-	if (unk199)
-		return TRUE;
-	if (unk19A)
-		return TRUE;
+	if (unk198[0])
+		return true;
+	if (unk198[1])
+		return true;
+	if (unk198[2])
+		return true;
 
 	unk19B = 0;
-	return FALSE;
+	return false;
 }
 #pragma dont_inline off
 
@@ -1105,28 +1085,50 @@ void TBossTelesa::loadAfter()
 		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
 		    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit.jpa", 0xD7);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit_pe.jpa", 0xD8);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit_gr.jpa", 0xD9);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit_or.jpa", 0xDA);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_damage.jpa", 0xDB);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down.jpa", 0xDC);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down_pe.jpa", 0xDD);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down_gr.jpa", 0xDE);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down_or.jpa", 0xDF);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_hit.jpa", 0xE0);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fubuki.jpa", 0xE1);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_yodare1.jpa", 0x19E);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_yodare2.jpa", 0x19F);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_yodare3.jpa", 0x1A0);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_ase.jpa", 0x1A1);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_a.jpa", 0x1A2);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_b.jpa", 0x1A3);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_d.jpa", 0x1A4);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_chika_a.jpa", 0x1A5);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_chika_b.jpa", 0x1A6);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_glow.jpa", 0x1A7);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_c.jpa", 0x1F0);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_FHIT);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit_pe.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_FHIT_PE);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit_gr.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_FHIT_GR);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit_or.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_FHIT_OR);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_damage.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_DAMAGE);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_DOWN);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down_pe.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_DOWN_PE);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down_gr.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_DOWN_GR);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down_or.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_DOWN_OR);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_hit.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_SPICY_HIT);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fubuki.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_FUBUKI);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_yodare1.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_YODARE1);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_yodare2.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_YODARE2);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_yodare3.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_YODARE3);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_ase.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_ASE);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_a.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_SPICY_A);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_b.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_SPICY_B);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_d.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_SPICY_D);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_chika_a.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_CHIKA_A);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_chika_b.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_CHIKA_B);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_glow.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_GLOW);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_c.jpa",
+	                 SCENE_BTELESA_JPA_MS_BTLS_SPICY_C);
 
 	void* res = JKRFileLoader::getGlbResource("/scene/btelesa/srot_waku.bmd");
 	SDLModelData* data
@@ -1159,10 +1161,9 @@ void TBossTelesa::reset()
 	setHitParams(params->mSLAttackRadius.get(), params->mSLAttackHeight.get(),
 	             params->mSLDamageRadius.get(), params->mSLDamageHeight.get());
 
-	TMarDirector* director = gpMarDirector;
-	director->fireStartDemoCamera("btelesa_roll_camera", nullptr, -1, 0.0f,
-	                              true, nullptr, 0, nullptr,
-	                              JDrama::TFlagT<u16>(0));
+	SMSGetMarDirector()->fireStartDemoCamera("btelesa_roll_camera", nullptr, -1,
+	                                         0.0f, true, nullptr, 0, nullptr,
+	                                         JDrama::TFlagT<u16>(0));
 }
 
 void TBossTelesa::moveObject()
@@ -1179,16 +1180,14 @@ void TBossTelesa::moveObject()
 	if (cameraDist < mCameraMoveLimit) {
 		unk360 += mCameraMoveSp * (gpMarioPos->y - gpCamera->unk148.y);
 		gpCamera->unk290 = unk360;
-	} else if (__fabsf(unk360) > 1.0f) {
+	} else if (fabsf(unk360) > 1.0f) {
 		unk360 *= mCameraMoveSp;
 		gpCamera->unk290 = unk360;
 	}
 
 	if (*gpMarioFlag & 0x400) {
-		if (gpMSound->gateCheck(0x28D4)) {
-			MSoundSESystem::MSoundSE::startSoundActor(0x28D4, &mPosition, 0,
-			                                          nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_V_LAUGH1, &mPosition,
+		                                0, nullptr, 0, 4);
 	}
 
 	if (mSpine->getCurrentNerve() == &TNerveBossTelesaFallDemo::theNerve()) {
@@ -1236,22 +1235,16 @@ void TBossTelesa::moveObject()
 
 	switch (movingRoulettes) {
 	case 1:
-		if (gpMSound->gateCheck(0x30B7)) {
-			MSoundSESystem::MSoundSE::startSoundActor(0x30B7, &unk19C, 0,
-			                                          nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_RLT_MOVE1, &unk19C, 0,
+		                                nullptr, 0, 4);
 		break;
 	case 2:
-		if (gpMSound->gateCheck(0x30B6)) {
-			MSoundSESystem::MSoundSE::startSoundActor(0x30B6, &unk19C, 0,
-			                                          nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_RLT_MOVE2, &unk19C, 0,
+		                                nullptr, 0, 4);
 		break;
 	case 3:
-		if (gpMSound->gateCheck(0x30B5)) {
-			MSoundSESystem::MSoundSE::startSoundActor(0x30B5, &unk19C, 0,
-			                                          nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_RLT_MOVE3, &unk19C, 0,
+		                                nullptr, 0, 4);
 		break;
 	}
 
@@ -1260,7 +1253,7 @@ void TBossTelesa::moveObject()
 	control();
 
 	for (int i = 0; i < mColCount; ++i) {
-		if (mCollisions[i]->isActorTypeOf(ACTOR_TYPE_PLAYER))
+		if (mCollisions[i]->mActorType == ACTOR_TYPE_PLAYER)
 			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 	}
 
@@ -1291,7 +1284,7 @@ void TBossTelesa::moveObject()
 	body->unk6C           = 0;
 	for (int i = 0; i < body->mColCount; ++i) {
 		THitActor* actor = body->mCollisions[i];
-		if (actor->isActorTypeOf(ACTOR_TYPE_PLAYER))
+		if (actor->mActorType == ACTOR_TYPE_PLAYER)
 			SMS_SendMessageToMario(body, HIT_MESSAGE_ATTACK);
 		else
 			body->unk68->checkHitObject(actor);
@@ -1300,7 +1293,7 @@ void TBossTelesa::moveObject()
 	TBossTelesaTongue* tongue = (TBossTelesaTongue*)unk170;
 	for (int i = 0; i < tongue->mColCount; ++i) {
 		THitActor* actor = tongue->mCollisions[i];
-		if (actor->isActorTypeOf(ACTOR_TYPE_PLAYER)) {
+		if (actor->mActorType == ACTOR_TYPE_PLAYER) {
 			SMS_SendMessageToMario(tongue, HIT_MESSAGE_ATTACK);
 		} else if (actor->mActorType == 0x40000395) {
 			tongue->unk68->setSpicy((TLiveActor*)actor);
@@ -1383,46 +1376,56 @@ void TBossTelesa::calcRootMatrix()
 	}
 
 	unk374.set(0.0f, 0.0f, 0.0f);
-	gpMarioParticleManager->emit(0x1A5, &unk374, 1, this);
-	gpMarioParticleManager->emit(0x1A6, &unk374, 1, this);
+	gpMarioParticleManager->emit(SCENE_BTELESA_JPA_MS_BTLS_CHIKA_A, &unk374, 1,
+	                             this);
+	gpMarioParticleManager->emit(SCENE_BTELESA_JPA_MS_BTLS_CHIKA_B, &unk374, 1,
+	                             this);
 
 	MtxPtr baseMtx = mMActor->getModel()->mNodeMatrices[1];
 	unk374.set(baseMtx[0][3], baseMtx[1][3], baseMtx[2][3]);
-	gpMarioParticleManager->emitAndBindToPosPtr(0x1A7, &unk374, 1, this);
+	gpMarioParticleManager->emitAndBindToPosPtr(SCENE_BTELESA_JPA_MS_BTLS_GLOW,
+	                                            &unk374, 1, this);
 
 	if (!mMActor->checkCurBckFromIndex(4) && !mMActor->checkCurBckFromIndex(6)
 	    && !mMActor->checkCurBckFromIndex(12)
 	    && !mMActor->checkCurBckFromIndex(13)) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x19E, mMActor->getModel()->mNodeMatrices[5], 1, this);
+		    SCENE_BTELESA_JPA_MS_BTLS_YODARE1,
+		    mMActor->getModel()->mNodeMatrices[5], 1, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x19F, mMActor->getModel()->mNodeMatrices[5], 1, this);
+		    SCENE_BTELESA_JPA_MS_BTLS_YODARE2,
+		    mMActor->getModel()->mNodeMatrices[5], 1, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x1A0, mMActor->getModel()->mNodeMatrices[10], 1, this);
+		    SCENE_BTELESA_JPA_MS_BTLS_YODARE3,
+		    mMActor->getModel()->mNodeMatrices[10], 1, this);
 	}
 
 	if (mMActor->checkCurBckFromIndex(1)
 	    && mMActor->getFrameCtrl(0)->getFrame() < 20.0f) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0xE0, mMActor->getModel()->mNodeMatrices[5], 0, nullptr);
+		    SCENE_BTELESA_JPA_MS_BTLS_SPICY_HIT,
+		    mMActor->getModel()->mNodeMatrices[5], 0, nullptr);
 	}
 
 	if (mMActor->checkCurBckFromIndex(12)) {
-		if (gpMSound->gateCheck(0x20FE)) {
-			MSoundSESystem::MSoundSE::startSoundActor(0x20FE, &mPosition, 0,
-			                                          nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_FIRE, &mPosition, 0,
+		                                nullptr, 0, 4);
 
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x1A1, mMActor->getModel()->mNodeMatrices[1], 1, this);
+		    SCENE_BTELESA_JPA_MS_BTLS_ASE,
+		    mMActor->getModel()->mNodeMatrices[1], 1, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x1A2, mMActor->getModel()->mNodeMatrices[9], 1, this);
+		    SCENE_BTELESA_JPA_MS_BTLS_SPICY_A,
+		    mMActor->getModel()->mNodeMatrices[9], 1, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x1A3, mMActor->getModel()->mNodeMatrices[9], 1, this);
+		    SCENE_BTELESA_JPA_MS_BTLS_SPICY_B,
+		    mMActor->getModel()->mNodeMatrices[9], 1, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x1A4, mMActor->getModel()->mNodeMatrices[9], 1, this);
+		    SCENE_BTELESA_JPA_MS_BTLS_SPICY_D,
+		    mMActor->getModel()->mNodeMatrices[9], 1, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x1F0, mMActor->getModel()->mNodeMatrices[9], 3, this);
+		    SCENE_BTELESA_JPA_MS_BTLS_SPICY_C,
+		    mMActor->getModel()->mNodeMatrices[9], 3, this);
 	}
 
 	if (mMActor->checkCurBckFromIndex(14)
@@ -1480,7 +1483,7 @@ void TBossTelesa::checkHitObject(THitActor* actor)
 		unk348.r = 0xE6;
 		unk348.g = 0x64;
 		unk348.b = 0xB4;
-		unk380   = 0xD8;
+		unk380   = SCENE_BTELESA_JPA_MS_BTLS_FHIT_PE;
 		kill();
 		break;
 	case 0x40000391:
@@ -1488,14 +1491,14 @@ void TBossTelesa::checkHitObject(THitActor* actor)
 		unk348.r = 0xE6;
 		unk348.g = 0xB4;
 		unk348.b = 0;
-		unk380   = 0xDA;
+		unk380   = SCENE_BTELESA_JPA_MS_BTLS_FHIT_OR;
 		kill();
 		break;
 	case 0x40000393:
 		unk348.r = 0x96;
 		unk348.g = 0x32;
 		unk348.b = 0xE6;
-		unk380   = 0xD9;
+		unk380   = SCENE_BTELESA_JPA_MS_BTLS_FHIT_GR;
 		kill();
 		break;
 	case 0x40000395:
@@ -1517,17 +1520,17 @@ void TBossTelesa::checkHitObject(THitActor* actor)
 	}
 
 	unk374 = actor->mPosition;
-	gpMarioParticleManager->emit(0xD7, &unk374, 0, nullptr);
+	gpMarioParticleManager->emit(SCENE_BTELESA_JPA_MS_BTLS_FHIT, &unk374, 0,
+	                             nullptr);
 	if (unk380 >= 0)
 		gpMarioParticleManager->emit(unk380, &unk374, 0, nullptr);
 
 	if (unk350) {
-		gpMarioParticleManager->emit(0xDB, &unk374, 0, nullptr);
+		gpMarioParticleManager->emit(SCENE_BTELESA_JPA_MS_BTLS_DAMAGE, &unk374,
+		                             0, nullptr);
 	} else {
-		if (gpMSound->gateCheck(0x2944)) {
-			MSoundSESystem::MSoundSE::startSoundActor(0x2944, &mPosition, 0,
-			                                          nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_FRUIT_HIT, &mPosition,
+		                                0, nullptr, 0, 4);
 	}
 
 	((TMapObjBase*)actor)->makeObjDead();
@@ -1588,7 +1591,8 @@ void TBossTelesa::damageRecover()
 				SMS_SendMessageToMario(actor, HIT_MESSAGE_UNK8);
 
 			((TMapObjBase*)actor)->makeObjDead();
-			gpMarioParticleManager->emit(0xCD, &actor->mPosition, 0, nullptr);
+			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
+			                             &actor->mPosition, 0, nullptr);
 			actor->mPosition.set(zero, zero, zero);
 		}
 	}
@@ -1600,28 +1604,26 @@ void TBossTelesa::damageRecover()
 				SMS_SendMessageToMario(actor, HIT_MESSAGE_UNK8);
 
 			((TMapObjBase*)actor)->makeObjDead();
-			gpMarioParticleManager->emit(0xCD, &actor->mPosition, 0, nullptr);
+			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
+			                             &actor->mPosition, 0, nullptr);
 			actor->mPosition.set(zero, zero, zero);
 		}
 
 		actor = unk320[i];
 		if (!(actor->mLiveFlag & LIVE_FLAG_DEAD)) {
 			((TMapObjBase*)actor)->makeObjDead();
-			gpMarioParticleManager->emit(0xCD, &actor->mPosition, 0, nullptr);
+			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
+			                             &actor->mPosition, 0, nullptr);
 			actor->mPosition.set(zero, zero, zero);
 		}
 	}
 
 	if (unk350) {
-		if (gpMSound->gateCheck(0x2968)) {
-			MSoundSESystem::MSoundSE::startSoundActor(0x2968, &mPosition, 0,
-			                                          nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_ESCAPE, &mPosition, 0,
+		                                nullptr, 0, 4);
 	} else {
-		if (gpMSound->gateCheck(0x28D5)) {
-			MSoundSESystem::MSoundSE::startSoundActor(0x28D5, &mPosition, 0,
-			                                          nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_DISAPPEAR, &mPosition,
+		                                0, nullptr, 0, 4);
 	}
 
 	mSpine->pushAfterCurrent(&TNerveBossTelesaHide::theNerve());
@@ -1648,23 +1650,17 @@ bool TBossTelesa::rouletteFall()
 			mHeldObject = (TTakeActor*)SMS_GetMarioHitActor();
 	} else {
 		if (SMS_SendMessageToMario(this, HIT_MESSAGE_UNK8)) {
-			if (gpMSound->gateCheck(0x2926)) {
-				MSoundSESystem::MSoundSE::startSoundActor(0x2926, &mPosition, 0,
-				                                          nullptr, 0, 4);
-			}
+			SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_RLT_SET,
+			                                &mPosition, 0, nullptr, 0, 4);
 			mHeldObject = nullptr;
 		}
 	}
 
-	if (gpMSound->gateCheck(0x28DC)) {
-		MSoundSESystem::MSoundSE::startSoundActor(0x28DC, &mPosition, 0,
-		                                          nullptr, 0, 4);
-	}
+	SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_V_LAUGH1B, &mPosition, 0,
+	                                nullptr, 0, 4);
 
-	if (gpMSound->gateCheck(0x2125)) {
-		MSoundSESystem::MSoundSE::startSoundActor(0x2125, &mPosition, 0,
-		                                          nullptr, 0, 4);
-	}
+	SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_RLT_DOWN, &mPosition, 0,
+	                                nullptr, 0, 4);
 
 	gpMarioOriginal->mGamePad->onNeutralMarioKey();
 	return FALSE;
@@ -1900,7 +1896,7 @@ void TBossTelesa::rouletteStart()
 		((TRoulette**)&unk178)[i]->setRollSp(unk184->unk1E4[i]);
 
 	SMSRumbleMgr->start(0x14, 0xf, (f32*)nullptr);
-	gpCameraShake->startShake((EnumCamShakeMode)0x23, 1.0f);
+	gpCameraShake->startShake(CAM_SHAKE_MODE_UNK23, 1.0f);
 }
 
 void TBossTelesa::slotStart() { rouletteStart(); }
@@ -2175,8 +2171,8 @@ void TBossTelesa::forceAllItemKill()
 
 		if (!(unk1AC[i]->mLiveFlag & LIVE_FLAG_DEAD)) {
 			unk1AC[i]->kill();
-			gpMarioParticleManager->emit(0xCD, &unk1AC[i]->mPosition, 0,
-			                             nullptr);
+			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
+			                             &unk1AC[i]->mPosition, 0, nullptr);
 		}
 	}
 }
@@ -2203,15 +2199,11 @@ void TBossTelesa::forceHide()
 	unk368 = 0;
 
 	if (unk350) {
-		if (gpMSound->gateCheck(0x2968)) {
-			MSoundSESystem::MSoundSE::startSoundActor(0x2968, &mPosition, 0,
-			                                          nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_ESCAPE, &mPosition, 0,
+		                                nullptr, 0, 4);
 	} else {
-		if (gpMSound->gateCheck(0x28D5)) {
-			MSoundSESystem::MSoundSE::startSoundActor(0x28D5, &mPosition, 0,
-			                                          nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_DISAPPEAR, &mPosition,
+		                                0, nullptr, 0, 4);
 	}
 
 	mSpine->reset();
@@ -2261,7 +2253,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 				else
 					basName = basTable[2];
 				boss->setAnmSound(basName);
-				gpCameraShake->startShake((EnumCamShakeMode)0x1F, 1.0f);
+				gpCameraShake->startShake(CAM_SHAKE_MODE_UNK1F, 1.0f);
 			} else {
 				boss->unk164 = boss->mMActor->getCurAnmIdx(0);
 				boss->unk160 = 5;
@@ -2290,11 +2282,11 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 					basName = basTable[5];
 				boss->setAnmSound(basName);
 				boss->mMActor->setBrkFromIndex(0);
-				gpCameraShake->startShake((EnumCamShakeMode)0x20, 1.0f);
+				gpCameraShake->startShake(CAM_SHAKE_MODE_UNK20, 1.0f);
 			}
 		} else {
 			MSBgm::stopBGM(0x8001000D, 10);
-			gpCameraShake->startShake((EnumCamShakeMode)0x21, 1.0f);
+			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK21, 1.0f);
 			boss->unk164 = boss->mMActor->getCurAnmIdx(0);
 			boss->unk160 = 3;
 			boss->unk168 = 1.0f;
@@ -2324,10 +2316,8 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 			boss->mMActor->setBrkFromIndex(1);
 			boss->unk184->mScaling.set(0.0f, 0.0f, 0.0f);
 
-			if (gpMSound->gateCheck(0x28DB)) {
-				MSoundSESystem::MSoundSE::startSoundActor(
-				    0x28DB, &boss->mPosition, 0, nullptr, 0, 4);
-			}
+			SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_DOWN,
+			                                &boss->mPosition, 0, nullptr, 0, 4);
 		}
 	}
 
@@ -2337,16 +2327,20 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 				MtxPtr mtx = boss->mMActor->getModel()->mNodeMatrices[1];
 				boss->unk374.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 
-				gpMarioParticleManager->emit(0xDC, &boss->unk374, 0, nullptr);
-				if (boss->unk380 == 0xD8) {
-					gpMarioParticleManager->emit(0xDD, &boss->unk374, 0,
-					                             nullptr);
-				} else if (boss->unk380 == 0xD9) {
-					gpMarioParticleManager->emit(0xDE, &boss->unk374, 0,
-					                             nullptr);
+				gpMarioParticleManager->emit(SCENE_BTELESA_JPA_MS_BTLS_DOWN,
+				                             &boss->unk374, 0, nullptr);
+				if (boss->unk380 == SCENE_BTELESA_JPA_MS_BTLS_FHIT_PE) {
+					gpMarioParticleManager->emit(
+					    SCENE_BTELESA_JPA_MS_BTLS_DOWN_PE, &boss->unk374, 0,
+					    nullptr);
+				} else if (boss->unk380 == SCENE_BTELESA_JPA_MS_BTLS_FHIT_GR) {
+					gpMarioParticleManager->emit(
+					    SCENE_BTELESA_JPA_MS_BTLS_DOWN_GR, &boss->unk374, 0,
+					    nullptr);
 				} else {
-					gpMarioParticleManager->emit(0xDF, &boss->unk374, 0,
-					                             nullptr);
+					gpMarioParticleManager->emit(
+					    SCENE_BTELESA_JPA_MS_BTLS_DOWN_OR, &boss->unk374, 0,
+					    nullptr);
 				}
 
 				boss->forceAllItemKill();
@@ -2680,11 +2674,9 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 
 	if (boss->mMActor->checkCurBckFromIndex(0)
 	    && boss->mMActor->getFrameCtrl(0)->checkPass(78.0f)) {
-		gpCameraShake->startShake((EnumCamShakeMode)0x22, 1.0f);
-		if (gpMSound->gateCheck(0x292A)) {
-			MSoundSESystem::MSoundSE::startSoundActor(0x292A, &boss->mPosition,
-			                                          0, nullptr, 0, 4);
-		}
+		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK22, 1.0f);
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_SLT_LAND,
+		                                &boss->mPosition, 0, nullptr, 0, 4);
 	}
 
 	if (spine->getTime() > 800) {
@@ -2846,8 +2838,8 @@ DEFINE_NERVE(TNerveBossTelesaSpitSlotItem, TLiveActor)
 		for (int i = 0; i < boss->unk274; ++i) {
 			TLiveActor* actor = boss->unk1AC[i];
 			if (!(actor->mLiveFlag & LIVE_FLAG_DEAD)
-			    && !actor->isActorType(0x2000000E)
-			    && !actor->isActorType(0x20000002))
+			    && actor->mActorType != 0x2000000E
+			    && actor->mActorType != 0x20000002)
 				actor->offHitFlag(HIT_FLAG_NO_COLLISION);
 		}
 		return TRUE;
@@ -3032,15 +3024,13 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 			boss->forceAllItemKill();
 
 			if (boss->unk350) {
-				if (gpMSound->gateCheck(0x2968)) {
-					MSoundSESystem::MSoundSE::startSoundActor(
-					    0x2968, &boss->mPosition, 0, nullptr, 0, 4);
-				}
+				SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_ESCAPE,
+				                                &boss->mPosition, 0, nullptr, 0,
+				                                4);
 			} else {
-				if (gpMSound->gateCheck(0x28D5)) {
-					MSoundSESystem::MSoundSE::startSoundActor(
-					    0x28D5, &boss->mPosition, 0, nullptr, 0, 4);
-				}
+				SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_DISAPPEAR,
+				                                &boss->mPosition, 0, nullptr, 0,
+				                                4);
 			}
 
 			spine->setNext(&TNerveBossTelesaHide::theNerve());
@@ -3097,10 +3087,8 @@ DEFINE_NERVE(TNerveBossTelesaFreeze, TLiveActor)
 			basName = basTable[16];
 		boss->setAnmSound(basName);
 
-		if (gpMSound->gateCheck(0x28E7)) {
-			MSoundSESystem::MSoundSE::startSoundActor(0x28E7, &boss->mPosition,
-			                                          0, nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_THANKYOU,
+		                                &boss->mPosition, 0, nullptr, 0, 4);
 	}
 
 	return FALSE;
