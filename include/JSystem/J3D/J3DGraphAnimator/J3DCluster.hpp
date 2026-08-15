@@ -49,6 +49,11 @@ public:
 	void normalize(float*);
 	void normalizeWeight(int, float*);
 
+	void onFlag(u32 flag) { mFlags |= flag; }
+	void offFlag(u32 flag) { mFlags &= ~flag; }
+	BOOL checkFlag(u32 flag) { return mFlags & flag ? TRUE : FALSE; }
+	void setAnmCluster(J3DAnmCluster* anm) { mAnmCluster = anm; }
+
 public:
 	/* 0x00 */ J3DDeformData* mDeformData;
 	/* 0x04 */ J3DAnmCluster* mAnmCluster;

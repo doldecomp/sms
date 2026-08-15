@@ -1,6 +1,7 @@
 #ifndef J3D_MATERIAL_HPP
 #define J3D_MATERIAL_HPP
 
+#include <stdint.h>
 #include <types.h>
 #include <JSystem/J3d/J3DGraphBase/Blocks/J3DTevBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DTexGenBlocks.hpp>
@@ -42,11 +43,11 @@ public:
 	void setCurrentMtx();
 	void copy(J3DMaterial*);
 
-	void reset(); // Unused
+	void reset();
 	void change();
 	J3DDisplayListObj* newSharedDisplayList(u32);
 
-	void setMaterialAnm(J3DMaterialAnm* v) { unk38 = v; }
+	void setMaterialAnm(J3DMaterialAnm* v) { mMaterialAnm = v; }
 
 	u16 getTexNo(u32 idx) { return mTevBlock->getTexNo(idx); }
 	void setTexNo(u32 idx, u16 v) { mTevBlock->setTexNo(idx, v); }
@@ -62,6 +63,7 @@ public:
 	J3DTexCoord* getTexCoord(u32 idx) { return mTexGenBlock->getTexCoord(idx); }
 	J3DNBTScale* getNBTScale() { return mTexGenBlock->getNBTScale(); }
 	J3DZMode* getZMode() { return mPEBlock->getZMode(); }
+	J3DFog* getFog() { return mPEBlock->getFog(); }
 
 	void setTevColor(u32 i, const J3DGXColorS10* i_color)
 	{
@@ -79,18 +81,21 @@ public:
 	J3DMaterial* getNext() { return mNext; }
 	void setNext(J3DMaterial* material) { mNext = material; }
 	J3DShape* getShape() { return mShape; }
-	u16 getIndex() { return unkC; }
+	u16 getIndex() { return mIndex; }
 
 	J3DMaterialAnm* getMaterialAnm()
 	{
-		if ((u32)unk38 < 0xC0000000) {
-			return unk38;
+		if ((uintptr_t)mMaterialAnm < 0xC0000000) {
+			return mMaterialAnm;
 		} else {
 			return nullptr;
 		}
 	}
 
-	GXBool isDrawModeOpaTexEdge() { return (unk8 & 3) ? GX_TRUE : GX_FALSE; }
+	GXBool isDrawModeOpaTexEdge()
+	{
+		return (mMaterialMode & 3) ? GX_TRUE : GX_FALSE;
+	}
 
 	// TODO: presumably this is something called diff flag?
 	BOOL getSomeFlag() { return unk1C & 1 ? TRUE : FALSE; }
@@ -99,9 +104,9 @@ public:
 public:
 	/* 0x0 */ J3DMaterial* mNext;
 	/* 0x4 */ J3DShape* mShape;
-	/* 0x8 */ u32 unk8;
-	/* 0xC */ u16 unkC;
-	/* 0x10 */ u32 unk10;
+	/* 0x8 */ u32 mMaterialMode;
+	/* 0xC */ u16 mIndex;
+	/* 0x10 */ u32 mInvalid;
 	/* 0x14 */ char unk14[4];
 	/* 0x18 */ u32 unk18;
 	/* 0x1C */ u32 unk1C;
@@ -111,7 +116,7 @@ public:
 	/* 0x2C */ J3DIndBlock* mIndBlock;
 	/* 0x30 */ J3DPEBlock* mPEBlock;
 	/* 0x34 */ J3DMaterial* mOriginalMaterial;
-	/* 0x38 */ J3DMaterialAnm* unk38;
+	/* 0x38 */ J3DMaterialAnm* mMaterialAnm;
 	/* 0x3C */ J3DDisplayListObj* unk3C;
 };
 

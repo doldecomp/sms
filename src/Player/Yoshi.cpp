@@ -1000,17 +1000,17 @@ void TYoshi::calcAnim()
 		case 12:
 		case 15:
 			mActor->getModel()->getModelData()->getShapeNodePointer(0)->onFlag(
-			    1);
+			    J3DShpFlag_Visible);
 			mActor->getModel()->getModelData()->getShapeNodePointer(1)->onFlag(
-			    1);
+			    J3DShpFlag_Visible);
 			mMirrorModels[0]->getModelData()->offFlag1OnAllShapes();
 			mMirrorModels[1]->getModelData()->offFlag1OnAllShapes();
 			break;
 		default:
 			mActor->getModel()->getModelData()->getShapeNodePointer(0)->offFlag(
-			    1);
+			    J3DShpFlag_Visible);
 			mActor->getModel()->getModelData()->getShapeNodePointer(1)->offFlag(
-			    1);
+			    J3DShpFlag_Visible);
 			mMirrorModels[0]->getModelData()->onFlag1OnAllShapes();
 			mMirrorModels[1]->getModelData()->onFlag1OnAllShapes();
 			break;

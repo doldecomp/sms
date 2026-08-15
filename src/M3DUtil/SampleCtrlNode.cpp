@@ -90,7 +90,7 @@ SampleCtrlShape::SampleCtrlShape(J3DShape* param_1)
     : unk4(nullptr)
 {
 	unk4 = param_1;
-	if (unk4->checkFlag(0x1))
+	if (unk4->checkFlag(J3DShpFlag_Visible))
 		unk8 = false;
 	else
 		unk8 = true;

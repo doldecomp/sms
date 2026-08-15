@@ -1010,9 +1010,9 @@ void THinokuri2::perform(u32 cue, JDrama::TGraphics* graphics)
 			    = getModel()->getModelData()->getShapeNodePointer(i);
 			if (shape) {
 				if (mLevel == 0 || mLevel == 2)
-					shape->onFlag(0x1);
+					shape->onFlag(J3DShpFlag_Visible);
 				else
-					shape->offFlag(0x1);
+					shape->offFlag(J3DShpFlag_Visible);
 			}
 		}
 	}

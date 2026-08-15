@@ -6,6 +6,7 @@
 #include <dolphin/gd.h>
 #include <dolphin/mtx.h>
 #include <JSystem/J3D/J3DGraphBase/J3DDrawBuffer.hpp>
+#include <JSystem/J3D/J3DAssert.hpp>
 
 class J3DMatPacket;
 class J3DDrawBuffer;
@@ -148,9 +149,17 @@ public:
 	void setShapePacket(J3DShapePacket* packet) { mpShapePacket = packet; }
 
 	J3DMaterial* getMaterial() const { return mpMaterial; }
-	void setMaterial(J3DMaterial* pMaterial) { mpMaterial = pMaterial; }
+	void setMaterial(J3DMaterial* pMaterial)
+	{
+		J3D_ASSERT_NULLPTR(646, pMaterial != nullptr);
+		mpMaterial = pMaterial;
+	}
 
-	void setTexture(J3DTexture* pTexture) { mTexture = pTexture; }
+	void setTexture(J3DTexture* pTexture)
+	{
+		J3D_ASSERT_NULLPTR(651, pTexture != nullptr);
+		mTexture = pTexture;
+	}
 
 	void setMaterialAnmID(J3DMaterialAnm* materialAnm) { unk44 = materialAnm; }
 

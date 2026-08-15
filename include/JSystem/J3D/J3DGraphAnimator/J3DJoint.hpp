@@ -96,14 +96,11 @@ public:
 	{
 	}
 
-	virtual ~J3DMtxCalcBasicAnm() { }
 	virtual void calc(u16 v) { J3DMtxCalcAnm::calc(v); }
 };
 
 class J3DMtxCalcMaya : public J3DMtxCalcBasic {
 public:
-	virtual ~J3DMtxCalcMaya() { }
-
 	virtual void init(const Vec& vec, const Mtx& mtx)
 	{
 		J3DSys::mParentS          = (Vec) { 1.0f, 1.0f, 1.0f };
@@ -132,7 +129,6 @@ public:
 	{
 	}
 
-	virtual ~J3DMtxCalcMayaAnm() { }
 	virtual void calc(u16 v) { J3DMtxCalcAnm::calc(v); }
 };
 
@@ -140,7 +136,6 @@ class J3DMtxCalcSoftimage : public J3DMtxCalcBasic {
 public:
 	J3DMtxCalcSoftimage() { }
 
-	virtual ~J3DMtxCalcSoftimage() { }
 	virtual void init(const Vec& vec, const Mtx& mtx)
 	{
 		J3DSys::mCurrentS = vec;
@@ -158,7 +153,6 @@ public:
 	{
 	}
 
-	virtual ~J3DMtxCalcSoftimageAnm() { }
 	virtual void calc(u16 v) { J3DMtxCalcAnm::calc(v); }
 };
 

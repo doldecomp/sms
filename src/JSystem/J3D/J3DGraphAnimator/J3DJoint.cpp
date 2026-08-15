@@ -105,17 +105,17 @@ void J3DMtxCalcBasic::calcTransform(u16 param_0, const J3DTransformInfo& info)
 	J3DSys::mCurrentS.x *= info.mScale.x;
 	J3DSys::mCurrentS.y *= info.mScale.y;
 	J3DSys::mCurrentS.z *= info.mScale.z;
-	s32 r29;
+	BOOL r29;
 	if (checkScaleOne(J3DSys::mCurrentS)) {
 		j3dSys.getModel()->setScaleFlag(param_0, 1);
-		r29 = 1;
+		r29 = TRUE;
 	} else {
 		j3dSys.getModel()->setScaleFlag(param_0, 0);
-		r29 = 0;
+		r29 = FALSE;
 	}
 	Mtx mtx;
 	J3DGetTranslateRotateMtx(info, mtx);
-	if (r29 == 0) {
+	if (!r29) {
 		mtx[0][0] *= info.mScale.x;
 		mtx[0][1] *= info.mScale.y;
 		mtx[0][2] *= info.mScale.z;
@@ -127,8 +127,7 @@ void J3DMtxCalcBasic::calcTransform(u16 param_0, const J3DTransformInfo& info)
 		mtx[2][2] *= info.mScale.z;
 	}
 	MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
-	J3DModel* model = j3dSys.getModel();
-	MTXCopy(J3DSys::mCurrentMtx, model->getAnmMtx(param_0));
+	j3dSys.getModel()->setAnmMtx(param_0, J3DSys::mCurrentMtx);
 }
 
 void J3DMtxCalcBasic::calc(u16 param_0)
@@ -151,9 +150,9 @@ void J3DMtxCalcSoftimage::calcTransform(u16 param_0,
 	                         info.mTranslate.z * J3DSys::mCurrentS.z, mtx);
 	MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
 
-	J3DSys::mCurrentS.x = J3DSys::mCurrentS.x * info.mScale.x;
-	J3DSys::mCurrentS.y = J3DSys::mCurrentS.y * info.mScale.y;
-	J3DSys::mCurrentS.z = J3DSys::mCurrentS.z * info.mScale.z;
+	J3DSys::mCurrentS.x *= info.mScale.x;
+	J3DSys::mCurrentS.y *= info.mScale.y;
+	J3DSys::mCurrentS.z *= info.mScale.z;
 
 	BOOL b;
 	if (checkScaleOne(J3DSys::mCurrentS)) {
@@ -165,47 +164,45 @@ void J3DMtxCalcSoftimage::calcTransform(u16 param_0,
 	}
 
 	if (!b) {
-		mtx[0][0] = J3DSys::mCurrentMtx[0][0] * J3DSys::mCurrentS.x;
-		mtx[0][1] = J3DSys::mCurrentMtx[0][1] * J3DSys::mCurrentS.y;
-		mtx[0][2] = J3DSys::mCurrentMtx[0][2] * J3DSys::mCurrentS.z;
-		mtx[0][3] = J3DSys::mCurrentMtx[0][3];
+		f32* p = mtx[0];
+		f32* q = J3DSys::mCurrentMtx[0];
+		*p++   = *q++ * J3DSys::mCurrentS.x;
+		*p++   = *q++ * J3DSys::mCurrentS.y;
+		*p++   = *q++ * J3DSys::mCurrentS.z;
+		*p++   = *q++;
+		*p++   = *q++ * J3DSys::mCurrentS.x;
+		*p++   = *q++ * J3DSys::mCurrentS.y;
+		*p++   = *q++ * J3DSys::mCurrentS.z;
+		*p++   = *q++;
+		*p++   = *q++ * J3DSys::mCurrentS.x;
+		*p++   = *q++ * J3DSys::mCurrentS.y;
+		*p++   = *q++ * J3DSys::mCurrentS.z;
+		*p++   = *q++;
 
-		mtx[1][0] = J3DSys::mCurrentMtx[1][0] * J3DSys::mCurrentS.x;
-		mtx[1][1] = J3DSys::mCurrentMtx[1][1] * J3DSys::mCurrentS.y;
-		mtx[1][2] = J3DSys::mCurrentMtx[1][2] * J3DSys::mCurrentS.z;
-		mtx[1][3] = J3DSys::mCurrentMtx[1][3];
-
-		mtx[2][0] = J3DSys::mCurrentMtx[2][0] * J3DSys::mCurrentS.x;
-		mtx[2][1] = J3DSys::mCurrentMtx[2][1] * J3DSys::mCurrentS.y;
-		mtx[2][2] = J3DSys::mCurrentMtx[2][2] * J3DSys::mCurrentS.z;
-		mtx[2][3] = J3DSys::mCurrentMtx[2][3];
-
-		J3DModel* model = j3dSys.getModel();
-		MTXCopy(mtx, model->getAnmMtx(param_0));
+		j3dSys.getModel()->setAnmMtx(param_0, mtx);
 	} else {
-		J3DModel* model = j3dSys.getModel();
-		MTXCopy(J3DSys::mCurrentMtx, model->getAnmMtx(param_0));
+		j3dSys.getModel()->setAnmMtx(param_0, J3DSys::mCurrentMtx);
 	}
 }
 
 void J3DMtxCalcMaya::calcTransform(u16 param_1, const J3DTransformInfo& param_2)
 {
-	J3DModel* model    = j3dSys.getModel();
-	u8 scaleCompensate = model->getModelData()
+	Mtx mtx;
+	u8 scaleCompensate = j3dSys.getModel()
+	                         ->getModelData()
 	                         ->getJointNodePointer(param_1)
 	                         ->getScaleCompensate();
-	s32 tmp;
+	BOOL b;
 	if (param_2.mScale.x == 1.0f && param_2.mScale.y == 1.0f
 	    && param_2.mScale.z == 1.0f) {
-		model->setScaleFlag(param_1, 1);
-		tmp = true;
+		j3dSys.getModel()->setScaleFlag(param_1, 1);
+		b = TRUE;
 	} else {
-		model->setScaleFlag(param_1, 0);
-		tmp = false;
+		j3dSys.getModel()->setScaleFlag(param_1, 0);
+		b = FALSE;
 	}
-	Mtx mtx;
 	J3DGetTranslateRotateMtx(param_2, mtx);
-	if (tmp == 0) {
+	if (b == 0) {
 		mtx[0][0] *= param_2.mScale.x;
 		mtx[0][1] *= param_2.mScale.y;
 		mtx[0][2] *= param_2.mScale.z;
@@ -217,22 +214,26 @@ void J3DMtxCalcMaya::calcTransform(u16 param_1, const J3DTransformInfo& param_2)
 		mtx[2][2] *= param_2.mScale.z;
 	}
 	if (scaleCompensate == 1) {
-		f32 x = 1.0f / J3DSys::mParentS.x;
-		f32 y = 1.0f / J3DSys::mParentS.y;
-		f32 z = 1.0f / J3DSys::mParentS.z;
-		mtx[0][0] *= x;
-		mtx[0][1] *= x;
-		mtx[0][2] *= x;
-		mtx[1][0] *= y;
-		mtx[1][1] *= y;
-		mtx[1][2] *= y;
-		mtx[2][0] *= z;
-		mtx[2][1] *= z;
-		mtx[2][2] *= z;
+		Vec inv;
+		inv.x = 1.0f / J3DSys::mParentS.x;
+		inv.y = 1.0f / J3DSys::mParentS.y;
+		inv.z = 1.0f / J3DSys::mParentS.z;
+
+		f32* p = mtx[0];
+		*p++ *= inv.x;
+		*p++ *= inv.x;
+		*p++ *= inv.x;
+		p++;
+		*p++ *= inv.y;
+		*p++ *= inv.y;
+		*p++ *= inv.y;
+		p++;
+		*p++ *= inv.z;
+		*p++ *= inv.z;
+		*p++ *= inv.z;
 	}
 	MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
-	model = j3dSys.getModel();
-	MTXCopy(J3DSys::mCurrentMtx, model->getAnmMtx(param_1));
+	j3dSys.getModel()->setAnmMtx(param_1, J3DSys::mCurrentMtx);
 	J3DSys::mParentS.x = param_2.mScale.x;
 	J3DSys::mParentS.y = param_2.mScale.y;
 	J3DSys::mParentS.z = param_2.mScale.z;
@@ -255,7 +256,6 @@ J3DMtxCalc* J3DNewMtxCalcAnm(u32 type, J3DAnmTransform* transform)
 
 void J3DJoint::initialize()
 {
-
 	mJntNo           = 0;
 	mKind            = 1;
 	mScaleCompensate = 0;
@@ -266,6 +266,11 @@ void J3DJoint::initialize()
 	mMtxCalc         = nullptr;
 	mOldMtxCalc      = nullptr;
 	mMesh            = nullptr;
+}
+
+J3DJoint::J3DJoint(u16, const J3DTransformInfo&)
+{
+	// UNUSED
 }
 
 void J3DJoint::addMesh(J3DMaterial* material)
@@ -287,11 +292,11 @@ void J3DJoint::updateIn()
 		j3dSys.getCurrentMtxCalc()->calc(mJntNo);
 	}
 
-	j3dSys.getDrawBuffer(0)->setZMtx(j3dSys.getModel()->getAnmMtx(mJntNo));
-	j3dSys.getDrawBuffer(1)->setZMtx(j3dSys.getModel()->getAnmMtx(mJntNo));
+	j3dSys.getDrawBuffer(0)->setZMtx(j3dSys.getModel()->getAnmMtx(getJntNo()));
+	j3dSys.getDrawBuffer(1)->setZMtx(j3dSys.getModel()->getAnmMtx(getJntNo()));
 
 	for (J3DMaterial* mesh = mMesh; mesh != nullptr;) {
-		if (mesh->getShape()->checkFlag(1)) {
+		if (mesh->getShape()->checkFlag(J3DShpFlag_Visible)) {
 			mesh = mesh->getNext();
 		} else {
 			J3DMatPacket* matPacket
@@ -310,7 +315,7 @@ void J3DJoint::updateIn()
 			J3DDrawBuffer* drawBuffer
 			    = j3dSys.getDrawBuffer(!mesh->isDrawModeOpaTexEdge());
 
-			if ((u8)matPacket->entry(drawBuffer)) {
+			if (matPacket->entry(drawBuffer)) {
 				j3dSys.setMatPacket(matPacket);
 				if (!mesh->getSomeFlag())
 					mesh->makeDisplayList();
@@ -352,11 +357,11 @@ void J3DJoint::calcOut()
 
 void J3DJoint::entryIn()
 {
-	j3dSys.getDrawBuffer(0)->setZMtx(j3dSys.getModel()->getAnmMtx(mJntNo));
-	j3dSys.getDrawBuffer(1)->setZMtx(j3dSys.getModel()->getAnmMtx(mJntNo));
+	j3dSys.getDrawBuffer(0)->setZMtx(j3dSys.getModel()->getAnmMtx(getJntNo()));
+	j3dSys.getDrawBuffer(1)->setZMtx(j3dSys.getModel()->getAnmMtx(getJntNo()));
 
 	for (J3DMaterial* mesh = mMesh; mesh != nullptr;) {
-		if (mesh->getShape()->checkFlag(1)) {
+		if (mesh->getShape()->checkFlag(J3DShpFlag_Visible)) {
 			mesh = mesh->getNext();
 		} else {
 			J3DMatPacket* matPacket
@@ -368,16 +373,17 @@ void J3DJoint::entryIn()
 				if (mesh->getMaterialAnm())
 					mesh->getMaterialAnm()->calc(mesh);
 
-				mesh->calc(j3dSys.getModel()->getAnmMtx(mJntNo));
+				MtxPtr anmMtx = j3dSys.getModel()->getAnmMtx(mJntNo);
+				mesh->calc(anmMtx);
 				mesh->setCurrentMtx();
 			}
 
 			matPacket->setMaterialAnmID(mesh->getMaterialAnm());
 			matPacket->setShapePacket(shapePacket);
-			J3DDrawBuffer* drawBuffer
-			    = j3dSys.getDrawBuffer(!mesh->isDrawModeOpaTexEdge());
 
-			if ((u8)matPacket->entry(drawBuffer)) {
+			bool b = !mesh->isDrawModeOpaTexEdge();
+			bool r = matPacket->entry(j3dSys.getDrawBuffer(b));
+			if (r) {
 				j3dSys.setMatPacket(matPacket);
 				J3DDrawBuffer::entryNum++;
 				mesh->makeDisplayList();
