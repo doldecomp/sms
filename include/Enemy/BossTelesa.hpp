@@ -44,14 +44,14 @@ public:
 	    , unk1A0(nullptr)
 	    , unk1A4(0)
 	{
-		unk198 = 0;
-		unk199 = 0;
-		unk19A = 0;
-		unk19B = 0;
-		unk19C = 0;
-		unk1A8 = 0;
-		unk1A9 = 0;
-		unk1AA = 0;
+		unk198[0] = false;
+		unk198[1] = false;
+		unk198[2] = false;
+		unk19B    = 0;
+		unk19C    = 0;
+		unk1A8[0] = false;
+		unk1A8[1] = false;
+		unk1A8[2] = false;
 	}
 
 	virtual void calcRootMatrix();
@@ -72,17 +72,13 @@ public:
 	void calcObjCollision();
 	int getDrumResult(int);
 
-	/* 0x198 */ u8 unk198;
-	/* 0x199 */ u8 unk199;
-	/* 0x19A */ u8 unk19A;
+	/* 0x198 */ bool unk198[3];
 	/* 0x19B */ u8 unk19B;
 	/* 0x19C */ u8 unk19C;
 	/* 0x19D */ u8 unk19D[3];
 	/* 0x1A0 */ void* unk1A0;
 	/* 0x1A4 */ s32 unk1A4;
-	/* 0x1A8 */ u8 unk1A8;
-	/* 0x1A9 */ u8 unk1A9;
-	/* 0x1AA */ u8 unk1AA;
+	/* 0x1A8 */ bool unk1A8[3];
 	/* 0x1AB */ u8 unk1AB[0x31];
 	/* 0x1DC */ TMapCollisionMove* unk1DC;
 	/* 0x1E0 */ u8 unk1E0;
