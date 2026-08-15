@@ -35,7 +35,7 @@ void TYoshiTongue::init(TYoshi* yoshi)
 
 	J3DModelData* modelData2 = mModel->getModelData();
 	for (u16 i = 0; i < modelData2->getShapeNum(); ++i)
-		modelData2->getShapeNodePointer(i)->onFlag(1);
+		modelData2->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
 
 	mTipModel = new J3DModel(
 	    J3DModelLoaderDataBase::load(
@@ -45,7 +45,7 @@ void TYoshiTongue::init(TYoshi* yoshi)
 
 	J3DModelData* modelData3 = mTipModel->getModelData();
 	for (u16 i = 0; i < modelData3->getShapeNum(); ++i)
-		modelData3->getShapeNodePointer(i)->onFlag(1);
+		modelData3->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
 
 	mState       = STATE_IDLE;
 	mProgress    = 0;
@@ -369,21 +369,21 @@ void TYoshiTongue::calcAnim(MtxPtr mtx)
 	case STATE_EXTENDING: {
 		J3DModelData* modelData = mModel->getModelData();
 		for (u16 i = 0; i < modelData->getShapeNum(); ++i)
-			modelData->getShapeNodePointer(i)->onFlag(1);
+			modelData->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
 
 		J3DModelData* modelData2 = mTipModel->getModelData();
 		for (u16 i = 0; i < modelData2->getShapeNum(); ++i)
-			modelData2->getShapeNodePointer(i)->onFlag(1);
+			modelData2->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
 		break;
 	}
 	default:
 		J3DModelData* modelData = mModel->getModelData();
 		for (u16 i = 0; i < modelData->getShapeNum(); ++i)
-			modelData->getShapeNodePointer(i)->offFlag(1);
+			modelData->getShapeNodePointer(i)->offFlag(J3DShpFlag_Visible);
 
 		J3DModelData* modelData2 = mTipModel->getModelData();
 		for (u16 i = 0; i < modelData2->getShapeNum(); ++i)
-			modelData2->getShapeNodePointer(i)->offFlag(1);
+			modelData2->getShapeNodePointer(i)->offFlag(J3DShpFlag_Visible);
 
 		JGeometry::TVec3<f32> tip = mTipPos;
 		tip.y += 50.0f;

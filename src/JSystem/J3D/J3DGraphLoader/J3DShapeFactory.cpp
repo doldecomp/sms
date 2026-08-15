@@ -25,12 +25,12 @@ J3DShape* J3DShapeFactory::create(int no, J3DMdlDataFlag flag,
 {
 	J3DShape* shape      = new J3DShape();
 	shape->mElementCount = getMtxGroupNum(no);
-	shape->unkC          = getRadius(no);
-	shape->unk2C         = getVtxDescList(no);
+	shape->mRadius       = getRadius(no);
+	shape->mVtxDesc      = getVtxDescList(no);
 	shape->mMatrices     = new J3DShapeMtx*[shape->mElementCount];
 	shape->mDraws        = new J3DShapeDraw*[shape->mElementCount];
-	shape->unk10         = getMin(no);
-	shape->unk1C         = getMax(no);
+	shape->mMin          = getMin(no);
+	shape->mMax          = getMax(no);
 	shape->mGDCommands   = mpVcdVatCmdBuffer + no * J3DShape::kVcdVatDLSize;
 
 	for (s32 i = 0; i < shape->mElementCount; i++) {
@@ -38,7 +38,7 @@ J3DShape* J3DShapeFactory::create(int no, J3DMdlDataFlag flag,
 		shape->mDraws[i]    = newShapeDraw(no, i, flag);
 	}
 
-	shape->unk4 = no;
+	shape->mIndex = no;
 	return shape;
 }
 

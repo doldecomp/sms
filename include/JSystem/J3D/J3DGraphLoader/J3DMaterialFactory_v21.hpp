@@ -118,7 +118,7 @@ public:
 	u16 getMaterialID(int idx) const { return mpMaterialID[idx]; }
 	u8 getMaterialMode(int idx) const
 	{
-		return mpMaterialInitData[getMaterialID(idx)].mMaterialMode;
+		return mpMaterialInitData[mpMaterialID[idx]].mMaterialMode;
 	}
 
 public:

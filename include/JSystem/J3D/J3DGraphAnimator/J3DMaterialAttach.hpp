@@ -2,6 +2,7 @@
 #define J3D_MATERIAL_ATTACH_HPP
 
 #include <types.h>
+#include <JSystem/J3D/J3DAssert.hpp>
 
 class J3DMaterial;
 class JUTNameTab;
@@ -16,6 +17,7 @@ public:
 
 	J3DMaterial* getMaterialNodePointer(u16 idx) const
 	{
+		J3D_ASSERT_RANGE(92, idx < mMaterialNum);
 		return mMaterials[idx];
 	}
 	u16 getMaterialNum() const { return mMaterialNum; }

@@ -51,7 +51,7 @@ void SDLModelData::entryNode(J3DNode* param_1, SDLDrawBufToken* param_2)
 	J3DJoint* joint       = (J3DJoint*)param_1;
 	J3DMaterial* material = joint->getMesh();
 	while (material != nullptr) {
-		if (material->getShape()->checkFlag(0x1)) {
+		if (material->getShape()->checkFlag(J3DShpFlag_Visible)) {
 			material = material->getNext();
 		} else {
 			entrySameMat(material, param_2);
@@ -135,7 +135,7 @@ void SDLModel::entryModelDataSDL(SDLModelData* param_1, u32 param_2,
 		mNodeMatrices = new Mtx[md->getJointNum()];
 	}
 	if (md->getWEvlpMtxNum())
-		unk5C = new Mtx[md->getWEvlpMtxNum()];
+		mWeightEvlpMatrices = new Mtx[md->getWEvlpMtxNum()];
 	if (param_3) {
 		for (int i = 0; i < 2; ++i) {
 			mDrawMtxBuf[i] = new Mtx*[param_3];
@@ -230,7 +230,7 @@ void SDLModel::entryModelDataSDL(SDLModelData* param_1, u32 param_2,
 			J3DNBTScale* nbtScale = mat->getTexGenBlock()->getNBTScale();
 			if (nbtScale->mbHasScale == 1) {
 				mBumpMtxArr[i][matsWithBumpMtxs] = new Mtx33*[param_3];
-				mat->getShape()->unk5C           = matsWithBumpMtxs;
+				mat->getShape()->setBumpMtxOffset(matsWithBumpMtxs);
 				++matsWithBumpMtxs;
 			}
 		}

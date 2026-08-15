@@ -195,7 +195,7 @@ void TAnimalBase::perform(u32 cue, JDrama::TGraphics* graphics)
 
 				Mtx* srcArrays[2];
 				srcArrays[0] = shared->mNodeMatrices;
-				srcArrays[1] = shared->unk5C;
+				srcArrays[1] = shared->mWeightEvlpMatrices;
 
 				for (u16 i = 0; i < count; ++i) {
 					MTXConcat(world,

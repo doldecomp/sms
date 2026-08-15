@@ -137,7 +137,7 @@ void TSilhouette::perform(u32 cue, JDrama::TGraphics* graphics)
 		C_MTXLightFrustum(afStack_80, -1.0f, 1.0f, -1.0f, 1.0f, 10.0f, 0.5f,
 		                  0.5f, 0.5f, 0.5f);
 		Mtx afStack_b0;
-		PSMTXRotRad(afStack_b0, 0x58, 1.570796f);
+		PSMTXRotRad(afStack_b0, 0x58, 1.5707964f);
 		Mtx afStack_50;
 		PSMTXConcat(afStack_80, afStack_b0, afStack_50);
 		Mtx afStack_e0;
@@ -364,7 +364,9 @@ void TTrembleModelEffect::movement()
 			unk34[i].x += diff.x * unk3C;
 			unk34[i].y += diff.y * unk3C;
 			unk34[i].z += diff.z * unk3C;
-			unk34[i] *= unk38;
+			unk34[i].x = unk38 * unk34[i].x;
+			unk34[i].y = unk38 * unk34[i].y;
+			unk34[i].z = unk38 * unk34[i].z;
 			unk28[i].add(unk34[i]);
 			unk2C[unk9][i] = unk28[i];
 		}
@@ -506,86 +508,79 @@ static void SetViewFrustumClipCheck(f32 top, f32 bottom, f32 left, f32 right,
 	f32 farLeft   = left * (far / near);
 	f32 farRight  = right * (far / near);
 
-	Vec local_98;
-	Vec local_8c;
-	Vec local_80;
-	Vec local_74;
-	Vec local_68;
-	Vec local_5c;
-	Vec local_50;
-	Vec local_44;
+	Vec corner[8];
 
-	local_44.x = left;
-	local_44.y = top;
-	local_44.z = -near;
+	corner[0].x = left;
+	corner[0].y = top;
+	corner[0].z = -near;
 
-	local_50.x = farLeft;
-	local_50.y = farTop;
-	local_50.z = -far;
+	corner[1].x = farLeft;
+	corner[1].y = farTop;
+	corner[1].z = -far;
 
-	local_5c.x = right;
-	local_5c.y = top;
-	local_5c.z = -near;
+	corner[2].x = right;
+	corner[2].y = top;
+	corner[2].z = -near;
 
-	local_68.x = farRight;
-	local_68.y = farTop;
-	local_68.z = -far;
+	corner[3].x = farRight;
+	corner[3].y = farTop;
+	corner[3].z = -far;
 
-	local_74.x = left;
-	local_74.y = bottom;
-	local_74.z = -near;
+	corner[4].x = left;
+	corner[4].y = bottom;
+	corner[4].z = -near;
 
-	local_80.x = farLeft;
-	local_80.y = farBottom;
-	local_80.z = -far;
+	corner[5].x = farLeft;
+	corner[5].y = farBottom;
+	corner[5].z = -far;
 
-	local_8c.x = right;
-	local_8c.y = bottom;
-	local_8c.z = -near;
+	corner[6].x = right;
+	corner[6].y = bottom;
+	corner[6].z = -near;
 
-	local_98.x = farRight;
-	local_98.y = farBottom;
-	local_98.z = -far;
+	corner[7].x = farRight;
+	corner[7].y = farBottom;
+	corner[7].z = -far;
 
 	Vec v1;
 	Vec v2;
 	Vec normal;
 
-	VECSubtract(&local_50, &local_44, &v1);
-	VECSubtract(&local_5c, &local_44, &v2);
+	VECSubtract(&corner[1], &corner[0], &v1);
+	VECSubtract(&corner[2], &corner[0], &v2);
 	VECCrossProduct(&v1, &v2, &normal);
 	MsVECNormalize(&normal, &normal);
-	sViewPlane[0].set(&normal, &local_44);
+	sViewPlane[0].set(&normal, &corner[0]);
 
-	VECSubtract(&local_8c, &local_74, &v1);
-	VECSubtract(&local_80, &local_74, &v2);
+	VECSubtract(&corner[6], &corner[4], &v1);
+	VECSubtract(&corner[5], &corner[4], &v2);
 	VECCrossProduct(&v1, &v2, &normal);
 	MsVECNormalize(&normal, &normal);
-	sViewPlane[1].set(&normal, &local_74);
+	sViewPlane[1].set(&normal, &corner[4]);
 
-	VECSubtract(&local_74, &local_44, &v1);
-	VECSubtract(&local_50, &local_44, &v2);
+	VECSubtract(&corner[4], &corner[0], &v1);
+	VECSubtract(&corner[1], &corner[0], &v2);
 	VECCrossProduct(&v1, &v2, &normal);
 	MsVECNormalize(&normal, &normal);
-	sViewPlane[2].set(&normal, &local_44);
+	sViewPlane[2].set(&normal, &corner[0]);
 
-	VECSubtract(&local_68, &local_5c, &v1);
-	VECSubtract(&local_8c, &local_5c, &v2);
+	VECSubtract(&corner[3], &corner[2], &v1);
+	VECSubtract(&corner[6], &corner[2], &v2);
 	VECCrossProduct(&v1, &v2, &normal);
 	MsVECNormalize(&normal, &normal);
-	sViewPlane[3].set(&normal, &local_5c);
+	sViewPlane[3].set(&normal, &corner[2]);
 
-	VECSubtract(&local_5c, &local_44, &v1);
-	VECSubtract(&local_74, &local_44, &v2);
+	VECSubtract(&corner[2], &corner[0], &v1);
+	VECSubtract(&corner[4], &corner[0], &v2);
 	VECCrossProduct(&v1, &v2, &normal);
 	MsVECNormalize(&normal, &normal);
-	sViewPlane[4].set(&normal, &local_44);
+	sViewPlane[4].set(&normal, &corner[0]);
 
-	VECSubtract(&local_68, &local_98, &v1);
-	VECSubtract(&local_80, &local_98, &v2);
+	VECSubtract(&corner[3], &corner[7], &v1);
+	VECSubtract(&corner[5], &corner[7], &v2);
 	VECCrossProduct(&v1, &v2, &normal);
 	MsVECNormalize(&normal, &normal);
-	sViewPlane[5].set(&normal, &local_98);
+	sViewPlane[5].set(&normal, &corner[7]);
 }
 
 static f32 sKeepViewClipFovy;
@@ -731,9 +726,8 @@ void SMS_SettingDrawShape(J3DModelData* param_1, u16 param_2)
 {
 	J3DShape* shape = param_1->getShapeNodePointer(param_2);
 	GXCallDisplayList(shape->getDrawList(), 0xC0);
-	J3DVertexData& data = param_1->getVertexData();
-	j3dSys.unk10C       = data.getVtxPosArray();
-	j3dSys.unk110       = data.getVtxNormArray();
+	j3dSys.setVtxPos(param_1->getVtxPosArray());
+	j3dSys.setVtxNrm(param_1->getVtxNormArray());
 	shape->loadVtxArray();
 }
 
@@ -765,10 +759,10 @@ void SMS_ShowJoint(J3DMaterial* param_1, bool param_2)
 {
 	if (param_2) {
 		for (; param_1 != nullptr; param_1 = param_1->getNext())
-			param_1->getShape()->offFlag(1);
+			param_1->getShape()->offFlag(J3DShpFlag_Visible);
 	} else {
 		for (; param_1 != nullptr; param_1 = param_1->getNext())
-			param_1->getShape()->onFlag(1);
+			param_1->getShape()->onFlag(J3DShpFlag_Visible);
 	}
 }
 

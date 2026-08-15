@@ -3,6 +3,7 @@
 
 #include <types.h>
 #include <JSystem/JUtility/JUTNameTab.hpp>
+#include <JSystem/J3D/J3DAssert.hpp>
 #include <dolphin/gx.h>
 #include <dolphin/mtx.h>
 
@@ -305,11 +306,23 @@ public:
 	{
 		return mUpdateMaterialID[idx] != 0xffff;
 	}
-	u16 getUpdateMaterialID(u16 idx) const { return mUpdateMaterialID[idx]; }
+	u16 getUpdateMaterialID(u16 idx) const
+	{
+		J3D_ASSERT_RANGE(1029, idx < mTrackNum / 3);
+		return mUpdateMaterialID[idx];
+	}
 	JUTNameTab* getUpdateMaterialName() { return mUpdateMaterialName; }
-	u8 getUpdateTexMtxID(u16 idx) const { return mUpdateTexMtxID[idx]; }
+	u8 getUpdateTexMtxID(u16 idx) const
+	{
+		J3D_ASSERT_RANGE(1017, idx < mTrackNum / 3);
+		return mUpdateTexMtxID[idx];
+	}
 	u32 getTexMtxCalcType() { return mTexMtxCalcType; }
-	Vec* getSRTCenter(u16 idx) { return &mSRTCenter[idx]; }
+	Vec* getSRTCenter(u16 idx)
+	{
+		J3D_ASSERT_RANGE(1047, idx < mTrackNum / 3);
+		return &mSRTCenter[idx];
+	}
 
 	virtual ~J3DAnmTextureSRTKey() { }
 
@@ -404,6 +417,13 @@ public:
 
 	virtual ~J3DAnmVtxColor() { }
 	virtual void getColor(u8, u16, GXColor*) const { }
+
+	u16 getAnmTableNum(u8 idx) { return mAnmTableNum[idx]; }
+
+	J3DAnmVtxColorIndexData* getAnmVtxColorIndexData(u8 p1, u16 p2)
+	{
+		return &mAnmVtxColorIndexData[p1][p2];
+	}
 
 public:
 	/* 0x10 */ u16 mAnmTableNum[2];
@@ -575,7 +595,11 @@ public:
 	void searchUpdateMaterialID(J3DModelData*);
 	virtual ~J3DAnmTexPattern() { }
 
-	u16 getUpdateMaterialID(u16 idx) const { return mUpdateMaterialID[idx]; }
+	u16 getUpdateMaterialID(u16 idx) const
+	{
+		J3D_ASSERT_RANGE(514, idx < mUpdateMaterialNum / 3 && idx >= 0);
+		return mUpdateMaterialID[idx];
+	}
 	u16 getUpdateMaterialNum() const { return mUpdateMaterialNum; }
 	JUTNameTab* getUpdateMaterialName() { return mUpdateMaterialName; }
 
@@ -632,6 +656,14 @@ public:
 	u16 getCRegUpdateMaterialNum() const { return mCRegUpdateMaterialNum; }
 	u16 getKRegUpdateMaterialNum() const { return mKRegUpdateMaterialNum; }
 
+	bool isValidCRegUpdateMaterialID(u16 idx) const
+	{
+		return mCRegUpdateMaterialID[idx] != 0xffff;
+	}
+	bool isValidKRegUpdateMaterialID(u16 idx) const
+	{
+		return mKRegUpdateMaterialID[idx] != 0xffff;
+	}
 	u16 getCRegUpdateMaterialID(u16 idx) const
 	{
 		return mCRegUpdateMaterialID[idx];

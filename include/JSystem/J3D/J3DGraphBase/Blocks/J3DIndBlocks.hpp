@@ -35,7 +35,9 @@ public:
 
 class J3DIndBlockFull : public J3DIndBlock {
 public:
-	J3DIndBlockFull() { mIndTexStageNum = 0; }
+	J3DIndBlockFull() { initialize(); }
+
+	void initialize();
 
 	virtual void reset(J3DIndBlock*);
 	virtual s32 countDLSize();

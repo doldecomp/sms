@@ -271,10 +271,11 @@ void TIceBlock::calc()
 {
 	Mtx mtx;
 	SMS_GetLightPerspectiveForEffectMtx(mtx);
-	J3DModelData* data = getModel()->getModelData();
-	J3DTexMtx* info
-	    = data->getMaterialNodePointer(0)->getTexGenBlock()->getTexMtx(1);
-	info->setEffectMtx(mtx);
+	getModel()
+	    ->getModelData()
+	    ->getMaterialNodePointer(0)
+	    ->getTexMtx(1)
+	    ->setEffectMtx(mtx);
 }
 
 void TIceBlock::initMapObj()

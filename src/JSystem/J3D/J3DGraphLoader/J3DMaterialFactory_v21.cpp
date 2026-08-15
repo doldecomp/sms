@@ -110,8 +110,8 @@ J3DMaterial* J3DMaterialFactory_v21::create(J3DMaterial* mat, int idx,
 	mat->mTevBlock    = J3DMaterial::createTevBlock((u16)tevStageNum);
 	mat->mIndBlock    = J3DMaterial::createIndBlock(indFlag);
 	mat->mPEBlock = J3DMaterial::createPEBlock(peFlag, getMaterialMode(idx));
-	mat->unkC     = idx;
-	mat->unk8     = getMaterialMode(idx);
+	mat->mIndex   = idx;
+	mat->mMaterialMode = getMaterialMode(idx);
 	mat->mColorBlock->setColorChanNum(newColorChanNum(idx));
 	mat->mColorBlock->setCullMode(newCullMode(idx));
 	mat->mTexGenBlock->setTexGenNum(newTexGenNum(idx));

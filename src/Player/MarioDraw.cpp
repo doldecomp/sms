@@ -893,9 +893,8 @@ BOOL TMario::isAnimeLoopOrStop()
 // Fabricated - Probably somewhere else
 void flagOnAllShapes(J3DModelData* modelData, u32 flag)
 {
-	for (u16 i = 0; i < modelData->getShapeNum(); ++i) {
-		modelData->getShapeNodePointer(i)->unk8 |= flag;
-	}
+	for (u16 i = 0; i < modelData->getShapeNum(); ++i)
+		modelData->getShapeNodePointer(i)->onFlag(flag);
 }
 
 // Fabricated - Probably somewhere else
@@ -914,34 +913,40 @@ void TMario::changeHand(int idx)
 	default:
 	case 0:
 		// 100% an inline
-		mModel->unk8->getModelData()->getShapeNodePointer(5)->offFlag(1);
-		mModel->unk8->getModelData()->getShapeNodePointer(6)->offFlag(1);
-		flagOnAllShapes(mHandModels[0][0]->getModelData(), 1);
-		flagOnAllShapes(mHandModels[0][1]->getModelData(), 1);
-		flagOnAllShapes(mHandModels[1][0]->getModelData(), 1);
-		flagOnAllShapes(mHandModels[1][1]->getModelData(), 1);
+		mModel->unk8->getModelData()->getShapeNodePointer(5)->offFlag(
+		    J3DShpFlag_Visible);
+		mModel->unk8->getModelData()->getShapeNodePointer(6)->offFlag(
+		    J3DShpFlag_Visible);
+		flagOnAllShapes(mHandModels[0][0]->getModelData(), J3DShpFlag_Visible);
+		flagOnAllShapes(mHandModels[0][1]->getModelData(), J3DShpFlag_Visible);
+		flagOnAllShapes(mHandModels[1][0]->getModelData(), J3DShpFlag_Visible);
+		flagOnAllShapes(mHandModels[1][1]->getModelData(), J3DShpFlag_Visible);
 		break;
 	case 1:
 		// 100% an inline
-		mModel->unk8->getModelData()->getShapeNodePointer(5)->onFlag(1);
-		mModel->unk8->getModelData()->getShapeNodePointer(6)->onFlag(1);
-		flagOffAllShapes(mHandModels[0][0]->getModelData(), 1);
-		flagOffAllShapes(mHandModels[0][1]->getModelData(), 1);
-		flagOnAllShapes(mHandModels[1][0]->getModelData(), 1);
-		flagOnAllShapes(mHandModels[1][1]->getModelData(), 1);
+		mModel->unk8->getModelData()->getShapeNodePointer(5)->onFlag(
+		    J3DShpFlag_Visible);
+		mModel->unk8->getModelData()->getShapeNodePointer(6)->onFlag(
+		    J3DShpFlag_Visible);
+		flagOffAllShapes(mHandModels[0][0]->getModelData(), J3DShpFlag_Visible);
+		flagOffAllShapes(mHandModels[0][1]->getModelData(), J3DShpFlag_Visible);
+		flagOnAllShapes(mHandModels[1][0]->getModelData(), J3DShpFlag_Visible);
+		flagOnAllShapes(mHandModels[1][1]->getModelData(), J3DShpFlag_Visible);
 		break;
 	case 2:
 		// 100% an inline
-		mModel->unk8->getModelData()->getShapeNodePointer(5)->onFlag(1);
-		mModel->unk8->getModelData()->getShapeNodePointer(6)->onFlag(1);
-		flagOnAllShapes(mHandModels[0][0]->getModelData(), 1);
-		flagOnAllShapes(mHandModels[0][1]->getModelData(), 1);
-		flagOffAllShapes(mHandModels[1][0]->getModelData(), 1);
-		flagOffAllShapes(mHandModels[1][1]->getModelData(), 1);
+		mModel->unk8->getModelData()->getShapeNodePointer(5)->onFlag(
+		    J3DShpFlag_Visible);
+		mModel->unk8->getModelData()->getShapeNodePointer(6)->onFlag(
+		    J3DShpFlag_Visible);
+		flagOnAllShapes(mHandModels[0][0]->getModelData(), J3DShpFlag_Visible);
+		flagOnAllShapes(mHandModels[0][1]->getModelData(), J3DShpFlag_Visible);
+		flagOffAllShapes(mHandModels[1][0]->getModelData(), J3DShpFlag_Visible);
+		flagOffAllShapes(mHandModels[1][1]->getModelData(), J3DShpFlag_Visible);
 		break;
 	}
 
-	flagOnAllShapes(mRHand4ndModel->getModelData(), 1);
+	flagOnAllShapes(mRHand4ndModel->getModelData(), J3DShpFlag_Visible);
 }
 
 f32 TMario::setAnimation(int anm_id, f32 rate)
@@ -1188,7 +1193,7 @@ void TMario::initModel()
 	DCFlushRange(mRHand4ndModel->getModelData()->getTexture()->getResTIMG(0),
 	             0x20);
 
-	mBodyModelData->getShapeNodePointer(4)->onFlag(1);
+	mBodyModelData->getShapeNodePointer(4)->onFlag(J3DShpFlag_Visible);
 
 	if (mBodyPollutionTex != nullptr) {
 		for (int handIdx = 0; handIdx < 2; ++handIdx) {
@@ -1989,18 +1994,23 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 	}
 
 	if (mAnimationId == ANIM_DEMO_GATE_OUT_GET2) {
-		mModel->unk8->getModelData()->getShapeNodePointer(5)->onFlag(1);
-		mModel->unk8->getModelData()->getShapeNodePointer(6)->onFlag(1);
-		flagOnAllShapes(mHandModels[0][0]->getModelData(), 1);
-		flagOnAllShapes(mHandModels[0][1]->getModelData(), 1);
-		flagOffAllShapes(mHandModels[1][1]->getModelData(), 1);
+		mModel->unk8->getModelData()->getShapeNodePointer(5)->onFlag(
+		    J3DShpFlag_Visible);
+		mModel->unk8->getModelData()->getShapeNodePointer(6)->onFlag(
+		    J3DShpFlag_Visible);
+		flagOnAllShapes(mHandModels[0][0]->getModelData(), J3DShpFlag_Visible);
+		flagOnAllShapes(mHandModels[0][1]->getModelData(), J3DShpFlag_Visible);
+		flagOffAllShapes(mHandModels[1][1]->getModelData(), J3DShpFlag_Visible);
 
 		if (getMotionFrameCtrl().getFrame() < 158.0f) {
-			flagOnAllShapes(mHandModels[1][0]->getModelData(), 1);
-			flagOffAllShapes(mRHand4ndModel->getModelData(), 1);
+			flagOnAllShapes(mHandModels[1][0]->getModelData(),
+			                J3DShpFlag_Visible);
+			flagOffAllShapes(mRHand4ndModel->getModelData(),
+			                 J3DShpFlag_Visible);
 		} else {
-			flagOffAllShapes(mHandModels[1][0]->getModelData(), 1);
-			flagOnAllShapes(mRHand4ndModel->getModelData(), 1);
+			flagOffAllShapes(mHandModels[1][0]->getModelData(),
+			                 J3DShpFlag_Visible);
+			flagOnAllShapes(mRHand4ndModel->getModelData(), J3DShpFlag_Visible);
 		}
 	}
 }

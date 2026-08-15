@@ -4,6 +4,7 @@
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DColorBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DPEBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DIndBlocks.hpp>
+#include <JSystem/J3D/J3DAssert.hpp>
 #include <JSystem/JSupport.hpp>
 
 J3DMaterialFactory::J3DMaterialFactory(const J3DMaterialBlock& block)
@@ -126,8 +127,10 @@ J3DMaterial* J3DMaterialFactory::create(J3DMaterial* mat, int idx,
 	peFlag     = flag & J3DMLF_MaterialPEFull ? 0 : 1;
 	indFlag    = flag & J3DMLF_MaterialUseIndirect ? 1 : 0;
 
-	if (mat == nullptr)
+	if (mat == nullptr) {
 		mat = new J3DMaterial();
+		J3D_ASSERT_ALLOCMEM(269, mat);
+	}
 
 	mat->mColorBlock  = J3DMaterial::createColorBlock(colorFlag);
 	mat->mTexGenBlock = J3DMaterial::createTexGenBlock(texGenFlag);
@@ -135,8 +138,8 @@ J3DMaterial* J3DMaterialFactory::create(J3DMaterial* mat, int idx,
 	mat->mIndBlock    = J3DMaterial::createIndBlock(indFlag);
 	mat->mPEBlock = J3DMaterial::createPEBlock(peFlag, getMaterialMode(idx));
 
-	mat->unkC = idx;
-	mat->unk8 = getMaterialMode(idx);
+	mat->mIndex        = idx;
+	mat->mMaterialMode = getMaterialMode(idx);
 	mat->mColorBlock->setColorChanNum(newColorChanNum(idx));
 	mat->mColorBlock->setCullMode(newCullMode(idx));
 	mat->mTexGenBlock->setTexGenNum(newTexGenNum(idx));

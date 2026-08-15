@@ -239,6 +239,8 @@ void J3DGetTextureMtxMayaOld(const J3DTextureSRTInfo& srt, Mtx dst)
 	dst[2][3] = 0.0f;
 }
 
+void J3DScaleNrmMtx(MtxPtr, const Vec&) { }
+
 void J3DScaleNrmMtx33(register ROMtxPtr mtx, const register Vec& scl)
 {
 	register f32 mtx0_xy, mtx0_z_;
@@ -357,6 +359,10 @@ void J3DMtxProjConcat(register Mtx param_1, register Mtx param_2,
 	}
 #endif // clang-format on
 }
+
+void PSSqrtfv(f32*, f32*, u32) { }
+
+void J3DPSMtx23Copy(MtxPtr, MtxPtr) { }
 
 void J3DPSMtx33Copy(register ROMtxPtr src, register ROMtxPtr dst)
 {
@@ -599,4 +605,9 @@ loop:
 
 	blr
 #endif // clang-format on
+}
+
+void J3DPSMTXConcatArray(const float (*)[4], const float (*)[3][4],
+                         float (*)[3][4], u32)
+{
 }

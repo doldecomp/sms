@@ -19,6 +19,7 @@ public:
 
 	u32 getVtxNum() const { return mVtxNum; }
 	u32 getNrmNum() const { return mNrmNum; }
+	u32 getColNum() const { return mColNum; }
 
 	const GXVtxAttrFmtList* getVtxAttrFmtList() const
 	{
@@ -80,6 +81,13 @@ public:
 		mVtxNrmArray[1] = tmp;
 	}
 
+	void swapVtxColArrayPointer()
+	{
+		GXColor* temp   = mVtxColArray[0];
+		mVtxColArray[0] = mVtxColArray[1];
+		mVtxColArray[1] = temp;
+	}
+
 	void swapTransformedVtxPos()
 	{
 		void* tmp                  = mTransformedVtxPosArray[0];
@@ -96,6 +104,7 @@ public:
 
 	void* getVtxPosArrayPointer(int idx) { return mVtxPosArray[idx]; }
 	void* getVtxNrmArrayPointer(int idx) { return mVtxNrmArray[idx]; }
+	GXColor* getVtxColArrayPointer(int idx) { return mVtxColArray[idx]; }
 
 	J3DVertexData* getVertexData() { return mVertexData; }
 
