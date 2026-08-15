@@ -68,8 +68,8 @@ public:
 	virtual bool check()                    = 0;
 	virtual bool dump_sort() { return true; }
 	virtual bool dump() = 0;
-	virtual s32 changeGroupID(u8 newGroupId);
-	virtual u8 getCurrentGroupId();
+	virtual s32 changeGroupID(u8 newGroupId) { return 0; }
+	virtual u8 getCurrentGroupId() { return 0; }
 	virtual void state_register(JKRHeap::TState*, u32) const;
 	virtual bool state_compare(JKRHeap::TState const&,
 	                           JKRHeap::TState const&) const;
