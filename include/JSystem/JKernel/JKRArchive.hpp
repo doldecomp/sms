@@ -105,24 +105,27 @@ public:
 	JKRArchive();
 	JKRArchive(s32, EMountMode);
 
-	virtual ~JKRArchive();                                 // _08
-	virtual bool becomeCurrent(const char*);               // _10
-	virtual void* getResource(const char* path);           // _14
-	virtual void* getResource(u32 type, const char* name); // _18
+	virtual bool becomeCurrent(const char*);
+	virtual void* getResource(const char* path);
+	virtual void* getResource(u32 type, const char* name);
 	virtual size_t readResource(void* resourceBuffer, u32 bufferSize,
-	                            const char* path); // _1C
+	                            const char* path);
 	virtual size_t readResource(void* resourceBuffer, u32 bufferSize, u32 type,
-	                            const char* name);                      // _20
-	virtual void removeResourceAll();                                   // _24
-	virtual bool removeResource(void*);                                 // _28
-	virtual bool detachResource(void*);                                 // _2C
-	virtual s32 getResSize(const void*) const;                          // _30
-	virtual u32 countFile(const char*) const;                           // _34
-	virtual JKRFileFinder* getFirstFile(const char*) const;             // _38
-	virtual void* fetchResource(SDIFileEntry* entry, u32* outSize) = 0; // _40
+	                            const char* name);
+	virtual void removeResourceAll();
+	virtual bool removeResource(void*);
+	virtual bool detachResource(void*);
+	virtual s32 getResSize(const void*) const;
+	virtual u32 countFile(const char*) const;
+	virtual JKRFileFinder* getFirstFile(const char*) const;
+	virtual void* fetchResource(SDIFileEntry* entry, u32* outSize) = 0;
 	virtual void* fetchResource(void* resourceBuffer, u32 bufferSize,
 	                            SDIFileEntry* entry, u32* resSize)
-	    = 0; // _44
+	    = 0;
+
+	// NOTE: has to be defined not first to get the vtable
+	// to emit to the correct TU
+	virtual ~JKRArchive();
 
 	SDIDirEntry* findDirectory(const char*, u32) const;
 	SDIFileEntry* findFsResource(const char*, u32) const;
