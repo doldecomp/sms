@@ -10,6 +10,8 @@
 #include <JSystem/JUtility/JUTException.hpp>
 #include "dolphin/os.h"
 
+JKRAramArchive::JKRAramArchive() { }
+
 JKRAramArchive::JKRAramArchive(s32 entryNumber,
                                JKRArchive::EMountDirection mountDirection)
     : JKRArchive(entryNumber, MOUNT_ARAM)
@@ -51,6 +53,14 @@ JKRAramArchive::~JKRAramArchive()
 		mIsMounted = false;
 	}
 }
+
+void JKRAramArchive::fixedInit(s32 entryNum) { }
+
+bool JKRAramArchive::mountFixed(s32 entryNum) { return false; }
+
+bool JKRAramArchive::mountFixed(const char* path) { return false; }
+
+void JKRAramArchive::unmountFixed() { }
 
 bool JKRAramArchive::open(s32 entryNum, EMountDirection mountDirection)
 {
@@ -162,6 +172,16 @@ void* JKRAramArchive::fetchResource(void* buffer, u32 bufferSize,
 	return buffer;
 }
 
+u32 JKRAramArchive::getAramAddress_Entry(SDIFileEntry* fileEntry) { return 0; }
+
+u32 JKRAramArchive::getAramAddress(const char* file) { return 0; }
+
+u32 JKRAramArchive::getAramAddress(u32 param_1, const char* file) { return 0; }
+
+u32 JKRAramArchive::getAramAddress(u16 idx) { return 0; }
+
+u32 JKRAramArchive::getIdxAramAddress(u32 idx) { return 0; }
+
 u32 JKRAramArchive::fetchResource_subroutine(u32 srcAram, u32 srcLength,
                                              u8* dst, u32 dstLength,
                                              int compression)
@@ -207,17 +227,17 @@ u32 JKRAramArchive::fetchResource_subroutine(u32 entryNum, u32 length,
 
 	case JKR_COMPRESSION_YAY0:
 	case JKR_COMPRESSION_YAZ0: {
+		u32 readLen;
 		u8* header = (u8*)JKRAllocFromHeap(pHeap, sizeof(SArcHeader), 0x20);
 		JKRAramToMainRam(entryNum, header, sizeof(SArcHeader),
 		                 EXPAND_SWITCH_DEFAULT, 0, nullptr, -1, nullptr);
-		u32 decompressedLen = JKRDecompExpandSize(header);
+		u32 expandSize = JKRDecompExpandSize(header);
 		JKRFreeToHeap(pHeap, header);
-		decompressedLen = ALIGN_NEXT(decompressedLen, sizeof(SArcHeader));
+		u32 decompressedLen = ALIGN_NEXT(expandSize, sizeof(SArcHeader));
 
 		buffer
 		    = (u8*)JKRAllocFromHeap(pHeap, decompressedLen, sizeof(SArcHeader));
 		JUT_ASSERT(703, buffer);
-		u32 readLen;
 		JKRAramToMainRam(entryNum, buffer, alignedLen, EXPAND_SWITCH_DECOMPRESS,
 		                 decompressedLen, pHeap, -1, &readLen);
 		*out = buffer;
