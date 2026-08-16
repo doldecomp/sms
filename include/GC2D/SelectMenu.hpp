@@ -1,5 +1,5 @@
-#ifndef GC2D_SELECT_MENU_2_HPP
-#define GC2D_SELECT_MENU_2_HPP
+#ifndef GC2D_SELECT_MENU_HPP
+#define GC2D_SELECT_MENU_HPP
 
 #include <GC2D/BoundPane.hpp>
 #include <JSystem/J2D/J2DScreen.hpp>
