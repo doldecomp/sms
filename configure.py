@@ -336,7 +336,7 @@ config.libs = [
             Object(Matching, "JSystem/JGadget/singlelinklist.cpp"),
 
             # JKernel
-            Object(NonMatching, "JSystem/JKernel/JKRArchivePri.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRArchivePri.cpp"),
             Object(Matching, "JSystem/JKernel/JKRAramArchive.cpp"),
             Object(Matching, "JSystem/JKernel/JKRAramHeap.cpp"),
             Object(Matching, "JSystem/JKernel/JKRAram.cpp"),
