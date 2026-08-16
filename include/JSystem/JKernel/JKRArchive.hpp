@@ -152,7 +152,7 @@ public:
 	SDIDirEntry* findResType(u32) const;
 	SDIFileEntry* findTypeResource(u32, u32) const;
 
-	static JKRCompression convertAttrToCompressionType(int attr)
+	static JKRCompression convertAttrToCompressionType(u8 attr)
 	{
 		if (!(attr & JKRARCHIVE_ATTR_COMPRESSION))
 			return JKR_COMPRESSION_NONE;
@@ -187,7 +187,7 @@ protected:
 
 enum JKRMemBreakFlag { MBF_0 = 0, MBF_1 = 1 };
 
-inline JKRCompression JKRConvertAttrToCompressionType(int attr)
+inline JKRCompression JKRConvertAttrToCompressionType(u8 attr)
 {
 	return JKRArchive::convertAttrToCompressionType(attr);
 }
