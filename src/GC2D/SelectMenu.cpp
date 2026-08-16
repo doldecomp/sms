@@ -25,12 +25,15 @@
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/ReinitGX.hpp>
 #include <MSound/MSound.hpp>
-#include <MSound/MSoundBGM.hpp>
 #include <stdio.h>
 #include <System/Application.hpp>
 #include <System/MarioGamePad.hpp>
 #include <System/SelectDir.hpp>
 #include <System/StageUtil.hpp>
+
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 // fabricated and not matching
 inline void bzero(void* pDst, u32 len)

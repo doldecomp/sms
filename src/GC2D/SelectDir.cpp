@@ -22,6 +22,10 @@
 #include <System/MarioGamePad.hpp>
 #include <System/Resolution.hpp>
 
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+
 extern OSThread gSetupThread;
 extern u8* gpSetupThreadStack;
 
@@ -50,11 +54,6 @@ TSelectDir::~TSelectDir()
 	unk18->offFlag(1);
 }
 
-void* TSelectDir::setupThreadFunc(void* param_1)
-{
-	((TSelectDir*)param_1)->rsetup();
-}
-
 void TSelectDir::setup(JDrama::TDisplay* display, TMarioGamePad* gamePad,
                        unsigned char stage)
 {
@@ -68,10 +67,9 @@ void TSelectDir::setup(JDrama::TDisplay* display, TMarioGamePad* gamePad,
 	OSResumeThread(&gSetupThread);
 }
 
-void TSelectDir::changeOrder()
+void* TSelectDir::setupThreadFunc(void* param_1)
 {
-	unk44->unkC.on(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
-	unk48->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
+	((TSelectDir*)param_1)->rsetup();
 }
 
 int TSelectDir::rsetup()
@@ -198,6 +196,12 @@ int TSelectDir::rsetup()
 	unk48->unkC.on(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 
 	return 0;
+}
+
+void TSelectDir::changeOrder()
+{
+	unk44->unkC.on(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
+	unk48->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 }
 
 int TSelectDir::direct()
