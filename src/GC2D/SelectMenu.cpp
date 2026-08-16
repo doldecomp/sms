@@ -1218,4 +1218,9 @@ void TSelectMenu::startOpenWindow()
 	}
 }
 
-void TSelectMenu::startCloseWindow() { }
+void TSelectMenu::startCloseWindow()
+{
+	// This function is deadstripped so this a complete guess to make the symbol
+	// size match.
+	mCloseMenu = false;
+}
