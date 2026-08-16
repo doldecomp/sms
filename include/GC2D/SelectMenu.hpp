@@ -42,6 +42,7 @@ public:
 	s8 getNextIndex();
 	s8 getPrevIndex();
 	void startOpenWindow();
+	void startCloseWindow();
 
 public:
 	enum SelectMenuState {

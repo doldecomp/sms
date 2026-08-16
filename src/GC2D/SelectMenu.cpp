@@ -1217,3 +1217,5 @@ void TSelectMenu::startOpenWindow()
 		mLetterboxAnimFrame = 0u;
 	}
 }
+
+void TSelectMenu::startCloseWindow() { }
