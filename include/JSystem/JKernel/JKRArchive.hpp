@@ -38,7 +38,7 @@ public:
 
 	class CArcName {
 	public:
-		CArcName() { }
+		CArcName();
 		CArcName(const char* data) { store(data); }
 		CArcName(const char** p1, char p2) { p1[0] = store(p1[0], p2); }
 
@@ -50,7 +50,7 @@ public:
 
 		u16 mHash;         // _00
 		u16 mLength;       // _02
-		char mString[256]; // _04
+		char mString[257]; // _04
 	};
 
 	struct SDIFileEntry {
