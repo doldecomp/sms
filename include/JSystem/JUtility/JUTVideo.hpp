@@ -10,11 +10,13 @@ public:
 
 	u32 getFbWidth() const { return mRenderObj->fbWidth; }
 	u32 getEfbHeight() const { return mRenderObj->efbHeight; }
+	GXRenderModeObj* getRenderMode() const { return mRenderObj; }
 
 	static JUTVideo* getManager() { return sManager; }
 
 	static JUTVideo* sManager;
 
+public:
 	/* 0x04 */ GXRenderModeObj* mRenderObj;
 };
 
