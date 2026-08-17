@@ -64,8 +64,8 @@ char* JSUInputStream::readString(char* buf, u16 len)
 	}
 
 	s32 r = 0;
-	if (strLen < len) {
-		r      = readData(buf, strLen);
+	if ((u32)strLen < len) {
+		r += readData(buf, (u32)strLen);
 		buf[r] = '\0';
 	} else {
 		r      = readData(buf, len - 1);
@@ -95,17 +95,6 @@ int JSUInputStream::skip(s32 amount)
 	return i;
 }
 
-/* JSURandomInputStream */
-
-int JSURandomInputStream::skip(s32 amount)
-{
-	int s = seekPos(amount, JSUStreamSeekFrom_CUR);
-	if (s != amount) {
-		setState(EOF);
-	}
-	return s;
-}
-
 int JSURandomInputStream::align(s32 alignment)
 {
 	int pos     = getPosition();
@@ -120,6 +109,15 @@ int JSURandomInputStream::align(s32 alignment)
 	}
 
 	return change;
+}
+
+int JSURandomInputStream::skip(s32 amount)
+{
+	int s = seekPos(amount, JSUStreamSeekFrom_CUR);
+	if (s != amount) {
+		setState(EOF);
+	}
+	return s;
 }
 
 u32 JSURandomInputStream::peek(void* buf, s32 len)

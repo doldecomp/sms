@@ -324,7 +324,7 @@ config.libs = [
         "objects": [
             # JSupport
             Object(Matching, "JSystem/JSupport/JSUOutputStream.cpp"),
-            Object(NonMatching, "JSystem/JSupport/JSUInputStream.cpp"),
+            Object(Matching, "JSystem/JSupport/JSUInputStream.cpp"),
             Object(Matching, "JSystem/JSupport/JSUList.cpp"),
             Object(Matching, "JSystem/JSupport/JSUMemoryStream.cpp"),
             Object(Matching, "JSystem/JSupport/JSUFileStream.cpp"),
