@@ -39,6 +39,16 @@ void JSUPtrList::initiate()
 	mLinkCount = 0;
 }
 
+void JSUPtrList::setFirst(JSUPtrLink* first)
+{
+	first->mPtrList = this;
+	first->mPrev    = nullptr;
+	first->mNext    = nullptr;
+	mTail           = first;
+	mHead           = first;
+	mLinkCount      = 1;
+}
+
 bool JSUPtrList::append(JSUPtrLink* node)
 {
 	bool result;
@@ -49,12 +59,7 @@ bool JSUPtrList::append(JSUPtrLink* node)
 	}
 	if (result) {
 		if (mLinkCount == 0) {
-			node->mPtrList = this;
-			node->mPrev    = nullptr;
-			node->mNext    = nullptr;
-			mTail          = node;
-			mHead          = node;
-			mLinkCount     = 1;
+			setFirst(node);
 		} else {
 			node->mPtrList = this;
 			node->mPrev    = mTail;
@@ -78,12 +83,7 @@ bool JSUPtrList::prepend(JSUPtrLink* node)
 	}
 	if (result) {
 		if (mLinkCount == 0) {
-			node->mPtrList = this;
-			node->mPrev    = nullptr;
-			node->mNext    = nullptr;
-			mTail          = node;
-			mHead          = node;
-			mLinkCount     = 1;
+			setFirst(node);
 		} else {
 			node->mPtrList = this;
 			node->mPrev    = nullptr;
@@ -153,4 +153,20 @@ bool JSUPtrList::remove(JSUPtrLink* node)
 	}
 
 	return isSameList;
+}
+
+// UNUSED FUNCTION
+// Ported from TP; the size agrees with the map's 0x88.
+JSUPtrLink* JSUPtrList::getNthLink(u32 index) const
+{
+	if (index >= mLinkCount) {
+		return nullptr;
+	}
+
+	JSUPtrLink* node = mHead;
+	for (u32 i = 0; i < index; i++) {
+		node = node->mNext;
+	}
+
+	return node;
 }
