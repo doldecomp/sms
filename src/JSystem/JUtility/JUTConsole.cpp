@@ -9,6 +9,11 @@
 
 JUTConsoleManager* JUTConsoleManager::sManager;
 
+JUTConsole* JUTConsole::create(unsigned param_0, unsigned param_1,
+                               JKRHeap* pHeap)
+{
+}
+
 JUTConsole* JUTConsole::create(unsigned param_0, void* buffer, u32 bufferSize)
 {
 	JUTConsoleManager* pManager = JUTConsoleManager::getManager();
@@ -22,6 +27,8 @@ JUTConsole* JUTConsole::create(unsigned param_0, void* buffer, u32 bufferSize)
 	pManager->appendConsole(newConsole);
 	return newConsole;
 }
+
+void JUTConsole::destroy(JUTConsole* console) { }
 
 JUTConsole::JUTConsole(unsigned param_0, unsigned maxLines, bool param_2)
 {
@@ -52,6 +59,11 @@ JUTConsole::~JUTConsole()
 	JUTConsoleManager::getManager()->removeConsole(this);
 }
 
+size_t JUTConsole::getObjectSizeFromBufferSize(unsigned param_0,
+                                               unsigned param_1)
+{
+}
+
 size_t JUTConsole::getLineFromObjectSize(u32 bufferSize, unsigned param_1)
 {
 	return (bufferSize - sizeof(JUTConsole)) / (param_1 + 2);
@@ -78,6 +90,8 @@ void JUTConsole::doDraw(JUTConsole::EConsoleType consoleType) const
 	if (mVisible && (mFont != nullptr || consoleType == CONSOLE_TYPE_2)) {
 		if (mHeight != 0) {
 			bool temp_r30 = consoleType == ACTIVE ? true : false;
+			int spA4      = temp_r30 ? 1 : 0;
+			spA4          = 0;
 			font_yOffset  = 2.0f + mFontSizeY;
 
 			if (consoleType != CONSOLE_TYPE_2) {
@@ -85,15 +99,15 @@ void JUTConsole::doDraw(JUTConsole::EConsoleType consoleType) const
 					J2DOrthoGraph ortho(0, 0, 640, 480);
 					ortho.setPort();
 				} else {
-					J2DOrthoGraph ortho(0, 0,
-					                    JUTGetVideoManager()->getFbWidth(),
-					                    JUTGetVideoManager()->getEfbHeight());
+					J2DOrthoGraph ortho(
+					    0, 0, JUTGetVideoManager()->getRenderMode()->fbWidth,
+					    JUTGetVideoManager()->getRenderMode()->efbHeight);
 					ortho.setPort();
 				}
 
 				J2DFillBox(mPositionX - 2, (int)(mPositionY - font_yOffset),
 				           (int)((mFontSizeX * field_0x20) + 4.0f),
-				           (int)(font_yOffset * mHeight),
+				           (int)(font_yOffset * (mHeight + spA4)),
 				           temp_r30 ? field_0x60 : field_0x5c);
 				mFont->setGX();
 
@@ -119,7 +133,8 @@ void JUTConsole::doDraw(JUTConsole::EConsoleType consoleType) const
 			}
 
 			s32 curLine = field_0x30;
-			s32 y       = 0;
+			s32 nextLine;
+			s32 y = 0;
 			u8* linePtr;
 
 			do {
@@ -139,9 +154,61 @@ void JUTConsole::doDraw(JUTConsole::EConsoleType consoleType) const
 					    (char*)linePtr);
 				}
 
-				curLine = nextIndex(curLine);
+				nextLine = nextIndex(curLine);
+				curLine  = nextLine;
 				y++;
-			} while (y < mHeight && curLine != field_0x34);
+			} while (y < mHeight && nextLine != field_0x34);
+
+			// Dead-stripped code copied from TP debug.
+			if (spA4 != 0) {
+				f32 f31  = mPositionX;
+				int sp94 = mHeight * font_yOffset + mPositionY;
+				mFont->setCharColor(
+				    JUtility::TColor(0xff, mVisible ? 0xff : 200, 0xc8, 0xff));
+				mFont->drawString_scale((int)f31, sp94, mFontSizeX, mFontSizeY,
+				                        "X", true);
+				f31 += mFontSizeX;
+				mFont->drawString_scale((int)f31, sp94, mFontSizeX, mFontSizeY,
+				                        mVisible ? "[ON]" : "[OFF]", true);
+				f31 += (int)(mFontSizeX * 6.0f);
+				if (this == nullptr) {
+					mFont->setCharColor(
+					    JUtility::TColor(0xff, 0xff, 0x64, 0xff));
+					mFont->drawString_scale((int)(f31 - mFontSizeX), mFontSizeX,
+					                        mFontSizeY, sp94, "*", true);
+				}
+				mFont->setCharColor(JUtility::TColor(0xc8, 0xc8, 0xc8, 0xff));
+				char spA8[] = "S----------E";
+				char spB8[0x20];
+				int sp90 = diffIndex(field_0x34, field_0x38) + 1;
+				int sp8C = diffIndex(field_0x34, field_0x30);
+				int sp88 = 0;
+				int sp84;
+				if (sp90 <= (int)mHeight) {
+					sp84 = 9;
+					sp88 = 1;
+				} else {
+					sp84 = (sp8C * 9) / (int)(sp90 - mHeight);
+				}
+				spA8[sp84 + 1] = 'O';
+				mFont->drawString_scale((int)f31, sp94, mFontSizeX, mFontSizeY,
+				                        spA8, true);
+				f31 += mFontSizeX * 13.0f;
+				if (sp88) {
+					sprintf(spB8, "ALL");
+				} else {
+					f32 f29 = sp8C / (f32)(sp90 - mHeight);
+					sprintf(spB8, "%3d%%(%dL)", (int)(100.0 * f29), sp90);
+				}
+				mFont->drawString_scale(f31, sp94, mFontSizeX, mFontSizeY, spB8,
+				                        true);
+
+				// Completely fake code. Everything above is from TP, but SMS
+				// reserves 0xc more bytes of stack for temporaries somewhere
+				// in this function.
+				JUtility::TColor(0, 0, 0, 0);
+				mFont->drawString_scale(0, 0, 0, 0, nullptr, false);
+			}
 		}
 	}
 }
@@ -211,6 +278,10 @@ void JUTConsole_print_f_va_(JUTConsole* console, const char* fmt, va_list args)
 	console->print(buf);
 }
 
+void JUTConsole::dumpToTerminal(unsigned param_0) { }
+
+void JUTConsole::dumpToConsole(JUTConsole* console, unsigned param_1) { }
+
 void JUTConsole::scroll(int scrollAmnt)
 {
 	if (scrollAmnt < 0) {
@@ -258,6 +329,8 @@ JUTConsoleManager::JUTConsoleManager()
 	mDirectConsole = nullptr;
 }
 
+JUTConsoleManager::~JUTConsoleManager() { }
+
 JUTConsoleManager* JUTConsoleManager::createManager(JKRHeap* pHeap)
 {
 	if (pHeap == nullptr) {
@@ -268,6 +341,8 @@ JUTConsoleManager* JUTConsoleManager::createManager(JKRHeap* pHeap)
 	sManager                   = manager;
 	return manager;
 }
+
+void JUTConsoleManager::destroyManager(JUTConsoleManager* manager) { }
 
 void JUTConsoleManager::appendConsole(JUTConsole* console)
 {
@@ -299,6 +374,23 @@ void JUTConsoleManager::removeConsole(JUTConsole* console)
 		JUTSetReportConsole(nullptr);
 
 	soLink_.Remove(console);
+}
+
+void JUTConsoleManager::getConsoleNumber() const { }
+
+void JUTConsoleManager::draw() const
+{
+	ConsoleList::const_iterator iter = soLink_.begin();
+	ConsoleList::const_iterator end  = soLink_.end();
+
+	for (; iter != end; ++iter) {
+		const JUTConsole* const console = &(*iter);
+		if (console != mActiveConsole)
+			console->doDraw(JUTConsole::INACTIVE);
+	}
+
+	if (mActiveConsole != nullptr)
+		mActiveConsole->doDraw(JUTConsole::ACTIVE);
 }
 
 void JUTConsoleManager::drawDirect(bool waitRetrace) const

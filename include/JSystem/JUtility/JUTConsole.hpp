@@ -23,6 +23,7 @@ public:
 
 	static JUTConsole* create(unsigned, void*, u32);
 	static JUTConsole* create(unsigned, unsigned, JKRHeap*);
+	static void destroy(JUTConsole*);
 	JUTConsole(unsigned, unsigned, bool);
 	static size_t getObjectSizeFromBufferSize(unsigned, unsigned);
 	static size_t getLineFromObjectSize(u32, unsigned);
@@ -31,6 +32,7 @@ public:
 	void print_f(char const*, ...);
 	void print(char const*);
 	void dumpToTerminal(unsigned);
+	void dumpToConsole(JUTConsole*, unsigned);
 	void scroll(int);
 	int getUsedLine() const;
 	int getLineOffset() const;
@@ -133,9 +135,12 @@ private:
 class JUTConsoleManager {
 public:
 	JUTConsoleManager();
+	~JUTConsoleManager();
 	static JUTConsoleManager* createManager(JKRHeap*);
+	static void destroyManager(JUTConsoleManager*);
 	void appendConsole(JUTConsole*);
 	void removeConsole(JUTConsole*);
+	void getConsoleNumber() const;
 	void draw() const;
 	void drawDirect(bool) const;
 	void setDirectConsole(JUTConsole*);
