@@ -36,17 +36,20 @@ TMovieSubTitle::TMovieSubTitle(const TTHPRender* param_1)
 
 void TMovieSubTitle::setupResource(const char* param_1, JKRArchive* param_2)
 {
-	if (is_longheight_movie(gpApplication.getMovie()))
-		unk14 = new J2DSetScreen("demo_1.blo", param_2);
-	else
-		unk14 = new J2DSetScreen("demo_2.blo", param_2);
+	char buffer[256];
+
+	if (is_longheight_movie(gpApplication.getMovie())) {
+		J2DSetScreen* screen = new J2DSetScreen("demo_1.blo", param_2);
+		unk14                = screen;
+	} else {
+		J2DSetScreen* screen = new J2DSetScreen("demo_2.blo", param_2);
+		unk14                = screen;
+	}
 
 	hide();
 
 	unk18 = (J2DTextBox*)unk14->search('me_a');
 	unk1C = (J2DTextBox*)unk14->search('me_b');
-
-	char buffer[256];
 
 	// inline?
 	memset(buffer, ' ', ARRAY_COUNT(buffer));
@@ -54,7 +57,8 @@ void TMovieSubTitle::setupResource(const char* param_1, JKRArchive* param_2)
 	unk18->setString(buffer);
 	unk1C->setString(buffer);
 
-	unk20 = new TMessageLoader;
+	TMessageLoader* loader = new TMessageLoader;
+	unk20                 = loader;
 	makeBmgName(buffer, ARRAY_COUNT(buffer), param_1);
 	unk20->loadMessageData(buffer);
 

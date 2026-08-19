@@ -49,9 +49,12 @@ void TMovieRumble::movement()
 
 void TMovieRumble::checkRumbleOn()
 {
-	if (unk24 != -1 && unk1C <= unk10->getFrameNumber()) {
-		SMSRumbleMgr->start(unk24, -1, (f32*)nullptr);
-		unk28 = true;
+	if (unk24 != -1) {
+		const s32 frameNumber = unk10->getFrameNumber();
+		if (unk1C <= frameNumber) {
+			SMSRumbleMgr->start(unk24, -1, (f32*)nullptr);
+			unk28 = true;
+		}
 	}
 }
 
@@ -69,10 +72,10 @@ void TMovieRumble::checkRumbleOff()
 
 void TMovieRumble::readCurInfo()
 {
-	int group = unk18;
+	Koga::ToolData* toolData = unk14;
+	int group                = unk18;
 
 	if (isValid() && unk14->isIndexValid(group)) {
-		Koga::ToolData* toolData = unk14;
 		toolData->GetValue(group, "start_frame", unk1C);
 		toolData->GetValue(group, "end_frame", unk20);
 		const char* type;

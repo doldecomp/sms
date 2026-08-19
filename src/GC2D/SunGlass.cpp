@@ -9,6 +9,7 @@
 
 extern JPAEmitterManager* gpEmitterManager4D2;
 
+// TODO: nonmatching, frame 0x58 vs target 0x68
 void TSunGlass::startFade(int type, bool arg1)
 {
 	TFlagManager::getInstance()->getFlag(0x40000);
@@ -25,7 +26,15 @@ void TSunGlass::startFade(int type, bool arg1)
 	unk24 = 0;
 }
 
-void TSunGlass::changeAlpha(u8*) { }
+void TSunGlass::changeAlpha(u8* alpha)
+{
+	*alpha
+	    = (u8)((f32)unk1D + (f32)(unk24 * (unk1C - unk1D)) / (f32)(s16)unk22);
+	if (unk24 < (s16)unk22)
+		unk24++;
+	else
+		unk26 = 0;
+}
 
 void TSunGlass::draw(const JDrama::TRect& rect, JUtility::TColor color)
 {
@@ -77,25 +86,17 @@ void TSunGlass::draw(const JDrama::TRect& rect, JUtility::TColor color)
 
 void TSunGlass::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((cue & CUE_MOVE) && unk26 != 0) {
-		unk14.a = (u8)((f32)unk1D
-		               + (f32)(unk24 * (unk1C - unk1D)) / (f32)(s16)unk22);
-		if (unk24 < (s16)unk22)
-			unk24++;
-		else
-			unk26 = 0;
-	}
+	if ((cue & CUE_MOVE) && unk26 != 0)
+		changeAlpha(&unk14.a);
 
 	if (cue & CUE_DRAW)
 		draw(graphics->getViewport(), unk14);
 }
 
-// TODO: this and changeAlpha have same size, maybe this isn't the right one for
-// this chunk of code?
 u8 TSunGlass::getShineAlpha()
 {
 	u8 alpha = 0;
-	if (gpMarDirector->getCurrentMap() == 1)
+	if (SMSGetMarDirector()->getCurrentMap() == 1)
 		alpha = (u8)((f32)(unk1E - unk1F)
 		             * (1.0f
 		                - (f32)TFlagManager::getInstance()->getFlag(0x40000)
@@ -108,13 +109,16 @@ void TSunGlass::loadAfter() { unk14.a = getShineAlpha(); }
 void TSunGlass::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
-	unk10 = gpMarDirector->unk18[1];
+	TMarioGamePad* gamePad = SMSGetMarDirector()->getGamePad(1);
+	unk10                  = gamePad;
 }
 
 void TSunShine::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (cue & CUE_DRAW)
-		draw(graphics->getViewport(), unk14);
+	if (cue & CUE_DRAW) {
+		const JDrama::TRect& viewport = graphics->getViewport();
+		draw(viewport, unk14);
+	}
 
 	if (cue & CUE_MOVE) {
 		unk14.a = gpSunMgr->getAddColor();

@@ -500,6 +500,8 @@ void TOptionRumbleUnit::setInfluencedAlphaRecursive(J2DPane* pane, bool flag)
 	}
 }
 
+// TODO: nonmatching, target saves r27-r31 (stmw); our register pressure is
+// lower, so some locals or inline shapes are missing
 TOptionSoundUnit::TOptionSoundUnit(J2DScreen* screen)
     : mScreen(screen)
 {
@@ -553,8 +555,9 @@ void TOptionSoundUnit::initSteleoAnm()
 {
 	TPatternAnmControl** ary = mStereoAnimations;
 
-	ary[0] = new TPatternAnmControl(mScreen);
-	ary[0]->set(cSteMonteAnm, ARRAY_COUNT(cSteMonteAnm));
+	ary[0]                      = new TPatternAnmControl(mScreen);
+	TPatternAnmControl* control = ary[0];
+	control->set(cSteMonteAnm, ARRAY_COUNT(cSteMonteAnm));
 	ary[0]->setupAnm();
 
 	ary[1] = new TPatternAnmControl(mScreen);
@@ -572,8 +575,9 @@ void TOptionSoundUnit::initSurroundAnm()
 {
 	TPatternAnmControl** ary = mSurroundAnimations;
 
-	ary[0] = new TPatternAnmControl(mScreen);
-	ary[0]->set(cSurMonteAnm, ARRAY_COUNT(cSurMonteAnm));
+	ary[0]                      = new TPatternAnmControl(mScreen);
+	TPatternAnmControl* control = ary[0];
+	control->set(cSurMonteAnm, ARRAY_COUNT(cSurMonteAnm));
 	ary[0]->setupAnm();
 
 	ary[1] = new TPatternAnmControl(mScreen);

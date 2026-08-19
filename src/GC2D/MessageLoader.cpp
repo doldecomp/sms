@@ -40,22 +40,23 @@ u32 TMessageLoader::loadMessageData(const char* param_1)
 void TMessageLoader::readHeader(u32* a, u32* b, void* header)
 {
 	u32* casted = (u32*)header;
+	u32 size    = casted[2];
+	u32 count   = casted[3];
 
-	*a = *(casted + 2) * 32;
-	*b = *(casted + 3);
+	*a = size * 32;
+	*b = count;
 }
 
 void* TMessageLoader::parseBlock(u32 param_1, u32 param_2, void* param_3)
 {
+	int local_74;
+	int local_70;
 	JSUMemoryInputStream local_5c(param_3, param_1);
 
 	void* result;
 
 	for (int i = 0; i < param_2; ++i) {
-		int local_74;
 		local_5c.read(&local_74, 4);
-
-		int local_70;
 
 		switch (local_74) {
 		case 'INF1': {
@@ -97,11 +98,12 @@ TMessageLoader::EntryInfo* TMessageLoader::getMessageEntry(u32 param_1)
 
 int TMessageLoader::readInfoBlock(void* data)
 {
-	int length = *(int*)data;
-	data       = (u8*)data + 4;
-	JSUMemoryInputStream local_38(data, length - 8);
-	local_38.read(&unk0, 2);
-	local_38.readU16();
+	int* content = (int*)data;
+	int length   = *content++;
+	u16 entrySize;
+	JSUMemoryInputStream local_38(content, length - 8);
+	local_38.read(unk0);
+	local_38.read(entrySize);
 	unk2 = local_38.readU16();
 	local_38.skip(2);
 
