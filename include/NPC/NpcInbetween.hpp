@@ -22,6 +22,16 @@ public:
 	void execPosInbetween(JGeometry::TVec3<f32>* cur_pos);
 
 	// fabricated
+	void calcPosInbetween(JGeometry::TVec3<f32>* cur_pos)
+	{
+		mPosInbetweenTimer -= 1;
+
+		f32 progress = mPosInbetweenTimer * (1.0f / mPosInbetweenFrame);
+
+		cur_pos->x = mCurrentPos.x + (mTargetPos.x - mCurrentPos.x) * progress;
+		cur_pos->y = mCurrentPos.y + (mTargetPos.y - mCurrentPos.y) * progress;
+		cur_pos->z = mCurrentPos.z + (mTargetPos.z - mCurrentPos.z) * progress;
+	}
 	bool isMotionBlending() const
 	{
 		if (mMotionBlendTimer > 0)

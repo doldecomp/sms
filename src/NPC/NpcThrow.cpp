@@ -5,6 +5,9 @@
 #include <Camera/cameralib.hpp>
 #include <Player/MarioAccess.hpp>
 
+// rogue
+#include <System/DummyStrings.hpp>
+
 void TNpcThrow::throwMario(THitActor* param_1)
 {
 	JGeometry::TVec3<f32> local_14;
@@ -17,8 +20,7 @@ void TNpcThrow::throwMario(THitActor* param_1)
 		local_14.set(0.0f, JMASSin(angle), -JMASCos(angle));
 	}
 
-	f32 yaw  = param_1->mRotation.y;
-	s16 sYaw = CLBDegToShortAngle(yaw);
+	s16 sYaw = CLBDegToShortAngle(param_1->mRotation.y);
 
 	f32 x = local_14.x;
 

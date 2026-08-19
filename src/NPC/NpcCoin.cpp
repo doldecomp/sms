@@ -39,11 +39,12 @@ void TNpcCoin::execAppearCoin_()
 		                                             &unk8, 0, nullptr, 0, 4);
 }
 
+// TODO: nonmatching, frame 0x50 vs target 0x60
 void TNpcCoin::requestAppearCoin(const Vec& param_1, f32 param_2, int param_3)
 {
 	unk4 = param_3;
 	unk8.set(param_1);
-	unk14.set(0.0f, JMASin(75), JMACos(75));
+	unk14.set(0.0f, JMASSin(0x3552), JMASCos(0x3552));
 	s16 sangle = CLBDegToShortAngle(param_2);
 	f32 x      = unk14.x;
 	unk14.x    = x * JMASCos(sangle) + unk14.z * JMASSin(sangle);
