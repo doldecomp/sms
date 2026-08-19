@@ -156,11 +156,9 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 		if (uVar7 < bVar1 + uVar5) {
 			bVar2 = false;
 		} else {
-			if (unk24.get() == 1 && unk1F.get() < uVar7 && f31 < unk20.get()) {
+			if (unk24.get() == 1 && uVar7 < unk1F.get() && f31 < unk20.get()) {
 				bVar2 = false;
 			} else {
-				// TODO: definitely an inline, non-structured control flow.
-				// Probably even two to get searchD to not inline.
 				if (param_8 != nullptr) {
 					MSSetSoundMember* candidate
 					    = param_8->searchD(unk5C[unk5A]->unk8);
@@ -254,7 +252,6 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 				snd->setVolume(f30 * f27, 3, 0);
 				snd->setPitch(f29 * f28, 3, 0);
 			} else {
-				// Huh.
 				if (unk5C[unk59] != nullptr)
 					unk5C[unk59]->setPortData(13, 1);
 				unk58 = 0;

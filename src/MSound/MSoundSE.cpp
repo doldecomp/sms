@@ -49,15 +49,13 @@ u32 MSRandVol::getRandomVolume(u32 param_1, u32 param_2) { }
 
 f32 MSRandVol::getRandVol(u32 param_1)
 {
-	f32 d = JALCalc::getRandom(unk3C[param_1 >> 24 & 0xC] * unk18,
-	                           unk2C[param_1 >> 22 & 0xC],
-	                           unk1C[param_1 >> 20 & 0xC])
-	        + 1.0f;
+	f32 step    = unk1C[param_1 >> 22 & 3];
+	f32 maximum = unk2C[param_1 >> 24 & 3];
+	f32 volume  = unk3C[param_1 >> 26 & 3] * unk18;
+	f32 d       = JALCalc::getRandom(volume, maximum, step) + 1.0f;
 
-	if (d < 0.0f)
-		return 0.0f;
-	if (d > 2.0f)
-		return 2.0f;
+	d = d < 0.0f ? 0.0f : d;
+	d = d > 2.0f ? 2.0f : d;
 	return d;
 }
 
@@ -468,6 +466,8 @@ static f32 vecLength(const Vec& vec)
 	return std::sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
 }
 
+// TODO: nonmatching, structural: early id check and bss addressing differ;
+// suspected tie to the startSoundActor receiver spelling in MSound.hpp
 void MSoundSE::startSoundActorWithInfo(u32 param_1, const Vec* param_2,
                                        Vec* param_3, f32 param_4, u32 param_5,
                                        u32 param_6, JAISound** param_7,
@@ -499,6 +499,9 @@ void MSoundSE::startSoundActorWithInfo(u32 param_1, const Vec* param_2,
 		else
 			param_1 += 0x4;
 		break;
+
+	case MSD_SE_OBJ_MA_MIRROR_MOVE:
+		return;
 	}
 
 	if (JALSystem::gateCheckFunc(param_1, fVar7) != true) {

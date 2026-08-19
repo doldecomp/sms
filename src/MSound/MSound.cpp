@@ -114,8 +114,12 @@ void MSSeCallBack::setWaterCameraFir(bool enabled)
 		smWaterFilter = 0;
 }
 
-void MSSeCallBack::setWaterFilter(u16 param_1) { }
+void MSSeCallBack::setWaterFilter(u16 param_1)
+{
+	smWaterFilter = param_1 > 0x78 ? 0x78 : param_1;
+}
 
+// TODO: nonmatching, register allocation and frame 0x50 vs target 0x88
 u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 {
 	switch (param_2) {
@@ -254,13 +258,8 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 		return ukuleleFlag;
 
 	case 121:
-	case 123:
-	case 124:
-	case 125:
-	case 126:
 		return ukuleleFlag;
 
-	// TODO: how to get bge? :(
 	case 127:
 		break;
 	}
@@ -423,6 +422,8 @@ f32 MSound::getDistFromCamera(Vec* pos)
 	return JALCalc::getDist(pos, unk8->unk0);
 }
 
+// TODO: nonmatching, we reload `this` from a stack home where the target
+// keeps it in a register; frame 0x70 vs target 0x88
 MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
                u8* param_5, u32 param_6)
 {
@@ -504,7 +505,7 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 	unkA4 = 0;
 }
 
-void MSound::requestShineAppearFanfare() { }
+void MSound::requestShineAppearFanfare() { unkD1 = 1; }
 
 void MSound::mainLoop()
 {

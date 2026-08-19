@@ -7,6 +7,8 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+Vec _posByCamera[256];
+
 MSSceneSE::MSSceneSE(u32 param_1)
 {
 	for (int i = 0; i < ARRAY_COUNT(unk4); ++i)

@@ -8,6 +8,11 @@
 
 MAnmSound::MAnmSound(MSound* sound) { mData = nullptr; }
 
+void MAnmSound::initAnmSound(void* param_1, u32 param_2, f32 param_3)
+{
+	initActorAnimSound(param_1, param_2, param_3);
+}
+
 void MAnmSound::animeLoop(Vec* param_1, f32 param_2, f32 param_3, u32 param_4,
                           u8 param_5)
 {
@@ -16,20 +21,6 @@ void MAnmSound::animeLoop(Vec* param_1, f32 param_2, f32 param_3, u32 param_4,
 		                param_5);
 }
 
-void MAnmSound::initAnmSound(void* param_1, u32 param_2, f32 param_3)
-{
-	initActorAnimSound(param_1, param_2, param_3);
-}
-
-void MAnmSound::setSpeedModifySound(JAISound* param_1,
-                                    JAIAnimeFrameSoundData* param_2,
-                                    f32 param_3)
-{
-	if (MSound::getSwitch(param_1->getUnk8(), 0x100000, 0x14))
-		JAIAnimeSound::setSpeedModifySound(param_1, param_2, param_3);
-}
-
-// TODO: find a home for this
 static u32 get_thing(u32 param_1)
 {
 	u32 uVar1 = param_1 >> 30;
@@ -47,6 +38,7 @@ static u32 get_thing(u32 param_1)
 	return 0xffffffff;
 }
 
+// TODO: nonmatching, frame 0x30 vs target 0x38
 void MAnmSound::startAnimSound(void* param_1, u32 param_2, JAISound** param_3,
                                JAIActor* param_4, u8 param_5)
 {
@@ -69,6 +61,25 @@ void MAnmSound::startAnimSound(void* param_1, u32 param_2, JAISound** param_3,
 		MSoundSESystem::MSoundSE::startSoundActorInner(param_2, param_3,
 		                                               param_4, 0, param_5);
 	}
+}
+
+void MAnmSound::setSpeedModifySound(JAISound* param_1,
+                                    JAIAnimeFrameSoundData* param_2,
+                                    f32 param_3)
+{
+	if (MSound::getSwitch(param_1->getUnk8(), 0x100000, 0x14))
+		JAIAnimeSound::setSpeedModifySound(param_1, param_2, param_3);
+}
+
+f32 MSMarioPosVolume::getDistFromMario(const Vec& position)
+{
+	if (MSGMSound->cameraLooksAtMario()) {
+		const Vec* marioPosition = MSGMSound->unkAC[0].unk0;
+		return std::sqrtf(std::powf(position.x - marioPosition->x, 2.0f)
+		                  + std::powf(position.y - marioPosition->y, 2.0f)
+		                  + std::powf(position.z - marioPosition->z, 2.0f));
+	}
+	return 0.0f;
 }
 
 void MAnmSoundNPC::startAnimSound(void* param_1, u32 param_2,
