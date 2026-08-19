@@ -21,25 +21,36 @@ TAnimalManagerBase::TAnimalManagerBase(const char* name)
 	mAnimalSave     = nullptr;
 }
 
+void TAnimalManagerBase::loadSaveParams_(const char* prm)
+{
+	mAnimalSave     = new TAnimalSaveIndividual(prm);
+	mViewClipNear   = mAnimalSave->mSLViewClipNear.get();
+	mViewClipFarPtr = &mAnimalSave->mSLViewClipFar.get();
+	unk3C           = mAnimalSave->mSLViewClipRadius.get();
+}
+
 void TAnimalManagerBase::clipEnemies(JDrama::TGraphics* graphics)
 {
-	SetViewFrustumClipCheckPerspective(gpCamera->mFovy, gpCamera->getAspect(),
-	                                   mViewClipNear, *mViewClipFarPtr);
+	int e;
+	TLiveActor* actor;
+	int i;
 
-	s32 count = mObjNum;
-	for (int i = 0; i < count; ++i) {
-		TLiveActor* actor         = (TLiveActor*)unk18[i];
+	SetViewFrustumClipCheckPerspective(gpCamera->getFovy(),
+	                                   gpCamera->getAspect(), getViewClipNear(),
+	                                   *mViewClipFarPtr);
+	for (e = getObjNum(), i = 0; i < e; ++i) {
+		actor = getObj(i);
+
 		JGeometry::TVec3<f32> pos = actor->mPosition;
 		pos.y += 75.0f;
 
 		if (actor->checkLiveFlag(LIVE_FLAG_UNK2000)
 		    && SMS_IsInOtherFastCube(pos)) {
 			actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
+		} else if (ViewFrustumClipCheck(graphics, &actor->mPosition, unk3C)) {
+			actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		} else {
-			if (ViewFrustumClipCheck(graphics, &actor->mPosition, unk3C))
-				actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-			else
-				actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
+			actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		}
 	}
 }
@@ -47,17 +58,17 @@ void TAnimalManagerBase::clipEnemies(JDrama::TGraphics* graphics)
 void TMewManager::load(JSUMemoryInputStream& stream)
 {
 	TAnimalManagerBase::load(stream);
-	mAnimalSave     = new TAnimalSaveIndividual("/Animal/mew.prm");
-	mViewClipNear   = mAnimalSave->mSLViewClipNear.get();
-	mViewClipFarPtr = &mAnimalSave->mSLViewClipFar.get();
-	unk3C           = mAnimalSave->mSLViewClipRadius.get();
+	loadSaveParams_("/Animal/mew.prm");
 }
 
 void TMewManager::loadAfter()
 {
 	TAnimalManagerBase::loadAfter();
-	MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_OBJ_KAMOME_SOLO,
-	                                              mObjNum);
+	// TODO: fabricated - this unused local is required to match the stack
+	// frame size (0x28); TAnimalBase::loadAfter has the same extra 0x10
+	JGeometry::TVec3<f32> pos;
+	u16 num = getObjNum();
+	MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_OBJ_KAMOME_SOLO, num);
 }
 
 void TMewManager::createModelData()

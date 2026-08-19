@@ -84,8 +84,10 @@ void TButterfloid::init(TLiveManager* manager)
 
 void TButterfloid::initBoids()
 {
-	for (int i = 0; i < unk150->mNumBoids; ++i)
-		unk154[i]->init();
+	for (int i = 0; i < unk150->getBoidNum(); ++i) {
+		TRealoidActor* actor = getRealoid(i);
+		actor->init();
+	}
 }
 
 void TButterfloid::receiveMessageFromChild(TButterfly* child)
@@ -108,6 +110,7 @@ void TButterfloid::receiveMessageFromChild(TButterfly* child)
 	}
 }
 
+// TODO: nonmatching, frame 0xa8 vs target 0x108: missing inline temporaries
 void TButterfloid::load(JSUMemoryInputStream& stream)
 {
 	loadDefault(stream, cButterflyMdlNames[mType], 0);
@@ -126,7 +129,7 @@ void TButterfloid::load(JSUMemoryInputStream& stream)
 	unk150->mFleeStrength = 2.0f;
 	unk150->mFlags |= 2;
 
-	for (int i = 0; i < unk150->mNumBoids; ++i)
+	for (int i = 0; i < unk150->getBoidNum(); ++i)
 		unk154[i]->unk70->setBck("butterfly_fly");
 
 	initBoids();

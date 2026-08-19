@@ -11,6 +11,12 @@ public:
 
 	virtual void clipEnemies(JDrama::TGraphics*);
 
+	void loadSaveParams_(const char*);
+
+	// fabricated
+	f32 getViewClipNear() const { return mViewClipNear; }
+	TLiveActor* getObj(int i) { return TLiveManager::getObj(i); }
+
 public:
 	/* 0x54 */ f32 mViewClipNear;
 	/* 0x58 */ const f32* mViewClipFarPtr;

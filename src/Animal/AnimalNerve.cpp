@@ -41,7 +41,7 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 			int lo     = CLBPalFrame<int>(150);
 			int* timer = actor->mFrameTimer;
 			timer[0]   = 0;
-			timer[1]   = MsRandI(hi, lo);
+			timer[1]   = MsRandI(lo, hi);
 		}
 
 		int* timer = actor->mFrameTimer;
@@ -62,7 +62,7 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 				int lo     = CLBPalFrame<int>(150);
 				int* timer = actor->mFrameTimer;
 				timer[0]   = 0;
-				timer[1]   = MsRandI(hi, lo);
+				timer[1]   = MsRandI(lo, hi);
 			}
 			break;
 		}
@@ -74,9 +74,8 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 		const JGeometry::TVec3<f32>& goalPos = actor->unkF4.getPoint();
 		f32 dist = calcDist(goalPos, actor->mPosition);
 
-		if (dist < 200.0f && !actor->unk114.empty()) {
-			actor->unkF4 = actor->unk114.pop();
-		}
+		if (dist < 200.0f)
+			actor->switchNextGoalPath();
 	} else {
 		const JGeometry::TVec3<f32>& curPos = actor->unk104.getPoint();
 		f32 dist = calcDist(curPos, actor->mPosition);
