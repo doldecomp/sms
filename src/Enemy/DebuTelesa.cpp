@@ -11,6 +11,8 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 
 // rogue includes needed for matching sinit & bss
+#include <M3DUtil/InfectiousStrings.hpp>
+#include <Map/MapCollisionEntry.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
@@ -87,6 +89,8 @@ bool TDebuTelesa::doKeepDistance() { return true; }
 
 void TDebuTelesa::setDeadAnm() { getMActor()->getFrameCtrl(0)->init(1); }
 
+// Tiny size mismatch: 0x10C standalone vs 0x110 (UNUSED) in map; the only
+// inline site (calcRootMatrix) matches 100%
 void TDebuTelesa::emitEffects()
 {
 	if (isTaken())

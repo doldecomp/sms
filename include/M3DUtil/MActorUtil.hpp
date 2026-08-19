@@ -7,6 +7,7 @@ class MActorAnmData;
 class SDLModelData;
 class MActor;
 
+void SMS_DumpMActor(MActor*);
 MActor* SMS_MakeMActorFromSDLModelData(SDLModelData*, MActorAnmData*, u32);
 SDLModelData* SMS_MakeSDLModelData(const char*, u32);
 MActor** SMS_MakeMActorsWithAnmData(const char*, MActorAnmData*, int, u32, u32);

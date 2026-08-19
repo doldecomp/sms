@@ -1445,7 +1445,7 @@ void TDoroHaneKuri::attackToMario()
 			mSpine->pushNerve(&TNerveDoroHaneRise::theNerve());
 			onHaveCap();
 			MtxPtr mtx = mMActor->getModel()->getAnmMtx(unk1AC);
-			unk200.set(mtx[3][0], mtx[3][1], mtx[3][2]);
+			unk200.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 			gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &unk200, 0,
 			                                            nullptr);
 		}
@@ -1714,8 +1714,8 @@ void TDangoHamuKuri::reset()
 	mPrev = nullptr;
 	mNext = nullptr;
 	mBoss = nullptr;
-	// TODO: rand interval
-	unk20C = MsRandF(0.0f, 1.0f);
+	TMsRange<f32> randomRange(0.0f, 1.0f);
+	unk20C = randomRange.rand();
 	mMActor->calc();
 }
 
@@ -1856,7 +1856,7 @@ void TDangoHamuKuri::swingBody()
 		if (mAttackSw) {
 			if (mPrev != nullptr) {
 				if (mPrev == mBoss) {
-					mPosition = mBoss->mPosition;
+					mRotation = mBoss->mRotation;
 					unk210 += 10.0f;
 				}
 
@@ -2115,15 +2115,7 @@ bool TFireHamuKuri::isHitValid(u32 param_1)
 	if (unk210)
 		return false;
 
-	if (isBckAnm(3)) {
-		getManager()->requestSerialKill(this);
-		return true;
-	}
-
-	if (checkLiveFlag(LIVE_FLAG_HIDDEN))
-		return false;
-
-	return true;
+	return THamuKuri::isHitValid(param_1);
 }
 
 // TODO: this is the wrong inline, size doesn't match at all!

@@ -571,6 +571,8 @@ void TBGTentacle::TNode::calcPosition(TBGTentacle* param_1)
 	mPosition += mVelocity;
 }
 
+// TODO: nonmatching, an SMatrix34C constructor call is missing near the
+// tail matrices; frame 0x170 vs target 0x1a0
 TBGTentacle::TBGTentacle(TBossGesso* owner, int node_num, int index)
     : JDrama::TViewObj("あし")
     , mState(0)
@@ -1353,7 +1355,8 @@ void TBGTentacle::calcAttackGuideAnm()
 void TBGTentacle::resetAllNodes(const JGeometry::TVec3<f32>& param_1)
 {
 	JGeometry::TVec3<f32> local_78 = param_1;
-	JGeometry::TVec3<f32> zero(0.0f, 0.0f, 0.0f);
+	JGeometry::TVec3<f32> zero;
+	zero.zero();
 
 	getFirstNode()->onUnk24();
 

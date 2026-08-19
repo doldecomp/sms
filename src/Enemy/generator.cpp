@@ -20,20 +20,19 @@ TGenerator::TGenerator(const char* name)
 	mTimer       = 0;
 }
 
+// TODO: nonmatching, a single stack offset differs
 void TGenerator::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
 
-	stream >> mPos.x >> mPos.y >> mPos.z;
-	stream >> mRot.x >> mRot.y >> mRot.z;
-
-	f32 unused;
-	stream >> unused >> unused >> unused;
+	JGeometry::TVec3<f32> scale;
+	s32 dummy;
+	stream >> mPos.x >> mPos.y >> mPos.z >> mRot.x >> mRot.y >> mRot.z
+	    >> scale.x >> scale.y >> scale.z;
 	stream.readString();
 
 	s32 count = stream.readS32();
 	for (int i = 0; i < count; ++i) {
-		s32 dummy;
 		stream >> dummy;
 		stream.readString();
 	}
@@ -43,9 +42,8 @@ void TGenerator::load(JSUMemoryInputStream& stream)
 
 	stream >> mInterval;
 
-	s32 timer = mInterval;
-	timer *= MsRandF();
-	mTimer = timer;
+	count  = mInterval;
+	mTimer = count * MsRandF();
 
 	gpConductor->registerGenerator(this);
 }
@@ -67,7 +65,7 @@ void TGenerator::perform(u32 cue, JDrama::TGraphics* graphics)
 				if (mGraph == nullptr)
 					mGraph = gpConductor->getGraphByName(mGraphName);
 
-				enemy->getTracer()->setGraph(mGraph);
+				enemy->unk124->setGraph(mGraph);
 
 				JGeometry::TVec3<f32> rot(0.0f, 0.0f, 0.0f);
 				JGeometry::TVec3<f32> vel(0.0f, 4.0f, 0.0f);
@@ -109,9 +107,9 @@ void TOneShotGenerator::loadAfter()
 		initHitActor(0x2000001, 1, 0x80000000, 80.0f, 120.0f, 80.0f, 120.0f);
 		offHitFlag(HIT_FLAG_NO_COLLISION);
 
-		JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
-		    ->getChildren()
-		    .push_back(this);
+		TIdxGroupObj* group
+		    = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+		group->getChildren().push_back(this);
 		gpConductor->registerOtherObj(this);
 	}
 }
@@ -122,7 +120,7 @@ BOOL TOneShotGenerator::receiveMessage(THitActor* sender, u32 message)
 		if (mCount != 0) {
 			TSpineEnemy* enemy = mManager->getFarOutEnemy();
 			if (enemy != nullptr) {
-				enemy->getTracer()->setGraph(mGraph);
+				enemy->unk124->setGraph(mGraph);
 
 				JGeometry::TVec3<f32> rot(0.0f, 0.0f, 0.0f);
 				JGeometry::TVec3<f32> vel(0.0f, 4.0f, 0.0f);

@@ -1029,8 +1029,8 @@ void TKumokunManager::load(JSUMemoryInputStream& stream)
 	unk38 = params;
 
 	params->mSLAttackRadius.set(60);
-	params->mSLAttackRadius.set(50);
-	params->mSLDamageRadius.set(60);
+	params->mSLAttackHeight.set(50);
+	params->mSLDamageRadius.set(65);
 	params->mSLDamageHeight.set(70);
 	TSmallEnemyManager::load(stream);
 }

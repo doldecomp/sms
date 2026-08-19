@@ -100,7 +100,8 @@ BOOL TMario::checkSwimJump()
 			return changePlayerJumping(MARIO_STATUS_BROAD_JUMP, 0);
 		}
 
-		if (mFloorPosition.z - mSwimParams.mCanJumpDepth.get() < mPosition.y) {
+		f32 depth = mFloorPosition.z - mSwimParams.mCanJumpDepth.get();
+		if (depth < mPosition.y) {
 			bool doJump = false;
 			if (mIntendedMag == 0.0f)
 				doJump = true;

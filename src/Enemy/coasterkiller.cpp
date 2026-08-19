@@ -319,12 +319,12 @@ void TCoasterKiller::setDeadAnm()
 {
 	mMActor = getActorKeeper()->getMActor("downkiller_model1.bmd");
 	setBckAnm(0);
-	TSpineEnemy* effectBase = gpConductor->makeOneEnemyAppear(
-	    mPosition, "エフェクト爆発マネージャー", 1);
-	if (effectBase != nullptr) {
-		TEffectExplosion* effect = (TEffectExplosion*)effectBase;
+	TEffectExplosion* effect
+	    = (TEffectExplosion*)gpConductor->makeOneEnemyAppear(
+	        mPosition, "エフェクト爆発マネージャー", 1);
+	if (effect != nullptr) {
 		effect->generate(mPosition, mScaling);
-		mScaling *= 0.6f;
+		effect->mScaling *= 0.6f;
 	}
 }
 

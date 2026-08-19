@@ -218,8 +218,9 @@ void TEffectObjManager::load(JSUMemoryInputStream& stream)
 void TEffectObjManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & (CUE_DRAW | CUE_MOVE)) {
-		JGadget::TList<TEffectObjBase*>::iterator it = unk14.begin();
-		for (; it != unk14.end(); ++it)
+		JGadget::TList<TEffectObjBase*>::iterator it  = unk14.begin();
+		JGadget::TList<TEffectObjBase*>::iterator end = unk14.end();
+		for (; it != end; ++it)
 			(*it)->perform(cue, graphics);
 
 		for (int i = 0; i < COOL_EFFECT_OBJ_NUM; ++i)
@@ -247,7 +248,8 @@ void TEffectModel::init(TLiveManager* param_1)
 void TEffectModel::reset()
 {
 	TSpineEnemy::reset();
-	mRotation.y = MsRandF(0.0f, 360.0f);
+	TMsRange<f32> rotationRange(0.0f, 360.0f);
+	mRotation.y = rotationRange.rand();
 	onLiveFlag(LIVE_FLAG_UNK8);
 	onLiveFlag(LIVE_FLAG_UNK10);
 	offLiveFlag(LIVE_FLAG_DEAD);
@@ -499,12 +501,12 @@ void TEffectColumSand::init(TLiveManager* param_1)
 void TEffectColumSand::reset()
 {
 	TEffectModel::reset();
-	mMActor->setBck("08_sunabashira");
-	mMActor->setBrk("08_sunabashira");
-	mMActor->setBtk("08_sunabashira");
-	mMActor->getFrameCtrl(0)->setFrame(0.0f);
-	mMActor->getFrameCtrl(5)->setFrame(0.0f);
-	mMActor->getFrameCtrl(4)->setFrame(0.0f);
+	getMActor()->setBck("08_sunabashira");
+	getMActor()->setBrk("08_sunabashira");
+	getMActor()->setBtk("08_sunabashira");
+	getMActor()->getFrameCtrl(0)->setFrame(0.0f);
+	getMActor()->getFrameCtrl(5)->setFrame(0.0f);
+	getMActor()->getFrameCtrl(4)->setFrame(0.0f);
 }
 
 void TEffectColumSand::generate(JGeometry::TVec3<f32>& param_1,

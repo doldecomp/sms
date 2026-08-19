@@ -49,6 +49,15 @@ THitActor* SMS_GetMarioHitActor() { return (THitActor*)gpMarioAddress; }
 
 TLiveActor* SMS_GetMarioLiveActor() { return (TLiveActor*)gpMarioAddress; }
 
+bool SMS_IsMarioStatusWaiting()
+{
+	if (gpMarioOriginal->mStatus == MARIO_STATUS_WAIT) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
 bool SMS_IsMarioStatusTypeJumping()
 {
 	return gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING);
@@ -62,6 +71,15 @@ bool SMS_IsMarioStatusTypeSwimming()
 bool SMS_IsMarioStatusHipDrop()
 {
 	if (gpMarioOriginal->mStatus == MARIO_STATUS_HIP_DROP) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+bool SMS_IsMarioStatusHipDropEnd()
+{
+	if (gpMarioOriginal->mStatus == MARIO_STATUS_HIP_ATTACK_END) {
 		return 1;
 	} else {
 		return 0;
@@ -86,6 +104,29 @@ bool SMS_IsMarioStatusElecDamage()
 	}
 }
 
+bool SMS_IsStatusHipDropOrHipDropEnd(THitActor* actor)
+{
+	if (((TMario*)actor)->mStatus == MARIO_STATUS_HIP_DROP
+	    || ((TMario*)actor)->mStatus == MARIO_STATUS_HIP_ATTACK_END) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+bool SMS_IsMarioNoCap()
+{
+	if (gpMarioOriginal->isWearingCap())
+		return false;
+	else
+		return true;
+}
+
+bool SMS_IsMarioWearingAloha()
+{
+	return !!gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_SHIRT);
+}
+
 bool SMS_IsMarioHeadSlideAttack()
 {
 	if (gpMarioOriginal->mStatus == MARIO_STATUS_CATCH
@@ -98,6 +139,8 @@ bool SMS_IsMarioHeadSlideAttack()
 
 s16 SMS_GetMarioHP() { return gpMarioOriginal->mHealth; }
 
+s16 SMS_GetMarioHPMax() { return gpMarioOriginal->mDeParams.mHpMax.value; }
+
 f32 SMS_GetMarioDamageRadius() { return gpMarioOriginal->mDamageRadius; }
 
 f32 SMS_GetMarioGrLevel() { return gpMarioOriginal->mFloorPosition.y; }
@@ -108,6 +151,11 @@ f32 SMS_GetMarioGravity()
 }
 
 TWaterGun* SMS_GetMarioWaterGun() { return gpMarioOriginal->mWaterGun; }
+
+void SMS_GetMarioJumpIntoWaterModelData()
+{
+	gpMarioOriginal->getJumpIntoWaterModelData();
+}
 
 bool SMS_SendMessageToMario(THitActor* m, u32 mesg)
 {
@@ -130,6 +178,18 @@ bool SMS_IsMarioTouchGround4cm()
 		return false;
 }
 
+bool SMS_IsMarioSpeedZero() { return gpMarioOriginal->isSpeedZero(); }
+
+// TODO: nonmatching: the target reloads mHolder after the null check
+// (lwz r0, 0x68 for the compare, then lwz r3, 0x68 for the deref).
+// MWCC merges the two reads for every natural spelling tried at -opt
+// level >= 2, and level <= 1 unfuses the !=0 tail (li+subf instead of
+// neg), so no single configuration reproduces both. TMario::calcAnim in
+// MarioDraw.cpp has the same unexplained reload at its two
+// setMotionBlendRatio guards.
+// A const read (TTakeActor::isTaken) plus a non-const one (getHolder) does
+// not split them either: they still merge, and isTaken's TRUE/FALSE ternary
+// materializes as an operand of the &&, costing four instructions (73.6%).
 bool SMS_IsMarioOnWire()
 {
 	bool ret;
@@ -179,6 +239,15 @@ void SMS_WindMoveMario(const JGeometry::TVec3<float>& vec)
 	gpMarioOriginal->windMove(vec);
 }
 
+// Fabricated body, almost certainly not the original one.
+// TODO: dead code, so the only surviving evidence is the name and the 0x14
+// size: five instructions, i.e. global load, scaled index, add, load, blr.
+// unk530 was picked only because it is the sole plainly indexed array member
+// of TMario; nothing in the class or the map is named "work", so the member
+// and the return type are both unknown. The size below is right; the meaning
+// is not.
+s16 SMS_GetMarioWork(int index) { return gpMarioOriginal->unk530[index]; }
+
 u32 SMS_GetMarioStatus() { return gpMarioOriginal->mStatus; }
 
 const TBGCheckData* SMS_GetMarioGrPlane()
@@ -197,6 +266,16 @@ const TBGCheckData* SMS_GetMarioRfPlane()
 }
 
 u32 SMS_GetMarioStatus(THitActor* actor) { return ((TMario*)actor)->mStatus; }
+
+bool SMS_IsMarioTouchGround4cm(THitActor* actor)
+{
+	if (((TMario*)actor)->isTouchGround4cm())
+		return true;
+	else
+		return false;
+}
+
+f32 SMS_GetMarioSpeedY(THitActor* actor) { return ((TMario*)actor)->mVel.y; }
 
 bool SMS_IsMarioFencing() { return gpMarioOriginal->isFencing(); }
 

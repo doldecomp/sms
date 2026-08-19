@@ -217,6 +217,8 @@ void TTelesa::load(JSUMemoryInputStream& stream)
 	setTypeNormal();
 }
 
+// TODO: nonmatching, one compare emits cmplw where target has cmpw (check
+// operand signedness); frame 0xb0 vs target 0xc0
 void TTelesa::init(TLiveManager* manager)
 {
 	TWalkerEnemy::init(manager);
@@ -679,8 +681,9 @@ void TTelesa::initAttacker(THitActor* param_1)
 	unk184 = 1;
 	mSpine->initWith(&TNerveTelesaAttackMario::theNerve());
 
-	MtxPtr mtx = ((TLiveActor*)param_1)->getModel()->getAnmMtx(5);
-	mPosition.set(mtx[3][0], mtx[3][1] - 150.0f, mtx[3][2]);
+	TLiveActor* attacker = (TLiveActor*)param_1;
+	MtxPtr mtx           = attacker->getModel()->getAnmMtx(5);
+	mPosition.set(mtx[0][3], mtx[1][3] - 150.0f, mtx[2][3]);
 	mDampenedGroundHeight = mPosition.y;
 
 	mVelocity.set(0.0f, 8.0f, 0.0f);

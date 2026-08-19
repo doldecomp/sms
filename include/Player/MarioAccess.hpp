@@ -31,14 +31,14 @@ inline bool SMS_CheckMarioFlag(u32 flag)
 
 bool SMS_IsMarioRoofing();
 bool SMS_IsMarioFencing();
-void SMS_GetMarioSpeedY(THitActor*);
-void SMS_IsMarioTouchGround4cm(THitActor*);
+f32 SMS_GetMarioSpeedY(THitActor*);
+bool SMS_IsMarioTouchGround4cm(THitActor*);
 u32 SMS_GetMarioStatus(THitActor*);
 const TBGCheckData* SMS_GetMarioRfPlane();
 const TBGCheckData* SMS_GetMarioWlPlane();
 const TBGCheckData* SMS_GetMarioGrPlane();
 u32 SMS_GetMarioStatus();
-void SMS_GetMarioWork(int);
+s16 SMS_GetMarioWork(int);
 void SMS_WindMoveMario(const JGeometry::TVec3<f32>&);
 void SMS_FlowMoveMario(const JGeometry::TVec3<f32>&);
 void SMS_MarioWarpRequest(const JGeometry::TVec3<f32>&, f32);
@@ -48,7 +48,7 @@ bool SMS_IsMarioDashing();
 bool SMS_IsMarioOnYoshi();
 bool SMS_IsMarioOpeningDoor();
 bool SMS_IsMarioOnWire();
-void SMS_IsMarioSpeedZero();
+bool SMS_IsMarioSpeedZero();
 bool SMS_IsMarioTouchGround4cm();
 
 void SMS_ThrowMario(const JGeometry::TVec3<f32>&, f32);

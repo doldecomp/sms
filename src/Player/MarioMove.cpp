@@ -215,7 +215,7 @@ BOOL TMario::canBendBody()
 	return TRUE;
 }
 
-void TMario::isSpeedZero() { }
+BOOL TMario::isSpeedZero() { }
 
 void TMario::changePos(const Vec&) { }
 
@@ -673,7 +673,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 u32 TMario::setStatusToRunning(u32 status, u32)
 {
-	f32 mag = mIntendedMag <= 8.0f ? 8.0f : mIntendedMag;
+	f32 mag = mIntendedMag <= 8.0f ? mIntendedMag : 8.0f;
 
 	switch (status) {
 	case MARIO_STATUS_RUN:
@@ -2032,6 +2032,8 @@ void TMario::thinkSituation()
 		offFlag(MARIO_FLAG_NPC_TALKING);
 }
 
+// TODO: nonmatching, one bool test emits clrlwi. where target has cmpwi
+// (check the variable's type); frame 0xa8 vs target 0xf0
 void TMario::thinkWaterSurface()
 {
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000))
@@ -2082,7 +2084,7 @@ void TMario::thinkWaterSurface()
 
 	if (isInWater && mPosition.y < mFloorPosition.z) {
 		if (mFloorPosition.z > mPosition.y + mRunParams.mSwimDepth.get()) {
-			// deep water — Mario plunges in
+			// deep water - Mario plunges in
 			if (onYoshi()) {
 				mYoshi->disappear();
 				if (mWaterGun != nullptr) {

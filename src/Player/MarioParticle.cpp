@@ -754,7 +754,7 @@ void TMario::kickFruitEffect()
 		emitter->setScale(scale);
 		JGeometry::TVec3<f32> pos = mPosition;
 		pos.y += 30.0f;
-		emitter->mTrans.set(pos);
+		emitter->unk160.set(pos);
 	}
 }
 

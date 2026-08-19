@@ -28,7 +28,7 @@ void TBGPolDrop::move()
 	if (!unk58)
 		return;
 
-	JGeometry::TVec3<f32> local_14 = mPosition;
+	JGeometry::TVec3<f32> local_14 = getPosition();
 	local_14 += unk44;
 
 	if (unk58 == 1) {
@@ -49,7 +49,7 @@ void TBGPolDrop::move()
 			unk44.zero();
 			if (!unk50->checkCurBckFromIndex(12)) {
 				unk50->setBckFromIndex(12);
-				unk50->setBckFromIndex(13);
+				unk54->setBckFromIndex(13);
 			}
 
 			gpMarioParticleManager->emit(BGESO_JPA_MS_BOGE_ODANHIT_A, &local_14,

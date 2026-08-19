@@ -903,11 +903,12 @@ void TGessoPolluteObj::loadInit(TSpineEnemy* param_1, const char* param_2)
 
 f32 TGessoPolluteObj::getNowGravity()
 {
-	f32 gravity = unk16C->getSaveParams()->mSLPolluteObjGravity.get();
-	if (unk16C->unk1D8 == 0)
+	TGesso* boss = unk16C;
+	f32 gravity  = boss->getSaveParams()->mSLPolluteObjGravity.get();
+	if (boss->unk1D8 == 0)
 		return gravity;
 
-	return unk16C->getSaveParams()->mSLPolluteObjLinerG.get();
+	return boss->getSaveParams()->mSLPolluteObjLinerG.get();
 }
 
 void TGessoPolluteObj::pollute()

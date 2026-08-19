@@ -33,9 +33,9 @@ static f32 calcFarthestVertex(const TBGCheckData* param_1,
 	if (bVar8) {
 		f7 = 0.0;
 	} else {
-		// TODO: yet another copy of the standard sqrt
-		// but without the newton iterations...
-		volatile f32 tmp = f7 * __frsqrte(f7);
+		double guess     = __frsqrte((double)f7);
+		double root      = f7 * guess;
+		volatile f32 tmp = (f32)root;
 		f7               = tmp;
 	}
 	return f7;

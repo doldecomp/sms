@@ -21,10 +21,10 @@ public:
 	static bool isOnWire(const JGeometry::TVec3<f32>&);
 	f32 getRangePos(const JGeometry::TVec3<f32>&) const;
 	TMapWire* getWire() const;
-	void isStartWire(const JGeometry::TVec3<f32>&, f32) const;
+	bool isStartWire(const JGeometry::TVec3<f32>&, f32) const;
 	bool isEndWire(const JGeometry::TVec3<f32>&, f32) const;
-	void getStartRangePos(f32);
-	void getEndRangePos(f32);
+	static f32 getStartRangePos(f32);
+	static f32 getEndRangePos(f32);
 
 private:
 	/* 0x04 */ s32 mWireNumber;

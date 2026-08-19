@@ -17,19 +17,19 @@ void M3UModelMario::changeMtxCalcSIAnmBQAnmTransform(int param_1, int param_2,
 
 void M3UModelMario::updateInMotion()
 {
-	// volatile u32 unused[12];
 	for (int i = 0; i < unk10; ++i) {
 		SomeModelMarioStruct& info = unk24[i];
 		getFrameCtrl(info.unk8).update();
-		J3DJoint* jnt = unk8->mModelData->getJointNodePointer(info.unk0);
+		J3DJoint* jnt
+		    = getModel()->getModelData()->getJointNodePointer(info.unk0);
 
 		if (info.unk3 == 0xff) {
 			jnt->setMtxCalc(nullptr);
 			continue;
 		}
 
-		J3DAnmTransform* prev = unk4->unk4[info.unk4[0]];
-		J3DAnmTransform* next = unk4->unk4[info.unk4[1]];
+		J3DAnmTransform* prev = unk4->getAnmTransform(info.unk4[0]);
+		J3DAnmTransform* next = unk4->getAnmTransform(info.unk4[1]);
 
 		if (prev != nullptr)
 			prev->setFrame(getFrameCtrl(info.unk8).getFrame());

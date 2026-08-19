@@ -46,6 +46,8 @@ static const char cDirtyTexName[]  = "H_ma_rak_dummy";
 
 #include <Player/MarioAnimeData.hpp>
 
+// TODO: the implicit ~TEnemyMario() is 99.9% nonmatching (minor stack offsets)
+
 static const TEnemyMario::TReplayLink replayLinkMonteMan[6] = {
 	{ 1, 0 },       { 1, 1 },       { 1, 2 },
 	{ 0xff, 0xff }, { 0xff, 0xff }, { 0xff, 0xff },
@@ -269,7 +271,7 @@ BOOL TEnemyMario::canJumpToNode() const
 
 // UNUSED in retail (inlined away), size 0x8 = 2 PPC instructions. A plain
 // bit-test compiles to 7 (MWCC's neg/subic/subfe bool normalization). 2 instrs
-// is just a load + blr, i.e. no room to mask — the real body must return a
+// is just a load + blr, i.e. no room to mask - the real body must return a
 // non-normalized value. Exact form is TODO (dead code, no callsite to anchor).
 bool TEnemyMario::isDispPencil() const { return false; }
 

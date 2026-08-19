@@ -1189,6 +1189,7 @@ void TNozzleDeform::animation(int param)
 	}
 }
 
+// TODO: nonmatching, stack slot ordering only
 TWaterGun::TWaterGun(TMario* mario)
     : mNozzleDeform("normal_wg", "/Mario/WaterGun/NozzleDeform.prm", this)
     , mNozzleRocket(nullptr, "/Mario/WaterGun/NozzleTrgRocket.prm", this)
@@ -1473,6 +1474,7 @@ void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 	}
 }
 
+// TODO: nonmatching, frame 0xd8 vs target 0x1c8: missing inline temporaries
 void TWaterGun::movement()
 {
 	if (!canSpray()) {
@@ -1491,8 +1493,8 @@ void TWaterGun::movement()
 		unk1CD2 += mNozzleList[mCurrentNozzle]->unk378
 		           * mWatergunParams.mNozzleAngleYSpeed.get();
 		unk1CD2 *= mWatergunParams.mNozzleAngleYBrake.get();
-		if (mWatergunParams.mHoverRotMax.get() < unk1CD2) {
-			unk1CD2 = mWatergunParams.mHoverRotMax.get();
+		if (mWatergunParams.mNozzleAngleYSpeedMax.get() < unk1CD2) {
+			unk1CD2 = mWatergunParams.mNozzleAngleYSpeedMax.get();
 		}
 		unk1CD0 = unk1CD0 + unk1CD2;
 	} else {
@@ -1752,8 +1754,8 @@ void TWaterGun::rotateProp(f32 rotation)
 	if (mCurrentNozzle == 5) {
 		unk1CD2 += rotation * mWatergunParams.mNozzleAngleYSpeed.get();
 		unk1CD2 *= mWatergunParams.mNozzleAngleYBrake.get();
-		if (mWatergunParams.mHoverRotMax.get() < unk1CD2) {
-			unk1CD2 = mWatergunParams.mHoverRotMax.get();
+		if (mWatergunParams.mNozzleAngleYSpeedMax.get() < unk1CD2) {
+			unk1CD2 = mWatergunParams.mNozzleAngleYSpeedMax.get();
 		}
 		unk1CD0 = unk1CD0 + unk1CD2;
 	} else {

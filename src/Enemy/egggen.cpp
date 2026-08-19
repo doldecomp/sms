@@ -33,7 +33,8 @@ void TEggGenerator::control()
 {
 	if (VECSquareDistance(&mPosition, &gpMarioOriginal->mPosition)
 	    < 250000.0f) {
-		if (!gpMarioOriginal->mYoshi->isHatched())
+		BOOL hatched = gpMarioOriginal->isYoshiHatched();
+		if (!hatched)
 			mMActor->setBckFromIndex(0);
 	}
 }

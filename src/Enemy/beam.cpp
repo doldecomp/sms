@@ -73,13 +73,12 @@ void TConeBeam::drawConeBeamAux(const GXColor& color, bool unk)
 	GXEnd();
 }
 
-// TODO: @non-matching
+// TODO: nonmatching, loop induction ordering and vertex stack offsets
 void TConeBeam::calcVertices(int count)
 {
-	JGeometry::TVec3<f32> local_134(0.0f, 1.0f, 0.0f);
-
-	JGeometry::TVec3<f32> local_128 = unk0C;
 	JGeometry::TVec3<f32> local_140;
+	JGeometry::TVec3<f32> local_134(0.0f, 1.0f, 0.0f);
+	JGeometry::TVec3<f32> local_128 = unk0C;
 
 	mVtxCount = count;
 	local_128.sub(unk00);
@@ -111,11 +110,16 @@ void TConeBeam::calcVertices(int count)
 			mVtx[i] = local_11c;
 		}
 	} else {
-		JGeometry::TPartition3<f32> partition(mBGCheckData->getNormal(),
-		                                      mBGCheckData->getPlaneDistance());
+		JGeometry::TPartition3<f32> partition;
+		const JGeometry::TVec3<f32>& normal = mBGCheckData->getNormal();
+		const f32 planeDistance             = mBGCheckData->getPlaneDistance();
+		const f32 normalX                   = normal.x;
+		const f32 normalY                   = normal.y;
+		const f32 normalZ                   = normal.z;
+		partition.mDist                     = planeDistance;
+		partition.mNormal.set(normalX, normalY, normalZ);
 		f32 local_128Len = PSVECMag(&local_128);
-		f32 angle        = matan(local_128Len, mScale)
-		            * (360.0f / 65536.0f); // this is SHORT2DEGANGLE constant
+		f32 angle        = matan(local_128Len, mScale) * (360.0f / 65536.0f);
 
 		PSVECNormalize(&local_128, &local_128);
 
