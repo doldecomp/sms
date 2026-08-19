@@ -60,6 +60,11 @@ extern const float __two_to_log2e_m1_tI[178];
 #define V_EXPF_MAX (88.72284f)
 #define V_EXPF_MIN (-87.33655f)
 
+// TODO: nonmatching, instruction stream is exact but FP registers are
+// renumbered: the target keeps the long-lived values (constants, pow2,
+// table element) in f6-f9 while we get f0-f4, so the Horner chain temps
+// start at f9 instead of f5. Source-order and const-local/inline-literal
+// permutations were tried and do not flip the allocation.
 float expf(float x)
 {
 	static const float __exp_to_x[] = {
@@ -113,16 +118,17 @@ inline float __log2f(float x)
 	float frac, r;
 	int exp, index;
 	int hi_bits, lo_bits;
-	int bits = *(int*)&x;
+	int lo_mask;
 
-	exp   = ((unsigned int)bits >> 23) - 0x80;
-	index = ((unsigned int)bits >> 16) & 0x7F;
+	lo_mask = *(int*)&x & 0x7FFFFF;
+	exp     = ((unsigned int)*(int*)&x >> 23) - 0x80;
+	index   = ((unsigned int)*(int*)&x >> 16) & 0x7F;
 
-	if ((unsigned short)bits != 0) {
-		hi_bits = (bits & 0x7F0000) | 0x3F800000;
-		lo_bits = (bits & 0x7FFFFF) | 0x3F800000;
+	if ((unsigned short)*(int*)&x != 0) {
+		hi_bits = (*(int*)&x & 0x7F0000) | 0x3F800000;
+		lo_bits = lo_mask | 0x3F800000;
 
-		if (bits & 0x8000) {
+		if (*(int*)&x & 0x8000) {
 			index++;
 			hi_bits += 0x10000;
 		}
@@ -160,23 +166,24 @@ inline float __exp2f(float f)
 	p = f * p + __two_to_x[1];
 	p = f * p + __two_to_x[0];
 
-	float fp = f * p;
-	return 0.75f + (0.25f + fp);
+	p = f * p;
+	return 0.75f + (0.25f + p);
 }
 
 #pragma cplusplus off
 
+// TODO: nonmatching, every opcode matches but the same FP renumbering as
+// expf remains (via the __log2f/__exp2f inlines) plus a 0x10 stack frame
+// excess (0xa0 here vs 0x90 in the target).
 float powf(float x, float y)
 {
-	// TODO: work on improving acc, im lazy right now so this is half assed
-	int ix, iy, n;
-	float logx, t, f, r;
+	int iy, n;
+	float t, f, r;
 	int cx, cy;
 
 	/* x > 0 */
 	if (x > 0.0f) {
-		logx = __log2f(x);
-		t    = y * logx;
+		t = y * __log2f(x);
 
 		n = (int)t;
 		f = t - (float)n;
@@ -194,11 +201,10 @@ float powf(float x, float y)
 	/* x < 0 */
 	if (x < 0.0f) {
 		iy = (int)y;
-		if ((y - (float)iy) != 0.0f)
+		if ((y - (float)(int)y) != 0.0f)
 			return __NAN;
-		if (((int)y % 2) != 0) {
-			logx = __log2f(-x);
-			t    = y * logx;
+		if ((iy % 2) != 0) {
+			t = y * __log2f(-x);
 
 			n = (int)t;
 			f = t - (float)n;
@@ -215,8 +221,7 @@ float powf(float x, float y)
 			return -r;
 		}
 
-		logx = __log2f(-x);
-		t    = y * logx;
+		t = y * __log2f(-x);
 
 		n = (int)t;
 		f = t - (float)n;
@@ -231,41 +236,11 @@ float powf(float x, float y)
 		return *(float*)&n * __exp2f(f);
 	}
 
-	/* x classification */
-	{
-		float xc = x;
-		ix       = *(int*)&xc & 0x7F800000;
-		switch (ix) {
-		case 0x7F800000:
-			cx = (*(int*)&xc & 0x7FFFFF) ? 1 /* NaN */ : 2 /* inf */;
-			break;
-		case 0x0:
-			cx = (*(int*)&xc & 0x7FFFFF) ? 5 /* denorm */ : 3 /* zero */;
-			break;
-		default:
-			cx = 4; /* normal */
-			break;
-		}
-	}
-	if (cx == 1)
-		return x; /* NaN */
+	cx = fpclassify(x);
+	if (cx == FP_QNAN)
+		return x;
 
-	/* y classification */
-	{
-		float yc = y;
-		iy       = *(int*)&yc & 0x7F800000;
-		switch (iy) {
-		case 0x7F800000:
-			cy = (*(int*)&yc & 0x7FFFFF) ? 1 /* NaN */ : 2 /* inf */;
-			break;
-		case 0x0:
-			cy = (*(int*)&yc & 0x7FFFFF) ? 5 /* denorm */ : 3 /* zero */;
-			break;
-		default:
-			cy = 4; /* normal */
-			break;
-		}
-	}
+	cy = fpclassify(y);
 
 	switch (cy) {
 	case 3:
