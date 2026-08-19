@@ -1,42 +1,56 @@
 #include <Strategic/HitActor.hpp>
 #include <math.h>
 
-f32 THitActor::calcEntryRadius()
+// Fabricated: rough sqrt without the Newton refinement step, in the style of
+// MsSqrtf (MathUtil.hpp). The double intermediates are required for the stack
+// frame to match. TSpineEnemy::calcTurnSpeedToReach (enemy.cpp) and
+// calcFarthestVertex (walker.cpp) inline the same computation, so this likely
+// lived in a shared header.
+inline f32 MsFastSqrtf(f32 x)
+{
+	volatile float y;
+	double guess = __frsqrte((double)x);
+	double root  = x * guess;
+	y            = (float)root;
+	return y;
+}
+
+// TODO: without the pragma, MWCC auto-inlines this function into initHitActor,
+// which the original binary does not do. The original spelling was presumably
+// heavy enough on its own to stay over the auto-inline threshold.
+#pragma dont_inline on
+void THitActor::calcEntryRadius()
 {
 	f32 rad;
-	if (mAttackRadius > mDamageRadius)
-		rad = mAttackRadius;
+	if (getAttackRadius() > getDamageRadius())
+		rad = getAttackRadius();
 	else
-		rad = mDamageRadius;
+		rad = getDamageRadius();
 
 	f32 height;
-	if (mAttackHeight > mDamageHeight)
-		height = mAttackHeight;
+	if (getAttackHeight() > getDamageHeight())
+		height = getAttackHeight();
 	else
-		height = mDamageHeight;
+		height = getDamageHeight();
 
-	f32 height2 = height * height;
-	f32 rad2    = rad * rad + height2;
+	f32 rad2 = rad * rad + height * height;
 
 	if (rad2 > 0.0f) {
-		// TODO: some kind of a fast sqrt function?
-		volatile f32 f = rad2 * __frsqrte(rad2);
-		mEntryRadius   = 1.4142135f * f;
+		mEntryRadius = 1.4142135f * MsFastSqrtf(rad2);
 	} else {
 		mEntryRadius = 0.0f;
 	}
-
-	return height2;
 }
+#pragma dont_inline off
 
 void THitActor::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	JDrama::TActor::perform(cue, graphics);
 }
 
-f32 THitActor::initHitActor(u32 actor_type, u16 max_collisions, int hit_flags,
-                            f32 attack_radius, f32 attack_height,
-                            f32 damage_radius, f32 damage_height)
+void THitActor::initHitActor(u32 actor_type, u16 max_collisions, int hit_flags,
+                             f32 attack_radius, f32 attack_height,
+                             f32 damage_radius, f32 damage_height)
 {
 	mActorType   = actor_type;
 	mColCapacity = max_collisions;
@@ -52,7 +66,7 @@ f32 THitActor::initHitActor(u32 actor_type, u16 max_collisions, int hit_flags,
 	mDamageRadius = damage_radius;
 	mDamageHeight = damage_height;
 
-	return calcEntryRadius();
+	calcEntryRadius();
 }
 
 THitActor::THitActor(const char* name)

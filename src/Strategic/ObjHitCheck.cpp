@@ -216,16 +216,40 @@ void TObjHitCheck::checkGroupPlayer(TIdxGroupObj* group)
 		if (it->checkHitFlag(HIT_FLAG_NO_COLLISION))
 			continue;
 
-		if (checkDistance(it->mPosition, it->getAttackRadius(),
+		if (checkDistance((*it)->mPosition, it->getAttackRadius(),
 		                  it->getAttackHeight(), mario->mPosition,
-		                  mario->getAttackRadius(), mario->getAttackHeight())) {
+		                  mario->getDamageRadius(), mario->getDamageHeight())) {
 			suffererIsInAttackArea(*it, mario);
 		}
 	}
 }
 
-void TObjHitCheck::checkGroup(TIdxGroupObj* group) { }
+void TObjHitCheck::checkGroup(TIdxGroupObj* group)
+{
+	TIdxGroupObj::iterator end = group->getChildren().end();
+	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
+	     ++it) {
+		it->mColCount = 0;
 
+		if (it->checkHitFlag(HIT_FLAG_NO_COLLISION))
+			continue;
+
+		u32 e;
+		u32 i = getTableIndex(it->mPosition, it->mEntryRadius, &e);
+
+		while (i != e) {
+			checkActorsInList(*it, unk0[i].unk0);
+
+			if (i == 0xff)
+				i = 0;
+			else
+				i += 1;
+		}
+	}
+}
+
+// TODO: nonmatching, structural: hit radius loads read through different
+// pointers (inline shape); frame 0xc0 vs target 0xd8
 void TObjHitCheck::checkActorsHit()
 {
 	initTable();
@@ -233,20 +257,20 @@ void TObjHitCheck::checkActorsHit()
 	if (!(gpStrategy->unk50 & 0x800))
 		entryGroup(gpStrategy->unk10[3]);
 	if (!(gpStrategy->unk50 & 0x100))
-		entryGroup(gpStrategy->unk10[7]);
+		checkAndEntryGroup(gpStrategy->unk10[7]);
 	if (!(gpStrategy->unk50 & 0x200))
-		entryGroup(gpStrategy->unk10[8]);
+		checkAndEntryGroup(gpStrategy->unk10[8]);
 	if (!(gpStrategy->unk50 & 0x400))
-		entryGroup(gpStrategy->unk10[9]);
+		checkAndEntryGroup(gpStrategy->unk10[9]);
 	if (!(gpStrategy->unk50 & 0x40))
-		entryGroup(gpStrategy->unk10[6]);
+		checkAndEntryGroup(gpStrategy->unk10[6]);
 
 	if (!(gpStrategy->unk50 & 0x80)
 	    && gpModelWaterManager->askDoWaterHitCheck())
 		checkWater();
 
 	if (!(gpStrategy->unk50 & 0x800))
-		checkGroupPlayer(gpStrategy->unk10[3]);
+		checkGroupPlayer(gpStrategy->unk10[5]);
 }
 
 void TObjHitCheck::clearHitNum()

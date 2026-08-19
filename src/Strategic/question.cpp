@@ -24,15 +24,15 @@ void TQuestionManager::load(JSUMemoryInputStream& param_1)
 
 bool TQuestionManager::request(JGeometry::TVec3<f32> param_1, f32 param_2)
 {
-	// TODO: inline for horizontal distance?
-	if (unk12 < 0x20
-	    && (gpMarioPos->x - param_1.x) * (gpMarioPos->x - param_1.x)
-	               + (gpMarioPos->z - param_1.z) * (gpMarioPos->z - param_1.z)
-	           < unk14 * unk14) {
-		unk1C[unk12].unk0 = param_1;
-		unk1C[unk12].unkC = param_2;
-		++unk12;
-		return true;
+	if (unk12 < 0x20) {
+		f32 dx = gpMarioPos->x - param_1.x;
+		f32 dz = gpMarioPos->z - param_1.z;
+		if (dx * dx + dz * dz < unk14 * unk14) {
+			unk1C[unk12].unk0 = param_1;
+			unk1C[unk12].unkC = param_2;
+			++unk12;
+			return true;
+		}
 	}
 
 	return false;
@@ -41,15 +41,21 @@ bool TQuestionManager::request(JGeometry::TVec3<f32> param_1, f32 param_2)
 #pragma dont_inline on
 void TQuestionManager::makeDL(JDrama::TGraphics* param_1) const
 {
+	MtxPtr viewMtx = param_1->mViewMtx;
+
 	for (int i = 0; i < unk12; ++i) {
+		JGeometry::TVec3<f32> v3[4];
+		JGeometry::TVec3<f32> v2;
 		TQuestionRequest& req    = unk1C[i];
 		JGeometry::TVec3<f32> v1 = req.unk0;
 		f32 f                    = req.unkC;
 		v1.y += f;
-		JGeometry::TVec3<f32> v2;
-		MTXMultVec(param_1->mViewMtx, &v1, &v2);
-		JGeometry::TVec3<f32> v3(v2.x - f, v2.y + f, v2.z + f);
-		unk20->request(&v3);
+		MTXMultVec(viewMtx, &v1, &v2);
+		v3[0].set(v2.x - f, v2.y + f, v2.z + f);
+		v3[1].set(v2.x + f, v2.y + f, v2.z + f);
+		v3[2].set(v2.x + f, v2.y - f, v2.z + f);
+		v3[3].set(v2.x - f, v2.y - f, v2.z + f);
+		unk20->request(v3);
 	}
 	unk20->setEnd();
 }
@@ -92,7 +98,8 @@ void TQuestionManager::draw() const
 void TQuestionManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if ((cue & CUE_CALC_VIEW) != 0) {
-		if (gpSilhouetteManager->isUnk48Positive()) {
+		BOOL isVisible = gpSilhouetteManager->isUnk48Positive();
+		if (isVisible) {
 			unk20->reset();
 			makeDL(graphics);
 			unk10 |= 2;
