@@ -122,3 +122,78 @@ void __num2dec(const decform* f, double x, decimal* d)
 
 	d->exp = exp;
 }
+
+// fabricated, UNUSED in the map. Defined after __num2dec so it is codegen'd
+// first, pooling the 0.0/1.0/int-conversion literals into .sdata2 in the
+// original order (@268/@270/@272 before @362/@363) -- required for the DOL
+// to link byte-identical even though the function itself is deadstripped.
+// TODO: incorrect size (0x13c here vs 0x2a4 in the map); the real body
+// likely handled the '0'/'N'/'I' encodings written by __num2dec.
+double __dec2num(const decimal* d)
+{
+	int digits;
+	int var_r4;
+	int chunk;
+	int n;
+	int count;
+	double x;
+	double var_f1;
+	const double* var_r5;
+	const unsigned char* p;
+
+	x = 0.0;
+
+	digits = d->sig.length;
+	if (digits == 0) {
+		return x;
+	}
+
+	var_f1 = 1.0;
+	var_r4 = d->exp;
+	var_r5 = bit_values;
+	if (var_r4 < 0) {
+		var_r4 = -var_r4;
+		while (var_r4 != 0) {
+			if (var_r4 & 1) {
+				var_f1 *= *var_r5;
+			}
+			var_r4 >>= 1;
+			var_r5++;
+		}
+	} else if (var_r4 > 0) {
+		while (var_r4 != 0) {
+			if (var_r4 & 1) {
+				var_f1 *= *var_r5;
+			}
+			var_r4 >>= 1;
+			var_r5++;
+		}
+	}
+
+	p = d->sig.text;
+	while (digits != 0) {
+		n = digits;
+		if (n > 8) {
+			n = 8;
+		}
+		chunk = 0;
+		count = n + 1;
+		while (--count != 0) {
+			chunk = chunk * 10 + (*p++ - '0');
+		}
+		x = x * digit_values[n - 1] + chunk;
+		digits -= n;
+	}
+
+	if (d->exp < 0) {
+		x /= var_f1;
+	} else {
+		x *= var_f1;
+	}
+
+	if (d->sign) {
+		x = -x;
+	}
+
+	return x;
+}

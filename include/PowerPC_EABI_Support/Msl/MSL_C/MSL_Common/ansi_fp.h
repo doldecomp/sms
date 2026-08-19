@@ -31,6 +31,6 @@ BOOL __less_dec(const decimal*, const decimal*);
 void __minus_dec(decimal*, const decimal*, const decimal*);
 void __num2dec_internal(decimal*, f64); */
 void __num2dec(const decform*, double, decimal*);
-/* f64 __dec2num(const decimal*); */
+double __dec2num(const decimal*);
 
 #endif
