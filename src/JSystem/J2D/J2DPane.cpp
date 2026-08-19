@@ -55,6 +55,11 @@ J2DPane::J2DPane(J2DPane* p_pane, u16 tag, bool visible, u32 user_tag,
 	mConnected         = false;
 }
 
+J2DPane::J2DPane(u32 user_tag, const JUTRect& bounds)
+    : mPaneTree(this)
+{
+}
+
 J2DPane::J2DPane(u16 tag, u32 user_tag, const JUTRect& bounds)
     : mBounds()
     , mGlobalBounds()
@@ -238,6 +243,10 @@ J2DPane* J2DPane::search(u32 tag)
 	return nullptr;
 }
 
+void J2DPane::gather(J2DPane** panes, u32 tag, u32 mask, int max, int& count)
+{
+}
+
 void J2DPane::makeMatrix(int x, int y)
 {
 	Mtx transBack, rotate, trans;
@@ -285,3 +294,9 @@ void J2DPane::setBasePosition(J2DBasePosition position)
 
 	mRotAxis = ROTATE_Z;
 }
+
+J2DPane* J2DPane::getFirstChildPane() { return nullptr; }
+
+J2DPane* J2DPane::getNextChildPane() { return nullptr; }
+
+J2DPane* J2DPane::getParentPane() { return nullptr; }

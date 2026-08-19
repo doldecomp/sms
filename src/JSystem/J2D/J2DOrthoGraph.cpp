@@ -36,6 +36,10 @@ void J2DOrthoGraph::setPort()
 	GXSetProjection(mMtx44, GX_ORTHOGRAPHIC);
 }
 
+void J2DOrthoGraph::setOrtho(const JUTRect& ortho, float far, float near) { }
+
+void J2DOrthoGraph::setOrigin(int x, int y) { }
+
 void J2DOrthoGraph::setLookat()
 {
 	MTXIdentity(mPosMtx);
@@ -54,6 +58,11 @@ void J2DOrthoGraph::scissorBounds(JUTRect* param_0, JUTRect* param_1)
 	    = mBounds.y1 + getHeightPower() * (param_1->y2 - mOrtho.y1) + 0.9f;
 }
 
+void J2DDrawLine(int x1, int y1, int x2, int y2, JUtility::TColor color,
+                 int line_width)
+{
+}
+
 void J2DFillBox(int x, int y, int width, int height, JUtility::TColor color)
 {
 	J2DFillBox(JUTRect(x, y, x + width, y + height), color);
@@ -65,3 +74,21 @@ void J2DFillBox(JUTRect box, JUtility::TColor color)
 	oGrph.setColor(color);
 	oGrph.fillBox(box);
 }
+
+void J2DFillBox(int x, int y, int width, int height, JUtility::TColor colorTL,
+                JUtility::TColor colorTR, JUtility::TColor colorBR,
+                JUtility::TColor colorBL)
+{
+}
+
+void J2DFillBox(JUTRect box, JUtility::TColor colorTL, JUtility::TColor colorTR,
+                JUtility::TColor colorBR, JUtility::TColor colorBL)
+{
+}
+
+void J2DDrawFrame(int x, int y, int width, int height, JUtility::TColor color,
+                  u8 line_width)
+{
+}
+
+void J2DDrawFrame(JUTRect box, JUtility::TColor color, u8 line_width) { }

@@ -43,6 +43,13 @@ J2DPrint::J2DPrint(JUTFont* font, int param_2)
 	                 JUtility::TColor());
 }
 
+J2DPrint::J2DPrint(JUTFont* font, int param_2, int param_3) { }
+
+J2DPrint::J2DPrint(JUTFont* font, JUtility::TColor param_2,
+                   JUtility::TColor param_3)
+{
+}
+
 J2DPrint::J2DPrint(JUTFont* font, int param_2, int param_3,
                    JUtility::TColor param_4, JUtility::TColor param_5)
 {
@@ -100,6 +107,8 @@ void J2DPrint::private_initiate(JUTFont* font, int param_2, int param_3,
 	}
 	initchar();
 }
+void J2DPrint::setBuffer(char* buffer, u32 size) { }
+
 char* J2DPrint::setBuffer(u32 size)
 {
 	char* old = mStrBuff;
@@ -129,31 +138,43 @@ void J2DPrint::locate(int x, int y)
 	unk2C    = 0.0f;
 }
 
-void J2DPrint::print(int x, int y, const char* format, ...)
+void J2DPrint::putChar(int code) { }
+
+void J2DPrint::putChar(int x, int y, int code) { }
+
+void J2DPrint::print(const char* format, ...) { }
+
+void J2DPrint::print(u8 opacity, const char* format, ...) { }
+
+float J2DPrint::print(int x, int y, const char* format, ...)
 {
 	locate(x, y);
 
 	va_list args;
 	va_start(args, format);
 
-	char trash[0x4]; // additional inline indirection?
-	J2DPrint_print_alpha_va(this, 0xff, format, args);
+	float result = print_va(0xff, format, args);
 
 	va_end(args);
+
+	return result;
 }
 
-void J2DPrint::print(int x, int y, u8 opacity, const char* format, ...)
+float J2DPrint::print(int x, int y, u8 opacity, const char* format, ...)
 {
 	locate(x, y);
 
 	va_list args;
 	va_start(args, format);
 
-	char trash[0x4]; // additional inline indirection?
-	J2DPrint_print_alpha_va(this, opacity, format, args);
+	float result = print_va(opacity, format, args);
 
 	va_end(args);
+
+	return result;
 }
+
+void J2DPrint::getSize(J2DPrint::TSize& size, const char* format, ...) { }
 
 float J2DPrint::getWidth(const char* format, ...)
 {
@@ -172,6 +193,8 @@ float J2DPrint::getWidth(const char* format, ...)
 	va_end(args);
 	return size.unk0;
 }
+
+float J2DPrint::getHeight(const char* format, ...) { return 0.0f; }
 
 void J2DPrint::printReturn(const char* param_1, int param_2, int param_3,
                            J2DTextBoxHBinding hbind, J2DTextBoxVBinding vbind,
@@ -255,16 +278,11 @@ float J2DPrint::parse(const u8* param_1, int param_2, int param_3, u16* param_4,
 
 	JUtility::TColor local_b8 = unk8;
 	JUtility::TColor local_bc = unkC;
+	f32 f18;
 
 	local_b8.a = local_b8.a * opacity / 0xff;
 	local_bc.a = local_bc.a * opacity / 0xff;
-	JUtility::TColor* local_d8;
-	if (unk18) {
-		local_d8 = &local_bc;
-	} else {
-		local_d8 = &local_b8;
-	}
-	mFont->setGradColor(local_b8, *local_d8);
+	mFont->setGradColor(local_b8, unk18 ? local_bc : local_b8);
 	bool r19 = false;
 	bool r18;
 	bool r17;
@@ -283,8 +301,8 @@ float J2DPrint::parse(const u8* param_1, int param_2, int param_3, u16* param_4,
 			break;
 		}
 
-		r17     = true;
-		f32 f18 = mCursorH;
+		r17 = true;
+		f18 = mCursorH;
 		if (r27 < 0x20) {
 			if (r27 == 0x1b) {
 				u16 r3 = doEscapeCode(&param_1, opacity);
@@ -330,10 +348,10 @@ float J2DPrint::parse(const u8* param_1, int param_2, int param_3, u16* param_4,
 			r21++;
 			break;
 		} else {
+			f32 rounded;
 			if (mFont->isFixed()) {
 				unk2C = mFont->getFixedWidth();
 			} else {
-				char trash[0x4]; // I hate this function
 				JUTFont::TWidth uStack_ec;
 				mFont->getWidthEntry(r27, &uStack_ec);
 				if (r19) {
@@ -345,9 +363,10 @@ float J2DPrint::parse(const u8* param_1, int param_2, int param_3, u16* param_4,
 
 			unk2C *= (float)unk34 / mFont->getWidth();
 
-			if ((((s32)(10000.0f * ((mCursorH + unk2C) - unk1C))) / 10000.0f)
-			        > param_3
-			    && mCursorH > f26) {
+			f32 fVar6 = (mCursorH + unk2C) - unk1C;
+			fVar6     = 10000.0f * fVar6;
+			rounded   = (s32)fVar6 / 10000.0f;
+			if (rounded > param_3 && mCursorH > f26) {
 				param_1 -= r18 ? 2 : 1;
 				mCursorV += unk14;
 				if (!param_7 && (param_4 != nullptr)) {
