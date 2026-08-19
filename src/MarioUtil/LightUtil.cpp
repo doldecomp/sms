@@ -35,6 +35,8 @@ TLightCommon::TLightCommon(const char* name)
 	unk10     = 50.0f;
 }
 
+// TODO: nonmatching, target reads mLightAry through small data directly;
+// the access spelling differs
 void TLightCommon::loadAfter()
 {
 	mAmbAry   = JDrama::TNameRefGen::search<JDrama::TAmbAry>("Ambient Group");
@@ -42,8 +44,8 @@ void TLightCommon::loadAfter()
 	mLightPos = &mLightAry->getLight(0)->mPosition;
 	unk10     = 50.0f;
 	for (int i = 0; i < 4; ++i) {
-		unk31[i] = mLightAry->getLight(unk24 + i)->getColor();
-		unk44[i] = mLightAry->getLight(unk24 + i)->mPosition;
+		unk31[i] = mLightAry->getLight(i + unk24)->getColor();
+		unk44[i] = mLightAry->getLight(i + unk24)->mPosition;
 	}
 	unk29[0] = mAmbAry->getAmb(unk20)->getColor();
 	unk29[1] = mAmbAry->getAmb(unk20 + 1)->getColor();
@@ -86,6 +88,7 @@ Vec* TLightCommon::getLightPosition(int index)
 	return &mLightAry->getLight(index)->mPosition;
 }
 
+// TODO: nonmatching, register allocation only
 void TLightCommon::setLight(const JDrama::TGraphics* gfx, int index)
 {
 	ReInitializeGX();
@@ -102,10 +105,9 @@ void TLightCommon::setLight(const JDrama::TGraphics* gfx, int index)
 
 	gpLightManager->setEffectLight(gfx, &light);
 
-	Vec spos;
-	MTXMultVec(gfx->getViewMtx(), getLightPosition(lightIndex), &spos);
-	VECNormalize(&spos, &spos);
-	GXInitSpecularDir(&light, -spos.x, -spos.y, -spos.z);
+	MTXMultVec(gfx->getViewMtx(), getLightPosition(lightIndex), &pos);
+	VECNormalize(&pos, &pos);
+	GXInitSpecularDir(&light, -pos.x, -pos.y, -pos.z);
 	GXInitLightColor(&light, getLightColor(lightIndex));
 	GXInitLightAttn(&light, 0.0f, 0.0f, 1.0f, unk10 / 2.0f, 0.0f,
 	                1.0f - unk10 / 2.0f);
@@ -144,6 +146,7 @@ void TLightMario::perform(u32 cue, JDrama::TGraphics* graphics)
 		setLight(graphics, *gpMarioLightID);
 }
 
+// TODO: nonmatching, register allocation only
 void TLightMario::setLight(const JDrama::TGraphics* gfx, int index)
 {
 	ReInitializeGX();
@@ -160,10 +163,9 @@ void TLightMario::setLight(const JDrama::TGraphics* gfx, int index)
 
 	gpLightManager->setEffectLight(gfx, &light);
 
-	Vec spos;
-	MTXMultVec(gfx->getViewMtx(), getLightPosition(lightIndex), &spos);
-	VECNormalize(&spos, &spos);
-	GXInitSpecularDir(&light, -spos.x, -spos.y, -spos.z);
+	MTXMultVec(gfx->getViewMtx(), getLightPosition(lightIndex), &pos);
+	VECNormalize(&pos, &pos);
+	GXInitSpecularDir(&light, -pos.x, -pos.y, -pos.z);
 	GXInitLightColor(&light, getLightColor(lightIndex));
 	GXInitLightAttn(&light, 0.0f, 0.0f, 1.0f, unk10 / 2.0f, 0.0f,
 	                1.0f - unk10 / 2.0f);

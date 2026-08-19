@@ -9,7 +9,13 @@
 static u8 uv[8] __attribute__((aligned(0x20)))
 = { 0x0, 0x0, 0x80, 0x0, 0x80, 0x80, 0x0, 0x80 };
 
-void TDLTexQuad::initValue(u16 param_1) { }
+void TDLTexQuad::initValue(u16 param_1)
+{
+	unk6  = param_1;
+	unk4  = 0;
+	unk1C = 0;
+	reset();
+}
 
 void TDLTexQuad::createDLBuffer(u16 param_1)
 {
@@ -33,10 +39,7 @@ void TDLTexQuad::createPosArrayBuffer(u16 param_1)
 
 void TDLTexQuad::createBuffer(u16 param_1)
 {
-	unk6  = param_1;
-	unk4  = 0;
-	unk1C = 0;
-	reset();
+	initValue(param_1);
 	unkA = 3;
 	createDLBuffer(param_1);
 	createPosArrayBuffer(param_1);
@@ -132,10 +135,7 @@ void TDLColorTexQuad::createColorArrayBuffer(u16 param_1)
 
 void TDLColorTexQuad::createBuffer(u16 param_1)
 {
-	unk6  = param_1;
-	unk4  = 0;
-	unk1C = 0;
-	reset();
+	initValue(param_1);
 	unkA = 4;
 	createDLBuffer(param_1);
 	createPosArrayBuffer(param_1);

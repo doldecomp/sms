@@ -5,6 +5,7 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 
 struct M3UMtxCalcSetInfo;
+class J3DJoint;
 class J3DModel;
 class J3DTexNoAnm;
 class J3DMtxCalc;
@@ -24,6 +25,15 @@ public:
 
 	// Fabricated
 	J3DTexNoAnm* getTexNoAnm(u8 idx) { return unkC[idx]; }
+
+	// Fabricated
+	J3DAnmTransform* getAnmTransform(int idx) { return unk4[idx]; }
+
+	// Fabricated
+	J3DMtxCalcBasicAnm* getMtxCalcBasicAnm(int idx);
+
+	// Fabricated
+	J3DMtxCalcSoftimageAnm* getMtxCalcSoftimageAnm(int idx);
 
 public:
 	/* 0x4 */ J3DAnmTransform** unk4;
@@ -72,6 +82,9 @@ public:
 
 	// Fabricated
 	J3DModel* getModel() { return unk8; }
+
+	// Fabricated
+	J3DJoint* getJoint(u16 idx);
 
 	// Fabricated
 	BOOL someAnimationCompleted() const

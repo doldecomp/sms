@@ -4,6 +4,24 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <JSystem/JDrama/JDRViewObj.hpp>
 
+// Fabricated
+inline J3DMtxCalcBasicAnm* M3UModelCommon::getMtxCalcBasicAnm(int idx)
+{
+	return &unk10[idx];
+}
+
+// Fabricated
+inline J3DMtxCalcSoftimageAnm* M3UModelCommon::getMtxCalcSoftimageAnm(int idx)
+{
+	return &unk14[idx];
+}
+
+// Fabricated
+inline J3DJoint* M3UModel::getJoint(u16 idx)
+{
+	return getModel()->getModelData()->getJointNodePointer(idx);
+}
+
 J3DMtxCalc* M3UModelCommon::getMtxCalc(const M3UMtxCalcSetInfo& param_1)
 {
 	// Same type as in J3DNewMtxCalcAnm
@@ -39,29 +57,28 @@ void M3UModel::changeAnmTexPattern(int param_1, u8 param_2)
 
 void M3UModel::updateInMotion()
 {
-	// Unused stack
-	// volatile u32 padding[12];
 	for (int i = 0; i < unk10; i++) {
 		M3UMtxCalcSetInfo& info   = unk14[i];
+		J3DFrameCtrl& frameCtrl   = unkC[info.mFrameCalcIdx];
 		J3DAnmTransform* anmTrans = unk4->unk4[info.mAnmTransformIdx];
-		J3DFrameCtrl& frameCtrl   = getFrameCtrl(info.mFrameCalcIdx);
 		frameCtrl.update();
 
-		J3DJoint* jnt = unk8->mModelData->getJointNodePointer(info.mJntIdx);
+		J3DJoint* jnt = getJoint(info.mJntIdx);
 		if (info.mMtxCalcIdx == 0xff) {
 			jnt->setMtxCalc(nullptr);
 			continue;
 		}
-		f32 currentFrame = frameCtrl.getFrame();
-		anmTrans->setFrame(currentFrame);
+		anmTrans->setFrame(frameCtrl.getFrame());
 
-		// Possibly inlined? Feels like it fits more in M3UModelCommon
+		// TODO: the fabricated accessors here and getJoint above are only
+		// justified by the stack frame size; the real shape is unknown
 		switch (info.mAnmType) {
 		case 0:
-			unk4->unk10[info.mMtxCalcIdx].mOne[0] = anmTrans;
+			unk4->getMtxCalcBasicAnm(info.mMtxCalcIdx)->mOne[0] = anmTrans;
 			break;
 		case 1:
-			unk4->unk14[info.mMtxCalcIdx].mOne[0] = anmTrans;
+			unk4->getMtxCalcSoftimageAnm(info.mMtxCalcIdx)->mOne[0]
+			    = anmTrans;
 			break;
 		}
 
@@ -78,9 +95,7 @@ void M3UModel::updateInTexPatternAnm()
 void M3UModel::updateIn()
 {
 	updateInMotion();
-	if (unk1C != nullptr) {
-		getFrameCtrl(unk1C->unk1).update();
-	}
+	updateInTexPatternAnm();
 }
 
 void M3UModel::updateOut()
@@ -91,7 +106,7 @@ void M3UModel::updateOut()
 	}
 }
 
-void M3UModel::entryIn()
+void M3UModel::entryInTexPatternAnm()
 {
 	if (unk1C != nullptr) {
 		Unk1CStruct& tmp        = unk1C[0];
@@ -104,11 +119,15 @@ void M3UModel::entryIn()
 	}
 }
 
-void M3UModel::entryOut()
+void M3UModel::entryOutTexPatternAnm()
 {
 	if (unk1C != nullptr && unk1C->unk0 != 0xff)
 		unk8->mModelData->removeTexNoAnimator(unk4->unk8[unk1C->unk0]);
 }
+
+void M3UModel::entryIn() { entryInTexPatternAnm(); }
+
+void M3UModel::entryOut() { entryOutTexPatternAnm(); }
 
 void M3UModel::perform(u32 cue, JDrama::TGraphics* graphics)
 {

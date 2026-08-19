@@ -69,7 +69,9 @@ void MActorAnmDataBase::sortByFileNameRaw(void** param_1)
 	}
 }
 
+// TODO: nonmatching, frame 0x10 vs target 0x20
 MActorAnmData::MActorAnmData()
+    : unk0(0)
 {
 	unk2C = nullptr;
 	unk30 = nullptr;
@@ -98,6 +100,7 @@ u16 MActorCalcKeyCode(const char* name)
 	return result;
 }
 
+// TODO: nonmatching, stack slot ordering only
 u32 MActorAnmData::partsNameToIdx(const char* name)
 {
 	typedef JGadget::TList<MActorSubAnmInfo>::iterator I;
@@ -108,6 +111,16 @@ u32 MActorAnmData::partsNameToIdx(const char* name)
 	return -1;
 }
 
+void MActorAnmData::addIncidentalAnm(const char* name, int index)
+{
+	MActorSubAnmInfo info;
+	info.unk0 = index;
+	info.unk4 = name;
+	++unk0;
+	unk1C.push_back(info);
+}
+
+// TODO: nonmatching, register allocation only
 void MActorAnmData::init(const char* param_1, const char** param_2)
 {
 	char thing[256];
@@ -124,7 +137,7 @@ void MActorAnmData::init(const char* param_1, const char** param_2)
 	char thing2[256];
 	snprintf(thing2, 0xff, "%s%s", thing, "/");
 
-	JKRFileFinder* fileFinder = JKRFileLoader::findFirstFile(thing2);
+	JKRFileFinder* fileFinder = JKRFileLoader::findFirstFile(thing);
 
 	JKRFileFinder* finder = fileFinder;
 	do {
@@ -157,7 +170,7 @@ void MActorAnmData::init(const char* param_1, const char** param_2)
 	unk14 = 0;
 	unk18 = 0;
 
-	fileFinder = JKRFileLoader::findFirstFile(thing2);
+	fileFinder = JKRFileLoader::findFirstFile(thing);
 	do {
 		strstr(fileFinder->mBase.mFileName, "#");
 		addFileTable(fileFinder->mBase.mFileName);
@@ -171,17 +184,17 @@ void MActorAnmData::init(const char* param_1, const char** param_2)
 	delete fileFinder;
 
 	if (unk2C)
-		unk2C->loadAnmPtrArray2(thing, ".bck");
+		unk2C->loadAnmPtrArray2(thing2, ".bck");
 	if (unk30)
-		unk30->loadAnmPtrArray2(thing, ".bpk");
+		unk30->loadAnmPtrArray2(thing2, ".bpk");
 	if (unk34)
-		unk34->loadAnmPtrArray2(thing, ".btp");
+		unk34->loadAnmPtrArray2(thing2, ".btp");
 	if (unk38)
-		unk38->loadAnmPtrArray2(thing, ".btk");
+		unk38->loadAnmPtrArray2(thing2, ".btk");
 	if (unk3C)
-		unk3C->loadAnmPtrArray2(thing, ".brk");
+		unk3C->loadAnmPtrArray2(thing2, ".brk");
 	if (unk40)
-		unk40->loadAnmPtrArray2(thing, ".blk");
+		unk40->loadAnmPtrArray2(thing2, ".blk");
 }
 
 void MActorAnmData::addFileNum(const char* name)

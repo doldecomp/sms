@@ -11,6 +11,53 @@ void MActorAnmBase::checkUseMaterialIDInit(u16*) { }
 
 void MActorAnmBase::checkUseMaterialID(u16*) { }
 
+// TODO: figure out something w/ these "things"
+inline J3DMtxCalcSoftimageAnm* createThing()
+{
+	return new J3DMtxCalcSoftimageAnm(nullptr);
+}
+inline J3DMtxCalcBasicAnm* createThing2()
+{
+	return new J3DMtxCalcBasicAnm(nullptr);
+}
+
+// UNUSED, no callers survive. Size matches the map (0x198); the body is a
+// guess modeled on setModel and updateIn. TODO: verify if evidence appears
+void MActorAnmBck::changeMtxCalcType(u8 param_1)
+{
+	if (param_1 == unk2A)
+		return;
+	J3DJoint* joint = unk18->getModelData()->getJointNodePointer(unk28);
+	unk24->setFrame(unk4.getFrame());
+	switch (param_1) {
+	case 1:
+		if (unk30 == nullptr)
+			unk30 = createThing();
+		unk30->mOne[0] = unk24;
+		joint->setMtxCalc(unk30);
+		break;
+	case 0:
+		if (unk2C == nullptr)
+			unk2C = createThing2();
+		unk2C->mOne[0] = unk24;
+		joint->setMtxCalc(unk2C);
+		break;
+	case 2:
+		if (!unk34) {
+			bool thing = false;
+			if (unk2A == 0)
+				thing = true;
+			unk34 = new TMotionBlendCtrl(thing);
+		}
+		joint->setMtxCalc(unk34->unk8);
+		break;
+	case 3:
+		joint->setMtxCalc(unk38);
+		break;
+	}
+	unk2A = param_1;
+}
+
 void MActorAnmBck::initSimpleMotionBlend(int param_1)
 {
 	if (!unk34) {
@@ -69,16 +116,6 @@ float MActorAnmBck::getOldMotionBlendFrame() const
 		return 0.0f;
 }
 
-// TODO: figure out something w/ these "things"
-inline J3DMtxCalcSoftimageAnm* createThing()
-{
-	return new J3DMtxCalcSoftimageAnm(nullptr);
-}
-inline J3DMtxCalcBasicAnm* createThing2()
-{
-	return new J3DMtxCalcBasicAnm(nullptr);
-}
-
 void MActorAnmBck::setModel(J3DModel* param_1)
 {
 	u8 thing = 0;
@@ -129,7 +166,7 @@ void MActorAnmBck::updateOut()
 void MActorAnmBck::setAnmFromIndex(int param_1, u16*)
 {
 	if (unk2A == 2 && unk0 != -1)
-		unk34->keepCurAnm(getData()->getAnmPtr(unk0), unk4.getFrame());
+		unk34->keepCurAnm(getData()->getAnmPtr(getUnk0()), unk4.getFrame());
 
 	setFrameCtrl(param_1);
 

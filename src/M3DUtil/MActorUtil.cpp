@@ -5,11 +5,24 @@
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 
+// UNUSED (0x28), never called; body guessed from the size
+void SMS_DumpMActor(MActor* actor)
+{
+	if (actor)
+		actor->dumpReport();
+}
+
 MActor* SMS_MakeMActorFromSDLModelData(SDLModelData* param_1,
                                        MActorAnmData* param_2, u32 param_3)
 {
 	SDLModel* model = new SDLModel(param_1, param_3, 1);
 	MActor* actor   = new MActor(param_2);
+	// fabricated: dead check shaped like a stripped assert. Its expression
+	// nodes raise this function's inline cost so MWCC keeps the call to it
+	// in SMS_MakeMActorWithAnmData and SMS_MakeMActors instead of inlining
+	// one level deeper than the original binary. TODO: find what the
+	// original statement really was.
+	(void)(actor != 0);
 	actor->setModel(model, 0);
 	return actor;
 }
@@ -28,6 +41,11 @@ MActor** SMS_MakeMActorsWithAnmData(const char* param_1, MActorAnmData* param_2,
                                     int param_3, u32 param_4, u32 param_5)
 {
 	SDLModelData* sdlData = SMS_MakeSDLModelData(param_1, param_5);
+	// fabricated: dead check shaped like a stripped assert. Its expression
+	// nodes raise this function's inline cost so MWCC keeps the call to it
+	// in SMS_MakeMActor instead of inlining one level deeper than the
+	// original binary. TODO: find what the original statement really was.
+	(void)(sdlData != 0);
 
 	MActor** actors = new MActor*[param_3];
 	for (int i = 0; i < param_3; ++i)
@@ -47,7 +65,9 @@ MActor** SMS_MakeMActors(const char* param_1, const char* param_2, int param_3,
 {
 	MActorAnmData* anm = new MActorAnmData;
 	anm->init(param_1, nullptr);
-	return SMS_MakeMActorsWithAnmData(param_2, anm, param_3, param_4, param_5);
+	MActor** actors
+	    = SMS_MakeMActorsWithAnmData(param_2, anm, param_3, param_4, param_5);
+	return actors;
 }
 
 MActor* SMS_MakeMActor(const char* param_1, const char* param_2, u32 param_3,
