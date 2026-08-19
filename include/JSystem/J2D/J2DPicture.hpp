@@ -101,6 +101,9 @@ public:
 	// fabricated
 	JUtility::TColor getWhite() const { return mWhite; }
 
+	// fabricated
+	void setWhite(JUtility::TColor white) { mWhite = white; }
+
 public:
 	/* 0xEC */ JUTTexture* mTextures[4];
 	/* 0xFC */ u8 mTextureNum;
@@ -115,7 +118,7 @@ public:
 	/* 0x138 */ J2DWrapmode mWrapmodeVer;
 	/* 0x13C */ JUtility::TColor mWhite;
 	/* 0x140 */ JUtility::TColor mBlack;
-	/* 0x114 */ JUtility::TColor mCornerColor[4];
+	/* 0x144 */ JUtility::TColor mCornerColor[4];
 	/* 0x154 */ JUtility::TColor mBlendKonstColor;
 	/* 0x158 */ JUtility::TColor mBlendKonstAlpha;
 };
