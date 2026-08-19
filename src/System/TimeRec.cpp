@@ -25,9 +25,21 @@ TTimeRec* TTimeRec::start(u16 param_1)
 	return _instance;
 }
 
-void TTimeRec::end() { }
+// UNUSED, size matches mario.MAP (0x34)
+void TTimeRec::end()
+{
+	if (_instance) {
+		delete _instance;
+		_instance = nullptr;
+	}
+}
 
-void TTimeRec::drawSyncCallbackSt(u16) { }
+// UNUSED, size matches mario.MAP (0x5C)
+void TTimeRec::drawSyncCallbackSt(u16 param_1)
+{
+	if (_instance)
+		_instance->TTimeRec::drawSyncCallback(param_1);
+}
 
 TTimeRec::TTimeRec(u16 param_1)
     : unk814(0)
@@ -45,11 +57,11 @@ void TTimeRec::flip()
 		int i    = size - 1;
 		u32 curr = array.mEntries[i].time;
 		while (i > 0) {
-			--i;
-			if (array.mEntries[i].time == 0) {
-				array.mEntries[i].time = curr;
+			TTimeArray::Entry& entry = array.mEntries[--i];
+			if (entry.time == 0) {
+				entry.time = curr;
 			} else {
-				curr = array.mEntries[i].time;
+				curr = entry.time;
 			}
 		}
 	}
@@ -71,7 +83,26 @@ void TTimeRec::snapGXTime(u32 param_1)
 	}
 }
 
-void TTimeRec::suppleGXTime() { }
+// UNUSED, size matches mario.MAP (0x68)
+void TTimeRec::suppleGXTime()
+{
+	if (_instance == nullptr)
+		return;
+	TTimeArray& array = _instance->crTimeAry()[1];
+	int size          = array.mSize;
+	if (size >= 3) {
+		int i    = size - 1;
+		u32 curr = array.mEntries[i].time;
+		while (i > 0) {
+			--i;
+			if (array.mEntries[i].time == 0) {
+				array.mEntries[i].time = curr;
+			} else {
+				curr = array.mEntries[i].time;
+			}
+		}
+	}
+}
 
 void TTimeRec::drawSyncCallback(u16 param_1)
 {

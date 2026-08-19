@@ -1,4 +1,6 @@
 #include <System/MarNameRefGen.hpp>
+#include <Enemy/DebuTelesa.hpp>
+#include <Enemy/EggGen.hpp>
 #include <Enemy/EffectObj.hpp>
 #include <Enemy/EnemyManager.hpp>
 #include <Enemy/Gesso.hpp>
@@ -20,8 +22,11 @@
 #include <Enemy/Kumokun.hpp>
 #include <Animal/AnimalBase.hpp>
 #include <Animal/AnimalManager.hpp>
+#include <Animal/Butterfly.hpp>
 #include <Animal/fishoid.hpp>
 
+// TODO: nonmatching (51%), factory cases still missing for enemy classes
+// whose constructors are not decompiled yet (TFruitsBoat and others)
 JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 {
 
@@ -99,33 +104,26 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 	// if ( strcmp(name, "BeeHiveManager") == 0)
 	//     return new TBeeHiveManager;
 
-	// TODO:
-	// if ( strcmp(name, "Butterfly") == 0)
-	//     return new TButterfloid;
+	if (strcmp(name, "Butterfly") == 0)
+		return new TButterfloid(0, "蝶Ａ");
 
-	// TODO:
-	// if ( strcmp(name, "ButterflyB") == 0)
-	//     return new TButterfloid;
+	if (strcmp(name, "ButterflyB") == 0)
+		return new TButterfloid(1, "蝶Ｂ");
 
-	// TODO:
-	// if ( strcmp(name, "ButterflyC") == 0)
-	//     return new TButterfloid;
+	if (strcmp(name, "ButterflyC") == 0)
+		return new TButterfloid(2, "蝶Ｃ");
 
-	// TODO:
-	// if ( strcmp(name, "ButterflyManager") == 0)
-	//     return new TButterfloidManager;
+	if (strcmp(name, "ButterflyManager") == 0)
+		return new TButterfloidManager("");
 
-	// TODO:
-	// if ( strcmp(name, "EggGenerator") == 0)
-	//     return new TEggGenerator;
+	if (strcmp(name, "EggGenerator") == 0)
+		return new TEggGenerator("タマゴジェネレータ");
 
-	// TODO:
-	// if ( strcmp(name, "WickedEggGenerator") == 0)
-	//     return new TEggGenerator;
+	if (strcmp(name, "WickedEggGenerator") == 0)
+		return new TEggGenerator("タマゴジェネレータ");
 
-	// TODO:
-	// if ( strcmp(name, "EggGenManager") == 0)
-	//     return new TEggGenManager;
+	if (strcmp(name, "EggGenManager") == 0)
+		return new TEggGenManager("タマゴジェネレータマネージャ");
 
 	if (strcmp(name, "EffectColumWaterManager") == 0)
 		return new TEffectColumWaterManager;
@@ -298,13 +296,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 	if (strcmp(name, "MarioModokiTelesa") == 0)
 		return new TMarioModokiTelesa;
 
-	// TODO:
-	// if ( strcmp(name, "DebuTelesaManager") == 0)
-	//     return new TDebuTelesaManager("デブテルサマネージャー");
+	if (strcmp(name, "DebuTelesaManager") == 0)
+		return new TDebuTelesaManager("デブテルサマネージャー");
 
-	// TODO:
-	// if ( strcmp(name, "DebuTelesa") == 0)
-	//     return new TDebuTelesa;
+	if (strcmp(name, "DebuTelesa") == 0)
+		return new TDebuTelesa("デブテルサ");
 
 	if (strcmp(name, "PoiHanaManager") == 0)
 		return new TPoiHanaManager;

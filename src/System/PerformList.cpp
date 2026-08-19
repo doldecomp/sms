@@ -7,7 +7,7 @@ void TPerformList::forEachPerform(
     JDrama::TGraphics* param_3, u32 param_4)
 {
 	for (JGadget::TSingleLinkList<TPerformLink, 0>::iterator it = b; it != e;
-	     ++it) {
+	     it++) {
 		TPerformLink& link = *it;
 		link.unk4->testPerform(link.unk8 & param_4, param_3);
 	}

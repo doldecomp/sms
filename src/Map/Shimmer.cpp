@@ -21,10 +21,11 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-void TShimmer::near() { }
+void TShimmer::near() { mPosition.set(0.0f, 0.0f, 9600.0f); }
 
-void TShimmer::far() { }
+void TShimmer::far() { mPosition.set(0.0f, 0.0f, 0.0f); }
 
+// TODO: nonmatching, frame 0x188 vs target 0x198
 void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (gpMarioOriginal->checkFlag(MARIO_FLAG_FLUDD_EMITTING))
@@ -40,9 +41,9 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 		    && !gpMarioOriginal->getGroundPlane()->isShadow()
 		    && !gpMarioOriginal->getGroundPlane()->isIndoors()
 		    && !gpMarioOriginal->getGroundPlane()->isPool()) {
-			mPosition.set(0.0f, 0.0f, 9600.0f);
+			near();
 		} else {
-			mPosition.set(0.0f, 0.0f, 0.0f);
+			far();
 		}
 
 		Mtx effectMtx;
@@ -56,6 +57,9 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		MtxPtr viewMtx = graphics->mViewMtx;
 
+		Mtx mtx;
+		Mtx trMtx;
+		Mtx scaleMtx;
 		J3DTransformInfo info;
 		info.mScale.x     = 1.0f;
 		info.mScale.y     = 1.0f;
@@ -63,25 +67,22 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 		info.mRotation.x  = 0.0f;
 		info.mRotation.y  = 0.0f;
 		info.mRotation.z  = 0.0f;
-		info.mTranslate.x = mPosition.x;
-		info.mTranslate.y = mPosition.y;
-		info.mTranslate.z = mPosition.z;
-		Mtx afStack_b0;
-		J3DGetTranslateRotateMtx(info, afStack_b0);
-		Mtx afStack_e0;
-		MTXScale(afStack_e0, mScaling.x, mScaling.y, mScaling.z);
-		Mtx afStack_80;
-		MTXInverse(viewMtx, afStack_80);
-		MTXConcat(afStack_80, afStack_b0, afStack_80);
-		MTXConcat(afStack_80, afStack_e0, afStack_80);
-		unk48->setBaseTRMtx(afStack_80);
-		unk48->entry();
+		info.mTranslate.x = getPosition().x;
+		info.mTranslate.y = getPosition().y;
+		info.mTranslate.z = getPosition().z;
+		J3DGetTranslateRotateMtx(info, trMtx);
+		MTXScale(scaleMtx, mScaling.x, mScaling.y, mScaling.z);
+		MTXInverse(viewMtx, mtx);
+		MTXConcat(mtx, trMtx, mtx);
+		MTXConcat(mtx, scaleMtx, mtx);
+		unk48->setBaseTRMtx(mtx);
 		unk48->calc();
+		unk48->viewCalc();
 	}
 
 	if (cue & CUE_ENTRY) {
-		if (gpMarDirector->mMap == 2 || !(gpCamera->unk124.y < 0.0f))
-			unk48->update();
+		if (SMSGetMarDirector()->mMap == 2 || !(gpCamera->getUnk124().y < 0.0f))
+			unk48->entry();
 	}
 }
 

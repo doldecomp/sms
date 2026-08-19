@@ -25,6 +25,14 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
+// TODO: most functions here sit at 96-99.9% with stack frame deltas only;
+// suspected shared cause is the startSoundActor receiver spelling in
+// MSound.hpp
+
+// TODO: fabricated, same trick as in MapObjAirport.cpp; the real shared
+// inline is still unknown
+inline TPollutionManager* getPollution() { return gpPollution; }
+
 u32 TMapEventSink::mCleanedDegree = 10;
 
 TJointObj* TMapEventSink::getBuilding(int i) const
@@ -44,7 +52,9 @@ f32 TMapEventSink::getSinkOffsetY() const
 
 TPollutionObj* TMapEventSink::getPollutionObj(int i)
 {
-	return gpPollution->getLayer(unk60[i].unk0)->getObj(unk60[i].unk2);
+	TPollutionLayer* layer = getPollution()->getLayer(unk60[i].unk0);
+	TPollutionObj* obj     = layer->getObj(unk60[i].unk2);
+	return obj;
 }
 
 bool TMapEventSink::isFinishedAll() const
@@ -87,7 +97,7 @@ void TMapEventSink::rising()
 	J3DTransformInfo& info = unk30->getTransformInfo();
 	info.mTranslate.y += unk3C;
 	unk30->setTransformInfo(info);
-	unk1C->mActor->unk4->calc();
+	unk1C->getMActor()->getModel()->calc();
 }
 
 bool TMapEventSink::control()
@@ -103,8 +113,8 @@ bool TMapEventSink::control()
 	    && (gpMarDirector->mMap != 2 || mIsBuildingRecovered[1 - unk24] == 0
 	        || mRaisingBuildingIdx != 1)) {
 		SMSRumbleMgr->start(0x13, (f32*)nullptr);
-		SMSGetMSound()->startSoundActor(
-		    MSD_SE_OBJ_QUAKE, unk50[mRaisingBuildingIdx], 0, nullptr, 0, 4);
+		gpMSound->startSoundActor(MSD_SE_OBJ_QUAKE, unk50[mRaisingBuildingIdx],
+		                          0, nullptr, 0, 4);
 	}
 
 	if (unk4C > 0) {
@@ -134,13 +144,16 @@ void TMapEventSink::startControl()
 	info.mTranslate.y -= dVar4;
 	unk30->setTransformInfo(info);
 
-	unk1C->mActor->unk4->calc();
+	unk1C->getMActor()->getModel()->calc();
 	int iVar3 = (unk40 - unk44) - unk48;
 	unk3C     = dVar4 / iVar3;
 	unk4C     = unk40;
 
-	unk5C[mRaisingBuildingIdx]->moveTrans(JGeometry::TVec3<f32>(
-	    info.mTranslate.x, info.mTranslate.y, info.mTranslate.z));
+	// TODO: frame is 8 bytes short of the original (0x60 vs 0x68); the
+	// missing temps are created during this last statement
+	JGeometry::TVec3<f32> trans(info.mTranslate.x, info.mTranslate.y,
+	                            info.mTranslate.z);
+	unk5C[mRaisingBuildingIdx]->setUpTrans(trans);
 }
 
 void TMapEventSink::initBuilding(int index, JSUMemoryInputStream& stream)
@@ -162,14 +175,15 @@ void TMapEventSink::initWithBuildingNum(JSUMemoryInputStream& stream)
 	stream >> value;
 	unk24                = value;
 	unk50                = new JGeometry::TVec3<f32>[mBuildingNum];
-	unk58                = new TMapCollisionWarp*[mBuildingNum];
-	unk5C                = new TMapCollisionMove*[mBuildingNum];
+	unk58                = new TMapCollisionBase*[mBuildingNum];
+	unk5C                = new TMapCollisionBase*[mBuildingNum];
 	mIsBuildingRecovered = new bool[mBuildingNum];
 	unk60                = new Unk60Struct[mBuildingNum];
 }
 
 void TMapEventSink::load(JSUMemoryInputStream& stream)
 {
+	// TODO: matching except for a 0x18 byte frame size shortfall
 	TMapEvent::load(stream);
 	mBuildingNum = stream.readU32();
 	initWithBuildingNum(stream);
@@ -213,9 +227,12 @@ TMapEventSink::TMapEventSink(const char* name)
 bool TMapEventSinkInPollution::watch()
 {
 	for (int i = 0; i < mBuildingNum; ++i) {
-		if (!mIsBuildingRecovered[i] && getPollutionObj(i)->isCleaned()) {
-			mRaisingBuildingIdx = i;
-			return true;
+		if (!mIsBuildingRecovered[i]) {
+			TPollutionObj* obj = getPollutionObj(i);
+			if (obj->isCleaned()) {
+				mRaisingBuildingIdx = i;
+				return true;
+			}
 		}
 	}
 	return false;
@@ -223,57 +240,76 @@ bool TMapEventSinkInPollution::watch()
 
 void TMapEventSinkInPollution::initBuriedBuilding()
 {
-	for (int i = 0; i < mBuildingNum; ++i)
-		if (getPollutionObj(i)->isCleaned())
+	for (int i = 0; i < mBuildingNum; ++i) {
+		TPollutionObj* obj = getPollutionObj(i);
+		if (obj->isCleaned())
 			makeBuildingRecovered(i);
+	}
 }
 
 void TMapEventSinkInPollution::loadAfter()
 {
+	// TODO: matching except for a 0x20 byte frame size shortfall, which
+	// also propagates into the loadAfter overrides that inline this one
 	TMapEventSink::loadAfter();
 	for (int i = 0; i < mBuildingNum; ++i) {
-		gpPollution->getCounterObj().registerPollutionObj(
-		    getPollutionObj(i), &getPollutionObj(i)->mCounter);
+		TPollutionObj* obj  = getPollutionObj(i);
+		TPollutionObj* obj2 = getPollutionObj(i);
+		getPollution()->getCounterObj().registerPollutionObj(obj,
+		                                                     &obj2->mCounter);
 	}
 }
 
 TPollutionObj* TMapEventSinkInPollutionReset::getResetPollutionObj(int i)
 {
-	return gpPollution->getLayer(unk60[i].unk0)->getObj(unk60[i].unk2 + 1);
+	TPollutionLayer* layer = getPollution()->getLayer(unk60[i].unk0);
+	TPollutionObj* obj     = layer->getObj(unk60[i].unk2 + 1);
+	return obj;
 }
 
 void TMapEventSinkInPollutionReset::makeBuildingRecovered(int i)
 {
 	TMapEventSinkInPollution::makeBuildingRecovered(i);
-	getPollutionObj(i)->kill();
-	getResetPollutionObj(i)->alive();
-	getResetPollutionObj(i)->updateDepthMap();
+	TPollutionObj* obj = getPollutionObj(i);
+	obj->kill();
+	TPollutionObj* resetObj = getResetPollutionObj(i);
+	resetObj->alive();
+	TPollutionObj* resetObj2 = getResetPollutionObj(i);
+	resetObj2->updateDepthMap();
 }
 
 void TMapEventSinkInPollutionReset::loadAfter()
 {
 	TMapEventSinkInPollution::loadAfter();
 	for (int i = 0; i < mBuildingNum; ++i) {
-		getPollutionObj(i)->alive();
-		getResetPollutionObj(i)->kill();
+		TPollutionObj* obj = getPollutionObj(i);
+		obj->alive();
+		TPollutionObj* resetObj = getResetPollutionObj(i);
+		resetObj->kill();
 	}
 }
 
 void TMapEventSinkBianco::finishControl()
 {
-	char buffer[64];
+	// TODO: matching except for frame size and this/rodata-base living in
+	// swapped registers (r30/r31)
 	if (mRaisingBuildingIdx == 0) {
+		char buffer[64];
 		TMapObjBase::setJointTransY(unk64, 0.0f);
 		for (int i = 0; i < 6; ++i) {
 			snprintf(buffer, 0x40, "バナナツリー（スケール） %d", i);
-			JDrama::TNameRefGen::search<TLiveActor>(buffer)->receiveMessage(
-			    gpModelWaterManager->unk2514[0], HIT_MESSAGE_SPRAYED_BY_WATER);
+			TLiveActor* actor
+			    = JDrama::TNameRefGen::search<TLiveActor>(buffer);
+			actor->receiveMessage(gpModelWaterManager->unk2514[0],
+			                      HIT_MESSAGE_SPRAYED_BY_WATER);
 		}
 
 		for (int i = 0; i < 7; ++i) {
 			snprintf(buffer, 0x40, "落書き内%02d", i);
-			JDrama::TNameRefGen::search<TLiveActor>(buffer)->receiveMessage(
-			    gpModelWaterManager->unk2514[0], HIT_MESSAGE_SPRAYED_BY_WATER);
+			TLiveActor* actor
+			    = JDrama::TNameRefGen::search<TLiveActor>(buffer);
+			actor->receiveMessage(gpModelWaterManager->unk2514[0],
+			                      HIT_MESSAGE_SPRAYED_BY_WATER);
 		}
 	}
 
@@ -292,6 +328,7 @@ void TMapEventSinkBianco::rising()
 
 bool TMapEventSinkBianco::control()
 {
+	// TODO: matching except for a 0x10 byte frame size shortfall
 	if (mRaisingBuildingIdx == 0 && unk4C == unk7C) {
 		gpItemManager->makeShineAppearWithTime(
 		    "シャイン（坂上げ用）", 300, unk50[mRaisingBuildingIdx].x,
@@ -303,6 +340,7 @@ bool TMapEventSinkBianco::control()
 
 void TMapEventSinkBianco::startControl()
 {
+	// TODO: matching except for one 4 byte stack slot below the TFlagT temp
 	switch (mRaisingBuildingIdx) {
 	case 0: {
 		unk40 = 1320;
@@ -351,9 +389,8 @@ bool TMapEventSinkBianco::watch()
 
 	for (int i = 1; i < mBuildingNum; ++i) {
 		if (!mIsBuildingRecovered[i]) {
-			if (gpPollution->getLayer(unk60[i].unk0)
-			        ->getObj(unk60[i].unk2)
-			        ->isCleaned()) {
+			TPollutionObj* obj = getPollutionObj(i);
+			if (obj->isCleaned()) {
 				mRaisingBuildingIdx = i;
 				return true;
 			}
@@ -404,6 +441,9 @@ void TMapEventSinkShadowMario::raiseBuilding(int i)
 
 void TMapEventSinkShadowMario::loadAfter()
 {
+	// TODO: nearly matching; the original moves the search result through
+	// r0 and sets up the getBuilding call before the unk64[i] store
+	// (inline-style addi copies), and the frame differs slightly
 	TMapEventSink::loadAfter();
 	for (int i = 0; i < mBuildingNum; ++i) {
 		unk64[i] = JDrama::TNameRefGen::search<JDrama::TPlacement>(unk68[i]);

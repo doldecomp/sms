@@ -12,13 +12,7 @@ class ResTIMG;
 
 class TPollutionCounterBase : public TDrawSyncCallback {
 public:
-	TPollutionCounterBase()
-	    : mCounterCapacity(0)
-	    , mCounterNum(0)
-	    , mCounters(nullptr)
-	    , mPolygonCount(nullptr)
-	{
-	}
+	TPollutionCounterBase();
 
 	void setCallback(int) const;
 	void drawSyncCallback(u16);

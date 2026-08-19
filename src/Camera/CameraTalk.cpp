@@ -12,8 +12,9 @@ void CPolarSubCamera::makeMtxForTalk(const TBaseNPC* param_1)
 	mCurrentTarget.mYaw  = *gpMarioAngleY - 0x8000;
 	mSavedModeBeforeTalk = mMode;
 
-	int r31 = CAMERA_MODE_TALK_A;
-	switch (param_1->getActorType()) {
+	int r31  = CAMERA_MODE_TALK_A;
+	u32 type = param_1->getActorType();
+	switch (type) {
 	case 0x400001B:
 		r31 = CAMERA_MODE_TALK_C;
 		break;
@@ -35,13 +36,15 @@ void CPolarSubCamera::makeMtxForTalk(const TBaseNPC* param_1)
 void CPolarSubCamera::makeMtxForPrevTalk()
 {
 	if (isTalkCameraSpecifyMode(mMode)) {
-		mCurrentTarget.mYaw = mCurrentTarget.unk2C;
+		s16 yaw             = mCurrentTarget.getUnk2C();
+		mCurrentTarget.mYaw = yaw;
 
 		changeCamMode_(mSavedModeBeforeTalk);
 
 		unk120->onNeutralMarioKey();
 
-		JGadget::TVector_pointer<TBaseNPC>& npcList = gpMarDirector->unk88;
+		JGadget::TVector_pointer<TBaseNPC*>& npcList
+		    = gpMarDirector->getNPCList();
 		for (TBaseNPC** it = npcList.begin(); it != npcList.end(); ++it)
 			(*it)->npcTalkOut();
 	}

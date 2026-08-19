@@ -13,7 +13,27 @@ void TMapCollisionManager::changeCollision(u32 i)
 	}
 }
 
-void TMapCollisionManager::getFileName(const char*, char*) { }
+void TMapCollisionManager::getFileName(const char* file, char* full_path)
+{
+	char buffer[256];
+	const char* folder;
+
+	if (mFolder) {
+		if (mFolder[0] != '/') {
+			snprintf(buffer, 256, "/%s", mFolder);
+			folder = buffer;
+		} else {
+			folder = mFolder;
+		}
+	} else {
+		folder = "";
+	}
+
+	if (file[0] != '/')
+		sprintf(full_path, "%s/%s", folder, file);
+	else
+		sprintf(full_path, "%s%s", folder, file);
+}
 
 #pragma dont_inline on
 void TMapCollisionManager::createCollision(const char* param_1, u8 param_2)
@@ -40,29 +60,12 @@ inline u16 col_other(u16 param_1) { return param_1 & 0xFFFC; }
 void TMapCollisionManager::init(const char* file, u16 param_2, const char* path)
 {
 	char fullPath[256];
-	char buffer[256];
-	const char* folder;
 
 	if (mFolder == nullptr)
 		mFolder = path;
 
 	createCollision(file, col_type(param_2));
-
-	if (mFolder) {
-		if (mFolder[0] != '/') {
-			snprintf(buffer, 256, "/%s", mFolder);
-			folder = buffer;
-		} else {
-			folder = mFolder;
-		}
-	} else {
-		folder = "";
-	}
-
-	if (file[0] != '/')
-		sprintf(fullPath, "%s/%s", folder, file);
-	else
-		sprintf(fullPath, "%s%s", folder, file);
+	getFileName(file, fullPath);
 
 	mEntries[mEntryNum]->init(fullPath, col_other(param_2) | 2, unk10);
 

@@ -49,6 +49,7 @@ void TMapCollisionMove::setList()
 	}
 }
 
+// TODO: nonmatching, vertex component load/store ordering differs
 void TMapCollisionBase::setCheckData(const f32* vertices, const s16* indices,
                                      TBGCheckData* param_3, int kind)
 {
@@ -62,8 +63,10 @@ void TMapCollisionBase::setCheckData(const f32* vertices, const s16* indices,
 
 	param_3->setVertex(p1, p2, p3);
 
-	if (kind != 3)
-		gpMapCollisionData->addCheckDataToGrid(param_3, getUnk8());
+	if (kind != 3) {
+		int collisionKind = getUnk8();
+		gpMapCollisionData->addCheckDataToGrid(param_3, collisionKind);
+	}
 }
 
 void TBGCheckData::updateTrans(const JGeometry::TVec3<f32>& translate_by)

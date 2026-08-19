@@ -31,13 +31,15 @@ void TMarDirector::getTalkMsgID(TBaseNPC*) { }
 
 void TMarDirector::updateFlag(TBaseNPC*, u32, u32) { }
 
+// TODO: nonmatching, a float distance lands in a different stack temp;
+// frame 0x30 vs target 0x58
 TBaseNPC* TMarDirector::findNearestTalkNPC()
 {
 	TBaseNPC* result = nullptr;
 	if (gpMarioOriginal->mStatus == MARIO_STATUS_WAIT) {
 		f32 bestDist                   = 5000000.0f;
 		JGeometry::TVec3<f32> marioPos = *gpMarioPos;
-		JGadget::TVector_pointer<TBaseNPC>::iterator it;
+		JGadget::TVector_pointer<TBaseNPC*>::iterator it;
 
 		for (it = unk88.begin(); it != unk88.end(); ++it) {
 			TBaseNPC* npc = *it;
@@ -63,7 +65,7 @@ TBaseNPC* TMarDirector::findNearestTalkNPC()
 TBaseNPC* TMarDirector::findNearestTakeNPC()
 {
 	TBaseNPC* result = nullptr;
-	JGadget::TVector_pointer<TBaseNPC>::iterator it;
+	JGadget::TVector_pointer<TBaseNPC*>::iterator it;
 
 	for (it = unk88.begin(); it != unk88.end(); ++it) {
 		TBaseNPC* npc = *it;

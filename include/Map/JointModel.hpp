@@ -28,6 +28,7 @@ public:
 	// fabriacted
 	J3DModel* getModel() { return mModel; }
 	J3DModelData* getModelData() { return mModelData; }
+	MActor* getMActor() { return mActor; }
 
 public:
 	/* 0x20 */ TJointModelManager* mManager;

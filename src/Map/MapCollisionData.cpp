@@ -41,7 +41,19 @@ void TMapCollisionData::initMoveCollision()
 	memset(unk18, 0, unk10 * sizeof(*unk18));
 }
 
-void TMapCollisionData::initAllCheckDataAndList() { }
+void TMapCollisionData::initAllCheckDataAndList()
+{
+	initGrid(unk14);
+
+	unk34 = 0;
+	unk38 = 0;
+	unk40 = 0;
+
+	initMoveCollision();
+
+	for (int i = 0; i < 256; ++i)
+		unk42[i] = 9999;
+}
 
 void TMapCollisionData::init(JSUMemoryInputStream& stream)
 {
@@ -68,16 +80,7 @@ void TMapCollisionData::init(JSUMemoryInputStream& stream)
 	unk2C = new TBGCheckList[unk20];
 	unk30 = new TBGCheckListWarp[unk24];
 
-	initGrid(unk14);
-
-	unk34 = 0;
-	unk38 = 0;
-	unk40 = 0;
-
-	initMoveCollision();
-
-	for (int i = 0; i < 256; ++i)
-		unk42[i] = 9999;
+	initAllCheckDataAndList();
 }
 
 TMapCollisionData::TMapCollisionData()

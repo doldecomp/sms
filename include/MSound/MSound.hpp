@@ -112,13 +112,21 @@ public:
 			                                             param_3, param_4);
 	}
 
-	// Fabricated, very likely due to real startSoundSystemSE
-	void startSoundActor(u32 param_1, const Vec* param_2, u32 param_3,
-	                     JAISound** param_4, u32 param_5, u8 param_6)
+	// Fabricated, very likely due to real startSoundSystemSE.
+	// Returning the handle through a named local (JAIBasic house style,
+	// cf. startSoundActorReturnHandle) is required for callers' stack
+	// frames to match, e.g. TDebuTelesa::receiveMessage.
+	// Callers that ignore the handle differ in how they spell the
+	// receiver: SMSGetMSound()-> costs two more stack words than
+	// gpMSound-> (TMapEventSink::control needs the latter).
+	JAISound* startSoundActor(u32 param_1, const Vec* param_2, u32 param_3,
+	                          JAISound** param_4, u32 param_5, u8 param_6)
 	{
+		JAISound* sound = nullptr;
 		if (gateCheck(param_1))
-			MSoundSESystem::MSoundSE::startSoundActor(
+			sound = MSoundSESystem::MSoundSE::startSoundActor(
 			    param_1, param_2, param_3, param_4, param_5, param_6);
+		return sound;
 	}
 
 	void startSoundActorWithInfo(u32 param_1, const Vec* param_2, Vec* param_3,

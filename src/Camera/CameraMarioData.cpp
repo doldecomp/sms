@@ -33,8 +33,10 @@ void TCameraMarioData::calcAndSetMarioData()
 	default:
 		JGeometry::TVec3<f32> offset;
 		offset.sub(SMS_GetMarioPos(), gpMarioOriginal->getPrevPosition());
-		mFrameMoveDistHorizontal = offset.x * offset.x + offset.z * offset.z;
-		mFrameMoveDistVertical   = offset.y * offset.y;
+		f32 horizontal = offset.x * offset.x + offset.z * offset.z;
+		f32 vertical   = offset.y * offset.y;
+		mFrameMoveDistHorizontal = horizontal;
+		mFrameMoveDistVertical   = vertical;
 		if (mFrameMoveDistHorizontal > 100.0f)
 			mFrameMoveDistHorizontal = 100.0f;
 		if (mFrameMoveDistVertical > 100.0f)

@@ -240,10 +240,13 @@ f32 TMapCollisionData::checkRoof(f32 x, f32 y, f32 z, u8 flags,
 	}
 }
 
+// TODO: nonmatching, register allocation only
 f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 flags,
                                        const TBGCheckList* head,
                                        const TBGCheckData** result)
 {
+	int ignoreWaterThrough = flags & IGNORE_WATER_THROUGH;
+	int ignoreWaterSurface = flags & IGNORE_WATER_SURFACE;
 	while (head) {
 		const TBGCheckData* data = head->unk8;
 		head                     = head->getNext();
@@ -251,30 +254,32 @@ f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 flags,
 		if (data->mMinY > y)
 			continue;
 
-		if ((flags & IGNORE_WATER_THROUGH) && data->isWaterThrough())
+		if (ignoreWaterThrough && data->isWaterThrough())
 			continue;
 
-		if ((flags & IGNORE_WATER_SURFACE) && data->isWaterSurface())
+		if (ignoreWaterSurface && data->isWaterSurface())
 			continue;
 
-		if ((data->mPoint1.z - z) * (data->mPoint2.x - data->mPoint1.x)
-		        - (data->mPoint1.x - x) * (data->mPoint2.z - data->mPoint1.z)
+		f32 x1 = data->getPoint1().x;
+		f32 z1 = data->getPoint1().z;
+		f32 z2 = data->getPoint2().z;
+		if ((z1 - z) * (data->getPoint2().x - x1) - (x1 - x) * (z2 - z1)
 		    < -1.0f)
 			continue;
 
-		if ((data->mPoint2.z - z) * (data->mPoint3.x - data->mPoint2.x)
-		        - (data->mPoint2.x - x) * (data->mPoint3.z - data->mPoint2.z)
+		if ((z2 - z) * (data->getPoint3().x - data->getPoint2().x)
+		        - (data->getPoint2().x - x) * (data->getPoint3().z - z2)
 		    < -1.0f)
 			continue;
 
-		if ((data->mPoint3.z - z) * (data->mPoint1.x - data->mPoint3.x)
-		        - (data->mPoint3.x - x) * (data->mPoint1.z - data->mPoint3.z)
+		if ((data->getPoint3().z - z) * (x1 - data->getPoint3().x)
+		        - (data->getPoint3().x - x) * (z1 - data->getPoint3().z)
 		    < -1.0f)
 			continue;
 
-		f32 tmp
-		    = x * data->mNormal.x + z * data->mNormal.z + data->mPlaneDistance;
-		f32 dVar10 = -tmp / data->mNormal.y;
+		f32 tmp = x * data->getNormal().x + z * data->getNormal().z
+		          + data->getPlaneDistance();
+		f32 dVar10 = -tmp / data->getNormal().y;
 
 		if (!(y - (dVar10 + -78.0f) < 0.0f)) {
 			*result = data;
@@ -286,6 +291,7 @@ f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 flags,
 	return 9999999.0f;
 }
 
+// TODO: nonmatching, frame 0x98 vs target 0xa8
 f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 flags,
                                    const TBGCheckData** result) const
 {
@@ -299,12 +305,14 @@ f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 flags,
 	int gridZ = (z + mGridExtentY) * (1.0f / 1024);
 
 	const TBGCheckData* local_60;
-	f32 dVar5 = checkGroundList(
-	    x, y, z, flags, getGridRoot18(gridX, gridZ).getRoofList(), &local_60);
+	f32 dVar5 = checkGroundList(x, y, z, flags,
+	                            getGridRoot18(gridX, gridZ).unk0[0].getNext(),
+	                            &local_60);
 
 	const TBGCheckData* local_64;
-	f32 dVar6 = checkGroundList(
-	    x, y, z, flags, getGridRoot14(gridX, gridZ).getRoofList(), &local_64);
+	f32 dVar6 = checkGroundList(x, y, z, flags,
+	                            getGridRoot14(gridX, gridZ).unk0[0].getNext(),
+	                            &local_64);
 
 	if (mGroundPlane != nullptr) {
 		const TBGCheckData* local_68;
@@ -391,11 +399,11 @@ static bool bgIntersectLine(const TBGCheckData* data,
 	return true;
 }
 
-inline const TBGCheckData* intersectLineList(const TBGCheckList* head,
-                                             const JGeometry::TVec3<f32>& start,
-                                             const JGeometry::TVec3<f32>& end,
-                                             bool front_only,
-                                             JGeometry::TVec3<f32>* hit_pos)
+const TBGCheckData* intersectLineList(const TBGCheckList* head,
+                                      const JGeometry::TVec3<f32>& start,
+                                      const JGeometry::TVec3<f32>& end,
+                                      bool front_only,
+                                      JGeometry::TVec3<f32>* hit_pos)
 {
 	while (head) {
 		TBGCheckData* data = head->unk8;

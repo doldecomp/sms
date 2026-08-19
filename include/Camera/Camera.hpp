@@ -39,6 +39,9 @@ public:
 		return *this;
 	}
 
+	// fabricated
+	s16 getUnk2C() const { return unk2C; }
+
 	/* 0x0 */ JGeometry::TVec3<f32> mPosition;
 	/* 0xC */ JGeometry::TVec3<f32> mTarget;
 	/* 0x18 */ JGeometry::TVec3<f32> unk18;
@@ -107,6 +110,7 @@ public:
 
 	// Fabricated
 	s16 getUnk2C8() const { return unk2C8; }
+	int getMode() const { return mMode; }
 	MtxPtr getUnk1EC() { return unk1EC; }
 	const JGeometry::TVec3<f32>& getUnk124() const { return unk124; }
 	s16 getUnk258() const { return unk258; }
@@ -143,6 +147,8 @@ public:
 	}
 
 	bool isLButtonCamera() const { return isLButtonCameraSpecifyMode(mMode); }
+	// Fabricated name but real inline
+	bool isNormalCamera() const { return isNormalCameraSpecifyMode(mMode); }
 	bool isBckDemoCamera() const
 	{
 		return mMode == CAMERA_MODE_REPRODUCE_DEMO ? true : false;
@@ -270,7 +276,8 @@ private:
 	void setUpFromLButtonCamera_();
 	void changeCamMode_(int mode)
 	{
-		changeCamModeSpecifyFrame_(mode, getCameraInbetweenFrame_(mode));
+		int frame = getCameraInbetweenFrame_(mode);
+		changeCamModeSpecifyFrame_(mode, frame);
 	}
 	void changeCamModeSub_(int mode, int tween_frames, bool force);
 	void changeCamModeSpecifyFrame_(int mode, int tween_frames);

@@ -5,6 +5,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+// TODO: nonmatching, frame 0x20 vs target 0x38
 int TPollutionPos::getEdgeDegree(int x, int y) const
 {
 	if (!isInArea(x, y))
@@ -14,7 +15,8 @@ int TPollutionPos::getEdgeDegree(int x, int y) const
 	for (int dy = -1; dy <= 1; ++dy) {
 		for (int dx = -1; dx <= 1; ++dx) {
 			if (dx != 0 || dy != 0) {
-				if (mHeightMap[index(x + dx, y + dy)] == 0xFF)
+				u32 mapIndex = index(x + dx, y + dy);
+				if (mHeightMap[mapIndex] == 0xFF)
 					count += 1;
 			}
 		}
@@ -31,6 +33,7 @@ f32 TPollutionPos::getDepthWorld(int x, int y) const
 	}
 }
 
+// TODO: nonmatching, frame 0x38 vs target 0x58
 bool TPollutionPos::isSame(int x, int z, f32 y) const
 {
 	if (!isInArea(x, z))
@@ -46,7 +49,12 @@ bool TPollutionPos::isSame(int x, int z, f32 y) const
 	return false;
 }
 
-void TPollutionPos::subtractFromYMap(int x, int z, f32 y) const { }
+void TPollutionPos::subtractFromYMap(int x, int z, f32 y) const
+{
+	u8 depth = worldToDepth(y);
+	if (depth < getDepth(x, z))
+		setDepth(x, z, depth);
+}
 
 bool TPollutionPos::isProhibit(int x, int z) const
 {

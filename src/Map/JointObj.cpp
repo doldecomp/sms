@@ -92,18 +92,15 @@ void TJointObj::kill()
 	}
 }
 
-// TODO: size is wrong, name sort of makes sense?
-static void getShapeInOneJoint(J3DJoint* joint, J3DShape** shapes)
+static u32 getShapeInOneJoint(J3DJoint* joint, J3DShape** shapes)
 {
-	u32 i          = 0;
-	J3DMaterial* m = joint->getMesh();
-	if (shapes) {
-		for (; m != nullptr; ++i, m = m->getNext())
-			shapes[i] = m->getShape();
-	} else {
-		for (; m != nullptr; m = m->getNext())
-			; // assert? debug print?
+	u32 count             = 0;
+	J3DMaterial* material = joint->getMesh();
+	for (; material != nullptr; ++count, material = material->getNext()) {
+		if (shapes != nullptr)
+			shapes[count] = material->getShape();
 	}
+	return count;
 }
 
 void TJointObj::initChildren()
@@ -137,17 +134,14 @@ void TJointObj::initJointObj(J3DJoint* joint)
 	mJoint = joint;
 	initChildren();
 
-	u32 count = 0;
-	for (J3DMaterial* m = getJoint()->getMesh(); m != nullptr; m = m->getNext())
-		++count;
-	mShapeNum = count;
+	mShapeNum = getShapeInOneJoint(mJoint, nullptr);
 
 	if (getShapeNum() <= 0)
 		return;
 
 	mShapes = new J3DShape*[getShapeNum()];
 
-	getShapeInOneJoint(getJoint(), mShapes);
+	getShapeInOneJoint(mJoint, mShapes);
 }
 
 TJointObj::TJointObj()

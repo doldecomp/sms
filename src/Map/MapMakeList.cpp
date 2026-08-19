@@ -153,12 +153,13 @@ template <class T> static inline T min(const T& a, const T& b)
 	return b > a ? a : b;
 }
 
+// TODO: nonmatching, frame 0x70 vs target 0xe0: missing inline temporaries
 bool TMapCollisionData::getGridArea(const TBGCheckData* param_1, int param_2,
                                     int* param_3, int* param_4, int* param_5,
                                     int* param_6)
 {
 	f32 minX
-	    = min(min(param_1->mPoint2.x, param_1->mPoint3.x), param_1->mPoint1.x);
+	    = min(min(param_1->mPoint3.x, param_1->mPoint2.x), param_1->mPoint1.x);
 	f32 minZ
 	    = min(min(param_1->mPoint2.z, param_1->mPoint3.z), param_1->mPoint1.z);
 
@@ -186,17 +187,19 @@ bool TMapCollisionData::getGridArea(const TBGCheckData* param_1, int param_2,
 	if (*param_5 >= unk8)
 		*param_5 = unk8 - 1;
 
-	*param_4 = (minZ + mGridExtentX) * 0.0009765625f;
+	*param_4 = (minZ + mGridExtentY) * 0.0009765625f;
 	if (*param_4 < 0)
 		*param_4 = 0;
 
-	*param_6 = (maxZ + mGridExtentX) * 0.0009765625f;
+	*param_6 = (maxZ + mGridExtentY) * 0.0009765625f;
 	if (*param_6 >= unkC)
 		*param_6 = unkC - 1;
 
 	return true;
 }
 
+// TODO: nonmatching, structural: grid-index float conversion placement and
+// register allocation; frame 0xd8 vs target 0x108
 void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int kind)
 {
 	int iVar7 = param_1->getPlaneType();
@@ -281,7 +284,17 @@ void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int kind)
 	}
 }
 
-void TMapCollisionData::removeCheckListNode(s32, s32) { }
+void TMapCollisionData::removeCheckListNode(s32 start, s32 count)
+{
+	for (int i = start; i < start + count; ++i) {
+		TBGCheckListWarp* curr = &unk30[i];
+		curr->getPreNode()->setNext(curr->getNext());
+		if (curr->getNext() != nullptr) {
+			curr->getNext()->setPreNode(curr->getPreNode());
+		}
+		curr->unk8 = nullptr;
+	}
+}
 
 void TMapCollisionData::updateCheckListNode(s32 param_1, s32 param_2,
                                             s32 param_3)
@@ -316,9 +329,9 @@ void printData(const TBGCheckListWarp*, int) { }
 
 void printList(const TBGCheckList*) { }
 
+// TODO: nonmatching, register allocation only
 void TMapCollisionData::removeCheckListData(u16 start, s32 count)
 {
-	TBGCheckListWarp* curr;
 	int rangeEnd;
 	u32 rangeStart;
 	int i;
@@ -332,14 +345,7 @@ void TMapCollisionData::removeCheckListData(u16 start, s32 count)
 	unk42[start] = 9999;
 	unk242       = start;
 
-	for (i = rangeStart; i < rangeEnd; ++i) {
-		curr = &unk30[i];
-		curr->getPreNode()->setNext(curr->getNext());
-		if (curr->getNext() != nullptr) {
-			curr->getNext()->setPreNode(curr->getPreNode());
-		}
-		curr->unk8 = nullptr;
-	}
+	removeCheckListNode(rangeStart, count);
 
 	unk40 -= count;
 

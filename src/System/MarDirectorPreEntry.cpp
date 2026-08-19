@@ -1,15 +1,12 @@
+#include <System/DummyStrings.hpp>
 #include <System/MarDirector.hpp>
 #include <System/PerformList.hpp>
 #include <System/RenderModeObj.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JDrama/JDRViewport.hpp>
 
-// TODO: which headers are these infections strings from?
-// See InfectiousStrings.hpp also
-static const char* dummy                 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE = "メモリが足りません\n";
-static const char cDirtyFileName[]       = "/scene/map/pollution/H_ma_rak.bti";
-static const char cDirtyTexName[]        = "H_ma_rak_dummy";
+static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
+static const char cDirtyTexName[]  = "H_ma_rak_dummy";
 
 void TMarDirector::preEntry(TPerformList* list)
 {

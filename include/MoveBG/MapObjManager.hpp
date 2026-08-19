@@ -46,6 +46,8 @@ public:
 class TMapObjManager;
 
 extern TMapObjManager* gpMapObjManager;
+// fabricated
+inline TMapObjManager* SMSGetMapObjManager() { return gpMapObjManager; }
 
 class TMapObjManager : public TMapObjBaseManager {
 public:

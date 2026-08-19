@@ -17,18 +17,26 @@ void TMapEvent::finishControl()
 		unk18 = 1;
 }
 
-void TMapEvent::controlMapEvent() { }
+void TMapEvent::controlMapEvent()
+{
+	if (control())
+		finishControl();
+}
 
-void TMapEvent::watchMapEvent() { }
+void TMapEvent::watchMapEvent()
+{
+	if (watch())
+		startControl();
+}
 
 void TMapEvent::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!stateIs(0) && (cue & CUE_MOVE)) {
-		if (stateIs(1) && watch())
-			startControl();
+		if (stateIs(1))
+			watchMapEvent();
 
-		if (stateIs(2) && control())
-			finishControl();
+		if (stateIs(2))
+			controlMapEvent();
 	}
 }
 

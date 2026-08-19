@@ -75,6 +75,14 @@ void TPollutionCounterBase::initCounters(int max_counters)
 	}
 }
 
+TPollutionCounterBase::TPollutionCounterBase()
+    : mCounterCapacity(0)
+    , mCounterNum(0)
+    , mCounters(nullptr)
+    , mPolygonCount(nullptr)
+{
+}
+
 void loadPollutionLayer(const u8* param_1, u16 param_2, u16 param_3,
                         GXTexMapID param_4)
 {
@@ -324,11 +332,12 @@ static void makeWorldToPollutionMtx(f32 scale, f32 x, f32 z, TPosition3f* mtx)
 	mtx->zero();
 
 	mtx->mMtx[0][0] = scale;
-	mtx->mMtx[0][3] = -z * scale;
+	mtx->mMtx[0][3] = -x * scale;
 	mtx->mMtx[1][2] = scale;
-	mtx->mMtx[1][3] = -x * scale;
+	mtx->mMtx[1][3] = -z * scale;
 }
 
+// TODO: nonmatching, frame 0xd0 vs target 0xe0
 void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
 {
 	for (int i = 0; i < mJointObjStampTaskNum; ++i) {
@@ -345,7 +354,7 @@ void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
 		GXSetChanCtrl(GX_COLOR1A1, 0, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 		              GX_AF_NONE);
 
-		if (mJointObjStampTaskQueue[i].unk0 == 0) {
+		if (info.unk0 == 0) {
 			GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0, 0, 0, 0xff });
 		} else {
 			GXSetChanMatColor(GX_COLOR0A0,
@@ -369,9 +378,8 @@ void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
 		GXLoadPosMtxImm(local_6c, GX_PNMTX0);
 
 		j3dSys.setVtxPos(layer->getModelData()->getVtxPosArray());
-		for (int j = 0; j < mJointObjStampTaskQueue[i].mJointObj->getShapeNum();
-		     ++j)
-			drawShape(mJointObjStampTaskQueue[i].mJointObj->getShape(j));
+		for (int j = 0; j < info.mJointObj->getShapeNum(); ++j)
+			drawShape(info.mJointObj->getShape(j));
 	}
 }
 
@@ -599,8 +607,14 @@ void TPollutionCounterLayer::cleanProhibitArea(int param_1) const
 	GXEnd();
 }
 
-void TPollutionCounterLayer::drawModelStamp(int) { }
+void TPollutionCounterLayer::drawModelStamp(int layer_index)
+{
+	j3dSys.setUnk4C(7);
+	mModelStampDrawBuffers[layer_index]->draw();
+	mModelStampDrawBuffers[layer_index]->frameInit();
+}
 
+// TODO: nonmatching, frame 0x68 vs target 0xc0: missing inline temporaries
 void TPollutionCounterLayer::countTexDegree(int layer_index)
 {
 	if (!mIsLayerEnabled[layer_index])
@@ -608,11 +622,8 @@ void TPollutionCounterLayer::countTexDegree(int layer_index)
 
 	ReInitializeGX();
 	drawPollutionLayer(layer_index);
-	if (mModelStampTaskNum != 0) {
-		j3dSys.setUnk4C(7);
-		mModelStampDrawBuffers[layer_index]->draw();
-		mModelStampDrawBuffers[layer_index]->frameInit();
-	}
+	if (mModelStampTaskNum != 0)
+		drawModelStamp(layer_index);
 
 	ReInitializeGX();
 	drawJointObjStamp(layer_index);

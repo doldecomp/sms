@@ -12,21 +12,7 @@ class TBGCheckData;
 
 class TMapCollisionBase {
 public:
-	TMapCollisionBase()
-	    : mCheckDatas(nullptr)
-	    , mKind(0)
-	    , mCheckDataNum(0)
-	    , mVertexNum(0)
-	    , mVertices(nullptr)
-	    , mCollisionGroupNum(0)
-	    , mCollisionGroups(nullptr)
-	    , mFlags(0)
-	{
-		MTXIdentity(unk20);
-		mPrevTranslation.x = 0.0f;
-		mPrevTranslation.y = 0.0f;
-		mPrevTranslation.z = 0.0f;
-	}
+	TMapCollisionBase();
 
 	virtual void init(const char*, u16, const TLiveActor*);
 	virtual void moveSRT(const JGeometry::TVec3<f32>&,

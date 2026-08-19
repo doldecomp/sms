@@ -223,6 +223,7 @@ void TMapWireManager::loadAfter()
 	entry(gpMarioOriginal);
 }
 
+// TODO: nonmatching, frame 0x38 vs target 0x50
 void TMapWireManager::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
@@ -254,7 +255,7 @@ void TMapWireManager::load(JSUMemoryInputStream& stream)
 
 	for (int i = 0; i < unk10; ++i) {
 		unk18[i] = new TMapWire;
-		unk18[i]->init(&gpCubeWire->unk14->getChildren()[i]);
+		unk18[i]->init(&(*gpCubeWire->unk14)[i]);
 	}
 }
 

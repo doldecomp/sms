@@ -37,6 +37,7 @@ namespace MSStageInfo {
 
 } // namespace MSMainProc
 
+// TODO: nonmatching, frame 0x28 vs target 0x30
 int MSMainProc::getMonteVillageActorArea(const Vec& param_1)
 {
 	int result = 4;
@@ -60,7 +61,7 @@ int MSMainProc::getMonteVillageActorArea(const Vec& param_1)
 	return result;
 }
 
-void MSMainProc::entranceDemoWipeInEnd() { }
+void MSMainProc::entranceDemoWipeInEnd() { gpMSound->unkC8[4] = 1; }
 
 void MSMainProc::toInnerCameraDemo() { gpMSound->unkC8[2] = 1; }
 
@@ -582,6 +583,7 @@ void MSMainProc::startStageBGM(u8, u8)
 	}
 }
 
+// TODO: nonmatching, frame 0x28 vs target 0x80: missing inline temporaries
 MSStage* MSStage::init(u8 param_1, u8)
 {
 	smMSStage = nullptr;
@@ -626,7 +628,7 @@ MSStage* MSStage::init(u8 param_1, u8)
 
 	case 3:
 		if (gpCubeSoundChange->unk10 == 1)
-			smMSStage = new MSStageCubeSwitch(param_1);
+			smMSStage = new MSStageCubeSwitch(0);
 		break;
 	}
 

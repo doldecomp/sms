@@ -38,20 +38,21 @@ static bool checkLinePolygonCollision(f32 x0, f32 z0, f32 x1, f32 z1,
 
 static bool pointIsInPolygon(f32 x, f32 z, TBGCheckData* data)
 {
-	if ((data->mPoint1.z - z) * (data->mPoint2.x - data->mPoint1.x)
-	        - (data->mPoint1.x - x) * (data->mPoint2.z - data->mPoint1.z)
+	JGeometry::TVec2<f32> point(x, z);
+	JGeometry::TVec2<f32> p1(data->mPoint1.x, data->mPoint1.z);
+	JGeometry::TVec2<f32> p2(data->mPoint2.x, data->mPoint2.z);
+	JGeometry::TVec2<f32> p3(data->mPoint3.x, data->mPoint3.z);
+	if ((p1.y - point.y) * (p2.x - p1.x) - (p1.x - point.x) * (p2.y - p1.y)
 	    < 0.0f) {
 		return false;
 	}
 
-	if ((data->mPoint2.z - z) * (data->mPoint3.x - data->mPoint2.x)
-	        - (data->mPoint2.x - x) * (data->mPoint3.z - data->mPoint2.z)
+	if ((p2.y - point.y) * (p3.x - p2.x) - (p2.x - point.x) * (p3.y - p2.y)
 	    < 0.0f) {
 		return false;
 	}
 
-	if ((data->mPoint3.z - z) * (data->mPoint1.x - data->mPoint3.x)
-	        - (data->mPoint3.x - x) * (data->mPoint1.z - data->mPoint3.z)
+	if ((p3.y - point.y) * (p1.x - p3.x) - (p3.x - point.x) * (p1.y - p3.y)
 	    < 0.0f) {
 		return false;
 	}

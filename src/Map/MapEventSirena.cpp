@@ -28,16 +28,16 @@ bool TMapEventSirenaSink::watch()
 		mRaisingBuildingIdx = 0;
 		SMSGetMarDirector()->fireStartDemoCamera(
 		    "ホテル上げカメラ", &unk68, -1, 0.0f, true, nullptr, 0, nullptr,
-		    JDrama::TFlagT<u16>(0));
+		    JDrama::TFlagT<u16>());
 		gpItemManager->makeShineAppearWithDemo("シャイン（ホテル上げ用）",
 		                                       "ホテル上げシャインカメラ",
 		                                       unk68.x, unk68.y, unk68.z);
 		TFlagManager::getInstance()->setBool(true, 0x50008);
 		SMS_MarioWarpRequest(unk74, unk80);
 		gpMarioParticleManager->emit(MAP_MAP_MS_OBJUP_HOTEL_A,
-		                             &gpMapObjManager->getUnk44(), 0, nullptr);
+		                             &SMSGetMapObjManager()->getUnk44(), 0, nullptr);
 		gpMarioParticleManager->emit(MAP_MAP_MS_OBJUP_HOTEL_B,
-		                             &gpMapObjManager->getUnk44(), 2, nullptr);
+		                             &SMSGetMapObjManager()->getUnk44(), 2, nullptr);
 
 		return true;
 	}

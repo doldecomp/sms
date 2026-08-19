@@ -3,8 +3,7 @@
 
 #include <Map/MapEvent.hpp>
 
-class TMapCollisionWarp;
-class TMapCollisionMove;
+class TMapCollisionBase;
 class TMapObjBase;
 class TPollutionObj;
 class TGateKeeperBase;
@@ -51,8 +50,8 @@ public:
 	/* 0x4C */ int unk4C;
 	/* 0x50 */ JGeometry::TVec3<f32>* unk50;
 	/* 0x54 */ bool* mIsBuildingRecovered;
-	/* 0x58 */ TMapCollisionWarp** unk58;
-	/* 0x5C */ TMapCollisionMove** unk5C;
+	/* 0x58 */ TMapCollisionBase** unk58;
+	/* 0x5C */ TMapCollisionBase** unk5C;
 	struct Unk60Struct {
 		u16 unk0;
 		u16 unk2;

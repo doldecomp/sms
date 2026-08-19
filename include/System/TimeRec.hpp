@@ -1,6 +1,7 @@
 #ifndef SYSTEM_TIME_REC_HPP
 #define SYSTEM_TIME_REC_HPP
 
+#include <JSystem/JUtility/JUTColor.hpp>
 #include <System/DrawSyncCallback.hpp>
 #include <dolphin/os.h>
 #include <dolphin/types.h>
@@ -68,44 +69,40 @@ public:
 
 	static void snapGxTimeStatic(u32 param_1)
 	{
-		if (!_instance)
+		TTimeRec* inst = instance();
+		if (!inst)
 			return;
-		_instance->snapGXTime(param_1);
+		inst->snapGXTime(param_1);
 	}
 
 	static void startTimer(u8 r = 0xff, u8 g = 0xff, u8 b = 0xff, u8 a = 0xff)
 	{
 		TTimeRec* inst = _instance;
+		TTimeArray* arrays;
 
-		union {
-			u8 asAry[4];
-			u32 asUint;
-		} color;
-		color.asAry[0] = r;
-		color.asAry[1] = g;
-		color.asAry[2] = b;
-		color.asAry[3] = a;
-		u32 col        = color.asUint;
+		u32 col;
+		JUtility::TColor color(r, g, b, a);
+		col = color;
+
+		if (!inst)
+			return;
+		OSTick tick       = OSGetTick();
+		arrays            = inst->crTimeAry();
+		TTimeArray& array = arrays[0];
+		array.append(tick, col);
+	}
+
+	static void startTimer(u32 param_1)
+	{
+		TTimeRec* inst = instance();
+
+		JUtility::TColor color(param_1);
+		u32 col = color;
 
 		if (!inst)
 			return;
 		OSTick tick = OSGetTick();
 		inst->crTimeAry()[0].append(tick, col);
-	}
-
-	static void startTimer(u32 param_1)
-	{
-		TTimeRec* inst = _instance;
-
-		// TODO: there must be some kind of a trick to unify
-		// this with the overload above that does 4 separate byte
-		// writes....
-		volatile u32 tmp = param_1;
-		u32 col          = tmp;
-		if (!inst)
-			return;
-		OSTick tick = OSGetTick();
-		inst->crTimeAry()[0].append(tick, param_1);
 	}
 
 	static void startTimerTwice(u32 tick, u32 param_1)

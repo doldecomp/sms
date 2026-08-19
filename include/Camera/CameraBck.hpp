@@ -14,12 +14,15 @@ public:
 	void isNowDemo() const;
 	void startDemo(const char*, const JGeometry::TVec3<f32>*);
 	int getTotalDemoFrames() const;
-	void isDemoFinished() const;
+	bool isDemoFinished() const;
 	void endDemo();
 	void restartDemo();
 	bool updateDemo(JGeometry::TVec3<f32>*, JGeometry::TVec3<f32>*,
 	                JGeometry::TVec3<f32>*, f32*);
 	void setFrame(f32);
+
+	MActor* getMActor() const { return unk0; }
+	MtxPtr getPosMtx() const { return unkC; }
 
 public:
 	/* 0x0 */ MActor* unk0;

@@ -35,6 +35,9 @@ public:
 	bool isInCube(const Vec&, const char*) const;
 	void calcPointInCubeRatio(const Vec&, s32, float*, float*, float*) const;
 
+	// fabricated
+	TCubeGeneralInfo& getInfo(s32 i) const { return (*unk14)[i]; }
+
 public:
 	/* 0x10 */ u8 unk10;
 	/* 0x14 */ TNameRefPtrAryT<TCubeGeneralInfo>* unk14;

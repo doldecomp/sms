@@ -20,6 +20,12 @@ public:
 
 	void addMoveCameraAndMario(const Vec& v) { unk0 += v; }
 
+	// fabricated
+	u32 getFramesSinceMarioStatusChange() const
+	{
+		return mFramesSinceMarioStatusChange;
+	}
+
 public:
 	/* 0x0 */ JGeometry::TVec3<f32> unk0;
 	/* 0xC */ f32 mFrameMoveDistHorizontal;

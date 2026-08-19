@@ -8,7 +8,8 @@
 
 TBGCheckData* TMapCheckGroundPlane::getCheckData(int x, int z, int which) const
 {
-	return &mGrid[(z * mGridHeight + x) * 2 + which];
+	int index = (z * mGridHeight + x) * 2 + which;
+	return &mGrid[index];
 }
 
 f32 TMapCheckGroundPlane::checkPlaneGround(f32 x, f32 y, f32 z,
@@ -19,11 +20,8 @@ f32 TMapCheckGroundPlane::checkPlaneGround(f32 x, f32 y, f32 z,
 		return -32767.0f;
 	}
 
-	// TODO: making the return type an int here makes it match better,
-	// but breaks other places...
 	int tileX = worldToGrid(x);
 	int tileZ = worldToGrid(z);
-
 	f32 inTileX = x - gridToWorld(tileX);
 	f32 inTileZ = z - gridToWorld(tileZ);
 

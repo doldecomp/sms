@@ -8,7 +8,7 @@
 
 void CPolarSubCamera::warpPosAndAt(const Vec& pos, const Vec& at)
 {
-	if (mMode < CAMERA_MODE_REPRODUCE_DEMO) {
+	if (getMode() < CAMERA_MODE_REPRODUCE_DEMO) {
 		mCurrentParams->copySaveParam(*mSaveKindParam[mMode]);
 		killHeightPan_();
 
@@ -31,6 +31,7 @@ void CPolarSubCamera::warpPosAndAt(f32 ratio, s16 yAngle)
 	if (mMode < CAMERA_MODE_REPRODUCE_DEMO) {
 		mCurrentParams->copySaveParam(*mSaveKindParam[mMode]);
 
+		Vec pos;
 		JGeometry::TVec3<f32> usualLookat;
 		usualLookat.set(getUsualLookat());
 
@@ -42,7 +43,6 @@ void CPolarSubCamera::warpPosAndAt(f32 ratio, s16 yAngle)
 		mCurrentTarget.mPitch = calcAngleXFromXRotRatio_();
 		mCurrentTarget.mYaw   = yAngle;
 
-		Vec pos;
 		CLBPolarToCross(usualLookat, &pos, calcDistFromXRotRatio_(),
 		                mCurrentTarget.mPitch, mCurrentTarget.mYaw);
 
