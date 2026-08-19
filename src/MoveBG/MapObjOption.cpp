@@ -12,12 +12,6 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-static void dummy(Vec* v)
-{
-	*v = (Vec) { 0.0f, 0.0f, 0.0f };
-	*v = (Vec) { 1.0f, 1.0f, 1.0f };
-}
-
 void TFileLoadBlock::makeBlockNoCard() { }
 
 void TFileLoadBlock::makeBlockNormal()
@@ -41,21 +35,22 @@ void TFileLoadBlock::pushed()
 	SMSRumbleMgr->start(0x15, sRumbleTime, (float*)nullptr);
 	gpMarioParticleManager->emit(0x6E, &unk144, 0, nullptr);
 	gpMarioParticleManager->emit(PARTICLE_MS_M_AMIATTACK, &unk144, 0, nullptr);
-	mStateTimer         = 120;
-	unk13C->mStateTimer = 120;
-	unk140->mStateTimer = 120;
+	startStateTimer(120);
+	unk13C->startStateTimer(120);
+	unk140->startStateTimer(120);
 }
 
 void TFileLoadBlock::touchPlayer(THitActor* param_1)
 {
-	if (isState(STATE_NORMAL) && marioHeadAttack() && !isStateTimerEngaged())
+	if (isState(STATE_NORMAL) && marioHeadAttack()
+	    && isStateTimerEngaged() == false)
 		pushed();
 }
 
 BOOL TFileLoadBlock::receiveMessage(THitActor* sender, u32 message)
 {
-	if (isState(STATE_NORMAL) && message == HIT_MESSAGE_PUSH_UP
-	    && !isStateTimerEngaged()) {
+	bool normal = isState(STATE_NORMAL);
+	if (normal && message == HIT_MESSAGE_PUSH_UP && !isStateTimerEngaged()) {
 		pushed();
 		return true;
 	}

@@ -7,7 +7,7 @@ void TBathtub::hipdrop(const JGeometry::TVec3<f32>&) { }
 
 void TBathtub::quake(const JGeometry::TVec3<f32>&) { }
 
-u8 TBathtub::getNumGripsDead() const { return 0; }
+s32 TBathtub::getNumGripsDead() const { return 0; }
 
 void TBathtub::tumble(f32, f32) { }
 

@@ -1,7 +1,10 @@
 #include <MoveBG/MapObjPole.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
+#include <JSystem/JKernel/JKRFileLoader.hpp>
+#include <System/MarDirector.hpp>
 #include <dolphin/gx.h>
+#include <stdio.h>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -42,12 +45,19 @@ void TMapObjPole::draw()
 	GXEnd();
 }
 
-static void dummy(f32* f) { *f = 0.0f; }
-
-void TMapObjPole::load(JSUMemoryInputStream&) { }
+void TMapObjPole::load(JSUMemoryInputStream& stream)
+{
+	THitActor::load(stream);
+	stream >> unk68 >> unk6C;
+	unk6C /= 100.0f;
+	gpMapObjPoleManager->registerObj(this);
+}
 
 TMapObjPole::TMapObjPole(const char* name)
     : THitActor(name)
+    , unk68(0.0f)
+    , unk6C(100.0f)
+    , unk70(0)
 {
 }
 
@@ -98,12 +108,27 @@ void TMapObjPoleManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
-void TMapObjPoleManager::loadPole(TMapObjPoleManager::TMapObjPoleInfo*,
-                                  TMapObjPole*, const char*)
+void TMapObjPoleManager::loadPole(TMapObjPoleManager::TMapObjPoleInfo* info,
+                                  TMapObjPole* pole, const char* name)
 {
+	if (info->unk54 == nullptr) {
+		char buffer[64];
+		snprintf(buffer, 64, "/scene/mapObj/%s.bti", name);
+		info->unk54 = (ResTIMG*)JKRGetResource(buffer);
+	}
+	info->unk4[info->unk0] = pole;
+	info->unk0 += 1;
 }
 
-void TMapObjPoleManager::registerObj(TMapObjPole*) { }
+void TMapObjPoleManager::registerObj(TMapObjPole* pole)
+{
+	const char* name;
+	if (gpMarDirector->getCurrentMap() == 9)
+		name = "cogwheel_rope";
+	else
+		name = "mon_bri_rope";
+	loadPole(&unk10[0], pole, name);
+}
 
 void TMapObjPoleManager::load(JSUMemoryInputStream& stream)
 {

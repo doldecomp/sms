@@ -24,6 +24,9 @@ public:
 
 	TRevivalPolluter();
 
+	// fabricated
+	ResTIMG* getStampTex() const { return mRevivalStampTex; }
+
 public:
 	/* 0x0 */ u32 mLayerIndex;
 	/* 0x4 */ ResTIMG* mRevivalStampTex;

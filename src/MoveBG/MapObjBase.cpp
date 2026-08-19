@@ -629,8 +629,9 @@ void TMapObjBase::initAndRegister(const char* param_1)
 	unkF4 = param_1;
 	initMapObj();
 	if (mMapObjData->unkC) {
-		JDrama::TNameRefGen::search<TIdxGroupObj>(mMapObjData->unkC)
-		    ->push_back(this);
+		TIdxGroupObj* group
+		    = JDrama::TNameRefGen::search<TIdxGroupObj>(mMapObjData->unkC);
+		group->getChildren().push_back(this);
 	}
 }
 

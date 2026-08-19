@@ -399,7 +399,7 @@ void TRollBlock::setGroundCollision()
 		return;
 
 	MtxPtr mtx = getModel()->getAnmMtx(0);
-	if (TMapCollisionBase* col = mMapCollisionManager->getUnk8())
+	if (TMapCollisionBase* col = mMapCollisionManager->unk8)
 		col->moveMtx(mtx);
 }
 

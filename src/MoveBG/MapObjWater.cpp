@@ -50,23 +50,24 @@ void TMapObjWaterFilter::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	// TODO: mother of all intern codes...
 
-	if (!unk44 || gpMarDirector->unk124 != 0)
+	if (!unk44)
 		return;
 
-	bool bVar1 = true;
-	if (!gpCamera->isSimpleDemoCamera() && !gpCamera->isBckDemoCamera()) {
-		bVar1 = false;
-	}
-
-	if (bVar1 ? true : false)
+	if (gpMarDirector->unk124 != 0)
 		return;
 
-	if (gpCamera->unk124.y > 0.0f
-	    && gpCamera->unk124.y >= gpMapObjWave->getHeight(
-	           gpCamera->unk124.x, gpCamera->unk124.y, gpCamera->unk124.z))
+	if (gpCamera->isDemoCamera()
+	    || (gpCamera->getUnk124().y > 0.0f
+	        && gpCamera->getUnk124().y
+	            >= gpMapObjWave->getHeight(gpCamera->getUnk124().x,
+	                gpCamera->getUnk124().y, gpCamera->getUnk124().z)))
 		return;
 
 	if (cue & CUE_CALC_ANIM) {
+		MtxPtr viewMtx = graphics->mViewMtx;
+		Mtx mtx;
+		Mtx trMtx;
+		Mtx scaleMtx;
 		J3DTransformInfo info;
 		info.mScale.x     = 1.0f;
 		info.mScale.y     = 1.0f;
@@ -74,18 +75,15 @@ void TMapObjWaterFilter::perform(u32 cue, JDrama::TGraphics* graphics)
 		info.mRotation.x  = 0.0f;
 		info.mRotation.y  = 0.0f;
 		info.mRotation.z  = 0.0f;
-		info.mTranslate.x = mPosition.x;
-		info.mTranslate.y = mPosition.y;
-		info.mTranslate.z = mPosition.z;
-		Mtx afStack_78;
-		J3DGetTranslateRotateMtx(info, afStack_78);
-		Mtx afStack_a8;
-		PSMTXScale(afStack_a8, mScaling.x, mScaling.y, mScaling.z);
-		Mtx afStack_48;
-		MTXInverse(graphics->mViewMtx, afStack_48);
-		MTXConcat(afStack_48, afStack_78, afStack_48);
-		MTXConcat(afStack_48, afStack_a8, afStack_48);
-		unk44->getModel()->setBaseTRMtx(afStack_48);
+		info.mTranslate.x = getPosition().x;
+		info.mTranslate.y = getPosition().y;
+		info.mTranslate.z = getPosition().z;
+		J3DGetTranslateRotateMtx(info, trMtx);
+		MTXScale(scaleMtx, mScaling.x, mScaling.y, mScaling.z);
+		MTXInverse(viewMtx, mtx);
+		MTXConcat(mtx, trMtx, mtx);
+		MTXConcat(mtx, scaleMtx, mtx);
+		unk44->getModel()->setBaseTRMtx(mtx);
 	}
 	unk44->perform(cue, graphics);
 }

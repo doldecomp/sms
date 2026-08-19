@@ -51,11 +51,20 @@ void TRevivalPolluter::pollute() { }
 
 void TRevivalPolluter::registerPolluteTex()
 {
-	// TODO: inlines make me cry
-	TPollutionLayer* layer = gpPollution->getLayer(mLayerIndex);
+	// TODO: this shape makes the inlined copy in TMapObjRevivalPollution::
+	// loadAfter match every instruction and the exact 0x60 stack frame, but
+	// four callee-save registers come out rotated: we allocate
+	// {i,this,elem,off} = {r29,r28,r30,r31} while the original has
+	// {r31,r30,r28,r29}. The original ranks the user variables above the
+	// loop-optimizer temps; no source spelling tried so far reproduces that.
+	// The asymmetric mPos.mWidth vs getPos().getHeight() and the tex local
+	// are load-bearing: they fix the load order (tex, interval, height,
+	// width), the scratch register texture and the frame size.
+	ResTIMG* tex = getStampTex();
 	unk8 = gpPollution->getCounterLayer().registerRevivalTexStamp(
-	    mLayerIndex, 0, 0, layer->mPos.mWidth, layer->mPos.mHeight,
-	    mStampInterval, mRevivalStampTex);
+	    mLayerIndex, 0, 0, gpPollution->getLayer(mLayerIndex)->mPos.mWidth,
+	    gpPollution->getLayer(mLayerIndex)->getPos().getHeight(),
+	    mStampInterval, tex);
 }
 
 void TRevivalPolluter::loadInfo(JSUMemoryInputStream& stream)

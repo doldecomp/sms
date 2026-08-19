@@ -361,6 +361,7 @@ void TCoinRed::taken(THitActor* param_1)
 TCoinRed::TCoinRed(const char* name)
     : TCoin(name)
 {
+	unk158.zero();
 }
 
 void TCoinBlue::makeObjAppeared()

@@ -45,11 +45,11 @@ u32 TRideCloud::touchWater(THitActor*)
 
 void TRideCloud::setGroundCollision()
 {
-	if (mMapCollisionManager) {
+	if (getMapCollisionManager()) {
 		// TODO: this is used in MapObjRailBlock too, inline global?
 		TMtx34f mtx;
 		mtx.set(getModel()->getAnmMtx(0));
-		if (TMapCollisionBase* col = mMapCollisionManager->unk8)
+		if (TMapCollisionBase* col = getMapCollisionManager()->unk8)
 			col->moveMtx(mtx);
 	}
 }

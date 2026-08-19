@@ -55,6 +55,9 @@ void TLampTrapSpikeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 TLampTrapSpike::TLampTrapSpike(const char* name)
     : TMapObjBase(name)
 {
+	unk138 = 3;
+	unk13C = 0;
+	unk140 = nullptr;
 }
 
 void TLampTrapSpike::initMapObj()

@@ -50,6 +50,14 @@ void TWoodBarrel::breaking()
 	}
 }
 
+// TODO: every instruction matches, but the frame is 0x28 instead of 0x30 and
+// vec sits at 0x10(r1) instead of 0x1c(r1) -- 12 bytes of stack below vec are
+// missing. Either a 12-byte local declared after vec, or three 4-byte
+// slot-taking locals declared after it, reproduce the target exactly.
+// Capturing the emitRequest and receiveMessage results (as WaterGun.cpp does)
+// supplies two of those three with no codegen change; the third is unknown.
+// Locals initialised from a plain member load, from a bool or from an f32 take
+// no slot, and any local holding mHolder costs an extra mr r3, r0.
 void TWoodBarrel::kill()
 {
 	TMapObjGeneral::kill();
@@ -67,9 +75,11 @@ void TWoodBarrel::appeared()
 {
 	TMapObjGeneral::appeared();
 	if (SMS_IsMarioStatusHipDrop()) {
-		setDamageHeight(mMapObjData->mHit->unkC->unkC + 90.0f);
+		const TMapObjHitDataTable* table = mMapObjData->mHit->unkC;
+		setDamageHeight(table->unkC + 90.0f);
 	} else {
-		setDamageHeight(mMapObjData->mHit->unkC->unkC);
+		const TMapObjHitDataTable* table = mMapObjData->mHit->unkC;
+		setDamageHeight(table->unkC);
 	}
 
 	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);

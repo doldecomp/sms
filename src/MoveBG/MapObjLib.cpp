@@ -48,19 +48,8 @@ bool TMapObjBase::isHideObj(THitActor* param_1)
 
 bool TMapObjBase::isDemo()
 {
-	bool b1 = true;
-	if (gpMarDirector->unk124 != 1 && gpMarDirector->unk124 != 2)
-		b1 = false;
-
-	if (!b1) {
-		// TODO: should be OR, but need fancy inlines for that...
-		bool b2 = true;
-		if (gpMarDirector->unk124 != 3 && gpMarDirector->unk124 != 4)
-			b2 = false;
-		if (b2) {
-			return true;
-		}
-	}
+	if (gpMarDirector->isTalkModeNow() || gpMarDirector->isDemoModeNow())
+		return true;
 	return false;
 }
 
@@ -539,12 +528,10 @@ void TMapObjBase::makeObjMtxRotByAxis(const JGeometry::TVec3<f32>& param_1,
 void TMapObjBase::calcReflectingVelocity(const TBGCheckData* wall, f32 param_2,
                                          JGeometry::TVec3<f32>* velocity) const
 {
-	const JGeometry::TVec3<f32>& normal = wall->getNormal();
-	f32 onePlus                         = 1.0f + param_2;
-	f32 dot                             = velocity->dot(normal);
-	velocity->x -= onePlus * dot * normal.x;
-	velocity->y -= onePlus * dot * normal.y;
-	velocity->z -= onePlus * dot * normal.z;
+	f32 dot = velocity->dot(wall->getNormal());
+	velocity->x -= (dot * wall->getNormal().x) * (param_2 + 1.0f);
+	velocity->y -= (dot * wall->getNormal().y) * (param_2 + 1.0f);
+	velocity->z -= (dot * wall->getNormal().z) * (param_2 + 1.0f);
 }
 
 // TODO: fabricated hack

@@ -15,6 +15,7 @@ public:
 public:
 	/* 0x68 */ f32 unk68;
 	/* 0x6C */ f32 unk6C;
+	u32 unk70;
 };
 
 class TMapObjPoleManager;
