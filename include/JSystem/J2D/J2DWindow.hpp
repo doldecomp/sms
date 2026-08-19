@@ -15,6 +15,8 @@ struct J2DTextureBase {
 
 struct J2DWindowMirror { };
 
+J2DWindowMirror J2DConvertMirror(J2DTextureBase);
+
 class J2DWindow : public J2DPane {
 public:
 	struct TContentsColor {
@@ -31,7 +33,7 @@ public:
 		{
 		}
 
-		virtual ~Texture();
+		virtual ~Texture() { }
 		void draw(int, int, int, int, u16, u16, u16, u16, u8, JUtility::TColor,
 		          JUtility::TColor);
 		void draw(int, int, bool, bool, u8, JUtility::TColor, JUtility::TColor);

@@ -150,3 +150,17 @@ void J2DGrafContext::fillBox(const JUTRect& box)
 	GXColor1u32(mColorBR);
 	GXEnd();
 }
+
+void J2DGrafContext::drawFrame(const JUTRect& box) { }
+
+void J2DGrafContext::line(JUTPoint start, JUTPoint end) { }
+
+void J2DGrafContext::lineTo(JUTPoint pos) { }
+
+void J2DGrafContext::polyline(JUTPoint* points, int count) { }
+
+void J2DGrafContext::polyline(int* points, int count) { }
+
+void J2DGrafContext::polylineTo(JUTPoint* points, int count) { }
+
+void J2DGrafContext::polylineTo(int* points, int count) { }
