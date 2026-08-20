@@ -92,6 +92,12 @@ J3DMaterial* J3DMaterialFactory_v21::create(J3DMaterial* mat, int idx,
 
 	u32 texNum = tevStageNum > 8 ? 8 : tevStageNum;
 
+	// TODO: the frame needs one more 4-byte local here that no instruction
+	// reads. In TP this slot holds `countTexGens(idx)`, which feeds the
+	// texture generator flag; SMS reads that flag straight from `flag`, so
+	// the local is dead. Its true name is a guess.
+	u32 texGenNum;
+
 	u32 colorFlag;
 	u32 peFlag;
 	u32 texGenFlag;
@@ -370,7 +376,7 @@ u8 J3DMaterialFactory_v21::newDither(int idx) const
 
 J3DNBTScale J3DMaterialFactory_v21::newNBTScale(int idx) const
 {
-	J3DNBTScale defaultNbtScale(j3dDefaultNBTScaleInfo);
+	J3DNBTScale defaultNbtScale;
 
 	J3DMaterialInitData_v21* initData = &mpMaterialInitData[mpMaterialID[idx]];
 

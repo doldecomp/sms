@@ -13,23 +13,29 @@ u16 TNameRef::calcKeyCode(const char* name)
 	return result;
 }
 
-const char* TNameRef::getType(JSUMemoryInputStream& param_1,
-                              JSUMemoryInputStream& param_2)
+const char* TNameRef::getType(JSUMemoryInputStream& stream,
+                              JSUMemoryInputStream& remainder)
 {
-	u32 x = param_1.readU32();
+	// The layout of scene graph nodes is:
+	// - 4 bytes: size of the node data (including this 4-byte size field)
+	// - 2 bytes: ???
+	// - string: the name of the node type
+	// - The remainder of the node data, class-dependent
 
-	// TODO: wtf is happening here
-	param_2.setBuffer((u8*)param_1.mBuffer + param_1.mPosition, x - 4);
-	param_1.skip(x - 4);
+	u32 size = stream.readU32();
 
-	u32 len = param_2.readU16();
-	return param_2.readString();
+	remainder.setBuffer((u8*)stream.mBuffer + stream.mPosition, size - 4);
+	stream.skip(size - 4);
+
+	// TODO: probably the keycode, someone confirm this in dolphin
+	int idk = remainder.readU16();
+	return remainder.readString();
 }
 
-TNameRef* TNameRef::genObject(JSUMemoryInputStream& param_1,
-                              JSUMemoryInputStream& param_2)
+TNameRef* TNameRef::genObject(JSUMemoryInputStream& stream,
+                              JSUMemoryInputStream& remainder)
 {
-	return TNameRefGen::getInstance()->getNameRef(getType(param_1, param_2));
+	return TNameRefGen::getInstance()->getNameRef(getType(stream, remainder));
 }
 
 TNameRef::~TNameRef() { }

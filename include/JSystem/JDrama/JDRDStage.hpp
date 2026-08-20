@@ -4,6 +4,7 @@
 #include <JSystem/JDrama/JDRViewConnecter.hpp>
 #include <JSystem/JDrama/JDRViewObjPtrList.hpp>
 #include <JSystem/JDrama/JDRFlag.hpp>
+#include <JSystem/JDrama/JDRSize.hpp>
 
 namespace JDrama {
 
@@ -20,6 +21,25 @@ public:
 	{
 		return (TViewObjPtrListT<TViewObj>*)unk14;
 	}
+};
+
+class TDStageTex {
+public:
+	TDStageTex(const char*, JDrama::TFlagT<u16>);
+
+	void getClearColor();
+	void setClearColor(JUtility::TColor);
+	void getClearZ();
+	void setClearZ(u32);
+	void getSrcRect() const;
+	void setSrcRect(const JDrama::TRect&);
+	void getImgPtr() const;
+	void setImgPtr(void*);
+	void getTexFmt() const;
+	void setTexFmt(GXTexFmt);
+	void getDstSize() const;
+	void setDstSize(const JDrama::TSize&);
+	void setTexAttb(const GXTexObj&);
 };
 
 } // namespace JDrama

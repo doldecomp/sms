@@ -33,7 +33,7 @@ public:
 	}
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(unsigned long cue, TGraphics* graphics);
+	virtual void perform(u32 cue, TGraphics* graphics);
 
 public:
 	/* 0x10 */ s32 mLightInfoCount;
@@ -47,9 +47,7 @@ public:
 	    , mLightType(JStage::TELIGHT_Unk1)
 	{
 		GXInitLightAttn(&unk24, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
-		const JUtility::TColor& color
-		    = JUtility::TColor(0xff, 0xff, 0xff, 0xff);
-		GXInitLightColor(&unk24, color);
+		GXInitLightColor(&unk24, JUtility::TColor(0xff, 0xff, 0xff, 0xff));
 	}
 
 	virtual void load(JSUMemoryInputStream&);

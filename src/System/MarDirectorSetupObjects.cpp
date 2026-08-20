@@ -385,7 +385,7 @@ bool TMarDirector::setupObjects()
 	    = JDrama::TNameRefGen::search<JDrama::TEfbCtrlTex>(
 	        "通常シーン描画ステージ");
 	normalSceneDrawStage->unk20.on(0x122F);
-	normalSceneDrawStage->unk44 = SMSVFilter_flicker;
+	normalSceneDrawStage->mVFilter = SMSVFilter_flicker;
 	TScreenTexture* screenTex
 	    = (TScreenTexture*)sceneCommon->search("スクリーンテクスチャ");
 

@@ -22,12 +22,11 @@ public:
 		TNameRef::load(stream);
 		s32 count = stream.readS32();
 
-		JGadget::TList_pointer<T*>& lst = getChildren();
 		for (s32 i = 0; i < count; ++i) {
 			JSUMemoryInputStream remainder(nullptr, 0);
 			TNameRef* nr = TNameRef::genObject(stream, remainder);
 			if (nr) {
-				lst.push_back(nr);
+				getChildren().push_back(nr);
 				nr->load(remainder);
 			}
 		}

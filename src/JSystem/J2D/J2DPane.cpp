@@ -243,8 +243,7 @@ J2DPane* J2DPane::search(u32 tag)
 	return nullptr;
 }
 
-void J2DPane::gather(J2DPane** panes, u32 tag, u32 mask, int max, int& count)
-{
+void J2DPane::gather(J2DPane** panes, u32 tag, u32 mask, int max, int& count) {
 }
 
 void J2DPane::makeMatrix(int x, int y)
