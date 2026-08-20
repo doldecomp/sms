@@ -6,6 +6,11 @@
 
 namespace JDrama {
 
+/**
+ * @brief A scene graph object that has a position on the scene.
+ * @details Placements, unlike actors, might not have a rotation or a scale,
+ * e.g. point lights and cameras.
+ */
 class TPlacement : public TViewObj {
 public:
 	TPlacement(const char* name)

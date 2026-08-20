@@ -52,14 +52,20 @@ void TEfbCtrlDisp::perform(u32 cue, TGraphics* graphics)
 	}
 }
 
+void TEfbCtrlDisp::setSrcRect(const GXRenderModeObj& obj)
+{
+	TRect rect(0, 0, obj.fbWidth, obj.efbHeight);
+	TEfbCtrl::setSrcRect(rect);
+}
+
 TEfbCtrlTex::TEfbCtrlTex(const char* name, TFlagT<u16> flag)
     : TEfbCtrl(name, flag)
     , mImagePtr(nullptr)
     , mFbClamp((GXFBClamp)(GX_CLAMP_TOP | GX_CLAMP_BOTTOM))
-    , unk38(0, 0, 0, 0)
-    , unk3C(0xffffff)
-    , unk40(nullptr)
-    , unk44(nullptr)
+    , mClearColor(0, 0, 0, 0)
+    , mClearZ(0xffffff)
+    , mSamplePattern(nullptr)
+    , mVFilter(nullptr)
 {
 }
 
@@ -74,8 +80,7 @@ void TEfbCtrlTex::setTexAttb(const GXTexObj& param_1)
 	GXGetTexObjAll(&param_1, &mImagePtr, &width, &height, &mTexFmt, &wrap_s,
 	               &wrap_t, &mipmap);
 
-	mWidth  = (u32)width;
-	mHeight = (u32)height;
+	setDstSize(TSize(width, height));
 }
 
 void TEfbCtrlTex::perform(u32 cue, TGraphics* graphics)
@@ -89,14 +94,16 @@ void TEfbCtrlTex::perform(u32 cue, TGraphics* graphics)
 
 	if (cue & CUE_DRAW) {
 		GXSetCopyClamp(mFbClamp);
-		IssueGXSetCopyFilter(unk20.check(0x800), unk40, unk20.check(0x20),
-		                     unk44);
+		IssueGXSetCopyFilter(unk20.check(0x800), mSamplePattern,
+		                     unk20.check(0x20), mVFilter);
 
 		if (mImagePtr != nullptr) {
-			bool doClear = IssueGXSetCopyClear(unk38, unk3C, unk20.get());
+			bool doClear
+			    = IssueGXSetCopyClear(mClearColor, mClearZ, unk20.get());
 			GXSetTexCopySrc(unk10.x1, unk10.y1, unk10.getWidth(),
 			                unk10.getHeight());
-			GXSetTexCopyDst(mWidth, mHeight, mTexFmt, unk20.check(0x1000));
+			GXSetTexCopyDst(mSize.mWidth, mSize.mHeight, mTexFmt,
+			                unk20.check(0x1000));
 			GXCopyTex(mImagePtr, doClear);
 		}
 	}

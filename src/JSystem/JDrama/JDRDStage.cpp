@@ -17,3 +17,31 @@ const TEfbCtrlDisp* TDStageDisp::getEfbCtrlDisp() const
 }
 
 TEfbCtrlDisp* TDStageDisp::getEfbCtrlDisp() { return (TEfbCtrlDisp*)unk10; }
+
+TDStageTex::TDStageTex(const char*, JDrama::TFlagT<u16>) { }
+
+void TDStageTex::getClearColor() { }
+
+void TDStageTex::setClearColor(JUtility::TColor) { }
+
+void TDStageTex::getClearZ() { }
+
+void TDStageTex::setClearZ(u32) { }
+
+void TDStageTex::getSrcRect() const { }
+
+void TDStageTex::setSrcRect(const JDrama::TRect&) { }
+
+void TDStageTex::getImgPtr() const { }
+
+void TDStageTex::setImgPtr(void*) { }
+
+void TDStageTex::getTexFmt() const { }
+
+void TDStageTex::setTexFmt(GXTexFmt) { }
+
+void TDStageTex::getDstSize() const { }
+
+void TDStageTex::setDstSize(const JDrama::TSize&) { }
+
+void TDStageTex::setTexAttb(const GXTexObj&) { }

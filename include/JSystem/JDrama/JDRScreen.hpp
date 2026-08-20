@@ -23,9 +23,9 @@ public:
 	virtual ~TScreen() { }
 
 	void isScissor() const;
-	void getCamera() const;
+	TViewObj* getCamera() const;
 	void assignCamera(TViewObj*);
-	void getViewObj() const;
+	TViewObj* getViewObj() const;
 	void assignViewObj(TViewObj*);
 };
 

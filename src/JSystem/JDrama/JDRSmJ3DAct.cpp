@@ -9,10 +9,8 @@
 
 using namespace JDrama;
 
-void TSmJ3DAct::load(JSUMemoryInputStream& stream)
+void TSmJ3DAct::initModDat()
 {
-	TActor::load(stream);
-
 	void* modelRes = unk3C->getRes("/default.bmd");
 
 	unk44 = J3DModelLoaderDataBase::load(
@@ -26,6 +24,12 @@ void TSmJ3DAct::load(JSUMemoryInputStream& stream)
 		unk50 = new J3DFrameCtrl;
 		unk50->setEnd(unk4C->getFrameMax());
 	}
+}
+
+void TSmJ3DAct::load(JSUMemoryInputStream& stream)
+{
+	TActor::load(stream);
+	initModDat();
 }
 
 void TSmJ3DAct::perform(u32 cue, TGraphics* graphics)

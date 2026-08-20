@@ -21,15 +21,13 @@ public:
 	virtual void load(JSUMemoryInputStream& stream)
 	{
 		this->loadSuper(stream);
-		int count = stream.readS32();
+		s32 count = stream.readS32();
 
-		JGadget::TList_pointer<T*>& lst = *this;
-
-		for (int i = 0; i < count; ++i) {
+		for (s32 i = 0; i < count; ++i) {
 			JSUMemoryInputStream stream2(nullptr, 0);
 			TNameRef* nr = TNameRef::genObject(stream, stream2);
 			if (nr) {
-				lst.push_back((T*)nr);
+				getChildren().push_back((T*)nr);
 				nr->load(stream2);
 			}
 		}
