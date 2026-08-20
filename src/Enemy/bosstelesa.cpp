@@ -480,9 +480,31 @@ BOOL TBossTelesaBody::receiveMessage(THitActor* sender, u32 message)
 	return TRUE;
 }
 
-void TBossTelesaBody::checkHit() { }
+void TBossTelesaBody::checkHit()
+{
+	unk6C = 0;
 
-void TBossTelesaTongue::checkHit() { }
+	for (int i = 0; i < mColCount; ++i) {
+		THitActor* actor = mCollisions[i];
+		if (actor->isActorType(0x80000001))
+			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+		else
+			unk68->checkHitObject(actor);
+	}
+}
+
+void TBossTelesaTongue::checkHit()
+{
+	for (int i = 0; i < mColCount; ++i) {
+		THitActor* actor = mCollisions[i];
+		if (actor->isActorType(0x80000001))
+			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+		else if (actor->isActorType(0x40000395))
+			unk68->setSpicy((TLiveActor*)actor);
+		else if (mPosition.y + 100.0f < actor->mPosition.y)
+			unk68->checkHitObject(actor);
+	}
+}
 
 BOOL TBossTelesaTongue::receiveMessage(THitActor*, u32 message)
 {
@@ -500,15 +522,9 @@ void TBossTelesaKillSmallEnemy::checkHit()
 	unk6C = 0;
 
 	for (int i = 0; i < mColCount; ++i) {
-		THitActor* collision = mCollisions[i];
-		bool isEnemy;
-		if (collision->mActorType & ACTOR_TYPE_ENEMY)
-			isEnemy = true;
-		else
-			isEnemy = false;
-		if (isEnemy) {
-			THitActor* actor = collision;
-			if (actor->mActorType == (ACTOR_TYPE_ENEMY | 0x13))
+		THitActor* actor = mCollisions[i];
+		if (actor->checkActorType(ACTOR_TYPE_ENEMY)) {
+			if (actor->isActorType(0x10000013))
 				((THamuKuri*)actor)->selectCapHolder();
 			((TLiveActor*)actor)->kill();
 		}
@@ -1252,7 +1268,7 @@ void TBossTelesa::moveObject()
 	control();
 
 	for (int i = 0; i < mColCount; ++i) {
-		if (mCollisions[i]->mActorType == ACTOR_TYPE_PLAYER)
+		if (mCollisions[i]->isActorType(0x80000001))
 			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 	}
 
@@ -1278,29 +1294,9 @@ void TBossTelesa::moveObject()
 		unk170->mPosition.set(node7[0][3], node7[1][3] - 350.0f, node7[2][3]);
 	}
 
-	TBossTelesaBody* body = (TBossTelesaBody*)unk16C;
-	body->unk6C           = 0;
-	for (int i = 0; i < body->mColCount; ++i) {
-		THitActor* actor = body->mCollisions[i];
-		if (actor->mActorType == ACTOR_TYPE_PLAYER)
-			SMS_SendMessageToMario(body, HIT_MESSAGE_ATTACK);
-		else
-			body->unk68->checkHitObject(actor);
-	}
-
-	TBossTelesaTongue* tongue = (TBossTelesaTongue*)unk170;
-	for (int i = 0; i < tongue->mColCount; ++i) {
-		THitActor* actor = tongue->mCollisions[i];
-		if (actor->mActorType == ACTOR_TYPE_PLAYER) {
-			SMS_SendMessageToMario(tongue, HIT_MESSAGE_ATTACK);
-		} else if (actor->mActorType == 0x40000395) {
-			tongue->unk68->setSpicy((TLiveActor*)actor);
-		} else if (tongue->mPosition.y + 100.0f < actor->mPosition.y) {
-			tongue->unk68->checkHitObject(actor);
-		}
-	}
-
-	((TBossTelesaKillSmallEnemy*)unk174)->checkHit();
+	unk16C->checkHit();
+	unk170->checkHit();
+	unk174->checkHit();
 }
 
 void TBossTelesa::kill()
