@@ -373,7 +373,95 @@ void TRailBlock::calcRootMatrix()
 	model->setBaseScale(mScaling);
 }
 
-void TRailBlock::control() { }
+void TRailBlock::control()
+{
+	TMapObjBase::control();
+	mDamageRadius = 300.0f;
+	mDamageHeight = 50.0f;
+	calcEntryRadius();
+
+	checkMarioRiding();
+	if (calcRecycle() || checkRailFlag(2))
+		return;
+
+	if (moveToNextNode(unk144)) {
+		TGraphNode& node = unk138->getCurrent();
+		if (node.getRailNode()->mFlags & 0x1000) {
+			unk14A = 180;
+			unk148 = 2;
+		}
+
+		unk138->moveToShortestNext();
+
+		TRailNode* nextNode = unk138->getCurrent().getRailNode();
+		u16 speed           = nextNode->mSpeed;
+		if (speed != 0xffff)
+			unk144 = speed * 0.01f;
+
+		JGeometry::TVec3<f32> nextPoint
+		    = unk138->unk0->indexToPoint(unk138->mCurrIdx);
+		f32 step = VECDistance(&nextPoint, &mPosition) / unk144;
+		unk13C   = step;
+
+		if (checkRailFlag(2)) {
+			MTXIdentity(unk174);
+			unk168.x = 0.0f;
+			unk168.y = 0.0f;
+			unk168.z = 0.0f;
+			return;
+		}
+
+		unk168 = unk15C;
+
+		Mtx rotMtx;
+		MsMtxSetRotRPH(rotMtx, unk168.x, unk168.y, unk168.z);
+		MTXConcat(rotMtx, unk174, unk174);
+
+		unk168.x = 0.0f;
+		unk168.y = 0.0f;
+		unk168.z = 0.0f;
+
+		JGeometry::TVec3<f32> xAxis(unk174[0][0], unk174[1][0], unk174[2][0]);
+		JGeometry::TVec3<f32> yAxis(unk174[0][1], unk174[1][1], unk174[2][1]);
+		JGeometry::TVec3<f32> zAxis(unk174[0][2], unk174[1][2], unk174[2][2]);
+		PSVECNormalize(&xAxis, &xAxis);
+		PSVECNormalize(&yAxis, &yAxis);
+		PSVECNormalize(&zAxis, &zAxis);
+
+		xAxis.x -= 1.0f;
+		yAxis.y -= 1.0f;
+		zAxis.z -= 1.0f;
+		if (fabsf(xAxis.x) < 0.02f && fabsf(xAxis.y) < 0.02f
+		    && fabsf(xAxis.z) < 0.02f && fabsf(yAxis.x) < 0.02f
+		    && fabsf(yAxis.y) < 0.02f && fabsf(yAxis.z) < 0.02f
+		    && fabsf(zAxis.x) < 0.02f && fabsf(zAxis.y) < 0.02f
+		    && fabsf(zAxis.z) < 0.02f)
+			MTXIdentity(unk174);
+
+		JGeometry::TVec3<f32> point;
+		TGraphNode& rotateNode = unk138->getCurrent();
+		rotateNode.getPoint(&point);
+		f32 rotateStep      = VECDistance(&mPosition, &point) / unk144;
+		TRailNode* railNode = rotateNode.getRailNode();
+		unk15C.x            = railNode->mPitch;
+		unk15C.y            = railNode->mYaw;
+		unk15C.z            = railNode->mRoll;
+		unk150              = MsAngleDiff(unk15C.x, unk168.x) / rotateStep;
+		unk154              = MsAngleDiff(unk15C.y, unk168.y) / rotateStep;
+		unk158              = MsAngleDiff(unk15C.z, unk168.z) / rotateStep;
+	} else {
+		mRotation.x += unk150;
+		mRotation.y += unk154;
+		mRotation.z += unk158;
+		unk168.x += unk150;
+		unk168.y += unk154;
+		unk168.z += unk158;
+
+		mRotation.x = MsWrap<f32>(mRotation.x, 0.0f, 360.0f);
+		mRotation.y = MsWrap<f32>(mRotation.y, 0.0f, 360.0f);
+		mRotation.z = MsWrap<f32>(mRotation.z, 0.0f, 360.0f);
+	}
+}
 
 TRollBlock::TRollBlock(const char* name)
     : TMapObjBase(name)
@@ -408,7 +496,35 @@ Mtx* TRollBlock::getRootJointMtx() const
 	return (Mtx*)getModel()->getAnmMtx(0);
 }
 
-void TRollBlock::calcRootMatrix() { }
+void TRollBlock::calcRootMatrix()
+{
+	J3DModel* model = getModel();
+	MtxPtr mtx      = model->getBaseTRMtx();
+	s16 rotZ        = mRotation.z * (65536.0f / 360.0f);
+	s16 rotY        = mRotation.y * (65536.0f / 360.0f);
+	s16 rotX        = mRotation.x * (65536.0f / 360.0f);
+	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y - mYOffset, mPosition.z, rotX,
+	               rotY, rotZ);
+	model->setBaseScale(mScaling);
+
+	f32 sinV = JMASin(unk138);
+	f32 cosV = JMACos(unk138);
+
+	Mtx rot;
+	rot[0][0] = cosV;
+	rot[0][1] = -sinV;
+	rot[0][2] = 0.0f;
+	rot[0][3] = 0.0f;
+	rot[1][0] = sinV;
+	rot[1][1] = cosV;
+	rot[1][2] = 0.0f;
+	rot[1][3] = 0.0f;
+	rot[2][0] = 0.0f;
+	rot[2][1] = 0.0f;
+	rot[2][2] = 1.0f;
+	rot[2][3] = 0.0f;
+	MTXConcat(mtx, rot, mtx);
+}
 
 void TRollBlock::control()
 {
