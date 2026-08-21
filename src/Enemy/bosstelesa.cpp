@@ -2127,7 +2127,16 @@ void TBossTelesa::generateSlotItem()
 
 void TBossTelesa::fruitCollisionOn() { unk370 = 0; }
 
-bool TBossTelesa::checkSlot() { return unk184 != nullptr; }
+bool TBossTelesa::checkSlot()
+{
+	if (!unk184->isRollDrum() && unk18C) {
+		unk18C = 0;
+		mSpine->pushAfterCurrent(&TNerveBossTelesaSpitSlotItem::theNerve());
+		return true;
+	}
+
+	return false;
+}
 
 bool TBossTelesa::checkAllItemDead()
 {
@@ -2655,12 +2664,8 @@ DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 		}
 	}
 
-	if (!boss->unk184->isRollDrum() && boss->unk18C) {
-		boss->unk18C = 0;
-		boss->mSpine->pushAfterCurrent(
-		    &TNerveBossTelesaSpitSlotItem::theNerve());
+	if (boss->checkSlot())
 		return TRUE;
-	}
 
 	boss->unk364 *= 0.99f;
 	return FALSE;
