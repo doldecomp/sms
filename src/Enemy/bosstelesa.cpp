@@ -678,7 +678,6 @@ void TTelesaSlot::moveObject()
 	}
 }
 
-#pragma dont_inline on
 void TTelesaSlot::moveStart()
 {
 	unk19C = 1;
@@ -697,7 +696,6 @@ void TTelesaSlot::moveStart()
 		unk138[i] = speed * unk158;
 	}
 }
-#pragma dont_inline off
 
 u32 TTelesaSlot::touchWater(THitActor*) { return FALSE; }
 
@@ -742,7 +740,6 @@ void TTelesaSlot::forceStopSlot(int idx)
 }
 #pragma dont_inline off
 
-#pragma dont_inline on
 bool TTelesaSlot::isRollDrum()
 {
 	if (unk198[0])
@@ -755,9 +752,7 @@ bool TTelesaSlot::isRollDrum()
 	unk19B = 0;
 	return false;
 }
-#pragma dont_inline off
 
-#pragma dont_inline on
 int TTelesaSlot::getSlotResult()
 {
 	int result = getResultFromAng(unk13C[0]);
@@ -767,7 +762,6 @@ int TTelesaSlot::getSlotResult()
 	}
 	return result;
 }
-#pragma dont_inline off
 
 int TTelesaSlot::getDrumResult(int index)
 {
@@ -1881,7 +1875,12 @@ void TBossTelesa::rouletteStart()
 	gpCameraShake->startShake(CAM_SHAKE_MODE_UNK23, 1.0f);
 }
 
-void TBossTelesa::slotStart() { rouletteStart(); }
+void TBossTelesa::slotStart()
+{
+	unk18C = 1;
+	unk184->moveStart();
+	((TTelesaManager*)unk354)->telesaForceKill();
+}
 
 void TBossTelesa::slotStop()
 {
@@ -2146,7 +2145,6 @@ bool TBossTelesa::checkAllItemDead()
 	return true;
 }
 
-#pragma dont_inline on
 void TBossTelesa::forceAllItemKill()
 {
 	f32 zero = 0.0f;
@@ -2167,7 +2165,6 @@ void TBossTelesa::forceAllItemKill()
 		}
 	}
 }
-#pragma dont_inline off
 
 void TBossTelesa::rollRouletteCircle()
 {
@@ -2636,9 +2633,7 @@ DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 
 	if (boss->mMActor->checkCurBckFromIndex(11)) {
 		if (boss->mMActor->getFrameCtrl(0)->checkPass(53.0f)) {
-			boss->unk18C = 1;
-			boss->unk184->moveStart();
-			((TTelesaManager*)boss->unk354)->telesaForceKill();
+			boss->slotStart();
 		}
 
 		if (boss->checkCurAnmEnd(0)) {
