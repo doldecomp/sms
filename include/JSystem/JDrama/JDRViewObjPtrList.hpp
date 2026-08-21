@@ -40,7 +40,7 @@ public:
 		typedef typename JGadget::TList_pointer<T*>::iterator I;
 
 		for (I it = getChildren().begin(); it != getChildren().end(); ++it)
-			it->loadAfter();
+			(*it)->loadAfter();
 	}
 
 	virtual TNameRef* searchF(u16 key, const char* name)
@@ -52,7 +52,7 @@ public:
 		typedef typename JGadget::TList_pointer<T*>::iterator I;
 
 		for (I it = getChildren().begin(); it != getChildren().end(); ++it) {
-			TNameRef* r = it->searchF(key, name);
+			TNameRef* r = (*it)->searchF(key, name);
 			if (r != nullptr)
 				return r;
 		}
@@ -78,7 +78,7 @@ void TViewObjPtrListT<T, U>::perform(u32 cue, TGraphics* graphics)
 	typedef typename JGadget::TList_pointer<T*>::iterator I;
 
 	for (I it = getChildren().begin(); it != getChildren().end(); ++it)
-		it->testPerform(cue, graphics);
+		(*it)->testPerform(cue, graphics);
 }
 
 template <class T, class U>
