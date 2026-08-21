@@ -23,7 +23,7 @@ public:
 	}
 };
 
-class TDStageTex {
+class TDStageTex : public TViewObj {
 public:
 	TDStageTex(const char*, JDrama::TFlagT<u16>);
 

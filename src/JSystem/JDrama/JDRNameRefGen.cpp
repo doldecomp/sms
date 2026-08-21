@@ -1,5 +1,6 @@
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JDrama/JDRViewObjPtrList.hpp>
+#include <JSystem/JDrama/JDRViewObjPtrList.tpp>
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/JDrama/JDRSmJ3DScn.hpp>
 #include <JSystem/JDrama/JDRCamera.hpp>
@@ -7,6 +8,7 @@
 #include <JSystem/JDrama/JDRCharacter.hpp>
 #include <JSystem/JDrama/JDRLighting.hpp>
 #include <JSystem/JDrama/JDRNameRefPtrList.hpp>
+#include <JSystem/JDrama/JDRNameRefPtrList.tpp>
 #include <JSystem/JDrama/JDRDrawBufObj.hpp>
 #include <JSystem/JDrama/JDRViewport.hpp>
 #include <JSystem/JDrama/JDREfbCtrl.hpp>
@@ -15,6 +17,9 @@
 static void dummy() { (void)(Vec) { 0.0f, 0.0f, 0.0f }; }
 
 using namespace JDrama;
+
+template class TViewObjPtrListT<TViewObj, TViewObj>;
+template class TNameRefPtrListT<TNameRef, TNameRef>;
 
 TNameRefGen* TNameRefGen::instance;
 
