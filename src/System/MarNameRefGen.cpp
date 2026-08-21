@@ -42,6 +42,11 @@
 #include <Camera/CubeManagerBase.hpp>
 #include <Camera/Camera.hpp>
 #include <Camera/CameraMapTool.hpp>
+#include <JSystem/JDrama/JDRViewObjPtrList.tpp>
+
+namespace JDrama {
+template class TViewObjPtrListT<THitActor, TViewObj>;
+}
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 {

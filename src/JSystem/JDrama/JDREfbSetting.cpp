@@ -8,8 +8,15 @@ using namespace JDrama;
 
 GXPixelFmt JDrama::DecidePixelFmt(bool antialiasing, bool field_rendering)
 {
-	return antialiasing ? GX_PF_RGB565_Z16
-	                    : (field_rendering ? GX_PF_RGBA6_Z24 : GX_PF_RGB8_Z24);
+	GXPixelFmt fmt;
+	if (antialiasing) {
+		fmt = GX_PF_RGB565_Z16;
+	} else if (field_rendering) {
+		fmt = GX_PF_RGBA6_Z24;
+	} else {
+		fmt = GX_PF_RGB8_Z24;
+	}
+	return fmt;
 }
 
 bool JDrama::IsCanEnableDither(GXPixelFmt pix_fmt)
