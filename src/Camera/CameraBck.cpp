@@ -104,7 +104,7 @@ bool TCameraBck::updateDemo(JGeometry::TVec3<f32>* pos,
 		up->set(unkC[0][1], unkC[1][1], unkC[2][1]);
 
 	if (out_y_scale != nullptr) {
-		J3DAnmTransformKey* anm = unk0->getBckAnm();
+		J3DAnmTransformKey* anm = unk0->getCurBckAnmPtr();
 		if (anm != nullptr) {
 			J3DTransformInfo info;
 			anm->getTransform((u16)unk8, &info);

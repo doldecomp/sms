@@ -92,7 +92,7 @@ public:
 
 	// fabricated
 	MActorAnmBase* getUnk28(int i) { return unk28[i]; }
-	MActorAnmBck* getCurBckAnmPtr() { return unkC; }
+	MActorAnmBck* getUnkC() { return unkC; }
 	J3DModel* getModel() const { return unk4; }
 	void unmarkUnk40() { unk40 = false; }
 	BOOL curAnmEndsNext() { return curAnmEndsNext(0, 0); }
@@ -166,7 +166,7 @@ public:
 		unkC->initNormalMotionBlend();
 	}
 
-	J3DAnmTransformKey* getBckAnm()
+	J3DAnmTransformKey* getCurBckAnmPtr()
 	{
 		if (!unkC)
 			return nullptr;

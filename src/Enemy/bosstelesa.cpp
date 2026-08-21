@@ -1531,7 +1531,7 @@ void TBossTelesa::setSpicy(TLiveActor* actor)
 	unk160 = 1;
 	unk168 = 1.0f;
 
-	mMActor->setBckOldMotionBlendAnmPtr(mMActor->getBckAnm());
+	mMActor->setBckOldMotionBlendAnmPtr(mMActor->getCurBckAnmPtr());
 
 	mMActor->setBckFromIndex(1);
 	mMActor->setMotionBlendRatioForBck(unk168);
@@ -2220,7 +2220,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 				boss->unk168 = 1.0f;
 
 				MActor* anmActor = boss->mMActor;
-				anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+				anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 				boss->mMActor->setBckFromIndex(2);
 				boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
@@ -2239,7 +2239,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 				boss->unk168 = 1.0f;
 
 				MActor* anmActor = boss->mMActor;
-				anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+				anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 				boss->mMActor->setBckFromIndex(5);
 				boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
@@ -2262,7 +2262,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 			boss->unk168 = 1.0f;
 
 			MActor* anmActor = boss->mMActor;
-			anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+			anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 			boss->mMActor->setBckFromIndex(3);
 			boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
@@ -2346,7 +2346,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 			boss->unk168 = 1.0f;
 
 			MActor* anmActor = boss->mMActor;
-			anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+			anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 			boss->mMActor->setBckFromIndex(7);
 			boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
@@ -2364,7 +2364,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 			boss->unk168 = 1.0f;
 
 			MActor* anmActor = boss->mMActor;
-			anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+			anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 			boss->mMActor->setBckFromIndex(6);
 			boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
@@ -2389,7 +2389,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 				boss->unk168 = 1.0f;
 
 				MActor* anmActor = boss->mMActor;
-				anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+				anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 				boss->mMActor->setBckFromIndex(15);
 				boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
@@ -2423,7 +2423,7 @@ DEFINE_NERVE(TNerveBossTelesaSpit, TLiveActor)
 		boss->unk168 = 1.0f;
 
 		MActor* anmActor = boss->mMActor;
-		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 		boss->mMActor->setBckFromIndex(14);
 		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
@@ -2454,7 +2454,7 @@ DEFINE_NERVE(TNerveBossTelesaHide, TLiveActor)
 		boss->unk168 = 1.0f;
 
 		MActor* anmActor = boss->mMActor;
-		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 		boss->mMActor->setBckFromIndex(4);
 		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
@@ -2524,7 +2524,7 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 			boss->unk168 = 1.0f;
 
 			MActor* anmActor = boss->mMActor;
-			anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+			anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 			boss->mMActor->setBckFromIndex(0);
 			boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
@@ -2555,7 +2555,7 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 		boss->unk168 = 1.0f;
 
 		MActor* anmActor = boss->mMActor;
-		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 		boss->mMActor->setBckFromIndex(15);
 		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
@@ -2589,7 +2589,7 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 			boss->unk168 = 1.0f;
 
 			MActor* anmActor = boss->mMActor;
-			anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+			anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 			boss->mMActor->setBckFromIndex(14);
 			boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
@@ -2617,7 +2617,7 @@ DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 		boss->unk168 = 1.0f;
 
 		MActor* anmActor = boss->mMActor;
-		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 		boss->mMActor->setBckFromIndex(11);
 		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
@@ -2642,7 +2642,7 @@ DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 			boss->unk168 = 1.0f;
 
 			MActor* anmActor = boss->mMActor;
-			anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+			anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 			boss->mMActor->setBckFromIndex(15);
 			boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
@@ -2676,7 +2676,7 @@ DEFINE_NERVE(TNerveBossTelesaSpitSlotItem, TLiveActor)
 		boss->unk168 = 1.0f;
 
 		MActor* anmActor = boss->mMActor;
-		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 		boss->mMActor->setBckFromIndex(14);
 		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
@@ -2714,7 +2714,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 		boss->unk168 = 1.0f;
 
 		MActor* anmActor = boss->mMActor;
-		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 		boss->mMActor->setBckFromIndex(15);
 		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
@@ -2738,7 +2738,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 				boss->unk168 = 1.0f;
 
 				MActor* anmActor = boss->mMActor;
-				anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+				anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 				boss->mMActor->setBckFromIndex(12);
 				boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
@@ -2760,7 +2760,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 					boss->unk168 = 1.0f;
 
 					MActor* anmActor = boss->mMActor;
-					anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+					anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 					boss->mMActor->setBckFromIndex(13);
 					boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
@@ -2792,7 +2792,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 				boss->unk168 = 1.0f;
 
 				MActor* anmActor = boss->mMActor;
-				anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+				anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 				boss->mMActor->setBckFromIndex(15);
 				boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
@@ -2885,7 +2885,7 @@ DEFINE_NERVE(TNerveBossTelesaFreeze, TLiveActor)
 		boss->unk168 = 1.0f;
 
 		MActor* anmActor = boss->mMActor;
-		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getBckAnm());
+		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
 
 		boss->mMActor->setBckFromIndex(16);
 		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
