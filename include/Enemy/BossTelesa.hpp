@@ -142,6 +142,10 @@ public:
 	static f32 mCameraMoveLimit;
 	static f32 mCameraMoveSp;
 
+	enum {
+		LIVE_FLAG_UNK10000 = 0x10000,
+	};
+
 public:
 	/* 0x150 */ u8 unk150;
 	/* 0x151 */ u8 unk151[0x3];
