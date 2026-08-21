@@ -1076,7 +1076,7 @@ TBossEelEye::TBossEelEye(const TLiveActor* owner, int jointIndex,
 	mPreviousBckIndex = getMActor()->getCurAnmIdx(0);
 	mAnimationMode    = 0;
 	mBlendRatio       = 1.0f;
-	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getBckAnm());
+	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getCurBckAnmPtr());
 	getMActor()->setBckFromIndex(0);
 	getMActor()->setMotionBlendRatioForBck(mBlendRatio);
 }
@@ -1112,7 +1112,7 @@ void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 				mAnimationMode    = 0;
 				mBlendRatio       = 1.0f;
 				getMActor()->setBckOldMotionBlendAnmPtr(
-				    getMActor()->getBckAnm());
+				    getMActor()->getCurBckAnmPtr());
 				getMActor()->setBckFromIndex(0);
 				getMActor()->setMotionBlendRatioForBck(mBlendRatio);
 
@@ -1122,7 +1122,7 @@ void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 				paired->mAnimationMode = 0;
 				paired->mBlendRatio    = 1.0f;
 				paired->getMActor()->setBckOldMotionBlendAnmPtr(
-				    paired->getMActor()->getBckAnm());
+				    paired->getMActor()->getCurBckAnmPtr());
 				paired->getMActor()->setBckFromIndex(0);
 				paired->getMActor()->setMotionBlendRatioForBck(
 				    paired->mBlendRatio);
@@ -1138,7 +1138,7 @@ void TBossEelEye::setBckAnm(int index)
 	mPreviousBckIndex = getMActor()->getCurAnmIdx(0);
 	mAnimationMode    = 1;
 	mBlendRatio       = 1.0f;
-	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getBckAnm());
+	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getCurBckAnmPtr());
 	getMActor()->setBckFromIndex(index);
 	getMActor()->setMotionBlendRatioForBck(mBlendRatio);
 }
@@ -1917,7 +1917,7 @@ void TBossEel::setBckAnm(int index)
 	mPreviousBckIndex = getMActor()->getCurAnmIdx(0);
 	mCurrentBckIndex  = index;
 	mBckBlendRatio    = 1.0f;
-	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getBckAnm());
+	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getCurBckAnmPtr());
 	getMActor()->setBckFromIndex(index);
 	getMActor()->setMotionBlendRatioForBck(mBckBlendRatio);
 	getMActor()->getFrameCtrl(0)->setRate(0.25f * SMSGetAnmFrameRate());
