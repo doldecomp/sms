@@ -1527,22 +1527,7 @@ void TBossTelesa::setSpicy(TLiveActor* actor)
 
 	unk350 = 1;
 	unk36C = 0;
-	unk164 = mMActor->getCurAnmIdx(0);
-	unk160 = 1;
-	unk168 = 1.0f;
-
-	mMActor->setBckOldMotionBlendAnmPtr(mMActor->getCurBckAnmPtr());
-
-	mMActor->setBckFromIndex(1);
-	mMActor->setMotionBlendRatioForBck(unk168);
-
-	const char** basTable = getBasNameTable();
-	const char* basName;
-	if (!basTable)
-		basName = nullptr;
-	else
-		basName = basTable[1];
-	setAnmSound(basName);
+	setBckAnm(1);
 
 	if (unk35B) {
 		unk35B = 0;
@@ -1838,8 +1823,17 @@ void TBossTelesa::genAttacker()
 
 void TBossTelesa::setBckAnm(int index)
 {
-	if (mMActor)
-		mMActor->setBckFromIndex(index);
+	unk164 = mMActor->getCurAnmIdx(0);
+	unk160 = index;
+	unk168 = 1.0f;
+
+	mMActor->setBckOldMotionBlendAnmPtr(mMActor->getCurBckAnmPtr());
+
+	mMActor->setBckFromIndex(index);
+	mMActor->setMotionBlendRatioForBck(unk168);
+
+	const char** basTable = getBasNameTable();
+	setAnmSound(!basTable ? nullptr : basTable[index]);
 }
 
 bool TBossTelesa::isInDamage() { return unk35B != 0; }
