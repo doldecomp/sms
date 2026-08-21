@@ -532,7 +532,7 @@ config.libs = [
             Object(Matching, "JSystem/JParticle/JPAExtraShape.cpp"),
             Object(NonMatching, "JSystem/JParticle/JPAResourceManager.cpp"),
             Object(Matching, "JSystem/JParticle/JPASweepShape.cpp"),
-            Object(NonMatching, "JSystem/JParticle/JPATexture.cpp"),
+            Object(Matching, "JSystem/JParticle/JPATexture.cpp"),
 
             # JStage
             Object(Matching, "JSystem/JStage/JSGAmbientLight.cpp"),
