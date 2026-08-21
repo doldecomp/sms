@@ -456,28 +456,7 @@ void TBossTelesaManager::perform(u32 flags, JDrama::TGraphics* gfx)
 
 BOOL TBossTelesaBody::receiveMessage(THitActor* sender, u32 message)
 {
-	TBossTelesa* boss = unk68;
-
-	if (message == HIT_MESSAGE_TRAMPLE) {
-		bool isMario;
-		if (sender->mActorType == (ACTOR_TYPE_PLAYER | 1))
-			isMario = true;
-		else
-			isMario = false;
-		if (!isMario) {
-			if (boss->mSpine->getCurrentNerve()
-			    == &TNerveBossTelesaPrepareSlot::theNerve())
-				boss->mSpine->pushNerve(&TNerveBossTelesaSpit::theNerve());
-		}
-	}
-
-	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		if (boss->mSpine->getCurrentNerve()
-		    == &TNerveBossTelesaPrepareSlot::theNerve())
-			boss->mSpine->pushNerve(&TNerveBossTelesaFreeze::theNerve());
-	}
-
-	return TRUE;
+	return unk68->checkMessage(sender, message);
 }
 
 void TBossTelesaBody::checkHit()
@@ -508,12 +487,8 @@ void TBossTelesaTongue::checkHit()
 
 BOOL TBossTelesaTongue::receiveMessage(THitActor*, u32 message)
 {
-	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		TBossTelesa* boss = unk68;
-		if (boss->mSpine->getCurrentNerve()
-		    == &TNerveBossTelesaAppear::theNerve())
-			boss->mSpine->pushNerve(&TNerveBossTelesaSlotStart::theNerve());
-	}
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER)
+		unk68->tongueHitWater();
 	return TRUE;
 }
 
@@ -1460,7 +1435,26 @@ BOOL TBossTelesa::receiveMessage(THitActor*, u32) { return FALSE; }
 
 BOOL TBossTelesa::checkMessage(THitActor* actor, u32 message)
 {
-	return receiveMessage(actor, message);
+	if (message == HIT_MESSAGE_TRAMPLE) {
+		bool isMario;
+		if (actor->mActorType == (ACTOR_TYPE_PLAYER | 1))
+			isMario = true;
+		else
+			isMario = false;
+		if (!isMario) {
+			if (mSpine->getCurrentNerve()
+			    == &TNerveBossTelesaPrepareSlot::theNerve())
+				mSpine->pushNerve(&TNerveBossTelesaSpit::theNerve());
+		}
+	}
+
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
+		if (mSpine->getCurrentNerve()
+		    == &TNerveBossTelesaPrepareSlot::theNerve())
+			mSpine->pushNerve(&TNerveBossTelesaFreeze::theNerve());
+	}
+
+	return TRUE;
 }
 
 void TBossTelesa::checkHitObject(THitActor* actor)
@@ -1614,7 +1608,11 @@ void TBossTelesa::damageRecover()
 	unk368 = 0;
 }
 
-void TBossTelesa::tongueHitWater() { }
+void TBossTelesa::tongueHitWater()
+{
+	if (mSpine->getCurrentNerve() == &TNerveBossTelesaAppear::theNerve())
+		mSpine->pushNerve(&TNerveBossTelesaSlotStart::theNerve());
+}
 
 bool TBossTelesa::rouletteFall()
 {
