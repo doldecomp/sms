@@ -258,7 +258,7 @@ void TBubble::calcRootMatrix()
 
 void TBubble::setDeadAnm() { setBckAnm(9); }
 
-MtxPtr TBubble::getTakingMtx() { return mMActor->unk4->unk20; }
+MtxPtr TBubble::getTakingMtx() { return mMActor->getModel()->getBaseTRMtx(); }
 
 const char** TBubble::getBasNameTable() const { return btelesa_bastable; }
 
@@ -268,7 +268,20 @@ const TNerveBubbleLive& TNerveBubbleLive::theNerve()
 	return instance;
 }
 
-void TBubble::appendItem() { }
+void TBubble::appendItem()
+{
+	unk198            = nullptr;
+	TMapObjBase* item = gpItemManager->makeObjAppear(
+	    mPosition.x, mPosition.y, mPosition.z, 0x20000008, true);
+	if (item && item->receiveMessage(this, HIT_MESSAGE_TAKE)) {
+		item->appear();
+		item->mPosition = mPosition;
+		item->mVelocity.set(0.0f, 15.0f, 0.0f);
+		item->offLiveFlag(LIVE_FLAG_UNK10);
+		mHeldObject = item;
+		unk198      = item;
+	}
+}
 
 void TBubble::appendEnemy()
 {
@@ -1026,22 +1039,22 @@ void TBossTelesa::loadAfter()
 		    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 
 	for (int i = 0; i < 20; ++i) {
-		((TMapObjBase*)unk2A8[i])->onMapObjFlag(0x04000000);
-		((TMapObjBase*)unk2A8[i])->makeObjDead();
+		unk2A8[i]->onMapObjFlag(0x04000000);
+		unk2A8[i]->makeObjDead();
 	}
 
-	unk2F8[0] = JDrama::TNameRefGen::search<TLiveActor>("唐辛子 0");
-	unk2F8[1] = JDrama::TNameRefGen::search<TLiveActor>("唐辛子 1");
-	unk2F8[2] = JDrama::TNameRefGen::search<TLiveActor>("唐辛子 2");
-	unk2F8[3] = JDrama::TNameRefGen::search<TLiveActor>("唐辛子 3");
-	unk2F8[4] = JDrama::TNameRefGen::search<TLiveActor>("唐辛子 4");
-	unk2F8[5] = JDrama::TNameRefGen::search<TLiveActor>("唐辛子 5");
-	unk2F8[6] = JDrama::TNameRefGen::search<TLiveActor>("唐辛子 6");
-	unk2F8[7] = JDrama::TNameRefGen::search<TLiveActor>("唐辛子 7");
-	unk2F8[8] = JDrama::TNameRefGen::search<TLiveActor>("唐辛子 8");
-	unk2F8[9] = JDrama::TNameRefGen::search<TLiveActor>("唐辛子 9");
+	unk2F8[0] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 0");
+	unk2F8[1] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 1");
+	unk2F8[2] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 2");
+	unk2F8[3] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 3");
+	unk2F8[4] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 4");
+	unk2F8[5] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 5");
+	unk2F8[6] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 6");
+	unk2F8[7] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 7");
+	unk2F8[8] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 8");
+	unk2F8[9] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 9");
 	for (int i = 0; i < 10; ++i)
-		((TMapObjBase*)unk2F8[i])->makeObjDead();
+		unk2F8[i]->makeObjDead();
 
 	unk320[0] = JDrama::TNameRefGen::search<TLiveActor>("コイン 0");
 	unk320[1] = JDrama::TNameRefGen::search<TLiveActor>("コイン 1");
@@ -1152,7 +1165,7 @@ void TBossTelesa::reset()
 
 void TBossTelesa::moveObject()
 {
-	if (mLiveFlag & LIVE_FLAG_DEAD)
+	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
 	JGeometry::TVec3<f32> cameraPos;
@@ -1249,7 +1262,7 @@ void TBossTelesa::moveObject()
 	unk168 = MsClamp(unk168 - 0.05f, 0.0f, 1.0f);
 	mMActor->setMotionBlendRatioForBck(unk168);
 
-	if (mLiveFlag & LIVE_FLAG_CLIPPED_OUT) {
+	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		unk16C->mPosition = mPosition;
 		unk170->mPosition = mPosition;
 		unk174->mPosition = mPosition;
@@ -1303,8 +1316,8 @@ void TBossTelesa::calcRootMatrix()
 
 	Mtx rotateMtx;
 	MsMtxSetRotRPH(rotateMtx, mRotation.x, mRotation.y, mRotation.z);
-	PSMTXConcat(translateMtx, rotateMtx, translateMtx);
-	PSMTXCopy(translateMtx, mMActor->getModel()->getBaseTRMtx());
+	MTXConcat(translateMtx, rotateMtx, translateMtx);
+	MTXCopy(translateMtx, mMActor->getModel()->getBaseTRMtx());
 
 	TTelesaSlot* slot = (TTelesaSlot*)unk184;
 	if (slot) {
@@ -1405,7 +1418,7 @@ void TBossTelesa::calcRootMatrix()
 void TBossTelesa::perform(u32 flags, JDrama::TGraphics* gfx)
 {
 	if ((flags & 0x200)
-	    && !(mLiveFlag & (LIVE_FLAG_DEAD | LIVE_FLAG_CLIPPED_OUT))) {
+	    && !checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_CLIPPED_OUT)) {
 		if (mSpine->getCurrentNerve() == &TNerveBossTelesaDie::theNerve()
 		    && unk350) {
 			mMActor->offMakeDL();
@@ -1431,7 +1444,7 @@ BOOL TBossTelesa::checkMessage(THitActor* actor, u32 message)
 {
 	if (message == HIT_MESSAGE_TRAMPLE) {
 		bool isMario;
-		if (actor->mActorType == (ACTOR_TYPE_PLAYER | 1))
+		if (actor->mActorType == 0x80000001)
 			isMario = true;
 		else
 			isMario = false;
@@ -1455,7 +1468,7 @@ void TBossTelesa::checkHitObject(THitActor* actor)
 {
 	unk380 = -1;
 
-	if ((actor->mActorType & ACTOR_TYPE_MASK) != ACTOR_TYPE_UNK40000000)
+	if ((actor->mActorType & 0xFFFF0000) != 0x40000000)
 		return;
 	if (mSpine->getCurrentNerve() != &TNerveBossTelesaPrepareSlot::theNerve())
 		return;
@@ -1543,7 +1556,7 @@ void TBossTelesa::damageRecover()
 
 	for (int i = 0; i < 20; ++i) {
 		TLiveActor* actor = unk2A8[i];
-		if (!(actor->mLiveFlag & LIVE_FLAG_DEAD)) {
+		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			if (actor->mHolder == nullptr)
 				SMS_SendMessageToMario(actor, HIT_MESSAGE_UNK8);
 
@@ -1556,7 +1569,7 @@ void TBossTelesa::damageRecover()
 
 	for (int i = 0; i < 10; ++i) {
 		TLiveActor* actor = unk2F8[i];
-		if (!(actor->mLiveFlag & LIVE_FLAG_DEAD)) {
+		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			if (actor->mHolder == nullptr)
 				SMS_SendMessageToMario(actor, HIT_MESSAGE_UNK8);
 
@@ -1567,7 +1580,7 @@ void TBossTelesa::damageRecover()
 		}
 
 		actor = unk320[i];
-		if (!(actor->mLiveFlag & LIVE_FLAG_DEAD)) {
+		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			((TMapObjBase*)actor)->makeObjDead();
 			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
 			                             &actor->mPosition, 0, nullptr);
@@ -1740,7 +1753,6 @@ void TBossTelesa::onAllCollision()
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 	unk16C->offHitFlag(HIT_FLAG_NO_COLLISION);
 	unk170->offHitFlag(HIT_FLAG_NO_COLLISION);
-	unk174->offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void TBossTelesa::offAllCollision()
@@ -1748,7 +1760,6 @@ void TBossTelesa::offAllCollision()
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 	unk16C->onHitFlag(HIT_FLAG_NO_COLLISION);
 	unk170->onHitFlag(HIT_FLAG_NO_COLLISION);
-	unk174->onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 const char** TBossTelesa::getBasNameTable() const { return btelesa_bastable; }
@@ -1782,7 +1793,7 @@ void TBossTelesa::genAttacker()
 		velocity.z = -50.0f;
 		MsMtxSetRotRPH(rot, mRotation.x,
 		               mRotation.y - angleOffset + angleStep * i, mRotation.z);
-		PSMTXMultVec(rot, &velocity, &velocity);
+		MTXMultVec(rot, &velocity, &velocity);
 		MsVECNormalize(&velocity, &velocity);
 
 		velocity.y = 2.0f;
@@ -1800,18 +1811,7 @@ void TBossTelesa::genAttacker()
 		TMsRange<f32> itemRange(0.0f, 1.0f);
 		f32 itemRoll = itemRange.rand();
 		if (itemRoll < mItemGenRate) {
-			bubble->unk198    = nullptr;
-			TMapObjBase* item = gpItemManager->makeObjAppear(
-			    bubble->mPosition.x, bubble->mPosition.y, bubble->mPosition.z,
-			    0x20000008, true);
-			if (item && item->receiveMessage(bubble, HIT_MESSAGE_TAKE)) {
-				item->appear();
-				item->mPosition = bubble->mPosition;
-				item->mVelocity.set(0.0f, 15.0f, 0.0f);
-				item->offLiveFlag(LIVE_FLAG_UNK10);
-				bubble->mHeldObject = item;
-				bubble->unk198      = item;
-			}
+			bubble->appendItem();
 		} else {
 			TMsRange<f32> enemyRange(0.0f, 1.0f);
 			f32 enemyRoll = enemyRange.rand();
@@ -1951,15 +1951,15 @@ void TBossTelesa::generateSlotItem()
 				angleIndex = 0;
 			}
 
-			PSMTXMultVec(rot, &dir, &dir);
+			MTXMultVec(rot, &dir, &dir);
 			MsVECNormalize(&dir, &normalizedDir);
 
 			Vec velocity;
 			TMsRange<f32> fruitSpeedRange(6.0f, 10.0f);
 
 			if (i == 0 || i == 4) {
-				((TMapObjBase*)unk2F8[i])->makeObjAppeared();
-				((TMapObjBase*)unk2F8[i])->offLiveFlag(LIVE_FLAG_HIDDEN);
+				unk2F8[i]->makeObjAppeared();
+				unk2F8[i]->offLiveFlag(LIVE_FLAG_HIDDEN);
 
 				velocity.x = normalizedDir.x * fruitSpeedRange.rand();
 				velocity.y = -2.0f;
@@ -1971,20 +1971,20 @@ void TBossTelesa::generateSlotItem()
 					    = normalizedDir.z * fruitSpeedRange.rand() * 2.0f;
 				}
 
-				((TMapObjBase*)unk2F8[i])->mVelocity = velocity;
-				((TMapObjBase*)unk2F8[i])->offLiveFlag(LIVE_FLAG_UNK10);
-				((TMapObjBase*)unk2F8[i])->mRotation.set(0.0f, 90.0f, 0.0f);
+				unk2F8[i]->mVelocity = velocity;
+				unk2F8[i]->offLiveFlag(LIVE_FLAG_UNK10);
+				unk2F8[i]->mRotation.set(0.0f, 90.0f, 0.0f);
 				unk1AC[unk274] = unk2F8[i];
 			} else {
-				((TMapObjBase*)unk2A8[i])->makeObjAppeared();
-				((TMapObjBase*)unk2A8[i])->offLiveFlag(LIVE_FLAG_HIDDEN);
+				unk2A8[i]->makeObjAppeared();
+				unk2A8[i]->offLiveFlag(LIVE_FLAG_HIDDEN);
 
 				velocity.x = normalizedDir.x * fruitSpeedRange.rand();
 				velocity.y = -2.0f;
 				velocity.z = normalizedDir.z * fruitSpeedRange.rand();
 
-				((TMapObjBase*)unk2A8[i])->mVelocity = velocity;
-				((TMapObjBase*)unk2A8[i])->offLiveFlag(LIVE_FLAG_UNK10);
+				unk2A8[i]->mVelocity = velocity;
+				unk2A8[i]->offLiveFlag(LIVE_FLAG_UNK10);
 				unk1AC[unk274] = unk2A8[i];
 			}
 
@@ -2019,7 +2019,7 @@ void TBossTelesa::generateSlotItem()
 			MsMtxSetRotRPH(rot, mRotation.x,
 			               mRotation.y - itemAngleOffset + itemAngleStep * i,
 			               mRotation.z);
-			PSMTXMultVec(rot, &dir, &dir);
+			MTXMultVec(rot, &dir, &dir);
 			MsVECNormalize(&dir, &dir);
 			dir.y = 10.0f;
 
@@ -2030,14 +2030,14 @@ void TBossTelesa::generateSlotItem()
 			velocity.y = dir.y;
 			velocity.z = dir.z * speed * itemSpeedRange.rand();
 
-			TMapObjBase* item = gpItemManager->makeObjAppeared(0x2000000E);
+			TItem* item = (TItem*)gpItemManager->makeObjAppeared(0x2000000E);
 			item->mPosition.x = rootMtx[0][3];
 			item->mPosition.y = rootMtx[1][3] - 250.0f;
 			item->mPosition.z = rootMtx[2][3];
 			item->mVelocity   = velocity;
 			item->offLiveFlag(LIVE_FLAG_UNK10);
 			item->mScaling.set(0.0f, 0.0f, 0.0f);
-			((TItem*)item)->killByTimer(0x3C0);
+			item->killByTimer(0x3C0);
 
 			unk1AC[unk274] = unk320[i];
 			unk1AC[unk274]->offLiveFlag(LIVE_FLAG_HIDDEN);
@@ -2094,7 +2094,7 @@ void TBossTelesa::generateSlotItem()
 			MsMtxSetRotRPH(rot, mRotation.x,
 			               mRotation.y - angleOffset + angleStep * i,
 			               mRotation.z);
-			PSMTXMultVec(rot, &dir, &dir);
+			MTXMultVec(rot, &dir, &dir);
 			MsVECNormalize(&dir, &dir);
 			dir.y = 2.0f;
 
@@ -2111,7 +2111,7 @@ void TBossTelesa::generateSlotItem()
 			enemy->mVelocity   = velocity;
 			enemy->mPosition.y += 10.0f;
 			enemy->onLiveFlag(LIVE_FLAG_AIRBORNE);
-			PSMTXCopy(rootMtx, enemy->mMActor->unk4->unk20);
+			MTXCopy(rootMtx, enemy->mMActor->getModel()->getBaseTRMtx());
 			enemy->mMActor->calc();
 			enemy->initAttacker(this);
 		}
@@ -2134,7 +2134,7 @@ bool TBossTelesa::checkSlot()
 bool TBossTelesa::checkAllItemDead()
 {
 	for (int i = 0; i < unk274; ++i)
-		if (!(unk1AC[i]->mLiveFlag & LIVE_FLAG_DEAD))
+		if (!unk1AC[i]->checkLiveFlag(LIVE_FLAG_DEAD))
 			return false;
 	return true;
 }
@@ -2152,7 +2152,7 @@ void TBossTelesa::forceAllItemKill()
 		unk1AC[i]->mPosition.set(zero, zero, zero);
 		unk1AC[i]->onHitFlag(HIT_FLAG_NO_COLLISION);
 
-		if (!(unk1AC[i]->mLiveFlag & LIVE_FLAG_DEAD)) {
+		if (!unk1AC[i]->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			unk1AC[i]->kill();
 			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
 			                             &unk1AC[i]->mPosition, 0, nullptr);
@@ -2202,9 +2202,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 		if (boss->unk350 && boss->mHitPoints != 0)
 			--boss->mHitPoints;
 
-		boss->onHitFlag(HIT_FLAG_NO_COLLISION);
-		boss->unk16C->onHitFlag(HIT_FLAG_NO_COLLISION);
-		boss->unk170->onHitFlag(HIT_FLAG_NO_COLLISION);
+		boss->offAllCollision();
 
 		if (boss->mHitPoints != 0) {
 			if (boss->unk350) {
@@ -2321,9 +2319,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 				boss->onLiveFlag(LIVE_FLAG_UNK8);
 				boss->offLiveFlag(TBossTelesa::LIVE_FLAG_UNK10000);
 				boss->mHolder = nullptr;
-				boss->onHitFlag(HIT_FLAG_NO_COLLISION);
-				boss->unk16C->onHitFlag(HIT_FLAG_NO_COLLISION);
-				boss->unk170->onHitFlag(HIT_FLAG_NO_COLLISION);
+				boss->offAllCollision();
 				boss->stopAnmSound();
 				spine->reset();
 				return TRUE;
@@ -2467,9 +2463,7 @@ DEFINE_NERVE(TNerveBossTelesaHide, TLiveActor)
 	}
 
 	if (boss->checkCurAnmEnd(0)) {
-		boss->onHitFlag(HIT_FLAG_NO_COLLISION);
-		boss->unk16C->onHitFlag(HIT_FLAG_NO_COLLISION);
-		boss->unk170->onHitFlag(HIT_FLAG_NO_COLLISION);
+		boss->offAllCollision();
 		SMSRumbleMgr->start(0x14, 0xF, (f32*)nullptr);
 		boss->rouletteStart();
 		spine->pushAfterCurrent(&TNerveBossTelesaHideWait::theNerve());
@@ -2690,7 +2684,7 @@ DEFINE_NERVE(TNerveBossTelesaSpitSlotItem, TLiveActor)
 		boss->unk368 = 0;
 		for (int i = 0; i < boss->unk274; ++i) {
 			TLiveActor* actor = boss->unk1AC[i];
-			if (!(actor->mLiveFlag & LIVE_FLAG_DEAD)
+			if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
 			    && actor->mActorType != 0x2000000E
 			    && actor->mActorType != 0x20000002)
 				actor->offHitFlag(HIT_FLAG_NO_COLLISION);
@@ -2832,7 +2826,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 		} else {
 			done = TRUE;
 			for (int i = 0; i < boss->unk274; ++i) {
-				if (!(boss->unk1AC[i]->mLiveFlag & LIVE_FLAG_DEAD)) {
+				if (!(boss->unk1AC[i]->checkLiveFlag(LIVE_FLAG_DEAD))) {
 					done = FALSE;
 					break;
 				}
