@@ -181,8 +181,8 @@ void TBaseNPC::init(TLiveManager* param_1)
 		onLiveFlag(LIVE_FLAG_UNK10);
 	}
 
-	if (mMActor->getAnmBck())
-		mMActor->getAnmBck()->initNormalMotionBlend();
+	if (mMActor->getUnkC())
+		mMActor->getUnkC()->initNormalMotionBlend();
 
 	if (isPollutionNpc())
 		initSinkNpc_();

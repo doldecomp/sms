@@ -426,11 +426,11 @@ void TBiancoGateKeeper::changeBck(int param_1)
 	    || (cur == 7 && param_1 == 7) || (cur == 7 && param_1 == 0x12)
 	    || (cur == 0xF && param_1 == 0x10) || (cur == 0x10 && param_1 == 0xC)) {
 		unk178->setAnm(param_1);
-		mMActor->getAnmBck()->setFrameCtrl(param_1);
+		mMActor->getUnkC()->setFrameCtrl(param_1);
 		unk158 = 0.0f;
 	} else {
 		unk178->joinAnm(param_1);
-		mMActor->getAnmBck()->setFrameCtrl(param_1);
+		mMActor->getUnkC()->setFrameCtrl(param_1);
 		J3DFrameCtrl* fc = mMActor->getFrameCtrl(0);
 		if (fc != NULL) {
 			f32 v = 0.25f * (f32)fc->getEnd();

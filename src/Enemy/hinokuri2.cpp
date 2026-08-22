@@ -558,8 +558,8 @@ void THinokuri2::init(TLiveManager* param_1)
 	mHitPoints = calcHitPoints();
 
 	J3DMtxCalc* calc = unk1A0;
-	if (getMActor()->getAnmBck()) {
-		MActorAnmBck* bck = getMActor()->getAnmBck();
+	if (getMActor()->getUnkC()) {
+		MActorAnmBck* bck = getMActor()->getUnkC();
 		bck->unk38        = calc;
 		bck->unk2A        = 3;
 	}
@@ -737,7 +737,7 @@ void THinokuri2::changeBck(int param_1)
 			        param_1));
 		}
 
-		getMActor()->getAnmBck()->setFrameCtrl(param_1);
+		getMActor()->getUnkC()->setFrameCtrl(param_1);
 	}
 
 	mCurrentBck = param_1;
