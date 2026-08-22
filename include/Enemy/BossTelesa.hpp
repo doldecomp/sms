@@ -170,8 +170,8 @@ public:
 	/* 0x1AC */ TLiveActor* unk1AC[50];
 	/* 0x274 */ s32 unk274;
 	/* 0x278 */ JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > unk278;
-	/* 0x2A8 */ TLiveActor* unk2A8[20];
-	/* 0x2F8 */ TLiveActor* unk2F8[10];
+	/* 0x2A8 */ TMapObjBase* unk2A8[20];
+	/* 0x2F8 */ TMapObjBase* unk2F8[10];
 	/* 0x320 */ TLiveActor* unk320[10];
 	/* 0x348 */ GXColor unk348;
 	/* 0x34C */ GXColor unk34C;
