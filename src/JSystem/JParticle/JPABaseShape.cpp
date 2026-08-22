@@ -1,5 +1,6 @@
 #include <JSystem/JParticle/JPABaseShape.hpp>
 #include <JSystem/JParticle/JPAMath.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 #include <dolphin/gx/GXStruct.h>
 
 GXBlendMode JPABaseShape::stBlendMode[] = {
@@ -35,63 +36,65 @@ GXAlphaOp JPABaseShape::stAlphaOp[] = {
 };
 
 struct JPAColorRegAnmKey {
-	s16 unk0;
-	GXColor unk2;
+	s16 mIndex;
+	GXColor mColor;
 };
 
-static GXColor* makeColorTable(JPAColorRegAnmKey* param_1, int param_2,
-                               int param_3, JKRHeap* param_4)
+static GXColor* makeColorTable(JPAColorRegAnmKey* i_data, int i_keyNum,
+                               int i_size, JKRHeap* i_heap)
 {
-	GXColor* result
-	    = (GXColor*)JKRHeap::alloc((param_3 + 1) * sizeof(GXColor), 4, param_4);
+	GXColor* p_clr_tbl
+	    = (GXColor*)JKRAllocFromHeap(i_heap, (i_size + 1) * sizeof(GXColor), 4);
+	JUT_ASSERT(p_clr_tbl);
 
-	f32 accumR, accumG, accumB, accumA;
-	f32 fR, fG, fB, fA;
+	f32 r_step, g_step, b_step, a_step;
+	r_step = g_step = b_step = a_step = 0.0f;
 
-	fR = (f32)param_1[0].unk2.r;
-	fG = (f32)param_1[0].unk2.g;
-	fB = (f32)param_1[0].unk2.b;
-	fA = (f32)param_1[0].unk2.a;
+	f32 diff_r, diff_g, diff_b, diff_a;
 
-	accumR = accumG = accumB = accumA = 0.0f;
+	f32 r, g, b, a;
+	r = diff_r = i_data[0].mColor.r;
+	g = diff_g = i_data[0].mColor.g;
+	b = diff_b = i_data[0].mColor.b;
+	a = diff_a    = i_data[0].mColor.a;
+	f32 base_step = 0.0f;
+	int j         = 0;
 
-	int nextKey = 0;
-	for (int i = 0; i < param_3 + 1; ++i) {
-		if (i == param_1[nextKey].unk0) {
-			result[i] = param_1[nextKey].unk2;
+	for (int i = 0; i < i_size + 1; i++) {
+		if (i == i_data[j].mIndex) {
+			p_clr_tbl[i] = i_data[j].mColor;
+			r            = i_data[j].mColor.r;
+			g            = i_data[j].mColor.g;
+			b            = i_data[j].mColor.b;
+			a            = i_data[j].mColor.a;
+			j++;
+			if (j < i_keyNum) {
+				diff_r = i_data[j].mColor.r;
+				diff_g = i_data[j].mColor.g;
+				diff_b = i_data[j].mColor.b;
+				diff_a = i_data[j].mColor.a;
+				base_step
+				    = 1.0f / (i_data[j].mIndex - (i_data + j - 1)->mIndex);
 
-			fR = (f32)param_1[nextKey].unk2.r;
-			fG = (f32)param_1[nextKey].unk2.g;
-			fB = (f32)param_1[nextKey].unk2.b;
-			fA = (f32)param_1[nextKey].unk2.a;
-
-			++nextKey;
-
-			if (nextKey < param_2) {
-				JPAColorRegAnmKey* key = &param_1[nextKey];
-
-				f32 thing = 1.0f / (key->unk0 - key[-1].unk0);
-
-				accumR = thing * (key->unk2.r - fR);
-				accumG = thing * (key->unk2.g - fG);
-				accumB = thing * (key->unk2.b - fB);
-				accumA = thing * (key->unk2.a - fA);
+				r_step = base_step * (diff_r - r);
+				g_step = base_step * (diff_g - g);
+				b_step = base_step * (diff_b - b);
+				a_step = base_step * (diff_a - a);
 			} else {
-				accumR = accumG = accumB = accumA = 0.0f;
+				r_step = g_step = b_step = a_step = 0.0f;
 			}
 		} else {
-			fR += accumR;
-			fG += accumG;
-			fB += accumB;
-			fA += accumA;
-			result[i].r = fR;
-			result[i].g = fG;
-			result[i].b = fB;
-			result[i].a = fA;
+			r += r_step;
+			p_clr_tbl[i].r = r;
+			g += g_step;
+			p_clr_tbl[i].g = g;
+			b += b_step;
+			p_clr_tbl[i].b = b;
+			a += a_step;
+			p_clr_tbl[i].a = a;
 		}
 	}
-
-	return result;
+	return p_clr_tbl;
 }
 
 JPABaseShape::JPABaseShape(const u8* data, JKRHeap* heap)
