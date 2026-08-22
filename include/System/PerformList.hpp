@@ -7,15 +7,20 @@
 class TPerformLink {
 public:
 	TPerformLink(JDrama::TViewObj* param_1, u32 param_2)
-	    : unk4(param_1)
-	    , unk8(param_2)
+	    : mPerformer(param_1)
+	    , mCueFilter(param_2)
 	{
+	}
+
+	void perform(u32 cue, JDrama::TGraphics* graphics)
+	{
+		mPerformer->testPerform(mCueFilter & cue, graphics);
 	}
 
 public:
 	/* 0x0 */ JGadget::TSingleLinkListNode unk0;
-	/* 0x4 */ JDrama::TViewObj* unk4;
-	/* 0x8 */ u32 unk8;
+	/* 0x4 */ JDrama::TViewObj* mPerformer;
+	/* 0x8 */ u32 mCueFilter;
 };
 
 // NOTE: fabricated name, but a class of this shape must exist. Two independent
