@@ -222,12 +222,12 @@ void TNameIndParCallback::execute(JPABaseEmitter* param_1,
 		param_1->setGlobalRTMatrix(mA);
 
 		if (mOwner->unk1A8) {
-			param_1->setScale(mOwner->mScaling);
+			param_1->setGlobalScale(mOwner->mScaling);
 		} else {
 			if (mOwner->isAttackJump())
-				param_1->setScale(local_7c * 0.5f);
+				param_1->setGlobalScale(local_7c * 0.5f);
 			else
-				param_1->setScale(local_7c);
+				param_1->setGlobalScale(local_7c);
 		}
 	}
 }
@@ -544,13 +544,13 @@ void TNameKuri::setDeadAnm()
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	        PARTICLE_MS_DEADNAMEKLI_O, mtx, 0, nullptr)) {
 
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 	}
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	        PARTICLE_MS_DEADNAMEKLI_N, mtx, 0, nullptr)) {
 
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 	}
 
 	setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
@@ -578,13 +578,13 @@ void TNameKuri::setMeltAnm()
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	        PARTICLE_MS_DEADNAMEKLI_O, mtx, 0, nullptr)) {
 
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 	}
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	        PARTICLE_MS_DEADNAMEKLI_N, mtx, 0, nullptr)) {
 
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 	}
 
 	setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));

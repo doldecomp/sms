@@ -206,7 +206,8 @@ u32 TIceBlock::touchWater(THitActor* param_1)
 
 	int id = getWaterID(param_1);
 	if (gpModelWaterManager->checkFlagBottom4Bits(id, 0x1)) {
-		gpMarioParticleManager->emit(0xE7, &param_1->getPosition(), 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
+		                             &param_1->getPosition(), 0, nullptr);
 		gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0, 0.0f,
 		                        0, 0, 4);
 		gpMSound->startSoundActor(MSD_SE_OBJ_ICE_BLOCK_MELT, &mPosition, 0,
@@ -229,18 +230,15 @@ u32 TIceBlock::touchWater(THitActor* param_1)
 void TIceBlock::control()
 {
 	JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(0x157, &mPosition, 1, this);
+	    = gpMarioParticleManager->emit(MAPOBJ_ICEBLOCKA, &mPosition, 1, this);
 	if (emitter != nullptr) {
-		emitter->unk154.x = mScaling.x;
-		emitter->unk154.y = mScaling.y;
-		emitter->unk154.z = mScaling.z;
+		emitter->setGlobalDynamicsScale(mScaling);
 	}
 
-	emitter = gpMarioParticleManager->emit(0x158, &mPosition, 1, this);
+	emitter
+	    = gpMarioParticleManager->emit(MAPOBJ_ICEBLOCKB, &mPosition, 1, this);
 	if (emitter != nullptr) {
-		emitter->unk154.x = mScaling.x;
-		emitter->unk154.y = mScaling.y;
-		emitter->unk154.z = mScaling.z;
+		emitter->setGlobalDynamicsScale(mScaling);
 	}
 
 	offHitFlag(HIT_FLAG_NO_COLLISION);

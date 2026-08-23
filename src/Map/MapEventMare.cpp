@@ -44,23 +44,23 @@ void TMareWallRock::appear()
 	(void)0;
 	(void)0;
 	(void)0;
+	(void)0;
 
 	unk10C[0]->setUp();
-	unk104->alive();
-	JGeometry::TVec3<f32> t(0.0f, 0.0f, unkFC);
-	unk10C[0]->moveTrans(t);
+	unk104->awake();
+	unk10C[0]->moveTrans(JGeometry::TVec3<f32>(0.0f, 0.0f, unkFC));
 	f32 rotY = unk128;
 
 	if (JPABaseEmitter* em = gpMarioParticleManager->emit(
 	        MAP_MAP_MS_MARE_OBJUP_A, &unk11C, 0, &unk11C)) {
 		em->setRotation(JGeometry::TVec3<f32>(0.0f, rotY, 0.0f));
-		em->unk154.set(unk110);
+		em->setGlobalDynamicsScale(unk110);
 	}
 
 	if (JPABaseEmitter* em = gpMarioParticleManager->emit(
 	        MAP_MAP_MS_MARE_OBJUP_B, &unk11C, 2, &unk11C)) {
 		em->setRotation(JGeometry::TVec3<f32>(0.0f, rotY, 0.0f));
-		em->unk154.set(unk110);
+		em->setGlobalDynamicsScale(unk110);
 	}
 
 	unkF4 = 2;
@@ -253,9 +253,10 @@ void TMareEventDepressWall::rising()
 		int idx = unk48;
 		if (JPABaseEmitter* em = gpMarioParticleManager->emit(
 		        MAP_MAP_MS_MARE_BLOCKUP, &unk34[idx], 1, &unk34[idx])) {
-			em->setScale(unk38[idx]);
-			em->mChildSpawnRate = unk3C[idx];
-			em->unk174.setAll(unk40[idx]);
+			em->setGlobalScale(unk38[idx]);
+			em->setRate(unk3C[idx]);
+			em->setGlobalParticleScale(
+			    JGeometry::TVec3<f32>(unk40[idx], unk40[idx], unk40[idx]));
 		}
 	}
 
@@ -326,9 +327,10 @@ void TMareEventDepressWall::depressing()
 					JPABaseEmitter* em = gpMarioParticleManager->emit(
 					    MAP_MAP_MS_MARE_BLOCKUP, &unk34[i], 1, &unk34[i]);
 					if (em) {
-						em->setScale(unk38[i]);
-						em->mChildSpawnRate = unk3C[i];
-						em->unk174.setAll(unk40[i]);
+						em->setGlobalScale(unk38[i]);
+						em->setRate(unk3C[i]);
+						em->setGlobalParticleScale(JGeometry::TVec3<f32>(
+						    unk40[i], unk40[i], unk40[i]));
 					}
 				} else {
 					SMSRumbleMgr->stop(0x13);
@@ -356,9 +358,10 @@ void TMareEventDepressWall::depressing()
 					JPABaseEmitter* em = gpMarioParticleManager->emit(
 					    MAP_MAP_MS_MARE_BLOCKUP, &unk34[i], 1, &unk34[i]);
 					if (em) {
-						em->setScale(unk38[i]);
-						em->mChildSpawnRate = unk3C[i];
-						em->unk174.setAll(unk40[i]);
+						em->setGlobalScale(unk38[i]);
+						em->setRate(unk3C[i]);
+						em->setGlobalParticleScale(JGeometry::TVec3<f32>(
+						    unk40[i], unk40[i], unk40[i]));
 					}
 				} else {
 					SMSRumbleMgr->stop(0x13);

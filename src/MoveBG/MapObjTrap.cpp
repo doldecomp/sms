@@ -6,6 +6,7 @@
 #include <Player/MarioAccess.hpp>
 #include <System/Application.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <Strategic/Strategy.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
@@ -284,8 +285,10 @@ void TLampTrapIron::perform(u32 cue, JDrama::TGraphics* graphics)
 	TMapObjBase::perform(cue, graphics);
 	unk138->perform(cue, graphics);
 	if ((cue & CUE_CALC_ANIM) && unk13C > 0) {
-		gpMarioParticleManager->emit(0x1F1, &mPosition, 3, this);
-		gpMarioParticleManager->emit(0x12C, &mPosition, 1, this);
+		gpMarioParticleManager->emit(PARTICLE_MS_TEPPANFIRE_B, &mPosition, 3,
+		                             this);
+		gpMarioParticleManager->emit(PARTICLE_MS_TEPPANFIRE_A, &mPosition, 1,
+		                             this);
 	}
 }
 

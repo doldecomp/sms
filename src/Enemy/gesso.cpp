@@ -926,8 +926,10 @@ void TGessoPolluteObj::pollute()
 void TGessoPolluteObj::rebirth()
 {
 	if (unk158 == 0) {
-		gpMarioParticleManager->emit(0xBC, &mPosition, 0, nullptr);
-		gpMarioParticleManager->emit(0xBD, &mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_GESO_OSENHIT_A, &mPosition, 0,
+		                             nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_GESO_OSENHIT_B, &mPosition, 0,
+		                             nullptr);
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_GESO_GERO_LAND, &mPosition, 0,
 		                                nullptr, 0, 4);
 	}

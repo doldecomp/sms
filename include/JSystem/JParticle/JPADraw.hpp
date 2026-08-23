@@ -130,7 +130,7 @@ public:
 	/* 0x8E */ u8 unk8E;
 	/* 0x8F */ u8 unk8F;
 	/* 0x90 */ JPADrawContext mDrawCtx;
-	/* 0xB4 */ f32 unkB4;
+	/* 0xB4 */ f32 mScaleOut;
 	/* 0xB8 */ GXColor mPrmColor;
 	/* 0xBC */ GXColor mEnvColor;
 	/* 0xC0 */ u16 unkC0;
@@ -148,6 +148,8 @@ public:
 
 	static JPADrawVisitorContainer vc;
 	static JPADrawClipBoard cb;
+
+	void setKeyScl(f32 value) { mScaleOut = value; }
 
 	BOOL initialize(JPABaseEmitter*, JPATextureResource*);
 	void draw(MtxPtr view_mtx);

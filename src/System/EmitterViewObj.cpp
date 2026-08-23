@@ -54,11 +54,8 @@ void TEmitterIndirectViewObj::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TMarioEmitterCallBackBindToPosPtr::execute(JPABaseEmitter* emitter)
 {
-	Vec* vec = (Vec*)emitter->unk120;
-
-	emitter->unk160.x = vec->x;
-	emitter->unk160.y = vec->y;
-	emitter->unk160.z = vec->z;
+	JGeometry::TVec3<f32>* vec = (JGeometry::TVec3<f32>*)emitter->unk120;
+	emitter->setGlobalTranslation(*vec);
 }
 
 void TMarioEmitterCallBackBindToPosPtr::draw(JPABaseEmitter*) { }
@@ -656,9 +653,9 @@ void SMSSetEmitterPolColor(JPABaseEmitter* param_1, int param_2)
 		{ 0xB7, 0x24, 0x08, 0xFF }, { 0x00, 0x73, 0x6C, 0xFF },
 	};
 
-	param_1->setParamColor(prmarray[value].r, prmarray[value].g,
-	                       prmarray[value].b);
+	param_1->setGlobalPrmColor(prmarray[value].r, prmarray[value].g,
+	                           prmarray[value].b);
 
-	param_1->setEnviColor(envarray[value].r, envarray[value].g,
-	                      envarray[value].b);
+	param_1->setGlobalEnvColor(envarray[value].r, envarray[value].g,
+	                           envarray[value].b);
 }

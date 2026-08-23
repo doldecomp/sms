@@ -306,26 +306,26 @@ void TPoiHana::setDeadAnm()
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 	        PARTICLE_MS_POI_DEAD, &mPosition, 0, nullptr)) {
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 	}
 
 	if (!mGroundPlane->isSand()) {
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_JUMP_ED_A, &mPosition, 0, nullptr)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_JUMP_ED_B, &mPosition, 0, nullptr)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 	} else {
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_POI_SAND, &mPosition, 0, nullptr)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_JUMP_ED_A, &mPosition, 0, nullptr)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 	}
 }
@@ -416,14 +416,14 @@ void TPoiHana::calcRootMatrix()
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToPosPtr(
 		        PARTICLE_MS_POI_KIZETSU, &mPosition, 1, this)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 
 	if (isBckAnm(5))
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToPosPtr(
 		        PARTICLE_MS_POI_ZZZ, &mPosition, 1, this)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 
 	if (isBckAnm(12) || isBckAnm(13)) {
@@ -431,20 +431,20 @@ void TPoiHana::calcRootMatrix()
 			if (!mGroundPlane->isSand()) {
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				        PARTICLE_MS_JUMP_ED_A, &mPosition, 0, nullptr)) {
-					emitter->setScale(mScaling);
+					emitter->setGlobalScale(mScaling);
 				}
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				        PARTICLE_MS_JUMP_ED_B, &mPosition, 0, nullptr)) {
-					emitter->setScale(mScaling);
+					emitter->setGlobalScale(mScaling);
 				}
 			} else {
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				        PARTICLE_MS_POI_SAND, &mPosition, 0, nullptr)) {
-					emitter->setScale(mScaling);
+					emitter->setGlobalScale(mScaling);
 				}
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				        PARTICLE_MS_JUMP_ED_A, &mPosition, 0, nullptr)) {
-					emitter->setScale(mScaling);
+					emitter->setGlobalScale(mScaling);
 				}
 			}
 		}

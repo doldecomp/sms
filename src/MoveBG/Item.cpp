@@ -459,20 +459,20 @@ void TShine::calc()
 	}
 
 	if (unk194) {
-		unk194->mBaseLifetime = promiLife;
-		unk194->setScale(unk1A8);
+		unk194->setLifeTime(promiLife);
+		unk194->setGlobalScale(unk1A8);
 	}
 	if (unk198) {
-		unk198->mChildSpawnRate = senkoRate;
-		unk198->setScale(unk1A8);
+		unk198->setRate(senkoRate);
+		unk198->setGlobalScale(unk1A8);
 	}
 	if (unk19C) {
-		unk19C->mChildSpawnRate = kiraRate;
-		unk19C->setScale(unk1A8);
+		unk19C->setRate(kiraRate);
+		unk19C->setGlobalScale(unk1A8);
 	}
 	if (unk1A0) {
-		unk1A0->mChildSpawnRate = bowRate;
-		unk1A0->setScale(unk1A8);
+		unk1A0->setRate(bowRate);
+		unk1A0->setGlobalScale(unk1A8);
 	}
 	unk1A4 = 1;
 }

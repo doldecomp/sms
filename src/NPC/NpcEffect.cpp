@@ -142,7 +142,7 @@ inline void TBaseNPC::emitPollutionParticle_(int particle, MtxPtr mtx)
 {
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	        particle, mtx, 0, nullptr)) {
-		emitter->setScale(getEffectScale_());
+		emitter->setGlobalScale(getEffectScale_());
 		SMSSetEmitterPolColor(emitter, 6);
 	}
 }
@@ -184,7 +184,7 @@ inline void TBaseNPC::emitWashEffect_()
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
 		        particle, mPollutionEffectMtxPtr, 1, this)) {
-			emitter->setScale(getEffectScale_());
+			emitter->setGlobalScale(getEffectScale_());
 			SMSSetEmitterPolColor(emitter, 6);
 		}
 	}

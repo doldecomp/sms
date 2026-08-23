@@ -120,12 +120,12 @@ void TPollutionLayer::fire()
 			if (JPABaseEmitter* em = gpMarioParticleManager->emit(
 			        MAP_POLLUTION_MS_NEWFIRE_B,
 			        &mEffectPositions[mCurEffectPosIndex], 2, this)) {
-				em->setScale(JGeometry::TVec3<f32>(1.5f, 1.5f, 1.5f));
+				em->setGlobalScale(JGeometry::TVec3<f32>(1.5f, 1.5f, 1.5f));
 			}
 			if (JPABaseEmitter* em = gpMarioParticleManager->emit(
 			        MAP_POLLUTION_MS_NEWFIRE_A,
 			        &mEffectPositions[mCurEffectPosIndex], 0, this)) {
-				em->setScale(JGeometry::TVec3<f32>(1.5f, 1.5f, 1.5f));
+				em->setGlobalScale(JGeometry::TVec3<f32>(1.5f, 1.5f, 1.5f));
 			}
 			mCurEffectPosIndex += 1;
 			if (mCurEffectPosIndex >= mEffectPositionsCapacity)

@@ -34,8 +34,8 @@ BOOL JPADraw::initialize(JPABaseEmitter* emitter,
 	                           ->getTextureDataBase();
 	mDrawCtx.unk18 = mDrawCtx.mBaseEmitter->getParticleList();
 
-	unkC2 = 0;
-	unkB4 = 1.0f;
+	unkC2     = 0;
+	mScaleOut = 1.0f;
 
 	GXColor white = { 0xff, 0xff, 0xff, 0xff };
 
@@ -138,10 +138,10 @@ void JPADraw::draw(MtxPtr view_mtx)
 	// TODO: fakematch
 	JPABaseEmitter* be = mDrawCtx.mBaseEmitter;
 
-	cb.mPrmColor.r = be->unk180.r;
-	cb.mPrmColor.g = be->unk180.g;
-	cb.mPrmColor.b = be->unk180.b;
-	cb.mPrmColor.a = be->unk180.a;
+	cb.mPrmColor.r = be->mGlobalPrmColor.r;
+	cb.mPrmColor.g = be->mGlobalPrmColor.g;
+	cb.mPrmColor.b = be->mGlobalPrmColor.b;
+	cb.mPrmColor.a = be->mGlobalPrmColor.a;
 
 	be             = mDrawCtx.mBaseEmitter;
 	cb.mEnvColor.r = be->unk184.r;
@@ -200,11 +200,7 @@ void JPADraw::initParticle(JPABaseParticle* particle)
 {
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
-	// TODO: something wrong here
-	f32* v         = JPAGetEmitterInfoPtr()->unk48[1];
-	params->unk0.x = v[0];
-	params->unk0.y = v[1];
-	params->unk0.z = v[2];
+	params->unk0.set(JPAGetEmitterInfoPtr()->mEmitterAxisY);
 
 	params->mPrmColor = mPrmColor;
 	params->mEnvColor = mEnvColor;
@@ -242,7 +238,7 @@ void JPADraw::initParticle(JPABaseParticle* particle)
 		}
 
 		params->mScaleX = params->mScaleY = params->unkC
-		    = unkB4
+		    = mScaleOut
 		      * (mDrawCtx.mBaseEmitter->getRandomRF()
 		             * mDrawCtx.mExtraShape->getRandomScale()
 		         + 1.0f);
@@ -253,7 +249,7 @@ void JPADraw::initParticle(JPABaseParticle* particle)
 	} else {
 		params->unk34 = 0;
 		params->unk36 = 0;
-		params->unkC = params->mScaleX = params->mScaleY = unkB4;
+		params->unkC = params->mScaleX = params->mScaleY = mScaleOut;
 
 		params->unk24 = 1.0f;
 	}
@@ -701,14 +697,14 @@ void JPADraw::setDrawCalcVisitors(const JPADraw::JPADrawVisitorDefFlags& flags)
 	if (flags.unk14 && !flags.unkC) {
 		unk48[unk8D++] = &vc.mDrawCalcAlpha;
 		if (mDrawCtx.mExtraShape->isEnableSinWave()) {
-			switch (mDrawCtx.mExtraShape->unk79) {
-			case 0:
+			switch (mDrawCtx.mExtraShape->getAlphaWaveType()) {
+			case JPAAlphaWaveType_Nrm:
 				unk48[unk8D++] = &vc.mDrawCalcAlphaFlickNrmSin;
 				break;
-			case 1:
+			case JPAAlphaWaveType_Add:
 				unk48[unk8D++] = &vc.mDrawCalcAlphaFlickAddSin;
 				break;
-			case 2:
+			case JPAAlphaWaveType_Mult:
 				unk48[unk8D++] = &vc.mDrawCalcAlphaFlickMultSin;
 				break;
 			}
@@ -1088,8 +1084,9 @@ void JPADraw::zDrawParticle()
 	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
 	GXSetZCompLoc(GX_FALSE);
 
-	GXSetAlphaCompare(GX_GEQUAL, mDrawCtx.mBaseEmitter->getAlpha(), GX_AOP_OR,
-	                  GX_GEQUAL, mDrawCtx.mBaseEmitter->getAlpha());
+	GXSetAlphaCompare(GX_GEQUAL, mDrawCtx.mBaseEmitter->getGlobalAlpha(),
+	                  GX_AOP_OR, GX_GEQUAL,
+	                  mDrawCtx.mBaseEmitter->getGlobalAlpha());
 	GXSetAlphaUpdate(GX_FALSE);
 	GXSetColorUpdate(GX_FALSE);
 	GXSetCullMode(GX_CULL_NONE);
@@ -1143,8 +1140,9 @@ void JPADraw::zDrawChild()
 
 	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
 	GXSetZCompLoc(GX_FALSE);
-	GXSetAlphaCompare(GX_GEQUAL, mDrawCtx.mBaseEmitter->getAlpha(), GX_AOP_OR,
-	                  GX_GEQUAL, mDrawCtx.mBaseEmitter->getAlpha());
+	GXSetAlphaCompare(GX_GEQUAL, mDrawCtx.mBaseEmitter->getGlobalAlpha(),
+	                  GX_AOP_OR, GX_GEQUAL,
+	                  mDrawCtx.mBaseEmitter->getGlobalAlpha());
 	GXSetAlphaUpdate(GX_FALSE);
 	GXSetColorUpdate(GX_FALSE);
 	GXSetCullMode(GX_CULL_NONE);
