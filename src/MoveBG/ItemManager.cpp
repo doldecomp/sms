@@ -28,7 +28,8 @@ void TItemManager::resetNozzleBoxesModel(int nozzle_type)
 			JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 			    PARTICLE_MS_ENM_DISAP_A, &box->mPosition, 0, nullptr);
 			if (emitter)
-				emitter->setScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
+				emitter->setGlobalScale(
+				    JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
 
 			SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT,
 			                                &box->mPosition, 0, nullptr, 0, 4);

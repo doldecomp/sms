@@ -277,7 +277,7 @@ void TAmenbo::updateRipple()
 		    = gpMarioParticleManager->emitAndBindToPosPtr(
 		        AMENBO_JPA_MS_AME_HAMON, &effect->mPos, 1, effect)) {
 			JGeometry::TVec3<f32> scale(3.0f, 3.0f, 3.0f);
-			emitter->setScale(scale);
+			emitter->setGlobalScale(scale);
 		}
 	}
 }

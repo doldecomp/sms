@@ -767,7 +767,7 @@ void TMapObjBase::emitAndSRT(s32 param_1, u8 param_2,
 
 	if (emitter) {
 		emitter->setRotation(param_4.x, param_4.y, param_4.z);
-		emitter->setScale(param_5);
+		emitter->setGlobalScale(param_5);
 	}
 }
 
@@ -781,7 +781,7 @@ void TMapObjBase::emitAndRotateScale(s32 param_1, u8 param_2,
 		emitter->setRotation(mRotation.x / 180.0f * 32768.0f,
 		                     mRotation.y / 180.0f * 32768.0f,
 		                     mRotation.z / 180.0f * 32768.0f);
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 	}
 }
 
@@ -793,12 +793,7 @@ TMapObjBase::emitAndScale(s32 param_1, u8 param_2,
 	    = gpMarioParticleManager->emit(param_1, param_3, param_2, this);
 
 	if (emitter) {
-		emitter->unk154.x = mScaling.x;
-		emitter->unk154.y = mScaling.y;
-		emitter->unk154.z = mScaling.z;
-		emitter->unk174.x = mScaling.x;
-		emitter->unk174.y = mScaling.y;
-		emitter->unk174.z = mScaling.z;
+		emitter->setGlobalScale(mScaling);
 	}
 
 	return emitter;
@@ -813,12 +808,7 @@ TMapObjBase::emitAndBindScale(s32 param_1, u8 param_2,
 	    param_1, param_3, param_2, this);
 
 	if (emitter) {
-		emitter->unk154.x = param_4.x;
-		emitter->unk154.y = param_4.y;
-		emitter->unk154.z = param_4.z;
-		emitter->unk174.x = param_4.x;
-		emitter->unk174.y = param_4.y;
-		emitter->unk174.z = param_4.z;
+		emitter->setGlobalScale(param_4);
 	}
 
 	return emitter;
@@ -833,12 +823,7 @@ TMapObjBase::emitAndScale(s32 param_1, u8 param_2,
 	    = gpMarioParticleManager->emit(param_1, param_3, param_2, this);
 
 	if (emitter) {
-		emitter->unk154.x = param_4.x;
-		emitter->unk154.y = param_4.y;
-		emitter->unk154.z = param_4.z;
-		emitter->unk174.x = param_4.x;
-		emitter->unk174.y = param_4.y;
-		emitter->unk174.z = param_4.z;
+		emitter->setGlobalScale(param_4);
 	}
 
 	return emitter;

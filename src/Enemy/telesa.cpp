@@ -7,6 +7,7 @@
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/JMath.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <Strategic/Spine.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/SharedParts.hpp>
@@ -446,13 +447,13 @@ void TTelesa::calcRootMatrix()
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
 		        0x187, mMActor->getModel()->getAnmMtx(4), 1, this)) {
-			emitter->unk180.a = mTelesaFadeColor.a;
+			emitter->setGlobalAlpha(mTelesaFadeColor.a);
 		}
 
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
 		        0x188, mMActor->getModel()->getAnmMtx(4), 1, this)) {
-			emitter->unk180.a = mTelesaFadeColor.a;
+			emitter->setGlobalAlpha(mTelesaFadeColor.a);
 		}
 	}
 
@@ -1108,7 +1109,8 @@ DEFINE_NERVE(TNerveTelesaDie, TLiveActor)
 		}
 
 		if (self->getUnk184()) {
-			gpMarioParticleManager->emit(0xCD, &self->mPosition, 0, nullptr);
+			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
+			                             &self->mPosition, 0, nullptr);
 		} else {
 			self->setBckAnm(2);
 		}
@@ -1256,8 +1258,8 @@ DEFINE_NERVE(TNerveKageMarioModokiWait, TLiveActor)
 	if (!self->checkLiveFlag(LIVE_FLAG_DEAD) && self->isFindMario(1.0f)) {
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToPosPtr(
-		        0xCD, &self->mPosition, 0, nullptr)) {
-			emitter->setScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
+		        PARTICLE_MS_TLS_CHANGE, &self->mPosition, 0, nullptr)) {
+			emitter->setGlobalScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
 		}
 
 		self->onLiveFlag(LIVE_FLAG_DEAD);

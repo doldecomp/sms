@@ -32,7 +32,9 @@ public:
 	/* 0x24 */ JGeometry::TVec3<f32> unk24;
 	/* 0x30 */ JGeometry::TVec3<f32> unk30;
 	/* 0x3C */ JGeometry::TVec3<f32> unk3C;
-	/* 0x48 */ Mtx33 unk48;
+	/* 0x48 */ JGeometry::TVec3<f32> mEmitterAxisX;
+	/* 0x54 */ JGeometry::TVec3<f32> mEmitterAxisY;
+	/* 0x60 */ JGeometry::TVec3<f32> mEmitterAxisZ;
 	/* 0x6C */ TPosition3f unk6C;
 	/* 0x9C */ TPosition3f unk9C;
 	/* 0xCC */ TPosition3f unkCC;
@@ -122,10 +124,44 @@ public:
 	{
 		return &mChildParticleList;
 	}
+
 	void getGlobalParticleScale(JGeometry::TVec3<f32>& out) const
 	{
-		out.set(unk174);
+		out.set(mGlobalParticleScale);
 	}
+	void setGlobalParticleScale(const JGeometry::TVec3<f32>& scale)
+	{
+		mGlobalParticleScale.set(scale);
+	}
+
+	JGeometry::TVec3<f32>& getGlobalDynamicsScale()
+	{
+		return mGlobalDynamicsScale;
+	}
+	void setGlobalDynamicsScale(const JGeometry::TVec3<f32>& scale)
+	{
+		mGlobalDynamicsScale.set(scale);
+	}
+
+	void setGlobalScale(const JGeometry::TVec3<f32>& scale)
+	{
+		mGlobalDynamicsScale.set(scale);
+		mGlobalParticleScale.set(scale);
+	}
+
+	JGeometry::TVec3<f32>& getGlobalTranslation() { return mGlobalTranslation; }
+	void setGlobalTranslation(f32 x, f32 y, f32 z)
+	{
+		mGlobalTranslation.set(x, y, z);
+	}
+	void setGlobalTranslation(const JGeometry::TVec3<f32>& trans)
+	{
+		mGlobalTranslation.set(trans);
+	}
+
+	f32 getRate() const { return mChildSpawnRate; }
+	void setRate(f32 rate) { mChildSpawnRate = rate; }
+
 	f32 getRandomF() { return mRng.get_ufloat_1(); }
 	f32 getRandomRF() { return mRng.get_ufloat_1() * 2.0f - 1.0f; }
 	f32 getRandomSF() { return mRng.get_ufloat_1() - 0.5f; }
@@ -142,13 +178,6 @@ public:
 	JPAFieldManager* getFieldManager() { return &mFieldManager; }
 	bool doParticleCreateChildren() { return mParticlesCreateChildren; }
 
-	// fabricated
-	void setScale(const JGeometry::TVec3<f32>& scale)
-	{
-		unk154.set(scale);
-		unk174.set(scale);
-	}
-
 	void setUnk190(f32 x, f32 y, f32 z) { mScale.set(x, y, z); }
 
 	// fabricated
@@ -162,7 +191,7 @@ public:
 		unk16C.x = x;
 		unk16C.y = y;
 		unk16C.z = z;
-		JPAGetXYZRotateMtx(unk16C.x, unk16C.y, unk16C.z, unk124);
+		JPAGetXYZRotateMtx(unk16C.x, unk16C.y, unk16C.z, mGlobalRotation);
 	}
 
 	void setRotation(const JGeometry::TVec3<f32>& rot)
@@ -170,21 +199,24 @@ public:
 		setRotation(rot.x, rot.y, rot.z);
 	}
 
-	void setParamColor(u8 r, u8 g, u8 b)
+	void setGlobalAlpha(u8 alpha) { mGlobalPrmColor.a = alpha; }
+	u8 getGlobalAlpha() const { return mGlobalPrmColor.a; }
+
+	void setGlobalPrmColor(u8 r, u8 g, u8 b)
 	{
-		unk180.r = r;
-		unk180.g = g;
-		unk180.b = b;
+		mGlobalPrmColor.r = r;
+		mGlobalPrmColor.g = g;
+		mGlobalPrmColor.b = b;
 	}
 
-	void setEnviColor(u8 r, u8 g, u8 b)
+	void setGlobalEnvColor(u8 r, u8 g, u8 b)
 	{
 		unk184.r = r;
 		unk184.g = g;
 		unk184.b = b;
 	}
 
-	u8 getAlpha() const { return unk180.a; }
+	void setLifeTime(s16 lifetime) { mBaseLifetime = lifetime; }
 
 	// Status stuff is taken from TP
 	enum {
@@ -268,15 +300,15 @@ public:
 	/* 0x118 */ JPADataBlockLinkInfo* mEmitterDataBlockInfo;
 	/* 0x11C */ u32 mStatus;
 	/* 0x120 */ void* unk120;
-	/* 0x124 */ TPosition3f unk124;
+	/* 0x124 */ TPosition3f mGlobalRotation;
 
-	/* 0x154 */ JGeometry::TVec3<f32> unk154;
-	/* 0x160 */ JGeometry::TVec3<f32> unk160;
+	/* 0x154 */ JGeometry::TVec3<f32> mGlobalDynamicsScale;
+	/* 0x160 */ JGeometry::TVec3<f32> mGlobalTranslation;
 	/* 0x16C */ JGeometry::TVec3<s16> unk16C;
 	/* 0x172 */ bool mParticlesCreateChildren;
 	/* 0x173 */ u8 unk173;
-	/* 0x174 */ JGeometry::TVec3<f32> unk174;
-	/* 0x180 */ GXColor unk180;
+	/* 0x174 */ JGeometry::TVec3<f32> mGlobalParticleScale;
+	/* 0x180 */ GXColor mGlobalPrmColor;
 	/* 0x184 */ GXColor unk184;
 	/* 0x188 */ u32 mEmitFlags;
 	/* 0x18C */ u32 mKeyAnmTypeMask;

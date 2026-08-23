@@ -6,6 +6,7 @@
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/Strategy.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <MSound/MSound.hpp>
 #include <MarioUtil/RandomUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
@@ -74,7 +75,8 @@ BOOL TLauncher::receiveMessage(THitActor* sender, u32 message)
 
 	if (sender->getActorType() == 0x1000001) {
 		if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-			gpMarioParticleManager->emit(0xE7, &mPosition, 0, nullptr);
+			gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &mPosition, 0,
+			                             nullptr);
 			gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
 			                        0.0f, 0, 0, 4);
 			if (mState == STATE_HITBYWATER)
@@ -339,22 +341,22 @@ void TCommonLauncher::stateDie()
 		MtxPtr mtx = getMActor()->getModel()->getAnmMtx(0);
 
 		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emitAndBindToMtxPtr(0xD0, mtx, 0,
-		                                                  nullptr)) {
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_GENE_DEAD,
+		                                                  mtx, 0, nullptr)) {
 			SMSSetEmitterPolColor(emitter, 6);
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 
 		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emitAndBindToMtxPtr(0xE4, mtx, 0,
-		                                                  nullptr)) {
-			emitter->setScale(mScaling);
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(
+		        PARTICLE_MS_ENM_DISAP_A, mtx, 0, nullptr)) {
+			emitter->setGlobalScale(mScaling);
 		}
 
 		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emitAndBindToMtxPtr(0xE6, mtx, 0,
-		                                                  nullptr)) {
-			emitter->setScale(mScaling);
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(
+		        PARTICLE_MS_ENM_DISAP_B, mtx, 0, nullptr)) {
+			emitter->setGlobalScale(mScaling);
 		}
 
 		kill();
@@ -376,10 +378,10 @@ void TCommonLauncher::perform(u32 cue, JDrama::TGraphics* graphics)
 		MtxPtr mtx = mMActor->getModel()->getAnmMtx(0);
 
 		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emitAndBindToMtxPtr(0x12D, mtx, 1,
-		                                                  this)) {
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_GENE_HIT,
+		                                                  mtx, 1, this)) {
 			SMSSetEmitterPolColor(emitter, 6);
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 	}
 

@@ -39,7 +39,7 @@ void TFileLoadBlock::pushed()
 	startBck("fileloadblock");
 	gpCardLoad->setSelected(unk138);
 	SMSRumbleMgr->start(0x15, sRumbleTime, (float*)nullptr);
-	gpMarioParticleManager->emit(0x6E, &unk144, 0, nullptr);
+	gpMarioParticleManager->emit(MAP_MAP_MS_M_FILEBLOCK, &unk144, 0, nullptr);
 	gpMarioParticleManager->emit(PARTICLE_MS_M_AMIATTACK, &unk144, 0, nullptr);
 	mStateTimer         = 120;
 	unk13C->mStateTimer = 120;

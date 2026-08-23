@@ -388,11 +388,11 @@ void TMapObjWaterSpray::calc()
 	    = gpMarioParticleManager->emit(unk138, &mPosition, 1, this);
 	if (em) {
 		em->setRotation(mRotation.x, mRotation.y, mRotation.z);
-		em->setScale(mScaling);
-		em->mChildSpawnRate = unk13C;
-		em->unk174.set(unk140);
-		em->setParamColor(unk14C.r, unk14C.g, unk14C.b);
-		em->unk180.a = unk14C.a;
+		em->setGlobalScale(mScaling);
+		em->setRate(unk13C);
+		em->setGlobalParticleScale(unk140);
+		em->setGlobalPrmColor(unk14C.r, unk14C.g, unk14C.b);
+		em->setGlobalAlpha(unk14C.a);
 	}
 }
 

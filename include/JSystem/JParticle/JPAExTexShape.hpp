@@ -18,17 +18,17 @@ public:
 	u32 getIndTexMode() { return mIndTexMode; }
 	u8 getIndTextureID() { return mIndTextureID; }
 	u8 getSubTextureID() { return mSubTextureID; }
-	BOOL isEnableSecondTex() { return unk28 & 1; }
+	BOOL isEnableSecondTex() { return mFlags & 1; }
 	u8 getSecondTexIndex() { return mSecondTexIndex; }
 
-public:
+private:
 	/* 0x8 */ Offsets mIndTexMtx;
 	/* 0x20 */ GXIndTexMtxID mIndTexMtxID;
 	/* 0x24 */ u8 mExpScale;
 	/* 0x25 */ u8 mIndTexMode;
 	/* 0x26 */ u8 mIndTextureID;
 	/* 0x27 */ u8 mSubTextureID;
-	/* 0x28 */ u8 unk28;
+	/* 0x28 */ u8 mFlags;
 	/* 0x29 */ u8 mSecondTexIndex;
 };
 

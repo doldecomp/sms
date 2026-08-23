@@ -70,7 +70,7 @@ void THideObjBase::appearObjFromPoint(const JGeometry::TVec3<f32>& point)
 
 void THideObjBase::emitEffect()
 {
-	gpMarioParticleManager->emit(0x57, &mPosition, 0, nullptr);
+	gpMarioParticleManager->emit(MAPOBJ_MS_WATCOIN_HIT, &mPosition, 0, nullptr);
 }
 
 BOOL THideObjBase::receiveMessage(THitActor* sender, u32 message)

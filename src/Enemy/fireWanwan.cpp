@@ -1278,7 +1278,7 @@ void TFireWanwan::emitEffects()
 
 		if (JPABaseEmitter* emitter = SMS_EasyEmitParticle(
 		        PARTICLE_MS_M_SLIPSMOKE, pos, this, mScaling))
-			emitter->unk180.a = 179;
+			emitter->setGlobalAlpha(179);
 	}
 
 	if (isRecovering()) {
@@ -1298,7 +1298,7 @@ void TFireWanwan::emitEffects()
 		local_4c *= 0.22f;
 		if (JPABaseEmitter* emitter = SMS_EasyEmitParticle(
 		        BWANWAN_JPA_MS_BWAN_KIRA, mtx, this, local_4c))
-			emitter->mChildSpawnRate = 0.1f;
+			emitter->setRate(0.1f);
 		local_4c.set(1.5f, 1.5f, 1.5f);
 		SMS_EasyEmitParticle(PARTICLE_MS_NPC_HAMON_B, &mRipplePos, this,
 		                     local_4c);
@@ -1325,11 +1325,11 @@ void TFireWanwan::emitEffectsOnHittingWall(
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtx(
 	        PARTICLE_MS_WALLKICK_A, transform.mMtx, 0, nullptr))
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtx(
 	        PARTICLE_MS_WALLKICK_B, transform.mMtx, 0, nullptr))
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 }
 
 void TFireWanwan::checkHitActors()

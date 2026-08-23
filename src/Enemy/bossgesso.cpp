@@ -167,7 +167,8 @@ BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
 
 		mOwner->gotEyeDamage();
 
-		gpMarioParticleManager->emit(0xE7, &mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &mPosition, 0,
+		                             nullptr);
 		return true;
 	}
 
@@ -301,7 +302,8 @@ BOOL TBGEyeHit::receiveMessage(THitActor* sender, u32 message)
 	if (sender->getActorType() == 0x1000001
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		mOwner->gotEyeDamage();
-		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
+		                             0, nullptr);
 		return true;
 	}
 
@@ -331,7 +333,8 @@ BOOL TBGBodyHit::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->getActorType() == 0x1000001
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
+		                             0, nullptr);
 		return true;
 	}
 
@@ -877,8 +880,10 @@ void TBossGesso::launchPolDrop()
 	mPolDrop->launch(local_14, VStack_20);
 
 	MtxPtr ptr = getModel()->getAnmMtx(27);
-	gpMarioParticleManager->emitAndBindToMtxPtr(0x94, ptr, 0, nullptr);
-	gpMarioParticleManager->emitAndBindToMtxPtr(0x93, ptr, 0, nullptr);
+	gpMarioParticleManager->emitAndBindToMtxPtr(BGESO_JPA_MS_BOGE_CANON_B, ptr,
+	                                            0, nullptr);
+	gpMarioParticleManager->emitAndBindToMtxPtr(BGESO_JPA_MS_BOGE_CANON_A, ptr,
+	                                            0, nullptr);
 
 	unk195 += 1;
 }
@@ -906,7 +911,8 @@ BOOL TBossGesso::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->getActorType() == 0x1000001
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
+		                             0, nullptr);
 		return true;
 	}
 
@@ -1566,9 +1572,9 @@ DEFINE_NERVE(TNerveBGEyeDamage, TLiveActor)
 	}
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    0x139, self->getModel()->getAnmMtx(7), 1, self);
+	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(7), 1, self);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    0x139, self->getModel()->getAnmMtx(4), 1, self);
+	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(4), 1, self);
 
 	if (self->unk1AE == 0) {
 		self->unk1AE = 0x78;
@@ -1616,11 +1622,14 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 
 	if (spine->getTime() == 12) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x97, self->getModel()->getAnmMtx(27), 0, nullptr);
+		    BGESO_JPA_MS_BOGE_HIT_A, self->getModel()->getAnmMtx(27), 0,
+		    nullptr);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x99, self->getModel()->getAnmMtx(27), 0, nullptr);
+		    BGESO_JPA_MS_BOGE_HIT_C, self->getModel()->getAnmMtx(27), 0,
+		    nullptr);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x98, self->getModel()->getAnmMtx(27), 0, nullptr);
+		    BGESO_JPA_MS_BOGE_HIT_B, self->getModel()->getAnmMtx(27), 0,
+		    nullptr);
 	}
 
 	if (spine->getTime() == 18) {
@@ -1645,14 +1654,17 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 		local_28.y = gpMap->checkGround(local_28.x, local_28.y + 500.0f,
 		                                local_28.z, &data);
 
-		gpMarioParticleManager->emit(0x9A, &local_28, 0, nullptr);
+		gpMarioParticleManager->emit(BGESO_JPA_MS_BOGE_HITDOWN, &local_28, 0,
+		                             nullptr);
 	}
 
 	if (spine->getTime() == 40) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x9C, self->getModel()->getAnmMtx(7), 0, nullptr);
+		    BGESO_JPA_MS_BOGE_KIZETSU, self->getModel()->getAnmMtx(7), 0,
+		    nullptr);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x9D, self->getModel()->getAnmMtx(4), 0, nullptr);
+		    BGESO_JPA_MS_BOGE_KIZETSU_R, self->getModel()->getAnmMtx(4), 0,
+		    nullptr);
 	}
 
 	if (self->getMActor()->curAnmEndsNext()) {
@@ -1688,7 +1700,8 @@ DEFINE_NERVE(TNerveBGTentacleDamage, TLiveActor)
 		local_28.y = gpMap->checkGround(local_28.x, local_28.y + 500.0f,
 		                                local_28.z, &data);
 
-		gpMarioParticleManager->emit(0x9A, &local_28, 0, nullptr);
+		gpMarioParticleManager->emit(BGESO_JPA_MS_BOGE_HITDOWN, &local_28, 0,
+		                             nullptr);
 	}
 
 	if (spine->getTime() == 10) {
@@ -1721,11 +1734,11 @@ DEFINE_NERVE(TNerveBGTug, TLiveActor)
 	}
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    0x138, self->getModel()->getAnmMtx(47), 0, nullptr);
+	    BGESO_JPA_MS_BOGE_ASE, self->getModel()->getAnmMtx(47), 0, nullptr);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    0x139, self->getModel()->getAnmMtx(7), 0, nullptr);
+	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(7), 0, nullptr);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    0x139, self->getModel()->getAnmMtx(4), 0, nullptr);
+	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(4), 0, nullptr);
 
 	if (self->mBeak->mHolder != nullptr) {
 		JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
@@ -1889,13 +1902,15 @@ DEFINE_NERVE(TNerveBGPollute, TLiveActor)
 
 	if (spine->getTime() == 90) {
 		gpMarioParticleManager->emitAndBindToSRTMtxPtr(
-		    0xA0, self->getModel()->getAnmMtx(27), 0, nullptr);
+		    BGESO_JPA_MS_BOGE_OSEN, self->getModel()->getAnmMtx(27), 0,
+		    nullptr);
 	}
 
 	if (spine->getTime() == 226) {
 		JGeometry::TVec3<f32> TStack_24;
 		self->getJointTransByIndex(1, &TStack_24);
-		gpMarioParticleManager->emit(0x9B, &TStack_24, 0, nullptr);
+		gpMarioParticleManager->emit(BGESO_JPA_MS_BOGE_JUMP, &TStack_24, 0,
+		                             nullptr);
 		self->unk190.color.a = 230;
 	}
 

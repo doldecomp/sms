@@ -415,12 +415,12 @@ void TSmallEnemy::setAfterDeadEffect()
 {
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 	        PARTICLE_MS_ENM_DISAP_A, &mPosition, 0, nullptr)) {
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 	}
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 	        PARTICLE_MS_ENM_DISAP_B, &mPosition, 0, nullptr)) {
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 	}
 
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_SMOKE, &mPosition, 0,

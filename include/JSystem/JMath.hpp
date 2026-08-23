@@ -22,14 +22,17 @@ public:
 
 	u32 get_bit32() { return get(); }
 
+	// NOTE: TP writes this with a union of an f32 and a u32. The union
+	// spelling lets MWCC prove that the store to the float bits cannot
+	// touch `value`, so back-to-back draws share one load of the seed. The
+	// ROM reloads the seed after every store, which only the address-taken
+	// local reproduces: taking its address makes the store opaque to the
+	// alias analysis and keeps each draw's read separate. Compare
+	// JPABaseEmitter::createChildParticle, which draws four times in a row.
 	f32 get_ufloat_1()
 	{
-		union {
-			f32 f;
-			u32 s;
-		} out;
-		out.s = (get() >> 9) | 0x3f800000;
-		return out.f - 1.0f;
+		u32 s = (get() >> 9) | 0x3f800000;
+		return *(f32*)&s - 1.0f;
 	}
 
 public:

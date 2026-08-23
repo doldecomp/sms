@@ -221,7 +221,8 @@ void TMap::updateMonte()
 	    || gpMarDirector->getCurrentStage() == 3
 	    || gpMarDirector->getCurrentStage() == 5
 	    || gpMarDirector->getCurrentStage() == 7)
-		gpMarioParticleManager->emit(0x156, &gpMapObjManager->unk44, 1, this);
+		gpMarioParticleManager->emit(MAP_MAP_MS_MONTE_YUGE,
+		                             &gpMapObjManager->unk44, 1, this);
 }
 
 static void updateRicco()

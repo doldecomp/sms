@@ -185,15 +185,15 @@ JPABaseEmitter* JPAEmitterManager::createEmitterBase(
 		}
 
 		if (emitter) {
-			emitter->unk173   = param_2;
-			emitter->mManager = this;
-			emitter->unk180.r = 0xff;
-			emitter->unk180.g = 0xff;
-			emitter->unk180.b = 0xff;
-			emitter->unk184.r = 0xff;
-			emitter->unk184.g = 0xff;
-			emitter->unk184.b = 0xff;
-			emitter->unk180.a = 0xff;
+			emitter->unk173            = param_2;
+			emitter->mManager          = this;
+			emitter->mGlobalPrmColor.r = 0xff;
+			emitter->mGlobalPrmColor.g = 0xff;
+			emitter->mGlobalPrmColor.b = 0xff;
+			emitter->unk184.r          = 0xff;
+			emitter->unk184.g          = 0xff;
+			emitter->unk184.b          = 0xff;
+			emitter->mGlobalPrmColor.a = 0xff;
 
 			emitter->mFieldManager.unkC = &unk28;
 
@@ -233,7 +233,7 @@ JPABaseEmitter* JPAEmitterManager::createSimpleEmitterID(
 	    = createEmitterBase(param_2, param_3, param_4, param_5, param_6);
 
 	if (result) {
-		result->unk160.set(param_1);
+		result->mGlobalTranslation.set(param_1);
 		return result;
 	}
 

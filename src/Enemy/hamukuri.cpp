@@ -1013,20 +1013,23 @@ void THamuKuri::setAfterDeadEffect()
 
 	JPABaseEmitter* emitter;
 	if (isBckAnm(1)) {
-		emitter = gpMarioParticleManager->emit(0xE5, &mPosition, 0, nullptr);
+		emitter = gpMarioParticleManager->emit(PARTICLE_MS_ENM_DISAP_A_W,
+		                                       &mPosition, 0, nullptr);
 
 		if (emitter)
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 	} else {
-		emitter = gpMarioParticleManager->emit(0xE4, &mPosition, 0, nullptr);
+		emitter = gpMarioParticleManager->emit(PARTICLE_MS_ENM_DISAP_A,
+		                                       &mPosition, 0, nullptr);
 	}
 
 	if (emitter)
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 
-	emitter = gpMarioParticleManager->emit(0xE6, &mPosition, 0, nullptr);
+	emitter = gpMarioParticleManager->emit(PARTICLE_MS_ENM_DISAP_B, &mPosition,
+	                                       0, nullptr);
 	if (emitter)
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_SMOKE, &mPosition, 0,
 	                                nullptr, 0, 4);
@@ -1060,7 +1063,8 @@ void THamuKuri::setDeadAnm()
 
 	if (unk184) {
 		onLiveFlag(LIVE_FLAG_UNK20000);
-		gpMarioParticleManager->emit(0xE4, &mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_DISAP_A, &mPosition, 0,
+		                             nullptr);
 	} else {
 		if (isBckAnm(3))
 			setBckAnm(10);
@@ -1753,7 +1757,8 @@ BOOL TDangoHamuKuri::receiveMessage(THitActor* sender, u32 message)
 	}
 
 	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		gpMarioParticleManager->emit(0xE7, &mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &mPosition, 0,
+		                             nullptr);
 		gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0.0f,
 		                        0.0f, 0, 0, 4);
 		if (mSprayedByWaterCooldown == 0) {
@@ -2022,8 +2027,9 @@ void TFireHamuKuri::behaveToWater(THitActor* param_1)
 			                                0, nullptr, 0, 4);
 			if (JPABaseEmitter* emitter
 			    = gpMarioParticleManager->emitAndBindToMtxPtr(
-			        0x8B, mMActor->getModel()->getAnmMtx(unk1AC), 0, nullptr)) {
-				emitter->setScale(mScaling);
+			        PARTICLE_MS_MOE_FIRE_OFF,
+			        mMActor->getModel()->getAnmMtx(unk1AC), 0, nullptr)) {
+				emitter->setGlobalScale(mScaling);
 			}
 		}
 		mSprayedByWaterCooldown = 20;
@@ -2066,23 +2072,27 @@ void TFireHamuKuri::calcRootMatrix()
 	if (unk210 && !checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        0x1ED, mMActor->getModel()->getAnmMtx(unk1AC), 3, this)) {
-			emitter->setScale(mScaling);
+		        PARTICLE_MS_MOE_FIRE_C, mMActor->getModel()->getAnmMtx(unk1AC),
+		        3, this)) {
+			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        0x135, mMActor->getModel()->getAnmMtx(unk1AC), 1, this)) {
-			emitter->setScale(mScaling);
+		        PARTICLE_MS_MOE_FIRE_A, mMActor->getModel()->getAnmMtx(unk1AC),
+		        1, this)) {
+			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        0x136, mMActor->getModel()->getAnmMtx(unk1AC), 1, this)) {
-			emitter->setScale(mScaling);
+		        PARTICLE_MS_MOE_FIRE_B, mMActor->getModel()->getAnmMtx(unk1AC),
+		        1, this)) {
+			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        0x137, mMActor->getModel()->getAnmMtx(unk1AC), 1, this)) {
-			emitter->setScale(mScaling);
+		        PARTICLE_MS_MOE_FIRE_D, mMActor->getModel()->getAnmMtx(unk1AC),
+		        1, this)) {
+			emitter->setGlobalScale(mScaling);
 		}
 	}
 }
@@ -2402,7 +2412,7 @@ DEFINE_NERVE(TNerveHamuKuriWallDie, TLiveActor)
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emitWithRotate(
 		        PARTICLE_MS_ENM_WALLHIT, &local_34, 0,
 		        DEG2SHORTANGLE(self->mRotation.y), 0, 0, nullptr)) {
-			emitter->setScale(self->mScaling);
+			emitter->setGlobalScale(self->mScaling);
 		}
 
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emitWithRotate(

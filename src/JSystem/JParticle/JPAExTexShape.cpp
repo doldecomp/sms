@@ -27,6 +27,6 @@ JPAExTexShape::JPAExTexShape(const u8* data)
 	mExpScale       = data[0x1E];
 	mIndTextureID   = data[0x1F];
 	mSubTextureID   = data[0x20];
-	unk28           = data[0x30];
+	mFlags          = data[0x30];
 	mSecondTexIndex = data[0x33];
 }

@@ -673,8 +673,8 @@ void TKumokun::calcRootMatrix()
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
 		        PARTICLE_MS_KIL_SMOKE, getModel()->getBaseTRMtx(), 1, this)) {
-			emitter->setScale(JGeometry::TVec3<f32>(1.5f));
-			emitter->unk180.a = 128;
+			emitter->setGlobalScale(JGeometry::TVec3<f32>(1.5f));
+			emitter->setGlobalAlpha(128);
 		}
 	}
 }

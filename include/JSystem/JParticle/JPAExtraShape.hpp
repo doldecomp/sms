@@ -4,6 +4,12 @@
 #include <JSystem/JParticle/JPADataBlock.hpp>
 #include <dolphin/gx/GXStruct.h>
 
+enum {
+	JPAAlphaWaveType_Nrm,
+	JPAAlphaWaveType_Add,
+	JPAAlphaWaveType_Mult,
+};
+
 class JPAExtraShape : public JPADataBlock {
 public:
 	JPAExtraShape(const u8*);
@@ -13,6 +19,7 @@ public:
 	BOOL isEnableAlpha() { return unk78 & 0x1; }
 	BOOL isEnableRotate() { return unk7F; }
 	BOOL isEnableSinWave() { return unk78 & 0x2; }
+	u8 getAlphaWaveType() { return unk79; }
 
 	BOOL isEnableScaleAnmX() { return unk7E & 0x8; }
 	BOOL isEnableScaleAnmY() { return unk7E & 0x4; }
@@ -60,7 +67,7 @@ public:
 	u8 getPivotX() { return unk7C; }
 	u8 getPivotY() { return unk7A; }
 
-public:
+private:
 	/* 0x8 */ f32 mAlphaInTiming;
 	/* 0xC */ f32 mAlphaOutTiming;
 	/* 0x10 */ f32 mAlphaInValue;

@@ -2,6 +2,7 @@
 #include <Strategic/Spine.hpp>
 #include <System/MarDirector.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <MarioUtil/MapUtil.hpp>
 #include <MarioUtil/MtxUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
@@ -347,7 +348,8 @@ void TBaseNPC::behaveToHitObject_(THitActor* param_1,
 		if (gpMarDirector->isTalkOrDemoModeNow())
 			return;
 
-		gpMarioParticleManager->emit(0xE7, &mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &mPosition, 0,
+		                             nullptr);
 		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
 		                              0.0f, 0, 0, 4);
 		if (SMSGetMSound()->gateCheck(MSD_SE_NPC_FIRE_FIGHTING))

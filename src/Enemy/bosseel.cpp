@@ -484,7 +484,7 @@ void TBEelTears::deadEffect()
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
 	    BOSSEELTEARS_MS_MEO_TEAR_BOMB, &mPosition, 0, nullptr);
 	if (emitter)
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 
 	mRecoverCollision->mColliding = false;
 	mRecoverCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
@@ -568,7 +568,7 @@ DEFINE_NERVE(TNerveBEelTearsMarioRecover, TLiveActor)
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
 		    BOSSEELTEARS_MS_MEO_TEAR_AWAGET, gpMarioPos, 0, nullptr);
 		if (emitter)
-			emitter->setScale(tears->mScaling);
+			emitter->setGlobalScale(tears->mScaling);
 		tears->kill();
 		return true;
 	}
@@ -576,7 +576,7 @@ DEFINE_NERVE(TNerveBEelTearsMarioRecover, TLiveActor)
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
 	    BOSSEELTEARS_MS_MEO_TEAR_AWA, &tears->mPosition, 1, tears);
 	if (emitter)
-		emitter->setScale(tears->mScaling);
+		emitter->setGlobalScale(tears->mScaling);
 
 	if (spine->getTime() > 1000) {
 		tears->kill();
@@ -835,7 +835,7 @@ BOOL TBossEelTooth::receiveMessage(THitActor* sender, u32 message)
 					JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 					    BOSSEEL_JPA_MS_MEO_AWA_TOOTH, &mPosition, 0, nullptr);
 					if (emitter)
-						emitter->setScale(mOwner->mScaling);
+						emitter->setGlobalScale(mOwner->mScaling);
 				} else {
 					SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEATH_FLASH,
 					                                &mPosition, 0, nullptr, 0,
@@ -934,7 +934,7 @@ void TBossEelTooth::perform(u32 cue, JDrama::TGraphics* graphics)
 			    = gpMarioParticleManager->emitAndBindToPosPtr(
 			        BOSSEEL_JPA_MS_MEO_TOOTH_ALWAYS, &mPosition, 1, this);
 			if (emitter)
-				emitter->setScale(mOwner->mScaling);
+				emitter->setGlobalScale(mOwner->mScaling);
 		}
 		if (mSharedParts->getMActor()->checkCurBckFromIndex(22)
 		    && mSharedParts->getMActor()->getFrameCtrl(0)->getRate() > 0.0f) {
@@ -942,14 +942,14 @@ void TBossEelTooth::perform(u32 cue, JDrama::TGraphics* graphics)
 			    = gpMarioParticleManager->emitAndBindToPosPtr(
 			        BOSSEEL_JPA_MS_MEO_TOOTH_WASH, &mPosition, 1, this);
 			if (emitter)
-				emitter->setScale(mOwner->mScaling);
+				emitter->setGlobalScale(mOwner->mScaling);
 		}
 		if ((mToothType == 0 || mToothType == 2) && mHitPoints == 1) {
 			JPABaseEmitter* emitter
 			    = gpMarioParticleManager->emitAndBindToPosPtr(
 			        BOSSEEL_JPA_MS_MEO_TOOTH_KIRA, &mPosition, 1, this);
 			if (emitter)
-				emitter->setScale(mOwner->mScaling);
+				emitter->setGlobalScale(mOwner->mScaling);
 		}
 
 		TPosition3f transform(0, 0, unk78.x);
@@ -1094,7 +1094,7 @@ void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
 		    BOSSEEL_JPA_MS_MEO_EYEBLUR, &mBlurPosition, 1, this);
 		if (emitter)
-			emitter->setScale(owner->mScaling);
+			emitter->setGlobalScale(owner->mScaling);
 
 		Mtx eyeMtx;
 		MTXCopy(getConnectedMtx(), eyeMtx);
@@ -1842,7 +1842,7 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 				    BOSSEEL_JPA_MS_MEO_SPIN_SMOKE_L, &mBreathParticlePosition,
 				    1, this);
 			if (emitter)
-				emitter->setScale(mScaling);
+				emitter->setGlobalScale(mScaling);
 
 			if (checkLiveFlag(LIVE_FLAG_UNK10000))
 				emitter = gpMarioParticleManager->emit(
@@ -1853,7 +1853,7 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 				    BOSSEEL_JPA_MS_MEO_SPIN_AWA_L, &mBreathParticlePosition, 1,
 				    this);
 			if (emitter)
-				emitter->setScale(mScaling);
+				emitter->setGlobalScale(mScaling);
 		}
 
 		if (mMActor->checkCurBckFromIndex(15)) {
@@ -1867,14 +1867,14 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 				        BOSSEEL_JPA_MS_MEO_AWA_MOUTH, &mBreathParticlePosition,
 				        0, nullptr);
 				if (emitter)
-					emitter->setScale(mScaling);
+					emitter->setGlobalScale(mScaling);
 			}
 			if (frameCtrl->getFrame() < 40.0f) {
 				JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				    BOSSEEL_JPA_MS_MEO_AWA_BODY, &mBreathParticlePosition, 1,
 				    this);
 				if (emitter)
-					emitter->setScale(mScaling);
+					emitter->setGlobalScale(mScaling);
 			}
 		}
 
@@ -1891,7 +1891,7 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 			        this);
 			if (emitter) {
 				JGeometry::TVec3<f32> scale(3.0f, 3.0f, 3.0f);
-				emitter->setScale(scale);
+				emitter->setGlobalScale(scale);
 			}
 		}
 	}
@@ -2256,7 +2256,7 @@ DEFINE_NERVE(TNerveBossEelEat, TLiveActor)
 				        BOSSEEL_JPA_MS_MEO_AWA_MOUTH,
 				        &eel->mBreathParticlePosition, 0, nullptr);
 				if (emitter)
-					emitter->setScale(eel->mScaling);
+					emitter->setGlobalScale(eel->mScaling);
 			}
 		} else if (eel->mMActor->checkCurBckFromIndex(12)) {
 			if (SMS_SendMessageToMario(eel, 8)) {
