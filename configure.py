@@ -1006,7 +1006,7 @@ config.libs = [
         "objects": [
             Object(NonMatching, "MoveBG/WoodBarrel.cpp"),
             Object(NonMatching, "MoveBG/MapObjBase.cpp"),
-            Object(NonMatching, "MoveBG/MapObjInit.cpp"),
+            PCHObject(NonMatching, "MoveBG/MapObjInit.cpp"),
             Object(NonMatching, "MoveBG/MapObjGeneral.cpp"),
             Object(NonMatching, "MoveBG/MapObjManager.cpp"),
             Object(NonMatching, "MoveBG/MapObjLib.cpp"),
