@@ -16,6 +16,7 @@ class TExPane;
 class JPABaseEmitter;
 class J2DPicture;
 class J2DPane;
+class J2DWindow;
 class J2DTextBox;
 class TMessageLoader;
 class TConsoleStr;
@@ -204,7 +205,7 @@ public:
 	/* 0x39C */ TBoundPane* unk39C[3];
 	/* 0x3A8 */ TExPane* unk3A8;
 	/* 0x3AC */ char unk3AC[0x4];
-	/* 0x3B0 */ J2DPane* unk3B0;
+	/* 0x3B0 */ J2DWindow* unk3B0;
 	/* 0x3B4 */ J2DTextBox* unk3B4;
 	/* 0x3B8 */ J2DTextBox* unk3B8;
 	/* 0x3BC */ JUTRect unk3BC;

@@ -27,6 +27,7 @@
 #include <JSystem/J2D/J2DPrint.hpp>
 #include <JSystem/J2D/J2DOrthoGraph.hpp>
 #include <JSystem/J2D/J2DScreen.hpp>
+#include <JSystem/J2D/J2DWindow.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/JParticle/JPAEmitterManager.hpp>
 #include <JSystem/JUtility/JUTResFont.hpp>
@@ -144,25 +145,8 @@ static inline void drawBoundPictureWithTextureSize(TBoundPane* pane)
 	                           picture->mBounds.y1);
 }
 
-class TBossEel {
-public:
-	bool isInBossEelMoguDemo();
-};
-
 extern JPAEmitterManager* gpEmitterManager4D2;
 bool SMS_isDivingMap();
-
-// fabricated
-static inline JUTRect& getWindowContentsRect(J2DPane* pane)
-{
-	return *(JUTRect*)((u8*)pane + 0xEC);
-}
-
-// fabricated
-static inline bool isBossPakkunCameraDemo(void* boss)
-{
-	return *(u8*)((u8*)boss + 0x29A) != 0;
-}
 
 // fabricated
 static inline void setPictureColor(J2DPane* pane, u32 white, u32 black)
@@ -184,20 +168,6 @@ static inline void setupLifeSegments(TGCConsole2* console, int firstIndex,
 		else
 			pane->hide();
 	}
-}
-
-// fabricated
-static inline void drawDetachedPane(J2DPane* pane, J2DOrthoGraph& graph)
-{
-	if (pane != nullptr && pane->isVisible())
-		pane->draw(0, 0, &graph, true);
-}
-
-// fabricated
-static inline void drawDetachedBoundPane(TBoundPane* pane, J2DOrthoGraph& graph)
-{
-	if (pane != nullptr)
-		drawDetachedPane(pane->getPane(), graph);
 }
 
 // fabricated
@@ -1593,7 +1563,7 @@ static inline bool updateBalloonDisappearState(TGCConsole2* console)
 	console->unk3F0 = 0;
 	console->unk3B0->hide();
 	console->unk3B0->resize(0, console->unk3BC.getHeight());
-	JUTRect contents(getWindowContentsRect(console->unk3B0));
+	JUTRect contents(console->unk3B0->getContentsBounds());
 	console->unk3B0->add(0, -contents.getHeight());
 
 	if (nextMessage != 0xffffffff)
@@ -1875,7 +1845,7 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 	for (int i = 0; i < 3; ++i)
 		unk39C[i] = new TBoundPane(unkB0, 'm_n1' + i);
 
-	unk3B0 = unkB0->search('he_w');
+	unk3B0 = (J2DWindow*)unkB0->search('he_w');
 	unk3B8 = (J2DTextBox*)unkB0->search('he_2');
 	unk3B4 = (J2DTextBox*)unkB0->search('he_1');
 
@@ -2502,11 +2472,11 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 		return false;
 
 	unk3F0        = entry->unk4;
-	J2DPane* pane = unk3B0;
+	J2DWindow* pane = unk3B0;
 	pane->mAlpha  = 0;
 	pane->show();
 
-	JUTRect contents(getWindowContentsRect(pane));
+	JUTRect contents(pane->getContentsBounds());
 	int contentHeight = contents.getHeight();
 	pane->resize(unk3BC.getWidth(), unk3BC.getHeight() - contentHeight);
 	pane->add(0, contentHeight);
@@ -3622,7 +3592,7 @@ inline bool TGCConsole2::processDisappearBalloon()
 	JUTRect bounds(unk3B0->mBounds);
 	int height = bounds.getHeight();
 
-	JUTRect contents(getWindowContentsRect(unk3B0));
+	JUTRect contents(unk3B0->getContentsBounds());
 	int contentHeight = contents.getHeight();
 
 	if (contentHeight > 0) {
