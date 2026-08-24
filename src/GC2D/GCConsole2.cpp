@@ -50,20 +50,21 @@ JUTPoint TGCConsole2::cCoinTopPoint(0, 0);
 JUTPoint TGCConsole2::cCoinMidPoint(0, 45);
 JUTPoint TGCConsole2::cCoinBotPoint(0, 0);
 
-// Fabricated inlines to help bring panes off-screen
-
+// fabricated
 static int getOffsetForBelowScreen(TExPane* pane)
 {
 	// setPaneOffset moves this to y1 = 465
 	return 465 - pane->mInitialBounds.y1;
 }
 
+// fabricated
 static int getOffsetForAboveScreen(TExPane* pane)
 {
 	// setPaneOffset moves this to y2 = -1
 	return -(pane->mInitialBounds.y2 + 1);
 }
 
+// fabricated
 static inline void setupConsoleGaugeGX(Mtx mtx, int texGenCount)
 {
 	MTXIdentity(mtx);
@@ -83,6 +84,7 @@ static inline void setupConsoleGaugeGX(Mtx mtx, int texGenCount)
 	              GX_DF_NONE, GX_AF_NONE);
 }
 
+// fabricated
 static inline void setupConsoleGaugeTevStage0()
 {
 	GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C0, GX_CC_C1, GX_CC_TEXC, GX_CC_ZERO);
@@ -93,6 +95,7 @@ static inline void setupConsoleGaugeTevStage0()
 	                GX_TRUE, GX_TEVPREV);
 }
 
+// fabricated
 static inline void setupConsoleGaugeTevStage1()
 {
 	GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_CPREV, GX_CC_ZERO, GX_CC_ZERO,
@@ -105,12 +108,14 @@ static inline void setupConsoleGaugeTevStage1()
 	                GX_TRUE, GX_TEVPREV);
 }
 
+// fabricated
 static inline void loadPictureTexture(J2DPicture* picture, GXTexMapID map)
 {
 	if (picture->mTextureNum > 0)
 		picture->mTextures[0]->load(map);
 }
 
+// fabricated
 static inline void drawGaugeQuad(const JUTRect& rect, int top, int bottom)
 {
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
@@ -124,12 +129,14 @@ static inline void drawGaugeQuad(const JUTRect& rect, int top, int bottom)
 	GXTexCoord2s8(0, 1);
 }
 
+// fabricated
 static inline void drawPictureWithTextureSize(J2DPicture* picture, int x, int y)
 {
 	JUTTexture* texture = picture->mTextures[0];
 	picture->draw(x, y, texture->mWidth, texture->mHeight, false, false, false);
 }
 
+// fabricated
 static inline void drawBoundPictureWithTextureSize(TBoundPane* pane)
 {
 	J2DPicture* picture = (J2DPicture*)pane->getPane();
@@ -145,22 +152,26 @@ public:
 extern JPAEmitterManager* gpEmitterManager4D2;
 bool SMS_isDivingMap();
 
+// fabricated
 static inline JUTRect& getWindowContentsRect(J2DPane* pane)
 {
 	return *(JUTRect*)((u8*)pane + 0xEC);
 }
 
+// fabricated
 static inline bool isBossPakkunCameraDemo(void* boss)
 {
 	return *(u8*)((u8*)boss + 0x29A) != 0;
 }
 
+// fabricated
 static inline void setPictureColor(J2DPane* pane, u32 white, u32 black)
 {
 	((J2DPicture*)pane)->mWhite = white;
 	((J2DPicture*)pane)->mBlack = black;
 }
 
+// fabricated
 static inline void setupLifeSegments(TGCConsole2* console, int firstIndex,
                                      int count, int value, u32 white, u32 black)
 {
@@ -175,18 +186,21 @@ static inline void setupLifeSegments(TGCConsole2* console, int firstIndex,
 	}
 }
 
+// fabricated
 static inline void drawDetachedPane(J2DPane* pane, J2DOrthoGraph& graph)
 {
 	if (pane != nullptr && pane->isVisible())
 		pane->draw(0, 0, &graph, true);
 }
 
+// fabricated
 static inline void drawDetachedBoundPane(TBoundPane* pane, J2DOrthoGraph& graph)
 {
 	if (pane != nullptr)
 		drawDetachedPane(pane->getPane(), graph);
 }
 
+// fabricated
 static inline void setEmitterToPaneCenter(JPABaseEmitter* emitter,
                                           J2DPane* pane)
 {
@@ -196,17 +210,20 @@ static inline void setEmitterToPaneCenter(JPABaseEmitter* emitter,
 	emitter->mGlobalTranslation.z = 0.0f;
 }
 
+// fabricated
 static inline void syncPaneBounds(TBoundPane* pane)
 {
 	pane->unk4 = pane->getPane()->mBounds;
 }
 
+// fabricated
 static inline void moveBoundPaneTo(TBoundPane* pane, int x, int y)
 {
 	pane->getPane()->move(x, y);
 	syncPaneBounds(pane);
 }
 
+// fabricated
 static inline void detachPaneFromParent(J2DPane* pane)
 {
 	JSUTree<J2DPane>* tree   = (JSUTree<J2DPane>*)pane->getPaneTree();
@@ -216,6 +233,7 @@ static inline void detachPaneFromParent(J2DPane* pane)
 		parent->removeChild(tree);
 }
 
+// fabricated
 static inline void setupConsoleGaugeGXFloatTex(Mtx mtx)
 {
 	MTXIdentity(mtx);
@@ -235,6 +253,7 @@ static inline void setupConsoleGaugeGXFloatTex(Mtx mtx)
 	              GX_DF_NONE, GX_AF_NONE);
 }
 
+// fabricated
 static inline void drawGaugeQuadF32(const JUTRect& rect, int top, int bottom,
                                     f32 topTex, f32 bottomTex)
 {
@@ -249,6 +268,7 @@ static inline void drawGaugeQuadF32(const JUTRect& rect, int top, int bottom,
 	GXTexCoord2f32(0.0f, bottomTex);
 }
 
+// fabricated
 static inline u32 getPressureFlashColor(u8 frame)
 {
 	u32 color = 0xff3f3f00;
@@ -267,17 +287,20 @@ static inline u32 getPressureFlashColor(u8 frame)
 	return color;
 }
 
+// fabricated
 static inline bool isMountedYoshi(TMario* mario)
 {
 	TYoshi* yoshi = mario->mYoshi;
 	return yoshi != nullptr && yoshi->mState == TYoshi::STATE_MOUNTED;
 }
 
+// fabricated
 static inline bool isConsoleDemoCameraActive()
 {
 	return gpCamera->isSimpleDemoCamera() || gpCamera->mMode == 0x49;
 }
 
+// fabricated
 static inline void setCurrentNozzlePanes(TGCConsole2* console, u8 nozzle)
 {
 	console->unk274->getPane()->hide();
@@ -306,6 +329,7 @@ static inline void setCurrentNozzlePanes(TGCConsole2* console, u8 nozzle)
 	console->unk288->show();
 }
 
+// fabricated
 static inline void updateWaterGaugeFill(TGCConsole2* console)
 {
 	TMario* mario       = gpMarioOriginal;
@@ -343,6 +367,7 @@ static inline void updateWaterGaugeFill(TGCConsole2* console)
 	console->unk28 = currentWater;
 }
 
+// fabricated
 static inline void updateYoshiJuiceIconState(TGCConsole2* console)
 {
 	if (isMountedYoshi(gpMarioOriginal)) {
@@ -372,6 +397,7 @@ static inline void updateYoshiJuiceIconState(TGCConsole2* console)
 	}
 }
 
+// fabricated
 static inline void playHudMoveSound(u32 soundID)
 {
 	if (gpMarDirector->unk124 != 0)
@@ -384,12 +410,14 @@ static inline void playHudMoveSound(u32 soundID)
 		MSoundSESystem::MSoundSE::startSoundSystemSE(soundID, 0, nullptr, 0);
 }
 
+// fabricated
 static inline void writeBalloonTextByte(TGCConsole2* console, u8 value)
 {
 	console->unk3D8->write(&value, 1);
 	console->unk3DC->write(&value, 1);
 }
 
+// fabricated
 static inline void writeBalloonColor(TGCConsole2* console, const char* text,
                                      int length)
 {
@@ -397,6 +425,7 @@ static inline void writeBalloonColor(TGCConsole2* console, const char* text,
 	console->unk3DC->write(text, length);
 }
 
+// fabricated
 static inline void processBalloonTextStep(TGCConsole2* console)
 {
 	JSUMemoryInputStream* input   = (JSUMemoryInputStream*)console->unk3D4;
@@ -492,6 +521,7 @@ static inline void processBalloonTextStep(TGCConsole2* console)
 	}
 }
 
+// fabricated
 static inline bool startLifeMeterDisappear(TGCConsole2* console, u16 frame)
 {
 	if (console->unk34[4] || console->unk34[24])
@@ -507,6 +537,7 @@ static inline bool startLifeMeterDisappear(TGCConsole2* console, u16 frame)
 	return true;
 }
 
+// fabricated
 static inline void updateLifeMeterColors(TGCConsole2* console, bool airMode)
 {
 	if (console->unk1CC[0] >= 4) {
@@ -528,6 +559,7 @@ static inline void updateLifeMeterColors(TGCConsole2* console, bool airMode)
 	}
 }
 
+// fabricated
 static inline void playLifeChangeSound(u32 sound)
 {
 	if (gpMarDirector->mState == TMarDirector::STATE_UNK4
@@ -536,6 +568,7 @@ static inline void playLifeChangeSound(u32 sound)
 	}
 }
 
+// fabricated
 static inline void updateLifeSegmentCount(TGCConsole2* console, u8 amount,
                                           bool airMode)
 {
@@ -560,6 +593,7 @@ static inline void updateLifeSegmentCount(TGCConsole2* console, u8 amount,
 	}
 }
 
+// fabricated
 static inline void updateLifeMeterState(TGCConsole2* console)
 {
 	TMario* mario = gpMarioOriginal;
@@ -736,11 +770,13 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 	updateLifeSegmentCount(console, amount, airMode);
 }
 
+// fabricated
 static inline void detachBoundPaneFromParent(TBoundPane* pane)
 {
 	detachPaneFromParent(pane->getPane());
 }
 
+// fabricated
 static inline void initHiddenPaneAbove(TExPane* pane)
 {
 	int offset = getOffsetForAboveScreen(pane);
@@ -749,6 +785,7 @@ static inline void initHiddenPaneAbove(TExPane* pane)
 	pane->getPane()->hide();
 }
 
+// fabricated
 static inline void initHiddenPaneOffset(TExPane* pane, int offset)
 {
 	pane->setPaneOffset(1, 0, offset, 0, offset);
@@ -756,6 +793,7 @@ static inline void initHiddenPaneOffset(TExPane* pane, int offset)
 	pane->getPane()->hide();
 }
 
+// fabricated
 static inline int clampRange(int value, int minValue, int maxValue)
 {
 	if (value < minValue)
@@ -765,6 +803,7 @@ static inline int clampRange(int value, int minValue, int maxValue)
 	return value;
 }
 
+// fabricated
 template <class Pane>
 static inline void setDigitPane(Pane* pane, JUTTexture** textures, int digit)
 {
@@ -772,6 +811,7 @@ static inline void setDigitPane(Pane* pane, JUTTexture** textures, int digit)
 	    ->changeTexture(textures[digit]->getTexInfo(), 0);
 }
 
+// fabricated
 template <class Pane>
 static inline void setThreeDigits(Pane** panes, JUTTexture** textures,
                                   int value, bool showHundreds)
@@ -790,6 +830,7 @@ static inline void setThreeDigits(Pane** panes, JUTTexture** textures,
 		panes[0]->getPane()->hide();
 }
 
+// fabricated
 static inline void setTwoDigits(TBoundPane** panes, JUTTexture** textures,
                                 int value)
 {
@@ -797,6 +838,7 @@ static inline void setTwoDigits(TBoundPane** panes, JUTTexture** textures,
 	setDigitPane(panes[1], textures, value % 10);
 }
 
+// fabricated
 static inline void updateMarioLifeCounter(TGCConsole2* console)
 {
 	int lives = TFlagManager::smInstance->getFlag(0x20001);
@@ -809,6 +851,7 @@ static inline void updateMarioLifeCounter(TGCConsole2* console)
 	}
 }
 
+// fabricated
 template <class Pane>
 static inline void setCounterDigits(Pane** panes, JUTTexture** textures,
                                     int value)
@@ -827,6 +870,7 @@ static inline void setCounterDigits(Pane** panes, JUTTexture** textures,
 	}
 }
 
+// fabricated
 static inline int getSpentBlueCoinCount()
 {
 	int count = 0;
@@ -841,6 +885,7 @@ static inline int getSpentBlueCoinCount()
 	return count;
 }
 
+// fabricated
 static inline void emitCounterParticle(TBoundPane* pane)
 {
 	JUTRect bounds(pane->getPane()->mGlobalBounds);
@@ -850,6 +895,7 @@ static inline void emitCounterParticle(TBoundPane* pane)
 	gpEmitterManager4D2->createEmitter(position, 0x1FC, nullptr, nullptr);
 }
 
+// fabricated
 static inline void setBlendDigit(TBlendPane* pane, JUTTexture** textures,
                                  int digit)
 {
@@ -860,6 +906,7 @@ static inline void setBlendDigit(TBlendPane* pane, JUTTexture** textures,
 	gpEmitterManager4D2->createEmitter(position, 0x1FC, nullptr, nullptr);
 }
 
+// fabricated
 static inline void updateRedCoinCounter(TGCConsole2* console)
 {
 	int redCoins = TFlagManager::smInstance->getFlag(0x60000);
@@ -878,6 +925,7 @@ static inline void updateRedCoinCounter(TGCConsole2* console)
 	}
 }
 
+// fabricated
 static inline void updateCoinCounterAnimation(TGCConsole2* console)
 {
 	if ((s8)console->unk68 <= 0)
@@ -941,6 +989,7 @@ static inline void updateCoinCounterAnimation(TGCConsole2* console)
 	}
 }
 
+// fabricated
 static inline void updateJetCounterAnimation(TGCConsole2* console)
 {
 	int flag   = -1;
@@ -1011,6 +1060,7 @@ static inline void updateJetCounterAnimation(TGCConsole2* console)
 		setDigitPane(console->unk414[1], console->unkE0, ones);
 }
 
+// fabricated
 static inline void updateCounterState(TGCConsole2* console)
 {
 	TFlagManager* flags = TFlagManager::smInstance;
@@ -1133,6 +1183,7 @@ static inline void updateCounterState(TGCConsole2* console)
 	}
 }
 
+// fabricated
 static inline void updateStarHudAutoHide(TGCConsole2* console)
 {
 	if (console->unk34[0])
@@ -1155,6 +1206,7 @@ static inline void updateStarHudAutoHide(TGCConsole2* console)
 	console->unk5A = 0;
 }
 
+// fabricated
 static inline void updateLifeMeterBlink(TGCConsole2* console)
 {
 	if (!console->unk1C4->getPane()->isVisible())
@@ -1208,6 +1260,7 @@ static inline void updateLifeMeterBlink(TGCConsole2* console)
 	}
 }
 
+// fabricated
 static inline bool updateDownBlendPane(TBlendPane* pane)
 {
 	if (pane->update()) {
@@ -1222,6 +1275,7 @@ static inline bool updateDownBlendPane(TBlendPane* pane)
 	return false;
 }
 
+// fabricated
 static inline void updateDownPaneState(TBoundPane*& pane, bool& isFinished)
 {
 	if (pane->update()) {
@@ -1239,6 +1293,7 @@ static inline void updateDownPaneState(TBoundPane*& pane, bool& isFinished)
 	}
 }
 
+// fabricated
 static inline void updateUpPaneState(TBoundPane*& pane, bool& isFinished)
 {
 	if (pane->update()) {
@@ -1256,6 +1311,7 @@ static inline void updateUpPaneState(TBoundPane*& pane, bool& isFinished)
 	}
 }
 
+// fabricated
 static inline void updateUpPaneStateAfter(TBoundPane*& pane, bool& isFinished,
                                           int frame, int startFrame)
 {
@@ -1274,6 +1330,7 @@ static inline void updateUpPaneStateAfter(TBoundPane*& pane, bool& isFinished,
 	}
 }
 
+// fabricated
 static inline void updateUpBlendPaneState(TBlendPane*& pane, bool& isFinished)
 {
 	if (pane->update()) {
@@ -1291,6 +1348,7 @@ static inline void updateUpBlendPaneState(TBlendPane*& pane, bool& isFinished)
 	}
 }
 
+// fabricated
 static inline bool updateCoinPane(TBoundPane* pane)
 {
 	if (pane->update()) {
@@ -1305,6 +1363,7 @@ static inline bool updateCoinPane(TBoundPane* pane)
 	return false;
 }
 
+// fabricated
 static inline bool updateDownCoinBlendPane(TBlendPane* pane)
 {
 	pane->update();
@@ -1321,6 +1380,7 @@ static inline bool updateDownCoinBlendPane(TBlendPane* pane)
 	return false;
 }
 
+// fabricated
 static inline void updateShineAppearState(TGCConsole2* console)
 {
 	if (!console->unk34[0])
@@ -1337,6 +1397,7 @@ static inline void updateShineAppearState(TGCConsole2* console)
 	++console->unk5C;
 }
 
+// fabricated
 static inline void updateJetAppearState(TGCConsole2* console)
 {
 	if (console->unk34[9] && console->processAppearJet(console->unk72++)) {
@@ -1345,6 +1406,7 @@ static inline void updateJetAppearState(TGCConsole2* console)
 	}
 }
 
+// fabricated
 static inline void updateRedCoinAppearState(TGCConsole2* console)
 {
 	if (console->unk34[8] && console->processAppearRed(console->unk74++)) {
@@ -1353,6 +1415,7 @@ static inline void updateRedCoinAppearState(TGCConsole2* console)
 	}
 }
 
+// fabricated
 static inline void updateTimerAppearState(TGCConsole2* console)
 {
 	if (console->unk34[10] && console->processAppearTimer(console->unk76++)) {
@@ -1361,6 +1424,7 @@ static inline void updateTimerAppearState(TGCConsole2* console)
 	}
 }
 
+// fabricated
 static inline void updateTelopState(TGCConsole2* console, u32 flags)
 {
 	if (console->unk34[11] && console->unk44C->update()) {
@@ -1421,6 +1485,7 @@ static inline void updateTelopState(TGCConsole2* console, u32 flags)
 		++console->unk55C;
 }
 
+// fabricated
 static inline void updateWaterTankState(TGCConsole2* console)
 {
 	if (console->unk34[17] && console->processAppearTank(console->unk7C++)) {
@@ -1463,12 +1528,14 @@ static inline void updateWaterTankState(TGCConsole2* console)
 	}
 }
 
+// fabricated
 static inline void updateCoinAppearState(TGCConsole2* console)
 {
 	if (console->unk34[27] && console->processAppearCoin(console->unk88++))
 		console->unk34[27] = 0;
 }
 
+// fabricated
 static inline void updateMarioAppearState(TGCConsole2* console)
 {
 	if (console->unk34[6] && console->processAppearMario(console->unk70++)) {
@@ -1502,6 +1569,7 @@ static inline void updateMarioAppearState(TGCConsole2* console)
 	}
 }
 
+// fabricated
 static inline bool updateBalloonAppearState(TGCConsole2* console)
 {
 	if (!console->processAppearBalloon())
@@ -1514,6 +1582,7 @@ static inline bool updateBalloonAppearState(TGCConsole2* console)
 	return true;
 }
 
+// fabricated
 static inline bool updateBalloonDisappearState(TGCConsole2* console)
 {
 	if (!console->processDisappearBalloon())
@@ -1533,6 +1602,7 @@ static inline bool updateBalloonDisappearState(TGCConsole2* console)
 	return true;
 }
 
+// fabricated
 static inline void drawWaterOrJuice(TGCConsole2* console, J2DOrthoGraph& graph)
 {
 	if (isMountedYoshi(gpMarioOriginal)) {
