@@ -36,6 +36,9 @@
 #include <stdio.h>
 #include <string.h>
 
+extern JPAEmitterManager* gpEmitterManager4D2;
+bool SMS_isDivingMap();
+
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
@@ -94,9 +97,6 @@ static inline void setupConsoleGaugeTevStage1()
 	GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
 	                GX_TRUE, GX_TEVPREV);
 }
-
-extern JPAEmitterManager* gpEmitterManager4D2;
-bool SMS_isDivingMap();
 
 // fabricated
 static inline void setEmitterToPaneCenter(JPABaseEmitter* emitter,
