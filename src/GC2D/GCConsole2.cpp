@@ -390,46 +390,6 @@ static inline void writeBalloonTextByte(TGCConsole2* console, u8 value)
 	console->unk3DC->write(&value, 1);
 }
 
-static inline bool getBalloonTextColor(u16 code, u8* color)
-{
-	switch (code) {
-	case 0x817B:
-		color[0] = 0xDC;
-		color[1] = 0xDC;
-		color[2] = 0xDC;
-		color[3] = 0xFF;
-		return true;
-	case 0x8184:
-	case 0x8185:
-		color[0] = 0xFF;
-		color[1] = 0xFF;
-		color[2] = 0x00;
-		color[3] = 0xFF;
-		return true;
-	case 0x8191:
-		color[0] = 0x6E;
-		color[1] = 0xE6;
-		color[2] = 0xFF;
-		color[3] = 0xFF;
-		return true;
-	case 0x8194:
-		color[0] = 0xFF;
-		color[1] = 0xA0;
-		color[2] = 0x64;
-		color[3] = 0xFF;
-		return true;
-	case 0x8196:
-	case 0x8197:
-		color[0] = 0x64;
-		color[1] = 0xFF;
-		color[2] = 0x64;
-		color[3] = 0xFF;
-		return true;
-	default:
-		return false;
-	}
-}
-
 static inline void writeBalloonColor(TGCConsole2* console, const char* text,
                                      int length)
 {
@@ -468,8 +428,50 @@ static inline void processBalloonTextStep(TGCConsole2* console)
 			u8 trail;
 			input->read(&trail, 1);
 			u8 color[4];
-			u16 code      = ((u16)value << 8) | trail;
-			bool hasColor = getBalloonTextColor(code, color);
+			u16 code = ((u16)value << 8) | trail;
+			bool hasColor;
+			switch (code) {
+			case 0x817B:
+				color[0] = 0xDC;
+				color[1] = 0xDC;
+				color[2] = 0xDC;
+				color[3] = 0xFF;
+				hasColor = true;
+				break;
+			case 0x8184:
+			case 0x8185:
+				color[0] = 0xFF;
+				color[1] = 0xFF;
+				color[2] = 0x00;
+				color[3] = 0xFF;
+				hasColor = true;
+				break;
+			case 0x8191:
+				color[0] = 0x6E;
+				color[1] = 0xE6;
+				color[2] = 0xFF;
+				color[3] = 0xFF;
+				hasColor = true;
+				break;
+			case 0x8194:
+				color[0] = 0xFF;
+				color[1] = 0xA0;
+				color[2] = 0x64;
+				color[3] = 0xFF;
+				hasColor = true;
+				break;
+			case 0x8196:
+			case 0x8197:
+				color[0] = 0x64;
+				color[1] = 0xFF;
+				color[2] = 0x64;
+				color[3] = 0xFF;
+				hasColor = true;
+				break;
+			default:
+				hasColor = false;
+				break;
+			}
 			if (hasColor) {
 				char buffer[0xff];
 				snprintf(buffer, 0xff,
@@ -890,27 +892,6 @@ static inline void updateRedCoinCounter(TGCConsole2* console)
 	}
 }
 
-static inline void setCoinCounterDigits(TGCConsole2* console, int value,
-                                        bool emit)
-{
-	SET_COUNTER_DIGITS(console->unkD4, console->unkE0, value);
-
-	if (!emit)
-		return;
-
-	if (value >= 100) {
-		if (value % 100 == 0)
-			EMIT_COUNTER_PARTICLE(console->unkD4[0]);
-		if (value % 10 == 0)
-			EMIT_COUNTER_PARTICLE(console->unkD4[1]);
-		EMIT_COUNTER_PARTICLE(console->unkD4[2]);
-	} else {
-		if (value % 10 == 0)
-			EMIT_COUNTER_PARTICLE(console->unkD4[0]);
-		EMIT_COUNTER_PARTICLE(console->unkD4[1]);
-	}
-}
-
 static inline void updateCoinCounterAnimation(TGCConsole2* console)
 {
 	if ((s8)console->unk68 <= 0)
@@ -940,7 +921,21 @@ static inline void updateCoinCounterAnimation(TGCConsole2* console)
 		}
 
 		console->unk6C = display;
-		setCoinCounterDigits(console, display, incrementing);
+		SET_COUNTER_DIGITS(console->unkD4, console->unkE0, display);
+
+		if (incrementing) {
+			if (display >= 100) {
+				if (display % 100 == 0)
+					EMIT_COUNTER_PARTICLE(console->unkD4[0]);
+				if (display % 10 == 0)
+					EMIT_COUNTER_PARTICLE(console->unkD4[1]);
+				EMIT_COUNTER_PARTICLE(console->unkD4[2]);
+			} else {
+				if (display % 10 == 0)
+					EMIT_COUNTER_PARTICLE(console->unkD4[0]);
+				EMIT_COUNTER_PARTICLE(console->unkD4[1]);
+			}
+		}
 		++console->unk68;
 	}
 
@@ -958,36 +953,6 @@ static inline void updateCoinCounterAnimation(TGCConsole2* console)
 			console->unk68 = 1;
 		}
 	}
-}
-
-static inline void setJetCounterDigits(TGCConsole2* console, int value,
-                                       bool blend)
-{
-	if (value < 0)
-		value = 0;
-	if (value > 99)
-		value = 99;
-
-	if (value >= 10) {
-		console->unk414[0]->getPane()->show();
-		int tens = value / 10;
-		if (blend)
-			((TBlendPane*)console->unk414[0])
-			    ->setPaneBlend(12, console->unkE0[tens],
-			                   console->unkE0[(tens + 9) % 10]);
-		else if (value % 10 == 0)
-			setDigitPane(console->unk414[0], console->unkE0, tens);
-	} else {
-		console->unk414[0]->getPane()->hide();
-	}
-
-	int ones = value % 10;
-	if (blend)
-		((TBlendPane*)console->unk414[1])
-		    ->setPaneBlend(12, console->unkE0[ones],
-		                   console->unkE0[(ones + 9) % 10]);
-	else
-		setDigitPane(console->unk414[1], console->unkE0, ones);
 }
 
 static inline void updateJetCounterAnimation(TGCConsole2* console)
@@ -1031,7 +996,33 @@ static inline void updateJetCounterAnimation(TGCConsole2* console)
 	}
 
 	++console->unk2C;
-	setJetCounterDigits(console, console->unk2C, blend);
+
+	int value = (int)console->unk2C;
+	if (value < 0)
+		value = 0;
+	if (value > 99)
+		value = 99;
+
+	if (value >= 10) {
+		console->unk414[0]->getPane()->show();
+		int tens = value / 10;
+		if (blend)
+			((TBlendPane*)console->unk414[0])
+			    ->setPaneBlend(12, console->unkE0[tens],
+			                   console->unkE0[(tens + 9) % 10]);
+		else if (value % 10 == 0)
+			setDigitPane(console->unk414[0], console->unkE0, tens);
+	} else {
+		console->unk414[0]->getPane()->hide();
+	}
+
+	int ones = value % 10;
+	if (blend)
+		((TBlendPane*)console->unk414[1])
+		    ->setPaneBlend(12, console->unkE0[ones],
+		                   console->unkE0[(ones + 9) % 10]);
+	else
+		setDigitPane(console->unk414[1], console->unkE0, ones);
 }
 
 static inline void updateCounterState(TGCConsole2* console)
