@@ -278,33 +278,33 @@ static inline bool isConsoleDemoCameraActive()
 	return gpCamera->isSimpleDemoCamera() || gpCamera->mMode == 0x49;
 }
 
-#define SET_CURRENT_NOZZLE_PANES(CONSOLE, NOZZLE)                              \
-	do {                                                                       \
-		(CONSOLE)->unk274->getPane()->hide();                                  \
-		(CONSOLE)->unk288->hide();                                             \
-		switch (NOZZLE) {                                                      \
-		case TWaterGun::Spray:                                                 \
-			(CONSOLE)->unk274 = (CONSOLE)->unk278[0];                          \
-			(CONSOLE)->unk288 = (CONSOLE)->unk28C[0];                          \
-			break;                                                             \
-		case TWaterGun::Rocket:                                                \
-			(CONSOLE)->unk274 = (CONSOLE)->unk278[2];                          \
-			(CONSOLE)->unk288 = (CONSOLE)->unk28C[2];                          \
-			break;                                                             \
-		case TWaterGun::Hover:                                                 \
-		case TWaterGun::Underwater:                                            \
-			(CONSOLE)->unk274 = (CONSOLE)->unk278[1];                          \
-			(CONSOLE)->unk288 = (CONSOLE)->unk28C[1];                          \
-			break;                                                             \
-		case TWaterGun::Turbo:                                                 \
-			(CONSOLE)->unk274 = (CONSOLE)->unk278[3];                          \
-			(CONSOLE)->unk288 = (CONSOLE)->unk28C[3];                          \
-			break;                                                             \
-		}                                                                      \
-		(CONSOLE)->unk310 = (NOZZLE);                                          \
-		(CONSOLE)->unk274->getPane()->show();                                  \
-		(CONSOLE)->unk288->show();                                             \
-	} while (0)
+static inline void setCurrentNozzlePanes(TGCConsole2* console, u8 nozzle)
+{
+	console->unk274->getPane()->hide();
+	console->unk288->hide();
+	switch (nozzle) {
+	case TWaterGun::Spray:
+		console->unk274 = console->unk278[0];
+		console->unk288 = console->unk28C[0];
+		break;
+	case TWaterGun::Rocket:
+		console->unk274 = console->unk278[2];
+		console->unk288 = console->unk28C[2];
+		break;
+	case TWaterGun::Hover:
+	case TWaterGun::Underwater:
+		console->unk274 = console->unk278[1];
+		console->unk288 = console->unk28C[1];
+		break;
+	case TWaterGun::Turbo:
+		console->unk274 = console->unk278[3];
+		console->unk288 = console->unk28C[3];
+		break;
+	}
+	console->unk310 = nozzle;
+	console->unk274->getPane()->show();
+	console->unk288->show();
+}
 
 static inline void updateWaterGaugeFill(TGCConsole2* console)
 {
@@ -318,7 +318,7 @@ static inline void updateWaterGaugeFill(TGCConsole2* console)
 
 	if (console->unk2F8->isInterpolatorAtZero() && !console->unk34[17]
 	    && currentNozzle != console->unk310)
-		SET_CURRENT_NOZZLE_PANES(console, currentNozzle);
+		setCurrentNozzlePanes(console, currentNozzle);
 
 	if (console->unk28 != currentWater && currentWater == maxWater
 	    && SMSGetMSound()->gateCheck(0x4807)) {
@@ -507,28 +507,26 @@ static inline bool startLifeMeterDisappear(TGCConsole2* console, u16 frame)
 	return true;
 }
 
-#define UPDATE_LIFE_METER_COLORS(CONSOLE, AIR_MODE)                            \
-	do {                                                                       \
-		if ((CONSOLE)->unk1CC[0] >= 4) {                                       \
-			if (AIR_MODE) {                                                    \
-				setPictureColor((CONSOLE)->unk178->getPane(), 0x00FFFFFF,      \
-				                0x003CFF00);                                   \
-				setPictureColor((CONSOLE)->unk17C[0], 0x00FFFFFF, 0x003CFF00); \
-			} else {                                                           \
-				setPictureColor((CONSOLE)->unk178->getPane(), 0xFFFFFFFF, 0);  \
-				setPictureColor((CONSOLE)->unk17C[0], 0xFFFFFFFF, 0);          \
-			}                                                                  \
-		} else {                                                               \
-			if (AIR_MODE) {                                                    \
-				setPictureColor((CONSOLE)->unk178->getPane(), 0x0010FFFF,      \
-				                0x003CFF00);                                   \
-				setPictureColor((CONSOLE)->unk17C[0], 0x0010FFFF, 0x003CFF00); \
-			} else {                                                           \
-				setPictureColor((CONSOLE)->unk178->getPane(), 0x7F7F7FFF, 0);  \
-				setPictureColor((CONSOLE)->unk17C[0], 0x7F7F7FFF, 0);          \
-			}                                                                  \
-		}                                                                      \
-	} while (0)
+static inline void updateLifeMeterColors(TGCConsole2* console, bool airMode)
+{
+	if (console->unk1CC[0] >= 4) {
+		if (airMode) {
+			setPictureColor(console->unk178->getPane(), 0x00FFFFFF, 0x003CFF00);
+			setPictureColor(console->unk17C[0], 0x00FFFFFF, 0x003CFF00);
+		} else {
+			setPictureColor(console->unk178->getPane(), 0xFFFFFFFF, 0);
+			setPictureColor(console->unk17C[0], 0xFFFFFFFF, 0);
+		}
+	} else {
+		if (airMode) {
+			setPictureColor(console->unk178->getPane(), 0x0010FFFF, 0x003CFF00);
+			setPictureColor(console->unk17C[0], 0x0010FFFF, 0x003CFF00);
+		} else {
+			setPictureColor(console->unk178->getPane(), 0x7F7F7FFF, 0);
+			setPictureColor(console->unk17C[0], 0x7F7F7FFF, 0);
+		}
+	}
+}
 
 static inline void playLifeChangeSound(u32 sound)
 {
@@ -538,28 +536,29 @@ static inline void playLifeChangeSound(u32 sound)
 	}
 }
 
-#define UPDATE_LIFE_SEGMENT_COUNT(CONSOLE, AMOUNT, AIR_MODE)                   \
-	do {                                                                       \
-		if ((CONSOLE)->unk18 != 10 && (AMOUNT) != (CONSOLE)->unk1CC[0]) {      \
-			if ((CONSOLE)->unk1CC[0] < (AMOUNT)) {                             \
-				++(CONSOLE)->unk1CC[0];                                        \
-				int _index = (CONSOLE)->unk1CC[0] * 2;                         \
-				(CONSOLE)->unk17C[_index]->show();                             \
-				playLifeChangeSound(0x4801);                                   \
-			} else if ((CONSOLE)->unk1CC[0] > 0) {                             \
-				int _index = (CONSOLE)->unk1CC[0] * 2;                         \
-				(CONSOLE)->unk17C[_index]->hide();                             \
-				(CONSOLE)->unk17C[_index]->setBounds(                          \
-				    (CONSOLE)->unk1D0[(CONSOLE)->unk1CC[0]]);                  \
-				(CONSOLE)->unk17C[_index + 1]->setBounds(                      \
-				    (CONSOLE)->unk1D0[(CONSOLE)->unk1CC[0]]);                  \
-				--(CONSOLE)->unk1CC[0];                                        \
-				playLifeChangeSound(0x4823);                                   \
-			}                                                                  \
-			(CONSOLE)->unk1C = (CONSOLE)->unk1CC[0];                           \
-			UPDATE_LIFE_METER_COLORS((CONSOLE), (AIR_MODE));                   \
-		}                                                                      \
-	} while (0)
+static inline void updateLifeSegmentCount(TGCConsole2* console, u8 amount,
+                                          bool airMode)
+{
+	if (console->unk18 != 10 && amount != console->unk1CC[0]) {
+		if (console->unk1CC[0] < amount) {
+			++console->unk1CC[0];
+			int index = console->unk1CC[0] * 2;
+			console->unk17C[index]->show();
+			playLifeChangeSound(0x4801);
+		} else if (console->unk1CC[0] > 0) {
+			int index = console->unk1CC[0] * 2;
+			console->unk17C[index]->hide();
+			console->unk17C[index]->setBounds(
+			    console->unk1D0[console->unk1CC[0]]);
+			console->unk17C[index + 1]->setBounds(
+			    console->unk1D0[console->unk1CC[0]]);
+			--console->unk1CC[0];
+			playLifeChangeSound(0x4823);
+		}
+		console->unk1C = console->unk1CC[0];
+		updateLifeMeterColors(console, airMode);
+	}
+}
 
 static inline void updateLifeMeterState(TGCConsole2* console)
 {
@@ -734,7 +733,7 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 		console->unk3A8->getPane()->hide();
 	}
 
-	UPDATE_LIFE_SEGMENT_COUNT(console, amount, airMode);
+	updateLifeSegmentCount(console, amount, airMode);
 }
 
 static inline void detachBoundPaneFromParent(TBoundPane* pane)
@@ -791,21 +790,6 @@ static inline void setThreeDigits(Pane** panes, JUTTexture** textures,
 		panes[0]->getPane()->hide();
 }
 
-#define SET_THREE_DIGITS(PANES, TEXTURES, VALUE, SHOW_HUNDREDS)                \
-	do {                                                                       \
-		int _value    = (VALUE);                                               \
-		int _hundreds = _value / 100;                                          \
-		int _tens     = (_value / 10) % 10;                                    \
-		int _ones     = _value % 10;                                           \
-		setDigitPane((PANES)[0], (TEXTURES), _hundreds);                       \
-		setDigitPane((PANES)[1], (TEXTURES), _tens);                           \
-		setDigitPane((PANES)[2], (TEXTURES), _ones);                           \
-		if ((SHOW_HUNDREDS) && _value >= 100)                                  \
-			(PANES)[0]->getPane()->show();                                     \
-		else                                                                   \
-			(PANES)[0]->getPane()->hide();                                     \
-	} while (0)
-
 static inline void setTwoDigits(TBoundPane** panes, JUTTexture** textures,
                                 int value)
 {
@@ -825,44 +809,46 @@ static inline void updateMarioLifeCounter(TGCConsole2* console)
 	}
 }
 
-#define SET_COUNTER_DIGITS(PANES, TEXTURES, VALUE)                             \
-	do {                                                                       \
-		int _value = (VALUE);                                                  \
-		if (_value < 100) {                                                    \
-			setDigitPane((PANES)[0], (TEXTURES), _value / 10);                 \
-			setDigitPane((PANES)[1], (TEXTURES), _value % 10);                 \
-			(PANES)[2]->getPane()->hide();                                     \
-		} else {                                                               \
-			int _hundreds  = _value / 100;                                     \
-			int _remainder = _value - _hundreds * 100;                         \
-			setDigitPane((PANES)[0], (TEXTURES), _hundreds);                   \
-			setDigitPane((PANES)[1], (TEXTURES), _remainder / 10);             \
-			setDigitPane((PANES)[2], (TEXTURES), _remainder % 10);             \
-			(PANES)[2]->getPane()->show();                                     \
-		}                                                                      \
-	} while (0)
+template <class Pane>
+static inline void setCounterDigits(Pane** panes, JUTTexture** textures,
+                                    int value)
+{
+	if (value < 100) {
+		setDigitPane(panes[0], textures, value / 10);
+		setDigitPane(panes[1], textures, value % 10);
+		panes[2]->getPane()->hide();
+	} else {
+		int hundreds  = value / 100;
+		int remainder = value - hundreds * 100;
+		setDigitPane(panes[0], textures, hundreds);
+		setDigitPane(panes[1], textures, remainder / 10);
+		setDigitPane(panes[2], textures, remainder % 10);
+		panes[2]->getPane()->show();
+	}
+}
 
-#define GET_SPENT_BLUE_COIN_COUNT(COUNT)                                       \
-	do {                                                                       \
-		(COUNT) = 0;                                                           \
-		for (int _flag = 0x10046; _flag < 0x10056; ++_flag) {                  \
-			if (TFlagManager::smInstance->getFlag(_flag) != 0)                 \
-				++(COUNT);                                                     \
-		}                                                                      \
-		for (int _flag = 0x1006c; _flag < 0x10074; ++_flag) {                  \
-			if (TFlagManager::smInstance->getFlag(_flag) != 0)                 \
-				++(COUNT);                                                     \
-		}                                                                      \
-	} while (0)
+static inline int getSpentBlueCoinCount()
+{
+	int count = 0;
+	for (int flag = 0x10046; flag < 0x10056; ++flag) {
+		if (TFlagManager::smInstance->getFlag(flag) != 0)
+			++count;
+	}
+	for (int flag = 0x1006c; flag < 0x10074; ++flag) {
+		if (TFlagManager::smInstance->getFlag(flag) != 0)
+			++count;
+	}
+	return count;
+}
 
-#define EMIT_COUNTER_PARTICLE(PANE)                                            \
-	do {                                                                       \
-		JUTRect _bounds((PANE)->getPane()->mGlobalBounds);                     \
-		JGeometry::TVec3<f32> _pos;                                            \
-		_pos.set(_bounds.x1 + _bounds.getWidth() * 0.5f,                       \
-		         _bounds.y1 + _bounds.getHeight() * 0.5f, 0.0f);               \
-		gpEmitterManager4D2->createEmitter(_pos, 0x1FC, nullptr, nullptr);     \
-	} while (0)
+static inline void emitCounterParticle(TBoundPane* pane)
+{
+	JUTRect bounds(pane->getPane()->mGlobalBounds);
+	JGeometry::TVec3<f32> position;
+	position.set(bounds.x1 + bounds.getWidth() * 0.5f,
+	             bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+	gpEmitterManager4D2->createEmitter(position, 0x1FC, nullptr, nullptr);
+}
 
 static inline void setBlendDigit(TBlendPane* pane, JUTTexture** textures,
                                  int digit)
@@ -887,7 +873,7 @@ static inline void updateRedCoinCounter(TGCConsole2* console)
 		if (!console->unk428->getPane()->isVisible())
 			console->startAppearRedCoin();
 
-		EMIT_COUNTER_PARTICLE(console->unk43C[0]);
+		emitCounterParticle(console->unk43C[0]);
 		console->unk444 = redCoins;
 	}
 }
@@ -921,19 +907,19 @@ static inline void updateCoinCounterAnimation(TGCConsole2* console)
 		}
 
 		console->unk6C = display;
-		SET_COUNTER_DIGITS(console->unkD4, console->unkE0, display);
+		setCounterDigits(console->unkD4, console->unkE0, display);
 
 		if (incrementing) {
 			if (display >= 100) {
 				if (display % 100 == 0)
-					EMIT_COUNTER_PARTICLE(console->unkD4[0]);
+					emitCounterParticle(console->unkD4[0]);
 				if (display % 10 == 0)
-					EMIT_COUNTER_PARTICLE(console->unkD4[1]);
-				EMIT_COUNTER_PARTICLE(console->unkD4[2]);
+					emitCounterParticle(console->unkD4[1]);
+				emitCounterParticle(console->unkD4[2]);
 			} else {
 				if (display % 10 == 0)
-					EMIT_COUNTER_PARTICLE(console->unkD4[0]);
-				EMIT_COUNTER_PARTICLE(console->unkD4[1]);
+					emitCounterParticle(console->unkD4[0]);
+				emitCounterParticle(console->unkD4[1]);
 			}
 		}
 		++console->unk68;
@@ -1062,17 +1048,16 @@ static inline void updateCounterState(TGCConsole2* console)
 	if ((int)console->unk168 != blueTotal) {
 		++console->unk168;
 
-		int spentBlueCoins;
-		GET_SPENT_BLUE_COIN_COUNT(spentBlueCoins);
-		int blueValue = console->unk168 - spentBlueCoins * 10;
+		int spentBlueCoins = getSpentBlueCoinCount();
+		int blueValue      = console->unk168 - spentBlueCoins * 10;
 		if (blueValue < 0)
 			blueValue = 0;
 
-		SET_COUNTER_DIGITS(console->unk154, console->unkE0, blueValue);
+		setCounterDigits(console->unk154, console->unkE0, blueValue);
 		if (console->unk160->getPane()->isVisible()) {
-			EMIT_COUNTER_PARTICLE(console->unk154[1]);
+			emitCounterParticle(console->unk154[1]);
 			if (blueValue % 10 == 0)
-				EMIT_COUNTER_PARTICLE(console->unk154[0]);
+				emitCounterParticle(console->unk154[0]);
 		} else {
 			console->startAppearStar();
 		}
@@ -1092,9 +1077,8 @@ static inline void updateCounterState(TGCConsole2* console)
 
 	if (console->unk8A != 0) {
 		if (console->unk8A > 0xFB) {
-			int spentBlueCoins;
-			GET_SPENT_BLUE_COIN_COUNT(spentBlueCoins);
-			int target = blueTotal - spentBlueCoins * 10;
+			int spentBlueCoins = getSpentBlueCoinCount();
+			int target         = blueTotal - spentBlueCoins * 10;
 			if (console->unk170 != target) {
 				--console->unk170;
 				if (console->unk170 < 0) {
@@ -1103,8 +1087,8 @@ static inline void updateCounterState(TGCConsole2* console)
 					MSoundSESystem::MSoundSE::startSoundSystemSE(0x4850, 0,
 					                                             nullptr, 0);
 				}
-				SET_COUNTER_DIGITS(console->unk154, console->unkE0,
-				                   console->unk170);
+				setCounterDigits(console->unk154, console->unkE0,
+				                 console->unk170);
 			}
 		}
 
@@ -1960,15 +1944,15 @@ void TGCConsole2::loadAfter()
 	if (blueCoinValue < 0)
 		blueCoinValue = 0;
 	unk170 = blueCoinValue;
-	SET_COUNTER_DIGITS(unk154, unkE0, blueCoinValue);
+	setCounterDigits(unk154, unkE0, blueCoinValue);
 
 	unk20 = clampRange(flags->getFlag(0x40002), 0, 999);
 	unk6C = unk20;
-	SET_COUNTER_DIGITS(unkD4, unkE0, unk20);
+	setCounterDigits(unkD4, unkE0, unk20);
 
 	unk24 = flags->getFlag(0x40000);
 	unk64 = unk24;
-	SET_THREE_DIGITS(unk134, unkE0, unk24, true);
+	setThreeDigits(unk134, unkE0, unk24, true);
 
 	int lives = clampRange(flags->getFlag(0x20001), 0, 99);
 	unk3AC[0] = lives;
