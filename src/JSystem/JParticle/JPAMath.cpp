@@ -120,40 +120,34 @@ void JPAGetZRotateMtx(s16 z, MtxPtr dst)
 void JPAVecToRotaMtx(MtxPtr dst, JGeometry::TVec3<f32> a,
                      JGeometry::TVec3<f32> b)
 {
-	f32 p = a.y * b.z - a.z * b.y;
-	f32 q = a.z * b.x - a.x * b.z;
-	f32 r = a.x * b.y - a.y * b.x;
+	JGeometry::TVec3<f32> axis;
+	axis.cross(a, b);
 
-	f32 crossLen = r * r + p * p + q * q;
-	f32 dot      = a.x * b.x + a.y * b.y + a.z * b.z;
-	crossLen     = JPASqrtf(crossLen);
+	f32 sq  = axis.squared();
+	f32 cos = a.dot(b);
+	f32 sin = JGeometry::TUtil<f32>::sqrt(sq);
 
-	if (crossLen > 3.814697e-06) {
-		f32 inv = 1.0f / crossLen;
-		p *= inv;
-		q *= inv;
-		r *= inv;
+	if (sin > JGeometry::TUtil<f32>::epsilon()) {
+		axis.scale(__fres(sin));
 	} else {
-		p = 0.0f;
-		q = 0.0f;
-		r = 0.0f;
+		axis.zero();
 	}
 
-	f32 oneMinusDot = 1.0f - dot;
+	f32 oneMinusCos = 1.0f - cos;
 
-	dst[0][0] = dot * (1.0f - p * p) + p * p;
-	dst[0][1] = p * q * oneMinusDot + r * crossLen;
-	dst[0][2] = r * p * oneMinusDot - q * crossLen;
+	dst[0][0] = cos * (1.0f - axis.x * axis.x) + axis.x * axis.x;
+	dst[0][1] = axis.x * axis.y * oneMinusCos + axis.z * sin;
+	dst[0][2] = axis.x * axis.z * oneMinusCos - axis.y * sin;
 	dst[0][3] = 0.0f;
 
-	dst[1][0] = p * q * oneMinusDot - r * crossLen;
-	dst[1][1] = dot * (1.0f - q * q) + q * q;
-	dst[1][2] = q * r * oneMinusDot + p * crossLen;
+	dst[1][0] = axis.y * axis.x * oneMinusCos - axis.z * sin;
+	dst[1][1] = cos * (1.0f - axis.y * axis.y) + axis.y * axis.y;
+	dst[1][2] = axis.y * axis.z * oneMinusCos + axis.x * sin;
 	dst[1][3] = 0.0f;
 
-	dst[2][0] = r * p * oneMinusDot + q * crossLen;
-	dst[2][1] = q * r * oneMinusDot - p * crossLen;
-	dst[2][2] = dot * (1.0f - r * r) + r * r;
+	dst[2][0] = axis.z * axis.x * oneMinusCos + axis.y * sin;
+	dst[2][1] = axis.z * axis.y * oneMinusCos - axis.x * sin;
+	dst[2][2] = cos * (1.0f - axis.z * axis.z) + axis.z * axis.z;
 	dst[2][3] = 0.0f;
 }
 
@@ -232,31 +226,33 @@ void JPAGetRMtxSTVecElement(MtxPtr param_1, MtxPtr param_2,
 void JPAGetRMtxTVecElement(MtxPtr param_1, MtxPtr param_2,
                            JGeometry::TVec3<f32>& param_3)
 {
-	f32 l1 = std::sqrtf(param_1[0][0] * param_1[0][0]
-	                    + param_1[1][0] * param_1[1][0]
-	                    + param_1[2][0] * param_1[2][0]);
-	f32 l2 = std::sqrtf(param_1[0][1] * param_1[0][1]
-	                    + param_1[1][1] * param_1[1][1]
-	                    + param_1[2][1] * param_1[2][1]);
-	f32 l3 = std::sqrtf(param_1[0][2] * param_1[0][2]
-	                    + param_1[1][2] * param_1[1][2]
-	                    + param_1[2][2] * param_1[2][2]);
+	JGeometry::TVec3<f32> scale;
+
+	scale.x = std::sqrtf(param_1[0][0] * param_1[0][0]
+	                     + param_1[1][0] * param_1[1][0]
+	                     + param_1[2][0] * param_1[2][0]);
+	scale.y = std::sqrtf(param_1[0][1] * param_1[0][1]
+	                     + param_1[1][1] * param_1[1][1]
+	                     + param_1[2][1] * param_1[2][1]);
+	scale.z = std::sqrtf(param_1[0][2] * param_1[0][2]
+	                     + param_1[1][2] * param_1[1][2]
+	                     + param_1[2][2] * param_1[2][2]);
 
 	MTXIdentity(param_2);
-	if (l1 != 0.0f) {
-		param_2[0][0] = param_1[0][0] / l1;
-		param_2[1][0] = param_1[1][0] / l1;
-		param_2[2][0] = param_1[2][0] / l1;
+	if (scale.x != 0.0f) {
+		param_2[0][0] = param_1[0][0] / scale.x;
+		param_2[1][0] = param_1[1][0] / scale.x;
+		param_2[2][0] = param_1[2][0] / scale.x;
 	}
-	if (l2 != 0.0f) {
-		param_2[0][1] = param_1[0][1] / l2;
-		param_2[1][1] = param_1[1][1] / l2;
-		param_2[2][1] = param_1[2][1] / l2;
+	if (scale.y != 0.0f) {
+		param_2[0][1] = param_1[0][1] / scale.y;
+		param_2[1][1] = param_1[1][1] / scale.y;
+		param_2[2][1] = param_1[2][1] / scale.y;
 	}
-	if (l3 != 0.0f) {
-		param_2[0][2] = param_1[0][2] / l3;
-		param_2[1][2] = param_1[1][2] / l3;
-		param_2[2][2] = param_1[2][2] / l3;
+	if (scale.z != 0.0f) {
+		param_2[0][2] = param_1[0][2] / scale.z;
+		param_2[1][2] = param_1[1][2] / scale.z;
+		param_2[2][2] = param_1[2][2] / scale.z;
 	}
 
 	param_3.set(param_1[0][3], param_1[1][3], param_1[2][3]);

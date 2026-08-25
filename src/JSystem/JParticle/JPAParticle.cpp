@@ -120,9 +120,26 @@ void JPABaseParticle::getCurrentPosition(JGeometry::TVec3<f32>& result)
 	result.z = info->unkC.z * (mLocalPosition.z + mVelocity.z) + unk14.z;
 }
 
-void JPABaseParticle::getCurrentPositionX() { }
-void JPABaseParticle::getCurrentPositionY() { }
-void JPABaseParticle::getCurrentPositionZ() { }
+f32 JPABaseParticle::getCurrentPositionX()
+{
+	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
+
+	return info->unkC.x * (mLocalPosition.x + mVelocity.x) + unk14.x;
+}
+
+f32 JPABaseParticle::getCurrentPositionY()
+{
+	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
+
+	return info->unkC.y * (mLocalPosition.y + mVelocity.y) + unk14.y;
+}
+
+f32 JPABaseParticle::getCurrentPositionZ()
+{
+	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
+
+	return info->unkC.z * (mLocalPosition.z + mVelocity.z) + unk14.z;
+}
 
 bool JPAParticle::checkCreateChildParticle()
 {
