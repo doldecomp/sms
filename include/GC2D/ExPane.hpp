@@ -42,7 +42,7 @@ public:
 		mOffsetAnimPending = true;
 	}
 
-	// fabricated
+	// Possibly inline
 	void updatePaneOffset(s32 time, s32 target_x, s32 target_y)
 	{
 		setPaneOffset(time, target_x, target_y,
@@ -60,7 +60,7 @@ public:
 		mSizeAnimPending = true;
 	}
 
-	// fabricated
+	// Possibly inline
 	void updatePaneSize(s32 time, s32 target_w, s32 target_h)
 	{
 		setPaneSize(time, target_w, target_h, mSizeInterpolator.getCurrentX(),
@@ -90,7 +90,7 @@ public:
 		              (initH - initial_h) * 0.5f);
 	}
 
-	// fabricated
+	// Possibly inline
 	void updateCenteredSize(s32 time, s32 target_w, s32 target_h)
 	{
 		setCenteredSize(time, target_w, target_h,

@@ -36,10 +36,10 @@ J2DWindow::J2DWindow(J2DPane* parent, JSURandomInputStream* stream, bool is_ex)
 	if (is_ex) {
 		u8 fields = stream->readU8();
 
-		unkEC.x1 = stream->readU16();
-		unkEC.y1 = stream->readU16();
-		unkEC.x2 = unkEC.x1 + stream->readU16();
-		unkEC.y2 = unkEC.y1 + stream->readU16();
+		mContentsBounds.x1 = stream->readU16();
+		mContentsBounds.y1 = stream->readU16();
+		mContentsBounds.x2 = mContentsBounds.x1 + stream->readU16();
+		mContentsBounds.y2 = mContentsBounds.y1 + stream->readU16();
 
 		if (ResTIMG* timg = (ResTIMG*)res.getResource(stream, 'TIMG', nullptr))
 			unk100 = new Texture(timg);
@@ -77,10 +77,10 @@ J2DWindow::J2DWindow(J2DPane* parent, JSURandomInputStream* stream, bool is_ex)
 		}
 		stream->align(4);
 	} else {
-		unkEC.x1 = stream->readU16();
-		unkEC.y1 = stream->readU16();
-		unkEC.x2 = unkEC.x1 + stream->readU16();
-		unkEC.y2 = unkEC.y1 + stream->readU16();
+		mContentsBounds.x1 = stream->readU16();
+		mContentsBounds.y1 = stream->readU16();
+		mContentsBounds.x2 = mContentsBounds.x1 + stream->readU16();
+		mContentsBounds.y2 = mContentsBounds.y1 + stream->readU16();
 
 		if (ResTIMG* timg = (ResTIMG*)res.getResource(stream, 'TIMG', nullptr))
 			unk100 = new Texture(timg);
@@ -239,8 +239,8 @@ void J2DWindow::resize(int width, int height)
 	int oldW = getWidth();
 	int oldH = getHeight();
 	J2DPane::resize(width, height);
-	unkEC.x2 += width - oldW;
-	unkEC.y2 += height - oldH;
+	mContentsBounds.x2 += width - oldW;
+	mContentsBounds.y2 += height - oldH;
 
 	for (JSUTreeIterator<J2DPane> iter(getPaneTree()->getFirstChild());
 	     iter != getPaneTree()->getEndChild(); iter++) {
@@ -269,8 +269,8 @@ void J2DWindow::drawSelf(int x, int y, Mtx* mtx)
 	JUTRect tmp(mGlobalBounds.x1, mGlobalBounds.y1, mGlobalBounds.x2,
 	            mGlobalBounds.y2);
 	tmp.add(x, y);
-	draw_private(tmp, unkEC, mtx);
-	clip(unkEC);
+	draw_private(tmp, mContentsBounds, mtx);
+	clip(mContentsBounds);
 }
 
 void J2DWindow::drawContents(const JUTRect& rect)
