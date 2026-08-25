@@ -16,6 +16,7 @@ class TExPane;
 class JPABaseEmitter;
 class J2DPicture;
 class J2DPane;
+class J2DWindow;
 class J2DTextBox;
 class TMessageLoader;
 class TConsoleStr;
@@ -65,22 +66,22 @@ public:
 
 	void perform(u32 cue, JDrama::TGraphics* graphics);
 
-	void processAppearLife(int) { }
-	void processInsertLife(int) { }
-	void processAppearStar(int) { }
-	void processDownCoin(int) { }
-	void processAppearTank(int) { }
-	void processAppearCoin(int) { }
-	void processAppearMario(int) { }
-	void processDrawTelop(u32) { }
-	void checkChangeTelopArray() { }
-	void processAppearJet(int) { }
-	void processAppearRed(int) { }
-	void processAppearTimer(int) { }
-	void processAppearBalloon() { }
-	void processDisappearBalloon() { }
-	void drawJuice(J2DOrthoGraph&, u32) { }
-	void drawWater(J2DOrthoGraph&) { }
+	inline bool processAppearLife(int);
+	inline bool processInsertLife(int);
+	inline bool processAppearStar(int);
+	inline bool processDownCoin(int);
+	inline bool processAppearTank(int);
+	inline bool processAppearCoin(int);
+	inline bool processAppearMario(int);
+	inline bool processDrawTelop(u32);
+	inline void checkChangeTelopArray();
+	inline bool processAppearJet(int);
+	inline bool processAppearRed(int);
+	inline bool processAppearTimer(int);
+	inline bool processAppearBalloon();
+	inline bool processDisappearBalloon();
+	inline void drawJuice(J2DOrthoGraph&, u32);
+	void drawWater(J2DOrthoGraph&);
 
 	static JUTPoint cDownTopPoint;
 	static JUTPoint cDownMidPoint;
@@ -96,7 +97,7 @@ public:
 	/* 0x10 */ int unk10;
 	/* 0x14 */ u32 unk14;
 	/* 0x18 */ u32 unk18;
-	/* 0x1C */ u16 unk1C;
+	/* 0x1C */ s16 unk1C;
 	/* 0x20 */ u32 unk20;
 	/* 0x24 */ u32 unk24;
 	/* 0x28 */ u32 unk28;
@@ -112,10 +113,15 @@ public:
 	/* 0x64 */ u32 unk64;
 	/* 0x68 */ u8 unk68;
 	/* 0x6C */ u32 unk6C;
-	/* 0x70 */ char unk70[0x8];
+	/* 0x70 */ u16 unk70;
+	/* 0x72 */ u8 unk72;
+	/* 0x73 */ u8 unk73;
+	/* 0x74 */ u16 unk74;
+	/* 0x76 */ u8 unk76;
+	/* 0x77 */ u8 unk77;
 	/* 0x78 */ u16 unk78;
 	/* 0x7A */ char unk7A[2];
-	/* 0x7C */ u16 unk7C;
+	/* 0x7C */ s16 unk7C;
 	/* 0x80 */ u32 unk80;
 	/* 0x84 */ u16 unk84;
 	/* 0x86 */ u16 unk86;
@@ -128,11 +134,11 @@ public:
 	/* 0x9A */ u8 unk9A[20];
 	/* 0xB0 */ J2DSetScreen* unkB0;
 	/* 0xB4 */ u8 unkB4;
-	/* 0xB6 */ u16 unkB6;
+	/* 0xB6 */ s16 unkB6;
 	/* 0xB8 */ u32 unkB8;
-	/* 0xBC */ u32 unkBC;
-	/* 0xC0 */ u32 unkC0;
-	/* 0xC4 */ u32 unkC4;
+	/* 0xBC */ void* unkBC;
+	/* 0xC0 */ void* unkC0;
+	/* 0xC4 */ void* unkC4;
 	/* 0xC8 */ TBoundPane* unkC8;
 	/* 0xCC */ TBoundPane* unkCC;
 	/* 0xD0 */ TBoundPane* unkD0;
@@ -144,25 +150,26 @@ public:
 	/* 0x128 */ TBoundPane* unk128;
 	/* 0x12C */ TBoundPane* unk12C;
 	/* 0x130 */ TBoundPane* unk130;
-	/* 0x134 */ TBoundPane* unk134[3];
+	/* 0x134 */ TBlendPane* unk134[3];
 	/* 0x140 */ TExPane* unk140;
 	/* 0x144 */ JPABaseEmitter* unk144;
 	/* 0x148 */ TBoundPane* unk148;
 	/* 0x14C */ TBoundPane* unk14C;
 	/* 0x150 */ TBoundPane* unk150;
-	/* 0x154 */ J2DPicture** unk154;
-	/* 0x158 */ J2DPicture** unk158;
-	/* 0x15C */ J2DPicture** unk15C;
+	/* 0x154 */ TBoundPane* unk154[3];
 	/* 0x160 */ TExPane* unk160;
 	/* 0x164 */ JPABaseEmitter* unk164;
-	/* 0x168 */ char unk168[0xC];
+	/* 0x168 */ u32 unk168;
+	/* 0x16C */ u16 unk16C;
+	/* 0x16E */ char unk16E[2];
+	/* 0x170 */ s32 unk170;
 	/* 0x174 */ TBoundPane* unk174;
 	/* 0x178 */ TBoundPane* unk178;
 	/* 0x17C */ J2DPane* unk17C[18];
 	/* 0x1C4 */ TBoundPane* unk1C4;
-	/* 0x1C8 */ u16 unk1C8;
-	/* 0x1CA */ u16 unk1CA;
-	/* 0x1CC */ char unk1CC[4];
+	/* 0x1C8 */ s16 unk1C8;
+	/* 0x1CA */ s16 unk1CA;
+	/* 0x1CC */ u8 unk1CC[4];
 	/* 0x1D0 */ JUTRect unk1D0[9];
 	/* 0x260 */ TBoundPane* unk260;
 	/* 0x264 */ u16 unk264;
@@ -178,7 +185,7 @@ public:
 	/* 0x29C */ TBoundPane* unk29C;
 	/* 0x2A0 */ J2DPicture* unk2A0[3];
 	/* 0x2AC */ J2DPicture* unk2AC[3];
-	/* 0x2B8 */ char unk2B8[0x4];
+	/* 0x2B8 */ f32 unk2B8;
 	/* 0x2BC */ JUTRect unk2BC[3];
 	/* 0x2EC */ JUtility::TColor unk2EC[3];
 	/* 0x2F8 */ TExPane* unk2F8;
@@ -198,11 +205,11 @@ public:
 	/* 0x39C */ TBoundPane* unk39C[3];
 	/* 0x3A8 */ TExPane* unk3A8;
 	/* 0x3AC */ char unk3AC[0x4];
-	/* 0x3B0 */ J2DPane* unk3B0;
+	/* 0x3B0 */ J2DWindow* unk3B0;
 	/* 0x3B4 */ J2DTextBox* unk3B4;
 	/* 0x3B8 */ J2DTextBox* unk3B8;
 	/* 0x3BC */ JUTRect unk3BC;
-	/* 0x3CC */ u16 unk3CC;
+	/* 0x3CC */ s16 unk3CC;
 	/* 0x3D0 */ TMessageLoader* unk3D0;
 	/* 0x3D4 */ JSUInputStream* unk3D4;
 	/* 0x3D8 */ JSUOutputStream* unk3D8;
@@ -213,15 +220,16 @@ public:
 	/* 0x3EC */ f32 unk3EC;
 	/* 0x3F0 */ u16 unk3F0;
 	/* 0x3F4 */ u32 unk3F4;
-	/* 0x3F8 */ char unk3F8[0x4];
+	/* 0x3F8 */ u8 unk3F8;
+	/* 0x3F9 */ char unk3F9[0x3];
 	/* 0x3FC */ TExPane* unk3FC;
 	/* 0x400 */ TBoundPane* unk400;
 	/* 0x404 */ TBoundPane* unk404;
 	/* 0x408 */ TBoundPane* unk408;
 	/* 0x40C */ TBoundPane* unk40C;
 	/* 0x410 */ TBoundPane* unk410;
-	/* 0x414 */ TBoundPane* unk414[4];
-	/* 0x424 */ char unk424[0x2];
+	/* 0x414 */ TBlendPane* unk414[4];
+	/* 0x424 */ u8 unk424[2];
 	/* 0x426 */ u8 unk426;
 	/* 0x428 */ TExPane* unk428;
 	/* 0x42C */ TBoundPane* unk42C;
