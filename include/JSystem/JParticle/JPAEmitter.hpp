@@ -8,9 +8,13 @@
 #include <JSystem/JMath.hpp>
 #include <JSystem/JGeometry.hpp>
 #include <JSystem/JSupport/JSUList.hpp>
+#include <stdint.h>
 
 class JPAEmitterManager;
 class JPADataBlockLinkInfo;
+
+typedef JPACallBackBase<JPABaseEmitter*> JPAEmitterCallBack;
+typedef JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*> JPAParticleCallBack;
 
 // name fabricated
 // Represents various state & parameters of the emitter that is
@@ -162,6 +166,25 @@ public:
 	f32 getRate() const { return mChildSpawnRate; }
 	void setRate(f32 rate) { mChildSpawnRate = rate; }
 
+	void setFieldList(JSUList<JPABaseField>* list)
+	{
+		mFieldManager.unkC = list;
+	}
+
+	void setEmitterCallBackPtr(JPAEmitterCallBack* cb) { unk110 = cb; }
+	void setParticleCallBackPtr(JPAParticleCallBack* cb) { unk114 = cb; }
+	uintptr_t getUserWork() { return unk120; }
+	void setUserWork(uintptr_t work) { unk120 = work; }
+
+	void setEmitterTranslation(const JGeometry::TVec3<f32>& trans)
+	{
+		mTrans.set(trans);
+	}
+	void setEmitterScale(const JGeometry::TVec3<f32>& scale)
+	{
+		mScale.set(scale);
+	}
+
 	f32 getRandomF() { return mRng.get_ufloat_1(); }
 	f32 getRandomRF() { return mRng.get_ufloat_1() * 2.0f - 1.0f; }
 	f32 getRandomSF() { return mRng.get_ufloat_1() - 0.5f; }
@@ -178,14 +201,6 @@ public:
 	JPAFieldManager* getFieldManager() { return &mFieldManager; }
 	bool doParticleCreateChildren() { return mParticlesCreateChildren; }
 
-	void setUnk190(f32 x, f32 y, f32 z) { mScale.set(x, y, z); }
-
-	// fabricated
-	void setScale2(JGeometry::TVec3<f32> scale)
-	{
-		mScale.x = scale.x, mScale.y = scale.y, mScale.z = scale.z;
-	}
-
 	void setRotation(s16 x, s16 y, s16 z)
 	{
 		unk16C.x = x;
@@ -201,6 +216,21 @@ public:
 
 	void setGlobalAlpha(u8 alpha) { mGlobalPrmColor.a = alpha; }
 	u8 getGlobalAlpha() const { return mGlobalPrmColor.a; }
+
+	void getBasePrmColor(GXColor& color) const
+	{
+		color.r = mGlobalPrmColor.r;
+		color.g = mGlobalPrmColor.g;
+		color.b = mGlobalPrmColor.b;
+		color.a = mGlobalPrmColor.a;
+	}
+	void getBaseEnvColor(GXColor& color) const
+	{
+		color.r = unk184.r;
+		color.g = unk184.g;
+		color.b = unk184.b;
+		color.a = 0xff;
+	}
 
 	void setGlobalPrmColor(u8 r, u8 g, u8 b)
 	{
@@ -237,6 +267,9 @@ public:
 	void playCreateParticle() { clearStatus(STATUS_STOP_EMIT); }
 	void stopCalcEmitter() { setStatus(STATUS_STOP_CALC); }
 	void playCalcEmitter() { clearStatus(STATUS_STOP_CALC); }
+	bool isDraw() { return !checkStatus(STATUS_STOP_DRAW); }
+	void draw(MtxPtr cameraMtxPtr) { mDraw.draw(cameraMtxPtr); }
+
 	void stopDrawParticle() { setStatus(STATUS_STOP_DRAW); }
 	void playDrawParticle() { clearStatus(STATUS_STOP_DRAW); }
 
@@ -295,11 +328,11 @@ public:
 	/* 0xF4 */ JSUList<JPABaseParticle> mParticleList;
 	/* 0x100 */ JSUList<JPABaseParticle> mChildParticleList;
 	/* 0x10C */ JPAEmitterManager* mManager;
-	/* 0x110 */ JPACallBackBase<JPABaseEmitter*>* unk110;
-	/* 0x114 */ JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>* unk114;
+	/* 0x110 */ JPAEmitterCallBack* unk110;
+	/* 0x114 */ JPAParticleCallBack* unk114;
 	/* 0x118 */ JPADataBlockLinkInfo* mEmitterDataBlockInfo;
 	/* 0x11C */ u32 mStatus;
-	/* 0x120 */ void* unk120;
+	/* 0x120 */ uintptr_t unk120;
 	/* 0x124 */ TPosition3f mGlobalRotation;
 
 	/* 0x154 */ JGeometry::TVec3<f32> mGlobalDynamicsScale;
