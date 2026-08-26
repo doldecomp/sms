@@ -10,6 +10,8 @@
 #include <MSound/MSound.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Player/Mario.hpp>
+#include <Enemy/BossEel.hpp>
+#include <MoveBG/MapObjCorona.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <Player/WaterGun.hpp>
 #include <Player/Yoshi.hpp>
@@ -103,9 +105,9 @@ static inline void setEmitterToPaneCenter(JPABaseEmitter* emitter,
                                           J2DPane* pane)
 {
 	JUTRect bounds(pane->mGlobalBounds);
-	emitter->mGlobalTranslation.x = bounds.x1 + bounds.getWidth() * 0.5f;
-	emitter->mGlobalTranslation.y = bounds.y1 + bounds.getHeight() * 0.5f;
-	emitter->mGlobalTranslation.z = 0.0f;
+	emitter->mGlobalTranslation.set(bounds.x1 + bounds.getWidth() * 0.5f,
+	                                bounds.y1 + bounds.getHeight() * 0.5f,
+	                                0.0f);
 }
 
 // fabricated
@@ -115,20 +117,9 @@ static inline void syncPaneBounds(TBoundPane* pane)
 }
 
 // fabricated
-static inline void moveBoundPaneTo(TBoundPane* pane, int x, int y)
-{
-	pane->getPane()->move(x, y);
-	syncPaneBounds(pane);
-}
-
-// fabricated
 static inline void detachPaneFromParent(J2DPane* pane)
 {
-	JSUTree<J2DPane>* tree   = (JSUTree<J2DPane>*)pane->getPaneTree();
-	JSUTree<J2DPane>* parent = tree->getParent();
-
-	if (parent != nullptr)
-		parent->removeChild(tree);
+	pane->mPaneTree.getParent()->removeChild(&pane->mPaneTree);
 }
 
 // fabricated
@@ -193,41 +184,6 @@ static inline bool isMountedYoshi(TMario* mario)
 }
 
 // fabricated
-static inline bool isConsoleDemoCameraActive()
-{
-	return gpCamera->isSimpleDemoCamera() || gpCamera->mMode == 0x49;
-}
-
-// fabricated
-static inline void setCurrentNozzlePanes(TGCConsole2* console, u8 nozzle)
-{
-	console->unk274->getPane()->hide();
-	console->unk288->hide();
-	switch (nozzle) {
-	case TWaterGun::Spray:
-		console->unk274 = console->unk278[0];
-		console->unk288 = console->unk28C[0];
-		break;
-	case TWaterGun::Rocket:
-		console->unk274 = console->unk278[2];
-		console->unk288 = console->unk28C[2];
-		break;
-	case TWaterGun::Hover:
-	case TWaterGun::Underwater:
-		console->unk274 = console->unk278[1];
-		console->unk288 = console->unk28C[1];
-		break;
-	case TWaterGun::Turbo:
-		console->unk274 = console->unk278[3];
-		console->unk288 = console->unk28C[3];
-		break;
-	}
-	console->unk310 = nozzle;
-	console->unk274->getPane()->show();
-	console->unk288->show();
-}
-
-// fabricated
 static inline void updateWaterGaugeFill(TGCConsole2* console)
 {
 	TMario* mario       = gpMarioOriginal;
@@ -238,9 +194,33 @@ static inline void updateWaterGaugeFill(TGCConsole2* console)
 	u8 currentNozzle    = waterGun->mCurrentNozzle;
 	f32 fill;
 
-	if (console->unk2F8->isInterpolatorAtZero() && !console->unk34[17]
-	    && currentNozzle != console->unk310)
-		setCurrentNozzlePanes(console, currentNozzle);
+	if (console->unk2F8->isInterpolatorAtZero() && !console->unk45
+	    && currentNozzle != console->unk310) {
+		console->unk274->getPane()->hide();
+		console->unk288->hide();
+		switch (currentNozzle) {
+		case TWaterGun::Spray:
+			console->unk274 = console->unk278[0];
+			console->unk288 = console->unk28C[0];
+			break;
+		case TWaterGun::Rocket:
+			console->unk274 = console->unk278[2];
+			console->unk288 = console->unk28C[2];
+			break;
+		case TWaterGun::Hover:
+		case TWaterGun::Underwater:
+			console->unk274 = console->unk278[1];
+			console->unk288 = console->unk28C[1];
+			break;
+		case TWaterGun::Turbo:
+			console->unk274 = console->unk278[3];
+			console->unk288 = console->unk28C[3];
+			break;
+		}
+		console->unk310 = currentNozzle;
+		console->unk274->getPane()->show();
+		console->unk288->show();
+	}
 
 	if (console->unk28 != currentWater && currentWater == maxWater
 	    && SMSGetMSound()->gateCheck(0x4807)) {
@@ -422,15 +402,17 @@ static inline void processBalloonTextStep(TGCConsole2* console)
 // fabricated
 static inline bool startLifeMeterDisappear(TGCConsole2* console, u16 frame)
 {
-	if (console->unk34[4] || console->unk34[24])
+	if (console->unk38 || console->unk4C)
 		return false;
 
-	console->unk34[24]   = 1;
-	TBoundPane* lifePane = console->unk1C4;
-	int offset           = -(lifePane->unk4.y2 + 1
-                   + console->unk174->getPane()->getBounds().getHeight());
-	lifePane->setPanePosition(40, JUTPoint(0, offset), JUTPoint(0, offset >> 1),
-	                          JUTPoint(0, 0));
+	console->unk4C = 1;
+	console->unk1C4->setPanePosition(
+	    40, JUTPoint(0, 0),
+	    JUTPoint(0, (-(console->unk1C4->unk4.y2 + 1)
+	                 - console->unk174->getPane()->getHeight())
+	                    >> 1),
+	    JUTPoint(0, -(console->unk1C4->unk4.y2 + 1)
+	                    - console->unk174->getPane()->getHeight()));
 	console->unk84 = frame;
 	return true;
 }
@@ -475,70 +457,50 @@ static inline void playLifeChangeSound(u32 sound)
 }
 
 // fabricated
-static inline void updateLifeSegmentCount(TGCConsole2* console, u8 amount,
-                                          bool airMode)
-{
-	if (console->unk18 != 10 && amount != console->unk1CC[0]) {
-		if (console->unk1CC[0] < amount) {
-			++console->unk1CC[0];
-			int index = console->unk1CC[0] * 2;
-			console->unk17C[index]->show();
-			playLifeChangeSound(0x4801);
-		} else if (console->unk1CC[0] > 0) {
-			int index = console->unk1CC[0] * 2;
-			console->unk17C[index]->hide();
-			console->unk17C[index]->setBounds(
-			    console->unk1D0[console->unk1CC[0]]);
-			console->unk17C[index + 1]->setBounds(
-			    console->unk1D0[console->unk1CC[0]]);
-			--console->unk1CC[0];
-			playLifeChangeSound(0x4823);
-		}
-		console->unk1C = console->unk1CC[0];
-		updateLifeMeterColors(console, airMode);
-	}
-}
-
-// fabricated
 static inline void updateLifeMeterState(TGCConsole2* console)
 {
-	TMario* mario = gpMarioOriginal;
-	u8 amount     = mario->mHealth;
-	bool airMode  = false;
+	u8 amount;
+	bool airMode = true;
 
 	switch (console->unk18) {
+	case 0:
+	case 1:
+	case 2:
+	case 3:
+	case 7:
+		airMode = false;
+		amount  = gpMarioOriginal->mHealth;
+		break;
 	case 4:
 	case 5:
 	case 6:
 	case 8:
 	case 9:
-		amount  = (s16)mario->mAir;
-		airMode = true;
+		amount = (s16)gpMarioOriginal->mAir;
 		break;
 	}
 
 	if (amount > 8)
 		amount = 8;
 
-	J2DPane* lifePane = console->unk1C4->getPane();
 	if (airMode && gpMarDirector->mState == TMarDirector::STATE_UNK5) {
-		s16 alpha = lifePane->mAlpha - 0x10;
+		s16 alpha = console->unk1C4->getPane()->mAlpha - 0x10;
 		if (alpha < 0)
 			alpha = 0;
-		lifePane->mAlpha = alpha;
-	} else if (lifePane->mAlpha != 0xff
+		console->unk1C4->getPane()->mAlpha = alpha;
+	} else if (console->unk1C4->getPane()->mAlpha != 0xff
 	           && gpMarDirector->mState != TMarDirector::STATE_UNK5) {
-		u16 alpha = lifePane->mAlpha + 0x10;
+		u16 alpha = console->unk1C4->getPane()->mAlpha + 0x10;
 		if (alpha > 0xff)
 			alpha = 0xff;
-		lifePane->mAlpha = alpha;
+		console->unk1C4->getPane()->mAlpha = alpha;
 	}
 
-	bool underwater = mario->isUnderWater();
 	bool airTimeout = false;
-	if (underwater) {
-		if (console->unk268 < 0xf0)
-			++console->unk268;
+	if (gpMarioOriginal->isUnderWater()) {
+		int airTimer = console->unk268;
+		if (airTimer < 0xf0)
+			console->unk268 = airTimer + 1;
 		else
 			airTimeout = true;
 	} else {
@@ -547,8 +509,8 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 
 	switch (console->unk18) {
 	case 0:
-		if (lifePane->isVisible())
-			lifePane->hide();
+		if (console->unk1C4->getPane()->isVisible())
+			console->unk1C4->getPane()->hide();
 
 		if (SMS_isDivingMap()) {
 			console->startInsertLife(1);
@@ -558,25 +520,25 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 		if (airTimeout) {
 			console->resetLife(amount);
 			console->startAppearLife(1);
-			amount             = (s16)mario->mAir;
+			amount             = (s16)gpMarioOriginal->mAir;
 			console->unk1CC[0] = amount;
 			if (gpMarDirector->mState == TMarDirector::STATE_UNK5)
-				lifePane->mAlpha = 0;
+				console->unk1C4->getPane()->mAlpha = 0;
 			console->unk18 = 4;
 		}
 
-		if (console->unk1CC[0] < 8 && !lifePane->isVisible() && amount != 0) {
+		if (console->unk1CC[0] < 8 && !console->unk1C4->getPane()->isVisible()
+		    && amount != 0) {
 			console->startAppearLife(0);
 			console->unk18 = 1;
 		}
 		break;
 	case 1:
 		if (console->processAppearLife(console->unk84++)) {
-			console->unk18    = 2;
-			console->unk34[4] = 0;
+			console->unk18 = 2;
+			console->unk38 = 0;
 		}
-		if (airTimeout
-		    && startLifeMeterDisappear(console, console->unk84 == 0 ? 0 : 1))
+		if (airTimeout && startLifeMeterDisappear(console, 1))
 			console->unk18 = 3;
 		break;
 	case 2:
@@ -591,8 +553,8 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 	case 3:
 		if (console->unk84 > 0x78) {
 			if (console->unk1C4->update()) {
-				console->unk34[24] = 0;
-				console->unk18     = 0;
+				console->unk4C = 0;
+				console->unk18 = 0;
 			}
 		} else {
 			++console->unk84;
@@ -608,22 +570,22 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 		break;
 	case 6:
 		if (console->processAppearLife(console->unk84)) {
-			console->unk18    = 5;
-			console->unk34[4] = 0;
+			console->unk18 = 5;
+			console->unk38 = 0;
 		}
-		if (!underwater && console->unk84 == 0)
+		if (!gpMarioOriginal->isUnderWater() && console->unk84 == 0)
 			console->unk84 = 1;
 		if (!(amount >= 8 && console->unk84 == 0) && console->unk84 < 1000)
 			++console->unk84;
 		break;
 	case 7:
-		if (!underwater) {
+		if (!gpMarioOriginal->isUnderWater()) {
 			if (console->unk1CC[0] == 8) {
 				if (startLifeMeterDisappear(console, 0))
 					console->unk18 = 6;
 			} else if (console->unk1CC[0] != console->unk1C) {
 				console->startAppearLife(1);
-				amount             = mario->mHealth;
+				amount             = gpMarioOriginal->mHealth;
 				console->unk1CC[0] = amount;
 				console->resetLife(amount);
 				console->unk18 = 1;
@@ -633,11 +595,11 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 	case 8:
 		if (console->unk84 > 0x78) {
 			if (console->unk1C4->update()) {
-				console->unk34[24] = 0;
-				if (mario->mHealth == 8) {
+				console->unk4C = 0;
+				if (gpMarioOriginal->mHealth == 8) {
 					console->unk18 = 0;
 				} else {
-					amount             = mario->mHealth;
+					amount             = gpMarioOriginal->mHealth;
 					console->unk1CC[0] = amount;
 					console->startInsertLife(0);
 					console->resetLife(amount);
@@ -649,13 +611,13 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 		}
 		break;
 	case 10:
-		if (console->unk34[28]) {
+		if (console->unk50) {
 			if (console->unk1C4->update())
-				console->unk34[24] = 0;
-		} else if (mario->mHealth != 8) {
+				console->unk4C = 0;
+		} else if (gpMarioOriginal->mHealth != 8) {
 			console->startInsertLife(0);
 			console->unk18 = 7;
-		} else if (underwater || SMS_isDivingMap()) {
+		} else if (gpMarioOriginal->isUnderWater() || SMS_isDivingMap()) {
 			console->startInsertLife(1);
 			console->unk18 = 8;
 		} else {
@@ -673,7 +635,53 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 		console->unk3A8->getPane()->hide();
 	}
 
-	updateLifeSegmentCount(console, amount, airMode);
+	if (amount != console->unk1CC[0] && console->unk18 != 10) {
+		if (console->unk1CC[0] < amount) {
+			++console->unk1CC[0];
+			console->unk17C[console->unk1CC[0] * 2]->show();
+			playLifeChangeSound(0x4801);
+		} else if (console->unk1CC[0] > 0) {
+			console->unk17C[console->unk1CC[0] * 2]->hide();
+			console->unk17C[console->unk1CC[0] * 2]->setBounds(
+			    JUTRect(console->unk1D0[console->unk1CC[0]].x1,
+			            console->unk1D0[console->unk1CC[0]].y1,
+			            console->unk1D0[console->unk1CC[0]].x2,
+			            console->unk1D0[console->unk1CC[0]].y2));
+			console->unk17C[console->unk1CC[0] * 2 + 1]->setBounds(
+			    JUTRect(console->unk1D0[console->unk1CC[0]].x1,
+			            console->unk1D0[console->unk1CC[0]].y1,
+			            console->unk1D0[console->unk1CC[0]].x2,
+			            console->unk1D0[console->unk1CC[0]].y2));
+			--console->unk1CC[0];
+			playLifeChangeSound(0x4823);
+		}
+		console->unk1C = console->unk1CC[0];
+		if (console->unk1CC[0] >= 4) {
+			if (airMode) {
+				((J2DPicture*)console->unk178->getPane())->mWhite = 0x00FFFFFF;
+				((J2DPicture*)console->unk178->getPane())->mBlack = 0x003CFF00;
+				((J2DPicture*)console->unk17C[0])->mWhite         = 0x00FFFFFF;
+				((J2DPicture*)console->unk17C[0])->mBlack         = 0x003CFF00;
+			} else {
+				((J2DPicture*)console->unk178->getPane())->mWhite = 0xFFFFFFFF;
+				((J2DPicture*)console->unk178->getPane())->mBlack = 0;
+				((J2DPicture*)console->unk17C[0])->mWhite         = 0xFFFFFFFF;
+				((J2DPicture*)console->unk17C[0])->mBlack         = 0;
+			}
+		} else {
+			if (airMode) {
+				((J2DPicture*)console->unk178->getPane())->mWhite = 0x0010FFFF;
+				((J2DPicture*)console->unk178->getPane())->mBlack = 0x003CFF00;
+				((J2DPicture*)console->unk17C[0])->mWhite         = 0x0010FFFF;
+				((J2DPicture*)console->unk17C[0])->mBlack         = 0x003CFF00;
+			} else {
+				((J2DPicture*)console->unk178->getPane())->mWhite = 0x7F7F7FFF;
+				((J2DPicture*)console->unk178->getPane())->mBlack = 0;
+				((J2DPicture*)console->unk17C[0])->mWhite         = 0x7F7F7FFF;
+				((J2DPicture*)console->unk17C[0])->mBlack         = 0;
+			}
+		}
+	}
 }
 
 // fabricated
@@ -685,28 +693,15 @@ static inline void detachBoundPaneFromParent(TBoundPane* pane)
 // fabricated
 static inline void initHiddenPaneAbove(TExPane* pane)
 {
-	int offset = -(pane->getInitialBounds().y2 + 1);
-	pane->setPaneOffset(1, 0, offset, 0, offset);
+	pane->updatePaneOffset(1, 0, -(pane->mInitialBounds.y2 + 1));
 	pane->update();
-	pane->getPane()->hide();
 }
 
 // fabricated
 static inline void initHiddenPaneOffset(TExPane* pane, int offset)
 {
-	pane->setPaneOffset(1, 0, offset, 0, offset);
+	pane->updatePaneOffset(1, 0, offset);
 	pane->update();
-	pane->getPane()->hide();
-}
-
-// fabricated
-static inline int clampRange(int value, int minValue, int maxValue)
-{
-	if (value < minValue)
-		return minValue;
-	if (value > maxValue)
-		return maxValue;
-	return value;
 }
 
 // fabricated
@@ -740,7 +735,7 @@ static inline void setThreeDigits(Pane** panes, JUTTexture** textures,
 static inline void setTwoDigits(TBoundPane** panes, JUTTexture** textures,
                                 int value)
 {
-	setDigitPane(panes[0], textures, value / 10);
+	setDigitPane(panes[0], textures, (int)(value * 0.1f));
 	setDigitPane(panes[1], textures, value % 10);
 }
 
@@ -748,7 +743,7 @@ static inline void setTwoDigits(TBoundPane** panes, JUTTexture** textures,
 static inline void updateMarioLifeCounter(TGCConsole2* console)
 {
 	int lives = TFlagManager::smInstance->getFlag(0x20001);
-	if (lives > (u8)console->unk3AC[0]) {
+	if (lives > console->unk3AC[0]) {
 		if (lives > 99)
 			lives = 99;
 		console->unk3AC[0] = lives;
@@ -763,32 +758,56 @@ static inline void setCounterDigits(Pane** panes, JUTTexture** textures,
                                     int value)
 {
 	if (value < 100) {
-		setDigitPane(panes[0], textures, value / 10);
+		setDigitPane(panes[0], textures, (int)(value * 0.1f));
 		setDigitPane(panes[1], textures, value % 10);
-		panes[2]->getPane()->hide();
 	} else {
-		int hundreds  = value / 100;
-		int remainder = value - hundreds * 100;
-		setDigitPane(panes[0], textures, hundreds);
-		setDigitPane(panes[1], textures, remainder / 10);
+		setDigitPane(panes[0], textures, (int)(value * 0.01f));
+
+		int remainder = value - (int)(value * 0.01f) * 100;
+		setDigitPane(panes[1], textures, (int)(remainder * 0.1f));
 		setDigitPane(panes[2], textures, remainder % 10);
-		panes[2]->getPane()->show();
 	}
 }
 
 // fabricated
-static inline int getSpentBlueCoinCount()
+template <class Pane>
+static inline void setBlueCoinDigits(Pane** panes, JUTTexture** textures,
+                                     int value)
 {
-	int count = 0;
-	for (int flag = 0x10046; flag < 0x10056; ++flag) {
-		if (TFlagManager::smInstance->getFlag(flag) != 0)
-			++count;
+	if (value < 100) {
+		setDigitPane(panes[0], textures, (int)(value * 0.1f));
+		setDigitPane(panes[1], textures, value % 10);
+		if (panes[2]->getPane()->isVisible())
+			panes[2]->getPane()->hide();
+	} else {
+		setDigitPane(panes[0], textures, (int)(value * 0.01f));
+
+		int remainder = value - (int)(value * 0.01f) * 100;
+		setDigitPane(panes[1], textures, (int)(remainder * 0.1f));
+		setDigitPane(panes[2], textures, remainder % 10);
+		if (!panes[2]->getPane()->isVisible())
+			panes[2]->getPane()->show();
 	}
-	for (int flag = 0x1006c; flag < 0x10074; ++flag) {
-		if (TFlagManager::smInstance->getFlag(flag) != 0)
-			++count;
+}
+
+// fabricated
+template <class Pane>
+static inline void setShineDigits(Pane** panes, JUTTexture** textures,
+                                  int value)
+{
+	if (value < 100) {
+		setDigitPane(panes[0], textures, (int)(value * 0.1f));
+		setDigitPane(panes[1], textures, value % 10);
+	} else {
+		if (!panes[2]->getPane()->isVisible())
+			panes[2]->getPane()->show();
+
+		setDigitPane(panes[0], textures, (int)(value * 0.01f));
+
+		int remainder = value - (int)(value * 0.01f) * 100;
+		setDigitPane(panes[1], textures, (int)(remainder * 0.1f));
+		setDigitPane(panes[2], textures, remainder % 10);
 	}
-	return count;
 }
 
 // fabricated
@@ -880,7 +899,7 @@ static inline void updateCoinCounterAnimation(TGCConsole2* console)
 	}
 
 	bool done = true;
-	if (!console->unk34[0]) {
+	if (!console->unk34) {
 		for (int i = 0; i < 3; ++i)
 			done = console->unkD4[i]->update() && done;
 	}
@@ -985,7 +1004,7 @@ static inline void updateCounterState(TGCConsole2* console)
 
 	bool waitForStarHud = gpMarioOriginal->mStatus == 0xC400201
 	                      && gpMarDirector->mState != TMarDirector::STATE_UNK5
-	                      && !console->unk34[28]
+	                      && !console->unk50
 	                      && !console->unk140->isInterpolatorAtZero();
 	if (waitForStarHud) {
 		++console->unk30;
@@ -1004,12 +1023,19 @@ static inline void updateCounterState(TGCConsole2* console)
 	if ((int)console->unk168 != blueTotal) {
 		++console->unk168;
 
-		int spentBlueCoins = getSpentBlueCoinCount();
-		int blueValue      = console->unk168 - spentBlueCoins * 10;
+		int spentBlueCoins = 0;
+		for (int flag = 0x46; flag < 0x56; ++flag)
+			if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
+				++spentBlueCoins;
+
+		for (int flag = 0x6C; flag <= 0x73; ++flag)
+			if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
+				++spentBlueCoins;
+		int blueValue = console->unk168 - spentBlueCoins * 10;
 		if (blueValue < 0)
 			blueValue = 0;
 
-		setCounterDigits(console->unk154, console->unkE0, blueValue);
+		setBlueCoinDigits(console->unk154, console->unkE0, blueValue);
 		if (console->unk160->getPane()->isVisible()) {
 			emitCounterParticle(console->unk154[1]);
 			if (blueValue % 10 == 0)
@@ -1033,8 +1059,15 @@ static inline void updateCounterState(TGCConsole2* console)
 
 	if (console->unk8A != 0) {
 		if (console->unk8A > 0xFB) {
-			int spentBlueCoins = getSpentBlueCoinCount();
-			int target         = blueTotal - spentBlueCoins * 10;
+			int spentBlueCoins = 0;
+			for (int flag = 0x46; flag < 0x56; ++flag)
+				if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
+					++spentBlueCoins;
+
+			for (int flag = 0x6C; flag <= 0x73; ++flag)
+				if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
+					++spentBlueCoins;
+			int target = blueTotal - spentBlueCoins * 10;
 			if (console->unk170 != target) {
 				--console->unk170;
 				if (console->unk170 < 0) {
@@ -1043,8 +1076,8 @@ static inline void updateCounterState(TGCConsole2* console)
 					MSoundSESystem::MSoundSE::startSoundSystemSE(0x4850, 0,
 					                                             nullptr, 0);
 				}
-				setCounterDigits(console->unk154, console->unkE0,
-				                 console->unk170);
+				setBlueCoinDigits(console->unk154, console->unkE0,
+				                  console->unk170);
 			}
 		}
 
@@ -1079,7 +1112,7 @@ static inline void updateCounterState(TGCConsole2* console)
 				++console->unk64;
 				console->unk8A = 0xFB;
 			}
-		} else if (!console->unk34[0] && !console->unk34[1]) {
+		} else if (!console->unk34 && !console->unk35) {
 			console->unk134[0]->update();
 			console->unk134[1]->update();
 			console->unk134[2]->update();
@@ -1092,7 +1125,7 @@ static inline void updateCounterState(TGCConsole2* console)
 // fabricated
 static inline void updateStarHudAutoHide(TGCConsole2* console)
 {
-	if (console->unk34[0])
+	if (console->unk34)
 		return;
 	if (!console->unk140->isInterpolatorAtZero())
 		return;
@@ -1101,13 +1134,13 @@ static inline void updateStarHudAutoHide(TGCConsole2* console)
 	if (gpMarDirector->mState == TMarDirector::STATE_UNK5
 	    || gpMarDirector->mState == TMarDirector::STATE_UNK11)
 		return;
-	if (console->unk34[28] || console->unk16C != 0 || console->unk8A != 0)
+	if (console->unk50 || console->unk16C != 0 || console->unk8A != 0)
 		return;
 	if (gpMarDirector->unk124 == 2)
 		return;
 
 	console->startDisappearStar();
-	if (console->unk3A8->getPane()->isVisible() && !console->unk34[7])
+	if (console->unk3A8->getPane()->isVisible() && !console->unk3B)
 		console->startDisappearMario();
 	console->unk5A = 0;
 }
@@ -1167,18 +1200,21 @@ static inline void updateLifeMeterBlink(TGCConsole2* console)
 }
 
 // fabricated
-static inline bool updateDownBlendPane(TBlendPane* pane)
+static inline void updateDownBlendPaneState(TBlendPane*& pane, bool& isFinished)
 {
 	if (pane->update()) {
+		bool paneFinished = false;
 		if (pane->unk14.x1 == 0 && pane->unk14.y1 == 0)
-			return true;
-
-		pane->setPanePosition(30, TGCConsole2::cDownMidPoint,
-		                      TGCConsole2::cDownMidPoint,
-		                      TGCConsole2::cDownBotPoint);
+			paneFinished = true;
+		if (!paneFinished) {
+			pane->setPanePosition(30, TGCConsole2::cDownMidPoint,
+			                      TGCConsole2::cDownMidPoint,
+			                      TGCConsole2::cDownBotPoint);
+			isFinished = false;
+		}
+	} else {
+		isFinished = false;
 	}
-
-	return false;
 }
 
 // fabricated
@@ -1255,41 +1291,47 @@ static inline void updateUpBlendPaneState(TBlendPane*& pane, bool& isFinished)
 }
 
 // fabricated
-static inline bool updateCoinPane(TBoundPane* pane)
+static inline void updateCoinPaneState(TBoundPane*& pane, bool& isFinished)
 {
 	if (pane->update()) {
+		bool paneFinished = false;
 		if (pane->unk14.x1 == 0 && pane->unk14.y1 == 0)
-			return true;
-
-		pane->setPanePosition(30, TGCConsole2::cCoinMidPoint,
-		                      TGCConsole2::cCoinMidPoint,
-		                      TGCConsole2::cCoinBotPoint);
+			paneFinished = true;
+		if (!paneFinished) {
+			pane->setPanePosition(30, TGCConsole2::cCoinMidPoint,
+			                      TGCConsole2::cCoinMidPoint,
+			                      TGCConsole2::cCoinBotPoint);
+			isFinished = false;
+		}
+	} else {
+		isFinished = false;
 	}
-
-	return false;
 }
 
 // fabricated
-static inline bool updateDownCoinBlendPane(TBlendPane* pane)
+static inline void updateCoinBlendPaneState(TBlendPane*& pane, bool& isFinished)
 {
 	pane->update();
 
-	if (pane->unk24)
-		return false;
-
-	if (pane->unk14.x1 == 0 && pane->unk14.y1 == 0)
-		return true;
-
-	pane->setPanePosition(30, TGCConsole2::cCoinMidPoint,
-	                      TGCConsole2::cCoinMidPoint,
-	                      TGCConsole2::cCoinBotPoint);
-	return false;
+	if (pane->unk24) {
+		isFinished = false;
+	} else {
+		bool paneFinished = false;
+		if (pane->unk14.x1 == 0 && pane->unk14.y1 == 0)
+			paneFinished = true;
+		if (!paneFinished) {
+			pane->setPanePosition(30, TGCConsole2::cCoinMidPoint,
+			                      TGCConsole2::cCoinMidPoint,
+			                      TGCConsole2::cCoinBotPoint);
+			isFinished = false;
+		}
+	}
 }
 
 // fabricated
 static inline void updateShineAppearState(TGCConsole2* console)
 {
-	if (!console->unk34[0])
+	if (!console->unk34)
 		return;
 
 	bool done = console->processAppearStar(console->unk5C);
@@ -1298,7 +1340,7 @@ static inline void updateShineAppearState(TGCConsole2* console)
 		int shines = TFlagManager::smInstance->getFlag(0x40000);
 		if ((int)console->unk24 != shines)
 			console->unk24 = shines;
-		console->unk34[0] = 0;
+		console->unk34 = 0;
 	}
 	++console->unk5C;
 }
@@ -1306,50 +1348,50 @@ static inline void updateShineAppearState(TGCConsole2* console)
 // fabricated
 static inline void updateJetAppearState(TGCConsole2* console)
 {
-	if (console->unk34[9] && console->processAppearJet(console->unk72++)) {
-		console->unk34[9] = 0;
-		console->unk72    = 0;
+	if (console->unk3D && console->processAppearJet(console->unk72++)) {
+		console->unk3D = 0;
+		console->unk72 = 0;
 	}
 }
 
 // fabricated
 static inline void updateRedCoinAppearState(TGCConsole2* console)
 {
-	if (console->unk34[8] && console->processAppearRed(console->unk74++)) {
-		console->unk34[8] = 0;
-		console->unk74    = 0;
+	if (console->unk3C && console->processAppearRed(console->unk74++)) {
+		console->unk3C = 0;
+		console->unk74 = 0;
 	}
 }
 
 // fabricated
 static inline void updateTimerAppearState(TGCConsole2* console)
 {
-	if (console->unk34[10] && console->processAppearTimer(console->unk76++)) {
-		console->unk34[10] = 0;
-		console->unk76     = 0;
+	if (console->unk3E && console->processAppearTimer(console->unk76++)) {
+		console->unk3E = 0;
+		console->unk76 = 0;
 	}
 }
 
 // fabricated
 static inline void updateTelopState(TGCConsole2* console, u32 flags)
 {
-	if (console->unk34[11] && console->unk44C->update()) {
+	if (console->unk3F && console->unk44C->update()) {
 		console->unk44C->getPane()->hide();
-		console->unk34[11] = 0;
+		console->unk3F = 0;
 	}
 
-	if (console->unk34[14]) {
+	if (console->unk42) {
 		if (console->unk520->update()) {
-			console->unk34[14] = 0;
-			console->unk34[16] = 1;
-			console->unk80     = 0;
+			console->unk42 = 0;
+			console->unk44 = 1;
+			console->unk80 = 0;
 		}
-	} else if (console->unk34[15] && console->unk520->update()) {
-		console->unk34[15] = 0;
+	} else if (console->unk43 && console->unk520->update()) {
+		console->unk43 = 0;
 		console->unk520->getPane()->hide();
 	}
 
-	if (console->unk34[16] && console->unk520->getPane()->isVisible()) {
+	if (console->unk44 && console->unk520->getPane()->isVisible()) {
 		++console->unk80;
 		if (console->processDrawTelop(flags)) {
 			console->unk534 = console->unk524->getPane()->mBounds;
@@ -1360,10 +1402,9 @@ static inline void updateTelopState(TGCConsole2* console, u32 flags)
 			if (console->unk56D) {
 				console->unk56D = 0;
 			} else {
-				console->unk34[16] = 0;
-				console->unk55C    = 0;
-				if (!console->unk34[15]
-				    && console->unk520->getPane()->isVisible())
+				console->unk44  = 0;
+				console->unk55C = 0;
+				if (!console->unk43 && console->unk520->getPane()->isVisible())
 					console->startDisappearTelop();
 			}
 		}
@@ -1371,7 +1412,7 @@ static inline void updateTelopState(TGCConsole2* console, u32 flags)
 
 	u16 telopWait = console->unk56C ? console->unk562 : console->unk560;
 	TMessageLoader* telopMessages = console->unk530;
-	if (!console->unk34[16] && !console->unk34[14] && !console->unk34[15]
+	if (!console->unk44 && !console->unk42 && !console->unk43
 	    && telopMessages->unk4 != nullptr
 	    && console->unk55C >= (u32)((s16)telopWait * 120)
 	    && gpMarioOriginal->mStatus == 0xC400201) {
@@ -1394,13 +1435,13 @@ static inline void updateTelopState(TGCConsole2* console, u32 flags)
 // fabricated
 static inline void updateWaterTankState(TGCConsole2* console)
 {
-	if (console->unk34[17] && console->processAppearTank(console->unk7C++)) {
-		console->unk34[17] = 0;
-		console->unk34[18] = 1;
-		console->unk7C     = 0;
+	if (console->unk45 && console->processAppearTank(console->unk7C++)) {
+		console->unk45 = 0;
+		console->unk46 = 1;
+		console->unk7C = 0;
 	}
 
-	if (console->unk34[18]) {
+	if (console->unk46) {
 		if (gpMarDirector->mState == TMarDirector::STATE_UNK5)
 			console->unk7C = 0;
 
@@ -1414,7 +1455,7 @@ static inline void updateWaterTankState(TGCConsole2* console)
 		++console->unk7C;
 	}
 
-	if (console->unk34[23]) {
+	if (console->unk4B) {
 		bool done = true;
 		if (!console->unk2F8->update())
 			done = false;
@@ -1428,8 +1469,8 @@ static inline void updateWaterTankState(TGCConsole2* console)
 			console->unk2F8->getPane()->hide();
 			console->unk274->getPane()->hide();
 			console->unk29C->getPane()->hide();
-			console->unk34[23] = 0;
-			console->unk34[18] = 0;
+			console->unk4B = 0;
+			console->unk46 = 0;
 		}
 	}
 }
@@ -1437,14 +1478,14 @@ static inline void updateWaterTankState(TGCConsole2* console)
 // fabricated
 static inline void updateCoinAppearState(TGCConsole2* console)
 {
-	if (console->unk34[27] && console->processAppearCoin(console->unk88++))
-		console->unk34[27] = 0;
+	if (console->unk4F && console->processAppearCoin(console->unk88++))
+		console->unk4F = 0;
 }
 
 // fabricated
 static inline void updateMarioAppearState(TGCConsole2* console)
 {
-	if (console->unk34[6] && console->processAppearMario(console->unk70++)) {
+	if (console->unk3A && console->processAppearMario(console->unk70++)) {
 		if (console->unk3AC[1]) {
 			if (console->unk70 == 0xc8) {
 				int lives = TFlagManager::smInstance->getFlag(0x20001);
@@ -1453,7 +1494,7 @@ static inline void updateMarioAppearState(TGCConsole2* console)
 				setTwoDigits(console->unk39C, console->unkE0, lives);
 				TFlagManager::smInstance->setBool(false, 0x30002);
 				console->endCameraDemo();
-				console->unk34[6] = 0;
+				console->unk3A = 0;
 			}
 		} else {
 			console->unk3AC[1] = 0;
@@ -1461,7 +1502,7 @@ static inline void updateMarioAppearState(TGCConsole2* console)
 		}
 	}
 
-	if (!console->unk34[6] && !console->unk34[7]
+	if (!console->unk3A && !console->unk3B
 	    && console->unk3A8->getPane()->isVisible()
 	    && gpMarioOriginal->mStatus != 0xC400201
 	    && gpMarDirector->mState != TMarDirector::STATE_UNK5) {
@@ -1469,8 +1510,8 @@ static inline void updateMarioAppearState(TGCConsole2* console)
 			console->startDisappearMario();
 	}
 
-	if (console->unk34[7] && console->unk3A8->update()) {
-		console->unk34[7] = 0;
+	if (console->unk3B && console->unk3A8->update()) {
+		console->unk3B = 0;
 		console->unk3A8->getPane()->hide();
 	}
 }
@@ -1514,22 +1555,13 @@ static inline void drawWaterOrJuice(TGCConsole2* console, J2DOrthoGraph& graph)
 	if (isMountedYoshi(gpMarioOriginal)) {
 		switch (gpModelWaterManager->unk5D5F) {
 		case 1:
-			console->drawJuice(graph, ((u32)console->unk9A[8] << 24)
-			                              | ((u32)console->unk9A[9] << 16)
-			                              | ((u32)console->unk9A[10] << 8)
-			                              | console->unk9A[11]);
+			console->drawJuice(graph, console->unkA2);
 			break;
 		case 2:
-			console->drawJuice(graph, ((u32)console->unk9A[12] << 24)
-			                              | ((u32)console->unk9A[13] << 16)
-			                              | ((u32)console->unk9A[14] << 8)
-			                              | console->unk9A[15]);
+			console->drawJuice(graph, console->unkA6);
 			break;
 		case 3:
-			console->drawJuice(graph, ((u32)console->unk9A[16] << 24)
-			                              | ((u32)console->unk9A[17] << 16)
-			                              | ((u32)console->unk9A[18] << 8)
-			                              | console->unk9A[19]);
+			console->drawJuice(graph, console->unkAA);
 			break;
 		default:
 			console->drawJuice(graph, 0);
@@ -1544,6 +1576,13 @@ static const s32 scNozzleSoundList[] = {
 	0x88B0, 0x88B1, 0x88B2, 0x88B3, 0x88B4, 0x88B5,
 	0x88B6, 0x88B7, 0x88B8, 0x88B9, 0x88BA, -1,
 };
+
+// TODO: three dead .data objects the original TU still emits, recovered from
+// the ROM. They are never read, so which function's statics they were is
+// unknown; they are placed here only to keep the .data layout right.
+static f32 scUnusedScale1[] = { 1.0f, 1.0f, 1.0f };
+static f32 scUnusedScale2[] = { 1.0f, 1.0f, 1.0f };
+static int scUnusedTable[]  = { 0, 2, 1, 3 };
 
 static u32 scDolpicNewsDolpic0[]   = { 0x000E0000, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic1[]   = { 0x000E0001, 0xFFFFFFFF };
@@ -1578,6 +1617,36 @@ TGCConsole2::TGCConsole2(const char* name)
     , unk28(0)
     , unk2C(0)
     , unk30(0xfffffe70)
+    , unk34(0)
+    , unk35(0)
+    , unk36(0)
+    , unk37(0)
+    , unk38(0)
+    , unk39(0)
+    , unk3A(0)
+    , unk3B(0)
+    , unk3C(0)
+    , unk3D(0)
+    , unk3E(0)
+    , unk3F(0)
+    , unk40(0)
+    , unk41(0)
+    , unk42(0)
+    , unk43(0)
+    , unk44(0)
+    , unk45(0)
+    , unk46(0)
+    , unk47(0)
+    , unk48(0)
+    , unk49(0)
+    , unk4A(0)
+    , unk4B(0)
+    , unk4C(0)
+    , unk4D(0)
+    , unk4E(0)
+    , unk4F(0)
+    , unk50(0)
+    , unk51(0)
     , unk54(0)
     , unk58(0)
     , unk59(0)
@@ -1597,6 +1666,11 @@ TGCConsole2::TGCConsole2(const char* name)
     , unk8C(0)
     , unk90(nullptr)
     , unk98(20)
+    , unk9A(0x64, 0xDC, 0xFF, 0xFF)
+    , unk9E(0x00, 0xB4, 0xF0, 0xFF)
+    , unkA2(0xFF, 0xCF, 0x00, 0x7F)
+    , unkA6(0xFF, 0x00, 0xFF, 0x7F)
+    , unkAA(0xFF, 0x7F, 0x7F, 0x7F)
     , unkB0(nullptr)
     , unkB4(0)
     , unkB6(0)
@@ -1655,6 +1729,8 @@ TGCConsole2::TGCConsole2(const char* name)
     , unk426(0)
     , unk444(0)
     , unk448(0)
+    , unk510(false)
+    , unk51C(0)
     , unk530(nullptr)
     , mTelopTextWidth(0)
     , unk558(0)
@@ -1667,8 +1743,11 @@ TGCConsole2::TGCConsole2(const char* name)
     , unk56D(1)
     , unk570(nullptr)
 {
-	for (int i = 0; i < 2; ++i)
-		unkE0[i] = 0;
+	for (int i = 0; i < 3; ++i)
+		unkD4[i] = nullptr;
+
+	for (int i = 0; i < 10; ++i)
+		unkE0[i] = nullptr;
 
 	for (int i = 0; i < 3; ++i)
 		unk134[i] = nullptr;
@@ -1719,8 +1798,9 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 	unk1C4 = new TBoundPane(unkB0, '\0l_0');
 
 	for (int i = 0; i < 9; ++i) {
-		unk17C[i]     = unkB0[i].search('lm01');
-		unk17C[9 + i] = unkB0[i].search('lm02');
+		unk17C[i]     = unkB0->search('lm01' + (i << 8));
+		unk17C[i + 1] = unkB0->search('lm02' + (i << 8));
+		unk1D0[i]     = unk17C[i]->getBounds();
 	}
 
 	unk260 = new TBoundPane(unkB0, 'lm_0');
@@ -1765,7 +1845,7 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 	unk328 = unkB0->search('j_rq');
 	unk32C = unkB0->search('j_ms');
 
-	for (int i = 0; i < 20; ++i) {
+	for (int i = 0; i < 22; ++i) {
 		if (i < 9)
 			unk334[i] = unkB0->search('j_01' + i);
 		else
@@ -1803,9 +1883,10 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 	for (int i = 0; i < 4; ++i)
 		unk414[i] = new TBlendPane(unkB0, 'b_n1' + i);
 
-	((J2DPicture*)unk414[2]->getPane())->changeTexture(unkE0[8]->mTexInfo, 0);
+	((J2DPicture*)unk414[2]->getPane())
+	    ->changeTexture(unkE0[8]->getTexInfo(), 0);
 
-	unk428 = new TExPane(unkB0, '\0b_1');
+	unk428 = new TExPane(unkB0, '\0r_0');
 	unk42C = new TBoundPane(unkB0, 'r_ba');
 	unk430 = new TBoundPane(unkB0, 'r_ic');
 	unk434 = new TBoundPane(unkB0, '\0r_x');
@@ -1824,8 +1905,8 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 	unk458[9] = new TBoundPane(unkB0, 't_n0');
 
 	// TODO: is this the right cast?
-	unk508 = ((J2DPicture*)unk458[6]->getPane())->mWhite;
-	unk50C = ((J2DPicture*)unk458[7]->getPane())->mWhite;
+	unk508 = ((J2DPicture*)unk458[6]->getPane())->getWhite();
+	unk50C = ((J2DPicture*)unk458[7]->getPane())->getWhite();
 
 	for (int i = 0; i < 3; ++i)
 		unk480[i] = new TBoundPane(unkB0, 't_c1' + i);
@@ -1847,36 +1928,30 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 
 void TGCConsole2::loadAfter()
 {
-	static const char consoleStrName[]
-	    = "\x83\x52\x83\x93\x83\x5C\x81\x5B\x83\x8B\x95\xB6\x8E\x9A";
-	static const char bathName[] = "\x83\x6F\x83\x58\x83\x5E\x83\x75";
-	static const char bossEelName[]
-	    = "\x82\xDF\x82\xA8\x82\xC6\x83\x45\x83\x69\x83\x4D";
-	static const char peachName[] = "\x83\x73\x81\x5B\x83\x60\x95\x50";
-
 	JDrama::TNameRef::loadAfter();
 
-	unk94 = JDrama::TNameRefGen::search<TConsoleStr>(consoleStrName);
+	unk94 = JDrama::TNameRefGen::search<TConsoleStr>("コンソール文字");
 
 	JUTRect waterBounds(unk2F8->getPane()->mBounds);
-	int waterX = waterBounds.x1;
-	int waterY = waterBounds.y1;
 
-	unk2A0[0]->move(waterX, waterY);
-	moveBoundPaneTo(unk270, waterX, waterY);
-	moveBoundPaneTo(unk26C, waterX, waterY);
-	unk328->move(waterX, waterY);
+	unk2A0[0]->add(waterBounds.x1, waterBounds.y1);
+	unk270->getPane()->add(waterBounds.x1, waterBounds.y1);
+	syncPaneBounds(unk270);
+	unk26C->getPane()->add(waterBounds.x1, waterBounds.y1);
+	syncPaneBounds(unk26C);
+	unk328->add(waterBounds.x1, waterBounds.y1);
 
 	for (int i = 0; i < 3; ++i) {
 		unk2BC[i] = unk2A0[i]->mBounds;
-		unk2BC[i].add(waterX, waterY);
+		unk2BC[i].add(waterBounds.x1, waterBounds.y1);
 	}
 
 	unk2A0[0]->show();
 	detachPaneFromParent(unk2A0[0]);
 	detachBoundPaneFromParent(unk270);
 	for (int i = 0; i < 4; ++i) {
-		moveBoundPaneTo(unk278[i], waterX, waterY);
+		unk278[i]->getPane()->add(waterBounds.x1, waterBounds.y1);
+		syncPaneBounds(unk278[i]);
 		detachBoundPaneFromParent(unk278[i]);
 	}
 	detachBoundPaneFromParent(unk26C);
@@ -1886,21 +1961,16 @@ void TGCConsole2::loadAfter()
 	unk2EC[1] = JUtility::TColor(0x64DCFF00);
 	unk2EC[2] = JUtility::TColor(0x00B4F000);
 
-	int health = gpMarioOriginal->mHealth;
+	s16 health = gpMarioOriginal->mHealth;
 	if (health < 0)
 		health = 0;
 
 	unk1C4->getPane()->hide();
 	for (int i = 0; i < 9; ++i) {
-		int index           = i * 2;
-		J2DPane* pane       = unk17C[index];
-		J2DPicture* picture = (J2DPicture*)pane;
-		picture->mWhite     = 0xFFFFFFFF;
-		picture->mBlack     = 0;
-		if (health + 1 > index / 2)
-			pane->show();
+		if (i < health + 1)
+			unk17C[i * 2]->show();
 		else
-			pane->hide();
+			unk17C[i * 2]->hide();
 	}
 	unk1CC[0] = health;
 	unk1C     = health;
@@ -1908,43 +1978,54 @@ void TGCConsole2::loadAfter()
 	unk26A = unk140->getPane()->mBounds.y1 - unk108->getPane()->mBounds.y1;
 
 	initHiddenPaneAbove(unk140);
+	unk140->getPane()->hide();
 	initHiddenPaneAbove(unk160);
+	unk160->getPane()->hide();
 	initHiddenPaneOffset(unk108, unk26A);
+	unk108->getPane()->hide();
 	initHiddenPaneAbove(unk3A8);
+	unk3A8->getPane()->hide();
 
-	TFlagManager* flags = TFlagManager::smInstance;
-
-	unk168 = flags->getFlag(0x40001);
+	unk168 = TFlagManager::smInstance->getFlag(0x40001);
 
 	int spentBlueCoins = 0;
-	for (u32 flag = 0x10046; flag < 0x10056; ++flag) {
-		if (flags->getBool(flag))
+	for (int flag = 0x46; flag < 0x56; ++flag)
+		if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
 			++spentBlueCoins;
-	}
-	for (u32 flag = 0x1006C; flag <= 0x10073; ++flag) {
-		if (flags->getBool(flag))
+
+	for (int flag = 0x6C; flag <= 0x73; ++flag)
+		if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
 			++spentBlueCoins;
-	}
 
 	int blueCoinValue = unk168 - spentBlueCoins * 10;
 	if (blueCoinValue < 0)
 		blueCoinValue = 0;
+	setBlueCoinDigits(unk154, unkE0, blueCoinValue);
 	unk170 = blueCoinValue;
-	setCounterDigits(unk154, unkE0, blueCoinValue);
 
-	unk20 = clampRange(flags->getFlag(0x40002), 0, 999);
+	unk20 = TFlagManager::smInstance->getFlag(0x40002);
+	if (unk20 > 999)
+		unk20 = 999;
+	else if (unk20 < 0)
+		unk20 = 0;
 	unk6C = unk20;
 	setCounterDigits(unkD4, unkE0, unk20);
 
-	unk24 = flags->getFlag(0x40000);
+	unk24 = TFlagManager::smInstance->getFlag(0x40000);
+	if (unk24 > 999)
+		unk24 = 999;
+	else if (unk24 < 0)
+		unk24 = 0;
 	unk64 = unk24;
-	setThreeDigits(unk134, unkE0, unk24, true);
+	setShineDigits(unk134, unkE0, unk24);
 
-	int lives = clampRange(flags->getFlag(0x20001), 0, 99);
+	int lives = TFlagManager::smInstance->getFlag(0x20001);
+	if (lives > 99)
+		lives = 99;
 	unk3AC[0] = lives;
 	setTwoDigits(unk39C, unkE0, lives);
 
-	unk34[5] = 1;
+	unk39 = 1;
 
 	unk2F8->getPane()->hide();
 	unk3A8->getPane()->hide();
@@ -2017,9 +2098,9 @@ void TGCConsole2::loadAfter()
 	TNozzleBase* nozzle = gpMarioOriginal->mWaterGun->getCurrentNozzle();
 	unk28               = *(u32*)((u8*)nozzle + 0xCC);
 
-	unkBC = JDrama::TNameRefGen::search<JDrama::TNameRef>(bathName);
-	unkC0 = JDrama::TNameRefGen::search<JDrama::TNameRef>(bossEelName);
-	unkC4 = JDrama::TNameRefGen::search<JDrama::TNameRef>(peachName);
+	unkBC = JDrama::TNameRefGen::search<TBathtub>("バスタブ");
+	unkC0 = JDrama::TNameRefGen::search<TBossEel>("めおとウナギ");
+	unkC4 = JDrama::TNameRefGen::search<JDrama::TNameRef>("ピーチ姫");
 }
 
 void TGCConsole2::entryHelpActor(THelpActor* param_1)
@@ -2035,25 +2116,142 @@ void TGCConsole2::entryHelpActor(THelpActor* param_1)
 	}
 }
 
-void TGCConsole2::startCameraDemo() { }
+void TGCConsole2::startCameraDemo()
+{
+	bool marioDead = true;
+	if (gpMarioOriginal->getHealth() != 0 && gpMarioOriginal->getAir() != 0)
+		marioDead = false;
+
+	if (marioDead) {
+		unk1C4->getPane()->hide();
+		unk274->getPane()->hide();
+		unk2F8->getPane()->hide();
+		unk270->getPane()->hide();
+		unk26C->getPane()->hide();
+		unk3A8->getPane()->hide();
+		unk44C->getPane()->hide();
+		unk3FC->getPane()->hide();
+		unk428->getPane()->hide();
+		unk46 = 0;
+		unk59 = 0;
+		unk5A = 0;
+		return;
+	}
+
+	if (unk50 || !TFlagManager::smInstance->getBool(0x30002) && unk39)
+		return;
+
+	unk50 = 1;
+
+	startDisappearTelop();
+	startLifeMeterDisappear(this, 120);
+
+	unk18 = 10;
+	unk48 = 0;
+
+	unk274->setPanePosition(1, JUTPoint(0, 0), JUTPoint(0, 0), JUTPoint(0, 0));
+	unk274->update();
+	unk26C->setPanePosition(1, JUTPoint(0, 0), JUTPoint(0, 0), JUTPoint(0, 0));
+	unk26C->update();
+	unk270->setPanePosition(1, JUTPoint(0, 0), JUTPoint(0, 0), JUTPoint(0, 0));
+	unk270->update();
+
+	if (unkBC != nullptr) {
+		if (!unkBC->unk29A)
+			startDisappearTank();
+	} else if (unkC0 != nullptr) {
+		if (!unkC0->isInBossEelMoguDemo())
+			startDisappearTank();
+	} else {
+		startDisappearTank();
+	}
+
+	startDisappearMario();
+	startDownLeftBot();
+
+	if (TFlagManager::smInstance->getBool(0x30002)) {
+		unk108->getPane()->hide();
+		startAppearMario(true);
+	} else if (gpMarDirector->checkUnk4CFlag(0x8000)) {
+		startAppearStar();
+	} else {
+		startDisappearStar();
+		startDisappearCoin();
+	}
+
+	unkB6 = 0;
+}
 
 void TGCConsole2::resetMoveTank() { }
 
-void TGCConsole2::endCameraDemo() { }
+void TGCConsole2::endCameraDemo()
+{
+	if (unk39)
+		return;
+
+	if (!unk50)
+		return;
+
+	// TODO: the ROM has one extra branch here, as if the whole body
+	// were nested in the unk50 test rather than an early return.
+
+	if (unkB6 < 3) {
+		++unkB6;
+		return;
+	}
+
+	unk50 = 0;
+
+	if (!unk2F8->isInterpolatorAtZero() && !unk45
+	    && !TFlagManager::smInstance->getBool(0x30002)) {
+		unk45 = 1;
+		unk59 = 1;
+		unk7C = 0;
+		unk2F8->getPane()->show();
+		unk2F8->setPaneOffset(unk98, 0, 0, 0, 465 - unk2F8->mInitialBounds.y1);
+		unk26C->setPanePosition(50, JUTPoint(0, 100), JUTPoint(0, -30),
+		                        JUTPoint(0, -30));
+		unk274->getPane()->hide();
+		unk29C->getPane()->hide();
+	}
+
+	unk40 = 1;
+	unk41 = 0;
+	unk59 = 1;
+
+	if (unk51C) {
+		startInsertTimer();
+		unk51C = 0;
+	}
+
+	if (unk448) {
+		startAppearRedCoin();
+		unk448 = 0;
+	}
+
+	if (unk426) {
+		startInsertJetBalloon();
+		unk426 = 0;
+	}
+
+	if (!gpMarDirector->checkUnk4CFlag(0x8000)
+	    && !unk108->getPane()->isVisible())
+		startAppearCoin();
+}
 
 void TGCConsole2::startAppearTank()
 {
-	if (unk34[17] || TFlagManager::smInstance->getBool(0x30002)) {
+	if (unk45 || TFlagManager::smInstance->getBool(0x30002)) {
 		return;
 	}
 
 	// TODO: needs register swapping
-	unk34[17] = 1;
-	unk59     = 1;
-	unk7C     = 0;
+	unk45 = 1;
+	unk59 = 1;
+	unk7C = 0;
 
 	unk2F8->getPane()->show();
-	unk2F8->setPaneOffset(unk98, 0, 0, 0, 465 - unk2F8->getInitialBounds().y1);
+	unk2F8->setPaneOffset(unk98, 0, 0, 0, 465 - unk2F8->mInitialBounds.y1);
 
 	unk26C->setPanePosition(50, JUTPoint(0, 100), JUTPoint(0, -30),
 	                        JUTPoint(0, -30));
@@ -2062,7 +2260,23 @@ void TGCConsole2::startAppearTank()
 	unk29C->getPane()->show();
 }
 
-void TGCConsole2::startDisappearTank() { }
+void TGCConsole2::startDisappearTank()
+{
+	unk4B = 1;
+	unk5A = 1;
+
+	int offset = 465 - unk2F8->mInitialBounds.y1;
+	offset += 60;
+	unk2F8->updatePaneOffset(40, 0, offset);
+
+	JUTPoint start(0, 0);
+	JUTPoint mid(0, offset >> 1);
+	JUTPoint end(0, offset);
+	unk48 = 0;
+	unk274->setPanePosition(40, start, mid, end);
+	unk270->setPanePosition(40, start, mid, end);
+	unk26C->setPanePosition(40, start, mid, end);
+}
 
 void TGCConsole2::startAppearCoin()
 {
@@ -2070,13 +2284,13 @@ void TGCConsole2::startAppearCoin()
 		return;
 	}
 
-	unk34[27] = 1;
-	unk59     = 1;
-	unk88     = 0;
+	unk4F = 1;
+	unk59 = 1;
+	unk88 = 0;
 
 	unk108->getPane()->show();
 	unk108->setPaneOffset(unk98, 0, unk26A, 0,
-	                      -(unk108->getInitialBounds().y2 + 1));
+	                      -(unk108->mInitialBounds.y2 + 1));
 
 	unkC8->setPanePosition(50, cDownTopPoint, cDownMidPoint, cDownMidPoint);
 
@@ -2091,25 +2305,61 @@ void TGCConsole2::startAppearCoin()
 
 void TGCConsole2::startDisappearCoin()
 {
-	unk34[25] = true;
-	unk5A     = true;
+	unk4D = true;
+	unk5A = true;
 
-	if (unk140->isInterpolatorAtZero()) {
-		J2DPane* pane = unk128->getPane();
-		unk140->updatePaneOffset(40, 0,
-		                         -pane->mBounds.getHeight()
-		                             - (unk140->getInitialBounds().y2 + 1));
-	}
+	if (unk140->isInterpolatorAtZero())
+		unk140->updatePaneOffset(
+		    40, 0,
+		    -(unk140->mInitialBounds.y2 + unk128->getPane()->getHeight() + 1));
 
-	J2DPane* pane = unkC8->getPane();
-	unk108->updatePaneOffset(40, 0,
-	                         -pane->mBounds.getHeight()
-	                             - (unk108->getInitialBounds().y2 + 1));
+	int offset = -(unk108->mInitialBounds.y2 + 1);
+	unk108->updatePaneOffset(40, 0, offset - unkC8->getPane()->getHeight());
 
 	unk124->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
 }
 
-void TGCConsole2::startInsertLife(int) { }
+void TGCConsole2::startInsertLife(int param_1)
+{
+	if (param_1 == 0) {
+		for (int i = 1; i < 9; ++i) {
+			((J2DPicture*)unk17C[i * 2])->mWhite = 0xFFFFFFFF;
+			((J2DPicture*)unk17C[i * 2])->mBlack = 0;
+			if (gpMarioOriginal->mHealth + 1 > i)
+				unk17C[i * 2]->show();
+			else
+				unk17C[i * 2]->hide();
+		}
+		((J2DPicture*)unk178->getPane())->mWhite = 0xFFFFFFFF;
+		((J2DPicture*)unk178->getPane())->mBlack = 0;
+		((J2DPicture*)unk174->getPane())->mWhite = 0xFF4C00C8;
+		((J2DPicture*)unk174->getPane())->mBlack = 0xFF4C0000;
+		updateLifeMeterColors(this, false);
+	} else if (param_1 == 1) {
+		for (int i = 1; i < 9; ++i) {
+			((J2DPicture*)unk17C[i * 2])->mWhite = 0x00FFFFFF;
+			((J2DPicture*)unk17C[i * 2])->mBlack = 0x003CFF00;
+			if ((s16)gpMarioOriginal->mAir + 1 > i)
+				unk17C[i * 2]->show();
+			else
+				unk17C[i * 2]->hide();
+		}
+		((J2DPicture*)unk174->getPane())->mWhite = 0x0000FF78;
+		((J2DPicture*)unk174->getPane())->mBlack = 0x0000FF00;
+		updateLifeMeterColors(this, true);
+	}
+
+	unk51 = 1;
+	unk84 = 0;
+
+	int offset = -(unk1C4->unk4.y2 + 1);
+	unk1C4->getPane()->show();
+	unk1C4->setPanePosition(unk98, JUTPoint(0, offset),
+	                        JUTPoint(0, offset >> 1), JUTPoint(0, 0));
+	unk174->setPanePosition(50, cDownTopPoint, cDownMidPoint, cDownMidPoint);
+	unk178->getPane()->hide();
+	unk260->getPane()->hide();
+}
 
 void TGCConsole2::resetLife(int param_1)
 {
@@ -2132,19 +2382,58 @@ void TGCConsole2::resetLife(int param_1)
 	}
 }
 
-void TGCConsole2::startAppearLife(int) { }
+bool TGCConsole2::startAppearLife(int param_1)
+{
+	if (unk38 || unk50 || gpMarioOriginal->getHealth() == 0)
+		return false;
+
+	if (param_1 == 0) {
+		for (int i = 0; i < 9; ++i) {
+			((J2DPicture*)unk17C[i * 2])->mWhite = 0xFFFFFFFF;
+			((J2DPicture*)unk17C[i * 2])->mBlack = 0;
+			if (gpMarioOriginal->mHealth + 1 > i)
+				unk17C[i * 2]->show();
+			else
+				unk17C[i * 2]->hide();
+		}
+		((J2DPicture*)unk178->getPane())->mWhite = 0xFFFFFFFF;
+		((J2DPicture*)unk178->getPane())->mBlack = 0;
+		((J2DPicture*)unk174->getPane())->mWhite = 0xFF4C00C8;
+		((J2DPicture*)unk174->getPane())->mBlack = 0xFF4C0000;
+		updateLifeMeterColors(this, false);
+	} else if (param_1 == 1) {
+		for (int i = 0; i < 9; ++i) {
+			((J2DPicture*)unk17C[i * 2])->mWhite = 0x00FFFFFF;
+			((J2DPicture*)unk17C[i * 2])->mBlack = 0x003CFF00;
+			if ((s16)gpMarioOriginal->mAir + 1 > i)
+				unk17C[i * 2]->show();
+			else
+				unk17C[i * 2]->hide();
+		}
+		((J2DPicture*)unk178->getPane())->mWhite = 0x00FFFFFF;
+		((J2DPicture*)unk178->getPane())->mBlack = 0x003CFF00;
+		((J2DPicture*)unk174->getPane())->mWhite = 0x0000FF78;
+		((J2DPicture*)unk174->getPane())->mBlack = 0x0000FF00;
+		updateLifeMeterColors(this, true);
+	}
+
+	unk38 = 1;
+	unk84 = 0;
+	unk1C4->getPane()->add(unk1C8, unk1CA);
+	return true;
+}
 
 void TGCConsole2::startDisappearLife(int) { }
 
 void TGCConsole2::startDownLeftBot()
 {
-	if (unk34[13]) {
+	if (unk41) {
 		return;
 	}
 
-	unk34[13] = 1;
-	unk34[12] = 0;
-	unk5A     = 1;
+	unk41 = 1;
+	unk40 = 0;
+	unk5A = 1;
 
 	if (unk44C->getPane()->isVisible() && unk44C->isInterpolatorAtZero()) {
 		unk44C->updatePaneOffset(20, 0, 525 - unk44C->getInitialBounds().y1);
@@ -2166,7 +2455,7 @@ void TGCConsole2::startUpLeftBot() { }
 
 void TGCConsole2::startAppearTelop(bool param_1)
 {
-	if (unk34[28]) {
+	if (unk50) {
 		return;
 	}
 	if (unk530->unk4 == nullptr) {
@@ -2175,16 +2464,16 @@ void TGCConsole2::startAppearTelop(bool param_1)
 	if (unk570 == 0 || unk44C->getPane()->isVisible()) {
 		return;
 	}
-	if (!(param_1 || unk34[16])) {
+	if (!(param_1 || unk44)) {
 		return;
 	}
 
-	unk34[14] = 1;
-	unk59     = 1;
-	unk56D    = 1;
+	unk42  = 1;
+	unk59  = 1;
+	unk56D = 1;
 	unk520->getPane()->show();
 
-	unk520->setPaneOffset(80, 0, 0, 0, 465 - unk520->getInitialBounds().y1);
+	unk520->setPaneOffset(80, 0, 0, 0, 465 - unk520->mInitialBounds.y1);
 
 	if (param_1) {
 		// TODO: needs regswapping
@@ -2204,12 +2493,12 @@ void TGCConsole2::startAppearTelop(bool param_1)
 
 void TGCConsole2::startDisappearTelop()
 {
-	if (unk34[15] || !unk520->getPane()->isVisible()) {
+	if (unk43 || !unk520->getPane()->isVisible()) {
 		return;
 	}
 
-	unk34[15] = 1;
-	unk5A     = 1;
+	unk43 = 1;
+	unk5A = 1;
 
 	unk520->updatePaneOffset(80, 0, 465 - unk520->getInitialBounds().y1);
 }
@@ -2217,8 +2506,8 @@ void TGCConsole2::startDisappearTelop()
 void TGCConsole2::startDisappearTimer()
 {
 	unk44C->updatePaneOffset(40, 0, 525 - unk44C->getInitialBounds().y1);
-	unk34[11] = 1;
-	unk5A     = 1;
+	unk3F = 1;
+	unk5A = 1;
 }
 
 void TGCConsole2::startAppearTimer(int param_1, s32 param_2)
@@ -2255,7 +2544,7 @@ void TGCConsole2::startAppearTimer(int param_1, s32 param_2)
 
 void TGCConsole2::startInsertTimer()
 {
-	unk34[10] = 1;
+	unk3E = 1;
 
 	for (int i = 0; i < 10; i++) {
 		unk458[i]->getPane()->hide();
@@ -2302,8 +2591,8 @@ void TGCConsole2::startAppearJetBalloon(int nozzleKind, int count)
 
 void TGCConsole2::startInsertJetBalloon()
 {
-	unk34[9] = 1;
-	unk59    = 1;
+	unk3D = 1;
+	unk59 = 1;
 
 	unk3FC->getPane()->show();
 	unk400->getPane()->show();
@@ -2318,23 +2607,21 @@ void TGCConsole2::startInsertJetBalloon()
 		unk414[i]->getPane()->hide();
 
 	if (unk404 == unk408)
-		unk3FC->setPaneOffset(80, 0, 0, 0, 465 - unk3FC->getInitialBounds().y1);
+		unk3FC->setPaneOffset(80, 0, 0, 0, 465 - unk3FC->mInitialBounds.y1);
 	else
-		unk3FC->setPaneOffset(80, 0, -73, 0,
-		                      465 - unk3FC->getInitialBounds().y1);
+		unk3FC->setPaneOffset(80, 0, -73, 0, 465 - unk3FC->mInitialBounds.y1);
 }
 
 void TGCConsole2::startAppearRedCoin()
 {
-	unk34[8] = 1;
-	unk59    = 1;
+	unk3C = 1;
+	unk59 = 1;
 
 	unk428->getPane()->show();
 	if (unk44C->getPane()->isVisible())
-		unk428->setPaneOffset(40, 0, -73, 0,
-		                      465 - unk428->getInitialBounds().y1);
+		unk428->setPaneOffset(40, 0, -73, 0, 465 - unk428->mInitialBounds.y1);
 	else
-		unk428->setPaneOffset(40, 0, 0, 0, 465 - unk428->getInitialBounds().y1);
+		unk428->setPaneOffset(40, 0, 0, 0, 465 - unk428->mInitialBounds.y1);
 
 	unk42C->getPane()->show();
 	unk42C->setPanePosition(50, cUpTopPoint, cUpMidPoint, cUpMidPoint);
@@ -2362,9 +2649,9 @@ void TGCConsole2::pauseOut()
 {
 	startAppearTelop(false);
 
-	unk34[12] = 1;
-	unk34[13] = 0;
-	unk59     = 1;
+	unk40 = 1;
+	unk41 = 0;
+	unk59 = 1;
 
 	if (unk51C) {
 		startInsertTimer();
@@ -2386,16 +2673,19 @@ void TGCConsole2::pauseOut()
 	unk5A = 0;
 }
 
+// TODO: figure out inlining without pragmas
+#pragma dont_inline on
 bool TGCConsole2::startDisappearBalloon(u32 param_1, bool param_2)
 {
 	if (!param_2 && unk3F4 == 0xffffffff && (param_1 != unk3E0 || unk3E4 != 0))
 		return false;
 
 	unk3B8->hide();
-	unk34[20] = 0;
-	unk10     = 4;
+	unk48 = 0;
+	unk10 = 4;
 	return true;
 }
+#pragma dont_inline off
 
 bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 {
@@ -2410,26 +2700,29 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 			return false;
 
 		unk3F4 = messageID;
-		if (unk3F4 != 0xffffffff || unk3E4 == 0) {
+		// The ROM compares unk3E0 with itself here, so the middle term is
+		// always true. Probably a copy-paste slip in the original source.
+		if (unk3F4 != 0xffffffff || (unk3E0 == unk3E0 && unk3E4 == 0)) {
 			unk3B8->hide();
-			unk34[20] = 0;
-			unk10     = 4;
+			unk48 = 0;
+			unk10 = 4;
 		}
 		return true;
 	}
 
-	if (gpMarDirector->mState == TMarDirector::STATE_UNK5 || !unk34[18])
+	if (gpMarDirector->mState == TMarDirector::STATE_UNK5 || !unk46)
 		return false;
 
-	unk3F0          = entry->unk4;
-	J2DWindow* pane = unk3B0;
-	pane->mAlpha    = 0;
-	pane->show();
+	unk3F0         = entry->unk4;
+	unk3B0->mAlpha = 0;
+	unk3B0->show();
 
-	JUTRect contents(pane->getContentsBounds());
-	int contentHeight = contents.getHeight();
-	pane->resize(unk3BC.getWidth(), unk3BC.getHeight() - contentHeight);
-	pane->add(0, contentHeight);
+	// TODO: the ROM copies the contents rect twice here, as if
+	// J2DWindow::getContentsBounds() returned a JUTRect by value.
+	JUTRect contents(unk3B0->getContentsBounds());
+	unk3B0->resize(unk3BC.getWidth(),
+	               unk3BC.getHeight() - contents.getHeight());
+	unk3B0->add(0, contents.getHeight());
 
 	((JSUMemoryOutputStream*)unk3D8)->setBuffer(unk3B4->getStringPtr(), 0x400);
 	((JSUMemoryOutputStream*)unk3DC)->setBuffer(unk3B8->getStringPtr(), 0x400);
@@ -2439,17 +2732,17 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 
 	unk3E0 = messageID;
 	unk3F8 = autoClose;
-	unk3E4 = (s32)(strlen((const char*)messageText) + unk3E8 * unk3EC);
+	unk3E4 = (s32)(strlen((const char*)messageText) * unk3EC + unk3E8);
 
-	if ((messageID & 0xffff0000) == 0x000e0000 && (messageID & 0xffff) <= 0x2f)
+	if (unk3E0 == 0x000E002F)
 		unk3E4 = 0x96;
 
 	if (unk3E4 <= 0)
 		unk3E4 = 1;
 
-	unk34[20] = 1;
-	unk14     = 0;
-	unk10     = 1;
+	unk48 = 1;
+	unk14 = 0;
+	unk10 = 1;
 
 	s32 soundID = scNozzleSoundList[(u8)entry->unk8[0]];
 	if (soundID != -1 && SMSGetMSound()->gateCheck(soundID))
@@ -2460,34 +2753,34 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 
 void TGCConsole2::startDisappearStar()
 {
-	unk140->updatePaneOffset(40, 0,
-	                         unk26A - (unk140->getInitialBounds().y2 + 1));
-	unk160->updatePaneOffset(40, 0, -(unk160->getInitialBounds().y2 + 1));
+	int offset = -(unk140->mInitialBounds.y2 + 1);
+	unk140->updatePaneOffset(40, 0, offset + unk26A);
+	unk160->updatePaneOffset(40, 0, -(unk160->mInitialBounds.y2 + 1));
 	unk108->updatePaneOffset(40, 0, unk26A);
 
 	unk144->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
 	unk164->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
 
-	unk34[1] = 1;
-	unk5A    = 1;
+	unk35 = 1;
+	unk5A = 1;
 }
 
 void TGCConsole2::startAppearStar()
 {
-	if (unk34[0] || unk140->isInterpolatorAtZero())
+	if (unk34 || unk140->isInterpolatorAtZero())
 		return;
 
 	unk59 = 1;
 
-	if (unk34[1]) {
+	if (unk35) {
 		unk140->getPane()->hide();
 		unk160->getPane()->hide();
 		unk144->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
 		unk164->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
-		unk34[1] = 0;
+		unk35 = 0;
 	}
 
-	unk140->setPaneOffset(40, 0, 0, 0, -(unk140->getInitialBounds().y2 + 1));
+	unk140->setPaneOffset(40, 0, 0, 0, -(unk140->mInitialBounds.y2 + 1));
 	unk140->getPane()->show();
 	unk128->setPanePosition(50, cDownTopPoint, cDownMidPoint, cDownMidPoint);
 
@@ -2496,7 +2789,7 @@ void TGCConsole2::startAppearStar()
 	for (int i = 0; i < 3; ++i)
 		unk134[i]->getPane()->hide();
 
-	unk160->setPaneOffset(40, 0, 0, 0, -(unk160->getInitialBounds().y2 + 1));
+	unk160->setPaneOffset(40, 0, 0, 0, -(unk160->mInitialBounds.y2 + 1));
 	unk160->getPane()->show();
 	unk148->setPanePosition(50, cDownTopPoint, cDownMidPoint, cDownMidPoint);
 
@@ -2514,33 +2807,33 @@ void TGCConsole2::startAppearStar()
 	unk144->clearStatus(JPABaseEmitter::STATUS_STOP_EMIT);
 	unk164->clearStatus(JPABaseEmitter::STATUS_STOP_EMIT);
 
-	unk5C    = 0;
-	unk34[0] = 1;
+	unk5C = 0;
+	unk34 = 1;
 }
 
 void TGCConsole2::drawWaterBack()
 {
-	if (gpMarioOriginal->mHealth == 0 || (s16)gpMarioOriginal->mAir == 0)
+	if (gpMarioOriginal->getHealth() == 0 || gpMarioOriginal->getAir() == 0)
 		return;
-
-	TWaterGun* waterGun = gpMarioOriginal->mWaterGun;
 
 	Mtx mtx;
 	setupConsoleGaugeGXFloatTex(mtx);
 	GXSetChanAmbColor(GX_COLOR0A0, (GXColor) { 0xff, 0xff, 0xff, 0xff });
 	setupConsoleGaugeTevStage0();
 
-	J2DPicture* background        = (J2DPicture*)unk26C->getPane();
-	JUTTexture* backgroundTexture = nullptr;
-	if (background->mTextureNum > 0)
-		backgroundTexture = background->mTextures[0];
+	JUTTexture* backgroundTexture;
+	if (((J2DPicture*)unk26C->getPane())->mTextureNum > 0)
+		backgroundTexture = ((J2DPicture*)unk26C->getPane())->mTextures[0];
+	else
+		backgroundTexture = nullptr;
 	backgroundTexture->load(GX_TEXMAP0);
 	GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX2x4);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX0,
 	                  GX_FALSE, GX_PTIDENTITY);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
 
-	JUTRect bounds(background->mBounds);
+	JUTRect bounds(((J2DPicture*)unk26C->getPane())->mBounds);
+	TWaterGun* waterGun = gpMarioOriginal->mWaterGun;
 	GXSetTevColor(GX_TEVREG0, JUtility::TColor(0x0000ff78));
 	GXSetTevColor(GX_TEVREG1, JUtility::TColor(0x0000ff00));
 
@@ -2552,14 +2845,14 @@ void TGCConsole2::drawWaterBack()
 
 		drawGaugeQuadF32(bounds, bounds.y1, fillTop, 0.0f, hiddenRatio);
 
-		if (!unk34[28] && pressure != 0.0f && !unk34[20]) {
-			unk14     = 1;
-			unk34[20] = 1;
+		if (!unk50 && pressure != 0.0f && !unk48) {
+			unk14 = 1;
+			unk48 = 1;
 		}
 
 		if (pressure == pressureMax) {
-			if (unk34[21])
-				unk34[21] = 0;
+			if (unk49)
+				unk49 = 0;
 
 			if (unk30C >= 25)
 				unk30C = 0;
@@ -2576,12 +2869,12 @@ void TGCConsole2::drawWaterBack()
 		}
 
 		drawGaugeQuadF32(bounds, fillTop, bounds.y2, hiddenRatio, 1.0f);
-	} else if (unk34[20]) {
+	} else if (unk48) {
 		if (unk30C != 0) {
 			unk274->setPanePosition(90, JUTPoint(0, 0), JUTPoint(0, -100),
 			                        JUTPoint(0, 0));
-			unk30C    = 0;
-			unk34[21] = 1;
+			unk30C = 0;
+			unk49  = 1;
 		}
 
 		drawGaugeQuadF32(bounds, bounds.y1, bounds.y2, 0.0f, 1.0f);
@@ -2595,16 +2888,16 @@ void TGCConsole2::drawWaterBack()
 
 void TGCConsole2::startDisappearMario()
 {
-	if (!unk3A8->getPane()->isVisible() || unk34[7])
+	if (!unk3A8->getPane()->isVisible() || unk3B)
 		return;
 
 	unk3A8->updatePaneOffset(50, 0, -(unk3A8->getInitialBounds().y2 + 1));
-	unk34[7] = 1;
+	unk3B = 1;
 }
 
 void TGCConsole2::startAppearMario(bool param_1)
 {
-	if (unk3A8->getPane()->isVisible() && !unk34[7])
+	if (unk3A8->getPane()->isVisible() && !unk3B)
 		return;
 
 	unk3A8->getPane()->show();
@@ -2629,9 +2922,9 @@ void TGCConsole2::startAppearMario(bool param_1)
 		    ->changeTexture(unkE0[lives % 10]->getTexInfo(), 0);
 	}
 
-	unk34[6]  = 1;
+	unk3A     = 1;
 	unk3AC[1] = param_1;
-	unk34[7]  = 0;
+	unk3B     = 0;
 	unk59     = 1;
 	unk70     = 0;
 }
@@ -2641,7 +2934,7 @@ void TGCConsole2::processMoveNozzle()
 	if (!unk274->update())
 		return;
 
-	if (!unk34[20])
+	if (!unk48)
 		return;
 
 	switch (unk14) {
@@ -2660,7 +2953,7 @@ void TGCConsole2::processMoveNozzle()
 	case 2:
 		unk274->setPanePosition(30, JUTPoint(0, 0), JUTPoint(0, -25),
 		                        JUTPoint(0, 0));
-		unk34[20] = 0;
+		unk48 = 0;
 		break;
 	}
 }
@@ -2741,201 +3034,23 @@ void TGCConsole2::setTimer(s32 param_1)
 
 void TGCConsole2::startMoveTimer(int param_1)
 {
-	unk34[22] = 1;
-	unk518    = param_1 * 100;
+	unk4A  = 1;
+	unk518 = param_1 * 100;
 }
 
 void TGCConsole2::stopMoveTimer()
 {
-	if (unk34[22] == 0)
+	if (unk4A == 0)
 		return;
 
-	unk34[22] = 0;
+	unk4A = 0;
 }
 
 int TGCConsole2::getFinishedTime() { return unk4FC; }
 
-void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
+bool TGCConsole2::processAppearLife(int param_1)
 {
-	if (flags & 1) {
-		if (!unk34[28]) {
-			if (isConsoleDemoCameraActive() || SMS_CheckMarioFlag(0x400)
-			    || (!unk3AC[1] && TFlagManager::smInstance->getBool(0x30002)))
-				startCameraDemo();
-		} else if (!isConsoleDemoCameraActive() && !SMS_CheckMarioFlag(0x400)) {
-			endCameraDemo();
-		}
-
-		if (unk34[12]) {
-			bool done = true;
-			if (!unk34[11] && unk44C->getPane()->isVisible()
-			    && !unk44C->update())
-				done = false;
-			if (unk428->getPane()->isVisible() && !unk428->update())
-				done = false;
-			if (unk3FC->getPane()->isVisible() && !unk3FC->update())
-				done = false;
-			if (done)
-				unk34[12] = 0;
-		}
-
-		if (unk34[13]) {
-			bool done = true;
-			if (unk44C->getPane()->isVisible() && !unk44C->update())
-				done = false;
-			if (unk428->getPane()->isVisible() && !unk428->update())
-				done = false;
-			if (unk3FC->getPane()->isVisible() && !unk3FC->update())
-				done = false;
-			if (done)
-				unk34[13] = 0;
-		}
-
-		if (unk34[5]) {
-			if (unkB4 == 1 && unk6C < 100)
-				unkD4[2]->getPane()->hide();
-
-			J2DPane* rootPane = unkB0->search('ROOT');
-			if (unkB4 == 0) {
-				startAppearCoin();
-				startAppearMario(false);
-				rootPane->mAlpha = 0;
-			} else {
-				rootPane->mAlpha = 0xff;
-			}
-
-			++unkB4;
-			if (unkB4 > 0xa0)
-				unk34[5] = 0;
-		}
-
-		updateLifeMeterState(this);
-		updateStarHudAutoHide(this);
-		updateShineAppearState(this);
-
-		if (unk34[1]) {
-			bool done = true;
-			if (!unk140->update())
-				done = false;
-			if (!unk160->update())
-				done = false;
-			if (!unk108->update())
-				done = false;
-
-			setEmitterToPaneCenter(unk124, unkCC->getPane());
-			setEmitterToPaneCenter(unk164, unk14C->getPane());
-			setEmitterToPaneCenter(unk144, unk12C->getPane());
-
-			if (done) {
-				unk140->getPane()->hide();
-				unk160->getPane()->hide();
-				unk144->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
-				unk164->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
-				unk34[1] = 0;
-			}
-		}
-
-		updateWaterGaugeFill(this);
-		updateCounterState(this);
-		updateJetAppearState(this);
-
-		updateRedCoinCounter(this);
-		updateRedCoinAppearState(this);
-		updateTimerAppearState(this);
-		updateTelopState(this, flags);
-
-		if (!unk34[18] && SMS_CheckMarioFlag(0x10000) && !unk34[17]
-		    && !unk34[28])
-			startAppearTank();
-		updateWaterTankState(this);
-
-		updateLifeMeterBlink(this);
-		updateCoinAppearState(this);
-
-		if (unk34[25]) {
-			if (unk108->update() && unk140->update()) {
-				unk108->getPane()->hide();
-				unk34[25] = 0;
-			}
-		}
-
-		if (!unk34[17])
-			processMoveNozzle();
-		updateMarioAppearState(this);
-
-		updateMarioLifeCounter(this);
-
-		if (!unk34[11] && unk34[22])
-			setTimer(-1);
-
-		if (unk59) {
-			playHudMoveSound(0x4819);
-			unk59 = 0;
-		}
-
-		if (unk5A) {
-			playHudMoveSound(0x481A);
-			unk5A = 0;
-		}
-	}
-
-	if (flags & 2) {
-		switch (unk10) {
-		case 1:
-			updateBalloonAppearState(this);
-			break;
-		case 2:
-			processBalloonTextStep(this);
-			break;
-		case 3:
-			if (unk3E4 > 0)
-				--unk3E4;
-			if ((unk3F8 && unk3E4 == 0) || unk3F4 != 0xffffffff)
-				startDisappearBalloon(unk3E0, false);
-			break;
-		case 4:
-			updateBalloonDisappearState(this);
-			break;
-		}
-
-		updateJetCounterAnimation(this);
-		updateCoinCounterAnimation(this);
-		updateYoshiJuiceIconState(this);
-	}
-
-	if (flags & 8) {
-		J2DOrthoGraph graph(graphics->mViewportRect);
-		graph.setup2D();
-
-		if (unk34[18] || unk34[17])
-			drawWaterBack();
-
-		graph.setup2D();
-
-		unkB0->draw(0, 0, &graph);
-
-		if (unk34[16] && !unk34[15] && !unk34[14]
-		    && unk520->getPane()->isVisible()) {
-			graphics->setScissor(
-			    JDrama::TRect(unk544.x1, unk544.y1, unk544.x2, unk544.y2));
-			graph.setup2D();
-			unk528->show();
-			unk52C->show();
-			unk52C->draw(unk534.x1 + 2, unk534.y1 + 2);
-			unk528->draw(unk534.x1, unk534.y1);
-			unk528->hide();
-			unk52C->hide();
-		}
-
-		graphics->setScissor(graphics->mViewportRect);
-		graph.setup2D();
-		drawWaterOrJuice(this, graph);
-	}
-}
-
-inline bool TGCConsole2::processAppearLife(int param_1)
-{
-	if (gpMarioOriginal->mHealth == 0 || (s16)gpMarioOriginal->mAir == 0)
+	if (gpMarioOriginal->getHealth() == 0 || gpMarioOriginal->getAir() == 0)
 		return true;
 
 	bool isFinished = true;
@@ -2955,7 +3070,7 @@ inline bool TGCConsole2::processAppearLife(int param_1)
 	return isFinished;
 }
 
-inline bool TGCConsole2::processInsertLife(int param_1)
+bool TGCConsole2::processInsertLife(int param_1)
 {
 	bool isFinished = true;
 
@@ -2980,15 +3095,13 @@ inline bool TGCConsole2::processInsertLife(int param_1)
 	return isFinished;
 }
 
-inline bool TGCConsole2::processAppearStar(int param_1)
+bool TGCConsole2::processAppearStar(int param_1)
 {
 	bool isFinished = true;
 
-	if (!unk140->update())
-		isFinished = false;
+	isFinished &= unk140->update();
 
-	if (!unk160->update())
-		isFinished = false;
+	isFinished &= unk160->update();
 
 	if (param_1 == 14) {
 		unk12C->getPane()->show();
@@ -3012,8 +3125,7 @@ inline bool TGCConsole2::processAppearStar(int param_1)
 	for (int i = 0; i < 3; ++i) {
 		if (param_1 == i * 6 + 28) {
 			if (i == 2) {
-				if ((!unk34[28] && shines >= 100)
-				    || (unk34[28] && shines > 100))
+				if ((!unk50 && shines >= 100) || (unk50 && shines > 100))
 					unk134[i]->getPane()->show();
 			} else {
 				unk134[i]->getPane()->show();
@@ -3026,14 +3138,13 @@ inline bool TGCConsole2::processAppearStar(int param_1)
 	TFlagManager::smInstance->getFlag(0x40001);
 
 	int blueCoins = 0;
-	for (int flag = 0x10046; flag < 0x10056; ++flag) {
-		if (TFlagManager::smInstance->getFlag(flag) != 0)
+	for (int flag = 0x46; flag < 0x56; ++flag)
+		if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
 			++blueCoins;
-	}
-	for (int flag = 0x1006c; flag <= 0x10073; ++flag) {
-		if (TFlagManager::smInstance->getFlag(flag) != 0)
+
+	for (int flag = 0x6C; flag <= 0x73; ++flag)
+		if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
 			++blueCoins;
-	}
 
 	int blueCoinValue = unk168 - blueCoins * 10;
 	if (blueCoinValue < 0)
@@ -3059,28 +3170,25 @@ inline bool TGCConsole2::processAppearStar(int param_1)
 	updateDownPaneState(unk130, isFinished);
 	updateDownPaneState(unk150, isFinished);
 
-	for (int i = 0; i < 3; ++i) {
-		if (!updateDownBlendPane(unk134[i]))
-			isFinished = false;
-	}
+	for (int i = 0; i < 3; ++i)
+		updateDownBlendPaneState(unk134[i], isFinished);
 	for (int i = 0; i < 3; ++i) {
 		updateDownPaneState(unk154[i], isFinished);
 	}
 
 	JUTRect bounds(unk12C->getPane()->mGlobalBounds);
-	unk144->mGlobalTranslation.x = bounds.x1 + bounds.getWidth() * 0.5f;
-	unk144->mGlobalTranslation.y = bounds.y1 + bounds.getHeight() * 0.5f;
-	unk144->mGlobalTranslation.z = 0.0f;
+	unk144->mGlobalTranslation.set(bounds.x1 + bounds.getWidth() * 0.5f,
+	                               bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 
 	JUTRect bounds2(unk14C->getPane()->mGlobalBounds);
-	unk164->mGlobalTranslation.x = bounds2.x1 + bounds2.getWidth() * 0.5f;
-	unk164->mGlobalTranslation.y = bounds2.y1 + bounds2.getHeight() * 0.5f;
-	unk164->mGlobalTranslation.z = 0.0f;
+	unk164->mGlobalTranslation.set(bounds2.x1 + bounds2.getWidth() * 0.5f,
+	                               bounds2.y1 + bounds2.getHeight() * 0.5f,
+	                               0.0f);
 
 	return isFinished;
 }
 
-inline bool TGCConsole2::processDownCoin(int param_1)
+bool TGCConsole2::processDownCoin(int param_1)
 {
 	bool isFinished = true;
 
@@ -3098,22 +3206,26 @@ inline bool TGCConsole2::processDownCoin(int param_1)
 			                          cCoinMidPoint);
 	}
 
-	if (!updateCoinPane(unkC8))
-		isFinished = false;
+	updateCoinPaneState(unkC8, isFinished);
 
-	if (param_1 < 14 || !updateCoinPane(unkCC))
+	if (param_1 < 14)
 		isFinished = false;
+	else
+		updateCoinPaneState(unkCC, isFinished);
 
-	if (param_1 < 24 || !updateCoinPane(unkD0))
+	if (param_1 < 24)
 		isFinished = false;
+	else
+		updateCoinPaneState(unkD0, isFinished);
 
 	for (int i = 0; i < 3; ++i) {
-		if (param_1 < i * 6 + 28 || !updateDownCoinBlendPane(unkD4[i]))
+		if (param_1 < i * 6 + 28)
 			isFinished = false;
+		else
+			updateCoinBlendPaneState(unkD4[i], isFinished);
 	}
 
-	if (!unk108->update())
-		isFinished = false;
+	isFinished &= unk108->update();
 
 	JUTRect bounds(unkCC->getPane()->mGlobalBounds);
 	unk124->mGlobalTranslation.set(bounds.x1 + bounds.getWidth() * 0.5f,
@@ -3122,7 +3234,7 @@ inline bool TGCConsole2::processDownCoin(int param_1)
 	return isFinished;
 }
 
-inline bool TGCConsole2::processAppearTank(int param_1)
+bool TGCConsole2::processAppearTank(int param_1)
 {
 	bool isFinished = true;
 	isFinished &= unk2F8->update();
@@ -3164,7 +3276,7 @@ inline bool TGCConsole2::processAppearTank(int param_1)
 	return isFinished;
 }
 
-inline bool TGCConsole2::processAppearCoin(int param_1)
+bool TGCConsole2::processAppearCoin(int param_1)
 {
 	bool isFinished = true;
 	isFinished &= unk108->update();
@@ -3192,19 +3304,18 @@ inline bool TGCConsole2::processAppearCoin(int param_1)
 	updateDownPaneState(unkD0, isFinished);
 
 	for (int i = 0; i < 3; ++i) {
-		if ((unk6C >= 100 || i != 2) && !updateDownBlendPane(unkD4[i]))
-			isFinished = false;
+		if (unk6C >= 100 || i != 2)
+			updateDownBlendPaneState(unkD4[i], isFinished);
 	}
 
 	JUTRect bounds(unkCC->getPane()->mGlobalBounds);
-	unk124->mGlobalTranslation.x = bounds.x1 + bounds.getWidth() * 0.5f;
-	unk124->mGlobalTranslation.y = bounds.y1 + bounds.getHeight() * 0.5f;
-	unk124->mGlobalTranslation.z = 0.0f;
+	unk124->mGlobalTranslation.set(bounds.x1 + bounds.getWidth() * 0.5f,
+	                               bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 
 	return isFinished;
 }
 
-inline bool TGCConsole2::processAppearMario(int param_1)
+bool TGCConsole2::processAppearMario(int param_1)
 {
 	bool isFinished = unk3A8->update();
 
@@ -3250,7 +3361,7 @@ inline bool TGCConsole2::processAppearMario(int param_1)
 	return isFinished;
 }
 
-inline bool TGCConsole2::processDrawTelop(u32)
+bool TGCConsole2::processDrawTelop(u32)
 {
 	bool isFinished = false;
 
@@ -3267,13 +3378,11 @@ inline bool TGCConsole2::processDrawTelop(u32)
 	return isFinished;
 }
 
-inline void TGCConsole2::checkChangeTelopArray()
+void TGCConsole2::checkChangeTelopArray()
 {
 	u32* oldArray = unk570;
 
-	if (gpMarDirector->mMap != 1) {
-		unk570 = nullptr;
-	} else {
+	if (gpMarDirector->mMap == 1) {
 		switch (gpMarDirector->unk7D) {
 		case 0:
 			unk570 = scDolpicNewsDolpic0;
@@ -3284,12 +3393,17 @@ inline void TGCConsole2::checkChangeTelopArray()
 			else
 				unk570 = nullptr;
 			break;
+		case 6:
+			unk570 = scDolpicNewsDolpic6;
+			break;
+		case 7:
+			unk570 = scDolpicNewsDolpic7;
+			break;
+		case 9:
+			unk570 = scDolpicNewsDolpic9;
+			break;
 		case 2:
 			unk570 = scDolpicNewsDolpic10;
-			break;
-		case 3:
-		case 4:
-			unk570 = nullptr;
 			break;
 		case 5:
 			if (TFlagManager::smInstance->getBool(0x50001)) {
@@ -3304,15 +3418,10 @@ inline void TGCConsole2::checkChangeTelopArray()
 					unk570 = scDolpicNewsDolpic5_4;
 			}
 			break;
-		case 6:
-			unk570 = scDolpicNewsDolpic6;
-			break;
-		case 7:
-			unk570 = scDolpicNewsDolpic7;
-			break;
 		case 8: {
 			int eventState = TFlagManager::smInstance->getFlag(0x60003);
-			if (eventState == 0) {
+			switch (eventState) {
+			case 0:
 				if (TFlagManager::smInstance->getBool(0x1038F)) {
 					if (TFlagManager::smInstance->getNozzleRight(1, 0)
 					    || TFlagManager::smInstance->getNozzleRight(1, 1))
@@ -3328,34 +3437,36 @@ inline void TGCConsole2::checkChangeTelopArray()
 					else
 						unk570 = scDolpicNewsDolpic8_1;
 				}
-			} else if (eventState == 1) {
+				break;
+			case 1:
 				if (TFlagManager::smInstance->getBool(0x1038F))
 					unk570 = scDolpicNewsDolpic8_1;
 				else
 					unk570 = scDolpicNewsDolpic8_2;
-			} else {
+				break;
+			default:
 				if (TFlagManager::smInstance->getNozzleRight(1, 0)
 				    || TFlagManager::smInstance->getNozzleRight(1, 1))
 					unk570 = scDolpicNewsDolpic8_1;
 				else
 					unk570 = scDolpicNewsDolpic8_3;
+				break;
 			}
 			break;
 		}
-		case 9:
-			unk570 = scDolpicNewsDolpic9;
-			break;
 		default:
 			unk570 = nullptr;
 			break;
 		}
+	} else {
+		unk570 = nullptr;
 	}
 
 	if (oldArray != unk570)
 		unk558 = 0;
 }
 
-inline bool TGCConsole2::processAppearJet(int param_1)
+bool TGCConsole2::processAppearJet(int param_1)
 {
 	bool isFinished = true;
 	int startDigit  = 0;
@@ -3401,7 +3512,7 @@ inline bool TGCConsole2::processAppearJet(int param_1)
 	return isFinished;
 }
 
-inline bool TGCConsole2::processAppearRed(int param_1)
+bool TGCConsole2::processAppearRed(int param_1)
 {
 	bool isFinished = true;
 	isFinished &= unk428->update();
@@ -3442,7 +3553,7 @@ inline bool TGCConsole2::processAppearRed(int param_1)
 	return isFinished;
 }
 
-inline bool TGCConsole2::processAppearTimer(int param_1)
+bool TGCConsole2::processAppearTimer(int param_1)
 {
 	bool isFinished = true;
 	isFinished &= unk44C->update();
@@ -3506,7 +3617,7 @@ inline bool TGCConsole2::processAppearTimer(int param_1)
 	return isFinished;
 }
 
-inline bool TGCConsole2::processAppearBalloon()
+bool TGCConsole2::processAppearBalloon()
 {
 	bool isFinished = false;
 
@@ -3536,7 +3647,7 @@ inline bool TGCConsole2::processAppearBalloon()
 	return isFinished;
 }
 
-inline bool TGCConsole2::processDisappearBalloon()
+bool TGCConsole2::processDisappearBalloon()
 {
 	bool isFinished = false;
 
@@ -3568,9 +3679,9 @@ inline bool TGCConsole2::processDisappearBalloon()
 	return isFinished;
 }
 
-inline void TGCConsole2::drawJuice(J2DOrthoGraph& graph, u32 color)
+void TGCConsole2::drawJuice(J2DOrthoGraph& graph, u32 color)
 {
-	if (unk34[0x1C])
+	if (unk50)
 		return;
 
 	Mtx mtx;
@@ -3642,7 +3753,7 @@ inline void TGCConsole2::drawJuice(J2DOrthoGraph& graph, u32 color)
 	}
 }
 
-inline void TGCConsole2::drawWater(J2DOrthoGraph& graph)
+void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 {
 	static const f32 height[2]  = { 0.16099999845f, 0.12999999523f };
 	static const s16 topDiff[2] = { 7, 10 };
@@ -3651,14 +3762,14 @@ inline void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 	setupConsoleGaugeGX(mtx, 2);
 	GXSetChanAmbColor(GX_COLOR0A0, (GXColor) { 0xff, 0xff, 0xff, 0xff });
 
-	unk2EC[1].set(((u32)unk9A[0] << 24) | ((u32)unk9A[1] << 16)
-	              | ((u32)unk9A[2] << 8));
-	unk2EC[2].set(((u32)unk9A[4] << 24) | ((u32)unk9A[5] << 16)
-	              | ((u32)unk9A[6] << 8));
+	unk2EC[1] = JUtility::TColor(((u32)unk9A.r << 24) + ((u32)unk9A.g << 16)
+	                             + ((u32)unk9A.b << 8));
+	unk2EC[2] = JUtility::TColor(((u32)unk9E.r << 24) + ((u32)unk9E.g << 16)
+	                             + ((u32)unk9E.b << 8));
 
 	u8 alpha[3] = { 0 };
-	alpha[1]    = unk9A[3];
-	alpha[2]    = unk9A[7];
+	alpha[1]    = unk9A.a;
+	alpha[2]    = unk9E.a;
 
 	for (int layer = 2; layer > 0; --layer) {
 		GXSetTevColor(GX_TEVREG0, unk2EC[layer]);
@@ -3727,4 +3838,178 @@ inline void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 	texture                 = maskPicture->mTextures[0];
 	maskPicture->draw(bounds.x1, bounds.y1, texture->mWidth, texture->mHeight,
 	                  false, false, false);
+}
+
+void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
+{
+	if (flags & 1) {
+		if (!unk50) {
+			if (gpCamera->isDemoCamera() || SMS_CheckMarioFlag(0x400)
+			    || (!unk3AC[1] && TFlagManager::smInstance->getBool(0x30002)))
+				startCameraDemo();
+		} else if (!gpCamera->isDemoCamera() && !SMS_CheckMarioFlag(0x400)) {
+			endCameraDemo();
+		}
+
+		if (unk40) {
+			bool done = true;
+			if (!unk3F && unk44C->getPane()->isVisible())
+				done &= unk44C->update();
+			if (unk428->getPane()->isVisible())
+				done &= unk428->update();
+			if (unk3FC->getPane()->isVisible())
+				done &= unk3FC->update();
+			if (done)
+				unk40 = 0;
+		}
+
+		if (unk41) {
+			bool done = true;
+			if (unk44C->getPane()->isVisible())
+				done &= unk44C->update();
+			if (unk428->getPane()->isVisible())
+				done &= unk428->update();
+			if (unk3FC->getPane()->isVisible())
+				done &= unk3FC->update();
+			if (done)
+				unk41 = 0;
+		}
+
+		if (unk39) {
+			if (unkB4 == 1 && unk6C < 100)
+				unkD4[2]->getPane()->hide();
+
+			if (unkB4 == 0) {
+				startAppearCoin();
+				startAppearMario(false);
+				unkB0->search('ROOT')->mAlpha = 0;
+			} else {
+				unkB0->search('ROOT')->mAlpha = 0xff;
+			}
+
+			++unkB4;
+			if (unkB4 > 0xa0)
+				unk39 = 0;
+		}
+
+		updateLifeMeterState(this);
+		updateStarHudAutoHide(this);
+		updateShineAppearState(this);
+
+		if (unk35) {
+			bool done = true;
+			if (!unk140->update())
+				done = false;
+			if (!unk160->update())
+				done = false;
+			if (!unk108->update())
+				done = false;
+
+			setEmitterToPaneCenter(unk124, unkCC->getPane());
+			setEmitterToPaneCenter(unk164, unk14C->getPane());
+			setEmitterToPaneCenter(unk144, unk12C->getPane());
+
+			if (done) {
+				unk140->getPane()->hide();
+				unk160->getPane()->hide();
+				unk144->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
+				unk164->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
+				unk35 = 0;
+			}
+		}
+
+		updateWaterGaugeFill(this);
+		updateCounterState(this);
+		updateJetAppearState(this);
+
+		updateRedCoinCounter(this);
+		updateRedCoinAppearState(this);
+		updateTimerAppearState(this);
+		updateTelopState(this, flags);
+
+		if (!unk46 && SMS_CheckMarioFlag(0x10000) && !unk45 && !unk50)
+			startAppearTank();
+		updateWaterTankState(this);
+
+		updateLifeMeterBlink(this);
+		updateCoinAppearState(this);
+
+		if (unk4D) {
+			if (unk108->update() && unk140->update()) {
+				unk108->getPane()->hide();
+				unk4D = 0;
+			}
+		}
+
+		if (!unk45)
+			processMoveNozzle();
+		updateMarioAppearState(this);
+
+		updateMarioLifeCounter(this);
+
+		if (!unk3F && unk4A)
+			setTimer(-1);
+
+		if (unk59) {
+			playHudMoveSound(0x4819);
+			unk59 = 0;
+		}
+
+		if (unk5A) {
+			playHudMoveSound(0x481A);
+			unk5A = 0;
+		}
+	}
+
+	if (flags & 2) {
+		switch (unk10) {
+		case 1:
+			updateBalloonAppearState(this);
+			break;
+		case 2:
+			processBalloonTextStep(this);
+			break;
+		case 3:
+			if (unk3E4 > 0)
+				--unk3E4;
+			if ((unk3F8 && unk3E4 == 0) || unk3F4 != 0xffffffff)
+				startDisappearBalloon(unk3E0, false);
+			break;
+		case 4:
+			updateBalloonDisappearState(this);
+			break;
+		}
+
+		updateJetCounterAnimation(this);
+		updateCoinCounterAnimation(this);
+		updateYoshiJuiceIconState(this);
+	}
+
+	if (flags & 8) {
+		J2DOrthoGraph graph(graphics->mViewportRect);
+		graph.setup2D();
+
+		if (unk46 || unk45)
+			drawWaterBack();
+
+		graph.setup2D();
+
+		unkB0->draw(0, 0, &graph);
+
+		if (unk44 && !unk43 && !unk42 && unk520->getPane()->isVisible()) {
+			graphics->setScissor(
+			    JDrama::TRect(unk544.x1, unk544.y1, unk544.x2, unk544.y2));
+			graph.setup2D();
+			unk528->show();
+			unk52C->show();
+			unk52C->draw(unk534.x1 + 2, unk534.y1 + 2);
+			unk528->draw(unk534.x1, unk534.y1);
+			unk528->hide();
+			unk52C->hide();
+		}
+
+		graphics->setScissor(graphics->mViewportRect);
+		graph.setup2D();
+		drawWaterOrJuice(this, graph);
+	}
 }

@@ -802,7 +802,7 @@ u8 TMarDirector::updateGameMode()
 
 				TGCConsole2* console = gpMarDirector->mConsole;
 				console->unk94->startAppearShineGet();
-				console->unk34[19] = 1;
+				console->unk47 = 1;
 				MSBgm::startBGM(MSD_BGM_CHUBOSS);
 				TFlagManager::getInstance()->setBool(true, 0x30006);
 				TFlagManager::getInstance()->setShineFlag(unk25C->getEventId());

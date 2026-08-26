@@ -352,7 +352,7 @@ public:
 	virtual BOOL hasMapCollision() const { return true; }
 
 	void startMoguCamera();
-	BOOL isInBossEelMoguDemo();
+	bool isInBossEelMoguDemo();
 	void quickBack();
 	BOOL isValidToothDamage();
 	void deadCheck();

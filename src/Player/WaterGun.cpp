@@ -1686,16 +1686,16 @@ void TWaterGun::setAmountToRate(f32 rate)
 	}
 }
 
-bool TWaterGun::isPressureOn()
+BOOL TWaterGun::isPressureOn()
 {
 	// volatile u32 unused2[6];
 	if (getCurrentNozzle()->getNozzleKind() == 1) {
 		TNozzleTrigger* triggerNozzle = (TNozzleTrigger*)getCurrentNozzle();
 		if (triggerNozzle->unk388 > 0.0f) {
-			return true;
+			return TRUE;
 		}
 	}
-	return false;
+	return FALSE;
 }
 
 f32 TWaterGun::getPressure()
