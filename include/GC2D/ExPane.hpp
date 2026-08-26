@@ -42,7 +42,8 @@ public:
 		mOffsetAnimPending = true;
 	}
 
-	// Possibly inline
+	/// Restarts the position animation from wherever it currently is.
+	/// Confirmed by the ROM: TGCConsole2::loadAfter inlines exactly this.
 	void updatePaneOffset(s32 time, s32 target_x, s32 target_y)
 	{
 		setPaneOffset(time, target_x, target_y,
@@ -60,7 +61,7 @@ public:
 		mSizeAnimPending = true;
 	}
 
-	// Possibly inline
+	// fabricated
 	void updatePaneSize(s32 time, s32 target_w, s32 target_h)
 	{
 		setPaneSize(time, target_w, target_h, mSizeInterpolator.getCurrentX(),
@@ -90,7 +91,7 @@ public:
 		              (initH - initial_h) * 0.5f);
 	}
 
-	// Possibly inline
+	// fabricated
 	void updateCenteredSize(s32 time, s32 target_w, s32 target_h)
 	{
 		setCenteredSize(time, target_w, target_h,

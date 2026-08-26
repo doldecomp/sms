@@ -526,7 +526,7 @@ static void evLaunchEventClearDemo(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->verifyArgNum(0, &arg_num);
 	TGCConsole2* console = SMSGetMarDirector()->getConsole();
 	console->unk94->startAppearShineGet();
-	console->unk34[0x13] = 1;
+	console->unk47 = 1;
 	interp->push();
 }
 
