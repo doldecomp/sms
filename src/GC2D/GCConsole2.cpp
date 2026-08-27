@@ -2832,16 +2832,14 @@ void TGCConsole2::drawWaterBack()
 		}
 
 		drawGaugeQuadF32(bounds, fillTop, bounds.y2, hiddenRatio, 1.0f);
-	} else if (unk48) {
-		if (unk30C != 0) {
+	} else {
+		if (unk48 && unk30C != 0) {
 			unk274->setPanePosition(90, JUTPoint(0, 0), JUTPoint(0, -100),
 			                        JUTPoint(0, 0));
 			unk30C = 0;
 			unk49  = 1;
 		}
 
-		drawGaugeQuadF32(bounds, bounds.y1, bounds.y2, 0.0f, 1.0f);
-	} else {
 		drawGaugeQuadF32(bounds, bounds.y1, bounds.y2, 0.0f, 1.0f);
 	}
 
