@@ -105,10 +105,11 @@ static inline void drawGaugeQuadF32(const JUTRect& rect, int top, int bottom,
 	GXTexCoord2f32(0.0f, bottomTex);
 }
 
-// fabricated
-static inline u32 getPressureFlashColor(u8 frame)
+// Possibly inline
+static inline u32 getPressureFlashColor(u8& counter)
 {
 	u32 color = 0xff3f3f00;
+	int frame = counter;
 
 	if (frame < 10) {
 		color += ((u32)(s16)(s32)((f32)frame * -6.3f)) << 8;
@@ -116,9 +117,11 @@ static inline u32 getPressureFlashColor(u8 frame)
 	} else if (frame < 15) {
 		color = 0xffff0000;
 	} else if (frame < 25) {
-		u8 fade = 25 - frame;
+		int fade = 25 - frame;
 		color += ((u32)(s16)(s32)((f32)fade * -6.3f)) << 8;
 		color += ((u32)(s32)((f32)fade * 19.2f)) << 16;
+	} else {
+		counter = 0;
 	}
 
 	return color;
@@ -2811,9 +2814,6 @@ void TGCConsole2::drawWaterBack()
 		if (pressure == pressureMax) {
 			if (unk49)
 				unk49 = 0;
-
-			if (unk30C >= 25)
-				unk30C = 0;
 
 			u32 color = getPressureFlashColor(unk30C);
 			GXSetTevColor(GX_TEVREG0, JUtility::TColor(color + 0xc8));
