@@ -2255,9 +2255,9 @@ void TGCConsole2::startDisappearCoin()
 	unk5A = true;
 
 	if (unk140->isInterpolatorAtZero())
-		unk140->updatePaneOffset(
-		    40, 0,
-		    -(unk140->getInitialY2() + unk128->getPane()->getHeight() + 1));
+		unk140->updatePaneOffset(40, 0,
+		                         getOffsetForAboveScreen(unk140)
+		                             - unk128->getPane()->getHeight());
 
 	unk108->updatePaneOffset(
 	    40, 0, getOffsetForAboveScreen(unk108) - unkC8->getPane()->getHeight());
