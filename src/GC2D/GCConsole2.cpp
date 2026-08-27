@@ -2280,7 +2280,7 @@ void TGCConsole2::startDisappearTank()
 
 void TGCConsole2::startAppearCoin()
 {
-	if (unk108->getPane()->isVisible()) {
+	if (unk108->getPane()->isVisible() != 0) {
 		return;
 	}
 
