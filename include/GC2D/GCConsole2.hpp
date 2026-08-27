@@ -230,8 +230,8 @@ public:
 	/* 0x310 */ u32 unk310;
 	/* 0x314 */ J2DPane* unk314[4];
 	/* 0x324 */ J2DPane* unk324;
-	/* 0x328 */ J2DPane* unk328;
-	/* 0x32C */ J2DPane* unk32C;
+	/* 0x328 */ J2DPicture* unk328;
+	/* 0x32C */ J2DPicture* unk32C;
 	/* 0x330 */ u8 unk330;
 	/* 0x334 */ J2DPane* unk334[22];
 	/* 0x38C */ TBoundPane* unk38C;
