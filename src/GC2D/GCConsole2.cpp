@@ -1745,9 +1745,9 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 	unk1C4 = new TBoundPane(unkB0, '\0l_0');
 
 	for (int i = 0; i < 9; ++i) {
-		unk17C[i]     = unkB0->search('lm01' + (i << 8));
-		unk17C[i + 1] = unkB0->search('lm02' + (i << 8));
-		unk1D0[i]     = unk17C[i]->getBounds();
+		unk17C[i * 2]     = unkB0->search('lm01' + (i << 8));
+		unk17C[i * 2 + 1] = unkB0->search('lm02' + (i << 8));
+		unk1D0[i]         = unk17C[i * 2]->getBounds();
 	}
 
 	unk260 = new TBoundPane(unkB0, 'lm_0');
