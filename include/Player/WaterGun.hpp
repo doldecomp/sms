@@ -135,7 +135,7 @@ public:
 
 		return false;
 	}
-	bool isPressureOn();
+	BOOL isPressureOn();
 	void movement();
 	void rotateProp(f32);
 	void setAmountToRate(f32);

@@ -1,4 +1,5 @@
 #include <JSystem/JParticle/JPAField.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 #include <JSystem/JParticle/JPAParticle.hpp>
 #include <JSystem/JParticle/JPADataBlock.hpp>
 #include <JSystem/JParticle/JPAMath.hpp>
@@ -31,7 +32,11 @@ JPABaseField::JPABaseField()
 }
 JPABaseField::~JPABaseField() { }
 void JPABaseField::set() { }
-void JPABaseField::calcMaxDistance() { }
+void JPABaseField::calcMaxDistance()
+{
+	if (checkStatus(STATUS_LIMIT_DISTANCE))
+		mMaxDistanceSq = mMaxDistance * mMaxDistance;
+}
 bool JPABaseField::checkMaxDistance(JGeometry::TVec3<f32>& param_1,
                                     JGeometry::TVec3<f32>& param_2)
 {
@@ -183,8 +188,9 @@ void JPAAirField::affect(JPAParticle* particle)
 			diff.sub(particle->mGlobalPosition, unk58);
 		}
 
-		diff.normalize();
-		if (unk70.dot(diff) >= unk64.x)
+		JGeometry::TVec3<f32> dir;
+		dir.normalize(diff);
+		if (unk70.dot(dir) >= unk64.x)
 			calcFieldVelocity(particle);
 	} else {
 		calcFieldVelocity(particle);
@@ -390,16 +396,17 @@ JPADragField::~JPADragField() { }
 void JPADragField::affect(JPAParticle* particle)
 {
 	if (!particle->checkStatus(JPABaseParticle::FLAG_UNK4)) {
-		if ((int)mFadeOutStart == 0) {
+		if (particle->getAge() == 0) {
 			f32 rnd = unk14 * (FieldRand.get_ufloat_1() - 0.5f) + unk10;
 			if (rnd > 1.0f)
 				rnd = 1.0f;
-			unk7C.y = rnd;
+			particle->mDragForce = rnd;
 		}
-		f32 scale = calcFieldFadeScale(particle->mLifeProgress);
-		unk7C.z *= 1.0f - scale * (1.0f - particle->getDragForce());
+		f32 scale = calcFieldFadeScale(particle->getLifeTime());
+		particle->mCurrentDragForce
+		    *= 1.0f - scale * (1.0f - particle->getDragForce());
 	} else {
-		unk7C.z *= particle->getDragForce();
+		particle->mCurrentDragForce *= particle->getDragForce();
 	}
 }
 
@@ -409,7 +416,7 @@ JPAFieldManager::~JPAFieldManager() { }
 void JPAFieldManager::deleteField(JPABaseField* field)
 {
 	unk0.remove(field->getLinkBufferPtr());
-	unkC->prepend(field->getLinkBufferPtr());
+	getFieldPool()->prepend(field->getLinkBufferPtr());
 }
 
 void JPAFieldManager::deleteAllField()
@@ -436,8 +443,7 @@ void JPAFieldManager::calcFieldParams()
 		JSULink<JPABaseField>* next = link->getNext();
 		JPABaseField* field         = link->getObject();
 
-		if (field->checkStatus(JPABaseField::STATUS_LIMIT_DISTANCE))
-			field->mMaxDistanceSq = field->mMaxDistance * field->mMaxDistance;
+		field->calcMaxDistance();
 		field->set();
 
 		link = next;
@@ -447,11 +453,10 @@ void JPAFieldManager::calcFieldParams()
 void JPAFieldManager::affectField(JPAParticle* particle)
 {
 	JGeometry::TVec3<f32>& particlePos = particle->mGlobalPosition;
-	JSUListIterator<JPABaseField> it;
-	JPABaseField* field;
 
-	for (it = unk0.getFirst(); it != unk0.getEnd(); ++it) {
-		field = it.getObject();
+	for (JSULink<JPABaseField>* link = unk0.getFirst(); link != nullptr;
+	     link                        = link->getNext()) {
+		JPABaseField* field = link->getObject();
 		if (!field->checkStatus(JPABaseField::STATUS_LIMIT_DISTANCE)) {
 			field->affect(particle);
 		} else if (!field->checkMaxDistance(particlePos, field->getUnk18())) {
@@ -489,6 +494,7 @@ JPABaseField* JPAFieldManager::setField(u8 param_1)
 		result = setConvectionField();
 		break;
 	}
+	JUT_ASSERT(485, result != nullptr);
 	return result;
 }
 
@@ -496,9 +502,9 @@ JPAGravityField* JPAFieldManager::setGravityField()
 {
 	JPAGravityField* result = nullptr;
 
-	if (unkC->getNumLinks()) {
-		result = (JPAGravityField*)unkC->getFirst()->getObject();
-		unkC->remove(result->getLinkBufferPtr());
+	if (getFieldPool()->getNumLinks() != 0) {
+		result = (JPAGravityField*)getFieldPool()->getFirst()->getObject();
+		getFieldPool()->remove(result->getLinkBufferPtr());
 		new (result) JPAGravityField;
 		unk0.append(result->getLinkBufferPtr());
 	}
@@ -510,9 +516,9 @@ JPAAirField* JPAFieldManager::setAirField()
 {
 	JPAAirField* result = nullptr;
 
-	if (unkC->getNumLinks()) {
-		result = (JPAAirField*)unkC->getFirst()->getObject();
-		unkC->remove(result->getLinkBufferPtr());
+	if (getFieldPool()->getNumLinks() != 0) {
+		result = (JPAAirField*)getFieldPool()->getFirst()->getObject();
+		getFieldPool()->remove(result->getLinkBufferPtr());
 		new (result) JPAAirField;
 		unk0.append(result->getLinkBufferPtr());
 	}
@@ -524,9 +530,9 @@ JPAMagnetField* JPAFieldManager::setMagnetField()
 {
 	JPAMagnetField* result = nullptr;
 
-	if (unkC->getNumLinks()) {
-		result = (JPAMagnetField*)unkC->getFirst()->getObject();
-		unkC->remove(result->getLinkBufferPtr());
+	if (getFieldPool()->getNumLinks() != 0) {
+		result = (JPAMagnetField*)getFieldPool()->getFirst()->getObject();
+		getFieldPool()->remove(result->getLinkBufferPtr());
 		new (result) JPAMagnetField;
 		unk0.append(result->getLinkBufferPtr());
 	}
@@ -538,9 +544,9 @@ JPANewtonField* JPAFieldManager::setNewtonField()
 {
 	JPANewtonField* result = nullptr;
 
-	if (unkC->getNumLinks()) {
-		result = (JPANewtonField*)unkC->getFirst()->getObject();
-		unkC->remove(result->getLinkBufferPtr());
+	if (getFieldPool()->getNumLinks() != 0) {
+		result = (JPANewtonField*)getFieldPool()->getFirst()->getObject();
+		getFieldPool()->remove(result->getLinkBufferPtr());
 		new (result) JPANewtonField;
 		unk0.append(result->getLinkBufferPtr());
 	}
@@ -552,9 +558,9 @@ JPAVortexField* JPAFieldManager::setVortexField()
 {
 	JPAVortexField* result = nullptr;
 
-	if (unkC->getNumLinks()) {
-		result = (JPAVortexField*)unkC->getFirst()->getObject();
-		unkC->remove(result->getLinkBufferPtr());
+	if (getFieldPool()->getNumLinks() != 0) {
+		result = (JPAVortexField*)getFieldPool()->getFirst()->getObject();
+		getFieldPool()->remove(result->getLinkBufferPtr());
 		new (result) JPAVortexField;
 		unk0.append(result->getLinkBufferPtr());
 	}
@@ -566,9 +572,9 @@ JPAConvectionField* JPAFieldManager::setConvectionField()
 {
 	JPAConvectionField* result = nullptr;
 
-	if (unkC->getNumLinks()) {
-		result = (JPAConvectionField*)unkC->getFirst()->getObject();
-		unkC->remove(result->getLinkBufferPtr());
+	if (getFieldPool()->getNumLinks() != 0) {
+		result = (JPAConvectionField*)getFieldPool()->getFirst()->getObject();
+		getFieldPool()->remove(result->getLinkBufferPtr());
 		new (result) JPAConvectionField;
 		unk0.append(result->getLinkBufferPtr());
 	}
@@ -580,9 +586,9 @@ JPARandomField* JPAFieldManager::setRandomField()
 {
 	JPARandomField* result = nullptr;
 
-	if (unkC->getNumLinks()) {
-		result = (JPARandomField*)unkC->getFirst()->getObject();
-		unkC->remove(result->getLinkBufferPtr());
+	if (getFieldPool()->getNumLinks() != 0) {
+		result = (JPARandomField*)getFieldPool()->getFirst()->getObject();
+		getFieldPool()->remove(result->getLinkBufferPtr());
 		new (result) JPARandomField;
 		unk0.append(result->getLinkBufferPtr());
 	}
@@ -594,9 +600,9 @@ JPADragField* JPAFieldManager::setDragField()
 {
 	JPADragField* result = nullptr;
 
-	if (unkC->getNumLinks()) {
-		result = (JPADragField*)unkC->getFirst()->getObject();
-		unkC->remove(result->getLinkBufferPtr());
+	if (getFieldPool()->getNumLinks() != 0) {
+		result = (JPADragField*)getFieldPool()->getFirst()->getObject();
+		getFieldPool()->remove(result->getLinkBufferPtr());
 		new (result) JPADragField;
 		unk0.append(result->getLinkBufferPtr());
 	}

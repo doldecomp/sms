@@ -392,7 +392,7 @@ void TWarpInCallBack::execute(JPABaseEmitter* emitter,
                               JPABaseParticle* particle)
 {
 	// TODO: awful vector maths :(
-	JGeometry::TVec3<f32>* vel = (JGeometry::TVec3<f32>*)emitter->unk120;
+	JGeometry::TVec3<f32>* vel = (JGeometry::TVec3<f32>*)emitter->getUserWork();
 
 	f32 timer = (f32)gpMarioOriginal->mStatusTimer;
 	f32 tmp   = gpMarioOriginal->unk468;
@@ -467,8 +467,8 @@ void TMario::warpInEffect()
 			JPABaseEmitter* emitter
 			    = gpMarioParticleManager->emitAndBindToMtx(id, mtx, 0, this);
 			if (emitter != nullptr) {
-				emitter->unk114 = &warpInCallBack;
-				emitter->unk120 = &mWarpInDir;
+				emitter->setParticleCallBackPtr(&warpInCallBack);
+				emitter->setUserWork((uintptr_t)&mWarpInDir);
 			}
 		}
 	}
@@ -755,7 +755,7 @@ void TMario::kickFruitEffect()
 		emitter->setGlobalScale(scale);
 		JGeometry::TVec3<f32> pos = mPosition;
 		pos.y += 30.0f;
-		emitter->mTrans.set(pos);
+		emitter->setEmitterTranslation(pos);
 	}
 }
 

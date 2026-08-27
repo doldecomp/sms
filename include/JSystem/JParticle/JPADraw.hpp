@@ -113,37 +113,37 @@ public:
 
 class JPADraw {
 public:
-	/* 0x00 */ JPADrawExecEmitterVisitor* unk0[1];
-	/* 0x04 */ JPADrawExecEmitterVisitor* unk4[5];
-	/* 0x18 */ JPADrawExecEmitterVisitor* unk18[3];
-	/* 0x24 */ JPADrawCalcEmitterVisitor* unk24[4];
-	/* 0x34 */ JPADrawExecParticleVisitor* unk34[5];
-	/* 0x48 */ JPADrawCalcParticleVisitor* unk48[10];
-	/* 0x70 */ JPADrawExecParticleVisitor* unk70[4];
-	/* 0x80 */ JPADrawCalcParticleVisitor* unk80[2];
-	/* 0x88 */ u8 unk88;
-	/* 0x89 */ u8 unk89;
-	/* 0x8A */ u8 unk8A;
-	/* 0x8B */ u8 unk8B;
-	/* 0x8C */ u8 unk8C;
-	/* 0x8D */ u8 unk8D;
-	/* 0x8E */ u8 unk8E;
-	/* 0x8F */ u8 unk8F;
+	/* 0x00 */ JPADrawExecEmitterVisitor* mpExecEmtrVis[1];
+	/* 0x04 */ JPADrawExecEmitterVisitor* mpExecEmtrPVis[5];
+	/* 0x18 */ JPADrawExecEmitterVisitor* mpExecEmtrCVis[3];
+	/* 0x24 */ JPADrawCalcEmitterVisitor* mpCalcEmtrVis[4];
+	/* 0x34 */ JPADrawExecParticleVisitor* mpExecPtclVis[5];
+	/* 0x48 */ JPADrawCalcParticleVisitor* mpCalcPtclVis[10];
+	/* 0x70 */ JPADrawExecParticleVisitor* mpExecChldVis[4];
+	/* 0x80 */ JPADrawCalcParticleVisitor* mpCalcChldVis[2];
+	/* 0x88 */ u8 execEmtrVisNum;
+	/* 0x89 */ u8 execEmtrPVisNum;
+	/* 0x8A */ u8 execEmtrCVisNum;
+	/* 0x8B */ u8 calcEmtrVisNum;
+	/* 0x8C */ u8 execPtclVisNum;
+	/* 0x8D */ u8 calcPtclVisNum;
+	/* 0x8E */ u8 execChldVisNum;
+	/* 0x8F */ u8 calcChldVisNum;
 	/* 0x90 */ JPADrawContext mDrawCtx;
 	/* 0xB4 */ f32 mScaleOut;
 	/* 0xB8 */ GXColor mPrmColor;
 	/* 0xBC */ GXColor mEnvColor;
-	/* 0xC0 */ u16 unkC0;
+	/* 0xC0 */ u16 mTexIdx;
 	/* 0xC2 */ u8 unkC2;
 
 public:
 	struct JPADrawVisitorDefFlags {
-		/* 0x00 */ BOOL unk0;
-		/* 0x04 */ BOOL unk4;
-		/* 0x08 */ BOOL unk8;
-		/* 0x0C */ BOOL unkC;
-		/* 0x10 */ BOOL unk10;
-		/* 0x14 */ BOOL unk14;
+		/* 0x00 */ BOOL mbIsEnableDrawParent;
+		/* 0x04 */ BOOL mbHasPrmAnm;
+		/* 0x08 */ BOOL mbHasEnvAnm;
+		/* 0x0C */ BOOL mbIsStripe;
+		/* 0x10 */ BOOL mbIsPointOrLine;
+		/* 0x14 */ BOOL mbIsEnableAlpha;
 	};
 
 	static JPADrawVisitorContainer vc;
@@ -159,7 +159,7 @@ public:
 	void initParticle(JPABaseParticle*);
 	void initChild(JPABaseParticle*, JPABaseParticle*);
 	const ResTIMG* swapImage(const ResTIMG*, s16);
-	void loadTexture(u8, GXTexMapID);
+	BOOL loadTexture(u8, GXTexMapID);
 	void setDrawExecVisitorsBeforeCB(const JPADraw::JPADrawVisitorDefFlags&);
 	void setDrawExecVisitorsAfterCB(const JPADraw::JPADrawVisitorDefFlags&);
 	void setDrawCalcVisitors(const JPADraw::JPADrawVisitorDefFlags&);
@@ -171,9 +171,9 @@ public:
 	void zDrawParticle();
 	void zDrawChild();
 	s16 getMainTextureID(u8);
-	void getIndTextureID();
-	void getIndSubTextureID();
-	void getSecondTextureID();
+	s16 getIndTextureID();
+	s16 getIndSubTextureID();
+	s16 getSecondTextureID();
 	void loadYBBMtx(MtxPtr);
 };
 

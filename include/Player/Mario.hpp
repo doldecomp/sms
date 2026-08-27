@@ -1202,6 +1202,8 @@ public:
 	f32 getIntendedMag() const { return mIntendedMag; }
 	f32 getIntendedYaw() const { return mIntendedYaw * (360.0f / 65536.0f); }
 	THitActor* getFloorHitActor() { return &mFloorHitActor; }
+	s16 getHealth() const { return mHealth; }
+	s16 getAir() const { return mAir; }
 
 	// fabricated
 	bool isTouchGround4cm() const

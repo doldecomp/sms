@@ -30,7 +30,7 @@ public:
 	// fabricated; smells fake
 	void setEmitterScale(f32 x, f32 y, f32 z)
 	{
-		mEmitter->setScale2(JGeometry::TVec3<f32>(x, y, z));
+		mEmitter->setEmitterScale(JGeometry::TVec3<f32>(x, y, z));
 	}
 
 	// fabricated

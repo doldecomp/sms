@@ -1966,7 +1966,7 @@ void TBossEel::quickBack()
 	}
 }
 
-BOOL TBossEel::isInBossEelMoguDemo()
+bool TBossEel::isInBossEelMoguDemo()
 {
 	if (mMActor->checkCurBckFromIndex(12) || mMActor->checkCurBckFromIndex(3))
 		return true;

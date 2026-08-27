@@ -42,7 +42,8 @@ public:
 		mOffsetAnimPending = true;
 	}
 
-	// fabricated
+	/// Restarts the position animation from wherever it currently is.
+	/// Confirmed by the ROM: TGCConsole2::loadAfter inlines exactly this.
 	void updatePaneOffset(s32 time, s32 target_x, s32 target_y)
 	{
 		setPaneOffset(time, target_x, target_y,

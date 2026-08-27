@@ -16,7 +16,7 @@ JPAEmitterManager::JPAEmitterManager(JPAResourceManager* param_1, s32 param_2,
 		param_5 = JKRHeap::getCurrentHeap();
 
 	u32 bytesForParticles
-	    = ALIGN_NEXT(param_2 * sizeof(JPABaseParticle), 0x20) + 0x80;
+	    = ALIGN_NEXT(param_2 * sizeof(JPAParticle), 0x20) + 0x80;
 	unkC = JKRCreateSolidHeap(bytesForParticles, param_5, false);
 	if (unkC) {
 		for (int i = 0; i < param_2; ++i) {
@@ -77,11 +77,45 @@ JPAEmitterManager::JPAEmitterManager(JPAResourceManager* param_1, s32 param_2,
 	}
 }
 
-u32 JPAEmitterManager::getEmitterNumber() { }
+u32 JPAEmitterManager::getEmitterNumber()
+{
+	u32 num = 0;
 
-u32 JPAEmitterManager::getParticleNumber() { }
+	for (int i = 0; i < 8; ++i)
+		num += unk44[i].getNumLinks();
 
-u32 JPAEmitterManager::getFieldNumber() { }
+	return num;
+}
+
+u32 JPAEmitterManager::getParticleNumber()
+{
+	u32 num = 0;
+
+	for (int i = 0; i < 8; ++i) {
+		JSUList<JPABaseEmitter>* list = &unk44[i];
+
+		for (JSULink<JPABaseEmitter>* link = list->getFirst();
+		     link != list->getEnd(); link  = link->getNext())
+            num += link->getObject()->getParticleNumber();
+	}
+
+	return num;
+}
+
+u32 JPAEmitterManager::getFieldNumber()
+{
+	u32 num = 0;
+
+	for (int i = 0; i < 8; ++i) {
+		JSUList<JPABaseEmitter>* list = &unk44[i];
+
+		for (JSULink<JPABaseEmitter>* link = list->getFirst();
+		     link != list->getEnd(); link  = link->getNext())
+            num += link->getObject()->getFieldManager()->unk0.getNumLinks();
+	}
+
+	return num;
+}
 
 void JPAEmitterManager::calcBase(u8 group_id)
 {
@@ -116,7 +150,13 @@ void JPAEmitterManager::calc()
 		calcBase(gid);
 }
 
-void JPAEmitterManager::calc(u8) { }
+void JPAEmitterManager::calc(u8 group_id)
+{
+	if (group_id >= 8)
+		return;
+
+	calcBase(group_id);
+}
 
 void JPAEmitterManager::drawBase(JPADrawInfo* info, u8 group_id)
 {
@@ -130,10 +170,10 @@ void JPAEmitterManager::drawBase(JPADrawInfo* info, u8 group_id)
 	for (JSULink<JPABaseEmitter>* link = list->getFirst();
 	     link != list->getEnd(); link  = link->getNext()) {
 
-		if (link->getObject()->checkStatus(JPABaseEmitter::STATUS_STOP_DRAW))
-			continue;
+		JPABaseEmitter* emitter = link->getObject();
 
-		link->getObject()->mDraw.draw(info->getCameraMtxPtr());
+		if (emitter->isDraw())
+			emitter->draw(info->getCameraMtxPtr());
 	}
 }
 
@@ -143,7 +183,13 @@ void JPAEmitterManager::draw(JPADrawInfo* info)
 		drawBase(info, i);
 }
 
-void JPAEmitterManager::draw(MtxPtr) { }
+void JPAEmitterManager::draw(MtxPtr cam_mtx)
+{
+	JPADrawInfo info(cam_mtx);
+
+	for (int i = 0; i < 8; ++i)
+		drawBase(&info, i);
+}
 
 void JPAEmitterManager::draw(JPADrawInfo* info, u8 group_id)
 {
@@ -155,7 +201,21 @@ void JPAEmitterManager::draw(JPADrawInfo* info, u8 group_id)
 
 void JPAEmitterManager::draw(MtxPtr, u8) { }
 
-JPABaseEmitter* JPAEmitterManager::createVolumeEmitter(JPADataBlock*, u8) { }
+JPABaseEmitter* JPAEmitterManager::createVolumeEmitter(JPADataBlock* block,
+                                                       u8 group_id)
+{
+	JPABaseEmitter* emitter = nullptr;
+
+	if (unk14.getNumLinks()) {
+		emitter = (JPABaseEmitter*)unk14.getFirst()->getObjectPtr();
+		unk14.remove(emitter->getLinkBufferPtr());
+		new (emitter) JPABaseEmitter;
+		unk44[group_id].append(emitter->getLinkBufferPtr());
+		emitter->loadBaseEmitterBlock(block);
+	}
+
+	return emitter;
+}
 
 JPABaseEmitter* JPAEmitterManager::createEmitterBase(
     s32 param_1, u8 param_2, u8 param_3,
@@ -165,46 +225,33 @@ JPABaseEmitter* JPAEmitterManager::createEmitterBase(
 	if (param_2 >= 8)
 		return nullptr;
 
-	if (unkA4[param_3]) {
+	if (getResourceManager(param_3)) {
 		JPAEmitterData* emitterData
-		    = unkA4[param_3]->getEmitterResource()->getByUserIndex(param_1);
+		    = getResourceManager(param_3)->getEmitterResource()->getByUserIndex(
+		        param_1);
 		if (!emitterData)
 			return nullptr;
 
-		JPABaseEmitter* emitter = nullptr;
-
-		JPADataBlockLinkInfo* linkInfo = emitterData->unk0[0];
+		JPADataBlockLinkInfo* linkInfo = emitterData->getLinkInfo()[0];
 		JPADataBlock* block            = linkInfo->getBaseEmitterBlock();
 
-		if (unk14.getNumLinks()) {
-			emitter = unk14.getFirst()->getObject();
-			unk14.remove(emitter->getLinkBufferPtr());
-			new (emitter) JPABaseEmitter;
-			unk44[param_2].append(emitter->getLinkBufferPtr());
-			emitter->loadBaseEmitterBlock(block);
-		}
+		JPABaseEmitter* emitter = createVolumeEmitter(block, param_2);
 
 		if (emitter) {
-			emitter->unk173            = param_2;
-			emitter->mManager          = this;
-			emitter->mGlobalPrmColor.r = 0xff;
-			emitter->mGlobalPrmColor.g = 0xff;
-			emitter->mGlobalPrmColor.b = 0xff;
-			emitter->unk184.r          = 0xff;
-			emitter->unk184.g          = 0xff;
-			emitter->unk184.b          = 0xff;
-			emitter->mGlobalPrmColor.a = 0xff;
+			emitter->unk173   = param_2;
+			emitter->mManager = this;
+			emitter->setGlobalPrmColor(0xff, 0xff, 0xff);
+			emitter->setGlobalEnvColor(0xff, 0xff, 0xff);
+			emitter->setGlobalAlpha(0xff);
 
-			emitter->mFieldManager.unkC = &unk28;
-
-			JPAFieldManager* fieldMgr = emitter->getFieldManager();
+			emitter->setFieldList(&unk28);
 
 			int count             = linkInfo->getFieldNum();
 			JPADataBlock** blocks = linkInfo->getField();
 			for (int i = 0; i < count; ++i) {
 				JPADataBlock* block = blocks[i];
-				JPABaseField* field
-				    = fieldMgr->setField(block->getRawData()[0xC]);
+				JPABaseField* field = emitter->getFieldManager()->setField(
+				    block->getRawData()[0xC]);
 				if (field)
 					field->loadFieldBlock(block);
 			}
@@ -214,9 +261,9 @@ JPABaseEmitter* JPAEmitterManager::createEmitterBase(
 
 			emitter->calcCurrentRateTimerStep();
 			emitter->getDraw()->initialize(
-			    emitter, unkA4[param_3]->getTextureResource());
-			emitter->unk110 = param_4;
-			emitter->unk114 = param_5;
+			    emitter, getResourceManager(param_3)->getTextureResource());
+			emitter->setEmitterCallBackPtr(param_4);
+			emitter->setParticleCallBackPtr(param_5);
 		}
 		return emitter;
 	}
@@ -233,7 +280,7 @@ JPABaseEmitter* JPAEmitterManager::createSimpleEmitterID(
 	    = createEmitterBase(param_2, param_3, param_4, param_5, param_6);
 
 	if (result) {
-		result->mGlobalTranslation.set(param_1);
+		result->setGlobalTranslation(param_1);
 		return result;
 	}
 
@@ -245,6 +292,7 @@ JPABaseEmitter* JPAEmitterManager::createSimpleEmitter(
     JPACallBackBase<JPABaseEmitter*>* param_3,
     JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>* param_4)
 {
+	return createSimpleEmitterID(param_1, param_2, 0, 0, param_3, param_4);
 }
 
 bool JPAEmitterManager::createEmitter(
@@ -277,4 +325,16 @@ void JPAEmitterManager::forceDeleteEmitter(JPABaseEmitter* emitter)
 	deleteEmitter(emitter);
 }
 
-void JPAEmitterManager::forceDeleteAllEmitter() { }
+void JPAEmitterManager::forceDeleteAllEmitter()
+{
+	for (int i = 0; i < 8; ++i) {
+		JSUList<JPABaseEmitter>* list = &unk44[i];
+
+		JSULink<JPABaseEmitter>* next = nullptr;
+		for (JSULink<JPABaseEmitter>* link = list->getFirst();
+		     link != list->getEnd(); link  = next) {
+			next = link->getNext();
+			forceDeleteEmitter(link->getObject());
+		}
+	}
+}

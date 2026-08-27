@@ -1,6 +1,7 @@
 #ifndef JPA_EMITTER_MANAGER_HPP
 #define JPA_EMITTER_MANAGER_HPP
 
+#include <JSystem/JUtility/JUTAssert.hpp>
 #include <JSystem/JSupport/JSUList.hpp>
 #include <JSystem/JGeometry.hpp>
 #include <JSystem/JParticle/JPACallback.hpp>
@@ -68,6 +69,13 @@ public:
 	bool createEmitter(const JGeometry::TVec3<f32>&, s32,
 	                   JPACallBackBase<JPABaseEmitter*>*,
 	                   JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>*);
+
+	// from tp
+	JPAResourceManager* getResourceManager(u8 res_mgr_id)
+	{
+		JUT_ASSERT(147, res_mgr_id < 8);
+		return unkA4[res_mgr_id];
+	}
 
 	void deleteEmitter(JPABaseEmitter*);
 	void forceDeleteEmitter(JPABaseEmitter*);
