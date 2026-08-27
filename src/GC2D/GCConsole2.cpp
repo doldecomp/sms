@@ -3609,8 +3609,7 @@ bool TGCConsole2::processDisappearBalloon()
 	JUTRect bounds = unk3B0->getBounds();
 	int height     = bounds.getHeight();
 
-	JUTRect contents  = unk3B0->getContentsBounds();
-	int contentHeight = contents.getHeight();
+	int contentHeight = unk3B0->getContentsBounds().getHeight();
 
 	if (contentHeight > 0) {
 		int nextHeight = height - unk3CC;
