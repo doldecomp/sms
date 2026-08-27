@@ -3148,10 +3148,9 @@ bool TGCConsole2::processAppearStar(int param_1)
 	unk144->mGlobalTranslation.set(bounds.x1 + bounds.getWidth() * 0.5f,
 	                               bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 
-	JUTRect bounds2(unk14C->getPane()->mGlobalBounds);
-	unk164->mGlobalTranslation.set(bounds2.x1 + bounds2.getWidth() * 0.5f,
-	                               bounds2.y1 + bounds2.getHeight() * 0.5f,
-	                               0.0f);
+	bounds = unk14C->getPane()->mGlobalBounds;
+	unk164->mGlobalTranslation.set(bounds.x1 + bounds.getWidth() * 0.5f,
+	                               bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 
 	return isFinished;
 }
