@@ -101,6 +101,10 @@ public:
 
 	J2DPane* getPane() const { return mPane; }
 	const JUTRect& getInitialBounds() const { return mInitialBounds; }
+	int getInitialX1() const { return mInitialBounds.x1; }
+	int getInitialY1() const { return mInitialBounds.y1; }
+	int getInitialX2() const { return mInitialBounds.x2; }
+	int getInitialY2() const { return mInitialBounds.y2; }
 
 	bool isBoundsAnimationCompleted() const
 	{
