@@ -56,50 +56,6 @@ JUTPoint TGCConsole2::cCoinTopPoint(0, 0);
 JUTPoint TGCConsole2::cCoinMidPoint(0, 45);
 JUTPoint TGCConsole2::cCoinBotPoint(0, 0);
 
-// Possibly inline
-static inline void setupConsoleGaugeGX(Mtx mtx, int texGenCount)
-{
-	MTXIdentity(mtx);
-	GXLoadPosMtxImm(mtx, 0);
-	GXSetCullMode(GX_CULL_BACK);
-	GXSetNumTexGens(texGenCount);
-	GXSetNumTevStages(texGenCount);
-	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XY, GX_F32, 0);
-	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_S8, 0);
-	GXClearVtxDesc();
-	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
-	GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-	GXSetNumChans(1);
-	GXSetChanCtrl(GX_COLOR0A0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL,
-	              GX_DF_NONE, GX_AF_NONE);
-	GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
-	              GX_DF_NONE, GX_AF_NONE);
-}
-
-// Possibly inline
-static inline void setupConsoleGaugeTevStage0()
-{
-	GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C0, GX_CC_C1, GX_CC_TEXC, GX_CC_ZERO);
-	GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_A1, GX_CA_A0, GX_CA_TEXA, GX_CA_ZERO);
-	GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
-	                GX_TRUE, GX_TEVPREV);
-	GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
-	                GX_TRUE, GX_TEVPREV);
-}
-
-// Possibly inline
-static inline void setupConsoleGaugeTevStage1()
-{
-	GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_CPREV, GX_CC_ZERO, GX_CC_ZERO,
-	                GX_CC_ZERO);
-	GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_APREV, GX_CA_TEXA,
-	                GX_CA_ZERO);
-	GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
-	                GX_TRUE, GX_TEVPREV);
-	GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
-	                GX_TRUE, GX_TEVPREV);
-}
-
 // fabricated
 static inline void setEmitterToPaneCenter(JPABaseEmitter* emitter,
                                           J2DPane* pane)
@@ -120,26 +76,6 @@ static inline void syncPaneBounds(TBoundPane* pane)
 static inline void detachPaneFromParent(J2DPane* pane)
 {
 	pane->mPaneTree.getParent()->removeChild(&pane->mPaneTree);
-}
-
-// fabricated
-static inline void setupConsoleGaugeGXFloatTex(Mtx mtx)
-{
-	MTXIdentity(mtx);
-	GXLoadPosMtxImm(mtx, 0);
-	GXSetCullMode(GX_CULL_BACK);
-	GXSetNumTexGens(1);
-	GXSetNumTevStages(1);
-	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XY, GX_F32, 0);
-	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
-	GXClearVtxDesc();
-	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
-	GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-	GXSetNumChans(1);
-	GXSetChanCtrl(GX_COLOR0A0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL,
-	              GX_DF_NONE, GX_AF_NONE);
-	GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
-	              GX_DF_NONE, GX_AF_NONE);
 }
 
 // fabricated
@@ -284,8 +220,7 @@ static inline void playHudMoveSound(u32 soundID)
 		return;
 	if ((s16)gpMarioOriginal->mAir == 0)
 		return;
-	if (SMSGetMSound()->gateCheck(soundID))
-		MSoundSESystem::MSoundSE::startSoundSystemSE(soundID, 0, nullptr, 0);
+	SMSGetMSound()->startSoundSystemSE(soundID, 0, nullptr, 0);
 }
 
 // fabricated
@@ -451,8 +386,8 @@ static inline void updateLifeMeterColors(TGCConsole2* console, bool airMode)
 static inline void playLifeChangeSound(u32 sound)
 {
 	if (gpMarDirector->mState == TMarDirector::STATE_UNK4
-	    && gpMarDirector->unk124 == 0 && SMSGetMSound()->gateCheck(sound)) {
-		MSoundSESystem::MSoundSE::startSoundSystemSE(sound, 0, nullptr, 0);
+	    && gpMarDirector->unk124 == 0) {
+		SMSGetMSound()->startSoundSystemSE(sound, 0, nullptr, 0);
 	}
 }
 
@@ -1842,8 +1777,8 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 		unk314[i] = unkB0->search(i == 0 ? 'j_t0' : 'j_t1');
 
 	unk324 = unkB0->search('j_ic');
-	unk328 = unkB0->search('j_rq');
-	unk32C = unkB0->search('j_ms');
+	unk328 = (J2DPicture*)unkB0->search('j_rq');
+	unk32C = (J2DPicture*)unkB0->search('j_ms');
 
 	for (int i = 0; i < 22; ++i) {
 		if (i < 9)
@@ -2535,9 +2470,9 @@ void TGCConsole2::startAppearTimer(int param_1, s32 param_2)
 	}
 
 	for (int i = 6; i <= 9; i++) {
-		((J2DPicture*)unk458[i]->getPane())->mWhite = unk50C;
+		((J2DPicture*)unk458[i]->getPane())->setWhite(unk50C);
 	}
-	((J2DPicture*)unk480[2]->getPane())->mWhite = unk50C;
+	((J2DPicture*)unk480[2]->getPane())->setWhite(unk50C);
 
 	startInsertTimer();
 }
@@ -2817,9 +2752,28 @@ void TGCConsole2::drawWaterBack()
 		return;
 
 	Mtx mtx;
-	setupConsoleGaugeGXFloatTex(mtx);
+	MTXIdentity(mtx);
+	GXLoadPosMtxImm(mtx, 0);
+	GXSetCullMode(GX_CULL_BACK);
+	GXSetNumTexGens(1);
+	GXSetNumTevStages(1);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XY, GX_F32, 0);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
+	GXClearVtxDesc();
+	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+	GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+	GXSetNumChans(1);
+	GXSetChanCtrl(GX_COLOR0A0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL,
+	              GX_DF_NONE, GX_AF_NONE);
+	GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
+	              GX_DF_NONE, GX_AF_NONE);
 	GXSetChanAmbColor(GX_COLOR0A0, (GXColor) { 0xff, 0xff, 0xff, 0xff });
-	setupConsoleGaugeTevStage0();
+	GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C0, GX_CC_C1, GX_CC_TEXC, GX_CC_ZERO);
+	GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_A1, GX_CA_A0, GX_CA_TEXA, GX_CA_ZERO);
+	GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
+	                GX_TRUE, GX_TEVPREV);
+	GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
+	                GX_TRUE, GX_TEVPREV);
 
 	JUTTexture* backgroundTexture;
 	if (((J2DPicture*)unk26C->getPane())->mTextureNum > 0)
@@ -3626,14 +3580,14 @@ bool TGCConsole2::processAppearBalloon()
 {
 	bool isFinished = false;
 
-	u16 alpha = unk3B0->mAlpha;
+	u16 alpha = unk3B0->getAlpha();
 	if (alpha < 0xFF) {
 		alpha += 0x30;
 		if (alpha > 0xFF)
 			alpha = 0xFF;
-		unk3B0->mAlpha = alpha;
+		unk3B0->setAlpha(alpha);
 	} else {
-		JUTRect bounds(unk3B0->mBounds);
+		JUTRect bounds = unk3B0->getBounds();
 		int nextHeight = unk3CC + bounds.getHeight();
 		int maxHeight  = unk3BC.getHeight();
 
@@ -3644,9 +3598,8 @@ bool TGCConsole2::processAppearBalloon()
 
 		unk3B0->resize(unk3BC.getWidth(), nextHeight);
 
-		JUTRect nextBounds(unk3BC.x1, unk3BC.y2 - nextHeight, unk3BC.x2,
-		                   unk3BC.y2);
-		unk3B0->mBounds = nextBounds;
+		unk3B0->setBounds(
+		    JUTRect(unk3BC.x1, unk3BC.y2 - nextHeight, unk3BC.x2, unk3BC.y2));
 	}
 
 	return isFinished;
@@ -3656,10 +3609,10 @@ bool TGCConsole2::processDisappearBalloon()
 {
 	bool isFinished = false;
 
-	JUTRect bounds(unk3B0->mBounds);
-	int height = bounds.getHeight();
+	JUTRect bounds = unk3B0->getBounds();
+	int height     = bounds.getHeight();
 
-	JUTRect contents(unk3B0->getContentsBounds());
+	JUTRect contents  = unk3B0->getContentsBounds();
 	int contentHeight = contents.getHeight();
 
 	if (contentHeight > 0) {
@@ -3669,16 +3622,16 @@ bool TGCConsole2::processDisappearBalloon()
 
 		unk3B0->resize(unk3BC.getWidth(), nextHeight);
 
-		JUTRect nextBounds(unk3BC.x1, unk3BC.y2 - nextHeight, unk3BC.x2,
-		                   unk3BC.y2);
-		unk3B0->mBounds = nextBounds;
+		unk3B0->setBounds(
+		    JUTRect(unk3BC.x1, unk3BC.y2 - nextHeight, unk3BC.x2, unk3BC.y2));
 	} else {
-		s16 alpha = unk3B0->mAlpha - 0x30;
+		s16 alpha = unk3B0->getAlpha();
+		alpha -= 0x30;
 		if (alpha < 0) {
 			alpha      = 0;
 			isFinished = true;
 		}
-		unk3B0->mAlpha = alpha;
+		unk3B0->setAlpha(alpha);
 	}
 
 	return isFinished;
@@ -3690,35 +3643,53 @@ void TGCConsole2::drawJuice(J2DOrthoGraph& graph, u32 color)
 		return;
 
 	Mtx mtx;
-	setupConsoleGaugeGX(mtx, 2);
+	MTXIdentity(mtx);
+	GXLoadPosMtxImm(mtx, 0);
+	GXSetCullMode(GX_CULL_BACK);
+	GXSetNumTexGens(2);
+	GXSetNumTevStages(2);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XY, GX_F32, 0);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_S8, 0);
+	GXClearVtxDesc();
+	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+	GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+	GXSetNumChans(1);
+	GXSetChanCtrl(GX_COLOR0A0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL,
+	              GX_DF_NONE, GX_AF_NONE);
+	GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
+	              GX_DF_NONE, GX_AF_NONE);
 	GXSetChanAmbColor(GX_COLOR0A0, (GXColor) { 0xff, 0xff, 0xff, 0xff });
 
 	GXSetTevColor(GX_TEVREG0, JUtility::TColor(color & 0xFFFFFF00));
 	GXSetTevColor(GX_TEVREG1, JUtility::TColor(color));
-	setupConsoleGaugeTevStage0();
+	GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C0, GX_CC_C1, GX_CC_TEXC, GX_CC_ZERO);
+	GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_A1, GX_CA_A0, GX_CA_TEXA, GX_CA_ZERO);
+	GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
+	                GX_TRUE, GX_TEVPREV);
+	GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
+	                GX_TRUE, GX_TEVPREV);
 
-	J2DPicture* juiceTexture = (J2DPicture*)unk32C;
-	if (juiceTexture->mTextureNum > 0)
-		juiceTexture->mTextures[0]->load(GX_TEXMAP0);
-	J2DPicture* maskTexture = (J2DPicture*)unk328;
-	if (maskTexture->mTextureNum > 0)
-		maskTexture->mTextures[0]->load(GX_TEXMAP1);
+	if (unk32C->mTextureNum > 0)
+		unk32C->mTextures[0]->load(GX_TEXMAP0);
+	if (unk328->mTextureNum > 0)
+		unk328->mTextures[0]->load(GX_TEXMAP1);
 
-	J2DPane** juicePanes = (J2DPane**)unk334;
-	int selected         = 0x17;
-	for (int i = 0x16; (u8)i != 0; --i) {
+	u8 selected = 0x17;
+	for (u8 i = 0x16; (u8)i != 0; --i) {
 		int threshold = (int)(64.0f * (1.0f - unk2B8));
-		if (juicePanes[i]->mBounds.y1 >= threshold) {
+		if (unk334[i]->mBounds.y1 >= threshold) {
 			selected = i + 1;
 			break;
 		}
 	}
 
-	f32 translateY = 1.0f;
-	if ((u8)selected < 0x17)
-		translateY = 1.0f - (f32)juicePanes[selected]->mBounds.y1 * 0.015625f;
+	f32 translateY;
+	if (selected < 0x17)
+		translateY = 1.0f - (f32)unk334[selected]->mBounds.y1 * 0.015625f;
+	else
+		translateY = 1.0f;
 
-	if (juicePanes[1]->mBounds.y1 < (int)(64.0f * (1.0f - unk2B8)))
+	if (unk334[1]->mBounds.y1 < (int)(64.0f * (1.0f - unk2B8)))
 		translateY = 0.0f;
 
 	MTXTrans(mtx, 0.0f, translateY, 0.0f);
@@ -3727,14 +3698,21 @@ void TGCConsole2::drawJuice(J2DOrthoGraph& graph, u32 color)
 	                  GX_FALSE, GX_PTIDENTITY);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
 
-	setupConsoleGaugeTevStage1();
+	GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_CPREV, GX_CC_ZERO, GX_CC_ZERO,
+	                GX_CC_ZERO);
+	GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_APREV, GX_CA_TEXA,
+	                GX_CA_ZERO);
+	GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
+	                GX_TRUE, GX_TEVPREV);
+	GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
+	                GX_TRUE, GX_TEVPREV);
 	MTXIdentity(mtx);
 	GXLoadTexMtxImm(mtx, GX_TEXMTX1, GX_MTX2x4);
 	GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX1,
 	                  GX_FALSE, GX_PTIDENTITY);
 	GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD1, GX_TEXMAP1, GX_COLOR_NULL);
 
-	JUTRect& bounds = unk328->mBounds;
+	JUTRect bounds = unk328->getBounds();
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 	GXPosition2f32((f32)bounds.x1, (f32)bounds.y1);
 	GXTexCoord2s8(0, 0);
@@ -3748,12 +3726,11 @@ void TGCConsole2::drawJuice(J2DOrthoGraph& graph, u32 color)
 	graph.setup2D();
 
 	if (unk330 != selected - 1)
-		juicePanes[unk330]->hide();
+		unk334[unk330]->hide();
 
-	if ((u8)selected < 0x17) {
-		J2DPane* pane = juicePanes[selected - 1];
-		((J2DPicture*)pane)->mWhite.set(color);
-		pane->show();
+	if (selected < 0x17) {
+		((J2DPicture*)unk334[selected - 1])->setWhite(color);
+		unk334[selected - 1]->show();
 		unk330 = selected - 1;
 	}
 }
@@ -3764,7 +3741,21 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 	static const s16 topDiff[2] = { 7, 10 };
 
 	Mtx mtx;
-	setupConsoleGaugeGX(mtx, 2);
+	MTXIdentity(mtx);
+	GXLoadPosMtxImm(mtx, 0);
+	GXSetCullMode(GX_CULL_BACK);
+	GXSetNumTexGens(2);
+	GXSetNumTevStages(2);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XY, GX_F32, 0);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_S8, 0);
+	GXClearVtxDesc();
+	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+	GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+	GXSetNumChans(1);
+	GXSetChanCtrl(GX_COLOR0A0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL,
+	              GX_DF_NONE, GX_AF_NONE);
+	GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
+	              GX_DF_NONE, GX_AF_NONE);
 	GXSetChanAmbColor(GX_COLOR0A0, (GXColor) { 0xff, 0xff, 0xff, 0xff });
 
 	unk2EC[1] = JUtility::TColor(((u32)unk9A.r << 24) + ((u32)unk9A.g << 16)
@@ -3781,7 +3772,14 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 		GXSetTevColor(GX_TEVREG1,
 		              JUtility::TColor((u32)unk2EC[layer] + alpha[layer]));
 
-		setupConsoleGaugeTevStage0();
+		GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C0, GX_CC_C1, GX_CC_TEXC,
+		                GX_CC_ZERO);
+		GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_A1, GX_CA_A0, GX_CA_TEXA,
+		                GX_CA_ZERO);
+		GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
+		                GX_TRUE, GX_TEVPREV);
+		GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
+		                GX_TRUE, GX_TEVPREV);
 		if (unk2AC[layer]->mTextureNum > 0)
 			unk2AC[layer]->mTextures[0]->load(GX_TEXMAP0);
 		if (unk2A0[layer]->mTextureNum > 0)
@@ -3793,7 +3791,14 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 		                  GX_FALSE, GX_PTIDENTITY);
 		GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
 
-		setupConsoleGaugeTevStage1();
+		GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_CPREV, GX_CC_ZERO, GX_CC_ZERO,
+		                GX_CC_ZERO);
+		GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_APREV, GX_CA_TEXA,
+		                GX_CA_ZERO);
+		GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
+		                GX_TRUE, GX_TEVPREV);
+		GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
+		                GX_TRUE, GX_TEVPREV);
 		MTXIdentity(mtx);
 		GXLoadTexMtxImm(mtx, GX_TEXMTX1, GX_MTX2x4);
 		GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX1,
@@ -3802,47 +3807,50 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 
 		int top    = unk29C->getPane()->mGlobalBounds.y1 + topDiff[layer - 1];
 		int bottom = top + unk2BC[layer].getHeight();
-		JUTRect& quadBounds = unk2BC[layer];
+		int left   = unk2BC[layer].x1;
+		int right  = unk2BC[layer].x2;
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-		GXPosition2f32((f32)quadBounds.x1, (f32)top);
+		GXPosition2f32((f32)left, (f32)top);
 		GXTexCoord2s8(0, 0);
-		GXPosition2f32((f32)quadBounds.x2, (f32)top);
+		GXPosition2f32((f32)right, (f32)top);
 		GXTexCoord2s8(1, 0);
-		GXPosition2f32((f32)quadBounds.x2, (f32)bottom);
+		GXPosition2f32((f32)right, (f32)bottom);
 		GXTexCoord2s8(1, 1);
-		GXPosition2f32((f32)quadBounds.x1, (f32)bottom);
+		GXPosition2f32((f32)left, (f32)bottom);
 		GXTexCoord2s8(0, 1);
 	}
 
 	graph.setup2D();
 
-	JUTRect baseBounds(unk2A0[0]->mBounds);
-	f32 hidden = 0.5f - 47.0f * (1.0f - unk2B8);
-	int y      = unk29C->getPane()->mGlobalBounds.y1 + (int)hidden + 1;
+	JUTRect bounds = unk2A0[0]->getBounds();
+	f32 hidden     = 47.0f * (1.0f - unk2B8) - 0.5f;
+	int y          = unk29C->getPane()->mGlobalBounds.y1 + (int)hidden;
+	y += 1;
 	if (y < 0)
 		y = 0;
 
 	JUTTexture* texture = unk2A0[0]->mTextures[0];
-	unk2A0[0]->draw(baseBounds.x1, y, texture->mWidth, texture->mHeight, false,
-	                false, false);
+	unk2A0[0]->draw(bounds.x1, y, texture->getWidth(), texture->getHeight(),
+	                false, false, false);
 
-	J2DPicture* boundPicture = (J2DPicture*)unk270->getPane();
-	texture                  = boundPicture->mTextures[0];
-	boundPicture->draw(boundPicture->mBounds.x1, boundPicture->mBounds.y1,
-	                   texture->mWidth, texture->mHeight, false, false, false);
+	bounds  = ((J2DPicture*)unk270->getPane())->getBounds();
+	texture = ((J2DPicture*)unk270->getPane())->mTextures[0];
+	((J2DPicture*)unk270->getPane())
+	    ->draw(bounds.x1, bounds.y1, texture->getWidth(), texture->getHeight(),
+	           false, false, false);
 
-	J2DPicture* picture = (J2DPicture*)unk274->getPane();
-	JUTRect bounds(picture->mBounds);
-	texture = picture->mTextures[0];
-	picture->draw(bounds.x1, bounds.y1, texture->mWidth, texture->mHeight,
-	              false, false, false);
+	bounds  = ((J2DPicture*)unk274->getPane())->getBounds();
+	texture = ((J2DPicture*)unk274->getPane())->mTextures[0];
+	((J2DPicture*)unk274->getPane())
+	    ->draw(bounds.x1, bounds.y1, texture->getWidth(), texture->getHeight(),
+	           false, false, false);
 
-	JUTRect maskOffset(unk288->mBounds);
+	JUTRect maskOffset = unk288->getBounds();
 	bounds.add(maskOffset.x1, maskOffset.y1);
-	J2DPicture* maskPicture = (J2DPicture*)unk288;
-	texture                 = maskPicture->mTextures[0];
-	maskPicture->draw(bounds.x1, bounds.y1, texture->mWidth, texture->mHeight,
-	                  false, false, false);
+	texture = ((J2DPicture*)unk288)->mTextures[0];
+	((J2DPicture*)unk288)
+	    ->draw(bounds.x1, bounds.y1, texture->getWidth(), texture->getHeight(),
+	           false, false, false);
 }
 
 void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
