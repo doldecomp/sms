@@ -1250,9 +1250,7 @@ static inline void updateCoinBlendPaneState(TBlendPane*& pane, bool& isFinished)
 {
 	pane->update();
 
-	if (pane->unk24) {
-		isFinished = false;
-	} else {
+	if (!pane->unk24) {
 		bool paneFinished = false;
 		if (pane->unk14.x1 == 0 && pane->unk14.y1 == 0)
 			paneFinished = true;
@@ -1262,6 +1260,8 @@ static inline void updateCoinBlendPaneState(TBlendPane*& pane, bool& isFinished)
 			                      TGCConsole2::cCoinBotPoint);
 			isFinished = false;
 		}
+	} else {
+		isFinished = false;
 	}
 }
 
@@ -2940,6 +2940,8 @@ void TGCConsole2::setTimer(s32 param_1)
 				timerValue = unk514 - timerValue;
 			}
 		}
+	} else {
+		timerValue = param_1;
 	}
 
 	// Cap at 5999.99 seconds (99:59.99)
@@ -2966,12 +2968,15 @@ void TGCConsole2::setTimer(s32 param_1)
 		((J2DPicture*)unk458[5]->getPane())
 		    ->changeTexture(unkE0[centis % 10]->getTexInfo(), 0);
 	} else {
-		if (timerValue < 1000
-		    && ((J2DPicture*)unk458[9]->getPane())->mWhite != unk508) {
-			for (int i = 6; i <= 9; i++) {
-				((J2DPicture*)unk458[i]->getPane())->mWhite = unk508;
+		if (timerValue < 1000) {
+			JUtility::TColor currentColor
+			    = ((J2DPicture*)unk458[9]->getPane())->mWhite;
+			if (currentColor != unk508) {
+				for (int i = 6; i <= 9; i++) {
+					((J2DPicture*)unk458[i]->getPane())->mWhite = unk508;
+				}
+				((J2DPicture*)unk480[2]->getPane())->mWhite = unk508;
 			}
-			((J2DPicture*)unk480[2]->getPane())->mWhite = unk508;
 		}
 		((J2DPicture*)unk458[6]->getPane())
 		    ->changeTexture(unkE0[seconds / 10]->getTexInfo(), 0);
@@ -2988,7 +2993,7 @@ void TGCConsole2::setTimer(s32 param_1)
 		SMSGetMSound()->playTimer(timerValue * 10);
 	}
 
-	unk4FC = param_1;
+	unk4FC = timerValue;
 }
 
 void TGCConsole2::startMoveTimer(int param_1)
@@ -3369,14 +3374,14 @@ void TGCConsole2::checkChangeTelopArray()
 		case 5:
 			if (TFlagManager::smInstance->getBool(0x50001)) {
 				if (TFlagManager::smInstance->getBool(0x50002))
-					unk570 = scDolpicNewsDolpic5_1;
+					unk570 = scDolpicNewsDolpic5_4;
 				else
 					unk570 = scDolpicNewsDolpic5_2;
 			} else {
 				if (TFlagManager::smInstance->getBool(0x50002))
 					unk570 = scDolpicNewsDolpic5_3;
 				else
-					unk570 = scDolpicNewsDolpic5_4;
+					unk570 = scDolpicNewsDolpic5_1;
 			}
 			break;
 		case 8: {
