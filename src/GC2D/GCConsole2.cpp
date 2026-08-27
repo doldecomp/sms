@@ -1982,14 +1982,13 @@ void TGCConsole2::loadAfter()
 	unk520->getPane()->hide();
 	unk524->getPane()->show();
 	unk528->hide();
-	unk52C->hide();
-
 	unk528->setFont(gpSystemFont);
-	unk52C->setFont(gpSystemFont);
+	JUTRect bounds(unk528->mBounds);
+	unk528->resize(gpSystemFont->getWidth() << 10, bounds.getHeight());
 
-	int fontHeight = gpSystemFont->getHeight();
-	unk528->setFontSize(fontHeight, unk528->mBounds.getHeight());
-	unk52C->setFontSize(fontHeight, unk52C->mBounds.getHeight());
+	unk52C->hide();
+	unk52C->setFont(gpSystemFont);
+	unk52C->resize(gpSystemFont->getWidth() << 10, bounds.getHeight());
 
 	JUTRect telopBounds(unk524->getPane()->mBounds);
 	JUTRect telopPaneBounds(unk520->getPane()->mBounds);
