@@ -226,9 +226,9 @@ JPABaseEmitter* JPAEmitterManager::createEmitterBase(
 		return nullptr;
 
 	if (getResourceManager(param_3)) {
-		JPAEmitterData* emitterData = getResourceManager(param_3)
-		                                  ->getEmitterResource()
-		                                  ->getByUserIndex(param_1);
+		JPAEmitterData* emitterData
+		    = getResourceManager(param_3)->getEmitterResource()->getByUserIndex(
+		        param_1);
 		if (!emitterData)
 			return nullptr;
 
