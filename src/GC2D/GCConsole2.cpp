@@ -56,6 +56,12 @@ JUTPoint TGCConsole2::cCoinTopPoint(0, 0);
 JUTPoint TGCConsole2::cCoinMidPoint(0, 45);
 JUTPoint TGCConsole2::cCoinBotPoint(0, 0);
 
+// Possibly inline
+static inline int getOffsetForBelowScreen(const TExPane* pane)
+{
+	return 465 - pane->getInitialBounds().y1;
+}
+
 // fabricated
 static inline void setEmitterToPaneCenter(JPABaseEmitter* emitter,
                                           J2DPane* pane)
@@ -2371,17 +2377,17 @@ void TGCConsole2::startDownLeftBot()
 	unk5A = 1;
 
 	if (unk44C->getPane()->isVisible() && unk44C->isInterpolatorAtZero()) {
-		unk44C->updatePaneOffset(20, 0, 525 - unk44C->getInitialBounds().y1);
+		unk44C->updatePaneOffset(20, 0, getOffsetForBelowScreen(unk44C) + 60);
 		unk51C = 1;
 	}
 
 	if (unk428->getPane()->isVisible()) {
-		unk428->updatePaneOffset(20, 0, 525 - unk428->getInitialBounds().y1);
+		unk428->updatePaneOffset(20, 0, getOffsetForBelowScreen(unk428) + 60);
 		unk448 = 1;
 	}
 
 	if (unk3FC->getPane()->isVisible()) {
-		unk3FC->updatePaneOffset(20, 0, 525 - unk3FC->getInitialBounds().y1);
+		unk3FC->updatePaneOffset(20, 0, getOffsetForBelowScreen(unk3FC) + 60);
 		unk426 = 1;
 	}
 }
@@ -2440,7 +2446,7 @@ void TGCConsole2::startDisappearTelop()
 
 void TGCConsole2::startDisappearTimer()
 {
-	unk44C->updatePaneOffset(40, 0, 525 - unk44C->getInitialBounds().y1);
+	unk44C->updatePaneOffset(40, 0, getOffsetForBelowScreen(unk44C) + 60);
 	unk3F = 1;
 	unk5A = 1;
 }
