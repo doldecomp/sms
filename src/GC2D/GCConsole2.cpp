@@ -68,7 +68,7 @@ static inline int getOffsetForBelowScreen(const TExPane* pane)
 	return 465 - pane->getInitialY1();
 }
 
-// fabricated
+// Possibly inline
 static inline void setEmitterToPaneCenter(JPABaseEmitter* emitter,
                                           J2DPane* pane)
 {
@@ -3195,9 +3195,7 @@ bool TGCConsole2::processDownCoin(int param_1)
 
 	isFinished &= unk108->update();
 
-	JUTRect bounds(unkCC->getPane()->mGlobalBounds);
-	unk124->mGlobalTranslation.set(bounds.x1 + bounds.getWidth() * 0.5f,
-	                               bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+	setEmitterToPaneCenter(unk124, unkCC->getPane());
 
 	return isFinished;
 }
@@ -3276,9 +3274,7 @@ bool TGCConsole2::processAppearCoin(int param_1)
 			updateDownBlendPaneState(unkD4[i], isFinished);
 	}
 
-	JUTRect bounds(unkCC->getPane()->mGlobalBounds);
-	unk124->mGlobalTranslation.set(bounds.x1 + bounds.getWidth() * 0.5f,
-	                               bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+	setEmitterToPaneCenter(unk124, unkCC->getPane());
 
 	return isFinished;
 }
