@@ -3093,7 +3093,7 @@ bool TGCConsole2::processAppearStar(int param_1)
 	for (int i = 0; i < 3; ++i) {
 		if (param_1 == i * 6 + 28) {
 			if (i == 2) {
-				if ((!unk50 && shines >= 100) || (unk50 && shines > 100))
+				if ((!unk50 && shines >= 100) || (shines > 100 && unk50))
 					unk134[i]->getPane()->show();
 			} else {
 				unk134[i]->getPane()->show();
