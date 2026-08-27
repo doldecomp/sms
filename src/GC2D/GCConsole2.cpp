@@ -3773,7 +3773,7 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 	alpha[2]    = unk9E.a;
 
 	for (int layer = 2; layer > 0; --layer) {
-		GXSetTevColor(GX_TEVREG0, unk2EC[layer]);
+		GXSetTevColor(GX_TEVREG0, JUtility::TColor((u32)unk2EC[layer]));
 		GXSetTevColor(GX_TEVREG1,
 		              JUtility::TColor((u32)unk2EC[layer] + alpha[layer]));
 
@@ -3810,18 +3810,16 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 		                  GX_FALSE, GX_PTIDENTITY);
 		GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD1, GX_TEXMAP1, GX_COLOR_NULL);
 
-		int top    = unk29C->getPane()->mGlobalBounds.y1 + topDiff[layer - 1];
-		int bottom = top + unk2BC[layer].getHeight();
-		int left   = unk2BC[layer].x1;
-		int right  = unk2BC[layer].x2;
+		f32 top    = unk29C->getPane()->mGlobalBounds.y1 + topDiff[layer - 1];
+		f32 bottom = top + unk2A0[layer]->getHeight();
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-		GXPosition2f32((f32)left, (f32)top);
+		GXPosition2f32((f32)unk2BC[layer].x1, top);
 		GXTexCoord2s8(0, 0);
-		GXPosition2f32((f32)right, (f32)top);
+		GXPosition2f32((f32)unk2BC[layer].x2, top);
 		GXTexCoord2s8(1, 0);
-		GXPosition2f32((f32)right, (f32)bottom);
+		GXPosition2f32((f32)unk2BC[layer].x2, bottom);
 		GXTexCoord2s8(1, 1);
-		GXPosition2f32((f32)left, (f32)bottom);
+		GXPosition2f32((f32)unk2BC[layer].x1, bottom);
 		GXTexCoord2s8(0, 1);
 	}
 
