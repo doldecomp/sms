@@ -2784,19 +2784,14 @@ void TGCConsole2::drawWaterBack()
 	GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
 	                GX_TRUE, GX_TEVPREV);
 
-	JUTTexture* backgroundTexture;
-	if (((J2DPicture*)unk26C->getPane())->mTextureNum > 0)
-		backgroundTexture = ((J2DPicture*)unk26C->getPane())->mTextures[0];
-	else
-		backgroundTexture = nullptr;
-	backgroundTexture->load(GX_TEXMAP0);
+	((J2DPicture*)unk26C->getPane())->getTexture(0)->load(GX_TEXMAP0);
 	GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX2x4);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX0,
 	                  GX_FALSE, GX_PTIDENTITY);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
 
-	JUTRect bounds(((J2DPicture*)unk26C->getPane())->mBounds);
 	TWaterGun* waterGun = gpMarioOriginal->mWaterGun;
+	JUTRect bounds(((J2DPicture*)unk26C->getPane())->mBounds);
 	GXSetTevColor(GX_TEVREG0, JUtility::TColor(0x0000ff78));
 	GXSetTevColor(GX_TEVREG1, JUtility::TColor(0x0000ff00));
 
