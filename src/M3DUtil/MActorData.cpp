@@ -108,32 +108,33 @@ u32 MActorAnmData::partsNameToIdx(const char* name)
 	return -1;
 }
 
-void MActorAnmData::init(const char* param_1, const char** param_2)
+void MActorAnmData::init(const char* anm_folder, const char** additional_files)
 {
-	char thing[256];
-	int uMVar1;
+	char fullAnmPath[256];
+	int fullAnmPathLength;
 
-	if (*param_1 != '/')
-		uMVar1 = snprintf(thing, 0xff, "%s%s", "/", param_1);
+	if (*anm_folder != '/')
+		fullAnmPathLength
+		    = snprintf(fullAnmPath, 0xff, "%s%s", "/", anm_folder);
 	else
-		uMVar1 = snprintf(thing, 0xff, "%s", param_1);
+		fullAnmPathLength = snprintf(fullAnmPath, 0xff, "%s", anm_folder);
 
-	if (uMVar1 < 0 || uMVar1 > 0xfe)
+	if (fullAnmPathLength < 0 || fullAnmPathLength > 254)
 		return;
 
-	char thing2[256];
-	snprintf(thing2, 0xff, "%s%s", thing, "/");
+	char anmFolder[256];
+	snprintf(anmFolder, 0xff, "%s%s", fullAnmPath, "/");
 
-	JKRFileFinder* fileFinder = JKRFileLoader::findFirstFile(thing2);
+	JKRFileFinder* fileFinder = JKRFileLoader::findFirstFile(anmFolder);
 
 	JKRFileFinder* finder = fileFinder;
 	do {
 		addFileNum(finder->mBase.mFileName);
 	} while (finder->findNextFile());
 
-	if (param_2 != nullptr)
-		for (int i = 0; i == 0 || param_2[i] != nullptr; ++i)
-			addFileNum(param_2[i]);
+	if (additional_files != nullptr)
+		for (int i = 0; i == 0 || additional_files[i] != nullptr; ++i)
+			addFileNum(additional_files[i]);
 
 	delete fileFinder;
 
@@ -157,31 +158,31 @@ void MActorAnmData::init(const char* param_1, const char** param_2)
 	unk14 = 0;
 	unk18 = 0;
 
-	fileFinder = JKRFileLoader::findFirstFile(thing2);
+	fileFinder = JKRFileLoader::findFirstFile(anmFolder);
 	do {
 		strstr(fileFinder->mBase.mFileName, "#");
 		addFileTable(fileFinder->mBase.mFileName);
 	} while (fileFinder->findNextFile());
 
-	if (param_2 != nullptr && *param_2 != nullptr) {
-		for (int i = 0; i == 0 || param_2[i] != nullptr; ++i)
-			addFileTable(param_2[i]);
+	if (additional_files != nullptr && *additional_files != nullptr) {
+		for (int i = 0; i == 0 || additional_files[i] != nullptr; ++i)
+			addFileTable(additional_files[i]);
 	}
 
 	delete fileFinder;
 
 	if (unk2C)
-		unk2C->loadAnmPtrArray2(thing, ".bck");
+		unk2C->loadAnmPtrArray2(fullAnmPath, ".bck");
 	if (unk30)
-		unk30->loadAnmPtrArray2(thing, ".bpk");
+		unk30->loadAnmPtrArray2(fullAnmPath, ".bpk");
 	if (unk34)
-		unk34->loadAnmPtrArray2(thing, ".btp");
+		unk34->loadAnmPtrArray2(fullAnmPath, ".btp");
 	if (unk38)
-		unk38->loadAnmPtrArray2(thing, ".btk");
+		unk38->loadAnmPtrArray2(fullAnmPath, ".btk");
 	if (unk3C)
-		unk3C->loadAnmPtrArray2(thing, ".brk");
+		unk3C->loadAnmPtrArray2(fullAnmPath, ".brk");
 	if (unk40)
-		unk40->loadAnmPtrArray2(thing, ".blk");
+		unk40->loadAnmPtrArray2(fullAnmPath, ".blk");
 }
 
 void MActorAnmData::addFileNum(const char* name)

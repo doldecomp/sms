@@ -221,7 +221,7 @@ public:
 	J3DModel(J3DModelData*, u32, u32);
 
 	void initialize();
-	void entryModelData(J3DModelData*, u32, u32);
+	void entryModelData(J3DModelData* pModelData, u32 mdlFlags, u32 mtxNum);
 	void lock();
 	void unlock();
 	void makeDL();

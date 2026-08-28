@@ -31,7 +31,7 @@ public:
 		ANM_TYPE_BRK
 	};
 
-	MActor(MActorAnmData*);
+	MActor(MActorAnmData* anm_data);
 
 	void setMActorAnmData(MActorAnmData*);
 	void setModel(J3DModel*, u32);
