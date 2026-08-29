@@ -4,16 +4,27 @@
 #include <dolphin/types.h>
 
 class J3DModelData;
+class J3DModel;
 class J3DJoint;
 class SampleCtrlJoint;
 class SampleCtrlMaterial;
 class SampleCtrlShape;
 
+// TODO: reconstructed from the symbol map only. The members and the
+// constructor body are not known yet (the map gives the constructor a size of
+// 0x50 and the vtable a size of 0xc, so the destructor is the only virtual).
+class SampleCtrlModel {
+public:
+	SampleCtrlModel(J3DModel*);
+
+	virtual ~SampleCtrlModel() { }
+};
+
 class SampleCtrlModelData {
 public:
 	SampleCtrlModelData(J3DModelData*);
 
-	SampleCtrlJoint* makeHierarchy(J3DJoint*);
+	SampleCtrlJoint* makeHierarchy(J3DJoint* joint);
 
 	virtual ~SampleCtrlModelData() { }
 

@@ -11,6 +11,12 @@ void MActorAnmBase::checkUseMaterialIDInit(u16*) { }
 
 void MActorAnmBase::checkUseMaterialID(u16*) { }
 
+// UNUSED (Size: 0x198 in MAP). Unreachable in the retail build: every linked
+// function in this TU already matches without it, so no ROM bytes constrain
+// the body. It takes an MActorMtxCalcType and reports it through
+// MtxCalcTypeName.
+void MActorAnmBck::changeMtxCalcType(u8) { }
+
 void MActorAnmBck::initSimpleMotionBlend(int param_1)
 {
 	if (!unk34) {
@@ -104,11 +110,11 @@ void MActorAnmBck::updateIn()
 	unk24->setFrame(unk4.getFrame());
 	switch (unk2A) {
 	case 0:
-		unk2C->mOne[0] = unk24;
+		unk2C->setAnmTransform(unk24);
 		joint->setMtxCalc(unk2C);
 		break;
 	case 1:
-		unk30->mOne[0] = unk24;
+		unk30->setAnmTransform(unk24);
 		joint->setMtxCalc(unk30);
 		break;
 	case 2:
