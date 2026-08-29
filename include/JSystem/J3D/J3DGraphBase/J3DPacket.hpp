@@ -100,6 +100,12 @@ public:
 	void beginPatch();
 	u32 endPatch();
 
+	void newDisplayList(u32 size)
+	{
+		mpDisplayListObj = new J3DDisplayListObj;
+		mpDisplayListObj->newDisplayList(size);
+	}
+
 	J3DDisplayListObj* getDisplayListObj() const { return mpDisplayListObj; }
 	void setDisplayListObj(J3DDisplayListObj* pObj) { mpDisplayListObj = pObj; }
 

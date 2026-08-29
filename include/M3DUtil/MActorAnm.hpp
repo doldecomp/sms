@@ -154,7 +154,7 @@ public:
 
 template <class T> class MActorAnmMatEach : public MActorAnmEach<T> {
 public:
-	~MActorAnmMatEach();
+	~MActorAnmMatEach() { }
 
 	virtual void setAnmFromIndex(int param_1, u16* param_2)
 	{
@@ -269,6 +269,16 @@ public:
 
 public:
 	/* 0x28 */ J3DTexNoAnm** unk28;
+};
+
+// The names come from the MtxCalcTypeName table in M3DUtil/InfectiousStrings.hpp,
+// which survives in the ROM (read it in MarioDraw.cpp's .data): its four entries
+// are "MActorMtxCalcType_Basic", "_Softimage", "_MotionBlend" and "_User".
+enum MActorMtxCalcType {
+	MACTOR_MTX_CALC_BASIC,
+	MACTOR_MTX_CALC_SOFTIMAGE,
+	MACTOR_MTX_CALC_MOTION_BLEND,
+	MACTOR_MTX_CALC_USER,
 };
 
 class MActorAnmBck : public MActorAnmEach<J3DAnmTransformKey> {

@@ -1,9 +1,6 @@
 #include <NPC/NpcBase.hpp>
 
 // pch issues with J3DJoint and co
-static Vec dummy0                    = { 1.0f, 1.0f, 1.0f };
-static Vec dummy1                    = { 1.0f, 1.0f, 1.0f };
-static u32 dummy2[]                  = { 0, 2, 1, 3 };
 static const char dummy3[]           = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char dummy4[]           = "メモリが足りません\n";
 static const char* MtxCalcTypeName[] = {

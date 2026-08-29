@@ -9,20 +9,8 @@ class J3DModelData;
 class J3DMaterial;
 class J3DNode;
 class SDLModel;
+class SDLDrawBufToken;
 
-struct SDLDrawBufToken {
-	SDLDrawBufToken()
-	{
-		unk0[0] = nullptr;
-		unk0[1] = nullptr;
-		unk8    = nullptr;
-	}
-
-	/* 0x0 */ J3DDrawBuffer* unk0[2];
-	/* 0x8 */ SDLModel* unk8;
-};
-
-// 0x1CU
 class SDLModelData {
 public:
 	SDLModelData(J3DModelData*);
@@ -31,15 +19,17 @@ public:
 	void registerSDLModel(SDLModel*);
 	void recursiveEntry(J3DNode*, SDLDrawBufToken*);
 	void entryNode(J3DNode*, SDLDrawBufToken*);
-	void entrySameMat(J3DMaterial*, SDLDrawBufToken*);
+	void entrySameMat(J3DMaterial* material, SDLDrawBufToken* token);
+
+	// used from enemymanager.cpp and NpcManager.cpp
+	J3DModelData* getModelData() { return unk0; }
 
 	// fabricated
-	J3DModelData* getModelData() { return unk0; }
 
 public:
 	/* 0x0 */ J3DModelData* unk0;
-	/* 0x4 */ SDLModel* unk4;
-	/* 0x8 */ JGadget::TList<SDLDrawBufToken*> unk8;
+	/* 0x4 */ SDLModel* mDlHost;
+	/* 0x8 */ JGadget::TList<SDLDrawBufToken*> mDbTokenList;
 	/* 0x18 */ u32 unk18;
 };
 
@@ -54,20 +44,32 @@ public:
 //
 class SDLModel : public J3DModel {
 public:
-	SDLModel(J3DModelData*, u32);
-	SDLModel(SDLModelData*, u32, u32);
+	SDLModel(J3DModelData* model_data, u32 flags);
+	SDLModel(SDLModelData* model_data, u32 flags, u32 mtx_num);
 
 	virtual void viewCalcSimple();
 	void entry();
-	void entryModelDataSDL(SDLModelData*, u32, u32);
+	void entryModelDataSDL(SDLModelData* model_data, u32 flags, u32 mtx_num);
 
 	// fabricated
-	SDLModelData* getSDLModelData() { return unkA0; }
+	// used from MirrorActor.cpp
+	SDLModelData* getSDLModelData() { return mSdlModelData; }
+
+	u32 checkSdlFlag(u32 flag) const { return mSdlFlags & flag; }
+	void onSdlFlag(u32 flag) { mSdlFlags |= flag; }
+	void offSdlFlag(u32 flag) { mSdlFlags &= ~flag; }
 
 public:
-	/* 0xA0 */ SDLModelData* unkA0;
-	/* 0xA4 */ SDLModel* unkA4;
-	/* 0xA8 */ u32 unkA8;
+	enum {
+		FLAG_UNK1 = 0x1,
+		FLAG_UNK2 = 0x2,
+		FLAG_UNK4 = 0x4,
+		FLAG_UNK8 = 0x8,
+	};
+
+	/* 0xA0 */ SDLModelData* mSdlModelData;
+	/* 0xA4 */ SDLModel* mNextSameMat;
+	/* 0xA8 */ u32 mSdlFlags;
 };
 
 #endif

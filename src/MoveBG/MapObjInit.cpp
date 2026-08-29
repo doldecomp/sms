@@ -22,17 +22,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-static void dummy() { static Vec data_2100 = { 1.0f, 1.0f, 1.0f }; }
-static void dummy2() { static Vec data_2100 = { 1.0f, 1.0f, 1.0f }; }
-static void dummy3() { static u32 data_2100[] = { 0, 2, 1, 3 }; }
-
 #include <M3DUtil/InfectiousStrings.hpp>
-
-static void dummy4(Vec& v)
-{
-	v = (Vec) { 0.0f, 0.0f, 0.0f };
-	v = (Vec) { 1.0f, 1.0f, 1.0f };
-}
 
 TMapObjSoundData TMapObjGeneral::mDefaultSound = {
 	{ 0xFFFFFFFF, MSD_SE_IT_COMMON_APPEAR, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,

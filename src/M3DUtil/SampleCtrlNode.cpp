@@ -18,71 +18,47 @@ SampleCtrlJoint::SampleCtrlJoint(J3DJoint* param_1)
 	unk28.set(param_1->getMax());
 }
 
-SampleCtrlMaterial::SampleCtrlMaterial(J3DMaterial* param_1)
+SampleCtrlMaterial::SampleCtrlMaterial(J3DMaterial* material)
 {
 	unk38 = j3dDefaultTevOrderInfoNull;
 	unk4  = nullptr;
 	unk8  = nullptr;
 	unkC  = 0;
 	unk10 = nullptr;
-	unk4  = param_1;
-	unk14 = param_1->getColorBlock()->getMatColor(0)->color;
+	unk4  = material;
+	unk14 = material->getMatColor(0)->color;
 
 	for (u8 i = 0; i < 4; ++i) {
-		unk18[i].mEnable
-		    = param_1->getColorBlock()->getColorChan(i)->getEnable();
-		unk18[i].mMatSrc
-		    = param_1->getColorBlock()->getColorChan(i)->getMatSrc();
-		unk18[i].mAmbSrc
-		    = param_1->getColorBlock()->getColorChan(i)->getAmbSrc();
-		unk18[i].mLightMask
-		    = param_1->getColorBlock()->getColorChan(i)->getLightMask();
-		unk18[i].mDiffuseFn
-		    = param_1->getColorBlock()->getColorChan(i)->getDiffuseFn();
-		unk18[i].mAttnFn
-		    = param_1->getColorBlock()->getColorChan(i)->getAttnFn();
+		unk18[i].mEnable    = material->getColorChan(i)->getEnable();
+		unk18[i].mMatSrc    = material->getColorChan(i)->getMatSrc();
+		unk18[i].mAmbSrc    = material->getColorChan(i)->getAmbSrc();
+		unk18[i].mLightMask = material->getColorChan(i)->getLightMask();
+		unk18[i].mDiffuseFn = material->getColorChan(i)->getDiffuseFn();
+		unk18[i].mAttnFn    = material->getColorChan(i)->getAttnFn();
 	}
 
-	unk38 = *param_1->getTevBlock()->getTevOrder(0);
+	unk38 = *material->getTevOrder(0);
 
-	u8 stageNum = param_1->getTevBlock()->getTevStageNum();
+	u8 stageNum = material->getTevStageNum();
 	for (u8 i = 0; i < stageNum; ++i) {
-		unk3C[i].field_0x1
-		    = param_1->getTevBlock()->getTevStage(i)->getTevColorA();
-		unk3C[i].field_0x2
-		    = param_1->getTevBlock()->getTevStage(i)->getTevColorB();
-		unk3C[i].field_0x3
-		    = param_1->getTevBlock()->getTevStage(i)->getTevColorC();
-		unk3C[i].field_0x4
-		    = param_1->getTevBlock()->getTevStage(i)->getTevColorD();
-		unk3C[i].field_0x5
-		    = param_1->getTevBlock()->getTevStage(i)->getColorOpSomething1();
-		unk3C[i].field_0x6
-		    = param_1->getTevBlock()->getTevStage(i)->getColorOpSomething2();
-		unk3C[i].field_0x7
-		    = param_1->getTevBlock()->getTevStage(i)->getColorOpSomething3();
-		unk3C[i].field_0x8
-		    = param_1->getTevBlock()->getTevStage(i)->getColorOpSomething4();
-		unk3C[i].field_0x9
-		    = param_1->getTevBlock()->getTevStage(i)->getColorOpSomething5();
-		unk3C[i].field_0xa
-		    = param_1->getTevBlock()->getTevStage(i)->getAlphaA();
-		unk3C[i].field_0xb
-		    = param_1->getTevBlock()->getTevStage(i)->getAlphaB();
-		unk3C[i].field_0xc
-		    = param_1->getTevBlock()->getTevStage(i)->getAlphaC();
-		unk3C[i].field_0xd
-		    = param_1->getTevBlock()->getTevStage(i)->getAlphaD();
-		unk3C[i].field_0xe
-		    = param_1->getTevBlock()->getTevStage(i)->getAlphaOpSomething1();
-		unk3C[i].field_0xf
-		    = param_1->getTevBlock()->getTevStage(i)->getAlphaOpSomething2();
-		unk3C[i].field_0x10
-		    = param_1->getTevBlock()->getTevStage(i)->getAlphaOpSomething3();
-		unk3C[i].field_0x11
-		    = param_1->getTevBlock()->getTevStage(i)->getAlphaOpSomething4();
-		unk3C[i].field_0x12
-		    = param_1->getTevBlock()->getTevStage(i)->getAlphaOpSomething5();
+		unk3C[i].field_0x1  = material->getTevStage(i)->getTevColorA();
+		unk3C[i].field_0x2  = material->getTevStage(i)->getTevColorB();
+		unk3C[i].field_0x3  = material->getTevStage(i)->getTevColorC();
+		unk3C[i].field_0x4  = material->getTevStage(i)->getTevColorD();
+		unk3C[i].field_0x5  = material->getTevStage(i)->getColorOpSomething1();
+		unk3C[i].field_0x6  = material->getTevStage(i)->getColorOpSomething2();
+		unk3C[i].field_0x7  = material->getTevStage(i)->getColorOpSomething3();
+		unk3C[i].field_0x8  = material->getTevStage(i)->getColorOpSomething4();
+		unk3C[i].field_0x9  = material->getTevStage(i)->getColorOpSomething5();
+		unk3C[i].field_0xa  = material->getTevStage(i)->getAlphaA();
+		unk3C[i].field_0xb  = material->getTevStage(i)->getAlphaB();
+		unk3C[i].field_0xc  = material->getTevStage(i)->getAlphaC();
+		unk3C[i].field_0xd  = material->getTevStage(i)->getAlphaD();
+		unk3C[i].field_0xe  = material->getTevStage(i)->getAlphaOpSomething1();
+		unk3C[i].field_0xf  = material->getTevStage(i)->getAlphaOpSomething2();
+		unk3C[i].field_0x10 = material->getTevStage(i)->getAlphaOpSomething3();
+		unk3C[i].field_0x11 = material->getTevStage(i)->getAlphaOpSomething4();
+		unk3C[i].field_0x12 = material->getTevStage(i)->getAlphaOpSomething5();
 	}
 }
 
