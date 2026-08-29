@@ -271,9 +271,10 @@ public:
 	/* 0x28 */ J3DTexNoAnm** unk28;
 };
 
-// The names come from the MtxCalcTypeName table in M3DUtil/InfectiousStrings.hpp,
-// which survives in the ROM (read it in MarioDraw.cpp's .data): its four entries
-// are "MActorMtxCalcType_Basic", "_Softimage", "_MotionBlend" and "_User".
+// The names come from the MtxCalcTypeName table in
+// M3DUtil/InfectiousStrings.hpp, which survives in the ROM (read it in
+// MarioDraw.cpp's .data): its four entries are "MActorMtxCalcType_Basic",
+// "_Softimage", "_MotionBlend" and "_User".
 enum MActorMtxCalcType {
 	MACTOR_MTX_CALC_BASIC,
 	MACTOR_MTX_CALC_SOFTIMAGE,
