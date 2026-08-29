@@ -1958,24 +1958,13 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 	if (mYoshi != nullptr) {
 		MActor* yoshiActor = mYoshi->mActor;
 		if (yoshiActor->getCurAnmIdx(0) == 0xf) {
-			if (yoshiActor->unkC != nullptr) {
-				yoshiActor->unkC->initNormalMotionBlend();
-			}
-			f32 blendRatio = unk414.z;
-			// Some weird stuff here
-			if (yoshiActor->unkC != nullptr) {
-				yoshiActor->unkC->setMotionBlendRatio(blendRatio);
-			}
+			yoshiActor->initNormalMotionBlend();
+			yoshiActor->setMotionBlendRatioForBck(unk414.z);
 			yoshiActor->getFrameCtrl(0)->setRate(
 			    getMotionFrameCtrl().getRate());
 		} else {
-			if (yoshiActor->unkC != nullptr) {
-				yoshiActor->unkC->initNormalMotionBlend();
-			}
-			if (yoshiActor->unkC != nullptr) {
-				yoshiActor->unkC->setMotionBlendRatio(0.0f);
-			}
-
+			yoshiActor->initNormalMotionBlend();
+			yoshiActor->setMotionBlendRatioForBck(0.0f);
 			yoshiActor->getFrameCtrl(0)->setRate(0.5f);
 		}
 	}
