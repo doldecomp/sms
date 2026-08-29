@@ -1,71 +1,82 @@
 #include <JSystem/JParticle/JPAResourceManager.hpp>
 #include <JSystem/JParticle/JPAEmitterLoader.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 
-JPATextureResource::JPATextureResource(u32 count, JKRHeap* heap)
+JPATextureResource::JPATextureResource(u32 num, JKRHeap* heap)
 {
-	unk24 = 0;
-	unk28 = count;
-	unk2C = new (heap, 0) JPATexture*[unk28];
-	unk0.initialize(heap);
+	registNum    = 0;
+	maxNum       = num;
+	pTexResArray = new (heap, 0) JPATexture*[maxNum];
+	JUT_ASSERT(24, pTexResArray);
+	defaultTex.initialize(heap);
 }
 
 int JPATextureResource::registration(const u8* data, JKRHeap* heap)
 {
 	const char* incomingName = (const char*)(data + 0xC);
-	for (int i = 0; i < unk24; ++i) {
-		const char* name = (const char*)((u8*)unk2C[i]->mRawData + 0xC);
+	for (int i = 0; i < registNum; ++i) {
+		const char* name = pTexResArray[i]->getName();
 		if (strcmp(name, incomingName) == 0)
 			return i;
 	}
 
-	unk2C[unk24] = new (heap, 0) JPATexture(data, heap);
-	return unk24++;
+	JUT_ASSERT(76, registNum < maxNum);
+	pTexResArray[registNum] = new (heap, 0) JPATexture(data, heap);
+	return registNum++;
 }
 
-JPAEmitterResource::JPAEmitterResource(u32 count, JKRHeap* heap)
+JPAEmitterResource::JPAEmitterResource(u32 num, JKRHeap* heap)
 {
-	unk0 = 0;
-	unk4 = count;
-	unk8 = new (heap, 0) JPAEmitterData*[unk4];
+	registNum     = 0;
+	maxNum        = num;
+	pEmtrResArray = new (heap, 0) JPAEmitterData*[maxNum];
+	JUT_ASSERT(93, pEmtrResArray);
 }
 
-int JPAEmitterResource::registration(JPAEmitterData* param_1, u16 param_2)
+int JPAEmitterResource::registration(JPAEmitterData* res, u16 userIndex)
 {
-	if (unk0 < unk4) {
-		param_1->setUserIndex(param_2);
-		unk8[unk0] = param_1;
+	JUT_ASSERT(107, registNum < maxNum);
+	if (registNum < maxNum) {
+		res->setUserIndex(userIndex);
+		pEmtrResArray[registNum] = res;
 	}
-	return unk0++;
+	return registNum++;
 }
 
-JPAEmitterData* JPAEmitterResource::getByUserIndex(u16 idx)
+JPAEmitterData* JPAEmitterResource::getByUserIndex(u16 userIndex)
 {
-	for (int i = 0; i < unk0; ++i) {
-		if (unk8[i]->getUserIndex() == idx)
-			return unk8[i];
+	for (int i = 0; i < registNum; ++i) {
+		if (pEmtrResArray[i]->getUserIndex() == userIndex)
+			return pEmtrResArray[i];
 	}
 	return nullptr;
 }
 
-JPAResourceManager::JPAResourceManager(u32 param_1, u32 param_2,
-                                       JKRHeap* param_3)
+JPAResourceManager::JPAResourceManager(u32 eArraySize, u32 tArraySize,
+                                       JKRHeap* heap)
 {
-	unk0 = param_3 ? param_3 : JKRGetCurrentHeap();
+	JUT_ASSERT(60, (eArraySize != 0) && (tArraySize != 0));
+	pHeap = heap ? heap : JKRGetCurrentHeap();
 
-	unk4 = new (unk0, 0) JPAEmitterResource(param_1, unk0);
-	unk8 = new (unk0, 0) JPATextureResource(param_2, unk0);
+	pEmtrResMgr = new (pHeap, 0) JPAEmitterResource(eArraySize, pHeap);
+	pTexResMgr  = new (pHeap, 0) JPATextureResource(tArraySize, pHeap);
+	JUT_ASSERT(65, pEmtrResMgr && pTexResMgr);
 }
 
-int JPAResourceManager::load(const char* param_1, u16 param_2)
+int JPAResourceManager::load(const char* name, u16 userIndex)
 {
-	return load(JKRGetResource(param_1), param_2);
+	void* binData = JKRGetResource(name);
+	JUT_WARNING_F(binData, "jpa file %s was not found\n", name);
+	return load(binData, userIndex);
 }
 
-int JPAResourceManager::load(const void* param_1, u16 param_2)
+int JPAResourceManager::load(const void* binData, u16 userIndex)
 {
-	return unk4->registration(
-	    JPAEmitterLoaderDataBase::load((const u8*)param_1, unk0, unk8),
-	    param_2);
+	JUT_ASSERT(77, binData);
+	JPAEmitterData* emtrData
+	    = JPAEmitterLoaderDataBase::load((const u8*)binData, pHeap, pTexResMgr);
+	int ret = getEmitterResource()->registration(emtrData, userIndex);
+	return ret;
 }

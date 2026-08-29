@@ -155,6 +155,8 @@ public:
 	void calcFieldParams();
 	void affectField(JPAParticle*);
 
+	JSUList<JPABaseField>* getFieldPool() { return unkC; }
+
 	JPABaseField* setField(u8);
 	JPAGravityField* setGravityField();
 	JPAAirField* setAirField();

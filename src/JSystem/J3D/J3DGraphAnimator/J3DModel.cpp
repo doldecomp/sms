@@ -486,7 +486,6 @@ J3DModel::~J3DModel() { }
 
 void J3DModel::initialize()
 {
-
 	unkC        = nullptr;
 	unk8        = 0;
 	mModelData  = nullptr;
@@ -519,18 +518,6 @@ void J3DModel::initialize()
 	unk94          = nullptr;
 }
 
-// TODO: 99.8%. The frame size and every instruction match; two register pairs
-// are still swapped. In the shape lookup the target keeps the material in r4
-// and mShapePackets in r5, we do the opposite; in the shared-display-list
-// branch the target produces the material in r3 and copies it to r24, we
-// produce it in r20 and copy it into r3.
-//
-// Every spelling of the two statements themselves has been tried and none of
-// them moves the registers: hoisting or inlining the shape lookup, going
-// through getShapePacket()/getMatPacket(), naming the shape packet or the
-// display list object, dropping either `mat` local, splitting the
-// declarations, and hoisting the loop counters. So the cause lies elsewhere in
-// the function's register allocation, not in this loop.
 void J3DModel::entryModelData(J3DModelData* pModelData, u32 mdlFlags,
                               u32 mtxNum)
 {

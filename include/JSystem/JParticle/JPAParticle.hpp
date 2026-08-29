@@ -77,9 +77,9 @@ public:
 	void initGlobalPosition();
 	void calcGlobalPosition();
 	void getCurrentPosition(JGeometry::TVec3<float>&);
-	void getCurrentPositionX();
-	void getCurrentPositionY();
-	void getCurrentPositionZ();
+	f32 getCurrentPositionX();
+	f32 getCurrentPositionY();
+	f32 getCurrentPositionZ();
 
 	// from TWW
 	JSULink<JPABaseParticle>* getLinkBufferPtr() { return &unk0; }
@@ -139,16 +139,16 @@ public:
 	virtual void setVelocity();
 	virtual bool checkCreateChildParticle();
 
-	virtual JGeometry::TVec3<f32>& accessFVelVec() { return mFieldVelocity; }
-	virtual JGeometry::TVec3<f32>& accessFAccVec()
-	{
-		return mFieldAcceleration;
-	}
+	virtual f32 getDynamicsWeight() const { return mDynamicsWeight; }
+	virtual f32 getAirResistance() const { return mAirResistance; }
+	virtual f32 getCurrentDragForce() const { return mCurrentDragForce; }
+	virtual f32 getDragForce() const { return mDragForce; }
+
+	virtual JGeometry::TVec3<f32>& accessBaseVelVec() { return mBaseVelocity; }
 	virtual void getBaseVelVec(JGeometry::TVec3<float>& out) const
 	{
 		out.set(mBaseVelocity);
 	}
-	virtual JGeometry::TVec3<f32>& accessBaseVelVec() { return mBaseVelocity; }
 	virtual void setBaseVelVec(const JGeometry::TVec3<float>& v)
 	{
 		mBaseVelocity.set(v);
@@ -157,11 +157,11 @@ public:
 	{
 		mBaseVelocity.add(v);
 	}
-
-	virtual f32 getDynamicsWeight() const { return mDynamicsWeight; }
-	virtual f32 getAirResistance() const { return mAirResistance; }
-	virtual f32 getCurrentDragForce() const { return mCurrentDragForce; }
-	virtual f32 getDragForce() const { return mDragForce; }
+	virtual JGeometry::TVec3<f32>& accessFAccVec()
+	{
+		return mFieldAcceleration;
+	}
+	virtual JGeometry::TVec3<f32>& accessFVelVec() { return mFieldVelocity; }
 
 	virtual JPADrawParams* getDrawParamPPtr() { return &mDrawParams; }
 	virtual JPADrawParams* getDrawParamCPtr() { return &mDrawParams; }

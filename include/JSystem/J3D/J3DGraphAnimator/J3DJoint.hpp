@@ -27,21 +27,24 @@ class J3DMtxCalcAnm : public virtual J3DMtxCalc {
 public:
 	J3DMtxCalcAnm(J3DAnmTransform* transform)
 	{
-		for (int i = 0; i < 2; i++) {
-			mOne[i] = nullptr;
-			mTwo[i] = 1.0f;
-		}
-		mOne[0] = transform;
+		initAnm();
+		setAnmTransform(transform);
 	}
 
-	virtual ~J3DMtxCalcAnm()
+	virtual ~J3DMtxCalcAnm() { initAnm(); }
+	virtual void calc(u16);
+
+	void initAnm()
 	{
 		for (int i = 0; i < 2; i++) {
 			mOne[i] = nullptr;
 			mTwo[i] = 1.0f;
 		}
 	}
-	virtual void calc(u16);
+	void setAnmTransform(J3DAnmTransform* mAnmTransform)
+	{
+		mOne[0] = mAnmTransform;
+	}
 
 public:
 	J3DAnmTransform* mOne[2];

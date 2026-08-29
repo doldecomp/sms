@@ -530,7 +530,7 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 
 				unk44 = gpEmitterManager4D2->unkC8[0][0];
 				unk44->setRotation(0, 0, DEG2SHORTANGLE(12));
-				unk44->setUnk190(0.9f, 1.0f, 0.1f);
+				unk44->setEmitterScale(JGeometry::TVec3<f32>(0.9f, 1.0f, 0.1f));
 			}
 		} else if (unk2FC == 44) {
 			selectedPane->setCenteredSize(40, selectedRect.getWidth(),
@@ -754,7 +754,7 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 
 				unk44 = gpEmitterManager4D2->unkC8[0][0];
 				unk44->setRotation(0, 0, DEG2SHORTANGLE(12));
-				unk44->setUnk190(0.9f, 1.0f, 0.1f);
+				unk44->setEmitterScale(JGeometry::TVec3<f32>(0.9f, 1.0f, 0.1f));
 			}
 		} else if (unk2FC == 44) {
 			selectedPane->setCenteredSize(40, selectedRect.getWidth(),

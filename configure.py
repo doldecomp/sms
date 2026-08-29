@@ -542,7 +542,7 @@ config.libs = [
             Object(Matching, "JSystem/JParticle/JPAEmitterLoader.cpp"),
             Object(Matching, "JSystem/JParticle/JPABaseShape.cpp"),
             Object(Matching, "JSystem/JParticle/JPAExtraShape.cpp"),
-            Object(NonMatching, "JSystem/JParticle/JPAResourceManager.cpp"),
+            Object(Matching, "JSystem/JParticle/JPAResourceManager.cpp"),
             Object(Matching, "JSystem/JParticle/JPASweepShape.cpp"),
             Object(Matching, "JSystem/JParticle/JPATexture.cpp"),
 
@@ -828,7 +828,7 @@ config.libs = [
             Object(NonMatching, "M3DUtil/MActorAnm.cpp"),
             Object(NonMatching, "M3DUtil/MActorData.cpp"),
             Object(NonMatching, "M3DUtil/SDLModel.cpp"),
-            Object(NonMatching, "M3DUtil/MActorUtil.cpp"),
+            Object(Matching, "M3DUtil/MActorUtil.cpp"),
             PCHObject(NonMatching, "M3DUtil/SampleCtrlNode.cpp"),
             Object(NonMatching, "M3DUtil/SampleCtrlModel.cpp"),
             Object(Matching, "M3DUtil/MotionBlendCtrl.cpp"),
