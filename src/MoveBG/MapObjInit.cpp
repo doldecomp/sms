@@ -10856,8 +10856,7 @@ void TMapObjBase::initUnique()
 		startAllAnim(mMActor, unkF4);
 		break;
 	case 0x4000003C:
-		if (mMActor->unkC)
-			mMActor->unkC->initSimpleMotionBlend(0x14);
+		mMActor->initSimpleMotionBlend(0x14);
 		break;
 	case 0x400000A8:
 	case 0x40000096:

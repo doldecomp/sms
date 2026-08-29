@@ -1270,12 +1270,12 @@ void TWaterGun::init()
 	mFluddModel->setModel(fluddModel, 0);
 
 	MTXCopy(mMario->mModel->unk8->getAnmMtx(mMario->mJointIdChnChest),
-	        mFluddModel->unk4->unk20);
+	        mFluddModel->mModel->unk20);
 
-	mFluddModel->unk4->calc();
+	mFluddModel->mModel->calc();
 
 	u16 handleIdx
-	    = mFluddModel->unk4->mModelData->unkB0->getIndex("jnt_G_handle");
+	    = mFluddModel->mModel->mModelData->unkB0->getIndex("jnt_G_handle");
 
 	{
 		unk1CDC            = new TMultiMtxEffect;
@@ -1294,7 +1294,7 @@ void TWaterGun::init()
 		unk1CDC->setup(mFluddModel->getModel(), "Mario/WaterGun");
 	}
 
-	unk1CD8 = mFluddModel->unk4->mModelData->unkB0->getIndex("nozzle_center");
+	unk1CD8 = mFluddModel->mModel->mModelData->unkB0->getIndex("nozzle_center");
 
 	for (int i = 0; i < 6; ++i) {
 		if (nozzleBmdData.getPath(i)) {
@@ -1398,7 +1398,7 @@ void TWaterGun::init()
 	mFluddModel->getModel()->calc();
 
 	unk1D10 = new TMirrorActor("水鉄砲in鏡");
-	unk1D10->init(mFluddModel->unk4, 4);
+	unk1D10->init(mFluddModel->mModel, 4);
 
 	// TODO: Definitely an inlined function
 	// Another function does the exact same thing
@@ -1445,7 +1445,7 @@ MtxPtr TWaterGun::getEmitMtx(int jointIndex)
 
 MtxPtr TWaterGun::getNozzleMtx()
 {
-	return mFluddModel->unk4->getAnmMtx(unk1CD8);
+	return mFluddModel->mModel->getAnmMtx(unk1CD8);
 }
 
 void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
@@ -1559,7 +1559,7 @@ void TWaterGun::setBaseTRMtx(Mtx mtx)
 	MsMtxSetRotRPH(temp, 0.0f, 0.0f, angleDegrees);
 
 	MTXConcat(mtx, temp, result);
-	MTXCopy(result, mFluddModel->unk4->unk20);
+	MTXCopy(result, mFluddModel->mModel->unk20);
 }
 
 void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)

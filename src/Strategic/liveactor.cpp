@@ -127,7 +127,7 @@ void TLiveActor::calcRideMomentum()
 	}
 }
 
-J3DModel* TLiveActor::getModel() const { return mMActor->unk4; }
+J3DModel* TLiveActor::getModel() const { return mMActor->mModel; }
 
 Mtx* TLiveActor::getRootJointMtx() const { return nullptr; }
 
@@ -421,7 +421,7 @@ int TLiveActor::getJointTransByIndex(int param_1,
 		return param_1;
 	}
 
-	MtxPtr mtx = mMActor->unk4->getAnmMtx(param_1);
+	MtxPtr mtx = mMActor->mModel->getAnmMtx(param_1);
 	param_2->set(mtx[0][3], mtx[1][3], mtx[2][3]);
 	return param_1;
 }
@@ -433,7 +433,7 @@ MtxPtr TLiveActor::getTakingMtx()
 	if (!mMActor)
 		return nullptr;
 
-	return mMActor->unk4->unk20;
+	return mMActor->mModel->unk20;
 }
 
 void TLiveActor::initAnmSound()
