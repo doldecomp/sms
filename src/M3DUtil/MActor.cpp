@@ -11,7 +11,7 @@
 #include <Camera/CubeManagerBase.hpp>
 #include <Map/MapData.hpp>
 
-MActor::MActor(MActorAnmData* param_1)
+MActor::MActor(MActorAnmData* anm_data)
 {
 	unk0  = nullptr;
 	unk4  = nullptr;
@@ -34,7 +34,7 @@ MActor::MActor(MActorAnmData* param_1)
 	unk40 = true;
 	unk44 = 1;
 
-	unk0     = param_1;
+	unk0     = anm_data;
 	unk28    = new MActorAnmBase*[6];
 	unk28[0] = nullptr;
 	unk28[1] = nullptr;
@@ -43,60 +43,63 @@ MActor::MActor(MActorAnmData* param_1)
 	unk28[4] = nullptr;
 	unk28[5] = nullptr;
 
-	if (param_1->getUnk2C()) {
+	if (anm_data->getUnk2C()) {
 		unkC = new MActorAnmBck;
-		unkC->setUnk1C(param_1->getUnk2C());
+		unkC->setUnk1C(anm_data->getUnk2C());
 		unk28[0] = unkC;
 	}
 
-	if (param_1->getUnk30()) {
+	if (anm_data->getUnk30()) {
 		unk14 = new MActorAnmBpk;
-		unk14->setUnk1C(param_1->getUnk30());
+		unk14->setUnk1C(anm_data->getUnk30());
 		unk14->setMatColorAnmKeyPtr();
 		unk28[2] = unk14;
 	}
 
-	if (param_1->getUnk34()) {
+	if (anm_data->getUnk34()) {
 		unk18 = new MActorAnmBtp;
-		unk18->setUnk1C(param_1->getUnk34());
+		unk18->setUnk1C(anm_data->getUnk34());
 		unk18->setTexNoAnmFullPtr();
 		unk28[3] = unk18;
 	}
 
-	if (param_1->getUnk38()) {
+	if (anm_data->getUnk38()) {
 		unk1C = new MActorAnmBtk;
-		unk1C->setUnk1C(param_1->getUnk38());
+		unk1C->setUnk1C(anm_data->getUnk38());
 		unk1C->setTexMtxAnmKeyPtr();
 		unk28[4] = unk1C;
 	}
 
-	if (param_1->getUnk3C()) {
+	if (anm_data->getUnk3C()) {
 		unk20 = new MActorAnmBrk;
-		unk20->setUnk1C(param_1->getUnk3C());
+		unk20->setUnk1C(anm_data->getUnk3C());
 		unk20->setTevColorAnmKeyPtr();
 		unk20->setTevKColorAnmKeyPtr();
 		unk28[5] = unk20;
 	}
 
-	if (param_1->getUnk40()) {
+	if (anm_data->getUnk40()) {
 		unk24 = new MActorAnmBlk;
-		unk24->setUnk1C(param_1->getUnk40());
+		unk24->setUnk1C(anm_data->getUnk40());
 		unk28[1] = unk24;
 	}
 
-	if (param_1->getUnk0() > 0) {
-		unk10 = new MActorAnmBck*[param_1->getUnk0()];
+	if (anm_data->getUnk0() > 0) {
+		unk10 = new MActorAnmBck*[anm_data->getUnk0()];
 
 		JGadget::TList<MActorSubAnmInfo>::iterator it = unk0->unk1C.begin();
 		JGadget::TList<MActorSubAnmInfo>::iterator e  = unk0->unk1C.end();
 
 		for (int i = 0; it != e; ++it, ++i) {
 			unk10[i] = new MActorAnmBck;
-			unk10[i]->setUnk1C(param_1->getUnk2C());
+			unk10[i]->setUnk1C(anm_data->getUnk2C());
 			unk10[i]->unk28 = it->unk0;
 		}
 	}
 }
+
+// UNUSED (Size: 0x8 in MAP)
+void MActor::setMActorAnmData(MActorAnmData*) { }
 
 void MActor::setModel(J3DModel* param_1, u32 param_2)
 {
@@ -186,6 +189,9 @@ BOOL MActor::curAnmEndsNext(int anm_idx, char* part_name)
 	return unk28[anm_idx]->endsNext();
 }
 
+// UNUSED (Size: 0x74 in MAP)
+void MActor::curSubAnmEndsNext(int) { }
+
 void MActor::setAnimation(const char* param_1, int param_2)
 {
 	if (!unk28[param_2])
@@ -242,6 +248,9 @@ void MActor::resetDL()
 	}
 }
 
+// UNUSED (Size: 0x104 in MAP)
+void MActor::initDLByIndex(u16) { }
+
 void MActor::unlockDLIfNeed()
 {
 	if (!unk38)
@@ -252,6 +261,9 @@ void MActor::unlockDLIfNeed()
 			unk4->getMatPacket(i)->unlock();
 }
 
+// UNUSED (Size: 0xc in MAP)
+void MActor::onMakeDL() { }
+
 void MActor::offMakeDL()
 {
 	unk38 = false;
@@ -259,6 +271,9 @@ void MActor::offMakeDL()
 		unk4->getMatPacket(i)->unlock();
 	}
 }
+
+// UNUSED (Size: 0x54 in MAP)
+void MActor::getCurAnmName(int) const { }
 
 void MActor::setJointCallback(int param_1, J3DNodeCallBack param_2)
 {
@@ -310,6 +325,9 @@ void MActor::viewCalc()
 		unk4->viewCalc();
 }
 
+// UNUSED (Size: 0x70 in MAP)
+void MActor::loadSetDeformData(const char*) { }
+
 void MActor::setLightID(s16 light_id)
 {
 	unk3C = 0;
@@ -341,6 +359,9 @@ void MActor::setLightType(int param_1)
 	unk44 = param_1;
 	gpLightManager->getUnk14(param_1)->enable();
 }
+
+// UNUSED (Size: 0x1f8 in MAP)
+void MActor::update() { }
 
 void MActor::entry()
 {
@@ -475,6 +496,9 @@ void MActor::setBckFromIndex(int index)
 	unkC->setAnmFromIndex(index, 0);
 }
 
+// UNUSED (Size: 0x44 in MAP)
+void MActor::setSubBckFromIndex(int, int) { }
+
 BOOL MActor::checkCurBckFromIndex(int index)
 {
 	if (!unkC)
@@ -483,6 +507,9 @@ BOOL MActor::checkCurBckFromIndex(int index)
 		return true;
 	return false;
 }
+
+// UNUSED (Size: 0x78 in MAP)
+void MActor::setSubBck(const char*, const char*) { }
 
 void MActor::setBpk(const char* name)
 {
@@ -541,6 +568,9 @@ void MActor::setBlk(const char* name)
 	unk24->setAnm(name, unk2C);
 	resetDL();
 }
+
+// UNUSED (Size: 0x50 in MAP)
+void MActor::setBlkFromIndex(int) { }
 
 void MActor::setBrk(const char* name)
 {
@@ -601,3 +631,6 @@ void MActor::updateMatAnm()
 		if (unk30[i] != 0x32 || unk2C[i] != 0x32)
 			SMS_CalcMatAnmAndMakeDL(unk4, i);
 }
+
+// UNUSED (Size: 0xe8 in MAP)
+void MActor::dumpReport() { }

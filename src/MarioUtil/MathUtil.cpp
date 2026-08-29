@@ -1,10 +1,6 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <JSystem/JMath.hpp>
 
-static Vec dummy1   = { 1.0f, 1.0f, 1.0f };
-static Vec dummy2   = { 1.0f, 1.0f, 1.0f };
-static int dummy3[] = { 0, 2, 1, 3 };
-
 static u16 atntable[] = {
 	0,    10,   20,   31,   41,   51,   61,   71,   81,   92,   102,  112,
 	122,  132,  143,  153,  163,  173,  183,  194,  204,  214,  224,  234,

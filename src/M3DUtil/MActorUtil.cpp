@@ -5,53 +5,81 @@
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 
-MActor* SMS_MakeMActorFromSDLModelData(SDLModelData* param_1,
-                                       MActorAnmData* param_2, u32 param_3)
+void SMS_DumpMActor(MActor*) { }
+
+MActor* SMS_MakeMActorFromSDLModelData(SDLModelData* model_data,
+                                       MActorAnmData* anm_data, u32 flags)
 {
-	SDLModel* model = new SDLModel(param_1, param_3, 1);
-	MActor* actor   = new MActor(param_2);
+	JUT_ASSERT(model_data);
+	JUT_ASSERT(anm_data);
+
+	SDLModel* model = new SDLModel(model_data, flags, 1);
+	MActor* actor   = new MActor(anm_data);
 	actor->setModel(model, 0);
 	return actor;
 }
 
-SDLModelData* SMS_MakeSDLModelData(const char* param_1, u32 param_2)
+SDLModelData* SMS_MakeSDLModelData(const char* model_path, u32 flags)
 {
-	void* res = JKRGetResource(param_1);
+	JUT_ASSERT(model_path);
 
-	J3DModelData* j3ddata = J3DModelLoaderDataBase::load(res, param_2);
+	void* res = JKRGetResource(model_path);
+	JUT_ASSERT(res);
+
+	J3DModelData* j3ddata = J3DModelLoaderDataBase::load(res, flags);
 	SDLModelData* sdlData = new SDLModelData(j3ddata);
 
 	return sdlData;
 }
 
-MActor** SMS_MakeMActorsWithAnmData(const char* param_1, MActorAnmData* param_2,
-                                    int param_3, u32 param_4, u32 param_5)
+MActor** SMS_MakeMActorsWithAnmData(const char* model_path,
+                                    MActorAnmData* anm_data, int count,
+                                    u32 model_flags, u32 loader_flags)
 {
-	SDLModelData* sdlData = SMS_MakeSDLModelData(param_1, param_5);
+	JUT_ASSERT(model_path);
+	JUT_ASSERT(anm_data);
 
-	MActor** actors = new MActor*[param_3];
-	for (int i = 0; i < param_3; ++i)
-		actors[i] = SMS_MakeMActorFromSDLModelData(sdlData, param_2, param_4);
+	SDLModelData* sdlData = SMS_MakeSDLModelData(model_path, loader_flags);
+
+	MActor** actors = new MActor*[count];
+	for (int i = 0; i < count; ++i)
+		actors[i]
+		    = SMS_MakeMActorFromSDLModelData(sdlData, anm_data, model_flags);
 
 	return actors;
 }
 
-MActor* SMS_MakeMActorWithAnmData(const char* param_1, MActorAnmData* param_2,
-                                  u32 param_3, u32 param_4)
+MActor* SMS_MakeMActorWithAnmData(const char* model_path,
+                                  MActorAnmData* anm_data, u32 model_flags,
+                                  u32 loader_flags)
 {
-	return *SMS_MakeMActorsWithAnmData(param_1, param_2, 1, param_3, param_4);
+	JUT_ASSERT(model_path);
+	JUT_ASSERT(anm_data);
+
+	MActor** actors = SMS_MakeMActorsWithAnmData(model_path, anm_data, 1,
+	                                             model_flags, loader_flags);
+	return actors[0];
 }
 
-MActor** SMS_MakeMActors(const char* param_1, const char* param_2, int param_3,
-                         u32 param_4, u32 param_5)
+MActor** SMS_MakeMActors(const char* anm_folder, const char* model_path,
+                         int count, u32 model_flags, u32 loader_flags)
 {
+	JUT_ASSERT(anm_folder);
+	JUT_ASSERT(model_path);
+
 	MActorAnmData* anm = new MActorAnmData;
-	anm->init(param_1, nullptr);
-	return SMS_MakeMActorsWithAnmData(param_2, anm, param_3, param_4, param_5);
+	anm->init(anm_folder, nullptr);
+	return SMS_MakeMActorsWithAnmData(model_path, anm, count, model_flags,
+	                                  loader_flags);
 }
 
-MActor* SMS_MakeMActor(const char* param_1, const char* param_2, u32 param_3,
-                       u32 param_4)
+MActor* SMS_MakeMActor(const char* anm_folder, const char* model_path,
+                       u32 model_flags, u32 loader_flags)
 {
-	return *SMS_MakeMActors(param_1, param_2, 1, param_3, param_4);
+	JUT_ASSERT(anm_folder);
+	JUT_ASSERT(model_path);
+
+	MActor** actors
+	    = SMS_MakeMActors(anm_folder, model_path, 1, model_flags, loader_flags);
+	return actors[0];
 }

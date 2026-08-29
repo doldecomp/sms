@@ -39,6 +39,9 @@ public:
 	bool isBodyJoint(int);
 	void entryDrawShadow();
 	void calc();
+
+private:
+	/* 0x0 */ u8 unk0[0x1C];
 };
 
 class TAlphaShadowQuad;

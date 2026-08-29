@@ -5,10 +5,6 @@
 #include <JSystem/JSupport/JSUMemoryOutputStream.hpp>
 #include <System/FlagManager.hpp>
 
-f32 dummy[]  = { 1.0f, 1.0f, 1.0f };
-f32 dummy2[] = { 1.0f, 1.0f, 1.0f };
-u32 dummy3[] = { 0, 2, 1, 3 };
-
 static u8 sDetach[2];
 const char CardFileName[0x20] = "super_mario_sunshine\0\0\0\0\0\0\0\0\0\0\0";
 

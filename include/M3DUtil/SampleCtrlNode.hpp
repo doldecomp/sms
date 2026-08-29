@@ -20,7 +20,7 @@ public:
 
 class SampleCtrlMaterial {
 public:
-	SampleCtrlMaterial(J3DMaterial*);
+	SampleCtrlMaterial(J3DMaterial* material);
 	virtual ~SampleCtrlMaterial() { }
 
 public:
