@@ -185,15 +185,15 @@ void TMapObjBase::startAllAnim(MActor* param_1, const char* param_2)
 	char lowerCased[128];
 	makeLowerStr(param_2, lowerCased);
 
-	if (param_1->checkAnmFileExist(lowerCased, 0))
+	if (param_1->checkAnmFileExist(lowerCased, ANM_TYPE_BCK))
 		param_1->setBck(lowerCased);
-	if (param_1->checkAnmFileExist(lowerCased, 5))
+	if (param_1->checkAnmFileExist(lowerCased, ANM_TYPE_BRK))
 		param_1->setBrk(lowerCased);
-	if (param_1->checkAnmFileExist(lowerCased, 2))
+	if (param_1->checkAnmFileExist(lowerCased, ANM_TYPE_BPK))
 		param_1->setBpk(lowerCased);
-	if (param_1->checkAnmFileExist(lowerCased, 3))
+	if (param_1->checkAnmFileExist(lowerCased, ANM_TYPE_BTP))
 		param_1->setBtp(lowerCased);
-	if (param_1->checkAnmFileExist(lowerCased, 4))
+	if (param_1->checkAnmFileExist(lowerCased, ANM_TYPE_BTK))
 		param_1->setBtk(lowerCased);
 }
 

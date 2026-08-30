@@ -5,6 +5,7 @@
 #include <Strategic/Spine.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/Strategy.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <System/Particles.hpp>
 #include <MSound/MSound.hpp>
@@ -224,7 +225,7 @@ void TCommonLauncher::init(TLiveManager* param_1)
 
 	mLaunchCooldown = mLaunchPeriod * MsRandF();
 
-	mMActor->setLightType(1);
+	mMActor->setLightType(LIGHT_TYPE_OBJECT);
 	initHitActor(0x10000014, 1, -0x7f000000, 150.0f, 100.0f, 150.0f, 100.0f);
 	offHitFlag(0x1);
 
