@@ -420,18 +420,18 @@ void TBiancoGateKeeper::kill()
 
 void TBiancoGateKeeper::changeBck(int param_1)
 {
-	int cur = mMActor->getCurAnmIdx(0);
+	int cur = mMActor->getCurAnmIdx(ANM_TYPE_BCK);
 	if ((cur == 0x11 && param_1 == 0xB) || (cur == 0x11 && param_1 == 0x12)
 	    || (cur == 0xB && param_1 == 0x12) || (cur == 0x12 && param_1 == 0xB)
 	    || (cur == 7 && param_1 == 7) || (cur == 7 && param_1 == 0x12)
 	    || (cur == 0xF && param_1 == 0x10) || (cur == 0x10 && param_1 == 0xC)) {
 		unk178->setAnm(param_1);
-		mMActor->getUnkC()->setFrameCtrl(param_1);
+		mMActor->getAnmBck()->setFrameCtrl(param_1);
 		unk158 = 0.0f;
 	} else {
 		unk178->joinAnm(param_1);
-		mMActor->getUnkC()->setFrameCtrl(param_1);
-		J3DFrameCtrl* fc = mMActor->getFrameCtrl(0);
+		mMActor->getAnmBck()->setFrameCtrl(param_1);
+		J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (fc != NULL) {
 			f32 v = 0.25f * (f32)fc->getEnd();
 			if (v < 1.0f)
@@ -517,7 +517,7 @@ void TBiancoGateKeeper::rumblePad()
 void TBiancoGateKeeper::deathRumble()
 {
 	if (SMS_IsMarioTouchGround4cm()) {
-		J3DFrameCtrl* fc = mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (fc != NULL) {
 			f32 t        = 1.0f - fc->getFrame() / (f32)fc->getEnd();
 			mRumblePower = t * getRumblePow();
@@ -528,7 +528,7 @@ void TBiancoGateKeeper::deathRumble()
 
 BOOL TBiancoGateKeeper::curBckFinished() const
 {
-	J3DFrameCtrl* fc = mMActor->getFrameCtrl(0);
+	J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 	BOOL done;
 	if (fc == NULL)
 		return true;
@@ -574,7 +574,7 @@ void TBiancoGateKeeper::startFinishDemo()
 #pragma dont_inline on
 BOOL TBiancoGateKeeper::isHeadHitActive() const
 {
-	J3DFrameCtrl* fc = getMActor()->getFrameCtrl(0);
+	J3DFrameCtrl* fc = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (getMActor()->checkCurBckFromIndex(0x12)) {
 		if (50.0f < fc->getFrame() && fc->getFrame() < 160.0f)
 			return true;
@@ -599,7 +599,7 @@ BOOL TBiancoGateKeeper::isDamageFogSituation() const
 		return true;
 
 	if (mMActor->checkCurBckFromIndex(0x12)) {
-		J3DFrameCtrl* fc = mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (!(50.0f < fc->getFrame() && fc->getFrame() < 160.0f))
 			return false;
 	}
@@ -671,7 +671,7 @@ void TBiancoGateKeeper::controlCollision()
 		return;
 	}
 	if (mMActor->checkCurBckFromIndex(0xF)) {
-		if (mMActor->getFrameCtrl(0)->getFrame() > 40.0f)
+		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame() > 40.0f)
 			mHead->mVulnerable = TRUE;
 		else
 			mHead->mVulnerable = FALSE;
@@ -785,7 +785,7 @@ DEFINE_NERVE(TNerveBGKSleep, TLiveActor)
 		self->changeBck(0xA);
 		self->offHitFlag(HIT_FLAG_NO_COLLISION);
 		self->getMActor()->setBpkFromIndex(0);
-		J3DFrameCtrl* fc = self->getMActor()->getFrameCtrl(2);
+		J3DFrameCtrl* fc = self->getMActor()->getFrameCtrl(ANM_TYPE_BPK);
 		if (fc != NULL) {
 			fc->setFrame(0.0f);
 			fc->setRate(0.0f);
@@ -843,7 +843,7 @@ DEFINE_NERVE(TNerveBGKAppear, TLiveActor)
 		self->rumblePad();
 	}
 
-	if (self->getMActor()->curAnmEndsNext(0, nullptr)) {
+	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		if (gpMarDirector->getCurrentMap() == 0)
 			spine->pushAfterCurrent(&TNerveBGKWait2::theNerve());
 		else
@@ -986,7 +986,7 @@ DEFINE_NERVE(TNerveBGKSleepDamage, TLiveActor)
 		}
 	}
 
-	if (self->getMActor()->curAnmEndsNext(0, nullptr)) {
+	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		spine->pushAfterCurrent(&TNerveBGKSleep::theNerve());
 		return true;
 	}
@@ -1023,7 +1023,7 @@ DEFINE_NERVE(TNerveBGKDie, TLiveActor)
 		     || self->unk296 != 0)) {
 			self->startFinishDemo();
 			self->getMActor()->setBpkFromIndex(0);
-			J3DFrameCtrl* fc = self->getMActor()->getFrameCtrl(2);
+			J3DFrameCtrl* fc = self->getMActor()->getFrameCtrl(ANM_TYPE_BPK);
 			if (fc != NULL) {
 				fc->setFrame(0.0f);
 				fc->setRate(SMSGetAnmFrameRate());
@@ -1051,7 +1051,7 @@ DEFINE_NERVE(TNerveBGKDie, TLiveActor)
 
 	self->deathRumble();
 
-	if (self->getMActor()->curAnmEndsNext(0, nullptr)) {
+	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		if ((self->mVariant == TBiancoGateKeeper::VARIANT_RICO_GATEKEEPER
 		     || self->mVariant == TBiancoGateKeeper::VARIANT_MAMMA_GATEKEEPER)
 		    && self->unk296 == 0) {
@@ -1085,7 +1085,7 @@ DEFINE_NERVE(TNerveBGKDive, TLiveActor)
 		self->rumblePad();
 	}
 
-	if (self->getMActor()->curAnmEndsNext(0, nullptr)) {
+	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		if (self->mVariant == TBiancoGateKeeper::VARIANT_GENERIC) {
 			int timer    = self->getSaveParams()->mSLLaunchTimerNormal.get();
 			self->unk298 = (s32)(240.0f * MsRandF()) + timer - 120;
@@ -1116,7 +1116,7 @@ DEFINE_NERVE(TNerveBGKLaunchGoro, TLiveActor)
 		return true;
 	}
 
-	if (self->getMActor()->curAnmEndsNext(0, nullptr)) {
+	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		spine->pushAfterCurrent(&TNerveBGKSleep::theNerve());
 		return true;
 	}
@@ -1136,7 +1136,7 @@ DEFINE_NERVE(TNerveBGKLaunchName, TLiveActor)
 		self->rumblePad();
 	}
 
-	if (self->getMActor()->curAnmEndsNext(0, nullptr)) {
+	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		spine->pushAfterCurrent(&TNerveBGKAppear::theNerve());
 		return true;
 	}

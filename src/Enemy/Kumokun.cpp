@@ -592,8 +592,9 @@ bool TKumokun::behaveHitHipdrop()
 
 void TKumokun::updateAnimation()
 {
-	if (unk1D8.size() > 0 && checkCurAnmEnd(0)) {
-		if (mMActor->checkCurAnm(unk1D8.pop(), 0) && unk1D8.size() >= 1)
+	if (unk1D8.size() > 0 && checkCurAnmEnd(ANM_TYPE_BCK)) {
+		if (mMActor->checkCurAnm(unk1D8.pop(), ANM_TYPE_BCK)
+		    && unk1D8.size() >= 1)
 			changeBck(unk1D8.top()); // TODO: wrong ops
 		else
 			unk1D8.clear();
@@ -623,7 +624,8 @@ void TKumokun::changeBck(const char* name)
 		fVar1 = 2.0f;
 	}
 
-	mMActor->getFrameCtrl(0)->setRate(SMSGetAnmFrameRate() * 0.5f * fVar1);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)
+	    ->setRate(SMSGetAnmFrameRate() * 0.5f * fVar1);
 }
 
 void TKumokun::setDeadAnm()
@@ -638,8 +640,8 @@ void TKumokun::setDeadAnm()
 		break;
 
 	case 2:
-		mMActor->getFrameCtrl(0)->init(1);
-		mMActor->getFrameCtrl(0)->setFrame(0.0f);
+		mMActor->getFrameCtrl(ANM_TYPE_BCK)->init(1);
+		mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 		break;
 	}
 }
@@ -1029,7 +1031,7 @@ void TKumokunManager::load(JSUMemoryInputStream& stream)
 	unk38 = params;
 
 	params->mSLAttackRadius.set(60);
-	params->mSLAttackRadius.set(50);
+	params->mSLAttackHeight.set(50);
 	params->mSLDamageRadius.set(60);
 	params->mSLDamageHeight.set(70);
 	TSmallEnemyManager::load(stream);
@@ -1104,8 +1106,8 @@ DEFINE_NERVE(TNerveKumokunSearch, TLiveActor)
 		}
 	}
 
-	if (self->doAdjustTarget() && self->checkCurAnmEnd(0)) {
-		if (self->getMActor()->checkCurAnm("kumo_turn1_loop", 0)) {
+	if (self->doAdjustTarget() && self->checkCurAnmEnd(ANM_TYPE_BCK)) {
+		if (self->getMActor()->checkCurAnm("kumo_turn1_loop", ANM_TYPE_BCK)) {
 			self->changeBck("kumo_turn1_end");
 		} else {
 			spine->pushAfterCurrent(&TNerveKumokunPreWalk::theNerve());
@@ -1145,10 +1147,11 @@ DEFINE_NERVE(TNerveKumokunFreeze, TLiveActor)
 	TKumokun* self = (TKumokun*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->clearAnmStack();
-		if (self->getMActor()->checkCurAnm("kumo_hit_end", 0)
-		    || self->getMActor()->checkCurAnm("kumo_hit_start", 0)) {
+		if (self->getMActor()->checkCurAnm("kumo_hit_end", ANM_TYPE_BCK)
+		    || self->getMActor()->checkCurAnm("kumo_hit_start", ANM_TYPE_BCK)) {
 			self->changeBck("kumo_hit_loop");
-		} else if (!self->getMActor()->checkCurAnm("kumo_hit_loop", 0)) {
+		} else if (!self->getMActor()->checkCurAnm("kumo_hit_loop",
+		                                           ANM_TYPE_BCK)) {
 			self->pushNextAnm("kumo_hit_loop", false);
 			self->pushNextAnm("kumo_hit_start", true);
 		}

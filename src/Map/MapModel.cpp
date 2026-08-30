@@ -92,9 +92,9 @@ void TMapModel::initJointModel(TJointModelManager* param_1, const char* param_2,
                                MActorAnmData* param_3)
 {
 	TJointModel::initJointModel(param_1, param_2, param_3);
-	if (mActor->checkAnmFileExist(param_2, 4))
+	if (mActor->checkAnmFileExist(param_2, ANM_TYPE_BTK))
 		mActor->setBtk(param_2);
-	if (mActor->checkAnmFileExist(param_2, 5))
+	if (mActor->checkAnmFileExist(param_2, ANM_TYPE_BRK))
 		mActor->setBrk(param_2);
 
 	mActor->calc();

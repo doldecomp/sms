@@ -696,7 +696,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 					            * rate,
 					        mIndividualParams->mTurnAnmMinRate.get() * rate,
 					        mIndividualParams->mTurnAnmMaxRate.get() * rate),
-					    0);
+					    ANM_TYPE_BCK);
 				}
 			}
 

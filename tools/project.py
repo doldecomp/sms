@@ -664,11 +664,11 @@ def generate_build_ninja(
     mwcc_sjis_implicit: List[Optional[Path]] = [*mwcc_implicit, sjiswrap]
 
     # MWCC for precompiled headers
-    mwcc_pch_cmd = f"{wrapper_cmd}{mwcc} $cflags -MMD -c $in -o $basedir -precompile $basefilestem.mch"
+    mwcc_pch_cmd = f'{wrapper_cmd}{mwcc} $cflags -MMD -c $in -o "$basedir" -precompile $basefilestem.mch'
     mwcc_pch_implicit: List[Optional[Path]] = [*mwcc_implicit]
 
     # MWCC for precompiled headers with UTF-8 to Shift JIS wrapper
-    mwcc_pch_sjis_cmd = f"{wrapper_cmd}{sjiswrap} {mwcc} $cflags -MMD -c $in -o $basedir -precompile $basefilestem.mch"
+    mwcc_pch_sjis_cmd = f'{wrapper_cmd}{sjiswrap} {mwcc} $cflags -MMD -c $in -o "$basedir" -precompile $basefilestem.mch'
     mwcc_pch_sjis_implicit: List[Optional[Path]] = [*mwcc_implicit, sjiswrap]
 
     # MWCC with extab post-processing

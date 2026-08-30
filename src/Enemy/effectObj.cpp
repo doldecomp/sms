@@ -314,7 +314,7 @@ void TEffectColumWater::reset()
 	mMActor->setBrk("06_enem_tobikomi");
 	mMActor->setBtk("06_enem_tobikomi");
 	mMActor->setBpk("06_enem_tobikomi");
-	mMActor->getFrameCtrl(0)->setFrame(0.0f);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	mMActor->getFrameCtrl(5)->setFrame(0.0f);
 	mMActor->getFrameCtrl(4)->setFrame(0.0f);
 	mMActor->getFrameCtrl(2)->setFrame(0.0f);
@@ -395,7 +395,7 @@ void TEffectBombColumWater::reset()
 	mMActor->setBrk("04_tobikomi");
 	mMActor->setBtk("04_tobikomi");
 	mMActor->setBpk("04_tobikomi");
-	mMActor->getFrameCtrl(0)->setFrame(0.0f);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	mMActor->getFrameCtrl(5)->setFrame(0.0f);
 	mMActor->getFrameCtrl(4)->setFrame(0.0f);
 	mMActor->getFrameCtrl(2)->setFrame(0.0f);
@@ -478,7 +478,7 @@ void TEffectColumSand::reset()
 	mMActor->setBck("08_sunabashira");
 	mMActor->setBrk("08_sunabashira");
 	mMActor->setBtk("08_sunabashira");
-	mMActor->getFrameCtrl(0)->setFrame(0.0f);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	mMActor->getFrameCtrl(5)->setFrame(0.0f);
 	mMActor->getFrameCtrl(4)->setFrame(0.0f);
 }
@@ -553,7 +553,7 @@ void TEffectExplosion::reset()
 	mMActor->setBck("10_bomb");
 	mMActor->setBrk("10_bomb");
 	mMActor->setBtk("10_bomb");
-	mMActor->getFrameCtrl(0)->setFrame(0.0f);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	mMActor->getFrameCtrl(5)->setFrame(0.0f);
 	mMActor->getFrameCtrl(4)->setFrame(0.0f);
 }

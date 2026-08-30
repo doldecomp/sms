@@ -748,7 +748,7 @@ void TSmallEnemy::changeOut()
 	mJuiceBlock->mPosition = mPosition;
 
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
-	getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+	getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	mJuiceBlock->kill();
 	mJuiceBlock = nullptr;
 }
@@ -1000,8 +1000,10 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 		uVar8 = 0;
 
 	if (self->checkCurAnmEnd(0)
-	        && spine->getTime()
-	               > uVar8 + self->getMActor()->getFrameCtrl(0)->getEnd()
+	        && spine->getTime() > uVar8
+	                                  + self->getMActor()
+	                                        ->getFrameCtrl(ANM_TYPE_BCK)
+	                                        ->getEnd()
 	    || spine->getTime() > 360 || self->getUnk184() != 0) {
 		self->genRandomItem();
 		self->onHitFlag(HIT_FLAG_NO_COLLISION);
@@ -1114,7 +1116,7 @@ DEFINE_NERVE(TNerveSmallEnemyChange, TLiveActor)
 	int changeTime = self->getChangeBlockTime();
 
 	if (spine->getTime() == 0) {
-		self->getMActor()->setFrameRate(0.0f, 0);
+		self->getMActor()->setFrameRate(0.0f, ANM_TYPE_BCK);
 		gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &self->getPosition(),
 		                                            0, nullptr);
 	}

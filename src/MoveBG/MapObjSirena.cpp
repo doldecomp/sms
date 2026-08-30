@@ -677,7 +677,7 @@ void TCasinoPanelGate::moveObject()
 	TLiveActor::moveObject();
 	mPosition.y = unk150 - unk14C;
 	if (unk16D) {
-		J3DFrameCtrl* fc = mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (fc->getFrame() < (f32)fc->getEnd() - 8.0f) {
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_PANELPUZZLE_OPEN, 0,
 			                                   nullptr, 0);
@@ -872,8 +872,8 @@ void TDonchou::calcRootMatrix()
 	if (unk13C != 0) {
 		unk14C++;
 		if (unk14C > 100) {
-			if (mMActor->checkCurAnm("donchou", 0)) {
-				if (mMActor->curAnmEndsNext(0, 0))
+			if (mMActor->checkCurAnm("donchou", ANM_TYPE_BCK)) {
+				if (mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
 					unk138->remove();
 			} else {
 				SMSGetMSound()->startSoundActor(MSD_SE_SY_DONCHO_OPEN,
@@ -882,7 +882,7 @@ void TDonchou::calcRootMatrix()
 				SMSGetMarDirector()->fireStartDemoCamera(
 				    "どん帳カメラ", &mPosition, -1, 0.0f, true, nullptr, 0,
 				    nullptr, JDrama::TFlagT<u16>(0));
-				J3DFrameCtrl* fc = mMActor->getFrameCtrl(0);
+				J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 				fc->setRate(0.5f * fc->getRate());
 			}
 		}
@@ -940,7 +940,7 @@ void TCloset::initMapObj()
 void TCloset::moveObject()
 {
 	TLiveActor::moveObject();
-	if (unk16C != 0 && !mMActor->checkCurAnm("closetopen", 0)) {
+	if (unk16C != 0 && !mMActor->checkCurAnm("closetopen", ANM_TYPE_BCK)) {
 		unk16D++;
 		if (unk16D == 60) {
 			mMActor->setBck("closetopen");
@@ -1016,8 +1016,8 @@ void TCloset::calcRootMatrix()
 	model->setBaseTRMtx(mtx);
 	model->setBaseScale(mScaling);
 	mtx.ref(1, 3) += unk14C;
-	if (unk16C != 0 && mMActor->checkCurAnm("closetopen", 0)
-	    && mMActor->curAnmEndsNext(0, 0))
+	if (unk16C != 0 && mMActor->checkCurAnm("closetopen", ANM_TYPE_BCK)
+	    && mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
 		mMapCollisionWarp->remove();
 }
 

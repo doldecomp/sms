@@ -11,6 +11,7 @@ public:
 
 	TMapObjGeneral(const char* name = "汎用地形オブジェ");
 
+	virtual void initMapObj();
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
@@ -20,12 +21,11 @@ public:
 	virtual void bind();
 	virtual void kill();
 	virtual void appear();
-	virtual void initMapObj();
 	virtual void checkIllegalAttr() const { }
 	virtual void touchPlayer(THitActor*);
 	virtual u32 touchWater(THitActor*);
 	virtual u32 getLivingTime() const { return mNormalLivingTime; }
-	virtual int getFlushTime() const { }
+	virtual int getFlushTime() const { return mNormalFlushTime; }
 	virtual bool isPollutedGround(const JGeometry::TVec3<f32>&) const;
 	virtual void work();
 	virtual void appearing();
