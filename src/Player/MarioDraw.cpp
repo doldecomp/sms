@@ -1035,17 +1035,18 @@ f32 TMario::setAnimation(int anm_id, f32 rate)
 
 		if (onYoshi()) {
 			mModel->changeMtxCalcSIAnmBQAnmTransform(0, 0, anm_id);
-			mModel->unk20->unk18->unk50 = 0.0f;
+			mModel->unk20->unk18->mMotionBlendRatio = 0.0f;
 			getMotionFrameCtrl().setAttribute(
-			    mModel->unk4->unk4[anm_id]->mAttribute);
+			    mModel->unk4->unk4[anm_id]->getAttribute());
 			changeHand(0);
 			mAnmSound->stop();
 		} else {
 			mModel->changeMtxCalcSIAnmBQAnmTransform(
 			    0, 0, gMarioAnimeData[anm_id].unk0);
-			mModel->unk20->unk18->unk50 = 0.0f;
+			mModel->unk20->unk18->mMotionBlendRatio = 0.0f;
 			getMotionFrameCtrl().setAttribute(
-			    mModel->unk4->unk4[gMarioAnimeData[anm_id].unk0]->mAttribute);
+			    mModel->unk4->unk4[gMarioAnimeData[anm_id].unk0]
+			        ->getAttribute());
 
 			int unk1 = gMarioAnimeData[anm_id].unk4;
 			if (mTrembleModelEffect != nullptr
@@ -1234,7 +1235,7 @@ void TMario::initModel()
 	}
 
 	M3UMtxCalcSIAnmBlendQuat* anmBlendQuat = new M3UMtxCalcSIAnmBlendQuat[2];
-	anmBlendQuat[0].unk50                  = 0.0f;
+	anmBlendQuat[0].mMotionBlendRatio      = 0.0f;
 	J3DFrameCtrl* frameCtrl                = new J3DFrameCtrl[3];
 
 	M3UModelCommonMario* marioCommon = new M3UModelCommonMario();
@@ -1279,8 +1280,8 @@ void TMario::initModel()
 	modelMario->changeMtxCalcSIAnmBQAnmTransform(1, 0, 0x41);
 
 	modelMario->unkC[1].setRate(0.0f);
-	marioCommon->unk18[1].unk50 = 0.0f;
-	mModel                      = modelMario;
+	marioCommon->unk18[1].mMotionBlendRatio = 0.0f;
+	mModel                                  = modelMario;
 
 	setAnimation(ANIM_WAIT, 1.0f);
 

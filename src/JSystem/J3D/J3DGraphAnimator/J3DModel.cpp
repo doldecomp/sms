@@ -855,10 +855,8 @@ void J3DModel::update()
 
 	j3dSys.setCurrentMtxCalc(mModelData->getMtxCalc());
 	mModelData->getMtxCalc()->init(unk14, unk20);
-
 	j3dSys.setTexture(mModelData->getTexture());
 	mModelData->getMtxCalc()->recursiveUpdate(mModelData->getRootNode());
-
 	calcWeightEnvelopeMtx();
 
 	if (mSkinDeform)

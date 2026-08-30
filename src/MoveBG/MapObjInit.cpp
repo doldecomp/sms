@@ -17,6 +17,7 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 
 // rogue includes needed for matching sinit & bss
@@ -11003,7 +11004,6 @@ void TMapObjBase::initObjCollisionData()
 		onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
 }
 
-#pragma dont_inline on
 void TMapObjBase::initBckMoveData()
 {
 	if (mMapObjData->mMove != nullptr) {
@@ -11015,27 +11015,22 @@ void TMapObjBase::initBckMoveData()
 		J3DModelData* data         = mMActor->getModel()->getModelData();
 		data->mJointNodePointer[0] = data->getJointNodePointer(1);
 
-		// TODO: this requires the J3DJoint.hpp header, but that has the dreaded
-		// compound literal in .data problem that we share with TWW, so avoid it
-		// for now
-
-		// J3DTransformInfo& info
-		//     = data->getJointNodePointer(0)->getTransformInfo();
-		// info.mScale.x         = 1.0f;
-		// info.mScale.y         = 1.0f;
-		// info.mScale.z         = 1.0f;
-		// info.mRotation.x      = 0;
-		// info.mRotation.y      = 0;
-		// info.mRotation.z      = 0;
-		// info.mTranslate.x     = 0.0f;
-		// info.mTranslate.y     = 0.0f;
-		// info.mTranslate.z     = 0.0f;
-		move->unk8 = new J3DFrameCtrl(move->unk4->mMaxFrame);
+		J3DTransformInfo& info
+		    = data->getJointNodePointer(0)->getTransformInfo();
+		info.mScale.x     = 1.0f;
+		info.mScale.y     = 1.0f;
+		info.mScale.z     = 1.0f;
+		info.mRotation.x  = 0;
+		info.mRotation.y  = 0;
+		info.mRotation.z  = 0;
+		info.mTranslate.x = 0.0f;
+		info.mTranslate.y = 0.0f;
+		info.mTranslate.z = 0.0f;
+		move->unk8        = new J3DFrameCtrl(move->unk4->getFrameMax());
 		move->unk8->setAttribute(J3DFrameCtrl::ATTR_LOOP);
 		move->unk8->setRate(SMSGetAnmFrameRate());
 	}
 }
-#pragma dont_inline off
 
 bool isAlreadyRegistered(const TMapObjAnimDataInfo* anim, int i)
 {

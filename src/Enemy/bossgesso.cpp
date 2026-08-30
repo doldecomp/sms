@@ -353,21 +353,14 @@ TBossGessoMtxCalc::TBossGessoMtxCalc(TBossGesso* owner)
     : M3UMtxCalcSIAnmBlendQuat(true)
     , mOwner(owner)
 {
-	unk50 = 0.0f;
+	mMotionBlendRatio = 0.0f;
 }
 
 void TBossGessoMtxCalc::joinAnm(int param_1)
 {
-	J3DAnmTransformKey* anm
-	    = mOwner->getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
-	        param_1);
-
-	if (unk54 == anm)
-		return;
-
-	unk58 = unk54;
-	unk54 = anm;
-	unk50 = 1.0f;
+	M3UMtxCalcSIAnmBlendQuat::joinAnm(
+	    mOwner->getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
+	        param_1));
 }
 
 void TBossGessoMtxCalc::setAnm(int param_1) { }
@@ -1382,11 +1375,7 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 	mBody->testPerform(cue, graphics);
 
 	if (cue & CUE_MOVE) {
-		mMtxCalc->unk50 += -unk188;
-		if (mMtxCalc->unk50 < 0.0f)
-			mMtxCalc->unk50 = 0.0f;
-		else if (mMtxCalc->unk50 > 1.0f)
-			mMtxCalc->unk50 = 1.0f;
+		mMtxCalc->advanceMotionBlend(-unk188);
 	}
 
 	if (unk17C) {

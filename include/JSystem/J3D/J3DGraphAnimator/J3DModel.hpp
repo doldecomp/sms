@@ -6,6 +6,7 @@
 #include <JSystem/J3D/J3DGraphBase/J3DPacket.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAttach.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <JSystem/J3D/J3DAssert.hpp>
 #include <JSystem/ResTIMG.hpp>
 #include <dolphin/mtx.h>
@@ -131,7 +132,9 @@ public:
 	void setBumpFlag(u32 flag) { unk18 = flag; }
 
 	// This is the J3DMtxCalcAnm type this model needs supposedly
-	u32 getUnkC() const { return unkC & 0xf; }
+	u32 getUnkC() const { return unkC & J3DMLF_MtxCalcMask; }
+	bool checkFlag(u32 flag) const { return unkC & flag ? true : false; }
+	u32 getFlag() const { return unkC; }
 
 	void onFlag1OnAllShapes()
 	{
