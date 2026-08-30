@@ -250,8 +250,8 @@ void TMapObjBase::startAnim(u16 param_1)
 			setAnmSound(data->unk10);
 	} else {
 		MActor* actor = mMActor;
-		actor->getModel()->mModelData->mJointNodePointer[0]->mMtxCalc
-		    = actor->unk8;
+		actor->getModel()->mModelData->mJointNodePointer[0]->setMtxCalc(
+		    actor->unk8);
 	}
 }
 

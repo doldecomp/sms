@@ -137,11 +137,13 @@ void TYoshi::init(TMario* param_1)
 	}
 
 	unk4C = J3DAnmLoaderDataBase::load(JKRGetResource("/yoshi/yoshi_eat.bck"));
-	unk54 = J3DNewMtxCalcAnm(mActor->getModel()->getModelData()->getUnkC(),
+	unk54 = J3DNewMtxCalcAnm(mActor->getModel()->getModelData()->getFlag()
+	                             & J3DMLF_MtxCalcMask,
 	                         (J3DAnmTransform*)unk4C);
 	unk50 = J3DAnmLoaderDataBase::load(
 	    JKRGetResource("/yoshi/yoshi_eat_end.bck"));
-	unk58 = J3DNewMtxCalcAnm(mActor->getModel()->getModelData()->getUnkC(),
+	unk58 = J3DNewMtxCalcAnm(mActor->getModel()->getModelData()->getFlag()
+	                             & J3DMLF_MtxCalcMask,
 	                         (J3DAnmTransform*)unk50);
 
 	unk5C.setFrame(unk5C.getStart());
@@ -601,7 +603,7 @@ void TYoshi::thinkAnimation()
 		mActor->setMotionBlendRatioForBck(tmp);
 
 		J3DAnmTransform* oldAnm = mActor->getBckOldMotionBlendAnmPtr();
-		oldAnm->mFrame = mActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
+		oldAnm->setFrame(mActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame());
 
 		if (mMario->mStatus == MARIO_STATUS_OIL_RUN)
 			nextFrame = mMario->getMotionFrameCtrl().getRate();

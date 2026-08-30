@@ -825,7 +825,7 @@ config.libs = [
             PCHObject(NonMatching, "M3DUtil/M3UJoint.cpp"),
             PCHObject(NonMatching, "M3DUtil/M3UModel.cpp"),
             PCHObject(NonMatching, "M3DUtil/MActor.cpp"),
-            PCHObject(NonMatching, "M3DUtil/MActorAnm.cpp"),
+            PCHObject(Matching, "M3DUtil/MActorAnm.cpp"),
             Object(NonMatching, "M3DUtil/MActorData.cpp"),
             PCHObject(NonMatching, "M3DUtil/SDLModel.cpp"),
             Object(Matching, "M3DUtil/MActorUtil.cpp"),

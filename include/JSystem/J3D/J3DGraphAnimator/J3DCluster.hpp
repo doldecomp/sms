@@ -44,10 +44,10 @@ class J3DDeformer {
 public:
 	void clear();
 	void deform(J3DModel*, u16);
-	void deform(J3DModel*, u16, float*);
+	void deform(J3DModel*, u16, f32*);
 	void base(J3DModel*);
-	void normalize(float*);
-	void normalizeWeight(int, float*);
+	void normalize(f32*);
+	void normalizeWeight(int, f32*);
 
 	void onFlag(u32 flag) { mFlags |= flag; }
 	void offFlag(u32 flag) { mFlags &= ~flag; }
