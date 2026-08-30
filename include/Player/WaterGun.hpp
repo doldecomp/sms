@@ -143,7 +143,7 @@ public:
 	BOOL suck();
 	void triggerPressureMovement(const TMarioControllerWork&);
 
-	J3DModel* getModel() { return mFluddModel->unk4; }
+	J3DModel* getModel() { return mFluddModel->mModel; }
 
 	// Fabricated
 	inline bool hasFlag(u16 flag)

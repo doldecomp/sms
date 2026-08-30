@@ -10,6 +10,7 @@
 #include <MSound/SoundEffects.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
 #include <MarioUtil/DrawUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/MirrorActor.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
@@ -10818,7 +10819,7 @@ void TMapObjBase::initUnique()
 	// TODO: I hate switches, someone fix this please...
 	switch (getActorType()) {
 	case 0x2000003C:
-		mMActor->setLightType(0);
+		mMActor->setLightType(LIGHT_TYPE_PLAYER);
 		break;
 	case 0x2000000E:
 		if (mMActor) {
@@ -10856,8 +10857,7 @@ void TMapObjBase::initUnique()
 		startAllAnim(mMActor, unkF4);
 		break;
 	case 0x4000003C:
-		if (mMActor->unkC)
-			mMActor->unkC->initSimpleMotionBlend(0x14);
+		mMActor->initSimpleMotionBlend(0x14);
 		break;
 	case 0x400000A8:
 	case 0x40000096:
@@ -10923,7 +10923,7 @@ void TMapObjBase::initUnique()
 		mMActor = mMActorKeeper->mActors[0];
 		break;
 	case 0x400000D0:
-		mMActor->setLightType(1);
+		mMActor->setLightType(LIGHT_TYPE_OBJECT);
 		break;
 	case 0x400000DB:
 		mPosition.y += mScaling.y * 50.0f;
@@ -11169,7 +11169,7 @@ void TMapObjBase::initMapObj()
 	checkIllegalAttr();
 
 	if (mMActor && checkActorType(0x40000000))
-		mMActor->setLightType(2);
+		mMActor->setLightType(LIGHT_TYPE_MAPOBJECT);
 
 	if (getMapObjData()->unk30 == 0.0f)
 		mLiveFlag |= LIVE_FLAG_UNK8;
@@ -11179,7 +11179,7 @@ void TMapObjBase::initMapObj()
 		    "スクリーンテクスチャ");
 		const ResTIMG* img = ref->getTexture()->getTexInfo();
 		getModel()->getModelData()->getTexture()->setResTIMG(2, *img);
-		mMActor->setLightType(3);
+		mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 	}
 
 	makeObjDead();

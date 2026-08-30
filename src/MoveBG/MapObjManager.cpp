@@ -128,9 +128,11 @@ void TMapObjManager::load(JSUMemoryInputStream& stream)
 		                                              getMActorAnmData(), 3);
 		mGreenGesso  = SMS_MakeMActorFromSDLModelData(mSurfGessoModelData,
 		                                              getMActorAnmData(), 3);
-		TMapObjBase::initPacketMatColor(mRedGesso->unk4, GX_TEVREG1, &unkA8);
-		TMapObjBase::initPacketMatColor(mYellowGesso->unk4, GX_TEVREG1, &unkB0);
-		TMapObjBase::initPacketMatColor(mGreenGesso->unk4, GX_TEVREG1, &unkB8);
+		TMapObjBase::initPacketMatColor(mRedGesso->mModel, GX_TEVREG1, &unkA8);
+		TMapObjBase::initPacketMatColor(mYellowGesso->mModel, GX_TEVREG1,
+		                                &unkB0);
+		TMapObjBase::initPacketMatColor(mGreenGesso->mModel, GX_TEVREG1,
+		                                &unkB8);
 	}
 
 	unkC0 = loadMatTable("/scene/mapObj/SandBombBase.bmt");

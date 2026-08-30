@@ -130,7 +130,7 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 		                  unk10->mPosition.z);
 		unk18->getModel()->setBaseTRMtx(magic);
 		if (unk2C != nullptr && unk30 != 0) {
-			J3DFrameCtrl* ctrl = unk18->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = unk18->getFrameCtrl(ANM_TYPE_BCK);
 
 			unk20 = unk10->mPosition;
 
@@ -448,7 +448,7 @@ void TTamaNoko::calcRootMatrix()
 			emitter->setGlobalScale(mScaling);
 		}
 
-	if (isBckAnm(11) && mMActor->getFrameCtrl(0)->getFrame() > 90.0f)
+	if (isBckAnm(11) && mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame() > 90.0f)
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToPosPtr(
 		        PARTICLE_MS_TAMA_HIT, &mPosition, 1, this)) {
@@ -456,13 +456,13 @@ void TTamaNoko::calcRootMatrix()
 		}
 
 	if (isBckAnm(1)) {
-		if (mMActor->getFrameCtrl(0)->checkPass(0.0f)
-		    || mMActor->getFrameCtrl(0)->checkPass(46.0f)) {
+		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(0.0f)
+		    || mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(46.0f)) {
 			gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_JUMP_ED_B,
 			                                            &mPosition, 0, nullptr);
 		}
 
-		if (mMActor->getFrameCtrl(0)->checkPass(25.0f)) {
+		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(25.0f)) {
 			if (mGroundPlane->isSand()) {
 				landEffect();
 			} else {
@@ -484,10 +484,10 @@ void TTamaNoko::calcRootMatrix()
 	}
 
 	if (isBckAnm(7)) {
-		if (mMActor->getFrameCtrl(0)->checkPass(110.0f))
+		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(110.0f))
 			landEffect();
 
-		if (mMActor->getFrameCtrl(0)->checkPass(152.0f)) {
+		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(152.0f)) {
 			const TBGCheckData* local_18;
 			gpMap->checkGround(mPosition.x, mPosition.y + 500.0f, mPosition.z,
 			                   &local_18);
@@ -661,7 +661,7 @@ DEFINE_NERVE(TNerveTamaNokoSleep, TLiveActor)
 
 	if (!self->isBckAnm(15) && self->checkCurAnmEnd(0)) {
 		self->setBckAnm(15);
-		self->getMActor()->setFrameRate(0, 0.0f);
+		self->getMActor()->setFrameRate(0.0f, ANM_TYPE_BCK);
 	}
 
 	self->walkBehavior(5, 0.0f);
@@ -771,7 +771,9 @@ DEFINE_NERVE(TNerveTamaNokoAttack, TLiveActor)
 
 		// The "preparing to jump" animation?
 		if (self->isBckAnm(2)) {
-			if (self->getMActor()->getFrameCtrl(0)->checkPass(63.0f)) {
+			if (self->getMActor()
+			        ->getFrameCtrl(ANM_TYPE_BCK)
+			        ->checkPass(63.0f)) {
 				// ...and jump attack!
 				self->unk1A0 = self->calcVelocityToJumpToY(
 				    SMS_GetMarioPos(),
@@ -924,7 +926,7 @@ DEFINE_NERVE(TNerveTamaNokoHitWater, TLiveActor)
 
 	if (spine->getTime() < 2) {
 		self->setBckAnm(15);
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	}
 
 	if (self->checkCurAnmEnd(0)) {
@@ -960,7 +962,7 @@ DEFINE_NERVE(TNerveTamaNokoWait, TLiveActor)
 
 	if (spine->getTime() < 2) {
 		self->setBckAnm(14);
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	}
 
 	if (self->checkCurAnmEnd(0)) {

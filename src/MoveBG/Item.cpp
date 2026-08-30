@@ -551,18 +551,8 @@ void TShine::control()
 		MtxPtr mtx           = model->getAnmMtx(2);
 		const GXColor& color = (GXColor) { 0xff, 0xff, 0xff, 0xff };
 		JGeometry::TVec3<f32> trans(mtx[0][3], mtx[1][3], mtx[2][3]);
-		TLightWithDBSetManager* mgr = gpLightManager;
-
-		mgr->unk18.r = color.r;
-		mgr->unk18.g = color.g;
-		mgr->unk18.b = color.b;
-		mgr->unk18.a = color.a;
-
-		mgr->unk54 = 1;
-
-		mgr = gpLightManager;
-		mgr->unk1C.set(trans);
-		mgr->unk54 = 1;
+		gpLightManager->setEffectLightColor(color);
+		gpLightManager->setEffectLightPos(trans);
 	} break;
 
 	case STATE_UNKB:
@@ -674,8 +664,7 @@ BOOL TShine::receiveMessage(THitActor* sender, u32 message)
 void TShine::touchPlayer(THitActor* actor)
 {
 	actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
-	TLightWithDBSetManager* mgr = gpLightManager;
-	mgr->unk1C.set(200000.0f, 500000.0f, 200000.0f);
+	gpLightManager->setEffectLightPos2(200000.0f, 500000.0f, 200000.0f);
 	SMSGetMSound()->startSoundActor(MSD_SE_SY_GET_SHINE, &mPosition, 0, nullptr,
 	                                0, 4);
 	getMActor()->setBck("shine_float");
@@ -894,19 +883,19 @@ void TEggYoshi::startBalloonAnim()
 {
 	switch (unk14C) {
 	case 0x40000394:
-		unk148->getFrameCtrl(3)->setFrame(1.0f);
+		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(1.0f);
 		break;
 	case 0x40000393:
-		unk148->getFrameCtrl(3)->setFrame(3.0f);
+		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(3.0f);
 		break;
 	case 0x40000391:
-		unk148->getFrameCtrl(3)->setFrame(5.0f);
+		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(5.0f);
 		break;
 	case 0x40000392:
-		unk148->getFrameCtrl(3)->setFrame(7.0f);
+		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(7.0f);
 		break;
 	case 0x40000390:
-		unk148->getFrameCtrl(3)->setFrame(9.0f);
+		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(9.0f);
 		break;
 	}
 }
@@ -918,7 +907,7 @@ void TEggYoshi::touchFruit(THitActor* fruit)
 
 	if (unk14C == (u32)fruit->mActorType) {
 		startAnim(1);
-		unk148->getFrameCtrl(3)->setFrame(11.0f);
+		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(11.0f);
 		mRotation.y = (360.0f / 65536.0f)
 		              * matan(fruit->mPosition.z - mPosition.z,
 		                      fruit->mPosition.x - mPosition.x);
@@ -928,7 +917,7 @@ void TEggYoshi::touchFruit(THitActor* fruit)
 		                                   0);
 	} else if (animIsFinished()) {
 		startAnim(2);
-		unk148->getFrameCtrl(3)->setFrame(12.0f);
+		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(12.0f);
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_NOT_COLLECT_YOSHI, 0,
 		                                   nullptr, 0);
 		mState = 0xD;
@@ -1088,7 +1077,7 @@ void TEggYoshi::load(JSUMemoryInputStream& stream)
 	PSMTXCopy(src, unk148->getModel()->getBaseTRMtx());
 	unk148->setBck("eggyoshi_fukidashi_wait");
 	unk148->setBtp("eggyoshi_fukidashi");
-	unk148->getFrameCtrl(3)->setRate(0.0f);
+	unk148->getFrameCtrl(ANM_TYPE_BTP)->setRate(0.0f);
 
 	decideRandomLoveFruit();
 

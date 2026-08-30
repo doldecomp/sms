@@ -944,7 +944,7 @@ static void evIsFinishMareBottleDemo(TSpcTypedInterp<TEventWatcher>* interp,
 	TMapObjBase* obj = JDrama::TNameRefGen::search<TMapObjBase>("ＥＸビン");
 
 	int result;
-	if (obj->getMActor()->curAnmEndsNext(0, nullptr))
+	if (obj->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
 		result = 1;
 	else
 		result = 0;

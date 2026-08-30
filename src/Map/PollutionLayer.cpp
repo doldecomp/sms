@@ -369,13 +369,13 @@ void TPollutionLayer::initJointModel(TJointModelManager* param_1,
 
 	initPollutionTex(param_2);
 
-	if (mActor->checkAnmFileExist(param_2, 4))
+	if (mActor->checkAnmFileExist(param_2, ANM_TYPE_BTK))
 		mActor->setBtk(param_2);
 
-	if (mActor->checkAnmFileExist(param_2, 2))
+	if (mActor->checkAnmFileExist(param_2, ANM_TYPE_BPK))
 		mActor->setBpk(param_2);
 
-	if (mActor->checkAnmFileExist(param_2, 5))
+	if (mActor->checkAnmFileExist(param_2, ANM_TYPE_BRK))
 		mActor->setBrk(param_2);
 
 	for (int i = 0; i < mChildrenNum; ++i)
