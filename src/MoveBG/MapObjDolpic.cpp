@@ -420,7 +420,7 @@ void TDemoCannon::initMapObj()
 	TMapObjBase::initMapObj();
 
 	mMActor->setBck("democannon_dpt");
-	J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(0);
+	J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 	frameCtrl->setFrame(frameCtrl->getEnd());
 
 	void* res
@@ -468,13 +468,13 @@ void TDemoCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (!(cue & CUE_CALC_ANIM))
 		return;
 
-	J3DFrameCtrl* frameCtrl = unk13C->getMActor()->getFrameCtrl(0);
+	J3DFrameCtrl* frameCtrl = unk13C->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (frameCtrl->getFrame() < 174.0f) {
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_CANNON_MOVE, &mPosition, 0,
 		                                nullptr, 0, 4);
 	}
 
-	frameCtrl = unk13C->getMActor()->getFrameCtrl(0);
+	frameCtrl = unk13C->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (frameCtrl->checkPass(174.0f)) {
 		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK24, 1.0f);
 		SMSRumbleMgr->start(21, 10, (f32*)nullptr);
@@ -493,7 +493,7 @@ void TDemoCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 		                                nullptr, 0, 4);
 	}
 
-	frameCtrl = unk13C->getMActor()->getFrameCtrl(0);
+	frameCtrl = unk13C->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (frameCtrl->getFrame() > 175.0f) {
 		MtxPtr mtx = unk13C->getMActor()->getModel()->getAnmMtx(0);
 		gpMarioParticleManager->emitAndBindToMtxPtr(358, mtx, 1, this);

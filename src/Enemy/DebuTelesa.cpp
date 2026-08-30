@@ -85,7 +85,10 @@ bool TDebuTelesa::isCollidMove(THitActor*) { return false; }
 
 bool TDebuTelesa::doKeepDistance() { return true; }
 
-void TDebuTelesa::setDeadAnm() { getMActor()->getFrameCtrl(0)->init(1); }
+void TDebuTelesa::setDeadAnm()
+{
+	getMActor()->getFrameCtrl(ANM_TYPE_BCK)->init(1);
+}
 
 void TDebuTelesa::emitEffects()
 {

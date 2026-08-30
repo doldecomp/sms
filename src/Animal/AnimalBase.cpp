@@ -74,7 +74,7 @@ void TAnimalBase::init(TLiveManager* manager)
 	    = ((TAnimalManagerBase*)mManager)->mAnimalSave->mSLWalkTurnSpeed.get();
 	mTurnSpeed = turnSpeed * SMSGetAnmFrameRate();
 
-	J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(0);
+	J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 	if (frameCtrl) {
 		s32 sharedAnmNum = ((TAnimalManagerBase*)manager)
 		                       ->mAnimalSave->mSLSharedAnmNum.get();
@@ -86,7 +86,7 @@ void TAnimalBase::init(TLiveManager* manager)
 		frameCtrl->setFrame(phase * frameCtrl->getEnd());
 	}
 
-	J3DFrameCtrl* frameCtrl2 = mMActor->getFrameCtrl(3);
+	J3DFrameCtrl* frameCtrl2 = mMActor->getFrameCtrl(ANM_TYPE_BTP);
 	if (frameCtrl2)
 		frameCtrl2->setFrame(frameCtrl2->getEnd() * MsRandF());
 }

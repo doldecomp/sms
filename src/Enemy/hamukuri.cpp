@@ -13,6 +13,7 @@
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/SDLModel.hpp>
 #include <MarioUtil/PacketUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
@@ -661,7 +662,7 @@ void THamuKuri::init(TLiveManager* param_1)
 	unk1F4     = (THamuKuriSaveLoadParams*)getSaveParam();
 	onHitFlag(0x40000000);
 	mSpine->initWith(&TNerveWalkerGenerate::theNerve());
-	mMActor->setLightType(1);
+	mMActor->setLightType(LIGHT_TYPE_OBJECT);
 }
 
 void THamuKuri::setMActorAndKeeper()
@@ -2429,7 +2430,7 @@ DEFINE_NERVE(TNerveHamuKuriWallDie, TLiveActor)
 	} else {
 		int pTVar7 = self->getManager()->unk5C;
 		if (self->checkCurAnmEnd(0)) {
-			J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 
 			if (spine->getTime() > pTVar7 + ctrl->getEnd()) {
 				self->onLiveFlag(LIVE_FLAG_DEAD);
@@ -2497,7 +2498,9 @@ DEFINE_NERVE(TNerveDangoHamuKuriWait, TLiveActor)
 
 	if (spine->getTime() < 2) {
 		self->setWaitAnm();
-		self->getMActor()->getFrameCtrl(0)->setFrame(MsRandF(0.0f, 30.0f));
+		self->getMActor()
+		    ->getFrameCtrl(ANM_TYPE_BCK)
+		    ->setFrame(MsRandF(0.0f, 30.0f));
 	}
 
 	return false;
@@ -2641,7 +2644,8 @@ DEFINE_NERVE(TNerveDoroHaneHitWater, TLiveActor)
 	TDoroHaneKuri* self = (TDoroHaneKuri*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->setGoalPath((SMS_GetMarioPos()));
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate() * 1.5f, 0);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate() * 1.5f,
+		                                ANM_TYPE_BCK);
 	}
 
 	if (self->mPosition.y > self->getGroundHeight() + 50.0f)
@@ -2652,7 +2656,7 @@ DEFINE_NERVE(TNerveDoroHaneHitWater, TLiveActor)
 	self->unk20C = 0.0f;
 	self->unk230 = self->getGroundHeight();
 	if (spine->getTime() > 300) {
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 		return true;
 	}
 

@@ -250,7 +250,7 @@ void TJumpBase::control()
 	case 0:
 		if (unk13C == 0) {
 			getMActor()->setBck("jumpbase_shrink");
-			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			if (ctrl) {
 				ctrl->setFrame((f32)ctrl->getEnd());
 				ctrl->setRate(0.0f);
@@ -266,7 +266,7 @@ void TJumpBase::control()
 				mMapCollisionManager->getUnk8()->setUp();
 
 			getMActor()->setBck("jumpbase_set");
-			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			if (ctrl) {
 				ctrl->setFrame((f32)ctrl->getEnd());
 				ctrl->setRate(0.0f);
@@ -277,7 +277,7 @@ void TJumpBase::control()
 	case 2:
 		if (unk13C == 0) {
 			getMActor()->setBck("jumpbase_set");
-			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			if (ctrl) {
 				ctrl->setFrame(0.0f);
 				ctrl->setRate(SMSGetAnmFrameRate());
@@ -285,7 +285,7 @@ void TJumpBase::control()
 			offLiveFlag(LIVE_FLAG_UNK10);
 			mScaledBodyRadius = 100.0f;
 		}
-		if (getMActor()->curAnmEndsNext(0, nullptr)) {
+		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			unk13C = 0;
 			unk138 = 3;
 		}
@@ -297,13 +297,13 @@ void TJumpBase::control()
 				mMapCollisionManager->getUnk8()->remove();
 
 			getMActor()->setBck("jumpbase_shrink");
-			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			if (ctrl) {
 				ctrl->setFrame(0.0f);
 				ctrl->setRate(SMSGetAnmFrameRate());
 			}
 		}
-		if (getMActor()->curAnmEndsNext(0, nullptr)) {
+		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			unk13C = 0;
 			unk138 = 0;
 		}
@@ -312,13 +312,13 @@ void TJumpBase::control()
 	case 4:
 		if (unk13C == 0) {
 			getMActor()->setBck("jumpbase_jump");
-			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			if (ctrl) {
 				ctrl->setFrame(0.0f);
 				ctrl->setRate(SMSGetAnmFrameRate());
 			}
 		}
-		if (getMActor()->curAnmEndsNext(0, nullptr)) {
+		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			unk13C = 0;
 			unk138 = 3;
 		}

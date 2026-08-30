@@ -20,30 +20,32 @@ class MActorAnmBtk;
 class MActorAnmBrk;
 class MActorAnmBlk;
 
+enum {
+	/// "Chain Keyframes" -- skeletal animation (softimage|3d terminology)
+	ANM_TYPE_BCK = 0,
+	/// "cLuster Keyframes" -- morph targets
+	ANM_TYPE_BLK = 1,
+	/// "Paint (???) Keyframes" -- material color animation
+	ANM_TYPE_BPK = 2,
+	/// "Texture Pattern" -- simply switches textures
+	ANM_TYPE_BTP = 3,
+	/// "Texture Keyframes" -- texture SRT animation
+	ANM_TYPE_BTK = 4,
+	/// "Register Keyframes" -- TEV C/K register animation
+	ANM_TYPE_BRK = 5,
+
+	ANM_TYPE_COUNT,
+	ANM_TYPE_FIRST = ANM_TYPE_BCK,
+};
+
 class MActor {
 public:
-	enum {
-		/// "Chain Keyframes" -- skeletal animation (softimage|3d terminology)
-		ANM_TYPE_BCK,
-		/// "cLuster Keyframes" -- morph targets
-		ANM_TYPE_BLK,
-		/// "Paint (???) Keyframes" -- material color animation
-		ANM_TYPE_BPK,
-		/// "Texture Pattern" -- simply switches textures
-		ANM_TYPE_BTP,
-		/// "Texture Keyframes" -- texture SRT animation
-		ANM_TYPE_BTK,
-		/// "Register Keyframes" -- TEV C/K register animation
-		ANM_TYPE_BRK,
-
-		ANM_TYPE_COUNT
-	};
-
 	MActor(MActorAnmData* anm_data);
 
 	void setMActorAnmData(MActorAnmData*);
 	void setModel(J3DModel*, u32);
-	bool isCurAnmAlreadyEnd(int);
+
+	bool isCurAnmAlreadyEnd(int type);
 	BOOL curAnmEndsNext(int type, char* part_name);
 	BOOL curSubAnmEndsNext(int);
 	void setAnimation(const char* name, int type);
@@ -53,7 +55,7 @@ public:
 	void unlockDLIfNeed();
 	void onMakeDL();
 	void offMakeDL();
-	void getCurAnmName(int) const;
+	const char* getCurAnmName(int) const;
 	void setJointCallback(int, J3DNodeCallBack);
 	void updateInSubBck();
 	void updateOutSubBck();
@@ -76,21 +78,22 @@ public:
 	BOOL checkBckPass(f32 pass_frame);
 	int getCurAnmIdx(int type) const;
 	void setFrameRate(f32 rate, int type);
-	void setBck(const char*);
-	void setBckFromIndex(int);
+	void setBck(const char* name);
+	void setBckFromIndex(int index);
 	void setSubBckFromIndex(int, int);
 	BOOL checkCurBckFromIndex(int);
 	void setSubBck(const char*, const char*);
-	void setBpk(const char*);
-	void setBpkFromIndex(int);
-	void setBtp(const char*);
-	void setBtpFromIndex(int);
-	void setBtk(const char*);
-	void setBtkFromIndex(int);
-	void setBlk(const char*);
-	void setBlkFromIndex(int);
-	void setBrk(const char*);
-	void setBrkFromIndex(int);
+	void setBpk(const char* name);
+	void setBpkFromIndex(int index);
+	void setBtp(const char* name);
+	void setBtpFromIndex(int index);
+	void setBtk(const char* name);
+	void setBtkFromIndex(int index);
+	void setBlk(const char* name);
+	void setBlkFromIndex(int index);
+	void setBrk(const char* name);
+	void setBrkFromIndex(int index);
+
 	void updateIn();
 	void updateOut();
 	void entryIn();
@@ -103,7 +106,7 @@ public:
 	MActorAnmBck* getAnmBck() { return mAnmBck; }
 	J3DModel* getModel() const { return mModel; }
 	void unmarkUnk40() { unk40 = false; }
-	BOOL curAnmEndsNext() { return curAnmEndsNext(0, 0); }
+	BOOL curAnmEndsNext() { return curAnmEndsNext(ANM_TYPE_BCK, nullptr); }
 
 	// TODO: cleanup the names of all these stupid wrappers
 
@@ -207,10 +210,10 @@ public:
 	/* 0x2C */ u16* unk2C;
 	/* 0x30 */ u16* unk30;
 	/* 0x34 */ int mMaterialNum;
-	/* 0x38 */ bool unk38;
-	/* 0x39 */ u8 unk39;
+	/* 0x38 */ bool mMakeDl;
+	/* 0x39 */ bool unk39;
 	/* 0x3C */ int mLightId;
-	/* 0x40 */ u8 unk40;
+	/* 0x40 */ bool unk40;
 	/* 0x44 */ u32 unk44;
 };
 

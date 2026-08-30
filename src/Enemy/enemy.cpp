@@ -591,32 +591,32 @@ void TSpineEnemy::doShortCut()
 
 void TSpineEnemy::searchNearestBrother() const { }
 
-f32 TSpineEnemy::getCurAnmFrameNo(int param_1) const
+f32 TSpineEnemy::getCurAnmFrameNo(int type) const
 {
 	TEnemyManager* mgr = (TEnemyManager*)mManager;
 
-	int iVar1             = getMActor()->getCurAnmIdx(param_1);
+	int iVar1             = getMActor()->getCurAnmIdx(type);
 	TSharedMActorSet* set = mgr->getSharedMActorSet(iVar1);
 	if (set == nullptr) {
-		return getMActor()->getFrameCtrl(param_1)->getFrame();
+		return getMActor()->getFrameCtrl(type)->getFrame();
 	} else {
 		return set->getMActor(getInstanceIndex())
-		    ->getFrameCtrl(param_1)
+		    ->getFrameCtrl(type)
 		    ->getFrame();
 	}
 }
 
-BOOL TSpineEnemy::checkCurAnmEnd(int param_1) const
+BOOL TSpineEnemy::checkCurAnmEnd(int type) const
 {
 	TEnemyManager* mgr = (TEnemyManager*)mManager;
 
-	int iVar1             = getMActor()->getCurAnmIdx(param_1);
+	int iVar1             = getMActor()->getCurAnmIdx(type);
 	TSharedMActorSet* set = mgr->getSharedMActorSet(iVar1);
 	if (set == nullptr) {
-		return getMActor()->curAnmEndsNext(param_1, nullptr);
+		return getMActor()->curAnmEndsNext(type, nullptr);
 	} else {
 		return set->getMActor(getInstanceIndex())
-		    ->curAnmEndsNext(param_1, nullptr);
+		    ->curAnmEndsNext(type, nullptr);
 	}
 }
 

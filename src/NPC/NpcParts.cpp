@@ -10,6 +10,7 @@
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <MarioUtil/MtxUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <M3DUtil/SDLModel.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <NPC/NpcColor.hpp>
@@ -145,7 +146,7 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 				}
 			}
 
-			unk0[i][j]->getMActor()->setLightType(1);
+			unk0[i][j]->getMActor()->setLightType(LIGHT_TYPE_OBJECT);
 		}
 	}
 }
@@ -168,9 +169,9 @@ void TNpcParts::addJellyFishParts(f32 param_1)
 
 	actor->setBckFromIndex(0);
 	actor->setBrkFromIndex(iVar3);
-	actor->getFrameCtrl(0)->setFrame(param_1);
-	actor->getFrameCtrl(5)->setFrame(param_1);
-	actor->setLightType(3);
+	actor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(param_1);
+	actor->getFrameCtrl(ANM_TYPE_BRK)->setFrame(param_1);
+	actor->setLightType(LIGHT_TYPE_INDIRECT);
 }
 
 void TNpcParts::setPartsAnmFrame(f32 param_1)
@@ -178,28 +179,28 @@ void TNpcParts::setPartsAnmFrame(f32 param_1)
 	switch (unk60->getActorType()) {
 	case 0x4000010: {
 		if (MActor* mactor = getPartsMActor(9, 0))
-			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(0))
+			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(ANM_TYPE_BCK))
 				ctrl->setFrame(param_1);
 	} break;
 
 	case 0x4000015: {
 		if (MActor* mactor = getPartsMActor(10, 0)) {
-			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(0))
+			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(ANM_TYPE_BCK))
 				ctrl->setFrame(param_1);
-			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(3))
+			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(ANM_TYPE_BTP))
 				ctrl->setFrame(param_1);
 		}
 	} break;
 
 	case 0x4000018:
 		if (MActor* mactor = getPartsMActor(0, 0))
-			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(0))
+			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(ANM_TYPE_BCK))
 				ctrl->setFrame(param_1);
 		if (MActor* mactor = getPartsMActor(3, 0))
-			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(0))
+			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(ANM_TYPE_BCK))
 				ctrl->setFrame(param_1);
 		if (MActor* mactor = getPartsMActor(4, 0))
-			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(0))
+			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(ANM_TYPE_BCK))
 				ctrl->setFrame(param_1);
 		break;
 	}

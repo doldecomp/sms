@@ -30,6 +30,27 @@ void GXSetChanCtrl(GXChannelID chan, GXBool enable, GXColorSrc amb_src,
                    GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn,
                    GXAttnFn attn_fn);
 
+#define GXInitLightPosv(lt_obj, vec)                                           \
+	GXInitLightPos((lt_obj), *(f32*)(vec), *((f32*)(vec) + 1),                 \
+	               *((f32*)(vec) + 2))
+
+#define GXInitLightDirv(lt_obj, vec)                                           \
+	GXInitLightDir((lt_obj), *(f32*)(vec), *((f32*)(vec) + 1),                 \
+	               *((f32*)(vec) + 2))
+
+#define GXInitSpecularDirv(lt_obj, vec)                                        \
+	GXInitSpecularDir((lt_obj), *(f32*)(vec), *((f32*)(vec) + 1),              \
+	                  *((f32*)(vec) + 2))
+
+#define GXInitSpecularDirHAv(lt_obj, vec0, vec1)                               \
+	GXInitSpecularDirHA((lt_obj), *(f32*)(vec0), *((f32*)(vec0) + 1),          \
+	                    *((f32*)(vec0) + 2), *(f32*)(vec1),                    \
+	                    *((f32*)(vec1) + 1), *((f32*)(vec1) + 2))
+
+#define GXInitLightShininess(lt_obj, shininess)                                \
+	GXInitLightAttn(lt_obj, 0.0F, 0.0F, 1.0F, (shininess) / 2.0F, 0.0F,        \
+	                1.0F - (shininess) / 2.0F)
+
 #ifdef __cplusplus
 }
 #endif

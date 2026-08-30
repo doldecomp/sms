@@ -276,7 +276,7 @@ DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->getMActor()->setBckFromIndex(0);
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 		self->getMActor()->setMotionBlendRatioForBck(0.0f);
 	}
 
@@ -365,15 +365,17 @@ void TBossManta::startWalkAnim()
 	getMActor()->setBckOldMotionBlendAnmPtr(oldAnm);
 	getMActor()->setMotionBlendRatioForBck(0.5f);
 
-	getMActor()->setFrameRate(
-	    TBossManta::sFrameRate[mGeneration] * SMSGetAnmFrameRate(), 0);
+	getMActor()->setFrameRate(TBossManta::sFrameRate[mGeneration]
+	                              * SMSGetAnmFrameRate(),
+	                          ANM_TYPE_BCK);
 }
 
 void TBossManta::startDamageAnim()
 {
 	getMActor()->setBckFromIndex(1);
-	getMActor()->setFrameRate(
-	    TBossManta::sFrameRate[mGeneration] * SMSGetAnmFrameRate(), 0);
+	getMActor()->setFrameRate(TBossManta::sFrameRate[mGeneration]
+	                              * SMSGetAnmFrameRate(),
+	                          ANM_TYPE_BCK);
 	getMActor()->setMotionBlendRatioForBck(0.0f);
 }
 

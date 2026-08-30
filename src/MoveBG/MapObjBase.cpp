@@ -130,7 +130,7 @@ void TMapObjBase::setUpMapCollision(u16 param_1)
 
 void TMapObjBase::soundBas(u32 param_1, f32 param_2, f32 param_3)
 {
-	f32 currFrame = mMActor->getFrameCtrl(0)->getFrame();
+	f32 currFrame = mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
 	if (currFrame <= param_2 && param_2 < currFrame + param_3) {
 		SMSGetMSound()->startSoundActor(param_1, &mPosition, 0, nullptr, 0, 4);
 	}
@@ -181,7 +181,7 @@ bool TMapObjBase::animIsFinished() const
 	    || !mMapObjData->mAnim->unk4[unkFE].unk4)
 		return true;
 
-	if (mMActor->curAnmEndsNext(0, nullptr))
+	if (mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
 		return true;
 	else
 		return false;
@@ -226,11 +226,11 @@ void TMapObjBase::startAnim(u16 param_1)
 		if (unkFE != 0xffff && anim && anim->unk0 != 0) {
 			const TMapObjAnimData* d2 = &anim->unk4[unkFE];
 			if (d2->unk4 != nullptr) {
-				u8 idx = d2->unk8;
-				mMActor->getFrameCtrl(idx)->setRate(0.0f);
-				mMActor->getFrameCtrl(idx)->setFrame(0.0f);
-				mMActor->getUnk28(idx)->unk0 = 0xffffffff;
-				unkFE                        = 0xffff;
+				u8 type = d2->unk8;
+				mMActor->getFrameCtrl(type)->setRate(0.0f);
+				mMActor->getFrameCtrl(type)->setFrame(0.0f);
+				mMActor->getUnk28(type)->unk0 = 0xffffffff;
+				unkFE                         = 0xffff;
 			}
 		}
 		stopAnmSound();
@@ -561,7 +561,7 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK100)) {
 			cue &= ~CUE_CALC_ANIM;
 		} else if (checkMapObjFlag(MAP_OBJ_FLAG_UNK200)) {
-			if (mMActor && mMActor->curAnmEndsNext(0, nullptr))
+			if (mMActor && mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
 				onMapObjFlag(MAP_OBJ_FLAG_UNK100);
 		}
 	}

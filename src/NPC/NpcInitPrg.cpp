@@ -12,6 +12,7 @@
 #include <MarioUtil/ModelUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Enemy/Graph.hpp>
 #include <Map/Map.hpp>
@@ -39,7 +40,7 @@ static const char* cNeckJointName              = "kubi";
 
 void TBaseNPC::initNpcLight_()
 {
-	mMActor->setLightType(1);
+	mMActor->setLightType(LIGHT_TYPE_OBJECT);
 	if (checkLiveFlag(LIVE_FLAG_UNK10))
 		mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
 		    mPosition.x, mPosition.y + 10.0f, mPosition.z, &mGroundPlane);
@@ -476,7 +477,7 @@ void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 	npcWaitIn();
 	randomizeBckAndBtpFrame_();
 
-	f32 fVar1 = mMActor->getFrameCtrl(0)->getFrame();
+	f32 fVar1 = mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
 	if (unk168 != nullptr) {
 		if (isJellyFishMare())
 			unk168->addJellyFishParts(fVar1);
