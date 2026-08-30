@@ -976,7 +976,8 @@ void TBossTelesa::init(TLiveManager* manager)
 	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("スクリーンテクスチャ");
 	void* dataOwner  = *(void**)((u8*)screenTex + 0x10);
 	ResTIMG* texture = *(ResTIMG**)((u8*)dataOwner + 0x20);
-	SMS_ChangeTextureAll(mMActor->mModel->mModelData, "H_ma_rak_dummy", *texture);
+	SMS_ChangeTextureAll(mMActor->mModel->mModelData, "H_ma_rak_dummy",
+	                     *texture);
 
 	unk358 = SMS_GetMarioHP();
 }
