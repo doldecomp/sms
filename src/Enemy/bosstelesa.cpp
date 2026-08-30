@@ -976,7 +976,7 @@ void TBossTelesa::init(TLiveManager* manager)
 	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("スクリーンテクスチャ");
 	void* dataOwner  = *(void**)((u8*)screenTex + 0x10);
 	ResTIMG* texture = *(ResTIMG**)((u8*)dataOwner + 0x20);
-	SMS_ChangeTextureAll(mMActor->unk4->mModelData, "H_ma_rak_dummy", *texture);
+	SMS_ChangeTextureAll(mMActor->mModel->mModelData, "H_ma_rak_dummy", *texture);
 
 	unk358 = SMS_GetMarioHP();
 }
@@ -1289,7 +1289,7 @@ void TBossTelesa::kill()
 
 MtxPtr TBossTelesa::getTakingMtx()
 {
-	unk278.set(unk178[0]->mMActor->unk4->mNodeMatrices[1]);
+	unk278.set(unk178[0]->mMActor->mModel->mNodeMatrices[1]);
 	unk278.mMtx[1][3] = unk178[0]->mPosition.y - 120.0f;
 	return unk278.mMtx;
 }
@@ -1422,7 +1422,7 @@ void TBossTelesa::perform(u32 flags, JDrama::TGraphics* gfx)
 		if (mSpine->getCurrentNerve() == &TNerveBossTelesaDie::theNerve()
 		    && unk350) {
 			mMActor->offMakeDL();
-			SMS_AddDamageFogEffect(mMActor->unk4->mModelData, mPosition, gfx);
+			SMS_AddDamageFogEffect(mMActor->mModel->mModelData, mPosition, gfx);
 		}
 	}
 
@@ -1776,7 +1776,7 @@ void TBossTelesa::genAttacker()
 
 	TBossTelesaSaveLoadParams* params = (TBossTelesaSaveLoadParams*)unk15C;
 	s32 count                         = params->mSLNumGenBubble.get();
-	MtxPtr rootMtx                    = mMActor->unk4->mNodeMatrices[5];
+	MtxPtr rootMtx                    = mMActor->mModel->mNodeMatrices[5];
 	f32 angleStep                     = 180.0f / count;
 	f32 angleOffset                   = count * 0.5f;
 
@@ -1912,7 +1912,7 @@ void TBossTelesa::generateSlotItem()
 
 	TBossTelesaSaveLoadParams* params = (TBossTelesaSaveLoadParams*)unk15C;
 	s32 slotItemNum                   = params->mSLSlotItemNum.get();
-	MtxPtr rootMtx                    = mMActor->unk4->mNodeMatrices[5];
+	MtxPtr rootMtx                    = mMActor->mModel->mNodeMatrices[5];
 	f32 angleStep                     = 120.0f / slotItemNum;
 	f32 angleOffset                   = angleStep * slotItemNum * 0.5f;
 

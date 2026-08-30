@@ -17,13 +17,7 @@ class SampleCtrlModelData;
 
 class MActorAnmDataBase {
 public:
-	MActorAnmDataBase(int param_1)
-	{
-		unk0 = param_1;
-		unk8 = new const char*[unk0];
-		unk4 = new u16[unk0];
-		unkC = nullptr;
-	}
+	MActorAnmDataBase(int param_1);
 
 	void sortByFileNameRaw(void**);
 	void checkLower(const char*);
@@ -93,7 +87,7 @@ public:
 
 	void createSampleModelData(J3DModelData*);
 	void addFileTable(const char*);
-	void getSimpleName(const char*);
+	char* getSimpleName(const char*);
 	void addFileNum(const char*);
 	void init(const char*, const char**);
 	void addIncidentalAnm(const char*, int);

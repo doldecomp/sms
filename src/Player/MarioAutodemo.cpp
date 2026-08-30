@@ -351,14 +351,14 @@ BOOL TMario::toroccoStart()
 
 	if (mPinaRail != nullptr) {
 		mPinaRail->setBckFromIndex(0);
-		mPinaRail->getFrameCtrl(0)->setRate(0.5f);
-		mPinaRail->getFrameCtrl(0)->setFrame(0.0f);
+		mPinaRail->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.5f);
+		mPinaRail->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	}
 
 	if (mKoopaRail != nullptr) {
 		mKoopaRail->setBckFromIndex(0);
-		mKoopaRail->getFrameCtrl(0)->setRate(0.5f);
-		mKoopaRail->getFrameCtrl(0)->setFrame(0.0f);
+		mKoopaRail->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.5f);
+		mKoopaRail->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	}
 
 	return TRUE;

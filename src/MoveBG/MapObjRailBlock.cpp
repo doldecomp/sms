@@ -8,6 +8,7 @@
 #include <Player/MarioAccess.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/PacketUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <Enemy/Graph.hpp>
 #include <Enemy/Conductor.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
@@ -175,7 +176,7 @@ void TRailMapObj::initMapObj()
 {
 	TMapObjBase::initMapObj();
 	offHitFlag(HIT_FLAG_NO_COLLISION);
-	mMActor->setLightType(2);
+	mMActor->setLightType(LIGHT_TYPE_MAPOBJECT);
 }
 
 void TRailMapObj::load(JSUMemoryInputStream& stream)

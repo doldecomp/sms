@@ -6,6 +6,7 @@
 #include <JSystem/J3d/J3DGraphBase/Blocks/J3DTevBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DTexGenBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DPEBlocks.hpp>
+#include <JSystem/J3D/J3DGraphBase/Blocks/J3DColorBlocks.hpp>
 
 class J3DMaterialAnm;
 class J3DShape;
@@ -57,13 +58,23 @@ public:
 	J3DTevBlock* getTevBlock() { return mTevBlock; }
 	J3DPEBlock* getPEBlock() { return mPEBlock; }
 
+	// NOTE: sadly, all of these are real and are required for matching.
+	// So this header pulls in all the block includes too...
 	J3DGXColor* getTevKColor(u32 idx) { return mTevBlock->getTevKColor(idx); }
 	J3DGXColorS10* getTevColor(u32 idx) { return mTevBlock->getTevColor(idx); }
+	J3DTevOrder* getTevOrder(u32 idx) { return mTevBlock->getTevOrder(idx); }
+	J3DTevStage* getTevStage(u32 idx) { return mTevBlock->getTevStage(idx); }
+	u8 getTevStageNum() const { return mTevBlock->getTevStageNum(); }
 	J3DTexMtx* getTexMtx(u32 idx) { return mTexGenBlock->getTexMtx(idx); }
 	J3DTexCoord* getTexCoord(u32 idx) { return mTexGenBlock->getTexCoord(idx); }
 	J3DNBTScale* getNBTScale() { return mTexGenBlock->getNBTScale(); }
 	J3DZMode* getZMode() { return mPEBlock->getZMode(); }
 	J3DFog* getFog() { return mPEBlock->getFog(); }
+	J3DColorChan* getColorChan(u32 idx)
+	{
+		return mColorBlock->getColorChan(idx);
+	}
+	J3DGXColor* getMatColor(u32 idx) { return mColorBlock->getMatColor(idx); }
 
 	void setTevColor(u32 i, const J3DGXColorS10* i_color)
 	{

@@ -957,7 +957,7 @@ f32 TMario::setAnimation(int anm_id, f32 rate)
 			mYoshi->changeAnimation(0x12);
 		}
 
-		switch (mYoshi->mActor->getCurAnmIdx(0)) {
+		switch (mYoshi->mActor->getCurAnmIdx(ANM_TYPE_BCK)) {
 		case 0x1:
 			anm_id = 0xB6;
 			break;
@@ -1350,7 +1350,7 @@ void TMario::initModel()
 				        0, 1),
 				    0);
 
-				mPinaRail->getFrameCtrl(0)->setRate(0.5f);
+				mPinaRail->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.5f);
 
 				Mtx pinnaMtx;
 				MTXIdentity(pinnaMtx);
@@ -1375,7 +1375,7 @@ void TMario::initModel()
 				        0, 1),
 				    0);
 
-				mKoopaRail->getFrameCtrl(0)->setRate(0.5f);
+				mKoopaRail->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.5f);
 
 				Mtx koopaMtx;
 				MTXIdentity(koopaMtx);
@@ -1957,26 +1957,15 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 
 	if (mYoshi != nullptr) {
 		MActor* yoshiActor = mYoshi->mActor;
-		if (yoshiActor->getCurAnmIdx(0) == 0xf) {
-			if (yoshiActor->unkC != nullptr) {
-				yoshiActor->unkC->initNormalMotionBlend();
-			}
-			f32 blendRatio = unk414.z;
-			// Some weird stuff here
-			if (yoshiActor->unkC != nullptr) {
-				yoshiActor->unkC->setMotionBlendRatio(blendRatio);
-			}
-			yoshiActor->getFrameCtrl(0)->setRate(
-			    getMotionFrameCtrl().getRate());
+		if (yoshiActor->getCurAnmIdx(ANM_TYPE_BCK) == 0xf) {
+			yoshiActor->initNormalMotionBlend();
+			yoshiActor->setMotionBlendRatioForBck(unk414.z);
+			yoshiActor->getFrameCtrl(ANM_TYPE_BCK)
+			    ->setRate(getMotionFrameCtrl().getRate());
 		} else {
-			if (yoshiActor->unkC != nullptr) {
-				yoshiActor->unkC->initNormalMotionBlend();
-			}
-			if (yoshiActor->unkC != nullptr) {
-				yoshiActor->unkC->setMotionBlendRatio(0.0f);
-			}
-
-			yoshiActor->getFrameCtrl(0)->setRate(0.5f);
+			yoshiActor->initNormalMotionBlend();
+			yoshiActor->setMotionBlendRatioForBck(0.0f);
+			yoshiActor->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.5f);
 		}
 	}
 

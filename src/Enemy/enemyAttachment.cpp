@@ -245,7 +245,7 @@ void TEnemyPolluteModel::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 
 	if (cue & CUE_CALC_ANIM) {
-		if (unk10->unk18->curAnmEndsNext(0, nullptr)) {
+		if (unk10->unk18->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			unk5D = false;
 			return;
 		}

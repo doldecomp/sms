@@ -429,10 +429,10 @@ void linSetAnmRate(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 
 	switch (arg2.getDataInt()) {
 	case 0:
-		owner->getMActor()->setFrameRate(arg1.getDataFloat(), 0);
+		owner->getMActor()->setFrameRate(arg1.getDataFloat(), ANM_TYPE_BCK);
 		break;
 	case 1:
-		owner->getMActor()->setFrameRate(arg1.getDataFloat(), 3);
+		owner->getMActor()->setFrameRate(arg1.getDataFloat(), ANM_TYPE_BTP);
 		break;
 	}
 

@@ -133,12 +133,7 @@ public:
 	virtual GXColor JSGGetColor() const;
 	virtual void JSGSetColor(GXColor color);
 
-	// Reconstructed from codegen, so treat the pair as provisional: the ROM's
-	// JSGSetColor passes the colour through one by-value GXColor parameter and
-	// then one by-value TColor parameter, and nothing else reproduces its
-	// frame. No map lists either overload, but TLight::setColor is on the same
-	// footing and a by-value TColor setter is the house style elsewhere
-	// (TSMSFader::setColor(JUtility::TColor) is in the map).
+	// fabricated
 	void setColor(GXColor color) { setColor(JUtility::TColor(color)); }
 	void setColor(JUtility::TColor color) { mColor = color; }
 

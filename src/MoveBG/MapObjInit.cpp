@@ -10,6 +10,7 @@
 #include <MSound/SoundEffects.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
 #include <MarioUtil/DrawUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/MirrorActor.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
@@ -22,17 +23,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-static void dummy() { static Vec data_2100 = { 1.0f, 1.0f, 1.0f }; }
-static void dummy2() { static Vec data_2100 = { 1.0f, 1.0f, 1.0f }; }
-static void dummy3() { static u32 data_2100[] = { 0, 2, 1, 3 }; }
-
 #include <M3DUtil/InfectiousStrings.hpp>
-
-static void dummy4(Vec& v)
-{
-	v = (Vec) { 0.0f, 0.0f, 0.0f };
-	v = (Vec) { 1.0f, 1.0f, 1.0f };
-}
 
 TMapObjSoundData TMapObjGeneral::mDefaultSound = {
 	{ 0xFFFFFFFF, MSD_SE_IT_COMMON_APPEAR, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
@@ -10828,7 +10819,7 @@ void TMapObjBase::initUnique()
 	// TODO: I hate switches, someone fix this please...
 	switch (getActorType()) {
 	case 0x2000003C:
-		mMActor->setLightType(0);
+		mMActor->setLightType(LIGHT_TYPE_PLAYER);
 		break;
 	case 0x2000000E:
 		if (mMActor) {
@@ -10866,8 +10857,7 @@ void TMapObjBase::initUnique()
 		startAllAnim(mMActor, unkF4);
 		break;
 	case 0x4000003C:
-		if (mMActor->unkC)
-			mMActor->unkC->initSimpleMotionBlend(0x14);
+		mMActor->initSimpleMotionBlend(0x14);
 		break;
 	case 0x400000A8:
 	case 0x40000096:
@@ -10933,7 +10923,7 @@ void TMapObjBase::initUnique()
 		mMActor = mMActorKeeper->mActors[0];
 		break;
 	case 0x400000D0:
-		mMActor->setLightType(1);
+		mMActor->setLightType(LIGHT_TYPE_OBJECT);
 		break;
 	case 0x400000DB:
 		mPosition.y += mScaling.y * 50.0f;
@@ -11179,7 +11169,7 @@ void TMapObjBase::initMapObj()
 	checkIllegalAttr();
 
 	if (mMActor && checkActorType(0x40000000))
-		mMActor->setLightType(2);
+		mMActor->setLightType(LIGHT_TYPE_MAPOBJECT);
 
 	if (getMapObjData()->unk30 == 0.0f)
 		mLiveFlag |= LIVE_FLAG_UNK8;
@@ -11189,7 +11179,7 @@ void TMapObjBase::initMapObj()
 		    "スクリーンテクスチャ");
 		const ResTIMG* img = ref->getTexture()->getTexInfo();
 		getModel()->getModelData()->getTexture()->setResTIMG(2, *img);
-		mMActor->setLightType(3);
+		mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 	}
 
 	makeObjDead();

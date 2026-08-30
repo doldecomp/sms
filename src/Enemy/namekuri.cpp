@@ -11,6 +11,7 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
 #include <MarioUtil/MtxUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
@@ -334,7 +335,7 @@ void TNameKuri::init(TLiveManager* param_1)
 	getMActor()->setJointCallback(1, &NameKuriAttackCallback);
 	getMActor()->setJointCallback(1, &NameKuriScaleCallback);
 	getMActor()->resetDL();
-	getMActor()->setLightType(3);
+	getMActor()->setLightType(LIGHT_TYPE_INDIRECT);
 	TScreenTexture* tex
 	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
 
@@ -734,7 +735,9 @@ DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 				self->walkToCurPathNode(0.0f, jumpAttackTurnSp, 0.0f);
 			}
 		} else if (self->isBckAnm(3)) {
-			if (self->getMActor()->getFrameCtrl(0)->checkPass(62.0f)) {
+			if (self->getMActor()
+			        ->getFrameCtrl(ANM_TYPE_BCK)
+			        ->checkPass(62.0f)) {
 				JGeometry::TVec3<f32> local_44 = SMS_GetMarioPos();
 				f32 jumpAttackSp = self->getSaveParams()->mSLJumpAttackSp.get();
 				JGeometry::TVec3<f32> local_6c = self->calcVelocityToJumpToY(
