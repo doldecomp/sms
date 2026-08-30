@@ -44,11 +44,11 @@ void TSharedMActorSet::init(MActorAnmData* param_1, J3DModelData* param_2,
 		unk0[i]         = new MActor(param_1);
 		unk0[i]->setModel(model, 0);
 		unk0[i]->setBck(param_3);
-		J3DFrameCtrl* ctrl = unk0[i]->getFrameCtrl(0);
+		J3DFrameCtrl* ctrl = unk0[i]->getFrameCtrl(ANM_TYPE_BCK);
 		ctrl->setFrame(coeff * ctrl->getEnd() * i);
 	}
 
-	unk8 = unk0[0]->getCurAnmIdx(0);
+	unk8 = unk0[0]->getCurAnmIdx(ANM_TYPE_BCK);
 }
 
 void TSharedMActorSet::calcAnm() { }
@@ -163,7 +163,7 @@ void TEnemyManager::setSharedFlags()
 		TSpineEnemy* enemy = getObj(i);
 		enemy->offLiveFlag(LIVE_FLAG_UNK4000);
 		if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT)) {
-			int idx = enemy->getMActor()->getCurAnmIdx(0);
+			int idx = enemy->getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 			for (int i = 0; i < unk44; ++i) {
 				if (idx < 0 || idx == unk40[i].getIdx()) {
 					enemy->onLiveFlag(LIVE_FLAG_UNK4000);
@@ -185,19 +185,19 @@ void TEnemyManager::updateAnmSoundShared()
 	for (int i = 0; i < getObjNum(); ++i) {
 		TSpineEnemy* enemy = getObj(i);
 		if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT)) {
-			int idx = enemy->getMActor()->getCurAnmIdx(0);
+			int idx = enemy->getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 			for (int i = 0; i < unk44; ++i) {
 				if (idx < 0 || idx == unk40[i].getIdx()) {
 					// unused (mistake)
 					J3DFrameCtrl* ctrl2
 					    = unk40[i]
 					          .getMActor(enemy->getInstanceIndex())
-					          ->getFrameCtrl(0);
+					          ->getFrameCtrl(ANM_TYPE_BCK);
 					if (enemy->mAnmSoundPath) {
 						J3DFrameCtrl* ctrl
 						    = unk40[i]
 						          .getMActor(enemy->getInstanceIndex())
-						          ->getFrameCtrl(0);
+						          ->getFrameCtrl(ANM_TYPE_BCK);
 
 						enemy->getAnmSound()->animeLoop(
 						    (Vec*)&enemy->getPosition(), ctrl->getFrame(),
@@ -223,7 +223,7 @@ void TEnemyManager::copyFromShared()
 		    || enemy->checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT))
 			continue;
 
-		int iVar6 = enemy->getMActor()->getCurAnmIdx(0);
+		int iVar6 = enemy->getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 		for (int j = 0; j < unk44; ++j) {
 			if (iVar6 >= 0 && iVar6 != unk40[j].unk8)
 				continue;
@@ -474,10 +474,10 @@ void TEnemyManager::createCopyAnmMtx(int) { }
 
 bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 {
-	if (unk4C != enemy->getMActor()->getCurAnmIdx(0))
+	if (unk4C != enemy->getMActor()->getCurAnmIdx(ANM_TYPE_BCK))
 		return false;
 
-	int f = enemy->getCurAnmFrameNo(0);
+	int f = enemy->getCurAnmFrameNo(ANM_TYPE_BCK);
 	enemy->calcRootMatrix();
 	enemy->updateAnmSound();
 	enemy->getMActor()->frameUpdate();

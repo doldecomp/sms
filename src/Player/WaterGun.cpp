@@ -360,7 +360,7 @@ void TNozzleBase::emit(int param_1)
 // properly
 void TNozzleBase::animation(int param_1)
 {
-	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(MActor::ANM_TYPE_BCK);
+	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 
 	if (param_1 != 2)
 		return;
@@ -381,7 +381,7 @@ void TNozzleBase::animation(int param_1)
 
 		bool thing = false;
 
-		J3DFrameCtrl* ctrl = unk380->getFrameCtrl(MActor::ANM_TYPE_BCK);
+		J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 
 		if (ctrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
 		                     | J3DFrameCtrl::STATE_LOOPED_ONCE))
@@ -695,7 +695,7 @@ void TNozzleTrigger::animation(int param_1)
 	int bckSwapIn;
 	int emitMtxCount;
 
-	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(MActor::ANM_TYPE_BCK);
+	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 
 	switch (param_1) {
 	case 4:
@@ -740,7 +740,7 @@ void TNozzleTrigger::animation(int param_1)
 
 		bool finished = false;
 
-		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(MActor::ANM_TYPE_BCK);
+		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 		if (frameCtrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
 		                          | J3DFrameCtrl::STATE_LOOPED_ONCE))
 			finished = true;
@@ -1032,7 +1032,7 @@ void TNozzleDeform::animation(int param)
 		}
 	}
 
-	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(MActor::ANM_TYPE_BCK);
+	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 
 	switch (unk36C) {
 	case 0: {
@@ -1051,7 +1051,7 @@ void TNozzleDeform::animation(int param)
 			mactor->setBckFromIndex(7);
 
 		bool finished           = 0;
-		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(MActor::ANM_TYPE_BCK);
+		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 		if (frameCtrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
 		                          | J3DFrameCtrl::STATE_LOOPED_ONCE)) {
 			finished = 1;
@@ -1119,7 +1119,7 @@ void TNozzleDeform::animation(int param)
 			unk36C = 2;
 
 		bool finished           = false;
-		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(MActor::ANM_TYPE_BCK);
+		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 		if (frameCtrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
 		                          | J3DFrameCtrl::STATE_LOOPED_ONCE))
 			finished = true;
@@ -1565,7 +1565,7 @@ void TWaterGun::setBaseTRMtx(Mtx mtx)
 void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 {
 	gpMarioForCallBack      = mMario;
-	J3DFrameCtrl* frameCtrl = mFluddModel->getFrameCtrl(MActor::ANM_TYPE_BCK);
+	J3DFrameCtrl* frameCtrl = mFluddModel->getFrameCtrl(ANM_TYPE_BCK);
 	if (mMario == nullptr)
 		return;
 

@@ -28,7 +28,7 @@ MActor::MActor(MActorAnmData* anm_data)
 	unk30      = nullptr;
 
 	mMaterialNum = 0;
-	unk38        = false;
+	mMakeDl      = false;
 	unk39        = true;
 	mLightId     = 0xffff;
 	unk40        = true;
@@ -107,7 +107,7 @@ void MActor::setModel(J3DModel* param_1, u32 param_2)
 	unk2C        = new u16[mMaterialNum];
 	unk30        = new u16[mMaterialNum];
 	if ((~param_2 & 0x10000) != 0)
-		unk38 = true;
+		onMakeDL();
 
 	unk8 = mModel->getModelData()->getJointNodePointer(0)->getMtxCalc();
 	for (u16 i = 0; i < mMaterialNum; ++i) {
@@ -155,11 +155,11 @@ void MActor::setModel(J3DModel* param_1, u32 param_2)
 		mAnmData->createSampleModelData(mModel->getModelData());
 }
 
-bool MActor::isCurAnmAlreadyEnd(int param_1)
+bool MActor::isCurAnmAlreadyEnd(int type)
 {
 	bool result = true;
 
-	J3DFrameCtrl* ctrl = getFrameCtrl(param_1);
+	J3DFrameCtrl* ctrl = getFrameCtrl(type);
 	if (ctrl) {
 		result = ctrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE)
 		         || ctrl->checkState(J3DFrameCtrl::STATE_LOOPED_ONCE)
@@ -203,13 +203,13 @@ void MActor::setAnimation(const char* name, int type)
 
 	mAnmByType[type]->setAnm(name, unk2C);
 
-	if (unk38 && type != 0)
+	if (mMakeDl && type != 0)
 		resetDL();
 }
 
 void MActor::initDL()
 {
-	if (!unk38)
+	if (!mMakeDl)
 		return;
 
 	j3dSys.setModel(mModel);
@@ -232,7 +232,7 @@ void MActor::initDL()
 
 void MActor::resetDL()
 {
-	if (!unk38)
+	if (!mMakeDl)
 		return;
 
 	j3dSys.setModel(mModel);
@@ -258,7 +258,7 @@ void MActor::initDLByIndex(u16) { }
 
 void MActor::unlockDLIfNeed()
 {
-	if (!unk38)
+	if (!mMakeDl)
 		return;
 
 	for (u16 i = 0; i < mMaterialNum; ++i)
@@ -266,17 +266,16 @@ void MActor::unlockDLIfNeed()
 			mModel->getMatPacket(i)->unlock();
 }
 
-void MActor::onMakeDL() { unk38 = true; }
+void MActor::onMakeDL() { mMakeDl = true; }
 
 void MActor::offMakeDL()
 {
-	unk38 = false;
-	for (u16 i = 0; i < mMaterialNum; ++i) {
+	mMakeDl = false;
+	for (u16 i = 0; i < mMaterialNum; ++i)
 		mModel->getMatPacket(i)->unlock();
-	}
 }
 
-void MActor::getCurAnmName(int) const { }
+const char* MActor::getCurAnmName(int) const { }
 
 void MActor::setJointCallback(int param_1, J3DNodeCallBack param_2)
 {
@@ -289,7 +288,7 @@ void MActor::updateInSubBck()
 		return;
 
 	for (int i = 0; i < mAnmData->getUnk0(); ++i)
-		if (unk10[i]->getUnk0() >= 0)
+		if (unk10[i]->getCurIdx() >= 0)
 			unk10[i]->updateIn();
 }
 
@@ -299,7 +298,7 @@ void MActor::updateOutSubBck()
 		return;
 
 	for (int i = 0; i < mAnmData->getUnk0(); ++i)
-		if (unk10[i]->getUnk0() >= 0)
+		if (unk10[i]->getCurIdx() >= 0)
 			unk10[i]->updateOut();
 }
 
@@ -339,7 +338,7 @@ void MActor::setLightID(s16 light_id)
 void MActor::setLightData(const TBGCheckData* param_1,
                           const JGeometry::TVec3<f32>& param_2)
 {
-	if (unk40 == 0)
+	if (!unk40)
 		return;
 
 	if (gpCubeShadow != nullptr && gpCubeShadow->getInCubeNo(param_2) != -1) {
@@ -356,10 +355,10 @@ void MActor::setLightData(const TBGCheckData* param_1,
 	}
 }
 
-void MActor::setLightType(int param_1)
+void MActor::setLightType(int light_type)
 {
-	unk44 = param_1;
-	gpLightManager->getUnk14(param_1)->enable();
+	unk44 = light_type;
+	gpLightManager->getLightSet(light_type)->enable();
 }
 
 void MActor::update() { }
@@ -374,7 +373,7 @@ void MActor::entry()
 		if (mLightId < 0)
 			mLightId = 0;
 
-		gpLightManager->getUnk14(unk44)->changeLightDrawBuffer(mLightId);
+		gpLightManager->getLightSet(unk44)->changeLightDrawBuffer(mLightId);
 
 		shouldResetLightDrawBuf = true;
 	}
@@ -384,25 +383,25 @@ void MActor::entry()
 	entryOut();
 
 	if (shouldResetLightDrawBuf)
-		gpLightManager->getUnk14(unk44)->resetLightDrawBuffer();
+		gpLightManager->getLightSet(unk44)->resetLightDrawBuffer();
 }
 
 void MActor::frameUpdate()
 {
-	for (int i = 0; i < 6; ++i)
-		if (mAnmByType[i] && mAnmByType[i]->getUnk0() >= 0)
+	for (int i = ANM_TYPE_FIRST; i < ANM_TYPE_COUNT; ++i)
+		if (mAnmByType[i] && mAnmByType[i]->getCurIdx() >= 0)
 			mAnmByType[i]->getFrameCtrl()->update();
 
 	if (unk10)
 		for (int i = 0; i < mAnmData->getUnk0(); ++i)
-			if (unk10[i]->getUnk0() >= 0)
+			if (unk10[i]->getCurIdx() >= 0)
 				unk10[i]->getFrameCtrl()->update();
 }
 
 void MActor::matAnmFrameUpdate()
 {
-	for (int i = 2; i < 6; ++i)
-		if (mAnmByType[i] && mAnmByType[i]->getUnk0() >= 0)
+	for (int i = ANM_TYPE_BPK; i < ANM_TYPE_COUNT; ++i)
+		if (mAnmByType[i] && mAnmByType[i]->getCurIdx() >= 0)
 			mAnmByType[i]->getFrameCtrl()->update();
 }
 
@@ -423,7 +422,7 @@ BOOL MActor::checkCurAnm(const char* name, int type)
 	if (!mAnmByType[type])
 		return false;
 
-	if (mAnmByType[type]->findName2(name) == mAnmByType[type]->getUnk0())
+	if (mAnmByType[type]->findName2(name) == mAnmByType[type]->getCurIdx())
 		return true;
 
 	return false;
@@ -434,7 +433,7 @@ bool MActor::checkCurAnmFromIndex(int index, int type)
 	if (!mAnmByType[type])
 		return false;
 
-	if (index == mAnmByType[type]->getUnk0())
+	if (index == mAnmByType[type]->getCurIdx())
 		return true;
 
 	return false;
@@ -609,37 +608,37 @@ void MActor::setBrkFromIndex(int index)
 
 void MActor::updateIn()
 {
-	if (mAnmByType[ANM_TYPE_BCK] && mAnmByType[ANM_TYPE_BCK]->getUnk0() >= 0)
+	if (mAnmByType[ANM_TYPE_BCK] && mAnmByType[ANM_TYPE_BCK]->getCurIdx() >= 0)
 		mAnmByType[ANM_TYPE_BCK]->updateIn();
 
 	updateInSubBck();
 
-	if (mAnmByType[ANM_TYPE_BLK] && mAnmByType[ANM_TYPE_BLK]->getUnk0() >= 0)
+	if (mAnmByType[ANM_TYPE_BLK] && mAnmByType[ANM_TYPE_BLK]->getCurIdx() >= 0)
 		mAnmByType[ANM_TYPE_BLK]->updateIn();
 }
 
 void MActor::updateOut()
 {
-	if (mAnmByType[ANM_TYPE_BCK] && mAnmByType[ANM_TYPE_BCK]->getUnk0() >= 0)
+	if (mAnmByType[ANM_TYPE_BCK] && mAnmByType[ANM_TYPE_BCK]->getCurIdx() >= 0)
 		mAnmByType[ANM_TYPE_BCK]->updateOut();
 
 	updateOutSubBck();
 
-	if (mAnmByType[ANM_TYPE_BLK] && mAnmByType[ANM_TYPE_BLK]->getUnk0() >= 0)
+	if (mAnmByType[ANM_TYPE_BLK] && mAnmByType[ANM_TYPE_BLK]->getCurIdx() >= 0)
 		mAnmByType[ANM_TYPE_BLK]->updateOut();
 }
 
 void MActor::entryIn()
 {
 	for (int i = ANM_TYPE_BPK; i < ANM_TYPE_COUNT; ++i)
-		if (mAnmByType[i] && mAnmByType[i]->getUnk0() >= 0)
+		if (mAnmByType[i] && mAnmByType[i]->getCurIdx() >= 0)
 			mAnmByType[i]->updateIn();
 }
 
 void MActor::entryOut()
 {
 	for (int i = ANM_TYPE_BPK; i < ANM_TYPE_COUNT; ++i)
-		if (mAnmByType[i] && mAnmByType[i]->getUnk0() >= 0)
+		if (mAnmByType[i] && mAnmByType[i]->getCurIdx() >= 0)
 			mAnmByType[i]->updateOut();
 }
 

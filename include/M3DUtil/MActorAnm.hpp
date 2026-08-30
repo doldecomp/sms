@@ -44,7 +44,7 @@ public:
 
 	// fabricated
 	J3DFrameCtrl* getFrameCtrl() { return &unk4; }
-	s32 getUnk0() { return unk0; }
+	s32 getCurIdx() { return unk0; }
 	void setUnk1C(MActorAnmDataBase* param_1) { unk1C = param_1; }
 
 	BOOL endsNext()

@@ -456,7 +456,7 @@ void TLiveActor::updateAnmSound()
 	if (!mAnmSoundPath)
 		return;
 
-	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 	mAnmSound->animeLoop(&mPosition, ctrl->getFrame(), ctrl->getRate(), 0, 4);
 }
 
@@ -480,7 +480,7 @@ void TLiveActor::setCurAnmSound()
 	const char* name = nullptr;
 
 	if (mMActor) {
-		int idx = mMActor->getCurAnmIdx(0);
+		int idx = mMActor->getCurAnmIdx(ANM_TYPE_BCK);
 		if (idx >= 0) {
 			const char** table = getBasNameTable();
 

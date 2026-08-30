@@ -9,6 +9,7 @@
 #include <System/Particles.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/Strategy.hpp>
 #include <M3DUtil/MActor.hpp>
@@ -601,7 +602,7 @@ TBGTentacle::TBGTentacle(TBossGesso* owner, int node_num, int index)
 	mMtxCalc = new TBGTentacleMtxCalc(this);
 	unk2C->setCalcForBck(mMtxCalc);
 	unk2C->calc();
-	unk2C->setLightType(1);
+	unk2C->setLightType(LIGHT_TYPE_OBJECT);
 	unk80 = keeper->createMActor("bgeso_shand.bmd", 0);
 	unk84.zero();
 	mTakeHit = new TBGTakeHit(this);
