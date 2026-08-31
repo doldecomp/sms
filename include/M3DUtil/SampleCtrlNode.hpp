@@ -2,6 +2,7 @@
 #define M3DUTIL_SAMPLE_CTRL_NODE_HPP
 
 #include <JSystem/JGeometry/JGVec3.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DStruct.hpp>
 
 class J3DShape;
@@ -36,18 +37,18 @@ public:
 
 class SampleCtrlJoint {
 public:
-	SampleCtrlJoint(J3DJoint*);
+	SampleCtrlJoint(J3DJoint* joint);
 	virtual ~SampleCtrlJoint() { }
 
 public:
 	/* 0x4 */ J3DJoint* unk4;
 	/* 0x8 */ const char* unk8;
-	/* 0xC */ SampleCtrlJoint* unkC;
-	/* 0x10 */ SampleCtrlJoint* unk10;
+	/* 0xC */ SampleCtrlJoint* mChild;
+	/* 0x10 */ SampleCtrlJoint* mYounger;
 	/* 0x14 */ SampleCtrlMaterial* unk14;
-	/* 0x18 */ f32 unk18;
-	/* 0x1C */ JGeometry::TVec3<f32> unk1C;
-	/* 0x28 */ JGeometry::TVec3<f32> unk28;
+	/* 0x18 */ f32 mRadius;
+	/* 0x1C */ JGeometry::TVec3<f32> mMin;
+	/* 0x28 */ JGeometry::TVec3<f32> mMax;
 };
 
 #endif
