@@ -900,18 +900,13 @@ void J3DTexGenBlockBasic::calc(MtxPtr ptr)
 
 void J3DMaterial::calc(MtxPtr ptr) { mTexGenBlock->calc(ptr); }
 
-// TODO: stack size mismatches...
 void J3DMaterial::setCurrentMtx()
 {
-	char trash[0x20];
-	mShape->setCurrentTexMtx(mTexGenBlock->getTexCoord(0)->getTexGenMtx(),
-	                         mTexGenBlock->getTexCoord(1)->getTexGenMtx(),
-	                         mTexGenBlock->getTexCoord(2)->getTexGenMtx(),
-	                         mTexGenBlock->getTexCoord(3)->getTexGenMtx(),
-	                         mTexGenBlock->getTexCoord(4)->getTexGenMtx(),
-	                         mTexGenBlock->getTexCoord(5)->getTexGenMtx(),
-	                         mTexGenBlock->getTexCoord(6)->getTexGenMtx(),
-	                         mTexGenBlock->getTexCoord(7)->getTexGenMtx());
+	mShape->setCurrentTexMtx(
+	    getTexCoord(0)->getTexGenMtx(), getTexCoord(1)->getTexGenMtx(),
+	    getTexCoord(2)->getTexGenMtx(), getTexCoord(3)->getTexGenMtx(),
+	    getTexCoord(4)->getTexGenMtx(), getTexCoord(5)->getTexGenMtx(),
+	    getTexCoord(6)->getTexGenMtx(), getTexCoord(7)->getTexGenMtx());
 }
 
 void J3DMaterial::copy(J3DMaterial* other)
