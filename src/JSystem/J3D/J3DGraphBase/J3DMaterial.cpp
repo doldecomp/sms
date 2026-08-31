@@ -904,7 +904,7 @@ void J3DMaterial::calc(MtxPtr ptr) { mTexGenBlock->calc(ptr); }
 void J3DMaterial::setCurrentMtx()
 {
 	char trash[0x20];
-	mShape->setUnk3C(mTexGenBlock->getTexCoord(0)->getTexGenMtx(),
+	mShape->setCurrentTexMtx(mTexGenBlock->getTexCoord(0)->getTexGenMtx(),
 	                 mTexGenBlock->getTexCoord(1)->getTexGenMtx(),
 	                 mTexGenBlock->getTexCoord(2)->getTexGenMtx(),
 	                 mTexGenBlock->getTexCoord(3)->getTexGenMtx(),

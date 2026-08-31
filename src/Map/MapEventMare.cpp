@@ -487,13 +487,13 @@ void TMareEventDepressWall::initCommon()
 		int idx          = (unk10 - 1) - i;
 		J3DJoint* jJoint = (J3DJoint*)joint;
 		unk30[idx]       = jJoint;
-		unk34[idx].set((jJoint->mMin.x + jJoint->mMax.x) / 2.0f,
-		               (jJoint->mMin.y + jJoint->mMax.y) / 2.0f,
-		               (jJoint->mMin.z + jJoint->mMax.z) / 2.0f);
+		unk34[idx].set((jJoint->getMin().x + jJoint->getMax().x) / 2.0f,
+		               (jJoint->getMin().y + jJoint->getMax().y) / 2.0f,
+		               (jJoint->getMin().z + jJoint->getMax().z) / 2.0f);
 
-		unk38[idx].x = (jJoint->mMax.x - jJoint->mMin.x) / 100.0f;
-		unk38[idx].y = (jJoint->mMax.y - jJoint->mMin.y) / 100.0f;
-		unk38[idx].z = (jJoint->mMax.z - jJoint->mMin.z) / 100.0f;
+		unk38[idx].x = (jJoint->getMax().x - jJoint->getMin().x) / 100.0f;
+		unk38[idx].y = (jJoint->getMax().y - jJoint->getMin().y) / 100.0f;
+		unk38[idx].z = (jJoint->getMax().z - jJoint->getMin().z) / 100.0f;
 
 		f32 volume = unk38[idx].x * unk38[idx].y * unk38[idx].z;
 		unk3C[idx] = 0.1f * MsSqrtf(volume);

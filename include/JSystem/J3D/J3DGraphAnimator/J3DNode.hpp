@@ -45,9 +45,10 @@ public:
 
 	void setCallBack(J3DNodeCallBack callback) { mCallBack = callback; }
 	void setCallBackUserData(void* data) { mCallBackUserData = data; }
+	void* getCallBackUserData() { return mCallBackUserData; }
 	J3DNodeCallBack getCallBack() { return mCallBack; }
 
-public:
+private:
 	/* 0x04 */ void* mCallBackUserData;
 	/* 0x08 */ J3DNodeCallBack mCallBack;
 	/* 0x0C */ char unkC[0x4];
