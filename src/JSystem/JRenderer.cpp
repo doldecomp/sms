@@ -1,4 +1,5 @@
 #include <JSystem/JRenderer.hpp>
+#include <dolphin/gd/GDTransform.h>
 #include <dolphin/os.h>
 
 void J3DGDLoadTexMtxImm(MtxPtr mtx, u32 i, GXTexMtxType type)
@@ -235,61 +236,70 @@ void J3DGDSetFog(GXFogType type, float startz, float endz, float nearz,
 	J3DGDWriteBPCmd(BP_FOG_COLOR(color.r, color.g, color.b, 0xf2));
 }
 
-void J3DGDSetTexCoordScale2(GXTexCoordID param_1, u16 param_2, u8 param_3,
-                            u8 param_4, u16 param_5, u8 param_6, u8 param_7)
+void J3DGDSetTexCoordScale(GXTexCoordID, u16, u16)
+{
+	// UNUSED, map size 0x240
+}
+
+void J3DGDSetTexCoordScale2(GXTexCoordID coord, u16 s_size, u8 s_bias,
+                            u8 s_cyl_wrap, u16 t_size, u8 t_bias, u8 t_cyl_wrap)
 {
 	GDOverflowCheck(0xf);
 	J3DGDWriteBPCmd(0xfe03ffff);
 	// clang-format off
 	J3DGDWriteBPCmd(
-		(u32)(param_2 - 1) |
-		(u32)(param_3) << 16 |
-		(u32)(param_4) << 17 |
-		(u32)(param_1 * 2 + 0x30) << 24
+		(u32)(s_size - 1) |
+		(u32)(s_bias) << 16 |
+		(u32)(s_cyl_wrap) << 17 |
+		(u32)(coord * 2 + 0x30) << 24
 	);
 	J3DGDWriteBPCmd(
-		(u32)(param_5 - 1) |
-		(u32)(param_6) << 16 |
-		(u32)(param_7) << 17 |
-		(u32)(param_1 * 2 + 0x31) << 24
+		(u32)(t_size - 1) |
+		(u32)(t_bias) << 16 |
+		(u32)(t_cyl_wrap) << 17 |
+		(u32)(coord * 2 + 0x31) << 24
 	);
 	// clang-format on
 }
 
-void J3DGDSetTexImgAttr(GXTexMapID param_1, u16 width, u16 height,
-                        GXTexFmt param_4)
+void J3DGDSetTexImgAttr(GXTexMapID map, u16 width, u16 height, GXTexFmt format)
 {
 	// clang-format off
 	u32 reg =
 		(u32) (width - 1) |
 		(u32) (height - 1) << 10 |
-		(u32) param_4 << 20 |
-		(u32) GXTexImage0Ids[param_1] << 24;
+		(u32) format << 20 |
+		(u32) GXTexImage0Ids[map] << 24;
 	// clang-format on
 
 	GDOverflowCheck(5);
 	J3DGDWriteBPCmd(reg);
 }
 
-void J3DGDSetTexImgPtr(GXTexMapID param_1, void* param_2)
+void J3DGDSetTexImgPtr(GXTexMapID map, void* image)
 {
 	// clang-format off
 	u32 reg =
-		(u32) ((u32)OSPhysicalToCached(param_2) >> 5) |
-		(u32) GXTexImage3Ids[param_1] << 24;
+		(u32) ((u32)OSPhysicalToCached(image) >> 5) |
+		(u32) GXTexImage3Ids[map] << 24;
 	// clang-format on
 
 	GDOverflowCheck(5);
 	J3DGDWriteBPCmd(reg);
 }
 
-void J3DGDSetTexTlut(GXTexMapID param_1, u32 param_2, GXTlutFmt param_3)
+void J3DGDSetTexImgPtrRaw(GXTexMapID, u32)
+{
+	// UNUSED, map size 0xC4
+}
+
+void J3DGDSetTexTlut(GXTexMapID map, u32 tlut_addr, GXTlutFmt format)
 {
 	// clang-format off
 	u32 reg =
-		(param_2 - 0x80000) >> 9 |
-		param_3 << 10 |
-		GXTexTlutIds[param_1] << 24
+		(tlut_addr - 0x80000) >> 9 |
+		format << 10 |
+		GXTexTlutIds[map] << 24
 		;
 	// clang-format on
 
@@ -297,7 +307,7 @@ void J3DGDSetTexTlut(GXTexMapID param_1, u32 param_2, GXTlutFmt param_3)
 	J3DGDWriteBPCmd(reg);
 }
 
-void J3DGDLoadTlut(void* param_1, u32 param_2, GXTlutSize param_3)
+void J3DGDLoadTlut(void* tlut, u32 tlut_addr, GXTlutSize entry_count)
 {
 	GDOverflowCheck(5);
 	J3DGDWriteBPCmd(0xfeffff00);
@@ -306,15 +316,15 @@ void J3DGDLoadTlut(void* param_1, u32 param_2, GXTlutSize param_3)
 	GDOverflowCheck(5);
 	// clang-format off
 	J3DGDWriteBPCmd(
-		(u32) ((u32)OSPhysicalToCached(param_1) >> 5) |
+		(u32) ((u32)OSPhysicalToCached(tlut) >> 5) |
 		(u32) 0x64 << 24
 	);
 	// clang-format on
 	GDOverflowCheck(5);
 	// clang-format off
 	J3DGDWriteBPCmd(
-		(param_2 - 0x80000) >> 9 |
-		param_3 << 10 |
+		(tlut_addr - 0x80000) >> 9 |
+		entry_count << 10 |
 		0x65 << 24
 	);
 	// clang-format on
@@ -337,42 +347,26 @@ void J3DGDSetTevKColor(GXTevKColorID reg, GXColor color)
 	J3DGDWriteBPCmd(regBG);
 }
 
-void JRNLoadCurrentMtx(u32 param_1, u32 param_2, u32 param_3, u32 param_4,
-                       u32 param_5, u32 param_6, u32 param_7, u32 param_8,
-                       u32 param_9)
+void JRNLoadCurrentMtx(u32 pn, u32 t0, u32 t1, u32 t2, u32 t3, u32 t4, u32 t5,
+                       u32 t6, u32 t7)
 {
-	// clang-format off
-	u32 a =
-		param_1 |
-		param_2 << 6 |
-		param_3 << 12 |
-		param_4 << 18 |
-		param_5 << 24;
-	// clang-format on
+	u32 regA = CP_MTX_REG_A(pn, t0, t1, t2, t3);
+	u32 regB = CP_MTX_REG_B(t4, t5, t6, t7);
 
-	// clang-format off
-	u32 b =
-		param_6 |
-		param_7 << 6 |
-		param_8 << 12 |
-		param_9 << 18;
-	// clang-format on
+	GXCmd1u8(GX_CMD_LOAD_CP_REG);
+	GXCmd1u8(CP_MTX_REG_A_ID);
+	GXCmd1u32(regA);
 
-	// TODO: this is all wrong, it should be using the CP register macros
-	GXCmd1u8(0x8);
-	GXCmd1u8(0x30);
-	GXCmd1u32(a);
+	GXCmd1u8(GX_CMD_LOAD_CP_REG);
+	GXCmd1u8(CP_MTX_REG_B_ID);
+	GXCmd1u32(regB);
 
-	GXCmd1u8(0x8);
-	GXCmd1u8(0x40);
-	GXCmd1u32(b);
+	GXCmd1u8(GX_CMD_LOAD_XF_REG);
+	GXCmd1u16(2 - 1);
+	GXCmd1u16(XF_REG_MATRIXINDEX0_ID);
 
-	GXCmd1u8(0x10);
-	GXCmd1u16(1);
-	GXCmd1u16(0x1018);
-
-	GXCmd1u32(a);
-	GXCmd1u32(b);
+	GXCmd1u32(regA);
+	GXCmd1u32(regB);
 }
 
 void JRNSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage,
@@ -396,6 +390,11 @@ void JRNSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage,
 		(tev_stage + 0x10) << 24
 	);
 	// clang-format on
+}
+
+void JRNSetTevDirect(GXTevStageID)
+{
+	// UNUSED, map size 0xBC
 }
 
 void JRNSetIndTexMtx(GXIndTexMtxID mtx_id, ROMtxPtr offset, s8 scale_exp)
@@ -445,121 +444,123 @@ void JRNSetIndTexMtx(GXIndTexMtxID mtx_id, ROMtxPtr offset, s8 scale_exp)
 	                | (3 * id + 8) << 24);
 }
 
-void JRNSetIndTexCoordScale(GXIndTexStageID param_1, GXIndTexScale param_2,
-                            GXIndTexScale param_3, GXIndTexScale param_4,
-                            GXIndTexScale param_5)
+void JRNSetIndTexCoordScale(GXIndTexStageID even_stage, GXIndTexScale scale_s0,
+                            GXIndTexScale scale_t0, GXIndTexScale scale_s1,
+                            GXIndTexScale scale_t1)
 {
 	GDOverflowCheck(5);
 	// clang-format off
 	J3DGDWriteBPCmd(
-		param_2 |
-		param_3 << 4 |
-		param_4 << 8 |
-		param_5 << 12 |
-		((param_1 >> 1) + 0x25) << 24
+		scale_s0 |
+		scale_t0 << 4 |
+		scale_s1 << 8 |
+		scale_t1 << 12 |
+		((even_stage >> 1) + 0x25) << 24
 	);
 	// clang-format on
 }
 
-void JRNSetIndTexOrder(u32 param_1, GXTexCoordID param_2, GXTexMapID param_3,
-                       GXTexCoordID param_4, GXTexMapID param_5,
-                       GXTexCoordID param_6, GXTexMapID param_7,
-                       GXTexCoordID param_8, GXTexMapID param_9)
+void JRNSetIndTexOrder(u32 stage_count, GXTexCoordID coord0, GXTexMapID map0,
+                       GXTexCoordID coord1, GXTexMapID map1,
+                       GXTexCoordID coord2, GXTexMapID map2,
+                       GXTexCoordID coord3, GXTexMapID map3)
 {
 	GDOverflowCheck(5);
 	// clang-format off
 	J3DGDWriteBPCmd(
-		((u32)(param_3 & 0x7)) |
-		((u32)(param_2 & 0x7)) << 3 |
-		((u32)(param_5 & 0x7)) << 6 |
-		((u32)(param_4 & 0x7)) << 9 |
-		((u32)(param_7 & 0x7)) << 12 |
-		((u32)(param_6 & 0x7)) << 15 |
-		((u32)(param_9 & 0x7)) << 18 |
-		((u32)(param_8 & 0x7)) << 21 |
+		((u32)(map0 & 0x7)) |
+		((u32)(coord0 & 0x7)) << 3 |
+		((u32)(map1 & 0x7)) << 6 |
+		((u32)(coord1 & 0x7)) << 9 |
+		((u32)(map2 & 0x7)) << 12 |
+		((u32)(coord2 & 0x7)) << 15 |
+		((u32)(map3 & 0x7)) << 18 |
+		((u32)(coord3 & 0x7)) << 21 |
 		((u32)0x27) << 24
 	);
 	// clang-format on
-	u32 thing = 0;
-	for (u32 i = 0; i < param_1; ++i) {
+	u32 mask = 0;
+	for (u32 i = 0; i < stage_count; ++i) {
 		switch (i) {
 		case 0:
-			thing |= 1 << (param_3 & 0x7);
+			mask |= 1 << (map0 & 0x7);
 			break;
 
 		case 1:
-			thing |= 1 << (param_5 & 0x7);
+			mask |= 1 << (map1 & 0x7);
 			break;
 
 		case 2:
-			thing |= 1 << (param_7 & 0x7);
+			mask |= 1 << (map2 & 0x7);
 			break;
 
 		case 3:
-			thing |= 1 << (param_9 & 0x7);
+			mask |= 1 << (map3 & 0x7);
 			break;
 		}
 	}
 	GDOverflowCheck(5);
-	J3DGDWriteBPCmd(thing | 0xf << 24);
+	J3DGDWriteBPCmd(mask | 0xf << 24);
 }
 
 u8 JRNTexImage1Ids[8] = { 0x8c, 0x8d, 0x8e, 0x8f, 0xac, 0xad, 0xae, 0xaf };
 u8 JRNTexImage2Ids[8] = { 0x90, 0x91, 0x92, 0x93, 0xb0, 0xb1, 0xb2, 0xb3 };
 
-void JRNLoadTexCached(GXTexMapID param_1, u32 param_2, GXTexCacheSize param_3,
-                      u32 param_4, GXTexCacheSize param_5)
+void JRNFlushTextureState()
 {
-	// TODO: this should use different GX stuff
+	// UNUSED, map size 0x138
+}
+
+void JRNLoadTexCached(GXTexMapID map, u32 tmem_even, GXTexCacheSize size_even,
+                      u32 tmem_odd, GXTexCacheSize size_odd)
+{
 	// clang-format off
 	u32 reg1 =
-		(param_2 >> 5) |
-		(param_3 + 3) << 15 |
-		(param_3 + 3) << 18 |
-		JRNTexImage1Ids[param_1] << 24;
+		(tmem_even >> 5) |
+		(size_even + 3) << 15 |
+		(size_even + 3) << 18 |
+		JRNTexImage1Ids[map] << 24;
 	// clang-format on
-	GXCmd1u8(0x61);
+	GXCmd1u8(GX_CMD_LOAD_BP_REG);
 	GXCmd1u32(reg1);
-	if (param_5 == GX_TEXCACHE_NONE)
+	if (size_odd == GX_TEXCACHE_NONE)
 		return;
-	if (param_4 >= 0x100000)
+	if (tmem_odd >= 0x100000)
 		return;
 	// clang-format off
 	u32 reg2 =
-		(param_4 >> 5) |
-		(param_5 + 3) << 15 |
-		(param_5 + 3) << 18 |
-		JRNTexImage2Ids[param_1] << 24;
+		(tmem_odd >> 5) |
+		(size_odd + 3) << 15 |
+		(size_odd + 3) << 18 |
+		JRNTexImage2Ids[map] << 24;
 	// clang-format on
-	GXCmd1u8(0x61);
+	GXCmd1u8(GX_CMD_LOAD_BP_REG);
 	GXCmd1u32(reg2);
 }
 
-void JRNISetTevOrder(GXTevStageID param_1, GXTexCoordID param_2,
-                     GXTexMapID param_3, GXChannelID param_4,
-                     GXTexCoordID param_5, GXTexMapID param_6,
-                     GXChannelID param_7)
+void JRNISetTevOrder(GXTevStageID even_stage, GXTexCoordID coord0,
+                     GXTexMapID map0, GXChannelID color0, GXTexCoordID coord1,
+                     GXTexMapID map1, GXChannelID color1)
 {
 	static u8 c2r[16] = { 0, 1, 0, 1, 0, 1, 7, 5, 6, 0, 0, 0, 0, 0, 0, 7 };
 
-	if (param_2 >= GX_MAX_TEXCOORD) {
-		param_2 = GX_TEXCOORD0;
-	}
-	if (param_5 >= GX_MAX_TEXCOORD) {
-		param_5 = GX_TEXCOORD0;
-	}
+	if (coord0 >= GX_MAX_TEXCOORD)
+		coord0 = GX_TEXCOORD0;
+
+	if (coord1 >= GX_MAX_TEXCOORD)
+		coord1 = GX_TEXCOORD0;
 
 	// clang-format off
 	u32 reg =
-		(u32)(param_3 & 0x7) |
-		(u32)param_2 << 3 |
-		(u32)(param_3 != 0xff && !(param_3 & 0x100)) << 6 |
-		(u32)c2r[param_4 & 0xf] << 7 |
-		(u32)(param_6 & 0x7) << 12 |
-		(u32)param_5 << 15 |
-		(u32)(param_6 != 0xff && !(param_6 & 0x100)) << 18 |
-		(u32)c2r[param_7 & 0xf] << 19 |
-		(u32)(param_1 / 2 + 0x28) << 24;
+		(u32)(map0 & 0x7) |
+		(u32)coord0 << 3 |
+		(u32)(map0 != 0xff && !(map0 & 0x100)) << 6 |
+		(u32)c2r[color0 & 0xf] << 7 |
+		(u32)(map1 & 0x7) << 12 |
+		(u32)coord1 << 15 |
+		(u32)(map1 != 0xff && !(map1 & 0x100)) << 18 |
+		(u32)c2r[color1 & 0xf] << 19 |
+		(u32)(even_stage / 2 + 0x28) << 24;
 	// clang-format on
 
 	GDOverflowCheck(5);

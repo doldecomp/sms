@@ -725,7 +725,7 @@ void SMS_DrawCube(const JGeometry::TVec3<f32>& param_1,
 void SMS_SettingDrawShape(J3DModelData* param_1, u16 param_2)
 {
 	J3DShape* shape = param_1->getShapeNodePointer(param_2);
-	GXCallDisplayList(shape->getDrawList(), 0xC0);
+	GXCallDisplayList(shape->getVcdVatCmd(), J3DShape::kVcdVatDLSize);
 	j3dSys.setVtxPos(param_1->getVtxPosArray());
 	j3dSys.setVtxNrm(param_1->getVtxNormArray());
 	shape->loadVtxArray();
