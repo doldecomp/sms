@@ -905,13 +905,13 @@ void J3DMaterial::setCurrentMtx()
 {
 	char trash[0x20];
 	mShape->setCurrentTexMtx(mTexGenBlock->getTexCoord(0)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(1)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(2)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(3)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(4)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(5)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(6)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(7)->getTexGenMtx());
+	                         mTexGenBlock->getTexCoord(1)->getTexGenMtx(),
+	                         mTexGenBlock->getTexCoord(2)->getTexGenMtx(),
+	                         mTexGenBlock->getTexCoord(3)->getTexGenMtx(),
+	                         mTexGenBlock->getTexCoord(4)->getTexGenMtx(),
+	                         mTexGenBlock->getTexCoord(5)->getTexGenMtx(),
+	                         mTexGenBlock->getTexCoord(6)->getTexGenMtx(),
+	                         mTexGenBlock->getTexCoord(7)->getTexGenMtx());
 }
 
 void J3DMaterial::copy(J3DMaterial* other)
