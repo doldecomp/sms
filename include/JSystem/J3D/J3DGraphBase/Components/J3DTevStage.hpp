@@ -31,22 +31,21 @@ public:
 		return *this;
 	}
 
-	void setTevColorOp(u8 param_1, u8 param_2, u8 param_3, u8 param_4,
-	                   u8 param_5)
+	void setTevColorOp(u8 op, u8 bias, u8 scale, u8 clamp, u8 out_reg)
 	{
-		mTevColorOp = mTevColorOp & ~(0x01 << 2) | param_1 << 2;
-		if (param_1 <= 1) {
-			mTevColorOp = mTevColorOp & ~(0x03 << 4) | param_3 << 4;
-			mTevColorOp = mTevColorOp & ~0x03 | param_2;
+		mTevColorOp = mTevColorOp & ~(0x01 << 2) | op << 2;
+		if (op <= 1) {
+			mTevColorOp = mTevColorOp & ~(0x03 << 4) | scale << 4;
+			mTevColorOp = mTevColorOp & ~0x03 | bias;
 		} else {
-			mTevColorOp = mTevColorOp & ~(0x03 << 4) | (param_1 >> 1 & 3) << 4;
+			mTevColorOp = mTevColorOp & ~(0x03 << 4) | (op >> 1 & 3) << 4;
 			mTevColorOp = mTevColorOp & ~0x03 | 3;
 		}
-		mTevColorOp = mTevColorOp & ~(0x01 << 3) | param_4 << 3;
-		mTevColorOp = mTevColorOp & ~(0x03 << 6) | param_5 << 6;
+		mTevColorOp = mTevColorOp & ~(0x01 << 3) | clamp << 3;
+		mTevColorOp = mTevColorOp & ~(0x03 << 6) | out_reg << 6;
 	}
 
-	u8 getColorOpSomething1() const
+	u8 getTevColorOp() const
 	{
 		if ((mTevColorOp & 3) != 3U)
 			return mTevColorOp >> 2 & 1;
@@ -54,10 +53,10 @@ public:
 			return 0x8 + (mTevColorOp >> 2 & 1) + (mTevColorOp >> 3 & 6);
 	}
 
-	u8 getColorOpSomething2() const { return mTevColorOp & 3; }
-	u8 getColorOpSomething3() const { return mTevColorOp >> 4 & 3; }
-	u8 getColorOpSomething4() const { return mTevColorOp >> 3 & 1; }
-	u8 getColorOpSomething5() const { return mTevColorOp >> 6 & 3; }
+	u8 getTevColorBias() const { return mTevColorOp & 3; }
+	u8 getTevColorScale() const { return mTevColorOp >> 4 & 3; }
+	u8 getTevColorClamp() const { return mTevColorOp >> 3 & 1; }
+	u8 getTevColorOutReg() const { return mTevColorOp >> 6 & 3; }
 
 	void setTevColorAB(u8 a, u8 b) { mTevColorAB = a << 4 | b; }
 	void setTevColorCD(u8 c, u8 d) { mTevColorCD = c << 4 | d; }
@@ -67,32 +66,33 @@ public:
 	u8 getTevColorC() const { return mTevColorCD >> 4 & 0xf; }
 	u8 getTevColorD() const { return mTevColorCD & 0xf; }
 
-	void setTevAlphaOp(u8 param_1, u8 param_2, u8 param_3, u8 param_4,
-	                   u8 param_5)
+	/// See setTevColorOp for the bit layout. Note that this one writes the bias
+	/// before the scale, and setTevColorOp writes them in the other order.
+	void setTevAlphaOp(u8 op, u8 bias, u8 scale, u8 clamp, u8 out_reg)
 	{
-		mTevAlphaOp = mTevAlphaOp & ~(0x01 << 2) | param_1 << 2;
-		if (param_1 <= 1) {
-			mTevAlphaOp = mTevAlphaOp & ~0x03 | param_2;
-			mTevAlphaOp = mTevAlphaOp & ~(0x03 << 4) | param_3 << 4;
+		mTevAlphaOp = mTevAlphaOp & ~(0x01 << 2) | op << 2;
+		if (op <= 1) {
+			mTevAlphaOp = mTevAlphaOp & ~0x03 | bias;
+			mTevAlphaOp = mTevAlphaOp & ~(0x03 << 4) | scale << 4;
 		} else {
-			mTevAlphaOp = mTevAlphaOp & ~(0x03 << 4) | (param_1 >> 1 & 3) << 4;
+			mTevAlphaOp = mTevAlphaOp & ~(0x03 << 4) | (op >> 1 & 3) << 4;
 			mTevAlphaOp = mTevAlphaOp & ~0x03 | 3;
 		}
-		mTevAlphaOp = mTevAlphaOp & ~(0x01 << 3) | param_4 << 3;
-		mTevAlphaOp = mTevAlphaOp & ~(0x03 << 6) | param_5 << 6;
+		mTevAlphaOp = mTevAlphaOp & ~(0x01 << 3) | clamp << 3;
+		mTevAlphaOp = mTevAlphaOp & ~(0x03 << 6) | out_reg << 6;
 	}
 
-	u8 getAlphaOpSomething1() const
+	u8 getTevAlphaOp() const
 	{
 		if ((mTevAlphaOp & 3) != 3U)
 			return mTevAlphaOp >> 2 & 1;
 		else
 			return 0x8 + (mTevAlphaOp >> 2 & 1) + (mTevAlphaOp >> 3 & 6);
 	}
-	u8 getAlphaOpSomething2() const { return mTevAlphaOp & 3; }
-	u8 getAlphaOpSomething3() const { return mTevAlphaOp >> 4 & 3; }
-	u8 getAlphaOpSomething4() const { return mTevAlphaOp >> 3 & 1; }
-	u8 getAlphaOpSomething5() const { return mTevAlphaOp >> 6 & 3; }
+	u8 getTevAlphaBias() const { return mTevAlphaOp & 3; }
+	u8 getTevAlphaScale() const { return mTevAlphaOp >> 4 & 3; }
+	u8 getTevAlphaClamp() const { return mTevAlphaOp >> 3 & 1; }
+	u8 getTevAlphaOutReg() const { return mTevAlphaOp >> 6 & 3; }
 
 	void setAlphaA(u8 a) { mTevAlphaAB = mTevAlphaAB & ~(0x07 << 5) | a << 5; }
 	void setAlphaB(u8 b) { mTevAlphaAB = mTevAlphaAB & ~(0x07 << 2) | b << 2; }
