@@ -559,9 +559,7 @@ void THinokuri2::init(TLiveManager* param_1)
 
 	J3DMtxCalc* calc = unk1A0;
 	if (getMActor()->getAnmBck()) {
-		MActorAnmBck* bck = getMActor()->getAnmBck();
-		bck->unk38        = calc;
-		bck->unk2A        = 3;
+		getMActor()->getAnmBck()->setCalc(calc);
 	}
 }
 

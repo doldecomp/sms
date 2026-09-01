@@ -20,7 +20,8 @@ void TSmJ3DAct::initModDat()
 	void* anmRes = unk3C->getRes("/default.bck");
 	if (anmRes) {
 		unk4C = J3DAnmLoaderDataBase::load(anmRes);
-		unk54 = J3DNewMtxCalcAnm(unk44->getUnkC(), (J3DAnmTransform*)unk4C);
+		unk54 = J3DNewMtxCalcAnm(unk44->getFlag() & J3DMLF_MtxCalcMask,
+		                         (J3DAnmTransform*)unk4C);
 		unk50 = new J3DFrameCtrl;
 		unk50->setEnd(unk4C->getFrameMax());
 	}

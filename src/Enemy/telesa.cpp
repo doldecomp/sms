@@ -292,8 +292,8 @@ void TTelesa::perform(u32 cue, JDrama::TGraphics* graphics)
 				               mPosition.z, mRotation.x, mRotation.y,
 				               mRotation.z);
 				mImitatedBmd->getMActor()->getModel()->setBaseTRMtx(afStack_58);
-				J3DModel* model = mImitatedBmd->getMActor()->getModel();
-				model->unk14    = JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f);
+				mImitatedBmd->getMActor()->getModel()->setBaseScale(
+				    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 			}
 
 			if (cue & CUE_ENTRY)

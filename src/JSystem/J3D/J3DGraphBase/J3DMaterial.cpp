@@ -900,24 +900,19 @@ void J3DTexGenBlockBasic::calc(MtxPtr ptr)
 
 void J3DMaterial::calc(MtxPtr ptr) { mTexGenBlock->calc(ptr); }
 
-// TODO: stack size mismatches...
 void J3DMaterial::setCurrentMtx()
 {
-	char trash[0x20];
-	mShape->setUnk3C(mTexGenBlock->getTexCoord(0)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(1)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(2)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(3)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(4)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(5)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(6)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(7)->getTexGenMtx());
+	mShape->setCurrentTexMtx(
+	    getTexCoord(0)->getTexGenMtx(), getTexCoord(1)->getTexGenMtx(),
+	    getTexCoord(2)->getTexGenMtx(), getTexCoord(3)->getTexGenMtx(),
+	    getTexCoord(4)->getTexGenMtx(), getTexCoord(5)->getTexGenMtx(),
+	    getTexCoord(6)->getTexGenMtx(), getTexCoord(7)->getTexGenMtx());
 }
 
 void J3DMaterial::copy(J3DMaterial* other)
 {
 	unk18 = other->unk18;
-	unk18 &= ~0x80000000;
+	unk18 &= ~DIFF_FLAG;
 	mColorBlock->reset(other->mColorBlock);
 	mTexGenBlock->reset(other->mTexGenBlock);
 	mTevBlock->reset(other->mTevBlock);
@@ -927,8 +922,8 @@ void J3DMaterial::copy(J3DMaterial* other)
 
 void J3DMaterial::reset()
 {
-	if ((~unk18 & 0x80000000) == 0) {
-		unk18 &= ~0x80000000;
+	if ((~unk18 & DIFF_FLAG) == 0) {
+		unk18 &= ~DIFF_FLAG;
 		mMaterialMode = mOriginalMaterial->mMaterialMode;
 		mInvalid      = mOriginalMaterial->mInvalid;
 		mMaterialAnm  = nullptr;
@@ -938,10 +933,10 @@ void J3DMaterial::reset()
 
 void J3DMaterial::change()
 {
-	if (unk18 & 0xC0000000) {
+	if (unk18 & (DIFF_FLAG | UNIQUE_FLAG))
 		return;
-	}
-	unk18 |= 0x80000000;
+
+	unk18 |= DIFF_FLAG;
 	mMaterialMode = mOriginalMaterial->mMaterialMode;
 	mInvalid      = mOriginalMaterial->mInvalid;
 	mMaterialAnm  = nullptr;
