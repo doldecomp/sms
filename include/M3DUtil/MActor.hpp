@@ -25,7 +25,7 @@ enum {
 	ANM_TYPE_BCK = 0,
 	/// "cLuster Keyframes" -- morph targets
 	ANM_TYPE_BLK = 1,
-	/// "Paint (???) Keyframes" -- material color animation
+	/// "Palette Keyframes" -- material color animation
 	ANM_TYPE_BPK = 2,
 	/// "Texture Pattern" -- simply switches textures
 	ANM_TYPE_BTP = 3,

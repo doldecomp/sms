@@ -340,13 +340,14 @@ void J3DModelLoader_v26::readMaterial(const J3DMaterialBlock* i_block,
 	if (i_flags & J3DMLF_UseUniqueMaterials) {
 		for (u16 i = 0; i < mpModelData->mMaterialNum; i++) {
 			mpModelData->mMaterials[i]->unk18
-			    = (u32)&mpModelData->unk38[factory.getMaterialID(i)] >> 4;
+			    = (uintptr_t)&mpModelData->unk38[factory.getMaterialID(i)] >> 4;
 			mpModelData->mMaterials[i]->mOriginalMaterial
 			    = &mpModelData->unk38[factory.getMaterialID(i)];
 		}
 	} else {
 		for (u16 i = 0; i < mpModelData->mMaterialNum; i++) {
-			mpModelData->mMaterials[i]->unk18 = 0xc0000000;
+			mpModelData->mMaterials[i]->unk18
+			    = J3DMaterial::DIFF_FLAG | J3DMaterial::UNIQUE_FLAG;
 		}
 	}
 }
@@ -381,13 +382,14 @@ void J3DModelLoader_v21::readMaterial_v21(const J3DMaterialBlock_v21* i_block,
 	if (i_flags & J3DMLF_UseUniqueMaterials) {
 		for (u16 i = 0; i < mpModelData->mMaterialNum; i++) {
 			mpModelData->mMaterials[i]->unk18
-			    = (u32)&mpModelData->unk38[factory.getMaterialID(i)] >> 4;
+			    = (uintptr_t)&mpModelData->unk38[factory.getMaterialID(i)] >> 4;
 			mpModelData->mMaterials[i]->mOriginalMaterial
 			    = &mpModelData->unk38[factory.getMaterialID(i)];
 		}
 	} else {
 		for (u16 i = 0; i < mpModelData->mMaterialNum; i++) {
-			mpModelData->mMaterials[i]->unk18 = 0xC0000000;
+			mpModelData->mMaterials[i]->unk18
+			    = J3DMaterial::DIFF_FLAG | J3DMaterial::UNIQUE_FLAG;
 		}
 	}
 }
