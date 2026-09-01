@@ -211,27 +211,16 @@ TBGKMtxCalc::TBGKMtxCalc(TBiancoGateKeeper* owner)
 
 void TBGKMtxCalc::joinAnm(int param_1)
 {
-	J3DAnmTransformKey* anm
-	    = mOwner->getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
-	        param_1);
-
-	if (unk54 == anm)
-		return;
-
-	unk58 = unk54;
-	unk54 = anm;
-	unk50 = 1.0f;
+	M3UMtxCalcSIAnmBlendQuat::joinAnm(
+	    mOwner->getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
+	        param_1));
 }
 
 void TBGKMtxCalc::setAnm(int param_1)
 {
-	J3DAnmTransformKey* anm
-	    = mOwner->getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
-	        param_1);
-
-	unk54 = anm;
-	unk58 = 0;
-	unk50 = 0.0f;
+	M3UMtxCalcSIAnmBlendQuat::setAnm(
+	    mOwner->getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
+	        param_1));
 }
 
 void TBGKMtxCalc::calc(u16 param_1)
@@ -724,13 +713,7 @@ void TBiancoGateKeeper::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_MOVE) {
-		TBGKMtxCalc* mc = unk178;
-		f32 delta       = -unk158;
-		mc->unk50 += delta;
-		if (mc->unk50 < 0.0f)
-			mc->unk50 = 0.0f;
-		else if (mc->unk50 > 1.0f)
-			mc->unk50 = 1.0f;
+		unk178->advanceMotionBlend(-unk158);
 	}
 
 	if (cue & CUE_MOVE)

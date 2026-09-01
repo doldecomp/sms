@@ -6,34 +6,49 @@
 #include <dolphin/mtx.h>
 #include <dolphin/gx.h>
 
+class J3DMaterial;
+
+/**
+ * @brief Strategy for loading matrices into GP matrix memory to be used for
+ * rendering. Basic form loads a single matrix from GX_POS_MTX_ARRAY by index or
+ * optionally uses the view matrix instead for position, normals or both.
+ */
 class J3DShapeMtx {
 public:
 	typedef void (J3DShapeMtx::*LoadPipeline)(int, u16) const;
 
 	J3DShapeMtx(u16 useMtxIndex)
-	    : unk4(useMtxIndex)
+	    : mUseMtxIndex(useMtxIndex)
 	{
 	}
 
 	virtual ~J3DShapeMtx() { }
 	virtual int getType() const { return 'SMTX'; }
 	virtual u32 getUseMtxNum() const { return 1; }
-	virtual u16 getUseMtxIndex(u16) const { return unk4; }
+	virtual u16 getUseMtxIndex(u16) const { return mUseMtxIndex; }
 	virtual void load() const;
 	virtual void calcNBTScale(const Vec&, float (*)[3][3], float (*)[3][3]);
 
+	/// No CPU-driven transforms
 	void loadMtxIndx_PNGP(int, u16) const;
+	/// Position transforms are CPU-driven
 	void loadMtxIndx_PCPU(int, u16) const;
+	/// Normal transforms are CPU-driven
 	void loadMtxIndx_NCPU(int, u16) const;
+	/// Both position and normal transforms are CPU-driven
 	void loadMtxIndx_PNCPU(int, u16) const;
 
 	static LoadPipeline mtxLoadPipeline[4];
 	static u32 currentPipeline;
 
-public:
-	u16 unk4;
+private:
+	u16 mUseMtxIndex;
 };
 
+/**
+ * @brief Pre-recorded matrix loading strategy: a display list is executed
+ * instead of doing GX commands.
+ */
 class J3DShapeMtxDL : public J3DShapeMtx {
 public:
 	J3DShapeMtxDL(u16);
@@ -42,31 +57,40 @@ public:
 	virtual void load() const;
 	virtual void calcNBTScale(const Vec&, float (*)[3][3], float (*)[3][3]) { }
 
-public:
+private:
 	void* mDisplayList;
 };
 
+/**
+ * @brief Loads up to 10 matrices into GP matrix memory from GX_POS_MTX_ARRAY by
+ * indices, optionally using the view matrix for all position or all normal
+ * matrices.
+ */
 class J3DShapeMtxMulti : public J3DShapeMtx {
 public:
 	J3DShapeMtxMulti(u16 useMtxIndex, u16 useMtxNum, u16* useMtxIndexTable)
 	    : J3DShapeMtx(useMtxIndex)
-	    , unk8(useMtxNum)
-	    , unkC(useMtxIndexTable)
+	    , mUseMtxNum(useMtxNum)
+	    , mUseMtxIndexTable(useMtxIndexTable)
 	{
 	}
 
 	virtual ~J3DShapeMtxMulti() { }
 	virtual int getType() const { return 'SMML'; }
-	virtual u32 getUseMtxNum() const { return unk8; }
-	virtual u16 getUseMtxIndex(u16 i) const { return unkC[i]; }
+	virtual u32 getUseMtxNum() const { return mUseMtxNum; }
+	virtual u16 getUseMtxIndex(u16 i) const { return mUseMtxIndexTable[i]; }
 	virtual void load() const;
 	virtual void calcNBTScale(const Vec&, float (*)[3][3], float (*)[3][3]);
 
-public:
-	u16 unk8;
-	u16* unkC;
+private:
+	u16 mUseMtxNum;
+	u16* mUseMtxIndexTable;
 };
 
+/**
+ * @brief A single piece of geometry in a J3D shape encoded as a GX display
+ * list to be drawn with a single set of matrices.
+ */
 class J3DShapeDraw {
 public:
 	J3DShapeDraw(const u8*, u32);
@@ -84,28 +108,36 @@ public:
 };
 
 enum J3DShpFlag {
-	J3DShpFlag_Visible    = 0x1,
+	/// The shape is drawn. Cleared to hide it.
+	J3DShpFlag_Visible = 0x1,
+	/// Positions are already transformed, so load the view matrix instead.
 	J3DShpFlag_SkinPosCpu = 0x4,
+	/// Normals are already transformed, so load the view matrix instead.
 	J3DShpFlag_SkinNrmCpu = 0x8,
-	J3DShpFlag_EnableLod  = 0x10,
+	/// The shape is deformed by a J3DCluster.
+	J3DShpFlag_EnableLod = 0x10,
 };
 
+/**
+ * @brief A single 3D mesh.
+ * @details A shape in J3D is cut up into pieces such that each piece contains
+ * vertices which only need 10 or less matrices to be drawn. This comes from a
+ * limitation of the GX hardware.
+ */
 class J3DShape {
-public:
-	enum {
-		kVcdVatDLSize = 0xC0,
-	};
+	friend class J3DShapeFactory;
 
+public:
 	J3DShape()
 	{
-		unk3C[0] = 0x3C;
-		unk3C[1] = 0x3C;
-		unk3C[2] = 0x3C;
-		unk3C[3] = 0x3C;
-		unk3C[4] = 0x3C;
-		unk3C[5] = 0x3C;
-		unk3C[6] = 0x3C;
-		unk3C[7] = 0x3C;
+		mCurrentTexMtx[0] = GX_IDENTITY;
+		mCurrentTexMtx[1] = GX_IDENTITY;
+		mCurrentTexMtx[2] = GX_IDENTITY;
+		mCurrentTexMtx[3] = GX_IDENTITY;
+		mCurrentTexMtx[4] = GX_IDENTITY;
+		mCurrentTexMtx[5] = GX_IDENTITY;
+		mCurrentTexMtx[6] = GX_IDENTITY;
+		mCurrentTexMtx[7] = GX_IDENTITY;
 		initialize();
 	}
 	~J3DShape();
@@ -117,16 +149,17 @@ public:
 	void loadVtxArray() const;
 	void draw() const;
 
-	void setUnk3C(u8 a, u8 b, u8 c, u8 d, u8 e, u8 f, u8 g, u8 h)
+	void setCurrentTexMtx(u8 t0, u8 t1, u8 t2, u8 t3, u8 t4, u8 t5, u8 t6,
+	                      u8 t7)
 	{
-		unk3C[0] = a;
-		unk3C[1] = b;
-		unk3C[2] = c;
-		unk3C[3] = d;
-		unk3C[4] = e;
-		unk3C[5] = f;
-		unk3C[6] = g;
-		unk3C[7] = h;
+		mCurrentTexMtx[0] = t0;
+		mCurrentTexMtx[1] = t1;
+		mCurrentTexMtx[2] = t2;
+		mCurrentTexMtx[3] = t3;
+		mCurrentTexMtx[4] = t4;
+		mCurrentTexMtx[5] = t5;
+		mCurrentTexMtx[6] = t6;
+		mCurrentTexMtx[7] = t7;
 	}
 
 	bool checkFlag(u32 flag) const { return (mFlags & flag) ? TRUE : FALSE; }
@@ -135,7 +168,7 @@ public:
 
 	u32 getIndex() const { return mIndex; }
 	GXVtxDescList* getVtxDesc() const { return mVtxDesc; }
-	u32 getMtxGroupNum() const { return mElementCount; }
+	u32 getMtxGroupNum() const { return mMtxGroupNum; }
 	J3DShapeMtx* getShapeMtx(u16 idx) const { return mMatrices[idx]; }
 	J3DShapeDraw* getShapeDraw(u16 idx) const { return mDraws[idx]; }
 	u32 getBumpMtxOffset() const { return mBumpMtxOffset; }
@@ -158,7 +191,7 @@ public:
 	void setDrawMtxDataPointer(J3DDrawMtxData* pMtxData)
 	{
 		J3D_ASSERT_NULLPTR(554, pMtxData != nullptr);
-		unk48 = pMtxData;
+		mDrawMtxData = pMtxData;
 	}
 
 	void setVertexDataPointer(J3DVertexData* pVtxData)
@@ -167,25 +200,29 @@ public:
 		mVertexData = pVtxData;
 	}
 
-	// fabricated
-	void* getDrawList() { return mGDCommands; }
+	void* getVcdVatCmd() const { return mVcdVatCmd; }
+	void setVcdVatCmd(void* pVatCmd) { mVcdVatCmd = pVatCmd; }
 
-public:
-	/* 0x0 */ u32 unk0;
+	enum {
+		kVcdVatDLSize = 0xC0,
+	};
+
+private:
+	/* 0x0 */ J3DMaterial* mMaterial;
 	/* 0x4 */ u16 mIndex;
-	/* 0x6 */ u16 mElementCount;
+	/* 0x6 */ u16 mMtxGroupNum;
 	/* 0x8 */ u32 mFlags;
 	/* 0xC */ f32 mRadius;
 	/* 0x10 */ Vec mMin;
 	/* 0x1C */ Vec mMax;
-	/* 0x28 */ void* mGDCommands;
+	/* 0x28 */ void* mVcdVatCmd;
 	/* 0x2C */ GXVtxDescList* mVtxDesc;
-	/* 0x30 */ bool unk30;
-	/* 0x34 */ J3DShapeMtx** mMatrices; // mElementCount entries
-	/* 0x38 */ J3DShapeDraw** mDraws;   // mElementCount entries
-	/* 0x3C */ u8 unk3C[8];
+	/* 0x30 */ bool mHasNBT;
+	/* 0x34 */ J3DShapeMtx** mMatrices; // mMtxGroupNum entries
+	/* 0x38 */ J3DShapeDraw** mDraws;   // mMtxGroupNum entries
+	/* 0x3C */ u8 mCurrentTexMtx[8];
 	/* 0x44 */ J3DVertexData* mVertexData;
-	/* 0x48 */ J3DDrawMtxData* unk48;
+	/* 0x48 */ J3DDrawMtxData* mDrawMtxData;
 	/* 0x4C */ u8* mScaleFlagArray;
 	/* 0x50 */ Mtx** mDrawMatrices;
 	/* 0x54 */ Mtx33** mNormMatrices;

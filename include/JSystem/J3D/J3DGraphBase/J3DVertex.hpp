@@ -5,6 +5,8 @@
 #include <dolphin/gx.h>
 
 class J3DVertexData {
+	friend class J3DModelLoader;
+
 public:
 	J3DVertexData();
 	~J3DVertexData();
@@ -26,7 +28,10 @@ public:
 		return mVtxAttrFmtList;
 	}
 
-public:
+	// fabricated
+	void setVtxPosArray(void* ptr) { mVtxPosArray = ptr; }
+
+private:
 	/* 0x0 */ u32 mVtxNum;
 	/* 0x4 */ u32 mNrmNum;
 	/* 0x8 */ u32 mColNum;
@@ -43,7 +48,6 @@ enum J3DDeformAttachFlag {
 };
 
 class J3DVertexBuffer {
-public:
 	/* 0x00 */ J3DVertexData* mVertexData;
 	/* 0x04 */ void* mVtxPosArray[2];
 	/* 0x0C */ void* mVtxNrmArray[2];
@@ -122,6 +126,12 @@ public:
 	void copyLocalVtxArray(J3DDeformAttachFlag);
 	void copyVtxColorArray(J3DDeformAttachFlag);
 	void copyTransformedVtxArray();
+
+	// fabricated
+	void setVtxPosArrayPointer(int index, void* ptr)
+	{
+		mVtxPosArray[index] = ptr;
+	}
 };
 
 class J3DDrawMtxData {

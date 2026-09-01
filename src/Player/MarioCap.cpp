@@ -26,7 +26,7 @@ TMarioCap::TMarioCap(TMario* mario)
 	    0,
 	    *mMario->mModel->getModel()->getModelData()->getTexture()->getResTIMG(
 	        0));
-	DCFlushRange(maCap1ModelData->getTexture()->mResources, 0x20);
+	DCFlushRange(maCap1ModelData->getTexture()->getResTIMG(0), sizeof(ResTIMG));
 	unk10[0] = new J3DModel(maCap1ModelData, 0, 1);
 
 	J3DModelData* maCap3ModelData = J3DModelLoaderDataBase::load(
@@ -37,7 +37,7 @@ TMarioCap::TMarioCap(TMario* mario)
 	    0,
 	    *mMario->mModel->getModel()->getModelData()->getTexture()->getResTIMG(
 	        0));
-	DCFlushRange(maCap3ModelData->getTexture()->mResources, 0x20);
+	DCFlushRange(maCap3ModelData->getTexture()->getResTIMG(0), sizeof(ResTIMG));
 	unk10[1] = new J3DModel(maCap3ModelData, 0, 1);
 
 	if (mMario->mBodyPollutionTex != 0) {
