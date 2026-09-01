@@ -29,6 +29,8 @@ JKRArchive::JKRArchive(s32 entryNumber, JKRArchive::EMountMode mountMode)
 	}
 }
 
+JKRArchive::JKRArchive(const char* p1, JKRArchive::EMountMode mountMode) { }
+
 JKRArchive::~JKRArchive() { }
 
 bool JKRArchive::isSameName(JKRArchive::CArcName& name, u32 nameOffset,
@@ -38,6 +40,22 @@ bool JKRArchive::isSameName(JKRArchive::CArcName& name, u32 nameOffset,
 	if (hash != nameHash)
 		return false;
 	return strcmp(mStrTable + nameOffset, name.getString()) == 0;
+}
+
+JKRArchive::SDIDirEntry* JKRArchive::findResType(u32 type) const
+{
+	SDIDirEntry* node = mDirectories;
+	u32 count         = 0;
+	while (count < mArcInfoBlock->num_nodes) {
+		if (node->mType == type) {
+			return node;
+		}
+
+		node++;
+		count++;
+	}
+
+	return nullptr;
 }
 
 JKRArchive::SDIDirEntry* JKRArchive::findDirectory(const char* name,
@@ -65,19 +83,8 @@ JKRArchive::SDIDirEntry* JKRArchive::findDirectory(const char* name,
 	return nullptr;
 }
 
-JKRArchive::SDIDirEntry* JKRArchive::findResType(u32 type) const
+JKRArchive::SDIFileEntry* JKRArchive::findTypeResource(u32 type, u32 id) const
 {
-	SDIDirEntry* node = mDirectories;
-	u32 count         = 0;
-	while (count < mArcInfoBlock->num_nodes) {
-		if (node->mType == type) {
-			return node;
-		}
-
-		node++;
-		count++;
-	}
-
 	return nullptr;
 }
 
@@ -168,6 +175,32 @@ JKRArchive::findPtrResource(const void* resource) const
 	return nullptr;
 }
 
+JKRArchive::SDIFileEntry* JKRArchive::findIdResource(u16 id) const
+{
+	if (id != 0xFFFF) {
+		SDIFileEntry* fileEntry;
+		if (id < mArcInfoBlock->num_file_entries) {
+			fileEntry = mFileEntries + id;
+			if (fileEntry->mFileID == id
+			    && fileEntry->mFlagsAndNameOffset >> 24 & 0x01) {
+				return fileEntry;
+			}
+		}
+
+		fileEntry = mFileEntries;
+		for (int i = 0; i < mArcInfoBlock->num_file_entries; fileEntry++, i++) {
+			if (fileEntry->mFileID == id
+			    && fileEntry->mFlagsAndNameOffset >> 24 & 0x01) {
+				return fileEntry;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+JKRArchive::CArcName::CArcName() { }
+
 void JKRArchive::CArcName::store(const char* name)
 {
 	mHash      = 0;
@@ -175,7 +208,7 @@ void JKRArchive::CArcName::store(const char* name)
 	while (*name) {
 		s32 ch = tolower(*name);
 		mHash  = ch + mHash * 3;
-		if (length < (s32)ARRAY_COUNT(mString)) {
+		if (length < (s32)ARRAY_COUNT(mString) - 1) {
 			mString[length++] = ch;
 		}
 		name++;
@@ -192,7 +225,7 @@ const char* JKRArchive::CArcName::store(const char* name, char endChar)
 	while (*name && *name != endChar) {
 		s32 lch = tolower((int)*name);
 		mHash   = lch + mHash * 3;
-		if (length < (s32)ARRAY_COUNT(mString)) {
+		if (length < (s32)ARRAY_COUNT(mString) - 1) {
 			mString[length++] = lch;
 		}
 		name++;

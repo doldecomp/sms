@@ -36,18 +36,34 @@ public:
 	static JKRAram* create(u32, u32, s32, s32, s32);
 	static void checkOkAddress(u8*, u32, JKRAramBlock*, u32);
 	static void changeGroupIdIfNeed(u8*, int);
+
 	static JKRAramBlock* mainRamToAram(u8*, u32, u32, JKRExpandSwitch, u32,
 	                                   JKRHeap*, int);
 	static JKRAramBlock* mainRamToAram(u8*, JKRAramBlock*, u32, JKRExpandSwitch,
 	                                   u32, JKRHeap*, int);
+	static void mainRamToAram_Async(u8*, u32, u32, JKRExpandSwitch, u32,
+	                                JKRHeap*, void (*)(u32), int);
+	static void mainRamToAram_Async(u8*, JKRAramBlock*, u32, JKRExpandSwitch,
+	                                u32, JKRHeap*, void (*)(u32), int);
+
 	static u8* aramToMainRam(u32, u8*, u32, JKRExpandSwitch, u32, JKRHeap*, int,
 	                         u32*);
 	static u8* aramToMainRam(JKRAramBlock*, u8*, u32, u32, JKRExpandSwitch, u32,
 	                         JKRHeap*, int, u32*);
+	static void aramToMainRam_Async(u32, u8*, u32, JKRExpandSwitch, u32,
+	                                JKRHeap*, void (*)(u32), int);
+	static void aramToMainRam_Async(JKRAramBlock*, u8*, u32, u32,
+	                                JKRExpandSwitch, u32, JKRHeap*,
+	                                void (*)(u32), int);
+
+	static void aramSync(JKRAMCommand*, int);
+	static void aramSyncAll(int);
+	static void countLeftSync();
+
 	static void dump(void);
 
 	static JKRAram* getManager() { return sAramObject; }
-	static JKRAramHeap* getAramHeap() { return getManager()->mAramHeap; }
+	static JKRAramHeap* getAramHeap() { return sAramObject->mAramHeap; }
 	static JSUList<JKRAMCommand>& getCommandList() { return sAramCommandList; }
 
 	static u8 decideAramGroupId(int groupId)

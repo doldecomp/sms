@@ -5,7 +5,10 @@
 #include <string.h>
 #include <types.h>
 
-void SpcTrace(const char*, ...);
+// Tracing is compiled out of the release build, so the body is empty. The map
+// records the symbol as weak in several translation units, which is why it
+// lives in this header rather than in spcinterp.cpp.
+inline void SpcTrace(const char*, ...) { }
 
 template <class T> class TSpcStack {
 public:
@@ -431,7 +434,17 @@ public:
 	void push(const TSpcSlice& slice) { mProcessStack.push(slice); }
 	void push(int v) { mProcessStack.push(TSpcSlice(v)); }
 	void push(f32 v) { mProcessStack.push(TSpcSlice(v)); }
-	void push(const char* v) { mProcessStack.push(TSpcSlice(v)); }
+	// Unlike the other scalar overloads this one builds the slice with the
+	// default constructor and setDataString, not with TSpcSlice(const char*).
+	// The callers show it: the null test inside setDataString survives even
+	// when the argument is a string literal, which only happens when the
+	// pointer arrives through this parameter.
+	void push(const char* v)
+	{
+		TSpcSlice slice;
+		slice.setDataString(v);
+		mProcessStack.push(slice);
+	}
 	void push() { push(TSpcSlice()); }
 	TSpcSlice pop() { return mProcessStack.pop(); }
 
@@ -669,8 +682,6 @@ public:
 			TSpcInterp::dispatchBuiltin(sym_index, arg_count);
 		}
 	}
-
-	virtual ~TSpcTypedInterp() { }
 
 	// fabricated
 	T* getOwner() const { return (T*)unk10; }

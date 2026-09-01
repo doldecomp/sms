@@ -94,7 +94,7 @@ static u8 getVertexFormat(const J3DModelData* model_data, GXAttr attr)
 
 void TMirrorModel::setPlane()
 {
-	MtxPtr mtx = unk4->unk4->unk20;
+	MtxPtr mtx = unk4->getModel()->getBaseTRMtx();
 	MTXMultVec(mtx, &unkC, &unkC);
 	MTXMultVecSR(mtx, &unk18, &unk18);
 	VECNormalize(&unk18, &unk18);
@@ -300,10 +300,8 @@ void TMirrorModelManager::loadAfter()
 		J3DTexture* texture
 		    = unk1C[i]->getUnk4()->getModel()->getModelData()->getTexture();
 
-		// This looks like setResTIMG but isn't???
-
+		ResTIMG& target       = *texture->getResTIMG(0);
 		const ResTIMG& source = *unk24->getUnk94();
-		ResTIMG& target       = texture->mResources[0];
 
 		target = source;
 		target.imageDataOffset

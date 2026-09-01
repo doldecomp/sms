@@ -4,9 +4,9 @@
 
 J3DVertexData::J3DVertexData()
 {
-	unk0            = 0;
-	unk4            = 0;
-	unk8            = 0;
+	mVtxNum         = 0;
+	mNrmNum         = 0;
+	mColNum         = 0;
 	mVtxAttrFmtList = nullptr;
 	mVtxPosArray    = nullptr;
 	mVtxNormArray   = nullptr;
@@ -21,40 +21,48 @@ J3DVertexData::~J3DVertexData() { }
 
 J3DVertexBuffer::J3DVertexBuffer(J3DVertexData* vertex_data)
 {
-	mVertexData = vertex_data;
-	unk4[0]     = vertex_data->mVtxPosArray;
-	unkC[0]     = vertex_data->mVtxNormArray;
-	unk14[0]    = vertex_data->mVtxColorArray[0];
-	unk4[1]     = nullptr;
-	unkC[1]     = nullptr;
-	unk14[1]    = nullptr;
-	unk1C[0]    = vertex_data->mVtxPosArray;
-	unk24[0]    = vertex_data->mVtxNormArray;
-	unk1C[1]    = nullptr;
-	unk24[1]    = nullptr;
-	unk2C       = vertex_data->mVtxPosArray;
-	unk30       = vertex_data->mVtxNormArray;
-	unk34       = vertex_data->mVtxColorArray[0];
+	mVertexData                = vertex_data;
+	mVtxPosArray[0]            = vertex_data->getVtxPosArray();
+	mVtxNrmArray[0]            = vertex_data->getVtxNormArray();
+	mVtxColArray[0]            = vertex_data->getVtxColorArray(0);
+	mVtxPosArray[1]            = nullptr;
+	mVtxNrmArray[1]            = nullptr;
+	mVtxColArray[1]            = nullptr;
+	mTransformedVtxPosArray[0] = vertex_data->getVtxPosArray();
+	mTransformedVtxNrmArray[0] = vertex_data->getVtxNormArray();
+	mTransformedVtxPosArray[1] = nullptr;
+	mTransformedVtxNrmArray[1] = nullptr;
+	unk2C                      = vertex_data->getVtxPosArray();
+	unk30                      = vertex_data->getVtxNormArray();
+	unk34                      = vertex_data->getVtxColorArray(0);
 }
 
 J3DVertexBuffer::~J3DVertexBuffer() { }
 
+void J3DVertexBuffer::copyLocalVtxArray(J3DDeformAttachFlag)
+{
+	// UNUSED
+}
+
 void J3DVertexBuffer::copyTransformedVtxArray()
 {
-	char trash[0x10];
-	if (unk1C[0] != 0 && unk1C[1] != 0) {
+	if (mTransformedVtxPosArray[0] != 0 && mTransformedVtxPosArray[1] != 0)
 		return;
-	}
 
 	for (int i = 0; i < 2; ++i) {
-		// TODO: the `new`s are probably for vec3s
-		if (i == 0 || unk1C[i] == 0) {
-			unk1C[i] = new (0x20) char[mVertexData->unk0 * 0xc];
-		}
-		if (i == 0 || unk24[i] == 0) {
-			unk24[i] = new (0x20) char[mVertexData->unk4 * 0xc];
-		}
+		if (i == 0 || mTransformedVtxPosArray[i] == 0)
+			mTransformedVtxPosArray[i]
+			    = new (0x20) u8[mVertexData->getVtxNum() * 0xc];
+
+		if (i == 0 || mTransformedVtxNrmArray[i] == 0)
+			mTransformedVtxNrmArray[i]
+			    = new (0x20) u8[mVertexData->getNrmNum() * 0xc];
 	}
+}
+
+void J3DVertexBuffer::copyVtxColorArray(J3DDeformAttachFlag)
+{
+	// UNUSED
 }
 
 J3DDrawMtxData::J3DDrawMtxData()

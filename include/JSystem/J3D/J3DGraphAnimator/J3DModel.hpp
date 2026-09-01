@@ -6,6 +6,8 @@
 #include <JSystem/J3D/J3DGraphBase/J3DPacket.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAttach.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
+#include <JSystem/J3D/J3DAssert.hpp>
 #include <JSystem/ResTIMG.hpp>
 #include <dolphin/mtx.h>
 
@@ -13,6 +15,7 @@ class J3DAnmColor;
 class J3DAnmTexPattern;
 class J3DAnmTextureSRTKey;
 class J3DAnmTevRegKey;
+class J3DAnmVtxColor;
 
 class J3DMatColorAnm;
 class J3DTexNoAnm;
@@ -82,12 +85,17 @@ public:
 	}
 	u16 getDrawMtxNum() const { return mDrawMtxData.mEntryNum; }
 	u16 getWEvlpMtxNum() const { return mWEvlpMtxNum; }
+	u8 getWEvlpMixMtxNum(u16 idx) const { return unk88[idx]; }
+	u16* getWEvlpMixMtxIndex() const { return unk8C; }
+	f32* getWEvlpMixWeight() const { return unk90; }
+	MtxPtr getInvJointMtx(u16 idx) const { return unk94[idx]; }
 	u16 getJointNum() const { return mJointNum; }
 	u16 getShapeNum() const { return mShapeNum; }
 	u16 getMaterialNum() const { return mMaterialNum; }
 
 	J3DMaterial* getMaterialNodePointer(u16 idx) const
 	{
+		J3D_ASSERT_RANGE(92, idx < mMaterialNum);
 		return mMaterials[idx];
 	}
 	void setTexture(J3DTexture* texture) { unkAC = texture; }
@@ -115,22 +123,29 @@ public:
 	const J3DVertexData& getVertexData() const { return mVertexData; }
 
 	void* getVtxPosArray() const { return mVertexData.getVtxPosArray(); }
+	void* getVtxNormArray() const { return mVertexData.getVtxNormArray(); }
 
 	J3DJoint* getRootNode() { return mRootNode; }
 
+	J3DMtxCalc* getMtxCalc() { return unk14; }
+
+	void setBumpFlag(u32 flag) { unk18 = flag; }
+
 	// This is the J3DMtxCalcAnm type this model needs supposedly
-	u32 getUnkC() const { return unkC & 0xf; }
+	u32 getUnkC() const { return unkC & J3DMLF_MtxCalcMask; }
+	bool checkFlag(u32 flag) const { return unkC & flag ? true : false; }
+	u32 getFlag() const { return unkC; }
 
 	void onFlag1OnAllShapes()
 	{
 		for (u16 j = 0; j < mShapeNum; ++j)
-			mShapeNodePointer[j]->onFlag(1);
+			mShapeNodePointer[j]->onFlag(J3DShpFlag_Visible);
 	}
 
 	void offFlag1OnAllShapes()
 	{
 		for (u16 j = 0; j < mShapeNum; ++j)
-			mShapeNodePointer[j]->offFlag(1);
+			mShapeNodePointer[j]->offFlag(J3DShpFlag_Visible);
 	}
 
 public:
@@ -182,6 +197,13 @@ struct J3DVtxShader;
 // Stolen from TP, unused in sms
 struct J3DVtxColorCalc {
 	virtual void calc(J3DModel*);
+	virtual ~J3DVtxColorCalc() { }
+
+	bool checkFlag(u32 flag) { return mFlags & flag ? true : false; }
+
+public:
+	/* 0x4 */ u32 mFlags;
+	/* 0x8 */ J3DAnmVtxColor* mpVtxColor;
 };
 
 // fake and unknowable
@@ -202,7 +224,7 @@ public:
 	J3DModel(J3DModelData*, u32, u32);
 
 	void initialize();
-	void entryModelData(J3DModelData*, u32, u32);
+	void entryModelData(J3DModelData* pModelData, u32 mdlFlags, u32 mtxNum);
 	void lock();
 	void unlock();
 	void makeDL();
@@ -228,15 +250,20 @@ public:
 	MtxPtr getAnmMtx(int idx) { return mNodeMatrices[idx]; }
 	void setAnmMtx(int idx, Mtx mtx) { MTXCopy(mtx, mNodeMatrices[idx]); }
 	J3DMatPacket* getMatPacket(u16 idx) { return &mMatPackets[idx]; }
+	J3DMatPacket* getMatPacketArray() { return mMatPackets; }
 	J3DShapePacket* getShapePacket(u16 idx) { return &mShapePackets[idx]; }
+	J3DShapePacket* getShapePacketArray() { return mShapePackets; }
 
 	u8 getScaleFlag(int idx) const { return mScaleFlagArr[idx]; }
 	void setScaleFlag(int idx, u8 param_1) { mScaleFlagArr[idx] = param_1; }
 	u8 getEnvScaleFlag(int idx) const { return mEvlpScaleFlagArr[idx]; }
 
 	J3DVertexBuffer* getVertexBuffer() { return mVertexBuffer; }
-	MtxPtr getWeightAnmMtx(int idx) { return unk5C[idx]; }
-	void setWeightAnmMtx(int idx, MtxPtr mtx) { MTXCopy(mtx, unk5C[idx]); }
+	MtxPtr getWeightAnmMtx(int idx) { return mWeightEvlpMatrices[idx]; }
+	void setWeightAnmMtx(int idx, MtxPtr mtx)
+	{
+		MTXCopy(mtx, mWeightEvlpMatrices[idx]);
+	}
 
 	bool checkFlag(u32 flag) const { return (unk8 & flag) ? 1 : 0; }
 
@@ -280,7 +307,7 @@ public:
 
 	virtual ~J3DModel();
 
-public:
+protected:
 	/* 0x04 */ J3DModelData* mModelData;
 	/* 0x08 */ u32 unk8;
 	/* 0x0C */ J3DCalcCallBack unkC;
@@ -290,7 +317,7 @@ public:
 	/* 0x50 */ u8* mScaleFlagArr;
 	/* 0x54 */ u8* mEvlpScaleFlagArr;
 	/* 0x58 */ Mtx* mNodeMatrices;
-	/* 0x5C */ Mtx* unk5C;
+	/* 0x5C */ Mtx* mWeightEvlpMatrices;
 	/* 0x60 */ Mtx** mDrawMtxBuf[2];
 	/* 0x68 */ Mtx33** mNrmMtxBuf[2];
 	/* 0x70 */ Mtx33*** mBumpMtxArr[2];

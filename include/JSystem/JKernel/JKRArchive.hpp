@@ -38,7 +38,7 @@ public:
 
 	class CArcName {
 	public:
-		CArcName() { }
+		CArcName();
 		CArcName(const char* data) { store(data); }
 		CArcName(const char** p1, char p2) { p1[0] = store(p1[0], p2); }
 
@@ -50,7 +50,7 @@ public:
 
 		u16 mHash;         // _00
 		u16 mLength;       // _02
-		char mString[256]; // _04
+		char mString[257]; // _04
 	};
 
 	struct SDIFileEntry {
@@ -105,24 +105,27 @@ public:
 	JKRArchive();
 	JKRArchive(s32, EMountMode);
 
-	virtual ~JKRArchive();                                 // _08
-	virtual bool becomeCurrent(const char*);               // _10
-	virtual void* getResource(const char* path);           // _14
-	virtual void* getResource(u32 type, const char* name); // _18
+	virtual bool becomeCurrent(const char*);
+	virtual void* getResource(const char* path);
+	virtual void* getResource(u32 type, const char* name);
 	virtual size_t readResource(void* resourceBuffer, u32 bufferSize,
-	                            const char* path); // _1C
+	                            const char* path);
 	virtual size_t readResource(void* resourceBuffer, u32 bufferSize, u32 type,
-	                            const char* name);                      // _20
-	virtual void removeResourceAll();                                   // _24
-	virtual bool removeResource(void*);                                 // _28
-	virtual bool detachResource(void*);                                 // _2C
-	virtual s32 getResSize(const void*) const;                          // _30
-	virtual u32 countFile(const char*) const;                           // _34
-	virtual JKRFileFinder* getFirstFile(const char*) const;             // _38
-	virtual void* fetchResource(SDIFileEntry* entry, u32* outSize) = 0; // _40
+	                            const char* name);
+	virtual void removeResourceAll();
+	virtual bool removeResource(void*);
+	virtual bool detachResource(void*);
+	virtual s32 getResSize(const void*) const;
+	virtual u32 countFile(const char*) const;
+	virtual JKRFileFinder* getFirstFile(const char*) const;
+	virtual void* fetchResource(SDIFileEntry* entry, u32* outSize) = 0;
 	virtual void* fetchResource(void* resourceBuffer, u32 bufferSize,
 	                            SDIFileEntry* entry, u32* resSize)
-	    = 0; // _44
+	    = 0;
+
+	// NOTE: has to be defined not first to get the vtable
+	// to emit to the correct TU
+	virtual ~JKRArchive();
 
 	SDIDirEntry* findDirectory(const char*, u32) const;
 	SDIFileEntry* findFsResource(const char*, u32) const;
@@ -149,7 +152,7 @@ public:
 	SDIDirEntry* findResType(u32) const;
 	SDIFileEntry* findTypeResource(u32, u32) const;
 
-	static JKRCompression convertAttrToCompressionType(int attr)
+	static JKRCompression convertAttrToCompressionType(u8 attr)
 	{
 		if (!(attr & JKRARCHIVE_ATTR_COMPRESSION))
 			return JKR_COMPRESSION_NONE;
@@ -184,7 +187,7 @@ protected:
 
 enum JKRMemBreakFlag { MBF_0 = 0, MBF_1 = 1 };
 
-inline JKRCompression JKRConvertAttrToCompressionType(int attr)
+inline JKRCompression JKRConvertAttrToCompressionType(u8 attr)
 {
 	return JKRArchive::convertAttrToCompressionType(attr);
 }

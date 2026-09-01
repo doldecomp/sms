@@ -6,6 +6,7 @@
 #include <Player/MarioAccess.hpp>
 #include <System/Application.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <Strategic/Strategy.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
@@ -81,14 +82,14 @@ void TLampTrapSpike::control()
 
 	switch (thing) {
 	case 0: {
-		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(6.0f);
 			ctrl->setRate(SMSGetAnmFrameRate());
 		}
-		if (mMActor->curAnmEndsNext(0, nullptr)) {
+		if (mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			unk13C = 0;
 			unk138 = 2;
 		}
@@ -97,14 +98,14 @@ void TLampTrapSpike::control()
 	} break;
 
 	case 1: {
-		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_down");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(0.0f);
 			ctrl->setRate(SMSGetAnmFrameRate() * 0.8f);
 		}
-		if (mMActor->curAnmEndsNext(0, nullptr)) {
+		if (mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			unk13C = 0;
 			unk138 = 3;
 		}
@@ -115,7 +116,7 @@ void TLampTrapSpike::control()
 	case 2:
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(ctrl->getEnd());
 			ctrl->setRate(0.0f);
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MVING_FENCT_SET,
@@ -131,7 +132,7 @@ void TLampTrapSpike::control()
 	case 3:
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_down");
-			if (J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0)) {
+			if (J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK)) {
 				ctrl->setFrame(ctrl->getEnd());
 				ctrl->setRate(0.0f);
 			}
@@ -144,10 +145,10 @@ void TLampTrapSpike::control()
 		break;
 
 	case 4: {
-		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(0.0f);
 			ctrl->setRate(SMSGetAnmFrameRate() * 0.1f);
 		}
@@ -161,10 +162,10 @@ void TLampTrapSpike::control()
 
 	default:
 	case 5:
-		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(6.0f);
 			ctrl->setRate(-SMSGetAnmFrameRate());
 		}
@@ -284,8 +285,10 @@ void TLampTrapIron::perform(u32 cue, JDrama::TGraphics* graphics)
 	TMapObjBase::perform(cue, graphics);
 	unk138->perform(cue, graphics);
 	if ((cue & CUE_CALC_ANIM) && unk13C > 0) {
-		gpMarioParticleManager->emit(0x1F1, &mPosition, 3, this);
-		gpMarioParticleManager->emit(0x12C, &mPosition, 1, this);
+		gpMarioParticleManager->emit(PARTICLE_MS_TEPPANFIRE_B, &mPosition, 3,
+		                             this);
+		gpMarioParticleManager->emit(PARTICLE_MS_TEPPANFIRE_A, &mPosition, 1,
+		                             this);
 	}
 }
 

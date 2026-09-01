@@ -9,6 +9,20 @@
 // NOTE: for .sdata ordering
 static void dummy(float* f) { *f = 1.0f; }
 
+J2DWindow::J2DWindow(const ResTIMG* timg1, const ResTIMG* timg2,
+                     const ResTIMG* timg3, const ResTIMG* timg4)
+{
+}
+
+J2DWindow::J2DWindow(const char* name1, const char* name2, const char* name3,
+                     const char* name4)
+{
+}
+
+J2DWindow::J2DWindow(const ResTIMG* timg, J2DTextureBase base) { }
+
+J2DWindow::J2DWindow(const char* name, J2DTextureBase base) { }
+
 J2DWindow::J2DWindow(J2DPane* parent, JSURandomInputStream* stream, bool is_ex)
     : J2DPane(parent, stream, is_ex)
     , unkFC(nullptr)
@@ -22,10 +36,10 @@ J2DWindow::J2DWindow(J2DPane* parent, JSURandomInputStream* stream, bool is_ex)
 	if (is_ex) {
 		u8 fields = stream->readU8();
 
-		unkEC.x1 = stream->readU16();
-		unkEC.y1 = stream->readU16();
-		unkEC.x2 = unkEC.x1 + stream->readU16();
-		unkEC.y2 = unkEC.y1 + stream->readU16();
+		mContentsBounds.x1 = stream->readU16();
+		mContentsBounds.y1 = stream->readU16();
+		mContentsBounds.x2 = mContentsBounds.x1 + stream->readU16();
+		mContentsBounds.y2 = mContentsBounds.y1 + stream->readU16();
 
 		if (ResTIMG* timg = (ResTIMG*)res.getResource(stream, 'TIMG', nullptr))
 			unk100 = new Texture(timg);
@@ -63,10 +77,10 @@ J2DWindow::J2DWindow(J2DPane* parent, JSURandomInputStream* stream, bool is_ex)
 		}
 		stream->align(4);
 	} else {
-		unkEC.x1 = stream->readU16();
-		unkEC.y1 = stream->readU16();
-		unkEC.x2 = unkEC.x1 + stream->readU16();
-		unkEC.y2 = unkEC.y1 + stream->readU16();
+		mContentsBounds.x1 = stream->readU16();
+		mContentsBounds.y1 = stream->readU16();
+		mContentsBounds.x2 = mContentsBounds.x1 + stream->readU16();
+		mContentsBounds.y2 = mContentsBounds.y1 + stream->readU16();
 
 		if (ResTIMG* timg = (ResTIMG*)res.getResource(stream, 'TIMG', nullptr))
 			unk100 = new Texture(timg);
@@ -99,6 +113,42 @@ J2DWindow::J2DWindow(J2DPane* parent, JSURandomInputStream* stream, bool is_ex)
 	}
 }
 
+J2DWindow::J2DWindow(u32 tag, const JUTRect& bounds, const ResTIMG* timg1,
+                     const ResTIMG* timg2, const ResTIMG* timg3,
+                     const ResTIMG* timg4, const ResTLUT* tlut)
+{
+}
+
+J2DWindow::J2DWindow(u32 tag, const JUTRect& bounds, const char* name1,
+                     const char* name2, const char* name3, const char* name4,
+                     const ResTLUT* tlut)
+{
+}
+
+J2DWindow::J2DWindow(u32 tag, const JUTRect& bounds, const ResTIMG* timg,
+                     J2DTextureBase base, const ResTLUT* tlut)
+{
+}
+
+J2DWindow::J2DWindow(u32 tag, const JUTRect& bounds, const char* name,
+                     J2DTextureBase base, const ResTLUT* tlut)
+{
+}
+
+void J2DWindow::initiate(const ResTIMG* timg1, const ResTIMG* timg2,
+                         const ResTIMG* timg3, const ResTIMG* timg4,
+                         const ResTLUT* tlut, J2DWindowMirror mirror,
+                         const JUTRect& bounds)
+{
+}
+
+void J2DWindow::initiateColor() { }
+
+J2DWindowMirror J2DConvertMirror(J2DTextureBase base)
+{
+	return J2DWindowMirror();
+}
+
 J2DWindow::~J2DWindow()
 {
 	if (unk100)
@@ -115,7 +165,7 @@ J2DWindow::~J2DWindow()
 		delete unk110;
 }
 
-J2DWindow::Texture::~Texture() { }
+void J2DWindow::draw(const JUTRect& param_1) { }
 
 void J2DWindow::draw_private(const JUTRect& param_1, const JUTRect& param_2,
                              Mtx* param_3)
@@ -144,7 +194,7 @@ void J2DWindow::draw_private(const JUTRect& param_1, const JUTRect& param_2,
 			unk10C->draw(iVar6, iVar8, !!(unk114 & 2), !!(unk114 & 1),
 			             mColorAlpha, unk12C, unk128);
 
-			u16 a, b, c, d;
+			u16 a, b, c, d, e;
 
 			b = a = (unk114 & 0x20) ? (u16)0x8000 : (u16)0;
 			c     = (unk114 & 0x10) ? (u16)0 : (u16)0x8000;
@@ -155,9 +205,9 @@ void J2DWindow::draw_private(const JUTRect& param_1, const JUTRect& param_2,
 
 			d = a = (unk114 & 0x2) ? (u16)0x8000 : (u16)0;
 			b     = (unk114 & 0x1) ? (u16)0 : (u16)0x8000;
-			c     = b ^ 0x8000;
+			e     = b ^ 0x8000;
 			unk10C->draw(unk100Width, iVar8, iVar6 - unk100Width,
-			             unk10C->getHeight(), d, b, a, c, mColorAlpha, unk12C,
+			             unk10C->getHeight(), d, b, a, e, mColorAlpha, unk12C,
 			             unk128);
 
 			a = (unk114 & 0x8) ? (u16)0 : (u16)0x8000;
@@ -182,24 +232,29 @@ void J2DWindow::draw_private(const JUTRect& param_1, const JUTRect& param_2,
 	}
 }
 
+void J2DWindow::draw(const JUTRect& param_1, const JUTRect& param_2) { }
+
 void J2DWindow::resize(int width, int height)
 {
-	int oldW = mBounds.getWidth();
-	int oldH = mBounds.getHeight();
-	mBounds.resize(width, height);
-	int dw = width - oldW;
-	int dh = height - oldH;
-	unkEC.x2 += dw;
-	unkEC.y2 += dh;
+	int oldW = getWidth();
+	int oldH = getHeight();
+	J2DPane::resize(width, height);
+	mContentsBounds.x2 += width - oldW;
+	mContentsBounds.y2 += height - oldH;
 
-	for (JSUTreeIterator<J2DPane> iter = mPaneTree.getFirstChild();
-	     iter != mPaneTree.getEndChild(); ++iter) {
+	for (JSUTreeIterator<J2DPane> iter(getPaneTree()->getFirstChild());
+	     iter != getPaneTree()->getEndChild(); iter++) {
 		if (iter->getTag() == 0x13 && iter->isConnectParent()) {
-			int nw = dw + iter->getWidth();
-			int nh = dh + iter->getHeight();
-			iter->mBounds.resize(nw, nh);
+			int nw = width - oldW + iter->getWidth();
+			int nh = height - oldH + iter->getHeight();
+			iter->J2DPane::resize(nw, nh);
 		}
 	}
+}
+
+void J2DWindow::setContentsColor(JUtility::TColor c1, JUtility::TColor c2,
+                                 JUtility::TColor c3, JUtility::TColor c4)
+{
 }
 
 void J2DWindow::drawSelf(int x, int y)
@@ -214,8 +269,8 @@ void J2DWindow::drawSelf(int x, int y, Mtx* mtx)
 	JUTRect tmp(mGlobalBounds.x1, mGlobalBounds.y1, mGlobalBounds.x2,
 	            mGlobalBounds.y2);
 	tmp.add(x, y);
-	draw_private(tmp, unkEC, mtx);
-	clip(unkEC);
+	draw_private(tmp, mContentsBounds, mtx);
+	clip(mContentsBounds);
 }
 
 void J2DWindow::drawContents(const JUTRect& rect)

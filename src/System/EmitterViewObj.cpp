@@ -54,18 +54,15 @@ void TEmitterIndirectViewObj::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TMarioEmitterCallBackBindToPosPtr::execute(JPABaseEmitter* emitter)
 {
-	Vec* vec = (Vec*)emitter->unk120;
-
-	emitter->unk160.x = vec->x;
-	emitter->unk160.y = vec->y;
-	emitter->unk160.z = vec->z;
+	JGeometry::TVec3<f32>* vec = (JGeometry::TVec3<f32>*)emitter->getUserWork();
+	emitter->setGlobalTranslation(*vec);
 }
 
 void TMarioEmitterCallBackBindToPosPtr::draw(JPABaseEmitter*) { }
 
 void TMarioEmitterCallBackBindToMtxPtr::execute(JPABaseEmitter* emitter)
 {
-	MtxPtr mtx = (MtxPtr)emitter->unk120;
+	MtxPtr mtx = (MtxPtr)emitter->getUserWork();
 	emitter->setGlobalRTMatrix(mtx);
 }
 
@@ -73,7 +70,7 @@ void TMarioEmitterCallBackBindToMtxPtr::draw(JPABaseEmitter*) { }
 
 void TMarioEmitterCallBackBindToSRTMtxPtr::execute(JPABaseEmitter* emitter)
 {
-	MtxPtr mtx = (MtxPtr)emitter->unk120;
+	MtxPtr mtx = (MtxPtr)emitter->getUserWork();
 	emitter->setGlobalSRTMatrix(mtx);
 }
 
@@ -273,16 +270,16 @@ TMarioParticleManager::emitAndBindToPosPtr(s32 param_1,
 	if (param_3 == 0)
 		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
 		        *param_2, param_1, param_3, 0, nullptr, nullptr)) {
-			emitter->unk120 = (void*)param_2;
-			emitter->unk110 = &emitterCallBackBindToPosPtr;
+			emitter->setUserWork((uintptr_t)param_2);
+			emitter->setEmitterCallBackPtr(&emitterCallBackBindToPosPtr);
 			return emitter;
 		}
 
 	if (param_3 == 2)
 		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
 		        *param_2, param_1, param_3, 0, nullptr, nullptr)) {
-			emitter->unk120 = (void*)param_2;
-			emitter->unk110 = &emitterCallBackBindToPosPtr;
+			emitter->setUserWork((uintptr_t)param_2);
+			emitter->setEmitterCallBackPtr(&emitterCallBackBindToPosPtr);
 			emitter->mDraw.swapImage(
 			    gpScreenTexture->getTexture()->getTexInfo(),
 			    emitter->mDraw.getMainTextureID(0));
@@ -337,16 +334,16 @@ JPABaseEmitter* TMarioParticleManager::emitAndBindToMtxPtr(s32 param_1,
 	if (param_3 == 0)
 		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
 		        local_24, param_1, param_3, 0, nullptr, nullptr)) {
-			emitter->unk120 = (void*)param_2;
-			emitter->unk110 = &emitterCallBackBindToMtxPtr;
+			emitter->setUserWork((uintptr_t)param_2);
+			emitter->setEmitterCallBackPtr(&emitterCallBackBindToMtxPtr);
 			return emitter;
 		}
 
 	if (param_3 == 2)
 		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
 		        local_24, param_1, param_3, 0, nullptr, nullptr)) {
-			emitter->unk120 = (void*)param_2;
-			emitter->unk110 = &emitterCallBackBindToMtxPtr;
+			emitter->setUserWork((uintptr_t)param_2);
+			emitter->setEmitterCallBackPtr(&emitterCallBackBindToMtxPtr);
 			emitter->mDraw.swapImage(
 			    gpScreenTexture->getTexture()->getTexInfo(),
 			    emitter->mDraw.getMainTextureID(0));
@@ -400,16 +397,16 @@ TMarioParticleManager::emitAndBindToSRTMtxPtr(s32 param_1, MtxPtr param_2,
 	if (param_3 == 0)
 		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
 		        local_24, param_1, param_3, 0, nullptr, nullptr)) {
-			emitter->unk120 = (void*)param_2;
-			emitter->unk110 = &emitterCallBackBindToSRTMtxPtr;
+			emitter->setUserWork((uintptr_t)param_2);
+			emitter->setEmitterCallBackPtr(&emitterCallBackBindToSRTMtxPtr);
 			return emitter;
 		}
 
 	if (param_3 == 2)
 		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
 		        local_24, param_1, param_3, 0, nullptr, nullptr)) {
-			emitter->unk120 = (void*)param_2;
-			emitter->unk110 = &emitterCallBackBindToSRTMtxPtr;
+			emitter->setUserWork((uintptr_t)param_2);
+			emitter->setEmitterCallBackPtr(&emitterCallBackBindToSRTMtxPtr);
 			emitter->mDraw.swapImage(
 			    gpScreenTexture->getTexture()->getTexInfo(),
 			    emitter->mDraw.getMainTextureID(0));
@@ -499,7 +496,7 @@ JPABaseEmitter* TMarioParticleManager::emitParticleCallBack(
 		if (info->mEmitter == nullptr)
 			emitTry(param_1, info, param_3);
 		if (info->mEmitter != nullptr) {
-			info->mEmitter->unk114 = param_4;
+			info->mEmitter->setParticleCallBackPtr(param_4);
 			return info->mEmitter;
 		}
 	}
@@ -517,7 +514,7 @@ JPABaseEmitter* TMarioParticleManager::emitParticleCallBack(
 		if (info->mEmitter == nullptr)
 			emitTry(param_1, info, param_3);
 		if (info->mEmitter != nullptr) {
-			info->mEmitter->unk114 = param_4;
+			info->mEmitter->setParticleCallBackPtr(param_4);
 			return info->mEmitter;
 		}
 	}
@@ -535,8 +532,9 @@ void TMarioParticleManager::emitTry(s32 param_1,
 		    nullptr, nullptr);
 
 		if (param_2->mEmitter != nullptr) {
-			param_2->mEmitter->unk120 = (void*)param_2->unk4;
-			param_2->mEmitter->unk110 = &emitterCallBackBindToPosPtr;
+			param_2->mEmitter->setUserWork((uintptr_t)param_2->unk4);
+			param_2->mEmitter->setEmitterCallBackPtr(
+			    &emitterCallBackBindToPosPtr);
 		}
 	} else {
 		if (param_2->checkFlag(INFO_FLAG_BIND_TO_RT_MTX
@@ -550,11 +548,13 @@ void TMarioParticleManager::emitTry(s32 param_1,
 			    local_14, param_1, param_3, 0, nullptr, nullptr);
 
 			if (param_2->mEmitter != nullptr) {
-				param_2->mEmitter->unk120 = (void*)param_2->unk4;
+				param_2->mEmitter->setUserWork((uintptr_t)param_2->unk4);
 				if (param_2->checkFlag(0x10))
-					param_2->mEmitter->unk110 = &emitterCallBackBindToSRTMtxPtr;
+					param_2->mEmitter->setEmitterCallBackPtr(
+					    &emitterCallBackBindToSRTMtxPtr);
 				else
-					param_2->mEmitter->unk110 = &emitterCallBackBindToMtxPtr;
+					param_2->mEmitter->setEmitterCallBackPtr(
+					    &emitterCallBackBindToMtxPtr);
 			}
 		} else {
 			param_2->mEmitter = unk3B8->createSimpleEmitterID(
@@ -656,9 +656,9 @@ void SMSSetEmitterPolColor(JPABaseEmitter* param_1, int param_2)
 		{ 0xB7, 0x24, 0x08, 0xFF }, { 0x00, 0x73, 0x6C, 0xFF },
 	};
 
-	param_1->setParamColor(prmarray[value].r, prmarray[value].g,
-	                       prmarray[value].b);
+	param_1->setGlobalPrmColor(prmarray[value].r, prmarray[value].g,
+	                           prmarray[value].b);
 
-	param_1->setEnviColor(envarray[value].r, envarray[value].g,
-	                      envarray[value].b);
+	param_1->setGlobalEnvColor(envarray[value].r, envarray[value].g,
+	                           envarray[value].b);
 }

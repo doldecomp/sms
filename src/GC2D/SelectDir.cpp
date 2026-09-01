@@ -13,6 +13,7 @@
 #include <JSystem/JParticle/JPAResourceManager.hpp>
 #include <GC2D/ScrnFader.hpp>
 #include <GC2D/SelectMenu.hpp>
+#include <GC2D/SelectShine2.hpp>
 #include <MSound/MSound.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <System/Application.hpp>
@@ -20,6 +21,10 @@
 #include <System/FlagManager.hpp>
 #include <System/MarioGamePad.hpp>
 #include <System/Resolution.hpp>
+
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 extern OSThread gSetupThread;
 extern u8* gpSetupThreadStack;
@@ -49,11 +54,6 @@ TSelectDir::~TSelectDir()
 	unk18->offFlag(1);
 }
 
-void* TSelectDir::setupThreadFunc(void* param_1)
-{
-	((TSelectDir*)param_1)->rsetup();
-}
-
 void TSelectDir::setup(JDrama::TDisplay* display, TMarioGamePad* gamePad,
                        unsigned char stage)
 {
@@ -67,10 +67,9 @@ void TSelectDir::setup(JDrama::TDisplay* display, TMarioGamePad* gamePad,
 	OSResumeThread(&gSetupThread);
 }
 
-void TSelectDir::changeOrder()
+void* TSelectDir::setupThreadFunc(void* param_1)
 {
-	unk44->unkC.on(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
-	unk48->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
+	((TSelectDir*)param_1)->rsetup();
 }
 
 int TSelectDir::rsetup()
@@ -111,8 +110,8 @@ int TSelectDir::rsetup()
 	group3D->getChildren().push_back(unk28);
 	groupGrad->getChildren().push_back(unk24);
 
-	unk18->mFlags = 1;
-	unk20->unk100 = unk18;
+	unk18->mFlags   = 1;
+	unk20->mGamePad = unk18;
 
 	JPAResourceManager* resourceManager2D = new JPAResourceManager(9, 0x200, 0);
 	JPAResourceManager* resourceManager3D = new JPAResourceManager(9, 0x200, 0);
@@ -199,6 +198,12 @@ int TSelectDir::rsetup()
 	return 0;
 }
 
+void TSelectDir::changeOrder()
+{
+	unk44->unkC.on(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
+	unk48->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
+}
+
 int TSelectDir::direct()
 {
 	if (!unk38) {
@@ -231,9 +236,9 @@ int TSelectDir::direct()
 		if (unk20->unk14B)
 			return TApplication::APP_STATE_DONE;
 
-		if (unk20->unk14A) {
-			gpApplication.mNextArea.unk1 = unk20->unk13B;
-			TFlagManager::smInstance->setFlag(0x40003, unk20->unk13B);
+		if (unk20->mCloseMenu) {
+			gpApplication.mNextArea.unk1 = unk20->mSelectedShine;
+			TFlagManager::smInstance->setFlag(0x40003, unk20->mSelectedShine);
 			gpApplication.mFader->startWipe(0xf, 1.0f, 0.0f);
 			gpApplication.mFader->setColor(
 			    JUtility::TColor(0xff, 0xff, 0xff, 0xff));

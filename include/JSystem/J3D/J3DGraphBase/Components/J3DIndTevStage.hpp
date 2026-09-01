@@ -10,13 +10,17 @@ class J3DIndTevStage : public J3DIndTevStageInfo {
 public:
 	J3DIndTevStage()
 	{
-		J3DIndTevStageInfo::operator=(j3dDefaultIndTevStageInfo);
+		J3DIndTevStageInfo* dst = getIndTevStageInfo();
+		*dst                    = j3dDefaultIndTevStageInfo;
 	}
 
 	J3DIndTevStage(const J3DIndTevStageInfo& info)
 	{
-		J3DIndTevStageInfo::operator=(info);
+		J3DIndTevStageInfo* dst = getIndTevStageInfo();
+		*dst                    = info;
 	}
+
+	J3DIndTevStageInfo* getIndTevStageInfo() { return this; }
 
 	J3DIndTevStage& operator=(const J3DIndTevStage& other)
 	{

@@ -1,11 +1,13 @@
 #include <JSystem/JParticle/JPADraw.hpp>
 #include <JSystem/JParticle/JPABaseShape.hpp>
 #include <JSystem/JParticle/JPAExtraShape.hpp>
+#include <JSystem/JParticle/JPAExTexShape.hpp>
 #include <JSystem/JParticle/JPASweepShape.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/JParticle/JPAResourceManager.hpp>
 #include <JSystem/JParticle/JPADrawSetupTev.hpp>
 #include <JSystem/JParticle/JPAParticle.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 #include <dolphin/gx.h>
 #include <macros.h>
 
@@ -15,6 +17,8 @@ JPADrawClipBoard JPADraw::cb;
 BOOL JPADraw::initialize(JPABaseEmitter* emitter,
                          JPATextureResource* tex_resource)
 {
+	int i;
+
 	mDrawCtx.pcb = &cb;
 
 	mDrawCtx.mBaseEmitter = emitter;
@@ -34,8 +38,8 @@ BOOL JPADraw::initialize(JPABaseEmitter* emitter,
 	                           ->getTextureDataBase();
 	mDrawCtx.unk18 = mDrawCtx.mBaseEmitter->getParticleList();
 
-	unkC2 = 0;
-	unkB4 = 1.0f;
+	unkC2     = 0;
+	mScaleOut = 1.0f;
 
 	GXColor white = { 0xff, 0xff, 0xff, 0xff };
 
@@ -53,61 +57,70 @@ BOOL JPADraw::initialize(JPABaseEmitter* emitter,
 		mEnvColor = white;
 	}
 
-	unk8F = 0;
-	unk8D = 0;
-	unk8E = 0;
-	unk8C = 0;
-	unk8B = 0;
-	unk8A = 0;
-	unk89 = 0;
-	unk88 = 0;
+	calcChldVisNum  = 0;
+	calcPtclVisNum  = 0;
+	execChldVisNum  = 0;
+	execPtclVisNum  = 0;
+	calcEmtrVisNum  = 0;
+	execEmtrCVisNum = 0;
+	execEmtrPVisNum = 0;
+	execEmtrVisNum  = 0;
 
-	for (int i = 0; i < ARRAY_COUNT(unk0); ++i)
-		unk0[i] = nullptr;
+	for (i = 0; i < ARRAY_COUNT(mpExecEmtrVis); ++i)
+		mpExecEmtrVis[i] = nullptr;
 
-	for (int i = 0; i < ARRAY_COUNT(unk4); ++i)
-		unk4[i] = nullptr;
+	for (i = 0; i < ARRAY_COUNT(mpExecEmtrPVis); ++i)
+		mpExecEmtrPVis[i] = nullptr;
 
-	for (int i = 0; i < ARRAY_COUNT(unk18); ++i)
-		unk18[i] = nullptr;
+	for (i = 0; i < ARRAY_COUNT(mpExecEmtrCVis); ++i)
+		mpExecEmtrCVis[i] = nullptr;
 
-	for (int i = 0; i < ARRAY_COUNT(unk24); ++i)
-		unk24[i] = nullptr;
+	for (i = 0; i < ARRAY_COUNT(mpCalcEmtrVis); ++i)
+		mpCalcEmtrVis[i] = nullptr;
 
-	for (int i = 0; i < ARRAY_COUNT(unk34); ++i)
-		unk34[i] = nullptr;
+	for (i = 0; i < ARRAY_COUNT(mpExecPtclVis); ++i)
+		mpExecPtclVis[i] = nullptr;
 
-	for (int i = 0; i < ARRAY_COUNT(unk70); ++i)
-		unk70[i] = nullptr;
+	for (i = 0; i < ARRAY_COUNT(mpExecChldVis); ++i)
+		mpExecChldVis[i] = nullptr;
 
-	for (int i = 0; i < ARRAY_COUNT(unk48); ++i)
-		unk48[i] = nullptr;
+	for (i = 0; i < ARRAY_COUNT(mpCalcPtclVis); ++i)
+		mpCalcPtclVis[i] = nullptr;
 
-	for (int i = 0; i < ARRAY_COUNT(unk80); ++i)
-		unk80[i] = nullptr;
+	for (i = 0; i < ARRAY_COUNT(mpCalcChldVis); ++i)
+		mpCalcChldVis[i] = nullptr;
 
-	JPADrawVisitorDefFlags local_28;
+	JPADrawVisitorDefFlags flags;
 
-	local_28.unk0 = mDrawCtx.mSweepShape == nullptr
-	                || mDrawCtx.mSweepShape->isEnableDrawParent();
-	local_28.unk4 = mDrawCtx.mBaseShape->isEnablePrm()
-	                && mDrawCtx.mBaseShape->isEnablePrmAnm();
-	local_28.unk8 = mDrawCtx.mBaseShape->isEnableEnv()
-	                && mDrawCtx.mBaseShape->isEnableEnvAnm();
-	local_28.unkC = mDrawCtx.mBaseShape->getType() == 5
-	                || mDrawCtx.mBaseShape->getType() == 6;
-	local_28.unk10 = mDrawCtx.mBaseShape->getType() == 0
-	                 || mDrawCtx.mBaseShape->getType() == 1;
-	local_28.unk14 = mDrawCtx.mExtraShape != nullptr
-	                 && mDrawCtx.mExtraShape->isEnableAlpha();
+	flags.mbIsEnableDrawParent = mDrawCtx.mSweepShape == nullptr
+	                             || mDrawCtx.mSweepShape->isEnableDrawParent();
+	flags.mbHasPrmAnm = mDrawCtx.mBaseShape->isEnablePrm()
+	                    && mDrawCtx.mBaseShape->isEnablePrmAnm();
+	flags.mbHasEnvAnm = mDrawCtx.mBaseShape->isEnableEnv()
+	                    && mDrawCtx.mBaseShape->isEnableEnvAnm();
+	flags.mbIsStripe = mDrawCtx.mBaseShape->getType() == 5
+	                   || mDrawCtx.mBaseShape->getType() == 6;
+	flags.mbIsPointOrLine = mDrawCtx.mBaseShape->getType() == 0
+	                        || mDrawCtx.mBaseShape->getType() == 1;
+	flags.mbIsEnableAlpha = mDrawCtx.mExtraShape != nullptr
+	                        && mDrawCtx.mExtraShape->isEnableAlpha();
 
-	setDrawExecVisitorsBeforeCB(local_28);
-	unk4[unk89++]  = &vc.mDrawExecCallBack;
-	unk18[unk8A++] = &vc.mDrawExecCallBack;
-	unk34[unk8C++] = &vc.mDrawExecCallBack;
-	unk70[unk8E++] = &vc.mDrawExecCallBack;
-	setDrawExecVisitorsAfterCB(local_28);
-	setDrawCalcVisitors(local_28);
+	setDrawExecVisitorsBeforeCB(flags);
+	mpExecEmtrPVis[execEmtrPVisNum++] = &vc.mDrawExecCallBack;
+	mpExecEmtrCVis[execEmtrCVisNum++] = &vc.mDrawExecCallBack;
+	mpExecPtclVis[execPtclVisNum++]   = &vc.mDrawExecCallBack;
+	mpExecChldVis[execChldVisNum++]   = &vc.mDrawExecCallBack;
+	setDrawExecVisitorsAfterCB(flags);
+	setDrawCalcVisitors(flags);
+
+	JUT_ASSERT(0x65, execEmtrVisNum <= 1);
+	JUT_ASSERT(0x66, execEmtrPVisNum <= 5);
+	JUT_ASSERT(0x67, execEmtrCVisNum <= 3);
+	JUT_ASSERT(0x68, calcEmtrVisNum <= 4);
+	JUT_ASSERT(0x69, execPtclVisNum <= 5);
+	JUT_ASSERT(0x6a, execChldVisNum <= 4);
+	JUT_ASSERT(0x6b, calcPtclVisNum <= 10);
+	JUT_ASSERT(0x6c, calcChldVisNum <= 2);
 
 	return true;
 }
@@ -135,26 +148,15 @@ void JPADraw::draw(MtxPtr view_mtx)
 	               mDrawCtx.mBaseShape->getDstBlendFactor1(),
 	               mDrawCtx.mBaseShape->getBlendOp1());
 
-	// TODO: fakematch
-	JPABaseEmitter* be = mDrawCtx.mBaseEmitter;
-
-	cb.mPrmColor.r = be->unk180.r;
-	cb.mPrmColor.g = be->unk180.g;
-	cb.mPrmColor.b = be->unk180.b;
-	cb.mPrmColor.a = be->unk180.a;
-
-	be             = mDrawCtx.mBaseEmitter;
-	cb.mEnvColor.r = be->unk184.r;
-	cb.mEnvColor.g = be->unk184.g;
-	cb.mEnvColor.b = be->unk184.b;
-	cb.mEnvColor.a = 0xff;
+	mDrawCtx.mBaseEmitter->getBasePrmColor(cb.mPrmColor);
+	mDrawCtx.mBaseEmitter->getBaseEnvColor(cb.mEnvColor);
 
 	cb.mViewMtx = view_mtx;
 
 	cb.mSetupTev.setupTev(mDrawCtx.mBaseShape, mDrawCtx.mExTexShape);
 
-	for (int i = 0; i < unk88; ++i)
-		unk0[i]->exec(&mDrawCtx);
+	for (int i = 0; i < execEmtrVisNum; ++i)
+		mpExecEmtrVis[i]->exec(&mDrawCtx);
 
 	if (mDrawCtx.mBaseShape->isEnableAnmTone())
 		zDraw();
@@ -176,35 +178,31 @@ void JPADraw::draw(MtxPtr view_mtx)
 
 void JPADraw::calc()
 {
-	for (int i = 0; i < unk8B; ++i)
-		unk24[i]->calc(&mDrawCtx);
+	for (int i = 0; i < calcEmtrVisNum; ++i)
+		mpCalcEmtrVis[i]->calc(&mDrawCtx);
 }
 
 void JPADraw::calcParticle(JPABaseParticle* particle)
 {
 	JPADrawParams* params = particle->getDrawParamPPtr();
 	params->unk34 += params->unk36;
-	for (int i = 0; i < unk8D; ++i)
-		unk48[i]->calc(&mDrawCtx, particle);
+	for (int i = 0; i < calcPtclVisNum; ++i)
+		mpCalcPtclVis[i]->calc(&mDrawCtx, particle);
 }
 
 void JPADraw::calcChild(JPABaseParticle* particle)
 {
 	JPADrawParams* params = particle->getDrawParamCPtr();
 	params->unk34 += params->unk36;
-	for (int i = 0; i < unk8F; ++i)
-		unk80[i]->calc(&mDrawCtx, particle);
+	for (int i = 0; i < calcChldVisNum; ++i)
+		mpCalcChldVis[i]->calc(&mDrawCtx, particle);
 }
 
 void JPADraw::initParticle(JPABaseParticle* particle)
 {
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
-	// TODO: something wrong here
-	f32* v         = JPAGetEmitterInfoPtr()->unk48[1];
-	params->unk0.x = v[0];
-	params->unk0.y = v[1];
-	params->unk0.z = v[2];
+	params->unk0.set(JPAGetEmitterInfoPtr()->mEmitterAxisY);
 
 	params->mPrmColor = mPrmColor;
 	params->mEnvColor = mEnvColor;
@@ -242,7 +240,7 @@ void JPADraw::initParticle(JPABaseParticle* particle)
 		}
 
 		params->mScaleX = params->mScaleY = params->unkC
-		    = unkB4
+		    = mScaleOut
 		      * (mDrawCtx.mBaseEmitter->getRandomRF()
 		             * mDrawCtx.mExtraShape->getRandomScale()
 		         + 1.0f);
@@ -253,7 +251,7 @@ void JPADraw::initParticle(JPABaseParticle* particle)
 	} else {
 		params->unk34 = 0;
 		params->unk36 = 0;
-		params->unkC = params->mScaleX = params->mScaleY = unkB4;
+		params->unkC = params->mScaleX = params->mScaleY = mScaleOut;
 
 		params->unk24 = 1.0f;
 	}
@@ -328,106 +326,119 @@ const ResTIMG* JPADraw::swapImage(const ResTIMG* param_1, s16 param_2)
 	return mDrawCtx.mTexResource->swapImage(param_1, idx);
 }
 
-void JPADraw::loadTexture(u8 idx, GXTexMapID map_id)
+BOOL JPADraw::loadTexture(u8 idx, GXTexMapID map_id)
 {
-	// TODO: this is 1 instruction too short!
-	// mDrawCtx.mTexResource->load(mDrawCtx.mTexIndices[idx], map_id);
+	JUT_ASSERT(
+	    0x17e,
+	    mDrawCtx.mBaseEmitter->getEmitterDataBlockInfoPtr()->getTextureNum()
+	        > idx);
+	mDrawCtx.mTexResource->load(mDrawCtx.mTexIndices[idx], map_id);
+	return true;
 }
 
 void JPADraw::setDrawExecVisitorsBeforeCB(
     const JPADraw::JPADrawVisitorDefFlags& flags)
 {
 	if (mDrawCtx.mExTexShape)
-		unk0[unk88++] = &vc.mDrawExecLoadExTex;
+		mpExecEmtrVis[execEmtrVisNum++] = &vc.mDrawExecLoadExTex;
 
-	if (flags.unk10) {
-		unk4[unk89++] = &vc.mDrawExecGenIdtMtx;
+	if (flags.mbIsPointOrLine) {
+		mpExecEmtrPVis[execEmtrPVisNum++] = &vc.mDrawExecGenIdtMtx;
 	} else if (mDrawCtx.mBaseShape->isEnableProjection()) {
 		if (mDrawCtx.mBaseShape->isEnableTexScrollAnm())
-			unk4[unk89++] = &vc.mDrawExecGenPrjTexMtx;
+			mpExecEmtrPVis[execEmtrPVisNum++] = &vc.mDrawExecGenPrjTexMtx;
 		else
-			unk4[unk89++] = &vc.mDrawExecGenPrjMtx;
+			mpExecEmtrPVis[execEmtrPVisNum++] = &vc.mDrawExecGenPrjMtx;
 	} else if (mDrawCtx.mBaseShape->isEnableTexScrollAnm()) {
-		if (flags.unkC)
-			unk4[unk89++] = &vc.mDrawExecSetTexMtx;
+		if (flags.mbIsStripe)
+			mpExecEmtrPVis[execEmtrPVisNum++] = &vc.mDrawExecSetTexMtx;
 		else
-			unk4[unk89++] = &vc.mDrawExecGenTexMtx0;
+			mpExecEmtrPVis[execEmtrPVisNum++] = &vc.mDrawExecGenTexMtx0;
 	} else {
-		unk4[unk89++] = &vc.mDrawExecGenIdtMtx;
+		mpExecEmtrPVis[execEmtrPVisNum++] = &vc.mDrawExecGenIdtMtx;
 	}
 
 	if (mDrawCtx.mBaseShape->isEnableGlobalColAnm()) {
-		if (flags.unkC || !flags.unk14) {
-			unk4[unk89++] = &vc.mDrawExecRegisterColorEmitterPE;
-		} else if (flags.unk14) {
-			unk4[unk89++] = &vc.mDrawExecRegisterColorEmitterE;
+		if (flags.mbIsStripe || !flags.mbIsEnableAlpha) {
+			mpExecEmtrPVis[execEmtrPVisNum++]
+			    = &vc.mDrawExecRegisterColorEmitterPE;
+		} else if (flags.mbIsEnableAlpha) {
+			mpExecEmtrPVis[execEmtrPVisNum++]
+			    = &vc.mDrawExecRegisterColorEmitterE;
 		}
 	} else {
 		if ((!mDrawCtx.mBaseShape->isEnablePrm()
 		     || !mDrawCtx.mBaseShape->isEnablePrmAnm())
-		    && flags.unk14 == 0) {
+		    && flags.mbIsEnableAlpha == 0) {
 			if (!mDrawCtx.mBaseShape->isEnableEnv()
 			    || !mDrawCtx.mBaseShape->isEnableEnvAnm()) {
-				unk4[unk89++] = &vc.mDrawExecRegisterColorEmitterPE;
+				mpExecEmtrPVis[execEmtrPVisNum++]
+				    = &vc.mDrawExecRegisterColorEmitterPE;
 			} else {
-				unk4[unk89++] = &vc.mDrawExecRegisterColorEmitterP;
+				mpExecEmtrPVis[execEmtrPVisNum++]
+				    = &vc.mDrawExecRegisterColorEmitterP;
 			}
 		} else if (!mDrawCtx.mBaseShape->isEnableEnv()
 		           || !mDrawCtx.mBaseShape->isEnableEnvAnm()) {
-			unk4[unk89++] = &vc.mDrawExecRegisterColorEmitterE;
+			mpExecEmtrPVis[execEmtrPVisNum++]
+			    = &vc.mDrawExecRegisterColorEmitterE;
 		}
 	}
 
 	if (!mDrawCtx.mBaseShape->textureIsEmpty()
 	    && (!mDrawCtx.mBaseShape->isEnableTextureAnm()
 	        || mDrawCtx.mBaseShape->isEnableGlobalTexAnm())) {
-		unk4[unk89++] = &vc.mDrawExecLoadTexture;
+		mpExecEmtrPVis[execEmtrPVisNum++] = &vc.mDrawExecLoadTexture;
 	} else if (mDrawCtx.mBaseShape->textureIsEmpty()) {
-		unk4[unk89++] = &vc.mDrawExecLoadDefaultTexture;
+		mpExecEmtrPVis[execEmtrPVisNum++] = &vc.mDrawExecLoadDefaultTexture;
 	}
 
 	if (mDrawCtx.mSweepShape != nullptr
 	    && !mDrawCtx.mSweepShape->isEnableAlphaOut()
 	    && !mDrawCtx.mSweepShape->isInheritedAlpha()
 	    && !mDrawCtx.mSweepShape->isInheritedRGB()) {
-		unk18[unk8A++] = &vc.mDrawExecRegisterColorChildPE;
+		mpExecEmtrCVis[execEmtrCVisNum++] = &vc.mDrawExecRegisterColorChildPE;
 	}
 
 	if (!mDrawCtx.mBaseShape->isEnableGlobalColAnm()) {
-		if (flags.unk4) {
-			if (flags.unk8)
-				unk34[unk8C++] = &vc.mDrawExecRegisterPrmCEnv;
+		if (flags.mbHasPrmAnm) {
+			if (flags.mbHasEnvAnm)
+				mpExecPtclVis[execPtclVisNum++] = &vc.mDrawExecRegisterPrmCEnv;
 			else
-				unk34[unk8C++] = &vc.mDrawExecRegisterPrmColorAnm;
+				mpExecPtclVis[execPtclVisNum++]
+				    = &vc.mDrawExecRegisterPrmColorAnm;
 		} else {
-			if (flags.unk14) {
-				if (flags.unk8)
-					unk34[unk8C++] = &vc.mDrawExecRegisterPrmAEnv;
+			if (flags.mbIsEnableAlpha) {
+				if (flags.mbHasEnvAnm)
+					mpExecPtclVis[execPtclVisNum++]
+					    = &vc.mDrawExecRegisterPrmAEnv;
 				else
-					unk34[unk8C++] = &vc.mDrawExecRegisterPrmAlphaAnm;
+					mpExecPtclVis[execPtclVisNum++]
+					    = &vc.mDrawExecRegisterPrmAlphaAnm;
 			} else {
-				if (flags.unk8)
-					unk34[unk8C++] = &vc.mDrawExecRegisterEnvColorAnm;
+				if (flags.mbHasEnvAnm)
+					mpExecPtclVis[execPtclVisNum++]
+					    = &vc.mDrawExecRegisterEnvColorAnm;
 			}
 		}
-	} else if (flags.unk14 && !flags.unkC) {
-		unk34[unk8C++] = &vc.mDrawExecRegisterPrmAlphaAnm;
+	} else if (flags.mbIsEnableAlpha && !flags.mbIsStripe) {
+		mpExecPtclVis[execPtclVisNum++] = &vc.mDrawExecRegisterPrmAlphaAnm;
 	}
 
 	if (!mDrawCtx.mBaseShape->textureIsEmpty()
 	    && mDrawCtx.mBaseShape->isEnableTextureAnm()
 	    && !mDrawCtx.mBaseShape->isEnableGlobalTexAnm()) {
-		unk34[unk8C++] = &vc.mDrawExecLoadTexture;
+		mpExecPtclVis[execPtclVisNum++] = &vc.mDrawExecLoadTexture;
 	}
 
 	switch (mDrawCtx.mBaseShape->getType()) {
 	case 0:
 		if (mDrawCtx.mExtraShape && mDrawCtx.mExtraShape->isEnableScale())
-			unk34[unk8C++] = &vc.mDrawExecSetPointSize;
+			mpExecPtclVis[execPtclVisNum++] = &vc.mDrawExecSetPointSize;
 		break;
 	case 1:
 		if (mDrawCtx.mExtraShape && mDrawCtx.mExtraShape->isEnableScale())
-			unk34[unk8C++] = &vc.mDrawExecSetLineWidth;
+			mpExecPtclVis[execPtclVisNum++] = &vc.mDrawExecSetLineWidth;
 		break;
 
 	case 2:
@@ -439,7 +450,7 @@ void JPADraw::setDrawExecVisitorsBeforeCB(
 	case 10:
 		if (mDrawCtx.mBaseShape->isEnableTexScrollAnm()
 		    && !mDrawCtx.mBaseShape->isEnableProjection())
-			unk34[unk8C++] = &vc.mDrawExecSetTexMtx;
+			mpExecPtclVis[execPtclVisNum++] = &vc.mDrawExecSetTexMtx;
 		break;
 	}
 
@@ -447,14 +458,14 @@ void JPADraw::setDrawExecVisitorsBeforeCB(
 		if (mDrawCtx.mSweepShape->isEnableAlphaOut()
 		    || mDrawCtx.mSweepShape->isInheritedAlpha()
 		    || mDrawCtx.mSweepShape->isInheritedRGB())
-			unk70[unk8E++] = &vc.mDrawExecRegisterPrmCEnv;
+			mpExecChldVis[execChldVisNum++] = &vc.mDrawExecRegisterPrmCEnv;
 
 		switch (mDrawCtx.mSweepShape->getType()) {
 		case 0:
-			unk70[unk8E++] = &vc.mDrawExecSetPointSize;
+			mpExecChldVis[execChldVisNum++] = &vc.mDrawExecSetPointSize;
 			break;
 		case 1:
-			unk70[unk8E++] = &vc.mDrawExecSetLineWidth;
+			mpExecChldVis[execChldVisNum++] = &vc.mDrawExecSetLineWidth;
 			break;
 		}
 	}
@@ -463,55 +474,56 @@ void JPADraw::setDrawExecVisitorsBeforeCB(
 void JPADraw::setDrawExecVisitorsAfterCB(
     const JPADraw::JPADrawVisitorDefFlags& flags)
 {
-	if (flags.unk0) {
+	if (flags.mbIsEnableDrawParent) {
 		switch (mDrawCtx.mBaseShape->getType()) {
 		case 0:
-			unk34[unk8C++] = &vc.mDrawExecPoint;
+			mpExecPtclVis[execPtclVisNum++] = &vc.mDrawExecPoint;
 			break;
 		case 1:
-			unk34[unk8C++] = &vc.mDrawExecLine;
+			mpExecPtclVis[execPtclVisNum++] = &vc.mDrawExecLine;
 			break;
 
 		case 2:
 			if (mDrawCtx.mExtraShape && mDrawCtx.mExtraShape->isEnableRotate())
-				unk34[unk8C++] = &vc.mDrawExecRotBillBoard;
+				mpExecPtclVis[execPtclVisNum++] = &vc.mDrawExecRotBillBoard;
 			else
-				unk34[unk8C++] = &vc.mDrawExecBillBoard;
+				mpExecPtclVis[execPtclVisNum++] = &vc.mDrawExecBillBoard;
 			break;
 		case 3:
 			if (mDrawCtx.mExtraShape && mDrawCtx.mExtraShape->isEnableRotate())
-				unk34[unk8C++] = &vc.mDrawExecRotDirectional;
+				mpExecPtclVis[execPtclVisNum++] = &vc.mDrawExecRotDirectional;
 			else
-				unk34[unk8C++] = &vc.mDrawExecDirectional;
+				mpExecPtclVis[execPtclVisNum++] = &vc.mDrawExecDirectional;
 			break;
 		case 4:
 			if (mDrawCtx.mExtraShape && mDrawCtx.mExtraShape->isEnableRotate())
-				unk34[unk8C++] = &vc.mDrawExecRotDirectionalCross;
+				mpExecPtclVis[execPtclVisNum++]
+				    = &vc.mDrawExecRotDirectionalCross;
 			else
-				unk34[unk8C++] = &vc.mDrawExecDirectionalCross;
+				mpExecPtclVis[execPtclVisNum++] = &vc.mDrawExecDirectionalCross;
 			break;
 		case 10:
 			if (mDrawCtx.mExtraShape && mDrawCtx.mExtraShape->isEnableRotate())
-				unk34[unk8C++] = &vc.mDrawExecRotYBillBoard;
+				mpExecPtclVis[execPtclVisNum++] = &vc.mDrawExecRotYBillBoard;
 			else
-				unk34[unk8C++] = &vc.mDrawExecYBillBoard;
+				mpExecPtclVis[execPtclVisNum++] = &vc.mDrawExecYBillBoard;
 			break;
 
 		case 7:
-			unk34[unk8C++] = &vc.mDrawExecRotation;
+			mpExecPtclVis[execPtclVisNum++] = &vc.mDrawExecRotation;
 			break;
 		case 8:
-			unk34[unk8C++] = &vc.mDrawExecRotationCross;
+			mpExecPtclVis[execPtclVisNum++] = &vc.mDrawExecRotationCross;
 			break;
 		case 9:
-			unk34[unk8C++] = &vc.mDrawExecDirBillBoard;
+			mpExecPtclVis[execPtclVisNum++] = &vc.mDrawExecDirBillBoard;
 			break;
 
 		case 5:
-			unk4[unk89++] = &vc.mDrawExecStripe;
+			mpExecEmtrPVis[execEmtrPVisNum++] = &vc.mDrawExecStripe;
 			break;
 		case 6:
-			unk4[unk89++] = &vc.mDrawExecStripeCross;
+			mpExecEmtrPVis[execEmtrPVisNum++] = &vc.mDrawExecStripeCross;
 			break;
 		}
 	}
@@ -519,56 +531,57 @@ void JPADraw::setDrawExecVisitorsAfterCB(
 	if (mDrawCtx.mSweepShape != nullptr) {
 		switch (mDrawCtx.mSweepShape->getType()) {
 		case 0:
-			unk70[unk8E++] = &vc.mDrawExecPoint;
+			mpExecChldVis[execChldVisNum++] = &vc.mDrawExecPoint;
 			break;
 		case 1:
-			unk70[unk8E++] = &vc.mDrawExecLine;
+			mpExecChldVis[execChldVisNum++] = &vc.mDrawExecLine;
 			break;
 
 		case 2:
 			if ((mDrawCtx.mExtraShape && mDrawCtx.mExtraShape->isEnableRotate())
 			    || mDrawCtx.mSweepShape->isEnableRotate())
-				unk70[unk8E++] = &vc.mDrawExecRotBillBoard;
+				mpExecChldVis[execChldVisNum++] = &vc.mDrawExecRotBillBoard;
 			else
-				unk70[unk8E++] = &vc.mDrawExecBillBoard;
+				mpExecChldVis[execChldVisNum++] = &vc.mDrawExecBillBoard;
 			break;
 		case 3:
 			if ((mDrawCtx.mExtraShape && mDrawCtx.mExtraShape->isEnableRotate())
 			    || mDrawCtx.mSweepShape->isEnableRotate())
-				unk70[unk8E++] = &vc.mDrawExecRotDirectional;
+				mpExecChldVis[execChldVisNum++] = &vc.mDrawExecRotDirectional;
 			else
-				unk70[unk8E++] = &vc.mDrawExecDirectional;
+				mpExecChldVis[execChldVisNum++] = &vc.mDrawExecDirectional;
 			break;
 		case 4:
 			if ((mDrawCtx.mExtraShape && mDrawCtx.mExtraShape->isEnableRotate())
 			    || mDrawCtx.mSweepShape->isEnableRotate())
-				unk70[unk8E++] = &vc.mDrawExecRotDirectionalCross;
+				mpExecChldVis[execChldVisNum++]
+				    = &vc.mDrawExecRotDirectionalCross;
 			else
-				unk70[unk8E++] = &vc.mDrawExecDirectionalCross;
+				mpExecChldVis[execChldVisNum++] = &vc.mDrawExecDirectionalCross;
 			break;
 		case 10:
 			if ((mDrawCtx.mExtraShape && mDrawCtx.mExtraShape->isEnableRotate())
 			    || mDrawCtx.mSweepShape->isEnableRotate())
-				unk70[unk8E++] = &vc.mDrawExecRotYBillBoard;
+				mpExecChldVis[execChldVisNum++] = &vc.mDrawExecRotYBillBoard;
 			else
-				unk70[unk8E++] = &vc.mDrawExecYBillBoard;
+				mpExecChldVis[execChldVisNum++] = &vc.mDrawExecYBillBoard;
 			break;
 
 		case 7:
-			unk70[unk8E++] = &vc.mDrawExecRotation;
+			mpExecChldVis[execChldVisNum++] = &vc.mDrawExecRotation;
 			break;
 		case 8:
-			unk70[unk8E++] = &vc.mDrawExecRotationCross;
+			mpExecChldVis[execChldVisNum++] = &vc.mDrawExecRotationCross;
 			break;
 		case 9:
-			unk70[unk8E++] = &vc.mDrawExecDirBillBoard;
+			mpExecChldVis[execChldVisNum++] = &vc.mDrawExecDirBillBoard;
 			break;
 
 		case 5:
-			unk18[unk8A++] = &vc.mDrawExecStripe;
+			mpExecEmtrCVis[execEmtrCVisNum++] = &vc.mDrawExecStripe;
 			break;
 		case 6:
-			unk18[unk8A++] = &vc.mDrawExecStripeCross;
+			mpExecEmtrCVis[execEmtrCVisNum++] = &vc.mDrawExecStripeCross;
 			break;
 		}
 	}
@@ -577,30 +590,30 @@ void JPADraw::setDrawExecVisitorsAfterCB(
 void JPADraw::setDrawCalcVisitors(const JPADraw::JPADrawVisitorDefFlags& flags)
 {
 	if ((mDrawCtx.mBaseShape->isEnableGlobalColAnm())
-	    && (flags.unk4 || flags.unk8)) {
+	    && (flags.mbHasPrmAnm || flags.mbHasEnvAnm)) {
 		switch (mDrawCtx.mBaseShape->unk82) {
 		case 0:
-			unk24[unk8B++] = &vc.mDrawCalcColorAnmFrameNormal;
+			mpCalcEmtrVis[calcEmtrVisNum++] = &vc.mDrawCalcColorAnmFrameNormal;
 			break;
 		case 1:
-			unk24[unk8B++] = &vc.mDrawCalcColorAnmFrameRepeat;
+			mpCalcEmtrVis[calcEmtrVisNum++] = &vc.mDrawCalcColorAnmFrameRepeat;
 			break;
 		case 2:
-			unk24[unk8B++] = &vc.mDrawCalcColorAnmFrameReverse;
+			mpCalcEmtrVis[calcEmtrVisNum++] = &vc.mDrawCalcColorAnmFrameReverse;
 			break;
 		case 3:
-			unk24[unk8B++] = &vc.mDrawCalcColorAnmFrameMerge;
+			mpCalcEmtrVis[calcEmtrVisNum++] = &vc.mDrawCalcColorAnmFrameMerge;
 			break;
 		case 4:
-			unk24[unk8B++] = &vc.mDrawCalcColorAnmFrameRandom;
+			mpCalcEmtrVis[calcEmtrVisNum++] = &vc.mDrawCalcColorAnmFrameRandom;
 			break;
 		}
 
-		if (flags.unk4)
-			unk24[unk8B++] = &vc.mDrawCalcColorPrm;
+		if (flags.mbHasPrmAnm)
+			mpCalcEmtrVis[calcEmtrVisNum++] = &vc.mDrawCalcColorPrm;
 
-		if (flags.unk8)
-			unk24[unk8B++] = &vc.mDrawCalcColorEnv;
+		if (flags.mbHasEnvAnm)
+			mpCalcEmtrVis[calcEmtrVisNum++] = &vc.mDrawCalcColorEnv;
 	}
 
 	if (!mDrawCtx.mBaseShape->textureIsEmpty()
@@ -608,19 +621,23 @@ void JPADraw::setDrawCalcVisitors(const JPADraw::JPADrawVisitorDefFlags& flags)
 	    && mDrawCtx.mBaseShape->isEnableGlobalTexAnm()) {
 		switch (mDrawCtx.mBaseShape->getTextureAnmType()) {
 		case 0:
-			unk24[unk8B++] = &vc.mDrawCalcTextureAnmIndexNormal;
+			mpCalcEmtrVis[calcEmtrVisNum++]
+			    = &vc.mDrawCalcTextureAnmIndexNormal;
 			break;
 		case 1:
-			unk24[unk8B++] = &vc.mDrawCalcTextureAnmIndexRepeat;
+			mpCalcEmtrVis[calcEmtrVisNum++]
+			    = &vc.mDrawCalcTextureAnmIndexRepeat;
 			break;
 		case 2:
-			unk24[unk8B++] = &vc.mDrawCalcTextureAnmIndexReverse;
+			mpCalcEmtrVis[calcEmtrVisNum++]
+			    = &vc.mDrawCalcTextureAnmIndexReverse;
 			break;
 		case 3:
-			unk24[unk8B++] = &vc.mDrawCalcTextureAnmIndexMerge;
+			mpCalcEmtrVis[calcEmtrVisNum++] = &vc.mDrawCalcTextureAnmIndexMerge;
 			break;
 		case 4:
-			unk24[unk8B++] = &vc.mDrawCalcTextureAnmIndexRandom;
+			mpCalcEmtrVis[calcEmtrVisNum++]
+			    = &vc.mDrawCalcTextureAnmIndexRandom;
 			break;
 		}
 	}
@@ -630,86 +647,98 @@ void JPADraw::setDrawCalcVisitors(const JPADraw::JPADrawVisitorDefFlags& flags)
 
 		if (mDrawCtx.mExtraShape->isEnableScaleAnmX()) {
 			if (mDrawCtx.mExtraShape->getAnmTypeX())
-				unk48[unk8D++] = &vc.mDrawCalcScaleAnmTimingReverseX;
+				mpCalcPtclVis[calcPtclVisNum++]
+				    = &vc.mDrawCalcScaleAnmTimingReverseX;
 			else
-				unk48[unk8D++] = &vc.mDrawCalcScaleAnmTimingRepeatX;
+				mpCalcPtclVis[calcPtclVisNum++]
+				    = &vc.mDrawCalcScaleAnmTimingRepeatX;
 		} else {
-			unk48[unk8D++] = &vc.mDrawCalcScaleAnmTimingNormal;
+			mpCalcPtclVis[calcPtclVisNum++] = &vc.mDrawCalcScaleAnmTimingNormal;
 		}
 
 		if ((mDrawCtx.mExtraShape->isEnableScaleBySpeedX())
 		    && mDrawCtx.mBaseShape->getType() != 1)
-			unk48[unk8D++] = &vc.mDrawCalcScaleXBySpeed;
+			mpCalcPtclVis[calcPtclVisNum++] = &vc.mDrawCalcScaleXBySpeed;
 		else
-			unk48[unk8D++] = &vc.mDrawCalcScaleX;
+			mpCalcPtclVis[calcPtclVisNum++] = &vc.mDrawCalcScaleX;
 
 		if (mDrawCtx.mBaseShape->getType() != 0) {
 			if (!mDrawCtx.mExtraShape->isDiffXY()) {
-				unk48[unk8D++] = &vc.mDrawCalcScaleCopyX2Y;
+				mpCalcPtclVis[calcPtclVisNum++] = &vc.mDrawCalcScaleCopyX2Y;
 			} else {
 				if (mDrawCtx.mExtraShape->isEnableScaleAnmY()) {
 					if (mDrawCtx.mExtraShape->getAnmTypeY()) {
-						unk48[unk8D++] = &vc.mDrawCalcScaleAnmTimingReverseY;
+						mpCalcPtclVis[calcPtclVisNum++]
+						    = &vc.mDrawCalcScaleAnmTimingReverseY;
 					} else {
-						unk48[unk8D++] = &vc.mDrawCalcScaleAnmTimingRepeatY;
+						mpCalcPtclVis[calcPtclVisNum++]
+						    = &vc.mDrawCalcScaleAnmTimingRepeatY;
 					}
 				} else {
 					if (mDrawCtx.mExtraShape->isEnableScaleAnmX()) {
-						unk48[unk8D++] = &vc.mDrawCalcScaleAnmTimingNormal;
+						mpCalcPtclVis[calcPtclVisNum++]
+						    = &vc.mDrawCalcScaleAnmTimingNormal;
 					}
 				}
 
 				if (mDrawCtx.mExtraShape->isEnableScaleBySpeedY()) {
-					unk48[unk8D++] = &vc.mDrawCalcScaleYBySpeed;
+					mpCalcPtclVis[calcPtclVisNum++]
+					    = &vc.mDrawCalcScaleYBySpeed;
 				} else {
-					unk48[unk8D++] = &vc.mDrawCalcScaleY;
+					mpCalcPtclVis[calcPtclVisNum++] = &vc.mDrawCalcScaleY;
 				}
 			}
 		}
 	}
 
 	if (!mDrawCtx.mBaseShape->isEnableGlobalColAnm()) {
-		if (flags.unk4 || flags.unk8) {
+		if (flags.mbHasPrmAnm || flags.mbHasEnvAnm) {
 			switch (mDrawCtx.mBaseShape->getColorRegAnmType()) {
 			case 0:
-				unk48[unk8D++] = &vc.mDrawCalcColorAnmFrameNormal;
+				mpCalcPtclVis[calcPtclVisNum++]
+				    = &vc.mDrawCalcColorAnmFrameNormal;
 				break;
 			case 1:
-				unk48[unk8D++] = &vc.mDrawCalcColorAnmFrameRepeat;
+				mpCalcPtclVis[calcPtclVisNum++]
+				    = &vc.mDrawCalcColorAnmFrameRepeat;
 				break;
 			case 2:
-				unk48[unk8D++] = &vc.mDrawCalcColorAnmFrameReverse;
+				mpCalcPtclVis[calcPtclVisNum++]
+				    = &vc.mDrawCalcColorAnmFrameReverse;
 				break;
 			case 3:
-				unk48[unk8D++] = &vc.mDrawCalcColorAnmFrameMerge;
+				mpCalcPtclVis[calcPtclVisNum++]
+				    = &vc.mDrawCalcColorAnmFrameMerge;
 				break;
 			case 4:
-				unk48[unk8D++] = &vc.mDrawCalcColorAnmFrameRandom;
+				mpCalcPtclVis[calcPtclVisNum++]
+				    = &vc.mDrawCalcColorAnmFrameRandom;
 				break;
 			}
 
-			if (flags.unk4)
-				unk48[unk8D++] = &vc.mDrawCalcColorPrm;
+			if (flags.mbHasPrmAnm)
+				mpCalcPtclVis[calcPtclVisNum++] = &vc.mDrawCalcColorPrm;
 
-			if (flags.unk8)
-				unk48[unk8D++] = &vc.mDrawCalcColorEnv;
+			if (flags.mbHasEnvAnm)
+				mpCalcPtclVis[calcPtclVisNum++] = &vc.mDrawCalcColorEnv;
 		}
 	} else {
-		unk48[unk8D++] = &vc.mDrawCalcColorCopyFromEmitter;
+		mpCalcPtclVis[calcPtclVisNum++] = &vc.mDrawCalcColorCopyFromEmitter;
 	}
 
-	if (flags.unk14 && !flags.unkC) {
-		unk48[unk8D++] = &vc.mDrawCalcAlpha;
+	if (flags.mbIsEnableAlpha && !flags.mbIsStripe) {
+		mpCalcPtclVis[calcPtclVisNum++] = &vc.mDrawCalcAlpha;
 		if (mDrawCtx.mExtraShape->isEnableSinWave()) {
-			switch (mDrawCtx.mExtraShape->unk79) {
-			case 0:
-				unk48[unk8D++] = &vc.mDrawCalcAlphaFlickNrmSin;
+			switch (mDrawCtx.mExtraShape->getAlphaWaveType()) {
+			case JPAAlphaWaveType_Nrm:
+				mpCalcPtclVis[calcPtclVisNum++] = &vc.mDrawCalcAlphaFlickNrmSin;
 				break;
-			case 1:
-				unk48[unk8D++] = &vc.mDrawCalcAlphaFlickAddSin;
+			case JPAAlphaWaveType_Add:
+				mpCalcPtclVis[calcPtclVisNum++] = &vc.mDrawCalcAlphaFlickAddSin;
 				break;
-			case 2:
-				unk48[unk8D++] = &vc.mDrawCalcAlphaFlickMultSin;
+			case JPAAlphaWaveType_Mult:
+				mpCalcPtclVis[calcPtclVisNum++]
+				    = &vc.mDrawCalcAlphaFlickMultSin;
 				break;
 			}
 		}
@@ -720,29 +749,33 @@ void JPADraw::setDrawCalcVisitors(const JPADraw::JPADrawVisitorDefFlags& flags)
 	    && !mDrawCtx.mBaseShape->isEnableGlobalTexAnm()) {
 		switch (mDrawCtx.mBaseShape->getTextureAnmType()) {
 		case 0:
-			unk48[unk8D++] = &vc.mDrawCalcTextureAnmIndexNormal;
+			mpCalcPtclVis[calcPtclVisNum++]
+			    = &vc.mDrawCalcTextureAnmIndexNormal;
 			break;
 		case 1:
-			unk48[unk8D++] = &vc.mDrawCalcTextureAnmIndexRepeat;
+			mpCalcPtclVis[calcPtclVisNum++]
+			    = &vc.mDrawCalcTextureAnmIndexRepeat;
 			break;
 		case 2:
-			unk48[unk8D++] = &vc.mDrawCalcTextureAnmIndexReverse;
+			mpCalcPtclVis[calcPtclVisNum++]
+			    = &vc.mDrawCalcTextureAnmIndexReverse;
 			break;
 		case 3:
-			unk48[unk8D++] = &vc.mDrawCalcTextureAnmIndexMerge;
+			mpCalcPtclVis[calcPtclVisNum++] = &vc.mDrawCalcTextureAnmIndexMerge;
 			break;
 		case 4:
-			unk48[unk8D++] = &vc.mDrawCalcTextureAnmIndexRandom;
+			mpCalcPtclVis[calcPtclVisNum++]
+			    = &vc.mDrawCalcTextureAnmIndexRandom;
 			break;
 		}
 	}
 
 	if (mDrawCtx.mSweepShape) {
 		if (mDrawCtx.mSweepShape->isEnableAlphaOut())
-			unk80[unk8F++] = &vc.mDrawCalcChildAlphaOut;
+			mpCalcChldVis[calcChldVisNum++] = &vc.mDrawCalcChildAlphaOut;
 
 		if (mDrawCtx.mSweepShape->isEnableScaleOut())
-			unk80[unk8F++] = &vc.mDrawCalcChildScaleOut;
+			mpCalcChldVis[calcChldVisNum++] = &vc.mDrawCalcChildScaleOut;
 	}
 }
 
@@ -800,7 +833,7 @@ void JPADraw::setParticleClipBoard()
 
 	if (!mDrawCtx.mBaseShape->textureIsEmpty()
 	    && !mDrawCtx.mBaseShape->isEnableTextureAnm())
-		unkC0 = mDrawCtx.mTexIndices[mDrawCtx.mBaseShape->getTextureIndex()];
+		mTexIdx = mDrawCtx.mTexIndices[mDrawCtx.mBaseShape->getTextureIndex()];
 
 	cb.mDirTypeFunc = nullptr;
 	cb.mRotTypeFunc = nullptr;
@@ -978,8 +1011,8 @@ void JPADraw::drawParticle()
 		GXSetClipMode(GX_CLIP_DISABLE);
 	}
 
-	for (int i = 0; i < unk89; ++i)
-		unk4[i]->exec(&mDrawCtx);
+	for (int i = 0; i < execEmtrPVisNum; ++i)
+		mpExecEmtrPVis[i]->exec(&mDrawCtx);
 
 	JSUList<JPABaseParticle>* particles
 	    = mDrawCtx.mBaseEmitter->getParticleList();
@@ -987,15 +1020,15 @@ void JPADraw::drawParticle()
 		JSULink<JPABaseParticle>* link;
 		for (link = particles->getFirst(); link; link = link->getNext()) {
 			JPABaseParticle* particle = link->getObject();
-			for (int i = 0; i < unk8C; ++i)
-				unk34[i]->exec(&mDrawCtx, particle);
+			for (int i = 0; i < execPtclVisNum; ++i)
+				mpExecPtclVis[i]->exec(&mDrawCtx, particle);
 		}
 	} else {
 		JSULink<JPABaseParticle>* link;
 		for (link = particles->getLast(); link; link = link->getPrev()) {
 			JPABaseParticle* particle = link->getObject();
-			for (int i = 0; i < unk8C; ++i)
-				unk34[i]->exec(&mDrawCtx, particle);
+			for (int i = 0; i < execPtclVisNum; ++i)
+				mpExecPtclVis[i]->exec(&mDrawCtx, particle);
 		}
 	}
 
@@ -1010,7 +1043,6 @@ void JPADraw::drawChild()
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3C, 0, 0x7D);
 	GXEnableTexOffsets(GX_TEXCOORD0, GX_TRUE, GX_TRUE);
 
-	// TODO: figure out how to use JPADraw::loadTexture
 	if (mDrawCtx.mBaseShape->textureIsEmpty()) {
 		mDrawCtx.mTexResource->loadDefaultTexture(GX_TEXMAP0);
 	} else {
@@ -1039,8 +1071,8 @@ void JPADraw::drawChild()
 		GXSetClipMode(GX_CLIP_DISABLE);
 	}
 
-	for (int i = 0; i < unk8A; ++i)
-		unk18[i]->exec(&mDrawCtx);
+	for (int i = 0; i < execEmtrCVisNum; ++i)
+		mpExecEmtrCVis[i]->exec(&mDrawCtx);
 
 	JSUList<JPABaseParticle>* particles
 	    = mDrawCtx.mBaseEmitter->getChildParticleList();
@@ -1048,15 +1080,15 @@ void JPADraw::drawChild()
 		JSULink<JPABaseParticle>* link;
 		for (link = particles->getFirst(); link; link = link->getNext()) {
 			JPABaseParticle* particle = link->getObject();
-			for (int i = 0; i < unk8E; ++i)
-				unk70[i]->exec(&mDrawCtx, particle);
+			for (int i = 0; i < execChldVisNum; ++i)
+				mpExecChldVis[i]->exec(&mDrawCtx, particle);
 		}
 	} else {
 		JSULink<JPABaseParticle>* link;
 		for (link = particles->getLast(); link; link = link->getPrev()) {
 			JPABaseParticle* particle = link->getObject();
-			for (int i = 0; i < unk8E; ++i)
-				unk70[i]->exec(&mDrawCtx, particle);
+			for (int i = 0; i < execChldVisNum; ++i)
+				mpExecChldVis[i]->exec(&mDrawCtx, particle);
 		}
 	}
 
@@ -1088,8 +1120,9 @@ void JPADraw::zDrawParticle()
 	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
 	GXSetZCompLoc(GX_FALSE);
 
-	GXSetAlphaCompare(GX_GEQUAL, mDrawCtx.mBaseEmitter->getAlpha(), GX_AOP_OR,
-	                  GX_GEQUAL, mDrawCtx.mBaseEmitter->getAlpha());
+	GXSetAlphaCompare(GX_GEQUAL, mDrawCtx.mBaseEmitter->getGlobalAlpha(),
+	                  GX_AOP_OR, GX_GEQUAL,
+	                  mDrawCtx.mBaseEmitter->getGlobalAlpha());
 	GXSetAlphaUpdate(GX_FALSE);
 	GXSetColorUpdate(GX_FALSE);
 	GXSetCullMode(GX_CULL_NONE);
@@ -1100,8 +1133,8 @@ void JPADraw::zDrawParticle()
 		GXSetClipMode(GX_CLIP_DISABLE);
 	}
 
-	for (int i = 0; i < unk89; ++i)
-		unk4[i]->exec(&mDrawCtx);
+	for (int i = 0; i < execEmtrPVisNum; ++i)
+		mpExecEmtrPVis[i]->exec(&mDrawCtx);
 
 	JSUList<JPABaseParticle>* particles
 	    = mDrawCtx.mBaseEmitter->getParticleList();
@@ -1109,15 +1142,15 @@ void JPADraw::zDrawParticle()
 		JSULink<JPABaseParticle>* link;
 		for (link = particles->getFirst(); link; link = link->getNext()) {
 			JPABaseParticle* particle = link->getObject();
-			for (int i = 0; i < unk8C; ++i)
-				unk34[i]->exec(&mDrawCtx, particle);
+			for (int i = 0; i < execPtclVisNum; ++i)
+				mpExecPtclVis[i]->exec(&mDrawCtx, particle);
 		}
 	} else {
 		JSULink<JPABaseParticle>* link;
 		for (link = particles->getLast(); link; link = link->getPrev()) {
 			JPABaseParticle* particle = link->getObject();
-			for (int i = 0; i < unk8C; ++i)
-				unk34[i]->exec(&mDrawCtx, particle);
+			for (int i = 0; i < execPtclVisNum; ++i)
+				mpExecPtclVis[i]->exec(&mDrawCtx, particle);
 		}
 	}
 
@@ -1132,7 +1165,6 @@ void JPADraw::zDrawChild()
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3C, 0, 0x7D);
 	GXEnableTexOffsets(GX_TEXCOORD0, GX_TRUE, GX_TRUE);
 
-	// TODO: figure out how to use JPADraw::loadTexture
 	if (mDrawCtx.mBaseShape->textureIsEmpty()) {
 		mDrawCtx.mTexResource->loadDefaultTexture(GX_TEXMAP0);
 	} else {
@@ -1143,8 +1175,9 @@ void JPADraw::zDrawChild()
 
 	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
 	GXSetZCompLoc(GX_FALSE);
-	GXSetAlphaCompare(GX_GEQUAL, mDrawCtx.mBaseEmitter->getAlpha(), GX_AOP_OR,
-	                  GX_GEQUAL, mDrawCtx.mBaseEmitter->getAlpha());
+	GXSetAlphaCompare(GX_GEQUAL, mDrawCtx.mBaseEmitter->getGlobalAlpha(),
+	                  GX_AOP_OR, GX_GEQUAL,
+	                  mDrawCtx.mBaseEmitter->getGlobalAlpha());
 	GXSetAlphaUpdate(GX_FALSE);
 	GXSetColorUpdate(GX_FALSE);
 	GXSetCullMode(GX_CULL_NONE);
@@ -1156,8 +1189,8 @@ void JPADraw::zDrawChild()
 		GXSetClipMode(GX_CLIP_DISABLE);
 	}
 
-	for (int i = 0; i < unk8A; ++i)
-		unk18[i]->exec(&mDrawCtx);
+	for (int i = 0; i < execEmtrCVisNum; ++i)
+		mpExecEmtrCVis[i]->exec(&mDrawCtx);
 
 	JSUList<JPABaseParticle>* particles
 	    = mDrawCtx.mBaseEmitter->getChildParticleList();
@@ -1165,15 +1198,15 @@ void JPADraw::zDrawChild()
 		JSULink<JPABaseParticle>* link;
 		for (link = particles->getFirst(); link; link = link->getNext()) {
 			JPABaseParticle* particle = link->getObject();
-			for (int i = 0; i < unk8E; ++i)
-				unk70[i]->exec(&mDrawCtx, particle);
+			for (int i = 0; i < execChldVisNum; ++i)
+				mpExecChldVis[i]->exec(&mDrawCtx, particle);
 		}
 	} else {
 		JSULink<JPABaseParticle>* link;
 		for (link = particles->getLast(); link; link = link->getPrev()) {
 			JPABaseParticle* particle = link->getObject();
-			for (int i = 0; i < unk8E; ++i)
-				unk70[i]->exec(&mDrawCtx, particle);
+			for (int i = 0; i < execChldVisNum; ++i)
+				mpExecChldVis[i]->exec(&mDrawCtx, particle);
 		}
 	}
 
@@ -1193,16 +1226,37 @@ s16 JPADraw::getMainTextureID(u8 i)
 	return result;
 }
 
-void JPADraw::getIndTextureID() { }
+s16 JPADraw::getIndTextureID()
+{
+	s16 result = -1;
+	if (mDrawCtx.mExTexShape != nullptr
+	    && mDrawCtx.mExTexShape->getIndTexMode() != 0)
+		result = mDrawCtx.mExTexShape->getIndTextureID();
+	return result;
+}
 
-void JPADraw::getIndSubTextureID() { }
+s16 JPADraw::getIndSubTextureID()
+{
+	s16 result = -1;
+	if (mDrawCtx.mExTexShape != nullptr
+	    && mDrawCtx.mExTexShape->getIndTexMode() == 2)
+		result = mDrawCtx.mExTexShape->getSubTextureID();
+	return result;
+}
 
-void JPADraw::getSecondTextureID() { }
+s16 JPADraw::getSecondTextureID()
+{
+	s16 result = -1;
+	if (mDrawCtx.mExTexShape != nullptr
+	    && mDrawCtx.mExTexShape->isEnableSecondTex())
+		result = mDrawCtx.mExTexShape->getSecondTexIndex();
+	return result;
+}
 
 void JPADraw::loadYBBMtx(MtxPtr mtx)
 {
-	JGeometry::TVec3<f32> v;
-	v.set(0.0f, mtx[1][1], mtx[2][1]);
+	JGeometry::TVec3<f32> v(0.0f, mtx[1][1], mtx[2][1]);
+	JUT_ASSERT(1430, !v.isZero());
 	v.normalize();
 
 	cb.unk38[0][0] = 1.0f;

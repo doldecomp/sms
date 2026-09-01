@@ -59,10 +59,10 @@ void TMario::thinkAloha()
 {
 	if (checkFlag(MARIO_FLAG_HAS_SHIRT)) {
 		mModel->getModel()->getModelData()->getShapeNodePointer(10)->offFlag(
-		    0x1);
+		    J3DShpFlag_Visible);
 	} else {
 		mModel->getModel()->getModelData()->getShapeNodePointer(10)->onFlag(
-		    0x1);
+		    J3DShpFlag_Visible);
 	}
 }
 
@@ -100,7 +100,7 @@ void TMario::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if (mWaterGun != nullptr) {
 			mWaterGun->setBaseTRMtx(
-			    mModel->unk8->mNodeMatrices[mJointIdChnChest]);
+			    mModel->getModel()->getAnmMtx(mJointIdChnChest));
 			mWaterGun->perform(CUE_CALC_ANIM, graphics);
 		}
 

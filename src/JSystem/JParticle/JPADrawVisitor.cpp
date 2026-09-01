@@ -7,6 +7,7 @@
 #include <JSystem/JParticle/JPASweepShape.hpp>
 #include <JSystem/JParticle/JPAExtraShape.hpp>
 #include <JSystem/JSupport/JSUList.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 #include <dolphin/mtx.h>
 #include <dolphin/gx.h>
 #include <macros.h>
@@ -21,6 +22,8 @@ static inline u32 JPA_U8_THRE(u32 a, u32 b)
 
 void JPADrawExecLoadExTex::exec(const JPADrawContext* dc)
 {
+	JUT_ASSERT(50, dc->mTexIndices);
+
 	GXTexCoordID coord = GX_TEXCOORD1;
 	GXTexMapID mapId   = GX_TEXMAP1;
 	switch (dc->mExTexShape->getIndTexMode()) {
@@ -129,7 +132,7 @@ void JPADrawExecSetTexMtx::exec(const JPADrawContext* dc)
 {
 	Mtx mtx;
 
-	s32 tick = dc->mBaseEmitter->unk10.getFrame();
+	s32 tick = dc->mBaseEmitter->getFrame();
 
 	f32 tilingX = 0.5f * dc->mBaseShape->getTilingX();
 	f32 tilingY = 0.5f * dc->mBaseShape->getTilingY();
@@ -176,7 +179,7 @@ void JPADrawExecLoadDefaultTexture::exec(const JPADrawContext* dc)
 
 void JPADrawExecLoadTexture::exec(const JPADrawContext* dc)
 {
-	dc->mTexResource->load(dc->unk14->unkC0, GX_TEXMAP0);
+	dc->mTexResource->load(dc->unk14->mTexIdx, GX_TEXMAP0);
 }
 
 void JPADrawExecSetPointSize::exec(const JPADrawContext* dc,
@@ -1116,11 +1119,11 @@ void JPADrawExecLine::exec(const JPADrawContext* dc, JPABaseParticle* particle)
 	GXEnd();
 }
 
-JSULink<JPABaseParticle>* stripeGetNext(JSULink<JPABaseParticle>* link)
+static JSULink<JPABaseParticle>* stripeGetNext(JSULink<JPABaseParticle>* link)
 {
 	return link->getNext();
 }
-JSULink<JPABaseParticle>* stripeGetPrev(JSULink<JPABaseParticle>* link)
+static JSULink<JPABaseParticle>* stripeGetPrev(JSULink<JPABaseParticle>* link)
 {
 	return link->getPrev();
 }
@@ -1393,7 +1396,7 @@ void JPADrawCalcColorEnv::calc(const JPADrawContext* dc)
 
 void JPADrawCalcColorAnmFrameNormal::calc(const JPADrawContext* dc)
 {
-	s32 tick  = dc->mBaseEmitter->unk10.getFrame();
+	s32 tick  = dc->mBaseEmitter->getFrame();
 	s16 max   = dc->mBaseShape->getColorRegAnmMaxFrm();
 	s32 frame = tick < max ? tick : max;
 
@@ -1402,14 +1405,14 @@ void JPADrawCalcColorAnmFrameNormal::calc(const JPADrawContext* dc)
 
 void JPADrawCalcColorAnmFrameRepeat::calc(const JPADrawContext* dc)
 {
-	f32 tick = dc->mBaseEmitter->unk10.getFrame();
+	f32 tick = dc->mBaseEmitter->getFrame();
 	dc->pcb->mColorAnmFrame
 	    = ((u32)tick) % (dc->mBaseShape->getColorRegAnmMaxFrm() + 1);
 }
 
 void JPADrawCalcColorAnmFrameReverse::calc(const JPADrawContext* dc)
 {
-	s32 tick     = dc->mBaseEmitter->unk10.getFrame();
+	s32 tick     = dc->mBaseEmitter->getFrame();
 	s32 maxFrame = dc->mBaseShape->getColorRegAnmMaxFrm();
 	s32 odd   = (tick / maxFrame) & 1; // whether we're on an even or odd loop
 	s32 frame = tick % maxFrame;
@@ -1428,37 +1431,37 @@ void JPADrawCalcColorAnmFrameRandom::calc(const JPADrawContext* dc)
 
 void JPADrawCalcTextureAnmIndexNormal::calc(const JPADrawContext* dc)
 {
-	s32 tick         = dc->mBaseEmitter->unk10.getFrame();
-	u8 anmKeyNum     = dc->mBaseShape->getTextureAnmKeyNum();
-	s32 idx          = ((anmKeyNum - 1) < tick) ? anmKeyNum - 1 : tick;
-	dc->unk14->unkC0 = dc->mTexIndices[dc->mBaseShape->getTextureIndex(idx)];
+	s32 tick           = dc->mBaseEmitter->getFrame();
+	u8 anmKeyNum       = dc->mBaseShape->getTextureAnmKeyNum();
+	s32 idx            = ((anmKeyNum - 1) < tick) ? anmKeyNum - 1 : tick;
+	dc->unk14->mTexIdx = dc->mTexIndices[dc->mBaseShape->getTextureIndex(idx)];
 }
 
 void JPADrawCalcTextureAnmIndexRepeat::calc(const JPADrawContext* dc)
 {
-	s32 tick         = dc->mBaseEmitter->unk10.getFrame();
-	dc->unk14->unkC0 = dc->mTexIndices[dc->mBaseShape->getTextureIndex(
+	s32 tick           = dc->mBaseEmitter->getFrame();
+	dc->unk14->mTexIdx = dc->mTexIndices[dc->mBaseShape->getTextureIndex(
 	    tick % dc->mBaseShape->getTextureAnmKeyNum())];
 }
 
 void JPADrawCalcTextureAnmIndexReverse::calc(const JPADrawContext* dc)
 {
-	s32 tick     = dc->mBaseEmitter->unk10.getFrame();
+	s32 tick     = dc->mBaseEmitter->getFrame();
 	s32 maxFrame = dc->mBaseShape->getTextureAnmKeyNum() - 1;
 	s32 odd   = (tick / maxFrame) & 1; // whether we're on an even or odd loop
 	s32 frame = tick % maxFrame;
-	dc->unk14->unkC0 = dc->mTexIndices[dc->mBaseShape->getTextureIndex(
+	dc->unk14->mTexIdx = dc->mTexIndices[dc->mBaseShape->getTextureIndex(
 	    frame + (odd * maxFrame) - 2 * (odd * frame))];
 }
 
 void JPADrawCalcTextureAnmIndexMerge::calc(const JPADrawContext* dc)
 {
-	dc->unk14->unkC0 = dc->mBaseShape->getTextureIndex();
+	dc->unk14->mTexIdx = dc->mBaseShape->getTextureIndex();
 }
 
 void JPADrawCalcTextureAnmIndexRandom::calc(const JPADrawContext* dc)
 {
-	dc->unk14->unkC0 = dc->mBaseShape->getTextureIndex();
+	dc->unk14->mTexIdx = dc->mBaseShape->getTextureIndex();
 }
 
 void JPADrawExecCallBack::exec(const JPADrawContext* dc)

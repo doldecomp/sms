@@ -74,7 +74,7 @@ void TAnimalBase::init(TLiveManager* manager)
 	    = ((TAnimalManagerBase*)mManager)->mAnimalSave->mSLWalkTurnSpeed.get();
 	mTurnSpeed = turnSpeed * SMSGetAnmFrameRate();
 
-	J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(0);
+	J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 	if (frameCtrl) {
 		s32 sharedAnmNum = ((TAnimalManagerBase*)manager)
 		                       ->mAnimalSave->mSLSharedAnmNum.get();
@@ -86,7 +86,7 @@ void TAnimalBase::init(TLiveManager* manager)
 		frameCtrl->setFrame(phase * frameCtrl->getEnd());
 	}
 
-	J3DFrameCtrl* frameCtrl2 = mMActor->getFrameCtrl(3);
+	J3DFrameCtrl* frameCtrl2 = mMActor->getFrameCtrl(ANM_TYPE_BTP);
 	if (frameCtrl2)
 		frameCtrl2->setFrame(frameCtrl2->getEnd() * MsRandF());
 }
@@ -194,8 +194,8 @@ void TAnimalBase::perform(u32 cue, JDrama::TGraphics* graphics)
 				model->swapAllMtx();
 
 				Mtx* srcArrays[2];
-				srcArrays[0] = shared->mNodeMatrices;
-				srcArrays[1] = shared->unk5C;
+				srcArrays[0] = (Mtx*)shared->getAnmMtx(0);
+				srcArrays[1] = (Mtx*)shared->getWeightAnmMtx(0);
 
 				for (u16 i = 0; i < count; ++i) {
 					MTXConcat(world,

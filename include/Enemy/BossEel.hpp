@@ -352,7 +352,7 @@ public:
 	virtual BOOL hasMapCollision() const { return true; }
 
 	void startMoguCamera();
-	BOOL isInBossEelMoguDemo();
+	bool isInBossEelMoguDemo();
 	void quickBack();
 	BOOL isValidToothDamage();
 	void deadCheck();
@@ -370,6 +370,10 @@ public:
 	void generateBubble(JGeometry::TVec3<f32>&);
 
 	TBossEelSaveParams& getBossEelParams() const { return *mSaveParams; }
+
+	enum {
+		LIVE_FLAG_UNK10000 = 0x10000,
+	};
 
 public:
 	/* 0x150 */ JGeometry::TVec3<f32> mInitialPosition;

@@ -22,7 +22,7 @@ void JPADrawSetupTev::setupTev(JPABaseShape* param_1, JPAExTexShape* param_2)
 		GXTevStageID stage = GX_TEVSTAGE1;
 		GXTexCoordID coord = GX_TEXCOORD1;
 		GXTexMapID map     = GX_TEXMAP1;
-		switch (param_2->mIndTexMode) {
+		switch (param_2->getIndTexMode()) {
 		case 1:
 			GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
 			GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
@@ -63,7 +63,7 @@ void JPADrawSetupTev::setupTev(JPABaseShape* param_1, JPAExTexShape* param_2)
 			break;
 		}
 
-		if ((param_2->unk28 & 1) != 0) {
+		if (param_2->isEnableSecondTex()) {
 			GXSetTevOrder(stage, coord, map, GX_COLOR_NULL);
 			GXSetTevColorIn(stage, GX_CC_ZERO, GX_CC_TEXC, GX_CC_CPREV,
 			                GX_CC_ZERO);

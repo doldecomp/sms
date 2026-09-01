@@ -20,6 +20,7 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/RandomUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <System/EmitterViewObj.hpp>
@@ -167,7 +168,8 @@ BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
 
 		mOwner->gotEyeDamage();
 
-		gpMarioParticleManager->emit(0xE7, &mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &mPosition, 0,
+		                             nullptr);
 		return true;
 	}
 
@@ -301,7 +303,8 @@ BOOL TBGEyeHit::receiveMessage(THitActor* sender, u32 message)
 	if (sender->getActorType() == 0x1000001
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		mOwner->gotEyeDamage();
-		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
+		                             0, nullptr);
 		return true;
 	}
 
@@ -331,7 +334,8 @@ BOOL TBGBodyHit::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->getActorType() == 0x1000001
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
+		                             0, nullptr);
 		return true;
 	}
 
@@ -349,21 +353,14 @@ TBossGessoMtxCalc::TBossGessoMtxCalc(TBossGesso* owner)
     : M3UMtxCalcSIAnmBlendQuat(true)
     , mOwner(owner)
 {
-	unk50 = 0.0f;
+	mMotionBlendRatio = 0.0f;
 }
 
 void TBossGessoMtxCalc::joinAnm(int param_1)
 {
-	J3DAnmTransformKey* anm
-	    = mOwner->getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
-	        param_1);
-
-	if (unk54 == anm)
-		return;
-
-	unk58 = unk54;
-	unk54 = anm;
-	unk50 = 1.0f;
+	M3UMtxCalcSIAnmBlendQuat::joinAnm(
+	    mOwner->getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
+	        param_1));
 }
 
 void TBossGessoMtxCalc::setAnm(int param_1) { }
@@ -600,7 +597,7 @@ void TBossGesso::init(TLiveManager* param_1)
 	getMActor()->setCalcForBck(mMtxCalc);
 
 	getMActor()->calc();
-	getMActor()->setLightType(1);
+	getMActor()->setLightType(LIGHT_TYPE_OBJECT);
 
 	unk178   = getActorKeeper()->createMActor("bgeso_dirty_white.bmd", 0);
 	mPolDrop = new TBGPolDrop;
@@ -718,7 +715,7 @@ void TBossGesso::changeBck(int param_1)
 	mMtxCalc->joinAnm(param_1);
 	getMActor()->setFrameCtrlForBck(param_1);
 
-	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
+	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (ctrl != nullptr)
 		unk188 = 10.0f / ctrl->getEnd();
 
@@ -877,8 +874,10 @@ void TBossGesso::launchPolDrop()
 	mPolDrop->launch(local_14, VStack_20);
 
 	MtxPtr ptr = getModel()->getAnmMtx(27);
-	gpMarioParticleManager->emitAndBindToMtxPtr(0x94, ptr, 0, nullptr);
-	gpMarioParticleManager->emitAndBindToMtxPtr(0x93, ptr, 0, nullptr);
+	gpMarioParticleManager->emitAndBindToMtxPtr(BGESO_JPA_MS_BOGE_CANON_B, ptr,
+	                                            0, nullptr);
+	gpMarioParticleManager->emitAndBindToMtxPtr(BGESO_JPA_MS_BOGE_CANON_A, ptr,
+	                                            0, nullptr);
 
 	unk195 += 1;
 }
@@ -906,7 +905,8 @@ BOOL TBossGesso::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->getActorType() == 0x1000001
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
+		                             0, nullptr);
 		return true;
 	}
 
@@ -1375,11 +1375,7 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 	mBody->testPerform(cue, graphics);
 
 	if (cue & CUE_MOVE) {
-		mMtxCalc->unk50 += -unk188;
-		if (mMtxCalc->unk50 < 0.0f)
-			mMtxCalc->unk50 = 0.0f;
-		else if (mMtxCalc->unk50 > 1.0f)
-			mMtxCalc->unk50 = 1.0f;
+		mMtxCalc->advanceMotionBlend(-unk188);
 	}
 
 	if (unk17C) {
@@ -1525,7 +1521,7 @@ DEFINE_NERVE(TNerveBGWait, TLiveActor)
 		self->setGoalPathMario();
 
 		self->getMActor()->setBtpFromIndex(2);
-		self->getMActor()->getFrameCtrl(3)->setFrame(0.0f);
+		self->getMActor()->getFrameCtrl(ANM_TYPE_BTP)->setFrame(0.0f);
 		self->getMActor()->resetDL();
 	}
 
@@ -1551,7 +1547,7 @@ DEFINE_NERVE(TNerveBGEyeDamage, TLiveActor)
 		}
 
 		self->getMActor()->setBtpFromIndex(1);
-		J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(3);
+		J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(ANM_TYPE_BTP);
 		ctrl->setFrame(1.5f);
 		ctrl->setRate(0.0f);
 		self->getMActor()->resetDL();
@@ -1559,16 +1555,16 @@ DEFINE_NERVE(TNerveBGEyeDamage, TLiveActor)
 
 	if (self->getMActor()->curAnmEndsNext()) {
 		self->getMActor()->setBtpFromIndex(2);
-		J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(3);
+		J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(ANM_TYPE_BTP);
 		ctrl->setFrame(0.0f);
 		self->getMActor()->resetDL();
 		return true;
 	}
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    0x139, self->getModel()->getAnmMtx(7), 1, self);
+	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(7), 1, self);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    0x139, self->getModel()->getAnmMtx(4), 1, self);
+	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(4), 1, self);
 
 	if (self->unk1AE == 0) {
 		self->unk1AE = 0x78;
@@ -1593,13 +1589,13 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 		self->getMActor()->setBtkFromIndex(0);
 		self->changeAllTentacleState(8);
 
-		J3DFrameCtrl* ctrl4 = self->getMActor()->getFrameCtrl(4);
+		J3DFrameCtrl* ctrl4 = self->getMActor()->getFrameCtrl(ANM_TYPE_BTK);
 		ctrl4->setRate(1.0f);
 		ctrl4->setFrame(0.0f);
 
 		self->getMActor()->setBtpFromIndex(1);
 
-		J3DFrameCtrl* ctrl3 = self->getMActor()->getFrameCtrl(3);
+		J3DFrameCtrl* ctrl3 = self->getMActor()->getFrameCtrl(ANM_TYPE_BTP);
 		ctrl3->setFrame(1.5f);
 		ctrl3->setRate(0.0f);
 
@@ -1616,11 +1612,14 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 
 	if (spine->getTime() == 12) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x97, self->getModel()->getAnmMtx(27), 0, nullptr);
+		    BGESO_JPA_MS_BOGE_HIT_A, self->getModel()->getAnmMtx(27), 0,
+		    nullptr);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x99, self->getModel()->getAnmMtx(27), 0, nullptr);
+		    BGESO_JPA_MS_BOGE_HIT_C, self->getModel()->getAnmMtx(27), 0,
+		    nullptr);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x98, self->getModel()->getAnmMtx(27), 0, nullptr);
+		    BGESO_JPA_MS_BOGE_HIT_B, self->getModel()->getAnmMtx(27), 0,
+		    nullptr);
 	}
 
 	if (spine->getTime() == 18) {
@@ -1645,21 +1644,24 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 		local_28.y = gpMap->checkGround(local_28.x, local_28.y + 500.0f,
 		                                local_28.z, &data);
 
-		gpMarioParticleManager->emit(0x9A, &local_28, 0, nullptr);
+		gpMarioParticleManager->emit(BGESO_JPA_MS_BOGE_HITDOWN, &local_28, 0,
+		                             nullptr);
 	}
 
 	if (spine->getTime() == 40) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x9C, self->getModel()->getAnmMtx(7), 0, nullptr);
+		    BGESO_JPA_MS_BOGE_KIZETSU, self->getModel()->getAnmMtx(7), 0,
+		    nullptr);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x9D, self->getModel()->getAnmMtx(4), 0, nullptr);
+		    BGESO_JPA_MS_BOGE_KIZETSU_R, self->getModel()->getAnmMtx(4), 0,
+		    nullptr);
 	}
 
 	if (self->getMActor()->curAnmEndsNext()) {
 
 		self->forceAllTentacleState(0);
 
-		J3DFrameCtrl* ctrl4 = self->getMActor()->getFrameCtrl(4);
+		J3DFrameCtrl* ctrl4 = self->getMActor()->getFrameCtrl(ANM_TYPE_BTK);
 		ctrl4->setRate(0.0f);
 		ctrl4->setFrame(0.0f);
 
@@ -1688,7 +1690,8 @@ DEFINE_NERVE(TNerveBGTentacleDamage, TLiveActor)
 		local_28.y = gpMap->checkGround(local_28.x, local_28.y + 500.0f,
 		                                local_28.z, &data);
 
-		gpMarioParticleManager->emit(0x9A, &local_28, 0, nullptr);
+		gpMarioParticleManager->emit(BGESO_JPA_MS_BOGE_HITDOWN, &local_28, 0,
+		                             nullptr);
 	}
 
 	if (spine->getTime() == 10) {
@@ -1721,11 +1724,11 @@ DEFINE_NERVE(TNerveBGTug, TLiveActor)
 	}
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    0x138, self->getModel()->getAnmMtx(47), 0, nullptr);
+	    BGESO_JPA_MS_BOGE_ASE, self->getModel()->getAnmMtx(47), 0, nullptr);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    0x139, self->getModel()->getAnmMtx(7), 0, nullptr);
+	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(7), 0, nullptr);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    0x139, self->getModel()->getAnmMtx(4), 0, nullptr);
+	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(4), 0, nullptr);
 
 	if (self->mBeak->mHolder != nullptr) {
 		JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
@@ -1735,7 +1738,7 @@ DEFINE_NERVE(TNerveBGTug, TLiveActor)
 		if (delta.length() >= lim) {
 			self->getMActor()->setBtpFromIndex(1);
 
-			J3DFrameCtrl* ctrl3 = self->getMActor()->getFrameCtrl(3);
+			J3DFrameCtrl* ctrl3 = self->getMActor()->getFrameCtrl(ANM_TYPE_BTP);
 			ctrl3->setFrame(1.5f);
 			ctrl3->setRate(0.0f);
 
@@ -1765,7 +1768,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 
 		self->getMActor()->setBtpFromIndex(1);
 
-		J3DFrameCtrl* ctrl3 = self->getMActor()->getFrameCtrl(3);
+		J3DFrameCtrl* ctrl3 = self->getMActor()->getFrameCtrl(ANM_TYPE_BTP);
 		ctrl3->setFrame(1.5f);
 		ctrl3->setRate(0.0f);
 
@@ -1882,20 +1885,22 @@ DEFINE_NERVE(TNerveBGPollute, TLiveActor)
 		self->changeAllTentacleState(0);
 		self->getMActor()->setBtpFromIndex(2);
 
-		J3DFrameCtrl* ctrl3 = self->getMActor()->getFrameCtrl(3);
+		J3DFrameCtrl* ctrl3 = self->getMActor()->getFrameCtrl(ANM_TYPE_BTP);
 		ctrl3->setFrame(0.0f);
 		self->getMActor()->resetDL();
 	}
 
 	if (spine->getTime() == 90) {
 		gpMarioParticleManager->emitAndBindToSRTMtxPtr(
-		    0xA0, self->getModel()->getAnmMtx(27), 0, nullptr);
+		    BGESO_JPA_MS_BOGE_OSEN, self->getModel()->getAnmMtx(27), 0,
+		    nullptr);
 	}
 
 	if (spine->getTime() == 226) {
 		JGeometry::TVec3<f32> TStack_24;
 		self->getJointTransByIndex(1, &TStack_24);
-		gpMarioParticleManager->emit(0x9B, &TStack_24, 0, nullptr);
+		gpMarioParticleManager->emit(BGESO_JPA_MS_BOGE_JUMP, &TStack_24, 0,
+		                             nullptr);
 		self->unk190.color.a = 230;
 	}
 
@@ -1922,12 +1927,12 @@ DEFINE_NERVE(TNerveBGPolDrop, TLiveActor)
 		self->changeAllTentacleState(0);
 		self->getMActor()->setBtpFromIndex(2);
 
-		J3DFrameCtrl* ctrl3 = self->getMActor()->getFrameCtrl(3);
+		J3DFrameCtrl* ctrl3 = self->getMActor()->getFrameCtrl(ANM_TYPE_BTP);
 		ctrl3->setFrame(0.0f);
 		self->getMActor()->resetDL();
 	}
 
-	J3DFrameCtrl* ctrl0 = self->getMActor()->getFrameCtrl(0);
+	J3DFrameCtrl* ctrl0 = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (83.0f < ctrl0->getFrame() && ctrl0->getFrame() < 87.0f) {
 		self->launchPolDrop();
 	}

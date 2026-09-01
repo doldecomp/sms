@@ -58,7 +58,10 @@ BOOL YoshiHeadCtrl(J3DNode* param_1, int param_2)
 	return true;
 }
 
-J3DFrameCtrl* TYoshi::getFrameCtrl() const { return mActor->getFrameCtrl(0); }
+J3DFrameCtrl* TYoshi::getFrameCtrl() const
+{
+	return mActor->getFrameCtrl(ANM_TYPE_BCK);
+}
 
 MtxPtr TYoshi::getMtxPtrFootL() const
 {
@@ -134,11 +137,13 @@ void TYoshi::init(TMario* param_1)
 	}
 
 	unk4C = J3DAnmLoaderDataBase::load(JKRGetResource("/yoshi/yoshi_eat.bck"));
-	unk54 = J3DNewMtxCalcAnm(mActor->getModel()->getModelData()->getUnkC(),
+	unk54 = J3DNewMtxCalcAnm(mActor->getModel()->getModelData()->getFlag()
+	                             & J3DMLF_MtxCalcMask,
 	                         (J3DAnmTransform*)unk4C);
 	unk50 = J3DAnmLoaderDataBase::load(
 	    JKRGetResource("/yoshi/yoshi_eat_end.bck"));
-	unk58 = J3DNewMtxCalcAnm(mActor->getModel()->getModelData()->getUnkC(),
+	unk58 = J3DNewMtxCalcAnm(mActor->getModel()->getModelData()->getFlag()
+	                             & J3DMLF_MtxCalcMask,
 	                         (J3DAnmTransform*)unk50);
 
 	unk5C.setFrame(unk5C.getStart());
@@ -189,8 +194,8 @@ void TYoshi::init(TMario* param_1)
 	unkFC.zero();
 	unk108.zero();
 	unk114 = 80.0f;
-	mActor->getFrameCtrl(0)->setRate(0.5f);
-	mActor->getFrameCtrl(3)->setRate(0.5f);
+	mActor->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.5f);
+	mActor->getFrameCtrl(ANM_TYPE_BTP)->setRate(0.5f);
 
 	mActor->getModel()->setBaseTRMtx(
 	    mMario->mModel->getModel()->getBaseTRMtx());
@@ -282,7 +287,7 @@ void TYoshi::thinkBtp(int id)
 
 	if (mBtpIndex != btpId) {
 		mActor->setBtpFromIndex(btpId);
-		J3DFrameCtrl* frameCtrl = mActor->getFrameCtrl(3);
+		J3DFrameCtrl* frameCtrl = mActor->getFrameCtrl(ANM_TYPE_BTP);
 		frameCtrl->setRate(0.5f);
 		mBtpIndex = btpId;
 	}
@@ -290,7 +295,7 @@ void TYoshi::thinkBtp(int id)
 
 void TYoshi::changeAnimation(int id)
 {
-	if (id != mActor->getCurAnmIdx(0)) {
+	if (id != mActor->getCurAnmIdx(ANM_TYPE_BCK)) {
 		mActor->setBck(id);
 		thinkBtp(id);
 		mBodyAnmSound->initAnmSound(mBodyAnmSoundTable[id], 1, 0.0f);
@@ -299,7 +304,7 @@ void TYoshi::changeAnimation(int id)
 
 u16 TYoshi::changeHand()
 {
-	u16 curIdx = mActor->getCurAnmIdx(0);
+	u16 curIdx = mActor->getCurAnmIdx(ANM_TYPE_BCK);
 	u32 status = mMario->mStatus;
 
 	if (status & MARIO_STATUS_FLAG_RUNNING) {
@@ -487,7 +492,7 @@ void TYoshi::thinkJumpEnd(u16, u16*) { }
 void TYoshi::thinkAnimation()
 {
 	f32 nextFrame = mMario->getMotionFrameCtrl().getRate();
-	u16 curIdx    = mActor->getCurAnmIdx(0);
+	u16 curIdx    = mActor->getCurAnmIdx(ANM_TYPE_BCK);
 	u16 newIdx    = curIdx;
 	u32 status    = mMario->mStatus;
 
@@ -598,7 +603,7 @@ void TYoshi::thinkAnimation()
 		mActor->setMotionBlendRatioForBck(tmp);
 
 		J3DAnmTransform* oldAnm = mActor->getBckOldMotionBlendAnmPtr();
-		oldAnm->mFrame          = mActor->getFrameCtrl(0)->getFrame();
+		oldAnm->setFrame(mActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame());
 
 		if (mMario->mStatus == MARIO_STATUS_OIL_RUN)
 			nextFrame = mMario->getMotionFrameCtrl().getRate();
@@ -608,7 +613,7 @@ void TYoshi::thinkAnimation()
 		mActor->setMotionBlendRatioForBck(0.0f);
 	}
 
-	mActor->getFrameCtrl(0)->setRate(nextFrame);
+	mActor->getFrameCtrl(ANM_TYPE_BCK)->setRate(nextFrame);
 }
 
 void TYoshi::thinkUpper()
@@ -829,7 +834,7 @@ void TYoshi::movement()
 
 	switch (mState) {
 	case STATE_UNK2:
-		if (mActor->curAnmEndsNext(0, nullptr)) {
+		if (mActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			mState = STATE_UNMOUNTED;
 			changeAnimation(0x17);
 			gpMSound->startMarioVoice(MSD_SE_YV_YOSHI1, 1, 1);
@@ -837,7 +842,7 @@ void TYoshi::movement()
 		break;
 
 	case STATE_UNMOUNTED: {
-		if (mActor->curAnmEndsNext(0, nullptr))
+		if (mActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
 			mActor->setBckFromIndex(0x17);
 
 		f32 rot = SHORTANGLE2DEG(mEggRotSpeed);
@@ -897,10 +902,10 @@ void TYoshi::movement()
 		break;
 
 	case STATE_DROWNING:
-		if (mActor->getFrameCtrl(0)->checkPass(60.0f)) {
+		if (mActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(60.0f)) {
 			gpMarioParticleManager->emitAndBindToPosPtr(0x3F, &unk74, 0, this);
 		}
-		if (mActor->curAnmEndsNext(0, nullptr)) {
+		if (mActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			mState = STATE_UNK5;
 			unk2   = 30;
 		}
@@ -995,22 +1000,22 @@ void TYoshi::calcAnim()
 
 	if (isHatched()) {
 		thinkUpper();
-		switch (mActor->getCurAnmIdx(0)) {
+		switch (mActor->getCurAnmIdx(ANM_TYPE_BCK)) {
 		case 10:
 		case 12:
 		case 15:
 			mActor->getModel()->getModelData()->getShapeNodePointer(0)->onFlag(
-			    1);
+			    J3DShpFlag_Visible);
 			mActor->getModel()->getModelData()->getShapeNodePointer(1)->onFlag(
-			    1);
+			    J3DShpFlag_Visible);
 			mMirrorModels[0]->getModelData()->offFlag1OnAllShapes();
 			mMirrorModels[1]->getModelData()->offFlag1OnAllShapes();
 			break;
 		default:
 			mActor->getModel()->getModelData()->getShapeNodePointer(0)->offFlag(
-			    1);
+			    J3DShpFlag_Visible);
 			mActor->getModel()->getModelData()->getShapeNodePointer(1)->offFlag(
-			    1);
+			    J3DShpFlag_Visible);
 			mMirrorModels[0]->getModelData()->onFlag1OnAllShapes();
 			mMirrorModels[1]->getModelData()->onFlag1OnAllShapes();
 			break;
@@ -1044,8 +1049,9 @@ void TYoshi::calcAnim()
 
 	u32 soundFlags = mMario->mSoundFlags;
 
-	mBodyAnmSound->animeLoop(&mTranslation, mActor->getFrameCtrl(0)->getFrame(),
-	                         mActor->getFrameCtrl(0)->getRate(),
+	mBodyAnmSound->animeLoop(&mTranslation,
+	                         mActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame(),
+	                         mActor->getFrameCtrl(ANM_TYPE_BCK)->getRate(),
 	                         soundFlags + 0x10000000, 4);
 	mTongueAnmSound->animeLoop(&unkFC, unk5C.getFrame(), unk5C.getRate(),
 	                           soundFlags + 0x10000000, 4);

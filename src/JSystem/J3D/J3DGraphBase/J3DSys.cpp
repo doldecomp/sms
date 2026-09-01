@@ -18,6 +18,8 @@ extern void makeAlphaCmpTable();
 extern void makeZModeTable();
 extern void makeTevSwapTable();
 
+u8 NullTexData[16] __attribute__((aligned(32))) = { 0 };
+
 J3DSys::J3DSys()
 {
 	makeTexCoordTable();
@@ -28,16 +30,16 @@ J3DSys::J3DSys()
 	MTXIdentity(mViewMtx);
 	unk4C  = 1;
 	unk50  = 0;
-	mModel = 0;
+	mModel = nullptr;
 	unk40  = 0;
 	for (int i = 0; i < ARRAY_COUNT(mDrawBuffer); ++i)
 		mDrawBuffer[i] = nullptr;
-	mTexture        = 0;
-	mCurrentDrawMtx = 0;
-	mCurrentNormMtx = 0;
-	unk10C          = 0;
-	unk110          = 0;
-	unk114          = 0;
+	mTexture        = nullptr;
+	mCurrentDrawMtx = nullptr;
+	mCurrentNormMtx = nullptr;
+	mVtxPos         = nullptr;
+	mVtxNrm         = nullptr;
+	mVtxCol         = nullptr;
 	unk118          = 0;
 	unk100          = 0;
 	unk11C          = 0;
@@ -59,6 +61,8 @@ void J3DSys::loadNrmMtxIndx(int id, u16 mtx_indx) const
 {
 	GXLoadNrmMtxIndx3x3(mtx_indx, id * 3);
 }
+
+void J3DSys::loadTexMtx(u32, MtxPtr) const { }
 
 void J3DSys::setTexCacheRegion(GXTexCacheSize size)
 {
@@ -256,7 +260,13 @@ void J3DSys::drawInit()
 	setTexCacheRegion(GX_TEXCACHE_32K);
 }
 
-u8 NullTexData[16] __attribute__((aligned(32))) = { 0 };
+void J3DSys::reinitGX() { }
+
+void J3DSys::reinitGenMode() { }
+
+void J3DSys::reinitLighting() { }
+
+void J3DSys::reinitTransform() { }
 
 void J3DSys::reinitTexture()
 {
@@ -273,3 +283,11 @@ void J3DSys::reinitTexture()
 	GXLoadTexObj(&GStack_24, GX_TEXMAP6);
 	GXLoadTexObj(&GStack_24, GX_TEXMAP7);
 }
+
+void J3DSys::reinitTevStages() { }
+
+void J3DSys::reinitIndStages() { }
+
+void J3DSys::reinitPixelProc() { }
+
+void J3DSys::ErrorReport(J3DErrType) const { }

@@ -44,23 +44,23 @@ void TMareWallRock::appear()
 	(void)0;
 	(void)0;
 	(void)0;
+	(void)0;
 
 	unk10C[0]->setUp();
-	unk104->alive();
-	JGeometry::TVec3<f32> t(0.0f, 0.0f, unkFC);
-	unk10C[0]->moveTrans(t);
+	unk104->awake();
+	unk10C[0]->moveTrans(JGeometry::TVec3<f32>(0.0f, 0.0f, unkFC));
 	f32 rotY = unk128;
 
 	if (JPABaseEmitter* em = gpMarioParticleManager->emit(
 	        MAP_MAP_MS_MARE_OBJUP_A, &unk11C, 0, &unk11C)) {
 		em->setRotation(JGeometry::TVec3<f32>(0.0f, rotY, 0.0f));
-		em->unk154.set(unk110);
+		em->setGlobalDynamicsScale(unk110);
 	}
 
 	if (JPABaseEmitter* em = gpMarioParticleManager->emit(
 	        MAP_MAP_MS_MARE_OBJUP_B, &unk11C, 2, &unk11C)) {
 		em->setRotation(JGeometry::TVec3<f32>(0.0f, rotY, 0.0f));
-		em->unk154.set(unk110);
+		em->setGlobalDynamicsScale(unk110);
 	}
 
 	unkF4 = 2;
@@ -253,9 +253,10 @@ void TMareEventDepressWall::rising()
 		int idx = unk48;
 		if (JPABaseEmitter* em = gpMarioParticleManager->emit(
 		        MAP_MAP_MS_MARE_BLOCKUP, &unk34[idx], 1, &unk34[idx])) {
-			em->setScale(unk38[idx]);
-			em->mChildSpawnRate = unk3C[idx];
-			em->unk174.setAll(unk40[idx]);
+			em->setGlobalScale(unk38[idx]);
+			em->setRate(unk3C[idx]);
+			em->setGlobalParticleScale(
+			    JGeometry::TVec3<f32>(unk40[idx], unk40[idx], unk40[idx]));
 		}
 	}
 
@@ -326,9 +327,10 @@ void TMareEventDepressWall::depressing()
 					JPABaseEmitter* em = gpMarioParticleManager->emit(
 					    MAP_MAP_MS_MARE_BLOCKUP, &unk34[i], 1, &unk34[i]);
 					if (em) {
-						em->setScale(unk38[i]);
-						em->mChildSpawnRate = unk3C[i];
-						em->unk174.setAll(unk40[i]);
+						em->setGlobalScale(unk38[i]);
+						em->setRate(unk3C[i]);
+						em->setGlobalParticleScale(JGeometry::TVec3<f32>(
+						    unk40[i], unk40[i], unk40[i]));
 					}
 				} else {
 					SMSRumbleMgr->stop(0x13);
@@ -356,9 +358,10 @@ void TMareEventDepressWall::depressing()
 					JPABaseEmitter* em = gpMarioParticleManager->emit(
 					    MAP_MAP_MS_MARE_BLOCKUP, &unk34[i], 1, &unk34[i]);
 					if (em) {
-						em->setScale(unk38[i]);
-						em->mChildSpawnRate = unk3C[i];
-						em->unk174.setAll(unk40[i]);
+						em->setGlobalScale(unk38[i]);
+						em->setRate(unk3C[i]);
+						em->setGlobalParticleScale(JGeometry::TVec3<f32>(
+						    unk40[i], unk40[i], unk40[i]));
 					}
 				} else {
 					SMSRumbleMgr->stop(0x13);
@@ -484,13 +487,13 @@ void TMareEventDepressWall::initCommon()
 		int idx          = (unk10 - 1) - i;
 		J3DJoint* jJoint = (J3DJoint*)joint;
 		unk30[idx]       = jJoint;
-		unk34[idx].set((jJoint->mMin.x + jJoint->mMax.x) / 2.0f,
-		               (jJoint->mMin.y + jJoint->mMax.y) / 2.0f,
-		               (jJoint->mMin.z + jJoint->mMax.z) / 2.0f);
+		unk34[idx].set((jJoint->getMin().x + jJoint->getMax().x) / 2.0f,
+		               (jJoint->getMin().y + jJoint->getMax().y) / 2.0f,
+		               (jJoint->getMin().z + jJoint->getMax().z) / 2.0f);
 
-		unk38[idx].x = (jJoint->mMax.x - jJoint->mMin.x) / 100.0f;
-		unk38[idx].y = (jJoint->mMax.y - jJoint->mMin.y) / 100.0f;
-		unk38[idx].z = (jJoint->mMax.z - jJoint->mMin.z) / 100.0f;
+		unk38[idx].x = (jJoint->getMax().x - jJoint->getMin().x) / 100.0f;
+		unk38[idx].y = (jJoint->getMax().y - jJoint->getMin().y) / 100.0f;
+		unk38[idx].z = (jJoint->getMax().z - jJoint->getMin().z) / 100.0f;
 
 		f32 volume = unk38[idx].x * unk38[idx].y * unk38[idx].z;
 		unk3C[idx] = 0.1f * MsSqrtf(volume);

@@ -1051,7 +1051,7 @@ s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 			                                   nullptr);
 			unkAC = gpEmitterManager4D2->unkC8[0][0];
 			unkAC->setRotation(0, 0, DEG2SHORTANGLE(12));
-			unkAC->setUnk190(0.9f, 1.0f, 0.1f);
+			unkAC->setEmitterScale(JGeometry::TVec3<f32>(0.9f, 1.0f, 0.1f));
 		} else if (unkC4 == 44) {
 			unk484[unkB7]->setCenteredSize(20, unk48C[unkB7].getWidth(),
 			                               unk48C[unkB7].getHeight(),
@@ -1231,7 +1231,7 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 			                                   nullptr);
 			unkAC = gpEmitterManager4D2->unkC8[0][0];
 			unkAC->setRotation(0, 0, DEG2SHORTANGLE(12));
-			unkAC->setUnk190(0.9f, 1.0f, 0.1f);
+			unkAC->setEmitterScale(JGeometry::TVec3<f32>(0.9f, 1.0f, 0.1f));
 		} else if (unkC4 == 44) {
 			unk4D8[unkB7]->setCenteredSize(40, unk4E0[unkB7].getWidth(),
 			                               unk4E0[unkB7].getHeight(),
@@ -1993,7 +1993,7 @@ s8 TCardLoad::selectFunction()
 				                                   nullptr);
 				unkAC = gpEmitterManager4D2->unkC8[0][0];
 				unkAC->setRotation(0, 0, DEG2SHORTANGLE(12));
-				unkAC->setUnk190(0.9f, 1.0f, 0.1f);
+				unkAC->setEmitterScale(JGeometry::TVec3<f32>(0.9f, 1.0f, 0.1f));
 			} else if (unkC4 == 44) {
 				unk378[unkB0][unkB6]->setCenteredSize(
 				    20, unk3A8[unkB0][unkB6].getWidth(),

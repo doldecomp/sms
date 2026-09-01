@@ -360,7 +360,7 @@ void TNozzleBase::emit(int param_1)
 // properly
 void TNozzleBase::animation(int param_1)
 {
-	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(MActor::ANM_TYPE_BCK);
+	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 
 	if (param_1 != 2)
 		return;
@@ -381,7 +381,7 @@ void TNozzleBase::animation(int param_1)
 
 		bool thing = false;
 
-		J3DFrameCtrl* ctrl = unk380->getFrameCtrl(MActor::ANM_TYPE_BCK);
+		J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 
 		if (ctrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
 		                     | J3DFrameCtrl::STATE_LOOPED_ONCE))
@@ -695,7 +695,7 @@ void TNozzleTrigger::animation(int param_1)
 	int bckSwapIn;
 	int emitMtxCount;
 
-	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(MActor::ANM_TYPE_BCK);
+	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 
 	switch (param_1) {
 	case 4:
@@ -740,7 +740,7 @@ void TNozzleTrigger::animation(int param_1)
 
 		bool finished = false;
 
-		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(MActor::ANM_TYPE_BCK);
+		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 		if (frameCtrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
 		                          | J3DFrameCtrl::STATE_LOOPED_ONCE))
 			finished = true;
@@ -1032,7 +1032,7 @@ void TNozzleDeform::animation(int param)
 		}
 	}
 
-	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(MActor::ANM_TYPE_BCK);
+	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 
 	switch (unk36C) {
 	case 0: {
@@ -1051,7 +1051,7 @@ void TNozzleDeform::animation(int param)
 			mactor->setBckFromIndex(7);
 
 		bool finished           = 0;
-		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(MActor::ANM_TYPE_BCK);
+		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 		if (frameCtrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
 		                          | J3DFrameCtrl::STATE_LOOPED_ONCE)) {
 			finished = 1;
@@ -1119,7 +1119,7 @@ void TNozzleDeform::animation(int param)
 			unk36C = 2;
 
 		bool finished           = false;
-		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(MActor::ANM_TYPE_BCK);
+		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 		if (frameCtrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
 		                          | J3DFrameCtrl::STATE_LOOPED_ONCE))
 			finished = true;
@@ -1269,13 +1269,14 @@ void TWaterGun::init()
 	    0, 1);
 	mFluddModel->setModel(fluddModel, 0);
 
-	MTXCopy(mMario->mModel->unk8->getAnmMtx(mMario->mJointIdChnChest),
-	        mFluddModel->unk4->unk20);
+	mFluddModel->getModel()->setBaseTRMtx(
+	    mMario->mModel->getModel()->getAnmMtx(mMario->mJointIdChnChest));
 
-	mFluddModel->unk4->calc();
+	mFluddModel->mModel->calc();
 
 	u16 handleIdx
-	    = mFluddModel->unk4->mModelData->unkB0->getIndex("jnt_G_handle");
+	    = mFluddModel->getModel()->getModelData()->getJointName()->getIndex(
+	        "jnt_G_handle");
 
 	{
 		unk1CDC            = new TMultiMtxEffect;
@@ -1294,7 +1295,8 @@ void TWaterGun::init()
 		unk1CDC->setup(mFluddModel->getModel(), "Mario/WaterGun");
 	}
 
-	unk1CD8 = mFluddModel->unk4->mModelData->unkB0->getIndex("nozzle_center");
+	unk1CD8 = mFluddModel->getModel()->getModelData()->getJointName()->getIndex(
+	    "nozzle_center");
 
 	for (int i = 0; i < 6; ++i) {
 		if (nozzleBmdData.getPath(i)) {
@@ -1398,7 +1400,7 @@ void TWaterGun::init()
 	mFluddModel->getModel()->calc();
 
 	unk1D10 = new TMirrorActor("水鉄砲in鏡");
-	unk1D10->init(mFluddModel->unk4, 4);
+	unk1D10->init(mFluddModel->mModel, 4);
 
 	// TODO: Definitely an inlined function
 	// Another function does the exact same thing
@@ -1445,7 +1447,7 @@ MtxPtr TWaterGun::getEmitMtx(int jointIndex)
 
 MtxPtr TWaterGun::getNozzleMtx()
 {
-	return mFluddModel->unk4->getAnmMtx(unk1CD8);
+	return mFluddModel->mModel->getAnmMtx(unk1CD8);
 }
 
 void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
@@ -1545,27 +1547,23 @@ void TWaterGun::setBaseTRMtx(Mtx mtx)
 	Mtx temp;
 
 	f32 initialAngle = mtx[1][0];
-	if (initialAngle < 0.0f) {
+	if (initialAngle < 0.0f)
 		initialAngle = -initialAngle;
-	}
 
 	// Seemingly some adjustment of fluddpack angle
-	f32 baseAngle = unk1D06;
-	f32 angleDiff = unk1D04 - unk1D06;
-
-	s16 angle = initialAngle * angleDiff + baseAngle;
+	s16 angle = initialAngle * (unk1D04 - unk1D06) + unk1D06;
 
 	f32 angleDegrees = SHORTANGLE2DEG(angle);
 	MsMtxSetRotRPH(temp, 0.0f, 0.0f, angleDegrees);
 
 	MTXConcat(mtx, temp, result);
-	MTXCopy(result, mFluddModel->unk4->unk20);
+	mFluddModel->getModel()->setBaseTRMtx(result);
 }
 
 void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 {
 	gpMarioForCallBack      = mMario;
-	J3DFrameCtrl* frameCtrl = mFluddModel->getFrameCtrl(MActor::ANM_TYPE_BCK);
+	J3DFrameCtrl* frameCtrl = mFluddModel->getFrameCtrl(ANM_TYPE_BCK);
 	if (mMario == nullptr)
 		return;
 
@@ -1686,16 +1684,16 @@ void TWaterGun::setAmountToRate(f32 rate)
 	}
 }
 
-bool TWaterGun::isPressureOn()
+BOOL TWaterGun::isPressureOn()
 {
 	// volatile u32 unused2[6];
 	if (getCurrentNozzle()->getNozzleKind() == 1) {
 		TNozzleTrigger* triggerNozzle = (TNozzleTrigger*)getCurrentNozzle();
 		if (triggerNozzle->unk388 > 0.0f) {
-			return true;
+			return TRUE;
 		}
 	}
-	return false;
+	return FALSE;
 }
 
 f32 TWaterGun::getPressure()

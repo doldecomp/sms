@@ -10,6 +10,10 @@
 
 J2DScreen::~J2DScreen() { }
 
+void J2DScreen::set(const char* name, JKRArchive* archive) { }
+
+void J2DScreen::set(JSURandomInputStream* stream) { }
+
 void J2DScreen::makeHiearachyPanes(J2DPane* parent,
                                    JSURandomInputStream* stream,
                                    bool allow_user_panes, bool we_are_root,
@@ -170,6 +174,8 @@ J2DPane* J2DScreen::search(u32 tag)
 	return J2DPane::search(tag);
 }
 
+void J2DScreen::gather(J2DPane** panes, u32 tag, u32 mask, int max) { }
+
 J2DSetScreen::J2DSetScreen(const char* name, JKRArchive* arch)
     : J2DScreen()
 {
@@ -186,7 +192,8 @@ J2DSetScreen::J2DSetScreen(const char* name, JKRArchive* arch)
 
 void J2DScreen::drawSelf(int x, int y, Mtx* mtx)
 {
-	int trash[0x4]; // ???
+	int x2 = x + getWidth();
+	int y2 = y + getHeight();
 
 	GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_SET);
 

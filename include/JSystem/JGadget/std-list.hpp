@@ -154,17 +154,15 @@ public:
 		{
 		}
 
-		T& operator*()
+		T& operator*() const
 		{
 			// clang-format off
 			JGADGET_ASSERT(p_!=0);
 			// clang-format on
 			return *(T*)(p_ + 1);
 		}
-		// not in tp debug for some reason? You'd expect this to be there
-		// and be emitted as one of the most comonly used functions
-		// but it isn't
-		T* operator->() { return (T*)(p_ + 1); }
+		// Not in the TP debug build, may be fake?
+		T* operator->() const { return (T*)(p_ + 1); }
 
 		iterator& operator++()
 		{
@@ -245,8 +243,8 @@ public:
 		{
 		}
 
-		T operator*() { return (T)this->Base::operator*(); }
-		T operator->() { return *(T*)this->Base::operator->(); }
+		// NOTE: feels fake cuz TP doesn't have operator-> at all, but oh well.
+		T& operator*() const { return *(T*)this->Base::operator->(); }
 
 		iterator& operator++()
 		{

@@ -41,39 +41,42 @@ void J3DShapeMtx::loadMtxIndx_PNCPU(int id, u16) const
 void J3DShapeMtx::load() const
 {
 	LoadPipeline ld = mtxLoadPipeline[currentPipeline];
-	(this->*ld)(0, unk4);
+	(this->*ld)(0, mUseMtxIndex);
 }
 
 void J3DShapeMtx::calcNBTScale(const Vec& param_1, float (*param_2)[3][3],
                                float (*param_3)[3][3])
 {
-	J3DPSMtx33Copy(param_2[unk4], param_3[unk4]);
-	J3DScaleNrmMtx33(param_3[unk4], param_1);
+	J3DPSMtx33Copy(param_2[mUseMtxIndex], param_3[mUseMtxIndex]);
+	J3DScaleNrmMtx33(param_3[mUseMtxIndex], param_1);
 }
 
-// ~J3DShapeMtx is included in the binary and must go *here*
-static void dummy(J3DShapeMtx* mtx) { mtx->~J3DShapeMtx(); }
+J3DShapeMtxDL::J3DShapeMtxDL(u16 useMtxIndex)
+    : J3DShapeMtx(useMtxIndex)
+{
+}
 
 void J3DShapeMtxDL::load() const { GXCallDisplayList(mDisplayList, 0x20); }
 
 void J3DShapeMtxMulti::load() const
 {
 	LoadPipeline ld = mtxLoadPipeline[currentPipeline];
-	for (int i = 0; i < unk8; ++i) {
-		if (unkC[i] == 0xffff)
+	for (int i = 0; i < mUseMtxNum; ++i) {
+		if (mUseMtxIndexTable[i] == 0xffff)
 			continue;
-		(this->*ld)(i, unkC[i]);
+		(this->*ld)(i, mUseMtxIndexTable[i]);
 	}
 }
 
 void J3DShapeMtxMulti::calcNBTScale(const Vec& param_1, float (*param_2)[3][3],
                                     float (*param_3)[3][3])
 {
-	for (int i = 0; i < unk8; ++i) {
-		if (unkC[i] == 0xffff)
+	for (int i = 0; i < mUseMtxNum; ++i) {
+		if (mUseMtxIndexTable[i] == 0xffff)
 			continue;
-		J3DPSMtx33Copy(param_2[unkC[i]], param_3[unkC[i]]);
-		J3DScaleNrmMtx33(param_3[unkC[i]], param_1);
+		J3DPSMtx33Copy(param_2[mUseMtxIndexTable[i]],
+		               param_3[mUseMtxIndexTable[i]]);
+		J3DScaleNrmMtx33(param_3[mUseMtxIndexTable[i]], param_1);
 	}
 }
 
@@ -90,47 +93,49 @@ void J3DShapeDraw::draw() const
 
 void J3DShape::initialize()
 {
-	unk0           = 0;
-	unk4           = 0xffff;
-	mElementCount  = 0;
-	unk8           = 0;
-	unkC           = 0;
-	unk10.x        = 0.0f;
-	unk10.y        = 0.0f;
-	unk10.z        = 0.0f;
-	unk1C.x        = 0.0f;
-	unk1C.y        = 0.0f;
-	unk1C.z        = 0.0f;
-	unk2C          = nullptr;
-	mMatrices      = nullptr;
-	mDraws         = nullptr;
-	unk44          = 0;
-	unk48          = 0;
-	unk4C          = 0;
-	mDrawMatrices  = nullptr;
-	mNormMatrices  = nullptr;
-	mCurrentViewNo = &j3dDefaultViewNo;
-	unk30          = 0;
+	mMaterial       = nullptr;
+	mIndex          = -1;
+	mMtxGroupNum    = 0;
+	mFlags          = 0;
+	mRadius         = 0;
+	mMin.x          = 0.0f;
+	mMin.y          = 0.0f;
+	mMin.z          = 0.0f;
+	mMax.x          = 0.0f;
+	mMax.y          = 0.0f;
+	mMax.z          = 0.0f;
+	mVtxDesc        = nullptr;
+	mMatrices       = nullptr;
+	mDraws          = nullptr;
+	mVertexData     = nullptr;
+	mDrawMtxData    = nullptr;
+	mScaleFlagArray = nullptr;
+	mDrawMatrices   = nullptr;
+	mNormMatrices   = nullptr;
+	mCurrentViewNo  = &j3dDefaultViewNo;
+	mHasNBT         = false;
 }
+
+J3DShape::~J3DShape() { }
 
 void J3DShape::calcNBTScale(const Vec& param_1, float (*param_2)[3][3],
                             float (*param_3)[3][3])
 {
-	for (u16 i = 0; i < mElementCount; ++i)
+	for (u16 i = 0; i < mMtxGroupNum; ++i)
 		mMatrices[i]->calcNBTScale(param_1, param_2, param_3);
 }
 
 int J3DShape::countBumpMtxNum() const
 {
 	int result = 0;
-	for (u16 i = 0; i < mElementCount; ++i)
+	for (u16 i = 0; i < mMtxGroupNum; ++i)
 		result += mMatrices[i]->getUseMtxNum();
 	return result;
 }
 
 void J3DShape::makeVtxArrayCmd()
 {
-	const GXVtxAttrFmtList* vtxAttr = unk44->getVtxAttrFmtList();
+	const GXVtxAttrFmtList* vtxAttr = mVertexData->getVtxAttrFmtList();
 	u8 stride[12];
 	void* array[12];
 
@@ -146,20 +151,20 @@ void J3DShape::makeVtxArrayCmd()
 				stride[vtxAttr->attr - GX_VA_POS] = 12;
 			else
 				stride[vtxAttr->attr - GX_VA_POS] = 6;
-			array[vtxAttr->attr - GX_VA_POS] = unk44->getVtxPosArray();
+			array[vtxAttr->attr - GX_VA_POS] = mVertexData->getVtxPosArray();
 		} break;
 		case GX_VA_NRM: {
 			if (vtxAttr->type == GX_F32)
 				stride[vtxAttr->attr - GX_VA_POS] = 12;
 			else
 				stride[vtxAttr->attr - GX_VA_POS] = 6;
-			array[vtxAttr->attr - GX_VA_POS] = unk44->getVtxNormArray();
+			array[vtxAttr->attr - GX_VA_POS] = mVertexData->getVtxNormArray();
 		} break;
 		case GX_VA_CLR0:
 		case GX_VA_CLR1: {
 			stride[vtxAttr->attr - GX_VA_POS] = 4;
 			array[vtxAttr->attr - GX_VA_POS]
-			    = unk44->getVtxColorArray(vtxAttr->attr - GX_VA_CLR0);
+			    = mVertexData->getVtxColorArray(vtxAttr->attr - GX_VA_CLR0);
 		} break;
 		case GX_VA_TEX0:
 		case GX_VA_TEX1:
@@ -174,17 +179,17 @@ void J3DShape::makeVtxArrayCmd()
 			else
 				stride[vtxAttr->attr - GX_VA_POS] = 4;
 			array[vtxAttr->attr - GX_VA_POS]
-			    = unk44->getVtxTexCoordArray(vtxAttr->attr - GX_VA_TEX0);
+			    = mVertexData->getVtxTexCoordArray(vtxAttr->attr - GX_VA_TEX0);
 		} break;
 		default:
 			break;
 		}
 	}
-	for (GXVtxDescList* piVar5 = unk2C; piVar5->attr != GX_VA_NULL; ++piVar5) {
-		if ((piVar5->attr == GX_VA_NBT) && (piVar5->type != GX_NONE)) {
-			unk30 = 1;
+	for (GXVtxDescList* it = mVtxDesc; it->attr != GX_VA_NULL; ++it) {
+		if ((it->attr == GX_VA_NBT) && (it->type != GX_NONE)) {
+			mHasNBT = true;
 			stride[1] *= 3;
-			array[1] = unk44->getVtxNBTArray();
+			array[1] = mVertexData->getVtxNBTArray();
 		}
 	}
 
@@ -200,40 +205,40 @@ void J3DShape::makeVcdVatCmd()
 {
 	GDLObj list;
 
-	GDInitGDLObj(&list, mGDCommands, 0xC0);
-	__GDCurrentDL = &list;
-	GDSetVtxDescv(unk2C);
+	GDInitGDLObj(&list, mVcdVatCmd, kVcdVatDLSize);
+	GDSetCurrent(&list);
+	GDSetVtxDescv(mVtxDesc);
 	makeVtxArrayCmd();
-	J3DSetVtxAttrFmtv(GX_VTXFMT0, unk44->getVtxAttrFmtList(), unk30);
+	J3DSetVtxAttrFmtv(GX_VTXFMT0, mVertexData->getVtxAttrFmtList(), mHasNBT);
 	GDPadCurr32();
 	GDFlushCurrToMem();
-	__GDCurrentDL = nullptr;
+	GDSetCurrent(nullptr);
 }
 
 void J3DShape::loadVtxArray() const
 {
-	J3DLoadArrayBasePtr(GX_VA_POS, j3dSys.unk10C);
-	if (unk30 == 0) {
-		void* l = j3dSys.unk110;
-		J3DLoadArrayBasePtr(GX_VA_NRM, l);
-	}
-	J3DLoadArrayBasePtr(GX_VA_CLR0, j3dSys.unk114);
+	J3DLoadArrayBasePtr(GX_VA_POS, j3dSys.getVtxPos());
+	if (!mHasNBT)
+		J3DLoadArrayBasePtr(GX_VA_NRM, j3dSys.getVtxNrm());
+
+	J3DLoadArrayBasePtr(GX_VA_CLR0, j3dSys.getVtxCol());
 }
 
 void J3DShape::draw() const
 {
-	GXCallDisplayList(mGDCommands, 0xC0);
+	GXCallDisplayList(mVcdVatCmd, J3DShape::kVcdVatDLSize);
 
-	J3DShapeMtx::currentPipeline = unk8 >> 2 & 3;
+	J3DShapeMtx::currentPipeline = mFlags >> 2 & 3;
 	loadVtxArray();
 
 	j3dSys.setModelDrawMtx(mDrawMatrices[*mCurrentViewNo]);
 	j3dSys.setModelNrmMtx(mNormMatrices[*mCurrentViewNo]);
 
-	JRNLoadCurrentMtx(0, unk3C[0], unk3C[1], unk3C[2], unk3C[3], unk3C[4],
-	                  unk3C[5], unk3C[6], unk3C[7]);
+	JRNLoadCurrentMtx(GX_PNMTX0, mCurrentTexMtx[0], mCurrentTexMtx[1],
+	                  mCurrentTexMtx[2], mCurrentTexMtx[3], mCurrentTexMtx[4],
+	                  mCurrentTexMtx[5], mCurrentTexMtx[6], mCurrentTexMtx[7]);
 
-	for (u16 i = 0; i < mElementCount; ++i) {
+	for (u16 i = 0; i < mMtxGroupNum; ++i) {
 		if (mMatrices[i])
 			mMatrices[i]->load();
 		if (mDraws[i])

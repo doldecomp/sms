@@ -17,45 +17,9 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream& stream)
-	{
-		TNameRef::load(stream);
-		s32 count = stream.readS32();
-
-		JGadget::TList_pointer<T*>& lst = getChildren();
-		for (s32 i = 0; i < count; ++i) {
-			JSUMemoryInputStream remainder(nullptr, 0);
-			TNameRef* nr = TNameRef::genObject(stream, remainder);
-			if (nr) {
-				lst.push_back(nr);
-				nr->load(remainder);
-			}
-		}
-	}
-
-	virtual void loadAfter()
-	{
-		TNameRef::loadAfter();
-		typedef typename JGadget::TList_pointer<T*>::iterator I;
-		for (I it = getChildren().begin(); it != getChildren().end(); ++it)
-			it->loadAfter();
-	}
-
-	virtual TNameRef* searchF(u16 key, const char* name)
-	{
-		TNameRef* res = TNameRef::searchF(key, name);
-		if (res != nullptr)
-			return res;
-
-		typedef typename JGadget::TList_pointer<T*>::iterator I;
-		for (I it = getChildren().begin(); it != getChildren().end(); ++it) {
-			TNameRef* r = it->searchF(key, name);
-			if (r != nullptr)
-				return r;
-		}
-
-		return nullptr;
-	}
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void loadAfter();
+	virtual TNameRef* searchF(u16 key, const char* name);
 
 	void insert(T* obj) { this->push_back(obj); }
 

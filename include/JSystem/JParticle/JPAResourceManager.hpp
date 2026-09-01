@@ -14,22 +14,22 @@ public:
 	int registration(const u8*, JKRHeap*);
 
 	// from TWW
-	void load(u16 id, GXTexMapID texMap) { unk2C[id]->load(texMap); }
-	void loadDefaultTexture(GXTexMapID texMap) { unk0.load(texMap); }
+	void load(u16 id, GXTexMapID texMap) { pTexResArray[id]->load(texMap); }
+	void loadDefaultTexture(GXTexMapID texMap) { defaultTex.load(texMap); }
 
 	// fabricated
 	const ResTIMG* swapImage(const ResTIMG* timg, u32 idx)
 	{
-		const ResTIMG* old = unk2C[idx]->unk8.getTexInfo();
-		unk2C[idx]->unk8.storeTIMG(timg);
+		const ResTIMG* old = pTexResArray[idx]->unk8.getTexInfo();
+		pTexResArray[idx]->unk8.storeTIMG(timg);
 		return old;
 	}
 
 public:
-	/* 0x0 */ JPADefaultTexture unk0;
-	/* 0x24 */ u32 unk24;
-	/* 0x28 */ u32 unk28;
-	/* 0x2C */ JPATexture** unk2C;
+	/* 0x0 */ JPADefaultTexture defaultTex;
+	/* 0x24 */ u32 registNum;
+	/* 0x28 */ u32 maxNum;
+	/* 0x2C */ JPATexture** pTexResArray;
 };
 
 class JPABaseShape;
@@ -88,7 +88,8 @@ public:
 };
 
 // TODO: name & usage might be wrong
-struct JPAEmitterData {
+class JPAEmitterData {
+public:
 	JPAEmitterData()
 	    : unk0(0)
 	{
@@ -97,10 +98,11 @@ struct JPAEmitterData {
 	// inlines from TWW
 	void setUserIndex(u16 v) { unk6 = v; }
 	u16 getUserIndex() { return unk6; }
+	JPADataBlockLinkInfo** getLinkInfo() { return unk0; }
 
+public:
 	// You'd THINK that they support multiple emitters here --
 	// but no, in SMS, only a single emitter is allowed.
-
 	/* 0x0 */ JPADataBlockLinkInfo** unk0;
 	/* 0x4 */ u16 unk4;
 	/* 0x6 */ u16 unk6;
@@ -114,9 +116,9 @@ public:
 	JPAEmitterData* getByUserIndex(u16);
 
 public:
-	/* 0x0 */ u32 unk0;
-	/* 0x4 */ u32 unk4;
-	/* 0x8 */ JPAEmitterData** unk8;
+	/* 0x0 */ u32 registNum;
+	/* 0x4 */ u32 maxNum;
+	/* 0x8 */ JPAEmitterData** pEmtrResArray;
 };
 
 class JPAResourceManager {
@@ -126,13 +128,13 @@ public:
 	int load(const char*, u16);
 	int load(const void*, u16);
 
-	JPATextureResource* getTextureResource() { return unk8; }
-	JPAEmitterResource* getEmitterResource() { return unk4; }
+	JPATextureResource* getTextureResource() { return pTexResMgr; }
+	JPAEmitterResource* getEmitterResource() { return pEmtrResMgr; }
 
 public:
-	/* 0x0 */ JKRHeap* unk0;
-	/* 0x4 */ JPAEmitterResource* unk4;
-	/* 0x8 */ JPATextureResource* unk8;
+	/* 0x0 */ JKRHeap* pHeap;
+	/* 0x4 */ JPAEmitterResource* pEmtrResMgr;
+	/* 0x8 */ JPATextureResource* pTexResMgr;
 };
 
 #endif

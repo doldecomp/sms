@@ -4,9 +4,11 @@
 #include <Map/MapData.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <System/MarDirector.hpp>
+#include <System/Particles.hpp>
 #include <Player/MarioAccess.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/PacketUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <Enemy/Graph.hpp>
 #include <Enemy/Conductor.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
@@ -174,7 +176,7 @@ void TRailMapObj::initMapObj()
 {
 	TMapObjBase::initMapObj();
 	offHitFlag(HIT_FLAG_NO_COLLISION);
-	mMActor->setLightType(2);
+	mMActor->setLightType(LIGHT_TYPE_MAPOBJECT);
 }
 
 void TRailMapObj::load(JSUMemoryInputStream& stream)
@@ -578,11 +580,13 @@ BOOL TWoodBlock::calcRecycle()
 			unk14C   = 1;
 			return true;
 		}
-		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emit(0x6D, &mPosition, 0, nullptr)) {
+		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+		        PARTICLE_MS_EX_CUBE_DISA, &mPosition, 0, nullptr)) {
 			f32 scale = (mScaling.x + mScaling.y + mScaling.z) / 3.0f;
-			emitter->unk154.set(scale, scale, scale);
-			emitter->unk174.set(1.0f, 1.0f, 0.0f);
+			emitter->setGlobalDynamicsScale(
+			    JGeometry::TVec3<f32>(scale, scale, scale));
+			emitter->setGlobalParticleScale(
+			    JGeometry::TVec3<f32>(1.0f, 1.0f, 0.0f));
 		}
 		resetPosition();
 		unk164 = unk15C;

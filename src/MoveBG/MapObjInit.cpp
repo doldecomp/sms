@@ -10,29 +10,21 @@
 #include <MSound/SoundEffects.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
 #include <MarioUtil/DrawUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/MirrorActor.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-static void dummy() { static Vec data_2100 = { 1.0f, 1.0f, 1.0f }; }
-static void dummy2() { static Vec data_2100 = { 1.0f, 1.0f, 1.0f }; }
-static void dummy3() { static u32 data_2100[] = { 0, 2, 1, 3 }; }
-
 #include <M3DUtil/InfectiousStrings.hpp>
-
-static void dummy4(Vec& v)
-{
-	v = (Vec) { 0.0f, 0.0f, 0.0f };
-	v = (Vec) { 1.0f, 1.0f, 1.0f };
-}
 
 TMapObjSoundData TMapObjGeneral::mDefaultSound = {
 	{ 0xFFFFFFFF, MSD_SE_IT_COMMON_APPEAR, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
@@ -10828,12 +10820,13 @@ void TMapObjBase::initUnique()
 	// TODO: I hate switches, someone fix this please...
 	switch (getActorType()) {
 	case 0x2000003C:
-		mMActor->setLightType(0);
+		mMActor->setLightType(LIGHT_TYPE_PLAYER);
 		break;
 	case 0x2000000E:
 		if (mMActor) {
-			u32 uVar4 = getModel()->getMatPacket(0)->unk3C;
-			getModel()->getMatPacket(0)->unk3C = uVar4 & 0x7fffffff;
+			getModel()->getMatPacket(0)->setMaterialID(
+			    getModel()->getMatPacket(0)->getMaterialID()
+			    & ~J3DMatPacket::DIFF_FLAG);
 		}
 		break;
 	case 0x40000048:
@@ -10866,8 +10859,7 @@ void TMapObjBase::initUnique()
 		startAllAnim(mMActor, unkF4);
 		break;
 	case 0x4000003C:
-		if (mMActor->unkC)
-			mMActor->unkC->initSimpleMotionBlend(0x14);
+		mMActor->initSimpleMotionBlend(0x14);
 		break;
 	case 0x400000A8:
 	case 0x40000096:
@@ -10933,7 +10925,7 @@ void TMapObjBase::initUnique()
 		mMActor = mMActorKeeper->mActors[0];
 		break;
 	case 0x400000D0:
-		mMActor->setLightType(1);
+		mMActor->setLightType(LIGHT_TYPE_OBJECT);
 		break;
 	case 0x400000DB:
 		mPosition.y += mScaling.y * 50.0f;
@@ -11013,7 +11005,6 @@ void TMapObjBase::initObjCollisionData()
 		onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
 }
 
-#pragma dont_inline on
 void TMapObjBase::initBckMoveData()
 {
 	if (mMapObjData->mMove != nullptr) {
@@ -11025,27 +11016,22 @@ void TMapObjBase::initBckMoveData()
 		J3DModelData* data         = mMActor->getModel()->getModelData();
 		data->mJointNodePointer[0] = data->getJointNodePointer(1);
 
-		// TODO: this requires the J3DJoint.hpp header, but that has the dreaded
-		// compound literal in .data problem that we share with TWW, so avoid it
-		// for now
-
-		// J3DTransformInfo& info
-		//     = data->getJointNodePointer(0)->getTransformInfo();
-		// info.mScale.x         = 1.0f;
-		// info.mScale.y         = 1.0f;
-		// info.mScale.z         = 1.0f;
-		// info.mRotation.x      = 0;
-		// info.mRotation.y      = 0;
-		// info.mRotation.z      = 0;
-		// info.mTranslate.x     = 0.0f;
-		// info.mTranslate.y     = 0.0f;
-		// info.mTranslate.z     = 0.0f;
-		move->unk8 = new J3DFrameCtrl(move->unk4->mMaxFrame);
+		J3DTransformInfo& info
+		    = data->getJointNodePointer(0)->getTransformInfo();
+		info.mScale.x     = 1.0f;
+		info.mScale.y     = 1.0f;
+		info.mScale.z     = 1.0f;
+		info.mRotation.x  = 0;
+		info.mRotation.y  = 0;
+		info.mRotation.z  = 0;
+		info.mTranslate.x = 0.0f;
+		info.mTranslate.y = 0.0f;
+		info.mTranslate.z = 0.0f;
+		move->unk8        = new J3DFrameCtrl(move->unk4->getFrameMax());
 		move->unk8->setAttribute(J3DFrameCtrl::ATTR_LOOP);
 		move->unk8->setRate(SMSGetAnmFrameRate());
 	}
 }
-#pragma dont_inline off
 
 bool isAlreadyRegistered(const TMapObjAnimDataInfo* anim, int i)
 {
@@ -11179,7 +11165,7 @@ void TMapObjBase::initMapObj()
 	checkIllegalAttr();
 
 	if (mMActor && checkActorType(0x40000000))
-		mMActor->setLightType(2);
+		mMActor->setLightType(LIGHT_TYPE_MAPOBJECT);
 
 	if (getMapObjData()->unk30 == 0.0f)
 		mLiveFlag |= LIVE_FLAG_UNK8;
@@ -11189,7 +11175,7 @@ void TMapObjBase::initMapObj()
 		    "スクリーンテクスチャ");
 		const ResTIMG* img = ref->getTexture()->getTexInfo();
 		getModel()->getModelData()->getTexture()->setResTIMG(2, *img);
-		mMActor->setLightType(3);
+		mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 	}
 
 	makeObjDead();

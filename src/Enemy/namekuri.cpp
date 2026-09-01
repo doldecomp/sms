@@ -11,6 +11,7 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
 #include <MarioUtil/MtxUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
@@ -222,12 +223,12 @@ void TNameIndParCallback::execute(JPABaseEmitter* param_1,
 		param_1->setGlobalRTMatrix(mA);
 
 		if (mOwner->unk1A8) {
-			param_1->setScale(mOwner->mScaling);
+			param_1->setGlobalScale(mOwner->mScaling);
 		} else {
 			if (mOwner->isAttackJump())
-				param_1->setScale(local_7c * 0.5f);
+				param_1->setGlobalScale(local_7c * 0.5f);
 			else
-				param_1->setScale(local_7c);
+				param_1->setGlobalScale(local_7c);
 		}
 	}
 }
@@ -334,7 +335,7 @@ void TNameKuri::init(TLiveManager* param_1)
 	getMActor()->setJointCallback(1, &NameKuriAttackCallback);
 	getMActor()->setJointCallback(1, &NameKuriScaleCallback);
 	getMActor()->resetDL();
-	getMActor()->setLightType(3);
+	getMActor()->setLightType(LIGHT_TYPE_INDIRECT);
 	TScreenTexture* tex
 	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
 
@@ -505,15 +506,15 @@ void TNameKuri::behaveToWater(THitActor* param_1)
 		mSpine->pushNerve(&TNerveSmallEnemyDie::theNerve());
 
 		if (!isAirborne())
-			onLiveFlag(0x10000);
+			onLiveFlag(LIVE_FLAG_MELT_ON_DEATH);
 
-		onLiveFlag(0x20000);
+		onLiveFlag(LIVE_FLAG_UNK20000);
 	}
 }
 
 f32 TNameKuri::getGravityY() const
 {
-	if (checkLiveFlag(0x10000))
+	if (checkLiveFlag(LIVE_FLAG_MELT_ON_DEATH))
 		return 0.01f;
 
 	if (mSpine->getCurrentNerve() == &TNerveNameKuriJumpAttack::theNerve())
@@ -544,13 +545,13 @@ void TNameKuri::setDeadAnm()
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	        PARTICLE_MS_DEADNAMEKLI_O, mtx, 0, nullptr)) {
 
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 	}
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	        PARTICLE_MS_DEADNAMEKLI_N, mtx, 0, nullptr)) {
 
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 	}
 
 	setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
@@ -578,13 +579,13 @@ void TNameKuri::setMeltAnm()
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	        PARTICLE_MS_DEADNAMEKLI_O, mtx, 0, nullptr)) {
 
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 	}
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	        PARTICLE_MS_DEADNAMEKLI_N, mtx, 0, nullptr)) {
 
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 	}
 
 	setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
@@ -619,7 +620,7 @@ void TNameKuri::reset()
 	unk1C4 = nameKuriTevColorData[((TNameKuriManager*)mManager)
 	                                  ->getNextColorIdx()];
 
-	offLiveFlag(0x10);
+	offLiveFlag(LIVE_FLAG_UNK10);
 }
 
 void TNameKuri::attackToMario()
@@ -627,7 +628,7 @@ void TNameKuri::attackToMario()
 	SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 	if (mSpine->getCurrentNerve() == &TNerveNameKuriJumpAttack::theNerve()) {
 		setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
-		onLiveFlag(0x20000);
+		onLiveFlag(LIVE_FLAG_UNK20000);
 		kill();
 	}
 }
@@ -734,7 +735,9 @@ DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 				self->walkToCurPathNode(0.0f, jumpAttackTurnSp, 0.0f);
 			}
 		} else if (self->isBckAnm(3)) {
-			if (self->getMActor()->getFrameCtrl(0)->checkPass(62.0f)) {
+			if (self->getMActor()
+			        ->getFrameCtrl(ANM_TYPE_BCK)
+			        ->checkPass(62.0f)) {
 				JGeometry::TVec3<f32> local_44 = SMS_GetMarioPos();
 				f32 jumpAttackSp = self->getSaveParams()->mSLJumpAttackSp.get();
 				JGeometry::TVec3<f32> local_6c = self->calcVelocityToJumpToY(

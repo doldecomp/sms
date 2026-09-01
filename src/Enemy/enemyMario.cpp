@@ -186,7 +186,7 @@ void TEnemyMario::initModel()
 	}
 
 	M3UMtxCalcSIAnmBlendQuat* anmBlendQuat = new M3UMtxCalcSIAnmBlendQuat[2];
-	anmBlendQuat[0].unk50                  = 0.0f;
+	anmBlendQuat[0].mMotionBlendRatio      = 0.0f;
 	J3DFrameCtrl* frameCtrl                = new J3DFrameCtrl[3];
 
 	M3UModelCommonMario* marioCommon = new M3UModelCommonMario;
@@ -215,8 +215,8 @@ void TEnemyMario::initModel()
 	modelMario->changeMtxCalcSIAnmBQAnmTransform(0, 0, 0x3e);
 	modelMario->changeMtxCalcSIAnmBQAnmTransform(1, 0, 0x41);
 	modelMario->unkC[1].setRate(0.0f);
-	marioCommon->unk18[1].unk50 = 0.0f;
-	mModel                      = modelMario;
+	marioCommon->unk18[1].mMotionBlendRatio = 0.0f;
+	mModel                                  = modelMario;
 
 	setAnimation(ANIM_WAIT, 1.0f);
 
@@ -882,7 +882,7 @@ void TEnemyMario::emReplay()
 	if (mStampActor != nullptr && mSettingParams->mStampFlag.get() == 1) {
 		mStampActor->setBck("stamp_koopa_sign_draw1");
 		MActor* stampActor = mStampActor;
-		stampActor->setFrameRate(SMSGetAnmFrameRate(), 0);
+		stampActor->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 		changeEMDoing(EM_DOING_UNK13);
 		startSoundActor(MSD_SE_MA_KAGE_PAINTS);
 		startSoundActor(MSD_SE_MA_KAGE_PAINTINGWIND);

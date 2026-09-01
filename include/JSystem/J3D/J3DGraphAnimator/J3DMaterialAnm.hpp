@@ -22,7 +22,7 @@ public:
 
 	void setAnmIndex(u16 index) { mAnmIndex = index; }
 	void setAnmColor(J3DAnmColor* anmColor) { mAnmColor = anmColor; }
-	void calc(GXColor*) const;
+	void calc(GXColor* out) const;
 
 private:
 	/* 0x0 */ u16 mAnmIndex;
@@ -42,6 +42,7 @@ public:
 	{
 		mAnmIndex     = anmIdx;
 		mAnmTransform = pAnm;
+		J3D_ASSERT_NULLPTR(134, pAnm != NULL);
 	}
 
 	void setAnmIndex(u16 index) { mAnmIndex = index; }
@@ -49,7 +50,7 @@ public:
 	{
 		mAnmTransform = transform;
 	}
-	void calc(J3DTextureSRTInfo*) const;
+	void calc(J3DTextureSRTInfo* out) const;
 
 private:
 	/* 0x0 */ u16 mAnmIndex;
@@ -71,7 +72,7 @@ public:
 	{
 		mAnmTexPattern = pattern;
 	}
-	virtual void calc(u16*) const;
+	virtual void calc(u16* out) const;
 
 private:
 	/* 0x4 */ u16 mAnmIndex;
@@ -91,11 +92,12 @@ public:
 	{
 		mAnmTevReg = tev_reg;
 		mAnmIndex  = idx;
+		J3D_ASSERT_NULLPTR(293, tev_reg != nullptr);
 	}
 
 	void setAnmIndex(u16 index) { mAnmIndex = index; }
 	void setAnmTevReg(J3DAnmTevRegKey* tevReg) { mAnmTevReg = tevReg; }
-	void calc(GXColorS10*) const;
+	void calc(GXColorS10* out) const;
 
 private:
 	/* 0x0 */ u16 mAnmIndex;
@@ -115,11 +117,12 @@ public:
 	{
 		mAnmTevReg = tev_reg;
 		mAnmIndex  = idx;
+		J3D_ASSERT_NULLPTR(371, tev_reg != nullptr);
 	}
 
 	void setAnmIndex(u16 index) { mAnmIndex = index; }
 	void setAnmTevReg(J3DAnmTevRegKey* tevReg) { mAnmTevReg = tevReg; }
-	void calc(GXColor*) const;
+	void calc(GXColor* out) const;
 
 private:
 	/* 0x0 */ u16 mAnmIndex;
@@ -127,13 +130,12 @@ private:
 	/* 0x4 */ J3DAnmTevRegKey* mAnmTevReg;
 };
 
-class J3DMaterialAnm // size 0x6c
-{
+class J3DMaterialAnm {
 public:
 	J3DMaterialAnm() { initialize(); }
 
 	virtual ~J3DMaterialAnm() { }
-	virtual void calc(J3DMaterial*) const;
+	virtual void calc(J3DMaterial* out) const;
 
 	void initialize();
 

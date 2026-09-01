@@ -1,8 +1,10 @@
 #ifndef JDR_EFB_CTRL_HPP
 #define JDR_EFB_CTRL_HPP
 
+#include "JSystem/ResTIMG.hpp"
 #include <JSystem/JDrama/JDRFlag.hpp>
 #include <JSystem/JDrama/JDRViewObj.hpp>
+#include <JSystem/JDrama/JDRSize.hpp>
 #include <dolphin/gx.h>
 
 // EFB stands for "Embedded Frame Buffer" -- the on-chip GPU framebuffer.
@@ -51,16 +53,19 @@ public:
 
 	void setTexAttb(const GXTexObj&);
 
+	void setDstSize(const JDrama::TSize& size) { mSize = size; }
+	void setImgPtr(void* ptr) { mImagePtr = ptr; }
+	void setTexFmt(GXTexFmt fmt) { mTexFmt = fmt; }
+
 public:
-	/* 0x24 */ u32 mWidth;
-	/* 0x28 */ u32 mHeight;
+	/* 0x24 */ TSize mSize;
 	/* 0x2C */ void* mImagePtr;
 	/* 0x30 */ GXTexFmt mTexFmt;
 	/* 0x34 */ GXFBClamp mFbClamp;
-	/* 0x38 */ JUtility::TColor unk38;
-	/* 0x3C */ u32 unk3C;
-	/* 0x40 */ u8 (*unk40)[2];
-	/* 0x44 */ u8* unk44;
+	/* 0x38 */ JUtility::TColor mClearColor;
+	/* 0x3C */ u32 mClearZ;
+	/* 0x40 */ u8 (*mSamplePattern)[2];
+	/* 0x44 */ u8* mVFilter;
 };
 
 }; // namespace JDrama

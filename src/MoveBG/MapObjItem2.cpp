@@ -54,12 +54,12 @@ void TMushroom1up::makeObjAppeared()
 	JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 	    PARTICLE_MS_ENM_DISAP_A_W, &mPosition, 0, nullptr);
 	if (emitter)
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 
 	emitter = gpMarioParticleManager->emit(PARTICLE_MS_ENM_DISAP_B, &mPosition,
 	                                       0, nullptr);
 	if (emitter)
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 }
 
 void TMushroom1up::initMapObj()
@@ -224,7 +224,7 @@ BOOL TJumpBase::receiveMessage(THitActor* sender, u32 message)
 
 Mtx* TJumpBase::getRootJointMtx() const
 {
-	return mMActor->getModel()->mNodeMatrices;
+	return (Mtx*)mMActor->getModel()->getAnmMtx(0);
 }
 
 void TJumpBase::calcRootMatrix()
@@ -232,8 +232,8 @@ void TJumpBase::calcRootMatrix()
 	if (getHolder() != nullptr) {
 		J3DModel* model = getModel();
 		MtxPtr mtx      = getHolder()->getTakingMtx();
-		MTXCopy(mtx, model->unk20);
-		model->unk14 = mScaling;
+		model->setBaseTRMtx(mtx);
+		model->setBaseScale(mScaling);
 		mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 		return;
 	}
@@ -250,7 +250,7 @@ void TJumpBase::control()
 	case 0:
 		if (unk13C == 0) {
 			getMActor()->setBck("jumpbase_shrink");
-			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			if (ctrl) {
 				ctrl->setFrame((f32)ctrl->getEnd());
 				ctrl->setRate(0.0f);
@@ -266,7 +266,7 @@ void TJumpBase::control()
 				mMapCollisionManager->getUnk8()->setUp();
 
 			getMActor()->setBck("jumpbase_set");
-			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			if (ctrl) {
 				ctrl->setFrame((f32)ctrl->getEnd());
 				ctrl->setRate(0.0f);
@@ -277,7 +277,7 @@ void TJumpBase::control()
 	case 2:
 		if (unk13C == 0) {
 			getMActor()->setBck("jumpbase_set");
-			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			if (ctrl) {
 				ctrl->setFrame(0.0f);
 				ctrl->setRate(SMSGetAnmFrameRate());
@@ -285,7 +285,7 @@ void TJumpBase::control()
 			offLiveFlag(LIVE_FLAG_UNK10);
 			mScaledBodyRadius = 100.0f;
 		}
-		if (getMActor()->curAnmEndsNext(0, nullptr)) {
+		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			unk13C = 0;
 			unk138 = 3;
 		}
@@ -297,13 +297,13 @@ void TJumpBase::control()
 				mMapCollisionManager->getUnk8()->remove();
 
 			getMActor()->setBck("jumpbase_shrink");
-			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			if (ctrl) {
 				ctrl->setFrame(0.0f);
 				ctrl->setRate(SMSGetAnmFrameRate());
 			}
 		}
-		if (getMActor()->curAnmEndsNext(0, nullptr)) {
+		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			unk13C = 0;
 			unk138 = 0;
 		}
@@ -312,13 +312,13 @@ void TJumpBase::control()
 	case 4:
 		if (unk13C == 0) {
 			getMActor()->setBck("jumpbase_jump");
-			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			if (ctrl) {
 				ctrl->setFrame(0.0f);
 				ctrl->setRate(SMSGetAnmFrameRate());
 			}
 		}
-		if (getMActor()->curAnmEndsNext(0, nullptr)) {
+		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			unk13C = 0;
 			unk138 = 3;
 		}

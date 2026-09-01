@@ -4,12 +4,11 @@
 void TPerformList::forEachPerform(
     JGadget::TSingleLinkList<TPerformLink, 0>::iterator b,
     JGadget::TSingleLinkList<TPerformLink, 0>::iterator e,
-    JDrama::TGraphics* param_3, u32 param_4)
+    JDrama::TGraphics* graphics, u32 cue)
 {
 	for (JGadget::TSingleLinkList<TPerformLink, 0>::iterator it = b; it != e;
-	     ++it) {
-		TPerformLink& link = *it;
-		link.unk4->testPerform(link.unk8 & param_4, param_3);
+	     it++) {
+		it->perform(cue, graphics);
 	}
 }
 
@@ -22,34 +21,28 @@ void TPerformList::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
 
+	JDrama::TViewObj* obj;
+	char elementName[80];
+
 	while (stream.getLength() - stream.getPosition() > 0) {
-		char acStack_6c[80];
-		stream.readString(acStack_6c, 80);
+		stream.readString(elementName, 80);
 
-		JDrama::TViewObj* obj
-		    = JDrama::TNameRefGen::search<JDrama::TViewObj>(acStack_6c);
+		obj = JDrama::TNameRefGen::search<JDrama::TViewObj>(elementName);
 
-		// TODO: feels fake and stack is missing, needs more tinkering
-		u32 value;
-		stream >> value;
-		u32 uVar5 = value;
+		u32 value = stream.readU32();
+
 		if (value & CUE_MOVE)
-			uVar5 |= (CUE_MOVEMENT_GATE_A | CUE_MOVEMENT_GATE_B);
+			value |= (CUE_MOVEMENT_GATE_A | CUE_MOVEMENT_GATE_B);
+
 		if (obj)
-			push_back(obj, uVar5);
+			push_back(obj, value);
 	}
 }
 
 void TPerformList::push_back(const char* param_1, u32 param_2)
 {
-	// TODO: every instruction matches, but the target holds one more compiler
-	// temporary and no `obj` local, so its stack slots all sit 4 bytes higher.
-	// Folding the search into the `new TPerformLink(...)` argument removes the
-	// local, but it also moves the allocation ahead of the search, which the
-	// target does not do. Delegating to the TViewObj* overload costs an inline
-	// pass and turns end() into a call. Both are worse.
 	JDrama::TViewObj* obj
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>(param_1);
+	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2(param_1);
 
 	Push_back(new TPerformLink(obj, param_2));
 }

@@ -3,6 +3,7 @@
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
+#include <System/MarDirector.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
@@ -25,7 +26,7 @@ TMarioCap::TMarioCap(TMario* mario)
 	    0,
 	    *mMario->mModel->getModel()->getModelData()->getTexture()->getResTIMG(
 	        0));
-	DCFlushRange(maCap1ModelData->getTexture()->mResources, 0x20);
+	DCFlushRange(maCap1ModelData->getTexture()->getResTIMG(0), sizeof(ResTIMG));
 	unk10[0] = new J3DModel(maCap1ModelData, 0, 1);
 
 	J3DModelData* maCap3ModelData = J3DModelLoaderDataBase::load(
@@ -36,7 +37,7 @@ TMarioCap::TMarioCap(TMario* mario)
 	    0,
 	    *mMario->mModel->getModel()->getModelData()->getTexture()->getResTIMG(
 	        0));
-	DCFlushRange(maCap3ModelData->getTexture()->mResources, 0x20);
+	DCFlushRange(maCap3ModelData->getTexture()->getResTIMG(0), sizeof(ResTIMG));
 	unk10[1] = new J3DModel(maCap3ModelData, 0, 1);
 
 	if (mMario->mBodyPollutionTex != 0) {
@@ -121,12 +122,12 @@ void TMarioCap::createMirrorCap()
 // UNUSED
 void TMarioCap::addDirty() { }
 
-void TMarioCap::perform(unsigned long param_1, JDrama::TGraphics* param_2)
+void TMarioCap::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	// Unused stack space
 	// volatile u32 padding[42];
 
-	if ((param_1 & 2) != 0) {
+	if ((cue & CUE_CALC_ANIM) != 0) {
 		if (mMario->mAnimationId == TMario::ANIM_DEMO_GATE_OUT_GET2) {
 			J3DFrameCtrl& frameCtrl = mMario->getMotionFrameCtrl();
 			if (frameCtrl.getFrame() < 157.0f) {
@@ -204,7 +205,7 @@ void TMarioCap::perform(unsigned long param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if ((param_1 & 4) != 0) {
+	if ((cue & CUE_CALC_VIEW) != 0) {
 		unkC->viewCalc();
 		// Likely inline
 		if (isModelActive(E_CAP_MODEL_HELMET)) {
@@ -215,7 +216,7 @@ void TMarioCap::perform(unsigned long param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if ((param_1 & 0x200) != 0) {
+	if ((cue & CUE_ENTRY) != 0) {
 		unkC->entry();
 		if (isModelActive(2)) {
 			unk10[2]->entry();
@@ -225,7 +226,7 @@ void TMarioCap::perform(unsigned long param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if ((param_1 & 0x10000000) != 0 && isModelActive(E_CAP_MODEL_HAT)) {
+	if ((cue & CUE_UNK10000000) != 0 && isModelActive(E_CAP_MODEL_HAT)) {
 		unk30->movement();
 	}
 }

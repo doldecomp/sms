@@ -10,14 +10,13 @@
 #include "string.h"
 #include "macros.h"
 
-static int JKRDecompressFromAramToMainRam(u32, void*, u32, u32, u32);
+int JKRDecompressFromAramToMainRam(u32, void*, u32, u32, u32);
 static int decompSZS_subroutine(u8*, u8*);
 static u8* firstSrcData();
 static u8* nextSrcData(u8*);
 
 JKRAram* JKRAram::sAramObject;
 
-/* 802B42C4-802B4360       .text create__7JKRAramFUlUllll */
 JKRAram* JKRAram::create(u32 aram_audio_buffer_size, u32 aram_audio_graph_size,
                          s32 stream_priority, s32 decomp_priority,
                          s32 piece_priority)
@@ -112,8 +111,7 @@ void JKRAram::changeGroupIdIfNeed(u8* data, int groupId)
 {
 	JKRHeap* currentHeap = JKRHeap::getCurrentHeap();
 	if (currentHeap->getHeapType() == 'EXPH' && groupId >= 0) {
-		JKRExpHeap::CMemBlock* block = JKRExpHeap::CMemBlock::getBlock(data);
-		block->newGroupId(groupId);
+		JKRExpHeap::CMemBlock::getBlock(data)->newGroupId(groupId);
 	}
 }
 
@@ -124,7 +122,7 @@ JKRAramBlock* JKRAram::mainRamToAram(u8* buf, u32 bufSize, u32 alignedSize,
 	JKRAramBlock* block = nullptr;
 	checkOkAddress(buf, bufSize, nullptr, 0);
 	if (expandSwitch == EXPAND_SWITCH_DECOMPRESS) {
-		expandSwitch = (JKRCheckCompressed(buf) != JKR_COMPRESSION_NONE)
+		expandSwitch = JKRCheckCompressed(buf) != JKR_COMPRESSION_NONE
 		                   ? EXPAND_SWITCH_DECOMPRESS
 		                   : EXPAND_SWITCH_DEFAULT;
 	}
@@ -163,15 +161,12 @@ JKRAramBlock* JKRAram::mainRamToAram(u8* buf, u32 bufSize, u32 alignedSize,
 		}
 	} else {
 		if (bufSize == 0) {
-
-			JKRAramBlock* allocatedBlock = (JKRAramBlock*)JKRAllocFromAram(
-			    alignedSize, JKRAramHeap::HEAD);
-			block = allocatedBlock;
+			block = JKRAllocFromAram(alignedSize, JKRAramHeap::HEAD);
 			block->newGroupID(decideAramGroupId(id));
 			if (block == nullptr)
 				return nullptr;
 
-			bufSize = allocatedBlock->getAddress();
+			bufSize = block->getAddress();
 		}
 
 		JKRAramPcs(0, (u32)buf, bufSize, alignedSize, block);
@@ -194,9 +189,19 @@ JKRAramBlock* JKRAram::mainRamToAram(u8* buf, JKRAramBlock* block,
 	if (expandSwitch == 1) {
 		fileSize = fileSize >= blockSize ? blockSize : fileSize;
 	}
-	return mainRamToAram(buf, block->mAddress,
+	return mainRamToAram(buf, block->getAddress(),
 	                     alignedSize > blockSize ? blockSize : alignedSize,
 	                     expandSwitch, fileSize, heap, id);
+}
+
+void JKRAram::mainRamToAram_Async(u8*, u32, u32, JKRExpandSwitch, u32, JKRHeap*,
+                                  void (*)(u32), int)
+{
+}
+
+void JKRAram::mainRamToAram_Async(u8*, JKRAramBlock*, u32, JKRExpandSwitch, u32,
+                                  JKRHeap*, void (*)(u32), int)
+{
 }
 
 u8* JKRAram::aramToMainRam(u32 address, u8* buf, u32 p3,
@@ -284,16 +289,33 @@ u8* JKRAram::aramToMainRam(JKRAramBlock* block, u8* buf, u32 p3, u32 p4,
 	if (!block)
 		OSPanic(__FILE__, 673, ":::Bad Aram Block specified.\n");
 
-	if (p4 >= block->mSize)
+	u32 blockSize = block->getSize();
+	if (p4 >= blockSize)
 		return nullptr;
 
-	p3 = p3 == 0 ? block->mSize : p3;
-	if (p4 + p3 > block->mSize)
-		p3 = block->mSize - p4;
+	p3 = p3 == 0 ? blockSize : p3;
+	if (p4 + p3 > blockSize)
+		p3 = blockSize - p4;
 
-	return aramToMainRam(p4 + block->mAddress, buf, p3, expandSwitch, p6, heap,
-	                     id, pSize);
+	return aramToMainRam(p4 + block->getAddress(), buf, p3, expandSwitch, p6,
+	                     heap, id, pSize);
 }
+
+void JKRAram::aramToMainRam_Async(u32, u8*, u32, JKRExpandSwitch, u32, JKRHeap*,
+                                  void (*)(u32), int)
+{
+}
+
+void JKRAram::aramToMainRam_Async(JKRAramBlock*, u8*, u32, u32, JKRExpandSwitch,
+                                  u32, JKRHeap*, void (*)(u32), int)
+{
+}
+
+void JKRAram::aramSync(JKRAMCommand*, int) { }
+
+void JKRAram::aramSyncAll(int) { }
+
+void JKRAram::countLeftSync() { }
 
 static void dummy()
 {
@@ -315,8 +337,8 @@ static u32 fileOffset;
 static u32 readCount;
 static u32 maxDest;
 
-static int JKRDecompressFromAramToMainRam(u32 src, void* dst, u32 srcLength,
-                                          u32 dstLength, u32 offset)
+int JKRDecompressFromAramToMainRam(u32 src, void* dst, u32 srcLength,
+                                   u32 dstLength, u32 offset)
 {
 	// TODO: what is 0x400?
 	szpBuf = (u8*)JKRAllocFromSysHeap(0x400, 32);

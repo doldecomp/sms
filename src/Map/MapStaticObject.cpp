@@ -186,7 +186,7 @@ void TMapStaticObj::calcUnique(JPABaseEmitter* emitter)
 		if (emitter) {
 			JGeometry::TVec3<f32> scale(mEffectCoronaScale, mEffectCoronaScale,
 			                            mEffectCoronaScale);
-			emitter->setScale(scale);
+			emitter->setGlobalScale(scale);
 		}
 		break;
 	default:

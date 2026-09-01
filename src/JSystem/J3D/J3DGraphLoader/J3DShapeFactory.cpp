@@ -23,22 +23,22 @@ J3DShapeFactory::J3DShapeFactory(const J3DShapeBlock& block)
 J3DShape* J3DShapeFactory::create(int no, J3DMdlDataFlag flag,
                                   GXVtxDescList* vtxDesc)
 {
-	J3DShape* shape      = new J3DShape();
-	shape->mElementCount = getMtxGroupNum(no);
-	shape->unkC          = getRadius(no);
-	shape->unk2C         = getVtxDescList(no);
-	shape->mMatrices     = new J3DShapeMtx*[shape->mElementCount];
-	shape->mDraws        = new J3DShapeDraw*[shape->mElementCount];
-	shape->unk10         = getMin(no);
-	shape->unk1C         = getMax(no);
-	shape->mGDCommands   = mpVcdVatCmdBuffer + no * J3DShape::kVcdVatDLSize;
+	J3DShape* shape     = new J3DShape();
+	shape->mMtxGroupNum = getMtxGroupNum(no);
+	shape->mRadius      = getRadius(no);
+	shape->mVtxDesc     = getVtxDescList(no);
+	shape->mMatrices    = new J3DShapeMtx*[shape->mMtxGroupNum];
+	shape->mDraws       = new J3DShapeDraw*[shape->mMtxGroupNum];
+	shape->mMin         = getMin(no);
+	shape->mMax         = getMax(no);
+	shape->mVcdVatCmd   = mpVcdVatCmdBuffer + no * J3DShape::kVcdVatDLSize;
 
-	for (s32 i = 0; i < shape->mElementCount; i++) {
+	for (s32 i = 0; i < shape->mMtxGroupNum; i++) {
 		shape->mMatrices[i] = newShapeMtx(no, i);
 		shape->mDraws[i]    = newShapeDraw(no, i, flag);
 	}
 
-	shape->unk4 = no;
+	shape->mIndex = no;
 	return shape;
 }
 

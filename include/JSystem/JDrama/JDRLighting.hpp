@@ -33,7 +33,7 @@ public:
 	}
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(unsigned long cue, TGraphics* graphics);
+	virtual void perform(u32 cue, TGraphics* graphics);
 
 public:
 	/* 0x10 */ s32 mLightInfoCount;
@@ -47,9 +47,7 @@ public:
 	    , mLightType(JStage::TELIGHT_Unk1)
 	{
 		GXInitLightAttn(&unk24, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
-		const JUtility::TColor& color
-		    = JUtility::TColor(0xff, 0xff, 0xff, 0xff);
-		GXInitLightColor(&unk24, color);
+		setColor(JUtility::TColor(0xff, 0xff, 0xff, 0xff));
 	}
 
 	virtual void load(JSUMemoryInputStream&);
@@ -66,6 +64,9 @@ public:
 
 	void correct(TGraphics*) const;
 
+	GXLightObj* getLightObj() const { return const_cast<GXLightObj*>(&unk24); }
+
+	void setColor(GXColor color) { GXInitLightColor(&unk24, color); }
 	GXColor getColor()
 	{
 		GXColor result;
@@ -108,7 +109,9 @@ public:
 
 	void setLightNum(s32);
 
-	// fabricated
+	// getLightNum() is real: TLightAry::perform only matches when its loop
+	// bound goes through it. getLight() is still fabricated -- using it in
+	// load() breaks that function.
 	TIdxLight* getLight(int idx) { return &mLights[idx]; }
 	s32 getLightNum() const { return mLightCount; }
 
@@ -129,6 +132,10 @@ public:
 	virtual void perform(u32 cue, TGraphics* graphics);
 	virtual GXColor JSGGetColor() const;
 	virtual void JSGSetColor(GXColor color);
+
+	// fabricated
+	void setColor(GXColor color) { setColor(JUtility::TColor(color)); }
+	void setColor(JUtility::TColor color) { mColor = color; }
 
 	const JUtility::TColor& getColor() const { return mColor; }
 

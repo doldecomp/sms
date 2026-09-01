@@ -6,8 +6,6 @@
 // first here.
 #include <System/DummyStrings.hpp>
 
-// TODO: this should live in some other header and infect various TUs, but we
-// don't know which one yet
 static const char* MtxCalcTypeName[] = {
 	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
 	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",

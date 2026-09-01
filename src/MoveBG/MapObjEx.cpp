@@ -128,8 +128,8 @@ void TJointCoin::loadAfter()
 		makeObjFromJointName(name, i);
 	}
 
-	mMActor->getFrameCtrl(0)->setRate(SMSGetAnmFrameRate() * 0.25f);
-	unk138->getFrameCtrl(0)->setRate(SMSGetAnmFrameRate() * 0.25f);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setRate(SMSGetAnmFrameRate() * 0.25f);
+	unk138->getFrameCtrl(ANM_TYPE_BCK)->setRate(SMSGetAnmFrameRate() * 0.25f);
 }
 
 bool TJointCoin::nameIsObj(const char* name)

@@ -11,29 +11,44 @@ void MActorAnmBase::checkUseMaterialIDInit(u16*) { }
 
 void MActorAnmBase::checkUseMaterialID(u16*) { }
 
+void MActorAnmBck::changeMtxCalcType(u8 type)
+{
+	unk2A = type;
+	switch (type) {
+	case MACTOR_MTX_CALC_SOFTIMAGE:
+		if (unk30 == nullptr)
+			unk30 = new J3DMtxCalcSoftimageAnm(nullptr);
+		break;
+	case MACTOR_MTX_CALC_BASIC:
+		if (unk2C == nullptr)
+			unk2C = new J3DMtxCalcBasicAnm(nullptr);
+		break;
+	}
+}
+
 void MActorAnmBck::initSimpleMotionBlend(int param_1)
 {
 	if (!unk34) {
 		bool thing = false;
-		if (unk2A == 0)
+		if (unk2A == MACTOR_MTX_CALC_BASIC)
 			thing = true;
 		unk34 = new TMotionBlendCtrl(thing, param_1);
 	}
-	unk2A = 2;
+	unk2A = MACTOR_MTX_CALC_MOTION_BLEND;
 }
 
 void MActorAnmBck::initNormalMotionBlend()
 {
 	if (!unk34) {
 		bool thing = false;
-		if (unk2A == 0)
+		if (unk2A == MACTOR_MTX_CALC_BASIC)
 			thing = true;
 		unk34 = new TMotionBlendCtrl(thing);
 	}
-	unk2A = 2;
+	unk2A = MACTOR_MTX_CALC_MOTION_BLEND;
 }
 
-float MActorAnmBck::getMotionBlendRatio() const
+f32 MActorAnmBck::getMotionBlendRatio() const
 {
 	if (!unk34)
 		return 0.0f;
@@ -41,7 +56,7 @@ float MActorAnmBck::getMotionBlendRatio() const
 		return unk34->getMotionBlendRatio();
 }
 
-void MActorAnmBck::setMotionBlendRatio(float param_1)
+void MActorAnmBck::setMotionBlendRatio(f32 param_1)
 {
 	if (unk34)
 		unk34->setMotionBlendRatio(param_1);
@@ -61,7 +76,7 @@ void MActorAnmBck::setOldMotionBlendAnmPtr(J3DAnmTransform* param_1)
 		unk34->setOldMotionBlendAnmPtr(param_1);
 }
 
-float MActorAnmBck::getOldMotionBlendFrame() const
+f32 MActorAnmBck::getOldMotionBlendFrame() const
 {
 	if (unk34)
 		return unk34->getOldMotionBlendFrame();
@@ -69,53 +84,33 @@ float MActorAnmBck::getOldMotionBlendFrame() const
 		return 0.0f;
 }
 
-// TODO: figure out something w/ these "things"
-inline J3DMtxCalcSoftimageAnm* createThing()
+void MActorAnmBck::setModel(J3DModel* model)
 {
-	return new J3DMtxCalcSoftimageAnm(nullptr);
-}
-inline J3DMtxCalcBasicAnm* createThing2()
-{
-	return new J3DMtxCalcBasicAnm(nullptr);
-}
-
-void MActorAnmBck::setModel(J3DModel* param_1)
-{
-	u8 thing = 0;
-	unk18    = param_1;
-	if (param_1->getModelData()->unkC & 1)
-		thing = 1;
-	unk2A = thing;
-	switch (thing) {
-	case 1:
-		if (unk30 == nullptr)
-			unk30 = createThing();
-		break;
-	case 0:
-		if (unk2C == nullptr)
-			unk2C = createThing2();
-		break;
-	}
+	u8 type = MACTOR_MTX_CALC_BASIC;
+	unk18   = model;
+	if (model->getModelData()->getFlag() & J3DMLF_MtxCalcSoftImage)
+		type = MACTOR_MTX_CALC_SOFTIMAGE;
+	changeMtxCalcType(type);
 }
 
 void MActorAnmBck::updateIn()
 {
 	J3DJoint* joint = unk18->getModelData()->getJointNodePointer(unk28);
 	unk24->setFrame(unk4.getFrame());
-	switch (unk2A) {
-	case 0:
-		unk2C->mOne[0] = unk24;
+	switch (getMtxCalcType()) {
+	case MACTOR_MTX_CALC_BASIC:
+		unk2C->setAnmTransform(unk24);
 		joint->setMtxCalc(unk2C);
 		break;
-	case 1:
-		unk30->mOne[0] = unk24;
+	case MACTOR_MTX_CALC_SOFTIMAGE:
+		unk30->setAnmTransform(unk24);
 		joint->setMtxCalc(unk30);
 		break;
-	case 2:
+	case MACTOR_MTX_CALC_MOTION_BLEND:
 		joint->setMtxCalc(unk34->unk8);
 		unk34->execSimpleMotionBlend();
 		break;
-	case 3:
+	case MACTOR_MTX_CALC_USER:
 		joint->setMtxCalc(unk38);
 		break;
 	}
@@ -128,12 +123,12 @@ void MActorAnmBck::updateOut()
 
 void MActorAnmBck::setAnmFromIndex(int param_1, u16*)
 {
-	if (unk2A == 2 && unk0 != -1)
+	if (getMtxCalcType() == MACTOR_MTX_CALC_MOTION_BLEND && unk0 != -1)
 		unk34->keepCurAnm(getData()->getAnmPtr(unk0), unk4.getFrame());
 
 	setFrameCtrl(param_1);
 
-	if (unk2A == 2)
+	if (getMtxCalcType() == MACTOR_MTX_CALC_MOTION_BLEND)
 		unk34->setNewAnm(getData()->getAnmPtr(unk0));
 }
 

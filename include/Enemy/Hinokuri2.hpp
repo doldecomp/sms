@@ -70,7 +70,6 @@ public:
 	virtual void calc(u16);
 
 	// fabricated
-	void setTransform(J3DAnmTransform* trans) { mOne[0] = trans; }
 	void addTransform(J3DAnmTransform* trans)
 	{
 		if (mOne[0] != trans) {

@@ -306,26 +306,26 @@ void TPoiHana::setDeadAnm()
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 	        PARTICLE_MS_POI_DEAD, &mPosition, 0, nullptr)) {
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 	}
 
 	if (!mGroundPlane->isSand()) {
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_JUMP_ED_A, &mPosition, 0, nullptr)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_JUMP_ED_B, &mPosition, 0, nullptr)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 	} else {
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_POI_SAND, &mPosition, 0, nullptr)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_JUMP_ED_A, &mPosition, 0, nullptr)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 	}
 }
@@ -416,42 +416,42 @@ void TPoiHana::calcRootMatrix()
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToPosPtr(
 		        PARTICLE_MS_POI_KIZETSU, &mPosition, 1, this)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 
 	if (isBckAnm(5))
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToPosPtr(
 		        PARTICLE_MS_POI_ZZZ, &mPosition, 1, this)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 
 	if (isBckAnm(12) || isBckAnm(13)) {
-		if (mMActor->getFrameCtrl(0)->checkPass(18.0f)) {
+		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(18.0f)) {
 			if (!mGroundPlane->isSand()) {
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				        PARTICLE_MS_JUMP_ED_A, &mPosition, 0, nullptr)) {
-					emitter->setScale(mScaling);
+					emitter->setGlobalScale(mScaling);
 				}
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				        PARTICLE_MS_JUMP_ED_B, &mPosition, 0, nullptr)) {
-					emitter->setScale(mScaling);
+					emitter->setGlobalScale(mScaling);
 				}
 			} else {
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				        PARTICLE_MS_POI_SAND, &mPosition, 0, nullptr)) {
-					emitter->setScale(mScaling);
+					emitter->setGlobalScale(mScaling);
 				}
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				        PARTICLE_MS_JUMP_ED_A, &mPosition, 0, nullptr)) {
-					emitter->setScale(mScaling);
+					emitter->setGlobalScale(mScaling);
 				}
 			}
 		}
 	}
 
 	if (isBckAnm(2) && mGroundPlane->isSand()
-	    && mMActor->getFrameCtrl(0)->checkPass(34.0f)) {
+	    && mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(34.0f)) {
 		gpMarioParticleManager->emit(PARTICLE_MS_POI_SAND, &mPosition, 0,
 		                             nullptr);
 	}
@@ -576,7 +576,7 @@ DEFINE_NERVE(TNervePoihanaSleep, TLiveActor)
 		                                &self->mPosition, 0, nullptr, 0, 4);
 
 		self->setBckAnm(10);
-		self->getMActor()->getFrameCtrl(0)->setFrame(148.0f);
+		self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(148.0f);
 	}
 
 	if (self->checkCurAnmEnd(0)) {
@@ -651,9 +651,9 @@ DEFINE_NERVE(TNervePoihanaThrow, TLiveActor)
 		self->mThrowTimer = 1;
 	}
 
-	if (self->getMActor()->getFrameCtrl(0)->checkPass(4.0f)
+	if (self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(4.0f)
 	    && self->mThrowTimer > 0)
-		self->getMActor()->setFrameRate(0.0f, 0);
+		self->getMActor()->setFrameRate(0.0f, ANM_TYPE_BCK);
 
 	if (self->mThrowTimer > 0) {
 		self->mThrowTimer += 1;
@@ -667,7 +667,7 @@ DEFINE_NERVE(TNervePoihanaThrow, TLiveActor)
 			MTXMultVec(afStack_4c, &local_58, &local_58);
 			SMS_ThrowMario(local_58, self->unk19C->mSLThrowSpeed.get());
 			self->mThrowTimer = 0;
-			self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+			self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 			self->mThrowTimer = 0;
 		}
 	}

@@ -45,15 +45,6 @@ void J3DTexGenBlockBasic::initialize()
 	mTexMtxOffset = 0;
 }
 
-void J3DPEBlockFull::initialize()
-{
-	mFog                   = nullptr;
-	mAlphaComp.mAlphaCmpID = 0xFFFF;
-	mZMode.mZModeID        = 0xFFFF;
-	mZCompLoc              = 0xFF;
-	mDither                = 0xFF;
-}
-
 void J3DTevBlock1::initialize()
 {
 	mTexNo[0]                 = 0xFFFF;
@@ -84,6 +75,7 @@ void J3DTevBlock2::initialize()
 	for (int i = 0; i < ARRAY_COUNT(mTevKColor); ++i)
 		mTevKColor[i] = j3dDefaultTevKColor;
 }
+
 void J3DTevBlock4::initialize()
 {
 	mTexNo[0] = 0xFFFF;
@@ -117,6 +109,7 @@ void J3DTevBlock4::initialize()
 	for (int i = 0; i < ARRAY_COUNT(mTevKColor); ++i)
 		mTevKColor[i] = j3dDefaultTevKColor;
 }
+
 void J3DTevBlock16::initialize()
 {
 	for (int i = 0; i < ARRAY_COUNT(mTexNo); ++i)
@@ -140,6 +133,17 @@ void J3DTevBlock16::initialize()
 		mTevStage[i].mTevColorReg = 0xC0 + i * 2;
 		mTevStage[i].mTevAlphaReg = 0xC1 + i * 2;
 	}
+}
+
+void J3DIndBlockFull::initialize() { mIndTexStageNum = 0; }
+
+void J3DPEBlockFull::initialize()
+{
+	mFog                   = nullptr;
+	mAlphaComp.mAlphaCmpID = 0xFFFF;
+	mZMode.mZModeID        = 0xFFFF;
+	mZCompLoc              = 0xFF;
+	mDither                = 0xFF;
 }
 
 J3DColorBlock* J3DMaterial::createColorBlock(int param_1)
@@ -198,9 +202,9 @@ void J3DMaterial::initialize()
 {
 	mShape            = nullptr;
 	mNext             = nullptr;
-	unk8              = 1;
-	unkC              = -1;
-	unk10             = nullptr;
+	mMaterialMode     = 1;
+	mIndex            = -1;
+	mInvalid          = 0;
 	unk18             = 0;
 	unk1C             = 0;
 	mColorBlock       = nullptr;
@@ -209,7 +213,7 @@ void J3DMaterial::initialize()
 	mIndBlock         = nullptr;
 	mPEBlock          = nullptr;
 	mOriginalMaterial = nullptr;
-	unk38             = nullptr;
+	mMaterialAnm      = nullptr;
 	unk3C             = nullptr;
 }
 
@@ -816,15 +820,19 @@ extern void loadNBTScale(J3DNBTScale&);
 
 void J3DMaterial::load()
 {
-	j3dSys.unk50 = unk8;
+	j3dSys.unk50 = mMaterialMode;
 	if (!j3dSys.checkFlag2()) {
 		j3dSys.getMatPacket()->getDisplayListObj()->callDL();
 		loadNBTScale(*mTexGenBlock->getNBTScale());
 	}
 }
 
+void J3DMaterial::patch() { }
+
 // not too much safer than the regular one
 void J3DMaterial::safeMakeDisplayList() { makeDisplayList(); }
+
+void J3DMaterial::safeLoad() { }
 
 void J3DTexGenBlockBasic::calc(MtxPtr ptr)
 {
@@ -892,24 +900,19 @@ void J3DTexGenBlockBasic::calc(MtxPtr ptr)
 
 void J3DMaterial::calc(MtxPtr ptr) { mTexGenBlock->calc(ptr); }
 
-// TODO: stack size mismatches...
 void J3DMaterial::setCurrentMtx()
 {
-	char trash[0x20];
-	mShape->setUnk3C(mTexGenBlock->getTexCoord(0)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(1)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(2)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(3)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(4)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(5)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(6)->getTexGenMtx(),
-	                 mTexGenBlock->getTexCoord(7)->getTexGenMtx());
+	mShape->setCurrentTexMtx(
+	    getTexCoord(0)->getTexGenMtx(), getTexCoord(1)->getTexGenMtx(),
+	    getTexCoord(2)->getTexGenMtx(), getTexCoord(3)->getTexGenMtx(),
+	    getTexCoord(4)->getTexGenMtx(), getTexCoord(5)->getTexGenMtx(),
+	    getTexCoord(6)->getTexGenMtx(), getTexCoord(7)->getTexGenMtx());
 }
 
 void J3DMaterial::copy(J3DMaterial* other)
 {
 	unk18 = other->unk18;
-	unk18 = unk18 & 0x7FFFFFFF;
+	unk18 &= ~DIFF_FLAG;
 	mColorBlock->reset(other->mColorBlock);
 	mTexGenBlock->reset(other->mTexGenBlock);
 	mTevBlock->reset(other->mTevBlock);
@@ -917,16 +920,26 @@ void J3DMaterial::copy(J3DMaterial* other)
 	mPEBlock->reset(other->mPEBlock);
 }
 
+void J3DMaterial::reset()
+{
+	if ((~unk18 & DIFF_FLAG) == 0) {
+		unk18 &= ~DIFF_FLAG;
+		mMaterialMode = mOriginalMaterial->mMaterialMode;
+		mInvalid      = mOriginalMaterial->mInvalid;
+		mMaterialAnm  = nullptr;
+		copy(mOriginalMaterial);
+	}
+}
+
 void J3DMaterial::change()
 {
-
-	if (unk18 & 0xc0000000) {
+	if (unk18 & (DIFF_FLAG | UNIQUE_FLAG))
 		return;
-	}
-	unk18 = unk18 | 0x80000000;
-	unk8  = mOriginalMaterial->unk8;
-	unk10 = mOriginalMaterial->unk10;
-	unk38 = nullptr;
+
+	unk18 |= DIFF_FLAG;
+	mMaterialMode = mOriginalMaterial->mMaterialMode;
+	mInvalid      = mOriginalMaterial->mInvalid;
+	mMaterialAnm  = nullptr;
 }
 
 J3DDisplayListObj* J3DMaterial::newSharedDisplayList(u32 param_1)

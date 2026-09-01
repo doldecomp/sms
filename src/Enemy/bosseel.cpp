@@ -1,4 +1,3 @@
-
 #include <Enemy/BossEel.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Camera/Camera.hpp>
@@ -12,6 +11,7 @@
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
 #include <Map/MapCollisionEntry.hpp>
@@ -108,7 +108,7 @@ TBEelTearsDrop::TBEelTearsDrop(TBEelTears* owner, int jointIndex,
 	SMS_ChangeTextureAll(actor->getModel()->getModelData(), "M_dummy",
 	                     *textureInfo);
 	actor->setBckFromIndex(0);
-	actor->setLightType(3);
+	actor->setLightType(LIGHT_TYPE_INDIRECT);
 }
 
 void TBEelTearsDrop::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -288,12 +288,12 @@ void TBEelTears::init(TLiveManager* manager)
 	tearsActor->resetDL();
 	SMS_ChangeTextureAll(tearsActor->getModel()->getModelData(), "M_dummy",
 	                     screenTexInfo);
-	tearsActor->setLightType(3);
+	tearsActor->setLightType(LIGHT_TYPE_INDIRECT);
 
 	MActor* waterHitActor = mMActorKeeper->getMActor("tears_waterhit.bmd");
 	SMS_ChangeTextureAll(waterHitActor->getModel()->getModelData(), "M_dummy",
 	                     screenTexInfo);
-	waterHitActor->setLightType(3);
+	waterHitActor->setLightType(LIGHT_TYPE_INDIRECT);
 
 	onLiveFlag(LIVE_FLAG_DEAD);
 	mBodyScale = mTearsParams->mBodyScaleRange.rand();
@@ -437,7 +437,7 @@ BOOL TBEelTears::receiveMessage(THitActor*, u32 message)
 
 		if (mSpine->getCurrentNerve() == &TNerveBEelTearsWaterHit::theNerve()) {
 			MActor* actor = mMActor;
-			actor->setFrameRate(SMSGetAnmFrameRate(), 0);
+			actor->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 		}
 		return true;
 	}
@@ -484,7 +484,7 @@ void TBEelTears::deadEffect()
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
 	    BOSSEELTEARS_MS_MEO_TEAR_BOMB, &mPosition, 0, nullptr);
 	if (emitter)
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 
 	mRecoverCollision->mColliding = false;
 	mRecoverCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
@@ -542,15 +542,15 @@ DEFINE_NERVE(TNerveBEelTearsWaterHit, TLiveActor)
 	f32 frameRate = tears->mTearsParams->mSLHitAnmFrameRate.get();
 	if (tears->mStateTimer < 0) {
 		MActor* actor = tears->mMActor;
-		actor->setFrameRate(-frameRate * SMSGetAnmFrameRate(), 0);
-		if (tears->getCurAnmFrameNo(0) < 1.0f)
+		actor->setFrameRate(-frameRate * SMSGetAnmFrameRate(), ANM_TYPE_BCK);
+		if (tears->getCurAnmFrameNo(ANM_TYPE_BCK) < 1.0f)
 			return true;
 	} else {
 		MActor* actor = tears->mMActor;
-		actor->setFrameRate(frameRate * SMSGetAnmFrameRate(), 0);
+		actor->setFrameRate(frameRate * SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	}
 
-	if (tears->checkCurAnmEnd(0)) {
+	if (tears->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveBEelTearsMarioRecover::theNerve());
 		tears->deadEffect();
 		return true;
@@ -568,7 +568,7 @@ DEFINE_NERVE(TNerveBEelTearsMarioRecover, TLiveActor)
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
 		    BOSSEELTEARS_MS_MEO_TEAR_AWAGET, gpMarioPos, 0, nullptr);
 		if (emitter)
-			emitter->setScale(tears->mScaling);
+			emitter->setGlobalScale(tears->mScaling);
 		tears->kill();
 		return true;
 	}
@@ -576,7 +576,7 @@ DEFINE_NERVE(TNerveBEelTearsMarioRecover, TLiveActor)
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
 	    BOSSEELTEARS_MS_MEO_TEAR_AWA, &tears->mPosition, 1, tears);
 	if (emitter)
-		emitter->setScale(tears->mScaling);
+		emitter->setGlobalScale(tears->mScaling);
 
 	if (spine->getTime() > 1000) {
 		tears->kill();
@@ -599,10 +599,10 @@ DEFINE_NERVE(TNerveBEelTearsSplit, TLiveActor)
 		tears->mMActor->setBckFromIndex(3);
 		MActor* actor = tears->mMActor;
 		f32 frameRate = tears->mTearsParams->mSLHitAnmFrameRate.get();
-		actor->setFrameRate(frameRate * SMSGetAnmFrameRate(), 0);
+		actor->setFrameRate(frameRate * SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	}
 
-	if (tears->checkCurAnmEnd(0)) {
+	if (tears->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		tears->deadEffect();
 		spine->pushAfterCurrent(&TNerveBEelTearsMarioRecover::theNerve());
 		return true;
@@ -772,9 +772,9 @@ TBossEelTooth::TBossEelTooth(u8 toothType, TBossEel* owner,
 	    = new TSharedParts(mOwner, jointIndex, modelData, 0, "<TSharedParts>");
 	MActor* actor = mSharedParts->getMActor();
 
-	mSharedParts->getMActor()->setLightType(1);
+	mSharedParts->getMActor()->setLightType(LIGHT_TYPE_OBJECT);
 	mSharedParts->getMActor()->setBckFromIndex(22);
-	mSharedParts->getMActor()->setFrameRate(0.0f, 0);
+	mSharedParts->getMActor()->setFrameRate(0.0f, ANM_TYPE_BCK);
 
 	for (u16 i = 0; i < actor->getModel()->getModelData()->getMaterialNum();
 	     ++i)
@@ -805,7 +805,7 @@ BOOL TBossEelTooth::receiveMessage(THitActor* sender, u32 message)
 			mDamageCooldown = 2;
 			--mHitPoints;
 			MActor* actor = mSharedParts->getMActor();
-			actor->setFrameRate(SMSGetAnmFrameRate(), 0);
+			actor->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 			mOwner->mToothDamaged = true;
 			mColor.a              = static_cast<u8>(
                 static_cast<f32>(mHitPoints * 0xFF)
@@ -835,7 +835,7 @@ BOOL TBossEelTooth::receiveMessage(THitActor* sender, u32 message)
 					JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 					    BOSSEEL_JPA_MS_MEO_AWA_TOOTH, &mPosition, 0, nullptr);
 					if (emitter)
-						emitter->setScale(mOwner->mScaling);
+						emitter->setGlobalScale(mOwner->mScaling);
 				} else {
 					SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEATH_FLASH,
 					                                &mPosition, 0, nullptr, 0,
@@ -888,8 +888,9 @@ void TBossEelTooth::perform(u32 cue, JDrama::TGraphics* graphics)
 			--mDamageCooldown;
 		} else {
 			if (mSharedParts->getMActor()->checkCurBckFromIndex(22)
-			    && mSharedParts->getMActor()->curAnmEndsNext(0, nullptr))
-				mSharedParts->getMActor()->setFrameRate(0.0f, 0);
+			    && mSharedParts->getMActor()->curAnmEndsNext(ANM_TYPE_BCK,
+			                                                 nullptr))
+				mSharedParts->getMActor()->setFrameRate(0.0f, ANM_TYPE_BCK);
 
 			if (mHitPoints == 1) {
 				if (mToothType == 1) {
@@ -900,11 +901,11 @@ void TBossEelTooth::perform(u32 cue, JDrama::TGraphics* graphics)
 						    mDetachedMtx[2][3]);
 						mOwner->generateBubble(tearsPosition);
 						mSharedParts->getMActor()->setFrameRate(
-						    SMSGetAnmFrameRate(), 0);
+						    SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 					}
 					if (mSharedParts->getMActor()->checkCurBckFromIndex(20)
-					    && mSharedParts->getMActor()->curAnmEndsNext(0,
-					                                                 nullptr))
+					    && mSharedParts->getMActor()->curAnmEndsNext(
+					        ANM_TYPE_BCK, nullptr))
 						mSharedParts->getMActor()->setBckFromIndex(21);
 				}
 
@@ -934,22 +935,23 @@ void TBossEelTooth::perform(u32 cue, JDrama::TGraphics* graphics)
 			    = gpMarioParticleManager->emitAndBindToPosPtr(
 			        BOSSEEL_JPA_MS_MEO_TOOTH_ALWAYS, &mPosition, 1, this);
 			if (emitter)
-				emitter->setScale(mOwner->mScaling);
+				emitter->setGlobalScale(mOwner->mScaling);
 		}
 		if (mSharedParts->getMActor()->checkCurBckFromIndex(22)
-		    && mSharedParts->getMActor()->getFrameCtrl(0)->getRate() > 0.0f) {
+		    && mSharedParts->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getRate()
+		           > 0.0f) {
 			JPABaseEmitter* emitter
 			    = gpMarioParticleManager->emitAndBindToPosPtr(
 			        BOSSEEL_JPA_MS_MEO_TOOTH_WASH, &mPosition, 1, this);
 			if (emitter)
-				emitter->setScale(mOwner->mScaling);
+				emitter->setGlobalScale(mOwner->mScaling);
 		}
 		if ((mToothType == 0 || mToothType == 2) && mHitPoints == 1) {
 			JPABaseEmitter* emitter
 			    = gpMarioParticleManager->emitAndBindToPosPtr(
 			        BOSSEEL_JPA_MS_MEO_TOOTH_KIRA, &mPosition, 1, this);
 			if (emitter)
-				emitter->setScale(mOwner->mScaling);
+				emitter->setGlobalScale(mOwner->mScaling);
 		}
 
 		TPosition3f transform(0, 0, unk78.x);
@@ -1073,7 +1075,7 @@ TBossEelEye::TBossEelEye(const TLiveActor* owner, int jointIndex,
 	mBlendModel = new SDLModel(modelData, modelFlags, 1);
 	mBlendModel->getModelData()->getMaterialName()->getIndex("_mat7");
 	getMActor()->initNormalMotionBlend();
-	mPreviousBckIndex = getMActor()->getCurAnmIdx(0);
+	mPreviousBckIndex = getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 	mAnimationMode    = 0;
 	mBlendRatio       = 1.0f;
 	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getBckAnm());
@@ -1094,7 +1096,7 @@ void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
 		    BOSSEEL_JPA_MS_MEO_EYEBLUR, &mBlurPosition, 1, this);
 		if (emitter)
-			emitter->setScale(owner->mScaling);
+			emitter->setGlobalScale(owner->mScaling);
 
 		Mtx eyeMtx;
 		MTXCopy(getConnectedMtx(), eyeMtx);
@@ -1105,10 +1107,11 @@ void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 		mBlendRatio
 		    = JGeometry::TUtil<f32>::clamp(mBlendRatio - 0.01f, 0.0f, 1.0f);
 		getMActor()->setMotionBlendRatioForBck(mBlendRatio);
-		if (mAnimationMode == 1 && getMActor()->curAnmEndsNext(0, nullptr)) {
+		if (mAnimationMode == 1
+		    && getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			++mAnimationLoopCount;
 			if (mAnimationLoopCount > 3) {
-				mPreviousBckIndex = getMActor()->getCurAnmIdx(0);
+				mPreviousBckIndex = getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 				mAnimationMode    = 0;
 				mBlendRatio       = 1.0f;
 				getMActor()->setBckOldMotionBlendAnmPtr(
@@ -1118,7 +1121,7 @@ void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 
 				TBossEelEye* paired = mPairedEye;
 				paired->mPreviousBckIndex
-				    = paired->getMActor()->getCurAnmIdx(0);
+				    = paired->getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 				paired->mAnimationMode = 0;
 				paired->mBlendRatio    = 1.0f;
 				paired->getMActor()->setBckOldMotionBlendAnmPtr(
@@ -1135,7 +1138,7 @@ void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TBossEelEye::setBckAnm(int index)
 {
-	mPreviousBckIndex = getMActor()->getCurAnmIdx(0);
+	mPreviousBckIndex = getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 	mAnimationMode    = 1;
 	mBlendRatio       = 1.0f;
 	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getBckAnm());
@@ -1170,7 +1173,8 @@ void TBossEelHeartCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 		                     ->getIndex("ha7");
 		MtxPtr jointMtx = mOwner->mMActor->getModel()->getAnmMtx(jointIndex);
 		if (mOwner->mMActor->checkCurBckFromIndex(3)
-		    && mOwner->mMActor->getFrameCtrl(0)->getFrame() < 700.0f) {
+		    && mOwner->mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
+		           < 700.0f) {
 			mPosition.set(jointMtx[0][3], jointMtx[1][3], jointMtx[2][3]);
 		}
 		mPosition.y = jointMtx[1][3];
@@ -1450,8 +1454,8 @@ void TBossEel::init(TLiveManager* manager)
 		mEyes[1]->mPairedEye = mEyes[0];
 		mEyes[2]->mPairedEye = mEyes[3];
 		mEyes[3]->mPairedEye = mEyes[2];
-		mEyes[2]->getMActor()->getFrameCtrl(0)->setFrame(100.0f);
-		mEyes[3]->getMActor()->getFrameCtrl(0)->setFrame(100.0f);
+		mEyes[2]->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(100.0f);
+		mEyes[3]->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(100.0f);
 	}
 
 	{
@@ -1842,7 +1846,7 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 				    BOSSEEL_JPA_MS_MEO_SPIN_SMOKE_L, &mBreathParticlePosition,
 				    1, this);
 			if (emitter)
-				emitter->setScale(mScaling);
+				emitter->setGlobalScale(mScaling);
 
 			if (checkLiveFlag(LIVE_FLAG_UNK10000))
 				emitter = gpMarioParticleManager->emit(
@@ -1853,11 +1857,11 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 				    BOSSEEL_JPA_MS_MEO_SPIN_AWA_L, &mBreathParticlePosition, 1,
 				    this);
 			if (emitter)
-				emitter->setScale(mScaling);
+				emitter->setGlobalScale(mScaling);
 		}
 
 		if (mMActor->checkCurBckFromIndex(15)) {
-			J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(0);
+			J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 			MtxPtr breathMtx        = mMActor->getModel()->getAnmMtx(5);
 			mBreathParticlePosition.set(breathMtx[0][3], breathMtx[1][3],
 			                            breathMtx[2][3]);
@@ -1867,19 +1871,19 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 				        BOSSEEL_JPA_MS_MEO_AWA_MOUTH, &mBreathParticlePosition,
 				        0, nullptr);
 				if (emitter)
-					emitter->setScale(mScaling);
+					emitter->setGlobalScale(mScaling);
 			}
 			if (frameCtrl->getFrame() < 40.0f) {
 				JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				    BOSSEEL_JPA_MS_MEO_AWA_BODY, &mBreathParticlePosition, 1,
 				    this);
 				if (emitter)
-					emitter->setScale(mScaling);
+					emitter->setGlobalScale(mScaling);
 			}
 		}
 
 		if (mMActor->checkCurBckFromIndex(14)) {
-			J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(0);
+			J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 			MtxPtr breathMtx        = mMActor->getModel()->getAnmMtx(5);
 			mBreathParticlePosition.set(breathMtx[0][3], breathMtx[1][3],
 			                            breathMtx[2][3]);
@@ -1891,7 +1895,7 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 			        this);
 			if (emitter) {
 				JGeometry::TVec3<f32> scale(3.0f, 3.0f, 3.0f);
-				emitter->setScale(scale);
+				emitter->setGlobalScale(scale);
 			}
 		}
 	}
@@ -1914,13 +1918,15 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TBossEel::setBckAnm(int index)
 {
-	mPreviousBckIndex = getMActor()->getCurAnmIdx(0);
+	mPreviousBckIndex = getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 	mCurrentBckIndex  = index;
 	mBckBlendRatio    = 1.0f;
 	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getBckAnm());
 	getMActor()->setBckFromIndex(index);
 	getMActor()->setMotionBlendRatioForBck(mBckBlendRatio);
-	getMActor()->getFrameCtrl(0)->setRate(0.25f * SMSGetAnmFrameRate());
+	getMActor()
+	    ->getFrameCtrl(ANM_TYPE_BCK)
+	    ->setRate(0.25f * SMSGetAnmFrameRate());
 	const char** basTable = getBasNameTable();
 	const char* basName;
 	if (basTable == nullptr)
@@ -1966,7 +1972,7 @@ void TBossEel::quickBack()
 	}
 }
 
-BOOL TBossEel::isInBossEelMoguDemo()
+bool TBossEel::isInBossEelMoguDemo()
 {
 	if (mMActor->checkCurBckFromIndex(12) || mMActor->checkCurBckFromIndex(3))
 		return true;
@@ -2026,7 +2032,7 @@ void ExecSpinNerve_Sub(TBossEel* eel)
 	eel->mTurnSpeed = spinSpeed;
 	gpCameraShake->keepShake(static_cast<EnumCamShakeMode>(0x18), 1.0f);
 
-	if (eel->checkLiveFlag(LIVE_FLAG_UNK10000)) {
+	if (eel->checkLiveFlag(TBossEel::LIVE_FLAG_UNK10000)) {
 		eel->mRotation.y -= spinSpeed;
 		if (eel->mRotation.y <= 0.0f)
 			SMSGetMSound()->startSoundActorWithInfo(
@@ -2052,9 +2058,9 @@ DEFINE_NERVE(TNerveBossEelFirstSpin, TLiveActor)
 		                                        0, 0, nullptr, 0, 4);
 		eel->setBckAnm(10);
 		if (MsRandF() < 0.5f)
-			eel->onLiveFlag(LIVE_FLAG_UNK10000);
+			eel->onLiveFlag(TBossEel::LIVE_FLAG_UNK10000);
 		else
-			eel->offLiveFlag(LIVE_FLAG_UNK10000);
+			eel->offLiveFlag(TBossEel::LIVE_FLAG_UNK10000);
 	}
 
 	ExecSpinNerve_Sub(eel);
@@ -2079,9 +2085,9 @@ DEFINE_NERVE(TNerveBossEelSecondSpin, TLiveActor)
 		                                        &eel->mPosition, nullptr, 2.0f,
 		                                        0, 0, nullptr, 0, 4);
 		if (MsRandF() < 0.5f)
-			eel->onLiveFlag(LIVE_FLAG_UNK10000);
+			eel->onLiveFlag(TBossEel::LIVE_FLAG_UNK10000);
 		else
-			eel->offLiveFlag(LIVE_FLAG_UNK10000);
+			eel->offLiveFlag(TBossEel::LIVE_FLAG_UNK10000);
 	}
 
 	ExecSpinNerve_Sub(eel);
@@ -2110,21 +2116,21 @@ DEFINE_NERVE(TNerveBossEelAppear, TLiveActor)
 		eel->setBckAnm(15);
 		eel->mInDemo = true;
 		gpCameraShake->startShake(static_cast<EnumCamShakeMode>(0x19), 1.0f);
-		f32 duration = eel->mMActor->getFrameCtrl(0)->getEnd() * 2;
+		f32 duration = eel->mMActor->getFrameCtrl(ANM_TYPE_BCK)->getEnd() * 2;
 		eel->mAppearAcceleration
 		    = (eel->mSaveParams->mSLAppearMoveDistY.get() / duration)
 		      / duration;
 		testHeight = 0.0f;
 	}
 
-	s32 duration = eel->mMActor->getFrameCtrl(0)->getEnd() * 2;
+	s32 duration = eel->mMActor->getFrameCtrl(ANM_TYPE_BCK)->getEnd() * 2;
 	if (spine->getTime() < duration) {
 		eel->mAppearOffset
 		    += eel->mSaveParams->mSLAppearMoveDistY.get() / duration;
 
 		f32 sp = eel->mTurnSpeed *= 0.98f;
 
-		if (eel->checkLiveFlag(LIVE_FLAG_UNK10000))
+		if (eel->checkLiveFlag(TBossEel::LIVE_FLAG_UNK10000))
 			eel->mRotation.y -= sp;
 		else
 			eel->mRotation.y += sp;
@@ -2199,8 +2205,9 @@ static BOOL ExecBackNerve_Sub(TSpineBase<TLiveActor>* spine, f32 speed)
 		}
 	}
 
-	eel->mAppearOffset -= eel->mSaveParams->mSLAppearMoveDistY.get()
-	                      / (eel->mMActor->getFrameCtrl(0)->getEnd() * 2);
+	eel->mAppearOffset
+	    -= eel->mSaveParams->mSLAppearMoveDistY.get()
+	       / (eel->mMActor->getFrameCtrl(ANM_TYPE_BCK)->getEnd() * 2);
 	if (eel->mAppearOffset < 0.0f) {
 		eel->mAppearOffset = 0.0f;
 		if (eel->checkCurAnmEnd(0)) {
@@ -2256,7 +2263,7 @@ DEFINE_NERVE(TNerveBossEelEat, TLiveActor)
 				        BOSSEEL_JPA_MS_MEO_AWA_MOUTH,
 				        &eel->mBreathParticlePosition, 0, nullptr);
 				if (emitter)
-					emitter->setScale(eel->mScaling);
+					emitter->setGlobalScale(eel->mScaling);
 			}
 		} else if (eel->mMActor->checkCurBckFromIndex(12)) {
 			if (SMS_SendMessageToMario(eel, 8)) {
@@ -2273,7 +2280,7 @@ DEFINE_NERVE(TNerveBossEelEat, TLiveActor)
 	}
 
 	if (eel->mMActor->checkCurBckFromIndex(12)) {
-		if (eel->mMActor->getFrameCtrl(0)->getFrame() < 250.0f)
+		if (eel->mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame() < 250.0f)
 			SMSRumbleMgr->start(8, &eel->mPosition);
 		else
 			SMSRumbleMgr->start(20, 10, static_cast<f32*>(nullptr));
@@ -2309,7 +2316,7 @@ DEFINE_NERVE(TNerveBossEelDie, TLiveActor)
 	}
 
 	if (eel->mMActor->checkCurBckFromIndex(3)) {
-		if (eel->mMActor->getFrameCtrl(0)->checkPass(650.0f))
+		if (eel->mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(650.0f))
 			eel->mHeartCoin->getMActor()->setBckFromIndex(8);
 
 		if (eel->checkCurAnmEnd(0)) {

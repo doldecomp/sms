@@ -81,9 +81,11 @@ void TManhole::touchPlayer(THitActor*)
 	}
 	if (gpMarioOriginal->getStatus() == MARIO_STATUS_HIP_DROP
 	    && gpMarioOriginal->mPosition.y < mPosition.y) {
-		getMActor()->getFrameCtrl(0)->setRate(SMSGetAnmFrameRate());
-		getMActor()->getFrameCtrl(0)->setFrame(
-		    getMActor()->getFrameCtrl(0)->getFrame() + SMSGetAnmFrameRate());
+		getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setRate(SMSGetAnmFrameRate());
+		getMActor()
+		    ->getFrameCtrl(ANM_TYPE_BCK)
+		    ->setFrame(getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
+		               + SMSGetAnmFrameRate());
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_OPEN, &mPosition, 0,
 		                                nullptr, 0, 4);
 		offMapObjFlag(MAP_OBJ_FLAG_UNK100);
@@ -93,9 +95,11 @@ void TManhole::touchPlayer(THitActor*)
 
 	if (gpMarioOriginal->mPosition.y < mPosition.y
 	    && gpMarioOriginal->mVel.y > 0.0f) {
-		getMActor()->getFrameCtrl(0)->setRate(SMSGetAnmFrameRate());
-		getMActor()->getFrameCtrl(0)->setFrame(
-		    getMActor()->getFrameCtrl(0)->getFrame() + SMSGetAnmFrameRate());
+		getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setRate(SMSGetAnmFrameRate());
+		getMActor()
+		    ->getFrameCtrl(ANM_TYPE_BCK)
+		    ->setFrame(getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
+		               + SMSGetAnmFrameRate());
 		offMapObjFlag(MAP_OBJ_FLAG_UNK100);
 		mMapCollisionManager->unk8->setAllBGType(0x400);
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_OPEN, &mPosition, 0,
@@ -135,11 +139,11 @@ void TManhole::touchPlayer(THitActor*)
 
 bool TManhole::animationFinished()
 {
-	J3DFrameCtrl* frameCtrl = getMActor()->getFrameCtrl(0);
+	J3DFrameCtrl* frameCtrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (frameCtrl->getRate() == 0.0f)
 		return true;
-	f32 next = getMActor()->getFrameCtrl(0)->getFrame()
-	           + getMActor()->getFrameCtrl(0)->getRate();
+	f32 next = getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
+	           + getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getRate();
 	if (frameCtrl->getFrame() < 79.0f && next >= 79.0f) {
 		frameCtrl->setFrame(79.0f);
 		frameCtrl->setRate(0.0f);
@@ -204,10 +208,11 @@ void TManhole::appeared()
 
 void TManhole::calc()
 {
-	f32 next = getMActor()->getFrameCtrl(0)->getFrame()
-	           + getMActor()->getFrameCtrl(0)->getRate();
-	if ((getMActor()->getFrameCtrl(0)->getFrame() <= 45.0f && 45.0f < next)
-	    || (getMActor()->getFrameCtrl(0)->getFrame() <= 125.0f
+	f32 next = getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
+	           + getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getRate();
+	if ((getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame() <= 45.0f
+	     && 45.0f < next)
+	    || (getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame() <= 125.0f
 	        && 125.0f < next)) {
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_CLOSE, &mPosition, 0,
 		                                nullptr, 0, 4);
@@ -239,7 +244,7 @@ void TManhole::makeManholeUnuseful(const TMapObjBase* param_1)
 void TManhole::loadAfter()
 {
 	TMapObjBase::loadAfter();
-	getMActor()->getFrameCtrl(0)->setRate(0.0f);
+	getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.0f);
 }
 
 void TManhole::initMapObj()
@@ -265,7 +270,7 @@ TManhole::TManhole(const char* name)
 void TMapObjBillboard::swing(THitActor* param_1)
 {
 	if (animIsFinished()
-	    || !(getMActor()->getFrameCtrl(0)->getFrame() < 33.0f)) {
+	    || !(getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame() < 33.0f)) {
 		f32 tmp   = 57.295776f * getRotYFromAxisX(param_1->mPosition);
 		f32 angle = MsWrap(mRotation.y + tmp, 0.0f, 360.0f);
 		if (angle < 0.0f || 180.0f < angle)
@@ -388,11 +393,11 @@ void TMapObjWaterSpray::calc()
 	    = gpMarioParticleManager->emit(unk138, &mPosition, 1, this);
 	if (em) {
 		em->setRotation(mRotation.x, mRotation.y, mRotation.z);
-		em->setScale(mScaling);
-		em->mChildSpawnRate = unk13C;
-		em->unk174.set(unk140);
-		em->setParamColor(unk14C.r, unk14C.g, unk14C.b);
-		em->unk180.a = unk14C.a;
+		em->setGlobalScale(mScaling);
+		em->setRate(unk13C);
+		em->setGlobalParticleScale(unk140);
+		em->setGlobalPrmColor(unk14C.r, unk14C.g, unk14C.b);
+		em->setGlobalAlpha(unk14C.a);
 	}
 }
 
@@ -550,7 +555,8 @@ BOOL TRedCoinSwitch::receiveMessage(THitActor*, u32 message)
 	if (message == HIT_MESSAGE_HIP_DROP) {
 		startBck("redcoinswitch");
 		gpMarDirector->unk18[0]->mDisabledFrames
-		    = (s32)(getMActor()->getFrameCtrl(0)->getEnd() * 2 + 0x3C);
+		    = (s32)(getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getEnd() * 2
+		            + 0x3C);
 		gpMSound->startSoundActor(MSD_SE_OBJ_AP_BUTTON, &mPosition, 0, nullptr,
 		                          0, 4);
 		removeMapCollision();
@@ -569,7 +575,7 @@ void TRedCoinSwitch::control()
 	case 1:
 		break;
 	case 2:
-		if (getMActor()->curAnmEndsNext(0, nullptr)) {
+		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			mStateTimer = 120;
 			mState      = 3;
 			TFlagManager::getInstance()->setBool(true, 0x50009);

@@ -17,7 +17,7 @@ void TJointObj::stand()
 
 	if (checkFlag(FLAG_SITTING)) {
 		for (int i = 0; i < getShapeNum(); ++i)
-			mShapes[i]->offFlag(1);
+			mShapes[i]->offFlag(J3DShpFlag_Visible);
 
 		offFlag(FLAG_SITTING);
 	}
@@ -30,7 +30,7 @@ void TJointObj::sit()
 
 	if (!checkFlag(FLAG_SITTING | FLAG_ASLEEP | FLAG_DEAD)) {
 		for (int i = 0; i < getShapeNum(); ++i)
-			mShapes[i]->onFlag(1);
+			mShapes[i]->onFlag(J3DShpFlag_Visible);
 
 		onFlag(FLAG_SITTING);
 	}
@@ -43,7 +43,7 @@ void TJointObj::awake()
 
 	if (checkFlag(FLAG_SITTING | FLAG_ASLEEP)) {
 		for (int i = 0; i < getShapeNum(); ++i)
-			mShapes[i]->offFlag(1);
+			mShapes[i]->offFlag(J3DShpFlag_Visible);
 
 		offFlag(FLAG_SITTING);
 		offFlag(FLAG_ASLEEP);
@@ -57,7 +57,7 @@ void TJointObj::sleep()
 
 	if (!checkFlag(FLAG_DEAD) && !checkFlag(FLAG_ASLEEP)) {
 		for (int i = 0; i < getShapeNum(); ++i)
-			mShapes[i]->onFlag(1);
+			mShapes[i]->onFlag(J3DShpFlag_Visible);
 
 		offFlag(FLAG_SITTING);
 		onFlag(FLAG_ASLEEP);
@@ -70,7 +70,7 @@ void TJointObj::alive()
 		mChildren[i]->alive();
 
 	for (int i = 0; i < getShapeNum(); ++i)
-		mShapes[i]->offFlag(1);
+		mShapes[i]->offFlag(J3DShpFlag_Visible);
 
 	offFlag(FLAG_DEAD);
 	offFlag(FLAG_ASLEEP);
@@ -84,7 +84,7 @@ void TJointObj::kill()
 
 	if (!checkFlag(FLAG_DEAD)) {
 		for (int i = 0; i < getShapeNum(); ++i)
-			mShapes[i]->onFlag(1);
+			mShapes[i]->onFlag(J3DShpFlag_Visible);
 
 		onFlag(FLAG_DEAD);
 		offFlag(FLAG_ASLEEP);

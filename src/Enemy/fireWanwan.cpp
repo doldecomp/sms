@@ -878,7 +878,7 @@ void TFireWanwan::decideTarget(const JGeometry::TVec3<f32>& param_1)
 
 void TFireWanwan::doAdjustTarget()
 {
-	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
+	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 
 	f32 fVar8 = JGeometry::TUtil<f32>::clamp(ctrl->getFrame() / ctrl->getEnd(),
 	                                         0.0f, 1.0f);
@@ -1278,7 +1278,7 @@ void TFireWanwan::emitEffects()
 
 		if (JPABaseEmitter* emitter = SMS_EasyEmitParticle(
 		        PARTICLE_MS_M_SLIPSMOKE, pos, this, mScaling))
-			emitter->unk180.a = 179;
+			emitter->setGlobalAlpha(179);
 	}
 
 	if (isRecovering()) {
@@ -1298,7 +1298,7 @@ void TFireWanwan::emitEffects()
 		local_4c *= 0.22f;
 		if (JPABaseEmitter* emitter = SMS_EasyEmitParticle(
 		        BWANWAN_JPA_MS_BWAN_KIRA, mtx, this, local_4c))
-			emitter->mChildSpawnRate = 0.1f;
+			emitter->setRate(0.1f);
 		local_4c.set(1.5f, 1.5f, 1.5f);
 		SMS_EasyEmitParticle(PARTICLE_MS_NPC_HAMON_B, &mRipplePos, this,
 		                     local_4c);
@@ -1325,11 +1325,11 @@ void TFireWanwan::emitEffectsOnHittingWall(
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtx(
 	        PARTICLE_MS_WALLKICK_A, transform.mMtx, 0, nullptr))
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtx(
 	        PARTICLE_MS_WALLKICK_B, transform.mMtx, 0, nullptr))
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 }
 
 void TFireWanwan::checkHitActors()
@@ -1949,8 +1949,8 @@ DEFINE_NERVE(TNerveFireWanwanRecover, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->setBckAnm(2);
-		self->getMActor()->setFrameRate(0.0f, 4);
-		self->getMActor()->getFrameCtrl(4)->setFrame(0.0f);
+		self->getMActor()->setFrameRate(0.0f, ANM_TYPE_BTK);
+		self->getMActor()->getFrameCtrl(ANM_TYPE_BTK)->setFrame(0.0f);
 		TFireWanwanManager* manager = (TFireWanwanManager*)self->getManager();
 		manager->receiveMessageFromBody(self,
 		                                TFireWanwanManager::BODY_MSG_RECOVERED);
@@ -1958,7 +1958,7 @@ DEFINE_NERVE(TNerveFireWanwanRecover, TLiveActor)
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_RECOVER,
 		                                &self->mPosition, 0, nullptr, 0, 4);
 
-		f32 end = self->getMActor()->getFrameCtrl(0)->getEnd();
+		f32 end = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getEnd();
 
 		self->changeBodyToRed(end);
 	}
@@ -2022,7 +2022,7 @@ DEFINE_NERVE(TNerveFireWanwanHungTail, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->setBckAnm(0);
 		self->getMActor()->setBtkFromIndex(0);
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 4);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BTK);
 	}
 
 	JGeometry::TVec3<f32> vec = self->mPosition;
@@ -2052,7 +2052,7 @@ DEFINE_NERVE(TNerveFireWanwanFly, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->setBckAnm(0);
 		self->getMActor()->setBtkFromIndex(0);
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 4);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BTK);
 
 		JGeometry::TVec3<f32> vel
 		    = fromPolar(self->mRotation.y, self->unk194->mThrowPow);
@@ -2088,7 +2088,7 @@ DEFINE_NERVE(TNerveFireWanwanFreeze, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->setBckAnm(0);
 		self->getMActor()->setBtkFromIndex(0);
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 4);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BTK);
 
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_TWINKLE,
 		                                &self->mPosition, 0, nullptr, 0, 4);
@@ -2112,7 +2112,7 @@ DEFINE_NERVE(TNerveFireWanwanEscape, TLiveActor)
 		self->initEscapeNextGraphNode();
 		self->setBckAnm(0);
 		self->getMActor()->setBtkFromIndex(0);
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 4);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BTK);
 
 		self->changeBodyToBlack(40);
 	}

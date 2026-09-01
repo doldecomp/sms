@@ -5,6 +5,8 @@
 #include <JSystem/JSupport/JSURandomInputStream.hpp>
 #include <dolphin/gx.h>
 
+J2DPicture::J2DPicture() { }
+
 J2DPicture::J2DPicture(J2DPane* parent, JSURandomInputStream* stream,
                        bool is_ex)
     : J2DPane(parent, stream, is_ex)
@@ -109,6 +111,28 @@ J2DPicture::J2DPicture(J2DPane* parent, JSURandomInputStream* stream,
 	setBlendKonstAlpha();
 }
 
+J2DPicture::J2DPicture(const ResTIMG* timg) { }
+
+J2DPicture::J2DPicture(const char* name) { }
+
+J2DPicture::J2DPicture(JUTTexture* texture) { }
+
+J2DPicture::J2DPicture(u32 tag, const JUTRect& bounds, const ResTIMG* timg,
+                       const ResTLUT* tlut)
+{
+}
+
+J2DPicture::J2DPicture(u32 tag, const JUTRect& bounds, const char* name,
+                       const ResTLUT* tlut)
+{
+}
+
+void J2DPicture::initiate(const ResTIMG* timg, const ResTLUT* tlut) { }
+
+void J2DPicture::private_initiate(const ResTIMG* timg, const ResTLUT* tlut) { }
+
+void J2DPicture::initinfo() { }
+
 J2DPicture::~J2DPicture()
 {
 	for (int i = 0; i < mTextureNum; ++i)
@@ -118,6 +142,13 @@ J2DPicture::~J2DPicture()
 	if (mPalette)
 		delete mPalette;
 }
+
+bool J2DPicture::insert(const ResTIMG* timg, u8 idx, float alpha)
+{
+	return false;
+}
+
+bool J2DPicture::insert(const char* name, u8 idx, float alpha) { return false; }
 
 bool J2DPicture::insert(JUTTexture* tex, u8 idx, float alpha)
 {
@@ -165,6 +196,8 @@ bool J2DPicture::remove(u8 idx)
 	return true;
 }
 
+bool J2DPicture::remove(JUTTexture* tex) { return false; }
+
 const ResTIMG* J2DPicture::changeTexture(const ResTIMG* timg, u8 idx)
 {
 	if (idx >= mTextureNum) {
@@ -182,6 +215,11 @@ const ResTIMG* J2DPicture::changeTexture(const ResTIMG* timg, u8 idx)
 	return pRVar3;
 }
 
+const ResTIMG* J2DPicture::changeTexture(const char* name, u8 idx)
+{
+	return nullptr;
+}
+
 void J2DPicture::drawSelf(int x, int y)
 {
 	Mtx id;
@@ -191,13 +229,13 @@ void J2DPicture::drawSelf(int x, int y)
 
 void J2DPicture::drawSelf(int x, int y, Mtx* mtx)
 {
-	char trash[0x4]; // probably getter for mGlobalBounds or something?
 	if (!mTextures[0])
 		return;
 
-	drawFullSet(mGlobalBounds.x1 + x, mGlobalBounds.y1 + y, mBounds.getWidth(),
-	            mBounds.getHeight(), mBinding, mMirror, unk130, mWrapmodeHor,
-	            mWrapmodeVer, mtx);
+	int h = mBounds.getHeight();
+	int w = mBounds.getWidth();
+	drawFullSet(mGlobalBounds.x1 + x, mGlobalBounds.y1 + y, w, h, mBinding,
+	            mMirror, unk130, mWrapmodeHor, mWrapmodeVer, mtx);
 }
 
 void J2DPicture::drawFullSet(int x, int y, int w, int h, J2DBinding binding,
@@ -206,31 +244,32 @@ void J2DPicture::drawFullSet(int x, int y, int w, int h, J2DBinding binding,
 {
 	int renderX = x;
 	int renderY = y;
+	float texSize;
 	if (wrap_hor == 0) {
-		float newWidth = !flip ? (float)mTextures[0]->getWidth()
-		                       : (float)mTextures[0]->getHeight();
+		texSize = !flip ? (float)mTextures[0]->getWidth()
+		                : (float)mTextures[0]->getHeight();
 		if (binding & 8) {
-			if (!(binding & 4) && newWidth < (float)w) {
-				w = (int)newWidth;
+			if (!(binding & 4) && texSize < (float)w) {
+				w = (int)texSize;
 			}
-		} else if (newWidth < (float)w) {
-			renderX = (binding & 4) ? (x + w) - (int)newWidth
-			                        : x + (w - (int)newWidth) / 2;
-			w       = (int)newWidth;
+		} else if (texSize < (float)w) {
+			renderX = (binding & 4) ? (x + w) - (int)texSize
+			                        : x + (w - (int)texSize) / 2;
+			w       = (int)texSize;
 		}
 	}
 	if (wrap_vert == 0) {
-		float newHeight = !flip ? (float)mTextures[0]->getHeight()
-		                        : (float)mTextures[0]->getWidth();
+		texSize = !flip ? (float)mTextures[0]->getHeight()
+		                : (float)mTextures[0]->getWidth();
 
 		if (binding & 2) {
-			if (!(binding & 1) && newHeight < (float)h) {
-				h = (int)newHeight;
+			if (!(binding & 1) && texSize < (float)h) {
+				h = (int)texSize;
 			}
-		} else if (newHeight < (float)h) {
-			renderY = (binding & 1) ? (y + h) - (int)newHeight
-			                        : y + (h - (int)newHeight) / 2;
-			h       = (int)newHeight;
+		} else if (texSize < (float)h) {
+			renderY = (binding & 1) ? (y + h) - (int)texSize
+			                        : y + (h - (int)texSize) / 2;
+			h       = (int)texSize;
 		}
 	}
 
@@ -255,10 +294,10 @@ void J2DPicture::drawFullSet(int x, int y, int w, int h, J2DBinding binding,
 	int renderWidth  = !flip ? w : h;
 	int renderHeight = !flip ? h : w;
 
-	float v2;
-	float u2;
-	float v1;
 	float u1;
+	float v1;
+	float u2;
+	float v2;
 	if (boolR0) {
 		u1 = 0.0f;
 		u2 = boolR3 ? 1.0f : (float)renderWidth / fullWidth;
@@ -300,10 +339,11 @@ void J2DPicture::drawFullSet(int x, int y, int w, int h, J2DBinding binding,
 void J2DPicture::draw(int x, int y, int param_3, int param_4, bool param_5,
                       bool param_6, bool param_7)
 {
-	char trash[0x8];
-
 	if (!mVisible)
 		return;
+
+	int x2 = x + param_3;
+	int y2 = y + param_4;
 
 	for (u8 i = 0; i < mTextureNum; ++i) {
 		GXTexMapID idx = (GXTexMapID)i;
@@ -381,6 +421,8 @@ void J2DPicture::draw(int x, int y, int param_3, int param_4, bool param_5,
 	              GX_AF_NONE);
 	GXSetVtxDesc(GX_VA_TEX0, GX_NONE);
 }
+
+void J2DPicture::drawOut(const JUTRect& param_1, const JUTRect& param_2) { }
 
 void J2DPicture::drawTexCoord(int x, int y, int w, int h, float u1, float v1,
                               float u2, float v2, float u4, float v4, float u3,
@@ -460,8 +502,8 @@ void J2DPicture::setTevMode()
 	                GX_TEVPREV);
 	GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
 	                GX_TEVPREV);
-	GXSetTevKColor(GX_KCOLOR0, mBlendKonstColor);
-	GXSetTevKColor(GX_KCOLOR2, mBlendKonstAlpha);
+	GXSetTevKColor(GX_KCOLOR0, mBlendKonstColor.get());
+	GXSetTevKColor(GX_KCOLOR2, mBlendKonstAlpha.get());
 
 	for (i = 1; i < mTextureNum; ++i) {
 		GXSetTevKColorSel((GXTevStageID)i, (GXTevKColorSel)(0x20 - (i << 2)));

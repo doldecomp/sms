@@ -381,8 +381,10 @@ static u8* firstSrcData()
 	u8* buffer  = szpBuf;
 	u32 bufSize = szpEnd - buffer;
 	u32 length  = transLeft < bufSize ? transLeft : bufSize;
+
 	while (true) {
-		int result = DVDReadPrio(srcFile->getFileInfo(), buffer, length, 0, 2);
+		DVDFileInfo* info = srcFile->getFileInfo();
+		int result        = DVDReadPrio(info, buffer, length, 0, 2);
 		if (result >= 0) {
 			break;
 		}

@@ -6,25 +6,26 @@
 #include <dolphin/os.h>
 #include <dolphin/gd.h>
 #include <dolphin/gx.h>
+#include <macros.h>
 
 int J3DDrawPacket::sInterruptFlag;
 
 void J3DDisplayListObj::newDisplayList(u32 param_1)
 {
-	unkC = param_1 + 0x1f & 0xffffffe0;
-	unk0 = new (0x20) char[unkC];
-	unk4 = new (0x20) char[unkC];
-	unk8 = 0;
+	mCapacity = ALIGN_NEXT(param_1, 0x20);
+	mpData[0] = new (0x20) char[mCapacity];
+	mpData[1] = new (0x20) char[mCapacity];
+	mSize     = 0;
 }
 
 void J3DDisplayListObj::swapBuffer()
 {
-	void* tmp = unk0;
-	unk0      = unk4;
-	unk4      = tmp;
+	void* tmp = mpData[0];
+	mpData[0] = mpData[1];
+	mpData[1] = tmp;
 }
 
-void J3DDisplayListObj::callDL() { GXCallDisplayList(unk0, unk8); }
+void J3DDisplayListObj::callDL() { GXCallDisplayList(mpData[0], mSize); }
 
 bool J3DPacket::isSame(J3DMatPacket*) const { return false; }
 
@@ -32,84 +33,100 @@ bool J3DPacket::entry(J3DDrawBuffer*) { return true; }
 
 void J3DPacket::addChildPacket(J3DPacket* packet)
 {
-	if (unk8 == nullptr) {
-		unk8 = packet;
+	if (mpFirstChild == nullptr) {
+		mpFirstChild = packet;
 		return;
 	}
-	packet->unk4 = unk8;
-	unk8         = packet;
+	packet->mpNext = mpFirstChild;
+	mpFirstChild   = packet;
 }
 
 void J3DCallBackPacket::draw()
 {
-	if (unk10 != nullptr) {
-		unk10(this, 0);
-	}
-	for (J3DPacket* packet = unk8; packet != nullptr; packet = packet->unk4) {
-		packet->draw();
-	}
-	if (unk10 != nullptr) {
-		unk10(this, 1);
-	}
+	if (mpCallBack != nullptr)
+		mpCallBack(this, 0);
+
+	for (J3DPacket* packet = mpFirstChild; packet != nullptr;
+	     packet            = packet->getNextPacket())
+        packet->draw();
+
+	if (mpCallBack != nullptr)
+		mpCallBack(this, 1);
 }
 
 J3DDrawPacket::J3DDrawPacket()
 {
-	unk10 = 0;
-	unk30 = nullptr;
+	mFlags           = 0;
+	mpDisplayListObj = nullptr;
 }
 
 J3DDrawPacket::~J3DDrawPacket() { }
 
-void J3DDrawPacket::draw() { GXCallDisplayList(unk30->unk0, unk30->unk8); }
+void J3DDrawPacket::draw()
+{
+	GXCallDisplayList(mpDisplayListObj->mpData[0], mpDisplayListObj->mSize);
+}
 
 void J3DDrawPacket::beginDL()
 {
-	unk30->swapBuffer();
+	mpDisplayListObj->swapBuffer();
 	sInterruptFlag = OSDisableInterrupts();
-	GDInitGDLObj(&unk20, unk30->unk0, unk30->unkC);
-	__GDCurrentDL = &unk20;
+	GDInitGDLObj(&mGDList, mpDisplayListObj->mpData[0],
+	             mpDisplayListObj->mCapacity);
+	GDSetCurrent(&mGDList);
 }
 
 u32 J3DDrawPacket::endDL()
 {
 	GDPadCurr32();
 	OSRestoreInterrupts(sInterruptFlag);
-	unk30->unk8 = unk20.ptr - unk20.start;
+	mpDisplayListObj->mSize = mGDList.ptr - mGDList.start;
 	GDFlushCurrToMem();
-	__GDCurrentDL = 0;
-	return unk30->unk8;
+	GDSetCurrent(nullptr);
+	return mpDisplayListObj->mSize;
+}
+
+void J3DDrawPacket::beginPatch() { beginDL(); }
+
+u32 J3DDrawPacket::endPatch()
+{
+	OSRestoreInterrupts(sInterruptFlag);
+	GDSetCurrent(nullptr);
+	return mpDisplayListObj->mSize;
 }
 
 J3DMatPacket::J3DMatPacket()
 {
-	unk38    = 0;
-	unk3C    = -1;
-	mTexture = 0;
-	unk44    = 0;
+	mpMaterial = 0;
+	unk3C      = 0xffffffff;
+	mTexture   = 0;
+	unk44      = 0;
 }
 
 J3DMatPacket::~J3DMatPacket() { }
 
 void J3DMatPacket::addShapePacket(J3DShapePacket* packet)
 {
-	if (unk34 == nullptr) {
-		unk34 = packet;
+	if (mpShapePacket == nullptr) {
+		mpShapePacket = packet;
 		return;
 	}
-	packet->unk4 = unk34;
-	unk34        = packet;
+	packet->setNextPacket(mpShapePacket);
+	mpShapePacket = packet;
 }
 
-inline bool checkThing(J3DShapePacket* p)
+bool J3DMatPacket::isHideAllShapePacket_()
 {
 	bool ret = true;
 
-	for (J3DShapePacket* i = p; i != nullptr; i = (J3DShapePacket*)i->unk4) {
-		if (i->unk30 != 0) {
+	J3DShapePacket* packet = getShapePacket();
+
+	while (packet != nullptr) {
+		if (packet->isVisible()) {
 			ret = false;
 			break;
 		}
+		packet = (J3DShapePacket*)packet->getNextPacket();
 	}
 
 	return ret;
@@ -117,48 +134,51 @@ inline bool checkThing(J3DShapePacket* p)
 
 void J3DMatPacket::draw()
 {
-	char trash[0x20];
-	if (!checkThing(unk34)) {
-		j3dSys.mTexture   = mTexture;
-		j3dSys.mMatPacket = this;
-		unk38->load();
-		for (J3DPacket* j = unk34; j != nullptr; j = j->unk4) {
-			j->draw();
-		}
+	if (isHideAllShapePacket_())
+		return;
+
+	j3dSys.setTexture(mTexture);
+	j3dSys.setMatPacket(this);
+	mpMaterial->load();
+
+	J3DShapePacket* packet = getShapePacket();
+
+	while (packet != nullptr) {
+		packet->draw();
+		packet = (J3DShapePacket*)packet->getNextPacket();
 	}
 }
 
 J3DShapePacket::J3DShapePacket()
 {
-	unk14 = 0;
-	unk18 = 0;
-	unk1C = 0;
-	unk20 = &j3dDefaultViewNo;
-	unk24 = 0;
-	unk28 = 0;
-	unk2C = 0;
-	unk30 = 1;
+	mpShape           = nullptr;
+	mDrawMatrices     = nullptr;
+	mNormMatrices     = nullptr;
+	mpCurrentViewNo   = &j3dDefaultViewNo;
+	mpVertexPositions = nullptr;
+	mpVertexNormals   = nullptr;
+	mpVertexColors    = nullptr;
+	mVisible          = true;
 }
 
 J3DShapePacket::~J3DShapePacket() { }
 
 void J3DShapePacket::draw()
 {
-	char
-	    trash[0x20]; // TODO: probably shares inlines w/ J3DCallBackPacket::draw
-	if ((unk14 != 0) && (unk30 != 0)) {
-		if (unk10 != nullptr) {
-			unk10(this, 0);
-		}
-		j3dSys.unk10C         = unk24;
-		j3dSys.unk110         = unk28;
-		j3dSys.unk114         = unk2C;
-		unk14->mDrawMatrices  = unk18;
-		unk14->mNormMatrices  = unk1C;
-		unk14->mCurrentViewNo = unk20;
-		unk14->draw();
-		if (unk10 != nullptr) {
-			unk10(this, 1);
-		}
+	if (mpShape != nullptr && mVisible) {
+		if (mpCallBack != nullptr)
+			mpCallBack(this, 0);
+
+		j3dSys.setVtxPos(mpVertexPositions);
+		j3dSys.setVtxNrm(mpVertexNormals);
+		j3dSys.setVtxCol(mpVertexColors);
+		mpShape->setDrawMtx(mDrawMatrices);
+		mpShape->setNrmMtx(mNormMatrices);
+		mpShape->setCurrentViewNoPtr(mpCurrentViewNo);
+
+		mpShape->draw();
+
+		if (mpCallBack != nullptr)
+			mpCallBack(this, 1);
 	}
 }

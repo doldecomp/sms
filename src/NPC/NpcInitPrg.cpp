@@ -12,6 +12,7 @@
 #include <MarioUtil/ModelUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Enemy/Graph.hpp>
 #include <Map/Map.hpp>
@@ -39,7 +40,7 @@ static const char* cNeckJointName              = "kubi";
 
 void TBaseNPC::initNpcLight_()
 {
-	mMActor->setLightType(1);
+	mMActor->setLightType(LIGHT_TYPE_OBJECT);
 	if (checkLiveFlag(LIVE_FLAG_UNK10))
 		mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
 		    mPosition.x, mPosition.y + 10.0f, mPosition.z, &mGroundPlane);
@@ -330,7 +331,7 @@ inline void TBaseNPC::initIndividualAnm_()
 			unkD0->unk18 = sIndividualParentRaccoonDogAnmBck;
 		} else if (strcmp(mName, cManiyaChildViewObjName) == 0) {
 			onActionFlag(NPC_ACTION_UNK800);
-			onLiveFlag(LIVE_FLAG_UNK10000);
+			onLiveFlag(LIVE_FLAG_DONT_TALK);
 			unkD0->unk18 = sIndividualChildRaccoonDogAnmBck;
 		}
 		break;
@@ -413,9 +414,8 @@ void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 				J3DMaterial* mat = modelData->getMaterialNodePointer(i);
 				J3DShapePacket* shape
 				    = model->getShapePacket(mat->getShape()->getIndex());
-				if (shape->unkC == nullptr) {
+				if (shape->getUserArea() == 0)
 					SMS_InitPacket_OneTevKColor(model, i, GX_KCOLOR0, &unk174);
-				}
 			}
 		}
 	}
@@ -477,7 +477,7 @@ void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 	npcWaitIn();
 	randomizeBckAndBtpFrame_();
 
-	f32 fVar1 = mMActor->getFrameCtrl(0)->getFrame();
+	f32 fVar1 = mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
 	if (unk168 != nullptr) {
 		if (isJellyFishMare())
 			unk168->addJellyFishParts(fVar1);

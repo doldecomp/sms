@@ -115,10 +115,6 @@ void JKRHeap::freeAll()
 	}
 }
 
-s32 JKRHeap::changeGroupID(u8 newGroupID) { return 0; }
-
-u8 JKRHeap::getCurrentGroupId() { return 0; }
-
 JKRHeap* JKRHeap::findFromRoot(void* ptr)
 {
 	if (sRootHeap != nullptr)

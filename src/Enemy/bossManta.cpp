@@ -276,7 +276,7 @@ DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->getMActor()->setBckFromIndex(0);
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 		self->getMActor()->setMotionBlendRatioForBck(0.0f);
 	}
 
@@ -365,15 +365,17 @@ void TBossManta::startWalkAnim()
 	getMActor()->setBckOldMotionBlendAnmPtr(oldAnm);
 	getMActor()->setMotionBlendRatioForBck(0.5f);
 
-	getMActor()->setFrameRate(
-	    TBossManta::sFrameRate[mGeneration] * SMSGetAnmFrameRate(), 0);
+	getMActor()->setFrameRate(TBossManta::sFrameRate[mGeneration]
+	                              * SMSGetAnmFrameRate(),
+	                          ANM_TYPE_BCK);
 }
 
 void TBossManta::startDamageAnim()
 {
 	getMActor()->setBckFromIndex(1);
-	getMActor()->setFrameRate(
-	    TBossManta::sFrameRate[mGeneration] * SMSGetAnmFrameRate(), 0);
+	getMActor()->setFrameRate(TBossManta::sFrameRate[mGeneration]
+	                              * SMSGetAnmFrameRate(),
+	                          ANM_TYPE_BCK);
 	getMActor()->setMotionBlendRatioForBck(0.0f);
 }
 
@@ -913,25 +915,25 @@ void TBossMantaAdditionalCollisionSet::update(u32 cue,
 			unk0[i]->perform(cue, graphics);
 
 		int centerIdx    = TBossManta::sCenterJointIndex;
-		MtxPtr centerMtx = unkC->getModel()->mNodeMatrices[centerIdx];
+		MtxPtr centerMtx = unkC->getModel()->getAnmMtx(centerIdx);
 		f32 centerX      = centerMtx[0][3];
 		f32 centerY      = centerMtx[1][3];
 		f32 centerZ      = centerMtx[2][3];
 
 		int bodyIdx    = TBossManta::sBodyJointIndex;
-		MtxPtr bodyMtx = unkC->getModel()->mNodeMatrices[bodyIdx];
+		MtxPtr bodyMtx = unkC->getModel()->getAnmMtx(bodyIdx);
 		f32 bodyX      = bodyMtx[0][3];
 		f32 bodyY      = bodyMtx[1][3];
 		f32 bodyZ      = bodyMtx[2][3];
 
 		int rwingIdx    = TBossManta::sRwingJointIndex;
-		MtxPtr rwingMtx = unkC->getModel()->mNodeMatrices[rwingIdx];
+		MtxPtr rwingMtx = unkC->getModel()->getAnmMtx(rwingIdx);
 		f32 rwingX      = rwingMtx[0][3];
 		f32 rwingY      = rwingMtx[1][3];
 		f32 rwingZ      = rwingMtx[2][3];
 
 		int lwingIdx    = TBossManta::sLwingJointIndex;
-		MtxPtr lwingMtx = unkC->getModel()->mNodeMatrices[lwingIdx];
+		MtxPtr lwingMtx = unkC->getModel()->getAnmMtx(lwingIdx);
 		f32 lwingX      = lwingMtx[0][3];
 		f32 lwingY      = lwingMtx[1][3];
 		f32 lwingZ      = lwingMtx[2][3];

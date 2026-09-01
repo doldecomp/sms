@@ -36,6 +36,14 @@ J3DDrawBuffer::J3DDrawBuffer(u32 size)
 	frameInit();
 }
 
+J3DDrawBuffer::~J3DDrawBuffer()
+{
+	if (mBuffer) {
+		delete[] mBuffer;
+		mBuffer = nullptr;
+	}
+}
+
 void J3DDrawBuffer::frameInit()
 {
 	for (int i = 0; i < mSize; ++i)
@@ -58,18 +66,18 @@ bool J3DDrawBuffer::entryMatSort(J3DMatPacket* packet)
 		hash = (u32)texture->getResTIMG(texNo);
 	}
 
-	if (packet->unk3C & 0x80000000) {
+	if (packet->isChanged()) {
 		packet->setNextPacket(mBuffer[0]);
 		mBuffer[0] = packet;
 		return true;
 	} else {
 		u32 slot = hash & (mSize - 1);
-		if (mBuffer[slot] == NULL) {
+		if (mBuffer[slot] == nullptr) {
 			mBuffer[slot] = packet;
 			return true;
 		} else {
-			for (J3DMatPacket* pkt = (J3DMatPacket*)mBuffer[slot]; pkt != NULL;
-			     pkt               = (J3DMatPacket*)pkt->getNextPacket()) {
+			for (J3DMatPacket* pkt   = (J3DMatPacket*)mBuffer[slot];
+			     pkt != nullptr; pkt = (J3DMatPacket*)pkt->getNextPacket()) {
 				if (pkt->isSame(packet)) {
 					pkt->addShapePacket(packet->getShapePacket());
 					return false;
@@ -83,30 +91,32 @@ bool J3DDrawBuffer::entryMatSort(J3DMatPacket* packet)
 	}
 }
 
-bool J3DDrawBuffer::entryMatAnmSort(J3DMatPacket* packet)
+bool J3DDrawBuffer::entryMatAnmSort(J3DMatPacket* pMatPacket)
 {
-	J3DMaterialAnm* pMaterialAnm = packet->unk44;
-	u32 slot                     = (u32)pMaterialAnm & (mSize - 1);
+	J3D_ASSERT_NULLPTR(199, pMatPacket != nullptr);
 
-	if (pMaterialAnm == NULL) {
-		return entryMatSort(packet);
+	uintptr_t matAnmId = pMatPacket->unk44;
+	u32 slot           = matAnmId & (mSize - 1);
+
+	if (matAnmId == 0) {
+		return entryMatSort(pMatPacket);
 	} else {
-		packet->drawClear();
-		packet->getShapePacket()->drawClear();
-		if (mBuffer[slot] == NULL) {
-			mBuffer[slot] = packet;
+		pMatPacket->drawClear();
+		pMatPacket->getShapePacket()->drawClear();
+		if (mBuffer[slot] == nullptr) {
+			mBuffer[slot] = pMatPacket;
 			return true;
 		} else {
-			for (J3DMatPacket* pkt = (J3DMatPacket*)mBuffer[slot]; pkt != NULL;
-			     pkt               = (J3DMatPacket*)pkt->getNextPacket()) {
-				if (pkt->unk44 == pMaterialAnm) {
-					pkt->addShapePacket(packet->getShapePacket());
+			for (J3DMatPacket* pkt   = (J3DMatPacket*)mBuffer[slot];
+			     pkt != nullptr; pkt = (J3DMatPacket*)pkt->getNextPacket()) {
+				if (pkt->unk44 == matAnmId) {
+					pkt->addShapePacket(pMatPacket->getShapePacket());
 					return false;
 				}
 			}
 
-			packet->setNextPacket(mBuffer[slot]);
-			mBuffer[slot] = packet;
+			pMatPacket->setNextPacket(mBuffer[slot]);
+			mBuffer[slot] = pMatPacket;
 			return true;
 		}
 	}
@@ -211,4 +221,9 @@ void J3DDrawBuffer::drawTail() const
 			packet->draw();
 		}
 	}
+}
+
+void J3DDrawBuffer::setCallBackPacket(J3DCallBackPacket* packet)
+{
+	// UNUSED
 }

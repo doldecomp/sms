@@ -26,11 +26,11 @@ void TMirrorActor::checkIsInMirror()
 
 	if (unk1A & 2) {
 		if (!gpMirrorModelManager->isUnk18Present() && !(unk1A & 4)) {
-			if (unk14->getShapePacket(0)->unk30 != 0)
+			if (unk14->getShapePacket(0)->isVisible())
 				SMS_HideAllShapePacket(unk14);
 			unk18 = 0;
 		} else {
-			if (unk14->getShapePacket(0)->unk30 == 0)
+			if (!unk14->getShapePacket(0)->isVisible())
 				SMS_ShowAllShapePacket(unk14);
 			unk18 = 1;
 		}
