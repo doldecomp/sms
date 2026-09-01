@@ -194,8 +194,8 @@ void TAnimalBase::perform(u32 cue, JDrama::TGraphics* graphics)
 				model->swapAllMtx();
 
 				Mtx* srcArrays[2];
-				srcArrays[0] = shared->mNodeMatrices;
-				srcArrays[1] = shared->mWeightEvlpMatrices;
+				srcArrays[0] = (Mtx*)shared->getAnmMtx(0);
+				srcArrays[1] = (Mtx*)shared->getWeightAnmMtx(0);
 
 				for (u16 i = 0; i < count; ++i) {
 					MTXConcat(world,

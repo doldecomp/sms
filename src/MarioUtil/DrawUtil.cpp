@@ -351,7 +351,7 @@ void TTrembleModelEffect::movement()
 		}
 		DCFlushRange(unk18[unk9],
 		             unk0->getModelData()->getVertexData().getVtxNum() * 6);
-		unk0->getVertexBuffer()->mVtxPosArray[0] = unk18[unk9];
+		unk0->getVertexBuffer()->setVtxPosArrayPointer(0, unk18[unk9]);
 		for (int j = 0; j < unk0->getModelData()->getShapeNum(); ++j)
 			unk0->getShapePacket(0)->setVtxPos(unk18[unk9]);
 		break;
@@ -367,12 +367,12 @@ void TTrembleModelEffect::movement()
 			unk34[i].x = unk38 * unk34[i].x;
 			unk34[i].y = unk38 * unk34[i].y;
 			unk34[i].z = unk38 * unk34[i].z;
-			unk28[i].add(unk34[i]);
+			unk28[i] += unk34[i];
 			unk2C[unk9][i] = unk28[i];
 		}
 		DCFlushRange(unk2C[unk9],
 		             unk0->getModelData()->getVertexData().getVtxNum() * 12);
-		unk0->getVertexBuffer()->mVtxPosArray[0] = unk2C[unk9];
+		unk0->getVertexBuffer()->setVtxPosArrayPointer(0, unk2C[unk9]);
 		for (int j = 0; j < unk0->getModelData()->getShapeNum(); ++j)
 			unk0->getShapePacket(0)->setVtxPos(unk2C[unk9]);
 		break;
@@ -411,9 +411,9 @@ void TTrembleModelEffect::reset()
 
 	unk8 &= ~1;
 	GXInvalidateVtxCache();
-	unk0->getModelData()->getVertexData().mVtxPosArray = unk4;
-	unk0->getVertexBuffer()->mVtxPosArray[0]           = unk4;
-	unk0->getVertexBuffer()->mVtxPosArray[1]           = unk4;
+	unk0->getModelData()->getVertexData().setVtxPosArray(unk4);
+	unk0->getVertexBuffer()->setVtxPosArrayPointer(0, unk4);
+	unk0->getVertexBuffer()->setVtxPosArrayPointer(1, unk4);
 	unk0->getVertexBuffer()->setCurrentVtxPos(unk4);
 }
 
@@ -725,7 +725,7 @@ void SMS_DrawCube(const JGeometry::TVec3<f32>& param_1,
 void SMS_SettingDrawShape(J3DModelData* param_1, u16 param_2)
 {
 	J3DShape* shape = param_1->getShapeNodePointer(param_2);
-	GXCallDisplayList(shape->getDrawList(), 0xC0);
+	GXCallDisplayList(shape->getVcdVatCmd(), J3DShape::kVcdVatDLSize);
 	j3dSys.setVtxPos(param_1->getVtxPosArray());
 	j3dSys.setVtxNrm(param_1->getVtxNormArray());
 	shape->loadVtxArray();
@@ -800,12 +800,12 @@ void SMS_CopyMaterialToSort(J3DMaterial*, J3DModel*, u16) { }
 void SMS_UnifyMaterial(J3DModel* param_1)
 {
 	J3DModelData* modelData = param_1->getModelData();
-	J3DMaterial* unifier    = modelData->getMaterialNodePointer(0);
+	J3DMaterial* unifier = param_1->getModelData()->getMaterialNodePointer(0);
 	for (u16 i = 0; i < modelData->getMaterialNum(); ++i) {
 		J3DMaterial* mat = param_1->getModelData()->getMaterialNodePointer(i);
-		u32 thing        = unifier->unk18 & 0x7fffffff;
-		mat->unk18       = thing;
-		param_1->getMatPacket(i)->unk3C = thing;
-		mat->setTexNo(0, unifier->getTexNo(0));
+		u32 materialID   = unifier->getMaterialID();
+		mat->setMaterialID(materialID);
+		param_1->getMatPacket(i)->setMaterialID(materialID);
+		mat->setTexNo(0, unifier->getTevBlock()->getTexNo(0));
 	}
 }

@@ -80,7 +80,7 @@ public:
 	virtual void initLayerInfo(const TPollutionLayerInfo*);
 	virtual ResTIMG* getTexResource(const char*)
 	{
-		return getModelData()->getTexture()->mResources;
+		return getModelData()->getTexture()->getResTIMG(0);
 	}
 	virtual void stamp(u16, f32 x, f32 y, f32 z, f32 range);
 	virtual void stampModel(J3DModel*);

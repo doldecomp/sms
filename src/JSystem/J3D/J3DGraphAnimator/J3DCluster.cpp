@@ -66,7 +66,7 @@ void J3DDeformer::deform(J3DModel* model, u16 idx)
 	}
 }
 
-void J3DDeformer::deform(J3DModel* model, u16 idx, float* weightList)
+void J3DDeformer::deform(J3DModel* model, u16 idx, f32* weightList)
 {
 	if (checkFlag(2) && model->getModelData()->isDeformableVertexFormat()) {
 		J3DCluster* cluster = mDeformData->getClusterPointer(idx);

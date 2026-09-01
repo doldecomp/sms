@@ -1,6 +1,7 @@
 #ifndef J3D_PACKET_HPP
 #define J3D_PACKET_HPP
 
+#include <limits.h>
 #include <stdint.h>
 #include <types.h>
 #include <dolphin/gd.h>
@@ -130,12 +131,15 @@ protected:
 };
 
 class J3DMatPacket : public J3DDrawPacket {
+	friend class J3DMaterial;
+	friend class J3DDrawBuffer;
+
 public:
 	J3DMatPacket();
 
 	virtual bool isSame(J3DMatPacket* other) const
 	{
-		return unk3C == other->unk3C && (unk3C >> 31) == 0;
+		return unk3C == other->unk3C && (unk3C >> DIFF_BIT) == 0;
 	}
 	virtual bool entry(J3DDrawBuffer* buffer)
 	{
@@ -149,8 +153,6 @@ public:
 	void addShapePacket(J3DShapePacket* packet);
 
 	// from TP
-	bool isChanged() const { return unk3C & 0x80000000; }
-
 	J3DShapePacket* getShapePacket() const { return mpShapePacket; }
 	void setShapePacket(J3DShapePacket* packet) { mpShapePacket = packet; }
 
@@ -167,17 +169,28 @@ public:
 		mTexture = pTexture;
 	}
 
-	void setMaterialAnmID(J3DMaterialAnm* materialAnm) { unk44 = materialAnm; }
+	bool isChanged() const { return unk3C & DIFF_FLAG; }
+	uintptr_t getMaterialID() const { return unk3C; }
+	void setMaterialID(uintptr_t id) { unk3C = id; }
+	void setMaterialAnmID(J3DMaterialAnm* materialAnm)
+	{
+		unk44 = (uintptr_t)materialAnm;
+	}
+
+	enum {
+		DIFF_BIT  = (sizeof(uintptr_t) * CHAR_BIT - 1),
+		DIFF_FLAG = 1 << DIFF_BIT,
+	};
 
 private:
 	bool isHideAllShapePacket_();
 
-public:
+private:
 	/* 0x34 */ J3DShapePacket* mpShapePacket;
 	/* 0x38 */ J3DMaterial* mpMaterial;
-	/* 0x3C */ u32 unk3C; // TODO: unk3C is something weird, probably not u32
+	/* 0x3C */ uintptr_t unk3C;
 	/* 0x40 */ J3DTexture* mTexture;
-	/* 0x44 */ J3DMaterialAnm* unk44;
+	/* 0x44 */ uintptr_t unk44;
 };
 
 class J3DShapePacket : public J3DCallBackPacket {

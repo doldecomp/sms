@@ -283,7 +283,7 @@ public:
 	MActorAnmBck()
 	{
 		unk28 = nullptr;
-		unk2A = 1;
+		unk2A = MACTOR_MTX_CALC_SOFTIMAGE;
 		unk2C = nullptr;
 		unk30 = nullptr;
 		unk34 = nullptr;
@@ -298,7 +298,7 @@ public:
 		return strstr(param_1, ".bck");
 	}
 
-	void setModel(J3DModel*);
+	void setModel(J3DModel* model);
 	float getOldMotionBlendFrame() const;
 	void setOldMotionBlendAnmPtr(J3DAnmTransform*);
 	J3DAnmTransform* getOldMotionBlendAnmPtr() const;
@@ -309,10 +309,13 @@ public:
 	void changeMtxCalcType(u8);
 
 	// fabricated
+	u8 getMtxCalcType() const { return unk2A; }
+
+	// fabricated
 	void setCalc(J3DMtxCalc* calc)
 	{
 		unk38 = calc;
-		unk2A = 3;
+		unk2A = MACTOR_MTX_CALC_USER;
 	}
 
 public:

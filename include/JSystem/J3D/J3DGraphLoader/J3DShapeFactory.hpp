@@ -80,7 +80,7 @@ public:
 	Vec& getMin(int no) const { return mpShapeInitData[mpIndexTable[no]].mMin; }
 	Vec& getMax(int no) const { return mpShapeInitData[mpIndexTable[no]].mMax; }
 
-public:
+private:
 	/* 0x00 */ J3DShapeInitData* mpShapeInitData;
 	/* 0x04 */ u16* mpIndexTable;
 	/* 0x08 */ GXVtxDescList* mpVtxDescList;

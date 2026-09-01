@@ -35,45 +35,44 @@ static int strcmp_ignore_case(const char* fst, const char* snd)
 
 void MActorAnmDataBase::checkLower(const char* param_1)
 {
-	for (int i = 0; i < unk0; ++i) {
-		if (strcmp_ignore_case(param_1, unk8[i])) {
+	for (int i = 0; i < mAnmNum; ++i) {
+		if (strcmp_ignore_case(param_1, mAnmNames[i])) {
 			// assert?
 		}
 	}
 }
 
-// UNUSED (Size: 0x50 in MAP)
-MActorAnmDataBase::MActorAnmDataBase(int param_1)
+MActorAnmDataBase::MActorAnmDataBase(int anm_num)
 {
-	unk0 = param_1;
-	unk8 = new const char*[unk0];
-	unk4 = new u16[unk0];
-	unkC = nullptr;
+	mAnmNum      = anm_num;
+	mAnmNames    = new const char*[mAnmNum];
+	mAnmKeyCodes = new u16[mAnmNum];
+	mAnimations  = nullptr;
 }
 
-void MActorAnmDataBase::sortByFileNameRaw(void** param_1)
+void MActorAnmDataBase::sortByFileNameRaw(void** anms)
 {
-	if (unk0 > 1) {
-		for (int i = 1; i < unk0; ++i) {
+	if (mAnmNum > 1) {
+		for (int i = 1; i < mAnmNum; ++i) {
 			int j;
 
-			const char* str = unk8[i];
-			u16 key         = unk4[i];
-			void* prm       = param_1[i];
+			const char* str = mAnmNames[i];
+			u16 key         = mAnmKeyCodes[i];
+			void* prm       = anms[i];
 
 			for (j = i - 1; j >= 0; --j) {
 
-				if (strcmp_ignore_case(str, unk8[j]) < 0)
+				if (strcmp_ignore_case(str, mAnmNames[j]) < 0)
 					break;
 
-				unk8[j + 1]    = unk8[j];
-				unk4[j + 1]    = unk4[j];
-				param_1[j + 1] = param_1[j];
+				mAnmNames[j + 1]    = mAnmNames[j];
+				mAnmKeyCodes[j + 1] = mAnmKeyCodes[j];
+				anms[j + 1]         = anms[j];
 			}
 
-			unk8[j + 1]    = str;
-			unk4[j + 1]    = key;
-			param_1[j + 1] = prm;
+			mAnmNames[j + 1]    = str;
+			mAnmKeyCodes[j + 1] = key;
+			anms[j + 1]         = prm;
 		}
 	}
 }
@@ -81,22 +80,22 @@ void MActorAnmDataBase::sortByFileNameRaw(void** param_1)
 MActorAnmData::MActorAnmData()
     : unk0(0)
 {
-	unk2C = nullptr;
-	unk30 = nullptr;
-	unk34 = nullptr;
-	unk38 = nullptr;
-	unk3C = nullptr;
-	unk40 = nullptr;
+	mBckAnms = nullptr;
+	mBpkAnms = nullptr;
+	mBtpAnms = nullptr;
+	mBtkAnms = nullptr;
+	mBrkAnms = nullptr;
+	mBlkAnms = nullptr;
 
 	unk44 = 0;
 	unk48 = nullptr;
 
-	unk4  = 0;
-	unk8  = 0;
-	unkC  = 0;
-	unk10 = 0;
-	unk14 = 0;
-	unk18 = 0;
+	mBckNum = 0;
+	mBlkNum = 0;
+	mBpkNum = 0;
+	mBtpNum = 0;
+	mBtkNum = 0;
+	mBrkNum = 0;
 }
 
 u16 MActorCalcKeyCode(const char* name)
@@ -113,13 +112,19 @@ u32 MActorAnmData::partsNameToIdx(const char* name)
 	typedef JGadget::TList<MActorSubAnmInfo>::iterator I;
 	u32 idx = 0;
 	for (I it = unk1C.begin(), e = unk1C.end(); it != e; ++idx, ++it)
-		if (strcmp(it->unk4, name) == 0)
+		if (strcmp((*it).unk4, name) == 0)
 			return idx;
 	return -1;
 }
 
-// UNUSED (Size: 0x58 in MAP)
-void MActorAnmData::addIncidentalAnm(const char*, int) { }
+void MActorAnmData::addIncidentalAnm(const char* parts_name, int joint_index)
+{
+	MActorSubAnmInfo info;
+	info.unk0 = joint_index;
+	info.unk4 = parts_name;
+	++unk0;
+	unk1C.push_back(info);
+}
 
 void MActorAnmData::init(const char* anm_folder, const char** additional_files)
 {
@@ -151,25 +156,25 @@ void MActorAnmData::init(const char* anm_folder, const char** additional_files)
 
 	delete fileFinder;
 
-	if (unk4 > 0)
-		unk2C = new MActorAnmDataEach<J3DAnmTransformKey>(unk4);
-	if (unkC > 0)
-		unk30 = new MActorAnmDataEach<J3DAnmColorKey>(unkC);
-	if (unk10 > 0)
-		unk34 = new MActorAnmDataEach<J3DAnmTexPattern>(unk10);
-	if (unk14 > 0)
-		unk38 = new MActorAnmDataEach<J3DAnmTextureSRTKey>(unk14);
-	if (unk18 > 0)
-		unk3C = new MActorAnmDataEach<J3DAnmTevRegKey>(unk18);
-	if (unk8 > 0)
-		unk40 = new MActorAnmDataEach<J3DAnmClusterKey>(unk8);
+	if (mBckNum > 0)
+		mBckAnms = new MActorAnmDataEach<J3DAnmTransformKey>(mBckNum);
+	if (mBpkNum > 0)
+		mBpkAnms = new MActorAnmDataEach<J3DAnmColorKey>(mBpkNum);
+	if (mBtpNum > 0)
+		mBtpAnms = new MActorAnmDataEach<J3DAnmTexPattern>(mBtpNum);
+	if (mBtkNum > 0)
+		mBtkAnms = new MActorAnmDataEach<J3DAnmTextureSRTKey>(mBtkNum);
+	if (mBrkNum > 0)
+		mBrkAnms = new MActorAnmDataEach<J3DAnmTevRegKey>(mBrkNum);
+	if (mBlkNum > 0)
+		mBlkAnms = new MActorAnmDataEach<J3DAnmClusterKey>(mBlkNum);
 
-	unk4  = 0;
-	unk8  = 0;
-	unkC  = 0;
-	unk10 = 0;
-	unk14 = 0;
-	unk18 = 0;
+	mBckNum = 0;
+	mBlkNum = 0;
+	mBpkNum = 0;
+	mBtpNum = 0;
+	mBtkNum = 0;
+	mBrkNum = 0;
 
 	fileFinder = JKRFileLoader::findFirstFile(fullAnmPath);
 	do {
@@ -184,38 +189,36 @@ void MActorAnmData::init(const char* anm_folder, const char** additional_files)
 
 	delete fileFinder;
 
-	if (unk2C)
-		unk2C->loadAnmPtrArray2(anmFolder, ".bck");
-	if (unk30)
-		unk30->loadAnmPtrArray2(anmFolder, ".bpk");
-	if (unk34)
-		unk34->loadAnmPtrArray2(anmFolder, ".btp");
-	if (unk38)
-		unk38->loadAnmPtrArray2(anmFolder, ".btk");
-	if (unk3C)
-		unk3C->loadAnmPtrArray2(anmFolder, ".brk");
-	if (unk40)
-		unk40->loadAnmPtrArray2(anmFolder, ".blk");
+	if (mBckAnms)
+		mBckAnms->loadAnmPtrArray2(anmFolder, ".bck");
+	if (mBpkAnms)
+		mBpkAnms->loadAnmPtrArray2(anmFolder, ".bpk");
+	if (mBtpAnms)
+		mBtpAnms->loadAnmPtrArray2(anmFolder, ".btp");
+	if (mBtkAnms)
+		mBtkAnms->loadAnmPtrArray2(anmFolder, ".btk");
+	if (mBrkAnms)
+		mBrkAnms->loadAnmPtrArray2(anmFolder, ".brk");
+	if (mBlkAnms)
+		mBlkAnms->loadAnmPtrArray2(anmFolder, ".blk");
 }
 
 void MActorAnmData::addFileNum(const char* name)
 {
 	if (strstr(name, ".bck"))
-		++unk4;
+		++mBckNum;
 	if (strstr(name, ".bpk"))
-		++unkC;
+		++mBpkNum;
 	if (strstr(name, ".btp"))
-		++unk10;
+		++mBtpNum;
 	if (strstr(name, ".btk"))
-		++unk14;
+		++mBtkNum;
 	if (strstr(name, ".brk"))
-		++unk18;
+		++mBrkNum;
 	if (strstr(name, ".blk"))
-		++unk8;
+		++mBlkNum;
 }
 
-// UNUSED (Size: 0x80 in MAP). Inlined into every addFileTable() branch;
-// the body below is what those branches compile to in the ROM.
 char* MActorAnmData::getSimpleName(const char* file_name)
 {
 	u32 length = strlen(file_name) - (strlen(strrchr(file_name, '.')) - 1);
@@ -227,51 +230,45 @@ char* MActorAnmData::getSimpleName(const char* file_name)
 void MActorAnmData::addFileTable(const char* param_1)
 {
 	if (strstr(param_1, ".bck") != nullptr) {
-		char* simple_name = getSimpleName(param_1);
-		unk2C->unk8[unk4] = simple_name;
-		u16 key           = MActorCalcKeyCode(simple_name);
-		unk2C->unk4[unk4] = key;
-		++unk4;
+		char* simple_name               = getSimpleName(param_1);
+		mBckAnms->mAnmNames[mBckNum]    = simple_name;
+		mBckAnms->mAnmKeyCodes[mBckNum] = MActorCalcKeyCode(simple_name);
+		++mBckNum;
 	}
 
 	if (strstr(param_1, ".bpk") != nullptr) {
-		char* simple_name = getSimpleName(param_1);
-		unk30->unk8[unkC] = simple_name;
-		u16 key           = MActorCalcKeyCode(simple_name);
-		unk30->unk4[unkC] = key;
-		++unkC;
+		char* simple_name               = getSimpleName(param_1);
+		mBpkAnms->mAnmNames[mBpkNum]    = simple_name;
+		mBpkAnms->mAnmKeyCodes[mBpkNum] = MActorCalcKeyCode(simple_name);
+		++mBpkNum;
 	}
 
 	if (strstr(param_1, ".btp") != nullptr) {
-		char* simple_name  = getSimpleName(param_1);
-		unk34->unk8[unk10] = simple_name;
-		u16 key            = MActorCalcKeyCode(simple_name);
-		unk34->unk4[unk10] = key;
-		++unk10;
+		char* simple_name               = getSimpleName(param_1);
+		mBtpAnms->mAnmNames[mBtpNum]    = simple_name;
+		mBtpAnms->mAnmKeyCodes[mBtpNum] = MActorCalcKeyCode(simple_name);
+		++mBtpNum;
 	}
 
 	if (strstr(param_1, ".btk") != nullptr) {
-		char* simple_name  = getSimpleName(param_1);
-		unk38->unk8[unk14] = simple_name;
-		u16 key            = MActorCalcKeyCode(simple_name);
-		unk38->unk4[unk14] = key;
-		++unk14;
+		char* simple_name               = getSimpleName(param_1);
+		mBtkAnms->mAnmNames[mBtkNum]    = simple_name;
+		mBtkAnms->mAnmKeyCodes[mBtkNum] = MActorCalcKeyCode(simple_name);
+		++mBtkNum;
 	}
 
 	if (strstr(param_1, ".brk") != nullptr) {
-		char* simple_name  = getSimpleName(param_1);
-		unk3C->unk8[unk18] = simple_name;
-		u16 key            = MActorCalcKeyCode(simple_name);
-		unk3C->unk4[unk18] = key;
-		++unk18;
+		char* simple_name               = getSimpleName(param_1);
+		mBrkAnms->mAnmNames[mBrkNum]    = simple_name;
+		mBrkAnms->mAnmKeyCodes[mBrkNum] = MActorCalcKeyCode(simple_name);
+		++mBrkNum;
 	}
 
 	if (strstr(param_1, ".blk") != nullptr) {
-		char* simple_name = getSimpleName(param_1);
-		unk40->unk8[unk8] = simple_name;
-		u16 key           = MActorCalcKeyCode(simple_name);
-		unk40->unk4[unk8] = key;
-		++unk8;
+		char* simple_name               = getSimpleName(param_1);
+		mBlkAnms->mAnmNames[mBlkNum]    = simple_name;
+		mBlkAnms->mAnmKeyCodes[mBlkNum] = MActorCalcKeyCode(simple_name);
+		++mBlkNum;
 	}
 }
 

@@ -96,11 +96,7 @@ void M3UModel::updateOut()
 	}
 }
 
-void M3UModel::entryInTexPatternAnm() { }
-
-void M3UModel::entryOutTexPatternAnm() { }
-
-void M3UModel::entryIn()
+void M3UModel::entryInTexPatternAnm()
 {
 	if (unk1C != nullptr) {
 		Unk1CStruct& tmp        = unk1C[0];
@@ -114,11 +110,15 @@ void M3UModel::entryIn()
 	}
 }
 
-void M3UModel::entryOut()
+void M3UModel::entryOutTexPatternAnm()
 {
 	if (unk1C != nullptr && unk1C->unk0 != 0xff)
 		unk8->getModelData()->removeTexNoAnimator(unk4->unk8[unk1C->unk0]);
 }
+
+void M3UModel::entryIn() { entryInTexPatternAnm(); }
+
+void M3UModel::entryOut() { entryOutTexPatternAnm(); }
 
 void M3UModel::perform(u32 cue, JDrama::TGraphics* graphics)
 {

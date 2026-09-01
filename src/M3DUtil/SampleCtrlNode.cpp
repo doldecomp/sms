@@ -5,17 +5,17 @@
 #include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTevs.hpp>
 
-SampleCtrlJoint::SampleCtrlJoint(J3DJoint* param_1)
+SampleCtrlJoint::SampleCtrlJoint(J3DJoint* joint)
     : unk4(nullptr)
     , unk8(nullptr)
-    , unkC(nullptr)
-    , unk10(nullptr)
+    , mChild(nullptr)
+    , mYounger(nullptr)
     , unk14(nullptr)
 {
-	unk4  = param_1;
-	unk18 = param_1->getRadius();
-	unk1C.set(param_1->getMin());
-	unk28.set(param_1->getMax());
+	unk4    = joint;
+	mRadius = joint->getRadius();
+	mMin.set(joint->getMin());
+	mMax.set(joint->getMax());
 }
 
 SampleCtrlMaterial::SampleCtrlMaterial(J3DMaterial* material)
@@ -45,20 +45,20 @@ SampleCtrlMaterial::SampleCtrlMaterial(J3DMaterial* material)
 		unk3C[i].field_0x2  = material->getTevStage(i)->getTevColorB();
 		unk3C[i].field_0x3  = material->getTevStage(i)->getTevColorC();
 		unk3C[i].field_0x4  = material->getTevStage(i)->getTevColorD();
-		unk3C[i].field_0x5  = material->getTevStage(i)->getColorOpSomething1();
-		unk3C[i].field_0x6  = material->getTevStage(i)->getColorOpSomething2();
-		unk3C[i].field_0x7  = material->getTevStage(i)->getColorOpSomething3();
-		unk3C[i].field_0x8  = material->getTevStage(i)->getColorOpSomething4();
-		unk3C[i].field_0x9  = material->getTevStage(i)->getColorOpSomething5();
+		unk3C[i].field_0x5  = material->getTevStage(i)->getTevColorOp();
+		unk3C[i].field_0x6  = material->getTevStage(i)->getTevColorBias();
+		unk3C[i].field_0x7  = material->getTevStage(i)->getTevColorScale();
+		unk3C[i].field_0x8  = material->getTevStage(i)->getTevColorClamp();
+		unk3C[i].field_0x9  = material->getTevStage(i)->getTevColorOutReg();
 		unk3C[i].field_0xa  = material->getTevStage(i)->getAlphaA();
 		unk3C[i].field_0xb  = material->getTevStage(i)->getAlphaB();
 		unk3C[i].field_0xc  = material->getTevStage(i)->getAlphaC();
 		unk3C[i].field_0xd  = material->getTevStage(i)->getAlphaD();
-		unk3C[i].field_0xe  = material->getTevStage(i)->getAlphaOpSomething1();
-		unk3C[i].field_0xf  = material->getTevStage(i)->getAlphaOpSomething2();
-		unk3C[i].field_0x10 = material->getTevStage(i)->getAlphaOpSomething3();
-		unk3C[i].field_0x11 = material->getTevStage(i)->getAlphaOpSomething4();
-		unk3C[i].field_0x12 = material->getTevStage(i)->getAlphaOpSomething5();
+		unk3C[i].field_0xe  = material->getTevStage(i)->getTevAlphaOp();
+		unk3C[i].field_0xf  = material->getTevStage(i)->getTevAlphaBias();
+		unk3C[i].field_0x10 = material->getTevStage(i)->getTevAlphaScale();
+		unk3C[i].field_0x11 = material->getTevStage(i)->getTevAlphaClamp();
+		unk3C[i].field_0x12 = material->getTevStage(i)->getTevAlphaOutReg();
 	}
 }
 

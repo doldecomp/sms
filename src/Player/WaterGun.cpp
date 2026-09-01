@@ -1269,13 +1269,14 @@ void TWaterGun::init()
 	    0, 1);
 	mFluddModel->setModel(fluddModel, 0);
 
-	MTXCopy(mMario->mModel->unk8->getAnmMtx(mMario->mJointIdChnChest),
-	        mFluddModel->mModel->unk20);
+	mFluddModel->getModel()->setBaseTRMtx(
+	    mMario->mModel->getModel()->getAnmMtx(mMario->mJointIdChnChest));
 
 	mFluddModel->mModel->calc();
 
 	u16 handleIdx
-	    = mFluddModel->mModel->mModelData->unkB0->getIndex("jnt_G_handle");
+	    = mFluddModel->getModel()->getModelData()->getJointName()->getIndex(
+	        "jnt_G_handle");
 
 	{
 		unk1CDC            = new TMultiMtxEffect;
@@ -1294,7 +1295,8 @@ void TWaterGun::init()
 		unk1CDC->setup(mFluddModel->getModel(), "Mario/WaterGun");
 	}
 
-	unk1CD8 = mFluddModel->mModel->mModelData->unkB0->getIndex("nozzle_center");
+	unk1CD8 = mFluddModel->getModel()->getModelData()->getJointName()->getIndex(
+	    "nozzle_center");
 
 	for (int i = 0; i < 6; ++i) {
 		if (nozzleBmdData.getPath(i)) {
@@ -1545,21 +1547,17 @@ void TWaterGun::setBaseTRMtx(Mtx mtx)
 	Mtx temp;
 
 	f32 initialAngle = mtx[1][0];
-	if (initialAngle < 0.0f) {
+	if (initialAngle < 0.0f)
 		initialAngle = -initialAngle;
-	}
 
 	// Seemingly some adjustment of fluddpack angle
-	f32 baseAngle = unk1D06;
-	f32 angleDiff = unk1D04 - unk1D06;
-
-	s16 angle = initialAngle * angleDiff + baseAngle;
+	s16 angle = initialAngle * (unk1D04 - unk1D06) + unk1D06;
 
 	f32 angleDegrees = SHORTANGLE2DEG(angle);
 	MsMtxSetRotRPH(temp, 0.0f, 0.0f, angleDegrees);
 
 	MTXConcat(mtx, temp, result);
-	MTXCopy(result, mFluddModel->mModel->unk20);
+	mFluddModel->getModel()->setBaseTRMtx(result);
 }
 
 void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)

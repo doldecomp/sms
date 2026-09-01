@@ -21,23 +21,23 @@ void M3UModelMario::updateInMotion()
 	for (int i = 0; i < unk10; ++i) {
 		SomeModelMarioStruct& info = unk24[i];
 		getFrameCtrl(info.unk8).update();
-		J3DJoint* jnt = unk8->mModelData->getJointNodePointer(info.unk0);
+		J3DJoint* jnt = unk8->getModelData()->getJointNodePointer(info.unk0);
 
 		if (info.unk3 == 0xff) {
 			jnt->setMtxCalc(nullptr);
 			continue;
 		}
 
-		J3DAnmTransform* prev = unk4->unk4[info.unk4[0]];
-		J3DAnmTransform* next = unk4->unk4[info.unk4[1]];
+		J3DAnmTransform* newAnm = unk4->unk4[info.unk4[0]];
+		J3DAnmTransform* oldAnm = unk4->unk4[info.unk4[1]];
 
-		if (prev != nullptr)
-			prev->setFrame(getFrameCtrl(info.unk8).getFrame());
-		if (next != nullptr)
-			next->setFrame(getFrameCtrl(info.unk8).getFrame());
+		if (newAnm != nullptr)
+			newAnm->setFrame(getFrameCtrl(info.unk8).getFrame());
+		if (oldAnm != nullptr)
+			oldAnm->setFrame(getFrameCtrl(info.unk8).getFrame());
 
-		unk20->unk18[info.unk3].unk54 = prev;
-		unk20->unk18[info.unk3].unk58 = next;
+		unk20->unk18[info.unk3].mNewAnm = newAnm;
+		unk20->unk18[info.unk3].mOldAnm = oldAnm;
 		jnt->setMtxCalc(&unk20->unk18[info.unk3]);
 	}
 }
