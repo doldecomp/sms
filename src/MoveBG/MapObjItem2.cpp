@@ -224,7 +224,7 @@ BOOL TJumpBase::receiveMessage(THitActor* sender, u32 message)
 
 Mtx* TJumpBase::getRootJointMtx() const
 {
-	return mMActor->getModel()->mNodeMatrices;
+	return (Mtx*)mMActor->getModel()->getAnmMtx(0);
 }
 
 void TJumpBase::calcRootMatrix()
@@ -232,8 +232,8 @@ void TJumpBase::calcRootMatrix()
 	if (getHolder() != nullptr) {
 		J3DModel* model = getModel();
 		MtxPtr mtx      = getHolder()->getTakingMtx();
-		MTXCopy(mtx, model->unk20);
-		model->unk14 = mScaling;
+		model->setBaseTRMtx(mtx);
+		model->setBaseScale(mScaling);
 		mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 		return;
 	}

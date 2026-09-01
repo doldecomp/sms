@@ -302,7 +302,7 @@ void TMario::runningRippleEffect()
 void TMario::blurEffect()
 {
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    PARTICLE_MS_M_BLUR1, mModel->unk8->mNodeMatrices[1], 1, this);
+	    PARTICLE_MS_M_BLUR1, mModel->getModel()->getAnmMtx(1), 1, this);
 }
 
 void TMario::wallSlipEffect()
@@ -345,7 +345,7 @@ void TMario::frontSlipEffect()
 			return;
 		}
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    PARTICLE_MS_M_SLIPSMOKE, mModel->unk8->mNodeMatrices[0], 1, this);
+		    PARTICLE_MS_M_SLIPSMOKE, mModel->getModel()->getAnmMtx(0), 1, this);
 	}
 }
 

@@ -9,6 +9,10 @@ class JUTNameTab;
 class J3DTexture;
 
 class J3DMaterialTable {
+	friend class J3DModelLoader;
+	friend class J3DModelLoader_v21;
+	friend class J3DModelLoader_v26;
+
 public:
 	J3DMaterialTable();
 	virtual ~J3DMaterialTable();
@@ -28,7 +32,7 @@ public:
 	JUTNameTab* getMaterialName() const { return mMaterialName; }
 	JUTNameTab* getTextureName() const { return mTextureName; }
 
-public:
+private:
 	/* 0x04 */ u16 mMaterialNum;
 	/* 0x06 */ u16 mMaterialInitNum;
 	/* 0x08 */ J3DMaterial** mMaterials;
