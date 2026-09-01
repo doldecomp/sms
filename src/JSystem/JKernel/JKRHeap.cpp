@@ -236,20 +236,48 @@ void* operator new[](u32 byteCount, JKRHeap* heap, int alignment)
 void operator delete(void* memory) { JKRHeap::free(memory, nullptr); }
 void operator delete[](void* memory) { JKRHeap::free(memory, nullptr); }
 
+// NOTE: all TState related stuff is guesswork mostly.
+
+JKRHeap::TState::TState(const JKRHeap* heap, bool isCompareOnDestructed)
+    : mHeap(heap)
+    , mId(0xFFFFFFFF)
+    , mIsCompareOnDestructed(isCompareOnDestructed)
+{
+	mHeap->state_register(this, mId);
+}
+
+JKRHeap::TState::TState(const JKRHeap* heap, u32 id, bool isCompareOnDestructed)
+    : mHeap(heap)
+    , mId(id)
+    , mIsCompareOnDestructed(isCompareOnDestructed)
+{
+	mHeap->state_register(this, mId);
+}
+
+JKRHeap::TState::~TState()
+{
+	if (mIsCompareOnDestructed) {
+		TState state(mHeap, mId, false);
+		if (!mHeap->state_compare(*this, state)) {
+			state_dumpDifference(*this, state);
+		}
+	}
+}
+
 void JKRHeap::state_register(JKRHeap::TState* p, u32) const
 {
-#line 1132
-	JUT_ASSERT(p != 0);
-	JUT_ASSERT(p->getHeap() == this);
+	JUT_ASSERT(268, p != 0);
+	JUT_ASSERT(269, p->getHeap() == this);
 }
 
 bool JKRHeap::state_compare(const JKRHeap::TState& r1,
                             const JKRHeap::TState& r2) const
 {
-#line 1141
-	JUT_ASSERT(r1.getHeap() == r2.getHeap());
-	return (r1.getCheckCode() == r2.getCheckCode());
+	JUT_ASSERT(274, r1.getHeap() == r2.getHeap());
+	return r1.getCheckCode() == r2.getCheckCode();
 }
+
+void JKRHeap::state_dumpDifference(const TState& r1, const TState& r2) { }
 
 void JKRHeap::state_dump(const TState& state) const
 {

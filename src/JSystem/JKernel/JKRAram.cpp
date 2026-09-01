@@ -185,7 +185,7 @@ JKRAramBlock* JKRAram::mainRamToAram(u8* buf, JKRAramBlock* block,
 		return mainRamToAram(buf, u32(0), alignedSize, expandSwitch, fileSize,
 		                     heap, id);
 	}
-	u32 blockSize = block->mSize;
+	u32 blockSize = block->getSize();
 	if (expandSwitch == 1) {
 		fileSize = fileSize >= blockSize ? blockSize : fileSize;
 	}

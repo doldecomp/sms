@@ -14,13 +14,14 @@ JKRThread::JKRThread(u32 stackSize, int msgCount, int threadPrio)
 	}
 
 	mStackSize    = JKR_ALIGN32(stackSize);
-	mStackMemory  = JKRHeap::alloc(mStackSize, 32, mHeap);
-	mThreadRecord = JKRHeap::allocOne<OSThread>(32, mHeap);
+	mStackMemory  = JKRAllocFromHeap(mHeap, mStackSize, 32);
+	mThreadRecord = (OSThread*)JKRAllocFromHeap(mHeap, sizeof(OSThread), 32);
 	OSCreateThread(mThreadRecord, &JKRThread::start, this,
 	               (void*)((u32)mStackMemory + mStackSize), mStackSize,
 	               threadPrio, OS_THREAD_ATTR_DETACH);
 	mMesgCount  = msgCount;
-	mMesgBuffer = JKRHeap::allocArray<OSMessage>(mMesgCount, 0, mHeap);
+	mMesgBuffer
+	    = (OSMessage*)JKRAllocFromHeap(mHeap, mMesgCount * sizeof(OSMessage), 0);
 	OSInitMessageQueue(&mMesgQueue, mMesgBuffer, mMesgCount);
 	JKRThread::sThreadList.append(&mLink);
 }

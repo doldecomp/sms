@@ -13,7 +13,6 @@ public:
 	};
 
 public:
-	// TODO: fix type
 	static JSUList<JKRAramBlock> sAramList;
 
 	JKRAramHeap(u32, u32);
@@ -31,10 +30,9 @@ public:
 
 private:
 	void lock() { OSLockMutex(&mMutex); }
-
 	void unlock() { OSUnlockMutex(&mMutex); }
 
-public:
+private:
 	/* 0x00 */ // vtable
 	/* 0x04 */ // JKRDisposer
 	/* 0x18 */ OSMutex mMutex;

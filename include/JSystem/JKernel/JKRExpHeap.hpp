@@ -37,24 +37,23 @@ public:
 
 	JKRExpHeap(void* data, u32 size, JKRHeap* parent, bool errorFlag);
 
-	virtual ~JKRExpHeap();                                     // _08
-	virtual void* alloc(u32 size, int alignment);              // _10
-	virtual void free(void* ptr);                              // _14
-	virtual void freeTail();                                   // _18
-	virtual void freeAll();                                    // _1C
-	virtual s32 resize(void* ptr, u32 size);                   // _20
-	virtual s32 getSize(void* ptr);                            // _24
-	virtual s32 getFreeSize();                                 // _28
-	virtual u32 getHeapType() { return 'EXPH'; }               // _30 (weak)
-	virtual s32 getTotalFreeSize();                            // _2C
-	virtual bool check();                                      // _34
-	virtual bool dump_sort();                                  // _38
-	virtual bool dump();                                       // _3C
-	virtual s32 changeGroupID(u8 groupId);                     // _40
-	virtual u8 getCurrentGroupId() { return mCurrentGroupID; } // _44 (weak)
-	virtual void state_register(TState*, u32) const;           // _48
-	virtual bool state_compare(const TState& fst,
-	                           const TState& snd) const; // _4C
+	virtual ~JKRExpHeap();
+	virtual void* alloc(u32 size, int alignment);
+	virtual void free(void* ptr);
+	virtual void freeTail();
+	virtual void freeAll();
+	virtual s32 resize(void* ptr, u32 size);
+	virtual s32 getSize(void* ptr);
+	virtual s32 getFreeSize();
+	virtual u32 getHeapType() { return 'EXPH'; }
+	virtual s32 getTotalFreeSize();
+	virtual bool check();
+	virtual bool dump_sort();
+	virtual bool dump();
+	virtual s32 changeGroupID(u8 groupId);
+	virtual u8 getCurrentGroupId() { return mCurrentGroupID; }
+	virtual void state_register(TState*, u32) const;
+	virtual bool state_compare(const TState& fst, const TState& snd) const;
 
 	void* allocFromHead(u32 size, int align);
 	void* allocFromHead(u32 size);
@@ -71,7 +70,6 @@ public:
 	void setFreeBlock(CMemBlock*, CMemBlock*, CMemBlock*);
 	void destroy();
 
-	// unused/inlined:
 	void removeUsedBlock(CMemBlock*);
 	bool isEmpty();
 	s32 getUsedSize(u8 groupId) const;
@@ -81,26 +79,20 @@ public:
 
 	static s32 getUsedSize_(JKRExpHeap* expHeap)
 	{
-		// s32 totalFreeSize = expHeap->getTotalFreeSize();
 		return expHeap->mSize - expHeap->getTotalFreeSize();
 	}
-	static u32 getState_(TState* state)
-	{
-		return getState_buf_(state);
-	} // might instead be a pointer to a next state?
+	static void* getState_(TState* state) { return getState_buf_(state); }
 
 private:
-	// _00     = VTBL
-	// _00-_68 = JKRHeap
-	u8 mCurrentAllocMode;     // _68
-	u8 mCurrentGroupID;       // _69
-	u8 mIsRoot;               // _6A
-	void* _70;                // _6C
-	u32 _74;                  // _70
-	CMemBlock* mHead;         // _74, free list
-	CMemBlock* mTail;         // _78, free list
-	CMemBlock* mHeadUsedList; // _8C
-	CMemBlock* mTailUsedList; // _80
+	/* 0x68 */ u8 mCurrentAllocMode;
+	/* 0x69 */ u8 mCurrentGroupID;
+	/* 0x6A */ u8 mIsRoot;
+	/* 0x6C */ void* _70;
+	/* 0x70 */ u32 _74;
+	/* 0x74 */ CMemBlock* mHead;
+	/* 0x78 */ CMemBlock* mTail;
+	/* 0x8C */ CMemBlock* mHeadUsedList;
+	/* 0x80 */ CMemBlock* mTailUsedList;
 };
 
 inline JKRExpHeap* JKRCreateExpHeap(u32 size, JKRHeap* parent, bool errorFlag)

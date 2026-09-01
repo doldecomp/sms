@@ -1,6 +1,7 @@
 #include <JSystem/JKernel/JKRSolidHeap.hpp>
 #include <JSystem/JUtility/JUTConsole.hpp>
 #include <macros.h>
+#include <stdint.h>
 
 JKRSolidHeap* JKRSolidHeap::create(u32 size, JKRHeap* parent, bool errorFlag)
 {
@@ -172,17 +173,20 @@ bool JKRSolidHeap::dump()
 	return ret;
 }
 
-void JKRSolidHeap::state_register(TState* state, u32 param_1) const
+void JKRSolidHeap::state_register(TState* p, u32 id) const
 {
-	setState_u32ID_(state, param_1);
-	setState_uUsedSize_(state, getUsedSize_((JKRSolidHeap*)this));
-	// impossible to properly figure out unless new debug
-	// builds of jsystem games are discovered
-	// + it really doesn't matter
-	char trash[0x10];
-	u32 checkCode = (u32)mCurStart;
-	checkCode += (u32)mCurEnd * 3;
-	setState_u32CheckCode_(state, checkCode);
+	JUT_ASSERT(604, p != nullptr);
+	JUT_ASSERT(605, p->getHeap() == this);
+
+	setState_u32ID_(p, id);
+	setState_uUsedSize_(p, getUsedSize((JKRSolidHeap*)this));
+
+	// TODO: r28 is copy-pasted from TP debug but still not enough stack
+	char trash[0x4];
+	void* r28     = getState_(p);
+	u32 checkCode = (uintptr_t)mCurStart;
+	checkCode += (uintptr_t)mCurEnd * 3;
+	setState_u32CheckCode_(p, checkCode);
 }
 
 bool JKRSolidHeap::state_compare(const TState& fst, const TState& snd) const

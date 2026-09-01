@@ -7,20 +7,19 @@ struct JKRDvdArchive : public JKRArchive {
 	JKRDvdArchive();
 	JKRDvdArchive(s32, JKRArchive::EMountDirection);
 
-	virtual ~JKRDvdArchive();                                       // _00
-	virtual void* fetchResource(SDIFileEntry* entry, u32* outSize); // _38
+	virtual ~JKRDvdArchive();
+	virtual void* fetchResource(SDIFileEntry* entry, u32* outSize);
 	virtual void* fetchResource(void* resourceBuffer, u32 bufferSize,
-	                            SDIFileEntry* entry, u32* resSize); // _3C
+	                            SDIFileEntry* entry, u32* resSize);
 
 	bool open(s32);
 	static u32 fetchResource_subroutine(s32, u32, u32, u8*, u32, int, int);
 	static u32 fetchResource_subroutine(s32, u32, u32, JKRHeap*, int, int,
 	                                    u8**);
 
-	// _00     = VTBL
-	// _00-_5C = JKRArchive
-	s32 mDataOffset;   // _60
-	JKRFile* mDvdFile; // _64
+private:
+	/* 0x60 */ s32 mDataOffset;
+	/* 0x64 */ JKRFile* mDvdFile;
 };
 
 #endif

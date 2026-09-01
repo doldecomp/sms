@@ -28,18 +28,16 @@ public:
 	void* allocFromHead(u32 size, int align);
 	void* allocFromTail(u32 size, int align);
 
-	// fabricated
-	static s32 getUsedSize_(JKRSolidHeap* solidHeap)
+	static void* getState_(TState* state) { return getState_buf_(state); }
+	static s32 getUsedSize(JKRSolidHeap* solidHeap)
 	{
 		return solidHeap->mSize - solidHeap->getTotalFreeSize();
 	}
 
 private:
-	// _00     = VTBL
-	// _00-_68 = JKRHeap
-	u32 mFreeSize;   // _68
-	void* mCurStart; // _6c
-	void* mCurEnd;   // _70
+	/* 0x68 */ u32 mFreeSize;
+	/* 0x6c */ void* mCurStart;
+	/* 0x70 */ void* mCurEnd;
 	struct UnknownStruct {
 		char unk0[0x4];
 		char unk4[0x4];

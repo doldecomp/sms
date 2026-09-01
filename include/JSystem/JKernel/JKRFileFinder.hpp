@@ -7,10 +7,10 @@
 class JKRArchive;
 
 struct JKRFileFinderBase {
-	char* mFileName;    // _00
-	int mFileIndex;     // _04
-	u16 mFileID;        // _08
-	u16 mFileTypeFlags; // _0A
+	/* 0x0 */ char* mFileName;
+	/* 0x4 */ int mFileIndex;
+	/* 0x8 */ u16 mFileID;
+	/* 0xA */ u16 mFileTypeFlags;
 };
 
 class JKRFileFinder {
@@ -23,48 +23,42 @@ public:
 
 	JKRFileFinderBase mBase;
 
-	virtual ~JKRFileFinder() { }     // _08 (weak)
-	virtual bool findNextFile() = 0; // _0C
+	virtual ~JKRFileFinder() { }
+	virtual bool findNextFile() = 0;
 
 	bool isAvailable() const { return mIsAvailable; }
 
-	// _00     = VTBL
-
-	bool mIsAvailable; // _10
-	bool mIsDir;       // _11
+	/* 0x10 */ bool mIsAvailable;
+	/* 0x11 */ bool mIsDir;
 };
 
 class JKRArcFinder : public JKRFileFinder {
 public:
-	JKRArcFinder(JKRArchive*, long, long);
+	JKRArcFinder(JKRArchive*, s32, s32);
 
-	virtual ~JKRArcFinder() { }  // _08 (weak)
-	virtual bool findNextFile(); // _0C
+	virtual ~JKRArcFinder() { }
+	virtual bool findNextFile();
 
-	// _00     = VTBL
-	// _00-_14 = JKRFileFinder
-	JKRArchive* mArchive; // _14
-	long mStartIndex;     // _18
-	long mEndIndex;       // _1C
-	long mNextIndex;      // _20
+	/* 0x14 */ JKRArchive* mArchive;
+	/* 0x18 */ s32 mStartIndex;
+	/* 0x1C */ s32 mEndIndex;
+	/* 0x20 */ s32 mNextIndex;
 };
 
 class JKRDvdFinder : public JKRFileFinder {
 public:
 	JKRDvdFinder(const char*);
 
-	virtual ~JKRDvdFinder() // _08 (weak)
+	virtual ~JKRDvdFinder()
 	{
 		if (mIsDvdOpen) {
 			DVDCloseDir(&mDir);
 		}
 	}
-	virtual bool findNextFile(); // _0C
+	virtual bool findNextFile();
 
-	// _00     = VTBL
-	// _00-_14 = JKRFileFinder
-	DVDDir mDir;     // _14
-	bool mIsDvdOpen; // _20
+	/* 0x14 */ DVDDir mDir;
+	/* 0x20 */ bool mIsDvdOpen;
 };
 
 #endif

@@ -987,7 +987,8 @@ void JKRExpHeap::state_register(JKRHeap::TState* p, u32 param_1) const
 {
 	JUT_ASSERT(0, p != 0);
 	JUT_ASSERT(0, p->getHeap() == this);
-	u32 prevState = getState_(p); // not needed, however TP debug has it
+	void* buf = getState_(p); // dead in the release build, but TP's debug
+	                          // build shows the original read it here
 	setState_u32ID_(p, param_1);
 	if (param_1 <= 0xff) {
 		setState_uUsedSize_(p, getUsedSize(param_1));
