@@ -976,7 +976,7 @@ void TBossTelesa::init(TLiveManager* manager)
 	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("スクリーンテクスチャ");
 	void* dataOwner  = *(void**)((u8*)screenTex + 0x10);
 	ResTIMG* texture = *(ResTIMG**)((u8*)dataOwner + 0x20);
-	SMS_ChangeTextureAll(mMActor->mModel->mModelData, "H_ma_rak_dummy",
+	SMS_ChangeTextureAll(mMActor->mModel->getModelData(), "H_ma_rak_dummy",
 	                     *texture);
 
 	unk358 = SMS_GetMarioHP();
@@ -1269,8 +1269,8 @@ void TBossTelesa::moveObject()
 		unk174->mPosition = mPosition;
 	} else {
 		J3DModel* model = mMActor->getModel();
-		MtxPtr node1    = model->mNodeMatrices[1];
-		MtxPtr node7    = model->mNodeMatrices[7];
+		MtxPtr node1    = model->getAnmMtx(1);
+		MtxPtr node7    = model->getAnmMtx(7);
 
 		unk16C->mPosition.set(node1[0][3], node1[1][3] - 200.0f, node1[2][3]);
 		unk174->mPosition.set(node1[0][3], mPosition.y - 350.0f, node1[2][3]);
@@ -1290,7 +1290,7 @@ void TBossTelesa::kill()
 
 MtxPtr TBossTelesa::getTakingMtx()
 {
-	unk278.set(unk178[0]->mMActor->mModel->mNodeMatrices[1]);
+	unk278.set(unk178[0]->mMActor->mModel->getAnmMtx(1));
 	unk278.mMtx[1][3] = unk178[0]->mPosition.y - 120.0f;
 	return unk278.mMtx;
 }
@@ -1329,11 +1329,11 @@ void TBossTelesa::calcRootMatrix()
 		if (mMActor->checkCurBckFromIndex(4) || mMActor->checkCurBckFromIndex(0)
 		    || mMActor->checkCurBckFromIndex(2)
 		    || mMActor->checkCurBckFromIndex(5)) {
-			slotMtx = mMActor->getModel()->mNodeMatrices[1];
+			slotMtx = mMActor->getModel()->getAnmMtx(1);
 			if (!mMActor->checkCurBckFromIndex(0))
 				slotOffsetY = -2400.0f;
 		} else {
-			slotMtx = mMActor->getModel()->mNodeMatrices[0];
+			slotMtx = mMActor->getModel()->getAnmMtx(0);
 		}
 
 		slot->mPosition.x = slotMtx[0][3];
@@ -1358,7 +1358,7 @@ void TBossTelesa::calcRootMatrix()
 	gpMarioParticleManager->emit(SCENE_BTELESA_JPA_MS_BTLS_CHIKA_B, &unk374, 1,
 	                             this);
 
-	MtxPtr baseMtx = mMActor->getModel()->mNodeMatrices[1];
+	MtxPtr baseMtx = mMActor->getModel()->getAnmMtx(1);
 	unk374.set(baseMtx[0][3], baseMtx[1][3], baseMtx[2][3]);
 	gpMarioParticleManager->emitAndBindToPosPtr(SCENE_BTELESA_JPA_MS_BTLS_GLOW,
 	                                            &unk374, 1, this);
@@ -1368,20 +1368,20 @@ void TBossTelesa::calcRootMatrix()
 	    && !mMActor->checkCurBckFromIndex(13)) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    SCENE_BTELESA_JPA_MS_BTLS_YODARE1,
-		    mMActor->getModel()->mNodeMatrices[5], 1, this);
+		    mMActor->getModel()->getAnmMtx(5), 1, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    SCENE_BTELESA_JPA_MS_BTLS_YODARE2,
-		    mMActor->getModel()->mNodeMatrices[5], 1, this);
+		    mMActor->getModel()->getAnmMtx(5), 1, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    SCENE_BTELESA_JPA_MS_BTLS_YODARE3,
-		    mMActor->getModel()->mNodeMatrices[10], 1, this);
+		    mMActor->getModel()->getAnmMtx(10), 1, this);
 	}
 
 	if (mMActor->checkCurBckFromIndex(1)
 	    && mMActor->getFrameCtrl(0)->getFrame() < 20.0f) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    SCENE_BTELESA_JPA_MS_BTLS_SPICY_HIT,
-		    mMActor->getModel()->mNodeMatrices[5], 0, nullptr);
+		    mMActor->getModel()->getAnmMtx(5), 0, nullptr);
 	}
 
 	if (mMActor->checkCurBckFromIndex(12)) {
@@ -1389,20 +1389,20 @@ void TBossTelesa::calcRootMatrix()
 		                                nullptr, 0, 4);
 
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    SCENE_BTELESA_JPA_MS_BTLS_ASE,
-		    mMActor->getModel()->mNodeMatrices[1], 1, this);
+		    SCENE_BTELESA_JPA_MS_BTLS_ASE, mMActor->getModel()->getAnmMtx(1), 1,
+		    this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    SCENE_BTELESA_JPA_MS_BTLS_SPICY_A,
-		    mMActor->getModel()->mNodeMatrices[9], 1, this);
+		    mMActor->getModel()->getAnmMtx(9), 1, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    SCENE_BTELESA_JPA_MS_BTLS_SPICY_B,
-		    mMActor->getModel()->mNodeMatrices[9], 1, this);
+		    mMActor->getModel()->getAnmMtx(9), 1, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    SCENE_BTELESA_JPA_MS_BTLS_SPICY_D,
-		    mMActor->getModel()->mNodeMatrices[9], 1, this);
+		    mMActor->getModel()->getAnmMtx(9), 1, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    SCENE_BTELESA_JPA_MS_BTLS_SPICY_C,
-		    mMActor->getModel()->mNodeMatrices[9], 3, this);
+		    mMActor->getModel()->getAnmMtx(9), 3, this);
 	}
 
 	if (mMActor->checkCurBckFromIndex(14)
@@ -1423,7 +1423,8 @@ void TBossTelesa::perform(u32 flags, JDrama::TGraphics* gfx)
 		if (mSpine->getCurrentNerve() == &TNerveBossTelesaDie::theNerve()
 		    && unk350) {
 			mMActor->offMakeDL();
-			SMS_AddDamageFogEffect(mMActor->mModel->mModelData, mPosition, gfx);
+			SMS_AddDamageFogEffect(mMActor->mModel->getModelData(), mPosition,
+			                       gfx);
 		}
 	}
 
@@ -1777,7 +1778,7 @@ void TBossTelesa::genAttacker()
 
 	TBossTelesaSaveLoadParams* params = (TBossTelesaSaveLoadParams*)unk15C;
 	s32 count                         = params->mSLNumGenBubble.get();
-	MtxPtr rootMtx                    = mMActor->mModel->mNodeMatrices[5];
+	MtxPtr rootMtx                    = mMActor->mModel->getAnmMtx(5);
 	f32 angleStep                     = 180.0f / count;
 	f32 angleOffset                   = count * 0.5f;
 
@@ -1913,7 +1914,7 @@ void TBossTelesa::generateSlotItem()
 
 	TBossTelesaSaveLoadParams* params = (TBossTelesaSaveLoadParams*)unk15C;
 	s32 slotItemNum                   = params->mSLSlotItemNum.get();
-	MtxPtr rootMtx                    = mMActor->mModel->mNodeMatrices[5];
+	MtxPtr rootMtx                    = mMActor->mModel->getAnmMtx(5);
 	f32 angleStep                     = 120.0f / slotItemNum;
 	f32 angleOffset                   = angleStep * slotItemNum * 0.5f;
 
@@ -2280,7 +2281,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 	if (boss->mHitPoints == 0) {
 		if (boss->checkCurAnmEnd(0)) {
 			if (boss->unk388 == 0) {
-				MtxPtr mtx = boss->mMActor->getModel()->mNodeMatrices[1];
+				MtxPtr mtx = boss->mMActor->getModel()->getAnmMtx(1);
 				boss->unk374.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 
 				gpMarioParticleManager->emit(SCENE_BTELESA_JPA_MS_BTLS_DOWN,
