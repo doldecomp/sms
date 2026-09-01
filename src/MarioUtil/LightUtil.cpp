@@ -20,33 +20,33 @@ TLightWithDBSetManager* gpLightManager;
 
 TLightCommon::TLightCommon(const char* name)
     : JDrama::TViewObj(name)
-    , unk10(0.0f)
+    , mShininess(0.0f)
     , unk14(1.0f)
     , unk18(1.0f)
     , unk1C(1.0f)
-    , unk20(0)
-    , unk24(0)
+    , mAmbIndex(0)
+    , mLightIndex(0)
     , unk28(0)
     , unk41(0)
 {
-	mAmbAry   = nullptr;
-	mLightAry = nullptr;
-	mLightPos = nullptr;
-	unk10     = 50.0f;
+	mAmbAry    = nullptr;
+	mLightAry  = nullptr;
+	mLightPos  = nullptr;
+	mShininess = 50.0f;
 }
 
 void TLightCommon::loadAfter()
 {
-	mAmbAry   = JDrama::TNameRefGen::search<JDrama::TAmbAry>("Ambient Group");
-	mLightAry = JDrama::TNameRefGen::search<JDrama::TLightAry>("Light Group");
-	mLightPos = &mLightAry->getLight(0)->mPosition;
-	unk10     = 50.0f;
+	mAmbAry    = JDrama::TNameRefGen::search<JDrama::TAmbAry>("Ambient Group");
+	mLightAry  = JDrama::TNameRefGen::search<JDrama::TLightAry>("Light Group");
+	mLightPos  = &mLightAry->getLight(0)->mPosition;
+	mShininess = 50.0f;
 	for (int i = 0; i < 4; ++i) {
-		unk31[i] = mLightAry->getLight(unk24 + i)->getColor();
-		unk44[i] = mLightAry->getLight(unk24 + i)->mPosition;
+		unk31[i] = mLightAry->getLight(mLightIndex + i)->getColor();
+		unk44[i] = mLightAry->getLight(mLightIndex + i)->mPosition;
 	}
-	unk29[0] = mAmbAry->getAmb(unk20)->getColor();
-	unk29[1] = mAmbAry->getAmb(unk20 + 1)->getColor();
+	unk29[0] = mAmbAry->getAmb(mAmbIndex)->getColor();
+	unk29[1] = mAmbAry->getAmb(mAmbIndex + 1)->getColor();
 }
 
 GXColor TLightCommon::getLightColor(int index) const
@@ -56,7 +56,7 @@ GXColor TLightCommon::getLightColor(int index) const
 			index = 0;
 		return unk31[index];
 	}
-	index += unk24;
+	index += mLightIndex;
 	GXColor color = mLightAry->getLight(index)->getColor();
 	color.a *= unk1C;
 	return color;
@@ -69,7 +69,7 @@ GXColor TLightCommon::getAmbColor(int index) const
 			index = 0;
 		return unk29[index];
 	}
-	index += unk20;
+	index += mAmbIndex;
 	GXColor color = mAmbAry->getAmb(index)->getColor();
 	color.a *= unk18;
 	return color;
@@ -82,7 +82,7 @@ Vec* TLightCommon::getLightPosition(int index)
 			index = 0;
 		return unk44[index];
 	}
-	index += unk24;
+	index += mLightIndex;
 	return &mLightAry->getLight(index)->mPosition;
 }
 
@@ -107,8 +107,7 @@ void TLightCommon::setLight(const JDrama::TGraphics* gfx, int index)
 	VECNormalize(&spos, &spos);
 	GXInitSpecularDir(&light, -spos.x, -spos.y, -spos.z);
 	GXInitLightColor(&light, getLightColor(lightIndex));
-	GXInitLightAttn(&light, 0.0f, 0.0f, 1.0f, unk10 / 2.0f, 0.0f,
-	                1.0f - unk10 / 2.0f);
+	GXInitLightShininess(&light, mShininess);
 	GXLoadLightObjImm(&light, GX_LIGHT2);
 
 	GXSetChanAmbColor(GX_COLOR0A0, getAmbColor(index));
@@ -165,8 +164,7 @@ void TLightMario::setLight(const JDrama::TGraphics* gfx, int index)
 	VECNormalize(&spos, &spos);
 	GXInitSpecularDir(&light, -spos.x, -spos.y, -spos.z);
 	GXInitLightColor(&light, getLightColor(lightIndex));
-	GXInitLightAttn(&light, 0.0f, 0.0f, 1.0f, unk10 / 2.0f, 0.0f,
-	                1.0f - unk10 / 2.0f);
+	GXInitLightShininess(&light, mShininess);
 	GXLoadLightObjImm(&light, GX_LIGHT2);
 
 	GXSetChanAmbColor(GX_COLOR0A0, getAmbColor(index));
@@ -174,14 +172,14 @@ void TLightMario::setLight(const JDrama::TGraphics* gfx, int index)
 
 GXColor TLightMario::getLightColor(int index) const
 {
-	GXColor color = TLightCommon::getLightColor(index + unk24);
+	GXColor color = TLightCommon::getLightColor(index + mLightIndex);
 	color.a *= unk14;
 	return color;
 }
 
 GXColor TLightMario::getAmbColor(int index) const
 {
-	index += unk24;
+	index += mLightIndex;
 	GXColor color = TLightCommon::getAmbColor(index);
 	color.a *= unk14;
 	return color;
@@ -190,7 +188,7 @@ GXColor TLightMario::getAmbColor(int index) const
 #pragma dont_inline on
 TLightDrawBuffer::TLightDrawBuffer(int param_1, u32 param_2, const char* name)
     : JDrama::TViewObj(name)
-    , unk10(nullptr)
+    , mLight(nullptr)
     , mOpaDrawBufferObject(nullptr)
     , mXluDrawBufferObject(nullptr)
     , unk80(param_1)
@@ -206,7 +204,7 @@ TLightDrawBuffer::TLightDrawBuffer(int param_1, u32 param_2, const char* name)
 void TLightDrawBuffer::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_LIGHT)
-		unk10->setLight(graphics, unk80);
+		mLight->setLight(graphics, unk80);
 }
 
 TLightWithDBSet::TLightWithDBSet(int param_1, const char* name)
@@ -313,9 +311,9 @@ void TPlayerLightWithDBSet::makeDrawBuffer()
 		    i, 0x80, TLightCommon::mAmbAry->getAmb(ambIndex + i)->getName());
 		TLightMario* light = new TLightMario();
 		unk10[i]->setLight(light);
-		unk10[i]->unk10->unk20 = ambIndex;
-		unk10[i]->unk10->unk24 = lightIndex;
-		unk10[i]->unk10->loadAfter();
+		unk10[i]->mLight->mAmbIndex   = ambIndex;
+		unk10[i]->mLight->mLightIndex = lightIndex;
+		unk10[i]->mLight->loadAfter();
 	}
 }
 
@@ -332,9 +330,9 @@ void TObjectLightWithDBSet::makeDrawBuffer()
 		    i, 0x100, TLightCommon::mAmbAry->getAmb(ambIndex + i)->getName());
 		TLightCommon* light = new TLightCommon();
 		unk10[i]->setLight(light);
-		unk10[i]->unk10->unk20 = ambIndex;
-		unk10[i]->unk10->unk24 = lightIndex;
-		unk10[i]->unk10->loadAfter();
+		unk10[i]->mLight->mAmbIndex   = ambIndex;
+		unk10[i]->mLight->mLightIndex = lightIndex;
+		unk10[i]->mLight->loadAfter();
 	}
 }
 
@@ -352,9 +350,9 @@ void TMapObjectLightWithDBSet::makeDrawBuffer()
 		unk10[i]            = new TLightDrawBuffer(i, 0x100, className[i]);
 		TLightCommon* light = new TLightCommon();
 		unk10[i]->setLight(light);
-		unk10[i]->unk10->unk20 = ambIndex;
-		unk10[i]->unk10->unk24 = lightIndex;
-		unk10[i]->unk10->loadAfter();
+		unk10[i]->mLight->mAmbIndex   = ambIndex;
+		unk10[i]->mLight->mLightIndex = lightIndex;
+		unk10[i]->mLight->loadAfter();
 	}
 }
 
@@ -372,9 +370,9 @@ void TIndirectLightWithDBSet::makeDrawBuffer()
 		unk10[i]            = new TLightDrawBuffer(i, 0x100, className[i]);
 		TLightCommon* light = new TLightCommon();
 		unk10[i]->setLight(light);
-		unk10[i]->unk10->unk20 = ambIndex;
-		unk10[i]->unk10->unk24 = lightIndex;
-		unk10[i]->unk10->loadAfter();
+		unk10[i]->mLight->mAmbIndex   = ambIndex;
+		unk10[i]->mLight->mLightIndex = lightIndex;
+		unk10[i]->mLight->loadAfter();
 	}
 }
 
@@ -401,15 +399,17 @@ TIndirectLightWithDBSet::TIndirectLightWithDBSet()
 TLightWithDBSetManager::TLightWithDBSetManager(const char* name)
     : JDrama::TViewObj(name)
 {
-	unk10          = nullptr;
-	unk14          = nullptr;
-	unk54          = 0;
-	unk55          = 1;
-	unk14          = new TLightWithDBSet*[4];
-	unk14[0]       = new TPlayerLightWithDBSet();
-	unk14[1]       = new TObjectLightWithDBSet();
-	unk14[2]       = new TMapObjectLightWithDBSet();
-	unk14[3]       = new TIndirectLightWithDBSet();
+	mMarioLight = nullptr;
+	mLightSets  = nullptr;
+	unk54       = false;
+	unk55       = 1;
+
+	mLightSets                       = new TLightWithDBSet*[LIGHT_TYPE_COUNT];
+	mLightSets[LIGHT_TYPE_PLAYER]    = new TPlayerLightWithDBSet();
+	mLightSets[LIGHT_TYPE_OBJECT]    = new TObjectLightWithDBSet();
+	mLightSets[LIGHT_TYPE_MAPOBJECT] = new TMapObjectLightWithDBSet();
+	mLightSets[LIGHT_TYPE_INDIRECT]  = new TIndirectLightWithDBSet();
+
 	gpLightManager = this;
 	unk48.x        = 0.0f;
 	unk48.y        = 0.0f;
@@ -429,8 +429,8 @@ void TLightWithDBSetManager::loadAfter()
 {
 	JDrama::TLightAry* group
 	    = JDrama::TNameRefGen::search<JDrama::TLightAry>("Light Group");
-	unk18 = group->getLight(0)->getColor();
-	unk1C = group->getLight(0)->mPosition;
+	mEffectLightColor = group->getLight(0)->getColor();
+	mEffectLightPos   = group->getLight(0)->mPosition;
 }
 
 void TLightWithDBSetManager::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -439,38 +439,39 @@ void TLightWithDBSetManager::perform(u32 cue, JDrama::TGraphics* graphics)
 		int start;
 		int end;
 		if (cue & CUE_UNK80000) {
-			start = 3;
-			end   = 4;
+			start = LIGHT_TYPE_INDIRECT;
+			end   = LIGHT_TYPE_COUNT;
 		} else if (cue & CUE_UNK40000) {
-			start = 2;
-			end   = 3;
+			start = LIGHT_TYPE_MAPOBJECT;
+			end   = LIGHT_TYPE_INDIRECT;
 		} else {
-			start = 0;
-			end   = 2;
+			start = LIGHT_TYPE_PLAYER;
+			end   = LIGHT_TYPE_MAPOBJECT;
 		}
 		for (int i = start; i < end; ++i)
-			if (unk14[i]->isEnabled())
-				unk14[i]->perform(cue, graphics);
+			if (mLightSets[i]->isEnabled())
+				mLightSets[i]->perform(cue, graphics);
 	}
+
 	if (cue & CUE_SET_DRAW_BUFFER) {
-		for (int i = 0; i < 4; ++i)
-			if (unk14[i]->isEnabled())
-				unk14[i]->perform(cue, graphics);
+		for (int i = LIGHT_TYPE_FIRST; i < LIGHT_TYPE_COUNT; ++i)
+			if (mLightSets[i]->isEnabled())
+				mLightSets[i]->perform(cue, graphics);
 	}
 }
 
 void TLightWithDBSetManager::addChildGroupObj(
     JDrama::TViewObjPtrListT<JDrama::TViewObj>* list)
 {
-	for (int i = 0; i < 4; ++i)
-		unk14[i]->addChildGroupObj(list);
+	for (int i = LIGHT_TYPE_FIRST; i < LIGHT_TYPE_COUNT; ++i)
+		mLightSets[i]->addChildGroupObj(list);
 }
 
 void TLightWithDBSetManager::makeDrawBuffer()
 {
-	for (int i = 0; i < 4; ++i)
-		if (unk14[i]->isEnabled())
-			unk14[i]->makeDrawBuffer();
+	for (int i = LIGHT_TYPE_FIRST; i < LIGHT_TYPE_COUNT; ++i)
+		if (mLightSets[i]->isEnabled())
+			mLightSets[i]->makeDrawBuffer();
 }
 
 Vec* TLightWithDBSetManager::getLightPos() const
@@ -483,7 +484,7 @@ void TLightWithDBSetManager::setEffectLight(const JDrama::TGraphics* gfx,
 {
 	if (unk54 && unk55) {
 		Vec epos;
-		MTXMultVec(gfx->getViewMtx(), unk1C, &epos);
+		MTXMultVec(gfx->getViewMtx(), mEffectLightPos, &epos);
 		GXInitLightPos(light, epos.x, epos.y, epos.z);
 		GXInitLightColor(light, getEffectLightColor());
 		GXInitLightAttnA(light, 1.0f, 0.0f, 0.0f);
@@ -494,7 +495,7 @@ void TLightWithDBSetManager::setEffectLight(const JDrama::TGraphics* gfx,
 
 GXColor TLightWithDBSetManager::getEffectLightColor() const
 {
-	GXColor result = unk18;
+	GXColor result = mEffectLightColor;
 	result.a *= unk28;
 	return result;
 }

@@ -56,7 +56,7 @@ void TSharedParts::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 
 	if (cue & CUE_CALC_ANIM)
-		unk18->unk4->setBaseTRMtx(getConnectedMtx());
+		unk18->mModel->setBaseTRMtx(getConnectedMtx());
 
 	if (cue & CUE_ENTRY)
 		unk18->setLightData(unk10->getGroundPlane(), unk10->getPosition());

@@ -113,8 +113,10 @@ void TEMario::init(TLiveManager* manager)
 			mMActorKeeper->mModelLoaderFlags = 0x11300000;
 			mMActor = mMActorKeeper->createMActorFromDefaultBmd(
 			    chara->getFolder(), 0);
-			for (int i = 0; i < mMActor->unk4->mModelData->mMaterialNum; i++) {
-				SMS_InitPacket_Fog(mMActor->unk4, i);
+			for (int i = 0;
+			     i < mMActor->getModel()->getModelData()->getMaterialNum();
+			     i++) {
+				SMS_InitPacket_Fog(mMActor->getModel(), i);
 			}
 			mMActor->setBtk("kagemario_scroll");
 		}

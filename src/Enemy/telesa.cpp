@@ -19,6 +19,7 @@
 #include <MarioUtil/RandomUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/MtxUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <MoveBG/MapObjManager.hpp>
@@ -239,7 +240,7 @@ void TTelesa::init(TLiveManager* manager)
 	mMActor->resetDL();
 	SMS_ChangeTextureAll(mMActor->getModel()->getModelData(), "H_ma_rak_dummy",
 	                     *img);
-	mMActor->setLightType(3);
+	mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 	if (mInstanceIndex == 0) {
 		for (u16 i = 0; i < getModel()->getModelData()->getJointNum(); ++i)
 			;
@@ -291,8 +292,8 @@ void TTelesa::perform(u32 cue, JDrama::TGraphics* graphics)
 				               mPosition.z, mRotation.x, mRotation.y,
 				               mRotation.z);
 				mImitatedBmd->getMActor()->getModel()->setBaseTRMtx(afStack_58);
-				J3DModel* model = mImitatedBmd->getMActor()->getModel();
-				model->unk14    = JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f);
+				mImitatedBmd->getMActor()->getModel()->setBaseScale(
+				    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 			}
 
 			if (cue & CUE_ENTRY)
@@ -582,7 +583,7 @@ void TTelesa::changeOut()
 	offLiveFlag(LIVE_FLAG_HIDDEN);
 	mPosition = mJuiceBlock->mPosition;
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
-	getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+	getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	mJuiceBlock->kill();
 	mJuiceBlock = nullptr;
 }
@@ -694,7 +695,7 @@ void TTelesa::initAttacker(THitActor* param_1)
 	offHitFlag(HIT_FLAG_UNK10000000);
 	unk150 &= ~0x40;
 	onLiveFlag(LIVE_FLAG_HIDDEN);
-	mMActor->getFrameCtrl(0)->setFrame(0.0f);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	mHeadHeight = 250.0f;
 
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELESA_APPEAR, &mPosition, 0,
@@ -713,7 +714,7 @@ void TTelesa::initItemAttacker(THitActor* param_1)
 
 	setFlyParam(1.0f);
 	unk150 &= ~0x40;
-	mMActor->getFrameCtrl(0)->setFrame(0.0f);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	mHeadHeight = 250.0f;
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELESA_APPEAR, &mPosition, 0,
 	                                nullptr, 0, 4);
@@ -801,7 +802,7 @@ void TTelesa::setTypeCanSee()
 	mTelesaType = TELESA_TYPE_CAN_SEE;
 	mFadeState  = FADE_STATE_VISIBLE;
 	offLiveFlag(LIVE_FLAG_HIDDEN);
-	mMActor->setLightType(1);
+	mMActor->setLightType(LIGHT_TYPE_OBJECT);
 }
 
 void TTelesa::changeTevKColor()
@@ -821,7 +822,7 @@ void TTelesa::changeTevKColor()
 				loopAppearTime = unk194->mSLAppearTime.get();
 			if (mFadeLoopTimer <= loopAppearTime)
 				break;
-			mMActor->setLightType(3);
+			mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 			mFadeState     = FADE_STATE_FADE_OUT;
 			mFadeLoopTimer = 0;
 			break;
@@ -853,7 +854,7 @@ void TTelesa::changeTevKColor()
 			mFadeState         = FADE_STATE_VISIBLE;
 			mFadeTimer         = 0;
 			mTelesaFadeColor.a = 0xff;
-			mMActor->setLightType(1);
+			mMActor->setLightType(LIGHT_TYPE_OBJECT);
 		} else {
 			mTelesaFadeColor.a = progress;
 		}
@@ -1237,7 +1238,7 @@ void TKageMarioModoki::init(TLiveManager* manager)
 	TWalkerEnemy::init(manager);
 	mSpine->initWith(&TNerveKageMarioModokiWait::theNerve());
 	mMActor->resetDL();
-	mMActor->setLightType(3);
+	mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 
 	TScreenTexture* tex
 	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");

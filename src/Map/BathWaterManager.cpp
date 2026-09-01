@@ -1121,7 +1121,8 @@ public:
 		                    modelData->getVertexData().getVtxNormArray());
 		J3DLoadArrayBasePtr(GX_VA_CLR0,
 		                    modelData->getVertexData().getVtxColorArray(0));
-		GXCallDisplayList(modelData->getShapeNodePointer(0)->mGDCommands, 0xC0);
+		GXCallDisplayList(modelData->getShapeNodePointer(0)->getVcdVatCmd(),
+		                  J3DShape::kVcdVatDLSize);
 		GXLoadNrmMtxImm(unk80020, GX_PNMTX0);
 		GXSetCurrentMtx(GX_PNMTX0);
 

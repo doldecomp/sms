@@ -130,7 +130,7 @@ void TMario::stopCommon(int anim_id, int status_on_end)
 {
 	waitProcess();
 	setAnimation(anim_id, 1.0f);
-	if (onYoshi() && mYoshi->mActor->curAnmEndsNext(0, nullptr)) {
+	if (onYoshi() && mYoshi->mActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		changePlayerStatus(status_on_end, 0, false);
 	} else if (isLast1AnimeFrame()) {
 		changePlayerStatus(status_on_end, 0, false);

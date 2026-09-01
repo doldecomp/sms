@@ -2,6 +2,7 @@
 #define J3D_CLUSTER_HPP
 
 #include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
+#include <JSystem/J3D/J3DAssert.hpp>
 #include <dolphin/types.h>
 #include <dolphin/mtx.h>
 
@@ -44,17 +45,17 @@ class J3DDeformer {
 public:
 	void clear();
 	void deform(J3DModel*, u16);
-	void deform(J3DModel*, u16, float*);
+	void deform(J3DModel*, u16, f32*);
 	void base(J3DModel*);
-	void normalize(float*);
-	void normalizeWeight(int, float*);
+	void normalize(f32*);
+	void normalizeWeight(int, f32*);
 
 	void onFlag(u32 flag) { mFlags |= flag; }
 	void offFlag(u32 flag) { mFlags &= ~flag; }
 	BOOL checkFlag(u32 flag) { return mFlags & flag ? TRUE : FALSE; }
 	void setAnmCluster(J3DAnmCluster* anm) { mAnmCluster = anm; }
 
-public:
+private:
 	/* 0x00 */ J3DDeformData* mDeformData;
 	/* 0x04 */ J3DAnmCluster* mAnmCluster;
 	/* 0x08 */ f32* mWeightList;
@@ -62,11 +63,29 @@ public:
 	/* 0x10 */ u32 mFlags;
 };
 
-class J3DCluster {
-public:
-	J3DDeformer* getDeformer() { return mDeformer; }
+struct J3DCluster {
+	void operator=(const J3DCluster& other)
+	{
+		mMaxAngle         = other.mMaxAngle;
+		mMinAngle         = other.mMinAngle;
+		mClusterKey       = other.mClusterKey;
+		mFlags            = other.mFlags;
+		mKeyNum           = other.mKeyNum;
+		mPosNum           = other.mPosNum;
+		mNrmNum           = other.mNrmNum;
+		mClusterVertexNum = other.mClusterVertexNum;
+		mPosDstIdx        = other.mPosDstIdx;
+		mClusterVertex    = other.mClusterVertex;
+		mDeformer         = other.mDeformer;
+	}
 
-public:
+	J3DDeformer* getDeformer() { return mDeformer; }
+	void setDeformer(J3DDeformer* deformer)
+	{
+		J3D_ASSERT_NULLPTR(85, deformer);
+		mDeformer = deformer;
+	}
+
 	/* 0x00 */ f32 mMaxAngle;
 	/* 0x04 */ f32 mMinAngle;
 	/* 0x08 */ J3DClusterKey* mClusterKey;
@@ -99,7 +118,7 @@ public:
 	f32* getVtxPos() { return mVtxPos; }
 	f32* getVtxNrm() { return mVtxNrm; }
 
-public:
+private:
 	/* 0x00 */ u16 mClusterNum;
 	/* 0x02 */ u16 mClusterKeyNum;
 	/* 0x04 */ u16 mClusterVertexNum;

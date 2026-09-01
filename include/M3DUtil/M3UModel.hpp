@@ -3,6 +3,7 @@
 
 #include <JSystem/JDrama/JDRGraphics.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 
 struct M3UMtxCalcSetInfo;
 class J3DModel;
