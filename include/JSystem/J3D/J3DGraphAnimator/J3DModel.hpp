@@ -250,7 +250,9 @@ public:
 	MtxPtr getAnmMtx(int idx) { return mNodeMatrices[idx]; }
 	void setAnmMtx(int idx, Mtx mtx) { MTXCopy(mtx, mNodeMatrices[idx]); }
 	J3DMatPacket* getMatPacket(u16 idx) { return &mMatPackets[idx]; }
+	J3DMatPacket* getMatPacketArray() { return mMatPackets; }
 	J3DShapePacket* getShapePacket(u16 idx) { return &mShapePackets[idx]; }
+	J3DShapePacket* getShapePacketArray() { return mShapePackets; }
 
 	u8 getScaleFlag(int idx) const { return mScaleFlagArr[idx]; }
 	void setScaleFlag(int idx, u8 param_1) { mScaleFlagArr[idx] = param_1; }
@@ -305,7 +307,7 @@ public:
 
 	virtual ~J3DModel();
 
-public:
+protected:
 	/* 0x04 */ J3DModelData* mModelData;
 	/* 0x08 */ u32 unk8;
 	/* 0x0C */ J3DCalcCallBack unkC;

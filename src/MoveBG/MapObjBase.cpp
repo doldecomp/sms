@@ -250,7 +250,7 @@ void TMapObjBase::startAnim(u16 param_1)
 			setAnmSound(data->unk10);
 	} else {
 		MActor* actor = mMActor;
-		actor->getModel()->mModelData->mJointNodePointer[0]->setMtxCalc(
+		actor->getModel()->getModelData()->getJointNodePointer(0)->setMtxCalc(
 		    actor->unk8);
 	}
 }
@@ -496,10 +496,10 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if ((cue & CUE_CALC_ANIM) && mMActor) {
 			if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK200)) {
-				if (getModel()->mShapePackets->isVisible())
+				if (getModel()->getShapePacket(0)->isVisible())
 					SMS_HideAllShapePacket(getModel());
 			} else {
-				if (!getModel()->mShapePackets->isVisible())
+				if (!getModel()->getShapePacket(0)->isVisible())
 					SMS_ShowAllShapePacket(getModel());
 			}
 		}
@@ -551,10 +551,10 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 		calc();
 		if (mMActor) {
 			if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK200)) {
-				if (getModel()->mShapePackets->isVisible())
+				if (getModel()->getShapePacket(0)->isVisible())
 					SMS_HideAllShapePacket(getModel());
 			} else {
-				if (!getModel()->mShapePackets->isVisible())
+				if (!getModel()->getShapePacket(0)->isVisible())
 					SMS_ShowAllShapePacket(getModel());
 			}
 		}

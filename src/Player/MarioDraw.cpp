@@ -773,7 +773,7 @@ void TMario::getJumpIntoWaterModelData() { }
 
 void TMario::getHeadRot() { }
 
-Mtx* TMario::getRootAnmMtx() { return mModel->getModel()->mNodeMatrices; }
+Mtx* TMario::getRootAnmMtx() { return (Mtx*)mModel->getModel()->getAnmMtx(0); }
 
 MtxPtr TMario::getCenterAnmMtx()
 {
@@ -1445,13 +1445,12 @@ void TMario::initMirrorModel()
 
 void TMario::finalDrawInitialize()
 {
-	// volatile u32 padding[10];
 	changeHand(0);
 	SMS_MakeDLAndLock(mModel->getModel());
 
 	for (int i = 0; i < mBodyModelData->getMaterialNum(); ++i)
 		if (i == mMaterialIdEyeL || i == mMaterialIdEyeR)
-			mModel->getModel()->mMatPackets[i].offFlag(0x1);
+			mModel->getModel()->getMatPacketArray()[i].offFlag(0x1);
 
 	for (int i = 0; i < mBodyModelData->getMaterialNum(); ++i)
 		SMS_InitPacket_OneTevKColorAndFog(mModel->getModel(), i, GX_KCOLOR0,
@@ -2206,14 +2205,14 @@ void TMario::addDamageFog(JDrama::TGraphics* graphics)
 
 	if (check == true) {
 		// Very likely an inline since it is duplicated
-		J3DModelData* modelData = mModel->unk8->mModelData;
+		J3DModelData* modelData = mModel->getModel()->getModelData();
 		for (u16 i = 0; i < modelData->getMaterialNum(); ++i) {
 			J3DFog* fog
 			    = modelData->getMaterialNodePointer(i)->getPEBlock()->getFog();
 			fog->mColor = fogColor;
 		}
 
-		SMS_AddDamageFogEffect(mModel->unk8->getModelData(), mPosition,
+		SMS_AddDamageFogEffect(mModel->getModel()->getModelData(), mPosition,
 		                       graphics);
 
 		if (mCap != nullptr) {
@@ -2260,7 +2259,7 @@ void TMario::addDamageFog(JDrama::TGraphics* graphics)
 					    mHandModels[handIdx][modelIdx]->getModelData());
 				}
 			}
-			SMS_ResetDamageFogEffect(mRHand4ndModel->mModelData);
+			SMS_ResetDamageFogEffect(mRHand4ndModel->getModelData());
 		}
 	}
 }

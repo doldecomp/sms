@@ -1,6 +1,7 @@
 #ifndef J3D_MATERIAL_HPP
 #define J3D_MATERIAL_HPP
 
+#include <limits.h>
 #include <stdint.h>
 #include <types.h>
 #include <JSystem/J3d/J3DGraphBase/Blocks/J3DTevBlocks.hpp>
@@ -19,6 +20,11 @@ class J3DPEBlock;
 class J3DDisplayListObj;
 
 class J3DMaterial {
+	friend class J3DModelLoader_v21;
+	friend class J3DModelLoader_v26;
+	friend class J3DMaterialFactory;
+	friend class J3DMaterialFactory_v21;
+
 public:
 	J3DMaterial() { initialize(); }
 	~J3DMaterial() { }
@@ -108,18 +114,25 @@ public:
 		return (mMaterialMode & 3) ? GX_TRUE : GX_FALSE;
 	}
 
-	// TODO: presumably this is something called diff flag?
+	uintptr_t getMaterialID() const { return unk18 & ~DIFF_FLAG; }
+	void setMaterialID(uintptr_t id) { unk18 = id; }
+
 	BOOL getSomeFlag() { return unk1C & 1 ? TRUE : FALSE; }
 	void setSomeFlag() { unk1C |= 1; }
 
-public:
+private:
+	enum {
+		DIFF_FLAG   = 1 << (sizeof(uintptr_t) * CHAR_BIT - 1),
+		UNIQUE_FLAG = 1 << (sizeof(uintptr_t) * CHAR_BIT - 2),
+	};
+
 	/* 0x0 */ J3DMaterial* mNext;
 	/* 0x4 */ J3DShape* mShape;
 	/* 0x8 */ u32 mMaterialMode;
 	/* 0xC */ u16 mIndex;
 	/* 0x10 */ u32 mInvalid;
 	/* 0x14 */ char unk14[4];
-	/* 0x18 */ u32 unk18;
+	/* 0x18 */ uintptr_t unk18;
 	/* 0x1C */ u32 unk1C;
 	/* 0x20 */ J3DColorBlock* mColorBlock;
 	/* 0x24 */ J3DTexGenBlock* mTexGenBlock;

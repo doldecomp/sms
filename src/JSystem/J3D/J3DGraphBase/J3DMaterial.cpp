@@ -912,7 +912,7 @@ void J3DMaterial::setCurrentMtx()
 void J3DMaterial::copy(J3DMaterial* other)
 {
 	unk18 = other->unk18;
-	unk18 &= ~0x80000000;
+	unk18 &= ~DIFF_FLAG;
 	mColorBlock->reset(other->mColorBlock);
 	mTexGenBlock->reset(other->mTexGenBlock);
 	mTevBlock->reset(other->mTevBlock);
@@ -922,8 +922,8 @@ void J3DMaterial::copy(J3DMaterial* other)
 
 void J3DMaterial::reset()
 {
-	if ((~unk18 & 0x80000000) == 0) {
-		unk18 &= ~0x80000000;
+	if ((~unk18 & DIFF_FLAG) == 0) {
+		unk18 &= ~DIFF_FLAG;
 		mMaterialMode = mOriginalMaterial->mMaterialMode;
 		mInvalid      = mOriginalMaterial->mInvalid;
 		mMaterialAnm  = nullptr;
@@ -933,10 +933,10 @@ void J3DMaterial::reset()
 
 void J3DMaterial::change()
 {
-	if (unk18 & 0xC0000000) {
+	if (unk18 & (DIFF_FLAG | UNIQUE_FLAG))
 		return;
-	}
-	unk18 |= 0x80000000;
+
+	unk18 |= DIFF_FLAG;
 	mMaterialMode = mOriginalMaterial->mMaterialMode;
 	mInvalid      = mOriginalMaterial->mInvalid;
 	mMaterialAnm  = nullptr;

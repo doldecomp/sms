@@ -22,19 +22,19 @@ J3DVertexData::~J3DVertexData() { }
 J3DVertexBuffer::J3DVertexBuffer(J3DVertexData* vertex_data)
 {
 	mVertexData                = vertex_data;
-	mVtxPosArray[0]            = vertex_data->mVtxPosArray;
-	mVtxNrmArray[0]            = vertex_data->mVtxNormArray;
-	mVtxColArray[0]            = vertex_data->mVtxColorArray[0];
+	mVtxPosArray[0]            = vertex_data->getVtxPosArray();
+	mVtxNrmArray[0]            = vertex_data->getVtxNormArray();
+	mVtxColArray[0]            = vertex_data->getVtxColorArray(0);
 	mVtxPosArray[1]            = nullptr;
 	mVtxNrmArray[1]            = nullptr;
 	mVtxColArray[1]            = nullptr;
-	mTransformedVtxPosArray[0] = vertex_data->mVtxPosArray;
-	mTransformedVtxNrmArray[0] = vertex_data->mVtxNormArray;
+	mTransformedVtxPosArray[0] = vertex_data->getVtxPosArray();
+	mTransformedVtxNrmArray[0] = vertex_data->getVtxNormArray();
 	mTransformedVtxPosArray[1] = nullptr;
 	mTransformedVtxNrmArray[1] = nullptr;
-	unk2C                      = vertex_data->mVtxPosArray;
-	unk30                      = vertex_data->mVtxNormArray;
-	unk34                      = vertex_data->mVtxColorArray[0];
+	unk2C                      = vertex_data->getVtxPosArray();
+	unk30                      = vertex_data->getVtxNormArray();
+	unk34                      = vertex_data->getVtxColorArray(0);
 }
 
 J3DVertexBuffer::~J3DVertexBuffer() { }

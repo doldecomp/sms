@@ -21,7 +21,7 @@ void M3UModelMario::updateInMotion()
 	for (int i = 0; i < unk10; ++i) {
 		SomeModelMarioStruct& info = unk24[i];
 		getFrameCtrl(info.unk8).update();
-		J3DJoint* jnt = unk8->mModelData->getJointNodePointer(info.unk0);
+		J3DJoint* jnt = unk8->getModelData()->getJointNodePointer(info.unk0);
 
 		if (info.unk3 == 0xff) {
 			jnt->setMtxCalc(nullptr);
