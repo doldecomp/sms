@@ -48,58 +48,59 @@ public:
 		const char* getString() const { return mString; }
 		u16 getHash() const { return mHash; }
 
-		u16 mHash;         // _00
-		u16 mLength;       // _02
-		char mString[257]; // _04
+	private:
+		/* 0x0 */ u16 mHash;
+		/* 0x2 */ u16 mLength;
+		/* 0x4 */ char mString[257];
 	};
 
 	struct SDIFileEntry {
-		u16 mFileID;             // _00
-		u16 mHash;               // _02
-		u32 mFlagsAndNameOffset; // _04
-		u32 mDataOffset;         // _08
-		u32 mSize;               // _0C
-		void* mData;             // _10
+		/* 0x00 */ u16 mFileID;
+		/* 0x02 */ u16 mHash;
+		/* 0x04 */ u32 mFlagsAndNameOffset;
+		/* 0x08 */ u32 mDataOffset;
+		/* 0x0C */ u32 mSize;
+		/* 0x10 */ void* mData;
 	};
 
 	struct SDirEntry {
-		u8 mFlags;         // _00
-		u8 _01;            // _01
-		u16 mID;           // _02
-		const char* mName; // _04
+		/* 0x0 */ u8 mFlags;
+		/* 0x1 */ u8 _01;
+		/* 0x2 */ u16 mID;
+		/* 0x4 */ const char* mName;
 	};
 
 	struct SDIDirEntry {
-		u32 mType;     // _00
-		u32 mOffset;   // _04
-		u16 _08;       // _08
-		u16 mNum;      // _0A
-		u32 mFirstIdx; // _0C
+		/* 0x0 */ u32 mType;
+		/* 0x4 */ u32 mOffset;
+		/* 0x8 */ u16 _08;
+		/* 0xA */ u16 mNum;
+		/* 0xC */ u32 mFirstIdx;
 	};
 
 	// NB: Fabricated name
 	struct SArcDataInfo {
-		u32 num_nodes;           // _00
-		u32 node_offset;         // _04
-		u32 num_file_entries;    // _08
-		u32 file_entry_offset;   // _0C
-		u32 string_table_length; // _10
-		u32 string_table_offset; // _14
-		u16 nextFreeFileID;      // _18
-		bool isSyncIDs;          // _1A
-		u8 _1B[5];               // _1B, unknown
+		/* 0x00 */ u32 num_nodes;
+		/* 0x04 */ u32 node_offset;
+		/* 0x08 */ u32 num_file_entries;
+		/* 0x0C */ u32 file_entry_offset;
+		/* 0x10 */ u32 string_table_length;
+		/* 0x14 */ u32 string_table_offset;
+		/* 0x18 */ u16 nextFreeFileID;
+		/* 0x1A */ bool isSyncIDs;
+		/* 0x1B */ u8 _1B[5];
 	};
 
 	// NB: Fabricated name - need to check size
 	struct SArcHeader {
-		u32 signature;        // _00
-		u32 file_length;      // _04
-		u32 header_length;    // _08
-		u32 file_data_offset; // _0C
-		u32 file_data_length; // _10
-		u32 _14;              // _14
-		u32 _18;              // _18
-		u32 _1C;              // _1C
+		/* 0x00 */ u32 signature;
+		/* 0x04 */ u32 file_length;
+		/* 0x08 */ u32 header_length;
+		/* 0x0C */ u32 file_data_offset;
+		/* 0x10 */ u32 file_data_length;
+		/* 0x14 */ u32 _14;
+		/* 0x18 */ u32 _18;
+		/* 0x1C */ u32 _1C;
 	};
 
 	JKRArchive();
@@ -140,12 +141,11 @@ public:
 	void* getIdxResource(u32 index);
 
 	static JKRArchive* mount(char const*, EMountMode, JKRHeap*,
-	                         EMountDirection);                  // yes
-	static JKRArchive* mount(void*, JKRHeap*, EMountDirection); // unused
+	                         EMountDirection);
+	static JKRArchive* mount(void*, JKRHeap*, EMountDirection);
 	static void* getGlbResource(u32 type, const char* name,
 	                            JKRArchive* archive);
 
-	// Unused/inlined:
 	JKRArchive(const char* p1, EMountMode mountMode);
 	static JKRArchive* check_mount_already(s32);
 	static JKRArchive* check_mount_already(s32, JKRHeap*);
@@ -171,18 +171,16 @@ public:
 	static u32 sCurrentDirID;
 
 protected:
-	// _00     = VTBL
-	// _00-_38 = JKRFileLoader
-	JKRHeap* mHeap;                  // _38
-	u8 mMountMode;                   // _3C
-	s32 mEntryNum;                   // _40
-	SArcDataInfo* mArcInfoBlock;     // _44
-	SDIDirEntry* mDirectories;       // _48
-	SDIFileEntry* mFileEntries;      // _4C
-	const char* mStrTable;           // _50
-	int _54;                         // _54
-	JKRCompression mCompression;     // _58
-	EMountDirection mMountDirection; // _5C
+	/* 0x38 */ JKRHeap* mHeap;
+	/* 0x3C */ u8 mMountMode;
+	/* 0x40 */ s32 mEntryNum;
+	/* 0x44 */ SArcDataInfo* mArcInfoBlock;
+	/* 0x48 */ SDIDirEntry* mDirectories;
+	/* 0x4C */ SDIFileEntry* mFileEntries;
+	/* 0x50 */ const char* mStrTable;
+	/* 0x54 */ int _54;
+	/* 0x58 */ JKRCompression mCompression;
+	/* 0x5C */ EMountDirection mMountDirection;
 };
 
 enum JKRMemBreakFlag { MBF_0 = 0, MBF_1 = 1 };

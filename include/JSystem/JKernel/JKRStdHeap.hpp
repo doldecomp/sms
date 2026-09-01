@@ -8,32 +8,29 @@ class JKRStdHeap : public JKRHeap {
 public:
 	JKRStdHeap(void* data, u32 size, JKRHeap* parent, bool errorFlag);
 
-	virtual ~JKRStdHeap();                                         // _08
-	virtual void* alloc(u32 size, int alignment);                  // _10
-	virtual void free(void* ptr);                                  // _14
-	virtual void freeTail();                                       // _18
-	virtual void freeAll();                                        // _1C
-	virtual s32 resize(void* ptr, u32 size);                       // _20
-	virtual s32 getSize(void* ptr) { return OSReferentSize(ptr); } // _24
-	virtual s32 getFreeSize();                                     // _28
-	virtual s32 getTotalFreeSize() { return getFreeSize(); }       // _2C
-	virtual u32 getHeapType() { return 'STDH'; }                   // _30
-	virtual bool check() { return OSCheckHeap(mHeapId) != -1; }    // _34
-	virtual bool dump()                                            // _3C
+	virtual ~JKRStdHeap();
+	virtual void* alloc(u32 size, int alignment);
+	virtual void free(void* ptr);
+	virtual void freeTail();
+	virtual void freeAll();
+	virtual s32 resize(void* ptr, u32 size);
+	virtual s32 getSize(void* ptr) { return OSReferentSize(ptr); }
+	virtual s32 getFreeSize();
+	virtual s32 getTotalFreeSize() { return getFreeSize(); }
+	virtual u32 getHeapType() { return 'STDH'; }
+	virtual bool check() { return OSCheckHeap(mHeapId) != -1; }
+	virtual bool dump()
 	{
 		OSDumpHeap(mHeapId);
 		return OSCheckHeap(mHeapId) != -1;
 	}
-	virtual void state_register(TState*, u32) const; // _48
-	virtual bool state_compare(const TState& fst,
-	                           const TState& snd) const; // _4C
+	virtual void state_register(TState*, u32) const;
+	virtual bool state_compare(const TState& fst, const TState& snd) const;
 
 	static JKRStdHeap* create(u32 size, JKRHeap* parent, bool errorFlag);
 
 private:
-	// _00     = VTBL
-	// _00-_68 = JKRHeap
-	s32 mHeapId; // _68
+	/* 0x68 */ s32 mHeapId;
 };
 
 inline JKRStdHeap* JKRCreateStdHeap(u32 size, JKRHeap* parent, bool errorFlag)
