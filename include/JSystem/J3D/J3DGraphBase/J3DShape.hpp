@@ -41,7 +41,7 @@ public:
 	static LoadPipeline mtxLoadPipeline[4];
 	static u32 currentPipeline;
 
-public:
+private:
 	u16 mUseMtxIndex;
 };
 
@@ -57,7 +57,7 @@ public:
 	virtual void load() const;
 	virtual void calcNBTScale(const Vec&, float (*)[3][3], float (*)[3][3]) { }
 
-public:
+private:
 	void* mDisplayList;
 };
 
@@ -82,7 +82,7 @@ public:
 	virtual void load() const;
 	virtual void calcNBTScale(const Vec&, float (*)[3][3], float (*)[3][3]);
 
-public:
+private:
 	u16 mUseMtxNum;
 	u16* mUseMtxIndexTable;
 };
@@ -125,6 +125,8 @@ enum J3DShpFlag {
  * limitation of the GX hardware.
  */
 class J3DShape {
+	friend class J3DShapeFactory;
+
 public:
 	J3DShape()
 	{
@@ -205,7 +207,7 @@ public:
 		kVcdVatDLSize = 0xC0,
 	};
 
-public:
+private:
 	/* 0x0 */ J3DMaterial* mMaterial;
 	/* 0x4 */ u16 mIndex;
 	/* 0x6 */ u16 mMtxGroupNum;

@@ -121,7 +121,7 @@ public:
 		return mpMaterialInitData[mpMaterialID[idx]].mMaterialMode;
 	}
 
-public:
+private:
 	/* 0x00 */ u16 mMaterialNum;
 	/* 0x04 */ J3DMaterialInitData_v21* mpMaterialInitData;
 	/* 0x08 */ u16* mpMaterialID;

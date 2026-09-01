@@ -110,9 +110,9 @@ void J3DModelData::makeHierarchy(J3DNode* root_node,
 
 bool J3DModelData::isDeformableVertexFormat() const
 {
-	GXVtxAttrFmtList* vtxAttrFmtList;
+	const GXVtxAttrFmtList* vtxAttrFmtList;
 	bool bVar1 = false;
-	for (vtxAttrFmtList = mVertexData.mVtxAttrFmtList;
+	for (vtxAttrFmtList = mVertexData.getVtxAttrFmtList();
 	     vtxAttrFmtList->attr != GX_VA_NULL; ++vtxAttrFmtList) {
 		switch (vtxAttrFmtList->attr) {
 		case GX_VA_POS:

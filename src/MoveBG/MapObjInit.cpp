@@ -10824,8 +10824,9 @@ void TMapObjBase::initUnique()
 		break;
 	case 0x2000000E:
 		if (mMActor) {
-			u32 uVar4 = getModel()->getMatPacket(0)->unk3C;
-			getModel()->getMatPacket(0)->unk3C = uVar4 & 0x7fffffff;
+			getModel()->getMatPacket(0)->setMaterialID(
+			    getModel()->getMatPacket(0)->getMaterialID()
+			    & ~J3DMatPacket::DIFF_FLAG);
 		}
 		break;
 	case 0x40000048:
