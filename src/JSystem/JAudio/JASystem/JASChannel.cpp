@@ -889,7 +889,7 @@ void TChannel::updateEffectorParam()
 		break;
 	}
 
-	f32 volume = unkA4 * (unk50 * unk90);
+	f32 volume = unkA4 * (unk54 * unk90);
 
 	pan   = clamp01(pan);
 	fxmix = clamp01(fxmix);

@@ -13,6 +13,10 @@ namespace BNKParser {
 
 	u32 sUsedHeapSize = 0;
 
+	static TOscillator::Osc_* findOscPtr(TBasicBank* bank, THeader* header,
+	                                     TOsc* osc);
+	static s16* getOscTableEndPtr(s16* ptr);
+
 	TBasicBank* createBasicBank(void* data)
 	{
 		JKRHeap* heap      = TBank::getCurrentHeap();
@@ -170,7 +174,8 @@ namespace BNKParser {
 		return bank;
 	}
 
-	TOscillator::Osc_* findOscPtr(TBasicBank* bank, THeader* header, TOsc* osc)
+	static TOscillator::Osc_* findOscPtr(TBasicBank* bank, THeader* header,
+	                                     TOsc* osc)
 	{
 		u32* instOffsets = header->mInstOffsets - 1;
 		for (int i = 0; i < 128; i++) {
@@ -196,7 +201,7 @@ namespace BNKParser {
 		return nullptr;
 	}
 
-	s16* getOscTableEndPtr(s16* ptr)
+	static s16* getOscTableEndPtr(s16* ptr)
 	{
 		s16 v1;
 		do {
@@ -206,7 +211,7 @@ namespace BNKParser {
 		return ptr;
 	}
 
-	u32 getUsedHeapSize() { return 0; }
+	u32 getUsedHeapSize() { return sUsedHeapSize; }
 
 } // namespace BNKParser
 

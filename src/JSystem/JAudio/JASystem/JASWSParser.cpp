@@ -141,4 +141,6 @@ TWaveBank* WSParser::createSimpleWaveBank(void* data)
 	return bank;
 }
 
+u32 WSParser::getUsedHeapSize() { return sUsedHeapSize; }
+
 } // namespace JASystem

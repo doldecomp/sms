@@ -23,6 +23,12 @@ namespace HardStream {
 
 	void init() { }
 
+	TPlayList::~TPlayList() { }
+
+	TPlayList::TPlayList() { clear(); }
+
+	TPlayPair::~TPlayPair() { }
+
 	void setMaxBgmPairs(u32) { }
 
 	void setMaxFilenames(u32) { }
@@ -32,6 +38,8 @@ namespace HardStream {
 	void setMasterVol(f32) { }
 
 	void setFile(u32, const char*, f32) { }
+
+	THardStreamFile::~THardStreamFile() { }
 
 	void setBgmPair(u32, u16, u16) { }
 

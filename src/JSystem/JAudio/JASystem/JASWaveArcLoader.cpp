@@ -23,6 +23,8 @@ bool WaveArcLoader::init()
 	return true;
 }
 
+void WaveArcLoader::init(u32) { }
+
 void WaveArcLoader::setCurrentDir(const char* dir)
 {
 	strcpy(sCurrentDir, dir);

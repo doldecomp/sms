@@ -54,28 +54,6 @@ u32 JAIGlobalParameter::interfaceHeapSize          = 0;
 char* JAIGlobalParameter::audioResPath             = nullptr;
 f32 JAIGlobalParameter::minDistanceVolume          = 0.0f;
 
-void JAIGlobalParameter::setParamSoundOutputMode(u32 value)
-{
-	int r31 = 1;
-	int r30 = 0;
-	switch (value) {
-	case 0:
-		r31 = 0;
-		r30 = 0;
-		break;
-	case 1:
-		r31 = 1;
-		r30 = 1;
-		break;
-	case 2:
-		r31 = 2;
-		r30 = 1;
-		break;
-	}
-	JAIBasic::basic->unk14 = value;
-	JASystem::Driver::setOutputMode(r31);
-	JAInter::StreamLib::setOutputMode(r30);
-}
 void JAIGlobalParameter::setParamAudioSystemThreadPriority(u8 value)
 {
 	audioSystemThreadPriority = value;
@@ -254,6 +232,29 @@ void JAIGlobalParameter::setParamSeDistanceWaitMax(u16 value)
 void JAIGlobalParameter::setParamSeDistancepitchMax(f32 value)
 {
 	seDistancepitchMax = value;
+}
+
+void JAIGlobalParameter::setParamSoundOutputMode(u32 value)
+{
+	int r31 = 1;
+	int r30 = 0;
+	switch (value) {
+	case 0:
+		r31 = 0;
+		r30 = 0;
+		break;
+	case 1:
+		r31 = 1;
+		r30 = 1;
+		break;
+	case 2:
+		r31 = 2;
+		r30 = 1;
+		break;
+	}
+	JAIBasic::basic->unk14 = value;
+	JASystem::Driver::setOutputMode(r31);
+	JAInter::StreamLib::setOutputMode(r30);
 }
 
 u8 JAIGlobalParameter::getParamAudioSystemThreadPriority()
