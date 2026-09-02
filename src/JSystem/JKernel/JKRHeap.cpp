@@ -1,6 +1,8 @@
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/JUtility/JUTAssert.hpp>
-#include "dolphin/os.h"
+#include <macros.h>
+#include <string.h>
+#include <dolphin/os.h>
 
 JKRHeap* JKRHeap::sSystemHeap;
 JKRHeap* JKRHeap::sCurrentHeap;
@@ -107,12 +109,34 @@ void JKRHeap::free(void* memory, JKRHeap* heap)
 
 void JKRHeap::freeAll()
 {
-	JUT_WARNING_F(417, !mInitFlag, "freeAll in heap %x", this);
+	JUT_WARNING_F(!mInitFlag, "freeAll in heap %x", this);
 	JSUListIterator<JKRDisposer> iterator(&mDisposerList);
 	while (iterator = mDisposerList.getFirst(),
 	       iterator != mDisposerList.getEnd()) {
 		iterator->~JKRDisposer();
 	}
+}
+
+s32 JKRHeap::resize(void* ptr, u32 size, JKRHeap* heap)
+{
+	if (!heap) {
+		heap = findFromRoot(ptr);
+		if (!heap) {
+			return -1;
+		}
+	}
+	return heap->resize(ptr, size);
+}
+
+s32 JKRHeap::getSize(void* ptr, JKRHeap* heap)
+{
+	if (!heap) {
+		heap = findFromRoot(ptr);
+		if (!heap) {
+			return -1;
+		}
+	}
+	return heap->getSize(ptr);
 }
 
 JKRHeap* JKRHeap::findFromRoot(void* ptr)
@@ -206,6 +230,28 @@ void JKRDefaultMemoryErrorRoutine(void* heap, u32 size, int alignment)
 	OSErrorLine(694, "abort\n");
 }
 
+bool JKRHeap::setErrorFlag(bool errorFlag)
+{
+	bool prev  = mErrorFlag;
+	mErrorFlag = errorFlag;
+	return prev;
+}
+
+JKRHeapErrorHandler* JKRHeap::setErrorHandler(JKRHeapErrorHandler* errorHandler)
+{
+	JKRHeapErrorHandler* prev = mErrorHandler;
+	if (!errorHandler) {
+		errorHandler = JKRDefaultMemoryErrorRoutine;
+	}
+	mErrorHandler = errorHandler;
+	return prev;
+}
+
+void JKRHeap::fillMemory(u8* dst, u32 size, u8 value)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
+
 void* operator new(u32 byteCount)
 {
 	return JKRHeap::alloc(byteCount, 4, nullptr);
@@ -254,26 +300,18 @@ JKRHeap::TState::TState(const JKRHeap* heap, u32 id, bool isCompareOnDestructed)
 	mHeap->state_register(this, mId);
 }
 
-JKRHeap::TState::~TState()
-{
-	if (mIsCompareOnDestructed) {
-		TState state(mHeap, mId, false);
-		if (!mHeap->state_compare(*this, state)) {
-			state_dumpDifference(*this, state);
-		}
-	}
-}
+JKRHeap::TState::~TState() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
 
 void JKRHeap::state_register(JKRHeap::TState* p, u32) const
 {
-	JUT_ASSERT(268, p != 0);
-	JUT_ASSERT(269, p->getHeap() == this);
+	JUT_ASSERT(p != 0);
+	JUT_ASSERT(p->getHeap() == this);
 }
 
 bool JKRHeap::state_compare(const JKRHeap::TState& r1,
                             const JKRHeap::TState& r2) const
 {
-	JUT_ASSERT(274, r1.getHeap() == r2.getHeap());
+	JUT_ASSERT(r1.getHeap() == r2.getHeap());
 	return r1.getCheckCode() == r2.getCheckCode();
 }
 
@@ -281,7 +319,7 @@ void JKRHeap::state_dumpDifference(const TState& r1, const TState& r2) { }
 
 void JKRHeap::state_dump(const TState& state) const
 {
-	JUT_LOG_F(1165, "check-code : 0x%08x", state.getCheckCode());
-	JUT_LOG_F(1166, "id         : 0x%08x", state.getId());
-	JUT_LOG_F(1167, "used size  : %u", state.getUsedSize());
+	JUT_LOG_F("check-code : 0x%08x", state.getCheckCode());
+	JUT_LOG_F("id         : 0x%08x", state.getId());
+	JUT_LOG_F("used size  : %u", state.getUsedSize());
 }

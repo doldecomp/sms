@@ -63,7 +63,10 @@ public:
 	JKRHeap* becomeCurrentHeap();
 	void destroy();
 	void fillFreeArea();
+	static s32 resize(void*, u32, JKRHeap*);
 	static s32 getSize(void*, JKRHeap*);
+	static void fillMemory(u8*, u32, u8);
+	static JKRHeapErrorHandler* setErrorHandler(JKRHeapErrorHandler*);
 
 	void* getMaxFreeBlock();
 	u32 getMaxAllocatableSize(int alignment);

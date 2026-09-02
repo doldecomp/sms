@@ -39,12 +39,15 @@ public:
 	static void* getGlbResource(const char*, JKRFileLoader* fileLoader);
 	static long getResSize(void* resourceBuffer, JKRFileLoader* fileLoader);
 	static size_t readGlbResource(void* resourceBuffer, u32 bufferSize,
-	                              const char* path,
-	                              JKRExpandSwitch expandSwitch);
+	                              const char* path);
+	static size_t readGlbResource(void* resourceBuffer, u32 bufferSize,
+	                              const char* name, JKRFileLoader* fileLoader);
 
 	static bool removeResource(void* resourceBuffer, JKRFileLoader* fileLoader);
 	static bool detachResource(void* resourceBuffer, JKRFileLoader* fileLoader);
 
+	static void unmountAll();
+	static u32 countFileGlb(const char*);
 	static JKRFileLoader* findVolume(const char**);
 	static JKRFileFinder* findFirstFile(const char*);
 	static const char* fetchVolumeName(char*, long, const char*);

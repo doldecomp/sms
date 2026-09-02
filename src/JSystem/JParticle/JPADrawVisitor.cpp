@@ -22,7 +22,7 @@ static inline u32 JPA_U8_THRE(u32 a, u32 b)
 
 void JPADrawExecLoadExTex::exec(const JPADrawContext* dc)
 {
-	JUT_ASSERT(50, dc->mTexIndices);
+	JUT_ASSERT(dc->mTexIndices);
 
 	GXTexCoordID coord = GX_TEXCOORD1;
 	GXTexMapID mapId   = GX_TEXMAP1;

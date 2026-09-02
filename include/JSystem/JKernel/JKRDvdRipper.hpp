@@ -10,12 +10,16 @@ struct SYaz0Header {
 };
 
 class JKRDMCommand {
+public:
 	JKRDMCommand();
 	~JKRDMCommand();
+
+	/* 0x00 */ JSULink<JKRDMCommand> mLink;
 };
 
 class JKRHeap;
 class JKRDvdFile;
+struct DVDFileInfo;
 class JKRDvdRipper {
 public:
 	static JSUList<JKRDMCommand> sDvdAsyncList;
@@ -36,6 +40,16 @@ public:
 	                           EAllocDirection, u32, int*);
 	static void* loadToMainRAM(JKRDvdFile*, u8*, JKRExpandSwitch, u32, JKRHeap*,
 	                           EAllocDirection, u32, int*);
+
+	static void* loadToMainRAMAsync(const char*, u8*, JKRExpandSwitch, u32,
+	                                JKRHeap*);
+	static void* loadToMainRAMAsync(s32, u8*, JKRExpandSwitch, u32, JKRHeap*);
+	static void* loadToMainRAMAsync(JKRDvdFile*, u8*, JKRExpandSwitch, u32,
+	                                JKRHeap*);
+	static void doneProcess(s32, DVDFileInfo*);
+	static bool sync(JKRDMCommand*, int);
+	static void syncAll(int);
+	static void countLeftSync();
 
 	static bool isErrorRetry(void) { return errorRetry; }
 	inline static u32 getSzpBufferSize() { return szpBufferSize; }

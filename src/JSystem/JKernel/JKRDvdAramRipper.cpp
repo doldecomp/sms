@@ -3,6 +3,7 @@
 #include <JSystem/JKernel/JKRAramPiece.hpp>
 #include <JSystem/JKernel/JKRAramStream.hpp>
 #include <JSystem/JKernel/JKRDecomp.hpp>
+#include <JSystem/JGadget/pointer.hpp>
 #include <JSystem/JKernel/JKRDvdFile.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/JSupport/JSUFileInputStream.hpp>
@@ -12,7 +13,7 @@
 #include <string.h>
 #include <macros.h>
 
-static int JKRDecompressFromDVDToAram(JKRDvdFile*, u32, u32, u32, u32, u32);
+int JKRDecompressFromDVDToAram(JKRDvdFile*, u32, u32, u32, u32, u32);
 static int decompSZS_subroutine(u8*, u32);
 static u8* firstSrcData();
 static u8* nextSrcData(u8*);
@@ -60,6 +61,27 @@ JKRAramBlock* JKRDvdAramRipper::loadToAram(JKRDvdFile* dvdFile, u32 address,
 }
 
 bool JKRDvdAramRipper::errorRetry = true;
+
+JKRADCommand* JKRDvdAramRipper::loadToAram_Async(char* path, u32 address,
+                                                 JKRExpandSwitch expandSwitch,
+                                                 void (*callback)(u32),
+                                                 u32 param_4, u32 param_5)
+{
+	// The linker takes the two JGadget::TPointer<JKRDvdFile> destructors from
+	// right after this function, so the original held the file in one of them.
+	JGadget::TPointer_delete<JKRDvdFile> dvdFile(new JKRDvdFile(path));
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return nullptr;
+}
+
+JKRADCommand* JKRDvdAramRipper::loadToAram_Async(s32 entryNumber, u32 address,
+                                                 JKRExpandSwitch expandSwitch,
+                                                 void (*callback)(u32),
+                                                 u32 param_4, u32 param_5)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return nullptr;
+}
 
 JKRADCommand* JKRDvdAramRipper::loadToAram_Async(JKRDvdFile* dvdFile,
                                                  u32 address,
@@ -221,6 +243,19 @@ bool JKRDvdAramRipper::syncAram(JKRADCommand* command, int param_1)
 	return true;
 }
 
+bool JKRDvdAramRipper::syncAramAll(int param_1)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return false;
+}
+
+void JKRDvdAramRipper::countLeftSync() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
+
+void JKRDvdAramRipper::afterAramAsync(JKRADCommand* command)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
+
 JKRADCommand::JKRADCommand()
     : mLink(this)
 {
@@ -251,9 +286,8 @@ static u32 fileOffset;
 static int readCount;
 static u32 maxDest;
 
-static int JKRDecompressFromDVDToAram(JKRDvdFile* dvdFile, u32 param_1,
-                                      u32 fileSize, u32 uncompressedSize,
-                                      u32 param_4, u32 param_5)
+int JKRDecompressFromDVDToAram(JKRDvdFile* dvdFile, u32 param_1, u32 fileSize,
+                               u32 uncompressedSize, u32 param_4, u32 param_5)
 {
 
 	int result = 0;
@@ -412,7 +446,7 @@ static u8* nextSrcData(u8* src)
 	if (transSize > transLeft) {
 		transSize = transLeft;
 	}
-	JUT_ASSERT(1036, transSize > 0);
+	JUT_ASSERT(transSize > 0);
 
 	while (true) {
 		s32 result = DVDReadPrio(srcFile->getFileInfo(), dest + size, transSize,

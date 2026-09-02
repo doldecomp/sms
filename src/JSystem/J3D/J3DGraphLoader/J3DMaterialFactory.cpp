@@ -129,7 +129,7 @@ J3DMaterial* J3DMaterialFactory::create(J3DMaterial* mat, int idx,
 
 	if (mat == nullptr) {
 		mat = new J3DMaterial();
-		J3D_ASSERT_ALLOCMEM(269, mat);
+		J3D_ASSERT_ALLOCMEM(mat);
 	}
 
 	mat->mColorBlock  = J3DMaterial::createColorBlock(colorFlag);

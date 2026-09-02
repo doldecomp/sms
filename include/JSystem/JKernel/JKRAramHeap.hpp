@@ -18,9 +18,19 @@ public:
 	JKRAramHeap(u32, u32);
 	virtual ~JKRAramHeap();
 
+	s32 changeGroupID(u8 newGroupId);
 	JKRAramBlock* alloc(u32, EAllocMode);
 	JKRAramBlock* allocFromHead(u32);
 	JKRAramBlock* allocFromTail(u32);
+	int freeLevel(u8 level);
+	int freeGroup(u8 groupId);
+	void freeAll();
+	void freeTail();
+	u32 getFreeSize();
+	u32 getTotalFreeSize();
+	u32 getUsedSize(u8 groupId);
+	bool isEmpty();
+	void dump();
 
 	void free(JKRAramBlock* block) { delete block; }
 

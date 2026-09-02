@@ -45,7 +45,7 @@ static GXColor* makeColorTable(JPAColorRegAnmKey* i_data, int i_keyNum,
 {
 	GXColor* p_clr_tbl
 	    = (GXColor*)JKRAllocFromHeap(i_heap, (i_size + 1) * sizeof(GXColor), 4);
-	JUT_ASSERT(48, p_clr_tbl);
+	JUT_ASSERT(p_clr_tbl);
 
 	f32 r_step, g_step, b_step, a_step;
 	r_step = g_step = b_step = a_step = 0.0f;
@@ -209,7 +209,7 @@ JPABaseShape::JPABaseShape(const u8* data, JKRHeap* heap)
 	}
 
 	if (unk83 & 2) {
-		JUT_ASSERT(1707, unk85 != 0);
+		JUT_ASSERT(unk85 != 0);
 		mPrmColors
 		    = makeColorTable((JPAColorRegAnmKey*)(data + *(s16*)(data + 0x14)),
 		                     unk85, mColorRegAnmMaxFrm, heap);
@@ -218,7 +218,7 @@ JPABaseShape::JPABaseShape(const u8* data, JKRHeap* heap)
 	}
 
 	if (unk84 & 2) {
-		JUT_ASSERT(1716, unk86 != 0);
+		JUT_ASSERT(unk86 != 0);
 		mEnvColors
 		    = makeColorTable((JPAColorRegAnmKey*)(data + *(s16*)(data + 0x16)),
 		                     unk86, mColorRegAnmMaxFrm, heap);

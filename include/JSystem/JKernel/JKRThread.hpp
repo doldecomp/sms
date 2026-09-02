@@ -105,4 +105,16 @@ protected:
 	/* 0x5C */ u32 mStackSize;
 };
 
+class JKRTask : public JKRThread {
+public:
+	JKRTask();
+
+	virtual ~JKRTask();
+	virtual void* run();
+
+	static JKRTask* create();
+	void destroy();
+	void request(void (*)(void*), void*);
+};
+
 #endif

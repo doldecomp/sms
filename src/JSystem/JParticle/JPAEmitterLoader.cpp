@@ -38,7 +38,7 @@ JPAEmitterData* JPAEmitterLoader_v10::load(JPATextureResource* param_1)
 	u32 nextOffset;
 
 	unk10 = new (mHeap, 0) JPAEmitterData;
-	JUT_ASSERT(234, unk10);
+	JUT_ASSERT(unk10);
 
 	u32 offset = 0x20;
 
@@ -62,18 +62,18 @@ JPAEmitterData* JPAEmitterLoader_v10::load(JPATextureResource* param_1)
 	}
 	unk10->unk4 = 1;
 	unk10->unk0 = new (mHeap, 0) JPADataBlockLinkInfo*[unk10->unk4];
-	JUT_ASSERT(243, unk10->unk0);
+	JUT_ASSERT(unk10->unk0);
 	JPADataBlockLinkInfo* linkInfo = new (mHeap, 0) JPADataBlockLinkInfo;
-	JUT_ASSERT(238, linkInfo);
+	JUT_ASSERT(linkInfo);
 	linkInfo->mKeyframeAnimationNum = kfa1Count;
 	linkInfo->mKeyframeAnimations
 	    = kfa1Count ? new (mHeap, 0) JPAKeyFrameAnime*[kfa1Count] : nullptr;
-	JUT_ASSERT(250, linkInfo->mKeyframeAnimations
-	                    || linkInfo->mKeyframeAnimationNum == 0);
+	JUT_ASSERT(linkInfo->mKeyframeAnimations
+	           || linkInfo->mKeyframeAnimationNum == 0);
 	linkInfo->mFieldNum = fld1Count;
 	linkInfo->mFields
 	    = fld1Count ? new (mHeap, 0) JPADataBlock*[fld1Count] : nullptr;
-	JUT_ASSERT(256, linkInfo->mFields || linkInfo->mFieldNum == 0);
+	JUT_ASSERT(linkInfo->mFields || linkInfo->mFieldNum == 0);
 	linkInfo->mTextureNum = tex1Count;
 	linkInfo->mTextureDataBase
 	    = tex1Count ? (u16*)JKRHeap::alloc(tex1Count * sizeof(u16), 4, mHeap)
@@ -89,33 +89,33 @@ JPAEmitterData* JPAEmitterLoader_v10::load(JPATextureResource* param_1)
 		if (*(u32*)(unk8 + offset2) == 'FLD1') {
 			linkInfo->mFields[nextFld1]
 			    = new (mHeap, 0) JPADataBlock(unk8 + offset2, mHeap);
-			JUT_ASSERT(274, linkInfo->mFields[nextFld1]);
+			JUT_ASSERT(linkInfo->mFields[nextFld1]);
 			++nextFld1;
 		} else if (*(u32*)(unk8 + offset2) == 'KFA1') {
 			linkInfo->mKeyframeAnimations[nextKfa1]
 			    = new (mHeap, 0) JPAKeyFrameAnime(unk8 + offset2, mHeap);
-			JUT_ASSERT(279, linkInfo->mKeyframeAnimations[nextKfa1]);
+			JUT_ASSERT(linkInfo->mKeyframeAnimations[nextKfa1]);
 			++nextKfa1;
 		} else if (*(u32*)(unk8 + offset2) == 'BEM1') {
 			linkInfo->mBaseEmitterBlock
 			    = new (mHeap, 0) JPADataBlock(unk8 + offset2, mHeap);
-			JUT_ASSERT(284, linkInfo->mBaseEmitterBlock);
+			JUT_ASSERT(linkInfo->mBaseEmitterBlock);
 		} else if (*(u32*)(unk8 + offset2) == 'BSP1') {
 			linkInfo->mBaseShape
 			    = new (mHeap, 0) JPABaseShape(unk8 + offset2, mHeap);
-			JUT_ASSERT(288, linkInfo->mBaseShape);
+			JUT_ASSERT(linkInfo->mBaseShape);
 		} else if (*(u32*)(unk8 + offset2) == 'ESP1') {
 			linkInfo->mExtraShape
 			    = new (mHeap, 0) JPAExtraShape(unk8 + offset2);
-			JUT_ASSERT(292, linkInfo->mExtraShape);
+			JUT_ASSERT(linkInfo->mExtraShape);
 		} else if (*(u32*)(unk8 + offset2) == 'SSP1') {
 			linkInfo->mSweepShape
 			    = new (mHeap, 0) JPASweepShape(unk8 + offset2);
-			JUT_ASSERT(296, linkInfo->mSweepShape);
+			JUT_ASSERT(linkInfo->mSweepShape);
 		} else if (*(u32*)(unk8 + offset2) == 'ETX1') {
 			linkInfo->mExTexShape
 			    = new (mHeap, 0) JPAExTexShape(unk8 + offset2);
-			JUT_ASSERT(300, linkInfo->mExTexShape);
+			JUT_ASSERT(linkInfo->mExTexShape);
 		}
 
 		offset2 += nextOffset;
