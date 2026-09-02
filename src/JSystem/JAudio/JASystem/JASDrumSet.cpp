@@ -11,12 +11,12 @@ bool TDrumSet::getParam(int key, int param_2, TInstParam* param_3) const
 
 	const TPerc* perc = unk4 + key;
 
-	param_3->unk0  = 0;
-	param_3->unk38 = 1;
-	param_3->unk10 *= perc->unk0;
-	param_3->unk14 *= perc->unk4;
-	param_3->unk20 = perc->unk8;
-	param_3->unk3A = perc->unkC;
+	param_3->mSourceType = 0;
+	param_3->mFixedPitch = 1;
+	param_3->mVolume *= perc->unk0;
+	param_3->mPitch *= perc->unk4;
+	param_3->mPan     = perc->unk8;
+	param_3->mRelease = perc->unkC;
 
 	static TOscillator::Osc_ osc;
 
@@ -38,19 +38,19 @@ bool TDrumSet::getParam(int key, int param_2, TInstParam* param_3) const
 			f32 y = effect->getY(key, param_2);
 			switch (effect->unk4) {
 			case 0:
-				param_3->unk18 *= y;
+				param_3->mEffectVolume *= y;
 				break;
 			case 1:
-				param_3->unk1C *= y;
+				param_3->mEffectPitch *= y;
 				break;
 			case 2:
-				param_3->unk2C = y;
+				param_3->mEffectPan = y;
 				break;
 			case 3:
-				param_3->unk30 = y;
+				param_3->mEffectFxmix = y;
 				break;
 			case 4:
-				param_3->unk34 = y;
+				param_3->mEffectDolby = y;
 				break;
 			}
 		}
@@ -60,9 +60,9 @@ bool TDrumSet::getParam(int key, int param_2, TInstParam* param_3) const
 		if (param_2 > region->unk0) {
 			continue;
 		}
-		param_3->unk10 *= region->unk8;
-		param_3->unk14 *= region->unkC;
-		param_3->unk4 = region->unk4;
+		param_3->mVolume *= region->unk8;
+		param_3->mPitch *= region->unkC;
+		param_3->mWaveId = region->unk4;
 		return true;
 	}
 	return false;
