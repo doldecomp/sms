@@ -20,12 +20,12 @@ bool TDrumSet::getParam(int key, int param_2, TInstParam* param_3) const
 
 	static TOscillator::Osc_ osc;
 
-	osc.unk0  = 0;
-	osc.unk4  = 1.0f;
-	osc.unk8  = nullptr;
-	osc.unkC  = nullptr;
-	osc.unk10 = 1.0f;
-	osc.unk14 = 0.0f;
+	osc.mTarget   = 0;
+	osc.mRate     = 1.0f;
+	osc.mAdsTable = nullptr;
+	osc.mRelTable = nullptr;
+	osc.mWidth    = 1.0f;
+	osc.mVertex   = 0.0f;
 
 	static TOscillator::Osc_* oscp = &osc;
 

@@ -1010,7 +1010,7 @@ u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 
 			JASystem::TTrack* track = JASystem::TrackMgr::handleToSeq(
 			    basic->unk0->unk180[i].unk48->getSeqParameter()->unk0);
-			if (track != param_1->unk2C0)
+			if (track != param_1->mParent)
 				continue;
 
 			u32 route = basic->routeToTrack(param_1->unk308);

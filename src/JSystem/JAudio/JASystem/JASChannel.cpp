@@ -576,7 +576,7 @@ f32 TChannel::bankOscToOfs(u32 index)
 
 void TChannel::effectOsc(u32 index, f32 effect)
 {
-	switch (unk38[index]->getOsc()->unk0) {
+	switch (unk38[index]->getOsc()->mTarget) {
 	case 1:
 		unk8C *= effect;
 		break;

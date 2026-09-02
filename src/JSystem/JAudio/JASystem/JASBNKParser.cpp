@@ -46,32 +46,32 @@ namespace BNKParser {
 						    = findOscPtr(bank, header, oscRaw);
 						if (osc == nullptr) {
 							osc           = new (heap, 0) TOscillator::Osc_;
-							osc->unk0     = oscRaw->unk0;
-							osc->unk4     = oscRaw->unk4;
+							osc->mTarget  = oscRaw->unk0;
+							osc->mRate    = oscRaw->unk4;
 							s16* oscTable = JSUConvertOffsetToPtr<s16>(
 							    header, oscRaw->unk8);
 							if (oscTable != nullptr) {
 								s32 tableLength
 								    = getOscTableEndPtr(oscTable) - oscTable;
-								osc->unk8 = new (heap, 0) s16[tableLength];
-								Calc::bcopy(oscTable, osc->unk8,
+								osc->mAdsTable = new (heap, 0) s16[tableLength];
+								Calc::bcopy(oscTable, osc->mAdsTable,
 								            tableLength * sizeof(s16));
 							} else {
-								osc->unk8 = nullptr;
+								osc->mAdsTable = nullptr;
 							}
 							oscTable = JSUConvertOffsetToPtr<s16>(header,
 							                                      oscRaw->unkC);
 							if (oscTable != nullptr) {
 								s32 tableLength
 								    = getOscTableEndPtr(oscTable) - oscTable;
-								osc->unkC = new (heap, 0) s16[tableLength];
-								Calc::bcopy(oscTable, osc->unkC,
+								osc->mRelTable = new (heap, 0) s16[tableLength];
+								Calc::bcopy(oscTable, osc->mRelTable,
 								            tableLength * sizeof(s16));
 							} else {
-								osc->unkC = nullptr;
+								osc->mRelTable = nullptr;
 							}
-							osc->unk10 = oscRaw->unk10;
-							osc->unk14 = oscRaw->unk14;
+							osc->mWidth  = oscRaw->unk10;
+							osc->mVertex = oscRaw->unk14;
 						}
 						instp->setOsc(oscIndex, osc);
 						oscIndex++;

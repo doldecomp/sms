@@ -171,7 +171,7 @@ void MSBgm::setStageBgmYoshiPercussion(bool param)
 		JASystem::TTrack* pTVar3 = getJASTrack(sound, 15);
 
 		if (pTVar3 != nullptr)
-			pTVar3->unk3C2 = param == 1 ? 0 : 1;
+			pTVar3->mMute = param == 1 ? 0 : 1;
 	}
 }
 
@@ -293,5 +293,5 @@ JASystem::TTrack* MSBgm::getJASTrack(JAISound* sound, u8 param_2)
 	if (!pTVar3)
 		return nullptr;
 
-	return pTVar3->unk2C4[param_2];
+	return pTVar3->mChildren[param_2];
 }
