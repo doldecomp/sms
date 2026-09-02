@@ -101,7 +101,7 @@ public:
 	void resetWaterMark();
 	void startTornadoBlur();
 	void ignoreWaterCheck();
-	BOOL is2ndFightNow() const;
+	bool is2ndFightNow() const;
 	void showMessage(u32);
 	void rumblePad(int, const JGeometry::TVec3<f32>&);
 	void startBGM();
@@ -124,7 +124,7 @@ public:
 	/* 0x170 */ s32 unk170;
 	/* 0x174 */ s32 unk174;
 	/* 0x178 */ s32 unk178;
-	/* 0x17C */ u8 unk17C;
+	/* 0x17C */ s8 unk17C;
 	/* 0x180 */ MActor* unk180;
 	/* 0x184 */ f32 unk184;
 	/* 0x188 */ TAreaCylinderManager* unk188;
@@ -136,7 +136,7 @@ public:
 	/* 0x1B8 */ s32 unk1B8;
 	/* 0x1BC */ u8 unk1BC;
 	/* 0x1C0 */ s32 unk1C0;
-	/* 0x1C4 */ u8 unk1C4;
+	/* 0x1C4 */ s8 unk1C4;
 	/* 0x1C8 */ f32 unk1C8;
 	/* 0x1CC */ u8 unk1CC;
 };
