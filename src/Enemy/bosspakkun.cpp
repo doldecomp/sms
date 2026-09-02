@@ -9,6 +9,7 @@
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <JSystem/JMath.hpp>
 #include <Map/MapData.hpp>
+#include <Map/PollutionManager.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <M3DUtil/MActor.hpp>
@@ -25,6 +26,7 @@
 #include <Strategic/Spine.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <System/MarDirector.hpp>
+#include <System/Particles.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <stdlib.h>
 
@@ -157,7 +159,26 @@ void TBPVomit::vomit()
 
 void TBPVomit::vomitFinished() { }
 
-void TBPVomit::perform(u32, JDrama::TGraphics*) { }
+void TBPVomit::perform(u32 flags, JDrama::TGraphics* graphics)
+{
+	if (unk14->getCurAnmIdx(ANM_TYPE_BCK) < 0)
+		return;
+
+	u32 calcAnim = flags & CUE_CALC_ANIM;
+	if (calcAnim && unk14->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		unk14->setBckFromIndex(-1);
+		unk18->setBckFromIndex(-1);
+		return;
+	}
+
+	if (calcAnim)
+		unk18->calcAnm();
+
+	if (flags & CUE_ENTRY)
+		gpPollution->stampModel(unk18->getModel());
+
+	unk14->perform(flags, graphics);
+}
 
 TBPTornado::TBPTornado(TBossPakkun* owner, const char* name)
     : THitActor(name)
@@ -204,9 +225,30 @@ TBPNavel::TBPNavel(TBossPakkun* owner, const char* name)
 {
 }
 
-BOOL TBPNavel::receiveMessage(THitActor*, u32) { return false; }
+BOOL TBPNavel::receiveMessage(THitActor* sender, u32 message)
+{
+	if (mOwner->mSpine->getLatestNerve() == &TNerveBPSleep::theNerve())
+		return mOwner->receiveMessage(sender, message);
 
-void TBPNavel::perform(u32, JDrama::TGraphics*) { }
+	if (sender->getActorType() == 0x1000001)
+		return false;
+
+	if (mOwner->unk16C != 1)
+		return true;
+
+	if (sender->getActorType() == 0x80000001 && message == HIT_MESSAGE_HIP_DROP)
+		mOwner->gotHipDropDamage();
+
+	return true;
+}
+
+void TBPNavel::perform(u32 flags, JDrama::TGraphics* graphics)
+{
+	if (flags & 2)
+		mOwner->getJointTransByIndex(6, &mPosition);
+
+	THitActor::perform(flags, graphics);
+}
 
 TBossPakkunMtxCalc::TBossPakkunMtxCalc(TBossPakkun* owner)
     : M3UMtxCalcSIAnmBlendQuat(false)
@@ -488,11 +530,71 @@ TBossPakkunManager::TBossPakkunManager(const char* name, int value)
 {
 }
 
-void TBossPakkunManager::initJParticle() { }
+void TBossPakkunManager::initJParticle()
+{
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_blur1.jpa", 0xa9);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_down.jpa", 0xaa);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_swing1.jpa", 0xab);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_swing2.jpa", 0xac);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_wathit.jpa", 0x15d);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_wathit_w.jpa", 0x15e);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_ase.jpa", 0x15f);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_blur2.jpa", 0x160);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_jita.jpa", 0x161);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_tr_rock.jpa", 0x162);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_tr_smoke.jpa", 0x163);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_tr_weed.jpa", 0x164);
+}
 
-void TBossPakkunManager::createModelData() { }
+void TBossPakkunManager::createModelData()
+{
+	if (unk54 != 0) {
+		static const TModelDataLoadEntry entry[] = {
+			{ "bosspaku_model.bmd",
+			  J3DMLF_MaterialPEFull | (1 << J3DMLF_TevStageNumShift), 0 },
+			{ "pollut_ball.bmd",
+			  J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+			      | (4 << J3DMLF_TevStageNumShift),
+			  0 },
+			{ "pollut_ball_stamp.bmd",
+			  J3DMLF_MaterialPEFull | (1 << J3DMLF_TevStageNumShift), 0 },
+			{ nullptr, 0, 0 },
+		};
+		createModelDataArray(entry);
+	} else {
+		static const TModelDataLoadEntry entry[] = {
+			{ "bosspaku_model.bmd",
+			  J3DMLF_MaterialPEFull | (1 << J3DMLF_TevStageNumShift), 0 },
+			{ "bosspaku_end.bmd",
+			  J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift), 0 },
+			{ "pollut_ball.bmd",
+			  J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+			      | (4 << J3DMLF_TevStageNumShift),
+			  0 },
+			{ "pollut_ball_stamp.bmd",
+			  J3DMLF_MaterialPEFull | (1 << J3DMLF_TevStageNumShift), 0 },
+			{ "bosspakuPollut.bmd",
+			  J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+			      | (2 << J3DMLF_TevStageNumShift),
+			  0 },
+			{ "bosspakuPollut_white.bmd",
+			  J3DMLF_MaterialPEFull | (1 << J3DMLF_TevStageNumShift), 0 },
+			{ "trunade.bmd",
+			  J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift), 0 },
+			{ nullptr, 0, 0 },
+		};
+		createModelDataArray(entry);
+	}
+}
 
-void TBossPakkunManager::load(JSUMemoryInputStream&) { }
+void TBossPakkunManager::load(JSUMemoryInputStream& stream)
+{
+	unk38 = new TBossPakkunParams("/enemy/bosspakkun.prm");
+	TEnemyManager::load(stream);
+
+	if (unk54 == 0)
+		initJParticle();
+}
 
 DEFINE_NERVE(TNerveBPWait, TLiveActor)
 {
