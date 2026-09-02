@@ -39,12 +39,12 @@ bool TBasicInst::getParam(int key, int velo, TInstParam* param) const
 {
 	char trash[4]; // TODO: what is this
 
-	param->unk0      = 0;
-	param->unk38     = 0;
-	param->mOscData  = unk14;
-	param->mOscCount = unk18;
-	param->unk10 *= unk4;
-	param->unk14 *= unk8;
+	param->mSourceType = 0;
+	param->mFixedPitch = 0;
+	param->mOscData    = unk14;
+	param->mOscCount   = unk18;
+	param->mVolume *= unk4;
+	param->mPitch *= unk8;
 
 	for (int i = 0; i < unk10; i++) {
 		TInstEffect* effect = unkC[i];
@@ -54,19 +54,19 @@ bool TBasicInst::getParam(int key, int velo, TInstParam* param) const
 		f32 y = effect->getY(key, velo);
 		switch (effect->unk4) {
 		case 0:
-			param->unk18 *= y;
+			param->mEffectVolume *= y;
 			break;
 		case 1:
-			param->unk1C *= y;
+			param->mEffectPitch *= y;
 			break;
 		case 2:
-			param->unk2C = y;
+			param->mEffectPan = y;
 			break;
 		case 3:
-			param->unk30 = y;
+			param->mEffectFxmix = y;
 			break;
 		case 4:
-			param->unk34 = y;
+			param->mEffectDolby = y;
 			break;
 		}
 	}
@@ -86,9 +86,9 @@ bool TBasicInst::getParam(int key, int velo, TInstParam* param) const
 	for (int i = 0; i < keymap->unk4; i++) {
 		const TVeloRegion* region = keymap->getVeloRegion(i);
 		if (velo <= region->unk0) {
-			param->unk10 *= region->unk8;
-			param->unk14 *= region->unkC;
-			param->unk4 = region->unk4;
+			param->mVolume *= region->unk8;
+			param->mPitch *= region->unkC;
+			param->mWaveId = region->unk4;
 			return true;
 		}
 	}

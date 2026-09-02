@@ -121,9 +121,7 @@ public:
 	/* 0x54 */ f32 unk54;
 	/* 0x58 */ u8 unk58[3];
 	/* 0x5C */ Driver::PanMatrix_ unk5C;
-	/* 0x68 */ Driver::PanMatrix_ unk68;
-	/* 0x74 */ Driver::PanMatrix_ unk74;
-	/* 0x80 */ Driver::PanMatrix_ unk80;
+	/* 0x68 */ Driver::PanMatrix_ unk68[3];
 	/* 0x8C */ f32 unk8C;
 	/* 0x90 */ f32 unk90;
 	/* 0x94 */ f32 unk94;
