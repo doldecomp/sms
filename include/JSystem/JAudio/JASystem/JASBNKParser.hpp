@@ -72,8 +72,6 @@ namespace BNKParser {
 	};
 
 	TBasicBank* createBasicBank(void* data);
-	TOscillator::Osc_* findOscPtr(TBasicBank* bank, THeader* header, TOsc* osc);
-	s16* getOscTableEndPtr(s16* ptr);
 	u32 getUsedHeapSize();
 
 	extern u32 sUsedHeapSize;

@@ -72,11 +72,42 @@ void JALSystem::processModFunc(JAISound* param_1, f32 param_2, u32 param_3,
 f32 JALSystem::processModDistVolume(u32 param_1, f32 param_2)
 {
 	f32 val;
-	if (spFManager->isRegistered(param_1, ModType_JALSeModVolDist)) {
+	if (TFlagManager::get()->isRegistered(param_1, ModType_JALSeModVolDist)) {
 		if (JALSeModVolDist::calc(param_1, param_2, &val))
 			return val;
-	} else if (spFManager->isRegistered(param_1, ModType_JALSeModVolDGrp)) {
+	} else if (TFlagManager::get()->isRegistered(param_1,
+	                                             ModType_JALSeModVolDGrp)) {
 		if (JALSeModVolDGrp::calcGrp(param_1, param_2, &val))
+			return val;
+	}
+
+	return 1.0f;
+}
+
+f32 JALSystem::processModDistPitch(u32 param_1, f32 param_2)
+{
+	f32 val;
+	if (TFlagManager::get()->isRegistered(param_1, ModType_JALSeModPitDist)) {
+		if (JALSeModPitDist::calc(param_1, param_2, &val))
+			return val;
+	} else if (TFlagManager::get()->isRegistered(param_1,
+	                                             ModType_JALSeModPitDGrp)) {
+		if (JALSeModPitDGrp::calcGrp(param_1, param_2, &val))
+			return val;
+	}
+
+	return 1.0f;
+}
+
+f32 JALSystem::processModDistFx(u32 param_1, f32 param_2)
+{
+	f32 val;
+	if (TFlagManager::get()->isRegistered(param_1, ModType_JALSeModEffDist)) {
+		if (JALSeModEffDist::calc(param_1, param_2, &val))
+			return val;
+	} else if (TFlagManager::get()->isRegistered(param_1,
+	                                             ModType_JALSeModEffDGrp)) {
+		if (JALSeModEffDGrp::calcGrp(param_1, param_2, &val))
 			return val;
 	}
 
@@ -227,6 +258,11 @@ JALSystem::TFlagManager::TFlagManager()
 void JALSystem::TFlagManager::addUseFlag(u32 param_1, u16 param_2)
 {
 	unk0[(u16)param_1 >> 12][param_1 & 0x3FF] += param_2;
+}
+
+u16 JALSystem::TFlagManager::getUseFlag(u32 param_1)
+{
+	return unk0[(u16)param_1 >> 12][param_1 & 0x3FF];
 }
 
 bool JALSystem::TFlagManager::isRegistered(u32 param_1, u16 param_2)

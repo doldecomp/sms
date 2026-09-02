@@ -31,7 +31,14 @@ public:
 
 	struct FabricatedUnk4CStruct {
 		/* 0x0 */ JASystem::TTrack* unk0;
-		/* 0x4 */ JASystem::Kernel::TPortArgs unk4;
+		// TODO: fabricated union; setSeqPortargsF32/U32 write the port
+		// arguments by index, so the original must have had an overlay
+		// like this one.
+		union {
+			/* 0x4 */ JASystem::Kernel::TPortArgs unk4;
+			/* 0x4 */ f32 unk4F32[10];
+			/* 0x4 */ u32 unk4U32[10];
+		};
 		/* 0x2C */ JASystem::Kernel::TPortCmd unk2C;
 	};
 	/* 0x4C */ FabricatedUnk4CStruct* unk4C;

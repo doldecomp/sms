@@ -6,6 +6,8 @@
 #include <JSystem/JAudio/JAInterface/JAIConst.hpp>
 #include <JSystem/JAudio/JASystem/JASDvdThread.hpp>
 
+JAIData::JAIData() { }
+
 void JAIData::init()
 {
 	unk88.unk78  = 0;
@@ -448,8 +450,8 @@ u8* JAIData::getAutoHeapPointer(u32 param) { return nullptr; }
 
 void JAIData::getInfoPointer(u32 param_1, void** param_2)
 {
-	u32 thing;
 	JAISoundTable* table;
+	u32 thing;
 
 	*param_2 = &JAIConst::nullInfoData2;
 	if (unk1B0 == 0) {
@@ -485,7 +487,7 @@ void JAIData::getInfoPointer(u32 param_1, void** param_2)
 	}
 
 	u32 tmp = param_1 & 0x3FF;
-	if (table->unk78 && table->unk2[thing] < tmp)
+	if (table->unk78 && tmp < table->unk2[thing])
 		*param_2 = &table->unk30[thing][tmp];
 	else
 		*param_2 = nullptr;

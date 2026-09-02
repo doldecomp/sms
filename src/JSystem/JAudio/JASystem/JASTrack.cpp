@@ -1221,9 +1221,11 @@ int TTrack::loadTbl(u32 param_1, u32 param_2, u32 param_3)
 	case 5:
 		res = mSeqCtrl.get16(param_1 + 2 * param_2);
 		break;
-	case 6:
-		res = mSeqCtrl.get24(param_1 + 3 * param_2);
+	case 6: {
+		u32 offset = param_2 + 2 * param_2;
+		res        = mSeqCtrl.get24(param_1 + offset);
 		break;
+	}
 	case 7:
 		res = mSeqCtrl.get32(param_1 + 4 * param_2);
 		break;
@@ -1531,10 +1533,9 @@ s32 TTrack::rootCallback(void* param)
 		} else {
 			self->unk3AC += self->unk3B0;
 
-			// TODO: this if is completely wrong, control flow is crazy here,
-			// probably an inline?
-			if (self->unk3AC > 1.0f) {
+			if (self->unk3AC < 1.0f) {
 				self->updateSeq(0, true);
+			} else {
 				while (self->unk3AC >= 1.0f) {
 					self->unk3AC -= 1.0f;
 					if ((int)self->mainProc() != -1)

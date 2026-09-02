@@ -41,16 +41,17 @@ void TBasicWaveBank::setWaveTableSize(u32 size)
 
 void TBasicWaveBank::incWaveTable(const TWaveGroup* group)
 {
-	for (int i = 0; i < group->unk38; i++) {
-		u32 waveID          = group->unk34[i].unk34;
-		TWaveInfo** table   = unk4;
-		TWaveInfo* waveInfo = &group->unk34[i];
-		waveInfo->mNext     = nullptr;
-		waveInfo->mPrev     = table[waveID];
-		if (table[waveID])
-			table[waveID]->mNext = waveInfo;
+	TWaveInfo* waveInfo;
 
-		table[waveID] = waveInfo;
+	for (int i = 0; i < group->unk38; i++) {
+		waveInfo          = &group->unk34[i];
+		TWaveInfo** entry = &unk4[waveInfo->unk34];
+		waveInfo->mNext   = nullptr;
+		waveInfo->mPrev   = *entry;
+		if (*entry)
+			(*entry)->mNext = waveInfo;
+
+		*entry = waveInfo;
 	}
 }
 
@@ -82,8 +83,9 @@ TBasicWaveBank::TWaveHandle* TBasicWaveBank::getWaveHandle(u32 id) const
 	if (id >= unk8)
 		return nullptr;
 
-	if (unk4[id])
-		return &unk4[id]->mWaveHandle;
+	TWaveInfo* info = unk4[id];
+	if (info)
+		return &info->mWaveHandle;
 
 	return nullptr;
 }
