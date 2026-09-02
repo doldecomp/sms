@@ -61,7 +61,13 @@ public:
 	}
 
 	f32 get_float(f32);
-	f32 get_ufloat(f32);
+	// Both bodies come from JASystem::TInstRand::getY, whose frame carries one
+	// dead temporary per inlined level: the chain
+	// get_sfloat_1 -> get_ufloat -> get_ufloat_1 -> get is the only depth that
+	// reproduces its stack layout. 0.9999999f is the largest f32 below 1.0f,
+	// so get_sfloat_1 returns (-1, 1).
+	f32 get_ufloat(f32 x) { return x * this->get_ufloat_1(); }
+	f32 get_sfloat_1() { return this->get_ufloat(2.0f) - 0.9999999f; }
 	u32 get_uint32(u32);
 	u8 get_uint8(u8 param_1) { return param_1 * this->get_ufloat_1(); }
 

@@ -37,11 +37,18 @@ namespace DSPInterface {
 	u16 JAS_DSP_PREFIX = 0xF355;
 
 	DSPBuffer* getDSPHandle(u8 i) { return &CH_BUF[i]; }
-	DSPBuffer* getDSPHandleNc(u8) { return 0; }
+	// "Nc" is the uncached view of the same buffer: the DSP writes these
+	// structures behind the CPU's cache, so a reader that must not see a stale
+	// line goes through the 0xC0000000 mirror. One instruction over the cached
+	// accessor is what both map sizes ask for (0x18 here, 0x14 for the FX one).
+	DSPBuffer* getDSPHandleNc(u8 i)
+	{
+		return (DSPBuffer*)OSCachedToUncached(&CH_BUF[i]);
+	}
 
 	void setFilterTable(s16* dst, s16* src, u32 size)
 	{
-		for (int i = 0; i < size; i++)
+		for (u32 i = 0; i < size; i++)
 			*dst++ = *src++;
 	}
 	void flushBuffer()
@@ -49,7 +56,7 @@ namespace DSPInterface {
 		DCFlushRange(CH_BUF, sizeof(DSPBuffer) * 64);
 		DCFlushRange(FX_BUF, sizeof(FXBuffer) * 4);
 	}
-	void flushChannelAll() { }
+	void flushChannelAll() { DCFlushRange(CH_BUF, sizeof(DSPBuffer) * 64); }
 	void cacheChannelAll() { }
 	void invalChannelAll()
 	{
@@ -82,7 +89,10 @@ namespace DSPInterface {
 	}
 
 	FXBuffer* getFXHandle(u8 i) { return &FX_BUF[i]; }
-	FXBuffer* getFXHandleNc(u8) { return 0; }
+	FXBuffer* getFXHandleNc(u8 i)
+	{
+		return (FXBuffer*)OSCachedToUncached(&FX_BUF[i]);
+	}
 
 	BOOL FXBuffer::setFXLine(s16* buffer, FxlineConfig_* config)
 	{
@@ -147,7 +157,7 @@ namespace DSPInterface {
 
 		unk0 = 1;
 	}
-	void DSPBuffer::playStop() { }
+	void DSPBuffer::playStop() { unk0 = 0; }
 	void DSPBuffer::setWaveInfo(Driver::Wave_* param_1, u32 param_2)
 	{
 		static u8 COMP_BLOCKSAMPLES[8] = {
@@ -202,9 +212,12 @@ namespace DSPInterface {
 		unk56 = param_1;
 		unk58 = 1;
 	}
-	void DSPBuffer::updateAMVolume(u16) { }
-	void DSPBuffer::updateAMPan(u8, u8) { }
-	void DSPBuffer::updateAMFX(u8) { }
+	void DSPBuffer::updateAMVolume(u16 param_1) { unk56 = param_1; }
+	void DSPBuffer::updateAMPan(u8 param_1, u8 param_2)
+	{
+		unk50 = param_1 << 8 | param_2;
+	}
+	void DSPBuffer::updateAMFX(u8 param_1) { unk52 = param_1 << 8; }
 	void DSPBuffer::setPitch(u16 param_1)
 	{
 		if (param_1 >= 0x7fff)
