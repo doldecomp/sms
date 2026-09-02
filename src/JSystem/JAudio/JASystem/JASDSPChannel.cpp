@@ -88,7 +88,7 @@ void TDSPChannel::pause() { }
 
 void TDSPChannel::restart() { }
 
-TDSPChannel* TDSPChannel::getHandle(u32 handle) { return 0; }
+TDSPChannel* TDSPChannel::getHandle(u32 handle) { return &DSPCH[handle]; }
 
 void TDSPChannel::initAll()
 {
@@ -222,12 +222,12 @@ BOOL TDSPChannel::breakLowerActive(u8 param)
 	return true;
 }
 
-void TDSPChannel::setLimitDSP(f32 limit) { }
+void TDSPChannel::setLimitDSP(f32 limit) { DSP_LIMIT_RATIO = limit; }
 
 static OSTick history[10] = { 1000000, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 static OSTick old_time;
 
-f32* TDSPChannel::getHistory() { return 0; }
+f32* TDSPChannel::getHistory() { return (f32*)history; }
 
 void TDSPChannel::updateAll()
 {
@@ -281,8 +281,8 @@ void TDSPChannel::updateAll()
 	PPCSync();
 }
 
-u32 TDSPChannel::getNumUse() { return 0; }
+u32 TDSPChannel::getNumUse() { return smnUse; }
 
-u32 TDSPChannel::getNumFree() { return 0; }
+u32 TDSPChannel::getNumFree() { return smnFree; }
 
 } // namespace JASystem
