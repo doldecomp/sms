@@ -13,6 +13,10 @@ struct JKRDvdArchive : public JKRArchive {
 	                            SDIFileEntry* entry, u32* resSize);
 
 	bool open(s32);
+	void fixedInit(s32);
+	void mountFixed(s32);
+	void mountFixed(const char*);
+	void unmountFixed();
 	static u32 fetchResource_subroutine(s32, u32, u32, u8*, u32, int, int);
 	static u32 fetchResource_subroutine(s32, u32, u32, JKRHeap*, int, int,
 	                                    u8**);

@@ -7,7 +7,7 @@
 class JKRArchive;
 
 struct JKRFileFinderBase {
-	/* 0x0 */ char* mFileName;
+	/* 0x0 */ const char* mFileName;
 	/* 0x4 */ int mFileIndex;
 	/* 0x8 */ u16 mFileID;
 	/* 0xA */ u16 mFileTypeFlags;
@@ -49,12 +49,7 @@ class JKRDvdFinder : public JKRFileFinder {
 public:
 	JKRDvdFinder(const char*);
 
-	virtual ~JKRDvdFinder()
-	{
-		if (mIsDvdOpen) {
-			DVDCloseDir(&mDir);
-		}
-	}
+	virtual ~JKRDvdFinder();
 	virtual bool findNextFile();
 
 	/* 0x14 */ DVDDir mDir;

@@ -82,7 +82,7 @@ struct J3DCluster {
 	J3DDeformer* getDeformer() { return mDeformer; }
 	void setDeformer(J3DDeformer* deformer)
 	{
-		J3D_ASSERT_NULLPTR(85, deformer);
+		J3D_ASSERT_NULLPTR(deformer);
 		mDeformer = deformer;
 	}
 

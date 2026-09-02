@@ -23,7 +23,12 @@ public:
 	virtual void state_register(TState*, u32) const;
 	virtual bool state_compare(const TState& fst, const TState& snd) const;
 
+	static JKRSolidHeap* createRoot(int, bool);
 	static JKRSolidHeap* create(u32 size, JKRHeap* parent, bool errorFlag);
+	void destroy();
+	s32 adjustSize();
+	void recordState(u32);
+	void restoreState(u32);
 
 	void* allocFromHead(u32 size, int align);
 	void* allocFromTail(u32 size, int align);
@@ -38,14 +43,15 @@ private:
 	/* 0x68 */ u32 mFreeSize;
 	/* 0x6c */ void* mCurStart;
 	/* 0x70 */ void* mCurEnd;
-	struct UnknownStruct {
-		char unk0[0x4];
-		char unk4[0x4];
-		char unk8[0x4];
-		void* unkC;
-		UnknownStruct* unk10;
+	// Names from MKDD, which keeps recordState/restoreState in its binary.
+	struct State {
+		/* 0x00 */ u32 mId;
+		/* 0x04 */ u32 mFreeSize;
+		/* 0x08 */ void* mCurStart;
+		/* 0x0C */ void* mCurEnd;
+		/* 0x10 */ State* mNext;
 	};
-	UnknownStruct* unk74;
+	/* 0x74 */ State* mStateList;
 };
 
 inline JKRSolidHeap* JKRCreateSolidHeap(u32 size, JKRHeap* parent,

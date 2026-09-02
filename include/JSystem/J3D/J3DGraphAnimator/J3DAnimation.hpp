@@ -370,19 +370,19 @@ public:
 	}
 	u16 getUpdateMaterialID(u16 idx) const
 	{
-		J3D_ASSERT_RANGE(1029, idx < mTrackNum / 3);
+		J3D_ASSERT_RANGE(idx < mTrackNum / 3);
 		return mUpdateMaterialID[idx];
 	}
 	JUTNameTab* getUpdateMaterialName() { return mUpdateMaterialName; }
 	u8 getUpdateTexMtxID(u16 idx) const
 	{
-		J3D_ASSERT_RANGE(1017, idx < mTrackNum / 3);
+		J3D_ASSERT_RANGE(idx < mTrackNum / 3);
 		return mUpdateTexMtxID[idx];
 	}
 	u32 getTexMtxCalcType() { return mTexMtxCalcType; }
 	Vec* getSRTCenter(u16 idx)
 	{
-		J3D_ASSERT_RANGE(1047, idx < mTrackNum / 3);
+		J3D_ASSERT_RANGE(idx < mTrackNum / 3);
 		return &mSRTCenter[idx];
 	}
 
@@ -752,7 +752,7 @@ public:
 
 	u16 getUpdateMaterialID(u16 idx) const
 	{
-		J3D_ASSERT_RANGE(514, idx < mUpdateMaterialNum / 3 && idx >= 0);
+		J3D_ASSERT_RANGE(idx < mUpdateMaterialNum / 3 && idx >= 0);
 		return mUpdateMaterialID[idx];
 	}
 	u16 getUpdateMaterialNum() const { return mUpdateMaterialNum; }

@@ -412,6 +412,12 @@ void JKRExpHeap::free(void* ptr)
 	unlock();
 }
 
+int JKRExpHeap::freeLevel(u8 level)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
+}
+
 int JKRExpHeap::freeGroup(u8 groupID)
 {
 	lock();
@@ -430,6 +436,12 @@ int JKRExpHeap::freeGroup(u8 groupID)
 	}
 	unlock();
 	return count;
+}
+
+int JKRExpHeap::countGroup(u8 groupID)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
 }
 
 void JKRExpHeap::freeAll()
@@ -566,12 +578,24 @@ s32 JKRExpHeap::getUsedSize(u8 groupId) const
 	return size;
 }
 
+s32 JKRExpHeap::getTotalUsedSize() const
+{
+	JKRExpHeap* heap = (JKRExpHeap*)this;
+	heap->lock();
+	u32 size = 0;
+	for (CMemBlock* block = mHeadUsedList; block; block = block->mNext) {
+		size += block->mAllocatedSpace + sizeof(CMemBlock);
+	}
+	heap->unlock();
+	return size;
+}
+
 bool JKRExpHeap::isEmpty()
 {
-	u32 newSize;
-#line 1269
-	JUT_ASSERT(newSize > 0);
-	return true;
+	lock();
+	bool result = !mHeadUsedList ? true : false;
+	unlock();
+	return result;
 }
 
 bool JKRExpHeap::check()
@@ -704,7 +728,6 @@ void JKRExpHeap::removeFreeBlock(JKRExpHeap::CMemBlock* blockToRemove)
 
 void JKRExpHeap::removeUsedBlock(JKRExpHeap::CMemBlock* blockToRemove)
 {
-	// UNUSED FUNCTION
 	CMemBlock* prev = blockToRemove->mPrev;
 	CMemBlock* next = blockToRemove->mNext;
 	if (prev == nullptr)
@@ -914,6 +937,8 @@ static void genData()
 	JUTWarningConsole_f("+---------------End\n");
 }
 
+void JKRExpHeap::DBshow() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
+
 void JKRExpHeap::CMemBlock::initiate(JKRExpHeap::CMemBlock* prev,
                                      JKRExpHeap::CMemBlock* next, u32 size,
                                      u8 groupID, u8 alignment)
@@ -985,8 +1010,8 @@ JKRExpHeap::CMemBlock* JKRExpHeap::CMemBlock::getHeapBlock(void* mem)
 
 void JKRExpHeap::state_register(JKRHeap::TState* p, u32 param_1) const
 {
-	JUT_ASSERT(0, p != 0);
-	JUT_ASSERT(0, p->getHeap() == this);
+	JUT_ASSERT(p != 0);
+	JUT_ASSERT(p->getHeap() == this);
 	void* buf = getState_(p); // dead in the release build, but TP's debug
 	                          // build shows the original read it here
 	setState_u32ID_(p, param_1);

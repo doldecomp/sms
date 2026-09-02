@@ -8,6 +8,12 @@
 #include <string.h>
 #include <dolphin/os.h>
 
+JKRDvdArchive::JKRDvdArchive()
+    : JKRArchive(0, MOUNT_DVD)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
+
 JKRDvdArchive::JKRDvdArchive(s32 entryNum,
                              JKRArchive::EMountDirection mountDirection)
     : JKRArchive(entryNum, MOUNT_DVD)
@@ -46,6 +52,23 @@ JKRDvdArchive::~JKRDvdArchive()
 		mIsMounted = false;
 	}
 }
+
+void JKRDvdArchive::fixedInit(s32 entryNum)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
+
+void JKRDvdArchive::mountFixed(s32 entryNum)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
+
+void JKRDvdArchive::mountFixed(const char* path)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
+
+void JKRDvdArchive::unmountFixed() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
 
 bool JKRDvdArchive::open(s32 entryNum)
 {
@@ -238,7 +261,7 @@ u32 JKRDvdArchive::fetchResource_subroutine(s32 entryNum, u32 offset, u32 size,
 		case JKR_COMPRESSION_NONE: {
 			buffer
 			    = (u8*)JKRAllocFromHeap(heap, alignedSize, sizeof(SArcHeader));
-			JUT_ASSERT(VERSION_SELECT(638, 631, 631), buffer != nullptr);
+			JUT_ASSERT(buffer != nullptr);
 
 			JKRDvdToMainRam(
 			    entryNum, buffer, EXPAND_SWITCH_DEFAULT, alignedSize, nullptr,
@@ -274,7 +297,7 @@ u32 JKRDvdArchive::fetchResource_subroutine(s32 entryNum, u32 offset, u32 size,
 
 	case JKR_COMPRESSION_YAZ0: {
 		buffer = (u8*)JKRAllocFromHeap(heap, alignedSize, sizeof(SArcHeader));
-		JUT_ASSERT(VERSION_SELECT(686, 672, 672), buffer);
+		JUT_ASSERT(buffer);
 
 		JKRDvdToMainRam(entryNum, buffer, EXPAND_SWITCH_DECOMPRESS, size,
 		                nullptr, JKRDvdRipper::ALLOC_DIRECTION_FORWARD, offset,

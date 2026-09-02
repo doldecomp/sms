@@ -1,7 +1,14 @@
 #include <JSystem/JKernel/JKRSolidHeap.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 #include <JSystem/JUtility/JUTConsole.hpp>
 #include <macros.h>
 #include <stdint.h>
+
+JKRSolidHeap* JKRSolidHeap::createRoot(int param_1, bool errorFlag)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return nullptr;
+}
 
 JKRSolidHeap* JKRSolidHeap::create(u32 size, JKRHeap* parent, bool errorFlag)
 {
@@ -20,17 +27,40 @@ JKRSolidHeap* JKRSolidHeap::create(u32 size, JKRHeap* parent, bool errorFlag)
 	    JKRSolidHeap(dataPtr, alignedSize - expHeapSize, parent, errorFlag);
 }
 
+void JKRSolidHeap::destroy() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
+
 JKRSolidHeap::JKRSolidHeap(void* data, u32 size, JKRHeap* parent,
                            bool errorFlag)
     : JKRHeap(data, size, parent, errorFlag)
 {
-	mFreeSize = mSize;
-	mCurStart = mStart;
-	mCurEnd   = mEnd;
-	unk74     = nullptr;
+	mFreeSize  = mSize;
+	mCurStart  = mStart;
+	mCurEnd    = mEnd;
+	mStateList = nullptr;
 }
 
 JKRSolidHeap::~JKRSolidHeap() { dispose(); }
+
+s32 JKRSolidHeap::adjustSize()
+{
+	JKRHeap* parent = getParent();
+	if (!parent) {
+		return -1;
+	}
+
+	lock();
+	u32 headerSize = (u32)mStart - (u32)this;
+	u32 newSize    = ALIGN_NEXT((u32)mCurStart - (u32)mStart, 0x20);
+	if (parent->resize(this, headerSize + newSize) != -1) {
+		mFreeSize = 0;
+		mSize     = newSize;
+		mEnd      = (void*)((u32)mStart + mSize);
+		mCurStart = mEnd;
+		mCurEnd   = mEnd;
+	}
+	unlock();
+	return headerSize + newSize;
+}
 
 void* JKRSolidHeap::alloc(u32 size, int alignment)
 {
@@ -103,10 +133,10 @@ void JKRSolidHeap::freeAll()
 {
 	lock();
 	JKRHeap::freeAll();
-	mFreeSize = mSize;
-	mCurStart = mStart;
-	mCurEnd   = mEnd;
-	unk74     = nullptr;
+	mFreeSize  = mSize;
+	mCurStart  = mStart;
+	mCurEnd    = mEnd;
+	mStateList = nullptr;
 	unlock();
 }
 
@@ -117,9 +147,8 @@ void JKRSolidHeap::freeTail()
 		dispose(mCurEnd, mEnd);
 	mFreeSize += (u8*)mEnd - (u8*)mCurEnd;
 	mCurEnd = mEnd;
-	// more stuff, unk74 has size 18
-	for (UnknownStruct* s = unk74; s != nullptr; s = s->unk10) {
-		s->unkC = mEnd;
+	for (State* state = mStateList; state != nullptr; state = state->mNext) {
+		state->mCurEnd = mEnd;
 	}
 	unlock();
 }
@@ -135,6 +164,32 @@ s32 JKRSolidHeap::getSize(void* ptr)
 {
 	JUTWarningConsole_f("getSize: cannot get memory block size (%08x)\n", ptr);
 	return -1;
+}
+
+void JKRSolidHeap::recordState(u32 id) { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
+
+void JKRSolidHeap::restoreState(u32 id)
+{
+	State* state = mStateList;
+	lock();
+	if (id != 0) {
+		while (state != nullptr && id != state->mId) {
+			state = state->mNext;
+		}
+	}
+	if (state != nullptr) {
+		if (state->mCurStart != mCurStart) {
+			dispose(state->mCurStart, mCurStart);
+		}
+		if (state->mCurEnd != mCurEnd) {
+			dispose(mCurEnd, state->mCurEnd);
+		}
+		mFreeSize  = state->mFreeSize;
+		mCurStart  = state->mCurStart;
+		mCurEnd    = state->mCurEnd;
+		mStateList = state->mNext;
+	}
+	unlock();
 }
 
 bool JKRSolidHeap::check()
@@ -175,8 +230,8 @@ bool JKRSolidHeap::dump()
 
 void JKRSolidHeap::state_register(TState* p, u32 id) const
 {
-	JUT_ASSERT(604, p != nullptr);
-	JUT_ASSERT(605, p->getHeap() == this);
+	JUT_ASSERT(p != nullptr);
+	JUT_ASSERT(p->getHeap() == this);
 
 	setState_u32ID_(p, id);
 	setState_uUsedSize_(p, getUsedSize((JKRSolidHeap*)this));

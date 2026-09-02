@@ -20,6 +20,8 @@ inline u32 read_big_endian_u32(void* ptr)
 class JKRAramBlock;
 class JKRFile;
 
+class JKRArcFinder;
+
 class JKRArchive : public JKRFileLoader {
 public:
 	enum EMountMode {
@@ -139,6 +141,17 @@ public:
 
 	bool getDirEntry(SDirEntry*, u32) const;
 	void* getIdxResource(u32 index);
+	void* getResource(u16 id);
+	static size_t readTypeResource(void* resourceBuffer, u32 bufferSize,
+	                               u32 type, const char* name,
+	                               JKRArchive* archive);
+	size_t readIdxResource(void* resourceBuffer, u32 bufferSize, u32 index);
+	size_t readResource(void* resourceBuffer, u32 bufferSize, u16 id);
+	static u32 countResource(u32 type, const JKRArchive* archive);
+	u32 countResource() const;
+	u32 countResource(u32 type) const;
+	JKRArcFinder* getFirstResource(u32 type) const;
+	u32 getFileAttribute(u32 index) const;
 
 	static JKRArchive* mount(char const*, EMountMode, JKRHeap*,
 	                         EMountDirection);

@@ -27,7 +27,10 @@ public:
 	virtual void state_register(TState*, u32) const;
 	virtual bool state_compare(const TState& fst, const TState& snd) const;
 
+	static JKRStdHeap* createRoot(int, bool);
 	static JKRStdHeap* create(u32 size, JKRHeap* parent, bool errorFlag);
+	void destroy();
+	void* allocFixed(void*, void*);
 
 private:
 	/* 0x68 */ s32 mHeapId;

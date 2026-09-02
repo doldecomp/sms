@@ -63,7 +63,11 @@ public:
 	static JKRExpHeap* create(u32 size, JKRHeap* parent, bool errorFlag);
 	static JKRExpHeap* create(void*, u32, JKRHeap*, bool);
 	static JKRExpHeap* createRoot(int, bool);
+	int freeLevel(u8 level);
 	int freeGroup(u8 groupID);
+	int countGroup(u8 groupID);
+	s32 getTotalUsedSize() const;
+	void DBshow();
 	void joinTwoBlocks(CMemBlock*);
 	void recycleFreeBlock(CMemBlock*);
 	void removeFreeBlock(CMemBlock*);

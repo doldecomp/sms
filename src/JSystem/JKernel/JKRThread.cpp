@@ -1,6 +1,6 @@
-
-#include <JSystem/JKernel/JKRMacro.hpp>
 #include <JSystem/JKernel/JKRThread.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
+#include <JSystem/JKernel/JKRMacro.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
 
 JSUList<JKRThread> JKRThread::sThreadList;
@@ -20,8 +20,8 @@ JKRThread::JKRThread(u32 stackSize, int msgCount, int threadPrio)
 	               (void*)((u32)mStackMemory + mStackSize), mStackSize,
 	               threadPrio, OS_THREAD_ATTR_DETACH);
 	mMesgCount  = msgCount;
-	mMesgBuffer
-	    = (OSMessage*)JKRAllocFromHeap(mHeap, mMesgCount * sizeof(OSMessage), 0);
+	mMesgBuffer = (OSMessage*)JKRAllocFromHeap(
+	    mHeap, mMesgCount * sizeof(OSMessage), 0);
 	OSInitMessageQueue(&mMesgQueue, mMesgBuffer, mMesgCount);
 	JKRThread::sThreadList.append(&mLink);
 }
@@ -60,4 +60,35 @@ JKRThread::~JKRThread()
 void* JKRThread::start(void* thread)
 {
 	return static_cast<JKRThread*>(thread)->run();
+}
+
+// NOTE: sTaskList is declared but not defined: the map does not list it, and a
+// definition would add a JKRTask entry to __sinit_JKRThread_cpp, which the
+// original does not have.
+
+JKRTask::JKRTask()
+    : JKRThread(0, 0, 0)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
+
+JKRTask::~JKRTask() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
+
+JKRTask* JKRTask::create()
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return nullptr;
+}
+
+void JKRTask::destroy() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
+
+void* JKRTask::run()
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return nullptr;
+}
+
+void JKRTask::request(void (*func)(void*), void* param)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
 }

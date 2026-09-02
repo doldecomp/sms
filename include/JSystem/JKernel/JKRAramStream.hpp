@@ -4,6 +4,7 @@
 #include <JSystem/JKernel/JKRThread.hpp>
 
 class JSUFileInputStream;
+class JKRAramBlock;
 
 class JKRAramStreamCommand {
 public:
@@ -46,8 +47,13 @@ public:
 
 	static s32 readFromAram(void);
 	static s32 writeToAram(JKRAramStreamCommand*);
+	static JKRAramStreamCommand*
+	write_StreamToAram_Async(JSUFileInputStream*, JKRAramBlock*, u32, u32);
 	static JKRAramStreamCommand* write_StreamToAram_Async(JSUFileInputStream*,
 	                                                      u32, u32, u32);
+	// TODO: the return type of both is a guess; nothing references them
+	static u32 write_StreamToAram(JSUFileInputStream*, JKRAramBlock*, u32, u32);
+	static u32 write_StreamToAram(JSUFileInputStream*, u32, u32, u32);
 	static JKRAramStreamCommand* sync(JKRAramStreamCommand*, BOOL);
 	static void setTransBuffer(u8*, u32, JKRHeap*);
 

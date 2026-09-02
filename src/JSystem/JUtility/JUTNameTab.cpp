@@ -15,7 +15,7 @@ JUTNameTab::JUTNameTab(const ResNTAB* pNameTable) { setResource(pNameTable); }
 
 s32 JUTNameTab::getIndex(const char* pName) const
 {
-	JUT_ASSERT(101, mNameTable != NULL);
+	JUT_ASSERT(mNameTable != NULL);
 
 	const ResNTAB::Entry* pEntry = mNameTable->mEntries;
 	u16 keyCode                  = calcKeyCode(pName);
