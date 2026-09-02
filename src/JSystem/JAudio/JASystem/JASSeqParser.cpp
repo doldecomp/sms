@@ -120,7 +120,7 @@ int TSeqParser::cmdOpenTrack(TTrack* track, u32* args)
 
 int TSeqParser::cmdOpenTrackBros(TTrack* track, u32* args)
 {
-	TTrack* parent = track->unk2C0;
+	TTrack* parent = track->mParent;
 	if (!parent)
 		return 0;
 
@@ -264,33 +264,33 @@ int TSeqParser::cmdWait(TTrack* track, u32* args)
 
 int TSeqParser::cmdConnectName(TTrack* track, u32* args)
 {
-	track->unk3A8 = args[0] << 16 | args[1];
+	track->mConnectName = args[0] << 16 | args[1];
 	return 0;
 }
 
 int TSeqParser::cmdParentWritePort(TTrack* track, u32* args)
 {
-	track->unk2C0->writePortAppDirect(args[0] & 0xf, args[1]);
+	track->mParent->writePortAppDirect(args[0] & 0xf, args[1]);
 	return 0;
 }
 
 int TSeqParser::cmdChildWritePort(TTrack* track, u32* args)
 {
-	track->unk2C4[args[0] >> 4]->writePortAppDirect(args[0] & 0xf, args[1]);
+	track->mChildren[args[0] >> 4]->writePortAppDirect(args[0] & 0xf, args[1]);
 	return 0;
 }
 
 int TSeqParser::cmdSetLastNote(TTrack* track, u32* args)
 {
 	u32 key = args[0];
-	key += track->unk3C0;
+	key += track->mTransposeTotal;
 	track->mNoteMgr.setLastNote(key);
 	return 0;
 }
 
 int TSeqParser::cmdTimeRelate(TTrack* track, u32* args)
 {
-	track->unk3CB = args[0] ? 1 : 0;
+	track->mTimeRelate = args[0] ? 1 : 0;
 	return 0;
 }
 
@@ -312,24 +312,24 @@ int TSeqParser::cmdSimpleADSR(TTrack* track, u32* args)
 	for (u8 i = 0; i < 5; ++i)
 		realArgs[i] = args[i];
 
-	track->unk30C[0]      = Player::sAdsrDef;
-	track->unk30C[0].unk8 = track->unk37C;
-	track->unk30C[0].unkC = track->unk394;
+	track->mOscData[0]           = Player::sAdsrDef;
+	track->mOscData[0].mAdsTable = track->mAdsTable;
+	track->mOscData[0].mRelTable = track->mRelTable;
 
-	track->unk37C[1] = realArgs[0];
-	track->unk37C[4] = realArgs[1];
-	track->unk37C[7] = realArgs[2];
-	track->unk37C[8] = realArgs[3];
-	track->unk394[1] = realArgs[4];
+	track->mAdsTable[1] = realArgs[0];
+	track->mAdsTable[4] = realArgs[1];
+	track->mAdsTable[7] = realArgs[2];
+	track->mAdsTable[8] = realArgs[3];
+	track->mRelTable[1] = realArgs[4];
 	return 0;
 }
 
 int TSeqParser::cmdTranspose(TTrack* track, u32* args)
 {
-	track->unk3BF = args[0];
-	track->unk3C0 = track->unk3BF;
-	if (track->unk2C0)
-		track->unk3C0 += track->unk2C0->unk3BF;
+	track->mTranspose      = args[0];
+	track->mTransposeTotal = track->mTranspose;
+	if (track->mParent)
+		track->mTransposeTotal += track->mParent->mTranspose;
 	return 0;
 }
 
@@ -337,12 +337,12 @@ int TSeqParser::cmdCloseTrack(TTrack* track, u32* args)
 {
 	u8 i = args[0];
 
-	TTrack* child = track->unk2C4[i];
+	TTrack* child = track->mChildren[i];
 	if (!child)
 		return 0;
 
 	child->closeTrack();
-	track->unk2C4[i] = nullptr;
+	track->mChildren[i] = nullptr;
 
 	return 0;
 }
@@ -373,13 +373,13 @@ int TSeqParser::cmdBusConnect(TTrack* track, u32* args)
 
 int TSeqParser::cmdPauseStatus(TTrack* track, u32* args)
 {
-	track->unk3C1 = args[0];
+	track->mPauseStatus = args[0];
 	return 0;
 }
 
 int TSeqParser::cmdVolumeMode(TTrack* track, u32* args)
 {
-	track->unk3C3 = args[0];
+	track->mVolumeMode = args[0];
 	return 0;
 }
 
@@ -423,16 +423,16 @@ int TSeqParser::cmdIntTimer(TTrack* track, u32* args)
 
 int TSeqParser::cmdConnectOpen(TTrack* track, u32* args)
 {
-	TrackMgr::registTrack(track->unk3A8, track);
-	track->unk3CC = 1;
+	TrackMgr::registTrack(track->mConnectName, track);
+	track->mConnected = 1;
 	return 0;
 }
 
 int TSeqParser::cmdConnectClose(TTrack* track, u32* args)
 {
-	if (track->unk3CC) {
+	if (track->mConnected) {
 		TrackMgr::unRegistTrack(track);
-		track->unk3CC = 0;
+		track->mConnected = 0;
 	}
 	return 0;
 }
@@ -461,16 +461,16 @@ int TSeqParser::cmdFlushRelease(TTrack* track, u32* args)
 
 int TSeqParser::cmdTimeBase(TTrack* track, u32* args)
 {
-	track->unk3BA = args[0];
-	if (!track->unk2C0)
+	track->mTimeBase = args[0];
+	if (!track->mParent)
 		track->updateTempo();
 	return 0;
 }
 
 int TSeqParser::cmdTempo(TTrack* track, u32* args)
 {
-	track->unk3B8 = args[0];
-	if (!track->unk2C0)
+	track->mTempo = args[0];
+	if (!track->mParent)
 		track->updateTempo();
 	else
 		track->unk3BD = 1;
@@ -542,8 +542,8 @@ int TSeqParser::cmdPanSwSet(TTrack* track, u32* args)
 	u8 parentCalcTypes[] = { 0, 1, 2, 0, 2, 0, 2 };
 
 	for (u8 i = 0; i < 3; i++) {
-		track->unk3C5[i]                = calcTypes[args[i] >> 5];
-		track->unk3C8[i]                = parentCalcTypes[args[i] >> 5];
+		track->mPanSwitchExt[i]         = calcTypes[args[i] >> 5];
+		track->mPanSwitchParent[i]      = parentCalcTypes[args[i] >> 5];
 		track->mChannelUpdater.unk62[i] = args[i] & 0x1F;
 		track->unk3B4 |= 8;
 	}
@@ -557,9 +557,9 @@ int TSeqParser::cmdOscRoute(TTrack* track, u32* args)
 	u32 i   = (arg >> 4) & 0xF;
 	s32 v   = arg & 0xF;
 
-	track->unk3A0[i] = v;
+	track->mOscMode[i] = v;
 	if (v == 0xE)
-		track->unk33C[i].initStart();
+		track->mOscillators[i].initStart();
 	return 0;
 }
 
@@ -767,14 +767,14 @@ int TSeqParser::cmdNoteOff(TTrack* track, u8 flag)
 
 int TSeqParser::cmdNoteOn(TTrack* track, u8 note)
 {
-	u8 r31 = note + track->unk3C0;
+	u8 r31 = note + track->mTransposeTotal;
 
 	// TODO: very fake, but IDK how to make mwcc push it off
 	// to the stack =/
 	volatile u8 r25_or_0x1C = track->mSeqCtrl.readByte();
 	if (r25_or_0x1C & 0x80) {
 		r31 = track->exchangeRegisterValue(note);
-		r31 += track->unk3C0;
+		r31 += track->mTransposeTotal;
 	}
 
 	u8 r30;
@@ -827,7 +827,7 @@ int TSeqParser::cmdNoteOn(TTrack* track, u8 note)
 		if (r25 != -1)
 			r25 = track->seqTimeToDspTime(r25, r26);
 
-		if (!track->unk3CD || !(track->unk3C1 & 0x10))
+		if (!track->mPause || !(track->mPauseStatus & 0x10))
 			track->gateOn(r27, r31, r29, r25);
 	} else {
 		if ((s32)r25 != -1)
@@ -836,7 +836,7 @@ int TSeqParser::cmdNoteOn(TTrack* track, u8 note)
 		if (track->mNoteMgr.getConnectCase() & 1)
 			r25 = -1;
 
-		if (!track->unk3CD || !(track->unk3C1 & 0x10))
+		if (!track->mPause || !(track->mPauseStatus & 0x10))
 			track->noteOn(r27, r31, r29, r25);
 	}
 
@@ -850,7 +850,7 @@ int TSeqParser::cmdNoteOn(TTrack* track, u8 note)
 
 		JASystem::TChannel* channel = track->mNoteMgr.getChannel(0);
 		if (channel)
-			channel->setKeySweepTarget(r30 + track->unk3C0, r25);
+			channel->setKeySweepTarget(r30 + track->mTransposeTotal, r25);
 
 		r31 = r30;
 	}

@@ -22,14 +22,14 @@ BOOL JAISystemInterface::checkSeqActiveFlag(u32 param_1)
 {
 	JASystem::TTrack* track = JASystem::TrackMgr::handleToSeq(param_1);
 
-	if (track != 0 && track->unk3C4) {
+	if (track != 0 && track->mSeqState) {
 		if (track->getChild(0) || track->getChild(1) || track->getChild(2)
 		    || track->getChild(3) || track->getChild(4) || track->getChild(5)
 		    || track->getChild(6) || track->getChild(7) || track->getChild(8)
 		    || track->getChild(9) || track->getChild(10) || track->getChild(11)
 		    || track->getChild(12) || track->getChild(13) || track->getChild(14)
 		    || track->getChild(15)) {
-			return track->unk3C4;
+			return track->mSeqState;
 		} else {
 			return false;
 		}

@@ -225,7 +225,7 @@ public:
 	static u8 sOscTable[];
 
 	// from tp (I think)
-	TTrack* getChild(int index) { return unk2C4[index]; }
+	TTrack* getChild(int index) { return mChildren[index]; }
 	TOuterParam* getOuterParam() { return mOuterParam; }
 
 public:
@@ -237,37 +237,37 @@ public:
 	/* 0x160 */ TimedParam_ mTimedParam;
 	/* 0x280 */ TRegisterParam mRegisterParam;
 	/* 0x2B0 */ char unk2B0[0x2C0 - 0x2B0];
-	/* 0x2C0 */ TTrack* unk2C0;
-	/* 0x2C4 */ TTrack* unk2C4[16];
+	/* 0x2C0 */ TTrack* mParent;
+	/* 0x2C4 */ TTrack* mChildren[16];
 	/* 0x304 */ TOuterParam* mOuterParam;
 	/* 0x308 */ u32 unk308;
-	/* 0x30C */ TOscillator::Osc_ unk30C[2];
-	/* 0x33C */ TOscillator unk33C[2];
-	/* 0x37C */ s16 unk37C[12];
-	/* 0x394 */ s16 unk394[6];
-	/* 0x3A0 */ s32 unk3A0[2];
-	/* 0x3A8 */ u32 unk3A8;
-	/* 0x3AC */ f32 unk3AC;
-	/* 0x3B0 */ f32 unk3B0;
+	/* 0x30C */ TOscillator::Osc_ mOscData[2];
+	/* 0x33C */ TOscillator mOscillators[2];
+	/* 0x37C */ s16 mAdsTable[12];
+	/* 0x394 */ s16 mRelTable[6];
+	/* 0x3A0 */ s32 mOscMode[2];
+	/* 0x3A8 */ u32 mConnectName;
+	/* 0x3AC */ f32 mTickCounter;
+	/* 0x3B0 */ f32 mTickRate;
 	/* 0x3B4 */ u32 unk3B4;
-	/* 0x3B8 */ u16 unk3B8;
-	/* 0x3BA */ u16 unk3BA;
+	/* 0x3B8 */ u16 mTempo;
+	/* 0x3BA */ u16 mTimeBase;
 	/* 0x3BC */ u8 unk3BC;
 	/* 0x3BD */ u8 unk3BD;
-	/* 0x3BE */ u8 unk3BE;
-	/* 0x3BF */ s8 unk3BF;
-	/* 0x3C0 */ s8 unk3C0; // NOTE: TWW says this is a "transpose"
-	/* 0x3C1 */ u8 unk3C1;
-	/* 0x3C2 */ u8 unk3C2;
-	/* 0x3C3 */ u8 unk3C3;
+	/* 0x3BE */ u8 mInnerMemory;
+	/* 0x3BF */ s8 mTranspose;
+	/* 0x3C0 */ s8 mTransposeTotal;
+	/* 0x3C1 */ u8 mPauseStatus;
+	/* 0x3C2 */ u8 mMute;
+	/* 0x3C3 */ u8 mVolumeMode;
 
-	/* 0x3C4 */ u8 unk3C4;
-	/* 0x3C5 */ u8 unk3C5[3];
-	/* 0x3C8 */ u8 unk3C8[3];
+	/* 0x3C4 */ u8 mSeqState;
+	/* 0x3C5 */ u8 mPanSwitchExt[3];
+	/* 0x3C8 */ u8 mPanSwitchParent[3];
 
-	/* 0x3CB */ u8 unk3CB;
-	/* 0x3CC */ u8 unk3CC;
-	/* 0x3CD */ u8 unk3CD;
+	/* 0x3CB */ u8 mTimeRelate;
+	/* 0x3CC */ u8 mConnected;
+	/* 0x3CD */ u8 mPause;
 };
 
 } // namespace JASystem
