@@ -57,6 +57,7 @@ public:
 		void onSwitch(u16);
 		bool checkOuterSwitch(u16);
 		s16 getIntFirFilter(u8);
+		f32 getTempo() const { return mTempo; }
 		u16 getOuterUpdate();
 		void setOuterUpdate(u16);
 		void setOuterSwitch(u16);
@@ -65,15 +66,15 @@ public:
 		void setIntFirFilter(s16, u8);
 
 	public:
-		/* 0x00 */ u16 unk0;
-		/* 0x02 */ u16 unk2;
-		/* 0x04 */ f32 unk4;
-		/* 0x08 */ f32 unk8;
-		/* 0x0C */ f32 unkC;
-		/* 0x10 */ f32 unk10;
-		/* 0x14 */ f32 unk14;
-		/* 0x18 */ f32 unk18;
-		/* 0x1C */ s16 unk1C[8];
+		/* 0x00 */ u16 mSwitch;
+		/* 0x02 */ u16 mUpdate;
+		/* 0x04 */ f32 mVolume;
+		/* 0x08 */ f32 mPitch;
+		/* 0x0C */ f32 mFxmix;
+		/* 0x10 */ f32 mDolby;
+		/* 0x14 */ f32 mPan;
+		/* 0x18 */ f32 mTempo;
+		/* 0x1C */ s16 mFirFilter[8];
 	};
 
 	struct MoveParam_ {
@@ -112,6 +113,24 @@ public:
 		TIMED_Unk16       = 16,
 		TIMED_Unk17       = 17,
 		TIMED_Count, // 18
+	};
+
+	enum ParamUpdateFlag {
+		UPDATE_Volume    = 1 << TIMED_Volume, // 0x00001
+		UPDATE_Pitch     = 1 << TIMED_Pitch,  // 0x00002
+		UPDATE_Fxmix     = 1 << TIMED_Fxmix,  // 0x00004
+		UPDATE_Pan       = 1 << TIMED_Pan,    // 0x00008
+		UPDATE_Dolby     = 1 << TIMED_Dolby,  // 0x00010
+		UPDATE_Unk5      = 1 << TIMED_Unk5,   // 0x00020
+		UPDATE_Tempo     = 0x00040,
+		UPDATE_FirFilter = 0x00080,
+		UPDATE_IIR0      = 1 << TIMED_IIR_Unk0, // 0x01000
+		UPDATE_IIR1      = 1 << TIMED_IIR_Unk1, // 0x02000
+		UPDATE_IIR2      = 1 << TIMED_IIR_Unk2, // 0x04000
+		UPDATE_IIR3      = 1 << TIMED_IIR_Unk3, // 0x08000
+		UPDATE_IIRs  = UPDATE_IIR0 | UPDATE_IIR1 | UPDATE_IIR2 | UPDATE_IIR3,
+		UPDATE_Unk16 = 1 << TIMED_Unk16, // 0x10000
+		UPDATE_Unk17 = 1 << TIMED_Unk17, // 0x20000
 	};
 	struct AInnerParam_ {
 #ifdef __MWERKS__

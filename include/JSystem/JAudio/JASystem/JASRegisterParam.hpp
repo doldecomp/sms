@@ -16,6 +16,8 @@ public:
 	u8 getProgramNumber() const;
 
 	void setPanPower(int i, u16 power) { mPanPower[i] = power; }
+	u16 getPanPower(int i) const { return mPanPower[i]; }
+	int getReg32(int i) const { return unk20[i]; }
 
 public:
 	/* 0x00 */ u16 unk0[6];

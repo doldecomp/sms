@@ -1,6 +1,7 @@
 #ifndef JASWSPARSER_HPP
 #define JASWSPARSER_HPP
 
+#include <JSystem/JSupport.hpp>
 #include <dolphin/types.h>
 
 namespace JASystem {
@@ -9,29 +10,17 @@ class TWaveBank;
 
 namespace WSParser {
 
-	struct TCtrl {
-		/* 0x00 */ u32 mMagic;
-		/* 0x04 */ u32 mWaveCount;
-		/* 0x08 */ u32 mCtrlWaveOffsets[1];
+	template <typename T> struct TOffset {
+		T* ptr(const void* base) const
+		{
+			return JSUConvertOffsetToPtr<T>(base, mOffset);
+		}
+
+		/* 0x00 */ u32 mOffset;
 	};
-	struct TCtrlGroup {
-		/* 0x00 */ u32 mMagic;
-		/* 0x04 */ u8 unk4[0x08 - 0x04];
-		/* 0x08 */ u32 mCtrlGroupCount;
-		/* 0x0C */ u32 mCtrlSceneOffsets[1];
-	};
-	struct TCtrlScene {
-		/* 0x00 */ u32 mMagic;
-		/* 0x04 */ u8 unk4[0x0C - 0x04];
-		/* 0x0C */ u32 mCtrlOffset;
-	};
+
 	struct TCtrlWave {
 		/* 0x00 */ u32 unk0;
-	};
-	struct THeader {
-		/* 0x00 */ u8 unk0[0x10];
-		/* 0x10 */ u32 mArchiveBankOffset;
-		/* 0x14 */ u32 mCtrlGroupOffset;
 	};
 	struct TWave {
 		/* 0x00 */ u8 unk0;
@@ -51,12 +40,33 @@ namespace WSParser {
 	};
 	struct TWaveArchive {
 		/* 0x00 */ char mFileName[0x74];
-		/* 0x74 */ u32 mWaveOffsets[1];
+		/* 0x74 */ TOffset<TWave> mWaveOffsets[1];
 	};
 	struct TWaveArchiveBank {
 		/* 0x00 */ u32 mMagic;
 		/* 0x04 */ u8 unk4[0x08 - 0x04];
-		/* 0x08 */ u32 mArchiveOffsets[1];
+		/* 0x08 */ TOffset<TWaveArchive> mArchiveOffsets[1];
+	};
+	struct TCtrl {
+		/* 0x00 */ u32 mMagic;
+		/* 0x04 */ u32 mWaveCount;
+		/* 0x08 */ TOffset<TCtrlWave> mCtrlWaveOffsets[1];
+	};
+	struct TCtrlScene {
+		/* 0x00 */ u32 mMagic;
+		/* 0x04 */ u8 unk4[0x0C - 0x04];
+		/* 0x0C */ TOffset<TCtrl> mCtrlOffset;
+	};
+	struct TCtrlGroup {
+		/* 0x00 */ u32 mMagic;
+		/* 0x04 */ u8 unk4[0x08 - 0x04];
+		/* 0x08 */ u32 mCtrlGroupCount;
+		/* 0x0C */ TOffset<TCtrlScene> mCtrlSceneOffsets[1];
+	};
+	struct THeader {
+		/* 0x00 */ u8 unk0[0x10];
+		/* 0x10 */ TOffset<TWaveArchiveBank> mArchiveBankOffset;
+		/* 0x14 */ TOffset<TCtrlGroup> mCtrlGroupOffset;
 	};
 
 	u32 getGroupCount(void* data);
@@ -68,7 +78,5 @@ namespace WSParser {
 }; // namespace WSParser
 
 } // namespace JASystem
-
-template <typename T> T* JSUConvertOffsetToPtr(const void* base, u32 offset);
 
 #endif // JASWSPARSER_HPP

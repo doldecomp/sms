@@ -545,7 +545,7 @@ int TSeqParser::cmdPanSwSet(TTrack* track, u32* args)
 		track->mPanSwitchExt[i]         = calcTypes[args[i] >> 5];
 		track->mPanSwitchParent[i]      = parentCalcTypes[args[i] >> 5];
 		track->mChannelUpdater.unk62[i] = args[i] & 0x1F;
-		track->unk3B4 |= 8;
+		track->unk3B4 |= TTrack::UPDATE_Pan;
 	}
 
 	return 0;
