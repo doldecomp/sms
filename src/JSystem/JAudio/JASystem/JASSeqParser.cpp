@@ -3,6 +3,7 @@
 #include <JSystem/JAudio/JASystem/JASPlayer_impl.hpp>
 #include <JSystem/JAudio/JASystem/JASTrackMgr.hpp>
 #include <dolphin/os.h>
+#include <stdint.h>
 
 namespace JASystem {
 
@@ -594,7 +595,7 @@ int TSeqParser::cmdPrintf(TTrack* track, u32* args)
 {
 	char buffer[128];
 	u8 byteArray[4];
-	int registers[4];
+	uintptr_t registers[4];
 	u32 count = 0;
 
 	u32 i;
@@ -617,52 +618,52 @@ int TSeqParser::cmdPrintf(TTrack* track, u32* args)
 			}
 		}
 
-		if (buffer[i] != '%')
-			continue;
+		if (buffer[i] == '%') {
+			++i;
+			buffer[i] = track->mSeqCtrl.readByte();
+			if (!buffer[i])
+				break;
 
-		++i;
-		buffer[i] = track->mSeqCtrl.readByte();
-		if (!buffer[i])
-			break;
-
-		switch (buffer[i]) {
-		case 'd':
-			byteArray[count] = 0;
-			break;
-		case 'x':
-			byteArray[count] = 1;
-			break;
-		case 's':
-			byteArray[count] = 2;
-			break;
-		case 'r':
-			byteArray[count] = 3;
-			buffer[i]        = 'd';
-			break;
-		case 'R':
-			byteArray[count] = 4;
-			buffer[i]        = 'x';
-			break;
-		case 't':
-			byteArray[count] = 5;
-			buffer[i]        = 'x';
-			break;
+			switch (buffer[i]) {
+			case 'd':
+				byteArray[count] = 0;
+				break;
+			case 'x':
+				byteArray[count] = 1;
+				break;
+			case 's':
+				byteArray[count] = 2;
+				break;
+			case 'r':
+				byteArray[count] = 3;
+				buffer[i]        = 'd';
+				break;
+			case 'R':
+				byteArray[count] = 4;
+				buffer[i]        = 'x';
+				break;
+			case 't':
+				byteArray[count] = 5;
+				buffer[i]        = 'x';
+				break;
+			}
+			++count;
 		}
-		++count;
 	}
 
 	for (i = 0; i < count; ++i) {
 		registers[i] = track->mSeqCtrl.readByte();
 		if (byteArray[i] == 2)
-			registers[i] = (int)&track->mSeqCtrl.mRawFilePtr[registers[i]];
+			registers[i] = (uintptr_t)track->mSeqCtrl.getAddr(registers[i]);
 		else if (byteArray[i] == 5)
 			registers[i] = track->unk308;
 		else if (byteArray[i] >= 3)
 			registers[i] = track->exchangeRegisterValue(registers[i]);
 	}
 
-	// Thrown out in release build
-	// OSReport(buf, registers[0], registers[1], registers[2], registers[3]);
+#ifndef NDEBUG
+	OSReport(buf, registers[0], registers[1], registers[2], registers[3]);
+#endif
 
 	return 0;
 }
@@ -742,7 +743,7 @@ int TSeqParser::cmdNoteOff(TTrack* track, u8 flag)
 
 		if (rdata2 > 7 || rdata2 == 0) {
 			if (r31 & 0x80)
-				++track->mSeqCtrl.mCurrentFilePtr;
+				track->mSeqCtrl.readByte();
 
 			return 0;
 		}
@@ -755,7 +756,7 @@ int TSeqParser::cmdNoteOff(TTrack* track, u8 flag)
 	u8 note = flag & 0xF;
 
 	s32 release = 0;
-	if (flag & 0x8) {
+	if (note & 0x8) {
 		note -= 0x8;
 		release = track->mSeqCtrl.readByte();
 		if (release > 100)
@@ -769,16 +770,25 @@ int TSeqParser::cmdNoteOn(TTrack* track, u8 note)
 {
 	u8 r31 = note + track->mTransposeTotal;
 
-	// TODO: very fake, but IDK how to make mwcc push it off
-	// to the stack =/
-	volatile u8 r25_or_0x1C = track->mSeqCtrl.readByte();
-	if (r25_or_0x1C & 0x80) {
-		r31 = track->exchangeRegisterValue(note);
+	union {
+		u8 b;
+		struct {
+			u8 regKey : 1;
+			u8 connect : 2;
+			u8 length : 2;
+			u8 voice : 3;
+		} bits;
+	} cmd;
+
+	u8 cmdByte = track->mSeqCtrl.readByte();
+	if (cmdByte & 0x80) {
+		r31 = track->exchangeRegisterValue(r31);
 		r31 += track->mTransposeTotal;
 	}
+	cmd.b = cmdByte;
 
 	u8 r30;
-	if ((r25_or_0x1C >> 5) & 0x2) {
+	if (cmd.bits.connect & 0x2) {
 		r30 = r31;
 		r31 = track->mNoteMgr.getLastNote();
 	}
@@ -788,36 +798,36 @@ int TSeqParser::cmdNoteOn(TTrack* track, u8 note)
 		r29 = track->exchangeRegisterValue(r29 - 0x80);
 
 	u32 r28;
-	u8 r26;
 	u8 r27;
+	u8 r26;
 
-	if (!(r25_or_0x1C & 0x7)) {
+	if (cmd.bits.voice == 0) {
 		r27 = 0;
 		r26 = track->mSeqCtrl.readByte();
 		if (r26 >= 0x80)
 			r26 = track->exchangeRegisterValue(r26 - 0x80);
 
 		r28 = 0;
-		for (u8 i = 0; i < ((r25_or_0x1C >> 3) & 0x3); ++i) {
+		for (int i = 0; i < cmd.bits.length; ++i) {
 			r28 <<= 8;
 			r28 |= track->mSeqCtrl.readByte();
 		}
 
-		if ((u32)((r25_or_0x1C >> 3) & 0x3) == 1)
+		if (cmd.bits.length == 1)
 			if (r28 >= 0x80)
 				r28 = track->exchangeRegisterValue(r28 - 0x80);
 
 	} else {
-		r27 = r25_or_0x1C & 0x7;
+		r27 = cmd.bits.voice;
 
-		if ((r25_or_0x1C >> 3) & 0x3)
+		if (cmd.bits.length)
 			r27 = track->exchangeRegisterValue(r27 - 1);
 
 		r28 = -1;
 		r26 = 100;
 	}
 
-	track->mNoteMgr.setConnectCase((r25_or_0x1C >> 5) & 0x3);
+	track->mNoteMgr.setConnectCase(cmd.bits.connect);
 
 	s32 r25 = r28;
 	if (track->mNoteMgr.checkBeforeTieMode()) {
