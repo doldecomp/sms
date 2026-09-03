@@ -11,6 +11,7 @@
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <JSystem/JMath.hpp>
 #include <Map/Map.hpp>
+#include <Map/MapCollisionManager.hpp>
 #include <Map/MapData.hpp>
 #include <Map/PollutionManager.hpp>
 #include <MarioUtil/MathUtil.hpp>
@@ -483,11 +484,7 @@ BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 	u32 actorType = sender->getActorType();
 	if (boss->unk16C == 3
 	    && (actorType == 0x1000000d || actorType == 0x1000001)) {
-		boss->unk16C = 0;
-		boss->mSpine->reset();
-		boss->mSpine->setNext(&TNerveBPFall::theNerve());
-		SMSGetMSound()->startSoundActor(MSD_SE_BS_BSPAKU_FALL, &boss->mPosition,
-		                                0, nullptr, 0, 4);
+		boss->gotFlyingDamage();
 		return true;
 	}
 
@@ -506,20 +503,7 @@ BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 		angle     = MsAngleDiff(MsGetRotFromZaxisY(toMario), boss->mRotation.y);
 		if (fabsf(angle)
 		    < 0.5f * boss->getBossPakkunParams()->mSLDamageAngle.get()) {
-			if (boss->unk17C == 0) {
-				boss->unk170 += 1;
-				if (boss->unk178
-				    < boss->getBossPakkunParams()->mSLWaterMarkLimit.get())
-					boss->unk178 += 1;
-				boss->unk174
-				    = boss->getBossPakkunParams()->mSLWaterHitTimer.get();
-
-				if (boss->mSpine->getLatestNerve()
-				    != &TNerveBPSwallow::theNerve()) {
-					boss->mSpine->reset();
-					boss->mSpine->setNext(&TNerveBPSwallow::theNerve());
-				}
-			}
+			boss->gotWaterDamage();
 		}
 	}
 
@@ -792,7 +776,13 @@ BOOL TBossPakkun::checkMarioRiding()
 	return false;
 }
 
-void TBossPakkun::startBGM() { }
+void TBossPakkun::startBGM()
+{
+	if (unk1CC == 0) {
+		MSBgm::startBGM(MSD_BGM_MAP_SELECT);
+		unk1CC = 1;
+	}
+}
 
 void TBossPakkun::rumblePad(int type, const JGeometry::TVec3<f32>& position)
 {
@@ -847,9 +837,28 @@ bool TBossPakkun::is2ndFightNow() const
 
 void TBossPakkun::ignoreWaterCheck() { }
 
-void TBossPakkun::startTornadoBlur() { }
+void TBossPakkun::startTornadoBlur()
+{
+	gpMarioParticleManager->emitAndBindToPosPtr(0xa9, &unk194, 0, nullptr);
+	gpMarioParticleManager->emitAndBindToPosPtr(0xa9, &unk1A0, 0, nullptr);
+}
 
-void TBossPakkun::resetWaterMark() { }
+void TBossPakkun::resetWaterMark()
+{
+	if (unk17C == 0) {
+		unk17C = 1;
+		unk174 = 0;
+		unk170 = 0;
+		unk1B8 = 50;
+		if (unk18C != nullptr) {
+			JGeometry::TVec3<f32> position;
+			getJointTransByIndex(18, &position);
+			position.y += 250.0f;
+			unk18C->mPos.value = position;
+			gpModelWaterManager->emitRequest(*unk18C);
+		}
+	}
+}
 
 BOOL TBossPakkun::inArea(const JGeometry::TVec3<f32>& position)
 {
@@ -861,9 +870,29 @@ BOOL TBossPakkun::inArea(const JGeometry::TVec3<f32>& position)
 	return unk188 == nullptr ? false : unk188->contain(position);
 }
 
-void TBossPakkun::gotFlyingDamage() { }
+void TBossPakkun::gotFlyingDamage()
+{
+	unk16C = 0;
+	mSpine->reset();
+	mSpine->setNext(&TNerveBPFall::theNerve());
+	SMSGetMSound()->startSoundActor(MSD_SE_BS_BSPAKU_FALL, &mPosition, 0,
+	                                nullptr, 0, 4);
+}
 
-void TBossPakkun::gotWaterDamage() { }
+void TBossPakkun::gotWaterDamage()
+{
+	if (unk17C == 0) {
+		unk170 += 1;
+		if (unk178 < getBossPakkunParams()->mSLWaterMarkLimit.get())
+			unk178 += 1;
+		unk174 = getBossPakkunParams()->mSLWaterHitTimer.get();
+
+		if (mSpine->getLatestNerve() != &TNerveBPSwallow::theNerve()) {
+			mSpine->reset();
+			mSpine->setNext(&TNerveBPSwallow::theNerve());
+		}
+	}
+}
 
 void TBossPakkun::gotHipDropDamage() { }
 
@@ -895,9 +924,15 @@ void TBossPakkun::launchPolDrop()
 	mPolDrop->launch(launchPosition, velocity);
 }
 
-void TBossPakkun::launchTornado() { }
+void TBossPakkun::launchTornado() { mTornado->launch(*gpMarioPos); }
 
-void TBossPakkun::killSmallEnemies() { }
+void TBossPakkun::killSmallEnemies()
+{
+	TNameKuriManager* manager
+	    = JDrama::TNameRefGen::search<TNameKuriManager>("ナメクリマネージャー");
+	if (manager != nullptr)
+		manager->killChildren();
+}
 
 void TBossPakkun::changeBck(int index)
 {
@@ -962,7 +997,18 @@ const char** TBossPakkun::getBasNameTable() const
 	return bosspakkun_bastable;
 }
 
-void TBossPakkun::setGroundCollision() { }
+void TBossPakkun::setGroundCollision()
+{
+	const TNerveBase<TLiveActor>* dieNerve = &TNerveBPDie::theNerve();
+	if (mSpine->getLatestNerve() != dieNerve
+	    && mMapCollisionManager != nullptr) {
+		TPosition3f collisionMtx;
+		collisionMtx.set(getModel()->getAnmMtx(2));
+		TMapCollisionBase* collision = mMapCollisionManager->unk8;
+		if (collision != nullptr)
+			collision->moveMtx(collisionMtx);
+	}
+}
 
 void TBossPakkun::kill()
 {
@@ -1213,13 +1259,10 @@ DEFINE_NERVE(TNerveBPTornado, TLiveActor)
 		boss->changeBck(24);
 		gpMarioParticleManager->emitAndBindToSRTMtxPtr(
 		    0xab, boss->getModel()->getAnmMtx(3), 0, boss);
-		gpMarioParticleManager->emitAndBindToPosPtr(0xa9, &boss->unk194, 0,
-		                                            nullptr);
-		gpMarioParticleManager->emitAndBindToPosPtr(0xa9, &boss->unk1A0, 0,
-		                                            nullptr);
+		boss->startTornadoBlur();
 	}
 	if (spine->getTime() == 150)
-		boss->mTornado->launch(*gpMarioPos);
+		boss->launchTornado();
 	if (actor->isCurAnmAlreadyEnd(ANM_TYPE_BCK))
 		return true;
 	return false;
@@ -1348,19 +1391,8 @@ DEFINE_NERVE(TNerveBPTumbleOut, TLiveActor)
 
 	if (actor->checkCurBckFromIndex(22)) {
 		f32 frame = actor->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
-		if (140.0f < frame && frame < 160.0f && boss->unk17C == 0) {
-			boss->unk17C = 1;
-			boss->unk174 = 0;
-			boss->unk170 = 0;
-			boss->unk1B8 = 50;
-			if (boss->unk18C != nullptr) {
-				JGeometry::TVec3<f32> position;
-				boss->getJointTransByIndex(18, &position);
-				position.y += 250.0f;
-				boss->unk18C->mPos.value = position;
-				gpModelWaterManager->emitRequest(*boss->unk18C);
-			}
-		}
+		if (140.0f < frame && frame < 160.0f)
+			boss->resetWaterMark();
 		if (35.0f < frame)
 			boss->unk1BC = 1;
 	}
@@ -1411,20 +1443,8 @@ DEFINE_NERVE(TNerveBPStompReact, TLiveActor)
 		boss->mHeadHit->onHitFlag(HIT_FLAG_NO_COLLISION);
 	}
 
-	if (spine->getTime() == 30 && boss->unk17C == 0) {
-		boss->unk17C = 1;
-		boss->unk174 = 0;
-		boss->unk170 = 0;
-		boss->unk1B8 = 50;
-
-		if (boss->unk18C != nullptr) {
-			JGeometry::TVec3<f32> position;
-			boss->getJointTransByIndex(18, &position);
-			position.y += 250.0f;
-			boss->unk18C->mPos.value = position;
-			gpModelWaterManager->emitRequest(*boss->unk18C);
-		}
-	}
+	if (spine->getTime() == 30)
+		boss->resetWaterMark();
 
 	if (spine->getTime() == 50)
 		boss->unk1BC = 1;
@@ -1455,25 +1475,8 @@ DEFINE_NERVE(TNerveBPPreDie, TLiveActor)
 	if (spine->getTime() == 0) {
 		boss->changeBck(5);
 		boss->mHeadHit->onHitFlag(HIT_FLAG_NO_COLLISION);
-		if (boss->unk17C == 0) {
-			boss->unk17C = 1;
-			boss->unk174 = 0;
-			boss->unk170 = 0;
-			boss->unk1B8 = 50;
-			if (boss->unk18C != nullptr) {
-				JGeometry::TVec3<f32> position;
-				boss->getJointTransByIndex(18, &position);
-				position.y += 250.0f;
-				boss->unk18C->mPos.value = position;
-				gpModelWaterManager->emitRequest(*boss->unk18C);
-			}
-		}
-
-		TNameKuriManager* manager
-		    = JDrama::TNameRefGen::search<TNameKuriManager>(
-		        "ナメクリマネージャー");
-		if (manager != nullptr)
-			manager->killChildren();
+		boss->resetWaterMark();
+		boss->killSmallEnemies();
 		MSBgm::stopTrackBGM(1, 10);
 	}
 
@@ -1541,10 +1544,7 @@ DEFINE_NERVE(TNerveBPFly, TLiveActor)
 	if (spine->getTime() == 0) {
 		boss->changeBck(11);
 		boss->goToRandomNextGraphNode();
-		if (boss->unk1CC == 0) {
-			MSBgm::startBGM(MSD_BGM_MAP_SELECT);
-			boss->unk1CC = 1;
-		}
+		boss->startBGM();
 	}
 
 	JGeometry::TVec3<f32> toNext = boss->getUnk104().getPoint();
