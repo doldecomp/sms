@@ -183,10 +183,17 @@ void TBPVomit::perform(u32 flags, JDrama::TGraphics* graphics)
 TBPTornado::TBPTornado(TBossPakkun* owner, const char* name)
     : THitActor(name)
     , mOwner(owner)
-    , mActor(nullptr)
     , unk94(0.0f)
     , unk98(0)
 {
+	mActor = mOwner->getActorKeeper()->createMActor("trunade.bmd", 0);
+	initHitActor(0x8000010, 5, 0x81000000, 150.0f, 600.0f, 100.0f,
+	             600.0f);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+	mActor->setBtkFromIndex(2);
+	mActor->setBckFromIndex(29);
+	mActor->setBrkFromIndex(1);
+	mScaling.set(2.0f, 2.0f, 2.0f);
 }
 
 void TBPTornado::vanish() { }
