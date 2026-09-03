@@ -3,11 +3,13 @@
 #include <Enemy/Conductor.hpp>
 #include <Enemy/Graph.hpp>
 #include <Enemy/NameKuri.hpp>
+#include <Camera/cameralib.hpp>
 #include <Camera/CameraShake.hpp>
 #include <GC2D/GCConsole2.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <JSystem/JMath.hpp>
+#include <Map/Map.hpp>
 #include <Map/MapData.hpp>
 #include <Map/PollutionManager.hpp>
 #include <MarioUtil/MathUtil.hpp>
@@ -196,9 +198,129 @@ TBPTornado::TBPTornado(TBossPakkun* owner, const char* name)
 	mScaling.set(2.0f, 2.0f, 2.0f);
 }
 
-void TBPTornado::vanish() { }
+void TBPTornado::vanish()
+{
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+	unk98 = 2;
 
-void TBPTornado::perform(u32, JDrama::TGraphics*) { }
+	J3DFrameCtrl* frameCtrl = mActor->getFrameCtrl(ANM_TYPE_BRK);
+	frameCtrl->setFrame(0.0f);
+	frameCtrl->setRate(SMSGetAnmFrameRate());
+}
+
+void TBPTornado::perform(u32 flags, JDrama::TGraphics* graphics)
+{
+	THitActor::perform(flags, graphics);
+
+	if (mOwner->checkLiveFlag(LIVE_FLAG_DEAD))
+		return;
+	if (unk98 == 0)
+		return;
+
+	if (flags & CUE_MOVE) {
+		if (unk98 == 2) {
+			mPosition += unk88;
+			if (mActor->curAnmEndsNext(ANM_TYPE_BRK, nullptr)) {
+				unk98 = 0;
+				return;
+			}
+		} else {
+			unk94 += mOwner->getBossPakkunParams()->mSLTornadoMoveInc.get();
+			if (unk94
+			    > mOwner->getBossPakkunParams()->mSLTornadoMoveLimit.get()) {
+				vanish();
+				return;
+			}
+
+			f32 angle = 360.0f - static_cast<s32>(unk94) % 360;
+			f32 radius
+			    = unk94
+			      * mOwner->getBossPakkunParams()->mSLTornadoRollSpeed.get();
+			JGeometry::TVec3<f32> direction;
+			direction = unk70;
+			direction.sub(unk7C);
+			if (PSVECMag(&direction) < 100.0f) {
+				vanish();
+				return;
+			}
+
+			PSVECNormalize(&direction, &direction);
+			direction
+			    *= mOwner->getBossPakkunParams()->mSLTornadoSpeed.get();
+			unk7C += direction;
+
+			s16 shortAngle = DEG2SHORTANGLE(angle);
+			JGeometry::TVec3<f32> nextPosition(
+			    unk7C.x + radius * JMASCos(shortAngle), unk7C.y,
+			    unk7C.z + radius * JMASSin(shortAngle));
+
+			const TBGCheckData* ground;
+			f32 groundHeight
+			    = gpMap->checkGround(nextPosition.x, nextPosition.y + 200.0f,
+			                         nextPosition.z, &ground);
+			if (!ground->isIllegalData())
+				nextPosition.y = groundHeight;
+
+			if (gpMap->isTouchedOneWallAndMoveXZ(
+			        &nextPosition.x, nextPosition.y, &nextPosition.z, 80.0f))
+				vanish();
+
+			unk88 = nextPosition;
+			unk88.sub(mPosition);
+			mPosition = nextPosition;
+
+			for (s32 i = 0; i < mColCount; ++i) {
+				if (!mCollisions[i]->isActorType(0x80000001))
+					continue;
+
+				static const JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
+				SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+				SMS_SendMessageToMario(this, HIT_MESSAGE_THROWN);
+				SMS_ThrowMario(up, 100.0f);
+				vanish();
+			}
+		}
+	}
+
+	if (flags & CUE_CALC_ANIM) {
+		J3DModel* model = mActor->getModel();
+		MtxPtr mtx      = model->getBaseTRMtx();
+		MTXIdentity(mtx);
+		mtx[0][3] = mPosition.x;
+		mtx[1][3] = mPosition.y;
+		mtx[2][3] = mPosition.z;
+		model->setBaseScale(mScaling);
+	}
+
+	if (flags & CUE_CALC_ANIM) {
+		MtxPtr mtx = mActor->getModel()->getBaseTRMtx();
+		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+		    0x162, mtx, 1, this);
+		if (emitter)
+			emitter->setGlobalScale(mScaling);
+
+		emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+		    0x163, mtx, 1, reinterpret_cast<u8*>(this) + 1);
+		if (emitter)
+			emitter->setGlobalScale(mScaling);
+
+		emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+		    0x164, mtx, 1, reinterpret_cast<u8*>(this) + 2);
+		if (emitter)
+			emitter->setGlobalScale(mScaling);
+	}
+
+	if (flags & CUE_CALC_ANIM) {
+		JGeometry::TVec3<f32> toMario;
+		toMario = mPosition;
+		toMario.sub(*gpMarioPos);
+		SMSGetMSound()->startSoundActorWithInfo(
+		    MSD_SE_BS_BSPAKU_TORNADO, &mPosition, nullptr, toMario.length(), 0,
+		    0, nullptr, 0, 4);
+	}
+
+	mActor->perform(flags, graphics);
+}
 
 void TBPTornado::launch(const JGeometry::TVec3<f32>& target)
 {
