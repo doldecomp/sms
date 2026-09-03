@@ -313,9 +313,10 @@ f32 JAISound::setPositionDopplarCommon(u32 param_1)
 	                         / ((param_1 >> 8) * (param_1 >> 8))));
 
 	if (result < 0.1f)
-		return 0.1f;
-	if (result > 2.0f)
-		return 2.0f;
+		result = 0.1f;
+	else if (result > 2.0f)
+		result = 2.0f;
+
 	return result;
 }
 
@@ -761,11 +762,13 @@ void JAISound::setSePositionDopplar()
 void JAISound::setSeDistanceFxmix(u8 param_1)
 {
 	u16 fx = JAIGlobalParameter::seDefaultFx;
-	if (!checkSwBit(0x4) && JAIGlobalParameter::audioCameraMax == 1) {
+	if (!(interPointer->getSoundSwBit(unk3C) & 0x4)
+	    && JAIGlobalParameter::audioCameraMax == 1) {
 		// TODO: likely an inline
-		if (unk1C->unk18 < JAIGlobalParameter::distanceMax) {
+		f32 dist = unk1C->unk18;
+		if (dist < JAIGlobalParameter::distanceMax) {
 			fx = JAIGlobalParameter::seDistanceFxParameter
-			     * (unk1C->unk18 / JAIGlobalParameter::distanceMax);
+			     * (dist / JAIGlobalParameter::distanceMax);
 		} else {
 			fx = JAIGlobalParameter::seDistanceFxParameter;
 		}

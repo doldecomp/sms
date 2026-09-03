@@ -26,7 +26,7 @@ public:
 	static void updateAll();
 	static TDSPChannel* alloc(u32 param1, u32 param2);
 	static int free(TDSPChannel* channel, u32 param);
-	TDSPChannel* getHandle(u32 handle);
+	static TDSPChannel* getHandle(u32 handle);
 	u32 getNumUse();
 	u32 getNumFree();
 	void setLimitDSP(f32 limit);

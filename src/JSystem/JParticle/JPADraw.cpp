@@ -113,14 +113,14 @@ BOOL JPADraw::initialize(JPABaseEmitter* emitter,
 	setDrawExecVisitorsAfterCB(flags);
 	setDrawCalcVisitors(flags);
 
-	JUT_ASSERT(0x65, execEmtrVisNum <= 1);
-	JUT_ASSERT(0x66, execEmtrPVisNum <= 5);
-	JUT_ASSERT(0x67, execEmtrCVisNum <= 3);
-	JUT_ASSERT(0x68, calcEmtrVisNum <= 4);
-	JUT_ASSERT(0x69, execPtclVisNum <= 5);
-	JUT_ASSERT(0x6a, execChldVisNum <= 4);
-	JUT_ASSERT(0x6b, calcPtclVisNum <= 10);
-	JUT_ASSERT(0x6c, calcChldVisNum <= 2);
+	JUT_ASSERT(execEmtrVisNum <= 1);
+	JUT_ASSERT(execEmtrPVisNum <= 5);
+	JUT_ASSERT(execEmtrCVisNum <= 3);
+	JUT_ASSERT(calcEmtrVisNum <= 4);
+	JUT_ASSERT(execPtclVisNum <= 5);
+	JUT_ASSERT(execChldVisNum <= 4);
+	JUT_ASSERT(calcPtclVisNum <= 10);
+	JUT_ASSERT(calcChldVisNum <= 2);
 
 	return true;
 }
@@ -329,9 +329,8 @@ const ResTIMG* JPADraw::swapImage(const ResTIMG* param_1, s16 param_2)
 BOOL JPADraw::loadTexture(u8 idx, GXTexMapID map_id)
 {
 	JUT_ASSERT(
-	    0x17e,
 	    mDrawCtx.mBaseEmitter->getEmitterDataBlockInfoPtr()->getTextureNum()
-	        > idx);
+	    > idx);
 	mDrawCtx.mTexResource->load(mDrawCtx.mTexIndices[idx], map_id);
 	return true;
 }
@@ -1256,7 +1255,7 @@ s16 JPADraw::getSecondTextureID()
 void JPADraw::loadYBBMtx(MtxPtr mtx)
 {
 	JGeometry::TVec3<f32> v(0.0f, mtx[1][1], mtx[2][1]);
-	JUT_ASSERT(1430, !v.isZero());
+	JUT_ASSERT(!v.isZero());
 	v.normalize();
 
 	cb.unk38[0][0] = 1.0f;

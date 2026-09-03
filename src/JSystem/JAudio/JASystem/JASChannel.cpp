@@ -158,7 +158,7 @@ namespace Driver {
 
 			if (channel->unk4->unk61 & 0x20)
 				buf->setIIRFilterParam(channel->unk4->unk3C);
-			if (channel->unk4->unk61 & 0x1)
+			if (channel->unk4->unk61 & 0x1f)
 				buf->setFIR8FilterParam(channel->unk4->unk2C);
 
 			buf->setFilterMode(channel->unk4->unk61);
@@ -183,7 +183,7 @@ namespace Driver {
 		buf->setPitch(channel->unk98);
 		if (channel->unk4->unk61 & 0x20)
 			buf->setIIRFilterParam(channel->unk4->unk3C);
-		if (channel->unk4->unk61 & 0x1)
+		if (channel->unk4->unk61 & 0x1f)
 			buf->setFIR8FilterParam(channel->unk4->unk2C);
 
 		buf->setFilterMode(channel->unk4->unk61);
@@ -435,11 +435,11 @@ namespace Driver {
 			}
 
 			if (param == 0) {
-				channel->unk8C         = 1.0f;
-				channel->unk90         = 1.0f;
-				channel->unk68.mEffect = 0.5f;
-				channel->unk74.mEffect = 0.0f;
-				channel->unk80.mEffect = 0.0f;
+				channel->unk8C            = 1.0f;
+				channel->unk90            = 1.0f;
+				channel->unk68[0].mEffect = 0.5f;
+				channel->unk68[1].mEffect = 0.0f;
+				channel->unk68[2].mEffect = 0.0f;
 
 				for (i = 0; i < 4; i++) {
 					if (!channel->isOsc(i))
@@ -576,7 +576,7 @@ f32 TChannel::bankOscToOfs(u32 index)
 
 void TChannel::effectOsc(u32 index, f32 effect)
 {
-	switch (unk38[index]->getOsc()->unk0) {
+	switch (unk38[index]->getTarget()) {
 	case 1:
 		unk8C *= effect;
 		break;
@@ -584,13 +584,13 @@ void TChannel::effectOsc(u32 index, f32 effect)
 		unk90 *= effect;
 		break;
 	case 2:
-		unk68.mEffect = effect;
+		unk68[0].mEffect = effect;
 		break;
 	case 3:
-		unk74.mEffect = effect;
+		unk68[1].mEffect = effect;
 		break;
 	case 4:
-		unk80.mEffect = effect;
+		unk68[2].mEffect = effect;
 		break;
 	}
 }
@@ -856,11 +856,11 @@ void TChannel::updateEffectorParam()
 	f32 dolby = 0.0f;
 
 	if (unk9C == unk4) {
-		unkA0          = unk4->mPitch;
-		unkA4          = unk4->mVolume;
-		unk68.mChannel = unk4->mPan;
-		unk74.mChannel = unk4->mFxmix;
-		unk80.mChannel = unk4->mDolby;
+		unkA0             = unk4->mPitch;
+		unkA4             = unk4->mVolume;
+		unk68[0].mChannel = unk4->mPan;
+		unk68[1].mChannel = unk4->mFxmix;
+		unk68[2].mChannel = unk4->mDolby;
 		for (int i = 0; i < 3; i++)
 			unk58[i] = unk4->unk62[i];
 	}
@@ -869,27 +869,27 @@ void TChannel::updateEffectorParam()
 	case 0:
 		pan   = 0.5f;
 		dolby = 0.0f;
-		fxmix = calcEffect(&unk74, &unk5C, unk58[1]);
+		fxmix = calcEffect(&unk68[1], &unk5C, unk58[1]);
 		break;
 	case 1:
 		if (unk58[0] == CALC_None)
 			pan = 0.5f;
 		else
-			pan = calcPan(&unk68, &unk5C, unk58[0]);
-		fxmix = calcEffect(&unk74, &unk5C, unk58[1]);
+			pan = calcPan(&unk68[0], &unk5C, unk58[0]);
+		fxmix = calcEffect(&unk68[1], &unk5C, unk58[1]);
 		dolby = 0.0f;
 		break;
 	case 2:
 		if (unk58[0] == CALC_None)
 			pan = 0.5f;
 		else
-			pan = calcPan(&unk68, &unk5C, unk58[0]);
-		fxmix = calcEffect(&unk74, &unk5C, unk58[1]);
-		dolby = calcEffect(&unk80, &unk5C, unk58[2]);
+			pan = calcPan(&unk68[0], &unk5C, unk58[0]);
+		fxmix = calcEffect(&unk68[1], &unk5C, unk58[1]);
+		dolby = calcEffect(&unk68[2], &unk5C, unk58[2]);
 		break;
 	}
 
-	f32 volume = unkA4 * (unk50 * unk90);
+	f32 volume = unkA4 * (unk54 * unk90);
 
 	pan   = clamp01(pan);
 	fxmix = clamp01(fxmix);

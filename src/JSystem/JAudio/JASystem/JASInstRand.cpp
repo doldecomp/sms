@@ -5,12 +5,11 @@ namespace JASystem {
 
 f32 TInstRand::getY(int, int) const
 {
-	static JMath::TRandom_fast_ oRandom(0);
-	f32 tmp1 = oRandom.get_ufloat_1() * 2.0f;
-	f32 tmp2 = tmp1 - 0.9999999f;
-	tmp2 *= unkC;
-	tmp2 += unk8;
-	return tmp2;
+	static JMath::TRandomFast oRandom(0);
+	f32 val = oRandom.get_sfloat_1();
+	val *= mCeiling;
+	val += mFloor;
+	return val;
 }
 
 } // namespace JASystem

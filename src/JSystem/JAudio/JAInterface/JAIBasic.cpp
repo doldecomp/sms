@@ -382,9 +382,11 @@ void JAIBasic::finishSceneSet(u32 param)
 
 void JAIBasic::loadSceneWave(s32 param1, s32 param2)
 {
-	if (unk54 && unk54[param1].unk8 == 2 && unk60[param1] != param2) {
-		if (unk60[param1] != -1)
-			JASystem::WaveBankMgr::eraseWave(param1, unk60[param1]);
+	s32 loaded;
+	if (unk54 && unk54[param1].unk8 == 2
+	    && param2 != (loaded = unk60[param1])) {
+		if (loaded != -1)
+			JASystem::WaveBankMgr::eraseWave(param1, loaded);
 		loadGroupWave(param1, param2);
 	}
 }
@@ -758,21 +760,21 @@ void JAIBasic::releaseControllerHandle(JAILinkBuffer* buffer, JAISound* sound)
 
 JAIStreamParameter* JAIBasic::getStreamParameter()
 {
-	JAIStreamParameter* var1;
-	JAIStreamParameter** var2;
+	JAIStreamParameter** end   = &unk0->unk1D4;
+	JAIStreamParameter** start = &unk0->unk1D8;
 
-	var2 = &unk0->unk1D8;
-	if (unk0->unk1D4->unk3DC != nullptr) {
-		var1         = unk0->unk1D4;
-		unk0->unk1D4 = var1->unk3DC;
-		if (*var2 != nullptr) {
-			var1->unk3DC    = *var2;
-			(*var2)->unk3D8 = var1;
+	if ((*end)->unk3DC != nullptr) {
+		JAIStreamParameter* var1 = *end;
+
+		*end = var1->unk3DC;
+		if (*start != nullptr) {
+			var1->unk3DC     = *start;
+			(*start)->unk3D8 = var1;
 		} else {
 			var1->unk3DC = nullptr;
 		}
 		var1->unk3D8 = nullptr;
-		*var2        = var1;
+		*start       = var1;
 		return var1;
 	}
 	return nullptr;
@@ -800,18 +802,21 @@ void JAIBasic::releaseStreamParameterPointer(JAIStreamParameter* param)
 
 JAISeqParameter* JAIBasic::getSeqParametermeterPointer()
 {
-	JAISeqParameter** var2 = &unk0->unk1C0;
-	if (unk0->unk1BC->unk1858) {
-		JAISeqParameter* var1 = unk0->unk1BC;
-		unk0->unk1BC          = var1->unk1858;
-		if (*var2) {
-			var1->unk1858    = *var2;
-			(*var2)->unk1854 = var1;
+	JAISeqParameter** end   = &unk0->unk1BC;
+	JAISeqParameter** start = &unk0->unk1C0;
+
+	if ((*end)->unk1858) {
+		JAISeqParameter* var1 = *end;
+
+		*end = var1->unk1858;
+		if (*start) {
+			var1->unk1858     = *start;
+			(*start)->unk1854 = var1;
 		} else {
 			var1->unk1858 = nullptr;
 		}
 		var1->unk1854 = nullptr;
-		*var2         = var1;
+		*start        = var1;
 		return var1;
 	}
 	return nullptr;
@@ -840,18 +845,20 @@ void JAIBasic::releaseSeqParameterPointer(JAISeqParameter* param)
 JAISeParameter* JAIBasic::getSeParametermeterPointer()
 {
 	JAISeParameter* var1;
-	JAISeParameter** var2 = &unk0->unk1CC;
-	if (unk0->unk1C8) {
-		var1         = unk0->unk1C8;
-		unk0->unk1C8 = var1->unk440;
-		if (*var2 != nullptr) {
-			var1->unk440    = *var2;
-			(*var2)->unk43C = var1;
+	JAISeParameter** end   = &unk0->unk1C8;
+	JAISeParameter** start = &unk0->unk1CC;
+
+	if (*end) {
+		var1 = *end;
+		*end = var1->unk440;
+		if (*start != nullptr) {
+			var1->unk440     = *start;
+			(*start)->unk43C = var1;
 		} else {
 			var1->unk440 = nullptr;
 		}
 		var1->unk43C = nullptr;
-		*var2        = var1;
+		*start       = var1;
 		unk0->initSePara(var1);
 	} else {
 		var1 = nullptr;
@@ -1003,7 +1010,7 @@ u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 
 			JASystem::TTrack* track = JASystem::TrackMgr::handleToSeq(
 			    basic->unk0->unk180[i].unk48->getSeqParameter()->unk0);
-			if (track != param_1->unk2C0)
+			if (track != param_1->mParent)
 				continue;
 
 			u32 route = basic->routeToTrack(param_1->unk308);
@@ -1023,16 +1030,16 @@ u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 		JAIData::FabricatedUnk0Struct* params
 		    = &basic->unk0->unk0[uVar8 & 0xff];
 
-		outer->setParam(1, params->unk4);
-		outer->setParam(8, params->unk10);
-		outer->setParam(2, params->unk8);
-		outer->setParam(4, params->unkC);
+		outer->setParam(JASystem::TTrack::UPDATE_Volume, params->unk4);
+		outer->setParam(JASystem::TTrack::UPDATE_Pan, params->unk10);
+		outer->setParam(JASystem::TTrack::UPDATE_Pitch, params->unk8);
+		outer->setParam(JASystem::TTrack::UPDATE_Fxmix, params->unkC);
 		f32 thing;
 		if (basic->unk14 != 2)
 			thing = 0.0f;
 		else
 			thing = params->unk14;
-		outer->setParam(16, thing);
+		outer->setParam(JASystem::TTrack::UPDATE_Dolby, thing);
 		break;
 	}
 	case 0x7F:

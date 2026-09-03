@@ -145,7 +145,7 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 	case 12: {
 		u16 local_26;
 		u16 local_28;
-		param_1->unk2C0->readPortAppDirect(8, &local_26);
+		param_1->mParent->readPortAppDirect(8, &local_26);
 		param_1->readPortAppDirect(0xf, &local_28);
 		u16 uVar4 = local_26 > smWaterFilter ? smWaterFilter : local_26;
 
@@ -188,7 +188,7 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 
 	case 13: {
 		u16 local_26;
-		param_1->unk2C0->readPortAppDirect(8, &local_26);
+		param_1->mParent->readPortAppDirect(8, &local_26);
 		u16 uVar3 = local_26 > smWaterFilter ? smWaterFilter : local_26;
 		param_1->writePortAppDirect(0xe, uVar3);
 		param_1->writePortAppDirect(0xf, uVar3);
@@ -198,9 +198,9 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 	case 0: {
 		u16 uVar3 = JAIBasic::setParameterSeqSync(param_1, param_2);
 
-		param_1->unk3C1 = 74;
-		if (param_1->unk2C0->unk2C4[15] == param_1)
-			param_1->unk3C2 = 1;
+		param_1->mPauseStatus = 74;
+		if (param_1->mParent->mChildren[15] == param_1)
+			param_1->mMute = 1;
 
 		return uVar3;
 	}
@@ -217,7 +217,7 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 		param_1->writeRegDirect(10, 0);
 		param_1->writeRegDirect(11, 0);
 		param_1->writeRegDirect(12, 0x7fff);
-		JASystem::TTrack* pTVar1 = param_1->unk2C0;
+		JASystem::TTrack* pTVar1 = param_1->mParent;
 		if (pTVar1 != nullptr) {
 			pTVar1->setPanSwitchExt(1, 0);
 			pTVar1->setPanSwitchExt(1, 1);
@@ -227,9 +227,9 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 			pTVar1->writeRegDirect(11, 0x7fff);
 			pTVar1->writeRegDirect(12, 0);
 			if (pTVar1->mOuterParam != nullptr) {
-				pTVar1->mOuterParam->onSwitch(8);
-				pTVar1->mOuterParam->onSwitch(4);
-				pTVar1->mOuterParam->onSwitch(0x10);
+				pTVar1->mOuterParam->onSwitch(JASystem::TTrack::UPDATE_Pan);
+				pTVar1->mOuterParam->onSwitch(JASystem::TTrack::UPDATE_Fxmix);
+				pTVar1->mOuterParam->onSwitch(JASystem::TTrack::UPDATE_Dolby);
 			}
 		}
 		param_1->mChannelUpdater.unk4E[0] = 0xffff;

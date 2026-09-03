@@ -14,9 +14,9 @@ namespace Dvd {
 
 	u32 checkFileExtend(char*);
 	s32 openDvd(char*, DVDFileInfo*);
-	int registerFastOpen(char*);
-	int loadToAramDvdT(u32, char*, void*, u32, u32, u32*, DvdCallback);
-	int loadToAramDvdTMain(void*);
+	s32 registerFastOpen(char*);
+	s32 loadToAramDvdT(u32, char*, void*, u32, u32, u32*, DvdCallback);
+	s32 loadToAramDvdTMain(void*);
 
 	struct TDvdCall {
 		/* 0x0 */ u32 unk0;
@@ -28,9 +28,9 @@ namespace Dvd {
 		/* 0x34 */ DvdCallback unk34;
 	};
 
-	int loadToDramDvdT(u32, char*, void*, u32, u32, u32*, DvdCallback);
-	int loadToDramDvdTMain(void*);
-	int checkPassDvdT(u32, u32*, DvdCallback);
+	s32 loadToDramDvdT(u32, char*, void*, u32, u32, u32*, DvdCallback);
+	s32 loadToDramDvdTMain(void*);
+	s32 checkPassDvdT(u32, u32*, DvdCallback);
 	void pauseDvdT();
 	void init();
 
@@ -38,21 +38,21 @@ namespace Dvd {
 	void* dvdProc(void*);
 
 	void extendPath(char*, char*);
-	int checkFile(char*);
-	int loadFile(char*, void*);
+	s32 checkFile(char*);
+	s32 loadFile(char*, void*);
 	u32 loadFileDvdT(char*, void*);
 	void setNumOfMsgs(s32);
 	void setDvdBufSize(u32);
 	void setRootPath(char*);
-	void addTaskHigh(s32 (*)(void*), void*, u32);
-	void addTask(s32 (*)(void*), void*, u32);
+	s32 addTaskHigh(s32 (*)(void*), void*, u32);
+	s32 addTask(s32 (*)(void*), void*, u32);
 	void setBufferDvdT(u8*, u32, u32);
 	void closeBufferDvdT(u8*);
 	void getCurrentBufferDvdT(u8**);
-	void* aramToDramDvdTMain(void*);
-	void* dramToAramDvdTMain(void*);
-	void aramToDramDvdT(u32, void*, void*, u32, u32*, void (*)(u32));
-	void dramToAramDvdT(u32, void*, void*, u32, u32*, void (*)(u32));
+	s32 aramToDramDvdTMain(void*);
+	s32 dramToAramDvdTMain(void*);
+	s32 aramToDramDvdT(u32, void*, void*, u32, u32*, void (*)(u32));
+	s32 dramToAramDvdT(u32, void*, void*, u32, u32*, void (*)(u32));
 
 	typedef void (*ErrorCallback)(char*, u8*);
 	void registerDvdErrorCallback(ErrorCallback);

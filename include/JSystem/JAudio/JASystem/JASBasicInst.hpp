@@ -19,6 +19,9 @@ public:
 	virtual int getType() const { return 'BSIC'; }
 	virtual int getKeymapIndex(int) const;
 
+	void setVolume(f32 volume) { unk4 = volume; }
+	void setPitch(f32 pitch) { unk8 = pitch; }
+
 	void setOscCount(u32);
 	void setOsc(int, TOscillator::Osc_*);
 	TOscillator::Osc_* getOsc(int);
@@ -39,6 +42,8 @@ public:
 		{
 		}
 		~TKeymap();
+
+		void setHighKey(int key) { unk0 = key; }
 
 		void setVeloRegionCount(u32);
 		TVeloRegion* getVeloRegion(int);

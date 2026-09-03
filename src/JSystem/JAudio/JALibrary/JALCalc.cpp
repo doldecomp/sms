@@ -46,6 +46,8 @@ f32 getParamByExp(f32 x, f32 xStart, f32 xEnd, f32 y, f32 yStart, f32 yEnd,
 	return result;
 }
 
+f32 getParamByExp_0_1(f32, f32, f32, f32, CurveSign) { return 0.0f; }
+
 f32 getRandom(f32 p1, f32 p2, f32 p3)
 {
 	f32 val0 = 2.0f * p3;
@@ -64,6 +66,12 @@ f32 getRandom_0_1()
 	static JMath::TRandom_fast_ oRandom(0);
 	return oRandom.get_ufloat_1();
 }
+
+s32 getRandom_Sign() { return 0; }
+
+f32 pow2(f32) { return 0.0f; }
+
+f32 getRint(f32) { return 0.0f; }
 
 f32 getDist(Vec* vec1, Vec* vec2) { return std::sqrtf(getDistPow(vec1, vec2)); }
 

@@ -14,7 +14,7 @@ namespace Kernel {
 	void updateDac();
 	void registerDacCallback(void (*callback)(s16*, s32));
 
-	MixCallback getMixCallback(s32);
+	MixCallback getMixCallback(u8* mode);
 	void registerMixCallback(MixCallback callback, u8 mode);
 	u32 getCurrentVCounter();
 

@@ -7,30 +7,28 @@ class JKRCompArchive : public JKRArchive {
 public:
 	JKRCompArchive(s32, EMountDirection);
 
-	virtual ~JKRCompArchive();                                      // _08
-	virtual void removeResourceAll();                               // _24
-	virtual bool removeResource(void*);                             // _28
-	virtual void* fetchResource(SDIFileEntry* entry, u32* outSize); // _40
+	virtual ~JKRCompArchive();
+	virtual void removeResourceAll();
+	virtual bool removeResource(void*);
+	virtual void* fetchResource(SDIFileEntry* entry, u32* outSize);
 	virtual void* fetchResource(void* resourceBuffer, u32 bufferSize,
-	                            SDIFileEntry* entry, u32* resSize); // _44
+	                            SDIFileEntry* entry, u32* resSize);
 
 	bool open(s32);
 
-	// Unused/inlined:
 	void fixedInit(s32);
 	void mountFixed(s32);
 	void mountFixed(const char*);
 	void unmountFixed();
 
-	// _00     = VTBL
-	// _00-_5C = JKRArchive
-	u8* mArcFileData;        // _60
-	JKRAramBlock* mAramPart; // _64
-	u32 _68;                 // _68
-	JKRFile* mDvdFile;       // _6C
-	u32 mSizeOfMemPart;      // _70
-	u32 mSizeOfAramPart;     // _74
-	u32 _78;                 // _78
+private:
+	/* 0x60 */ u8* mArcFileData;
+	/* 0x64 */ JKRAramBlock* mAramPart;
+	/* 0x68 */ u32 _68;
+	/* 0x6C */ JKRFile* mDvdFile;
+	/* 0x70 */ u32 mSizeOfMemPart;
+	/* 0x74 */ u32 mSizeOfAramPart;
+	/* 0x78 */ u32 _78;
 };
 
 #endif

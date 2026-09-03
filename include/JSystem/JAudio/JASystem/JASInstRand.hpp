@@ -7,16 +7,19 @@ namespace JASystem {
 class TInstRand : public TInstEffect {
 public:
 	TInstRand()
-	    : unk8(1.0f)
-	    , unkC(0.0f)
+	    : mFloor(1.0f)
+	    , mCeiling(0.0f)
 	{
 	}
+
+	void setFloor(f32 floor) { mFloor = floor; }
+	void setCeiling(f32 ceiling) { mCeiling = ceiling; }
 
 	virtual f32 getY(int, int) const;
 
 public:
-	/* 0x8 */ f32 unk8;
-	/* 0xC */ f32 unkC;
+	/* 0x8 */ f32 mFloor;
+	/* 0xC */ f32 mCeiling;
 };
 
 } // namespace JASystem

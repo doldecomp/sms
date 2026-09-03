@@ -230,7 +230,7 @@ template <typename T, int I> struct TLinkList : public TNodeLinkList {
 		T& operator*() const
 		{
 			T* p = operator->();
-			JUT_ASSERT(541, p != nullptr);
+			JUT_ASSERT(p != nullptr);
 			return *p;
 		}
 	};
@@ -285,32 +285,32 @@ template <typename T, int I> struct TLinkList : public TNodeLinkList {
 		const T& operator*() const
 		{
 			T* p = operator->();
-			JUT_ASSERT(586, p != nullptr);
+			JUT_ASSERT(p != nullptr);
 			return *p;
 		}
 	};
 
 	static const TLinkListNode* Element_getNode(const T* element)
 	{
-		JUT_ASSERT(753, element != NULL);
+		JUT_ASSERT(element != NULL);
 		return reinterpret_cast<const TLinkListNode*>(
 		    reinterpret_cast<const char*>(element) - I);
 	}
 	static TLinkListNode* Element_getNode(T* element)
 	{
-		JUT_ASSERT(758, element != NULL);
+		JUT_ASSERT(element != NULL);
 		return reinterpret_cast<TLinkListNode*>(reinterpret_cast<char*>(element)
 		                                        - I);
 	}
 	static const T* Element_getValue(const TLinkListNode* node)
 	{
-		JUT_ASSERT(763, node != NULL);
+		JUT_ASSERT(node != NULL);
 		return reinterpret_cast<const T*>(reinterpret_cast<const char*>(node)
 		                                  + I);
 	}
 	static T* Element_getValue(TLinkListNode* node)
 	{
-		JUT_ASSERT(768, node != NULL);
+		JUT_ASSERT(node != NULL);
 		return reinterpret_cast<T*>(reinterpret_cast<char*>(node) + I);
 	}
 
@@ -336,12 +336,12 @@ template <typename T, int I> struct TLinkList : public TNodeLinkList {
 	}
 	T& front()
 	{
-		JUT_ASSERT(642, !empty());
+		JUT_ASSERT(!empty());
 		return *begin();
 	}
 	T& back()
 	{
-		JUT_ASSERT(652, !empty());
+		JUT_ASSERT(!empty());
 		return *--end();
 	}
 	void Push_front(T* element) { Insert(begin(), element); }

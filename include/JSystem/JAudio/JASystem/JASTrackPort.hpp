@@ -26,6 +26,8 @@ public:
 		mValue[port_num]      = value;
 	}
 
+	u16 get(u32 port) const { return mValue[port]; }
+
 	u8 checkImport(int i) const { return mImportFlag[i]; }
 	u8 checkExport(int i) const { return mExportFlag[i]; }
 

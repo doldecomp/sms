@@ -8,7 +8,6 @@ class JKRHeap;
 
 namespace JASystem {
 
-// TODO: Yoinked from TWW cuz yolo. May be incorrect.
 struct TWaveInfo {
 	/* 0x00 */ u8 unk0;
 	/* 0x01 */ u8 unk1;

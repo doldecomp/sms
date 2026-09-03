@@ -96,6 +96,6 @@ bool WaveBankMgr::eraseWave(int bankIndex, int waveIndex)
 	return false;
 }
 
-u32 WaveBankMgr::getUsedHeapSize() { return 0; }
+u32 WaveBankMgr::getUsedHeapSize() { return WSParser::getUsedHeapSize(); }
 
 } // namespace JASystem

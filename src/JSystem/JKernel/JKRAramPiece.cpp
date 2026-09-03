@@ -2,7 +2,12 @@
 #include <JSystem/JKernel/JKRAram.hpp>
 #include <JSystem/JKernel/JKRDecomp.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 #include <dolphin/os.h>
+
+JKRAramPiece::JKRAramPiece() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
+
+JKRAramPiece::~JKRAramPiece() { }
 
 JKRAMCommand* JKRAramPiece::prepareCommand(int direction, u32 src, u32 dst,
                                            u32 length, JKRAramBlock* block,
@@ -74,6 +79,11 @@ bool JKRAramPiece::sync(JKRAMCommand* command, int is_non_blocking)
 	sAramPieceCommandList.remove(&command->mPieceLink);
 	unlock();
 	return TRUE;
+}
+
+void JKRAramPiece::syncAll(int is_non_blocking)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
 }
 
 bool JKRAramPiece::orderSync(int direction, u32 source, u32 destination,
@@ -152,4 +162,10 @@ JKRAMCommand::~JKRAMCommand()
 	if (field_0x94) {
 		JKRHeap::free(field_0x94, nullptr);
 	}
+}
+
+u32 JKRAMCommand::getDestination()
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
 }

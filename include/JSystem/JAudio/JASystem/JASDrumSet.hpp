@@ -16,6 +16,10 @@ public:
 		TPerc();
 		~TPerc();
 
+		void setVolume(f32 volume) { mVolume = volume; }
+		void setPitch(f32 pitch) { mPitch = pitch; }
+		void setPan(f32 pan) { mPan = pan; }
+
 		void setRelease(u32);
 		void setEffectCount(u32);
 		void setEffect(int, TInstEffect*);
@@ -27,14 +31,14 @@ public:
 		TInstEffect* getEffect(int);
 
 	public:
-		/* 0x0 */ f32 unk0;
-		/* 0x4 */ f32 unk4;
-		/* 0x8 */ f32 unk8;
-		/* 0xC */ u16 unkC;
-		/* 0x10 */ TInstEffect** unk10;
-		/* 0x14 */ u32 unk14;
-		/* 0x18 */ u32 unk18;
-		/* 0x1C */ TVeloRegion* unk1C;
+		/* 0x0 */ f32 mVolume;
+		/* 0x4 */ f32 mPitch;
+		/* 0x8 */ f32 mPan;
+		/* 0xC */ u16 mRelease;
+		/* 0x10 */ TInstEffect** mEffects;
+		/* 0x14 */ u32 mEffectCount;
+		/* 0x18 */ u32 mVeloRegionCount;
+		/* 0x1C */ TVeloRegion* mVeloRegions;
 	};
 
 	TDrumSet() { }

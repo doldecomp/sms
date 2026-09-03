@@ -178,25 +178,25 @@ public:
 	void setNrmMtx(Mtx33** pNrmMtx) { mNormMatrices = pNrmMtx; }
 	void setCurrentViewNoPtr(u32* pViewNoPtr)
 	{
-		J3D_ASSERT_NULLPTR(584, pViewNoPtr != nullptr);
+		J3D_ASSERT_NULLPTR(pViewNoPtr != nullptr);
 		mCurrentViewNo = pViewNoPtr;
 	}
 
 	void setScaleFlagArray(u8* pScaleFlagArray)
 	{
-		J3D_ASSERT_NULLPTR(595, pScaleFlagArray != nullptr);
+		J3D_ASSERT_NULLPTR(pScaleFlagArray != nullptr);
 		mScaleFlagArray = pScaleFlagArray;
 	}
 
 	void setDrawMtxDataPointer(J3DDrawMtxData* pMtxData)
 	{
-		J3D_ASSERT_NULLPTR(554, pMtxData != nullptr);
+		J3D_ASSERT_NULLPTR(pMtxData != nullptr);
 		mDrawMtxData = pMtxData;
 	}
 
 	void setVertexDataPointer(J3DVertexData* pVtxData)
 	{
-		J3D_ASSERT_NULLPTR(657, pVtxData != nullptr);
+		J3D_ASSERT_NULLPTR(pVtxData != nullptr);
 		mVertexData = pVtxData;
 	}
 

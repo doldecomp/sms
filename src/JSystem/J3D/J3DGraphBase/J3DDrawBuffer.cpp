@@ -93,7 +93,7 @@ bool J3DDrawBuffer::entryMatSort(J3DMatPacket* packet)
 
 bool J3DDrawBuffer::entryMatAnmSort(J3DMatPacket* pMatPacket)
 {
-	J3D_ASSERT_NULLPTR(199, pMatPacket != nullptr);
+	J3D_ASSERT_NULLPTR(pMatPacket != nullptr);
 
 	uintptr_t matAnmId = pMatPacket->unk44;
 	u32 slot           = matAnmId & (mSize - 1);

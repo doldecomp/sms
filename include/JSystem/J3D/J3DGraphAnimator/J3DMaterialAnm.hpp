@@ -42,7 +42,7 @@ public:
 	{
 		mAnmIndex     = anmIdx;
 		mAnmTransform = pAnm;
-		J3D_ASSERT_NULLPTR(134, pAnm != NULL);
+		J3D_ASSERT_NULLPTR(pAnm != NULL);
 	}
 
 	void setAnmIndex(u16 index) { mAnmIndex = index; }
@@ -92,7 +92,7 @@ public:
 	{
 		mAnmTevReg = tev_reg;
 		mAnmIndex  = idx;
-		J3D_ASSERT_NULLPTR(293, tev_reg != nullptr);
+		J3D_ASSERT_NULLPTR(tev_reg != nullptr);
 	}
 
 	void setAnmIndex(u16 index) { mAnmIndex = index; }
@@ -117,7 +117,7 @@ public:
 	{
 		mAnmTevReg = tev_reg;
 		mAnmIndex  = idx;
-		J3D_ASSERT_NULLPTR(371, tev_reg != nullptr);
+		J3D_ASSERT_NULLPTR(tev_reg != nullptr);
 	}
 
 	void setAnmIndex(u16 index) { mAnmIndex = index; }

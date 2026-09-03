@@ -14,40 +14,24 @@ public:
 		HEAPALLOC_Unk1 = 1,
 	};
 
+	// NOTE: half guesswork
 	struct TState {
-		TState(const JKRHeap* heap, u32 id, bool isCompareOnDestructed)
-		    : mUsedSize(0)
-		    , mCheckCode(0)
-		    , mHeap(heap)
-		    , mId(id)
-		{
-			mHeap->state_register(this, mId);
-		}
-
-		TState(JKRHeap* heap)
-		    : mUsedSize(0)
-		    , mCheckCode(0)
-		    , mHeap(heap)
-		    , mId(0xFFFFFFFF)
-		{
-		}
-
+		TState(const JKRHeap* heap, u32 id, bool isCompareOnDestructed);
+		TState(const JKRHeap* heap, bool isCompareOnDestructed);
 		~TState();
-		void dump() const { mHeap->state_dump(*this); }
-		bool isVerbose() { return bVerbose_; }
+
 		u32 getUsedSize() const { return mUsedSize; }
 		u32 getCheckCode() const { return mCheckCode; }
 		const JKRHeap* getHeap() const { return mHeap; }
 		u32 getId() const { return mId; }
+		bool isCompareOnDestructed() const { return mIsCompareOnDestructed; }
 
-		static bool bVerbose_;
-
-		// TODO: this is all wrong
-		u32 mBuf;             // _00
-		u32 mUsedSize;        // _04
-		u32 mCheckCode;       // _08
-		u32 mId;              // _0C
-		const JKRHeap* mHeap; // _10
+		/* 0x00 */ u32 mBuf;
+		/* 0x04 */ u32 mUsedSize;
+		/* 0x08 */ u32 mCheckCode;
+		/* 0x0C */ u32 mId;
+		/* 0x10 */ const JKRHeap* mHeap;
+		/* 0x14 */ BOOL mIsCompareOnDestructed;
 	};
 
 public:
@@ -79,22 +63,10 @@ public:
 	JKRHeap* becomeCurrentHeap();
 	void destroy();
 	void fillFreeArea();
+	static s32 resize(void*, u32, JKRHeap*);
 	static s32 getSize(void*, JKRHeap*);
-
-	// TODO: pure speculation but helped JKRThread to match
-	template <class T> static inline T* allocOne(int align, JKRHeap* heap)
-	{
-		return (T*)alloc(sizeof(T), align, heap);
-	}
-
-	// TODO: pure speculation but helped JKRThread to match
-	template <class T>
-	static inline T* allocArray(size_t cnt, int align, JKRHeap* heap)
-	{
-		return (T*)alloc(cnt * sizeof(T), align, heap);
-	}
-
-	// ... more functions
+	static void fillMemory(u8*, u32, u8);
+	static JKRHeapErrorHandler* setErrorHandler(JKRHeapErrorHandler*);
 
 	void* getMaxFreeBlock();
 	u32 getMaxAllocatableSize(int alignment);
@@ -126,10 +98,7 @@ public:
 	}
 
 	// TState related
-	static u32 getState_buf_(TState* state)
-	{
-		return state->mBuf;
-	} // might instead be a pointer to a next state?
+	static void* getState_buf_(TState* state) { return &state->mBuf; }
 	static void setState_u32ID_(TState* state, u32 id) { state->mId = id; }
 	static void setState_uUsedSize_(TState* state, u32 usedSize)
 	{
@@ -147,7 +116,6 @@ public:
 
 	const JSUTree<JKRHeap>& getHeapTree() { return mChildTree; }
 
-	// Unused
 	void checkMemoryFilled(u8*, u32 size, u8);
 
 	static bool initArena(char**, u32*, int);
@@ -186,17 +154,15 @@ public:
 	static JKRHeapErrorHandler* mErrorHandler;
 
 protected:
-	// _00 = vtable
-	// _00-_18 = JKRDisposer
-	OSMutex mMutex;                     // _18
-	void* mStart;                       // _30
-	void* mEnd;                         // _34
-	u32 mSize;                          // _38
-	JSUTree<JKRHeap> mChildTree;        // _3C
-	JSUList<JKRDisposer> mDisposerList; // _58
-	bool mErrorFlag;                    // _64
-	bool mInitFlag;                     // _65
-	u8 padding_0x6a[2];                 // _66
+	/* 0x18 */ OSMutex mMutex;
+	/* 0x30 */ void* mStart;
+	/* 0x34 */ void* mEnd;
+	/* 0x38 */ u32 mSize;
+	/* 0x3C */ JSUTree<JKRHeap> mChildTree;
+	/* 0x58 */ JSUList<JKRDisposer> mDisposerList;
+	/* 0x64 */ bool mErrorFlag;
+	/* 0x65 */ bool mInitFlag;
+	/* 0x66 */ u8 padding_0x6a[2];
 };
 
 inline JKRHeap* JKRGetCurrentHeap() { return JKRHeap::getCurrentHeap(); }

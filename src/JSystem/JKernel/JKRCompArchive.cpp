@@ -56,13 +56,22 @@ JKRCompArchive::~JKRCompArchive()
 	mIsMounted = false;
 }
 
-void JKRCompArchive::fixedInit(s32 entryNum) { }
+void JKRCompArchive::fixedInit(s32 entryNum)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
 
-void JKRCompArchive::mountFixed(s32 entryNum) { }
+void JKRCompArchive::mountFixed(s32 entryNum)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
 
-void JKRCompArchive::mountFixed(const char* path) { }
+void JKRCompArchive::mountFixed(const char* path)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
 
-void JKRCompArchive::unmountFixed() { }
+void JKRCompArchive::unmountFixed() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
 
 static void dummy()
 {
@@ -239,7 +248,7 @@ bool JKRCompArchive::open(s32 entryNum)
 
 void* JKRCompArchive::fetchResource(SDIFileEntry* fileEntry, u32* pSize)
 {
-	JUT_ASSERT(597, isMounted());
+	JUT_ASSERT(isMounted());
 
 	if (fileEntry->mData == nullptr) {
 		u32 flag = fileEntry->mFlagsAndNameOffset >> 24;

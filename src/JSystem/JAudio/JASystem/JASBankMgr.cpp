@@ -2,6 +2,7 @@
 #include <JSystem/JAudio/JASystem/JASSystemHeap.hpp>
 #include <JSystem/JAudio/JASystem/JASCalc.hpp>
 #include <JSystem/JAudio/JASystem/JASBNKParser.hpp>
+#include <JSystem/JAudio/JASystem/JASWSParser.hpp>
 #include <JSystem/JAudio/JASystem/JASWaveBankMgr.hpp>
 #include <JSystem/JAudio/JASystem/JASChannelMgr.hpp>
 #include <JSystem/JAudio/JASystem/JASDriverTables.hpp>
@@ -117,7 +118,7 @@ namespace BankMgr {
 		if (!waveBank)
 			return nullptr;
 
-		TWaveHandle* waveHndl = waveBank->getWaveHandle(instParam.unk4);
+		TWaveHandle* waveHndl = waveBank->getWaveHandle(instParam.mWaveId);
 		if (!waveHndl)
 			return nullptr;
 
@@ -149,12 +150,13 @@ namespace BankMgr {
 		// TODO: WTF?
 		chan->unk10 = (Driver::Wave_*)waveInfo;
 		chan->unk14 = (u32)wave;
-		chan->unkC  = instParam.unk0;
+		chan->unkC  = instParam.mSourceType;
 		chan->unk0  = param_5;
 		chan->unk1  = param_4;
-		chan->unk48 = instParam.unk14 * (waveInfo->unk4 / Kernel::getDacRate());
-		chan->unk50 = chan->unk48 * instParam.unk18;
-		if (instParam.unk38 == 0) {
+		chan->unk48
+		    = instParam.mPitch * (waveInfo->unk4 / Kernel::getDacRate());
+		chan->unk50 = chan->unk48 * instParam.mEffectPitch;
+		if (instParam.mFixedPitch == 0) {
 			int var = (param_4 + 0x3C) - waveInfo->unk2;
 			if (var < 0)
 				var = 0;
@@ -162,21 +164,21 @@ namespace BankMgr {
 				var = 0x7f;
 			chan->unk50 *= Driver::C5BASE_PITCHTABLE[var];
 		}
-		chan->unk4C = instParam.unk10;
+		chan->unk4C = instParam.mVolume;
 		chan->unk54 = chan->unk0 / 127.0f;
 		chan->unk54 = chan->unk4C * (chan->unk54 * chan->unk54);
-		chan->unk54 *= instParam.unk18;
+		chan->unk54 *= instParam.mEffectVolume;
 
-		chan->unk68.mSound = instParam.unk20;
-		chan->unk74.mSound = instParam.unk24;
-		chan->unk80.mSound = instParam.unk28;
+		chan->unk68[0].mSound = instParam.mPan;
+		chan->unk68[1].mSound = instParam.mFxmix;
+		chan->unk68[2].mSound = instParam.mDolby;
 
-		chan->unk68.mSound = clamp01(chan->unk68.mSound);
-		chan->unk74.mSound = clamp01(chan->unk74.mSound);
+		for (int i = 0; i < 2; ++i)
+			chan->unk68[i].mSound = clamp01(chan->unk68[i].mSound);
 
-		chan->unk68.mEffect = instParam.unk2C;
-		chan->unk74.mEffect = instParam.unk30;
-		chan->unk80.mEffect = instParam.unk34;
+		chan->unk68[0].mEffect = instParam.mEffectPan;
+		chan->unk68[1].mEffect = instParam.mEffectFxmix;
+		chan->unk68[2].mEffect = instParam.mEffectDolby;
 
 		chan->unk8C = 1.0f;
 		chan->unk90 = 1.0f;
@@ -184,7 +186,7 @@ namespace BankMgr {
 		for (u32 i = 0; i < instParam.mOscCount; ++i)
 			chan->setOscInit(i, instParam.mOscData[i]);
 
-		chan->directReleaseOsc(0, instParam.unk3A);
+		chan->directReleaseOsc(0, instParam.mRelease);
 		if (!chan->play(param_6))
 			return nullptr;
 
@@ -217,12 +219,12 @@ namespace BankMgr {
 		channel->unk54 = channel->unk0 / 127.0f;
 		channel->unk54 = channel->unk4C * (channel->unk54 * channel->unk54);
 
-		channel->unk68.mSound  = 0.5f;
-		channel->unk74.mSound  = 0.0f;
-		channel->unk80.mSound  = 0.0f;
-		channel->unk68.mEffect = 0.5f;
-		channel->unk74.mEffect = 0.0f;
-		channel->unk80.mEffect = 0.0f;
+		channel->unk68[0].mSound  = 0.5f;
+		channel->unk68[1].mSound  = 0.0f;
+		channel->unk68[2].mSound  = 0.0f;
+		channel->unk68[0].mEffect = 0.5f;
+		channel->unk68[1].mEffect = 0.0f;
+		channel->unk68[2].mEffect = 0.0f;
 
 		channel->unk8C = 1.0f;
 		channel->unk90 = 1.0f;
@@ -261,7 +263,7 @@ namespace BankMgr {
 		channel->unk54 = channel->unk4C * (channel->unk54 * channel->unk54);
 	}
 
-	u32 getUsedHeapSize() { return 0; }
+	u32 getUsedHeapSize() { return BNKParser::getUsedHeapSize(); }
 
 } // namespace BankMgr
 } // namespace JASystem

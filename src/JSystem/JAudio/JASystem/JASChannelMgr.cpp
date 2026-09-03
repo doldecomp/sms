@@ -169,7 +169,7 @@ TChannel* TChannelMgr::getListHead(u32 param)
 	return head;
 }
 
-u32 TChannelMgr::countList(u32 param) { return 0; }
+u32 TChannelMgr::countList(u32 param) const { return 0; }
 
 int TChannelMgr::cutList(TChannel* channel)
 {

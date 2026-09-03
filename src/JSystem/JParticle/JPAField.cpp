@@ -494,7 +494,7 @@ JPABaseField* JPAFieldManager::setField(u8 param_1)
 		result = setConvectionField();
 		break;
 	}
-	JUT_ASSERT(485, result != nullptr);
+	JUT_ASSERT(result != nullptr);
 	return result;
 }
 
