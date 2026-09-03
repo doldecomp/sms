@@ -120,7 +120,62 @@ TBPPolDrop::TBPPolDrop(TBossPakkun* owner, const char* name)
 
 void TBPPolDrop::drop() { }
 
-void TBPPolDrop::move() { }
+void TBPPolDrop::move()
+{
+	if (unk80 == 0) {
+		onHitFlag(HIT_FLAG_NO_COLLISION);
+		return;
+	}
+
+	JGeometry::TVec3<f32> nextPosition = mPosition;
+	nextPosition += unk6C;
+
+	if (unk80 == 1) {
+		if (unk78->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
+			unk78->setBck("pollut_ball");
+
+		unk6C.y -= 0.1f;
+		if (unk84 >= 60 || mOwner->is2ndFightNow()) {
+			const TBGCheckData* ground;
+			f32 groundHeight = gpMap->checkGround(
+			    nextPosition.x, mPosition.y, nextPosition.z, &ground);
+			groundHeight += 1.0f;
+			if (ground->isIllegalData())
+				groundHeight = unk88;
+			unk88 = groundHeight;
+
+			if (nextPosition.y < groundHeight) {
+				unk80 = 2;
+				unk6C.zero();
+				unk7C->setBck("pollut_ball_stamp");
+				gpMarioParticleManager->emit(0x52, &mPosition, 0, nullptr);
+				SMSGetMSound()->startSoundActor(
+				    MSD_SE_BS_BSPAKU_POLLUT_GND, &mPosition, 0, nullptr, 0, 4);
+				mOwner->rumblePad(2, mPosition);
+				nextPosition.y = groundHeight;
+				onHitFlag(HIT_FLAG_NO_COLLISION);
+				return;
+			}
+
+			offHitFlag(HIT_FLAG_NO_COLLISION);
+			if (gpMap->isTouchedOneWallAndMoveXZ(
+			        &nextPosition.x, nextPosition.y, &nextPosition.z, 80.0f))
+				unk80 = 0;
+
+			SMSGetMSound()->startSoundActorWithInfo(
+			    MSD_SE_BS_BSPAKU_POLLUT_IMI, &mPosition, nullptr, -unk6C.y, 0,
+			    0, nullptr, 0, 4);
+			SMSGetMSound()->startSoundActorWithInfo(
+			    MSD_SE_BS_BSPAKU_POLLUT_FLY, &mPosition, nullptr, -unk6C.y, 0,
+			    0, nullptr, 0, 4);
+		}
+	} else if (unk80 == 2
+	           && unk7C->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		unk80 = 0;
+	}
+
+	mPosition = nextPosition;
+}
 
 void TBPPolDrop::launch(const JGeometry::TVec3<f32>& position,
                         const JGeometry::TVec3<f32>& velocity)
