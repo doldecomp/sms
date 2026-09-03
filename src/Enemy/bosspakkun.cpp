@@ -80,12 +80,6 @@ static inline JGeometry::TVec3<f32> fromPolar(s16 angle, f32 radius)
 	                             radius * JMASCos(angle));
 }
 
-// fabricated
-static inline JGeometry::TVec3<f32> fromPolar(f32 angle, f32 radius)
-{
-	return fromPolar(static_cast<s16>(DEG2SHORTANGLE(angle)), radius);
-}
-
 TBossPakkunParams::TBossPakkunParams(const char* path)
     : TSpineEnemyParams(path)
     , PARAM_INIT(mSLWaitFrameStg0, 400)
@@ -481,34 +475,38 @@ TBPHeadHit::TBPHeadHit(TBossPakkun* owner, const char* name)
 
 BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 {
-	TBossPakkun* boss = mOwner;
-	if (boss->mSpine->getLatestNerve() == &TNerveBPSleep::theNerve())
-		return boss->receiveMessage(sender, message);
+	if (&TNerveBPSleep::theNerve() == mOwner->mSpine->getLatestNerve())
+		return mOwner->receiveMessage(sender, message);
 
-	u32 actorType = sender->getActorType();
+	TBossPakkun* boss = mOwner;
 	if (boss->unk16C == 3
-	    && (actorType == 0x1000000d || actorType == 0x1000001)) {
+	    && (sender->getActorType() == 0x1000000d
+	        || sender->getActorType() == 0x1000001)) {
 		boss->gotFlyingDamage();
 		return true;
 	}
 
 	if (boss->unk16C != 2) {
 		if (boss->is2ndFightNow()
-		    && boss->mSpine->getLatestNerve() == &TNerveBPFly::theNerve())
+		    && &TNerveBPFly::theNerve() == boss->mSpine->getLatestNerve())
 			boss->showMessage(0xe0002);
-		return actorType == 0x1000001;
+		if (sender->getActorType() == 0x1000001)
+			return true;
+		return false;
 	}
 
-	if (actorType == 0x1000001 && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
+	if (sender->getActorType() == 0x1000001
+	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		JGeometry::TVec3<f32> toMario = *gpMarioPos;
 		toMario -= mPosition;
 
-		f32 angle = MsAngleWrap(MsGetRotFromZaxisY(toMario));
-		angle     = MsAngleDiff(MsGetRotFromZaxisY(toMario), boss->mRotation.y);
+		f32 angle = MsWrap(MsGetRotFromZaxisY(toMario), 0.0f, 360.0f);
+		angle = MsAngleDiff(MsGetRotFromZaxisY(toMario), mOwner->mRotation.y);
 		if (fabsf(angle)
-		    < 0.5f * boss->getBossPakkunParams()->mSLDamageAngle.get()) {
-			boss->gotWaterDamage();
+		    < 0.5f * mOwner->getBossPakkunParams()->mSLDamageAngle.get()) {
+			mOwner->gotWaterDamage();
 		}
+		return true;
 	}
 
 	return true;
@@ -569,7 +567,7 @@ TBPNavel::TBPNavel(TBossPakkun* owner, const char* name)
 
 BOOL TBPNavel::receiveMessage(THitActor* sender, u32 message)
 {
-	if (mOwner->mSpine->getLatestNerve() == &TNerveBPSleep::theNerve())
+	if (&TNerveBPSleep::theNerve() == mOwner->mSpine->getLatestNerve())
 		return mOwner->receiveMessage(sender, message);
 
 	if (sender->getActorType() == 0x1000001)
@@ -973,7 +971,7 @@ void TBossPakkun::gotWaterDamage()
 			unk178 += 1;
 		unk174 = getBossPakkunParams()->mSLWaterHitTimer.get();
 
-		if (mSpine->getLatestNerve() != &TNerveBPSwallow::theNerve()) {
+		if (&TNerveBPSwallow::theNerve() != mSpine->getLatestNerve()) {
 			mSpine->reset();
 			mSpine->setNext(&TNerveBPSwallow::theNerve());
 		}
@@ -1025,8 +1023,8 @@ void TBossPakkun::launchPolDrop()
 
 	f32 marioYaw = gpMarioOriginal->mRotation.y;
 	f32 front    = getBossPakkunParams()->mSLPollBallFront.get();
-	JGeometry::TVec3<f32> targetOffset = fromPolar(marioYaw, front);
-	JGeometry::TVec3<f32> target       = targetOffset;
+	s16 angle    = DEG2SHORTANGLE(marioYaw);
+	JGeometry::TVec3<f32> target = fromPolar(angle, front);
 	target += SMS_GetMarioPos();
 
 	JGeometry::TVec3<f32> velocity;
@@ -1062,21 +1060,21 @@ void TBossPakkun::changeBck(int index)
 	}
 
 	f32 blendTime = -1.0f;
-	switch (previous) {
-	case 25:
+	if (previous == 25) {
 		if (index == 21 || index == 26)
 			blendTime = getBossPakkunParams()->mSLAnmBlendTime0.get();
-		break;
-	case 18:
-	case 2:
-	case 20:
+	} else if (previous == 18) {
 		if (index == 25)
 			blendTime = getBossPakkunParams()->mSLAnmBlendTime0.get();
-		break;
-	case 26:
+	} else if (previous == 2) {
+		if (index == 25)
+			blendTime = getBossPakkunParams()->mSLAnmBlendTime0.get();
+	} else if (previous == 20) {
+		if (index == 25)
+			blendTime = getBossPakkunParams()->mSLAnmBlendTime0.get();
+	} else if (previous == 26) {
 		if (index == 22)
 			blendTime = getBossPakkunParams()->mSLAnmBlendTime0.get();
-		break;
 	}
 
 	if (blendTime < 0.0f) {
@@ -1085,7 +1083,10 @@ void TBossPakkun::changeBck(int index)
 			blendTime = 0.1f * ctrl->getEnd();
 	}
 
-	unk154 = blendTime == 0.0f ? 1.0f : 1.0f / blendTime;
+	if (blendTime == 0.0f)
+		unk154 = 1.0f;
+	else
+		unk154 = 1.0f / blendTime;
 
 	const char** table = getBasNameTable();
 	setAnmSound(table == nullptr ? nullptr : table[index]);
