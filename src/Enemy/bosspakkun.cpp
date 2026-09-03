@@ -1134,7 +1134,30 @@ void TBossPakkun::kill()
 		mPolDrop->onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
-BOOL TBossPakkun::receiveMessage(THitActor*, u32) { return false; }
+BOOL TBossPakkun::receiveMessage(THitActor* sender, u32)
+{
+	if (static_cast<TBossPakkunManager*>(mManager)->unk54 != 0)
+		return false;
+
+	if (&TNerveBPSleep::theNerve() == mSpine->getLatestNerve()
+	    && sender->getActorType() == 0x1000000d) {
+		mSpine->reset();
+		mSpine->setNext(&TNerveBPBreakSleep::theNerve());
+		return true;
+	}
+
+	if (unk16C == 3
+	    && (sender->getActorType() == 0x1000000d
+	        || sender->getActorType() == 0x1000001)) {
+		if (mPosition.y - 300.0f > sender->mPosition.y)
+			return true;
+		if (mPosition.y + 1500.0f < sender->mPosition.y)
+			return true;
+		gotFlyingDamage();
+		return true;
+	}
+	return false;
+}
 
 void TBossPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 {
