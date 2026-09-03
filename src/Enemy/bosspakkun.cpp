@@ -126,7 +126,16 @@ TBPPolDrop::TBPPolDrop(TBossPakkun* owner, const char* name)
 	    .push_back(this);
 }
 
-void TBPPolDrop::drop() { }
+void TBPPolDrop::drop()
+{
+	unk80 = 2;
+	unk6C.zero();
+	unk7C->setBck("pollut_ball_stamp");
+	gpMarioParticleManager->emit(0x52, &mPosition, 0, nullptr);
+	SMSGetMSound()->startSoundActor(MSD_SE_BS_BSPAKU_POLLUT_GND, &mPosition, 0,
+	                                nullptr, 0, 4);
+	mOwner->rumblePad(2, mPosition);
+}
 
 void TBPPolDrop::move()
 {
@@ -153,13 +162,7 @@ void TBPPolDrop::move()
 			unk88 = groundHeight;
 
 			if (nextPosition.y < groundHeight) {
-				unk80 = 2;
-				unk6C.zero();
-				unk7C->setBck("pollut_ball_stamp");
-				gpMarioParticleManager->emit(0x52, &mPosition, 0, nullptr);
-				SMSGetMSound()->startSoundActor(MSD_SE_BS_BSPAKU_POLLUT_GND,
-				                                &mPosition, 0, nullptr, 0, 4);
-				mOwner->rumblePad(2, mPosition);
+				drop();
 				nextPosition.y = groundHeight;
 				onHitFlag(HIT_FLAG_NO_COLLISION);
 				return;
@@ -284,7 +287,11 @@ void TBPVomit::vomit()
 	unk18->getModel()->setBaseScale(mOwner->mScaling);
 }
 
-void TBPVomit::vomitFinished() { }
+void TBPVomit::vomitFinished()
+{
+	unk14->setBckFromIndex(-1);
+	unk18->setBckFromIndex(-1);
+}
 
 void TBPVomit::perform(u32 flags, JDrama::TGraphics* graphics)
 {
@@ -293,8 +300,7 @@ void TBPVomit::perform(u32 flags, JDrama::TGraphics* graphics)
 
 	u32 calcAnim = flags & CUE_CALC_ANIM;
 	if (calcAnim && unk14->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
-		unk14->setBckFromIndex(-1);
-		unk18->setBckFromIndex(-1);
+		vomitFinished();
 		return;
 	}
 
