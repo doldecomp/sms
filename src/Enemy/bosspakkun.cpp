@@ -14,6 +14,7 @@
 #include <Map/PollutionManager.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
+#include <MarioUtil/ShadowUtil.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorData.hpp>
 #include <MoveBG/ItemManager.hpp>
@@ -192,7 +193,70 @@ void TBPPolDrop::launch(const JGeometry::TVec3<f32>& position,
 	unk88 = position.y;
 }
 
-void TBPPolDrop::perform(u32, JDrama::TGraphics*) { }
+void TBPPolDrop::perform(u32 flags, JDrama::TGraphics* graphics)
+{
+	if (unk80 == 0)
+		return;
+
+	if (flags & CUE_MOVE) {
+		move();
+		++unk84;
+	}
+
+	if (flags & CUE_MOVE) {
+		for (s32 i = 0; i < mColCount; ++i) {
+			THitActor* collision = mCollisions[i];
+			if (!collision->isActorType(0x80000001))
+				continue;
+
+			collision->receiveMessage(this, HIT_MESSAGE_ATTACK);
+			mOwner->rumblePad(2, mPosition);
+			if (SMS_IsMarioTouchGround4cm())
+				unk80 = 2;
+			else
+				unk80 = 0;
+		}
+	}
+
+	u32 calcAnim = flags & CUE_CALC_ANIM;
+	if (calcAnim) {
+		MtxPtr mtx = unk78->getModel()->getBaseTRMtx();
+		MTXIdentity(mtx);
+		mtx[0][3] = mPosition.x;
+		mtx[1][3] = mPosition.y;
+		mtx[2][3] = mPosition.z;
+		unk78->getModel()->setBaseScale(mScaling);
+
+		if (unk80 == 2) {
+			f32 scale
+			    = mOwner->getBossPakkunParams()->mSLPollBallStampScale.get();
+			JGeometry::TVec3<f32> stampScale(scale, scale, scale);
+			unk7C->getModel()->setBaseScale(stampScale);
+			MTXCopy(mtx, unk7C->getModel()->getBaseTRMtx());
+		}
+	}
+
+	if (unk80 == 1) {
+		unk78->perform(flags, graphics);
+
+		if (flags & CUE_CALC_VIEW) {
+			TCircleShadowRequest request;
+			request.unk0  = mPosition;
+			request.unkC  = 400.0f;
+			request.unk10 = 400.0f;
+			request.unk14 = 0.0f;
+			request.unk1C = 0;
+			gpBindShadowManager->request(request, 0);
+		}
+	}
+
+	if (unk80 == 2) {
+		if (calcAnim)
+			unk7C->calcAnm();
+		if (flags & CUE_ENTRY)
+			gpPollution->stampModel(unk7C->getModel());
+	}
+}
 
 TBPVomit::TBPVomit(TBossPakkun* owner, const char* name)
     : JDrama::TViewObj(name)
