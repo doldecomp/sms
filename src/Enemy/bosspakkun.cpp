@@ -211,18 +211,113 @@ TBPHeadHit::TBPHeadHit(TBossPakkun* owner, const char* name)
     : THitActor(name)
     , mOwner(owner)
 {
+	initHitActor(0x8000010, 5, 0x81000000, 300.0f, 500.0f, 300.0f, 500.0f);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
-BOOL TBPHeadHit::receiveMessage(THitActor*, u32) { return false; }
+BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
+{
+	TBossPakkun* boss = mOwner;
+	if (boss->mSpine->getLatestNerve() == &TNerveBPSleep::theNerve())
+		return boss->receiveMessage(sender, message);
 
-void TBPHeadHit::throwActor(THitActor*) { }
+	u32 actorType = sender->getActorType();
+	if (boss->unk16C == 3
+	    && (actorType == 0x1000000d || actorType == 0x1000001)) {
+		boss->unk16C = 0;
+		boss->mSpine->reset();
+		boss->mSpine->setNext(&TNerveBPFall::theNerve());
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_BSPAKU_FALL, &boss->mPosition,
+		                                0, nullptr, 0, 4);
+		return true;
+	}
 
-void TBPHeadHit::perform(u32, JDrama::TGraphics*) { }
+	if (boss->unk16C != 2) {
+		if (boss->is2ndFightNow()
+		    && boss->mSpine->getLatestNerve() == &TNerveBPFly::theNerve())
+			boss->showMessage(0xe0002);
+		return actorType == 0x1000001;
+	}
+
+	if (actorType == 0x1000001 && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
+		JGeometry::TVec3<f32> toMario = *gpMarioPos;
+		toMario -= mPosition;
+
+		f32 angle = MsAngleWrap(MsGetRotFromZaxisY(toMario));
+		angle     = MsAngleDiff(MsGetRotFromZaxisY(toMario), boss->mRotation.y);
+		if (fabsf(angle)
+		    < 0.5f * boss->getBossPakkunParams()->mSLDamageAngle.get()) {
+			if (boss->unk17C == 0) {
+				boss->unk170 += 1;
+				if (boss->unk178
+				    < boss->getBossPakkunParams()->mSLWaterMarkLimit.get())
+					boss->unk178 += 1;
+				boss->unk174
+				    = boss->getBossPakkunParams()->mSLWaterHitTimer.get();
+
+				if (boss->mSpine->getLatestNerve()
+				    != &TNerveBPSwallow::theNerve()) {
+					boss->mSpine->reset();
+					boss->mSpine->setNext(&TNerveBPSwallow::theNerve());
+				}
+			}
+		}
+	}
+
+	return true;
+}
+
+void TBPHeadHit::throwActor(THitActor* actor)
+{
+	if (actor->getActorType() != 0x80000001)
+		return;
+	if (!mOwner->mMActor->checkCurBckFromIndex(15))
+		return;
+
+	static JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
+	JGeometry::TVec3<f32> direction = mOwner->mPosition;
+	direction -= actor->mPosition;
+	if (direction.isZero())
+		direction.set(0.0f, 0.0f, 1.0f);
+	else
+		PSVECNormalize(&direction, &direction);
+
+	JGeometry::TVec3<f32> perpendicular;
+	perpendicular.cross(up, direction);
+	if (perpendicular.isZero())
+		perpendicular.set(1.0f, 0.0f, 0.0f);
+	else
+		PSVECNormalize(&perpendicular, &perpendicular);
+
+	perpendicular *= 2.0f;
+	perpendicular += up;
+	SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+	SMS_SendMessageToMario(this, HIT_MESSAGE_THROWN);
+	SMS_ThrowMario(perpendicular, 100.0f);
+}
+
+void TBPHeadHit::perform(u32 flags, JDrama::TGraphics* graphics)
+{
+	if ((flags & CUE_MOVE) && mOwner->unk16C != 1) {
+		for (int i = 0; i < mColCount; ++i) {
+			THitActor* actor = mCollisions[i];
+			if (actor->isActorType(0x80000001))
+				throwActor(actor);
+		}
+	}
+
+	if (flags & CUE_CALC_ANIM)
+		mOwner->getJointTransByIndex(1, &mPosition);
+
+	THitActor::perform(flags, graphics);
+}
 
 TBPNavel::TBPNavel(TBossPakkun* owner, const char* name)
     : THitActor(name)
     , mOwner(owner)
 {
+	initHitActor(0x8000011, 1, 0x80000000, 200.0f, 300.0f, 200.0f, 300.0f);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 BOOL TBPNavel::receiveMessage(THitActor* sender, u32 message)
@@ -256,7 +351,44 @@ TBossPakkunMtxCalc::TBossPakkunMtxCalc(TBossPakkun* owner)
 {
 }
 
-void TBossPakkunMtxCalc::calcBellyScale(u16) { }
+void TBossPakkunMtxCalc::calcBellyScale(u16 jointIndex)
+{
+	if (jointIndex != 4 && jointIndex != 36)
+		return;
+
+	f32 progress;
+	if (mOwner->unk17C != 0) {
+		progress = static_cast<f32>(mOwner->unk1B8) / 50.0f;
+	} else {
+		s32 limit = mOwner->getBossPakkunParams()->mSLWaterMarkLimit.get();
+		s32 mark  = mOwner->unk178;
+		if (mark > limit)
+			mark = limit;
+		progress = static_cast<f32>(mark) / static_cast<f32>(limit);
+	}
+
+	f32 blend = JMAHermiteInterpolation(progress, 0.0f, 0.0f, 10.0f, 1.0f, 1.0f,
+	                                    0.0f);
+	MtxPtr jointMtx = mOwner->getModel()->getAnmMtx(jointIndex);
+	Mtx scaleMtx;
+
+	if (jointIndex == 36) {
+		static JGeometry::TVec3<f32> goal(1.4f, 1.4f, 1.6f);
+		static JGeometry::TVec3<f32> start(1.0f, 0.8f, 0.8f);
+		MTXScale(scaleMtx, blend * (goal.x - start.x) + start.x,
+		         blend * (goal.y - start.y) + start.y,
+		         blend * (goal.z - start.z) + start.z);
+	} else {
+		static JGeometry::TVec3<f32> goal(1.3f, 1.7f, 1.7f);
+		static JGeometry::TVec3<f32> start(1.0f, 0.9f, 0.9f);
+		MTXScale(scaleMtx, blend * (goal.x - start.x) + start.x,
+		         blend * (goal.y - start.y) + start.y,
+		         blend * (goal.z - start.z) + start.z);
+	}
+
+	MTXConcat(jointMtx, scaleMtx, jointMtx);
+	MTXCopy(jointMtx, J3DSys::mCurrentMtx);
+}
 
 void TBossPakkunMtxCalc::calcHeadDir(u16 jointIndex)
 {
@@ -270,31 +402,51 @@ void TBossPakkunMtxCalc::calcHeadDir(u16 jointIndex)
 	toMario.z -= headMtx[2][3];
 
 	JGeometry::TVec3<f32> headAxis(headMtx[0][1], 0.0f, headMtx[2][1]);
-	f32 headAngle = MsGetRotFromZaxisY(headAxis);
+	f32 headRotation = mOwner->unk184;
+	f32 headAngle    = MsGetRotFromZaxisY(headAxis);
 	f32 desiredAngle;
 	if (mOwner->mMActor->checkCurBckFromIndex(25)) {
-		desiredAngle = mOwner->unk184 + MsGetRotFromZaxisY(toMario);
-		desiredAngle = MsWrap(desiredAngle, 0.0f, 360.0f);
+		desiredAngle
+		    = MsWrap(headRotation + MsGetRotFromZaxisY(toMario), 0.0f, 360.0f);
 	} else {
 		desiredAngle = headAngle;
 	}
 
 	f32 delta = MsAngleDiff(desiredAngle, headAngle);
 	f32 limit = mOwner->getBossPakkunParams()->mSLHeadHomingLimit.get();
-	if (delta > limit)
-		delta = limit;
-	else if (delta < -limit)
-		delta = -limit;
 
-	f32 turn = MsAngleDiff(delta, mOwner->unk184);
-	if (turn > 1.0f)
-		turn = 1.0f;
-	else if (turn < -1.0f)
-		turn = -1.0f;
-	mOwner->unk184 += turn;
+	f32 limitedDelta;
+	if (0.0f < delta)
+		limitedDelta = limit > delta ? delta : limit;
+	else
+		limitedDelta = -limit > delta ? -limit : delta;
+
+	f32 turn = MsAngleDiff(limitedDelta, headRotation);
+	if (0.0f < turn)
+		turn = 1.0f > turn ? turn : 1.0f;
+	else
+		turn = -1.0f > turn ? -1.0f : turn;
+
+	headRotation += turn;
+	mOwner->unk184 = headRotation;
+
+	f32 s = JMASin(headRotation);
+	f32 c = JMACos(headRotation);
 
 	Mtx rotation;
-	MsMtxSetRotRPH(rotation, 0.0f, mOwner->unk184, 0.0f);
+	rotation[0][0] = 1.0f;
+	rotation[0][1] = 0.0f;
+	rotation[0][2] = 0.0f;
+	rotation[0][3] = 0.0f;
+	rotation[1][0] = 0.0f;
+	rotation[1][1] = c;
+	rotation[1][2] = -s;
+	rotation[1][3] = 0.0f;
+	rotation[2][0] = 0.0f;
+	rotation[2][1] = s;
+	rotation[2][2] = c;
+	rotation[2][3] = 0.0f;
+
 	MTXConcat(headMtx, rotation, headMtx);
 	MTXConcat(J3DSys::mCurrentMtx, rotation, J3DSys::mCurrentMtx);
 }
@@ -324,7 +476,12 @@ void TBossPakkunMtxCalc::setAnm(int index)
 	mMotionBlendRatio = 0.0f;
 }
 
-void TBossPakkunMtxCalc::calc(u16) { }
+void TBossPakkunMtxCalc::calc(u16 jointIndex)
+{
+	M3UMtxCalcSIAnmBlendQuat::calc(jointIndex);
+	calcBellyScale(jointIndex);
+	calcHeadDir(jointIndex);
+}
 
 TBossPakkun::TBossPakkun(const char* name)
     : TSpineEnemy(name)
