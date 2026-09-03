@@ -9,6 +9,7 @@
 #include <GC2D/GCConsole2.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
+#include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JMath.hpp>
 #include <Map/Map.hpp>
 #include <Map/MapCollisionManager.hpp>
@@ -17,6 +18,7 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/ShadowUtil.hpp>
+#include <MarioUtil/TexUtil.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorData.hpp>
 #include <MoveBG/ItemManager.hpp>
@@ -754,7 +756,89 @@ TBossPakkun::TBossPakkun(const char* name)
 	mBinder = new TWalker;
 }
 
-void TBossPakkun::init(TLiveManager*) { }
+void TBossPakkun::init(TLiveManager* manager)
+{
+	mManager = manager;
+	mManager->manageActor(this);
+
+	mMActorKeeper = new TMActorKeeper(mManager, 7);
+	mMActor       = mMActorKeeper->createMActor("bosspaku_model.bmd", 0);
+
+	if (static_cast<TBossPakkunManager*>(mManager)->unk54 == 0) {
+		unk180 = mMActorKeeper->createMActor("bosspaku_end.bmd", 0);
+		unk180->setBckFromIndex(7);
+		unk180->setBrkFromIndex(0);
+	}
+
+	TIdxGroupObj* group
+	    = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+	initHitActor(0x800000F, 1, 0x80000000, 80.0f, 300.0f, 80.0f, 300.0f);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
+
+	if (static_cast<TBossPakkunManager*>(mManager)->unk54 == 0) {
+		mHeadHit = new TBPHeadHit(this, "ボスパックン頭部");
+		mNavel   = new TBPNavel(this, "ボスパックンへそ");
+		group->getChildren().push_back(mHeadHit);
+		group->getChildren().push_back(mNavel);
+
+		mMapCollisionManager
+		    = new TMapCollisionManager(1, "/scene/bosspakkun", this);
+		mMapCollisionManager->init("col_body.col", 1, nullptr);
+
+		mMapCollisionManager->setUpUnk8TRS(mPosition, mRotation, mScaling);
+
+		mMtxCalc = new TBossPakkunMtxCalc(this);
+		mMActor->setCalcForBck(mMtxCalc);
+		mMActor->calc();
+	}
+
+	if (static_cast<TBossPakkunManager*>(mManager)->unk54 != 0) {
+		mSpine->initWith(&TNerveBPWaitL::theNerve());
+	} else if (gpMarDirector->mMap == 0x37) {
+		mSpine->initWith(&TNerveBPFall::theNerve());
+	} else if (gpMarDirector->unk7D == 4) {
+		mSpine->initWith(&TNerveBPSleep::theNerve());
+	} else {
+		mSpine->initWith(&TNerveBPWait::theNerve());
+	}
+
+	mPolDrop        = new TBPPolDrop(this);
+	MActor* stamp   = mMActorKeeper->createMActor("pollut_ball_stamp.bmd", 0);
+	mPolDrop->unk78 = mMActorKeeper->createMActor("pollut_ball.bmd", 0);
+	mPolDrop->unk7C = stamp;
+	const ResTIMG* res = static_cast<const ResTIMG*>(
+	    JKRFileLoader::getGlbResource("/scene/map/pollution/H_ma_rak.bti"));
+	if (res != nullptr) {
+		SMS_ChangeTextureAll(mPolDrop->unk78->getModel()->getModelData(),
+		                     "M_dummy", *res);
+	}
+
+	if (static_cast<TBossPakkunManager*>(mManager)->unk54 == 0) {
+		mVomit = new TBPVomit(this, "<TBPVomit>");
+		MActor* white
+		    = mMActorKeeper->createMActor("bosspakuPollut_white.bmd", 0);
+		MActor* pollut = mMActorKeeper->createMActor("bosspakuPollut.bmd", 0);
+		mVomit->unk14  = pollut;
+		mVomit->unk18  = white;
+
+		mTornado = new TBPTornado(this, "<TBPTornado>");
+		group->getChildren().push_back(mTornado);
+
+		unk18C = new TWaterEmitInfo("/enemy/bosspakuwater.prm");
+	}
+
+	initAnmSound();
+	onLiveFlag(LIVE_FLAG_UNK400);
+	mScaledBodyRadius = 400.0f;
+
+	unk124->setGraph(gpConductor->getGraphByName("bosspakkun"));
+	if (unk124->getGraph() != nullptr) {
+		unk124->reset();
+		goToShortestNextGraphNode();
+	}
+
+	mHitPoints = getMaxHitPoints();
+}
 
 BOOL TBossPakkun::checkMarioRiding()
 {
