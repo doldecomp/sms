@@ -105,7 +105,7 @@ public:
 	void showMessage(u32);
 	void rumblePad(int, const JGeometry::TVec3<f32>&);
 	void startBGM();
-	void checkMarioRiding();
+	BOOL checkMarioRiding();
 
 	TBossPakkunParams* getBossPakkunParams() const
 	{
@@ -129,7 +129,7 @@ public:
 	/* 0x184 */ f32 unk184;
 	/* 0x188 */ TAreaCylinderManager* unk188;
 	/* 0x18C */ TWaterEmitInfo* unk18C;
-	/* 0x190 */ u8 unk190;
+	/* 0x190 */ s8 unk190;
 	/* 0x194 */ JGeometry::TVec3<f32> unk194;
 	/* 0x1A0 */ JGeometry::TVec3<f32> unk1A0;
 	/* 0x1AC */ JGeometry::TVec3<f32> unk1AC;

@@ -3,6 +3,7 @@
 #include <Enemy/Conductor.hpp>
 #include <Enemy/Graph.hpp>
 #include <Enemy/NameKuri.hpp>
+#include <Enemy/Walker.hpp>
 #include <Camera/cameralib.hpp>
 #include <Camera/CameraShake.hpp>
 #include <GC2D/GCConsole2.hpp>
@@ -743,7 +744,6 @@ void TBossPakkunMtxCalc::calc(u16 jointIndex)
 
 TBossPakkun::TBossPakkun(const char* name)
     : TSpineEnemy(name)
-    , mMtxCalc(nullptr)
     , unk154(0.0f)
     , mPolDrop(nullptr)
     , mVomit(nullptr)
@@ -764,14 +764,33 @@ TBossPakkun::TBossPakkun(const char* name)
     , unk1BC(0)
     , unk1C0(0)
     , unk1C4(0)
-    , unk1C8(0.0f)
     , unk1CC(0)
 {
+	offLiveFlag(LIVE_FLAG_UNK100);
+	mBinder = new TWalker;
 }
 
 void TBossPakkun::init(TLiveManager*) { }
 
-void TBossPakkun::checkMarioRiding() { }
+BOOL TBossPakkun::checkMarioRiding()
+{
+	const TBGCheckData* ground = SMS_GetMarioGrPlane();
+	if (unk190 == 0) {
+		if (ground != nullptr && ground->getActor() == this
+		    && SMS_IsMarioTouchGround4cm()) {
+			u32 status = SMS_GetMarioStatus();
+			if ((status & MARIO_STATUS_FLAG_UNK200)
+			    && !(status & MARIO_STATUS_FLAG_UNK200000)) {
+				unk190 = 1;
+				return true;
+			}
+		}
+	} else if (ground == nullptr || ground->getActor() != this
+	           || !SMS_IsMarioTouchGround4cm()) {
+		unk190 = 0;
+	}
+	return false;
+}
 
 void TBossPakkun::startBGM() { }
 
@@ -805,7 +824,19 @@ void TBossPakkun::rumblePad(int type, const JGeometry::TVec3<f32>& position)
 	SMSRumbleMgr->start(8, &unk1C8);
 }
 
-void TBossPakkun::showMessage(u32) { }
+void TBossPakkun::showMessage(u32 message)
+{
+	u32 index = message - 0xe0000;
+	u32 mask;
+	if (index == 1)
+		mask = 0;
+	else
+		mask = 1 << index;
+
+	if (!(unk1C0 & mask))
+		gpMarDirector->getConsole()->startAppearBalloon(message, true);
+	unk1C0 |= mask;
+}
 
 bool TBossPakkun::is2ndFightNow() const
 {
@@ -933,7 +964,17 @@ const char** TBossPakkun::getBasNameTable() const
 
 void TBossPakkun::setGroundCollision() { }
 
-void TBossPakkun::kill() { }
+void TBossPakkun::kill()
+{
+	TLiveActor::kill();
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+	if (mHeadHit != nullptr)
+		mHeadHit->onHitFlag(HIT_FLAG_NO_COLLISION);
+	if (mNavel != nullptr)
+		mNavel->onHitFlag(HIT_FLAG_NO_COLLISION);
+	if (mPolDrop != nullptr)
+		mPolDrop->onHitFlag(HIT_FLAG_NO_COLLISION);
+}
 
 BOOL TBossPakkun::receiveMessage(THitActor*, u32) { return false; }
 
