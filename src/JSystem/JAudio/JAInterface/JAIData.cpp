@@ -5,6 +5,7 @@
 #include <JSystem/JAudio/JAInterface/JAISystemInterface.hpp>
 #include <JSystem/JAudio/JAInterface/JAIConst.hpp>
 #include <JSystem/JAudio/JASystem/JASDvdThread.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 
 JAIData::JAIData() { }
 
@@ -88,8 +89,6 @@ void JAIData::initDummyVecLink()
 
 void JAIData::initSeqParameter(JAISeqParameter* param)
 {
-	u32 i;
-
 	param->unk1758   = -1;
 	param->unk4.unk4 = 1.0f;
 	param->unk4.unkC = 0;
@@ -113,7 +112,7 @@ void JAIData::initSeqParameter(JAISeqParameter* param)
 	param->unk1788 = 0;
 	param->unk178C = 0;
 
-	for (i = 0; i < JAIGlobalParameter::seqTrackMax; ++i) {
+	for (u32 i = 0; i < JAIGlobalParameter::seqTrackMax; ++i) {
 		param->unk754[i].unk4  = 1.0f;
 		param->unk954[i].unk4  = 0.5f;
 		param->unkB54[i].unk4  = 1.0f;
@@ -159,12 +158,12 @@ void JAIData::initSeqParameter(JAISeqParameter* param)
 		param->unk1354[i][15] = 0;
 	}
 
-	for (i = 0; i < 16; ++i) {
+	for (u32 i = 0; i < 16; ++i) {
 		param->unk14[i].unk4 = 0.0f;
 		param->unk14[i].unkC = 0;
 	}
 
-	for (i = 0; i < JAIGlobalParameter::seqPlayTrackMax + 0xC; ++i) {
+	for (u32 i = 0; i < JAIGlobalParameter::seqPlayTrackMax + 0xC; ++i) {
 		param->unk114[i].unk4 = 1.0f;
 		param->unk254[i].unk4 = 0.5f;
 		param->unk394[i].unk4 = 1.0f;
@@ -409,10 +408,10 @@ void JAIData::releaseAutoHeapPointer(u8 param)
 
 u8* JAIData::getFreeStayHeapPointer(u32 param1, u32 param2)
 {
-	u8* result;
-
 	if (unk1B8 >= JAIGlobalParameter::stayHeapMax)
 		return nullptr;
+
+	u8* result;
 
 	if ((u8*)unk1F0[unk1B8].unk4 + param1
 	        < (u8*)unk1F0[0].unk4 + JAIGlobalParameter::stayHeapSize
@@ -458,7 +457,7 @@ void JAIData::getInfoPointer(u32 param_1, void** param_2)
 		table = &unk88;
 		switch (param_1 & 0xC0000000) {
 		case 0x00000000:
-			thing = param_1 >> 12 & 0xff;
+			thing = (u8)(param_1 >> 12);
 			JAIGlobalParameter::getParamSeCategoryMax();
 			break;
 		case 0x80000000:
@@ -471,7 +470,7 @@ void JAIData::getInfoPointer(u32 param_1, void** param_2)
 	} else {
 		switch (param_1 & 0xC0000000) {
 		case 0x00000000:
-			thing = param_1 >> 12 & 0xff;
+			thing = (u8)(param_1 >> 12);
 			table = &unk88;
 			JAIGlobalParameter::getParamSeCategoryMax();
 			break;
@@ -640,19 +639,35 @@ void JAIData::initData()
 	}
 
 	if (unk1F4->unk6C) {
-		unk188 = *unk1F4->unk6C;
+		struct Unk6CStruct {
+			u32 unk0;
+			u32 unk4;
+			u32 unk8;
+			u32 unkC;
+			u32 unk10;
+			u32 unk14[];
+		};
 
-		unk1AC = (JASystem::DSPInterface::FxlineConfig_**)unk1F4->allocHeap(
+		Unk6CStruct* tmp = (Unk6CStruct*)unk1F4->unk6C;
+		setFxSceneMax(tmp->unk0);
+		setFxBufferMax(tmp->unk4, tmp->unk8, tmp->unkC, tmp->unk10);
+
+		void* table = unk1F4->allocHeap(
 		    unk188 * sizeof(JASystem::DSPInterface::FxlineConfig_*));
-		for (int i = 0; i < unk188; ++i) {
-			// TODO:
+		JUT_ASSERT(table);
+		unk1AC = (JASystem::DSPInterface::FxlineConfig_**)table;
+		for (u8 i = 0; i < unk188; ++i) {
+			unk1AC[i]
+			    = (JASystem::DSPInterface::FxlineConfig_*)(unk1F4->unk6C
+			                                               + tmp->unk14[i]);
 		}
-		for (int i = 0; i < 4; ++i) {
+		for (u8 i = 0; i < 4; ++i) {
 			if (!unk18C[i])
 				continue;
-			unk19C[i] = (s16*)unk1F4->allocHeap(unk18C[i] * 0xA0);
-			JASystem::DSPInterface::getFXHandle(i)->setFXLine(unk19C[i],
-			                                                  &unk1AC[0][i]);
+			s16* buf = (s16*)unk1F4->allocHeap(unk18C[i] * 0xA0);
+			JUT_ASSERT(buf);
+			unk19C[i] = buf;
+			JASystem::DSPInterface::setFXLine(i, unk19C[i], &unk1AC[0][i]);
 		}
 	}
 }

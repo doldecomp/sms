@@ -171,8 +171,8 @@ namespace Driver {
 	{
 		DSPInterface::DSPBuffer* buf = channel->unk20->unkC;
 
-		if (channel->unkA8[0].mWhole == 0xffff) {
-			buf->initAutoMixer();
+		if (channel->isDolbyMode()) {
+			channel->unk20->unkC->initAutoMixer();
 		} else {
 			buf->setMixerInitDelayMax(channel->unk4->unk60);
 			for (u8 i = 0; i < 6; ++i)
@@ -223,7 +223,7 @@ namespace Driver {
 				channel->releaseOsc(i);
 
 			if (channel->unk20)
-				channel->unk20->unk3 = channel->unkC0 >> 8;
+				channel->unk20->unk3 = channel->getReleasePriority();
 
 			if (mgr->cutList(channel) != -1) {
 				mgr->addListTail(channel, 2);
@@ -234,7 +234,8 @@ namespace Driver {
 			if (mgr->unk4 != 0) {
 				if (mgr->cutList(channel) != -1) {
 					--mgr->unk4;
-					if (u32 thing = channel->unkC8) {
+					if (channel->unkC8) {
+						u32 thing      = channel->unkC8;
 						channel->unkC8 = 0;
 						mgr->checkLimitStop(channel, thing);
 					}
@@ -242,7 +243,8 @@ namespace Driver {
 				}
 			} else {
 				if (mgr->cutList(channel) != -1) {
-					if (u32 thing = channel->unkC8) {
+					if (channel->unkC8) {
+						u32 thing      = channel->unkC8;
 						channel->unkC8 = 0;
 						mgr->checkLimitStop(channel, thing);
 					}
@@ -528,10 +530,11 @@ void TChannel::init()
 		for (int i = 0; i < 6; i++)
 			unkA8[i].mWhole = unk4->unk4E[i];
 
-		unkC0 = unk4->unk68;
-		unkC4 = unk4->unk6C;
-		for (int i = 0; i < 3; i++)
-			unk58[i] = unk4->unk62[i];
+		unkC0    = unk4->unk68;
+		unkC4    = unk4->unk6C;
+		unk58[0] = unk4->unk62[0];
+		unk58[1] = unk4->unk62[1];
+		unk58[2] = unk4->unk62[2];
 	}
 	for (u32 i = 0; i < 4; i++) {
 		unk38[i]->setOsc(nullptr);
