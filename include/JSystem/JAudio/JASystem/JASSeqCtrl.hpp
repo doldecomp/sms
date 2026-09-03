@@ -22,6 +22,7 @@ public:
 	u8 readByte() { return *mCurrentFilePtr++; }
 
 	u8* getBase() { return mRawFilePtr; }
+	void* getAddr(u32 offset) { return mRawFilePtr + offset; }
 
 	void call(u32 offset)
 	{

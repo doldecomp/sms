@@ -489,7 +489,7 @@ config.libs = [
             Object(Matching, "JSystem/JAudio/JASystem/JASTrackInterrupt.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASTrackMgr.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASTrackPort.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASSeqParser.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASSeqParser.cpp"),
 
             # J2D
             Object(Matching, "JSystem/J2D/J2DPane.cpp"),
