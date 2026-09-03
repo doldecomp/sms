@@ -864,7 +864,7 @@ DEFINE_NERVE(TNerveBPVomit, TLiveActor)
 
 	if (actor->checkCurBckFromIndex(21)) {
 		f32 frame = actor->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
-		if (frame > 25.0f && frame < 165.0f)
+		if (25.0f < frame && frame < 165.0f)
 			boss->unk16C = 2;
 		else
 			boss->unk16C = 0;
@@ -872,7 +872,9 @@ DEFINE_NERVE(TNerveBPVomit, TLiveActor)
 
 	if (actor->checkCurBckFromIndex(20) && rand() * (1.0f / 32768.0f) < 0.2f
 	    && spine->getTime() == 500) {
-		JGeometry::TVec3<f32> offset = fromPolar(boss->mRotation.y, 700.0f);
+		JGeometry::TVec3<f32> offset;
+		offset = fromPolar(
+		    static_cast<s16>(DEG2SHORTANGLE(boss->mRotation.y)), 700.0f);
 		JGeometry::TVec3<f32> appearOffset = offset;
 		gpItemManager->makeObjAppear(
 		    boss->mPosition.x + appearOffset.x, boss->mPosition.y + 1.0f,
