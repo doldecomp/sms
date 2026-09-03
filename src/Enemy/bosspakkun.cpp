@@ -1118,9 +1118,8 @@ void TBossPakkun::setGroundCollision()
 	    && mMapCollisionManager != nullptr) {
 		TPosition3f collisionMtx;
 		collisionMtx.set(getModel()->getAnmMtx(2));
-		TMapCollisionBase* collision = mMapCollisionManager->unk8;
-		if (collision != nullptr)
-			collision->moveMtx(collisionMtx);
+		if (mMapCollisionManager->unk8 != nullptr)
+			mMapCollisionManager->unk8->moveMtx(collisionMtx);
 	}
 }
 
