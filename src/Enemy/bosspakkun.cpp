@@ -980,7 +980,33 @@ void TBossPakkun::gotWaterDamage()
 	}
 }
 
-void TBossPakkun::gotHipDropDamage() { }
+void TBossPakkun::gotHipDropDamage()
+{
+	decHitPoints();
+	unk16C = 0;
+	if (getHitPoints() == 0) {
+		if (&TNerveBPPreDie::theNerve() != mSpine->getLatestNerve()
+		    && &TNerveBPDie::theNerve() != mSpine->getLatestNerve()) {
+			mSpine->setNext(&TNerveBPPreDie::theNerve());
+			SMSGetMSound()->startSoundActor(MSD_SE_BS_BSPAKU_DOWN, &mPosition,
+			                                0, nullptr, 0, 4);
+		}
+	} else if (&TNerveBPTumbleOut::theNerve() != mSpine->getLatestNerve()) {
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_BSPAKU_DAMAGE, &mPosition, 0,
+		                                nullptr, 0, 4);
+		if (gpMarDirector->getCurrentStage() == 4) {
+			mSpine->reset();
+			mSpine->setNext(&TNerveBPTakeOff::theNerve());
+			mSpine->pushNerve(&TNerveBPGetUp::theNerve());
+			mSpine->pushNerve(&TNerveBPStompReact::theNerve());
+		} else {
+			mSpine->reset();
+			mSpine->setNext(&TNerveBPWait::theNerve());
+			mSpine->pushNerve(&TNerveBPGetUp::theNerve());
+			mSpine->pushNerve(&TNerveBPStompReact::theNerve());
+		}
+	}
+}
 
 void TBossPakkun::gotTrampleDamage() { }
 
