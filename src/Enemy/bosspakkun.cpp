@@ -15,6 +15,7 @@
 #include <Map/MapCollisionManager.hpp>
 #include <Map/MapData.hpp>
 #include <Map/PollutionManager.hpp>
+#include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/ShadowUtil.hpp>
@@ -35,6 +36,7 @@
 #include <System/EmitterViewObj.hpp>
 #include <System/MarDirector.hpp>
 #include <System/Particles.hpp>
+#include <System/TargetArrow.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <stdlib.h>
 
@@ -1108,7 +1110,145 @@ void TBossPakkun::kill()
 
 BOOL TBossPakkun::receiveMessage(THitActor*, u32) { return false; }
 
-void TBossPakkun::perform(u32, JDrama::TGraphics*) { }
+void TBossPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	if (mPolDrop != nullptr)
+		mPolDrop->perform(cue, graphics);
+	if (mVomit != nullptr)
+		mVomit->perform(cue, graphics);
+	if (mTornado != nullptr)
+		mTornado->perform(cue, graphics);
+
+	if (checkLiveFlag(LIVE_FLAG_DEAD))
+		return;
+
+	if (mHeadHit != nullptr)
+		mHeadHit->perform(cue, graphics);
+	if (mNavel != nullptr)
+		mNavel->perform(cue, graphics);
+
+	if (static_cast<TBossPakkunManager*>(mManager)->unk54 == 0
+	    && (cue & CUE_MOVE)) {
+		mMtxCalc->advanceMotionBlend(-unk154);
+
+		if (unk17C) {
+			if (unk178 <= 0) {
+				unk17C = 0;
+				unk178 = 0;
+			} else {
+				s32 step = getBossPakkunParams()->mSLWaterMarkLimit.get() / 100;
+				if (step == 0)
+					step = 1;
+				unk178 -= step;
+				if (unk178 < 0)
+					unk178 = 0;
+			}
+		}
+
+		if (unk17C == 0) {
+			if (unk174 > 0) {
+				unk174--;
+				unk170++;
+			}
+		}
+
+		if (unk1BC) {
+			if (unk1B8 <= 0) {
+				unk1BC = 0;
+				unk1B8 = 0;
+			} else {
+				unk1B8--;
+			}
+		}
+
+		if (unk16C == 1 && checkMarioRiding()) {
+			if (&TNerveBPJumpReact::theNerve() != mSpine->getLatestNerve()) {
+				mSpine->pushNerve(&TNerveBPJumpReact::theNerve());
+			}
+		}
+	}
+
+	if (static_cast<TBossPakkunManager*>(mManager)->unk54 == 0
+	    && (cue & CUE_CALC_ANIM)) {
+		if (mMActor->checkCurBckFromIndex(24)) {
+			MtxPtr mtx = mMActor->getModel()->getAnmMtx(43);
+			unk194.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+			mtx = mMActor->getModel()->getAnmMtx(44);
+			unk1A0.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+		}
+
+		if (mMActor->checkCurBckFromIndex(23)) {
+			MtxPtr mtx = mMActor->getModel()->getAnmMtx(20);
+			unk1AC.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+			JPABaseEmitter* emitter
+			    = gpMarioParticleManager->emitAndBindToPosPtr(
+			        PARTICLE_MS_POI_ZZZ, &unk1AC, 1, this);
+			if (emitter != nullptr) {
+				static JGeometry::TVec3<f32> scale(2.5f, 2.5f, 2.5f);
+				emitter->setGlobalScale(scale);
+			}
+		}
+
+		if (mMActor->checkCurBckFromIndex(11)
+		    || mMActor->checkCurBckFromIndex(13)
+		    || mMActor->checkCurBckFromIndex(12)) {
+			gpMarioParticleManager->emitAndBindToMtxPtr(
+			    0x160, getModel()->getAnmMtx(38), 1, this);
+			gpMarioParticleManager->emitAndBindToMtxPtr(
+			    0x160, getModel()->getAnmMtx(46), 1, (u8*)this + 1);
+		}
+
+		if (mMActor->checkCurBckFromIndex(11)
+		    || mMActor->checkCurBckFromIndex(6)
+		    || mMActor->checkCurBckFromIndex(26)) {
+			gpMarioParticleManager->emitAndBindToMtxPtr(
+			    0x15F, getModel()->getAnmMtx(20), 1, (u8*)this + 1);
+		}
+	}
+
+	if (static_cast<TBossPakkunManager*>(mManager)->unk54 == 0) {
+		if (&TNerveBPDie::theNerve() == mSpine->getLatestNerve()) {
+			MActor* origActor = mMActor;
+			mMActor           = unk180;
+			TSpineEnemy::perform(cue, graphics);
+			mMActor = origActor;
+			return;
+		}
+	}
+
+	if (static_cast<TBossPakkunManager*>(mManager)->unk54 == 0
+	    && (cue & CUE_CALC_ANIM)) {
+		updateSquareToMario();
+		getModel()->getModelData()->getJointNodePointer(0)->setMtxCalc(
+		    mMtxCalc);
+	}
+
+	if (static_cast<TBossPakkunManager*>(mManager)->unk54 == 0
+	    && (cue & CUE_CALC_ANIM)) {
+		if (unk16C == 1) {
+			JGeometry::TVec3<f32> pos = mNavel->mPosition;
+			pos.y += 100.0f;
+			gpTargetArrow->unk14 = 1;
+			gpTargetArrow->setPos(pos);
+		} else {
+			gpTargetArrow->unk14 = 0;
+		}
+	}
+
+	if (static_cast<TBossPakkunManager*>(mManager)->unk54 == 0
+	    && (cue & CUE_ENTRY)) {
+		if (&TNerveBPPreDie::theNerve() == mSpine->getLatestNerve()
+		    || &TNerveBPStompReact::theNerve() == mSpine->getLatestNerve()) {
+			mMActor->offMakeDL();
+			SMS_AddDamageFogEffect(mMActor->getModel()->getModelData(),
+			                       mPosition, graphics);
+		} else {
+			SMS_ResetDamageFogEffect(mMActor->getModel()->getModelData());
+		}
+	}
+
+	TSpineEnemy::perform(cue, graphics);
+}
 
 TBossPakkunManager::TBossPakkunManager(const char* name, int value)
     : TEnemyManager(name)
