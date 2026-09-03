@@ -115,6 +115,16 @@ public:
 	void reloadInfoDataWork(JAISoundTable* soundTable);
 	void setInfoDataPointer(JAISoundTable* soundTable, u8* ptr);
 
+	// from tww
+	void setFxSceneMax(u8 param_1) { unk188 = param_1; }
+	void setFxBufferMax(u32 param_1, u32 param_2, u32 param_3, u32 param_4)
+	{
+		unk18C[0] = param_1;
+		unk18C[1] = param_2;
+		unk18C[2] = param_3;
+		unk18C[3] = param_4;
+	}
+
 public:
 	struct FabricatedUnk0Struct {
 		u8 unk0;

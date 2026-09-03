@@ -145,16 +145,16 @@ JASystem::TDSPChannel* TDSPChannel::getLower()
 	u8 r30  = 0;
 	u32 r29 = 0;
 	for (u8 i = 0; i < 64; i++) {
-		TDSPChannel* dspch = &DSPCH[i];
-		if (dspch->unk1 == 2)
+		if (DSPCH[i].unk1 == 2)
 			continue;
 
-		if (dspch->unk1 == 1 ? TRUE : FALSE) {
+		if (DSPCH[i].isUnk1One()) {
 			r30 = i;
 			break;
 		}
 
-		if (dspch->unk10) {
+		if (DSPCH[i].unk10) {
+			TDSPChannel* dspch = &DSPCH[i];
 			if (dspch->unk3 <= r31) {
 				if (dspch->unk3 != r31 || dspch->unkC->unk10C >= r29) {
 					r29 = dspch->unkC->unk10C;
@@ -173,10 +173,10 @@ JASystem::TDSPChannel* TDSPChannel::getLowerActive()
 	u8 r28  = 0;
 	u32 r27 = 0;
 	for (u8 i = 0; i < 64; i++) {
-		TDSPChannel* dspch = &DSPCH[i];
-		if (dspch->unk1 == 2 || dspch->unk1 == 1)
+		if (DSPCH[i].unk1 == 2 || DSPCH[i].unk1 == 1)
 			continue;
 
+		TDSPChannel* dspch = &DSPCH[i];
 		if (dspch->unk3 <= r29) {
 			if (dspch->unk3 != r29 || dspch->unkC->unk10C >= r27) {
 				r27 = dspch->unkC->unk10C;
@@ -194,7 +194,7 @@ BOOL TDSPChannel::breakLower(u8 param)
 	if (dspch->unk3 > param)
 		return false;
 
-	if (!(dspch->unk1 == 1 ? TRUE : FALSE)) {
+	if (!dspch->isUnk1One()) {
 		if (dspch->unk10)
 			dspch->unk6 = dspch->unk10(dspch, 3);
 
@@ -233,14 +233,13 @@ void TDSPChannel::updateAll()
 {
 	DSPInterface::DSPBuffer* dspBuffer;
 	{
-		OSTick time = OSGetTick();
-		u32 var2;
-		OSTick var3   = time - old_time;
+		OSTick time   = OSGetTick();
+		OSTick delta  = time - old_time;
 		old_time      = time;
-		var2          = 7 - AudioThread::getDSPSyncCount();
-		history[var2] = var3;
+		u32 var2      = 7 - AudioThread::getDSPSyncCount();
+		history[var2] = delta;
 		if (var2)
-			if (f32(history[0]) / var3 < DSP_LIMIT_RATIO)
+			if (f32(history[0]) / delta < DSP_LIMIT_RATIO)
 				breakLowerActive(126);
 	}
 
@@ -250,12 +249,11 @@ void TDSPChannel::updateAll()
 		if (dspChannel->unk1 == 1)
 			continue;
 
-		if (dspBuffer->unk2 != 0) {
+		if (dspBuffer->isFinish()) {
 			if (dspChannel->unk10)
 				dspChannel->unk6 = dspChannel->unk10(dspChannel, 2);
 
-			dspBuffer->unk2 = 0;
-			dspBuffer->unk0 = 0;
+			dspBuffer->replyFinishRequest();
 			dspBuffer->flushChannel();
 		}
 		if (dspBuffer->unk10A == 0) {
@@ -269,8 +267,7 @@ void TDSPChannel::updateAll()
 			if (dspChannel->unk6 == 0) {
 				dspChannel->unk6 = dspChannel->unk10(dspChannel, 0);
 				if (dspChannel->unk6 == 0) {
-					dspBuffer->unk2 = 0;
-					dspBuffer->unk0 = 0;
+					dspBuffer->replyFinishRequest();
 					Driver::DSPQueue::deQueue(1);
 					dspBuffer->flushChannel();
 				}

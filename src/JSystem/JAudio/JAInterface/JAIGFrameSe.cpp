@@ -49,26 +49,25 @@ void JAIBasic::checkNextFrameSe()
 				releaseSeRegist(it);
 				it = &sound;
 			} else if (it->unk1 != 0) {
-				f32 fVar2 = 2.147484e+09f;
-				u8 uVar14;
-				u8 uVar8;
+				f32 fVar2 = 2147483647.0f;
+				u8 camStart;
+				u8 camEnd;
 				if (it->unk4 == 4) {
-					uVar14 = 0;
-					uVar8  = JAIGlobalParameter::audioCameraMax;
+					camStart = 0;
+					camEnd   = JAIGlobalParameter::audioCameraMax;
 				} else {
-					uVar8  = it->unk4 + 1;
-					uVar14 = it->unk4;
+					camEnd   = it->unk4 + 1;
+					camStart = it->unk4;
 				}
 
-				for (; uVar14 < uVar8; ++uVar14) {
-					JAISound::FabricatedPositionInfo* pi = &it->unk1C[uVar14];
+				for (u8 cam = camStart; cam < camEnd; ++cam) {
+					JAISound::FabricatedPositionInfo* pi = &it->unk1C[cam];
 
 					pi->unkC = pi->unk0;
 					if (it->unk24 == 0) {
 						pi->unk0 = JAIConst::dummyZeroVec;
 					} else {
-						MTXMultVec(unk8[uVar14].unk8, (Vec*)it->unk24,
-						           &pi->unk0);
+						MTXMultVec(unk8[cam].unk8, (Vec*)it->unk24, &pi->unk0);
 					}
 
 					pi->unk18 = pi->unk0.x * pi->unk0.x
@@ -89,7 +88,7 @@ void JAIBasic::checkNextFrameSe()
 					if (pi->unk0.z > 0.0f)
 						it->unkC += (u32)(pi->unk0.z * 6.0f / fVar1);
 
-					if (uVar14 == 0 || pi->unk18 < fVar2)
+					if (cam == 0 || pi->unk18 < fVar2)
 						fVar2 = pi->unk18;
 				}
 
@@ -145,8 +144,9 @@ void JAIBasic::checkNextFrameSe()
 				it = it->unk30;
 		}
 
+		JAISound* snd;
 		for (u8 k = 0; k < bVar19; ++k) {
-			JAISound* snd = candidates[k].sound;
+			snd = candidates[k].sound;
 			if (snd->unk1 == 1) {
 				snd->unk1 = 2;
 			} else if (snd->unk1 == 4) {
@@ -154,11 +154,11 @@ void JAIBasic::checkNextFrameSe()
 			}
 		}
 
-		u8 bVar192 = unk0->unk4[unk10][i * 2];
-		for (u8 j = 0; j < bVar192; ++j) {
-			JAISound** cur = &unk0->unk8[i][j].unk8;
-			JAISound* snd  = *cur;
-			u8 bVar7       = 0;
+		bVar19 = unk0->unk4[unk10][i * 2];
+		for (u8 j = 0; j < bVar19; ++j) {
+			snd      = unk0->unk8[i][j].unk8;
+			u8 bVar7 = 0;
+			u8 k;
 			if (snd == nullptr) {
 				bVar7 = 1;
 			} else if (snd->unk1 == 4) {
@@ -170,38 +170,37 @@ void JAIBasic::checkNextFrameSe()
 				}
 				bVar7 = 1;
 			} else if (snd->unk1 == 0) {
-				*cur  = nullptr;
-				bVar7 = 1;
+				unk0->unk8[i][j].unk8 = nullptr;
+				bVar7                 = 1;
 			} else {
-				for (u8 k = 0; k < bVar192; ++k) {
+				for (k = 0; k < bVar19; ++k) {
 					if (unk0->unk8[i][j].unk8 == candidates[k].sound) {
 						candidates[k].sound = nullptr;
-						k                   = bVar192;
+						k                   = bVar19;
 					}
 				}
 			}
 
 			if (bVar7 == 1) {
-				u8 k;
-				for (k = 0; k < bVar192; ++k) {
-					JAISound* snd = candidates[k].sound;
+				for (k = 0; k < bVar19; ++k) {
+					snd = candidates[k].sound;
 					if (snd != nullptr && snd->unk1 != 3) {
-						for (u8 l = 0; l < bVar192; ++l) {
+						for (u8 l = 0; l < bVar19; ++l) {
 							if (unk0->unk8[i][l].unk8
 							    && snd == unk0->unk8[i][l].unk8) {
 								bVar7 = 0;
-								l     = bVar192;
+								l     = bVar19;
 							}
 						}
 
 						if (bVar7 == 1) {
 							unk0->unk8[i][j].unk8 = snd;
 							candidates[k].sound   = nullptr;
-							k                     = bVar192 + 1;
+							k                     = bVar19 + 1;
 						}
 					}
 				}
-				if (k == bVar192) {
+				if (k == bVar19) {
 					unk0->unk8[i][j].unk8 = nullptr;
 				}
 			}
@@ -213,12 +212,13 @@ void JAIBasic::sendPlayingSeCommand()
 {
 	u16 readStatus0;
 	u16 readStatus1;
+	u8 j;
+	JAISound* sound;
 	u8 trackId = 0;
-	// char _stackPad[8];
 
 	for (u8 cat = 0; cat < JAIGlobalParameter::getParamSeCategoryMax(); ++cat) {
-		for (u8 j = 0; j < unk0->unk4[unk10][(u8)cat * 2]; ++j, ++trackId) {
-			JAISound* sound = unk0->unk8[cat][j].unk8;
+		for (j = 0; j < unk0->unk4[unk10][(u8)cat * 2]; ++j, ++trackId) {
+			sound = unk0->unk8[cat][j].unk8;
 			if (sound == nullptr)
 				continue;
 
@@ -363,13 +363,17 @@ void JAIBasic::setSeqMuteFromSeStart(JAISound* param_1)
 
 void JAIBasic::clearSeqMuteFromSeStop(JAISound* sound)
 {
+	if (unk30 == 0 || !(sound->getSwBit() & 8))
+		return;
+
 	for (u32 i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
 		JAISound* seq = unk0->unk180[i].unk48;
 		if (i != unk38->unk0 && seq && !(seq->getSwBit() & 8)) {
-			seq->setSeqInterVolume(
-			    9, JAIGlobalParameter::seqMuteVolumeSePlay / 127.0f,
-			    JAIGlobalParameter::seqMuteMoveSpeedSePlay);
-			unk30 &= ~(1 << sound->unk0);
+			unk30 &= (1 << sound->unk0) ^ 0xffffffff;
+			if (unk30 == 0) {
+				seq->setSeqInterVolume(
+				    9, 1.0f, JAIGlobalParameter::seqMuteMoveSpeedSePlay);
+			}
 		}
 	}
 }
@@ -476,13 +480,8 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 			seParam->unk2A4[0].unk4 = *(f32*)seParam->unk430;
 		}
 		fxmix = 0.0f;
-		fxmix += seParam->unk2A4[0].unk4;
-		fxmix += seParam->unk2A4[1].unk4;
-		fxmix += seParam->unk2A4[2].unk4;
-		fxmix += seParam->unk2A4[3].unk4;
-		fxmix += seParam->unk2A4[4].unk4;
-		fxmix += seParam->unk2A4[5].unk4;
-		fxmix += seParam->unk2A4[6].unk4;
+		for (int i = 0; i < 7; ++i)
+			fxmix += seParam->unk2A4[i].unk4;
 	} else {
 		fxmix = seParam->unk2A4[7].unk4;
 	}
@@ -503,13 +502,8 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 		}
 		f32 center = JAIGlobalParameter::seDolbyCenterValue / 127.0f;
 		dolby      = 0.0f;
-		dolby += seParam->unk3A4[0].unk4 - center;
-		dolby += seParam->unk3A4[1].unk4 - center;
-		dolby += seParam->unk3A4[2].unk4 - center;
-		dolby += seParam->unk3A4[3].unk4 - center;
-		dolby += seParam->unk3A4[4].unk4 - center;
-		dolby += seParam->unk3A4[5].unk4 - center;
-		dolby += seParam->unk3A4[6].unk4 - center;
+		for (int i = 0; i < 7; ++i)
+			dolby += seParam->unk3A4[i].unk4 - center;
 		dolby += center;
 		if (dolby < 0.0f)
 			dolby = 0.0f;
@@ -546,21 +540,11 @@ void JAIBasic::releaseSeRegist(JAISound* sound)
 		unk38->setTrackInterruptSwitch(sound->unk0, 1);
 	}
 
-	if (unk30 != 0 && (sound->getSwBit() & 8)) {
-		for (u32 i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
-			JAISound* seq = unk0->unk180[i].unk48;
-			if (i != unk38->unk0 && seq && !(seq->getSwBit() & 8)) {
-				unk30 &= (1 << sound->unk0) ^ 0xffffffff;
-				if (unk30 == 0) {
-					seq->setSeqInterVolume(
-					    9, 1.0f, JAIGlobalParameter::seqMuteMoveSpeedSePlay);
-				}
-			}
-		}
-	}
+	clearSeqMuteFromSeStop(sound);
 
+	u8 cat;
 	u8 maxCount = unk0->unk4[unk10][(u8)sound->getSeCategoryNumber() * 2];
-	u8 cat      = sound->getSeCategoryNumber();
+	cat         = sound->getSeCategoryNumber();
 	for (u8 j = 0; j < maxCount; ++j) {
 		JAISound** slot = &unk0->unk8[cat][j].unk8;
 		if (*slot == sound) {

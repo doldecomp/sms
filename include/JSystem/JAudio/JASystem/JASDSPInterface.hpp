@@ -48,6 +48,13 @@ namespace DSPInterface {
 		void setPitchIndirect(f32, f32);
 		void cacheChannel();
 
+		bool isFinish() { return unk2 != 0; }
+		void replyFinishRequest()
+		{
+			unk2 = 0;
+			unk0 = 0;
+		}
+
 		struct Channel {
 			/* 0x0 */ u16 id;
 			/* 0x4 */ u16 targetVolume;
@@ -139,6 +146,12 @@ namespace DSPInterface {
 	void clearBuffer();
 	void setupBuffer();
 	void initBuffer();
+
+	// TODO: TWW has a bunch of inlines for us here!
+	inline bool setFXLine(u8 i, s16* buffer, FxlineConfig_* config)
+	{
+		return getFXHandle(i)->setFXLine(buffer, config);
+	}
 } // namespace DSPInterface
 
 } // namespace JASystem

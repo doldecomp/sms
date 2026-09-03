@@ -252,7 +252,7 @@ public:
 	/* 0x60 */ s32* unk60;
 	/* 0x64 */ s32* unk64;
 	/* 0x68 */ u8** unk68; // TODO: might be pair of u8s actually
-	/* 0x6C */ u32* unk6C; // TODO: wrong type
+	/* 0x6C */ u8* unk6C;
 	/* 0x70 */ u32 unk70;
 	/* 0x74 */ char unk74[0x4];
 	/* 0x78 */ u32 unk78;

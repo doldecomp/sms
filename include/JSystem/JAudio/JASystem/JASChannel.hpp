@@ -85,7 +85,9 @@ public:
 	BOOL playLogicalChannel();
 	void updateEffectorParam();
 
+	u8 getReleasePriority() const { return unkC0 >> 8; }
 	u8 getLifeTimePriority() const { return unkC0 >> 0x10; }
+	bool isDolbyMode() const { return unkA8[0].mWhole == 0xFFFF; }
 
 	union MixConfig {
 		u16 mWhole;
