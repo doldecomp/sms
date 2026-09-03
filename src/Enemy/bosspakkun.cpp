@@ -27,6 +27,7 @@
 #include <Player/Mario.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/Spine.hpp>
+#include <Strategic/Strategy.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <System/MarDirector.hpp>
 #include <System/Particles.hpp>
@@ -117,6 +118,12 @@ TBPPolDrop::TBPPolDrop(TBossPakkun* owner, const char* name)
     , unk84(0)
     , unk88(0.0f)
 {
+	unk6C.zero();
+	initHitActor(0x800000F, 1, 0x80000000, 0.0f, 0.0f, 100.0f, 200.0f);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
+	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	    ->getChildren()
+	    .push_back(this);
 }
 
 void TBPPolDrop::drop() { }
@@ -138,8 +145,8 @@ void TBPPolDrop::move()
 		unk6C.y -= 0.1f;
 		if (unk84 >= 60 || mOwner->is2ndFightNow()) {
 			const TBGCheckData* ground;
-			f32 groundHeight = gpMap->checkGround(
-			    nextPosition.x, mPosition.y, nextPosition.z, &ground);
+			f32 groundHeight = gpMap->checkGround(nextPosition.x, mPosition.y,
+			                                      nextPosition.z, &ground);
 			groundHeight += 1.0f;
 			if (ground->isIllegalData())
 				groundHeight = unk88;
@@ -150,8 +157,8 @@ void TBPPolDrop::move()
 				unk6C.zero();
 				unk7C->setBck("pollut_ball_stamp");
 				gpMarioParticleManager->emit(0x52, &mPosition, 0, nullptr);
-				SMSGetMSound()->startSoundActor(
-				    MSD_SE_BS_BSPAKU_POLLUT_GND, &mPosition, 0, nullptr, 0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_BS_BSPAKU_POLLUT_GND,
+				                                &mPosition, 0, nullptr, 0, 4);
 				mOwner->rumblePad(2, mPosition);
 				nextPosition.y = groundHeight;
 				onHitFlag(HIT_FLAG_NO_COLLISION);
@@ -170,8 +177,7 @@ void TBPPolDrop::move()
 			    MSD_SE_BS_BSPAKU_POLLUT_FLY, &mPosition, nullptr, -unk6C.y, 0,
 			    0, nullptr, 0, 4);
 		}
-	} else if (unk80 == 2
-	           && unk7C->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+	} else if (unk80 == 2 && unk7C->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		unk80 = 0;
 	}
 
@@ -308,8 +314,7 @@ TBPTornado::TBPTornado(TBossPakkun* owner, const char* name)
     , unk98(0)
 {
 	mActor = mOwner->getActorKeeper()->createMActor("trunade.bmd", 0);
-	initHitActor(0x8000010, 5, 0x81000000, 150.0f, 600.0f, 100.0f,
-	             600.0f);
+	initHitActor(0x8000010, 5, 0x81000000, 150.0f, 600.0f, 100.0f, 600.0f);
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 	mActor->setBtkFromIndex(2);
 	mActor->setBckFromIndex(29);
@@ -364,8 +369,7 @@ void TBPTornado::perform(u32 flags, JDrama::TGraphics* graphics)
 			}
 
 			PSVECNormalize(&direction, &direction);
-			direction
-			    *= mOwner->getBossPakkunParams()->mSLTornadoSpeed.get();
+			direction *= mOwner->getBossPakkunParams()->mSLTornadoSpeed.get();
 			unk7C += direction;
 
 			s16 shortAngle = DEG2SHORTANGLE(angle);
@@ -413,8 +417,8 @@ void TBPTornado::perform(u32 flags, JDrama::TGraphics* graphics)
 
 	if (flags & CUE_CALC_ANIM) {
 		MtxPtr mtx = mActor->getModel()->getBaseTRMtx();
-		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x162, mtx, 1, this);
+		JPABaseEmitter* emitter
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(0x162, mtx, 1, this);
 		if (emitter)
 			emitter->setGlobalScale(mScaling);
 
@@ -1121,8 +1125,8 @@ DEFINE_NERVE(TNerveBPVomit, TLiveActor)
 	if (actor->checkCurBckFromIndex(20) && rand() * (1.0f / 32768.0f) < 0.2f
 	    && spine->getTime() == 500) {
 		JGeometry::TVec3<f32> offset;
-		offset = fromPolar(
-		    static_cast<s16>(DEG2SHORTANGLE(boss->mRotation.y)), 700.0f);
+		offset = fromPolar(static_cast<s16>(DEG2SHORTANGLE(boss->mRotation.y)),
+		                   700.0f);
 		JGeometry::TVec3<f32> appearOffset = offset;
 		gpItemManager->makeObjAppear(
 		    boss->mPosition.x + appearOffset.x, boss->mPosition.y + 1.0f,
