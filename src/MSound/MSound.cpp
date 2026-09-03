@@ -227,9 +227,9 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 			pTVar1->writeRegDirect(11, 0x7fff);
 			pTVar1->writeRegDirect(12, 0);
 			if (pTVar1->mOuterParam != nullptr) {
-				pTVar1->mOuterParam->onSwitch(8);
-				pTVar1->mOuterParam->onSwitch(4);
-				pTVar1->mOuterParam->onSwitch(0x10);
+				pTVar1->mOuterParam->onSwitch(JASystem::TTrack::UPDATE_Pan);
+				pTVar1->mOuterParam->onSwitch(JASystem::TTrack::UPDATE_Fxmix);
+				pTVar1->mOuterParam->onSwitch(JASystem::TTrack::UPDATE_Dolby);
 			}
 		}
 		param_1->mChannelUpdater.unk4E[0] = 0xffff;

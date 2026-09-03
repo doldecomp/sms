@@ -22,6 +22,7 @@ T* JSUConvertOffsetToPtr(const void* ptr, const void* offset)
 	}
 }
 
+inline u16 JSULoHalf(u32 in) { return in & 0xffff; }
 inline u8 JSULoByte(u16 in) { return in & 0xff; }
 inline u8 JSUHiByte(u16 in) { return in >> 8; }
 

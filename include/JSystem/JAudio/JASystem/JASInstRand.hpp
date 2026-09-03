@@ -12,6 +12,9 @@ public:
 	{
 	}
 
+	void setFloor(f32 floor) { mFloor = floor; }
+	void setCeiling(f32 ceiling) { mCeiling = ceiling; }
+
 	virtual f32 getY(int, int) const;
 
 public:

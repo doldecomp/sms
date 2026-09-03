@@ -158,7 +158,7 @@ namespace Driver {
 
 			if (channel->unk4->unk61 & 0x20)
 				buf->setIIRFilterParam(channel->unk4->unk3C);
-			if (channel->unk4->unk61 & 0x1)
+			if (channel->unk4->unk61 & 0x1f)
 				buf->setFIR8FilterParam(channel->unk4->unk2C);
 
 			buf->setFilterMode(channel->unk4->unk61);
@@ -183,7 +183,7 @@ namespace Driver {
 		buf->setPitch(channel->unk98);
 		if (channel->unk4->unk61 & 0x20)
 			buf->setIIRFilterParam(channel->unk4->unk3C);
-		if (channel->unk4->unk61 & 0x1)
+		if (channel->unk4->unk61 & 0x1f)
 			buf->setFIR8FilterParam(channel->unk4->unk2C);
 
 		buf->setFilterMode(channel->unk4->unk61);
@@ -576,7 +576,7 @@ f32 TChannel::bankOscToOfs(u32 index)
 
 void TChannel::effectOsc(u32 index, f32 effect)
 {
-	switch (unk38[index]->getOsc()->mTarget) {
+	switch (unk38[index]->getTarget()) {
 	case 1:
 		unk8C *= effect;
 		break;

@@ -1030,16 +1030,16 @@ u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 		JAIData::FabricatedUnk0Struct* params
 		    = &basic->unk0->unk0[uVar8 & 0xff];
 
-		outer->setParam(1, params->unk4);
-		outer->setParam(8, params->unk10);
-		outer->setParam(2, params->unk8);
-		outer->setParam(4, params->unkC);
+		outer->setParam(JASystem::TTrack::UPDATE_Volume, params->unk4);
+		outer->setParam(JASystem::TTrack::UPDATE_Pan, params->unk10);
+		outer->setParam(JASystem::TTrack::UPDATE_Pitch, params->unk8);
+		outer->setParam(JASystem::TTrack::UPDATE_Fxmix, params->unkC);
 		f32 thing;
 		if (basic->unk14 != 2)
 			thing = 0.0f;
 		else
 			thing = params->unk14;
-		outer->setParam(16, thing);
+		outer->setParam(JASystem::TTrack::UPDATE_Dolby, thing);
 		break;
 	}
 	case 0x7F:

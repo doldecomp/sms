@@ -13,10 +13,10 @@ bool TDrumSet::getParam(int key, int param_2, TInstParam* param_3) const
 
 	param_3->mSourceType = 0;
 	param_3->mFixedPitch = 1;
-	param_3->mVolume *= perc->unk0;
-	param_3->mPitch *= perc->unk4;
-	param_3->mPan     = perc->unk8;
-	param_3->mRelease = perc->unkC;
+	param_3->mVolume *= perc->mVolume;
+	param_3->mPitch *= perc->mPitch;
+	param_3->mPan     = perc->mPan;
+	param_3->mRelease = perc->mRelease;
 
 	static TOscillator::Osc_ osc;
 
@@ -32,8 +32,8 @@ bool TDrumSet::getParam(int key, int param_2, TInstParam* param_3) const
 	param_3->mOscData  = &oscp;
 	param_3->mOscCount = 1;
 
-	for (int i = 0; i < perc->unk14; i++) {
-		TInstEffect* effect = perc->unk10[i];
+	for (int i = 0; i < perc->mEffectCount; i++) {
+		TInstEffect* effect = perc->mEffects[i];
 		if (effect) {
 			f32 y = effect->getY(key, param_2);
 			switch (effect->unk4) {
@@ -55,8 +55,8 @@ bool TDrumSet::getParam(int key, int param_2, TInstParam* param_3) const
 			}
 		}
 	}
-	for (int i = 0; i < perc->unk18; i++) {
-		TVeloRegion* region = &perc->unk1C[i];
+	for (int i = 0; i < perc->mVeloRegionCount; i++) {
+		TVeloRegion* region = &perc->mVeloRegions[i];
 		if (param_2 > region->unk0) {
 			continue;
 		}
@@ -76,57 +76,60 @@ const TDrumSet::TPerc* TDrumSet::getPerc(int index) const
 }
 
 TDrumSet::TPerc::TPerc()
-    : unk0(1.0f)
-    , unk4(1.0f)
-    , unk8(0.5f)
-    , unkC(1000)
-    , unk10(nullptr)
-    , unk14(0)
-    , unk18(0)
-    , unk1C(nullptr)
+    : mVolume(1.0f)
+    , mPitch(1.0f)
+    , mPan(0.5f)
+    , mRelease(1000)
+    , mEffects(nullptr)
+    , mEffectCount(0)
+    , mVeloRegionCount(0)
+    , mVeloRegions(nullptr)
 {
 }
 
 TDrumSet::TPerc::~TPerc()
 {
-	delete[] unk10;
-	delete[] unk1C;
+	delete[] mEffects;
+	delete[] mVeloRegions;
 }
 
 void TDrumSet::TPerc::setEffectCount(u32 count)
 {
-	delete[] unk10;
-	unk14 = count;
+	delete[] mEffects;
+	mEffectCount = count;
 	if (count == 0) {
-		unk10 = nullptr;
+		mEffects = nullptr;
 		return;
 	}
 
-	unk10 = new (TBank::getCurrentHeap(), 0) TInstEffect*[count];
-	Calc::bzero(unk10, count * sizeof(TInstEffect*));
+	mEffects = new (TBank::getCurrentHeap(), 0) TInstEffect*[count];
+	Calc::bzero(mEffects, count * sizeof(TInstEffect*));
 }
 
 void TDrumSet::TPerc::setVeloRegionCount(u32 count)
 {
-	delete[] unk1C;
-	unk1C = new (TBank::getCurrentHeap(), 0) TVeloRegion[count];
-	unk18 = count;
+	delete[] mVeloRegions;
+	mVeloRegions     = new (TBank::getCurrentHeap(), 0) TVeloRegion[count];
+	mVeloRegionCount = count;
 }
 
-TVeloRegion* TDrumSet::TPerc::getVeloRegion(int index) { return &unk1C[index]; }
+TVeloRegion* TDrumSet::TPerc::getVeloRegion(int index)
+{
+	return &mVeloRegions[index];
+}
 
 const TVeloRegion* TDrumSet::TPerc::getVeloRegion(int index) const
 {
-	return &unk1C[index];
+	return &mVeloRegions[index];
 }
 
 void TDrumSet::TPerc::setEffect(int index, TInstEffect* effect)
 {
-	unk10[index] = effect;
+	mEffects[index] = effect;
 }
 
-TInstEffect* TDrumSet::TPerc::getEffect(int index) { return unk10[index]; }
+TInstEffect* TDrumSet::TPerc::getEffect(int index) { return mEffects[index]; }
 
-void TDrumSet::TPerc::setRelease(u32 value) { unkC = value; }
+void TDrumSet::TPerc::setRelease(u32 value) { mRelease = value; }
 
 } // namespace JASystem

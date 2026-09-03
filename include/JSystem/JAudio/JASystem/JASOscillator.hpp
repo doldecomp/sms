@@ -28,6 +28,7 @@ public:
 	f32 calc(s16*);
 
 	const Osc_* getOsc() const { return mOsc; }
+	u8 getTarget() const { return mOsc->mTarget; }
 	void setOsc(const Osc_* osc) { mOsc = osc; }
 	BOOL isOsc() { return mOsc != NULL ? TRUE : FALSE; }
 	void releaseDirect(u16 param_0) { mDirectRelease = param_0; }
