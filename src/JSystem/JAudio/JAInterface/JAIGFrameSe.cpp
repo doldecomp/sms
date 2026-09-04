@@ -7,8 +7,6 @@
 
 void JAIBasic::checkNextFrameSe()
 {
-	// TODO: gl matching this awfulness
-
 	JAISound sound;
 
 	struct Candidate {
@@ -17,7 +15,18 @@ void JAIBasic::checkNextFrameSe()
 		/* 0x8 */ JAISound* sound;
 	};
 	Candidate candidates[16];
-	int _stackPad;
+
+	s16 prio;
+	u8 camStart;
+	u8 camEnd;
+	JAISound* snd;
+	u8 l;
+	int i;
+	u8 k;
+	u8 j;
+	u8 bVar7;
+	u8 bVar18;
+	JAISound::FabricatedPositionInfo* pi;
 
 	f32 fVar6
 	    = JAIGlobalParameter::distanceMax * JAIGlobalParameter::distanceMax;
@@ -25,8 +34,8 @@ void JAIBasic::checkNextFrameSe()
 	if (fVar1 == 0.0f)
 		fVar1 = 1.0f;
 
-	for (int i = 0; i < JAIGlobalParameter::getParamSeCategoryMax(); ++i) {
-		for (u8 j = 0; j < unk0->unk4[unk10][i * 2]; ++j) {
+	for (i = 0; i < JAIGlobalParameter::getParamSeCategoryMax(); ++i) {
+		for (j = 0; j < unk0->unk4[unk10][i * 2]; ++j) {
 			candidates[j].score = 0x7fffffff;
 			candidates[j].sound = nullptr;
 			candidates[j].state = 0xff;
@@ -50,8 +59,6 @@ void JAIBasic::checkNextFrameSe()
 				it = &sound;
 			} else if (it->unk1 != 0) {
 				f32 fVar2 = 2147483647.0f;
-				u8 camStart;
-				u8 camEnd;
 				if (it->unk4 == 4) {
 					camStart = 0;
 					camEnd   = JAIGlobalParameter::audioCameraMax;
@@ -61,7 +68,7 @@ void JAIBasic::checkNextFrameSe()
 				}
 
 				for (u8 cam = camStart; cam < camEnd; ++cam) {
-					JAISound::FabricatedPositionInfo* pi = &it->unk1C[cam];
+					pi = &it->unk1C[cam];
 
 					pi->unkC = pi->unk0;
 					if (it->unk24 == 0) {
@@ -73,7 +80,7 @@ void JAIBasic::checkNextFrameSe()
 					pi->unk18 = pi->unk0.x * pi->unk0.x
 					            + pi->unk0.y * pi->unk0.y
 					            + pi->unk0.z * pi->unk0.z;
-					s16 prio = it->getInfoPriority();
+					prio = it->getInfoPriority();
 					if (it->unk6) {
 						prio += it->unk6;
 						if (prio < 0)
@@ -118,15 +125,15 @@ void JAIBasic::checkNextFrameSe()
 						it = &sound;
 					}
 				} else {
-					u8 bVar18
+					bVar18
 					    = unk0->unk4[unk10][(u8)it->getSeCategoryNumber() * 2];
-					for (u8 j = 0; j < bVar18; ++j) {
+					for (j = 0; j < bVar18; ++j) {
 						if (it->unkC < candidates[j].score
 						    || (it->unkC == candidates[j].score
 						        && candidates[j].state >= it->unk1)) {
 							if (bVar19 < bVar18)
 								++bVar19;
-							for (u8 k = bVar18 - 1; k > j; --k) {
+							for (k = bVar18 - 1; k > j; --k) {
 								candidates[k].score = candidates[k - 1].score;
 								candidates[k].sound = candidates[k - 1].sound;
 								candidates[j].state = candidates[k - 1].state;
@@ -144,8 +151,7 @@ void JAIBasic::checkNextFrameSe()
 				it = it->unk30;
 		}
 
-		JAISound* snd;
-		for (u8 k = 0; k < bVar19; ++k) {
+		for (k = 0; k < bVar19; ++k) {
 			snd = candidates[k].sound;
 			if (snd->unk1 == 1) {
 				snd->unk1 = 2;
@@ -155,10 +161,9 @@ void JAIBasic::checkNextFrameSe()
 		}
 
 		bVar19 = unk0->unk4[unk10][i * 2];
-		for (u8 j = 0; j < bVar19; ++j) {
-			snd      = unk0->unk8[i][j].unk8;
-			u8 bVar7 = 0;
-			u8 k;
+		for (j = 0; j < bVar19; ++j) {
+			snd   = unk0->unk8[i][j].unk8;
+			bVar7 = 0;
 			if (snd == nullptr) {
 				bVar7 = 1;
 			} else if (snd->unk1 == 4) {
@@ -185,7 +190,7 @@ void JAIBasic::checkNextFrameSe()
 				for (k = 0; k < bVar19; ++k) {
 					snd = candidates[k].sound;
 					if (snd != nullptr && snd->unk1 != 3) {
-						for (u8 l = 0; l < bVar19; ++l) {
+						for (l = 0; l < bVar19; ++l) {
 							if (unk0->unk8[i][l].unk8
 							    && snd == unk0->unk8[i][l].unk8) {
 								bVar7 = 0;
@@ -217,7 +222,7 @@ void JAIBasic::sendPlayingSeCommand()
 	u8 trackId = 0;
 
 	for (u8 cat = 0; cat < JAIGlobalParameter::getParamSeCategoryMax(); ++cat) {
-		for (j = 0; j < unk0->unk4[unk10][(u8)cat * 2]; ++j, ++trackId) {
+		for (j = 0; j < unk0->unk4[unk10][(u8)cat * 2]; ++trackId, ++j) {
 			sound = unk0->unk8[cat][j].unk8;
 			if (sound == nullptr)
 				continue;
