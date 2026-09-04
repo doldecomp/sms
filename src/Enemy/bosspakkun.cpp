@@ -429,13 +429,13 @@ void TBPTornado::perform(u32 flags, JDrama::TGraphics* graphics)
 		if (emitter)
 			emitter->setGlobalScale(mScaling);
 
-		emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x163, mtx, 1, reinterpret_cast<u8*>(this) + 1);
+		emitter = gpMarioParticleManager->emitAndBindToMtxPtr(0x163, mtx, 1,
+		                                                      (u8*)this + 1);
 		if (emitter)
 			emitter->setGlobalScale(mScaling);
 
-		emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x164, mtx, 1, reinterpret_cast<u8*>(this) + 2);
+		emitter = gpMarioParticleManager->emitAndBindToMtxPtr(0x164, mtx, 1,
+		                                                      (u8*)this + 2);
 		if (emitter)
 			emitter->setGlobalScale(mScaling);
 	}
@@ -585,7 +585,7 @@ BOOL TBPNavel::receiveMessage(THitActor* sender, u32 message)
 
 void TBPNavel::perform(u32 flags, JDrama::TGraphics* graphics)
 {
-	if (flags & 2)
+	if (flags & CUE_CALC_ANIM)
 		mOwner->getJointTransByIndex(6, &mPosition);
 
 	THitActor::perform(flags, graphics);
