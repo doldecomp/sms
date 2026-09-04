@@ -153,7 +153,7 @@ public:
 	u32 getTrackPortRoute(u8, u8);
 	void getSeInfoPointer();
 
-	u32 getUnk8() { return unk8; }
+	u32 getID() const { return unk8; }
 
 	u32 getUnk8Lo() { return unk8 & 0x3FF; }
 
