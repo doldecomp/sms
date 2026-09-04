@@ -39,10 +39,9 @@ void JAIBasic::checkEntriedSeq()
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
 		JAISeqUpdateData* sud = &unk0->unk180[i];
 		JAISound** sound      = &sud->unk48;
+		u32& r27              = sud->unk8;
 
-		u32& r27 = sud->unk8;
-
-		if (!*sound)
+		if (!sud->unk48)
 			continue;
 
 		if (!(r27 & 1))
@@ -51,7 +50,8 @@ void JAIBasic::checkEntriedSeq()
 		if (sud->unk3 != 0)
 			return;
 
-		u32 size = JASystem::Vload::checkSize(unk2C + ((*sound)->unk8 & 0x3FF));
+		u32 size
+		    = JASystem::Vload::checkSize(unk2C + (sud->unk48->unk8 & 0x3FF));
 
 		u8 pos;
 		u8* ptr = (u8*)unk0->checkOnMemory((*sound)->unk8 & 0x3FF, &pos);
@@ -111,7 +111,7 @@ void JAIBasic::checkEntriedSeq()
 				(*sound)->unk1 = 1;
 
 				u32 swBit8 = (*sound)->unk8;
-				u32 param  = (pos << 8) | i | ((swBit8 & 0x3FF) << 16);
+				u32 param  = i | ((swBit8 & 0x3FF) << 16) | (pos << 8);
 
 				unk0->setAutoHeapLoadedFlag(pos, 1);
 				JASystem::Vload::loadFileAsync(unk2C + (swBit8 & 0x3FF), ptr, 0,
@@ -178,8 +178,8 @@ void JAIBasic::checkPlayingSeqTrack(unsigned long trackID)
 	}
 
 	if ((*sound) != nullptr && (*sound)->unk20 != 0) {
-		u32 i;
 		u32 s, e;
+		u32 i;
 		if ((*sound)->unk4 == 4) {
 			s = 0;
 			e = JAIGlobalParameter::audioCameraMax;
@@ -498,13 +498,14 @@ void JAIBasic::checkPlayingSeqTrack(unsigned long trackID)
 
 	if (r30 & 0x1000) {
 		for (u8 j = 0; j < JAIGlobalParameter::seqTrackMax; ++j) {
+			u16* ports = seqParam->unk1354[j];
 			if (seqParam->unk178C & (1 << j)) {
 				seqParam->unk178C ^= 1 << j;
 				for (u8 k = 0; k < 16; ++k) {
 					if (seqParam->unk1790[j] & (1 << k)) {
 						JAISystemInterface::writePortApp(
 						    seqParam->unk0, (*sound)->getTrackPortRoute(j, k),
-						    seqParam->unk1354[j][k]);
+						    ports[k]);
 						seqParam->unk1790[j] ^= 1 << k;
 					}
 				}
