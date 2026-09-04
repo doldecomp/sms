@@ -1,6 +1,7 @@
 Super Mario Sunshine
 [![Build Status]][actions] [![Code Progress]][progress] [![Discord Badge]][discord]
 =============
+
 [<img src="https://decomp.dev/doldecomp/sms.svg?w=512&h=256" width="512" height="256">][Progress]
 =============
 
@@ -43,16 +44,12 @@ macOS
   brew install ninja
   ```
 
-- Install [wine-crossover](https://github.com/Gcenx/homebrew-wine):
+- Install [wibo-macos](https://github.com/decompals/wibo) from their latest releases.
 
-  ```sh
-  brew install --cask --no-quarantine gcenx/wine/wine-crossover
-  ```
-
-After OS upgrades, if macOS complains about `Wine Crossover.app` being unverified, you can unquarantine it using:
+After OS upgrades, if macOS complains about `wibo` being unverified, you can unquarantine it using:
 
 ```sh
-sudo xattr -rd com.apple.quarantine '/Applications/Wine Crossover.app'
+xattr -d com.apple.quarantine path/to/wibo
 ```
 
 Linux
