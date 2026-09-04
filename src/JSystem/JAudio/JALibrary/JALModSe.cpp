@@ -39,7 +39,7 @@ void JALSystem::processModFunc(JAISound* param_1, f32 param_2, u32 param_3,
 
 	f32 val;
 
-	u32 thing = param_1->getUnk8();
+	u32 thing = param_1->getID();
 
 	if (TFlagManager::get()->isRegistered(thing, ModType_JALSeModVolFunk)) {
 		if (JALSeModVolFunk::calc(thing, param_2, &val))

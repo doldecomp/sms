@@ -25,7 +25,7 @@ void MAnmSound::setSpeedModifySound(JAISound* param_1,
                                     JAIAnimeFrameSoundData* param_2,
                                     f32 param_3)
 {
-	if (MSound::getSwitch(param_1->getUnk8(), 0x100000, 0x14))
+	if (MSound::getSwitch(param_1->getID(), 0x100000, 0x14))
 		JAIAnimeSound::setSpeedModifySound(param_1, param_2, param_3);
 }
 
