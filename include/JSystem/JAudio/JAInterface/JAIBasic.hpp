@@ -189,16 +189,16 @@ public:
 	static JAIBasic* getInterface() { return basic; }
 
 public:
-	/* 0x8 */ JAICamera* unk8;
-	/* 0xC */ JKRSolidHeap* unkC;
+	/* 0x8 */ JAICamera* mAudioCameras;
+	/* 0xC */ JKRSolidHeap* mInterfaceHeap;
 	/* 0x10 */ u8 unk10;
 	/* 0x11 */ u8 unk11;
 	/* 0x12 */ u8 unk12;
-	/* 0x13 */ u8 unk13;
+	/* 0x13 */ u8 mInitFileLoadSwitch;
 	/* 0x14 */ u8 unk14;
 	/* 0x15 */ u8 unk15;
 	/* 0x16 */ char unk16[2];
-	/* 0x18 */ u8* unk18;
+	/* 0x18 */ u8* mSeCancelSwitch;
 	/* 0x1C */ struct {
 		u8 flag1 : 1;
 		u8 flag2 : 1;
@@ -211,10 +211,10 @@ public:
 	} unk1C;
 	/* 0x20 */ u32 unk20;
 	/* 0x24 */ u32 unk24;
-	/* 0x28 */ f32* unk28;
+	/* 0x28 */ f32* mSeCategoryVolume;
 	/* 0x2C */ u32 unk2C;
 	/* 0x30 */ u32 unk30;
-	/* 0x34 */ u32 unk34;
+	/* 0x34 */ u32 mFinishedSceneSet;
 	/* 0x38 */ JAISound* unk38;
 
 	struct FabricatedUnk3CStruct {
@@ -231,7 +231,7 @@ public:
 	/* 0x40 */ FabricatedUnk40Struct* unk40;
 	/* 0x44 */ u32 unk44;
 	/* 0x48 */ u32 unk48;
-	/* 0x4C */ u8* unk4C;
+	/* 0x4C */ u8* mInitDataPointer;
 
 	// TODO: same as Unk54 struct?
 	struct FabricatedUnk50Struct {
