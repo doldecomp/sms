@@ -18,15 +18,15 @@ void JAIStreamEntry::storeBuffer(JAISound** sound, JAIActor* actor, u32 param_3,
 		return;
 	}
 
-	controller->unk38 = unk0->getStreamParameter();
-	if (controller->unk38 == 0) {
+	controller->setCustomParameterPointer(unk0->getStreamParameter());
+	if (controller->mCustomParameter == 0) {
 		*sound = nullptr;
 		return;
 	}
 
 	data->initStreamParameter(controller->getStreamParameter());
-	controller->unk1         = 1;
-	controller->unk2         = 10;
+	controller->mState       = SOUNDSTATE_Stored;
+	controller->mWaitTimer   = 10;
 	unk0->unk0->unk184->unk2 = 0;
 	initSoundParameter(controller, sound, actor, param_3, param_4, param_5,
 	                   param_6);

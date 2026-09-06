@@ -25,29 +25,32 @@ void JAIData::initLinkBuffer(JAILinkBuffer* linkBuffer, u32 param)
 	int i;
 	u32 thing = JAIGlobalParameter::audioCameraMax * 0x1C;
 
-	linkBuffer->unk0 = linkBuffer->unk8;
-	linkBuffer->unk4 = nullptr;
+	linkBuffer->mFreeHead = linkBuffer->mStorage;
+	linkBuffer->mUsedHead = nullptr;
 
-	linkBuffer->unk8[0].unk2C = nullptr;
-	linkBuffer->unk8[0].unk30 = &linkBuffer->unk8[1];
-	JAISound::interPointer    = unk1F4;
-	linkBuffer->unk8[0].unk1  = 0;
-	linkBuffer->unk8[0].unk1C
+	linkBuffer->mStorage[0].mPrevSound = nullptr;
+	linkBuffer->mStorage[0].mNextSound = &linkBuffer->mStorage[1];
+	JAISound::interPointer             = unk1F4;
+	linkBuffer->mStorage[0].mState     = SOUNDSTATE_Inactive;
+	linkBuffer->mStorage[0].unk1C
 	    = (JAISound::FabricatedPositionInfo*)unk1F4->allocHeap(thing);
+	JUT_ASSERT(linkBuffer->mStorage[0].unk1C);
 	for (i = 1; i < param - 1; ++i) {
-		linkBuffer->unk8[i].unk2C = &linkBuffer->unk8[i - 1];
-		linkBuffer->unk8[i].unk30 = &linkBuffer->unk8[i + 1];
-		JAISound::interPointer    = unk1F4;
-		linkBuffer->unk8[i].unk1  = 0;
-		linkBuffer->unk8[i].unk1C
+		linkBuffer->mStorage[i].mPrevSound = &linkBuffer->mStorage[i - 1];
+		linkBuffer->mStorage[i].mNextSound = &linkBuffer->mStorage[i + 1];
+		JAISound::interPointer             = unk1F4;
+		linkBuffer->mStorage[i].mState     = SOUNDSTATE_Inactive;
+		linkBuffer->mStorage[i].unk1C
 		    = (JAISound::FabricatedPositionInfo*)unk1F4->allocHeap(thing);
+		JUT_ASSERT(linkBuffer->mStorage[i].unk1C);
 	}
-	linkBuffer->unk8[i].unk2C = &linkBuffer->unk8[i - 1];
-	linkBuffer->unk8[i].unk30 = nullptr;
-	JAISound::interPointer    = unk1F4;
-	linkBuffer->unk8[i].unk1  = 0;
-	linkBuffer->unk8[i].unk1C
+	linkBuffer->mStorage[i].mPrevSound = &linkBuffer->mStorage[i - 1];
+	linkBuffer->mStorage[i].mNextSound = nullptr;
+	JAISound::interPointer             = unk1F4;
+	linkBuffer->mStorage[i].mState     = SOUNDSTATE_Inactive;
+	linkBuffer->mStorage[i].unk1C
 	    = (JAISound::FabricatedPositionInfo*)unk1F4->allocHeap(thing);
+	JUT_ASSERT(linkBuffer->mStorage[i].unk1C);
 }
 
 void JAIData::initSeqParaLinkBuffer()
@@ -455,30 +458,30 @@ void JAIData::getInfoPointer(u32 param_1, void** param_2)
 	*param_2 = &JAIConst::nullInfoData2;
 	if (unk1B0 == 0) {
 		table = &unk88;
-		switch (param_1 & 0xC0000000) {
-		case 0x00000000:
+		switch (param_1 & JAISoundID_TypeMask) {
+		case JAISoundID_Type_Se:
 			thing = (u8)(param_1 >> 12);
 			JAIGlobalParameter::getParamSeCategoryMax();
 			break;
-		case 0x80000000:
+		case JAISoundID_Type_Sequence:
 			thing = 16;
 			break;
-		case 0xC0000000:
+		case JAISoundID_Type_Stream:
 			thing = 17;
 			break;
 		}
 	} else {
-		switch (param_1 & 0xC0000000) {
-		case 0x00000000:
+		switch (param_1 & JAISoundID_TypeMask) {
+		case JAISoundID_Type_Se:
 			thing = (u8)(param_1 >> 12);
 			table = &unk88;
 			JAIGlobalParameter::getParamSeCategoryMax();
 			break;
-		case 0x80000000:
+		case JAISoundID_Type_Sequence:
 			table = &unkC;
 			thing = 0x10;
 			break;
-		case 0xC0000000:
+		case JAISoundID_Type_Stream:
 			table = &unk104;
 			thing = 0x11;
 			break;
@@ -526,8 +529,8 @@ void JAIData::initData()
 	    JAIGlobalParameter::getParamSeCategoryMax() * sizeof(JAISound*));
 
 	for (int i = 0; i < JAIGlobalParameter::getParamSeCategoryMax(); ++i) {
-		unk1E4[i]      = unk1F4->makeSound(JAIGlobalParameter::seRegistMax);
-		unk1E8[i].unk8 = unk1E4[i];
+		unk1E4[i]          = unk1F4->makeSound(JAIGlobalParameter::seRegistMax);
+		unk1E8[i].mStorage = unk1E4[i];
 		initLinkBuffer(&unk1E8[i], JAIGlobalParameter::seRegistMax);
 		unk8[i] = (FabricatedUnk8Struct*)unk1F4->allocHeap(
 		    JAIGlobalParameter::seRegistMax * sizeof(FabricatedUnk8Struct));
@@ -548,11 +551,11 @@ void JAIData::initData()
 		s.unk14 = 0.0f;
 	}
 
-	unk208      = unk1F4->makeSound(JAIGlobalParameter::seqControlBufferMax);
-	unk20C      = unk1F4->makeSound(JAIGlobalParameter::streamControlBufferMax);
-	unk210.unk8 = unk208;
+	unk208 = unk1F4->makeSound(JAIGlobalParameter::seqControlBufferMax);
+	unk20C = unk1F4->makeSound(JAIGlobalParameter::streamControlBufferMax);
+	unk210.mStorage = unk208;
 	initLinkBuffer(&unk210, JAIGlobalParameter::seqControlBufferMax);
-	unk21C.unk8 = unk20C;
+	unk21C.mStorage = unk20C;
 	initLinkBuffer(&unk21C, JAIGlobalParameter::streamControlBufferMax);
 	unk1C4 = (JAISeqParameter*)unk1F4->allocHeap(
 	    JAIGlobalParameter::seqControlBufferMax * sizeof(JAISeqParameter));

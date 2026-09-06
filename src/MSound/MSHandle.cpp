@@ -89,8 +89,8 @@ f32 MSHandle::MSACos(f32 param_1)
 
 void MSHandle::setSeDistanceParameters()
 {
-	u8 type = smSeCategory[get_thing(unk8)].mType;
-	if (unk1 == 2)
+	u8 type = smSeCategory[get_thing(mSoundID)].mType;
+	if (mState == SOUNDSTATE_Prepared)
 		type = 0;
 
 	setSeDistanceVolume(type);
@@ -100,7 +100,7 @@ void MSHandle::setSeDistanceParameters()
 	setSeDistanceFir(type);
 
 	if (!(getSwBit() & 0x400)) {
-		f32 dVar4 = interPointer->getMapInfoFxParameter(unk18);
+		f32 dVar4 = interPointer->getMapInfoFxParameter(mActorGroundNumber);
 		setFxmix(dVar4, 0, 2);
 	}
 
@@ -109,17 +109,16 @@ void MSHandle::setSeDistanceParameters()
 
 void MSHandle::setSeDistancePitch(u8 param_1)
 {
-	f32 fVar1 = 1.0f;
+	f32 pitch = 1.0f;
 	if (getSwBit() & 0x10) {
-		fVar1 = 1.0f
+		pitch = 1.0f
 		        - (int(JAIConst::random.get_ufloat_1() * 16.0f) & 0xF) / 192.0f;
 	}
 
-	if (getSwBit() & 0xC0) {
-		fVar1 += unk3 / 192.0f;
-	}
+	if (getSwBit() & 0xC0)
+		pitch += mRandom / 192.0f;
 
-	setSeInterPitch(4, fVar1, param_1, 0.0f);
+	setSeInterPitch(4, pitch, param_1, 0.0f);
 }
 
 void MSHandle::setSeDistancePan(u8 param_1)
@@ -128,7 +127,7 @@ void MSHandle::setSeDistancePan(u8 param_1)
 
 	f32 thing = ptr->unk18;
 
-	f32 d = calcPan(ptr->unk0, thing, smSeCategory[get_thing(unk8)].unk4);
+	f32 d = calcPan(ptr->unk0, thing, smSeCategory[get_thing(mSoundID)].unk4);
 	setSeInterPan(4, d, param_1, 0);
 }
 
@@ -211,7 +210,7 @@ void MSHandle::setSeDistanceVolume(u8 param_1)
 {
 	u32 uVar2 = getSwBit();
 	if (uVar2 & 0x200000) {
-		f32 d = JALSystem::processModDistVolume(unk8, unk1C->unk18);
+		f32 d = JALSystem::processModDistVolume(mSoundID, unk1C->unk18);
 		setSeInterVolume(4, d, param_1, 0);
 		return;
 	}
@@ -220,8 +219,8 @@ void MSHandle::setSeDistanceVolume(u8 param_1)
 	if (!(uVar2 & 0x2)) {
 		// TODO: inline?
 		u32 tmp = getSwBit() >> 16 & 0x7;
-		dVar4
-		    = setDistanceVolumeCommon(smSeCategory[get_thing(unk8)].unk4, tmp);
+		dVar4 = setDistanceVolumeCommon(smSeCategory[get_thing(mSoundID)].unk4,
+		                                tmp);
 	} else {
 		dVar4 = 1.0f;
 	}
@@ -233,7 +232,7 @@ f32 MSHandle::setDistanceVolumeCommon(f32 volume, u8 param_2)
 {
 	f32 fVar1         = unk1C->unk18;
 	f32 maxVolumeDist = JAIGlobalParameter::getParamMaxVolumeDistance();
-	u32 uVar1         = get_thing(unk8);
+	u32 uVar1         = get_thing(mSoundID);
 	return calcVolume(fVar1, volume, maxVolumeDist, param_2, uVar1);
 }
 

@@ -35,8 +35,8 @@ JAISound* MSBgm::startBGM(u32 param)
 		if (iVar1->unk14) {
 			iVar1->unk14->setVolume(smMainVolume, 0, 8);
 
-			if (iVar1->unk14->unk0 < 3) {
-				smBgmInTrack[iVar1->unk14->unk0] = iVar1;
+			if (iVar1->unk14->getTrack() < 3) {
+				smBgmInTrack[iVar1->unk14->getTrack()] = iVar1;
 			}
 			int uVar2 = getSceneNo(param);
 			if (uVar2 != -1 && uVar2 != 0x210) {
@@ -65,7 +65,7 @@ void MSBgm::stopBGM(u32 param1, u32 param2)
 	} else {
 		iVar2 = JALListS<MSBgm, u32>::search(param1 & 0x3FF);
 		if (iVar2 && iVar2->unk14) {
-			u8 a = iVar2->unk14->unk0;
+			u8 a = iVar2->unk14->mTrack;
 			if (a == 0xff) {
 				stopBGM(0xffffffff, 10);
 			} else if (a < 3) {
@@ -167,7 +167,7 @@ void MSBgm::setStageBgmYoshiPercussion(bool param)
 	if (sound == nullptr)
 		return;
 
-	if (MSGMSound->getBstSwitch(sound->unk8) & 0x10000000) {
+	if (MSGMSound->getBstSwitch(sound->getID()) & 0x10000000) {
 		JASystem::TTrack* pTVar3 = getJASTrack(sound, 15);
 
 		if (pTVar3 != nullptr)

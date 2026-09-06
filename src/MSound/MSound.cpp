@@ -728,8 +728,8 @@ void MSound::fadeOutAllSound(u32 param_1)
 
 	for (u8 i = 0; i < JAIGlobalParameter::getParamSeCategoryMax(); ++i) {
 		if (unk0->unk88.unk2[i] != 0 && i != 4) {
-			for (JAISound* sound = unk0->unk1E8[i].unk4; sound != nullptr;
-			     sound           = sound->unk30)
+			for (JAISound* sound = unk0->unk1E8[i].mUsedHead; sound != nullptr;
+			     sound           = sound->mNextSound)
                 sound->setVolume(0.0f, param_1, 2);
 		}
 	}
@@ -755,17 +755,17 @@ void MSound::stopAllSound()
 void MSound::setSeExtParameter(JAISound* sound)
 {
 	if (sound != nullptr) {
-		u32 id               = sound->unk8;
+		u32 id               = sound->mSoundID;
 		JAISoundTable* table = JAIBasic::getInfoPointerFromID(id);
-		JAISoundInfo* ptr    = (JAISoundInfo*)sound->unk3C;
+		JAISoundInfo* ptr    = (JAISoundInfo*)sound->mInfo;
 		JAIBasic::getInfoFormat(table, id);
-		f32 dVar5
-		    = (ptr->unk0 & 0xC00000)
-		          ? MSoundSESystem::MSRandVol::getRandomVolumeNormal(ptr->unk0)
-		          : 1.0f;
-		f32 fVar1 = dVar5 * (ptr->unkC / 127.0f);
+		f32 dVar5 = (ptr->mSwBit & 0xC00000)
+		                ? MSoundSESystem::MSRandVol::getRandomVolumeNormal(
+		                      ptr->mSwBit)
+		                : 1.0f;
+		f32 fVar1 = dVar5 * (ptr->mVolume / 127.0f);
 		sound->setVolume(fVar1 > 1.0f ? 1.0f : fVar1, 0, 1);
-		sound->setPitch(ptr->unk8, 0, 1);
+		sound->setPitch(ptr->mPitch, 0, 1);
 	}
 }
 
@@ -852,7 +852,7 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 
 		if (!r3) {
 			if (unk8C[0])
-				return unk8C[0]->unk8;
+				return unk8C[0]->mSoundID;
 			return -1;
 		}
 	}
@@ -906,7 +906,7 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 			MSoundSESystem::MSRandPlay::startSeRandPlay(
 			    MSD_SE_MV10A_CRY_SHORT_01, 0);
 		if (unk8C[0] != nullptr)
-			return unk8C[0]->unk8;
+			return unk8C[0]->mSoundID;
 		return -1;
 		break;
 
@@ -1011,7 +1011,7 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 
 	u8 iVar62 = param_3 & 0x2 ? 1 : 0;
 	if (unk8C[iVar62] != nullptr)
-		return unk8C[iVar62]->unk8;
+		return unk8C[iVar62]->mSoundID;
 
 	return -1;
 }
@@ -1020,7 +1020,7 @@ u32 MSound::getMarioVoiceID(u8 param_1)
 {
 	u8 iVar1 = param_1 & 2 ? 1 : 0;
 	if (unk8C[iVar1])
-		return unk8C[iVar1]->unk8;
+		return unk8C[iVar1]->mSoundID;
 
 	return -1;
 }
@@ -1030,7 +1030,7 @@ void MSound::stopMarioVoice(u32 id, u8 param_2)
 	u8 iVar1 = param_2 & 2 ? 1 : 0;
 	if (unk8C[iVar1] != nullptr) {
 		if (id != 0xffffffff) {
-			if (id == unk8C[iVar1]->unk8)
+			if (id == unk8C[iVar1]->mSoundID)
 				unk8C[iVar1]->stop(1);
 		} else {
 			unk8C[iVar1]->stop(1);
@@ -1160,7 +1160,7 @@ u32 MSound::getBstSwitch(u32 param_1)
 	if (!info)
 		return -1;
 
-	return info->unk0;
+	return info->mSwBit;
 }
 
 u32 MSound::getSwitch(u32 param_1, u32 param_2, u32 param3)

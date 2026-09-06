@@ -53,12 +53,12 @@ void MAnmSound::startAnimSound(void* param_1, u32 param_2, JAISound** param_3,
 	if (MSGMSound->gateCheck(param_2)) {
 		switch (get_thing(param_2)) {
 		case 0:
-			if ((param_4->unkC & 0x1000) == 0x1000)
+			if ((param_4->mGroundNumber & 0x1000) == 0x1000)
 				return;
 			break;
 
 		case 7: {
-			u32 bVar2 = param_4->unkC >> 24;
+			u32 bVar2 = param_4->mGroundNumber >> 24;
 			u32 a     = bVar2 & 0xF;
 			u8 b      = bVar2 >> 4;
 			MSGMSound->startMarioVoice(param_2, a, b);
@@ -107,7 +107,7 @@ void MAnmSoundNPC::startAnimSound(void* param_1, u32 param_2,
 
 				f32 dVar10 = 1.0f;
 
-				const Vec* pfVar7 = param_4->unk4;
+				const Vec* pfVar7 = param_4->mTranslation;
 				f32 fVar11;
 				if (MSGMSound->cameraLooksAtMario()) {
 					const Vec* pVVar8 = MSGMSound->unkAC[0].unk0;

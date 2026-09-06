@@ -7,25 +7,25 @@
 class JAIActor {
 public:
 	JAIActor()
-	    : unk0(0)
-	    , unk4(0)
+	    : mIdentity(0)
+	    , mTranslation(0)
 	    , unk8(0)
-	    , unkC(0)
+	    , mGroundNumber(0)
 	{
 	}
 
-	JAIActor(const Vec* a, const Vec* b, const Vec* c, u32 d)
-	    : unk0(a)
-	    , unk4(b)
+	JAIActor(const void* a, const Vec* b, const Vec* c, u32 d)
+	    : mIdentity(a)
+	    , mTranslation(b)
 	    , unk8(c)
-	    , unkC(d)
+	    , mGroundNumber(d)
 	{
 	}
 
-	/* 0x0 */ const Vec* unk0;
-	/* 0x4 */ const Vec* unk4;
+	/* 0x0 */ const void* mIdentity;
+	/* 0x4 */ const Vec* mTranslation;
 	/* 0x8 */ const Vec* unk8;
-	/* 0xC */ u32 unkC;
+	/* 0xC */ u32 mGroundNumber;
 };
 
 namespace JAIConst {
@@ -39,7 +39,7 @@ extern Vec dummyZeroVec;
 extern u8 nullInfoData2[];
 extern u8 sCInfos_0[];
 
-extern JMath::TRandom_fast_ random;
+extern JMath::TRandomFast random;
 
 } // namespace JAIConst
 

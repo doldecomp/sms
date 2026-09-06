@@ -14,6 +14,6 @@ u8 sCInfos_0[]       = {
     4, 2, 4, 2, 4, 2, 4, 2, 4, 2, 4, 2, 4, 2, 4, 2,
 };
 
-JMath::TRandom_fast_ random = 0;
+JMath::TRandomFast random = 0;
 
 } // namespace JAIConst

@@ -97,18 +97,18 @@ namespace StreamLib {
 void JAIBasic::checkEntriedStream()
 {
 	JAISound* it;
-	for (it = unk0->unk21C.unk4; it != nullptr; it = it->unk30) {
+	for (it = unk0->unk21C.mUsedHead; it != nullptr; it = it->mNextSound) {
 		bool bVar1 = false;
-		if (it->unk1 == 1) {
+		if (it->mState == SOUNDSTATE_Stored) {
 			if (!unk0->unk184->unk14) {
 				JAInter::StreamLib::stop();
 				bVar1 = true;
-			} else if (unk0->unk184->unk14->unk2 == 0) {
+			} else if (unk0->unk184->unk14->mWaitTimer == 0) {
 				JAInter::StreamLib::stop();
 				bVar1 = true;
 			}
 			if (bVar1) {
-				it->unk1 = 2;
+				it->mState = SOUNDSTATE_Prepared;
 
 				it->getStreamParameter()->unk3D4 = unk0->unk184;
 				unk0->initStreamUpdateParameter();
@@ -123,17 +123,17 @@ void JAIBasic::checkWaitStream()
 	JAISound* sound = unk0->unk184->unk14;
 	if (!sound)
 		return;
-	if (sound->unk1 != 2)
+	if (sound->mState != SOUNDSTATE_Prepared)
 		return;
 
 	char buffer[64];
 	strcpy(buffer, JAIGlobalParameter::streamPath);
-	strcat(buffer, unk0->unk1F8[sound->unk8 & 0x3FF].unk10);
+	strcat(buffer, unk0->unk1F8[sound->mSoundID & 0x3FF].unk10);
 	setSeExtParameter(sound);
-	sound->unk1 = 3;
+	sound->mState = SOUNDSTATE_Started;
 	checkPlayingStream();
 	JAInter::StreamLib::start(buffer, sound->getStreamParameter()->unk4,
-	                          &unk0->unk1F8[sound->unk8 & 0x3FF].unk20);
+	                          &unk0->unk1F8[sound->mSoundID & 0x3FF].unk20);
 	JAInter::StreamLib::setPrepareFlag(1);
 }
 
@@ -142,14 +142,14 @@ void JAIBasic::checkRequestStream()
 	JAISound* sound = unk0->unk184->unk14;
 	if (!sound)
 		return;
-	if (sound->unk1 != 3)
+	if (sound->mState != SOUNDSTATE_Started)
 		return;
 	if (unk0->unk184->unk2 != 0)
 		return;
-	sound->unk1 = 4;
-	if (sound->unk10 > 1) {
+	sound->mState = SOUNDSTATE_Playing;
+	if (sound->mFadeCounter > 1) {
 		sound->setStreamInterVolume(6, 0.0f, 0);
-		sound->setStreamInterVolume(6, 1.0f, sound->unk10);
+		sound->setStreamInterVolume(6, 1.0f, sound->mFadeCounter);
 	}
 	JAInter::StreamLib::setPrepareFlag(0);
 }
@@ -164,10 +164,10 @@ void JAIBasic::checkPlayingStream()
 
 	u32& r29 = sud->unk10;
 
-	if (sound->unk1 >= 4) {
+	if (sound->mState >= SOUNDSTATE_Playing) {
 		sound->getStreamParameter(); // huh?
 		if (JAInter::StreamLib::getPlayingFlag() == 2) {
-			sound->unk1 = 0;
+			sound->mState = SOUNDSTATE_Inactive;
 			if (sound->getStreamParameter()->unk3D4 != nullptr)
 				sound->getStreamParameter()->unk3D4->unk14 = nullptr;
 
@@ -177,20 +177,21 @@ void JAIBasic::checkPlayingStream()
 			return;
 		}
 
-		if (sound->unk2 != 0)
-			sound->unk2--;
+		if (sound->mWaitTimer != 0)
+			sound->mWaitTimer--;
 
 		if (r29 & 2) {
-			sound->setStreamInterVolume(6, 0.0f, sound->unk10);
-			sound->unk1 = 5;
+			sound->setStreamInterVolume(6, 0.0f, sound->mFadeCounter);
+			sound->mState = SOUNDSTATE_Stopping;
 			r29 ^= 2;
 		}
 
-		if (sound->unk1 == 5
-		    && (sound->getStreamInterVolume(6) == 0.0f || sound->unk10 == 0)
-		    && sound->unk2 == 0) {
+		if (sound->mState == SOUNDSTATE_Stopping
+		    && (sound->getStreamInterVolume(6) == 0.0f
+		        || sound->mFadeCounter == 0)
+		    && sound->mWaitTimer == 0) {
 			JAInter::StreamLib::stop();
-			sound->unk1 = 0;
+			sound->mState = SOUNDSTATE_Inactive;
 			if (sound->getStreamParameter()->unk3D4 != nullptr)
 				sound->getStreamParameter()->unk3D4->unk14 = nullptr;
 
@@ -200,7 +201,7 @@ void JAIBasic::checkPlayingStream()
 		}
 	}
 
-	if (sound->unk1 < 3)
+	if (sound->mState < SOUNDSTATE_Started)
 		return;
 
 	JAIStreamParameter* streamParam = sound->getStreamParameter();
@@ -265,7 +266,7 @@ void JAIBasic::checkPlayingStream()
 			r29 ^= 0x80000;
 	}
 
-	sound->unk14++;
+	sound->incPlayGameFrameCounter();
 }
 
 namespace JAInter {
