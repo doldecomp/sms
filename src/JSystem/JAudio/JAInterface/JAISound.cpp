@@ -669,7 +669,7 @@ void JAISound::setSePortData(u8 param_1, u16 param_2)
 		getSeParameter()->unk0[param_1] = param_2;
 		getSeParameter()->unk20 |= 1 << param_1;
 	} else {
-		interPointer->unk38->setTrackPortData(mTrack, param_1, param_2);
+		interPointer->mSeSequence->setTrackPortData(mTrack, param_1, param_2);
 	}
 }
 

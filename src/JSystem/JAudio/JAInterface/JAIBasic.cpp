@@ -15,6 +15,7 @@
 #include <JSystem/JAudio/JASystem/JASWaveArcLoader.hpp>
 #include <JSystem/JAudio/JASystem/JASBankMgr.hpp>
 #include <dolphin/mtx.h>
+#include <stdint.h>
 #include <stdio.h>
 
 #include <JSystem/JAudio/JAInterface/JAIConst.hpp>
@@ -42,7 +43,7 @@ JAIBasic::JAIBasic()
 	unk11               = 0;
 	unk24               = 0;
 	mAudioCameras       = nullptr;
-	unk38               = nullptr;
+	mSeSequence         = nullptr;
 	unk20               = 0;
 	unk30               = 0;
 	mInitFileLoadSwitch = 3;
@@ -51,11 +52,11 @@ JAIBasic::JAIBasic()
 	unk40               = nullptr;
 	unk44               = 0;
 	unk48               = 0;
-	mBankList           = 0;
+	mBankList           = nullptr;
 	mWaveBankList       = nullptr;
-	unk58               = nullptr;
+	mSeqArchiveHeader   = nullptr;
 	unk5C               = nullptr;
-	unk68               = nullptr;
+	mSoundSceneList     = nullptr;
 	unk6C               = nullptr;
 	mFinishedSceneSet   = 0xffffffff;
 	unk70               = 0;
@@ -63,7 +64,11 @@ JAIBasic::JAIBasic()
 	unk78               = nullptr;
 }
 
-void JAIBasic::startSeSequence() { }
+void JAIBasic::startSeSequence()
+{
+	mSeSequence = nullptr;
+	startSoundDirectID(0x80000800, &mSeSequence, nullptr, 1, 4);
+}
 
 void JAIBasic::initInterfaceMain()
 {
@@ -113,16 +118,16 @@ void JAIBasic::initInterfaceMain()
 		initStream();
 	strcat(archivesPath, JAIGlobalParameter::sequenceArchivesPath);
 	strcat(archivesPath, JAIGlobalParameter::sequenceArchivesFileName);
-	if (!unk58) {
+	if (!mSeqArchiveHeader) {
 		JASystem::Vload::initHeader(archivesPath);
 	} else {
-		JASystem::Vload::initHeaderM(archivesPath, *unk58, nullptr);
+		JASystem::Vload::initHeaderM(archivesPath, mSeqArchiveHeader->mData,
+		                             nullptr);
 	}
 	JASystem::TrackMgr::initRegistTrack();
-	unk2C = JASystem::Vload::getArchiveHandle(
+	mSeqArchiveHandle = JASystem::Vload::getArchiveHandle(
 	    JAIGlobalParameter::sequenceArchivesFileName);
-	unk38 = 0;
-	startSoundDirectID(0x80000800, &unk38, nullptr, 1, 4);
+	startSeSequence();
 	if (!unk1C.flag3)
 		checkEntriedSeq();
 }
@@ -354,11 +359,12 @@ void JAIBasic::checkInitDataOnMemory()
 		}
 
 		case JAIINITDATA_SeqArchiveHeader: {
-			u8* buffer = (u8*)&((u32*)mInitDataPointer)[i];
-			unk58      = (u8**)transInitDataFile(buffer, 8);
-			*unk58     = (u8*)transInitDataFile(mInitDataPointer
-			                                        + ((u32*)mInitDataPointer)[i],
-			                                    ((u32*)mInitDataPointer)[i + 1]);
+			u8* buffer        = (u8*)&((u32*)mInitDataPointer)[i];
+			mSeqArchiveHeader = (FabricatedSeqArchiveHeader*)transInitDataFile(
+			    buffer, sizeof(FabricatedSeqArchiveHeader));
+			mSeqArchiveHeader->mData = (u8*)transInitDataFile(
+			    mInitDataPointer + ((u32*)mInitDataPointer)[i],
+			    ((u32*)mInitDataPointer)[i + 1]);
 			i += 3;
 			break;
 		}
@@ -378,13 +384,14 @@ void JAIBasic::checkInitDataOnMemory()
 		case JAIINITDATA_SoundSceneList: {
 			JAIInitDataBlob* blob
 			    = (JAIInitDataBlob*)&((u32*)mInitDataPointer)[i];
-			u32* buffer = (u32*)transInitDataFile(
-			    mInitDataPointer + blob->offset, blob->size);
-			JAIGlobalParameter::soundSceneMax = buffer[0];
-			unk68                             = (u8**)(buffer + 1);
+			FabricatedSoundSceneTable* table
+			    = (FabricatedSoundSceneTable*)transInitDataFile(
+			        mInitDataPointer + blob->offset, blob->size);
+			JAIGlobalParameter::soundSceneMax = table->mSceneMax;
+			mSoundSceneList                   = table->mSceneData;
 			for (u32 scene = 0; scene < JAIGlobalParameter::soundSceneMax;
 			     ++scene)
-				unk68[scene] += (u32)buffer;
+				mSoundSceneList[scene] += (uintptr_t)table;
 			i += 3;
 			break;
 		}
@@ -630,10 +637,10 @@ void JAIBasic::processFrameWork()
 {
 	checkDummyPositionBuffer();
 
-	if (unk38->mState == SOUNDSTATE_Started && !unk1C.flag2)
+	if (mSeSequence->mState == SOUNDSTATE_Started && !unk1C.flag2)
 		loadSecondStayWave();
 
-	if (unk38->mState >= SOUNDSTATE_Playing)
+	if (mSeSequence->mState >= SOUNDSTATE_Playing)
 		checkNextFrameSe();
 
 	sendPlayingSeCommand();
@@ -729,8 +736,8 @@ void JAIBasic::startSoundBasic(u32 id, JAISound** sound, JAIActor* actor,
 	switch (id & JAISoundID_TypeMask) {
 	case JAISoundID_Type_Sequence:
 		if (unk1C.flag4 != 1
-		    && (unk38 == nullptr
-		        || (unk38->mSoundID & 0x3ff) != (id & 0x3ff))) {
+		    && (mSeSequence == nullptr
+		        || (mSeSequence->mSoundID & 0x3ff) != (id & 0x3ff))) {
 			if (sound == nullptr) {
 				u8 num = getSeqTrackNumber(data);
 				sound  = &unk0->unk1E0[num];
@@ -1334,11 +1341,12 @@ int JAIBasic::loadArcSeqData(u32 param_1, bool param_2)
 		if ((uVar6 & 0x40) == 0) {
 			unk0->setAutoHeapLoadedFlag(unaff_r28, '\x01');
 			u32 id = param_2 | 0xFE | uVar1 << 16 | unaff_r28 << 8;
-			JASystem::Vload::loadFileAsync(unk2C + uVar1, puVar4, 0, uVar2,
-			                               &checkDvdLoadArc, id);
+			JASystem::Vload::loadFileAsync(mSeqArchiveHandle + uVar1, puVar4, 0,
+			                               uVar2, &checkDvdLoadArc, id);
 			return 1;
 		} else {
-			JASystem::Vload::loadFile(unk2C + uVar1, puVar4, 0, uVar2);
+			JASystem::Vload::loadFile(mSeqArchiveHandle + uVar1, puVar4, 0,
+			                          uVar2);
 			return 2;
 		}
 	}

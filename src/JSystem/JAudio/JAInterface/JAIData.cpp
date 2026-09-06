@@ -503,13 +503,13 @@ void JAIData::initData()
 		initInfoDataWork(&unkC, JAIGlobalParameter::seqInfoFileName);
 		initInfoDataWork(&unk104, JAIGlobalParameter::streamInfoFileName);
 	}
-	if (unk1F4->unk68) {
+	if (unk1F4->mSoundSceneList) {
 		JAIGlobalParameter::seTrackMax = 0;
 		for (int i = 0; i < JAIGlobalParameter::soundSceneMax; ++i) {
 			u32 sum = 0;
 			for (int j = 0; j < JAIGlobalParameter::getParamSeCategoryMax();
 			     ++j) {
-				sum += unk1F4->unk68[i][2 * j];
+				sum += unk1F4->mSoundSceneList[i][2 * j];
 			}
 			if (JAIGlobalParameter::seTrackMax < sum)
 				JAIGlobalParameter::seTrackMax = sum;
@@ -634,8 +634,8 @@ void JAIData::initData()
 	unk184->unk10 = 0;
 	unk184->unk14 = nullptr;
 
-	if (unk1F4->unk68) {
-		unk4 = unk1F4->unk68;
+	if (unk1F4->mSoundSceneList) {
+		unk4 = unk1F4->mSoundSceneList;
 	} else {
 		unk4 = (u8**)unk1F4->allocHeap(JAIGlobalParameter::soundSceneMax * 4);
 		for (int i = 0; i < JAIGlobalParameter::soundSceneMax; ++i)

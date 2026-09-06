@@ -52,7 +52,7 @@ void JAIBasic::checkEntriedSeq()
 			return;
 
 		u32 size = JASystem::Vload::checkSize(
-		    unk2C + (sud->mSound->mSoundID & 0x3FF));
+		    mSeqArchiveHandle + (sud->mSound->mSoundID & 0x3FF));
 
 		u8 pos;
 		u8* ptr = (u8*)unk0->checkOnMemory((*sound)->mSoundID & 0x3FF, &pos);
@@ -115,11 +115,13 @@ void JAIBasic::checkEntriedSeq()
 				u32 param  = i | ((swBit8 & 0x3FF) << 16) | (pos << 8);
 
 				unk0->setAutoHeapLoadedFlag(pos, 1);
-				JASystem::Vload::loadFileAsync(unk2C + (swBit8 & 0x3FF), ptr, 0,
-				                               size, checkDvdLoadArc, param);
+				JASystem::Vload::loadFileAsync(
+				    mSeqArchiveHandle + (swBit8 & 0x3FF), ptr, 0, size,
+				    checkDvdLoadArc, param);
 				sud->unk3 = 1;
 			} else {
-				JASystem::Vload::loadFile(unk2C + ((*sound)->mSoundID & 0x3FF),
+				JASystem::Vload::loadFile(mSeqArchiveHandle
+				                              + ((*sound)->mSoundID & 0x3FF),
 				                          ptr, 0, size);
 				(*sound)->mState = SOUNDSTATE_Prepared;
 			}
@@ -614,8 +616,8 @@ void JAIBasic::checkReadSeq()
 		if ((*sound)->getSeqParameter()->unk1850->unk2 != 0)
 			continue;
 
-		u32 lVar2
-		    = JASystem::Vload::checkSize(unk2C + ((*sound)->mSoundID & 0x3FF));
+		u32 lVar2 = JASystem::Vload::checkSize(mSeqArchiveHandle
+		                                       + ((*sound)->mSoundID & 0x3FF));
 		int uVar3 = JAISystemInterface::setSeqData(
 		    nullptr, sud->mSeqData, lVar2,
 		    JASystem::Player::SEQ_PLAYMODE_UNK_0);
