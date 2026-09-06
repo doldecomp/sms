@@ -193,7 +193,8 @@ void JAIBasic::checkPlayingSeqTrack(unsigned long trackID)
 			JAISound::FabricatedPositionInfo* pi = &(*sound)->unk1C[i];
 
 			pi->unkC = pi->unk0;
-			MTXMultVec(unk8[i].unk8, (Vec*)(*sound)->mActorTrans, &pi->unk0);
+			MTXMultVec(mAudioCameras[i].unk8, (Vec*)(*sound)->mActorTrans,
+			           &pi->unk0);
 
 			pi->unk18
 			    = std::sqrtf(pi->unk0.x * pi->unk0.x + pi->unk0.y * pi->unk0.y
@@ -656,16 +657,16 @@ void JAIBasic::checkSeqWave()
 			continue;
 		if ((*sound)->getSeqParameter()->unk1758 == 0xffffffff)
 			continue;
-		if (unk34 == 0xffffffff)
+		if (mFinishedSceneSet == 0xffffffff)
 			continue;
 
 		u32 uVar3 = (*sound)->getSeqParameter()->unk1758;
 
 		JAISound* snd = *sound;
-		if (unk34 == uVar3 || uVar3 == 0xff00ff00
-		    || (((unk34 & 0xffff0000) == (uVar3 & 0xffff0000)
+		if (mFinishedSceneSet == uVar3 || uVar3 == 0xff00ff00
+		    || (((mFinishedSceneSet & 0xffff0000) == (uVar3 & 0xffff0000)
 		         && uVar3 == 0xffff))
-		    || (((unk34 & 0xffff) == (uVar3 & 0xffff)
+		    || (((mFinishedSceneSet & 0xffff) == (uVar3 & 0xffff)
 		         && uVar3 == 0xffff0000))) {
 			snd->getSeqParameter()->unk1758 = 0xffffffff;
 		}

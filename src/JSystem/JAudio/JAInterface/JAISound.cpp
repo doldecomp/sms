@@ -286,8 +286,8 @@ f32 JAISound::setDistancePanCommon()
 
 f32 JAISound::setPositionDopplarCommon(u32 param_1)
 {
-	VecPtr pVVar7 = interPointer->unk8->unk0;
-	VecPtr pVVar6 = interPointer->unk8->unk4;
+	VecPtr pVVar7 = interPointer->mAudioCameras->unk0;
+	VecPtr pVVar6 = interPointer->mAudioCameras->unk4;
 
 	f32 diff_x = pVVar7->x - unk1C->unk0.x;
 	f32 diff_y = pVVar7->y - unk1C->unk0.y;

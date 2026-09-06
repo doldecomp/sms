@@ -75,8 +75,8 @@ void JAIBasic::checkNextFrameSe()
 					if (it->mActorTrans == nullptr) {
 						pi->unk0 = JAIConst::dummyZeroVec;
 					} else {
-						MTXMultVec(unk8[cam].unk8, (Vec*)it->mActorTrans,
-						           &pi->unk0);
+						MTXMultVec(mAudioCameras[cam].unk8,
+						           (Vec*)it->mActorTrans, &pi->unk0);
 					}
 
 					pi->unk18 = pi->unk0.x * pi->unk0.x
@@ -421,7 +421,7 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 	} else {
 		vol = seParam->unk124[7].mCurrentValue;
 	}
-	vol *= unk28[(u8)sound->getSeCategoryNumber()];
+	vol *= mSeCategoryVolume[(u8)sound->getSeCategoryNumber()];
 	if (slot->mVolume != vol) {
 		slot->mVolume = vol;
 		if (sound->mState != SOUNDSTATE_Prepared) {

@@ -272,8 +272,8 @@ MSound* MSound::getMSound() { return MSGMSound; }
 
 JAISound* MSound::makeSound(u32 count)
 {
-	if (unkC != 0)
-		return new (unkC, 0) MSHandle[count];
+	if (mInterfaceHeap != 0)
+		return new (mInterfaceHeap, 0) MSHandle[count];
 	else
 		return new (JASDram, 0) MSHandle[count];
 }
@@ -335,7 +335,7 @@ void MSound::exitStage()
 	if (unkC4)
 		unkC4->stop(0);
 
-	unk8[0] = JAInullCamera;
+	mAudioCameras[0] = JAInullCamera;
 
 	unkAC[0] = JAICamera();
 	unkAC[0] = JAInullCamera;
@@ -387,7 +387,7 @@ void MSound::setCameraInfo(Vec* param_1, Vec* param_2, MtxPtr param_3,
                            u32 param_4)
 {
 	if (param_1 == nullptr) {
-		unk8[param_4] = JAInullCamera;
+		mAudioCameras[param_4] = JAInullCamera;
 	} else {
 		JAIBasic::setCameraInfo(param_1, param_2, param_3, param_4);
 	}
@@ -420,7 +420,7 @@ void MSound::setPlayerInfo(Vec* param_1, Vec* param_2, MtxPtr param_3,
 
 f32 MSound::getDistFromCamera(Vec* pos)
 {
-	return JALCalc::getDist(pos, unk8->unk0);
+	return JALCalc::getDist(pos, mAudioCameras->unk0);
 }
 
 MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,

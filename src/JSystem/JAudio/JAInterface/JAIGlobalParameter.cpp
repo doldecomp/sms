@@ -65,8 +65,8 @@ void JAIGlobalParameter::setParamAudioDvdThreadPriority(u8 value)
 void JAIGlobalParameter::setParamInitFileLoadSwitch(u8) { }
 void JAIGlobalParameter::setParamInitDataPointer(void* value)
 {
-	JAIBasic::getInterface()->unk4C = (u8*)value;
-	JAIBasic::getInterface()->unk13 = 4;
+	JAIBasic::getInterface()->mInitDataPointer    = (u8*)value;
+	JAIBasic::getInterface()->mInitFileLoadSwitch = 4;
 }
 void JAIGlobalParameter::setParamInterfaceHeapSize(u32 value)
 {

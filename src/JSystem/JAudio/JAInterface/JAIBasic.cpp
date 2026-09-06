@@ -37,30 +37,30 @@ JAIBasic::JAIBasic()
 	unk1C.flag6 = 0;
 	unk1C.flag7 = 0;
 
-	unk15 = 0;
-	unk10 = 0;
-	unk11 = 0;
-	unk24 = 0;
-	unk8  = nullptr;
-	unk38 = nullptr;
-	unk20 = 0;
-	unk30 = 0;
-	unk13 = 3;
-	unk4C = nullptr;
-	unk3C = nullptr;
-	unk40 = nullptr;
-	unk44 = 0;
-	unk48 = 0;
-	unk50 = 0;
-	unk54 = nullptr;
-	unk58 = nullptr;
-	unk5C = nullptr;
-	unk68 = nullptr;
-	unk6C = nullptr;
-	unk34 = 0xffffffff;
-	unk70 = 0;
-	unkC  = nullptr;
-	unk78 = nullptr;
+	unk15               = 0;
+	unk10               = 0;
+	unk11               = 0;
+	unk24               = 0;
+	mAudioCameras       = nullptr;
+	unk38               = nullptr;
+	unk20               = 0;
+	unk30               = 0;
+	mInitFileLoadSwitch = 3;
+	mInitDataPointer    = nullptr;
+	unk3C               = nullptr;
+	unk40               = nullptr;
+	unk44               = 0;
+	unk48               = 0;
+	unk50               = 0;
+	unk54               = nullptr;
+	unk58               = nullptr;
+	unk5C               = nullptr;
+	unk68               = nullptr;
+	unk6C               = nullptr;
+	mFinishedSceneSet   = 0xffffffff;
+	unk70               = 0;
+	mInterfaceHeap      = nullptr;
+	unk78               = nullptr;
 }
 
 void JAIBasic::startSeSequence() { }
@@ -132,9 +132,9 @@ void JAIBasic::setCameraInfo(VecPtr pos, VecPtr dir, MtxPtr mtx, u32 id)
 	if (JAIGlobalParameter::audioCameraMax <= id)
 		return;
 
-	unk8[id].unk0 = pos;
-	unk8[id].unk4 = dir;
-	unk8[id].unk8 = mtx;
+	mAudioCameras[id].unk0 = pos;
+	mAudioCameras[id].unk4 = dir;
+	mAudioCameras[id].unk8 = mtx;
 }
 
 void JAIBasic::initStream() { JAInter::StreamLib::init(unk1C.flag7); }
@@ -163,7 +163,7 @@ void JAIBasic::bootDSP() { }
 
 void JAIBasic::initReadFile()
 {
-	switch (unk13) {
+	switch (mInitFileLoadSwitch) {
 	case 0:
 		break;
 	case 1:
@@ -177,14 +177,14 @@ void JAIBasic::initReadFile()
 			checkInitDataFile();
 		break;
 	case 4:
-		if (unk4C)
+		if (mInitDataPointer)
 			checkInitDataOnMemory();
 		break;
 	}
 
 	initBankWave();
-	if (unk13 != 4 && unk4C != 0)
-		deleteTmpDVDFile(&unk4C);
+	if (mInitFileLoadSwitch != 4 && mInitDataPointer != 0)
+		deleteTmpDVDFile(&mInitDataPointer);
 }
 
 struct FabricatedFileHeader {
@@ -237,8 +237,8 @@ BOOL JAIBasic::checkInitDataFile()
 	        JAIGlobalParameter::initDataFileName))
 		return 0;
 
-	loadTmpDVDFile(JAIGlobalParameter::initDataFileName, &unk4C);
-	if (unk4C) {
+	loadTmpDVDFile(JAIGlobalParameter::initDataFileName, &mInitDataPointer);
+	if (mInitDataPointer) {
 		checkInitDataOnMemory();
 		return 1;
 	} else {
@@ -276,32 +276,33 @@ void JAIBasic::checkInitDataOnMemory()
 	u32 n;
 
 	while (shouldContinue) {
-		switch (((u32*)unk4C)[i++]) {
+		switch (((u32*)mInitDataPointer)[i++]) {
 		case JAIINITDATA_End:
 			shouldContinue = 0;
 			break;
 
 		case JAIINITDATA_SoundTables:
-			if (((u32*)unk4C)[i + 2] != 0) {
-				u8* buffer        = unk4C + ((u32*)unk4C)[i++];
-				data->unk88.unk28 = ((u32*)unk4C)[i++];
+			if (((u32*)mInitDataPointer)[i + 2] != 0) {
+				u8* buffer = mInitDataPointer + ((u32*)mInitDataPointer)[i++];
+				data->unk88.unk28 = ((u32*)mInitDataPointer)[i++];
 				data->unk88.unk78
 				    = (u8*)transInitDataFile(buffer, data->unk88.unk28);
 
-				buffer           = unk4C + ((u32*)unk4C)[i++];
-				data->unkC.unk28 = ((u32*)unk4C)[i++];
+				buffer = mInitDataPointer + ((u32*)mInitDataPointer)[i++];
+				data->unkC.unk28 = ((u32*)mInitDataPointer)[i++];
 				data->unkC.unk78
 				    = (u8*)transInitDataFile(buffer, data->unkC.unk28);
 
-				data->unk104.unk78 = unk4C + ((u32*)unk4C)[i++];
-				data->unk104.unk28 = ((u32*)unk4C)[i++];
+				data->unk104.unk78
+				    = mInitDataPointer + ((u32*)mInitDataPointer)[i++];
+				data->unk104.unk28 = ((u32*)mInitDataPointer)[i++];
 				data->unk104.unk78
 				    = (u8*)transInitDataFile(buffer, data->unk104.unk28);
 
 				data->unk1B0 = 1;
 			} else {
-				u8* buffer        = unk4C + ((u32*)unk4C)[i++];
-				data->unk88.unk28 = ((u32*)unk4C)[i++];
+				u8* buffer = mInitDataPointer + ((u32*)mInitDataPointer)[i++];
+				data->unk88.unk28 = ((u32*)mInitDataPointer)[i++];
 				data->unk88.unk78
 				    = (u8*)transInitDataFile(buffer, data->unk88.unk28);
 				++i;
@@ -310,17 +311,17 @@ void JAIBasic::checkInitDataOnMemory()
 			break;
 
 		case JAIINITDATA_BankList: {
-			u8* buffer = (u8*)&((u32*)unk4C)[i];
+			u8* buffer = (u8*)&((u32*)mInitDataPointer)[i];
 			j          = 0;
 			n          = 0;
-			while (((u32*)unk4C)[i + n] != 0)
+			while (((u32*)mInitDataPointer)[i + n] != 0)
 				n += 3;
 
 			unk50 = (FabricatedUnk50Struct*)transInitDataFile(
 			    buffer, (n / 3) * sizeof(FabricatedUnk50Struct) + 4);
 
-			while (((u32*)unk4C)[i] != 0) {
-				unk50[j].unk0 = (void*)(unk4C + (u32)unk50[j].unk0);
+			while (((u32*)mInitDataPointer)[i] != 0) {
+				unk50[j].unk0 = (void*)(mInitDataPointer + (u32)unk50[j].unk0);
 				++j;
 				i += 3;
 			}
@@ -331,15 +332,15 @@ void JAIBasic::checkInitDataOnMemory()
 		case JAIINITDATA_WaveBankList: {
 			j          = 0;
 			n          = 0;
-			u8* buffer = (u8*)&((u32*)unk4C)[i];
-			while (((u32*)unk4C)[i + n] != 0)
+			u8* buffer = (u8*)&((u32*)mInitDataPointer)[i];
+			while (((u32*)mInitDataPointer)[i + n] != 0)
 				n += 3;
 
 			unk54 = (FabricatedUnk54Struct*)transInitDataFile(
 			    buffer, (n / 3) * sizeof(FabricatedUnk54Struct) + 4);
 
-			while (((u32*)unk4C)[i] != 0) {
-				unk54[j].unk0 = (void*)(unk4C + (u32)unk54[j].unk0);
+			while (((u32*)mInitDataPointer)[i] != 0) {
+				unk54[j].unk0 = (void*)(mInitDataPointer + (u32)unk54[j].unk0);
 				++j;
 				i += 3;
 			}
@@ -350,29 +351,32 @@ void JAIBasic::checkInitDataOnMemory()
 		}
 
 		case JAIINITDATA_SeqArchiveHeader: {
-			u8* buffer = (u8*)&((u32*)unk4C)[i];
+			u8* buffer = (u8*)&((u32*)mInitDataPointer)[i];
 			unk58      = (u8**)transInitDataFile(buffer, 8);
-			*unk58     = (u8*)transInitDataFile(unk4C + ((u32*)unk4C)[i],
-			                                    ((u32*)unk4C)[i + 1]);
+			*unk58     = (u8*)transInitDataFile(mInitDataPointer
+			                                        + ((u32*)mInitDataPointer)[i],
+			                                    ((u32*)mInitDataPointer)[i + 1]);
 			i += 3;
 			break;
 		}
 
 		case JAIINITDATA_Unk5C: {
-			u8* buffer = (u8*)&((u32*)unk4C)[i];
+			u8* buffer = (u8*)&((u32*)mInitDataPointer)[i];
 			unk5C = (JAIData::FabricatedUnk1F8Struct**)transInitDataFile(buffer,
 			                                                             8);
 			*unk5C = (JAIData::FabricatedUnk1F8Struct*)transInitDataFile(
-			    unk4C + ((u32*)unk4C)[i], ((u32*)unk4C)[i + 1]);
+			    mInitDataPointer + ((u32*)mInitDataPointer)[i],
+			    ((u32*)mInitDataPointer)[i + 1]);
 			i += 3;
 			unk0->unk1F8 = *unk5C;
 			break;
 		}
 
 		case JAIINITDATA_SoundSceneList: {
-			JAIInitDataBlob* blob = (JAIInitDataBlob*)&((u32*)unk4C)[i];
-			u32* buffer
-			    = (u32*)transInitDataFile(unk4C + blob->offset, blob->size);
+			JAIInitDataBlob* blob
+			    = (JAIInitDataBlob*)&((u32*)mInitDataPointer)[i];
+			u32* buffer = (u32*)transInitDataFile(
+			    mInitDataPointer + blob->offset, blob->size);
 			JAIGlobalParameter::soundSceneMax = buffer[0];
 			unk68                             = (u8**)(buffer + 1);
 			for (u32 scene = 0; scene < JAIGlobalParameter::soundSceneMax;
@@ -383,22 +387,25 @@ void JAIBasic::checkInitDataOnMemory()
 		}
 
 		case JAIINITDATA_Unk6C: {
-			JAIInitDataBlob* blob = (JAIInitDataBlob*)&((u32*)unk4C)[i];
-			unk6C = (u8*)transInitDataFile(unk4C + blob->offset, blob->size);
+			JAIInitDataBlob* blob
+			    = (JAIInitDataBlob*)&((u32*)mInitDataPointer)[i];
+			unk6C = (u8*)transInitDataFile(mInitDataPointer + blob->offset,
+			                               blob->size);
 			i += 3;
 			break;
 		}
 
 		case JAIINITDATA_Unk78: {
-			JAIInitDataBlob* blob = (JAIInitDataBlob*)&((u32*)unk4C)[i];
-			unk78                 = (u8*)transInitDataFile(unk4C + blob->offset,
-			                                               ((u16)blob->size & 0xFFF0) + 0x10);
+			JAIInitDataBlob* blob
+			    = (JAIInitDataBlob*)&((u32*)mInitDataPointer)[i];
+			unk78 = (u8*)transInitDataFile(mInitDataPointer + blob->offset,
+			                               ((u16)blob->size & 0xFFF0) + 0x10);
 			i += 3;
 			break;
 		}
 
 		default:
-			while (((u32*)unk4C)[i++] != 0)
+			while (((u32*)mInitDataPointer)[i++] != 0)
 				;
 			break;
 		}
@@ -503,14 +510,14 @@ void JAIBasic::loadSecondStayWave()
 void JAIBasic::setSceneSetFinishCallback(s32 bank_id, s32 param2)
 {
 	u32 id                   = (bank_id << 16) + param2;
-	unk34                    = 0xffffffff;
+	mFinishedSceneSet        = 0xffffffff;
 	mWaveLoadStatus[bank_id] = WAVE_LOAD_STATUS_LOADING;
 	JASystem::Dvd::checkPassDvdT(id, nullptr, &finishSceneSet);
 }
 
 void JAIBasic::finishSceneSet(u32 id)
 {
-	basic->unk34                     = id;
+	basic->mFinishedSceneSet         = id;
 	basic->mWaveLoadStatus[id >> 16] = WAVE_LOAD_STATUS_LOADED;
 }
 
@@ -589,15 +596,16 @@ void JAIBasic::initInterface(u8 param)
 void JAIBasic::initAllocParameter()
 {
 	unk0->initData();
-	unk18 = (u8*)allocHeap(JAIGlobalParameter::getParamSeCategoryMax()
-	                       * sizeof(*unk18));
-	unk28 = (f32*)allocHeap(JAIGlobalParameter::getParamSeCategoryMax()
-	                        * sizeof(*unk28));
-	unk8  = (JAICamera*)allocHeap(JAIGlobalParameter::audioCameraMax
-	                              * sizeof(JAICamera));
+	mSeCancelSwitch = (u8*)allocHeap(JAIGlobalParameter::getParamSeCategoryMax()
+	                                 * sizeof(*mSeCancelSwitch));
+	mSeCategoryVolume
+	    = (f32*)allocHeap(JAIGlobalParameter::getParamSeCategoryMax()
+	                      * sizeof(*mSeCategoryVolume));
+	mAudioCameras = (JAICamera*)allocHeap(JAIGlobalParameter::audioCameraMax
+	                                      * sizeof(JAICamera));
 	for (int i = 0; i < JAIGlobalParameter::getParamSeCategoryMax(); ++i) {
-		unk18[i] = 0;
-		unk28[i] = 1.0f;
+		mSeCancelSwitch[i]   = 0;
+		mSeCategoryVolume[i] = 1.0f;
 	}
 }
 
@@ -610,7 +618,7 @@ void JAIBasic::initSeqsLoadArea()
 	unk0->unk1F0->mPointer = allocHeap(JAIGlobalParameter::stayHeapSize);
 }
 
-void JAIBasic::setInitFileLoadSwitch(u8 flag) { unk13 = flag; }
+void JAIBasic::setInitFileLoadSwitch(u8 flag) { mInitFileLoadSwitch = flag; }
 
 void JAIBasic::startFrameInterfaceWork() { processFrameWork(); }
 
@@ -729,7 +737,7 @@ void JAIBasic::startSoundBasic(u32 id, JAISound** sound, JAIActor* actor,
 		break;
 
 	case JAISoundID_Type_Se:
-		if (unk18[id >> 12] == 0) {
+		if (mSeCancelSwitch[id >> 12] == 0) {
 			unk0->unk200.storeBuffer(sound, actor, id, param, flag, data);
 		} else if (sound != nullptr) {
 			*sound = nullptr;
@@ -1125,7 +1133,7 @@ void JAIBasic::setSeCancelSwitch(u8 param1, u8 param2) { }
 
 void JAIBasic::setSeCategoryVolume(u8 category, u8 volume)
 {
-	unk28[category] = volume / 127.0f;
+	mSeCategoryVolume[category] = volume / 127.0f;
 }
 
 u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
@@ -1233,23 +1241,23 @@ u32 JAIBasic::routeToTrack(u32 param)
 void JAIBasic::initHeap()
 {
 	if (JAIGlobalParameter::interfaceHeapSize != 0) {
-		unkC = JKRSolidHeap::create(JAIGlobalParameter::interfaceHeapSize,
-		                            JASDram, 0);
+		mInterfaceHeap = JKRSolidHeap::create(
+		    JAIGlobalParameter::interfaceHeapSize, JASDram, 0);
 	}
 }
 
 void* JAIBasic::allocHeap(u32 size)
 {
 	if (JAIGlobalParameter::interfaceHeapSize)
-		return new (unkC, 0x20) u8[size];
+		return new (mInterfaceHeap, 0x20) u8[size];
 	else
 		return JASystem::Kernel::allocFromSysDram(size);
 }
 
 JAISound* JAIBasic::makeSound(u32 param)
 {
-	if (unkC)
-		return new (unkC, 0) JAISound[param];
+	if (mInterfaceHeap)
+		return new (mInterfaceHeap, 0) JAISound[param];
 	else
 		return new (JASDram, 0) JAISound[param];
 }
