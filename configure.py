@@ -422,7 +422,7 @@ config.libs = [
             # JADebug
             Object(Matching, "JSystem/JAudio/JADebug/JADHioNode.cpp"),
             # JALibrary
-            Object(NonMatching, "JSystem/JAudio/JALibrary/JALCalc.cpp"),
+            Object(Matching, "JSystem/JAudio/JALibrary/JALCalc.cpp"),
             Object(NonMatching, "JSystem/JAudio/JALibrary/JALModSe.cpp"),
             # JAInterface
             Object(Matching, "JSystem/JAudio/JAInterface/JAIAsnData.cpp"),

@@ -17,24 +17,6 @@ struct JALPrmSet {
 	JADPrmS<f32> unk4;
 };
 
-template <class T, class U> class JALListS {
-public:
-	JALListS(U, T*) { }
-
-	static T* search(U param_1);
-	~JALListS();
-};
-
-template <class T, class U> T* JALListS<T, U>::search(U param_1)
-{
-	JSUListIterator<T> it = JALList<T>::smList.getFirst();
-	for (; it != JALList<T>::smList.getEnd(); ++it) {
-		if (param_1 == (u32)it.getObject()->unk10)
-			return it.getObject();
-	}
-	return nullptr;
-}
-
 template <class T> class JALSeModData : public JALListHioNode<T, u32> {
 public:
 	JALSeModData(const char* param_1, T* param_2, u32 param_3,
@@ -184,17 +166,26 @@ public:
 
 	void append(JALLinkD<T, U>* link)
 	{
-		JSUList<T>::append(&link->unk4);
-		link->unk14 = this;
+		JSUList<T>::append(link->getUnk4());
+		link->setUnk14(this);
 	}
 
-	~JALListD();
+	~JALListD() { }
 };
 
 template <class T, class U> class JALLinkD {
 public:
 	JALLinkD(T* param_1, U param_2, JALListD<T, U>* param_3);
-	~JALLinkD();
+	~JALLinkD()
+	{
+		JSUList<T>* sup = unk4.getSupervisor();
+		if (sup)
+			sup->remove(&unk4);
+	}
+
+	// fabricated
+	JSULink<T>* getUnk4() { return &unk4; }
+	void setUnk14(JALListD<T, U>* list) { unk14 = list; }
 
 public:
 	/* 0x0 */ U unk0;
@@ -224,7 +215,7 @@ public:
 template <class T, class U, class V> class JALListGrp : public JALListD<V, U> {
 public:
 	static T* searchGroup(U param_1);
-	~JALListGrp();
+	~JALListGrp() { }
 };
 
 template <class T, class U, class V>
@@ -252,7 +243,7 @@ public:
 	{
 	}
 
-	~JALSeModDataGrp();
+	~JALSeModDataGrp() { }
 
 	static bool calcGrp(u32 param_1, f32 param_2, f32* param_3);
 	static bool gateCheckGrp(u32 param_1, f32 param_2);
