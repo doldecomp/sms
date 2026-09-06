@@ -119,7 +119,7 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 		switch (param_1) {
 		case MSD_SE_ERASE_SCRAWL:
 			if (unk5C[unk5A] != nullptr) {
-				if ((f32)unk5C[unk5A]->unk14 < (f32)unk3C.get()
+				if ((f32)unk5C[unk5A]->getPlayGameFrameCounter() < (f32)unk3C.get()
 				    && f31 < unk40.get())
 					r31 = MSD_SE_ERASE_SCRAWL_CONT;
 			}
@@ -152,7 +152,7 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 
 		u32 bVar1 = unk1D.get();
 		u32 uVar5 = JALCalc::getRandom_0_1() * unk1E.get();
-		u32 uVar7 = unk5C[unk5A]->unk14;
+		u32 uVar7 = unk5C[unk5A]->getPlayGameFrameCounter();
 		if (uVar7 < bVar1 + uVar5) {
 			bVar2 = false;
 		} else {
@@ -163,7 +163,7 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 				// Probably even two to get searchD to not inline.
 				if (param_8 != nullptr) {
 					MSSetSoundMember* candidate
-					    = param_8->searchD(unk5C[unk5A]->unk8);
+					    = param_8->searchD(unk5C[unk5A]->mSoundID);
 					if (!candidate) {
 						bVar2 = false;
 					} else if (uVar7 < candidate->unk18) {
@@ -183,7 +183,7 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 		switch (param_1) {
 		case MSD_SE_ERASE_SCRAWL:
 			if (unk5C[unk5A] != nullptr) {
-				if ((f32)unk5C[unk5A]->unk14 < (f32)unk3C.get()
+				if ((f32)unk5C[unk5A]->getPlayGameFrameCounter() < (f32)unk3C.get()
 				    && f31 < unk40.get()) {
 					r26 = MSD_SE_ERASE_SCRAWL_CONT;
 				}
@@ -216,7 +216,7 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 		if (unk5C[unk59] != nullptr) {
 			JAISound* sound = unk5C[unk5A];
 			if (unk5C[unk59] != nullptr) {
-				u32 uVar7  = sound->unk14;
+				u32 uVar7  = sound->getPlayGameFrameCounter();
 				f32 unused = 1.0f;
 				f32 f29    = 1.0f;
 				f32 f30    = 1.0f;

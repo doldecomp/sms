@@ -10,6 +10,38 @@ class JAISeParameter;
 class JAIStreamParameter;
 class JAIBasic;
 
+#define JAISoundID_TypeMask      0xC0000000
+#define JAISoundID_Type_Se       0x00000000
+#define JAISoundID_Type_Sequence 0x80000000
+#define JAISoundID_Type_Stream   0xC0000000
+
+// How far a sound has got. The three sound types share one ladder and the
+// library compares it ordinally (>= 3, < 4). The names come from the functions
+// that service each state - checkEntriedStream, checkReadSeq, checkStartedSeq,
+// checkPlayingSeq, checkFadeoutSeq - but a se reads the top of the ladder
+// differently, so each state says what it means for all three.
+enum JAISoundState {
+	// free, on the free list of its JAILinkBuffer
+	SOUNDSTATE_Inactive = 0,
+	// entered, and waiting for what it needs: a se for a track, a sequence for
+	// its data, which it may be reading from the disc, a stream for the player
+	SOUNDSTATE_Stored = 1,
+	// it has what it needs and the start comes next: a se holds its track, the
+	// data of a sequence is in memory, a stream holds the player
+	SOUNDSTATE_Prepared = 2,
+	// the start is issued. A sequence waits for its player to report active, a
+	// stream waits after JAInter::StreamLib::start, and a se is on its track
+	// and gets its parameters again this frame
+	SOUNDSTATE_Started = 3,
+	// playing
+	SOUNDSTATE_Playing = 4,
+	// about to be released. A sequence or a stream fades out here and stops
+	// when its volume reaches zero. A se is playing and waits for the game to
+	// ask for it again, which puts it back to _Playing; it is released if the
+	// game does not
+	SOUNDSTATE_Stopping = 5,
+};
+
 class JAISound {
 public:
 	struct FabricatedPositionInfo {
@@ -18,28 +50,28 @@ public:
 		/* 0x18 */ f32 unk18;
 	};
 
-	/* 0x0 */ u8 unk0;
-	/* 0x1 */ u8 unk1;
-	/* 0x2 */ u8 unk2;
-	/* 0x3 */ u8 unk3;
+	/* 0x0 */ u8 mTrack;
+	/* 0x1 */ u8 mState;
+	/* 0x2 */ u8 mWaitTimer;
+	/* 0x3 */ u8 mRandom;
 	/* 0x4 */ u8 unk4;
 	/* 0x5 */ u8 unk5;
-	/* 0x6 */ s16 unk6;
-	/* 0x8 */ u32 unk8;
+	/* 0x6 */ s16 mAdjustPrio;
+	/* 0x8 */ u32 mSoundID;
 	/* 0xC */ u32 unkC;
-	/* 0x10 */ u32 unk10;
-	/* 0x14 */ u32 unk14;
-	/* 0x18 */ u32 unk18;
+	/* 0x10 */ u32 mFadeCounter;
+	/* 0x14 */ u32 mPlayGameFrameCounter;
+	/* 0x18 */ u32 mActorGroundNumber;
 	/* 0x1C */ FabricatedPositionInfo* unk1C;
-	/* 0x20 */ const Vec* unk20;
-	/* 0x24 */ const Vec* unk24;
+	/* 0x20 */ const void* mActor;
+	/* 0x24 */ const Vec* mActorTrans;
 	/* 0x28 */ const Vec* unk28;
-	/* 0x2C */ JAISound* unk2C;
-	/* 0x30 */ JAISound* unk30;
-	/* 0x34 */ JAISound** unk34;
+	/* 0x2C */ JAISound* mPrevSound;
+	/* 0x30 */ JAISound* mNextSound;
+	/* 0x34 */ JAISound** mMainSoundPPointer;
 	// JAISeqParameter* or JAIStreamParameter* or JAISeParameter*
-	/* 0x38 */ void* unk38;
-	/* 0x3C */ void* unk3C;
+	/* 0x38 */ void* mCustomParameter;
+	/* 0x3C */ void* mInfo;
 	/* 0x40 */ // vtable
 
 public:
@@ -146,16 +178,49 @@ public:
 	void getSeParametermeterF32(u8, u8);
 	f32 getStreamInterVolume(u8);
 	void getStreamInterPitch(u8);
-	void getActorGroundNumber();
+	u32 getActorGroundNumber();
 	JAISeqParameter* getSeqParameter();
 	JAISeParameter* getSeParameter();
 	JAIStreamParameter* getStreamParameter();
 	u32 getTrackPortRoute(u8, u8);
-	void getSeInfoPointer();
+	void* getSeInfoPointer();
 
-	u32 getID() const { return unk8; }
+	u32 getID() const { return mSoundID; }
+	void setID(u32 id) { mSoundID = id; }
 
-	u32 getUnk8Lo() { return unk8 & 0x3FF; }
+	u8 getStatus() const { return mState; }
+	void setStatus(u8 state) { mState = state; }
+
+	u8 getWait() const { return mWaitTimer; }
+	void setWait(u8 wait) { mWaitTimer = wait; }
+	void decWait() { mWaitTimer--; }
+
+	u8 getTrack() const { return mTrack; }
+	void setTrack(u8 track) { mTrack = track; }
+
+	void setCustomParameterPointer(void* param) { mCustomParameter = param; }
+
+	JAISound* getPrevSound() const { return mPrevSound; }
+	void setPrevSound(JAISound* prev) { mPrevSound = prev; }
+
+	JAISound* getNextSound() const { return mNextSound; }
+	void setNextSound(JAISound* next) { mNextSound = next; }
+
+	u32 getFadetime() const { return mFadeCounter; }
+	void setFadetime(u32 fadeTime) { mFadeCounter = fadeTime; }
+
+	void setMainSoundPPointer(JAISound** pp) { mMainSoundPPointer = pp; }
+
+	u32 getPlayGameFrameCounter() const { return mPlayGameFrameCounter; }
+	void incPlayGameFrameCounter() { mPlayGameFrameCounter++; }
+
+	const void* getAct() const { return mActor; }
+	const Vec* getTrans() const { return mActorTrans; }
+
+	void setRandom(u8 random) { mRandom = random; }
+	s16 getAdjustPriority() { return mAdjustPrio; }
+
+	u32 getUnk8Lo() { return mSoundID & 0x3FF; }
 
 	static JAIBasic* interPointer;
 };

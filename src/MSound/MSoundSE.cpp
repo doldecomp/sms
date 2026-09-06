@@ -509,7 +509,7 @@ void MSoundSE::startSoundActorWithInfo(u32 param_1, const Vec* param_2,
 			switch (param_1) {
 			case MSD_SE_BS_HINO_SEED_LQ_LEV: {
 				f32 fVar1 = SeInfo::smSeSetting.unk4;
-				for (u32 i = 0; i < sound->unk14; ++i)
+				for (u32 i = 0; i < sound->getPlayGameFrameCounter(); ++i)
 					fVar1 *= SeInfo::smSeSetting.unk0;
 				sound->setSeInterPitch(0, fVar1, 0, 0.0f);
 				break;
@@ -598,14 +598,14 @@ JAISound* MSoundSE::startSoundActorInner(u32 param_1, JAISound** param_2,
 	if (param_3 != (JAIActor*)0xffffffff) {
 		switch (MSGMSound->unkCD) {
 		case 7:
-			if (!checkSoundArea(MSGMSound->unkCD, *param_3->unk4)) {
+			if (!checkSoundArea(MSGMSound->unkCD, *param_3->mTranslation)) {
 				if (get_thing(param_1) != 1 && get_thing(param_1) != 0)
 					return nullptr;
 			}
 			break;
 
 		case 8:
-			if (!checkSoundArea(MSGMSound->unkCD, *param_3->unk4)) {
+			if (!checkSoundArea(MSGMSound->unkCD, *param_3->mTranslation)) {
 				if (get_thing(param_1) != 1 && get_thing(param_1) != 0)
 					return nullptr;
 			}
@@ -628,7 +628,7 @@ JAISound* MSoundSE::startSoundActorInner(u32 param_1, JAISound** param_2,
 		}
 
 		if (uVar2 & 0x800) {
-			u32 uVar3 = param_3->unkC & 0x10000000;
+			u32 uVar3 = param_3->mGroundNumber & 0x10000000;
 			if (uVar3) {
 				switch (param_1) {
 				case MSD_SE_MA_WALK_STONE_L_HEEL:
@@ -647,7 +647,7 @@ JAISound* MSoundSE::startSoundActorInner(u32 param_1, JAISound** param_2,
 				return nullptr;
 
 			u32 copy;
-			if (param_3->unkC & 0xf00) {
+			if (param_3->mGroundNumber & 0xf00) {
 				copy = param_1;
 			} else {
 				copy = param_1;
@@ -656,7 +656,7 @@ JAISound* MSoundSE::startSoundActorInner(u32 param_1, JAISound** param_2,
 				case MSD_SE_MA_WALK_STONE_L_TIP:
 				case MSD_SE_MA_WALK_STONE_R_HEEL:
 				case MSD_SE_MA_WALK_STONE_R_TIP:
-					copy += param_3->unkC << 3 & 0x7F8;
+					copy += param_3->mGroundNumber << 3 & 0x7F8;
 					break;
 				}
 			}
@@ -711,7 +711,7 @@ u32 MSoundSE::getNewIDByGroundCode(u32 param, JAIActor* actor) { return 0; }
 
 u32 MSoundSE::getNewIDBySurfaceCode(u32 param_1, JAIActor* param_2)
 {
-	u32 uVar1 = param_2->unkC & 0xf00;
+	u32 uVar1 = param_2->mGroundNumber & 0xf00;
 	if (!uVar1)
 		return param_1;
 
@@ -773,21 +773,21 @@ bool MSoundSE::checkMonoSound(u32 param_1, JAIActor* param_2)
 {
 	JAISoundInfo* local_c;
 	JAIBasic::basic->unk0->getInfoPointer(param_1, (void**)&local_c);
-	if (local_c->unk0 & 0x4000) {
+	if (local_c->mSwBit & 0x4000) {
 		u32 uVar1       = JAIBasic::basic->changeIDToCategory(param_1);
-		JAISound* sound = JAIBasic::basic->unk0->unk1E8[uVar1 & 0xff].unk4;
+		JAISound* sound = JAIBasic::basic->unk0->unk1E8[(u8)uVar1].mUsedHead;
 		JAISound* nextSound;
 		for (; sound != nullptr; sound = nextSound) {
-			nextSound         = sound->unk30;
-			JAISoundInfo* tmp = (JAISoundInfo*)sound->unk3C;
+			nextSound         = sound->getNextSound();
+			JAISoundInfo* tmp = (JAISoundInfo*)sound->mInfo;
 
-			if (sound->unk20 != param_2->unk0)
+			if (sound->getAct() != param_2->mIdentity)
 				continue;
 
-			if (!(tmp->unk0 & 0x4000))
+			if (!(tmp->mSwBit & 0x4000))
 				continue;
 
-			if (param_1 == sound->unk8)
+			if (param_1 == sound->mSoundID)
 				continue;
 
 			JAIBasic::basic->stopSoundHandle(sound, 0);

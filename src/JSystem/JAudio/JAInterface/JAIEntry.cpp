@@ -9,10 +9,11 @@ u32 JAIEntry::checkSoundHandle(JAISound** sound_ptr, u32 param, void* data)
 
 	if (sound_ptr) {
 		if (*sound_ptr) {
-			if ((param & 0xC0000000) != ((*sound_ptr)->unk8 & 0xC0000000)) {
+			if ((param & JAISoundID_TypeMask)
+			    != ((*sound_ptr)->getID() & JAISoundID_TypeMask)) {
 				(*sound_ptr)->stop(0);
 			} else {
-				if (unk0->getSoundPrioity((*sound_ptr)->unk3C)
+				if (unk0->getSoundPrioity((*sound_ptr)->mInfo)
 				    <= unk0->getSoundPrioity(data))
 					(*sound_ptr)->stop(0);
 				else
@@ -27,32 +28,32 @@ void JAIEntry::initSoundParameter(JAISound* param_1, JAISound** param_2,
                                   JAIActor* param_3, u32 param_4, u32 param_5,
                                   u8 param_6, void* param_7)
 {
-	param_1->unk8 = param_4;
+	param_1->setID(param_4);
 	if (param_3) {
-		param_1->unk20 = param_3->unk0;
-		if (param_3->unk0) {
-			param_1->unk24 = param_3->unk4;
-			param_1->unk28 = param_3->unk8;
-			param_1->unk18 = param_3->unkC;
+		param_1->mActor = param_3->mIdentity;
+		if (param_3->mIdentity) {
+			param_1->mActorTrans        = param_3->mTranslation;
+			param_1->unk28              = param_3->unk8;
+			param_1->mActorGroundNumber = param_3->mGroundNumber;
 		} else {
-			param_1->unk24 = 0;
-			param_1->unk28 = 0;
-			param_1->unk18 = param_3->unkC;
+			param_1->mActorTrans        = nullptr;
+			param_1->unk28              = nullptr;
+			param_1->mActorGroundNumber = param_3->mGroundNumber;
 		}
 	} else {
-		param_1->unk20 = 0;
-		param_1->unk24 = 0;
-		param_1->unk28 = 0;
-		param_1->unk18 = 0;
+		param_1->mActor             = nullptr;
+		param_1->mActorTrans        = nullptr;
+		param_1->unk28              = nullptr;
+		param_1->mActorGroundNumber = 0;
 	}
-	param_1->unk34 = param_2;
-	param_1->unk10 = param_5;
-	param_1->unk4  = param_6;
-	param_1->unk3C = param_7;
-	param_1->unk2  = 10;
-	param_1->unk5  = JAIGlobalParameter::distanceParameterMoveTime;
-	param_1->unk6  = 0;
-	param_1->unk14 = 0;
+	param_1->setMainSoundPPointer(param_2);
+	param_1->mFadeCounter = param_5;
+	param_1->unk4         = param_6;
+	param_1->mInfo        = param_7;
+	param_1->mWaitTimer   = 10;
+	param_1->unk5         = JAIGlobalParameter::distanceParameterMoveTime;
+	param_1->mAdjustPrio  = 0;
+	param_1->mPlayGameFrameCounter = 0;
 	if (param_2 == nullptr)
 		return;
 	*param_2 = param_1;
