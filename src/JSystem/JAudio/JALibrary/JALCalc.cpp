@@ -14,36 +14,35 @@ f32 linearTransform(f32 x, f32 xStart, f32 xEnd, f32 yStart, f32 yEnd,
 	if (unbounded)
 		return result;
 
-	if (yStart < yEnd) {
+	if (yStart < yEnd)
 		return result > yEnd ? yEnd : (result < yStart ? yStart : result);
-	} else {
+	else
 		return result > yStart ? yStart : (result < yEnd ? yEnd : result);
-	}
 }
 
 f32 getParamByExp(f32 x, f32 xStart, f32 xEnd, f32 y, f32 yStart, f32 yEnd,
                   CurveSign curve)
 {
-	f32 result;
+	f32 param;
 	if (curve == CS_POSITIVE_CURVE) {
-		f32 newX = expf(linearTransform(x, xStart, xEnd, 0.0f, y, true));
-		result   = linearTransform(newX, 1.0f, expf(y), yStart, yEnd, true);
+		param = linearTransform(x, xStart, xEnd, 0.0f, y, true);
+		param = expf(param);
+		param = linearTransform(param, 1.0f, expf(y), yStart, yEnd, true);
 	} else if (curve == CS_NEGATIVE_CURVE) {
-		f32 newX = expf(linearTransform(x, xStart, xEnd, y, 0.0f, true));
-		result   = linearTransform(newX, expf(y), 1.0f, yStart, yEnd, true);
+		param = linearTransform(x, xStart, xEnd, y, 0.0f, true);
+		param = expf(param);
+		param = linearTransform(param, expf(y), 1.0f, yStart, yEnd, true);
 	} else {
-		result = linearTransform(x, xStart, xEnd, yStart, yEnd, false);
+		param = linearTransform(x, xStart, xEnd, yStart, yEnd, false);
 	}
 
-	if (result > yEnd) {
+	if (param > yEnd)
 		return yEnd;
-	}
 
-	if (result < yStart) {
+	if (param < yStart)
 		return yStart;
-	}
 
-	return result;
+	return param;
 }
 
 f32 getParamByExp_0_1(f32, f32, f32, f32, CurveSign) { return 0.0f; }
