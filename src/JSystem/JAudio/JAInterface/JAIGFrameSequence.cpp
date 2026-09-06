@@ -74,7 +74,7 @@ void JAIBasic::checkEntriedSeq()
 					if (pos >= JAIGlobalParameter::autoHeapMax) {
 						for (int ii = 0; ii < JAIGlobalParameter::autoHeapMax;
 						     ++ii) {
-							if (unk0->unk1EC[ii].unk10 == 0xFFFFFFFF)
+							if (unk0->unk1EC[ii].mUseOrder == -1)
 								continue;
 
 							u32 j;
@@ -82,7 +82,7 @@ void JAIBasic::checkEntriedSeq()
 							     ++j) {
 								JAISound* other = unk0->unk180[j].unk48;
 								if (other
-								    && unk0->unk1EC[ii].unk8
+								    && unk0->unk1EC[ii].mSeqNumber
 								           == (u8)other->mSoundID) {
 									j = JAIGlobalParameter::seqPlayTrackMax;
 								}

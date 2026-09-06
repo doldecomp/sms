@@ -56,13 +56,12 @@ public:
 	/* 0x78 */ u8* unk78;
 };
 
-class JAIHeapBlock {
-public:
-	/* 0x0 */ u8 unk0;
-	/* 0x4 */ void* unk4;
-	/* 0x8 */ u32 unk8;
-	/* 0xC */ u32 unkC;
-	/* 0x10 */ u32 unk10;
+struct JAIHeapBlock {
+	/* 0x0 */ u8 mLoadedFlag;
+	/* 0x4 */ void* mPointer;
+	/* 0x8 */ u32 mSeqNumber;
+	/* 0xC */ u32 mLoadOrder;
+	/* 0x10 */ u32 mUseOrder;
 };
 
 struct JAIMoveParaSet;
@@ -159,8 +158,11 @@ public:
 	/* 0x19C */ s16* unk19C[4];
 	/* 0x1AC */ JASystem::DSPInterface::FxlineConfig_** unk1AC;
 	/* 0x1B0 */ u8 unk1B0;
-	/* 0x1B4 */ u32 unk1B4;
-	/* 0x1B8 */ u32 unk1B8;
+	// The serial the next auto heap block will get. See JAIHeapBlock.
+	/* 0x1B4 */ u32 mNextLoadOrder;
+	// How many stay heap blocks are given out. The stay heap never releases,
+	// so the blocks below this are the used ones.
+	/* 0x1B8 */ u32 mStayHeapCount;
 	/* 0x1BC */ JAISeqParameter* unk1BC;
 	/* 0x1C0 */ JAISeqParameter* unk1C0;
 	/* 0x1C4 */ JAISeqParameter* unk1C4;
