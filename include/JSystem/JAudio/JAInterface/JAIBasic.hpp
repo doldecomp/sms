@@ -233,22 +233,27 @@ public:
 	/* 0x48 */ u32 unk48;
 	/* 0x4C */ u8* mInitDataPointer;
 
-	// TODO: same as Unk54 struct?
-	struct FabricatedUnk50Struct {
-		void* unk0;
-		char unk4[0x4];
-		int unk8;
+	struct FabricatedBankEntry {
+		/* 0x0 */ void* mBankData;
+		/* 0x4 */ char unk4[0x4];
+		/* 0x8 */ int mWaveBankNumber;
 	};
 
-	/* 0x50 */ FabricatedUnk50Struct* unk50;
+	/* 0x50 */ FabricatedBankEntry* mBankList;
 
-	struct FabricatedUnk54Struct {
-		void* unk0;
-		u32 unk4;
-		u32 unk8;
+	enum {
+		WAVE_LOAD_TIMING_FIRST_STAY  = 0,
+		WAVE_LOAD_TIMING_SECOND_STAY = 1,
+		WAVE_LOAD_TIMING_SCENE       = 2,
 	};
 
-	/* 0x54 */ FabricatedUnk54Struct* unk54;
+	struct FabricatedWaveBankEntry {
+		/* 0x0 */ void* mWaveBankData;
+		/* 0x4 */ u32 unk4;
+		/* 0x8 */ u32 mLoadTiming;
+	};
+
+	/* 0x54 */ FabricatedWaveBankEntry* mWaveBankList;
 	/* 0x58 */ u8** unk58; // TODO: wrong type
 	/* 0x5C */ JAIData::FabricatedUnk1F8Struct** unk5C;
 	/* 0x60 */ s32* mWaveGroupNumber;

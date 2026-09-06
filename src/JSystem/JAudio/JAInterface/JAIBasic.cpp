@@ -51,8 +51,8 @@ JAIBasic::JAIBasic()
 	unk40               = nullptr;
 	unk44               = 0;
 	unk48               = 0;
-	unk50               = 0;
-	unk54               = nullptr;
+	mBankList           = 0;
+	mWaveBankList       = nullptr;
 	unk58               = nullptr;
 	unk5C               = nullptr;
 	unk68               = nullptr;
@@ -317,11 +317,12 @@ void JAIBasic::checkInitDataOnMemory()
 			while (((u32*)mInitDataPointer)[i + n] != 0)
 				n += 3;
 
-			unk50 = (FabricatedUnk50Struct*)transInitDataFile(
-			    buffer, (n / 3) * sizeof(FabricatedUnk50Struct) + 4);
+			mBankList = (FabricatedBankEntry*)transInitDataFile(
+			    buffer, (n / 3) * sizeof(FabricatedBankEntry) + 4);
 
 			while (((u32*)mInitDataPointer)[i] != 0) {
-				unk50[j].unk0 = (void*)(mInitDataPointer + (u32)unk50[j].unk0);
+				mBankList[j].mBankData
+				    = (void*)(mInitDataPointer + (u32)mBankList[j].mBankData);
 				++j;
 				i += 3;
 			}
@@ -336,11 +337,13 @@ void JAIBasic::checkInitDataOnMemory()
 			while (((u32*)mInitDataPointer)[i + n] != 0)
 				n += 3;
 
-			unk54 = (FabricatedUnk54Struct*)transInitDataFile(
-			    buffer, (n / 3) * sizeof(FabricatedUnk54Struct) + 4);
+			mWaveBankList = (FabricatedWaveBankEntry*)transInitDataFile(
+			    buffer, (n / 3) * sizeof(FabricatedWaveBankEntry) + 4);
 
 			while (((u32*)mInitDataPointer)[i] != 0) {
-				unk54[j].unk0 = (void*)(mInitDataPointer + (u32)unk54[j].unk0);
+				mWaveBankList[j].mWaveBankData
+				    = (void*)(mInitDataPointer
+				              + (u32)mWaveBankList[j].mWaveBankData);
 				++j;
 				i += 3;
 			}
@@ -428,9 +431,9 @@ void JAIBasic::initBankWave()
 	JASystem::WaveBankMgr::init(0x100);
 	JASystem::WaveArcLoader::init();
 
-	if (unk54) {
-		for (int i = 0; unk54[i].unk0; ++i) {
-			void* data = unk54[i].unk0;
+	if (mWaveBankList) {
+		for (int i = 0; mWaveBankList[i].mWaveBankData; ++i) {
+			void* data = mWaveBankList[i].mWaveBankData;
 			if (data) {
 				JASystem::WaveBankMgr::registWaveBankWS(i, data);
 				mWaveGroupNumber[i] = -1;
@@ -449,17 +452,17 @@ void JAIBasic::initBankWave()
 
 	JASystem::BankMgr::init(0x100);
 
-	if (unk50) {
+	if (mBankList) {
 		int i;
 
-		for (i = 0; unk50[i].unk0; ++i) {
-			void* data = unk50[i].unk0;
+		for (i = 0; mBankList[i].mBankData; ++i) {
+			void* data = mBankList[i].mBankData;
 			if (data)
 				JASystem::BankMgr::registBankBNK(i, data);
 		}
 
-		for (i = 0; unk50[i].unk0; ++i)
-			JASystem::BankMgr::assignWaveBank(i, unk50[i].unk8);
+		for (i = 0; mBankList[i].mBankData; ++i)
+			JASystem::BankMgr::assignWaveBank(i, mBankList[i].mWaveBankNumber);
 	}
 
 	if (unk3C) {
@@ -474,9 +477,9 @@ void JAIBasic::initBankWave()
 
 void JAIBasic::setWaveScene()
 {
-	if (unk54 && !unk1C.flag3) {
-		for (int i = 0; unk54[i].unk0; ++i)
-			if (unk54[i].unk8 == 0)
+	if (mWaveBankList && !unk1C.flag3) {
+		for (int i = 0; mWaveBankList[i].mWaveBankData; ++i)
+			if (mWaveBankList[i].mLoadTiming == WAVE_LOAD_TIMING_FIRST_STAY)
 				loadGroupWave(i, 0);
 
 		unk1C.flag1 = true;
@@ -487,9 +490,9 @@ void JAIBasic::readInitSoundData() { }
 
 void JAIBasic::loadFirstStayWave()
 {
-	if (unk54 && !unk1C.flag3) {
-		for (int i = 0; unk54[i].unk0; ++i)
-			if (unk54[i].unk8 == 0)
+	if (mWaveBankList && !unk1C.flag3) {
+		for (int i = 0; mWaveBankList[i].mWaveBankData; ++i)
+			if (mWaveBankList[i].mLoadTiming == WAVE_LOAD_TIMING_FIRST_STAY)
 				loadGroupWave(i, 0);
 
 		unk1C.flag1 = true;
@@ -498,9 +501,9 @@ void JAIBasic::loadFirstStayWave()
 
 void JAIBasic::loadSecondStayWave()
 {
-	if (unk54) {
-		for (int i = 0; unk54[i].unk0; ++i)
-			if (unk54[i].unk8 == 1)
+	if (mWaveBankList) {
+		for (int i = 0; mWaveBankList[i].mWaveBankData; ++i)
+			if (mWaveBankList[i].mLoadTiming == WAVE_LOAD_TIMING_SECOND_STAY)
 				loadGroupWave(i, 0);
 
 		unk1C.flag2 = true;
@@ -523,7 +526,8 @@ void JAIBasic::finishSceneSet(u32 id)
 
 void JAIBasic::loadSceneWave(s32 bank_id, s32 group_no)
 {
-	if (unk54 && unk54[bank_id].unk8 == 2) {
+	if (mWaveBankList
+	    && mWaveBankList[bank_id].mLoadTiming == WAVE_LOAD_TIMING_SCENE) {
 		s32 current = mWaveGroupNumber[bank_id];
 		if (group_no != current) {
 			if (current != -1)
