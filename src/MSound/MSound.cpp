@@ -471,7 +471,7 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 	JAIGlobalParameter::setParamMinDistanceVolume(0.0f);
 	JAIGlobalParameter::setParamMaxVolumeDistance(1200.0f);
 	unkA8     = 0x1 | 0x2;
-	MSGBasic  = JAIBasic::basic;
+	MSGBasic  = JAIBasic::getInterface();
 	MSGMSound = this;
 	JALSystem::init();
 	MSoundSESystem::MSoundSE::construct();
@@ -555,8 +555,9 @@ void MSound::initSound()
 {
 	unkA8 |= 0x2;
 	for (u8 i = 0; i < 16; ++i) {
-		if (MSGMSound->unk0->unk88.unk2[i] != 0 && JAIBasic::basic != nullptr) {
-			JAIBasic::basic->setSeCategoryVolume(
+		if (MSGMSound->unk0->unk88.unk2[i] != 0
+		    && JAIBasic::getInterface() != nullptr) {
+			JAIBasic::getInterface()->setSeCategoryVolume(
 			    i, min<u8>(MSHandle::smSeCategory[i].unk8 * 127.0f, 127));
 		}
 	}
@@ -601,8 +602,8 @@ void MSound::pauseOff(u8 param_1)
 	case 2:
 		for (u8 i = 0; i < 16; ++i) {
 			if (i != 4 && MSGMSound->unk0->unk88.unk2[i] != 0)
-				if (JAIBasic::basic != nullptr) {
-					JAIBasic::basic->setSeCategoryVolume(
+				if (JAIBasic::getInterface() != nullptr) {
+					JAIBasic::getInterface()->setSeCategoryVolume(
 					    i,
 					    min<u8>(MSHandle::smSeCategory[i].unk8 * 127.0f, 127));
 				}
@@ -640,8 +641,8 @@ void MSound::demoModeOut(bool param_1)
 {
 	for (u8 i = 0; i < 16; ++i) {
 		if (MSGMSound->unk0->unk88.unk2[i] != 0)
-			if (JAIBasic::basic != nullptr) {
-				JAIBasic::basic->setSeCategoryVolume(
+			if (JAIBasic::getInterface() != nullptr) {
+				JAIBasic::getInterface()->setSeCategoryVolume(
 				    i, min<u8>(MSHandle::smSeCategory[i].unk8 * 127.0f, 127));
 			}
 	}
@@ -673,8 +674,8 @@ void MSound::talkModeOut()
 
 	for (u8 i = 0; i < 16; ++i) {
 		if (MSGMSound->unk0->unk88.unk2[i] != 0 && 0x1FF >> i & 1)
-			if (JAIBasic::basic != nullptr) {
-				JAIBasic::basic->setSeCategoryVolume(
+			if (JAIBasic::getInterface() != nullptr) {
+				JAIBasic::getInterface()->setSeCategoryVolume(
 				    i, min<u8>(MSHandle::smSeCategory[i].unk8 * 127.0f, 127));
 			}
 	}

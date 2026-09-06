@@ -186,6 +186,8 @@ public:
 
 	static JAIBasic* basic;
 
+	static JAIBasic* getInterface() { return basic; }
+
 public:
 	/* 0x8 */ JAICamera* unk8;
 	/* 0xC */ JKRSolidHeap* unkC;

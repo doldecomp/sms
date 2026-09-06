@@ -65,8 +65,8 @@ void JAIGlobalParameter::setParamAudioDvdThreadPriority(u8 value)
 void JAIGlobalParameter::setParamInitFileLoadSwitch(u8) { }
 void JAIGlobalParameter::setParamInitDataPointer(void* value)
 {
-	JAIBasic::basic->unk4C = (u8*)value;
-	JAIBasic::basic->unk13 = 4;
+	JAIBasic::getInterface()->unk4C = (u8*)value;
+	JAIBasic::getInterface()->unk13 = 4;
 }
 void JAIGlobalParameter::setParamInterfaceHeapSize(u32 value)
 {
@@ -123,7 +123,7 @@ void JAIGlobalParameter::setParamStreamUseOffFlag(bool) { }
 void JAIGlobalParameter::setParamStreamDecodedBufferBlocks(u32) { }
 void JAIGlobalParameter::setParamStreamInsideBufferCut(bool value)
 {
-	JAIBasic::basic->unk1C.flag7 = value;
+	JAIBasic::getInterface()->unk1C.flag7 = value;
 }
 void JAIGlobalParameter::setParamAutoHeapRoomSize(u32 value)
 {
@@ -252,7 +252,7 @@ void JAIGlobalParameter::setParamSoundOutputMode(u32 value)
 		r30 = 1;
 		break;
 	}
-	JAIBasic::basic->unk14 = value;
+	JAIBasic::getInterface()->unk14 = value;
 	JASystem::Driver::setOutputMode(r31);
 	JAInter::StreamLib::setOutputMode(r30);
 }
@@ -274,7 +274,7 @@ u32 JAIGlobalParameter::getParamInterfaceHeapSize()
 
 u32 JAIGlobalParameter::getParamSeCategoryMax()
 {
-	return JAIBasic::basic->unk0->unk88.unk1;
+	return JAIBasic::getInterface()->unk0->unk88.unk1;
 }
 
 u32 JAIGlobalParameter::getParamSoundSceneMax() { return soundSceneMax; }

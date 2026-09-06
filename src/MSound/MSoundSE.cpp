@@ -772,10 +772,11 @@ void MSoundSE::startSoundNpcActor(u32 param_1, const Vec* param_2, u32 param_3,
 bool MSoundSE::checkMonoSound(u32 param_1, JAIActor* param_2)
 {
 	JAISoundInfo* local_c;
-	JAIBasic::basic->unk0->getInfoPointer(param_1, (void**)&local_c);
+	JAIBasic::getInterface()->unk0->getInfoPointer(param_1, (void**)&local_c);
 	if (local_c->mSwBit & 0x4000) {
-		u32 uVar1       = JAIBasic::basic->changeIDToCategory(param_1);
-		JAISound* sound = JAIBasic::basic->unk0->unk1E8[(u8)uVar1].mUsedHead;
+		u32 uVar1 = JAIBasic::getInterface()->changeIDToCategory(param_1);
+		JAISound* sound
+		    = JAIBasic::getInterface()->unk0->unk1E8[(u8)uVar1].mUsedHead;
 		JAISound* nextSound;
 		for (; sound != nullptr; sound = nextSound) {
 			nextSound         = sound->getNextSound();
@@ -790,7 +791,7 @@ bool MSoundSE::checkMonoSound(u32 param_1, JAIActor* param_2)
 			if (param_1 == sound->mSoundID)
 				continue;
 
-			JAIBasic::basic->stopSoundHandle(sound, 0);
+			JAIBasic::getInterface()->stopSoundHandle(sound, 0);
 			break;
 		}
 	}
