@@ -233,7 +233,7 @@ void JAIBasic::checkPlayingSeqTrack(unsigned long trackID)
 					seqParam->unk1760 ^= 1 << j;
 				}
 			}
-			vol *= mps->unk4;
+			vol *= mps->mCurrentValue;
 		}
 		if (sud->unkC != vol) {
 			sud->unkC = vol;
@@ -256,7 +256,7 @@ void JAIBasic::checkPlayingSeqTrack(unsigned long trackID)
 					seqParam->unk1764 ^= 1 << j;
 				}
 			}
-			pan += mps->unk4 - 0.5f;
+			pan += mps->mCurrentValue - 0.5f;
 		}
 		pan += 0.5f;
 		if (pan > 1.0f)
@@ -284,7 +284,7 @@ void JAIBasic::checkPlayingSeqTrack(unsigned long trackID)
 					seqParam->unk1768 ^= 1 << j;
 				}
 			}
-			pitch *= mps->unk4;
+			pitch *= mps->mCurrentValue;
 		}
 		if (sud->unk10 != pitch) {
 			sud->unk10 = pitch;
@@ -306,7 +306,7 @@ void JAIBasic::checkPlayingSeqTrack(unsigned long trackID)
 				if (!unk0->moveParameter(mps)) {
 					seqParam->unk176C ^= 1 << j;
 				}
-				fxmix += mps->unk4;
+				fxmix += mps->mCurrentValue;
 			}
 		}
 		if (fxmix > 1.0f)
@@ -331,7 +331,7 @@ void JAIBasic::checkPlayingSeqTrack(unsigned long trackID)
 				if (!unk0->moveParameter(mps)) {
 					seqParam->unk1770 ^= 1 << j;
 				}
-				dolby *= mps->unk4;
+				dolby *= mps->mCurrentValue;
 			}
 		}
 		if (sud->unk1C != dolby) {
@@ -350,11 +350,11 @@ void JAIBasic::checkPlayingSeqTrack(unsigned long trackID)
 		if (!unk0->moveParameter(&seqParam->unk4)) {
 			r30 ^= 4;
 		}
-		if (sud->unk20 != seqParam->unk4.unk4) {
-			sud->unk20 = seqParam->unk4.unk4;
+		if (sud->unk20 != seqParam->unk4.mCurrentValue) {
+			sud->unk20 = seqParam->unk4.mCurrentValue;
 			JAISystemInterface::setSeqPortargsF32(
 			    &unk0->unk180[trackID], JAIGlobalParameter::seqTrackMax, 9,
-			    seqParam->unk4.unk4);
+			    seqParam->unk4.mCurrentValue);
 			portFlags[JAIGlobalParameter::seqTrackMax] |= 0x80;
 		}
 	}
@@ -367,9 +367,9 @@ void JAIBasic::checkPlayingSeqTrack(unsigned long trackID)
 
 			u16 readVal;
 			JAISystemInterface::readPortApp(seqParam->unk0, j << 16, &readVal);
-			if (readVal != (u16)seqParam->unk14[j].unk4)
-				JAISystemInterface::writePortApp(seqParam->unk0, j << 16,
-				                                 seqParam->unk14[j].unk4);
+			if (readVal != (u16)seqParam->unk14[j].mCurrentValue)
+				JAISystemInterface::writePortApp(
+				    seqParam->unk0, j << 16, seqParam->unk14[j].mCurrentValue);
 		}
 		if (seqParam->unk175C == 0)
 			r30 ^= 0x10;
@@ -382,11 +382,11 @@ void JAIBasic::checkPlayingSeqTrack(unsigned long trackID)
 				if (!unk0->moveParameter(mps))
 					seqParam->unk1774 ^= 1 << j;
 
-				if (mps->unk4 != sud->unk24[j]) {
-					sud->unk24[j] = mps->unk4;
+				if (mps->mCurrentValue != sud->unk24[j]) {
+					sud->unk24[j] = mps->mCurrentValue;
 					portFlags[j] |= 1;
 					JAISystemInterface::setSeqPortargsF32(
-					    &unk0->unk180[trackID], j, 2, mps->unk4);
+					    &unk0->unk180[trackID], j, 2, mps->mCurrentValue);
 				}
 			}
 		}
@@ -415,11 +415,12 @@ void JAIBasic::checkPlayingSeqTrack(unsigned long trackID)
 				if (!unk0->moveParameter(mps))
 					seqParam->unk1778 ^= 1 << j;
 
-				if (mps->unk4 != sud->unk30[j]) {
-					sud->unk30[j] = mps->unk4;
+				if (mps->mCurrentValue != sud->unk30[j]) {
+					sud->unk30[j] = mps->mCurrentValue;
 					portFlags[j] |= 4;
 					JAISystemInterface::setSeqPortargsF32(
-					    &unk0->unk180[trackID], j, 4, seqParam->unk954[j].unk4);
+					    &unk0->unk180[trackID], j, 4,
+					    seqParam->unk954[j].mCurrentValue);
 				}
 			}
 		}
@@ -434,11 +435,12 @@ void JAIBasic::checkPlayingSeqTrack(unsigned long trackID)
 				if (!unk0->moveParameter(mps)) {
 					seqParam->unk177C ^= 1 << j;
 				}
-				if (mps->unk4 != sud->unk28[j]) {
-					sud->unk28[j] = mps->unk4;
+				if (mps->mCurrentValue != sud->unk28[j]) {
+					sud->unk28[j] = mps->mCurrentValue;
 					portFlags[j] |= 2;
 					JAISystemInterface::setSeqPortargsF32(
-					    &unk0->unk180[trackID], j, 3, seqParam->unkB54[j].unk4);
+					    &unk0->unk180[trackID], j, 3,
+					    seqParam->unkB54[j].mCurrentValue);
 				}
 			}
 		}
@@ -453,11 +455,12 @@ void JAIBasic::checkPlayingSeqTrack(unsigned long trackID)
 				if (!unk0->moveParameter(mps)) {
 					seqParam->unk1780 ^= 1 << j;
 				}
-				if (mps->unk4 != sud->unk2C[j]) {
-					sud->unk2C[j] = mps->unk4;
+				if (mps->mCurrentValue != sud->unk2C[j]) {
+					sud->unk2C[j] = mps->mCurrentValue;
 					portFlags[j] |= 8;
 					JAISystemInterface::setSeqPortargsF32(
-					    &unk0->unk180[trackID], j, 5, seqParam->unkD54[j].unk4);
+					    &unk0->unk180[trackID], j, 5,
+					    seqParam->unkD54[j].mCurrentValue);
 				}
 			}
 		}
@@ -472,11 +475,12 @@ void JAIBasic::checkPlayingSeqTrack(unsigned long trackID)
 				if (!unk0->moveParameter(mps)) {
 					seqParam->unk1784 ^= 1 << j;
 				}
-				if (mps->unk4 != sud->unk34[j]) {
-					sud->unk34[j] = mps->unk4;
+				if (mps->mCurrentValue != sud->unk34[j]) {
+					sud->unk34[j] = mps->mCurrentValue;
 					portFlags[j] |= 0x10;
 					JAISystemInterface::setSeqPortargsF32(
-					    &unk0->unk180[trackID], j, 6, seqParam->unkF54[j].unk4);
+					    &unk0->unk180[trackID], j, 6,
+					    seqParam->unkF54[j].mCurrentValue);
 				}
 			}
 		}

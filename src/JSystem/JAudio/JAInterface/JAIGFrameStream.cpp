@@ -214,7 +214,7 @@ void JAIBasic::checkPlayingStream()
 				if (!unk0->moveParameter(mps))
 					streamParam->unk8 ^= 1 << j;
 
-			vol *= mps->unk4;
+			vol *= mps->mCurrentValue;
 		}
 		if (unk0->unk184->unk4 != vol) {
 			JAInter::StreamLib::setVolume(vol);
@@ -232,7 +232,7 @@ void JAIBasic::checkPlayingStream()
 				if (!unk0->moveParameter(mps))
 					streamParam->unkC ^= 1 << j;
 
-			pitch *= mps->unk4;
+			pitch *= mps->mCurrentValue;
 		}
 		if (unk0->unk184->unk8 != pitch) {
 			JAInter::StreamLib::setPitch(pitch);
@@ -250,7 +250,7 @@ void JAIBasic::checkPlayingStream()
 				if (!unk0->moveParameter(mps))
 					streamParam->unk10 ^= 1 << j;
 
-			pan += mps->unk4 - 0.5f;
+			pan += mps->mCurrentValue - 0.5f;
 		}
 		pan += 0.5f;
 		if (pan > 1.0f)

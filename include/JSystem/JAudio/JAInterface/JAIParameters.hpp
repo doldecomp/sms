@@ -4,10 +4,10 @@
 #include <types.h>
 
 struct JAIMoveParaSet {
-	/* 0x0 */ f32 unk0;
-	/* 0x4 */ f32 unk4;
-	/* 0x8 */ f32 unk8;
-	/* 0xC */ u32 unkC;
+	/* 0x0 */ f32 mTargetValue;
+	/* 0x4 */ f32 mCurrentValue;
+	/* 0x8 */ f32 mMoveAmount;
+	/* 0xC */ u32 mMoveCounter;
 };
 
 class JAISeParameter {
