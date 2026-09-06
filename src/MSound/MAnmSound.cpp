@@ -12,8 +12,8 @@ void MAnmSound::animeLoop(Vec* param_1, f32 param_2, f32 param_3, u32 param_4,
                           u8 param_5)
 {
 	if (mData != nullptr)
-		setAnimSoundVec(JAIBasic::basic, param_1, param_2, param_3, param_4,
-		                param_5);
+		setAnimSoundVec(JAIBasic::getInterface(), param_1, param_2, param_3,
+		                param_4, param_5);
 }
 
 void MAnmSound::initAnmSound(void* param_1, u32 param_2, f32 param_3)
