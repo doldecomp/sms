@@ -452,7 +452,7 @@ void JAISound::setSeqPortData(u8 param_1, u16 param_2, u32 param_3)
 		getSeqParameter()->unk1850->unk8 |= 0x10;
 }
 
-void JAISound::setWaveReadMode(s32 param_1, s32 param_2)
+void JAISound::setWaveReadMode(s32 bank_id, s32 group_no)
 {
 	if ((mSoundID & JAISoundID_TypeMask) != JAISoundID_Type_Sequence)
 		return;
@@ -460,9 +460,10 @@ void JAISound::setWaveReadMode(s32 param_1, s32 param_2)
 	if (!getSeqParameter())
 		return;
 
-	u32 id = param_1 << 16 | param_2;
-	if (interPointer->unk60[param_1] == param_2
-	    && interPointer->unk64[param_1] == 1)
+	u32 id = bank_id << 16 | group_no;
+	if (interPointer->mWaveGroupNumber[bank_id] == group_no
+	    && interPointer->mWaveLoadStatus[bank_id]
+	           == JAIBasic::WAVE_LOAD_STATUS_LOADING)
 		getSeqParameter()->unk1758 = id;
 }
 

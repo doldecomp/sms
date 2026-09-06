@@ -284,18 +284,18 @@ void MSound::setRegisterTrackCallback()
 	    &MSSeCallBack::setParameterSeqSync);
 }
 
-void MSound::loadGroupWave(s32 param_1, s32 param_2)
+void MSound::loadGroupWave(s32 bank_id, s32 group_no)
 {
-	if (param_1 == 2 && param_2 != 0x10) {
-		MSLoadWave::loadWaveBackword(param_1, param_2);
-		setSceneSetFinishCallback(param_1, param_2);
-		unk60[param_1] = param_2;
-	} else if (param_1 == 2 && param_2 == 0x10) {
-		JASystem::WaveBankMgr::loadWave(param_1, param_2);
+	if (bank_id == 2 && group_no != 0x10) {
+		MSLoadWave::loadWaveBackword(bank_id, group_no);
+		setSceneSetFinishCallback(bank_id, group_no);
+		mWaveGroupNumber[bank_id] = group_no;
+	} else if (bank_id == 2 && group_no == 0x10) {
+		JASystem::WaveBankMgr::loadWave(bank_id, group_no);
 	} else {
-		JASystem::WaveBankMgr::loadWave(param_1, param_2);
-		setSceneSetFinishCallback(param_1, param_2);
-		unk60[param_1] = param_2;
+		JASystem::WaveBankMgr::loadWave(bank_id, group_no);
+		setSceneSetFinishCallback(bank_id, group_no);
+		mWaveGroupNumber[bank_id] = group_no;
 	}
 }
 

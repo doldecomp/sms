@@ -19,18 +19,15 @@ void WaveBankMgr::init(int tableSize)
 	sTableSize = tableSize;
 }
 
-TWaveBank* WaveBankMgr::getWaveBank(int bankIndex)
-{
-	return sWaveBank[bankIndex];
-}
+TWaveBank* WaveBankMgr::getWaveBank(int bankId) { return sWaveBank[bankId]; }
 
-bool WaveBankMgr::registWaveBank(int bankIndex, TWaveBank* waveBank)
+bool WaveBankMgr::registWaveBank(int bankId, TWaveBank* waveBank)
 {
-	sWaveBank[bankIndex] = waveBank;
+	sWaveBank[bankId] = waveBank;
 	return true;
 }
 
-bool WaveBankMgr::registWaveBankWS(int bankIndex, void* waveBankData)
+bool WaveBankMgr::registWaveBankWS(int bankId, void* waveBankData)
 {
 	TWaveBank* bank;
 	if (WSParser::getGroupCount(waveBankData) == 1)
@@ -41,18 +38,18 @@ bool WaveBankMgr::registWaveBankWS(int bankIndex, void* waveBankData)
 	if (!bank)
 		return false;
 
-	return registWaveBank(bankIndex, bank);
+	return registWaveBank(bankId, bank);
 }
 
-bool WaveBankMgr::loadWave(int bankIndex, int waveIndex)
+bool WaveBankMgr::loadWave(int bankId, int groupNo)
 {
-	TWaveBank* bank = getWaveBank(bankIndex);
+	TWaveBank* bank = getWaveBank(bankId);
 	if (!bank)
 		return false;
 
 	if (bank->getType() == 'BSIC') {
 		TBasicWaveBank::TWaveGroup* group
-		    = ((TBasicWaveBank*)bank)->getWaveGroup(waveIndex);
+		    = ((TBasicWaveBank*)bank)->getWaveGroup(groupNo);
 		if (!group)
 			return false;
 
@@ -70,16 +67,15 @@ bool WaveBankMgr::loadWave(int bankIndex, int waveIndex)
 	return false;
 }
 
-bool WaveBankMgr::eraseWave(int bankIndex, int waveIndex)
+bool WaveBankMgr::eraseWave(int bankId, int groupNo)
 {
-
-	TWaveBank* bank = getWaveBank(bankIndex);
+	TWaveBank* bank = getWaveBank(bankId);
 	if (!bank)
 		return false;
 
 	if (bank->getType() == 'BSIC') {
 		TBasicWaveBank::TWaveGroup* group
-		    = ((TBasicWaveBank*)bank)->getWaveGroup(waveIndex);
+		    = ((TBasicWaveBank*)bank)->getWaveGroup(groupNo);
 		if (!group)
 			return false;
 

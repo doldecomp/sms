@@ -54,13 +54,13 @@ JAIBasic::JAIBasic()
 	unk50 = 0;
 	unk54 = nullptr;
 	unk58 = nullptr;
-	unk5C = 0;
+	unk5C = nullptr;
 	unk68 = nullptr;
 	unk6C = nullptr;
-	unk34 = -1;
+	unk34 = 0xffffffff;
 	unk70 = 0;
 	unkC  = nullptr;
-	unk78 = 0;
+	unk78 = nullptr;
 }
 
 void JAIBasic::startSeSequence() { }
@@ -144,7 +144,20 @@ void JAIBasic::setRegisterTrackCallback()
 	JASystem::TrackMgr::registerTrackCallback(&JAIBasic::setParameterSeqSync);
 }
 
-void JAIBasic::initAudioThread(JKRSolidHeap* heap, u32 param1, u8 param2) { }
+void JAIBasic::initAudioThread(JKRSolidHeap* heap, u32 param1, u8 param2)
+{
+	s32 uVar1 = 1;
+	if (param2 & 1)
+		uVar1 |= 2;
+
+	JASystem::AudioThread::setPriority(
+	    JAIGlobalParameter::audioSystemThreadPriority,
+	    JAIGlobalParameter::audioDvdThreadPriority);
+	JASystem::AudioThread::start(heap, param1, uVar1);
+	JASystem::TrackMgr::init(JAIGlobalParameter::systemTrackMax,
+	                         JAIGlobalParameter::systemRootTrackMax);
+	JASystem::TrackMgr::reset();
+}
 
 void JAIBasic::bootDSP() { }
 
@@ -233,58 +246,161 @@ BOOL JAIBasic::checkInitDataFile()
 	}
 }
 
+// fabricated
+struct JAIInitDataBlob {
+	/* 0x0 */ u32 offset;
+	/* 0x4 */ u32 size;
+	/* 0x8 */ u32 unk8;
+};
+
+// fabricated
+enum JAIInitDataCommand {
+	JAIINITDATA_End              = 0,
+	JAIINITDATA_SoundTables      = 1,
+	JAIINITDATA_BankList         = 2,
+	JAIINITDATA_WaveBankList     = 3,
+	JAIINITDATA_SeqArchiveHeader = 4,
+	JAIINITDATA_Unk5C            = 5,
+	JAIINITDATA_SoundSceneList   = 6,
+	JAIINITDATA_Unk6C            = 7,
+	JAIINITDATA_Unk78            = 8,
+};
+
+// TODO: still extremely messy + regswaps
 void JAIBasic::checkInitDataOnMemory()
 {
-	JAIData* data = unk0;
+	u32 i              = 0;
+	u32 shouldContinue = 1;
+	JAIData* data      = unk0;
+	u8 j;
+	u32 n;
 
-	bool shouldContinue = true;
-	u32 i               = 0;
 	while (shouldContinue) {
-		u32 command = unk4C[i];
-		++i;
-		switch (command) {
-		case 0:
-			shouldContinue = false;
+		switch (((u32*)unk4C)[i++]) {
+		case JAIINITDATA_End:
+			shouldContinue = 0;
 			break;
-		case 1:
-			if (unk4C[i] == 0) {
-				u32 offset        = unk4C[i + 1];
-				data->unk88.unk28 = unk4C[i + 2];
-				data->unk88.unk78 = (u8*)transInitDataFile(
-				    ((u8*)unk4C) + offset, data->unk88.unk28);
-				data->unk1B0 = 0;
-				i += 4;
-			} else {
-				// TODO: should this all be done via header structs? probably
-				u32 offset        = unk4C[i + 1];
-				data->unk88.unk28 = unk4C[i + 2];
-				data->unk88.unk78 = (u8*)transInitDataFile(
-				    ((u8*)unk4C) + offset, data->unk88.unk28);
 
-				u8* buffer1      = ((u8*)unk4C) + unk4C[i + 3];
-				data->unkC.unk28 = unk4C[i + 4];
+		case JAIINITDATA_SoundTables:
+			if (((u32*)unk4C)[i + 2] != 0) {
+				u8* buffer        = unk4C + ((u32*)unk4C)[i++];
+				data->unk88.unk28 = ((u32*)unk4C)[i++];
+				data->unk88.unk78
+				    = (u8*)transInitDataFile(buffer, data->unk88.unk28);
+
+				buffer           = unk4C + ((u32*)unk4C)[i++];
+				data->unkC.unk28 = ((u32*)unk4C)[i++];
 				data->unkC.unk78
-				    = (u8*)transInitDataFile(buffer1, data->unk88.unk28);
+				    = (u8*)transInitDataFile(buffer, data->unkC.unk28);
 
-				u8* buffer         = ((u8*)unk4C) + unk4C[i + 5];
-				data->unk104.unk28 = unk4C[i + 6];
+				data->unk104.unk78 = unk4C + ((u32*)unk4C)[i++];
+				data->unk104.unk28 = ((u32*)unk4C)[i++];
 				data->unk104.unk78
 				    = (u8*)transInitDataFile(buffer, data->unk104.unk28);
-				data->unk1B0 = 0;
 
-				i += 7;
+				data->unk1B0 = 1;
+			} else {
+				u8* buffer        = unk4C + ((u32*)unk4C)[i++];
+				data->unk88.unk28 = ((u32*)unk4C)[i++];
+				data->unk88.unk78
+				    = (u8*)transInitDataFile(buffer, data->unk88.unk28);
+				++i;
+				data->unk1B0 = 0;
 			}
 			break;
-		case 2: {
-			u32 uVar7 = 0;
-			while (unk4C[i + uVar7] != 0)
-				uVar7 += 3;
+
+		case JAIINITDATA_BankList: {
+			u8* buffer = (u8*)&((u32*)unk4C)[i];
+			j          = 0;
+			n          = 0;
+			while (((u32*)unk4C)[i + n] != 0)
+				n += 3;
 
 			unk50 = (FabricatedUnk50Struct*)transInitDataFile(
-			    (u8*)&unk4C[i], (uVar7 / 3) * 0xC + 4);
-			// TODO: lots more stuff in here but I'm sick of it tbh
+			    buffer, (n / 3) * sizeof(FabricatedUnk50Struct) + 4);
+
+			while (((u32*)unk4C)[i] != 0) {
+				unk50[j].unk0 = (void*)(unk4C + (u32)unk50[j].unk0);
+				++j;
+				i += 3;
+			}
+			++i;
 			break;
 		}
+
+		case JAIINITDATA_WaveBankList: {
+			j          = 0;
+			n          = 0;
+			u8* buffer = (u8*)&((u32*)unk4C)[i];
+			while (((u32*)unk4C)[i + n] != 0)
+				n += 3;
+
+			unk54 = (FabricatedUnk54Struct*)transInitDataFile(
+			    buffer, (n / 3) * sizeof(FabricatedUnk54Struct) + 4);
+
+			while (((u32*)unk4C)[i] != 0) {
+				unk54[j].unk0 = (void*)(unk4C + (u32)unk54[j].unk0);
+				++j;
+				i += 3;
+			}
+			mWaveGroupNumber = (s32*)allocHeap(j * sizeof(*mWaveGroupNumber));
+			mWaveLoadStatus  = (s32*)allocHeap(j * sizeof(*mWaveLoadStatus));
+			++i;
+			break;
+		}
+
+		case JAIINITDATA_SeqArchiveHeader: {
+			u8* buffer = (u8*)&((u32*)unk4C)[i];
+			unk58      = (u8**)transInitDataFile(buffer, 8);
+			*unk58     = (u8*)transInitDataFile(unk4C + ((u32*)unk4C)[i],
+			                                    ((u32*)unk4C)[i + 1]);
+			i += 3;
+			break;
+		}
+
+		case JAIINITDATA_Unk5C: {
+			u8* buffer = (u8*)&((u32*)unk4C)[i];
+			unk5C = (JAIData::FabricatedUnk1F8Struct**)transInitDataFile(buffer,
+			                                                             8);
+			*unk5C = (JAIData::FabricatedUnk1F8Struct*)transInitDataFile(
+			    unk4C + ((u32*)unk4C)[i], ((u32*)unk4C)[i + 1]);
+			i += 3;
+			unk0->unk1F8 = *unk5C;
+			break;
+		}
+
+		case JAIINITDATA_SoundSceneList: {
+			JAIInitDataBlob* blob = (JAIInitDataBlob*)&((u32*)unk4C)[i];
+			u32* buffer
+			    = (u32*)transInitDataFile(unk4C + blob->offset, blob->size);
+			JAIGlobalParameter::soundSceneMax = buffer[0];
+			unk68                             = (u8**)(buffer + 1);
+			for (u32 scene = 0; scene < JAIGlobalParameter::soundSceneMax;
+			     ++scene)
+				unk68[scene] += (u32)buffer;
+			i += 3;
+			break;
+		}
+
+		case JAIINITDATA_Unk6C: {
+			JAIInitDataBlob* blob = (JAIInitDataBlob*)&((u32*)unk4C)[i];
+			unk6C = (u8*)transInitDataFile(unk4C + blob->offset, blob->size);
+			i += 3;
+			break;
+		}
+
+		case JAIINITDATA_Unk78: {
+			JAIInitDataBlob* blob = (JAIInitDataBlob*)&((u32*)unk4C)[i];
+			unk78                 = (u8*)transInitDataFile(unk4C + blob->offset,
+			                                               ((u16)blob->size & 0xFFF0) + 0x10);
+			i += 3;
+			break;
+		}
+
+		default:
+			while (((u32*)unk4C)[i++] != 0)
+				;
+			break;
 		}
 	}
 }
@@ -310,8 +426,8 @@ void JAIBasic::initBankWave()
 			void* data = unk54[i].unk0;
 			if (data) {
 				JASystem::WaveBankMgr::registWaveBankWS(i, data);
-				unk60[i] = -1;
-				unk64[i] = 0;
+				mWaveGroupNumber[i] = -1;
+				mWaveLoadStatus[i]  = WAVE_LOAD_STATUS_NOT_LOADED;
 			}
 		}
 	}
@@ -362,52 +478,79 @@ void JAIBasic::setWaveScene()
 
 void JAIBasic::readInitSoundData() { }
 
-void JAIBasic::loadFirstStayWave() { }
-
-void JAIBasic::loadSecondStayWave() { }
-
-void JAIBasic::setSceneSetFinishCallback(s32 param1, s32 param2)
+void JAIBasic::loadFirstStayWave()
 {
-	u32 id        = (param1 << 16) + param2;
-	unk34         = -1;
-	unk64[param1] = 1;
-	JASystem::Dvd::checkPassDvdT(id, nullptr, &finishSceneSet);
-}
+	if (unk54 && !unk1C.flag3) {
+		for (int i = 0; unk54[i].unk0; ++i)
+			if (unk54[i].unk8 == 0)
+				loadGroupWave(i, 0);
 
-void JAIBasic::finishSceneSet(u32 param)
-{
-	basic->unk34              = param;
-	basic->unk64[param >> 16] = 2;
-}
-
-void JAIBasic::loadSceneWave(s32 param1, s32 param2)
-{
-	s32 loaded;
-	if (unk54 && unk54[param1].unk8 == 2
-	    && param2 != (loaded = unk60[param1])) {
-		if (loaded != -1)
-			JASystem::WaveBankMgr::eraseWave(param1, loaded);
-		loadGroupWave(param1, param2);
+		unk1C.flag1 = true;
 	}
 }
 
-bool JAIBasic::checkSceneWaveOnMemory(s32 param1, s32 param2)
+void JAIBasic::loadSecondStayWave()
 {
-	if (param2 == unk60[param1] && unk64[param1] == 2)
+	if (unk54) {
+		for (int i = 0; unk54[i].unk0; ++i)
+			if (unk54[i].unk8 == 1)
+				loadGroupWave(i, 0);
+
+		unk1C.flag2 = true;
+	}
+}
+
+void JAIBasic::setSceneSetFinishCallback(s32 bank_id, s32 param2)
+{
+	u32 id                   = (bank_id << 16) + param2;
+	unk34                    = 0xffffffff;
+	mWaveLoadStatus[bank_id] = WAVE_LOAD_STATUS_LOADING;
+	JASystem::Dvd::checkPassDvdT(id, nullptr, &finishSceneSet);
+}
+
+void JAIBasic::finishSceneSet(u32 id)
+{
+	basic->unk34                     = id;
+	basic->mWaveLoadStatus[id >> 16] = WAVE_LOAD_STATUS_LOADED;
+}
+
+void JAIBasic::loadSceneWave(s32 bank_id, s32 group_no)
+{
+	if (unk54 && unk54[bank_id].unk8 == 2) {
+		s32 current = mWaveGroupNumber[bank_id];
+		if (group_no != current) {
+			if (current != -1)
+				JASystem::WaveBankMgr::eraseWave(bank_id,
+				                                 mWaveGroupNumber[bank_id]);
+			loadGroupWave(bank_id, group_no);
+		}
+	}
+}
+
+bool JAIBasic::checkSceneWaveOnMemory(s32 bank_id, s32 group_no)
+{
+	if (group_no == mWaveGroupNumber[bank_id]
+	    && mWaveLoadStatus[bank_id] == WAVE_LOAD_STATUS_LOADED)
 		return true;
 	return false;
 }
 
-void JAIBasic::loadGroupWave(s32 param1, s32 param2)
+void JAIBasic::loadGroupWave(s32 bank_id, s32 group_no)
 {
-	JASystem::WaveBankMgr::loadWave(param1, param2);
-	setSceneSetFinishCallback(param1, param2);
-	unk60[param1] = param2;
+	JASystem::WaveBankMgr::loadWave(bank_id, group_no);
+	setSceneSetFinishCallback(bank_id, group_no);
+	mWaveGroupNumber[bank_id] = group_no;
 }
 
-void JAIBasic::getWaveGroupNumber(s32 param) { }
+s32 JAIBasic::getWaveGroupNumber(s32 bank_id)
+{
+	return mWaveGroupNumber[bank_id];
+}
 
-void JAIBasic::getWaveLoadStatus(s32 param) { }
+s32 JAIBasic::getWaveLoadStatus(s32 bank_id)
+{
+	return mWaveLoadStatus[bank_id];
+}
 
 void JAIBasic::checkAllWaveLoadStatus() { }
 
@@ -434,17 +577,7 @@ void JAIBasic::initNullData()
 
 void JAIBasic::initDriver(JKRSolidHeap* heap, u32 param_2, u8 param_3)
 {
-	s32 uVar1 = 1;
-	if (param_3 & 1)
-		uVar1 |= 2;
-
-	JASystem::AudioThread::setPriority(
-	    JAIGlobalParameter::audioSystemThreadPriority,
-	    JAIGlobalParameter::audioDvdThreadPriority);
-	JASystem::AudioThread::start(heap, param_2, uVar1);
-	JASystem::TrackMgr::init(JAIGlobalParameter::systemTrackMax,
-	                         JAIGlobalParameter::systemRootTrackMax);
-	JASystem::TrackMgr::reset();
+	initAudioThread(heap, param_2, param_3);
 }
 
 void JAIBasic::initInterface(u8 param)
@@ -484,13 +617,8 @@ void JAIBasic::processFrameWork()
 {
 	checkDummyPositionBuffer();
 
-	if (unk38->mState == SOUNDSTATE_Started && !unk1C.flag2 && unk54) {
-		for (int i = 0; unk54[i].unk0; ++i)
-			if (unk54[i].unk8 == 1)
-				loadGroupWave(i, 0);
-
-		unk1C.flag2 = true;
-	}
+	if (unk38->mState == SOUNDSTATE_Started && !unk1C.flag2)
+		loadSecondStayWave();
 
 	if (unk38->mState >= SOUNDSTATE_Playing)
 		checkNextFrameSe();
@@ -999,6 +1127,12 @@ void JAIBasic::setSeCategoryVolume(u8 category, u8 volume)
 	unk28[category] = volume / 127.0f;
 }
 
+// TODO: the frame is 8 bytes short - two reserved slots - and the shortage
+// moves `params` in case 1 off the register the target reuses, plus a few
+// argument slots in case 0. Spelling every `basic` read as
+// `JAIBasic::getInterface()` overshoots to 0x40, and no subset of the reads is
+// less arbitrary than another; `finishSceneSet` matches at 100% with the raw
+// `basic`, so the getter is probably not what this function used.
 u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 {
 	u16 result = 0;
@@ -1014,7 +1148,8 @@ u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 			if (track != param_1->mParent)
 				continue;
 
-			u32 route          = basic->routeToTrack(param_1->unk308);
+			u32 uVar8          = param_1->unk308;
+			u32 route          = basic->routeToTrack(uVar8);
 			JAISoundInfo* info = basic->getSoundInfoFromID(
 			    basic->unk0->unk180[i].unk48->mSoundID);
 
@@ -1126,6 +1261,7 @@ JAISound* JAIBasic::makeSound(u32 param)
 
 void* JAIBasic::loadDVDFile(char* filename)
 {
+	// TODO: the frame is 8 bytes short here; every instruction matches.
 	u32 size = JASystem::Dvd::checkFile(filename);
 	if (!size) {
 		return nullptr;
@@ -1157,6 +1293,8 @@ void JAIBasic::allocStreamBuffer(void* buffer, s32 size) { }
 
 void JAIBasic::deallocStreamBuffer() { }
 
+// TODO: matches except that the target moves the checkOnMemory result into
+// its register one slot later.
 int JAIBasic::loadArcSeqData(u32 param_1, bool param_2)
 {
 	u32 uVar1   = param_1 & 0x3ff;
@@ -1166,6 +1304,7 @@ int JAIBasic::loadArcSeqData(u32 param_1, bool param_2)
 	u32 uVar6 = getSoundInfoFromID(param_1)->mSwBit;
 
 	u8* puVar4 = (u8*)iVar3;
+
 	if (puVar4 == 0) {
 		u8 unaff_r28;
 		if ((uVar6 & 0x10) != 0) {

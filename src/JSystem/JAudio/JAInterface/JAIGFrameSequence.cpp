@@ -603,7 +603,7 @@ void JAIBasic::checkReadSeq()
 			continue;
 		if ((*sound)->mState != SOUNDSTATE_Prepared)
 			continue;
-		if ((*sound)->getSeqParameter()->unk1758 != -1)
+		if ((*sound)->getSeqParameter()->unk1758 != 0xffffffff)
 			continue;
 		if ((*sound)->getSeqParameter()->unk1850->unk2 != 0)
 			continue;
