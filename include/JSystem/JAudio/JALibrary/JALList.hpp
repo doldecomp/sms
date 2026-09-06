@@ -36,6 +36,8 @@ JALListHioNode<T, U>::JALListHioNode(const char* param_1, U param_2, T* param_3)
 
 template <class T, class U> class JALListVirtualNode {
 public:
+	JALListVirtualNode(const char*, U, T*) { }
+
 	~JALListVirtualNode();
 };
 

@@ -19,6 +19,8 @@ struct JALPrmSet {
 
 template <class T, class U> class JALListS {
 public:
+	JALListS(U, T*) { }
+
 	static T* search(U param_1);
 	~JALListS();
 };

@@ -147,7 +147,89 @@ namespace DSPInterface {
 	void setupBuffer();
 	void initBuffer();
 
-	// TODO: TWW has a bunch of inlines for us here!
+	// TODO: TWW also lists boot(void (*)(void*)), finishWork(u16), restart()
+	// and sync(u32, u32, u32). No body is known for those yet.
+	inline void allocInit(u8 i) { getDSPHandle(i)->allocInit(); }
+	inline void playStart(u8 i) { getDSPHandle(i)->playStart(); }
+	inline void playStop(u8 i) { getDSPHandle(i)->playStop(); }
+	inline void flushChannel(u8 i) { getDSPHandle(i)->flushChannel(); }
+	inline void cacheChannel(u8 i) { getDSPHandle(i)->cacheChannel(); }
+	inline void initFilter(u8 i) { getDSPHandle(i)->initFilter(); }
+	inline void initAutoMixer(u8 i) { getDSPHandle(i)->initAutoMixer(); }
+
+	inline void setPitch(u8 i, u16 pitch) { getDSPHandle(i)->setPitch(pitch); }
+	inline void setPitchIndirect(u8 i, f32 pitch, f32 rate)
+	{
+		getDSPHandle(i)->setPitchIndirect(pitch, rate);
+	}
+	inline void setPauseFlag(u8 i, u8 flag)
+	{
+		getDSPHandle(i)->setPauseFlag(flag);
+	}
+	inline void setOscInfo(u8 i, u32 type)
+	{
+		getDSPHandle(i)->setOscInfo(type);
+	}
+	inline void setWaveInfo(u8 i, Driver::Wave_* wave, u32 base)
+	{
+		getDSPHandle(i)->setWaveInfo(wave, base);
+	}
+	inline void setBusConnect(u8 i, u8 mixer, u8 bus)
+	{
+		getDSPHandle(i)->setBusConnect(mixer, bus);
+	}
+
+	inline void setMixerInitDelayMax(u8 i, u8 delay)
+	{
+		getDSPHandle(i)->setMixerInitDelayMax(delay);
+	}
+	inline void setMixerInitVolume(u8 i, u8 mixer, s16 volume, u8 level)
+	{
+		getDSPHandle(i)->setMixerInitVolume(mixer, volume, level);
+	}
+	inline void setMixerVolume(u8 i, u8 mixer, s16 volume, u8 level)
+	{
+		getDSPHandle(i)->setMixerVolume(mixer, volume, level);
+	}
+	inline void setMixerVolumeOnly(u8 i, u8 mixer, s16 volume)
+	{
+		getDSPHandle(i)->setMixerVolumeOnly(mixer, volume);
+	}
+	inline void setAutoMixer(u8 i, u16 volume, u8 pan, u8 fxmix, u8 dolby,
+	                         u8 delay)
+	{
+		getDSPHandle(i)->setAutoMixer(volume, pan, fxmix, dolby, delay);
+	}
+	inline void updateAMVolume(u8 i, u16 volume)
+	{
+		getDSPHandle(i)->updateAMVolume(volume);
+	}
+	inline void updateAMPan(u8 i, u8 pan, u8 dolby)
+	{
+		getDSPHandle(i)->updateAMPan(pan, dolby);
+	}
+	inline void updateAMFX(u8 i, u8 fxmix)
+	{
+		getDSPHandle(i)->updateAMFX(fxmix);
+	}
+
+	inline void setFilterMode(u8 i, u16 mode)
+	{
+		getDSPHandle(i)->setFilterMode(mode);
+	}
+	inline void setDistFilter(u8 i, s16 dist)
+	{
+		getDSPHandle(i)->setDistFilter(dist);
+	}
+	inline void setIIRFilterParam(u8 i, s16* param)
+	{
+		getDSPHandle(i)->setIIRFilterParam(param);
+	}
+	inline void setFIR8FilterParam(u8 i, s16* param)
+	{
+		getDSPHandle(i)->setFIR8FilterParam(param);
+	}
+
 	inline bool setFXLine(u8 i, s16* buffer, FxlineConfig_* config)
 	{
 		return getFXHandle(i)->setFXLine(buffer, config);
