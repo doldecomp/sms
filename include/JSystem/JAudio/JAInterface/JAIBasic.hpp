@@ -212,10 +212,10 @@ public:
 	/* 0x20 */ u32 unk20;
 	/* 0x24 */ u32 unk24;
 	/* 0x28 */ f32* mSeCategoryVolume;
-	/* 0x2C */ u32 unk2C;
+	/* 0x2C */ u32 mSeqArchiveHandle;
 	/* 0x30 */ u32 unk30;
 	/* 0x34 */ u32 mFinishedSceneSet;
-	/* 0x38 */ JAISound* unk38;
+	/* 0x38 */ JAISound* mSeSequence;
 
 	struct FabricatedUnk3CStruct {
 		char unk0[1]; // TODO: is this just a size 0x30 str or nah?
@@ -254,7 +254,13 @@ public:
 	};
 
 	/* 0x54 */ FabricatedWaveBankEntry* mWaveBankList;
-	/* 0x58 */ u8** unk58; // TODO: wrong type
+
+	struct FabricatedSeqArchiveHeader {
+		/* 0x0 */ u8* mData;
+		/* 0x4 */ u32 mSize;
+	};
+
+	/* 0x58 */ FabricatedSeqArchiveHeader* mSeqArchiveHeader;
 	/* 0x5C */ JAIData::FabricatedUnk1F8Struct** unk5C;
 	/* 0x60 */ s32* mWaveGroupNumber;
 
@@ -265,7 +271,14 @@ public:
 	};
 
 	/* 0x64 */ s32* mWaveLoadStatus;
-	/* 0x68 */ u8** unk68; // TODO: might be pair of u8s actually
+
+	struct FabricatedSoundSceneTable {
+		/* 0x0 */ u32 mSceneMax;
+		/* 0x4 */ u8* mSceneData[];
+	};
+
+	// Points at FabricatedSoundSceneTable::mSceneData.
+	/* 0x68 */ u8** mSoundSceneList;
 	/* 0x6C */ u8* unk6C;
 	/* 0x70 */ u32 unk70;
 	/* 0x74 */ char unk74[0x4];

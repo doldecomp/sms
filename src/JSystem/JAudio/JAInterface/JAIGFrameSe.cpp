@@ -114,11 +114,11 @@ void JAIBasic::checkNextFrameSe()
 					if (!(it->mSoundID & 0xC00)) {
 						if (it->mState != SOUNDSTATE_Stored) {
 							JAISystemInterface::writePortApp(
-							    unk38->getSeqParameter()->unk0,
+							    mSeSequence->getSeqParameter()->unk0,
 							    (it->mTrack >> 4) + 0x20000000
 							        + ((it->mTrack & 0xf) << 4),
 							    0);
-							unk38->setTrackInterruptSwitch(it->mTrack, 1);
+							mSeSequence->setTrackInterruptSwitch(it->mTrack, 1);
 						}
 						it->mState = SOUNDSTATE_Stored;
 					} else {
@@ -234,7 +234,7 @@ void JAIBasic::sendPlayingSeCommand()
 			u32 portAddr
 			    = ((trackId >> 4) & 0xF) + 0x20000000 + ((trackId & 0xF) << 4);
 
-			u32 seqPort = unk38->getSeqParameter()->unk0;
+			u32 seqPort = mSeSequence->getSeqParameter()->unk0;
 
 			JAISystemInterface::readPortApp(seqPort, portAddr + 0x20000,
 			                                &readStatus0);
@@ -275,7 +275,7 @@ void JAIBasic::sendPlayingSeCommand()
 				for (u8 i = 0; *portMask != 0; ++i) {
 					u32 bit = 1 << i;
 					if (*portMask & bit) {
-						unk38->setTrackPortData(
+						mSeSequence->setTrackPortData(
 						    sound->mTrack, i, sound->getSeParameter()->unk0[i]);
 						*portMask ^= bit;
 					}
@@ -358,7 +358,7 @@ void JAIBasic::setSeqMuteFromSeStart(JAISound* param_1)
 {
 	for (u32 i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
 		JAISound* sound = unk0->unk180[i].mSound;
-		if (i != unk38->mTrack && sound && !(sound->getSwBit() & 8)) {
+		if (i != mSeSequence->mTrack && sound && !(sound->getSwBit() & 8)) {
 			sound->setSeqInterVolume(
 			    9, JAIGlobalParameter::seqMuteVolumeSePlay / 127.0f,
 			    JAIGlobalParameter::seqMuteMoveSpeedSePlay);
@@ -374,7 +374,7 @@ void JAIBasic::clearSeqMuteFromSeStop(JAISound* sound)
 
 	for (u32 i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
 		JAISound* seq = unk0->unk180[i].mSound;
-		if (i != unk38->mTrack && seq && !(seq->getSwBit() & 8)) {
+		if (i != mSeSequence->mTrack && seq && !(seq->getSwBit() & 8)) {
 			unk30 &= (1 << sound->mTrack) ^ 0xffffffff;
 			if (unk30 == 0) {
 				seq->setSeqInterVolume(
@@ -386,7 +386,7 @@ void JAIBasic::clearSeqMuteFromSeStop(JAISound* sound)
 
 void JAIBasic::checkSeMovePara()
 {
-	if (!unk38 || unk38->getSeqParameter()->unk1755 == 2)
+	if (!mSeSequence || mSeSequence->getSeqParameter()->unk1755 == 2)
 		return;
 
 	for (u8 i = 0; i < JAIGlobalParameter::getParamSeCategoryMax(); ++i) {
@@ -425,9 +425,10 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 	if (slot->mVolume != vol) {
 		slot->mVolume = vol;
 		if (sound->mState != SOUNDSTATE_Prepared) {
-			unk0->unk180[unk38->mTrack].mTrackUpdate[sound->mTrack] |= 0x1;
-			JAISystemInterface::setSeqPortargsF32(&unk0->unk180[unk38->mTrack],
-			                                      sound->mTrack, 2, vol);
+			unk0->unk180[mSeSequence->mTrack].mTrackUpdate[sound->mTrack]
+			    |= 0x1;
+			JAISystemInterface::setSeqPortargsF32(
+			    &unk0->unk180[mSeSequence->mTrack], sound->mTrack, 2, vol);
 		}
 	}
 
@@ -452,9 +453,10 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 	if (slot->mPan != pan) {
 		slot->mPan = pan;
 		if (sound->mState != SOUNDSTATE_Prepared) {
-			unk0->unk180[unk38->mTrack].mTrackUpdate[sound->mTrack] |= 0x4;
-			JAISystemInterface::setSeqPortargsF32(&unk0->unk180[unk38->mTrack],
-			                                      sound->mTrack, 4, pan);
+			unk0->unk180[mSeSequence->mTrack].mTrackUpdate[sound->mTrack]
+			    |= 0x4;
+			JAISystemInterface::setSeqPortargsF32(
+			    &unk0->unk180[mSeSequence->mTrack], sound->mTrack, 4, pan);
 		}
 	}
 
@@ -473,9 +475,10 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 	if (slot->mPitch != pitch) {
 		slot->mPitch = pitch;
 		if (sound->mState != SOUNDSTATE_Prepared) {
-			unk0->unk180[unk38->mTrack].mTrackUpdate[sound->mTrack] |= 0x2;
-			JAISystemInterface::setSeqPortargsF32(&unk0->unk180[unk38->mTrack],
-			                                      sound->mTrack, 3, pitch);
+			unk0->unk180[mSeSequence->mTrack].mTrackUpdate[sound->mTrack]
+			    |= 0x2;
+			JAISystemInterface::setSeqPortargsF32(
+			    &unk0->unk180[mSeSequence->mTrack], sound->mTrack, 3, pitch);
 		}
 	}
 
@@ -494,9 +497,10 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 	if (slot->mFxmix != fxmix) {
 		slot->mFxmix = fxmix;
 		if (sound->mState != SOUNDSTATE_Prepared) {
-			unk0->unk180[unk38->mTrack].mTrackUpdate[sound->mTrack] |= 0x8;
-			JAISystemInterface::setSeqPortargsF32(&unk0->unk180[unk38->mTrack],
-			                                      sound->mTrack, 5, fxmix);
+			unk0->unk180[mSeSequence->mTrack].mTrackUpdate[sound->mTrack]
+			    |= 0x8;
+			JAISystemInterface::setSeqPortargsF32(
+			    &unk0->unk180[mSeSequence->mTrack], sound->mTrack, 5, fxmix);
 		}
 	}
 
@@ -521,30 +525,33 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 	if (slot->mDolby != dolby) {
 		slot->mDolby = dolby;
 		if (sound->mState != SOUNDSTATE_Prepared) {
-			unk0->unk180[unk38->mTrack].mTrackUpdate[sound->mTrack] |= 0x10;
-			JAISystemInterface::setSeqPortargsF32(&unk0->unk180[unk38->mTrack],
-			                                      sound->mTrack, 6, dolby);
+			unk0->unk180[mSeSequence->mTrack].mTrackUpdate[sound->mTrack]
+			    |= 0x10;
+			JAISystemInterface::setSeqPortargsF32(
+			    &unk0->unk180[mSeSequence->mTrack], sound->mTrack, 6, dolby);
 		}
 	}
 
 	// Final block: U32 param
-	if (unk0->unk180[unk38->mTrack].mTrackUpdate[sound->mTrack] != 0) {
+	if (unk0->unk180[mSeSequence->mTrack].mTrackUpdate[sound->mTrack] != 0) {
 		JAISystemInterface::setSeqPortargsU32(
-		    &unk0->unk180[unk38->mTrack], sound->mTrack, 1,
-		    unk0->unk180[unk38->mTrack].mTrackUpdate[sound->mTrack]);
-		unk0->unk180[unk38->mTrack].unk4C[sound->mTrack].unk2C.unk0 = 0;
-		unk0->unk180[unk38->mTrack].unk4C[sound->mTrack].unk2C.addPortCmdOnce();
+		    &unk0->unk180[mSeSequence->mTrack], sound->mTrack, 1,
+		    unk0->unk180[mSeSequence->mTrack].mTrackUpdate[sound->mTrack]);
+		unk0->unk180[mSeSequence->mTrack].unk4C[sound->mTrack].unk2C.unk0 = 0;
+		unk0->unk180[mSeSequence->mTrack]
+		    .unk4C[sound->mTrack]
+		    .unk2C.addPortCmdOnce();
 	}
 }
 
 void JAIBasic::releaseSeRegist(JAISound* sound)
 {
 	if (sound->mState != SOUNDSTATE_Stored) {
-		JAISystemInterface::writePortApp(unk38->getSeqParameter()->unk0,
+		JAISystemInterface::writePortApp(mSeSequence->getSeqParameter()->unk0,
 		                                 (sound->mTrack >> 4) + 0x20000000
 		                                     + ((sound->mTrack & 0xf) << 4),
 		                                 0);
-		unk38->setTrackInterruptSwitch(sound->mTrack, 1);
+		mSeSequence->setTrackInterruptSwitch(sound->mTrack, 1);
 	}
 
 	clearSeqMuteFromSeStop(sound);
