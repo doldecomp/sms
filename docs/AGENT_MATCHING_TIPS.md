@@ -132,6 +132,28 @@ Reconstructing correct inline calls is crucial in matching code correctly. When 
 
 UNUSED functions from the MAP must often be reconstructed even when they do not exist as standalone code in the final binary: their inlined bodies still determine caller codegen (register allocation, load offsets, branch layout). Treat their MAP signature and size as constraints, recover a plausible body from repeated callsite patterns, and validate by diffing the caller(s) after each inline-shape change rather than expecting a direct symbol-level match for the UNUSED function itself.
 
+### A getter that repeats before every operation is a wrapper inline
+
+m2c writes an inlined wrapper as one pointer local that is assigned again and again:
+
+```cpp
+pBuf = DSPInterface::getDSPHandle(channel->unk0);
+pBuf->setPauseFlag(1);
+pBuf = DSPInterface::getDSPHandle(channel->unk0);
+pBuf->flushChannel();
+```
+
+When the same lookup comes back before every single operation, the original source almost always called a wrapper that hides the lookup:
+
+```cpp
+DSPInterface::setPauseFlag(channel->unk0, 1);
+DSPInterface::flushChannel(channel->unk0);
+```
+
+Both forms give the same instructions, but the wrapper form reads correctly and it colours the registers correctly in long functions.
+`JAInter::StreamLib::callBack` went from 98.7% to 99.8% on this rewrite alone.
+Keep the pointer local only where the code **reads a field** through it.
+
 ## Reference Locals Affect Register Allocation
 
 Introducing a reference local before accessing struct members can change how the compiler allocates registers:
