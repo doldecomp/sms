@@ -23,7 +23,7 @@ void JAISeqEntry::storeBuffer(JAISound** sound, JAIActor* actor, u32 param_3,
 
 	u32 doThing;
 
-	JAISound** soundSlot = &data->unk180[bVar10].unk48;
+	JAISound** soundSlot = &data->unk180[bVar10].mSound;
 	if (!*soundSlot) {
 		doThing = true;
 	} else {
@@ -83,7 +83,7 @@ void JAISeqEntry::storeBuffer(JAISound** sound, JAIActor* actor, u32 param_3,
 		data->initSeqTrackInfoParameter(bVar10);
 		if (unk0->getSoundSwBit(param_6) & 1) {
 			for (u32 i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
-				JAISound* sound = data->unk180[i].unk48;
+				JAISound* sound = data->unk180[i].mSound;
 				if (i != bVar10 && sound && sound->mState >= SOUNDSTATE_Started
 				    && (sound->getSwBit() & 2) == 0) {
 					sound->setSeqInterVolume(10, 0.0f, 10);

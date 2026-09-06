@@ -13,21 +13,26 @@ public:
 	/* 0x0 */ u8 unk3;
 	/* 0x4 */ u32 unk4;
 	/* 0x8 */ u32 unk8;
-	/* 0xC */ f32 unkC;
-	/* 0x10 */ f32 unk10;
-	/* 0x14 */ f32 unk14;
-	/* 0x18 */ f32 unk18;
-	/* 0x1C */ f32 unk1C;
-	/* 0x20 */ f32 unk20;
-	/* 0x24 */ f32* unk24;
-	/* 0x28 */ f32* unk28;
-	/* 0x2C */ f32* unk2C;
-	/* 0x30 */ f32* unk30;
-	/* 0x34 */ f32* unk34;
+	// The whole sequence. `outerInit` sends these six for the root slot.
+	/* 0xC */ f32 mSeqVolume;
+	/* 0x10 */ f32 mSeqPitch;
+	/* 0x14 */ f32 mSeqFxmix;
+	/* 0x18 */ f32 mSeqPan;
+	/* 0x1C */ f32 mSeqDolby;
+	/* 0x20 */ f32 mSeqTempo;
+	// One entry per track. These hold the value last sent to each track, so
+	// `checkPlayingSeqTrack` sends only what changed.
+	/* 0x24 */ f32* mTrackVolume;
+	/* 0x28 */ f32* mTrackPitch;
+	/* 0x2C */ f32* mTrackFxmix;
+	/* 0x30 */ f32* mTrackPan;
+	/* 0x34 */ f32* mTrackDolby;
 	/* 0x38 */ char unk38[0x8];
-	/* 0x40 */ u8* unk40;
-	/* 0x44 */ u32* unk44;
-	/* 0x48 */ JAISound* unk48;
+	// The sequence data in the load area, given to `setSeqData`.
+	/* 0x40 */ u8* mSeqData;
+	// One bit set per track that has an update to send.
+	/* 0x44 */ u32* mTrackUpdate;
+	/* 0x48 */ JAISound* mSound;
 
 	struct FabricatedUnk4CStruct {
 		/* 0x0 */ JASystem::TTrack* unk0;
