@@ -11,13 +11,13 @@ JAIData::JAIData() { }
 
 void JAIData::init()
 {
-	unk88.unk78  = 0;
-	unkC.unk78   = 0;
-	unk104.unk78 = 0;
-	unk1B0       = 0;
-	unk1F8       = 0;
-	unk1B4       = 0;
-	unk1B8       = 0;
+	unk88.unk78    = 0;
+	unkC.unk78     = 0;
+	unk104.unk78   = 0;
+	unk1B0         = 0;
+	unk1F8         = 0;
+	mNextLoadOrder = 0;
+	mStayHeapCount = 0;
 }
 
 void JAIData::initLinkBuffer(JAILinkBuffer* linkBuffer, u32 param)
@@ -343,26 +343,26 @@ BOOL JAIData::moveParameter(JAIMoveParaSet* moveParaSet)
 void* JAIData::checkOnMemory(u32 param1, u8* param2)
 {
 	for (u8 i = 0; i < JAIGlobalParameter::autoHeapMax; ++i) {
-		if (param1 != unk1EC[i].unk8)
+		if (param1 != unk1EC[i].mSeqNumber)
 			continue;
 
-		if (unk1EC[i].unk0 == 1)
+		if (unk1EC[i].mLoadedFlag == 1)
 			return (void*)0xffffffff;
 
 		if (param2)
 			*param2 = i;
 
-		return unk1EC[i].unk4;
+		return unk1EC[i].mPointer;
 	}
 
-	for (u8 i = 0; i < unk1B8; ++i) {
-		if (param1 != unk1F0[i].unk8)
+	for (u8 i = 0; i < mStayHeapCount; ++i) {
+		if (param1 != unk1F0[i].mSeqNumber)
 			continue;
 
 		if (param2 != 0)
 			*param2 = 0xff;
 
-		return unk1F0[i].unk4;
+		return unk1F0[i].mPointer;
 	}
 	return nullptr;
 }
@@ -374,14 +374,15 @@ u8 JAIData::checkUsefulAutoHeapPosition()
 	int smallest     = 0;
 
 	for (; i < JAIGlobalParameter::autoHeapMax; ++i)
-		if (unk1EC[i].unk8 == -1)
+		if (unk1EC[i].mSeqNumber == -1)
 			break;
 
 	if (i == JAIGlobalParameter::autoHeapMax) {
 		for (i = 0; i < JAIGlobalParameter::autoHeapMax; ++i) {
-			if (smallestSize > unk1EC[i].unkC && unk1EC[i].unk10 == -1) {
+			if (smallestSize > unk1EC[i].mLoadOrder
+			    && unk1EC[i].mUseOrder == -1) {
 				smallest     = i;
-				smallestSize = unk1EC[i].unkC;
+				smallestSize = unk1EC[i].mLoadOrder;
 			}
 		}
 
@@ -394,11 +395,11 @@ u8 JAIData::checkUsefulAutoHeapPosition()
 
 void* JAIData::getFreeAutoHeapPointer(u8 param1, u32 param2)
 {
-	unk1EC[param1].unk8  = param2;
-	void* result         = unk1EC[param1].unk4;
-	unk1EC[param1].unk10 = unk1B4;
-	unk1EC[param1].unkC  = unk1B4;
-	++unk1B4;
+	unk1EC[param1].mSeqNumber = param2;
+	void* result              = unk1EC[param1].mPointer;
+	unk1EC[param1].mUseOrder  = mNextLoadOrder;
+	unk1EC[param1].mLoadOrder = mNextLoadOrder;
+	++mNextLoadOrder;
 	return result;
 }
 
@@ -406,27 +407,27 @@ void JAIData::releaseAutoHeapPointer(u8 param)
 {
 	if (param == 0xff)
 		return;
-	unk1EC[param].unk10 = -1;
+	unk1EC[param].mUseOrder = -1;
 }
 
 u8* JAIData::getFreeStayHeapPointer(u32 param1, u32 param2)
 {
-	if (unk1B8 >= JAIGlobalParameter::stayHeapMax)
+	if (mStayHeapCount >= JAIGlobalParameter::stayHeapMax)
 		return nullptr;
 
 	u8* result;
 
-	if ((u8*)unk1F0[unk1B8].unk4 + param1
-	        < (u8*)unk1F0[0].unk4 + JAIGlobalParameter::stayHeapSize
-	    && unk1B8 < JAIGlobalParameter::stayHeapMax) {
-		result              = (u8*)unk1F0[unk1B8].unk4;
-		unk1F0[unk1B8].unk8 = param2;
-		u8* ptr             = (u8*)unk1F0[unk1B8].unk4 + (param1 & ~0x1F);
+	if ((u8*)unk1F0[mStayHeapCount].mPointer + param1
+	        < (u8*)unk1F0[0].mPointer + JAIGlobalParameter::stayHeapSize
+	    && mStayHeapCount < JAIGlobalParameter::stayHeapMax) {
+		result = (u8*)unk1F0[mStayHeapCount].mPointer;
+		unk1F0[mStayHeapCount].mSeqNumber = param2;
+		u8* ptr = (u8*)unk1F0[mStayHeapCount].mPointer + (param1 & ~0x1F);
 		if (param1 & 0x1F)
 			ptr += 0x20;
-		++unk1B8;
-		if (unk1B8 < JAIGlobalParameter::stayHeapMax)
-			unk1F0[unk1B8].unk4 = ptr;
+		++mStayHeapCount;
+		if (mStayHeapCount < JAIGlobalParameter::stayHeapMax)
+			unk1F0[mStayHeapCount].mPointer = ptr;
 	} else {
 		result = nullptr;
 	}
@@ -441,7 +442,7 @@ void JAIData::clearStayHeap(u32 param) { }
 
 void JAIData::setAutoHeapLoadedFlag(u8 param1, u8 param2)
 {
-	unk1EC[param1].unk0 = param2;
+	unk1EC[param1].mLoadedFlag = param2;
 }
 
 void JAIData::changeAutoHeapPointerToPosition(u8* ptr) { }
@@ -577,19 +578,19 @@ void JAIData::initData()
 	unk1EC = (JAIHeapBlock*)unk1F4->allocHeap(JAIGlobalParameter::autoHeapMax
 	                                          * sizeof(JAIHeapBlock));
 	for (int i = 0; i < JAIGlobalParameter::autoHeapMax; ++i) {
-		unk1EC[i].unk0  = 0;
-		unk1EC[i].unkC  = 0;
-		unk1EC[i].unk8  = -1;
-		unk1EC[i].unk10 = -1;
+		unk1EC[i].mLoadedFlag = 0;
+		unk1EC[i].mLoadOrder  = 0;
+		unk1EC[i].mSeqNumber  = -1;
+		unk1EC[i].mUseOrder   = -1;
 	}
 
 	unk1F0 = (JAIHeapBlock*)unk1F4->allocHeap(JAIGlobalParameter::stayHeapMax
 	                                          * sizeof(JAIHeapBlock));
 	for (int i = 0; i < JAIGlobalParameter::stayHeapMax; ++i) {
-		unk1F0[i].unk0  = 0;
-		unk1F0[i].unkC  = 0;
-		unk1F0[i].unk8  = -1;
-		unk1F0[i].unk10 = -1;
+		unk1F0[i].mLoadedFlag = 0;
+		unk1F0[i].mLoadOrder  = 0;
+		unk1F0[i].mSeqNumber  = -1;
+		unk1F0[i].mUseOrder   = -1;
 	}
 
 	unk1E0 = (JAISound**)unk1F4->allocHeap(JAIGlobalParameter::seqPlayTrackMax
