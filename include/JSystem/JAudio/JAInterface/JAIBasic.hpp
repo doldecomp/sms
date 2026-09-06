@@ -91,8 +91,8 @@ public:
 	static void finishSceneSet(u32 param);
 	void loadSceneWave(s32 param1, s32 param2);
 	bool checkSceneWaveOnMemory(s32 param1, s32 param2);
-	void getWaveGroupNumber(s32 param);
-	void getWaveLoadStatus(s32 param);
+	s32 getWaveGroupNumber(s32 param);
+	s32 getWaveLoadStatus(s32 param);
 	void checkAllWaveLoadStatus();
 	void setInitFileLoadSwitch(u8 flag);
 	void startFrameInterfaceWork();
@@ -250,14 +250,21 @@ public:
 
 	/* 0x54 */ FabricatedUnk54Struct* unk54;
 	/* 0x58 */ u8** unk58; // TODO: wrong type
-	/* 0x5C */ u32 unk5C;
-	/* 0x60 */ s32* unk60;
-	/* 0x64 */ s32* unk64;
+	/* 0x5C */ JAIData::FabricatedUnk1F8Struct** unk5C;
+	/* 0x60 */ s32* mWaveGroupNumber;
+
+	enum {
+		WAVE_LOAD_STATUS_NOT_LOADED = 0,
+		WAVE_LOAD_STATUS_LOADING    = 1,
+		WAVE_LOAD_STATUS_LOADED     = 2,
+	};
+
+	/* 0x64 */ s32* mWaveLoadStatus;
 	/* 0x68 */ u8** unk68; // TODO: might be pair of u8s actually
 	/* 0x6C */ u8* unk6C;
 	/* 0x70 */ u32 unk70;
 	/* 0x74 */ char unk74[0x4];
-	/* 0x78 */ u32 unk78;
+	/* 0x78 */ u8* unk78;
 	/* 0x7C */ JAISound* unk7C;
 	/* 0x80 */ JAISound* unk80;
 	/* 0x84 */ u32 unk84;

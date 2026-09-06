@@ -92,7 +92,7 @@ void JAIData::initDummyVecLink()
 
 void JAIData::initSeqParameter(JAISeqParameter* param)
 {
-	param->unk1758   = -1;
+	param->unk1758   = 0xffffffff;
 	param->unk4.unk4 = 1.0f;
 	param->unk4.unkC = 0;
 	param->unk1755   = 0;
