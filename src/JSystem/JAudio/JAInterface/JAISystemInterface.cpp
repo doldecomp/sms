@@ -118,11 +118,11 @@ void JAISystemInterface::outerInit(JAISeqUpdateData* param_1, void* param_2,
 		outer->onSwitch(JASystem::TTrack::UPDATE_Tempo);
 	} else {
 		JAISeqParameter* pJVar3 = param_1->unk48->getSeqParameter();
-		args->mTrackVolume      = pJVar3->unk754[param_3].unk4;
-		args->mTrackPitch       = pJVar3->unkB54[param_3].unk4;
-		args->mTrackFxmix       = pJVar3->unkD54[param_3].unk4;
-		args->mTrackPan         = pJVar3->unk954[param_3].unk4;
-		args->mTrackDolby       = pJVar3->unkF54[param_3].unk4;
+		args->mTrackVolume      = pJVar3->unk754[param_3].mCurrentValue;
+		args->mTrackPitch       = pJVar3->unkB54[param_3].mCurrentValue;
+		args->mTrackFxmix       = pJVar3->unkD54[param_3].mCurrentValue;
+		args->mTrackPan         = pJVar3->unk954[param_3].mCurrentValue;
+		args->mTrackDolby       = pJVar3->unkF54[param_3].mCurrentValue;
 		args->unk20             = 0;
 		args->mFlags            = 0x7f;
 		track->muteTrack(pJVar3->unk1830[param_3].flag1);

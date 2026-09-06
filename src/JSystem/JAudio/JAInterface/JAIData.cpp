@@ -92,11 +92,11 @@ void JAIData::initDummyVecLink()
 
 void JAIData::initSeqParameter(JAISeqParameter* param)
 {
-	param->unk1758   = 0xffffffff;
-	param->unk4.unk4 = 1.0f;
-	param->unk4.unkC = 0;
-	param->unk1755   = 0;
-	param->unk1756   = 0;
+	param->unk1758            = 0xffffffff;
+	param->unk4.mCurrentValue = 1.0f;
+	param->unk4.mMoveCounter  = 0;
+	param->unk1755            = 0;
+	param->unk1756            = 0;
 
 	// TODO: array? but why ops reordered tho?
 	param->unk175C = 0;
@@ -116,26 +116,26 @@ void JAIData::initSeqParameter(JAISeqParameter* param)
 	param->unk178C = 0;
 
 	for (u32 i = 0; i < JAIGlobalParameter::seqTrackMax; ++i) {
-		param->unk754[i].unk4  = 1.0f;
-		param->unk954[i].unk4  = 0.5f;
-		param->unkB54[i].unk4  = 1.0f;
-		param->unkD54[i].unk4  = 0.0f;
-		param->unkF54[i].unk4  = 0.0f;
-		param->unk1154[i].unk4 = 0.0f;
+		param->unk754[i].mCurrentValue  = 1.0f;
+		param->unk954[i].mCurrentValue  = 0.5f;
+		param->unkB54[i].mCurrentValue  = 1.0f;
+		param->unkD54[i].mCurrentValue  = 0.0f;
+		param->unkF54[i].mCurrentValue  = 0.0f;
+		param->unk1154[i].mCurrentValue = 0.0f;
 
-		param->unk754[i].unk0  = 1.0f;
-		param->unk954[i].unk0  = 0.5f;
-		param->unkB54[i].unk0  = 1.0f;
-		param->unkD54[i].unk0  = 0.0f;
-		param->unkF54[i].unk0  = 0.0f;
-		param->unk1154[i].unk0 = 0.0f;
+		param->unk754[i].mTargetValue  = 1.0f;
+		param->unk954[i].mTargetValue  = 0.5f;
+		param->unkB54[i].mTargetValue  = 1.0f;
+		param->unkD54[i].mTargetValue  = 0.0f;
+		param->unkF54[i].mTargetValue  = 0.0f;
+		param->unk1154[i].mTargetValue = 0.0f;
 
-		param->unk754[i].unkC  = 0;
-		param->unk954[i].unkC  = 0;
-		param->unkB54[i].unkC  = 0;
-		param->unkD54[i].unkC  = 0;
-		param->unkF54[i].unkC  = 0;
-		param->unk1154[i].unkC = 0;
+		param->unk754[i].mMoveCounter  = 0;
+		param->unk954[i].mMoveCounter  = 0;
+		param->unkB54[i].mMoveCounter  = 0;
+		param->unkD54[i].mMoveCounter  = 0;
+		param->unkF54[i].mMoveCounter  = 0;
+		param->unk1154[i].mMoveCounter = 0;
 
 		param->unk1830[i].flag1 = 0;
 		param->unk1830[i].flag3 = 0;
@@ -162,28 +162,28 @@ void JAIData::initSeqParameter(JAISeqParameter* param)
 	}
 
 	for (u32 i = 0; i < 16; ++i) {
-		param->unk14[i].unk4 = 0.0f;
-		param->unk14[i].unkC = 0;
+		param->unk14[i].mCurrentValue = 0.0f;
+		param->unk14[i].mMoveCounter  = 0;
 	}
 
 	for (u32 i = 0; i < JAIGlobalParameter::seqPlayTrackMax + 0xC; ++i) {
-		param->unk114[i].unk4 = 1.0f;
-		param->unk254[i].unk4 = 0.5f;
-		param->unk394[i].unk4 = 1.0f;
-		param->unk4D4[i].unk4 = 0.0f;
-		param->unk614[i].unk4 = 0.0f;
+		param->unk114[i].mCurrentValue = 1.0f;
+		param->unk254[i].mCurrentValue = 0.5f;
+		param->unk394[i].mCurrentValue = 1.0f;
+		param->unk4D4[i].mCurrentValue = 0.0f;
+		param->unk614[i].mCurrentValue = 0.0f;
 
-		param->unk114[i].unk0 = 1.0f;
-		param->unk254[i].unk0 = 0.5f;
-		param->unk394[i].unk0 = 1.0f;
-		param->unk4D4[i].unk0 = 0.0f;
-		param->unk614[i].unk0 = 0.0f;
+		param->unk114[i].mTargetValue = 1.0f;
+		param->unk254[i].mTargetValue = 0.5f;
+		param->unk394[i].mTargetValue = 1.0f;
+		param->unk4D4[i].mTargetValue = 0.0f;
+		param->unk614[i].mTargetValue = 0.0f;
 
-		param->unk114[i].unkC = 0;
-		param->unk254[i].unkC = 0;
-		param->unk394[i].unkC = 0;
-		param->unk4D4[i].unkC = 0;
-		param->unk614[i].unkC = 0;
+		param->unk114[i].mMoveCounter = 0;
+		param->unk254[i].mMoveCounter = 0;
+		param->unk394[i].mMoveCounter = 0;
+		param->unk4D4[i].mMoveCounter = 0;
+		param->unk614[i].mMoveCounter = 0;
 	}
 }
 
@@ -211,26 +211,26 @@ void JAIData::initSePara(JAISeParameter* param)
 {
 	f32 dolby = JAIGlobalParameter::seDolbyCenterValue / 127.0f;
 	for (int i = 0; i < 8; ++i) {
-		param->unk124[i].unk4 = 1.0f;
-		param->unk1A4[i].unk4 = 0.5f;
-		param->unk224[i].unk4 = 1.0f;
-		param->unk2A4[i].unk4 = 0.0f;
-		param->unk324[i].unk4 = 0.0f;
-		param->unk3A4[i].unk4 = dolby;
+		param->unk124[i].mCurrentValue = 1.0f;
+		param->unk1A4[i].mCurrentValue = 0.5f;
+		param->unk224[i].mCurrentValue = 1.0f;
+		param->unk2A4[i].mCurrentValue = 0.0f;
+		param->unk324[i].mCurrentValue = 0.0f;
+		param->unk3A4[i].mCurrentValue = dolby;
 
-		param->unk124[i].unkC = 0;
-		param->unk1A4[i].unkC = 0;
-		param->unk224[i].unkC = 0;
-		param->unk2A4[i].unkC = 0;
-		param->unk324[i].unkC = 0;
-		param->unk3A4[i].unkC = 0;
+		param->unk124[i].mMoveCounter = 0;
+		param->unk1A4[i].mMoveCounter = 0;
+		param->unk224[i].mMoveCounter = 0;
+		param->unk2A4[i].mMoveCounter = 0;
+		param->unk324[i].mMoveCounter = 0;
+		param->unk3A4[i].mMoveCounter = 0;
 	}
-	param->unk124[7].unk4 = -1.0f;
-	param->unk1A4[7].unk4 = -1.0f;
-	param->unk224[7].unk4 = -1.0f;
-	param->unk2A4[7].unk4 = -1.0f;
-	param->unk324[7].unk4 = -1.0f;
-	param->unk3A4[7].unk4 = -1.0f;
+	param->unk124[7].mCurrentValue = -1.0f;
+	param->unk1A4[7].mCurrentValue = -1.0f;
+	param->unk224[7].mCurrentValue = -1.0f;
+	param->unk2A4[7].mCurrentValue = -1.0f;
+	param->unk324[7].mCurrentValue = -1.0f;
+	param->unk3A4[7].mCurrentValue = -1.0f;
 
 	param->unk424 = 0;
 	param->unk428 = 0;
@@ -270,15 +270,15 @@ void JAIData::initStreamParameter(JAIStreamParameter* param)
 	param->unkC = 0;
 
 	for (int i = 0; i < 13; ++i) {
-		param->unk14[i].unk4  = 1.0f;
-		param->unk14[i].unk0  = 1.0f;
-		param->unk14[i].unkC  = 0;
-		param->unk154[i].unk4 = 1.0f;
-		param->unk154[i].unk0 = 1.0f;
-		param->unk154[i].unkC = 0;
-		param->unk294[i].unk4 = 0.5f;
-		param->unk294[i].unk0 = 0.5f;
-		param->unk294[i].unkC = 0;
+		param->unk14[i].mCurrentValue  = 1.0f;
+		param->unk14[i].mTargetValue   = 1.0f;
+		param->unk14[i].mMoveCounter   = 0;
+		param->unk154[i].mCurrentValue = 1.0f;
+		param->unk154[i].mTargetValue  = 1.0f;
+		param->unk154[i].mMoveCounter  = 0;
+		param->unk294[i].mCurrentValue = 0.5f;
+		param->unk294[i].mTargetValue  = 0.5f;
+		param->unk294[i].mMoveCounter  = 0;
 	}
 }
 
@@ -315,28 +315,28 @@ void JAIData::initStreamUpdateParameter()
 void JAIData::setSeMovePara(JAIMoveParaSet* moveParaSet)
 {
 	for (u8 i = 0; i < 8; ++i) {
-		if (!moveParaSet[i].unkC)
+		if (!moveParaSet[i].mMoveCounter)
 			continue;
 
-		--moveParaSet[i].unkC;
-		if (moveParaSet[i].unkC == 0)
-			moveParaSet[i].unk4 = moveParaSet[i].unk0;
+		--moveParaSet[i].mMoveCounter;
+		if (moveParaSet[i].mMoveCounter == 0)
+			moveParaSet[i].mCurrentValue = moveParaSet[i].mTargetValue;
 		else
-			moveParaSet[i].unk4 += moveParaSet[i].unk8;
+			moveParaSet[i].mCurrentValue += moveParaSet[i].mMoveAmount;
 	}
 }
 
 BOOL JAIData::moveParameter(JAIMoveParaSet* moveParaSet)
 {
-	if (moveParaSet->unkC == 0)
+	if (moveParaSet->mMoveCounter == 0)
 		return false;
 
-	if (--moveParaSet->unkC) {
-		moveParaSet->unk4 -= moveParaSet->unk8;
+	if (--moveParaSet->mMoveCounter) {
+		moveParaSet->mCurrentValue -= moveParaSet->mMoveAmount;
 		return true;
 	}
 
-	moveParaSet->unk4 = moveParaSet->unk0;
+	moveParaSet->mCurrentValue = moveParaSet->mTargetValue;
 	return false;
 }
 

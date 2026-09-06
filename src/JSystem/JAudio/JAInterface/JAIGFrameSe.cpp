@@ -330,7 +330,7 @@ void JAIBasic::sendPlayingSeCommand()
 			} else if (readStatus0 == 0 && readStatus1 != 1) {
 				releaseSeRegist(sound);
 			} else if (sound->mFadeCounter != 0) {
-				if (sound->getSeParameter()->unk124[6].unk4 != 0.0f) {
+				if (sound->getSeParameter()->unk124[6].mCurrentValue != 0.0f) {
 					sound->setSeDistanceParameters();
 					sendSeAllParameter(sound);
 					if (sound->mSoundID & 0xC00) {
@@ -411,15 +411,15 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 
 	// Volume
 	f32 vol;
-	if (seParam->unk124[7].unk4 == -1.0f) {
+	if (seParam->unk124[7].mCurrentValue == -1.0f) {
 		if (seParam->unk424 != 0) {
-			seParam->unk124[0].unk4 = *(f32*)seParam->unk424;
+			seParam->unk124[0].mCurrentValue = *(f32*)seParam->unk424;
 		}
 		vol = 1.0f;
 		for (int i = 0; i < 7; ++i)
-			vol *= seParam->unk124[i].unk4;
+			vol *= seParam->unk124[i].mCurrentValue;
 	} else {
-		vol = seParam->unk124[7].unk4;
+		vol = seParam->unk124[7].mCurrentValue;
 	}
 	vol *= unk28[(u8)sound->getSeCategoryNumber()];
 	if (slot->unk4 != vol) {
@@ -433,21 +433,21 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 
 	// Pan
 	f32 pan;
-	if (seParam->unk1A4[7].unk4 == -1.0f) {
+	if (seParam->unk1A4[7].mCurrentValue == -1.0f) {
 		if (seParam->unk428 != 0) {
-			seParam->unk1A4[0].unk4 = *(f32*)seParam->unk428;
+			seParam->unk1A4[0].mCurrentValue = *(f32*)seParam->unk428;
 		}
 		pan = 0.0f;
 		for (int i = 0; i < 7; ++i)
-			if (seParam->unk1A4[i].unk4 != 0.5f)
-				pan += seParam->unk1A4[i].unk4 - 0.5f;
+			if (seParam->unk1A4[i].mCurrentValue != 0.5f)
+				pan += seParam->unk1A4[i].mCurrentValue - 0.5f;
 		pan += 0.5f;
 		if (pan < 0.0f)
 			pan = 0.0f;
 		else if (pan > 1.0f)
 			pan = 1.0f;
 	} else {
-		pan = seParam->unk1A4[7].unk4;
+		pan = seParam->unk1A4[7].mCurrentValue;
 	}
 	if (slot->unk10 != pan) {
 		slot->unk10 = pan;
@@ -460,15 +460,15 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 
 	// Pitch
 	f32 pitch;
-	if (seParam->unk224[7].unk4 == -1.0f) {
+	if (seParam->unk224[7].mCurrentValue == -1.0f) {
 		if (seParam->unk42C != 0) {
-			seParam->unk224[0].unk4 = *(f32*)seParam->unk42C;
+			seParam->unk224[0].mCurrentValue = *(f32*)seParam->unk42C;
 		}
 		pitch = 1.0f;
 		for (int i = 0; i < 7; ++i)
-			pitch *= seParam->unk224[i].unk4;
+			pitch *= seParam->unk224[i].mCurrentValue;
 	} else {
-		pitch = seParam->unk224[7].unk4;
+		pitch = seParam->unk224[7].mCurrentValue;
 	}
 	if (slot->unk8 != pitch) {
 		slot->unk8 = pitch;
@@ -481,15 +481,15 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 
 	// FxMix
 	f32 fxmix;
-	if (seParam->unk2A4[7].unk4 == -1.0f) {
+	if (seParam->unk2A4[7].mCurrentValue == -1.0f) {
 		if (seParam->unk430 != 0) {
-			seParam->unk2A4[0].unk4 = *(f32*)seParam->unk430;
+			seParam->unk2A4[0].mCurrentValue = *(f32*)seParam->unk430;
 		}
 		fxmix = 0.0f;
 		for (int i = 0; i < 7; ++i)
-			fxmix += seParam->unk2A4[i].unk4;
+			fxmix += seParam->unk2A4[i].mCurrentValue;
 	} else {
-		fxmix = seParam->unk2A4[7].unk4;
+		fxmix = seParam->unk2A4[7].mCurrentValue;
 	}
 	if (slot->unkC != fxmix) {
 		slot->unkC = fxmix;
@@ -502,21 +502,21 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 
 	// Dolby
 	f32 dolby;
-	if (seParam->unk3A4[7].unk4 == -1.0f) {
+	if (seParam->unk3A4[7].mCurrentValue == -1.0f) {
 		if (seParam->unk438 != 0) {
-			seParam->unk3A4[0].unk4 = *(f32*)seParam->unk438;
+			seParam->unk3A4[0].mCurrentValue = *(f32*)seParam->unk438;
 		}
 		f32 center = JAIGlobalParameter::seDolbyCenterValue / 127.0f;
 		dolby      = 0.0f;
 		for (int i = 0; i < 7; ++i)
-			dolby += seParam->unk3A4[i].unk4 - center;
+			dolby += seParam->unk3A4[i].mCurrentValue - center;
 		dolby += center;
 		if (dolby < 0.0f)
 			dolby = 0.0f;
 		else if (dolby > 1.0f)
 			dolby = 1.0f;
 	} else {
-		dolby = seParam->unk3A4[7].unk4;
+		dolby = seParam->unk3A4[7].mCurrentValue;
 	}
 	if (slot->unk14 != dolby) {
 		slot->unk14 = dolby;
