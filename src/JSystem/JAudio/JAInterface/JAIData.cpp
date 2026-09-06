@@ -284,19 +284,19 @@ void JAIData::initStreamParameter(JAIStreamParameter* param)
 
 void JAIData::initSeqTrackInfoParameter(u32 param)
 {
-	unk180[param].unkC  = 1.0f;
-	unk180[param].unk18 = 0.5f;
-	unk180[param].unk10 = 1.0f;
-	unk180[param].unk14 = 0.0f;
-	unk180[param].unk1C = 0.0f;
-	unk180[param].unk20 = 1.0f;
+	unk180[param].mSeqVolume = 1.0f;
+	unk180[param].mSeqPan    = 0.5f;
+	unk180[param].mSeqPitch  = 1.0f;
+	unk180[param].mSeqFxmix  = 0.0f;
+	unk180[param].mSeqDolby  = 0.0f;
+	unk180[param].mSeqTempo  = 1.0f;
 	for (int i = 0; i < JAIGlobalParameter::seqTrackMax; ++i) {
-		unk180[param].unk24[i] = 1.0f;
-		unk180[param].unk30[i] = 64.0f;
-		unk180[param].unk28[i] = 1.0f;
-		unk180[param].unk2C[i] = 0.0f;
-		unk180[param].unk34[i] = 0.0f;
-		unk180[param].unk44[i] = 0;
+		unk180[param].mTrackVolume[i] = 1.0f;
+		unk180[param].mTrackPan[i]    = 64.0f;
+		unk180[param].mTrackPitch[i]  = 1.0f;
+		unk180[param].mTrackFxmix[i]  = 0.0f;
+		unk180[param].mTrackDolby[i]  = 0.0f;
+		unk180[param].mTrackUpdate[i] = 0;
 	}
 }
 
@@ -601,25 +601,25 @@ void JAIData::initData()
 		unk180[i].unk4C
 		    = (JAISeqUpdateData::FabricatedUnk4CStruct*)unk1F4->allocHeap(
 		        0x7BC);
-		unk1E0[i]       = 0;
-		unk180[i].unk0  = 0;
-		unk180[i].unk1  = 0;
-		unk180[i].unk2  = 0;
-		unk180[i].unk3  = 0;
-		unk180[i].unk8  = 0;
-		unk180[i].unk48 = 0;
+		unk1E0[i]        = 0;
+		unk180[i].unk0   = 0;
+		unk180[i].unk1   = 0;
+		unk180[i].unk2   = 0;
+		unk180[i].unk3   = 0;
+		unk180[i].unk8   = 0;
+		unk180[i].mSound = 0;
 
-		unk180[i].unk24 = (f32*)unk1F4->allocHeap(
+		unk180[i].mTrackVolume = (f32*)unk1F4->allocHeap(
 		    JAIGlobalParameter::seqTrackMax * sizeof(f32));
-		unk180[i].unk30 = (f32*)unk1F4->allocHeap(
+		unk180[i].mTrackPan = (f32*)unk1F4->allocHeap(
 		    JAIGlobalParameter::seqTrackMax * sizeof(f32));
-		unk180[i].unk28 = (f32*)unk1F4->allocHeap(
+		unk180[i].mTrackPitch = (f32*)unk1F4->allocHeap(
 		    JAIGlobalParameter::seqTrackMax * sizeof(f32));
-		unk180[i].unk2C = (f32*)unk1F4->allocHeap(
+		unk180[i].mTrackFxmix = (f32*)unk1F4->allocHeap(
 		    JAIGlobalParameter::seqTrackMax * sizeof(f32));
-		unk180[i].unk34 = (f32*)unk1F4->allocHeap(
+		unk180[i].mTrackDolby = (f32*)unk1F4->allocHeap(
 		    JAIGlobalParameter::seqTrackMax * sizeof(f32));
-		unk180[i].unk44 = (u32*)unk1F4->allocHeap(
+		unk180[i].mTrackUpdate = (u32*)unk1F4->allocHeap(
 		    (JAIGlobalParameter::seqTrackMax + 1) * sizeof(u32));
 		initSeqTrackInfoParameter(i);
 	}

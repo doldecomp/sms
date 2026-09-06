@@ -762,7 +762,7 @@ void JAIBasic::stopSoundHandle(JAISound* sound, u32 param)
 				stopSeq(sound);
 			} else {
 				unk0->unk180[sound->mTrack].unk8 |= 0x2;
-				unk0->unk180[sound->mTrack].unk48->mFadeCounter = param;
+				unk0->unk180[sound->mTrack].mSound->mFadeCounter = param;
 			}
 			break;
 
@@ -1135,18 +1135,18 @@ u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 	switch (param_2) {
 	case 0:
 		for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
-			if (basic->unk0->unk180[i].unk48 == nullptr)
+			if (basic->unk0->unk180[i].mSound == nullptr)
 				continue;
 
 			JASystem::TTrack* track = JASystem::TrackMgr::handleToSeq(
-			    basic->unk0->unk180[i].unk48->getSeqParameter()->unk0);
+			    basic->unk0->unk180[i].mSound->getSeqParameter()->unk0);
 			if (track != param_1->mParent)
 				continue;
 
 			u32 uVar8          = param_1->unk308;
 			u32 route          = basic->routeToTrack(uVar8);
 			JAISoundInfo* info = basic->getSoundInfoFromID(
-			    basic->unk0->unk180[i].unk48->mSoundID);
+			    basic->unk0->unk180[i].mSound->mSoundID);
 
 			JAISystemInterface::outerInit(&basic->unk0->unk180[i], param_1,
 			                              route, info->mSwBit >> 8,
