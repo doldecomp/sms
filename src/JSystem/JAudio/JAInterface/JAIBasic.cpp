@@ -48,8 +48,8 @@ JAIBasic::JAIBasic()
 	unk30               = 0;
 	mInitFileLoadSwitch = 3;
 	mInitDataPointer    = nullptr;
-	unk3C               = nullptr;
-	unk40               = nullptr;
+	mBankFileList       = nullptr;
+	mWaveBankFileList   = nullptr;
 	unk44               = 0;
 	unk48               = 0;
 	mBankList           = nullptr;
@@ -210,12 +210,12 @@ BOOL JAIBasic::checkInitListFile()
 	FabricatedFileHeader* header = (FabricatedFileHeader*)file;
 
 	if (file) {
-
 		strcpy(JAIGlobalParameter::sequenceArchivesFileName,
 		       (char*)((u8*)file + header->unk0));
 
-		unk3C = (FabricatedUnk3CStruct*)((u8*)file + header->unk2);
-		unk40 = (FabricatedUnk40Struct*)((u8*)file + header->unk4);
+		mBankFileList = (FabricatedFileNameEntry*)((u8*)file + header->unk2);
+		mWaveBankFileList
+		    = (FabricatedFileNameEntry*)((u8*)file + header->unk4);
 
 		strcpy(JAIGlobalParameter::seInfoFileName,
 		       (char*)((u8*)file + header->unk6));
@@ -327,7 +327,8 @@ void JAIBasic::checkInitDataOnMemory()
 
 			while (((u32*)mInitDataPointer)[i] != 0) {
 				mBankList[j].mBankData
-				    = (void*)(mInitDataPointer + (u32)mBankList[j].mBankData);
+				    = (void*)(mInitDataPointer
+				              + (uintptr_t)mBankList[j].mBankData);
 				++j;
 				i += 3;
 			}
@@ -348,7 +349,7 @@ void JAIBasic::checkInitDataOnMemory()
 			while (((u32*)mInitDataPointer)[i] != 0) {
 				mWaveBankList[j].mWaveBankData
 				    = (void*)(mInitDataPointer
-				              + (u32)mWaveBankList[j].mWaveBankData);
+				              + (uintptr_t)mWaveBankList[j].mWaveBankData);
 				++j;
 				i += 3;
 			}
@@ -449,9 +450,9 @@ void JAIBasic::initBankWave()
 		}
 	}
 
-	if (unk40) {
-		for (int i = 0; unk40[i].unk0[0] != 0; ++i) {
-			void* data = loadDVDFile(unk40[i].unk0);
+	if (mWaveBankFileList) {
+		for (int i = 0; mWaveBankFileList[i].mFileName[0] != 0; ++i) {
+			void* data = loadDVDFile(mWaveBankFileList[i].mFileName);
 			if (data)
 				JASystem::WaveBankMgr::registWaveBankWS(i, data);
 		}
@@ -472,9 +473,9 @@ void JAIBasic::initBankWave()
 			JASystem::BankMgr::assignWaveBank(i, mBankList[i].mWaveBankNumber);
 	}
 
-	if (unk3C) {
-		for (int i = 0; unk3C[i].unk0[0] != 0; ++i) {
-			void* file = loadDVDFile(unk3C[i].unk0);
+	if (mBankFileList) {
+		for (int i = 0; mBankFileList[i].mFileName[0] != 0; ++i) {
+			void* file = loadDVDFile(mBankFileList[i].mFileName);
 			if (file)
 				JASystem::BankMgr::registBankBNK(i, file);
 			loadGroupWave(i, 0);

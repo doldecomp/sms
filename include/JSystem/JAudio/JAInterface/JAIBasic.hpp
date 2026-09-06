@@ -217,18 +217,12 @@ public:
 	/* 0x34 */ u32 mFinishedSceneSet;
 	/* 0x38 */ JAISound* mSeSequence;
 
-	struct FabricatedUnk3CStruct {
-		char unk0[1]; // TODO: is this just a size 0x30 str or nah?
-		char unk1[0x2F];
+	struct FabricatedFileNameEntry {
+		/* 0x0 */ char mFileName[0x30];
 	};
-	/* 0x3C */ FabricatedUnk3CStruct* unk3C;
 
-	// TODO: same as unk3C?
-	struct FabricatedUnk40Struct {
-		char unk0[1];
-		char unk1[0x2F];
-	};
-	/* 0x40 */ FabricatedUnk40Struct* unk40;
+	/* 0x3C */ FabricatedFileNameEntry* mBankFileList;
+	/* 0x40 */ FabricatedFileNameEntry* mWaveBankFileList;
 	/* 0x44 */ u32 unk44;
 	/* 0x48 */ u32 unk48;
 	/* 0x4C */ u8* mInitDataPointer;
