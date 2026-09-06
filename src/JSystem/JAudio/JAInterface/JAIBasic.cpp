@@ -1127,12 +1127,6 @@ void JAIBasic::setSeCategoryVolume(u8 category, u8 volume)
 	unk28[category] = volume / 127.0f;
 }
 
-// TODO: the frame is 8 bytes short - two reserved slots - and the shortage
-// moves `params` in case 1 off the register the target reuses, plus a few
-// argument slots in case 0. Spelling every `basic` read as
-// `JAIBasic::getInterface()` overshoots to 0x40, and no subset of the reads is
-// less arbitrary than another; `finishSceneSet` matches at 100% with the raw
-// `basic`, so the getter is probably not what this function used.
 u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 {
 	u16 result = 0;
@@ -1164,18 +1158,18 @@ u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 	case 1: {
 		u32 uVar8                            = param_1->unk308;
 		JASystem::TTrack::TOuterParam* outer = param_1->mOuterParam;
-		JAIData::FabricatedUnk0Struct* params
+		JAIData::FabricatedSeTrackParameter* params
 		    = &basic->unk0->unk0[uVar8 & 0xff];
 
-		outer->setParam(JASystem::TTrack::UPDATE_Volume, params->unk4);
-		outer->setParam(JASystem::TTrack::UPDATE_Pan, params->unk10);
-		outer->setParam(JASystem::TTrack::UPDATE_Pitch, params->unk8);
-		outer->setParam(JASystem::TTrack::UPDATE_Fxmix, params->unkC);
+		outer->setParam(JASystem::TTrack::UPDATE_Volume, params->mVolume);
+		outer->setParam(JASystem::TTrack::UPDATE_Pan, params->mPan);
+		outer->setParam(JASystem::TTrack::UPDATE_Pitch, params->mPitch);
+		outer->setParam(JASystem::TTrack::UPDATE_Fxmix, params->mFxmix);
 		f32 thing;
 		if (basic->unk14 != 2)
 			thing = 0.0f;
 		else
-			thing = params->unk14;
+			thing = params->mDolby;
 		outer->setParam(JASystem::TTrack::UPDATE_Dolby, thing);
 		break;
 	}

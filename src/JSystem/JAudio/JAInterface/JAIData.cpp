@@ -538,17 +538,17 @@ void JAIData::initData()
 			unk8[i][j].unk8 = nullptr;
 		}
 	}
-	unk0 = (FabricatedUnk0Struct*)unk1F4->allocHeap(
+	unk0 = (FabricatedSeTrackParameter*)unk1F4->allocHeap(
 	    JAIGlobalParameter::seTrackMax * 0x18);
 	for (u32 i = 0; i < JAIGlobalParameter::seTrackMax; ++i) {
-		FabricatedUnk0Struct& s = unk0[i];
+		FabricatedSeTrackParameter& s = unk0[i];
 
-		s.unk4  = 1.0f;
-		s.unk8  = 1.0f;
-		s.unkC  = 0.0f;
-		s.unk10 = 0.5f;
-		s.unk0  = 0xff;
-		s.unk14 = 0.0f;
+		s.mVolume = 1.0f;
+		s.mPitch  = 1.0f;
+		s.mFxmix  = 0.0f;
+		s.mPan    = 0.5f;
+		s.unk0    = 0xff;
+		s.mDolby  = 0.0f;
 	}
 
 	unk208 = unk1F4->makeSound(JAIGlobalParameter::seqControlBufferMax);

@@ -127,16 +127,18 @@ public:
 	}
 
 public:
-	struct FabricatedUnk0Struct {
-		u8 unk0;
-		f32 unk4;
-		f32 unk8;
-		f32 unkC;
-		f32 unk10;
-		f32 unk14;
+	// One entry per SE track. `sendSeAllParameter` composes the track's
+	// parameters into it, and only sends the ones that changed.
+	struct FabricatedSeTrackParameter {
+		/* 0x0 */ u8 unk0;
+		/* 0x4 */ f32 mVolume;
+		/* 0x8 */ f32 mPitch;
+		/* 0xC */ f32 mFxmix;
+		/* 0x10 */ f32 mPan;
+		/* 0x14 */ f32 mDolby;
 	};
 
-	/* 0x0 */ FabricatedUnk0Struct* unk0;
+	/* 0x0 */ FabricatedSeTrackParameter* unk0;
 	/* 0x4 */ u8** unk4;
 
 	struct FabricatedUnk8Struct {

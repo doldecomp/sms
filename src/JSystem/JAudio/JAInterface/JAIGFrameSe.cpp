@@ -406,8 +406,8 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 {
 	// char _stackPad[0x30];
 
-	JAIData::FabricatedUnk0Struct* slot = &unk0->unk0[sound->mTrack];
-	JAISeParameter* seParam             = sound->getSeParameter();
+	JAIData::FabricatedSeTrackParameter* slot = &unk0->unk0[sound->mTrack];
+	JAISeParameter* seParam                   = sound->getSeParameter();
 
 	// Volume
 	f32 vol;
@@ -422,8 +422,8 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 		vol = seParam->unk124[7].mCurrentValue;
 	}
 	vol *= unk28[(u8)sound->getSeCategoryNumber()];
-	if (slot->unk4 != vol) {
-		slot->unk4 = vol;
+	if (slot->mVolume != vol) {
+		slot->mVolume = vol;
 		if (sound->mState != SOUNDSTATE_Prepared) {
 			unk0->unk180[unk38->mTrack].unk44[sound->mTrack] |= 0x1;
 			JAISystemInterface::setSeqPortargsF32(&unk0->unk180[unk38->mTrack],
@@ -449,8 +449,8 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 	} else {
 		pan = seParam->unk1A4[7].mCurrentValue;
 	}
-	if (slot->unk10 != pan) {
-		slot->unk10 = pan;
+	if (slot->mPan != pan) {
+		slot->mPan = pan;
 		if (sound->mState != SOUNDSTATE_Prepared) {
 			unk0->unk180[unk38->mTrack].unk44[sound->mTrack] |= 0x4;
 			JAISystemInterface::setSeqPortargsF32(&unk0->unk180[unk38->mTrack],
@@ -470,8 +470,8 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 	} else {
 		pitch = seParam->unk224[7].mCurrentValue;
 	}
-	if (slot->unk8 != pitch) {
-		slot->unk8 = pitch;
+	if (slot->mPitch != pitch) {
+		slot->mPitch = pitch;
 		if (sound->mState != SOUNDSTATE_Prepared) {
 			unk0->unk180[unk38->mTrack].unk44[sound->mTrack] |= 0x2;
 			JAISystemInterface::setSeqPortargsF32(&unk0->unk180[unk38->mTrack],
@@ -491,8 +491,8 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 	} else {
 		fxmix = seParam->unk2A4[7].mCurrentValue;
 	}
-	if (slot->unkC != fxmix) {
-		slot->unkC = fxmix;
+	if (slot->mFxmix != fxmix) {
+		slot->mFxmix = fxmix;
 		if (sound->mState != SOUNDSTATE_Prepared) {
 			unk0->unk180[unk38->mTrack].unk44[sound->mTrack] |= 0x8;
 			JAISystemInterface::setSeqPortargsF32(&unk0->unk180[unk38->mTrack],
@@ -518,8 +518,8 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 	} else {
 		dolby = seParam->unk3A4[7].mCurrentValue;
 	}
-	if (slot->unk14 != dolby) {
-		slot->unk14 = dolby;
+	if (slot->mDolby != dolby) {
+		slot->mDolby = dolby;
 		if (sound->mState != SOUNDSTATE_Prepared) {
 			unk0->unk180[unk38->mTrack].unk44[sound->mTrack] |= 0x10;
 			JAISystemInterface::setSeqPortargsF32(&unk0->unk180[unk38->mTrack],
