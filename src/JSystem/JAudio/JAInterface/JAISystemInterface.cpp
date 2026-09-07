@@ -151,9 +151,15 @@ void JAISystemInterface::outerInit(JAISeqUpdateData* param_1, void* param_2,
 	param_1->unk4C[param_3].unk2C.addPortCmdOnce();
 }
 
-void JAISystemInterface::setPortParameter(JASystem::Kernel::TPortArgs*,
-                                          JASystem::TTrack*, u32, u32)
+void JAISystemInterface::setPortParameter(JASystem::Kernel::TPortArgs* param_1,
+                                          JASystem::TTrack* param_2,
+                                          u32 param_3, u32 param_4)
 {
+	if ((param_1->mFlags & (1 << param_4)) != 0) {
+		JASystem::TTrack::TOuterParam* outer = param_2->getOuterParam();
+		outer->setParam(param_3, (&param_1->mTrackVolume)[param_4]);
+		param_1->mFlags ^= 1 << param_4;
+	}
 }
 
 void JAISystemInterface::setSePortParameter(
@@ -163,40 +169,13 @@ void JAISystemInterface::setSePortParameter(
 	if (!track)
 		return;
 
-	// TODO: some weird stuff is happening here and with setSeqPortargsF32/U32,
-	// they seem to have a union somewhere making the params accessible by index
-	// and these 6 ifs seem to be setPortParameter called w/ different args and
-	// accessing the union
-	if ((param_1->mFlags & 1) != 0) {
-		track->getOuterParam()->setParam(JASystem::TTrack::UPDATE_Volume,
-		                                 param_1->mTrackVolume);
-		param_1->mFlags ^= 1;
-	}
-	if ((param_1->mFlags & 2) != 0) {
-		track->getOuterParam()->setParam(JASystem::TTrack::UPDATE_Pitch,
-		                                 param_1->mTrackPitch);
-		param_1->mFlags ^= 2;
-	}
-	if ((param_1->mFlags & 4) != 0) {
-		track->getOuterParam()->setParam(JASystem::TTrack::UPDATE_Pan,
-		                                 param_1->mTrackPan);
-		param_1->mFlags ^= 4;
-	}
-	if ((param_1->mFlags & 8) != 0) {
-		track->getOuterParam()->setParam(JASystem::TTrack::UPDATE_Fxmix,
-		                                 param_1->mTrackFxmix);
-		param_1->mFlags ^= 8;
-	}
-	if ((param_1->mFlags & 0x80) != 0) {
-		track->getOuterParam()->setParam(JASystem::TTrack::UPDATE_Tempo,
-		                                 param_1->mTrackTempo);
-		param_1->mFlags ^= 0x80;
-	}
-	if ((param_1->mFlags & 0x10) != 0) {
-		track->getOuterParam()->setParam(JASystem::TTrack::UPDATE_Dolby,
-		                                 param_1->mTrackDolby);
-		param_1->mFlags ^= 0x10;
-	}
+	setPortParameter(param_1, track, JASystem::TTrack::UPDATE_Volume, 0);
+	setPortParameter(param_1, track, JASystem::TTrack::UPDATE_Pitch, 1);
+	setPortParameter(param_1, track, JASystem::TTrack::UPDATE_Pan, 2);
+	setPortParameter(param_1, track, JASystem::TTrack::UPDATE_Fxmix, 3);
+	setPortParameter(param_1, track, JASystem::TTrack::UPDATE_Tempo, 7);
+	setPortParameter(param_1, track, JASystem::TTrack::UPDATE_Dolby, 4);
+
 	if ((param_1->mFlags & 0x40) != 0 && param_1->unk20 != 0) {
 		track->setInterrupt(5);
 	}

@@ -1265,10 +1265,12 @@ void JAIBasic::initHeap()
 
 void* JAIBasic::allocHeap(u32 size)
 {
+	void* result;
 	if (JAIGlobalParameter::interfaceHeapSize)
-		return new (mInterfaceHeap, 0x20) u8[size];
+		result = new (mInterfaceHeap, 0x20) u8[size];
 	else
-		return JASystem::Kernel::allocFromSysDram(size);
+		result = JASystem::Kernel::allocFromSysDram(size);
+	return result;
 }
 
 JAISound* JAIBasic::makeSound(u32 param)
