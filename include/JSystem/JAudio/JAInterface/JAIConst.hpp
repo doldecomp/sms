@@ -2,6 +2,7 @@
 #define JAICONST_HPP
 
 #include <dolphin/mtx.h>
+#include <JSystem/JAudio/JAInterface/JAIData.hpp>
 #include <JSystem/JMath.hpp>
 
 class JAIActor {
@@ -37,7 +38,7 @@ extern Vec camPreTrans;
 
 extern Vec dummyZeroVec;
 extern u8 nullInfoData2[];
-extern u8 sCInfos_0[];
+extern JAICategoryInfo sCInfos_0[];
 
 extern JMath::TRandomFast random;
 

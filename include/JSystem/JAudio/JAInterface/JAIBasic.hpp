@@ -191,11 +191,11 @@ public:
 public:
 	/* 0x8 */ JAICamera* mAudioCameras;
 	/* 0xC */ JKRSolidHeap* mInterfaceHeap;
-	/* 0x10 */ u8 unk10;
+	/* 0x10 */ u8 mSoundScene;
 	/* 0x11 */ u8 unk11;
 	/* 0x12 */ u8 unk12;
 	/* 0x13 */ u8 mInitFileLoadSwitch;
-	/* 0x14 */ u8 unk14;
+	/* 0x14 */ u8 mSoundOutputMode;
 	/* 0x15 */ u8 unk15;
 	/* 0x16 */ char unk16[2];
 	/* 0x18 */ u8* mSeCancelSwitch;
@@ -273,11 +273,11 @@ public:
 
 	struct FabricatedSoundSceneTable {
 		/* 0x0 */ u32 mSceneMax;
-		/* 0x4 */ u8* mSceneData[];
+		/* 0x4 */ JAICategoryInfo* mSceneData[];
 	};
 
 	// Points at FabricatedSoundSceneTable::mSceneData.
-	/* 0x68 */ u8** mSoundSceneList;
+	/* 0x68 */ JAICategoryInfo** mSoundSceneList;
 	/* 0x6C */ u8* unk6C;
 	/* 0x70 */ u32 unk70;
 	/* 0x74 */ char unk74[0x4];

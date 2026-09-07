@@ -39,7 +39,7 @@ JAIBasic::JAIBasic()
 	unk1C.mStreamInsideBufferCut = false;
 
 	unk15               = 0;
-	unk10               = 0;
+	mSoundScene         = 0;
 	unk11               = 0;
 	unk24               = 0;
 	mAudioCameras       = nullptr;
@@ -396,7 +396,7 @@ void JAIBasic::checkInitDataOnMemory()
 			mSoundSceneList                   = table->mSceneData;
 			for (u32 scene = 0; scene < JAIGlobalParameter::soundSceneMax;
 			     ++scene)
-				mSoundSceneList[scene] += (uintptr_t)table;
+				((u8**)mSoundSceneList)[scene] += (uintptr_t)table;
 			i += 3;
 			break;
 		}
@@ -1192,7 +1192,7 @@ u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 		outer->setParam(JASystem::TTrack::UPDATE_Pitch, params->mPitch);
 		outer->setParam(JASystem::TTrack::UPDATE_Fxmix, params->mFxmix);
 		f32 thing;
-		if (basic->unk14 != 2)
+		if (basic->mSoundOutputMode != 2)
 			thing = 0.0f;
 		else
 			thing = params->mDolby;
@@ -1200,7 +1200,7 @@ u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 		break;
 	}
 	case 0x7F:
-		param_1->writePortApp(0, basic->unk10);
+		param_1->writePortApp(0, basic->mSoundScene);
 		break;
 	}
 	return result;

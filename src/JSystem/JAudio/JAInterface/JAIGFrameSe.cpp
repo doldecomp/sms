@@ -35,7 +35,8 @@ void JAIBasic::checkNextFrameSe()
 		fVar1 = 1.0f;
 
 	for (i = 0; i < JAIGlobalParameter::getParamSeCategoryMax(); ++i) {
-		for (j = 0; j < unk0->unk4[unk10][i * 2]; ++j) {
+		for (j = 0; j < unk0->mCategoryInfoTable[mSoundScene][i].mMaxPlaying;
+		     ++j) {
 			candidates[j].score = 0x7fffffff;
 			candidates[j].sound = nullptr;
 			candidates[j].state = 0xff;
@@ -127,8 +128,9 @@ void JAIBasic::checkNextFrameSe()
 						it = &sound;
 					}
 				} else {
-					bVar18
-					    = unk0->unk4[unk10][(u8)it->getSeCategoryNumber() * 2];
+					bVar18 = unk0->mCategoryInfoTable
+					             [mSoundScene][(u8)it->getSeCategoryNumber()]
+					                 .mMaxPlaying;
 					for (j = 0; j < bVar18; ++j) {
 						if (it->unkC < candidates[j].score
 						    || (it->unkC == candidates[j].score
@@ -162,7 +164,7 @@ void JAIBasic::checkNextFrameSe()
 			}
 		}
 
-		bVar19 = unk0->unk4[unk10][i * 2];
+		bVar19 = unk0->mCategoryInfoTable[mSoundScene][i].mMaxPlaying;
 		for (j = 0; j < bVar19; ++j) {
 			snd   = unk0->unk8[i][j].unk8;
 			bVar7 = 0;
@@ -224,7 +226,9 @@ void JAIBasic::sendPlayingSeCommand()
 	u8 trackId = 0;
 
 	for (u8 cat = 0; cat < JAIGlobalParameter::getParamSeCategoryMax(); ++cat) {
-		for (j = 0; j < unk0->unk4[unk10][(u8)cat * 2]; ++trackId, ++j) {
+		for (j = 0;
+		     j < unk0->mCategoryInfoTable[mSoundScene][(u8)cat].mMaxPlaying;
+		     ++trackId, ++j) {
 			sound = unk0->unk8[cat][j].unk8;
 			if (sound == nullptr)
 				continue;
@@ -557,8 +561,10 @@ void JAIBasic::releaseSeRegist(JAISound* sound)
 	clearSeqMuteFromSeStop(sound);
 
 	u8 cat;
-	u8 maxCount = unk0->unk4[unk10][(u8)sound->getSeCategoryNumber() * 2];
-	cat         = sound->getSeCategoryNumber();
+	u8 maxCount = unk0->mCategoryInfoTable[mSoundScene]
+	                                      [(u8)sound->getSeCategoryNumber()]
+	                                          .mMaxPlaying;
+	cat = sound->getSeCategoryNumber();
 	for (u8 j = 0; j < maxCount; ++j) {
 		JAISound** slot = &unk0->unk8[cat][j].unk8;
 		if (*slot == sound) {

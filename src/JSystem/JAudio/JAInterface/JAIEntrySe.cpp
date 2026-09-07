@@ -25,7 +25,9 @@ void JAISeEntry::storeBuffer(JAISound** sound, JAIActor* param_2, u32 param_3,
 	u8 bVar10 = 0;
 	JAISound* local_88[16];
 
-	u32 bVar9 = data->unk4[unk0->unk10][((param_3 >> 11) & 0x1FE) + 1];
+	u32 bVar9
+	    = data->mCategoryInfoTable[unk0->mSoundScene][(param_3 >> 12) & 0xFF]
+	          .mMaxSameSound;
 
 	while (it != nullptr) {
 		if (it->mActor == uVar14) {

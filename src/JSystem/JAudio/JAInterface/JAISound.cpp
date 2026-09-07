@@ -397,7 +397,7 @@ void JAISound::setSeqInterDolby(u8 param_1, f32 param_2, u32 param_3)
 	if (!getSeqParameter())
 		return;
 
-	if (interPointer->unk14 != 2) {
+	if (interPointer->mSoundOutputMode != 2) {
 		if (getSeqParameter()->unk614[param_1].mCurrentValue != 0.0f)
 			param_2 = 0.0f;
 		else
