@@ -37,3 +37,6 @@ compile_commands.json
 /*.txt
 *.exe
 tools/mwcc_compiler
+
+# Apple
+.DS_Store
