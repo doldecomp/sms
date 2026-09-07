@@ -746,7 +746,7 @@ void JAIBasic::startSoundBasic(u32 id, JAISound** sound, JAIActor* actor,
 		        || (mSeSequence->mSoundID & 0x3ff) != (id & 0x3ff))) {
 			if (sound == nullptr) {
 				u8 num = getSeqTrackNumber(data);
-				sound  = &unk0->unk1E0[num];
+				sound  = &unk0->mDefaultSeqHandle[num];
 			}
 
 			unk0->unk1FC.storeBuffer(sound, actor, id, param, flag, data);
@@ -838,7 +838,7 @@ void JAIBasic::stopAllSe(void* obj) { }
 
 void JAIBasic::stopAllSe(u8 param)
 {
-	JAISound* sound = unk0->unk1E8[param].mUsedHead;
+	JAISound* sound = unk0->mSeRegist[param].mUsedHead;
 	while (sound) {
 		JAISound* next = sound->mNextSound;
 		stopSoundHandle(sound, 0);
@@ -915,110 +915,110 @@ void JAIBasic::releaseControllerHandle(JAILinkBuffer* buffer, JAISound* sound)
 
 JAIStreamParameter* JAIBasic::getStreamParameter()
 {
-	JAIStreamParameter** end   = &unk0->unk1D4;
-	JAIStreamParameter** start = &unk0->unk1D8;
+	JAIStreamParameter** free = &unk0->mStreamParameterFreeHead;
+	JAIStreamParameter** used = &unk0->mStreamParameterUsedHead;
 
-	if ((*end)->unk3DC != nullptr) {
-		JAIStreamParameter* var1 = *end;
+	if ((*free)->mNext != nullptr) {
+		JAIStreamParameter* result = *free;
 
-		*end = var1->unk3DC;
-		if (*start != nullptr) {
-			var1->unk3DC     = *start;
-			(*start)->unk3D8 = var1;
+		*free = result->mNext;
+		if (*used != nullptr) {
+			result->mNext  = *used;
+			(*used)->mPrev = result;
 		} else {
-			var1->unk3DC = nullptr;
+			result->mNext = nullptr;
 		}
-		var1->unk3D8 = nullptr;
-		*start       = var1;
-		return var1;
+		result->mPrev = nullptr;
+		*used         = result;
+		return result;
 	}
 	return nullptr;
 }
 
 void JAIBasic::releaseStreamParameterPointer(JAIStreamParameter* param)
 {
-	JAIStreamParameter** start = &unk0->unk1D8;
-	JAIStreamParameter** end   = &unk0->unk1D4;
+	JAIStreamParameter** used = &unk0->mStreamParameterUsedHead;
+	JAIStreamParameter** free = &unk0->mStreamParameterFreeHead;
 
-	if (*start != param) {
-		param->unk3D8->unk3DC = param->unk3DC;
-		if (param->unk3DC)
-			param->unk3DC->unk3D8 = param->unk3D8;
+	if (*used != param) {
+		param->mPrev->mNext = param->mNext;
+		if (param->mNext)
+			param->mNext->mPrev = param->mPrev;
 	} else {
-		*start = param->unk3DC;
-		if (param->unk3DC)
-			param->unk3DC->unk3D8 = nullptr;
+		*used = param->mNext;
+		if (param->mNext)
+			param->mNext->mPrev = nullptr;
 	}
-	param->unk3DC = *end;
-	if (param->unk3DC)
-		param->unk3DC->unk3D8 = param;
-	*end = param;
+	param->mNext = *free;
+	if (param->mNext)
+		param->mNext->mPrev = param;
+	*free = param;
 }
 
 JAISeqParameter* JAIBasic::getSeqParametermeterPointer()
 {
-	JAISeqParameter** end   = &unk0->unk1BC;
-	JAISeqParameter** start = &unk0->unk1C0;
+	JAISeqParameter** free = &unk0->mSeqParameterFreeHead;
+	JAISeqParameter** used = &unk0->mSeqParameterUsedHead;
 
-	if ((*end)->unk1858) {
-		JAISeqParameter* var1 = *end;
+	if ((*free)->mNext) {
+		JAISeqParameter* result = *free;
 
-		*end = var1->unk1858;
-		if (*start) {
-			var1->unk1858     = *start;
-			(*start)->unk1854 = var1;
+		*free = result->mNext;
+		if (*used) {
+			result->mNext  = *used;
+			(*used)->mPrev = result;
 		} else {
-			var1->unk1858 = nullptr;
+			result->mNext = nullptr;
 		}
-		var1->unk1854 = nullptr;
-		*start        = var1;
-		return var1;
+		result->mPrev = nullptr;
+		*used         = result;
+		return result;
 	}
 	return nullptr;
 }
 
 void JAIBasic::releaseSeqParameterPointer(JAISeqParameter* param)
 {
-	JAISeqParameter** start = &unk0->unk1C0;
-	JAISeqParameter** end   = &unk0->unk1BC;
+	JAISeqParameter** used = &unk0->mSeqParameterUsedHead;
+	JAISeqParameter** free = &unk0->mSeqParameterFreeHead;
 
-	if (*start != param) {
-		param->unk1854->unk1858 = param->unk1858;
-		if (param->unk1858)
-			param->unk1858->unk1854 = param->unk1854;
+	if (*used != param) {
+		param->mPrev->mNext = param->mNext;
+		if (param->mNext)
+			param->mNext->mPrev = param->mPrev;
 	} else {
-		*start = param->unk1858;
-		if (param->unk1858)
-			param->unk1858->unk1854 = nullptr;
+		*used = param->mNext;
+		if (param->mNext)
+			param->mNext->mPrev = nullptr;
 	}
-	param->unk1858 = *end;
-	if (param->unk1858)
-		param->unk1858->unk1854 = param;
-	*end = param;
+	param->mNext = *free;
+	if (param->mNext)
+		param->mNext->mPrev = param;
+	*free = param;
 }
 
 JAISeParameter* JAIBasic::getSeParametermeterPointer()
 {
-	JAISeParameter* var1;
-	JAISeParameter** end   = &unk0->unk1C8;
-	JAISeParameter** start = &unk0->unk1CC;
+	JAISeParameter* result;
+	JAISeParameter** free = &unk0->mSeParameterFreeHead;
+	JAISeParameter** used = &unk0->mSeParameterUsedHead;
 
-	if (*end) {
-		var1 = *end;
-		*end = var1->unk440;
-		if (*start != nullptr) {
-			var1->unk440     = *start;
-			(*start)->unk43C = var1;
+	if (*free) {
+		result = *free;
+		*free  = result->mNext;
+		if (*used != nullptr) {
+			result->mNext  = *used;
+			(*used)->mPrev = result;
 		} else {
-			var1->unk440 = nullptr;
+			result->mNext = nullptr;
 		}
-		var1->unk43C = nullptr;
-		*start       = var1;
-		unk0->initSePara(var1);
+		result->mPrev = nullptr;
+		*used         = result;
+		unk0->initSePara(result);
 	} else {
-		var1 = nullptr;
+		result = nullptr;
 	}
-	return var1;
+	return result;
 }
 
 void JAIBasic::releaseSeParameterPointer(JAISeParameter* param)
@@ -1026,22 +1026,22 @@ void JAIBasic::releaseSeParameterPointer(JAISeParameter* param)
 	if (!param)
 		return;
 
-	JAISeParameter** start = &unk0->unk1CC;
-	JAISeParameter** end   = &unk0->unk1C8;
+	JAISeParameter** used = &unk0->mSeParameterUsedHead;
+	JAISeParameter** free = &unk0->mSeParameterFreeHead;
 
-	if (*start != param) {
-		param->unk43C->unk440 = param->unk440;
-		if (param->unk440)
-			param->unk440->unk43C = param->unk43C;
+	if (*used != param) {
+		param->mPrev->mNext = param->mNext;
+		if (param->mNext)
+			param->mNext->mPrev = param->mPrev;
 	} else {
-		*start = param->unk440;
-		if (param->unk440)
-			param->unk440->unk43C = nullptr;
+		*used = param->mNext;
+		if (param->mNext)
+			param->mNext->mPrev = nullptr;
 	}
-	param->unk440 = *end;
-	if (param->unk440)
-		param->unk440->unk43C = param;
-	*end = param;
+	param->mNext = *free;
+	if (param->mNext)
+		param->mNext->mPrev = param;
+	*free = param;
 }
 
 void JAIBasic::getDummyVecPointer() { }

@@ -14,7 +14,7 @@ void JAISeEntry::storeBuffer(JAISound** sound, JAIActor* param_2, u32 param_3,
 	}
 
 	u32 category = unk0->changeIDToCategory(param_3);
-	JAISound* it = data->unk1E8[(u8)category].mUsedHead;
+	JAISound* it = data->mSeRegist[(u8)category].mUsedHead;
 
 	JAIActor* actor = param_2;
 	if (!param_2)
@@ -77,7 +77,7 @@ void JAISeEntry::storeBuffer(JAISound** sound, JAIActor* param_2, u32 param_3,
 		unk0->releaseSeRegist(local_88[0]);
 	}
 	JAISound* controller
-	    = unk0->getControllerHandle(&data->unk1E8[(u8)category]);
+	    = unk0->getControllerHandle(&data->mSeRegist[(u8)category]);
 	if (!controller) {
 		if (sound)
 			*sound = nullptr;

@@ -776,7 +776,7 @@ bool MSoundSE::checkMonoSound(u32 param_1, JAIActor* param_2)
 	if (local_c->mSwBit & 0x4000) {
 		u32 uVar1 = JAIBasic::getInterface()->changeIDToCategory(param_1);
 		JAISound* sound
-		    = JAIBasic::getInterface()->unk0->unk1E8[(u8)uVar1].mUsedHead;
+		    = JAIBasic::getInterface()->unk0->mSeRegist[(u8)uVar1].mUsedHead;
 		JAISound* nextSound;
 		for (; sound != nullptr; sound = nextSound) {
 			nextSound         = sound->getNextSound();

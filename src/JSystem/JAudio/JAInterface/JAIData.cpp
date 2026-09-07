@@ -57,20 +57,20 @@ void JAIData::initSeqParaLinkBuffer()
 {
 	int i;
 
-	unk1BC = &unk1C4[0];
-	unk1C0 = nullptr;
+	mSeqParameterFreeHead = &mSeqParameterBuffer[0];
+	mSeqParameterUsedHead = nullptr;
 
-	unk1C4[0].unk1854 = nullptr;
-	unk1C4[0].unk1858 = unk1C4 + 1;
+	mSeqParameterBuffer[0].mPrev = nullptr;
+	mSeqParameterBuffer[0].mNext = mSeqParameterBuffer + 1;
 	for (i = 1; i < JAIGlobalParameter::seqControlBufferMax - 1; ++i) {
-		unk1C4[i].unk1854 = &unk1C4[i - 1];
-		unk1C4[i].unk1858 = &unk1C4[i + 1];
+		mSeqParameterBuffer[i].mPrev = &mSeqParameterBuffer[i - 1];
+		mSeqParameterBuffer[i].mNext = &mSeqParameterBuffer[i + 1];
 	}
-	unk1C4[i].unk1854 = &unk1C4[i - 1];
-	unk1C4[i].unk1858 = nullptr;
+	mSeqParameterBuffer[i].mPrev = &mSeqParameterBuffer[i - 1];
+	mSeqParameterBuffer[i].mNext = nullptr;
 
 	for (int i = 0; i < JAIGlobalParameter::seqControlBufferMax; ++i)
-		initSeqParameter(&unk1C4[i]);
+		initSeqParameter(&mSeqParameterBuffer[i]);
 }
 
 void JAIData::initDummyVecLink()
@@ -191,20 +191,20 @@ void JAIData::initSeParaLinkBuffer()
 {
 	int i;
 
-	unk1C8 = &unk1D0[0];
-	unk1CC = nullptr;
+	mSeParameterFreeHead = &mSeParameterBuffer[0];
+	mSeParameterUsedHead = nullptr;
 
-	unk1D0[0].unk43C = nullptr;
-	unk1D0[0].unk440 = &unk1D0[1];
+	mSeParameterBuffer[0].mPrev = nullptr;
+	mSeParameterBuffer[0].mNext = &mSeParameterBuffer[1];
 	for (i = 1; i < JAIGlobalParameter::seRegistMax
 	                        * JAIGlobalParameter::getParamSeCategoryMax()
 	                    - 1;
 	     ++i) {
-		unk1D0[i].unk43C = &unk1D0[i - 1];
-		unk1D0[i].unk440 = &unk1D0[i + 1];
+		mSeParameterBuffer[i].mPrev = &mSeParameterBuffer[i - 1];
+		mSeParameterBuffer[i].mNext = &mSeParameterBuffer[i + 1];
 	}
-	unk1D0[i].unk43C = &unk1D0[i - 1];
-	unk1D0[i].unk440 = nullptr;
+	mSeParameterBuffer[i].mPrev = &mSeParameterBuffer[i - 1];
+	mSeParameterBuffer[i].mNext = nullptr;
 }
 
 void JAIData::initSePara(JAISeParameter* param)
@@ -246,20 +246,20 @@ void JAIData::initStreamParaLinkBuffer()
 {
 	int i;
 
-	unk1D4 = &unk1DC[0];
-	unk1D8 = nullptr;
+	mStreamParameterFreeHead = &mStreamParameterBuffer[0];
+	mStreamParameterUsedHead = nullptr;
 
-	unk1DC[0].unk3D8 = nullptr;
-	unk1DC[0].unk3DC = &unk1DC[1];
+	mStreamParameterBuffer[0].mPrev = nullptr;
+	mStreamParameterBuffer[0].mNext = &mStreamParameterBuffer[1];
 	for (i = 1; i < JAIGlobalParameter::streamParameterBufferMax - 1; ++i) {
-		unk1DC[i].unk3D8 = &unk1DC[i - 1];
-		unk1DC[i].unk3DC = &unk1DC[i + 1];
+		mStreamParameterBuffer[i].mPrev = &mStreamParameterBuffer[i - 1];
+		mStreamParameterBuffer[i].mNext = &mStreamParameterBuffer[i + 1];
 	}
-	unk1DC[i].unk3D8 = &unk1DC[i - 1];
-	unk1DC[i].unk3DC = nullptr;
+	mStreamParameterBuffer[i].mPrev = &mStreamParameterBuffer[i - 1];
+	mStreamParameterBuffer[i].mNext = nullptr;
 
 	for (int i = 0; i < JAIGlobalParameter::streamParameterBufferMax; ++i)
-		initStreamParameter(&unk1DC[i]);
+		initStreamParameter(&mStreamParameterBuffer[i]);
 }
 
 void JAIData::initStreamParameter(JAIStreamParameter* param)
@@ -519,20 +519,21 @@ void JAIData::initData()
 	    JAIGlobalParameter::dummyPositionMax * sizeof(JAIDummyVec));
 	initDummyVecLink();
 
-	unk1E8 = (JAILinkBuffer*)unk1F4->allocHeap(
+	mSeRegist = (JAILinkBuffer*)unk1F4->allocHeap(
 	    JAIGlobalParameter::getParamSeCategoryMax() * sizeof(JAILinkBuffer));
 
 	mSeTrack = (FabricatedSeTrack**)unk1F4->allocHeap(
 	    JAIGlobalParameter::getParamSeCategoryMax()
 	    * sizeof(FabricatedSeTrack*));
 
-	unk1E4 = (JAISound**)unk1F4->allocHeap(
+	mSeRegistStorage = (JAISound**)unk1F4->allocHeap(
 	    JAIGlobalParameter::getParamSeCategoryMax() * sizeof(JAISound*));
 
 	for (int i = 0; i < JAIGlobalParameter::getParamSeCategoryMax(); ++i) {
-		unk1E4[i]          = unk1F4->makeSound(JAIGlobalParameter::seRegistMax);
-		unk1E8[i].mStorage = unk1E4[i];
-		initLinkBuffer(&unk1E8[i], JAIGlobalParameter::seRegistMax);
+		mSeRegistStorage[i]
+		    = unk1F4->makeSound(JAIGlobalParameter::seRegistMax);
+		mSeRegist[i].mStorage = mSeRegistStorage[i];
+		initLinkBuffer(&mSeRegist[i], JAIGlobalParameter::seRegistMax);
 		mSeTrack[i] = (FabricatedSeTrack*)unk1F4->allocHeap(
 		    JAIGlobalParameter::seRegistMax * sizeof(FabricatedSeTrack));
 		for (int j = 0; j < JAIGlobalParameter::seRegistMax; ++j) {
@@ -558,21 +559,21 @@ void JAIData::initData()
 	initLinkBuffer(&unk210, JAIGlobalParameter::seqControlBufferMax);
 	unk21C.mStorage = unk20C;
 	initLinkBuffer(&unk21C, JAIGlobalParameter::streamControlBufferMax);
-	unk1C4 = (JAISeqParameter*)unk1F4->allocHeap(
+	mSeqParameterBuffer = (JAISeqParameter*)unk1F4->allocHeap(
 	    JAIGlobalParameter::seqControlBufferMax * sizeof(JAISeqParameter));
 	initSeqParaLinkBuffer();
-	unk1D0 = (JAISeParameter*)unk1F4->allocHeap(
+	mSeParameterBuffer = (JAISeParameter*)unk1F4->allocHeap(
 	    JAIGlobalParameter::seRegistMax
 	    * JAIGlobalParameter::getParamSeCategoryMax() * sizeof(JAISeParameter));
 	initSeParaLinkBuffer();
-	unk1DC = (JAIStreamParameter*)unk1F4->allocHeap(
+	mStreamParameterBuffer = (JAIStreamParameter*)unk1F4->allocHeap(
 	    JAIGlobalParameter::streamParameterBufferMax
 	    * sizeof(JAIStreamParameter));
 	initStreamParaLinkBuffer();
 	for (int i = 0; i < JAIGlobalParameter::seRegistMax
 	                        * JAIGlobalParameter::getParamSeCategoryMax();
 	     ++i) {
-		initSePara(&unk1D0[i]);
+		initSePara(&mSeParameterBuffer[i]);
 	}
 
 	unk1EC = (JAIHeapBlock*)unk1F4->allocHeap(JAIGlobalParameter::autoHeapMax
@@ -593,21 +594,21 @@ void JAIData::initData()
 		unk1F0[i].mUseOrder   = -1;
 	}
 
-	unk1E0 = (JAISound**)unk1F4->allocHeap(JAIGlobalParameter::seqPlayTrackMax
-	                                       * sizeof(JAISound*));
+	mDefaultSeqHandle = (JAISound**)unk1F4->allocHeap(
+	    JAIGlobalParameter::seqPlayTrackMax * sizeof(JAISound*));
 	unk180 = (JAISeqUpdateData*)unk1F4->allocHeap(
 	    JAIGlobalParameter::seqPlayTrackMax * sizeof(JAISeqUpdateData));
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
 		unk180[i].unk4C
 		    = (JAISeqUpdateData::FabricatedUnk4CStruct*)unk1F4->allocHeap(
 		        0x7BC);
-		unk1E0[i]        = 0;
-		unk180[i].unk0   = 0;
-		unk180[i].unk1   = 0;
-		unk180[i].unk2   = 0;
-		unk180[i].unk3   = 0;
-		unk180[i].unk8   = 0;
-		unk180[i].mSound = 0;
+		mDefaultSeqHandle[i] = 0;
+		unk180[i].unk0       = 0;
+		unk180[i].unk1       = 0;
+		unk180[i].unk2       = 0;
+		unk180[i].unk3       = 0;
+		unk180[i].unk8       = 0;
+		unk180[i].mSound     = 0;
 
 		unk180[i].mTrackVolume = (f32*)unk1F4->allocHeap(
 		    JAIGlobalParameter::seqTrackMax * sizeof(f32));
