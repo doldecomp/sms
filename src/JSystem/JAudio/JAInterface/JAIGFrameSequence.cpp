@@ -31,7 +31,7 @@ void JAIBasic::stopSeq(JAISound* param_1)
 	}
 	param_1->setStatus(SOUNDSTATE_Inactive);
 	releaseSeqParameterPointer(param_1->getSeqParameter());
-	releaseControllerHandle(&unk0->unk210, param_1);
+	releaseControllerHandle(&unk0->mSeqControlBuffer, param_1);
 	unk0->unk180[param_1->mTrack].mSound = nullptr;
 }
 

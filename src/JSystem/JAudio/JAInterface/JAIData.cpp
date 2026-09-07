@@ -77,17 +77,17 @@ void JAIData::initDummyVecLink()
 {
 	int i;
 
-	unk228 = (JAIDummyVec*)unk230;
-	unk22C = nullptr;
+	mDummyVecFreeHead = (JAIDummyVec*)mDummyVecBuffer;
+	mDummyVecUsedHead = nullptr;
 
-	unk230[0].unk0 = nullptr;
-	unk230[0].unk4 = &unk230[1];
+	mDummyVecBuffer[0].mPrev = nullptr;
+	mDummyVecBuffer[0].mNext = &mDummyVecBuffer[1];
 	for (i = 1; i < JAIGlobalParameter::dummyPositionMax - 1; ++i) {
-		unk230[i].unk0 = &unk230[i - 1];
-		unk230[i].unk4 = &unk230[i + 1];
+		mDummyVecBuffer[i].mPrev = &mDummyVecBuffer[i - 1];
+		mDummyVecBuffer[i].mNext = &mDummyVecBuffer[i + 1];
 	}
-	unk230[i].unk0 = &unk230[i - 1];
-	unk230[i].unk4 = nullptr;
+	mDummyVecBuffer[i].mPrev = &mDummyVecBuffer[i - 1];
+	mDummyVecBuffer[i].mNext = nullptr;
 }
 
 void JAIData::initSeqParameter(JAISeqParameter* param)
@@ -515,7 +515,7 @@ void JAIData::initData()
 				JAIGlobalParameter::seTrackMax = sum;
 		}
 	}
-	unk230 = (JAIDummyVec*)unk1F4->allocHeap(
+	mDummyVecBuffer = (JAIDummyVec*)unk1F4->allocHeap(
 	    JAIGlobalParameter::dummyPositionMax * sizeof(JAIDummyVec));
 	initDummyVecLink();
 
@@ -553,12 +553,15 @@ void JAIData::initData()
 		s.mDolby  = 0.0f;
 	}
 
-	unk208 = unk1F4->makeSound(JAIGlobalParameter::seqControlBufferMax);
-	unk20C = unk1F4->makeSound(JAIGlobalParameter::streamControlBufferMax);
-	unk210.mStorage = unk208;
-	initLinkBuffer(&unk210, JAIGlobalParameter::seqControlBufferMax);
-	unk21C.mStorage = unk20C;
-	initLinkBuffer(&unk21C, JAIGlobalParameter::streamControlBufferMax);
+	mSeqControlStorage
+	    = unk1F4->makeSound(JAIGlobalParameter::seqControlBufferMax);
+	mStreamControlStorage
+	    = unk1F4->makeSound(JAIGlobalParameter::streamControlBufferMax);
+	mSeqControlBuffer.mStorage = mSeqControlStorage;
+	initLinkBuffer(&mSeqControlBuffer, JAIGlobalParameter::seqControlBufferMax);
+	mStreamControlBuffer.mStorage = mStreamControlStorage;
+	initLinkBuffer(&mStreamControlBuffer,
+	               JAIGlobalParameter::streamControlBufferMax);
 	mSeqParameterBuffer = (JAISeqParameter*)unk1F4->allocHeap(
 	    JAIGlobalParameter::seqControlBufferMax * sizeof(JAISeqParameter));
 	initSeqParaLinkBuffer();

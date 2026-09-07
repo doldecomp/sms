@@ -97,7 +97,8 @@ namespace StreamLib {
 void JAIBasic::checkEntriedStream()
 {
 	JAISound* it;
-	for (it = unk0->unk21C.mUsedHead; it != nullptr; it = it->mNextSound) {
+	for (it = unk0->mStreamControlBuffer.mUsedHead; it != nullptr;
+	     it = it->mNextSound) {
 		bool bVar1 = false;
 		if (it->mState == SOUNDSTATE_Stored) {
 			if (!unk0->unk184->unk14) {
@@ -174,7 +175,7 @@ void JAIBasic::checkPlayingStream()
 
 			releaseStreamParameterPointer(sound->getStreamParameter());
 			sound->clearMainSoundPPointer();
-			releaseControllerHandle(&unk0->unk21C, sound);
+			releaseControllerHandle(&unk0->mStreamControlBuffer, sound);
 			return;
 		}
 
@@ -198,7 +199,7 @@ void JAIBasic::checkPlayingStream()
 
 			releaseStreamParameterPointer(sound->getStreamParameter());
 			sound->clearMainSoundPPointer();
-			releaseControllerHandle(&unk0->unk21C, sound);
+			releaseControllerHandle(&unk0->mStreamControlBuffer, sound);
 		}
 	}
 

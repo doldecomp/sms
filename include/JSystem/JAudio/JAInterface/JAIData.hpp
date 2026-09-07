@@ -12,10 +12,10 @@ class JAISound;
 class JAISeqUpdateData;
 class JAIDummyVec {
 public:
-	/* 0x0 */ JAIDummyVec* unk0;
-	/* 0x4 */ JAIDummyVec* unk4;
-	/* 0x8 */ JAISound* unk8;
-	/* 0xC */ u32 unkC;
+	/* 0x0 */ JAIDummyVec* mPrev;
+	/* 0x4 */ JAIDummyVec* mNext;
+	/* 0x8 */ JAISound* mSound;
+	/* 0xC */ u32 mLifeTime;
 	/* 0x10 */ char unk10[0xC];
 };
 struct JAIStreamUpdateParameter;
@@ -190,13 +190,13 @@ public:
 	/* 0x1FC */ JAISeqEntry unk1FC;
 	/* 0x200 */ JAISeEntry unk200;
 	/* 0x204 */ JAIStreamEntry unk204;
-	/* 0x208 */ JAISound* unk208;
-	/* 0x20C */ JAISound* unk20C;
-	/* 0x210 */ JAILinkBuffer unk210;
-	/* 0x21C */ JAILinkBuffer unk21C;
-	/* 0x228 */ JAIDummyVec* unk228;
-	/* 0x22C */ JAIDummyVec* unk22C;
-	/* 0x230 */ JAIDummyVec* unk230;
+	/* 0x208 */ JAISound* mSeqControlStorage;
+	/* 0x20C */ JAISound* mStreamControlStorage;
+	/* 0x210 */ JAILinkBuffer mSeqControlBuffer;
+	/* 0x21C */ JAILinkBuffer mStreamControlBuffer;
+	/* 0x228 */ JAIDummyVec* mDummyVecFreeHead;
+	/* 0x22C */ JAIDummyVec* mDummyVecUsedHead;
+	/* 0x230 */ JAIDummyVec* mDummyVecBuffer;
 };
 
 #endif // JAIDATA_HPP
