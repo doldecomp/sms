@@ -255,7 +255,13 @@ public:
 	};
 
 	/* 0x58 */ FabricatedSeqArchiveHeader* mSeqArchiveHeader;
-	/* 0x5C */ JAIData::FabricatedUnk1F8Struct** unk5C;
+
+	struct FabricatedStreamListHeader {
+		/* 0x0 */ JAIData::FabricatedStreamEntry* mData;
+		/* 0x4 */ u32 mSize;
+	};
+
+	/* 0x5C */ FabricatedStreamListHeader* mStreamListHeader;
 	/* 0x60 */ s32* mWaveGroupNumber;
 
 	enum {
