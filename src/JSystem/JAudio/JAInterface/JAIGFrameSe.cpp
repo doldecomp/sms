@@ -44,7 +44,7 @@ void JAIBasic::checkNextFrameSe()
 
 		u8 bVar19 = 0;
 
-		JAISound* it = unk0->unk1E8[i].mUsedHead;
+		JAISound* it = unk0->mSeRegist[i].mUsedHead;
 		while (it) {
 			if (it->mState == SOUNDSTATE_Stored && (it->mSoundID & 0xC00)) {
 				it->decWait();
@@ -394,7 +394,7 @@ void JAIBasic::checkSeMovePara()
 		return;
 
 	for (u8 i = 0; i < JAIGlobalParameter::getParamSeCategoryMax(); ++i) {
-		for (JAISound* it = unk0->unk1E8[i].mUsedHead; it != nullptr;
+		for (JAISound* it = unk0->mSeRegist[i].mUsedHead; it != nullptr;
 		     it           = it->mNextSound) {
 			unk0->setSeMovePara(it->getSeParameter()->unk124);
 			unk0->setSeMovePara(it->getSeParameter()->unk1A4);
@@ -576,5 +576,5 @@ void JAIBasic::releaseSeRegist(JAISound* sound)
 	sound->clearMainSoundPPointer();
 	sound->mState = SOUNDSTATE_Inactive;
 	releaseSeParameterPointer(sound->getSeParameter());
-	releaseControllerHandle(&unk0->unk1E8[cat], sound);
+	releaseControllerHandle(&unk0->mSeRegist[cat], sound);
 }

@@ -161,23 +161,20 @@ public:
 	/* 0x19C */ s16* mFxBuffer[4];
 	/* 0x1AC */ JASystem::DSPInterface::FxlineConfig_** mFxlineConfig;
 	/* 0x1B0 */ u8 unk1B0;
-	// The serial the next auto heap block will get. See JAIHeapBlock.
 	/* 0x1B4 */ u32 mNextLoadOrder;
-	// How many stay heap blocks are given out. The stay heap never releases,
-	// so the blocks below this are the used ones.
 	/* 0x1B8 */ u32 mStayHeapCount;
-	/* 0x1BC */ JAISeqParameter* unk1BC;
-	/* 0x1C0 */ JAISeqParameter* unk1C0;
-	/* 0x1C4 */ JAISeqParameter* unk1C4;
-	/* 0x1C8 */ JAISeParameter* unk1C8;
-	/* 0x1CC */ JAISeParameter* unk1CC;
-	/* 0x1D0 */ JAISeParameter* unk1D0;
-	/* 0x1D4 */ JAIStreamParameter* unk1D4;
-	/* 0x1D8 */ JAIStreamParameter* unk1D8;
-	/* 0x1DC */ JAIStreamParameter* unk1DC;
-	/* 0x1E0 */ JAISound** unk1E0;
-	/* 0x1E4 */ JAISound** unk1E4;
-	/* 0x1E8 */ JAILinkBuffer* unk1E8;
+	/* 0x1BC */ JAISeqParameter* mSeqParameterFreeHead;
+	/* 0x1C0 */ JAISeqParameter* mSeqParameterUsedHead;
+	/* 0x1C4 */ JAISeqParameter* mSeqParameterBuffer;
+	/* 0x1C8 */ JAISeParameter* mSeParameterFreeHead;
+	/* 0x1CC */ JAISeParameter* mSeParameterUsedHead;
+	/* 0x1D0 */ JAISeParameter* mSeParameterBuffer;
+	/* 0x1D4 */ JAIStreamParameter* mStreamParameterFreeHead;
+	/* 0x1D8 */ JAIStreamParameter* mStreamParameterUsedHead;
+	/* 0x1DC */ JAIStreamParameter* mStreamParameterBuffer;
+	/* 0x1E0 */ JAISound** mDefaultSeqHandle;
+	/* 0x1E4 */ JAISound** mSeRegistStorage;
+	/* 0x1E8 */ JAILinkBuffer* mSeRegist;
 	/* 0x1EC */ JAIHeapBlock* unk1EC;
 	/* 0x1F0 */ JAIHeapBlock* unk1F0;
 	/* 0x1F4 */ JAIBasic* unk1F4;

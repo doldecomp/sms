@@ -27,8 +27,8 @@ public:
 	/* 0x430 */ u32 unk430;
 	/* 0x434 */ u32 unk434;
 	/* 0x438 */ u32 unk438;
-	/* 0x43C */ JAISeParameter* unk43C;
-	/* 0x440 */ JAISeParameter* unk440;
+	/* 0x43C */ JAISeParameter* mPrev;
+	/* 0x440 */ JAISeParameter* mNext;
 };
 
 class MuteBit {
@@ -88,8 +88,8 @@ public:
 	/* 0x1810 */ u8 unk1810[32];
 	/* 0x1830 */ MuteBit unk1830[32];
 	/* 0x1850 */ JAISeqUpdateData* unk1850;
-	/* 0x1854 */ JAISeqParameter* unk1854;
-	/* 0x1858 */ JAISeqParameter* unk1858;
+	/* 0x1854 */ JAISeqParameter* mPrev;
+	/* 0x1858 */ JAISeqParameter* mNext;
 };
 
 class JAIStreamUpdateParameter;
@@ -105,8 +105,8 @@ public:
 	/* 0x154 */ JAIMoveParaSet unk154[20];
 	/* 0x294 */ JAIMoveParaSet unk294[20];
 	/* 0x3D4 */ JAIStreamUpdateParameter* unk3D4;
-	/* 0x3D8 */ JAIStreamParameter* unk3D8;
-	/* 0x3DC */ JAIStreamParameter* unk3DC;
+	/* 0x3D8 */ JAIStreamParameter* mPrev;
+	/* 0x3DC */ JAIStreamParameter* mNext;
 };
 
 class JAISound;

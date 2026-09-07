@@ -729,9 +729,9 @@ void MSound::fadeOutAllSound(u32 param_1)
 
 	for (u8 i = 0; i < JAIGlobalParameter::getParamSeCategoryMax(); ++i) {
 		if (unk0->unk88.unk2[i] != 0 && i != 4) {
-			for (JAISound* sound = unk0->unk1E8[i].mUsedHead; sound != nullptr;
-			     sound           = sound->mNextSound)
-                sound->setVolume(0.0f, param_1, 2);
+			for (JAISound* sound         = unk0->mSeRegist[i].mUsedHead;
+			     sound != nullptr; sound = sound->mNextSound)
+				sound->setVolume(0.0f, param_1, 2);
 		}
 	}
 
