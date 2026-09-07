@@ -77,7 +77,17 @@ TTrack::TTrack()
 
 void TTrack::setInterrupt(u16 interrupt) { mIntrMgr.request(interrupt); }
 
-void TTrack::tryInterrupt() { }
+bool TTrack::tryInterrupt()
+{
+	if (mSeqCtrl.isIntr())
+		return false;
+
+	void* intr = mIntrMgr.checkIntr();
+	if (intr == nullptr)
+		return false;
+
+	return mSeqCtrl.callIntr(intr);
+}
 
 void TTrack::setBankNumber(u8 bank) { }
 
@@ -132,7 +142,13 @@ f32 TTrack::getDolby() const
 
 u8 TTrack::getNoteStatus(u8 note) { return 0; }
 
-void TTrack::releaseChannelAll() { }
+void TTrack::releaseChannelAll()
+{
+	if (mParent)
+		mParent->mChannelUpdater.receiveAllChannels(&mChannelUpdater);
+	else
+		ChGlobal::releaseAll(&mChannelUpdater);
+}
 
 void TTrack::flushAll()
 {
@@ -283,7 +299,17 @@ int TTrack::gateOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 	return 0;
 }
 
-void TTrack::checkNoteStop(s32 param) { }
+bool TTrack::checkNoteStop(s32 param)
+{
+	TChannel* chan = mNoteMgr.getChannel(param);
+	if (chan == nullptr)
+		return true;
+
+	if (chan->unk1 == 0xff)
+		return true;
+
+	return false;
+}
 
 void TTrack::oscSetupFull(u8 param_1, u32 param_2, u32 param_3)
 {
@@ -708,27 +734,15 @@ s8 TTrack::mainProc()
 
 	s32 retcode;
 	do {
-		if (!(mSeqCtrl.mPreviousFilePtr != 0 ? true : false)) {
-			void* intr = mIntrMgr.checkIntr();
-			if (intr != nullptr)
-				mSeqCtrl.callIntr(intr);
-		}
+		tryInterrupt();
 
 		if (mPause != 0 && (mPauseStatus & 2))
 			goto bail; // TODO: is this goto real? looks quite real to me
 
 		if (mSeqCtrl.getWait() == -1) {
-			TChannel* chan = mNoteMgr.getChannel(0);
-			bool b;
-			if (chan == nullptr)
-				b = true;
-			else if (chan->unk1 == 0xff)
-				b = true;
-			else
-				b = false;
-			if (!b)
+			if (!checkNoteStop(0))
 				break;
-			mSeqCtrl.mWaitTimer = 0;
+			mSeqCtrl.wait(0);
 		}
 
 		if (mSeqCtrl.getWait() > 0) {
@@ -1093,7 +1107,12 @@ bool TTrack::startSeq()
 	return true;
 }
 
-void TTrack::stopSeqMain() { }
+void TTrack::stopSeqMain()
+{
+	updateSeq(0, true);
+	closeTrack();
+	TrackMgr::deAllocRoot(this);
+}
 
 bool TTrack::stopSeq()
 {
@@ -1123,6 +1142,8 @@ void TTrack::allNoteOff()
 	else
 		for (u8 i = 0; i < 8; ++i)
 			noteOff(i, 0);
+
+	mNoteMgr.init();
 }
 
 bool TTrack::closeTrack()
@@ -1131,8 +1152,6 @@ bool TTrack::closeTrack()
 		return false;
 
 	allNoteOff();
-
-	mNoteMgr.init();
 	mSeqState = 0;
 
 	if (mInnerMemory == 1)
@@ -1146,10 +1165,7 @@ bool TTrack::closeTrack()
 
 	mMute = 0;
 
-	if (mParent)
-		mParent->mChannelUpdater.receiveAllChannels(&mChannelUpdater);
-	else
-		ChGlobal::releaseAll(&mChannelUpdater);
+	releaseChannelAll();
 
 	if (mConnected) {
 		TrackMgr::unRegistTrack(this);
@@ -1585,9 +1601,7 @@ s32 TTrack::rootCallback(void* param)
 	TTrack* self = static_cast<TTrack*>(param);
 	if (self && self->mSeqState != 0) {
 		if (self->mSeqState == 3) {
-			self->updateSeq(0, true);
-			self->closeTrack();
-			TrackMgr::deAllocRoot(self);
+			self->stopSeqMain();
 			return -1;
 		} else {
 			self->mTickCounter += self->mTickRate;
@@ -1600,9 +1614,7 @@ s32 TTrack::rootCallback(void* param)
 					if ((int)self->mainProc() != -1)
 						continue;
 
-					self->updateSeq(0, true);
-					self->closeTrack();
-					TrackMgr::deAllocRoot(self);
+					self->stopSeqMain();
 					return -1;
 				}
 			}

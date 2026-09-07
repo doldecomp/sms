@@ -192,7 +192,7 @@ public:
 	int noteOn(u8 note, s32 velocity, s32 length, s32 delay);
 	bool noteOff(u8 note, u16 release);
 	int gateOn(u8 note, s32 velocity, s32 length, s32 delay);
-	void checkNoteStop(s32 param);
+	bool checkNoteStop(s32 param);
 	void releaseChannelAll();
 	void flushAll();
 	void flushRelease();
@@ -203,7 +203,7 @@ public:
 	void unPauseTrack(u8 flag);
 	void unPauseTrackAll();
 	void setInterrupt(u16 interrupt);
-	void tryInterrupt();
+	bool tryInterrupt();
 	void setInnerMemory(u8 param);
 	void setBankNumber(u8 bank);
 	bool assignExtBuffer(TOuterParam* buffer);

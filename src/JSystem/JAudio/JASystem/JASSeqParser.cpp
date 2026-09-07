@@ -523,14 +523,14 @@ int TSeqParser::cmdIIRSet(TTrack* track, u32* args)
 
 int TSeqParser::cmdFIRSet(TTrack* track, u32* args)
 {
-	track->setExtFirFilterD((s16*)(track->mSeqCtrl.mRawFilePtr + args[0]));
+	track->setExtFirFilterD((s16*)track->mSeqCtrl.getAddr(args[0]));
 	return 0;
 }
 
 int TSeqParser::cmdEXTSet(TTrack* track, u32* args)
 {
 	u32 offset                      = args[0];
-	u8* outerParamAddr              = track->mSeqCtrl.mRawFilePtr + offset;
+	u8* outerParamAddr              = track->mSeqCtrl.getAddr(offset);
 	TTrack::TOuterParam* outerParam = (TTrack::TOuterParam*)outerParamAddr;
 	outerParam->initExtBuffer();
 	track->assignExtBuffer(outerParam);
@@ -727,7 +727,7 @@ int TSeqParser::cmdWait(TTrack* track, u8 flag)
 		val <<= 8;
 		val |= track->mSeqCtrl.readByte();
 	}
-	track->mSeqCtrl.mWaitTimer = val;
+	track->mSeqCtrl.wait(val);
 	if (!val) {
 		return 0;
 	} else {

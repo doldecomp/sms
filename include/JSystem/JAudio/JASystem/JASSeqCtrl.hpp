@@ -22,7 +22,7 @@ public:
 	u8 readByte() { return *mCurrentFilePtr++; }
 
 	u8* getBase() { return mRawFilePtr; }
-	void* getAddr(u32 offset) { return mRawFilePtr + offset; }
+	u8* getAddr(u32 offset) { return mRawFilePtr + offset; }
 
 	void call(u32 offset)
 	{
@@ -51,6 +51,7 @@ public:
 		return mLoopTimers[mLoopIndex - 1];
 	}
 
+	bool isIntr() const { return mPreviousFilePtr != 0 ? true : false; }
 	void clrIntr() { mPreviousFilePtr = 0; }
 
 public:
