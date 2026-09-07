@@ -12,7 +12,7 @@ void JAIStreamEntry::storeBuffer(JAISound** sound, JAIActor* actor, u32 param_3,
 	if (checkSoundHandle(sound, param_3, param_6))
 		return;
 
-	controller = unk0->getControllerHandle(&data->unk21C);
+	controller = unk0->getControllerHandle(&data->mStreamControlBuffer);
 	if (!controller) {
 		*sound = nullptr;
 		return;

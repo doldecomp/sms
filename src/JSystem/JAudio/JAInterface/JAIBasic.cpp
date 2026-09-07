@@ -673,13 +673,13 @@ void JAIBasic::checkStream()
 
 void JAIBasic::checkDummyPositionBuffer()
 {
-	JAIDummyVec* it = unk0->unk22C;
+	JAIDummyVec* it = unk0->mDummyVecUsedHead;
 	while (it) {
-		JAIDummyVec* next = it->unk4;
-		--it->unkC;
-		if (it->unkC == 0 || !it->unk8) {
-			if (it->unk8)
-				it->unk8->stop(0);
+		JAIDummyVec* next = it->mNext;
+		--it->mLifeTime;
+		if (it->mLifeTime == 0 || !it->mSound) {
+			if (it->mSound)
+				it->mSound->stop(0);
 			releaseDummyVecPointer(it);
 		}
 		it = next;
@@ -810,7 +810,7 @@ void JAIBasic::stopSoundHandle(JAISound* sound, u32 param)
 				sound->clearMainSoundPPointer();
 				releaseStreamParameterPointer(
 				    (JAIStreamParameter*)sound->mCustomParameter);
-				releaseControllerHandle(&unk0->unk21C, sound);
+				releaseControllerHandle(&unk0->mStreamControlBuffer, sound);
 				JASystem::Dvd::unpauseDvdT();
 			} else {
 				if (sound->getStreamParameter()->unk3D4 != nullptr) {
@@ -1048,22 +1048,22 @@ void JAIBasic::getDummyVecPointer() { }
 
 void JAIBasic::releaseDummyVecPointer(JAIDummyVec* vec)
 {
-	JAIDummyVec** start = &unk0->unk22C;
-	JAIDummyVec** end   = &unk0->unk228;
+	JAIDummyVec** used = &unk0->mDummyVecUsedHead;
+	JAIDummyVec** free = &unk0->mDummyVecFreeHead;
 
-	if (*start != vec) {
-		vec->unk0->unk4 = vec->unk4;
-		if (vec->unk4)
-			vec->unk4->unk0 = vec->unk0;
+	if (*used != vec) {
+		vec->mPrev->mNext = vec->mNext;
+		if (vec->mNext)
+			vec->mNext->mPrev = vec->mPrev;
 	} else {
-		*start = vec->unk4;
-		if (vec->unk4)
-			vec->unk4->unk0 = nullptr;
+		*used = vec->mNext;
+		if (vec->mNext)
+			vec->mNext->mPrev = nullptr;
 	}
-	vec->unk4 = *end;
-	if (vec->unk4)
-		vec->unk4->unk0 = vec;
-	*end = vec;
+	vec->mNext = *free;
+	if (vec->mNext)
+		vec->mNext->mPrev = vec;
+	*free = vec;
 }
 
 void JAIBasic::getGameFrameCounter() { }

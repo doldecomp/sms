@@ -54,7 +54,7 @@ void JAISeqEntry::storeBuffer(JAISound** sound, JAIActor* actor, u32 param_3,
 	}
 
 	if (doThing) {
-		controller = unk0->getControllerHandle(&data->unk210);
+		controller = unk0->getControllerHandle(&data->mSeqControlBuffer);
 		if (!controller) {
 			*sound = nullptr;
 			return;
