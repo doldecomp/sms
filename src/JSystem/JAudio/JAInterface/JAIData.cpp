@@ -509,7 +509,7 @@ void JAIData::initData()
 			u32 sum = 0;
 			for (int j = 0; j < JAIGlobalParameter::getParamSeCategoryMax();
 			     ++j) {
-				sum += unk1F4->mSoundSceneList[i][2 * j];
+				sum += unk1F4->mSoundSceneList[i][j].mMaxPlaying;
 			}
 			if (JAIGlobalParameter::seTrackMax < sum)
 				JAIGlobalParameter::seTrackMax = sum;
@@ -635,11 +635,12 @@ void JAIData::initData()
 	unk184->unk14 = nullptr;
 
 	if (unk1F4->mSoundSceneList) {
-		unk4 = unk1F4->mSoundSceneList;
+		mCategoryInfoTable = unk1F4->mSoundSceneList;
 	} else {
-		unk4 = (u8**)unk1F4->allocHeap(JAIGlobalParameter::soundSceneMax * 4);
+		mCategoryInfoTable = (JAICategoryInfo**)unk1F4->allocHeap(
+		    JAIGlobalParameter::soundSceneMax * 4);
 		for (int i = 0; i < JAIGlobalParameter::soundSceneMax; ++i)
-			unk4[i] = JAIConst::sCInfos_0;
+			mCategoryInfoTable[i] = JAIConst::sCInfos_0;
 	}
 
 	if (unk1F4->unk6C) {

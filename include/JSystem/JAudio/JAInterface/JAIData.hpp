@@ -21,6 +21,12 @@ public:
 struct JAIStreamUpdateParameter;
 
 // fabricated
+struct JAICategoryInfo {
+	/* 0x0 */ u8 mMaxPlaying;
+	/* 0x1 */ u8 mMaxSameSound;
+};
+
+// fabricated
 struct JAISoundInfo {
 	/* 0x0 */ u32 mSwBit;
 	/* 0x4 */ u8 mPriority;
@@ -138,7 +144,7 @@ public:
 	};
 
 	/* 0x0 */ FabricatedSeTrackParameter* unk0;
-	/* 0x4 */ u8** unk4;
+	/* 0x4 */ JAICategoryInfo** mCategoryInfoTable;
 
 	struct FabricatedUnk8Struct {
 		u32 unk0;

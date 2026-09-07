@@ -264,7 +264,7 @@ void JAIGlobalParameter::setParamSoundOutputMode(u32 value)
 		r30 = 1;
 		break;
 	}
-	JAIBasic::getInterface()->unk14 = value;
+	JAIBasic::getInterface()->mSoundOutputMode = value;
 	JASystem::Driver::setOutputMode(r31);
 	JAInter::StreamLib::setOutputMode(r30);
 }
