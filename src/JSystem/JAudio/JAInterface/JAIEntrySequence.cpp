@@ -23,7 +23,7 @@ void JAISeqEntry::storeBuffer(JAISound** sound, JAIActor* actor, u32 param_3,
 
 	u32 doThing;
 
-	JAISound** soundSlot = &data->unk180[bVar10].mSound;
+	JAISound** soundSlot = &data->mSeqTrackInfo[bVar10].mSound;
 	if (!*soundSlot) {
 		doThing = true;
 	} else {
@@ -71,19 +71,19 @@ void JAISeqEntry::storeBuffer(JAISound** sound, JAIActor* actor, u32 param_3,
 		*soundSlot             = controller;
 		(*soundSlot)->mSoundID = param_3;
 
-		JAISeqUpdateData* pJVar1 = &data->unk180[bVar10];
+		JAISeqUpdateData* pJVar1 = &data->mSeqTrackInfo[bVar10];
 		JAISeqParameter* pvVar5  = (*soundSlot)->getSeqParameter();
 
 		pvVar5->unk1850 = pJVar1;
 
-		(*soundSlot)->mTrack      = bVar10;
-		data->unk180[bVar10].unk8 = 1;
-		data->unk180[bVar10].unk2 = 0;
-		data->unk180[bVar10].unk4 = 0;
+		(*soundSlot)->mTrack             = bVar10;
+		data->mSeqTrackInfo[bVar10].unk8 = 1;
+		data->mSeqTrackInfo[bVar10].unk2 = 0;
+		data->mSeqTrackInfo[bVar10].unk4 = 0;
 		data->initSeqTrackInfoParameter(bVar10);
 		if (unk0->getSoundSwBit(param_6) & 1) {
 			for (u32 i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
-				JAISound* sound = data->unk180[i].mSound;
+				JAISound* sound = data->mSeqTrackInfo[i].mSound;
 				if (i != bVar10 && sound && sound->mState >= SOUNDSTATE_Started
 				    && (sound->getSwBit() & 2) == 0) {
 					sound->setSeqInterVolume(10, 0.0f, 10);

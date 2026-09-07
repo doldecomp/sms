@@ -11,13 +11,13 @@ JAIData::JAIData() { }
 
 void JAIData::init()
 {
-	unk88.unk78    = 0;
-	unkC.unk78     = 0;
-	unk104.unk78   = 0;
-	unk1B0         = 0;
-	mStreamList    = 0;
-	mNextLoadOrder = 0;
-	mStayHeapCount = 0;
+	mSeTable.unk78       = 0;
+	mSeqTable.unk78      = 0;
+	mStreamTable.unk78   = 0;
+	mSeparateSoundTables = 0;
+	mStreamList          = 0;
+	mNextLoadOrder       = 0;
+	mStayHeapCount       = 0;
 }
 
 void JAIData::initLinkBuffer(JAILinkBuffer* linkBuffer, u32 param)
@@ -284,32 +284,32 @@ void JAIData::initStreamParameter(JAIStreamParameter* param)
 
 void JAIData::initSeqTrackInfoParameter(u32 param)
 {
-	unk180[param].mSeqVolume = 1.0f;
-	unk180[param].mSeqPan    = 0.5f;
-	unk180[param].mSeqPitch  = 1.0f;
-	unk180[param].mSeqFxmix  = 0.0f;
-	unk180[param].mSeqDolby  = 0.0f;
-	unk180[param].mSeqTempo  = 1.0f;
+	mSeqTrackInfo[param].mSeqVolume = 1.0f;
+	mSeqTrackInfo[param].mSeqPan    = 0.5f;
+	mSeqTrackInfo[param].mSeqPitch  = 1.0f;
+	mSeqTrackInfo[param].mSeqFxmix  = 0.0f;
+	mSeqTrackInfo[param].mSeqDolby  = 0.0f;
+	mSeqTrackInfo[param].mSeqTempo  = 1.0f;
 	for (int i = 0; i < JAIGlobalParameter::seqTrackMax; ++i) {
-		unk180[param].mTrackVolume[i] = 1.0f;
-		unk180[param].mTrackPan[i]    = 64.0f;
-		unk180[param].mTrackPitch[i]  = 1.0f;
-		unk180[param].mTrackFxmix[i]  = 0.0f;
-		unk180[param].mTrackDolby[i]  = 0.0f;
-		unk180[param].mTrackUpdate[i] = 0;
+		mSeqTrackInfo[param].mTrackVolume[i] = 1.0f;
+		mSeqTrackInfo[param].mTrackPan[i]    = 64.0f;
+		mSeqTrackInfo[param].mTrackPitch[i]  = 1.0f;
+		mSeqTrackInfo[param].mTrackFxmix[i]  = 0.0f;
+		mSeqTrackInfo[param].mTrackDolby[i]  = 0.0f;
+		mSeqTrackInfo[param].mTrackUpdate[i] = 0;
 	}
 }
 
 void JAIData::initStreamUpdateParameter()
 {
-	unk184->unk0  = 0;
-	unk184->unk1  = 0;
-	unk184->unk2  = 0;
-	unk184->unk4  = 1.0f;
-	unk184->unk8  = 1.0f;
-	unk184->unkC  = 0.5f;
-	unk184->unk10 = 0;
-	unk184->unk14 = nullptr;
+	mStreamUpdate->unk0  = 0;
+	mStreamUpdate->unk1  = 0;
+	mStreamUpdate->unk2  = 0;
+	mStreamUpdate->unk4  = 1.0f;
+	mStreamUpdate->unk8  = 1.0f;
+	mStreamUpdate->unkC  = 0.5f;
+	mStreamUpdate->unk10 = 0;
+	mStreamUpdate->unk14 = nullptr;
 }
 
 void JAIData::setSeMovePara(JAIMoveParaSet* moveParaSet)
@@ -457,8 +457,8 @@ void JAIData::getInfoPointer(u32 param_1, void** param_2)
 	u32 thing;
 
 	*param_2 = &JAIConst::nullInfoData2;
-	if (unk1B0 == 0) {
-		table = &unk88;
+	if (mSeparateSoundTables == 0) {
+		table = &mSeTable;
 		switch (param_1 & JAISoundID_TypeMask) {
 		case JAISoundID_Type_Se:
 			thing = (u8)(param_1 >> 12);
@@ -475,15 +475,15 @@ void JAIData::getInfoPointer(u32 param_1, void** param_2)
 		switch (param_1 & JAISoundID_TypeMask) {
 		case JAISoundID_Type_Se:
 			thing = (u8)(param_1 >> 12);
-			table = &unk88;
+			table = &mSeTable;
 			JAIGlobalParameter::getParamSeCategoryMax();
 			break;
 		case JAISoundID_Type_Sequence:
-			table = &unkC;
+			table = &mSeqTable;
 			thing = 0x10;
 			break;
 		case JAISoundID_Type_Stream:
-			table = &unk104;
+			table = &mStreamTable;
 			thing = 0x11;
 			break;
 		}
@@ -498,10 +498,10 @@ void JAIData::getInfoPointer(u32 param_1, void** param_2)
 
 void JAIData::initData()
 {
-	initInfoDataWork(&unk88, JAIGlobalParameter::seInfoFileName);
-	if (unk1B0 == 1) {
-		initInfoDataWork(&unkC, JAIGlobalParameter::seqInfoFileName);
-		initInfoDataWork(&unk104, JAIGlobalParameter::streamInfoFileName);
+	initInfoDataWork(&mSeTable, JAIGlobalParameter::seInfoFileName);
+	if (mSeparateSoundTables == 1) {
+		initInfoDataWork(&mSeqTable, JAIGlobalParameter::seqInfoFileName);
+		initInfoDataWork(&mStreamTable, JAIGlobalParameter::streamInfoFileName);
 	}
 	if (unk1F4->mSoundSceneList) {
 		JAIGlobalParameter::seTrackMax = 0;
@@ -599,44 +599,44 @@ void JAIData::initData()
 
 	mDefaultSeqHandle = (JAISound**)unk1F4->allocHeap(
 	    JAIGlobalParameter::seqPlayTrackMax * sizeof(JAISound*));
-	unk180 = (JAISeqUpdateData*)unk1F4->allocHeap(
+	mSeqTrackInfo = (JAISeqUpdateData*)unk1F4->allocHeap(
 	    JAIGlobalParameter::seqPlayTrackMax * sizeof(JAISeqUpdateData));
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
-		unk180[i].unk4C
+		mSeqTrackInfo[i].unk4C
 		    = (JAISeqUpdateData::FabricatedUnk4CStruct*)unk1F4->allocHeap(
 		        0x7BC);
-		mDefaultSeqHandle[i] = 0;
-		unk180[i].unk0       = 0;
-		unk180[i].unk1       = 0;
-		unk180[i].unk2       = 0;
-		unk180[i].unk3       = 0;
-		unk180[i].unk8       = 0;
-		unk180[i].mSound     = 0;
+		mDefaultSeqHandle[i]    = 0;
+		mSeqTrackInfo[i].unk0   = 0;
+		mSeqTrackInfo[i].unk1   = 0;
+		mSeqTrackInfo[i].unk2   = 0;
+		mSeqTrackInfo[i].unk3   = 0;
+		mSeqTrackInfo[i].unk8   = 0;
+		mSeqTrackInfo[i].mSound = 0;
 
-		unk180[i].mTrackVolume = (f32*)unk1F4->allocHeap(
+		mSeqTrackInfo[i].mTrackVolume = (f32*)unk1F4->allocHeap(
 		    JAIGlobalParameter::seqTrackMax * sizeof(f32));
-		unk180[i].mTrackPan = (f32*)unk1F4->allocHeap(
+		mSeqTrackInfo[i].mTrackPan = (f32*)unk1F4->allocHeap(
 		    JAIGlobalParameter::seqTrackMax * sizeof(f32));
-		unk180[i].mTrackPitch = (f32*)unk1F4->allocHeap(
+		mSeqTrackInfo[i].mTrackPitch = (f32*)unk1F4->allocHeap(
 		    JAIGlobalParameter::seqTrackMax * sizeof(f32));
-		unk180[i].mTrackFxmix = (f32*)unk1F4->allocHeap(
+		mSeqTrackInfo[i].mTrackFxmix = (f32*)unk1F4->allocHeap(
 		    JAIGlobalParameter::seqTrackMax * sizeof(f32));
-		unk180[i].mTrackDolby = (f32*)unk1F4->allocHeap(
+		mSeqTrackInfo[i].mTrackDolby = (f32*)unk1F4->allocHeap(
 		    JAIGlobalParameter::seqTrackMax * sizeof(f32));
-		unk180[i].mTrackUpdate = (u32*)unk1F4->allocHeap(
+		mSeqTrackInfo[i].mTrackUpdate = (u32*)unk1F4->allocHeap(
 		    (JAIGlobalParameter::seqTrackMax + 1) * sizeof(u32));
 		initSeqTrackInfoParameter(i);
 	}
-	unk184 = (JAIStreamUpdateParameter*)unk1F4->allocHeap(
+	mStreamUpdate = (JAIStreamUpdateParameter*)unk1F4->allocHeap(
 	    sizeof(JAIStreamUpdateParameter));
-	unk184->unk0  = 0;
-	unk184->unk1  = 0;
-	unk184->unk2  = 0;
-	unk184->unk4  = 1.0f;
-	unk184->unk8  = 1.0f;
-	unk184->unkC  = 0.5f;
-	unk184->unk10 = 0;
-	unk184->unk14 = nullptr;
+	mStreamUpdate->unk0  = 0;
+	mStreamUpdate->unk1  = 0;
+	mStreamUpdate->unk2  = 0;
+	mStreamUpdate->unk4  = 1.0f;
+	mStreamUpdate->unk8  = 1.0f;
+	mStreamUpdate->unkC  = 0.5f;
+	mStreamUpdate->unk10 = 0;
+	mStreamUpdate->unk14 = nullptr;
 
 	if (unk1F4->mSoundSceneList) {
 		mCategoryInfoTable = unk1F4->mSoundSceneList;
