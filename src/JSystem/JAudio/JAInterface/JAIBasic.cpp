@@ -228,9 +228,9 @@ BOOL JAIBasic::checkInitListFile()
 			       (char*)((u8*)file + header->unk8));
 			strcpy(JAIGlobalParameter::streamInfoFileName,
 			       (char*)((u8*)file + header->unkA));
-			unk0->unk1B0 = 1;
+			unk0->mSeparateSoundTables = 1;
 		} else {
-			unk0->unk1B0 = 0;
+			unk0->mSeparateSoundTables = 0;
 		}
 
 		return 1;
@@ -292,29 +292,29 @@ void JAIBasic::checkInitDataOnMemory()
 		case JAIINITDATA_SoundTables:
 			if (((u32*)mInitDataPointer)[i + 2] != 0) {
 				u8* buffer = mInitDataPointer + ((u32*)mInitDataPointer)[i++];
-				data->unk88.unk28 = ((u32*)mInitDataPointer)[i++];
-				data->unk88.unk78
-				    = (u8*)transInitDataFile(buffer, data->unk88.unk28);
+				data->mSeTable.unk28 = ((u32*)mInitDataPointer)[i++];
+				data->mSeTable.unk78
+				    = (u8*)transInitDataFile(buffer, data->mSeTable.unk28);
 
 				buffer = mInitDataPointer + ((u32*)mInitDataPointer)[i++];
-				data->unkC.unk28 = ((u32*)mInitDataPointer)[i++];
-				data->unkC.unk78
-				    = (u8*)transInitDataFile(buffer, data->unkC.unk28);
+				data->mSeqTable.unk28 = ((u32*)mInitDataPointer)[i++];
+				data->mSeqTable.unk78
+				    = (u8*)transInitDataFile(buffer, data->mSeqTable.unk28);
 
-				data->unk104.unk78
+				data->mStreamTable.unk78
 				    = mInitDataPointer + ((u32*)mInitDataPointer)[i++];
-				data->unk104.unk28 = ((u32*)mInitDataPointer)[i++];
-				data->unk104.unk78
-				    = (u8*)transInitDataFile(buffer, data->unk104.unk28);
+				data->mStreamTable.unk28 = ((u32*)mInitDataPointer)[i++];
+				data->mStreamTable.unk78
+				    = (u8*)transInitDataFile(buffer, data->mStreamTable.unk28);
 
-				data->unk1B0 = 1;
+				data->mSeparateSoundTables = 1;
 			} else {
 				u8* buffer = mInitDataPointer + ((u32*)mInitDataPointer)[i++];
-				data->unk88.unk28 = ((u32*)mInitDataPointer)[i++];
-				data->unk88.unk78
-				    = (u8*)transInitDataFile(buffer, data->unk88.unk28);
+				data->mSeTable.unk28 = ((u32*)mInitDataPointer)[i++];
+				data->mSeTable.unk78
+				    = (u8*)transInitDataFile(buffer, data->mSeTable.unk28);
 				++i;
-				data->unk1B0 = 0;
+				data->mSeparateSoundTables = 0;
 			}
 			break;
 
@@ -786,8 +786,8 @@ void JAIBasic::stopSoundHandle(JAISound* sound, u32 param)
 				sound->clearMainSoundPPointer();
 				stopSeq(sound);
 			} else {
-				unk0->unk180[sound->mTrack].unk8 |= 0x2;
-				unk0->unk180[sound->mTrack].mSound->mFadeCounter = param;
+				unk0->mSeqTrackInfo[sound->mTrack].unk8 |= 0x2;
+				unk0->mSeqTrackInfo[sound->mTrack].mSound->mFadeCounter = param;
 			}
 			break;
 
@@ -805,8 +805,8 @@ void JAIBasic::stopSoundHandle(JAISound* sound, u32 param)
 		case JAISoundID_Type_Stream:
 			if (param == 0) {
 				JAInter::StreamLib::stop();
-				sound->mState       = SOUNDSTATE_Inactive;
-				unk0->unk184->unk14 = nullptr;
+				sound->mState              = SOUNDSTATE_Inactive;
+				unk0->mStreamUpdate->unk14 = nullptr;
 				sound->clearMainSoundPPointer();
 				releaseStreamParameterPointer(
 				    (JAIStreamParameter*)sound->mCustomParameter);
@@ -1111,18 +1111,18 @@ void JAIBasic::getSeInfoCategoryMax() { }
 JAISoundTable* JAIBasic::getInfoPointerFromID(u32 id)
 {
 	static JAISoundTable* _dinfo;
-	if (unk0->unk1B0 == 0) {
-		_dinfo = &unk0->unk88;
+	if (unk0->mSeparateSoundTables == 0) {
+		_dinfo = &unk0->mSeTable;
 	} else {
 		switch (id & JAISoundID_TypeMask) {
 		case JAISoundID_Type_Se:
-			_dinfo = &unk0->unk88;
+			_dinfo = &unk0->mSeTable;
 			break;
 		case JAISoundID_Type_Sequence:
-			_dinfo = &unk0->unkC;
+			_dinfo = &unk0->mSeqTable;
 			break;
 		case JAISoundID_Type_Stream:
-			_dinfo = &unk0->unk104;
+			_dinfo = &unk0->mStreamTable;
 			break;
 		}
 	}
@@ -1160,24 +1160,24 @@ u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 	switch (param_2) {
 	case 0:
 		for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
-			if (basic->unk0->unk180[i].mSound == nullptr)
+			if (basic->unk0->mSeqTrackInfo[i].mSound == nullptr)
 				continue;
 
 			JASystem::TTrack* track = JASystem::TrackMgr::handleToSeq(
-			    basic->unk0->unk180[i].mSound->getSeqParameter()->unk0);
+			    basic->unk0->mSeqTrackInfo[i].mSound->getSeqParameter()->unk0);
 			if (track != param_1->mParent)
 				continue;
 
 			u32 uVar8          = param_1->unk308;
 			u32 route          = basic->routeToTrack(uVar8);
 			JAISoundInfo* info = basic->getSoundInfoFromID(
-			    basic->unk0->unk180[i].mSound->mSoundID);
+			    basic->unk0->mSeqTrackInfo[i].mSound->mSoundID);
 
-			JAISystemInterface::outerInit(&basic->unk0->unk180[i], param_1,
-			                              route, info->mSwBit >> 8,
+			JAISystemInterface::outerInit(&basic->unk0->mSeqTrackInfo[i],
+			                              param_1, route, info->mSwBit >> 8,
 			                              param_2 & 1);
 			result = 0;
-			basic->unk0->unk180[i].unk4 |= 1 << route;
+			basic->unk0->mSeqTrackInfo[i].unk4 |= 1 << route;
 			i = JAIGlobalParameter::seqPlayTrackMax;
 		}
 		break;

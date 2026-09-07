@@ -151,16 +151,16 @@ public:
 	};
 
 	/* 0x8 */ FabricatedSeTrack** mSeTrack;
-	/* 0xC */ JAISoundTable unkC;
-	/* 0x88 */ JAISoundTable unk88;
-	/* 0x104 */ JAISoundTable unk104;
-	/* 0x180 */ JAISeqUpdateData* unk180;
-	/* 0x184 */ JAIStreamUpdateParameter* unk184;
+	/* 0xC */ JAISoundTable mSeqTable;
+	/* 0x88 */ JAISoundTable mSeTable;
+	/* 0x104 */ JAISoundTable mStreamTable;
+	/* 0x180 */ JAISeqUpdateData* mSeqTrackInfo;
+	/* 0x184 */ JAIStreamUpdateParameter* mStreamUpdate;
 	/* 0x188 */ u8 mFxSceneMax;
 	/* 0x18C */ u32 mFxBufferMax[4];
 	/* 0x19C */ s16* mFxBuffer[4];
 	/* 0x1AC */ JASystem::DSPInterface::FxlineConfig_** mFxlineConfig;
-	/* 0x1B0 */ u8 unk1B0;
+	/* 0x1B0 */ u8 mSeparateSoundTables;
 	/* 0x1B4 */ u32 mNextLoadOrder;
 	/* 0x1B8 */ u32 mStayHeapCount;
 	/* 0x1BC */ JAISeqParameter* mSeqParameterFreeHead;

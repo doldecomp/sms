@@ -101,19 +101,19 @@ void JAIBasic::checkEntriedStream()
 	     it = it->mNextSound) {
 		bool bVar1 = false;
 		if (it->mState == SOUNDSTATE_Stored) {
-			if (!unk0->unk184->unk14) {
+			if (!unk0->mStreamUpdate->unk14) {
 				JAInter::StreamLib::stop();
 				bVar1 = true;
-			} else if (unk0->unk184->unk14->mWaitTimer == 0) {
+			} else if (unk0->mStreamUpdate->unk14->mWaitTimer == 0) {
 				JAInter::StreamLib::stop();
 				bVar1 = true;
 			}
 			if (bVar1) {
 				it->mState = SOUNDSTATE_Prepared;
 
-				it->getStreamParameter()->unk3D4 = unk0->unk184;
+				it->getStreamParameter()->unk3D4 = unk0->mStreamUpdate;
 				unk0->initStreamUpdateParameter();
-				unk0->unk184->unk14 = it;
+				unk0->mStreamUpdate->unk14 = it;
 			}
 		}
 	}
@@ -121,7 +121,7 @@ void JAIBasic::checkEntriedStream()
 
 void JAIBasic::checkWaitStream()
 {
-	JAISound* sound = unk0->unk184->unk14;
+	JAISound* sound = unk0->mStreamUpdate->unk14;
 	if (!sound)
 		return;
 	if (sound->mState != SOUNDSTATE_Prepared)
@@ -141,12 +141,12 @@ void JAIBasic::checkWaitStream()
 
 void JAIBasic::checkRequestStream()
 {
-	JAISound* sound = unk0->unk184->unk14;
+	JAISound* sound = unk0->mStreamUpdate->unk14;
 	if (!sound)
 		return;
 	if (sound->mState != SOUNDSTATE_Started)
 		return;
-	if (unk0->unk184->unk2 != 0)
+	if (unk0->mStreamUpdate->unk2 != 0)
 		return;
 	sound->mState = SOUNDSTATE_Playing;
 	if (sound->mFadeCounter > 1) {
@@ -158,7 +158,7 @@ void JAIBasic::checkRequestStream()
 
 void JAIBasic::checkPlayingStream()
 {
-	JAIStreamUpdateParameter* sud = unk0->unk184;
+	JAIStreamUpdateParameter* sud = unk0->mStreamUpdate;
 	JAISound* sound               = sud->unk14;
 
 	if (sound == nullptr)
@@ -218,9 +218,9 @@ void JAIBasic::checkPlayingStream()
 
 			vol *= mps->mCurrentValue;
 		}
-		if (unk0->unk184->unk4 != vol) {
+		if (unk0->mStreamUpdate->unk4 != vol) {
 			JAInter::StreamLib::setVolume(vol);
-			unk0->unk184->unk4 = vol;
+			unk0->mStreamUpdate->unk4 = vol;
 		}
 		if (streamParam->unk8 == 0)
 			r29 ^= 0x40000;
@@ -236,9 +236,9 @@ void JAIBasic::checkPlayingStream()
 
 			pitch *= mps->mCurrentValue;
 		}
-		if (unk0->unk184->unk8 != pitch) {
+		if (unk0->mStreamUpdate->unk8 != pitch) {
 			JAInter::StreamLib::setPitch(pitch);
-			unk0->unk184->unk8 = pitch;
+			unk0->mStreamUpdate->unk8 = pitch;
 		}
 		if (streamParam->unkC == 0)
 			r29 ^= 0x100000;
@@ -260,9 +260,9 @@ void JAIBasic::checkPlayingStream()
 		else if (pan < 0.0f)
 			pan = 0.0f;
 
-		if (unk0->unk184->unkC != pan) {
+		if (unk0->mStreamUpdate->unkC != pan) {
 			JAInter::StreamLib::setPan(pan);
-			unk0->unk184->unkC = pan;
+			unk0->mStreamUpdate->unkC = pan;
 		}
 		if (streamParam->unk10 == 0)
 			r29 ^= 0x80000;
