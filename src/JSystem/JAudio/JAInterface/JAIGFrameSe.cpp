@@ -166,7 +166,7 @@ void JAIBasic::checkNextFrameSe()
 
 		bVar19 = unk0->mCategoryInfoTable[mSoundScene][i].mMaxPlaying;
 		for (j = 0; j < bVar19; ++j) {
-			snd   = unk0->unk8[i][j].unk8;
+			snd   = unk0->mSeTrack[i][j].mSound;
 			bVar7 = 0;
 			if (snd == nullptr) {
 				bVar7 = 1;
@@ -179,11 +179,11 @@ void JAIBasic::checkNextFrameSe()
 				}
 				bVar7 = 1;
 			} else if (snd->mState == SOUNDSTATE_Inactive) {
-				unk0->unk8[i][j].unk8 = nullptr;
-				bVar7                 = 1;
+				unk0->mSeTrack[i][j].mSound = nullptr;
+				bVar7                       = 1;
 			} else {
 				for (k = 0; k < bVar19; ++k) {
-					if (unk0->unk8[i][j].unk8 == candidates[k].sound) {
+					if (unk0->mSeTrack[i][j].mSound == candidates[k].sound) {
 						candidates[k].sound = nullptr;
 						k                   = bVar19;
 					}
@@ -195,22 +195,22 @@ void JAIBasic::checkNextFrameSe()
 					snd = candidates[k].sound;
 					if (snd != nullptr && snd->mState != SOUNDSTATE_Started) {
 						for (l = 0; l < bVar19; ++l) {
-							if (unk0->unk8[i][l].unk8
-							    && snd == unk0->unk8[i][l].unk8) {
+							if (unk0->mSeTrack[i][l].mSound
+							    && snd == unk0->mSeTrack[i][l].mSound) {
 								bVar7 = 0;
 								l     = bVar19;
 							}
 						}
 
 						if (bVar7 == 1) {
-							unk0->unk8[i][j].unk8 = snd;
-							candidates[k].sound   = nullptr;
-							k                     = bVar19 + 1;
+							unk0->mSeTrack[i][j].mSound = snd;
+							candidates[k].sound         = nullptr;
+							k                           = bVar19 + 1;
 						}
 					}
 				}
 				if (k == bVar19) {
-					unk0->unk8[i][j].unk8 = nullptr;
+					unk0->mSeTrack[i][j].mSound = nullptr;
 				}
 			}
 		}
@@ -229,7 +229,7 @@ void JAIBasic::sendPlayingSeCommand()
 		for (j = 0;
 		     j < unk0->mCategoryInfoTable[mSoundScene][(u8)cat].mMaxPlaying;
 		     ++trackId, ++j) {
-			sound = unk0->unk8[cat][j].unk8;
+			sound = unk0->mSeTrack[cat][j].mSound;
 			if (sound == nullptr)
 				continue;
 
@@ -566,7 +566,7 @@ void JAIBasic::releaseSeRegist(JAISound* sound)
 	                                          .mMaxPlaying;
 	cat = sound->getSeCategoryNumber();
 	for (u8 j = 0; j < maxCount; ++j) {
-		JAISound** slot = &unk0->unk8[cat][j].unk8;
+		JAISound** slot = &unk0->mSeTrack[cat][j].mSound;
 		if (*slot == sound) {
 			*slot = nullptr;
 			j     = maxCount;
