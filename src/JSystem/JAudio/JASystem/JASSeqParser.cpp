@@ -121,7 +121,7 @@ int TSeqParser::cmdOpenTrack(TTrack* track, u32* args)
 
 int TSeqParser::cmdOpenTrackBros(TTrack* track, u32* args)
 {
-	TTrack* parent = track->mParent;
+	TTrack* parent = track->getParent();
 	if (!parent)
 		return 0;
 
@@ -246,13 +246,13 @@ int TSeqParser::cmdWritePort(TTrack* track, u32* args)
 
 int TSeqParser::cmdCheckPortImport(TTrack* track, u32* args)
 {
-	track->writeRegDirect(3, track->mTrackPort.checkImport(args[0]));
+	track->writeRegDirect(3, track->checkImport(args[0]));
 	return 0;
 }
 
 int TSeqParser::cmdCheckPortExport(TTrack* track, u32* args)
 {
-	track->writeRegDirect(3, track->mTrackPort.checkExport(args[0]));
+	track->writeRegDirect(3, track->checkExport(args[0]));
 	return 0;
 }
 
@@ -277,7 +277,7 @@ int TSeqParser::cmdParentWritePort(TTrack* track, u32* args)
 
 int TSeqParser::cmdChildWritePort(TTrack* track, u32* args)
 {
-	track->mChildren[args[0] >> 4]->writePortAppDirect(args[0] & 0xf, args[1]);
+	track->getChild(args[0] >> 4)->writePortAppDirect(args[0] & 0xf, args[1]);
 	return 0;
 }
 
@@ -327,10 +327,10 @@ int TSeqParser::cmdSimpleADSR(TTrack* track, u32* args)
 
 int TSeqParser::cmdTranspose(TTrack* track, u32* args)
 {
-	track->mTranspose      = args[0];
+	track->setTranspose(args[0]);
 	track->mTransposeTotal = track->mTranspose;
-	if (track->mParent)
-		track->mTransposeTotal += track->mParent->mTranspose;
+	if (track->getParent())
+		track->mTransposeTotal += track->getParent()->mTranspose;
 	return 0;
 }
 
@@ -338,7 +338,7 @@ int TSeqParser::cmdCloseTrack(TTrack* track, u32* args)
 {
 	u8 i = args[0];
 
-	TTrack* child = track->mChildren[i];
+	TTrack* child = track->getChild(i);
 	if (!child)
 		return 0;
 
@@ -350,7 +350,7 @@ int TSeqParser::cmdCloseTrack(TTrack* track, u32* args)
 
 int TSeqParser::cmdOutSwitch(TTrack* track, u32* args)
 {
-	TTrack::TOuterParam* outer = track->mOuterParam;
+	TTrack::TOuterParam* outer = track->getOuterParam();
 	if (outer) {
 		outer->setOuterSwitch(args[0]);
 		outer->setOuterUpdate(0xffff);
@@ -374,13 +374,13 @@ int TSeqParser::cmdBusConnect(TTrack* track, u32* args)
 
 int TSeqParser::cmdPauseStatus(TTrack* track, u32* args)
 {
-	track->mPauseStatus = args[0];
+	track->setPauseStatus(args[0]);
 	return 0;
 }
 
 int TSeqParser::cmdVolumeMode(TTrack* track, u32* args)
 {
-	track->mVolumeMode = args[0];
+	track->setVolumeMode(args[0]);
 	return 0;
 }
 
@@ -463,7 +463,7 @@ int TSeqParser::cmdFlushRelease(TTrack* track, u32* args)
 int TSeqParser::cmdTimeBase(TTrack* track, u32* args)
 {
 	track->mTimeBase = args[0];
-	if (!track->mParent)
+	if (!track->getParent())
 		track->updateTempo();
 	return 0;
 }
@@ -471,7 +471,7 @@ int TSeqParser::cmdTimeBase(TTrack* track, u32* args)
 int TSeqParser::cmdTempo(TTrack* track, u32* args)
 {
 	track->mTempo = args[0];
-	if (!track->mParent)
+	if (!track->getParent())
 		track->updateTempo();
 	else
 		track->unk3BD = 1;
@@ -500,11 +500,11 @@ int TSeqParser::cmdNop(TTrack* track, u32* args) { return 0; }
 
 int TSeqParser::cmdPanPowSet(TTrack* track, u32* args)
 {
-	track->mRegisterParam.setPanPower(0, args[0]);
-	track->mRegisterParam.setPanPower(1, args[1]);
-	track->mRegisterParam.setPanPower(2, args[2]);
-	track->mRegisterParam.setPanPower(3, args[3] * 327.67f);
-	track->mRegisterParam.setPanPower(4, args[4] * 327.67f);
+	track->setPanPower(0, args[0]);
+	track->setPanPower(1, args[1]);
+	track->setPanPower(2, args[2]);
+	track->setPanPower(3, args[3] * 327.67f);
+	track->setPanPower(4, args[4] * 327.67f);
 	return 0;
 }
 

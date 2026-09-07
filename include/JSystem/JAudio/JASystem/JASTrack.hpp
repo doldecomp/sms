@@ -57,7 +57,14 @@ public:
 		void onSwitch(u16);
 		bool checkOuterSwitch(u16);
 		s16 getIntFirFilter(u8);
+
+		f32 getVolume() const { return mVolume; }
+		f32 getPitch() const { return mPitch; }
+		f32 getFxVol() const { return mFxmix; }
+		f32 getDolby() const { return mDolby; }
+		f32 getPan() const { return mPan; }
 		f32 getTempo() const { return mTempo; }
+
 		u16 getOuterUpdate();
 		void setOuterUpdate(u16);
 		void setOuterSwitch(u16);
@@ -243,9 +250,19 @@ public:
 	static u16 (*sCallBackFunc)(TTrack*, u16);
 	static u8 sOscTable[];
 
-	// from tp (I think)
+	// From tww
+	TTrack* getParent() { return mParent; }
 	TTrack* getChild(int index) { return mChildren[index]; }
 	TOuterParam* getOuterParam() { return mOuterParam; }
+	TSeqCtrl* getSeq() { return &mSeqCtrl; }
+
+	u8 checkImport(int i) const { return mTrackPort.checkImport(i); }
+	u8 checkExport(int i) const { return mTrackPort.checkExport(i); }
+
+	void setPanPower(int i, u16 power) { mRegisterParam.setPanPower(i, power); }
+	void setPauseStatus(u8 status) { mPauseStatus = status; }
+	void setTranspose(s32 transpose) { mTranspose = transpose; }
+	void setVolumeMode(u8 mode) { mVolumeMode = mode; }
 
 public:
 	/* 0x0 */ TSeqCtrl mSeqCtrl;

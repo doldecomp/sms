@@ -44,6 +44,13 @@ public:
 	void wait(s32 timer) { mWaitTimer = timer; }
 	s32 getWait() const { return mWaitTimer; }
 
+	u16 getLoopCount() const
+	{
+		if (mLoopIndex == 0)
+			return 0;
+		return mLoopTimers[mLoopIndex - 1];
+	}
+
 	void clrIntr() { mPreviousFilePtr = 0; }
 
 public:

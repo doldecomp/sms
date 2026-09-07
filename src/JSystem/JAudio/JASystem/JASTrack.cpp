@@ -185,7 +185,7 @@ int TTrack::noteOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 			break;
 		}
 		r30 = &r24->mChannelUpdater;
-		r3  = r3->mParent;
+		r3  = r3->getParent();
 	}
 
 	if (unk3BC == 4) {
@@ -228,8 +228,8 @@ int TTrack::noteOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 	mNoteMgr.unk20[index] = chan->unkC6;
 
 	chan->setPanPower(
-	    mRegisterParam.getPanPower(0), mRegisterParam.getPanPower(1),
-	    mRegisterParam.getPanPower(2), mRegisterParam.getPanPower(3));
+	    mRegisterParam.getPanPowerBank(), mRegisterParam.getPanPowerExt(),
+	    mRegisterParam.getPanPowerOsc(), mRegisterParam.getPanPowerParent());
 
 	for (u8 i = 0; i < 2; ++i) {
 		u32 someThing = mOscMode[i];
@@ -373,7 +373,7 @@ void TTrack::oscSetupSimple(u8 param_1)
 
 void TTrack::updateTrackAll()
 {
-	f32 fVar6 = mRegisterParam.getPanPower(3) / 32767.0f;
+	f32 fVar6 = mRegisterParam.getPanPowerParent() / 32767.0f;
 	f32 curVolume;
 	f32 curPitch;
 	f32 curFxmix;
@@ -415,21 +415,21 @@ void TTrack::updateTrackAll()
 
 	if (mOuterParam) {
 		if (mOuterParam->checkOuterSwitch(UPDATE_Volume))
-			curVolume *= mOuterParam->mVolume;
+			curVolume *= mOuterParam->getVolume();
 
 		if (mOuterParam->checkOuterSwitch(UPDATE_Pitch))
-			curPitch *= mOuterParam->mPitch;
+			curPitch *= mOuterParam->getPitch();
 
 		if (mOuterParam->checkOuterSwitch(UPDATE_Fxmix))
-			curFxmix = panCalc(curFxmix, mOuterParam->mFxmix, fVar6,
+			curFxmix = panCalc(curFxmix, mOuterParam->getFxVol(), fVar6,
 			                   mPanSwitchExt[1]);
 
 		if (mOuterParam->checkOuterSwitch(UPDATE_Dolby))
-			curDolby = panCalc(curDolby, mOuterParam->mDolby, fVar6,
+			curDolby = panCalc(curDolby, mOuterParam->getDolby(), fVar6,
 			                   mPanSwitchExt[2]);
 
 		if (mOuterParam->checkOuterSwitch(UPDATE_Pan))
-			curPan = panCalc(curPan, mOuterParam->mPan, fVar6,
+			curPan = panCalc(curPan, mOuterParam->getPan(), fVar6,
 			                 mPanSwitchParent[0]);
 	}
 
@@ -440,7 +440,7 @@ void TTrack::updateTrackAll()
 		mChannelUpdater.mFxmix  = curFxmix;
 		mChannelUpdater.mDolby  = curDolby;
 	} else {
-		f32 fVar6               = mRegisterParam.getPanPower(4) / 32767.0f;
+		f32 fVar6               = mRegisterParam.getPanPowerTrack() / 32767.0f;
 		mChannelUpdater.mVolume = mParent->mChannelUpdater.mVolume * curVolume;
 		mChannelUpdater.mPitch  = mParent->mChannelUpdater.mPitch * curPitch;
 		mChannelUpdater.mPan    = panCalc(curPan, mParent->mChannelUpdater.mPan,
@@ -476,7 +476,7 @@ void TTrack::updateTrack(u32 param)
 	f32 curPan;
 	f32 curFxmix;
 	f32 curDolby;
-	f32 fVar3 = mRegisterParam.getPanPower(3) / 32767.0f;
+	f32 fVar3 = mRegisterParam.getPanPowerParent() / 32767.0f;
 
 	if (unk3BC == 4)
 		return;
@@ -507,7 +507,7 @@ void TTrack::updateTrack(u32 param)
 			curVolume = 0.0f;
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Volume))
-			curVolume *= mOuterParam->mVolume;
+			curVolume *= mOuterParam->getVolume();
 
 		if (mPause && (mPauseStatus & 1))
 			curVolume *= mTimedParam.mInnerParam.unk100.mCurrentValue;
@@ -518,22 +518,22 @@ void TTrack::updateTrack(u32 param)
 		    mTimedParam.mInnerParam.mPitch.mCurrentValue, mRegisterParam.unkE);
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Pitch))
-			curPitch *= mOuterParam->mPitch;
+			curPitch *= mOuterParam->getPitch();
 	}
 
 	if (param & UPDATE_Pan) {
 		curPan = mTimedParam.mInnerParam.mPan.mCurrentValue;
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Pan))
-			curPan
-			    = panCalc(curPan, mOuterParam->mPan, fVar3, mPanSwitchExt[0]);
+			curPan = panCalc(curPan, mOuterParam->getPan(), fVar3,
+			                 mPanSwitchExt[0]);
 	}
 
 	if (param & UPDATE_Fxmix) {
 		curFxmix = mTimedParam.mInnerParam.mFxmix.mCurrentValue;
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Fxmix))
-			curFxmix = panCalc(curFxmix, mOuterParam->mFxmix, fVar3,
+			curFxmix = panCalc(curFxmix, mOuterParam->getFxVol(), fVar3,
 			                   mPanSwitchExt[1]);
 	}
 
@@ -541,7 +541,7 @@ void TTrack::updateTrack(u32 param)
 		curDolby = mTimedParam.mInnerParam.mDolby.mCurrentValue;
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Dolby))
-			curDolby = panCalc(curDolby, mOuterParam->mDolby, fVar3,
+			curDolby = panCalc(curDolby, mOuterParam->getDolby(), fVar3,
 			                   mPanSwitchExt[2]);
 	}
 
@@ -601,7 +601,7 @@ void TTrack::updateTrack(u32 param)
 		if (param & UPDATE_Dolby)
 			mChannelUpdater.mDolby = curDolby;
 	} else {
-		fVar3 = mRegisterParam.getPanPower(4) / 32767.0f;
+		fVar3 = mRegisterParam.getPanPowerTrack() / 32767.0f;
 		if (param & UPDATE_Volume)
 			mChannelUpdater.mVolume
 			    = mParent->mChannelUpdater.mVolume * curVolume;
@@ -948,7 +948,7 @@ void TTrack::writeRegParam(u8 param)
 	}
 
 	case 0x3:
-		mRegisterParam.unk0[3] = uVar5 - r24;
+		mRegisterParam.setFlag(uVar5 - r24);
 		return;
 	case 0xB:
 		r24 = uVar5 - r24;
@@ -1031,7 +1031,7 @@ void TTrack::writeRegParam(u8 param)
 	case 0x29:
 	case 0x2A:
 	case 0x2B:
-		mRegisterParam.unk20[bVar1 - 0x28] = r25;
+		mRegisterParam.setAddress(bVar1 - 0x28, r25);
 		return;
 
 	default:
@@ -1040,7 +1040,7 @@ void TTrack::writeRegParam(u8 param)
 	}
 
 	mRegisterParam.unk0[bVar1] = r24;
-	mRegisterParam.unk0[3]     = uVar6;
+	mRegisterParam.setFlag(uVar6);
 
 	if (bVar1 == 6) {
 		for (int i = 0; i < 2; i++) {
@@ -1305,7 +1305,7 @@ u32 TTrack::readReg32(u8 reg)
 	case 0x29:
 	case 0x2A:
 	case 0x2B:
-		result = mRegisterParam.getReg32(reg - 0x28);
+		result = mRegisterParam.getAddress(reg - 0x28);
 		break;
 
 	case 0x23:
@@ -1376,9 +1376,7 @@ u16 TTrack::readRegDirect(u8 reg)
 		break;
 
 	case 48:
-		result = mSeqCtrl.mLoopIndex == 0
-		             ? (u16)0
-		             : mSeqCtrl.mLoopTimers[mSeqCtrl.mLoopIndex - 1];
+		result = mSeqCtrl.getLoopCount();
 		break;
 
 	default:
@@ -1412,7 +1410,7 @@ void TTrack::writeRegDirect(u8 reg, u16 value)
 		top                    = value >> 8;
 		uVar1                  = Player::extend8to16(top);
 		mRegisterParam.unk0[0] = top;
-		mRegisterParam.unk0[3] = uVar1;
+		mRegisterParam.setFlag(uVar1);
 
 		r4    = value;
 		value = value & 0xff;
@@ -1426,7 +1424,7 @@ void TTrack::writeRegDirect(u8 reg, u16 value)
 	}
 
 	mRegisterParam.unk0[r30] = value;
-	mRegisterParam.unk0[3]   = r4;
+	mRegisterParam.setFlag(r4);
 }
 
 void TTrack::setTrackExtPanPower(f32 power) { }
@@ -1457,7 +1455,7 @@ TTrack* TTrack::routeTrack(u32 route)
 	TTrack* found  = this;
 	u32 iterations = route >> 28;
 	for (int i = 0; i < iterations; ++i, route >>= 4) {
-		found = found->mChildren[route & 0xF];
+		found = found->getChild(route & 0xF);
 
 		if (found)
 			continue;

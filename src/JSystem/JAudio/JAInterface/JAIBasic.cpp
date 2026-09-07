@@ -1165,37 +1165,42 @@ u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 
 			JASystem::TTrack* track = JASystem::TrackMgr::handleToSeq(
 			    basic->unk0->mSeqTrackInfo[i].mSound->getSeqParameter()->unk0);
-			if (track != param_1->mParent)
+			if (track != param_1->getParent())
 				continue;
 
-			u32 uVar8          = param_1->unk308;
-			u32 route          = basic->routeToTrack(uVar8);
-			JAISoundInfo* info = basic->getSoundInfoFromID(
-			    basic->unk0->mSeqTrackInfo[i].mSound->mSoundID);
+			u32 uVar8 = param_1->unk308;
+			u32 route = basic->routeToTrack(uVar8);
 
-			JAISystemInterface::outerInit(&basic->unk0->mSeqTrackInfo[i],
-			                              param_1, route, info->mSwBit >> 8,
-			                              param_2 & 1);
+			JAISystemInterface::outerInit(
+			    &basic->unk0->mSeqTrackInfo[i], param_1, route,
+			    basic->getSoundInfoFromID(
+			             basic->unk0->mSeqTrackInfo[i].mSound->mSoundID)
+			            ->mSwBit
+			        >> 8,
+			    param_2 & 1);
 			result = 0;
 			basic->unk0->mSeqTrackInfo[i].unk4 |= 1 << route;
 			i = JAIGlobalParameter::seqPlayTrackMax;
 		}
 		break;
 	case 1: {
-		u32 uVar8                            = param_1->unk308;
-		JASystem::TTrack::TOuterParam* outer = param_1->mOuterParam;
-		JAIData::FabricatedSeTrackParameter* params
-		    = &basic->unk0->unk0[uVar8 & 0xff];
+		u8 index                             = param_1->unk308;
+		JASystem::TTrack::TOuterParam* outer = param_1->getOuterParam();
+		JAIData::FabricatedSeTrackParameter* seTrackUpdate = basic->unk0->unk0;
 
-		outer->setParam(JASystem::TTrack::UPDATE_Volume, params->mVolume);
-		outer->setParam(JASystem::TTrack::UPDATE_Pan, params->mPan);
-		outer->setParam(JASystem::TTrack::UPDATE_Pitch, params->mPitch);
-		outer->setParam(JASystem::TTrack::UPDATE_Fxmix, params->mFxmix);
+		outer->setParam(JASystem::TTrack::UPDATE_Volume,
+		                seTrackUpdate[index].mVolume);
+		outer->setParam(JASystem::TTrack::UPDATE_Pan,
+		                seTrackUpdate[index].mPan);
+		outer->setParam(JASystem::TTrack::UPDATE_Pitch,
+		                seTrackUpdate[index].mPitch);
+		outer->setParam(JASystem::TTrack::UPDATE_Fxmix,
+		                seTrackUpdate[index].mFxmix);
 		f32 thing;
 		if (basic->mSoundOutputMode != 2)
 			thing = 0.0f;
 		else
-			thing = params->mDolby;
+			thing = seTrackUpdate[index].mDolby;
 		outer->setParam(JASystem::TTrack::UPDATE_Dolby, thing);
 		break;
 	}
