@@ -6,6 +6,7 @@
 #include <JSystem/JAudio/JAInterface/JAIConst.hpp>
 #include <JSystem/JAudio/JASystem/JASDvdThread.hpp>
 #include <JSystem/JUtility/JUTAssert.hpp>
+#include <stdint.h>
 
 JAIData::JAIData() { }
 
@@ -417,12 +418,13 @@ u8* JAIData::getFreeStayHeapPointer(u32 param1, u32 param2)
 
 	u8* result;
 
-	if ((u8*)unk1F0[mStayHeapCount].mPointer + param1
-	        < (u8*)unk1F0[0].mPointer + JAIGlobalParameter::stayHeapSize
+	if (param1 + (uintptr_t)unk1F0[mStayHeapCount].mPointer
+	        < (uintptr_t)unk1F0[0].mPointer + JAIGlobalParameter::stayHeapSize
 	    && mStayHeapCount < JAIGlobalParameter::stayHeapMax) {
 		result = (u8*)unk1F0[mStayHeapCount].mPointer;
 		unk1F0[mStayHeapCount].mSeqNumber = param2;
-		u8* ptr = (u8*)unk1F0[mStayHeapCount].mPointer + (param1 & ~0x1F);
+		u8* ptr = (u8*)((param1 & ~0x1F)
+		                + (uintptr_t)unk1F0[mStayHeapCount].mPointer);
 		if (param1 & 0x1F)
 			ptr += 0x20;
 		++mStayHeapCount;
@@ -694,11 +696,14 @@ void JAIData::initInfoDataWork(JAISoundTable* soundTable, char* path)
 	// TODO: WTF???
 	soundTable->unk2C = &path;
 
-	// TODO: definitely fake, but a header struct doesn't work either
+	// TODO: the record layout is a guess. The file keeps a table of 18
+	// records of 4 bytes at offset 6. Each record has a count and the index of
+	// its first JAISoundInfo. A record structure does not give the same code:
+	// the target reads unk78 again for each field.
 	for (u8 i = 0; i < 18; ++i) {
 		soundTable->unk2[i]
-		    = reinterpret_cast<u16*>(soundTable->unk78 + 6)[i * 2];
-		u32 idx = reinterpret_cast<u16*>(soundTable->unk78 + 8)[i * 2];
+		    = *reinterpret_cast<u16*>(&soundTable->unk78[i * 4 + 6]);
+		u32 idx = *reinterpret_cast<u16*>(&soundTable->unk78[i * 4 + 8]);
 		soundTable->unk30[i]
 		    = &(reinterpret_cast<JAISoundInfo*>(soundTable->unk78 + 0x50)[idx]);
 		if (i < 0x10 && soundTable->unk2[i] != 0) {

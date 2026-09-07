@@ -727,12 +727,14 @@ void JAISound::setSeDistancePitch(u8 param_1)
 
 	if (checkSwBit(0x4000) && !checkSwBit(0x2) && !checkSwBit(0x300)) {
 		if (JAIGlobalParameter::audioCameraMax == 1) {
-			// TODO: likely an inline
-			if (unk1C->unk18 >= JAIGlobalParameter::distanceMax) {
+			// TODO: likely an inline. setSeDistanceFxmix has the same
+			// shape, with the same distance local.
+			f32 dist = unk1C->unk18;
+			if (dist >= JAIGlobalParameter::distanceMax) {
 				pitch += JAIGlobalParameter::seDistancepitchMax;
 			} else {
 				pitch += JAIGlobalParameter::seDistancepitchMax
-				         * (unk1C->unk18 / JAIGlobalParameter::distanceMax);
+				         * (dist / JAIGlobalParameter::distanceMax);
 			}
 		}
 	}

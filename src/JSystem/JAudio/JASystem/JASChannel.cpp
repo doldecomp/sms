@@ -296,8 +296,13 @@ namespace Driver {
 	static void updateMixer(TChannel* channel, f32 volume, f32 pan, f32 fxmix,
 	                        f32 dolby)
 	{
+		f32 vol;
+		f32 invPan   = 1.0f - pan;
+		f32 invFxmix = 1.0f - fxmix;
+		f32 invDolby = 1.0f - dolby;
+
 		for (u32 i = 0; i < 6; i++) {
-			f32 vol = volume;
+			vol = volume;
 
 			TChannel::MixConfig config = channel->unkA8[i];
 			if (config.mParts.u == 0) {
@@ -317,13 +322,13 @@ namespace Driver {
 						scale = dolby;
 						break;
 					case 5:
-						scale = 1.0f - pan;
+						scale = invPan;
 						break;
 					case 6:
-						scale = 1.0f - fxmix;
+						scale = invFxmix;
 						break;
 					case 7:
-						scale = 1.0f - dolby;
+						scale = invDolby;
 						break;
 					}
 
@@ -342,13 +347,13 @@ namespace Driver {
 						scale = dolby;
 						break;
 					case 5:
-						scale = 1.0f - pan;
+						scale = invPan;
 						break;
 					case 6:
-						scale = 1.0f - fxmix;
+						scale = invFxmix;
 						break;
 					case 7:
-						scale = 1.0f - dolby;
+						scale = invDolby;
 						break;
 					}
 
