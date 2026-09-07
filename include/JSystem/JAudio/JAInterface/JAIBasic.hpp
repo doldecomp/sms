@@ -278,7 +278,14 @@ public:
 
 	// Points at FabricatedSoundSceneTable::mSceneData.
 	/* 0x68 */ JAICategoryInfo** mSoundSceneList;
-	/* 0x6C */ u8* unk6C;
+
+	struct FabricatedFxSceneTable {
+		/* 0x0 */ u32 mSceneMax;
+		/* 0x4 */ u32 mBufferMax[4];
+		/* 0x14 */ u32 mSceneOffset[];
+	};
+
+	/* 0x6C */ FabricatedFxSceneTable* mFxSceneTable;
 	/* 0x70 */ u32 unk70;
 	/* 0x74 */ char unk74[0x4];
 	/* 0x78 */ u8* unk78;

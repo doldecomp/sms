@@ -57,7 +57,7 @@ JAIBasic::JAIBasic()
 	mSeqArchiveHeader   = nullptr;
 	mStreamListHeader   = nullptr;
 	mSoundSceneList     = nullptr;
-	unk6C               = nullptr;
+	mFxSceneTable       = nullptr;
 	mFinishedSceneSet   = 0xffffffff;
 	unk70               = 0;
 	mInterfaceHeap      = nullptr;
@@ -270,7 +270,7 @@ enum JAIInitDataCommand {
 	JAIINITDATA_SeqArchiveHeader = 4,
 	JAIINITDATA_StreamList       = 5,
 	JAIINITDATA_SoundSceneList   = 6,
-	JAIINITDATA_Unk6C            = 7,
+	JAIINITDATA_FxSceneTable     = 7,
 	JAIINITDATA_Unk78            = 8,
 };
 
@@ -401,11 +401,11 @@ void JAIBasic::checkInitDataOnMemory()
 			break;
 		}
 
-		case JAIINITDATA_Unk6C: {
+		case JAIINITDATA_FxSceneTable: {
 			JAIInitDataBlob* blob
 			    = (JAIInitDataBlob*)&((u32*)mInitDataPointer)[i];
-			unk6C = (u8*)transInitDataFile(mInitDataPointer + blob->offset,
-			                               blob->size);
+			mFxSceneTable = (FabricatedFxSceneTable*)transInitDataFile(
+			    mInitDataPointer + blob->offset, blob->size);
 			i += 3;
 			break;
 		}

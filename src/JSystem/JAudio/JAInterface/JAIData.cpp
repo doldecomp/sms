@@ -643,36 +643,29 @@ void JAIData::initData()
 			mCategoryInfoTable[i] = JAIConst::sCInfos_0;
 	}
 
-	if (unk1F4->unk6C) {
-		struct Unk6CStruct {
-			u32 unk0;
-			u32 unk4;
-			u32 unk8;
-			u32 unkC;
-			u32 unk10;
-			u32 unk14[];
-		};
-
-		Unk6CStruct* tmp = (Unk6CStruct*)unk1F4->unk6C;
-		setFxSceneMax(tmp->unk0);
-		setFxBufferMax(tmp->unk4, tmp->unk8, tmp->unkC, tmp->unk10);
+	if (unk1F4->mFxSceneTable) {
+		JAIBasic::FabricatedFxSceneTable* tmp = unk1F4->mFxSceneTable;
+		setFxSceneMax(tmp->mSceneMax);
+		setFxBufferMax(tmp->mBufferMax[0], tmp->mBufferMax[1],
+		               tmp->mBufferMax[2], tmp->mBufferMax[3]);
 
 		void* table = unk1F4->allocHeap(
-		    unk188 * sizeof(JASystem::DSPInterface::FxlineConfig_*));
+		    mFxSceneMax * sizeof(JASystem::DSPInterface::FxlineConfig_*));
 		JUT_ASSERT(table);
-		unk1AC = (JASystem::DSPInterface::FxlineConfig_**)table;
-		for (u8 i = 0; i < unk188; ++i) {
-			unk1AC[i]
-			    = (JASystem::DSPInterface::FxlineConfig_*)(unk1F4->unk6C
-			                                               + tmp->unk14[i]);
+		mFxlineConfig = (JASystem::DSPInterface::FxlineConfig_**)table;
+		for (u8 i = 0; i < mFxSceneMax; ++i) {
+			mFxlineConfig[i] = (JASystem::DSPInterface::
+			                        FxlineConfig_*)((u8*)unk1F4->mFxSceneTable
+			                                        + tmp->mSceneOffset[i]);
 		}
 		for (u8 i = 0; i < 4; ++i) {
-			if (!unk18C[i])
+			if (!mFxBufferMax[i])
 				continue;
-			s16* buf = (s16*)unk1F4->allocHeap(unk18C[i] * 0xA0);
+			s16* buf = (s16*)unk1F4->allocHeap(mFxBufferMax[i] * 0xA0);
 			JUT_ASSERT(buf);
-			unk19C[i] = buf;
-			JASystem::DSPInterface::setFXLine(i, unk19C[i], &unk1AC[0][i]);
+			mFxBuffer[i] = buf;
+			JASystem::DSPInterface::setFXLine(i, mFxBuffer[i],
+			                                  &mFxlineConfig[0][i]);
 		}
 	}
 }
