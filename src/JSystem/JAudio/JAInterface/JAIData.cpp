@@ -522,9 +522,9 @@ void JAIData::initData()
 	unk1E8 = (JAILinkBuffer*)unk1F4->allocHeap(
 	    JAIGlobalParameter::getParamSeCategoryMax() * sizeof(JAILinkBuffer));
 
-	unk8 = (FabricatedUnk8Struct**)unk1F4->allocHeap(
+	mSeTrack = (FabricatedSeTrack**)unk1F4->allocHeap(
 	    JAIGlobalParameter::getParamSeCategoryMax()
-	    * sizeof(FabricatedUnk8Struct*));
+	    * sizeof(FabricatedSeTrack*));
 
 	unk1E4 = (JAISound**)unk1F4->allocHeap(
 	    JAIGlobalParameter::getParamSeCategoryMax() * sizeof(JAISound*));
@@ -533,10 +533,10 @@ void JAIData::initData()
 		unk1E4[i]          = unk1F4->makeSound(JAIGlobalParameter::seRegistMax);
 		unk1E8[i].mStorage = unk1E4[i];
 		initLinkBuffer(&unk1E8[i], JAIGlobalParameter::seRegistMax);
-		unk8[i] = (FabricatedUnk8Struct*)unk1F4->allocHeap(
-		    JAIGlobalParameter::seRegistMax * sizeof(FabricatedUnk8Struct));
+		mSeTrack[i] = (FabricatedSeTrack*)unk1F4->allocHeap(
+		    JAIGlobalParameter::seRegistMax * sizeof(FabricatedSeTrack));
 		for (int j = 0; j < JAIGlobalParameter::seRegistMax; ++j) {
-			unk8[i][j].unk8 = nullptr;
+			mSeTrack[i][j].mSound = nullptr;
 		}
 	}
 	unk0 = (FabricatedSeTrackParameter*)unk1F4->allocHeap(

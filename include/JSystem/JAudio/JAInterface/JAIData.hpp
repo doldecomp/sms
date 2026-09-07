@@ -132,8 +132,6 @@ public:
 	}
 
 public:
-	// One entry per SE track. `sendSeAllParameter` composes the track's
-	// parameters into it, and only sends the ones that changed.
 	struct FabricatedSeTrackParameter {
 		/* 0x0 */ u8 unk0;
 		/* 0x4 */ f32 mVolume;
@@ -146,13 +144,13 @@ public:
 	/* 0x0 */ FabricatedSeTrackParameter* unk0;
 	/* 0x4 */ JAICategoryInfo** mCategoryInfoTable;
 
-	struct FabricatedUnk8Struct {
-		u32 unk0;
-		u32 unk4;
-		JAISound* unk8;
+	struct FabricatedSeTrack {
+		/* 0x0 */ u32 unk0;
+		/* 0x4 */ u32 unk4;
+		/* 0x8 */ JAISound* mSound;
 	};
 
-	/* 0x8 */ FabricatedUnk8Struct** unk8;
+	/* 0x8 */ FabricatedSeTrack** mSeTrack;
 	/* 0xC */ JAISoundTable unkC;
 	/* 0x88 */ JAISoundTable unk88;
 	/* 0x104 */ JAISoundTable unk104;
