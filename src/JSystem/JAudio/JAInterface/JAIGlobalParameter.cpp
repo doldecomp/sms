@@ -118,12 +118,18 @@ void JAIGlobalParameter::setParamSeDistanceFxParameter(u16 value)
 {
 	seDistanceFxParameter = value;
 }
-void JAIGlobalParameter::setParamInitDataLoadOffFlag(bool) { }
-void JAIGlobalParameter::setParamStreamUseOffFlag(bool) { }
+void JAIGlobalParameter::setParamInitDataLoadOffFlag(bool value)
+{
+	JAIBasic::getInterface()->unk1C.mInitDataLoadOff = value;
+}
+void JAIGlobalParameter::setParamStreamUseOffFlag(bool value)
+{
+	JAIBasic::getInterface()->unk1C.mStreamUseOff = value;
+}
 void JAIGlobalParameter::setParamStreamDecodedBufferBlocks(u32) { }
 void JAIGlobalParameter::setParamStreamInsideBufferCut(bool value)
 {
-	JAIBasic::getInterface()->unk1C.flag7 = value;
+	JAIBasic::getInterface()->unk1C.mStreamInsideBufferCut = value;
 }
 void JAIGlobalParameter::setParamAutoHeapRoomSize(u32 value)
 {
@@ -175,8 +181,14 @@ void JAIGlobalParameter::setParamSequenceArchivesFileName(char* value)
 {
 	sequenceArchivesFileName = value;
 }
-void JAIGlobalParameter::setParamSeqEntryCancelFlag(bool) { }
-void JAIGlobalParameter::setParamStreamEntryCancelFlag(bool) { }
+void JAIGlobalParameter::setParamSeqEntryCancelFlag(bool value)
+{
+	JAIBasic::getInterface()->unk1C.mSeqEntryCancel = value;
+}
+void JAIGlobalParameter::setParamStreamEntryCancelFlag(bool value)
+{
+	JAIBasic::getInterface()->unk1C.mStreamEntryCancel = value;
+}
 void JAIGlobalParameter::setParamDopplarMoveTime(u32 value)
 {
 	dopplarMoveTime = value;
