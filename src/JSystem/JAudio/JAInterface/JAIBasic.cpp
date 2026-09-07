@@ -55,7 +55,7 @@ JAIBasic::JAIBasic()
 	mBankList           = nullptr;
 	mWaveBankList       = nullptr;
 	mSeqArchiveHeader   = nullptr;
-	unk5C               = nullptr;
+	mStreamListHeader   = nullptr;
 	mSoundSceneList     = nullptr;
 	unk6C               = nullptr;
 	mFinishedSceneSet   = 0xffffffff;
@@ -265,7 +265,7 @@ enum JAIInitDataCommand {
 	JAIINITDATA_BankList         = 2,
 	JAIINITDATA_WaveBankList     = 3,
 	JAIINITDATA_SeqArchiveHeader = 4,
-	JAIINITDATA_Unk5C            = 5,
+	JAIINITDATA_StreamList       = 5,
 	JAIINITDATA_SoundSceneList   = 6,
 	JAIINITDATA_Unk6C            = 7,
 	JAIINITDATA_Unk78            = 8,
@@ -370,15 +370,16 @@ void JAIBasic::checkInitDataOnMemory()
 			break;
 		}
 
-		case JAIINITDATA_Unk5C: {
-			u8* buffer = (u8*)&((u32*)mInitDataPointer)[i];
-			unk5C = (JAIData::FabricatedUnk1F8Struct**)transInitDataFile(buffer,
-			                                                             8);
-			*unk5C = (JAIData::FabricatedUnk1F8Struct*)transInitDataFile(
-			    mInitDataPointer + ((u32*)mInitDataPointer)[i],
-			    ((u32*)mInitDataPointer)[i + 1]);
+		case JAIINITDATA_StreamList: {
+			u8* buffer        = (u8*)&((u32*)mInitDataPointer)[i];
+			mStreamListHeader = (FabricatedStreamListHeader*)transInitDataFile(
+			    buffer, sizeof(FabricatedStreamListHeader));
+			mStreamListHeader->mData
+			    = (JAIData::FabricatedStreamEntry*)transInitDataFile(
+			        mInitDataPointer + ((u32*)mInitDataPointer)[i],
+			        ((u32*)mInitDataPointer)[i + 1]);
 			i += 3;
-			unk0->unk1F8 = *unk5C;
+			unk0->mStreamList = mStreamListHeader->mData;
 			break;
 		}
 

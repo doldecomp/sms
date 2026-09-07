@@ -15,7 +15,7 @@ void JAIData::init()
 	unkC.unk78     = 0;
 	unk104.unk78   = 0;
 	unk1B0         = 0;
-	unk1F8         = 0;
+	mStreamList    = 0;
 	mNextLoadOrder = 0;
 	mStayHeapCount = 0;
 }
