@@ -293,5 +293,5 @@ JASystem::TTrack* MSBgm::getJASTrack(JAISound* sound, u8 param_2)
 	if (!pTVar3)
 		return nullptr;
 
-	return pTVar3->mChildren[param_2];
+	return pTVar3->getChild(param_2);
 }
