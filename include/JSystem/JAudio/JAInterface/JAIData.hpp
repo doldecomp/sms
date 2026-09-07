@@ -122,13 +122,13 @@ public:
 	void setInfoDataPointer(JAISoundTable* soundTable, u8* ptr);
 
 	// from tww
-	void setFxSceneMax(u8 param_1) { unk188 = param_1; }
+	void setFxSceneMax(u8 param_1) { mFxSceneMax = param_1; }
 	void setFxBufferMax(u32 param_1, u32 param_2, u32 param_3, u32 param_4)
 	{
-		unk18C[0] = param_1;
-		unk18C[1] = param_2;
-		unk18C[2] = param_3;
-		unk18C[3] = param_4;
+		mFxBufferMax[0] = param_1;
+		mFxBufferMax[1] = param_2;
+		mFxBufferMax[2] = param_3;
+		mFxBufferMax[3] = param_4;
 	}
 
 public:
@@ -158,11 +158,10 @@ public:
 	/* 0x104 */ JAISoundTable unk104;
 	/* 0x180 */ JAISeqUpdateData* unk180;
 	/* 0x184 */ JAIStreamUpdateParameter* unk184;
-	// TODO: some kind of a struct?
-	/* 0x188 */ u8 unk188;
-	/* 0x18C */ u32 unk18C[4];
-	/* 0x19C */ s16* unk19C[4];
-	/* 0x1AC */ JASystem::DSPInterface::FxlineConfig_** unk1AC;
+	/* 0x188 */ u8 mFxSceneMax;
+	/* 0x18C */ u32 mFxBufferMax[4];
+	/* 0x19C */ s16* mFxBuffer[4];
+	/* 0x1AC */ JASystem::DSPInterface::FxlineConfig_** mFxlineConfig;
 	/* 0x1B0 */ u8 unk1B0;
 	// The serial the next auto heap block will get. See JAIHeapBlock.
 	/* 0x1B4 */ u32 mNextLoadOrder;
