@@ -30,13 +30,13 @@ JAIBasic::JAIBasic()
 	basic                  = this;
 	JAISound::interPointer = this;
 
-	unk1C.flag3 = 0;
-	unk1C.flag1 = 0;
-	unk1C.flag2 = 0;
-	unk1C.flag4 = 0;
-	unk1C.flag5 = 0;
-	unk1C.flag6 = 0;
-	unk1C.flag7 = 0;
+	unk1C.mInitDataLoadOff       = false;
+	unk1C.mFirstStayWaveLoaded   = false;
+	unk1C.mSecondStayWaveLoaded  = false;
+	unk1C.mSeqEntryCancel        = false;
+	unk1C.mStreamEntryCancel     = false;
+	unk1C.mStreamUseOff          = false;
+	unk1C.mStreamInsideBufferCut = false;
 
 	unk15               = 0;
 	unk10               = 0;
@@ -114,7 +114,7 @@ void JAIBasic::initInterfaceMain()
 	initAllocParameter();
 	initNullData();
 	initSeqsLoadArea();
-	if (!unk1C.flag6)
+	if (!unk1C.mStreamUseOff)
 		initStream();
 	strcat(archivesPath, JAIGlobalParameter::sequenceArchivesPath);
 	strcat(archivesPath, JAIGlobalParameter::sequenceArchivesFileName);
@@ -128,7 +128,7 @@ void JAIBasic::initInterfaceMain()
 	mSeqArchiveHandle = JASystem::Vload::getArchiveHandle(
 	    JAIGlobalParameter::sequenceArchivesFileName);
 	startSeSequence();
-	if (!unk1C.flag3)
+	if (!unk1C.mInitDataLoadOff)
 		checkEntriedSeq();
 }
 
@@ -142,7 +142,10 @@ void JAIBasic::setCameraInfo(VecPtr pos, VecPtr dir, MtxPtr mtx, u32 id)
 	mAudioCameras[id].unk8 = mtx;
 }
 
-void JAIBasic::initStream() { JAInter::StreamLib::init(unk1C.flag7); }
+void JAIBasic::initStream()
+{
+	JAInter::StreamLib::init(unk1C.mStreamInsideBufferCut);
+}
 
 void JAIBasic::setRegisterTrackCallback()
 {
@@ -486,12 +489,12 @@ void JAIBasic::initBankWave()
 
 void JAIBasic::setWaveScene()
 {
-	if (mWaveBankList && !unk1C.flag3) {
+	if (mWaveBankList && !unk1C.mInitDataLoadOff) {
 		for (int i = 0; mWaveBankList[i].mWaveBankData; ++i)
 			if (mWaveBankList[i].mLoadTiming == WAVE_LOAD_TIMING_FIRST_STAY)
 				loadGroupWave(i, 0);
 
-		unk1C.flag1 = true;
+		unk1C.mFirstStayWaveLoaded = true;
 	}
 }
 
@@ -499,12 +502,12 @@ void JAIBasic::readInitSoundData() { }
 
 void JAIBasic::loadFirstStayWave()
 {
-	if (mWaveBankList && !unk1C.flag3) {
+	if (mWaveBankList && !unk1C.mInitDataLoadOff) {
 		for (int i = 0; mWaveBankList[i].mWaveBankData; ++i)
 			if (mWaveBankList[i].mLoadTiming == WAVE_LOAD_TIMING_FIRST_STAY)
 				loadGroupWave(i, 0);
 
-		unk1C.flag1 = true;
+		unk1C.mFirstStayWaveLoaded = true;
 	}
 }
 
@@ -515,7 +518,7 @@ void JAIBasic::loadSecondStayWave()
 			if (mWaveBankList[i].mLoadTiming == WAVE_LOAD_TIMING_SECOND_STAY)
 				loadGroupWave(i, 0);
 
-		unk1C.flag2 = true;
+		unk1C.mSecondStayWaveLoaded = true;
 	}
 }
 
@@ -639,7 +642,8 @@ void JAIBasic::processFrameWork()
 {
 	checkDummyPositionBuffer();
 
-	if (mSeSequence->mState == SOUNDSTATE_Started && !unk1C.flag2)
+	if (mSeSequence->mState == SOUNDSTATE_Started
+	    && !unk1C.mSecondStayWaveLoaded)
 		loadSecondStayWave();
 
 	if (mSeSequence->mState >= SOUNDSTATE_Playing)
@@ -654,7 +658,7 @@ void JAIBasic::processFrameWork()
 	checkStartedSeq();
 	checkReadSeq();
 	checkSeqWave();
-	if (!unk1C.flag6)
+	if (!unk1C.mStreamUseOff)
 		checkStream();
 	++unk20;
 }
@@ -737,7 +741,7 @@ void JAIBasic::startSoundBasic(u32 id, JAISound** sound, JAIActor* actor,
 {
 	switch (id & JAISoundID_TypeMask) {
 	case JAISoundID_Type_Sequence:
-		if (unk1C.flag4 != 1
+		if (unk1C.mSeqEntryCancel != true
 		    && (mSeSequence == nullptr
 		        || (mSeSequence->mSoundID & 0x3ff) != (id & 0x3ff))) {
 			if (sound == nullptr) {
@@ -758,7 +762,7 @@ void JAIBasic::startSoundBasic(u32 id, JAISound** sound, JAIActor* actor,
 		break;
 
 	case JAISoundID_Type_Stream:
-		if (unk1C.flag6 == 0 && unk1C.flag5 != 1)
+		if (unk1C.mStreamUseOff == false && unk1C.mStreamEntryCancel != true)
 			unk0->unk204.storeBuffer(sound, actor, id, param, flag, data);
 		break;
 	}
