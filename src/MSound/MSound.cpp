@@ -80,7 +80,7 @@ bool MSLoadWave::loadWaveBackword(JASystem::WaveArcLoader::TObject* obj)
 	if (!heap)
 		return false;
 
-	if (heap->unk8 != 0)
+	if (heap->mBase != 0)
 		return false;
 
 	char filePath[256];
@@ -91,12 +91,12 @@ bool MSLoadWave::loadWaveBackword(JASystem::WaveArcLoader::TObject* obj)
 		return false;
 
 	JASystem::Kernel::THeap* root = JASystem::WaveArcLoader::getRootHeap();
-	if (!heap->selfAlloc(root, extent, (u32)root->unk8 + root->unk10 - extent))
+	if (!heap->selfAlloc(root, extent, (u32)root->mBase + root->unk10 - extent))
 		return false;
 
 	u32* ptr = obj->getLoadFlagPtr();
 	*ptr     = 0;
-	if (JASystem::Dvd::loadToAramDvdT(0, filePath, heap->unk8, 0, extent, ptr,
+	if (JASystem::Dvd::loadToAramDvdT(0, filePath, heap->mBase, 0, extent, ptr,
 	                                  nullptr)
 	    == -1) {
 		heap->free();

@@ -21,9 +21,9 @@ public:
 		virtual const TWaveInfo* getWaveInfo() const { return &mWaveInfo; }
 		virtual const void* getWavePtr() const
 		{
-			if (mHeap->unk8 == 0)
+			if (mHeap->getBase() == 0)
 				return nullptr;
-			return ((u8*)mHeap->unk8) + mWaveInfo.unk8;
+			return ((u8*)mHeap->getBase()) + mWaveInfo.unk8;
 		}
 
 	public:

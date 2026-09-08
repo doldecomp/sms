@@ -548,7 +548,9 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 		    &unk0->mSeqTrackInfo[mSeSequence->mTrack], sound->mTrack, 1,
 		    unk0->mSeqTrackInfo[mSeSequence->mTrack]
 		        .mTrackUpdate[sound->mTrack]);
-		unk0->mSeqTrackInfo[mSeSequence->mTrack].unk4C[sound->mTrack].unk2C.unk0
+		unk0->mSeqTrackInfo[mSeSequence->mTrack]
+		    .unk4C[sound->mTrack]
+		    .unk2C.mHead
 		    = 0;
 		unk0->mSeqTrackInfo[mSeSequence->mTrack]
 		    .unk4C[sound->mTrack]

@@ -43,11 +43,17 @@ namespace Kernel {
 		void cancelPortCmd(TPortHead* head);
 		void cancelPortCmdStay();
 
+		TPortHead* getHead() { return mHead; }
+		void setHead(TPortHead* head) { mHead = head; }
+		TPortCmd* getNext() { return mNext; }
+		PortCallback getFunc() { return mFunc; }
+		TPortArgs* getArgs() { return mArgs; }
+
 	public:
-		/* 0x00 */ TPortHead* unk0;
-		/* 0x04 */ TPortCmd* unk4;
-		/* 0x08 */ PortCallback unk8;
-		/* 0x0C */ TPortArgs* unkC;
+		/* 0x00 */ TPortHead* mHead;
+		/* 0x04 */ TPortCmd* mNext;
+		/* 0x08 */ PortCallback mFunc;
+		/* 0x0C */ TPortArgs* mArgs;
 	};
 
 	void portCmdInit();

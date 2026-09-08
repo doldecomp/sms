@@ -19,8 +19,8 @@ public:
 	virtual int getType() const { return 'BSIC'; }
 	virtual int getKeymapIndex(int) const;
 
-	void setVolume(f32 volume) { unk4 = volume; }
-	void setPitch(f32 pitch) { unk8 = pitch; }
+	void setVolume(f32 volume) { mVolume = volume; }
+	void setPitch(f32 pitch) { mPitch = pitch; }
 
 	void setOscCount(u32);
 	void setOsc(int, TOscillator::Osc_*);
@@ -36,37 +36,38 @@ public:
 	class TKeymap {
 	public:
 		TKeymap()
-		    : unk0(-1)
-		    , unk4(0)
-		    , unk8(nullptr)
+		    : mHighKey(-1)
+		    , mVeloRegionCount(0)
+		    , mVeloRegions(nullptr)
 		{
 		}
 		~TKeymap();
 
-		void setHighKey(int key) { unk0 = key; }
+		void setHighKey(int key) { mHighKey = key; }
 
 		void setVeloRegionCount(u32);
+		u32 getVeloRegionCount() const { return mVeloRegionCount; }
 		TVeloRegion* getVeloRegion(int);
 		const TVeloRegion* getVeloRegion(int) const;
 
 	public:
-		/* 0x0 */ int unk0;
-		/* 0x4 */ u32 unk4;
-		/* 0x8 */ TVeloRegion* unk8;
+		/* 0x0 */ int mHighKey;
+		/* 0x4 */ u32 mVeloRegionCount;
+		/* 0x8 */ TVeloRegion* mVeloRegions;
 	};
 
 	TKeymap* getKeyRegion(int);
 	const TKeymap* getKeyRegion(int) const;
 
 public:
-	/* 0x4 */ float unk4;
-	/* 0x8 */ float unk8;
-	/* 0xC */ TInstEffect** unkC;
-	/* 0x10 */ u32 unk10;
-	/* 0x14 */ TOscillator::Osc_** unk14;
-	/* 0x18 */ u32 unk18;
-	/* 0x1C */ u32 unk1C;
-	/* 0x20 */ TKeymap* unk20;
+	/* 0x4 */ f32 mVolume;
+	/* 0x8 */ f32 mPitch;
+	/* 0xC */ TInstEffect** mEffects;
+	/* 0x10 */ u32 mEffectCount;
+	/* 0x14 */ TOscillator::Osc_** mOscillators;
+	/* 0x18 */ u32 mOscillatorCount;
+	/* 0x1C */ u32 mKeyRegionCount;
+	/* 0x20 */ TKeymap* mKeyRegions;
 };
 
 } // namespace JASystem
