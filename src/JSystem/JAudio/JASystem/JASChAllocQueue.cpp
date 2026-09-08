@@ -51,7 +51,7 @@ namespace Driver {
 			TChannel* chan;
 			chan = waitp[cur_top];
 			if (chan) {
-				TDSPChannel* dspChan = TDSPChannel::alloc(0, (u32)chan);
+				TDSPChannel* dspChan = TDSPChannel::alloc(0, (uintptr_t)chan);
 				if (!dspChan)
 					return;
 				chan->unk20 = dspChan;

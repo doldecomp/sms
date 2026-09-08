@@ -699,8 +699,9 @@ namespace StreamLib {
 		LoadADPCM();
 
 		for (u32 i = 0; i < ARRAY_COUNT(assign_ch); ++i) {
-			if (assign_ch[i] != nullptr && assign_ch[i]->unk8 != 0)
-				JASystem::TDSPChannel::free(assign_ch[i], (u32)&assign_ch[i]);
+			if (assign_ch[i] != nullptr && assign_ch[i]->mSign != 0)
+				JASystem::TDSPChannel::free(assign_ch[i],
+				                            (uintptr_t)&assign_ch[i]);
 
 			assign_ch[i] = nullptr;
 		}
@@ -734,8 +735,10 @@ namespace StreamLib {
 		}
 
 		if (assign_ch[0] == nullptr) {
-			assign_ch[0] = JASystem::TDSPChannel::alloc(0, (u32)&assign_ch[0]);
-			assign_ch[1] = JASystem::TDSPChannel::alloc(0, (u32)&assign_ch[1]);
+			assign_ch[0]
+			    = JASystem::TDSPChannel::alloc(0, (uintptr_t)&assign_ch[0]);
+			assign_ch[1]
+			    = JASystem::TDSPChannel::alloc(0, (uintptr_t)&assign_ch[1]);
 			if (assign_ch[0] != nullptr && assign_ch[1] != nullptr) {
 				assign_ch[0]->mPriority = 0x7F;
 				assign_ch[1]->mPriority = 0x7F;
@@ -784,9 +787,9 @@ namespace StreamLib {
 			if (buf->isFinish()) {
 				if (adpcmbuf_state != 2) {
 					JASystem::TDSPChannel::free(assign_ch[0],
-					                            (u32)&assign_ch[0]);
+					                            (uintptr_t)&assign_ch[0]);
 					JASystem::TDSPChannel::free(assign_ch[1],
-					                            (u32)&assign_ch[1]);
+					                            (uintptr_t)&assign_ch[1]);
 					sync(-1);
 					playflag  = 0;
 					playflag2 = 2;

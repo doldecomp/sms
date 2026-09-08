@@ -714,7 +714,7 @@ BOOL TChannel::play(u32 param)
 	unk30 = param;
 	unk34 = unk30;
 	unk28 = &Driver::updatecallLogicalChannel;
-	unk20 = TDSPChannel::alloc(0, (u32)this);
+	unk20 = TDSPChannel::alloc(0, (uintptr_t)this);
 
 	if (unk20 == nullptr) {
 		if (checkLogicalChannel() == TRUE) {
@@ -729,7 +729,7 @@ BOOL TChannel::play(u32 param)
 	}
 
 	if (playLogicalChannel() == FALSE) {
-		TDSPChannel::free(unk20, (u32)this);
+		TDSPChannel::free(unk20, (uintptr_t)this);
 		unk20 = nullptr;
 		unk4->addListTail(this, 0);
 		return false;
@@ -774,7 +774,7 @@ BOOL TChannel::stopLogicalChannel()
 	unk20->mCallback   = 0;
 	unk20->mCBInterval = 0;
 	unk20->stop();
-	TDSPChannel::free(unk20, (u32)this);
+	TDSPChannel::free(unk20, (uintptr_t)this);
 	unk20 = nullptr;
 
 	return TRUE;
