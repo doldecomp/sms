@@ -143,7 +143,7 @@ namespace Driver {
 
 	static void __UpdateJcToDSP(TChannel* channel)
 	{
-		DSPInterface::DSPBuffer* buf = channel->unk20->unkC;
+		DSPInterface::DSPBuffer* buf = channel->unk20->mDSPHandle;
 		if (channel->unkD0) {
 			for (u8 i = 0; i < 6; ++i)
 				buf->setMixerVolumeOnly(i, channel->unkB4[i]);
@@ -169,10 +169,10 @@ namespace Driver {
 
 	static void __UpdateJcToDSPInit(TChannel* channel)
 	{
-		DSPInterface::DSPBuffer* buf = channel->unk20->unkC;
+		DSPInterface::DSPBuffer* buf = channel->unk20->mDSPHandle;
 
 		if (channel->isDolbyMode()) {
-			channel->unk20->unkC->initAutoMixer();
+			channel->unk20->mDSPHandle->initAutoMixer();
 		} else {
 			buf->setMixerInitDelayMax(channel->unk4->unk60);
 			for (u8 i = 0; i < 6; ++i)
@@ -223,7 +223,7 @@ namespace Driver {
 				channel->releaseOsc(i);
 
 			if (channel->unk20)
-				channel->unk20->unk3 = channel->getReleasePriority();
+				channel->unk20->mPriority = channel->getReleasePriority();
 
 			if (mgr->cutList(channel) != -1) {
 				mgr->addListTail(channel, 2);
@@ -288,9 +288,9 @@ namespace Driver {
 	static void updateAutoMixer(TChannel* channel, f32 volume, f32 pan,
 	                            f32 fxmix, f32 dolby)
 	{
-		channel->unk20->unkC->setAutoMixer(volume * 32767.5f, pan * 127.5f,
-		                                   dolby * 127.5f, fxmix * 127.5f,
-		                                   channel->unkA8[1].mWhole);
+		channel->unk20->mDSPHandle->setAutoMixer(
+		    volume * 32767.5f, pan * 127.5f, dolby * 127.5f, fxmix * 127.5f,
+		    channel->unkA8[1].mWhole);
 	}
 
 	static void updateMixer(TChannel* channel, f32 volume, f32 pan, f32 fxmix,
@@ -386,8 +386,8 @@ namespace Driver {
 		u32 r28 = 0;
 
 		if (channel == nullptr) {
-			dspChannel->unk10 = nullptr;
-			dspChannel->unk3  = 0;
+			dspChannel->mCallback = nullptr;
+			dspChannel->setPriority(0);
 			killBrokenLogicalChannels(dspChannel);
 			return 0;
 		}
@@ -425,8 +425,8 @@ namespace Driver {
 			if (param == 4) {
 				u8 priority = channel->getLifeTimePriority();
 				if (channel->unk20 != nullptr) {
-					if (priority < channel->unk20->unk3) {
-						channel->unk20->unk3 = priority;
+					if (priority < channel->unk20->mPriority) {
+						channel->unk20->mPriority = priority;
 					}
 				}
 				return 0;
@@ -700,7 +700,7 @@ bool TChannel::resetInitialVolume()
 
 	updateEffectorParam();
 	Driver::__UpdateJcToDSPInit(this);
-	unk20->unkC->flushChannel();
+	unk20->mDSPHandle->flushChannel();
 
 	return true;
 }
@@ -753,7 +753,7 @@ void TChannel::stop(u16 release)
 void TChannel::updateJcToDSP()
 {
 	Driver::__UpdateJcToDSP(this);
-	unk20->unkC->flushChannel();
+	unk20->mDSPHandle->flushChannel();
 }
 
 BOOL TChannel::forceStopLogicalChannel()
@@ -770,8 +770,8 @@ BOOL TChannel::stopLogicalChannel()
 	if (!unk20)
 		return FALSE;
 
-	unk20->unk10 = 0;
-	unk20->unk6  = 0;
+	unk20->mCallback   = 0;
+	unk20->mCBInterval = 0;
 	unk20->stop();
 	TDSPChannel::free(unk20, (u32)this);
 	unk20 = nullptr;
@@ -787,10 +787,10 @@ BOOL TChannel::playLogicalChannel()
 	if (!checkLogicalChannel())
 		return FALSE;
 
-	unk20->unk10 = &Driver::updatecallDSPChannel;
-	unk20->unk6  = 1;
+	unk20->mCallback   = &Driver::updatecallDSPChannel;
+	unk20->mCBInterval = 1;
 
-	DSPInterface::DSPBuffer* buf = unk20->unkC;
+	DSPInterface::DSPBuffer* buf = unk20->mDSPHandle;
 
 	switch (unkC) {
 	case 0:
@@ -839,8 +839,8 @@ BOOL TChannel::playLogicalChannel()
 
 	updateEffectorParam();
 	Driver::__UpdateJcToDSPInit(this);
-	unk20->unk3 = unkC0;
-	unk20->unk4 = unkC4;
+	unk20->setPriority(getNoteOnPriority());
+	unk20->setPriorityTime(unkC4);
 	unk20->play();
 
 	return TRUE;

@@ -278,30 +278,30 @@ namespace StreamLib {
 	                    u16 param_3, u32 param_4)
 	{
 		JASystem::DSPInterface::DSPBuffer* pDVar1
-		    = JASystem::DSPInterface::getDSPHandle(channel->unk0);
-		pDVar1->unk118 = param_2;
-		pDVar1->unk102 = 0;
-		pDVar1->unk100 = 0x21;
-		pDVar1->unk74  = param_4;
-		pDVar1->unk110 = param_2;
-		pDVar1->unk114 = param_3 << 0x10;
+		    = JASystem::DSPInterface::getDSPHandle(channel->mNumber);
+		pDVar1->baseAddress       = param_2;
+		pDVar1->isLooping         = 0;
+		pDVar1->samplesSourceType = 0x21;
+		pDVar1->remainingLength   = param_4;
+		pDVar1->loopAddress       = param_2;
+		pDVar1->loopStartPosition = param_3 << 0x10;
 
-		JASystem::DSPInterface::setMixerInitDelayMax(channel->unk0, 0);
+		JASystem::DSPInterface::setMixerInitDelayMax(channel->mNumber, 0);
 
 		for (u8 i = 0; i < 6; ++i) {
 			if (i < 2) {
-				JASystem::DSPInterface::setMixerInitVolume(channel->unk0, i,
+				JASystem::DSPInterface::setMixerInitVolume(channel->mNumber, i,
 				                                           0x7fff, 0);
 			} else {
-				JASystem::DSPInterface::setMixerInitVolume(channel->unk0, i, 0,
-				                                           0);
+				JASystem::DSPInterface::setMixerInitVolume(channel->mNumber, i,
+				                                           0, 0);
 			}
 
-			JASystem::DSPInterface::setBusConnect(channel->unk0, i, i + 1);
+			JASystem::DSPInterface::setBusConnect(channel->mNumber, i, i + 1);
 		}
-		JASystem::DSPInterface::setPitch(channel->unk0, 0x800);
-		JASystem::DSPInterface::playStart(channel->unk0);
-		JASystem::DSPInterface::flushChannel(channel->unk0);
+		JASystem::DSPInterface::setPitch(channel->mNumber, 0x800);
+		JASystem::DSPInterface::playStart(channel->mNumber);
+		JASystem::DSPInterface::flushChannel(channel->mNumber);
 	}
 
 	void* Get_DirectPCM_LoopRemain(JASystem::DSPInterface::DSPBuffer* buffer)
@@ -737,8 +737,8 @@ namespace StreamLib {
 			assign_ch[0] = JASystem::TDSPChannel::alloc(0, (u32)&assign_ch[0]);
 			assign_ch[1] = JASystem::TDSPChannel::alloc(0, (u32)&assign_ch[1]);
 			if (assign_ch[0] != nullptr && assign_ch[1] != nullptr) {
-				assign_ch[0]->unk3 = 0x7F;
-				assign_ch[1]->unk3 = 0x7F;
+				assign_ch[0]->mPriority = 0x7F;
+				assign_ch[1]->mPriority = 0x7F;
 			}
 		}
 
@@ -755,18 +755,18 @@ namespace StreamLib {
 		s32 stat = DVDGetDriveStatus();
 		switch (stat) {
 		case 5:
-			JASystem::DSPInterface::setPauseFlag(assign_ch[0]->unk0, 1);
-			JASystem::DSPInterface::setPauseFlag(assign_ch[1]->unk0, 1);
+			JASystem::DSPInterface::setPauseFlag(assign_ch[0]->mNumber, 1);
+			JASystem::DSPInterface::setPauseFlag(assign_ch[1]->mNumber, 1);
 			outpause = 1;
-			JASystem::DSPInterface::flushChannel(assign_ch[0]->unk0);
-			JASystem::DSPInterface::flushChannel(assign_ch[1]->unk0);
+			JASystem::DSPInterface::flushChannel(assign_ch[0]->mNumber);
+			JASystem::DSPInterface::flushChannel(assign_ch[1]->mNumber);
 			break;
 		case 0:
 			if (oldstat != DVDGetDriveStatus()) {
-				JASystem::DSPInterface::setPauseFlag(assign_ch[0]->unk0, 0);
-				JASystem::DSPInterface::setPauseFlag(assign_ch[1]->unk0, 0);
-				JASystem::DSPInterface::flushChannel(assign_ch[0]->unk0);
-				JASystem::DSPInterface::flushChannel(assign_ch[1]->unk0);
+				JASystem::DSPInterface::setPauseFlag(assign_ch[0]->mNumber, 0);
+				JASystem::DSPInterface::setPauseFlag(assign_ch[1]->mNumber, 0);
+				JASystem::DSPInterface::flushChannel(assign_ch[0]->mNumber);
+				JASystem::DSPInterface::flushChannel(assign_ch[1]->mNumber);
 				outpause = 0;
 			}
 			break;
@@ -780,7 +780,7 @@ namespace StreamLib {
 		BOOL needDecode;
 		if (movieframe != 0) {
 			JASystem::DSPInterface::DSPBuffer* buf
-			    = JASystem::DSPInterface::getDSPHandle(assign_ch[0]->unk0);
+			    = JASystem::DSPInterface::getDSPHandle(assign_ch[0]->mNumber);
 			if (buf->isFinish()) {
 				if (adpcmbuf_state != 2) {
 					JASystem::TDSPChannel::free(assign_ch[0],
@@ -796,9 +796,11 @@ namespace StreamLib {
 				return 0;
 			}
 
-			sync(((playback_samples - buf->unk74) * header.unkE) / header.unk8);
+			sync(((playback_samples - buf->remainingLength) * header.unkE)
+			     / header.unk8);
 			movieframe++;
-			u32 cur = (LOOP_SAMPLESIZE - (buf->unk6C >> 16)) / 0x1400;
+			u32 cur
+			    = (LOOP_SAMPLESIZE - (buf->samplesBeforeLoop >> 16)) / 0x1400;
 			static u32 old_dspside = 0;
 			if (old_dspside != cur)
 				old_dspside = cur;
@@ -837,7 +839,7 @@ namespace StreamLib {
 					for (u32 i = 0; i < 2; ++i) {
 						JASystem::DSPInterface::DSPBuffer* buf2
 						    = JASystem::DSPInterface::getDSPHandle(
-						        assign_ch[i]->unk0);
+						        assign_ch[i]->mNumber);
 						u16 pitch = (header.unk8 << 12) / 32000;
 						Play_DirectPCM(assign_ch[i], loop_buffer[i][0],
 						               (u16)LOOP_SAMPLESIZE, playback_samples);
@@ -850,19 +852,19 @@ namespace StreamLib {
 							v1 = 0x5A7E;
 						}
 						JASystem::DSPInterface::setMixerVolume(
-						    assign_ch[i]->unk0, i, v0, 0);
+						    assign_ch[i]->mNumber, i, v0, 0);
 						JASystem::DSPInterface::setMixerVolume(
-						    assign_ch[i]->unk0, 1 - i, v1, 0);
-						JASystem::DSPInterface::setPitch(assign_ch[i]->unk0,
+						    assign_ch[i]->mNumber, 1 - i, v1, 0);
+						JASystem::DSPInterface::setPitch(assign_ch[i]->mNumber,
 						                                 pitch);
 
 						decoded = true;
 
 						if (header.unk10 != 0)
-							buf2->unk74 = -1;
+							buf2->remainingLength = -1;
 
 						JASystem::DSPInterface::flushChannel(
-						    assign_ch[i]->unk0);
+						    assign_ch[i]->mNumber);
 					}
 					if (adpcmbuf_state != 3)
 						adpcmbuf_state = 0;
@@ -891,39 +893,39 @@ namespace StreamLib {
 
 				base = 0x7FFF;
 
-				JASystem::DSPInterface::setMixerVolume(assign_ch[0]->unk0, 1, 0,
-				                                       0);
+				JASystem::DSPInterface::setMixerVolume(assign_ch[0]->mNumber, 1,
+				                                       0, 0);
 
-				JASystem::DSPInterface::setMixerVolume(assign_ch[1]->unk0, 0, 0,
-				                                       0);
+				JASystem::DSPInterface::setMixerVolume(assign_ch[1]->mNumber, 0,
+				                                       0, 0);
 			} else {
 				base   = 0x5A7E;
 				s16 v1 = (s16)(23166.0f * outvolume);
-				JASystem::DSPInterface::setMixerVolume(assign_ch[0]->unk0, 1,
+				JASystem::DSPInterface::setMixerVolume(assign_ch[0]->mNumber, 1,
 				                                       v1, 0);
 
 				s16 v2 = (s16)(23166.0f * outvolume);
-				JASystem::DSPInterface::setMixerVolume(assign_ch[1]->unk0, 0,
+				JASystem::DSPInterface::setMixerVolume(assign_ch[1]->mNumber, 0,
 				                                       v2, 0);
 			}
 
 			s16 vL = outvolume * ((f32)base * fL);
-			JASystem::DSPInterface::setMixerVolume(assign_ch[0]->unk0, 0, vL,
+			JASystem::DSPInterface::setMixerVolume(assign_ch[0]->mNumber, 0, vL,
 			                                       0);
 
 			s16 vR = outvolume * ((f32)base * fR);
-			JASystem::DSPInterface::setMixerVolume(assign_ch[1]->unk0, 1, vR,
+			JASystem::DSPInterface::setMixerVolume(assign_ch[1]->mNumber, 1, vR,
 			                                       0);
 
 			u16 pitch1 = outpitch * (f32)((header.unk8 << 12) / 32000);
-			JASystem::DSPInterface::setPitch(assign_ch[0]->unk0, pitch1);
+			JASystem::DSPInterface::setPitch(assign_ch[0]->mNumber, pitch1);
 
 			u16 pitch2 = outpitch * (f32)((header.unk8 << 12) / 32000);
-			JASystem::DSPInterface::setPitch(assign_ch[1]->unk0, pitch2);
+			JASystem::DSPInterface::setPitch(assign_ch[1]->mNumber, pitch2);
 
-			JASystem::DSPInterface::flushChannel(assign_ch[0]->unk0);
+			JASystem::DSPInterface::flushChannel(assign_ch[0]->mNumber);
 
-			JASystem::DSPInterface::flushChannel(assign_ch[1]->unk0);
+			JASystem::DSPInterface::flushChannel(assign_ch[1]->mNumber);
 		}
 
 		if (adpcmbuf_state == 0) {

@@ -32,7 +32,7 @@ namespace Driver {
 		if (cur_waits == waitMax)
 			return false;
 
-		if (!TDSPChannel::breakLower(channel->unkC0))
+		if (!TDSPChannel::breakLower(channel->getNoteOnPriority()))
 			return false;
 
 		waittime[cur_tail] = 0;

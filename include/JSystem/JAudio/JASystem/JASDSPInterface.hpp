@@ -17,11 +17,10 @@ namespace DSPInterface {
 		/* 0x06 */ u16 unk6;
 		/* 0x08 */ s16 unk8;
 		/* 0x0C */ int unkC;
-		/* 0x10 */ short unk10[8];
+		/* 0x10 */ s16 unk10[8];
 	};
 
-	class DSPBuffer {
-	public:
+	struct DSPBuffer {
 		void flushChannel();
 		void allocInit();
 		void initFilter();
@@ -48,72 +47,68 @@ namespace DSPInterface {
 		void setPitchIndirect(f32, f32);
 		void cacheChannel();
 
-		bool isFinish() { return unk2 != 0; }
+		bool isFinish() { return done != 0; }
 		void replyFinishRequest()
 		{
-			unk2 = 0;
-			unk0 = 0;
+			done    = 0;
+			enabled = 0;
 		}
 
 		struct Channel {
 			/* 0x0 */ u16 id;
-			/* 0x4 */ u16 targetVolume;
-			/* 0x8 */ u16 currentVolume;
-			/* 0xC */ u16 unkC;
+			/* 0x2 */ u16 targetVolume;
+			/* 0x4 */ u16 currentVolume;
+			/* 0x6 */ u16 level;
 		};
 
-		// TODO: verify whether this struct is this & label:
-		// https://github.com/dolphin-emu/dolphin/blob/master/Source/Core/Core/HW/DSPHLE/UCodes/Zelda.cpp#L683
-		// As far as I understand, a bunch of games have the same DSP microcode
-		// as Zelda (including sms), and that DSP microcode reads this struct
-		// directly on the DSP side, so it's layout is the same in all such
-		// games, presumably.
-	public:
-		/* 0x00 */ u16 unk0;
-		/* 0x02 */ u16 unk2;
-		/* 0x04 */ u16 unk4;
-		/* 0x06 */ u8 unk6[0x8 - 0x6];
-		/* 0x08 */ u16 unk8;
-		/* 0x0A */ u8 unkA[0xc - 0xa];
-		/* 0x0C */ u16 unkC;
-		/* 0x0E */ u16 unkE;
-		/* 0x10 */ Channel unk10[6];
-		/* 0x18 */ u8 unk18[0x50 - 0x40];
-		/* 0x50 */ u16 unk50;
-		/* 0x52 */ u16 unk52;
-		/* 0x54 */ u16 unk54;
-		/* 0x56 */ u16 unk56;
-		/* 0x58 */ u16 unk58;
-		/* 0x5A */ u8 unk5A[0x60 - 0x5a];
-		/* 0x60 */ short unk60;
-		/* 0x62 */ u8 unk62[0x64 - 0x62];
-		/* 0x64 */ short unk64;
-		/* 0x66 */ short unk66;
-		/* 0x68 */ int unk68;
-		/* 0x6C */ u32 unk6C;
-		/* 0x70 */ u8 unk70[0x74 - 0x70];
-		/* 0x74 */ u32 unk74;
-		/* 0x78 */ short unk78[4];
-		/* 0x80 */ u16 unk80[20];
-		/* 0xA8 */ short unkA8[4];
-		/* 0xB8 */ u16 unkB0[16];
-		/* 0xD0 */ u8 unkD0[0x100 - 0xd0];
-		/* 0x100 */ u16 unk100;
-		/* 0x102 */ u16 unk102;
-		/* 0x104 */ short unk104;
-		/* 0x106 */ short unk106;
-		/* 0x108 */ short unk108;
-		/* 0x10A */ u16 unk10A;
+		// Names stolen from Dolphin, see
+		// https://github.com/dolphin-emu/dolphin/blob/master/Source/Core/Core/HW/DSPHLE/UCodes/Zelda.cpp#L682
+
+		/* 0x000 */ u16 enabled;
+		/* 0x002 */ u16 done;
+		/* 0x004 */ u16 resamplingRatio;
+		/* 0x006 */ u8 unk6[0x8 - 0x6];
+		/* 0x008 */ u16 resetVpb;
+		/* 0x00A */ u16 endReached;
+		/* 0x00C */ u16 useConstantSample;
+		/* 0x00E */ u16 samplesToKeepCount;
+		/* 0x010 */ Channel mixChannels[6];
+		/* 0x040 */ u8 unk40[0x50 - 0x40];
+		/* 0x050 */ u16 dolbyVoicePosition;
+		/* 0x052 */ u16 dolbyReverbFactor;
+		/* 0x054 */ u16 dolbyVolumeCurrent;
+		/* 0x056 */ u16 dolbyVolumeTarget;
+		/* 0x058 */ u16 useDolbyVolume;
+		/* 0x05A */ u8 unk5A[0x60 - 0x5a];
+		/* 0x060 */ s16 currentPosFrac;
+		/* 0x062 */ u8 unk62[0x64 - 0x62];
+		/* 0x064 */ s16 afcRemainingDecodedSamples;
+		/* 0x066 */ s16 constantSample;
+		/* 0x068 */ int currentPosition;
+		/* 0x06C */ u32 samplesBeforeLoop;
+		/* 0x070 */ u32 currentAramAddr;
+		/* 0x074 */ u32 remainingLength;
+		/* 0x078 */ s16 resampleBuffer[4];
+		/* 0x080 */ u16 variableFirHistory[20];
+		/* 0x0A8 */ s16 biquadHistory[4];
+		/* 0x0B0 */ u16 afcRemainingSamples[16];
+		/* 0x0D0 */ s16 lowPassHistory[2];
+		/* 0x0D4 */ u8 unkD4[0x100 - 0xd4];
+		/* 0x100 */ u16 samplesSourceType;
+		/* 0x102 */ u16 isLooping;
+		/* 0x104 */ s16 loopYN1;
+		/* 0x106 */ s16 loopYN2;
+		/* 0x108 */ s16 filterMode;
+		/* 0x10A */ u16 endRequested;
 		/* 0x10C */ u32 unk10C;
-		/* 0x110 */ s16* unk110;
-		/* 0x114 */ u32 unk114;
-		/* 0x118 */ s16* unk118;
+		/* 0x110 */ s16* loopAddress;
+		/* 0x114 */ u32 loopStartPosition;
+		/* 0x118 */ s16* baseAddress;
 		/* 0x11C */ int unk11C;
-		/* 0x120 */ short unk120[8];
-		/* 0x130 */ u8 unk130[0x148 - 0x130];
-		/* 0x148 */ short unk148[4];
-		/* 0x150 */ short unk150;
-		/* 0x152 */ u8 unk152[0x180 - 0x152];
+		/* 0x120 */ s16 variableFirCoeffs[20];
+		/* 0x148 */ s16 biquadFilterCoeffs[4];
+		/* 0x150 */ s16 lowPassCoeff;
+		/* 0x152 */ u8 padding[0x180 - 0x152];
 	};
 
 	class FXBuffer {

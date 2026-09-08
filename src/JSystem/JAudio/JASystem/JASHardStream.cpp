@@ -80,7 +80,7 @@ namespace HardStream {
 		}
 		while (true) {
 			u16 introNum;
-			switch (strCtrl.unkB) {
+			switch (strCtrl.getState()) {
 			case 1:
 				if (!strCtrl.getList()) {
 					return;
@@ -88,64 +88,64 @@ namespace HardStream {
 				introNum = strCtrl.getIntroNum();
 				if (introNum != 0xffff) {
 					if (!strCtrl.startFirst(introNum, finfo, &cur_finfo)) {
-						strCtrl.unkB = 0;
+						strCtrl.setState(0);
 						return;
 					}
-					strCtrl.unk8 = 0;
+					strCtrl.setPlayArea(0);
 				} else {
 					if (!strCtrl.startFirst(strCtrl.getLoopNum(), finfo,
 					                        &cur_finfo)) {
-						strCtrl.unkB = 0;
+						strCtrl.setState(0);
 						return;
 					}
 					strCtrl.clearListOne();
-					strCtrl.unk8 = 1;
+					strCtrl.setPlayArea(1);
 				}
-				strCtrl.unkB = 3;
+				strCtrl.setState(3);
 				return;
 			case 2:
-				if (strCtrl.unk8 == 0) {
+				if (strCtrl.getPlayArea() == 0) {
 					u16 loopNum = strCtrl.getLoopNum();
 					if (loopNum != 0xffff) {
 						if (!strCtrl.startSecond(loopNum, finfo, &cur_finfo)) {
-							strCtrl.unkB = 0;
+							strCtrl.setState(0);
 							return;
 						}
 						strCtrl.clearListOne();
-						strCtrl.unk8 = 1;
-						strCtrl.unkB = 4;
+						strCtrl.setPlayArea(1);
+						strCtrl.setState(4);
 						return;
 					}
 				}
 				strCtrl.clearListOne();
 				if (!strCtrl.getList()) {
-					if (strCtrl.unk8 == 0) {
+					if (strCtrl.getPlayArea() == 0) {
 						DVDStopStreamAtEndAsync(&stop_cmd, 0);
-						strCtrl.unkB = 4;
-						strCtrl.unk8 = 2;
+						strCtrl.setState(4);
+						strCtrl.setPlayArea(2);
 						return;
 					}
-					strCtrl.unk8 = 3;
-					strCtrl.unkB = 4;
+					strCtrl.setPlayArea(3);
+					strCtrl.setState(4);
 					return;
 				}
 				introNum = strCtrl.getIntroNum();
 				if (introNum != 0xffff) {
 					if (!strCtrl.startSecond(introNum, finfo, &cur_finfo)) {
-						strCtrl.unkB = 0;
+						strCtrl.setState(0);
 						return;
 					}
-					strCtrl.unk8 = 0;
+					strCtrl.setPlayArea(0);
 				} else {
 					if (!strCtrl.startSecond(strCtrl.getLoopNum(), finfo,
 					                         &cur_finfo)) {
-						strCtrl.unkB = 0;
+						strCtrl.setState(0);
 						return;
 					}
 					strCtrl.clearListOne();
-					strCtrl.unk8 = 1;
+					strCtrl.setPlayArea(1);
 				}
-				strCtrl.unkB = 4;
+				strCtrl.setState(4);
 				return;
 			case 4: {
 				u8 currentVol = strCtrl.getCurVol();
@@ -160,48 +160,48 @@ namespace HardStream {
 			case 5: {
 				TPlayList* list = strCtrl.getList();
 				if (!list) {
-					if (strCtrl.unk8 != 2) {
-						strCtrl.unk8 = 3;
+					if (strCtrl.getPlayArea() != 2) {
+						strCtrl.setPlayArea(3);
 					}
-					strCtrl.unkB = 4;
+					strCtrl.setState(4);
 					return;
 				}
-				if (strCtrl.unk8 == 0) {
+				if (strCtrl.getPlayArea() == 0) {
 					if (list->getPair()->getLoop() == 0xffff) {
 						if (list->getNext() == nullptr) {
 							DVDStopStreamAtEndAsync(&stop_cmd, 0);
 							strCtrl.clearListOne();
-							strCtrl.unk8 = 2;
+							strCtrl.setPlayArea(2);
 						} else {
 							strCtrl.clearListOne();
-							strCtrl.unk8 = 1;
+							strCtrl.setPlayArea(1);
 							break;
 						}
 					} else {
 						if (!strCtrl.startSecond(strCtrl.getLoopNum(), finfo,
 						                         &cur_finfo)) {
-							strCtrl.unkB = 0;
+							strCtrl.setState(0);
 							return;
 						}
 						strCtrl.clearListOne();
-						strCtrl.unk8 = 1;
+						strCtrl.setPlayArea(1);
 					}
 				} else if (!list) {
-					strCtrl.unk8 = 3;
-					strCtrl.unkB = 4;
+					strCtrl.setPlayArea(3);
+					strCtrl.setState(4);
 				} else {
 					introNum = strCtrl.getIntroNum();
 					if (introNum == 0xffff) {
-						strCtrl.unk8 = 0;
+						strCtrl.setPlayArea(0);
 						break;
 					}
 					if (!strCtrl.startSecond(introNum, finfo, &cur_finfo)) {
-						strCtrl.unkB = 0;
+						strCtrl.setState(0);
 						return;
 					}
-					strCtrl.unk8 = 0;
+					strCtrl.setPlayArea(0);
 				}
-				strCtrl.unkB = 4;
+				strCtrl.setState(4);
 				return;
 			}
 			case 6:
@@ -209,10 +209,10 @@ namespace HardStream {
 				AISetStreamVolRight(0);
 				AISetStreamPlayState(0);
 				DVDCancelStreamAsync(&finish_cmd, nullptr);
-				strCtrl.unkB = 0;
-				strCtrl.unk8 = 0;
+				strCtrl.setState(0);
+				strCtrl.setPlayArea(0);
 				strCtrl.resetFader();
-				strCtrl.unkA = 0;
+				strCtrl.setRestart(0);
 				return;
 			case 0:
 			case 3:
@@ -226,37 +226,37 @@ namespace HardStream {
 
 	static void firstBgmCallback(s32, DVDFileInfo*)
 	{
-		if (strCtrl.unkA == 0) {
+		if (strCtrl.getRestart() == 0) {
 			u8 vol = strCtrl.getCurVol();
 			AISetStreamVolLeft(vol);
 			AISetStreamVolRight(vol);
 			AISetStreamSampleRate(1);
 			AIResetStreamSampleCount();
 			AISetStreamPlayState(1);
-			strCtrl.unkB = 2;
+			strCtrl.setState(2);
 		} else {
-			strCtrl.unkB = 4;
-			strCtrl.unkA = 0;
+			strCtrl.setState(4);
+			strCtrl.setRestart(0);
 		}
 	}
 
-	static void secondBgmCallback(s32, DVDFileInfo*) { strCtrl.unkB = 4; }
+	static void secondBgmCallback(s32, DVDFileInfo*) { strCtrl.setState(4); }
 
 	static void getAddrCallback(s32 param_1, DVDCommandBlock*)
 	{
 		static BOOL last_frame = 0;
-		if (strCtrl.unk8 == 3) {
-			if (param_1 == strCtrl.unk44[strCtrl.unk4C ^ 1]) {
+		if (strCtrl.getPlayArea() == 3) {
+			if (param_1 == strCtrl.getLastAddrBefore()) {
 				last_frame = true;
 			} else if (last_frame) {
 				last_frame   = false;
-				strCtrl.unkB = 5;
+				strCtrl.setState(5);
 			}
-		} else if (strCtrl.unk8 == 2) {
-			if (param_1 == strCtrl.unk44[strCtrl.unk4C ^ 1] - 0x8000) {
+		} else if (strCtrl.getPlayArea() == 2) {
+			if (param_1 == strCtrl.getLastAddrBefore() - 0x8000) {
 				last_frame = true;
 			} else if (last_frame) {
-				strCtrl.unkB = 6;
+				strCtrl.setState(6);
 				unregistBgmAll();
 				last_frame = false;
 			}
@@ -265,7 +265,7 @@ namespace HardStream {
 				last_frame = true;
 			} else if (last_frame) {
 				last_frame   = false;
-				strCtrl.unkB = 5;
+				strCtrl.setState(5);
 			}
 		}
 	}
@@ -274,9 +274,9 @@ namespace HardStream {
 	{
 		unk0  = 0;
 		mList = nullptr;
-		unkA  = 0;
-		unk8  = 0;
-		unkB  = 0;
+		mRestart  = 0;
+		mPlayArea  = 0;
+		mState  = 0;
 		unkC  = 1.0f;
 		unk10 = 0.0f;
 		unk14 = 0;
@@ -438,7 +438,7 @@ namespace HardStream {
 				unk28 = 1.0f;
 				unk1C = 0;
 				unk40 = 0;
-				unkB  = 6;
+				mState  = 6;
 
 				unregistBgmAll();
 			} else {

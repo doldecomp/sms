@@ -7,7 +7,7 @@
 namespace JASystem {
 
 namespace DSPInterface {
-	class DSPBuffer;
+	struct DSPBuffer;
 }
 
 class TChannel;
@@ -16,8 +16,8 @@ class TDSPChannel {
 private:
 public:
 	TDSPChannel()
-	    : unkC(nullptr)
-	    , unk10(nullptr)
+	    : mDSPHandle(nullptr)
+	    , mCallback(nullptr)
 	{
 	}
 	~TDSPChannel() { }
@@ -46,7 +46,20 @@ public:
 	static BOOL breakLower(u8 param);
 	static BOOL breakLowerActive(u8 param);
 
-	BOOL isUnk1One() const { return unk1 == 1 ? TRUE : FALSE; }
+	BOOL isFree() const { return mStatus == 1 ? TRUE : FALSE; }
+
+	u8 getNumber() { return mNumber; }
+	u8 getStatus() { return mStatus; }
+
+	u8 getPriority() { return mPriority; }
+	void setPriority(u8 priority) { mPriority = priority; }
+
+	u16 getPriorityTime() { return mPriorityTime; }
+	void setPriorityTime(u16 time) { mPriorityTime = time; }
+
+	u16 getCBInterval() { return mCBInterval; }
+	void setCBInterval(u16 interval) { mCBInterval = interval; }
+	void decCBInterval() { mCBInterval--; }
 
 	static TDSPChannel* DSPCH;
 	static u32 smnUse;
@@ -55,7 +68,7 @@ public:
 	// fake, stolen from tww
 	TChannel* getLogicalChannel()
 	{
-		if (unk10 != nullptr) {
+		if (mCallback != nullptr) {
 			return (TChannel*)unk8; // (TWW) ?? is this userdata?
 		} else {
 			return nullptr;
@@ -63,15 +76,15 @@ public:
 	}
 
 public:
-	/* 0x0 */ u8 unk0;
-	/* 0x0 */ u8 unk1;
+	/* 0x0 */ u8 mNumber;
+	/* 0x0 */ u8 mStatus;
 	/* 0x0 */ u8 unk2;
-	/* 0x0 */ u8 unk3;
-	/* 0x4 */ u16 unk4;
-	/* 0x6 */ u16 unk6;
+	/* 0x0 */ u8 mPriority;
+	/* 0x4 */ u16 mPriorityTime;
+	/* 0x6 */ u16 mCBInterval;
 	/* 0x8 */ u32 unk8;
-	/* 0xC */ DSPInterface::DSPBuffer* unkC;
-	/* 0x10 */ int (*unk10)(TDSPChannel*, u32);
+	/* 0xC */ DSPInterface::DSPBuffer* mDSPHandle;
+	/* 0x10 */ int (*mCallback)(TDSPChannel*, u32);
 };
 
 } // namespace JASystem
