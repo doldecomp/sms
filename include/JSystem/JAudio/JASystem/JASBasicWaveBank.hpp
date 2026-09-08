@@ -23,9 +23,9 @@ public:
 		virtual const TWaveInfo* getWaveInfo() const { return &unk4; }
 		virtual const void* getWavePtr() const
 		{
-			if (unk30->unk8 == 0)
+			if (unk30->getBase() == 0)
 				return nullptr;
-			return ((u8*)unk30->unk8) + unk4.unk8;
+			return ((u8*)unk30->getBase()) + unk4.unk8;
 		}
 
 	public:
@@ -67,6 +67,7 @@ public:
 		virtual Kernel::THeap* getHeap() { return &unk4; }
 
 		void setWaveCount(u32);
+		u32 getWaveCount() const { return unk38; }
 		void setWaveInfo(int, u32, const JASystem::TWaveInfo&);
 		void setWaveArcFileName(const char*);
 

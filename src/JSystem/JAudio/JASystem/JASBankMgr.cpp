@@ -79,7 +79,7 @@ namespace BankMgr {
 		if (!waveBank)
 			return false;
 
-		bank->unk4 = waveBank;
+		bank->assignWaveBank(waveBank);
 		return true;
 	}
 
@@ -114,7 +114,7 @@ namespace BankMgr {
 		if (!inst->getParam(param_4, param_5, &instParam))
 			return nullptr;
 
-		TWaveBank* waveBank = bank->unk4;
+		TWaveBank* waveBank = bank->getWaveBank();
 		if (!waveBank)
 			return nullptr;
 

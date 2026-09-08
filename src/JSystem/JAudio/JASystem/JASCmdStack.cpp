@@ -15,10 +15,10 @@ namespace Kernel {
 
 	TPortCmd::TPortCmd()
 	{
-		unk0 = nullptr;
-		unk4 = nullptr;
-		unk8 = nullptr;
-		unkC = nullptr;
+		mHead = nullptr;
+		mNext = nullptr;
+		mFunc = nullptr;
+		mArgs = nullptr;
 	}
 
 	BOOL TPortCmd::addPortCmdOnce() { return addPortCmd(&cmd_once); }
@@ -27,28 +27,28 @@ namespace Kernel {
 
 	BOOL TPortCmd::setPortCmd(PortCallback func, TPortArgs* args)
 	{
-		unk8 = func;
-		unkC = args;
-		unk0 = nullptr;
+		mFunc = func;
+		mArgs = args;
+		mHead = nullptr;
 		return true;
 	}
 
 	BOOL TPortCmd::addPortCmd(TPortHead* head)
 	{
 		BOOL enable = OSDisableInterrupts();
-		if (unk0) {
+		if (mHead) {
 			OSRestoreInterrupts(enable);
 			return false;
 		}
 
 		if (head->unk4)
-			head->unk4->unk4 = this;
+			head->unk4->mNext = this;
 		else
 			head->unk0 = this;
 
 		head->unk4 = this;
-		unk4       = nullptr;
-		unk0       = head;
+		mNext      = nullptr;
+		mHead      = head;
 		OSRestoreInterrupts(enable);
 		return true;
 	}
@@ -64,7 +64,7 @@ namespace Kernel {
 			if (!cmd)
 				break;
 
-			cmd->unk8(cmd->unkC);
+			cmd->mFunc(cmd->mArgs);
 		}
 	}
 
@@ -75,9 +75,9 @@ namespace Kernel {
 			if (!cmd)
 				break;
 
-			cmd->unk8(cmd->unkC);
+			cmd->mFunc(cmd->mArgs);
 
-			cmd = cmd->unk4;
+			cmd = cmd->mNext;
 		}
 	}
 
@@ -101,11 +101,11 @@ namespace Kernel {
 		if (head->unk0) {
 			TPortCmd* r31 = head->unk0;
 			r30           = r31;
-			head->unk0    = r31->unk4;
+			head->unk0    = r31->mNext;
 			if (!head->unk0)
 				head->unk4 = nullptr;
 
-			r31->unk0 = nullptr;
+			r31->mHead = nullptr;
 		}
 		return r30;
 	}

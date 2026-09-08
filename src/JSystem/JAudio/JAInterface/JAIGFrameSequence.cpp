@@ -537,7 +537,7 @@ void JAIBasic::checkPlayingSeq()
 					    &unk0->mSeqTrackInfo[i], j, 1,
 					    unk0->mSeqTrackInfo[i].mTrackUpdate[j]);
 
-					unk0->mSeqTrackInfo[i].unk4C[j].unk2C.unk0 = nullptr;
+					unk0->mSeqTrackInfo[i].unk4C[j].unk2C.mHead = nullptr;
 					unk0->mSeqTrackInfo[i].unk4C[j].unk2C.addPortCmdOnce();
 				}
 			}
