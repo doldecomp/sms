@@ -417,7 +417,8 @@ namespace Driver {
 				return 0;
 			}
 
-			if (channel->unk10 != nullptr && channel->unk10->unk24[0] == 0) {
+			if (channel->mWaveData != nullptr
+			    && channel->mWaveData->mLoadFlagPtr[0] == 0) {
 				channel->unk20->forceStop();
 				return -1;
 			}
@@ -509,16 +510,16 @@ namespace Driver {
 
 void TChannel::init()
 {
-	unk28 = nullptr;
-	unk2C = nullptr;
-	unk30 = 0;
-	unk34 = 0;
-	unk10 = nullptr;
-	unkC  = 0;
-	unk14 = 0;
-	unk18 = 0;
-	unk1C = 0;
-	unkD0 = 0;
+	unk28            = nullptr;
+	unk2C            = nullptr;
+	unk30            = 0;
+	unk34            = 0;
+	mWaveData        = nullptr;
+	mLogicalChanType = 0;
+	unk14            = 0;
+	unk18            = 0;
+	unk1C            = 0;
+	unkD0            = 0;
 	if (!unk4) {
 		unkA8[0].mWhole = 0x150;
 		unkA8[1].mWhole = 0x210;
@@ -633,10 +634,10 @@ void TChannel::setKeySweepTarget(u8 key, u32 target)
 {
 	s32 thing;
 
-	if (unkC == 2 || unk10 == 0)
+	if (mLogicalChanType == 2 || mWaveData == 0)
 		thing = key;
 	else
-		thing = key + 0x3C - unk10->unk2;
+		thing = key + 0x3C - mWaveData->mKey;
 
 	if (thing < 0)
 		thing = 0;
@@ -684,7 +685,7 @@ void TChannel::setDolbyParam(const f32* pan, const f32* dolby, const f32* fx) {
 
 BOOL TChannel::checkLogicalChannel()
 {
-	if (!unk10 && unkC == 0)
+	if (!mWaveData && mLogicalChanType == 0)
 		return false;
 
 	return true;
@@ -792,9 +793,9 @@ BOOL TChannel::playLogicalChannel()
 
 	DSPInterface::DSPBuffer* buf = unk20->mDSPHandle;
 
-	switch (unkC) {
+	switch (mLogicalChanType) {
 	case 0:
-		buf->setWaveInfo(unk10, unk14);
+		buf->setWaveInfo(mWaveData, unk14);
 		break;
 	case 2:
 		buf->setOscInfo(unk14);
@@ -835,7 +836,7 @@ BOOL TChannel::playLogicalChannel()
 
 	for (u32 i = 0; i < 4; ++i)
 		if (unk38[i]->isOsc())
-			effectOsc(i, unk38[i]->isOsc() ? unk38[i]->getOffset() : 1.0f);
+			effectOsc(i, bankOscToOfs(i));
 
 	updateEffectorParam();
 	Driver::__UpdateJcToDSPInit(this);

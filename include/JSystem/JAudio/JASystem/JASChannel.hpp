@@ -16,16 +16,16 @@ namespace Driver {
 
 	struct Wave_ {
 		/* 0x0 */ u8 unk0;
-		/* 0x1 */ u8 unk1;
-		/* 0x2 */ u8 unk2;
+		/* 0x1 */ u8 mFormat; // 0 = ADPCM4, 1 = ADPCM2, 2 = PCM8, 3 = PCM16
+		/* 0x2 */ u8 mKey;    // root key of the sample; C5 (0x3C) is the base
 		/* 0x4 */ char unk4[0xC];
-		/* 0x10 */ int unk10;
-		/* 0x14 */ int unk14;
-		/* 0x18 */ int unk18;
-		/* 0x1C */ int unk1C;
-		/* 0x20 */ short unk20;
-		/* 0x22 */ short unk22;
-		/* 0x24 */ u32* unk24;
+		/* 0x10 */ int mLoop;
+		/* 0x14 */ int mLoopStart;
+		/* 0x18 */ int mLoopEnd;
+		/* 0x1C */ int mSampleCount;
+		/* 0x20 */ short mLast;       // ADPCM history y[n-1] at the loop start
+		/* 0x22 */ short mPenult;     // ADPCM history y[n-2] at the loop start
+		/* 0x24 */ u32* mLoadFlagPtr; // 0 while the wave data is not in memory
 	};
 } // namespace Driver
 
@@ -106,8 +106,8 @@ public:
 	/* 0x3 */ u8 unk3;
 	/* 0x4 */ TChannelMgr* unk4;
 	/* 0x8 */ TChannel** unk8;
-	/* 0xC */ u8 unkC;
-	/* 0x10 */ Driver::Wave_* unk10;
+	/* 0xC */ u8 mLogicalChanType;
+	/* 0x10 */ Driver::Wave_* mWaveData;
 	/* 0x14 */ u32 unk14;
 	/* 0x18 */ u32 unk18;
 	/* 0x1C */ u32 unk1C;

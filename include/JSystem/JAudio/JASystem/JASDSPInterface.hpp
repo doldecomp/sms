@@ -61,7 +61,7 @@ namespace DSPInterface {
 			/* 0x6 */ u16 level;
 		};
 
-		// Names stolen from Dolphin, see
+		// Names stolen from Dolphin with some fixes, see
 		// https://github.com/dolphin-emu/dolphin/blob/master/Source/Core/Core/HW/DSPHLE/UCodes/Zelda.cpp#L682
 
 		/* 0x000 */ u16 enabled;
@@ -102,9 +102,9 @@ namespace DSPInterface {
 		/* 0x10A */ u16 endRequested;
 		/* 0x10C */ u32 unk10C;
 		/* 0x110 */ s16* loopAddress;
-		/* 0x114 */ u32 loopStartPosition;
+		/* 0x114 */ u32 endPosition;
 		/* 0x118 */ s16* baseAddress;
-		/* 0x11C */ int unk11C;
+		/* 0x11C */ int sampleCount;
 		/* 0x120 */ s16 variableFirCoeffs[20];
 		/* 0x148 */ s16 biquadFilterCoeffs[4];
 		/* 0x150 */ s16 lowPassCoeff;
