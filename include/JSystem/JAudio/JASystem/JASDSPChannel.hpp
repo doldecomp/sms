@@ -2,6 +2,7 @@
 #define JASDSPCHANNEL_HPP
 
 #include <dolphin/types.h>
+#include <stdint.h>
 #include <types.h>
 
 namespace JASystem {
@@ -23,7 +24,7 @@ public:
 	~TDSPChannel() { }
 
 	void init(u8 param);
-	BOOL allocate(u32 param);
+	BOOL allocate(uintptr_t sign);
 	void free();
 	void play();
 	void stop();
@@ -37,6 +38,7 @@ public:
 	f32* getHistory();
 
 	BOOL isFree() const { return mStatus == 1 ? TRUE : FALSE; }
+	BOOL checkSign(uintptr_t sign) { return mSign == sign ? TRUE : FALSE; }
 
 	u8 getNumber() { return mNumber; }
 	u8 getStatus() { return mStatus; }
@@ -54,16 +56,21 @@ public:
 	TChannel* getLogicalChannel()
 	{
 		if (mCallback != nullptr) {
-			return (TChannel*)unk8; // (TWW) ?? is this userdata?
+			return (TChannel*)mSign; // (TWW) ?? is this userdata?
 		} else {
 			return nullptr;
 		}
 	}
 
+	// (TWW) TWW's onUpdate is a linked function that tests mCallback itself.
+	// SMS has no such symbol, and every call site here tests mCallback before
+	// the call, so this revision's body is only the assignment.
+	void onUpdate(u32 param_1) { mCBInterval = mCallback(this, param_1); }
+
 	static void initAll();
 	static void updateAll();
-	static TDSPChannel* alloc(u32 param1, u32 param2);
-	static int free(TDSPChannel* channel, u32 param);
+	static TDSPChannel* alloc(u32 param1, uintptr_t sign);
+	static int free(TDSPChannel* channel, uintptr_t sign);
 	static TDSPChannel* getHandle(u32 handle);
 	static JASystem::TDSPChannel* getLower();
 	static JASystem::TDSPChannel* getLowerActive();
@@ -86,7 +93,7 @@ public:
 	/* 0x0 */ u8 mPriority;
 	/* 0x4 */ u16 mPriorityTime;
 	/* 0x6 */ u16 mCBInterval;
-	/* 0x8 */ u32 unk8;
+	/* 0x8 */ uintptr_t mSign;
 	/* 0xC */ DSPInterface::DSPBuffer* mDSPHandle;
 	/* 0x10 */ int (*mCallback)(TDSPChannel*, u32);
 };
