@@ -79,8 +79,8 @@ namespace BNKParser {
 					if (randRaw != nullptr) {
 						TInstRand* randp = new (heap, 0) TInstRand;
 						randp->setTarget(randRaw->unk0);
-						randp->setFloor(randRaw->unk4);
-						randp->setCeiling(randRaw->unk8);
+						randp->setBase(randRaw->unk4);
+						randp->setWidth(randRaw->unk8);
 						instp->setEffect(j, randp);
 					}
 				}
@@ -136,8 +136,8 @@ namespace BNKParser {
 							if (randRaw != nullptr) {
 								TInstRand* randp = new (heap, 0) TInstRand();
 								randp->setTarget(randRaw->unk0);
-								randp->setFloor(randRaw->unk4);
-								randp->setCeiling(randRaw->unk8);
+								randp->setBase(randRaw->unk4);
+								randp->setWidth(randRaw->unk8);
 								drumSetPerc->setEffect(effectIndex, randp);
 								effectIndex++;
 							}

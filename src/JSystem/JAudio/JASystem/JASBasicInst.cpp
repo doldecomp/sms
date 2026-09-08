@@ -52,7 +52,7 @@ bool TBasicInst::getParam(int key, int velo, TInstParam* param) const
 			continue;
 
 		f32 y = effect->getY(key, velo);
-		switch (effect->unk4) {
+		switch (effect->mTarget) {
 		case 0:
 			param->mEffectVolume *= y;
 			break;
