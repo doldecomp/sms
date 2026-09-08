@@ -119,7 +119,8 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 		switch (param_1) {
 		case MSD_SE_ERASE_SCRAWL:
 			if (unk5C[unk5A] != nullptr) {
-				if ((f32)unk5C[unk5A]->getPlayGameFrameCounter() < (f32)unk3C.get()
+				if ((f32)unk5C[unk5A]->getPlayGameFrameCounter()
+				        < (f32)unk3C.get()
 				    && f31 < unk40.get())
 					r31 = MSD_SE_ERASE_SCRAWL_CONT;
 			}
@@ -183,7 +184,8 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 		switch (param_1) {
 		case MSD_SE_ERASE_SCRAWL:
 			if (unk5C[unk5A] != nullptr) {
-				if ((f32)unk5C[unk5A]->getPlayGameFrameCounter() < (f32)unk3C.get()
+				if ((f32)unk5C[unk5A]->getPlayGameFrameCounter()
+				        < (f32)unk3C.get()
 				    && f31 < unk40.get()) {
 					r26 = MSD_SE_ERASE_SCRAWL_CONT;
 				}
