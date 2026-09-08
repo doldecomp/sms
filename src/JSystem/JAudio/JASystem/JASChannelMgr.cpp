@@ -234,8 +234,7 @@ TChannel* TChannelMgr::getLogicalChannel(u32 param)
 			if (chan != nullptr) {
 				chan->forceStopOsc(0);
 				addListHead(chan, 3);
-				if (chan->unk20 != nullptr)
-					chan->unk20->forceStop();
+				TDSPChannel::forceStop(chan->unk20);
 			}
 		}
 	}
