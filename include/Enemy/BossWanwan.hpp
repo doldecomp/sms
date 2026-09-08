@@ -4,11 +4,53 @@
 #include <Strategic/Nerve.hpp>
 #include <Strategic/Spine.hpp>
 #include <Strategic/LiveManager.hpp>
+#include <Strategic/Binder.hpp>
 #include <Enemy/EnemyManager.hpp>
 #include <Enemy/Enemy.hpp>
 
 class TLiveActor;
 class TBossWanwan;
+
+class TBWHit : public THitActor {
+public:
+	TBWHit(TBossWanwan* owner, int joint_index,
+	       const char* name = "idk"); // yeah
+
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+
+private:
+	TBossWanwan* mOwner;
+	u32 mJointIndex;
+};
+
+class TBWPicket : public THitActor {
+public:
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+};
+
+class TBWBinder : public TBinder {
+public:
+	TBWBinder();
+	virtual void bind(TLiveActor*);
+};
+
+class TBWLeash : public THitActor {
+public:
+	TBWLeash(int, const char*);
+
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+};
+
+class TBWLeashNode : public THitActor {
+public:
+	TBWLeashNode(int, const char*);
+
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual void calcMatrix();
+	virtual void calcTemperature();
+};
 
 class TBWParams : public TSpineEnemyParams {
 public:
@@ -40,13 +82,22 @@ public:
 	/* 0x1E8 */ TParamRT<f32> mSLShakeLengthMaxHP0;
 };
 
+// TBossWanwan size: 0x1b8
 class TBossWanwan : public TSpineEnemy {
 public:
 	TBossWanwan(const char* name = "ボスワンワン");
 
 	virtual void kill();
 	virtual void init(TLiveManager*);
+	BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void shakeCamera(int shakeType);
+
+private:
+	/* 0x1A0 */ BOOL unk0;
+	/* 0x1A8 */ u32 mWaterHitCount;
+	/* 0x1AC */ u32 mDistToMarioSquared;
+	/* 0x1B0 */ TBWParams* mParams;
+	/* 0x18C */ u8 msInvincible;
 };
 
 class TBossWanwanManager : public TEnemyManager {
