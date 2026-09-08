@@ -15,7 +15,7 @@ u64 DSP_CreateMap()
 
 		JASystem::DSPInterface::DSPBuffer* buffer
 		    = JASystem::DSPInterface::getDSPHandle(i);
-		if (buffer->unk0) {
+		if (buffer->enabled) {
 			var1 |= 1;
 		}
 	}
@@ -130,34 +130,34 @@ namespace DSPInterface {
 
 	void DSPBuffer::allocInit()
 	{
-		unkC   = 0;
-		unk2   = 0;
-		unk10A = 0;
-		unk0   = 0;
-		unk58  = 0;
+		useConstantSample = 0;
+		done              = 0;
+		endRequested      = 0;
+		enabled           = 0;
+		useDolbyVolume    = 0;
 		initFilter();
 		flushChannel();
 	}
 	void DSPBuffer::playStart()
 	{
-		unk10C = 0;
-		unk68  = 0;
-		unk60  = 0;
-		unk8   = 1;
-		unk66  = 0;
+		unk10C          = 0;
+		currentPosition = 0;
+		currentPosFrac  = 0;
+		resetVpb        = 1;
+		constantSample  = 0;
 
 		s32 i;
 		for (i = 0; i < 4; ++i) {
-			unk78[i] = 0;
-			unkA8[i] = 0;
+			resampleBuffer[i] = 0;
+			biquadHistory[i]  = 0;
 		}
 
 		for (i = 0; i < 20; ++i)
-			unk80[i] = 0;
+			variableFirHistory[i] = 0;
 
-		unk0 = 1;
+		enabled = 1;
 	}
-	void DSPBuffer::playStop() { unk0 = 0; }
+	void DSPBuffer::playStop() { enabled = 0; }
 	void DSPBuffer::setWaveInfo(Driver::Wave_* param_1, u32 param_2)
 	{
 		static u8 COMP_BLOCKSAMPLES[8] = {
@@ -167,101 +167,104 @@ namespace DSPInterface {
 			0x09, 0x05, 0x08, 0x10, 0x01, 0x01, 0x01, 0x01,
 		};
 
-		unk118 = (s16*)param_2;
-		unk64  = COMP_BLOCKSAMPLES[param_1->unk1];
-		unk100 = COMP_BLOCKBYTES[param_1->unk1];
+		baseAddress                = (s16*)param_2;
+		afcRemainingDecodedSamples = COMP_BLOCKSAMPLES[param_1->unk1];
+		samplesSourceType          = COMP_BLOCKBYTES[param_1->unk1];
 
-		if (unk100 < 4)
+		if (samplesSourceType < 4)
 			return;
 
-		unk11C = param_1->unk1C;
-		unk102 = param_1->unk10;
+		unk11C    = param_1->unk1C;
+		isLooping = param_1->unk10;
 
-		if (unk102 != 0) {
-			unk110 = (s16*)param_1->unk14;
-			unk114 = param_1->unk18;
-			unk104 = param_1->unk20;
-			unk106 = param_1->unk22;
+		if (isLooping != 0) {
+			loopAddress       = (s16*)param_1->unk14;
+			loopStartPosition = param_1->unk18;
+			loopYN1           = param_1->unk20;
+			loopYN2           = param_1->unk22;
 		} else {
-			unk114 = unk11C;
+			loopStartPosition = unk11C;
 		}
 
 		for (s32 i = 0; i < 16; i++)
-			unkB0[i] = 0;
+			afcRemainingSamples[i] = 0;
 	}
 	void DSPBuffer::setOscInfo(u32 param_1)
 	{
-		unk118 = 0;
-		unk64  = 16;
-		unk100 = param_1;
+		baseAddress                = 0;
+		afcRemainingDecodedSamples = 16;
+		samplesSourceType          = param_1;
 	}
 	void DSPBuffer::initAutoMixer()
 	{
-		if (unk58) {
-			unk54 = unk56;
+		if (useDolbyVolume) {
+			dolbyVolumeCurrent = dolbyVolumeTarget;
 			return;
 		}
-		unk54 = 0;
-		unk58 = 1;
+		dolbyVolumeCurrent = 0;
+		useDolbyVolume     = 1;
 	}
 	void DSPBuffer::setAutoMixer(u16 param_1, u8 param_2, u8 param_3,
 	                             u8 param_4, u8 param_5)
 	{
-		unk50 = param_2 << 8 | param_3;
-		unk52 = param_4 << 8;
-		unk56 = param_1;
-		unk58 = 1;
+		dolbyVoicePosition = param_2 << 8 | param_3;
+		dolbyReverbFactor  = param_4 << 8;
+		dolbyVolumeTarget  = param_1;
+		useDolbyVolume     = 1;
 	}
-	void DSPBuffer::updateAMVolume(u16 param_1) { unk56 = param_1; }
+	void DSPBuffer::updateAMVolume(u16 param_1) { dolbyVolumeTarget = param_1; }
 	void DSPBuffer::updateAMPan(u8 param_1, u8 param_2)
 	{
-		unk50 = param_1 << 8 | param_2;
+		dolbyVoicePosition = param_1 << 8 | param_2;
 	}
-	void DSPBuffer::updateAMFX(u8 param_1) { unk52 = param_1 << 8; }
+	void DSPBuffer::updateAMFX(u8 param_1) { dolbyReverbFactor = param_1 << 8; }
 	void DSPBuffer::setPitch(u16 param_1)
 	{
 		if (param_1 >= 0x7fff)
 			param_1 = 0x7fff;
 
-		unk4 = param_1;
+		resamplingRatio = param_1;
 	}
 	void DSPBuffer::setPitchIndirect(f32 param_1, f32 param_2) { }
 
-	void DSPBuffer::setMixerInitDelayMax(u8 param_1) { unkE = param_1; }
+	void DSPBuffer::setMixerInitDelayMax(u8 param_1)
+	{
+		samplesToKeepCount = param_1;
+	}
 	void DSPBuffer::setMixerInitVolume(u8 param_1, s16 param_2, u8 param_3)
 	{
-		Channel& chan      = unk10[param_1];
+		Channel& chan      = mixChannels[param_1];
 		chan.currentVolume = param_2;
 		chan.targetVolume  = param_2;
-		chan.unkC          = param_3 << 8 | param_3;
+		chan.level         = param_3 << 8 | param_3;
 	}
 	void DSPBuffer::setMixerVolume(u8 param_1, s16 param_2, u8 param_3)
 	{
-		if (unk10A)
+		if (endRequested)
 			return;
 
-		Channel& chan     = unk10[param_1];
+		Channel& chan     = mixChannels[param_1];
 		chan.targetVolume = param_2;
-		chan.unkC         = param_3 << 8 | chan.unkC & 0xff;
+		chan.level        = param_3 << 8 | chan.level & 0xff;
 	}
 	void DSPBuffer::setMixerVolumeOnly(u8 param_1, s16 param_2)
 	{
-		if (unk10A)
+		if (endRequested)
 			return;
 
-		unk10[param_1].targetVolume = param_2;
+		mixChannels[param_1].targetVolume = param_2;
 	}
-	void DSPBuffer::setPauseFlag(u8 flag) { unkC = flag; }
+	void DSPBuffer::setPauseFlag(u8 flag) { useConstantSample = flag; }
 	void DSPBuffer::flushChannel() { DCFlushRangeNoSync(this, sizeof(*this)); }
 	void DSPBuffer::cacheChannel() { }
 
 	void DSPBuffer::setIIRFilterParam(s16* param)
 	{
-		setFilterTable(unk148, param, 4);
+		setFilterTable(biquadFilterCoeffs, param, 4);
 	}
 	void DSPBuffer::setFIR8FilterParam(s16* param)
 	{
-		setFilterTable(unk120, param, 8);
+		setFilterTable(variableFirCoeffs, param, 8);
 	}
 
 	void DSPBuffer::setFilterMode(u16 param)
@@ -277,25 +280,25 @@ namespace DSPInterface {
 				r31 = 0x18;
 			}
 		}
-		unk108 = r30 + r31;
+		filterMode = r30 + r31;
 	}
 
 	void DSPBuffer::initFilter()
 	{
 		for (int i = 0; i < 8; ++i)
-			unk120[i] = 0;
+			variableFirCoeffs[i] = 0;
 
-		unk120[0] = 0x7FFF;
+		variableFirCoeffs[0] = 0x7FFF;
 
 		for (int i = 0; i < 4; ++i)
-			unk148[i] = 0;
+			biquadFilterCoeffs[i] = 0;
 
-		unk148[0] = 0x7FFF;
+		biquadFilterCoeffs[0] = 0x7FFF;
 
-		unk150 = 0;
+		lowPassCoeff = 0;
 	}
 
-	void DSPBuffer::setDistFilter(s16 value) { unk150 = value; }
+	void DSPBuffer::setDistFilter(s16 value) { lowPassCoeff = value; }
 
 	void DSPBuffer::setBusConnect(u8 param_1, u8 param_2)
 	{
@@ -303,7 +306,7 @@ namespace DSPInterface {
 			0x0000, 0x0D00, 0x0D60, 0x0DC0, 0x0E20, 0x0E80,
 			0x0EE0, 0x0CA0, 0x0F40, 0x0FA0, 0x0B00, 0x09A0,
 		};
-		Channel& chan = unk10[param_1];
+		Channel& chan = mixChannels[param_1];
 		chan.id       = connect_table[param_2];
 	}
 
