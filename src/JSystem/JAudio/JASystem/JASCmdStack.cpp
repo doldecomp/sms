@@ -3,12 +3,12 @@
 #include <dolphin/os.h>
 #include <types.h>
 
+static JASystem::Kernel::TPortHead cmd_once;
+static JASystem::Kernel::TPortHead cmd_stay;
+
 namespace JASystem {
 
 namespace Kernel {
-
-	JASystem::Kernel::TPortHead cmd_once;
-	JASystem::Kernel::TPortHead cmd_stay;
 
 	static s32 portCmdMain(void* data);
 	static TPortCmd* getPortCmd(TPortHead* head);
@@ -64,7 +64,7 @@ namespace Kernel {
 			if (!cmd)
 				break;
 
-			cmd->mFunc(cmd->mArgs);
+			cmd->getFunc()(cmd->getArgs());
 		}
 	}
 
@@ -75,9 +75,9 @@ namespace Kernel {
 			if (!cmd)
 				break;
 
-			cmd->mFunc(cmd->mArgs);
+			cmd->getFunc()(cmd->getArgs());
 
-			cmd = cmd->mNext;
+			cmd = cmd->getNext();
 		}
 	}
 
@@ -112,10 +112,6 @@ namespace Kernel {
 
 	static s32 portCmdMain(void* data)
 	{
-		// TODO: inlines inside of portCmdProc*
-		// (but does it matter?)
-		char trash[0x30];
-
 		portCmdProcOnce(&cmd_once);
 		portCmdProcStay(&cmd_stay);
 		return 0;
