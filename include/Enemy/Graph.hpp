@@ -15,7 +15,7 @@ struct TRailNode {
 	/* 0xC */ u16 mPitch;
 	/* 0xE */ u16 mYaw;
 	/* 0x10 */ u16 mRoll;
-	/* 0x12 */ s16 mSpeed;
+	/* 0x12 */ u16 mSpeed;
 	/* 0x14 */ u16 mConnections[8];
 	/* 0x24 */ f32 mPeriods[8];
 };
