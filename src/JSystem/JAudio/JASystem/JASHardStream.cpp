@@ -249,7 +249,7 @@ namespace HardStream {
 			if (param_1 == strCtrl.getLastAddrBefore()) {
 				last_frame = true;
 			} else if (last_frame) {
-				last_frame   = false;
+				last_frame = false;
 				strCtrl.setState(5);
 			}
 		} else if (strCtrl.getPlayArea() == 2) {
@@ -264,7 +264,7 @@ namespace HardStream {
 			if (param_1 == strCtrl.getLastAddr()) {
 				last_frame = true;
 			} else if (last_frame) {
-				last_frame   = false;
+				last_frame = false;
 				strCtrl.setState(5);
 			}
 		}
@@ -272,26 +272,26 @@ namespace HardStream {
 
 	TControl::TControl()
 	{
-		unk0  = 0;
-		mList = nullptr;
+		unk0      = 0;
+		mList     = nullptr;
 		mRestart  = 0;
-		mPlayArea  = 0;
-		mState  = 0;
-		unkC  = 1.0f;
-		unk10 = 0.0f;
-		unk14 = 0;
-		unk18 = 0;
-		unk1C = 0;
-		unk20 = 0.0f;
-		unk24 = 0.0f;
-		unk2C = 1.0f;
-		unk30 = 1.0f;
-		unk28 = 1.0f;
-		unk34 = 0.0f;
-		unk38 = 0;
-		unk3C = 0;
-		unk40 = 0;
-		unk4C = 0;
+		mPlayArea = 0;
+		mState    = 0;
+		unkC      = 1.0f;
+		unk10     = 0.0f;
+		unk14     = 0;
+		unk18     = 0;
+		unk1C     = 0;
+		unk20     = 0.0f;
+		unk24     = 0.0f;
+		unk2C     = 1.0f;
+		unk30     = 1.0f;
+		unk28     = 1.0f;
+		unk34     = 0.0f;
+		unk38     = 0;
+		unk3C     = 0;
+		unk40     = 0;
+		unk4C     = 0;
 	}
 
 	void TControl::setMasterVol(f32) { }
@@ -427,18 +427,18 @@ namespace HardStream {
 			if (thing <= 0.0f) {
 				f5 = 0.0f;
 
-				unk14 = 0;
-				unk20 = 0.0f;
-				unk38 = 0;
-				unk18 = 0;
-				unk24 = 0.0f;
-				unk3C = 0;
-				unk30 = 1.0f;
-				unk2C = 1.0f;
-				unk28 = 1.0f;
-				unk1C = 0;
-				unk40 = 0;
-				mState  = 6;
+				unk14  = 0;
+				unk20  = 0.0f;
+				unk38  = 0;
+				unk18  = 0;
+				unk24  = 0.0f;
+				unk3C  = 0;
+				unk30  = 1.0f;
+				unk2C  = 1.0f;
+				unk28  = 1.0f;
+				unk1C  = 0;
+				unk40  = 0;
+				mState = 6;
 
 				unregistBgmAll();
 			} else {
