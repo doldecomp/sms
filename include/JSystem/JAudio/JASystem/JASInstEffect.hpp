@@ -8,16 +8,17 @@ namespace JASystem {
 class TInstEffect {
 public:
 	TInstEffect()
-	    : unk4(0)
+	    : mTarget(0)
 	{
 	}
 
 	virtual f32 getY(int, int) const = 0;
 
 	void setTarget(int);
+	u8 getTarget() const { return mTarget; }
 
 public:
-	/* 0x4 */ u8 unk4;
+	/* 0x4 */ u8 mTarget;
 };
 
 } // namespace JASystem
