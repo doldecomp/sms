@@ -100,10 +100,10 @@ void JAIAnimeSound::setAnimSoundActor(JAIBasic* basic, JAIActor* actor,
 		}
 
 		for (u8 i = 0; i < 8; ++i) {
+			JAIAnimeFrameSoundData* sd;
 			JAISound** sndAddr = &mSlots[i].mSound;
 			if (mSlots[i].mIsPlaying != 0) {
-				u32 id                     = mSlots[i].mData->unk0;
-				JAIAnimeFrameSoundData* sd = mSlots[i].mData;
+				u32 id = (sd = mSlots[i].mData)->unk0;
 				if (!(id & 0xC00) && (param2 != 0.0f || !(sd->unk10 & 0x20))) {
 					f32 t1 = sd->unk4;
 					f32 t2 = sd->unk8;
@@ -143,10 +143,10 @@ void JAIAnimeSound::setAnimSoundActor(JAIBasic* basic, JAIActor* actor,
 		}
 
 		for (u8 i = 0; i < 8; ++i) {
+			JAIAnimeFrameSoundData* sd;
 			JAISound** sndAddr = &mSlots[i].mSound;
 			if (mSlots[i].mIsPlaying != 0) {
-				u32 id                     = mSlots[i].mData->unk0;
-				JAIAnimeFrameSoundData* sd = mSlots[i].mData;
+				u32 id = (sd = mSlots[i].mData)->unk0;
 				if (!(id & 0xC00) && (param2 != 0.0f || !(sd->unk10 & 0x20))) {
 					f32 t1 = sd->unk4;
 					f32 t2 = sd->unk8;
