@@ -168,22 +168,22 @@ namespace DSPInterface {
 		};
 
 		baseAddress                = (s16*)param_2;
-		afcRemainingDecodedSamples = COMP_BLOCKSAMPLES[param_1->unk1];
-		samplesSourceType          = COMP_BLOCKBYTES[param_1->unk1];
+		afcRemainingDecodedSamples = COMP_BLOCKSAMPLES[param_1->mFormat];
+		samplesSourceType          = COMP_BLOCKBYTES[param_1->mFormat];
 
 		if (samplesSourceType < 4)
 			return;
 
-		unk11C    = param_1->unk1C;
-		isLooping = param_1->unk10;
+		sampleCount = param_1->mSampleCount;
+		isLooping   = param_1->mLoop;
 
 		if (isLooping != 0) {
-			loopAddress       = (s16*)param_1->unk14;
-			loopStartPosition = param_1->unk18;
-			loopYN1           = param_1->unk20;
-			loopYN2           = param_1->unk22;
+			loopAddress = (s16*)param_1->mLoopStart;
+			endPosition = param_1->mLoopEnd;
+			loopYN1     = param_1->mLast;
+			loopYN2     = param_1->mPenult;
 		} else {
-			loopStartPosition = unk11C;
+			endPosition = sampleCount;
 		}
 
 		for (s32 i = 0; i < 16; i++)

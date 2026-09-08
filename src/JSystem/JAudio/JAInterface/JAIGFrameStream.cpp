@@ -284,7 +284,7 @@ namespace StreamLib {
 		pDVar1->samplesSourceType = 0x21;
 		pDVar1->remainingLength   = param_4;
 		pDVar1->loopAddress       = param_2;
-		pDVar1->loopStartPosition = param_3 << 0x10;
+		pDVar1->endPosition       = param_3 << 0x10;
 
 		JASystem::DSPInterface::setMixerInitDelayMax(channel->mNumber, 0);
 

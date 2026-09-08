@@ -147,12 +147,11 @@ namespace BankMgr {
 		if (!chan)
 			return nullptr;
 
-		// TODO: WTF?
-		chan->unk10 = (Driver::Wave_*)waveInfo;
-		chan->unk14 = (u32)wave;
-		chan->unkC  = instParam.mSourceType;
-		chan->unk0  = param_5;
-		chan->unk1  = param_4;
+		chan->mWaveData        = (Driver::Wave_*)waveInfo;
+		chan->unk14            = (u32)wave;
+		chan->mLogicalChanType = instParam.mSourceType;
+		chan->unk0             = param_5;
+		chan->unk1             = param_4;
 		chan->unk48
 		    = instParam.mPitch * (waveInfo->unk4 / Kernel::getDacRate());
 		chan->unk50 = chan->unk48 * instParam.mEffectPitch;
@@ -200,12 +199,12 @@ namespace BankMgr {
 		if (!channel)
 			return nullptr;
 
-		channel->unk14 = param_2;
-		channel->unkC  = 2;
-		channel->unk0  = param_4;
-		channel->unk1  = param_3;
-		channel->unk48 = 16736.016f / Kernel::getDacRate();
-		channel->unk50 = channel->unk48;
+		channel->unk14            = param_2;
+		channel->mLogicalChanType = 2;
+		channel->unk0             = param_4;
+		channel->unk1             = param_3;
+		channel->unk48            = 16736.016f / Kernel::getDacRate();
+		channel->unk50            = channel->unk48;
 
 		s32 var1 = param_3;
 		if (var1 < 0)
@@ -245,10 +244,10 @@ namespace BankMgr {
 		channel->unk30 = param_4;
 		channel->unk34 = channel->unk30;
 		s32 var;
-		if (channel->unkC == 2)
+		if (channel->mLogicalChanType == 2)
 			var = param_2;
 		else
-			var = (param_2 + 0x3C) - channel->unk10->unk2;
+			var = (param_2 + 0x3C) - channel->mWaveData->mKey;
 
 		if (var < 0)
 			var = 0;
