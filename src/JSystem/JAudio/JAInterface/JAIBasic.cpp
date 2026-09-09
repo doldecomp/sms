@@ -753,7 +753,8 @@ void JAIBasic::startSoundBasic(u32 id, JAISound** sound, JAIActor* actor,
 	case JAISoundID_Type_Sequence:
 		if (unk1C.mSeqEntryCancel != true
 		    && (mSeSequence == nullptr
-		        || (mSeSequence->mSoundID & 0x3ff) != (id & 0x3ff))) {
+		        || (mSeSequence->mSoundID & JAISoundID_IndexMask)
+		               != (id & JAISoundID_IndexMask))) {
 			if (sound == nullptr) {
 				u8 num = getSeqTrackNumber(data);
 				sound  = &unk0->mDefaultSeqHandle[num];
@@ -1336,7 +1337,7 @@ void JAIBasic::deallocStreamBuffer() { }
 
 int JAIBasic::loadArcSeqData(u32 param_1, bool param_2)
 {
-	u32 uVar1   = param_1 & 0x3ff;
+	u32 uVar1   = param_1 & JAISoundID_IndexMask;
 	u32 uVar2   = JASystem::Vload::checkSize(uVar1);
 	void* iVar3 = unk0->checkOnMemory(uVar1, nullptr);
 

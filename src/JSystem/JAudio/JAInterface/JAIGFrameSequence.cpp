@@ -53,16 +53,17 @@ void JAIBasic::checkEntriedSeq()
 			return;
 
 		u32 size = JASystem::Vload::checkSize(
-		    mSeqArchiveHandle + (sud->mSound->mSoundID & 0x3FF));
+		    mSeqArchiveHandle + (sud->mSound->mSoundID & JAISoundID_IndexMask));
 
 		u8 pos;
-		u8* ptr = (u8*)unk0->checkOnMemory((*sound)->mSoundID & 0x3FF, &pos);
+		u8* ptr = (u8*)unk0->checkOnMemory(
+		    (*sound)->mSoundID & JAISoundID_IndexMask, &pos);
 
 		if (ptr == nullptr) {
 			if ((*sound)->checkSwBit(0x10)) {
-				ptr = unk0->getFreeStayHeapPointer(size,
-				                                   (*sound)->mSoundID & 0x3FF);
-				pos = 0xFF;
+				ptr = unk0->getFreeStayHeapPointer(
+				    size, (*sound)->mSoundID & JAISoundID_IndexMask);
+				pos                                            = 0xFF;
 				(*sound)->getSeqParameter()->mAutoHeapPosition = 0xFF;
 				if (ptr == nullptr) {
 					(*sound)->checkSwBit(0x20);
@@ -106,7 +107,7 @@ void JAIBasic::checkEntriedSeq()
 					JAISound* tmp                                  = *sound;
 					ptr = (u8*)unk0->getFreeAutoHeapPointer(
 					    tmp->getSeqParameter()->mAutoHeapPosition,
-					    tmp->mSoundID & 0x3FF);
+					    tmp->mSoundID & JAISoundID_IndexMask);
 				}
 			}
 
@@ -114,17 +115,19 @@ void JAIBasic::checkEntriedSeq()
 				(*sound)->mState = SOUNDSTATE_Stored;
 
 				u32 swBit8 = (*sound)->mSoundID;
-				u32 param  = i | ((swBit8 & 0x3FF) << 16) | (pos << 8);
+				u32 param
+				    = i | ((swBit8 & JAISoundID_IndexMask) << 16) | (pos << 8);
 
 				unk0->setAutoHeapLoadedFlag(pos, 1);
 				JASystem::Vload::loadFileAsync(
-				    mSeqArchiveHandle + (swBit8 & 0x3FF), ptr, 0, size,
-				    checkDvdLoadArc, param);
+				    mSeqArchiveHandle + (swBit8 & JAISoundID_IndexMask), ptr, 0,
+				    size, checkDvdLoadArc, param);
 				sud->unk3 = 1;
 			} else {
-				JASystem::Vload::loadFile(mSeqArchiveHandle
-				                              + ((*sound)->mSoundID & 0x3FF),
-				                          ptr, 0, size);
+				JASystem::Vload::loadFile(
+				    mSeqArchiveHandle
+				        + ((*sound)->mSoundID & JAISoundID_IndexMask),
+				    ptr, 0, size);
 				(*sound)->mState = SOUNDSTATE_Prepared;
 			}
 		} else {
@@ -133,7 +136,8 @@ void JAIBasic::checkEntriedSeq()
 
 			JAISound* snd = *sound;
 			if (pos != 0xFF) {
-				unk0->getFreeAutoHeapPointer(pos, snd->mSoundID & 0x3FF);
+				unk0->getFreeAutoHeapPointer(pos, snd->mSoundID
+				                                      & JAISoundID_IndexMask);
 			}
 
 			(*sound)->getSeqParameter()->mAutoHeapPosition = pos;
@@ -624,8 +628,8 @@ void JAIBasic::checkReadSeq()
 		if ((*sound)->getSeqParameter()->mUpdateData->unk2 != 0)
 			continue;
 
-		u32 lVar2 = JASystem::Vload::checkSize(mSeqArchiveHandle
-		                                       + ((*sound)->mSoundID & 0x3FF));
+		u32 lVar2 = JASystem::Vload::checkSize(
+		    mSeqArchiveHandle + ((*sound)->mSoundID & JAISoundID_IndexMask));
 		int uVar3 = JAISystemInterface::setSeqData(
 		    nullptr, sud->mSeqData, lVar2,
 		    JASystem::Player::SEQ_PLAYMODE_UNK_0);
@@ -688,7 +692,7 @@ void JAIBasic::checkDvdLoadArc(u32 param_1)
 {
 	u8 hi   = param_1 >> 8;
 	u8 lo   = param_1 & 0xff;
-	u16 hi2 = ((param_1 >> 16) & 0x3FF);
+	u16 hi2 = ((param_1 >> 16) & JAISoundID_IndexMask);
 	if (hi != 0xff)
 		basic->unk0->setAutoHeapLoadedFlag(hi, 0);
 
@@ -696,7 +700,7 @@ void JAIBasic::checkDvdLoadArc(u32 param_1)
 		JAISound* sound = basic->unk0->mSeqTrackInfo[lo].mSound;
 		basic->unk0->mSeqTrackInfo[lo].unk3 = 0;
 		if (sound && sound->mState == SOUNDSTATE_Stored
-		    && hi2 == (sound->mSoundID & 0x3FF))
+		    && hi2 == (sound->mSoundID & JAISoundID_IndexMask))
 			sound->mState = SOUNDSTATE_Prepared;
 		else
 			basic->unk0->releaseAutoHeapPointer(hi);

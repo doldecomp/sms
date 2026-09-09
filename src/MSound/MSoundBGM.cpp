@@ -20,7 +20,7 @@ void MSBgm::init()
 
 JAISound* MSBgm::startBGM(u32 param)
 {
-	MSBgm* iVar1 = JALListS<MSBgm, u32>::search(param & 0x3FF);
+	MSBgm* iVar1 = JALListS<MSBgm, u32>::search(param & JAISoundID_IndexMask);
 	if (iVar1) {
 		if ((param == MSD_BGM_CHUBOSS) || (param == MSD_BGM_BOSS)
 		    || (param == MSD_BGM_BOSSHANA_2ND3RD)) {
@@ -63,7 +63,7 @@ void MSBgm::stopBGM(u32 param1, u32 param2)
 			smBgmInTrack[0] = nullptr;
 		}
 	} else {
-		iVar2 = JALListS<MSBgm, u32>::search(param1 & 0x3FF);
+		iVar2 = JALListS<MSBgm, u32>::search(param1 & JAISoundID_IndexMask);
 		if (iVar2 && iVar2->unk14) {
 			u8 a = iVar2->unk14->mTrack;
 			if (a == 0xff) {
@@ -120,7 +120,7 @@ void MSBgm::stopTrackBGMs(u8 param1, u32 param2)
 
 void MSBgm::setVolume(u32 param1, f32 param2, u32 param3, u8 param4)
 {
-	MSBgm* bgm = JALListS<MSBgm, u32>::search(param1 & 0x3FF);
+	MSBgm* bgm = JALListS<MSBgm, u32>::search(param1 & JAISoundID_IndexMask);
 	if (bgm && bgm->unk14) {
 		bgm->unk14->setVolume(param2, param3, param4);
 	}
