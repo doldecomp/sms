@@ -491,7 +491,7 @@ void JAIData::getInfoPointer(u32 param_1, void** param_2)
 		}
 	}
 
-	u32 tmp = param_1 & 0x3FF;
+	u32 tmp = param_1 & JAISoundID_IndexMask;
 	if (table->unk78 && tmp < table->unk2[thing])
 		*param_2 = &table->unk30[thing][tmp];
 	else

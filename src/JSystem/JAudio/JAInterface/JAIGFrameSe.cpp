@@ -297,7 +297,7 @@ void JAIBasic::sendPlayingSeCommand()
 
 				sendSeAllParameter(sound);
 
-				u16 portValue = sound->mSoundID & 0x3FF;
+				u16 portValue = sound->mSoundID & JAISoundID_IndexMask;
 				if (sound->checkSwBit(0x800)) {
 					u32 tmp = sound->mActorGroundNumber;
 					portValue += getMapInfoGround(tmp);

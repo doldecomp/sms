@@ -273,17 +273,17 @@ JALSystem::TFlagManager::TFlagManager()
 
 void JALSystem::TFlagManager::addUseFlag(u32 param_1, u16 param_2)
 {
-	unk0[(u16)param_1 >> 12][param_1 & 0x3FF] += param_2;
+	unk0[(u16)param_1 >> 12][param_1 & JAISoundID_IndexMask] += param_2;
 }
 
 u16 JALSystem::TFlagManager::getUseFlag(u32 param_1)
 {
-	return unk0[(u16)param_1 >> 12][param_1 & 0x3FF];
+	return unk0[(u16)param_1 >> 12][param_1 & JAISoundID_IndexMask];
 }
 
 bool JALSystem::TFlagManager::isRegistered(u32 param_1, u16 param_2)
 {
-	if (param_2 & unk0[(u16)param_1 >> 12][param_1 & 0x3FF])
+	if (param_2 & unk0[(u16)param_1 >> 12][param_1 & JAISoundID_IndexMask])
 		return true;
 	return false;
 }

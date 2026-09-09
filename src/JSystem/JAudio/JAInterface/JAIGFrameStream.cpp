@@ -129,13 +129,14 @@ void JAIBasic::checkWaitStream()
 
 	char buffer[64];
 	strcpy(buffer, JAIGlobalParameter::streamPath);
-	strcat(buffer, unk0->mStreamList[sound->mSoundID & 0x3FF].mFileName);
+	strcat(buffer,
+	       unk0->mStreamList[sound->mSoundID & JAISoundID_IndexMask].mFileName);
 	setSeExtParameter(sound);
 	sound->mState = SOUNDSTATE_Started;
 	checkPlayingStream();
 	JAInter::StreamLib::start(
 	    buffer, sound->getStreamParameter()->mStreamMode,
-	    &unk0->mStreamList[sound->mSoundID & 0x3FF].unk20);
+	    &unk0->mStreamList[sound->mSoundID & JAISoundID_IndexMask].unk20);
 	JAInter::StreamLib::setPrepareFlag(1);
 }
 

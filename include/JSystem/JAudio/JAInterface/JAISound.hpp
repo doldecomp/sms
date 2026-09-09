@@ -10,6 +10,7 @@ struct JAISeParameter;
 struct JAIStreamParameter;
 class JAIBasic;
 
+#define JAISoundID_IndexMask     0x000003FF
 #define JAISoundID_TypeMask      0xC0000000
 #define JAISoundID_Type_Se       0x00000000
 #define JAISoundID_Type_Sequence 0x80000000
@@ -219,8 +220,6 @@ public:
 
 	void setRandom(u8 random) { mRandom = random; }
 	s16 getAdjustPriority() { return mAdjustPrio; }
-
-	u32 getUnk8Lo() { return mSoundID & 0x3FF; }
 
 	void setSeqInterVolumeU7(u8 param, u8 value, u32 moveTime)
 	{
