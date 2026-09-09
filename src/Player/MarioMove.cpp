@@ -124,7 +124,7 @@ BOOL TMario::moveRequest(const JGeometry::TVec3<f32>& pos)
 	mPosition                    = pos;
 
 	unk160 += offset;
-	unk29C += offset;
+	mPrevPosition += offset;
 	mWireStartPos += offset;
 	mWireEndPos += offset;
 	unk2A8 += offset;
@@ -1094,8 +1094,8 @@ void TMario::checkGraffito()
 		break;
 	case POLLUTION_TYPE_GLASS_WALL:
 		if (isDirty == 1) {
-			mPosition.x = unk29C.x;
-			mPosition.z = unk29C.z;
+			mPosition.x = mPrevPosition.x;
+			mPosition.z = mPrevPosition.z;
 		}
 		break;
 
@@ -2055,7 +2055,7 @@ void TMario::thinkWaterSurface()
 		}
 	}
 
-	f32 dy = mPosition.y - unk29C.y;
+	f32 dy = mPosition.y - mPrevPosition.y;
 	if (dy > 0.0f)
 		dy = 0.0f;
 
@@ -2437,8 +2437,8 @@ void TMario::gunExec()
 
 void TMario::playerControl(JDrama::TGraphics* param_1)
 {
-	unk9C  = mFaceAngle.y;
-	unk29C = mPosition;
+	unk9C         = mFaceAngle.y;
+	mPrevPosition = mPosition;
 	offUnk114(UNK114_FLAG_PROFILE);
 
 	if (gpMarDirector->unk124 == 1 && mStatus != MARIO_STATUS_READ_BILLBOARD)

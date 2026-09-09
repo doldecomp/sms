@@ -72,17 +72,17 @@ void JAIBasic::checkNextFrameSe()
 				for (u8 cam = camStart; cam < camEnd; ++cam) {
 					pi = &it->unk1C[cam];
 
-					pi->unkC = pi->unk0;
+					pi->mPrevCamSpacePos = pi->mCamSpacePos;
 					if (it->mActorTrans == nullptr) {
-						pi->unk0 = JAIConst::dummyZeroVec;
+						pi->mCamSpacePos = JAIConst::dummyZeroVec;
 					} else {
-						MTXMultVec(mAudioCameras[cam].unk8,
-						           (Vec*)it->mActorTrans, &pi->unk0);
+						MTXMultVec(mAudioCameras[cam].nViewMtx,
+						           (Vec*)it->mActorTrans, &pi->mCamSpacePos);
 					}
 
-					pi->unk18 = pi->unk0.x * pi->unk0.x
-					            + pi->unk0.y * pi->unk0.y
-					            + pi->unk0.z * pi->unk0.z;
+					pi->unk18 = pi->mCamSpacePos.x * pi->mCamSpacePos.x
+					            + pi->mCamSpacePos.y * pi->mCamSpacePos.y
+					            + pi->mCamSpacePos.z * pi->mCamSpacePos.z;
 					prio = it->getInfoPriority();
 					if (it->getAdjustPriority()) {
 						prio += it->getAdjustPriority();
@@ -95,8 +95,8 @@ void JAIBasic::checkNextFrameSe()
 					it->unkC
 					    = (u32)((0xff - prio) * (0xff - prio) * 0x1690 / fVar1)
 					      + (u32)(pi->unk18 / fVar1);
-					if (pi->unk0.z > 0.0f)
-						it->unkC += (u32)(pi->unk0.z * 6.0f / fVar1);
+					if (pi->mCamSpacePos.z > 0.0f)
+						it->unkC += (u32)(pi->mCamSpacePos.z * 6.0f / fVar1);
 
 					if (cam == 0 || pi->unk18 < fVar2)
 						fVar2 = pi->unk18;

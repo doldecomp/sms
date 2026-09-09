@@ -132,14 +132,15 @@ void JAIBasic::initInterfaceMain()
 		checkEntriedSeq();
 }
 
-void JAIBasic::setCameraInfo(VecPtr pos, VecPtr dir, MtxPtr mtx, u32 id)
+void JAIBasic::setCameraInfo(VecPtr pos, VecPtr prev_pos, MtxPtr view_mtx,
+                             u32 id)
 {
 	if (JAIGlobalParameter::audioCameraMax <= id)
 		return;
 
-	mAudioCameras[id].unk0 = pos;
-	mAudioCameras[id].unk4 = dir;
-	mAudioCameras[id].unk8 = mtx;
+	mAudioCameras[id].mPosition     = pos;
+	mAudioCameras[id].mPrevPosition = prev_pos;
+	mAudioCameras[id].nViewMtx      = view_mtx;
 }
 
 void JAIBasic::initStream()
@@ -589,23 +590,23 @@ void JAIBasic::checkAllWaveLoadStatus() { }
 
 void JAIBasic::initNullData()
 {
-	JAInullCamera.unk0->x = 0.0f;
-	JAInullCamera.unk0->y = 0.0f;
-	JAInullCamera.unk0->z = -50.0f;
+	JAInullCamera.mPosition->x = 0.0f;
+	JAInullCamera.mPosition->y = 0.0f;
+	JAInullCamera.mPosition->z = -50.0f;
 
-	JAInullCamera.unk4->x = 0.0f;
-	JAInullCamera.unk4->y = 0.0f;
-	JAInullCamera.unk4->z = -50.0f;
+	JAInullCamera.mPrevPosition->x = 0.0f;
+	JAInullCamera.mPrevPosition->y = 0.0f;
+	JAInullCamera.mPrevPosition->z = -50.0f;
 
 	Vec up;
 	up.x       = 0.0f;
 	up.y       = 1.0f;
 	up.z       = 0.0f;
 	Vec target = JAIConst::dummyZeroVec;
-	C_MTXLookAt(JAIConst::camMtx, JAInullCamera.unk0, &up, &target);
+	C_MTXLookAt(JAIConst::camMtx, JAInullCamera.mPosition, &up, &target);
 	for (int i = 0; i < JAIGlobalParameter::audioCameraMax; ++i)
-		setCameraInfo(JAInullCamera.unk0, JAInullCamera.unk4, JAIConst::camMtx,
-		              i);
+		setCameraInfo(JAInullCamera.mPosition, JAInullCamera.mPrevPosition,
+		              JAIConst::camMtx, i);
 }
 
 void JAIBasic::initDriver(JKRSolidHeap* heap, u32 param_2, u8 param_3)

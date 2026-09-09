@@ -24,7 +24,7 @@ void MSSceneSE::frameLoop(u32 param_1, Vec* param_2, u8 param_3)
 			++ptr;
 		}
 
-		MtxPtr m = MSGMSound->mAudioCameras->unk8;
+		MtxPtr m = MSGMSound->mAudioCameras->nViewMtx;
 		for (u8 i = 0; i < 3; ++i) {
 			unk404[i].x = 0.0;
 			unk404[i].y = 0.0;

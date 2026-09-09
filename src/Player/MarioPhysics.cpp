@@ -166,7 +166,7 @@ int TMario::checkGroundAtWalking(Vec* v)
 	}
 
 	if (fabsf(mPosition.y - floorY) > 100000.0f) {
-		mPosition = unk29C;
+		mPosition = mPrevPosition;
 	} else {
 		mPosition.x      = v->x;
 		mPosition.y      = floorY;
@@ -201,7 +201,7 @@ int TMario::waitProcess()
 {
 	setPlayerVelocity(0.0f);
 	if (fabsf(mPosition.y - mFloorPosition.y) > 100000.0f) {
-		mPosition = unk29C;
+		mPosition = mPrevPosition;
 		changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, false);
 	} else {
 		mPosition.y = mFloorPosition.y;
@@ -349,7 +349,7 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 	mPosition.set(pos);
 
 	if (mGroundPlane->isIllegalData()) {
-		mPosition  = unk29C;
+		mPosition  = mPrevPosition;
 		groundCode = 2;
 	} else {
 		BOOL passable = false;

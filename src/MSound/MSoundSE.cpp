@@ -533,7 +533,7 @@ bool MSoundSE::checkSoundArea(u32 param_1, const Vec& param_2)
 
 	switch (param_1) {
 	case 7: {
-		Vec vec = *MSGMSound->unkAC[0].unk0;
+		Vec vec = *MSGMSound->unkAC[0].mPosition;
 		vec.y += 75.0f;
 		Vec vec1  = vec;
 		int iVar2 = gpCubeCamera->getInCubeNo(vec1);

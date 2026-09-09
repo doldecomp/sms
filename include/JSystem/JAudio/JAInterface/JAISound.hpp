@@ -46,8 +46,8 @@ enum JAISoundState {
 class JAISound {
 public:
 	struct FabricatedPositionInfo {
-		/* 0x00 */ Vec unk0;
-		/* 0x0C */ Vec unkC;
+		/* 0x00 */ Vec mCamSpacePos;
+		/* 0x0C */ Vec mPrevCamSpacePos;
 		/* 0x18 */ f32 unk18;
 	};
 

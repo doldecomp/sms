@@ -200,13 +200,13 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 		for (i = s; i < e; ++i) {
 			JAISound::FabricatedPositionInfo* pi = &(*sound)->unk1C[i];
 
-			pi->unkC = pi->unk0;
-			MTXMultVec(mAudioCameras[i].unk8, (Vec*)(*sound)->mActorTrans,
-			           &pi->unk0);
+			pi->mPrevCamSpacePos = pi->mCamSpacePos;
+			MTXMultVec(mAudioCameras[i].nViewMtx, (Vec*)(*sound)->mActorTrans,
+			           &pi->mCamSpacePos);
 
-			pi->unk18
-			    = std::sqrtf(pi->unk0.x * pi->unk0.x + pi->unk0.y * pi->unk0.y
-			                 + pi->unk0.z * pi->unk0.z);
+			pi->unk18 = std::sqrtf(pi->mCamSpacePos.x * pi->mCamSpacePos.x
+			                       + pi->mCamSpacePos.y * pi->mCamSpacePos.y
+			                       + pi->mCamSpacePos.z * pi->mCamSpacePos.z);
 
 			(*sound)->setSeqInterVolume(
 			    4,

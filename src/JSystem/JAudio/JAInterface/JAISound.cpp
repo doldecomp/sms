@@ -244,8 +244,8 @@ f32 JAISound::setDistancePanCommon()
 	if (JAIGlobalParameter::audioCameraMax == 1) {
 		FabricatedPositionInfo& info = unk1C[0];
 
-		f32 distanceX = std::fabsf(info.unk0.x);
-		f32 distanceZ = std::fabsf(info.unk0.z);
+		f32 distanceX = std::fabsf(info.mCamSpacePos.x);
+		f32 distanceZ = std::fabsf(info.mCamSpacePos.z);
 
 		if (distanceX < 1.0f && distanceZ < 1.0f)
 			return 0.5f;
@@ -257,19 +257,19 @@ f32 JAISound::setDistancePanCommon()
 			distanceZ = JAIGlobalParameter::panDistanceMax;
 
 		f32 pan;
-		if (info.unk0.x == 0.0f && info.unk0.z == 0.0f) {
+		if (info.mCamSpacePos.x == 0.0f && info.mCamSpacePos.z == 0.0f) {
 			pan = 0.5f;
-		} else if (info.unk0.x > 0.0f && distanceX >= distanceZ) {
+		} else if (info.mCamSpacePos.x > 0.0f && distanceX >= distanceZ) {
 			pan = 1.0f
 			      - (JAIGlobalParameter::panDistance2Max - distanceX)
 			            / (JAIGlobalParameter::panAngleParameter
 			               * (JAIGlobalParameter::panDistance2Max - distanceZ));
-		} else if (info.unk0.x <= 0.0f && distanceX >= distanceZ) {
+		} else if (info.mCamSpacePos.x <= 0.0f && distanceX >= distanceZ) {
 			pan = (JAIGlobalParameter::panDistance2Max - distanceX)
 			      / (JAIGlobalParameter::panAngleParameter
 			         * (JAIGlobalParameter::panDistance2Max - distanceZ));
 		} else {
-			pan = info.unk0.x
+			pan = info.mCamSpacePos.x
 			          / (JAIGlobalParameter::panAngleParameter2 * distanceZ)
 			      + 0.5f;
 		}
@@ -286,23 +286,28 @@ f32 JAISound::setDistancePanCommon()
 
 f32 JAISound::setPositionDopplarCommon(u32 param_1)
 {
-	VecPtr pVVar7 = interPointer->mAudioCameras->unk0;
-	VecPtr pVVar6 = interPointer->mAudioCameras->unk4;
+	VecPtr camPos     = interPointer->mAudioCameras->mPosition;
+	VecPtr prevCamPos = interPointer->mAudioCameras->mPrevPosition;
 
-	f32 diff_x = pVVar7->x - unk1C->unk0.x;
-	f32 diff_y = pVVar7->y - unk1C->unk0.y;
-	f32 diff_z = pVVar7->z - unk1C->unk0.z;
+	// BUG: mixing world space positions (camera) with camera space positions
+	// (the sound) so the doppler effect is not physically correct
+	f32 toCam_x = camPos->x - unk1C->mCamSpacePos.x;
+	f32 toCam_y = camPos->y - unk1C->mCamSpacePos.y;
+	f32 toCam_z = camPos->z - unk1C->mCamSpacePos.z;
 
-	f32 diff2_x = (pVVar7->x - pVVar6->x) - (unk1C->unk0.x - unk1C->unkC.x);
-	f32 diff2_y = (pVVar7->y - pVVar6->y) - (unk1C->unk0.y - unk1C->unkC.y);
-	f32 diff2_z = (pVVar7->z - pVVar6->z) - (unk1C->unk0.z - unk1C->unkC.z);
+	f32 velDiff_x = (camPos->x - prevCamPos->x)
+	                - (unk1C->mCamSpacePos.x - unk1C->mPrevCamSpacePos.x);
+	f32 velDiff_y = (camPos->y - prevCamPos->y)
+	                - (unk1C->mCamSpacePos.y - unk1C->mPrevCamSpacePos.y);
+	f32 velDiff_z = (camPos->z - prevCamPos->z)
+	                - (unk1C->mCamSpacePos.z - unk1C->mPrevCamSpacePos.z);
 
-	f32 lenSq = diff_x * diff_x + diff_y * diff_y + diff_z * diff_z;
+	f32 lenSq = toCam_x * toCam_x + toCam_y * toCam_y + toCam_z * toCam_z;
 	f32 len   = std::sqrtf(lenSq);
 
-	f32 diff3_x = diff_x + diff2_x;
-	f32 diff3_y = diff_y + diff2_y;
-	f32 diff3_z = diff_z + diff2_z;
+	f32 diff3_x = toCam_x + velDiff_x;
+	f32 diff3_y = toCam_y + velDiff_y;
+	f32 diff3_z = toCam_z + velDiff_z;
 
 	f32 lenSq2 = diff3_x * diff3_x + diff3_y * diff3_y + diff3_z * diff3_z;
 	f32 len2   = std::sqrtf(lenSq2);
@@ -785,17 +790,19 @@ void JAISound::setSeDistanceDolby(u8 param_1)
 	FabricatedPositionInfo* pi = unk1C;
 	f32 fVar1;
 	if (mActorTrans == nullptr
-	    || pi->unk0.z < JAIGlobalParameter::seDolbyFrontDistanceMax) {
+	    || pi->mCamSpacePos.z < JAIGlobalParameter::seDolbyFrontDistanceMax) {
 		fVar1 = 0.0f;
 	} else {
-		if (pi->unk0.z < 0.0f) {
+		if (pi->mCamSpacePos.z < 0.0f) {
 			fVar1 = JAIGlobalParameter::seDolbyCenterValue
-			        * (JAIGlobalParameter::seDolbyFrontDistanceMax - pi->unk0.z)
+			        * (JAIGlobalParameter::seDolbyFrontDistanceMax
+			           - pi->mCamSpacePos.z)
 			        / JAIGlobalParameter::seDolbyFrontDistanceMax;
 		} else {
-			if (pi->unk0.z < JAIGlobalParameter::seDolbyBehindDistanceMax) {
+			if (pi->mCamSpacePos.z
+			    < JAIGlobalParameter::seDolbyBehindDistanceMax) {
 				fVar1 = (127.0f - JAIGlobalParameter::seDolbyCenterValue)
-				            * (pi->unk0.z
+				            * (pi->mCamSpacePos.z
 				               / JAIGlobalParameter::seDolbyBehindDistanceMax)
 				        + JAIGlobalParameter::seDolbyCenterValue;
 			} else {

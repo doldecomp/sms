@@ -10,28 +10,28 @@
 class JAICamera {
 public:
 	JAICamera()
-	    : unk0(nullptr)
-	    , unk4(nullptr)
-	    , unk8(nullptr)
+	    : mPosition(nullptr)
+	    , mPrevPosition(nullptr)
+	    , nViewMtx(nullptr)
 	{
 	}
 	JAICamera(VecPtr param_1, VecPtr param_2, MtxPtr param_3)
-	    : unk0(param_1)
-	    , unk4(param_2)
-	    , unk8(param_3)
+	    : mPosition(param_1)
+	    , mPrevPosition(param_2)
+	    , nViewMtx(param_3)
 	{
 	}
 
 	Vec toCamSpace(Vec in) const
 	{
 		Vec out;
-		MTXMultVec(unk8, &in, &out);
+		MTXMultVec(nViewMtx, &in, &out);
 		return out;
 	}
 
-	/* 0x0 */ VecPtr unk0;
-	/* 0x4 */ VecPtr unk4;
-	/* 0x8 */ MtxPtr unk8;
+	/* 0x0 */ VecPtr mPosition;
+	/* 0x4 */ VecPtr mPrevPosition;
+	/* 0x8 */ MtxPtr nViewMtx;
 };
 
 extern JAICamera JAInullCamera;
