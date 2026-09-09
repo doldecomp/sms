@@ -12,11 +12,11 @@ JAIData::JAIData() { }
 
 void JAIData::init()
 {
-	mSeTable.unk78       = 0;
-	mSeqTable.unk78      = 0;
-	mStreamTable.unk78   = 0;
+	mSeTable.mData       = nullptr;
+	mSeqTable.mData      = nullptr;
+	mStreamTable.mData   = nullptr;
 	mSeparateSoundTables = 0;
-	mStreamList          = 0;
+	mStreamList          = nullptr;
 	mNextLoadOrder       = 0;
 	mStayHeapCount       = 0;
 }
@@ -99,7 +99,6 @@ void JAIData::initSeqParameter(JAISeqParameter* param)
 	param->mPauseMode           = 0;
 	param->unk1756              = 0;
 
-	// TODO: array? but why ops reordered tho?
 	param->mPortUpdate   = 0;
 	param->mVolumeUpdate = 0;
 	param->mPanUpdate    = 0;
@@ -144,22 +143,8 @@ void JAIData::initSeqParameter(JAISeqParameter* param)
 
 		param->mTrackPortDataUpdate[i] = 0;
 
-		param->mTrackPortData[i][0]  = 0;
-		param->mTrackPortData[i][1]  = 0;
-		param->mTrackPortData[i][2]  = 0;
-		param->mTrackPortData[i][3]  = 0;
-		param->mTrackPortData[i][4]  = 0;
-		param->mTrackPortData[i][5]  = 0;
-		param->mTrackPortData[i][6]  = 0;
-		param->mTrackPortData[i][7]  = 0;
-		param->mTrackPortData[i][8]  = 0;
-		param->mTrackPortData[i][9]  = 0;
-		param->mTrackPortData[i][10] = 0;
-		param->mTrackPortData[i][11] = 0;
-		param->mTrackPortData[i][12] = 0;
-		param->mTrackPortData[i][13] = 0;
-		param->mTrackPortData[i][14] = 0;
-		param->mTrackPortData[i][15] = 0;
+		for (u32 j = 0; j < 16; ++j)
+			param->mTrackPortData[i][j] = 0;
 	}
 
 	for (u32 i = 0; i < 16; ++i) {
@@ -453,49 +438,49 @@ void JAIData::stopPlayingSeq(u32 param) { }
 
 u8* JAIData::getAutoHeapPointer(u32 param) { return nullptr; }
 
-void JAIData::getInfoPointer(u32 param_1, void** param_2)
+void JAIData::getInfoPointer(u32 sound_id, void** result)
 {
 	JAISoundTable* table;
-	u32 thing;
+	u32 category;
 
-	*param_2 = &JAIConst::nullInfoData2;
+	*result = &JAIConst::nullInfoData2;
 	if (mSeparateSoundTables == 0) {
 		table = &mSeTable;
-		switch (param_1 & JAISoundID_TypeMask) {
+		switch (sound_id & JAISoundID_TypeMask) {
 		case JAISoundID_Type_Se:
-			thing = (u8)(param_1 >> 12);
+			category = (u8)(sound_id >> 12);
 			JAIGlobalParameter::getParamSeCategoryMax();
 			break;
 		case JAISoundID_Type_Sequence:
-			thing = 16;
+			category = 16;
 			break;
 		case JAISoundID_Type_Stream:
-			thing = 17;
+			category = 17;
 			break;
 		}
 	} else {
-		switch (param_1 & JAISoundID_TypeMask) {
+		switch (sound_id & JAISoundID_TypeMask) {
 		case JAISoundID_Type_Se:
-			thing = (u8)(param_1 >> 12);
-			table = &mSeTable;
+			category = (u8)(sound_id >> 12);
+			table    = &mSeTable;
 			JAIGlobalParameter::getParamSeCategoryMax();
 			break;
 		case JAISoundID_Type_Sequence:
-			table = &mSeqTable;
-			thing = 0x10;
+			table    = &mSeqTable;
+			category = 16;
 			break;
 		case JAISoundID_Type_Stream:
-			table = &mStreamTable;
-			thing = 0x11;
+			table    = &mStreamTable;
+			category = 17;
 			break;
 		}
 	}
 
-	u32 tmp = param_1 & JAISoundID_IndexMask;
-	if (table->unk78 && tmp < table->unk2[thing])
-		*param_2 = &table->unk30[thing][tmp];
+	u32 index = sound_id & JAISoundID_IndexMask;
+	if (table->mData && index < table->mSoundMax[category])
+		*result = &table->mCategorySoundInfos[category][index];
 	else
-		*param_2 = nullptr;
+		*result = nullptr;
 }
 
 void JAIData::initData()
@@ -660,9 +645,8 @@ void JAIData::initData()
 		JUT_ASSERT(table);
 		mFxlineConfig = (JASystem::DSPInterface::FxlineConfig_**)table;
 		for (u8 i = 0; i < mFxSceneMax; ++i) {
-			mFxlineConfig[i] = (JASystem::DSPInterface::
-			                        FxlineConfig_*)((u8*)unk1F4->mFxSceneTable
-			                                        + tmp->mSceneOffset[i]);
+			u8* tmp2 = (u8*)unk1F4->mFxSceneTable + tmp->mSceneOffset[(int)i];
+			mFxlineConfig[i] = (JASystem::DSPInterface::FxlineConfig_*)tmp2;
 		}
 		for (u8 i = 0; i < 4; ++i) {
 			if (!mFxBufferMax[i])
@@ -679,39 +663,67 @@ void JAIData::initData()
 void JAIData::initInfoDataWork(JAISoundTable* soundTable, char* path)
 {
 	u32 size;
-	if (!soundTable->unk78)
+	if (!soundTable->mData)
 		size = JASystem::Dvd::checkFile(path);
 	else
-		size = soundTable->unk28;
+		size = soundTable->mDataSize;
 
 	if (size == 0)
 		return;
 
-	if (!soundTable->unk78) {
-		soundTable->unk78 = (u8*)unk1F4->allocHeap(size);
-		JASystem::Dvd::loadFile(path, soundTable->unk78);
-		soundTable->unk28 = size;
+	if (!soundTable->mData) {
+		soundTable->mData = (u8*)unk1F4->allocHeap(size);
+		// TODO: fakematch?
+		void* tmp = soundTable->mData;
+		JASystem::Dvd::loadFile(path, tmp);
+		soundTable->mDataSize = size;
 	}
-	soundTable->unk0 = soundTable->unk78[3];
-	// TODO: WTF???
+	soundTable->unk0 = soundTable->mData[3];
+	// BUG: pointer to a local recorded in persistent storage
 	soundTable->unk2C = &path;
 
-	// TODO: the record layout is a guess. The file keeps a table of 18
-	// records of 4 bytes at offset 6. Each record has a count and the index of
-	// its first JAISoundInfo. A record structure does not give the same code:
-	// the target reads unk78 again for each field.
+	// TODO: you'd think structs were used here but apparently not?
+	// maybe I didn't try hard enough
 	for (u8 i = 0; i < 18; ++i) {
-		soundTable->unk2[i]
-		    = *reinterpret_cast<u16*>(&soundTable->unk78[i * 4 + 6]);
-		u32 idx = *reinterpret_cast<u16*>(&soundTable->unk78[i * 4 + 8]);
-		soundTable->unk30[i]
-		    = &(reinterpret_cast<JAISoundInfo*>(soundTable->unk78 + 0x50)[idx]);
-		if (i < 0x10 && soundTable->unk2[i] != 0) {
-			soundTable->unk1 = i + 1;
+		soundTable->mSoundMax[i] = *(u16*)(&soundTable->mData[i * 4 + 6]);
+
+		u32 idx = *(u16*)(&soundTable->mData[i * 4 + 8]);
+		soundTable->mCategorySoundInfos[i]
+		    = &((JAISoundInfo*)(soundTable->mData + 0x50))[idx];
+		if (i < 0x10 && soundTable->mSoundMax[i] != 0) {
+			soundTable->mCategoryMax = i + 1;
 		}
 	}
 }
 
-void JAIData::reloadInfoDataWork(JAISoundTable* soundTable) { }
+void JAIData::reloadInfoDataWork(JAISoundTable* soundTable)
+{
+	char* path = *(char**)soundTable->unk2C;
+	u32 size   = JASystem::Dvd::checkFile(path);
+	if (size == 0)
+		return;
+	if (!soundTable->mData) {
+		soundTable->mData = (u8*)unk1F4->allocHeap(size);
+		void* tmp         = soundTable->mData;
+		JASystem::Dvd::loadFile(path, tmp);
+		soundTable->mDataSize = size;
+	}
+}
 
-void JAIData::setInfoDataPointer(JAISoundTable* soundTable, u8* ptr) { }
+void JAIData::setInfoDataPointer(JAISoundTable* soundTable, u8* ptr)
+{
+	soundTable->mData = ptr;
+	soundTable->unk0  = soundTable->mData[3];
+	// TODO: you'd think structs were used here but apparently not?
+	// maybe I didn't try hard enough
+	for (u8 i = 0; i < 18; ++i) {
+		soundTable->mSoundMax[i] = *(u16*)(&soundTable->mData[i * 4 + 6]);
+
+		u32 idx = *(u16*)(&soundTable->mData[i * 4 + 8]);
+		soundTable->mCategorySoundInfos[i]
+		    = &((JAISoundInfo*)(soundTable->mData + 0x50))[idx];
+		if (i < 0x10 && soundTable->mSoundMax[i] != 0) {
+			soundTable->mCategoryMax = i + 1;
+		}
+	}
+}

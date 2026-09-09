@@ -49,17 +49,14 @@ struct FabricatedSoundTableMemoryHeader {
 	/* 0x50 */ JAISoundInfo unk50[];
 };
 
-// TODO: I accidentally put a bunch of stuff in here
-// that doesn't actually belong, fix it!!!
-class JAISoundTable {
-public:
+struct JAISoundTable {
 	/* 0x0 */ u8 unk0;
-	/* 0x1 */ u8 unk1;
-	/* 0x2 */ u16 unk2[18];
-	/* 0x28 */ u32 unk28;
+	/* 0x1 */ u8 mCategoryMax;
+	/* 0x2 */ u16 mSoundMax[18];
+	/* 0x28 */ u32 mDataSize;
 	/* 0x2C */ void* unk2C;
-	/* 0x30 */ JAISoundInfo* unk30[18];
-	/* 0x78 */ u8* unk78;
+	/* 0x30 */ JAISoundInfo* mCategorySoundInfos[18];
+	/* 0x78 */ u8* mData;
 };
 
 struct JAIHeapBlock {

@@ -9,7 +9,7 @@ f32 MSBgm::smMainVolume = 0.75f;
 
 void MSBgm::init()
 {
-	u16 count = MSGMSound->unk0->mSeTable.unk2[16];
+	u16 count = MSGMSound->unk0->mSeTable.mSoundMax[16];
 	for (u32 i = 1; i < count; ++i)
 		new MSBgm(i);
 

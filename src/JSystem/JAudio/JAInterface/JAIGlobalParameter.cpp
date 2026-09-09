@@ -286,7 +286,7 @@ u32 JAIGlobalParameter::getParamInterfaceHeapSize()
 
 u32 JAIGlobalParameter::getParamSeCategoryMax()
 {
-	return JAIBasic::getInterface()->unk0->mSeTable.unk1;
+	return JAIBasic::getInterface()->unk0->mSeTable.mCategoryMax;
 }
 
 u32 JAIGlobalParameter::getParamSoundSceneMax() { return soundSceneMax; }
