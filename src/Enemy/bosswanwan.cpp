@@ -18,6 +18,8 @@
 #include <System/MarDirector.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <System/Application.hpp>
+#include <System/Particles.hpp>
+#include <JSystem/JGeometry/JGUtil.hpp>
 
 void TBossWanwan::kill() { return; }
 
@@ -29,28 +31,22 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 	} else if (actorType == 0x1000001) {
 		// fabricated
 		if (!this->msInvincible) {
-			gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, 0);
+			gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
+			                             &sender->mPosition, 0, 0);
 			if (this->mHitPoints == 0) {
-				if (true) {
-					if (gpMSound->gateCheck(0x28d1)) {
-						MSoundSESystem::MSoundSE::startSoundActor(
-						    0x28d1, &this->mPosition, 0, nullptr, 0, 4);
-					}
-				}
+
+				SMSGetMSound()->startSoundActor(0x28d1, &this->mPosition, 0,
+				                                nullptr, 0, 4);
 			} else if (this->mHitPoints == 1) {
 				MtxPtr iVar3 = this->getModel()->getAnmMtx(1);
 				gpMarioParticleManager->emitAndBindToMtxPtr(
 				    0xb0, (iVar3 + 0x58) + 0x30, 0, 0);
-				if (gpMSound->gateCheck(0x28c5)) {
-					MSoundSESystem::MSoundSE::startSoundActor(
-					    0x28c5, &this->mPosition, 0, nullptr, 0, 4);
-				}
+				SMSGetMSound()->startSoundActor(0x28c5, &this->mPosition, 0,
+				                                nullptr, 0, 4);
 
 			} else {
-				if (gpMSound->gateCheck(0x28be)) {
-					MSoundSESystem::MSoundSE::startSoundActor(
-					    0x28be, &this->mPosition, 0, nullptr, 0, 4);
-				}
+				SMSGetMSound()->startSoundActor(0x28be, &this->mPosition, 0,
+				                                nullptr, 0, 4);
 			}
 
 			if (this->mHitPoints != 0) {
@@ -72,13 +68,12 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 				this->unk0 = true;
 			}
 
-			MtxPtr mtx = this->getModel()->getAnmMtx(1); // fabricated index
-			gpMarioParticleManager->emitAndBindToMtxPtr(0xB0, mtx, 0, nullptr);
+			MtxPtr mtx = this->getModel()->getAnmMtx(1);
+			gpMarioParticleManager->emitAndBindToMtxPtr(BWAN_JPA_MS_DOWNYUGE,
+			                                            mtx, 0, nullptr);
 
-			if (gpMSound->gateCheck(0x28c5)) {
-				MSoundSESystem::MSoundSE::startSoundActor(
-				    0x28c5, &this->mPosition, 0, nullptr, 0, 4);
-			}
+			SMSGetMSound()->startSoundActor(0x28c5, &this->mPosition, 0,
+			                                nullptr, 0, 4);
 		}
 	}
 
@@ -93,11 +88,7 @@ void TBossWanwan::shakeCamera(int shakeType)
 
 	f32 dist = this->mDistToMarioSquared;
 
-	if (0.0f < dist) {
-		// TODO: This is a bit tricky. There's still some problems here
-		f64 r = __frsqrte(dist);
-		dist  = dist * (0.5 * r * -(dist * (r * r) - 3.0));
-	}
+	dist = MsSqrtf(dist);
 
 	TBWParams* params  = (TBWParams*)this->getSaveParam();
 	f32 shakeLengthMax = params->mSLShakeLengthMax.get();
