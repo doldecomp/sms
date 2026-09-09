@@ -806,16 +806,17 @@ void JAIBasic::stopSoundHandle(JAISound* sound, u32 param)
 		case JAISoundID_Type_Stream:
 			if (param == 0) {
 				JAInter::StreamLib::stop();
-				sound->mState              = SOUNDSTATE_Inactive;
-				unk0->mStreamUpdate->unk14 = nullptr;
+				sound->mState               = SOUNDSTATE_Inactive;
+				unk0->mStreamUpdate->mSound = nullptr;
 				sound->clearMainSoundPPointer();
 				releaseStreamParameterPointer(
 				    (JAIStreamParameter*)sound->mCustomParameter);
 				releaseControllerHandle(&unk0->mStreamControlBuffer, sound);
 				JASystem::Dvd::unpauseDvdT();
 			} else {
-				if (sound->getStreamParameter()->unk3D4 != nullptr) {
-					sound->getStreamParameter()->unk3D4->unk10 |= 0x2;
+				if (sound->getStreamParameter()->mUpdateData != nullptr) {
+					sound->getStreamParameter()->mUpdateData->mActiveTrackFlag
+					    |= 0x2;
 					sound->mFadeCounter = param;
 				}
 			}

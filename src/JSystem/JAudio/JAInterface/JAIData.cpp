@@ -265,21 +265,21 @@ void JAIData::initStreamParaLinkBuffer()
 
 void JAIData::initStreamParameter(JAIStreamParameter* param)
 {
-	param->unk0 = 0;
-	param->unk4 = 0;
-	param->unk8 = 0;
-	param->unkC = 0;
+	param->mPauseMode    = 0;
+	param->mStreamMode   = 0;
+	param->mVolumeUpdate = 0;
+	param->mPitchUpdate  = 0;
 
 	for (int i = 0; i < 13; ++i) {
-		param->unk14[i].mCurrentValue  = 1.0f;
-		param->unk14[i].mTargetValue   = 1.0f;
-		param->unk14[i].mMoveCounter   = 0;
-		param->unk154[i].mCurrentValue = 1.0f;
-		param->unk154[i].mTargetValue  = 1.0f;
-		param->unk154[i].mMoveCounter  = 0;
-		param->unk294[i].mCurrentValue = 0.5f;
-		param->unk294[i].mTargetValue  = 0.5f;
-		param->unk294[i].mMoveCounter  = 0;
+		param->mVolume[i].mCurrentValue = 1.0f;
+		param->mVolume[i].mTargetValue  = 1.0f;
+		param->mVolume[i].mMoveCounter  = 0;
+		param->mPitch[i].mCurrentValue  = 1.0f;
+		param->mPitch[i].mTargetValue   = 1.0f;
+		param->mPitch[i].mMoveCounter   = 0;
+		param->mPan[i].mCurrentValue    = 0.5f;
+		param->mPan[i].mTargetValue     = 0.5f;
+		param->mPan[i].mMoveCounter     = 0;
 	}
 }
 
@@ -303,14 +303,14 @@ void JAIData::initSeqTrackInfoParameter(u32 param)
 
 void JAIData::initStreamUpdateParameter()
 {
-	mStreamUpdate->unk0  = 0;
-	mStreamUpdate->unk1  = 0;
-	mStreamUpdate->unk2  = 0;
-	mStreamUpdate->unk4  = 1.0f;
-	mStreamUpdate->unk8  = 1.0f;
-	mStreamUpdate->unkC  = 0.5f;
-	mStreamUpdate->unk10 = 0;
-	mStreamUpdate->unk14 = nullptr;
+	mStreamUpdate->unk0             = 0;
+	mStreamUpdate->unk1             = 0;
+	mStreamUpdate->mPrepareFlag     = 0;
+	mStreamUpdate->mVolume          = 1.0f;
+	mStreamUpdate->mPitch           = 1.0f;
+	mStreamUpdate->mPan             = 0.5f;
+	mStreamUpdate->mActiveTrackFlag = 0;
+	mStreamUpdate->mSound           = nullptr;
 }
 
 void JAIData::setSeMovePara(JAIMoveParaSet* moveParaSet)
@@ -631,14 +631,14 @@ void JAIData::initData()
 	}
 	mStreamUpdate = (JAIStreamUpdateParameter*)unk1F4->allocHeap(
 	    sizeof(JAIStreamUpdateParameter));
-	mStreamUpdate->unk0  = 0;
-	mStreamUpdate->unk1  = 0;
-	mStreamUpdate->unk2  = 0;
-	mStreamUpdate->unk4  = 1.0f;
-	mStreamUpdate->unk8  = 1.0f;
-	mStreamUpdate->unkC  = 0.5f;
-	mStreamUpdate->unk10 = 0;
-	mStreamUpdate->unk14 = nullptr;
+	mStreamUpdate->unk0             = 0;
+	mStreamUpdate->unk1             = 0;
+	mStreamUpdate->mPrepareFlag     = 0;
+	mStreamUpdate->mVolume          = 1.0f;
+	mStreamUpdate->mPitch           = 1.0f;
+	mStreamUpdate->mPan             = 0.5f;
+	mStreamUpdate->mActiveTrackFlag = 0;
+	mStreamUpdate->mSound           = nullptr;
 
 	if (unk1F4->mSoundSceneList) {
 		mCategoryInfoTable = unk1F4->mSoundSceneList;
