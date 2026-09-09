@@ -154,14 +154,15 @@ void JAIBasic::setRegisterTrackCallback()
 
 void JAIBasic::initAudioThread(JKRSolidHeap* heap, u32 param1, u8 param2)
 {
-	s32 uVar1 = 1;
+	JKRSolidHeap* rootHeap = heap;
+	s32 uVar1              = 1;
 	if (param2 & 1)
 		uVar1 |= 2;
 
 	JASystem::AudioThread::setPriority(
 	    JAIGlobalParameter::audioSystemThreadPriority,
 	    JAIGlobalParameter::audioDvdThreadPriority);
-	JASystem::AudioThread::start(heap, param1, uVar1);
+	JASystem::AudioThread::start(rootHeap, param1, uVar1);
 	JASystem::TrackMgr::init(JAIGlobalParameter::systemTrackMax,
 	                         JAIGlobalParameter::systemRootTrackMax);
 	JASystem::TrackMgr::reset();
@@ -274,7 +275,6 @@ enum JAIInitDataCommand {
 	JAIINITDATA_Unk78            = 8,
 };
 
-// TODO: still extremely messy + regswaps
 void JAIBasic::checkInitDataOnMemory()
 {
 	u32 i              = 0;
@@ -282,6 +282,7 @@ void JAIBasic::checkInitDataOnMemory()
 	JAIData* data      = unk0;
 	u8 j;
 	u32 n;
+	u32 size;
 
 	while (shouldContinue) {
 		switch (((u32*)mInitDataPointer)[i++]) {
@@ -325,8 +326,8 @@ void JAIBasic::checkInitDataOnMemory()
 			while (((u32*)mInitDataPointer)[i + n] != 0)
 				n += 3;
 
-			mBankList = (FabricatedBankEntry*)transInitDataFile(
-			    buffer, (n / 3) * sizeof(FabricatedBankEntry) + 4);
+			size      = (n / 3) * sizeof(FabricatedBankEntry) + 4;
+			mBankList = (FabricatedBankEntry*)transInitDataFile(buffer, size);
 
 			while (((u32*)mInitDataPointer)[i] != 0) {
 				mBankList[j].mBankData
@@ -346,8 +347,9 @@ void JAIBasic::checkInitDataOnMemory()
 			while (((u32*)mInitDataPointer)[i + n] != 0)
 				n += 3;
 
-			mWaveBankList = (FabricatedWaveBankEntry*)transInitDataFile(
-			    buffer, (n / 3) * sizeof(FabricatedWaveBankEntry) + 4);
+			size = (n / 3) * sizeof(FabricatedWaveBankEntry) + 4;
+			mWaveBankList
+			    = (FabricatedWaveBankEntry*)transInitDataFile(buffer, size);
 
 			while (((u32*)mInitDataPointer)[i] != 0) {
 				mWaveBankList[j].mWaveBankData
@@ -366,9 +368,9 @@ void JAIBasic::checkInitDataOnMemory()
 			u8* buffer        = (u8*)&((u32*)mInitDataPointer)[i];
 			mSeqArchiveHeader = (FabricatedSeqArchiveHeader*)transInitDataFile(
 			    buffer, sizeof(FabricatedSeqArchiveHeader));
+			u8* dataBuffer = mInitDataPointer + ((u32*)mInitDataPointer)[i];
 			mSeqArchiveHeader->mData = (u8*)transInitDataFile(
-			    mInitDataPointer + ((u32*)mInitDataPointer)[i],
-			    ((u32*)mInitDataPointer)[i + 1]);
+			    dataBuffer, ((u32*)mInitDataPointer)[i + 1]);
 			i += 3;
 			break;
 		}
@@ -377,10 +379,10 @@ void JAIBasic::checkInitDataOnMemory()
 			u8* buffer        = (u8*)&((u32*)mInitDataPointer)[i];
 			mStreamListHeader = (FabricatedStreamListHeader*)transInitDataFile(
 			    buffer, sizeof(FabricatedStreamListHeader));
+			u8* dataBuffer = mInitDataPointer + ((u32*)mInitDataPointer)[i];
 			mStreamListHeader->mData
 			    = (JAIData::FabricatedStreamEntry*)transInitDataFile(
-			        mInitDataPointer + ((u32*)mInitDataPointer)[i],
-			        ((u32*)mInitDataPointer)[i + 1]);
+			        dataBuffer, ((u32*)mInitDataPointer)[i + 1]);
 			i += 3;
 			unk0->mStreamList = mStreamListHeader->mData;
 			break;
@@ -389,9 +391,10 @@ void JAIBasic::checkInitDataOnMemory()
 		case JAIINITDATA_SoundSceneList: {
 			JAIInitDataBlob* blob
 			    = (JAIInitDataBlob*)&((u32*)mInitDataPointer)[i];
+			u8* dataBuffer = mInitDataPointer + blob->offset;
 			FabricatedSoundSceneTable* table
-			    = (FabricatedSoundSceneTable*)transInitDataFile(
-			        mInitDataPointer + blob->offset, blob->size);
+			    = (FabricatedSoundSceneTable*)transInitDataFile(dataBuffer,
+			                                                    blob->size);
 			JAIGlobalParameter::soundSceneMax = table->mSceneMax;
 			mSoundSceneList                   = table->mSceneData;
 			for (u32 scene = 0; scene < JAIGlobalParameter::soundSceneMax;
@@ -404,8 +407,9 @@ void JAIBasic::checkInitDataOnMemory()
 		case JAIINITDATA_FxSceneTable: {
 			JAIInitDataBlob* blob
 			    = (JAIInitDataBlob*)&((u32*)mInitDataPointer)[i];
-			mFxSceneTable = (FabricatedFxSceneTable*)transInitDataFile(
-			    mInitDataPointer + blob->offset, blob->size);
+			u8* dataBuffer = mInitDataPointer + blob->offset;
+			mFxSceneTable  = (FabricatedFxSceneTable*)transInitDataFile(
+                dataBuffer, blob->size);
 			i += 3;
 			break;
 		}
@@ -413,8 +417,9 @@ void JAIBasic::checkInitDataOnMemory()
 		case JAIINITDATA_Unk78: {
 			JAIInitDataBlob* blob
 			    = (JAIInitDataBlob*)&((u32*)mInitDataPointer)[i];
-			unk78 = (u8*)transInitDataFile(mInitDataPointer + blob->offset,
-			                               ((u16)blob->size & 0xFFF0) + 0x10);
+			u8* dataBuffer = mInitDataPointer + blob->offset;
+			unk78          = (u8*)transInitDataFile(dataBuffer,
+			                                        (blob->size & 0xFFF0) + 0x10);
 			i += 3;
 			break;
 		}
@@ -538,14 +543,19 @@ void JAIBasic::finishSceneSet(u32 id)
 
 void JAIBasic::loadSceneWave(s32 bank_id, s32 group_no)
 {
-	if (mWaveBankList
-	    && mWaveBankList[bank_id].mLoadTiming == WAVE_LOAD_TIMING_SCENE) {
-		s32 current = mWaveGroupNumber[bank_id];
-		if (group_no != current) {
-			if (current != -1)
-				JASystem::WaveBankMgr::eraseWave(bank_id,
-				                                 mWaveGroupNumber[bank_id]);
-			loadGroupWave(bank_id, group_no);
+	if (mWaveBankList) {
+		// Won't match any other way :/
+		uintptr_t entry = bank_id * sizeof(FabricatedWaveBankEntry);
+		entry           = (uintptr_t)mWaveBankList + entry;
+		if (((FabricatedWaveBankEntry*)entry)->mLoadTiming
+		    == WAVE_LOAD_TIMING_SCENE) {
+			s32 current = mWaveGroupNumber[bank_id];
+			if (group_no != current) {
+				if (current != -1)
+					JASystem::WaveBankMgr::eraseWave(bank_id,
+					                                 mWaveGroupNumber[bank_id]);
+				loadGroupWave(bank_id, group_no);
+			}
 		}
 	}
 }
@@ -1324,8 +1334,6 @@ void JAIBasic::allocStreamBuffer(void* buffer, s32 size) { }
 
 void JAIBasic::deallocStreamBuffer() { }
 
-// TODO: matches except that the target moves the checkOnMemory result into
-// its register one slot later.
 int JAIBasic::loadArcSeqData(u32 param_1, bool param_2)
 {
 	u32 uVar1   = param_1 & 0x3ff;
