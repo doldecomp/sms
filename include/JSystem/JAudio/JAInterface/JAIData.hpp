@@ -9,7 +9,7 @@
 
 class JAIBasic;
 class JAISound;
-class JAISeqUpdateData;
+struct JAISeqUpdateData;
 class JAIDummyVec {
 public:
 	/* 0x0 */ JAIDummyVec* mPrev;

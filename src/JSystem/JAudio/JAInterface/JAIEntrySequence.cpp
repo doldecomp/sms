@@ -28,7 +28,8 @@ void JAISeqEntry::storeBuffer(JAISound** sound, JAIActor* actor, u32 param_3,
 		doThing = true;
 	} else {
 		if ((*soundSlot)->mState == SOUNDSTATE_Stopping) {
-			JAISystemInterface::stopSeq((*soundSlot)->getSeqParameter()->unk0);
+			JAISystemInterface::stopSeq(
+			    (*soundSlot)->getSeqParameter()->mSeqHandle);
 			(*soundSlot)->clearMainSoundPPointer();
 			unk0->stopSeq(*soundSlot);
 			doThing = true;
@@ -42,7 +43,7 @@ void JAISeqEntry::storeBuffer(JAISound** sound, JAIActor* actor, u32 param_3,
 			u8 p2   = unk0->getSoundPrioity(param_6);
 			if (p1 <= p2) {
 				JAISystemInterface::stopSeq(
-				    (*soundSlot)->getSeqParameter()->unk0);
+				    (*soundSlot)->getSeqParameter()->mSeqHandle);
 				(*soundSlot)->clearMainSoundPPointer();
 				unk0->stopSeq(*soundSlot);
 				doThing = true;
@@ -74,7 +75,7 @@ void JAISeqEntry::storeBuffer(JAISound** sound, JAIActor* actor, u32 param_3,
 		JAISeqUpdateData* pJVar1 = &data->mSeqTrackInfo[bVar10];
 		JAISeqParameter* pvVar5  = (*soundSlot)->getSeqParameter();
 
-		pvVar5->unk1850 = pJVar1;
+		pvVar5->mUpdateData = pJVar1;
 
 		(*soundSlot)->mTrack             = bVar10;
 		data->mSeqTrackInfo[bVar10].unk8 = 1;
@@ -88,7 +89,7 @@ void JAISeqEntry::storeBuffer(JAISound** sound, JAIActor* actor, u32 param_3,
 				    && (sound->getSwBit() & 2) == 0) {
 					sound->setSeqInterVolume(10, 0.0f, 10);
 					JASystem::TrackMgr::handleToSeq(
-					    sound->getSeqParameter()->unk0)
+					    sound->getSeqParameter()->mSeqHandle)
 					    ->pauseTrackAll();
 				}
 			}

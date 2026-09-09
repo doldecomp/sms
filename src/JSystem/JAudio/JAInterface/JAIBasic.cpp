@@ -778,10 +778,11 @@ void JAIBasic::stopSoundHandle(JAISound* sound, u32 param)
 		case JAISoundID_Type_Sequence:
 			if (sound->mState < SOUNDSTATE_Playing || param == 0) {
 				if (sound->mState >= SOUNDSTATE_Started)
-					JAISystemInterface::stopSeq(sound->getSeqParameter()->unk0);
+					JAISystemInterface::stopSeq(
+					    sound->getSeqParameter()->mSeqHandle);
 				else if (sound->mState >= SOUNDSTATE_Stored)
 					unk0->releaseAutoHeapPointer(
-					    sound->getSeqParameter()->unk1754);
+					    sound->getSeqParameter()->mAutoHeapPosition);
 
 				sound->clearMainSoundPPointer();
 				stopSeq(sound);
@@ -1163,8 +1164,10 @@ u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 			if (basic->unk0->mSeqTrackInfo[i].mSound == nullptr)
 				continue;
 
-			JASystem::TTrack* track = JASystem::TrackMgr::handleToSeq(
-			    basic->unk0->mSeqTrackInfo[i].mSound->getSeqParameter()->unk0);
+			JASystem::TTrack* track
+			    = JASystem::TrackMgr::handleToSeq(basic->unk0->mSeqTrackInfo[i]
+			                                          .mSound->getSeqParameter()
+			                                          ->mSeqHandle);
 			if (track != param_1->getParent())
 				continue;
 

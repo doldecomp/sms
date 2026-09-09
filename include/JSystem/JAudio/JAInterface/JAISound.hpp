@@ -5,8 +5,8 @@
 #include <dolphin/mtx.h>
 
 struct JAIMoveParaSet;
-class JAISeqParameter;
-class JAISeParameter;
+struct JAISeqParameter;
+struct JAISeParameter;
 class JAIStreamParameter;
 class JAIBasic;
 

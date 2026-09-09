@@ -41,13 +41,13 @@ JASystem::TTrack* JAISystemInterface::trackToSeqp(JAISound* param_1, u8 param_2)
 {
 	JASystem::TTrack* result = nullptr;
 	if (param_1->mSoundID & 0x800) {
-		JASystem::TTrack* track
-		    = JASystem::TrackMgr::handleToSeq(param_1->getSeqParameter()->unk0);
+		JASystem::TTrack* track = JASystem::TrackMgr::handleToSeq(
+		    param_1->getSeqParameter()->mSeqHandle);
 		if (track->getChild(param_2 >> 4))
 			result = track->getChild(param_2 >> 4)->getChild(param_2 & 0xF);
 	} else {
-		JASystem::TTrack* track
-		    = JASystem::TrackMgr::handleToSeq(param_1->getSeqParameter()->unk0);
+		JASystem::TTrack* track = JASystem::TrackMgr::handleToSeq(
+		    param_1->getSeqParameter()->mSeqHandle);
 		result = track->getChild(param_2 & 0xF);
 	}
 	return result;
@@ -72,7 +72,7 @@ JAISeqParameter* JAISystemInterface::rootInit(JAISeqUpdateData* param_1)
 {
 	JAISound* sound = param_1->mSound;
 	JASystem::TTrack* track
-	    = JASystem::TrackMgr::handleToSeq(sound->getSeqParameter()->unk0);
+	    = JASystem::TrackMgr::handleToSeq(sound->getSeqParameter()->mSeqHandle);
 	outerInit(param_1, track, JAIGlobalParameter::getParamSeqTrackMax(), 0xffff,
 	          0);
 	return sound->getSeqParameter();
@@ -118,14 +118,14 @@ void JAISystemInterface::outerInit(JAISeqUpdateData* param_1, void* param_2,
 		outer->onSwitch(JASystem::TTrack::UPDATE_Tempo);
 	} else {
 		JAISeqParameter* pJVar3 = param_1->mSound->getSeqParameter();
-		args->mTrackVolume      = pJVar3->unk754[param_3].mCurrentValue;
-		args->mTrackPitch       = pJVar3->unkB54[param_3].mCurrentValue;
-		args->mTrackFxmix       = pJVar3->unkD54[param_3].mCurrentValue;
-		args->mTrackPan         = pJVar3->unk954[param_3].mCurrentValue;
-		args->mTrackDolby       = pJVar3->unkF54[param_3].mCurrentValue;
+		args->mTrackVolume      = pJVar3->mTrackVolume[param_3].mCurrentValue;
+		args->mTrackPitch       = pJVar3->mTrackPitch[param_3].mCurrentValue;
+		args->mTrackFxmix       = pJVar3->mTrackFxmix[param_3].mCurrentValue;
+		args->mTrackPan         = pJVar3->mTrackPan[param_3].mCurrentValue;
+		args->mTrackDolby       = pJVar3->mTrackDolby[param_3].mCurrentValue;
 		args->unk20             = 0;
 		args->mFlags            = 0x7f;
-		track->muteTrack(pJVar3->unk1830[param_3].flag1);
+		track->muteTrack(pJVar3->mMuteBits[param_3].mCurrent);
 	}
 	outer->onSwitch(JASystem::TTrack::UPDATE_Volume);
 	outer->onSwitch(JASystem::TTrack::UPDATE_Pitch);

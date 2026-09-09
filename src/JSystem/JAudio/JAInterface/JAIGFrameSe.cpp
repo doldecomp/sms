@@ -115,7 +115,7 @@ void JAIBasic::checkNextFrameSe()
 					if (!(it->mSoundID & 0xC00)) {
 						if (it->mState != SOUNDSTATE_Stored) {
 							JAISystemInterface::writePortApp(
-							    mSeSequence->getSeqParameter()->unk0,
+							    mSeSequence->getSeqParameter()->mSeqHandle,
 							    (it->mTrack >> 4) + 0x20000000
 							        + ((it->mTrack & 0xf) << 4),
 							    0);
@@ -238,7 +238,7 @@ void JAIBasic::sendPlayingSeCommand()
 			u32 portAddr
 			    = ((trackId >> 4) & 0xF) + 0x20000000 + ((trackId & 0xF) << 4);
 
-			u32 seqPort = mSeSequence->getSeqParameter()->unk0;
+			u32 seqPort = mSeSequence->getSeqParameter()->mSeqHandle;
 
 			JAISystemInterface::readPortApp(seqPort, portAddr + 0x20000,
 			                                &readStatus0);
@@ -391,7 +391,7 @@ void JAIBasic::clearSeqMuteFromSeStop(JAISound* sound)
 
 void JAIBasic::checkSeMovePara()
 {
-	if (!mSeSequence || mSeSequence->getSeqParameter()->unk1755 == 2)
+	if (!mSeSequence || mSeSequence->getSeqParameter()->mPauseMode == 2)
 		return;
 
 	for (u8 i = 0; i < JAIGlobalParameter::getParamSeCategoryMax(); ++i) {
@@ -560,10 +560,10 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 void JAIBasic::releaseSeRegist(JAISound* sound)
 {
 	if (sound->mState != SOUNDSTATE_Stored) {
-		JAISystemInterface::writePortApp(mSeSequence->getSeqParameter()->unk0,
-		                                 (sound->mTrack >> 4) + 0x20000000
-		                                     + ((sound->mTrack & 0xf) << 4),
-		                                 0);
+		JAISystemInterface::writePortApp(
+		    mSeSequence->getSeqParameter()->mSeqHandle,
+		    (sound->mTrack >> 4) + 0x20000000 + ((sound->mTrack & 0xf) << 4),
+		    0);
 		mSeSequence->setTrackInterruptSwitch(sound->mTrack, 1);
 	}
 

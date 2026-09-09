@@ -329,13 +329,13 @@ void JAISound::setSeqInterVolume(u8 param_1, f32 param_2, u32 param_3)
 	if (!getSeqParameter())
 		return;
 
-	int ret = initMoveParameter(&getSeqParameter()->unk114[param_1], param_2,
+	int ret = initMoveParameter(&getSeqParameter()->mVolume[param_1], param_2,
 	                            param_3);
 	if (ret == 1)
-		getSeqParameter()->unk1760 |= 1 << param_1;
+		getSeqParameter()->mVolumeUpdate |= 1 << param_1;
 
-	if (getSeqParameter()->unk1850 && ret != 2)
-		getSeqParameter()->unk1850->unk8 |= 0x40000;
+	if (getSeqParameter()->mUpdateData && ret != 2)
+		getSeqParameter()->mUpdateData->unk8 |= 0x40000;
 }
 
 void JAISound::setSeqInterPan(u8 param_1, f32 param_2, u32 param_3)
@@ -346,13 +346,13 @@ void JAISound::setSeqInterPan(u8 param_1, f32 param_2, u32 param_3)
 	if (!getSeqParameter())
 		return;
 
-	int ret = initMoveParameter(&getSeqParameter()->unk254[param_1], param_2,
+	int ret = initMoveParameter(&getSeqParameter()->mPan[param_1], param_2,
 	                            param_3);
 	if (ret == 1)
-		getSeqParameter()->unk1764 |= 1 << param_1;
+		getSeqParameter()->mPanUpdate |= 1 << param_1;
 
-	if (getSeqParameter()->unk1850 && ret != 2)
-		getSeqParameter()->unk1850->unk8 |= 0x80000;
+	if (getSeqParameter()->mUpdateData && ret != 2)
+		getSeqParameter()->mUpdateData->unk8 |= 0x80000;
 }
 
 void JAISound::setSeqInterPitch(u8 param_1, f32 param_2, u32 param_3)
@@ -363,13 +363,13 @@ void JAISound::setSeqInterPitch(u8 param_1, f32 param_2, u32 param_3)
 	if (!getSeqParameter())
 		return;
 
-	int ret = initMoveParameter(&getSeqParameter()->unk394[param_1], param_2,
+	int ret = initMoveParameter(&getSeqParameter()->mPitch[param_1], param_2,
 	                            param_3);
 	if (ret == 1)
-		getSeqParameter()->unk1768 |= 1 << param_1;
+		getSeqParameter()->mPitchUpdate |= 1 << param_1;
 
-	if (getSeqParameter()->unk1850 && ret != 2)
-		getSeqParameter()->unk1850->unk8 |= 0x100000;
+	if (getSeqParameter()->mUpdateData && ret != 2)
+		getSeqParameter()->mUpdateData->unk8 |= 0x100000;
 }
 
 void JAISound::setSeqInterFxmix(u8 param_1, f32 param_2, u32 param_3)
@@ -380,13 +380,13 @@ void JAISound::setSeqInterFxmix(u8 param_1, f32 param_2, u32 param_3)
 	if (!getSeqParameter())
 		return;
 
-	int ret = initMoveParameter(&getSeqParameter()->unk4D4[param_1], param_2,
+	int ret = initMoveParameter(&getSeqParameter()->mFxmix[param_1], param_2,
 	                            param_3);
 	if (ret == 1)
-		getSeqParameter()->unk176C |= 1 << param_1;
+		getSeqParameter()->mFxmixUpdate |= 1 << param_1;
 
-	if (getSeqParameter()->unk1850 && ret != 2)
-		getSeqParameter()->unk1850->unk8 |= 0x200000;
+	if (getSeqParameter()->mUpdateData && ret != 2)
+		getSeqParameter()->mUpdateData->unk8 |= 0x200000;
 }
 
 void JAISound::setSeqInterDolby(u8 param_1, f32 param_2, u32 param_3)
@@ -398,19 +398,19 @@ void JAISound::setSeqInterDolby(u8 param_1, f32 param_2, u32 param_3)
 		return;
 
 	if (interPointer->mSoundOutputMode != 2) {
-		if (getSeqParameter()->unk614[param_1].mCurrentValue != 0.0f)
+		if (getSeqParameter()->mDolby[param_1].mCurrentValue != 0.0f)
 			param_2 = 0.0f;
 		else
 			return;
 	}
 
-	int ret = initMoveParameter(&getSeqParameter()->unk614[param_1], param_2,
+	int ret = initMoveParameter(&getSeqParameter()->mDolby[param_1], param_2,
 	                            param_3);
 	if (ret == 1)
-		getSeqParameter()->unk1770 |= 1 << param_1;
+		getSeqParameter()->mDolbyUpdate |= 1 << param_1;
 
-	if (getSeqParameter()->unk1850 && ret != 2)
-		getSeqParameter()->unk1850->unk8 |= 0x400000;
+	if (getSeqParameter()->mUpdateData && ret != 2)
+		getSeqParameter()->mUpdateData->unk8 |= 0x400000;
 }
 
 void JAISound::setSeqTempoProportion(f32 param_1, u32 param_2)
@@ -422,10 +422,10 @@ void JAISound::setSeqTempoProportion(f32 param_1, u32 param_2)
 	if (!getSeqParameter())
 		return;
 
-	int ret = initMoveParameter(&getSeqParameter()->unk4, param_1, param_2);
+	int ret = initMoveParameter(&getSeqParameter()->mTempo, param_1, param_2);
 
-	if (getSeqParameter()->unk1850)
-		getSeqParameter()->unk1850->unk8 |= 0x4;
+	if (getSeqParameter()->mUpdateData)
+		getSeqParameter()->mUpdateData->unk8 |= 0x4;
 }
 
 void JAISound::setSeqPortData(u8 param_1, u16 param_2, u32 param_3)
@@ -436,21 +436,21 @@ void JAISound::setSeqPortData(u8 param_1, u16 param_2, u32 param_3)
 	if (!getSeqParameter())
 		return;
 
-	if (getSeqParameter()->unk14[param_1].mCurrentValue == 0.0f
+	if (getSeqParameter()->mPortData[param_1].mCurrentValue == 0.0f
 	    && mState >= SOUNDSTATE_Started) {
 		u16 local_38;
-		JAISystemInterface::readPortApp(getSeqParameter()->unk0, param_1 << 16,
-		                                &local_38);
-		getSeqParameter()->unk14[param_1].mCurrentValue = local_38;
+		JAISystemInterface::readPortApp(getSeqParameter()->mSeqHandle,
+		                                param_1 << 16, &local_38);
+		getSeqParameter()->mPortData[param_1].mCurrentValue = local_38;
 	}
 
-	int ret = initMoveParameter(&getSeqParameter()->unk14[param_1], param_2,
+	int ret = initMoveParameter(&getSeqParameter()->mPortData[param_1], param_2,
 	                            param_3);
 	if (ret == 1)
-		getSeqParameter()->unk175C |= 1 << param_1;
+		getSeqParameter()->mPortUpdate |= 1 << param_1;
 
-	if (getSeqParameter()->unk1850 && ret != 2)
-		getSeqParameter()->unk1850->unk8 |= 0x10;
+	if (getSeqParameter()->mUpdateData && ret != 2)
+		getSeqParameter()->mUpdateData->unk8 |= 0x10;
 }
 
 void JAISound::setWaveReadMode(s32 bank_id, s32 group_no)
@@ -465,7 +465,7 @@ void JAISound::setWaveReadMode(s32 bank_id, s32 group_no)
 	if (interPointer->mWaveGroupNumber[bank_id] == group_no
 	    && interPointer->mWaveLoadStatus[bank_id]
 	           == JAIBasic::WAVE_LOAD_STATUS_LOADING)
-		getSeqParameter()->unk1758 = id;
+		getSeqParameter()->mWaitSceneSet = id;
 }
 
 void JAISound::setTrackVolume(u8 param_1, f32 param_2, u32 param_3) { }
@@ -484,9 +484,9 @@ void JAISound::setTrackInterruptSwitch(u8 param_1, u8 param_2)
 	if (!getSeqParameter())
 		return;
 
-	getSeqParameter()->unk1810[param_1] = param_2;
-	if (getSeqParameter()->unk1850)
-		getSeqParameter()->unk1850->unk8 |= 0x800000;
+	getSeqParameter()->mTrackInterruptSwitch[param_1] = param_2;
+	if (getSeqParameter()->mUpdateData)
+		getSeqParameter()->mUpdateData->unk8 |= 0x800000;
 }
 
 void JAISound::setTrackPan(u8, f32, u32) { }
@@ -517,19 +517,19 @@ void JAISound::setTrackPortData(u8 param_1, u8 param_2, u16 param_3)
 	if (!getSeqParameter())
 		return;
 
-	if (!getSeqParameter()->unk1850)
+	if (!getSeqParameter()->mUpdateData)
 		return;
 
 	if (mState >= SOUNDSTATE_Playing) {
-		JAISystemInterface::writePortApp(getSeqParameter()->unk0,
+		JAISystemInterface::writePortApp(getSeqParameter()->mSeqHandle,
 		                                 getTrackPortRoute(param_1, param_2),
 		                                 param_3);
 	} else {
-		getSeqParameter()->unk1850->unk8 |= 0x1000;
-		getSeqParameter()->unk178C |= 1 << param_1;
-		getSeqParameter()->unk1790[param_1] |= 1 << param_2;
+		getSeqParameter()->mUpdateData->unk8 |= 0x1000;
+		getSeqParameter()->mTrackPortUpdate |= 1 << param_1;
+		getSeqParameter()->mTrackPortDataUpdate[param_1] |= 1 << param_2;
 	}
-	getSeqParameter()->unk1354[param_1][param_2] = param_3;
+	getSeqParameter()->mTrackPortData[param_1][param_2] = param_3;
 }
 
 void JAISound::setSeInterMovePara(JAIMoveParaSet* set, u32 value)
@@ -865,43 +865,45 @@ void JAISound::setStreamPrepareFlag(u8) { }
 
 void JAISound::checkStreamReady() { }
 
-void JAISound::setPauseMode(u8 param_1, u8 param_2)
+void JAISound::setPauseMode(u8 mode, u8 param_2)
 {
 	switch (mSoundID & JAISoundID_TypeMask) {
 	case JAISoundID_Type_Sequence:
 		if (getSeqParameter()) {
-			if (param_1 == 3)
-				param_1 = 4;
-			if (param_1) {
-				switch (param_1) {
+			if (mode == 3)
+				mode = 4;
+			if (mode) {
+				switch (mode) {
 				case 1:
 					setSeqInterVolumeU7(11, param_2, 1);
 					break;
 				case 2:
-					JASystem::TrackMgr::handleToSeq(getSeqParameter()->unk0)
+					JASystem::TrackMgr::handleToSeq(
+					    getSeqParameter()->mSeqHandle)
 					    ->pauseTrackAll();
 					break;
 				}
 			} else {
 				getSeqParameter();
-				switch (getSeqParameter()->unk1755) {
+				switch (getSeqParameter()->mPauseMode) {
 				case 1:
 					setSeqInterVolume(11, 1.0f, 1);
 					break;
 				case 2:
-					JASystem::TrackMgr::handleToSeq(getSeqParameter()->unk0)
+					JASystem::TrackMgr::handleToSeq(
+					    getSeqParameter()->mSeqHandle)
 					    ->unPauseTrackAll();
 					break;
 				}
 			}
 
-			getSeqParameter()->unk1755 = param_1;
+			getSeqParameter()->mPauseMode = mode;
 		}
 		break;
 	case JAISoundID_Type_Stream:
 		if (getStreamParameter()) {
-			if (param_1) {
-				switch (param_1) {
+			if (mode) {
+				switch (mode) {
 				case 1:
 					setStreamInterVolume(11, param_2 / 127.0f, 1);
 					break;
@@ -920,7 +922,7 @@ void JAISound::setPauseMode(u8 param_1, u8 param_2)
 				}
 			}
 
-			getStreamParameter()->unk0 = param_1;
+			getStreamParameter()->unk0 = mode;
 		}
 		break;
 	}
@@ -948,7 +950,7 @@ f32 JAISound::getSeqInterVolume(u8 param_1)
 {
 	f32 result;
 	if (mState == SOUNDSTATE_Playing || mState == SOUNDSTATE_Stopping) {
-		result = getSeqParameter()->unk114[param_1].mCurrentValue;
+		result = getSeqParameter()->mVolume[param_1].mCurrentValue;
 	} else {
 		result = -1.0f;
 	}

@@ -170,14 +170,14 @@ public:
 	void checkSeMovePara();
 	void releaseSeRegist(JAISound* sound);
 	void checkEntriedSeq();
-	void checkPlayingSeqTrack(unsigned long trackID);
+	void checkPlayingSeqTrack(u32 trackID);
 	void checkPlayingSeq();
 	void checkStoppedSeq();
 	void checkStartedSeq();
 	void checkFadeoutSeq();
 	void checkReadSeq();
 	void checkSeqWave();
-	static void checkDvdLoadArc(unsigned long arcID);
+	static void checkDvdLoadArc(u32 arcID);
 	void stopSeq(JAISound* sound);
 	void checkEntriedStream();
 	void checkWaitStream();
