@@ -7,7 +7,7 @@
 struct JAIMoveParaSet;
 struct JAISeqParameter;
 struct JAISeParameter;
-class JAIStreamParameter;
+struct JAIStreamParameter;
 class JAIBasic;
 
 #define JAISoundID_TypeMask      0xC0000000

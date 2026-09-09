@@ -80,19 +80,18 @@ struct JAISeqParameter {
 	/* 0x1858 */ JAISeqParameter* mNext;
 };
 
-class JAIStreamUpdateParameter;
+struct JAIStreamUpdateParameter;
 
-class JAIStreamParameter {
-public:
-	/* 0x0 */ u8 unk0;
-	/* 0x4 */ u32 unk4;
-	/* 0x8 */ u32 unk8;
-	/* 0xC */ u32 unkC;
-	/* 0x10 */ u32 unk10;
-	/* 0x14 */ JAIMoveParaSet unk14[20];
-	/* 0x154 */ JAIMoveParaSet unk154[20];
-	/* 0x294 */ JAIMoveParaSet unk294[20];
-	/* 0x3D4 */ JAIStreamUpdateParameter* unk3D4;
+struct JAIStreamParameter {
+	/* 0x0 */ u8 mPauseMode;
+	/* 0x4 */ u32 mStreamMode;
+	/* 0x8 */ u32 mVolumeUpdate;
+	/* 0xC */ u32 mPitchUpdate;
+	/* 0x10 */ u32 mPanUpdate;
+	/* 0x14 */ JAIMoveParaSet mVolume[20];
+	/* 0x154 */ JAIMoveParaSet mPitch[20];
+	/* 0x294 */ JAIMoveParaSet mPan[20];
+	/* 0x3D4 */ JAIStreamUpdateParameter* mUpdateData;
 	/* 0x3D8 */ JAIStreamParameter* mPrev;
 	/* 0x3DC */ JAIStreamParameter* mNext;
 };
@@ -101,14 +100,14 @@ class JAISound;
 
 // fabricated
 struct JAIStreamUpdateParameter {
-	/* 0x0 */ u8 unk0;
-	/* 0x1 */ u8 unk1;
-	/* 0x2 */ u8 unk2;
-	/* 0x4 */ f32 unk4;
-	/* 0x8 */ f32 unk8;
-	/* 0xC */ f32 unkC;
-	/* 0x10 */ u32 unk10;
-	/* 0x14 */ JAISound* unk14;
+	/* 0x0 */ u8 unk0; // JAISeqUpdateData's pair here is the pause mode
+	/* 0x1 */ u8 unk1; // and the pause volume; nothing in SMS reads either
+	/* 0x2 */ u8 mPrepareFlag;
+	/* 0x4 */ f32 mVolume;
+	/* 0x8 */ f32 mPitch;
+	/* 0xC */ f32 mPan;
+	/* 0x10 */ u32 mActiveTrackFlag;
+	/* 0x14 */ JAISound* mSound;
 };
 
 #endif

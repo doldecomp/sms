@@ -814,14 +814,14 @@ void JAISound::setStreamInterVolume(u8 param_1, f32 param_2, u32 param_3)
 	if (!getStreamParameter())
 		return;
 
-	int iVar2 = initMoveParameter(&getStreamParameter()->unk14[param_1],
+	int iVar2 = initMoveParameter(&getStreamParameter()->mVolume[param_1],
 	                              param_2, param_3);
 	if (iVar2 == 1) {
-		getStreamParameter()->unk8 |= 1 << param_1;
+		getStreamParameter()->mVolumeUpdate |= 1 << param_1;
 	}
 
-	if (getStreamParameter()->unk3D4 && iVar2 != 2) {
-		getStreamParameter()->unk3D4->unk10 |= 0x40000;
+	if (getStreamParameter()->mUpdateData && iVar2 != 2) {
+		getStreamParameter()->mUpdateData->mActiveTrackFlag |= 0x40000;
 	}
 }
 
@@ -832,14 +832,14 @@ void JAISound::setStreamInterPitch(u8 param_1, f32 param_2, u32 param_3)
 	if (!getStreamParameter())
 		return;
 
-	int iVar2 = initMoveParameter(&getStreamParameter()->unk154[param_1],
+	int iVar2 = initMoveParameter(&getStreamParameter()->mPitch[param_1],
 	                              param_2, param_3);
 	if (iVar2 == 1) {
-		getStreamParameter()->unkC |= 1 << param_1;
+		getStreamParameter()->mPitchUpdate |= 1 << param_1;
 	}
 
-	if (getStreamParameter()->unk3D4 && iVar2 != 2) {
-		getStreamParameter()->unk3D4->unk10 |= 0x100000;
+	if (getStreamParameter()->mUpdateData && iVar2 != 2) {
+		getStreamParameter()->mUpdateData->mActiveTrackFlag |= 0x100000;
 	}
 }
 
@@ -850,14 +850,14 @@ void JAISound::setStreamInterPan(u8 param_1, f32 param_2, u32 param_3)
 	if (!getStreamParameter())
 		return;
 
-	int iVar2 = initMoveParameter(&getStreamParameter()->unk294[param_1],
-	                              param_2, param_3);
+	int iVar2 = initMoveParameter(&getStreamParameter()->mPan[param_1], param_2,
+	                              param_3);
 	if (iVar2 == 1) {
-		getStreamParameter()->unk10 |= 1 << param_1;
+		getStreamParameter()->mPanUpdate |= 1 << param_1;
 	}
 
-	if (getStreamParameter()->unk3D4 && iVar2 != 2) {
-		getStreamParameter()->unk3D4->unk10 |= 0x80000;
+	if (getStreamParameter()->mUpdateData && iVar2 != 2) {
+		getStreamParameter()->mUpdateData->mActiveTrackFlag |= 0x80000;
 	}
 }
 
@@ -912,7 +912,7 @@ void JAISound::setPauseMode(u8 mode, u8 param_2)
 					break;
 				}
 			} else {
-				switch (getStreamParameter()->unk0) {
+				switch (getStreamParameter()->mPauseMode) {
 				case 1:
 					setStreamInterVolume(11, 1.0f, 1);
 					break;
@@ -922,7 +922,7 @@ void JAISound::setPauseMode(u8 mode, u8 param_2)
 				}
 			}
 
-			getStreamParameter()->unk0 = mode;
+			getStreamParameter()->mPauseMode = mode;
 		}
 		break;
 	}
@@ -984,7 +984,7 @@ f32 JAISound::getStreamInterVolume(u8 param_1)
 	if ((mSoundID & JAISoundID_TypeMask) == JAISoundID_Type_Stream
 	    && getStreamParameter()) {
 		if (mState == SOUNDSTATE_Playing || mState == SOUNDSTATE_Stopping)
-			return getStreamParameter()->unk14[param_1].mCurrentValue;
+			return getStreamParameter()->mVolume[param_1].mCurrentValue;
 
 		return -1.0f;
 	}
