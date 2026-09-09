@@ -93,98 +93,98 @@ void JAIData::initDummyVecLink()
 
 void JAIData::initSeqParameter(JAISeqParameter* param)
 {
-	param->unk1758            = 0xffffffff;
-	param->unk4.mCurrentValue = 1.0f;
-	param->unk4.mMoveCounter  = 0;
-	param->unk1755            = 0;
-	param->unk1756            = 0;
+	param->mWaitSceneSet        = 0xffffffff;
+	param->mTempo.mCurrentValue = 1.0f;
+	param->mTempo.mMoveCounter  = 0;
+	param->mPauseMode           = 0;
+	param->unk1756              = 0;
 
 	// TODO: array? but why ops reordered tho?
-	param->unk175C = 0;
-	param->unk1760 = 0;
-	param->unk1764 = 0;
-	param->unk1768 = 0;
-	param->unk1770 = 0;
+	param->mPortUpdate   = 0;
+	param->mVolumeUpdate = 0;
+	param->mPanUpdate    = 0;
+	param->mPitchUpdate  = 0;
+	param->mDolbyUpdate  = 0;
 
-	param->unk176C = 0;
+	param->mFxmixUpdate = 0;
 
-	param->unk1774 = 0;
-	param->unk1778 = 0;
-	param->unk177C = 0;
-	param->unk1780 = 0;
-	param->unk1784 = 0;
-	param->unk1788 = 0;
-	param->unk178C = 0;
+	param->mTrackVolumeUpdate = 0;
+	param->mTrackPanUpdate    = 0;
+	param->mTrackPitchUpdate  = 0;
+	param->mTrackFxmixUpdate  = 0;
+	param->mTrackDolbyUpdate  = 0;
+	param->mTrackFirUpdate    = 0;
+	param->mTrackPortUpdate   = 0;
 
 	for (u32 i = 0; i < JAIGlobalParameter::seqTrackMax; ++i) {
-		param->unk754[i].mCurrentValue  = 1.0f;
-		param->unk954[i].mCurrentValue  = 0.5f;
-		param->unkB54[i].mCurrentValue  = 1.0f;
-		param->unkD54[i].mCurrentValue  = 0.0f;
-		param->unkF54[i].mCurrentValue  = 0.0f;
-		param->unk1154[i].mCurrentValue = 0.0f;
+		param->mTrackVolume[i].mCurrentValue = 1.0f;
+		param->mTrackPan[i].mCurrentValue    = 0.5f;
+		param->mTrackPitch[i].mCurrentValue  = 1.0f;
+		param->mTrackFxmix[i].mCurrentValue  = 0.0f;
+		param->mTrackDolby[i].mCurrentValue  = 0.0f;
+		param->mTrackFir[i].mCurrentValue    = 0.0f;
 
-		param->unk754[i].mTargetValue  = 1.0f;
-		param->unk954[i].mTargetValue  = 0.5f;
-		param->unkB54[i].mTargetValue  = 1.0f;
-		param->unkD54[i].mTargetValue  = 0.0f;
-		param->unkF54[i].mTargetValue  = 0.0f;
-		param->unk1154[i].mTargetValue = 0.0f;
+		param->mTrackVolume[i].mTargetValue = 1.0f;
+		param->mTrackPan[i].mTargetValue    = 0.5f;
+		param->mTrackPitch[i].mTargetValue  = 1.0f;
+		param->mTrackFxmix[i].mTargetValue  = 0.0f;
+		param->mTrackDolby[i].mTargetValue  = 0.0f;
+		param->mTrackFir[i].mTargetValue    = 0.0f;
 
-		param->unk754[i].mMoveCounter  = 0;
-		param->unk954[i].mMoveCounter  = 0;
-		param->unkB54[i].mMoveCounter  = 0;
-		param->unkD54[i].mMoveCounter  = 0;
-		param->unkF54[i].mMoveCounter  = 0;
-		param->unk1154[i].mMoveCounter = 0;
+		param->mTrackVolume[i].mMoveCounter = 0;
+		param->mTrackPan[i].mMoveCounter    = 0;
+		param->mTrackPitch[i].mMoveCounter  = 0;
+		param->mTrackFxmix[i].mMoveCounter  = 0;
+		param->mTrackDolby[i].mMoveCounter  = 0;
+		param->mTrackFir[i].mMoveCounter    = 0;
 
-		param->unk1830[i].flag1 = 0;
-		param->unk1830[i].flag3 = 0;
-		param->unk1810[i]       = 0;
+		param->mMuteBits[i].mCurrent    = 0;
+		param->mMuteBits[i].mEnable     = 0;
+		param->mTrackInterruptSwitch[i] = 0;
 
-		param->unk1790[i] = 0;
+		param->mTrackPortDataUpdate[i] = 0;
 
-		param->unk1354[i][0]  = 0;
-		param->unk1354[i][1]  = 0;
-		param->unk1354[i][2]  = 0;
-		param->unk1354[i][3]  = 0;
-		param->unk1354[i][4]  = 0;
-		param->unk1354[i][5]  = 0;
-		param->unk1354[i][6]  = 0;
-		param->unk1354[i][7]  = 0;
-		param->unk1354[i][8]  = 0;
-		param->unk1354[i][9]  = 0;
-		param->unk1354[i][10] = 0;
-		param->unk1354[i][11] = 0;
-		param->unk1354[i][12] = 0;
-		param->unk1354[i][13] = 0;
-		param->unk1354[i][14] = 0;
-		param->unk1354[i][15] = 0;
+		param->mTrackPortData[i][0]  = 0;
+		param->mTrackPortData[i][1]  = 0;
+		param->mTrackPortData[i][2]  = 0;
+		param->mTrackPortData[i][3]  = 0;
+		param->mTrackPortData[i][4]  = 0;
+		param->mTrackPortData[i][5]  = 0;
+		param->mTrackPortData[i][6]  = 0;
+		param->mTrackPortData[i][7]  = 0;
+		param->mTrackPortData[i][8]  = 0;
+		param->mTrackPortData[i][9]  = 0;
+		param->mTrackPortData[i][10] = 0;
+		param->mTrackPortData[i][11] = 0;
+		param->mTrackPortData[i][12] = 0;
+		param->mTrackPortData[i][13] = 0;
+		param->mTrackPortData[i][14] = 0;
+		param->mTrackPortData[i][15] = 0;
 	}
 
 	for (u32 i = 0; i < 16; ++i) {
-		param->unk14[i].mCurrentValue = 0.0f;
-		param->unk14[i].mMoveCounter  = 0;
+		param->mPortData[i].mCurrentValue = 0.0f;
+		param->mPortData[i].mMoveCounter  = 0;
 	}
 
 	for (u32 i = 0; i < JAIGlobalParameter::seqPlayTrackMax + 0xC; ++i) {
-		param->unk114[i].mCurrentValue = 1.0f;
-		param->unk254[i].mCurrentValue = 0.5f;
-		param->unk394[i].mCurrentValue = 1.0f;
-		param->unk4D4[i].mCurrentValue = 0.0f;
-		param->unk614[i].mCurrentValue = 0.0f;
+		param->mVolume[i].mCurrentValue = 1.0f;
+		param->mPan[i].mCurrentValue    = 0.5f;
+		param->mPitch[i].mCurrentValue  = 1.0f;
+		param->mFxmix[i].mCurrentValue  = 0.0f;
+		param->mDolby[i].mCurrentValue  = 0.0f;
 
-		param->unk114[i].mTargetValue = 1.0f;
-		param->unk254[i].mTargetValue = 0.5f;
-		param->unk394[i].mTargetValue = 1.0f;
-		param->unk4D4[i].mTargetValue = 0.0f;
-		param->unk614[i].mTargetValue = 0.0f;
+		param->mVolume[i].mTargetValue = 1.0f;
+		param->mPan[i].mTargetValue    = 0.5f;
+		param->mPitch[i].mTargetValue  = 1.0f;
+		param->mFxmix[i].mTargetValue  = 0.0f;
+		param->mDolby[i].mTargetValue  = 0.0f;
 
-		param->unk114[i].mMoveCounter = 0;
-		param->unk254[i].mMoveCounter = 0;
-		param->unk394[i].mMoveCounter = 0;
-		param->unk4D4[i].mMoveCounter = 0;
-		param->unk614[i].mMoveCounter = 0;
+		param->mVolume[i].mMoveCounter = 0;
+		param->mPan[i].mMoveCounter    = 0;
+		param->mPitch[i].mMoveCounter  = 0;
+		param->mFxmix[i].mMoveCounter  = 0;
+		param->mDolby[i].mMoveCounter  = 0;
 	}
 }
 

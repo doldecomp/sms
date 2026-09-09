@@ -10,8 +10,7 @@ struct JAIMoveParaSet {
 	/* 0xC */ u32 mMoveCounter;
 };
 
-class JAISeParameter {
-public:
+struct JAISeParameter {
 	/* 0x0 */ u16 mPortData[16];
 	/* 0x20 */ u16 mPortUpdate;
 	/* 0x22 */ char unk22[0x124 - 0x22];
@@ -33,61 +32,50 @@ public:
 
 class MuteBit {
 public:
-	u8 flag1 : 1;
-	u8 flag2 : 1;
-	u8 flag3 : 1;
-	u8 flag4 : 1;
-	u8 flag5 : 1;
-	u8 flag6 : 1;
-	u8 flag7 : 1;
-	u8 flag8 : 1;
+	u8 mCurrent : 1;
+	u8 mTarget : 1;
+	u8 mEnable : 1;
 };
 
-class JAISeqUpdateData;
+struct JAISeqUpdateData;
 
-class JAISeqParameter {
-public:
-	/* 0x0 */ u32 unk0;
-	/* 0x4 */ JAIMoveParaSet unk4;
-	/* 0x14 */ JAIMoveParaSet unk14[16];
-
-	/* 0x114 */ JAIMoveParaSet unk114[20];
-	/* 0x254 */ JAIMoveParaSet unk254[20];
-	/* 0x394 */ JAIMoveParaSet unk394[20];
-	/* 0x4D4 */ JAIMoveParaSet unk4D4[20];
-	/* 0x614 */ JAIMoveParaSet unk614[20];
-
-	/* 0x754 */ JAIMoveParaSet unk754[32];
-	/* 0x954 */ JAIMoveParaSet unk954[32];
-	/* 0xB54 */ JAIMoveParaSet unkB54[32];
-	/* 0xD54 */ JAIMoveParaSet unkD54[32];
-	/* 0xF54 */ JAIMoveParaSet unkF54[32];
-	/* 0x1154 */ JAIMoveParaSet unk1154[32];
-
-	/* 0x1354 */ u16 unk1354[32][16];
-
-	/* 0x1754 */ u8 unk1754;
-	/* 0x1755 */ u8 unk1755;
+struct JAISeqParameter {
+	/* 0x0 */ u32 mSeqHandle;
+	/* 0x4 */ JAIMoveParaSet mTempo;
+	/* 0x14 */ JAIMoveParaSet mPortData[16];
+	/* 0x114 */ JAIMoveParaSet mVolume[20];
+	/* 0x254 */ JAIMoveParaSet mPan[20];
+	/* 0x394 */ JAIMoveParaSet mPitch[20];
+	/* 0x4D4 */ JAIMoveParaSet mFxmix[20];
+	/* 0x614 */ JAIMoveParaSet mDolby[20];
+	/* 0x754 */ JAIMoveParaSet mTrackVolume[32];
+	/* 0x954 */ JAIMoveParaSet mTrackPan[32];
+	/* 0xB54 */ JAIMoveParaSet mTrackPitch[32];
+	/* 0xD54 */ JAIMoveParaSet mTrackFxmix[32];
+	/* 0xF54 */ JAIMoveParaSet mTrackDolby[32];
+	/* 0x1154 */ JAIMoveParaSet mTrackFir[32];
+	/* 0x1354 */ u16 mTrackPortData[32][16];
+	/* 0x1754 */ u8 mAutoHeapPosition;
+	/* 0x1755 */ u8 mPauseMode;
 	/* 0x1756 */ s16 unk1756;
-	/* 0x1758 */ u32 unk1758;
-	/* 0x175C */ u32 unk175C;
-	/* 0x1760 */ u32 unk1760;
-	/* 0x1764 */ u32 unk1764;
-	/* 0x1768 */ u32 unk1768;
-	/* 0x176C */ u32 unk176C;
-	/* 0x1770 */ u32 unk1770;
-	/* 0x1774 */ u32 unk1774;
-	/* 0x1778 */ u32 unk1778;
-	/* 0x177C */ u32 unk177C;
-	/* 0x1780 */ u32 unk1780;
-	/* 0x1784 */ u32 unk1784;
-	/* 0x1788 */ u32 unk1788;
-	/* 0x178C */ u32 unk178C;
-
-	/* 0x1790 */ u32 unk1790[32];
-	/* 0x1810 */ u8 unk1810[32];
-	/* 0x1830 */ MuteBit unk1830[32];
-	/* 0x1850 */ JAISeqUpdateData* unk1850;
+	/* 0x1758 */ u32 mWaitSceneSet;
+	/* 0x175C */ u32 mPortUpdate;
+	/* 0x1760 */ u32 mVolumeUpdate;
+	/* 0x1764 */ u32 mPanUpdate;
+	/* 0x1768 */ u32 mPitchUpdate;
+	/* 0x176C */ u32 mFxmixUpdate;
+	/* 0x1770 */ u32 mDolbyUpdate;
+	/* 0x1774 */ u32 mTrackVolumeUpdate;
+	/* 0x1778 */ u32 mTrackPanUpdate;
+	/* 0x177C */ u32 mTrackPitchUpdate;
+	/* 0x1780 */ u32 mTrackFxmixUpdate;
+	/* 0x1784 */ u32 mTrackDolbyUpdate;
+	/* 0x1788 */ u32 mTrackFirUpdate;
+	/* 0x178C */ u32 mTrackPortUpdate;
+	/* 0x1790 */ u32 mTrackPortDataUpdate[32];
+	/* 0x1810 */ u8 mTrackInterruptSwitch[32];
+	/* 0x1830 */ MuteBit mMuteBits[32];
+	/* 0x1850 */ JAISeqUpdateData* mUpdateData;
 	/* 0x1854 */ JAISeqParameter* mPrev;
 	/* 0x1858 */ JAISeqParameter* mNext;
 };

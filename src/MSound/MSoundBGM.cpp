@@ -289,7 +289,7 @@ JAISound* MSBgm::getHandle(u8 param)
 JASystem::TTrack* MSBgm::getJASTrack(JAISound* sound, u8 param_2)
 {
 	JASystem::TTrack* pTVar3
-	    = JASystem::TrackMgr::handleToSeq(sound->getSeqParameter()->unk0);
+	    = JASystem::TrackMgr::handleToSeq(sound->getSeqParameter()->mSeqHandle);
 	if (!pTVar3)
 		return nullptr;
 

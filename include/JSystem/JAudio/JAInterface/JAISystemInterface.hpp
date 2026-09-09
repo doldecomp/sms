@@ -5,8 +5,8 @@
 #include <JSystem/JAudio/JASystem/JASCmdStack.hpp>
 
 class JAISound;
-class JAISeqUpdateData {
-public:
+
+struct JAISeqUpdateData {
 	/* 0x0 */ u8 unk0;
 	/* 0x0 */ u8 unk1;
 	/* 0x0 */ u8 unk2;
@@ -49,7 +49,7 @@ public:
 	/* 0x4C */ FabricatedUnk4CStruct* unk4C;
 };
 
-class JAISeqParameter;
+struct JAISeqParameter;
 
 namespace JAISystemInterface {
 
