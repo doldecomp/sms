@@ -240,48 +240,48 @@ f32 JAISound::setDistanceVolumeCommon(f32 param_1, u8 param_2)
 
 f32 JAISound::setDistancePanCommon()
 {
+	f32 result;
 	if (JAIGlobalParameter::audioCameraMax == 1) {
 		FabricatedPositionInfo& info = unk1C[0];
 
-		f32 fVar3 = std::fabsf(info.unk0.x);
-		f32 fVar2 = std::fabsf(info.unk0.z);
+		f32 distanceX = std::fabsf(info.unk0.x);
+		f32 distanceZ = std::fabsf(info.unk0.z);
 
-		if (fVar3 < 1.0f && fVar2 < 1.0f)
+		if (distanceX < 1.0f && distanceZ < 1.0f)
 			return 0.5f;
 
-		if (JAIGlobalParameter::panDistanceMax < fVar3)
-			fVar3 = JAIGlobalParameter::panDistanceMax;
+		if (JAIGlobalParameter::panDistanceMax < distanceX)
+			distanceX = JAIGlobalParameter::panDistanceMax;
 
-		if (JAIGlobalParameter::panDistanceMax < fVar2)
-			fVar2 = JAIGlobalParameter::panDistanceMax;
+		if (JAIGlobalParameter::panDistanceMax < distanceZ)
+			distanceZ = JAIGlobalParameter::panDistanceMax;
 
-		f32 result;
-
+		f32 pan;
 		if (info.unk0.x == 0.0f && info.unk0.z == 0.0f) {
-			result = 0.5f;
-		} else if (info.unk0.x > 0.0f && fVar3 >= fVar2) {
-			result = 1.0f
-			         - (JAIGlobalParameter::panDistance2Max - fVar3)
-			               / (JAIGlobalParameter::panAngleParameter
-			                  * (JAIGlobalParameter::panDistance2Max - fVar2));
-		} else if (info.unk0.x <= 0.0f && fVar3 >= fVar2) {
-			result = (JAIGlobalParameter::panDistance2Max - fVar3)
-			         / (JAIGlobalParameter::panAngleParameter
-			            * (JAIGlobalParameter::panDistance2Max - fVar2));
+			pan = 0.5f;
+		} else if (info.unk0.x > 0.0f && distanceX >= distanceZ) {
+			pan = 1.0f
+			      - (JAIGlobalParameter::panDistance2Max - distanceX)
+			            / (JAIGlobalParameter::panAngleParameter
+			               * (JAIGlobalParameter::panDistance2Max - distanceZ));
+		} else if (info.unk0.x <= 0.0f && distanceX >= distanceZ) {
+			pan = (JAIGlobalParameter::panDistance2Max - distanceX)
+			      / (JAIGlobalParameter::panAngleParameter
+			         * (JAIGlobalParameter::panDistance2Max - distanceZ));
 		} else {
-			result
-			    = info.unk0.x / (JAIGlobalParameter::panAngleParameter2 * fVar2)
+			pan = info.unk0.x
+			          / (JAIGlobalParameter::panAngleParameter2 * distanceZ)
 			      + 0.5f;
 		}
 
-		return result;
+		result = pan;
+	} else if (unk4 != 4) {
+		result = unk4 & 1;
 	} else {
-		if (unk4 != 4) {
-			return unk4 & 1;
-		} else {
-			return 0.5f;
-		}
+		result = 0.5f;
 	}
+
+	return result;
 }
 
 f32 JAISound::setPositionDopplarCommon(u32 param_1)
@@ -720,15 +720,11 @@ void JAISound::setSeDistancePitch(u8 param_1)
 {
 	f32 pitch = 1.0f;
 	if (checkSwBit(0x10)) {
-		pitch = 1.0f
-		        - (f32)((u8)(JAIConst::random.get_ufloat_1() * 16.0f) & 0xF)
-		              / 192.0f;
+		pitch = 1.0f - (f32)(JAIConst::random.get_uint8(16) & 0xF) / 192.0f;
 	}
 
 	if (checkSwBit(0x4000) && !checkSwBit(0x2) && !checkSwBit(0x300)) {
 		if (JAIGlobalParameter::audioCameraMax == 1) {
-			// TODO: likely an inline. setSeDistanceFxmix has the same
-			// shape, with the same distance local.
 			f32 dist = unk1C->unk18;
 			if (dist >= JAIGlobalParameter::distanceMax) {
 				pitch += JAIGlobalParameter::seDistancepitchMax;
@@ -764,7 +760,6 @@ void JAISound::setSePositionDopplar()
 	setSeInterPitch(1, dVar5, uVar4, 0);
 }
 
-#pragma dont_inline on
 void JAISound::setSeDistanceFxmix(u8 param_1)
 {
 	u16 fx = JAIGlobalParameter::seDefaultFx;
@@ -781,14 +776,10 @@ void JAISound::setSeDistanceFxmix(u8 param_1)
 	}
 	if (fx > 0x7F)
 		fx = 0x7F;
-	// TODO: how do we make this not get inlined? :(
-	setSeInterFxmix(4, (u8)fx / 127.0f, param_1, 0);
+	setSeInterFxmixU7(4, fx, param_1, 0);
 }
-#pragma dont_inline off
-
 void JAISound::setSeDistanceFir(u8) { }
 
-#pragma dont_inline on
 void JAISound::setSeDistanceDolby(u8 param_1)
 {
 	FabricatedPositionInfo* pi = unk1C;
@@ -812,10 +803,8 @@ void JAISound::setSeDistanceDolby(u8 param_1)
 			}
 		}
 	}
-	setSeInterDolby(4, (u8)fVar1 / 127.0f, param_1, 0);
+	setSeInterDolbyU7(4, (u8)fVar1, param_1, 0);
 }
-#pragma dont_inline off
-
 void JAISound::setStreamMode(u32) { }
 
 void JAISound::setStreamInterVolume(u8 param_1, f32 param_2, u32 param_3)
@@ -886,8 +875,7 @@ void JAISound::setPauseMode(u8 param_1, u8 param_2)
 			if (param_1) {
 				switch (param_1) {
 				case 1:
-					// TODO: should be volume, but that gets inlined =(
-					setSeqInterDolby(11, param_2 / 127.0f, 1);
+					setSeqInterVolumeU7(11, param_2, 1);
 					break;
 				case 2:
 					JASystem::TrackMgr::handleToSeq(getSeqParameter()->unk0)
