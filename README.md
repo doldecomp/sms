@@ -44,13 +44,7 @@ macOS
   brew install ninja
   ```
 
-- Install [wibo-macos](https://github.com/decompals/wibo) from their latest releases.
-
-After OS upgrades, if macOS complains about `wibo` being unverified, you can unquarantine it using:
-
-```sh
-xattr -d com.apple.quarantine path/to/wibo
-```
+[wibo](https://github.com/decompals/wibo), a minimal 32-bit Windows binary wrapper, will be automatically downloaded and used.
 
 Linux
 ------
