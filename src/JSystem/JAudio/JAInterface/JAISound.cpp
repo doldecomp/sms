@@ -572,7 +572,7 @@ void JAISound::setSeInterVolume(u8 param_1, f32 param_2, u32 param_3,
 	if (!getSeParameter())
 		return;
 
-	JAIMoveParaSet* set = &getSeParameter()->unk124[param_1];
+	JAIMoveParaSet* set = &getSeParameter()->mVolume[param_1];
 	set->mTargetValue   = param_2;
 	if (param_4 != 0) {
 		u32 uVar5 = (param_4 * 1000) / 127U;
@@ -590,7 +590,7 @@ void JAISound::setSeInterPan(u8 param_1, f32 param_2, u32 param_3, u8 param_4)
 	if (!getSeParameter())
 		return;
 
-	JAIMoveParaSet* set = &getSeParameter()->unk1A4[param_1];
+	JAIMoveParaSet* set = &getSeParameter()->mPan[param_1];
 	set->mTargetValue   = param_2;
 	if (param_4 != 0) {
 		u32 uVar5 = (param_4 * 1000) / 127U;
@@ -608,7 +608,7 @@ void JAISound::setSeInterFxmix(u8 param_1, f32 param_2, u32 param_3, u8 param_4)
 	if (!getSeParameter())
 		return;
 
-	JAIMoveParaSet* set = &getSeParameter()->unk2A4[param_1];
+	JAIMoveParaSet* set = &getSeParameter()->mFxmix[param_1];
 	set->mTargetValue   = param_2;
 	if (param_4 != 0) {
 		u32 uVar5 = (param_4 * 1000) / 127U;
@@ -628,7 +628,7 @@ void JAISound::setSeInterDolby(u8 param_1, f32 param_2, u32 param_3, u8 param_4)
 	if (!getSeParameter())
 		return;
 
-	JAIMoveParaSet* set = &getSeParameter()->unk3A4[param_1];
+	JAIMoveParaSet* set = &getSeParameter()->mDolby[param_1];
 	set->mTargetValue   = param_2;
 	if (param_4 != 0) {
 		u32 uVar5 = (param_4 * 1000) / 127U;
@@ -647,7 +647,7 @@ void JAISound::setSeInterPitch(u8 param_1, f32 param_2, u32 param_3,
 	if (!getSeParameter())
 		return;
 
-	JAIMoveParaSet* set = &getSeParameter()->unk224[param_1];
+	JAIMoveParaSet* set = &getSeParameter()->mPitch[param_1];
 	set->mTargetValue   = param_2;
 	if (param_4 != 0) {
 		u32 uVar5 = (param_4 * 1000);
@@ -666,8 +666,8 @@ void JAISound::setSePortData(u8 param_1, u16 param_2)
 		return;
 
 	if (mState == SOUNDSTATE_Stored) {
-		getSeParameter()->unk0[param_1] = param_2;
-		getSeParameter()->unk20 |= 1 << param_1;
+		getSeParameter()->mPortData[param_1] = param_2;
+		getSeParameter()->mPortUpdate |= 1 << param_1;
 	} else {
 		interPointer->mSeSequence->setTrackPortData(mTrack, param_1, param_2);
 	}

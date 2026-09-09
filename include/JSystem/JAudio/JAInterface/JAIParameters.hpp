@@ -12,21 +12,21 @@ struct JAIMoveParaSet {
 
 class JAISeParameter {
 public:
-	/* 0x0 */ u16 unk0[16];
-	/* 0x20 */ u16 unk20;
+	/* 0x0 */ u16 mPortData[16];
+	/* 0x20 */ u16 mPortUpdate;
 	/* 0x22 */ char unk22[0x124 - 0x22];
-	/* 0x124 */ JAIMoveParaSet unk124[8];
-	/* 0x1A4 */ JAIMoveParaSet unk1A4[8];
-	/* 0x224 */ JAIMoveParaSet unk224[8];
-	/* 0x2A4 */ JAIMoveParaSet unk2A4[8];
-	/* 0x324 */ JAIMoveParaSet unk324[8];
-	/* 0x3A4 */ JAIMoveParaSet unk3A4[8];
-	/* 0x424 */ u32 unk424;
-	/* 0x428 */ u32 unk428;
-	/* 0x42C */ u32 unk42C;
-	/* 0x430 */ u32 unk430;
-	/* 0x434 */ u32 unk434;
-	/* 0x438 */ u32 unk438;
+	/* 0x124 */ JAIMoveParaSet mVolume[8];
+	/* 0x1A4 */ JAIMoveParaSet mPan[8];
+	/* 0x224 */ JAIMoveParaSet mPitch[8];
+	/* 0x2A4 */ JAIMoveParaSet mFxmix[8];
+	/* 0x324 */ JAIMoveParaSet mFir[8];
+	/* 0x3A4 */ JAIMoveParaSet mDolby[8];
+	/* 0x424 */ f32* mVolumePointer;
+	/* 0x428 */ f32* mPanPointer;
+	/* 0x42C */ f32* mPitchPointer;
+	/* 0x430 */ f32* mFxmixPointer;
+	/* 0x434 */ f32* mFirPointer;
+	/* 0x438 */ f32* mDolbyPointer;
 	/* 0x43C */ JAISeParameter* mPrev;
 	/* 0x440 */ JAISeParameter* mNext;
 };

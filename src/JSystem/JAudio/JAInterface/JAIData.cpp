@@ -212,35 +212,35 @@ void JAIData::initSePara(JAISeParameter* param)
 {
 	f32 dolby = JAIGlobalParameter::seDolbyCenterValue / 127.0f;
 	for (int i = 0; i < 8; ++i) {
-		param->unk124[i].mCurrentValue = 1.0f;
-		param->unk1A4[i].mCurrentValue = 0.5f;
-		param->unk224[i].mCurrentValue = 1.0f;
-		param->unk2A4[i].mCurrentValue = 0.0f;
-		param->unk324[i].mCurrentValue = 0.0f;
-		param->unk3A4[i].mCurrentValue = dolby;
+		param->mVolume[i].mCurrentValue = 1.0f;
+		param->mPan[i].mCurrentValue    = 0.5f;
+		param->mPitch[i].mCurrentValue  = 1.0f;
+		param->mFxmix[i].mCurrentValue  = 0.0f;
+		param->mFir[i].mCurrentValue    = 0.0f;
+		param->mDolby[i].mCurrentValue  = dolby;
 
-		param->unk124[i].mMoveCounter = 0;
-		param->unk1A4[i].mMoveCounter = 0;
-		param->unk224[i].mMoveCounter = 0;
-		param->unk2A4[i].mMoveCounter = 0;
-		param->unk324[i].mMoveCounter = 0;
-		param->unk3A4[i].mMoveCounter = 0;
+		param->mVolume[i].mMoveCounter = 0;
+		param->mPan[i].mMoveCounter    = 0;
+		param->mPitch[i].mMoveCounter  = 0;
+		param->mFxmix[i].mMoveCounter  = 0;
+		param->mFir[i].mMoveCounter    = 0;
+		param->mDolby[i].mMoveCounter  = 0;
 	}
-	param->unk124[7].mCurrentValue = -1.0f;
-	param->unk1A4[7].mCurrentValue = -1.0f;
-	param->unk224[7].mCurrentValue = -1.0f;
-	param->unk2A4[7].mCurrentValue = -1.0f;
-	param->unk324[7].mCurrentValue = -1.0f;
-	param->unk3A4[7].mCurrentValue = -1.0f;
+	param->mVolume[7].mCurrentValue = -1.0f;
+	param->mPan[7].mCurrentValue    = -1.0f;
+	param->mPitch[7].mCurrentValue  = -1.0f;
+	param->mFxmix[7].mCurrentValue  = -1.0f;
+	param->mFir[7].mCurrentValue    = -1.0f;
+	param->mDolby[7].mCurrentValue  = -1.0f;
 
-	param->unk424 = 0;
-	param->unk428 = 0;
-	param->unk42C = 0;
-	param->unk430 = 0;
-	param->unk434 = 0;
-	param->unk438 = 0;
+	param->mVolumePointer = nullptr;
+	param->mPanPointer    = nullptr;
+	param->mPitchPointer  = nullptr;
+	param->mFxmixPointer  = nullptr;
+	param->mFirPointer    = nullptr;
+	param->mDolbyPointer  = nullptr;
 
-	param->unk20 = 0;
+	param->mPortUpdate = 0;
 }
 
 void JAIData::initStreamParaLinkBuffer()
