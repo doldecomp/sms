@@ -127,7 +127,8 @@ void MSHandle::setSeDistancePan(u8 param_1)
 
 	f32 thing = ptr->unk18;
 
-	f32 d = calcPan(ptr->unk0, thing, smSeCategory[get_thing(mSoundID)].unk4);
+	f32 d = calcPan(ptr->mCamSpacePos, thing,
+	                smSeCategory[get_thing(mSoundID)].unk4);
 	setSeInterPan(4, d, param_1, 0);
 }
 
@@ -171,13 +172,13 @@ f32 MSHandle::calcPan(const Vec& param_1, f32 param_2, f32 param_3)
 
 void MSHandle::setSeDistanceDolby(u8 param_1)
 {
-	f32 d = calcDolby(unk1C->unk0, unk1C->unk18);
+	f32 d = calcDolby(unk1C->mCamSpacePos, unk1C->unk18);
 	setSeInterDolby(4, d, param_1, 0);
 }
 
-f32 MSHandle::calcDolby(const Vec& param_1, f32 param_2)
+f32 MSHandle::calcDolby(const Vec& pos, f32 dist)
 {
-	f32 dVar2 = param_2 <= 0.0f ? 0.0f : MSACos(-param_1.y / param_2);
+	f32 dVar2 = dist <= 0.0f ? 0.0f : MSACos(-pos.y / dist);
 
 	f32 zeroRad = cDol_0Rad;
 	f32 halfRad = cDol_HalfRad;
@@ -193,8 +194,8 @@ f32 MSHandle::calcDolby(const Vec& param_1, f32 param_2)
 		dVar2 = 1.0f;
 	}
 
-	if (param_2 < cPan_HiSence_Dist) {
-		dVar2 = param_2 * ((dVar2 - 0.5f) / cPan_HiSence_Dist) + 0.5f;
+	if (dist < cPan_HiSence_Dist) {
+		dVar2 = dist * ((dVar2 - 0.5f) / cPan_HiSence_Dist) + 0.5f;
 	}
 
 	if (dVar2 > 1.0f)

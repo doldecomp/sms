@@ -110,7 +110,7 @@ void MAnmSoundNPC::startAnimSound(void* param_1, u32 param_2,
 				const Vec* pfVar7 = param_4->mTranslation;
 				f32 fVar11;
 				if (MSGMSound->cameraLooksAtMario()) {
-					const Vec* pVVar8 = MSGMSound->unkAC[0].unk0;
+					const Vec* pVVar8 = MSGMSound->unkAC[0].mPosition;
 					fVar11
 					    = std::sqrtf(std::powf(pfVar7->x - pVVar8->x, 2.0f)
 					                 + std::powf(pfVar7->y - pVVar8->y, 2.0f)

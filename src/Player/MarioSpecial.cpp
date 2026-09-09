@@ -353,7 +353,7 @@ BOOL TMario::moveRoof()
 	if (mInput & 0x20)
 		return changePlayerStatus(MARIO_STATUS_WAIT_ROOF, mStatusArg, false);
 
-	f32 dist = JGeometry::TVec3<f32>(mPosition - unk29C).length();
+	f32 dist = JGeometry::TVec3<f32>(mPosition - mPrevPosition).length();
 	dist *= mHangRoofParams.mAnmMult.get();
 	if (mStatusArg & 1)
 		setAnimation(ANIM_LADDER_HANG_MOVE_L, dist);
@@ -586,8 +586,8 @@ BOOL TMario::hanging()
 	mModelFaceAngle = mFaceAngle.y;
 
 	if (pulledUp == TRUE) {
-		f32 dx = mPosition.x - unk29C.x;
-		f32 dz = mPosition.z - unk29C.z;
+		f32 dx = mPosition.x - mPrevPosition.x;
+		f32 dz = mPosition.z - mPrevPosition.z;
 		f32 anmRate
 		    = MsSqrtf(dx * dx + dz * dz) * mHangingParams.mAnmRate.get();
 		if (yawDiff < 0)
@@ -1265,9 +1265,9 @@ BOOL TMario::pulling()
 		JGeometry::TVec3<f32> delta;
 		if ((mHeldObject->getActorType() == 0x8000006 ? true : false)
 		    || (mHeldObject->getActorType() == 0x8000008 ? true : false)) {
-			delta = pos - unk29C;
+			delta = pos - mPrevPosition;
 		} else {
-			delta = mPosition - unk29C;
+			delta = mPosition - mPrevPosition;
 		}
 
 		f32 len = delta.length();
@@ -1430,11 +1430,11 @@ BOOL TMario::fenceMove()
 		if (mIntendedMag > 0.0f) {
 			f32 hDot, vDiff, dist;
 			if (unk2C0 == nullptr) {
-				vDiff    = mPosition.y - unk29C.y;
+				vDiff    = mPosition.y - mPrevPosition.y;
 				f32 sinY = JMASSin(mFaceAngle.y);
 				f32 cosY = JMASCos(mFaceAngle.y);
 
-				JGeometry::TVec3<f32> diff = mPosition - unk29C;
+				JGeometry::TVec3<f32> diff = mPosition - mPrevPosition;
 
 				hDot = -cosY * diff.z + sinY * diff.x;
 				dist = diff.length();

@@ -606,11 +606,11 @@ MSStage* MSStage::init(u8 param_1, u8)
 			}
 
 			smMSStage = new MSStageDistFade(
-			    gpMSound->unkAC[1].unk0, fVar1, fVar2, uVar6,
+			    gpMSound->unkAC[1].mPosition, fVar1, fVar2, uVar6,
 			    MSMainProc::MSStageInfo::distFadeStageToKage);
 		} else {
 			smMSStage = new MSStageDistFadeMonte(
-			    gpMSound->unkAC[1].unk0, 6000.0f, 1600.0f, 90,
+			    gpMSound->unkAC[1].mPosition, 6000.0f, 1600.0f, 90,
 			    MSMainProc::MSStageInfo::distFadeStageToKage);
 		}
 		break;

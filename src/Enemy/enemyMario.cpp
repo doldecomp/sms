@@ -1609,8 +1609,8 @@ void TEnemyMario::checkController(JDrama::TGraphics*)
 
 void TEnemyMario::playerControl(JDrama::TGraphics* graphics)
 {
-	unk9C  = mFaceAngle.y;
-	unk29C = mPosition;
+	unk9C         = mFaceAngle.y;
+	mPrevPosition = mPosition;
 	offUnk114(UNK114_FLAG_UNK8);
 	checkPlayerAction(graphics);
 	stateMachine();

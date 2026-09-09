@@ -395,34 +395,33 @@ void MSound::setCameraInfo(Vec* param_1, Vec* param_2, MtxPtr param_3,
 	}
 }
 
-void MSound::setPlayerInfo(Vec* param_1, Vec* param_2, MtxPtr param_3,
-                           bool param_4)
+void MSound::setPlayerInfo(Vec* pos, Vec* prev_pos, MtxPtr view_mtx,
+                           bool is_mario)
 {
-	u8 i = param_4 == 1 ? 0 : 1;
-	if (param_1 == 0) {
+	u8 i = is_mario == 1 ? 0 : 1;
+	if (pos == 0) {
 		unkAC[i] = JAICamera();
 		unkAC[i] = JAInullCamera;
 	} else {
-		unkAC[i].unk0 = param_1;
-		unkAC[i].unk4 = param_2;
-		unkAC[i].unk8 = param_3;
+		unkAC[i].mPosition     = pos;
+		unkAC[i].mPrevPosition = prev_pos;
+		unkAC[i].nViewMtx      = view_mtx;
 		MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_MV10A_CRY_SHORT_01,
 		                                              1);
 		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_MV10A_CRY_SHORT_01,
-		                                          param_1);
+		                                          pos);
 		MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_MV16_EXERT_CONT_01,
 		                                              1);
 		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_MV16_EXERT_CONT_01,
-		                                          param_1);
+		                                          pos);
 		MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_MA_WATER_WAIT, 1);
-		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_MA_WATER_WAIT,
-		                                          param_1);
+		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_MA_WATER_WAIT, pos);
 	}
 }
 
 f32 MSound::getDistFromCamera(Vec* pos)
 {
-	return JALCalc::getDist(pos, mAudioCameras->unk0);
+	return JALCalc::getDist(pos, mAudioCameras->mPosition);
 }
 
 MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
@@ -831,8 +830,8 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 		case MSD_SE_MV23_JUMP_LARGE_01:
 		case MSD_SE_MV24_JUMP_SPECIAL_01:
 		case MSD_SE_MV25A_JUMP_HUGE_01:
-			JAIActor local_38(unkAC[iVar3].unk0, unkAC[iVar3].unk0,
-			                  unkAC[iVar3].unk0, 0);
+			JAIActor local_38(unkAC[iVar3].mPosition, unkAC[iVar3].mPosition,
+			                  unkAC[iVar3].mPosition, 0);
 			MSoundSESystem::MSoundSE::startSoundActorInner(
 			    MSD_SE_NPC_VA_MTMAN_JUMP1, unk8C + iVar6, &local_38, 1, 4);
 			return MSD_SE_NPC_VA_MTMAN_JUMP1;
@@ -1000,8 +999,8 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 		break;
 	}
 
-	JAIActor local_48(unkAC[iVar3].unk0, unkAC[iVar3].unk0, unkAC[iVar3].unk0,
-	                  0);
+	JAIActor local_48(unkAC[iVar3].mPosition, unkAC[iVar3].mPosition,
+	                  unkAC[iVar3].mPosition, 0);
 	MSoundSESystem::MSoundSE::startSoundActorInner(param_1, unk8C + iVar6,
 	                                               &local_48, 1, 4);
 	if (unk8C[iVar6] != nullptr) {
