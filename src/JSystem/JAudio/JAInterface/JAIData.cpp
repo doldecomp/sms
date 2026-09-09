@@ -423,8 +423,8 @@ u8* JAIData::getFreeStayHeapPointer(u32 param1, u32 param2)
 	    && mStayHeapCount < JAIGlobalParameter::stayHeapMax) {
 		result = (u8*)unk1F0[mStayHeapCount].mPointer;
 		unk1F0[mStayHeapCount].mSeqNumber = param2;
-		u8* ptr = (u8*)((param1 & ~0x1F)
-		                + (uintptr_t)unk1F0[mStayHeapCount].mPointer);
+		u8* ptr                           = (u8*)((param1 & ~0x1F)
+                        + (uintptr_t)unk1F0[mStayHeapCount].mPointer);
 		if (param1 & 0x1F)
 			ptr += 0x20;
 		++mStayHeapCount;
