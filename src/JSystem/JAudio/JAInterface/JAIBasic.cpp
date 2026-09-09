@@ -293,27 +293,27 @@ void JAIBasic::checkInitDataOnMemory()
 		case JAIINITDATA_SoundTables:
 			if (((u32*)mInitDataPointer)[i + 2] != 0) {
 				u8* buffer = mInitDataPointer + ((u32*)mInitDataPointer)[i++];
-				data->mSeTable.unk28 = ((u32*)mInitDataPointer)[i++];
-				data->mSeTable.unk78
-				    = (u8*)transInitDataFile(buffer, data->mSeTable.unk28);
+				data->mSeTable.mDataSize = ((u32*)mInitDataPointer)[i++];
+				data->mSeTable.mData
+				    = (u8*)transInitDataFile(buffer, data->mSeTable.mDataSize);
 
 				buffer = mInitDataPointer + ((u32*)mInitDataPointer)[i++];
-				data->mSeqTable.unk28 = ((u32*)mInitDataPointer)[i++];
-				data->mSeqTable.unk78
-				    = (u8*)transInitDataFile(buffer, data->mSeqTable.unk28);
+				data->mSeqTable.mDataSize = ((u32*)mInitDataPointer)[i++];
+				data->mSeqTable.mData
+				    = (u8*)transInitDataFile(buffer, data->mSeqTable.mDataSize);
 
-				data->mStreamTable.unk78
+				data->mStreamTable.mData
 				    = mInitDataPointer + ((u32*)mInitDataPointer)[i++];
-				data->mStreamTable.unk28 = ((u32*)mInitDataPointer)[i++];
-				data->mStreamTable.unk78
-				    = (u8*)transInitDataFile(buffer, data->mStreamTable.unk28);
+				data->mStreamTable.mDataSize = ((u32*)mInitDataPointer)[i++];
+				data->mStreamTable.mData     = (u8*)transInitDataFile(
+                    buffer, data->mStreamTable.mDataSize);
 
 				data->mSeparateSoundTables = 1;
 			} else {
 				u8* buffer = mInitDataPointer + ((u32*)mInitDataPointer)[i++];
-				data->mSeTable.unk28 = ((u32*)mInitDataPointer)[i++];
-				data->mSeTable.unk78
-				    = (u8*)transInitDataFile(buffer, data->mSeTable.unk28);
+				data->mSeTable.mDataSize = ((u32*)mInitDataPointer)[i++];
+				data->mSeTable.mData
+				    = (u8*)transInitDataFile(buffer, data->mSeTable.mDataSize);
 				++i;
 				data->mSeparateSoundTables = 0;
 			}
@@ -1147,13 +1147,13 @@ u32 JAIBasic::getInfoFormat(JAISoundTable* table, u32 id)
 	u32 result = 0;
 	switch (id & JAISoundID_TypeMask) {
 	case JAISoundID_Type_Se:
-		result = ((u8*)table->unk78)[0];
+		result = ((u8*)table->mData)[0];
 		break;
 	case JAISoundID_Type_Sequence:
-		result = ((u8*)table->unk78)[1];
+		result = ((u8*)table->mData)[1];
 		break;
 	case JAISoundID_Type_Stream:
-		result = ((u8*)table->unk78)[2];
+		result = ((u8*)table->mData)[2];
 		break;
 	}
 	return result;

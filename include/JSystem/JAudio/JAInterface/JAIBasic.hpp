@@ -39,7 +39,7 @@ extern JAICamera JAInullCamera;
 class JAIActor;
 class JAILinkBuffer;
 class JAIDummyVec;
-class JAISoundTable;
+struct JAISoundTable;
 
 class JAIBasic {
 public:

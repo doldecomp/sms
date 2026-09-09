@@ -264,7 +264,7 @@ JALSystem::TFlagManager::TFlagManager()
 	u8 i;
 	u16 j;
 	for (i = 0; i < 16; ++i) {
-		size    = JAIBasic::getInterface()->unk0->mSeTable.unk2[i];
+		size    = JAIBasic::getInterface()->unk0->mSeTable.mSoundMax[i];
 		unk0[i] = new u16[size];
 		for (j = 0; j < size; ++j)
 			unk0[i][j] = 0;
