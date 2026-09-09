@@ -222,6 +222,24 @@ public:
 
 	u32 getUnk8Lo() { return mSoundID & 0x3FF; }
 
+	void setSeqInterVolumeU7(u8 param, u8 value, u32 moveTime)
+	{
+		f32 volume = value / 127.0f;
+		setSeqInterVolume(param, volume, moveTime);
+	}
+
+	void setSeInterFxmixU7(u8 param, u8 value, u32 moveTime, u8 random)
+	{
+		f32 fxmix = value / 127.0f;
+		setSeInterFxmix(param, fxmix, moveTime, random);
+	}
+
+	void setSeInterDolbyU7(u8 param, u8 value, u32 moveTime, u8 random)
+	{
+		f32 dolby = value / 127.0f;
+		setSeInterDolby(param, dolby, moveTime, random);
+	}
+
 	static JAIBasic* interPointer;
 };
 
