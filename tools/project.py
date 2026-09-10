@@ -277,8 +277,8 @@ class ProjectConfig:
     def use_wibo(self) -> bool:
         return (
             self.wibo_tag is not None
-            and sys.platform == "linux"
-            and platform.machine() in ("i386", "x86_64")
+            and sys.platform in ("linux", "darwin")
+            and platform.machine() in ("i386", "x86_64", "arm64")
             and self.wrapper is None
         )
 
@@ -975,7 +975,13 @@ def generate_build_ninja(
                         "basefile": pch_out_abs_path.with_suffix(""),
                         "basefilestem": pch_out_abs_path.stem,
                     },
-                    implicit=[*mwcc_implicit],
+                    implicit=[
+                        *(
+                            mwcc_sjis_implicit
+                            if pch.get("shift_jis", config.shift_jis)
+                            else mwcc_implicit
+                        )
+                    ],
                 )
                 n.newline()
 
