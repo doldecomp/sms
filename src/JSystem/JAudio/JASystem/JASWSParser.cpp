@@ -42,19 +42,19 @@ TWaveBank* WSParser::createBasicWaveBank(void* data)
 			TWave* waveRaw = archiveRaw->mWaveOffsets[waveIndex].ptr(header);
 			TWaveInfo info;
 
-			info.unk0  = waveRaw->unk0;
-			info.unk1  = waveRaw->unk1;
-			info.unk2  = waveRaw->unk2;
-			info.unk4  = waveRaw->unk4;
-			info.unk8  = waveRaw->mOffset;
-			info.unkC  = waveRaw->unkC;
-			info.unk10 = waveRaw->unk10;
-			info.unk14 = waveRaw->unk14;
-			info.unk18 = waveRaw->unk18;
-			info.unk1c = waveRaw->unk1c;
-			info.unk20 = waveRaw->unk20;
-			info.unk22 = waveRaw->unk22;
-			info.unk28 = waveRaw->unk28;
+			info.unk0    = waveRaw->unk0;
+			info.unk1    = waveRaw->unk1;
+			info.unk2    = waveRaw->unk2;
+			info.unk4    = waveRaw->unk4;
+			info.mOffset = waveRaw->mOffset;
+			info.unkC    = waveRaw->unkC;
+			info.unk10   = waveRaw->unk10;
+			info.unk14   = waveRaw->unk14;
+			info.unk18   = waveRaw->unk18;
+			info.unk1c   = waveRaw->unk1c;
+			info.unk20   = waveRaw->unk20;
+			info.unk22   = waveRaw->unk22;
+			info.unk28   = waveRaw->unk28;
 
 			TCtrlWave* ctrlWaveRaw
 			    = ctrlRaw->mCtrlWaveOffsets[waveIndex].ptr(header);
@@ -105,19 +105,19 @@ TWaveBank* WSParser::createSimpleWaveBank(void* data)
 	for (int waveIndex = 0; waveIndex < ctrlRaw->mWaveCount; waveIndex++) {
 		TWave* waveRaw = archiveRaw->mWaveOffsets[waveIndex].ptr(header);
 		TWaveInfo info;
-		info.unk0  = waveRaw->unk0;
-		info.unk1  = waveRaw->unk1;
-		info.unk2  = waveRaw->unk2;
-		info.unk4  = waveRaw->unk4;
-		info.unk8  = waveRaw->mOffset;
-		info.unkC  = waveRaw->unkC;
-		info.unk10 = waveRaw->unk10;
-		info.unk14 = waveRaw->unk14;
-		info.unk18 = waveRaw->unk18;
-		info.unk1c = waveRaw->unk1c;
-		info.unk20 = waveRaw->unk20;
-		info.unk22 = waveRaw->unk22;
-		info.unk28 = waveRaw->unk28;
+		info.unk0    = waveRaw->unk0;
+		info.unk1    = waveRaw->unk1;
+		info.unk2    = waveRaw->unk2;
+		info.unk4    = waveRaw->unk4;
+		info.mOffset = waveRaw->mOffset;
+		info.unkC    = waveRaw->unkC;
+		info.unk10   = waveRaw->unk10;
+		info.unk14   = waveRaw->unk14;
+		info.unk18   = waveRaw->unk18;
+		info.unk1c   = waveRaw->unk1c;
+		info.unk20   = waveRaw->unk20;
+		info.unk22   = waveRaw->unk22;
+		info.unk28   = waveRaw->unk28;
 
 		TCtrlWave* ctrlWaveRaw
 		    = ctrlRaw->mCtrlWaveOffsets[waveIndex].ptr(header);
