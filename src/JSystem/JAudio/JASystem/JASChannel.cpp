@@ -7,6 +7,7 @@
 #include <JSystem/JAudio/JASystem/JASDriverIF.hpp>
 #include <JSystem/JAudio/JASystem/JASDriverTables.hpp>
 #include <JSystem/JAudio/JASystem/JASCalc.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 #include <types.h>
 
 namespace JASystem {
@@ -543,6 +544,7 @@ void TChannel::init()
 		unk58[2] = unk4->unk62[2];
 	}
 	for (u32 i = 0; i < 4; i++) {
+		JUT_ASSERT(osc[i]);
 		unk38[i]->setOsc(nullptr);
 		unk38[i]->init();
 	}
@@ -554,37 +556,44 @@ void TChannel::init()
 
 void TChannel::setOscillator(u32 index, TOscillator* oscillator)
 {
+	JUT_ASSERT(index < 4);
 	unk38[index] = oscillator;
 }
 
 void TChannel::setOscInit(u32 index, const TOscillator::Osc_* osc)
 {
+	JUT_ASSERT(index < 4);
 	unk38[index]->setOsc(osc);
 	unk38[index]->initStart();
 }
 
 bool TChannel::forceStopOsc(u32 index)
 {
+	JUT_ASSERT(index < 4);
 	return unk38[index]->isOsc() ? unk38[index]->forceStop() : false;
 }
 
 bool TChannel::releaseOsc(u32 index)
 {
+	JUT_ASSERT(index < 4);
 	return unk38[index]->isOsc() ? unk38[index]->release() : false;
 }
 
 void TChannel::directReleaseOsc(u32 index, u16 release)
 {
+	JUT_ASSERT(index < 4);
 	unk38[index]->releaseDirect(release);
 }
 
 f32 TChannel::bankOscToOfs(u32 index)
 {
+	JUT_ASSERT(index < 4);
 	return unk38[index]->isOsc() ? unk38[index]->getOffset() : 1.0f;
 }
 
 void TChannel::effectOsc(u32 index, f32 effect)
 {
+	JUT_ASSERT(index < 4);
 	switch (unk38[index]->getTarget()) {
 	case 1:
 		unk8C *= effect;
@@ -604,12 +613,21 @@ void TChannel::effectOsc(u32 index, f32 effect)
 	}
 }
 
-u8 TChannel::getOscState(u32 index) const { return unk38[index]->mState; }
+u8 TChannel::getOscState(u32 index) const
+{
+	JUT_ASSERT(index < 4);
+	return unk38[index]->mState;
+}
 
-BOOL TChannel::isOsc(u32 index) { return unk38[index]->isOsc(); }
+BOOL TChannel::isOsc(u32 index)
+{
+	JUT_ASSERT(index < 4);
+	return unk38[index]->isOsc();
+}
 
 void TChannel::copyOsc(u32 index, TOscillator::Osc_* dest)
 {
+	JUT_ASSERT(index < 4);
 	if (isOsc(index)) {
 		*dest = *unk38[index]->getOsc();
 	}
@@ -617,6 +635,7 @@ void TChannel::copyOsc(u32 index, TOscillator::Osc_* dest)
 
 void TChannel::overwriteOsc(u32 index, TOscillator::Osc_* src)
 {
+	JUT_ASSERT(index < 4);
 	setOscInit(index, src);
 	effectOsc(index, bankOscToOfs(index));
 }
@@ -847,17 +866,6 @@ BOOL TChannel::playLogicalChannel()
 	return TRUE;
 }
 
-// fabricated
-static inline f32 clamp01(f32 value)
-{
-	if (value <= 0.0f)
-		return 0.0f;
-	else if (value >= 1.0f)
-		return 1.0f;
-	else
-		return value;
-}
-
 void TChannel::updateEffectorParam()
 {
 	f32 pan;
@@ -900,9 +908,9 @@ void TChannel::updateEffectorParam()
 
 	f32 volume = unkA4 * (unk54 * unk90);
 
-	pan   = clamp01(pan);
-	fxmix = clamp01(fxmix);
-	dolby = clamp01(dolby);
+	pan   = Driver::Clamp01(pan);
+	fxmix = Driver::Clamp01(fxmix);
+	dolby = Driver::Clamp01(dolby);
 
 	unk98 = 4096.0f * (unkA0 * (unk50 * unk8C));
 

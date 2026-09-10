@@ -62,9 +62,6 @@ public:
 		}
 	}
 
-	// (TWW) TWW's onUpdate is a linked function that tests mCallback itself.
-	// SMS has no such symbol, and every call site here tests mCallback before
-	// the call, so this revision's body is only the assignment.
 	void onUpdate(u32 param_1) { mCBInterval = mCallback(this, param_1); }
 
 	static void initAll();
