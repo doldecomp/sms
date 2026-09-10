@@ -40,10 +40,10 @@ void JAIBasic::checkEntriedSeq()
 {
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
 		JAISeqUpdateData* sud = &unk0->mSeqTrackInfo[i];
-		JAISound** sound      = &sud->mSound;
-		u32& r27              = sud->unk8;
+		JAISound** sound      = &unk0->mSeqTrackInfo[i].mSound;
+		u32& r27              = unk0->mSeqTrackInfo[i].unk8;
 
-		if (!sud->mSound)
+		if (!*sound)
 			continue;
 
 		if (!(r27 & 1))
@@ -53,7 +53,7 @@ void JAIBasic::checkEntriedSeq()
 			return;
 
 		u32 size = JASystem::Vload::checkSize(
-		    mSeqArchiveHandle + (sud->mSound->mSoundID & JAISoundID_IndexMask));
+		    mSeqArchiveHandle + ((*sound)->mSoundID & JAISoundID_IndexMask));
 
 		u8 pos;
 		u8* ptr = (u8*)unk0->checkOnMemory(
@@ -82,10 +82,10 @@ void JAIBasic::checkEntriedSeq()
 							u32 j;
 							for (j = 0; j < JAIGlobalParameter::seqPlayTrackMax;
 							     ++j) {
-								JAISound* other = unk0->mSeqTrackInfo[j].mSound;
-								if (other
+								if (unk0->mSeqTrackInfo[j].mSound
 								    && unk0->unk1EC[ii].mSeqNumber
-								           == (u8)other->mSoundID) {
+								           == (u8)unk0->mSeqTrackInfo[j]
+								                  .mSound->mSoundID) {
 									j = JAIGlobalParameter::seqPlayTrackMax;
 								}
 							}
@@ -104,10 +104,9 @@ void JAIBasic::checkEntriedSeq()
 					}
 
 					(*sound)->getSeqParameter()->mAutoHeapPosition = pos;
-					JAISound* tmp                                  = *sound;
 					ptr = (u8*)unk0->getFreeAutoHeapPointer(
-					    tmp->getSeqParameter()->mAutoHeapPosition,
-					    tmp->mSoundID & JAISoundID_IndexMask);
+					    (*sound)->getSeqParameter()->mAutoHeapPosition,
+					    (*sound)->mSoundID & JAISoundID_IndexMask);
 				}
 			}
 
