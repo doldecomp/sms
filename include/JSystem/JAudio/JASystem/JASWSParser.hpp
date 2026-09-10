@@ -22,6 +22,8 @@ namespace WSParser {
 	struct TCtrlWave {
 		/* 0x00 */ u32 unk0;
 	};
+
+	// same as JASystem::Driver::Wave_
 	struct TWave {
 		/* 0x00 */ u8 unk0;
 		/* 0x01 */ u8 unk1;

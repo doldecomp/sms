@@ -23,8 +23,8 @@ namespace Driver {
 		/* 0x14 */ int mLoopStart;
 		/* 0x18 */ int mLoopEnd;
 		/* 0x1C */ int mSampleCount;
-		/* 0x20 */ short mLast;       // ADPCM history y[n-1] at the loop start
-		/* 0x22 */ short mPenult;     // ADPCM history y[n-2] at the loop start
+		/* 0x20 */ s16 mLast;         // ADPCM history y[n-1] at the loop start
+		/* 0x22 */ s16 mPenult;       // ADPCM history y[n-2] at the loop start
 		/* 0x24 */ u32* mLoadFlagPtr; // 0 while the wave data is not in memory
 	};
 } // namespace Driver

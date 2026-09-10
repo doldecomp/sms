@@ -30,7 +30,7 @@ u8 TTrack::sOscTable[5]
 TTrack::TTrack()
     : mParent(0)
     , mOuterParam(0)
-    , unk308(0)
+    , mTrackRoute(0)
     , mConnectName(0)
 {
 	mTickCounter = 0.0f;
