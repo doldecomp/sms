@@ -656,7 +656,7 @@ int TSeqParser::cmdPrintf(TTrack* track, u32* args)
 		if (byteArray[i] == 2)
 			registers[i] = (uintptr_t)track->mSeqCtrl.getAddr(registers[i]);
 		else if (byteArray[i] == 5)
-			registers[i] = track->unk308;
+			registers[i] = track->mTrackRoute;
 		else if (byteArray[i] >= 3)
 			registers[i] = track->exchangeRegisterValue(registers[i]);
 	}

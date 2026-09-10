@@ -2,6 +2,7 @@
 #include <JSystem/JAudio/JAInterface/JAIBasic.hpp>
 #include <JSystem/JAudio/JASystem/JASDriverIF.hpp>
 #include <JSystem/JAudio/JAInterface/JAIInter.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 
 u8 JAIGlobalParameter::distanceParameterMoveTime   = 0x03;
 u8 JAIGlobalParameter::audioSystemThreadPriority   = 0x02;
@@ -262,6 +263,10 @@ void JAIGlobalParameter::setParamSoundOutputMode(u32 value)
 	case 2:
 		r31 = 2;
 		r30 = 1;
+		break;
+	default:
+		JUT_ASSERT_MSG(false, "JAIGlobalParameter::setParamSoundOutputMode "
+		                      "出力モードが不正です。\n");
 		break;
 	}
 	JAIBasic::getInterface()->mSoundOutputMode = value;

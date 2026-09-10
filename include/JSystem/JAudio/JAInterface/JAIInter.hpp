@@ -28,12 +28,12 @@ namespace StreamLib {
 	void setBufferMode(bool mode);
 	void sync(s32 param);
 	void Hvqm_SetAudioDmaBuffers(u32 buffers);
-	void getPrepareFlag();
+	u8 getPrepareFlag();
 	void setDecodedBufferBlocks(u32 blocks);
 	void LoopInit();
-	void* Get_DirectPCM_LoopRemain(JASystem::DSPInterface::DSPBuffer* buffer);
-	void* Get_DirectPCM_Counter(JASystem::DSPInterface::DSPBuffer* buffer);
-	void* Get_DirectPCM_Remain(JASystem::DSPInterface::DSPBuffer* buffer);
+	u32 Get_DirectPCM_LoopRemain(JASystem::DSPInterface::DSPBuffer* buffer);
+	u32 Get_DirectPCM_Counter(JASystem::DSPInterface::DSPBuffer* buffer);
+	u32 Get_DirectPCM_Remain(JASystem::DSPInterface::DSPBuffer* buffer);
 } // namespace StreamLib
 } // namespace JAInter
 

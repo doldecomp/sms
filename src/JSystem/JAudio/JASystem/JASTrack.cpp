@@ -1078,8 +1078,8 @@ int TTrack::setSeqData(u8* data, s32 size, Player::SEQ_PLAYMODE mode)
 	if (result == -1)
 		return -1;
 
-	unk308 = result;
-	unk3BC = 3;
+	mTrackRoute = result;
+	unk3BC      = 3;
 	initTrack(data, 0, nullptr);
 	mChannelUpdater.initAllocChannel(0);
 	mTickCounter = 0.0f;
@@ -1261,8 +1261,8 @@ void TTrack::initTrack(void* data, u32 size, TTrack* parent)
 
 int TTrack::startTrack(TTrack* parent, u8 param2, u8 param3, u32 param4)
 {
-	unk308 = (((parent->unk308 << 4) | param2) & 0xfffffff)
-	         | ((parent->unk308 & 0xf0000000) + 0x10000000);
+	mTrackRoute = (((parent->mTrackRoute << 4) | param2) & 0xfffffff)
+	              | ((parent->mTrackRoute & 0xf0000000) + 0x10000000);
 
 	mConnectName = 0;
 	unk3BC       = param3;
