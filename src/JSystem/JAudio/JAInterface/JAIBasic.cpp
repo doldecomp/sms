@@ -783,7 +783,6 @@ void JAIBasic::startSoundBasic(u32 id, JAISound** sound, JAIActor* actor,
 
 void JAIBasic::getPlayingSoundHandle(JAISound** sound, u32 param) { }
 
-#pragma dont_inline on
 void JAIBasic::stopSoundHandle(JAISound* sound, u32 param)
 {
 	if (sound) {
@@ -837,9 +836,8 @@ void JAIBasic::stopSoundHandle(JAISound* sound, u32 param)
 		}
 	}
 }
-#pragma dont_inline off
 
-u32 JAIBasic::changeIDToCategory(u32 id) { return id >> 0xc & 0xff; }
+u32 JAIBasic::changeIDToCategory(u32 id) { return id >> 12 & 0xff; }
 
 void JAIBasic::stopPlayingObjectSe(void* obj) { }
 
