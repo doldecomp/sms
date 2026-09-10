@@ -264,6 +264,9 @@ public:
 	void setTranspose(s32 transpose) { mTranspose = transpose; }
 	void setVolumeMode(u8 mode) { mVolumeMode = mode; }
 
+	// fabricated
+	u32 getTrackRoute() const { return mTrackRoute; }
+
 public:
 	/* 0x0 */ TSeqCtrl mSeqCtrl;
 	/* 0x48 */ TTrackPort mTrackPort;
@@ -276,7 +279,7 @@ public:
 	/* 0x2C0 */ TTrack* mParent;
 	/* 0x2C4 */ TTrack* mChildren[16];
 	/* 0x304 */ TOuterParam* mOuterParam;
-	/* 0x308 */ u32 unk308;
+	/* 0x308 */ u32 mTrackRoute;
 	/* 0x30C */ TOscillator::Osc_ mOscData[2];
 	/* 0x33C */ TOscillator mOscillators[2];
 	/* 0x37C */ s16 mAdsTable[12];

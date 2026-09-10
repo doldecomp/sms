@@ -305,19 +305,19 @@ namespace StreamLib {
 		JASystem::DSPInterface::flushChannel(channel->mNumber);
 	}
 
-	void* Get_DirectPCM_LoopRemain(JASystem::DSPInterface::DSPBuffer* buffer)
+	u32 Get_DirectPCM_LoopRemain(JASystem::DSPInterface::DSPBuffer* buffer)
 	{
-		return nullptr;
+		return buffer->samplesBeforeLoop >> 16;
 	}
 
-	void* Get_DirectPCM_Counter(JASystem::DSPInterface::DSPBuffer* buffer)
+	u32 Get_DirectPCM_Counter(JASystem::DSPInterface::DSPBuffer* buffer)
 	{
-		return nullptr;
+		return buffer->currentPosition >> 16;
 	}
 
-	void* Get_DirectPCM_Remain(JASystem::DSPInterface::DSPBuffer* buffer)
+	u32 Get_DirectPCM_Remain(JASystem::DSPInterface::DSPBuffer* buffer)
 	{
-		return nullptr;
+		return buffer->remainingLength;
 	}
 
 	void init(bool mode)
@@ -607,7 +607,7 @@ namespace StreamLib {
 
 	void setPrepareFlag(u8 flag) { prepareflag = flag; }
 
-	void getPrepareFlag() { }
+	u8 getPrepareFlag() { return prepareflag; }
 
 	void setOutputMode(u32 mode) { outputmode = mode; }
 
@@ -615,7 +615,13 @@ namespace StreamLib {
 
 	void setDecodedBufferBlocks(u32 blocks) { }
 
-	void LoopInit() { }
+	void LoopInit()
+	{
+		loop_start_flag = true;
+		adpcm_loadpoint
+		    = ((header.unk14 - (header.unk14 & 0x7F)) >> 4) * 0x12 + 0x20;
+		adpcm_remain = header.unk0 - (adpcm_loadpoint - 0x20);
+	}
 
 	static s32 callBack(void* param);
 
@@ -779,11 +785,11 @@ namespace StreamLib {
 				return 0;
 			}
 
-			sync(((playback_samples - buf->remainingLength) * header.unkE)
+			sync(((playback_samples - Get_DirectPCM_Remain(buf)) * header.unkE)
 			     / header.unk8);
 			movieframe++;
 			u32 cur
-			    = (LOOP_SAMPLESIZE - (buf->samplesBeforeLoop >> 16)) / 0x1400;
+			    = (LOOP_SAMPLESIZE - Get_DirectPCM_LoopRemain(buf)) / 0x1400;
 			static u32 old_dspside = 0;
 			if (old_dspside != cur)
 				old_dspside = cur;
@@ -905,11 +911,7 @@ namespace StreamLib {
 		if (adpcmbuf_state == 0) {
 			if (adpcm_remain == 0) {
 				if (header.unk10 != 0) {
-					loop_start_flag = true;
-					adpcm_loadpoint
-					    = ((header.unk14 - (header.unk14 & 0x7F)) >> 4) * 0x12
-					      + 0x20;
-					adpcm_remain = header.unk0 - (adpcm_loadpoint - 0x20);
+					LoopInit();
 				} else {
 					adpcmbuf_state = 3;
 				}

@@ -153,7 +153,8 @@ void JAIBasic::setRegisterTrackCallback()
 	JASystem::TrackMgr::registerTrackCallback(&JAIBasic::setParameterSeqSync);
 }
 
-void JAIBasic::initAudioThread(JKRSolidHeap* heap, u32 param1, u8 param2)
+void JAIBasic::initAudioThread(JKRSolidHeap* heap, u32 aram_heap_size,
+                               u8 param2)
 {
 	JKRSolidHeap* rootHeap = heap;
 	s32 uVar1              = 1;
@@ -163,7 +164,7 @@ void JAIBasic::initAudioThread(JKRSolidHeap* heap, u32 param1, u8 param2)
 	JASystem::AudioThread::setPriority(
 	    JAIGlobalParameter::audioSystemThreadPriority,
 	    JAIGlobalParameter::audioDvdThreadPriority);
-	JASystem::AudioThread::start(rootHeap, param1, uVar1);
+	JASystem::AudioThread::start(rootHeap, aram_heap_size, uVar1);
 	JASystem::TrackMgr::init(JAIGlobalParameter::systemTrackMax,
 	                         JAIGlobalParameter::systemRootTrackMax);
 	JASystem::TrackMgr::reset();
@@ -609,9 +610,9 @@ void JAIBasic::initNullData()
 		              JAIConst::camMtx, i);
 }
 
-void JAIBasic::initDriver(JKRSolidHeap* heap, u32 param_2, u8 param_3)
+void JAIBasic::initDriver(JKRSolidHeap* heap, u32 aram_heap_size, u8 param_3)
 {
-	initAudioThread(heap, param_2, param_3);
+	initAudioThread(heap, aram_heap_size, param_3);
 }
 
 void JAIBasic::initInterface(u8 param)
@@ -1184,15 +1185,16 @@ u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 			if (track != param_1->getParent())
 				continue;
 
-			u32 uVar8 = param_1->unk308;
-			u32 route = basic->routeToTrack(uVar8);
+			u32 route = basic->routeToTrack(param_1->getTrackRoute());
 
 			JAISystemInterface::outerInit(
 			    &basic->unk0->mSeqTrackInfo[i], param_1, route,
-			    basic->getSoundInfoFromID(
+			    (basic
+			         ->getSoundInfoFromID(
 			             basic->unk0->mSeqTrackInfo[i].mSound->mSoundID)
-			            ->mSwBit
-			        >> 8,
+			         ->mSwBit
+			     >> 8)
+			        & 0xffff,
 			    param_2 & 1);
 			result = 0;
 			basic->unk0->mSeqTrackInfo[i].unk4 |= 1 << route;
@@ -1200,7 +1202,8 @@ u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 		}
 		break;
 	case 1: {
-		u8 index                             = param_1->unk308;
+		u8 index = param_1->getTrackRoute();
+
 		JASystem::TTrack::TOuterParam* outer = param_1->getOuterParam();
 		JAIData::FabricatedSeTrackParameter* seTrackUpdate = basic->unk0->unk0;
 
@@ -1264,16 +1267,16 @@ void JAIBasic::setSeExtParameter(JAISound* sound)
 		sound->setPitch(((JAISoundInfo*)sound->mInfo)->mPitch, 0, 1);
 }
 
-u32 JAIBasic::routeToTrack(u32 param)
+u32 JAIBasic::routeToTrack(u32 route)
 {
 	u32 uVar2 = 0;
-	if ((param & 0xf0000000) == 0x00000000)
+	if ((route & 0xf0000000) == 0x00000000)
 		return 0;
-	if ((param & 0xf0000000) == 0x10000000)
+	if ((route & 0xf0000000) == 0x10000000)
 		uVar2 = 0xf;
-	else if ((param & 0xf0000000) == 0x20000000)
+	else if ((route & 0xf0000000) == 0x20000000)
 		uVar2 = 0xff;
-	return param & uVar2;
+	return route & uVar2;
 }
 
 void JAIBasic::initHeap()
