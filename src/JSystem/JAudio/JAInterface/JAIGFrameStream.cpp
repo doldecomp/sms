@@ -383,34 +383,22 @@ namespace StreamLib {
 
 	static void __DecodePCM()
 	{
-		// TODO: 93.1%. The unrolled loop body matches; `samples` lands in a
-		// different register from the target's, which costs one `mr`, and the
-		// store to `loadup_samples` is scheduled one instruction early.
-		// Declaring `p2` before `p1` is what puts the two pointers in the
-		// target's registers - with `p1` first, every store in the body
-		// disagrees.
-		s16* p2;
+		s32 i;
 		s16* p1;
+		s16* p2;
 		s16* src;
-
-		u32 lsz     = loadsize;
-		u32 samples = loadsize / 4;
 
 		p1  = loop_buffer[0][playside];
 		p2  = loop_buffer[1][playside];
 		src = adpcm_buffer;
 
-		for (s32 i = 0; i < samples; ++i) {
-			*p1 = src[0];
-			*p2 = src[1];
-			++p1;
-			++p2;
-			src += 2;
+		for (i = 0; i < loadsize / 4; ++i) {
+			*p1++ = *src++;
+			*p2++ = *src++;
 		}
 
-		loadup_samples += lsz / 4;
-		DCStoreRange(loop_buffer[0][playside], lsz / 2);
-
+		loadup_samples += loadsize / 2 / 2;
+		DCStoreRange(loop_buffer[0][playside], loadsize / 2);
 		DCStoreRange(loop_buffer[1][playside], loadsize / 2);
 	}
 
@@ -422,12 +410,15 @@ namespace StreamLib {
 		static s16 R2;
 
 		u32 lsz;
-		u8 hdr;
-		u32 blocks;
-		u32 skipBytes = 0;
+		u32 hdr;
+		s16 c1;
+		s16 c2;
 		s16* leftOut;
 		s16* rightOut;
 		u8* src;
+		u32 block;
+		u32 skipBytes = 0;
+		u32 blocks;
 
 		if (movieframe == 0 && playside == 0) {
 			R2 = 0;
@@ -441,7 +432,7 @@ namespace StreamLib {
 		src      = (u8*)adpcm_buffer;
 
 		if (loop_start_flag) {
-			skipBytes       = ((header.unk14 >> 4) & 7) * 18;
+			skipBytes       = (header.unk14 % 128 / 16) * 18;
 			loop_start_flag = false;
 			loadsize        = 0x1680 - skipBytes;
 			src             = (u8*)adpcm_buffer + skipBytes;
@@ -449,69 +440,49 @@ namespace StreamLib {
 
 		lsz    = loadsize;
 		blocks = lsz / 18;
-		for (u32 block = 0; block < blocks; ++block) {
-			hdr        = *src++;
-			s16 cL1    = filter_table[(hdr & 0xF) * 2];
-			s16 cL2    = filter_table[(hdr & 0xF) * 2 + 1];
-			u32 shiftL = (hdr >> 4) & 0xF;
-			for (int i = 0; i < 4; ++i) {
+		for (block = 0; block < blocks; ++block) {
+			hdr = *src++;
+			c1  = filter_table[(hdr & 0xF) * 2];
+			c2  = filter_table[(hdr & 0xF) * 2 + 1];
+			hdr = (hdr >> 4) & 0xF;
+			for (int i = 0; i < 8; ++i) {
 				u8 b1Hi = src[0] >> 4;
 				u8 b1Lo = src[0] & 0xF;
 				s32 l1;
 				s32 l2;
 
-				l2 = (table4[b1Hi] << shiftL) + ((cL1 * L1 + cL2 * L2) >> 11);
+				l2 = (table4[b1Hi] << hdr) + ((c1 * L1 + c2 * L2) >> 11);
 				*leftOut++ = l2;
 				L2         = l2;
-				l1 = (table4[b1Lo] << shiftL) + ((cL1 * L2 + cL2 * L1) >> 11);
+				l1 = (table4[b1Lo] << hdr) + ((c1 * L2 + c2 * L1) >> 11);
 				*leftOut++ = l1;
 				L1         = l1;
 
-				u8 b2Hi = src[1] >> 4;
-				u8 b2Lo = src[1] & 0xf;
-
-				l2 = (table4[b2Hi] << shiftL) + ((cL1 * L1 + cL2 * L2) >> 11);
-				*leftOut++ = l2;
-				L2         = l2;
-				l1 = (table4[b2Lo] << shiftL) + ((cL1 * L2 + cL2 * L1) >> 11);
-				*leftOut++ = l1;
-				L1         = l1;
-
-				src += 2;
+				++src;
 			}
 
-			u8 hdrR    = *src++;
-			s16 cR1    = filter_table[(hdrR & 0xF) * 2];
-			s16 cR2    = filter_table[(hdrR & 0xF) * 2 + 1];
-			u32 shiftR = (hdrR >> 4) & 0xF;
-			for (int i = 0; i < 4; ++i) {
-
+			hdr = *src++;
+			c1  = filter_table[(hdr & 0xF) * 2];
+			c2  = filter_table[(hdr & 0xF) * 2 + 1];
+			hdr = (hdr >> 4) & 0xF;
+			for (int i = 0; i < 8; ++i) {
 				u8 b1Hi = src[0] >> 4;
 				u8 b1Lo = src[0] & 0xF;
-
 				s32 l1;
 				s32 l2;
 
-				l2 = (table4[b1Hi] << shiftR) + ((cR1 * R2 + cR2 * R1) >> 11);
+				l2 = (table4[b1Hi] << hdr) + ((c1 * R1 + c2 * R2) >> 11);
 				*rightOut++ = l2;
 				R2          = l2;
-				l1 = (table4[b1Lo] << shiftR) + ((cR1 * R2 + cR2 * R1) >> 11);
+				l1 = (table4[b1Lo] << hdr) + ((c1 * R2 + c2 * R1) >> 11);
 				*rightOut++ = l1;
 				R1          = l1;
 
-				u8 b2Hi = src[1] >> 4;
-				u8 b2Lo = src[1] & 0xF;
-				l2 = (table4[b2Hi] << shiftR) + ((cR1 * R1 + cR2 * R2) >> 11);
-				*rightOut++ = l2;
-				R2          = l2;
-				l1 = (table4[b2Lo] << shiftR) + ((cR1 * R2 + cR2 * R1) >> 11);
-				*rightOut++ = l1;
-				R1          = l1;
-				src += 2;
+				++src;
 			}
 		}
 
-		loadup_samples += (((lsz - skipBytes) / 18) & 0x7FFFFFF) << 4;
+		loadup_samples += (lsz - skipBytes) / 18 * 32 / 2;
 
 		u32 pos;
 		u32 sampleIdx;
@@ -547,7 +518,19 @@ namespace StreamLib {
 		}
 	}
 
-	static void __Decode() { }
+	static void __Decode()
+	{
+		switch (header.unkA) {
+		case 3:
+			break;
+		case 2:
+			__DecodePCM();
+			break;
+		case 4:
+			__DecodeADPCM();
+			break;
+		}
+	}
 
 	static void __LoadFin(s32 param, DVDFileInfo* info)
 	{
@@ -647,9 +630,6 @@ namespace StreamLib {
 		}
 	}
 
-	// fabricated
-	static inline u8 getHeadByte(u32 n) { return ((u8*)Head)[n]; }
-
 	void __start()
 	{
 		startInitFlag = 0;
@@ -666,10 +646,9 @@ namespace StreamLib {
 		if (Head == nullptr) {
 			DVDReadPrio(&finfo, adpcm_buffer, 0x20, 0, 2);
 		} else {
-			for (int i = 0; i < 4; ++i) {
-				for (int j = 0; j < 8; ++j) {
-					((u8*)adpcm_buffer)[i * 8 + j] = getHeadByte(i * 8 + j);
-				}
+			for (int i = 0; i < 32; ++i) {
+				u8* dst = (u8*)adpcm_buffer;
+				dst[i]  = ((u8*)Head)[i];
 			}
 		}
 
@@ -818,16 +797,7 @@ namespace StreamLib {
 		if ((needDecode == true || movieframe == 0)
 		    && (adpcmbuf_state == 2 || adpcmbuf_state == 4)) {
 			if (adpcmbuf_state == 2) {
-				switch (header.unkA) {
-				case 3:
-					break;
-				case 2:
-					__DecodePCM();
-					break;
-				case 4:
-					__DecodeADPCM();
-					break;
-				}
+				__Decode();
 				adpcmbuf_state = 0;
 			}
 			if (movieframe == 0) {
