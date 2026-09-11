@@ -3,45 +3,46 @@
 #include <JSystem/JAudio/JAInterface/JAIBasic.hpp>
 #include <JSystem/JAudio/JAInterface/JAIConst.hpp>
 
-void JAISeEntry::storeBuffer(JAISound** sound, JAIActor* param_2, u32 param_3,
-                             u32 param_4, u8 param_5, void* param_6)
+void JAISeEntry::storeBuffer(JAISoundHandle* out_handle, JAIActor* actor,
+                             u32 sound_id, u32 fade, u8 param_5, void* info)
 {
 	JAIData* data = unk0->unk0;
-	if (!sound || !*sound || (*sound)->mSoundID != param_3
-	    || ((*sound)->mSoundID == param_3 && (param_3 & 0xC00) == 0x800)) {
-		if (checkSoundHandle(sound, param_3, param_6))
+	if (!out_handle || !*out_handle || (*out_handle)->mSoundID != sound_id
+	    || ((*out_handle)->mSoundID == sound_id
+	        && (sound_id & 0xC00) == 0x800)) {
+		if (checkSoundHandle(out_handle, sound_id, info))
 			return;
 	}
 
-	u32 category = unk0->changeIDToCategory(param_3);
+	u32 category = unk0->changeIDToCategory(sound_id);
 	JAISound* it = data->mSeRegist[(u8)category].mUsedHead;
 
-	JAIActor* actor = param_2;
-	if (!param_2)
-		actor = &JAIConst::nullActor;
+	JAIActor* actualActor = actor;
+	if (!actor)
+		actualActor = &JAIConst::nullActor;
 
-	const void* uVar14 = actor->mIdentity;
+	const void* uVar14 = actualActor->mIdentity;
 
 	u8 bVar10 = 0;
 	JAISound* local_88[16];
 
 	u32 bVar9
-	    = data->mCategoryInfoTable[unk0->mSoundScene][(param_3 >> 12) & 0xFF]
+	    = data->mCategoryInfoTable[unk0->mSoundScene][(sound_id >> 12) & 0xFF]
 	          .mMaxSameSound;
 
 	while (it != nullptr) {
 		if (it->mActor == uVar14) {
-			if (it->mSoundID == param_3
-			    && (unk0->getSoundSwBit(param_6) & 0x80000) == 0) {
-				if ((param_3 & 0x800) == 0
+			if (it->mSoundID == sound_id
+			    && (unk0->getSoundSwBit(info) & 0x80000) == 0) {
+				if ((sound_id & 0x800) == 0
 				    && it->mState == SOUNDSTATE_Stopping) {
 					it->mState = SOUNDSTATE_Playing;
-					if (sound == nullptr)
+					if (out_handle == nullptr)
 						return;
-					if (*sound != nullptr)
+					if (*out_handle != nullptr)
 						return;
-					it->mMainSoundPPointer = sound;
-					*sound                 = it;
+					it->mMainSoundPPointer = out_handle;
+					*out_handle            = it;
 					return;
 				}
 				it->stop(0);
@@ -69,9 +70,9 @@ void JAISeEntry::storeBuffer(JAISound** sound, JAIActor* param_2, u32 param_3,
 	}
 
 	if (bVar10 == bVar9) {
-		if (local_88[0]->getInfoPriority() > unk0->getSoundPrioity(param_6))
+		if (local_88[0]->getInfoPriority() > unk0->getSoundPrioity(info))
 			return;
-		if (local_88[0]->getInfoPriority() == unk0->getSoundPrioity(param_6)
+		if (local_88[0]->getInfoPriority() == unk0->getSoundPrioity(info)
 		    && local_88[0]->mState == SOUNDSTATE_Stopping)
 			return;
 		unk0->releaseSeRegist(local_88[0]);
@@ -79,17 +80,17 @@ void JAISeEntry::storeBuffer(JAISound** sound, JAIActor* param_2, u32 param_3,
 	JAISound* controller
 	    = unk0->getControllerHandle(&data->mSeRegist[(u8)category]);
 	if (!controller) {
-		if (sound)
-			*sound = nullptr;
+		if (out_handle)
+			*out_handle = nullptr;
 	} else {
 		controller->setCustomParameterPointer(
 		    unk0->getSeParametermeterPointer());
 		if (controller->mCustomParameter == 0) {
-			*sound = nullptr;
+			*out_handle = nullptr;
 		} else {
 			controller->mState = SOUNDSTATE_Stored;
-			initSoundParameter(controller, sound, actor, param_3, param_4,
-			                   param_5, param_6);
+			initSoundParameter(controller, out_handle, actualActor, sound_id,
+			                   fade, param_5, info);
 		}
 	}
 }
