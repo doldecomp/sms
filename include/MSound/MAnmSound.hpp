@@ -16,13 +16,14 @@ class MAnmSound : public JAIAnimeSound {
 public:
 	MAnmSound(MSound* sound);
 
-	virtual void startAnimSound(void* ptr, u32 ul, JAISound** sound,
-	                            JAIActor* actor, u8 uc);
+	virtual void startAnimSound(void* interface, u32 id,
+	                            JAISoundHandle* out_handle, JAIActor* actor,
+	                            u8 uc);
 
-	void animeLoop(Vec* vec, f32 f1, f32 f2, u32 ul, u8 uc);
-	void initAnmSound(void* ptr, u32 ul, f32 f);
+	void animeLoop(Vec* position, f32 frame, f32 speed, u32 ground_no, u8);
+	void initAnmSound(void* interface, u32 ul, f32 frame);
 	void setSpeedModifySound(JAISound* sound, JAIAnimeFrameSoundData* data,
-	                         f32 f);
+	                         f32 speed);
 };
 
 // fabricated

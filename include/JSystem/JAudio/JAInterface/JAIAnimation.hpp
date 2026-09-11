@@ -7,16 +7,16 @@
 class JAIActor;
 
 struct JAIAnimeFrameSoundData {
-	/* 0x00 */ u32 unk0;
-	/* 0x04 */ f32 unk4;
-	/* 0x08 */ f32 unk8;
-	/* 0x0C */ f32 unkC;
+	/* 0x00 */ u32 mSoundID;
+	/* 0x04 */ f32 mStartFrame;
+	/* 0x08 */ f32 mEndFrame;
+	/* 0x0C */ f32 mPitch;
 	/* 0x10 */ u32 unk10;
-	/* 0x14 */ u8 unk14;
-	/* 0x15 */ s8 unk15;
+	/* 0x14 */ u8 mVolume;
+	/* 0x15 */ s8 mPitchScale;
 	/* 0x16 */ u8 unk16;
-	/* 0x17 */ u8 unk17;
-	/* 0x18 */ s8 unk18;
+	/* 0x17 */ u8 mPan;
+	/* 0x18 */ s8 mVolumeScale;
 	/* 0x19 */ u8 unk19[7];
 };
 
@@ -32,7 +32,7 @@ class JAIAnimeSound {
 public:
 	struct Slot {
 		/* 0x0 */ u8 mIsPlaying;
-		/* 0x4 */ JAISound* mSound;
+		/* 0x4 */ JAISoundHandle mSoundHandle;
 		/* 0x8 */ JAIAnimeFrameSoundData* mData;
 	};
 
@@ -56,20 +56,21 @@ public:
 	JAIAnimeSound();
 	~JAIAnimeSound();
 
-	virtual void startAnimSound(void* data, u32 id, JAISound** sound,
-	                            JAIActor* actor, u8 flag);
+	virtual void startAnimSound(void* interface, u32 id,
+	                            JAISoundHandle* out_handle, JAIActor* actor,
+	                            u8 flag);
 	virtual void setSpeedModifySound(JAISound* sound,
 	                                 JAIAnimeFrameSoundData* data, f32 speed);
 
-	void setAnimSound(JAIBasic* basic, f32 param1, f32 param2, u8 param3);
-	void setAnimSoundVec(JAIBasic* basic, Vec* pos, f32 param1, f32 param2,
-	                     u32 param3, u8 param4);
-	void setAnimSoundActor(JAIBasic* basic, JAIActor* actor, f32 param1,
+	void setAnimSound(JAIBasic*, f32, f32, u8);
+	void setAnimSoundVec(JAIBasic* interface, Vec* position, f32 frame,
+	                     f32 speed, u32 ground_no, u8 param4);
+	void setAnimSoundActor(JAIBasic* interface, JAIActor* actor, f32 frame,
 	                       f32 param2, u8 param3);
-	void playActorAnimSound(JAIBasic* basic, JAIActor* actor, f32 param,
+	void playActorAnimSound(JAIBasic* interface, JAIActor* actor, f32 param,
 	                        u8 flag);
-	void initActorAnimSound(void* data, u32 param, f32 value);
-	void initActorAnimSound(void* data, JAIActor actor, u32 param, f32 value);
+	void initActorAnimSound(void* interface, u32 param, f32 frame);
+	void initActorAnimSound(void*, JAIActor, u32, f32);
 	void stop();
 };
 
