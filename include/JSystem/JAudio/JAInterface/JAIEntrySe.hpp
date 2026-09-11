@@ -9,8 +9,8 @@ class JAIActor;
 
 class JAISeEntry : public JAIEntry {
 public:
-	void storeBuffer(JAISound** sound, JAIActor* actor, u32 param1, u32 param2,
-	                 u8 param3, void* data);
+	void storeBuffer(JAISoundHandle* out_handle, JAIActor* actor, u32 sound_id,
+	                 u32 fade, u8 param3, void* info);
 };
 
 #endif // JAIENTRYSE_HPP

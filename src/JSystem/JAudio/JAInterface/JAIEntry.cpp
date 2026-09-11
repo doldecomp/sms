@@ -3,19 +3,19 @@
 #include <JSystem/JAudio/JAInterface/JAIConst.hpp>
 #include <JSystem/JAudio/JAInterface/JAIGlobalParameter.hpp>
 
-u32 JAIEntry::checkSoundHandle(JAISound** sound_ptr, u32 param, void* data)
+u32 JAIEntry::checkSoundHandle(JAISoundHandle* handle, u32 sound_id, void* info)
 {
 	u32 result = 0;
 
-	if (sound_ptr) {
-		if (*sound_ptr) {
-			if ((param & JAISoundID_TypeMask)
-			    != ((*sound_ptr)->getID() & JAISoundID_TypeMask)) {
-				(*sound_ptr)->stop(0);
+	if (handle) {
+		if (*handle) {
+			if ((sound_id & JAISoundID_TypeMask)
+			    != ((*handle)->getID() & JAISoundID_TypeMask)) {
+				(*handle)->stop(0);
 			} else {
-				if (unk0->getSoundPrioity((*sound_ptr)->mInfo)
-				    <= unk0->getSoundPrioity(data))
-					(*sound_ptr)->stop(0);
+				if (unk0->getSoundPrioity((*handle)->mInfo)
+				    <= unk0->getSoundPrioity(info))
+					(*handle)->stop(0);
 				else
 					result = 1;
 			}
@@ -24,41 +24,41 @@ u32 JAIEntry::checkSoundHandle(JAISound** sound_ptr, u32 param, void* data)
 	return result;
 }
 
-void JAIEntry::initSoundParameter(JAISound* param_1, JAISound** param_2,
-                                  JAIActor* param_3, u32 param_4, u32 param_5,
-                                  u8 param_6, void* param_7)
+void JAIEntry::initSoundParameter(JAISound* sound, JAISoundHandle* out_handle,
+                                  JAIActor* actor, u32 sound_id, u32 fade,
+                                  u8 param_6, void* info)
 {
-	param_1->setID(param_4);
-	if (param_3) {
-		param_1->mActor = param_3->mIdentity;
-		if (param_3->mIdentity) {
-			param_1->mActorTrans        = param_3->mTranslation;
-			param_1->unk28              = param_3->unk8;
-			param_1->mActorGroundNumber = param_3->mGroundNumber;
+	sound->setID(sound_id);
+	if (actor) {
+		sound->mActor = actor->mIdentity;
+		if (actor->mIdentity) {
+			sound->mActorTrans        = actor->mTranslation;
+			sound->unk28              = actor->unk8;
+			sound->mActorGroundNumber = actor->mGroundNumber;
 		} else {
-			param_1->mActorTrans        = nullptr;
-			param_1->unk28              = nullptr;
-			param_1->mActorGroundNumber = param_3->mGroundNumber;
+			sound->mActorTrans        = nullptr;
+			sound->unk28              = nullptr;
+			sound->mActorGroundNumber = actor->mGroundNumber;
 		}
 	} else {
-		param_1->mActor             = nullptr;
-		param_1->mActorTrans        = nullptr;
-		param_1->unk28              = nullptr;
-		param_1->mActorGroundNumber = 0;
+		sound->mActor             = nullptr;
+		sound->mActorTrans        = nullptr;
+		sound->unk28              = nullptr;
+		sound->mActorGroundNumber = 0;
 	}
-	param_1->setMainSoundPPointer(param_2);
-	param_1->mFadeCounter = param_5;
-	param_1->unk4         = param_6;
-	param_1->mInfo        = param_7;
-	param_1->mWaitTimer   = 10;
-	param_1->unk5         = JAIGlobalParameter::distanceParameterMoveTime;
-	param_1->mAdjustPrio  = 0;
-	param_1->mPlayGameFrameCounter = 0;
-	if (param_2 == nullptr)
+	sound->setMainSoundPPointer(out_handle);
+	sound->mFadeCounter = fade;
+	sound->unk4         = param_6;
+	sound->mInfo        = info;
+	sound->mWaitTimer   = 10;
+	sound->unk5         = JAIGlobalParameter::distanceParameterMoveTime;
+	sound->mAdjustPrio  = 0;
+	sound->mPlayGameFrameCounter = 0;
+	if (out_handle == nullptr)
 		return;
-	*param_2 = param_1;
+	*out_handle = sound;
 }
 
-BOOL JAIEntry::checkSoundHandle(JAISound** sound, JAISound* soundParam) { }
+BOOL JAIEntry::checkSoundHandle(JAISoundHandle*, JAISound*) { }
 
-void JAIEntry::checkAllSoundHandle(JAISound** sound) { }
+void JAIEntry::checkAllSoundHandle(JAISoundHandle*) { }

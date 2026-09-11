@@ -30,7 +30,7 @@ void JAIBasic::stopSeq(JAISound* param_1)
 		unk0->releaseAutoHeapPointer(
 		    param_1->getSeqParameter()->mAutoHeapPosition);
 	}
-	param_1->setStatus(SOUNDSTATE_Inactive);
+	param_1->mState = SOUNDSTATE_Inactive;
 	releaseSeqParameterPointer(param_1->getSeqParameter());
 	releaseControllerHandle(&unk0->mSeqControlBuffer, param_1);
 	unk0->mSeqTrackInfo[param_1->mTrack].mSound = nullptr;
@@ -40,10 +40,10 @@ void JAIBasic::checkEntriedSeq()
 {
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
 		JAISeqUpdateData* sud = &unk0->mSeqTrackInfo[i];
-		JAISound** sound      = &unk0->mSeqTrackInfo[i].mSound;
+		JAISoundHandle& sound = unk0->mSeqTrackInfo[i].mSound;
 		u32& r27              = unk0->mSeqTrackInfo[i].unk8;
 
-		if (!*sound)
+		if (!sound)
 			continue;
 
 		if (!(r27 & 1))
@@ -53,25 +53,25 @@ void JAIBasic::checkEntriedSeq()
 			return;
 
 		u32 size = JASystem::Vload::checkSize(
-		    mSeqArchiveHandle + ((*sound)->mSoundID & JAISoundID_IndexMask));
+		    mSeqArchiveHandle + (sound->mSoundID & JAISoundID_IndexMask));
 
 		u8 pos;
 		u8* ptr = (u8*)unk0->checkOnMemory(
-		    (*sound)->mSoundID & JAISoundID_IndexMask, &pos);
+		    sound->mSoundID & JAISoundID_IndexMask, &pos);
 
 		if (ptr == nullptr) {
-			if ((*sound)->checkSwBit(0x10)) {
+			if (sound->checkSwBit(0x10)) {
 				ptr = unk0->getFreeStayHeapPointer(
-				    size, (*sound)->mSoundID & JAISoundID_IndexMask);
-				pos                                            = 0xFF;
-				(*sound)->getSeqParameter()->mAutoHeapPosition = 0xFF;
+				    size, sound->mSoundID & JAISoundID_IndexMask);
+				pos                                         = 0xFF;
+				sound->getSeqParameter()->mAutoHeapPosition = 0xFF;
 				if (ptr == nullptr) {
-					(*sound)->checkSwBit(0x20);
+					sound->checkSwBit(0x20);
 				}
 			}
 
 			if (ptr == nullptr) {
-				if ((*sound)->checkSwBit(0x20) || !(*sound)->checkSwBit(0x10)) {
+				if (sound->checkSwBit(0x20) || !sound->checkSwBit(0x10)) {
 					pos = unk0->checkUsefulAutoHeapPosition();
 					if (pos >= JAIGlobalParameter::autoHeapMax) {
 						for (int ii = 0; ii < JAIGlobalParameter::autoHeapMax;
@@ -95,27 +95,29 @@ void JAIBasic::checkEntriedSeq()
 							}
 						}
 						if (pos >= JAIGlobalParameter::autoHeapMax) {
-							(*sound)->stop(0);
+							sound->stop(0);
 							return;
 						}
 					} else if (size >= JAIGlobalParameter::autoHeapRoomSize) {
-						(*sound)->stop(0);
+						sound->stop(0);
 						return;
 					}
 
-					(*sound)->getSeqParameter()->mAutoHeapPosition = pos;
+					sound->getSeqParameter()->mAutoHeapPosition = pos;
 					ptr = (u8*)unk0->getFreeAutoHeapPointer(
-					    (*sound)->getSeqParameter()->mAutoHeapPosition,
-					    (*sound)->mSoundID & JAISoundID_IndexMask);
+					    sound->getSeqParameter()->mAutoHeapPosition,
+					    sound->mSoundID & JAISoundID_IndexMask);
 				}
 			}
 
-			if (!(*sound)->checkSwBit(0x40)) {
-				(*sound)->mState = SOUNDSTATE_Stored;
+			if (!sound->checkSwBit(0x40)) {
+				sound->mState = SOUNDSTATE_Stored;
 
-				u32 swBit8 = (*sound)->mSoundID;
-				u32 param
-				    = i | ((swBit8 & JAISoundID_IndexMask) << 16) | (pos << 8);
+				u32 swBit8 = sound->mSoundID;
+				// Keep the signed, two-step packing for MWCC register
+				// allocation.
+				s32 param = pos << 8;
+				param = (i | ((swBit8 & JAISoundID_IndexMask) << 16)) | param;
 
 				unk0->setAutoHeapLoadedFlag(pos, 1);
 				JASystem::Vload::loadFileAsync(
@@ -125,30 +127,30 @@ void JAIBasic::checkEntriedSeq()
 			} else {
 				JASystem::Vload::loadFile(
 				    mSeqArchiveHandle
-				        + ((*sound)->mSoundID & JAISoundID_IndexMask),
+				        + (sound->mSoundID & JAISoundID_IndexMask),
 				    ptr, 0, size);
-				(*sound)->mState = SOUNDSTATE_Prepared;
+				sound->mState = SOUNDSTATE_Prepared;
 			}
 		} else {
 			if (ptr == (u8*)0xFFFFFFFF)
 				return;
 
-			JAISound* snd = *sound;
+			JAISound* snd = sound;
 			if (pos != 0xFF) {
 				unk0->getFreeAutoHeapPointer(pos, snd->mSoundID
 				                                      & JAISoundID_IndexMask);
 			}
 
-			(*sound)->getSeqParameter()->mAutoHeapPosition = pos;
+			sound->getSeqParameter()->mAutoHeapPosition = pos;
 
-			(*sound)->mState = SOUNDSTATE_Prepared;
+			sound->mState = SOUNDSTATE_Prepared;
 		}
 
 		if (ptr != nullptr) {
 			sud->mSeqData = ptr;
 			r27 ^= 1;
 		} else {
-			stopSeq(*sound);
+			stopSeq(sound);
 		}
 	}
 }
@@ -156,76 +158,75 @@ void JAIBasic::checkEntriedSeq()
 void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 {
 	JAISeqUpdateData* sud = &unk0->mSeqTrackInfo[trackID];
-	JAISound** sound      = &sud->mSound;
-	if ((*sound)->getSeqParameter()->mPauseMode == 2)
+	JAISoundHandle& sound = sud->mSound;
+	if (sound->getSeqParameter()->mPauseMode == 2)
 		return;
 
 	u32& r30 = sud->unk8;
 
-	JAISeqParameter* seqParam = (*sound)->getSeqParameter();
+	JAISeqParameter* seqParam = sound->getSeqParameter();
 	u32* portFlags            = sud->mTrackUpdate;
 
 	for (u8 j = 0; j < JAIGlobalParameter::seqTrackMax + 1; ++j)
 		portFlags[j] = 0;
 
 	if (r30 & 2) {
-		JAISound* snd = (*sound);
+		JAISound* snd = sound;
 		if (snd->mFadeCounter == 0 || snd->mState < SOUNDSTATE_Playing) {
 			if (snd->mState >= SOUNDSTATE_Started) {
 				JAISystemInterface::stopSeq(seqParam->mSeqHandle);
 			}
-			(*sound)->clearMainSoundPPointer();
-			stopSeq((*sound));
+			sound->clearMainSoundPPointer();
+			stopSeq(sound);
 			r30 = 0;
 			return;
 		} else {
 			snd->setSeqInterVolume(6, 0.0f, snd->mFadeCounter);
-			(*sound)->mState = SOUNDSTATE_Stopping;
+			sound->mState = SOUNDSTATE_Stopping;
 			r30 ^= 2;
 		}
 	}
 
-	if ((*sound) != nullptr && (*sound)->mActor != 0) {
+	if (sound != nullptr && sound->mActor != 0) {
 		u32 s, e;
 		u32 i;
-		if ((*sound)->unk4 == 4) {
+		if (sound->unk4 == 4) {
 			s = 0;
 			e = JAIGlobalParameter::audioCameraMax;
 		} else {
-			s = (*sound)->unk4;
-			e = (*sound)->unk4 + 1;
+			s = sound->unk4;
+			e = sound->unk4 + 1;
 		}
 
 		for (i = s; i < e; ++i) {
-			JAISound::FabricatedPositionInfo* pi = &(*sound)->unk1C[i];
+			JAISound::FabricatedPositionInfo* pi = &sound->unk1C[i];
 
 			pi->mPrevCamSpacePos = pi->mCamSpacePos;
-			MTXMultVec(mAudioCameras[i].nViewMtx, (Vec*)(*sound)->mActorTrans,
+			MTXMultVec(mAudioCameras[i].nViewMtx, (Vec*)sound->mActorTrans,
 			           &pi->mCamSpacePos);
 
 			pi->unk18 = std::sqrtf(pi->mCamSpacePos.x * pi->mCamSpacePos.x
 			                       + pi->mCamSpacePos.y * pi->mCamSpacePos.y
 			                       + pi->mCamSpacePos.z * pi->mCamSpacePos.z);
 
-			(*sound)->setSeqInterVolume(
+			sound->setSeqInterVolume(
 			    4,
 			    (f32)(u8)(127.0f
-			              * (*sound)->setDistanceVolumeCommon(
+			              * sound->setDistanceVolumeCommon(
 			                  JAIGlobalParameter::distanceMax, 0)),
 			    JAIGlobalParameter::distanceParameterMoveTime);
 
-			(*sound)->setSeqInterPan(
-			    4, (f32)(u8)(*sound)->setDistancePanCommon(),
+			sound->setSeqInterPan(
+			    4, (f32)(u8)sound->setDistancePanCommon(),
 			    JAIGlobalParameter::distanceParameterMoveTime);
 
-			(*sound)->setSeqInterPitch(
-			    4, (*sound)->setPositionDopplarCommon(0x100),
-			    JAIGlobalParameter::dopplarMoveTime);
+			sound->setSeqInterPitch(4, sound->setPositionDopplarCommon(0x100),
+			                        JAIGlobalParameter::dopplarMoveTime);
 		}
 	}
 
-	if ((*sound) != nullptr)
-		(*sound)->incPlayGameFrameCounter();
+	if (sound != nullptr)
+		sound->incPlayGameFrameCounter();
 
 	if (r30 == 0)
 		return;
@@ -412,7 +413,7 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 			    && seqParam->mMuteBits[j].mCurrent
 			           != seqParam->mMuteBits[j].mTarget) {
 				JASystem::TTrack* tt
-				    = JAISystemInterface::trackToSeqp((*sound), j);
+				    = JAISystemInterface::trackToSeqp(sound, j);
 				if (tt != nullptr)
 					tt->muteTrack(seqParam->mMuteBits[j].mTarget);
 				seqParam->mMuteBits[j].mCurrent
@@ -523,7 +524,7 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 					if (seqParam->mTrackPortDataUpdate[j] & (1 << k)) {
 						JAISystemInterface::writePortApp(
 						    seqParam->mSeqHandle,
-						    (*sound)->getTrackPortRoute(j, k), ports[k]);
+						    sound->getTrackPortRoute(j, k), ports[k]);
 						seqParam->mTrackPortDataUpdate[j] ^= 1 << k;
 					}
 				}
@@ -537,8 +538,8 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 void JAIBasic::checkPlayingSeq()
 {
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
-		JAISound** sound = &unk0->mSeqTrackInfo[i].mSound;
-		if (*sound && (*sound)->mState >= SOUNDSTATE_Playing) {
+		JAISoundHandle& sound = unk0->mSeqTrackInfo[i].mSound;
+		if (sound && sound->mState >= SOUNDSTATE_Playing) {
 			checkPlayingSeqTrack(i);
 			for (u8 j = 0; j < JAIGlobalParameter::seqTrackMax + 1; ++j) {
 				if (unk0->mSeqTrackInfo[i].mTrackUpdate[j] != 0) {
@@ -557,18 +558,18 @@ void JAIBasic::checkPlayingSeq()
 void JAIBasic::checkStoppedSeq()
 {
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
-		JAISound** sound = &unk0->mSeqTrackInfo[i].mSound;
+		JAISoundHandle& sound = unk0->mSeqTrackInfo[i].mSound;
 
-		if (!*sound)
+		if (!sound)
 			continue;
 
-		if ((*sound)->mState == SOUNDSTATE_Playing
-		    || (*sound)->mState == SOUNDSTATE_Stopping) {
+		if (sound->mState == SOUNDSTATE_Playing
+		    || sound->mState == SOUNDSTATE_Stopping) {
 			u8 flag = JAISystemInterface::checkSeqActiveFlag(
-			    (*sound)->getSeqParameter()->mSeqHandle);
+			    sound->getSeqParameter()->mSeqHandle);
 			if (flag == 0) {
-				(*sound)->clearMainSoundPPointer();
-				stopSeq(*sound);
+				sound->clearMainSoundPPointer();
+				stopSeq(sound);
 				unk0->mSeqTrackInfo[i].unk8 = 0;
 			}
 		}
@@ -578,16 +579,16 @@ void JAIBasic::checkStoppedSeq()
 void JAIBasic::checkStartedSeq()
 {
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
-		JAISound** sound = &unk0->mSeqTrackInfo[i].mSound;
+		JAISoundHandle& sound = unk0->mSeqTrackInfo[i].mSound;
 
-		if (!*sound)
+		if (!sound)
 			continue;
 
-		if ((*sound)->mState == SOUNDSTATE_Started) {
+		if (sound->mState == SOUNDSTATE_Started) {
 			u8 flag = JAISystemInterface::checkSeqActiveFlag(
-			    (*sound)->getSeqParameter()->mSeqHandle);
+			    sound->getSeqParameter()->mSeqHandle);
 			if (flag != 0) {
-				(*sound)->mState = SOUNDSTATE_Playing;
+				sound->mState = SOUNDSTATE_Playing;
 				JAISystemInterface::trackInit(&unk0->mSeqTrackInfo[i]);
 			}
 		}
@@ -597,17 +598,16 @@ void JAIBasic::checkStartedSeq()
 void JAIBasic::checkFadeoutSeq()
 {
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
-		JAISound** sound = &unk0->mSeqTrackInfo[i].mSound;
+		JAISoundHandle& sound = unk0->mSeqTrackInfo[i].mSound;
 
-		if (!*sound)
+		if (!sound)
 			continue;
 
-		if ((*sound)->mState == SOUNDSTATE_Stopping
-		    && (*sound)->getSeqInterVolume(6) == 0.0f) {
-			JAISystemInterface::stopSeq(
-			    (*sound)->getSeqParameter()->mSeqHandle);
-			(*sound)->clearMainSoundPPointer();
-			stopSeq(*sound);
+		if (sound->mState == SOUNDSTATE_Stopping
+		    && sound->getSeqInterVolume(6) == 0.0f) {
+			JAISystemInterface::stopSeq(sound->getSeqParameter()->mSeqHandle);
+			sound->clearMainSoundPPointer();
+			stopSeq(sound);
 			unk0->mSeqTrackInfo[i].unk8 = 0;
 		}
 	}
@@ -617,44 +617,44 @@ void JAIBasic::checkReadSeq()
 {
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
 		JAISeqUpdateData* sud = &unk0->mSeqTrackInfo[i];
-		JAISound** sound      = &sud->mSound;
-		if (!*sound)
+		JAISoundHandle& sound = sud->mSound;
+		if (!sound)
 			continue;
-		if ((*sound)->mState != SOUNDSTATE_Prepared)
+		if (sound->mState != SOUNDSTATE_Prepared)
 			continue;
-		if ((*sound)->getSeqParameter()->mWaitSceneSet != 0xffffffff)
+		if (sound->getSeqParameter()->mWaitSceneSet != 0xffffffff)
 			continue;
-		if ((*sound)->getSeqParameter()->mUpdateData->unk2 != 0)
+		if (sound->getSeqParameter()->mUpdateData->unk2 != 0)
 			continue;
 
 		u32 lVar2 = JASystem::Vload::checkSize(
-		    mSeqArchiveHandle + ((*sound)->mSoundID & JAISoundID_IndexMask));
+		    mSeqArchiveHandle + (sound->mSoundID & JAISoundID_IndexMask));
 		int uVar3 = JAISystemInterface::setSeqData(
 		    nullptr, sud->mSeqData, lVar2,
 		    JASystem::Player::SEQ_PLAYMODE_UNK_0);
 
-		(*sound)->getSeqParameter()->mSeqHandle = uVar3;
-		(*sound)->getSeqParameter();
-		if ((*sound)->getSeqParameter()->mSeqHandle != -1) {
-			unk0->initSeqTrackInfoParameter((*sound)->mTrack);
-			(*sound)->mState = SOUNDSTATE_Started;
-			if ((*sound)->mFadeCounter > 1) {
-				(*sound)->setSeqInterVolume(6, 0.0f, 0);
-				(*sound)->setSeqInterVolume(6, 1.0f, (*sound)->mFadeCounter);
+		sound->getSeqParameter()->mSeqHandle = uVar3;
+		sound->getSeqParameter();
+		if (sound->getSeqParameter()->mSeqHandle != -1) {
+			unk0->initSeqTrackInfoParameter(sound->mTrack);
+			sound->mState = SOUNDSTATE_Started;
+			if (sound->mFadeCounter > 1) {
+				sound->setSeqInterVolume(6, 0.0f, 0);
+				sound->setSeqInterVolume(6, 1.0f, sound->mFadeCounter);
 			}
 			if (sud->unk0 != 0) {
-				(*sound)->setPauseMode(sud->unk0, sud->unk1);
+				sound->setPauseMode(sud->unk0, sud->unk1);
 				sud->mSeqVolume = 1.1f;
 			}
-			setSeExtParameter(*sound);
+			setSeExtParameter(sound);
 			checkPlayingSeqTrack(i);
-			if (*sound != nullptr) {
+			if (sound != nullptr) {
 				JAISystemInterface::rootInit(sud);
 				JAISystemInterface::startSeq(
-				    (*sound)->getSeqParameter()->mSeqHandle);
+				    sound->getSeqParameter()->mSeqHandle);
 			}
 		} else {
-			JAISound* snd = *sound;
+			JAISound* snd = sound;
 			stopSeq(snd);
 		}
 	}
@@ -664,19 +664,19 @@ void JAIBasic::checkSeqWave()
 {
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
 		JAISeqUpdateData* sud = &unk0->mSeqTrackInfo[i];
-		JAISound** sound      = &sud->mSound;
-		if (!*sound)
+		JAISoundHandle& sound = sud->mSound;
+		if (!sound)
 			continue;
-		if (!(*sound)->getSeqParameter())
+		if (!sound->getSeqParameter())
 			continue;
-		if ((*sound)->getSeqParameter()->mWaitSceneSet == 0xffffffff)
+		if (sound->getSeqParameter()->mWaitSceneSet == 0xffffffff)
 			continue;
 		if (mFinishedSceneSet == 0xffffffff)
 			continue;
 
-		u32 id = (*sound)->getSeqParameter()->mWaitSceneSet;
+		u32 id = sound->getSeqParameter()->mWaitSceneSet;
 
-		JAISound* snd = *sound;
+		JAISound* snd = sound;
 		if (mFinishedSceneSet == id || id == 0xff00ff00
 		    || (((mFinishedSceneSet & 0xffff0000) == (id & 0xffff0000)
 		         && id == 0xffff))

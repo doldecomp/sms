@@ -1,7 +1,7 @@
 #ifndef JAIENTRY_HPP
 #define JAIENTRY_HPP
 
-#include <types.h>
+#include <JSystem/JAudio/JAInterface/JAISound.hpp>
 
 class JAIActor;
 class JAIBasic;
@@ -9,12 +9,12 @@ class JAISound;
 
 class JAIEntry {
 public:
-	u32 checkSoundHandle(JAISound** sound, u32 param, void* data);
-	void initSoundParameter(JAISound* sound1, JAISound** sound2,
-	                        JAIActor* actor, u32 param1, u32 param2, u8 param3,
-	                        void* data);
-	BOOL checkSoundHandle(JAISound** sound, JAISound* soundParam);
-	void checkAllSoundHandle(JAISound** sound);
+	u32 checkSoundHandle(JAISoundHandle* handle, u32 sound_id, void* info);
+	void initSoundParameter(JAISound* sound, JAISoundHandle* out_handle,
+	                        JAIActor* actor, u32 param_4, u32 fade, u8 param_6,
+	                        void* info);
+	BOOL checkSoundHandle(JAISoundHandle*, JAISound*);
+	void checkAllSoundHandle(JAISoundHandle*);
 
 	/* 0x0 */ JAIBasic* unk0;
 };
