@@ -726,7 +726,7 @@ void MSound::setCategoryAllVolume(u8 param_1, f32 param_2, u32 param_3,
 {
 }
 
-void MSound::fadeOutAllSound(u32 param_1)
+void MSound::fadeOutAllSound(u32 fadeout)
 {
 	unkA8 &= 1;
 
@@ -734,14 +734,14 @@ void MSound::fadeOutAllSound(u32 param_1)
 		if (unk0->mSeTable.mSoundMax[cat] != 0 && cat != 4) {
 			for (JAISound* sound         = unk0->mSeRegist[cat].mUsedHead;
 			     sound != nullptr; sound = sound->mNextSound)
-				sound->setVolume(0.0f, param_1, 2);
+				sound->setVolume(0.0f, fadeout, 2);
 		}
 	}
 
-	MSBgm::setAllTracksVolume(0.0f, param_1);
+	MSBgm::setAllTracksVolume(0.0f, fadeout);
 
 	if (unkC4)
-		unkC4->stop(param_1);
+		unkC4->stop(fadeout);
 }
 
 void MSound::stopAllSound()
@@ -1100,24 +1100,24 @@ void MSound::startBeeSe(Vec* param_1, u32 param_2)
 	}
 }
 
-void MSound::startSoundActorSpecial(u32 param_1, const Vec* param_2,
-                                    f32 param_3, f32 param_4, u32 param_5,
-                                    JAISound** param_6, u32 param_7, u8 param_8)
+void MSound::startSoundActorSpecial(u32 id, const Vec* position, f32 param_3,
+                                    f32 param_4, u32 ground_no,
+                                    JAISoundHandle* out_handle, u32 param_7,
+                                    u8 param_8)
 {
-	if (gateCheck(param_1) && !JALSystem::gateCheckFunc(param_1, param_3)
-	    && !JALSystem::gateCheckFunc(param_1, param_4)) {
-		JAIActor actor(param_2, param_2, param_2, param_5);
+	if (gateCheck(id) && !JALSystem::gateCheckFunc(id, param_3)
+	    && !JALSystem::gateCheckFunc(id, param_4)) {
+		JAIActor actor(position, position, position, ground_no);
 		JAISound* sound = MSoundSESystem::MSoundSE::startSoundActorInner(
-		    param_1, param_6, &actor, param_7, param_8);
+		    id, out_handle, &actor, param_7, param_8);
 		if (sound != nullptr) {
-			switch (param_1) {
+			switch (id) {
 			case MSD_SE_EN_IGAIGA_ROLL:
 				f32 local_40 = 1.0f;
 				f32 local_44 = 1.0f;
-				if (JALSeModData<JALSeModVolFunk>::calc(param_1, param_3,
-				                                        &local_40))
+				if (JALSeModData<JALSeModVolFunk>::calc(id, param_3, &local_40))
 					sound->setVolume(local_40, 0, 0);
-				if (JALSeModDataGrp<JALSeModPitFGrp>::calcGrp(param_1, param_4,
+				if (JALSeModDataGrp<JALSeModPitFGrp>::calcGrp(id, param_4,
 				                                              &local_44))
 					sound->setPitch(local_44, 0, 0);
 				break;
@@ -1141,16 +1141,16 @@ bool MSound::cameraLooksAtMario()
 	return true;
 }
 
-bool MSound::gateCheck(u32 param_1)
+bool MSound::gateCheck(u32 id)
 {
 	if (!(unkA8 & 1)) {
-		u8 tmp = (param_1 >> 11 & 1) | (param_1 >> 24 & 0xC0);
+		u8 tmp = (id >> 11 & 1) | (id >> 24 & 0xC0);
 		if (tmp == 0)
 			return false;
 	}
 
 	if (!(unkA8 & 2)) {
-		u8 tmp = (param_1 >> 11 & 1) | (param_1 >> 24 & 0xC0);
+		u8 tmp = (id >> 11 & 1) | (id >> 24 & 0xC0);
 		if (tmp == 1)
 			return false;
 	}

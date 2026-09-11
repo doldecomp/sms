@@ -100,7 +100,7 @@ public:
 	void clearMainSoundPPointer();
 	void release();
 	void start(u32);
-	void stop(u32);
+	void stop(u32 fadeout);
 	void setVolume(f32, u32, u8);
 	void setDirectVolume(f32, u32);
 	void setPan(f32, u32, u8);
@@ -239,7 +239,14 @@ public:
 		setSeInterDolby(param, dolby, moveTime, random);
 	}
 
+	void setVolumeU7(u8 param_1, u32 param_2, u8 param_3)
+	{
+		setVolume(param_1 / 127.0f, param_2, param_3);
+	}
+
 	static JAIBasic* interPointer;
 };
+
+typedef JAISound* JAISoundHandle;
 
 #endif // JAISOUND_HPP

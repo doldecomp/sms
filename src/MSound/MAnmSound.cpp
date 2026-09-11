@@ -8,25 +8,24 @@
 
 MAnmSound::MAnmSound(MSound* sound) { mData = nullptr; }
 
-void MAnmSound::animeLoop(Vec* param_1, f32 param_2, f32 param_3, u32 param_4,
+void MAnmSound::animeLoop(Vec* position, f32 frame, f32 speed, u32 ground_no,
                           u8 param_5)
 {
 	if (mData != nullptr)
-		setAnimSoundVec(JAIBasic::getInterface(), param_1, param_2, param_3,
-		                param_4, param_5);
+		setAnimSoundVec(JAIBasic::getInterface(), position, frame, speed,
+		                ground_no, param_5);
 }
 
-void MAnmSound::initAnmSound(void* param_1, u32 param_2, f32 param_3)
+void MAnmSound::initAnmSound(void* interface, u32 param_2, f32 frame)
 {
-	initActorAnimSound(param_1, param_2, param_3);
+	initActorAnimSound(interface, param_2, frame);
 }
 
 void MAnmSound::setSpeedModifySound(JAISound* param_1,
-                                    JAIAnimeFrameSoundData* param_2,
-                                    f32 param_3)
+                                    JAIAnimeFrameSoundData* param_2, f32 speed)
 {
 	if (MSound::getSwitch(param_1->getID(), 0x100000, 0x14))
-		JAIAnimeSound::setSpeedModifySound(param_1, param_2, param_3);
+		JAIAnimeSound::setSpeedModifySound(param_1, param_2, speed);
 }
 
 // TODO: find a home for this
@@ -47,11 +46,12 @@ static u32 get_thing(u32 param_1)
 	return 0xffffffff;
 }
 
-void MAnmSound::startAnimSound(void* param_1, u32 param_2, JAISound** param_3,
-                               JAIActor* param_4, u8 param_5)
+void MAnmSound::startAnimSound(void* interface, u32 id,
+                               JAISoundHandle* out_handle, JAIActor* param_4,
+                               u8 param_5)
 {
-	if (MSGMSound->gateCheck(param_2)) {
-		switch (get_thing(param_2)) {
+	if (MSGMSound->gateCheck(id)) {
+		switch (get_thing(id)) {
 		case 0:
 			if ((param_4->mGroundNumber & 0x1000) == 0x1000)
 				return;
@@ -61,13 +61,13 @@ void MAnmSound::startAnimSound(void* param_1, u32 param_2, JAISound** param_3,
 			u32 bVar2 = param_4->mGroundNumber >> 24;
 			u32 a     = bVar2 & 0xF;
 			u8 b      = bVar2 >> 4;
-			MSGMSound->startMarioVoice(param_2, a, b);
+			MSGMSound->startMarioVoice(id, a, b);
 			return;
 		}
 		}
 
-		MSoundSESystem::MSoundSE::startSoundActorInner(param_2, param_3,
-		                                               param_4, 0, param_5);
+		MSoundSESystem::MSoundSE::startSoundActorInner(id, out_handle, param_4,
+		                                               0, param_5);
 	}
 }
 

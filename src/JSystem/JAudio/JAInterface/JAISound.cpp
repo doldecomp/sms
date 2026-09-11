@@ -80,9 +80,9 @@ void JAISound::release()
 
 void JAISound::start(u32) { }
 
-void JAISound::stop(u32 param_1)
+void JAISound::stop(u32 fadeout)
 {
-	interPointer->stopSoundHandle(this, param_1);
+	interPointer->stopSoundHandle(this, fadeout);
 }
 
 void JAISound::setVolume(f32 param_1, u32 param_2, u8 param_3)

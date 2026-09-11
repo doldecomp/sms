@@ -55,7 +55,7 @@ public:
 	static JSUList<MSRandPlay> smList;
 
 public:
-	/* 0x1C */ u32 unk1C;
+	/* 0x1C */ u32 mSoundID;
 	/* 0x20 */ s32 unk20;
 	/* 0x24 */ s32 unk24;
 	/* 0x28 */ f32 unk28;
@@ -81,17 +81,23 @@ public:
 	MSoundSE() { }
 
 	static void construct();
-	static bool checkMonoSound(u32, JAIActor*);
+	static bool checkMonoSound(u32 id, JAIActor* actor);
 	static bool checkSoundArea(u32, const Vec&);
 	static u32 getNewIDByGroundCode(u32, JAIActor*);
 	static u32 getNewIDBySurfaceCode(u32, JAIActor*);
 	static u32 getRandomID(u32);
-	static JAISound* startSoundActor(u32, const Vec*, u32, JAISound**, u32, u8);
-	static JAISound* startSoundActorInner(u32, JAISound**, JAIActor*, u32, u8);
-	static void startSoundActorWithInfo(u32, const Vec*, Vec*, f32, u32, u32,
-	                                    JAISound**, u32, u8);
-	static void startSoundNpcActor(u32, const Vec*, u32, JAISound**, u32, u8);
-	static JAISound* startSoundSystemSE(u32, u32, JAISound**, u32);
+
+	static JAISound* startSoundActor(u32 id, const Vec* position, u32 ground_no,
+	                                 JAISoundHandle* out_handle, u32, u8);
+	static JAISound* startSoundActorInner(u32 id, JAISoundHandle* out_handle,
+	                                      JAIActor* actor, u32, u8);
+	static void startSoundActorWithInfo(u32 id, const Vec* position, Vec*, f32,
+	                                    u32, u32 ground_no,
+	                                    JAISoundHandle* out_handle, u32, u8);
+	static void startSoundNpcActor(u32 id, const Vec* position, u32 ground_no,
+	                               JAISoundHandle* out_handle, u32, u8);
+	static JAISound* startSoundSystemSE(u32 id, u32, JAISoundHandle* out_handle,
+	                                    u32);
 	static MSoundSE* mObj;
 };
 
