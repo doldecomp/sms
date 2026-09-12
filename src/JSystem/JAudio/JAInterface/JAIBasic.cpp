@@ -1175,11 +1175,11 @@ u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* track, u16 param_2)
 			if (basic->unk0->mSeqTrackInfo[i].mSound == nullptr)
 				continue;
 
-			JASystem::TTrack* track
+			JASystem::TTrack* seqTrack
 			    = JASystem::TrackMgr::handleToSeq(basic->unk0->mSeqTrackInfo[i]
 			                                          .mSound->getSeqParameter()
 			                                          ->mSeqHandle);
-			if (track != track->getParent())
+			if (seqTrack != track->getParent())
 				continue;
 
 			u32 route = basic->routeToTrack(track->getTrackRoute());
@@ -1230,7 +1230,9 @@ u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* track, u16 param_2)
 JAISoundInfo* JAIBasic::getSoundInfoFromID(u32 sound_id)
 {
 	static JAISoundInfo* _info;
-	unk0->getInfoPointer(sound_id, (void**)&_info);
+	// TODO: fakematch that helps loadArcSeqData
+	u32 id = sound_id;
+	unk0->getInfoPointer(id, (void**)&_info);
 	return _info;
 }
 
