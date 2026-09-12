@@ -17,7 +17,7 @@ JSUList<MSRandVol> MSRandVol::smList;
 
 JSUList<MSRandPlay> MSRandPlay::smList;
 
-SeInfo SeInfo::smSeSetting(1.0f, 0.9f);
+SeInfo::Setting SeInfo::smSeSetting(1.0f, 0.9f);
 
 MSoundSE* MSoundSE::mObj = 0;
 
@@ -49,10 +49,10 @@ u32 MSRandVol::getRandomVolume(u32 param_1, u32 param_2) { }
 
 f32 MSRandVol::getRandVol(u32 param_1)
 {
-	f32 d = JALCalc::getRandom(unk3C[param_1 >> 26 & 3] * unk18,
-	                           unk2C[param_1 >> 24 & 3],
-	                           unk1C[param_1 >> 22 & 3])
-	        + 1.0f;
+	f32 d
+	    = JALCalc::getRandom(unk3C[param_1 >> 26 & 3] * unk18,
+	                         unk2C[param_1 >> 24 & 3], unk1C[param_1 >> 22 & 3])
+	      + 1.0f;
 
 	f32 x = d < 0.0f ? 0.0f : d;
 	return x > 2.0f ? 2.0f : x;
@@ -789,8 +789,8 @@ bool MSoundSE::checkMonoSound(u32 id, JAIActor* actor)
 			nextSound         = sound->getNextSound();
 			JAISoundInfo* tmp = (JAISoundInfo*)sound->mInfo;
 
-			if (sound->getAct() == actor->mIdentity
-			    && (tmp->mSwBit & 0x4000) && id != sound->mSoundID) {
+			if (sound->getAct() == actor->mIdentity && (tmp->mSwBit & 0x4000)
+			    && id != sound->getID()) {
 				JAIBasic::getInterface()->stopSoundHandle(sound, 0);
 				break;
 			}

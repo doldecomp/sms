@@ -164,10 +164,7 @@ bool MSBgm::checkPlaying(u32 param) { return false; }
 
 void MSBgm::stopBGM(u32 param1, u32 param2)
 {
-	MSBgm* track = smBgmInTrack[param1];
-	u32 stack; /* Unused */
 	MSBgm* iVar2;
-	JAISound* audio; /*Unused*/
 	if (param1 == -1) {
 		if (smBgmInTrack[0] && smBgmInTrack[0]->unk14) {
 			smBgmInTrack[0]->unk14->stop(param2);
@@ -176,7 +173,7 @@ void MSBgm::stopBGM(u32 param1, u32 param2)
 	} else {
 		iVar2 = JALListS<MSBgm, u32>::search(param1 & JAISoundID_IndexMask);
 		if (iVar2 && iVar2->unk14) {
-			u8 a = iVar2->unk14->mTrack;
+			u8 a = iVar2->unk14->getTrack();
 			if (a == 0xff) {
 				stopBGM(0xffffffff, 10);
 			} else if (a < 3) {

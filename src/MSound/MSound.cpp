@@ -126,6 +126,11 @@ void MSSeCallBack::setWaterFilter(u16 param_1) { }
 
 u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 {
+	u16 local_26;
+	u16 local_28;
+	u16 local_2a;
+	u16 local_2c;
+
 	switch (param_2) {
 	case 15:
 		return MSGMSound->unk94;
@@ -151,15 +156,11 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 		return 0;
 
 	case 12: {
-		u16 local_26;
-		u16 local_28;
 		param_1->getParent()->readPortAppDirect(8, &local_26);
 		param_1->readPortAppDirect(0xf, &local_28);
-		u16 uVar4 = local_26 > smWaterFilter ? smWaterFilter : local_26;
+		u16 uVar4 = local_26 > smWaterFilter ? local_26 : smWaterFilter;
 
-		u16 local_2c;
 		if (uVar4 != local_28) {
-			u16 local_2a;
 			param_1->readPortAppDirect(14, &local_2a);
 			if (local_2a > uVar4) {
 				local_2c = 0xFFEC;
@@ -174,13 +175,12 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 		}
 
 		if (local_2c != 0) {
-			u16 local_2a;
 			param_1->readPortAppDirect(14, &local_2a);
 			local_2a += local_2c;
 			if (local_2a > 0x7FFF || local_2a == 0) {
 				local_2c = 0;
 				local_2a = 0;
-				param_1->writePortAppDirect(13, local_2a);
+				param_1->writePortAppDirect(13, local_2c);
 			} else if (local_28 != 0 && local_2a > local_28) {
 				local_2a = local_28;
 				local_2c = 0;
@@ -195,9 +195,8 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 	}
 
 	case 13: {
-		u16 local_26;
 		param_1->getParent()->readPortAppDirect(8, &local_26);
-		u16 uVar3 = local_26 > smWaterFilter ? smWaterFilter : local_26;
+		u16 uVar3 = local_26 > smWaterFilter ? local_26 : smWaterFilter;
 		param_1->writePortAppDirect(0xe, uVar3);
 		param_1->writePortAppDirect(0xf, uVar3);
 		return 0x7f - uVar3;
@@ -435,6 +434,7 @@ f32 MSound::getDistFromCamera(Vec* pos)
 MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
                u8* param_5, u32 param_6)
 {
+	u32 aramSize       = param_3;
 	JKRSolidHeap* heap = JKRSolidHeap::create(0x151800, param_1, false);
 	if (param_2 != nullptr) {
 		JAInter::TDebugHeap::currentHeap = param_2;
@@ -464,7 +464,7 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 		JAInter::TAsnData::asnData = param_5;
 
 	MSSeCallBack::smWaterFilter = nullptr;
-	initDriver(heap, param_3, 1);
+	initDriver(heap, aramSize, 1);
 	initInterface(1);
 	f32 fVar1 = 0.0f;
 	for (u8 cat = 0; cat < 16; ++cat) {
@@ -698,8 +698,12 @@ void MSound::setCategoryVOLsDefault(u16 param_1) { }
 
 void MSound::setCategoryVOLs(u16 param_1, f32 param_2)
 {
-	u8 tmp   = param_2 * 127.0f;
-	u8 uVar2 = min<u8>(127, tmp);
+	u8 tmp = param_2 * 127.0f;
+	u8 uVar2;
+	if (tmp > 127)
+		uVar2 = 127;
+	else
+		uVar2 = tmp;
 
 	for (u8 cat = 0; cat < 16; ++cat) {
 		if (MSGMSound->unk0->mSeTable.mSoundMax[cat] != 0 && param_1 >> cat & 1)
@@ -740,8 +744,8 @@ void MSound::fadeOutAllSound(u32 fadeout)
 
 	for (u8 cat = 0; cat < JAIGlobalParameter::getParamSeCategoryMax(); ++cat) {
 		if (unk0->mSeTable.mSoundMax[cat] != 0 && cat != 4) {
-			for (JAISound* sound         = unk0->mSeRegist[cat].mUsedHead;
-			     sound != nullptr; sound = sound->mNextSound)
+			for (JAISound* sound         = unk0->getLinkBuffer(cat)->mUsedHead;
+			     sound != nullptr; sound = sound->getNextSound())
 				sound->setVolume(0.0f, fadeout, 2);
 		}
 	}
@@ -767,9 +771,10 @@ void MSound::stopAllSound()
 void MSound::setSeExtParameter(JAISound* sound)
 {
 	if (sound != nullptr) {
-		u32 id               = sound->mSoundID;
+		JAISoundInfo* ptr;
+		u32 id               = sound->getID();
 		JAISoundTable* table = JAIBasic::getInfoPointerFromID(id);
-		JAISoundInfo* ptr    = (JAISoundInfo*)sound->mInfo;
+		ptr                  = (JAISoundInfo*)sound->mInfo;
 		JAIBasic::getInfoFormat(table, id);
 		f32 dVar5 = (ptr->mSwBit & 0xC00000)
 		                ? MSoundSESystem::MSRandVol::getRandomVolumeNormal(
@@ -864,7 +869,7 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 
 		if (!r3) {
 			if (unk8C[0])
-				return unk8C[0]->mSoundID;
+				return unk8C[0]->getID();
 			return -1;
 		}
 	}
@@ -918,7 +923,7 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 			MSoundSESystem::MSRandPlay::startSeRandPlay(
 			    MSD_SE_MV10A_CRY_SHORT_01, 0);
 		if (unk8C[0] != nullptr)
-			return unk8C[0]->mSoundID;
+			return unk8C[0]->getID();
 		return -1;
 		break;
 
@@ -1023,7 +1028,7 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 
 	u8 iVar62 = param_3 & 0x2 ? 1 : 0;
 	if (unk8C[iVar62] != nullptr)
-		return unk8C[iVar62]->mSoundID;
+		return unk8C[iVar62]->getID();
 
 	return -1;
 }
@@ -1032,7 +1037,7 @@ u32 MSound::getMarioVoiceID(u8 param_1)
 {
 	u8 iVar1 = param_1 & 2 ? 1 : 0;
 	if (unk8C[iVar1])
-		return unk8C[iVar1]->mSoundID;
+		return unk8C[iVar1]->getID();
 
 	return -1;
 }
@@ -1042,7 +1047,7 @@ void MSound::stopMarioVoice(u32 id, u8 param_2)
 	u8 iVar1 = param_2 & 2 ? 1 : 0;
 	if (unk8C[iVar1] != nullptr) {
 		if (id != 0xffffffff) {
-			if (id == unk8C[iVar1]->mSoundID)
+			if (id == unk8C[iVar1]->getID())
 				unk8C[iVar1]->stop(1);
 		} else {
 			unk8C[iVar1]->stop(1);

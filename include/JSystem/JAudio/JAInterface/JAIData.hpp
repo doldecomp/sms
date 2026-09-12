@@ -86,6 +86,7 @@ public:
 	void initData();
 	void initInfoDataWork(JAISoundTable* soundTable, char* param);
 	void initLinkBuffer(JAILinkBuffer* linkBuffer, u32 param);
+	JAILinkBuffer* getLinkBuffer(u8 category) { return &mSeRegist[category]; }
 	void initSeqParaLinkBuffer();
 	void initSeParaLinkBuffer();
 	void initStreamParaLinkBuffer();
