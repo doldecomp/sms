@@ -16,30 +16,12 @@ class JAIBasic;
 #define JAISoundID_Type_Sequence 0x80000000
 #define JAISoundID_Type_Stream   0xC0000000
 
-// How far a sound has got. The three sound types share one ladder and the
-// library compares it ordinally (>= 3, < 4). The names come from the functions
-// that service each state - checkEntriedStream, checkReadSeq, checkStartedSeq,
-// checkPlayingSeq, checkFadeoutSeq - but a se reads the top of the ladder
-// differently, so each state says what it means for all three.
 enum JAISoundState {
-	// free, on the free list of its JAILinkBuffer
 	SOUNDSTATE_Inactive = 0,
-	// entered, and waiting for what it needs: a se for a track, a sequence for
-	// its data, which it may be reading from the disc, a stream for the player
-	SOUNDSTATE_Stored = 1,
-	// it has what it needs and the start comes next: a se holds its track, the
-	// data of a sequence is in memory, a stream holds the player
+	SOUNDSTATE_Stored   = 1,
 	SOUNDSTATE_Prepared = 2,
-	// the start is issued. A sequence waits for its player to report active, a
-	// stream waits after JAInter::StreamLib::start, and a se is on its track
-	// and gets its parameters again this frame
-	SOUNDSTATE_Started = 3,
-	// playing
-	SOUNDSTATE_Playing = 4,
-	// about to be released. A sequence or a stream fades out here and stops
-	// when its volume reaches zero. A se is playing and waits for the game to
-	// ask for it again, which puts it back to _Playing; it is released if the
-	// game does not
+	SOUNDSTATE_Started  = 3,
+	SOUNDSTATE_Playing  = 4,
 	SOUNDSTATE_Stopping = 5,
 };
 
