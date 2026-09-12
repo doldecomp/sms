@@ -640,10 +640,10 @@ void JAIBasic::initAllocParameter()
 void JAIBasic::initSeqsLoadArea()
 {
 	for (int i = 0; i < JAIGlobalParameter::autoHeapMax; ++i) {
-		unk0->unk1EC[i].mPointer
+		unk0->mAutoHeap[i].mPointer
 		    = allocHeap(JAIGlobalParameter::autoHeapRoomSize);
 	}
-	unk0->unk1F0->mPointer = allocHeap(JAIGlobalParameter::stayHeapSize);
+	unk0->mStayHeap->mPointer = allocHeap(JAIGlobalParameter::stayHeapSize);
 }
 
 void JAIBasic::setInitFileLoadSwitch(u8 flag) { mInitFileLoadSwitch = flag; }

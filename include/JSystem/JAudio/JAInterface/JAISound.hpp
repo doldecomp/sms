@@ -59,7 +59,7 @@ public:
 	/* 0x5 */ u8 unk5;
 	/* 0x6 */ s16 mAdjustPrio;
 	/* 0x8 */ u32 mSoundID;
-	/* 0xC */ u32 unkC;
+	/* 0xC */ u32 mPriority;
 	/* 0x10 */ u32 mFadeCounter;
 	/* 0x14 */ u32 mPlayGameFrameCounter;
 	/* 0x18 */ u32 mActorGroundNumber;
@@ -220,6 +220,9 @@ public:
 
 	void setRandom(u8 random) { mRandom = random; }
 	s16 getAdjustPriority() { return mAdjustPrio; }
+
+	u32 getPriority() const { return mPriority; }
+	void setPriority(u32 priority) { mPriority = priority; }
 
 	void setSeqInterVolumeU7(u8 param, u8 value, u32 moveTime)
 	{

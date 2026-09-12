@@ -172,8 +172,8 @@ public:
 	/* 0x1E0 */ JAISound** mDefaultSeqHandle;
 	/* 0x1E4 */ JAISound** mSeRegistStorage;
 	/* 0x1E8 */ JAILinkBuffer* mSeRegist;
-	/* 0x1EC */ JAIHeapBlock* unk1EC;
-	/* 0x1F0 */ JAIHeapBlock* unk1F0;
+	/* 0x1EC */ JAIHeapBlock* mAutoHeap;
+	/* 0x1F0 */ JAIHeapBlock* mStayHeap;
 	/* 0x1F4 */ JAIBasic* unk1F4;
 
 	struct FabricatedStreamEntry {
