@@ -76,7 +76,7 @@ static u32 get_thing(u32 param_1)
 
 f32 MSHandle::MSACos(f32 param_1)
 {
-	int iVar1 = (param_1 + 1.0f) * 50.0f;
+	s32 iVar1 = (param_1 + 1.0f) * 50.0f;
 
 	if (iVar1 < 0)
 		return smACosPrm[0];
@@ -161,13 +161,8 @@ f32 MSHandle::calcPan(const Vec& param_1, f32 param_2, f32 param_3)
 
 	fVar4 += fVar2;
 
-	if (fVar4 > 1.0f)
-		return 1.0f;
-
-	if (fVar4 < 0.0f)
-		return 0.0f;
-
-	return fVar4;
+	f32 r = fVar4 > 1.0f ? 1.0f : fVar4;
+	return r < 0.0f ? 0.0f : r;
 }
 
 void MSHandle::setSeDistanceDolby(u8 param_1)
@@ -178,7 +173,7 @@ void MSHandle::setSeDistanceDolby(u8 param_1)
 
 f32 MSHandle::calcDolby(const Vec& pos, f32 dist)
 {
-	f32 dVar2 = dist <= 0.0f ? 0.0f : MSACos(-pos.y / dist);
+	f32 dVar2 = dist <= 0.0f ? 0.0f : MSACos(-pos.z / dist);
 
 	f32 zeroRad = cDol_0Rad;
 	f32 halfRad = cDol_HalfRad;
@@ -198,13 +193,8 @@ f32 MSHandle::calcDolby(const Vec& pos, f32 dist)
 		dVar2 = dist * ((dVar2 - 0.5f) / cPan_HiSence_Dist) + 0.5f;
 	}
 
-	if (dVar2 > 1.0f)
-		return 1.0f;
-
-	if (dVar2 < 0.0f)
-		return 0.0f;
-
-	return dVar2;
+	f32 r = dVar2 > 1.0f ? 1.0f : dVar2;
+	return r < 0.0f ? 0.0f : r;
 }
 
 void MSHandle::setSeDistanceVolume(u8 param_1)

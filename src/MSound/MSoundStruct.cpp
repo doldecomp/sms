@@ -160,19 +160,12 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 			if (unk24.get() == 1 && unk1F.get() < uVar7 && f31 < unk20.get()) {
 				bVar2 = false;
 			} else {
-				// TODO: definitely an inline, non-structured control flow.
-				// Probably even two to get searchD to not inline.
-				if (param_8 != nullptr) {
-					MSSetSoundMember* candidate
-					    = param_8->searchD(unk5C[unk5A]->mSoundID);
-					if (!candidate) {
-						bVar2 = false;
-					} else if (uVar7 < candidate->unk18) {
-						bVar2 = false;
-					}
-				} else {
-					bVar2 = true;
-				}
+				MSSetSoundMember* candidate;
+				bVar2 = param_8 == nullptr
+				        || ((candidate
+				             = param_8->searchD(unk5C[unk5A]->mSoundID))
+				                != nullptr
+				            && uVar7 >= candidate->unk18);
 			}
 		}
 
