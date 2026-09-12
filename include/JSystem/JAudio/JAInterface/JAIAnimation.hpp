@@ -58,7 +58,7 @@ public:
 
 	virtual void startAnimSound(void* interface, u32 id,
 	                            JAISoundHandle* out_handle, JAIActor* actor,
-	                            u8 flag);
+	                            u8 camera_idx);
 	virtual void setSpeedModifySound(JAISound* sound,
 	                                 JAIAnimeFrameSoundData* data, f32 speed);
 

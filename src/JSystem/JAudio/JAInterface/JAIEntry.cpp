@@ -26,7 +26,7 @@ u32 JAIEntry::checkSoundHandle(JAISoundHandle* handle, u32 sound_id, void* info)
 
 void JAIEntry::initSoundParameter(JAISound* sound, JAISoundHandle* out_handle,
                                   JAIActor* actor, u32 sound_id, u32 fade,
-                                  u8 param_6, void* info)
+                                  u8 camera_idx, void* info)
 {
 	sound->setID(sound_id);
 	if (actor) {
@@ -48,7 +48,7 @@ void JAIEntry::initSoundParameter(JAISound* sound, JAISoundHandle* out_handle,
 	}
 	sound->setMainSoundPPointer(out_handle);
 	sound->mFadeCounter = fade;
-	sound->unk4         = param_6;
+	sound->mCameraIdx   = camera_idx;
 	sound->mInfo        = info;
 	sound->mWaitTimer   = 10;
 	sound->unk5         = JAIGlobalParameter::distanceParameterMoveTime;

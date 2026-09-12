@@ -7,7 +7,7 @@
 #include <JSystem/JAudio/JASystem/JASTrackMgr.hpp>
 
 void JAISeqEntry::storeBuffer(JAISound** out_handle, JAIActor* actor,
-                              u32 sound_id, u32 fade, u8 param_5, void* info)
+                              u32 sound_id, u32 fade, u8 camera_idx, void* info)
 {
 	JAISound* controller;
 	JAIData* data = unk0->unk0;
@@ -95,6 +95,6 @@ void JAISeqEntry::storeBuffer(JAISound** out_handle, JAIActor* actor,
 		}
 	}
 
-	initSoundParameter(controller, out_handle, actor, sound_id, fade, param_5,
-	                   info);
+	initSoundParameter(controller, out_handle, actor, sound_id, fade,
+	                   camera_idx, info);
 }

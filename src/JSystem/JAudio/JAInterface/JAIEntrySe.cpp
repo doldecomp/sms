@@ -4,7 +4,7 @@
 #include <JSystem/JAudio/JAInterface/JAIConst.hpp>
 
 void JAISeEntry::storeBuffer(JAISoundHandle* out_handle, JAIActor* actor,
-                             u32 sound_id, u32 fade, u8 param_5, void* info)
+                             u32 sound_id, u32 fade, u8 camera_idx, void* info)
 {
 	JAIData* data = unk0->unk0;
 	if (!out_handle || !*out_handle || (*out_handle)->mSoundID != sound_id
@@ -90,7 +90,7 @@ void JAISeEntry::storeBuffer(JAISoundHandle* out_handle, JAIActor* actor,
 		} else {
 			controller->mState = SOUNDSTATE_Stored;
 			initSoundParameter(controller, out_handle, actualActor, sound_id,
-			                   fade, param_5, info);
+			                   fade, camera_idx, info);
 		}
 	}
 }

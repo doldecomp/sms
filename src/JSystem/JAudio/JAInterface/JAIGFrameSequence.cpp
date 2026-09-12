@@ -190,12 +190,12 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 	if (sound != nullptr && sound->mActor != 0) {
 		u32 s, e;
 		u32 i;
-		if (sound->unk4 == 4) {
+		if (sound->mCameraIdx == 4) {
 			s = 0;
 			e = JAIGlobalParameter::audioCameraMax;
 		} else {
-			s = sound->unk4;
-			e = sound->unk4 + 1;
+			s = sound->mCameraIdx;
+			e = sound->mCameraIdx + 1;
 		}
 
 		for (i = s; i < e; ++i) {

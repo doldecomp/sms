@@ -106,31 +106,31 @@ public:
 
 	// real
 	void startSoundSystemSE(u32 id, u32 param_2, JAISoundHandle* out_handle,
-	                        u32 param_4)
+	                        u32 fade)
 	{
 		if (gateCheck(id))
 			MSoundSESystem::MSoundSE::startSoundSystemSE(id, param_2,
-			                                             out_handle, param_4);
+			                                             out_handle, fade);
 	}
 
 	// Fabricated, very likely due to real startSoundSystemSE
 	void startSoundActor(u32 id, const Vec* position, u32 ground_no,
-	                     JAISoundHandle* out_handle, u32 param_5, u8 param_6)
+	                     JAISoundHandle* out_handle, u32 fade, u8 camera_idx)
 	{
 		if (gateCheck(id))
 			MSoundSESystem::MSoundSE::startSoundActor(
-			    id, position, ground_no, out_handle, param_5, param_6);
+			    id, position, ground_no, out_handle, fade, camera_idx);
 	}
 
 	void startSoundActorWithInfo(u32 id, const Vec* position, Vec* param_3,
 	                             f32 param_4, u32 param_5, u32 ground_no,
-	                             JAISoundHandle* out_handle, u32 param_8,
-	                             u8 param_9)
+	                             JAISoundHandle* out_handle, u32 fade,
+	                             u8 camera_idx)
 	{
 		if (gateCheck(id))
 			MSoundSESystem::MSoundSE::startSoundActorWithInfo(
 			    id, position, param_3, param_4, param_5, ground_no, out_handle,
-			    param_8, param_9);
+			    fade, camera_idx);
 	}
 
 	void startSeRandPlay(u32 id, u32 param_2)

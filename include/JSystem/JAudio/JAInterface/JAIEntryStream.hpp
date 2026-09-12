@@ -8,7 +8,7 @@ class JAIActor;
 class JAIStreamEntry : public JAIEntry {
 public:
 	void storeBuffer(JAISoundHandle* out_handle, JAIActor* actor, u32 sound_id,
-	                 u32 fade, u8 param_5, void* info);
+	                 u32 fade, u8 camera_idx, void* info);
 };
 
 #endif // JAIENTRYSTREAM_HPP

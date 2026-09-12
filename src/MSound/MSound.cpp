@@ -1102,14 +1102,14 @@ void MSound::startBeeSe(Vec* param_1, u32 param_2)
 
 void MSound::startSoundActorSpecial(u32 id, const Vec* position, f32 param_3,
                                     f32 param_4, u32 ground_no,
-                                    JAISoundHandle* out_handle, u32 param_7,
-                                    u8 param_8)
+                                    JAISoundHandle* out_handle, u32 fade,
+                                    u8 camera_idx)
 {
 	if (gateCheck(id) && !JALSystem::gateCheckFunc(id, param_3)
 	    && !JALSystem::gateCheckFunc(id, param_4)) {
 		JAIActor actor(position, position, position, ground_no);
 		JAISound* sound = MSoundSESystem::MSoundSE::startSoundActorInner(
-		    id, out_handle, &actor, param_7, param_8);
+		    id, out_handle, &actor, fade, camera_idx);
 		if (sound != nullptr) {
 			switch (id) {
 			case MSD_SE_EN_IGAIGA_ROLL:

@@ -222,9 +222,10 @@ void JAIAnimeSound::playActorAnimSound(JAIBasic* interface, JAIActor* actor,
 
 void JAIAnimeSound::startAnimSound(void* interface, u32 id,
                                    JAISoundHandle* out_handle, JAIActor* actor,
-                                   u8 param_5)
+                                   u8 camera_idx)
 {
-	((JAIBasic*)interface)->startSoundActor(id, out_handle, actor, 0, param_5);
+	((JAIBasic*)interface)
+	    ->startSoundActor(id, out_handle, actor, 0, camera_idx);
 }
 
 void JAIAnimeSound::setSpeedModifySound(JAISound* param_1,

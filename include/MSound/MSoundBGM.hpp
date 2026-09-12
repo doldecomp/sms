@@ -19,7 +19,7 @@ public:
 	static MSBgm* smBgmInTrack[3];
 	static f32 smMainVolume;
 	static void init();
-	static JAISound* startBGM(u32);
+	static JAISound* startBGM(u32 sound_id);
 	static void stopBGM(u32, u32);
 	static void stopTrackBGM(u8, u32);
 	static void stopTrackBGMs(u8, u32);

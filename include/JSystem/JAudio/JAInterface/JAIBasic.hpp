@@ -98,20 +98,18 @@ public:
 	void startFrameInterfaceWork();
 	void processFrameWork();
 	void checkDummyPositionBuffer();
-	void startSoundVec(u32 id, JAISoundHandle* out_handle, Vec* pos, u32 param1,
-	                   u32 param2, u8 param3);
-	JAISoundHandle startSoundVecReturnHandle(u32 id, Vec* pos, u32 param1,
-	                                         u32 param2, u8 param3);
+	void startSoundVec(u32, JAISoundHandle*, Vec*, u32, u32, u8);
+	JAISoundHandle startSoundVecReturnHandle(u32, Vec*, u32, u32, u8);
 	void startSoundActor(u32 id, JAISoundHandle* out_handle, JAIActor* actor,
-	                     u32 param, u8 flag);
+	                     u32 fade, u8 camera_idx);
 	JAISoundHandle startSoundActorReturnHandle(u32 id, JAIActor* actor,
-	                                           u32 param, u8 flag);
+	                                           u32 fade, u8 camera_idx);
 	void startSoundDirectID(u32 id, JAISoundHandle* out_handle, JAIActor* actor,
-	                        u32 param, u8 flag);
+	                        u32 fade, u8 camera_idx);
 	void startSoundIndirectID(u32 id, JAISoundHandle* out_handle,
-	                          JAIActor* actor, u32 param, u8 flag);
+	                          JAIActor* actor, u32 fade, u8 camera_idx);
 	void startSoundBasic(u32 id, JAISoundHandle* out_handle, JAIActor* actor,
-	                     u32 param, u8 flag, void* data);
+	                     u32 fade, u8 camera_idx, void* info);
 	void getPlayingSoundHandle(JAISoundHandle*, u32);
 	void stopSoundHandle(JAISoundHandle sound, u32 fadeout);
 	u32 changeIDToCategory(u32 id);
