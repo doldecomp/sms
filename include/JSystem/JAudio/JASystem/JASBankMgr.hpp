@@ -15,7 +15,7 @@ namespace BankMgr {
 	bool registBankBNK(int bankIndex, void* bankData);
 	TBank* getBank(int bankIndex);
 	u16 getPhysicalNumber(u16 virtualNumber);
-	void setVir2PhyTable(u32 tableAddr, int size);
+	void setVir2PhyTable(u32 vir_id, int banknum);
 	bool assignWaveBank(int bankIndex, int waveBankIndex);
 	f32 clamp01(f32 value);
 	TChannel* noteOn(TChannelMgr* channelMgr, int bankIndex, int programIndex,

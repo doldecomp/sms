@@ -9,6 +9,7 @@
 #include <JSystem/JAudio/JASystem/JASRate.hpp>
 #include <JSystem/JAudio/JASystem/JASInst.hpp>
 #include <JSystem/JAudio/JASystem/JASWaveBank.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 
 namespace JASystem {
 namespace BankMgr {
@@ -56,17 +57,20 @@ namespace BankMgr {
 		return sBankArray[bankIndex];
 	}
 
-	u16 getPhysicalNumber(u16 virtualNumber)
-	{
-		return sVir2PhyTable[virtualNumber];
-	}
+	u16 getPhysicalNumber(u16 vir_id) { return sVir2PhyTable[vir_id]; }
 
-	void setVir2PhyTable(u32 tableAddr, int size)
+	void setVir2PhyTable(u32 vir_id, int banknum)
 	{
-		if (tableAddr == 0xFFFF)
+		if (vir_id == 0xFFFF)
 			return;
 
-		sVir2PhyTable[tableAddr] = size;
+		JUT_ASSERT(vir_id < sTableSize);
+
+		if (sVir2PhyTable[vir_id] != 0xFFFF)
+			JUT_REPORT_MSG("Warning : Duplicated Bank vir_id ID %d (%d,%d)\n",
+			               vir_id, sVir2PhyTable[vir_id], banknum);
+
+		sVir2PhyTable[vir_id] = banknum;
 	}
 
 	bool assignWaveBank(int bankIndex, int waveBankIndex)
@@ -138,9 +142,12 @@ namespace BankMgr {
 		case 0x80:
 			chanKey |= 0xff;
 			break;
-		case 0x40:
-			chanKey |= instParam.unk3C << 0x10;
+		case 0x40: {
+			u32 keymap = instParam.unk3C;
+			keymap <<= 0x10;
+			chanKey |= keymap;
 			break;
+		}
 		}
 
 		TChannel* chan = param_1->getLogicalChannel(chanKey);
