@@ -78,7 +78,7 @@ public:
 
 class MSoundSE {
 public:
-	MSoundSE() { }
+	MSoundSE();
 
 	static void construct();
 	static bool checkMonoSound(u32 id, JAIActor* actor);

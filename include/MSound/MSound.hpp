@@ -29,16 +29,13 @@ public:
 	static u16 smWaterFilter;
 };
 
-class MSLoadWave {
-public:
-	static bool loadWaveBackword(int, int);
-	static bool loadWaveBackword(JASystem::WaveArcLoader::TObject*);
-};
+namespace MSLoadWave {
+bool loadWaveBackword(int, int);
+}
 
-class MSMarioPosVolume {
-public:
-	static f32 getDistFromMario(const Vec&);
-};
+namespace MSMarioPosVolume {
+f32 getDistFromMario(const Vec&);
+}
 
 class MSound : public JAIBasic {
 public:
