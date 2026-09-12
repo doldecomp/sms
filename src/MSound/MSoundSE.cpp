@@ -410,15 +410,15 @@ u32 MSoundSE::getRandomID(u32 id)
 }
 
 JAISound* MSoundSE::startSoundActor(u32 id, const Vec* position, u32 ground_no,
-                                    JAISoundHandle* out_handle, u32 param_5,
-                                    u8 param_6)
+                                    JAISoundHandle* out_handle, u32 fade,
+                                    u8 camera_idx)
 {
 	JAIActor actor(position, position, position, ground_no);
-	return startSoundActorInner(id, out_handle, &actor, param_5, param_6);
+	return startSoundActorInner(id, out_handle, &actor, fade, camera_idx);
 }
 
 JAISound* MSoundSE::startSoundSystemSE(u32 id, u32 param_2,
-                                       JAISoundHandle* out_handle, u32 param_4)
+                                       JAISoundHandle* out_handle, u32 fade)
 {
 	u32 actualId = id;
 	switch (id) {
@@ -437,7 +437,7 @@ JAISound* MSoundSE::startSoundSystemSE(u32 id, u32 param_2,
 	}
 
 	JAISound* sound = startSoundActorInner(actualId, out_handle,
-	                                       (JAIActor*)0xffffffff, param_4, 4);
+	                                       (JAIActor*)0xffffffff, fade, 4);
 
 	if (!sound)
 		return nullptr;
@@ -472,8 +472,8 @@ static f32 vecLength(const Vec& vec)
 void MSoundSE::startSoundActorWithInfo(u32 id, const Vec* position,
                                        Vec* param_3, f32 param_4, u32 param_5,
                                        u32 ground_no,
-                                       JAISoundHandle* out_handle, u32 param_8,
-                                       u8 param_9)
+                                       JAISoundHandle* out_handle, u32 fade,
+                                       u8 camera_idx)
 {
 	f32 fVar7 = param_4;
 	switch (id) {
@@ -506,7 +506,7 @@ void MSoundSE::startSoundActorWithInfo(u32 id, const Vec* position,
 	if (JALSystem::gateCheckFunc(id, fVar7) != true) {
 		JAIActor actor(position, position, position, ground_no);
 		JAISound* sound
-		    = startSoundActorInner(id, out_handle, &actor, param_8, param_9);
+		    = startSoundActorInner(id, out_handle, &actor, fade, camera_idx);
 		if (sound) {
 			switch (id) {
 			case MSD_SE_BS_HINO_SEED_LQ_LEV: {
@@ -592,9 +592,9 @@ static u32 get_thing(u32 param_1)
 	return 0xffffffff;
 }
 
-JAISound* MSoundSE::startSoundActorInner(u32 id, JAISoundHandle* param_2,
-                                         JAIActor* actor, u32 param_4,
-                                         u8 param_5)
+JAISound* MSoundSE::startSoundActorInner(u32 id, JAISoundHandle* out_handle,
+                                         JAIActor* actor, u32 fade,
+                                         u8 camera_idx)
 {
 	u32 uVar2 = MSound::getBstSwitch(id);
 	if (actor != (JAIActor*)0xffffffff) {
@@ -634,13 +634,13 @@ JAISound* MSoundSE::startSoundActorInner(u32 id, JAISoundHandle* param_2,
 			if (uVar3) {
 				switch (id) {
 				case MSD_SE_MA_WALK_STONE_L_HEEL:
-					startSoundActorInner(MSD_SE_YO_WALK_L, nullptr, actor,
-					                     param_4, param_5);
+					startSoundActorInner(MSD_SE_YO_WALK_L, nullptr, actor, fade,
+					                     camera_idx);
 					break;
 
 				case MSD_SE_MA_WALK_STONE_R_HEEL:
 					return startSoundActorInner(MSD_SE_YO_WALK_R, nullptr,
-					                            actor, param_4, param_5);
+					                            actor, fade, camera_idx);
 				}
 			}
 
@@ -690,20 +690,19 @@ JAISound* MSoundSE::startSoundActorInner(u32 id, JAISoundHandle* param_2,
 	}
 
 	if (actor == (JAIActor*)0xffffffff) {
-		if (param_2 != nullptr) {
-			MSGBasic->startSoundDirectID(id, param_2, nullptr, param_4, 4);
-			return *param_2;
+		if (out_handle != nullptr) {
+			MSGBasic->startSoundDirectID(id, out_handle, nullptr, fade, 4);
+			return *out_handle;
 		} else {
-			return MSGBasic->startSoundActorReturnHandle(id, nullptr, param_4,
-			                                             4);
+			return MSGBasic->startSoundActorReturnHandle(id, nullptr, fade, 4);
 		}
 	} else {
-		if (param_2 != nullptr) {
-			MSGBasic->startSoundActor(id, param_2, actor, param_4, param_5);
-			return *param_2;
+		if (out_handle != nullptr) {
+			MSGBasic->startSoundActor(id, out_handle, actor, fade, camera_idx);
+			return *out_handle;
 		} else {
-			return MSGBasic->startSoundActorReturnHandle(id, actor, param_4,
-			                                             param_5);
+			return MSGBasic->startSoundActorReturnHandle(id, actor, fade,
+			                                             camera_idx);
 		}
 	}
 }
@@ -763,12 +762,12 @@ u32 MSoundSE::getNewIDBySurfaceCode(u32 id, JAIActor* actor)
 }
 
 void MSoundSE::startSoundNpcActor(u32 id, const Vec* position, u32 ground_no,
-                                  JAISoundHandle* out_handle, u32 param_5,
-                                  u8 param_6)
+                                  JAISoundHandle* out_handle, u32 fade,
+                                  u8 camera_idx)
 {
 	JAIActor actor(position, position, position, ground_no);
 	checkMonoSound(id, &actor);
-	startSoundActorInner(id, out_handle, &actor, param_5, param_6);
+	startSoundActorInner(id, out_handle, &actor, fade, camera_idx);
 }
 
 bool MSoundSE::checkMonoSound(u32 id, JAIActor* actor)

@@ -698,31 +698,25 @@ void JAIBasic::checkDummyPositionBuffer()
 	}
 }
 
-void JAIBasic::startSoundVec(u32 id, JAISoundHandle* out_handle, Vec* pos,
-                             u32 param1, u32 param2, u8 param3)
-{
-}
+void JAIBasic::startSoundVec(u32, JAISoundHandle*, Vec*, u32, u32, u8) { }
 
-JAISoundHandle JAIBasic::startSoundVecReturnHandle(u32 id, Vec* pos, u32 param1,
-                                                   u32 param2, u8 param3)
-{
-}
+JAISoundHandle JAIBasic::startSoundVecReturnHandle(u32, Vec*, u32, u32, u8) { }
 
 void JAIBasic::startSoundActor(u32 id, JAISoundHandle* out_handle,
-                               JAIActor* actor, u32 param, u8 flag)
+                               JAIActor* actor, u32 fade, u8 camera_idx)
 {
 	u32 format = getInfoFormat(getInfoPointerFromID(id), id);
 	if (format & 1)
-		startSoundIndirectID(id, out_handle, actor, param, flag);
+		startSoundIndirectID(id, out_handle, actor, fade, camera_idx);
 	else
-		startSoundDirectID(id, out_handle, actor, param, flag);
+		startSoundDirectID(id, out_handle, actor, fade, camera_idx);
 }
 
 JAISoundHandle JAIBasic::startSoundActorReturnHandle(u32 id, JAIActor* actor,
-                                                     u32 param, u8 flag)
+                                                     u32 fade, u8 camera_idx)
 {
 	JAISound* sound = nullptr;
-	startSoundActor(id, &sound, actor, param, flag);
+	startSoundActor(id, &sound, actor, fade, camera_idx);
 	JAISound* result = sound;
 	if (result)
 		sound->release();
@@ -730,26 +724,27 @@ JAISoundHandle JAIBasic::startSoundActorReturnHandle(u32 id, JAIActor* actor,
 }
 
 void JAIBasic::startSoundDirectID(u32 id, JAISoundHandle* out_handle,
-                                  JAIActor* actor, u32 param, u8 flag)
+                                  JAIActor* actor, u32 fade, u8 camera_idx)
 {
 	void* ptr;
 	unk0->getInfoPointer(id, &ptr);
 	if (ptr)
-		startSoundBasic(id, out_handle, actor, param, flag, ptr);
+		startSoundBasic(id, out_handle, actor, fade, camera_idx, ptr);
 }
 
 void JAIBasic::startSoundIndirectID(u32 id, JAISoundHandle* out_handle,
-                                    JAIActor* actor, u32 param, u8 flag)
+                                    JAIActor* actor, u32 fade, u8 camera_idx)
 {
-	void* ptr;
-	unk0->getInfoPointer(id, &ptr);
-	if (ptr)
-		startSoundBasic((id & 0xFFFFFC00) + ((JAISoundInfo*)ptr)->mOffsetNo,
-		                out_handle, actor, param, flag, ptr);
+	void* info;
+	unk0->getInfoPointer(id, &info);
+	if (info)
+		startSoundBasic((id & 0xFFFFFC00) + ((JAISoundInfo*)info)->mOffsetNo,
+		                out_handle, actor, fade, camera_idx, info);
 }
 
 void JAIBasic::startSoundBasic(u32 id, JAISoundHandle* out_handle,
-                               JAIActor* actor, u32 param, u8 flag, void* data)
+                               JAIActor* actor, u32 fade, u8 camera_idx,
+                               void* info)
 {
 	switch (id & JAISoundID_TypeMask) {
 	case JAISoundID_Type_Sequence:
@@ -758,17 +753,19 @@ void JAIBasic::startSoundBasic(u32 id, JAISoundHandle* out_handle,
 		        || (mSeSequence->mSoundID & JAISoundID_IndexMask)
 		               != (id & JAISoundID_IndexMask))) {
 			if (out_handle == nullptr) {
-				u8 num     = getSeqTrackNumber(data);
+				u8 num     = getSeqTrackNumber(info);
 				out_handle = &unk0->mDefaultSeqHandle[num];
 			}
 
-			unk0->unk1FC.storeBuffer(out_handle, actor, id, param, flag, data);
+			unk0->unk1FC.storeBuffer(out_handle, actor, id, fade, camera_idx,
+			                         info);
 		}
 		break;
 
 	case JAISoundID_Type_Se:
 		if (mSeCancelSwitch[id >> 12] == 0) {
-			unk0->unk200.storeBuffer(out_handle, actor, id, param, flag, data);
+			unk0->unk200.storeBuffer(out_handle, actor, id, fade, camera_idx,
+			                         info);
 		} else if (out_handle != nullptr) {
 			*out_handle = nullptr;
 		}
@@ -776,7 +773,8 @@ void JAIBasic::startSoundBasic(u32 id, JAISoundHandle* out_handle,
 
 	case JAISoundID_Type_Stream:
 		if (unk1C.mStreamUseOff == false && unk1C.mStreamEntryCancel != true)
-			unk0->unk204.storeBuffer(out_handle, actor, id, param, flag, data);
+			unk0->unk204.storeBuffer(out_handle, actor, id, fade, camera_idx,
+			                         info);
 		break;
 	}
 }

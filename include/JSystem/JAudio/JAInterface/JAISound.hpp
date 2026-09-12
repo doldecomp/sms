@@ -55,7 +55,7 @@ public:
 	/* 0x1 */ u8 mState;
 	/* 0x2 */ u8 mWaitTimer;
 	/* 0x3 */ u8 mRandom;
-	/* 0x4 */ u8 unk4;
+	/* 0x4 */ u8 mCameraIdx;
 	/* 0x5 */ u8 unk5;
 	/* 0x6 */ s16 mAdjustPrio;
 	/* 0x8 */ u32 mSoundID;

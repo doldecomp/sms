@@ -202,8 +202,8 @@ void JAISound::checkReady() { }
 f32 JAISound::setDistanceVolumeCommon(f32 param_1, u8 param_2)
 {
 	f32 var1;
-	if (unk4 != 4) {
-		var1 = unk1C[unk4].unk18;
+	if (mCameraIdx != 4) {
+		var1 = unk1C[mCameraIdx].unk18;
 	} else {
 		var1 = unk1C[0].unk18;
 		for (u8 i = 1; i < JAIGlobalParameter::audioCameraMax; i++)
@@ -275,8 +275,8 @@ f32 JAISound::setDistancePanCommon()
 		}
 
 		result = pan;
-	} else if (unk4 != 4) {
-		result = unk4 & 1;
+	} else if (mCameraIdx != 4) {
+		result = mCameraIdx & 1;
 	} else {
 		result = 0.5f;
 	}

@@ -88,16 +88,20 @@ public:
 	static u32 getRandomID(u32);
 
 	static JAISound* startSoundActor(u32 id, const Vec* position, u32 ground_no,
-	                                 JAISoundHandle* out_handle, u32, u8);
+	                                 JAISoundHandle* out_handle, u32 fade,
+	                                 u8 camera_idx);
 	static JAISound* startSoundActorInner(u32 id, JAISoundHandle* out_handle,
-	                                      JAIActor* actor, u32, u8);
+	                                      JAIActor* actor, u32 fade,
+	                                      u8 camera_idx);
 	static void startSoundActorWithInfo(u32 id, const Vec* position, Vec*, f32,
 	                                    u32, u32 ground_no,
-	                                    JAISoundHandle* out_handle, u32, u8);
+	                                    JAISoundHandle* out_handle, u32 fade,
+	                                    u8 camera_idx);
 	static void startSoundNpcActor(u32 id, const Vec* position, u32 ground_no,
-	                               JAISoundHandle* out_handle, u32, u8);
+	                               JAISoundHandle* out_handle, u32 fade,
+	                               u8 camera_idx);
 	static JAISound* startSoundSystemSE(u32 id, u32, JAISoundHandle* out_handle,
-	                                    u32);
+	                                    u32 fade);
 	static MSoundSE* mObj;
 };
 

@@ -102,7 +102,7 @@ bool MSSetSoundGrp::startSoundSetGrp(u32 param1, const Vec* param2, u32 param3,
 template <typename T>
 bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
                                         u32 param_3, f32 param_4, u32 param_5,
-                                        u32 param_6, u8 param_7,
+                                        u32 fade, u8 camera_idx,
                                         MSSetSoundGrp* param_8)
 {
 	f32 dVar9 = param_4;
@@ -143,7 +143,7 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 
 		JAIActor local_94(ptr, ptr, ptr, param_5);
 		MSoundSESystem::MSoundSE::startSoundActorInner(
-		    r31, &unk5C[unk59], &local_94, param_6, param_7);
+		    r31, &unk5C[unk59], &local_94, fade, camera_idx);
 		JALSystem::processModFunc(unk5C[unk59], f29, 0, 3);
 
 		unkAC = *param_2;
@@ -209,7 +209,7 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 
 		JAIActor local_AC(ptr, ptr, ptr, param_5);
 		MSoundSESystem::MSoundSE::startSoundActorInner(
-		    r26, &unk5C[unk59], &local_AC, param_6, param_7);
+		    r26, &unk5C[unk59], &local_AC, fade, camera_idx);
 		JALSystem::processModFunc(unk5C[unk59], f29, 0, 3);
 
 		unkAC = *param_2;

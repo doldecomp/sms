@@ -61,12 +61,12 @@ void JAIBasic::checkNextFrameSe()
 				it = &sound;
 			} else if (it->mState != SOUNDSTATE_Inactive) {
 				f32 fVar2 = 2147483647.0f;
-				if (it->unk4 == 4) {
+				if (it->mCameraIdx == 4) {
 					camStart = 0;
 					camEnd   = JAIGlobalParameter::audioCameraMax;
 				} else {
-					camEnd   = it->unk4 + 1;
-					camStart = it->unk4;
+					camEnd   = it->mCameraIdx + 1;
+					camStart = it->mCameraIdx;
 				}
 
 				for (u8 cam = camStart; cam < camEnd; ++cam) {
@@ -102,7 +102,7 @@ void JAIBasic::checkNextFrameSe()
 						fVar2 = pi->unk18;
 				}
 
-				if (it->unk4 == 4)
+				if (it->mCameraIdx == 4)
 					it->unkC /= JAIGlobalParameter::audioCameraMax;
 
 				f32 fVar3;

@@ -4,7 +4,8 @@
 #include <JSystem/JAudio/JAInterface/JAIParameters.hpp>
 
 void JAIStreamEntry::storeBuffer(JAISoundHandle* out_handle, JAIActor* actor,
-                                 u32 sound_id, u32 fade, u8 param_5, void* info)
+                                 u32 sound_id, u32 fade, u8 camera_idx,
+                                 void* info)
 {
 	JAISoundHandle sound;
 
@@ -28,5 +29,6 @@ void JAIStreamEntry::storeBuffer(JAISoundHandle* out_handle, JAIActor* actor,
 	sound->mState                           = SOUNDSTATE_Stored;
 	sound->mWaitTimer                       = 10;
 	unk0->unk0->mStreamUpdate->mPrepareFlag = 0;
-	initSoundParameter(sound, out_handle, actor, sound_id, fade, param_5, info);
+	initSoundParameter(sound, out_handle, actor, sound_id, fade, camera_idx,
+	                   info);
 }

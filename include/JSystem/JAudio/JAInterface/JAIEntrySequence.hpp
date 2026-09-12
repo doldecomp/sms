@@ -7,8 +7,8 @@ struct JAIActor;
 
 class JAISeqEntry : public JAIEntry {
 public:
-	void storeBuffer(JAISoundHandle* out_handle, JAIActor* actor, u32 param1,
-	                 u32 param2, u8 param3, void* data);
+	void storeBuffer(JAISoundHandle* out_handle, JAIActor* actor, u32 sound_idx,
+	                 u32 fade, u8 camera_idx, void* data);
 };
 
 #endif // JAIENTRYSEQUENCE_HPP
