@@ -43,6 +43,10 @@ u8 MSSeCallBack::smPolifonic[16] = {
 
 u16 MSSeCallBack::smWaterFilter;
 
+namespace MSLoadWave {
+static bool loadWaveBackword(JASystem::WaveArcLoader::TObject*);
+}
+
 bool MSLoadWave::loadWaveBackword(int param_1, int param_2)
 {
 	JASystem::TWaveBank* bank = JASystem::WaveBankMgr::getWaveBank(param_1);
@@ -74,7 +78,9 @@ bool MSLoadWave::loadWaveBackword(int param_1, int param_2)
 	return false;
 }
 
-bool MSLoadWave::loadWaveBackword(JASystem::WaveArcLoader::TObject* obj)
+namespace MSLoadWave {
+
+static bool loadWaveBackword(JASystem::WaveArcLoader::TObject* obj)
 {
 	JASystem::Kernel::THeap* heap = obj->getHeap();
 	if (!heap)
@@ -105,6 +111,8 @@ bool MSLoadWave::loadWaveBackword(JASystem::WaveArcLoader::TObject* obj)
 
 	return true;
 }
+
+} // namespace MSLoadWave
 
 void MSSeCallBack::setWaterCameraFir(bool enabled)
 {

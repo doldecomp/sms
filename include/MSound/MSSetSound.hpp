@@ -66,7 +66,7 @@ public:
 		for (int i = 0; i < 5; ++i)
 			unk5C[i] = 0;
 	}
-	~MSSetSoundTL();
+	~MSSetSoundTL() { }
 
 	virtual void frameLoopDyna()
 	{

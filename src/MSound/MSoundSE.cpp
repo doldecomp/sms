@@ -178,6 +178,8 @@ void MSRandPlay::randPlay(u32 param_1)
 	}
 }
 
+MSoundSE::MSoundSE() { }
+
 void MSoundSE::construct()
 {
 	mObj = new MSoundSE;

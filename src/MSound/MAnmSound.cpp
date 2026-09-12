@@ -8,24 +8,17 @@
 
 MAnmSound::MAnmSound(MSound* sound) { mData = nullptr; }
 
+void MAnmSound::initAnmSound(void* interface, u32 param_2, f32 frame)
+{
+	initActorAnimSound(interface, param_2, frame);
+}
+
 void MAnmSound::animeLoop(Vec* position, f32 frame, f32 speed, u32 ground_no,
                           u8 param_5)
 {
 	if (mData != nullptr)
 		setAnimSoundVec(JAIBasic::getInterface(), position, frame, speed,
 		                ground_no, param_5);
-}
-
-void MAnmSound::initAnmSound(void* interface, u32 param_2, f32 frame)
-{
-	initActorAnimSound(interface, param_2, frame);
-}
-
-void MAnmSound::setSpeedModifySound(JAISound* param_1,
-                                    JAIAnimeFrameSoundData* param_2, f32 speed)
-{
-	if (MSound::getSwitch(param_1->getID(), 0x100000, 0x14))
-		JAIAnimeSound::setSpeedModifySound(param_1, param_2, speed);
 }
 
 // TODO: find a home for this
@@ -71,6 +64,25 @@ void MAnmSound::startAnimSound(void* interface, u32 id,
 	}
 }
 
+void MAnmSound::setSpeedModifySound(JAISound* param_1,
+                                    JAIAnimeFrameSoundData* param_2, f32 speed)
+{
+	if (MSound::getSwitch(param_1->getID(), 0x100000, 0x14))
+		JAIAnimeSound::setSpeedModifySound(param_1, param_2, speed);
+}
+
+f32 MSMarioPosVolume::getDistFromMario(const Vec& pos)
+{
+	if (MSGMSound->cameraLooksAtMario()) {
+		const Vec* mario = MSGMSound->unkAC[0].mPosition;
+		return std::sqrtf(std::powf(pos.x - mario->x, 2.0f)
+		                  + std::powf(pos.y - mario->y, 2.0f)
+		                  + std::powf(pos.z - mario->z, 2.0f));
+	}
+
+	return 0.0f;
+}
+
 void MAnmSoundNPC::startAnimSound(void* interface, u32 sound_id,
                                   JAISound** out_handle, JAIActor* actor,
                                   u8 camera_idx)
@@ -107,17 +119,8 @@ void MAnmSoundNPC::startAnimSound(void* interface, u32 sound_id,
 
 				f32 dVar10 = 1.0f;
 
-				const Vec* pfVar7 = actor->mTranslation;
-				f32 fVar11;
-				if (MSGMSound->cameraLooksAtMario()) {
-					const Vec* pVVar8 = MSGMSound->unkAC[0].mPosition;
-					fVar11
-					    = std::sqrtf(std::powf(pfVar7->x - pVVar8->x, 2.0f)
-					                 + std::powf(pfVar7->y - pVVar8->y, 2.0f)
-					                 + std::powf(pfVar7->z - pVVar8->z, 2.0f));
-				} else {
-					fVar11 = 0.0f;
-				}
+				f32 fVar11 = MSMarioPosVolume::getDistFromMario(
+				    *actor->mTranslation);
 
 				if (fVar11 != 0.0f)
 					dVar10 = MSHandle::calcVolume(
