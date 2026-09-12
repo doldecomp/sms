@@ -49,16 +49,13 @@ u32 MSRandVol::getRandomVolume(u32 param_1, u32 param_2) { }
 
 f32 MSRandVol::getRandVol(u32 param_1)
 {
-	f32 d = JALCalc::getRandom(unk3C[param_1 >> 24 & 0xC] * unk18,
-	                           unk2C[param_1 >> 22 & 0xC],
-	                           unk1C[param_1 >> 20 & 0xC])
+	f32 d = JALCalc::getRandom(unk3C[param_1 >> 26 & 3] * unk18,
+	                           unk2C[param_1 >> 24 & 3],
+	                           unk1C[param_1 >> 22 & 3])
 	        + 1.0f;
 
-	if (d < 0.0f)
-		return 0.0f;
-	if (d > 2.0f)
-		return 2.0f;
-	return d;
+	f32 x = d < 0.0f ? 0.0f : d;
+	return x > 2.0f ? 2.0f : x;
 }
 
 void MSRandPlay::construct(u32 param_1, s32 param_2, s32 param_3, f32 param_4,
@@ -137,8 +134,8 @@ void MSRandPlay::randPlay(u32 param_1)
 
 	switch (self->unk4) {
 	case 0: {
-		s32 uVar3  = JALCalc::getRandom(unk24 / 2.0f, unk28, unk2C);
-		self->unk8 = unk20 < uVar3 ? uVar3 : unk20;
+		f32 fVar3  = JALCalc::getRandom(unk24 / 2.0f, unk28, unk2C);
+		self->unk8 = (s32)fVar3 > unk20 ? (s32)fVar3 : unk20;
 		self->unk8 = self->unk8 < unk24 ? self->unk8 : unk24;
 
 		if (self->unk8 == 0) {
@@ -482,17 +479,24 @@ void MSoundSE::startSoundActorWithInfo(u32 id, const Vec* position,
 		break;
 
 	case MSD_SE_OBJ_ROPE_CLEAK_A:
-		fVar7 = abs(fVar7);
+	case MSD_SE_OBJ_ROPE_CLEAK_B:
+	case MSD_SE_OBJ_ROPE_CLEAK_ROLL:
+	case MSD_SE_OBJ_ROPE_CLEAK_HALFA:
+	case MSD_SE_OBJ_ROPE_CLEAK_HALFB:
+		fVar7 = std::fabs(fVar7);
 		break;
 
 	case MSD_SE_OBJ_JET_COASTER_IMI:
 		fVar7 = position->y;
 		break;
 
+	case MSD_SE_OBJ_MA_MIRROR_MOVE:
+		return;
+
 	case MSD_SE_IT_EGG_BOUND:
 	case MSD_SE_IT_DRIAN_BOUND:
 		fVar7 = vecLength(*param_3);
-		fVar7 = abs(fVar7);
+		fVar7 = std::fabs(fVar7);
 		break;
 
 	case MSD_SE_MA_KICK_ENEMY:
@@ -783,17 +787,11 @@ bool MSoundSE::checkMonoSound(u32 id, JAIActor* actor)
 			nextSound         = sound->getNextSound();
 			JAISoundInfo* tmp = (JAISoundInfo*)sound->mInfo;
 
-			if (sound->getAct() != actor->mIdentity)
-				continue;
-
-			if (!(tmp->mSwBit & 0x4000))
-				continue;
-
-			if (id == sound->mSoundID)
-				continue;
-
-			JAIBasic::getInterface()->stopSoundHandle(sound, 0);
-			break;
+			if (sound->getAct() == actor->mIdentity
+			    && (tmp->mSwBit & 0x4000) && id != sound->mSoundID) {
+				JAIBasic::getInterface()->stopSoundHandle(sound, 0);
+				break;
+			}
 		}
 	}
 

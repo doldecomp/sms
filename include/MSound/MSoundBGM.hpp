@@ -8,10 +8,10 @@
 
 class JAISound;
 
-class MSBgm : public JALListHioNode<MSBgm, u32> {
+class MSBgm : public JALListVirtualNode<MSBgm, u32> {
 public:
 	MSBgm(int i)
-	    : JALListHioNode<MSBgm, u32>("", i, this)
+	    : JALListVirtualNode<MSBgm, u32>("", i, this)
 	    , unk14(nullptr)
 	{
 	}

@@ -8,7 +8,7 @@ public:
 	JALList(T* param_1, bool param_2)
 	    : JSULink<T>(param_1)
 	{
-		if (param_2)
+		if (param_2 == true)
 			smList.append(this);
 	}
 	~JALList() { smList.remove(this); }
@@ -55,11 +55,18 @@ JALListHioNode<T, U>::JALListHioNode(const char* param_1, U param_2, T* param_3)
 {
 }
 
-template <class T, class U> class JALListVirtualNode {
+template <class T, class U>
+class JALListVirtualNode : public JALListS<T, U> {
 public:
-	JALListVirtualNode(const char*, U, T*) { }
+	JALListVirtualNode(const char* param_1, U param_2, T* param_3)
+	    : JALListS<T, U>(param_2, param_3)
+	    , unk10(param_2)
+	{
+	}
+	~JALListVirtualNode() { }
 
-	~JALListVirtualNode();
+public:
+	/* 0x10 */ U unk10;
 };
 
 template <class T> class JALListFrameLoop {

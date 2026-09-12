@@ -83,8 +83,8 @@ void MAnmSoundNPC::startAnimSound(void* interface, u32 sound_id,
 				u32 uVar5 = mLoopCount;
 				u32 uVar6 = (uVar5 >> 24) + 1;
 				if (uVar5 != 0) {
-					u32 uVar3 = uVar5 + (unk98 - (unk98 / uVar6) * uVar6);
-					if (uVar3 - (uVar3 / uVar6) * uVar6 != 0)
+					u32 uVar3 = uVar5 + unk98 % uVar6;
+					if (uVar3 % uVar6 != 0)
 						return;
 				}
 			}
