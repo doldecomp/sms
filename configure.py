@@ -443,7 +443,7 @@ config.libs = [
             Object(Matching, "JSystem/JAudio/JAInterface/JAISystemInterface.cpp"),
             # JASystem
             Object(Matching, "JSystem/JAudio/JASystem/JASBank.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASBankMgr.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASBankMgr.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASBasicBank.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASBasicInst.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASBasicWaveBank.cpp"),
