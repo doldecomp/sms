@@ -177,6 +177,14 @@ public:
 		mAnmBck->initNormalMotionBlend();
 	}
 
+	J3DAnmTransformKey* getCurBckAnmPtr()
+	{
+		if (!mAnmBck)
+			return nullptr;
+
+		return mAnmBck->unk24;
+	}
+
 	J3DAnmTransformKey* getBckAnm()
 	{
 		if (!mAnmBck)
