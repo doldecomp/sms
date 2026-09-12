@@ -62,19 +62,25 @@ public:
 	/* 0x2C */ f32 unk2C;
 };
 
-class SeInfo {
-public:
-	SeInfo(f32 param_1, f32 param_2)
-	    : unk0(param_1)
-	    , unk4(param_2)
-	{
-	}
+namespace SeInfo {
+	// NOTE: SeInfo couldn't have been the name for this class, because that way
+	// it's size is unknown at the point of smSeSetting declaration and so it
+	// couldn not have been emitted into sbss
+	// fabricated
+	class Setting {
+	public:
+		Setting(f32 param_1, f32 param_2)
+		    : unk0(param_1)
+		    , unk4(param_2)
+		{
+		}
 
-	static SeInfo smSeSetting;
+		/* 0x0 */ f32 unk0;
+		/* 0x4 */ f32 unk4;
+	};
 
-	/* 0x0 */ f32 unk0;
-	/* 0x4 */ f32 unk4;
-};
+	extern Setting smSeSetting;
+} // namespace SeInfo
 
 class MSoundSE {
 public:

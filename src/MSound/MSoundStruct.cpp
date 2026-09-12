@@ -150,6 +150,7 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 		unkB8 = 1;
 	} else {
 		bool bVar2;
+		MSSetSoundMember* candidate;
 
 		u32 bVar1 = unk1D.get();
 		u32 uVar5 = JALCalc::getRandom_0_1() * unk1E.get();
@@ -157,15 +158,16 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 		if (uVar7 < bVar1 + uVar5) {
 			bVar2 = false;
 		} else {
-			if (unk24.get() == 1 && unk1F.get() < uVar7 && f31 < unk20.get()) {
+			if (unk24.get() == 1 && uVar7 < unk1F.get() && f31 < unk20.get()) {
 				bVar2 = false;
 			} else {
-				MSSetSoundMember* candidate;
-				bVar2 = param_8 == nullptr
-				        || ((candidate
-				             = param_8->searchD(unk5C[unk5A]->mSoundID))
-				                != nullptr
-				            && uVar7 >= candidate->unk18);
+				bVar2 = param_8 != nullptr
+				            ? ((candidate
+				                = param_8->searchD(unk5C[unk5A]->getID()))
+				                       == nullptr
+				                   ? false
+				                   : (uVar7 < candidate->unk18 ? false : true))
+				            : true;
 			}
 		}
 
@@ -210,27 +212,25 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 
 		if (unk5C[unk59] != nullptr) {
 			JAISound* sound = unk5C[unk5A];
-			if (unk5C[unk59] != nullptr) {
-				u32 uVar7  = sound->getPlayGameFrameCounter();
-				f32 unused = 1.0f;
-				f32 f29    = 1.0f;
-				f32 f30    = 1.0f;
+			if (sound != nullptr) {
+				u32 uVar7 = sound->getPlayGameFrameCounter();
+				f32 f30   = 1.0f;
+				f32 f29   = 1.0f;
 
 				f32 f1 = unk2C.get();
 				if ((f32)uVar7 < (f32)unk28.get() && f31 < f1) {
-					unused = JALCalc::linearTransform(uVar7, unk1D.get(),
-					                                  unk28.get(), unk38.get(),
-					                                  0.0f, false);
-					f30    = JALCalc::linearTransform(uVar7, unk1D.get(),
-					                                  unk28.get(), unk30.get(),
-					                                  1.0f, false);
-					f29    = JALCalc::linearTransform(uVar7, unk1D.get(),
-					                                  unk28.get(), 1.0f,
-					                                  unk34.get(), false);
+					JALCalc::linearTransform(uVar7, unk1D.get(), unk28.get(),
+					                         unk38.get(), 0.0f, false);
+					f30 = JALCalc::linearTransform(uVar7, unk1D.get(),
+					                               unk28.get(), unk30.get(),
+					                               1.0f, false);
+					f29 = JALCalc::linearTransform(uVar7, unk1D.get(),
+					                               unk28.get(), 1.0f,
+					                               unk34.get(), false);
 				}
 
-				f32 f27 = 1.0f;
 				f32 f28 = 1.0f;
+				f32 f27 = 1.0f;
 				if ((f32)uVar7 < (f32)unk3C.get() && f31 < unk40.get()) {
 					unk58 = 1;
 					JALCalc::linearTransform((f32)unk54, 0.0f, unk44.get(),
