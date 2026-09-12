@@ -92,18 +92,19 @@ void JAIBasic::checkNextFrameSe()
 							prio = 0xff;
 					}
 
-					it->unkC
+					it->mPriority
 					    = (u32)((0xff - prio) * (0xff - prio) * 0x1690 / fVar1)
 					      + (u32)(pi->unk18 / fVar1);
 					if (pi->mCamSpacePos.z > 0.0f)
-						it->unkC += (u32)(pi->mCamSpacePos.z * 6.0f / fVar1);
+						it->mPriority
+						    += (u32)(pi->mCamSpacePos.z * 6.0f / fVar1);
 
 					if (cam == 0 || pi->unk18 < fVar2)
 						fVar2 = pi->unk18;
 				}
 
 				if (it->mCameraIdx == 4)
-					it->unkC /= JAIGlobalParameter::audioCameraMax;
+					it->mPriority /= JAIGlobalParameter::audioCameraMax;
 
 				f32 fVar3;
 				if (it->getSwBit() & 0x20)
@@ -132,8 +133,8 @@ void JAIBasic::checkNextFrameSe()
 					             [mSoundScene][(u8)it->getSeCategoryNumber()]
 					                 .mMaxPlaying;
 					for (j = 0; j < bVar18; ++j) {
-						if (it->unkC < candidates[j].score
-						    || (it->unkC == candidates[j].score
+						if (it->mPriority < candidates[j].score
+						    || (it->mPriority == candidates[j].score
 						        && candidates[j].state >= it->mState)) {
 							if (bVar19 < bVar18)
 								++bVar19;
@@ -142,7 +143,7 @@ void JAIBasic::checkNextFrameSe()
 								candidates[k].sound = candidates[k - 1].sound;
 								candidates[j].state = candidates[k - 1].state;
 							}
-							candidates[j].score = it->unkC;
+							candidates[j].score = it->mPriority;
 							candidates[j].sound = it;
 							candidates[j].state = it->mState;
 

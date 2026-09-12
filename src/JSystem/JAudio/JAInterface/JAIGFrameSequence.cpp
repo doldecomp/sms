@@ -76,14 +76,14 @@ void JAIBasic::checkEntriedSeq()
 					if (pos >= JAIGlobalParameter::autoHeapMax) {
 						for (int ii = 0; ii < JAIGlobalParameter::autoHeapMax;
 						     ++ii) {
-							if (unk0->unk1EC[ii].mUseOrder == -1)
+							if (unk0->mAutoHeap[ii].mUseOrder == -1)
 								continue;
 
 							u32 j;
 							for (j = 0; j < JAIGlobalParameter::seqPlayTrackMax;
 							     ++j) {
 								if (unk0->mSeqTrackInfo[j].mSound
-								    && unk0->unk1EC[ii].mSeqNumber
+								    && unk0->mAutoHeap[ii].mSeqNumber
 								           == (u8)unk0->mSeqTrackInfo[j]
 								                  .mSound->mSoundID) {
 									j = JAIGlobalParameter::seqPlayTrackMax;
