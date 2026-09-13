@@ -20,9 +20,9 @@ public:
 	static f32 smMainVolume;
 	static void init();
 	static JAISound* startBGM(u32 sound_id);
-	static void stopBGM(u32, u32);
-	static void stopTrackBGM(u8, u32);
-	static void stopTrackBGMs(u8, u32);
+	static void stopBGM(u32 sound_id, u32 fade);
+	static void stopTrackBGM(u8 track, u32 fade);
+	static void stopTrackBGMs(u8 track_mask, u32 fade);
 	static void setVolume(u32, f32, u32, u8);
 	static void setTrackVolume(u8, f32, u32, u8);
 	static void setSeqTrackVolume(u8, u8, f32, u32);
