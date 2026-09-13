@@ -785,8 +785,8 @@ namespace StreamLib {
 				return 0;
 			}
 
-			sync(((playback_samples - Get_DirectPCM_Remain(buf)) * header.unkE)
-			     / header.unk8);
+			u32 playedSamples = playback_samples - Get_DirectPCM_Remain(buf);
+			sync((playedSamples * header.unkE) / header.unk8);
 			movieframe++;
 			u32 cur
 			    = (LOOP_SAMPLESIZE - Get_DirectPCM_LoopRemain(buf)) / 0x1400;
@@ -879,29 +879,26 @@ namespace StreamLib {
 				JASystem::DSPInterface::setMixerVolume(assign_ch[1]->mNumber, 0,
 				                                       0, 0);
 			} else {
-				base   = 0x5A7E;
-				s16 v1 = (s16)(23166.0f * outvolume);
-				JASystem::DSPInterface::setMixerVolume(assign_ch[0]->mNumber, 1,
-				                                       v1, 0);
-
-				s16 v2 = (s16)(23166.0f * outvolume);
-				JASystem::DSPInterface::setMixerVolume(assign_ch[1]->mNumber, 0,
-				                                       v2, 0);
+				base = 0x5A7E;
+				JASystem::DSPInterface::setMixerVolume(
+				    assign_ch[0]->mNumber, 1, (s16)(23166.0f * outvolume), 0);
+				JASystem::DSPInterface::setMixerVolume(
+				    assign_ch[1]->mNumber, 0, (s16)(23166.0f * outvolume), 0);
 			}
 
-			s16 vL = outvolume * ((f32)base * fL);
-			JASystem::DSPInterface::setMixerVolume(assign_ch[0]->mNumber, 0, vL,
-			                                       0);
+			JASystem::DSPInterface::setMixerVolume(
+			    assign_ch[0]->mNumber, 0, outvolume * ((f32)base * fL), 0);
 
-			s16 vR = outvolume * ((f32)base * fR);
-			JASystem::DSPInterface::setMixerVolume(assign_ch[1]->mNumber, 1, vR,
-			                                       0);
+			JASystem::DSPInterface::setMixerVolume(
+			    assign_ch[1]->mNumber, 1, outvolume * ((f32)base * fR), 0);
 
-			u16 pitch1 = outpitch * (f32)((header.unk8 << 12) / 32000);
-			JASystem::DSPInterface::setPitch(assign_ch[0]->mNumber, pitch1);
+			JASystem::DSPInterface::setPitch(
+			    assign_ch[0]->mNumber,
+			    outpitch * (f32)((header.unk8 << 12) / 32000));
 
-			u16 pitch2 = outpitch * (f32)((header.unk8 << 12) / 32000);
-			JASystem::DSPInterface::setPitch(assign_ch[1]->mNumber, pitch2);
+			JASystem::DSPInterface::setPitch(
+			    assign_ch[1]->mNumber,
+			    outpitch * (f32)((header.unk8 << 12) / 32000));
 
 			JASystem::DSPInterface::flushChannel(assign_ch[0]->mNumber);
 
