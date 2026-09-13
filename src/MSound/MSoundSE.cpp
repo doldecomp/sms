@@ -23,157 +23,163 @@ MSoundSE* MSoundSE::mObj = 0;
 
 void MSRandVol::construct(u32 param)
 {
-	smList.append(&(new MSRandVol(param))->unk4);
+	smList.append(&(new MSRandVol(param))->mLink);
 }
 
 MSRandVol::MSRandVol(u32 param)
-    : unk4(this)
+    : mLink(this)
     , unk14(param)
-    , unk18(0.5f)
+    , mAmplitude(0.5f)
 {
-	unk1C[0] = 0.0f;
-	unk1C[1] = 0.25f;
-	unk1C[2] = 0.5f;
-	unk1C[3] = 0.75f;
-	unk2C[0] = 1.0f;
-	unk2C[1] = 1.5f;
-	unk2C[2] = 2.0f;
-	unk2C[3] = 4.0f;
-	unk3C[0] = 0.25f;
-	unk3C[1] = 0.5f;
-	unk3C[2] = 0.75f;
-	unk3C[3] = 1.0f;
+	mPSlopes[0] = 0.0f;
+	mPSlopes[1] = 0.25f;
+	mPSlopes[2] = 0.5f;
+	mPSlopes[3] = 0.75f;
+
+	mCSlopes[0] = 1.0f;
+	mCSlopes[1] = 1.5f;
+	mCSlopes[2] = 2.0f;
+	mCSlopes[3] = 4.0f;
+
+	mAmplitudes[0] = 0.25f;
+	mAmplitudes[1] = 0.5f;
+	mAmplitudes[2] = 0.75f;
+	mAmplitudes[3] = 1.0f;
 }
 
 u32 MSRandVol::getRandomVolume(u32 param_1, u32 param_2) { }
 
 f32 MSRandVol::getRandVol(u32 param_1)
 {
-	f32 d
-	    = JALCalc::getRandom(unk3C[param_1 >> 26 & 3] * unk18,
-	                         unk2C[param_1 >> 24 & 3], unk1C[param_1 >> 22 & 3])
-	      + 1.0f;
+	f32 d = JALCalc::getRandom(mAmplitudes[param_1 >> 26 & 3] * mAmplitude,
+	                           mCSlopes[param_1 >> 24 & 3],
+	                           mPSlopes[param_1 >> 22 & 3])
+	        + 1.0f;
 
 	f32 x = d < 0.0f ? 0.0f : d;
 	return x > 2.0f ? 2.0f : x;
 }
 
-void MSRandPlay::construct(u32 param_1, s32 param_2, s32 param_3, f32 param_4,
-                           f32 param_5)
+void MSRandPlay::construct(u32 sound_id, s32 wait_min, s32 wait_max,
+                           f32 curve_slope, f32 plus_slope)
 {
 	smList.append(
-	    &(new MSRandPlay(param_1, param_2, param_3, param_4, param_5))->unk0);
+	    &(new MSRandPlay(sound_id, wait_min, wait_max, curve_slope, plus_slope))
+	         ->mLink);
 }
 
-int MSRandPlay::registerTrans(u32 param, const Vec* vec)
+int MSRandPlay::registerTrans(u32 sound_id, const Vec* trans)
 {
 	for (JSUListIterator<MSRandPlay> it = smList.getFirst();
 	     it != smList.getEnd(); ++it) {
-		if (param == it.getObject()->mSoundID) {
-			return it.getObject()->registerTransDynamic(vec);
+		if (sound_id == it.getObject()->mSoundID) {
+			return it.getObject()->registerTransDynamic(trans);
 		}
 	}
 
 	return -1;
 }
 
-int MSRandPlay::registerTransDynamic(const Vec* vec)
+int MSRandPlay::registerTransDynamic(const Vec* trans)
 {
-	unk10[unk16].unk0 = vec;
-	return unk16++;
+	mRandPlayVecs[mRandPlayVecNum].mTrans = trans;
+	return mRandPlayVecNum++;
 }
 
-void MSRandPlay::createRandPlayVec(u32 id, u16 param_2)
+void MSRandPlay::createRandPlayVec(u32 sound_id, u16 max_vecs)
 {
 	JSUListIterator<MSRandPlay> it;
 	for (it = MSRandPlay::smList.getFirst(); it != MSRandPlay::smList.getEnd();
 	     ++it) {
-		if (id == it.getObject()->mSoundID) {
-			it.getObject()->createRandPlayVecDynamic(param_2);
+		if (sound_id == it.getObject()->mSoundID) {
+			it.getObject()->createRandPlayVecDynamic(max_vecs);
 			break;
 		}
 	}
 }
 
-void MSRandPlay::createRandPlayVecDynamic(u16 param_1)
+void MSRandPlay::createRandPlayVecDynamic(u16 max_vecs)
 {
-	unk10 = new MSRandPlayVec[param_1];
-	unk14 = param_1;
-	unk16 = 0;
+	mRandPlayVecs   = new MSRandPlayVec[max_vecs];
+	mRandPlayVecMax = max_vecs;
+	mRandPlayVecNum = 0;
 }
 
-void MSRandPlay::startSeRandPlay(u32 param1, u32 param2)
+void MSRandPlay::startSeRandPlay(u32 sound_id, u32 vec_idx)
 {
 	JSUListIterator<MSRandPlay> it;
 	for (it = MSRandPlay::smList.getFirst(); it != MSRandPlay::smList.getEnd();
 	     ++it) {
-		if (param1 == it.getObject()->mSoundID) {
-			it.getObject()->randPlay(param2);
+		if (sound_id == it.getObject()->mSoundID) {
+			it.getObject()->randPlay(vec_idx);
 			break;
 		}
 	}
 }
 
-MSRandPlay::MSRandPlay(u32 param_1, s32 param_2, s32 param_3, f32 param_4,
-                       f32 param_5)
-    : unk0(this)
-    , unk10(0)
-    , unk14(0)
-    , unk16(0)
-    , mSoundID(param_1)
-    , unk20(param_2)
-    , unk24(param_3)
-    , unk28(param_4)
-    , unk2C(param_5)
+MSRandPlay::MSRandPlay(u32 sound_id, s32 wait_min, s32 wait_max,
+                       f32 curve_slope, f32 plus_slope)
+    : mLink(this)
+    , mRandPlayVecs(0)
+    , mRandPlayVecMax(0)
+    , mRandPlayVecNum(0)
+    , mSoundID(sound_id)
+    , mWaitMin(wait_min)
+    , mWaitMax(wait_max)
+    , mCurveSlope(curve_slope)
+    , mPlusSlope(plus_slope)
 {
 }
 
-void MSRandPlay::randPlay(u32 param_1)
+void MSRandPlay::randPlay(u32 vec_idx)
 {
-	MSRandPlayVec* self = &unk10[param_1];
+	MSRandPlayVec* vec = &mRandPlayVecs[vec_idx];
 
-	switch (self->unk4) {
-	case 0: {
-		f32 fVar3  = JALCalc::getRandom(unk24 / 2.0f, unk28, unk2C);
-		self->unk8 = (s32)fVar3 > unk20 ? (s32)fVar3 : unk20;
-		self->unk8 = self->unk8 < unk24 ? self->unk8 : unk24;
+	switch (vec->mState) {
+	case MSRandPlayVec::STATE_CALC_WAIT: {
+		f32 fVar3
+		    = JALCalc::getRandom(mWaitMax / 2.0f, mCurveSlope, mPlusSlope);
+		vec->mWaitTime = (s32)fVar3 > mWaitMin ? (s32)fVar3 : mWaitMin;
+		vec->mWaitTime = vec->mWaitTime < mWaitMax ? vec->mWaitTime : mWaitMax;
 
-		if (self->unk8 == 0) {
-			self->unk4 = 2;
+		if (vec->mWaitTime == 0) {
+			vec->mState = MSRandPlayVec::STATE_START;
 			break;
 		}
-		self->unkC = 0;
-		self->unk4 = 1;
+		vec->mWaitTimer = 0;
+		vec->mState     = MSRandPlayVec::STATE_WAIT;
 		return;
 	}
-	case 1:
-		if (self->unk8 > self->unkC) {
-			self->unkC += 1;
+
+	case MSRandPlayVec::STATE_WAIT:
+		if (vec->mWaitTime > vec->mWaitTimer) {
+			vec->mWaitTimer += 1;
 			return;
 		}
-		self->unk4 = 2;
+		vec->mState = MSRandPlayVec::STATE_START;
 		break;
 	}
 
-	switch (self->unk4) {
-	case 2:
+	switch (vec->mState) {
+	case MSRandPlayVec::STATE_START:
 		switch (mSoundID) {
 		case MSD_SE_OBJ_KAMOME_SOLO:
-			MSGMSound->startSoundSetGrp(mSoundID, self->unk0, 0, 0.0f, 0, 0, 4);
+			MSGMSound->startSoundSetGrp(mSoundID, vec->mTrans, 0, 0.0f, 0, 0,
+			                            4);
 			break;
 		default:
-			JAIActor actor(self->unk0, self->unk0, self->unk0, 0);
-			MSoundSE::startSoundActorInner(mSoundID, &self->unk20, &actor, 0,
+			JAIActor actor(vec->mTrans, vec->mTrans, vec->mTrans, 0);
+			MSoundSE::startSoundActorInner(mSoundID, &vec->mSound, &actor, 0,
 			                               4);
 			break;
 		}
-		self->unk4 = 3;
-		self->unkC = 0;
+		vec->mState     = MSRandPlayVec::STATE_PLAYING;
+		vec->mWaitTimer = 0;
 		break;
 
-	case 3:
-		if (self->unk20 == 0)
-			self->unk4 = 0;
+	case MSRandPlayVec::STATE_PLAYING:
+		if (vec->mSound == nullptr)
+			vec->mState = MSRandPlayVec::STATE_CALC_WAIT;
 		break;
 	}
 }
@@ -783,15 +789,19 @@ bool MSoundSE::checkMonoSound(u32 id, JAIActor* actor)
 	JAISoundInfo* local_c;
 	JAIBasic::getInterface()->unk0->getInfoPointer(id, (void**)&local_c);
 	if (local_c->mSwBit & 0x4000) {
-		u32 uVar1 = JAIBasic::getInterface()->changeIDToCategory(id);
 		JAISound* sound
-		    = JAIBasic::getInterface()->unk0->mSeRegist[(u8)uVar1].mUsedHead;
+		    = JAIBasic::getInterface()
+		          ->unk0
+		          ->getLinkBuffer(
+		              JAIBasic::getInterface()->changeIDToCategory(id))
+		          ->mUsedHead;
 		JAISound* nextSound;
 		for (; sound != nullptr; sound = nextSound) {
 			nextSound         = sound->getNextSound();
 			JAISoundInfo* tmp = (JAISoundInfo*)sound->mInfo;
+			const void* act   = sound->getAct();
 
-			if (sound->getAct() == actor->mIdentity && (tmp->mSwBit & 0x4000)
+			if (act == actor->mIdentity && (tmp->mSwBit & 0x4000)
 			    && id != sound->getID()) {
 				JAIBasic::getInterface()->stopSoundHandle(sound, 0);
 				break;
