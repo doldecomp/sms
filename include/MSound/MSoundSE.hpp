@@ -14,52 +14,61 @@ namespace MSoundSESystem {
 class MSRandPlayVec {
 public:
 	MSRandPlayVec()
-	    : unk0(0)
-	    , unk4(0)
-	    , unk8(0)
-	    , unkC(0)
+	    : mTrans(0)
+	    , mState(0)
+	    , mWaitTime(0)
+	    , mWaitTimer(0)
 	    , unk10(this)
-	    , unk20(0)
+	    , mSound(nullptr)
 	{
 	}
 	~MSRandPlayVec() { }
 
 public:
-	/* 0x0 */ const Vec* unk0;
-	/* 0x4 */ u8 unk4;
-	/* 0x8 */ s32 unk8;
-	/* 0xC */ s32 unkC;
+	enum {
+		STATE_CALC_WAIT = 0,
+		STATE_WAIT      = 1,
+		STATE_START     = 2,
+		STATE_PLAYING   = 3
+	};
+
+	/* 0x0 */ const Vec* mTrans;
+	/* 0x4 */ u8 mState;
+	/* 0x8 */ s32 mWaitTime;
+	/* 0xC */ s32 mWaitTimer;
 	/* 0x10 */ JSULink<MSRandPlayVec> unk10;
-	/* 0x20 */ JAISound* unk20;
+	/* 0x20 */ JAISoundHandle mSound;
 };
 
 class MSRandPlay {
 public:
-	/* 0x0 */ JSULink<MSRandPlay> unk0;
-	/* 0x10 */ MSRandPlayVec* unk10;
-	/* 0x14 */ u16 unk14;
-	/* 0x16 */ u16 unk16;
+	/* 0x0 */ JSULink<MSRandPlay> mLink;
+	/* 0x10 */ MSRandPlayVec* mRandPlayVecs;
+	/* 0x14 */ u16 mRandPlayVecMax;
+	/* 0x16 */ u16 mRandPlayVecNum;
 
 public:
-	MSRandPlay(u32 param_1, s32 param_2, s32 param_3, f32 param_4, f32 param_5);
+	MSRandPlay(u32 sound_id, s32 wait_min, s32 wait_max, f32 curve_slope,
+	           f32 plus_slope);
 
 	/* 0x18 */ // vt
 	virtual void randPlay(u32);
 
-	static void construct(u32, s32, s32, f32, f32);
-	static void createRandPlayVec(u32, u16);
-	void createRandPlayVecDynamic(u16);
-	static int registerTrans(u32, const Vec*);
-	int registerTransDynamic(const Vec*);
-	static void startSeRandPlay(u32, u32);
+	static void construct(u32 sound_id, s32 wait_min, s32 wait_max,
+	                      f32 curve_slope, f32 plus_slope);
+	static void createRandPlayVec(u32 sound_id, u16 max_vecs);
+	void createRandPlayVecDynamic(u16 max_vecs);
+	static int registerTrans(u32 sound_id, const Vec* trans);
+	int registerTransDynamic(const Vec* trans);
+	static void startSeRandPlay(u32 sound_id, u32);
 	static JSUList<MSRandPlay> smList;
 
 public:
 	/* 0x1C */ u32 mSoundID;
-	/* 0x20 */ s32 unk20;
-	/* 0x24 */ s32 unk24;
-	/* 0x28 */ f32 unk28;
-	/* 0x2C */ f32 unk2C;
+	/* 0x20 */ s32 mWaitMin;
+	/* 0x24 */ s32 mWaitMax;
+	/* 0x28 */ f32 mCurveSlope;
+	/* 0x2C */ f32 mPlusSlope;
 };
 
 namespace SeInfo {

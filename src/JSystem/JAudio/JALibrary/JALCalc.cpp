@@ -47,17 +47,17 @@ f32 getParamByExp(f32 x, f32 xStart, f32 xEnd, f32 y, f32 yStart, f32 yEnd,
 
 f32 getParamByExp_0_1(f32, f32, f32, f32, CurveSign) { return 0.0f; }
 
-f32 getRandom(f32 p1, f32 p2, f32 p3)
+f32 getRandom(f32 amplitude, f32 curveSlope, f32 plusSlope)
 {
-	f32 val0 = 2.0f * p3;
-	f32 val1 = -2.0f * (1.0f - p3);
+	f32 val0 = 2.0f * plusSlope;
+	f32 val1 = -2.0f * (1.0f - plusSlope);
 
-	f32 val2 = getRandom_0_1() < p3 ? val0 : val1;
+	f32 val2 = getRandom_0_1() < plusSlope ? val0 : val1;
 
-	p1 *= val2;
+	amplitude *= val2;
 
-	f32 val3 = powf(getRandom_0_1(), p2);
-	return val3 * p1;
+	f32 val3 = powf(getRandom_0_1(), curveSlope);
+	return val3 * amplitude;
 }
 
 f32 getRandom_0_1()
