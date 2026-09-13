@@ -654,21 +654,7 @@ JAISound* MSoundSE::startSoundActorInner(u32 id, JAISoundHandle* out_handle,
 			if (id == 0xffffffff)
 				return nullptr;
 
-			u32 copy;
-			if (actor->mGroundNumber & 0xf00) {
-				copy = id;
-			} else {
-				copy = id;
-				switch (id) {
-				case MSD_SE_MA_WALK_STONE_L_HEEL:
-				case MSD_SE_MA_WALK_STONE_L_TIP:
-				case MSD_SE_MA_WALK_STONE_R_HEEL:
-				case MSD_SE_MA_WALK_STONE_R_TIP:
-					copy += actor->mGroundNumber << 3 & 0x7F8;
-					break;
-				}
-			}
-			id = copy;
+			id = getNewIDByGroundCode(id, actor);
 
 			if (id == 0xffffffff)
 				return nullptr;
@@ -713,7 +699,23 @@ JAISound* MSoundSE::startSoundActorInner(u32 id, JAISoundHandle* out_handle,
 	}
 }
 
-u32 MSoundSE::getNewIDByGroundCode(u32, JAIActor*) { return 0; }
+u32 MSoundSE::getNewIDByGroundCode(u32 id, JAIActor* actor)
+{
+	u32 ground = actor->mGroundNumber;
+	if (ground & 0xf00)
+		return id;
+
+	switch (id) {
+	case MSD_SE_MA_WALK_STONE_L_HEEL:
+	case MSD_SE_MA_WALK_STONE_L_TIP:
+	case MSD_SE_MA_WALK_STONE_R_HEEL:
+	case MSD_SE_MA_WALK_STONE_R_TIP:
+		id += ground << 3 & 0x7f8;
+		break;
+	}
+
+	return id;
+}
 
 u32 MSoundSE::getNewIDBySurfaceCode(u32 id, JAIActor* actor)
 {
