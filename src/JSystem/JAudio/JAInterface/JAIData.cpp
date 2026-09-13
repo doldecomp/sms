@@ -290,7 +290,7 @@ void JAIData::initStreamUpdateParameter()
 {
 	mStreamUpdate->unk0             = 0;
 	mStreamUpdate->unk1             = 0;
-	mStreamUpdate->mPrepareFlag     = 0;
+	mStreamUpdate->mPrepareFlag     = false;
 	mStreamUpdate->mVolume          = 1.0f;
 	mStreamUpdate->mPitch           = 1.0f;
 	mStreamUpdate->mPan             = 0.5f;
@@ -590,16 +590,15 @@ void JAIData::initData()
 	mSeqTrackInfo = (JAISeqUpdateData*)unk1F4->allocHeap(
 	    JAIGlobalParameter::seqPlayTrackMax * sizeof(JAISeqUpdateData));
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
-		mSeqTrackInfo[i].unk4C
-		    = (JAISeqUpdateData::FabricatedUnk4CStruct*)unk1F4->allocHeap(
-		        0x7BC);
-		mDefaultSeqHandle[i]    = 0;
-		mSeqTrackInfo[i].unk0   = 0;
-		mSeqTrackInfo[i].unk1   = 0;
-		mSeqTrackInfo[i].unk2   = 0;
-		mSeqTrackInfo[i].unk3   = 0;
-		mSeqTrackInfo[i].unk8   = 0;
-		mSeqTrackInfo[i].mSound = 0;
+		mSeqTrackInfo[i].mPlayerParams = (JAIPlayerParameter*)unk1F4->allocHeap(
+		    33 * sizeof(JAIPlayerParameter));
+		mDefaultSeqHandle[i]          = 0;
+		mSeqTrackInfo[i].mPauseMode   = 0;
+		mSeqTrackInfo[i].mPauseVolume = 0;
+		mSeqTrackInfo[i].mPrepareFlag = false;
+		mSeqTrackInfo[i].mLoadingFlag = false;
+		mSeqTrackInfo[i].unk8         = 0;
+		mSeqTrackInfo[i].mSound       = 0;
 
 		mSeqTrackInfo[i].mTrackVolume = (f32*)unk1F4->allocHeap(
 		    JAIGlobalParameter::seqTrackMax * sizeof(f32));
@@ -619,7 +618,7 @@ void JAIData::initData()
 	    sizeof(JAIStreamUpdateParameter));
 	mStreamUpdate->unk0             = 0;
 	mStreamUpdate->unk1             = 0;
-	mStreamUpdate->mPrepareFlag     = 0;
+	mStreamUpdate->mPrepareFlag     = false;
 	mStreamUpdate->mVolume          = 1.0f;
 	mStreamUpdate->mPitch           = 1.0f;
 	mStreamUpdate->mPan             = 0.5f;

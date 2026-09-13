@@ -19,6 +19,25 @@ class JAIAnimeFrameSoundData;
 class MSModBgm;
 class MSBgmXFade;
 
+enum MSSeSwBit {
+	MSSeSwBit_AnimeSpeed                 = 0x00100000,
+	MSSeSwBit_AnimeSpeedShift            = 20,
+	MSSeSwBit_ModDistanceVolume          = 0x00200000,
+	MSSeSwBit_RandomVolumePSlopeMask     = 0x00C00000,
+	MSSeSwBit_RandomVolumePSlopeShift    = 22,
+	MSSeSwBit_RandomVolumeCSlopeMask     = 0x03000000,
+	MSSeSwBit_RandomVolumeCSlopeShift    = 24,
+	MSSeSwBit_RandomVolumeAmplitudeMask  = 0x0C000000,
+	MSSeSwBit_RandomVolumeAmplitudeShift = 26,
+	MSSeSwBit_RandomIDWeightMask         = 0x70000000,
+	MSSeSwBit_RandomIDWeightShift        = 28,
+	MSSeSwBit_RandomID                   = 0x80000000,
+};
+
+enum MSBgmSwBit {
+	MSBgmSwBit_YoshiPercussion = 0x10000000,
+};
+
 class MSSeCallBack {
 public:
 	static u16 setParameterSeqSync(JASystem::TTrack*, u16);
@@ -95,8 +114,8 @@ public:
 
 	u32 getWallSound(u32, f32);
 	u32 getBstPitch(u32);
-	static u32 getBstSwitch(u32);
-	static u32 getSwitch(u32, u32, u32);
+	static u32 getBstSwitch(u32 sound_id);
+	static u32 getSwitch(u32 sound_id, u32 mask, u32 offset);
 	bool gateCheck(u32);
 
 	bool resetAudioAll(u16);

@@ -26,6 +26,38 @@ struct JAICategoryInfo {
 	/* 0x1 */ u8 mMaxSameSound;
 };
 
+enum JAISeSwBit {
+	JAISeSwBit_NoDistanceVolume         = 0x00000002,
+	JAISeSwBit_NoDistanceFxmix          = 0x00000004,
+	JAISeSwBit_SeqMute                  = 0x00000008,
+	JAISeSwBit_RandomPitchDown          = 0x00000010,
+	JAISeSwBit_DistanceLimit            = 0x00000020,
+	JAISeSwBit_RandomPitchWidthMask     = 0x000000C0,
+	JAISeSwBit_RandomPitchWidthSmall    = 0x00000040,
+	JAISeSwBit_RandomPitchWidthMiddle   = 0x00000080,
+	JAISeSwBit_RandomPitchWidthLarge    = 0x000000C0,
+	JAISeSwBit_DopplarLevelMask         = 0x00000300,
+	JAISeSwBit_DopplarLevelShift        = 8,
+	JAISeSwBit_NoMapFxmix               = 0x00000400,
+	JAISeSwBit_GroundVariant            = 0x00000800,
+	JAISeSwBit_DistanceWait             = 0x00001000,
+	JAISeSwBit_Mono                     = 0x00004000,
+	JAISeSwBit_DistanceVolumeCurveMask  = 0x00070000,
+	JAISeSwBit_DistanceVolumeCurveShift = 16,
+	JAISeSwBit_Multi                    = 0x00080000,
+};
+
+enum JAISeqSwBit {
+	JAISeqSwBit_PauseOthers      = 0x00000001,
+	JAISeqSwBit_NoPause          = 0x00000002,
+	JAISeqSwBit_NoSeqMute        = 0x00000008,
+	JAISeqSwBit_StayHeap         = 0x00000010,
+	JAISeqSwBit_AutoHeap         = 0x00000020,
+	JAISeqSwBit_SyncLoad         = 0x00000040,
+	JAISeqSwBit_OuterEnableMask  = 0x00001F00,
+	JAISeqSwBit_OuterEnableShift = 8,
+};
+
 // fabricated
 struct JAISoundInfo {
 	/* 0x0 */ u32 mSwBit;

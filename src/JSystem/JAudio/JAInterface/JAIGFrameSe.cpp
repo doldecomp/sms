@@ -108,7 +108,7 @@ void JAIBasic::checkNextFrameSe()
 					it->mPriority /= JAIGlobalParameter::audioCameraMax;
 
 				f32 fVar3;
-				if (it->getSwBit() & 0x20)
+				if (it->getSwBit() & JAISeSwBit_DistanceLimit)
 					fVar3 = fVar6;
 				else
 					fVar3 = 1e+10f;
@@ -256,19 +256,19 @@ void JAIBasic::sendPlayingSeCommand()
 			if (state == SOUNDSTATE_Prepared) {
 				u32 swBit     = sound->getSwBit();
 				sound->mTrack = trackId;
-				if (swBit & 8) {
+				if (swBit & JAISeSwBit_SeqMute)
 					setSeqMuteFromSeStart(sound);
-				}
-				if (swBit & 0xC0) {
+
+				if (swBit & JAISeSwBit_RandomPitchWidthMask) {
 					s32 rnd = (s32)(255.0f * JAIConst::random.get_ufloat_1());
-					switch (swBit & 0xC0) {
-					case 0x40:
+					switch (swBit & JAISeSwBit_RandomPitchWidthMask) {
+					case JAISeSwBit_RandomPitchWidthSmall:
 						sound->setRandom(rnd & 0xF);
 						break;
-					case 0x80:
+					case JAISeSwBit_RandomPitchWidthMiddle:
 						sound->setRandom(rnd & 0x1F);
 						break;
-					case 0xC0:
+					case JAISeSwBit_RandomPitchWidthLarge:
 						sound->setRandom(rnd & 0x3F);
 						break;
 					default:
@@ -300,14 +300,14 @@ void JAIBasic::sendPlayingSeCommand()
 				sendSeAllParameter(sound);
 
 				u16 portValue = sound->mSoundID & JAISoundID_IndexMask;
-				if (sound->checkSwBit(0x800)) {
+				if (sound->checkSwBit(JAISeSwBit_GroundVariant)) {
 					u32 tmp = sound->mActorGroundNumber;
 					portValue += getMapInfoGround(tmp);
 				}
 
 				u16 distArg;
 				if (JAIGlobalParameter::audioCameraMax == 1
-				    && sound->checkSwBit(0x1000)) {
+				    && sound->checkSwBit(JAISeSwBit_DistanceWait)) {
 					if (sound->unk1C[0].unk18
 					    < JAIGlobalParameter::distanceMax) {
 						distArg = JAIGlobalParameter::seDistanceWaitMax
@@ -365,7 +365,8 @@ void JAIBasic::setSeqMuteFromSeStart(JAISound* param_1)
 {
 	for (u32 i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
 		JAISound* sound = unk0->mSeqTrackInfo[i].mSound;
-		if (i != mSeSequence->mTrack && sound && !(sound->getSwBit() & 8)) {
+		if (i != mSeSequence->mTrack && sound
+		    && !(sound->getSwBit() & JAISeqSwBit_NoSeqMute)) {
 			sound->setSeqInterVolume(
 			    9, JAIGlobalParameter::seqMuteVolumeSePlay / 127.0f,
 			    JAIGlobalParameter::seqMuteMoveSpeedSePlay);
@@ -376,12 +377,13 @@ void JAIBasic::setSeqMuteFromSeStart(JAISound* param_1)
 
 void JAIBasic::clearSeqMuteFromSeStop(JAISound* sound)
 {
-	if (unk30 == 0 || !(sound->getSwBit() & 8))
+	if (unk30 == 0 || !(sound->getSwBit() & JAISeSwBit_SeqMute))
 		return;
 
 	for (u32 i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
 		JAISound* seq = unk0->mSeqTrackInfo[i].mSound;
-		if (i != mSeSequence->mTrack && seq && !(seq->getSwBit() & 8)) {
+		if (i != mSeSequence->mTrack && seq
+		    && !(seq->getSwBit() & JAISeqSwBit_NoSeqMute)) {
 			unk30 &= (1 << sound->mTrack) ^ 0xffffffff;
 			if (unk30 == 0) {
 				seq->setSeqInterVolume(
@@ -550,12 +552,12 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 		    unk0->mSeqTrackInfo[mSeSequence->mTrack]
 		        .mTrackUpdate[sound->mTrack]);
 		unk0->mSeqTrackInfo[mSeSequence->mTrack]
-		    .unk4C[sound->mTrack]
-		    .unk2C.mHead
-		    = 0;
+		    .mPlayerParams[sound->mTrack]
+		    .mCmd.mHead
+		    = nullptr;
 		unk0->mSeqTrackInfo[mSeSequence->mTrack]
-		    .unk4C[sound->mTrack]
-		    .unk2C.addPortCmdOnce();
+		    .mPlayerParams[sound->mTrack]
+		    .mCmd.addPortCmdOnce();
 	}
 }
 

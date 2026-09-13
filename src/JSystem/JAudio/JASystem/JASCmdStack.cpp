@@ -25,9 +25,9 @@ namespace Kernel {
 
 	BOOL TPortCmd::addPortCmdStay() { return addPortCmd(&cmd_stay); }
 
-	BOOL TPortCmd::setPortCmd(PortCallback func, TPortArgs* args)
+	BOOL TPortCmd::setPortCmd(PortCallback cb, TPortArgs* args)
 	{
-		mFunc = func;
+		mFunc = cb;
 		mArgs = args;
 		mHead = nullptr;
 		return true;

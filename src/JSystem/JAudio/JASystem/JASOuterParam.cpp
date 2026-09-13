@@ -42,10 +42,10 @@ void TTrack::TOuterParam::setIntFirFilter(s16 param1, u8 param2)
 
 s16 TTrack::TOuterParam::getIntFirFilter(u8 param) { return mFirFilter[param]; }
 
-void TTrack::TOuterParam::setParam(u8 param1, f32 param2)
+void TTrack::TOuterParam::setParam(u8 param, f32 value)
 {
 	f32* var1;
-	switch (param1) {
+	switch (param) {
 	case TTrack::UPDATE_Volume:
 		var1 = &mVolume;
 		break;
@@ -67,8 +67,8 @@ void TTrack::TOuterParam::setParam(u8 param1, f32 param2)
 	default:
 		return;
 	}
-	*var1 = param2;
-	mUpdate |= param1;
+	*var1 = value;
+	mUpdate |= param;
 }
 
 void TTrack::TOuterParam::onSwitch(u16 param)

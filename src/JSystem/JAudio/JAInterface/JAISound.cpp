@@ -18,34 +18,31 @@ JAISound::JAISound()
 	mActor           = 0;
 }
 
-int JAISound::initMoveParameter(JAIMoveParaSet* param_1, f32 param_2,
-                                u32 param_3)
+int JAISound::initMoveParameter(JAIMoveParaSet* set, f32 target, u32 moveTime)
 {
-	if (param_1->mMoveCounter == 0 && param_1->mCurrentValue == param_2)
+	if (set->mMoveCounter == 0 && set->mCurrentValue == target)
 		return 2;
 
-	if (param_1->mMoveCounter != 0 && param_1->mTargetValue == param_2)
+	if (set->mMoveCounter != 0 && set->mTargetValue == target)
 		return 2;
 
-	param_1->mTargetValue = param_2;
-	if (param_3 == 0) {
-		param_1->mCurrentValue = param_2;
+	set->mTargetValue = target;
+	if (moveTime == 0) {
+		set->mCurrentValue = target;
 		return 0;
 	}
 
-	if (param_3 == 1)
-		param_1->mMoveAmount = param_1->mCurrentValue - param_1->mTargetValue;
+	if (moveTime == 1)
+		set->mMoveAmount = set->mCurrentValue - set->mTargetValue;
 	else
-		param_1->mMoveAmount
-		    = (param_1->mCurrentValue - param_1->mTargetValue) / (f32)param_3;
-	param_1->mMoveCounter = param_3;
+		set->mMoveAmount
+		    = (set->mCurrentValue - set->mTargetValue) / (f32)moveTime;
+	set->mMoveCounter = moveTime;
 
 	return 1;
 }
 
-void JAISound::initMultiMoveParameter(JAIMoveParaSet* param_1, u8 param_2,
-                                      u32 param_3, f32 param_4, f32 param_5,
-                                      u32 param_6)
+void JAISound::initMultiMoveParameter(JAIMoveParaSet*, u8, u32, f32, f32, u32)
 {
 }
 
@@ -316,7 +313,8 @@ f32 JAISound::setPositionDopplarCommon(u32 param_1)
 	             / (1.0f
 	                - (len - len2)
 	                      / (JAIGlobalParameter::dopplarParameter
-	                         / ((param_1 >> 8) * (param_1 >> 8))));
+	                         / ((param_1 >> JAISeSwBit_DopplarLevelShift)
+	                            * (param_1 >> JAISeSwBit_DopplarLevelShift))));
 
 	if (result < 0.1f)
 		result = 0.1f;
@@ -326,7 +324,7 @@ f32 JAISound::setPositionDopplarCommon(u32 param_1)
 	return result;
 }
 
-void JAISound::setSeqInterVolume(u8 param_1, f32 param_2, u32 param_3)
+void JAISound::setSeqInterVolume(u8 param, f32 volume, u32 moveTime)
 {
 	if ((mSoundID & JAISoundID_TypeMask) != JAISoundID_Type_Sequence)
 		return;
@@ -334,16 +332,16 @@ void JAISound::setSeqInterVolume(u8 param_1, f32 param_2, u32 param_3)
 	if (!getSeqParameter())
 		return;
 
-	int ret = initMoveParameter(&getSeqParameter()->mVolume[param_1], param_2,
-	                            param_3);
+	int ret = initMoveParameter(&getSeqParameter()->mVolume[param], volume,
+	                            moveTime);
 	if (ret == 1)
-		getSeqParameter()->mVolumeUpdate |= 1 << param_1;
+		getSeqParameter()->mVolumeUpdate |= 1 << param;
 
 	if (getSeqParameter()->mUpdateData && ret != 2)
 		getSeqParameter()->mUpdateData->unk8 |= 0x40000;
 }
 
-void JAISound::setSeqInterPan(u8 param_1, f32 param_2, u32 param_3)
+void JAISound::setSeqInterPan(u8 param, f32 pan, u32 moveTime)
 {
 	if ((mSoundID & JAISoundID_TypeMask) != JAISoundID_Type_Sequence)
 		return;
@@ -351,16 +349,15 @@ void JAISound::setSeqInterPan(u8 param_1, f32 param_2, u32 param_3)
 	if (!getSeqParameter())
 		return;
 
-	int ret = initMoveParameter(&getSeqParameter()->mPan[param_1], param_2,
-	                            param_3);
+	int ret = initMoveParameter(&getSeqParameter()->mPan[param], pan, moveTime);
 	if (ret == 1)
-		getSeqParameter()->mPanUpdate |= 1 << param_1;
+		getSeqParameter()->mPanUpdate |= 1 << param;
 
 	if (getSeqParameter()->mUpdateData && ret != 2)
 		getSeqParameter()->mUpdateData->unk8 |= 0x80000;
 }
 
-void JAISound::setSeqInterPitch(u8 param_1, f32 param_2, u32 param_3)
+void JAISound::setSeqInterPitch(u8 param, f32 pitch, u32 moveTime)
 {
 	if ((mSoundID & JAISoundID_TypeMask) != JAISoundID_Type_Sequence)
 		return;
@@ -368,16 +365,16 @@ void JAISound::setSeqInterPitch(u8 param_1, f32 param_2, u32 param_3)
 	if (!getSeqParameter())
 		return;
 
-	int ret = initMoveParameter(&getSeqParameter()->mPitch[param_1], param_2,
-	                            param_3);
+	int ret
+	    = initMoveParameter(&getSeqParameter()->mPitch[param], pitch, moveTime);
 	if (ret == 1)
-		getSeqParameter()->mPitchUpdate |= 1 << param_1;
+		getSeqParameter()->mPitchUpdate |= 1 << param;
 
 	if (getSeqParameter()->mUpdateData && ret != 2)
 		getSeqParameter()->mUpdateData->unk8 |= 0x100000;
 }
 
-void JAISound::setSeqInterFxmix(u8 param_1, f32 param_2, u32 param_3)
+void JAISound::setSeqInterFxmix(u8 param, f32 fxmix, u32 moveTime)
 {
 	if ((mSoundID & JAISoundID_TypeMask) != JAISoundID_Type_Sequence)
 		return;
@@ -385,16 +382,16 @@ void JAISound::setSeqInterFxmix(u8 param_1, f32 param_2, u32 param_3)
 	if (!getSeqParameter())
 		return;
 
-	int ret = initMoveParameter(&getSeqParameter()->mFxmix[param_1], param_2,
-	                            param_3);
+	int ret
+	    = initMoveParameter(&getSeqParameter()->mFxmix[param], fxmix, moveTime);
 	if (ret == 1)
-		getSeqParameter()->mFxmixUpdate |= 1 << param_1;
+		getSeqParameter()->mFxmixUpdate |= 1 << param;
 
 	if (getSeqParameter()->mUpdateData && ret != 2)
 		getSeqParameter()->mUpdateData->unk8 |= 0x200000;
 }
 
-void JAISound::setSeqInterDolby(u8 param_1, f32 param_2, u32 param_3)
+void JAISound::setSeqInterDolby(u8 param, f32 dolby, u32 moveTime)
 {
 	if ((mSoundID & JAISoundID_TypeMask) != JAISoundID_Type_Sequence)
 		return;
@@ -403,31 +400,30 @@ void JAISound::setSeqInterDolby(u8 param_1, f32 param_2, u32 param_3)
 		return;
 
 	if (interPointer->mSoundOutputMode != 2) {
-		if (getSeqParameter()->mDolby[param_1].mCurrentValue != 0.0f)
-			param_2 = 0.0f;
+		if (getSeqParameter()->mDolby[param].mCurrentValue != 0.0f)
+			dolby = 0.0f;
 		else
 			return;
 	}
 
-	int ret = initMoveParameter(&getSeqParameter()->mDolby[param_1], param_2,
-	                            param_3);
+	int ret
+	    = initMoveParameter(&getSeqParameter()->mDolby[param], dolby, moveTime);
 	if (ret == 1)
-		getSeqParameter()->mDolbyUpdate |= 1 << param_1;
+		getSeqParameter()->mDolbyUpdate |= 1 << param;
 
 	if (getSeqParameter()->mUpdateData && ret != 2)
 		getSeqParameter()->mUpdateData->unk8 |= 0x400000;
 }
 
-void JAISound::setSeqTempoProportion(f32 param_1, u32 param_2)
+void JAISound::setSeqTempoProportion(f32 tempo, u32 moveTime)
 {
-
 	if ((mSoundID & JAISoundID_TypeMask) != JAISoundID_Type_Sequence)
 		return;
 
 	if (!getSeqParameter())
 		return;
 
-	int ret = initMoveParameter(&getSeqParameter()->mTempo, param_1, param_2);
+	int ret = initMoveParameter(&getSeqParameter()->mTempo, tempo, moveTime);
 
 	if (getSeqParameter()->mUpdateData)
 		getSeqParameter()->mUpdateData->unk8 |= 0x4;
@@ -537,14 +533,15 @@ void JAISound::setTrackPortData(u8 param_1, u8 param_2, u16 param_3)
 	getSeqParameter()->mTrackPortData[param_1][param_2] = param_3;
 }
 
-void JAISound::setSeInterMovePara(JAIMoveParaSet* set, u32 value)
+void JAISound::setSeInterMovePara(JAIMoveParaSet* set, u32 moveTime)
 {
 	if (set->mCurrentValue != set->mTargetValue) {
-		if (value == 0) {
+		if (moveTime == 0) {
 			set->mCurrentValue = set->mTargetValue;
 		} else {
-			set->mMoveCounter = value;
-			set->mMoveAmount = (set->mTargetValue - set->mCurrentValue) / value;
+			set->mMoveCounter = moveTime;
+			set->mMoveAmount
+			    = (set->mTargetValue - set->mCurrentValue) / moveTime;
 		}
 	}
 }
@@ -554,22 +551,19 @@ static inline u32 rand_u32()
 	return JAIConst::random.get_ufloat_1() * 4294967300.0f;
 }
 
-void JAISound::setSeInterRandomPara(f32* param_1, u32 param_2, f32 param_3,
-                                    f32 param_4)
+void JAISound::setSeInterRandomPara(f32* target, u32 random, f32 min, f32 max)
 {
-	f32 fVar1
-	    = ((f32)((rand_u32() % (param_2 * 2)) + 1) - (f32)param_2) / 1000.0f;
-	if (*param_1 + fVar1 > param_4) {
-		*param_1 = param_4;
-	} else if (*param_1 < param_3 - fVar1) {
-		*param_1 = param_3;
+	f32 rnd = ((f32)((rand_u32() % (random * 2)) + 1) - (f32)random) / 1000.0f;
+	if (*target + rnd > max) {
+		*target = max;
+	} else if (*target < min - rnd) {
+		*target = min;
 	} else {
-		*param_1 += fVar1;
+		*target += rnd;
 	}
 }
 
-void JAISound::setSeInterVolume(u8 param_1, f32 param_2, u32 param_3,
-                                u8 param_4)
+void JAISound::setSeInterVolume(u8 param, f32 volume, u32 moveTime, u8 random)
 {
 	if ((mSoundID & JAISoundID_TypeMask) != JAISoundID_Type_Se)
 		return;
@@ -577,17 +571,17 @@ void JAISound::setSeInterVolume(u8 param_1, f32 param_2, u32 param_3,
 	if (!getSeParameter())
 		return;
 
-	JAIMoveParaSet* set = &getSeParameter()->mVolume[param_1];
-	set->mTargetValue   = param_2;
-	if (param_4 != 0) {
-		u32 uVar5 = (param_4 * 1000) / 127U;
-		setSeInterRandomPara(&set->mTargetValue, uVar5, 0.0f, 1.0f);
+	JAIMoveParaSet* set = &getSeParameter()->mVolume[param];
+	set->mTargetValue   = volume;
+	if (random != 0) {
+		u32 rnd = (random * 1000) / 127U;
+		setSeInterRandomPara(&set->mTargetValue, rnd, 0.0f, 1.0f);
 	}
 
-	setSeInterMovePara(set, param_3);
+	setSeInterMovePara(set, moveTime);
 }
 
-void JAISound::setSeInterPan(u8 param_1, f32 param_2, u32 param_3, u8 param_4)
+void JAISound::setSeInterPan(u8 param, f32 pan, u32 moveTime, u8 random)
 {
 	if ((mSoundID & JAISoundID_TypeMask) != JAISoundID_Type_Se)
 		return;
@@ -595,17 +589,17 @@ void JAISound::setSeInterPan(u8 param_1, f32 param_2, u32 param_3, u8 param_4)
 	if (!getSeParameter())
 		return;
 
-	JAIMoveParaSet* set = &getSeParameter()->mPan[param_1];
-	set->mTargetValue   = param_2;
-	if (param_4 != 0) {
-		u32 uVar5 = (param_4 * 1000) / 127U;
-		setSeInterRandomPara(&set->mTargetValue, uVar5, 0.0f, 1.0f);
+	JAIMoveParaSet* set = &getSeParameter()->mPan[param];
+	set->mTargetValue   = pan;
+	if (random != 0) {
+		u32 rnd = (random * 1000) / 127U;
+		setSeInterRandomPara(&set->mTargetValue, rnd, 0.0f, 1.0f);
 	}
 
-	setSeInterMovePara(set, param_3);
+	setSeInterMovePara(set, moveTime);
 }
 
-void JAISound::setSeInterFxmix(u8 param_1, f32 param_2, u32 param_3, u8 param_4)
+void JAISound::setSeInterFxmix(u8 param, f32 fxmix, u32 moveTime, u8 random)
 {
 	if ((mSoundID & JAISoundID_TypeMask) != JAISoundID_Type_Se)
 		return;
@@ -613,14 +607,14 @@ void JAISound::setSeInterFxmix(u8 param_1, f32 param_2, u32 param_3, u8 param_4)
 	if (!getSeParameter())
 		return;
 
-	JAIMoveParaSet* set = &getSeParameter()->mFxmix[param_1];
-	set->mTargetValue   = param_2;
-	if (param_4 != 0) {
-		u32 uVar5 = (param_4 * 1000) / 127U;
-		setSeInterRandomPara(&set->mTargetValue, uVar5, 0.0f, 1.0f);
+	JAIMoveParaSet* set = &getSeParameter()->mFxmix[param];
+	set->mTargetValue   = fxmix;
+	if (random != 0) {
+		u32 rnd = (random * 1000) / 127U;
+		setSeInterRandomPara(&set->mTargetValue, rnd, 0.0f, 1.0f);
 	}
 
-	setSeInterMovePara(set, param_3);
+	setSeInterMovePara(set, moveTime);
 }
 
 void JAISound::setSeInterFir(u8, u8, u32, u8) { }
@@ -693,7 +687,7 @@ void JAISound::setSeDistanceParameters()
 	setSeDistanceFxmix(uVar2);
 	setSeDistanceFir(uVar2);
 
-	if (!checkSwBit(0x400)) {
+	if (!checkSwBit(JAISeSwBit_NoMapFxmix)) {
 		f32 fxParam = interPointer->getMapInfoFxParameter(mActorGroundNumber);
 		setFxmix(fxParam, 0, 2);
 	}
@@ -702,33 +696,35 @@ void JAISound::setSeDistanceParameters()
 
 void JAISound::setSeDistanceVolume(u8 param_1)
 {
-	f32 dVar4;
-	if (!checkSwBit(2)) {
-		dVar4 = setDistanceVolumeCommon(
+	f32 volume;
+	if (!checkSwBit(JAISeSwBit_NoDistanceVolume)) {
+		volume = setDistanceVolumeCommon(
 		    JAIGlobalParameter::distanceMax,
-		    (interPointer->getSoundSwBit(mInfo) & 0x70000) >> 16);
+		    (interPointer->getSoundSwBit(mInfo)
+		     & JAISeSwBit_DistanceVolumeCurveMask)
+		        >> JAISeSwBit_DistanceVolumeCurveShift);
 	} else {
-		dVar4 = 1.0f;
+		volume = 1.0f;
 	}
 
-	setSeInterVolume(4, dVar4, param_1, 0);
+	setSeInterVolume(4, volume, param_1, 0);
 }
 
 void JAISound::setSeDistancePan(u8 param_1)
 {
-	f32 dVar4 = setDistancePanCommon();
+	f32 pan = setDistancePanCommon();
 
-	setSeInterPan(4, dVar4, param_1, 0);
+	setSeInterPan(4, pan, param_1, 0);
 }
 
 void JAISound::setSeDistancePitch(u8 param_1)
 {
 	f32 pitch = 1.0f;
-	if (checkSwBit(0x10)) {
+	if (checkSwBit(JAISeSwBit_RandomPitchDown))
 		pitch = 1.0f - (f32)(JAIConst::random.get_uint8(16) & 0xF) / 192.0f;
-	}
 
-	if (checkSwBit(0x4000) && !checkSwBit(0x2) && !checkSwBit(0x300)) {
+	if (checkSwBit(JAISeSwBit_Mono) && !checkSwBit(JAISeSwBit_NoDistanceVolume)
+	    && !checkSwBit(JAISeSwBit_DopplarLevelMask)) {
 		if (JAIGlobalParameter::audioCameraMax == 1) {
 			f32 dist = unk1C->unk18;
 			if (dist >= JAIGlobalParameter::distanceMax) {
@@ -740,7 +736,7 @@ void JAISound::setSeDistancePitch(u8 param_1)
 		}
 	}
 
-	if (checkSwBit(0xC0))
+	if (checkSwBit(JAISeSwBit_RandomPitchWidthMask))
 		pitch += mRandom / 192.0f;
 
 	setSeInterPitch(4, pitch, param_1, 0);
@@ -754,7 +750,7 @@ void JAISound::setSePositionDopplar()
 
 	// TODO: fakematch, wtf is actually happening here? Uninitialized variable?
 	u32 bit;
-	if (!(bit = getSwBit() & 0x300))
+	if (!(bit = getSwBit() & JAISeSwBit_DopplarLevelMask))
 		return;
 
 	if (JAIGlobalParameter::audioCameraMax != 1)
@@ -768,7 +764,7 @@ void JAISound::setSePositionDopplar()
 void JAISound::setSeDistanceFxmix(u8 param_1)
 {
 	u16 fx = JAIGlobalParameter::seDefaultFx;
-	if (!(interPointer->getSoundSwBit(mInfo) & 0x4)
+	if (!(interPointer->getSoundSwBit(mInfo) & JAISeSwBit_NoDistanceFxmix)
 	    && JAIGlobalParameter::audioCameraMax == 1) {
 		// TODO: likely an inline
 		f32 dist = unk1C->unk18;
@@ -872,7 +868,7 @@ void JAISound::setStreamPrepareFlag(u8) { }
 
 void JAISound::checkStreamReady() { }
 
-void JAISound::setPauseMode(u8 mode, u8 param_2)
+void JAISound::setPauseMode(u8 mode, u8 volume)
 {
 	switch (mSoundID & JAISoundID_TypeMask) {
 	case JAISoundID_Type_Sequence:
@@ -882,7 +878,7 @@ void JAISound::setPauseMode(u8 mode, u8 param_2)
 			if (mode) {
 				switch (mode) {
 				case 1:
-					setSeqInterVolumeU7(11, param_2, 1);
+					setSeqInterVolumeU7(11, volume, 1);
 					break;
 				case 2:
 					JASystem::TrackMgr::handleToSeq(
@@ -912,7 +908,7 @@ void JAISound::setPauseMode(u8 mode, u8 param_2)
 			if (mode) {
 				switch (mode) {
 				case 1:
-					setStreamInterVolume(11, param_2 / 127.0f, 1);
+					setStreamInterVolume(11, volume / 127.0f, 1);
 					break;
 				case 2:
 					JAInter::StreamLib::setPauseFlag(2);

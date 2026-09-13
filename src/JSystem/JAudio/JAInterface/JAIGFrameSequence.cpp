@@ -9,12 +9,12 @@
 
 void JAIBasic::stopSeq(JAISound* param_1)
 {
-	if (param_1->getSwBit() & 1) {
+	if (param_1->getSwBit() & JAISeqSwBit_PauseOthers) {
 		for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
 			JAISound* sound = unk0->mSeqTrackInfo[i].mSound;
 			if (param_1 != sound && sound) {
 				if (sound->mState >= SOUNDSTATE_Started
-				    && !(sound->getSwBit() & 2)) {
+				    && !(sound->getSwBit() & JAISeqSwBit_NoPause)) {
 					sound->setSeqInterVolume(10, 1.0f, 10);
 					JASystem::TrackMgr::handleToSeq(
 					    sound->getSeqParameter()->mSeqHandle)
@@ -49,7 +49,7 @@ void JAIBasic::checkEntriedSeq()
 		if (!(r27 & 1))
 			continue;
 
-		if (sud->unk3 != 0)
+		if (sud->mLoadingFlag)
 			return;
 
 		u32 size = JASystem::Vload::checkSize(
@@ -60,18 +60,18 @@ void JAIBasic::checkEntriedSeq()
 		    sound->mSoundID & JAISoundID_IndexMask, &pos);
 
 		if (ptr == nullptr) {
-			if (sound->checkSwBit(0x10)) {
+			if (sound->checkSwBit(JAISeqSwBit_StayHeap)) {
 				ptr = unk0->getFreeStayHeapPointer(
 				    size, sound->mSoundID & JAISoundID_IndexMask);
 				pos                                         = 0xFF;
 				sound->getSeqParameter()->mAutoHeapPosition = 0xFF;
-				if (ptr == nullptr) {
-					sound->checkSwBit(0x20);
-				}
+				if (ptr == nullptr)
+					sound->checkSwBit(JAISeqSwBit_AutoHeap);
 			}
 
 			if (ptr == nullptr) {
-				if (sound->checkSwBit(0x20) || !sound->checkSwBit(0x10)) {
+				if (sound->checkSwBit(JAISeqSwBit_AutoHeap)
+				    || !sound->checkSwBit(JAISeqSwBit_StayHeap)) {
 					pos = unk0->checkUsefulAutoHeapPosition();
 					if (pos >= JAIGlobalParameter::autoHeapMax) {
 						for (int ii = 0; ii < JAIGlobalParameter::autoHeapMax;
@@ -110,20 +110,19 @@ void JAIBasic::checkEntriedSeq()
 				}
 			}
 
-			if (!sound->checkSwBit(0x40)) {
+			if (!sound->checkSwBit(JAISeqSwBit_SyncLoad)) {
 				sound->mState = SOUNDSTATE_Stored;
 
-				u32 swBit8 = sound->mSoundID;
-				// Keep the signed, two-step packing for MWCC register
-				// allocation.
+				u32 soundId = sound->mSoundID;
+
 				s32 param = pos << 8;
-				param = (i | ((swBit8 & JAISoundID_IndexMask) << 16)) | param;
+				param = (i | ((soundId & JAISoundID_IndexMask) << 16)) | param;
 
 				unk0->setAutoHeapLoadedFlag(pos, 1);
 				JASystem::Vload::loadFileAsync(
-				    mSeqArchiveHandle + (swBit8 & JAISoundID_IndexMask), ptr, 0,
-				    size, checkDvdLoadArc, param);
-				sud->unk3 = 1;
+				    mSeqArchiveHandle + (soundId & JAISoundID_IndexMask), ptr,
+				    0, size, checkDvdLoadArc, param);
+				sud->mLoadingFlag = true;
 			} else {
 				JASystem::Vload::loadFile(
 				    mSeqArchiveHandle
@@ -547,8 +546,11 @@ void JAIBasic::checkPlayingSeq()
 					    &unk0->mSeqTrackInfo[i], j, 1,
 					    unk0->mSeqTrackInfo[i].mTrackUpdate[j]);
 
-					unk0->mSeqTrackInfo[i].unk4C[j].unk2C.mHead = nullptr;
-					unk0->mSeqTrackInfo[i].unk4C[j].unk2C.addPortCmdOnce();
+					unk0->mSeqTrackInfo[i].mPlayerParams[j].mCmd.mHead
+					    = nullptr;
+					unk0->mSeqTrackInfo[i]
+					    .mPlayerParams[j]
+					    .mCmd.addPortCmdOnce();
 				}
 			}
 		}
@@ -624,7 +626,7 @@ void JAIBasic::checkReadSeq()
 			continue;
 		if (sound->getSeqParameter()->mWaitSceneSet != 0xffffffff)
 			continue;
-		if (sound->getSeqParameter()->mUpdateData->unk2 != 0)
+		if (sound->getSeqParameter()->mUpdateData->mPrepareFlag)
 			continue;
 
 		u32 lVar2 = JASystem::Vload::checkSize(
@@ -642,8 +644,8 @@ void JAIBasic::checkReadSeq()
 				sound->setSeqInterVolume(6, 0.0f, 0);
 				sound->setSeqInterVolume(6, 1.0f, sound->mFadeCounter);
 			}
-			if (sud->unk0 != 0) {
-				sound->setPauseMode(sud->unk0, sud->unk1);
+			if (sud->mPauseMode != 0) {
+				sound->setPauseMode(sud->mPauseMode, sud->mPauseVolume);
 				sud->mSeqVolume = 1.1f;
 			}
 			setSeExtParameter(sound);
@@ -697,7 +699,7 @@ void JAIBasic::checkDvdLoadArc(u32 param_1)
 
 	if (lo < 0xFE) {
 		JAISound* sound = basic->unk0->mSeqTrackInfo[lo].mSound;
-		basic->unk0->mSeqTrackInfo[lo].unk3 = 0;
+		basic->unk0->mSeqTrackInfo[lo].mLoadingFlag = false;
 		if (sound && sound->mState == SOUNDSTATE_Stored
 		    && hi2 == (sound->mSoundID & JAISoundID_IndexMask))
 			sound->mState = SOUNDSTATE_Prepared;

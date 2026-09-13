@@ -22,8 +22,8 @@ public:
 
 	void animeLoop(Vec* position, f32 frame, f32 speed, u32 ground_no, u8);
 	void initAnmSound(void* interface, u32 param_2, f32 frame);
-	void setSpeedModifySound(JAISound* sound, JAIAnimeFrameSoundData* data,
-	                         f32 speed);
+	void setSpeedModifySound(JAISound* sound,
+	                         JAIAnimeFrameSoundData* frame_data, f32 speed);
 };
 
 class MAnmSoundNPC : public MAnmSound {
