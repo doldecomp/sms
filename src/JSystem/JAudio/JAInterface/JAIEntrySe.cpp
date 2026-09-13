@@ -33,7 +33,7 @@ void JAISeEntry::storeBuffer(JAISoundHandle* out_handle, JAIActor* actor,
 	while (it != nullptr) {
 		if (it->mActor == uVar14) {
 			if (it->mSoundID == sound_id
-			    && (unk0->getSoundSwBit(info) & 0x80000) == 0) {
+			    && (unk0->getSoundSwBit(info) & JAISeSwBit_Multi) == 0) {
 				if ((sound_id & 0x800) == 0
 				    && it->mState == SOUNDSTATE_Stopping) {
 					it->mState = SOUNDSTATE_Playing;

@@ -72,7 +72,7 @@ public:
 	virtual f32 setDistanceVolumeCommon(f32, u8);
 	virtual f32 setDistancePanCommon();
 
-	int initMoveParameter(JAIMoveParaSet*, f32, u32);
+	int initMoveParameter(JAIMoveParaSet* set, f32 target, u32 moveTime);
 	void initMultiMoveParameter(JAIMoveParaSet*, u8, u32, f32, f32, u32);
 	u32 getSeCategoryNumber();
 	void getDataInfoHeader();
@@ -100,7 +100,7 @@ public:
 	void setSeqInterVolume(u8, f32, u32);
 	void setSeqInterPan(u8, f32, u32);
 	void setSeqInterPitch(u8, f32, u32);
-	void setSeqInterFxmix(u8, f32, u32);
+	void setSeqInterFxmix(u8 param, f32 fxmix, u32 moveTime);
 	void setSeqInterDolby(u8, f32, u32);
 	void setSeqTempoProportion(f32, u32);
 	void setSeqPortData(u8, u16, u32);
@@ -121,9 +121,9 @@ public:
 	void setTrackFirU7(u8, u8, u32);
 	void setTrackFirMultiU7(u8, u32, u8, u32);
 	void setTrackPortData(u8, u8, u16);
-	void setSeInterMovePara(JAIMoveParaSet*, u32);
+	void setSeInterMovePara(JAIMoveParaSet* set, u32 moveTime);
 	void setSeInterRandomPara(f32*, u32, f32, f32);
-	void setSeInterVolume(u8, f32, u32, u8);
+	void setSeInterVolume(u8 param, f32 volume, u32 moveTime, u8 random);
 	void setSeInterPan(u8, f32, u32, u8);
 	void setSeInterFxmix(u8, f32, u32, u8);
 	void setSeInterFir(u8, u8, u32, u8);
@@ -137,7 +137,7 @@ public:
 	void setStreamInterPan(u8, f32, u32);
 	void setStreamPrepareFlag(u8);
 	void checkStreamReady();
-	void setPauseMode(u8, u8);
+	void setPauseMode(u8 mode, u8 volume);
 	void setSeqPrepareFlag(u8);
 	void checkSeqReady();
 	void getVolume(u8);

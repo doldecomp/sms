@@ -38,7 +38,7 @@ namespace Kernel {
 
 		BOOL addPortCmdOnce();
 		BOOL addPortCmdStay();
-		BOOL setPortCmd(PortCallback func, TPortArgs* args);
+		BOOL setPortCmd(PortCallback cb, TPortArgs* args);
 		BOOL addPortCmd(TPortHead* head);
 		void cancelPortCmd(TPortHead* head);
 		void cancelPortCmdStay();

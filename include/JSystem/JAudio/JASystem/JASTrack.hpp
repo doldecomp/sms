@@ -53,7 +53,7 @@ public:
 	public:
 		TOuterParam();
 		void initExtBuffer();
-		void setParam(u8, f32);
+		void setParam(u8 param, f32 value);
 		void onSwitch(u16);
 		bool checkOuterSwitch(u16);
 		s16 getIntFirFilter(u8);

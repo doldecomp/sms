@@ -780,7 +780,7 @@ void MSound::setSeExtParameter(JAISound* sound)
 		JAISoundTable* table = JAIBasic::getInfoPointerFromID(id);
 		ptr                  = (JAISoundInfo*)sound->mInfo;
 		JAIBasic::getInfoFormat(table, id);
-		f32 dVar5 = (ptr->mSwBit & 0xC00000)
+		f32 dVar5 = (ptr->mSwBit & MSSeSwBit_RandomVolumePSlopeMask)
 		                ? MSoundSESystem::MSRandVol::getRandomVolumeNormal(
 		                      ptr->mSwBit)
 		                : 1.0f;
@@ -1175,19 +1175,19 @@ bool MSound::gateCheck(u32 id)
 	return true;
 }
 
-u32 MSound::getBstSwitch(u32 param_1)
+u32 MSound::getBstSwitch(u32 sound_id)
 {
-	JAISoundInfo* info = MSGBasic->getSoundInfoFromID(param_1);
+	JAISoundInfo* info = MSGBasic->getSoundInfoFromID(sound_id);
 	if (!info)
 		return -1;
 
 	return info->mSwBit;
 }
 
-u32 MSound::getSwitch(u32 param_1, u32 param_2, u32 param3)
+u32 MSound::getSwitch(u32 sound_id, u32 mask, u32 offset)
 {
-	u32 bstSwitch = getBstSwitch(param_1);
-	return (bstSwitch & param_2) >> param3;
+	u32 bstSwitch = getBstSwitch(sound_id);
+	return (bstSwitch & mask) >> offset;
 }
 
 u32 MSound::getBstPitch(u32 param_1) { return 0; }

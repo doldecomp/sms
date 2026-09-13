@@ -64,11 +64,13 @@ void MAnmSound::startAnimSound(void* interface, u32 id,
 	}
 }
 
-void MAnmSound::setSpeedModifySound(JAISound* param_1,
-                                    JAIAnimeFrameSoundData* param_2, f32 speed)
+void MAnmSound::setSpeedModifySound(JAISound* sound,
+                                    JAIAnimeFrameSoundData* frame_data,
+                                    f32 speed)
 {
-	if (MSound::getSwitch(param_1->getID(), 0x100000, 0x14))
-		JAIAnimeSound::setSpeedModifySound(param_1, param_2, speed);
+	if (MSound::getSwitch(sound->getID(), MSSeSwBit_AnimeSpeed,
+	                      MSSeSwBit_AnimeSpeedShift))
+		JAIAnimeSound::setSpeedModifySound(sound, frame_data, speed);
 }
 
 f32 MSMarioPosVolume::getDistFromMario(const Vec& pos)
@@ -119,8 +121,8 @@ void MAnmSoundNPC::startAnimSound(void* interface, u32 sound_id,
 
 				f32 dVar10 = 1.0f;
 
-				f32 fVar11 = MSMarioPosVolume::getDistFromMario(
-				    *actor->mTranslation);
+				f32 fVar11
+				    = MSMarioPosVolume::getDistFromMario(*actor->mTranslation);
 
 				if (fVar11 != 0.0f)
 					dVar10 = MSHandle::calcVolume(

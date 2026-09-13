@@ -1190,11 +1190,11 @@ u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* track, u16 param_2)
 			         ->getSoundInfoFromID(
 			             basic->unk0->mSeqTrackInfo[i].mSound->mSoundID)
 			         ->mSwBit
-			     >> 8)
+			     >> JAISeqSwBit_OuterEnableShift)
 			        & 0xffff,
 			    param_2 & 1);
 			result = 0;
-			basic->unk0->mSeqTrackInfo[i].unk4 |= 1 << route;
+			basic->unk0->mSeqTrackInfo[i].mTrackInitFlags |= 1 << route;
 			i = JAIGlobalParameter::seqPlayTrackMax;
 		}
 		break;
@@ -1350,12 +1350,12 @@ int JAIBasic::loadArcSeqData(u32 sound_id, bool param_2)
 
 	if (puVar4 == 0) {
 		u8 unaff_r28;
-		if ((uVar6 & 0x10) != 0) {
+		if ((uVar6 & JAISeqSwBit_StayHeap) != 0) {
 			puVar4    = unk0->getFreeStayHeapPointer(uVar2, uVar1);
 			unaff_r28 = 0xff;
 		}
 
-		if ((puVar4 == nullptr) || ((uVar6 & 0x20) != 0)) {
+		if ((puVar4 == nullptr) || ((uVar6 & JAISeqSwBit_AutoHeap) != 0)) {
 			unaff_r28 = unk0->checkUsefulAutoHeapPosition();
 
 			if (unaff_r28 >= JAIGlobalParameter::autoHeapMax)

@@ -147,7 +147,7 @@ void JAIBasic::checkRequestStream()
 		return;
 	if (sound->mState != SOUNDSTATE_Started)
 		return;
-	if (unk0->mStreamUpdate->mPrepareFlag != 0)
+	if (unk0->mStreamUpdate->mPrepareFlag)
 		return;
 	sound->mState = SOUNDSTATE_Playing;
 	if (sound->mFadeCounter > 1) {

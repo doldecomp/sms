@@ -9,6 +9,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <MSound/MSound.hpp>
 
 f32 MSHandle::smACosPrm[101] = {
 	3.141592,   2.941258,   2.857799,   2.793427,   2.738877,   2.690566,
@@ -99,7 +100,7 @@ void MSHandle::setSeDistanceParameters()
 	setSePositionDopplar();
 	setSeDistanceFir(type);
 
-	if (!(getSwBit() & 0x400)) {
+	if (!(getSwBit() & JAISeSwBit_NoMapFxmix)) {
 		f32 dVar4 = interPointer->getMapInfoFxParameter(mActorGroundNumber);
 		setFxmix(dVar4, 0, 2);
 	}
@@ -107,21 +108,21 @@ void MSHandle::setSeDistanceParameters()
 	setSeDistanceDolby(type);
 }
 
-void MSHandle::setSeDistancePitch(u8 param_1)
+void MSHandle::setSeDistancePitch(u8 moveTime)
 {
 	f32 pitch = 1.0f;
-	if (getSwBit() & 0x10) {
+	if (getSwBit() & JAISeSwBit_RandomPitchDown) {
 		pitch = 1.0f
 		        - (int(JAIConst::random.get_ufloat_1() * 16.0f) & 0xF) / 192.0f;
 	}
 
-	if (getSwBit() & 0xC0)
+	if (getSwBit() & JAISeSwBit_RandomPitchWidthMask)
 		pitch += mRandom / 192.0f;
 
-	setSeInterPitch(4, pitch, param_1, 0.0f);
+	setSeInterPitch(4, pitch, moveTime, 0.0f);
 }
 
-void MSHandle::setSeDistancePan(u8 param_1)
+void MSHandle::setSeDistancePan(u8 moveTime)
 {
 	FabricatedPositionInfo* ptr = unk1C;
 
@@ -129,7 +130,7 @@ void MSHandle::setSeDistancePan(u8 param_1)
 
 	f32 d = calcPan(ptr->mCamSpacePos, thing,
 	                smSeCategory[get_thing(mSoundID)].unk4);
-	setSeInterPan(4, d, param_1, 0);
+	setSeInterPan(4, d, moveTime, 0);
 }
 
 f32 MSHandle::calcPan(const Vec& param_1, f32 param_2, f32 param_3)
@@ -165,10 +166,10 @@ f32 MSHandle::calcPan(const Vec& param_1, f32 param_2, f32 param_3)
 	return r < 0.0f ? 0.0f : r;
 }
 
-void MSHandle::setSeDistanceDolby(u8 param_1)
+void MSHandle::setSeDistanceDolby(u8 moveTime)
 {
 	f32 d = calcDolby(unk1C->mCamSpacePos, unk1C->unk18);
-	setSeInterDolby(4, d, param_1, 0);
+	setSeInterDolby(4, d, moveTime, 0);
 }
 
 f32 MSHandle::calcDolby(const Vec& pos, f32 dist)
@@ -197,34 +198,34 @@ f32 MSHandle::calcDolby(const Vec& pos, f32 dist)
 	return r < 0.0f ? 0.0f : r;
 }
 
-void MSHandle::setSeDistanceVolume(u8 param_1)
+void MSHandle::setSeDistanceVolume(u8 moveTime)
 {
-	u32 uVar2 = getSwBit();
-	if (uVar2 & 0x200000) {
+	u32 swBit = getSwBit();
+	if (swBit & MSSeSwBit_ModDistanceVolume) {
 		f32 d = JALSystem::processModDistVolume(mSoundID, unk1C->unk18);
-		setSeInterVolume(4, d, param_1, 0);
+		setSeInterVolume(4, d, moveTime, 0);
 		return;
 	}
 
-	f32 dVar4;
-	if (!(uVar2 & 0x2)) {
+	f32 volume;
+	if (!(swBit & JAISeSwBit_NoDistanceVolume)) {
 		// TODO: inline?
-		u32 tmp = getSwBit() >> 16 & 0x7;
-		dVar4 = setDistanceVolumeCommon(smSeCategory[get_thing(mSoundID)].unk4,
-		                                tmp);
+		u32 tmp = getSwBit() >> JAISeSwBit_DistanceVolumeCurveShift & 0x7;
+		volume = setDistanceVolumeCommon(smSeCategory[get_thing(mSoundID)].unk4,
+		                                 tmp);
 	} else {
-		dVar4 = 1.0f;
+		volume = 1.0f;
 	}
 
-	setSeInterVolume(4, dVar4, param_1, 0);
+	setSeInterVolume(4, volume, moveTime, 0);
 }
 
-f32 MSHandle::setDistanceVolumeCommon(f32 volume, u8 param_2)
+f32 MSHandle::setDistanceVolumeCommon(f32 volume, u8 moveTime)
 {
 	f32 fVar1         = unk1C->unk18;
 	f32 maxVolumeDist = JAIGlobalParameter::getParamMaxVolumeDistance();
 	u32 uVar1         = get_thing(mSoundID);
-	return calcVolume(fVar1, volume, maxVolumeDist, param_2, uVar1);
+	return calcVolume(fVar1, volume, maxVolumeDist, moveTime, uVar1);
 }
 
 f32 MSHandle::calcVolume(f32 param_1, f32 param_2, f32 param_3, u8 param_4,

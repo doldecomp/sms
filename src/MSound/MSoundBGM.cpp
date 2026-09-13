@@ -267,7 +267,7 @@ void MSBgm::setStageBgmYoshiPercussion(bool param)
 	if (sound == nullptr)
 		return;
 
-	if (MSGMSound->getBstSwitch(sound->getID()) & 0x10000000) {
+	if (MSGMSound->getBstSwitch(sound->getID()) & MSBgmSwBit_YoshiPercussion) {
 		JASystem::TTrack* pTVar3 = getJASTrack(sound, 15);
 
 		if (pTVar3 != nullptr)

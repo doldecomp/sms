@@ -100,9 +100,9 @@ class JAISound;
 
 // fabricated
 struct JAIStreamUpdateParameter {
-	/* 0x0 */ u8 unk0; // JAISeqUpdateData's pair here is the pause mode
-	/* 0x1 */ u8 unk1; // and the pause volume; nothing in SMS reads either
-	/* 0x2 */ u8 mPrepareFlag;
+	/* 0x0 */ u8 unk0;
+	/* 0x1 */ u8 unk1;
+	/* 0x2 */ bool mPrepareFlag;
 	/* 0x4 */ f32 mVolume;
 	/* 0x8 */ f32 mPitch;
 	/* 0xC */ f32 mPan;

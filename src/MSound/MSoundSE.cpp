@@ -51,9 +51,11 @@ u32 MSRandVol::getRandomVolume(u32 param_1, u32 param_2) { }
 
 f32 MSRandVol::getRandVol(u32 param_1)
 {
-	f32 d = JALCalc::getRandom(mAmplitudes[param_1 >> 26 & 3] * mAmplitude,
-	                           mCSlopes[param_1 >> 24 & 3],
-	                           mPSlopes[param_1 >> 22 & 3])
+	f32 d = JALCalc::getRandom(
+	            mAmplitudes[param_1 >> MSSeSwBit_RandomVolumeAmplitudeShift & 3]
+	                * mAmplitude,
+	            mCSlopes[param_1 >> MSSeSwBit_RandomVolumeCSlopeShift & 3],
+	            mPSlopes[param_1 >> MSSeSwBit_RandomVolumePSlopeShift & 3])
 	        + 1.0f;
 
 	f32 x = d < 0.0f ? 0.0f : d;
@@ -372,24 +374,25 @@ u32 MSoundSE::getRandomID(u32 id)
 
 	u32 local_a0[16];
 	for (; i < 15; ++i) {
-		u32 uVar6 = id + i;
-		u32 uVar4 = MSound::getBstSwitch(uVar6);
+		u32 soundId = id + i;
+		u32 swBit   = MSound::getBstSwitch(soundId);
 
 		u8 a = (id >> 0xb & 1) | (id >> 0x18 & 0xc0);
-		u8 b = (uVar6 >> 0xb & 1) | (uVar6 >> 0x18 & 0xc0);
+		u8 b = (soundId >> 0xb & 1) | (soundId >> 0x18 & 0xc0);
 		if (a != b)
 			break;
 
-		if (uVar4 == 0xffffffff)
+		if (swBit == 0xffffffff)
 			break;
 
-		if (i != 0 && ((uVar4 & 0x80000000) != 0))
+		if (i != 0 && ((swBit & MSSeSwBit_RandomID) != 0))
 			break;
 
-		if ((uVar4 & 0x70000000) == 0)
+		if ((swBit & MSSeSwBit_RandomIDWeightMask) == 0)
 			break;
 
-		local_a0[i] = (uVar4 & 0x70000000) >> 0x1c;
+		local_a0[i] = (swBit & MSSeSwBit_RandomIDWeightMask)
+		              >> MSSeSwBit_RandomIDWeightShift;
 	}
 
 	if (i <= 1)
@@ -641,7 +644,7 @@ JAISound* MSoundSE::startSoundActorInner(u32 id, JAISoundHandle* out_handle,
 			break;
 		}
 
-		if (uVar2 & 0x800) {
+		if (uVar2 & JAISeSwBit_GroundVariant) {
 			u32 uVar3 = actor->mGroundNumber & 0x10000000;
 			if (uVar3) {
 				switch (id) {
@@ -679,7 +682,7 @@ JAISound* MSoundSE::startSoundActorInner(u32 id, JAISoundHandle* out_handle,
 		}
 	}
 
-	if (uVar2 & 0x80000000)
+	if (uVar2 & MSSeSwBit_RandomID)
 		id = getRandomID(id);
 
 	if (MSGMSound->unkCD == 8 && id >= MSD_SE_MA_WALK_METALNET_LH1
@@ -788,7 +791,7 @@ bool MSoundSE::checkMonoSound(u32 id, JAIActor* actor)
 {
 	JAISoundInfo* local_c;
 	JAIBasic::getInterface()->unk0->getInfoPointer(id, (void**)&local_c);
-	if (local_c->mSwBit & 0x4000) {
+	if (local_c->mSwBit & JAISeSwBit_Mono) {
 		JAISound* sound
 		    = JAIBasic::getInterface()
 		          ->unk0
@@ -801,7 +804,7 @@ bool MSoundSE::checkMonoSound(u32 id, JAIActor* actor)
 			JAISoundInfo* tmp = (JAISoundInfo*)sound->mInfo;
 			const void* act   = sound->getAct();
 
-			if (act == actor->mIdentity && (tmp->mSwBit & 0x4000)
+			if (act == actor->mIdentity && (tmp->mSwBit & JAISeSwBit_Mono)
 			    && id != sound->getID()) {
 				JAIBasic::getInterface()->stopSoundHandle(sound, 0);
 				break;
