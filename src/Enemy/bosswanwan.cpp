@@ -21,7 +21,38 @@
 #include <System/Particles.hpp>
 #include <JSystem/JGeometry/JGUtil.hpp>
 
+/*
+Need to setup global position like:
+
+- BW_BATH_POS: Target coordinates for the hot spring/bath (Vec / TVec3<float>).
+- BW_PICKET_START: Starting position for the leash chain stake (Vec /
+    TVec3<float>).
+- BW_HEAD_START: Starting spawn coordinates for the chain chomp head (Vec /
+    TVec3<float>).
+*/
+// Maybe they are just declared here, but filled on runtime
+JGeometry::TVec3<f32> BW_BATH_POS     = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
+JGeometry::TVec3<f32> BW_PICKET_START = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
+JGeometry::TVec3<f32> BW_HEAD_START   = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
+
 void TBossWanwan::kill() { return; }
+
+void TBossWanwan::calcRootMatrix()
+{
+	getModel()->setBaseScale(mScaling);
+
+	f32 x = this->mPosition.x;
+	f32 y = this->mPosition.y + 500.0f;
+	f32 z = this->mPosition.z;
+
+	f32 rotX = this->mRotation.x;
+	f32 rotY = this->mRotation.y;
+	f32 rotZ = this->mRotation.z;
+
+	J3DModel* model = getModel();
+
+	MsMtxSetXYZRPH(model->getBaseTRMtx(), x, y, z, rotX, rotY, rotZ);
+}
 
 BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 {
