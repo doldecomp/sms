@@ -41,17 +41,9 @@ void TBossWanwan::calcRootMatrix()
 {
 	getModel()->setBaseScale(mScaling);
 
-	f32 x = this->mPosition.x;
-	f32 y = this->mPosition.y + 500.0f;
-	f32 z = this->mPosition.z;
-
-	f32 rotX = this->mRotation.x;
-	f32 rotY = this->mRotation.y;
-	f32 rotZ = this->mRotation.z;
-
-	J3DModel* model = getModel();
-
-	MsMtxSetXYZRPH(model->getBaseTRMtx(), x, y, z, rotX, rotY, rotZ);
+	MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x,
+	               mPosition.y + 500.0f, mPosition.z, mRotation.x, mRotation.y,
+	               mRotation.z);
 }
 
 BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
