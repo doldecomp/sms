@@ -7,6 +7,7 @@
 #include <Strategic/Binder.hpp>
 #include <Enemy/EnemyManager.hpp>
 #include <Enemy/Enemy.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 
 class TLiveActor;
 class TBossWanwan;
@@ -18,6 +19,8 @@ public:
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	void getTakingMtx();
+	void moveRequest(const JGeometry::TVec3<float>&);
 
 private:
 	TBossWanwan* mOwner;
@@ -38,7 +41,7 @@ public:
 
 class TBWLeash : public THitActor {
 public:
-	TBWLeash(int, const char*);
+	TBWLeash(TBossWanwan*, int, const char*);
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
@@ -89,10 +92,16 @@ public:
 
 	virtual void kill();
 	virtual void init(TLiveManager*);
-	BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void shakeCamera(int shakeType);
+	BOOL receiveMessage(THitActor* sender, u32 message);
+	void calcRootMatrix();
+	void slideToCurPathNode(float, float);
+	void control();
+	void emitEffects();
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 
 private:
+	/* 0x24 */
 	/* 0x1A0 */ BOOL unk0;
 	/* 0x1A8 */ u32 mWaterHitCount;
 	/* 0x1AC */ u32 mDistToMarioSquared;
@@ -100,12 +109,21 @@ private:
 	/* 0x18C */ u8 msInvincible;
 };
 
+class TBossWanwanMtxCalc : public J3DMtxCalcSoftimageAnm {
+public:
+	TBossWanwanMtxCalc(TBossWanwan*);
+
+	virtual void calc(u16);
+
+public:
+	TBossWanwan mOwner;
+};
+
 class TBossWanwanManager : public TEnemyManager {
 public:
 	TBossWanwanManager(const char* name = "ボスワンワンマネージャ");
 
 	virtual void load(JSUMemoryInputStream&);
-
 	TSpineEnemy* createEnemyInstance();
 	void createModelData();
 };
