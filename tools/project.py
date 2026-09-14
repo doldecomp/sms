@@ -694,12 +694,12 @@ def generate_build_ninja(
 
     if os.name != "nt":
         transform_dep = config.tools_dir / "transform_dep.py"
-        mwcc_cmd += f" && $python {transform_dep} $basefile.d $basefile.d"
-        mwcc_sjis_cmd += f" && $python {transform_dep} $basefile.d $basefile.d"
-        mwcc_pch_cmd += f" && $python {transform_dep} $basefile.d $basefile.d"
-        mwcc_pch_sjis_cmd += f" && $python {transform_dep} $basefile.d $basefile.d"
-        mwcc_extab_cmd += f" && $python {transform_dep} $basefile.d $basefile.d"
-        mwcc_sjis_extab_cmd += f" && $python {transform_dep} $basefile.d $basefile.d"
+        mwcc_cmd += f' && $python "{transform_dep}" "$basefile.d" "$basefile.d"'
+        mwcc_sjis_cmd += f' && $python "{transform_dep}" "$basefile.d" "$basefile.d"'
+        mwcc_pch_cmd += f' && $python "{transform_dep}" "$basefile.d" "$basefile.d"'
+        mwcc_pch_sjis_cmd += f' && $python "{transform_dep}" "$basefile.d" "$basefile.d"'
+        mwcc_extab_cmd += f' && $python "{transform_dep}" "$basefile.d" "$basefile.d"'
+        mwcc_sjis_extab_cmd += f' && $python "{transform_dep}" "$basefile.d" "$basefile.d"'
         mwcc_implicit.append(transform_dep)
         mwcc_sjis_implicit.append(transform_dep)
         mwcc_pch_implicit.append(transform_dep)
