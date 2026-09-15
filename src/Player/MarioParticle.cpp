@@ -177,9 +177,10 @@ void TMario::rippleEffect()
 		SMS_EmitRipplePool(unk220, this);
 	} else {
 		SMS_EmitRippleSea(unk220, this);
-		if ((checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
-		    && mForwardVel > mParticleParams.mWaveEmitSpeed.get()) {
-			mWaterWakeAlpha = 0xFF;
+		if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING)) {
+			f32 waveEmitSpeed = mParticleParams.mWaveEmitSpeed.get();
+			if (mForwardVel > waveEmitSpeed)
+				mWaterWakeAlpha = 0xFF;
 		}
 	}
 }
