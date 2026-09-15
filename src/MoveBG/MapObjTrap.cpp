@@ -28,9 +28,9 @@ TLampTrapSpikeHit::TLampTrapSpikeHit(TLampTrapSpike* trap, const char* name)
     , unk68(trap)
 {
 	initHitActor(0x4000001E, 3, -0x80000000, 500.0f, 300.0f, 500.0f, 300.0f);
-	JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ")
-	    ->getChildren()
-	    .push_back(this);
+	TIdxGroupObj* group
+	    = JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ");
+	group->getChildren().push_back(this);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
@@ -203,9 +203,9 @@ TLampTrapIronHit::TLampTrapIronHit(TLampTrapIron* trap, const char* name)
     , unk68(trap)
 {
 	initHitActor(0x4000001D, 3, -0x80000000, 500.0f, 300.0f, 500.0f, 300.0f);
-	JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ")
-	    ->getChildren()
-	    .push_back(this);
+	TIdxGroupObj* group
+	    = JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ");
+	group->getChildren().push_back(this);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
