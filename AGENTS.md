@@ -88,9 +88,10 @@ docs/                 — documentation on reverse-engineering methodology
 Upstream forbids autonomous work on the MSL runtime, MetroTRK, THPPlayer, the Dolphin SDK and JSystem middleware.
 **That prohibition is lifted here.**
 All libraries are in scope: decompiling them, linking already-matching objects from source, and fixing their build configuration.
-The 298 library objects that already match byte-for-byte (code **and** data) but are not source-linked are a standing, high-value target: linking them takes source-linked code from 2.57% to about 17.64%.
-Three further library objects match in code but not data.
-Verify these counts from `build/GMSE01/report.json` rather than trusting this line; the earlier figure of 308 was wrong.
+The **308** library objects that already match byte-for-byte (code **and** data) but are not source-linked are a standing, high-value target: linking them takes source-linked code from 2.57% to about 17.64%.
+298 of them carry code; the other 10 are data-only TUs such as `errno.c` and `JUTVideo.cpp`, which still need linking even though they contribute no code bytes.
+Beware when recounting: a zero-code unit reports `complete_code_percent` of 100 vacuously, so filtering on that field undercounts by exactly those 10.
+Filter on membership in `config/GMSE01/objects.json` instead.
 
 One rule survives the lift, and it is not negotiable:
 

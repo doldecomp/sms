@@ -210,9 +210,9 @@ Continue larger unfinished game units (HUD, save/load screens, event scripting, 
 
 ### Pending human decision: library objects
 
-After the batch 35 regional metadata correction, 298 JSystem and Dolphin SDK objects (542,892 code bytes) report complete code/data matches but are not linked from source.
-A further three objects match in code but not data.
-The object count was previously recorded as 308, which recounting from `report.json` does not support; the byte figure is unchanged.
+After the batch 35 regional metadata correction, 308 JSystem, MSL and Dolphin SDK objects (542,892 code bytes) report complete code/data matches but are not linked from source.
+298 carry code; 10 are data-only TUs.
+Count them by absence from `config/GMSE01/objects.json`, not by `complete_code_percent`, which a zero-code unit reports as 100 vacuously.
 Subject to the required map and relink checks, linking them would raise complete code from 2.57% to about 17.64%, and a fully source-built game ultimately requires them.
 As of 2026-09-15 these libraries are in scope without further approval; the required map and relink checks still apply to each promotion.
 The three matching `THPPlayer` objects fall under the same restriction.
