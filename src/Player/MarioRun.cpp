@@ -258,8 +258,14 @@ void TMario::getSlopeSlideAccele(f32* arg0, f32* arg1)
 		}
 		return;
 	}
-	*arg0 = mSlipParamsNormal.mSlideAcceleUp.get();
-	*arg1 = mSlipParamsNormal.mSlideAcceleDown.get();
+	{
+		f32 up = mSlipParamsNormal.mSlideAcceleUp.get();
+		*arg0  = up;
+	}
+	{
+		f32 down = mSlipParamsNormal.mSlideAcceleDown.get();
+		*arg1    = down;
+	}
 }
 
 f32 TMario::getChangeAngleSpeed()
