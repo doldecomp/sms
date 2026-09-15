@@ -1,10 +1,10 @@
 {
   "region": "GMSE01",
-  "checkpoint": "batch30",
+  "checkpoint": "batch31",
   "notes": [
     "Report-based candidates only; source-link promotion also requires instruction, data, emission, map and executable verification.",
     "Priorities follow DECOMPILATION_PLAN.md. Game objects only; protected THPPlayer objects are excluded even though report metadata classifies them as game.",
-    "Consult the batch 25 through batch 30 closure audits before revisiting stalled candidates."
+    "Consult the batch 25 through batch 31 closure audits before revisiting stalled candidates."
   ],
   "all_code_matching": [
     {
@@ -122,6 +122,20 @@
           "name": "makeMtxForPrevTalk__15CPolarSubCameraFv",
           "size": 152,
           "similarity": 99.81579
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/MapCollisionEntry",
+      "source": "src/Map/MapCollisionEntry.cpp",
+      "code_bytes": 2656,
+      "unmatched_code_bytes": 168,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "init__17TMapCollisionMoveFUlUssPC10TLiveActor",
+          "size": 168,
+          "similarity": 99.7381
         }
       ]
     },
@@ -754,6 +768,20 @@
           "name": "makeMtxForPrevTalk__15CPolarSubCameraFv",
           "size": 152,
           "similarity": 99.81579
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/MapCollisionEntry",
+      "source": "src/Map/MapCollisionEntry.cpp",
+      "code_bytes": 2656,
+      "unmatched_code_bytes": 168,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "init__17TMapCollisionMoveFUlUssPC10TLiveActor",
+          "size": 168,
+          "similarity": 99.7381
         }
       ]
     },
@@ -1429,35 +1457,6 @@
           "name": "checkRumbleOff__12TMovieRumbleFv",
           "size": 268,
           "similarity": 97.44776
-        }
-      ]
-    },
-    {
-      "unit": "mario/Map/MapCollisionEntry",
-      "source": "src/Map/MapCollisionEntry.cpp",
-      "code_bytes": 2656,
-      "unmatched_code_bytes": 776,
-      "unmatched_data_bytes": 0,
-      "nonmatching_functions": [
-        {
-          "name": "moveSRT__17TMapCollisionMoveFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
-          "size": 236,
-          "similarity": 99.932205
-        },
-        {
-          "name": "move__17TMapCollisionMoveFv",
-          "size": 164,
-          "similarity": 99.92683
-        },
-        {
-          "name": "init__17TMapCollisionMoveFUlUssPC10TLiveActor",
-          "size": 168,
-          "similarity": 99.7381
-        },
-        {
-          "name": "setUp__17TMapCollisionWarpFv",
-          "size": 208,
-          "similarity": 99.82692
         }
       ]
     },
@@ -2853,5 +2852,5 @@
     "mario/THPPlayer/THPVideoDecode"
   ],
   "near_count": 104,
-  "near_unmatched_code_bytes": 95388
+  "near_unmatched_code_bytes": 94780
 }

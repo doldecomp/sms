@@ -8,7 +8,24 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 30 — small-file closure audit
+## Latest checkpoint: batch 31 — MapCollisionEntry close to completion
+
+Matched **three MapCollisionEntry functions / 608 code bytes** and restored its missing 116-byte UNUSED base constructor definition.
+The file now passes every map check and has one nonmatching runtime function: its 168-byte initializer retains an eight-byte stack-frame difference.
+**No new file was linked from source.**
+
+| Coverage | Matched code | Source-linked code |
+| --- | ---: | ---: |
+| Game code | **24.86575%** | **2.8374174%** |
+| Aggregate | **38.48049%** | **2.24211%** |
+
+Source linking remains **76 game files / 80,800 code bytes**.
+Baseline at `915877d3`; full build, changes_all, all 12,904 function checks, DOL byte comparison and expected SHA-1 pass.
+Zero regressions across all header consumers; no gameplay test.
+The regenerated small-file queue contains 104 authorized game files / 94,780 unmatched bytes.
+See the [batch 31 audit](docs/progress/GMSE01-closure-audit-batch31.md) and [measurements](docs/progress/GMSE01-batch31.json) for retained changes, rejected trials and next files.
+
+## Verified checkpoint: batch 30 — small-file closure audit
 
 Reread the plan and continued its file-completion queue.
 MessageLoader's parser now has the original instruction sequence and registers, improving from 99.64336% to 99.94405%; stack offsets and its constructor still differ.

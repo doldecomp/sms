@@ -789,6 +789,9 @@ A full executable match also does not validate bodies in objects that are still 
 - AnimalManager's recovered loadSaveParams_ matches its 128-byte UNUSED map size and preserves the exact runtime load.
   Named near-plane input and existing camera/object accessors restore clipping instructions/registers; a four-byte vector-slot difference remains.
 - Read the [batch 29 audit](progress/GMSE01-closure-audit-batch29.md) before repeating frame, stream, counter or accessor trials.
+  All four edited files pass map checks; all 12,904 function comparisons have zero regressions.
+  Full DOL byte comparison and SHA-1 pass; no gameplay test.
+  Game code is 24.844398% matched / 2.8374174% source-linked; aggregate 38.463623% / 2.24211%.
 
 ## Small-file closure audit, batch 30
 
@@ -807,6 +810,20 @@ A full executable match also does not validate bodies in objects that are still 
   UNUSED readCurInfo/movement sizes still differ; no changes retained.
 - Read the [batch 30 audit](progress/GMSE01-closure-audit-batch30.md) before revisiting these files.
   No new file completed; continue the plan's ordered completion queue.
-  All four edited files pass map checks; all 12,904 function comparisons have zero regressions.
-  Full DOL byte comparison and SHA-1 pass; no gameplay test.
-  Game code is 24.844398% matched / 2.8374174% source-linked; aggregate 38.463623% / 2.24211%.
+
+## MapCollisionEntry shared predicate and constructor, batch 31
+
+- Move the existing TMapCollisionBase constructor from the header to its map-ordered source location after base init.
+  This emits the missing 116-byte UNUSED body while preserving all three exact derived constructors.
+- Name the translation-only flag in move and warp setUp.
+  move and its inlined moveSRT caller both become exact, with their original frame/vector slots.
+  Warp also needs its vector declared before the predicate and initialized with set; all 208 bytes then match.
+  This is one shared pattern verified in three functions, not a universal rule to name every predicate.
+- The 168-byte move initializer still differs only by an eight-byte frame gap.
+  An instance accessor, named count and u32 loop index do not fix it; a manager local reverses load order.
+  No source-link promotion until that last function also matches.
+- MSModBgm's repeated zero-load mismatch does not resolve through bool/u8, integer-zero, assignment-order or early-return trials.
+  Its getTiming body lacks evidence for the non-null optional output behavior; retain the map-size warning.
+- PollutionManager retains register/frame differences and two four-byte UNUSED stubs; no edits.
+- See the [batch 31 audit](progress/GMSE01-closure-audit-batch31.md) for exact sizes and rejected trials.
+  Full build, all 12,904 function checks, map, DOL byte comparison and SHA-1 pass with zero regressions.
