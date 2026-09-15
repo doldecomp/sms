@@ -21,15 +21,25 @@ TAnimalManagerBase::TAnimalManagerBase(const char* name)
 	mAnimalSave     = nullptr;
 }
 
+void TAnimalManagerBase::loadSaveParams_(const char* path)
+{
+	mAnimalSave     = new TAnimalSaveIndividual(path);
+	mViewClipNear   = mAnimalSave->mSLViewClipNear.get();
+	mViewClipFarPtr = &mAnimalSave->mSLViewClipFar.get();
+	unk3C           = mAnimalSave->mSLViewClipRadius.get();
+}
+
 void TAnimalManagerBase::clipEnemies(JDrama::TGraphics* graphics)
 {
-	SetViewFrustumClipCheckPerspective(gpCamera->mFovy, gpCamera->getAspect(),
-	                                   mViewClipNear, *mViewClipFarPtr);
+	f32 nearClip = mViewClipNear;
+	SetViewFrustumClipCheckPerspective(gpCamera->getFovy(), gpCamera->getAspect(),
+	                                   nearClip, *mViewClipFarPtr);
 
-	s32 count = mObjNum;
+	int count = getObjNum();
 	for (int i = 0; i < count; ++i) {
-		TLiveActor* actor         = (TLiveActor*)unk18[i];
-		JGeometry::TVec3<f32> pos = actor->mPosition;
+		JGeometry::TVec3<f32> pos;
+		TSpineEnemy* actor = getObj(i);
+		pos = actor->mPosition;
 		pos.y += 75.0f;
 
 		if (actor->checkLiveFlag(LIVE_FLAG_UNK2000)
@@ -47,10 +57,7 @@ void TAnimalManagerBase::clipEnemies(JDrama::TGraphics* graphics)
 void TMewManager::load(JSUMemoryInputStream& stream)
 {
 	TAnimalManagerBase::load(stream);
-	mAnimalSave     = new TAnimalSaveIndividual("/Animal/mew.prm");
-	mViewClipNear   = mAnimalSave->mSLViewClipNear.get();
-	mViewClipFarPtr = &mAnimalSave->mSLViewClipFar.get();
-	unk3C           = mAnimalSave->mSLViewClipRadius.get();
+	loadSaveParams_("/Animal/mew.prm");
 }
 
 void TMewManager::loadAfter()

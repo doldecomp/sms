@@ -6,7 +6,7 @@
 - Local branch: `local/decomp-progress`.
 - Upstream: `https://github.com/doldecomp/sms`, commit `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 - The user has authorized implementation and ongoing progress checks for the local North American ISO.
-- Local changes have added 20,108 exactly matching code bytes and 118 matching functions/helpers across twenty-eight batches; 75 verified game objects are linked from source.
+- Local changes have added 21,024 exactly matching code bytes and 122 matching functions/helpers across twenty-nine batches; 76 verified game objects are linked from source.
 - Consult `docs/MATCHING_CATALOG.md` before related edits; inventory shared callers, batch evidence-supported fixes, and record exceptions and validation results.
 - Current checkpoint and remaining limitations are documented in `PROGRESS.md`.
 - The active configuration is now `GMSE01`; an all-extracted-object rebuild has matched the complete input executable.
@@ -146,15 +146,16 @@ Each promotion still requires the full executable SHA-1 and byte comparison.
    - `System/TargetArrow` (320 data bytes differ).
 2. Game objects with a single nonmatching function, smallest remaining size first, for example:
    `Player/MarioAccess` (72 bytes left), `Enemy/egggen` (120), `Strategic/HitActor` (124), `MSound/MSoundBGM` (136), `Camera/CameraMode` (144, plus data), `MoveBG/MapObjPollution` (172), `Enemy/DebuTelesa` (176, plus data), `MoveBG/MapObjAirport` (208), `NPC/NpcInbetween` (220), `System/SnapTimeObj` (228), `Strategic/livemanager` (252), `Enemy/enemytable` (276), `Map/MapEventSirena` (280), `MoveBG/MapObjFloat` (288), `M3DUtil/M3UModel` (292), `Map/MapCollisionPlane` (308).
-3. More broadly, 105 unlinked game objects have 2,000 or fewer unmatched code bytes, totalling 96,304 bytes.
+3. More broadly, 104 unlinked game objects have 2,000 or fewer unmatched code bytes, totalling 95,388 bytes.
    Regenerate this list from `report.json` at each checkpoint rather than trusting these numbers.
-   Batch 28 regeneration is saved in `docs/progress/GMSE01-completion-queue.json`: 105 authorized game files with 1..2,000 unmatched bytes, totaling 96,304 unmatched code bytes.
+   Batch 29 regeneration is saved in `docs/progress/GMSE01-completion-queue.json`: 104 authorized game files with 1..2,000 unmatched bytes, totaling 95,388 unmatched code bytes.
    This excludes THPPlayer despite the report classifying it as game code.
-   Consult the batch 25 through batch 28 closure audits in `docs/progress/` before retrying stalled candidates; they record map gaps, shared issues, and rejected trials.
+   Consult the batch 25 through batch 29 closure audits in `docs/progress/` before retrying stalled candidates; they record map gaps, shared issues, and rejected trials.
    `Map/PollutionObj` completed and source-linked in batch 27: 75 game objects / 79,528 code bytes.
-   Game coverage is 24.812231% matched / 2.7927492% source-linked; aggregate coverage is 38.438206% / 2.2068136%.
-   Batch 28 restores US selector data and Shimmer definitions but promotes no file.
-   Next unaudited single-function candidates include `MarDirectorPreEntry`; revisit earlier deferrals when new evidence addresses their recorded blockers.
+   `GC2D/HelpActor` completed and source-linked in batch 29: 76 game objects / 80,800 code bytes.
+   Game coverage is 24.844398% matched / 2.8374174% source-linked; aggregate coverage is 38.463623% / 2.24211%.
+   Batch 29 also restores an AnimalManager helper and matches CameraTalk/Strategy functions; those files retain recorded blockers.
+   Next unaudited small multi-function candidates include `MapXlu`, `PollutionPos`, `PerformList`, and `BossHanachanNerve`; revisit earlier deferrals when new evidence addresses their recorded blockers.
 
 If an object stalls on a hard function, record the evidence and move to the next object instead of forcing a fakematch.
 

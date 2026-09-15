@@ -10,6 +10,7 @@ public:
 	TAnimalManagerBase(const char* name);
 
 	virtual void clipEnemies(JDrama::TGraphics*);
+	void loadSaveParams_(const char*);
 
 public:
 	/* 0x54 */ f32 mViewClipNear;

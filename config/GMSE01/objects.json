@@ -73,5 +73,6 @@
   "Enemy/BossHanachanSound.cpp",
   "Enemy/BossHanachanSave.cpp",
   "GC2D/MessageUtil.cpp",
-  "Map/PollutionObj.cpp"
+  "Map/PollutionObj.cpp",
+  "GC2D/HelpActor.cpp"
 ]

@@ -14,7 +14,7 @@ TStrategy::TStrategy(const char* name)
     : JDrama::TViewObj(name)
     , unk50(0)
 {
-	for (int i = 0; i < ARRAY_COUNT(unk10); ++i)
+	for (s32 i = 0; i < 16; ++i)
 		unk10[i] = nullptr;
 }
 

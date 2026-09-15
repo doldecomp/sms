@@ -8,7 +8,26 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 28 — US selector data and Shimmer definitions
+## Latest checkpoint: batch 29 — HelpActor file completion
+
+Completed and source-linked **GC2D/HelpActor.cpp**, adding **1,272 source-linked code bytes**.
+The US help ID offset and named console locals restore its final two functions.
+Also recovered AnimalManager's missing 128-byte UNUSED helper and matched CameraTalk's talk setup and Strategy's constructor.
+These three files retain other differences and remain unlinked.
+
+| Coverage | Matched code | Source-linked code |
+| --- | ---: | ---: |
+| Game code | **24.844398%** | **2.8374174%** |
+| Aggregate | **38.463623%** | **2.24211%** |
+
+Source linking is now **76 game files / 80,800 code bytes**.
+Baseline at `ad9a47f2`; full build, changes_all, all 12,904 function checks, DOL byte comparison and expected SHA-1 pass.
+Zero regressions; four newly exact runtime functions / 916 code bytes.
+All four changed source files pass map checks; no gameplay test was performed.
+The refreshed small-file completion queue contains 104 authorized game files / 95,388 unmatched bytes.
+See the [batch 29 audit](docs/progress/GMSE01-closure-audit-batch29.md) and [measurements](docs/progress/GMSE01-batch29.json) before related trials.
+
+## Verified checkpoint: batch 28 — US selector data and Shimmer definitions
 
 Restored ProgSelect's five original US English strings and text dimensions: **312 newly matched data bytes**, with all 328 unit data bytes now exact.
 Removed its pre-existing padding array; the remaining draw-function differences are stack offsets.

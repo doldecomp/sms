@@ -1,0 +1,115 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "ad9a47f2",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.550545,
+    "total_code": "3603748",
+    "matched_code": "1386132",
+    "matched_code_percent": 38.463623,
+    "total_data": "641075",
+    "matched_data": "303847",
+    "matched_data_percent": 47.39648,
+    "total_functions": 12904,
+    "matched_functions": 8227,
+    "matched_functions_percent": 63.755424,
+    "complete_code": "80800",
+    "complete_code_percent": 2.24211,
+    "complete_data": "51636",
+    "complete_data_percent": 8.054595,
+    "total_units": 732,
+    "complete_units": 76
+  },
+  "game_measures": {
+    "fuzzy_match_percent": 69.40067,
+    "total_code": "2847660",
+    "matched_code": "707484",
+    "matched_code_percent": 24.844398,
+    "total_data": "558300",
+    "matched_data": "241872",
+    "matched_data_percent": 43.322945,
+    "total_functions": 9012,
+    "matched_functions": 4430,
+    "matched_functions_percent": 49.15668,
+    "complete_code": "80800",
+    "complete_code_percent": 2.8374174,
+    "complete_data": "51636",
+    "complete_data_percent": 9.248791,
+    "total_units": 385,
+    "complete_units": 76
+  },
+  "source_linked_objects": 76,
+  "new_source_linked_objects": [
+    "GC2D/HelpActor.cpp"
+  ],
+  "new_source_linked_code_bytes": 1272,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "unexplained_function_regressions": [],
+  "new_exact_functions": 4,
+  "new_exact_code_bytes": 916,
+  "new_matched_data_bytes": 0,
+  "improvements": [
+    {
+      "unit": "mario/Animal/AnimalManager",
+      "function": "clipEnemies__18TAnimalManagerBaseFPQ26JDrama9TGraphics",
+      "before": 94.984375,
+      "after": 99.90625,
+      "size": 256
+    },
+    {
+      "unit": "mario/Camera/CameraTalk",
+      "function": "makeMtxForTalk__15CPolarSubCameraFPC8TBaseNPC",
+      "before": 99.83929,
+      "after": 100.0,
+      "size": 224
+    },
+    {
+      "unit": "mario/GC2D/HelpActor",
+      "function": "load__10THelpActorFR20JSUMemoryInputStream",
+      "before": 97.53658,
+      "after": 100.0,
+      "size": 164
+    },
+    {
+      "unit": "mario/GC2D/HelpActor",
+      "function": "perform__10THelpActorFUlPQ26JDrama9TGraphics",
+      "before": 99.941864,
+      "after": 100.0,
+      "size": 344
+    },
+    {
+      "unit": "mario/Strategic/Strategy",
+      "function": "__ct__9TStrategyFPCc",
+      "before": 87.608696,
+      "after": 100.0,
+      "size": 184
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "all_functions_present": true,
+    "no_exact_function_regressions": true,
+    "symbol_map_animal_manager": true,
+    "symbol_map_camera_talk": true,
+    "symbol_map_strategy": true,
+    "symbol_map_help_actor": true,
+    "gameplay_test": false
+  },
+  "notes": [
+    "HelpActor now links entirely from source: original US help ID offset and named console locals restore its last two functions.",
+    "AnimalManager helper recovered with exact UNUSED size; clipping retains only a four-byte vector slot difference.",
+    "CameraTalk makeMtxForTalk and Strategy constructor now match exactly; their remaining functions keep the files nonmatching."
+  ],
+  "recovered_unused_functions": [
+    {
+      "unit": "mario/Animal/AnimalManager",
+      "function": "loadSaveParams___18TAnimalManagerBaseFPCc",
+      "map_size": 128,
+      "compiled_size": 128
+    }
+  ]
+}

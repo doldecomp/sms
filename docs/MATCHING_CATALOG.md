@@ -773,3 +773,22 @@ A full executable match also does not validate bodies in objects that are still 
   Its frame gap remains unresolved; no file promotion.
 - Read [batch 28 audit](progress/GMSE01-closure-audit-batch28.md) before repeating CameraWarp, area-cylinder, Butterfly or multiplayer-camera frame trials.
   Both edited files pass map checks; executable byte comparison and SHA-1 pass.
+
+## HelpActor file completion and small-file audit, batch 29
+
+- HelpActor's US help ID base is `0x33`; `0xE0030` is retained only outside GMSE01.
+  The old literal has no other GC2D/System occurrence.
+- Both help-balloon branches need a named console result after `SMSGetMarDirector()->getConsole()`.
+  This reuses the EventWatcher finding and restores the original frame in both sites without padding.
+  Full code/data/map and executable comparisons pass; all 1,272 file code bytes now link from source.
+- Strategy's constructor uses an s32 counter and signed constant bound for the initial branch before sixteen unrolled stores.
+  An int counter with the same bound still drops the branch; other array loops require their own original/current comparison.
+  ObjHitCheck's constructor already matches and is an explicit exception.
+- CameraTalk's existing Mario-angle accessor restores its 224-byte talk setup.
+  The previous-talk function's frame remains unresolved; changing the shared mode helper did not help and was reverted.
+- AnimalManager's recovered loadSaveParams_ matches its 128-byte UNUSED map size and preserves the exact runtime load.
+  Named near-plane input and existing camera/object accessors restore clipping instructions/registers; a four-byte vector-slot difference remains.
+- Read the [batch 29 audit](progress/GMSE01-closure-audit-batch29.md) before repeating frame, stream, counter or accessor trials.
+  All four edited files pass map checks; all 12,904 function comparisons have zero regressions.
+  Full DOL byte comparison and SHA-1 pass; no gameplay test.
+  Game code is 24.844398% matched / 2.8374174% source-linked; aggregate 38.463623% / 2.24211%.

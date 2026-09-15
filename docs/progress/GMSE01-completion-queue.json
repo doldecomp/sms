@@ -1,10 +1,10 @@
 {
   "region": "GMSE01",
-  "checkpoint": "batch28",
+  "checkpoint": "batch29",
   "notes": [
     "Report-based candidates only; source-link promotion also requires instruction, data, emission, map and executable verification.",
     "Priorities follow DECOMPILATION_PLAN.md. Game objects only; protected THPPlayer objects are excluded even though report metadata classifies them as game.",
-    "Consult the batch 25 through batch 28 closure audits before revisiting stalled candidates."
+    "Consult the batch 25 through batch 29 closure audits before revisiting stalled candidates."
   ],
   "all_code_matching": [
     {
@@ -108,6 +108,20 @@
           "name": "isNormalCameraCompletely__15CPolarSubCameraCFv",
           "size": 144,
           "similarity": 72.861115
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraTalk",
+      "source": "src/Camera/CameraTalk.cpp",
+      "code_bytes": 448,
+      "unmatched_code_bytes": 152,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "makeMtxForPrevTalk__15CPolarSubCameraFv",
+          "size": 152,
+          "similarity": 99.81579
         }
       ]
     },
@@ -220,6 +234,20 @@
           "name": "watch__19TMapEventSirenaSinkFv",
           "size": 280,
           "similarity": 99.87143
+        }
+      ]
+    },
+    {
+      "unit": "mario/Strategic/Strategy",
+      "source": "src/Strategic/Strategy.cpp",
+      "code_bytes": 1600,
+      "unmatched_code_bytes": 280,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "load__9TStrategyFR20JSUMemoryInputStream",
+          "size": 280,
+          "similarity": 99.92857
         }
       ]
     },
@@ -716,6 +744,20 @@
       ]
     },
     {
+      "unit": "mario/Camera/CameraTalk",
+      "source": "src/Camera/CameraTalk.cpp",
+      "code_bytes": 448,
+      "unmatched_code_bytes": 152,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "makeMtxForPrevTalk__15CPolarSubCameraFv",
+          "size": 152,
+          "similarity": 99.81579
+        }
+      ]
+    },
+    {
       "unit": "mario/MoveBG/MapObjPollution",
       "source": "src/MoveBG/MapObjPollution.cpp",
       "code_bytes": 2128,
@@ -847,6 +889,20 @@
       ]
     },
     {
+      "unit": "mario/Strategic/Strategy",
+      "source": "src/Strategic/Strategy.cpp",
+      "code_bytes": 1600,
+      "unmatched_code_bytes": 280,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "load__9TStrategyFR20JSUMemoryInputStream",
+          "size": 280,
+          "similarity": 99.92857
+        }
+      ]
+    },
+    {
       "unit": "mario/MoveBG/MapObjFloat",
       "source": "src/MoveBG/MapObjFloat.cpp",
       "code_bytes": 1680,
@@ -898,7 +954,7 @@
         {
           "name": "clipEnemies__18TAnimalManagerBaseFPQ26JDrama9TGraphics",
           "size": 256,
-          "similarity": 94.984375
+          "similarity": 99.90625
         },
         {
           "name": "loadAfter__11TMewManagerFv",
@@ -946,25 +1002,6 @@
           "name": "controlByCameraCode___15CPolarSubCameraFPi",
           "size": 360,
           "similarity": 99.87778
-        }
-      ]
-    },
-    {
-      "unit": "mario/Camera/CameraTalk",
-      "source": "src/Camera/CameraTalk.cpp",
-      "code_bytes": 448,
-      "unmatched_code_bytes": 376,
-      "unmatched_data_bytes": 0,
-      "nonmatching_functions": [
-        {
-          "name": "makeMtxForTalk__15CPolarSubCameraFPC8TBaseNPC",
-          "size": 224,
-          "similarity": 99.83929
-        },
-        {
-          "name": "makeMtxForPrevTalk__15CPolarSubCameraFv",
-          "size": 152,
-          "similarity": 99.81579
         }
       ]
     },
@@ -1077,25 +1114,6 @@
       ]
     },
     {
-      "unit": "mario/Strategic/Strategy",
-      "source": "src/Strategic/Strategy.cpp",
-      "code_bytes": 1600,
-      "unmatched_code_bytes": 464,
-      "unmatched_data_bytes": 0,
-      "nonmatching_functions": [
-        {
-          "name": "__ct__9TStrategyFPCc",
-          "size": 184,
-          "similarity": 87.608696
-        },
-        {
-          "name": "load__9TStrategyFR20JSUMemoryInputStream",
-          "size": 280,
-          "similarity": 99.92857
-        }
-      ]
-    },
-    {
       "unit": "mario/MoveBG/WoodBarrel",
       "source": "src/MoveBG/WoodBarrel.cpp",
       "code_bytes": 2920,
@@ -1130,25 +1148,6 @@
           "name": "SMS_EmitSinkInPollutionEffect__FRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>b",
           "size": 488,
           "similarity": 98.7541
-        }
-      ]
-    },
-    {
-      "unit": "mario/GC2D/HelpActor",
-      "source": "src/GC2D/HelpActor.cpp",
-      "code_bytes": 1272,
-      "unmatched_code_bytes": 508,
-      "unmatched_data_bytes": 0,
-      "nonmatching_functions": [
-        {
-          "name": "load__10THelpActorFR20JSUMemoryInputStream",
-          "size": 164,
-          "similarity": 97.53658
-        },
-        {
-          "name": "perform__10THelpActorFUlPQ26JDrama9TGraphics",
-          "size": 344,
-          "similarity": 99.941864
         }
       ]
     },
@@ -2853,6 +2852,6 @@
     "mario/THPPlayer/THPRead",
     "mario/THPPlayer/THPVideoDecode"
   ],
-  "near_count": 105,
-  "near_unmatched_code_bytes": 96304
+  "near_count": 104,
+  "near_unmatched_code_bytes": 95388
 }
