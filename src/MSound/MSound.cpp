@@ -432,6 +432,7 @@ f32 MSound::getDistFromCamera(Vec* pos)
 MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
                u8* param_5, u32 param_6)
 {
+	MSound* sound      = this;
 	u32 aramSize       = param_3;
 	JKRSolidHeap* heap = JKRSolidHeap::create(0x151800, param_1, false);
 	if (param_2 != nullptr) {
@@ -454,7 +455,7 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 	JAIGlobalParameter::setParamStreamInsideBufferCut(true);
 	JAIGlobalParameter::setParamInputGainDown(0.802);
 	JAIGlobalParameter::setParamOutputGainUp(5.0);
-	setInitFileLoadSwitch(2);
+	sound->setInitFileLoadSwitch(2);
 
 	if (param_4 != nullptr)
 		JAIGlobalParameter::setParamInitDataPointer(param_4);
@@ -462,15 +463,15 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 		JAInter::TAsnData::asnData = param_5;
 
 	MSSeCallBack::smWaterFilter = nullptr;
-	initDriver(heap, aramSize, 1);
-	initInterface(1);
+	sound->initDriver(heap, aramSize, 1);
+	sound->initInterface(1);
 	f32 fVar1 = 0.0f;
 	for (u8 cat = 0; cat < 16; ++cat) {
 		if (unk0->mSeTable.mSoundMax[cat] != 0) {
 			f32 tmp  = MSHandle::smSeCategory[cat].unk4;
 			fVar1    = max(fVar1, tmp);
 			u8 uVar2 = min<u8>(MSHandle::smSeCategory[cat].unk8 * 127.0f, 127);
-			setSeCategoryVolume(cat, uVar2);
+			sound->setSeCategoryVolume(cat, uVar2);
 		}
 	}
 
