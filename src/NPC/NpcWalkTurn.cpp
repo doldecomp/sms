@@ -86,7 +86,8 @@ bool TBaseNPC::execUTurn()
 {
 	JGeometry::TVec3<f32> local_24 = unkF4.getPoint();
 	local_24 -= mPosition;
-	f32 targetYaw = MsGetRotFromZaxis(local_24).y;
+	const JGeometry::TVec3<f32>& local_30 = MsGetRotFromZaxis(local_24);
+	f32 targetYaw = local_30.y;
 	if (targetYaw == mRotation.y)
 		return true;
 
