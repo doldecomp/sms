@@ -976,9 +976,10 @@ f32 MSStageCubeFade::calcParamRatioInCube(s32 id) { }
 
 void MSStageCubeSwitch::proc()
 {
-	Vec tmp = SMS_GetMarioPos();
+	JGeometry::TVec3<f32> local_18;
+	JGeometry::TVec3<f32> tmp = SMS_GetMarioPos();
 	tmp.y += 75.0f;
-	Vec local_18 = tmp;
+	local_18 = tmp;
 
 	unk4 = gpCubeSoundChange->getInCubeNo(local_18);
 
