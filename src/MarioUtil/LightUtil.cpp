@@ -102,10 +102,9 @@ void TLightCommon::setLight(const JDrama::TGraphics* gfx, int index)
 
 	gpLightManager->setEffectLight(gfx, &light);
 
-	Vec spos;
-	MTXMultVec(gfx->getViewMtx(), getLightPosition(lightIndex), &spos);
-	VECNormalize(&spos, &spos);
-	GXInitSpecularDir(&light, -spos.x, -spos.y, -spos.z);
+	MTXMultVec(gfx->getViewMtx(), getLightPosition(lightIndex), &pos);
+	VECNormalize(&pos, &pos);
+	GXInitSpecularDir(&light, -pos.x, -pos.y, -pos.z);
 	GXInitLightColor(&light, getLightColor(lightIndex));
 	GXInitLightShininess(&light, mShininess);
 	GXLoadLightObjImm(&light, GX_LIGHT2);
