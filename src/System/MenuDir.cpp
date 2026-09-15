@@ -182,9 +182,9 @@ int TMenuDirector::direct()
 		void* res;
 		OSJoinThread(&gSetupThread, &res);
 		gpApplication.mFader->startFadeinT(0.25f);
-		if (TFlagManager::getInstance()->getBool(0x30007)) {
+		if (!TFlagManager::getInstance()->getBool(0x30007)) {
 			TFlagManager::getInstance()->setBool(true, 0x30007);
-			gpMSound->loadWave(MS_WAVE_UNK128);
+			gpMSound->loadWave(MS_WAVE_DEFAULT);
 		}
 		unk50 = true;
 	}
@@ -273,7 +273,13 @@ int TMenuDirector::direct()
 					if (i == 9)
 						snprintf(box->getStringPtr(), 22, "ボス");
 				}
-			} else if (unk40->unk2C == 0x11 || unk40->unk2C == 0x12) {
+			} else {
+				if (unk40->unk2C == 0x11)
+					goto showMovies;
+				if (unk40->unk2C != 0x12)
+					goto showStages;
+			showMovies:
+				;
 				for (int i = 0; i < 20; ++i) {
 					int code;
 					if (i < 9)
@@ -300,7 +306,9 @@ int TMenuDirector::direct()
 						         movie);
 					}
 				}
-			} else {
+				goto finishLabels;
+			showStages:
+				;
 				for (int i = 0; i < 20; ++i) {
 					int code;
 					if (i < 9)
@@ -317,6 +325,8 @@ int TMenuDirector::direct()
 						snprintf(box->getStringPtr(), 22, "%02d EX %d", i,
 						         i - 10);
 				}
+			finishLabels:
+				;
 			}
 
 			unk38->show();
@@ -332,7 +342,7 @@ int TMenuDirector::direct()
 			gpApplication.mFader->startFadeoutT(0.25f);
 			TGameSequence nextArea;
 			nextArea.set(unk48, unk4C, 0);
-			gpApplication.setNextArea(nextArea);
+			gpApplication.mNextArea = nextArea;
 		} else if (unk44->checkFlag(0x2)) {
 			unk18 = 0;
 			unk40->unfade();
@@ -343,7 +353,7 @@ int TMenuDirector::direct()
 
 	case 2:
 		if (gpApplication.mFader->isFullyFadedOut()
-		    && gpMSound->checkWaveOnAram(MS_WAVE_UNK128)) {
+		    && gpMSound->checkWaveOnAram(MS_WAVE_DEFAULT)) {
 			if (unk40->unk2C == 0x11 || unk40->unk2C == 0x12)
 				uVar13 = TApplication::APP_STATE_MOVIE;
 			else
