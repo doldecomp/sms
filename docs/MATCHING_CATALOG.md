@@ -17,6 +17,15 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## Sender dispatch and boolean guards, batch 48
+
+- Decode case destinations as well as the comparison tree. ReceiveMessage's final sender switch adds 0x08000003/04 to the take/damage group, removes 0x08000010–12, maps 0x08000002 with 0x80000001, and removes the extra 0x80000002 and door ID 0x4000002A.
+  The 0x0800002A/2C branch falls through to hinokuri handling; the 0x08000014/15 branch must break before door handling. Do not propagate these case changes into the earlier, separately gated enemy switch.
+- The mushroom guard rejects only `unk13A == 0 && unk13C < 120`; use existing TMushroom1up fields instead of byte-offset casts.
+  An explicit if/else assigning a bool reproduces the original merge. Direct bool assignment hoists a zero initialization; a ternary around the whole condition adds another merge. Both trials were rejected.
+- Fruit kick uses mMotorWall (offset 0x27F8), not mMotorTrample. Other rumble callers are an inventory, not evidence for mass replacement.
+  All 2,225 receiveMessage instruction shapes now match; frame 0x180 vs 0x220 and wire/conversion stack slots remain unresolved. Map checks and all function/data regressions pass.
+
 ## Collision switch boundaries and pointer locals, batch 47
 
 - CheckCollision's Yoshi guard must reject holding an object: the original branch at 0x14C tests `!isHolding()`.

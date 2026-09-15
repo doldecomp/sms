@@ -138,9 +138,12 @@ The neighboring hitNormal water sender improves to 99.643936%; both retain sourc
 ### 9. `TMario::receiveMessage(THitActor*, unsigned long)`
 
 Unit `mario/Player/MarioReceiveMsg`, 8,900 bytes, 99.213%.
-The comparison tree for the message `switch` around 0x16a0–0x1790 differs.
+The comparison tree for the sender-type `switch` around 0x16a0–0x1790 differs.
 The compared constants are off (0x16 vs 0x1f, 5 vs 9, and so on), so the set of case labels is wrong: some are missing, extra, or grouped differently.
 The frame is 0x220 in the original and 0x180 in ours (0xa0 too small), so there are probably missing inline helpers with locals.
+
+Batch 48 restores the exact sender dispatch and two fallthrough boundaries, corrects the mushroom pickup guard and fruit-kick rumble parameter.
+Similarity reaches 99.981125%; all 2,225 instruction shapes match, with only frame and stack-slot differences left as a source TODO.
 
 ### 10. `TSelectDir::rsetup()`
 

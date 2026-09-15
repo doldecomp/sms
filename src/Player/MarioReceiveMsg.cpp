@@ -4,6 +4,7 @@
 #include <Map/MapWire.hpp>
 #include <Map/MapWireManager.hpp>
 #include <MoveBG/MapObjManager.hpp>
+#include <MoveBG/MapObjItem2.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <Strategic/HitActor.hpp>
 #include <System/EmitterViewObj.hpp>
@@ -90,6 +91,8 @@ void TMario::getCoinBlue()
 
 BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 {
+	// TODO: GMSE01 instructions match apart from stack operands: frame 0x180
+	// vs 0x220, wire direction/swap locals and conversion scratch slots.
 	if (checkFlag(MARIO_FLAG_GAME_OVER))
 		return FALSE;
 
@@ -190,10 +193,15 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			break;
 		case 0x20000005:
 		case 0x20000006:
-		case 0x20000007: // collectible fruit
+		case 0x20000007: // 1-up mushrooms
 			if (message == HIT_MESSAGE_ATTACK) {
-				if (*(s8*)((u8*)sender + 0x13A) == 0
-				    && !(*(s32*)((u8*)sender + 0x13C) < 120 ? true : false)) {
+				TMushroom1up* mushroom = static_cast<TMushroom1up*>(sender);
+				bool cannotTake;
+				if (mushroom->unk13A == 0 && mushroom->unk13C < 120)
+					cannotTake = true;
+				else
+					cannotTake = false;
+				if (!cannotTake) {
 					mHealth = mDeParams.mHpMax.get();
 					if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 						mWaterGun->addWater(mWaterGun->getMaxWater());
@@ -606,7 +614,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			           mDmgParamsEnemyCommon.mInvincibleTime.get());
 			return TRUE;
 		}
-		break;
+		// fallthrough
 
 	case 0x08000001: // hinokuri-class
 		if (message == HIT_MESSAGE_ATTACK && !isInvincible()) {
@@ -684,12 +692,11 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		}
 		break;
 
+	case 0x08000003:
+	case 0x08000004:
 	case 0x08000006:
 	case 0x08000007:
 	case 0x08000008:
-	case 0x08000010:
-	case 0x08000011:
-	case 0x08000012:
 	case 0x0800001F:
 	case 0x08000022:
 	case 0x08000023:
@@ -755,9 +762,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			           mDmgParamsHanachanBoss.mInvincibleTime.get());
 			return TRUE;
 		}
-		// fallthrough
+		break;
 
-	case 0x4000002A:
 	case 0x4000002C: { // big spinning enemy with rotation-based attack window
 		if (mInput & 0x8000) {
 			s16 attackAngle = getAttackAngle(sender);
@@ -807,8 +813,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		break;
 	}
 
+	case 0x08000002:
 	case 0x80000001:
-	case 0x80000002:
 		if (!isInvincible()) {
 			switch (message) {
 			case HIT_MESSAGE_TAKE:
@@ -881,7 +887,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 	case 0x40000393: // fruit kick targets (durian & smth else)
 		if (mFreezeImmunityTimer <= 0) {
 			mFreezeTimer = mDeParams.mKickFreezeTime.get();
-			rumbleStart(0x15, mMotorParams.mMotorTrample.get());
+			rumbleStart(0x15, mMotorParams.mMotorWall.get());
 			calcDamagePos(sender->mPosition);
 			kickFruitEffect();
 			return TRUE;
