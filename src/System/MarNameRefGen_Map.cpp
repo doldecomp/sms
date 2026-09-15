@@ -15,7 +15,20 @@ static const char* MtxCalcTypeName[] = {
 #include "Map/Map.hpp"
 #include "Map/MapDraw.hpp"
 #include "Map/MarineSnow.hpp"
-#include "Map/PollutionEvent.hpp"
+#include <JSystem/JDrama/JDRViewObj.hpp>
+
+class TPollutionTest : public JDrama::TViewObj {
+public:
+	TPollutionTest(const char* name = "落書きテスト")
+	    : JDrama::TViewObj(name)
+	{
+	}
+
+	virtual void loadAfter();
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics) { }
+
+	void registerEvent(JDrama::TViewObj*);
+};
 #include "Map/PollutionManager.hpp"
 #include "Map/Shimmer.hpp"
 #include "Map/Sky.hpp"
