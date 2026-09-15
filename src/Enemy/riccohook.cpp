@@ -16,7 +16,8 @@ THookTake::THookTake(TRiccoHook* owner, const char* name)
 	             mOwner->getSaveLoadParam()->mSLHitRadius.get(),
 	             mOwner->getSaveLoadParam()->mSLHitHeight.get());
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
+	static_cast<TIdxGroupObj*>(
+	    JDrama::TNameRefGen::search2("オブジェクトグループ"))
 	    ->getChildren()
 	    .push_back(this);
 }

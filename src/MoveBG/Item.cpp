@@ -206,8 +206,8 @@ void TCoin::taken(THitActor* param_1)
 		mContainer->receiveMessage(this, HIT_MESSAGE_UNK8);
 
 	if (TFlagManager::smInstance->getFlag(0x40002) == 100) {
-		TShine* shine = JDrama::TNameRefGen::search<TShine>(
-		    "シャイン（１００枚コイン用）");
+		TShine* shine = static_cast<TShine*>(
+		    JDrama::TNameRefGen::search2("シャイン（１００枚コイン用）"));
 
 		gpItemManager->makeShineAppearWithDemo(
 		    "シャイン（１００枚コイン用）",
@@ -745,7 +745,7 @@ void TShine::appearSimple(int param_1)
 
 void TShine::appearWithDemo(const char* param_1)
 {
-	unk18C = JDrama::TNameRefGen::instance->search<TCameraMapTool>(param_1)
+	unk18C = static_cast<TCameraMapTool*>(JDrama::TNameRefGen::search2(param_1))
 	             ->mDemoLengthFrames;
 	SMSGetMarDirector()->fireStartDemoCamera(
 	    param_1, &mPosition, -1, 0.0f, true, appearWithTimeCallback, (u32)this,

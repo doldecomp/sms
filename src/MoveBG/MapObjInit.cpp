@@ -11138,7 +11138,8 @@ void TMapObjBase::initActorData()
 	mMapObjData = sObjDataTable[i];
 	unkF8       = mMapObjData->unk34;
 
-	mManager = JDrama::TNameRefGen::search<TLiveManager>(mMapObjData->unk8);
+	mManager = static_cast<TLiveManager*>(
+	    JDrama::TNameRefGen::search2(mMapObjData->unk8));
 	mManager->manageActor(this);
 	if (mMapObjData->mHit)
 		mYOffset = mScaling.y * mMapObjData->mHit->unk8;
@@ -11172,8 +11173,8 @@ void TMapObjBase::initMapObj()
 		mLiveFlag |= LIVE_FLAG_UNK8;
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8000) && !isActorType(0x40000084)) {
-		TScreenTexture* ref = JDrama::TNameRefGen::search<TScreenTexture>(
-		    "スクリーンテクスチャ");
+		TScreenTexture* ref = static_cast<TScreenTexture*>(
+		    JDrama::TNameRefGen::search2("スクリーンテクスチャ"));
 		const ResTIMG* img = ref->getTexture()->getTexInfo();
 		getModel()->getModelData()->getTexture()->setResTIMG(2, *img);
 		mMActor->setLightType(LIGHT_TYPE_INDIRECT);
