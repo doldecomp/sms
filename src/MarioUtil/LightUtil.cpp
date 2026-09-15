@@ -37,15 +37,17 @@ TLightCommon::TLightCommon(const char* name)
 
 void TLightCommon::loadAfter()
 {
-	mAmbAry    = JDrama::TNameRefGen::search<JDrama::TAmbAry>("Ambient Group");
-	mLightAry  = JDrama::TNameRefGen::search<JDrama::TLightAry>("Light Group");
-	mLightPos  = &mLightAry->mLights[0].mPosition;
+	mAmbAry = static_cast<JDrama::TAmbAry*>(
+	    JDrama::TNameRefGen::search2("Ambient Group"));
+	mLightAry = static_cast<JDrama::TLightAry*>(
+	    JDrama::TNameRefGen::search2("Light Group"));
+	mLightPos = &mLightAry->mLights[0].mPosition;
 	mShininess = 50.0f;
 	for (int i = 0; i < 4; ++i) {
 		unk31[i] = mLightAry->getLight(i + mLightIndex)->getColor();
 		unk44[i] = mLightAry->mLights[i + mLightIndex].mPosition;
 	}
-	unk29[0] = mAmbAry->getAmb(mAmbIndex)->getColor();
+	unk29[0] = GXColor(mAmbAry->getAmb(mAmbIndex)->mColor);
 	unk29[1] = mAmbAry->getAmb(mAmbIndex + 1)->getColor();
 }
 
