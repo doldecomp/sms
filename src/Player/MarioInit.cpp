@@ -350,12 +350,13 @@ void TMario::loadAfter()
 
 	initParticle();
 
-	if (isMario())
-		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition,
-		                              mModel->getModel()->getAnmMtx(1), true);
-	else
-		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition,
-		                              mModel->getModel()->getAnmMtx(1), false);
+	if (isMario()) {
+		MtxPtr mtx = mModel->getModel()->getAnmMtx(1);
+		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition, mtx, true);
+	} else {
+		MtxPtr mtx = mModel->getModel()->getAnmMtx(1);
+		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition, mtx, false);
+	}
 
 	finalDrawInitialize();
 	initMirrorModel();
