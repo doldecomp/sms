@@ -1,0 +1,85 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "562ed4e0",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.628136,
+    "total_code": "3603748",
+    "matched_code": "1391504",
+    "matched_code_percent": 38.612686,
+    "total_data": "641075",
+    "matched_data": "322047",
+    "matched_data_percent": 50.235462,
+    "total_functions": 12904,
+    "matched_functions": 8258,
+    "matched_functions_percent": 63.99566,
+    "complete_code": "92672",
+    "complete_code_percent": 2.571545,
+    "complete_data": "58404",
+    "complete_data_percent": 9.110323,
+    "total_units": 732,
+    "complete_units": 86
+  },
+  "game_measures": {
+    "fuzzy_match_percent": 69.49888,
+    "total_code": "2847660",
+    "matched_code": "712856",
+    "matched_code_percent": 25.033045,
+    "total_data": "558292",
+    "matched_data": "250768",
+    "matched_data_percent": 44.916996,
+    "total_functions": 9012,
+    "matched_functions": 4461,
+    "matched_functions_percent": 49.500664,
+    "complete_code": "92672",
+    "complete_code_percent": 3.254321,
+    "complete_data": "58404",
+    "complete_data_percent": 10.461192,
+    "total_units": 385,
+    "complete_units": 86
+  },
+  "source_linked_objects": 86,
+  "new_source_linked_objects": [],
+  "new_source_linked_code_bytes": 0,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "unexplained_function_regressions": [],
+  "new_exact_functions": 0,
+  "new_exact_code_bytes": 0,
+  "new_matched_data_bytes": 0,
+  "improvements": [
+    {
+      "unit": "mario/Animal/AnimalNerve",
+      "function": "execute__23TNerveAnimalGraphWanderCFP24TSpineBase<10TLiveActor>",
+      "before": 99.532936,
+      "after": 99.62276,
+      "size": 1336
+    },
+    {
+      "unit": "mario/NPC/NpcCallback",
+      "function": "NPCNeckCallBack__FP7J3DNodei",
+      "before": 92.890976,
+      "after": 96.04511,
+      "size": 1064
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "all_functions_present": true,
+    "no_exact_function_regressions": true,
+    "symbol_map_NpcCallback": true,
+    "symbol_map_AnimalNerve": true,
+    "gameplay_test": false
+  },
+  "notes": [
+    "No file was completed or promoted in this batch. Source-linked coverage remains 86 game files / 92672 bytes.",
+    "NPCNeckCallBack uses the existing live-flag predicate and retains Mario height across the range call; vector-copy, register and frame differences remain.",
+    "AnimalNerve corrects two reversed random-timer bounds; frame and register differences remain.",
+    "AnimalNerve distance/timer helper trials and MapObjPollution accessor/loop trials were reverted.",
+    "NpcCallback map check retains its existing weak-symbol order warning.",
+    "The full executable still contains original objects for both changed source files; executable equality does not prove those reconstructions complete."
+  ]
+}

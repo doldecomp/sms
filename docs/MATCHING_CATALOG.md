@@ -17,6 +17,20 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## Single-function closure trials, batch 39
+
+- No file completed; whole-file priorities remain in DECOMPILATION_PLAN.md.
+- AnimalNerve: two MsRandI(hi, lo) calls are reversed relative to the original positive range and lower-bound addition.
+  Correct both to MsRandI(lo, hi), matching the other two local sites; do not change the shared random helper.
+  Similarity rises to 99.62276%, but frame 0x118 versus 0xE8 and early register differences remain.
+- NpcCallback: checkLiveFlag inside the conditional bool expression removes redundant normalization; a named Mario Y value retains it across the range call.
+  Similarity rises to 96.04511%; rotation-vector copying, registers and frame remain unresolved.
+  No shared MathUtil or vector-library changes are retained.
+- Rejected AnimalNerve distance/timer helpers and MapObjPollution accessor/loop trials are recorded in the [batch 39 audit](progress/GMSE01-closure-audit-batch39.md).
+  The pollution trial reached the correct frame but still had wrong register allocation; do not retain it as a match.
+- Full build, all-function regression comparison, changed-unit map checks and executable byte/SHA-1 checks pass.
+  NpcCallback retains its pre-existing weak-order warning.
+
 ## Return types: `TBathtub::getNumGripsDead`
 
 - Status: verified shared correction, batch 5 (`57f560d3`).

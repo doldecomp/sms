@@ -8,7 +8,25 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 38 — MapCollisionPlane completed
+## Latest checkpoint: batch 39 — closure trials, no file completed
+
+Reread the plan and retain its whole-file completion order.
+Corrected two reversed random-timer bounds in AnimalNerve and improved NpcCallback's flag test and Mario-height retention.
+Both files remain nonmatching; no new exact or source-linked bytes are claimed.
+Unsuccessful distance/timer and pollution-accessor trials were reverted and recorded.
+
+| Coverage | Matched code | Source-linked code |
+| --- | ---: | ---: |
+| Game code | **25.033045%** | **3.254321%** |
+| Aggregate | **38.612686%** | **2.571545%** |
+
+Source linking remains **86 game files / 92,672 code bytes**.
+Baseline at `562ed4e0`; full build, changes_all, all 12,904 function comparisons, changed-unit map checks, DOL byte comparison and expected SHA-1 pass with zero regressions.
+NpcCallback retains its existing weak-symbol ordering warning; no gameplay test was performed.
+The regenerated queue remains 96 authorized small game files / 90,016 unmatched bytes.
+See the [batch 39 audit](docs/progress/GMSE01-closure-audit-batch39.md) and [measurements](docs/progress/GMSE01-batch39.json).
+
+## Verified checkpoint: batch 38 — MapCollisionPlane completed
 
 Completed and source-linked **MapCollisionPlane.cpp**, adding **1,348 code bytes** and **220 data bytes**.
 A separate integer cell-index conversion recovers the original conversion reuse and stack layout.

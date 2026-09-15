@@ -147,9 +147,9 @@ Each promotion still requires the full executable SHA-1 and byte comparison.
    `Player/MarioAccess` (72 bytes left), `Enemy/egggen` (120), `Strategic/HitActor` (124), `MSound/MSoundBGM` (136), `MoveBG/MapObjPollution` (172), `Enemy/DebuTelesa` (176, plus data), `MoveBG/MapObjAirport` (208), `NPC/NpcInbetween` (220), `System/SnapTimeObj` (228), `Enemy/enemytable` (276), `Map/MapEventSirena` (280), `MoveBG/MapObjFloat` (288), `M3DUtil/M3UModel` (292).
 3. More broadly, 96 unlinked game objects have 2,000 or fewer unmatched code bytes, totalling 90,016 bytes.
    Regenerate this list from `report.json` at each checkpoint rather than trusting these numbers.
-   Batch 38 regeneration is saved in `docs/progress/GMSE01-completion-queue.json`: 96 authorized game files with 1..2,000 unmatched bytes, totaling 90,016 unmatched code bytes.
+   Batch 39 regeneration is saved in `docs/progress/GMSE01-completion-queue.json`: 96 authorized game files with 1..2,000 unmatched bytes, totaling 90,016 unmatched code bytes.
    This excludes THPPlayer despite the report classifying it as game code.
-   Consult the batch 25 through batch 38 closure audits in `docs/progress/` before retrying stalled candidates; they record map gaps, shared issues, and rejected trials.
+   Consult the batch 25 through batch 39 closure audits in `docs/progress/` before retrying stalled candidates; they record map gaps, shared issues, and rejected trials.
    `Map/PollutionObj` completed and source-linked in batch 27: 75 game objects / 79,528 code bytes.
    `GC2D/HelpActor` completed and source-linked in batch 29: 76 game objects / 80,800 code bytes.
    Game coverage is 25.033045% matched / 3.254321% source-linked; aggregate coverage is 38.612686% / 2.571545%.
@@ -173,6 +173,9 @@ Each promotion still requires the full executable SHA-1 and byte comparison.
    Restored factory branches and constructor/header context match all code/data; ordered archive linking reproduces the original handling of duplicate sun-path globals and passes full executable comparison.
    Batch 38 completes and source-links MapCollisionPlane: 86 game objects / 92,672 code bytes.
    A separate integer grid-index helper resolves conversion reuse and frame layout while preserving MapObjPlane's fractional coordinates; full executable comparison and all-function regression checks pass.
+   Batch 39 completes no file: AnimalNerve's two reversed random bounds are corrected and NpcCallback's predicate/height handling improves, but both remain nonmatching.
+   Distance/timer helper and pollution-accessor trials were reverted; all-function regression and executable checks pass.
+   Keep empty-file reconstructions such as BathtubBinder behind the near-complete queue, and consult the recorded deferrals before retrying frame-only candidates.
    Revisit earlier deferrals when new evidence addresses their recorded blockers; prioritize a hypothesis that can close a file over further partial camera reconstruction.
 
 If an object stalls on a hard function, record the evidence and move to the next object instead of forcing a fakematch.
