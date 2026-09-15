@@ -1,0 +1,199 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "e3d8ae6b",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.1694,
+    "total_code": "3603748",
+    "matched_code": "1379904",
+    "matched_code_percent": 38.290802,
+    "total_data": "641075",
+    "matched_data": "302115",
+    "matched_data_percent": 47.126312,
+    "total_functions": 12904,
+    "matched_functions": 8189,
+    "matched_functions_percent": 63.46094,
+    "complete_code": "76468",
+    "complete_code_percent": 2.121902,
+    "complete_data": "51024",
+    "complete_data_percent": 7.9591312,
+    "total_units": 732,
+    "complete_units": 73
+  },
+  "source_linked_objects": 73,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 20,
+  "new_exact_code_bytes": 3156,
+  "new_matched_data_bytes": 444,
+  "improvements": [
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "__dt__22TNerveBossHanachanDeadFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 92
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "__dt__22TNerveBossHanachanDownFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 92
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "__dt__23TNerveBossHanachanGetUpFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 92
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "__dt__23TNerveBossHanachanSnortFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 92
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "__dt__24TNerveBossHanachanDamageFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 92
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "__dt__24TNerveBossHanachanTumbleFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 92
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "__dt__29TNerveBossHanachanGraphWanderFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 92
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "__sinit_BossHanachanNerve_cpp",
+      "before": 0,
+      "after": 100.0,
+      "size": 764
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "execute__22TNerveBossHanachanDeadCFP24TSpineBase<10TLiveActor>",
+      "before": 0,
+      "after": 100.0,
+      "size": 108
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "execute__22TNerveBossHanachanDownCFP24TSpineBase<10TLiveActor>",
+      "before": 0,
+      "after": 100.0,
+      "size": 224
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "execute__23TNerveBossHanachanGetUpCFP24TSpineBase<10TLiveActor>",
+      "before": 0,
+      "after": 100.0,
+      "size": 228
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "execute__23TNerveBossHanachanSnortCFP24TSpineBase<10TLiveActor>",
+      "before": 0,
+      "after": 99.89535,
+      "size": 344
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "execute__24TNerveBossHanachanDamageCFP24TSpineBase<10TLiveActor>",
+      "before": 0,
+      "after": 100.0,
+      "size": 248
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "execute__24TNerveBossHanachanTumbleCFP24TSpineBase<10TLiveActor>",
+      "before": 0,
+      "after": 99.901405,
+      "size": 284
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "execute__29TNerveBossHanachanGraphWanderCFP24TSpineBase<10TLiveActor>",
+      "before": 0,
+      "after": 100.0,
+      "size": 240
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "theNerve__22TNerveBossHanachanDeadFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 100
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "theNerve__22TNerveBossHanachanDownFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 100
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "theNerve__23TNerveBossHanachanGetUpFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 100
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "theNerve__23TNerveBossHanachanSnortFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 100
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "theNerve__24TNerveBossHanachanDamageFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 100
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "theNerve__24TNerveBossHanachanTumbleFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 100
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "theNerve__29TNerveBossHanachanGraphWanderFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 100
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_map_nerve": true,
+    "gameplay_test": false
+  },
+  "notes": [
+    "Reconstructed seven behavior-state execute routines and singleton accessors using the existing nerve and spine helpers.",
+    "Twenty of twenty-two mapped functions and all 444 data bytes match exactly.",
+    "Tumble has a stack-size difference; Snort has a stack-size difference and the existing MSound controller layout mismatch (0x98 versus original 0x9C).",
+    "No source-link promotion; executable verification covers the mixed source/original-object build."
+  ]
+}

@@ -8,7 +8,36 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 16
+## Latest checkpoint: batch 17
+
+Reconstructed all seven boss behavior states in the previously empty `BossHanachanNerve.cpp`: graph wandering, tumbling, down, get-up, damage, snort, and death.
+The existing nerve macro supplies the singleton accessors; all 22 mapped functions, including destructors and initialization, are present in the correct order and linkage.
+Twenty functions match exactly, along with all 444 bytes of data sections.
+
+This batch adds **3,156 exact code bytes, twenty matching functions, and 444 matched data bytes**.
+Aggregate exact code is **1,379,904 / 3,603,748 bytes (38.290802%)**, with **8,189 / 12,904 functions** matching.
+There are still **73 source-linked objects**, covering **76,468 code bytes (2.121902%)**.
+The nerve object remains original-linked pending its two nonmatching functions.
+
+### Validation and remaining work
+
+Captured `ninja baseline` at `e3d8ae6b`, ran the full build and `ninja changes_all`, and compared every reported function with missing-function detection: zero regressions.
+The nerve unit passes symbol presence, order, and linkage checks with no map warnings.
+Expected SHA-1 and direct byte comparison pass for the mixed source/original-object executable.
+No gameplay test was performed.
+
+`TNerveBossHanachanTumble::execute` is 99.901405%, differing only in its 0x38 versus 0x40 stack frame.
+`TNerveBossHanachanSnort::execute` is 99.89535%, with a 0x28 versus 0x40 frame and a shared sound-layout discrepancy.
+The original snort routine and `MSound` constructor agree that the tempo controller is at 0x9C; the current header's `MSModBgm* unk98` is at 0x98.
+The constructor also writes a byte at 0x98 and a word at 0x94, which must be considered during a dedicated shared-layout audit.
+No raw-offset cast, arbitrary padding, or protected middleware change was introduced to hide that discrepancy.
+
+The [shared-fix catalog](docs/MATCHING_CATALOG.md) records the transition rules, exact helper pattern, sound evidence, and reverted stack-layout trials.
+Next work: audit the US sound layout and its game-code consumers, resolve the two nerve differences, and continue the boss main-unit reconstruction.
+See [batch 17 measurements](docs/progress/GMSE01-batch17.json).
+Draft and trial source are under `build/GMSE01/BossHanachanNerve-batch17*`; validation logs are `build/GMSE01-*-batch17.*`.
+
+## Verified checkpoint: batch 16
 
 Reconstructed the previously empty `BossHanachanEffect.cpp`: particle loading, state-dependent particle emission, sand-pillar animation and sound, and camera shake/rumble.
 All four routines and compiler-generated initialization are present in the correct map order and linkage.

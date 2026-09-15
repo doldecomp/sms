@@ -329,3 +329,36 @@ A full executable match also does not validate bodies in objects that are still 
 - All five effects map functions pass presence/order/linkage checks; parts also passes with its pre-existing UNUSED hit-predicate size warning.
   Full rebuild and baseline comparison report zero regressions; mixed executable byte comparison and SHA-1 pass.
   Two exact functions add 1,584 bytes; all 844 data bytes match; the object remains original-linked.
+
+## Boss nerve transitions and US sound layout: batch 17
+
+- Status: all seven states reconstructed; twenty of twenty-two mapped functions exact.
+- Search: `rg -n 'TNerveBossHanachan|pushAfterCurrent|startAppearBalloon|changeTempo' src/Enemy include`.
+- Full map function inventory: `BossHanachanNerve.cpp`, lines 59466–59488, twenty-two linked functions and no UNUSED functions.
+  Define states in source order GraphWander, Tumble, Down, GetUp, Damage, Snort, Dead using `DEFINE_NERVE`.
+  This emits strong functions, singleton guards/instances, destructors, and vtables in their original order.
+  The existing MSound include sequence also matches the 764-byte static initializer.
+- `spine->pushAfterCurrent(&NextState::theNerve())` reproduces the original inlined singleton initialization and bounded stack push at all six transitions.
+  Return TRUE after scheduling the successor, even when the bounded push cannot append it.
+- Walking initializes animation 0 on entry, executes walking, and schedules tumble when the fall check succeeds.
+  Tumble initializes its animation on entry, slips until stationary and fully fallen, shows balloon 7, then schedules Down.
+  Down waits `mSLDownFrames`; Damage also requires zero march speed and waits `mSLDamageFrames`; both initialize get-up timers before scheduling GetUp.
+  GetUp randomizes the weak body and sets snort timers after recovery finishes.
+  Snort returns to the initial recovery graph node after animation 14 finishes, then schedules walking.
+  Death removes map collision once animation 15 finishes, guarding the action with live flag 0x40000.
+- Tumble uses `0.0f == boss->mMarchSpeed`, `isTumbleCompletelyAllBody()`, and `SMSGetMarDirector()->getConsole()->startAppearBalloon(7, true)`.
+  Current instructions match except for frame 0x38 versus 0x40.
+  Direct `gpMarDirector` access produces frame 0x30; adding named console/director locals to the accessor chain does not increase 0x38 and was reverted.
+  No artificial stack objects were added.
+- Snort checks timer 200 and flag 0x20000 before clearing that flag and starting BGM 0x80010029.
+  Health 2 changes tempo with (0,1); health 1 uses (1,1); preserve switch case order.
+  Its frame is currently 0x28 versus 0x40, with two controller loads from 0x98 instead of 0x9C.
+- Shared layout audit needed: `include/MSound/MSound.hpp` declares `MSModBgm* unk98` at 0x98 and `MSBgmXFade* unk9C` at 0x9C.
+  Original `MSound` constructor at 0x800150BC stores the eight-byte tempo-controller allocation at 0x9C, and 0x800150D8 stores the four-byte crossfade allocation at 0xA0.
+  It writes -1 as a word at 0x94 and zero as a byte at 0x98, then reads the byte to choose a water-filter value.
+  Current `JAIBasic.hpp` has a u16 at 0x94 and ends before that byte; it explicitly notes uncertainty about which tail fields belong to MSound.
+  Do not swap controller pointer types or use a raw-offset cast at the snort call site.
+  Inventory the affected game-code fields/callers and respect the restriction on autonomous middleware edits.
+- Full build and all-function baseline comparison pass with zero regressions; symbol map passes without warnings.
+  All 444 data bytes match; exact code gain is 3,156 bytes across twenty functions.
+  Mixed executable byte comparison/SHA-1 pass; the unit remains original-linked until both execute routines match.
