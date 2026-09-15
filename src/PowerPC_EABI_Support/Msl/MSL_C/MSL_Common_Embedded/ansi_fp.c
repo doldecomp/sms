@@ -8,6 +8,19 @@ static const double digit_values[] = {
 	1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8,
 };
 
+// TODO: this TU is the last library object that cannot be source-linked.
+// The map records a second, deadstripped function here:
+//   UNUSED 0x2a4 __dec2num   ansi_fp.c
+// along with its own deadstripped .sdata2 literal @269. Because that function
+// is missing, our float literal pool allocates in the wrong order: the map has
+// @268=0.0, @270=1.0, @272=<int->double magic 0x4330000080000000>, @362=0.1,
+// @363=10.0, while we emit the magic constant last. The code below already
+// matches byte-for-byte -- objdiff compares the symbolic reference, so it
+// reports 100% -- but after linking, four @sda21 displacements inside
+// __num2dec and the literal block itself differ, 23 bytes in all.
+// Reconstructing __dec2num (decimal -> double, the inverse of this function)
+// should restore the pool order. Its 0x2a4 size is the verification
+// constraint. Until then the object stays out of config/GMSE01/objects.json.
 void __num2dec(const decform* f, double x, decimal* d)
 {
 	int sp30;

@@ -17,7 +17,10 @@ JSystem goes 0% -> 61.61% linked (166/198 files) and SDK 0% -> 91.84% (141/149).
 One object is held back: `PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/ansi_fp.c`.
 Linking it changes exactly 23 bytes: four inside `__num2dec` (0x80338cbf, 0x80338cdf, 0x80338ce3, 0x80338cff) and the 8-byte `.sdata2` literal `@272` at 0x80417560, plus its neighbour.
 Its per-object code and data both report 100%, so objdiff's comparison does not see whatever differs; suspect the `.sdata2` literal pool contents or ordering.
-This is the sole blocker between here and 100% library linking, and is the obvious next target.
+Diagnosed: the map records a deadstripped `__dec2num` (UNUSED, 0x2a4) and its literal `@269` in this TU.
+With that function missing, our `.sdata2` pool orders the int-to-double magic constant last instead of third, so four `@sda21` displacements resolve differently after linking.
+The code itself is correct; objdiff reports 100% because it compares symbolic references, not resolved offsets.
+Reconstructing `__dec2num` against its 0x2a4 size is the fix and the next target.
 
 Verification: `cmp` against `orig/GMSE01/sys/main.dol` is identical, SHA-1 `a6782903ef79d4196c8489ecb1b57decb5b3728f`, matched code unchanged at 1,423,420 bytes with no function regressions.
 Game code is untouched at **26.15378% matched / 3.254321% source-linked**. No gameplay test performed.
