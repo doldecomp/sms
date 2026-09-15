@@ -39,11 +39,11 @@ void TLightCommon::loadAfter()
 {
 	mAmbAry    = JDrama::TNameRefGen::search<JDrama::TAmbAry>("Ambient Group");
 	mLightAry  = JDrama::TNameRefGen::search<JDrama::TLightAry>("Light Group");
-	mLightPos  = &mLightAry->getLight(0)->mPosition;
+	mLightPos  = &mLightAry->mLights[0].mPosition;
 	mShininess = 50.0f;
 	for (int i = 0; i < 4; ++i) {
-		unk31[i] = mLightAry->getLight(mLightIndex + i)->getColor();
-		unk44[i] = mLightAry->getLight(mLightIndex + i)->mPosition;
+		unk31[i] = mLightAry->getLight(i + mLightIndex)->getColor();
+		unk44[i] = mLightAry->mLights[i + mLightIndex].mPosition;
 	}
 	unk29[0] = mAmbAry->getAmb(mAmbIndex)->getColor();
 	unk29[1] = mAmbAry->getAmb(mAmbIndex + 1)->getColor();
