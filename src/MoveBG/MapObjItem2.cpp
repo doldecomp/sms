@@ -93,10 +93,11 @@ void TMushroom1up::control()
 		}
 
 		JGeometry::TVec3<f32> pos = SMS_GetMarioPos();
-		pos.x += 1.5f * (50.0f * JMACos(5.0f * t));
+		s16 angle = DEG2SHORTANGLE(5.0f * t);
+		pos.x += 1.5f * (50.0f * JMASCos(angle));
 		pos.y += 200.0f;
-		pos.z += 1.5f * (50.0f * JMASin(5.0f * t));
-		mPosition.set(pos);
+		pos.z += 1.5f * (50.0f * JMASSin(angle));
+		mPosition = pos;
 
 		mScaling.set(1.5f, 1.5f, 1.5f);
 		mLinearVelocity.zero();
@@ -131,9 +132,9 @@ void TMushroom1up::control()
 	f32 delta = MsAngleDiff(angle, mRotation.y);
 	f32 step;
 	if (delta > 0.0f)
-		step = MsClamp(delta, -1.0f, 1.0f);
+		step = delta > 1.0f ? 1.0f : delta;
 	else
-		step = MsClamp(delta, -1.0f, 1.0f);
+		step = delta < -1.0f ? -1.0f : delta;
 
 	mRotation.y = MsWrap(mRotation.y + step, 0.0f, 360.0f);
 
