@@ -316,13 +316,13 @@ void TMario::slideProcess(f32 baseAcc, f32 friction)
 	const TBGCheckData* ground = mGroundPlane;
 
 	s16 dirAng = matan(ground->getNormal().z, ground->getNormal().x);
+	f32 slopeUp;
+	f32 slopeDown;
 
 	f32 mag = MsSqrtf(ground->getNormal().x * ground->getNormal().x
 	                  + ground->getNormal().z * ground->getNormal().z);
 
 	s16 angDiff = mSlopeAngle - mFaceAngle.y;
-	f32 slopeUp;
-	f32 slopeDown;
 	getSlopeSlideAccele(&slopeUp, &slopeDown);
 	f32 acc;
 	if (angDiff > -0x4000 && angDiff < 0x4000)
