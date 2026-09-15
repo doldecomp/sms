@@ -9,6 +9,8 @@
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
 
+static const Vec sZeroVec = { 0.0f, 0.0f, 0.0f };
+
 void MtxToQuat(MtxPtr m, Quaternion* quat)
 {
 	f32 q[4];
