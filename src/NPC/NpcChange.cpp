@@ -320,7 +320,7 @@ void TBaseNPC::behaveToBeTrampled_()
 	case NPC_ANM_KIND_UNK7: {
 		const TNerveBase<TLiveActor>* current = mSpine->getCurrentNerve();
 		const TNerveBase<TLiveActor>* latest  = mSpine->getLatestNerve();
-		if (latest == &TNerveNPCWet::theNerve()) {
+		if (current == &TNerveNPCWet::theNerve()) {
 			mSpine->pushNerve(&TNerveNPCWet::theNerve());
 			mSpine->setNext(nullptr);
 		} else if (current == nullptr && latest == &TNerveNPCWet::theNerve())
