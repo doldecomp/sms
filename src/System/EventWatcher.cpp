@@ -185,14 +185,14 @@ static void evIsNearSameActors(TSpcTypedInterp<TEventWatcher>* interp,
 		return;
 	}
 
-	int count         = 0;
-	f32 (*sqrt)(f32)  = JGeometry::TUtil<f32>::sqrt;
-	int num           = gpMapObjManager->getObjNum();
+	int count = 0;
+	int num   = gpMapObjManager->getObjNum();
 	for (int i = 0; i < num; ++i) {
 		TMapObjBase* obj = gpMapObjManager->getObj(i);
 		if (type == obj->getActorType()) {
 			JGeometry::TVec3<f32> diff = which->mPosition;
 			diff -= obj->mPosition;
+			f32 (*sqrt)(f32) = JGeometry::TUtil<f32>::sqrt;
 			if (sqrt(diff.squared()) <= dist)
 				count++;
 		}
