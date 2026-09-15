@@ -1,0 +1,78 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "918bf10e",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 74.883995,
+    "total_code": "3603748",
+    "matched_code": "1374896",
+    "matched_code_percent": 38.151836,
+    "total_data": "641075",
+    "matched_data": "300595",
+    "matched_data_percent": 46.88921,
+    "total_functions": 12904,
+    "matched_functions": 8162,
+    "matched_functions_percent": 63.251705,
+    "complete_code": "76468",
+    "complete_code_percent": 2.121902,
+    "complete_data": "51024",
+    "complete_data_percent": 7.9591312,
+    "total_units": 732,
+    "complete_units": 73
+  },
+  "source_linked_objects": 73,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 2,
+  "new_exact_code_bytes": 164,
+  "new_matched_data_bytes": 800,
+  "improvements": [
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "@32@__dt__13TFootHitActorFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 8
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "__dt__13TFootHitActorFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 156
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "initFootHitActor___22TBossHanachanPartsBodyFP12TIdxGroupObj",
+      "before": 0.95238096,
+      "after": 99.55238,
+      "size": 420
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "initMapCollisionAndHitActor___22TBossHanachanPartsBaseFP12TIdxGroupObj",
+      "before": 0.7352941,
+      "after": 99.76471,
+      "size": 544
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "all_header_consumers_rebuilt": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_map_parts": true,
+    "gameplay_test": false
+  },
+  "remaining_map_issues": [
+    "Parts unit isReactToTrampleOrHipDrop_ UNUSED size 208 versus 196",
+    "Previously recorded animation unit setTumbleBckRate_ UNUSED size 180 versus 176"
+  ],
+  "notes": [
+    "Both remaining TODO initialization routines in the parts unit reconstructed; nonmatching stack/register differences remain.",
+    "Parts unit now passes all map function presence/order/linkage checks, including UNUSED functions.",
+    "Water payload uses explicit 32-bit particle-index and signed 16-bit countdown views at the same offset; the original header spelling remains uncertain.",
+    "No objects promoted; executable verification covers the mixed source/original-object build."
+  ]
+}

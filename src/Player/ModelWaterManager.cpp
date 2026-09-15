@@ -104,7 +104,7 @@ void TModelWaterManager::load(JSUMemoryInputStream& stream)
 	if (!(mStaticHitActor.mCollisions ? true : false)) {
 		mStaticHitActor.initHitActor(0x1000001, 1, 0x5c000000, 50.0f, 80.0f,
 		                             50.0f, 80.0f);
-		mStaticHitActor.unk68 = -1;
+		mStaticHitActor.mParticleIndex = -1;
 	}
 
 	unk5D14 = 7.0f;
@@ -420,7 +420,7 @@ void TModelWaterManager::move()
 	for (int i = 0; i < mParticleCount; ++i) {
 		if (unk2514[i] != nullptr) {
 			mStaticHitActor.mPosition = mParticlePositionSOA[i];
-			mStaticHitActor.unk68     = i;
+			mStaticHitActor.mParticleIndex = i;
 
 			if (!unk2514[i]->receiveMessage(&mStaticHitActor,
 			                                HIT_MESSAGE_SPRAYED_BY_WATER))
@@ -550,7 +550,7 @@ void TModelWaterManager::move()
 			unk2914[i] = local_248;
 			if (local_248->mActor != nullptr) {
 				mStaticHitActor.mPosition = mParticlePositionSOA[i];
-				mStaticHitActor.unk68     = i;
+				mStaticHitActor.mParticleIndex = i;
 				THitActor* hit            = (THitActor*)local_248->mActor;
 				if (hit->receiveMessage(&mStaticHitActor,
 				                        HIT_MESSAGE_SPRAYED_BY_WATER))
@@ -581,7 +581,7 @@ void TModelWaterManager::move()
 					} else {
 						if (r27->mActor != nullptr) {
 							mStaticHitActor.mPosition = mParticlePositionSOA[i];
-							mStaticHitActor.unk68     = i;
+							mStaticHitActor.mParticleIndex = i;
 							THitActor* hit            = (THitActor*)r27->mActor;
 							hit->receiveMessage(&mStaticHitActor,
 							                    HIT_MESSAGE_SPRAYED_BY_WATER);
@@ -630,7 +630,7 @@ void TModelWaterManager::move()
 					if (local_b4) {
 						if (local_b4->mActor != nullptr) {
 							mStaticHitActor.mPosition = mParticlePositionSOA[i];
-							mStaticHitActor.unk68     = i;
+							mStaticHitActor.mParticleIndex = i;
 							THitActor* hit = (THitActor*)local_b4->mActor;
 							hit->receiveMessage(&mStaticHitActor,
 							                    HIT_MESSAGE_SPRAYED_BY_WATER);

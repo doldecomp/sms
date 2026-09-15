@@ -107,19 +107,25 @@ A full executable match also does not validate bodies in objects that are still 
   Passing `end - frame` directly as an argument computed it after the call and spilled extra registers; the named intermediate reproduces all 188 bytes, including stack layout.
 - Shadow submission reuses `TCircleShadowRequest`; its full instruction sequence matches apart from stack offsets (99.54%).
 
-## Water-hit counter declaration and field ambiguity
+## Water-hit payload: particle index and signed countdown
 
-- Status: declaration corrected, field audit pending, batch 9.
-- Search: `rg -n 'TWaterHitActor|onWaterHitCounter|mStaticHitActor' src include`.
+- Status: shared storage and constructor behavior reconstructed, batch 14.
+- Search: `rg -n 'TWaterHitActor|mParticleIndex|mWaterHitCounter|mStaticHitActor' src include`.
 - Original map: `onWaterHitCounter__14TWaterHitActorFv` is a global 12-byte function in `BossHanachanSub.cpp`, at `0x800ED5B4`.
-- Native instructions set 60 and use `sth` at `0x68`; the original receive-message handler also uses halfword stores there.
-- Removed the fabricated inline `unk68 = 0x3C` from `ModelWaterManager.hpp`, restoring the out-of-line declaration and the head hit-handler call.
-  The function body remains supplied by the original nonmatching sub-object until that unit is reconstructed.
-- Do not simply change the existing `int unk68` to a halfword globally: particle-manager code and multiple enemy consumers use it as a particle index.
-  Audit their actual load/store widths and static-object initialization together to establish whether separate views/fields or an original declaration discrepancy are involved.
-- The original particle-manager static object is `0x6C` bytes and its constructor has no store to `0x68`; the boss foot constructor explicitly zeros a halfword there.
-  Avoid inventing a shared constructor until that distinction is resolved.
-- All callers rebuilt after the declaration correction; the complete batch 9 function comparison found zero regressions.
+  It sets 60 with `sth` at offset 0x68; `receiveMessage` also uses halfword stores there.
+  The declaration is out of line; the sub-unit implementation is still pending.
+- Signedness is established by `BossHanachanMain` at 0x800EF50C, 0x800EF580, and 0x800EF5F4: `lha` from the head/body/foot payload, compare with one, decrement, and `sth` back.
+- Particle consumers require a separate 32-bit view of the same storage.
+  `TSmallEnemy::decHpByWater` at 0x8006BAB8 and `TBossManta::receiveMessage` at 0x80112828 load the sender's offset 0x68 with `lwz`, then use it to index the water manager's arrays.
+  The particle manager and Mario water-message sender assign that index; all existing sites now use `mParticleIndex`.
+- Current reconstruction: an anonymous union at 0x68 containing `int mParticleIndex` and `s16 mWaterHitCounter`, preserving the 0x6C object size.
+  This expresses the binary's two proven access patterns; the exact original header declaration, including whether different source headers disagreed, is not established.
+  Do not globally narrow the particle index or reinterpret the countdown as a separate field at 0x6A.
+- The named receiver constructor calls `THitActor(name)` and initializes only the counter halfword to zero.
+  Both boss allocation sites reproduce the original vtable stores and `sth` initialization, at 0x800F432C and 0x800F4564.
+  The default sender constructor leaves the payload initialization to the manager.
+  Its original static initializer at 0x80280B04–0x80280B30 constructs the base and stores the same water-actor vtable without a payload store.
+- All header consumers rebuilt in batch 14 with zero function regressions; existing particle-manager and enemy scores are unchanged.
 
 ## Boss parameter constructors and shared literals
 
@@ -220,3 +226,29 @@ A full executable match also does not validate bodies in objects that are still 
 - Changed the base virtual declaration, both overrides, and both result locals to `bool`.
   Existing parts function scores are unchanged, and all header consumers rebuilt with zero function regressions.
 - Rule: use a caller's result handling to resolve types when callee instruction streams alone are indistinguishable.
+
+## Boss collision and foot initialization
+
+- Status: both previously empty initialization routines reconstructed, batch 14; all parts map symbols now present.
+- Search: `rg -n 'initMapCollisionAndHitActor_|initFootHitActor_|mFeet|mSLFoot' src/Enemy/BossHanachanParts.cpp include/Enemy/BossHanachan.hpp`.
+- `initMapCollisionAndHitActor_`: 99.76471%, 544 bytes, with only stack offsets differing (0xE8 frame versus 0xF0).
+  Start with body collision parameters and use the original signed actor-type switch to select the head values.
+  Bind the `center` joint, initialize a moving map collision with flag 0x8000, allocate the named water receiver, register it with the actor group, enable collision, and place it at the joint translation minus its vertical offset.
+- `initFootHitActor_`: 99.55238%, 420 bytes, same 105-instruction length as the target.
+  Keep the two joint indices in an `int[2]`, narrowing each index to `u16` when fetching its matrix.
+  Fetch foot parameters directly at the `initHitActor` call; their reference-returning `get()` accessors let MWCC hoist the four field addresses in the original order.
+  The `foot_L`/`foot_R` local static array is eight bytes in `.sdata`; each string occupies eight bytes in `.sdata2` including padding.
+  The current frame is 0xE0 versus 0xF0; name-table and loop-counter registers are swapped (r20/r19 versus r19/r20).
+- Use `mMActor->getModel()` in these two initializers.
+  `TLiveActor::getModel()` remains out of line here, adding calls absent from the target.
+  Do not generalize this to the head/body constructors, whose original call sites use that out-of-line helper.
+- Use `group->getChildren().push_back(actor)`.
+  The existing fabricated `group->add(actor)` wrapper changes iterator inlining and regresses both functions (about 95.7% and 74.9%); reverted.
+- Holding the four foot parameter references in separate locals before the loop alters register ordering; direct arguments are closer.
+  Putting the parameter pointer before the model/name-table locals restores the original setup-load registers.
+  Reading the foot matrix back from the assigned member adds a load absent from the target; keep the computed matrix in a local and use it for both assignments.
+  Using an `int` joint local plus an explicit `u16` cast in the base initializer gives the same instructions as a `u16` local.
+  Splitting the model/name-table chain and naming the base placement matrix do not resolve the remaining stack gap.
+- The foot destructor and adjustment thunk are now emitted and match all 156 and 8 bytes.
+  The only remaining parts map warning is the existing hit-predicate UNUSED size (208 versus 196); all presence/order/linkage checks pass.
+- All `.rodata`, `.sdata`, and `.sdata2` bytes in the parts unit now match; `.data` remains incomplete.

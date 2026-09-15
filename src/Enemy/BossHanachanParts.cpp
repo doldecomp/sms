@@ -7,6 +7,7 @@
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/ShadowUtil.hpp>
 #include <Strategic/Spine.hpp>
+#include <Strategic/Strategy.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <System/MarDirector.hpp>
 #include <NPC/NpcInbetween.hpp>
@@ -23,6 +24,10 @@
 
 class TFootHitActor : public TWaterHitActor {
 public:
+	TFootHitActor(const char* name)
+	    : TWaterHitActor(name)
+	{
+	}
 	virtual ~TFootHitActor() { }
 	/* 0x6C */ MtxPtr mJointMtx;
 };
@@ -102,14 +107,63 @@ TBossHanachanPartsHead::TBossHanachanPartsHead(TBossHanachan* boss,
 	CalcMtxPtrFromJointName(names, cNoseHallJointName_R, model, &mRightNoseMtx);
 }
 
-void TBossHanachanPartsBase::initMapCollisionAndHitActor_(TIdxGroupObj*)
+void TBossHanachanPartsBase::initMapCollisionAndHitActor_(TIdxGroupObj* group)
 {
-	// TODO
+	TBossHanachanCommonSaveParams* params = unkFC->mCommonParams;
+	const char* collisionFile = cBodyMapCollisionFileName;
+	f32 attackRadius = params->mSLBodyAttackRadius.get();
+	f32 attackHeight = params->mSLBodyAttackHeight.get();
+	f32 damageRadius = params->mSLBodyDamageRadius.get();
+	f32 damageHeight = params->mSLBodyDamageHeight.get();
+	f32 offsetY = params->mSLBodyHitOffsetY.get();
+	switch ((int)getActorType()) {
+	case 0x08000015:
+		break;
+	case 0x08000014:
+		collisionFile = cHeadMapCollisionFileName;
+		attackRadius = params->mSLHeadAttackRadius.get();
+		attackHeight = params->mSLHeadAttackHeight.get();
+		damageRadius = params->mSLHeadDamageRadius.get();
+		damageHeight = params->mSLHeadDamageHeight.get();
+		offsetY = params->mSLHeadHitOffsetY.get();
+		break;
+	}
+	J3DModel* model = mMActor->getModel();
+	JUTNameTab* names = model->getModelData()->getJointName();
+	u16 joint = names->getIndex(cMapCollisionJointName);
+	unk108 = mMActor->getModel()->getAnmMtx(joint);
+	unk104 = new TMapCollisionMove;
+	unk104->init(collisionFile, 0x8000, this);
+	unk100 = new TWaterHitActor("ボスハナチャンのパーツ");
+	unk100->initHitActor(getActorType(), 1, ACTOR_TYPE_PLAYER, attackRadius,
+	                     attackHeight, damageRadius, damageHeight);
+	group->getChildren().push_back(unk100);
+	unk100->offHitFlag(HIT_FLAG_NO_COLLISION);
+	MtxPtr mtx = unk108;
+	unk100->mPosition.set(mtx[0][3], mtx[1][3] - offsetY, mtx[2][3]);
 }
 
-void TBossHanachanPartsBody::initFootHitActor_(TIdxGroupObj*)
+void TBossHanachanPartsBody::initFootHitActor_(TIdxGroupObj* group)
 {
-	// TODO
+	static const char* sFootJointName[] = { "foot_L", "foot_R" };
+	int joints[2];
+	TBossHanachanCommonSaveParams* params = unkFC->mCommonParams;
+	J3DModel* model = mMActor->getModel();
+	JUTNameTab* names = model->getModelData()->getJointName();
+	for (int i = 0; i < 2; ++i) {
+		joints[i] = names->getIndex(sFootJointName[i]);
+		mFeet[i] = new TFootHitActor("ボスハナチャンの足");
+		mFeet[i]->initHitActor(getActorType(), 1, ACTOR_TYPE_PLAYER,
+		                      params->mSLFootAttackRadius.get(),
+		                      params->mSLFootAttackHeight.get(),
+		                      params->mSLFootDamageRadius.get(),
+		                      params->mSLFootDamageHeight.get());
+		group->getChildren().push_back(mFeet[i]);
+		mFeet[i]->offHitFlag(HIT_FLAG_NO_COLLISION);
+		MtxPtr mtx = mMActor->getModel()->getAnmMtx((u16)joints[i]);
+		mFeet[i]->mJointMtx = mtx;
+		mFeet[i]->mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+	}
 }
 
 void TBossHanachanPartsBase::offNonstopMotionBlend_()

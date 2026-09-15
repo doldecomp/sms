@@ -8,7 +8,44 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 13
+## Latest checkpoint: batch 14
+
+Reconstructed the last two TODO routines in `BossHanachanParts.cpp`: head/body map-collision setup and the two foot collision actors.
+The code recovers the original actor names, joint names, collision dimensions, actor-group registration, collision flags, matrix bindings, and initial positions.
+`initMapCollisionAndHitActor_` is **99.76471%** (544 bytes); only stack offsets differ.
+`initFootHitActor_` is **99.55238%** (420 bytes), with stack offsets and two register assignments still different.
+The foot destructor (156 bytes) and its pointer-adjustment thunk (8 bytes) now match exactly.
+All mapped functions in the parts unit, including UNUSED functions, are present for the first time.
+
+Audited the water-hit payload across the boss and particle users.
+The binary uses offset 0x68 as a signed 16-bit countdown in boss receivers and a 32-bit particle index in senders.
+The shared class now represents those views with a union, and all existing particle-index uses were renamed together.
+The named constructor initializes the receiver counter; the default constructor preserves the static sender's original lack of a payload store.
+This is an evidence-based representation of the binary's accesses, not proof of the original header's exact spelling.
+
+This batch adds **164 exact code bytes, two matching functions, and 800 matched data bytes**.
+Aggregate exact code is **1,374,896 / 3,603,748 bytes (38.151836%)**, with **8,162 / 12,904 functions** matching.
+Matched data is 300,595 bytes.
+There are still **73 source-linked objects**, covering **76,468 code bytes (2.121902%)**.
+The parts unit remains original-linked until all remaining instruction/data differences are resolved.
+
+### Validation and remaining work
+
+Captured `ninja baseline` at `918bf10e`, rebuilt the shared header's consumers, ran `ninja changes_all`, and compared all reported functions, including missing-function detection: zero regressions.
+Existing particle-manager and enemy function scores are unchanged.
+The full build, expected SHA-1, and direct byte comparison pass for the mixed source/original-object executable.
+No gameplay test was performed.
+
+The parts unit passes map presence, order, and linkage checks; its only map warning is the existing 208-versus-196-byte UNUSED hit predicate.
+The new strings and joint-name array also complete the unit's `.rodata`, `.sdata`, and `.sdata2` section matches.
+The `.data` section still differs.
+
+Next work: reconstruct `BossHanachanSub.cpp` using the audited counter field, and resolve the parts/owner animation stack and register differences before source-link promotion.
+The sub-unit map inventory and both initialization drafts were inspected; the draft files remain in `build/GMSE01/BossHanachan{Foot,Collision}-batch14.c`.
+See [batch 14 measurements](docs/progress/GMSE01-batch14.json) and the [shared-fix catalog](docs/MATCHING_CATALOG.md).
+Build, change, and map logs are saved under `build/GMSE01-*-batch14.log`.
+
+## Verified checkpoint: batch 13
 
 Matched `isAllBckAlreadyEnd` (184 bytes) and `setTumbleAnm` (420 bytes) exactly.
 The completion check compares each compound condition explicitly with `false`, preserving the original boolean normalization without the extra stack slots of named boolean locals.

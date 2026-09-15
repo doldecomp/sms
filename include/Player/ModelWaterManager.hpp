@@ -49,11 +49,22 @@ public:
 
 class TWaterHitActor : public THitActor {
 public:
+	TWaterHitActor() { }
+	TWaterHitActor(const char* name)
+	    : THitActor(name)
+	    , mWaterHitCounter(0)
+	{
+	}
+	virtual ~TWaterHitActor() { }
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	void onWaterHitCounter();
 
 public:
-	/* 0x68 */ int unk68;
+	// Senders carry a particle index; boss collision receivers carry a timer.
+	union {
+		/* 0x68 */ int mParticleIndex;
+		/* 0x68 */ s16 mWaterHitCounter;
+	};
 };
 
 class TModelWaterManager;
@@ -107,15 +118,15 @@ public:
 	// fabricated
 	BOOL checkParticleFlag(TWaterHitActor* hit, u16 flag)
 	{
-		return mParticleFlagSOA[hit->unk68] & flag ? TRUE : FALSE;
+		return mParticleFlagSOA[hit->mParticleIndex] & flag ? TRUE : FALSE;
 	}
 	u16 getParticleFlag(TWaterHitActor* hit)
 	{
-		return mParticleFlagSOA[hit->unk68];
+		return mParticleFlagSOA[hit->mParticleIndex];
 	}
 	s16 getParticleAttack(TWaterHitActor* hit)
 	{
-		return mParticleAttackSOA[hit->unk68];
+		return mParticleAttackSOA[hit->mParticleIndex];
 	}
 	int getFlagBottom4Bits(int i) const { return mParticleFlagSOA[i] & 0xf; }
 	void setFlagBottom4Bits(int i, int flag)

@@ -534,7 +534,7 @@ BOOL TBossManta::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_SPRAYED_BY_WATER
 	    && gpModelWaterManager
-	               ->mParticleFlagSOA[((TWaterHitActor*)sender)->unk68]
+	               ->mParticleFlagSOA[((TWaterHitActor*)sender)->mParticleIndex]
 	           & 0x40)
 		return collidedWithWater();
 	return FALSE;
