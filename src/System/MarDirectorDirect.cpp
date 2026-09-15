@@ -832,7 +832,7 @@ u8 TMarDirector::updateGameMode()
 				TFlagManager::getInstance()->setBool(true, 0x30006);
 				TFlagManager::getInstance()->setShineFlag(unk25C->getEventId());
 				f32 fVar3 = unkDC->mRate;
-				u16 uVar4 = fVar3;
+				u16 uVar4 = fVar3 * 0.5f;
 				unkDC->registFadeout(uVar4, fVar3 * 5.3333333f);
 				unk4C |= 0x8202;
 				unk261 = 6;
