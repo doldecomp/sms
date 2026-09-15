@@ -199,7 +199,7 @@ found_new_data:
 
 MActor* TMActorKeeper::createMActorFromAllBmd(u32 flags)
 {
-	int num = mModelDataKeeper->getModelDataNum();
+	int num = getModelDataKeeper()->getModelDataNum();
 	for (int i = 0; i < num; ++i)
 		createMActorFromNthData(i, flags);
 }
