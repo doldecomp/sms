@@ -1,0 +1,286 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "218d1312",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 74.47933,
+    "total_code": "3603748",
+    "matched_code": "1367756",
+    "matched_code_percent": 37.95371,
+    "total_data": "641075",
+    "matched_data": "296615",
+    "matched_data_percent": 46.268375,
+    "total_functions": 12904,
+    "matched_functions": 8135,
+    "matched_functions_percent": 63.04247,
+    "complete_code": "73148",
+    "complete_code_percent": 2.0297756,
+    "complete_data": "48064",
+    "complete_data_percent": 7.497407,
+    "total_units": 732,
+    "complete_units": 70
+  },
+  "source_linked_objects": 70,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 20,
+  "new_exact_code_bytes": 1376,
+  "improvements": [
+    {
+      "unit": "mario/Enemy/BathtubKiller",
+      "function": "generateItemBathtubKiller__14TBathtubKillerFv",
+      "before": 98.944786,
+      "after": 99.926384,
+      "size": 652
+    },
+    {
+      "unit": "mario/GC2D/GCConsole2",
+      "function": "startCameraDemo__11TGCConsole2Fv",
+      "before": 61.05137,
+      "after": 61.05308,
+      "size": 2336
+    },
+    {
+      "unit": "mario/Map/BathWaterManager",
+      "function": "perform__17TBathWaterManagerFUlPQ26JDrama9TGraphics",
+      "before": 93.85518,
+      "after": 93.85599,
+      "size": 4944
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "@32@__dt__12TBathtubGripFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 8
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "@32@__dt__21TBathtubGripPartsHardFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 8
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "@32@__dt__24TBathtubGripPartsFragileFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 8
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "@32@__dt__17TBathtubGripPartsFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 8
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "__sinit_MapObjCorona_cpp",
+      "before": 0,
+      "after": 99.92146,
+      "size": 764
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "__dt__24TBathtubGripPartsFragileFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 132
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "__dt__21TBathtubGripPartsHardFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 132
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "__dt__12TBathtubGripFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 132
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "__ct__14TBathtubParamsFv",
+      "before": 0,
+      "after": 99.84395,
+      "size": 1256
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "getRootJointMtx__17TBathtubGripPartsCFv",
+      "before": 0,
+      "after": 99.72222,
+      "size": 72
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "receiveMessage__24TBathtubGripPartsFragileFP9THitActorUl",
+      "before": 0,
+      "after": 100.0,
+      "size": 48
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "receiveMessage__21TBathtubGripPartsHardFP9THitActorUl",
+      "before": 0,
+      "after": 100.0,
+      "size": 60
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "kill__12TBathtubGripFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 176
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "__dt__17TBathtubGripPartsFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 108
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "__ct__12TBathtubGripFP8TBathtubfP13MActorAnmDataPCc",
+      "before": 0,
+      "after": 99.36323,
+      "size": 892
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "perform__12TBathtubGripFUlPQ26JDrama9TGraphics",
+      "before": 0,
+      "after": 100.0,
+      "size": 208
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "receiveMessage__12TBathtubGripFP9THitActorUl",
+      "before": 0,
+      "after": 78.30846,
+      "size": 804
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "getRootJointMtx__12TBathtubGripCFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 36
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "calcRootMatrix__12TBathtubGripFv",
+      "before": 0,
+      "after": 0.78740156,
+      "size": 508
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "control__12TBathtubGripFv",
+      "before": 0,
+      "after": 99.951965,
+      "size": 916
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "getNumGripsDead__8TBathtubCFv",
+      "before": 4.242424,
+      "after": 100.0,
+      "size": 132
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "getTakingMtx__8TBathtubFv",
+      "before": 20.0,
+      "after": 100.0,
+      "size": 28
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "getSubmarineMtxInDemo__8TBathtubFv",
+      "before": 20.0,
+      "after": 100.0,
+      "size": 28
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "getPeachMtxInDemo__8TBathtubFv",
+      "before": 20.0,
+      "after": 100.0,
+      "size": 28
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "getKoopaJrMtxInDemo__8TBathtubFv",
+      "before": 20.0,
+      "after": 100.0,
+      "size": 28
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "getRootJointMtx__8TBathtubCFv",
+      "before": 9.333333,
+      "after": 100.0,
+      "size": 60
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "getNozzleKind__14TNozzleTriggerCFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 8
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "allowsTumble__8TBathtubCFv",
+      "before": 0.9032258,
+      "after": 82.83871,
+      "size": 620
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "getNearGrip__8TBathtubCFRCQ29JGeometry8TVec3<f>fPf",
+      "before": 1.2173913,
+      "after": 70.982605,
+      "size": 460
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCorona",
+      "function": "__ct__8TBathtubFPCc",
+      "before": 25.016666,
+      "after": 86.833336,
+      "size": 240
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_order_corona": true,
+    "symbol_linkage_corona": true,
+    "symbol_presence_corona": false,
+    "symbol_map_corona_missing": [
+      "__ct__Q29JGeometry13SMatrix33R<f>Fv",
+      "set<f>__Q29JGeometry8TVec3<f>Ffff"
+    ],
+    "unused_size_warnings_corona": 17,
+    "symbol_map_bathtub_killer": true,
+    "gameplay_tested": false
+  },
+  "notes": [
+    "Reconstructed all mapped grip-family class declarations, inheritance, constructors, virtual methods, and UNUSED helper stubs. Four new grip-family vtables match exactly.",
+    "Exact gains include four destructors, four adjustment thunks, and the emitted existing TNozzleTrigger getter; no library implementation was edited.",
+    "Recovered all 26 bathtub parameters from the original constructor, including names, types, offsets, and defaults.",
+    "Corrected getNumGripsDead from u8 to int; the Bullet Bill item-drop routine is now 99.926384 percent, with remaining temporary-vector stack differences.",
+    "Grip control is 99.951965 percent, not exact: stack offsets differ.",
+    "Shared TBathtubData row-major matrix correction was investigated and reverted pending coordinated changes to its existing water consumers.",
+    "Both MapObjCorona and BathtubKiller remain nonmatching; the executable still links extracted objects for these units."
+  ]
+}

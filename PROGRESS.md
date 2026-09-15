@@ -7,7 +7,63 @@ The full decompilation is **not complete**.
 The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 
-## Latest checkpoint: batch 4
+## Latest checkpoint: batch 5
+
+Reconstructed the missing bathtub grip family in `MoveBG/MapObjCorona.cpp` and its header.
+This includes the grip, collision-part base, hard parts, fragile parts, and all 26 bathtub parameters.
+Class inheritance and fields follow constructor stores and virtual tables; descriptive field names are inferred from their uses.
+All four new grip-family virtual tables match exactly.
+Corrected `TBathtub::getNumGripsDead` from `u8` to `int`, eliminating the wrong narrowing operation in the Bullet Bill item-drop caller.
+
+This batch adds **1,376 exactly matched bytes and 20 matching functions/helpers**.
+These include the grip counter, animation update, collision removal, message forwarding, matrix getters, four destructors, four adjustment thunks, and an emitted existing nozzle getter.
+Exactly matched code is now **1,367,756 / 3,603,748 bytes (37.95371%)**, with **8,135 / 12,904 functions** matching.
+Matched data increased by 1,476 bytes to 296,615 bytes.
+There are still **70 source-linked objects**; neither bathtub unit is complete or newly source-linked.
+
+### Validation
+
+Captured `ninja baseline` at `218d1312`, rebuilt the changed units, and ran `ninja changes_all`.
+Every reported function was compared against the baseline: **zero regressions**.
+The full executable build, expected SHA-1, and byte comparison against the local US executable all pass.
+This checks the mixed source/extracted-object build, not completion of the new decompilation bodies.
+No gameplay test was performed.
+
+The bathtub file's function ordering and linkage now pass map validation.
+The overall map check still fails because two expected template symbols are not emitted: `SMatrix33R<float>`'s constructor and `TVec3<float>::set<float>`.
+There are also 17 UNUSED-size warnings.
+The Bullet Bill unit's map check passes with its existing warnings.
+No library implementation was changed.
+
+### Remaining work and next checkpoint
+
+| Routine | Comparison | Remaining issue |
+| --- | ---: | --- |
+| Grip control | 99.951965% | Stack frame differs by 16 bytes |
+| Bullet Bill item drops | 99.926384% | Temporary vectors are four bytes low on the stack |
+| Bathtub parameter constructor | 99.84395% | String offsets depend on unfinished TU data |
+| Grip-part matrix lookup | 99.72222% | Stack frame differs by 16 bytes |
+| Grip constructor | 99.36323% | Stack layout, model-flag registers, and string offsets |
+| Bathtub constructor | 86.833336% | Missing nested matrix constructor call |
+| Tumble eligibility | 82.83871% | Local-coordinate helper and template inlining |
+| Grip messages | 78.30846% | Stubbed quake, hipdrop, and demo callees; parameter loads |
+| Nearest-grip query | 70.982605% | Vector temporaries and `std::fmodf` inlining |
+
+These are partial comparison scores, not exact matches.
+The standalone reset, collision removal/setup, part constructors, and `startBreak` helpers have the original UNUSED sizes.
+`startCrack`, `isCracking`, and `trample` still differ in size.
+Other bathtub behavior and several direction/demo helpers remain TODO stubs.
+
+The original bathtub constructor calls `SMatrix33R<float>` at the shared data matrix at `0x188`.
+The current `TBathtubData` declaration uses a column-major matrix.
+A trial correction exposed transposed-access assumptions in existing water routines and was reverted; update that type and its consumers together after checking each caller's assembly.
+`allowsTumble` and `TBathWaterManager::throwMario` share the same original local-coordinate conversion sequence, which is a useful next reconstruction target.
+The quake and hipdrop drafts reference `TKoopa`, whose class scaffolding is also missing; scan its full map before introducing declarations.
+
+See [batch 5 measurements](docs/progress/GMSE01-batch5.json).
+The m2c drafts, baseline/build/change logs, and both map validation logs remain under `build/GMSE01` or `build/GMSE01-*-batch5.log`.
+
+## Verified checkpoint: batch 4
 
 Reconstructed five more previously stubbed routines in `Enemy/BathtubKiller.cpp`, together with its mushroom-spawning and break helpers.
 Recovered manager fields at `0x60`, `0x64`, `0x68`, and `0x69` from the load and item-drop instructions.

@@ -12,33 +12,35 @@ class MActor;
 class TBathtub : public TMapObjBase {
 public:
 	TBathtub(const char* name = "バスタブ");
+	virtual ~TBathtub();
 
-	void loadAfter();
+	virtual void load(JSUMemoryInputStream&);
+	virtual void loadAfter();
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual Mtx* getRootJointMtx() const;
+	virtual void calcRootMatrix();
+	virtual void control();
+
 	void hipdrop(const JGeometry::TVec3<f32>&);
 	void quake(const JGeometry::TVec3<f32>&);
-	u8 getNumGripsDead() const;
+	int getNumGripsDead() const;
 	void tumble(f32, f32);
 	MtxPtr getTakingMtx();
 	MtxPtr getSubmarineMtxInDemo();
 	MtxPtr getPeachMtxInDemo();
 	MtxPtr getKoopaJrMtxInDemo();
-	BOOL receiveMessage(THitActor* sender, u32 message);
-	Mtx* getRootJointMtx() const;
-	void perform(u32 cue, JDrama::TGraphics* graphics);
-	void control();
 	void calcBathtubData();
 	void setupCollisions_();
 	void removeCollisions_(); // Unused
 	void startDemo();
 	bool allowsTumble() const;
-	void calcRootMatrix();
 	bool getNearGrip(const JGeometry::TVec3<f32>&, f32, f32*) const;
 	u8 getNextJuncture(const JGeometry::TVec3<f32>&,
 	                   const JGeometry::TVec3<f32>&) const;
 	u8 getNextGrip(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&,
 	               f32, f32*) const;
 	void updatePosture_();
-	void load(JSUMemoryInputStream&);
 	u8 getNumKillerLaunchable() const;
 	bool isKillerAttackable() const;
 	u8 getNumKillerBurstable() const;
@@ -47,7 +49,7 @@ public:
 	void showMessage(u32);                                  // Unused
 	u8 getNearJuncture(const JGeometry::TVec3<f32>&) const; // Unused
 	MtxPtr getKoopaMtxInDemo();                             // Unused
-	MtxPtr getWaterMtx(s32);                                // Unused
+	MtxPtr getWaterMtx(int);                                // Unused
 	MtxPtr getShineEffectMtx();                             // Unused
 	MtxPtr getShineMtx();                                   // Unused
 	void liftMario(const JGeometry::TVec3<f32>&);           // Unused
@@ -97,9 +99,109 @@ public:
 	/* 0x290 */ int unk290;
 	/* 0x294 */ int unk294;
 	/* 0x298 */ u8 unk298;
+	/* 0x299 */ u8 unk299;
 	/* 0x29A */ u8 unk29A;
 	/* 0x29C */ MActor* unk29C;
 	/* 0x2A0 */ u32 unk2A0;
+};
+
+class TBathtubGripPartsHard;
+class TBathtubGripPartsFragile;
+
+class TBathtubGrip : public TMapObjBase {
+public:
+	TBathtubGrip(TBathtub*, f32, MActorAnmData*, const char*);
+	virtual ~TBathtubGrip() { }
+	virtual void perform(u32, JDrama::TGraphics*);
+	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual Mtx* getRootJointMtx() const;
+	virtual void calcRootMatrix();
+	virtual void control();
+	virtual void kill();
+
+	void reset(); // Unused
+	bool isCracking() const; // Unused
+	void startCrack(); // Unused
+	void startBreak(int, int, f32); // Unused
+	bool marioIsOn() const; // Unused
+	void removeCollisions_(); // Unused
+	void setupCollisions_(); // Unused
+
+public:
+	/* 0x138 */ JGeometry::TVec3<f32> unk138[2];
+	/* 0x150 */ TMapCollisionMove* mFragileCollisions[5];
+	/* 0x164 */ TMapCollisionMove* mHardCollisions[17];
+	/* 0x1A8 */ TBathtubGripPartsFragile* mFragileParts[5];
+	/* 0x1BC */ TBathtubGripPartsHard* mHardParts[17];
+	/* 0x200 */ int mJointIndices[17];
+	/* 0x244 */ TBathtub* mBathtub;
+	/* 0x248 */ u8 unk248;
+	/* 0x249 */ u8 unk249;
+	/* 0x24A */ u8 unk24A;
+	/* 0x24B */ u8 unk24B;
+	/* 0x24C */ f32 unk24C;
+	/* 0x250 */ f32 unk250;
+	/* 0x254 */ int unk254;
+	/* 0x258 */ int unk258;
+	/* 0x25C */ MActor* unk25C;
+	/* 0x260 */ u8 unk260;
+};
+
+class TBathtubGripParts : public TLiveActor {
+public:
+	TBathtubGripParts(const char*, int, TBathtubGrip*);
+	virtual ~TBathtubGripParts() { }
+	virtual Mtx* getRootJointMtx() const;
+
+public:
+	/* 0xF4 */ TBathtubGrip* mGrip;
+	/* 0xF8 */ int mIndex;
+};
+
+class TBathtubGripPartsFragile : public TBathtubGripParts {
+public:
+	TBathtubGripPartsFragile(int, TBathtubGrip*);
+	virtual ~TBathtubGripPartsFragile() { }
+	virtual BOOL receiveMessage(THitActor*, u32);
+};
+
+class TBathtubGripPartsHard : public TBathtubGripParts {
+public:
+	TBathtubGripPartsHard(int, TBathtubGrip*);
+	virtual ~TBathtubGripPartsHard() { }
+	virtual BOOL receiveMessage(THitActor*, u32);
+};
+
+class TBathtubParams : public TParams {
+public:
+	TBathtubParams();
+
+	/* 0x8 */ TParamRT<u8> resetGrip;
+	/* 0x1C */ TParamRT<s32> trampleRelease;
+	/* 0x30 */ TParamRT<s32> trampleRecover;
+	/* 0x44 */ TParamRT<s32> quakeRelease;
+	/* 0x58 */ TParamRT<s32> quakeRecover;
+	/* 0x6C */ TParamRT<s32> hipdropRelease;
+	/* 0x80 */ TParamRT<s32> hipdropRecover;
+	/* 0x94 */ TParamRT<s32> breakCount0;
+	/* 0xA8 */ TParamRT<s32> breakCount1;
+	/* 0xBC */ TParamRT<s32> breakCount2;
+	/* 0xD0 */ TParamRT<s32> breakCount3;
+	/* 0xE4 */ TParamRT<s32> launchStopCount;
+	/* 0xF8 */ TParamRT<f32> animSpeed0;
+	/* 0x10C */ TParamRT<f32> animSpeed1;
+	/* 0x120 */ TParamRT<f32> animSpeed2;
+	/* 0x134 */ TParamRT<f32> animSpeed3;
+	/* 0x148 */ TParamRT<f32> animSpeed4;
+	/* 0x15C */ TParamRT<f32> shake;
+	/* 0x170 */ TParamRT<f32> watermark;
+	/* 0x184 */ TParamRT<f32> maxAngle;
+	/* 0x198 */ TParamRT<f32> angleVelDamp;
+	/* 0x1AC */ TParamRT<f32> rebound;
+	/* 0x1C0 */ TParamRT<f32> shakeDamp;
+	/* 0x1D4 */ TParamRT<f32> marioWeight;
+	/* 0x1E8 */ TParamRT<f32> marioDropWeight;
+	/* 0x1FC */ TParamRT<f32> outerHeight;
 };
 
 #endif
