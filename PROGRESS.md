@@ -8,7 +8,18 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 39 — closure trials, no file completed
+## Latest checkpoint: batch 40 — apply near-matching strategy
+
+Adopted [STRATEGY.md](STRATEGY.md): prioritize large 98%+ functions, group shared causes, time-box stalls, and keep short batch notes.
+Corrected the two wire-transition flag types: specMain improves from 99.85731% to 99.9932%; its six swap-stack operands remain nonmatching (TODO recorded).
+Preserved verified spider collision corrections (84.298% → 99.590256%) and beam geometry corrections (88.64047% → 95.671425%); rejected trials are reverted and frame blockers noted in source.
+No new exact functions or source-linked files: game **25.033045% matched / 3.254321% source-linked**; aggregate **38.612686% / 2.571545%**, still **86 source-linked game files / 92,672 code bytes**.
+Baseline at `f1c2fc62`; full build, changes_all, all 12,904 function comparisons and per-unit data checks show zero regressions; map checks pass with existing UNUSED-size warnings (12 MarioSpecial, one beam).
+DOL byte comparison and SHA-1 `a6782903ef79d4196c8489ecb1b57decb5b3728f` pass; no gameplay test performed.
+Refreshed `build/GMSE01-near-matching.txt`: 1,266 authorized functions / 733,184 bytes; next reviewed target is loadParticleMario, with TMario callers grouped when shared evidence applies.
+A local Git bundle is saved under `/home/netflix/sms-backups/`; no fork remote is configured, so an off-machine backup remains pending.
+
+## Verified checkpoint: batch 39 — closure trials, no file completed
 
 Reread the plan and retain its whole-file completion order.
 Corrected two reversed random-timer bounds in AnimalNerve and improved NpcCallback's flag test and Mario-height retention.
@@ -1137,5 +1148,6 @@ Source, configuration, progress snapshots, and notes are versioned locally.
 
 ## Next work
 
-Continue with small game-code mismatches, capture a fresh baseline for the next batch, and investigate the three deferred source-link candidates.
-The largest unfinished game units in the initial inventory include the HUD, save/load screens, boss logic, and event scripting.
+Follow [STRATEGY.md](STRATEGY.md) and the refreshed near-matching list.
+Start the next time-box with `TMarDirector::loadParticleMario()`; consult source TODOs before revisiting specMain, spider or beam.
+Keep the small-file queue and old audits as supporting references; defer from-scratch work until the near-matching group is mostly exhausted.

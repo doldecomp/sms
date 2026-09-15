@@ -820,6 +820,8 @@ BOOL TMario::wireWaitToSWaitL()
 	return 0;
 }
 
+// TODO: specMain inlines the endpoint swap at stack 0x68; ours uses 0x7c.
+// Hoisting or splitting the temporary declaration does not fix its stack slot.
 BOOL TMario::wireWaitToSWaitR()
 {
 	getOnWirePosAngle(&mPosition, &mModelFaceAngle);
@@ -853,9 +855,9 @@ BOOL TMario::wireWaitToHang()
 	mFaceAngle.y = mModelFaceAngle + 0x4000;
 	setAnimation(ANIM_ROPE_WHG, 1.0f);
 	if (isLast1AnimeFrame()) {
-		BOOL noHold = FALSE;
+		bool noHold = false;
 		if (mHeldObject == nullptr && !onYoshi())
-			noHold = TRUE;
+			noHold = true;
 		if (noHold)
 			return changePlayerStatus(MARIO_STATUS_WIRE_HANGING, 0, false);
 		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
@@ -869,9 +871,9 @@ BOOL TMario::wireSWaitToHang()
 	mModelFaceAngle = mFaceAngle.y;
 	setAnimation(ANIM_ROPE_SWHG, 1.0f);
 	if (isLast1AnimeFrame()) {
-		BOOL noHold = FALSE;
+		bool noHold = false;
 		if (mHeldObject == nullptr && !onYoshi())
-			noHold = TRUE;
+			noHold = true;
 		if (noHold)
 			return changePlayerStatus(MARIO_STATUS_WIRE_HANGING, 0, false);
 		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);

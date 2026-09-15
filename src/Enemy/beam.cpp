@@ -73,13 +73,14 @@ void TConeBeam::drawConeBeamAux(const GXColor& color, bool unk)
 	GXEnd();
 }
 
-// TODO: @non-matching
+// TODO: Recover origin caching in coneInPlane and the remaining stack layout.
+// Preserve the map's 348-byte UNUSED coneInPlane body while testing callers.
 void TConeBeam::calcVertices(int count)
 {
+	JGeometry::TVec3<f32> local_140;
 	JGeometry::TVec3<f32> local_134(0.0f, 1.0f, 0.0f);
 
 	JGeometry::TVec3<f32> local_128 = unk0C;
-	JGeometry::TVec3<f32> local_140;
 
 	mVtxCount = count;
 	local_128.sub(unk00);
@@ -97,22 +98,23 @@ void TConeBeam::calcVertices(int count)
 
 	if (mBGCheckData == nullptr) {
 		for (int i = 0; i <= mVtxCount; i++) {
-			f32 s = mScale * JMASin(i * (360.0f / mVtxCount)) / 2.0f;
-			f32 c = mScale * JMACos(i * (360.0f / mVtxCount)) / 2.0f;
+			f32 s = 0.5f * (mScale * JMASin(i * (360.0f / mVtxCount)));
+			f32 c = 0.5f * (mScale * JMACos(i * (360.0f / mVtxCount)));
 
 			JGeometry::TVec3<f32> local_11c;
 			local_11c.zero();
 
-			local_11c += local_140 * s;
-			local_11c += local_134 * c;
+			local_11c += local_140 * c;
+			local_11c += local_134 * s;
 
 			local_11c += unk0C;
 
 			mVtx[i] = local_11c;
 		}
 	} else {
-		JGeometry::TPartition3<f32> partition(mBGCheckData->getNormal(),
-		                                      mBGCheckData->getPlaneDistance());
+		JGeometry::TPartition3<f32> partition;
+		partition.mDist = mBGCheckData->getPlaneDistance();
+		partition.mNormal.set(mBGCheckData->getNormal());
 		f32 local_128Len = PSVECMag(&local_128);
 		f32 angle        = matan(local_128Len, mScale)
 		            * (360.0f / 65536.0f); // this is SHORT2DEGANGLE constant
@@ -120,8 +122,8 @@ void TConeBeam::calcVertices(int count)
 		PSVECNormalize(&local_128, &local_128);
 
 		for (int i = 0; i <= mVtxCount; i++) {
-			f32 sinA = JMASin(i * (360.0f / mVtxCount));
 			f32 cosA = JMACos(i * (360.0f / mVtxCount));
+			f32 sinA = JMASin(i * (360.0f / mVtxCount));
 
 			JGeometry::TVec3<f32> local_ec;
 			local_ec.zero();

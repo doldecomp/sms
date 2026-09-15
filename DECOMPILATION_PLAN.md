@@ -7,6 +7,7 @@
 - Upstream: `https://github.com/doldecomp/sms`, commit `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 - The user has authorized implementation and ongoing progress checks for the local North American ISO.
 - Local changes have added 26,396 exactly matching code bytes and 153 matching functions/helpers across thirty-eight batches; 86 game objects are linked from source.
+- Follow [STRATEGY.md](STRATEGY.md) for the active work order.
 - Consult `docs/MATCHING_CATALOG.md` before related edits; inventory shared callers, batch evidence-supported fixes, and record exceptions and validation results.
 - Current checkpoint and remaining limitations are documented in `PROGRESS.md`.
 - The active configuration is now `GMSE01`; an all-extracted-object rebuild has matched the complete input executable.
@@ -71,7 +72,7 @@ Exit condition: a repeatable build and a trustworthy per-unit/per-function basel
 
 1. Classify game translation units as missing, partially reconstructed, or verified matching.
 2. Record code sizes, match results, dependencies, unknown layouts, and unresolved symbols.
-3. Prioritize small game utilities and nearly matching functions, followed by shared game systems and their dependents.
+3. Follow STRATEGY.md: prioritize large nonmatching game functions at 98%+ similarity and group shared causes.
 4. Group subsequent work by subsystem: player, camera, map, interactive objects, enemies, NPCs, UI, and audio wrappers.
 5. Keep runtime and middleware work requiring human supervision as explicit dependencies.
 
@@ -112,7 +113,25 @@ Its instruction is: "when working without a human programmer's supervision work 
 Any remaining work in those libraries requires human supervision and may limit full-project completion.
 The autonomous implementation backlog should focus on game code.
 
-## Active work: revised priorities (user direction, 2026-09-15)
+## Active work: near-matching strategy (user direction, 2026-09-15)
+
+[STRATEGY.md](STRATEGY.md) supersedes the former small-file completion order below.
+The final goal remains a fully source-built, byte-identical GMSE01 game.
+
+1. Start with the strategy's ten reviewed targets, then refresh the size-ranked list of nonmatching game functions at 98%+ similarity after each batch.
+2. Investigate shared causes together, starting with TMario; search related callers and batch only fixes supported by their instruction diffs.
+3. Spend about 20–30 minutes per function, then leave a specific TODO and move on if the evidence remains unresolved.
+4. Complete and source-link files when little work remains; defer from-scratch reconstruction until the near-matching group is mostly exhausted.
+5. Keep full regression, map, DOL byte and SHA-1 checks; take a fresh baseline before header changes.
+6. Keep batch notes short in PROGRESS.md and add only reusable findings to MATCHING_CATALOG.md; stop creating per-batch audit Markdown and JSON snapshots.
+
+The source-linked measure below remains the completion criterion; matched-function gains guide the intermediate work order.
+The historical queue and audits remain references for existing blockers, not instructions to resume the old priority order.
+Backup-to-fork and upstream intent remain user decisions; keep local commits and a local bundle until a fork destination is supplied.
+
+## Historical priorities through batch 39 — superseded
+
+The following records the previous file-completion strategy and its results.
 
 ### Goal
 
@@ -132,7 +151,7 @@ Taken from `build/GMSE01/report.json`.
 | All | 100% | 38.42% | 2.12% |
 
 The aggregate 38% is dominated by upstream library work; game code is about 25% matched.
-From now on, every checkpoint in `PROGRESS.md` must report the **game-category** matched and complete percentages alongside the aggregate figures.
+Every checkpoint in `PROGRESS.md` must report the **game-category** matched and complete percentages alongside the aggregate figures.
 
 ### Priority 1: finish nearly complete game objects and link them from source
 

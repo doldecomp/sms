@@ -17,9 +17,22 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## Byte-test flags and vector copies, batch 40
+
+- MarioSpecial: `clrlwi. r0,r29,24` at specMain offsets 0x948/0x9e8 identifies byte-sized flags in the inlined wireWaitToHang/wireSWaitToHang helpers.
+  Change their `BOOL noHold` locals to `bool`; keep function return types unchanged.
+  Search neighboring `noHold` sites, but do not mass-convert them without their own instruction evidence.
+  specMain reaches 99.9932%, not exact: six endpoint-swap stack operands use 0x7c/0x80/0x84 instead of 0x68/0x6c/0x70.
+  Hoisting, splitting or const-qualifying the vector temporary does not fix the slot; plain Vec introduces a conversion call and regresses.
+- Spider: a plain `Vec` linear-velocity copy followed by scalar xyz sums/dot products lets MWCC retain Y/Z in floating-point registers where a TVec3 copy blocks it.
+  All instruction opcodes/registers now agree, but frame/stack operands remain wrong (0x120 versus 0x158); setters and wall-record initialization variants do not resolve the frame.
+- Beam: default-construct the local partition, then assign distance and normal separately; the by-value constructor emits extra integer copies and prevents the original floating-point caching.
+  Do not change JGeometry globally; the coneInPlane UNUSED body must remain 348 bytes, and scalar-origin trials changed its size without matching the caller.
+- Verification: all-function and per-unit data comparison has no regressions; see the short batch 40 checkpoint in PROGRESS.md.
+
 ## Single-function closure trials, batch 39
 
-- No file completed; whole-file priorities remain in DECOMPILATION_PLAN.md.
+- No file completed under the former whole-file priorities; STRATEGY.md supersedes that order starting at batch 40.
 - AnimalNerve: two MsRandI(hi, lo) calls are reversed relative to the original positive range and lower-bound addition.
   Correct both to MsRandI(lo, hi), matching the other two local sites; do not change the shared random helper.
   Similarity rises to 99.62276%, but frame 0x118 versus 0xE8 and early register differences remain.
