@@ -922,3 +922,18 @@ A full executable match also does not validate bodies in objects that are still 
   Consult the [batch 37 audit](progress/GMSE01-closure-audit-batch37.md) before retrying these candidates.
 - Source linking reaches 85 game files / 91,324 code bytes.
   All 12,904 function comparisons pass with zero regressions, as do the factory map and full executable byte/SHA-1 checks.
+
+## Integer grid lookup completes MapCollisionPlane, batch 38
+
+- Inventory worldToGrid/gridToWorld callers before changing conversion types.
+  MapObjPlane::depress needs fractional coordinates; checkPlaneGround needs integer cell indices.
+  Preserve the existing fractional API and add worldToGridIndex with its name marked fabricated.
+- Compute mOneOverScale * (v + mExtent) directly into a named int and return it.
+  This recovers integer conversion reuse, registers, frame 0x88 and all stack slots in checkPlaneGround.
+  Returning the fractional helper directly gives frame 0x80; naming its int result gives 0x90; naming a float result reintroduces extra instructions.
+  Caller int-to-s32 and split declaration/assignment trials have no effect.
+- All MapCollisionPlane code/data/map checks pass, and all 1,348 code bytes now link from source.
+  MapObjPlane function scores are unchanged; full executable byte/SHA-1 checks pass with zero regressions across 12,904 functions.
+- NpcInbetween's ratio accessor recovers the original floating-point registers but enlarges its frame by eight bytes.
+  Const and split-declaration variations do not solve it; all NPC trials reverted.
+  See the [batch 38 audit](progress/GMSE01-closure-audit-batch38.md) before related retries.

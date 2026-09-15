@@ -6,7 +6,7 @@
 - Local branch: `local/decomp-progress`.
 - Upstream: `https://github.com/doldecomp/sms`, commit `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 - The user has authorized implementation and ongoing progress checks for the local North American ISO.
-- Local changes have added 26,088 exactly matching code bytes and 152 matching functions/helpers across thirty-seven batches; 85 game objects are linked from source.
+- Local changes have added 26,396 exactly matching code bytes and 153 matching functions/helpers across thirty-eight batches; 86 game objects are linked from source.
 - Consult `docs/MATCHING_CATALOG.md` before related edits; inventory shared callers, batch evidence-supported fixes, and record exceptions and validation results.
 - Current checkpoint and remaining limitations are documented in `PROGRESS.md`.
 - The active configuration is now `GMSE01`; an all-extracted-object rebuild has matched the complete input executable.
@@ -144,15 +144,15 @@ Each promotion still requires the full executable SHA-1 and byte comparison.
    - `GC2D/MessageUtil` completed and source-linked in batch 24; full SHA-1 and byte comparison pass.
    - `System/MarDirectorCreateObjects` and `System/TargetArrow` completed and source-linked in batch 35 after correcting regional string/split metadata; full SHA-1 and byte comparison pass.
 2. Game objects with a single nonmatching function, smallest remaining size first, for example:
-   `Player/MarioAccess` (72 bytes left), `Enemy/egggen` (120), `Strategic/HitActor` (124), `MSound/MSoundBGM` (136), `MoveBG/MapObjPollution` (172), `Enemy/DebuTelesa` (176, plus data), `MoveBG/MapObjAirport` (208), `NPC/NpcInbetween` (220), `System/SnapTimeObj` (228), `Enemy/enemytable` (276), `Map/MapEventSirena` (280), `MoveBG/MapObjFloat` (288), `M3DUtil/M3UModel` (292), `Map/MapCollisionPlane` (308).
-3. More broadly, 97 unlinked game objects have 2,000 or fewer unmatched code bytes, totalling 90,324 bytes.
+   `Player/MarioAccess` (72 bytes left), `Enemy/egggen` (120), `Strategic/HitActor` (124), `MSound/MSoundBGM` (136), `MoveBG/MapObjPollution` (172), `Enemy/DebuTelesa` (176, plus data), `MoveBG/MapObjAirport` (208), `NPC/NpcInbetween` (220), `System/SnapTimeObj` (228), `Enemy/enemytable` (276), `Map/MapEventSirena` (280), `MoveBG/MapObjFloat` (288), `M3DUtil/M3UModel` (292).
+3. More broadly, 96 unlinked game objects have 2,000 or fewer unmatched code bytes, totalling 90,016 bytes.
    Regenerate this list from `report.json` at each checkpoint rather than trusting these numbers.
-   Batch 37 regeneration is saved in `docs/progress/GMSE01-completion-queue.json`: 97 authorized game files with 1..2,000 unmatched bytes, totaling 90,324 unmatched code bytes.
+   Batch 38 regeneration is saved in `docs/progress/GMSE01-completion-queue.json`: 96 authorized game files with 1..2,000 unmatched bytes, totaling 90,016 unmatched code bytes.
    This excludes THPPlayer despite the report classifying it as game code.
-   Consult the batch 25 through batch 37 closure audits in `docs/progress/` before retrying stalled candidates; they record map gaps, shared issues, and rejected trials.
+   Consult the batch 25 through batch 38 closure audits in `docs/progress/` before retrying stalled candidates; they record map gaps, shared issues, and rejected trials.
    `Map/PollutionObj` completed and source-linked in batch 27: 75 game objects / 79,528 code bytes.
    `GC2D/HelpActor` completed and source-linked in batch 29: 76 game objects / 80,800 code bytes.
-   Game coverage is 25.02223% matched / 3.206984% source-linked; aggregate coverage is 38.604145% / 2.5341396%.
+   Game coverage is 25.033045% matched / 3.254321% source-linked; aggregate coverage is 38.612686% / 2.571545%.
    Batch 29 also restores an AnimalManager helper and matches CameraTalk/Strategy functions; those files retain recorded blockers.
    Batch 30 audited `MapXlu`, `PollutionPos`, `PerformList`, `BossHanachanNerve`, `MessageLoader` and `MovieRumble`; no additional file was completed.
    MessageLoader's parser improves, but its remaining stack differences prevent promotion.
@@ -171,6 +171,8 @@ Each promotion still requires the full executable SHA-1 and byte comparison.
    Named alpha plus call-site color construction closes SplashManager; a current-mode predicate restores CameraMode's asymmetric inlining and data emission.
    Batch 37 completes and source-links MarNameRefGen_Map: 85 game objects / 91,324 code bytes.
    Restored factory branches and constructor/header context match all code/data; ordered archive linking reproduces the original handling of duplicate sun-path globals and passes full executable comparison.
+   Batch 38 completes and source-links MapCollisionPlane: 86 game objects / 92,672 code bytes.
+   A separate integer grid-index helper resolves conversion reuse and frame layout while preserving MapObjPlane's fractional coordinates; full executable comparison and all-function regression checks pass.
    Revisit earlier deferrals when new evidence addresses their recorded blockers; prioritize a hypothesis that can close a file over further partial camera reconstruction.
 
 If an object stalls on a hard function, record the evidence and move to the next object instead of forcing a fakematch.
@@ -187,7 +189,7 @@ Continue larger unfinished game units (HUD, save/load screens, event scripting, 
 ### Pending human decision: library objects
 
 After the batch 35 regional metadata correction, 308 JSystem and Dolphin SDK objects (542,892 code bytes) report complete code/data matches but are not linked from source.
-Subject to the required map and relink checks, linking them would raise complete code from 2.53% to about 17.60%, and a fully source-built game ultimately requires them.
+Subject to the required map and relink checks, linking them would raise complete code from 2.57% to about 17.64%, and a fully source-built game ultimately requires them.
 `AGENTS.md` restricts autonomous work on these libraries, so **do not promote or edit them without explicit user approval**.
 The three matching `THPPlayer` objects fall under the same restriction.
 

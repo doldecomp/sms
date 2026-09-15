@@ -1,0 +1,77 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "d4900785",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.627174,
+    "total_code": "3603748",
+    "matched_code": "1391504",
+    "matched_code_percent": 38.612686,
+    "total_data": "641075",
+    "matched_data": "322047",
+    "matched_data_percent": 50.235462,
+    "total_functions": 12904,
+    "matched_functions": 8258,
+    "matched_functions_percent": 63.99566,
+    "complete_code": "92672",
+    "complete_code_percent": 2.571545,
+    "complete_data": "58404",
+    "complete_data_percent": 9.110323,
+    "total_units": 732,
+    "complete_units": 86
+  },
+  "game_measures": {
+    "fuzzy_match_percent": 69.49765,
+    "total_code": "2847660",
+    "matched_code": "712856",
+    "matched_code_percent": 25.033045,
+    "total_data": "558292",
+    "matched_data": "250768",
+    "matched_data_percent": 44.916996,
+    "total_functions": 9012,
+    "matched_functions": 4461,
+    "matched_functions_percent": 49.500664,
+    "complete_code": "92672",
+    "complete_code_percent": 3.254321,
+    "complete_data": "58404",
+    "complete_data_percent": 10.461192,
+    "total_units": 385,
+    "complete_units": 86
+  },
+  "source_linked_objects": 86,
+  "new_source_linked_objects": [
+    "Map/MapCollisionPlane.cpp"
+  ],
+  "new_source_linked_code_bytes": 1348,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "unexplained_function_regressions": [],
+  "new_exact_functions": 1,
+  "new_exact_code_bytes": 308,
+  "new_matched_data_bytes": 0,
+  "improvements": [
+    {
+      "unit": "mario/Map/MapCollisionPlane",
+      "function": "checkPlaneGround__20TMapCheckGroundPlaneFfffPPC12TBGCheckData",
+      "before": 95.94805,
+      "after": 100.0,
+      "size": 308
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "all_functions_present": true,
+    "no_exact_function_regressions": true,
+    "symbol_map_MapCollisionPlane": true,
+    "gameplay_test": false
+  },
+  "notes": [
+    "MapCollisionPlane now links all 1348 code bytes and 220 data bytes from source.",
+    "Separate integer grid-index conversion removes redundant conversion spills; its direct expression and named integer result recover the original frame. The helper name is marked fabricated.",
+    "MapObjPlane keeps fractional worldToGrid conversion and its function scores are unchanged. No other function similarity changes.",
+    "NpcInbetween ratio helper trials fixed registers but enlarged the frame; all were reverted."
+  ]
+}

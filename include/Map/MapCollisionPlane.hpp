@@ -14,6 +14,12 @@ public:
 
 	f32 gridToWorld(f32 v) { return v * mScale - mExtent; }
 	f32 worldToGrid(f32 v) { return mOneOverScale * (v + mExtent); }
+	// Fabricated name; collision lookup truncates to a cell index.
+	int worldToGridIndex(f32 v)
+	{
+		int coordinate = mOneOverScale * (v + mExtent);
+		return coordinate;
+	}
 
 public:
 	/* 0x0 */ int mGridWidth;

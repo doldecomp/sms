@@ -8,7 +8,26 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 37 — map factory completed and source-linked
+## Latest checkpoint: batch 38 — MapCollisionPlane completed
+
+Completed and source-linked **MapCollisionPlane.cpp**, adding **1,348 code bytes** and **220 data bytes**.
+A separate integer cell-index conversion recovers the original conversion reuse and stack layout.
+MapObjPlane keeps its fractional-coordinate conversion; all its function scores remain unchanged.
+One runtime function / 308 code bytes becomes exact.
+
+| Coverage | Matched code | Source-linked code |
+| --- | ---: | ---: |
+| Game code | **25.033045%** | **3.254321%** |
+| Aggregate | **38.612686%** | **2.571545%** |
+
+Source linking is now **86 game files / 92,672 code bytes**.
+Baseline at `d4900785`; full build, changes_all, all 12,904 function comparisons, map checks, DOL byte comparison and expected SHA-1 pass with zero regressions.
+All code/data sections match; no gameplay test was performed.
+NpcInbetween helper trials did not complete that file and were reverted.
+The regenerated queue contains 96 authorized small game files / 90,016 unmatched bytes.
+See the [batch 38 audit](docs/progress/GMSE01-closure-audit-batch38.md) and [measurements](docs/progress/GMSE01-batch38.json).
+
+## Verified checkpoint: batch 37 — map factory completed and source-linked
 
 Completed and source-linked **MarNameRefGen_Map.cpp**, adding **824 code bytes** and **488 data bytes**.
 Restored its three missing factory branches, pollution-test constructor context and header-generated strings.

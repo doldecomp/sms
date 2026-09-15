@@ -1,10 +1,10 @@
 {
   "region": "GMSE01",
-  "checkpoint": "batch37",
+  "checkpoint": "batch38",
   "notes": [
     "Report-based candidates only; source-link promotion also requires instruction, data, emission, map and executable verification.",
     "Priorities follow DECOMPILATION_PLAN.md. Game objects only; protected THPPlayer objects are excluded even though report metadata classifies them as game.",
-    "Consult the batch 25 through batch 37 closure audits before revisiting stalled candidates."
+    "Consult the batch 25 through batch 38 closure audits before revisiting stalled candidates."
   ],
   "all_code_matching": [
     {
@@ -246,20 +246,6 @@
           "name": "updateInMotion__8M3UModelFv",
           "size": 292,
           "similarity": 99.9315
-        }
-      ]
-    },
-    {
-      "unit": "mario/Map/MapCollisionPlane",
-      "source": "src/Map/MapCollisionPlane.cpp",
-      "code_bytes": 1348,
-      "unmatched_code_bytes": 308,
-      "unmatched_data_bytes": 0,
-      "nonmatching_functions": [
-        {
-          "name": "checkPlaneGround__20TMapCheckGroundPlaneFfffPPC12TBGCheckData",
-          "size": 308,
-          "similarity": 95.94805
         }
       ]
     },
@@ -855,20 +841,6 @@
           "name": "updateInMotion__8M3UModelFv",
           "size": 292,
           "similarity": 99.9315
-        }
-      ]
-    },
-    {
-      "unit": "mario/Map/MapCollisionPlane",
-      "source": "src/Map/MapCollisionPlane.cpp",
-      "code_bytes": 1348,
-      "unmatched_code_bytes": 308,
-      "unmatched_data_bytes": 0,
-      "nonmatching_functions": [
-        {
-          "name": "checkPlaneGround__20TMapCheckGroundPlaneFfffPPC12TBGCheckData",
-          "size": 308,
-          "similarity": 95.94805
         }
       ]
     },
@@ -2581,6 +2553,6 @@
     "mario/THPPlayer/THPRead",
     "mario/THPPlayer/THPVideoDecode"
   ],
-  "near_count": 97,
-  "near_unmatched_code_bytes": 90324
+  "near_count": 96,
+  "near_unmatched_code_bytes": 90016
 }

@@ -83,5 +83,6 @@
   "System/TargetArrow.cpp",
   "Player/SplashManager.cpp",
   "Camera/CameraMode.cpp",
-  "System/MarNameRefGen_Map.cpp"
+  "System/MarNameRefGen_Map.cpp",
+  "Map/MapCollisionPlane.cpp"
 ]
