@@ -1,3 +1,41 @@
+#define STRATEGIC_TAKE_ACTOR_HPP
+#include <Strategic/HitActor.hpp>
+
+class TTakeActor : public THitActor {
+public:
+	TTakeActor(const char* name)
+	    : THitActor(name)
+	    , mHolder(nullptr)
+	    , mHeldObject(nullptr)
+	{
+	}
+	virtual ~TTakeActor();
+	virtual MtxPtr getTakingMtx() = 0;
+	virtual void ensureTakeSituation()
+	{
+		if (mHeldObject != nullptr && mHeldObject->mHolder != this)
+			mHeldObject = nullptr;
+
+		if (mHolder != nullptr && mHolder->mHeldObject != this)
+			mHolder = nullptr;
+	}
+	virtual BOOL moveRequest(const JGeometry::TVec3<f32>& where_to)
+	{
+		mPosition = where_to;
+		return true;
+	}
+	virtual f32 getRadiusAtY(f32) const;
+
+	BOOL isTaken() const { return mHolder != nullptr ? TRUE : FALSE; }
+	bool isHolding() const { return mHeldObject != nullptr ? true : false; }
+	TTakeActor* getHolder() { return mHolder; }
+	TTakeActor* getHeldObject() { return mHeldObject; }
+
+public:
+	/* 0x68 */ TTakeActor* mHolder;
+	/* 0x6C */ TTakeActor* mHeldObject;
+};
+
 #include "Map/MapStaticObject.hpp"
 #include "Map/MapWireManager.hpp"
 #include "MoveBG/Item.hpp"
@@ -39,10 +77,17 @@
 #include <System/MarNameRefGen.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-static void dummy(Vec* v)
+TTakeActor::~TTakeActor() { }
+
+static void dummy(Vec* v, TSirenaGate* sirenaGate,
+                  TCasinoRoulette* casinoRoulette,
+                  TSirenaRollMapObj* sirenaRollMapObj)
 {
 	*v = (Vec) { 0.0f, 0.0f, 0.0f };
 	*v = (Vec) { 1.0f, 1.0f, 1.0f };
+	sirenaGate->~TSirenaGate();
+	casinoRoulette->~TCasinoRoulette();
+	sirenaRollMapObj->~TSirenaRollMapObj();
 }
 
 inline TCoverFruit::TCoverFruit(const char* name)
