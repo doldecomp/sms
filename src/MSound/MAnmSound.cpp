@@ -51,7 +51,8 @@ void MAnmSound::startAnimSound(void* interface, u32 id,
 			break;
 
 		case 7: {
-			u32 bVar2 = actor->mGroundNumber >> 24;
+			u32 ground = actor->mGroundNumber;
+			u32 bVar2 = ground >> 24;
 			u32 a     = bVar2 & 0xF;
 			u8 b      = bVar2 >> 4;
 			MSGMSound->startMarioVoice(id, a, b);
