@@ -70,5 +70,6 @@
   "System/TimeRec.cpp",
   "NPC/NpcThrow.cpp",
   "System/marerr.cpp",
-  "Enemy/BossHanachanSound.cpp"
+  "Enemy/BossHanachanSound.cpp",
+  "Enemy/BossHanachanSave.cpp"
 ]

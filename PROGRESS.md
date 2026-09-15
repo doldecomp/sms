@@ -8,7 +8,39 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 9
+## Latest checkpoint: batch 10
+
+Completed `BossHanachanSave.cpp` and linked it from source after verifying the full executable.
+Both parameter constructors match exactly: 1,608 bytes for the changeable parameters and 1,408 bytes for common parameters.
+Recovered all 63 parameter names, defaults, types, and field offsets from native strings, constructor stores, and parameter virtual-table references.
+Reused the existing `System/DummyStrings.hpp` for the leading shared literals; this fixed the remaining differences in both constructors together.
+
+Completed the previously missing base-part constructor logic using the recovered parameters and existing model/motion helpers.
+It now reproduces the original instruction sequence apart from an eight-byte stack-frame difference (99.90598%).
+Correcting the shared joint-matrix helper to hold a `u16` index made both head/body constructors exact (192 and 260 bytes) and restored the helper's mapped 76-byte size.
+The existing `CLBPalFrame<short>` template is now emitted and matches all 92 bytes.
+
+This batch adds **3,560 exact code bytes and five matching functions/helpers**.
+Aggregate exact code is **1,373,020 / 3,603,748 bytes (38.099777%)**, with **8,152 / 12,904 functions** matching.
+Matched data is 299,763 bytes.
+There are now **73 source-linked objects**, covering **76,468 code bytes (2.121902%)** and 51,024 data bytes.
+The unfinished parts object remains linked from the original executable.
+
+### Validation and remaining work
+
+Captured `ninja baseline` at `58f3e2d0`, ran `ninja changes_all`, and compared all functions, including missing-function detection: zero regressions.
+The complete executable passes its expected SHA-1 and byte comparison after linking the parameter object from source.
+The parameter and sound objects pass map presence, order, and linkage checks.
+The parts object passes order and linkage but still lacks the emitted foot destructor/thunk; its two remaining UNUSED-size warnings concern the hit predicate and `isMarioOn_`.
+No gameplay test was performed.
+
+Remaining parts work includes collision/foot initialization, the animation-state dispatcher, `isMarioOn_`, and exact matching of the partial routines.
+The water-hit counter/particle-index layout discrepancy recorded in batch 9 must be resolved before adding a shared water-hit constructor.
+The base constructor now contains model and blend setup, but the parts unit is not yet a runnable replacement as a whole.
+See [batch 10 measurements](docs/progress/GMSE01-batch10.json) and the [shared-fix catalog](docs/MATCHING_CATALOG.md).
+Logs and drafts are saved under `build/GMSE01` and `build/GMSE01-*-batch10*.log`.
+
+## Verified checkpoint: batch 9
 
 Reconstructed the boss head/body animation setters and hit-message handlers, plus tumble-rate adjustment, circular-shadow submission, and damage fog.
 The shared hit-reaction predicate is reconstructed once and used by both message handlers.

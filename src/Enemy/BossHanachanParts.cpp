@@ -7,6 +7,7 @@
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/ShadowUtil.hpp>
 #include <Strategic/Spine.hpp>
+#include <Strategic/ObjModel.hpp>
 #include <System/MarDirector.hpp>
 #include <NPC/NpcInbetween.hpp>
 #include <Player/ModelWaterManager.hpp>
@@ -35,7 +36,8 @@ const char* cNoseHallJointName_R = "R_hall";
 void CalcMtxPtrFromJointName(JUTNameTab* names, const char* name,
                            J3DModel* model, MtxPtr* result)
 {
-	*result = model->getAnmMtx(names->getIndex(name));
+	u16 index = names->getIndex(name);
+	*result = model->getAnmMtx(index);
 }
 
 TBossHanachanPartsBase::TBossHanachanPartsBase(TBossHanachan* boss,
@@ -51,7 +53,24 @@ TBossHanachanPartsBase::TBossHanachanPartsBase(TBossHanachan* boss,
     , unk10C(0)
     , mInbetween(nullptr)
 {
-	// TODO: recover the boss parameters and model-keeper setup.
+	mMActorKeeper = unkFC->mMActorKeeper;
+	mMActor = mMActorKeeper->createMActorFromNthData(modelIndex, 0);
+	mMActor->initNormalMotionBlend();
+	initHitActor(actorType, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+	switch ((int)actorType) {
+	case 0x08000015:
+		mScaledBodyRadius = unkFC->mCommonParams->mSLBodyShadowSize.get();
+		break;
+	case 0x08000014:
+		mScaledBodyRadius = unkFC->mCommonParams->mSLHeadShadowSize.get();
+		break;
+	}
+	onLiveFlag(LIVE_FLAG_UNK8);
+	initAnmSound();
+	mMActor->setLightType(1);
+	mInbetween = new TNpcInbetween(
+	    1, CLBPalFrame(unkFC->mCommonParams->mSLMotionBlendFrames.get()));
 }
 
 TBossHanachanPartsBody::TBossHanachanPartsBody(TBossHanachan* boss,

@@ -120,3 +120,27 @@ A full executable match also does not validate bodies in objects that are still 
 - The original particle-manager static object is `0x6C` bytes and its constructor has no store to `0x68`; the boss foot constructor explicitly zeros a halfword there.
   Avoid inventing a shared constructor until that distinction is resolved.
 - All callers rebuilt after the declaration correction; the complete batch 9 function comparison found zero regressions.
+
+## Boss parameter constructors and shared literals
+
+- Status: both constructors exact and `BossHanachanSave.cpp` source-linked, batch 10.
+- Search: `rg -n 'TBossHanachan.*SaveParams|PARAM_INIT' src/Enemy/BossHanachanSave.cpp include/Enemy/BossHanachan.hpp`.
+- Common parameters: 29 `TParamRT` members, size `0x24C`; changeable parameters: 34 members, size `0x2B0`.
+- Names are native DOL strings starting from rodata base `0x803820A0`; defaults and types come from constructor stores and vtable references.
+- The common block supplies head/body collision dimensions, shadow sizes, and the signed-short motion-blend duration at `0x248`.
+- Both constructors initially had correct initialization logic but incorrect string offsets: the original has 32 bytes of shared literals before the first parameter name.
+  Including the existing `System/DummyStrings.hpp` restores them and makes both constructors exact, including the first constructor's scheduling.
+- The original trailing four zero bytes in `.sdata2` are reproduced by linker alignment; no dummy data definition was needed.
+- Full executable SHA-1 and byte comparison pass with the parameter object source-linked.
+
+## Boss joint-matrix lookup: narrow the local index
+
+- Status: verified shared correction, batch 10.
+- Search: `rg -n 'CalcMtxPtrFromJointName' src include`.
+- Original head/body constructor sites narrow the `JUTNameTab::getIndex` result to 16 bits before computing the matrix address.
+- Use `u16 index = names->getIndex(name);` followed by `model->getAnmMtx(index)` in the existing helper.
+  This restores its UNUSED 76-byte size and makes both derived constructors exact, including their stack layouts.
+- Do not globally narrow `JUTNameTab::getIndex` or change the protected model accessor: this evidence belongs to the caller's local index.
+- Completing the base constructor with existing model and blend helpers also emits the exact `CLBPalFrame<short>` implementation.
+  The base constructor itself still has an eight-byte stack difference; avoid artificial padding.
+- Both changed units and all header consumers rebuilt with zero function regressions in batch 10.

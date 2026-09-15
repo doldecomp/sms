@@ -1,0 +1,97 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "58f3e2d0",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 74.70169,
+    "total_code": "3603748",
+    "matched_code": "1373020",
+    "matched_code_percent": 38.099777,
+    "total_data": "641075",
+    "matched_data": "299763",
+    "matched_data_percent": 46.759426,
+    "total_functions": 12904,
+    "matched_functions": 8152,
+    "matched_functions_percent": 63.174213,
+    "complete_code": "76468",
+    "complete_code_percent": 2.121902,
+    "complete_data": "51024",
+    "complete_data_percent": 7.9591312,
+    "total_units": 732,
+    "complete_units": 73
+  },
+  "source_linked_objects": 73,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 5,
+  "new_exact_code_bytes": 3560,
+  "improvements": [
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "CLBPalFrame<s>__Fs",
+      "before": 0,
+      "after": 100.0,
+      "size": 92
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "__ct__22TBossHanachanPartsBaseFP13TBossHanachanUliPCc",
+      "before": 25.666666,
+      "after": 99.90598,
+      "size": 468
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "__ct__22TBossHanachanPartsBodyFP13TBossHanachanPCc",
+      "before": 54.615383,
+      "after": 100.0,
+      "size": 260
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "__ct__22TBossHanachanPartsHeadFP13TBossHanachanPCc",
+      "before": 37.208332,
+      "after": 100.0,
+      "size": 192
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanSave",
+      "function": "__ct__29TBossHanachanCommonSaveParamsFPCc",
+      "before": 0,
+      "after": 100.0,
+      "size": 1408
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanSave",
+      "function": "__ct__29TBossHanachanChangeSaveParamsFPCc",
+      "before": 0,
+      "after": 100.0,
+      "size": 1608
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_map_save": true,
+    "symbol_map_sound": true,
+    "symbol_order_parts": true,
+    "symbol_linkage_parts": true,
+    "symbol_presence_parts": false,
+    "missing_parts": [
+      "__dt__13TFootHitActorFv",
+      "@32@__dt__13TFootHitActorFv"
+    ],
+    "unused_size_warnings_parts": 2,
+    "gameplay_tested": false
+  },
+  "notes": [
+    "BossHanachanSave is reconstructed and source-linked with both constructors exact; the full US DOL byte comparison passes after promotion.",
+    "Parameter names were decoded from the native DOL; defaults and types follow constructor stores and TParamRT vtable references.",
+    "Reusing System/DummyStrings.hpp restores the shared leading literals and makes both parameter constructors exact.",
+    "Completed the missing parts base-constructor logic. Its remaining mismatch is an eight-byte stack-frame difference.",
+    "A u16 local in CalcMtxPtrFromJointName restores the UNUSED helper size and makes both derived part constructors exact.",
+    "The parts unit remains incomplete and is not source-linked; foot initialization and animation dispatch are still unfinished."
+  ]
+}
