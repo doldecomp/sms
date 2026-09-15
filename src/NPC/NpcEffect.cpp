@@ -136,7 +136,8 @@ void TBaseNPC::emitSinkEffect_()
 void TBaseNPC::emitHappyEffect_()
 {
 	JGeometry::TVec3<f32> scale = getEffectScale_();
-	scale *= mPtrSaveNormal->mSLCleanEffectScale.get();
+	const f32& cleanEffectScale = mPtrSaveNormal->mSLCleanEffectScale.get();
+	scale *= cleanEffectScale;
 	if (isNormalMonte()) {
 		SMS_EasyEmitParticle(PARTICLE_MS_MNT_KIRA, mHappyEffectMtxPtr, this,
 		                     scale);
