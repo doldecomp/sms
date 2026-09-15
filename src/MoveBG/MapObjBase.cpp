@@ -108,7 +108,11 @@ void TMapObjBase::setUpCurrentMapCollision()
 	} else {
 		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,
 		                          mPosition.z);
-		colman->setUpUnk8TRS(pos, mRotation, mScaling);
+		Mtx mtx;
+		MsMtxSetTRS(mtx, pos.x, pos.y, pos.z, mRotation.x, mRotation.y,
+		            mRotation.z, mScaling.x, mScaling.y, mScaling.z);
+		TMapCollisionBase* col = colman->getUnk8();
+		col->setUpMtx(mtx);
 	}
 }
 
