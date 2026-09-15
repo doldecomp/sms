@@ -1,0 +1,81 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "68fb613c",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.549446,
+    "total_code": "3603748",
+    "matched_code": "1385216",
+    "matched_code_percent": 38.438206,
+    "total_data": "641075",
+    "matched_data": "303535",
+    "matched_data_percent": 47.347813,
+    "total_functions": 12904,
+    "matched_functions": 8223,
+    "matched_functions_percent": 63.72443,
+    "complete_code": "79528",
+    "complete_code_percent": 2.2068136,
+    "complete_data": "51276",
+    "complete_data_percent": 7.9984403,
+    "total_units": 732,
+    "complete_units": 75
+  },
+  "game_measures": {
+    "fuzzy_match_percent": 69.39927,
+    "total_code": "2847660",
+    "matched_code": "706568",
+    "matched_code_percent": 24.812231,
+    "total_data": "558300",
+    "matched_data": "241560",
+    "matched_data_percent": 43.26706,
+    "total_functions": 9012,
+    "matched_functions": 4426,
+    "matched_functions_percent": 49.112297,
+    "complete_code": "79528",
+    "complete_code_percent": 2.7927492,
+    "complete_data": "51276",
+    "complete_data_percent": 9.18431,
+    "total_units": 385,
+    "complete_units": 75
+  },
+  "source_linked_objects": 75,
+  "new_source_linked_objects": [
+    "Map/PollutionObj.cpp"
+  ],
+  "new_source_linked_code_bytes": 2092,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 1,
+  "new_exact_code_bytes": 564,
+  "new_matched_data_bytes": 0,
+  "improvements": [
+    {
+      "unit": "mario/Map/PollutionObj",
+      "function": "getDepthFromMap__13TPollutionObjFii",
+      "before": 99.96454,
+      "after": 100.0,
+      "size": 564
+    },
+    {
+      "unit": "mario/MarioUtil/EffectUtil",
+      "function": "SMS_EmitSinkInPollutionEffect__FRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>b",
+      "before": 96.66393,
+      "after": 98.7541,
+      "size": 488
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_map_pollution_obj": true,
+    "symbol_map_effect_util": false,
+    "gameplay_test": false
+  },
+  "notes": [
+    "PollutionObj now links all 2092 runtime code bytes from source; its last 564-byte function matches exactly. Named near/height results and the first-declared ground pointer restore native stack layout without the pre-existing void expression.",
+    "EffectUtil normalizes the two cross-product vectors in place; no new exact code or promotion is claimed for this file. Its pre-existing missing UNUSED SMS_GetJumpIntoWaterModelData definition remains unresolved.",
+    "Full executable byte comparison and SHA-1 pass; all 12904 functions remain present with zero regressions."
+  ]
+}

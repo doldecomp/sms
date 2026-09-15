@@ -739,3 +739,19 @@ A full executable match also does not validate bodies in objects that are still 
   Both changed units pass map checks without warnings.
   No source-link promotion or exact runtime-code gain is claimed.
   Game code remains 24.792425% matched / 2.7192852% source-linked; aggregate 38.422554% / 2.148763%.
+
+## PollutionObj file completion and EffectUtil vectors, batch 27
+
+- PollutionObj's ground-query pointer needs slot `0x54`, with an otherwise exact `0xB0` frame.
+  Declare it first and name both the `is_near` result and center ground-height result.
+  This restores all 564 function bytes while removing the existing `(void)0` and preserving the out-of-line call from `updateDepthMap`.
+  Both UNUSED predicates retain their map sizes; the entire 2,092-byte object now links from source with a byte-identical executable.
+- Moving the pointer alone reaches `0x50`; removing the no-op before recovering the named predicate causes unwanted inlining.
+  Naming the center height alone does not fix the pointer slot.
+  Search `is_near|getDepthFromMap|worldToDepth` in game map sources before related changes; other conversion callers have different surrounding contexts.
+- EffectUtil normalizes its two cross-product vectors in place, eliminating an extra saved float register.
+  Similarity improves from 96.66393% to 98.7541%; two `cross2` calls regress and were reverted.
+  Matrix/frame/register differences and one missing UNUSED map definition remain; no file completion claimed.
+- Full build, changes_all, all 12,904 function comparisons, DOL byte comparison and SHA-1 pass; zero regressions.
+  PollutionObj map checks pass; EffectUtil's pre-existing missing definition remains documented.
+  See [batch 27 audit](progress/GMSE01-closure-audit-batch27.md) for the complete evidence and next queue entries.

@@ -72,5 +72,6 @@
   "System/marerr.cpp",
   "Enemy/BossHanachanSound.cpp",
   "Enemy/BossHanachanSave.cpp",
-  "GC2D/MessageUtil.cpp"
+  "GC2D/MessageUtil.cpp",
+  "Map/PollutionObj.cpp"
 ]

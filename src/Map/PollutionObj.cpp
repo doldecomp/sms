@@ -25,8 +25,7 @@ static bool is_near(f32 h00, f32 h01, f32 h10, f32 h11)
 
 u8 TPollutionObj::getDepthFromMap(int x, int z)
 {
-	// TODO: inlines are wrong here!
-	(void)0;
+	const TBGCheckData* tmp;
 	f32 worldX = mLayer->getWorldPosX(x);
 	f32 worldZ = mLayer->getWorldPosZ(z);
 
@@ -37,16 +36,17 @@ u8 TPollutionObj::getDepthFromMap(int x, int z)
 
 	f32 texelSz = mLayer->getTexelSize();
 
-	const TBGCheckData* tmp;
 	f32 h00 = gpMap->checkGround(minX, 9999999.0f, minZ, &tmp);
 	f32 h10 = gpMap->checkGround(maxX, 9999999.0f, minZ, &tmp);
 	f32 h01 = gpMap->checkGround(minX, 9999999.0f, maxZ, &tmp);
 	f32 h11 = gpMap->checkGround(maxX, 9999999.0f, maxZ, &tmp);
 
-	if (is_near(h00, h01, h10, h11)) {
+	bool near = is_near(h00, h01, h10, h11);
+	if (near) {
 		f32 half = 0.5f * texelSz;
-		return mLayer->worldToDepth(
-		    gpMap->checkGround(worldX + half, 9999999.0f, worldZ + half, &tmp));
+		f32 height = gpMap->checkGround(worldX + half, 9999999.0f,
+		                                worldZ + half, &tmp);
+		return mLayer->worldToDepth(height);
 	}
 	return 0xFF;
 }

@@ -1,10 +1,10 @@
 {
   "region": "GMSE01",
-  "checkpoint": "batch26",
+  "checkpoint": "batch27",
   "notes": [
     "Report-based candidates only; source-link promotion also requires instruction, data, emission, map and executable verification.",
     "Priorities follow DECOMPILATION_PLAN.md. Game objects only; protected THPPlayer objects are excluded even though report metadata classifies them as game.",
-    "Consult GMSE01-closure-audit-batch25.md and GMSE01-closure-audit-batch26.md before revisiting stalled candidates."
+    "Consult GMSE01-closure-audit-batch25.md, GMSE01-closure-audit-batch26.md and GMSE01-closure-audit-batch27.md before revisiting stalled candidates."
   ],
   "all_code_matching": [
     {
@@ -387,7 +387,7 @@
         {
           "name": "SMS_EmitSinkInPollutionEffect__FRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>b",
           "size": 488,
-          "similarity": 96.66393
+          "similarity": 98.7541
         }
       ]
     },
@@ -402,20 +402,6 @@
           "name": "SMS_InitChangeNpcColor__FPC6MActorPC16TColorChangeInfosPC8_GXColor",
           "size": 560,
           "similarity": 99.96429
-        }
-      ]
-    },
-    {
-      "unit": "mario/Map/PollutionObj",
-      "source": "src/Map/PollutionObj.cpp",
-      "code_bytes": 2092,
-      "unmatched_code_bytes": 564,
-      "unmatched_data_bytes": 0,
-      "nonmatching_functions": [
-        {
-          "name": "getDepthFromMap__13TPollutionObjFii",
-          "size": 564,
-          "similarity": 99.96454
         }
       ]
     },
@@ -759,7 +745,7 @@
     },
     {
       "unit": "mario/Enemy/enemyinterp",
-      "source": "",
+      "source": null,
       "code_bytes": 180,
       "unmatched_code_bytes": 180,
       "unmatched_data_bytes": 16,
@@ -1143,7 +1129,7 @@
         {
           "name": "SMS_EmitSinkInPollutionEffect__FRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>b",
           "size": 488,
-          "similarity": 96.66393
+          "similarity": 98.7541
         }
       ]
     },
@@ -1215,20 +1201,6 @@
           "name": "SMS_InitChangeNpcColor__FPC6MActorPC16TColorChangeInfosPC8_GXColor",
           "size": 560,
           "similarity": 99.96429
-        }
-      ]
-    },
-    {
-      "unit": "mario/Map/PollutionObj",
-      "source": "src/Map/PollutionObj.cpp",
-      "code_bytes": 2092,
-      "unmatched_code_bytes": 564,
-      "unmatched_data_bytes": 0,
-      "nonmatching_functions": [
-        {
-          "name": "getDepthFromMap__13TPollutionObjFii",
-          "size": 564,
-          "similarity": 99.96454
         }
       ]
     },
@@ -2881,6 +2853,6 @@
     "mario/THPPlayer/THPRead",
     "mario/THPPlayer/THPVideoDecode"
   ],
-  "near_count": 106,
-  "near_unmatched_code_bytes": 96868
+  "near_count": 105,
+  "near_unmatched_code_bytes": 96304
 }

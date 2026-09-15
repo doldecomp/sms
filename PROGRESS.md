@@ -8,7 +8,26 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 26 — restore missing file definitions
+## Latest checkpoint: batch 27 — PollutionObj file completion
+
+Completed and source-linked **`Map/PollutionObj.cpp`**, adding **2,092 source-linked code bytes**.
+Its final 564-byte function now matches exactly after restoring the original local-variable and inline-call structure.
+Removed its pre-existing no-op expression; no stack padding was added.
+EffectUtil improves to 98.7541% but remains deferred with a missing UNUSED definition.
+
+| Coverage | Matched code | Source-linked code |
+| --- | ---: | ---: |
+| Game code | **24.812231%** | **2.7927492%** |
+| Aggregate | **38.438206%** | **2.2068136%** |
+
+Source linking is now **75 game objects / 79,528 code bytes**.
+Baseline at `68fb613c`; full build, changes_all, comparison of all 12,904 functions, DOL byte comparison and expected SHA-1 pass.
+Zero regressions; PollutionObj passes all map checks including both UNUSED sizes.
+No gameplay test was performed.
+The refreshed completion queue has 105 authorized small files / 96,304 unmatched bytes.
+Continue file completion in the plan's order; consult the [batch 27 audit](docs/progress/GMSE01-closure-audit-batch27.md) and [measurements](docs/progress/GMSE01-batch27.json).
+
+## Verified checkpoint: batch 26 — restore missing file definitions
 
 Recovered both missing NPC color helpers from repeated call sites.
 Their UNUSED map sizes are **48 and 80 bytes**, and the file now passes symbol presence/order/linkage checks without warnings.
