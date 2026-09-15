@@ -133,10 +133,11 @@ bool TMarDirector::setupObjects()
 {
 	TFlagManager::getInstance()->resetStage();
 	TFlagManager::getInstance()->setFlag(0x60003, 1);
-	switch (gpApplication.mCurrArea.unk0) {
+	TGameSequence* currArea = &gpApplication.mCurrArea;
+	switch (currArea->unk0) {
 	case 1: {
-		TFlagManager::getInstance()->setBool(true, 0x3000D);
-		TFlagManager::getInstance()->setBool(true, 0x30005);
+		TFlagManager::getInstance()->setBool(false, 0x3000D);
+		TFlagManager::getInstance()->setBool(false, 0x30005);
 		if (!TFlagManager::getInstance()->getBool(0x30003)) {
 			TFlagManager::getInstance()->setBool(true, 0x30003);
 			unk4E |= 0x2;
@@ -144,7 +145,7 @@ bool TMarDirector::setupObjects()
 			TFlagManager::getInstance()->setBool(true, 0x30000);
 		}
 
-		switch (gpApplication.mCurrArea.unk1) {
+		switch (currArea->unk1) {
 		case 0:
 		case 1:
 		case 7:
@@ -201,15 +202,16 @@ bool TMarDirector::setupObjects()
 		break;
 	}
 	case 5:
-		if (gpApplication.mCurrArea.unk1 != 3)
-			(void)gpApplication.mCurrArea.unk1;
+		if ((int)currArea->unk1 != 3)
+			(void)currArea->unk1;
 		else
 			TFlagManager::getInstance()->setBool(true, 0x50003);
 		break;
 	}
 
-	u32 bVar28 = SMS_getShineStage(gpApplication.mCurrArea.unk0);
-	TFlagManager::getInstance()->setBool(true, 0x103A5 + bVar28);
+	u32 bVar28 = SMS_getShineStage(currArea->unk0);
+	u32 flag    = 0x103A5 + bVar28;
+	TFlagManager::getInstance()->setBool(true, flag);
 
 	MSMainProc::setMSoundEnterStage(mMap, unk7D);
 	if (!TFlagManager::getInstance()->getBool(0x30007)) {
