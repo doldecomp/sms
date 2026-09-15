@@ -598,7 +598,7 @@ The sound unit retains its baseline map failure: missing `getDistPowFromCamera`,
 Its complete map-check output is unchanged from the baseline.
 No source-link promotion or gameplay test was performed.
 
-The constructor still lacks the previous-voice-ID word initialization at 0x94; properly recovering that field requires resolving ownership of the existing `JAIBasic` tail under the middleware supervision constraint.
+The constructor still lacks the previous-voice-ID word initialization at 0x94; properly recovering that field requires resolving ownership of the existing `JAIBasic` tail, which is now in scope after the 2026-09-15 autonomy change.
 `playTimer` is 99.881355% and boss Snort is 99.9186%; their field offsets now agree with the original, leaving stack-layout differences.
 The sound callback also has remaining US behavior differences in cases 40 and 110, recorded in the catalog for the next focused pass.
 Next work: reconstruct the missing game-side sound distance helper and callback differences, then continue the boss main-unit reconstruction and remaining nerve stack differences.
@@ -1132,7 +1132,8 @@ No gameplay test has been performed; the matching executable still uses extracte
 Several game-side audio routines access fields four bytes later in the US binary than in the current declarations.
 Examples include `MSMainProc::toInnerCameraDemo` (target byte `0xCE`, current `0xCA`) and `MSound`'s camera array (target `0xB0`, current `0xAC`).
 The constructor also writes additional fields at `0x94` and `0x98` and uses `0x9A` for a field currently at `0x94`.
-This indicates a regional layout change around the end of the `JAIBasic` base class, requiring supervised library review under `AGENTS.md`.
+This indicates a regional layout change around the end of the `JAIBasic` base class.
+This was blocked pending supervised library review; as of 2026-09-15 it is in scope and is a good first target for the lifted library restriction.
 No library source or speculative padding was added.
 
 ## Verified checkpoint: batch 2

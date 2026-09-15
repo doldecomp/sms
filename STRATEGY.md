@@ -46,7 +46,11 @@ Even matching half of them would be worth 11–13 points, several times the enti
    A batch touching only one `.cpp` file can reuse the previous baseline.
    Always capture a fresh `ninja baseline` before any header change, and run `ninja changes_all` after every batch.
    Keep the SHA-1 / DOL byte checks and `tools/validate-symbol-order.py` for changed units.
-6. **Defer from-scratch decompilation.**
+6. **Library objects are now in scope.**
+   The user lifted the MSL/TRK/THPPlayer/SDK/JSystem prohibition on 2026-09-15.
+   298 library objects already match in code and data and only need source linking, which is worth about 15 points of source-linked code — far more than anything in the near-match queue.
+   Weigh that against near-match work when choosing a batch.
+7. **Defer from-scratch decompilation.**
    Untouched units (`bosstelesa`, `bosspakkun`, `Koopa`, `bosswanwan`, …) are real work but pay back more slowly.
    Start them once the 98%+ group is mostly exhausted.
 
@@ -60,7 +64,7 @@ Functions 1, 3, 7, 8 and 9 are all `TMario`: if a fix belongs in a shared Mario 
 View a diff with:
 
 ```
-python tools/decomp-diff.py -u <unit> -d "<function>" --no-collapse
+python3 tools/decomp-diff.py -u <unit> -d "<function>" --no-collapse
 ```
 
 ### 1. `TMario::specMain()`
@@ -172,11 +176,10 @@ python3 - <<'EOF'
 import json
 r = json.load(open("build/GMSE01/report.json"))
 fns = []
+# Since 2026-09-15 all categories are in scope; drop the filter to include
+# JSystem and SDK units, or keep it to work game code first.
 for u in r["units"]:
     if "game" not in u.get("metadata", {}).get("progress_categories", []):
-        continue
-    # THPPlayer is categorized as game but is restricted by AGENTS.md.
-    if u.get("metadata", {}).get("source_path", "").startswith("src/THPPlayer/"):
         continue
     for f in u.get("functions", []) or []:
         fz = f.get("fuzzy_match_percent", 0) or 0

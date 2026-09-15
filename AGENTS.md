@@ -4,6 +4,40 @@ This document describes the structure, conventions and workflows of this reposit
 
 Important preliminary note: always prefer putting sentences in `.md` files on different lines to reduce the diff shown in git when rewording just one sentence — the lines still get collapsed into a single paragraph as per `.md` formatting rules.
 
+## This clone
+
+This is a personal clone, not upstream `doldecomp/sms`, and it is configured differently from what the rest of this guide assumes.
+Read this section before running any command below.
+
+| | Upstream default | **This clone** |
+| --- | --- | --- |
+| Active version | `GMSJ01` (Japanese) | **`GMSE01`** (North American, rev 0) |
+| Linker map | `orig/GMSJ01/files/mario.MAP` | **`orig/GMSE01/files/marioUS.MAP`** |
+| Platform | Windows (`.exe` suffixes) | **Linux**, no `.exe` suffix |
+| Ninja | `ninja` on `PATH` | **`build/venv/bin/ninja`** |
+| Python | `python` | **`python3`** for repo tools; **`build/venv/bin/python3`** when venv packages are needed |
+| `m2c` | ask the user for a path | **`/home/netflix/m2c/m2c.py`**, installed in `build/venv` |
+
+The `GMSJ01` and `GMSP01` configs still exist in the tree but have no input image here, so they cannot be built or regression-tested.
+
+**Neither `python` nor `ninja` is on `PATH`.**
+Commands copied verbatim from upstream documentation will fail with "command not found"; use the invocations in the table above.
+
+Two tools need explicit overrides because their defaults point at the Japanese setup:
+
+```bash
+# validate-symbol-order.py defaults to the GMSJ01 map and a Windows nm
+NM=build/binutils/powerpc-eabi-nm build/venv/bin/python3 tools/validate-symbol-order.py \
+    -u mario/GC2D/CardLoad --map orig/GMSE01/files/marioUS.MAP
+```
+
+The US map is a real linker map shipped on the disc, so it is a priority source of truth exactly as `mario.MAP` is upstream.
+Region-specific layout differences between the Japanese and US binaries are real and recurring — see `docs/MATCHING_CATALOG.md`.
+Guard them with `#if defined(VERSION_GMSE01)` rather than silently changing shared offsets, since the other regions cannot be rebuilt here to catch a regression.
+
+Current state, active work order and per-batch history live in `PROGRESS.md`, `STRATEGY.md` and `DECOMPILATION_PLAN.md`.
+`STRATEGY.md` defines the current work order and supersedes the older file-completion queue.
+
 ## Project Goal
 
 Reconstruct the original C++ source code such that compiling it with the original Metrowerks CodeWarrior compiler produces **byte-identical** object files to the original game binary (`mario.dol`). This is called a **matching** decomp.
@@ -14,14 +48,16 @@ The work is fundamentally about getting into the heads of the original developer
 
 When progress stalls because a tough choice must be made and strong evidence is lacking, **leave the code nonmatching and move on**. New evidence often emerges later — from matching a neighboring function, finding a pattern in another TU, or discovering a debug string. Premature commitment to a wrong approach creates technical debt that's harder to undo than a TODO comment. The final goal is still always a 100% match, but trying to headbutt a particular function into matching 100% usually results in fakematches (see below) and technical debt. Case-by-case judgement should be used.
 
-Truly hard judgment calls — ambiguous code structure, naming disputes, architectural decisions — should be deferred to humans.
-Do that by leaving TODOs around places that feel especially fake and wrong rather than refusing to tackle complicated tasks.
+Hard judgment calls — ambiguous code structure, naming disputes, architectural decisions — are yours to make in this clone.
+Pick the best-evidenced option, record the evidence and the rejected alternative in a `// TODO:` comment next to the code, and keep moving.
+Do not stall a batch waiting for a human; do not refuse a complicated task; do not silently bury a guess without a comment.
+The one thing still worth interrupting for is a change whose only path to a match looks artificial — see [Fakematches](#fakematches-important).
 The ultimate goal of the project is not just a matching binary, but **human-readable, modifiable source code**.
 
 ## Repository Layout
 
 ```
-config/GMSJ01/
+config/GMSE01/
   config.yml          — decomp-toolkit project config
   symbols.txt         — layout of the binary, addresses, sizes, names etc for every symbol present
   splits.txt          — per-TU section address ranges
@@ -29,8 +65,8 @@ config/GMSJ01/
 
 src/                  — decompiled C/C++ source files
 include/              — headers (class declarations, inline functions)
-orig/GMSJ01/          — original game disc image (not committed)
-build/GMSJ01/         — build artifacts, compiled objects
+orig/GMSE01/          — original game disc image + marioUS.MAP (not committed)
+build/GMSE01/         — build artifacts, compiled objects
   obj/                — target (original) object files extracted by dtk
   src/                — recompiled object files from our source
 build/compilers/      — various retro compilers, downloaded during build
@@ -47,17 +83,41 @@ configure.py          — main build configuration; lists ALL objects and their 
 docs/                 — documentation on reverse-engineering methodology
 ```
 
-**MOST IMPORTANT NOTE OF ALL IMPORTANT NOTES**: autonomous agents are **strictly prohibited** from working on:
-- MSL runtime, MetroTRK and THPPlayer,
-- dolphin SDK,
-- JSystem middleware.
-Under the supervision of a human programmer, some degree of work might be acceptable on a narrow subset of these libraries known to be leak-free, but when working without a human programmer's supervision work on these libraries is strictly prohibited and such PRs will not be accepted. Work on game code instead.
+## Autonomy in this clone
+
+Upstream forbids autonomous work on the MSL runtime, MetroTRK, THPPlayer, the Dolphin SDK and JSystem middleware.
+**That prohibition is lifted here.**
+All libraries are in scope: decompiling them, linking already-matching objects from source, and fixing their build configuration.
+The 298 library objects that already match byte-for-byte (code **and** data) but are not source-linked are a standing, high-value target: linking them takes source-linked code from 2.57% to about 17.64%.
+Three further library objects match in code but not data.
+Verify these counts from `build/GMSE01/report.json` rather than trusting this line; the earlier figure of 308 was wrong.
+
+One rule survives the lift, and it is not negotiable:
+
+> **Work only from the binary, the disc's linker map, and this repository.**
+> Leaked Nintendo SDK, JSystem and MSL sources are in circulation.
+> Never seek them out, never copy from them, and never paste code of unclear provenance into this tree.
+> If a chunk of proposed code cannot be justified from the disassembly or the map, it does not go in.
+
+Publicly documented headers, SDK documentation, other clean-room decomp projects and compiler behaviour are all fine evidence.
+
+### Committing
+
+Commit each batch yourself once it passes verification — no need to ask.
+A batch is committable when `ninja changes_all` shows no function regressions **and** the rebuilt `mario.dol` still matches `a6782903ef79d4196c8489ecb1b57decb5b3728f` byte-for-byte.
+If either check fails, fix or revert; never commit a red batch.
+
+Do **not** push.
+There is no fork configured, and all 51+ batches exist only on this disk — raise that with the user rather than inventing a remote.
+
+Keep commit messages in the existing style: imperative mood, one line naming what was restored or corrected, and the `Claude-Session:` trailer.
 
 ## Build & Diff Workflow
 
-Note that on windows, all tool names should be suffixed with `.exe`, while the following documentation uses the UNIX spelling (without `.exe`) for simplicity.
+This clone is Linux, so tool names carry no `.exe` suffix.
+Ninja lives in the project virtualenv: run **`build/venv/bin/ninja`**, not bare `ninja`.
 
-Ninja is used for most workflows. Simply running `ninja` in the root of the repository will build the project and report the overall matching progress.
+Ninja is used for most workflows. Simply running it in the root of the repository will build the project and report the overall matching progress, broken down by category (game / JSystem / SDK).
 
 To check changes against a baseline, `ninja baseline` can be used to generate a baseline report on the current state of the work tree, after which `ninja changes_all` can be used to show how the current changes to work tree influence matching progress, including a per-symbol report.
 **Important**: for regression testing, you **must** use `ninja baseline` and `ninja changes_all`.
@@ -69,7 +129,7 @@ It is already properly set up and almost never requires any meddling.
 
 The main diffing tool used by humans is **objdiff** (`encounter/objdiff`). It compares the compiled `.o` from our source against the original `.o` extracted from the DOL, function by function, showing PPC assembly side-by-side in a convenient GUI.
 
-**Important**: The human user typically has objdiff open in the background.
+**Important**: The human user may have objdiff open in the background.
 It watches source files and **automatically recompiles** whenever a file changes.
 This means after editing a source or header file, you do **not** need to manually `touch` files or force rebuilds — just run `ninja` and if it says "no work to do", that's fine; objdiff has already compiled the latest code.
 Never waste time trying to force ninja to rebuild.
@@ -83,7 +143,7 @@ Unit names follow the pattern in `objdiff.json` — typically `mario/<path>` (e.
 #### Overview mode (list symbols with match status)
 
 ```
-python tools/decomp-diff.py -u mario/Enemy/fireWanwan
+python3 tools/decomp-diff.py -u mario/Enemy/fireWanwan
 ```
 
 Output columns: STATUS (match/nonmatching/missing/extra), MATCH %, SIZE, SECTION, demangled NAME.
@@ -100,13 +160,13 @@ Useful filters (can be combined):
 
 Example — list all nonmatching functions:
 ```
-python tools/decomp-diff.py -u mario/Enemy/fireWanwan -s nonmatching -t function --section .text
+python3 tools/decomp-diff.py -u mario/Enemy/fireWanwan -s nonmatching -t function --section .text
 ```
 
 #### Diff mode (side-by-side instruction comparison)
 
 ```
-python tools/decomp-diff.py -u mario/Enemy/fireWanwan -d "TFireWanwan::moveObject"
+python3 tools/decomp-diff.py -u mario/Enemy/fireWanwan -d "TFireWanwan::moveObject"
 ```
 
 The `-d` argument takes a substring match on the demangled or mangled symbol name.
@@ -147,9 +207,11 @@ rather than instruction bytes. It reads our compiled object with `nm`, so
 and symbol-closure section.
 
 ```
-python tools/validate-symbol-order.py -u mario/MarioUtil/MathUtil
+NM=build/binutils/powerpc-eabi-nm build/venv/bin/python3 tools/validate-symbol-order.py \
+    -u mario/MarioUtil/MathUtil --map orig/GMSE01/files/marioUS.MAP
 ```
 
+Both overrides are required in this clone: the script defaults to a Windows `nm` and the Japanese map, and fails immediately without them.
 Unit names are the same `mario/<path>` names as `decomp-diff.py`.
 
 What it reports:
@@ -181,32 +243,36 @@ items in the Pre-PR checklist below.
 
 ### Always prefer using `m2c` for from-scratch decompilation
 
-Always insist for the user to provide a path to [`m2c`](https://github.com/matt-kempster/m2c) when working on decompiling new functions (as opposed to matching ones that are already very close), it produces rough C-style draft decompilation of a function or an entire translation unit.
+[`m2c`](https://github.com/matt-kempster/m2c) produces a rough C-style draft decompilation of a function or an entire translation unit, and is the right starting point for new functions (as opposed to matching ones that are already very close).
 Cleaning up that draft to use proper fields and inline helpers available on relevant types usually already gets the function very close to matching.
-The tool accepts plaintext assembly, which for this repository are the dtk-generated assembly files under `build/GMSJ01/asm/<path>.s`.
+The tool accepts plaintext assembly, which for this repository are the dtk-generated assembly files under `build/GMSE01/asm/<path>.s`.
 
-Usually, m2c is available at `../m2c/m2c.py` relative to the project's root.
+In this clone m2c is already installed: **`/home/netflix/m2c/m2c.py`**, commit `e07f7e1c`, runnable through `build/venv/bin/python3`.
+There is no need to ask the user for a path.
 
 Tested example:
 
 ```bash
-python D:/Develop/m2c/m2c.py -t ppc -f __dt__22TNerveFireWanwanEscapeFv --globals=used build/GMSJ01/asm/Enemy/fireWanwan.s
+build/venv/bin/python3 /home/netflix/m2c/m2c.py -t ppc -f __dt__22TNerveFireWanwanEscapeFv \
+    --globals=used build/GMSE01/asm/Enemy/fireWanwan.s
 ```
 
 That command decompiles the function named by the `.fn` symbol in the asm file and prints a raw draft to stdout.
 For larger functions, the same pattern works with the mangled symbol name, for example:
 
 ```bash
-python D:/Develop/m2c/m2c.py -t ppc -f "execute__22TNerveFireWanwanEscapeCFP24TSpineBase<10TLiveActor>" --globals=used build/GMSJ01/asm/Enemy/fireWanwan.s
+build/venv/bin/python3 /home/netflix/m2c/m2c.py -t ppc \
+    -f "execute__22TNerveFireWanwanEscapeCFP24TSpineBase<10TLiveActor>" \
+    --globals=used build/GMSE01/asm/Enemy/fireWanwan.s
 ```
 
 Practical workflow:
-- find the TU assembly file in `build/GMSJ01/asm/...`
+- find the TU assembly file in `build/GMSE01/asm/...`
 - if the task requires decompiling only one function, open it and copy the mangled function name from the `.fn` line
 - run `m2c` with `-t ppc` (`ppc` is the right alias for this CodeWarrior PowerPC output)
 - use `-f <mangled name>` when decompiling only one function
 - use `--globals=used` by default so that values of used globals are shown
-- save the output in a temporary folder for later inspection
+- save the output under the session scratchpad, not in the repository
 
 Important limitations:
 - `m2c` output is often rough for this codebase: inferred placeholder structs, bad field names, missing types, and occasional broken expressions are normal.
@@ -268,7 +334,7 @@ Expand this document as you notice new patterns, but always ask for human review
 
 ## Key Data Files
 
-### `config/GMSJ01/symbols.txt`
+### `config/GMSE01/symbols.txt`
 
 Every symbol present in the binary with address, size, type, scope and alignment. Format:
 ```
@@ -277,17 +343,18 @@ mangled_name = .section:0xADDRESS; // type:function size:0xSIZE scope:global ali
 
 Scope is `global`, `local` (static), or `weak` (inline/header-defined). Mangled names use MWCC's mangling scheme (similar to but not identical to Itanium ABI). The `bulk_demangle.sh` script or objdiff can demangle them.
 
-### `config/GMSJ01/splits.txt`
+### `config/GMSE01/splits.txt`
 
 Maps each source file to its section address ranges, telling dtk how to split the DOL into per-TU objects.
 
-### `orig/GMSJ01/files/mario.MAP`
+### `orig/GMSE01/files/marioUS.MAP`
 
-The original linker map file, included on the game disc. This is a **priority source of truth** — it contains every symbol the linker saw, including UNUSED (inlined/dead) functions with their mangled names and compiled sizes. When there is any ambiguity about symbol names, signatures, sizes, or ordering, defer to this file first before other sources. It is very large (~102k lines) so grep it rather than reading it in full.
+The original linker map file, included on the game disc.
+Upstream documentation calls this `mario.MAP`; the US disc names it `marioUS.MAP`. This is a **priority source of truth** — it contains every symbol the linker saw, including UNUSED (inlined/dead) functions with their mangled names and compiled sizes. When there is any ambiguity about symbol names, signatures, sizes, or ordering, defer to this file first before other sources. It is very large (~102k lines) so grep it rather than reading it in full.
 
-### `build/GMSJ01/asm/<path>.s`
+### `build/GMSE01/asm/<path>.s`
 
-Disassembled `.s` files generated by dtk for every TU (e.g. `build/GMSJ01/asm/Enemy/fireWanwan.s`). These contain the full assembly including data sections (`.rodata`, `.data`, `.sdata2`, etc.) with literal values — strings, floats, jump tables, and vtables. Useful for recovering string constants, float literals, and other data symbol contents that aren't visible in the symbol map.
+Disassembled `.s` files generated by dtk for every TU (e.g. `build/GMSE01/asm/Enemy/fireWanwan.s`). These contain the full assembly including data sections (`.rodata`, `.data`, `.sdata2`, etc.) with literal values — strings, floats, jump tables, and vtables. Useful for recovering string constants, float literals, and other data symbol contents that aren't visible in the symbol map.
 
 ## Class Hierarchy & Architecture
 
@@ -358,6 +425,7 @@ Don't be afraid to leave notes that would be useful to the next person trying to
   Name the enumerands as `THING_FLAG_UNK10` if it's not immediately clear what the different states/flags represent -- sometimes running the game in an emulator and inspecting the memory state is required to truly understand what the different states or flags represent, but having them named already makes working with the code simpler.
 
 ### Fakematches (**IMPORTANT**)
+<a id="fakematches-important"></a>
 
 A **fakematch** is code that compiles to byte-identical output but is clearly not what the original developers wrote. Examples include nonsensical casts, unnecessary temporaries, bizarre control flow, or abusing compiler quirks to force specific code generation. Fakematches should be **avoided where possible** — the goal is to reconstruct code that a real Japanese developer at Nintendo would have plausibly written in ~2002 using C++98. If a match can only be achieved through obviously artificial code, it's better to leave the function as nonmatching with a TODO comment than to commit a fakematch.
 
@@ -391,7 +459,7 @@ UNUSED functions must still be reconstructed in the source because:
 2. **Cross-reference the signature**: The demangled name gives argument types and the class it belongs to. Match these against code patterns in call sites.
 3. **Use the byte size as a constraint**: The symbol map (`mario.MAP`) gives the exact compiled size for every UNUSED function. After writing a candidate body, compile with `ninja` and check the compiled size using `decomp-diff.py`:
    ```
-   python tools/decomp-diff.py -u mario/Enemy/fireWanwan -s extra --search "functionName"
+   python3 tools/decomp-diff.py -u mario/Enemy/fireWanwan -s extra --search "functionName"
    ```
    The SIZE column shows the compiled size of your implementation. Compare it against the expected size from `mario.MAP`. PPC instructions are 4 bytes each, so `size / 4` gives the instruction count (minus alignment padding).
 

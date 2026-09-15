@@ -74,7 +74,7 @@ Exit condition: a repeatable build and a trustworthy per-unit/per-function basel
 2. Record code sizes, match results, dependencies, unknown layouts, and unresolved symbols.
 3. Follow STRATEGY.md: prioritize large nonmatching game functions at 98%+ similarity and group shared causes.
 4. Group subsequent work by subsystem: player, camera, map, interactive objects, enemies, NPCs, UI, and audio wrappers.
-5. Keep runtime and middleware work requiring human supervision as explicit dependencies.
+5. Include runtime and middleware units in the backlog; they are in scope as of 2026-09-15.
 
 Exit condition: an evidence-based backlog with bounded tasks and acceptance criteria.
 Estimate effort only after the baseline and first representative batches establish the actual difficulty.
@@ -82,7 +82,7 @@ Estimate effort only after the baseline and first representative batches establi
 ## Milestone 4: Reconstruct and verify in batches
 
 1. Read `docs/AGENT_MATCHING_TIPS.md` before matching work.
-2. Obtain the user's local `m2c` path before from-scratch reconstruction, per `AGENTS.md`.
+2. Use the installed `m2c` at `/home/netflix/m2c/m2c.py` for from-scratch reconstruction.
 3. Follow `docs/PROGRAM_STRUCTURE_REVVING.md` for new translation units, accounting explicitly for unavailable regional map information.
 4. Reconstruct readable C++98 using the selected regional assembly as ground truth.
 5. Inventory shared patterns and batch equivalent fixes supported by the original instructions.
@@ -98,7 +98,7 @@ Exit condition for each batch: demonstrated improvements with no unexplained reg
 
 1. Verify that every required translation unit and function is reconstructed and appropriately classified.
 2. Verify code, data, relocations, symbol ordering, and link layout against the selected regional binary.
-3. Resolve outstanding validation gaps and any remaining supervised-library work.
+3. Resolve outstanding validation gaps and any remaining library work.
 4. Rebuild from a clean build directory and verify the expected executable hash.
 5. Perform gameplay smoke checks for boot, menus, English text, loading, movement, camera, and representative levels.
 6. Record final coverage, reproducible commands, and any limitations.
@@ -108,10 +108,10 @@ Completion requires reconstructed source coverage as well as the final binary ma
 
 ## Repository constraints
 
-`AGENTS.md` prohibits autonomous reconstruction of MSL runtime, MetroTRK, THPPlayer, Dolphin SDK, and JSystem middleware.
-Its instruction is: "when working without a human programmer's supervision work on these libraries is strictly prohibited".
-Any remaining work in those libraries requires human supervision and may limit full-project completion.
-The autonomous implementation backlog should focus on game code.
+Superseded on 2026-09-15: the user lifted the library prohibition for this clone.
+MSL runtime, MetroTRK, THPPlayer, Dolphin SDK and JSystem middleware are all in scope for autonomous work, including linking the already-matching objects.
+The single remaining constraint is provenance: work only from the binary, the disc's linker map and this repository, never from leaked Nintendo sources.
+See the "Autonomy in this clone" section of `AGENTS.md`.
 
 ## Active work: near-matching strategy (user direction, 2026-09-15)
 
@@ -210,9 +210,11 @@ Continue larger unfinished game units (HUD, save/load screens, event scripting, 
 
 ### Pending human decision: library objects
 
-After the batch 35 regional metadata correction, 308 JSystem and Dolphin SDK objects (542,892 code bytes) report complete code/data matches but are not linked from source.
+After the batch 35 regional metadata correction, 298 JSystem and Dolphin SDK objects (542,892 code bytes) report complete code/data matches but are not linked from source.
+A further three objects match in code but not data.
+The object count was previously recorded as 308, which recounting from `report.json` does not support; the byte figure is unchanged.
 Subject to the required map and relink checks, linking them would raise complete code from 2.57% to about 17.64%, and a fully source-built game ultimately requires them.
-`AGENTS.md` restricts autonomous work on these libraries, so **do not promote or edit them without explicit user approval**.
+As of 2026-09-15 these libraries are in scope without further approval; the required map and relink checks still apply to each promotion.
 The three matching `THPPlayer` objects fall under the same restriction.
 
 ### Playability checks
