@@ -331,5 +331,6 @@ void SDLModel::viewCalcSimple()
 	MtxPtr mA = gpCamera->getUnk1EC();
 	for (int i = 0; i < mModelData->getDrawMtxNum(); ++i)
 		MTXConcat(mA, mNodeMatrices[i], getDrawMtx(i));
-	DCStoreRange(getDrawMtxPtr(), mModelData->getDrawMtxNum() * sizeof(Mtx));
+	Mtx* drawMtx = getDrawMtxPtr();
+	DCStoreRange(drawMtx, mModelData->getDrawMtxNum() * sizeof(Mtx));
 }
