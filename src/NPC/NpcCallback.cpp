@@ -13,16 +13,14 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 		if (gpCurrentNpc == nullptr)
 			return FALSE;
 
-		bool shouldRun;
-		if (gpCurrentNpc->mNeckJointIndex != -1
-		    && !gpCurrentNpc->checkLiveFlag2(LIVE_FLAG_HIDDEN
-		                                      | LIVE_FLAG_CLIPPED_OUT)) {
-			shouldRun = true;
-		} else {
-			shouldRun = false;
+		bool shouldRun = false;
+		if (gpCurrentNpc->mNeckJointIndex != -1) {
+			if (!gpCurrentNpc->checkLiveFlag(LIVE_FLAG_HIDDEN
+			                                  | LIVE_FLAG_CLIPPED_OUT))
+				shouldRun = true;
 		}
 
-		if (shouldRun) {
+		if (shouldRun ? true : false) {
 			J3DJoint* joint = (J3DJoint*)param_1;
 			MtxPtr currMtx  = j3dSys.getModel()->getAnmMtx(joint->getJntNo());
 
@@ -63,16 +61,17 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 					    currMtx[0][1], currMtx[1][1], currMtx[2][1]);
 					MsVECNormalize(&toMario, &toMario);
 
-					local_148
-					    = (const JGeometry::TVec3<f32>)MsGetRotFromZaxis(neckForward)
-					      - MsGetRotFromZaxis(toMario);
+					const JGeometry::TVec3<f32>& neckRot
+					    = MsGetRotFromZaxis(neckForward);
+					local_148 = neckRot - MsGetRotFromZaxis(toMario);
 				} else {
 					local_148.zero();
 				}
 
 				s16 tmp = CLBDegToShortAngle(local_148.y);
-				s16 maxNeckY
-				    = gpCurrentNpc->mIndividualParams->mNeckMaxAngleY.get();
+				const TParamT<s16> maxAngleY
+				    = gpCurrentNpc->mIndividualParams->mNeckMaxAngleY;
+				s16 maxNeckY = maxAngleY.get();
 				s16 minNeckY = -maxNeckY;
 
 				r28 = MsClamp<s16>(tmp, minNeckY, maxNeckY);
