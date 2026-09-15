@@ -421,7 +421,7 @@ bool TYoshi::disappear()
 		if (mState == STATE_MOUNTED)
 			mMario->getOffYoshi(true);
 
-		if (mMario->checkFlag(MARIO_FLAG_IN_ANY_WATER)) {
+		if (mMario->checkFlag(MARIO_FLAG_IN_ANY_WATER) != 0) {
 			mState = STATE_DROWNING;
 			changeAnimation(MSD_SE_PO_SPREAD);
 		} else {
