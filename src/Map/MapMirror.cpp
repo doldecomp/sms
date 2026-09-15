@@ -39,8 +39,8 @@ void TMirrorCamera::drawSetting(MtxPtr param_1)
 {
 	GXLoadTexObj(&unk60, GX_TEXMAP0);
 	Mtx afStack_38;
-	C_MTXLightPerspective(afStack_38, unk80 * gpCamera->mFovy,
-	                      gpCamera->mAspect, 1.0f, -1.0f, 1.0f, 1.0f);
+	C_MTXLightPerspective(afStack_38, unk80 * gpCamera->getFovy(),
+	                      gpCamera->getAspect(), 0.5f, -0.5f, 0.5f, 0.5f);
 
 	Mtx afStack_68;
 	MTXConcat(getUnk30(), param_1, afStack_68);
@@ -280,9 +280,22 @@ void TMirrorModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 			unk1C[unk18]->unk4->viewCalc();
 
 		if (cue & CUE_ENTRY) {
-			unk1C[unk18]->setPlane();
+			TMirrorModel* model = unk1C[unk18];
+			model->setPlane();
 
-			// TODO: awful vector math, one of unused functions inlined
+			Mtx lightPerspective;
+			C_MTXLightPerspective(lightPerspective,
+			                      model->unk8->unk80 * gpCamera->getFovy(),
+			                      gpCamera->getAspect(), 0.5f, -0.5f, 0.5f,
+			                      0.5f);
+			Mtx effectMtx;
+			MTXConcat(lightPerspective, model->unk8->getUnk30(), effectMtx);
+			J3DMaterial* material = model->unk4->getModel()
+			                            ->getModelData()
+			                            ->getMaterialNodePointer(0);
+			material->change();
+			material->getTexGenBlock()->getTexMtx(0)->setEffectMtx(effectMtx);
+			model->unk4->entry();
 		}
 	}
 }
