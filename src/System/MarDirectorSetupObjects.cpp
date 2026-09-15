@@ -62,10 +62,8 @@ void TMarDirector::decideMarioPosIdx()
 	case 4:
 	case 5:
 	case 6:
-	case 7:
 	case 8:
-	case 10:
-	case 11: {
+	case 9: {
 		unkE4 = 14;
 		gpApplication.mFader->setColor(
 		    JUtility::TColor(0xd2, 0xd2, 0xd2, 0xff));
