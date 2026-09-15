@@ -7,7 +7,45 @@ The full decompilation is **not complete**.
 The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 
-## Latest checkpoint: batch 2
+## Latest checkpoint: batch 3
+
+Reconstructed the bathtub Bullet Bill initialization, reset, matrix update, gravity query, active-count loop, personality parameters, and explosion state from the local executable.
+The original symbols already existed as stubs.
+The five personality fields are now grouped in the existing `TBathtubKillerPersonality` class, whose three parameter-copy methods reproduce the inlined instructions and the map's 44-byte UNUSED sizes.
+Field names describe their corresponding parameters; they are inferred names.
+
+Five game functions now match exactly: `init`, `reset`, `calcRootMatrix`, `getGravityY`, and `countActiveKillers`.
+The reconstructed explosion state also emits the previously missing 92-byte integer-vector helper with an exact match.
+This batch adds 632 exactly matched bytes and six matched functions, bringing the total to 1,366,380 of 3,603,748 bytes (37.915524%) and 8,115 of 12,904 functions.
+Cumulative gains over the initial regional baseline are 1,272 bytes and ten functions.
+
+The reset helper is at 99.944954%, and the explosion state is at 99.95%; both still differ in stack layout.
+The manager's load routine is at 81.03704%, with unexplained null comparisons and stack space still to reconstruct.
+Other behavior in this unit remains stubbed, so `BathtubKiller.cpp` remains nonmatching and is not promoted into the source-link manifest.
+There are still 70 source-linked objects.
+
+### Validation
+
+- Captured `ninja baseline` at `21fd1969` before changes, then rebuilt and ran `ninja changes_all`.
+- Compared every reported function against that baseline: zero regressions.
+- Checked individual instruction differences and validated map symbols, ordering, and linkage.
+  The map check passes with warnings for weak-symbol order and 17 remaining UNUSED size differences.
+- Rebuilt the executable and passed both the expected SHA-1 and a full byte comparison.
+
+See [batch 3 measurements](docs/progress/GMSE01-batch3.json).
+Drafts from m2c, the build log, the regression log, and the map validation log are preserved under `build/GMSE01` or as `build/GMSE01-*-batch3.log`.
+The original disc image remains excluded from Git.
+No gameplay test has been performed; the matching executable still uses extracted objects for unfinished units.
+
+### US audio layout dependency
+
+Several game-side audio routines access fields four bytes later in the US binary than in the current declarations.
+Examples include `MSMainProc::toInnerCameraDemo` (target byte `0xCE`, current `0xCA`) and `MSound`'s camera array (target `0xB0`, current `0xAC`).
+The constructor also writes additional fields at `0x94` and `0x98` and uses `0x9A` for a field currently at `0x94`.
+This indicates a regional layout change around the end of the `JAIBasic` base class, requiring supervised library review under `AGENTS.md`.
+No library source or speculative padding was added.
+
+## Verified checkpoint: batch 2
 
 The build now links 70 verified game objects from source.
 Exactly matched code is 1,365,748 of 3,603,748 bytes (37.897987%), with 8,109 of 12,904 functions matching.

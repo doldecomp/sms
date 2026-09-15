@@ -1,5 +1,10 @@
 #include <Enemy/BathtubKiller.hpp>
+#include <Enemy/Conductor.hpp>
+#include <Enemy/EffectObj.hpp>
 #include <Strategic/ObjModel.hpp>
+#include <Strategic/Spine.hpp>
+#include <MarioUtil/RandomUtil.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -14,11 +19,32 @@ static const char* bathtubkiller_bastable[] = {
 
 TBathtubKillerPersonality::TBathtubKillerPersonality() { }
 
-void TBathtubKillerPersonality::makeFast(const TBathtubKillerParams*) { }
+void TBathtubKillerPersonality::makeFast(const TBathtubKillerParams* params)
+{
+	mAccelerationQuatRate = params->fastAccelerationQuatRate.get();
+	mChaseAcceleration = params->fastChaseAcceleration.get();
+	mChaseSpeed = params->fastChaseSpeed.get();
+	mInitialSpeed = params->fastInitialSpeed.get();
+	mDeadPeriod = params->fastDeadPeriod.get();
+}
 
-void TBathtubKillerPersonality::makeShine(const TBathtubKillerParams*) { }
+void TBathtubKillerPersonality::makeShine(const TBathtubKillerParams* params)
+{
+	mAccelerationQuatRate = params->shineAccelerationQuatRate.get();
+	mChaseAcceleration = params->shineChaseAcceleration.get();
+	mChaseSpeed = params->shineChaseSpeed.get();
+	mInitialSpeed = params->shineInitialSpeed.get();
+	mDeadPeriod = params->shineDeadPeriod.get();
+}
 
-void TBathtubKillerPersonality::makeNormal(const TBathtubKillerParams*) { }
+void TBathtubKillerPersonality::makeNormal(const TBathtubKillerParams* params)
+{
+	mAccelerationQuatRate = params->mSLAccelerationQuatRate.get();
+	mChaseAcceleration = params->mSLChaseAcceleration.get();
+	mChaseSpeed = params->mSLChaseSpeed.get();
+	mInitialSpeed = params->mSLInitialSpeed.get();
+	mDeadPeriod = params->mSLDeadPeriod.get();
+}
 
 TBathtubKillerParams::TBathtubKillerParams(const char* prm)
     : TSmallEnemyParams(prm)
@@ -101,21 +127,108 @@ TBathtubKiller::TBathtubKiller(const char* name)
 {
 }
 
-void TBathtubKiller::init(TLiveManager*) { }
+void TBathtubKiller::init(TLiveManager* manager)
+{
+	TSmallEnemy::init(manager);
+	mActorType = 0x08000024;
+	unk150    = 0x11;
+	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_DEAD);
+	onLiveFlag(LIVE_FLAG_UNK8);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+	unk194 = 0;
+	resetBathtubKiller();
+}
 
 void TBathtubKiller::setMActorAndKeeper() { }
 
-void TBathtubKiller::reset() { }
+void TBathtubKiller::reset()
+{
+	TSmallEnemy::reset();
+	offLiveFlag(LIVE_FLAG_DEAD);
+	offLiveFlag(LIVE_FLAG_UNK8);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFlag(HIT_FLAG_CANNOT_ATTACK);
+	offHitFlag(HIT_FLAG_CANNOT_GET_HIT);
+	resetBathtubKiller();
+}
 
-void TBathtubKiller::resetBathtubKiller() { }
+// TODO: GMSE01 instructions match apart from the stack frame layout.
+void TBathtubKiller::resetBathtubKiller()
+{
+	mSpine->initWith(&TNerveBathtubKillerWander::theNerve());
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
+	unk208 = 0;
+	unk20C = 0;
+	unk210 = 0;
+	unk214 = 0;
+	unk218 = 0;
+	mQuat.set(0.0f, 0.0f, 0.0f, 1.0f);
+	mVelocity.set(0.0f, 0.0f, 0.0f);
+	unk1BC.set(0.0f, 0.0f, 0.0f);
+	unk21C = 0;
+	unk1D4 = 0;
+
+	if (unk194 == 1) {
+		unk1D8.r = 50;
+		unk1D8.g = 70;
+		unk1D8.b = 160;
+		unk1D8.a = 0;
+		unk1E0 = unk1D8;
+		unk1E8 = unk1D8;
+		unk1F0 = unk1D8;
+		mPersonality.makeShine(getSaveParam2());
+	} else {
+		unk1D8.r = 0;
+		unk1D8.g = 0;
+		unk1D8.b = 0;
+		unk1D8.a = 0;
+		unk1E0 = unk1D8;
+		unk1E8 = unk1D8;
+		unk1F0 = unk1D8;
+		if (unk194 == 2) {
+			mPersonality.makeFast(getSaveParam2());
+		} else {
+			mPersonality.makeNormal(getSaveParam2());
+		}
+	}
+
+	unk1FC = 0.0f;
+	unk1F8 = getSaveParam2()->mSLColorChangeRateDelta.get();
+	unk208 = mPersonality.mDeadPeriod;
+	unk20C = getSaveParam2()->mSLLaunchingPeriod.get();
+	unk214 = getSaveParam2()->noCollisionAmongKillers.get();
+	unk200 = getSaveParam2()->mSLChaseMinY.get();
+	unk204 = getSaveParam2()->mSLChaseMaxY.get();
+	if (unk194 == 2) {
+		int choice = 4.0f * MsRandF();
+		f32 heightOffset = 0.0f;
+		if (choice == 0)
+			heightOffset = 120.0f;
+		else if (choice == 1)
+			heightOffset = 240.0f;
+		unk200 += heightOffset;
+		unk204 += heightOffset;
+	}
+}
 
 void TBathtubKiller::generateItemBathtubKiller() { }
 
-void TBathtubKiller::killBathtubKiller() { }
+void TBathtubKiller::killBathtubKiller()
+{
+	unk21C = 0;
+	onLiveFlag(LIVE_FLAG_DEAD);
+	stopAnmSound();
+}
 
 void TBathtubKiller::breakBathtubKiller() { }
 
-void TBathtubKiller::explodeBathtubKiller() { }
+void TBathtubKiller::explodeBathtubKiller()
+{
+	setDeadBathtubKillerAnm();
+	generateExplosion();
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+}
 
 void TBathtubKiller::bind() { }
 
@@ -174,9 +287,18 @@ void TBathtubKiller::makeQuat(JGeometry::TVec3<f32> axis, f32 moveAmountY,
 
 void TBathtubKiller::makeScrewQuat(JGeometry::TVec3<f32>, f32, f32) { }
 
-f32 TBathtubKiller::getGravityY() const { return 0.0f; }
+f32 TBathtubKiller::getGravityY() const
+{
+	return getSaveParam2()->mSLFlyingGravityY.get();
+}
 
-void TBathtubKiller::calcRootMatrix() { }
+void TBathtubKiller::calcRootMatrix()
+{
+	TPosition3f mtx;
+	mtx.setQT(mQuat, mPosition);
+	getModel()->setBaseScale(mScaling);
+	getModel()->setBaseTRMtx(mtx);
+}
 
 BOOL TBathtubKiller::receiveMessage(THitActor*, u32) { return false; }
 
@@ -197,7 +319,16 @@ void TBathtubKiller::setChaseBathtubKillerAnm() { }
 
 void TBathtubKiller::setStraightBathtubKillerAnm() { }
 
-void TBathtubKiller::setDeadBathtubKillerAnm() { }
+void TBathtubKiller::setDeadBathtubKillerAnm()
+{
+	mMActor = mMActorKeeper->getMActor("bathtubdownkiller_model1.bmd");
+	setBckAnm(0);
+	mQuat.set(0.0f, 0.0f, 0.0f, 1.0f);
+	unk1BC.set(0.0f, 0.0f, 0.0f);
+	mVelocity = JGeometry::TVec3<f32>(0, 0, 0);
+	onLiveFlag(LIVE_FLAG_UNK8);
+	unk1E0 = unk1D8;
+}
 
 void TBathtubKiller::updateTimers() { }
 
@@ -207,7 +338,14 @@ bool TBathtubKiller::isAboided() { return false; }
 
 bool TBathtubKiller::canChase() { return false; }
 
-void TBathtubKiller::generateExplosion() { }
+void TBathtubKiller::generateExplosion()
+{
+	TEffectExplosion* explosion
+	    = (TEffectExplosion*)gpConductor->makeOneEnemyAppear(
+	        mPosition, "エフェクト爆発マネージャー", 1);
+	if (explosion)
+		explosion->generate(mPosition, mScaling);
+}
 
 DEFINE_NERVE(TNerveBathtubKillerWander, TLiveActor) { return FALSE; }
 
@@ -219,20 +357,44 @@ DEFINE_NERVE(TNerveBathtubKillerStraight, TLiveActor) { return FALSE; }
 
 DEFINE_NERVE(TNerveBathtubKillerBreak, TLiveActor) { return FALSE; }
 
-DEFINE_NERVE(TNerveBathtubKillerExplosion, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBathtubKillerExplosion, TLiveActor)
+{
+	TBathtubKiller* killer = (TBathtubKiller*)spine->getBody();
+	if (spine->getTime() == 0)
+		killer->explodeBathtubKiller();
+	if (killer->checkCurAnmEnd(0)) {
+		killer->killBathtubKiller();
+		return TRUE;
+	}
+	return FALSE;
+}
 
 TBathtubKillerManager::TBathtubKillerManager(const char* name)
     : TSmallEnemyManager(name)
 {
 }
 
-void TBathtubKillerManager::load(JSUMemoryInputStream&) { }
+void TBathtubKillerManager::load(JSUMemoryInputStream& stream)
+{
+	// TODO: Recover the omitted parameter checks around this load.
+	// GMSE01 retains two comparisons against null and a larger stack frame.
+	TSmallEnemyManager::load(stream);
+	unk38 = new TBathtubKillerParams("/enemy/bathtubkiller.prm");
+}
 
 void TBathtubKillerManager::loadAfter() { }
 
 void TBathtubKillerManager::generateMushroom(JGeometry::TVec3<f32>) { }
 
-int TBathtubKillerManager::countActiveKillers() { return 0; }
+int TBathtubKillerManager::countActiveKillers()
+{
+	int count = 0;
+	for (int i = 0; i < getActiveObjNum(); ++i) {
+		if (!getObj(i)->checkLiveFlag(LIVE_FLAG_DEAD))
+			++count;
+	}
+	return count;
+}
 
 int TBathtubKillerManager::countActiveShineKillers() { return 0; }
 

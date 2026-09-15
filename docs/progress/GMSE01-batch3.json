@@ -1,0 +1,97 @@
+{
+  "region": "GMSE01",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "baseline_commit": "21fd1969",
+  "measures": {
+    "fuzzy_match_percent": 74.244225,
+    "total_code": "3603748",
+    "matched_code": "1366380",
+    "matched_code_percent": 37.915524,
+    "total_data": "641075",
+    "matched_data": "294331",
+    "matched_data_percent": 45.9121,
+    "total_functions": 12904,
+    "matched_functions": 8115,
+    "matched_functions_percent": 62.887478,
+    "complete_code": "73148",
+    "complete_code_percent": 2.0297756,
+    "complete_data": "48064",
+    "complete_data_percent": 7.497407,
+    "total_units": 732,
+    "complete_units": 70
+  },
+  "source_linked_objects": 70,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "improvements": [
+    {
+      "unit": "mario/Enemy/BathtubKiller",
+      "function": "init__14TBathtubKillerFP12TLiveManager",
+      "before": 3.125,
+      "after": 100.0,
+      "size": 128
+    },
+    {
+      "unit": "mario/Enemy/BathtubKiller",
+      "function": "reset__14TBathtubKillerFv",
+      "before": 3.5714285,
+      "after": 100.0,
+      "size": 112
+    },
+    {
+      "unit": "mario/Enemy/BathtubKiller",
+      "function": "resetBathtubKiller__14TBathtubKillerFv",
+      "before": 0.4587156,
+      "after": 99.944954,
+      "size": 872
+    },
+    {
+      "unit": "mario/Enemy/BathtubKiller",
+      "function": "getGravityY__14TBathtubKillerCFv",
+      "before": 11.666667,
+      "after": 100.0,
+      "size": 48
+    },
+    {
+      "unit": "mario/Enemy/BathtubKiller",
+      "function": "calcRootMatrix__14TBathtubKillerFv",
+      "before": 2.7777777,
+      "after": 100.0,
+      "size": 144
+    },
+    {
+      "unit": "mario/Enemy/BathtubKiller",
+      "function": "set<i>__Q29JGeometry8TVec3<f>Fiii",
+      "before": 0,
+      "after": 100.0,
+      "size": 92
+    },
+    {
+      "unit": "mario/Enemy/BathtubKiller",
+      "function": "execute__28TNerveBathtubKillerExplosionCFP24TSpineBase<10TLiveActor>",
+      "before": 1.75,
+      "after": 99.95,
+      "size": 320
+    },
+    {
+      "unit": "mario/Enemy/BathtubKiller",
+      "function": "load__21TBathtubKillerManagerFR20JSUMemoryInputStream",
+      "before": 3.7037036,
+      "after": 81.03704,
+      "size": 108
+    },
+    {
+      "unit": "mario/Enemy/BathtubKiller",
+      "function": "countActiveKillers__21TBathtubKillerManagerFv",
+      "before": 7.2222223,
+      "after": 100.0,
+      "size": 108
+    }
+  ],
+  "notes": [
+    "Five newly exact game functions plus one emitted template helper add 632 matching bytes.",
+    "BathtubKiller remains nonmatching and is not linked from source.",
+    "Symbol validation passes with weak order and 17 pre-existing or remaining UNUSED size warnings.",
+    "No JSystem source was edited; the template helper is emitted by the reconstructed game code."
+  ]
+}

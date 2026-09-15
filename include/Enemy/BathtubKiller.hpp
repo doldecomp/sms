@@ -14,6 +14,12 @@ public:
 	void makeFast(const TBathtubKillerParams*);
 	void makeShine(const TBathtubKillerParams*);
 	void makeNormal(const TBathtubKillerParams*);
+
+	/* 0x00 */ f32 mAccelerationQuatRate;
+	/* 0x04 */ f32 mChaseAcceleration;
+	/* 0x08 */ f32 mChaseSpeed;
+	/* 0x0C */ f32 mInitialSpeed;
+	/* 0x10 */ s32 mDeadPeriod;
 };
 
 class TBathtubKillerParams : public TSmallEnemyParams {
@@ -105,11 +111,7 @@ public:
 
 public:
 	/* 0x194 */ u8 unk194;
-	/* 0x198 */ f32 unk198;
-	/* 0x19C */ f32 unk19C;
-	/* 0x1A0 */ f32 unk1A0;
-	/* 0x1A4 */ f32 unk1A4;
-	/* 0x1A8 */ s32 unk1A8;
+	/* 0x198 */ TBathtubKillerPersonality mPersonality;
 	/* 0x1AC */ JGeometry::TQuat4<f32> mQuat;
 	/* 0x1BC */ JGeometry::TVec3<f32> unk1BC;
 	/* 0x1C8 */ char unk1C8[4];
