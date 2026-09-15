@@ -300,7 +300,7 @@ TMario::TMario()
 	mWireSfxDelay    = 20;
 	mWireQueuedSfxID = 0;
 
-	unk54E             = 0x4000;
+	unk54E             = 0x400;
 	mWireSwingPosAngle = 0x4000;
 	mWireSwingNegAngle = 0xC000;
 
@@ -932,10 +932,10 @@ TMario::TEParams::TEParams(const char* prm)
     , PARAM_INIT(mDamage, 1)
     , PARAM_INIT(mDownType, 0)
     , PARAM_INIT(mWaterEmit, 0)
-    , PARAM_INIT(mMotor, 0)
+    , PARAM_INIT(mMotor, 25)
     , PARAM_INIT(mMinSpeed, 0.0f)
     , PARAM_INIT(mDirty, 0.0f)
-    , PARAM_INIT(mInvincibleTime, 0)
+    , PARAM_INIT(mInvincibleTime, 300)
 {
 	TParams::load(mPrmPath);
 }
@@ -948,7 +948,7 @@ TMario::TAutoDemoParams::TAutoDemoParams()
     , PARAM_INIT(mWarpInTremble, 15.0f)
     , PARAM_INIT(mWarpInVecBase, 0.3f)
     , PARAM_INIT(mWarpTransTremble, 50.0f)
-    , PARAM_INIT(mReadRotSp, 0x400f)
+    , PARAM_INIT(mReadRotSp, 0x400)
 {
 	TParams::load(mPrmPath);
 }
