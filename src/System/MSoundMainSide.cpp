@@ -741,6 +741,8 @@ MSStageDistFadeMonte::MSStageDistFadeMonte(const Vec* param_1, f32 param_2,
 
 void MSStageDistFadeMonte::proc()
 {
+	f32 dVar10;
+	f32 dVar11;
 	JAISound* sound1 = MSBgm::getHandle(1);
 	JAISound* sound2 = MSBgm::getHandle(0);
 	if (sound1 == nullptr || sound2 == nullptr)
@@ -791,8 +793,8 @@ void MSStageDistFadeMonte::proc()
 		u32 uVar8 = unk4;
 
 		Vec local_88 = gpMSound->mAudioCameras->toCamSpace(*unk10);
-		f32 dVar10   = MSHandle::calcPan(local_88, fVar12, 10000.0f);
-		f32 dVar11   = MSHandle::calcDolby(local_88, fVar12);
+		dVar10       = MSHandle::calcPan(local_88, fVar12, 10000.0f);
+		dVar11       = MSHandle::calcDolby(local_88, fVar12);
 		if (uVar8 < uVar4) {
 			dVar10 = 0.5f + (dVar10 - 0.5f) * uVar8 / uVar4;
 			dVar11 = dVar11 * uVar8 / uVar4;
