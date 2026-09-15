@@ -8,7 +8,16 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 44 — BossEel initialization corrections
+## Latest checkpoint: batch 45 — US console layout and constructor
+
+Restored the US-only 16-bit field at 0x3AE and byte at 0x3B0, correcting all later member offsets; restored missing constructor initialization. **+5,936 exact code bytes / 12 functions**, including the entire constructor.
+Load improves **99.61546% → 99.8411%**: fix health-pane pair indexing, apply blend changes to the original pane, and reuse one color temporary. Its frame is now 0x120 vs 0x118; texture-construction and stack differences remain TODOs.
+Game **25.424381% matched / 3.254321% source-linked**; aggregate **38.92192% / 2.571545%**; still **86 source-linked game files / 92,672 code bytes**.
+Fresh baseline at `9e60782a`; full header rebuild, changes_all, all 12,904 function comparisons and unit-data checks show zero regressions; DOL byte/SHA-1 checks pass. No gameplay test performed.
+Map results are identical to the pre-change source: five missing symbols, weak-order warnings and four UNUSED-size warnings. The file remains incomplete; US timer/flag behavior still needs reconstruction.
+Refreshed queue: 1,252 authorized functions / 723,328 bytes; next reviewed target is `TMario::TMario()`.
+
+## Verified checkpoint: batch 44 — BossEel initialization corrections
 
 `TBossEel::init()` improves **99.44744% → 99.50852%**: restore distinct tooth-model array entries, correct both eye/heart loader flags, and call collision setUpTrans at the original virtual slot.
 A named skin-deformer local restores argument setup order; sharing the resource pointer improves the later loader registers. Frame, eye/skin registers and the extra heart-model copy remain a source TODO.
@@ -1187,5 +1196,5 @@ Source, configuration, progress snapshots, and notes are versioned locally.
 ## Next work
 
 Follow [STRATEGY.md](STRATEGY.md) and the refreshed near-matching list.
-Start the next time-box with `TGCConsole2::load(JSUMemoryInputStream&)`; consult source TODOs before revisiting BossEel, npcWetting, jumpMain, specMain, spider or beam.
+Start the next time-box with `TMario::TMario()`; consult source TODOs before revisiting GCConsole2::load, BossEel, npcWetting, jumpMain, specMain, spider or beam.
 Keep the small-file queue and old audits as supporting references; defer from-scratch work until the near-matching group is mostly exhausted.

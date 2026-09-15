@@ -240,7 +240,15 @@ public:
 	/* 0x398 */ TBoundPane* unk398;
 	/* 0x39C */ TBoundPane* unk39C[3];
 	/* 0x3A8 */ TExPane* unk3A8;
+#if defined(VERSION_GMSE01)
+	/* 0x3AC */ u8 unk3AC[2];
+	// TODO: recover the US timer/flag users; some still use unk3AC[1].
+	/* 0x3AE */ u16 unk3AE_US;
+	/* 0x3B0 */ u8 unk3B0_US;
+	// Following names/offset comments retain the Japanese layout; US is +4.
+#else
 	/* 0x3AC */ u8 unk3AC[0x4];
+#endif
 	/* 0x3B0 */ J2DWindow* unk3B0;
 	/* 0x3B4 */ J2DTextBox* unk3B4;
 	/* 0x3B8 */ J2DTextBox* unk3B8;

@@ -1625,6 +1625,11 @@ TGCConsole2::TGCConsole2(const char* name)
     , unk14C(nullptr)
     , unk150(nullptr)
     , unk160(nullptr)
+#if defined(VERSION_GMSE01)
+    , unk164(nullptr)
+    , unk16C(0)
+    , unk170(0)
+#endif
     , unk174(nullptr)
     , unk178(nullptr)
     , unk1C4(nullptr)
@@ -1650,6 +1655,10 @@ TGCConsole2::TGCConsole2(const char* name)
     , unk390(nullptr)
     , unk394(nullptr)
     , unk398(nullptr)
+#if defined(VERSION_GMSE01)
+    , unk3AE_US(0)
+    , unk3B0_US(0)
+#endif
     , unk3CC(0)
     , unk3D0(nullptr)
     , unk3D4(nullptr)
@@ -1661,10 +1670,26 @@ TGCConsole2::TGCConsole2(const char* name)
     , unk3EC(0.7f)
     , unk3F0(0)
     , unk3F4(0xffffffff)
+#if defined(VERSION_GMSE01)
+    , unk3F8(0)
+    , unk3FC(nullptr)
+    , unk400(nullptr)
+    , unk404(nullptr)
+    , unk408(nullptr)
+    , unk40C(nullptr)
+    , unk410(nullptr)
+#endif
     , unk426(0)
     , unk444(0)
     , unk448(0)
+#if defined(VERSION_GMSE01)
+    , unk4FC(0)
+#endif
     , unk510(false)
+#if defined(VERSION_GMSE01)
+    , unk514(0)
+    , unk518(0)
+#endif
     , unk51C(0)
     , unk530(nullptr)
     , mTelopTextWidth(0)
@@ -1687,9 +1712,16 @@ TGCConsole2::TGCConsole2(const char* name)
 	for (int i = 0; i < 3; ++i)
 		unk134[i] = nullptr;
 
+#if defined(VERSION_GMSE01)
+	for (int i = 0; i < 4; ++i)
+		unk414[i] = nullptr;
+#endif
+
 	unk90 = new THelpActor*[32];
 }
 
+// TODO: GMSE01 frame is 0x120 vs 0x118; color/buffer slots are +8.
+// Texture construction also lacks the original r24-to-r29 copy before lookup.
 void TGCConsole2::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
@@ -1733,9 +1765,9 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 	unk1C4 = new TBoundPane(unkB0, '\0l_0');
 
 	for (int i = 0; i < 9; ++i) {
-		unk17C[i]     = unkB0->search('lm01' + (i << 8));
-		unk17C[i + 1] = unkB0->search('lm02' + (i << 8));
-		unk1D0[i]     = unk17C[i]->getBounds();
+		unk17C[i * 2]     = unkB0->search('lm01' + (i << 8));
+		unk17C[i * 2 + 1] = unkB0->search('lm02' + (i << 8));
+		unk1D0[i]         = unk17C[i * 2]->getBounds();
 	}
 
 	unk260 = new TBoundPane(unkB0, 'lm_0');
@@ -1766,8 +1798,8 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 		if (i != 0) {
 			unk2AC[i] = (J2DPicture*)unkB0->search('w_m1' + i);
 
-			unk2AC[i]->setBlendKonstColor(0.0f, 0.0f, 0.0f, 0.0f);
-			unk2AC[i]->setBlendKonstAlpha(1.0f, 0.0f, 0.0f, 0.0f);
+			unk2A0[i]->setBlendKonstColor(0.0f, 0.0f, 0.0f, 0.0f);
+			unk2A0[i]->setBlendKonstAlpha(1.0f, 0.0f, 0.0f, 0.0f);
 
 			unk2AC[i]->hide();
 		}
@@ -1839,9 +1871,10 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 
 	unk458[9] = new TBoundPane(unkB0, 't_n0');
 
-	// TODO: is this the right cast?
-	unk508 = ((J2DPicture*)unk458[6]->getPane())->getWhite();
-	unk50C = ((J2DPicture*)unk458[7]->getPane())->getWhite();
+	JUtility::TColor white = ((J2DPicture*)unk458[6]->getPane())->getWhite();
+	unk508 = white;
+	white = ((J2DPicture*)unk458[7]->getPane())->getWhite();
+	unk50C = white;
 
 	for (int i = 0; i < 3; ++i)
 		unk480[i] = new TBoundPane(unkB0, 't_c1' + i);

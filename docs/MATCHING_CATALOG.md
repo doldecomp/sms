@@ -17,6 +17,20 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## Regional console layout and pane receivers, batch 45
+
+- GCConsole2's US constructor writes a u16 at 0x3AE and a byte at 0x3B0; later pointers start at 0x3B4 rather than 0x3B0.
+  Represent these fields under VERSION_GMSE01; retain the Japanese member names and annotate the +4 offset after this point.
+  Full header rebuild improves 30 functions with no regressions. Missing US constructor initializers and four blend-pane null entries complete the 1,288-byte constructor; 11 other functions also become exact.
+  The new fields still need their US timer/flag behavior reconstructed; existing unk3AC[1] users remain a documented follow-up.
+- In load, health-pane pairs use indices i*2 and i*2+1, matching the existing runtime consumers.
+  At 0xec04, stwu updates the unk2AC pointer, but the following blend calls use r25, still pointing to unk2A0; only hide uses unk2AC.
+  Fixing the receiver reproduces that complete sequence without manufactured pointer locals.
+- Reuse one initialized JUtility::TColor local for both getWhite conversions; this reduces frame 0x148 to 0x120 and shares their stack slot.
+  Default-constructing the local gets frame 0x118 but adds instructions and leaves a wrong slot; rejected.
+  Naming the texture allocation does not restore the missing r24-to-r29 copy and worsens stack allocation; rejected.
+- All function/data comparisons and DOL checks pass. Map errors match the original source exactly; GCConsole2 is not ready for source linking.
+
 ## Near-match operands can hide initialization errors, batch 44
 
 - BossEel::init's tooth-model stores target three consecutive stack slots; the old source assigned all three resources to index zero.

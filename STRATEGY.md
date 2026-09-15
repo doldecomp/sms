@@ -108,10 +108,11 @@ A named skin-deformer local and shared resource pointer improve argument setup/r
 ### 6. `TGCConsole2::load(JSUMemoryInputStream&)`
 
 Unit `mario/GC2D/GCConsole2`, 3,776 bytes, 99.615%.
-At 0xec04 the original stores with `stwu r3,0x2ac(r26)` and then reads through that pointer.
-It probably takes a pointer or reference to the member at 0x2ac first, then stores into it.
-At 0xe6d4 there is also a small address or temporary difference before `JKRFileLoader::getGlbResource`.
-The frame is 0x118 in the original and 0x148 in ours (0x30 too big).
+Batch 45 resolves the original 0xec04 store/update sequence by correcting the blend-call receiver to unk2A0, while hiding unk2AC.
+The original health-pane stride is two pointers, and a US-only class-layout extension at 0x3AE/0x3B0 shifts later fields by four bytes.
+That layout correction plus constructor initialization matches 12 functions / 5,936 bytes; load improves to 99.8411%.
+Reusing one color temporary reduces the frame from 0x148 to 0x120 versus target 0x118.
+The resource constructor still lacks a pointer copy at 0xe6d4; frame/color/buffer offsets remain TODOs.
 
 ### 7. `TMario::TMario()`
 
