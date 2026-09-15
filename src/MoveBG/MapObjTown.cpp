@@ -76,7 +76,7 @@ void TManhole::touchPlayer(THitActor*)
 {
 	mState = STATE_NORMAL;
 	if (!animationFinished()) {
-		mPosition.y = mInitialPosition.y;
+		mPosition.y = getInitialPosition().y;
 		return;
 	}
 	if (gpMarioOriginal->getStatus() == MARIO_STATUS_HIP_DROP
@@ -119,12 +119,12 @@ void TManhole::touchPlayer(THitActor*)
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_DOWN, &mPosition,
 			                                0, nullptr, 0, 4);
 		}
-		if (mPosition.y > mInitialPosition.y - mDownHeight)
+		if (mPosition.y > getInitialPosition().y - mDownHeight)
 			mPosition.y = mPosition.y - mDownSpeed;
 		else
-			mPosition.y = mInitialPosition.y - mDownHeight;
+			mPosition.y = getInitialPosition().y - mDownHeight;
 		unk148 = 1.0f;
-		unk14C = mInitialPosition.y - mPosition.y;
+		unk14C = getInitialPosition().y - mPosition.y;
 		offMapObjFlag(MAP_OBJ_FLAG_UNK100);
 		return;
 	}
