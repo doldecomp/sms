@@ -118,6 +118,7 @@ void TLightCommon::perform(u32 cue, JDrama::TGraphics* graphics)
 		ReInitializeGX();
 		SMS_DrawInit();
 		GXLightObj light;
+		Vec pos;
 		GXInitLightPos(&light, getLightPosition(0)->x, getLightPosition(0)->y,
 		               getLightPosition(0)->z);
 		GXInitLightColor(&light, getLightColor(0));
