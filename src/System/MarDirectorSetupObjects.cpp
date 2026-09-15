@@ -5,7 +5,9 @@
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JDrama/JDRNameRefPtrList.hpp>
 #include <JSystem/JDrama/JDRViewObjPtrList.hpp>
+#define TOrthoProj TOrthoProjWithDefaultName
 #include <JSystem/JDrama/JDRCamera.hpp>
+#undef TOrthoProj
 #include <JSystem/JDrama/JDRFrmGXSet.hpp>
 #include <JSystem/JDrama/JDREfbCtrl.hpp>
 #include <JSystem/JDrama/JDRViewport.hpp>
@@ -41,6 +43,33 @@ extern int gpSceneCmnDatSize;
 // TODO: These literals are emitted by dependencies in the original build.
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+
+namespace JDrama {
+class TOrthoProj : public TCamera {
+public:
+	TOrthoProj(f32 near, f32 far, f32 a, f32 b, f32 c, f32 d)
+	    : TCamera(near, far, "ブラーカメラ")
+	{
+		mField[0] = a;
+		mField[1] = b;
+		mField[2] = c;
+		mField[3] = d;
+	}
+
+	virtual ~TOrthoProj() { }
+
+	virtual void load(JSUMemoryInputStream&);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+
+	virtual JStage::TECameraProjection JSGGetProjectionType() const;
+	virtual void JSGSetProjectionType(JStage::TECameraProjection);
+	virtual void JSGGetProjectionField(f32*) const;
+	virtual void JSGSetProjectionField(const f32*);
+
+public:
+	/* 0x30 */ f32 mField[4];
+};
+} // namespace JDrama
 
 void TMarDirector::decideMarioPosIdx()
 {
