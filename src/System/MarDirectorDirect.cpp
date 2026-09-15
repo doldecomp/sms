@@ -583,7 +583,7 @@ void TMarDirector::setMario()
 		gpMarioOriginal->toroccoStart();
 		break;
 
-	case 3:
+	case 0:
 		const JGeometry::TVec3<f32>* pos = nullptr;
 		if (uVar10)
 			pos = &marioSetPosition->getUnk10(uVar10 - 1);
@@ -591,23 +591,42 @@ void TMarDirector::setMario()
 		break;
 	}
 
-	switch (gpApplication.mCurrArea.getStage()) {
-	case 0x3C:
-		gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Rocket, true);
-		break;
+	TWaterGun* waterGun;
+	TGameSequence& curArea = gpApplication.mCurrArea;
+	if (gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)) {
+		switch (curArea.getStage()) {
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 8:
+		case 9:
+		case 0x10:
+		case 0x2C:
+		case 0x34:
+		case 0x39:
+			break;
 
-		// TODO: crazy cases
-	case 0:
-	case 7:
-		gpMarioOriginal->mWaterGun->changeNozzle(
-		    (TWaterGun::TNozzleType)TFlagManager::getInstance()->getFlag(
-		        0x40004),
-		    true);
-		gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Spray, true);
-		break;
+		case 0x3C:
+			gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Rocket,
+			                                                true);
+			break;
+
+		default: {
+			waterGun = gpMarioOriginal->mWaterGun;
+			waterGun->changeNozzle(
+			    (TWaterGun::TNozzleType)TFlagManager::getInstance()->getFlag(
+			        0x40004),
+			    true);
+			gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Spray, true);
+			break;
+		}
+		}
 	}
 
-	u32 uVar6 = SMS_getShineIDofExStage(gpApplication.mCurrArea.getStage());
+	u8 uVar6 = SMS_getShineIDofExStage(curArea.getStage());
 	if (uVar6 != 0xff && TFlagManager::getInstance()->getShineFlag(uVar6) == 0)
 		gpMarioOriginal->offFlag(MARIO_FLAG_HAS_FLUDD);
 }
