@@ -24,17 +24,16 @@ void TQuestionManager::load(JSUMemoryInputStream& param_1)
 
 bool TQuestionManager::request(JGeometry::TVec3<f32> param_1, f32 param_2)
 {
-	// TODO: inline for horizontal distance?
-	if (unk12 < 0x20
-	    && (gpMarioPos->x - param_1.x) * (gpMarioPos->x - param_1.x)
-	               + (gpMarioPos->z - param_1.z) * (gpMarioPos->z - param_1.z)
-	           < unk14 * unk14) {
-		unk1C[unk12].unk0 = param_1;
-		unk1C[unk12].unkC = param_2;
-		++unk12;
-		return true;
+	if (unk12 < 0x20) {
+		f32 dx = gpMarioPos->x - param_1.x;
+		f32 dz = gpMarioPos->z - param_1.z;
+		if (dx * dx + dz * dz < unk14 * unk14) {
+			unk1C[unk12].unk0 = param_1;
+			unk1C[unk12].unkC = param_2;
+			++unk12;
+			return true;
+		}
 	}
-
 	return false;
 }
 
