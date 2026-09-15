@@ -13,6 +13,9 @@
 #include <JSystem/JKernel/JKRDvdFile.hpp>
 #include <JSystem/JKernel/JKRDvdRipper.hpp>
 #include <System/Resolution.hpp>
+#ifdef VERSION_GMSP01
+#include <dolphin/vi.h>
+#endif
 #include <System/EventWatcher.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <System/RenderModeObj.hpp>
@@ -305,8 +308,13 @@ bool TMarDirector::setupObjects()
 
 		JDrama::TLookAtCamera* cam
 		    = JDrama::TNameRefGen::search<JDrama::TLookAtCamera>("camera 1");
+#ifdef VERSION_GMSP01
+		cam->mAspect = (u16)SMSGetGameVideoWidth() * 0.9134614f
+		               / (u16)SMSGetGameVideoHeight(VIGetTvFormat());
+#else
 		cam->mAspect = (u16)SMSGetGameVideoWidth() * 0.9134614f
 		               / (u16)SMSGetGameVideoHeight();
+#endif
 	}
 
 	unk80 = new JDrama::TViewObjPtrListT<JDrama::TViewObj>("イベントグループ");
