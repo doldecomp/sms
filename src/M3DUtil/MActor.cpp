@@ -608,7 +608,7 @@ void MActor::setBrkFromIndex(int index)
 
 void MActor::updateIn()
 {
-	if (mAnmByType[ANM_TYPE_BCK] && mAnmByType[ANM_TYPE_BCK]->getCurIdx() >= 0)
+	if (mAnmByType[ANM_TYPE_BCK] && 0 <= mAnmByType[ANM_TYPE_BCK]->getCurIdx())
 		mAnmByType[ANM_TYPE_BCK]->updateIn();
 
 	updateInSubBck();
