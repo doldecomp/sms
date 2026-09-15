@@ -390,12 +390,14 @@ void TMario::checkCollision()
 			break;
 
 		// Mame gesso
-		case 0x10000008:
-			if (((TSmallEnemy*)mCollisions[i])->doKeepDistance())
+		case 0x10000008: {
+			TSmallEnemy* enemy = (TSmallEnemy*)mCollisions[i];
+			if (enemy->doKeepDistance())
 				keepDistance(*mCollisions[i], 0.0f);
 			else
 				hitPickUpEnemy(mCollisions[i]);
 			break;
+		}
 
 		// R1: keepDistance (cases sharing L_80161364 leaf)
 		case 0x10000033:
