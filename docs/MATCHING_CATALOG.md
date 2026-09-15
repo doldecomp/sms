@@ -17,6 +17,19 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## Collision switch boundaries and pointer locals, batch 47
+
+- CheckCollision's Yoshi guard must reject holding an object: the original branch at 0x14C tests `!isHolding()`.
+  Both hitHipDrop inline sites accept status states 2 and 3; restoring the shared helper repairs both. MarioMove's ride check already accepts both and needs no edit.
+  The UNUSED helper is now 112 bytes vs map 116; preserve that unresolved size warning.
+- Decode switch branch intervals, not just compared constants: actor IDs 0x08000016–0x08000021 do nothing, while 0x08000022/23 call keepDistance.
+  Moving only ID 0x08000021 gives the wrong comparison tree; moving the entire original interval restores the tree and its registers.
+- In the 0x10000008 case, name the `TSmallEnemy*` receiver before doKeepDistance; this restores the original vtable-load-before-this-copy order.
+  Naming only the returned bool has no effect and was reverted. CheckCollision now has 1,243 matching instruction shapes, with only stack operands different (frame 0x1E0 vs 0x238).
+- HitNormal copies Mario's position into the static water-hit actor, then adds 80 to that actor's Y coordinate. Do not reread Mario's Y afterward.
+  A named water-hit pointer restores instruction scheduling but leaves register differences and frame 0x18 vs 0x30.
+  All function/data checks pass; no exact-code or source-link gain is claimed for this batch.
+
 ## Shared parameter defaults and unwanted header data, batch 46
 
 - MarioInit's TEParams constructor supplies 29 damage blocks in Mario's constructor.

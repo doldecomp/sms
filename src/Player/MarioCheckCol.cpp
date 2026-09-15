@@ -12,6 +12,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+// TODO: GMSE01 frame is 0x18 vs 0x30; water-hit pointer registers differ.
 void TMario::hitNormal(THitActor* actor)
 {
 	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
@@ -44,18 +45,19 @@ void TMario::hitNormal(THitActor* actor)
 
 	TWaterGun* wg = mWaterGun;
 	if ((int)wg->mCurrentNozzle == 0 && wg->mIsEmitWater != 0) {
-		TModelWaterManager::mStaticHitActor.mPosition   = mPosition;
-		TModelWaterManager::mStaticHitActor.mPosition.y = mPosition.y + 80.0f;
-		TModelWaterManager::mStaticHitActor.mParticleIndex = 0;
-		actor->receiveMessage(&TModelWaterManager::mStaticHitActor,
-		                      HIT_MESSAGE_SPRAYED_BY_WATER);
+		TWaterHitActor* water = &TModelWaterManager::mStaticHitActor;
+		water->mPosition = mPosition;
+		water->mPosition.y += 80.0f;
+		water->mParticleIndex = 0;
+		actor->receiveMessage(water, HIT_MESSAGE_SPRAYED_BY_WATER);
 	}
 }
 
-// TODO: wrong size! maybe we return the receiveMessage result?
+// TODO: the inlined conditions match, but the UNUSED body is 112 vs 116 bytes.
 void TMario::hitHipDrop(THitActor* actor)
 {
-	if (mStatus == MARIO_STATUS_HIP_DROP && mStatusState == 2
+	if (mStatus == MARIO_STATUS_HIP_DROP
+	    && (mStatusState == 2 || mStatusState == 3)
 	    && actor->mPosition.y < mPosition.y) {
 		actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 	}
@@ -238,6 +240,8 @@ void TMario::hitNoKeepPull(THitActor* actor)
 	}
 }
 
+// TODO: GMSE01 instructions match apart from stack operands: frame 0x1E0 vs
+// 0x238, sqrt temporary 0x54 vs 0xA8, and later spills shifted by 0x58.
 void TMario::checkCollision()
 {
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK1000))
@@ -258,7 +262,7 @@ void TMario::checkCollision()
 			f32 dx   = yt.x - mPosition.x;
 			f32 dist = std::sqrtf(dx * dx + dz * dz);
 
-			if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && isHolding()
+			if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && !isHolding()
 			    && mVel.y < 0.0f && yt.y < mPosition.y && mStatus != 0x89C
 			    && mStatus != MARIO_STATUS_THROWN_DOWN
 			    && mStatus != MARIO_STATUS_BACK_JUMP && dist < 180.0f) {
@@ -292,7 +296,6 @@ void TMario::checkCollision()
 			continue;
 		}
 
-		// TODO: switch still a bit wrong!
 		switch (mCollisions[i]->getActorType()) {
 		// Other mario (enemy mario?)
 		case 0x80000001:
@@ -311,18 +314,6 @@ void TMario::checkCollision()
 		case 0x8000001:
 		case 0x8000003:
 		case 0x8000013:
-		case 0x8000016:
-		case 0x8000017:
-		case 0x8000018:
-		case 0x8000019:
-		case 0x800001A:
-		case 0x800001B:
-		case 0x800001C:
-		case 0x800001D:
-		case 0x800001E:
-		case 0x800001F:
-		case 0x8000020:
-		case 0x8000021:
 		case 0x8000024:
 		case 0x10000001:
 		case 0x10000002:
@@ -390,14 +381,18 @@ void TMario::checkCollision()
 			break;
 
 		// Mame gesso
-		case 0x10000008:
-			if (((TSmallEnemy*)mCollisions[i])->doKeepDistance())
+		case 0x10000008: {
+			TSmallEnemy* enemy = (TSmallEnemy*)mCollisions[i];
+			if (enemy->doKeepDistance())
 				keepDistance(*mCollisions[i], 0.0f);
 			else
 				hitPickUpEnemy(mCollisions[i]);
 			break;
+		}
 
 		// R1: keepDistance (cases sharing L_80161364 leaf)
+		case 0x8000022:
+		case 0x8000023:
 		case 0x10000033:
 		case 0x400001A6:
 			keepDistance(*mCollisions[i], 0.0f);
@@ -540,6 +535,18 @@ void TMario::checkCollision()
 		// empty cases
 		case 0x8000004:
 		case 0x8000012:
+		case 0x8000016:
+		case 0x8000017:
+		case 0x8000018:
+		case 0x8000019:
+		case 0x800001A:
+		case 0x800001B:
+		case 0x800001C:
+		case 0x800001D:
+		case 0x800001E:
+		case 0x800001F:
+		case 0x8000020:
+		case 0x8000021:
 		case 0x10000005:
 		case 0x10000006:
 		case 0x10000009:

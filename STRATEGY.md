@@ -131,6 +131,9 @@ Unit `mario/Player/MarioCheckCol`, 4,972 bytes, 99.340%.
 At 0xbe0 and 0xc74 the original checks a field against both 2 and 3; ours drops one comparison.
 The original also loads the vtable earlier for the virtual call at 0xe10.
 The frame is 0x238 in the original and 0x1e0 in ours (0x58 too small), so inlines are probably missing.
+Batch 47 restores both comparisons, reverses the erroneous Yoshi holding guard, and corrects the 0x08000016–0x08000023 switch cases.
+A named small-enemy pointer fixes the virtual-call ordering; checkCollision reaches 99.87611% with only stack operands remaining.
+The neighboring hitNormal water sender improves to 99.643936%; both retain source TODOs.
 
 ### 9. `TMario::receiveMessage(THitActor*, unsigned long)`
 

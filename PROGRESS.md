@@ -8,7 +8,15 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 46 — Mario constructor matched
+## Latest checkpoint: batch 47 — collision behavior and dispatch corrected
+
+`checkCollision()` improves **99.3395% → 99.87611%**: fix the inverted Yoshi holding guard, restore hip-drop state 3, and correct fourteen enemy-ID cases. A named small-enemy pointer restores virtual-call scheduling; only stack operands remain (frame 0x1E0 vs 0x238).
+`hitNormal()` improves **97.371216% → 99.643936%** by retaining the water-hit actor pointer and adjusting its copied position; remaining frame/register differences are TODOs.
+Baseline at `46691bc4`; full build, changes_all, all 12,904 function comparisons, unit-data checks and DOL byte/SHA-1 checks pass without regressions. Map presence/order/linkage pass with four existing UNUSED-size warnings; hitHipDrop grows from 104 to 112 bytes vs map 116.
+No new exact code or source-linked files: game **26.129522% matched / 3.254321% source-linked**. No gameplay test performed.
+Refreshed queue: 1,252 authorized functions / 703,776 bytes; next reviewed target is `TMario::receiveMessage(THitActor*, unsigned long)`.
+
+## Verified checkpoint: batch 46 — Mario constructor matched
 
 `TMario::TMario()` now matches all **20,080 bytes / 5,020 instructions** after correcting shared damage defaults, two other initial values, the auto-demo rotation default, and the Hamukuri parameter filename.
 Remove StageUtil's unused static tables from this unit by declaring its sole required function directly; this restores the virtual-table offsets. Restore the four-byte UNUSED `stageSetting` body recorded by the map.
@@ -1204,5 +1212,5 @@ Source, configuration, progress snapshots, and notes are versioned locally.
 ## Next work
 
 Follow [STRATEGY.md](STRATEGY.md) and the refreshed near-matching list.
-Start the next time-box with `TMario::checkCollision()`; consult source TODOs before revisiting GCConsole2::load, BossEel, npcWetting, jumpMain, specMain, spider or beam.
+Start the next time-box with `TMario::receiveMessage(THitActor*, unsigned long)`; consult source TODOs before revisiting GCConsole2::load, BossEel, npcWetting, jumpMain, specMain, spider or beam.
 Keep the small-file queue and old audits as supporting references; defer from-scratch work until the near-matching group is mostly exhausted.
