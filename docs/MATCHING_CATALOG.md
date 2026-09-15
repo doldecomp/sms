@@ -789,6 +789,24 @@ A full executable match also does not validate bodies in objects that are still 
 - AnimalManager's recovered loadSaveParams_ matches its 128-byte UNUSED map size and preserves the exact runtime load.
   Named near-plane input and existing camera/object accessors restore clipping instructions/registers; a four-byte vector-slot difference remains.
 - Read the [batch 29 audit](progress/GMSE01-closure-audit-batch29.md) before repeating frame, stream, counter or accessor trials.
+
+## Small-file closure audit, batch 30
+
+- MessageLoader: tag/length declarations before the outer stream, a typed advancing INF1 cursor and a named discarded entry-size read restore all parser instruction opcodes/registers and the 0xB8 frame.
+  Remaining constructor/stream slots prevent source linking; do not equate its 99.94405% score with completion.
+  Chained extractions alter registers and expand the frame; extra payload/format/entries locals prevent inlining.
+  Both UNUSED helper sizes pass the map check.
+- MapXlu: signed counters and named indices do not resolve the two frame gaps; an inner-loop priority-group reference changes address reuse adversely.
+- PollutionPos: two runtime functions retain frame/register differences; UNUSED subtractFromYMap is still a four-byte stub against 112 bytes.
+- PerformList: load differs by one stream-read slot; perform retains by-value iterator frame/copy differences.
+  Direct extraction and a separate raw value do not restore the frame; middleware and the game list hierarchy remain unchanged.
+- BossHanachanNerve: existing sound/march getters do not fix the frame; the hit-point getter only partially shifts it, and named next-nerve locals add instructions.
+  Batch 17/18 director/console trials were consulted rather than repeated.
+- MovieRumble: init/checkRumbleOff share a missing pointer move inside readCurInfo.
+  Getter placement, validity locals, signed group, const pointer and conditional pointer assignment do not resolve it.
+  UNUSED readCurInfo/movement sizes still differ; no changes retained.
+- Read the [batch 30 audit](progress/GMSE01-closure-audit-batch30.md) before revisiting these files.
+  No new file completed; continue the plan's ordered completion queue.
   All four edited files pass map checks; all 12,904 function comparisons have zero regressions.
   Full DOL byte comparison and SHA-1 pass; no gameplay test.
   Game code is 24.844398% matched / 2.8374174% source-linked; aggregate 38.463623% / 2.24211%.

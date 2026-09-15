@@ -148,14 +148,16 @@ Each promotion still requires the full executable SHA-1 and byte comparison.
    `Player/MarioAccess` (72 bytes left), `Enemy/egggen` (120), `Strategic/HitActor` (124), `MSound/MSoundBGM` (136), `Camera/CameraMode` (144, plus data), `MoveBG/MapObjPollution` (172), `Enemy/DebuTelesa` (176, plus data), `MoveBG/MapObjAirport` (208), `NPC/NpcInbetween` (220), `System/SnapTimeObj` (228), `Strategic/livemanager` (252), `Enemy/enemytable` (276), `Map/MapEventSirena` (280), `MoveBG/MapObjFloat` (288), `M3DUtil/M3UModel` (292), `Map/MapCollisionPlane` (308).
 3. More broadly, 104 unlinked game objects have 2,000 or fewer unmatched code bytes, totalling 95,388 bytes.
    Regenerate this list from `report.json` at each checkpoint rather than trusting these numbers.
-   Batch 29 regeneration is saved in `docs/progress/GMSE01-completion-queue.json`: 104 authorized game files with 1..2,000 unmatched bytes, totaling 95,388 unmatched code bytes.
+   Batch 30 regeneration is saved in `docs/progress/GMSE01-completion-queue.json`: 104 authorized game files with 1..2,000 unmatched bytes, totaling 95,388 unmatched code bytes.
    This excludes THPPlayer despite the report classifying it as game code.
-   Consult the batch 25 through batch 29 closure audits in `docs/progress/` before retrying stalled candidates; they record map gaps, shared issues, and rejected trials.
+   Consult the batch 25 through batch 30 closure audits in `docs/progress/` before retrying stalled candidates; they record map gaps, shared issues, and rejected trials.
    `Map/PollutionObj` completed and source-linked in batch 27: 75 game objects / 79,528 code bytes.
    `GC2D/HelpActor` completed and source-linked in batch 29: 76 game objects / 80,800 code bytes.
    Game coverage is 24.844398% matched / 2.8374174% source-linked; aggregate coverage is 38.463623% / 2.24211%.
    Batch 29 also restores an AnimalManager helper and matches CameraTalk/Strategy functions; those files retain recorded blockers.
-   Next unaudited small multi-function candidates include `MapXlu`, `PollutionPos`, `PerformList`, and `BossHanachanNerve`; revisit earlier deferrals when new evidence addresses their recorded blockers.
+   Batch 30 audited `MapXlu`, `PollutionPos`, `PerformList`, `BossHanachanNerve`, `MessageLoader` and `MovieRumble`; no additional file was completed.
+   MessageLoader's parser improves, but its remaining stack differences prevent promotion.
+   Further small multi-function candidates include `MSModBgm` and `MapCollisionEntry`; revisit earlier deferrals when new evidence addresses their recorded blockers.
 
 If an object stalls on a hard function, record the evidence and move to the next object instead of forcing a fakematch.
 

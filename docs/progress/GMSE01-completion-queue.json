@@ -1,10 +1,10 @@
 {
   "region": "GMSE01",
-  "checkpoint": "batch29",
+  "checkpoint": "batch30",
   "notes": [
     "Report-based candidates only; source-link promotion also requires instruction, data, emission, map and executable verification.",
     "Priorities follow DECOMPILATION_PLAN.md. Game objects only; protected THPPlayer objects are excluded even though report metadata classifies them as game.",
-    "Consult the batch 25 through batch 29 closure audits before revisiting stalled candidates."
+    "Consult the batch 25 through batch 30 closure audits before revisiting stalled candidates."
   ],
   "all_code_matching": [
     {
@@ -1312,7 +1312,7 @@
         {
           "name": "parseBlock__14TMessageLoaderFUlUlPv",
           "size": 572,
-          "similarity": 99.64336
+          "similarity": 99.94405
         }
       ]
     },

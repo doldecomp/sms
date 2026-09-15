@@ -1,0 +1,75 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "f3694700",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.5506,
+    "total_code": "3603748",
+    "matched_code": "1386132",
+    "matched_code_percent": 38.463623,
+    "total_data": "641075",
+    "matched_data": "303847",
+    "matched_data_percent": 47.39648,
+    "total_functions": 12904,
+    "matched_functions": 8227,
+    "matched_functions_percent": 63.755424,
+    "complete_code": "80800",
+    "complete_code_percent": 2.24211,
+    "complete_data": "51636",
+    "complete_data_percent": 8.054595,
+    "total_units": 732,
+    "complete_units": 76
+  },
+  "game_measures": {
+    "fuzzy_match_percent": 69.40073,
+    "total_code": "2847660",
+    "matched_code": "707484",
+    "matched_code_percent": 24.844398,
+    "total_data": "558300",
+    "matched_data": "241872",
+    "matched_data_percent": 43.322945,
+    "total_functions": 9012,
+    "matched_functions": 4430,
+    "matched_functions_percent": 49.15668,
+    "complete_code": "80800",
+    "complete_code_percent": 2.8374174,
+    "complete_data": "51636",
+    "complete_data_percent": 9.248791,
+    "total_units": 385,
+    "complete_units": 76
+  },
+  "source_linked_objects": 76,
+  "new_source_linked_objects": [],
+  "new_source_linked_code_bytes": 0,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "unexplained_function_regressions": [],
+  "new_exact_functions": 0,
+  "new_exact_code_bytes": 0,
+  "new_matched_data_bytes": 0,
+  "improvements": [
+    {
+      "unit": "mario/GC2D/MessageLoader",
+      "function": "parseBlock__14TMessageLoaderFUlUlPv",
+      "before": 99.64336,
+      "after": 99.94405,
+      "size": 572
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "all_functions_present": true,
+    "no_exact_function_regressions": true,
+    "symbol_map_message_loader": true,
+    "gameplay_test": false
+  },
+  "notes": [
+    "No new source-linked file or exact function in this checkpoint.",
+    "MessageLoader parser instruction sequence and registers agree; stack offsets and constructor still differ.",
+    "Closure audit records six small-file blockers and rejected trials; follow the file-completion queue."
+  ],
+  "recovered_unused_functions": []
+}
