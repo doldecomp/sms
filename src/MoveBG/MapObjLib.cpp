@@ -52,15 +52,18 @@ bool TMapObjBase::isDemo()
 	if (gpMarDirector->unk124 != 1 && gpMarDirector->unk124 != 2)
 		b1 = false;
 
-	if (!b1) {
-		// TODO: should be OR, but need fancy inlines for that...
-		bool b2 = true;
-		if (gpMarDirector->unk124 != 3 && gpMarDirector->unk124 != 4)
-			b2 = false;
-		if (b2) {
-			return true;
-		}
-	}
+	if (b1)
+		goto demo;
+
+	bool b2 = true;
+	if (gpMarDirector->unk124 != 3 && gpMarDirector->unk124 != 4)
+		b2 = false;
+	if (!b2)
+		goto not_demo;
+
+demo:
+	return true;
+not_demo:
 	return false;
 }
 
