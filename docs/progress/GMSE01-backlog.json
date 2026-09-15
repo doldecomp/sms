@@ -1,0 +1,3413 @@
+[
+  {
+    "unit": "mario/GC2D/GCConsole2",
+    "source": "src/GC2D/GCConsole2.cpp",
+    "code_bytes": 64728,
+    "matched_code_bytes": 4380,
+    "unmatched_code_bytes": 60348,
+    "functions": 70,
+    "matched_functions": 18
+  },
+  {
+    "unit": "mario/GC2D/CardLoad",
+    "source": "src/GC2D/CardLoad.cpp",
+    "code_bytes": 50156,
+    "matched_code_bytes": 1308,
+    "unmatched_code_bytes": 48848,
+    "functions": 22,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/GC2D/CardSave",
+    "source": "src/GC2D/CardSave.cpp",
+    "code_bytes": 48048,
+    "matched_code_bytes": 1836,
+    "unmatched_code_bytes": 46212,
+    "functions": 21,
+    "matched_functions": 6
+  },
+  {
+    "unit": "mario/Enemy/bosstelesa",
+    "source": "src/Enemy/bosstelesa.cpp",
+    "code_bytes": 40152,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 40152,
+    "functions": 118,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/bosspakkun",
+    "source": "src/Enemy/bosspakkun.cpp",
+    "code_bytes": 39772,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 39772,
+    "functions": 129,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/bossgesso",
+    "source": "src/Enemy/bossgesso.cpp",
+    "code_bytes": 39724,
+    "matched_code_bytes": 5900,
+    "unmatched_code_bytes": 33824,
+    "functions": 88,
+    "matched_functions": 53
+  },
+  {
+    "unit": "mario/System/EventWatcher",
+    "source": "src/System/EventWatcher.cpp",
+    "code_bytes": 42064,
+    "matched_code_bytes": 9284,
+    "unmatched_code_bytes": 32780,
+    "functions": 99,
+    "matched_functions": 32
+  },
+  {
+    "unit": "mario/Enemy/bosseel",
+    "source": "src/Enemy/bosseel.cpp",
+    "code_bytes": 45644,
+    "matched_code_bytes": 13468,
+    "unmatched_code_bytes": 32176,
+    "functions": 144,
+    "matched_functions": 99
+  },
+  {
+    "unit": "mario/Enemy/bosswanwan",
+    "source": "src/Enemy/bosswanwan.cpp",
+    "code_bytes": 31708,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 31708,
+    "functions": 79,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/fireWanwan",
+    "source": "src/Enemy/fireWanwan.cpp",
+    "code_bytes": 39040,
+    "matched_code_bytes": 8492,
+    "unmatched_code_bytes": 30548,
+    "functions": 96,
+    "matched_functions": 54
+  },
+  {
+    "unit": "mario/Enemy/Koopa",
+    "source": "src/Enemy/Koopa.cpp",
+    "code_bytes": 28628,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 28628,
+    "functions": 79,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/hamukuri",
+    "source": "src/Enemy/hamukuri.cpp",
+    "code_bytes": 45700,
+    "matched_code_bytes": 18084,
+    "unmatched_code_bytes": 27616,
+    "functions": 226,
+    "matched_functions": 160
+  },
+  {
+    "unit": "mario/Player/MarioMove",
+    "source": "src/Player/MarioMove.cpp",
+    "code_bytes": 34216,
+    "matched_code_bytes": 7140,
+    "unmatched_code_bytes": 27076,
+    "functions": 68,
+    "matched_functions": 36
+  },
+  {
+    "unit": "mario/Map/BathWaterManager",
+    "source": "src/Map/BathWaterManager.cpp",
+    "code_bytes": 32352,
+    "matched_code_bytes": 6928,
+    "unmatched_code_bytes": 25424,
+    "functions": 41,
+    "matched_functions": 27
+  },
+  {
+    "unit": "mario/Enemy/hanasambo",
+    "source": "src/Enemy/hanasambo.cpp",
+    "code_bytes": 25108,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 25108,
+    "functions": 96,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/MoveBG/MapObjBall",
+    "source": "src/MoveBG/MapObjBall.cpp",
+    "code_bytes": 22948,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 22948,
+    "functions": 72,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Player/MarioInit",
+    "source": "src/Player/MarioInit.cpp",
+    "code_bytes": 33740,
+    "matched_code_bytes": 11232,
+    "unmatched_code_bytes": 22508,
+    "functions": 16,
+    "matched_functions": 12
+  },
+  {
+    "unit": "mario/Enemy/igaiga",
+    "source": "src/Enemy/igaiga.cpp",
+    "code_bytes": 22000,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 22000,
+    "functions": 95,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/cannon",
+    "source": "src/Enemy/cannon.cpp",
+    "code_bytes": 21908,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 21908,
+    "functions": 55,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/chuuhana",
+    "source": "src/Enemy/chuuhana.cpp",
+    "code_bytes": 21056,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 21056,
+    "functions": 57,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/enemyMario",
+    "source": "src/Enemy/enemyMario.cpp",
+    "code_bytes": 23464,
+    "matched_code_bytes": 2728,
+    "unmatched_code_bytes": 20736,
+    "functions": 54,
+    "matched_functions": 29
+  },
+  {
+    "unit": "mario/Enemy/tobiPuku",
+    "source": "src/Enemy/tobiPuku.cpp",
+    "code_bytes": 20580,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 20580,
+    "functions": 120,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/MoveBG/MapObjMamma",
+    "source": "src/MoveBG/MapObjMamma.cpp",
+    "code_bytes": 20480,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 20480,
+    "functions": 103,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/GC2D/hx_wiper",
+    "source": "src/GC2D/hx_wiper.c",
+    "code_bytes": 20416,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 20416,
+    "functions": 45,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/koopajr",
+    "source": "src/Enemy/koopajr.cpp",
+    "code_bytes": 20296,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 20296,
+    "functions": 81,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Player/WaterGun",
+    "source": "src/Player/WaterGun.cpp",
+    "code_bytes": 21016,
+    "matched_code_bytes": 1132,
+    "unmatched_code_bytes": 19884,
+    "functions": 44,
+    "matched_functions": 10
+  },
+  {
+    "unit": "mario/Player/MarioSpecial",
+    "source": "src/Player/MarioSpecial.cpp",
+    "code_bytes": 21060,
+    "matched_code_bytes": 1720,
+    "unmatched_code_bytes": 19340,
+    "functions": 21,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/Enemy/bgtentacle",
+    "source": "src/Enemy/bgtentacle.cpp",
+    "code_bytes": 22684,
+    "matched_code_bytes": 3508,
+    "unmatched_code_bytes": 19176,
+    "functions": 40,
+    "matched_functions": 22
+  },
+  {
+    "unit": "mario/MarioUtil/ShadowUtil",
+    "source": "src/MarioUtil/ShadowUtil.cpp",
+    "code_bytes": 21032,
+    "matched_code_bytes": 1944,
+    "unmatched_code_bytes": 19088,
+    "functions": 49,
+    "matched_functions": 16
+  },
+  {
+    "unit": "mario/MoveBG/MapObjCorona",
+    "source": "src/MoveBG/MapObjCorona.cpp",
+    "code_bytes": 18968,
+    "matched_code_bytes": 140,
+    "unmatched_code_bytes": 18828,
+    "functions": 52,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/Player/ModelWaterManager",
+    "source": "src/Player/ModelWaterManager.cpp",
+    "code_bytes": 20448,
+    "matched_code_bytes": 1888,
+    "unmatched_code_bytes": 18560,
+    "functions": 25,
+    "matched_functions": 8
+  },
+  {
+    "unit": "mario/GC2D/Talk2D2",
+    "source": "src/GC2D/Talk2D2.cpp",
+    "code_bytes": 18424,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 18424,
+    "functions": 24,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/bossManta",
+    "source": "src/Enemy/bossManta.cpp",
+    "code_bytes": 21872,
+    "matched_code_bytes": 3456,
+    "unmatched_code_bytes": 18416,
+    "functions": 50,
+    "matched_functions": 24
+  },
+  {
+    "unit": "mario/Enemy/popo",
+    "source": "src/Enemy/popo.cpp",
+    "code_bytes": 18300,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 18300,
+    "functions": 54,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/pakkun",
+    "source": "src/Enemy/pakkun.cpp",
+    "code_bytes": 18184,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 18184,
+    "functions": 78,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Player/MarioDraw",
+    "source": "src/Player/MarioDraw.cpp",
+    "code_bytes": 21692,
+    "matched_code_bytes": 3964,
+    "unmatched_code_bytes": 17728,
+    "functions": 48,
+    "matched_functions": 28
+  },
+  {
+    "unit": "mario/Player/MarioRun",
+    "source": "src/Player/MarioRun.cpp",
+    "code_bytes": 19804,
+    "matched_code_bytes": 2360,
+    "unmatched_code_bytes": 17444,
+    "functions": 33,
+    "matched_functions": 8
+  },
+  {
+    "unit": "mario/MoveBG/MapObjMonte",
+    "source": "src/MoveBG/MapObjMonte.cpp",
+    "code_bytes": 17380,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 17380,
+    "functions": 54,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/BathtubKiller",
+    "source": "src/Enemy/BathtubKiller.cpp",
+    "code_bytes": 19236,
+    "matched_code_bytes": 1896,
+    "unmatched_code_bytes": 17340,
+    "functions": 45,
+    "matched_functions": 15
+  },
+  {
+    "unit": "mario/Enemy/elecNokonoko",
+    "source": "src/Enemy/elecNokonoko.cpp",
+    "code_bytes": 17168,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 17168,
+    "functions": 69,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/tinkoopa",
+    "source": "src/Enemy/tinkoopa.cpp",
+    "code_bytes": 16852,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 16852,
+    "functions": 54,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/GC2D/Guide",
+    "source": "src/GC2D/Guide.cpp",
+    "code_bytes": 15976,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 15976,
+    "functions": 17,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/hinokuri2",
+    "source": "src/Enemy/hinokuri2.cpp",
+    "code_bytes": 23992,
+    "matched_code_bytes": 8360,
+    "unmatched_code_bytes": 15632,
+    "functions": 72,
+    "matched_functions": 50
+  },
+  {
+    "unit": "mario/GC2D/Option",
+    "source": "src/GC2D/Option.cpp",
+    "code_bytes": 17972,
+    "matched_code_bytes": 2448,
+    "unmatched_code_bytes": 15524,
+    "functions": 42,
+    "matched_functions": 16
+  },
+  {
+    "unit": "mario/Animal/Bird",
+    "source": "src/Animal/Bird.cpp",
+    "code_bytes": 15204,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 15204,
+    "functions": 52,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/Kumokun",
+    "source": "src/Enemy/Kumokun.cpp",
+    "code_bytes": 23696,
+    "matched_code_bytes": 8548,
+    "unmatched_code_bytes": 15148,
+    "functions": 65,
+    "matched_functions": 45
+  },
+  {
+    "unit": "mario/MoveBG/MapObjMare",
+    "source": "src/MoveBG/MapObjMare.cpp",
+    "code_bytes": 15128,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 15128,
+    "functions": 67,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Animal/BeeHive",
+    "source": "src/Animal/BeeHive.cpp",
+    "code_bytes": 14856,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 14856,
+    "functions": 49,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/BossHanachanMain",
+    "source": "src/Enemy/BossHanachanMain.cpp",
+    "code_bytes": 14712,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 14712,
+    "functions": 29,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/MoveBG/MapObjBianco",
+    "source": "src/MoveBG/MapObjBianco.cpp",
+    "code_bytes": 14396,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 14396,
+    "functions": 74,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/System/MarNameRefGen_MapObj",
+    "source": "src/System/MarNameRefGen_MapObj.cpp",
+    "code_bytes": 14680,
+    "matched_code_bytes": 380,
+    "unmatched_code_bytes": 14300,
+    "functions": 8,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/Player/MarioJump",
+    "source": "src/Player/MarioJump.cpp",
+    "code_bytes": 16208,
+    "matched_code_bytes": 1996,
+    "unmatched_code_bytes": 14212,
+    "functions": 20,
+    "matched_functions": 6
+  },
+  {
+    "unit": "mario/Enemy/TabePuku",
+    "source": "src/Enemy/TabePuku.cpp",
+    "code_bytes": 13592,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 13592,
+    "functions": 48,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/gatekeeper",
+    "source": "src/Enemy/gatekeeper.cpp",
+    "code_bytes": 18616,
+    "matched_code_bytes": 5056,
+    "unmatched_code_bytes": 13560,
+    "functions": 55,
+    "matched_functions": 36
+  },
+  {
+    "unit": "mario/Player/Yoshi",
+    "source": "src/Player/Yoshi.cpp",
+    "code_bytes": 14832,
+    "matched_code_bytes": 1328,
+    "unmatched_code_bytes": 13504,
+    "functions": 25,
+    "matched_functions": 8
+  },
+  {
+    "unit": "mario/Enemy/killer",
+    "source": "src/Enemy/killer.cpp",
+    "code_bytes": 13416,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 13416,
+    "functions": 54,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/MoveBG/MapObjPinna",
+    "source": "src/MoveBG/MapObjPinna.cpp",
+    "code_bytes": 13364,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 13364,
+    "functions": 68,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/Kazekun",
+    "source": "src/Enemy/Kazekun.cpp",
+    "code_bytes": 12640,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 12640,
+    "functions": 43,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/amiNoko",
+    "source": "src/Enemy/amiNoko.cpp",
+    "code_bytes": 12336,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 12336,
+    "functions": 37,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/limitkoopa",
+    "source": "src/Enemy/limitkoopa.cpp",
+    "code_bytes": 12308,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 12308,
+    "functions": 58,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/MoveBG/Item",
+    "source": "src/MoveBG/Item.cpp",
+    "code_bytes": 19184,
+    "matched_code_bytes": 7120,
+    "unmatched_code_bytes": 12064,
+    "functions": 97,
+    "matched_functions": 64
+  },
+  {
+    "unit": "mario/MoveBG/MapObjSirena",
+    "source": "src/MoveBG/MapObjSirena.cpp",
+    "code_bytes": 20384,
+    "matched_code_bytes": 8592,
+    "unmatched_code_bytes": 11792,
+    "functions": 94,
+    "matched_functions": 69
+  },
+  {
+    "unit": "mario/System/MarNameRefGen",
+    "source": "src/System/MarNameRefGen.cpp",
+    "code_bytes": 22672,
+    "matched_code_bytes": 11076,
+    "unmatched_code_bytes": 11596,
+    "functions": 68,
+    "matched_functions": 60
+  },
+  {
+    "unit": "mario/GC2D/SelectMenu",
+    "source": "src/GC2D/SelectMenu.cpp",
+    "code_bytes": 13736,
+    "matched_code_bytes": 2240,
+    "unmatched_code_bytes": 11496,
+    "functions": 14,
+    "matched_functions": 10
+  },
+  {
+    "unit": "mario/Enemy/bombhei",
+    "source": "src/Enemy/bombhei.cpp",
+    "code_bytes": 11048,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 11048,
+    "functions": 48,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/tamaNoko",
+    "source": "src/Enemy/tamaNoko.cpp",
+    "code_bytes": 16532,
+    "matched_code_bytes": 5504,
+    "unmatched_code_bytes": 11028,
+    "functions": 58,
+    "matched_functions": 41
+  },
+  {
+    "unit": "mario/Enemy/telesa",
+    "source": "src/Enemy/telesa.cpp",
+    "code_bytes": 20588,
+    "matched_code_bytes": 9632,
+    "unmatched_code_bytes": 10956,
+    "functions": 86,
+    "matched_functions": 62
+  },
+  {
+    "unit": "mario/GC2D/ConsoleStr",
+    "source": "src/GC2D/ConsoleStr.cpp",
+    "code_bytes": 11012,
+    "matched_code_bytes": 156,
+    "unmatched_code_bytes": 10856,
+    "functions": 19,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/Camera/cameragc",
+    "source": "src/Camera/cameragc.cpp",
+    "code_bytes": 13540,
+    "matched_code_bytes": 2760,
+    "unmatched_code_bytes": 10780,
+    "functions": 61,
+    "matched_functions": 47
+  },
+  {
+    "unit": "mario/Enemy/smallEnemy",
+    "source": "src/Enemy/smallEnemy.cpp",
+    "code_bytes": 17608,
+    "matched_code_bytes": 6856,
+    "unmatched_code_bytes": 10752,
+    "functions": 65,
+    "matched_functions": 40
+  },
+  {
+    "unit": "mario/System/MSoundMainSide",
+    "source": "src/System/MSoundMainSide.cpp",
+    "code_bytes": 11060,
+    "matched_code_bytes": 516,
+    "unmatched_code_bytes": 10544,
+    "functions": 29,
+    "matched_functions": 11
+  },
+  {
+    "unit": "mario/Enemy/Kukku",
+    "source": "src/Enemy/Kukku.cpp",
+    "code_bytes": 10464,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 10464,
+    "functions": 37,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/System/MarDirectorDirect",
+    "source": "src/System/MarDirectorDirect.cpp",
+    "code_bytes": 11188,
+    "matched_code_bytes": 792,
+    "unmatched_code_bytes": 10396,
+    "functions": 14,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/Enemy/wireTrap",
+    "source": "src/Enemy/wireTrap.cpp",
+    "code_bytes": 10016,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 10016,
+    "functions": 35,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/MSound/MSoundSE",
+    "source": "src/MSound/MSoundSE.cpp",
+    "code_bytes": 11912,
+    "matched_code_bytes": 1900,
+    "unmatched_code_bytes": 10012,
+    "functions": 30,
+    "matched_functions": 18
+  },
+  {
+    "unit": "mario/Enemy/gesso",
+    "source": "src/Enemy/gesso.cpp",
+    "code_bytes": 19904,
+    "matched_code_bytes": 10016,
+    "unmatched_code_bytes": 9888,
+    "functions": 93,
+    "matched_functions": 73
+  },
+  {
+    "unit": "mario/NPC/NpcAnm",
+    "source": "src/NPC/NpcAnm.cpp",
+    "code_bytes": 15984,
+    "matched_code_bytes": 6192,
+    "unmatched_code_bytes": 9792,
+    "functions": 40,
+    "matched_functions": 27
+  },
+  {
+    "unit": "mario/MSound/MSound",
+    "source": "src/MSound/MSound.cpp",
+    "code_bytes": 13112,
+    "matched_code_bytes": 3604,
+    "unmatched_code_bytes": 9508,
+    "functions": 58,
+    "matched_functions": 31
+  },
+  {
+    "unit": "mario/Enemy/yunbo",
+    "source": "src/Enemy/yunbo.cpp",
+    "code_bytes": 9224,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 9224,
+    "functions": 35,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Player/MarioReceiveMsg",
+    "source": "src/Player/MarioReceiveMsg.cpp",
+    "code_bytes": 9956,
+    "matched_code_bytes": 764,
+    "unmatched_code_bytes": 9192,
+    "functions": 3,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/System/MarDirectorSetupObjects",
+    "source": "src/System/MarDirectorSetupObjects.cpp",
+    "code_bytes": 9792,
+    "matched_code_bytes": 780,
+    "unmatched_code_bytes": 9012,
+    "functions": 4,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/System/MarNameRefGen_Enemy",
+    "source": "src/System/MarNameRefGen_Enemy.cpp",
+    "code_bytes": 8832,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 8832,
+    "functions": 5,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/MoveBG/MapObjFence",
+    "source": "src/MoveBG/MapObjFence.cpp",
+    "code_bytes": 8664,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 8664,
+    "functions": 43,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/MarioUtil/DrawUtil",
+    "source": "src/MarioUtil/DrawUtil.cpp",
+    "code_bytes": 10204,
+    "matched_code_bytes": 1712,
+    "unmatched_code_bytes": 8492,
+    "functions": 27,
+    "matched_functions": 13
+  },
+  {
+    "unit": "mario/Enemy/enemy",
+    "source": "src/Enemy/enemy.cpp",
+    "code_bytes": 11600,
+    "matched_code_bytes": 3160,
+    "unmatched_code_bytes": 8440,
+    "functions": 40,
+    "matched_functions": 21
+  },
+  {
+    "unit": "mario/System/Application",
+    "source": "src/System/Application.cpp",
+    "code_bytes": 9848,
+    "matched_code_bytes": 1436,
+    "unmatched_code_bytes": 8412,
+    "functions": 21,
+    "matched_functions": 6
+  },
+  {
+    "unit": "mario/System/MarDirectorLoadResource",
+    "source": "src/System/MarDirectorLoadResource.cpp",
+    "code_bytes": 9572,
+    "matched_code_bytes": 1160,
+    "unmatched_code_bytes": 8412,
+    "functions": 6,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/Enemy/graph",
+    "source": "src/Enemy/graph.cpp",
+    "code_bytes": 12700,
+    "matched_code_bytes": 4336,
+    "unmatched_code_bytes": 8364,
+    "functions": 34,
+    "matched_functions": 18
+  },
+  {
+    "unit": "mario/Player/MarioSound",
+    "source": "src/Player/MarioSound.cpp",
+    "code_bytes": 9324,
+    "matched_code_bytes": 1128,
+    "unmatched_code_bytes": 8196,
+    "functions": 10,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/Enemy/fruitsboat",
+    "source": "src/Enemy/fruitsboat.cpp",
+    "code_bytes": 8180,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 8180,
+    "functions": 24,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/BossHanachanParts",
+    "source": "src/Enemy/BossHanachanParts.cpp",
+    "code_bytes": 8020,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 8020,
+    "functions": 27,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/MoveBG/MapObjRicco",
+    "source": "src/MoveBG/MapObjRicco.cpp",
+    "code_bytes": 7764,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 7764,
+    "functions": 32,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/MoveBG/ModelGate",
+    "source": "src/MoveBG/ModelGate.cpp",
+    "code_bytes": 7252,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 7252,
+    "functions": 11,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/rocket",
+    "source": "src/Enemy/rocket.cpp",
+    "code_bytes": 7228,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 7228,
+    "functions": 33,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/NPC/NpcChange",
+    "source": "src/NPC/NpcChange.cpp",
+    "code_bytes": 8900,
+    "matched_code_bytes": 1696,
+    "unmatched_code_bytes": 7204,
+    "functions": 19,
+    "matched_functions": 9
+  },
+  {
+    "unit": "mario/Enemy/namekuri",
+    "source": "src/Enemy/namekuri.cpp",
+    "code_bytes": 14408,
+    "matched_code_bytes": 7248,
+    "unmatched_code_bytes": 7160,
+    "functions": 70,
+    "matched_functions": 54
+  },
+  {
+    "unit": "mario/Enemy/Amenbo",
+    "source": "src/Enemy/Amenbo.cpp",
+    "code_bytes": 10200,
+    "matched_code_bytes": 3224,
+    "unmatched_code_bytes": 6976,
+    "functions": 41,
+    "matched_functions": 30
+  },
+  {
+    "unit": "mario/GC2D/PauseMenu2",
+    "source": "src/GC2D/PauseMenu2.cpp",
+    "code_bytes": 8264,
+    "matched_code_bytes": 1364,
+    "unmatched_code_bytes": 6900,
+    "functions": 13,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/Map/MapCheck",
+    "source": "src/Map/MapCheck.cpp",
+    "code_bytes": 7524,
+    "matched_code_bytes": 764,
+    "unmatched_code_bytes": 6760,
+    "functions": 9,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/Enemy/limitkoopajr",
+    "source": "src/Enemy/limitkoopajr.cpp",
+    "code_bytes": 6516,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 6516,
+    "functions": 27,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Map/MapEventMare",
+    "source": "src/Map/MapEventMare.cpp",
+    "code_bytes": 10628,
+    "matched_code_bytes": 4128,
+    "unmatched_code_bytes": 6500,
+    "functions": 34,
+    "matched_functions": 23
+  },
+  {
+    "unit": "mario/Enemy/poihana",
+    "source": "src/Enemy/poihana.cpp",
+    "code_bytes": 13244,
+    "matched_code_bytes": 6760,
+    "unmatched_code_bytes": 6484,
+    "functions": 55,
+    "matched_functions": 43
+  },
+  {
+    "unit": "mario/MoveBG/MapObjManager",
+    "source": "src/MoveBG/MapObjManager.cpp",
+    "code_bytes": 10772,
+    "matched_code_bytes": 4488,
+    "unmatched_code_bytes": 6284,
+    "functions": 32,
+    "matched_functions": 27
+  },
+  {
+    "unit": "mario/NPC/NpcEvent",
+    "source": "src/NPC/NpcEvent.cpp",
+    "code_bytes": 9656,
+    "matched_code_bytes": 3400,
+    "unmatched_code_bytes": 6256,
+    "functions": 25,
+    "matched_functions": 8
+  },
+  {
+    "unit": "mario/System/MenuDir",
+    "source": "src/System/MenuDir.cpp",
+    "code_bytes": 7208,
+    "matched_code_bytes": 1032,
+    "unmatched_code_bytes": 6176,
+    "functions": 10,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/Player/MarioCheckCol",
+    "source": "src/Player/MarioCheckCol.cpp",
+    "code_bytes": 6924,
+    "matched_code_bytes": 764,
+    "unmatched_code_bytes": 6160,
+    "functions": 4,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/System/MovieDirector",
+    "source": "src/System/MovieDirector.cpp",
+    "code_bytes": 6988,
+    "matched_code_bytes": 860,
+    "unmatched_code_bytes": 6128,
+    "functions": 14,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/MoveBG/MapObjLib",
+    "source": "src/MoveBG/MapObjLib.cpp",
+    "code_bytes": 13360,
+    "matched_code_bytes": 7240,
+    "unmatched_code_bytes": 6120,
+    "functions": 87,
+    "matched_functions": 64
+  },
+  {
+    "unit": "mario/MarioUtil/MtxUtil",
+    "source": "src/MarioUtil/MtxUtil.cpp",
+    "code_bytes": 8224,
+    "matched_code_bytes": 2180,
+    "unmatched_code_bytes": 6044,
+    "functions": 23,
+    "matched_functions": 16
+  },
+  {
+    "unit": "mario/MoveBG/MapObjGeneral",
+    "source": "src/MoveBG/MapObjGeneral.cpp",
+    "code_bytes": 9100,
+    "matched_code_bytes": 3132,
+    "unmatched_code_bytes": 5968,
+    "functions": 41,
+    "matched_functions": 23
+  },
+  {
+    "unit": "mario/MoveBG/MapObjFlag",
+    "source": "src/MoveBG/MapObjFlag.cpp",
+    "code_bytes": 5956,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 5956,
+    "functions": 15,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/GC2D/SelectShine2",
+    "source": "src/GC2D/SelectShine2.cpp",
+    "code_bytes": 5768,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 5768,
+    "functions": 13,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/hauntLeg",
+    "source": "src/Enemy/hauntLeg.cpp",
+    "code_bytes": 5704,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 5704,
+    "functions": 28,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Map/MapWire",
+    "source": "src/Map/MapWire.cpp",
+    "code_bytes": 7088,
+    "matched_code_bytes": 1416,
+    "unmatched_code_bytes": 5672,
+    "functions": 16,
+    "matched_functions": 8
+  },
+  {
+    "unit": "mario/Enemy/mameGesso",
+    "source": "src/Enemy/mameGesso.cpp",
+    "code_bytes": 12652,
+    "matched_code_bytes": 7172,
+    "unmatched_code_bytes": 5480,
+    "functions": 55,
+    "matched_functions": 46
+  },
+  {
+    "unit": "mario/Player/MarioPhysics",
+    "source": "src/Player/MarioPhysics.cpp",
+    "code_bytes": 6932,
+    "matched_code_bytes": 1520,
+    "unmatched_code_bytes": 5412,
+    "functions": 14,
+    "matched_functions": 6
+  },
+  {
+    "unit": "mario/Camera/CameraChange",
+    "source": "src/Camera/CameraChange.cpp",
+    "code_bytes": 7364,
+    "matched_code_bytes": 1960,
+    "unmatched_code_bytes": 5404,
+    "functions": 18,
+    "matched_functions": 11
+  },
+  {
+    "unit": "mario/GC2D/SelectDir",
+    "source": "src/GC2D/SelectDir.cpp",
+    "code_bytes": 6848,
+    "matched_code_bytes": 1572,
+    "unmatched_code_bytes": 5276,
+    "functions": 14,
+    "matched_functions": 11
+  },
+  {
+    "unit": "mario/MoveBG/MapObjDolpic",
+    "source": "src/MoveBG/MapObjDolpic.cpp",
+    "code_bytes": 8004,
+    "matched_code_bytes": 2836,
+    "unmatched_code_bytes": 5168,
+    "functions": 40,
+    "matched_functions": 27
+  },
+  {
+    "unit": "mario/MoveBG/MapObjTown",
+    "source": "src/MoveBG/MapObjTown.cpp",
+    "code_bytes": 10256,
+    "matched_code_bytes": 5124,
+    "unmatched_code_bytes": 5132,
+    "functions": 66,
+    "matched_functions": 47
+  },
+  {
+    "unit": "mario/System/MarDirectorInitECT",
+    "source": "src/System/MarDirectorInitECT.cpp",
+    "code_bytes": 5224,
+    "matched_code_bytes": 132,
+    "unmatched_code_bytes": 5092,
+    "functions": 6,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/MoveBG/MapObjRailBlock",
+    "source": "src/MoveBG/MapObjRailBlock.cpp",
+    "code_bytes": 9112,
+    "matched_code_bytes": 4040,
+    "unmatched_code_bytes": 5072,
+    "functions": 46,
+    "matched_functions": 33
+  },
+  {
+    "unit": "mario/MoveBG/MapObjWave",
+    "source": "src/MoveBG/MapObjWave.cpp",
+    "code_bytes": 5060,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 5060,
+    "functions": 12,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Player/MarioWait",
+    "source": "src/Player/MarioWait.cpp",
+    "code_bytes": 7496,
+    "matched_code_bytes": 2556,
+    "unmatched_code_bytes": 4940,
+    "functions": 16,
+    "matched_functions": 10
+  },
+  {
+    "unit": "mario/MoveBG/MapObjHide",
+    "source": "src/MoveBG/MapObjHide.cpp",
+    "code_bytes": 11300,
+    "matched_code_bytes": 6416,
+    "unmatched_code_bytes": 4884,
+    "functions": 64,
+    "matched_functions": 50
+  },
+  {
+    "unit": "mario/System/EmitterViewObj",
+    "source": "src/System/EmitterViewObj.cpp",
+    "code_bytes": 6500,
+    "matched_code_bytes": 1644,
+    "unmatched_code_bytes": 4856,
+    "functions": 30,
+    "matched_functions": 20
+  },
+  {
+    "unit": "mario/Player/Tongue",
+    "source": "src/Player/Tongue.cpp",
+    "code_bytes": 6304,
+    "matched_code_bytes": 1452,
+    "unmatched_code_bytes": 4852,
+    "functions": 16,
+    "matched_functions": 10
+  },
+  {
+    "unit": "mario/MoveBG/MapObjBase",
+    "source": "src/MoveBG/MapObjBase.cpp",
+    "code_bytes": 8380,
+    "matched_code_bytes": 3600,
+    "unmatched_code_bytes": 4780,
+    "functions": 38,
+    "matched_functions": 25
+  },
+  {
+    "unit": "mario/System/CardManager",
+    "source": "src/System/CardManager.cpp",
+    "code_bytes": 7964,
+    "matched_code_bytes": 3184,
+    "unmatched_code_bytes": 4780,
+    "functions": 33,
+    "matched_functions": 23
+  },
+  {
+    "unit": "mario/Player/MarioCollision",
+    "source": "src/Player/MarioCollision.cpp",
+    "code_bytes": 5976,
+    "matched_code_bytes": 1228,
+    "unmatched_code_bytes": 4748,
+    "functions": 19,
+    "matched_functions": 7
+  },
+  {
+    "unit": "mario/MoveBG/MapObjInit",
+    "source": "src/MoveBG/MapObjInit.cpp",
+    "code_bytes": 6192,
+    "matched_code_bytes": 1460,
+    "unmatched_code_bytes": 4732,
+    "functions": 15,
+    "matched_functions": 8
+  },
+  {
+    "unit": "mario/M3DUtil/MActor",
+    "source": "src/M3DUtil/MActor.cpp",
+    "code_bytes": 11252,
+    "matched_code_bytes": 6524,
+    "unmatched_code_bytes": 4728,
+    "functions": 60,
+    "matched_functions": 48
+  },
+  {
+    "unit": "mario/Player/MarioParticle",
+    "source": "src/Player/MarioParticle.cpp",
+    "code_bytes": 8788,
+    "matched_code_bytes": 4060,
+    "unmatched_code_bytes": 4728,
+    "functions": 48,
+    "matched_functions": 33
+  },
+  {
+    "unit": "mario/NPC/NpcBase",
+    "source": "src/NPC/NpcBase.cpp",
+    "code_bytes": 9176,
+    "matched_code_bytes": 4560,
+    "unmatched_code_bytes": 4616,
+    "functions": 38,
+    "matched_functions": 30
+  },
+  {
+    "unit": "mario/MarioUtil/LightUtil",
+    "source": "src/MarioUtil/LightUtil.cpp",
+    "code_bytes": 8912,
+    "matched_code_bytes": 4532,
+    "unmatched_code_bytes": 4380,
+    "functions": 40,
+    "matched_functions": 29
+  },
+  {
+    "unit": "mario/MSound/MSoundStruct",
+    "source": "src/MSound/MSoundStruct.cpp",
+    "code_bytes": 7272,
+    "matched_code_bytes": 2936,
+    "unmatched_code_bytes": 4336,
+    "functions": 12,
+    "matched_functions": 9
+  },
+  {
+    "unit": "mario/Enemy/seal",
+    "source": "src/Enemy/seal.cpp",
+    "code_bytes": 4292,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 4292,
+    "functions": 18,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Camera/cameralib",
+    "source": "src/Camera/cameralib.cpp",
+    "code_bytes": 6376,
+    "matched_code_bytes": 2132,
+    "unmatched_code_bytes": 4244,
+    "functions": 17,
+    "matched_functions": 12
+  },
+  {
+    "unit": "mario/Animal/AnimalBase",
+    "source": "src/Animal/AnimalBase.cpp",
+    "code_bytes": 7408,
+    "matched_code_bytes": 3172,
+    "unmatched_code_bytes": 4236,
+    "functions": 37,
+    "matched_functions": 27
+  },
+  {
+    "unit": "mario/System/MarNameRefGen_NPC",
+    "source": "src/System/MarNameRefGen_NPC.cpp",
+    "code_bytes": 4232,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 4232,
+    "functions": 3,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/M3DUtil/MActorData",
+    "source": "src/M3DUtil/MActorData.cpp",
+    "code_bytes": 5304,
+    "matched_code_bytes": 1120,
+    "unmatched_code_bytes": 4184,
+    "functions": 15,
+    "matched_functions": 6
+  },
+  {
+    "unit": "mario/Enemy/BathtubPeach",
+    "source": "src/Enemy/BathtubPeach.cpp",
+    "code_bytes": 4164,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 4164,
+    "functions": 21,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/conductor",
+    "source": "src/Enemy/conductor.cpp",
+    "code_bytes": 9268,
+    "matched_code_bytes": 5140,
+    "unmatched_code_bytes": 4128,
+    "functions": 50,
+    "matched_functions": 42
+  },
+  {
+    "unit": "mario/Player/MarioAutodemo",
+    "source": "src/Player/MarioAutodemo.cpp",
+    "code_bytes": 6696,
+    "matched_code_bytes": 2576,
+    "unmatched_code_bytes": 4120,
+    "functions": 14,
+    "matched_functions": 8
+  },
+  {
+    "unit": "mario/Enemy/feetinv",
+    "source": "src/Enemy/feetinv.cpp",
+    "code_bytes": 4112,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 4112,
+    "functions": 25,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Map/MapMirror",
+    "source": "src/Map/MapMirror.cpp",
+    "code_bytes": 6088,
+    "matched_code_bytes": 1988,
+    "unmatched_code_bytes": 4100,
+    "functions": 27,
+    "matched_functions": 16
+  },
+  {
+    "unit": "mario/NPC/NpcInitPrg",
+    "source": "src/NPC/NpcInitPrg.cpp",
+    "code_bytes": 4088,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 4088,
+    "functions": 2,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Map/MapEventSink",
+    "source": "src/Map/MapEventSink.cpp",
+    "code_bytes": 7984,
+    "matched_code_bytes": 3932,
+    "unmatched_code_bytes": 4052,
+    "functions": 39,
+    "matched_functions": 24
+  },
+  {
+    "unit": "mario/Strategic/spcinterp",
+    "source": "src/Strategic/spcinterp.cpp",
+    "code_bytes": 23296,
+    "matched_code_bytes": 19288,
+    "unmatched_code_bytes": 4008,
+    "functions": 72,
+    "matched_functions": 66
+  },
+  {
+    "unit": "mario/Enemy/BossHanachanNerve",
+    "source": "src/Enemy/BossHanachanNerve.cpp",
+    "code_bytes": 3784,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 3784,
+    "functions": 22,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Animal/boid",
+    "source": "src/Animal/boid.cpp",
+    "code_bytes": 5364,
+    "matched_code_bytes": 1684,
+    "unmatched_code_bytes": 3680,
+    "functions": 16,
+    "matched_functions": 13
+  },
+  {
+    "unit": "mario/Enemy/BossHanachanAnm",
+    "source": "src/Enemy/BossHanachanAnm.cpp",
+    "code_bytes": 3644,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 3644,
+    "functions": 10,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/walker",
+    "source": "src/Enemy/walker.cpp",
+    "code_bytes": 4152,
+    "matched_code_bytes": 524,
+    "unmatched_code_bytes": 3628,
+    "functions": 7,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/Enemy/BossHanachanEffect",
+    "source": "src/Enemy/BossHanachanEffect.cpp",
+    "code_bytes": 3596,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 3596,
+    "functions": 5,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/coasterkiller",
+    "source": "src/Enemy/coasterkiller.cpp",
+    "code_bytes": 7900,
+    "matched_code_bytes": 4320,
+    "unmatched_code_bytes": 3580,
+    "functions": 37,
+    "matched_functions": 30
+  },
+  {
+    "unit": "mario/System/GCLogoDir",
+    "source": "src/System/GCLogoDir.cpp",
+    "code_bytes": 5140,
+    "matched_code_bytes": 1560,
+    "unmatched_code_bytes": 3580,
+    "functions": 11,
+    "matched_functions": 6
+  },
+  {
+    "unit": "mario/Enemy/effectObj",
+    "source": "src/Enemy/effectObj.cpp",
+    "code_bytes": 11476,
+    "matched_code_bytes": 7916,
+    "unmatched_code_bytes": 3560,
+    "functions": 82,
+    "matched_functions": 71
+  },
+  {
+    "unit": "mario/Map/Map",
+    "source": "src/Map/Map.cpp",
+    "code_bytes": 5712,
+    "matched_code_bytes": 2188,
+    "unmatched_code_bytes": 3524,
+    "functions": 29,
+    "matched_functions": 21
+  },
+  {
+    "unit": "mario/Strategic/ObjHitCheck",
+    "source": "src/Strategic/ObjHitCheck.cpp",
+    "code_bytes": 4204,
+    "matched_code_bytes": 700,
+    "unmatched_code_bytes": 3504,
+    "functions": 10,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/System/MarNameRefGen_BossEnemy",
+    "source": "src/System/MarNameRefGen_BossEnemy.cpp",
+    "code_bytes": 3456,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 3456,
+    "functions": 3,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/NPC/NpcEffect",
+    "source": "src/NPC/NpcEffect.cpp",
+    "code_bytes": 3740,
+    "matched_code_bytes": 356,
+    "unmatched_code_bytes": 3384,
+    "functions": 12,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/Player/MarioSwim",
+    "source": "src/Player/MarioSwim.cpp",
+    "code_bytes": 4120,
+    "matched_code_bytes": 764,
+    "unmatched_code_bytes": 3356,
+    "functions": 5,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/Map/PollutionLayer",
+    "source": "src/Map/PollutionLayer.cpp",
+    "code_bytes": 6212,
+    "matched_code_bytes": 2944,
+    "unmatched_code_bytes": 3268,
+    "functions": 26,
+    "matched_functions": 18
+  },
+  {
+    "unit": "mario/MoveBG/MapObjPlane",
+    "source": "src/MoveBG/MapObjPlane.cpp",
+    "code_bytes": 5924,
+    "matched_code_bytes": 2732,
+    "unmatched_code_bytes": 3192,
+    "functions": 20,
+    "matched_functions": 15
+  },
+  {
+    "unit": "mario/Camera/CameraBGCheck",
+    "source": "src/Camera/CameraBGCheck.cpp",
+    "code_bytes": 3640,
+    "matched_code_bytes": 452,
+    "unmatched_code_bytes": 3188,
+    "functions": 10,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/Enemy/BossHanachanSub",
+    "source": "src/Enemy/BossHanachanSub.cpp",
+    "code_bytes": 3124,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 3124,
+    "functions": 11,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/launcher",
+    "source": "src/Enemy/launcher.cpp",
+    "code_bytes": 5924,
+    "matched_code_bytes": 2800,
+    "unmatched_code_bytes": 3124,
+    "functions": 35,
+    "matched_functions": 25
+  },
+  {
+    "unit": "mario/Camera/sunmodel",
+    "source": "src/Camera/sunmodel.cpp",
+    "code_bytes": 3652,
+    "matched_code_bytes": 584,
+    "unmatched_code_bytes": 3068,
+    "functions": 14,
+    "matched_functions": 9
+  },
+  {
+    "unit": "mario/Enemy/enemymanager",
+    "source": "src/Enemy/enemymanager.cpp",
+    "code_bytes": 6984,
+    "matched_code_bytes": 3928,
+    "unmatched_code_bytes": 3056,
+    "functions": 27,
+    "matched_functions": 22
+  },
+  {
+    "unit": "mario/Enemy/walkerEnemy",
+    "source": "src/Enemy/walkerEnemy.cpp",
+    "code_bytes": 7468,
+    "matched_code_bytes": 4420,
+    "unmatched_code_bytes": 3048,
+    "functions": 33,
+    "matched_functions": 25
+  },
+  {
+    "unit": "mario/Enemy/BossHanachanSave",
+    "source": "src/Enemy/BossHanachanSave.cpp",
+    "code_bytes": 3016,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 3016,
+    "functions": 2,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/System/FlagManager",
+    "source": "src/System/FlagManager.cpp",
+    "code_bytes": 8408,
+    "matched_code_bytes": 5412,
+    "unmatched_code_bytes": 2996,
+    "functions": 29,
+    "matched_functions": 20
+  },
+  {
+    "unit": "mario/MoveBG/MapObjItem2",
+    "source": "src/MoveBG/MapObjItem2.cpp",
+    "code_bytes": 5244,
+    "matched_code_bytes": 2260,
+    "unmatched_code_bytes": 2984,
+    "functions": 20,
+    "matched_functions": 15
+  },
+  {
+    "unit": "mario/Map/MapStaticObject",
+    "source": "src/Map/MapStaticObject.cpp",
+    "code_bytes": 5104,
+    "matched_code_bytes": 2196,
+    "unmatched_code_bytes": 2908,
+    "functions": 18,
+    "matched_functions": 13
+  },
+  {
+    "unit": "mario/NPC/NpcNerve",
+    "source": "src/NPC/NpcNerve.cpp",
+    "code_bytes": 7208,
+    "matched_code_bytes": 4368,
+    "unmatched_code_bytes": 2840,
+    "functions": 49,
+    "matched_functions": 43
+  },
+  {
+    "unit": "mario/Player/MarioCap",
+    "source": "src/Player/MarioCap.cpp",
+    "code_bytes": 3196,
+    "matched_code_bytes": 360,
+    "unmatched_code_bytes": 2836,
+    "functions": 5,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/Strategic/liveactor",
+    "source": "src/Strategic/liveactor.cpp",
+    "code_bytes": 6480,
+    "matched_code_bytes": 3660,
+    "unmatched_code_bytes": 2820,
+    "functions": 37,
+    "matched_functions": 29
+  },
+  {
+    "unit": "mario/Animal/fishoid",
+    "source": "src/Animal/fishoid.cpp",
+    "code_bytes": 5208,
+    "matched_code_bytes": 2416,
+    "unmatched_code_bytes": 2792,
+    "functions": 48,
+    "matched_functions": 39
+  },
+  {
+    "unit": "mario/Camera/CameraJetCoaster",
+    "source": "src/Camera/CameraJetCoaster.cpp",
+    "code_bytes": 3716,
+    "matched_code_bytes": 932,
+    "unmatched_code_bytes": 2784,
+    "functions": 3,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/Map/MapMakeList",
+    "source": "src/Map/MapMakeList.cpp",
+    "code_bytes": 3312,
+    "matched_code_bytes": 568,
+    "unmatched_code_bytes": 2744,
+    "functions": 11,
+    "matched_functions": 7
+  },
+  {
+    "unit": "mario/MarioUtil/PacketUtil",
+    "source": "src/MarioUtil/PacketUtil.cpp",
+    "code_bytes": 4604,
+    "matched_code_bytes": 1872,
+    "unmatched_code_bytes": 2732,
+    "functions": 15,
+    "matched_functions": 11
+  },
+  {
+    "unit": "mario/MoveBG/MapObjBlock",
+    "source": "src/MoveBG/MapObjBlock.cpp",
+    "code_bytes": 6792,
+    "matched_code_bytes": 4200,
+    "unmatched_code_bytes": 2592,
+    "functions": 42,
+    "matched_functions": 33
+  },
+  {
+    "unit": "mario/Enemy/effectEnemy",
+    "source": "src/Enemy/effectEnemy.cpp",
+    "code_bytes": 2572,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 2572,
+    "functions": 18,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Player/MarioMain",
+    "source": "src/Player/MarioMain.cpp",
+    "code_bytes": 3260,
+    "matched_code_bytes": 812,
+    "unmatched_code_bytes": 2448,
+    "functions": 4,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/MoveBG/MapObjGrass",
+    "source": "src/MoveBG/MapObjGrass.cpp",
+    "code_bytes": 3808,
+    "matched_code_bytes": 1416,
+    "unmatched_code_bytes": 2392,
+    "functions": 13,
+    "matched_functions": 8
+  },
+  {
+    "unit": "mario/Map/PollutionCount",
+    "source": "src/Map/PollutionCount.cpp",
+    "code_bytes": 10552,
+    "matched_code_bytes": 8176,
+    "unmatched_code_bytes": 2376,
+    "functions": 38,
+    "matched_functions": 34
+  },
+  {
+    "unit": "mario/NPC/NpcParts",
+    "source": "src/NPC/NpcParts.cpp",
+    "code_bytes": 2408,
+    "matched_code_bytes": 36,
+    "unmatched_code_bytes": 2372,
+    "functions": 6,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/Enemy/riccohook",
+    "source": "src/Enemy/riccohook.cpp",
+    "code_bytes": 3688,
+    "matched_code_bytes": 1344,
+    "unmatched_code_bytes": 2344,
+    "functions": 21,
+    "matched_functions": 17
+  },
+  {
+    "unit": "mario/System/MarioGamePad",
+    "source": "src/System/MarioGamePad.cpp",
+    "code_bytes": 2476,
+    "matched_code_bytes": 144,
+    "unmatched_code_bytes": 2332,
+    "functions": 5,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/Camera/camerashake",
+    "source": "src/Camera/camerashake.cpp",
+    "code_bytes": 3424,
+    "matched_code_bytes": 1112,
+    "unmatched_code_bytes": 2312,
+    "functions": 5,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/MoveBG/MapObjTree",
+    "source": "src/MoveBG/MapObjTree.cpp",
+    "code_bytes": 4912,
+    "matched_code_bytes": 2624,
+    "unmatched_code_bytes": 2288,
+    "functions": 17,
+    "matched_functions": 12
+  },
+  {
+    "unit": "mario/MSound/MSoundScene",
+    "source": "src/MSound/MSoundScene.cpp",
+    "code_bytes": 2660,
+    "matched_code_bytes": 380,
+    "unmatched_code_bytes": 2280,
+    "functions": 4,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/System/MarDirectorEvent",
+    "source": "src/System/MarDirectorEvent.cpp",
+    "code_bytes": 3320,
+    "matched_code_bytes": 1056,
+    "unmatched_code_bytes": 2264,
+    "functions": 13,
+    "matched_functions": 4
+  },
+  {
+    "unit": "mario/Player/MarioEffect",
+    "source": "src/Player/MarioEffect.cpp",
+    "code_bytes": 3148,
+    "matched_code_bytes": 904,
+    "unmatched_code_bytes": 2244,
+    "functions": 7,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/MoveBG/MapObjTrap",
+    "source": "src/MoveBG/MapObjTrap.cpp",
+    "code_bytes": 4468,
+    "matched_code_bytes": 2280,
+    "unmatched_code_bytes": 2188,
+    "functions": 25,
+    "matched_functions": 19
+  },
+  {
+    "unit": "mario/Enemy/enemyAttachment",
+    "source": "src/Enemy/enemyAttachment.cpp",
+    "code_bytes": 3720,
+    "matched_code_bytes": 1564,
+    "unmatched_code_bytes": 2156,
+    "functions": 29,
+    "matched_functions": 22
+  },
+  {
+    "unit": "mario/Camera/CameraNotice",
+    "source": "src/Camera/CameraNotice.cpp",
+    "code_bytes": 2956,
+    "matched_code_bytes": 816,
+    "unmatched_code_bytes": 2140,
+    "functions": 7,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/Camera/lensglow",
+    "source": "src/Camera/lensglow.cpp",
+    "code_bytes": 2296,
+    "matched_code_bytes": 236,
+    "unmatched_code_bytes": 2060,
+    "functions": 4,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/Map/MapEventDolpic",
+    "source": "src/Map/MapEventDolpic.cpp",
+    "code_bytes": 3680,
+    "matched_code_bytes": 1664,
+    "unmatched_code_bytes": 2016,
+    "functions": 14,
+    "matched_functions": 9
+  },
+  {
+    "unit": "mario/MarioUtil/ScreenUtil",
+    "source": "src/MarioUtil/ScreenUtil.cpp",
+    "code_bytes": 3616,
+    "matched_code_bytes": 1664,
+    "unmatched_code_bytes": 1952,
+    "functions": 10,
+    "matched_functions": 9
+  },
+  {
+    "unit": "mario/NPC/NpcWalkTurn",
+    "source": "src/NPC/NpcWalkTurn.cpp",
+    "code_bytes": 2164,
+    "matched_code_bytes": 216,
+    "unmatched_code_bytes": 1948,
+    "functions": 7,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/Strategic/liveinterp",
+    "source": "src/Strategic/liveinterp.cpp",
+    "code_bytes": 7004,
+    "matched_code_bytes": 5060,
+    "unmatched_code_bytes": 1944,
+    "functions": 12,
+    "matched_functions": 11
+  },
+  {
+    "unit": "mario/System/MarDirectorSetup2",
+    "source": "src/System/MarDirectorSetup2.cpp",
+    "code_bytes": 2720,
+    "matched_code_bytes": 780,
+    "unmatched_code_bytes": 1940,
+    "functions": 5,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/Camera/lensflare",
+    "source": "src/Camera/lensflare.cpp",
+    "code_bytes": 2076,
+    "matched_code_bytes": 152,
+    "unmatched_code_bytes": 1924,
+    "functions": 7,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/Map/MapWarp",
+    "source": "src/Map/MapWarp.cpp",
+    "code_bytes": 2712,
+    "matched_code_bytes": 796,
+    "unmatched_code_bytes": 1916,
+    "functions": 7,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/Enemy/emario",
+    "source": "src/Enemy/emario.cpp",
+    "code_bytes": 3972,
+    "matched_code_bytes": 2064,
+    "unmatched_code_bytes": 1908,
+    "functions": 22,
+    "matched_functions": 19
+  },
+  {
+    "unit": "mario/Map/PollutionAction",
+    "source": "src/Map/PollutionAction.cpp",
+    "code_bytes": 3064,
+    "matched_code_bytes": 1176,
+    "unmatched_code_bytes": 1888,
+    "functions": 8,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/Strategic/ObjModel",
+    "source": "src/Strategic/ObjModel.cpp",
+    "code_bytes": 3252,
+    "matched_code_bytes": 1396,
+    "unmatched_code_bytes": 1856,
+    "functions": 15,
+    "matched_functions": 9
+  },
+  {
+    "unit": "mario/Map/MapArea",
+    "source": "src/Map/MapArea.cpp",
+    "code_bytes": 1808,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 1808,
+    "functions": 2,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Camera/CameraDemo",
+    "source": "src/Camera/CameraDemo.cpp",
+    "code_bytes": 2816,
+    "matched_code_bytes": 1036,
+    "unmatched_code_bytes": 1780,
+    "functions": 11,
+    "matched_functions": 7
+  },
+  {
+    "unit": "mario/Enemy/SleepBossHanachan",
+    "source": "src/Enemy/SleepBossHanachan.cpp",
+    "code_bytes": 1712,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 1712,
+    "functions": 14,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/BathtubBinder",
+    "source": "src/Enemy/BathtubBinder.cpp",
+    "code_bytes": 1688,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 1688,
+    "functions": 6,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/beam",
+    "source": "src/Enemy/beam.cpp",
+    "code_bytes": 3704,
+    "matched_code_bytes": 2024,
+    "unmatched_code_bytes": 1680,
+    "functions": 9,
+    "matched_functions": 8
+  },
+  {
+    "unit": "mario/System/DrawSyncManager",
+    "source": "src/System/DrawSyncManager.cpp",
+    "code_bytes": 2076,
+    "matched_code_bytes": 400,
+    "unmatched_code_bytes": 1676,
+    "functions": 10,
+    "matched_functions": 6
+  },
+  {
+    "unit": "mario/Camera/CubeManagerBase",
+    "source": "src/Camera/CubeManagerBase.cpp",
+    "code_bytes": 2280,
+    "matched_code_bytes": 664,
+    "unmatched_code_bytes": 1616,
+    "functions": 14,
+    "matched_functions": 8
+  },
+  {
+    "unit": "mario/Map/MapMakeData",
+    "source": "src/Map/MapMakeData.cpp",
+    "code_bytes": 3240,
+    "matched_code_bytes": 1648,
+    "unmatched_code_bytes": 1592,
+    "functions": 8,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/NPC/NpcCollision",
+    "source": "src/NPC/NpcCollision.cpp",
+    "code_bytes": 1788,
+    "matched_code_bytes": 220,
+    "unmatched_code_bytes": 1568,
+    "functions": 4,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/Strategic/MirrorActor",
+    "source": "src/Strategic/MirrorActor.cpp",
+    "code_bytes": 2520,
+    "matched_code_bytes": 1000,
+    "unmatched_code_bytes": 1520,
+    "functions": 7,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/Map/MapWireManager",
+    "source": "src/Map/MapWireManager.cpp",
+    "code_bytes": 4156,
+    "matched_code_bytes": 2644,
+    "unmatched_code_bytes": 1512,
+    "functions": 22,
+    "matched_functions": 17
+  },
+  {
+    "unit": "mario/Camera/CameraNormal",
+    "source": "src/Camera/CameraNormal.cpp",
+    "code_bytes": 1676,
+    "matched_code_bytes": 176,
+    "unmatched_code_bytes": 1500,
+    "functions": 4,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/M3DUtil/SDLModel",
+    "source": "src/M3DUtil/SDLModel.cpp",
+    "code_bytes": 4796,
+    "matched_code_bytes": 3380,
+    "unmatched_code_bytes": 1416,
+    "functions": 14,
+    "matched_functions": 10
+  },
+  {
+    "unit": "mario/Enemy/spider",
+    "source": "src/Enemy/spider.cpp",
+    "code_bytes": 1580,
+    "matched_code_bytes": 184,
+    "unmatched_code_bytes": 1396,
+    "functions": 3,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/Enemy/wireBinder",
+    "source": "src/Enemy/wireBinder.cpp",
+    "code_bytes": 1712,
+    "matched_code_bytes": 328,
+    "unmatched_code_bytes": 1384,
+    "functions": 9,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/Animal/AnimalNerve",
+    "source": "src/Animal/AnimalNerve.cpp",
+    "code_bytes": 1788,
+    "matched_code_bytes": 452,
+    "unmatched_code_bytes": 1336,
+    "functions": 6,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/GC2D/ScrnFader",
+    "source": "src/GC2D/ScrnFader.cpp",
+    "code_bytes": 4612,
+    "matched_code_bytes": 3276,
+    "unmatched_code_bytes": 1336,
+    "functions": 17,
+    "matched_functions": 14
+  },
+  {
+    "unit": "mario/Camera/CameraOption",
+    "source": "src/Camera/CameraOption.cpp",
+    "code_bytes": 1408,
+    "matched_code_bytes": 132,
+    "unmatched_code_bytes": 1276,
+    "functions": 5,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/MSound/MSHandle",
+    "source": "src/MSound/MSHandle.cpp",
+    "code_bytes": 2876,
+    "matched_code_bytes": 1604,
+    "unmatched_code_bytes": 1272,
+    "functions": 11,
+    "matched_functions": 6
+  },
+  {
+    "unit": "mario/Enemy/generator",
+    "source": "src/Enemy/generator.cpp",
+    "code_bytes": 1832,
+    "matched_code_bytes": 564,
+    "unmatched_code_bytes": 1268,
+    "functions": 10,
+    "matched_functions": 6
+  },
+  {
+    "unit": "mario/M3DUtil/SampleCtrlNode",
+    "source": "src/M3DUtil/SampleCtrlNode.cpp",
+    "code_bytes": 1648,
+    "matched_code_bytes": 404,
+    "unmatched_code_bytes": 1244,
+    "functions": 6,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/MarioUtil/MathUtil",
+    "source": "src/MarioUtil/MathUtil.cpp",
+    "code_bytes": 3320,
+    "matched_code_bytes": 2080,
+    "unmatched_code_bytes": 1240,
+    "functions": 14,
+    "matched_functions": 12
+  },
+  {
+    "unit": "mario/Enemy/bgpoldrop",
+    "source": "src/Enemy/bgpoldrop.cpp",
+    "code_bytes": 2412,
+    "matched_code_bytes": 1256,
+    "unmatched_code_bytes": 1156,
+    "functions": 8,
+    "matched_functions": 6
+  },
+  {
+    "unit": "mario/GC2D/BoundPane",
+    "source": "src/GC2D/BoundPane.cpp",
+    "code_bytes": 1388,
+    "matched_code_bytes": 232,
+    "unmatched_code_bytes": 1156,
+    "functions": 4,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/NPC/NpcManager",
+    "source": "src/NPC/NpcManager.cpp",
+    "code_bytes": 11720,
+    "matched_code_bytes": 10572,
+    "unmatched_code_bytes": 1148,
+    "functions": 93,
+    "matched_functions": 90
+  },
+  {
+    "unit": "mario/GC2D/MovieSubtitle",
+    "source": "src/GC2D/MovieSubtitle.cpp",
+    "code_bytes": 1372,
+    "matched_code_bytes": 252,
+    "unmatched_code_bytes": 1120,
+    "functions": 5,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/MoveBG/MapObjOption",
+    "source": "src/MoveBG/MapObjOption.cpp",
+    "code_bytes": 2640,
+    "matched_code_bytes": 1540,
+    "unmatched_code_bytes": 1100,
+    "functions": 16,
+    "matched_functions": 12
+  },
+  {
+    "unit": "mario/MSound/MAnmSound",
+    "source": "src/MSound/MAnmSound.cpp",
+    "code_bytes": 2124,
+    "matched_code_bytes": 1056,
+    "unmatched_code_bytes": 1068,
+    "functions": 9,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/NPC/NpcCallback",
+    "source": "src/NPC/NpcCallback.cpp",
+    "code_bytes": 1312,
+    "matched_code_bytes": 248,
+    "unmatched_code_bytes": 1064,
+    "functions": 4,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/NPC/NpcCoin",
+    "source": "src/NPC/NpcCoin.cpp",
+    "code_bytes": 1924,
+    "matched_code_bytes": 884,
+    "unmatched_code_bytes": 1040,
+    "functions": 4,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/System/RenderModeObj",
+    "source": "src/System/RenderModeObj.cpp",
+    "code_bytes": 1392,
+    "matched_code_bytes": 356,
+    "unmatched_code_bytes": 1036,
+    "functions": 6,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/MoveBG/MapObjEx",
+    "source": "src/MoveBG/MapObjEx.cpp",
+    "code_bytes": 3464,
+    "matched_code_bytes": 2436,
+    "unmatched_code_bytes": 1028,
+    "functions": 17,
+    "matched_functions": 14
+  },
+  {
+    "unit": "mario/System/MarDirector",
+    "source": "src/System/MarDirector.cpp",
+    "code_bytes": 1976,
+    "matched_code_bytes": 948,
+    "unmatched_code_bytes": 1028,
+    "functions": 7,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/GC2D/Menu",
+    "source": "src/GC2D/Menu.cpp",
+    "code_bytes": 1564,
+    "matched_code_bytes": 552,
+    "unmatched_code_bytes": 1012,
+    "functions": 8,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/Map/Sky",
+    "source": "src/Map/Sky.cpp",
+    "code_bytes": 2168,
+    "matched_code_bytes": 1160,
+    "unmatched_code_bytes": 1008,
+    "functions": 7,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/MoveBG/ItemManager",
+    "source": "src/MoveBG/ItemManager.cpp",
+    "code_bytes": 2668,
+    "matched_code_bytes": 1676,
+    "unmatched_code_bytes": 992,
+    "functions": 13,
+    "matched_functions": 8
+  },
+  {
+    "unit": "mario/Player/MarioUpper",
+    "source": "src/Player/MarioUpper.cpp",
+    "code_bytes": 2016,
+    "matched_code_bytes": 1052,
+    "unmatched_code_bytes": 964,
+    "functions": 5,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/M3DUtil/M3UJoint",
+    "source": "src/M3DUtil/M3UJoint.cpp",
+    "code_bytes": 2204,
+    "matched_code_bytes": 1272,
+    "unmatched_code_bytes": 932,
+    "functions": 11,
+    "matched_functions": 10
+  },
+  {
+    "unit": "mario/GC2D/SunGlass",
+    "source": "src/GC2D/SunGlass.cpp",
+    "code_bytes": 1948,
+    "matched_code_bytes": 1032,
+    "unmatched_code_bytes": 916,
+    "functions": 9,
+    "matched_functions": 4
+  },
+  {
+    "unit": "mario/MoveBG/MapObjCloud",
+    "source": "src/MoveBG/MapObjCloud.cpp",
+    "code_bytes": 2748,
+    "matched_code_bytes": 1856,
+    "unmatched_code_bytes": 892,
+    "functions": 13,
+    "matched_functions": 11
+  },
+  {
+    "unit": "mario/System/MarDirectorPreEntry",
+    "source": "src/System/MarDirectorPreEntry.cpp",
+    "code_bytes": 892,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 892,
+    "functions": 1,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Camera/CameraMultiPlayer",
+    "source": "src/Camera/CameraMultiPlayer.cpp",
+    "code_bytes": 1304,
+    "matched_code_bytes": 420,
+    "unmatched_code_bytes": 884,
+    "functions": 5,
+    "matched_functions": 4
+  },
+  {
+    "unit": "mario/Camera/sunmgr",
+    "source": "src/Camera/sunmgr.cpp",
+    "code_bytes": 2044,
+    "matched_code_bytes": 1160,
+    "unmatched_code_bytes": 884,
+    "functions": 8,
+    "matched_functions": 6
+  },
+  {
+    "unit": "mario/Map/PollutionManager",
+    "source": "src/Map/PollutionManager.cpp",
+    "code_bytes": 4208,
+    "matched_code_bytes": 3376,
+    "unmatched_code_bytes": 832,
+    "functions": 27,
+    "matched_functions": 24
+  },
+  {
+    "unit": "mario/System/MarNameRefGen_Map",
+    "source": "src/System/MarNameRefGen_Map.cpp",
+    "code_bytes": 824,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 824,
+    "functions": 1,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Camera/CameraSecureView",
+    "source": "src/Camera/CameraSecureView.cpp",
+    "code_bytes": 800,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 800,
+    "functions": 2,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/GC2D/ProgSelect",
+    "source": "src/GC2D/ProgSelect.cpp",
+    "code_bytes": 1408,
+    "matched_code_bytes": 616,
+    "unmatched_code_bytes": 792,
+    "functions": 3,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/Map/MapCollisionEntry",
+    "source": "src/Map/MapCollisionEntry.cpp",
+    "code_bytes": 2656,
+    "matched_code_bytes": 1880,
+    "unmatched_code_bytes": 776,
+    "functions": 20,
+    "matched_functions": 16
+  },
+  {
+    "unit": "mario/GC2D/MovieRumble",
+    "source": "src/GC2D/MovieRumble.cpp",
+    "code_bytes": 988,
+    "matched_code_bytes": 240,
+    "unmatched_code_bytes": 748,
+    "functions": 5,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/MSound/MSModBgm",
+    "source": "src/MSound/MSModBgm.cpp",
+    "code_bytes": 1704,
+    "matched_code_bytes": 960,
+    "unmatched_code_bytes": 744,
+    "functions": 6,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/Enemy/DemoBossHanachanBase",
+    "source": "src/Enemy/DemoBossHanachanBase.cpp",
+    "code_bytes": 728,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 728,
+    "functions": 7,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Strategic/question",
+    "source": "src/Strategic/question.cpp",
+    "code_bytes": 1448,
+    "matched_code_bytes": 756,
+    "unmatched_code_bytes": 692,
+    "functions": 8,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/GC2D/MessageLoader",
+    "source": "src/GC2D/MessageLoader.cpp",
+    "code_bytes": 880,
+    "matched_code_bytes": 200,
+    "unmatched_code_bytes": 680,
+    "functions": 6,
+    "matched_functions": 4
+  },
+  {
+    "unit": "mario/Map/Shimmer",
+    "source": "src/Map/Shimmer.cpp",
+    "code_bytes": 2516,
+    "matched_code_bytes": 1868,
+    "unmatched_code_bytes": 648,
+    "functions": 8,
+    "matched_functions": 7
+  },
+  {
+    "unit": "mario/Animal/Butterfly",
+    "source": "src/Animal/Butterfly.cpp",
+    "code_bytes": 2196,
+    "matched_code_bytes": 1556,
+    "unmatched_code_bytes": 640,
+    "functions": 13,
+    "matched_functions": 12
+  },
+  {
+    "unit": "mario/Enemy/areacylinder",
+    "source": "src/Enemy/areacylinder.cpp",
+    "code_bytes": 1824,
+    "matched_code_bytes": 1220,
+    "unmatched_code_bytes": 604,
+    "functions": 12,
+    "matched_functions": 11
+  },
+  {
+    "unit": "mario/Camera/CameraWarp",
+    "source": "src/Camera/CameraWarp.cpp",
+    "code_bytes": 1548,
+    "matched_code_bytes": 968,
+    "unmatched_code_bytes": 580,
+    "functions": 3,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/System/PerformList",
+    "source": "src/System/PerformList.cpp",
+    "code_bytes": 1156,
+    "matched_code_bytes": 588,
+    "unmatched_code_bytes": 568,
+    "functions": 10,
+    "matched_functions": 8
+  },
+  {
+    "unit": "mario/Map/PollutionObj",
+    "source": "src/Map/PollutionObj.cpp",
+    "code_bytes": 2092,
+    "matched_code_bytes": 1528,
+    "unmatched_code_bytes": 564,
+    "functions": 8,
+    "matched_functions": 7
+  },
+  {
+    "unit": "mario/NPC/NpcColor",
+    "source": "src/NPC/NpcColor.cpp",
+    "code_bytes": 560,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 560,
+    "functions": 1,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Map/PollutionPos",
+    "source": "src/Map/PollutionPos.cpp",
+    "code_bytes": 1756,
+    "matched_code_bytes": 1204,
+    "unmatched_code_bytes": 552,
+    "functions": 9,
+    "matched_functions": 7
+  },
+  {
+    "unit": "mario/Map/MapXlu",
+    "source": "src/Map/MapXlu.cpp",
+    "code_bytes": 1592,
+    "matched_code_bytes": 1056,
+    "unmatched_code_bytes": 536,
+    "functions": 5,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/GC2D/HelpActor",
+    "source": "src/GC2D/HelpActor.cpp",
+    "code_bytes": 1272,
+    "matched_code_bytes": 764,
+    "unmatched_code_bytes": 508,
+    "functions": 11,
+    "matched_functions": 9
+  },
+  {
+    "unit": "mario/MarioUtil/EffectUtil",
+    "source": "src/MarioUtil/EffectUtil.cpp",
+    "code_bytes": 968,
+    "matched_code_bytes": 480,
+    "unmatched_code_bytes": 488,
+    "functions": 4,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/MoveBG/WoodBarrel",
+    "source": "src/MoveBG/WoodBarrel.cpp",
+    "code_bytes": 2920,
+    "matched_code_bytes": 2444,
+    "unmatched_code_bytes": 476,
+    "functions": 22,
+    "matched_functions": 19
+  },
+  {
+    "unit": "mario/Strategic/Strategy",
+    "source": "src/Strategic/Strategy.cpp",
+    "code_bytes": 1600,
+    "matched_code_bytes": 1136,
+    "unmatched_code_bytes": 464,
+    "functions": 9,
+    "matched_functions": 7
+  },
+  {
+    "unit": "mario/Camera/CameraBck",
+    "source": "src/Camera/CameraBck.cpp",
+    "code_bytes": 1116,
+    "matched_code_bytes": 664,
+    "unmatched_code_bytes": 452,
+    "functions": 8,
+    "matched_functions": 7
+  },
+  {
+    "unit": "mario/Map/MapModel",
+    "source": "src/Map/MapModel.cpp",
+    "code_bytes": 2632,
+    "matched_code_bytes": 2212,
+    "unmatched_code_bytes": 420,
+    "functions": 12,
+    "matched_functions": 11
+  },
+  {
+    "unit": "mario/MarioUtil/ModelUtil",
+    "source": "src/MarioUtil/ModelUtil.cpp",
+    "code_bytes": 1332,
+    "matched_code_bytes": 928,
+    "unmatched_code_bytes": 404,
+    "functions": 7,
+    "matched_functions": 6
+  },
+  {
+    "unit": "mario/MoveBG/MapObjWater",
+    "source": "src/MoveBG/MapObjWater.cpp",
+    "code_bytes": 2288,
+    "matched_code_bytes": 1884,
+    "unmatched_code_bytes": 404,
+    "functions": 12,
+    "matched_functions": 11
+  },
+  {
+    "unit": "mario/Strategic/objmanager",
+    "source": "src/Strategic/objmanager.cpp",
+    "code_bytes": 1640,
+    "matched_code_bytes": 1236,
+    "unmatched_code_bytes": 404,
+    "functions": 15,
+    "matched_functions": 13
+  },
+  {
+    "unit": "mario/Player/SplashManager",
+    "source": "src/Player/SplashManager.cpp",
+    "code_bytes": 2752,
+    "matched_code_bytes": 2360,
+    "unmatched_code_bytes": 392,
+    "functions": 8,
+    "matched_functions": 7
+  },
+  {
+    "unit": "mario/System/TalkCursor",
+    "source": "src/System/TalkCursor.cpp",
+    "code_bytes": 560,
+    "matched_code_bytes": 180,
+    "unmatched_code_bytes": 380,
+    "functions": 4,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/Camera/CameraTalk",
+    "source": "src/Camera/CameraTalk.cpp",
+    "code_bytes": 448,
+    "matched_code_bytes": 72,
+    "unmatched_code_bytes": 376,
+    "functions": 3,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/Camera/CameraCodeControl",
+    "source": "src/Camera/CameraCodeControl.cpp",
+    "code_bytes": 360,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 360,
+    "functions": 1,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Camera/CameraMarioData",
+    "source": "src/Camera/CameraMarioData.cpp",
+    "code_bytes": 920,
+    "matched_code_bytes": 564,
+    "unmatched_code_bytes": 356,
+    "functions": 9,
+    "matched_functions": 8
+  },
+  {
+    "unit": "mario/Player/MarioBlend",
+    "source": "src/Player/MarioBlend.cpp",
+    "code_bytes": 580,
+    "matched_code_bytes": 232,
+    "unmatched_code_bytes": 348,
+    "functions": 4,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/NPC/NpcThrow",
+    "source": "src/NPC/NpcThrow.cpp",
+    "code_bytes": 324,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 324,
+    "functions": 1,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Animal/AnimalManager",
+    "source": "src/Animal/AnimalManager.cpp",
+    "code_bytes": 1552,
+    "matched_code_bytes": 1236,
+    "unmatched_code_bytes": 316,
+    "functions": 8,
+    "matched_functions": 6
+  },
+  {
+    "unit": "mario/Map/MapCollisionPlane",
+    "source": "src/Map/MapCollisionPlane.cpp",
+    "code_bytes": 1348,
+    "matched_code_bytes": 1040,
+    "unmatched_code_bytes": 308,
+    "functions": 5,
+    "matched_functions": 4
+  },
+  {
+    "unit": "mario/M3DUtil/M3UModel",
+    "source": "src/M3DUtil/M3UModel.cpp",
+    "code_bytes": 1152,
+    "matched_code_bytes": 860,
+    "unmatched_code_bytes": 292,
+    "functions": 11,
+    "matched_functions": 10
+  },
+  {
+    "unit": "mario/MoveBG/MapObjFloat",
+    "source": "src/MoveBG/MapObjFloat.cpp",
+    "code_bytes": 1680,
+    "matched_code_bytes": 1392,
+    "unmatched_code_bytes": 288,
+    "functions": 8,
+    "matched_functions": 7
+  },
+  {
+    "unit": "mario/Map/MapEventSirena",
+    "source": "src/Map/MapEventSirena.cpp",
+    "code_bytes": 1712,
+    "matched_code_bytes": 1432,
+    "unmatched_code_bytes": 280,
+    "functions": 8,
+    "matched_functions": 7
+  },
+  {
+    "unit": "mario/Enemy/enemytable",
+    "source": "src/Enemy/enemytable.cpp",
+    "code_bytes": 1436,
+    "matched_code_bytes": 1160,
+    "unmatched_code_bytes": 276,
+    "functions": 9,
+    "matched_functions": 8
+  },
+  {
+    "unit": "mario/Strategic/livemanager",
+    "source": "src/Strategic/livemanager.cpp",
+    "code_bytes": 1272,
+    "matched_code_bytes": 1020,
+    "unmatched_code_bytes": 252,
+    "functions": 10,
+    "matched_functions": 9
+  },
+  {
+    "unit": "mario/System/SnapTimeObj",
+    "source": "src/System/SnapTimeObj.cpp",
+    "code_bytes": 344,
+    "matched_code_bytes": 116,
+    "unmatched_code_bytes": 228,
+    "functions": 2,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/NPC/NpcInbetween",
+    "source": "src/NPC/NpcInbetween.cpp",
+    "code_bytes": 696,
+    "matched_code_bytes": 476,
+    "unmatched_code_bytes": 220,
+    "functions": 2,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/MoveBG/MapObjAirport",
+    "source": "src/MoveBG/MapObjAirport.cpp",
+    "code_bytes": 2188,
+    "matched_code_bytes": 1980,
+    "unmatched_code_bytes": 208,
+    "functions": 13,
+    "matched_functions": 12
+  },
+  {
+    "unit": "mario/Enemy/DebuTelesa",
+    "source": "src/Enemy/DebuTelesa.cpp",
+    "code_bytes": 2704,
+    "matched_code_bytes": 2528,
+    "unmatched_code_bytes": 176,
+    "functions": 23,
+    "matched_functions": 22
+  },
+  {
+    "unit": "mario/MoveBG/MapObjPollution",
+    "source": "src/MoveBG/MapObjPollution.cpp",
+    "code_bytes": 2128,
+    "matched_code_bytes": 1956,
+    "unmatched_code_bytes": 172,
+    "functions": 12,
+    "matched_functions": 11
+  },
+  {
+    "unit": "mario/Camera/CameraMode",
+    "source": "src/Camera/CameraMode.cpp",
+    "code_bytes": 1152,
+    "matched_code_bytes": 1008,
+    "unmatched_code_bytes": 144,
+    "functions": 14,
+    "matched_functions": 13
+  },
+  {
+    "unit": "mario/System/TimeRec",
+    "source": "src/System/TimeRec.cpp",
+    "code_bytes": 616,
+    "matched_code_bytes": 472,
+    "unmatched_code_bytes": 144,
+    "functions": 6,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/MSound/MSoundBGM",
+    "source": "src/MSound/MSoundBGM.cpp",
+    "code_bytes": 2860,
+    "matched_code_bytes": 2724,
+    "unmatched_code_bytes": 136,
+    "functions": 15,
+    "matched_functions": 14
+  },
+  {
+    "unit": "mario/Strategic/HitActor",
+    "source": "src/Strategic/HitActor.cpp",
+    "code_bytes": 668,
+    "matched_code_bytes": 544,
+    "unmatched_code_bytes": 124,
+    "functions": 6,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/Enemy/egggen",
+    "source": "src/Enemy/egggen.cpp",
+    "code_bytes": 888,
+    "matched_code_bytes": 768,
+    "unmatched_code_bytes": 120,
+    "functions": 9,
+    "matched_functions": 8
+  },
+  {
+    "unit": "mario/NPC/NpcBalloon",
+    "source": "src/NPC/NpcBalloon.cpp",
+    "code_bytes": 120,
+    "matched_code_bytes": 12,
+    "unmatched_code_bytes": 108,
+    "functions": 2,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/Player/MarioAccess",
+    "source": "src/Player/MarioAccess.cpp",
+    "code_bytes": 1152,
+    "matched_code_bytes": 1080,
+    "unmatched_code_bytes": 72,
+    "functions": 33,
+    "matched_functions": 32
+  },
+  {
+    "unit": "mario/System/ProcessMeter",
+    "source": "src/System/ProcessMeter.cpp",
+    "code_bytes": 64,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 64,
+    "functions": 1,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Enemy/BossHanachanSound",
+    "source": "src/Enemy/BossHanachanSound.cpp",
+    "code_bytes": 20,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 20,
+    "functions": 2,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Animal/AnimalSave",
+    "source": "src/Animal/AnimalSave.cpp",
+    "code_bytes": 528,
+    "matched_code_bytes": 528,
+    "unmatched_code_bytes": 0,
+    "functions": 1,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/Camera/CamShakeDefine",
+    "source": "src/Camera/CamShakeDefine.cpp",
+    "code_bytes": 0,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 0,
+    "functions": 0,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/Camera/CameraHeightPan",
+    "source": "src/Camera/CameraHeightPan.cpp",
+    "code_bytes": 1020,
+    "matched_code_bytes": 1020,
+    "unmatched_code_bytes": 0,
+    "functions": 4,
+    "matched_functions": 4
+  },
+  {
+    "unit": "mario/Camera/CameraInbetween",
+    "source": "src/Camera/CameraInbetween.cpp",
+    "code_bytes": 1672,
+    "matched_code_bytes": 1672,
+    "unmatched_code_bytes": 0,
+    "functions": 7,
+    "matched_functions": 7
+  },
+  {
+    "unit": "mario/Camera/CameraKindParam",
+    "source": "src/Camera/CameraKindParam.cpp",
+    "code_bytes": 1692,
+    "matched_code_bytes": 1692,
+    "unmatched_code_bytes": 0,
+    "functions": 2,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/Camera/CameraMapTool",
+    "source": "src/Camera/CameraMapTool.cpp",
+    "code_bytes": 532,
+    "matched_code_bytes": 532,
+    "unmatched_code_bytes": 0,
+    "functions": 3,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/Camera/CubeMapTool",
+    "source": "src/Camera/CubeMapTool.cpp",
+    "code_bytes": 1412,
+    "matched_code_bytes": 1412,
+    "unmatched_code_bytes": 0,
+    "functions": 6,
+    "matched_functions": 6
+  },
+  {
+    "unit": "mario/Camera/camerasave",
+    "source": "src/Camera/camerasave.cpp",
+    "code_bytes": 7640,
+    "matched_code_bytes": 7640,
+    "unmatched_code_bytes": 0,
+    "functions": 5,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/Enemy/spline",
+    "source": "src/Enemy/spline.cpp",
+    "code_bytes": 1728,
+    "matched_code_bytes": 1728,
+    "unmatched_code_bytes": 0,
+    "functions": 4,
+    "matched_functions": 4
+  },
+  {
+    "unit": "mario/Enemy/typicalenemy",
+    "source": "src/Enemy/typicalenemy.cpp",
+    "code_bytes": 1344,
+    "matched_code_bytes": 1344,
+    "unmatched_code_bytes": 0,
+    "functions": 11,
+    "matched_functions": 11
+  },
+  {
+    "unit": "mario/GC2D/BlendPane",
+    "source": "src/GC2D/BlendPane.cpp",
+    "code_bytes": 336,
+    "matched_code_bytes": 336,
+    "unmatched_code_bytes": 0,
+    "functions": 2,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/GC2D/Coord2D",
+    "source": "src/GC2D/Coord2D.cpp",
+    "code_bytes": 320,
+    "matched_code_bytes": 320,
+    "unmatched_code_bytes": 0,
+    "functions": 3,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/GC2D/ExPane",
+    "source": "src/GC2D/ExPane.cpp",
+    "code_bytes": 952,
+    "matched_code_bytes": 952,
+    "unmatched_code_bytes": 0,
+    "functions": 4,
+    "matched_functions": 4
+  },
+  {
+    "unit": "mario/GC2D/MessageUtil",
+    "source": "src/GC2D/MessageUtil.cpp",
+    "code_bytes": 968,
+    "matched_code_bytes": 968,
+    "unmatched_code_bytes": 0,
+    "functions": 2,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/GC2D/ShineFader",
+    "source": "src/GC2D/ShineFader.cpp",
+    "code_bytes": 660,
+    "matched_code_bytes": 660,
+    "unmatched_code_bytes": 0,
+    "functions": 6,
+    "matched_functions": 6
+  },
+  {
+    "unit": "mario/M3DUtil/LodAnm",
+    "source": "src/M3DUtil/LodAnm.cpp",
+    "code_bytes": 632,
+    "matched_code_bytes": 632,
+    "unmatched_code_bytes": 0,
+    "functions": 4,
+    "matched_functions": 4
+  },
+  {
+    "unit": "mario/M3DUtil/MActorAnm",
+    "source": "src/M3DUtil/MActorAnm.cpp",
+    "code_bytes": 5356,
+    "matched_code_bytes": 5356,
+    "unmatched_code_bytes": 0,
+    "functions": 52,
+    "matched_functions": 52
+  },
+  {
+    "unit": "mario/M3DUtil/MActorUtil",
+    "source": "src/M3DUtil/MActorUtil.cpp",
+    "code_bytes": 760,
+    "matched_code_bytes": 760,
+    "unmatched_code_bytes": 0,
+    "functions": 5,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/M3DUtil/MotionBlendCtrl",
+    "source": "src/M3DUtil/MotionBlendCtrl.cpp",
+    "code_bytes": 492,
+    "matched_code_bytes": 492,
+    "unmatched_code_bytes": 0,
+    "functions": 10,
+    "matched_functions": 10
+  },
+  {
+    "unit": "mario/M3DUtil/SampleCtrlModel",
+    "source": "src/M3DUtil/SampleCtrlModel.cpp",
+    "code_bytes": 808,
+    "matched_code_bytes": 808,
+    "unmatched_code_bytes": 0,
+    "functions": 3,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/MSound/MSoundDebug",
+    "source": "src/MSound/MSoundDebug.cpp",
+    "code_bytes": 772,
+    "matched_code_bytes": 772,
+    "unmatched_code_bytes": 0,
+    "functions": 2,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/Map/JointModel",
+    "source": "src/Map/JointModel.cpp",
+    "code_bytes": 1384,
+    "matched_code_bytes": 1384,
+    "unmatched_code_bytes": 0,
+    "functions": 7,
+    "matched_functions": 7
+  },
+  {
+    "unit": "mario/Map/JointModelManager",
+    "source": "src/Map/JointModelManager.cpp",
+    "code_bytes": 1808,
+    "matched_code_bytes": 1808,
+    "unmatched_code_bytes": 0,
+    "functions": 9,
+    "matched_functions": 9
+  },
+  {
+    "unit": "mario/Map/JointObj",
+    "source": "src/Map/JointObj.cpp",
+    "code_bytes": 2540,
+    "matched_code_bytes": 2540,
+    "unmatched_code_bytes": 0,
+    "functions": 10,
+    "matched_functions": 10
+  },
+  {
+    "unit": "mario/Map/MapCollisionData",
+    "source": "src/Map/MapCollisionData.cpp",
+    "code_bytes": 2292,
+    "matched_code_bytes": 2292,
+    "unmatched_code_bytes": 0,
+    "functions": 9,
+    "matched_functions": 9
+  },
+  {
+    "unit": "mario/Map/MapCollisionManager",
+    "source": "src/Map/MapCollisionManager.cpp",
+    "code_bytes": 828,
+    "matched_code_bytes": 828,
+    "unmatched_code_bytes": 0,
+    "functions": 4,
+    "matched_functions": 4
+  },
+  {
+    "unit": "mario/Map/MapData",
+    "source": "src/Map/MapData.cpp",
+    "code_bytes": 1100,
+    "matched_code_bytes": 1100,
+    "unmatched_code_bytes": 0,
+    "functions": 4,
+    "matched_functions": 4
+  },
+  {
+    "unit": "mario/Map/MapDraw",
+    "source": "src/Map/MapDraw.cpp",
+    "code_bytes": 1880,
+    "matched_code_bytes": 1880,
+    "unmatched_code_bytes": 0,
+    "functions": 6,
+    "matched_functions": 6
+  },
+  {
+    "unit": "mario/Map/MapEvent",
+    "source": "src/Map/MapEvent.cpp",
+    "code_bytes": 1560,
+    "matched_code_bytes": 1560,
+    "unmatched_code_bytes": 0,
+    "functions": 10,
+    "matched_functions": 10
+  },
+  {
+    "unit": "mario/Map/MarineSnow",
+    "source": "src/Map/MarineSnow.cpp",
+    "code_bytes": 556,
+    "matched_code_bytes": 556,
+    "unmatched_code_bytes": 0,
+    "functions": 6,
+    "matched_functions": 6
+  },
+  {
+    "unit": "mario/Map/PollutionEvent",
+    "source": "src/Map/PollutionEvent.cpp",
+    "code_bytes": 916,
+    "matched_code_bytes": 916,
+    "unmatched_code_bytes": 0,
+    "functions": 4,
+    "matched_functions": 4
+  },
+  {
+    "unit": "mario/Map/StickyStainManager",
+    "source": "src/Map/StickyStainManager.cpp",
+    "code_bytes": 120,
+    "matched_code_bytes": 120,
+    "unmatched_code_bytes": 0,
+    "functions": 2,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/MarioUtil/DLUtil",
+    "source": "src/MarioUtil/DLUtil.cpp",
+    "code_bytes": 2652,
+    "matched_code_bytes": 2652,
+    "unmatched_code_bytes": 0,
+    "functions": 9,
+    "matched_functions": 9
+  },
+  {
+    "unit": "mario/MarioUtil/GDUtil",
+    "source": "src/MarioUtil/GDUtil.cpp",
+    "code_bytes": 792,
+    "matched_code_bytes": 792,
+    "unmatched_code_bytes": 0,
+    "functions": 5,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/MarioUtil/MapUtil",
+    "source": "src/MarioUtil/MapUtil.cpp",
+    "code_bytes": 228,
+    "matched_code_bytes": 228,
+    "unmatched_code_bytes": 0,
+    "functions": 3,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/MarioUtil/RumbleData",
+    "source": "src/MarioUtil/RumbleData.cpp",
+    "code_bytes": 0,
+    "matched_code_bytes": 0,
+    "unmatched_code_bytes": 0,
+    "functions": 0,
+    "matched_functions": 0
+  },
+  {
+    "unit": "mario/MarioUtil/RumbleMgr",
+    "source": "src/MarioUtil/RumbleMgr.cpp",
+    "code_bytes": 5124,
+    "matched_code_bytes": 5124,
+    "unmatched_code_bytes": 0,
+    "functions": 21,
+    "matched_functions": 21
+  },
+  {
+    "unit": "mario/MarioUtil/RumbleType",
+    "source": "src/MarioUtil/RumbleType.cpp",
+    "code_bytes": 116,
+    "matched_code_bytes": 116,
+    "unmatched_code_bytes": 0,
+    "functions": 1,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/MarioUtil/TexUtil",
+    "source": "src/MarioUtil/TexUtil.cpp",
+    "code_bytes": 284,
+    "matched_code_bytes": 284,
+    "unmatched_code_bytes": 0,
+    "functions": 1,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/MarioUtil/ToolData",
+    "source": "src/MarioUtil/ToolData.cpp",
+    "code_bytes": 536,
+    "matched_code_bytes": 536,
+    "unmatched_code_bytes": 0,
+    "functions": 5,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/MarioUtil/gd-reinit-gx",
+    "source": "src/MarioUtil/gd-reinit-gx.cpp",
+    "code_bytes": 2112,
+    "matched_code_bytes": 2112,
+    "unmatched_code_bytes": 0,
+    "functions": 4,
+    "matched_functions": 4
+  },
+  {
+    "unit": "mario/MoveBG/MapObjPole",
+    "source": "src/MoveBG/MapObjPole.cpp",
+    "code_bytes": 2076,
+    "matched_code_bytes": 2076,
+    "unmatched_code_bytes": 0,
+    "functions": 8,
+    "matched_functions": 8
+  },
+  {
+    "unit": "mario/MoveBG/MapObjSample",
+    "source": "src/MoveBG/MapObjSample.cpp",
+    "code_bytes": 884,
+    "matched_code_bytes": 884,
+    "unmatched_code_bytes": 0,
+    "functions": 3,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/MoveBG/Pool",
+    "source": "src/MoveBG/Pool.cpp",
+    "code_bytes": 2012,
+    "matched_code_bytes": 2012,
+    "unmatched_code_bytes": 0,
+    "functions": 10,
+    "matched_functions": 10
+  },
+  {
+    "unit": "mario/NPC/NpcInitActionData",
+    "source": "src/NPC/NpcInitActionData.cpp",
+    "code_bytes": 156,
+    "matched_code_bytes": 156,
+    "unmatched_code_bytes": 0,
+    "functions": 3,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/NPC/NpcInitAnmData",
+    "source": "src/NPC/NpcInitAnmData.cpp",
+    "code_bytes": 20,
+    "matched_code_bytes": 20,
+    "unmatched_code_bytes": 0,
+    "functions": 1,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/NPC/NpcInitData",
+    "source": "src/NPC/NpcInitData.cpp",
+    "code_bytes": 52,
+    "matched_code_bytes": 52,
+    "unmatched_code_bytes": 0,
+    "functions": 2,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/NPC/NpcSave",
+    "source": "src/NPC/NpcSave.cpp",
+    "code_bytes": 4612,
+    "matched_code_bytes": 4612,
+    "unmatched_code_bytes": 0,
+    "functions": 4,
+    "matched_functions": 4
+  },
+  {
+    "unit": "mario/NPC/NpcSound",
+    "source": "src/NPC/NpcSound.cpp",
+    "code_bytes": 392,
+    "matched_code_bytes": 392,
+    "unmatched_code_bytes": 0,
+    "functions": 1,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/NPC/NpcTrample",
+    "source": "src/NPC/NpcTrample.cpp",
+    "code_bytes": 340,
+    "matched_code_bytes": 340,
+    "unmatched_code_bytes": 0,
+    "functions": 2,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/Player/MarioAction",
+    "source": "src/Player/MarioAction.cpp",
+    "code_bytes": 1656,
+    "matched_code_bytes": 1656,
+    "unmatched_code_bytes": 0,
+    "functions": 3,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/Player/MarioPositionObj",
+    "source": "src/Player/MarioPositionObj.cpp",
+    "code_bytes": 460,
+    "matched_code_bytes": 460,
+    "unmatched_code_bytes": 0,
+    "functions": 5,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/Player/MarioRecord",
+    "source": "src/Player/MarioRecord.cpp",
+    "code_bytes": 1044,
+    "matched_code_bytes": 1044,
+    "unmatched_code_bytes": 0,
+    "functions": 11,
+    "matched_functions": 11
+  },
+  {
+    "unit": "mario/Strategic/SharedParts",
+    "source": "src/Strategic/SharedParts.cpp",
+    "code_bytes": 968,
+    "matched_code_bytes": 968,
+    "unmatched_code_bytes": 0,
+    "functions": 5,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/Strategic/binder",
+    "source": "src/Strategic/binder.cpp",
+    "code_bytes": 92,
+    "matched_code_bytes": 92,
+    "unmatched_code_bytes": 0,
+    "functions": 2,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/Strategic/smplcharacter",
+    "source": "src/Strategic/smplcharacter.cpp",
+    "code_bytes": 268,
+    "matched_code_bytes": 268,
+    "unmatched_code_bytes": 0,
+    "functions": 3,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/System/BaseParam",
+    "source": "src/System/BaseParam.cpp",
+    "code_bytes": 84,
+    "matched_code_bytes": 84,
+    "unmatched_code_bytes": 0,
+    "functions": 2,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/System/J3DSysFlag",
+    "source": "src/System/J3DSysFlag.cpp",
+    "code_bytes": 928,
+    "matched_code_bytes": 928,
+    "unmatched_code_bytes": 0,
+    "functions": 10,
+    "matched_functions": 10
+  },
+  {
+    "unit": "mario/System/MarDirectorCreateObjects",
+    "source": "src/System/MarDirectorCreateObjects.cpp",
+    "code_bytes": 120,
+    "matched_code_bytes": 120,
+    "unmatched_code_bytes": 0,
+    "functions": 1,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/System/ParamInst",
+    "source": "src/System/ParamInst.cpp",
+    "code_bytes": 420,
+    "matched_code_bytes": 420,
+    "unmatched_code_bytes": 0,
+    "functions": 5,
+    "matched_functions": 5
+  },
+  {
+    "unit": "mario/System/Params",
+    "source": "src/System/Params.cpp",
+    "code_bytes": 836,
+    "matched_code_bytes": 836,
+    "unmatched_code_bytes": 0,
+    "functions": 4,
+    "matched_functions": 4
+  },
+  {
+    "unit": "mario/System/PositionHolder",
+    "source": "src/System/PositionHolder.cpp",
+    "code_bytes": 200,
+    "matched_code_bytes": 200,
+    "unmatched_code_bytes": 0,
+    "functions": 1,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/System/Resolution",
+    "source": "src/System/Resolution.cpp",
+    "code_bytes": 304,
+    "matched_code_bytes": 304,
+    "unmatched_code_bytes": 0,
+    "functions": 12,
+    "matched_functions": 12
+  },
+  {
+    "unit": "mario/System/ScenarioArchiveName",
+    "source": "src/System/ScenarioArchiveName.cpp",
+    "code_bytes": 68,
+    "matched_code_bytes": 68,
+    "unmatched_code_bytes": 0,
+    "functions": 1,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/System/StageEventInfo",
+    "source": "src/System/StageEventInfo.cpp",
+    "code_bytes": 152,
+    "matched_code_bytes": 152,
+    "unmatched_code_bytes": 0,
+    "functions": 1,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/System/StageUtil",
+    "source": "src/System/StageUtil.cpp",
+    "code_bytes": 232,
+    "matched_code_bytes": 232,
+    "unmatched_code_bytes": 0,
+    "functions": 6,
+    "matched_functions": 6
+  },
+  {
+    "unit": "mario/System/THPRender",
+    "source": "src/System/THPRender.cpp",
+    "code_bytes": 348,
+    "matched_code_bytes": 348,
+    "unmatched_code_bytes": 0,
+    "functions": 3,
+    "matched_functions": 3
+  },
+  {
+    "unit": "mario/System/TargetArrow",
+    "source": "src/System/TargetArrow.cpp",
+    "code_bytes": 324,
+    "matched_code_bytes": 324,
+    "unmatched_code_bytes": 0,
+    "functions": 4,
+    "matched_functions": 4
+  },
+  {
+    "unit": "mario/System/TexCache",
+    "source": "src/System/TexCache.cpp",
+    "code_bytes": 60,
+    "matched_code_bytes": 60,
+    "unmatched_code_bytes": 0,
+    "functions": 1,
+    "matched_functions": 1
+  },
+  {
+    "unit": "mario/System/ZBufferCatch",
+    "source": "src/System/ZBufferCatch.cpp",
+    "code_bytes": 356,
+    "matched_code_bytes": 356,
+    "unmatched_code_bytes": 0,
+    "functions": 4,
+    "matched_functions": 4
+  },
+  {
+    "unit": "mario/System/marerr",
+    "source": "src/System/marerr.cpp",
+    "code_bytes": 284,
+    "matched_code_bytes": 284,
+    "unmatched_code_bytes": 0,
+    "functions": 2,
+    "matched_functions": 2
+  },
+  {
+    "unit": "mario/main",
+    "source": "src/main.cpp",
+    "code_bytes": 108,
+    "matched_code_bytes": 108,
+    "unmatched_code_bytes": 0,
+    "functions": 2,
+    "matched_functions": 2
+  }
+]

@@ -13,6 +13,7 @@
 ###
 
 import argparse
+import json
 import sys
 from pathlib import Path
 from typing import Any, Dict, List
@@ -31,6 +32,7 @@ DEFAULT_VERSION = 0
 VERSIONS = [
     "GMSJ01",  # 0
     "GMSP01",  # 1
+    "GMSE01",  # 2: North American revision 0 (experimental)
 ]
 
 parser = argparse.ArgumentParser()
@@ -174,6 +176,8 @@ if args.map:
 
 # Use for any additional files that should cause a re-configure when modified
 config.reconfig_deps = []
+if config.version == "GMSE01":
+    config.reconfig_deps.append(Path("config/GMSE01/objects.json"))
 
 # Optional numeric ID for decomp.me preset
 # Can be overridden in libraries or objects
@@ -294,7 +298,7 @@ def DolphinLibUnpatched(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
-Matching = True                   # Object matches and should be linked
+Matching = config.version != "GMSE01"  # US objects require independent verification
 NonMatching = False               # Object does not match and should not be linked
 Equivalent = config.non_matching  # Object should be linked when configured with --non-matching
 
@@ -1142,6 +1146,7 @@ config.libs = [
             PCHObject(NonMatching, "Enemy/enemyAttachment.cpp"),
             PCHObject(NonMatching, "Enemy/enemymanager.cpp"),
             PCHObject(NonMatching, "Enemy/enemyMario.cpp"),
+            Object(NonMatching, "Enemy/enemyinterp.cpp"),
             PCHObject(NonMatching, "Enemy/feetinv.cpp"),
             PCHObject(NonMatching, "Enemy/gesso.cpp"),
             PCHObject(NonMatching, "Enemy/graph.cpp"),
@@ -1286,6 +1291,18 @@ config.progress_categories = [
     ProgressCategory("sdk", "SDK Code"),
 ]
 config.progress_each_module = args.verbose
+
+# US completion is opt-in: other regions' Matching flags are not evidence of a
+# US match. Only independently verified objects are linked from source.
+if config.version == "GMSE01":
+    with Path("config/GMSE01/objects.json").open(encoding="utf-8") as f:
+        us_matching = set(json.load(f))
+    configured_objects = {obj.name for lib in config.libs for obj in lib["objects"]}
+    if us_matching - configured_objects:
+        sys.exit(f"Unknown US matching objects: {sorted(us_matching - configured_objects)}")
+    for lib in config.libs:
+        for obj in lib["objects"]:
+            obj.completed = obj.name in us_matching or (config.non_matching and obj.completed)
 
 if args.mode == "configure":
     # Write build.ninja and objdiff.json

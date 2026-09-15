@@ -1,0 +1,10 @@
+name: mario
+object_base: orig/GMSE01
+object: sys/main.dol
+hash: a6782903ef79d4196c8489ecb1b57decb5b3728f
+symbols: config/GMSE01/symbols.txt
+splits: config/GMSE01/splits.txt
+mw_comment_version: 8
+symbols_known: true
+# Retail padding contains nonzero bytes that must survive the relink.
+fill_gaps: true

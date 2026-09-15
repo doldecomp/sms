@@ -16,7 +16,8 @@ bool TNpcBalloon::updateBalloon()
 		mBalloonAppearTimer -= 1;
 
 		if (mBalloonAppearTimer == 0) {
-			gpMarDirector->getConsole()->startAppearBalloon(unk0, true);
+			TGCConsole2* console = SMSGetMarDirector()->getConsole();
+			console->startAppearBalloon(unk0, true);
 			mBalloonAppearTimer = -1;
 
 			result = true;

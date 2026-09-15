@@ -1,0 +1,107 @@
+{
+  "region": "GMSE01",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 74.19155,
+    "total_code": "3603748",
+    "matched_code": "1365424",
+    "matched_code_percent": 37.888996,
+    "total_data": "641075",
+    "matched_data": "294331",
+    "matched_data_percent": 45.9121,
+    "total_functions": 12904,
+    "matched_functions": 8108,
+    "matched_functions_percent": 62.833233,
+    "complete_code": "72824",
+    "complete_code_percent": 2.020785,
+    "complete_data": "48040",
+    "complete_data_percent": 7.493663,
+    "total_units": 732,
+    "complete_units": 69
+  },
+  "categories": [
+    {
+      "id": "game",
+      "name": "Game Code",
+      "measures": {
+        "fuzzy_match_percent": 67.68086,
+        "total_code": "2847660",
+        "matched_code": "686776",
+        "matched_code_percent": 24.117205,
+        "total_data": "558300",
+        "matched_data": "232356",
+        "matched_data_percent": 41.618484,
+        "total_functions": 9012,
+        "matched_functions": 4311,
+        "matched_functions_percent": 47.836216,
+        "complete_code": "72824",
+        "complete_code_percent": 2.5573277,
+        "complete_data": "48040",
+        "complete_data_percent": 8.604692,
+        "total_units": 385,
+        "complete_units": 69
+      }
+    },
+    {
+      "id": "jsystem",
+      "name": "JSystem Middleware",
+      "measures": {
+        "fuzzy_match_percent": 99.70891,
+        "total_code": "504316",
+        "matched_code": "439296",
+        "matched_code_percent": 87.10729,
+        "total_data": "48176",
+        "matched_data": "30808",
+        "matched_data_percent": 63.948853,
+        "total_functions": 2878,
+        "matched_functions": 2792,
+        "matched_functions_percent": 97.01182,
+        "total_units": 198
+      }
+    },
+    {
+      "id": "sdk",
+      "name": "SDK Code",
+      "measures": {
+        "fuzzy_match_percent": 96.7176,
+        "total_code": "251772",
+        "matched_code": "239352",
+        "matched_code_percent": 95.06696,
+        "total_data": "34599",
+        "matched_data": "31167",
+        "matched_data_percent": 90.080635,
+        "total_functions": 1014,
+        "matched_functions": 1005,
+        "matched_functions_percent": 99.11243,
+        "total_units": 149
+      }
+    }
+  ],
+  "source_linked_objects": 69,
+  "function_regressions": [],
+  "improvements": [
+    {
+      "unit": "mario/NPC/NpcBalloon",
+      "function": "updateBalloon__11TNpcBalloonFv",
+      "before": 99.81481,
+      "after": 100.0
+    },
+    {
+      "unit": "mario/System/ProcessMeter",
+      "function": "__ct__13TProcessMeterFl",
+      "before": 99.9375,
+      "after": 100.0
+    },
+    {
+      "unit": "mario/System/TimeRec",
+      "function": "flip__8TTimeRecFv",
+      "before": 99.166664,
+      "after": 100.0
+    }
+  ],
+  "notes": [
+    "Full executable byte comparison passed with the linked source manifest.",
+    "Category totals include the newly classified US enemyinterp and renamed MetroTRK exception unit.",
+    "UNUSED function bodies remain incomplete; see PROGRESS.md."
+  ]
+}

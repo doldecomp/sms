@@ -19,6 +19,8 @@ Supported versions:
 
 - `GMSJ01`: Rev 0 (JPN)
 - ~~`GMSP01`: Rev 0 (PAL)~~ slightly broken, feel free to fix
+- `GMSE01`: Rev 0 (USA), local experimental support; see
+  [North American build notes](config/GMSE01/README.md).
 
 Dependencies
 ============
