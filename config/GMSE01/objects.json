@@ -74,5 +74,7 @@
   "Enemy/BossHanachanSave.cpp",
   "GC2D/MessageUtil.cpp",
   "Map/PollutionObj.cpp",
-  "GC2D/HelpActor.cpp"
+  "GC2D/HelpActor.cpp",
+  "Enemy/DemoBossHanachanBase.cpp",
+  "Enemy/SleepBossHanachan.cpp"
 ]

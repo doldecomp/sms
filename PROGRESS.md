@@ -8,7 +8,27 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 32 — completion queue and shared bounds check
+## Latest checkpoint: batch 33 — two whole files completed
+
+Completed and source-linked **DemoBossHanachanBase.cpp** and **SleepBossHanachan.cpp** from the small-file queue.
+This adds **21 exactly matching functions/helpers / 2,440 code bytes / 1,496 data bytes**.
+Recorded the successful accessor/local-variable patterns and their MapEventSirena exception in the shared-fix catalog.
+MapModel, MarDirectorPreEntry and Sirena trials did not complete those files and were reverted.
+
+| Coverage | Matched code | Source-linked code |
+| --- | ---: | ---: |
+| Game code | **24.951435%** | **2.9231017%** |
+| Aggregate | **38.548203%** | **2.3098176%** |
+
+Source linking is now **78 game files / 83,240 code bytes**.
+Baseline at `f7a677b8`; full build, changes_all, all 12,904 function comparisons, DOL byte comparison and expected SHA-1 pass.
+Zero regressions; both completed files pass all code/data and map checks.
+No gameplay test was performed.
+The regenerated queue contains 102 authorized small game files / 92,340 unmatched bytes.
+See the [batch 33 audit](docs/progress/GMSE01-closure-audit-batch33.md) and [measurements](docs/progress/GMSE01-batch33.json).
+Continue the plan's file-completion order, consulting recorded blockers before retries.
+
+## Verified checkpoint: batch 32 — completion queue and shared bounds check
 
 Reread the plan and reaffirmed its file-completion order.
 One shared bounds-check change improves sunmgr, lensglow and lensflare; sunmodel requires a direct-member exception.

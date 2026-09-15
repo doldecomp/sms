@@ -1,10 +1,10 @@
 {
   "region": "GMSE01",
-  "checkpoint": "batch32",
+  "checkpoint": "batch33",
   "notes": [
     "Report-based candidates only; source-link promotion also requires instruction, data, emission, map and executable verification.",
     "Priorities follow DECOMPILATION_PLAN.md. Game objects only; protected THPPlayer objects are excluded even though report metadata classifies them as game.",
-    "Consult the batch 25 through batch 32 closure audits before revisiting stalled candidates."
+    "Consult the batch 25 through batch 33 closure audits before revisiting stalled candidates."
   ],
   "all_code_matching": [
     {
@@ -1369,50 +1369,6 @@
       ]
     },
     {
-      "unit": "mario/Enemy/DemoBossHanachanBase",
-      "source": "src/Enemy/DemoBossHanachanBase.cpp",
-      "code_bytes": 728,
-      "unmatched_code_bytes": 728,
-      "unmatched_data_bytes": 656,
-      "nonmatching_functions": [
-        {
-          "name": "@32@__dt__17TDemoBossHanachanFv",
-          "size": 8,
-          "similarity": 0
-        },
-        {
-          "name": "__dt__24TDemoBossHanachanManagerFv",
-          "size": 100,
-          "similarity": 0
-        },
-        {
-          "name": "__ct__27TDemoBossHanachanSaveParamsFPCc",
-          "size": 204,
-          "similarity": 0
-        },
-        {
-          "name": "clipEnemies__24TDemoBossHanachanManagerFPQ26JDrama9TGraphics",
-          "size": 44,
-          "similarity": 0
-        },
-        {
-          "name": "initBase__17TDemoBossHanachanFP12TLiveManagerUl",
-          "size": 256,
-          "similarity": 0
-        },
-        {
-          "name": "receiveMessage__17TDemoBossHanachanFP9THitActorUl",
-          "size": 8,
-          "similarity": 0
-        },
-        {
-          "name": "__dt__17TDemoBossHanachanFv",
-          "size": 108,
-          "similarity": 0
-        }
-      ]
-    },
-    {
       "unit": "mario/MSound/MSModBgm",
       "source": "src/MSound/MSModBgm.cpp",
       "code_bytes": 1704,
@@ -2467,85 +2423,6 @@
       ]
     },
     {
-      "unit": "mario/Enemy/SleepBossHanachan",
-      "source": "src/Enemy/SleepBossHanachan.cpp",
-      "code_bytes": 1712,
-      "unmatched_code_bytes": 1712,
-      "unmatched_data_bytes": 840,
-      "nonmatching_functions": [
-        {
-          "name": "@32@__dt__18TSleepBossHanachanFv",
-          "size": 8,
-          "similarity": 0
-        },
-        {
-          "name": "__dt__25TSleepBossHanachanManagerFv",
-          "size": 116,
-          "similarity": 0
-        },
-        {
-          "name": "__dt__18TSleepBossHanachanFv",
-          "size": 132,
-          "similarity": 0
-        },
-        {
-          "name": "createModelData__25TSleepBossHanachanManagerFv",
-          "size": 52,
-          "similarity": 0
-        },
-        {
-          "name": "init__18TSleepBossHanachanFP12TLiveManager",
-          "size": 448,
-          "similarity": 0
-        },
-        {
-          "name": "calcRootMatrix__18TSleepBossHanachanFv",
-          "size": 4,
-          "similarity": 0
-        },
-        {
-          "name": "getBasNameTable__18TSleepBossHanachanCFv",
-          "size": 8,
-          "similarity": 0
-        },
-        {
-          "name": "startFall__18TSleepBossHanachanFfff",
-          "size": 236,
-          "similarity": 0
-        },
-        {
-          "name": "theNerve__23TNerveSBH_SleepContinueFv",
-          "size": 100,
-          "similarity": 0
-        },
-        {
-          "name": "execute__23TNerveSBH_SleepContinueCFP24TSpineBase<10TLiveActor>",
-          "size": 8,
-          "similarity": 0
-        },
-        {
-          "name": "theNerve__14TNerveSBH_FallFv",
-          "size": 100,
-          "similarity": 0
-        },
-        {
-          "name": "__dt__23TNerveSBH_SleepContinueFv",
-          "size": 92,
-          "similarity": 0
-        },
-        {
-          "name": "execute__14TNerveSBH_FallCFP24TSpineBase<10TLiveActor>",
-          "size": 316,
-          "similarity": 0
-        },
-        {
-          "name": "__dt__14TNerveSBH_FallFv",
-          "size": 92,
-          "similarity": 0
-        }
-      ]
-    },
-    {
       "unit": "mario/Camera/CameraDemo",
       "source": "src/Camera/CameraDemo.cpp",
       "code_bytes": 2816,
@@ -2851,6 +2728,6 @@
     "mario/THPPlayer/THPRead",
     "mario/THPPlayer/THPVideoDecode"
   ],
-  "near_count": 104,
-  "near_unmatched_code_bytes": 94780
+  "near_count": 102,
+  "near_unmatched_code_bytes": 92340
 }

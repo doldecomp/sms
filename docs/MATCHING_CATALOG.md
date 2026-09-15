@@ -844,3 +844,21 @@ A full executable match also does not validate bodies in objects that are still 
   Zero similarity regressions across 12,904 functions; full DOL byte comparison and SHA-1 pass.
   sunmodel/lensflare map failures were reproduced at baseline and remain closure blockers.
   Source linking remains 76 files / 80,800 game-code bytes; prioritize file completion over more partial camera work.
+
+## Demo/SleepBossHanachan file completion, batch 33
+
+- Two small files completed: DemoBossHanachanBase (728 code bytes) and SleepBossHanachan (1,712).
+  Both now link from source, with exact code/data sections, map validation and executable byte comparison.
+  Map-derived class layouts, existing parameter/actor helpers and the float-argument MsMtxSetXYZRPH overload recover initialization directly.
+- SleepBossHanachan's fall nerve needs its position declared before a named BOOL animation result, using the existing getMActor accessor.
+  Assign the position inside the successful branch; this restores frame 0x40 and vector slot 0x28.
+  Its startFall uses a named TFlagManager::getInstance result to recover frame 0x48.
+  Named next-nerve/spine pointer trials do not fix that frame.
+- Inventory single-function completion candidates for `TFlagManager::getInstance` before reusing the latter pattern.
+  MapEventSirena is an exception: the named result only partially shifts the camera-flag slot.
+  Combining a named camera flag and director produces either the wrong slot or the wrong frame; all Sirena trials reverted.
+- MapModel's existing model/child/info accessors reduce its frame gap to eight bytes but do not complete the file.
+  MarDirectorPreEntry name-search variants also do not resolve its frame; both files restored.
+- Read the [batch 33 audit](progress/GMSE01-closure-audit-batch33.md) for layouts and rejected trials.
+  All 12,904 function comparisons pass with zero regressions; no gameplay test.
+  Source linking is now 78 game files / 83,240 code bytes.
