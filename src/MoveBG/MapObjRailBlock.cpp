@@ -277,20 +277,19 @@ void TNormalLift::readRailFlag()
 {
 	TRailMapObj::readRailFlag();
 
-	TGraphWeb* graph = unk138->unk0;
+	TGraphWeb* graph = unk138->getGraph();
 
-	if (!unk138->unk0)
+	if (!graph)
+		return;
+	if (graph->isDummy())
 		return;
 
-	if (!graph->isDummy())
-		return;
-
-	TRailNode* railNode = graph->getCurrentNode().getRailNode();
-	if (railNode->mFlags & 0x800) {
-		unk150 = railNode->mPitch;
+	TGraphNode& graphNode = graph->getGraphNode(unk138->getCurGraphIndex());
+	if (graphNode.getRailNode()->mFlags & 0x800) {
+		unk150 = graphNode.getRailNode()->mPitch;
 	}
-	if (railNode->mFlags & 0x1000) {
-		u16 roll = railNode->mRoll;
+	if (graphNode.getRailNode()->mFlags & 0x1000) {
+		u16 roll = graphNode.getRailNode()->mRoll;
 		if (roll == 0xffff)
 			roll = 0;
 		unk152 = roll;
