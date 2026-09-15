@@ -705,8 +705,8 @@ BOOL TMario::fireDowning()
 
 	if (mInput & 1) {
 		u16 angleDiff = mIntendedYaw - mFaceAngle.y;
-		f32 velIncrement
-		    = 0.03125f * mIntendedMag * mJumpParams.mFireDownControl.get();
+		f32 mag       = 0.03125f * mIntendedMag;
+		f32 velIncrement = mag * mJumpParams.mFireDownControl.get();
 
 		mForwardVel += velIncrement * JMASCos(angleDiff);
 		mFaceAngle.y += 1024.0f * (velIncrement * JMASSin(angleDiff));
