@@ -230,7 +230,7 @@ void TBellDolpic::calcRootMatrix()
 	TMapObjBase::calcRootMatrix();
 	J3DModel* model = getModel();
 	Mtx temp;
-	PSMTXRotAxisRad(temp, &unk140, 0.017453292f * unk14C);
+	PSMTXRotAxisRad(temp, &unk140, DEG_TO_RAD(unk14C));
 	PSMTXConcat(model->getBaseTRMtx(), temp, model->getBaseTRMtx());
 }
 
@@ -254,8 +254,7 @@ void TBellDolpic::ring(const JGeometry::TVec3<f32>& pos)
 
 	unk150 -= 0.5f;
 
-	int r   = rand();
-	f32 tmp = (f32)r * 0.000030517578f;
+	f32 tmp = (f32)rand() * 0.000030517578f;
 	unk158  = (int)(tmp * 14400.0f) + 0x5460;
 }
 

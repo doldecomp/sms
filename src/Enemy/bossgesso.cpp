@@ -921,7 +921,7 @@ void TBossGesso::doAttackSingle()
 		unk17C = 0;
 	}
 
-	if (gpMarDirector->unk58 < 0x1E0)
+	if (gpMarDirector->mMoveTickCount < 0x1E0)
 		return;
 
 	if (gpMarDirector->isTalkOrDemoModeNow())

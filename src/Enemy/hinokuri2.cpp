@@ -925,7 +925,7 @@ void THinokuri2::moveObject()
 		unk194 = 1.0f;
 	}
 
-	if (gpMarDirector->unk58 % 600 == 0)
+	if (gpMarDirector->mMoveTickCount % 600 == 0)
 		generateEnemy();
 
 	doShortCut();
