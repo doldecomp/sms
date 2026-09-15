@@ -5,10 +5,27 @@
 #include <MSound/MSoundBGM.hpp>
 #include <MSound/MSModBgm.hpp>
 #include <MSound/MSHandle.hpp>
+#include <MSound/MSSetSound.hpp>
 #include <MarioUtil/MapUtil.hpp>
 #include <Camera/CubeManagerBase.hpp>
 #include <Camera/CubeMapTool.hpp>
 #include <Player/MarioAccess.hpp>
+
+template class JALList<MSBgm>;
+template class JALList<MSSetSoundGrp>;
+template class JALList<MSSetSound>;
+template class JALList<JALSeModEffDGrp>;
+template class JALList<JALSeModPitDGrp>;
+template class JALList<JALSeModVolDGrp>;
+template class JALList<JALSeModEffFGrp>;
+template class JALList<JALSeModPitFGrp>;
+template class JALList<JALSeModVolFGrp>;
+template class JALList<JALSeModEffDist>;
+template class JALList<JALSeModPitDist>;
+template class JALList<JALSeModVolDist>;
+template class JALList<JALSeModEffFunk>;
+template class JALList<JALSeModPitFunk>;
+template class JALList<JALSeModVolFunk>;
 
 MSStage* MSStage::smMSStage;
 
