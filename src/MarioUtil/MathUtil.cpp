@@ -131,6 +131,11 @@ static u16 GetAtanTable(f32 param_1, f32 param_2)
 	return atntable[(int)(param_2 * tmp * 1024.0f + 0.5f)];
 }
 
+static inline f32 matanNegate(f32 param_1)
+{
+	return -param_1;
+}
+
 s16 matan(f32 param_1, f32 param_2)
 {
 	u16 result;
@@ -151,7 +156,7 @@ s16 matan(f32 param_1, f32 param_2)
 				result = 0x8000 - GetAtanTable(param_1, param_2);
 		}
 	} else {
-		param_2 = -param_2;
+		param_2 = matanNegate(param_2);
 
 		if (param_1 < 0.0f) {
 			param_1 = -param_1;
