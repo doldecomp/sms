@@ -452,7 +452,8 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 			}
 
 			s16 headAngle = mario->unk100 * anmSpeed;
-			MsMtxSetRotRPH(transform, 0.0f, SHORTANGLE2DEG(headAngle), 0.0f);
+			f32 angle     = SHORTANGLE2DEG(headAngle);
+			MsMtxSetRotRPH(transform, 0.0f, angle, 0.0f);
 			const TWaterGun* gun = gpMarioForCallBack->mWaterGun;
 			s16 gunAngle         = gun->getCurrentNozzle()->getGunAngle() / 2;
 			if (gunAngle < 0) {
