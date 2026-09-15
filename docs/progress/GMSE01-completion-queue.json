@@ -1,10 +1,10 @@
 {
   "region": "GMSE01",
-  "checkpoint": "batch36",
+  "checkpoint": "batch37",
   "notes": [
     "Report-based candidates only; source-link promotion also requires instruction, data, emission, map and executable verification.",
     "Priorities follow DECOMPILATION_PLAN.md. Game objects only; protected THPPlayer objects are excluded even though report metadata classifies them as game.",
-    "Consult the batch 25 through batch 36 closure audits before revisiting stalled candidates."
+    "Consult the batch 25 through batch 37 closure audits before revisiting stalled candidates."
   ],
   "all_code_matching": [
     {
@@ -456,20 +456,6 @@
           "name": "perform__11TProgSelectFUlPQ26JDrama9TGraphics",
           "size": 792,
           "similarity": 99.79798
-        }
-      ]
-    },
-    {
-      "unit": "mario/System/MarNameRefGen_Map",
-      "source": "src/System/MarNameRefGen_Map.cpp",
-      "code_bytes": 824,
-      "unmatched_code_bytes": 824,
-      "unmatched_data_bytes": 448,
-      "nonmatching_functions": [
-        {
-          "name": "getNameRef_Map__14TMarNameRefGenCFPCc",
-          "size": 824,
-          "similarity": 69.88835
         }
       ]
     },
@@ -1327,20 +1313,6 @@
           "name": "execSecureView___15CPolarSubCameraFsP3Vec",
           "size": 512,
           "similarity": 99.859375
-        }
-      ]
-    },
-    {
-      "unit": "mario/System/MarNameRefGen_Map",
-      "source": "src/System/MarNameRefGen_Map.cpp",
-      "code_bytes": 824,
-      "unmatched_code_bytes": 824,
-      "unmatched_data_bytes": 448,
-      "nonmatching_functions": [
-        {
-          "name": "getNameRef_Map__14TMarNameRefGenCFPCc",
-          "size": 824,
-          "similarity": 69.88835
         }
       ]
     },
@@ -2609,6 +2581,6 @@
     "mario/THPPlayer/THPRead",
     "mario/THPPlayer/THPVideoDecode"
   ],
-  "near_count": 98,
-  "near_unmatched_code_bytes": 91148
+  "near_count": 97,
+  "near_unmatched_code_bytes": 90324
 }

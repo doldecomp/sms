@@ -82,5 +82,6 @@
   "System/MarDirectorCreateObjects.cpp",
   "System/TargetArrow.cpp",
   "Player/SplashManager.cpp",
-  "Camera/CameraMode.cpp"
+  "Camera/CameraMode.cpp",
+  "System/MarNameRefGen_Map.cpp"
 ]

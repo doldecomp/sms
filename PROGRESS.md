@@ -8,7 +8,26 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 36 — SplashManager and CameraMode completed
+## Latest checkpoint: batch 37 — map factory completed and source-linked
+
+Completed and source-linked **MarNameRefGen_Map.cpp**, adding **824 code bytes** and **488 data bytes**.
+Restored its three missing factory branches, pollution-test constructor context and header-generated strings.
+The original map records duplicate sun-path globals; GMSE01 now archives the ordered link inputs so MWLD resolves them with the original layout.
+One runtime function / 824 bytes becomes exact, and 448 additional data bytes match.
+
+| Coverage | Matched code | Source-linked code |
+| --- | ---: | ---: |
+| Game code | **25.02223%** | **3.206984%** |
+| Aggregate | **38.604145%** | **2.5341396%** |
+
+Source linking is now **85 game files / 91,324 code bytes**.
+Baseline at `b8c96698`; full build, changes_all, all 12,904 function comparisons, factory map checks, DOL byte comparison and expected SHA-1 pass with zero regressions.
+The archive uses the same source/extracted objects; it does not change coverage accounting.
+PollutionEvent's existing map gaps remain deferred; no gameplay test was performed.
+The regenerated queue contains 97 authorized small game files / 90,324 unmatched bytes.
+See the [batch 37 audit](docs/progress/GMSE01-closure-audit-batch37.md) and [measurements](docs/progress/GMSE01-batch37.json).
+
+## Verified checkpoint: batch 36 — SplashManager and CameraMode completed
 
 Completed and source-linked **SplashManager.cpp** and **CameraMode.cpp**, adding **3,904 code bytes**.
 Naming alpha before constructing SplashManager's call-site color recovers its stack slots and scheduling.

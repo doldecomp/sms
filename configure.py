@@ -178,6 +178,9 @@ if args.map:
 config.reconfig_deps = []
 if config.version == "GMSE01":
     config.reconfig_deps.append(Path("config/GMSE01/objects.json"))
+    # The retail map records unreferenced duplicate sun-path globals.
+    # MWLD accepts these through archive resolution, but rejects loose objects.
+    config.link_dol_as_archive = True
 
 # Optional numeric ID for decomp.me preset
 # Can be overridden in libraries or objects

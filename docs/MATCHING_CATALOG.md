@@ -903,3 +903,22 @@ A full executable match also does not validate bodies in objects that are still 
 - Both files now link from source, with every section exact and all map checks passing.
   Full build, changes_all, all 12,904 function comparisons, executable byte comparison and SHA-1 pass; no gameplay test.
   See the [batch 36 audit](progress/GMSE01-closure-audit-batch36.md) for evidence and the remaining queue.
+
+## Map factory and archive resolution, batch 37
+
+- Restore the original PollutionTest, SunModel and SunsetModel factory branches in MarNameRefGen_Map.
+  TPollutionTest's inlined constructor initializes only its TViewObj base; the allocation confirms size 0x10.
+  Use its Japanese default name through a no-argument call to retain the original base-constructor calls and pointer spill.
+  Passing the name explicitly inlines too deeply, matching the previously documented default-argument exception.
+- InfectiousStrings must precede SunModel so its 0xE0-byte string prefix precedes the sun paths.
+  All factory code and data then match.
+- The map explicitly lists unreferenced duplicate cSunVolumeName/cSunsetVolumeName definitions.
+  Loose-object linking rejects them; a single archived factory moves too late in the link.
+  Archiving the complete ordered input list with MWLD resolves them and retains the exact executable.
+  GMSE01 now enables that reproducible build path; no source or extracted symbol is rewritten.
+- NpcColor's direct two-color arguments and named material lookup chain do not fix its frame.
+  MapObjWater's TMtx34f locals do not fix its frame or branch; MapObjFloat's named wave allocation does not fix registers.
+  ModelUtil also lacks the UNUSED SMS_DumpJ3DModel definition.
+  Consult the [batch 37 audit](progress/GMSE01-closure-audit-batch37.md) before retrying these candidates.
+- Source linking reaches 85 game files / 91,324 code bytes.
+  All 12,904 function comparisons pass with zero regressions, as do the factory map and full executable byte/SHA-1 checks.

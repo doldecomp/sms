@@ -166,6 +166,7 @@ class ProjectConfig:
         self.generate_map: bool = False  # Generate map file(s)
         self.asflags: Optional[List[str]] = None  # Assembler flags
         self.ldflags: Optional[List[str]] = None  # Linker flags
+        self.link_dol_as_archive: bool = False  # Preserve archive duplicate resolution
         self.libs: Optional[List[Library]] = None  # List of libraries
         self.precompiled_headers: Optional[List[PrecompiledHeader]] = None  # List of precompiled headers
         self.linker_version: Optional[str] = None  # mwld version
@@ -717,6 +718,16 @@ def generate_build_ninja(
     )
     n.newline()
 
+    n.comment("Archive ordered DOL link inputs")
+    n.rule(
+        name="archive",
+        command=f"{wrapper_cmd}{mwld} -library -nodefaults -o $out @$out.rsp",
+        description="ARCHIVE $out",
+        rspfile="$out.rsp",
+        rspfile_content="$in_newline",
+    )
+    n.newline()
+
     n.comment("Generate DOL")
     n.rule(
         name="elf2dol",
@@ -884,6 +895,17 @@ def generate_build_ninja(
             n.comment(f"Link {self.name}")
             if self.module_id == 0:
                 elf_path = build_path / f"{self.name}.elf"
+                link_inputs = self.inputs
+                if config.link_dol_as_archive:
+                    archive_path = build_path / f"{self.name}.a"
+                    n.build(
+                        outputs=archive_path,
+                        rule="archive",
+                        inputs=self.inputs,
+                        implicit=mwld_implicit,
+                        order_only="post-compile",
+                    )
+                    link_inputs = [serialize_path(archive_path)]
                 elf_ldflags = f"$ldflags -lcf {serialize_path(self.ldscript)}"
                 if config.generate_map:
                     elf_map = map_path(elf_path)
@@ -893,7 +915,7 @@ def generate_build_ninja(
                 n.build(
                     outputs=elf_path,
                     rule="link",
-                    inputs=self.inputs,
+                    inputs=link_inputs,
                     implicit=[
                         self.ldscript,
                         *mwld_implicit,

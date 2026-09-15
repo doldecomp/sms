@@ -5,6 +5,12 @@ It is a matching decompilation in progress, with an independently verified regio
 Source objects are enabled individually through `objects.json` after verification.
 All other objects remain extracted binary objects in the final link.
 
+GMSE01 links through an archive of the ordered object list, built by the pinned MWLD.
+The original map records unreferenced duplicate sun-path globals in several game objects.
+Archive resolution handles these duplicates while preserving the original section layout; linking those objects loose produces duplicate-definition errors.
+This changes input packaging, not source-coverage accounting.
+The archive build and final executable byte comparison are verified in [batch 37](../../docs/progress/GMSE01-closure-audit-batch37.md).
+
 ## Build
 
 From the repository root, after installing the dependencies in the main README:

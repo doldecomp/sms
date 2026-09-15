@@ -1,0 +1,78 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "b8c96698",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.62682,
+    "total_code": "3603748",
+    "matched_code": "1391196",
+    "matched_code_percent": 38.604145,
+    "total_data": "641075",
+    "matched_data": "322047",
+    "matched_data_percent": 50.235462,
+    "total_functions": 12904,
+    "matched_functions": 8257,
+    "matched_functions_percent": 63.98791,
+    "complete_code": "91324",
+    "complete_code_percent": 2.5341396,
+    "complete_data": "58184",
+    "complete_data_percent": 9.076005,
+    "total_units": 732,
+    "complete_units": 85
+  },
+  "game_measures": {
+    "fuzzy_match_percent": 69.497215,
+    "total_code": "2847660",
+    "matched_code": "712548",
+    "matched_code_percent": 25.02223,
+    "total_data": "558292",
+    "matched_data": "250768",
+    "matched_data_percent": 44.916996,
+    "total_functions": 9012,
+    "matched_functions": 4460,
+    "matched_functions_percent": 49.48957,
+    "complete_code": "91324",
+    "complete_code_percent": 3.206984,
+    "complete_data": "58184",
+    "complete_data_percent": 10.421786,
+    "total_units": 385,
+    "complete_units": 85
+  },
+  "source_linked_objects": 85,
+  "new_source_linked_objects": [
+    "System/MarNameRefGen_Map.cpp"
+  ],
+  "new_source_linked_code_bytes": 824,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "unexplained_function_regressions": [],
+  "new_exact_functions": 1,
+  "new_exact_code_bytes": 824,
+  "new_matched_data_bytes": 448,
+  "improvements": [
+    {
+      "unit": "mario/System/MarNameRefGen_Map",
+      "function": "getNameRef_Map__14TMarNameRefGenCFPCc",
+      "before": 69.88835,
+      "after": 100.0,
+      "size": 824
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "all_functions_present": true,
+    "no_exact_function_regressions": true,
+    "symbol_map_MarNameRefGen_Map": true,
+    "ordered_archive_relink": true,
+    "incremental_build": true,
+    "gameplay_test": false
+  },
+  "notes": [
+    "The map factory is source-linked after restoring PollutionTest, SunModel and SunsetModel branches, its default-argument constructor context and header-generated strings.",
+    "The original map records duplicate global sun-path definitions. GMSE01 archives its ordered link inputs with MWLD so unused duplicates resolve as archive members; no symbols are rewritten and the complete executable matches.",
+    "Only the factory function changes similarity; no unit loses matched data. PollutionEvent retains its nine missing map definitions and ten pre-existing UNUSED size mismatches."
+  ]
+}
