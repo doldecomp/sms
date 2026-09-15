@@ -163,8 +163,10 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 	if (strcmp(name, "MirrorMapDrawBuf") == 0)
 		return new TMirrorMapDrawBuf;
 
-	if (strcmp(name, "Silhouette") == 0)
+	if (strcmp(name, "Silhouette") == 0) {
+		(void)"<TSilhouette>";
 		return new TSilhouette;
+	}
 
 	if (strcmp(name, "ScrnFader") == 0)
 		return new TSmplFader;
@@ -295,8 +297,10 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 	if (strcmp(name, "StageEnemyInfoHeader") == 0)
 		return new TStageEnemyInfoTable;
 
-	if (strcmp(name, "StageEnemyInfo") == 0)
+	if (strcmp(name, "StageEnemyInfo") == 0) {
+		(void)"<TStageEnemyInfo>";
 		return new TStageEnemyInfo;
+	}
 
 	if (strcmp(name, "EventTable") == 0)
 		return new TNameRefAryT<TStageEventInfo>;
@@ -355,11 +359,15 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 	if (strcmp(name, "SMSDrawInit") == 0)
 		return new TSMSDrawInit;
 
-	if (strcmp(name, "ZBufferCatch") == 0)
+	if (strcmp(name, "ZBufferCatch") == 0) {
+		(void)"<ZBufferCatch>";
 		return new TZBufferCatch;
+	}
 
-	if (strcmp(name, "AlphaCatch") == 0)
+	if (strcmp(name, "AlphaCatch") == 0) {
+		(void)"<AlphaCatch>";
 		return new TAlphaCatch;
+	}
 
 	if (strcmp(name, "J3DSysFlag") == 0)
 		return new TJ3DSysFlag;
@@ -367,5 +375,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 	if (strcmp(name, "Conductor") == 0)
 		return gpConductor = new TConductor;
 
+	(void)"<StagePositionInfo>";
+	(void)"<TCameraMapTool>";
 	return JDrama::TNameRefGen::getNameRef(name);
 }
+
