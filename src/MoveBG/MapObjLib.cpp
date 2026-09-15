@@ -92,8 +92,9 @@ void TMapObjBase::checkOnManhole()
 {
 	mGroundHeight = gpMap->checkGround(mPosition.x, mPosition.y + 20.0f,
 	                                   mPosition.z, &mGroundPlane);
-	if (mGroundPlane->mActor && mGroundPlane->mActor->isActorType(0x4000000b)) {
-		((TManhole*)mGroundPlane->mActor)->makeManholeUnuseful(this);
+	if (mGroundPlane->getActor() != nullptr
+	    && mGroundPlane->getActor()->isActorType(0x4000000b)) {
+		((TManhole*)mGroundPlane->getActor())->makeManholeUnuseful(this);
 	}
 }
 
