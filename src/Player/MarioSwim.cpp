@@ -117,7 +117,8 @@ BOOL TMario::checkSwimJump()
 			}
 		}
 
-		if (mIntendedMag == 0.0f)
+		bool doSwimUp = mIntendedMag == 0.0f;
+		if (doSwimUp)
 			return changePlayerStatus(MARIO_STATUS_SWIM_UP, 0, false);
 		return changePlayerStatus(MARIO_STATUS_SWIM_PADDLE_START, 0, false);
 	}
