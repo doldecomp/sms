@@ -4,8 +4,9 @@
 
 Given a list of changed paths (as arguments), map each .cpp to its decomp unit
 via objdiff.json and run the symbol-order check on it. Files that aren't tracked
-units -- new files, headers, SDK/JSystem sources without a built object, units
-whose map TU can't be resolved -- are skipped, not failed.
+units are skipped. A tracked unit whose object, map, or validator is unavailable
+fails the check. With --baseline-dir, inherited errors remain visible and only
+new errors fail; without it, validation is strict.
 
 Exit status:
   0  every checked unit passed (or nothing to check)
@@ -17,6 +18,7 @@ Usage:
 """
 
 import json
+import argparse
 import os
 import subprocess
 import sys
@@ -31,8 +33,8 @@ def norm(p: str) -> str:
     return p.replace("\\", "/").lstrip("./")
 
 
-def source_to_unit() -> dict:
-    with open(OBJDIFF_JSON, encoding="utf-8") as f:
+def source_to_unit(path=OBJDIFF_JSON) -> dict:
+    with open(path, encoding="utf-8") as f:
         units = json.load(f).get("units", [])
     out = {}
     for u in units:
@@ -43,13 +45,20 @@ def source_to_unit() -> dict:
 
 
 def main(argv) -> int:
-    files = [norm(a) for a in argv if a.strip()]
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--baseline-dir",
+                        help="checkout of the base revision with built objects")
+    parser.add_argument("files", nargs="*")
+    args = parser.parse_args(argv)
+    files = [norm(a) for a in args.files if a.strip()]
     cpp = [f for f in files if f.endswith(".cpp")]
     if not cpp:
         print("No changed .cpp files to check.")
         return 0
 
     mapping = source_to_unit()
+    baseline = (source_to_unit(os.path.join(args.baseline_dir, "objdiff.json"))
+                if args.baseline_dir else {})
     passed, failed, skipped = [], [], []
 
     for f in cpp:
@@ -60,18 +69,27 @@ def main(argv) -> int:
             continue
         unit, base = entry
         if base and not os.path.exists(os.path.join(root_dir, base)):
-            print(f"skip  {f}  ({unit}: object not built)")
-            skipped.append(f)
+            print(f"FAIL  {f}  ({unit}: object not built)")
+            failed.append((f, unit))
             continue
 
         print(f"\n{'=' * 72}\n{f}  ->  {unit}\n{'=' * 72}")
-        rc = subprocess.run([sys.executable, VALIDATOR, "-u", unit],
+        command = [sys.executable, VALIDATOR, "-u", unit]
+        if args.baseline_dir and os.path.exists(os.path.join(args.baseline_dir, f)):
+            entry = baseline.get(f)
+            if entry is None or not entry[1]:
+                print(f"FAIL  {f}: existing source has no baseline object mapping")
+                failed.append((f, unit))
+                continue
+            command.extend(["--baseline-object",
+                            os.path.join(args.baseline_dir, entry[1])])
+        rc = subprocess.run(command,
                             cwd=root_dir).returncode
         if rc == 0:
             passed.append(f)
         elif rc == 2:
-            print(f"skip  {f}  ({unit}: check could not run -- see message above)")
-            skipped.append(f)
+            print(f"FAIL  {f}  ({unit}: check could not run -- see message above)")
+            failed.append((f, unit))
         else:
             failed.append((f, unit))
 
