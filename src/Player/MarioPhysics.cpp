@@ -106,8 +106,11 @@ void TMario::checkDescent()
 	if (!(mForwardVel < descentSp))
 		return;
 
-	TBGWallCheckRecord rec(mPosition.x, mPosition.y - 10.0f, mPosition.z,
-	                       descentSp, 1, 0);
+	JGeometry::TVec3<f32> center;
+	center.x = mPosition.x;
+	center.y = mPosition.y - 10.0f;
+	center.z = mPosition.z;
+	TBGWallCheckRecord rec(center.x, center.y, center.z, descentSp, 1, 0);
 	if (!gpMap->isTouchedWallsAndMoveXZ(&rec))
 		return;
 
