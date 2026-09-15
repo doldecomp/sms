@@ -397,8 +397,8 @@ static int Hino2HeadCallback(J3DNode* param_1, int param_2)
 			local_44[2][2] = scale;
 			local_44[2][3] = 0.0;
 
-			f32 s = JMASin(gpCurHinokuri->unk198);
-			f32 c = JMACos(gpCurHinokuri->unk198);
+			f32 s = MsSin(gpCurHinokuri->unk198);
+			f32 c = MsCos(gpCurHinokuri->unk198);
 
 			Mtx local_74;
 			local_74[0][0] = c;
@@ -422,8 +422,8 @@ static int Hino2HeadCallback(J3DNode* param_1, int param_2)
 			MTXConcat(J3DSys::mCurrentMtx, local_44, J3DSys::mCurrentMtx);
 		} else {
 			Mtx local_a4;
-			f32 s          = JMASin(gpCurHinokuri->unk198);
-			f32 c          = JMACos(gpCurHinokuri->unk198);
+			f32 s          = MsSin(gpCurHinokuri->unk198);
+			f32 c          = MsCos(gpCurHinokuri->unk198);
 			local_a4[0][0] = c;
 			local_a4[0][1] = 0.0;
 			local_a4[0][2] = s;

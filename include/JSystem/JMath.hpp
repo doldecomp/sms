@@ -100,10 +100,6 @@ inline f32 JMASSin(s16 v)
 	return jmaSinTable[static_cast<u16>(v) >> jmaSinShift];
 }
 
-inline f32 JMACos(f32 v) { return JMASCos(DEG2SHORTANGLE(v)); }
-
-inline f32 JMASin(f32 v) { return JMASSin(DEG2SHORTANGLE(v)); }
-
 bool JMANewSinTable(u8 numBits);
 void JMADeleteSinTable();
 void JMAEulerToQuat(s16 x, s16 y, s16 z, Quaternion* out);

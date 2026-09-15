@@ -316,7 +316,7 @@ void TBellDolpic::control()
 
 	TMapObjBase::control();
 
-	f32 sinVal = -JMASin(unk14C);
+	f32 sinVal = -MsSin(unk14C);
 	unk150     = 0.01f * sinVal + unk150;
 
 	unk14C = unk14C + unk150;

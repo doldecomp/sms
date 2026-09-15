@@ -490,7 +490,7 @@ void TShine::movingCircle()
 
 	mPosition.x += unk17C.x;
 
-	mPosition.y = unk160 * JMASin(unk158)
+	mPosition.y = unk160 * MsSin(unk158)
 	              + (tmp * (mInitialPosition.y - unk164) + unk164);
 	unk188 = mPosition.y - prevY;
 

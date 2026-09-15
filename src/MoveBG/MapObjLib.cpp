@@ -950,8 +950,8 @@ void TMapObjTurn::turn()
 // fabricated
 static inline void makeRotXMtx(MtxPtr mtx, f32 angle)
 {
-	f32 s     = JMASin(angle);
-	f32 c     = JMACos(angle);
+	f32 s     = MsSin(angle);
+	f32 c     = MsCos(angle);
 	mtx[0][0] = 1.0f;
 	mtx[0][1] = 0.0f;
 	mtx[0][2] = 0.0f;
@@ -969,8 +969,8 @@ static inline void makeRotXMtx(MtxPtr mtx, f32 angle)
 // fabricated
 static inline void makeRotYMtx(MtxPtr mtx, f32 angle)
 {
-	f32 s     = JMASin(angle);
-	f32 c     = JMACos(angle);
+	f32 s     = MsSin(angle);
+	f32 c     = MsCos(angle);
 	mtx[0][0] = c;
 	mtx[0][1] = 0.0f;
 	mtx[0][2] = s;
@@ -988,8 +988,8 @@ static inline void makeRotYMtx(MtxPtr mtx, f32 angle)
 // fabricated
 static inline void makeRotZMtx(MtxPtr mtx, f32 angle)
 {
-	f32 s     = JMASin(angle);
-	f32 c     = JMACos(angle);
+	f32 s     = MsSin(angle);
+	f32 c     = MsCos(angle);
 	mtx[0][0] = c;
 	mtx[0][1] = -s;
 	mtx[0][2] = 0.0f;

@@ -1,7 +1,7 @@
 #include <Enemy/RiccoHook.hpp>
 #include <Strategic/Spine.hpp>
 #include <Enemy/Graph.hpp>
-#include <JSystem/JMath.hpp>
+#include <MarioUtil/MathUtil.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
 // @non-matching -- the issue seems to stem from the JDrama TNameRefGen
@@ -130,8 +130,8 @@ TSpineEnemy* TRiccoHookManager::createEnemyInstance() { return nullptr; }
 // Can't find any other way to get the * 1.0f's to emit
 static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 {
-	f32 c = radius * JMACos(theta);
-	f32 s = radius * JMASin(theta);
+	f32 c = radius * MsCos(theta);
+	f32 s = radius * MsSin(theta);
 	return JGeometry::TVec3<f32>(s, 0.0f, c);
 }
 
