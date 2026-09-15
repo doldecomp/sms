@@ -260,9 +260,9 @@ BOOL TLampTrapIron::receiveMessage(THitActor* sender, u32 message)
 		if (unk13C > 0) {
 			--unk13C;
 			if (unk13C == 0) {
-				unk140 = mFireTimerMax;
-				gpMarioParticleManager->emitAndBindToMtxPtr(
-				    100, getModel()->getBaseTRMtx(), 0, this);
+				unk140     = mFireTimerMax;
+				MtxPtr mtx = getModel()->getBaseTRMtx();
+				gpMarioParticleManager->emitAndBindToMtxPtr(100, mtx, 0, this);
 			}
 		}
 		return true;
