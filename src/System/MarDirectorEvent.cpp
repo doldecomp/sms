@@ -167,8 +167,11 @@ void TMarDirector::fireDemoMovie(u32, TLiveActor*) { }
 
 void TMarDirector::movement()
 {
-	if ((int)mState != STATE_UNK4)
+	switch (mState) {
+	case STATE_UNK4:
 		movement_game();
+		break;
+	}
 }
 
 #pragma dont_inline on
