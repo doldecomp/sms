@@ -88,14 +88,13 @@ void TMirrorActor::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TMirrorActor::entryMirrorDrawBufferAlways(J3DModel* model)
 {
-	JDrama::TDrawBufObj* dbOpa
+	JDrama::TDrawBufObj* db
 	    = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
 	        "DrawBuf MirrorAlways Opa");
-	j3dSys.setDrawBuffer(dbOpa->getDrawBuffer(), 0);
-	JDrama::TDrawBufObj* dbXlu
-	    = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	        "DrawBuf MirrorAlways Xlu");
-	j3dSys.setDrawBuffer(dbXlu->getDrawBuffer(), 1);
+	j3dSys.setDrawBuffer(db->getDrawBuffer(), 0);
+	db = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	    "DrawBuf MirrorAlways Xlu");
+	j3dSys.setDrawBuffer(db->getDrawBuffer(), 1);
 	model->calc();
 	model->viewCalc();
 	model->entry();
