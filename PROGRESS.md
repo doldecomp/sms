@@ -8,7 +8,39 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 15
+## Latest checkpoint: batch 16
+
+Reconstructed the previously empty `BossHanachanEffect.cpp`: particle loading, state-dependent particle emission, sand-pillar animation and sound, and camera shake/rumble.
+All four routines and compiler-generated initialization are present in the correct map order and linkage.
+Particle loading (820 bytes) and static initialization (764 bytes) match exactly, along with all 844 bytes of the unit's data sections.
+
+Recovered the body's two-element leg-matrix array and the owner's sand-pillar model pointer and position vector from original field accesses.
+Moved the foot-hit actor declaration into the shared boss header because both parts and effects use its joint matrix.
+The two body-constructor matrix lookups were updated together and remain exact.
+
+This batch adds **1,584 exact code bytes, two matching functions, and 844 matched data bytes**.
+Aggregate exact code is **1,376,748 / 3,603,748 bytes (38.203228%)**, with **8,169 / 12,904 functions** matching.
+There are still **73 source-linked objects**, covering **76,468 code bytes (2.121902%)**.
+The effects object remains original-linked pending three nonmatching routines.
+
+### Validation and remaining work
+
+Used the saved `ninja baseline` at `d78586d8`, rebuilt affected header consumers, ran `ninja changes_all`, and compared all reported functions with missing-function detection: zero regressions.
+Effects and parts pass symbol presence, order, and linkage checks.
+Parts retains its previously recorded UNUSED hit-predicate size warning (208 versus 196 bytes).
+The full build, expected SHA-1, and direct byte comparison pass for the mixed source/original-object executable.
+No gameplay test was performed.
+
+`emitOneTimeSandPillar_` is 99.93507% (only an eight-byte stack-size difference).
+`emitCamShake_` is 99.70303% (stack layout and two loop-counter registers).
+`emitParticle_` is 98.038315% (stack/register allocation and a water-counter sign-extension comparison).
+The existing `MsSqrtf` and `MsRandF` helpers reproduce the original arithmetic and probability-load order; direct random arithmetic did not.
+Remaining differences and reverted trials are recorded in the [shared-fix catalog](docs/MATCHING_CATALOG.md).
+Next work: resolve effects inline contexts where evidence supports them, then continue boss main/nerve reconstruction and the pending sub-unit collision helper.
+See [batch 16 measurements](docs/progress/GMSE01-batch16.json).
+The draft and trial backups are under `build/GMSE01/BossHanachanEffect-batch16*`; build, regression, and map logs are `build/GMSE01-*-batch16.*`.
+
+## Verified checkpoint: batch 15
 
 Reconstructed the previously empty `BossHanachanSub.cpp`: sphere-chain initialization and movement, wall/ground collision, rotation-dependent position corrections, centrifugal force, and water-hit handling.
 Recovered `TSpherePoint` (0x2C bytes) and `TSphereLink` (0x1C bytes), with declarations in `BossHanachanSub.hpp`.

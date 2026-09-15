@@ -297,3 +297,35 @@ A full executable match also does not validate bodies in objects that are still 
   Receiver, setter, water destructor/thunk, and point constructor are exact; all data sections total 232 exact bytes.
 - Full affected rebuild and baseline comparison found zero function regressions.
   The full mixed executable passes byte comparison and SHA-1; no source-link promotion or gameplay validation was performed.
+
+## Boss effects: shared layout and inline context, batch 16
+
+- Status: all four routines reconstructed; particle loading and static initialization exact.
+- Search: `rg -n 'TFootHitActor|mLegMtx|mSandPillar|emitCamShake_|emitParticle_|MsRandF|MsSqrtf' src include`.
+- Complete function inventory: `BossHanachanEffect.cpp`, map lines 59671–59676, five linked functions and no UNUSED routines.
+  Define the four methods in reverse order under deferred inlining; MSound headers generate the fifth (`__sinit`).
+- Move the complete `TFootHitActor` declaration into `BossHanachan.hpp` for actual cross-unit use of offset-0x6C `mJointMtx`.
+  This is a shared class-layout recovery, not movement of a known cpp helper to force inlining.
+- Body offsets 0x14C and 0x150 are `MtxPtr mLegMtx[2]`: the effect loop indexes them by the foot number.
+  Both constructor calls were changed together; the body constructor and other parts scores remain unchanged.
+- Owner offset 0x19C is `MActor* mSandPillarActor`; offsets 0x1A0–0x1A8 are its position vector.
+  The sand-pillar routine averages X/Z with the sand actor, takes its Y, emits particle 0x7E, updates the model base translation, and starts BCK 0x25/BTK 2/BRK 2.
+- Foot-step frames are 14 and 34; snort-step frames are 21, 36, and 55.
+  The special snort emission occurs at frame 134.
+  All sixteen particle filenames/IDs are recovered from the binary and loaded through `SMS_LoadParticle`.
+- Camera distance uses `MsSqrtf`, whose one double-precision reciprocal-square-root refinement and rounded float spill match the original instructions.
+  Do not substitute the JGeometry float arithmetic or the MSL three-refinement sqrt.
+  The distance ratio uses the existing out-of-line `CLBCalcRatio<float>` and inline `MsClamp`.
+- Particle probability uses `MsRandF() < mChangeParams->mSLParticleProbability.get()`.
+  The inline comparison binds the parameter address before `rand()` and reads its value afterward, matching the original.
+  Direct `(1.0f / 32768.0f) * rand()` reads the parameter owner afterward and loses an instruction (96.7%).
+  A named const reference restores the instruction shape, but the existing random helper expresses it without the extra alias and yields 98.038315%.
+- Tumble/damage dust checks sphere point `i`, not `i + 1`, before binding to body `i`'s offset-0x154 position.
+  Keep the shared local position vector and its integer-word assignment copies: they are present in both original loops.
+- Remaining: sand-pillar frame 0x38 versus 0x40 (99.93507%); camera frame 0x60 versus 0x78, square-root spill 0x30 versus 0x40, and swapped first-loop counters (99.70303%); particle frame 0x80 versus 0xC8, register allocation, and `cmpwi` versus original redundant `extsh.` after loading the signed water counter (98.038315%).
+  No artificial stack padding or fabricated getter was added.
+- Reverted trials: one shared `int i` across loops did not recover the original particle registers and worsened camera allocation; explicit `(s16)` on the already signed water counter did not change the comparison.
+  Do not repeat these as presumed fixes.
+- All five effects map functions pass presence/order/linkage checks; parts also passes with its pre-existing UNUSED hit-predicate size warning.
+  Full rebuild and baseline comparison report zero regressions; mixed executable byte comparison and SHA-1 pass.
+  Two exact functions add 1,584 bytes; all 844 data bytes match; the object remains original-linked.

@@ -22,16 +22,6 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-class TFootHitActor : public TWaterHitActor {
-public:
-	TFootHitActor(const char* name)
-	    : TWaterHitActor(name)
-	{
-	}
-	virtual ~TFootHitActor() { }
-	/* 0x6C */ MtxPtr mJointMtx;
-};
-
 const char* cMapCollisionJointName = "center";
 const char* cBodyMapCollisionFileName = "/scene/bosshanachan/hanabody_col.col";
 const char* cHeadMapCollisionFileName = "/scene/bosshanachan/hanahead_col.col";
@@ -93,8 +83,8 @@ TBossHanachanPartsBody::TBossHanachanPartsBody(TBossHanachan* boss,
 {
 	J3DModel* model = getModel();
 	JUTNameTab* names = model->getModelData()->getJointName();
-	CalcMtxPtrFromJointName(names, cLegJointName_L3, model, &mLeftLegMtx);
-	CalcMtxPtrFromJointName(names, cLegJointName_R3, model, &mRightLegMtx);
+	CalcMtxPtrFromJointName(names, cLegJointName_L3, model, &mLegMtx[0]);
+	CalcMtxPtrFromJointName(names, cLegJointName_R3, model, &mLegMtx[1]);
 }
 
 TBossHanachanPartsHead::TBossHanachanPartsHead(TBossHanachan* boss,

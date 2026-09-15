@@ -1,0 +1,85 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "d78586d8",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.06443,
+    "total_code": "3603748",
+    "matched_code": "1376748",
+    "matched_code_percent": 38.203228,
+    "total_data": "641075",
+    "matched_data": "301671",
+    "matched_data_percent": 47.057053,
+    "total_functions": 12904,
+    "matched_functions": 8169,
+    "matched_functions_percent": 63.30595,
+    "complete_code": "76468",
+    "complete_code_percent": 2.121902,
+    "complete_data": "51024",
+    "complete_data_percent": 7.9591312,
+    "total_units": 732,
+    "complete_units": 73
+  },
+  "source_linked_objects": 73,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 2,
+  "new_exact_code_bytes": 1584,
+  "new_matched_data_bytes": 844,
+  "improvements": [
+    {
+      "unit": "mario/Enemy/BossHanachanEffect",
+      "function": "__sinit_BossHanachanEffect_cpp",
+      "before": 0,
+      "after": 100.0,
+      "size": 764
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanEffect",
+      "function": "emitCamShake___13TBossHanachanFv",
+      "before": 0,
+      "after": 99.70303,
+      "size": 660
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanEffect",
+      "function": "emitOneTimeSandPillar___13TBossHanachanFP22TBossHanachanPartsBody",
+      "before": 0,
+      "after": 99.93507,
+      "size": 308
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanEffect",
+      "function": "emitParticle___13TBossHanachanFv",
+      "before": 0,
+      "after": 98.038315,
+      "size": 1044
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanEffect",
+      "function": "staticLoadParticle__13TBossHanachanFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 820
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "all_header_consumers_rebuilt": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_map_effect": true,
+    "symbol_map_parts": true,
+    "gameplay_test": false
+  },
+  "remaining_map_issues": [
+    "Parts retains its existing UNUSED isReactToTrampleOrHipDrop_ size warning: 208 bytes versus 196 in the map."
+  ],
+  "notes": [
+    "Reconstructed all four effects routines and compiler-generated initialization; all five mapped functions are present with correct order and linkage.",
+    "Particle loading and static initialization are exact, along with all 844 data bytes.",
+    "Leg matrix array and sand-pillar actor/position types recovered from original indexed and pointer accesses.",
+    "No source-link promotion; executable verification covers the mixed source/original-object build."
+  ]
+}

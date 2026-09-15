@@ -4,13 +4,12 @@
 #include <Strategic/Nerve.hpp>
 #include <Strategic/LiveActor.hpp>
 #include <Enemy/Enemy.hpp>
+#include <Player/ModelWaterManager.hpp>
 
 class TBossHanachan;
 class TIdxGroupObj;
-class TWaterHitActor;
 class TMapCollisionMove;
 class TNpcInbetween;
-class TFootHitActor;
 class JUTNameTab;
 class TBossHanachanPartsBody;
 class TBossHanachanPartsHead;
@@ -65,6 +64,16 @@ enum EnumBossHanachanStopMotionBlendOnOff {
 	BOSS_HANACHAN_STOP_MOTION_BLEND_ON = 1,
 };
 
+class TFootHitActor : public TWaterHitActor {
+public:
+	TFootHitActor(const char* name)
+	    : TWaterHitActor(name)
+	{
+	}
+	virtual ~TFootHitActor() { }
+	/* 0x6C */ MtxPtr mJointMtx;
+};
+
 class TBossHanachanPartsBase : public TLiveActor {
 public:
 	TBossHanachanPartsBase(TBossHanachan*, u32, int, const char*);
@@ -117,8 +126,7 @@ public:
 	/* 0x138 */ JGeometry::TVec3<f32> unk138;
 	/* 0x144 */ f32 unk144;
 	/* 0x148 */ f32 unk148;
-	/* 0x14C */ MtxPtr mLeftLegMtx;
-	/* 0x150 */ MtxPtr mRightLegMtx;
+	/* 0x14C */ MtxPtr mLegMtx[2];
 	/* 0x154 */ JGeometry::TVec3<f32> unk154;
 };
 
@@ -268,10 +276,8 @@ public:
 	/* 0x190 */ f32 unk190;
 	/* 0x194 */ f32 unk194;
 	/* 0x198 */ f32 unk198;
-	/* 0x19C */ s32 unk19C;
-	/* 0x1A0 */ f32 unk1A0;
-	/* 0x1A4 */ f32 unk1A4;
-	/* 0x1A8 */ f32 unk1A8;
+	/* 0x19C */ MActor* mSandPillarActor;
+	/* 0x1A0 */ JGeometry::TVec3<f32> mSandPillarPosition;
 	/* 0x1AC */ f32 unk1AC;
 	/* 0x1B0 */ f32 unk1B0;
 	/* 0x1B4 */ f32 unk1B4;
