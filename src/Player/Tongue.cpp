@@ -33,9 +33,7 @@ void TYoshiTongue::init(TYoshi* yoshi)
 	mYoshi = yoshi;
 	mModel = new J3DModel(modelData, 0x10000, 1);
 
-	J3DModelData* modelData2 = mModel->getModelData();
-	for (u16 i = 0; i < modelData2->getShapeNum(); ++i)
-		modelData2->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
+	mModel->getModelData()->onFlag1OnAllShapes();
 
 	mTipModel = new J3DModel(
 	    J3DModelLoaderDataBase::load(
@@ -43,9 +41,7 @@ void TYoshiTongue::init(TYoshi* yoshi)
 	        J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift)),
 	    0x10000, 1);
 
-	J3DModelData* modelData3 = mTipModel->getModelData();
-	for (u16 i = 0; i < modelData3->getShapeNum(); ++i)
-		modelData3->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
+	mTipModel->getModelData()->onFlag1OnAllShapes();
 
 	mState       = STATE_IDLE;
 	mProgress    = 0;
