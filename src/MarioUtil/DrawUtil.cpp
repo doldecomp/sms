@@ -88,7 +88,9 @@ void TSilhouette::loadAfter()
 
 void TSilhouette::setting(MtxPtr param_1)
 {
-	GXSetChanAmbColor(GX_COLOR0A0, (GXColor) { unk12.r, unk12.g, unk12.b, 0 });
+	const GXColor& color
+	    = (GXColor) { unk12.r, unk12.g, unk12.b, 0 };
+	GXSetChanAmbColor(GX_COLOR0A0, color);
 	GXLightObj GStack_54;
 	Vec local_60;
 	Vec local_6C = SMS_GetMarioPos();
