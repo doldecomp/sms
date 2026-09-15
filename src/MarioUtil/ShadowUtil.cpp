@@ -1348,15 +1348,12 @@ void TMBindShadowManager::calcVtx()
 
 			f32 h1 = foot.y - foot.y;
 			f32 h2 = head.y - foot.y;
-			JGeometry::TVec3<f32> projectedFoot;
-			projectedFoot.set(foot.x - light.x * h1, foot.y,
-			                  foot.z - light.z * h1);
-			JGeometry::TVec3<f32> projectedHead;
-			projectedHead.set(head.x - light.x * h2, foot.y,
-			                  head.z - h2 * light.z);
-			request->mPosition.set(0.5f * (projectedHead.x + projectedFoot.x),
-			                       0.5f * (projectedFoot.y + projectedHead.y),
-			                       0.5f * (projectedHead.z + projectedFoot.z));
+			request->mPosition.set(
+			    0.5f
+			        * ((head.x - light.x * h2) + (foot.x - light.x * h1)),
+			    0.5f * (foot.y + foot.y),
+			    0.5f
+			        * ((head.z - light.z * h2) + (foot.z - light.z * h1)));
 		}
 
 		JGeometry::TVec3<f32> pos = request->mPosition;
