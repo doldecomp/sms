@@ -1666,6 +1666,31 @@ void TWaterGun::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+bool TWaterGun::isEmitting()
+{
+	// TODO: instruction structure matches; frame 0x30 vs original 0x80.
+	const TWaterGun* self = this;
+
+	if (mCurrentWater == 0)
+		return false;
+
+	if (gpMarDirector->isDemoMode3() || gpMarDirector->isDemoMode4()
+	    || gpMarDirector->isTalkModeNow())
+		return false;
+
+	if (self->getCurrentNozzle()->getNozzleKind() == 1) {
+		TNozzleTrigger* trig = (TNozzleTrigger*)self->getCurrentNozzle();
+		if (trig->unk385 == TNozzleTrigger::ACTIVE)
+			return true;
+		return false;
+	}
+
+	if (self->getCurrentNozzle()->unk378 > 0.0f)
+		return true;
+
+	return false;
+}
+
 TNozzleBase* TWaterGun::getCurrentNozzle() const
 {
 	return mNozzleList[mCurrentNozzle];

@@ -8,7 +8,15 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 49 — SelectDir string data restored
+## Latest checkpoint: batch 50 — shared FLUDD emission call restored
+
+Move `isEmitting` from the header to its map-recorded WaterGun definition and restore its demo/dialogue guard. This makes `considerRotateStart` exact: **+144 code bytes / one function**.
+`soundMovement` improves **98.25304% → 99.994804%**, including a corrected damage-sound guard; `squating` reaches **99.91304%**, and the restored helper reaches **99.92063%**. Their remaining frame/stack differences are source TODOs.
+Fresh baseline at `27ef0a79`; header rebuild, changes_all, all 12,904 function comparisons, unit-data checks and DOL byte/SHA-1 checks pass without regressions. No gameplay test performed.
+Map checks introduce no new errors: WaterGun's missing count drops from 25 to 24 UNUSED functions; MarioRun still lacks UNUSED braking. Existing UNUSED-size warnings remain (MarioRun 15, MarioSound/MarioWait one each); linked-symbol order/linkage are preserved.
+Game **26.13458% matched / 3.254321% source-linked**, still 86 linked files. Queue: 1,254 functions / 704,856 bytes; next is `TCardSave::waitForChoice` (6,580 bytes).
+
+## Verified checkpoint: batch 49 — SelectDir string data restored
 
 `rsetup()` improves **99.600365% → 99.63048%** after restoring the original 32-byte string-pool prefix through DummyStrings.hpp and spelling out the stage-display constructor arguments.
 All SelectDir data now matches: **+688 data bytes**. Frame 0x610 vs 0x648, list/constructor stack slots and camera-vector setup remain a source TODO; no new exact functions or source-linked files.
@@ -1226,5 +1234,5 @@ Source, configuration, progress snapshots, and notes are versioned locally.
 ## Next work
 
 Follow [STRATEGY.md](STRATEGY.md) and the refreshed near-matching list.
-Start the next time-box with `TMario::soundMovement()`; consult source TODOs before revisiting GCConsole2::load, BossEel, npcWetting, jumpMain, specMain, spider or beam.
+Start the next time-box with `TCardSave::waitForChoice()`; consult source TODOs before revisiting GCConsole2::load, BossEel, npcWetting, jumpMain, specMain, spider or beam.
 Keep the small-file queue and old audits as supporting references; defer from-scratch work until the near-matching group is mostly exhausted.

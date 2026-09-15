@@ -307,6 +307,8 @@ void TMario::getSideWalkValues(E_SIDEWALK_TYPE* type, f32* val1, f32* val2)
 
 BOOL TMario::squating()
 {
+	// TODO: instruction structure matches; frame 0x70 vs original 0xA0
+	// and sideways-movement/conversion slots still differ.
 	if (mInput & 0x4)
 		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 

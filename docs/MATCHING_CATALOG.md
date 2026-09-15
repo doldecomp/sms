@@ -17,6 +17,15 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## Out-of-line FLUDD emission predicate, batch 50
+
+- The map records a global 252-byte `TWaterGun::isEmitting` between getCurrentNozzle and perform. MarioRun, MarioWait and MarioSound each call it out of line; the previous header body incorrectly expands at all three sites.
+  Move the existing body to WaterGun.cpp in reverse definition order and restore its missing director guard. Use isDemoMode3/isDemoMode4 followed by isTalkModeNow; isDemoModeNow introduces an extra boolean merge absent from the binary.
+- This matches all 144 considerRotateStart bytes. Squating and soundMovement retain only stack differences after correcting soundMovement's guard to enclose its collision-sound switch.
+  Remaining frames: isEmitting 0x30 vs 0x80, squating 0x70 vs 0xA0, soundMovement 0x100 vs 0x2D0. Do not treat rounded 100.0% output as exact.
+- The separately fabricated canSpray predicate has different callers; leave it for complete caller comparisons rather than automatically replacing it.
+  All 12,904 function comparisons and unit-data checks pass. WaterGun still lacks 24 UNUSED definitions; MarioRun still lacks braking, so neither file is ready for source linking.
+
 ## Missing string prefixes and constructor arguments, batch 49
 
 - SelectDir's original rodata starts with twelve zero bytes and the twenty-byte Shift-JIS memory-error string; the map also records UNUSED SMS_NO_MEMORY_MESSAGE.

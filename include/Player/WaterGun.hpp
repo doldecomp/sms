@@ -115,26 +115,7 @@ public:
 	f32 getPressureMax();
 	void init();
 	void initInLoadAfter();
-	bool isEmitting()
-	{
-		// TODO: more inlines!
-		const TWaterGun* self = this;
-
-		if (mCurrentWater == 0)
-			return false;
-
-		if (self->getCurrentNozzle()->getNozzleKind() == 1) {
-			TNozzleTrigger* trig = (TNozzleTrigger*)self->getCurrentNozzle();
-			if (trig->unk385 == TNozzleTrigger::ACTIVE)
-				return true;
-			return false;
-		}
-
-		if (self->getCurrentNozzle()->unk378 > 0.0f)
-			return true;
-
-		return false;
-	}
+	bool isEmitting();
 	BOOL isPressureOn();
 	void movement();
 	void rotateProp(f32);
@@ -224,9 +205,8 @@ public:
 		return getCurrentNozzle()->mEmitParams.mAmountMax.get();
 	}
 
-	// TODO: get rid of this -- it's real name is isEmitting() and it
-	// wasn't stripped in MarioRun.cpp
-	// //Fabricated
+	// Fabricated. TODO: compare callers before replacing this with the
+	// out-of-line isEmitting predicate, which also checks director state.
 	bool canSpray() const
 	{
 		if (mCurrentWater == 0)
