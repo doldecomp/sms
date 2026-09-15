@@ -667,7 +667,8 @@ int SMS_CountPolygonNumInShape(J3DShape* shape)
 		while (p - dl < shape->getShapeDraw(i)->getDisplayListSize()) {
 			u8 op = *p;
 			if (op == GX_TRIANGLEFAN || op == GX_TRIANGLESTRIP) {
-				u16 n   = *(u16*)(p + 1);
+				u8* p2 = p + 1;
+				u16 n  = *(u16*)p2;
 				polyNum = n + polyNum;
 				p += vtxSize * n;
 				polyNum -= 2;
