@@ -39,14 +39,16 @@ extern int gpSceneCmnDatSize;
 
 void TMarDirector::decideMarioPosIdx()
 {
+	TApplication* application = &gpApplication;
 	unkD0 = 0;
 	unkD1 = 0;
 	unkE4 = 1;
 
-	switch (gpApplication.mCurrArea.unk0) {
+	TGameSequence* prevArea = &application->mPrevArea;
+	switch (application->mCurrArea.unk0) {
 	case 15:
 		unkE4 = 14;
-		gpApplication.mFader->setColor(
+		application->mFader->setColor(
 		    JUtility::TColor(0x00, 0x00, 0x00, 0xff));
 		break;
 
@@ -61,7 +63,9 @@ void TMarDirector::decideMarioPosIdx()
 	case 5:
 	case 6:
 	case 7:
-	case 8: {
+	case 8:
+	case 10:
+	case 11: {
 		unkE4 = 14;
 		gpApplication.mFader->setColor(
 		    JUtility::TColor(0xd2, 0xd2, 0xd2, 0xff));
@@ -76,7 +80,7 @@ void TMarDirector::decideMarioPosIdx()
 				TFlagManager::getInstance()->setBool(false, 0x30004);
 				unkD0 = 4;
 			} else {
-				switch (SMS_getShineStage(gpApplication.mPrevArea.unk0)) {
+				switch (SMS_getShineStage(prevArea->unk0)) {
 				case 2:
 					unkD0 = 1;
 					unkD1 = 2;
@@ -111,7 +115,7 @@ void TMarDirector::decideMarioPosIdx()
 					unkD0 = 7;
 					unkD1 = 2;
 					unkE4 = 0xe;
-					gpApplication.mFader->setColor(
+					application->mFader->setColor(
 					    JUtility::TColor(0x00, 0x00, 0x00, 0xff));
 					break;
 				case 9:
