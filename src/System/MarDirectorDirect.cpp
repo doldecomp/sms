@@ -57,6 +57,13 @@ int TMarDirector::direct()
 	}
 
 	u32 desiredAppState = TApplication::APP_STATE_DEFAULT;
+	u32 uVar8;
+	u8 bVar7;
+	u32 tmp;
+	bool bVar1;
+	u32 uVar11;
+	u32 uVar4;
+	u32 uVar44;
 
 	JDrama::TGraphics local_140;
 
@@ -74,8 +81,8 @@ int TMarDirector::direct()
 				unk4C |= 0x4000;
 
 			// inline?
-			u32 uVar8 = 0;
-			u8 bVar7  = bVar2;
+			uVar8 = 0;
+			bVar7 = bVar2;
 			if (unk4C & 0x4000) {
 				if (unk258)
 					unk258->stageLoop();
@@ -118,7 +125,7 @@ int TMarDirector::direct()
 				}
 			}
 
-			u32 tmp = 0;
+			tmp = 0;
 			if (unk4C & 0x2000)
 				tmp |= 1;
 			if (unk4C & 0x4000)
@@ -126,7 +133,7 @@ int TMarDirector::direct()
 			local_140.unk2 = tmp;
 
 			// inline
-			bool bVar1 = true;
+			bVar1 = true;
 			if ((unk58 & 1) || (unk58 & 2))
 				bVar1 = false;
 
@@ -135,8 +142,8 @@ int TMarDirector::direct()
 			else
 				gpObjHitCheck->clearHitNum();
 
-			u32 uVar11 = ~uVar8;
-			u32 uVar4  = uVar11;
+			uVar11 = ~uVar8;
+			uVar4  = uVar11;
 			if (unk58 & 1)
 				uVar4 &= ~0x100;
 			if (unk58 & 2)
@@ -146,7 +153,7 @@ int TMarDirector::direct()
 			else
 				mShinePfLstMov->perform(uVar4, &local_140);
 
-			u32 uVar44 = 0;
+			uVar44 = 0;
 			if (!(unk4C & 0x4000))
 				uVar44 |= 2;
 			unk30->perform(~uVar44, &local_140);
