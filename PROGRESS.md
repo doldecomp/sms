@@ -8,7 +8,46 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 8
+## Latest checkpoint: batch 9
+
+Reconstructed the boss head/body animation setters and hit-message handlers, plus tumble-rate adjustment, circular-shadow submission, and damage fog.
+The shared hit-reaction predicate is reconstructed once and used by both message handlers.
+Added the main boss's mapped declarations and field layout needed by these parts, including its eight body pointers, head pointer, weak-body index, and parameter pointers.
+Owner fields whose meanings are not established retain provisional names.
+
+The tumble-rate function now matches all **188 bytes** exactly.
+The other six routines remain nonmatching: shadow submission 99.54%, head animation setter 97.746475%, body animation setter 91.818184%, head hit handler 96.02941%, body hit handler 96.78832%, and damage fog 93.683334%.
+Their remaining differences include state-lookup inlining, registers, and stack layout.
+Both hit handlers use the shared overturned-state test; the body handler also follows the original six-case hip-drop eligibility table.
+
+Corrected `TWaterHitActor::onWaterHitCounter` to an out-of-line declaration, consistent with its global symbol in `BossHanachanSub.cpp` and the head caller's original call instruction.
+The former inline wrote a 32-bit value, while the original function stores a 16-bit counter.
+The underlying field declaration still needs a coordinated audit with particle-manager consumers; it was not globally narrowed.
+See the [shared-fix catalog](docs/MATCHING_CATALOG.md) for the evidence and pending work.
+
+Aggregate exact code is **1,369,460 / 3,603,748 bytes (38.00099%)**, with **8,147 / 12,904 functions** matching.
+Matched data remains 298,283 bytes.
+There are still **72 source-linked objects**, covering **73,452 code bytes (2.0382113%)**.
+The parts object remains incomplete and is not source-linked.
+
+### Validation and remaining work
+
+Used the saved batch 9 baseline at `f7eb2cf2`; rebuilt all affected units and ran `ninja changes_all`.
+Compared every reported function against the baseline, including missing-function detection: zero regressions.
+The full build, expected SHA-1, and byte comparison against the original US executable pass.
+These executable checks validate the current mixed source/original-object build, not the unfinished parts implementations.
+No gameplay test was performed.
+
+The parts object's ordering and linkage pass; its map-presence check still fails on the foot destructor/thunk and `CLBPalFrame<short>`.
+Three UNUSED-size warnings remain: the hit predicate (208 versus 196 bytes), `isMarioOn_` (still a stub), and the joint-matrix helper.
+The sound object's complete map check passes.
+Remaining parts work includes the constructor, collision/foot initialization, animation-state dispatcher, `isMarioOn_`, and exact matching of the partial routines.
+The parameter-constructor draft is saved locally for the next layout reconstruction.
+
+See [batch 9 measurements](docs/progress/GMSE01-batch9.json).
+Build and change logs are `build/GMSE01-build-batch9.log` and `build/GMSE01-changes-batch9.log`.
+
+## Verified checkpoint: batch 8
 
 Started reconstructing `BossHanachanParts.cpp`, with complete mapped base/head/body method declarations and explicit TODO bodies for unfinished behavior.
 Identified the shared motion controller as `TNpcInbetween` from its constructor layout and calls in `BossHanachanMain`.

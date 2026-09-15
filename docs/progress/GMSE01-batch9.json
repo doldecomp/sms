@@ -1,0 +1,103 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "f7eb2cf2",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 74.59919,
+    "total_code": "3603748",
+    "matched_code": "1369460",
+    "matched_code_percent": 38.00099,
+    "total_data": "641075",
+    "matched_data": "298283",
+    "matched_data_percent": 46.528564,
+    "total_functions": 12904,
+    "matched_functions": 8147,
+    "matched_functions_percent": 63.135464,
+    "complete_code": "73452",
+    "complete_code_percent": 2.0382113,
+    "complete_data": "49544",
+    "complete_data_percent": 7.728269,
+    "total_units": 732,
+    "complete_units": 72
+  },
+  "source_linked_objects": 72,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 1,
+  "new_exact_code_bytes": 188,
+  "improvements": [
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "changeTumbleAnmRate___22TBossHanachanPartsBaseFv",
+      "before": 2.1276596,
+      "after": 100.0,
+      "size": 188
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "entryCircleShadow___22TBossHanachanPartsBaseFv",
+      "before": 2.0,
+      "after": 99.54,
+      "size": 200
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "setDamageFog___22TBossHanachanPartsBaseFPQ26JDrama9TGraphics",
+      "before": 1.6666666,
+      "after": 93.683334,
+      "size": 240
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "setAnm___22TBossHanachanPartsBodyF23EnumBossHanachanAnmKind36EnumBossHanachanStopMotionBlendOnOff",
+      "before": 1.8181819,
+      "after": 91.818184,
+      "size": 308
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "setAnm___22TBossHanachanPartsHeadF23EnumBossHanachanAnmKind36EnumBossHanachanStopMotionBlendOnOff",
+      "before": 2.7464788,
+      "after": 97.746475,
+      "size": 284
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "receiveMessage__22TBossHanachanPartsBodyFP9THitActorUl",
+      "before": 1.4233576,
+      "after": 96.78832,
+      "size": 548
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "receiveMessage__22TBossHanachanPartsHeadFP9THitActorUl",
+      "before": 1.9019607,
+      "after": 96.02941,
+      "size": 408
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_order_parts": true,
+    "symbol_linkage_parts": true,
+    "symbol_presence_parts": false,
+    "missing_parts": [
+      "__dt__13TFootHitActorFv",
+      "CLBPalFrame<s>__Fs",
+      "@32@__dt__13TFootHitActorFv"
+    ],
+    "unused_size_warnings_parts": 3,
+    "symbol_map_sound": true,
+    "gameplay_tested": false
+  },
+  "notes": [
+    "BossHanachanParts remains nonmatching and is not source-linked; seven routines were reconstructed or expanded, with one newly exact function.",
+    "Shared hit eligibility and animation restart helpers serve both head/body handlers; animation table contents and body jump-table cases follow the original US binary.",
+    "TWaterHitActor::onWaterHitCounter is a mapped global out-of-line function; removed the incorrect inline store. Counter field width still needs a coordinated audit with particle-index consumers.",
+    "Remaining state-lookup inlining, register allocation, and stack differences are recorded in docs/MATCHING_CATALOG.md.",
+    "Whole-executable verification covers the mixed source/original-object build, not the unfinished parts unit."
+  ]
+}

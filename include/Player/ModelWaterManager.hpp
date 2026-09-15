@@ -50,7 +50,7 @@ public:
 class TWaterHitActor : public THitActor {
 public:
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
-	void onWaterHitCounter() { unk68 = 0x3C; }
+	void onWaterHitCounter();
 
 public:
 	/* 0x68 */ int unk68;

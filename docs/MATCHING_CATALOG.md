@@ -84,3 +84,39 @@ A full executable match also does not validate bodies in objects that are still 
 - A type-only correction regressed existing water consumers.
 - Next action: coordinate the type and access changes against each caller's assembly.
 - Related candidate: `TBathtub::allowsTumble` and `TBathWaterManager::throwMario` share a local-coordinate conversion sequence.
+
+## Boss animation and reaction families
+
+- Status: reconstructed, partially matching, batch 9.
+- Search: `rg -n 'setAnm_|receiveMessage|isReactToTrampleOrHipDrop_|changeTumbleAnmRate_' src/Enemy/BossHanachanParts.cpp`.
+- The body/head animation tables contain 18 entries each; head BCK/BTP/BTK table offsets are `0x190`, `0x1D8`, and `0x220` from the original rodata base `0x80381E08`.
+- Body BCK table starts at `0x80381F50`; weak-body overrides select indices 11/14 for animation kinds 2/3.
+- The owner stores eight body pointers at `0x150`, head at `0x170`, weak-body index at `0x174`, and parameter pointers at `0x1BC`/`0x1C0`.
+- Keep the candidate body-animation index separate from the mutable index inside the change branch; this reproduces the target's load/move scheduling.
+- Head setter is 97.746475% with register differences; body setter is 91.818184% with register/prologue and stack differences.
+- `BOOL` result/local and `bool` result/local trials had equivalent setter instruction streams; mixed types added a conversion.
+  Do not infer a global return-type correction from these trials.
+- Both hit handlers share the same director guard (`isThing()`), overturned-state test, and trample reaction.
+  Reuse `isReactToTrampleOrHipDrop_()` and `restartBck_()`.
+- The overturned test uses exact comparisons to -179 and 179 degrees, with a ternary boolean result reproducing the target's second normalization group.
+- Body hip drops affect animation kinds 2, 3, 5, 13, 16, and 17, as shown by the original 18-entry jump table.
+  The head has a distinct hip-drop response and does not use that eligibility switch.
+- `getLatestNerve()` remains incorrectly inlined in both hit handlers and damage fog; the original calls the existing weak function out of line.
+  Investigate common inline context before adding local pragmas or changing the shared getter globally.
+- Exact tumble-rate fix: compute `remaining = end - frame` before loading rate and calling `SMSGetAnmFrameRate()`.
+  Passing `end - frame` directly as an argument computed it after the call and spilled extra registers; the named intermediate reproduces all 188 bytes, including stack layout.
+- Shadow submission reuses `TCircleShadowRequest`; its full instruction sequence matches apart from stack offsets (99.54%).
+
+## Water-hit counter declaration and field ambiguity
+
+- Status: declaration corrected, field audit pending, batch 9.
+- Search: `rg -n 'TWaterHitActor|onWaterHitCounter|mStaticHitActor' src include`.
+- Original map: `onWaterHitCounter__14TWaterHitActorFv` is a global 12-byte function in `BossHanachanSub.cpp`, at `0x800ED5B4`.
+- Native instructions set 60 and use `sth` at `0x68`; the original receive-message handler also uses halfword stores there.
+- Removed the fabricated inline `unk68 = 0x3C` from `ModelWaterManager.hpp`, restoring the out-of-line declaration and the head hit-handler call.
+  The function body remains supplied by the original nonmatching sub-object until that unit is reconstructed.
+- Do not simply change the existing `int unk68` to a halfword globally: particle-manager code and multiple enemy consumers use it as a particle index.
+  Audit their actual load/store widths and static-object initialization together to establish whether separate views/fields or an original declaration discrepancy are involved.
+- The original particle-manager static object is `0x6C` bytes and its constructor has no store to `0x68`; the boss foot constructor explicitly zeros a halfword there.
+  Avoid inventing a shared constructor until that distinction is resolved.
+- All callers rebuilt after the declaration correction; the complete batch 9 function comparison found zero regressions.

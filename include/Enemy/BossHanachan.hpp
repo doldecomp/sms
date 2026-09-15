@@ -3,6 +3,7 @@
 
 #include <Strategic/Nerve.hpp>
 #include <Strategic/LiveActor.hpp>
+#include <Enemy/Enemy.hpp>
 
 class TBossHanachan;
 class TIdxGroupObj;
@@ -11,6 +12,10 @@ class TMapCollisionMove;
 class TNpcInbetween;
 class TFootHitActor;
 class JUTNameTab;
+class TBossHanachanPartsBody;
+class TBossHanachanPartsHead;
+class TBossHanachanCommonSaveParams;
+class TBossHanachanChangeSaveParams;
 
 extern const char* cMapCollisionJointName;
 extern const char* cBodyMapCollisionFileName;
@@ -28,8 +33,16 @@ enum EnumBossHanachanNerveAnm {
 };
 
 enum EnumBossHanachanAnmKind {
+	BOSS_HANACHAN_ANM_UNK2 = 2,
+	BOSS_HANACHAN_ANM_UNK3 = 3,
+	BOSS_HANACHAN_ANM_UNK5 = 5,
+	BOSS_HANACHAN_ANM_UNK6 = 6,
 	BOSS_HANACHAN_ANM_UNK8 = 8,
 	BOSS_HANACHAN_ANM_UNK11 = 11,
+	BOSS_HANACHAN_ANM_UNK13 = 13,
+	BOSS_HANACHAN_ANM_UNK15 = 15,
+	BOSS_HANACHAN_ANM_UNK16 = 16,
+	BOSS_HANACHAN_ANM_UNK17 = 17,
 	BOSS_HANACHAN_ANM_UNK18 = 18,
 };
 
@@ -47,7 +60,7 @@ public:
 	                     EnumBossHanachanStopMotionBlendOnOff) = 0;
 
 	void considerSetAnm_(EnumBossHanachanNerveAnm);
-	BOOL isReactToTrampleOrHipDrop_() const;
+	bool isReactToTrampleOrHipDrop_() const;
 	void calcRotateZWhenGetUp_();
 	BOOL isMarioOn_() const;
 	const TLiveActor* getSandActor_() const;
@@ -106,6 +119,76 @@ public:
 public:
 	/* 0x114 */ MtxPtr mLeftNoseMtx;
 	/* 0x118 */ MtxPtr mRightNoseMtx;
+};
+
+class TBossHanachan : public TSpineEnemy {
+public:
+	TBossHanachan(const char*);
+	virtual ~TBossHanachan() { }
+	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void init(TLiveManager*);
+	virtual void bind();
+	virtual void moveObject();
+	virtual void kill();
+	virtual BOOL hasMapCollision() const;
+
+	void removeAllMapCollision();
+	void execDamage();
+	void goToInitialRecoverGraphNode();
+	void execSlip();
+	void execWalk(bool);
+	bool isCanWalk() const;
+	f32 getBodyMaxRotateZ() const;
+	bool checkFallDecideAndSetup();
+	bool isTumbleCompletelyAllBody() const;
+	void execBodyCalcAnim_();
+	void execHeadCalcAnim_();
+	void throwMario_(THitActor*);
+	void setRandomWeakBodyIndex();
+	void changeAnmRateAndFrameUpdate_();
+	void copyFrameFromOldAnmToNewAnm_();
+	void setHeadAndBodyNonstopMotionBlendRatio_(f32);
+	void offHeadAndBodyNonstopMotionBlend_();
+	bool isAllBckAlreadyEnd(EnumBossHanachanAnmKind) const;
+	bool isFinishedGetUp() const;
+	void considerSetAnm(EnumBossHanachanNerveAnm);
+	void setAnmTimerWhenDead();
+	void setAnmTimerWhenDamage();
+	void setAnmTimerWhenSnort();
+	void setAnmTimerWhenGetUp();
+	void setTumbleAnm(EnumBossHanachanStopMotionBlendOnOff);
+	void setTumbleBckRate_(TBossHanachanPartsBase*);
+	void setHeadAndBodyAnm(EnumBossHanachanAnmKind,
+	                       EnumBossHanachanStopMotionBlendOnOff);
+	void emitCamShake_();
+	void emitOneTimeSandPillar_(TBossHanachanPartsBody*);
+	void emitParticle_();
+	static void staticLoadParticle();
+
+public:
+	/* 0x150 */ TBossHanachanPartsBody* mBodies[8];
+	/* 0x170 */ TBossHanachanPartsHead* mHead;
+	/* 0x174 */ s32 mWeakBodyIndex;
+	// TODO: recover the remaining field meanings from their consumers.
+	/* 0x178 */ s32 unk178;
+	/* 0x17C */ f32 unk17C;
+	/* 0x180 */ f32 unk180;
+	/* 0x184 */ f32 unk184;
+	/* 0x188 */ f32 unk188;
+	/* 0x18C */ f32 unk18C;
+	/* 0x190 */ f32 unk190;
+	/* 0x194 */ f32 unk194;
+	/* 0x198 */ f32 unk198;
+	/* 0x19C */ s32 unk19C;
+	/* 0x1A0 */ f32 unk1A0;
+	/* 0x1A4 */ f32 unk1A4;
+	/* 0x1A8 */ f32 unk1A8;
+	/* 0x1AC */ f32 unk1AC;
+	/* 0x1B0 */ f32 unk1B0;
+	/* 0x1B4 */ f32 unk1B4;
+	/* 0x1B8 */ s32 unk1B8;
+	/* 0x1BC */ TBossHanachanCommonSaveParams* mCommonParams;
+	/* 0x1C0 */ TBossHanachanChangeSaveParams* mChangeParams;
 };
 
 DECLARE_NERVE(TNerveSBH_Fall, TLiveActor);
