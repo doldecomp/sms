@@ -392,15 +392,17 @@ bool TYoshi::appearFromEgg(const JGeometry::TVec3<f32>& pos, f32 yrot,
 	mLastTranslation = pos;
 	mTranslation     = pos;
 	mTranslation.y += 1.0f;
-	mEggRotSpeed = DEG2SHORTANGLE(yrot);
-	mState       = STATE_UNK2;
+	s16 eggRotSpeed = DEG2SHORTANGLE(yrot);
+	mEggRotSpeed    = eggRotSpeed;
+	mState          = STATE_UNK2;
 
 	changeAnimation(0);
 
-	TTakeActor* fruit = (TTakeActor*)egg->getFruit();
+	THitActor* fruit       = egg->getFruit();
+	TTakeActor* takeActor  = (TTakeActor*)fruit;
 	if (mMario->getHeldObject() == fruit) {
-		fruit->receiveMessage(mMario->getFloorHitActor(), HIT_MESSAGE_UNK8);
-		fruit->mHolder      = nullptr;
+		takeActor->receiveMessage(mMario->getFloorHitActor(), HIT_MESSAGE_UNK8);
+		takeActor->mHolder  = nullptr;
 		mMario->mHeldObject = nullptr;
 	}
 
