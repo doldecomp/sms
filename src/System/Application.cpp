@@ -428,7 +428,7 @@ bool TApplication::checkAdditionalMovie()
 
 	const TGameSequence& currArea = gpApplication.mCurrArea;
 
-	u8 uVar1 = SMS_getShineIDofExStage(currArea.unk0);
+	u8 uVar1 = SMS_getShineIDofExStage(currArea.getStage());
 	if (uVar1 != 0xFF) {
 		if (!TFlagManager::getInstance()->getShineFlag(uVar1)) {
 			if (!TFlagManager::getInstance()->getBool(0x3000D)) {
@@ -438,9 +438,9 @@ bool TApplication::checkAdditionalMovie()
 			}
 		}
 	} else {
-		switch (currArea.unk0) {
+		switch (currArea.getStage()) {
 		case 0:
-			if (currArea.unk1 == 0) {
+			if (currArea.getScenario() == 0) {
 				if (!TFlagManager::getInstance()->getBool(0x30009)) {
 					mMovie = 1;
 					TFlagManager::getInstance()->setBool(true, 0x30009);
@@ -450,13 +450,13 @@ bool TApplication::checkAdditionalMovie()
 			break;
 
 		case 1:
-			if (currArea.unk1 == 0) {
+			if (currArea.getScenario() == 0) {
 				if (!TFlagManager::getInstance()->getBool(0x3000B)) {
 					mMovie = 3;
 					TFlagManager::getInstance()->setBool(true, 0x3000B);
 					result = true;
 				}
-			} else if (currArea.unk1 == 1) {
+			} else if (currArea.getScenario() == 1) {
 				if (!TFlagManager::getInstance()->getBool(0x3000C)) {
 					mMovie = 4;
 					TFlagManager::getInstance()->setBool(true, 0x3000C);
@@ -466,7 +466,7 @@ bool TApplication::checkAdditionalMovie()
 			break;
 
 		case 8:
-			if (currArea.unk1 == 2) {
+			if (currArea.getScenario() == 2) {
 				if (!TFlagManager::getInstance()->getBool(0x3000D)) {
 					mMovie = 5;
 					TFlagManager::getInstance()->setBool(true, 0x3000D);
