@@ -153,7 +153,7 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 
 void TNpcParts::addJellyFishParts(f32 param_1)
 {
-	TSharedParts** slot = &unk0[5][1];
+	TSharedParts** slot = &unk0[0][11];
 
 	int iVar2 = gpMareJellyFishManager->getModelDataKeeper()->getModelDataNum();
 	int iVar3 = MsRandF() * iVar2;
