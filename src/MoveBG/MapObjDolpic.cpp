@@ -104,8 +104,9 @@ BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 	if (sender->isActorType(0x01000001)) {
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);
-		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
-		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
+		MSound* sound = SMSGetMSound();
+		sound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &sender->mPosition, 0,
+		                     0.0f, 0, 0, 4);
 
 		if (unk13C == 0)
 			return 1;
