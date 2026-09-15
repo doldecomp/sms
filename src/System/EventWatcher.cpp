@@ -1263,6 +1263,24 @@ static void evIsWaterMelonIsReached(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push(result);
 }
 
+template <>
+void TSpcTypedInterp<TEventWatcher>::dispatchBuiltin(u32 sym_index,
+                                                     u32 arg_count)
+{
+	typedef void (*TypedNativeCall)(TSpcTypedInterp<TEventWatcher>*, u32);
+	TSpcSymbol* sym = mBinary->getSymbol(sym_index);
+
+	if (sym) {
+		TypedNativeCall call = (TypedNativeCall)sym->mNativeCall;
+		if (call) {
+			mCurrentlyExecutingBuiltinName = mBinary->getSymbolName(sym);
+			call(this, arg_count);
+			return;
+		}
+	}
+	TSpcInterp::dispatchBuiltin(sym_index, arg_count);
+}
+
 template <> void TSpcTypedBinary<TEventWatcher>::initUserBuiltin()
 {
 	// clang-format off
