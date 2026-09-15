@@ -61,7 +61,6 @@ int TMarDirector::direct()
 	u8 bVar7;
 	u32 tmp;
 	bool bVar1;
-	u32 uVar11;
 	u32 uVar4;
 	u32 uVar44;
 
@@ -142,7 +141,9 @@ int TMarDirector::direct()
 			else
 				gpObjHitCheck->clearHitNum();
 
-			uVar11 = ~uVar8;
+			u32 uVar11;
+			tmp    = ~uVar8;
+			uVar11 = tmp;
 			uVar4  = uVar11;
 			if (unk58 & 1)
 				uVar4 &= ~0x100;
