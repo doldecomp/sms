@@ -427,7 +427,9 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 			else
 				wallCode = 0;
 		}
-	} else if (wall1Passable == 0 || wall2Passable == 0) {
+	}
+
+	if (wall1Passable == 0 || wall2Passable == 0) {
 		mWallPlane = wall1 != nullptr ? wall1 : wall2;
 		s16 diff   = matan(mWallPlane->getNormal().z, mWallPlane->getNormal().x)
 		           - (mFaceAngle.y + 0x8000);
