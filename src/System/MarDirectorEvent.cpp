@@ -77,28 +77,31 @@ TBaseNPC* TMarDirector::findNearestTakeNPC()
 void TMarDirector::movement_game()
 {
 	unk84->associateNPC(nullptr);
-	if ((int)unk124 == 0)
-		return;
+	switch (unk124) {
+	case 0:
+		unk18[0]->offFlag(4);
+		if (gpMarioOriginal->isHolding())
+			return;
+		if (gpCamera->isLButtonCamera())
+			return;
 
-	unk18[0]->offFlag(0x2);
-	if (!gpMarioOriginal->isHolding() && gpCamera->isLButtonCamera())
-		return;
-
-	if (!gpCamera->isDemoCamera()) {
-		TBaseNPC* takeNpc = findNearestTakeNPC();
-		if (takeNpc != nullptr) {
-			unk84->associateNPC(takeNpc);
-		} else {
-			TBaseNPC* talkNpc = findNearestTalkNPC();
-			if (talkNpc != nullptr) {
-				unkA0 = talkNpc;
-				unk84->associateNPC(talkNpc);
-				unk18[0]->onFlag(4);
-				unk128 |= 0x1;
-				if ((unk128 & 2) && (unk18[0]->mEnabledFrameMeaning & 0x800))
-					unk126 = 1;
+		if (!gpCamera->isDemoCamera()) {
+			if (TBaseNPC* takeNpc = findNearestTakeNPC()) {
+				unk84->associateNPC(takeNpc);
+			} else {
+				TBaseNPC* talkNpc = findNearestTalkNPC();
+				if (talkNpc != nullptr) {
+					unkA0 = talkNpc;
+					unk84->associateNPC(talkNpc);
+					unk18[0]->onFlag(4);
+					unk128 |= 0x1;
+					if ((unk128 & 2)
+					    && (unk18[0]->mEnabledFrameMeaning & 0x800))
+						unk126 = 1;
+				}
 			}
 		}
+		break;
 	}
 }
 
