@@ -470,17 +470,17 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 
 static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 {
-	volatile u32 padding[3];
+	Mtx transform;
 	if (param_2 == 0) {
-		TMario* mario = gpMarioForCallBack;
-		s16* unk      = &mario->unkFC; // This feels wrong
-		if (mario == gpMarioOriginal && gpCamera->isLButtonCamera() == true
+		s16* unk = &gpMarioForCallBack->unkFC;
+		if (gpMarioForCallBack == gpMarioOriginal
+		    && gpCamera->isLButtonCamera() == true
 		    && gpMarioForCallBack->canBendBody() != 0
 		    && gpCamera->mCurrentTarget.mPitch > 0) {
-			*unk = gpCamera->mCurrentTarget.mPitch;
-			Mtx transform;
-			MsMtxSetRotRPH(transform, SHORTANGLE2DEG(-mario->unk100), 0.0f,
-			               SHORTANGLE2DEG(gpCamera->mCurrentTarget.mPitch));
+			*unk       = gpCamera->mCurrentTarget.mPitch;
+			s16 unk100 = -unk[2];
+			MsMtxSetRotRPH(transform, SHORTANGLE2DEG(unk100), 0.0f,
+			               SHORTANGLE2DEG(*unk));
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
 		} else if (gpMarioForCallBack->checkStatusType(MARIO_FLAG_HAS_FLUDD)
@@ -489,9 +489,10 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 			TNozzleBase* currentNozzle = gun->getCurrentNozzle();
 			s16 gunAngle               = currentNozzle->getGunAngle();
 			if (gunAngle > 0) {
-				Mtx gunMtx;
-				MsMtxSetRotRPH(gunMtx, 0.0f, 0.0f, SHORTANGLE2DEG(gunAngle));
-				MTXConcat(J3DSys::mCurrentMtx, gunMtx, J3DSys::mCurrentMtx);
+				MsMtxSetRotRPH(transform, 0.0f, 0.0f,
+				               SHORTANGLE2DEG(gunAngle));
+				MTXConcat(J3DSys::mCurrentMtx, transform,
+				          J3DSys::mCurrentMtx);
 				return 1;
 			}
 		} else if (gpMarioForCallBack->mAnimationId == TMario::ANIM_RUN1
@@ -509,14 +510,13 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 			// /* 0x3DC */ f32 unk3DC;
 			s16 unk3D8 = gpMarioForCallBack->mWaistRoll;
 			s16 unk3DC = gpMarioForCallBack->mWaistPitch;
-			Mtx transform;
 			MsMtxSetRotRPH(transform, SHORTANGLE2DEG(unk3D8), 0.0f,
 			               SHORTANGLE2DEG(unk3DC));
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
 		} else {
 			*unk          = 0;
-			mario->unk100 = 0;
+			gpMarioForCallBack->unk100 = 0;
 		}
 	}
 	return 1;
