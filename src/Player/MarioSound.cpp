@@ -716,8 +716,10 @@ u32 TMario::startVoice(u32 param_1)
 
 u32 TMario::startVoiceIfNoVoice(u32 param_1)
 {
-	if (SMSGetMSound()->getMarioVoiceID(0) == -1)
-		return startVoice(param_1);
+	if (SMSGetMSound()->getMarioVoiceID(0) == -1) {
+		u32 result = startVoice(param_1);
+		return result;
+	}
 
 	return 0;
 }
