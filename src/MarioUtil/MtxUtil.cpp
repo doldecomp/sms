@@ -12,7 +12,7 @@
 void MtxToQuat(MtxPtr m, Quaternion* quat)
 {
 	f32 q[4];
-	f32 s = m[0][0] + m[1][1] + m[2][2] + 1.0f;
+	f32 s = (m[0][0] + m[1][1]) - -m[2][2] + 1.0f;
 	if (s >= 1.0f) {
 		f32 root = 2.0f * MsSqrtf(s);
 		q[3]     = 0.25f * root;
