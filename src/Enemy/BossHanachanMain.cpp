@@ -5,11 +5,13 @@
 #include <Strategic/Spine.hpp>
 #include <Strategic/Binder.hpp>
 #include <Strategic/ObjModel.hpp>
+#include <Strategic/Strategy.hpp>
 #include <MoveBG/MapObjManager.hpp>
 #include <Map/MapCollisionEntry.hpp>
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
 #include <M3DUtil/SDLModel.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <MarioUtil/RandomUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
@@ -20,6 +22,7 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DMaterialAttach.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
 #include <JSystem/JUtility/JUTNameTab.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <math.h>
 
 // rogue includes needed for matching sinit & bss
@@ -101,8 +104,136 @@ void TBossHanachan::setRandomWeakBodyIndex()
 	mWeakBodyIndex = 8.0f * MsRandF();
 }
 
-// TODO: reconstruct init, throwMario_, CalcRevisionPosByRotateZ,
-// execHeadCalcAnim_, and execBodyCalcAnim_ from the original unit.
+void TBossHanachan::init(TLiveManager* manager)
+{
+	mManager = manager;
+	manager->manageActor(this);
+	mMActorKeeper = new TMActorKeeper(manager, 10);
+	mSandPillarActor = mMActorKeeper->createMActor(cSandPillarModelName, 0);
+	mCommonParams = ((TBossHanachanManager*)manager)->mCommonParams;
+	mChangeParams = ((TBossHanachanManager*)manager)->mChangeParams[0];
+	mBodyScale = 1.0f;
+	mBodyRadius = 350.0f;
+	mWallRadius = mBodyRadius;
+	mHeadHeight = 500.0f;
+	mMarchSpeed = 0.0f;
+	mGravity = 2.0f;
+	mHitPoints = 3;
+	mScaledBodyRadius = 0.0f;
+	onLiveFlag(LIVE_FLAG_UNK1000 | LIVE_FLAG_UNK8);
+	mSpine->initWith(&TNerveBossHanachanGraphWander::theNerve());
+	unk124->reset();
+	goToShortestNextGraphNode();
+	initHitActor(0x08000014, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+	for (int i = 0; i < 8; ++i) {
+		mBodies[i] = new TBossHanachanPartsBody(this, "ボスハナチャンの体");
+		mBodies[i]->unk114 = i;
+	}
+	mHead = new TBossHanachanPartsHead(this, "ボスハナチャンの頭");
+	mMActor = mHead->mMActor;
+	mCollisionPosition = mPosition;
+	JGeometry::TVec3<f32> bodyPosition = mCollisionPosition;
+	s16 angle = DEG2SHORTANGLE(mRotation.y);
+	const f32& headLength = mCommonParams->mSLHeadLength.get();
+	bodyPosition.x -= JMASSin(angle) * headLength;
+	bodyPosition.z -= JMASCos(angle) * headLength;
+	unk178 = new TSphereLink(8,
+	    JGeometry::TVec3<f32>(bodyPosition.x, bodyPosition.y, bodyPosition.z),
+	    mCommonParams->mSLBodyLength.get(), mCommonParams->mSLBodyAttackRadius.get(),
+	    0.2f, -2.0f, -3.5f, mRotation.y);
+	mHead->mPosition = mPosition;
+	mHead->mRotation = mRotation;
+	mHead->mGroundPlane = mGroundPlane;
+	for (int i = 0; i < 8; ++i) {
+		TBossHanachanPartsBody* body = mBodies[i];
+		body->mPosition = unk178->mPoints[i].mPosition;
+		body->mPreviousPosition = body->mPosition;
+		body->mOlderPosition = body->mPreviousPosition;
+		body->mRotation = mRotation;
+	}
+	setHeadAndBodyAnm(BOSS_HANACHAN_ANM_UNK0, BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
+	execHeadCalcAnim_();
+	execBodyCalcAnim_();
+	TIdxGroupObj* group = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+	mHead->initMapCollisionAndHitActor_(group);
+	for (int i = 0; i < 8; ++i) {
+		mBodies[i]->initMapCollisionAndHitActor_(group);
+		mBodies[i]->initFootHitActor_(group);
+	}
+}
+
+void TBossHanachan::throwMario_(THitActor* actor)
+{
+	JGeometry::TVec3<f32> direction = *gpMarioPos - actor->mPosition;
+	f32 speed;
+	if (direction.isZero()) {
+		direction.set(0.0f, 1.0f, 0.0f);
+		speed = mMarchSpeed * mChangeParams->mSLThrowTotalPower.get();
+	} else {
+		s16 moveAngle = CLBDegToShortAngle(MsGetRotFromZaxisY(mPreviousLinearVelocity));
+		s16 marioAngle = CLBDegToShortAngle(MsGetRotFromZaxisY(direction));
+		s16 angleDifference = moveAngle - marioAngle;
+		int absoluteDifference = CLBAbs<int>(angleDifference);
+		f32 ratio = (1.0f / 32768.0f) * absoluteDifference;
+		ratio = 1.0f - ratio;
+		speed = ratio * (mMarchSpeed * mChangeParams->mSLThrowTotalPower.get());
+		JGeometry::TVec3<f32> movement = mPreviousLinearVelocity;
+		movement.scale(ratio * mChangeParams->mSLThrowMoveDirPower.get());
+		direction += movement;
+		direction.y = mChangeParams->mSLThrowVecY.get();
+	}
+	speed = MsClamp(speed, mChangeParams->mSLThrowSpeedMin.get(),
+	                 mChangeParams->mSLThrowSpeedMax.get());
+	SMS_SendMessageToMario(mHead, 0xE);
+	SMS_SendMessageToMario(mHead, 7);
+	SMS_ThrowMario(direction, speed);
+	mHead->unk100->onWaterHitCounter();
+}
+
+static void CalcRevisionPosByRotateZ(const JGeometry::TVec3<f32>& rotation,
+                                    f32 heightScale, Vec* position)
+{
+	f32 roll = fabsf(rotation.z);
+	position->y += heightScale * roll;
+	if (roll > 90.0f) {
+		JGeometry::TVec3<f32> offset(7.0f * (roll - 90.0f), 0.0f, 0.0f);
+		if (rotation.z > 0.0f)
+			offset.x = -offset.x;
+		s16 angle = CLBDegToShortAngle(rotation.y);
+		f32 cosine = JMASCos(angle);
+		f32 sine = JMASSin(angle);
+		f32 x = offset.x * cosine + offset.z * sine;
+		offset.z = -offset.x * sine + offset.z * cosine;
+		offset.x = x;
+		position->x += offset.x;
+		position->z += offset.z;
+	}
+}
+
+void TBossHanachan::execHeadCalcAnim_()
+{
+	JGeometry::TVec3<f32> position = mPosition;
+	CalcRevisionPosByRotateZ(mRotation, mCommonParams->mSLHeadPlusYByRotateZ.get(),
+	                        &position);
+	CLBCalcRotateZXYTranslateMatrix(mHead->mMActor->getModel()->getBaseTRMtx(),
+	                               mRotation, position);
+	mHead->mMActor->calc();
+}
+
+void TBossHanachan::execBodyCalcAnim_()
+{
+	for (int i = 0; i < 8; ++i) {
+		TBossHanachanPartsBody* body = mBodies[i];
+		JGeometry::TVec3<f32> position = body->mPosition;
+		CalcRevisionPosByRotateZ(body->mRotation,
+		    mCommonParams->mSLBodyPlusYByRotateZ.get(), &position);
+		Mtx transform;
+		CLBCalcRotateZXYTranslateMatrix(transform, body->mRotation, position);
+		body->mMActor->getModel()->setBaseTRMtx(transform);
+		body->mMActor->calc();
+	}
+}
 
 void TBossHanachan::kill() { }
 
@@ -191,7 +322,7 @@ bool TBossHanachan::checkFallDecideAndSetup()
 				unk194 = 179.0f;
 			else
 				unk194 = -179.0f;
-			f32 change = CLBAbs(body->unk138.y - body->mRotation.z);
+			f32 change = CLBAbs(body->mPreviousRoll - body->mRotation.z);
 			unk198 = change * mChangeParams->mSLWaveFallDownSpeed.get();
 			f32 minimum = mChangeParams->mSLFallDecideMinSpeed.get();
 			if (unk198 < minimum)
@@ -259,8 +390,8 @@ void TBossHanachan::execSlip()
 			if (roll > 0.0f)
 				side.negate();
 			s16 angle = CLBDegToShortAngle(mRotation.y);
-			f32 sine = JMASSin(angle);
 			f32 cosine = JMASCos(angle);
+			f32 sine = JMASSin(angle);
 			f32 x = side.x * cosine + side.z * sine;
 			side.z = -side.x * sine + side.z * cosine;
 			side.x = x;

@@ -490,3 +490,63 @@ A full executable match also does not validate bodies in objects that are still 
   The main map check remains a recorded failure for ten missing symbols, with a weak-order warning and UNUSED `isCanWalk` size warning (164 versus 192).
   No source-link promotion or gameplay test.
   Measurements are in `progress/GMSE01-batch20.json`; full logs are `build/GMSE01-*-batch20.*`.
+
+## Boss initialization, history layout, and animation helpers: batch 21
+
+- Status: initialization, throwing, local rotation-position adjustment, and both UNUSED animation helpers reconstructed.
+  The three linked additions cover 2,456 bytes but are not yet exact.
+  Twenty-seven of the main unit's 32 mapped functions are now present.
+
+### Body history layout correction
+
+- Search: `rg -n 'unk120|mPreviousPosition|mOlderPosition|mPreviousRoll|mOlderRoll' src/Enemy/BossHanachan* include/Enemy/BossHanachan.hpp`.
+- The previous three-vector interpretation starting at 0x120, 0x12C, and 0x138 was wrong despite an exact zero-initializing constructor.
+  Initialization copies position into 0x124..0x12C and then into 0x130..0x138.
+  Main-update instructions copy those same vectors forward, and separately copy roll at 0x13C to 0x140 before saving the actor's current roll.
+- Correct layout: scalar 0x120 (meaning still unknown), previous position 0x124, older position 0x130, previous roll 0x13C, older roll 0x140.
+  Updated the body constructor and fall check together; all existing function scores, including the exact 260-byte constructor, are preserved.
+  The batch 20 reference to `body->unk138.y` is superseded by `body->mPreviousRoll`.
+- Rule: zero stores prove field extent and initialization order, but do not establish vector boundaries.
+  Copy sites and mixed scalar/vector operations provide stronger type evidence.
+
+### Initialization and UNUSED animation helpers
+
+- Initialization reuses manager/model-keeper, spine, graph, sphere-chain, and hit-actor APIs.
+  Body names, head name, and enemy-group name were decoded from the original Shift-JIS resource strings.
+- Reuse a single converted short yaw for both initial sphere-chain sine and cosine lookups.
+  Calling `JMASin(mRotation.y)` and `JMACos(mRotation.y)` independently repeated the conversion; saving the angle improved initialization from 95.9% to approximately 99%.
+  A reference to the head-length parameter reproduces its native address calculation; some float register/load differences remain.
+- `execHeadCalcAnim_` builds the head's base transform directly, then calls `MActor::calc`.
+  `execBodyCalcAnim_` builds a local matrix for each body, copies it to the model's base transform, and calculates animation.
+  Both call local `CalcRevisionPosByRotateZ` before constructing the transform.
+  Their out-of-line bodies inline the rotation helper, while their inlined bodies in `init` retain the original calls.
+- The rotation helper uses `fabsf` when storing the absolute roll in a float local.
+  Global `fabs` added a `frsp` instruction and inflated both UNUSED helpers by four bytes.
+  With `fabsf`, their sizes are exactly the map's 280 and 368 bytes.
+  This size agreement is not an instruction-match claim for dead-stripped code.
+
+### Reusable trig lookup order and throwing arithmetic
+
+- Declaring the cosine local before the sine local reproduces the native sine/cosine table register assignments in both `CalcRevisionPosByRotateZ` and `execSlip`.
+  Verified both callers individually; slipping improves from 99.63793% to 99.89655%, leaving only two temporary-vector stack locations.
+  The rotation helper remains 95.57692% with one load-order difference and final arithmetic registers.
+- Replacing the rotation helper's temporary-X assignment with a three-component `set` increased its frame from 0x58 to 0x60 without resolving arithmetic differences; reverted.
+- Throwing reuses `MsGetRotFromZaxisY`, rounded short-angle conversion, and `MsClamp`.
+  The native sequence measures the signed short-angle difference, takes its absolute value as an int, scales it by 1/32768, and subtracts from one before applying throw parameters.
+  Keeping the absolute result as an int preserves the 32768 result at the opposite-angle boundary.
+- Global `abs` introduced an unwanted call; `CLBCalcRatio` also remained out of line.
+  Separate normalized-difference and `1 - ratio` assignments reproduce the native unfused arithmetic better than one expression.
+  An int ternary and `CLBAbs<int>` have the same essential branch behavior here; the final source reuses the existing helper.
+  Throwing is 96.03125%, with remaining scheduling and stack differences.
+
+### Validation and next work
+
+- Full affected rebuild, `ninja changes_all`, all-function regression comparison including missing entries, and executable byte/SHA-1 checks pass with zero regressions.
+  No new exact functions, data, or source-linked objects this batch.
+- Main map failure is reduced to five missing symbols: `perform`, emitted `MsWrap<float>` and `TVec3::set<float>`, and boss destructor/thunk.
+  Strong order and linkage are correct.
+  The remaining UNUSED warning is `isCanWalk`, 164 versus 192 bytes.
+  Parts map still passes with its prior trample-predicate size warning.
+- Next: reconstruct the complete 6,108-byte `perform` using the recovered helpers and corrected history fields.
+  Its resource strings must be included before judging initialization's final string offsets.
+  Measurements and logs: `progress/GMSE01-batch21.json`, `build/GMSE01-*-batch21.*`.

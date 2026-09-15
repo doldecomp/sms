@@ -8,7 +8,35 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 20
+## Latest checkpoint: batch 21
+
+Reconstructed boss initialization, Mario throwing, the local rotation-position helper, and both UNUSED animation helpers.
+The three newly reconstructed linked routines cover **2,456 original code bytes**: initialization is **99.07692%**, throwing **96.03125%**, and rotation-position adjustment **95.57692%**.
+The animation helpers reproduce their original map sizes of 280 and 368 bytes and inline into initialization with the expected calls.
+Corrected the body's position and roll history declarations and both existing callers together; the body constructor remains exactly matching.
+A shared trig lookup ordering correction also improved slipping to **99.89655%**.
+
+This batch adds no new exact functions or source-linked objects.
+Aggregate exact code remains **1,384,464 / 3,603,748 bytes (38.417336%)**, with **8,219 / 12,904 functions** matching.
+There are still **73 source-linked objects**, covering **76,468 code bytes (2.121902%)**.
+
+### Validation and remaining work
+
+Captured `ninja baseline` at `ded6891c`, rebuilt all affected consumers, and ran `ninja changes_all`.
+The all-function comparison, including missing-function detection, found zero regressions.
+Full build, byte comparison, and expected SHA-1 checks pass for the mixed source/original-object executable.
+The parts symbol-map check passes with its prior UNUSED size warning.
+The main map check now has five missing symbols: `perform`, emitted `MsWrap<float>` and `TVec3::set<float>`, and the boss destructor/thunk.
+Existing strong definitions have correct order and linkage; its weak-order and walking-predicate size warnings remain.
+No gameplay test was performed.
+
+Next work: reconstruct the 6,108-byte `perform` routine, using the corrected position/roll histories and the recovered animation helpers.
+Remaining instruction differences include temporary stack locations, parameter loads, throwing-ratio evaluation, and the rotation helper's final arithmetic scheduling.
+The initializer's resource string offsets also depend on strings in the missing main routine.
+See [batch 21 measurements](docs/progress/GMSE01-batch21.json) and the [shared-fix catalog](docs/MATCHING_CATALOG.md).
+The original full draft remains `build/GMSE01/BossHanachanMain-batch20.c`; new validation logs are `build/GMSE01-*-batch21.*`.
+
+## Verified checkpoint: batch 20
 
 Reconstructed 21 linked functions and the UNUSED walking predicate in the previously empty `BossHanachanMain.cpp`.
 The new code covers manager/model setup, walking, slipping, damage transitions, collision binding, recovery-path selection, body-roll checks, and head movement.

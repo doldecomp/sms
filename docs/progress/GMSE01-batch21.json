@@ -1,0 +1,78 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "ded6891c",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.403404,
+    "total_code": "3603748",
+    "matched_code": "1384464",
+    "matched_code_percent": 38.417336,
+    "total_data": "641075",
+    "matched_data": "302335",
+    "matched_data_percent": 47.16063,
+    "total_functions": 12904,
+    "matched_functions": 8219,
+    "matched_functions_percent": 63.693428,
+    "complete_code": "76468",
+    "complete_code_percent": 2.121902,
+    "complete_data": "51024",
+    "complete_data_percent": 7.9591312,
+    "total_units": 732,
+    "complete_units": 73
+  },
+  "source_linked_objects": 73,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 0,
+  "new_exact_code_bytes": 0,
+  "new_matched_data_bytes": 0,
+  "new_reconstructed_code_bytes": 2456,
+  "improvements": [
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "CalcRevisionPosByRotateZ__FRCQ29JGeometry8TVec3<f>fP3Vec",
+      "before": 0,
+      "after": 95.57692,
+      "size": 208
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "execSlip__13TBossHanachanFv",
+      "before": 99.63793,
+      "after": 99.89655,
+      "size": 928
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "init__13TBossHanachanFP12TLiveManager",
+      "before": 0,
+      "after": 99.07692,
+      "size": 1352
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "throwMario___13TBossHanachanFP9THitActor",
+      "before": 0,
+      "after": 96.03125,
+      "size": 896
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_map_boss_main": false,
+    "symbol_map_boss_parts": true,
+    "gameplay_test": false
+  },
+  "notes": [
+    "Reconstructed boss initialization, Mario throwing, the local rotation-position helper, and both UNUSED animation helpers.",
+    "Corrected body fields: scalar at 0x120, position history at 0x124/0x130, and roll history at 0x13C/0x140. Updated constructor and fall caller together; constructor remains 100% matching.",
+    "The animation helpers reproduce original UNUSED sizes of 280 and 368 bytes and inline into initialization with the original rotation-helper calls.",
+    "Cosine-before-sine local declaration order fixes trig register allocation in both rotation-position and slipping routines; slipping improves to 99.89655%.",
+    "No new exact functions or source-linked objects in this batch. The new reconstructed linked routines total 2456 bytes and still need instruction matching.",
+    "Main map check now has five missing symbols: perform, MsWrap<float>, TVec3::set<float>, and boss destructor/thunk; strong order and linkage are correct.",
+    "Full executable verification covers the mixed source/original-object build; no gameplay test."
+  ]
+}

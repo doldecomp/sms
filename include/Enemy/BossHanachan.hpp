@@ -128,9 +128,11 @@ public:
 public:
 	/* 0x114 */ s32 unk114;
 	/* 0x118 */ TFootHitActor* mFeet[2];
-	/* 0x120 */ JGeometry::TVec3<f32> unk120;
-	/* 0x12C */ JGeometry::TVec3<f32> unk12C;
-	/* 0x138 */ JGeometry::TVec3<f32> unk138;
+	/* 0x120 */ f32 unk120;
+	/* 0x124 */ JGeometry::TVec3<f32> mPreviousPosition;
+	/* 0x130 */ JGeometry::TVec3<f32> mOlderPosition;
+	/* 0x13C */ f32 mPreviousRoll;
+	/* 0x140 */ f32 mOlderRoll;
 	/* 0x144 */ f32 unk144;
 	/* 0x148 */ f32 unk148;
 	/* 0x14C */ MtxPtr mLegMtx[2];
