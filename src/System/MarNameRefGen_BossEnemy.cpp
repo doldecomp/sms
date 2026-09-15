@@ -1,3 +1,13 @@
+static const char cBossEnemyEMario[] = "EMario";
+static const char cBossEnemyUnknown[] = "?";
+static const float cBossEnemyZero[] = { 0.0f };
+static const char cBossEnemyBossEel[] = "BossEel";
+static const char cBossEnemyKoopa[] = "Koopa";
+static const char cBossEnemyKoopaName[] = "クッパ";
+static const char cBossEnemyKoopaJr[] = "KoopaJr";
+static const char cBossEnemyOilBall[] = "OilBall";
+static const char cBossEnemyOilBallName[] = "油ダマ";
+
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
@@ -100,7 +110,7 @@ static const char* bossEnemyNames[] = {
 JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 {
 
-	if (strcmp(name, "EMario") == 0)
+	if (strcmp(name, cBossEnemyEMario) == 0)
 		return new TEMario("マリオモドキ");
 
 	// TODO:
@@ -123,7 +133,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	// if (strcmp(name, "SleepBossHanachanManager") == 0)
 	// 	return new TDemoBossHanachanManager("?");
 
-	if (strcmp(name, "BossEel") == 0)
+	if (strcmp(name, cBossEnemyBossEel) == 0)
 		return new TBossEel(name);
 
 	if (strcmp(name, "BossEelManager") == 0)
@@ -250,8 +260,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	// if ( strcmp( name, "BubbleManager" ) == 0 )
 	//     return new TBubbleManager("バブルマネージャー");
 
-	if (strcmp(name, "OilBall") == 0)
-		return new TBEelTears("油ダマ");
+	if (strcmp(name, cBossEnemyOilBall) == 0)
+		return new TBEelTears(cBossEnemyOilBallName);
 
 	if (strcmp(name, "BossManta") == 0)
 		return new TBossManta("ボスマンタ");
