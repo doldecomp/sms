@@ -115,11 +115,12 @@ void TMapObjGeneral::thrown()
 	unk138        = 0;
 	mHolder       = nullptr;
 
-	mVelocity.set(JMASSin((s32)*gpMarioAngleY) * *gpMarioThrowPower
+	s16 angle = *gpMarioAngleY;
+	mVelocity.set(JMASSin((u16)angle) * *gpMarioThrowPower
 	                      * mMapObjData->mPhysical->unk4->unk2C
 	                  + (mNormalThrowSpeedRate * *gpMarioSpeedX),
 	              mMapObjData->mPhysical->unk4->unk30,
-	              JMASCos((s32)*gpMarioAngleY) * *gpMarioThrowPower
+	              JMASCos(angle) * *gpMarioThrowPower
 	                      * mMapObjData->mPhysical->unk4->unk2C
 	                  + (mNormalThrowSpeedRate * *gpMarioSpeedZ));
 
@@ -128,7 +129,7 @@ void TMapObjGeneral::thrown()
 	mPosition.add(vel);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 	removeMapCollision();
-	offLiveFlag(LIVE_FLAG_DEAD);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 	startAnim(5);
 	startSound(5);
 	mState = STATE_NORMAL;
