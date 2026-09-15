@@ -127,7 +127,8 @@ static u16 GetAtanTable(f32 param_1, f32 param_2)
 	if (param_1 == 0)
 		return atntable[0];
 
-	return atntable[(int)(param_2 * __fres(param_1) * 1024.0f + 0.5f)];
+	f32 tmp = __fres(param_1);
+	return atntable[(int)(param_2 * tmp * 1024.0f + 0.5f)];
 }
 
 s16 matan(f32 param_1, f32 param_2)
