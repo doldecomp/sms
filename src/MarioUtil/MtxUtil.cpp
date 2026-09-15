@@ -369,23 +369,23 @@ void SMS_MakeJointsToArc(J3DModel* model, const JGeometry::TVec3<f32>& start,
 
 	JGeometry::TVec3<f32> dir = end - start;
 	f32 mag                   = VECMag(dir);
-	dir.scale(1.0f / mag);
+	f32 invMag                = 1.0f / mag;
+	dir.scale(invMag);
 
 	JGeometry::TVec3<f32> up = upDir;
 	up.normalize();
 
-	int jointNum = model->getModelData()->getJointNum();
+	u16 jointNum = model->getModelData()->getJointNum();
 	for (u16 i = 0; i < jointNum; ++i) {
 		f32 t = (f32)i / (f32)(jointNum - 1);
 
-		JGeometry::TVec3<f32> a = dir * t;
-		JGeometry::TVec3<f32> b = up * (1.0f - t);
-		JGeometry::TVec3<f32> c = b + a;
+		JGeometry::TVec3<f32> c = up * (1.0f - t) + dir * t;
 		c.normalize();
 
 		MtxPtr jm = model->getAnmMtx(i);
 
-		f32 dist = (f32)i * (mag / (f32)(jointNum - 1));
+		f32 jointDivisor = (f32)(jointNum - 1);
+		f32 dist         = (f32)i * (mag / jointDivisor);
 
 		JGeometry::TVec3<f32> zAxis(jm[0][2], jm[1][2], jm[2][2]);
 		JGeometry::TVec3<f32> side;
