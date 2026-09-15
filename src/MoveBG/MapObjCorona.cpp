@@ -1,7 +1,14 @@
 #include "MoveBG/MapObjCorona.hpp"
 #include "MoveBG/MapObjBase.hpp"
+#include <System/Particles.hpp>
 
-void TBathtub::loadAfter() { }
+void TBathtub::loadAfter()
+{
+	SMS_LoadParticle("/scene/map/map/ms_lkp_yuge1.jpa", 0x1be);
+	SMS_LoadParticle("/scene/map/map/ms_kp_funsui.jpa", 0x1bf);
+	SMS_LoadParticle("/scene/map/map/ms_kp_break_a.jpa", 0xf6);
+	SMS_LoadParticle("/scene/map/map/ms_kp_break_b.jpa", 0xf7);
+}
 
 void TBathtub::hipdrop(const JGeometry::TVec3<f32>&) { }
 
