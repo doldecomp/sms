@@ -211,8 +211,8 @@ static int GessoBodyCallback(J3DNode* param_1, int param_2)
 		f32 angle = MsClamp(gpCurGesso->mBodyTrackingAngle - 90.0f, -maxAngle,
 		                    maxAngle);
 
-		f32 s = JMASin(angle);
-		f32 c = JMACos(angle);
+		f32 s = MsSin(angle);
+		f32 c = MsCos(angle);
 
 		Mtx local_74;
 		local_74[0][0] = 1.0f;
@@ -687,8 +687,8 @@ void TGesso::calcRootMatrix()
 		MsMtxSetXYZRPH(mA, mPosition.x, mPosition.y + unk1D0, mPosition.z,
 		               mRotation.x, mRotation.y, mRotation.z);
 
-		f32 s = JMASin(mStayYaw);
-		f32 c = JMACos(mStayYaw);
+		f32 s = MsSin(mStayYaw);
+		f32 c = MsCos(mStayYaw);
 		Mtx local_68;
 
 		local_68[0][0] = c;

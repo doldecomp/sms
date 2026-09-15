@@ -263,8 +263,8 @@ void TBGKMtxCalc::calc(u16 param_1)
 			}
 		}
 
-		f32 s = JMASin(mOwner->unk180);
-		f32 c = JMACos(mOwner->unk180);
+		f32 s = MsSin(mOwner->unk180);
+		f32 c = MsCos(mOwner->unk180);
 		Mtx rot;
 		rot[0][0] = c;
 		rot[0][1] = 0.0f;

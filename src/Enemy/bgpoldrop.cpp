@@ -96,8 +96,8 @@ void TBGPolDrop::perform(u32 cue, JDrama::TGraphics* graphics)
 		MtxPtr m = unk50->getModel()->getBaseTRMtx();
 		if (unk58 == 1) {
 			Mtx local_60;
-			f32 s          = JMASin(-90.0f);
-			f32 c          = JMACos(-90.0f);
+			f32 s          = MsSin(-90.0f);
+			f32 c          = MsCos(-90.0f);
 			local_60[0][0] = 1.0;
 			local_60[0][1] = 0.0;
 			local_60[0][2] = 0.0;

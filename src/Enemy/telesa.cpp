@@ -338,8 +338,8 @@ void TTelesa::setBehavior()
 		mFlyBobPhase = 0.0f;
 
 	f32 phase      = (mFlyBobPhase * 360.0f) / mFlyBobFrequency;
-	mFlyBobOffsetY = mFlyBobAmplitude * JMASin(phase);
-	f32 newRotX    = 10.0f - mFlyAngMax * JMACos(phase);
+	mFlyBobOffsetY = mFlyBobAmplitude * MsSin(phase);
+	f32 newRotX    = 10.0f - mFlyAngMax * MsCos(phase);
 	if (abs(newRotX - mRotation.x) > 5.0f)
 		mRotation.x == -newRotX; // HUH???
 	else
@@ -774,8 +774,8 @@ void TTelesa::setFirstAttackPoint()
 	JGeometry::TVec3<f32> pos = mPosition;
 
 	// TODO: probably done via TRotation calls? Why is is all so inlined ;(
-	f32 s = JMASin(mRotation.y);
-	f32 c = JMACos(mRotation.y);
+	f32 s = MsSin(mRotation.y);
+	f32 c = MsCos(mRotation.y);
 
 	pos.x += c * 1000.0f;
 	pos.z += s * 1000.0f;

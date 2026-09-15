@@ -225,13 +225,13 @@ JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>& param_1)
 
 void MsMtxSetRotRPH(MtxPtr param_1, f32 r, f32 p, f32 h)
 {
-	f32 sr = JMASin(r);
-	f32 sp = JMASin(p);
-	f32 sh = JMASin(h);
+	f32 sr = MsSin(r);
+	f32 sp = MsSin(p);
+	f32 sh = MsSin(h);
 
-	f32 cr = JMACos(r);
-	f32 cp = JMACos(p);
-	f32 ch = JMACos(h);
+	f32 cr = MsCos(r);
+	f32 cp = MsCos(p);
+	f32 ch = MsCos(h);
 
 	char trash[0x4]; // TODO: skill issue
 
@@ -286,13 +286,13 @@ void MsMtxSetXYZRPH(MtxPtr param_1, f32 x, f32 y, f32 z, s16 r, s16 p, s16 h)
 void MsMtxSetTRS(MtxPtr param_1, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h,
                  f32 sx, f32 sy, f32 sz)
 {
-	f32 sr = JMASin(r);
-	f32 sp = JMASin(p);
-	f32 sh = JMASin(h);
+	f32 sr = MsSin(r);
+	f32 sp = MsSin(p);
+	f32 sh = MsSin(h);
 
-	f32 cr = JMACos(r);
-	f32 cp = JMACos(p);
-	f32 ch = JMACos(h);
+	f32 cr = MsCos(r);
+	f32 cp = MsCos(p);
+	f32 ch = MsCos(h);
 
 	char trash[0x8]; // TODO: skill issue
 
