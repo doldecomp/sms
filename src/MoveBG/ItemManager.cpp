@@ -69,7 +69,7 @@ TShine* TItemManager::makeShineAppearWithDemoOffset(const char* shine_name,
                                                     f32 offset_x, f32 offset_y,
                                                     f32 offset_z)
 {
-	TShine* shine = JDrama::TNameRefGen::search<TShine>(shine_name);
+	TShine* shine = (TShine*)JDrama::TNameRefGen::search2(shine_name);
 	shine->mPosition.x += offset_x;
 	shine->mPosition.y += offset_y;
 	shine->mPosition.z += offset_z;
