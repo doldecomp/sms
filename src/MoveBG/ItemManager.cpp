@@ -58,7 +58,7 @@ TShine* TItemManager::makeShineAppearWithDemo(const char* shine_name,
                                               const char* demo_name, f32 x,
                                               f32 y, f32 z)
 {
-	TShine* shine = JDrama::TNameRefGen::search<TShine>(shine_name);
+	TShine* shine = (TShine*)JDrama::TNameRefGen::search2(shine_name);
 	shine->mPosition.set(x, y, z);
 	shine->appearWithDemo(demo_name);
 	return shine;
