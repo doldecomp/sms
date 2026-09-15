@@ -413,9 +413,13 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	u32 nextStatus = status;
 
 	unk2BC = mPosition.y;
-	if (mSlopeAngle > mDeParams.mRocketRotSp.get() / 2)
-		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
-		                   mDirtyParams.mPolSizeJump.get());
+	if (mFootPrintTimer > mDeParams.mFootPrintTimerMax.get() / 2) {
+		f32 size = mDirtyParams.mPolSizeJump.get();
+		f32 z = mPosition.z;
+		f32 y = mPosition.y;
+		f32 x = mPosition.x;
+		gpPollution->stamp(1, x, y, z, size);
+	}
 
 	switch (status) {
 	case MARIO_STATUS_JUMP:
@@ -643,8 +647,8 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	}
 
 	if (isSinking()) {
-		f32 scale = ((mGraffitoParams.mSinkJumpRateMax.get()
-		              - mGraffitoParams.mSinkJumpRateMin.get())
+		f32 sinkJumpRateMax = mGraffitoParams.mSinkJumpRateMax.get();
+		f32 scale = ((sinkJumpRateMax - mGraffitoParams.mSinkJumpRateMin.get())
 		             * (1.0f - (mSinkTimer / mGraffitoParams.mSinkTime.get())))
 		            + mGraffitoParams.mSinkJumpRateMin.get();
 
