@@ -98,7 +98,7 @@ void TMario::checkDescent()
 	if (mHeldObject == nullptr && !onYoshi())
 		active = true;
 
-	if (active != true)
+	if ((s32)active != true)
 		return;
 
 	if (!(mForwardVel < descentSp))
