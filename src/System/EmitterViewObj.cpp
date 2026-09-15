@@ -555,7 +555,7 @@ void TMarioParticleManager::emitTry(s32 param_1,
 					    &emitterCallBackBindToSRTMtxPtr);
 				else
 					param_2->mEmitter->setEmitterCallBackPtr(
-					    &emitterCallBackBindToMtxPtr);
+					    &emitterCallBackBindToSRTMtxPtr);
 			}
 		} else {
 			param_2->mEmitter = unk3B8->createSimpleEmitterID(
