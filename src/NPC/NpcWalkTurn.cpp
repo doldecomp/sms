@@ -9,7 +9,7 @@ bool TBaseNPC::isCanWalk() const
 {
 	bool result = true;
 	// TODO: TVec3::sub should use set internally I guess?
-	if ((unkF4.getPoint() - mPosition).squared() < CLBSquared(2.5625f))
+	if ((unkF4.getPoint() - mPosition).squared() < CLBSquared<f32>(10.0f))
 		result = false;
 	return result;
 }
