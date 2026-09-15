@@ -505,25 +505,26 @@ void TBaseNPC::moveObject()
 		mCoinCtrl->updateCoin();
 
 	if (mBalloonCtrl != nullptr) {
-		int prev = mBalloonCtrl->unk0;
-		if (!gpMarDirector->isTalkOrDemoModeNow()
-		    && mBalloonCtrl->updateBalloon()) {
-			if (mHolder != nullptr) {
-				switch (prev) {
-				case 0xE004F:
-					mBalloonCtrl->setNextMessage(0xE0051, 0x1C20);
-					break;
-				case 0xE0050:
-					break;
-				case 0xE0051:
-					mBalloonCtrl->setNextMessage(0xE004F, 0x1C20);
-					break;
-				}
-			} else {
-				switch (prev) {
-				case 0xE0050:
-					mBalloonCtrl->setNextMessage(0xE0050, 0x1C20);
-					break;
+		if (!gpMarDirector->isTalkOrDemoModeNow()) {
+			int prev = mBalloonCtrl->unk0;
+			if (mBalloonCtrl->updateBalloon()) {
+				if (mHolder != nullptr) {
+					switch (prev) {
+					case 0xE004F:
+						mBalloonCtrl->setNextMessage(0xE0051, 0x1C20);
+						break;
+					case 0xE0050:
+						break;
+					case 0xE0051:
+						mBalloonCtrl->setNextMessage(0xE004F, 0x1C20);
+						break;
+					}
+				} else {
+					switch (prev) {
+					case 0xE0050:
+						mBalloonCtrl->setNextMessage(0xE0050, 0x1C20);
+						break;
+					}
 				}
 			}
 		}
