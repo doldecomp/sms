@@ -712,8 +712,8 @@ void MSStageDistFade::proc()
 	}
 
 	// TODO: inline?
-	u32 r29 = unk14;
 	u32 r30 = unk4;
+	u32 r29 = unk14;
 
 	Vec local_68 = gpMSound->mAudioCameras->toCamSpace(*unk10);
 
