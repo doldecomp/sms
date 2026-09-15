@@ -1,53 +1,27 @@
 name: lint
 
-on:
-  pull_request:
-    paths:
-      - '**.hpp'
-      - '**.cpp'
-      - '**.h'
-      - '**.c'
-      - '**.clang-format'
-      - '**.clang-tidy'
-      - 'tools/check-format.py'
-      - '.github/workflows/lint.yml'
-  push:
-    paths:
-      - '**.hpp'
-      - '**.cpp'
-      - '**.h'
-      - '**.c'
-      - '**.clang-format'
-      - '**.clang-tidy'
-      - 'tools/check-format.py'
-      - '.github/workflows/lint.yml'
+on: [push, pull_request]
 
 permissions:
   contents: read
 
 jobs:
-  check-format-and-tidy:
+  format:
     name: clang-format
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
 
-    - name: Install clang-format
+    - name: Check formatting in all tracked sources
+      shell: bash
       run: |
-        python3 -m venv "$RUNNER_TEMP/clang-format"
-        "$RUNNER_TEMP/clang-format/bin/pip" install clang-format==21.1.8
+        git ls-files -z -- '*.c' '*.C' '*.cc' '*.cpp' '*.cxx' '*.c++' \
+          '*.h' '*.H' '*.hh' '*.hpp' '*.hxx' '*.h++' \
+          '*.ino' '*.pde' '*.proto' '*.cu' |
+          docker run --rm -i \
+            --volume "$GITHUB_WORKSPACE:/work:ro" --workdir /work \
+            --entrypoint /usr/bin/xargs ghcr.io/jidicula/clang-format:21 \
+            -0 -r /usr/bin/clang-format --dry-run --Werror \
+            --style=file --fallback-style=none --
 
-    - name: Check formatting
-      env:
-        BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
-      run: |
-        args=()
-        if [ -n "$BASE" ] && [ "$BASE" != "0000000000000000000000000000000000000000" ]; then
-          args+=(--base "$BASE")
-        fi
-        python3 tools/check-format.py "${args[@]}" \
-          --clang-format "$RUNNER_TEMP/clang-format/bin/clang-format"
-
-    # clang-tidy is not currently configured.
+    # clang-tidy is not currently configured. This check never edits files.

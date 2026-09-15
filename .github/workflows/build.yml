@@ -26,8 +26,8 @@ jobs:
     - name: Git config
       run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-    - name: Test CI validation tools
-      run: python -m unittest discover -s tools -p test_ci_checks.py
+    - name: Test symbol validation
+      run: python -m unittest discover -s tools -p test_symbol_validation.py
 
     # Determine which .cpp files changed (PR: vs base branch; push: vs prev commit)
     - name: Changed .cpp files

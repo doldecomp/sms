@@ -1,10 +1,7 @@
 import contextlib
 import importlib.util
 import io
-import os
 from pathlib import Path
-import subprocess
-import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -19,7 +16,6 @@ def load(name):
 
 symbols = load("validate-symbol-order")
 driver = load("check-changed-symbol-order")
-formatting = load("check-format")
 
 
 class SymbolErrorsTest(unittest.TestCase):
@@ -70,48 +66,6 @@ class DriverTest(unittest.TestCase):
         }), patch.object(driver.os.path, "exists", return_value=False), \
                 contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(driver.main(["src/a.cpp"]), 1)
-
-
-class FormatSelectionTest(unittest.TestCase):
-    def setUp(self):
-        self.tmp = tempfile.TemporaryDirectory()
-        self.previous = Path.cwd()
-        os.chdir(self.tmp.name)
-        self.addCleanup(os.chdir, self.previous)
-        self.addCleanup(self.tmp.cleanup)
-        self.git("init", "-q")
-        self.git("config", "user.email", "test@example.invalid")
-        self.git("config", "user.name", "CI test")
-        for name in ["changed file.cpp", "unchanged.hpp", "deleted.cpp", "notes.txt"]:
-            Path(name).write_text("before\n")
-        self.commit()
-        self.base = self.git("rev-parse", "HEAD").strip()
-
-    def git(self, *args):
-        return subprocess.check_output(["git", *args], text=True)
-
-    def commit(self):
-        self.git("add", "-A")
-        self.git("commit", "-qm", "fixture")
-
-    def test_changed_sources_only_with_spaces_and_deleted_files(self):
-        Path("changed file.cpp").write_text("after\n")
-        Path("notes.txt").write_text("after\n")
-        Path("deleted.cpp").unlink()
-        Path("new.cpp").write_text("new\n")
-        self.commit()
-        self.assertEqual(sorted(formatting.select_files(self.base)),
-                         ["changed file.cpp", "new.cpp"])
-
-    def test_format_configuration_change_checks_all_sources(self):
-        Path(".clang-format").write_text("BasedOnStyle: WebKit\n")
-        self.commit()
-        self.assertEqual(set(formatting.select_files(self.base)),
-                         {"changed file.cpp", "unchanged.hpp", "deleted.cpp"})
-
-    def test_invalid_base_fails(self):
-        with self.assertRaises(subprocess.CalledProcessError):
-            formatting.select_files("nonexistent")
 
 
 if __name__ == "__main__":
