@@ -319,7 +319,8 @@ def main() -> None:
                          "no known unit needs this)")
     ap.add_argument("--baseline-object",
                     help="freshly built base-revision object; fail only on new "
-                         "strict errors while reporting inherited errors")
+                         "strict errors while reporting inherited errors; "
+                         "objects without function symbols grant no exemptions")
     ap.add_argument("-v", "--verbose", action="store_true",
                     help="list the object-only symbols not in the map "
                          "(by default only their count is shown)")
@@ -470,11 +471,16 @@ def main() -> None:
     print("-" * 78)
     if baseline_syms is not None:
         current_errors = validation_errors(map_syms, obj_syms, map_binding)
-        baseline_errors = validation_errors(map_syms, baseline_syms, map_binding)
+        # An unimplemented TU must pass strict validation when work starts on it.
+        # Its empty object must not exempt every missing function in the map.
+        baseline_errors = (validation_errors(map_syms, baseline_syms, map_binding)
+                           if baseline_syms else set())
         introduced = current_errors - baseline_errors
         inherited = current_errors & baseline_errors
         resolved = baseline_errors - current_errors
         print(f"Baseline object: {args.baseline_object}")
+        if not baseline_syms:
+            print("Baseline has no function symbols; no inherited errors exempted.")
         print(f"Symbol regressions: {len(introduced)} new, "
               f"{len(inherited)} inherited, {len(resolved)} resolved.")
         for error in sorted(introduced):
