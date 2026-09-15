@@ -287,7 +287,8 @@ static void evSetTalkMsgID(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->verifyArgNum(2, &arg_num);
 	int p1 = TSpcSlice(interp->pop()).getDataInt();
 	int p2 = TSpcSlice(interp->pop()).getDataInt();
-	gpTalk2D->setMessageID(p2, p1);
+	TTalk2D2* talk = gpTalk2D;
+	talk->setMessageID(p2, p1);
 	interp->push();
 }
 
