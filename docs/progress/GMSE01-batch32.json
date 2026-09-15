@@ -1,0 +1,94 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "08c838ba",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.551094,
+    "total_code": "3603748",
+    "matched_code": "1386740",
+    "matched_code_percent": 38.48049,
+    "total_data": "641075",
+    "matched_data": "303847",
+    "matched_data_percent": 47.39648,
+    "total_functions": 12904,
+    "matched_functions": 8230,
+    "matched_functions_percent": 63.778675,
+    "complete_code": "80800",
+    "complete_code_percent": 2.24211,
+    "complete_data": "51636",
+    "complete_data_percent": 8.054595,
+    "total_units": 732,
+    "complete_units": 76
+  },
+  "game_measures": {
+    "fuzzy_match_percent": 69.40137,
+    "total_code": "2847660",
+    "matched_code": "708092",
+    "matched_code_percent": 24.86575,
+    "total_data": "558300",
+    "matched_data": "241872",
+    "matched_data_percent": 43.322945,
+    "total_functions": 9012,
+    "matched_functions": 4433,
+    "matched_functions_percent": 49.18997,
+    "complete_code": "80800",
+    "complete_code_percent": 2.8374174,
+    "complete_data": "51636",
+    "complete_data_percent": 9.248791,
+    "total_units": 385,
+    "complete_units": 76
+  },
+  "source_linked_objects": 76,
+  "new_source_linked_objects": [],
+  "new_source_linked_code_bytes": 0,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "unexplained_function_regressions": [],
+  "new_exact_functions": 0,
+  "new_exact_code_bytes": 0,
+  "new_matched_data_bytes": 0,
+  "improvements": [
+    {
+      "unit": "mario/Camera/lensflare",
+      "function": "perform__10TLensFlareFUlPQ26JDrama9TGraphics",
+      "before": 76.756615,
+      "after": 77.309525,
+      "size": 1512
+    },
+    {
+      "unit": "mario/Camera/lensglow",
+      "function": "perform__9TLensGlowFUlPQ26JDrama9TGraphics",
+      "before": 98.665665,
+      "after": 99.00301,
+      "size": 1328
+    },
+    {
+      "unit": "mario/Camera/sunmgr",
+      "function": "perform__7TSunMgrFUlPQ26JDrama9TGraphics",
+      "before": 98.82243,
+      "after": 99.915886,
+      "size": 428
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "all_functions_present": true,
+    "no_exact_function_regressions": true,
+    "symbol_map_sunmgr": true,
+    "symbol_map_lensglow": true,
+    "symbol_map_sunmodel": false,
+    "symbol_map_lensflare": false,
+    "map_failures_reproduced_at_baseline": true,
+    "gameplay_test": false
+  },
+  "notes": [
+    "No file completed or newly exact function; source-linked coverage is unchanged.",
+    "A shared first-position reference improves the sunmgr, lensflare and lensglow bounds-check callers.",
+    "Sunmodel uses a direct member check with a named bound to preserve its original bounds instructions; its frame is 0xC8 versus baseline 0xD0 and original 0xE0, while its comparison score is unchanged.",
+    "Sunmodel and lensflare retain pre-existing map-definition/linkage failures; reproduced with baseline sources.",
+    "CameraSecureView, sunmgr load and egggen trials reverted; deferred string-boundary and CameraInbetween evidence recorded."
+  ]
+}

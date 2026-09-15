@@ -35,11 +35,12 @@ public:
 	u8 getUnk191() { return unk191; }
 	f32 getUnk194() { return unk194; }
 
-	// TODO: incorrect! Maybe a cameralib inline or even TVec3?
+	// Fabricated name; external callers retain the first position's address.
 	bool isInBounds(f32 bounds)
 	{
-		return -bounds <= unkF8[0].x && unkF8[0].x <= bounds
-		               && -bounds <= unkF8[0].y && unkF8[0].y <= bounds
+		const JGeometry::TVec2<f32>& position = unkF8[0];
+		return -bounds <= position.x && position.x <= bounds
+		               && -bounds <= position.y && position.y <= bounds
 		           ? true
 		           : false;
 	}

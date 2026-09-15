@@ -827,3 +827,20 @@ A full executable match also does not validate bodies in objects that are still 
 - PollutionManager retains register/frame differences and two four-byte UNUSED stubs; no edits.
 - See the [batch 31 audit](progress/GMSE01-closure-audit-batch31.md) for exact sizes and rejected trials.
   Full build, all 12,904 function checks, map, DOL byte comparison and SHA-1 pass with zero regressions.
+
+## Sun bounds-check callers and closure audit, batch 32
+
+- Search `isInBounds` in game camera sources before changing the shared SunModel helper.
+  External sunmgr, lensglow and both lensflare sites retain a pointer to the first position; a const reference recovers the original lfsu/offset-4 accesses.
+  Three whole-function similarity scores improve; none becomes exact.
+- The sunmodel self-call is an exception: native code addresses members directly.
+  A direct expression with a named bound preserves its bounds instructions and baseline similarity; its frame remains unresolved and is eight bytes smaller than baseline.
+  A reference adds an address calculation/reload; omitting the named bound removes a required negation.
+- CameraSecureView accessor/ABS/predicate trials and sunmgr stream-chain/array/loop trials do not close their files and were reverted.
+  egggen's vector squared method removes the required SDK call; named Yoshi/result/accessor locals only partially shift its frame and were reverted.
+- The DOL confirms eight-byte string-label discrepancies throughout MovieDirector's strings through the light-manager name, not just at the two deferred file endpoints.
+  Do not repeat the limited boundary-only relink trial from batch 6.
+- Read the [batch 32 audit](progress/GMSE01-closure-audit-batch32.md) before retries.
+  Zero similarity regressions across 12,904 functions; full DOL byte comparison and SHA-1 pass.
+  sunmodel/lensflare map failures were reproduced at baseline and remain closure blockers.
+  Source linking remains 76 files / 80,800 game-code bytes; prioritize file completion over more partial camera work.

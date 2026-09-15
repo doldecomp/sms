@@ -8,7 +8,27 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 31 — MapCollisionEntry close to completion
+## Latest checkpoint: batch 32 — completion queue and shared bounds check
+
+Reread the plan and reaffirmed its file-completion order.
+One shared bounds-check change improves sunmgr, lensglow and lensflare; sunmodel requires a direct-member exception.
+**No file completed, no newly exact function, and no new source-linked bytes.**
+Recorded CameraSecureView, sunmgr-load and egggen trials; revisited CameraInbetween and the deferred string-boundary evidence.
+
+| Coverage | Matched code | Source-linked code |
+| --- | ---: | ---: |
+| Game code | **24.86575%** | **2.8374174%** |
+| Aggregate | **38.48049%** | **2.24211%** |
+
+Source linking remains **76 game files / 80,800 code bytes**.
+Baseline at `08c838ba`; full build, changes_all, all 12,904 function comparisons, DOL byte comparison and expected SHA-1 pass.
+Zero similarity regressions; sunmgr and lensglow pass map checks.
+sunmodel and lensflare retain map failures reproduced with the baseline sources; no gameplay test.
+The regenerated queue remains 104 authorized small game files / 94,780 unmatched bytes.
+See the [batch 32 audit](docs/progress/GMSE01-closure-audit-batch32.md) and [measurements](docs/progress/GMSE01-batch32.json).
+Continue with file-closing hypotheses in the plan's order, consulting recorded blockers before retries.
+
+## Verified checkpoint: batch 31 — MapCollisionEntry close to completion
 
 Matched **three MapCollisionEntry functions / 608 code bytes** and restored its missing 116-byte UNUSED base constructor definition.
 The file now passes every map check and has one nonmatching runtime function: its 168-byte initializer retains an eight-byte stack-frame difference.
