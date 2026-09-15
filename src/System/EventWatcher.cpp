@@ -242,7 +242,7 @@ static void evGetTalkNPC(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 
 	TBaseNPC* npc = SMSGetMarDirector()->getTalkingNPC();
 
-	interp->push(!npc ? 0 : (int)npc);
+	interp->push(TSpcSlice(npc ? (int)npc : 0));
 }
 
 static void evGetTalkNPCName(TSpcTypedInterp<TEventWatcher>* interp,
