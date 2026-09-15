@@ -33,10 +33,12 @@ void TBaseNPC::execWalk(bool param_1)
 		// TODO: vector math is borked
 		JGeometry::TVec3<f32> local_54 = unkF4.getPoint();
 		local_54 -= mPosition;
-		JGeometry::TVec3<f32> copy;
-		copy.set(local_54);
+		JGeometry::TVec3<f32> copy = local_54;
+		JGeometry::TVec3<f32> copy2 = copy;
+		JGeometry::TVec3<f32> copy3;
+		copy3.set(copy2);
 
-		f32 angle = MsGetRotFromZaxisY(copy);
+		f32 angle = MsGetRotFromZaxisY(copy3);
 		if (MsWrap(mRotation.y - angle, 0.0f, 360.0f) < 0.001f)
 			offUnk1DA(UNK1DA_FLAG_UNK1);
 
