@@ -449,7 +449,8 @@ void SMS_ResetDamageFogEffect(J3DModelData* param_1)
 	for (u16 i = 0; i < param_1->getMaterialNum(); i++) {
 		J3DFog* fog
 		    = param_1->getMaterialNodePointer(i)->getPEBlock()->getFog();
-		fog->mNearZ  = gpCamera->getNear();
+		f32 nearZ    = gpCamera->getNear();
+		fog->mNearZ  = nearZ;
 		fog->mFarZ   = gpCamera->getFar();
 		fog->mEndZ   = fog->mFarZ;
 		fog->mStartZ = fog->mEndZ - 1.0f;
