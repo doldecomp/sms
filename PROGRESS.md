@@ -7,7 +7,40 @@ The full decompilation is **not complete**.
 The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 
-## Latest checkpoint: batch 6
+## Latest checkpoint: batch 7
+
+Reconstructed `Enemy/BossHanachanSound.cpp` from the original executable's 38-entry animation sound table.
+The table getter and destructor adjustment thunk now match exactly, and the entire object is linked from source.
+Added every mapped `TBossHanachanPartsBase` method declaration, including UNUSED methods, with inheritance checked against its constructor and virtual table.
+Constructor and animation-setting instructions establish the current/previous animation fields; collision initialization identifies the water hit actor, moving collision, and joint matrix pointers.
+The animation enums remain incomplete, and the motion-controller pointer remains opaque.
+
+There are now **72 source-linked objects**, covering **73,452 / 3,603,748 code bytes (2.0382113%)**.
+This batch adds **20 exactly matched code bytes, two matching functions/helpers, and 1,440 source-linked data bytes**.
+Aggregate exact code is **1,367,776 bytes (37.95426%)**, with **8,137 matching functions**.
+Aggregate matched data increased by 1,032 bytes to 297,687 bytes.
+
+### Validation
+
+Captured `ninja baseline` at `6718c96a`, rebuilt, and ran `ninja changes_all`.
+Every reported function was compared against the baseline: zero regressions.
+The sound object's map presence, ordering, and linkage checks pass.
+The final source-linked executable passes both the expected SHA-1 and a full byte comparison against the US original.
+No gameplay test was performed.
+
+The imported virtual-table symbol includes four alignment bytes after its 252-byte C++ table.
+This makes the detailed object comparison show 99.6% for that symbol even though every virtual entry and the final executable match.
+No artificial padding was added to the source.
+
+### Remaining work
+
+`BossHanachanParts.cpp` is still empty and nonmatching.
+Its base-class declarations now support reconstructing animation selection and collision behavior, but the head/body subclasses must also be fully scaffolded from the map before implementing that unit.
+The new sound-table object does not imply that the boss itself is decompiled.
+See [batch 7 measurements](docs/progress/GMSE01-batch7.json).
+Build, change, and map-check logs remain under `build/GMSE01-*-batch7.log` and `build/GMSE01/BossHanachanSound-symbol-order-batch7.log`.
+
+## Verified checkpoint: batch 6
 
 Corrected the US crash-reporting filename to `/marioUS.MAP` and its read-only data placement in `System/marerr.cpp`.
 Both functions and both data symbols now match in the detailed object comparison, and the object is linked from source.

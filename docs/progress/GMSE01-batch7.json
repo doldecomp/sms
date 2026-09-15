@@ -1,0 +1,63 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "6718c96a",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 74.47988,
+    "total_code": "3603748",
+    "matched_code": "1367776",
+    "matched_code_percent": 37.95426,
+    "total_data": "641075",
+    "matched_data": "297687",
+    "matched_data_percent": 46.435596,
+    "total_functions": 12904,
+    "matched_functions": 8137,
+    "matched_functions_percent": 63.057964,
+    "complete_code": "73452",
+    "complete_code_percent": 2.0382113,
+    "complete_data": "49544",
+    "complete_data_percent": 7.728269,
+    "total_units": 732,
+    "complete_units": 72
+  },
+  "source_linked_objects": 72,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 2,
+  "new_exact_code_bytes": 20,
+  "new_source_linked_code_bytes": 20,
+  "new_source_linked_data_bytes": 1440,
+  "promoted_units": [
+    "Enemy/BossHanachanSound.cpp"
+  ],
+  "improvements": [
+    {
+      "unit": "mario/Enemy/BossHanachanSound",
+      "function": "@32@__dt__22TBossHanachanPartsBaseFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 8
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanSound",
+      "function": "getBasNameTable__22TBossHanachanPartsBaseCFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 12
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_map_hanachan_sound": true,
+    "gameplay_tested": false
+  },
+  "notes": [
+    "Reconstructed the 38-entry boss animation sound table from original executable pointers and strings, with both functions and the complete linked object verified.",
+    "Scaffolded every mapped TBossHanachanPartsBase method, including UNUSED declarations, with TLiveActor inheritance verified against its original vtable and constructor.",
+    "Original vtable symbol includes four alignment bytes after its 252-byte C++ vtable; detailed comparison is 99.6 percent, but all entries and the final linked executable match. No source padding was added.",
+    "BossHanachanParts.cpp remains empty and nonmatching. Animation enums are incomplete and the motion-controller field remains opaque."
+  ]
+}
