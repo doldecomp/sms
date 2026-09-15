@@ -60,12 +60,13 @@ void TRailMapObj::resetStep(float param_1)
 
 BOOL TRailMapObj::moveToNextNode(float param_1)
 {
-	if (!unk138->unk0 || unk138->unk0->isDummy())
+	TGraphWeb* graph = unk138->unk0;
+	if (!graph || graph->isDummy())
 		return false;
 
 	if (unk138->unk0->unk14 ? TRUE : FALSE) {
 
-		bool result = unk138->traceSpline(unk138->calcSplineSpeed(param_1));
+		BOOL result = unk138->traceSpline(unk138->calcSplineSpeed(param_1));
 		JGeometry::TVec3<f32> local_1C;
 		JGeometry::TVec3<f32> local_28;
 		unk138->unk0->unk14->getPosAndRot(unk138->unk14, &local_1C, &local_28);
@@ -81,12 +82,12 @@ BOOL TRailMapObj::moveToNextNode(float param_1)
 	}
 
 	JGeometry::TVec3<f32> local_40
-	    = unk138->unk0->indexToPoint(unk138->mCurrIdx);
+	    = graph->indexToPoint(unk138->mCurrIdx);
 	JGeometry::TVec3<f32> local_34;
 	local_34.sub(local_40, mPosition);
 	if (local_34.squared() < param_1 * param_1 * 2.0f || unk13C == 0) {
 		readRailFlag();
-		unk138->unk0->getGraphNode(unk138->mCurrIdx).getPoint(mPosition);
+		graph->getGraphNode(unk138->mCurrIdx).getPoint(mPosition);
 		return true;
 	} else {
 		VECNormalize(&local_34, &local_34);
