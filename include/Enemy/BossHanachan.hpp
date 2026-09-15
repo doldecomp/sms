@@ -4,6 +4,7 @@
 #include <Strategic/Nerve.hpp>
 #include <Strategic/LiveActor.hpp>
 #include <Enemy/Enemy.hpp>
+#include <Enemy/EnemyManager.hpp>
 #include <Player/ModelWaterManager.hpp>
 
 class TBossHanachan;
@@ -16,6 +17,12 @@ class TBossHanachanPartsHead;
 class TBossHanachanCommonSaveParams;
 class TBossHanachanChangeSaveParams;
 class TSphereLink;
+
+extern const char* cSandPillarModelName;
+extern const char* cHitPoint1_RailName;
+extern const char* cHitPoint2_RailName;
+extern const char* cSandTextureName;
+extern const char* cDummyTextureName;
 
 extern const char* cMapCollisionJointName;
 extern const char* cBodyMapCollisionFileName;
@@ -218,6 +225,20 @@ public:
 	/* 0x29C */ TParamRT<f32> mSLThrowVecY;
 };
 
+class TBossHanachanManager : public TEnemyManager {
+public:
+	TBossHanachanManager(const char*);
+	virtual ~TBossHanachanManager() { }
+	virtual void loadAfter();
+	virtual void createModelData();
+	virtual void clipEnemies(JDrama::TGraphics*);
+	virtual BOOL hasMapCollision() const;
+
+public:
+	/* 0x54 */ TBossHanachanCommonSaveParams* mCommonParams;
+	/* 0x58 */ TBossHanachanChangeSaveParams* mChangeParams[3];
+};
+
 class TBossHanachan : public TSpineEnemy {
 public:
 	TBossHanachan(const char*);
@@ -268,19 +289,13 @@ public:
 	/* 0x174 */ s32 mWeakBodyIndex;
 	// TODO: recover the remaining field meanings from their consumers.
 	/* 0x178 */ TSphereLink* unk178;
-	/* 0x17C */ f32 unk17C;
-	/* 0x180 */ f32 unk180;
-	/* 0x184 */ f32 unk184;
-	/* 0x188 */ f32 unk188;
-	/* 0x18C */ f32 unk18C;
-	/* 0x190 */ f32 unk190;
+	/* 0x17C */ JGeometry::TVec3<f32> mCollisionPosition;
+	/* 0x188 */ JGeometry::TVec3<f32> mPreviousLinearVelocity;
 	/* 0x194 */ f32 unk194;
 	/* 0x198 */ f32 unk198;
 	/* 0x19C */ MActor* mSandPillarActor;
 	/* 0x1A0 */ JGeometry::TVec3<f32> mSandPillarPosition;
-	/* 0x1AC */ f32 unk1AC;
-	/* 0x1B0 */ f32 unk1B0;
-	/* 0x1B4 */ f32 unk1B4;
+	/* 0x1AC */ JGeometry::TVec3<f32> mDeathSoundPosition;
 	/* 0x1B8 */ s32 unk1B8;
 	/* 0x1BC */ TBossHanachanCommonSaveParams* mCommonParams;
 	/* 0x1C0 */ TBossHanachanChangeSaveParams* mChangeParams;

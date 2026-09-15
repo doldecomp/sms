@@ -430,3 +430,63 @@ A full executable match also does not validate bodies in objects that are still 
   The MSound map now passes presence/order/linkage, retaining weak-order and seven UNUSED size warnings from the baseline.
   Several UNUSED bodies are still stubs despite being present; a map pass does not establish completion.
   See `progress/GMSE01-batch19.json` and the saved `m2c` draft `build/GMSE01/MSound-distance-batch19.c`.
+
+## Boss main movement, manager, and collision reconstruction: batch 20
+
+- Status: partial main-unit reconstruction; 21 linked functions and one UNUSED helper are present, fourteen functions exact.
+- Inventory: the imported US map lists 32 functions including three UNUSED routines.
+  The extracted original object contains 29 linked functions and 14,712 code bytes.
+  Its actual `.text` extent is 0x3978; do not substitute the imported map's aggregate extent.
+  The full map inventory and m2c draft are saved under `build/GMSE01-boss-main-map-inventory-batch20.txt` and `build/GMSE01/BossHanachanMain-batch20.c`.
+
+### Shared fields and APIs
+
+- Search: `rg -n 'TBossHanachanManager|mCollisionPosition|mPreviousLinearVelocity|mDeathSoundPosition' src include`.
+- Manager size is 0x64: common parameters at 0x54, three change-parameter pointers at 0x58.
+  Its resource table, constructor, destructor, collision flag, and clipping routine match exactly.
+  Reuse `TModelDataLoadEntry`, `TModelDataKeeper`, `SDLModelData`, and the existing material/texture APIs.
+- Boss offset 0x17C is the collision-adjusted position vector; `bind` updates it before ground/wall queries and copies it for the displacement correction.
+- Boss offset 0x188 is the previous linear velocity vector; `moveObject` stores its three components from 0x94 before calling the base movement routine, and `execSlip` copies it with integer loads/stores.
+  Preserve component stores in `moveObject`; replacing them with vector assignment would change the original instructions.
+- Boss offset 0x1AC is the death-sound position vector; `execDamage` copies Mario's position and passes its address to sound 0x28E6.
+  The three recovered vectors retain the original constructor initialization order.
+- Reuse `TSpineBase::reset` and `setNext`, `TGraphTracer::setGraph`, `THitActor::onHitFlag`, and existing camera/rumble APIs.
+  Damage disables head/body/foot collision on death and switches both parameters and graph for the remaining hit-point count.
+
+### Loops, vector temporaries, and boolean results
+
+- `getBodyMaxRotateZ`: direct `fabs(mBodies[i]->mRotation.z)` comparison followed by direct member assignment yields the original fully unrolled loop, all 264 bytes exact.
+  Keeping a local `angle` eliminated eight native address calculations and dropped the score to 64.9%; a rotation getter with that local did not repair it.
+  Reuse the matching helper in `execSlip`; its entire inlined eight-body scan matches too.
+- `isTumbleCompletelyAllBody`: retain the explicit boolean ternary for the +/-179-degree test, a result initialized to true, and result assignment plus `break` when body rolls differ.
+  Both boolean normalization stages appear in the original; all 252 bytes match.
+- `execSlip`: store `direction.isZero()` in a boolean local before testing its negation.
+  This reproduces the original `mfcr`/bit-extraction sequence.
+  Copy the current position to a local goal, add the direction, then call `setGoalPath`.
+  The compact `setGoalPath(mPosition + direction)` introduced an out-of-line vector-add call and a larger stack frame.
+  These two changes improve slipping from 93.2% to 99.63793%; trig registers and two temporary-vector stack locations remain different.
+- `bind`: the final displacement has its own vector local before adding the collision correction.
+  The compact `(nextPosition - mPosition) + correction` omitted six original copy instructions.
+  Restoring the named displacement improved binding from 96.5% to 99.55385%; stack locations and two argument loads remain different.
+- Ground validity reuses the prior sphere-chain pattern: `ground && (ground->isIllegalData() == true ? false : true)`.
+  It reproduces both native boolean conversions without changing the shared collision-data declaration.
+
+### Rejected trials and remaining work
+
+- Walking still differs in template `TVec3::set<float>` emission and squared-length inlining.
+  Replacing `delta.squared()` with three calls to `CLBSquared` introduced three unwanted out-of-line calls; reverted.
+  Replacing the explicit set with the vector constructor did not improve the instructions; reverted.
+  Existing `direction.isZero()` in slipping already emits the native unfused squared-length sequence, so a blanket floating-point contraction change is not justified.
+- Fall setup needs a named absolute rotation-change value before reading the fall-speed parameter, and a result variable plus loop break.
+  It reaches 99.742424%; a floating-point operand order and stack frame still differ.
+- Manager `loadAfter` is 99.74286% with only stack-frame differences (original 0x40, current 0x30).
+  Boss construction is 99.82758% with frame differences; changing adjacent scalar fields to the recovered vectors did not remove those differences.
+- Damage is 96.304344%: collision-loop registers, manager array-index addressing, and the 0x60 versus 0x30 frame remain different.
+- Missing map entries: `init`, `throwMario_`, `perform`, `execHeadCalcAnim_`, `execBodyCalcAnim_`, local `CalcRevisionPosByRotateZ`, emitted `TVec3::set<float>` and `MsWrap<float>`, and boss destructor/thunk.
+  The complete original 208-byte rotation-position helper and its m2c draft were read; implement it with its initialization/animation callers next.
+  `perform` is 6,108 bytes and remains entirely absent.
+- Validation: all affected consumers rebuilt, `ninja changes_all` and the all-function comparison show zero regressions, and the mixed executable passes byte/SHA-1 checks.
+  Gain: fourteen exact functions, 2,364 code bytes, 220 data bytes.
+  The main map check remains a recorded failure for ten missing symbols, with a weak-order warning and UNUSED `isCanWalk` size warning (164 versus 192).
+  No source-link promotion or gameplay test.
+  Measurements are in `progress/GMSE01-batch20.json`; full logs are `build/GMSE01-*-batch20.*`.

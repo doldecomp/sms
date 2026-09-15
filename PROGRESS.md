@@ -8,7 +8,37 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 19
+## Latest checkpoint: batch 20
+
+Reconstructed 21 linked functions and the UNUSED walking predicate in the previously empty `BossHanachanMain.cpp`.
+The new code covers manager/model setup, walking, slipping, damage transitions, collision binding, recovery-path selection, body-roll checks, and head movement.
+Recovered the manager class and three stored position/velocity vectors from their original reads and writes.
+Fourteen functions match exactly, adding **2,364 exact code bytes** and **220 matched data bytes**.
+Slipping is **99.63793%**, collision binding is **99.55385%**, and damage handling is **96.304344%**.
+
+Aggregate exact code is **1,384,464 / 3,603,748 bytes (38.417336%)**, with **8,219 / 12,904 functions** matching.
+There are still **73 source-linked objects**, covering **76,468 code bytes (2.121902%)**.
+The boss main object remains linked from the original binary.
+
+### Validation and remaining work
+
+Captured `ninja baseline` at `3afc3252`, rebuilt all affected header consumers, and ran `ninja changes_all`.
+The comparison of all reported functions, including missing-function detection, found zero regressions.
+The full build, expected SHA-1, and direct byte comparison pass for the mixed source/original-object executable.
+No gameplay test was performed.
+
+The main unit's map check still fails with ten missing symbols: initialization, Mario throwing, main update/render handling, two UNUSED animation helpers, the local rotation-position helper, two compiler-emitted helpers, and the boss destructor/thunk.
+All currently present strong functions have the correct order and linkage.
+The manager destructor has a weak-order warning, and UNUSED `isCanWalk` is 164 bytes versus the map's 192.
+Walking remains 76.784% because vector construction, squared-length evaluation, and inline context differ.
+Stack/register differences remain in other reconstructed routines; no artificial padding or middleware edits were introduced.
+
+Next work: reconstruct `CalcRevisionPosByRotateZ`, `init`, `throwMario_`, and the two animation helpers, then the 6,108-byte `perform` routine.
+The [shared-fix catalog](docs/MATCHING_CATALOG.md) records the reusable vector, loop, and boolean patterns and the rejected trials.
+See [batch 20 measurements](docs/progress/GMSE01-batch20.json).
+The map inventory, full draft, instruction overview, and validation logs are under `build/GMSE01-boss-main-map-inventory-batch20.txt`, `build/GMSE01/BossHanachanMain-batch20.c`, and `build/GMSE01-*-batch20.*`.
+
+## Verified checkpoint: batch 19
 
 Reconstructed the missing US `MSound::getDistPowFromCamera(const Vec&)` using the original three `powf` calls and evaluation order.
 All **136 bytes match exactly**.

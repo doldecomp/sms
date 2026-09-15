@@ -1,0 +1,195 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "3afc3252",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.336784,
+    "total_code": "3603748",
+    "matched_code": "1384464",
+    "matched_code_percent": 38.417336,
+    "total_data": "641075",
+    "matched_data": "302335",
+    "matched_data_percent": 47.16063,
+    "total_functions": 12904,
+    "matched_functions": 8219,
+    "matched_functions_percent": 63.693428,
+    "complete_code": "76468",
+    "complete_code_percent": 2.121902,
+    "complete_data": "51024",
+    "complete_data_percent": 7.9591312,
+    "total_units": 732,
+    "complete_units": 73
+  },
+  "source_linked_objects": 73,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 14,
+  "new_exact_code_bytes": 2364,
+  "new_matched_data_bytes": 220,
+  "improvements": [
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "__ct__13TBossHanachanFPCc",
+      "before": 0,
+      "after": 99.82758,
+      "size": 232
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "__ct__20TBossHanachanManagerFPCc",
+      "before": 0,
+      "after": 100.0,
+      "size": 232
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "__dt__20TBossHanachanManagerFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 100
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "__sinit_BossHanachanMain_cpp",
+      "before": 0,
+      "after": 100.0,
+      "size": 764
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "bind__13TBossHanachanFv",
+      "before": 0,
+      "after": 99.55385,
+      "size": 780
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "checkFallDecideAndSetup__13TBossHanachanFv",
+      "before": 0,
+      "after": 99.742424,
+      "size": 264
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "clipEnemies__20TBossHanachanManagerFPQ26JDrama9TGraphics",
+      "before": 0,
+      "after": 100.0,
+      "size": 44
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "createModelData__20TBossHanachanManagerFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 88
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "execDamage__13TBossHanachanFv",
+      "before": 0,
+      "after": 96.304344,
+      "size": 736
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "execSlip__13TBossHanachanFv",
+      "before": 0,
+      "after": 99.63793,
+      "size": 928
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "execWalk__13TBossHanachanFb",
+      "before": 0,
+      "after": 76.784,
+      "size": 500
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "getBodyMaxRotateZ__13TBossHanachanCFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 264
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "goToInitialRecoverGraphNode__13TBossHanachanFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 152
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "hasMapCollision__13TBossHanachanCFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 8
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "hasMapCollision__20TBossHanachanManagerCFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 8
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "isTumbleCompletelyAllBody__13TBossHanachanCFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 252
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "kill__13TBossHanachanFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 4
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "loadAfter__20TBossHanachanManagerFv",
+      "before": 0,
+      "after": 99.74286,
+      "size": 140
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "moveObject__13TBossHanachanFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 212
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "removeAllMapCollision__13TBossHanachanFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 132
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "setRandomWeakBodyIndex__13TBossHanachanFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 104
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_map_boss_main": false,
+    "gameplay_test": false
+  },
+  "notes": [
+    "Reconstructed 21 linked functions and the UNUSED isCanWalk helper in the previously empty boss main unit; 14 functions match exactly.",
+    "Recovered the manager class, five resource-name globals, and position/velocity vectors at boss offsets 0x17C, 0x188, and 0x1AC.",
+    "Reused original-map inventory, existing graph/spine/collision/sound helpers, and matching body-roll logic across callers.",
+    "Main map check still fails with ten missing symbols, including init, throwMario_, perform, animation helpers, compiler-emitted helpers, and boss destructor/thunk; existing strong definitions have correct order and linkage.",
+    "UNUSED isCanWalk is 164 bytes versus map size 192; walking has unresolved vector construction and squared-length inlining differences.",
+    "Slipping and collision binding exceed 99.5%; damage handling is 96.304344%, with remaining instruction/register/stack differences.",
+    "No source-link promotion; executable validation covers the mixed source/original-object build."
+  ]
+}
