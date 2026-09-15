@@ -8,7 +8,46 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 11
+## Latest checkpoint: batch 12
+
+Reconstructed `BossHanachanAnm.cpp`: all ten linked routines and all four UNUSED helpers from the map.
+The routines coordinate walk/run blending, frame preservation, directional tumble rates, animation completion, and staggered head/body transitions.
+The recovered parameter fields are reused throughout.
+
+Six routines now match exactly: `considerSetAnm`, `isFinishedGetUp`, and the four `setAnmTimerWhen*` methods.
+They add **1,108 exact code bytes** and six matching functions.
+All 32 bytes of the unit's mapped constants match.
+Four routines remain nonmatching: `changeAnmRateAndFrameUpdate_` (99.89781%), `isAllBckAlreadyEnd` (99.891304%), `setTumbleAnm` (99.85714%), and `setHeadAndBodyAnm` (91.75%).
+Their remaining differences are documented in the shared-fix catalog.
+
+The owner's `setHeadAndBodyAnm` caller tests the low byte of the virtual setter's result, providing new evidence that `TBossHanachanPartsBase::setAnm_` returns `bool`.
+Corrected the base declaration and both head/body overrides together, including their result locals.
+Existing parts function match scores did not regress.
+
+Aggregate exact code is **1,374,128 / 3,603,748 bytes (38.130524%)**, with **8,158 / 12,904 functions** matching.
+Matched data is 299,795 bytes.
+There are still **73 source-linked objects**, covering **76,468 code bytes (2.121902%)**.
+The animation and parts units remain linked from the original executable until their remaining differences are resolved.
+
+### Validation and remaining work
+
+Captured `ninja baseline` at `50f5cffc`, rebuilt affected consumers, ran `ninja changes_all`, and compared all functions, including missing-function detection: zero regressions.
+The full build, expected SHA-1, and direct byte comparison pass for the mixed source/original-object executable.
+No gameplay test was performed.
+
+The animation unit passes map presence, order, and linkage checks.
+Its three forwarding/blend helpers have the recorded 100-, 112-, and 116-byte sizes; `setTumbleBckRate_` is still 172 rather than 176 bytes.
+The parameter and sound objects pass all map checks.
+The parts unit retains the missing foot destructor/thunk and its hit-predicate UNUSED-size warning.
+
+Next work: resolve the owner animation routines' remaining stack/register differences and the tumble helper's size, then test source-linking the whole animation unit.
+The frame-update routine's short stack suggests missing inline context; the map-visible wrappers are present, but their current direct blend-field accesses may omit a nested helper boundary.
+Do not add artificial stack padding.
+Collision/foot initialization and the water-hit field discrepancy remain outstanding in the parts/sub units.
+See [batch 12 measurements](docs/progress/GMSE01-batch12.json) and the [shared-fix catalog](docs/MATCHING_CATALOG.md).
+Logs and the full `m2c` draft are saved under `build/GMSE01` and `build/GMSE01-*-batch12*.log`.
+
+## Verified checkpoint: batch 11
 
 Reconstructed all six branches of the boss-part animation dispatcher, including Mario standing on a body segment, animation completion, directional get-up sequences, and delayed damage/snort/death transitions.
 `considerSetAnm_` improved from a stub (0.21691974%) to **99.6833%**, reproducing the original 461-instruction length (1,844 bytes).

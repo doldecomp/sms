@@ -1,0 +1,145 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "50f5cffc",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 74.85298,
+    "total_code": "3603748",
+    "matched_code": "1374128",
+    "matched_code_percent": 38.130524,
+    "total_data": "641075",
+    "matched_data": "299795",
+    "matched_data_percent": 46.76442,
+    "total_functions": 12904,
+    "matched_functions": 8158,
+    "matched_functions_percent": 63.22071,
+    "complete_code": "76468",
+    "complete_code_percent": 2.121902,
+    "complete_data": "51024",
+    "complete_data_percent": 7.9591312,
+    "total_units": 732,
+    "complete_units": 73
+  },
+  "source_linked_objects": 73,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 6,
+  "new_exact_code_bytes": 1108,
+  "improvements": [
+    {
+      "unit": "mario/Enemy/BossHanachanAnm",
+      "function": "changeAnmRateAndFrameUpdate___13TBossHanachanFv",
+      "before": 0,
+      "after": 99.89781,
+      "size": 1644
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanAnm",
+      "function": "considerSetAnm__13TBossHanachanF24EnumBossHanachanNerveAnm",
+      "before": 0,
+      "after": 100.0,
+      "size": 116
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanAnm",
+      "function": "isAllBckAlreadyEnd__13TBossHanachanCF23EnumBossHanachanAnmKind",
+      "before": 0,
+      "after": 99.891304,
+      "size": 184
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanAnm",
+      "function": "isFinishedGetUp__13TBossHanachanCFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 92
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanAnm",
+      "function": "setAnmTimerWhenDamage__13TBossHanachanFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 332
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanAnm",
+      "function": "setAnmTimerWhenDead__13TBossHanachanFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 332
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanAnm",
+      "function": "setAnmTimerWhenGetUp__13TBossHanachanFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 116
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanAnm",
+      "function": "setAnmTimerWhenSnort__13TBossHanachanFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 120
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanAnm",
+      "function": "setHeadAndBodyAnm__13TBossHanachanF23EnumBossHanachanAnmKind36EnumBossHanachanStopMotionBlendOnOff",
+      "before": 0,
+      "after": 91.75,
+      "size": 288
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanAnm",
+      "function": "setTumbleAnm__13TBossHanachanF36EnumBossHanachanStopMotionBlendOnOff",
+      "before": 0,
+      "after": 99.85714,
+      "size": 420
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_map_anm": true,
+    "symbol_map_save": true,
+    "symbol_map_sound": true,
+    "symbol_order_parts": true,
+    "symbol_linkage_parts": true,
+    "symbol_presence_parts": false,
+    "gameplay_test": false
+  },
+  "unused_reconstructions": [
+    {
+      "function": "copyFrameFromOldAnmToNewAnm_",
+      "map_size": 100,
+      "compiled_size": 100
+    },
+    {
+      "function": "setHeadAndBodyNonstopMotionBlendRatio_",
+      "map_size": 112,
+      "compiled_size": 112
+    },
+    {
+      "function": "offHeadAndBodyNonstopMotionBlend_",
+      "map_size": 116,
+      "compiled_size": 116
+    },
+    {
+      "function": "setTumbleBckRate_",
+      "map_size": 176,
+      "compiled_size": 172
+    }
+  ],
+  "remaining_map_issues": [
+    "Animation unit setTumbleBckRate_ UNUSED size 172 versus 176",
+    "Parts unit missing TFootHitActor destructor and adjustment thunk",
+    "Parts unit isReactToTrampleOrHipDrop_ UNUSED size 208 versus 196"
+  ],
+  "notes": [
+    "All ten owner animation routines and four UNUSED helpers reconstructed; four linked routines still nonmatching.",
+    "Shared parts animation setter result corrected to bool using the new owner caller instruction as evidence; existing parts functions unchanged in match scores.",
+    "No objects promoted; executable verification covers the mixed source/original-object build."
+  ]
+}

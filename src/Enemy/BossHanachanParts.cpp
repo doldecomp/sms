@@ -380,13 +380,13 @@ void TBossHanachanPartsBase::considerSetAnm_(EnumBossHanachanNerveAnm nerve)
 	}
 }
 
-BOOL TBossHanachanPartsBody::setAnm_(EnumBossHanachanAnmKind anm,
+bool TBossHanachanPartsBody::setAnm_(EnumBossHanachanAnmKind anm,
                                     EnumBossHanachanStopMotionBlendOnOff blend)
 {
 	static const int sBodyBckIndex[] = {
 		19, 15, 10, 13, 0, 12, 9, 2, 3, 4, 5, 6, 7, 8, 16, 1, 17, 18
 	};
-	BOOL changed = FALSE;
+	bool changed = false;
 	if (mCurrentAnm != anm) {
 		mPreviousAnm = mCurrentAnm;
 		mCurrentAnm = anm;
@@ -401,7 +401,7 @@ BOOL TBossHanachanPartsBody::setAnm_(EnumBossHanachanAnmKind anm,
 				}
 			}
 			mMActor->setBckFromIndex(index);
-			changed = TRUE;
+			changed = true;
 			if (blend == BOSS_HANACHAN_STOP_MOTION_BLEND_ON)
 				mInbetween->startMotionBlend();
 			else
@@ -417,7 +417,7 @@ BOOL TBossHanachanPartsBody::setAnm_(EnumBossHanachanAnmKind anm,
 	return changed;
 }
 
-BOOL TBossHanachanPartsHead::setAnm_(EnumBossHanachanAnmKind anm,
+bool TBossHanachanPartsHead::setAnm_(EnumBossHanachanAnmKind anm,
                                     EnumBossHanachanStopMotionBlendOnOff blend)
 {
 	static const int sHeadBckIndex[] = {
@@ -429,13 +429,13 @@ BOOL TBossHanachanPartsHead::setAnm_(EnumBossHanachanAnmKind anm,
 	static const int sHeadBtkIndex[] = {
 		0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	};
-	BOOL changed = FALSE;
+	bool changed = false;
 	if (mCurrentAnm != anm) {
 		mPreviousAnm = mCurrentAnm;
 		mCurrentAnm = anm;
 		if (sHeadBckIndex[anm] != mMActor->getCurAnmIdx(ANM_TYPE_BCK)) {
 			mMActor->setBckFromIndex(sHeadBckIndex[anm]);
-			changed = TRUE;
+			changed = true;
 			if (blend == BOSS_HANACHAN_STOP_MOTION_BLEND_ON)
 				mInbetween->startMotionBlend();
 			else

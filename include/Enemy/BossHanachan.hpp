@@ -69,7 +69,7 @@ public:
 	TBossHanachanPartsBase(TBossHanachan*, u32, int, const char*);
 	virtual ~TBossHanachanPartsBase() { }
 	virtual const char** getBasNameTable() const;
-	virtual BOOL setAnm_(EnumBossHanachanAnmKind,
+	virtual bool setAnm_(EnumBossHanachanAnmKind,
 	                     EnumBossHanachanStopMotionBlendOnOff) = 0;
 
 	void considerSetAnm_(EnumBossHanachanNerveAnm);
@@ -104,7 +104,7 @@ public:
 	TBossHanachanPartsBody(TBossHanachan*, const char*);
 	virtual ~TBossHanachanPartsBody() { }
 	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual BOOL setAnm_(EnumBossHanachanAnmKind,
+	virtual bool setAnm_(EnumBossHanachanAnmKind,
 	                     EnumBossHanachanStopMotionBlendOnOff);
 	void initFootHitActor_(TIdxGroupObj*);
 
@@ -126,7 +126,7 @@ public:
 	TBossHanachanPartsHead(TBossHanachan*, const char*);
 	virtual ~TBossHanachanPartsHead() { }
 	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual BOOL setAnm_(EnumBossHanachanAnmKind,
+	virtual bool setAnm_(EnumBossHanachanAnmKind,
 	                     EnumBossHanachanStopMotionBlendOnOff);
 
 public:

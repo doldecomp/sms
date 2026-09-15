@@ -166,5 +166,47 @@ A full executable match also does not validate bodies in objects that are still 
 - Stack trials: using `getMActor()` at each access in the completion and frame-copy helpers did not change their stack frames.
   Holding that actor in a local regressed both instruction sequences; splitting the completion-state OR into a named local also regressed the helper and dispatcher.
   All these trials were reverted; do not repeat them as presumed shared fixes.
-- `BossHanachanAnm.cpp` is the next related empty owner unit: its complete map inventory begins at line 59489 and includes four UNUSED wrappers.
+- `BossHanachanAnm.cpp` was reconstructed in batch 12: its complete map inventory begins at line 59489 and includes four UNUSED wrappers.
   Its methods must be reconstructed together with the wrappers rather than omitting their inline context.
+
+## Owner animation routines and timer families
+
+- Status: all ten routines and four UNUSED helpers reconstructed, batch 12; six linked functions exact.
+- Search: `rg -n 'setAnmTimerWhen|setTumbleBckRate_|setHeadAndBodyAnm|changeAnmRateAndFrameUpdate_' src/Enemy/BossHanachanAnm.cpp`.
+- Timer loops use `u8` parameter values and signed integer indices.
+  Damage/death timers are `delay * CLBAbs(mWeakBodyIndex - i)`, with the head using `mWeakBodyIndex + 1`.
+  Both 332-byte functions match with the same loop form.
+- Snort timers run from the head (zero) through body indices 0–7 with multipliers 1–8; all 120 bytes match.
+- Get-up timers run in the reverse body order, then the head.
+  Use an ascending loop `i = 0..7`, access `mBodies[7 - i]`, and multiply by `i`.
+  Counting down the index and multiplying by `7 - i` leaves runtime subtraction/multiplication after unrolling (20.3%); the ascending form matches all 116 bytes.
+- `considerSetAnm` (116 bytes) and `isFinishedGetUp` (92 bytes) match exactly.
+  The latter waits for head animation 9 or 12 to complete.
+- Preserve the mapped owner wrappers: frame copying (100 bytes), forced blend ratio (112), and clearing the ratio (116).
+  All three reproduce their UNUSED sizes and inline into the main frame-update routine.
+  The blend wrappers currently access the existing controller fields directly; investigate nested part helper boundaries when resolving the caller's stack gap.
+- `changeAnmRateAndFrameUpdate_`: 99.89781%, 411 instructions.
+  Current frame 0xC0 versus original 0x118; the first tumble-loop counter and head actor use r28 instead of r26.
+  Walk/run cases are 0/1; preserve frame-copy calls and the separate ratio complements for previous-animation cases.
+  The original calls `CLBCalcRatio<float>` out of line and updates animation sound before each model's `frameUpdate()`.
+- `isAllBckAlreadyEnd`: 99.891304%, only stack size differs (0x30 versus 0x28).
+  Named `bool` head/body completion locals reproduce the original normalization groups.
+  Direct conditions remove groups; ternary conditions add extra groups; splitting declaration from assignment has no effect.
+  These trials were reverted.
+- `setTumbleAnm`: 99.85714%, only stack size differs (0x78 versus 0x60).
+  Its shared `setTumbleBckRate_` helper uses `CLBAbs`, explicit reciprocal multiplication, and nested `2 * (40 * SMSGetAnmFrameRate())`.
+  Replacing the two reciprocal products with ordinary division changes instructions and reduces similarity to 87.8%; reverted.
+  The helper itself is 172 bytes versus the UNUSED map's 176; resolve it together with both inline call sites.
+- `setHeadAndBodyAnm`: 91.75%, correct 0x68 frame but register allocation and integer-to-float conversion slots/scheduling differ.
+  BCK uses an integer remainder; BTP and BTK use a second conversion of that integer to a shared float.
+  Preserve both conversions while investigating the original inline context.
+- All mapped constants (32 bytes) match; no source-link promotion until all linked functions and the whole executable are verified.
+
+## Shared boss animation setter result: caller establishes bool
+
+- Status: declaration and both implementations corrected together, batch 12.
+- Earlier homogeneous `BOOL`/`bool` trials in the setters could not distinguish the return type.
+  The newly reconstructed owner caller at `0x800F2ECC` uses `clrlwi.` on the low byte immediately after the virtual setter call, establishing the `bool` interface.
+- Changed the base virtual declaration, both overrides, and both result locals to `bool`.
+  Existing parts function scores are unchanged, and all header consumers rebuilt with zero function regressions.
+- Rule: use a caller's result handling to resolve types when callee instruction streams alone are indistinguishable.
