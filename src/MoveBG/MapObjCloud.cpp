@@ -129,7 +129,8 @@ void TRideCloud::control()
 			// TODO: common subexpression elimination did a mess here and it is
 			// painful to figure out....
 
-			if (!unk138->unk0 || unk138->unk0->isDummy())
+			TGraphWeb* web = unk138->unk0;
+			if (!web || web->isDummy())
 				return;
 
 			if (moveToNextNode(unk15C)) {
@@ -145,7 +146,8 @@ void TRideCloud::control()
 				if (node.getRailNode()->mFlags & 0x800)
 					unk16C = node.getRailNode()->mPitch;
 
-				TRailNode* node2 = unk138->getCurrent().getRailNode();
+				TRailNode* node2
+				    = web->getGraphNode(unk138->getCurGraphIndex()).getRailNode();
 				if (node2->mYaw != 0xffff)
 					unk15C = node2->mYaw * 0.01f;
 
