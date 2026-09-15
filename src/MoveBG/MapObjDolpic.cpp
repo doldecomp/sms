@@ -67,14 +67,21 @@ void TMonumentShine::hitByWater(THitActor* actor)
 
 	JGeometry::TVec3<f32> waterDir = actor->mPosition;
 
-	waterDir -= mPosition;
+	f32 x = mPosition.x;
+	waterDir.x -= x;
+	f32 y = mPosition.y;
+	waterDir.y -= y;
+	f32 z = mPosition.z;
+	waterDir.z -= z;
 	waterDir.y = 0.0f;
 
 	if (waterDir.squared() <= JGeometry::TUtil<f32>::epsilon())
 		return;
 
 	JGeometry::TVec3<f32> marioDir = SMS_GetMarioPos();
-	marioDir -= mPosition;
+	marioDir.x -= x;
+	marioDir.y -= y;
+	marioDir.z -= z;
 	marioDir.y = 0.0f;
 
 	if (marioDir.squared() <= JGeometry::TUtil<f32>::epsilon())
