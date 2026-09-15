@@ -412,6 +412,8 @@ void TCardSave::endWaitForChoice()
 
 s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 {
+	// TODO: frame 0x3F8 vs original 0x428; centered-size registers,
+	// particle-position scheduling and color/conversion slots still differ.
 	s8 result = -1;
 
 	switch (unk10) {
@@ -441,15 +443,15 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 
 			unk2E9 = param_3;
 			if (param_3 == 0) {
-				((J2DPicture*)unkFC->getPane())->mWhite
-				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
-				((J2DPicture*)unk100->getPane())->mWhite
-				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
+				((J2DPicture*)unkFC->getPane())
+				    ->setWhite(JUtility::TColor(0, 0xFF, 0, 0xFF));
+				((J2DPicture*)unk100->getPane())
+				    ->setWhite(JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF));
 			} else {
-				((J2DPicture*)unkFC->getPane())->mWhite
-				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
-				((J2DPicture*)unk100->getPane())->mWhite
-				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
+				((J2DPicture*)unkFC->getPane())
+				    ->setWhite(JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF));
+				((J2DPicture*)unk100->getPane())
+				    ->setWhite(JUtility::TColor(0, 0xFF, 0, 0xFF));
 			}
 
 			unkFC->updateCenteredSize(1, unk104.getWidth(), unk104.getHeight());
@@ -541,8 +543,8 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 
 		s32 thing = unk2FC < 40 ? unk2FC : 80 - unk2FC;
 		thing     = (s32)(thing * 255.0f / 40.0f);
-		((J2DPicture*)selectedPane->getPane())->mWhite
-		    = (thing << 24) + 0xFF00FF;
+		((J2DPicture*)selectedPane->getPane())
+		    ->setWhite((thing << 24) + 0xFF00FF);
 		selectedPane->update();
 
 		unk2FC += 1;
@@ -564,15 +566,15 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 			unk100->update();
 
 			if (unk2E9 == 0) {
-				((J2DPicture*)unkFC->getPane())->mWhite
-				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
-				((J2DPicture*)unk100->getPane())->mWhite
-				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
+				((J2DPicture*)unkFC->getPane())
+				    ->setWhite(JUtility::TColor(0, 0xFF, 0, 0xFF));
+				((J2DPicture*)unk100->getPane())
+				    ->setWhite(JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF));
 			} else {
-				((J2DPicture*)unkFC->getPane())->mWhite
-				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
-				((J2DPicture*)unk100->getPane())->mWhite
-				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
+				((J2DPicture*)unkFC->getPane())
+				    ->setWhite(JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF));
+				((J2DPicture*)unk100->getPane())
+				    ->setWhite(JUtility::TColor(0, 0xFF, 0, 0xFF));
 			}
 		}
 		break;

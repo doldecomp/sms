@@ -160,7 +160,8 @@ Rsetup reaches 99.63048%; frame 0x610 vs 0x648, list/constructor slots and camer
 All ten initial targets have been reviewed through batch 49.
 Continue down the refreshed size-ordered queue, skipping documented time-boxed targets until new shared evidence appears.
 Batch 50 restores the shared out-of-line FLUDD predicate and damage-sound guard: soundMovement reaches 99.994804%, with stack differences left as a TODO; considerRotateStart becomes exact (+144 bytes).
-Next: `TCardSave::waitForChoice()` in `mario/GC2D/CardSave`, 6,580 bytes, 98.9611% at this checkpoint.
+Batch 51 corrects shared pane interpolation fields and waitForChoice color temporaries; it reaches 98.96596%, with frame/register/scheduling TODOs.
+Next: `TCardLoad::waitForChoice()` in `mario/GC2D/CardLoad`, 3,704 bytes, 98.302376% at this checkpoint.
 
 ## Refreshing the target list
 

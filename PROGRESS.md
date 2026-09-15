@@ -8,7 +8,15 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 50 — shared FLUDD emission call restored
+## Latest checkpoint: batch 51 — shared menu animation fields corrected
+
+`updateCenteredSize` must read the offset interpolator at 0x14/0x18, as shown by CardSave and CardLoad callers. The shared correction improves three functions with no regressions.
+`waitForChoice` reaches **98.96596%** (from 98.9611%); using the existing color setter restores eight-byte color-temp spacing and reduces its frame from 0x3B0 to 0x3F8 vs original 0x428. Frame, register and particle-position scheduling differences remain TODOs; no new exact code or source-linked files.
+Fresh baseline at `4ea41229`; header rebuild, changes_all, all 12,904 function comparisons, unit-data checks and DOL byte/SHA-1 checks pass. No gameplay test performed.
+CardSave/CardLoad/ExPane map output is unchanged: CardSave retains two missing functions/one UNUSED-size warning, CardLoad one missing function/three size warnings, and ExPane passes. Game remains **26.13458% matched / 3.254321% source-linked**.
+Queue: 1,254 functions / 704,856 bytes; next is `TCardLoad::waitForChoice` (3,704 bytes), with a possible shared US layout difference to investigate.
+
+## Verified checkpoint: batch 50 — shared FLUDD emission call restored
 
 Move `isEmitting` from the header to its map-recorded WaterGun definition and restore its demo/dialogue guard. This makes `considerRotateStart` exact: **+144 code bytes / one function**.
 `soundMovement` improves **98.25304% → 99.994804%**, including a corrected damage-sound guard; `squating` reaches **99.91304%**, and the restored helper reaches **99.92063%**. Their remaining frame/stack differences are source TODOs.
@@ -1234,5 +1242,5 @@ Source, configuration, progress snapshots, and notes are versioned locally.
 ## Next work
 
 Follow [STRATEGY.md](STRATEGY.md) and the refreshed near-matching list.
-Start the next time-box with `TCardSave::waitForChoice()`; consult source TODOs before revisiting GCConsole2::load, BossEel, npcWetting, jumpMain, specMain, spider or beam.
+Start the next time-box with `TCardLoad::waitForChoice()`; consult source TODOs before revisiting GCConsole2::load, BossEel, npcWetting, jumpMain, specMain, spider or beam.
 Keep the small-file queue and old audits as supporting references; defer from-scratch work until the near-matching group is mostly exhausted.

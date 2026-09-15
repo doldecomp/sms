@@ -17,6 +17,18 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## Menu interpolation fields and color parameters, batch 51
+
+- CardSave::waitForChoice loads 0x18/0x14 at all four updateCenteredSize sites; the fabricated helper previously used 0x30/0x2C.
+  Correct it to mOffsetInterpolator. The corresponding waitForChoiceBM and CardLoad::selectFunction sites confirm those original fields; all three function scores improve and no other function changes score.
+- Passing colors through the existing J2DPicture::setWhite reproduces the original eight-byte spacing between temporary colors. Apply it to the nine checked waitForChoice color writes; the frame grows from 0x3B0 to 0x3F8, toward target 0x428.
+  Remaining centered-size registers, frame/slots and particle-position conversion scheduling are a source TODO. This is not an exact-function gain.
+- Naming initial width/height before setCenteredSize, or expanding it into setPaneSize/setPaneOffset, changes argument scheduling and worsens similarity; reverted.
+  Using pos.set or reversing the center-coordinate additions does not solve particle scheduling; reverted.
+- Inventory other mWhite assignments before propagating the setter pattern. Only the fully compared waitForChoice sites were changed in this batch.
+  CardLoad::selectFunction also accesses later members 0x20 above the current layout; inspect the constructor and other callers before changing its class header.
+- Header rebuild, all function/data regression checks and full executable byte/SHA-1 checks pass. Map diagnostics are identical to the baseline; these files remain incomplete.
+
 ## Out-of-line FLUDD emission predicate, batch 50
 
 - The map records a global 252-byte `TWaterGun::isEmitting` between getCurrentNozzle and perform. MarioRun, MarioWait and MarioSound each call it out of line; the previous header body incorrectly expands at all three sites.

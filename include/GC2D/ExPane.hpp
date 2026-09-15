@@ -91,12 +91,13 @@ public:
 		              (initH - initial_h) * 0.5f);
 	}
 
-	// fabricated
+	// Fabricated name. CardSave/CardLoad initialize the size from the
+	// offset interpolator here, rather than the size interpolator.
 	void updateCenteredSize(s32 time, s32 target_w, s32 target_h)
 	{
 		setCenteredSize(time, target_w, target_h,
-		                mSizeInterpolator.getCurrentX(),
-		                mSizeInterpolator.getCurrentY());
+		                mOffsetInterpolator.getCurrentX(),
+		                mOffsetInterpolator.getCurrentY());
 	}
 
 	J2DPane* getPane() const { return mPane; }
