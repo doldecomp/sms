@@ -359,8 +359,9 @@ void TMario::frontSlipEffect()
 			    PARTICLE_MS_M_SLIDESAND_A, &mCenterPos, 1, this);
 			return;
 		}
+		MtxPtr mtx = mModel->getModel()->getAnmMtx(0);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    PARTICLE_MS_M_SLIPSMOKE, mModel->getModel()->getAnmMtx(0), 1, this);
+		    PARTICLE_MS_M_SLIPSMOKE, mtx, 1, this);
 	}
 }
 
