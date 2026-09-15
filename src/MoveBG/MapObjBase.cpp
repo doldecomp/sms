@@ -8,6 +8,7 @@
 #include <Strategic/Strategy.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
+#include <MarioUtil/ShadowUtil.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorAnm.hpp>
 #include <MSound/MSound.hpp>
@@ -588,11 +589,11 @@ u32 TMapObjBase::getShadowType()
 	if (isActorType(0x40000034) || isActorType(0x40000035)
 	    || isActorType(0x40000036) || isActorType(0x40000037)
 	    || isActorType(0x40000039)) {
-		return 2;
+		return SHADOW_TYPE_TREE;
 	} else if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2000)) {
-		return 1;
+		return SHADOW_TYPE_SQUARE;
 	} else {
-		return 0;
+		return SHADOW_TYPE_CIRCLE;
 	}
 }
 

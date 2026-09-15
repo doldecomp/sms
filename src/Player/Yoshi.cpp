@@ -1137,8 +1137,8 @@ void TYoshi::entry()
 	mTongue->entry();
 
 	TCircleShadowRequest shadowRequest;
-	shadowRequest.unk0 = mTranslation;
-	shadowRequest.unkC = shadowRequest.unk10 = unk114;
+	shadowRequest.mPosition = mTranslation;
+	shadowRequest.mRadiusX = shadowRequest.mRadiusZ = unk114;
 
 	gpBindShadowManager->request(shadowRequest, 0);
 	gpQuestionManager->request(mTranslation, unk114);

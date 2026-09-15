@@ -522,20 +522,20 @@ void TTamaNoko::requestShadow()
 				local_38.y = mGroundHeight;
 				local_38.z = actor->getModel()->getAnmMtx(1)[2][3];
 				if (!isAirborne())
-					local_2c.unk1D = 0;
+					local_2c.mNeedsGroundCheck = 0;
 			} else {
 				local_38 = mPosition;
 				if (!isAirborne()) {
-					local_2c.unk1D = 0;
-					local_38.y     = mGroundHeight;
+					local_2c.mNeedsGroundCheck = 0;
+					local_38.y                 = mGroundHeight;
 				}
 			}
 
-			local_2c.unk0  = local_38;
-			local_2c.unkC  = mScaledBodyRadius;
-			local_2c.unk10 = local_2c.unkC;
-			local_2c.unk1C = getShadowType();
-			local_2c.unk14 = mRotation.y;
+			local_2c.mPosition   = local_38;
+			local_2c.mRadiusX    = mScaledBodyRadius;
+			local_2c.mRadiusZ    = local_2c.mRadiusX;
+			local_2c.mShadowType = getShadowType();
+			local_2c.mRotationY  = mRotation.y;
 			if (checkLiveFlag(LIVE_FLAG_UNK400)) {
 				gpBindShadowManager->forceRequest(local_2c, getActorType());
 			} else {

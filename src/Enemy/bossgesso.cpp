@@ -1353,18 +1353,18 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 		TCircleShadowRequest request;
 
 		MtxPtr joint = mMActor->getModel()->getAnmMtx(1);
-		request.unk0
+		request.mPosition
 		    = JGeometry::TVec3<f32>(joint[0][3], mPosition.y, joint[2][3]);
 
 		JGeometry::TVec3<f32> right(joint[0][0], joint[1][0], joint[2][0]);
 		JGeometry::TVec3<f32> front(joint[0][2], joint[1][2], joint[2][2]);
 
-		request.unkC  = VECMag(right);
-		request.unk10 = VECMag(front);
-		request.unkC *= mScaledBodyRadius;
-		request.unk10 *= mScaledBodyRadius;
-		request.unk1C = getShadowType();
-		request.unk14 = mRotation.y;
+		request.mRadiusX = VECMag(right);
+		request.mRadiusZ = VECMag(front);
+		request.mRadiusX *= mScaledBodyRadius;
+		request.mRadiusZ *= mScaledBodyRadius;
+		request.mShadowType = getShadowType();
+		request.mRotationY  = mRotation.y;
 
 		gpBindShadowManager->request(request, getActorType());
 	}
