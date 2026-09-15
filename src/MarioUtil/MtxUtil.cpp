@@ -57,10 +57,10 @@ void TMtxTimeLag::calc(MtxPtr mtx)
 {
 	if (checkFlag(2)) {
 		offFlag(2);
+		Vec v2;
 		Vec v = { 0.0f, 0.0f, 0.0f };
 		unk08 = v;
 
-		Vec v2;
 		v2.x  = mtx[0][3];
 		v2.y  = mtx[1][3];
 		v2.z  = mtx[2][3];
@@ -72,6 +72,7 @@ void TMtxTimeLag::calc(MtxPtr mtx)
 		MtxToQuat(mtx, &q);
 		unk30 = q;
 	} else {
+		Quaternion tmp;
 		Vec trans;
 
 		trans.x = mtx[0][3];
@@ -107,6 +108,7 @@ void TMtxTimeLag::calc(MtxPtr mtx)
 		if (unk14.z > trans.z + posLimit)
 			unk14.z = trans.z + posLimit;
 
+		Mtx rot;
 		f32 len0 = MsSqrtf(mtx[0][0] * mtx[0][0] + mtx[1][0] * mtx[1][0]
 		                   + mtx[2][0] * mtx[2][0]);
 		f32 len1 = MsSqrtf(mtx[0][1] * mtx[0][1] + mtx[1][1] * mtx[1][1]
@@ -114,7 +116,6 @@ void TMtxTimeLag::calc(MtxPtr mtx)
 		f32 len2 = MsSqrtf(mtx[0][2] * mtx[0][2] + mtx[1][2] * mtx[1][2]
 		                   + mtx[2][2] * mtx[2][2]);
 
-		Mtx rot;
 		f32 inv0  = 1.0f / len0;
 		f32 inv1  = 1.0f / len1;
 		f32 inv2  = 1.0f / len2;
@@ -128,7 +129,6 @@ void TMtxTimeLag::calc(MtxPtr mtx)
 		rot[1][2] = mtx[1][2] * inv2;
 		rot[2][2] = mtx[2][2] * inv2;
 
-		Quaternion tmp;
 		MtxToQuat(rot, &tmp);
 
 		Quaternion newQuat;
