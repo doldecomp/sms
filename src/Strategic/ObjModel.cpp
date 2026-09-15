@@ -148,15 +148,53 @@ MActor* TMActorKeeper::createMActorFromNthData(int n, u32 flags)
 MActor* TMActorKeeper::createMActor(const char* model_data_name, u32 flags)
 {
 	TModelDataKeeper* keeper = getModelDataKeeper();
+	u16 key              = JDrama::TNameRef::calcKeyCode(model_data_name);
+	int index            = 0;
+	TModelDataNode* node = &keeper->mHead;
 
-	int index = keeper->getIndex(model_data_name);
+	for (; node && node->getData(); ++index) {
+		if (node->isSameName(model_data_name, key))
+			goto found_data;
+		node = node->getNext();
+	}
+	index = -1;
+
+found_data:
+	;
 
 	if (index < 0) {
-		keeper->createAndKeepData(model_data_name, mModelLoaderFlags);
-		index = keeper->getIndex(model_data_name);
+		node = &keeper->mHead;
+		while (node->getNext())
+			node = node->getNext();
+		SDLModelData* data = keeper->loadModelData(
+		    model_data_name, mModelLoaderFlags, keeper->mFolder);
+		node->registerDataAndJoinNewNode(data, model_data_name);
+
+		key   = JDrama::TNameRef::calcKeyCode(model_data_name);
+		index = 0;
+		node  = &keeper->mHead;
+		for (; node && node->getData(); ++index) {
+			if (node->isSameName(model_data_name, key))
+				goto found_new_data;
+			node = node->getNext();
+		}
+		index = -1;
 	}
 
-	return createMActorFromNthData(index, flags);
+found_new_data:
+	;
+
+	mActorModelDataIndices[mActorNum] = index;
+	const TModelDataNode* nth         = &keeper->mHead;
+	for (int i = 0; i < index; ++i)
+		nth = nth->getNext();
+	SDLModelData* data = nth->getData();
+	SDLModel* model    = new SDLModel(data, flags, 1);
+	MActor* actor      = new MActor(mActorAnmData);
+	actor->setModel(model, flags);
+	mActors[mActorNum] = actor;
+	++mActorNum;
+	return actor;
 }
 
 MActor* TMActorKeeper::createMActorFromAllBmd(u32 flags)
