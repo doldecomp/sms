@@ -266,7 +266,7 @@ void TIceBlock::control()
 
 void TIceBlock::calc()
 {
-	Mtx mtx;
+	Mtx44 mtx;
 	SMS_GetLightPerspectiveForEffectMtx(mtx);
 	getModel()
 	    ->getModelData()
