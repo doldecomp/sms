@@ -684,12 +684,11 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		}
 		break;
 
+	case 0x08000003:
+	case 0x08000004:
 	case 0x08000006:
 	case 0x08000007:
 	case 0x08000008:
-	case 0x08000010:
-	case 0x08000011:
-	case 0x08000012:
 	case 0x0800001F:
 	case 0x08000022:
 	case 0x08000023:
@@ -757,7 +756,6 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		}
 		// fallthrough
 
-	case 0x4000002A:
 	case 0x4000002C: { // big spinning enemy with rotation-based attack window
 		if (mInput & 0x8000) {
 			s16 attackAngle = getAttackAngle(sender);
@@ -807,8 +805,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		break;
 	}
 
+	case 0x08000002:
 	case 0x80000001:
-	case 0x80000002:
 		if (!isInvincible()) {
 			switch (message) {
 			case HIT_MESSAGE_TAKE:

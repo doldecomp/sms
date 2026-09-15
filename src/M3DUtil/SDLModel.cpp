@@ -71,8 +71,8 @@ void SDLModelData::entrySameMat(J3DMaterial* material, SDLDrawBufToken* token)
 			}
 			model = model->mNextSameMat;
 		}
-		token->unk0[material->isDrawModeOpaTexEdge() ? 0 : 1]->entryImm(
-		    matPacket, 0);
+		bool drawBuffer = material->isDrawModeOpaTexEdge();
+		token->unk0[drawBuffer ? 0 : 1]->entryImm(matPacket, 0);
 	}
 }
 
@@ -331,5 +331,6 @@ void SDLModel::viewCalcSimple()
 	MtxPtr mA = gpCamera->getUnk1EC();
 	for (int i = 0; i < mModelData->getDrawMtxNum(); ++i)
 		MTXConcat(mA, mNodeMatrices[i], getDrawMtx(i));
-	DCStoreRange(getDrawMtxPtr(), mModelData->getDrawMtxNum() * sizeof(Mtx));
+	Mtx* drawMtx = getDrawMtxPtr();
+	DCStoreRange(drawMtx, mModelData->getDrawMtxNum() * sizeof(Mtx));
 }

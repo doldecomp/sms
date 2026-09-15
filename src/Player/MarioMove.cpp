@@ -35,7 +35,8 @@ f32 TMario::getJumpSlideControl() const
 	if (mStatus == MARIO_STATUS_WIRE_JUMP)
 		return mWireParams.mWireJumpSlideControl.get();
 
-	if (onYoshi() && (mYoshi->mFlutterState == 1 ? true : false))
+	BOOL isOnYoshi = onYoshi();
+	if (isOnYoshi && (mYoshi->mFlutterState == 1 ? true : false))
 		return mYoshiParams.mHoldOutSldCtrl.get();
 
 	return mJumpParams.mJumpSlideControl.get();
@@ -85,7 +86,8 @@ bool TMario::isInvincible() const
 bool TMario::isWallInFront() const
 {
 	if (mWallPlane != nullptr) {
-		s16 diff = getWallAngle() - mFaceAngle.y;
+		s16 angle = getWallAngle();
+		s16 diff  = angle - mFaceAngle.y;
 		if (diff < -0x71C7 || diff > 0x71C7)
 			return true;
 	}
@@ -120,15 +122,15 @@ bool TMario::isForceSlip()
 
 BOOL TMario::moveRequest(const JGeometry::TVec3<f32>& pos)
 {
-	JGeometry::TVec3<f32> offset = pos - mPosition;
-	mPosition                    = pos;
+	const JGeometry::TVec3<f32> offset = pos - mPosition;
+	mPosition                          = pos;
 
+	unk2BC += offset.y;
 	unk160 += offset;
 	mPrevPosition += offset;
 	mWireStartPos += offset;
 	mWireEndPos += offset;
 	unk2A8 += offset;
-	unk2BC += offset.y;
 	mHeadMtx[0][3] += offset.x;
 	mHeadMtx[1][3] += offset.y;
 	mHeadMtx[2][3] += offset.z;
@@ -411,9 +413,13 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	u32 nextStatus = status;
 
 	unk2BC = mPosition.y;
-	if (mSlopeAngle > mDeParams.mRocketRotSp.get() / 2)
-		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
-		                   mDirtyParams.mPolSizeJump.get());
+	if (mFootPrintTimer > mDeParams.mFootPrintTimerMax.get() / 2) {
+		f32 size = mDirtyParams.mPolSizeJump.get();
+		f32 z    = mPosition.z;
+		f32 y    = mPosition.y;
+		f32 x    = mPosition.x;
+		gpPollution->stamp(1, x, y, z, size);
+	}
 
 	switch (status) {
 	case MARIO_STATUS_JUMP:
@@ -641,8 +647,8 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	}
 
 	if (isSinking()) {
-		f32 scale = ((mGraffitoParams.mSinkJumpRateMax.get()
-		              - mGraffitoParams.mSinkJumpRateMin.get())
+		f32 sinkJumpRateMax = mGraffitoParams.mSinkJumpRateMax.get();
+		f32 scale = ((sinkJumpRateMax - mGraffitoParams.mSinkJumpRateMin.get())
 		             * (1.0f - (mSinkTimer / mGraffitoParams.mSinkTime.get())))
 		            + mGraffitoParams.mSinkJumpRateMin.get();
 

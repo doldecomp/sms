@@ -42,13 +42,26 @@ static const s32 cParticleIDs[] = {
 
 void TMario::initParticle()
 {
+	const char* fileName;
+	bool* loadedFlag;
 	for (int i = 0; i < 3; ++i) {
-		const char* fileName = cParticleFileNames[i];
+		fileName = cParticleFileNames[i];
 		if (JKRFileLoader::getGlbResource(fileName)) {
-			if (i < 1)
-				SMS_LoadParticle(fileName, cParticleIDs[i]);
-			else
-				SMS_LoadParticle(fileName, cParticleIDs[i]);
+			if (i < 1) {
+				u16 id     = cParticleIDs[i];
+				loadedFlag = &gParticleFlagLoaded[id];
+				if (!*loadedFlag) {
+					gpResourceManager->load(fileName, id);
+					*loadedFlag = true;
+				}
+			} else {
+				u16 id     = cParticleIDs[i];
+				loadedFlag = &gParticleFlagLoaded[id];
+				if (!*loadedFlag) {
+					gpResourceManager->load(fileName, id);
+					*loadedFlag = true;
+				}
+			}
 		}
 	}
 }
@@ -126,8 +139,9 @@ void TMario::emitGetEffect()
 
 void TMario::emitGetWaterEffect()
 {
-	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ITEMGET1_B, &unk160,
-	                                            0, nullptr);
+	JGeometry::TVec3<f32>* pos = &unk160;
+	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ITEMGET1_B, pos, 0,
+	                                            nullptr);
 }
 
 void TMario::emitGetCoinEffect(JGeometry::TVec3<f32>* pos)
@@ -163,9 +177,10 @@ void TMario::rippleEffect()
 		SMS_EmitRipplePool(unk220, this);
 	} else {
 		SMS_EmitRippleSea(unk220, this);
-		if ((checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
-		    && mForwardVel > mParticleParams.mWaveEmitSpeed.get()) {
-			mWaterWakeAlpha = 0xFF;
+		if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING)) {
+			f32 waveEmitSpeed = mParticleParams.mWaveEmitSpeed.get();
+			if (mForwardVel > waveEmitSpeed)
+				mWaterWakeAlpha = 0xFF;
 		}
 	}
 }
@@ -173,7 +188,8 @@ void TMario::rippleEffect()
 void TMario::inOutWaterEffect(f32 waterY)
 {
 	JGeometry::TVec3<f32> pos = mPosition;
-	pos.y                     = mFloorPosition.z;
+	f32 floorY                = mFloorPosition.z;
+	pos.y                     = floorY;
 
 	if (checkFlag(MARIO_FLAG_IN_SHALLOW_WATER)
 	    || checkPrevFlag(MARIO_FLAG_IN_SHALLOW_WATER)) {
@@ -224,8 +240,7 @@ void TBubbleCallBack::execute(JPABaseEmitter*, JPABaseParticle* particle)
 		particle->getCurrentPosition(pos);
 		if (pos.y > gpMarioOriginal->mFloorPosition.z) {
 			particle->unk10 |= 2;
-			if (gpMarioOriginal->mParticleParams.mBubbleToRipple.get()
-			    != 0.0f) {
+			if (gpMarioOriginal->mParticleParams.mBubbleToRipple.get()) {
 				gpMarioParticleManager->emit(PARTICLE_MS_M_AWAHAMON, &pos, 0,
 				                             nullptr);
 			}
@@ -344,8 +359,9 @@ void TMario::frontSlipEffect()
 			    PARTICLE_MS_M_SLIDESAND_A, &mCenterPos, 1, this);
 			return;
 		}
-		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    PARTICLE_MS_M_SLIPSMOKE, mModel->getModel()->getAnmMtx(0), 1, this);
+		MtxPtr mtx = mModel->getModel()->getAnmMtx(0);
+		gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_M_SLIPSMOKE,
+		                                            mtx, 1, this);
 	}
 }
 

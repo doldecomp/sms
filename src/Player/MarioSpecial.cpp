@@ -21,7 +21,7 @@ void TMario::barJumpSetting() { }
 BOOL TMario::barWait()
 {
 	if (mHolder == nullptr)
-		return changePlayerStatus(MARIO_STATUS_WALL_JUMP, 0, false);
+		return changePlayerStatus(MARIO_STATUS_LAND_SAFE_DOWN, 0, false);
 
 	if (mInput & 0x2) {
 		mPosition.x -= 200.0f * JMASSin(mFaceAngle.y);
@@ -34,7 +34,7 @@ BOOL TMario::barWait()
 	mPosition.y = mHolder->mPosition.y + mHolderHeightDiff;
 	mPosition.z = mHolder->mPosition.z;
 
-	if ((mInput & 0x10000) || mHolderHeightDiff > 100.0f) {
+	if ((mInput & 0x8000) || mHolderHeightDiff <= 100.0f) {
 		setPlayerVelocity(-2.0f);
 		mPosition.x -= 200.0f * JMASSin(mFaceAngle.y);
 		mPosition.z -= 200.0f * JMASCos(mFaceAngle.y);
@@ -45,7 +45,8 @@ BOOL TMario::barWait()
 		return changePlayerStatus(MARIO_STATUS_BAR_CLIMB, 0, false);
 
 	if (unk108->mStickV < -16.0f) {
-		mVel.y += unk108->mStickV * 0.001953125f;
+		f32 slipRate = 0.001953125f;
+		mVel.y += unk108->mStickV * slipRate;
 		mPosition.y += mVel.y;
 		mHolderHeightDiff = mPosition.y - mHolder->mPosition.y;
 		treeSlipEffect();
@@ -506,14 +507,14 @@ BOOL TMario::hanging()
 				           - moveSp * (mIntendedMag * foundWall->mNormal.z);
 				newPos.y = mPosition.y;
 				newPos.z = mPosition.z
-				           + moveSp * (mIntendedMag * foundWall->mNormal.x);
+				           + moveSp * (foundWall->mNormal.x * mIntendedMag);
 			}
 			if (yawDiff > -0x71c7 && yawDiff < -0x400) {
 				newPos.x = mPosition.x
 				           + moveSp * (mIntendedMag * foundWall->mNormal.z);
 				newPos.y = mPosition.y;
 				newPos.z = mPosition.z
-				           - moveSp * (mIntendedMag * foundWall->mNormal.x);
+				           - moveSp * (foundWall->mNormal.x * mIntendedMag);
 			}
 
 			TBGCheckData* foundWall2 = nullptr;
@@ -523,8 +524,9 @@ BOOL TMario::hanging()
 			newPos = record3.mCenter;
 
 			const TBGCheckData* groundDummy;
-			f32 groundY = gpMap->checkGround(newPos.x, 50.0f + newPos.y,
-			                                 newPos.z, &groundDummy);
+			f32 z       = newPos.z;
+			f32 y       = 50.0f + newPos.y;
+			f32 groundY = gpMap->checkGround(newPos.x, y, z, &groundDummy);
 			if (mPosition.y - 100.0f < groundY
 			    && groundY < 50.0f + mPosition.y) {
 				TBGWallCheckRecord record4(
@@ -557,8 +559,8 @@ BOOL TMario::hanging()
 					mFaceAngle.y = matan(foundWall2->getNormal().z,
 					                     foundWall2->getNormal().x)
 					               + 0x8000;
-					mPosition.x
-					    = record4.mCenter.x - 40.0f * foundWall2->getNormal().x;
+					f32 offset  = 40.0f * foundWall2->getNormal().x;
+					mPosition.x = record4.mCenter.x - offset;
 					mPosition.z
 					    = record4.mCenter.z - 40.0f * foundWall2->getNormal().z;
 					const TBGCheckData* dummy2;

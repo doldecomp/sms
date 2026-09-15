@@ -38,7 +38,8 @@ void TMarDirector::initECTGft(
 
 	JDrama::TEfbCtrlTex* graffitiEfbTex
 	    = new JDrama::TEfbCtrlTex("graffito check");
-	scene->insert(graffitiEfbTex);
+	JDrama::TViewObj* graffitiEfbObj = graffitiEfbTex;
+	scene->insert(graffitiEfbObj);
 
 	JDrama::TRect rect;
 	rect.set(0, 0, 0x200, 0x200);
@@ -46,20 +47,21 @@ void TMarDirector::initECTGft(
 	param_1->push_back(graffitiEfbTex, CUE_DRAW_INIT);
 
 	param_1->push_back(new JDrama::TViewport(rect, "graffito"), CUE_DRAW);
-	param_1->push_back(
-	    new JDrama::TOrthoProj(-1.0f, 1.0f, 0.0f, 0.0f, 512.0f, 512.0f),
-	    CUE_SET_PROJECTION);
+	JDrama::TViewObj* graffitiProjection
+	    = new JDrama::TOrthoProj(-1.0f, 1.0f, 0.0f, 0.0f, 512.0f, 512.0f);
+	param_1->push_back(graffitiProjection, CUE_SET_PROJECTION);
 	param_1->push_back(drawInit, CUE_DRAW);
 	param_1->push_back(graffitiGroup, CUE_UNK1000000);
 	param_1->push_back(graffitiEfbTex, CUE_DRAW);
 
 	for (int i = 0; i < gpPollution->getJointModelNum(); ++i) {
 		JDrama::TEfbCtrlTex* efbTex = new JDrama::TEfbCtrlTex("graffito");
-		scene->insert(efbTex);
+		JDrama::TViewObj* efbObj    = efbTex;
+		scene->insert(efbObj);
 
 		const ResTIMG* img = gpPollution->getLayer(i)->getPollutionImage();
 
-		efbTex->setImgPtr((u8*)&img + img->imageDataOffset);
+		efbTex->setImgPtr((u8*)img + img->imageDataOffset);
 		JDrama::TSize size(img->width, img->height);
 		efbTex->setDstSize(size);
 		efbTex->setTexFmt(GX_CTF_R8);
@@ -69,9 +71,9 @@ void TMarDirector::initECTGft(
 
 		param_2->push_back(efbTex, CUE_DRAW_INIT);
 		param_2->push_back(new JDrama::TViewport(rect, "graffito"), CUE_DRAW);
-		param_2->push_back(new JDrama::TOrthoProj(-1.0f, 1.0f, 0.0f, 0.0f,
-		                                          img->width, img->height),
-		                   CUE_SET_PROJECTION);
+		JDrama::TViewObj* projection = new JDrama::TOrthoProj(
+		    -1.0f, 1.0f, 0.0f, 0.0f, img->height, img->width);
+		param_2->push_back(projection, CUE_SET_PROJECTION);
 		param_1->push_back(drawInit, CUE_DRAW);
 		param_1->push_back(graffitiGroup, (i << CUE_OFFSET_POLLUTION_LAYER)
 		                                      | CUE_SEMITRANSPARENT_PRIO_2
@@ -95,8 +97,8 @@ JDrama::TViewObj* TMarDirector::initECTMir(
 
 	GXTexObj& obj = mirrorCam->unk60;
 	mirrorTex->setTexAttb(obj);
-	mirrorTex->setSrcRect(
-	    JDrama::TRect(0, 0, GXGetTexObjWidth(&obj), GXGetTexObjHeight(&obj)));
+	JDrama::TRect rect(0, 0, GXGetTexObjWidth(&obj), GXGetTexObjHeight(&obj));
+	mirrorTex->setSrcRect(rect);
 
 	return mirrorTex;
 }
@@ -111,7 +113,8 @@ void TMarDirector::initECDisp(
 	JDrama::TEfbCtrlDisp* stageDisp = new JDrama::TEfbCtrlDisp("stageDisp");
 	stageDisp->JDrama::TEfbCtrl::setSrcRect(JDrama::TRect(
 	    0, 0, (u16)SMSGetGameRenderWidth(), (u16)SMSGetGameRenderHeight()));
-	param_2->insert(stageDisp);
+	JDrama::TViewObj* stageDispObj = stageDisp;
+	param_2->insert(stageDispObj);
 
 	JDrama::TViewObj* composite3
 	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("合成3");
@@ -126,17 +129,21 @@ void TMarDirector::initECDisp(
 	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("太陽モデル");
 
 	if (sunModel) {
-		lensGlow = new TLensGlow(true, "太陽遮蔽物グロー");
-		param_2->insert(lensGlow);
-		lensFlare = new TLensFlare("レンズフレア");
-		param_2->insert(lensFlare);
+		lensGlow                      = new TLensGlow(true, "太陽遮蔽物グロー");
+		JDrama::TViewObj* lensGlowObj = lensGlow;
+		param_2->insert(lensGlowObj);
+		lensFlare                      = new TLensFlare("レンズフレア");
+		JDrama::TViewObj* lensFlareObj = lensFlare;
+		param_2->insert(lensFlareObj);
 	} else {
 		sunModel = JDrama::TNameRefGen::search<JDrama::TViewObj>("夕日モデル");
 		if (sunModel) {
 			lensGlow = new TLensGlow(true, "太陽遮蔽物グロー");
-			param_2->insert(lensGlow);
-			lensFlare = new TLensFlare("レンズフレア");
-			param_2->insert(lensFlare);
+			JDrama::TViewObj* lensGlowObj = lensGlow;
+			param_2->insert(lensGlowObj);
+			lensFlare                      = new TLensFlare("レンズフレア");
+			JDrama::TViewObj* lensFlareObj = lensFlare;
+			param_2->insert(lensFlareObj);
 		}
 	}
 

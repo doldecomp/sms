@@ -37,15 +37,17 @@ TLightCommon::TLightCommon(const char* name)
 
 void TLightCommon::loadAfter()
 {
-	mAmbAry    = JDrama::TNameRefGen::search<JDrama::TAmbAry>("Ambient Group");
-	mLightAry  = JDrama::TNameRefGen::search<JDrama::TLightAry>("Light Group");
-	mLightPos  = &mLightAry->getLight(0)->mPosition;
+	mAmbAry = static_cast<JDrama::TAmbAry*>(
+	    JDrama::TNameRefGen::search2("Ambient Group"));
+	mLightAry = static_cast<JDrama::TLightAry*>(
+	    JDrama::TNameRefGen::search2("Light Group"));
+	mLightPos  = &mLightAry->mLights[0].mPosition;
 	mShininess = 50.0f;
 	for (int i = 0; i < 4; ++i) {
-		unk31[i] = mLightAry->getLight(mLightIndex + i)->getColor();
-		unk44[i] = mLightAry->getLight(mLightIndex + i)->mPosition;
+		unk31[i] = mLightAry->getLight(i + mLightIndex)->getColor();
+		unk44[i] = mLightAry->mLights[i + mLightIndex].mPosition;
 	}
-	unk29[0] = mAmbAry->getAmb(mAmbIndex)->getColor();
+	unk29[0] = GXColor(mAmbAry->getAmb(mAmbIndex)->mColor);
 	unk29[1] = mAmbAry->getAmb(mAmbIndex + 1)->getColor();
 }
 
@@ -102,10 +104,9 @@ void TLightCommon::setLight(const JDrama::TGraphics* gfx, int index)
 
 	gpLightManager->setEffectLight(gfx, &light);
 
-	Vec spos;
-	MTXMultVec(gfx->getViewMtx(), getLightPosition(lightIndex), &spos);
-	VECNormalize(&spos, &spos);
-	GXInitSpecularDir(&light, -spos.x, -spos.y, -spos.z);
+	MTXMultVec(gfx->getViewMtx(), getLightPosition(lightIndex), &pos);
+	VECNormalize(&pos, &pos);
+	GXInitSpecularDir(&light, -pos.x, -pos.y, -pos.z);
 	GXInitLightColor(&light, getLightColor(lightIndex));
 	GXInitLightShininess(&light, mShininess);
 	GXLoadLightObjImm(&light, GX_LIGHT2);
@@ -119,6 +120,7 @@ void TLightCommon::perform(u32 cue, JDrama::TGraphics* graphics)
 		ReInitializeGX();
 		SMS_DrawInit();
 		GXLightObj light;
+		Vec pos;
 		GXInitLightPos(&light, getLightPosition(0)->x, getLightPosition(0)->y,
 		               getLightPosition(0)->z);
 		GXInitLightColor(&light, getLightColor(0));
@@ -159,10 +161,9 @@ void TLightMario::setLight(const JDrama::TGraphics* gfx, int index)
 
 	gpLightManager->setEffectLight(gfx, &light);
 
-	Vec spos;
-	MTXMultVec(gfx->getViewMtx(), getLightPosition(lightIndex), &spos);
-	VECNormalize(&spos, &spos);
-	GXInitSpecularDir(&light, -spos.x, -spos.y, -spos.z);
+	MTXMultVec(gfx->getViewMtx(), getLightPosition(lightIndex), &pos);
+	VECNormalize(&pos, &pos);
+	GXInitSpecularDir(&light, -pos.x, -pos.y, -pos.z);
 	GXInitLightColor(&light, getLightColor(lightIndex));
 	GXInitLightShininess(&light, mShininess);
 	GXLoadLightObjImm(&light, GX_LIGHT2);
@@ -194,10 +195,13 @@ TLightDrawBuffer::TLightDrawBuffer(int param_1, u32 param_2, const char* name)
     , unk80(param_1)
 {
 	snprintf(unk1C, 0x32, "%s%s", name, "opa");
-	mOpaDrawBufferObject = new JDrama::TDrawBufObj(3, param_2, unk1C);
+	JDrama::TDrawBufObj* drawBuffer
+	    = new JDrama::TDrawBufObj(3, param_2, unk1C);
+	mOpaDrawBufferObject = drawBuffer;
 
 	snprintf(unk4E, 0x32, "%s%s", name, "xlu");
-	mXluDrawBufferObject = new JDrama::TDrawBufObj(4, param_2, unk4E);
+	drawBuffer           = new JDrama::TDrawBufObj(4, param_2, unk4E);
+	mXluDrawBufferObject = drawBuffer;
 }
 #pragma dont_inline reset
 
@@ -427,9 +431,11 @@ TLightWithDBSetManager::TLightWithDBSetManager(const char* name)
 
 void TLightWithDBSetManager::loadAfter()
 {
+	GXColor color;
 	JDrama::TLightAry* group
 	    = JDrama::TNameRefGen::search<JDrama::TLightAry>("Light Group");
-	mEffectLightColor = group->getLight(0)->getColor();
+	GXGetLightColor(group->getLight(0)->getLightObj(), &color);
+	mEffectLightColor = color;
 	mEffectLightPos   = group->getLight(0)->mPosition;
 }
 

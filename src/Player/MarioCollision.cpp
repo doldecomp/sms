@@ -48,7 +48,8 @@ void TMario::decHP(int hp)
 {
 	// volatile u32 padding[2];
 	if (isUnderWater() || checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
-		mAir -= hp;
+		f32 air = hp;
+		mAir -= air;
 
 		for (int i = 0; i < 10; ++i) {
 			bubbleFromMouth(i);
@@ -253,7 +254,7 @@ void TMario::floorDamageExec(const TMario::TEParams& params)
 	mFloorHitActor.mPosition.z = mPosition.z + JMASCos(mFaceAngle.y);
 	damageExec(&mFloorHitActor, params.mDamage.get(), params.mDownType.get(),
 	           params.mWaterEmit.get(), params.mMinSpeed.get(),
-	           params.mMotor.get(), params.mDamage.get(),
+	           params.mMotor.get(), params.mDirty.get(),
 	           params.mInvincibleTime.get());
 }
 
@@ -309,7 +310,12 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 		return;
 	}
 
-	u32 animOffset1 = checkStatusType(MARIO_STATUS_FLAG_JUMPING) ? 1 : 0;
+	u32 animOffset1;
+	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
+		animOffset1 = 1;
+	} else {
+		animOffset1 = 0;
+	}
 	if (onYoshi()) {
 		animOffset1 = true;
 	}
@@ -346,12 +352,12 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 			canPlayAnimation = false;
 
 		if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
-			canPlayAnimation = true;
+			canPlayAnimation = false;
 
 		if (canPlayAnimation) {
 			// I don't think this is correct, but was the closest i could get
-			u32 statusIdx = animationTypes[damageAnimType + animOffset1 * 4
-			                               + animOffset2 * 8];
+			u32 statusIdx = animationTypes[animOffset2 * 8 + animOffset1 * 4
+			                               + damageAnimType];
 			if (mHolder == nullptr || mHolder->isActorType(0x40000098)) {
 				// Knocked from a wire hang by damage?
 				changePlayerDropping(MARIO_STATUS_WIRE_HANG_LAND_SAFE_DOWN, 0);
@@ -362,7 +368,8 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 	}
 	mInvincibilityFrames = invincibilityFrames;
 	decHP(damage);
-	if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
+	bool hasFludd = checkFlag(MARIO_FLAG_HAS_FLUDD);
+	if (hasFludd) {
 		for (int i = 0; i < waterEmit; ++i) {
 			if (mWaterGun->damage()) {
 				unk154->mPos.value = mWaterGun->mEmitPos[0];
@@ -382,9 +389,10 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 
 	if (damageAnimType != 3) {
 		calcDamagePos(hittingActor->mPosition);
-		emitParticle(PARTICLE_MS_DMG_B, &mDamagePos);
-		emitParticle(PARTICLE_MS_DMG_C, &mDamagePos);
-		emitParticle(PARTICLE_MS_DMG_A, &mDamagePos);
+		const JGeometry::TVec3<f32>& damagePos = mDamagePos;
+		emitParticle(PARTICLE_MS_DMG_B, &damagePos);
+		emitParticle(PARTICLE_MS_DMG_C, &damagePos);
+		emitParticle(PARTICLE_MS_DMG_A, &damagePos);
 	}
 
 	if (mHealth > 0) {

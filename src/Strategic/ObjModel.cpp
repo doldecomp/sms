@@ -148,20 +148,28 @@ MActor* TMActorKeeper::createMActorFromNthData(int n, u32 flags)
 MActor* TMActorKeeper::createMActor(const char* model_data_name, u32 flags)
 {
 	TModelDataKeeper* keeper = getModelDataKeeper();
-
-	int index = keeper->getIndex(model_data_name);
-
+	int index                = keeper->getIndex(model_data_name);
 	if (index < 0) {
 		keeper->createAndKeepData(model_data_name, mModelLoaderFlags);
-		index = keeper->getIndex(model_data_name);
+		index = keeper->getModelDataNum() - 1;
 	}
 
-	return createMActorFromNthData(index, flags);
+	mActorModelDataIndices[mActorNum] = index;
+	const TModelDataNode* nth         = &keeper->mHead;
+	for (int i = 0; i < index; ++i)
+		nth = nth->getNext();
+	SDLModelData* data = nth->getData();
+	SDLModel* model    = new SDLModel(data, flags, 1);
+	MActor* actor      = new MActor(mActorAnmData);
+	actor->setModel(model, flags);
+	mActors[mActorNum] = actor;
+	++mActorNum;
+	return actor;
 }
 
 MActor* TMActorKeeper::createMActorFromAllBmd(u32 flags)
 {
-	int num = mModelDataKeeper->getModelDataNum();
+	int num = getModelDataKeeper()->getModelDataNum();
 	for (int i = 0; i < num; ++i)
 		createMActorFromNthData(i, flags);
 }
@@ -191,7 +199,8 @@ TMActorKeeper::TMActorKeeper(TLiveManager* param_1)
 		mActorAnmData    = param_1->getMActorAnmData();
 	}
 
-	mModelDataNum          = mModelDataKeeper->getModelDataNum();
+	int modelDataNum       = mModelDataKeeper->getModelDataNum();
+	mModelDataNum          = modelDataNum;
 	mActorNum              = 0;
 	mActors                = new MActor*[mModelDataNum];
 	mActorModelDataIndices = new u16[mModelDataNum];

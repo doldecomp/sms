@@ -8,6 +8,7 @@
 #include <JSystem/JDrama/JDRCamera.hpp>
 #include <JSystem/JDrama/JDRScreen.hpp>
 #include <System/Application.hpp>
+#include <System/DummyStrings.hpp>
 #include <System/MarioGamePad.hpp>
 #include <System/Resolution.hpp>
 #include <MSound/MSound.hpp>
@@ -127,10 +128,11 @@ TGCLogoDir::~TGCLogoDir() { mGamePad->offFlag(0x1); }
 
 int TGCLogoDir::direct()
 {
+	int desiredAppState = TApplication::APP_STATE_DEFAULT;
+
 	JDrama::TDirector::direct();
 
-	int desiredAppState = TApplication::APP_STATE_DEFAULT;
-	int nextState       = mOverallState;
+	int nextState = mOverallState;
 	switch (mOverallState) {
 	case 0:
 		if (direct_nlogo()) {
@@ -169,15 +171,12 @@ bool TGCLogoDir::direct_nlogo()
 	switch (mState) {
 	case 0:
 		if (gpApplication.mFader->isFullyFadedIn()) {
-			if (mProgSelect->unkC.mValue == 0)
-				nextState = 3;
-			else
-				nextState = 1;
+			nextState = !mProgSelect->unkC.check(0xffff) ? 3 : 1;
 
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_MV_CHAO, 0, nullptr, 0);
 			mLogoShowTimer = 0;
 		} else {
-			if (mProgSelect->unkC.mValue != 0 && VIGetTvFormat() == 0
+			if (mProgSelect->unkC.check(0xffff) && VIGetTvFormat() == 0
 			    && VIGetDTVStatus() == 1) {
 				if (OSGetProgressiveMode() == 1) {
 					mProgSelect->unkC = 0;
@@ -200,7 +199,7 @@ bool TGCLogoDir::direct_nlogo()
 		} else {
 			bool bVar1 = false;
 
-			if (mProgSelect->unkC.mValue != 0 && VIGetTvFormat() == 0
+			if (mProgSelect->unkC.check(0xffff) && VIGetTvFormat() == 0
 			    && VIGetDTVStatus() == 1) {
 				if (OSGetProgressiveMode() == 1) {
 					mProgSelect->unkC = 0;
@@ -211,11 +210,10 @@ bool TGCLogoDir::direct_nlogo()
 						mProgSelect->unkC = 0;
 						bVar1             = true;
 					}
-				} else {
-					unk44 = 0;
 				}
 			}
 
+			unk44 = bVar1;
 			if (bVar1) {
 				mLogoShowTimer = 0;
 				nextState      = 3;
@@ -224,7 +222,7 @@ bool TGCLogoDir::direct_nlogo()
 		break;
 
 	case 3:
-		if (mProgSelect->unkC.mValue) {
+		if (mProgSelect->mHideTextBoxes) {
 			mLogoShowTimer = 0;
 			nextState      = 4;
 		}

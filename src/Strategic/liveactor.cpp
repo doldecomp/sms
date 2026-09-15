@@ -2,6 +2,7 @@
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/question.hpp>
 #include <Strategic/Spine.hpp>
+#include <Strategic/spcinterp.hpp>
 #include <Strategic/Binder.hpp>
 #include <System/MarDirector.hpp>
 #include <MarioUtil/MtxUtil.hpp>
@@ -58,8 +59,9 @@ TLiveActor::TLiveActor(const char* name)
 
 	mRidePos.zero();
 
-	mGroundPlane = TMap::getIllegalCheckData();
-	if (gpMarDirector->getCurrentMap() != 8)
+	mGroundPlane   = TMap::getIllegalCheckData();
+	u32 currentMap = gpMarDirector->getCurrentMap();
+	if (currentMap != 8)
 		mLiveFlag |= LIVE_FLAG_UNK2000;
 }
 
@@ -117,9 +119,10 @@ void TLiveActor::calcRideMomentum()
 			mLinearVelocity += rideVelocity;
 
 			if (unkE8 >= 2) {
-				mAngularVelocity.y
-				    += MsAngleDiff(mGroundActor->mRotation.y, mGroundActorYaw);
-				mGroundActorYaw = mGroundActor->mRotation.y;
+				f32 angleDiff
+				    = MsAngleDiff(mGroundActor->mRotation.y, mGroundActorYaw);
+				mAngularVelocity.y = angleDiff + mAngularVelocity.y;
+				mGroundActorYaw    = mGroundActor->mRotation.y;
 			}
 		}
 	} else {
@@ -229,19 +232,18 @@ void TLiveActor::bind()
 
 void TLiveActor::control()
 {
-	// TODO: what is unk90???
-	if (unk90 == nullptr || *(int*)((char*)unk90 + 4) == 0) {
+	if (unk90 == nullptr || (s32)((TSpcInterp*)unk90)->mStepsToDo == 0) {
 		if (mSpine)
 			mSpine->update();
 	} else {
 		if (!mSpine) {
-			if (unk90 && *(int*)((char*)unk90 + 4) != 0) {
-				// call on unk90
-			}
-		} else if (mSpine->isIdle()) {
-			// call on unk90
-		} else {
+			if (unk90 && (s32)((TSpcInterp*)unk90)->mStepsToDo != 0)
+				((TSpcInterp*)unk90)->update();
+		} else if (mSpine->getCurrentNerve() != nullptr
+		           || mSpine->getVertebraeCount() > 0) {
 			mSpine->update();
+		} else {
+			((TSpcInterp*)unk90)->update();
 		}
 	}
 }
@@ -441,10 +443,15 @@ void TLiveActor::initAnmSound()
 	if (mAnmSound)
 		return;
 
-	if (checkActorType(0x4000000))
-		mAnmSound = new MAnmSoundNPC(SMSGetMSound());
-	else
-		mAnmSound = new MAnmSound(SMSGetMSound());
+	MAnmSoundNPC* npcAnmSound;
+	MAnmSound* anmSound;
+	if (checkActorType(0x4000000)) {
+		npcAnmSound = new MAnmSoundNPC(SMSGetMSound());
+		mAnmSound   = npcAnmSound;
+	} else {
+		anmSound  = new MAnmSound(SMSGetMSound());
+		mAnmSound = anmSound;
+	}
 
 	mAnmSound->initAnmSound(nullptr, 1, 0.0f);
 }

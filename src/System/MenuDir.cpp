@@ -22,6 +22,9 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+
 TMenuDirector::TMenuDirector()
     : unk18(0)
     , unk1C(nullptr)
@@ -82,7 +85,7 @@ int TMenuDirector::rsetup()
 	unk3C = new J2DSetScreen("title.blo", arc);
 
 	if (!unk3C)
-		return 0;
+		return 1;
 
 	group2d->getChildren().push_back(new TMenuBase(unk3C));
 
@@ -120,12 +123,20 @@ int TMenuDirector::rsetup()
 		for (int i = 0; i < 19; ++i) {
 			const char* message = SMSGetMessageData(unk1C, i);
 			char acStack_40[22];
-			if (message)
+			if (message) {
 				snprintf(acStack_40, 22, "%02d %s", i, message);
-			else if (i == 17 || i == 18)
+			} else {
+				if (i == 17)
+					goto showMovie;
+				if (i != 18)
+					goto noData;
+			showMovie:
 				snprintf(acStack_40, 22, "show movie %d", i == 17 ? 1 : 2);
-			else
+				goto setMessage;
+			noData:
 				snprintf(acStack_40, 22, "%02d No Data            ", i);
+			}
+		setMessage:
 
 			if (i < 9) {
 				((J2DTextBox*)unk3C->search('tx01' + i))->setString(acStack_40);
@@ -171,9 +182,9 @@ int TMenuDirector::direct()
 		void* res;
 		OSJoinThread(&gSetupThread, &res);
 		gpApplication.mFader->startFadeinT(0.25f);
-		if (TFlagManager::getInstance()->getBool(0x30007)) {
+		if (!TFlagManager::getInstance()->getBool(0x30007)) {
 			TFlagManager::getInstance()->setBool(true, 0x30007);
-			gpMSound->loadWave(MS_WAVE_UNK128);
+			gpMSound->loadWave(MS_WAVE_DEFAULT);
 		}
 		unk50 = true;
 	}
@@ -262,7 +273,12 @@ int TMenuDirector::direct()
 					if (i == 9)
 						snprintf(box->getStringPtr(), 22, "ボス");
 				}
-			} else if (unk40->unk2C == 0x11 || unk40->unk2C == 0x12) {
+			} else {
+				if (unk40->unk2C == 0x11)
+					goto showMovies;
+				if (unk40->unk2C != 0x12)
+					goto showStages;
+			showMovies:;
 				for (int i = 0; i < 20; ++i) {
 					int code;
 					if (i < 9)
@@ -289,7 +305,8 @@ int TMenuDirector::direct()
 						         movie);
 					}
 				}
-			} else {
+				goto finishLabels;
+			showStages:;
 				for (int i = 0; i < 20; ++i) {
 					int code;
 					if (i < 9)
@@ -306,6 +323,7 @@ int TMenuDirector::direct()
 						snprintf(box->getStringPtr(), 22, "%02d EX %d", i,
 						         i - 10);
 				}
+			finishLabels:;
 			}
 
 			unk38->show();
@@ -321,7 +339,7 @@ int TMenuDirector::direct()
 			gpApplication.mFader->startFadeoutT(0.25f);
 			TGameSequence nextArea;
 			nextArea.set(unk48, unk4C, 0);
-			gpApplication.setNextArea(nextArea);
+			gpApplication.mNextArea = nextArea;
 		} else if (unk44->checkFlag(0x2)) {
 			unk18 = 0;
 			unk40->unfade();
@@ -332,7 +350,7 @@ int TMenuDirector::direct()
 
 	case 2:
 		if (gpApplication.mFader->isFullyFadedOut()
-		    && gpMSound->checkWaveOnAram(MS_WAVE_UNK128)) {
+		    && gpMSound->checkWaveOnAram(MS_WAVE_DEFAULT)) {
 			if (unk40->unk2C == 0x11 || unk40->unk2C == 0x12)
 				uVar13 = TApplication::APP_STATE_MOVIE;
 			else

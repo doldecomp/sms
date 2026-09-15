@@ -452,7 +452,8 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 			}
 
 			s16 headAngle = mario->unk100 * anmSpeed;
-			MsMtxSetRotRPH(transform, 0.0f, SHORTANGLE2DEG(headAngle), 0.0f);
+			f32 angle     = SHORTANGLE2DEG(headAngle);
+			MsMtxSetRotRPH(transform, 0.0f, angle, 0.0f);
 			const TWaterGun* gun = gpMarioForCallBack->mWaterGun;
 			s16 gunAngle         = gun->getCurrentNozzle()->getGunAngle() / 2;
 			if (gunAngle < 0) {
@@ -469,17 +470,18 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 
 static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 {
-	volatile u32 padding[3];
+	Mtx transform;
 	if (param_2 == 0) {
-		TMario* mario = gpMarioForCallBack;
-		s16* unk      = &mario->unkFC; // This feels wrong
-		if (mario == gpMarioOriginal && gpCamera->isLButtonCamera() == true
+		s16* unk = &gpMarioForCallBack->unkFC;
+		if (gpMarioForCallBack == gpMarioOriginal
+		    && gpCamera->isLButtonCamera() == true
 		    && gpMarioForCallBack->canBendBody() != 0
 		    && gpCamera->mCurrentTarget.mPitch > 0) {
-			*unk = gpCamera->mCurrentTarget.mPitch;
-			Mtx transform;
-			MsMtxSetRotRPH(transform, SHORTANGLE2DEG(-mario->unk100), 0.0f,
-			               SHORTANGLE2DEG(gpCamera->mCurrentTarget.mPitch));
+			*unk       = gpCamera->mCurrentTarget.mPitch;
+			s16 unk100 = -unk[2];
+			s16 unkFC  = *unk;
+			MsMtxSetRotRPH(transform, SHORTANGLE2DEG(unk100), 0.0f,
+			               SHORTANGLE2DEG(unkFC));
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
 		} else if (gpMarioForCallBack->checkStatusType(MARIO_FLAG_HAS_FLUDD)
@@ -488,17 +490,16 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 			TNozzleBase* currentNozzle = gun->getCurrentNozzle();
 			s16 gunAngle               = currentNozzle->getGunAngle();
 			if (gunAngle > 0) {
-				Mtx gunMtx;
-				MsMtxSetRotRPH(gunMtx, 0.0f, 0.0f, SHORTANGLE2DEG(gunAngle));
-				MTXConcat(J3DSys::mCurrentMtx, gunMtx, J3DSys::mCurrentMtx);
+				MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(gunAngle));
+				MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 				return 1;
 			}
-		} else if (gpMarioForCallBack->mAnimationId == TMario::ANIM_RUN1
-		           || gpMarioForCallBack->mAnimationId == TMario::ANIM_RUN2
-		           || gpMarioForCallBack->mAnimationId
-		                      == TMario::ANIM_RIDE_SHELL
-		                  && !gpMarioForCallBack->checkStatusType(
-		                      MARIO_FLAG_FLUDD_EMITTING)) {
+		} else if ((gpMarioForCallBack->mAnimationId == TMario::ANIM_RUN1
+		            || gpMarioForCallBack->mAnimationId == TMario::ANIM_RUN2
+		            || gpMarioForCallBack->mAnimationId
+		                   == TMario::ANIM_RIDE_SHELL)
+		           && !gpMarioForCallBack->checkFlag(
+		               MARIO_FLAG_FLUDD_EMITTING)) {
 
 			// Ah, i love storing floats, casting them to s16
 			// and then transforming them to floats again...
@@ -508,14 +509,13 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 			// /* 0x3DC */ f32 unk3DC;
 			s16 unk3D8 = gpMarioForCallBack->mWaistRoll;
 			s16 unk3DC = gpMarioForCallBack->mWaistPitch;
-			Mtx transform;
 			MsMtxSetRotRPH(transform, SHORTANGLE2DEG(unk3D8), 0.0f,
 			               SHORTANGLE2DEG(unk3DC));
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
 		} else {
-			*unk          = 0;
-			mario->unk100 = 0;
+			*unk                       = 0;
+			gpMarioForCallBack->unk100 = 0;
 		}
 	}
 	return 1;
@@ -575,8 +575,7 @@ static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 
 		// Definitely some inline shenanigans
 		// And this is wrong
-		if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK)
-		        == MARIO_STATUS_TYPE_WAITING
+		if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK) == 0
 		    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
 		    && gpMarioForCallBack->onYoshi() == 0) {
 
@@ -596,15 +595,15 @@ static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 			if (!checkData->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
 
 				// A lot of stuff is not matching with these copies
-				Vec currentMtxDir;
-				currentMtxDir.x = J3DSys::mCurrentMtx[0][0];
-				currentMtxDir.y = J3DSys::mCurrentMtx[1][0];
-				currentMtxDir.z = J3DSys::mCurrentMtx[2][0];
+				Vec currentMtxDir = { 0.0f, 0.0f, 0.0f };
+				currentMtxDir.x   = J3DSys::mCurrentMtx[0][0];
+				currentMtxDir.y   = J3DSys::mCurrentMtx[1][0];
+				currentMtxDir.z   = J3DSys::mCurrentMtx[2][0];
 
-				Vec normalDir;
-				normalDir.x = -checkData->getNormal().x;
-				normalDir.y = -checkData->getNormal().y;
-				normalDir.z = -checkData->getNormal().z;
+				Vec normalDir = { 0.0f, 0.0f, 0.0f };
+				normalDir.x   = -checkData->getNormal().x;
+				normalDir.y   = -checkData->getNormal().y;
+				normalDir.z   = -checkData->getNormal().z;
 
 				Vec currentNormalCross1;
 				Vec currentNormalCross2;

@@ -37,9 +37,9 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 	const TNpcInitInfo* initInfo
 	    = SMSGetNpcInitData(unk60->getActorType() - 0x4000001);
 
-	for (int i = 0; i < 2; ++i)
-		for (int j = 0; j < 12; ++j)
-			unk0[i][j] = nullptr;
+	TSharedParts** parts = &unk0[0][0];
+	for (int i = 0; i < 24; ++i, ++parts)
+		*parts = nullptr;
 
 	for (int i = 0; i < 12; ++i) {
 		const TNpcModelData* iVar10 = initInfo->unk4[i];
@@ -67,18 +67,18 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 			                      ->getModel()
 			                      ->getModelData()
 			                      ->getJointName()
-			                      ->getIndex(initInfo->unk4[i + j]->unk0);
+			                      ->getIndex(puVar6->unk0);
 
 			TNPCManager* manager    = (TNPCManager*)unk60->getManager();
 			SDLModelData* modelData = manager->getPartsSDLModelData(puVar3);
-			unk0[i][j] = new TSharedParts(unk60, iVar6, modelData, 3);
-			if (initInfo->unk4[j]->unk2B)
-				SMS_UnifyMaterial(unk0[i][j]->getMActor()->getModel());
+			unk0[j][i] = new TSharedParts(unk60, iVar6, modelData, 3);
+			if (puVar6->unk2B)
+				SMS_UnifyMaterial(unk0[j][i]->getMActor()->getModel());
 
 			switch (unk60->getActorType()) {
 			case 0x4000018:
 				if (j != 0 || (i != 3 && i != 4)) {
-					TSharedParts* parts = unk0[i][j];
+					TSharedParts* parts = unk0[j][i];
 
 					J3DModelData* pJVar17
 					    = parts->getMActor()->getModel()->getModelData();
@@ -101,15 +101,15 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 						if (iVar6 == -1)
 							iVar6 = TBaseNPC::mPtrSaveNormal->mMotionBlendFrame
 							            .get();
-						unk0[i][j]->getMActor()->initSimpleMotionBlend(iVar6);
+						unk0[j][i]->getMActor()->initSimpleMotionBlend(iVar6);
 						break;
 					}
 				}
 				break;
 
 			case 0x4000010:
-				if (i == 0 && j == 9)
-					unk0[i][j]->getMActor()->initSimpleMotionBlend(20);
+				if (j == 0 && i == 9)
+					unk0[j][i]->getMActor()->initSimpleMotionBlend(20);
 				break;
 
 			case 0x4000015:
@@ -118,7 +118,7 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 					if (iVar6 == -1)
 						iVar6
 						    = TBaseNPC::mPtrSaveNormal->mMotionBlendFrame.get();
-					unk0[i][j]->getMActor()->initSimpleMotionBlend(iVar6);
+					unk0[j][i]->getMActor()->initSimpleMotionBlend(iVar6);
 				}
 				break;
 			}
@@ -127,12 +127,12 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 				const TColorChangeInfo* ccInfo
 				    = initInfo->unk4[i][j].unk10[k].unk0;
 				if (ccInfo != nullptr)
-					SMS_InitChangeNpcColor(unk0[i][j]->getMActor(), ccInfo,
+					SMS_InitChangeNpcColor(unk0[j][i]->getMActor(), ccInfo,
 					                       param3, param4);
 			}
 
 			if (param4 != nullptr) {
-				J3DModel* pJVar18     = unk0[i][j]->getMActor()->getModel();
+				J3DModel* pJVar18     = unk0[j][i]->getMActor()->getModel();
 				J3DModelData* pJVar15 = pJVar18->getModelData();
 				u16 matNum            = pJVar15->getMaterialNum();
 				for (u16 k = 0; k < matNum; ++k) {
@@ -146,7 +146,7 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 				}
 			}
 
-			unk0[i][j]->getMActor()->setLightType(LIGHT_TYPE_OBJECT);
+			unk0[j][i]->getMActor()->setLightType(LIGHT_TYPE_OBJECT);
 		}
 	}
 }

@@ -241,10 +241,10 @@ void TYoshi::init(TMario* param_1)
 	mBodyAnmSoundTable[16] = JKRGetResource("/yoshi/bas/yoshi_sidewalk_l.bas");
 	mBodyAnmSoundTable[17] = JKRGetResource("/yoshi/bas/yoshi_sidewalk_r.bas");
 	mBodyAnmSoundTable[18] = JKRGetResource("/yoshi/bas/yoshi_slide_end.bas");
-	mBodyAnmSoundTable[20] = JKRGetResource("/yoshi/bas/yoshi_wait.bas");
-	mBodyAnmSoundTable[21] = JKRGetResource("/yoshi/bas/yoshi_wait_alone.bas");
-	mBodyAnmSoundTable[22] = JKRGetResource("/yoshi/bas/yoshi_walk.bas");
-	mBodyAnmSoundTable[23] = JKRGetResource("/yoshi/bas/yoshi_water_die.bas");
+	mBodyAnmSoundTable[22] = JKRGetResource("/yoshi/bas/yoshi_wait.bas");
+	mBodyAnmSoundTable[23] = JKRGetResource("/yoshi/bas/yoshi_wait_alone.bas");
+	mBodyAnmSoundTable[24] = JKRGetResource("/yoshi/bas/yoshi_walk.bas");
+	mBodyAnmSoundTable[25] = JKRGetResource("/yoshi/bas/yoshi_water_die.bas");
 	// clang-format on
 
 	changeAnimation(0x17);
@@ -392,15 +392,17 @@ bool TYoshi::appearFromEgg(const JGeometry::TVec3<f32>& pos, f32 yrot,
 	mLastTranslation = pos;
 	mTranslation     = pos;
 	mTranslation.y += 1.0f;
-	mEggRotSpeed = DEG2SHORTANGLE(yrot);
-	mState       = STATE_UNK2;
+	s16 eggRotSpeed = DEG2SHORTANGLE(yrot);
+	mEggRotSpeed    = eggRotSpeed;
+	mState          = STATE_UNK2;
 
 	changeAnimation(0);
 
-	TTakeActor* fruit = (TTakeActor*)egg->getFruit();
+	THitActor* fruit      = egg->getFruit();
+	TTakeActor* takeActor = (TTakeActor*)fruit;
 	if (mMario->getHeldObject() == fruit) {
-		fruit->receiveMessage(mMario->getFloorHitActor(), HIT_MESSAGE_UNK8);
-		fruit->mHolder      = nullptr;
+		takeActor->receiveMessage(mMario->getFloorHitActor(), HIT_MESSAGE_UNK8);
+		takeActor->mHolder  = nullptr;
 		mMario->mHeldObject = nullptr;
 	}
 

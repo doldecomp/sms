@@ -37,7 +37,8 @@ void TTalkCursor::perform(u32 cue, JDrama::TGraphics* graphics)
 void TTalkCursor::associateNPC(TBaseNPC* param_1)
 {
 	if (param_1) {
-		TPosition3f mtx(param_1->getCursorPos());
+		TPosition3f mtx;
+		mtx.translation(param_1->getCursorPos());
 		unk10->getModel()->setBaseTRMtx(mtx);
 		unkC.off(CUE_CALC_VIEW | CUE_ENTRY);
 	} else {

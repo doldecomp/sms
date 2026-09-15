@@ -27,7 +27,10 @@ void isNearMapObj(const JDrama::TActor&, const char*, f32) { }
 
 void is3BarrelNear(const TBaseNPC&) { }
 
-void TMarDirector::getTalkMsgID(TBaseNPC*) { }
+void TMarDirector::getTalkMsgID(TBaseNPC*)
+{
+	(void)"\x83\x6a\x83\x52\x83\x7d\x83\x7d";
+}
 
 void TMarDirector::updateFlag(TBaseNPC*, u32, u32) { }
 
@@ -77,28 +80,31 @@ TBaseNPC* TMarDirector::findNearestTakeNPC()
 void TMarDirector::movement_game()
 {
 	unk84->associateNPC(nullptr);
-	if ((int)unk124 == 0)
-		return;
+	switch (unk124) {
+	case 0:
+		unk18[0]->offFlag(4);
+		if (gpMarioOriginal->isHolding())
+			return;
+		if (gpCamera->isLButtonCamera())
+			return;
 
-	unk18[0]->offFlag(0x2);
-	if (!gpMarioOriginal->isHolding() && gpCamera->isLButtonCamera())
-		return;
-
-	if (!gpCamera->isDemoCamera()) {
-		TBaseNPC* takeNpc = findNearestTakeNPC();
-		if (takeNpc != nullptr) {
-			unk84->associateNPC(takeNpc);
-		} else {
-			TBaseNPC* talkNpc = findNearestTalkNPC();
-			if (talkNpc != nullptr) {
-				unkA0 = talkNpc;
-				unk84->associateNPC(talkNpc);
-				unk18[0]->onFlag(4);
-				unk128 |= 0x1;
-				if ((unk128 & 2) && (unk18[0]->mEnabledFrameMeaning & 0x800))
-					unk126 = 1;
+		if (!gpCamera->isDemoCamera()) {
+			if (TBaseNPC* takeNpc = findNearestTakeNPC()) {
+				unk84->associateNPC(takeNpc);
+			} else {
+				TBaseNPC* talkNpc = findNearestTalkNPC();
+				if (talkNpc != nullptr) {
+					unkA0 = talkNpc;
+					unk84->associateNPC(talkNpc);
+					unk18[0]->onFlag(4);
+					unk128 |= 0x1;
+					if ((unk128 & 2)
+					    && (unk18[0]->mEnabledFrameMeaning & 0x800))
+						unk126 = 1;
+				}
 			}
 		}
+		break;
 	}
 }
 
@@ -120,18 +126,15 @@ void TMarDirector::fireGetNozzle(TItemNozzle* nozzle)
 	if (!nozzle)
 		return;
 
+	u8 area = gpApplication.mCurrArea.unk0;
 	if (nozzle->isActorType(0x20000022)
-	    && TFlagManager::smInstance->getNozzleRight(
-	        gpApplication.mCurrArea.unk0, 0)) {
-		TFlagManager::smInstance->setNozzleRight(gpApplication.mCurrArea.unk0,
-		                                         0);
+	    && !TFlagManager::smInstance->getNozzleRight(area, 0)) {
+		TFlagManager::smInstance->setNozzleRight(area, 0);
 		unk4C |= 0x200;
 		unk261 = 3;
 	} else if (nozzle->isActorType(0x2000002A)
-	           && TFlagManager::smInstance->getNozzleRight(
-	               gpApplication.mCurrArea.unk0, 1)) {
-		TFlagManager::smInstance->setNozzleRight(gpApplication.mCurrArea.unk0,
-		                                         1);
+	           && !TFlagManager::smInstance->getNozzleRight(area, 1)) {
+		TFlagManager::smInstance->setNozzleRight(area, 1);
 		unk4C |= 0x200;
 		unk261 = 4;
 	}
@@ -148,7 +151,18 @@ void TMarDirector::fireGetStar(TShine* shine)
 	                    nullptr, JDrama::TFlagT<u16>(0));
 }
 
-void TMarDirector::fireRideYoshi(TYoshi*) { }
+void TMarDirector::fireRideYoshi(TYoshi* yoshi)
+{
+	if (!yoshi)
+		return;
+
+	if (gpApplication.mCurrArea.unk0 == 1
+	    && !TFlagManager::smInstance->getBool(0x1038F)) {
+		TFlagManager::smInstance->setBool(true, 0x1038F);
+		unk4C |= 0x200;
+		unk261 = 5;
+	}
+}
 
 void TMarDirector::fireDefeatEnemy(TSpineEnemy*) { }
 
@@ -156,14 +170,45 @@ void TMarDirector::fireDemoMovie(u32, TLiveActor*) { }
 
 void TMarDirector::movement()
 {
-	if ((int)mState != STATE_UNK4)
+	switch (mState) {
+	case STATE_UNK4:
 		movement_game();
+		break;
+	}
 }
 
 #pragma dont_inline on
 void TMarDirector::setNextStage(u16 param_1, JDrama::TActor* param_2)
 {
-	// TODO: wtf is happening in this function it's cursed
+	if (unk4C & 2)
+		return;
+
+	TGameSequence nextArea = TGameSequence();
+	if (param_1 >= 0x100) {
+		nextArea.unk0 = (param_1 >> 8) - 1;
+		nextArea.unk1 = param_1;
+	} else {
+		nextArea.unk0 = param_1;
+		nextArea.unk1 = 0xff;
+	}
+	gpApplication.setNextArea(nextArea);
+
+	if (param_2) {
+		unk4C |= 4;
+		unk250 = param_2;
+	} else if ((gpApplication.mCurrArea.unk0 == 1 && nextArea.unk0 == 5)
+	           || (gpApplication.mCurrArea.unk0 == 1 && nextArea.unk0 == 6)
+	           || (gpApplication.mCurrArea.unk0 == 1 && nextArea.unk0 == 8)) {
+		unk4C |= 8;
+	} else {
+		unk4C |= 2;
+	}
+
+	int stage = nextArea.unk0;
+	if (stage == 0x37) {
+		unk4C |= 0x100;
+		gpApplication.mMovie = 6;
+	}
 }
 #pragma dont_inline off
 
@@ -200,8 +245,8 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 {
 	switch (param_1) {
 	case 0:
-		if (!(unk4C & 0x100)) {
-			unk4C |= 0x100;
+		if (!((*(volatile u16*)&unk4C) & 0x100)) {
+			(*(volatile u16*)&unk4C) |= 0x100;
 			setNextStage(0x1, nullptr);
 			TFlagManager::smInstance->setBool(true, 0x10389);
 			TFlagManager::smInstance->setBool(true, 0x30004);
@@ -210,48 +255,49 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		break;
 
 	case 10:
-		if (!(unk4C & 0x100)) {
-			unk4C |= 0x100;
+		if (!((*(volatile u16*)&unk4C) & 0x100)) {
+			(*(volatile u16*)&unk4C) |= 0x100;
 			setNextStage(0x3B, nullptr);
 			gpApplication.mMovie = param_1;
 		}
 		break;
 
 	case 7:
-		if (!(unk4C & 0x100)) {
-			unk4C |= 0x100;
+		if (!((*(volatile u16*)&unk4C) & 0x100)) {
+			(*(volatile u16*)&unk4C) |= 0x100;
 			setNextStage(0xE06, nullptr);
 			gpApplication.mMovie = param_1;
 		}
 		break;
 
 	case 8:
-		if (!(unk4C & 0x100)) {
-			unk4C |= 0x100;
+		if (!((*(volatile u16*)&unk4C) & 0x100)) {
+			(*(volatile u16*)&unk4C) |= 0x100;
 			setNextStage(0xE07, nullptr);
 			gpApplication.mMovie = param_1;
 		}
 		break;
 
 	case 11:
-		if (!(unk4C & 0x100)) {
-			unk4C |= 0x100;
+		if (!((*(volatile u16*)&unk4C) & 0x100)) {
+			(*(volatile u16*)&unk4C) |= 0x100;
 			setNextStage(0x3C, nullptr);
 			gpApplication.mMovie = param_1;
 		}
 		break;
 
 	case 2:
-		if (!(unk4C & 0x100)) {
-			unk4C |= 0x100;
+		if (!((*(volatile u16*)&unk4C) & 0x100)) {
+			(*(volatile u16*)&unk4C) |= 0x100;
 			setNextStage(0x101, nullptr);
 			gpApplication.mMovie = param_1;
 		}
 		break;
 
+	case 12:
 	default:
-		if (!(unk4C & 0x100)) {
-			unk4C |= 0x100;
+		if (!((*(volatile u16*)&unk4C) & 0x100)) {
+			(*(volatile u16*)&unk4C) |= 0x100;
 			setNextStage(0xF, nullptr);
 			gpApplication.mMovie = (u8)param_1;
 		}

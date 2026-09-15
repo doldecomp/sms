@@ -120,7 +120,7 @@ BOOL TMario::doRunningAnimation()
 	f32 rate;
 	f32 sp;
 
-	sp = mIntendedMag > mForwardVel ? mForwardVel : mIntendedMag;
+	sp = mIntendedMag > mForwardVel ? mIntendedMag : mForwardVel;
 
 	if (sp < 4.0f)
 		sp = 4.0f;
@@ -258,8 +258,14 @@ void TMario::getSlopeSlideAccele(f32* arg0, f32* arg1)
 		}
 		return;
 	}
-	*arg0 = mSlipParamsNormal.mSlideAcceleUp.get();
-	*arg1 = mSlipParamsNormal.mSlideAcceleDown.get();
+	{
+		f32 up = mSlipParamsNormal.mSlideAcceleUp.get();
+		*arg0  = up;
+	}
+	{
+		f32 down = mSlipParamsNormal.mSlideAcceleDown.get();
+		*arg1    = down;
+	}
 }
 
 f32 TMario::getChangeAngleSpeed()
@@ -316,13 +322,13 @@ void TMario::slideProcess(f32 baseAcc, f32 friction)
 	const TBGCheckData* ground = mGroundPlane;
 
 	s16 dirAng = matan(ground->getNormal().z, ground->getNormal().x);
+	f32 slopeUp;
+	f32 slopeDown;
 
 	f32 mag = MsSqrtf(ground->getNormal().x * ground->getNormal().x
 	                  + ground->getNormal().z * ground->getNormal().z);
 
 	s16 angDiff = mSlopeAngle - mFaceAngle.y;
-	f32 slopeUp;
-	f32 slopeDown;
 	getSlopeSlideAccele(&slopeUp, &slopeDown);
 	f32 acc;
 	if (angDiff > -0x4000 && angDiff < 0x4000)
@@ -403,19 +409,20 @@ BOOL TMario::doSliding(f32 stopThreshold)
 		if (mStatus == MARIO_STATUS_CATCH) {
 			if (mStatusState == 1)
 				slipFr = mDeParams.mWasOnWaterSlip.get();
-			if (checkFlag(MARIO_FLAG_IN_ANY_WATER))
+			bool inWater = checkFlag(MARIO_FLAG_IN_ANY_WATER) != 0;
+			if (inWater)
 				slipFr = mDeParams.mInWaterSlip.get();
 		}
 	}
 
-	f32 mult   = (0.02f * (mIntendedMag * 0.03125f * cs)) + slipFr;
+	f32 mult   = (0.02f * (mIntendedMag / 32.0f * cs)) + slipFr;
 	f32 oldMag = MsSqrtf(mSlideVelX * mSlideVelX + mSlideVelZ * mSlideVelZ);
 
 	mSlideVelX
-	    += sn * (mSlideVelZ * (mIntendedMag * 0.03125f)) * getSlideStickMult();
-	mSlideVelZ = -(
-	    (sn * (mSlideVelX * (mIntendedMag * 0.03125f)) * getSlideStickMult())
-	    - mSlideVelZ);
+	    += sn * (mSlideVelZ * (mIntendedMag / 32.0f)) * getSlideStickMult();
+	mSlideVelZ
+	    = -((sn * (mSlideVelX * (mIntendedMag / 32.0f)) * getSlideStickMult())
+	        - mSlideVelZ);
 
 	f32 newMag = MsSqrtf(mSlideVelX * mSlideVelX + mSlideVelZ * mSlideVelZ);
 	if (oldMag > 0.0f && newMag > 0.0f) {

@@ -16,8 +16,8 @@
 BOOL TMario::startJumpWall()
 {
 	if (mWallPlane != NULL) {
-		const JGeometry::TVec3<f32>& normal = mWallPlane->getNormal();
-		s16 angle = matan(mWallPlane->mMinY, normal.x) + 0x8000;
+		s16 angle = matan(mWallPlane->getNormal().z, mWallPlane->getNormal().x)
+		            + 0x8000;
 		emitParticle(PARTICLE_MS_WALLKICK_A, angle);
 		emitParticle(PARTICLE_MS_WALLKICK_B, angle);
 	}
@@ -102,29 +102,28 @@ BOOL TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 		if (mGroundPlane->mActor != nullptr)
 			((THitActor*)mGroundPlane->mActor)->receiveMessage(this, 0);
 
-		bool didTrample = false;
-
-		bool isStrong = true;
+		bool didTrample = true;
 		if (checkUnk114(UNK114_FLAG_UNK100) == true)
-			isStrong = false;
+			didTrample = false;
 
 		if (unk2A8.y - mPosition.y <= mDeParams.mDamageFallHeight.get())
-			isStrong = false;
+			didTrample = false;
 
 		if (onYoshi())
-			isStrong = false;
+			didTrample = false;
 
 		if (mGroundPlane->isThing4())
-			isStrong = false;
+			didTrample = false;
 
 		if (mVel.y > -70.0f)
-			isStrong = false;
+			didTrample = false;
 
-		if (isStrong) {
+		if (didTrample) {
 			if (checkFlag(MARIO_FLAG_ON_SAND)) {
 				sinkInSandEffect();
 				return changePlayerStatus(MARIO_STATUS_FOOT_DOWN, 0, 0);
 			}
+			didTrample = false;
 			if (checkFlag(MARIO_FLAG_HAS_FLUDD)
 			    && (int)mWaterGun->mCurrentNozzle != 2) {
 				mTrembleModelEffect->tremble(mJumpParams.mTremblePower.get(),
@@ -705,9 +704,9 @@ BOOL TMario::fireDowning()
 		mForwardVel = FConverge(mForwardVel, 0.0f, 0.35f, 0.35f);
 
 	if (mInput & 1) {
-		u16 angleDiff = mIntendedYaw - mFaceAngle.y;
-		f32 velIncrement
-		    = 0.03125f * mIntendedMag * mJumpParams.mFireDownControl.get();
+		u16 angleDiff    = mIntendedYaw - mFaceAngle.y;
+		f32 mag          = 0.03125f * mIntendedMag;
+		f32 velIncrement = mag * mJumpParams.mFireDownControl.get();
 
 		mForwardVel += velIncrement * JMASCos(angleDiff);
 		mFaceAngle.y += 1024.0f * (velIncrement * JMASSin(angleDiff));

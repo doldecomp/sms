@@ -50,7 +50,9 @@ void TSilhouette::loadAfter()
 	// three sample points atten = {0.9, 0.5, 0.05} at distances
 	// d = {30, 650, 1500}. k0 is eliminated by subtracting adjacent equations
 	// scaled by a[i]*a[i+1], leaving a 2x2 system solved via Cramer's rule.
-	f32 m[3][2];
+	f32 m2[2];
+	f32 m1[2];
+	f32 m0[2];
 	f32 dist[3];
 	f32 atten[3] = { 0.9f, 0.5f, 0.05f };
 
@@ -58,16 +60,14 @@ void TSilhouette::loadAfter()
 		dist[i] = unk24[i];
 
 	for (int i = 0; i < 2; ++i) {
-		m[0][i]
-		    = atten[i + 1]
-		      * (atten[i] * (dist[i] * dist[i] - dist[i + 1] * dist[i + 1]));
-		m[1][i] = atten[i + 1] * (atten[i] * (dist[i] - dist[i + 1]));
-		m[2][i] = atten[i + 1] - atten[i];
+		m0[i] = atten[i + 1]
+		        * (atten[i] * (dist[i] * dist[i] - dist[i + 1] * dist[i + 1]));
+		m1[i] = atten[i + 1] * (atten[i] * (dist[i] - dist[i + 1]));
+		m2[i] = atten[i + 1] - atten[i];
 	}
 
-	unk38 = (m[2][0] * m[1][1] - m[2][1] * m[1][0])
-	        / (m[0][0] * m[1][1] - m[0][1] * m[1][0]);
-	unk34 = (m[2][0] - m[0][0] * unk38) / m[1][0];
+	unk38 = (m2[0] * m1[1] - m2[1] * m1[0]) / (m0[0] * m1[1] - m0[1] * m1[0]);
+	unk34 = (m2[0] - m0[0] * unk38) / m1[0];
 	unk30 = atten[0] - (dist[0] * dist[0] * unk38 + dist[0] * unk34);
 	unk3C = 8e-05f;
 
@@ -86,7 +86,8 @@ void TSilhouette::loadAfter()
 
 void TSilhouette::setting(MtxPtr param_1)
 {
-	GXSetChanAmbColor(GX_COLOR0A0, (GXColor) { unk12.r, unk12.g, unk12.b, 0 });
+	const GXColor& color = (GXColor) { unk12.r, unk12.g, unk12.b, 0 };
+	GXSetChanAmbColor(GX_COLOR0A0, color);
 	GXLightObj GStack_54;
 	Vec local_60;
 	Vec local_6C = SMS_GetMarioPos();
@@ -302,9 +303,11 @@ void TTrembleModelEffect::clash(f32 magnitude)
 		for (u32 i = 0; i < unk0->getModelData()->getVertexData().getVtxNum();
 		     ++i) {
 			JGeometry::TVec3<s16> t = unk14[i] + unk20[i];
-			unk14[i]                = t;
-			unk18[0][i]             = t;
-			unk18[1][i]             = t;
+			JGeometry::TVec3<s16> t2;
+			t2          = t;
+			unk14[i]    = t;
+			unk18[0][i] = t2;
+			unk18[1][i] = t2;
 		}
 		break;
 
@@ -312,9 +315,11 @@ void TTrembleModelEffect::clash(f32 magnitude)
 		for (u32 i = 0; i < unk0->getModelData()->getVertexData().getVtxNum();
 		     ++i) {
 			JGeometry::TVec3<f32> t = unk28[i] + unk34[i];
-			unk28[i]                = t;
-			unk2C[0][i]             = t;
-			unk2C[1][i]             = t;
+			JGeometry::TVec3<f32> t2;
+			t2          = t;
+			unk28[i]    = t;
+			unk2C[0][i] = t2;
+			unk2C[1][i] = t2;
 		}
 		break;
 	}
@@ -445,7 +450,8 @@ void SMS_ResetDamageFogEffect(J3DModelData* param_1)
 	for (u16 i = 0; i < param_1->getMaterialNum(); i++) {
 		J3DFog* fog
 		    = param_1->getMaterialNodePointer(i)->getPEBlock()->getFog();
-		fog->mNearZ  = gpCamera->getNear();
+		f32 nearZ    = gpCamera->getNear();
+		fog->mNearZ  = nearZ;
 		fog->mFarZ   = gpCamera->getFar();
 		fog->mEndZ   = fog->mFarZ;
 		fog->mStartZ = fog->mEndZ - 1.0f;

@@ -240,7 +240,7 @@ void TMBindShadowBody::entryDrawShadow()
 {
 	f32 eps = JGeometry::TUtil<f32>::epsilon();
 
-	if (gpMarioPos->epsilonEquals(mActor->mPosition, eps)) {
+	if (mActor->mPosition.epsilonEquals(*gpMarioPos, eps)) {
 		if (!gpBindShadowManager->unk65) {
 			gpBindShadowManager->unk65 = true;
 			calc();
@@ -295,6 +295,13 @@ void TAlphaShadowQuad::reset()
 	mRequest       = nullptr;
 	mNext          = nullptr;
 }
+
+static const Vec cModelShadowOrigin = { 0.0f, 0.0f, 0.0f };
+static const char cModelShadowAllocError[]
+    = "\x83\x81\x83\x82\x83\x8a\x82\xaa\x91\xab\x82\xe8\x82\xdc\x82\xb9\x82\xf1"
+      "\n";
+static const f32 cModelShadowTexCoordS[4] = { 1.0f, 1.0f, -1.0f, -1.0f };
+static const f32 cModelShadowTexCoordT[4] = { 1.0f, -1.0f, 1.0f, -1.0f };
 
 TModelShadow::TModelShadow(SDLModelData* param_1, void* param_2, int param_3) {
 }
@@ -396,7 +403,7 @@ void TMBindShadowManager::reset()
 
 void TMBindShadowManager::initEntry(TMBindShadowBody* param_1)
 {
-	mBodyList.push_back(param_1);
+	mBodyList.insert(mBodyList.end(), param_1);
 }
 
 void TMBindShadowManager::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -509,7 +516,6 @@ static inline void loadPosMtxImm(MtxPtr mtx)
 void TMBindShadowManager::drawShadowVolume(bool param_1,
                                            TAlphaShadowQuad* param_2)
 {
-	f32 height = 50.0f;
 	if (param_2->mRequest->mShadowType == SHADOW_TYPE_SQUARE) {
 		if (param_2->mSquareOutline == nullptr) {
 			SMS_SettingDrawShape(mModelDatas[2]->getModelData(), 0);
@@ -517,6 +523,7 @@ void TMBindShadowManager::drawShadowVolume(bool param_1,
 		} else {
 			int topIndices[9]    = { 2, 1, 0, 3, 2, 0, 4, 3, 0 };
 			int bottomIndices[9] = { 0, 1, 2, 0, 2, 3, 0, 3, 4 };
+			f32 height           = 50.0f;
 
 			GXClearVtxDesc();
 			GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
@@ -1347,7 +1354,7 @@ void TMBindShadowManager::calcVtx()
 			                  foot.z - light.z * h1);
 			JGeometry::TVec3<f32> projectedHead;
 			projectedHead.set(head.x - light.x * h2, foot.y,
-			                  head.z - light.z * h2);
+			                  head.z - h2 * light.z);
 			request->mPosition.set(0.5f * (projectedHead.x + projectedFoot.x),
 			                       0.5f * (projectedFoot.y + projectedHead.y),
 			                       0.5f * (projectedHead.z + projectedFoot.z));
@@ -1380,7 +1387,8 @@ void TMBindShadowManager::calcVtx()
 			radius = request->mRadiusZ;
 
 		f32 treeScale = 1.0f;
-		f32 sx        = 0.08f * request->mRadiusX;
+		f32 sxValue   = 0.08f * request->mRadiusX;
+		f32 sx        = sxValue;
 		f32 sy        = 0.08f * request->mRadiusZ;
 		f32 sz        = 0.08f * (radius * shrink);
 
@@ -1513,8 +1521,8 @@ void TMBindShadowManager::calcVtx()
 	if (mTestSw)
 		return;
 
-	TAlphaShadowQuad* quads       = mQuads;
 	TAlphaShadowBlendQuad* blends = mBlendQuads;
+	TAlphaShadowQuad* quads       = mQuads;
 	TAlphaShadowQuadAry* arrays   = mQuadArys;
 
 	for (int i = 0; i < mQuadAryNum; i++) {

@@ -44,18 +44,21 @@ void TMarDirector::setup2()
 	unkBC = JDrama::TNameRefGen::search<TNameRefAryT<TStageEventInfo> >(
 	    "イベントテーブル");
 	if (unkBC) {
+		u16 eventId = 0;
 		for (TStageEventInfo* it = unkBC->begin(); it != unkBC->end(); ++it) {
-			JDrama::TNameRef* ref
-			    = JDrama::TNameRefGen::search<JDrama::TNameRef>(it->unk14);
+			TMapObjBase* ref
+			    = JDrama::TNameRefGen::search<TMapObjBase>(it->unk14);
 			if (ref) {
-				// TODO: what is ref?
-				it->unk28 = ref;
+				ref->mEventId = eventId;
+				it->unk28     = ref;
 			}
+			++eventId;
 		}
 	}
 
 	JDrama::TNameRefGen::search<TMario>("マリオ")->setGamePad(unk18[0]);
-	JDrama::TNameRefGen::search<CPolarSubCamera>("camera 1")->unk120 = unk18[0];
+	TMarioGamePad* gamePad                                           = unk18[0];
+	JDrama::TNameRefGen::search<CPolarSubCamera>("camera 1")->unk120 = gamePad;
 
 	unk84 = JDrama::TNameRefGen::search<TTalkCursor>("会話カーソル");
 
@@ -71,8 +74,9 @@ void TMarDirector::setup2()
 	unkE0 = JDrama::TNameRefGen::search<TSunGlass>("サングラスフェーダ");
 	unk78 = JDrama::TNameRefGen::search<TGuide>("ガイド画面");
 	unkAC = JDrama::TNameRefGen::search<TPauseMenu2>("ポーズメニュー");
-	unkB0 = JDrama::TNameRefGen::search<TTalk2D2>("会話表示");
-	unk70 = JDrama::TNameRefGen::search<TCardLoad>("データロード");
+	unkAC->mGamePad = unk18[0];
+	unkB0           = JDrama::TNameRefGen::search<TTalk2D2>("会話表示");
+	unk70           = JDrama::TNameRefGen::search<TCardLoad>("データロード");
 
 	unk70->unk38 = unk18[0];
 	unk78->unkC0 = unk18[0];

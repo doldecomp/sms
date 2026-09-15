@@ -119,7 +119,7 @@ static void evGetNPCType(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	TBaseNPC* npc = (TBaseNPC*)getNameRefPtr(interp->pop());
 	if (npc)
 		result = npc->getActorType() - 0x4000001;
-	interp->push(result);
+	interp->push(TSpcSlice(result));
 }
 
 static void evSetFlagNPCDontTalk(TSpcTypedInterp<TEventWatcher>* interp,
@@ -192,7 +192,8 @@ static void evIsNearSameActors(TSpcTypedInterp<TEventWatcher>* interp,
 		if (type == obj->getActorType()) {
 			JGeometry::TVec3<f32> diff = which->mPosition;
 			diff -= obj->mPosition;
-			if (diff.length() <= dist)
+			f32 (*sqrt)(f32) = JGeometry::TUtil<f32>::sqrt;
+			if (sqrt(diff.squared()) <= dist)
 				count++;
 		}
 	}
@@ -207,27 +208,31 @@ static void evIsNearActors(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	int count = 0;
 
 	if (arg_num >= 3) {
-		THitActor* which = (THitActor*)getNameRefPtr(
-		    interp->mProcessStack.getFromTop(arg_num - 1));
+		THitActor* which
+		    = (THitActor*)getNameRefPtr(interp->mProcessStack.getFromBottom(
+		        interp->mProcessStack.size() - arg_num));
 		if (which) {
 			f32 dist
 			    = interp->mProcessStack.getFromTop(arg_num - 2).getDataFloat();
 
+			u32 i = 2;
 			count = 1;
-			for (u32 i = 2; i < arg_num; ++i) {
+			for (; i < arg_num; ++i) {
 				THitActor* other = (THitActor*)getNameRefPtr(
-				    interp->mProcessStack.getFromTop(arg_num - 1 - i));
+				    interp->mProcessStack.getFromBottom(
+				        interp->mProcessStack.size() - (arg_num - i)));
 				if (other) {
 					JGeometry::TVec3<f32> diff = which->mPosition;
 					diff -= other->mPosition;
-					if (diff.length() <= dist)
+					f32 (*sqrt)(f32) = JGeometry::TUtil<f32>::sqrt;
+					if (sqrt(diff.squared()) <= dist)
 						count++;
 				}
 			}
 		}
 	}
 
-	for (int i = 0; i < arg_num; ++i)
+	for (int i = 0; i < (int)arg_num; ++i)
 		interp->pop();
 
 	interp->push(count);
@@ -239,7 +244,7 @@ static void evGetTalkNPC(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 
 	TBaseNPC* npc = SMSGetMarDirector()->getTalkingNPC();
 
-	interp->push(!npc ? 0 : (int)npc);
+	interp->push(TSpcSlice(npc ? (int)npc : 0));
 }
 
 static void evGetTalkNPCName(TSpcTypedInterp<TEventWatcher>* interp,
@@ -249,10 +254,13 @@ static void evGetTalkNPCName(TSpcTypedInterp<TEventWatcher>* interp,
 
 	TBaseNPC* npc = SMSGetMarDirector()->getTalkingNPC();
 
-	if (!npc)
-		interp->push("");
-	else
-		interp->push(npc->getName());
+	if (!npc) {
+		const char* name = "";
+		interp->push(name);
+	} else {
+		const char* name = npc->getName();
+		interp->push(name);
+	}
 }
 
 // TODO: `TSpcSlice(interp->pop()).getDataInt()` is a placeholder for something
@@ -1261,6 +1269,24 @@ static void evIsWaterMelonIsReached(TSpcTypedInterp<TEventWatcher>* interp,
 		result = 1;
 
 	interp->push(result);
+}
+
+template <>
+void TSpcTypedInterp<TEventWatcher>::dispatchBuiltin(u32 sym_index,
+                                                     u32 arg_count)
+{
+	typedef void (*TypedNativeCall)(TSpcTypedInterp<TEventWatcher>*, u32);
+	TSpcSymbol* sym = mBinary->getSymbol(sym_index);
+
+	if (sym) {
+		TypedNativeCall call = (TypedNativeCall)sym->mNativeCall;
+		if (call) {
+			mCurrentlyExecutingBuiltinName = mBinary->getSymbolName(sym);
+			call(this, arg_count);
+			return;
+		}
+	}
+	TSpcInterp::dispatchBuiltin(sym_index, arg_count);
 }
 
 template <> void TSpcTypedBinary<TEventWatcher>::initUserBuiltin()

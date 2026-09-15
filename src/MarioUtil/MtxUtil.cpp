@@ -9,10 +9,12 @@
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
 
+static const Vec sZeroVec = { 0.0f, 0.0f, 0.0f };
+
 void MtxToQuat(MtxPtr m, Quaternion* quat)
 {
 	f32 q[4];
-	f32 s = m[0][0] + m[1][1] + m[2][2] + 1.0f;
+	f32 s = (m[0][0] + m[1][1]) - -m[2][2] + 1.0f;
 	if (s >= 1.0f) {
 		f32 root = 2.0f * MsSqrtf(s);
 		q[3]     = 0.25f * root;
@@ -57,10 +59,10 @@ void TMtxTimeLag::calc(MtxPtr mtx)
 {
 	if (checkFlag(2)) {
 		offFlag(2);
+		Vec v2;
 		Vec v = { 0.0f, 0.0f, 0.0f };
 		unk08 = v;
 
-		Vec v2;
 		v2.x  = mtx[0][3];
 		v2.y  = mtx[1][3];
 		v2.z  = mtx[2][3];
@@ -72,6 +74,7 @@ void TMtxTimeLag::calc(MtxPtr mtx)
 		MtxToQuat(mtx, &q);
 		unk30 = q;
 	} else {
+		Quaternion tmp;
 		Vec trans;
 
 		trans.x = mtx[0][3];
@@ -107,6 +110,7 @@ void TMtxTimeLag::calc(MtxPtr mtx)
 		if (unk14.z > trans.z + posLimit)
 			unk14.z = trans.z + posLimit;
 
+		Mtx rot;
 		f32 len0 = MsSqrtf(mtx[0][0] * mtx[0][0] + mtx[1][0] * mtx[1][0]
 		                   + mtx[2][0] * mtx[2][0]);
 		f32 len1 = MsSqrtf(mtx[0][1] * mtx[0][1] + mtx[1][1] * mtx[1][1]
@@ -114,7 +118,6 @@ void TMtxTimeLag::calc(MtxPtr mtx)
 		f32 len2 = MsSqrtf(mtx[0][2] * mtx[0][2] + mtx[1][2] * mtx[1][2]
 		                   + mtx[2][2] * mtx[2][2]);
 
-		Mtx rot;
 		f32 inv0  = 1.0f / len0;
 		f32 inv1  = 1.0f / len1;
 		f32 inv2  = 1.0f / len2;
@@ -128,7 +131,6 @@ void TMtxTimeLag::calc(MtxPtr mtx)
 		rot[1][2] = mtx[1][2] * inv2;
 		rot[2][2] = mtx[2][2] * inv2;
 
-		Quaternion tmp;
 		MtxToQuat(rot, &tmp);
 
 		Quaternion newQuat;
@@ -369,23 +371,23 @@ void SMS_MakeJointsToArc(J3DModel* model, const JGeometry::TVec3<f32>& start,
 
 	JGeometry::TVec3<f32> dir = end - start;
 	f32 mag                   = VECMag(dir);
-	dir.scale(1.0f / mag);
+	f32 invMag                = 1.0f / mag;
+	dir.scale(invMag);
 
 	JGeometry::TVec3<f32> up = upDir;
 	up.normalize();
 
-	int jointNum = model->getModelData()->getJointNum();
+	u16 jointNum = model->getModelData()->getJointNum();
 	for (u16 i = 0; i < jointNum; ++i) {
 		f32 t = (f32)i / (f32)(jointNum - 1);
 
-		JGeometry::TVec3<f32> a = dir * t;
-		JGeometry::TVec3<f32> b = up * (1.0f - t);
-		JGeometry::TVec3<f32> c = b + a;
+		JGeometry::TVec3<f32> c = up * (1.0f - t) + dir * t;
 		c.normalize();
 
 		MtxPtr jm = model->getAnmMtx(i);
 
-		f32 dist = (f32)i * (mag / (f32)(jointNum - 1));
+		f32 jointDivisor = (f32)(jointNum - 1);
+		f32 dist         = (f32)i * (mag / jointDivisor);
 
 		JGeometry::TVec3<f32> zAxis(jm[0][2], jm[1][2], jm[2][2]);
 		JGeometry::TVec3<f32> side;
@@ -502,7 +504,7 @@ void TRope::constraintTail(const JGeometry::TVec3<f32>& param)
 		TRopePoint& cur  = mPoints[i];
 		TRopePoint& prev = mPoints[i - 1];
 
-		if (!cur.unkC.epsilonEquals(prev.unkC)) {
+		if (!prev.unkC.epsilonEquals(cur.unkC, 3.81469727e-06f)) {
 			JGeometry::TVec3<f32> delta = prev.unkC;
 			delta -= cur.unkC;
 			VECNormalize(&delta, &delta);

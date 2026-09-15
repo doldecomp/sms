@@ -5,6 +5,7 @@
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <System/MarDirector.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
+#include <System/DummyStrings.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
@@ -42,8 +43,9 @@ TMarioCap::TMarioCap(TMario* mario)
 
 	if (mMario->mBodyPollutionTex != 0) {
 		for (int i = 0; i < 2; ++i) {
+			TMario* mario = mMario;
 			SMS_ChangeTextureAll(unk10[i]->getModelData(), cDirtyTexName,
-			                     *mMario->mBodyPollutionTex);
+			                     *mario->mBodyPollutionTex);
 			SMS_MakeDLAndLock(unk10[i]);
 		}
 	}
@@ -97,9 +99,10 @@ TMarioCap::TMarioCap(TMario* mario)
 
 	unkC = unk10[0];
 
-	int thingIdx = 0;
-	unk30        = new TTrembleModelEffect;
-	unk30->init(unk10[thingIdx]);
+	int thingIdx                  = 0;
+	TTrembleModelEffect* unk30Ptr = new TTrembleModelEffect;
+	unk30                         = unk30Ptr;
+	unk30Ptr->init(unk10[thingIdx]);
 	unk34 = 4.0f;
 
 	for (int idx = 0; idx < 2; idx++) {

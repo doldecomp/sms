@@ -5,7 +5,9 @@
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JDrama/JDRNameRefPtrList.hpp>
 #include <JSystem/JDrama/JDRViewObjPtrList.hpp>
+#define TOrthoProj TOrthoProjWithDefaultName
 #include <JSystem/JDrama/JDRCamera.hpp>
+#undef TOrthoProj
 #include <JSystem/JDrama/JDRFrmGXSet.hpp>
 #include <JSystem/JDrama/JDREfbCtrl.hpp>
 #include <JSystem/JDrama/JDRViewport.hpp>
@@ -20,7 +22,6 @@
 #include <System/PerformList.hpp>
 #include <System/FlagManager.hpp>
 #include <System/Application.hpp>
-#include <System/StageUtil.hpp>
 #include <System/MSoundMainSide.hpp>
 #include <System/Params.hpp>
 #include <GC2D/ScrnFader.hpp>
@@ -34,20 +35,54 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+u8 SMS_getShineStage(u8);
+
 extern void* gpSceneCmnDat;
 extern int gpSceneCmnDatSize;
 
+// TODO: These literals are emitted by dependencies in the original build.
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+
+namespace JDrama {
+class TOrthoProj : public TCamera {
+public:
+	TOrthoProj(f32 near, f32 far, f32 a, f32 b, f32 c, f32 d)
+	    : TCamera(near, far, "ブラーカメラ")
+	{
+		mField[0] = a;
+		mField[1] = b;
+		mField[2] = c;
+		mField[3] = d;
+	}
+
+	virtual ~TOrthoProj() { }
+
+	virtual void load(JSUMemoryInputStream&);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+
+	virtual JStage::TECameraProjection JSGGetProjectionType() const;
+	virtual void JSGSetProjectionType(JStage::TECameraProjection);
+	virtual void JSGGetProjectionField(f32*) const;
+	virtual void JSGSetProjectionField(const f32*);
+
+public:
+	/* 0x30 */ f32 mField[4];
+};
+} // namespace JDrama
+
 void TMarDirector::decideMarioPosIdx()
 {
-	unkD0 = 0;
-	unkD1 = 0;
-	unkE4 = 1;
+	TApplication* application = &gpApplication;
+	unkD0                     = 0;
+	unkD1                     = 0;
+	unkE4                     = 1;
 
-	switch (gpApplication.mCurrArea.unk0) {
+	TGameSequence* prevArea = &application->mPrevArea;
+	switch (application->mCurrArea.unk0) {
 	case 15:
 		unkE4 = 14;
-		gpApplication.mFader->setColor(
-		    JUtility::TColor(0x00, 0x00, 0x00, 0xff));
+		application->mFader->setColor(JUtility::TColor(0x00, 0x00, 0x00, 0xff));
 		break;
 
 	case 0:
@@ -60,8 +95,8 @@ void TMarDirector::decideMarioPosIdx()
 	case 4:
 	case 5:
 	case 6:
-	case 7:
-	case 8: {
+	case 8:
+	case 9: {
 		unkE4 = 14;
 		gpApplication.mFader->setColor(
 		    JUtility::TColor(0xd2, 0xd2, 0xd2, 0xff));
@@ -76,7 +111,7 @@ void TMarDirector::decideMarioPosIdx()
 				TFlagManager::getInstance()->setBool(false, 0x30004);
 				unkD0 = 4;
 			} else {
-				switch (SMS_getShineStage(gpApplication.mPrevArea.unk0)) {
+				switch (SMS_getShineStage(prevArea->unk0)) {
 				case 2:
 					unkD0 = 1;
 					unkD1 = 2;
@@ -111,7 +146,7 @@ void TMarDirector::decideMarioPosIdx()
 					unkD0 = 7;
 					unkD1 = 2;
 					unkE4 = 0xe;
-					gpApplication.mFader->setColor(
+					application->mFader->setColor(
 					    JUtility::TColor(0x00, 0x00, 0x00, 0xff));
 					break;
 				case 9:
@@ -129,10 +164,11 @@ bool TMarDirector::setupObjects()
 {
 	TFlagManager::getInstance()->resetStage();
 	TFlagManager::getInstance()->setFlag(0x60003, 1);
-	switch (gpApplication.mCurrArea.unk0) {
+	TGameSequence* currArea = &gpApplication.mCurrArea;
+	switch (currArea->unk0) {
 	case 1: {
-		TFlagManager::getInstance()->setBool(true, 0x3000D);
-		TFlagManager::getInstance()->setBool(true, 0x30005);
+		TFlagManager::getInstance()->setBool(false, 0x3000D);
+		TFlagManager::getInstance()->setBool(false, 0x30005);
 		if (!TFlagManager::getInstance()->getBool(0x30003)) {
 			TFlagManager::getInstance()->setBool(true, 0x30003);
 			unk4E |= 0x2;
@@ -140,7 +176,7 @@ bool TMarDirector::setupObjects()
 			TFlagManager::getInstance()->setBool(true, 0x30000);
 		}
 
-		switch (gpApplication.mCurrArea.unk1) {
+		switch (currArea->unk1) {
 		case 0:
 		case 1:
 		case 7:
@@ -197,15 +233,16 @@ bool TMarDirector::setupObjects()
 		break;
 	}
 	case 5:
-		if (gpApplication.mCurrArea.unk1 != 3)
-			(void)gpApplication.mCurrArea.unk1;
+		if ((int)currArea->unk1 != 3)
+			(void)currArea->unk1;
 		else
 			TFlagManager::getInstance()->setBool(true, 0x50003);
 		break;
 	}
 
-	u32 bVar28 = SMS_getShineStage(gpApplication.mCurrArea.unk0);
-	TFlagManager::getInstance()->setBool(true, 0x103A5 + bVar28);
+	u32 bVar28 = SMS_getShineStage(currArea->unk0);
+	u32 flag   = 0x103A5 + bVar28;
+	TFlagManager::getInstance()->setBool(true, flag);
 
 	MSMainProc::setMSoundEnterStage(mMap, unk7D);
 	if (!TFlagManager::getInstance()->getBool(0x30007)) {
@@ -225,11 +262,11 @@ bool TMarDirector::setupObjects()
 		sceneCommon = JDrama::TNameRefGen::getInstance()->load(stream);
 	}
 
-	JDrama::TNameRef* root
-	    = JDrama::TNameRefGen::search<JDrama::TNameRef>("Root View Obj");
-
+	JDrama::TNameRef* root;
 	JDrama::TNameRefPtrListT<JDrama::TViewObj>* gameObjs;
-	if (root) {
+	if (JDrama::TNameRef* found
+	    = JDrama::TNameRefGen::search<JDrama::TNameRef>("Root View Obj")) {
+		root     = found;
 		gameObjs = (JDrama::TNameRefPtrListT<JDrama::TViewObj>*)root->search(
 		    "ゲームオブジェクト");
 	} else {
@@ -305,7 +342,7 @@ bool TMarDirector::setupObjects()
 
 		JDrama::TLookAtCamera* cam
 		    = JDrama::TNameRefGen::search<JDrama::TLookAtCamera>("camera 1");
-		cam->mAspect = (u16)SMSGetGameVideoWidth() * 0.9134614f
+		cam->mAspect = (u16)SMSGetGameVideoWidth() * 0.91346145f
 		               / (u16)SMSGetGameVideoHeight();
 	}
 

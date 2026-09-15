@@ -66,11 +66,17 @@ void TMirrorActor::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (unk18 == 0)
 			return;
 
-		for (u16 i = 0; i < unk10->getModelData()->getJointNum(); ++i)
-			unk14->setAnmMtx(i, unk10->getAnmMtx(i));
+		for (u16 i = 0; i < unk10->getModelData()->getJointNum(); ++i) {
+			MtxPtr src = unk10->getAnmMtx(i);
+			MtxPtr dst = unk14->getAnmMtx(i);
+			MTXCopy(src, dst);
+		}
 
-		for (u16 i = 0; i < unk10->getModelData()->getJointNum(); ++i)
-			unk14->setWeightAnmMtx(i, unk10->getWeightAnmMtx(i));
+		for (u16 i = 0; i < unk10->getModelData()->getJointNum(); ++i) {
+			MtxPtr src = unk10->getWeightAnmMtx(i);
+			MtxPtr dst = unk14->getWeightAnmMtx(i);
+			MTXCopy(src, dst);
+		}
 	}
 
 	if ((cue & CUE_CALC_VIEW) && unk18 != 0)
@@ -82,14 +88,12 @@ void TMirrorActor::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TMirrorActor::entryMirrorDrawBufferAlways(J3DModel* model)
 {
-	JDrama::TDrawBufObj* dbOpa
-	    = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	        "DrawBuf MirrorAlways Opa");
-	j3dSys.setDrawBuffer(dbOpa->getDrawBuffer(), 0);
-	JDrama::TDrawBufObj* dbXlu
-	    = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	        "DrawBuf MirrorAlways Xlu");
-	j3dSys.setDrawBuffer(dbXlu->getDrawBuffer(), 1);
+	JDrama::TDrawBufObj* db = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	    "DrawBuf MirrorAlways Opa");
+	j3dSys.setDrawBuffer(db->getDrawBuffer(), 0);
+	db = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
+	    "DrawBuf MirrorAlways Xlu");
+	j3dSys.setDrawBuffer(db->getDrawBuffer(), 1);
 	model->calc();
 	model->viewCalc();
 	model->entry();

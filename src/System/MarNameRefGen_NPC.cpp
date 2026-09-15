@@ -1,6 +1,119 @@
+#include "M3DUtil/InfectiousStrings.hpp"
 #include "NPC/NpcBase.hpp"
+#include "NPC/NpcManager.hpp"
 #include "Strategic/LiveManager.hpp"
 #include <System/MarNameRefGen.hpp>
+
+class TMareMManager : public TMareMBaseManager {
+public:
+	TMareMManager()
+	    : TMareMBaseManager("")
+	{
+	}
+};
+
+class TMareWManager : public TMareWBaseManager {
+public:
+	TMareWManager()
+	    : TMareWBaseManager("")
+	{
+	}
+};
+
+inline TMonteMSpecialManager::TMonteMSpecialManager()
+    : TMonteMBaseManager("")
+{
+}
+
+inline TMonteWSpecialManager::TMonteWSpecialManager()
+    : TMonteWBaseManager("")
+{
+}
+
+inline TMonteMManager::TMonteMManager()
+    : TMonteMBaseManager("")
+{
+}
+inline TMonteMAManager::TMonteMAManager()
+    : TMonteMBaseManager("")
+{
+}
+inline TMonteMBManager::TMonteMBManager()
+    : TMonteMBaseManager("")
+{
+}
+inline TMonteMCManager::TMonteMCManager()
+    : TMonteMBaseManager("")
+{
+}
+inline TMonteMDManager::TMonteMDManager()
+    : TMonteMBaseManager("")
+{
+}
+inline TMonteMEManager::TMonteMEManager()
+    : TMonteMSpecialManager()
+{
+}
+inline TMonteWManager::TMonteWManager()
+    : TMonteWBaseManager("")
+{
+}
+inline TMonteWAManager::TMonteWAManager()
+    : TMonteWBaseManager("")
+{
+}
+inline TMonteWBManager::TMonteWBManager()
+    : TMonteWBaseManager("")
+{
+}
+inline TMareMAManager::TMareMAManager()
+    : TMareMBaseManager("")
+{
+}
+inline TMareMBManager::TMareMBManager()
+    : TMareMBaseManager("")
+{
+}
+inline TMareMCManager::TMareMCManager()
+    : TMareMBaseManager("")
+{
+}
+inline TMareMDManager::TMareMDManager()
+    : TMareMBaseManager("")
+{
+}
+inline TMareWAManager::TMareWAManager()
+    : TMareWBaseManager("")
+{
+}
+inline TMareWBManager::TMareWBManager()
+    : TMareWBaseManager("")
+{
+}
+inline TKinopioManager::TKinopioManager()
+    : TNPCManager("")
+{
+}
+inline TKinojiiManager::TKinojiiManager()
+    : TNPCManager("")
+{
+}
+inline TPeachManager::TPeachManager()
+    : TNPCManager("")
+{
+}
+inline TRaccoonDogManager::TRaccoonDogManager()
+    : TNPCManager("")
+{
+}
+inline TSunflowerLManager::TSunflowerLManager()
+    : TNPCManager("")
+{
+}
+inline TSunflowerSManager::TSunflowerSManager()
+    : TNPCManager("")
+{
+}
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_NPC(const char* name) const
 {
@@ -93,121 +206,92 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_NPC(const char* name) const
 	if (strcmp(name, "NPCBoard") == 0)
 		return new TBaseNPC(0x0400001DU);
 
-	// TODO:
-	// if ( strcmp(name, "MonteMManager") == 0 )
-	//     return new TMonteMBaseManager("?");
+	if (strcmp(name, "MonteMManager") == 0)
+		return new TMonteMManager;
 
-	// TODO:
-	// if ( strcmp(name, "MonteMAManager") == 0 )
-	//     return new TMonteMBaseManager("?");
+	if (strcmp(name, "MonteMAManager") == 0)
+		return new TMonteMAManager;
 
-	// TODO:
-	// if ( strcmp(name, "MonteMBManager") == 0 )
-	//     return new TMonteMBaseManager("?");
+	if (strcmp(name, "MonteMBManager") == 0)
+		return new TMonteMBManager;
 
-	// TODO:
-	// if ( strcmp(name, "MonteMCManager") == 0 )
-	//     return new TMonteMBaseManager("?");
+	if (strcmp(name, "MonteMCManager") == 0)
+		return new TMonteMCManager;
 
-	// TODO:
-	// if ( strcmp(name, "MonteMDManager") == 0 )
-	//     return new TMonteMBaseManager("?");
+	if (strcmp(name, "MonteMDManager") == 0)
+		return new TMonteMDManager;
 
-	// TODO:
-	// if ( strcmp(name, "MonteMEManager") == 0 )
-	//     return new TMonteMBaseManager("?");
+	if (strcmp(name, "MonteMEManager") == 0)
+		return new TMonteMEManager;
 
-	// TODO:
-	// if ( strcmp(name, "MonteMFManager") == 0 )
-	//     return new TMonteMBaseManager("?");
+	if (strcmp(name, "MonteMFManager") == 0)
+		return new TMonteMFManager;
 
-	// TODO:
-	// if ( strcmp(name, "MonteMGManager") == 0 )
-	//     return new TMonteMBaseManager("?");
+	if (strcmp(name, "MonteMGManager") == 0)
+		return new TMonteMGManager;
 
-	// TODO:
-	// if ( strcmp(name, "MonteMHManager") == 0 )
-	//     return new TMonteMBaseManager("?");
+	if (strcmp(name, "MonteMHManager") == 0)
+		return new TMonteMHManager;
 
-	// TODO:
-	// if ( strcmp(name, "MonteWManager") == 0 )
-	//     return new TMonteWBaseManager("?");
+	if (strcmp(name, "MonteWManager") == 0)
+		return new TMonteWManager;
 
-	// TODO:
-	// if ( strcmp(name, "MonteWAManager") == 0 )
-	//     return new TMonteWBaseManager("?");
+	if (strcmp(name, "MonteWAManager") == 0)
+		return new TMonteWAManager;
 
-	// TODO:
-	// if ( strcmp(name, "MonteWBManager") == 0 )
-	//     return new TMonteWBaseManager("?");
+	if (strcmp(name, "MonteWBManager") == 0)
+		return new TMonteWBManager;
 
-	// TODO:
-	// if ( strcmp(name, "MonteWCManager") == 0 )
-	//     return new TMonteWBaseManager("?");
+	if (strcmp(name, "MonteWCManager") == 0)
+		return new TMonteWCManager;
 
-	// TODO:
-	// if ( strcmp(name, "MareMManager") == 0 )
-	//     return new TMareMBaseManager("?");
+	if (strcmp(name, "MareMManager") == 0)
+		return new TMareMManager;
 
-	// TODO:
-	// if ( strcmp(name, "MareMAManager") == 0 )
-	//     return new TMareMBaseManager("?");
+	if (strcmp(name, "MareMAManager") == 0)
+		return new TMareMAManager;
 
-	// TODO:
-	// if ( strcmp(name, "MareMBManager") == 0 )
-	//     return new TMareMBaseManager( "?");
+	if (strcmp(name, "MareMBManager") == 0)
+		return new TMareMBManager;
 
-	// TODO:
-	// if ( strcmp(name, "MareMCManager") == 0 )
-	//     return new TMareMBaseManager("?");
+	if (strcmp(name, "MareMCManager") == 0)
+		return new TMareMCManager;
 
-	// TODO:
-	// if ( strcmp(name, "MareMDManager") == 0 )
-	//     return new TMareMBaseManager("?");
+	if (strcmp(name, "MareMDManager") == 0)
+		return new TMareMDManager;
 
-	// TODO:
-	// if ( strcmp(name, "MareWManager") == 0 )
-	//     return new TMareMBaseManager("?");
+	if (strcmp(name, "MareWManager") == 0)
+		return new TMareWManager;
 
-	// TODO:
-	// if ( strcmp(name, "MareWAManager") == 0 )
-	//     return new TMareWBaseManager("?");
+	if (strcmp(name, "MareWAManager") == 0)
+		return new TMareWAManager;
 
-	// TODO:
-	// if ( strcmp(name, "MareWBManager") == 0 )
-	//     return new TMareWBaseManager("?");
+	if (strcmp(name, "MareWBManager") == 0)
+		return new TMareWBManager;
 
-	// TODO:
-	// if ( strcmp(name, "KinopioManager") == 0 )
-	//     return new TNPCManager("?");
+	if (strcmp(name, "KinopioManager") == 0)
+		return new TKinopioManager;
 
-	// TODO:
-	// if ( strcmp(name, "KinojiiManager") == 0 )
-	//     return new TNPCManager("?");
+	if (strcmp(name, "KinojiiManager") == 0)
+		return new TKinojiiManager;
 
-	// TODO:
-	// if ( strcmp(name, "PeachManager") == 0 )
-	//     return new TNPCManager("?");
+	if (strcmp(name, "PeachManager") == 0)
+		return new TPeachManager;
 
-	// TODO:
-	// if ( strcmp(name, "RaccoonDogManager") == 0 )
-	//     return new TNPCManager("?");
+	if (strcmp(name, "RaccoonDogManager") == 0)
+		return new TRaccoonDogManager;
 
-	// TODO:
-	// if ( strcmp(name, "SunflowerLManager") == 0 )
-	//     return new TNPCManager("?");
+	if (strcmp(name, "SunflowerLManager") == 0)
+		return new TSunflowerLManager;
 
-	// TODO:
-	// if ( strcmp(name, "SunflowerSManager") == 0 )
-	//     return new TNPCManager  ("?");
+	if (strcmp(name, "SunflowerSManager") == 0)
+		return new TSunflowerSManager;
 
-	// TODO:
-	// if ( strcmp(name, "MareJellyFish") == 0 )
-	//     return new TMareJellyFishManager("?");
+	if (strcmp(name, "MareJellyFish") == 0)
+		return new TMareJellyFishManager("");
 
-	// TODO:
-	// if (strcmp(name, "BoardNpcManager") == 0)
-	// 	return new TBoardNpcManager("?");
+	if (strcmp(name, "BoardNpcManager") == 0)
+		return new TBoardNpcManager;
 
 	return nullptr;
 }

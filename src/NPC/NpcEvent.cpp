@@ -55,7 +55,7 @@ static void evGetAddressFromViewObjName(TSpcTypedInterp<TEventWatcher>* interp,
 	const char* name = interp->pop().getDataString();
 	JDrama::TViewObj* viewObj
 	    = JDrama::TNameRefGen::search<JDrama::TViewObj>(name);
-	interp->push((int)viewObj);
+	interp->push(TSpcSlice((int)viewObj));
 }
 
 static void evCheckCurNerve4Npc(TSpcTypedInterp<TEventWatcher>* interp,

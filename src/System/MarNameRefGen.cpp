@@ -1,3 +1,19 @@
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+
+static const char* MtxCalcTypeName[] = {
+	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
+	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
+	"MActorMtxCalcType_MotionBlend モーションブレンド",
+	"MActorMtxCalcType_User ユーザー定義",
+};
+
+const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
+const char cDirtyTexName[]  = "H_ma_rak_dummy";
+
+static const float dummyZeroValues[] = { 0.0f, 0.0f, 0.0f };
+static const float dummyOneValues[]  = { 1.0f, 1.0f, 1.0f };
+
 #include <System/MarNameRefGen.hpp>
 
 #include <JSystem/JDrama/JDRSmJ3DScn.hpp>
@@ -30,6 +46,9 @@
 #include <GC2D/SunGlass.hpp>
 #include <Map/MapMirror.hpp>
 #include <Map/MapEventSink.hpp>
+#include <Map/MapEventSirena.hpp>
+#include <Map/MapEventDolpic.hpp>
+#include <Map/MapEventMare.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Enemy/EffectObj.hpp>
 #include <Enemy/AreaCylinder.hpp>
@@ -250,28 +269,26 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 	if (strcmp(name, "MapEventSinkShadowMario") == 0)
 		return new TMapEventSinkShadowMario;
 
-	// TODO:
-	// if (strcmp(name, "MapEventSirenaSink") == 0)
-	// 	return new TMapEventSirenaSink;
+	if (strcmp(name, "MapEventSirenaSink") == 0)
+		return new TMapEventSirenaSink("ホテル沈む");
 
 	if (strcmp(name, "MapEventSinkBianco") == 0)
 		return new TMapEventSinkBianco;
 
-	// TODO:
-	// if (strcmp(name, "DolpicEventBiancoGate") == 0)
-	// 	return new TDolpicEventBiancoGate;
+	if (strcmp(name, "DolpicEventBiancoGate") == 0)
+		return new TDolpicEventBiancoGate("イベント（ビアンコゲート）");
 
-	// if (strcmp(name, "DolpicEventRiccoGate") == 0)
-	// 	return new TDolpicEventRiccoMammaGate;
+	if (strcmp(name, "DolpicEventRiccoGate") == 0)
+		return new TDolpicEventRiccoMammaGate("イベント（リコ、マンマゲート）");
 
-	// if (strcmp(name, "DolpicEventMammaGate") == 0)
-	// 	return new TDolpicEventRiccoMammaGate;
+	if (strcmp(name, "DolpicEventMammaGate") == 0)
+		return new TDolpicEventRiccoMammaGate("イベント（リコ、マンマゲート）");
 
-	// if (strcmp(name, "MareEventBumpyWall") == 0)
-	// 	return new TMareEventBumpyWall;
+	if (strcmp(name, "MareEventBumpyWall") == 0)
+		return new TMareEventBumpyWall("凸凹壁");
 
-	// if (strcmp(name, "MareEventWallRock") == 0)
-	// 	return new TMareEventWallRock;
+	if (strcmp(name, "MareEventWallRock") == 0)
+		return new TMareEventWallRock("イベント（マーレ壁の岩）");
 
 	if (strcmp(name, "StageEnemyInfoHeader") == 0)
 		return new TStageEnemyInfoTable;

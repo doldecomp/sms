@@ -1,17 +1,117 @@
+static const char cBossEnemyEMario[]      = "EMario";
+static const char cBossEnemyUnknown[]     = "?";
+static const float cBossEnemyZero[]       = { 0.0f };
+static const char cBossEnemyBossEel[]     = "BossEel";
+static const char cBossEnemyKoopa[]       = "Koopa";
+static const char cBossEnemyKoopaName[]   = "クッパ";
+static const char cBossEnemyKoopaJr[]     = "KoopaJr";
+static const char cBossEnemyOilBall[]     = "OilBall";
+static const char cBossEnemyOilBallName[] = "油ダマ";
+
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+
+static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
+static const char cDirtyTexName[]  = "H_ma_rak_dummy";
+
+static const char* MtxCalcTypeName[] = {
+	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
+	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
+	"MActorMtxCalcType_MotionBlend モーションブレンド",
+	"MActorMtxCalcType_User ユーザー定義",
+};
+
+static const char* bossEnemyNames[] = {
+	"マリオモドキ",
+	"EMarioManager",
+	"典型敵マネージャ",
+	"BossHanachan",
+	"BossHanachanManager",
+	"SleepBossHanachan",
+	"SleepBossHanachanManager",
+	"/enemy/sleepBossHanachan.prm",
+	"BossEelManager",
+	"BEelTearsManager",
+	"めおとウナギ涙マネージャー",
+	"KoopaManager",
+	"クッパマネージャー",
+	"HinoKuri2",
+	"ヒノクリ２",
+	"HinoKuri2Manager",
+	"ヒノクリ２マネージャ",
+	"BossGesso",
+	"ボスゲッソー",
+	"BossGessoManager",
+	"ボスゲッソーマネージャ",
+	"TinKoopa",
+	"メカクッパ",
+	"TinKoopaManager",
+	"メカクッパマネージャ",
+	"CoasterKillerManager",
+	"コースターキラーマネージャー",
+	"CoasterKiller",
+	"コースターキラー",
+	"KoopaJrManager",
+	"クッパジュニアマネージャー",
+	"クッパジュニア",
+	"KoopaJrSubmarineManager",
+	"クッパジュニアサブマリンマネージャー",
+	"KoopaJrSubmarine",
+	"クッパジュニアサブマリン",
+	"LimitKoopaJrManager",
+	"リミットクッパジュニアマネージャー",
+	"LimitKoopaJr",
+	"リミットクッパジュニア",
+	"LimitKoopaManager",
+	"LimitKoopa",
+	"BathtubKillerManager",
+	"バスタブキラーマネージャー",
+	"BathtubKiller",
+	"バスタブキラー",
+	"BathtubPeachManager",
+	"バスタブピーチマネージャー",
+	"BathtubPeach",
+	"バスタブピーチ",
+	"BossWanwan",
+	"ボスワンワン",
+	"BossWanwanManager",
+	"ボスワンワンマネージャ",
+	"BossPakkun",
+	"ボスパックン改",
+	"KBossPakkun",
+	"ボスパックン軽",
+	"BossPakkunManager",
+	"ボスパックンマネージャー",
+	"KBossPakkunManager",
+	"ボスパックン軽マネージャ",
+	"BossTelesa",
+	"ボステレサ",
+	"BossTelesaManager",
+	"ボステレサマネージャー",
+	"BubbleManager",
+	"バブルマネージャー",
+	"BossManta",
+	"ボスマンタ",
+	"BossMantaManager",
+	"ボスマンタマネージャ",
+};
+
 #include "Enemy/BathtubKiller.hpp"
+#include "Enemy/BossEel.hpp"
 #include "Enemy/BossGesso.hpp"
+#include "Enemy/BossManta.hpp"
 #include "Enemy/CoasterKiller.hpp"
 #include "Enemy/Enemy.hpp"
 #include "Enemy/EnemyManager.hpp"
+#include "Enemy/Emario.hpp"
 #include "Enemy/Hinokuri2.hpp"
 #include <System/MarNameRefGen.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 {
 
-	// TODO:
-	// if ( strcmp( name, "EMario" ) == 0 )
-	//     return new TEMario("マリオモドキ");
+	if (strcmp(name, cBossEnemyEMario) == 0)
+		return new TEMario("マリオモドキ");
 
 	// TODO:
 	// if ( strcmp( name, "EMarioManager" ) == 0 )
@@ -33,17 +133,14 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	// if (strcmp(name, "SleepBossHanachanManager") == 0)
 	// 	return new TDemoBossHanachanManager("?");
 
-	// TODO:
-	// if ( strcmp( name, "BossEel" ) == 0 )
-	//     return new TBossEel;
+	if (strcmp(name, cBossEnemyBossEel) == 0)
+		return new TBossEel(name);
 
-	// TODO:
-	// if (strcmp(name, "BossEelManager") == 0)
-	// 	return new TBossEelManager("?");
+	if (strcmp(name, "BossEelManager") == 0)
+		return new TBossEelManager(name);
 
-	// TODO:
-	// if ( strcmp( name, "BEelTearsManager" ) == 0 )
-	//     return new TBEelTearsManager("めおとウナギ涙マネージャー");
+	if (strcmp(name, "BEelTearsManager") == 0)
+		return new TBEelTearsManager("めおとウナギ涙マネージャー");
 
 	// TODO:
 	// if ( strcmp( name, "Koopa" ) == 0 )
@@ -113,9 +210,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	// if ( strcmp( name, "LimitKoopa" ) == 0 )
 	//     return new TLimitKoopa("クッパ");
 
-	// TODO:
-	// if ( strcmp( name, "BathtubKillerManager" ) == 0 )
-	//     return new TBathtubKillerManager("バスタブキラーマネージャー");
+	if (strcmp(name, "BathtubKillerManager") == 0)
+		return new TBathtubKillerManager("バスタブキラーマネージャー");
 
 	if (strcmp(name, "BathtubKiller") == 0)
 		return new TBathtubKiller;
@@ -164,17 +260,14 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	// if ( strcmp( name, "BubbleManager" ) == 0 )
 	//     return new TBubbleManager("バブルマネージャー");
 
-	// TODO:
-	// if ( strcmp( name, "OilBall" ) == 0 )
-	//     return new TBEelTears("油ダマ");
+	if (strcmp(name, cBossEnemyOilBall) == 0)
+		return new TBEelTears(cBossEnemyOilBallName);
 
-	// TODO:
-	// if ( strcmp( name, "BossManta" ) == 0 )
-	//     return new TBossManta("ボスマンタ");
+	if (strcmp(name, "BossManta") == 0)
+		return new TBossManta("ボスマンタ");
 
-	// TODO:
-	// if ( strcmp( name, "BossMantaManager" ) == 0 )
-	//     return new TBossMantaManager("ボスマンタマネージャ");
+	if (strcmp(name, "BossMantaManager") == 0)
+		return new TBossMantaManager("ボスマンタマネージャ");
 
 	return nullptr;
 }

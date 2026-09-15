@@ -57,6 +57,12 @@ int TMarDirector::direct()
 	}
 
 	u32 desiredAppState = TApplication::APP_STATE_DEFAULT;
+	u32 uVar8;
+	u8 bVar7;
+	u32 tmp;
+	bool bVar1;
+	u32 uVar4;
+	u32 uVar44;
 
 	JDrama::TGraphics local_140;
 
@@ -74,8 +80,8 @@ int TMarDirector::direct()
 				unk4C |= 0x4000;
 
 			// inline?
-			u32 uVar8 = 0;
-			u8 bVar7  = bVar2;
+			uVar8 = 0;
+			bVar7 = bVar2;
 			if (unk4C & 0x4000) {
 				if (unk258)
 					unk258->stageLoop();
@@ -118,7 +124,7 @@ int TMarDirector::direct()
 				}
 			}
 
-			u32 tmp = 0;
+			tmp = 0;
 			if (unk4C & 0x2000)
 				tmp |= 1;
 			if (unk4C & 0x4000)
@@ -126,7 +132,7 @@ int TMarDirector::direct()
 			local_140.unk2 = tmp;
 
 			// inline
-			bool bVar1 = true;
+			bVar1 = true;
 			if ((unk58 & 1) || (unk58 & 2))
 				bVar1 = false;
 
@@ -135,8 +141,10 @@ int TMarDirector::direct()
 			else
 				gpObjHitCheck->clearHitNum();
 
-			u32 uVar11 = ~uVar8;
-			u32 uVar4  = uVar11;
+			u32 uVar11;
+			tmp    = ~uVar8;
+			uVar11 = tmp;
+			uVar4  = uVar11;
 			if (unk58 & 1)
 				uVar4 &= ~0x100;
 			if (unk58 & 2)
@@ -146,7 +154,7 @@ int TMarDirector::direct()
 			else
 				mShinePfLstMov->perform(uVar4, &local_140);
 
-			u32 uVar44 = 0;
+			uVar44 = 0;
 			if (!(unk4C & 0x4000))
 				uVar44 |= 2;
 			unk30->perform(~uVar44, &local_140);
@@ -576,7 +584,7 @@ void TMarDirector::setMario()
 		gpMarioOriginal->toroccoStart();
 		break;
 
-	case 3:
+	case 0:
 		const JGeometry::TVec3<f32>* pos = nullptr;
 		if (uVar10)
 			pos = &marioSetPosition->getUnk10(uVar10 - 1);
@@ -584,23 +592,41 @@ void TMarDirector::setMario()
 		break;
 	}
 
-	switch (gpApplication.mCurrArea.getStage()) {
-	case 0x3C:
-		gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Rocket, true);
-		break;
+	TWaterGun* waterGun;
+	TGameSequence& curArea = gpApplication.mCurrArea;
+	if (gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)) {
+		switch (curArea.getStage()) {
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 8:
+		case 9:
+		case 0x10:
+		case 0x2C:
+		case 0x34:
+		case 0x39:
+			break;
 
-		// TODO: crazy cases
-	case 0:
-	case 7:
-		gpMarioOriginal->mWaterGun->changeNozzle(
-		    (TWaterGun::TNozzleType)TFlagManager::getInstance()->getFlag(
-		        0x40004),
-		    true);
-		gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Spray, true);
-		break;
+		case 0x3C:
+			gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Rocket, true);
+			break;
+
+		default: {
+			waterGun = gpMarioOriginal->mWaterGun;
+			waterGun->changeNozzle(
+			    (TWaterGun::TNozzleType)TFlagManager::getInstance()->getFlag(
+			        0x40004),
+			    true);
+			gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Spray, true);
+			break;
+		}
+		}
 	}
 
-	u32 uVar6 = SMS_getShineIDofExStage(gpApplication.mCurrArea.getStage());
+	u8 uVar6 = SMS_getShineIDofExStage(curArea.getStage());
 	if (uVar6 != 0xff && TFlagManager::getInstance()->getShineFlag(uVar6) == 0)
 		gpMarioOriginal->offFlag(MARIO_FLAG_HAS_FLUDD);
 }
@@ -723,9 +749,7 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		    ->unkC.on(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 		JDrama::TNameRefGen::search<JDrama::TViewObj>("Guide")->unkC.off(
 		    CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
-		if (gpMSound->gateCheck(MSD_SE_SY_WIPE_IN))
-			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_WIPE_IN, 0, nullptr,
-			                                   0);
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_WIPE_IN, 0, nullptr, 0);
 		gpApplication.mFader->startWipe(6, 1.0f, 0.0f);
 		unk78->setup(nullptr);
 		unk78->startMoveCursor();
@@ -807,7 +831,8 @@ u8 TMarDirector::updateGameMode()
 				TFlagManager::getInstance()->setBool(true, 0x30006);
 				TFlagManager::getInstance()->setShineFlag(unk25C->getEventId());
 				f32 fVar3 = unkDC->mRate;
-				unkDC->registFadeout(fVar3 * 1.0f, fVar3 * 5.3333333f);
+				u16 uVar4 = fVar3;
+				unkDC->registFadeout(uVar4, fVar3 * 5.3333333f);
 				unk4C |= 0x8202;
 				unk261 = 6;
 				decideNextStage();
@@ -878,6 +903,7 @@ u8 TMarDirector::updateGameMode()
 		}
 		break;
 
+	case 3:
 	case 4: {
 		bool bVar5  = false;
 		bool uVar15 = 0;
@@ -887,7 +913,7 @@ u8 TMarDirector::updateGameMode()
 			unk4C &= ~0x80;
 		} else {
 			if (!gpCamera->getRestDemoFrames()) {
-				if (!MSBgm::getHandle(2) || unk5C - unk60 >= 1200) {
+				if (!MSBgm::getHandle(2) || unk5C - unk60 >= 720) {
 					bVar5  = true;
 					uVar15 = unk12C[unk24D].unk10;
 				}
@@ -903,6 +929,7 @@ u8 TMarDirector::updateGameMode()
 				if (info->unk14 != nullptr)
 					(*info->unk14)(info->unk18, 1);
 
+				info = &unk12C[unk24D];
 				gpCamera->startDemoCamera(info->unk0, info->unk4, info->unk8,
 				                          info->unkC, info->unk10);
 				if (info->unk14 != nullptr)
@@ -969,7 +996,8 @@ u8 TMarDirector::updateGameMode()
 			else
 				MSMainProc::toInnerCameraDemo();
 			unk18[0]->mFlags |= 0x10;
-			if (unk12C[unk24D].unk20.mValue == 1) {
+			JDrama::TFlagT<u16> flag = unk12C[unk24D].unk20;
+			if (flag.mValue == 1) {
 				gpCamera->startGateDemoCamera(unk12C[unk24D].unk1C);
 			} else {
 				TDemoInfo* info = &unk12C[unk24D];
