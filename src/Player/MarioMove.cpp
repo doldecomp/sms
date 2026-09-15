@@ -35,7 +35,8 @@ f32 TMario::getJumpSlideControl() const
 	if (mStatus == MARIO_STATUS_WIRE_JUMP)
 		return mWireParams.mWireJumpSlideControl.get();
 
-	if (onYoshi() && (mYoshi->mFlutterState == 1 ? true : false))
+	BOOL isOnYoshi = onYoshi();
+	if (isOnYoshi && (mYoshi->mFlutterState == 1 ? true : false))
 		return mYoshiParams.mHoldOutSldCtrl.get();
 
 	return mJumpParams.mJumpSlideControl.get();
