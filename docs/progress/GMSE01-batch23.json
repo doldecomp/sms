@@ -1,0 +1,77 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "211b726c",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.545715,
+    "total_code": "3603748",
+    "matched_code": "1384652",
+    "matched_code_percent": 38.422554,
+    "total_data": "641075",
+    "matched_data": "303535",
+    "matched_data_percent": 47.347813,
+    "total_functions": 12904,
+    "matched_functions": 8222,
+    "matched_functions_percent": 63.71668,
+    "complete_code": "76468",
+    "complete_code_percent": 2.121902,
+    "complete_data": "51024",
+    "complete_data_percent": 7.9591312,
+    "total_units": 732,
+    "complete_units": 73
+  },
+  "source_linked_objects": 73,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 1,
+  "new_exact_code_bytes": 72,
+  "new_matched_data_bytes": 56,
+  "new_reconstructed_code_bytes": 0,
+  "improvements": [
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "MsWrap<f>__Ffff",
+      "before": 0,
+      "after": 100.0,
+      "size": 72
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "execWalk__13TBossHanachanFb",
+      "before": 76.784,
+      "after": 95.624,
+      "size": 500
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "perform__13TBossHanachanFUlPQ26JDrama9TGraphics",
+      "before": 78.2685,
+      "after": 78.874916,
+      "size": 6108
+    },
+    {
+      "unit": "mario/NPC/NpcWalkTurn",
+      "function": "execWalk__8TBaseNPCFb",
+      "before": 89.435486,
+      "after": 92.30645,
+      "size": 992
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_map_boss_main": false,
+    "symbol_map_npc_walk": false,
+    "gameplay_test": false
+  },
+  "notes": [
+    "Existing MsAngleWrap restores the first original wrapper call in boss perform and emits an exactly matching 72-byte MsWrap<float>. Sphere-link direct wrapping is a verified exception.",
+    "Shared horizontal vector temporaries restore unfused squared-length calculations in boss/NPC walking predicates and the boss path-transition check. Both UNUSED predicates now match the 192-byte map size.",
+    "Corrected NPC horizontal walk threshold to the original float 10 and restored absolute yaw difference before wrapping. Vector assignment recovers one missing integer-word direction copy.",
+    "Boss execWalk is 95.624%, NPC execWalk is 92.30645%, and boss perform is 78.874916%. Both changed units still lack the original emitted TVec3::set<float>; order, linkage, and UNUSED sizes pass.",
+    "Rejected construction, copy, acceleration-load and history-loop trials are documented for reuse. No compiler pragmas, stack padding, or middleware changes were retained.",
+    "Zero function regressions, including missing-function detection. No source-link promotion. Executable checks cover the mixed source/original-object build; these units remain original-linked."
+  ]
+}

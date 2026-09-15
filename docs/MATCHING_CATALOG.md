@@ -590,3 +590,71 @@ A full executable match also does not validate bodies in objects that are still 
 - Validation: full build, baseline/changes_all, all-function presence and score comparison with zero regressions, expected DOL SHA-1, and byte comparison passed.
   Added 116 exact code bytes/two functions and 1,144 matched data bytes; source linking remains 73 objects/76,468 code bytes.
   No gameplay test was performed.
+
+## Shared horizontal walking checks and angle wrapping, batch 23
+
+### Walking predicate inventory and original behavior
+
+- Search: `rg -n 'isCanWalk|CLBSquared|2.5625f' src/Enemy src/NPC src/Animal include`.
+  The two `isCanWalk` definitions are `TBossHanachan` and `TBaseNPC`.
+  Both original inline sites construct `(target.x - position.x, 0, target.z - position.z)` and compare squared length against `CLBSquared(10.0f)`.
+  Both UNUSED predicates are 192 bytes in the map.
+- NPC evidence: original `execWalk` at 0x80216E68, predicate construction at TU offsets 0x7A0..0x824, and `.sdata2` constant `@2354` at 0x80415224 explicitly contains float 10.
+  The previous full three-dimensional subtraction and 2.5625 threshold were incorrect for this US target.
+- Shared change: invoke `.squared()` directly on the horizontal vector temporary.
+  This keeps the vector in memory and reproduces separate component multiplies and adds before the threshold call.
+  A named vector was scalarized, eliminated the zero component, and fused arithmetic across the threshold call.
+  Applied to both predicates and the boss's separate 100-unit path-transition check, whose complete original diff independently supports the same arithmetic.
+- Boss walking improves from 76.784% to 95.624%.
+  NPC walking, including the additional yaw corrections below, improves from 89.435486% to 92.30645%.
+  Both UNUSED predicates now reproduce the 192-byte map size.
+  Size agreement does not prove their original instruction bodies, which were dead-stripped.
+- Remaining shared issue: both original inline predicates call `TVec3::set<float>`; the current construction still inlines the setter.
+  The boss's second, 100-unit check correctly needs the setter inline and now reproduces its arithmetic apart from stack locations.
+  Do not globally disable setter inlining.
+- Related candidate: `TNerveNPCGraphWander::execute` in `NpcNerve.cpp` uses a horizontal named vector plus an existing `(void)&local_58` workaround.
+  Its function was not edited or fully investigated in this batch; compare its complete original before reusing the temporary-expression form.
+
+### NPC yaw completion and vector copies
+
+- Original NPC offsets 0x6A8..0x6AC subtract yaw and take its absolute value before wrapping to 0..360.
+  Restored `fabsf(mRotation.y - angle)` before the existing `MsWrap` call.
+  The exact original `fabs` instruction is restored without an extra narrowing instruction.
+- Original offsets 0x5D0..0x5FC copy the direction through integer-word vector assignments twice.
+  Changed the existing float-component `.set(direction)` to vector assignment, recovering one missing copy.
+  The remaining copy and register differences are explicitly noted in source.
+- Rejected: rewriting direction as `unkF4.getPoint() - mPosition` recovered both copies but introduced a non-native out-of-line `TVec3::sub` call.
+  Kept the explicit in-place subtraction and the evidenced assignment instead.
+
+### Existing angle wrapper and caller exception
+
+- Search: `rg -n 'MsAngleWrap|MsWrap\(MsGetRotFromZaxisY' src include/MarioUtil/MathUtil.hpp`.
+- In boss `perform`, use existing `MsAngleWrap(MsGetRotFromZaxisY(axis))` for the first body-yaw wrapping site.
+  Its additional inline boundary retains the original call and emits the missing local `MsWrap<float>` with all 72 bytes matching exactly.
+  `perform` improves from 78.2685% to 78.874916%.
+- Exception verified against the complete diff: `TSphereLink::setDegreeZAndRevisionPosXZ` in `BossHanachanSub.cpp` correctly inlines its direct `MsWrap` call.
+  Do not apply the main-update wrapper change there.
+  The main update's three signed wrapping sites still inline incorrectly and need their own source-context investigation.
+
+### Rejected construction and loop trials
+
+- Explicit assignment or copy initialization from a constructed vector emits the missing setter call but adds a non-native integer-word vector copy; UNUSED predicate size becomes 216 bytes.
+  Using `.set(temporary)` also retains the setter call but fuses the squared-length calculation incorrectly.
+- Binding the temporary to a const reference, or naming its squared-length result, preserves the unfused arithmetic but does not recover the missing setter call.
+  They add stack slots compared with the simpler direct-expression form and were not retained.
+- Const-qualified named vector construction still scalarizes and does not help.
+  Naming the boss's acceleration parameters leaves their reversed load order unchanged; reverted.
+- Main-update history-loop experiments from the same batch were all reverted.
+  Direct repeated `mBodies[i]` access partially unrolls the loop but adds non-native pointer reloads; a reference local or unsigned index still fully unrolls eight iterations.
+  A do/while loop does not reproduce the original four-body group repeated twice using CTR.
+  The original single-body-pointer loop remains the best evidenced source until its unrolling context is resolved.
+
+### Validation
+
+- Saved baseline at `211b726c`; full build, `ninja changes_all`, all-function presence/score comparison, direct DOL byte comparison, and expected SHA-1 check pass.
+  Zero function regressions; gain is one exact function, 72 code bytes, and 56 matched data bytes.
+- Both changed units retain one missing map symbol, emitted `TVec3::set<float>`.
+  All present strong functions have correct order and linkage; all UNUSED function sizes now agree with the map.
+  These are recorded map failures, not complete-unit claims.
+- No new source-linked object or gameplay test.
+  Measurements: `docs/progress/GMSE01-batch23.json`; original/current diffs, map checks, and regression results: `build/GMSE01-*-batch23.*`.

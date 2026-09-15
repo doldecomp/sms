@@ -8,8 +8,10 @@
 bool TBaseNPC::isCanWalk() const
 {
 	bool result = true;
-	// TODO: TVec3::sub should use set internally I guess?
-	if ((unkF4.getPoint() - mPosition).squared() < CLBSquared(2.5625f))
+	JGeometry::TVec3<f32> target = unkF4.getPoint();
+	if (JGeometry::TVec3<f32>(target.x - mPosition.x, 0.0f,
+	                          target.z - mPosition.z).squared()
+	    < CLBSquared(10.0f))
 		result = false;
 	return result;
 }
@@ -30,14 +32,14 @@ void TBaseNPC::execWalk(bool param_1)
 
 		SMS_GoRotate(mPosition, unkF4.getPoint(), fVar1, &mRotation.y);
 
-		// TODO: vector math is borked
-		JGeometry::TVec3<f32> local_54 = unkF4.getPoint();
-		local_54 -= mPosition;
+		// TODO: the original makes one more vector copy before computing yaw.
+		JGeometry::TVec3<f32> direction = unkF4.getPoint();
+		direction -= mPosition;
 		JGeometry::TVec3<f32> copy;
-		copy.set(local_54);
+		copy = direction;
 
 		f32 angle = MsGetRotFromZaxisY(copy);
-		if (MsWrap(mRotation.y - angle, 0.0f, 360.0f) < 0.001f)
+		if (MsWrap(fabsf(mRotation.y - angle), 0.0f, 360.0f) < 0.001f)
 			offUnk1DA(UNK1DA_FLAG_UNK1);
 
 		return;

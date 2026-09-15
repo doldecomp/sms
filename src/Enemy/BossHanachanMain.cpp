@@ -362,7 +362,7 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 				JGeometry::TVec3<f32> axis = unk178->mPoints[i - 1].mPosition
 				                            - unk178->mPoints[i].mPosition;
 				body->mRotation.y
-				    = MsWrap(MsGetRotFromZaxisY(axis), 0.0f, 360.0f);
+				    = MsAngleWrap(MsGetRotFromZaxisY(axis));
 			}
 			unk178->mHeadDegreeY = mBodies[0]->mRotation.y;
 			for (int i = 0; i < 8; ++i)
@@ -754,9 +754,9 @@ bool TBossHanachan::isCanWalk() const
 {
 	bool result = true;
 	JGeometry::TVec3<f32> target = unkF4.getPoint();
-	JGeometry::TVec3<f32> delta;
-	delta.set<f32>(target.x - mPosition.x, 0.0f, target.z - mPosition.z);
-	if (delta.squared() < CLBSquared(10.0f))
+	if (JGeometry::TVec3<f32>(target.x - mPosition.x, 0.0f,
+	                          target.z - mPosition.z).squared()
+	    < CLBSquared(10.0f))
 		result = false;
 	return result;
 }
@@ -773,9 +773,9 @@ void TBossHanachan::execWalk(bool accelerate)
 	if (isCanWalk())
 		walkToCurPathNode(mMarchSpeed, mTurnSpeed, 0.0f);
 	JGeometry::TVec3<f32> target = unkF4.getPoint();
-	JGeometry::TVec3<f32> delta(target.x - mPosition.x, 0.0f,
-	                           target.z - mPosition.z);
-	if (delta.squared() < CLBSquared(100.0f)) {
+	if (JGeometry::TVec3<f32>(target.x - mPosition.x, 0.0f,
+	                          target.z - mPosition.z).squared()
+	    < CLBSquared(100.0f)) {
 		if (!unk114.empty())
 			switchNextGoalPath();
 		else

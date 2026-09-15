@@ -8,7 +8,35 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 22
+## Latest checkpoint: batch 23
+
+Applied an evidence-supported horizontal vector calculation to the boss and NPC walking predicates and the boss's path-transition check.
+Boss walking improves from **76.784% to 95.624%**, and NPC walking improves from **89.435486% to 92.30645%**.
+Corrected the NPC's original 10-unit horizontal threshold and absolute yaw difference, and restored an integer-word direction copy.
+Both UNUSED walking predicates now have their original 192-byte map size.
+The existing `MsAngleWrap` helper restores one original call in boss `perform` and emits **72 exactly matching code bytes / one function**.
+The main update improves to **78.874916%**.
+
+Aggregate exact code is **1,384,652 / 3,603,748 bytes (38.422554%)**, with **8,222 / 12,904 functions** matching.
+Matched data increased by 56 bytes.
+Source linking remains **73 objects / 76,468 code bytes (2.121902%)**.
+Both changed objects remain linked from the original binary.
+
+### Validation and remaining work
+
+Used the saved `ninja baseline` at `211b726c`, rebuilt, and ran `ninja changes_all`.
+The comparison of all reported functions, including missing-function detection, found zero regressions.
+Full build, direct DOL byte comparison, and expected SHA-1 checks pass for the mixed source/original-object executable.
+Both changed units still fail the map check for one missing emitted `TVec3::set<float>` helper; their function order, linkage, and all UNUSED sizes pass.
+No gameplay test was performed.
+
+Next work: recover the shared walking setter-call context, then address the boss main update's remaining maximum-roll calls, three signed angle-wrap calls, history-loop unrolling, and arithmetic differences.
+The sphere-link angle-wrap site is a verified exception to the main-update wrapper correction.
+Keep the current best-evidenced history loop; trials that merely raised similarity while adding non-native pointer reloads were reverted.
+See [batch 23 measurements](docs/progress/GMSE01-batch23.json) and the [matching catalog](docs/MATCHING_CATALOG.md) for successful patterns, exceptions, and rejected trials.
+Validation logs and full instruction diffs are saved under `build/GMSE01-*-batch23.*`.
+
+## Verified checkpoint: batch 22
 
 Reconstructed the boss's full 6,108-byte main update/render routine from its original instructions and m2c draft.
 It covers body motion, terrain and sand response, collision handling, animation blending, targeting, shadows, and rendering, and currently has **78.2685% instruction similarity**.
