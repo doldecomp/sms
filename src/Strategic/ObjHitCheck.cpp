@@ -150,7 +150,7 @@ u32 TObjHitCheck::getTableIndex(const JGeometry::TVec3<f32>& pos,
 void TObjHitCheck::checkAndEntryGroup(TIdxGroupObj* group)
 {
 	TIdxGroupObj::iterator end = group->getChildren().end();
-	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
+	for (TIdxGroupObj::iterator it = group->getChildren().begin(); !(it == end);
 	     ++it) {
 		(*it)->mColCount = 0;
 
