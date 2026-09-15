@@ -1,10 +1,10 @@
 {
   "region": "GMSE01",
-  "checkpoint": "batch27",
+  "checkpoint": "batch28",
   "notes": [
     "Report-based candidates only; source-link promotion also requires instruction, data, emission, map and executable verification.",
     "Priorities follow DECOMPILATION_PLAN.md. Game objects only; protected THPPlayer objects are excluded even though report metadata classifies them as game.",
-    "Consult GMSE01-closure-audit-batch25.md, GMSE01-closure-audit-batch26.md and GMSE01-closure-audit-batch27.md before revisiting stalled candidates."
+    "Consult the batch 25 through batch 28 closure audits before revisiting stalled candidates."
   ],
   "all_code_matching": [
     {
@@ -457,7 +457,7 @@
         {
           "name": "perform__8TShimmerFUlPQ26JDrama9TGraphics",
           "size": 648,
-          "similarity": 99.80247
+          "similarity": 99.820984
         }
       ]
     },
@@ -466,12 +466,12 @@
       "source": "src/GC2D/ProgSelect.cpp",
       "code_bytes": 1408,
       "unmatched_code_bytes": 792,
-      "unmatched_data_bytes": 312,
+      "unmatched_data_bytes": 0,
       "nonmatching_functions": [
         {
           "name": "perform__11TProgSelectFUlPQ26JDrama9TGraphics",
           "size": 792,
-          "similarity": 99.85859
+          "similarity": 99.79798
         }
       ]
     },
@@ -1294,7 +1294,7 @@
         {
           "name": "perform__8TShimmerFUlPQ26JDrama9TGraphics",
           "size": 648,
-          "similarity": 99.80247
+          "similarity": 99.820984
         }
       ]
     },
@@ -1467,12 +1467,12 @@
       "source": "src/GC2D/ProgSelect.cpp",
       "code_bytes": 1408,
       "unmatched_code_bytes": 792,
-      "unmatched_data_bytes": 312,
+      "unmatched_data_bytes": 0,
       "nonmatching_functions": [
         {
           "name": "perform__11TProgSelectFUlPQ26JDrama9TGraphics",
           "size": 792,
-          "similarity": 99.85859
+          "similarity": 99.79798
         }
       ]
     },

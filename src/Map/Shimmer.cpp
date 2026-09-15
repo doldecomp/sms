@@ -21,9 +21,9 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-void TShimmer::near() { }
+void TShimmer::near() { mPosition.set(0.0f, 0.0f, 9600.0f); }
 
-void TShimmer::far() { }
+void TShimmer::far() { mPosition.set(0.0f, 0.0f, 0.0f); }
 
 void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 {
@@ -40,9 +40,9 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 		    && !gpMarioOriginal->getGroundPlane()->isShadow()
 		    && !gpMarioOriginal->getGroundPlane()->isIndoors()
 		    && !gpMarioOriginal->getGroundPlane()->isPool()) {
-			mPosition.set(0.0f, 0.0f, 9600.0f);
+			near();
 		} else {
-			mPosition.set(0.0f, 0.0f, 0.0f);
+			far();
 		}
 
 		Mtx effectMtx;
@@ -54,8 +54,11 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 		    ->getTexMtx(1)
 		    ->setEffectMtx(effectMtx);
 
-		MtxPtr viewMtx = graphics->mViewMtx;
+		MtxPtr viewMtx = graphics->getViewMtx();
 
+		Mtx inverseView;
+		Mtx translation;
+		Mtx scale;
 		J3DTransformInfo info;
 		info.mScale.x     = 1.0f;
 		info.mScale.y     = 1.0f;
@@ -66,22 +69,19 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 		info.mTranslate.x = mPosition.x;
 		info.mTranslate.y = mPosition.y;
 		info.mTranslate.z = mPosition.z;
-		Mtx afStack_b0;
-		J3DGetTranslateRotateMtx(info, afStack_b0);
-		Mtx afStack_e0;
-		MTXScale(afStack_e0, mScaling.x, mScaling.y, mScaling.z);
-		Mtx afStack_80;
-		MTXInverse(viewMtx, afStack_80);
-		MTXConcat(afStack_80, afStack_b0, afStack_80);
-		MTXConcat(afStack_80, afStack_e0, afStack_80);
-		unk48->setBaseTRMtx(afStack_80);
-		unk48->entry();
+		J3DGetTranslateRotateMtx(info, translation);
+		MTXScale(scale, mScaling.x, mScaling.y, mScaling.z);
+		MTXInverse(viewMtx, inverseView);
+		MTXConcat(inverseView, translation, inverseView);
+		MTXConcat(inverseView, scale, inverseView);
+		unk48->setBaseTRMtx(inverseView);
 		unk48->calc();
+		unk48->viewCalc();
 	}
 
 	if (cue & CUE_ENTRY) {
 		if (gpMarDirector->mMap == 2 || !(gpCamera->unk124.y < 0.0f))
-			unk48->update();
+			unk48->entry();
 	}
 }
 

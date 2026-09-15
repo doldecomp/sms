@@ -8,7 +8,30 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 27 — PollutionObj file completion
+## Latest checkpoint: batch 28 — US selector data and Shimmer definitions
+
+Restored ProgSelect's five original US English strings and text dimensions: **312 newly matched data bytes**, with all 328 unit data bytes now exact.
+Removed its pre-existing padding array; the remaining draw-function differences are stack offsets.
+Its similarity decreases from 99.85859% to 99.79798% because the artificial frame padding is gone.
+No exact code or source-linked coverage was lost.
+
+Recovered Shimmer's two UNUSED near/far bodies with correct 24/20-byte map sizes, corrected three rendering calls, and restored relative matrix-local order.
+Both changed files pass their map checks without warnings.
+**No new source-linked file is claimed.**
+
+| Coverage | Matched code | Source-linked code |
+| --- | ---: | ---: |
+| Game code | **24.812231%** | **2.7927492%** |
+| Aggregate | **38.438206%** | **2.2068136%** |
+
+Source linking remains **75 game objects / 79,528 code bytes**.
+Baseline at `6bb39882`; full build, changes_all, all 12,904 function checks, DOL byte comparison and expected SHA-1 pass.
+All previously exact functions remain exact; one explained nonmatching-function score regression, zero unexplained regressions.
+No gameplay test was performed.
+See the [batch 28 audit](docs/progress/GMSE01-closure-audit-batch28.md) and [measurements](docs/progress/GMSE01-batch28.json) before further trials.
+Continue the Priority 1 file-completion queue.
+
+## Verified checkpoint: batch 27 — PollutionObj file completion
 
 Completed and source-linked **`Map/PollutionObj.cpp`**, adding **2,092 source-linked code bytes**.
 Its final 564-byte function now matches exactly after restoring the original local-variable and inline-call structure.

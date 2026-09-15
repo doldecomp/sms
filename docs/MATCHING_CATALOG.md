@@ -755,3 +755,21 @@ A full executable match also does not validate bodies in objects that are still 
 - Full build, changes_all, all 12,904 function comparisons, DOL byte comparison and SHA-1 pass; zero regressions.
   PollutionObj map checks pass; EffectUtil's pre-existing missing definition remains documented.
   See [batch 27 audit](progress/GMSE01-closure-audit-batch27.md) for the complete evidence and next queue entries.
+
+## US selector data and Shimmer rendering context, batch 28
+
+- ProgSelect's US strings are named mutable arrays, not Japanese string literals.
+  Recover exact data bytes and section placement from the DOL; the five arrays and all 328 unit data bytes now match.
+  Width 360 and X position 145 are original US draw arguments.
+  Constructor instruction coverage already matched before fixing its data relocations; do not double-count it.
+- Removed the old selector padding array.
+  Draw-function frame is now `0x1E8` versus `0x1F8`, with color/print/graph slots twelve bytes low.
+  Similarity decreases slightly, explicitly recorded as an explained regression; no exact function or source linking was lost.
+  Hoisted controller booleans add normalization instructions; `u8` selection local has no effect.
+- Shimmer requires model `calc`, `viewCalc`, then `entry`, selected by original virtual offsets `0x10`, `0x14`, `0x0C`.
+  Compare other game callers before changing similarly named calls; MapStaticObject/MapWire already use the appropriate methods.
+  Its near/far position branches recover both mapped UNUSED bodies with exact sizes (24/20 bytes).
+- The water-filter matrix declaration-order finding also restores Shimmer's relative matrix/transform layout.
+  Its frame gap remains unresolved; no file promotion.
+- Read [batch 28 audit](progress/GMSE01-closure-audit-batch28.md) before repeating CameraWarp, area-cylinder, Butterfly or multiplayer-camera frame trials.
+  Both edited files pass map checks; executable byte comparison and SHA-1 pass.
