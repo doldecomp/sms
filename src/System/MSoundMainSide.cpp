@@ -643,7 +643,7 @@ MSStage* MSStage::init(u8 param_1, u8)
 
 	case 3:
 		if (gpCubeSoundChange->unk10 == 1)
-			smMSStage = new MSStageCubeSwitch(param_1);
+			smMSStage = new MSStageCubeSwitch(0);
 		break;
 	}
 
