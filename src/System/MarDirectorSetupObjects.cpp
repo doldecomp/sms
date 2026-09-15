@@ -37,6 +37,10 @@
 extern void* gpSceneCmnDat;
 extern int gpSceneCmnDatSize;
 
+// TODO: These literals are emitted by dependencies in the original build.
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+
 void TMarDirector::decideMarioPosIdx()
 {
 	TApplication* application = &gpApplication;
