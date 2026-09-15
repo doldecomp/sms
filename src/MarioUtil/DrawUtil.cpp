@@ -50,7 +50,9 @@ void TSilhouette::loadAfter()
 	// three sample points atten = {0.9, 0.5, 0.05} at distances
 	// d = {30, 650, 1500}. k0 is eliminated by subtracting adjacent equations
 	// scaled by a[i]*a[i+1], leaving a 2x2 system solved via Cramer's rule.
-	f32 m[3][2];
+	f32 m2[2];
+	f32 m1[2];
+	f32 m0[2];
 	f32 dist[3];
 	f32 atten[3] = { 0.9f, 0.5f, 0.05f };
 
@@ -58,16 +60,16 @@ void TSilhouette::loadAfter()
 		dist[i] = unk24[i];
 
 	for (int i = 0; i < 2; ++i) {
-		m[0][i]
+		m0[i]
 		    = atten[i + 1]
 		      * (atten[i] * (dist[i] * dist[i] - dist[i + 1] * dist[i + 1]));
-		m[1][i] = atten[i + 1] * (atten[i] * (dist[i] - dist[i + 1]));
-		m[2][i] = atten[i + 1] - atten[i];
+		m1[i] = atten[i + 1] * (atten[i] * (dist[i] - dist[i + 1]));
+		m2[i] = atten[i + 1] - atten[i];
 	}
 
-	unk38 = (m[2][0] * m[1][1] - m[2][1] * m[1][0])
-	        / (m[0][0] * m[1][1] - m[0][1] * m[1][0]);
-	unk34 = (m[2][0] - m[0][0] * unk38) / m[1][0];
+	unk38 = (m2[0] * m1[1] - m2[1] * m1[0])
+	        / (m0[0] * m1[1] - m0[1] * m1[0]);
+	unk34 = (m2[0] - m0[0] * unk38) / m1[0];
 	unk30 = atten[0] - (dist[0] * dist[0] * unk38 + dist[0] * unk34);
 	unk3C = 8e-05f;
 
