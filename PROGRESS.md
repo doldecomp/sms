@@ -8,7 +8,39 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 10
+## Latest checkpoint: batch 11
+
+Reconstructed all six branches of the boss-part animation dispatcher, including Mario standing on a body segment, animation completion, directional get-up sequences, and delayed damage/snort/death transitions.
+`considerSetAnm_` improved from a stub (0.21691974%) to **99.6833%**, reproducing the original 461-instruction length (1,844 bytes).
+Remaining differences are the stack frame (0xD0 versus 0x110), register allocation, and one constant-load/move choice in the blending check.
+The existing animation-completion and motion-blending helpers are reused.
+
+Reconstructed `isMarioOn_` from the original dispatcher inline site and corrected its result to `bool`.
+Its inline instructions match and its emitted UNUSED body now has the mapped 100-byte size.
+Added the missing enum values; descriptive animation-state names remain provisional.
+
+This batch adds no fully exact linked functions or source-linked objects.
+Aggregate exact code remains **1,373,020 / 3,603,748 bytes (38.099777%)**, with **8,152 / 12,904 functions** matching.
+There are still **73 source-linked objects**, covering **76,468 code bytes (2.121902%)**.
+The unfinished parts object remains linked from the original executable.
+
+### Validation and remaining work
+
+Captured `ninja baseline` at `90cba87f`, rebuilt affected consumers, ran `ninja changes_all`, and compared all functions, including missing-function detection: zero regressions.
+The full build, expected SHA-1, and direct byte comparison pass.
+These executable checks cover the mixed source/original-object build; the dispatcher is not yet used by that executable.
+The parameter and sound objects pass all map checks.
+The parts object's order and linkage pass; the foot destructor/thunk are still missing, and the hit predicate has the sole remaining UNUSED-size warning (208 versus 196 bytes).
+No gameplay test was performed.
+
+Shared accessor/local-variable trials did not resolve the stack differences and were reverted.
+Their outcomes and the successful blending-expression form are recorded in the [shared-fix catalog](docs/MATCHING_CATALOG.md).
+Next work: reconstruct collision/foot initialization after resolving the water-hit field discrepancy, then continue exact matching and the owner's animation routines.
+The owner animation unit's complete map inventory is at `marioUS.MAP:59489`; it remains empty and has linked and UNUSED wrapper functions suitable for grouped reconstruction.
+See [batch 11 measurements](docs/progress/GMSE01-batch11.json).
+Logs and the dispatcher draft are saved under `build/GMSE01` and `build/GMSE01-*-batch11*.log`.
+
+## Verified checkpoint: batch 10
 
 Completed `BossHanachanSave.cpp` and linked it from source after verifying the full executable.
 Both parameter constructors match exactly: 1,608 bytes for the changeable parameters and 1,408 bytes for common parameters.

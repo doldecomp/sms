@@ -144,3 +144,27 @@ A full executable match also does not validate bodies in objects that are still 
 - Completing the base constructor with existing model and blend helpers also emits the exact `CLBPalFrame<short>` implementation.
   The base constructor itself still has an eight-byte stack difference; avoid artificial padding.
 - Both changed units and all header consumers rebuilt with zero function regressions in batch 10.
+
+## Boss-part animation dispatcher and standing check
+
+- Status: reconstructed, partially matching, batch 11.
+- Search: `rg -n 'considerSetAnm_|isMarioOn_|isCurBckAlreadyEnd_' src/Enemy/BossHanachanParts.cpp include/Enemy/BossHanachan.hpp`.
+- Original dispatcher: `0x800F3610`, 1,844 bytes; all six nerve states use an if/else chain.
+  The current function is 99.6833%, with the same 461 instructions; its frame is 0xD0 rather than 0x110 and the blending branch has register/load differences.
+- States 0/1 share the completion cases 5, 6, 13, 16, 17.
+  State 1 additionally checks Mario standing on this part and motion blending.
+- State 2 checks animation completion before its switch, including cases that do nothing (9/12).
+  Preserve these calls and the two directional chains, 7→8→9 and 10→11→12.
+- State 3 distinguishes a positive countdown becoming zero from a countdown already at or below zero.
+  Do not merge these with the other timer branches.
+- `isMarioOn_` returns `bool`, checks `SMS_IsMarioTouchGround4cm()`, then a non-null ground plane whose actor is this part.
+  Reusing `SMS_GetMarioGroundPlane()` and `getActor()` reproduces the inline instructions and the map's UNUSED 100-byte size.
+- Blending trial: `bool blending = isMotionBlending() || isForcedBlendRatio()` leaves the second helper out of line here (97.7%).
+  Initializing true and setting false when both helpers return false inlines both and reaches 99.6833% without changing the shared NPC helpers.
+  A ternary around the OR still leaves the call and adds another normalization group.
+  Directly comparing the forced-ratio field removed the call but left scheduling differences; that trial was reverted.
+- Stack trials: using `getMActor()` at each access in the completion and frame-copy helpers did not change their stack frames.
+  Holding that actor in a local regressed both instruction sequences; splitting the completion-state OR into a named local also regressed the helper and dispatcher.
+  All these trials were reverted; do not repeat them as presumed shared fixes.
+- `BossHanachanAnm.cpp` is the next related empty owner unit: its complete map inventory begins at line 59489 and includes four UNUSED wrappers.
+  Its methods must be reconstructed together with the wrappers rather than omitting their inline context.

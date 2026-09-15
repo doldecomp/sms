@@ -27,19 +27,32 @@ extern const char* cNoseHallJointName_R;
 
 void CalcMtxPtrFromJointName(JUTNameTab*, const char*, J3DModel*, MtxPtr*);
 
-// TODO: recover the remaining animation-state values and their names.
+// TODO: recover descriptive names for the animation states.
 enum EnumBossHanachanNerveAnm {
 	BOSS_HANACHAN_NERVE_ANM_UNK0 = 0,
+	BOSS_HANACHAN_NERVE_ANM_UNK1 = 1,
+	BOSS_HANACHAN_NERVE_ANM_UNK2 = 2,
+	BOSS_HANACHAN_NERVE_ANM_UNK3 = 3,
+	BOSS_HANACHAN_NERVE_ANM_UNK4 = 4,
+	BOSS_HANACHAN_NERVE_ANM_UNK5 = 5,
 };
 
 enum EnumBossHanachanAnmKind {
+	BOSS_HANACHAN_ANM_UNK0 = 0,
+	BOSS_HANACHAN_ANM_UNK1 = 1,
 	BOSS_HANACHAN_ANM_UNK2 = 2,
 	BOSS_HANACHAN_ANM_UNK3 = 3,
+	BOSS_HANACHAN_ANM_UNK4 = 4,
 	BOSS_HANACHAN_ANM_UNK5 = 5,
 	BOSS_HANACHAN_ANM_UNK6 = 6,
+	BOSS_HANACHAN_ANM_UNK7 = 7,
 	BOSS_HANACHAN_ANM_UNK8 = 8,
+	BOSS_HANACHAN_ANM_UNK9 = 9,
+	BOSS_HANACHAN_ANM_UNK10 = 10,
 	BOSS_HANACHAN_ANM_UNK11 = 11,
+	BOSS_HANACHAN_ANM_UNK12 = 12,
 	BOSS_HANACHAN_ANM_UNK13 = 13,
+	BOSS_HANACHAN_ANM_UNK14 = 14,
 	BOSS_HANACHAN_ANM_UNK15 = 15,
 	BOSS_HANACHAN_ANM_UNK16 = 16,
 	BOSS_HANACHAN_ANM_UNK17 = 17,
@@ -62,7 +75,7 @@ public:
 	void considerSetAnm_(EnumBossHanachanNerveAnm);
 	bool isReactToTrampleOrHipDrop_() const;
 	void calcRotateZWhenGetUp_();
-	BOOL isMarioOn_() const;
+	bool isMarioOn_() const;
 	const TLiveActor* getSandActor_() const;
 	void copyFrameFromOldAnmToNewAnm_();
 	bool isCurBckAlreadyEnd_() const;

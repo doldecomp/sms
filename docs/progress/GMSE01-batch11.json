@@ -1,0 +1,65 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "90cba87f",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 74.752594,
+    "total_code": "3603748",
+    "matched_code": "1373020",
+    "matched_code_percent": 38.099777,
+    "total_data": "641075",
+    "matched_data": "299763",
+    "matched_data_percent": 46.759426,
+    "total_functions": 12904,
+    "matched_functions": 8152,
+    "matched_functions_percent": 63.174213,
+    "complete_code": "76468",
+    "complete_code_percent": 2.121902,
+    "complete_data": "51024",
+    "complete_data_percent": 7.9591312,
+    "total_units": 732,
+    "complete_units": 73
+  },
+  "source_linked_objects": 73,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 0,
+  "new_exact_code_bytes": 0,
+  "improvements": [
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "considerSetAnm___22TBossHanachanPartsBaseF24EnumBossHanachanNerveAnm",
+      "before": 0.21691974,
+      "after": 99.6833,
+      "size": 1844
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_map_save": true,
+    "symbol_map_sound": true,
+    "symbol_order_parts": true,
+    "symbol_linkage_parts": true,
+    "symbol_presence_parts": false,
+    "gameplay_test": false
+  },
+  "unused_reconstructions": [
+    {
+      "function": "isMarioOn___22TBossHanachanPartsBaseCFv",
+      "map_size": 100,
+      "compiled_size": 100,
+      "inline_instructions_match": true
+    }
+  ],
+  "remaining_parts_map_issues": [
+    "Missing TFootHitActor destructor and adjustment thunk",
+    "isReactToTrampleOrHipDrop_ UNUSED size 208 versus 196"
+  ],
+  "notes": [
+    "The dispatcher is reconstructed but still has stack and register differences.",
+    "No objects promoted; executable verification covers the mixed source/original-object build."
+  ]
+}

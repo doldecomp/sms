@@ -6,7 +6,7 @@
 - Local branch: `local/decomp-progress`.
 - Upstream: `https://github.com/doldecomp/sms`, commit `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 - The user has authorized implementation and ongoing progress checks for the local North American ISO.
-- Local changes have added 7,912 exactly matching code bytes and 47 matching functions/helpers across ten batches; 73 verified game objects are linked from source.
+- Local changes have added 7,912 exactly matching code bytes and 47 matching functions/helpers across eleven batches; 73 verified game objects are linked from source.
 - Consult `docs/MATCHING_CATALOG.md` before related edits; inventory shared callers, batch evidence-supported fixes, and record exceptions and validation results.
 - Current checkpoint and remaining limitations are documented in `PROGRESS.md`.
 - The active configuration is now `GMSE01`; an all-extracted-object rebuild has matched the complete input executable.
@@ -84,7 +84,8 @@ Estimate effort only after the baseline and first representative batches establi
 2. Obtain the user's local `m2c` path before from-scratch reconstruction, per `AGENTS.md`.
 3. Follow `docs/PROGRAM_STRUCTURE_REVVING.md` for new translation units, accounting explicitly for unavailable regional map information.
 4. Reconstruct readable C++98 using the selected regional assembly as ground truth.
-5. Make one source change at a time and compare the compiled result with `tools/decomp-diff.py`.
+5. Inventory shared patterns and batch equivalent fixes supported by the original instructions.
+   Compare every affected function with `tools/decomp-diff.py` and the saved baseline.
 6. Keep uncertain functions nonmatching and document unresolved evidence.
 7. Run `ninja changes_all` and relevant symbol-order validation after each batch.
 8. If a required validator cannot run because metadata is missing, record that as an unresolved validation gap.

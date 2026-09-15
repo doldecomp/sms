@@ -11,6 +11,8 @@
 #include <System/MarDirector.hpp>
 #include <NPC/NpcInbetween.hpp>
 #include <Player/ModelWaterManager.hpp>
+#include <Player/MarioAccess.hpp>
+#include <Map/MapData.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <JSystem/JUtility/JUTNameTab.hpp>
 
@@ -216,7 +218,16 @@ const TLiveActor* TBossHanachanPartsBase::getSandActor_() const
 	return actor;
 }
 
-BOOL TBossHanachanPartsBase::isMarioOn_() const { return FALSE; /* TODO */ }
+bool TBossHanachanPartsBase::isMarioOn_() const
+{
+	bool result = false;
+	if (SMS_IsMarioTouchGround4cm()) {
+		const TBGCheckData* ground = SMS_GetMarioGroundPlane();
+		if (ground && ground->getActor() == this)
+			result = true;
+	}
+	return result;
+}
 
 void TBossHanachanPartsBase::calcRotateZWhenGetUp_()
 {
@@ -255,9 +266,118 @@ bool TBossHanachanPartsBase::isReactToTrampleOrHipDrop_() const
 	return result;
 }
 
-void TBossHanachanPartsBase::considerSetAnm_(EnumBossHanachanNerveAnm)
+void TBossHanachanPartsBase::considerSetAnm_(EnumBossHanachanNerveAnm nerve)
 {
-	// TODO
+	if (nerve == BOSS_HANACHAN_NERVE_ANM_UNK0) {
+		switch (mCurrentAnm) {
+		case BOSS_HANACHAN_ANM_UNK5:
+		case BOSS_HANACHAN_ANM_UNK6:
+		case BOSS_HANACHAN_ANM_UNK13:
+		case BOSS_HANACHAN_ANM_UNK16:
+		case BOSS_HANACHAN_ANM_UNK17:
+			if (isCurBckAlreadyEnd_())
+				setAnm_(BOSS_HANACHAN_ANM_UNK3,
+				        BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
+			break;
+		}
+	} else if (nerve == BOSS_HANACHAN_NERVE_ANM_UNK1) {
+		bool marioOn = isMarioOn_();
+		switch (mCurrentAnm) {
+		case BOSS_HANACHAN_ANM_UNK5:
+		case BOSS_HANACHAN_ANM_UNK6:
+		case BOSS_HANACHAN_ANM_UNK13:
+		case BOSS_HANACHAN_ANM_UNK16:
+		case BOSS_HANACHAN_ANM_UNK17:
+			if (isCurBckAlreadyEnd_()) {
+				if (getActorType() == 0x08000015 && marioOn)
+					setAnm_(BOSS_HANACHAN_ANM_UNK2,
+					        BOSS_HANACHAN_STOP_MOTION_BLEND_ON);
+				else
+					setAnm_(BOSS_HANACHAN_ANM_UNK3,
+					        BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
+			}
+			break;
+		default:
+			if (getActorType() == 0x08000015) {
+				bool blending = true;
+				if (!mInbetween->isMotionBlending()
+				    && !mInbetween->isForcedBlendRatio())
+					blending = false;
+				if (!blending) {
+					if (mCurrentAnm == BOSS_HANACHAN_ANM_UNK2) {
+						if (!marioOn)
+							setAnm_(BOSS_HANACHAN_ANM_UNK3,
+							        BOSS_HANACHAN_STOP_MOTION_BLEND_ON);
+					} else if (marioOn) {
+						setAnm_(BOSS_HANACHAN_ANM_UNK2,
+						        BOSS_HANACHAN_STOP_MOTION_BLEND_ON);
+					}
+				}
+			}
+			break;
+		}
+	} else if (nerve == BOSS_HANACHAN_NERVE_ANM_UNK2) {
+		if (unk10C > 0)
+			--unk10C;
+		if (unk10C == 0) {
+			bool ended = isCurBckAlreadyEnd_();
+			switch (mCurrentAnm) {
+			case BOSS_HANACHAN_ANM_UNK7:
+				if (ended)
+					setAnm_(BOSS_HANACHAN_ANM_UNK8,
+					        BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
+				break;
+			case BOSS_HANACHAN_ANM_UNK8:
+				if (ended)
+					setAnm_(BOSS_HANACHAN_ANM_UNK9,
+					        BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
+				break;
+			case BOSS_HANACHAN_ANM_UNK10:
+				if (ended)
+					setAnm_(BOSS_HANACHAN_ANM_UNK11,
+					        BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
+				break;
+			case BOSS_HANACHAN_ANM_UNK11:
+				if (ended)
+					setAnm_(BOSS_HANACHAN_ANM_UNK12,
+					        BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
+				break;
+			case BOSS_HANACHAN_ANM_UNK9:
+			case BOSS_HANACHAN_ANM_UNK12:
+				break;
+			default:
+				if (mRotation.z < 0.0f)
+					setAnm_(BOSS_HANACHAN_ANM_UNK7,
+					        BOSS_HANACHAN_STOP_MOTION_BLEND_ON);
+				else
+					setAnm_(BOSS_HANACHAN_ANM_UNK10,
+					        BOSS_HANACHAN_STOP_MOTION_BLEND_ON);
+				break;
+			}
+		}
+	} else if (nerve == BOSS_HANACHAN_NERVE_ANM_UNK3) {
+		if (unk10C > 0) {
+			--unk10C;
+			if (unk10C == 0)
+				setAnm_(BOSS_HANACHAN_ANM_UNK6,
+				        BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
+		} else if (mCurrentAnm == BOSS_HANACHAN_ANM_UNK6 && isCurBckAlreadyEnd_()) {
+			setAnm_(BOSS_HANACHAN_ANM_UNK4,
+			        BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
+		}
+	} else if (nerve == BOSS_HANACHAN_NERVE_ANM_UNK4) {
+		if (unk10C > 0)
+			--unk10C;
+		if (unk10C == 0 && mCurrentAnm != BOSS_HANACHAN_ANM_UNK14)
+			setAnm_(BOSS_HANACHAN_ANM_UNK14,
+			        BOSS_HANACHAN_STOP_MOTION_BLEND_ON);
+	} else if (nerve == BOSS_HANACHAN_NERVE_ANM_UNK5) {
+		if (unk10C > 0)
+			--unk10C;
+		if (unk10C == 0)
+			setAnm_(BOSS_HANACHAN_ANM_UNK15,
+			        BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
+	}
 }
 
 BOOL TBossHanachanPartsBody::setAnm_(EnumBossHanachanAnmKind anm,
@@ -345,7 +465,8 @@ BOOL TBossHanachanPartsBody::receiveMessage(THitActor*, u32 message)
 			if (mCurrentAnm == BOSS_HANACHAN_ANM_UNK5)
 				restartBck_();
 			else
-				setAnm_(BOSS_HANACHAN_ANM_UNK5, BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
+				setAnm_(BOSS_HANACHAN_ANM_UNK5,
+				        BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
 			received = true;
 			break;
 		case HIT_MESSAGE_HIP_DROP: {
@@ -362,13 +483,15 @@ BOOL TBossHanachanPartsBody::receiveMessage(THitActor*, u32 message)
 			case BOSS_HANACHAN_ANM_UNK16:
 			case BOSS_HANACHAN_ANM_UNK17:
 				if (weak) {
-					setAnm_(BOSS_HANACHAN_ANM_UNK6, BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
+					setAnm_(BOSS_HANACHAN_ANM_UNK6,
+					        BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
 					unkFC->execDamage();
 				} else {
 					if (mCurrentAnm == BOSS_HANACHAN_ANM_UNK13)
 						restartBck_();
 					else
-						setAnm_(BOSS_HANACHAN_ANM_UNK13, BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
+						setAnm_(BOSS_HANACHAN_ANM_UNK13,
+						        BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
 				}
 				received = true;
 				break;
@@ -391,11 +514,13 @@ BOOL TBossHanachanPartsHead::receiveMessage(THitActor*, u32 message)
 			if (mCurrentAnm == BOSS_HANACHAN_ANM_UNK5)
 				restartBck_();
 			else
-				setAnm_(BOSS_HANACHAN_ANM_UNK5, BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
+				setAnm_(BOSS_HANACHAN_ANM_UNK5,
+				        BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
 			received = true;
 			break;
 		case HIT_MESSAGE_HIP_DROP:
-			setAnm_(BOSS_HANACHAN_ANM_UNK6, BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
+			setAnm_(BOSS_HANACHAN_ANM_UNK6,
+			        BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
 			unk100->onWaterHitCounter();
 			received = true;
 			break;
