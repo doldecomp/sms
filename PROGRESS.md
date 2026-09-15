@@ -8,7 +8,27 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 25 — file-closure audit
+## Latest checkpoint: batch 26 — restore missing file definitions
+
+Recovered both missing NPC color helpers from repeated call sites.
+Their UNUSED map sizes are **48 and 80 bytes**, and the file now passes symbol presence/order/linkage checks without warnings.
+The runtime caller still has an eight-byte frame difference.
+Water-filter `perform` improves from **78.38614% to 98.68317%** through existing camera helpers, correct pointer reuse, and relative matrix-local order.
+A frame gap and one branch remain unresolved.
+**No new source-linked file or exact runtime code is claimed.**
+
+| Coverage | Matched code | Source-linked code |
+| --- | ---: | ---: |
+| Game code | **24.792425%** | **2.7192852%** |
+| Aggregate | **38.422554%** | **2.148763%** |
+
+Source linking remains **74 game objects / 77,436 code bytes**.
+Baseline at `4d0e4561`; full build, changes_all, comparison of all 12,904 functions, DOL byte comparison and expected SHA-1 pass.
+Zero regressions; both changed files pass map checks without warnings.
+No gameplay test was performed.
+See the [batch 26 closure audit](docs/progress/GMSE01-closure-audit-batch26.md) for retained evidence, rejected trials and next candidates, and [measurements](docs/progress/GMSE01-batch26.json).
+
+## Verified checkpoint: batch 25 — file-closure audit
 
 Reread the revised plan and audited the Priority 1 completion queue.
 **No additional file reached source-link completion**; coverage remains **74 game objects / 77,436 code bytes**.

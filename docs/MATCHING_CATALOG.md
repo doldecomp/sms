@@ -720,3 +720,22 @@ A full executable match also does not validate bodies in objects that are still 
   Game code remains 24.792425% matched / 2.7192852% source-linked; aggregate 38.422554% / 2.148763%.
 - Queue refresh excludes protected THPPlayer despite game-category metadata.
   Measurements: `progress/GMSE01-batch25.json`; validation logs: `build/GMSE01-*-batch25.*`.
+
+## NPC color helper recovery and water-filter context, batch 26
+
+- Restored `InitChangeOneColor_Base` and `InitChangeTwoColor_Base` from repeated branches in `NpcColor.cpp`.
+  Their signatures come from the map; their compiled sizes match the UNUSED 48/80-byte entries.
+  Three one-color callers and one two-color caller reuse them without changing runtime instructions.
+  The map check now passes; the runtime frame remains eight bytes too large.
+- Water-filter camera logic reuses existing `isDemoCamera()` and `getUnk124()`.
+  These retain the original camera pointers across calls and restore register allocation and boolean groups.
+  Declare inverse-view, translation and scale matrices before transform info to restore relative stack order.
+  The 404-byte function improves from 78.38614% to 98.68317%; frame and one return branch remain different.
+- Search covered existing demo-camera helpers and transform construction in MapObjWater/Shimmer.
+  Shimmer has different surrounding rendering work and was not changed without full caller evidence.
+- Read [batch 26 audit](progress/GMSE01-closure-audit-batch26.md) before retrying animation frame, ground-plane conversion, camera-code, splash-color or NPC-color trials.
+  No stack padding or middleware edits were retained.
+- Full build, changes_all, all-function comparison, DOL comparison and SHA-1 pass; zero regressions.
+  Both changed units pass map checks without warnings.
+  No source-link promotion or exact runtime-code gain is claimed.
+  Game code remains 24.792425% matched / 2.7192852% source-linked; aggregate 38.422554% / 2.148763%.

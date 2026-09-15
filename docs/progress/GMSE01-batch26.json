@@ -1,0 +1,87 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "4d0e4561",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.54914,
+    "total_code": "3603748",
+    "matched_code": "1384652",
+    "matched_code_percent": 38.422554,
+    "total_data": "641075",
+    "matched_data": "303535",
+    "matched_data_percent": 47.347813,
+    "total_functions": 12904,
+    "matched_functions": 8222,
+    "matched_functions_percent": 63.71668,
+    "complete_code": "77436",
+    "complete_code_percent": 2.148763,
+    "complete_data": "51024",
+    "complete_data_percent": 7.9591312,
+    "total_units": 732,
+    "complete_units": 74
+  },
+  "game_measures": {
+    "fuzzy_match_percent": 69.39891,
+    "total_code": "2847660",
+    "matched_code": "706004",
+    "matched_code_percent": 24.792425,
+    "total_data": "558300",
+    "matched_data": "241560",
+    "matched_data_percent": 43.26706,
+    "total_functions": 9012,
+    "matched_functions": 4425,
+    "matched_functions_percent": 49.101196,
+    "complete_code": "77436",
+    "complete_code_percent": 2.7192852,
+    "complete_data": "51024",
+    "complete_data_percent": 9.139173,
+    "total_units": 385,
+    "complete_units": 74
+  },
+  "source_linked_objects": 74,
+  "new_source_linked_objects": [],
+  "new_source_linked_code_bytes": 0,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 0,
+  "new_exact_code_bytes": 0,
+  "new_matched_data_bytes": 0,
+  "improvements": [
+    {
+      "unit": "mario/MoveBG/MapObjWater",
+      "function": "perform__18TMapObjWaterFilterFUlPQ26JDrama9TGraphics",
+      "before": 78.38614,
+      "after": 98.68317,
+      "size": 404
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_map_npc_color": true,
+    "symbol_map_water_filter": true,
+    "gameplay_test": false
+  },
+  "notes": [
+    "Recovered both missing NpcColor helpers from existing inline call sites and verified their UNUSED map sizes; all symbol checks now pass. Native caller instructions remain unchanged and its eight-byte frame difference is unresolved.",
+    "Water-filter perform now reuses the camera demo predicate and position accessor, keeps the original camera pointer across the wave-height call, and uses the original relative matrix-local layout. It improves from 78.38614% to 98.68317%.",
+    "No new exactly matching runtime code or source-linked file. Reverted unsuccessful trials in M3UModel, MapCollisionPlane, CameraCodeControl, and SplashManager.",
+    "Full executable byte comparison and SHA-1 pass, with no function regressions."
+  ],
+  "recovered_unused_functions": [
+    {
+      "unit": "mario/NPC/NpcColor",
+      "function": "InitChangeOneColor_Base",
+      "map_size": 48,
+      "compiled_size": 48
+    },
+    {
+      "unit": "mario/NPC/NpcColor",
+      "function": "InitChangeTwoColor_Base",
+      "map_size": 80,
+      "compiled_size": 80
+    }
+  ]
+}

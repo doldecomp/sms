@@ -1,10 +1,10 @@
 {
   "region": "GMSE01",
-  "checkpoint": "batch25",
+  "checkpoint": "batch26",
   "notes": [
     "Report-based candidates only; source-link promotion also requires instruction, data, emission, map and executable verification.",
     "Priorities follow DECOMPILATION_PLAN.md. Game objects only; protected THPPlayer objects are excluded even though report metadata classifies them as game.",
-    "Consult GMSE01-closure-audit-batch25.md before revisiting stalled Priority 1 candidates."
+    "Consult GMSE01-closure-audit-batch25.md and GMSE01-closure-audit-batch26.md before revisiting stalled candidates."
   ],
   "all_code_matching": [
     {
@@ -345,7 +345,7 @@
         {
           "name": "perform__18TMapObjWaterFilterFUlPQ26JDrama9TGraphics",
           "size": 404,
-          "similarity": 78.38614
+          "similarity": 98.68317
         }
       ]
     },
@@ -1039,7 +1039,7 @@
         {
           "name": "perform__18TMapObjWaterFilterFUlPQ26JDrama9TGraphics",
           "size": 404,
-          "similarity": 78.38614
+          "similarity": 98.68317
         }
       ]
     },
