@@ -26,15 +26,46 @@ int TMarDirector::loadResource()
 
 	gpMarioParticleManager = this_00;
 
-	int lVar10 = 100;
-	int iVar9  = 100;
+	int lVar10 = 1000;
+	int uVar8  = 0x100;
+	int iVar9  = 0x20;
 
-	// TODO: giant switch, can't be bothered right now, sorry
+	switch (gpMarDirector->mMap) {
+	case 33:
+		lVar10 = 3000;
+		iVar9  = 120;
+		break;
+	case 5:
+		if (gpMarDirector->unk7D == 1)
+			lVar10 = 1500;
+		break;
+	case 58:
+		lVar10 = 4000;
+		break;
+	case 56:
+	case 57:
+		lVar10 = 3000;
+		break;
+	case 9:
+		if (gpMarDirector->unk7D == 0)
+			lVar10 = 1500;
+		break;
+	case 52:
+		lVar10 = 3000;
+		break;
+	case 4:
+		if (gpMarDirector->unk7D == 2)
+			lVar10 = 3000;
+		break;
+	case 60:
+		lVar10 = 5000;
+		break;
+	}
 
-	this_00->createEffectInfoAry(iVar9);
+	gpMarioParticleManager->createEffectInfoAry(iVar9);
 	gpResourceManager = new JPAResourceManager(0x201, 0x800, nullptr);
-	// gpMarioParticleManager->unk3B8 =
-	new JPAEmitterManager(gpResourceManager, lVar10, 0x100, 0x200, nullptr);
+	gpMarioParticleManager->unk3B8 = new JPAEmitterManager(
+	    gpResourceManager, lVar10, 0x100, uVar8 * 2, nullptr);
 	gpEmitterManager4D2
 	    = new JPAEmitterManager(nullptr, 200, 0x20, 0x40, nullptr);
 	loadParticle();
@@ -57,11 +88,11 @@ int TMarDirector::loadResource()
 			return 1;
 	}
 
-	void* paramsBlob = new (0x20) char[0x80000];
+	void* paramsBlob = new (-0x20) char[0x80000];
 	if (!SMSLoadArchive("/data/params.arc", paramsBlob, 0x80000, nullptr))
 		return 1;
 
-	JKRMemArchive* paramsArch = new (0x20) JKRMemArchive;
+	JKRMemArchive* paramsArch = new (-0x20) JKRMemArchive;
 	if (!paramsArch->mountFixed(paramsBlob, MBF_0))
 		return 1;
 
@@ -370,7 +401,8 @@ int TMarDirector::thpInit()
 	THPPlayerInit();
 	if (!THPPlayerOpen("/data/ex128x144_q0.thp", FALSE))
 		return 1;
-	THPPlayerSetBuffer(new (0x20) u8[THPPlayerCalcNeedMemory()]);
+	THPPlayerSetBuffer(
+	    (u8*)::operator new[](THPPlayerCalcNeedMemory(), 0x20));
 	if (!THPPlayerPrepare(0, 1, 0))
 		return 1;
 
