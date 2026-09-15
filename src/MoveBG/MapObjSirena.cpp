@@ -178,20 +178,18 @@ static int partsRollCallback(J3DNode* node, int flag)
 	if (flag == 0) {
 		if (gpCurObject == nullptr)
 			return 1;
-		int jntNo     = ((J3DJoint*)node)->getJntNo();
+		u16 jntNo     = ((J3DJoint*)node)->getJntNo();
 		MtxPtr jntMtx = gpCurObject->getModel()->getAnmMtx(jntNo);
-
-		--jntNo;
 
 		TPosition3f local_4C;
 		local_4C.setTrans(0.0f, 0.0f, 0.0f);
-		local_4C.setScale(gpCurObject->mScaling.x, gpCurObject->mScaling.y,
-		                  gpCurObject->mScaling.z);
+		const JGeometry::TVec3<f32>& scaling = gpCurObject->mScaling;
+		local_4C.setScale(scaling.x, scaling.y, scaling.z);
 
 		Mtx local_1C;
-		MsMtxSetRotRPH(local_1C, gpCurObject->getRollAngX(jntNo),
-		               gpCurObject->getRollAngY(jntNo),
-		               gpCurObject->getRollAngZ(jntNo));
+		MsMtxSetRotRPH(local_1C, gpCurObject->getRollAngX(jntNo - 1),
+		               gpCurObject->getRollAngY(jntNo - 1),
+		               gpCurObject->getRollAngZ(jntNo - 1));
 		MTXConcat(jntMtx, local_1C, jntMtx);
 		MTXConcat(jntMtx, local_4C, jntMtx);
 		MTXConcat(J3DSys::mCurrentMtx, local_1C, J3DSys::mCurrentMtx);
