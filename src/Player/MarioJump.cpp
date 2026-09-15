@@ -102,29 +102,28 @@ BOOL TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 		if (mGroundPlane->mActor != nullptr)
 			((THitActor*)mGroundPlane->mActor)->receiveMessage(this, 0);
 
-		bool didTrample = false;
-
-		bool isStrong = true;
+		bool didTrample = true;
 		if (checkUnk114(UNK114_FLAG_UNK100) == true)
-			isStrong = false;
+			didTrample = false;
 
 		if (unk2A8.y - mPosition.y <= mDeParams.mDamageFallHeight.get())
-			isStrong = false;
+			didTrample = false;
 
 		if (onYoshi())
-			isStrong = false;
+			didTrample = false;
 
 		if (mGroundPlane->isThing4())
-			isStrong = false;
+			didTrample = false;
 
 		if (mVel.y > -70.0f)
-			isStrong = false;
+			didTrample = false;
 
-		if (isStrong) {
+		if (didTrample) {
 			if (checkFlag(MARIO_FLAG_ON_SAND)) {
 				sinkInSandEffect();
 				return changePlayerStatus(MARIO_STATUS_FOOT_DOWN, 0, 0);
 			}
+			didTrample = false;
 			if (checkFlag(MARIO_FLAG_HAS_FLUDD)
 			    && (int)mWaterGun->mCurrentNozzle != 2) {
 				mTrembleModelEffect->tremble(mJumpParams.mTremblePower.get(),
