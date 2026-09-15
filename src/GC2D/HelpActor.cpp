@@ -30,8 +30,8 @@ void THelpActor::load(JSUMemoryInputStream& stream)
 void THelpActor::loadAfter()
 {
 	THitActor::loadAfter();
-	unk70 = static_cast<TLiveActor*>(JDrama::TNameRefGen::search2(unk6C));
-	static_cast<TGCConsole2*>(JDrama::TNameRefGen::search2("GCコンソール"))
+	unk70 = static_cast<TLiveActor*>(JDrama::TNameRefGen::search(unk6C));
+	static_cast<TGCConsole2*>(JDrama::TNameRefGen::search("GCコンソール"))
 	    ->entryHelpActor(this);
 }
 

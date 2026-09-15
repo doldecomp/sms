@@ -11139,7 +11139,7 @@ void TMapObjBase::initActorData()
 	unkF8       = mMapObjData->unk34;
 
 	mManager = static_cast<TLiveManager*>(
-	    JDrama::TNameRefGen::search2(mMapObjData->unk8));
+	    JDrama::TNameRefGen::search(mMapObjData->unk8));
 	mManager->manageActor(this);
 	if (mMapObjData->mHit)
 		mYOffset = mScaling.y * mMapObjData->mHit->unk8;
@@ -11174,7 +11174,7 @@ void TMapObjBase::initMapObj()
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8000) && !isActorType(0x40000084)) {
 		TScreenTexture* ref = static_cast<TScreenTexture*>(
-		    JDrama::TNameRefGen::search2("スクリーンテクスチャ"));
+		    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 		const ResTIMG* img = ref->getTexture()->getTexInfo();
 		getModel()->getModelData()->getTexture()->setResTIMG(2, *img);
 		mMActor->setLightType(LIGHT_TYPE_INDIRECT);

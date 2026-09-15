@@ -594,7 +594,7 @@ void TRedCoinSwitch::loadAfter()
 	for (int i = 0; i < 8; ++i) {
 		char buf[0x40];
 		snprintf(buf, 0x40, "赤コイン %d", i);
-		static_cast<TMapObjBase*>(JDrama::TNameRefGen::search2(buf))
+		static_cast<TMapObjBase*>(JDrama::TNameRefGen::search(buf))
 		    ->makeObjDead();
 	}
 }

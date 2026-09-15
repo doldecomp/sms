@@ -83,10 +83,10 @@ void TMirrorActor::perform(u32 cue, JDrama::TGraphics* graphics)
 void TMirrorActor::entryMirrorDrawBufferAlways(J3DModel* model)
 {
 	JDrama::TDrawBufObj* dbOpa = static_cast<JDrama::TDrawBufObj*>(
-	    JDrama::TNameRefGen::search2("DrawBuf MirrorAlways Opa"));
+	    JDrama::TNameRefGen::search("DrawBuf MirrorAlways Opa"));
 	j3dSys.setDrawBuffer(dbOpa->getDrawBuffer(), 0);
 	JDrama::TDrawBufObj* dbXlu = static_cast<JDrama::TDrawBufObj*>(
-	    JDrama::TNameRefGen::search2("DrawBuf MirrorAlways Xlu"));
+	    JDrama::TNameRefGen::search("DrawBuf MirrorAlways Xlu"));
 	j3dSys.setDrawBuffer(dbXlu->getDrawBuffer(), 1);
 	model->calc();
 	model->viewCalc();
@@ -107,7 +107,7 @@ void TMirrorActor::init(J3DModel* param_1, u16 param_2)
 
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* mirrorScene
 	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
-	        JDrama::TNameRefGen::search2("鏡シーン"));
+	        JDrama::TNameRefGen::search("鏡シーン"));
 	mirrorScene->getChildren().push_back(this);
 
 	if (unk1A & 2)

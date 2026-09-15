@@ -208,7 +208,7 @@ TBGTakeHit::TBGTakeHit(TBGTentacle* owner, const char* name)
     : TTakeActor(name)
     , mOwner(owner)
 {
-	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search2("敵グループ"))
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 
@@ -399,7 +399,7 @@ TBGAttackHit::TBGAttackHit(TBGTentacle* owner, f32 pos_on_spline,
     , mOwner(owner)
     , mPosOnSpline(pos_on_spline)
 {
-	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search2("敵グループ"))
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 	initHitActor(0x8000007, 1, -0x80000000, 50.0f, 50.0f, 50.0f, 50.0f);

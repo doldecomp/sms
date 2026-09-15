@@ -34,7 +34,7 @@ static void initMonte()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* group
 	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
-	        JDrama::TNameRefGen::search2("マップグループ"));
+	        JDrama::TNameRefGen::search("マップグループ"));
 
 	TMapStaticObj* obj = new TMapStaticObj("水インダイレクト");
 	obj->init("SeaIndirect");
@@ -60,7 +60,7 @@ static void initMare()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* group
 	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
-	        JDrama::TNameRefGen::search2("マップグループ"));
+	        JDrama::TNameRefGen::search("マップグループ"));
 
 	if (gpMarDirector->getCurrentStage() == 5) {
 		TMapStaticObj* gate = new TMapStaticObj("マーレ５ＥＸゲート");
@@ -118,9 +118,9 @@ static void initStageCommon()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* group
 	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
-	        JDrama::TNameRefGen::search2("インダイレクトシーン"));
+	        JDrama::TNameRefGen::search("インダイレクトシーン"));
 	static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
-	    JDrama::TNameRefGen::search2("マップグループ"));
+	    JDrama::TNameRefGen::search("マップグループ"));
 
 	if (gpMarDirector->getCurrentMap() == 4
 	    || gpMarDirector->getCurrentMap() == 3

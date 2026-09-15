@@ -42,10 +42,10 @@ extern JPAEmitterManager* gpEmitterManager4D2;
 void TMarDirector::setup2()
 {
 	unkBC = static_cast<TNameRefAryT<TStageEventInfo>*>(
-	    JDrama::TNameRefGen::search2("イベントテーブル"));
+	    JDrama::TNameRefGen::search("イベントテーブル"));
 	if (unkBC) {
 		for (TStageEventInfo* it = unkBC->begin(); it != unkBC->end(); ++it) {
-			JDrama::TNameRef* ref = JDrama::TNameRefGen::search2(it->unk14);
+			JDrama::TNameRef* ref = JDrama::TNameRefGen::search(it->unk14);
 			if (ref) {
 				// TODO: what is ref?
 				it->unk28 = ref;
@@ -53,34 +53,34 @@ void TMarDirector::setup2()
 		}
 	}
 
-	static_cast<TMario*>(JDrama::TNameRefGen::search2("マリオ"))
+	static_cast<TMario*>(JDrama::TNameRefGen::search("マリオ"))
 	    ->setGamePad(unk18[0]);
-	static_cast<CPolarSubCamera*>(JDrama::TNameRefGen::search2("camera 1"))
+	static_cast<CPolarSubCamera*>(JDrama::TNameRefGen::search("camera 1"))
 	    ->unk120
 	    = unk18[0];
 
 	unk84 = static_cast<TTalkCursor*>(
-	    JDrama::TNameRefGen::search2("会話カーソル"));
+	    JDrama::TNameRefGen::search("会話カーソル"));
 
 	mConsole = static_cast<TGCConsole2*>(
-	    JDrama::TNameRefGen::search2("GCコンソール"));
+	    JDrama::TNameRefGen::search("GCコンソール"));
 
 	mConsole->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 
 	unkDC = static_cast<TShineFader*>(
-	    JDrama::TNameRefGen::search2("シャインフェーダー"));
+	    JDrama::TNameRefGen::search("シャインフェーダー"));
 
 	unkDC->mRate = 120.0f;
 	unkDC->setColor(JUtility::TColor(0xD2, 0xD2, 0xD2, 0xFF));
 
 	unkE0 = static_cast<TSunGlass*>(
-	    JDrama::TNameRefGen::search2("サングラスフェーダ"));
-	unk78 = static_cast<TGuide*>(JDrama::TNameRefGen::search2("ガイド画面"));
+	    JDrama::TNameRefGen::search("サングラスフェーダ"));
+	unk78 = static_cast<TGuide*>(JDrama::TNameRefGen::search("ガイド画面"));
 	unkAC = static_cast<TPauseMenu2*>(
-	    JDrama::TNameRefGen::search2("ポーズメニュー"));
-	unkB0 = static_cast<TTalk2D2*>(JDrama::TNameRefGen::search2("会話表示"));
+	    JDrama::TNameRefGen::search("ポーズメニュー"));
+	unkB0 = static_cast<TTalk2D2*>(JDrama::TNameRefGen::search("会話表示"));
 	unk70
-	    = static_cast<TCardLoad*>(JDrama::TNameRefGen::search2("データロード"));
+	    = static_cast<TCardLoad*>(JDrama::TNameRefGen::search("データロード"));
 
 	unk70->unk38 = unk18[0];
 	unk78->unkC0 = unk18[0];
@@ -94,8 +94,7 @@ void TMarDirector::setup2()
 		unk70->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 	}
 
-	unk254
-	    = static_cast<TDemoCannon*>(JDrama::TNameRefGen::search2("デモ砲台"));
+	unk254 = static_cast<TDemoCannon*>(JDrama::TNameRefGen::search("デモ砲台"));
 
 	TDrawSyncManager::smInstance->setCallback(1, 0x7D, 0x7D, gpSunMgr);
 	TDrawSyncManager::smInstance->setCallback(2, 0x7E, 0x91,
@@ -119,14 +118,14 @@ void TMarDirector::setup2()
 	TMapEventSinkInPollution* sinkInPollutionEvent;
 
 	sinkInPollutionEvent = static_cast<TMapEventSinkInPollution*>(
-	    JDrama::TNameRefGen::search2("イベント（地形沈む）"));
+	    JDrama::TNameRefGen::search("イベント（地形沈む）"));
 
 	if (!sinkInPollutionEvent) {
 		sinkInPollutionEvent = static_cast<TMapEventSinkInPollution*>(
-		    JDrama::TNameRefGen::search2("イベント（地形沈む再汚染）"));
+		    JDrama::TNameRefGen::search("イベント（地形沈む再汚染）"));
 		if (!sinkInPollutionEvent) {
 			sinkInPollutionEvent = static_cast<TMapEventSinkInPollution*>(
-			    JDrama::TNameRefGen::search2("イベント（地形沈むビアンコ）"));
+			    JDrama::TNameRefGen::search("イベント（地形沈むビアンコ）"));
 		}
 	}
 

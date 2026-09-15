@@ -15,7 +15,7 @@ public:
 	TNameRef* getRootNameRef() { return mRootNameRef; }
 	static TNameRefGen* getInstance() { return instance; }
 
-	static JDrama::TNameRef* search2(const char* name)
+	static JDrama::TNameRef* search(const char* name)
 	{
 		return JDrama::TNameRefGen::getInstance()->getRootNameRef()->search(
 		    name);

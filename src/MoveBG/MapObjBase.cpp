@@ -631,7 +631,7 @@ void TMapObjBase::initAndRegister(const char* param_1)
 	initMapObj();
 	if (mMapObjData->unkC) {
 		static_cast<TIdxGroupObj*>(
-		    JDrama::TNameRefGen::search2(mMapObjData->unkC))
+		    JDrama::TNameRefGen::search(mMapObjData->unkC))
 		    ->push_back(this);
 	}
 }

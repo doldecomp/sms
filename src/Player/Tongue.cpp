@@ -75,7 +75,7 @@ void TYoshiTongue::initInLoadAfter()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* grp
 	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
-	        JDrama::TNameRefGen::search2("敵グループ"));
+	        JDrama::TNameRefGen::search("敵グループ"));
 	grp->getChildren().push_back(this);
 
 	TMirrorActor* ma = new TMirrorActor("ヨッシー舌in鏡");

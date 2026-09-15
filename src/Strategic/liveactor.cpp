@@ -171,7 +171,7 @@ void TLiveActor::load(JSUMemoryInputStream& stream)
 	char buffer[256];
 	stream.readString(buffer, 256);
 	TLiveManager* mgr
-	    = static_cast<TLiveManager*>(JDrama::TNameRefGen::search2(buffer));
+	    = static_cast<TLiveManager*>(JDrama::TNameRefGen::search(buffer));
 
 	mGroundPlane = TMap::getIllegalCheckData();
 
