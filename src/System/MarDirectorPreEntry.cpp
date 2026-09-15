@@ -14,14 +14,14 @@ static const char cDirtyTexName[]        = "H_ma_rak_dummy";
 void TMarDirector::preEntry(TPerformList* list)
 {
 	JDrama::TViewObj* setViewMtx = static_cast<JDrama::TViewObj*>(
-	    JDrama::TNameRefGen::search2("J3D System Set View Mtx"));
+	    JDrama::TNameRefGen::search("J3D System Set View Mtx"));
 	JDrama::TViewObj* mirrorDisplayModelControl
 	    = static_cast<JDrama::TViewObj*>(
-	        JDrama::TNameRefGen::search2("鏡表示モデル管理"));
+	        JDrama::TNameRefGen::search("鏡表示モデル管理"));
 	JDrama::TViewObj* mapGroup = static_cast<JDrama::TViewObj*>(
-	    JDrama::TNameRefGen::search2("マップグループ"));
+	    JDrama::TNameRefGen::search("マップグループ"));
 	JDrama::TViewObj* camera1 = static_cast<JDrama::TViewObj*>(
-	    JDrama::TNameRefGen::search2("camera 1"));
+	    JDrama::TNameRefGen::search("camera 1"));
 
 	list->push_back(camera1, CUE_SET_PROJECTION);
 	list->push_back(setViewMtx, CUE_CALC_VIEW);
@@ -58,7 +58,7 @@ void TMarDirector::preEntry(TPerformList* list)
 	list->push_back("クエッションマネージャ", CUE_CALC_VIEW);
 
 	JDrama::TViewObj* indirectSheen = static_cast<JDrama::TViewObj*>(
-	    JDrama::TNameRefGen::search2("インダイレクトシーン"));
+	    JDrama::TNameRefGen::search("インダイレクトシーン"));
 	if (indirectSheen) {
 		list->push_back("DrawBuf Indirect",
 		                CUE_SET_DRAW_BUFFER | CUE_DRAW_INIT);

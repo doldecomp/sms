@@ -117,7 +117,7 @@ void TSunModel::load(JSUMemoryInputStream& param_1)
 
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* mirrorScene
 	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
-	        JDrama::TNameRefGen::search2("鏡シーン"));
+	        JDrama::TNameRefGen::search("鏡シーン"));
 	mirrorScene->getChildren().push_back(unk64);
 }
 

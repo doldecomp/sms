@@ -123,7 +123,7 @@ TBGBeakHit::TBGBeakHit(TBossGesso* owner, const char* name)
     : TTakeActor(name)
     , mOwner(owner)
 {
-	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search2("敵グループ"))
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 
@@ -285,7 +285,7 @@ TBGEyeHit::TBGEyeHit(TBossGesso* owner, int joint_index, const char* name)
     , mOwner(owner)
     , mJointIndex(joint_index)
 {
-	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search2("敵グループ"))
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 
@@ -322,7 +322,7 @@ TBGBodyHit::TBGBodyHit(TBossGesso* owner, int joint_index, const char* name)
     : mOwner(owner)
     , mJointIndex(joint_index)
 {
-	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search2("敵グループ"))
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 
@@ -1287,7 +1287,7 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (mAttackMode == 6) {
 		if (cue & CUE_CALC_ANIM) {
 			if (static_cast<THitActor*>(
-			        JDrama::TNameRefGen::search2("container"))
+			        JDrama::TNameRefGen::search("container"))
 			    == nullptr) {
 				changeAttackMode(0);
 			} else if (mTentacles[0]->mState != 4) {
@@ -1787,7 +1787,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		}
 
 		TNameKuriManager* nameKuriMgr = static_cast<TNameKuriManager*>(
-		    JDrama::TNameRefGen::search2("ナメクリマネージャー"));
+		    JDrama::TNameRefGen::search("ナメクリマネージャー"));
 		if (nameKuriMgr)
 			nameKuriMgr->killChildren();
 
@@ -1843,7 +1843,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		self->kill();
 
 		THitActor* block = static_cast<THitActor*>(
-		    JDrama::TNameRefGen::search2("マーレボスゲッソー用ブロック"));
+		    JDrama::TNameRefGen::search("マーレボスゲッソー用ブロック"));
 
 		if (block != nullptr) {
 			block->receiveMessage(self, HIT_MESSAGE_ATTACK);

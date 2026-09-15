@@ -54,7 +54,7 @@ static void evGetAddressFromViewObjName(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->verifyArgNum(1, &arg_num);
 	const char* name = interp->pop().getDataString();
 	JDrama::TViewObj* viewObj
-	    = static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search2(name));
+	    = static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search(name));
 	interp->push((int)viewObj);
 }
 
@@ -98,7 +98,7 @@ static void ev__ForceStartTalkExceptNpc(TSpcTypedInterp<TEventWatcher>* interp,
 	    && !gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
 
 		TBaseNPC* dummyNpc = static_cast<TBaseNPC*>(
-		    JDrama::TNameRefGen::search2("ダミーＮＰＣ"));
+		    JDrama::TNameRefGen::search("ダミーＮＰＣ"));
 
 		if (dummyNpc) {
 			gpMarDirector->unkA0  = dummyNpc;
@@ -139,7 +139,7 @@ static void evConnectDummyNpc(TSpcTypedInterp<TEventWatcher>* interp,
 	int result = 0;
 
 	TBaseNPC* dummyNpc
-	    = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search2("ダミーＮＰＣ"));
+	    = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search("ダミーＮＰＣ"));
 	if (dummyNpc != nullptr) {
 		const JDrama::TActor* actor
 		    = (const JDrama::TActor*)interp->pop().getDataInt();
@@ -157,7 +157,7 @@ static void evOnTalkToDummyNpc(TSpcTypedInterp<TEventWatcher>* interp,
 {
 	interp->verifyArgNum(0, &arg_num);
 	TBaseNPC* dummyNpc
-	    = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search2("ダミーＮＰＣ"));
+	    = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search("ダミーＮＰＣ"));
 	if (dummyNpc != nullptr) {
 		dummyNpc->offLiveFlag(LIVE_FLAG_DEAD);
 		dummyNpc->offLiveFlag(LIVE_FLAG_UNK40000);
@@ -304,8 +304,7 @@ static void evCheckMonteClear(TSpcTypedInterp<TEventWatcher>* interp,
 
 	char buffer[32];
 	snprintf(buffer, 32, "モンテ%d", fVar1);
-	TBaseNPC* npc
-	    = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search2(buffer));
+	TBaseNPC* npc = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search(buffer));
 
 	int b;
 	if (!npc->checkLiveFlag(LIVE_FLAG_UNK400000) && npc->isClean())
@@ -376,7 +375,7 @@ void TNpcEvent::reviveOneSunflower()
 		snprintf(acStack_50, 0x40, "%s%d", sViewObjName, idx);
 
 		TBaseNPC* npc
-		    = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search2(acStack_50));
+		    = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search(acStack_50));
 		--mDownSunflowerNum;
 
 		static const char* sCameraNames[] = {

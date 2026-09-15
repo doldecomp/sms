@@ -457,9 +457,9 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 {
 	switch (mState) {
 	case STATE_UNK0:
-		static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search2("Group 2D"))
+		static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search("Group 2D"))
 		    ->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
-		static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search2("Guide"))
+		static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search("Guide"))
 		    ->unkC.on(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 
 		gpApplication.mFader->startWipe(unkE4, 0.4f, 0.0f);
@@ -493,9 +493,9 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 		unk18[0]->mFlags &= ~0x1;
 		SMSRumbleMgr->finishPause();
 
-		static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search2("Group 2D"))
+		static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search("Group 2D"))
 		    ->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
-		static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search2("Guide"))
+		static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search("Guide"))
 		    ->unkC.on(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 
 		SMSSwitch2DArchive("guide", gArBkConsole);
@@ -532,7 +532,7 @@ void TMarDirector::setMario()
 	u8 uVar10 = unkD0;
 
 	TMarioPositionObj* marioSetPosition = static_cast<TMarioPositionObj*>(
-	    JDrama::TNameRefGen::search2("マリオセット位置"));
+	    JDrama::TNameRefGen::search("マリオセット位置"));
 	if (!marioSetPosition || marioSetPosition->unkD0 == 0)
 		uVar10 = 0;
 
@@ -719,9 +719,9 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		for (int i = 0; i < 4; ++i)
 			JUTGamePad::CRumble::stopMotor(unk18[i]->mPortNum);
 		unk18[0]->onFlag(0x1);
-		static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search2("Group 2D"))
+		static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search("Group 2D"))
 		    ->unkC.on(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
-		static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search2("Guide"))
+		static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search("Guide"))
 		    ->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 		if (gpMSound->gateCheck(MSD_SE_SY_WIPE_IN))
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_WIPE_IN, 0, nullptr,

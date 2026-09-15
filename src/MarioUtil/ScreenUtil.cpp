@@ -42,7 +42,7 @@ void TAfterEffect::load(JSUMemoryInputStream& stream)
 void TAfterEffect::loadAfter()
 {
 	TScreenTexture* tex = static_cast<TScreenTexture*>(
-	    JDrama::TNameRefGen::search2("スクリーンテクスチャ"));
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 	unk10         = tex->getTexture();
 	gpAfterEffect = this;
 }

@@ -476,13 +476,13 @@ void TCardLoad::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
 	unk278[0] = static_cast<TFileLoadBlock*>(
-	    JDrama::TNameRefGen::search2("ロードブロックＡ"));
+	    JDrama::TNameRefGen::search("ロードブロックＡ"));
 	unk278[1] = static_cast<TFileLoadBlock*>(
-	    JDrama::TNameRefGen::search2("ロードブロックＢ"));
+	    JDrama::TNameRefGen::search("ロードブロックＢ"));
 	unk278[2] = static_cast<TFileLoadBlock*>(
-	    JDrama::TNameRefGen::search2("ロードブロックＣ"));
+	    JDrama::TNameRefGen::search("ロードブロックＣ"));
 	unk284 = static_cast<TMapObjOptionWall*>(
-	    JDrama::TNameRefGen::search2("オプション用壁"));
+	    JDrama::TNameRefGen::search("オプション用壁"));
 }
 
 void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)

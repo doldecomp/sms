@@ -505,16 +505,16 @@ void TTurboNozzleDoor::loadAfter()
 {
 	if (strcmp("空港ドアＡ０", getName()) == 0) {
 		unk144 = static_cast<TLiveActor*>(
-		    JDrama::TNameRefGen::search2("空港ドアＡ１"));
+		    JDrama::TNameRefGen::search("空港ドアＡ１"));
 	} else if (strcmp("空港ドアＡ１", getName()) == 0) {
 		unk144 = static_cast<TLiveActor*>(
-		    JDrama::TNameRefGen::search2("空港ドアＡ０"));
+		    JDrama::TNameRefGen::search("空港ドアＡ０"));
 	} else if (strcmp("空港ドアＢ０", getName()) == 0) {
 		unk144 = static_cast<TLiveActor*>(
-		    JDrama::TNameRefGen::search2("空港ドアＢ１"));
+		    JDrama::TNameRefGen::search("空港ドアＢ１"));
 	} else if (strcmp("空港ドアＢ１", getName()) == 0) {
 		unk144 = static_cast<TLiveActor*>(
-		    JDrama::TNameRefGen::search2("空港ドアＢ０"));
+		    JDrama::TNameRefGen::search("空港ドアＢ０"));
 	}
 }
 

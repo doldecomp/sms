@@ -347,7 +347,7 @@ void TApplication::initialize_nlogoAfter()
 		JDrama::TNameRefGen::getInstance()->load(stream);
 		unk30 = static_cast<
 		    TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >*>(
-		    JDrama::TNameRefGen::search2("ステージ毎シナリオアーカイブ名群"));
+		    JDrama::TNameRefGen::search("ステージ毎シナリオアーカイブ名群"));
 
 		delete JDrama::TNameRefGen::instance;
 		JDrama::TNameRefGen::instance = nullptr;

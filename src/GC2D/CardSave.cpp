@@ -275,7 +275,7 @@ void TCardSave::initData(TMarioGamePad* param_1)
 	unk2E4 = JKRGetResource("/common/2d/savemessage.bmg");
 	if (!unk18)
 		unk2D8 = static_cast<TPauseMenu2*>(
-		    JDrama::TNameRefGen::search2("ポーズメニュー"));
+		    JDrama::TNameRefGen::search("ポーズメニュー"));
 	unk270 = param_1;
 }
 

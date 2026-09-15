@@ -44,7 +44,7 @@ TShine* TItemManager::makeShineAppearWithTime(const char* shine_name,
                                               int param_8)
 {
 	TShine* shine
-	    = static_cast<TShine*>(JDrama::TNameRefGen::search2(shine_name));
+	    = static_cast<TShine*>(JDrama::TNameRefGen::search(shine_name));
 	shine->mPosition.set(x, y, z);
 	shine->appearWithTime(param_2, param_6, param_7, param_8);
 	return shine;

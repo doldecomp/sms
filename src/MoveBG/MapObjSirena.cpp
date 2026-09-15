@@ -89,7 +89,7 @@ void TRoulette::initMapObj()
 	unk150 = new TRouletteSw(this, "ルーレットスイッチ");
 
 	static_cast<TIdxGroupObj*>(
-	    JDrama::TNameRefGen::search2("オブジェクトグループ"))
+	    JDrama::TNameRefGen::search("オブジェクトグループ"))
 	    ->getChildren()
 	    .push_back(unk150);
 	f32 attackR = 500.0f;
@@ -826,9 +826,9 @@ void TDonchou::loadAfter()
 	if (gpApplication.mCurrArea.getStage() == 14
 	    && gpMarDirector->getCurrentStage() == 0) {
 		unk144
-		    = static_cast<TSlotDrum*>(JDrama::TNameRefGen::search2("srotdram"));
+		    = static_cast<TSlotDrum*>(JDrama::TNameRefGen::search("srotdram"));
 		unk148 = static_cast<TItemSlotDrum*>(
-		    JDrama::TNameRefGen::search2("itemsrotdram"));
+		    JDrama::TNameRefGen::search("itemsrotdram"));
 	}
 }
 
@@ -1055,7 +1055,7 @@ void TSakuCasino::loadAfter()
 {
 	TMapObjBase::loadAfter();
 	unk144
-	    = static_cast<TCasinoPanelGate*>(JDrama::TNameRefGen::search2("pazul"));
+	    = static_cast<TCasinoPanelGate*>(JDrama::TNameRefGen::search("pazul"));
 }
 
 void TSakuCasino::calcRootMatrix()

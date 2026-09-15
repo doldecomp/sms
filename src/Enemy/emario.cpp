@@ -83,7 +83,7 @@ void TEMario::load(JSUMemoryInputStream& stream)
 	// "Mario Character"
 	const char marioCharName[] = "マリオ キャラ";
 	mEnemyMario->setCharacter(static_cast<JDrama::TCharacter*>(
-	    JDrama::TNameRefGen::search2(marioCharName)));
+	    JDrama::TNameRefGen::search(marioCharName)));
 
 	mEnemyMario->initValues();
 

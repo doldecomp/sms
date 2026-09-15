@@ -233,7 +233,7 @@ void TTelesa::init(TLiveManager* manager)
 	setFlyParam(1.0f);
 
 	TScreenTexture* tex = static_cast<TScreenTexture*>(
-	    JDrama::TNameRefGen::search2("スクリーンテクスチャ"));
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 	const ResTIMG* img    = tex->getTexture()->getTexInfo();
 	J3DSkinDeform* deform = new J3DSkinDeform;
 	mMActor->getModel()->setSkinDeform(deform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
@@ -1241,7 +1241,7 @@ void TKageMarioModoki::init(TLiveManager* manager)
 	mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 
 	TScreenTexture* tex = static_cast<TScreenTexture*>(
-	    JDrama::TNameRefGen::search2("スクリーンテクスチャ"));
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 	const ResTIMG* img = tex->getTexture()->getTexInfo();
 	SMS_ChangeTextureAll(mMActor->getModel()->getModelData(),
 	                     "H_kagemario_dummy", *img);

@@ -28,7 +28,7 @@ void TPerformList::load(JSUMemoryInputStream& stream)
 		stream.readString(elementName, 80);
 
 		obj = static_cast<JDrama::TViewObj*>(
-		    JDrama::TNameRefGen::search2(elementName));
+		    JDrama::TNameRefGen::search(elementName));
 
 		u32 value = stream.readU32();
 
@@ -43,7 +43,7 @@ void TPerformList::load(JSUMemoryInputStream& stream)
 void TPerformList::push_back(const char* param_1, u32 param_2)
 {
 	JDrama::TViewObj* obj
-	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2(param_1);
+	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search(param_1);
 
 	Push_back(new TPerformLink(obj, param_2));
 }

@@ -305,7 +305,7 @@ void TNameKuri::init(TLiveManager* param_1)
 	getMActor()->resetDL();
 	getMActor()->setLightType(LIGHT_TYPE_INDIRECT);
 	TScreenTexture* tex = static_cast<TScreenTexture*>(
-	    JDrama::TNameRefGen::search2("スクリーンテクスチャ"));
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 
 	SMS_ChangeTextureAll(getMActor()->getModel()->getModelData(),
 	                     "H_ma_rak_dummy", *tex->getTexture()->getTexInfo());

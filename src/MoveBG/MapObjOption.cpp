@@ -63,19 +63,19 @@ void TFileLoadBlock::loadAfter()
 
 	if (unk138 == 0) {
 		unk13C = static_cast<TFileLoadBlock*>(
-		    JDrama::TNameRefGen::search2("ロードブロックＢ"));
+		    JDrama::TNameRefGen::search("ロードブロックＢ"));
 		unk140 = static_cast<TFileLoadBlock*>(
-		    JDrama::TNameRefGen::search2("ロードブロックＣ"));
+		    JDrama::TNameRefGen::search("ロードブロックＣ"));
 	} else if (unk138 == 1) {
 		unk13C = static_cast<TFileLoadBlock*>(
-		    JDrama::TNameRefGen::search2("ロードブロックＡ"));
+		    JDrama::TNameRefGen::search("ロードブロックＡ"));
 		unk140 = static_cast<TFileLoadBlock*>(
-		    JDrama::TNameRefGen::search2("ロードブロックＣ"));
+		    JDrama::TNameRefGen::search("ロードブロックＣ"));
 	} else {
 		unk13C = static_cast<TFileLoadBlock*>(
-		    JDrama::TNameRefGen::search2("ロードブロックＡ"));
+		    JDrama::TNameRefGen::search("ロードブロックＡ"));
 		unk140 = static_cast<TFileLoadBlock*>(
-		    JDrama::TNameRefGen::search2("ロードブロックＢ"));
+		    JDrama::TNameRefGen::search("ロードブロックＢ"));
 	}
 }
 

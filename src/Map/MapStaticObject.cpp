@@ -271,17 +271,17 @@ void TMapStaticObj::initUnique()
 	}
 
 	if (strcmp(mActorName, "ReflectSky") == 0) {
-		TSky* sky = static_cast<TSky*>(JDrama::TNameRefGen::search2("空"));
+		TSky* sky = static_cast<TSky*>(JDrama::TNameRefGen::search("空"));
 
 		getModelData()->setMaterialTable(gpMapObjManager->getUnk68(),
 		                                 J3DMatCopyFlag_All);
 		mMActor->initDL();
 
 		JDrama::TDrawBufObj* dboOpa = static_cast<JDrama::TDrawBufObj*>(
-		    JDrama::TNameRefGen::search2("DrawBuf MirrorSky Opa"));
+		    JDrama::TNameRefGen::search("DrawBuf MirrorSky Opa"));
 		j3dSys.setDrawBuffer(dboOpa->getDrawBuffer(), 0);
 		JDrama::TDrawBufObj* dboXlu = static_cast<JDrama::TDrawBufObj*>(
-		    JDrama::TNameRefGen::search2("DrawBuf MirrorSky Xlu"));
+		    JDrama::TNameRefGen::search("DrawBuf MirrorSky Xlu"));
 		j3dSys.setDrawBuffer(dboXlu->getDrawBuffer(), 1);
 
 		getModel()->calc();
@@ -370,13 +370,13 @@ void TMapStaticObj::init(const char* name)
 
 	if (mActorData->mIdxGroupName != nullptr) {
 		TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
-		    JDrama::TNameRefGen::search2(mActorData->mIdxGroupName));
+		    JDrama::TNameRefGen::search(mActorData->mIdxGroupName));
 		group->getChildren().push_back(this);
 	}
 
 	if (mActorData->mFlags & TActorData::FLAG_IS_INDIRECT) {
 		TScreenTexture* ref = static_cast<TScreenTexture*>(
-		    JDrama::TNameRefGen::search2("スクリーンテクスチャ"));
+		    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 		const ResTIMG* img = ref->getTexture()->getTexInfo();
 		mMActor->getModel()->getModelData()->getTexture()->setResTIMG(1, *img);
 

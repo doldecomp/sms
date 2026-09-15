@@ -68,17 +68,17 @@ void TMapObjManager::loadAfter()
 void TMapObjManager::initDrawBuffer()
 {
 	mDrawBufferSunOpa = static_cast<JDrama::TDrawBufObj*>(
-	    JDrama::TNameRefGen::search2("DrawBuf StaticMapObj SunOpa"));
+	    JDrama::TNameRefGen::search("DrawBuf StaticMapObj SunOpa"));
 	mDrawBufferSunXlu = static_cast<JDrama::TDrawBufObj*>(
-	    JDrama::TNameRefGen::search2("DrawBuf StaticMapObj SunXlu"));
+	    JDrama::TNameRefGen::search("DrawBuf StaticMapObj SunXlu"));
 	mDrawBufferShadowOpa = static_cast<JDrama::TDrawBufObj*>(
-	    JDrama::TNameRefGen::search2("DrawBuf StaticMapObj ShadowOpa"));
+	    JDrama::TNameRefGen::search("DrawBuf StaticMapObj ShadowOpa"));
 	mDrawBufferShadowXlu = static_cast<JDrama::TDrawBufObj*>(
-	    JDrama::TNameRefGen::search2("DrawBuf StaticMapObj ShadowXlu"));
+	    JDrama::TNameRefGen::search("DrawBuf StaticMapObj ShadowXlu"));
 	mDrawBufferAfterIndirectOpa = static_cast<JDrama::TDrawBufObj*>(
-	    JDrama::TNameRefGen::search2("DrawBuf AfterIndirect Opa"));
+	    JDrama::TNameRefGen::search("DrawBuf AfterIndirect Opa"));
 	mDrawBufferAfterIndirectXlu = static_cast<JDrama::TDrawBufObj*>(
-	    JDrama::TNameRefGen::search2("DrawBuf AfterIndirect Xlu"));
+	    JDrama::TNameRefGen::search("DrawBuf AfterIndirect Xlu"));
 }
 
 J3DMaterialTable* TMapObjManager::loadMatTable(const char* name)
@@ -397,7 +397,7 @@ TMapObjBase* TMapObjBaseManager::newAndRegisterObjByEventID(u32 event_id,
 	case 777: {
 		char buffer[64];
 		snprintf(buffer, 64, "シャイン（%s）", name);
-		return static_cast<TMapObjBase*>(JDrama::TNameRefGen::search2(buffer));
+		return static_cast<TMapObjBase*>(JDrama::TNameRefGen::search(buffer));
 	} break;
 
 	case 1000:
