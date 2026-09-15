@@ -131,7 +131,7 @@ static BOOL NozzleCtrl(J3DNode* node, BOOL param_2)
 			s16 gunAngle = gpMarioForCallBack->mWaterGun->getCurrentNozzle()
 			                   ->getGunAngle();
 			if (gunAngle < 0) {
-				Mtx mtx;
+				Mtx44 mtx;
 				// Unused stack space
 				// volatile u32 unused2[6];
 				MsMtxSetRotRPH(mtx, 0.0f, 0.0f, SHORTANGLE2DEG(gunAngle));
