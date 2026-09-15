@@ -136,14 +136,17 @@ void TMapObjBase::throwObjToFrontFromPoint(TMapObjBase* object,
 	object->mPosition.set(point);
 	if (mMActor) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
-		object->mVelocity.set(mtx[0][2] * speed, mtx[1][2] * speed + y_speed,
+		object->mVelocity.set(mtx[0][2] * speed,
+		                      mtx[1][2] * speed + y_speed,
 		                      mtx[2][2] * speed);
 		object->offLiveFlag(LIVE_FLAG_UNK10);
 	} else {
+		JGeometry::TVec3<f32> velocity;
 		Mtx mtx;
 		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
-		object->mVelocity.set(mtx[0][2] * speed, mtx[1][2] * speed + y_speed,
-		                      mtx[2][2] * speed);
+		velocity.set(mtx[0][2] * speed, mtx[1][2] * speed + y_speed,
+		             mtx[2][2] * speed);
+		object->mVelocity.set(velocity);
 		object->offLiveFlag(LIVE_FLAG_UNK10);
 	}
 }
