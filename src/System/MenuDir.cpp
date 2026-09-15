@@ -22,6 +22,9 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+
 TMenuDirector::TMenuDirector()
     : unk18(0)
     , unk1C(nullptr)
@@ -82,7 +85,7 @@ int TMenuDirector::rsetup()
 	unk3C = new J2DSetScreen("title.blo", arc);
 
 	if (!unk3C)
-		return 0;
+		return 1;
 
 	group2d->getChildren().push_back(new TMenuBase(unk3C));
 
@@ -120,12 +123,20 @@ int TMenuDirector::rsetup()
 		for (int i = 0; i < 19; ++i) {
 			const char* message = SMSGetMessageData(unk1C, i);
 			char acStack_40[22];
-			if (message)
+			if (message) {
 				snprintf(acStack_40, 22, "%02d %s", i, message);
-			else if (i == 17 || i == 18)
+			} else {
+				if (i == 17)
+					goto showMovie;
+				if (i != 18)
+					goto noData;
+			showMovie:
 				snprintf(acStack_40, 22, "show movie %d", i == 17 ? 1 : 2);
-			else
+				goto setMessage;
+			noData:
 				snprintf(acStack_40, 22, "%02d No Data            ", i);
+			}
+		setMessage:
 
 			if (i < 9) {
 				((J2DTextBox*)unk3C->search('tx01' + i))->setString(acStack_40);
