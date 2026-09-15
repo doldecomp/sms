@@ -252,6 +252,7 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		break;
 
 	case 10:
+	case 12:
 		if (!(unk4C & 0x100)) {
 			unk4C |= 0x100;
 			setNextStage(0x3B, nullptr);
