@@ -8,7 +8,14 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 48 — receiveMessage behavior corrected
+## Latest checkpoint: batch 49 — SelectDir string data restored
+
+`rsetup()` improves **99.600365% → 99.63048%** after restoring the original 32-byte string-pool prefix through DummyStrings.hpp and spelling out the stage-display constructor arguments.
+All SelectDir data now matches: **+688 data bytes**. Frame 0x610 vs 0x648, list/constructor stack slots and camera-vector setup remain a source TODO; no new exact functions or source-linked files.
+Baseline at `ed1fe590`; full build, changes_all, all 12,904 function comparisons, unit-data checks and DOL byte/SHA-1 checks pass without regressions. Map presence/order/linkage and the UNUSED size pass; no gameplay test performed.
+Game remains **26.129522% matched / 3.254321% source-linked**. The strategy's ten initial targets have each been reviewed; next is the largest unreviewed near-match, `TMario::soundMovement()` (6,924 bytes). Queue: 1,252 functions / 703,776 bytes.
+
+## Verified checkpoint: batch 48 — receiveMessage behavior corrected
 
 `receiveMessage()` improves **99.212585% → 99.981125%**: restore the sender-type case groups and two fallthrough boundaries, the 1-up pickup guard, and fruit-kick rumble parameter.
 All 2,225 instruction shapes now match; frame 0x180 vs 0x220 and wire/conversion stack slots remain a source TODO. No new exact code or source-linked files.
@@ -1219,5 +1226,5 @@ Source, configuration, progress snapshots, and notes are versioned locally.
 ## Next work
 
 Follow [STRATEGY.md](STRATEGY.md) and the refreshed near-matching list.
-Start the next time-box with `TSelectDir::rsetup()`; consult source TODOs before revisiting GCConsole2::load, BossEel, npcWetting, jumpMain, specMain, spider or beam.
+Start the next time-box with `TMario::soundMovement()`; consult source TODOs before revisiting GCConsole2::load, BossEel, npcWetting, jumpMain, specMain, spider or beam.
 Keep the small-file queue and old audits as supporting references; defer from-scratch work until the near-matching group is mostly exhausted.

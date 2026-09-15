@@ -17,6 +17,15 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## Missing string prefixes and constructor arguments, batch 49
+
+- SelectDir's original rodata starts with twelve zero bytes and the twenty-byte Shift-JIS memory-error string; the map also records UNUSED SMS_NO_MEMORY_MESSAGE.
+  The existing DummyStrings.hpp supplies exactly this pair. Including it restores every rsetup string offset and all unit data (+688 matched bytes), without fabricated padding.
+- Explicit `TDStageDisp("<DStageDisp>", 0)` puts the flag temporary above the camera vectors, closer to the original arrangement than default arguments. Explicit TFlagT construction gives the same result.
+  Rsetup still has frame 0x610 vs 0x648 and list/constructor slot differences.
+- Naming the three camera vectors before allocation moves their stores ahead of operator new and lowers similarity to 98.4%; reverted.
+  The original camera-vector temporary order/registers remain unresolved. Do not change protected middleware to force this game caller to match.
+
 ## Sender dispatch and boolean guards, batch 48
 
 - Decode case destinations as well as the comparison tree. ReceiveMessage's final sender switch adds 0x08000003/04 to the take/damage group, removes 0x08000010–12, maps 0x08000002 with 0x80000001, and removes the extra 0x80000002 and door ID 0x4000002A.

@@ -21,6 +21,7 @@
 #include <System/FlagManager.hpp>
 #include <System/MarioGamePad.hpp>
 #include <System/Resolution.hpp>
+#include <System/DummyStrings.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -74,6 +75,8 @@ void* TSelectDir::setupThreadFunc(void* param_1)
 
 int TSelectDir::rsetup()
 {
+	// TODO: GMSE01 frame is 0x610 vs 0x648, with list/constructor temporary
+	// offsets and LookAtCamera vector ordering/register differences remaining.
 	void* arcData = SMSLoadArchive("/data/select.arc", 0, 0, 0);
 
 	JKRMemArchive* archive = new JKRMemArchive;
@@ -135,7 +138,7 @@ int TSelectDir::rsetup()
 	TEmitterViewObj* emitterView3D = new TEmitterViewObj(unk34);
 	group2DParticle->getChildren().push_back(emitterView3D);
 
-	JDrama::TDStageDisp* stageDisp = new JDrama::TDStageDisp;
+	JDrama::TDStageDisp* stageDisp = new JDrama::TDStageDisp("<DStageDisp>", 0);
 	unk14->getChildren().push_back(stageDisp);
 
 	JDrama::TRect rect(0, 0, SMSGetTitleRenderWidth(),

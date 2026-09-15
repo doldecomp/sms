@@ -151,7 +151,15 @@ Unit `mario/GC2D/SelectDir`, 4,384 bytes, 99.600%.
 Instructions match, but about 790 offsets differ.
 Most are string-pool offsets (`addi r3,r31,0x20` vs `0`), so strings are missing or out of order in this unit.
 The stack offsets differ too: the frame is 0x648 in the original and 0x610 in ours (0x38 too small).
-Fix the strings first, then look at the frame.
+Batch 49 restores the original 32-byte prefix through DummyStrings.hpp: all SelectDir data is now exact (+688 matched bytes).
+Explicit stage-display constructor arguments move its flag temporary into the original region, but leave a slot difference.
+Rsetup reaches 99.63048%; frame 0x610 vs 0x648, list/constructor slots and camera-vector ordering/registers remain TODOs.
+
+### After the initial ten
+
+All ten initial targets have been reviewed through batch 49.
+Continue down the refreshed size-ordered queue, skipping documented time-boxed targets until new shared evidence appears.
+Next: `TMario::soundMovement()` in `mario/Player/MarioSound`, 6,924 bytes, 98.25304% at this checkpoint.
 
 ## Refreshing the target list
 
