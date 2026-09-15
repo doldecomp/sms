@@ -538,10 +538,8 @@ static int MarioFootPosRCtrl(J3DNode* param_1, int param_2)
 		    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
 		    && gpMarioForCallBack->onYoshi() == 0) {
 
-			check2 = !(gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEPY
-			           && gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEP)
-			             ? TRUE
-			             : FALSE;
+			check  = gpMarioForCallBack->isSleeping();
+			check2 = check == false ? TRUE : FALSE;
 		}
 
 		if (check2) {
