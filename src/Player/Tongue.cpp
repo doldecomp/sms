@@ -368,24 +368,13 @@ void TYoshiTongue::calcAnim(MtxPtr mtx)
 	mHeadDir.z = mtx[2][0];
 
 	switch (mState) {
-	case STATE_EXTENDING: {
-		J3DModelData* modelData = mModel->getModelData();
-		for (u16 i = 0; i < modelData->getShapeNum(); ++i)
-			modelData->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
-
-		J3DModelData* modelData2 = mTipModel->getModelData();
-		for (u16 i = 0; i < modelData2->getShapeNum(); ++i)
-			modelData2->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
+	case STATE_IDLE:
+		mModel->getModelData()->onFlag1OnAllShapes();
+		mTipModel->getModelData()->onFlag1OnAllShapes();
 		break;
-	}
 	default:
-		J3DModelData* modelData = mModel->getModelData();
-		for (u16 i = 0; i < modelData->getShapeNum(); ++i)
-			modelData->getShapeNodePointer(i)->offFlag(J3DShpFlag_Visible);
-
-		J3DModelData* modelData2 = mTipModel->getModelData();
-		for (u16 i = 0; i < modelData2->getShapeNum(); ++i)
-			modelData2->getShapeNodePointer(i)->offFlag(J3DShpFlag_Visible);
+		mModel->getModelData()->offFlag1OnAllShapes();
+		mTipModel->getModelData()->offFlag1OnAllShapes();
 
 		JGeometry::TVec3<f32> tip = mTipPos;
 		tip.y += 50.0f;
@@ -420,8 +409,6 @@ void TYoshiTongue::calcAnim(MtxPtr mtx)
 		modelMtx[2][1] = dir.y;
 		modelMtx[2][2] = dir.z;
 		modelMtx[2][3] = tip.z;
-
-		char kek[0x40];
 
 		mTipModel->setBaseTRMtx(modelMtx);
 		mTipModel->calc();
