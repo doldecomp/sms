@@ -279,7 +279,7 @@ f32 TMario::getChangeAngleSpeed()
 		} else if (mGroundPlane->isUnk2()) {
 			angSp = (f32)mSlipParams45.mSlideAngleYSp.get();
 		} else if (mGroundPlane->isWetGround()) {
-			if (mGroundPlane->mNormal.y > 0.99f) {
+			if (mGroundPlane->getNormal().y > 0.99f) {
 				angSp = (f32)mSlipParamsWaterGround.mSlideAngleYSp.get();
 			} else {
 				angSp = (f32)mSlipParamsWaterSlope.mSlideAngleYSp.get();
