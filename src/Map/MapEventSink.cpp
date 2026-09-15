@@ -44,7 +44,11 @@ f32 TMapEventSink::getSinkOffsetY() const
 
 TPollutionObj* TMapEventSink::getPollutionObj(int i)
 {
-	return gpPollution->getLayer(unk60[i].unk0)->getObj(unk60[i].unk2);
+	u16 layerIndex             = unk60[i].unk0;
+	TPollutionManager* manager = gpPollution;
+	TPollutionLayer* layer     = manager->getLayer(layerIndex);
+	TPollutionObj* obj         = layer->getObj(unk60[i].unk2);
+	return obj;
 }
 
 bool TMapEventSink::isFinishedAll() const
