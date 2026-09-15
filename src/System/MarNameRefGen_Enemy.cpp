@@ -1,8 +1,10 @@
 #include <System/MarNameRefGen.hpp>
 #include <Enemy/EffectObj.hpp>
+#include <Enemy/EggGen.hpp>
 #include <Enemy/EnemyManager.hpp>
 #include <Enemy/Gesso.hpp>
 #include <Enemy/HamuKuri.hpp>
+#include <Enemy/Igaiga.hpp>
 #include <Enemy/Launcher.hpp>
 #include <Enemy/MameGesso.hpp>
 #include <Enemy/NameKuri.hpp>
@@ -12,14 +14,17 @@
 #include <Enemy/SmallEnemy.hpp>
 #include <Enemy/TamaNoko.hpp>
 #include <Enemy/Telesa.hpp>
+#include <Enemy/DebuTelesa.hpp>
 #include <Enemy/TypicalEnemy.hpp>
 #include <Enemy/WalkerEnemy.hpp>
 #include <Enemy/FireWanwan.hpp>
+#include <Enemy/GateKeeper.hpp>
 #include <Enemy/beam.hpp>
 #include <Enemy/Amenbo.hpp>
 #include <Enemy/Kumokun.hpp>
 #include <Animal/AnimalBase.hpp>
 #include <Animal/AnimalManager.hpp>
+#include <Animal/Butterfly.hpp>
 #include <Animal/fishoid.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
@@ -99,33 +104,26 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 	// if ( strcmp(name, "BeeHiveManager") == 0)
 	//     return new TBeeHiveManager;
 
-	// TODO:
-	// if ( strcmp(name, "Butterfly") == 0)
-	//     return new TButterfloid;
+	if (strcmp(name, "Butterfly") == 0)
+		return new TButterfloid(0, "蝶Ａ");
 
-	// TODO:
-	// if ( strcmp(name, "ButterflyB") == 0)
-	//     return new TButterfloid;
+	if (strcmp(name, "ButterflyB") == 0)
+		return new TButterfloid(1, "蝶Ｂ");
 
-	// TODO:
-	// if ( strcmp(name, "ButterflyC") == 0)
-	//     return new TButterfloid;
+	if (strcmp(name, "ButterflyC") == 0)
+		return new TButterfloid(2, "蝶Ｃ");
 
-	// TODO:
-	// if ( strcmp(name, "ButterflyManager") == 0)
-	//     return new TButterfloidManager;
+	if (strcmp(name, "ButterflyManager") == 0)
+		return new TButterfloidManager("ButterflyManager");
 
-	// TODO:
-	// if ( strcmp(name, "EggGenerator") == 0)
-	//     return new TEggGenerator;
+	if (strcmp(name, "EggGenerator") == 0)
+		return new TEggGenerator("タマゴジェネレータ");
 
-	// TODO:
-	// if ( strcmp(name, "WickedEggGenerator") == 0)
-	//     return new TEggGenerator;
+	if (strcmp(name, "WickedEggGenerator") == 0)
+		return new TEggGenerator("タマゴジェネレータ");
 
-	// TODO:
-	// if ( strcmp(name, "EggGenManager") == 0)
-	//     return new TEggGenManager;
+	if (strcmp(name, "EggGenManager") == 0)
+		return new TEggGenManager("タマゴジェネレータマネージャ");
 
 	if (strcmp(name, "EffectColumWaterManager") == 0)
 		return new TEffectColumWaterManager;
@@ -298,13 +296,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 	if (strcmp(name, "MarioModokiTelesa") == 0)
 		return new TMarioModokiTelesa;
 
-	// TODO:
-	// if ( strcmp(name, "DebuTelesaManager") == 0)
-	//     return new TDebuTelesaManager("デブテルサマネージャー");
+	if (strcmp(name, "DebuTelesaManager") == 0)
+		return new TDebuTelesaManager("デブテルサマネージャー");
 
-	// TODO:
-	// if ( strcmp(name, "DebuTelesa") == 0)
-	//     return new TDebuTelesa;
+	if (strcmp(name, "DebuTelesa") == 0)
+		return new TDebuTelesa("デブテレサ");
 
 	if (strcmp(name, "PoiHanaManager") == 0)
 		return new TPoiHanaManager;
@@ -431,13 +427,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 	if (strcmp(name, "CommonLauncherManager") == 0)
 		return new TCommonLauncherManager;
 
-	// TODO:
-	// if ( strcmp(name, "GateKeeper") == 0)
-	//     return new TBiancoGateKeeper;
+	if (strcmp(name, "GateKeeper") == 0)
+		return new TBiancoGateKeeper("ゲートキーパー（ビアンコ）");
 
-	// TODO:
-	// if ( strcmp(name, "GateKeeperManager") == 0)
-	//     return new TBiancoGateKeeperManager;
+	if (strcmp(name, "GateKeeperManager") == 0)
+		return new TBiancoGateKeeperManager("ゲートキーパーマネージャー");
 
 	// TODO:
 	// if ( strcmp(name, "OrangeSeal") == 0)
@@ -461,8 +455,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 	// if (strcmp(name, "NamekuriLauncherManager") == 0)
 	// 	return new TNamekuriLauncherManager("ナメクリランチャーマネージャー");
 
-	// if ( strcmp(name, "IgaigaManager") == 0)
-	//     return new TIgaigaManager;
+	if (strcmp(name, "IgaigaManager") == 0)
+		return new TIgaigaManager("イガイガマネージャー");
 
 	if (strcmp(name, "TamaNokoManager") == 0)
 		return new TTamaNokoManager;
