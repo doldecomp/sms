@@ -152,7 +152,9 @@ void TCardManager::copyTo(TCardManager::TCriteria* param_1,
 		param_2->unk0 = 0;
 		JSUMemoryInputStream stream(param_1[sector].getPreviewBytes(), 0x1C);
 
-		param_2->unk4  = stream.readU32();
+		u32 val4;
+		stream.read(&val4, sizeof(val4));
+		param_2->unk4  = val4;
 		param_2->unk8  = stream.readU64();
 		param_2->unk10 = stream.readU64();
 		param_2->unk18 = stream.readU32();
