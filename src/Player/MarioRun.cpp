@@ -794,7 +794,7 @@ BOOL TMario::rotating()
 	if (mStatus == MARIO_STATUS_ROTATE_L)
 		mModelFaceAngle = mStatusTimer * 4096;
 	else
-		mModelFaceAngle = -(mStatusTimer * 4096);
+		mModelFaceAngle = mStatusTimer * -4096;
 
 	return 0;
 }

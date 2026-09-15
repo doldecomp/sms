@@ -17,6 +17,18 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## Spin-angle negative multiplication, batch 42
+
+- `mModelFaceAngle = -(mStatusTimer * 4096)` emits an extra `extsh` after `neg` with MWCC 1.2.5.
+  `mModelFaceAngle = mStatusTimer * -4096` matches the original shift/negate/store sequence.
+  Keep the positive branch unchanged: its original instructions deliberately retain `extsh`.
+- Search found two sites, in MarioJump::rotateJumping and MarioRun::rotating; both complete original diffs support the same correction.
+  Rotating's 296 bytes now match exactly, and the UNUSED rotateJumping size becomes the map's 348 bytes.
+  JumpMain remains 99.98485% due to frame 0x60 versus 0x88 and pullJumping's vector slot 0x34 versus 0x60.
+- Restoring checkJumpingThrowStart from the existing jumpMain body gives the map's 92-byte helper and fixes definition order, but does not change jumpMain's frame.
+  Narrowing jumping/secJumping animation locals to s16 introduces unwanted sign extensions; reverted.
+- All runtime function and unit-data checks have no regressions; existing missing UNUSED helpers and size warnings keep both files incomplete.
+
 ## Static member functions can remove an unexplained frame slot, batch 41
 
 - `TMarDirector::loadParticleMario` had matching body instructions but frame 0x20 instead of 0x18.

@@ -8,7 +8,17 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 41 — Mario particle loader matched
+## Latest checkpoint: batch 42 — shared Mario spin-angle correction
+
+A shared negative-multiplier spelling removes the extra sign extension in rotateJumping/jumpMain and makes `TMario::rotating()` exact: **+296 code bytes / one runtime function**.
+Restored `checkJumpingThrowStart` from jumpMain's existing inline body: its 92-byte UNUSED size and definition order now match the map.
+JumpMain improves to 99.98485%, with only frame/stack operands remaining; animation-local narrowing regressed and was reverted, and the remaining blocker is a source TODO.
+Game **25.208769% matched / 3.254321% source-linked**; aggregate **38.751545% / 2.571545%**; still **86 source-linked game files / 92,672 code bytes**.
+Baseline at `b1d5cd9c`; full build, changes_all, all 12,904 function comparisons, per-unit data checks and DOL byte/SHA-1 checks pass without regressions; no gameplay test performed.
+Map checks still fail on existing missing UNUSED helpers: three in MarioJump and braking in MarioRun; both now pass symbol order/linkage, with four and fifteen size warnings respectively. Neither file is promoted.
+Refreshed queue: 1,264 authorized functions / 728,180 bytes; next reviewed target is `TBaseNPC::npcWetting()`.
+
+## Verified checkpoint: batch 41 — Mario particle loader matched
 
 `TMarDirector::loadParticleMario()` now matches exactly: **+4,708 code bytes / one function**.
 Declaring the global-only loader static removes the spurious implicit-instance stack slot; its caller also improves (99.133224% → 99.2977%).
@@ -1159,5 +1169,5 @@ Source, configuration, progress snapshots, and notes are versioned locally.
 ## Next work
 
 Follow [STRATEGY.md](STRATEGY.md) and the refreshed near-matching list.
-Start the next time-box with `TMario::jumpMain()`; consult source TODOs before revisiting specMain, spider or beam.
+Start the next time-box with `TBaseNPC::npcWetting()`; consult source TODOs before revisiting jumpMain, specMain, spider or beam.
 Keep the small-file queue and old audits as supporting references; defer from-scratch work until the near-matching group is mostly exhausted.

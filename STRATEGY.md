@@ -84,7 +84,8 @@ Direct particle-helper expansion did not change the frame.
 ### 3. `TMario::jumpMain()`
 
 Unit `mario/Player/MarioJump`, 4,224 bytes, 99.890%.
-Ours has an extra `extsh` at 0xaf8 before `sth r0,0x9a(r31)`: a wrong cast or temporary type on that short store.
+Batch 42 removes the extra `extsh` at 0xaf8 before `sth r0,0x9a(r31)` by spelling the angle as `mStatusTimer * -4096`.
+The same verified fix completes MarioRun::rotating; jumpMain remains 99.98485% with stack differences.
 The frame is 0x88 in the original and 0x60 in ours (0x28 too small), suggesting a missing inline or temporaries.
 
 ### 4. `TBaseNPC::npcWetting()`

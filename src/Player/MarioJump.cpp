@@ -30,6 +30,13 @@ BOOL TMario::startJumpWall()
 	return changePlayerStatus(MARIO_STATUS_WALL_JUMP, 0, 0);
 }
 
+void TMario::checkJumpingThrowStart()
+{
+	if (mHeldObject != nullptr)
+		if (mInput & 0x2000 ? true : false)
+			changePlayerStatus(MARIO_STATUS_JUMP_THROW, 0, 0);
+}
+
 void TMario::doJumping()
 {
 	f32 sideVel = 0.0f;
@@ -84,8 +91,6 @@ void TMario::doJumping()
 		setAttackHeight(mDeParams.mPushupHeight.get());
 	}
 }
-
-void TMario::checkJumpingThrowStart() { }
 
 void TMario::askStrongGroundTouch() { }
 
@@ -1026,7 +1031,7 @@ BOOL TMario::rotateJumping()
 	if (mStatus == MARIO_STATUS_RIGHT_ROTATE_JUMP)
 		mModelFaceAngle = mStatusTimer * 4096;
 	else
-		mModelFaceAngle = -(mStatusTimer * 4096);
+		mModelFaceAngle = mStatusTimer * -4096;
 
 	if (!(gpMarDirector->unk58 & 0x3F))
 		rumbleStart(0x14, mMotorParams.mMotorWall.get() / 2);
@@ -1295,13 +1300,13 @@ BOOL TMario::fallDead()
 	return FALSE;
 }
 
+// TODO: Body opcodes/registers match; recover the original inline stack layout.
+// Frame is 0x60 instead of 0x88; pullJumping's position is at 0x34, not 0x60.
 BOOL TMario::jumpMain()
 {
 	int result;
 
-	if (mHeldObject != nullptr)
-		if (mInput & 0x2000 ? true : false)
-			changePlayerStatus(MARIO_STATUS_JUMP_THROW, 0, 0);
+	checkJumpingThrowStart();
 
 	switch (mStatus) {
 	case MARIO_STATUS_FORCE_JUMP:
