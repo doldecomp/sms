@@ -80,5 +80,7 @@
   "Strategic/livemanager.cpp",
   "Strategic/objmanager.cpp",
   "System/MarDirectorCreateObjects.cpp",
-  "System/TargetArrow.cpp"
+  "System/TargetArrow.cpp",
+  "Player/SplashManager.cpp",
+  "Camera/CameraMode.cpp"
 ]

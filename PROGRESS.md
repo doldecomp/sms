@@ -8,7 +8,25 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 35 — deferred files linked after metadata correction
+## Latest checkpoint: batch 36 — SplashManager and CameraMode completed
+
+Completed and source-linked **SplashManager.cpp** and **CameraMode.cpp**, adding **3,904 code bytes**.
+Naming alpha before constructing SplashManager's call-site color recovers its stack slots and scheduling.
+A current-mode camera predicate restores the original current/previous-mode inlining and jump-table layout.
+Two runtime functions / 536 code bytes become exact, and 1,432 additional data bytes match.
+
+| Coverage | Matched code | Source-linked code |
+| --- | ---: | ---: |
+| Game code | **24.993294%** | **3.1780477%** |
+| Aggregate | **38.581276%** | **2.5112743%** |
+
+Source linking is now **84 game files / 90,500 code bytes**.
+Baseline at `8f7a03e5`; full build, changes_all, all 12,904 function comparisons, map checks, DOL byte comparison and expected SHA-1 pass with zero regressions.
+Both files match every code/data section; no gameplay test was performed.
+The regenerated queue contains 98 authorized small game files / 91,148 unmatched bytes.
+See the [batch 36 audit](docs/progress/GMSE01-closure-audit-batch36.md) and [measurements](docs/progress/GMSE01-batch36.json).
+
+## Verified checkpoint: batch 35 — deferred files linked after metadata correction
 
 Completed source linking for **MarDirectorCreateObjects.cpp** and **TargetArrow.cpp**, adding **444 code bytes**.
 Resolved the imported map's string-boundary discrepancy at Application's two English disc-error messages and corrected downstream regional metadata.

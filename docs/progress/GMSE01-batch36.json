@@ -1,0 +1,86 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "8f7a03e5",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.61993,
+    "total_code": "3603748",
+    "matched_code": "1390372",
+    "matched_code_percent": 38.581276,
+    "total_data": "641075",
+    "matched_data": "321599",
+    "matched_data_percent": 50.16558,
+    "total_functions": 12904,
+    "matched_functions": 8256,
+    "matched_functions_percent": 63.980164,
+    "complete_code": "90500",
+    "complete_code_percent": 2.5112743,
+    "complete_data": "57696",
+    "complete_data_percent": 8.999883,
+    "total_units": 732,
+    "complete_units": 84
+  },
+  "game_measures": {
+    "fuzzy_match_percent": 69.488495,
+    "total_code": "2847660",
+    "matched_code": "711724",
+    "matched_code_percent": 24.993294,
+    "total_data": "558292",
+    "matched_data": "250320",
+    "matched_data_percent": 44.83675,
+    "total_functions": 9012,
+    "matched_functions": 4459,
+    "matched_functions_percent": 49.478474,
+    "complete_code": "90500",
+    "complete_code_percent": 3.1780477,
+    "complete_data": "57696",
+    "complete_data_percent": 10.334377,
+    "total_units": 385,
+    "complete_units": 84
+  },
+  "source_linked_objects": 84,
+  "new_source_linked_objects": [
+    "Player/SplashManager.cpp",
+    "Camera/CameraMode.cpp"
+  ],
+  "new_source_linked_code_bytes": 3904,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "unexplained_function_regressions": [],
+  "new_exact_functions": 2,
+  "new_exact_code_bytes": 536,
+  "new_matched_data_bytes": 1432,
+  "improvements": [
+    {
+      "unit": "mario/Camera/CameraMode",
+      "function": "isNormalCameraCompletely__15CPolarSubCameraCFv",
+      "before": 72.861115,
+      "after": 100.0,
+      "size": 144
+    },
+    {
+      "unit": "mario/Player/SplashManager",
+      "function": "makeDL__14TSplashManagerCFPQ26JDrama9TGraphics",
+      "before": 99.94898,
+      "after": 100.0,
+      "size": 392
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "all_functions_present": true,
+    "no_exact_function_regressions": true,
+    "symbol_map_SplashManager": true,
+    "symbol_map_CameraMode": true,
+    "gameplay_test": false
+  },
+  "notes": [
+    "Two single-function completion candidates are now source-linked, with exact code/data sections and map validation.",
+    "SplashManager names alpha before constructing the by-value color at its requestCol call, preserving scheduling and both stack slots.",
+    "CameraMode uses a current-mode predicate analogous to the existing L-button helper; its name is marked fabricated, and the original current/previous-mode inlining asymmetry is restored.",
+    "No other function similarity changes across the full camera-header rebuild; no library source changes."
+  ]
+}

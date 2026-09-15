@@ -6,7 +6,7 @@
 - Local branch: `local/decomp-progress`.
 - Upstream: `https://github.com/doldecomp/sms`, commit `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 - The user has authorized implementation and ongoing progress checks for the local North American ISO.
-- Local changes have added 24,728 exactly matching code bytes and 149 matching functions/helpers across thirty-five batches; 82 game objects are linked from source.
+- Local changes have added 25,264 exactly matching code bytes and 151 matching functions/helpers across thirty-six batches; 84 game objects are linked from source.
 - Consult `docs/MATCHING_CATALOG.md` before related edits; inventory shared callers, batch evidence-supported fixes, and record exceptions and validation results.
 - Current checkpoint and remaining limitations are documented in `PROGRESS.md`.
 - The active configuration is now `GMSE01`; an all-extracted-object rebuild has matched the complete input executable.
@@ -144,15 +144,15 @@ Each promotion still requires the full executable SHA-1 and byte comparison.
    - `GC2D/MessageUtil` completed and source-linked in batch 24; full SHA-1 and byte comparison pass.
    - `System/MarDirectorCreateObjects` and `System/TargetArrow` completed and source-linked in batch 35 after correcting regional string/split metadata; full SHA-1 and byte comparison pass.
 2. Game objects with a single nonmatching function, smallest remaining size first, for example:
-   `Player/MarioAccess` (72 bytes left), `Enemy/egggen` (120), `Strategic/HitActor` (124), `MSound/MSoundBGM` (136), `Camera/CameraMode` (144, plus data), `MoveBG/MapObjPollution` (172), `Enemy/DebuTelesa` (176, plus data), `MoveBG/MapObjAirport` (208), `NPC/NpcInbetween` (220), `System/SnapTimeObj` (228), `Enemy/enemytable` (276), `Map/MapEventSirena` (280), `MoveBG/MapObjFloat` (288), `M3DUtil/M3UModel` (292), `Map/MapCollisionPlane` (308).
-3. More broadly, 100 unlinked game objects have 2,000 or fewer unmatched code bytes, totalling 91,684 bytes.
+   `Player/MarioAccess` (72 bytes left), `Enemy/egggen` (120), `Strategic/HitActor` (124), `MSound/MSoundBGM` (136), `MoveBG/MapObjPollution` (172), `Enemy/DebuTelesa` (176, plus data), `MoveBG/MapObjAirport` (208), `NPC/NpcInbetween` (220), `System/SnapTimeObj` (228), `Enemy/enemytable` (276), `Map/MapEventSirena` (280), `MoveBG/MapObjFloat` (288), `M3DUtil/M3UModel` (292), `Map/MapCollisionPlane` (308).
+3. More broadly, 98 unlinked game objects have 2,000 or fewer unmatched code bytes, totalling 91,148 bytes.
    Regenerate this list from `report.json` at each checkpoint rather than trusting these numbers.
-   Batch 35 regeneration is saved in `docs/progress/GMSE01-completion-queue.json`: 100 authorized game files with 1..2,000 unmatched bytes, totaling 91,684 unmatched code bytes.
+   Batch 36 regeneration is saved in `docs/progress/GMSE01-completion-queue.json`: 98 authorized game files with 1..2,000 unmatched bytes, totaling 91,148 unmatched code bytes.
    This excludes THPPlayer despite the report classifying it as game code.
-   Consult the batch 25 through batch 35 closure audits in `docs/progress/` before retrying stalled candidates; they record map gaps, shared issues, and rejected trials.
+   Consult the batch 25 through batch 36 closure audits in `docs/progress/` before retrying stalled candidates; they record map gaps, shared issues, and rejected trials.
    `Map/PollutionObj` completed and source-linked in batch 27: 75 game objects / 79,528 code bytes.
    `GC2D/HelpActor` completed and source-linked in batch 29: 76 game objects / 80,800 code bytes.
-   Game coverage is 24.97447% matched / 3.040953% source-linked; aggregate coverage is 38.566406% / 2.4029427%.
+   Game coverage is 24.993294% matched / 3.1780477% source-linked; aggregate coverage is 38.581276% / 2.5112743%.
    Batch 29 also restores an AnimalManager helper and matches CameraTalk/Strategy functions; those files retain recorded blockers.
    Batch 30 audited `MapXlu`, `PollutionPos`, `PerformList`, `BossHanachanNerve`, `MessageLoader` and `MovieRumble`; no additional file was completed.
    MessageLoader's parser improves, but its remaining stack differences prevent promotion.
@@ -167,6 +167,8 @@ Each promotion still requires the full executable SHA-1 and byte comparison.
    SnapTimeObj retains a four-byte color-slot difference; TimeRec's three pre-existing UNUSED stubs remain completion-audit debt despite its runtime-exact source linking.
    Batch 35 resolves the deferred regional .rodata discrepancy and links MarDirectorCreateObjects and TargetArrow: 82 game objects / 86,596 code bytes.
    Application's shorter English disc-error strings explain the four-byte local and eight-byte downstream shifts; all affected metadata is corrected together and the executable remains byte-identical.
+   Batch 36 completes and source-links SplashManager and CameraMode: 84 game objects / 90,500 code bytes.
+   Named alpha plus call-site color construction closes SplashManager; a current-mode predicate restores CameraMode's asymmetric inlining and data emission.
    Revisit earlier deferrals when new evidence addresses their recorded blockers; prioritize a hypothesis that can close a file over further partial camera reconstruction.
 
 If an object stalls on a hard function, record the evidence and move to the next object instead of forcing a fakematch.
@@ -183,7 +185,7 @@ Continue larger unfinished game units (HUD, save/load screens, event scripting, 
 ### Pending human decision: library objects
 
 After the batch 35 regional metadata correction, 308 JSystem and Dolphin SDK objects (542,892 code bytes) report complete code/data matches but are not linked from source.
-Subject to the required map and relink checks, linking them would raise complete code from 2.40% to about 17.47%, and a fully source-built game ultimately requires them.
+Subject to the required map and relink checks, linking them would raise complete code from 2.51% to about 17.58%, and a fully source-built game ultimately requires them.
 `AGENTS.md` restricts autonomous work on these libraries, so **do not promote or edit them without explicit user approval**.
 The three matching `THPPlayer` objects fall under the same restriction.
 

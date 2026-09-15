@@ -888,3 +888,18 @@ A full executable match also does not validate bodies in objects that are still 
 - Both manager files now link from source; full code/data/map, all 12,904 function comparisons and final DOL byte/SHA-1 checks pass with zero regressions.
   TimeRec's three pre-existing UNUSED stubs remain explicit audit debt; no gameplay test.
   See the [batch 34 audit](progress/GMSE01-closure-audit-batch34.md) for the full exceptions and measurements.
+
+## SplashManager color and CameraMode predicate completion, batch 36
+
+- SplashManager's original constructs color at 0x54 and passes its by-value copy at 0x58.
+  A compound literal at requestCol fixes those slots, but alpha must be named before the vertex writes to retain the original division/scheduling.
+  This combines the two pieces of evidence from batch 26 and completes all 392 makeDL bytes.
+  requestCol has no other game caller; do not mass-replace unrelated GXColor locals.
+- CameraMode's current-mode check is an out-of-line call, while its previous-mode check is an inline switch.
+  Add a current-mode predicate analogous to isLButtonCamera and use it only for the current-mode branch.
+  Keep its name marked fabricated; the binary proves the call shape but does not establish the original inline name.
+  This removes the extra switch/table, matches all 144 function bytes and restores exact data emission.
+  CameraChange, CameraBGCheck and cameragc calls remain unchanged; the header rebuild has no other function-similarity effects.
+- Both files now link from source, with every section exact and all map checks passing.
+  Full build, changes_all, all 12,904 function comparisons, executable byte comparison and SHA-1 pass; no gameplay test.
+  See the [batch 36 audit](progress/GMSE01-closure-audit-batch36.md) for evidence and the remaining queue.

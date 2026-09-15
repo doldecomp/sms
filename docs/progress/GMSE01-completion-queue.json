@@ -1,10 +1,10 @@
 {
   "region": "GMSE01",
-  "checkpoint": "batch35",
+  "checkpoint": "batch36",
   "notes": [
     "Report-based candidates only; source-link promotion also requires instruction, data, emission, map and executable verification.",
     "Priorities follow DECOMPILATION_PLAN.md. Game objects only; protected THPPlayer objects are excluded even though report metadata classifies them as game.",
-    "Consult the batch 25 through batch 35 closure audits before revisiting stalled candidates."
+    "Consult the batch 25 through batch 36 closure audits before revisiting stalled candidates."
   ],
   "all_code_matching": [
     {
@@ -78,20 +78,6 @@
           "name": "init__5MSBgmFv",
           "size": 136,
           "similarity": 99.85294
-        }
-      ]
-    },
-    {
-      "unit": "mario/Camera/CameraMode",
-      "source": "src/Camera/CameraMode.cpp",
-      "code_bytes": 1152,
-      "unmatched_code_bytes": 144,
-      "unmatched_data_bytes": 1432,
-      "nonmatching_functions": [
-        {
-          "name": "isNormalCameraCompletely__15CPolarSubCameraCFv",
-          "size": 144,
-          "similarity": 72.861115
         }
       ]
     },
@@ -316,20 +302,6 @@
           "name": "controlByCameraCode___15CPolarSubCameraFPi",
           "size": 360,
           "similarity": 99.87778
-        }
-      ]
-    },
-    {
-      "unit": "mario/Player/SplashManager",
-      "source": "src/Player/SplashManager.cpp",
-      "code_bytes": 2752,
-      "unmatched_code_bytes": 392,
-      "unmatched_data_bytes": 0,
-      "nonmatching_functions": [
-        {
-          "name": "makeDL__14TSplashManagerCFPQ26JDrama9TGraphics",
-          "size": 392,
-          "similarity": 99.94898
         }
       ]
     },
@@ -714,20 +686,6 @@
       ]
     },
     {
-      "unit": "mario/Camera/CameraMode",
-      "source": "src/Camera/CameraMode.cpp",
-      "code_bytes": 1152,
-      "unmatched_code_bytes": 144,
-      "unmatched_data_bytes": 1432,
-      "nonmatching_functions": [
-        {
-          "name": "isNormalCameraCompletely__15CPolarSubCameraCFv",
-          "size": 144,
-          "similarity": 72.861115
-        }
-      ]
-    },
-    {
       "unit": "mario/Camera/CameraTalk",
       "source": "src/Camera/CameraTalk.cpp",
       "code_bytes": 448,
@@ -1005,20 +963,6 @@
           "name": "associateNPC__11TTalkCursorFP8TBaseNPC",
           "size": 140,
           "similarity": 99.6
-        }
-      ]
-    },
-    {
-      "unit": "mario/Player/SplashManager",
-      "source": "src/Player/SplashManager.cpp",
-      "code_bytes": 2752,
-      "unmatched_code_bytes": 392,
-      "unmatched_data_bytes": 0,
-      "nonmatching_functions": [
-        {
-          "name": "makeDL__14TSplashManagerCFPQ26JDrama9TGraphics",
-          "size": 392,
-          "similarity": 99.94898
         }
       ]
     },
@@ -2665,6 +2609,6 @@
     "mario/THPPlayer/THPRead",
     "mario/THPPlayer/THPVideoDecode"
   ],
-  "near_count": 100,
-  "near_unmatched_code_bytes": 91684
+  "near_count": 98,
+  "near_unmatched_code_bytes": 91148
 }

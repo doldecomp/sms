@@ -143,6 +143,8 @@ public:
 	}
 
 	bool isLButtonCamera() const { return isLButtonCameraSpecifyMode(mMode); }
+	// Fabricated name, analogous to isLButtonCamera.
+	bool isNormalCamera() const { return isNormalCameraSpecifyMode(mMode); }
 	bool isBckDemoCamera() const
 	{
 		return mMode == CAMERA_MODE_REPRODUCE_DEMO ? true : false;
