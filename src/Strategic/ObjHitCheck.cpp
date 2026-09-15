@@ -201,7 +201,7 @@ void TObjHitCheck::clearGroup(TIdxGroupObj* group)
 {
 	TIdxGroupObj::iterator end = group->getChildren().end();
 
-	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
+	for (TIdxGroupObj::iterator it = group->getChildren().begin(); !(it == end);
 	     ++it)
 		(*it)->mColCount = 0;
 }
