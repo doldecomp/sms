@@ -356,12 +356,11 @@ void SMS_InitPacket_ThreeTevColor(J3DModel* param_1, u16 param_2,
 
 void SMS_InitPacket_Fog(J3DModel* param_1, u16 param_2)
 {
+	J3DMaterial* material
+	    = param_1->getModelData()->getMaterialNodePointer(param_2);
+	J3DPEBlock* peBlock = material->getPEBlock();
 	J3DShapePacket* packet = InitPacket_Sub(param_1, param_2);
-
-	J3DFog* fog = param_1->getModelData()
-	                  ->getMaterialNodePointer(param_2)
-	                  ->getPEBlock()
-	                  ->getFog();
+	J3DFog* fog = peBlock->getFog();
 
 	PacketUserData_Fog* userData = new PacketUserData_Fog;
 	userData->unk0               = 5;
