@@ -107,7 +107,11 @@ void TMapObjBase::throwObjToFront(TMapObjBase* object, f32 y_offset, f32 speed,
                                   f32 vertical_speed) const
 {
 	object->appear();
-	object->mPosition.set(mPosition.x, mPosition.y + y_offset, mPosition.z);
+	Vec position;
+	position.x = mPosition.x;
+	position.y = mPosition.y + y_offset;
+	position.z = mPosition.z;
+	object->mPosition.set(position);
 	if (mMActor) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
 		object->mVelocity.set(mtx[0][2] * speed,
