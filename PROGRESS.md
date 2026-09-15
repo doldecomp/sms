@@ -8,7 +8,37 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 14
+## Latest checkpoint: batch 15
+
+Reconstructed the previously empty `BossHanachanSub.cpp`: sphere-chain initialization and movement, wall/ground collision, rotation-dependent position corrections, centrifugal force, and water-hit handling.
+Recovered `TSpherePoint` (0x2C bytes) and `TSphereLink` (0x1C bytes), with declarations in `BossHanachanSub.hpp`.
+Corrected the owner's offset-0x178 field to a sphere-link pointer using its original call sites.
+All seven retained strong functions and the map's UNUSED collision helper have bodies.
+
+Five linked functions match exactly: the water-actor destructor (132 bytes), its thunk (8), the sphere-point constructor (4), water-message handling (112), and counter reset (12).
+All 232 bytes of the unit's data sections match.
+This batch adds **268 exact code bytes, five matching functions, and 232 matched data bytes**.
+Aggregate exact code is **1,375,164 / 3,603,748 bytes (38.15927%)**, with **8,167 / 12,904 functions** matching.
+There are still **73 source-linked objects**, covering **76,468 code bytes (2.121902%)**.
+The sub-unit remains original-linked pending its remaining differences.
+
+### Validation and remaining work
+
+Captured `ninja baseline` at `6e2992e9`, rebuilt affected header consumers, ran `ninja changes_all`, and compared all reported functions with missing-function detection: zero regressions.
+The full build, expected SHA-1, and direct byte comparison pass for the mixed source/original-object executable.
+No gameplay test was performed.
+
+**The sub-unit's symbol-map check still fails one presence check:** `TBGCheckData::isIllegalData()` is defined in the existing header but is inlined where the original calls and emits it.
+Function order, linkage, and the UNUSED collision helper's 188-byte size pass.
+Do not promote this object while that emission issue or its five nonmatching routines remain.
+Those routines are `setDegreeZAndRevisionPosXZ` (98.19259%), `moveHead` (85.69796%), the sphere-link constructor (99.53333%), `BHSCalcRevisionDistXZByRotateZ` (94.02857%), and `BHSCalcCentrifugalForce` (99.023254%).
+
+The catalog records recovered field semantics, angle rounding versus truncation, signed angle-difference behavior, matching helper patterns, and reverted trials.
+Next work: resolve the sub-unit's collision/vector inline context and rotation-helper stack layouts, then continue the boss main/nerve reconstruction and pending source-link investigations.
+See [batch 15 measurements](docs/progress/GMSE01-batch15.json) and the [shared-fix catalog](docs/MATCHING_CATALOG.md).
+The `m2c` draft is `build/GMSE01/BossHanachanSub-batch15.c`; build, regression, and map logs are `build/GMSE01-*-batch15.log`.
+
+## Verified checkpoint: batch 14
 
 Reconstructed the last two TODO routines in `BossHanachanParts.cpp`: head/body map-collision setup and the two foot collision actors.
 The code recovers the original actor names, joint names, collision dimensions, actor-group registration, collision flags, matrix bindings, and initial positions.

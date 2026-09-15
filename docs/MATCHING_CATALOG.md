@@ -113,7 +113,7 @@ A full executable match also does not validate bodies in objects that are still 
 - Search: `rg -n 'TWaterHitActor|mParticleIndex|mWaterHitCounter|mStaticHitActor' src include`.
 - Original map: `onWaterHitCounter__14TWaterHitActorFv` is a global 12-byte function in `BossHanachanSub.cpp`, at `0x800ED5B4`.
   It sets 60 with `sth` at offset 0x68; `receiveMessage` also uses halfword stores there.
-  The declaration is out of line; the sub-unit implementation is still pending.
+  The declaration and definition are out of line; batch 15 reconstructs the setter and receiver exactly.
 - Signedness is established by `BossHanachanMain` at 0x800EF50C, 0x800EF580, and 0x800EF5F4: `lha` from the head/body/foot payload, compare with one, decrement, and `sth` back.
 - Particle consumers require a separate 32-bit view of the same storage.
   `TSmallEnemy::decHpByWater` at 0x8006BAB8 and `TBossManta::receiveMessage` at 0x80112828 load the sender's offset 0x68 with `lwz`, then use it to index the water manager's arrays.
@@ -252,3 +252,48 @@ A full executable match also does not validate bodies in objects that are still 
 - The foot destructor and adjustment thunk are now emitted and match all 156 and 8 bytes.
   The only remaining parts map warning is the existing hit-predicate UNUSED size (208 versus 196); all presence/order/linkage checks pass.
 - All `.rodata`, `.sdata`, and `.sdata2` bytes in the parts unit now match; `.data` remains incomplete.
+
+## Boss sphere-chain movement and collision: batch 15
+
+- Status: all seven retained strong functions and the UNUSED collision helper reconstructed in `BossHanachanSub.cpp`; five of eleven retained functions exact, with matching data sections.
+- Search: `rg -n 'TSphereLink|TSpherePoint|BHSCalc|TWaterHitActor' src include`.
+- Full map inventory: `BossHanachanSub.cpp`, lines 59420–59432; includes the UNUSED 188-byte `execMapCollision_` helper.
+  `TSpherePoint` has only an empty constructor in the map; `TSphereLink` has its constructor, `moveHead`, `setDegreeZAndRevisionPosXZ`, and `execMapCollision_`.
+  The class field names are inferred descriptions, not recovered original names.
+- `TSpherePoint` stride is 0x2C: previous position at 0, current position at 0xC, velocity at 0x18, segment length at 0x24, and roll angle at 0x28.
+  `TSphereLink` is 0x1C: u16 count at 0, point-array pointer at 4, velocity multiplier at 8, vertical position increment at 0xC, collision radius at 0x10, roll-to-displacement multiplier at 0x14, and head yaw at 0x18.
+  Owner field 0x178 is a pointer, demonstrated by the `setDegreeZAndRevisionPosXZ` call at 0x800EEC20.
+- Movement applies the vertical increment directly to each position, then adds its velocity; it pins the first point to the supplied head position and resolves walls/ground.
+  Each following point is projected to its segment length from its predecessor and then checked against the map.
+  The final pass derives damped velocity from current minus previous position and updates previous position.
+  A near-zero displacement becomes the up vector; otherwise normalization calls `PSVECNormalize` directly.
+- Angle conversions differ by context.
+  The constructor truncates `yaw * (65536.0f / 360.0f)` to a short.
+  Both BHS rotation helpers use the existing rounded `CLBDegToShortAngle`/`CLBRoundf<s16>` chain.
+  Do not replace the constructor's truncation with the rounding helper.
+- `BHSCalcCentrifugalForce` uses squared XZ distances and a 0.001 threshold.
+  Existing `TVec3::sub(first, second)` reproduces the original scalar load/register ordering; explicit component constructor arguments do not.
+  Its signed angle subtraction stays an int for the final sign test, but is narrowed to s16 before absolute magnitude is formed as an int.
+  `CLBAbs<s16>` adds another narrowing after negation, unlike the original, and mishandles the magnitude of -32768; reverted.
+  The final body is 99.023254%, with a 0x80 versus 0xA0 stack frame and one extra integer move.
+- `BHSCalcRevisionDistXZByRotateZ` preserves both zero-valued products in the rotation matrix.
+  Literal scalar `0.0f * sine/cosine` expressions are optimized away (89.7%); initializing a vector then reading its components preserves them.
+  A single three-component distance vector and cosine-before-sine locals reach 94.02857%; one constant-load scheduling difference and a 0x50 versus 0x58 frame remain.
+  Adding a second rotated vector inflates the frame to 0x70 without fixing scheduling; reverted.
+  The shared roll-position caller is 98.19259% and inlines this helper.
+- The constructor is 99.53333% with all 120 instruction positions accounted for; its frame is 0x98 versus 0xB8, and two multiplication operands are exchanged.
+  Putting sine/cosine calculations inside the loop prevents the original hoisting and introduces fused arithmetic (81.2%); reverted.
+  Replacing the two scalar offsets with a scaled vector changes saved-float allocation and sine/cosine ordering (98.8%); reverted.
+  Splitting offset calculations into assignment and multiplication changes length's saved register (99.0%); reverted.
+- `moveHead` is 85.69796%, with collision predicate inlining, vector-copy/scale context, registers, and stack layout unresolved.
+  The current source emits the UNUSED collision helper at the map's exact 188-byte size, but **does not emit the mapped weak `isIllegalData` function** because it inlines it into the caller.
+  This is an outstanding map-check failure, not a completed symbol inventory.
+  Passing through `isLegal`, chaining it to `isIllegalData`/`checkFlag`, and rewriting the latter with explicit returns did not establish the required call; all shared-header trials were reverted.
+  Explicit `inline` on the cpp collision helper dropped its UNUSED definition; reverted.
+  Replacing the collision ternary with an equality-to-false expression reduced the UNUSED helper to 168 bytes and lost the original normalization sequence; reverted.
+  Splitting the final velocity expression into named delta/velocity locals restores copies but inlines `scale` where the original calls it (83.5%); using compound multiplication does not restore the call; reverted.
+- The original water receiver uses `gpMarDirector->isThing()` (modes 1, 2, or 4), not the broader talk/demo predicate.
+  It accepts only the water-spray message, clears the counter during those modes, and otherwise invokes the 60-frame counter setter.
+  Receiver, setter, water destructor/thunk, and point constructor are exact; all data sections total 232 exact bytes.
+- Full affected rebuild and baseline comparison found zero function regressions.
+  The full mixed executable passes byte comparison and SHA-1; no source-link promotion or gameplay validation was performed.

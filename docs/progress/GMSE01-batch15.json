@@ -1,0 +1,119 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "6e2992e9",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 74.965256,
+    "total_code": "3603748",
+    "matched_code": "1375164",
+    "matched_code_percent": 38.15927,
+    "total_data": "641075",
+    "matched_data": "300827",
+    "matched_data_percent": 46.9254,
+    "total_functions": 12904,
+    "matched_functions": 8167,
+    "matched_functions_percent": 63.29045,
+    "complete_code": "76468",
+    "complete_code_percent": 2.121902,
+    "complete_data": "51024",
+    "complete_data_percent": 7.9591312,
+    "total_units": 732,
+    "complete_units": 73
+  },
+  "source_linked_objects": 73,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 5,
+  "new_exact_code_bytes": 268,
+  "new_matched_data_bytes": 232,
+  "improvements": [
+    {
+      "unit": "mario/Enemy/BossHanachanSub",
+      "function": "@32@__dt__14TWaterHitActorFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 8
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanSub",
+      "function": "BHSCalcCentrifugalForce__FRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>f",
+      "before": 0,
+      "after": 99.023254,
+      "size": 688
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanSub",
+      "function": "BHSCalcRevisionDistXZByRotateZ__FfffPfPf",
+      "before": 0,
+      "after": 94.02857,
+      "size": 140
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanSub",
+      "function": "__ct__11TSphereLinkFUsRCQ29JGeometry8TVec3<f>ffffff",
+      "before": 0,
+      "after": 99.53333,
+      "size": 480
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanSub",
+      "function": "__ct__12TSpherePointFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 4
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanSub",
+      "function": "__dt__14TWaterHitActorFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 132
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanSub",
+      "function": "moveHead__11TSphereLinkFRCQ29JGeometry8TVec3<f>",
+      "before": 0,
+      "after": 85.69796,
+      "size": 980
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanSub",
+      "function": "onWaterHitCounter__14TWaterHitActorFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 12
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanSub",
+      "function": "receiveMessage__14TWaterHitActorFP9THitActorUl",
+      "before": 0,
+      "after": 100.0,
+      "size": 112
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanSub",
+      "function": "setDegreeZAndRevisionPosXZ__11TSphereLinkFif",
+      "before": 0,
+      "after": 98.19259,
+      "size": 540
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "all_header_consumers_rebuilt": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_map_sub": false,
+    "gameplay_test": false
+  },
+  "remaining_map_issues": [
+    "Sub unit does not emit the mapped weak isIllegalData__12TBGCheckDataCFv symbol; the existing header implementation is inlined into moveHead instead.",
+    "Sub unit function order, linkage, and UNUSED execMapCollision_ size (188 bytes) pass."
+  ],
+  "notes": [
+    "Reconstructed all seven strong routines and the UNUSED collision helper in BossHanachanSub.cpp, with class declarations/layouts in BossHanachanSub.hpp.",
+    "Five of the eleven linked functions and all 232 data bytes match exactly; movement, constructor, and rotation routines remain nonmatching.",
+    "No source-link promotion; executable verification covers the mixed source/original-object build."
+  ]
+}
