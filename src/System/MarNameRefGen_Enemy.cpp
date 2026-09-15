@@ -36,7 +36,12 @@ DECL_MANAGER(TChuuHanaManager)
 DECL_ENEMY(TSeal) DECL_MANAGER(TSealManager)
 DECL_ENEMY(TKukku) DECL_MANAGER(TKukkuManager)
 DECL_ENEMY(TKazekun) DECL_MANAGER(TKazekunManager)
-DECL_ENEMY(TPakkun) DECL_MANAGER(TPakkunManager)
+class TPakkun : public TTypicalEnemy {
+public:
+	TPakkun(const char*);
+	virtual ~TPakkun();
+};
+DECL_MANAGER(TPakkunManager)
 DECL_ENEMY(THanaSambo) DECL_MANAGER(THanaSamboManager)
 DECL_ENEMY(TSamboHead) DECL_MANAGER(TSamboHeadManager)
 DECL_ENEMY(TYumbo) DECL_MANAGER(TYumboManager)
@@ -107,12 +112,13 @@ public:
 	THauntLegManager(const char*);
 };
 
-class TStayPakkun : public TTypicalEnemy {
+class TStayPakkun : public TPakkun {
 public:
 	TStayPakkun(const char* name)
-	    : TTypicalEnemy(name)
+	    : TPakkun(name)
 	{
 	}
+	virtual ~TStayPakkun();
 };
 
 class TSamboFlowerManager : public TEnemyManager {
@@ -221,7 +227,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 		return new TButterfloid(2, "蝶Ｃ");
 
 	if (strcmp(name, "ButterflyManager") == 0)
-		return new TButterfloidManager("ButterflyManager");
+		return new TButterfloidManager("");
 
 	if (strcmp(name, "EggGenerator") == 0)
 		return new TEggGenerator("タマゴジェネレータ");
@@ -336,6 +342,9 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 
 	if (strcmp(name, "PopoManager") == 0)
 		return new TPopoManager("ポポマネージャー");
+
+	if (strcmp(name, "Popo") == 0)
+		return new TPopo("ポポ");
 
 	if (strcmp(name, "GorogoroManager") == 0)
 		return new TEnemyManager("ゴロゴロマネージャー");
@@ -497,7 +506,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 		return new TBiancoGateKeeperManager("ゲートキーパーマネージャー");
 
 	if (strcmp(name, "OrangeSeal") == 0)
-		return new TSeal("OrangeSeal");
+		return new TSeal("シール");
 
 	if (strcmp(name, "SealManager") == 0)
 		return new TSealManager("シールマネージャ");
@@ -532,7 +541,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 		return new TKukkuManager("クックマネージャー");
 
 	if (strcmp(name, "Kukku") == 0)
-		return new TKukku("Kukku");
+		return new TKukku("クック");
 
 	if (strcmp(name, "KumokunManager") == 0)
 		return new TKumokunManager("くもくんマネージャー");
