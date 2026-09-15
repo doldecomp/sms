@@ -126,9 +126,9 @@ void TMarDirector::initLoadParticle()
 
 void TMarDirector::loadParticle()
 {
-	void* pvVar1 = new (0x20) char[0x200000];
+	void* pvVar1 = new (-0x20) char[0x200000];
 	SMSLoadArchive("/data/particle.arc", pvVar1, 0x200000, nullptr);
-	JKRMemArchive* this_00 = new (0x20) JKRMemArchive;
+	JKRMemArchive* this_00 = new (-0x20) JKRMemArchive;
 	this_00->mountFixed(pvVar1, MBF_0);
 	this_00->becomeCurrent("/");
 	loadParticleMario();
@@ -260,7 +260,7 @@ void TMarDirector::loadParticle()
 	gpResourceManager->load("ms_2d_get_b.jpa", 0x1ff);
 	gpResourceManager->load("ms_2d_elecflash.jpa", 0x200);
 
-	// gpEmitterManager4D2->unkA4 = gpResourceManager;
+	gpEmitterManager4D2->unkA4[0] = gpResourceManager;
 	this_00->unmountFixed();
 
 	if (mMap == 4 && unk7D == 2) {
