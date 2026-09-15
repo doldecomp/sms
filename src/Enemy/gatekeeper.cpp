@@ -73,7 +73,7 @@ TGKHitObj::TGKHitObj(TGateKeeperBase* owner, int joint_idx, const char* name)
 {
 	initHitActor(0x10000022, 1, 0x80000000, 0.0f, 0.0f, 150.0f, 200.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search2("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 }
@@ -290,7 +290,7 @@ TBGKObstacle::TBGKObstacle(TBiancoGateKeeper* owner, const char* name)
 	mPosition.y -= 1000.0f;
 	initHitActor(0x10000022, 1, 0x80000000, 800.0f, 800.0f, 800.0f, 800.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search2("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 }
@@ -354,7 +354,7 @@ void TBiancoGateKeeper::init(TLiveManager* manager)
 	}
 
 	initHitActor(0x10000022, 5, 0x81000000, 400.0f, 150.0f, 400.0f, 150.0f);
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search2("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
@@ -446,11 +446,11 @@ void TBiancoGateKeeper::launchGorogoro()
 
 void TBiancoGateKeeper::launchNamekuri()
 {
-	TNameKuriManager* mgr = JDrama::TNameRefGen::search<TNameKuriManager>(
-	    "拡散ナメクリマネージャー");
+	TNameKuriManager* mgr = static_cast<TNameKuriManager*>(
+	    JDrama::TNameRefGen::search2("拡散ナメクリマネージャー"));
 	if (mgr == NULL)
-		mgr = JDrama::TNameRefGen::search<TNameKuriManager>(
-		    "ナメクリマネージャー");
+		mgr = static_cast<TNameKuriManager*>(
+		    JDrama::TNameRefGen::search2("ナメクリマネージャー"));
 
 	if (mgr != NULL) {
 		for (int i = 0; i < 10; i++) {

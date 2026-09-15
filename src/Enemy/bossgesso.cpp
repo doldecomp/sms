@@ -123,7 +123,7 @@ TBGBeakHit::TBGBeakHit(TBossGesso* owner, const char* name)
     : TTakeActor(name)
     , mOwner(owner)
 {
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search2("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 
@@ -285,7 +285,7 @@ TBGEyeHit::TBGEyeHit(TBossGesso* owner, int joint_index, const char* name)
     , mOwner(owner)
     , mJointIndex(joint_index)
 {
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search2("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 
@@ -322,7 +322,7 @@ TBGBodyHit::TBGBodyHit(TBossGesso* owner, int joint_index, const char* name)
     : mOwner(owner)
     , mJointIndex(joint_index)
 {
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search2("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 
@@ -1303,7 +1303,8 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (mAttackMode == 6) {
 		if (cue & CUE_CALC_ANIM) {
-			if (JDrama::TNameRefGen::search<THitActor>("container")
+			if (static_cast<THitActor*>(
+			        JDrama::TNameRefGen::search2("container"))
 			    == nullptr) {
 				changeAttackMode(0);
 			} else if (mTentacles[0]->mState != 4) {
@@ -1802,9 +1803,8 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 			    self->mPosition.y + 6000.0f, self->mPosition.z);
 		}
 
-		TNameKuriManager* nameKuriMgr
-		    = JDrama::TNameRefGen::search<TNameKuriManager>(
-		        "ナメクリマネージャー");
+		TNameKuriManager* nameKuriMgr = static_cast<TNameKuriManager*>(
+		    JDrama::TNameRefGen::search2("ナメクリマネージャー"));
 		if (nameKuriMgr)
 			nameKuriMgr->killChildren();
 
@@ -1859,8 +1859,8 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		self->changeAllTentacleState(0);
 		self->kill();
 
-		THitActor* block = JDrama::TNameRefGen::search<THitActor>(
-		    "マーレボスゲッソー用ブロック");
+		THitActor* block = static_cast<THitActor*>(
+		    JDrama::TNameRefGen::search2("マーレボスゲッソー用ブロック"));
 
 		if (block != nullptr) {
 			block->receiveMessage(self, HIT_MESSAGE_ATTACK);

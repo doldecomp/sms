@@ -62,20 +62,20 @@ void TFileLoadBlock::loadAfter()
 	TMapObjBase::loadAfter();
 
 	if (unk138 == 0) {
-		unk13C
-		    = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＢ");
-		unk140
-		    = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＣ");
+		unk13C = static_cast<TFileLoadBlock*>(
+		    JDrama::TNameRefGen::search2("ロードブロックＢ"));
+		unk140 = static_cast<TFileLoadBlock*>(
+		    JDrama::TNameRefGen::search2("ロードブロックＣ"));
 	} else if (unk138 == 1) {
-		unk13C
-		    = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＡ");
-		unk140
-		    = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＣ");
+		unk13C = static_cast<TFileLoadBlock*>(
+		    JDrama::TNameRefGen::search2("ロードブロックＡ"));
+		unk140 = static_cast<TFileLoadBlock*>(
+		    JDrama::TNameRefGen::search2("ロードブロックＣ"));
 	} else {
-		unk13C
-		    = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＡ");
-		unk140
-		    = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＢ");
+		unk13C = static_cast<TFileLoadBlock*>(
+		    JDrama::TNameRefGen::search2("ロードブロックＡ"));
+		unk140 = static_cast<TFileLoadBlock*>(
+		    JDrama::TNameRefGen::search2("ロードブロックＢ"));
 	}
 }
 

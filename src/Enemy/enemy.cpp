@@ -69,7 +69,8 @@ void TSpineEnemy::load(JSUMemoryInputStream& stream)
 
 	char buffer[256];
 	stream.readString(buffer, 256);
-	TLiveManager* mgr = JDrama::TNameRefGen::search<TLiveManager>(buffer);
+	TLiveManager* mgr
+	    = static_cast<TLiveManager*>(JDrama::TNameRefGen::search2(buffer));
 
 	char buffer2[256];
 	stream.readString(buffer2, 256);

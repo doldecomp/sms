@@ -133,7 +133,8 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 void TPauseMenu2::loadAfter()
 {
 	// "Save data"
-	mCardSave = JDrama::TNameRefGen::search<TCardSave>("データセーブ");
+	mCardSave
+	    = static_cast<TCardSave*>(JDrama::TNameRefGen::search2("データセーブ"));
 
 	mItemColor = mMenuItems[0]->getWhite();
 

@@ -514,7 +514,7 @@ void TFireWanwanTailHit::init()
 		actor->getModel()->calc();
 	}
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search2("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 	initHitActor(0x10000028, 0, 0, 0.0f, 0.0f, 30.0f, 200.0f);

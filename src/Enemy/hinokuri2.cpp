@@ -497,8 +497,8 @@ void THinokuri2::init(TLiveManager* param_1)
 	             mHeadHeight);
 	unk150 = new TMBindShadowBody(this, getModel(), 1.0f);
 
-	TIdxGroupObj* enemiesGrp
-	    = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+	TIdxGroupObj* enemiesGrp = static_cast<TIdxGroupObj*>(
+	    JDrama::TNameRefGen::search2("敵グループ"));
 	enemiesGrp->getChildren().push_back(mHead);
 	enemiesGrp->getChildren().push_back(mBody);
 	enemiesGrp->getChildren().push_back(unk178);
