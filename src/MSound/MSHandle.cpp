@@ -151,7 +151,6 @@ f32 MSHandle::calcPan(const Vec& param_1, f32 param_2, f32 param_3)
 		fVar4 = fVar2 * fVar4;
 	}
 
-	f32 fVar1;
 	if (param_2 < cPan_HiSence_Dist) {
 		fVar4 *= param_2 / cPan_HiSence_Dist;
 	} else {
@@ -162,8 +161,8 @@ f32 MSHandle::calcPan(const Vec& param_1, f32 param_2, f32 param_3)
 
 	fVar4 += fVar2;
 
-	f32 r = fVar4 > 1.0f ? 1.0f : fVar4;
-	return r < 0.0f ? 0.0f : r;
+	fVar4 = fVar4 > 1.0f ? 1.0f : fVar4;
+	return fVar4 < 0.0f ? 0.0f : fVar4;
 }
 
 void MSHandle::setSeDistanceDolby(u8 moveTime)
