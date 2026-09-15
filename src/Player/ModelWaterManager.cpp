@@ -307,7 +307,8 @@ u8 TModelWaterManager::emitRequest(const TWaterEmitInfo& param_1)
 		mParticleCount += 1;
 	}
 
-	return (param_1.mNum.get() - particlesToSpawn) & 0xff;
+	u8 result = (param_1.mNum.get() - particlesToSpawn) & 0xff;
+	return result;
 }
 
 void TModelWaterManager::splashSound(const JGeometry::TVec3<f32>& pos,
