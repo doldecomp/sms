@@ -73,11 +73,13 @@ The stack frame already matches, but the swap temporary uses 0x7c/0x80/0x84 inst
 Batch 40 corrects the two flag types; the stack operands remain unresolved.
 A rounded similarity of 100.0% is not an exact match.
 
-### 2. `TMarDirector::loadParticleMario()`
+### 2. `TMarDirector::loadParticleMario()` — matched in batch 41
 
 Unit `mario/System/MarDirectorLoadResource`, 4,708 bytes, 99.991%.
 Every instruction matches; only the stack frame differs.
-The frame is 0x18 in the original and 0x20 in ours (8 bytes too big): look for an extra local or temporary.
+At the initial snapshot, the frame was 0x18 in the original and 0x20 in ours (8 bytes too big).
+Resolved by declaring the global-only member static: removing the implicit instance parameter fixes the frame and all 4,708 bytes match.
+Direct particle-helper expansion did not change the frame.
 
 ### 3. `TMario::jumpMain()`
 

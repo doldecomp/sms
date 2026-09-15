@@ -17,6 +17,16 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## Static member functions can remove an unexplained frame slot, batch 41
+
+- `TMarDirector::loadParticleMario` had matching body instructions but frame 0x20 instead of 0x18.
+  It accesses only globals; the original caller supplies no director instance.
+  Making its declaration `static` removes the implicit `this` stack reservation and matches all 4,708 bytes, while also improving loadParticle's call sequence.
+- Check this possibility before rewriting a leaf-like routine's body: search for instance access, member-pointer uses, and all callers; an unused `this` alone is not proof of static membership.
+  `initLoadParticle` already matches and is unchanged.
+- Expanding all SMS_LoadParticle calls directly had no effect on the frame; that trial was reverted. Do not mass-rewrite the 29 files using that fabricated helper on this evidence.
+- Full header rebuild and all-function/data regression comparison pass; the map has no warnings and the DOL remains byte-identical.
+
 ## Byte-test flags and vector copies, batch 40
 
 - MarioSpecial: `clrlwi. r0,r29,24` at specMain offsets 0x948/0x9e8 identifies byte-sized flags in the inlined wireWaitToHang/wireSWaitToHang helpers.

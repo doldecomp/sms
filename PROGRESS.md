@@ -8,7 +8,17 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 40 — apply near-matching strategy
+## Latest checkpoint: batch 41 — Mario particle loader matched
+
+`TMarDirector::loadParticleMario()` now matches exactly: **+4,708 code bytes / one function**.
+Declaring the global-only loader static removes the spurious implicit-instance stack slot; its caller also improves (99.133224% → 99.2977%).
+Direct expansion of the fabricated particle helper did not affect the frame and was reverted; other particle callers and the helper remain unchanged.
+Game **25.198374% matched / 3.254321% source-linked**; aggregate **38.743332% / 2.571545%**; still **86 source-linked game files / 92,672 code bytes**.
+Fresh baseline at `1981f998`; full header-dependent build, changes_all, all 12,904 function comparisons and per-unit data checks pass with zero regressions; changed-unit map validation passes without warnings.
+DOL byte comparison and expected SHA-1 pass; no gameplay test performed. The loader's file retains three nonmatching routines and is not promoted.
+Refreshed near-matching queue: 1,265 authorized functions / 728,476 bytes; next reviewed target is `TMario::jumpMain()`.
+
+## Verified checkpoint: batch 40 — apply near-matching strategy
 
 Adopted [STRATEGY.md](STRATEGY.md): prioritize large 98%+ functions, group shared causes, time-box stalls, and keep short batch notes.
 Corrected the two wire-transition flag types: specMain improves from 99.85731% to 99.9932%; its six swap-stack operands remain nonmatching (TODO recorded).
@@ -1149,5 +1159,5 @@ Source, configuration, progress snapshots, and notes are versioned locally.
 ## Next work
 
 Follow [STRATEGY.md](STRATEGY.md) and the refreshed near-matching list.
-Start the next time-box with `TMarDirector::loadParticleMario()`; consult source TODOs before revisiting specMain, spider or beam.
+Start the next time-box with `TMario::jumpMain()`; consult source TODOs before revisiting specMain, spider or beam.
 Keep the small-file queue and old audits as supporting references; defer from-scratch work until the near-matching group is mostly exhausted.
