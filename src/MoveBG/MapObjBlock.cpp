@@ -164,10 +164,9 @@ void TLeanBlock::initMapObj()
 	unk140 = 0.01f;
 	unk144 = 0.005f;
 	unk148 = 1.0f;
-	// TODO: Float registers mismatching
-	// I see other places are doing scaling._ * 100.0f aswell, possible inline?
-	unk138 = mScaling.x * 100.0f * 0.5f;
-	unk13C = mScaling.z * 100.0f * 0.5f;
+	f32 half = 0.5f;
+	unk138 = mScaling.x * 100.0f * half;
+	unk13C = mScaling.z * 100.0f * half;
 	calcDefaultMtx();
 }
 
