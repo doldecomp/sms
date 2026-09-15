@@ -525,22 +525,8 @@ void TItemSlotDrum::generateItem()
 		TTelesa* item = (TTelesa*)gpConductor->makeOneEnemyAppear(
 		    mPosition, "テレサマネージャー", 1);
 		if (item != nullptr) {
-			s16 ang = (s16)DEG2SHORTANGLE(mRotation.x);
-			f32 s   = JMASSin(ang);
-			f32 c   = JMASCos(ang);
 			Mtx m;
-			m[0][0] = c;
-			m[0][1] = 0.0f;
-			m[0][2] = s;
-			m[0][3] = 0.0f;
-			m[1][0] = 0.0f;
-			m[1][1] = 1.0f;
-			m[1][2] = 0.0f;
-			m[1][3] = 0.0f;
-			m[2][0] = -s;
-			m[2][1] = 0.0f;
-			m[2][2] = c;
-			m[2][3] = 0.0f;
+			MsMtxSetRotY(m, mRotation.x);
 			JGeometry::TVec3<f32> off(0.0f, -350.0f, 300.0f);
 			MTXMultVec(m, &off, &off);
 			item->mPosition += off;
@@ -556,23 +542,8 @@ void TItemSlotDrum::generateItem()
 			spread = 20.0f;
 		}
 		for (int i = 0; i < count; ++i) {
-			s16 ang = (s16)DEG2SHORTANGLE(spread * ((f32)i - 1.0f)
-			                              + (mRotation.x - spread));
-			f32 s   = JMASSin(ang);
-			f32 c   = JMASCos(ang);
 			Mtx m;
-			m[0][0] = c;
-			m[0][1] = 0.0f;
-			m[0][2] = s;
-			m[0][3] = 0.0f;
-			m[1][0] = 0.0f;
-			m[1][1] = 1.0f;
-			m[1][2] = 0.0f;
-			m[1][3] = 0.0f;
-			m[2][0] = -s;
-			m[2][1] = 0.0f;
-			m[2][2] = c;
-			m[2][3] = 0.0f;
+			MsMtxSetRotY(m, spread * ((f32)i - 1.0f) + (mRotation.x - spread));
 			JGeometry::TVec3<f32> off(0.0f, -350.0f, 200.0f);
 			MTXMultVec(m, &off, &off);
 			TMapObjBase* item = gpItemManager->makeObjAppear(

@@ -1269,80 +1269,16 @@ void TBGTentacle::calcAttackGuideAnm()
 	Mtx local_a8;
 	if (mState == 10) {
 		static const f32 zangle[] = { 80.0f, 60.0f, -80.0f, -60.0f };
-		f32 s                     = MsSin(zangle[mIndex]);
-		f32 c                     = MsCos(zangle[mIndex]);
-
-		local_a8[0][0] = c;
-		local_a8[0][1] = -s;
-		local_a8[0][2] = 0.0f;
-		local_a8[0][3] = 0.0f;
-
-		local_a8[1][0] = s;
-		local_a8[1][1] = c;
-		local_a8[1][2] = 0.0f;
-		local_a8[1][3] = 0.0f;
-
-		local_a8[2][0] = 0.0f;
-		local_a8[2][1] = 0.0f;
-		local_a8[2][2] = 1.0f;
-		local_a8[2][3] = 0.0f;
+		MsMtxSetRotZ(local_a8, zangle[mIndex]);
 	} else if (mOwner->getAttackMode() == 2 || mOwner->getAttackMode() == 1) {
 		static const f32 zangle[] = { 65.0f, 40.0f, -65.0f, -40.0f };
-		f32 s                     = MsSin(zangle[mIndex]);
-		f32 c                     = MsCos(zangle[mIndex]);
-
-		local_a8[0][0] = c;
-		local_a8[0][1] = -s;
-		local_a8[0][2] = 0.0f;
-		local_a8[0][3] = 0.0f;
-
-		local_a8[1][0] = s;
-		local_a8[1][1] = c;
-		local_a8[1][2] = 0.0f;
-		local_a8[1][3] = 0.0f;
-
-		local_a8[2][0] = 0.0f;
-		local_a8[2][1] = 0.0f;
-		local_a8[2][2] = 1.0f;
-		local_a8[2][3] = 0.0f;
+		MsMtxSetRotZ(local_a8, zangle[mIndex]);
 	} else if (mOwner->getAttackMode() == 4) {
 		static const f32 zangle[] = { 80.0f, 70.0f, -80.0f, -70.0f };
-		f32 s                     = MsSin(zangle[mIndex]);
-		f32 c                     = MsCos(zangle[mIndex]);
-
-		local_a8[0][0] = c;
-		local_a8[0][1] = -s;
-		local_a8[0][2] = 0.0f;
-		local_a8[0][3] = 0.0f;
-
-		local_a8[1][0] = s;
-		local_a8[1][1] = c;
-		local_a8[1][2] = 0.0f;
-		local_a8[1][3] = 0.0f;
-
-		local_a8[2][0] = 0.0f;
-		local_a8[2][1] = 0.0f;
-		local_a8[2][2] = 1.0f;
-		local_a8[2][3] = 0.0f;
+		MsMtxSetRotZ(local_a8, zangle[mIndex]);
 	} else {
 		static const f32 zangle[] = { 20.0f, 7.5f, -20.0f, -7.5f };
-		f32 s                     = MsSin(zangle[mIndex]);
-		f32 c                     = MsCos(zangle[mIndex]);
-
-		local_a8[0][0] = c;
-		local_a8[0][1] = -s;
-		local_a8[0][2] = 0.0f;
-		local_a8[0][3] = 0.0f;
-
-		local_a8[1][0] = s;
-		local_a8[1][1] = c;
-		local_a8[1][2] = 0.0f;
-		local_a8[1][3] = 0.0f;
-
-		local_a8[2][0] = 0.0f;
-		local_a8[2][1] = 0.0f;
-		local_a8[2][2] = 1.0f;
-		local_a8[2][3] = 0.0f;
+		MsMtxSetRotZ(local_a8, zangle[mIndex]);
 	}
 
 	MTXConcat(afStack_78, local_a8, afStack_78);

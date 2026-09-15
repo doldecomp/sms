@@ -263,21 +263,8 @@ void TBGKMtxCalc::calc(u16 param_1)
 			}
 		}
 
-		f32 s = MsSin(mOwner->unk180);
-		f32 c = MsCos(mOwner->unk180);
 		Mtx rot;
-		rot[0][0] = c;
-		rot[0][1] = 0.0f;
-		rot[0][2] = s;
-		rot[0][3] = 0.0f;
-		rot[1][0] = 0.0f;
-		rot[1][1] = 1.0f;
-		rot[1][2] = 0.0f;
-		rot[1][3] = 0.0f;
-		rot[2][0] = -s;
-		rot[2][1] = 0.0f;
-		rot[2][2] = c;
-		rot[2][3] = 0.0f;
+		MsMtxSetRotY(rot, mOwner->unk180);
 		MTXConcat(mtx, rot, mtx);
 		MTXCopy(mtx, J3DSys::mCurrentMtx);
 	}

@@ -82,23 +82,7 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 						JGeometry::TVec3<f32> local_88(0.0f, 0.0f, 350.0f);
 						Mtx local_b8;
 
-						f32 s = MsSin((i + 1) * 72.0f);
-						f32 c = MsCos((i + 1) * 72.0f);
-
-						local_b8[0][0] = c;
-						local_b8[0][1] = 0.0f;
-						local_b8[0][2] = s;
-						local_b8[0][3] = 0.0f;
-
-						local_b8[1][0] = 0.0f;
-						local_b8[1][1] = 1.0f;
-						local_b8[1][2] = 0.0f;
-						local_b8[1][3] = 0.0f;
-
-						local_b8[2][0] = -s;
-						local_b8[2][1] = 0.0f;
-						local_b8[2][3] = 0.0f;
-						local_b8[2][2] = c;
+						MsMtxSetRotY(local_b8, (i + 1) * 72.0f);
 
 						MTXMultVec(local_b8, &local_88, &unk20);
 
