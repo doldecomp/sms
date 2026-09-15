@@ -189,9 +189,9 @@ f32 MSHandle::calcDolby(const Vec& pos, f32 dist)
 		dVar2 = 1.0f;
 	}
 
-	if (dist < cPan_HiSence_Dist) {
-		dVar2 = dist * ((dVar2 - 0.5f) / cPan_HiSence_Dist) + 0.5f;
-	}
+	dVar2 = dist < cPan_HiSence_Dist
+	            ? dist * ((dVar2 - 0.5f) / cPan_HiSence_Dist) + 0.5f
+	            : dVar2;
 
 	f32 r = dVar2 > 1.0f ? 1.0f : dVar2;
 	return r < 0.0f ? 0.0f : r;
