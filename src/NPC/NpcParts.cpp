@@ -56,23 +56,23 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 			if (j >= unk60->getManager()->unk28)
 				break;
 
-			const TNpcModelData* puVar6 = &initInfo->unk4[i][j];
-			const char* puVar3          = puVar6->unk8[0];
+			const char* puVar3 = initInfo->unk4[i][j].unk8[0];
 			if (puVar3 == nullptr)
 				continue;
 
-			int iVar6 = strcmp(puVar6->unk0, cNpcPartsNameRootJoint) == 0
-			                ? -1
-			                : unk60->mMActorKeeper->getMActor(j)
-			                      ->getModel()
-			                      ->getModelData()
-			                      ->getJointName()
-			                      ->getIndex(puVar6->unk0);
+			int iVar6
+			    = strcmp(initInfo->unk4[i][j].unk0, cNpcPartsNameRootJoint) == 0
+			          ? -1
+			          : unk60->mMActorKeeper->getMActor(j)
+			                ->getModel()
+			                ->getModelData()
+			                ->getJointName()
+			                ->getIndex(initInfo->unk4[i][j].unk0);
 
 			TNPCManager* manager    = (TNPCManager*)unk60->getManager();
 			SDLModelData* modelData = manager->getPartsSDLModelData(puVar3);
 			unk0[j][i] = new TSharedParts(unk60, iVar6, modelData, 3);
-			if (puVar6->unk2B)
+			if (initInfo->unk4[i][j].unk2B)
 				SMS_UnifyMaterial(unk0[j][i]->getMActor()->getModel());
 
 			switch (unk60->getActorType()) {
