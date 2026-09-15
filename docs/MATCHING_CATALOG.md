@@ -550,3 +550,43 @@ A full executable match also does not validate bodies in objects that are still 
 - Next: reconstruct the complete 6,108-byte `perform` using the recovered helpers and corrected history fields.
   Its resource strings must be included before judging initialization's final string offsets.
   Measurements and logs: `progress/GMSE01-batch21.json`, `build/GMSE01-*-batch21.*`.
+
+## Boss main update and rendering, batch 22
+
+- Status: all strong main-unit functions reconstructed; `perform` is 78.2685% and remains original-linked.
+- Search: `rg -n 'perform|mPreviousPosition|mOlderPosition|mPreviousRoll|mOlderRoll|unk120|unk144|unk148' src/Enemy/BossHanachanMain.cpp include/Enemy/BossHanachan.hpp`.
+- Evidence: original `perform` at 0x800EE624, 6,108 bytes, plus the full m2c draft `build/GMSE01/BossHanachanMain-batch20.c`.
+  The full original function and initial instruction comparison were reviewed; current diff is `build/GMSE01-boss-perform-diff-batch22.txt`.
+- Body history copies at 0x800EE930 confirm the batch 21 layout: previous position 0x124, older position 0x130, previous roll 0x13C, older roll 0x140, current centrifugal force 0x144 and previous force 0x148.
+  The scalar at 0x120 stores the signed terrain/sand roll target.
+  The wave calculation uses previous rolls from neighboring segments and mirrors the neighbor at each endpoint.
+- The head-anchor offset in `perform` converts the yaw twice using `JMASin`/`JMACos`, with a parameter load between them.
+  Keep the batch 21 initializer's single converted yaw: its original instruction sequence differs.
+- Terrain probing rotates a 200-unit side vector, probes both sides 500 units above the body, and compares ground-height deltas.
+  Construct the opposite vector from `(-side.x, -side.y, -side.z)`.
+  Copying `side` then calling `negate()` introduces integer-word copies, forces both vectors to stack, and blocks the original scalar optimization.
+  Named `f64 absoluteLeft = fabs(left)` and `absoluteRight` reproduce the original two `fabs` operations without narrowing or repeated absolute-value evaluation.
+- Sand response compares horizontal distance to `CLBSquared(50.0f)` and zeroes the terrain roll for relative angles within 15 degrees of the front or back.
+  Its direction is relative to the boss position, as the native subtraction at 0x800EEF24 shows.
+  Outside those ranges the signed roll is 70 times `SMS_GetSandRiseUpRatio`.
+- Collision loops at 0x800EF53C, 0x800EF5B4, and 0x800EF624 directly compare the actor ID to 0x80000001.
+  Use `getActorType() == 0x80000001` at all three sites.
+  The existing `isActorType` helper adds a boolean normalization group absent from these originals; do not change the shared helper globally.
+- Head/body collision transitions at 0x800EF7F0 and 0x800EF8F4 have the opposite requirement: `(checkHitFlag(0x80000000) ? true : false)` restores a normalization group missing from a direct helper condition.
+  While walking, collision actors and both feet set that flag, and the head/body map collision is removed.
+  Otherwise the flag is cleared and the map collision is set up at its joint translation.
+- Reuse `execHeadCalcAnim_` and `execBodyCalcAnim_`: both inline in the new routine with the expected calls to the local rotation-position helper and matrix functions.
+  The render phases also submit shadows, damage fog, object drawing, and view calculations; the sand-pillar actor follows its live flag.
+- The new definition emits the exactly matching 108-byte destructor, 8-byte adjustment thunk, and 276-byte boss virtual table.
+  Its two Japanese shine/camera strings also improve initialization resource offsets (99.08876%).
+- Initial draft: 72.4%; component construction, native actor-ID comparisons, hit-flag normalization, named absolute values, and direct squared wave parameters improve it to 78.2685%.
+- Remaining: `getBodyMaxRotateZ` incorrectly inlines twice here, while `execSlip` correctly needs its inline scan.
+  `MsWrap<float>` also inlines where the original calls its local 72-byte symbol.
+  Do not globally disable these helpers' inlining without checking their other callers.
+  The history loop fully unrolls eight iterations rather than the original four-iteration group repeated twice.
+  Horizontal distance currently lacks the native fused operation; register and stack allocation differences remain.
+- Symbol-map check: only emitted `MsWrap<float>` and `TVec3::set<float>` remain missing.
+  Strong order and linkage pass; `isCanWalk` retains its UNUSED 164-versus-192-byte warning.
+- Validation: full build, baseline/changes_all, all-function presence and score comparison with zero regressions, expected DOL SHA-1, and byte comparison passed.
+  Added 116 exact code bytes/two functions and 1,144 matched data bytes; source linking remains 73 objects/76,468 code bytes.
+  No gameplay test was performed.

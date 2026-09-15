@@ -1,0 +1,77 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "8176629d",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.53928,
+    "total_code": "3603748",
+    "matched_code": "1384580",
+    "matched_code_percent": 38.420555,
+    "total_data": "641075",
+    "matched_data": "303479",
+    "matched_data_percent": 47.339077,
+    "total_functions": 12904,
+    "matched_functions": 8221,
+    "matched_functions_percent": 63.708923,
+    "complete_code": "76468",
+    "complete_code_percent": 2.121902,
+    "complete_data": "51024",
+    "complete_data_percent": 7.9591312,
+    "total_units": 732,
+    "complete_units": 73
+  },
+  "source_linked_objects": 73,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 2,
+  "new_exact_code_bytes": 116,
+  "new_matched_data_bytes": 1144,
+  "new_reconstructed_code_bytes": 6108,
+  "improvements": [
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "@32@__dt__13TBossHanachanFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 8
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "__dt__13TBossHanachanFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 108
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "init__13TBossHanachanFP12TLiveManager",
+      "before": 99.07692,
+      "after": 99.08876,
+      "size": 1352
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanMain",
+      "function": "perform__13TBossHanachanFUlPQ26JDrama9TGraphics",
+      "before": 0,
+      "after": 78.2685,
+      "size": 6108
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_map_boss_main": false,
+    "gameplay_test": false
+  },
+  "notes": [
+    "Reconstructed the complete main update/render routine from the m2c draft and original 6108-byte function, reusing sphere-link, motion, collision, and animation helpers.",
+    "perform reaches 78.2685% instruction similarity. The boss destructor and adjustment thunk now match all 116 bytes, and the full 276-byte boss vtable matches.",
+    "Native collision-ID comparisons were applied to all three head/body/foot loops; conditional hit-flag normalization was restored in both head/body collision transitions.",
+    "Constructing the opposite terrain probe from components removes non-native integer-word vector copies; named double absolute values preserve the native two fabs instructions.",
+    "The remaining original-call versus inline differences include getBodyMaxRotateZ and MsWrap; the body-history loop is fully unrolled instead of four iterations per group.",
+    "Two map symbols remain missing: emitted MsWrap<float> and TVec3::set<float>; all strong function definitions, order, and linkage pass. UNUSED isCanWalk is 164 bytes versus 192.",
+    "Zero baseline function regressions. No new source-linked object. Full executable checks cover the mixed source/original-object build, not gameplay or source linking of this boss object."
+  ]
+}

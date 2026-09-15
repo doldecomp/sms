@@ -8,7 +8,34 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 21
+## Latest checkpoint: batch 22
+
+Reconstructed the boss's full 6,108-byte main update/render routine from its original instructions and m2c draft.
+It covers body motion, terrain and sand response, collision handling, animation blending, targeting, shadows, and rendering, and currently has **78.2685% instruction similarity**.
+All strong functions in `BossHanachanMain.cpp` now have reconstructed definitions.
+The boss destructor and adjustment thunk match exactly, adding **116 exact code bytes and two functions**.
+Its full virtual table also matches; aggregate matched data increased by **1,144 bytes**.
+
+Aggregate exact code is **1,384,580 / 3,603,748 bytes (38.420555%)**, with **8,221 / 12,904 functions** matching.
+There are still **73 source-linked objects**, covering **76,468 code bytes (2.121902%)**.
+The boss main object remains linked from the original binary.
+
+### Validation and remaining work
+
+Captured `ninja baseline` at `8176629d`, rebuilt, and ran `ninja changes_all`.
+The comparison of all reported functions, including missing-function detection, found zero regressions.
+Full build, byte comparison, and expected SHA-1 checks pass for the mixed source/original-object executable.
+The main symbol-map check has two missing emitted helpers: `MsWrap<float>` and `TVec3::set<float>`.
+All strong functions have correct order and linkage; the UNUSED walking predicate retains its size warning.
+No gameplay test was performed.
+
+Next work: resolve the main routine's helper inlining, loop unrolling, and floating-point expression differences, then finish matching the remaining boss units and verify source linking.
+The two maximum-roll calls and four angle-wrap calls currently inline, while the original keeps calls; the slipping routine correctly needs the maximum-roll helper inline.
+These differences need caller-specific investigation before shared changes.
+See [batch 22 measurements](docs/progress/GMSE01-batch22.json) and the [matching catalog](docs/MATCHING_CATALOG.md) for verified patterns and exceptions.
+The current instruction diff is `build/GMSE01-boss-perform-diff-batch22.txt`; validation logs are `build/GMSE01-*-batch22.*`.
+
+## Verified checkpoint: batch 21
 
 Reconstructed boss initialization, Mario throwing, the local rotation-position helper, and both UNUSED animation helpers.
 The three newly reconstructed linked routines cover **2,456 original code bytes**: initialization is **99.07692%**, throwing **96.03125%**, and rotation-position adjustment **95.57692%**.
