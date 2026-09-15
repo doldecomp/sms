@@ -112,8 +112,8 @@ void TMBindShadowParts::calc(f32 param_1)
 	request.mRadiusX = radiusX;
 	request.mRadiusZ = radiusZ;
 
-	if (!mIsCircle && mBody->mActor->mActorType != 0x80000001
-	    && mBody->mActor->mActorType != 0x8000002) {
+	if (!mIsCircle && mBody->mActor->getActorType() != 0x80000001
+	    && mBody->mActor->getActorType() != 0x8000002) {
 		f32 rotY = matan(z2 - z1, x2 - x1) * (360.0f / 65536.0f);
 		if (radiusX > radiusZ)
 			rotY -= 90.0f;
@@ -122,7 +122,7 @@ void TMBindShadowParts::calc(f32 param_1)
 		request.mRotationY = 0.0f;
 	}
 
-	gpBindShadowManager->request(request, mBody->mActor->mActorType);
+	gpBindShadowManager->request(request, mBody->mActor->getActorType());
 }
 
 TMBindShadowBody::TMBindShadowBody(THitActor* param_1, J3DModel* param_2,
@@ -135,7 +135,7 @@ TMBindShadowBody::TMBindShadowBody(THitActor* param_1, J3DModel* param_2,
     , mPartsRadius(0.01f)
     , mBodyRadius(50.0f)
 {
-	switch (param_1->mActorType) {
+	switch (param_1->getActorType()) {
 	case 0x80000001:
 	case 0x8000002:
 		mCircleRadius = 38.0f;
@@ -193,7 +193,7 @@ TMBindShadowBody::TMBindShadowBody(THitActor* param_1, J3DModel* param_2,
 bool TMBindShadowBody::isUseThisJoint(int param_1)
 {
 	const THitActor* actor = mActor;
-	switch (actor->mActorType) {
+	switch (actor->getActorType()) {
 	case 0x80000001:
 	case 0x8000002:
 		return true;
@@ -208,7 +208,7 @@ bool TMBindShadowBody::isUseThisJoint(int param_1)
 
 bool TMBindShadowBody::isCircleJoint(int param_1)
 {
-	switch (mActor->mActorType) {
+	switch (mActor->getActorType()) {
 	case 0x80000001:
 	case 0x8000002:
 		if (param_1 == 0x1a)
@@ -225,7 +225,7 @@ bool TMBindShadowBody::isCircleJoint(int param_1)
 
 bool TMBindShadowBody::isBodyJoint(int param_1)
 {
-	switch (mActor->mActorType) {
+	switch (mActor->getActorType()) {
 	case 0x80000001:
 	case 0x8000002:
 		if (param_1 == 2 || param_1 == 0xe)
@@ -509,9 +509,6 @@ static inline void loadPosMtxImm(MtxPtr mtx)
 void TMBindShadowManager::drawShadowVolume(bool param_1,
                                            TAlphaShadowQuad* param_2)
 {
-	// TODO: instruction-identical and the frame size is right, but the two
-	// index arrays sit 4 bytes lower than in the map, so one 4-byte local is
-	// still missing after them.
 	f32 height = 50.0f;
 	if (param_2->mRequest->mShadowType == SHADOW_TYPE_SQUARE) {
 		if (param_2->mSquareOutline == nullptr) {
@@ -1259,7 +1256,6 @@ void TMBindShadowManager::drawShadow(u32 param_1, JDrama::TGraphics* param_2)
 void TMBindShadowManager::request(const TCircleShadowRequest& param_1,
                                   u32 param_2)
 {
-	// TODO: instruction-identical, but the frame is 0x28 short of the map.
 	JGeometry::TVec3<f32> delta = param_1.mPosition;
 	delta -= gpCamera->unk124;
 	f32 dist = delta.squared();
