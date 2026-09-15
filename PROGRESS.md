@@ -7,7 +7,46 @@ The full decompilation is **not complete**.
 The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 
-## Latest checkpoint: batch 3
+## Latest checkpoint: batch 4
+
+Reconstructed five more previously stubbed routines in `Enemy/BathtubKiller.cpp`, together with its mushroom-spawning and break helpers.
+Recovered manager fields at `0x60`, `0x64`, `0x68`, and `0x69` from the load and item-drop instructions.
+Their descriptive names are inferred from the lives comparisons and mushroom-spawning behavior.
+The compiled `generateMushroom` helper now has the original map's 100-byte size.
+
+| Routine | Previous comparison | Current comparison |
+| --- | ---: | ---: |
+| Model and material setup | 1.09% | 88.07% |
+| Item drops | 0.61% | 98.94% |
+| Water reaction | 1.43% | 54.46% |
+| Break state | 2.75% | 99.94% |
+| Manager load-after | 1.41% | 84.49% |
+
+These percentages describe partial instruction comparisons, not completed functions.
+Exactly matched code remains 1,366,380 bytes (37.915524%); none of these five routines is newly exact.
+Matched data increased by 808 bytes to 295,139 bytes.
+The build still links 70 source objects, and `BathtubKiller.cpp` remains nonmatching.
+
+### Verification and remaining issues
+
+Captured a fresh `ninja baseline` at `1ccbf133`, rebuilt, and ran `ninja changes_all`.
+Comparing every reported function found zero regressions.
+Symbol validation passes with weak-symbol ordering warnings and 16 remaining UNUSED size mismatches.
+The final executable passed SHA-1 verification and a full byte comparison against the local US executable.
+No gameplay test was performed.
+
+The item-drop routine still differs in temporary-vector stack offsets and the declared return type of `TBathtub::getNumGripsDead`.
+Its caller compares a signed integer in the original, while the existing declaration returns `u8` and adds a narrowing operation.
+The grip class currently has only a forward declaration, so reconstructing the grip-count body requires further class work.
+The break state has the same four-byte temporary-vector offset discrepancy as the explosion state.
+The water reaction still needs its original inlined state-check boundaries recovered.
+Manager loading retains unexplained null comparisons in the original, and model setup needs further scheduling and register-allocation work.
+
+See [batch 4 measurements](docs/progress/GMSE01-batch4.json).
+The current logs are `build/GMSE01-build-batch4.log`, `build/GMSE01-changes-batch4.log`, and `build/GMSE01/BathtubKiller-symbol-order-batch4.log`.
+The m2c drafts remain under `build/GMSE01/BathtubKiller-*-m2c.c`.
+
+## Verified checkpoint: batch 3
 
 Reconstructed the bathtub Bullet Bill initialization, reset, matrix update, gravity query, active-count loop, personality parameters, and explosion state from the local executable.
 The original symbols already existed as stubs.

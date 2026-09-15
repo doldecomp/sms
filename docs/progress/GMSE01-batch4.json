@@ -1,0 +1,70 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "1ccbf133",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 74.28922,
+    "total_code": "3603748",
+    "matched_code": "1366380",
+    "matched_code_percent": 37.915524,
+    "total_data": "641075",
+    "matched_data": "295139",
+    "matched_data_percent": 46.03814,
+    "total_functions": 12904,
+    "matched_functions": 8115,
+    "matched_functions_percent": 62.887478,
+    "complete_code": "73148",
+    "complete_code_percent": 2.0297756,
+    "complete_data": "48064",
+    "complete_data_percent": 7.497407,
+    "total_units": 732,
+    "complete_units": 70
+  },
+  "source_linked_objects": 70,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "improvements": [
+    {
+      "unit": "mario/Enemy/BathtubKiller",
+      "function": "setMActorAndKeeper__14TBathtubKillerFv",
+      "before": 1.0869565,
+      "after": 88.065216,
+      "size": 368
+    },
+    {
+      "unit": "mario/Enemy/BathtubKiller",
+      "function": "generateItemBathtubKiller__14TBathtubKillerFv",
+      "before": 0.61349696,
+      "after": 98.944786,
+      "size": 652
+    },
+    {
+      "unit": "mario/Enemy/BathtubKiller",
+      "function": "behaveToWater__14TBathtubKillerFP9THitActor",
+      "before": 1.4285715,
+      "after": 54.45714,
+      "size": 280
+    },
+    {
+      "unit": "mario/Enemy/BathtubKiller",
+      "function": "execute__24TNerveBathtubKillerBreakCFP24TSpineBase<10TLiveActor>",
+      "before": 2.7464788,
+      "after": 99.943665,
+      "size": 284
+    },
+    {
+      "unit": "mario/Enemy/BathtubKiller",
+      "function": "loadAfter__21TBathtubKillerManagerFv",
+      "before": 1.4084507,
+      "after": 84.49296,
+      "size": 284
+    }
+  ],
+  "notes": [
+    "Five previously stubbed linked routines now have reconstructed bodies; all remain nonmatching.",
+    "Reconstructed two UNUSED helpers: breakBathtubKiller and generateMushroom. The latter has the original 100-byte compiled size.",
+    "Exact matched code is unchanged; matched data increased by 808 bytes.",
+    "Map validation passes with weak-order and 16 UNUSED-size warnings.",
+    "No library source was changed."
+  ]
+}

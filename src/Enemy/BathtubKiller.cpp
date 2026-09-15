@@ -1,9 +1,18 @@
 #include <Enemy/BathtubKiller.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Enemy/EffectObj.hpp>
+#include <MoveBG/ItemManager.hpp>
+#include <MoveBG/MapObjCorona.hpp>
+#include <Player/MarioAccess.hpp>
+#include <Player/WaterGun.hpp>
+#include <System/FlagManager.hpp>
+#include <System/Particles.hpp>
+#include <JSystem/JParticle/JPAEmitter.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/Spine.hpp>
 #include <MarioUtil/RandomUtil.hpp>
+#include <MarioUtil/PacketUtil.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 
 // rogue includes needed for matching sinit & bss
@@ -140,7 +149,39 @@ void TBathtubKiller::init(TLiveManager* manager)
 	resetBathtubKiller();
 }
 
-void TBathtubKiller::setMActorAndKeeper() { }
+void TBathtubKiller::setMActorAndKeeper()
+{
+	mMActorKeeper = new TMActorKeeper(mManager, 2);
+	mMActor = mMActorKeeper->createMActor("bathtubkiller_model1.bmd", 0);
+	mMActorKeeper->createMActor("bathtubdownkiller_model1.bmd", 3);
+	int nose = mMActorKeeper->getMActor("bathtubkiller_model1.bmd")
+	               ->getModel()
+	               ->getModelData()
+	               ->getMaterialName()
+	               ->getIndex("_nosemat1");
+	int eyes = mMActorKeeper->getMActor("bathtubkiller_model1.bmd")
+	               ->getModel()
+	               ->getModelData()
+	               ->getMaterialName()
+	               ->getIndex("_eyesmat1");
+	int body = mMActorKeeper->getMActor("bathtubkiller_model1.bmd")
+	               ->getModel()
+	               ->getModelData()
+	               ->getMaterialName()
+	               ->getIndex("_body1");
+	SMS_InitPacket_OneTevColor(
+	    mMActorKeeper->getMActor("bathtubkiller_model1.bmd")->getModel(),
+	    nose, GX_TEVREG0, &unk1E0);
+	SMS_InitPacket_OneTevColor(
+	    mMActorKeeper->getMActor("bathtubkiller_model1.bmd")->getModel(),
+	    eyes, GX_TEVREG0, &unk1E8);
+	SMS_InitPacket_OneTevColor(
+	    mMActorKeeper->getMActor("bathtubkiller_model1.bmd")->getModel(),
+	    body, GX_TEVREG0, &unk1D8);
+	SMS_InitPacket_OneTevColor(
+	    mMActorKeeper->getMActor("bathtubdownkiller_model1.bmd")->getModel(),
+	    0, GX_TEVREG0, &unk1F0);
+}
 
 void TBathtubKiller::reset()
 {
@@ -212,7 +253,42 @@ void TBathtubKiller::resetBathtubKiller()
 	}
 }
 
-void TBathtubKiller::generateItemBathtubKiller() { }
+void TBathtubKiller::generateItemBathtubKiller()
+{
+	if (unk194 == 1) {
+		TMapObjBase* item = nullptr;
+		TBathtubKillerManager* manager = (TBathtubKillerManager*)mManager;
+		int lives = TFlagManager::getInstance()->getFlag(0x20001);
+		if (SMS_GetMarioWaterGun()->getCurrentWater() == 0) {
+			item = gpItemManager->makeObjAppear(
+			    mPosition.x, mPosition.y, mPosition.z, 0x20000002, true);
+		} else {
+			if (manager->mInitialLives == lives
+			    && manager->mMushroomDropCount < 7) {
+				manager->generateMushroom(mPosition);
+				++manager->mMushroomDropCount;
+			} else if (lives <= manager->mInitialLives + 1
+			           && unk1CC->getNumGripsDead() == 3
+			           && !manager->mDroppedFinalMushroom) {
+				manager->generateMushroom(mPosition);
+				manager->mDroppedFinalMushroom = true;
+			}
+		}
+		if (!item)
+			item = gpItemManager->makeObjAppear(
+			    mPosition.x, mPosition.y, mPosition.z, 0x20000002, true);
+		if (item && item->getActorType() == 0x20000002) {
+			JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+			    PARTICLE_MS_ENM_DISAP_A_W, &item->mPosition, 0, nullptr);
+			if (emitter)
+				emitter->setGlobalScale(item->mScaling);
+			emitter = gpMarioParticleManager->emit(
+			    PARTICLE_MS_ENM_DISAP_B, &item->mPosition, 0, nullptr);
+			if (emitter)
+				emitter->setGlobalScale(item->mScaling);
+		}
+	}
+}
 
 void TBathtubKiller::killBathtubKiller()
 {
@@ -221,7 +297,12 @@ void TBathtubKiller::killBathtubKiller()
 	stopAnmSound();
 }
 
-void TBathtubKiller::breakBathtubKiller() { }
+void TBathtubKiller::breakBathtubKiller()
+{
+	setDeadBathtubKillerAnm();
+	generateItemBathtubKiller();
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+}
 
 void TBathtubKiller::explodeBathtubKiller()
 {
@@ -306,7 +387,15 @@ void TBathtubKiller::attackToMario() { }
 
 bool TBathtubKiller::isCollidMove(THitActor*) { return false; }
 
-void TBathtubKiller::behaveToWater(THitActor*) { }
+void TBathtubKiller::behaveToWater(THitActor*)
+{
+	// TODO: Recover the original inlined state checks and their call boundaries.
+	bool dying
+	    = mSpine->getCurrentNerve() == &TNerveBathtubKillerExplosion::theNerve()
+	      || mSpine->getCurrentNerve() == &TNerveBathtubKillerBreak::theNerve();
+	if (!dying)
+		mSpine->pushNerve(&TNerveBathtubKillerBreak::theNerve());
+}
 
 const char** TBathtubKiller::getBasNameTable() const
 {
@@ -355,7 +444,17 @@ DEFINE_NERVE(TNerveBathtubKillerChaseStraight, TLiveActor) { return FALSE; }
 
 DEFINE_NERVE(TNerveBathtubKillerStraight, TLiveActor) { return FALSE; }
 
-DEFINE_NERVE(TNerveBathtubKillerBreak, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBathtubKillerBreak, TLiveActor)
+{
+	TBathtubKiller* killer = (TBathtubKiller*)spine->getBody();
+	if (spine->getTime() == 0)
+		killer->breakBathtubKiller();
+	if (killer->checkCurAnmEnd(0)) {
+		killer->killBathtubKiller();
+		return TRUE;
+	}
+	return FALSE;
+}
 
 DEFINE_NERVE(TNerveBathtubKillerExplosion, TLiveActor)
 {
@@ -382,9 +481,28 @@ void TBathtubKillerManager::load(JSUMemoryInputStream& stream)
 	unk38 = new TBathtubKillerParams("/enemy/bathtubkiller.prm");
 }
 
-void TBathtubKillerManager::loadAfter() { }
+void TBathtubKillerManager::loadAfter()
+{
+	TSmallEnemyManager::loadAfter();
+	TMapObjBaseManager::newAndRegisterObj("mushroom1up");
+	TMapObjBaseManager::newAndRegisterObj("mushroom1up");
+	mInitialLives = TFlagManager::getInstance()->getFlag(0x20001);
+	mMushroom = nullptr;
+	mDroppedFinalMushroom = false;
+	mMushroomDropCount = 0;
+	// TODO: GMSE01 also retains a null comparison of unk38 here.
+	static const char* loopFilenames[] = {
+		"/scene/map/map/ms_kp_kill_smoke.jpa",
+	};
+	SMS_LoadParticle(loopFilenames[0], 0x1BD);
+}
 
-void TBathtubKillerManager::generateMushroom(JGeometry::TVec3<f32>) { }
+void TBathtubKillerManager::generateMushroom(JGeometry::TVec3<f32> position)
+{
+	if (!mMushroom || mMushroom->checkLiveFlag(LIVE_FLAG_DEAD))
+		mMushroom = gpItemManager->makeObjAppear(
+		    position.x, position.y, position.z, 0x20000005, true);
+}
 
 int TBathtubKillerManager::countActiveKillers()
 {
