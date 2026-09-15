@@ -128,7 +128,11 @@ void TMarioEffect::setJumpIntoWaterEffect()
 
 void TMarioEffect::setJumpIntoWaterEffectSmall()
 {
-	int idx = getThing();
+	int idx = -1;
+	if (unk6C[0] == 0)
+		idx = 0;
+	if (unk6C[1] == 0)
+		idx = 1;
 	if (idx < 0)
 		return;
 
