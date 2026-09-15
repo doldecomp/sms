@@ -190,7 +190,8 @@ void TNPCManager::makePartsModelData_(u32 npc_type, u32 flags,
 			char path[0x100];
 			snprintf(path, sizeof(path), "%s/%s", keeper->mFolder,
 			         modelData->unk8[j]);
-			if (JKRGetResource(path) == nullptr)
+			void* resource = JKRGetResource(path);
+			if (resource == nullptr)
 				continue;
 
 			SDLModelData* sdlModel
