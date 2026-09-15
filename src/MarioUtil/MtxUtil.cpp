@@ -502,7 +502,7 @@ void TRope::constraintTail(const JGeometry::TVec3<f32>& param)
 		TRopePoint& cur  = mPoints[i];
 		TRopePoint& prev = mPoints[i - 1];
 
-		if (!cur.unkC.epsilonEquals(prev.unkC)) {
+		if (!prev.unkC.epsilonEquals(cur.unkC, 3.81469727e-06f)) {
 			JGeometry::TVec3<f32> delta = prev.unkC;
 			delta -= cur.unkC;
 			VECNormalize(&delta, &delta);
