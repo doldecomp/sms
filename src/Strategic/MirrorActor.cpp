@@ -66,11 +66,17 @@ void TMirrorActor::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (unk18 == 0)
 			return;
 
-		for (u16 i = 0; i < unk10->getModelData()->getJointNum(); ++i)
-			unk14->setAnmMtx(i, unk10->getAnmMtx(i));
+		for (u16 i = 0; i < unk10->getModelData()->getJointNum(); ++i) {
+			MtxPtr src = unk10->getAnmMtx(i);
+			MtxPtr dst = unk14->getAnmMtx(i);
+			MTXCopy(src, dst);
+		}
 
-		for (u16 i = 0; i < unk10->getModelData()->getJointNum(); ++i)
-			unk14->setWeightAnmMtx(i, unk10->getWeightAnmMtx(i));
+		for (u16 i = 0; i < unk10->getModelData()->getJointNum(); ++i) {
+			MtxPtr src = unk10->getWeightAnmMtx(i);
+			MtxPtr dst = unk14->getWeightAnmMtx(i);
+			MTXCopy(src, dst);
+		}
 	}
 
 	if ((cue & CUE_CALC_VIEW) && unk18 != 0)
