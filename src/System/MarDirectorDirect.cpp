@@ -833,7 +833,8 @@ u8 TMarDirector::updateGameMode()
 				TFlagManager::getInstance()->setBool(true, 0x30006);
 				TFlagManager::getInstance()->setShineFlag(unk25C->getEventId());
 				f32 fVar3 = unkDC->mRate;
-				unkDC->registFadeout(fVar3 * 1.0f, fVar3 * 5.3333333f);
+				u16 uVar4 = fVar3;
+				unkDC->registFadeout(uVar4, fVar3 * 5.3333333f);
 				unk4C |= 0x8202;
 				unk261 = 6;
 				decideNextStage();
@@ -904,6 +905,7 @@ u8 TMarDirector::updateGameMode()
 		}
 		break;
 
+	case 3:
 	case 4: {
 		bool bVar5  = false;
 		bool uVar15 = 0;
@@ -913,7 +915,7 @@ u8 TMarDirector::updateGameMode()
 			unk4C &= ~0x80;
 		} else {
 			if (!gpCamera->getRestDemoFrames()) {
-				if (!MSBgm::getHandle(2) || unk5C - unk60 >= 1200) {
+				if (!MSBgm::getHandle(2) || unk5C - unk60 >= 720) {
 					bVar5  = true;
 					uVar15 = unk12C[unk24D].unk10;
 				}
@@ -929,6 +931,7 @@ u8 TMarDirector::updateGameMode()
 				if (info->unk14 != nullptr)
 					(*info->unk14)(info->unk18, 1);
 
+				info = &unk12C[unk24D];
 				gpCamera->startDemoCamera(info->unk0, info->unk4, info->unk8,
 				                          info->unkC, info->unk10);
 				if (info->unk14 != nullptr)
@@ -995,7 +998,8 @@ u8 TMarDirector::updateGameMode()
 			else
 				MSMainProc::toInnerCameraDemo();
 			unk18[0]->mFlags |= 0x10;
-			if (unk12C[unk24D].unk20.mValue == 1) {
+			JDrama::TFlagT<u16> flag = unk12C[unk24D].unk20;
+			if (flag.mValue == 1) {
 				gpCamera->startGateDemoCamera(unk12C[unk24D].unk1C);
 			} else {
 				TDemoInfo* info = &unk12C[unk24D];
