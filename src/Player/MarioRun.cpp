@@ -120,7 +120,7 @@ BOOL TMario::doRunningAnimation()
 	f32 rate;
 	f32 sp;
 
-	sp = mIntendedMag > mForwardVel ? mForwardVel : mIntendedMag;
+	sp = mIntendedMag > mForwardVel ? mIntendedMag : mForwardVel;
 
 	if (sp < 4.0f)
 		sp = 4.0f;
