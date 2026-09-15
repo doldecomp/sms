@@ -42,13 +42,26 @@ static const s32 cParticleIDs[] = {
 
 void TMario::initParticle()
 {
+	const char* fileName;
+	bool* loadedFlag;
 	for (int i = 0; i < 3; ++i) {
-		const char* fileName = cParticleFileNames[i];
+		fileName = cParticleFileNames[i];
 		if (JKRFileLoader::getGlbResource(fileName)) {
-			if (i < 1)
-				SMS_LoadParticle(fileName, cParticleIDs[i]);
-			else
-				SMS_LoadParticle(fileName, cParticleIDs[i]);
+			if (i < 1) {
+				u16 id     = cParticleIDs[i];
+				loadedFlag = &gParticleFlagLoaded[id];
+				if (!*loadedFlag) {
+					gpResourceManager->load(fileName, id);
+					*loadedFlag = true;
+				}
+			} else {
+				u16 id     = cParticleIDs[i];
+				loadedFlag = &gParticleFlagLoaded[id];
+				if (!*loadedFlag) {
+					gpResourceManager->load(fileName, id);
+					*loadedFlag = true;
+				}
+			}
 		}
 	}
 }
