@@ -515,7 +515,6 @@ static inline void loadPosMtxImm(MtxPtr mtx)
 void TMBindShadowManager::drawShadowVolume(bool param_1,
                                            TAlphaShadowQuad* param_2)
 {
-	f32 height = 50.0f;
 	if (param_2->mRequest->mShadowType == SHADOW_TYPE_SQUARE) {
 		if (param_2->mSquareOutline == nullptr) {
 			SMS_SettingDrawShape(mModelDatas[2]->getModelData(), 0);
@@ -523,6 +522,7 @@ void TMBindShadowManager::drawShadowVolume(bool param_1,
 		} else {
 			int topIndices[9]    = { 2, 1, 0, 3, 2, 0, 4, 3, 0 };
 			int bottomIndices[9] = { 0, 1, 2, 0, 2, 3, 0, 3, 4 };
+			f32 height           = 50.0f;
 
 			GXClearVtxDesc();
 			GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
