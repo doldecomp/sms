@@ -369,23 +369,7 @@ void TSmallEnemy::genEventCoin()
 			Mtx44 local_c0;
 
 			f32 angle = 360.0f / unk18C * i + mRotation.y;
-			f32 s     = MsSin(angle);
-			f32 c     = MsCos(angle);
-
-			local_c0[0][0] = c;
-			local_c0[0][1] = 0.0f;
-			local_c0[0][2] = s;
-			local_c0[0][3] = 0.0f;
-
-			local_c0[1][0] = 0.0f;
-			local_c0[1][1] = 1.0f;
-			local_c0[1][2] = 0.0f;
-			local_c0[1][3] = 0.0f;
-
-			local_c0[2][0] = -s;
-			local_c0[2][1] = 0.0f;
-			local_c0[2][2] = c;
-			local_c0[2][3] = 0.0f;
+			MsMtxSetRotY(local_c0, angle);
 
 			Vec local_d0;
 			local_d0.x = 0.0f;
