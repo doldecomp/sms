@@ -115,7 +115,8 @@ void TMarDirector::initECDisp(
 	JDrama::TEfbCtrlDisp* stageDisp = new JDrama::TEfbCtrlDisp("stageDisp");
 	stageDisp->JDrama::TEfbCtrl::setSrcRect(JDrama::TRect(
 	    0, 0, (u16)SMSGetGameRenderWidth(), (u16)SMSGetGameRenderHeight()));
-	param_2->insert(stageDisp);
+	JDrama::TViewObj* stageDispObj = stageDisp;
+	param_2->insert(stageDispObj);
 
 	JDrama::TViewObj* composite3
 	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("合成3");
@@ -131,16 +132,20 @@ void TMarDirector::initECDisp(
 
 	if (sunModel) {
 		lensGlow = new TLensGlow(true, "太陽遮蔽物グロー");
-		param_2->insert(lensGlow);
+		JDrama::TViewObj* lensGlowObj = lensGlow;
+		param_2->insert(lensGlowObj);
 		lensFlare = new TLensFlare("レンズフレア");
-		param_2->insert(lensFlare);
+		JDrama::TViewObj* lensFlareObj = lensFlare;
+		param_2->insert(lensFlareObj);
 	} else {
 		sunModel = JDrama::TNameRefGen::search<JDrama::TViewObj>("夕日モデル");
 		if (sunModel) {
 			lensGlow = new TLensGlow(true, "太陽遮蔽物グロー");
-			param_2->insert(lensGlow);
+			JDrama::TViewObj* lensGlowObj = lensGlow;
+			param_2->insert(lensGlowObj);
 			lensFlare = new TLensFlare("レンズフレア");
-			param_2->insert(lensFlare);
+			JDrama::TViewObj* lensFlareObj = lensFlare;
+			param_2->insert(lensFlareObj);
 		}
 	}
 
