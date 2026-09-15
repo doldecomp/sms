@@ -241,13 +241,14 @@ void TApplication::initialize()
 
 	SMSRumbleMgr = new RumbleMgr(true, true, true, true);
 	SMSRumbleMgr->init();
-	mFader = new TSmplFader(JUtility::TColor(0, 0, 0, 0),
+	mFader = new TSmplFader(JUtility::TColor(0, 0, 0, 0xff),
 	                        SMSGetVSyncTimesPerSec(), "ルートフェーダー");
 	mFader->setDisplaySize(SMSGetGCLogoRenderWidth(),
 	                       SMSGetGCLogoRenderHeight());
 	TFlagManager::start(JKRGetCurrentHeap());
 	TTimeRec::start(0xDFC0);
-	TTimeRec::instance()->unk81C |= 1;
+	u16& flags = TTimeRec::instance()->unk81C;
+	flags |= 1;
 	TDrawSyncManager::smInstance->setCallback(0, 0xDFC0, 0xDFFF,
 	                                          TTimeRec::instance());
 	mMeter = new TProcessMeter(2);
