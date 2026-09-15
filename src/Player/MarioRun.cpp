@@ -420,9 +420,9 @@ BOOL TMario::doSliding(f32 stopThreshold)
 
 	mSlideVelX
 	    += sn * (mSlideVelZ * (mIntendedMag / 32.0f)) * getSlideStickMult();
-	mSlideVelZ = -(
-	    (sn * (mSlideVelX * (mIntendedMag / 32.0f)) * getSlideStickMult())
-	    - mSlideVelZ);
+	mSlideVelZ
+	    = -((sn * (mSlideVelX * (mIntendedMag / 32.0f)) * getSlideStickMult())
+	        - mSlideVelZ);
 
 	f32 newMag = MsSqrtf(mSlideVelX * mSlideVelX + mSlideVelZ * mSlideVelZ);
 	if (oldMag > 0.0f && newMag > 0.0f) {

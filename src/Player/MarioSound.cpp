@@ -686,7 +686,7 @@ void TMario::soundHitBound() { }
 void TMario::soundTorocco()
 {
 	const JGeometry::TVec3<f32>& delta = mPosition - mToroccoPos;
-	f32 len = JGeometry::TVec3<f32>(delta).length();
+	f32 len                            = JGeometry::TVec3<f32>(delta).length();
 	SMSGetMSound()->startSoundActorWithInfo(MSD_SE_OBJ_JET_COASTER, &mPosition,
 	                                        nullptr, len, 0, 0, nullptr, 0, 4);
 }

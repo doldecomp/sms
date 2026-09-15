@@ -16,7 +16,7 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 		bool shouldRun;
 		if (gpCurrentNpc->mNeckJointIndex != -1
 		    && !gpCurrentNpc->checkLiveFlag2(LIVE_FLAG_HIDDEN
-		                                      | LIVE_FLAG_CLIPPED_OUT)) {
+		                                     | LIVE_FLAG_CLIPPED_OUT)) {
 			shouldRun = true;
 		} else {
 			shouldRun = false;
@@ -63,9 +63,9 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 					    currMtx[0][1], currMtx[1][1], currMtx[2][1]);
 					MsVECNormalize(&toMario, &toMario);
 
-					local_148
-					    = (const JGeometry::TVec3<f32>)MsGetRotFromZaxis(neckForward)
-					      - MsGetRotFromZaxis(toMario);
+					local_148 = (const JGeometry::TVec3<f32>)MsGetRotFromZaxis(
+					                neckForward)
+					            - MsGetRotFromZaxis(toMario);
 				} else {
 					local_148.zero();
 				}

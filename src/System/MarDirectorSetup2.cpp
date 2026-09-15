@@ -50,14 +50,14 @@ void TMarDirector::setup2()
 			    = JDrama::TNameRefGen::search<TMapObjBase>(it->unk14);
 			if (ref) {
 				ref->mEventId = eventId;
-				it->unk28    = ref;
+				it->unk28     = ref;
 			}
 			++eventId;
 		}
 	}
 
 	JDrama::TNameRefGen::search<TMario>("マリオ")->setGamePad(unk18[0]);
-	TMarioGamePad* gamePad = unk18[0];
+	TMarioGamePad* gamePad                                           = unk18[0];
 	JDrama::TNameRefGen::search<CPolarSubCamera>("camera 1")->unk120 = gamePad;
 
 	unk84 = JDrama::TNameRefGen::search<TTalkCursor>("会話カーソル");
@@ -76,7 +76,7 @@ void TMarDirector::setup2()
 	unkAC = JDrama::TNameRefGen::search<TPauseMenu2>("ポーズメニュー");
 	unkAC->mGamePad = unk18[0];
 	unkB0           = JDrama::TNameRefGen::search<TTalk2D2>("会話表示");
-	unk70 = JDrama::TNameRefGen::search<TCardLoad>("データロード");
+	unk70           = JDrama::TNameRefGen::search<TCardLoad>("データロード");
 
 	unk70->unk38 = unk18[0];
 	unk78->unkC0 = unk18[0];

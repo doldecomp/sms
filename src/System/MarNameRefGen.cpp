@@ -279,12 +279,10 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 		return new TDolpicEventBiancoGate("イベント（ビアンコゲート）");
 
 	if (strcmp(name, "DolpicEventRiccoGate") == 0)
-		return new TDolpicEventRiccoMammaGate(
-		    "イベント（リコ、マンマゲート）");
+		return new TDolpicEventRiccoMammaGate("イベント（リコ、マンマゲート）");
 
 	if (strcmp(name, "DolpicEventMammaGate") == 0)
-		return new TDolpicEventRiccoMammaGate(
-		    "イベント（リコ、マンマゲート）");
+		return new TDolpicEventRiccoMammaGate("イベント（リコ、マンマゲート）");
 
 	if (strcmp(name, "MareEventBumpyWall") == 0)
 		return new TMareEventBumpyWall("凸凹壁");

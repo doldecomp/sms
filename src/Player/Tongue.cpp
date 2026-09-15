@@ -126,8 +126,8 @@ BOOL TYoshiTongue::canGo()
 	if (toTip.dot(mHeadDir) < 0.0f)
 		return false;
 
-	if ((int)gpMap->isTouchedOneWallAndMoveXZ(
-	        &mTipPos.x, 10.0f + mTipPos.y, &mTipPos.z, 50.0f)
+	if ((int)gpMap->isTouchedOneWallAndMoveXZ(&mTipPos.x, 10.0f + mTipPos.y,
+	                                          &mTipPos.z, 50.0f)
 	    > 0)
 		return false;
 

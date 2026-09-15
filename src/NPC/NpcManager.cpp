@@ -243,8 +243,8 @@ void TNPCManager::clipEnemies(JDrama::TGraphics* graphics)
 				farClip = 15000.0f;
 	}
 
-	SetViewFrustumClipCheckPerspective(gpCamera->getFovy(),
-	                                   gpCamera->getAspect(), nearClip, farClip);
+	SetViewFrustumClipCheckPerspective(
+	    gpCamera->getFovy(), gpCamera->getAspect(), nearClip, farClip);
 
 	int e;
 	TBaseNPC* actor;

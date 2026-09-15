@@ -56,7 +56,7 @@ void TMarDirector::initECTGft(
 
 	for (int i = 0; i < gpPollution->getJointModelNum(); ++i) {
 		JDrama::TEfbCtrlTex* efbTex = new JDrama::TEfbCtrlTex("graffito");
-		JDrama::TViewObj* efbObj = efbTex;
+		JDrama::TViewObj* efbObj    = efbTex;
 		scene->insert(efbObj);
 
 		const ResTIMG* img = gpPollution->getLayer(i)->getPollutionImage();
@@ -71,9 +71,8 @@ void TMarDirector::initECTGft(
 
 		param_2->push_back(efbTex, CUE_DRAW_INIT);
 		param_2->push_back(new JDrama::TViewport(rect, "graffito"), CUE_DRAW);
-		JDrama::TViewObj* projection
-		    = new JDrama::TOrthoProj(-1.0f, 1.0f, 0.0f, 0.0f, img->height,
-		                            img->width);
+		JDrama::TViewObj* projection = new JDrama::TOrthoProj(
+		    -1.0f, 1.0f, 0.0f, 0.0f, img->height, img->width);
 		param_2->push_back(projection, CUE_SET_PROJECTION);
 		param_1->push_back(drawInit, CUE_DRAW);
 		param_1->push_back(graffitiGroup, (i << CUE_OFFSET_POLLUTION_LAYER)
@@ -98,8 +97,7 @@ JDrama::TViewObj* TMarDirector::initECTMir(
 
 	GXTexObj& obj = mirrorCam->unk60;
 	mirrorTex->setTexAttb(obj);
-	JDrama::TRect rect(0, 0, GXGetTexObjWidth(&obj),
-	                   GXGetTexObjHeight(&obj));
+	JDrama::TRect rect(0, 0, GXGetTexObjWidth(&obj), GXGetTexObjHeight(&obj));
 	mirrorTex->setSrcRect(rect);
 
 	return mirrorTex;
@@ -131,10 +129,10 @@ void TMarDirector::initECDisp(
 	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("太陽モデル");
 
 	if (sunModel) {
-		lensGlow = new TLensGlow(true, "太陽遮蔽物グロー");
+		lensGlow                      = new TLensGlow(true, "太陽遮蔽物グロー");
 		JDrama::TViewObj* lensGlowObj = lensGlow;
 		param_2->insert(lensGlowObj);
-		lensFlare = new TLensFlare("レンズフレア");
+		lensFlare                      = new TLensFlare("レンズフレア");
 		JDrama::TViewObj* lensFlareObj = lensFlare;
 		param_2->insert(lensFlareObj);
 	} else {
@@ -143,7 +141,7 @@ void TMarDirector::initECDisp(
 			lensGlow = new TLensGlow(true, "太陽遮蔽物グロー");
 			JDrama::TViewObj* lensGlowObj = lensGlow;
 			param_2->insert(lensGlowObj);
-			lensFlare = new TLensFlare("レンズフレア");
+			lensFlare                      = new TLensFlare("レンズフレア");
 			JDrama::TViewObj* lensFlareObj = lensFlare;
 			param_2->insert(lensFlareObj);
 		}

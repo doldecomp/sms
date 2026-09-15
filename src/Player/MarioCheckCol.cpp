@@ -45,7 +45,7 @@ void TMario::hitNormal(THitActor* actor)
 	TWaterGun* wg = mWaterGun;
 	if ((int)wg->mCurrentNozzle == 0 && wg->mIsEmitWater != 0) {
 		TWaterHitActor* waterActor = &TModelWaterManager::mStaticHitActor;
-		waterActor->mPosition = mPosition;
+		waterActor->mPosition      = mPosition;
 		waterActor->mPosition.y += 80.0f;
 		waterActor->unk68 = 0;
 		actor->receiveMessage(waterActor, HIT_MESSAGE_SPRAYED_BY_WATER);

@@ -39,7 +39,7 @@ void M3UMtxCalcBlendAux(u16 param_1, J3DTransformInfo* param_2,
 	JMAEulerToQuat(param_2->mRotation.x, param_2->mRotation.y,
 	               param_2->mRotation.z, &QStack_b8);
 	Quaternion* pQuat = &QStack_a8;
-	s16 tmp = param_3->mRotation.x;
+	s16 tmp           = param_3->mRotation.x;
 	JMAEulerToQuat(tmp, param_3->mRotation.y, param_3->mRotation.z, pQuat);
 	JMAQuatLerp(&QStack_b8, pQuat, param_4, &QStack_c8);
 

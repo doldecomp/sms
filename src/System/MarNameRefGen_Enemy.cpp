@@ -28,36 +28,58 @@
 #include <Animal/Butterfly.hpp>
 #include <Animal/fishoid.hpp>
 
-#define DECL_ENEMY(name) class name : public TTypicalEnemy { public: name(const char*); };
-#define DECL_MANAGER(name) class name : public TEnemyManager { public: name(const char*); };
-DECL_ENEMY(TBeeHive) DECL_MANAGER(TBeeHiveManager)
-DECL_ENEMY(TElecNokonoko) DECL_MANAGER(TElecNokonokoManager)
-DECL_MANAGER(TChuuHanaManager)
-DECL_ENEMY(TSeal) DECL_MANAGER(TSealManager)
-DECL_ENEMY(TKukku) DECL_MANAGER(TKukkuManager)
-DECL_ENEMY(TKazekun) DECL_MANAGER(TKazekunManager)
+#define DECL_ENEMY(name)                                                       \
+	class name : public TTypicalEnemy {                                        \
+	public:                                                                    \
+		name(const char*);                                                     \
+	}
+#define DECL_MANAGER(name)                                                     \
+	class name : public TEnemyManager {                                        \
+	public:                                                                    \
+		name(const char*);                                                     \
+	}
+DECL_ENEMY(TBeeHive);
+DECL_MANAGER(TBeeHiveManager);
+DECL_ENEMY(TElecNokonoko);
+DECL_MANAGER(TElecNokonokoManager);
+DECL_MANAGER(TChuuHanaManager);
+DECL_ENEMY(TSeal);
+DECL_MANAGER(TSealManager);
+DECL_ENEMY(TKukku);
+DECL_MANAGER(TKukkuManager);
+DECL_ENEMY(TKazekun);
+DECL_MANAGER(TKazekunManager);
 class TPakkun : public TTypicalEnemy {
 public:
 	TPakkun(const char*);
 	virtual ~TPakkun();
 };
-DECL_MANAGER(TPakkunManager)
-DECL_ENEMY(THanaSambo) DECL_MANAGER(THanaSamboManager)
-DECL_ENEMY(TSamboHead) DECL_MANAGER(TSamboHeadManager)
-DECL_ENEMY(TYumbo) DECL_MANAGER(TYumboManager)
-DECL_ENEMY(TSamboFlower)
-DECL_ENEMY(TPopo) DECL_MANAGER(TPopoManager)
-DECL_ENEMY(TTobiPukuLaunchPad)
-DECL_MANAGER(TTobiPukuManager)
-DECL_ENEMY(TPukuPuku)
-DECL_ENEMY(TTobiPuku)
-DECL_MANAGER(TTabePukuManager)
-DECL_ENEMY(TTabePuku)
-DECL_ENEMY(TWireTrap) DECL_MANAGER(TWireTrapManager)
-DECL_ENEMY(TCannon) DECL_MANAGER(TCannonManager)
-DECL_ENEMY(TBombHei) DECL_MANAGER(TBombHeiManager)
-DECL_ENEMY(TKiller) DECL_MANAGER(TKillerManager)
-DECL_ENEMY(TAmiNoko) DECL_MANAGER(TAmiNokoManager)
+DECL_MANAGER(TPakkunManager);
+DECL_ENEMY(THanaSambo);
+DECL_MANAGER(THanaSamboManager);
+DECL_ENEMY(TSamboHead);
+DECL_MANAGER(TSamboHeadManager);
+DECL_ENEMY(TYumbo);
+DECL_MANAGER(TYumboManager);
+DECL_ENEMY(TSamboFlower);
+DECL_ENEMY(TPopo);
+DECL_MANAGER(TPopoManager);
+DECL_ENEMY(TTobiPukuLaunchPad);
+DECL_MANAGER(TTobiPukuManager);
+DECL_ENEMY(TPukuPuku);
+DECL_ENEMY(TTobiPuku);
+DECL_MANAGER(TTabePukuManager);
+DECL_ENEMY(TTabePuku);
+DECL_ENEMY(TWireTrap);
+DECL_MANAGER(TWireTrapManager);
+DECL_ENEMY(TCannon);
+DECL_MANAGER(TCannonManager);
+DECL_ENEMY(TBombHei);
+DECL_MANAGER(TBombHeiManager);
+DECL_ENEMY(TKiller);
+DECL_MANAGER(TKillerManager);
+DECL_ENEMY(TAmiNoko);
+DECL_MANAGER(TAmiNokoManager);
 #undef DECL_ENEMY
 #undef DECL_MANAGER
 

@@ -53,7 +53,7 @@ TDrawSyncManager* TDrawSyncManager::start(u32 param_1, u32 param_2, s32 param_3)
 {
 	s32 local_3;
 	u32 local_1 = param_1;
-	local_3 = param_3;
+	local_3     = param_3;
 	if (smInstance == nullptr)
 		smInstance = new TDrawSyncManager(local_1, param_2, local_3);
 	return smInstance;

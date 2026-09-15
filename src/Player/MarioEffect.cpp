@@ -37,8 +37,7 @@ void TMarioEffect::init(TMario* mario)
 	u32 flag = J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift);
 	for (int i = 0; i < 2; ++i) {
 		unk74[i]->setModel(
-		    new J3DModel(J3DModelLoaderDataBase::load(tobikomiBmd, flag), 0,
-		                 1),
+		    new J3DModel(J3DModelLoaderDataBase::load(tobikomiBmd, flag), 0, 1),
 		    0);
 	}
 
@@ -88,8 +87,8 @@ void TMarioEffect::setJumpIntoWaterEffect()
 	MTXCopy(unk68->unk220, localMtx);
 
 	TMario* mario = unk68;
-	f32 minY = mario->mWaterEffectParams.mJumpIntoMinY.get();
-	f32 maxY = mario->mWaterEffectParams.mJumpIntoMaxY.get();
+	f32 minY      = mario->mWaterEffectParams.mJumpIntoMinY.get();
+	f32 maxY      = mario->mWaterEffectParams.mJumpIntoMaxY.get();
 
 	f32 ratio;
 	if (absVelY < minY)

@@ -415,9 +415,9 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	unk2BC = mPosition.y;
 	if (mFootPrintTimer > mDeParams.mFootPrintTimerMax.get() / 2) {
 		f32 size = mDirtyParams.mPolSizeJump.get();
-		f32 z = mPosition.z;
-		f32 y = mPosition.y;
-		f32 x = mPosition.x;
+		f32 z    = mPosition.z;
+		f32 y    = mPosition.y;
+		f32 x    = mPosition.x;
 		gpPollution->stamp(1, x, y, z, size);
 	}
 

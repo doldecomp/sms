@@ -278,8 +278,7 @@ int TMenuDirector::direct()
 					goto showMovies;
 				if (unk40->unk2C != 0x12)
 					goto showStages;
-			showMovies:
-				;
+			showMovies:;
 				for (int i = 0; i < 20; ++i) {
 					int code;
 					if (i < 9)
@@ -307,8 +306,7 @@ int TMenuDirector::direct()
 					}
 				}
 				goto finishLabels;
-			showStages:
-				;
+			showStages:;
 				for (int i = 0; i < 20; ++i) {
 					int code;
 					if (i < 9)
@@ -325,8 +323,7 @@ int TMenuDirector::direct()
 						snprintf(box->getStringPtr(), 22, "%02d EX %d", i,
 						         i - 10);
 				}
-			finishLabels:
-				;
+			finishLabels:;
 			}
 
 			unk38->show();

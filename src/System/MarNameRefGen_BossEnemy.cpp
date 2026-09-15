@@ -1,11 +1,11 @@
-static const char cBossEnemyEMario[] = "EMario";
-static const char cBossEnemyUnknown[] = "?";
-static const float cBossEnemyZero[] = { 0.0f };
-static const char cBossEnemyBossEel[] = "BossEel";
-static const char cBossEnemyKoopa[] = "Koopa";
-static const char cBossEnemyKoopaName[] = "クッパ";
-static const char cBossEnemyKoopaJr[] = "KoopaJr";
-static const char cBossEnemyOilBall[] = "OilBall";
+static const char cBossEnemyEMario[]      = "EMario";
+static const char cBossEnemyUnknown[]     = "?";
+static const float cBossEnemyZero[]       = { 0.0f };
+static const char cBossEnemyBossEel[]     = "BossEel";
+static const char cBossEnemyKoopa[]       = "Koopa";
+static const char cBossEnemyKoopaName[]   = "クッパ";
+static const char cBossEnemyKoopaJr[]     = "KoopaJr";
+static const char cBossEnemyOilBall[]     = "OilBall";
 static const char cBossEnemyOilBallName[] = "油ダマ";
 
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";

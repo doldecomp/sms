@@ -13,16 +13,16 @@ static void FifoSetChanMatColor(GXChannelID param_1, GXColor param_2)
 	GXWGFifo.u8  = GX_CMD_LOAD_XF_REG;
 	GXWGFifo.u16 = 0;
 	GXWGFifo.u16 = 0x100C + (param_1 & 1);
-	GXWGFifo.u32 = param_2.r << 24 | param_2.g << 16 | param_2.b << 8
-	                 | param_2.a;
+	GXWGFifo.u32
+	    = param_2.r << 24 | param_2.g << 16 | param_2.b << 8 | param_2.a;
 }
 
 static void FifoSetTevColorS10(GXTevRegID param_1, GXColorS10 param_2)
 {
-	u32 regRA = BP_TEV_COLOR_REG_RA(param_2.r & 0x7FF, param_2.a & 0x7FF, 0,
-	                                0xE0 + param_1 * 2);
-	u32 regBG = BP_TEV_COLOR_REG_BG(param_2.b & 0x7FF, param_2.g & 0x7FF, 0,
-	                                0xE1 + param_1 * 2);
+	u32 regRA    = BP_TEV_COLOR_REG_RA(param_2.r & 0x7FF, param_2.a & 0x7FF, 0,
+	                                   0xE0 + param_1 * 2);
+	u32 regBG    = BP_TEV_COLOR_REG_BG(param_2.b & 0x7FF, param_2.g & 0x7FF, 0,
+	                                   0xE1 + param_1 * 2);
 	GXWGFifo.u8  = GX_CMD_LOAD_BP_REG;
 	GXWGFifo.u32 = regRA;
 	GXWGFifo.u8  = GX_CMD_LOAD_BP_REG;
@@ -35,18 +35,17 @@ static void FifoSetTevColorS10(GXTevRegID param_1, GXColorS10 param_2)
 
 static void FifoSetTevKColor(GXTevKColorID param_1, GXColor param_2)
 {
-	u32 regRA = BP_TEV_COLOR_REG_RA(param_2.r, param_2.a, 1,
-	                                0xE0 + param_1 * 2);
-	u32 regBG = BP_TEV_COLOR_REG_BG(param_2.b, param_2.g, 1,
-	                                0xE1 + param_1 * 2);
+	u32 regRA
+	    = BP_TEV_COLOR_REG_RA(param_2.r, param_2.a, 1, 0xE0 + param_1 * 2);
+	u32 regBG
+	    = BP_TEV_COLOR_REG_BG(param_2.b, param_2.g, 1, 0xE1 + param_1 * 2);
 	GXWGFifo.u8  = GX_CMD_LOAD_BP_REG;
 	GXWGFifo.u32 = regRA;
 	GXWGFifo.u8  = GX_CMD_LOAD_BP_REG;
 	GXWGFifo.u32 = regBG;
 }
 
-static void FifoSetFogRangeAdj(u8 param_1, u16 param_2,
-                               GXFogAdjTable* param_3)
+static void FifoSetFogRangeAdj(u8 param_1, u16 param_2, GXFogAdjTable* param_3)
 {
 	if (param_1) {
 		for (int i = 0; i < 10; i += 2) {
@@ -220,7 +219,8 @@ static bool ShapePacketCallBackFunc(J3DCallBackPacket* param_1, int param_2)
 			break;
 		}
 		case 3: {
-			PacketUserData_ThreeTevColor* p = (PacketUserData_ThreeTevColor*)data;
+			PacketUserData_ThreeTevColor* p
+			    = (PacketUserData_ThreeTevColor*)data;
 			FifoSetTevColorS10(p->unk4, *p->unk10);
 			FifoSetTevColorS10(p->unk8, *p->unk14);
 			FifoSetTevColorS10(p->unkC, *p->unk18);
@@ -272,8 +272,7 @@ static bool ShapePacketCallBackFunc(J3DCallBackPacket* param_1, int param_2)
 		switch (data[0]) {
 		case 5:
 		case 8:
-			FifoSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f,
-			           sFogOffColor);
+			FifoSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, sFogOffColor);
 		}
 	}
 	return true;
@@ -358,9 +357,9 @@ void SMS_InitPacket_Fog(J3DModel* param_1, u16 param_2)
 {
 	J3DMaterial* material
 	    = param_1->getModelData()->getMaterialNodePointer(param_2);
-	J3DPEBlock* peBlock = material->getPEBlock();
+	J3DPEBlock* peBlock    = material->getPEBlock();
 	J3DShapePacket* packet = InitPacket_Sub(param_1, param_2);
-	J3DFog* fog = peBlock->getFog();
+	J3DFog* fog            = peBlock->getFog();
 
 	PacketUserData_Fog* userData = new PacketUserData_Fog;
 	userData->unk0               = 5;

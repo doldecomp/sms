@@ -74,16 +74,15 @@ public:
 void TMarDirector::decideMarioPosIdx()
 {
 	TApplication* application = &gpApplication;
-	unkD0 = 0;
-	unkD1 = 0;
-	unkE4 = 1;
+	unkD0                     = 0;
+	unkD1                     = 0;
+	unkE4                     = 1;
 
 	TGameSequence* prevArea = &application->mPrevArea;
 	switch (application->mCurrArea.unk0) {
 	case 15:
 		unkE4 = 14;
-		application->mFader->setColor(
-		    JUtility::TColor(0x00, 0x00, 0x00, 0xff));
+		application->mFader->setColor(JUtility::TColor(0x00, 0x00, 0x00, 0xff));
 		break;
 
 	case 0:
@@ -242,7 +241,7 @@ bool TMarDirector::setupObjects()
 	}
 
 	u32 bVar28 = SMS_getShineStage(currArea->unk0);
-	u32 flag    = 0x103A5 + bVar28;
+	u32 flag   = 0x103A5 + bVar28;
 	TFlagManager::getInstance()->setBool(true, flag);
 
 	MSMainProc::setMSoundEnterStage(mMap, unk7D);
@@ -267,7 +266,7 @@ bool TMarDirector::setupObjects()
 	JDrama::TNameRefPtrListT<JDrama::TViewObj>* gameObjs;
 	if (JDrama::TNameRef* found
 	    = JDrama::TNameRefGen::search<JDrama::TNameRef>("Root View Obj")) {
-		root = found;
+		root     = found;
 		gameObjs = (JDrama::TNameRefPtrListT<JDrama::TViewObj>*)root->search(
 		    "ゲームオブジェクト");
 	} else {

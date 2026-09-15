@@ -611,8 +611,7 @@ void TMarDirector::setMario()
 			break;
 
 		case 0x3C:
-			gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Rocket,
-			                                                true);
+			gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Rocket, true);
 			break;
 
 		default: {

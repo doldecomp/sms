@@ -59,7 +59,7 @@ TLiveActor::TLiveActor(const char* name)
 
 	mRidePos.zero();
 
-	mGroundPlane = TMap::getIllegalCheckData();
+	mGroundPlane   = TMap::getIllegalCheckData();
 	u32 currentMap = gpMarDirector->getCurrentMap();
 	if (currentMap != 8)
 		mLiveFlag |= LIVE_FLAG_UNK2000;
@@ -122,7 +122,7 @@ void TLiveActor::calcRideMomentum()
 				f32 angleDiff
 				    = MsAngleDiff(mGroundActor->mRotation.y, mGroundActorYaw);
 				mAngularVelocity.y = angleDiff + mAngularVelocity.y;
-				mGroundActorYaw = mGroundActor->mRotation.y;
+				mGroundActorYaw    = mGroundActor->mRotation.y;
 			}
 		}
 	} else {
@@ -447,9 +447,9 @@ void TLiveActor::initAnmSound()
 	MAnmSound* anmSound;
 	if (checkActorType(0x4000000)) {
 		npcAnmSound = new MAnmSoundNPC(SMSGetMSound());
-		mAnmSound = npcAnmSound;
+		mAnmSound   = npcAnmSound;
 	} else {
-		anmSound = new MAnmSound(SMSGetMSound());
+		anmSound  = new MAnmSound(SMSGetMSound());
 		mAnmSound = anmSound;
 	}
 

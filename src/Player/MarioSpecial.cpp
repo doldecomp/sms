@@ -524,10 +524,9 @@ BOOL TMario::hanging()
 			newPos = record3.mCenter;
 
 			const TBGCheckData* groundDummy;
-			f32 z = newPos.z;
-			f32 y = 50.0f + newPos.y;
-			f32 groundY
-			    = gpMap->checkGround(newPos.x, y, z, &groundDummy);
+			f32 z       = newPos.z;
+			f32 y       = 50.0f + newPos.y;
+			f32 groundY = gpMap->checkGround(newPos.x, y, z, &groundDummy);
 			if (mPosition.y - 100.0f < groundY
 			    && groundY < 50.0f + mPosition.y) {
 				TBGWallCheckRecord record4(
@@ -560,7 +559,7 @@ BOOL TMario::hanging()
 					mFaceAngle.y = matan(foundWall2->getNormal().z,
 					                     foundWall2->getNormal().x)
 					               + 0x8000;
-					f32 offset = 40.0f * foundWall2->getNormal().x;
+					f32 offset  = 40.0f * foundWall2->getNormal().x;
 					mPosition.x = record4.mCenter.x - offset;
 					mPosition.z
 					    = record4.mCenter.z - 40.0f * foundWall2->getNormal().z;

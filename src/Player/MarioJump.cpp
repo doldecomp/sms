@@ -16,9 +16,8 @@
 BOOL TMario::startJumpWall()
 {
 	if (mWallPlane != NULL) {
-		s16 angle
-		    = matan(mWallPlane->getNormal().z, mWallPlane->getNormal().x)
-		      + 0x8000;
+		s16 angle = matan(mWallPlane->getNormal().z, mWallPlane->getNormal().x)
+		            + 0x8000;
 		emitParticle(PARTICLE_MS_WALLKICK_A, angle);
 		emitParticle(PARTICLE_MS_WALLKICK_B, angle);
 	}
@@ -705,8 +704,8 @@ BOOL TMario::fireDowning()
 		mForwardVel = FConverge(mForwardVel, 0.0f, 0.35f, 0.35f);
 
 	if (mInput & 1) {
-		u16 angleDiff = mIntendedYaw - mFaceAngle.y;
-		f32 mag       = 0.03125f * mIntendedMag;
+		u16 angleDiff    = mIntendedYaw - mFaceAngle.y;
+		f32 mag          = 0.03125f * mIntendedMag;
 		f32 velIncrement = mag * mJumpParams.mFireDownControl.get();
 
 		mForwardVel += velIncrement * JMASCos(angleDiff);

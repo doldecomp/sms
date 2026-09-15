@@ -60,15 +60,13 @@ void TSilhouette::loadAfter()
 		dist[i] = unk24[i];
 
 	for (int i = 0; i < 2; ++i) {
-		m0[i]
-		    = atten[i + 1]
-		      * (atten[i] * (dist[i] * dist[i] - dist[i + 1] * dist[i + 1]));
+		m0[i] = atten[i + 1]
+		        * (atten[i] * (dist[i] * dist[i] - dist[i + 1] * dist[i + 1]));
 		m1[i] = atten[i + 1] * (atten[i] * (dist[i] - dist[i + 1]));
 		m2[i] = atten[i + 1] - atten[i];
 	}
 
-	unk38 = (m2[0] * m1[1] - m2[1] * m1[0])
-	        / (m0[0] * m1[1] - m0[1] * m1[0]);
+	unk38 = (m2[0] * m1[1] - m2[1] * m1[0]) / (m0[0] * m1[1] - m0[1] * m1[0]);
 	unk34 = (m2[0] - m0[0] * unk38) / m1[0];
 	unk30 = atten[0] - (dist[0] * dist[0] * unk38 + dist[0] * unk34);
 	unk3C = 8e-05f;
@@ -88,8 +86,7 @@ void TSilhouette::loadAfter()
 
 void TSilhouette::setting(MtxPtr param_1)
 {
-	const GXColor& color
-	    = (GXColor) { unk12.r, unk12.g, unk12.b, 0 };
+	const GXColor& color = (GXColor) { unk12.r, unk12.g, unk12.b, 0 };
 	GXSetChanAmbColor(GX_COLOR0A0, color);
 	GXLightObj GStack_54;
 	Vec local_60;
@@ -307,10 +304,10 @@ void TTrembleModelEffect::clash(f32 magnitude)
 		     ++i) {
 			JGeometry::TVec3<s16> t = unk14[i] + unk20[i];
 			JGeometry::TVec3<s16> t2;
-			t2 = t;
-			unk14[i]                 = t;
-			unk18[0][i]              = t2;
-			unk18[1][i]              = t2;
+			t2          = t;
+			unk14[i]    = t;
+			unk18[0][i] = t2;
+			unk18[1][i] = t2;
 		}
 		break;
 
@@ -319,10 +316,10 @@ void TTrembleModelEffect::clash(f32 magnitude)
 		     ++i) {
 			JGeometry::TVec3<f32> t = unk28[i] + unk34[i];
 			JGeometry::TVec3<f32> t2;
-			t2 = t;
-			unk28[i]                 = t;
-			unk2C[0][i]              = t2;
-			unk2C[1][i]              = t2;
+			t2          = t;
+			unk28[i]    = t;
+			unk2C[0][i] = t2;
+			unk2C[1][i] = t2;
 		}
 		break;
 	}

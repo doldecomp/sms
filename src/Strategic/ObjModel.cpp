@@ -148,7 +148,7 @@ MActor* TMActorKeeper::createMActorFromNthData(int n, u32 flags)
 MActor* TMActorKeeper::createMActor(const char* model_data_name, u32 flags)
 {
 	TModelDataKeeper* keeper = getModelDataKeeper();
-	int index = keeper->getIndex(model_data_name);
+	int index                = keeper->getIndex(model_data_name);
 	if (index < 0) {
 		keeper->createAndKeepData(model_data_name, mModelLoaderFlags);
 		index = keeper->getModelDataNum() - 1;

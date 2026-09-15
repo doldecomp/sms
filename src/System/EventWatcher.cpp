@@ -208,9 +208,9 @@ static void evIsNearActors(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	int count = 0;
 
 	if (arg_num >= 3) {
-		THitActor* which = (THitActor*)getNameRefPtr(
-		    interp->mProcessStack.getFromBottom(interp->mProcessStack.size()
-		                                        - arg_num));
+		THitActor* which
+		    = (THitActor*)getNameRefPtr(interp->mProcessStack.getFromBottom(
+		        interp->mProcessStack.size() - arg_num));
 		if (which) {
 			f32 dist
 			    = interp->mProcessStack.getFromTop(arg_num - 2).getDataFloat();

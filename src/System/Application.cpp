@@ -306,8 +306,8 @@ void TApplication::initialize_bootAfter()
 
 	this_01->becomeCurrent("/audi");
 	void* resource2 = this_01->getResource("mSound.aaf");
-	u32 uVar3        = this_01->getResSize(resource2);
-	u8* buf          = new u8[uVar3];
+	u32 uVar3       = this_01->getResSize(resource2);
+	u8* buf         = new u8[uVar3];
 	this_01->readResource(buf, uVar3, "mSound.aaf");
 	JKRHeap* prevHeap = JKRGetCurrentHeap();
 	gpMSound = new MSound(prevHeap, nullptr, 0xF40000, buf, nullptr, 0xb00000);
@@ -352,7 +352,7 @@ void TApplication::initialize_nlogoAfter()
 		    = new (JKRGetSystemHeap(), 0) TMarNameRefGen;
 
 		JKRHeap* heap = JKRGetRootHeap();
-		u32 lVar3   = heap->getSize(bufStageArcBin);
+		u32 lVar3     = heap->getSize(bufStageArcBin);
 		JSUMemoryInputStream stream(bufStageArcBin, lVar3);
 		JDrama::TNameRefGen::getInstance()->load(stream);
 		unk30 = JDrama::TNameRefGen::search<
@@ -749,8 +749,7 @@ int TApplication::drawDVDErr()
 		ReInitializeGX();
 		SMS_DrawInit();
 		GXRenderModeObj& rmode = mDisplay->unk60->mNextRenderMode;
-		GXSetViewport(0.0f, 0.0f, rmode.fbWidth, rmode.efbHeight, 0.0f,
-		              1.0f);
+		GXSetViewport(0.0f, 0.0f, rmode.fbWidth, rmode.efbHeight, 0.0f, 1.0f);
 		Mtx afStack_260;
 		C_MTXOrtho(afStack_260, 16.0f, 464.0f, 0.0f, 600.0f, -1.0f, 1.0f);
 		GXSetProjection(afStack_260, GX_ORTHOGRAPHIC);

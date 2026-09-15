@@ -442,8 +442,7 @@ s32 TCardManager::filledInitData_(CARDFileInfo* file)
 		if (mSectorCriteria[i].getState() != TCriteria::STATE_EMPTY)
 			continue;
 
-		s32 errc
-		    = writeCardSector_(file, i, sector, &mSectorCriteria[i]);
+		s32 errc = writeCardSector_(file, i, sector, &mSectorCriteria[i]);
 
 		if (errc != 0)
 			return errc;

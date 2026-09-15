@@ -490,10 +490,8 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 			TNozzleBase* currentNozzle = gun->getCurrentNozzle();
 			s16 gunAngle               = currentNozzle->getGunAngle();
 			if (gunAngle > 0) {
-				MsMtxSetRotRPH(transform, 0.0f, 0.0f,
-				               SHORTANGLE2DEG(gunAngle));
-				MTXConcat(J3DSys::mCurrentMtx, transform,
-				          J3DSys::mCurrentMtx);
+				MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(gunAngle));
+				MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 				return 1;
 			}
 		} else if ((gpMarioForCallBack->mAnimationId == TMario::ANIM_RUN1
@@ -516,7 +514,7 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
 		} else {
-			*unk          = 0;
+			*unk                       = 0;
 			gpMarioForCallBack->unk100 = 0;
 		}
 	}

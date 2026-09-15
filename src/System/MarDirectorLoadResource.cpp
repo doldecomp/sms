@@ -401,8 +401,7 @@ int TMarDirector::thpInit()
 	THPPlayerInit();
 	if (!THPPlayerOpen("/data/ex128x144_q0.thp", FALSE))
 		return 1;
-	THPPlayerSetBuffer(
-	    (u8*)::operator new[](THPPlayerCalcNeedMemory(), 0x20));
+	THPPlayerSetBuffer((u8*)::operator new[](THPPlayerCalcNeedMemory(), 0x20));
 	if (!THPPlayerPrepare(0, 1, 0))
 		return 1;
 

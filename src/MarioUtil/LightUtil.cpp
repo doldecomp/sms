@@ -41,7 +41,7 @@ void TLightCommon::loadAfter()
 	    JDrama::TNameRefGen::search2("Ambient Group"));
 	mLightAry = static_cast<JDrama::TLightAry*>(
 	    JDrama::TNameRefGen::search2("Light Group"));
-	mLightPos = &mLightAry->mLights[0].mPosition;
+	mLightPos  = &mLightAry->mLights[0].mPosition;
 	mShininess = 50.0f;
 	for (int i = 0; i < 4; ++i) {
 		unk31[i] = mLightAry->getLight(i + mLightIndex)->getColor();
@@ -200,7 +200,7 @@ TLightDrawBuffer::TLightDrawBuffer(int param_1, u32 param_2, const char* name)
 	mOpaDrawBufferObject = drawBuffer;
 
 	snprintf(unk4E, 0x32, "%s%s", name, "xlu");
-	drawBuffer = new JDrama::TDrawBufObj(4, param_2, unk4E);
+	drawBuffer           = new JDrama::TDrawBufObj(4, param_2, unk4E);
 	mXluDrawBufferObject = drawBuffer;
 }
 #pragma dont_inline reset

@@ -29,9 +29,9 @@ void TMario::keepDistance(const JGeometry::TVec3<f32>& target, f32 param_2,
 {
 	f32 thresh = param_3 + (param_2 + unk15C);
 	f32 dx;
-	f32 dz = mPosition.z - target.z;
-	dx     = mPosition.x - target.x;
-	f32 dist   = MsSqrtf(dx * dx + dz * dz);
+	f32 dz   = mPosition.z - target.z;
+	dx       = mPosition.x - target.x;
+	f32 dist = MsSqrtf(dx * dx + dz * dz);
 
 	if (dist == 0.0f)
 		dist = dx = 1.0f;

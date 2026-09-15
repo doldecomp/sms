@@ -80,7 +80,7 @@ void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
 	if (unk168 != nullptr && isPartsAnmNpc()) {
 		switch (mActorType) {
 		case 0x4000018: {
-			bool bVar8 = checkUnk1D8(UNK1D8_FLAG_UNK1);
+			bool bVar8     = checkUnk1D8(UNK1D8_FLAG_UNK1);
 			MActor* mactor = unk168->getPartsMActor(0, 0);
 			if (mactor != nullptr) {
 				int iVar7;
