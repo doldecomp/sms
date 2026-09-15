@@ -443,10 +443,15 @@ void TLiveActor::initAnmSound()
 	if (mAnmSound)
 		return;
 
-	if (checkActorType(0x4000000))
-		mAnmSound = new MAnmSoundNPC(SMSGetMSound());
-	else
-		mAnmSound = new MAnmSound(SMSGetMSound());
+	MAnmSoundNPC* npcAnmSound;
+	MAnmSound* anmSound;
+	if (checkActorType(0x4000000)) {
+		npcAnmSound = new MAnmSoundNPC(SMSGetMSound());
+		mAnmSound = npcAnmSound;
+	} else {
+		anmSound = new MAnmSound(SMSGetMSound());
+		mAnmSound = anmSound;
+	}
 
 	mAnmSound->initAnmSound(nullptr, 1, 0.0f);
 }
