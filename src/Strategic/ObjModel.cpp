@@ -229,7 +229,8 @@ TMActorKeeper::TMActorKeeper(TLiveManager* param_1)
 		mActorAnmData    = param_1->getMActorAnmData();
 	}
 
-	mModelDataNum          = mModelDataKeeper->getModelDataNum();
+	int modelDataNum       = mModelDataKeeper->getModelDataNum();
+	mModelDataNum          = modelDataNum;
 	mActorNum              = 0;
 	mActors                = new MActor*[mModelDataNum];
 	mActorModelDataIndices = new u16[mModelDataNum];
