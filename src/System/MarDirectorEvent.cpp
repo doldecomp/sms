@@ -148,7 +148,18 @@ void TMarDirector::fireGetStar(TShine* shine)
 	                    nullptr, JDrama::TFlagT<u16>(0));
 }
 
-void TMarDirector::fireRideYoshi(TYoshi*) { }
+void TMarDirector::fireRideYoshi(TYoshi* yoshi)
+{
+	if (!yoshi)
+		return;
+
+	if (gpApplication.mCurrArea.unk0 == 1
+	    && !TFlagManager::smInstance->getBool(0x1038F)) {
+		TFlagManager::smInstance->setBool(true, 0x1038F);
+		unk4C |= 0x200;
+		unk261 = 5;
+	}
+}
 
 void TMarDirector::fireDefeatEnemy(TSpineEnemy*) { }
 
