@@ -9,6 +9,8 @@ on:
       - '**.c'
       - '**.clang-format'
       - '**.clang-tidy'
+      - 'tools/check-format.py'
+      - '.github/workflows/lint.yml'
   push:
     paths:
       - '**.hpp'
@@ -17,19 +19,35 @@ on:
       - '**.c'
       - '**.clang-format'
       - '**.clang-tidy'
+      - 'tools/check-format.py'
+      - '.github/workflows/lint.yml'
 
 permissions:
   contents: read
 
 jobs:
   check-format-and-tidy:
+    name: clang-format
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-
-    - uses: jidicula/clang-format-action@v4.16.0
       with:
-        clang-format-version: '21'
-        fallback-style: 'none'
+        fetch-depth: 0
 
-    # no tidy for now I'm too lazy sorry
+    - name: Install clang-format
+      run: |
+        python3 -m venv "$RUNNER_TEMP/clang-format"
+        "$RUNNER_TEMP/clang-format/bin/pip" install clang-format==21.1.8
+
+    - name: Check formatting
+      env:
+        BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+      run: |
+        args=()
+        if [ -n "$BASE" ] && [ "$BASE" != "0000000000000000000000000000000000000000" ]; then
+          args+=(--base "$BASE")
+        fi
+        python3 tools/check-format.py "${args[@]}" \
+          --clang-format "$RUNNER_TEMP/clang-format/bin/clang-format"
+
+    # clang-tidy is not currently configured.
