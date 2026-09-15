@@ -110,7 +110,7 @@ void TMapWireActorManager::doActorToWire()
 		unk4.unk70       = 1;
 	}
 
-	if (unk0->mHeldObject != nullptr) {
+	if (unk4.unk74->unk7C != nullptr) {
 		for (int i = 0; i < unk4.mColCount; ++i) {
 			THitActor* col = unk4.mCollisions[i];
 			if (col->isActorType(0x80000001)
