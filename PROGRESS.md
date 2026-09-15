@@ -7,11 +7,51 @@ The full decompilation is **not complete**.
 The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 
+## Latest checkpoint: batch 2
+
+The build now links 70 verified game objects from source.
+Exactly matched code is 1,365,748 of 3,603,748 bytes (37.897987%), with 8,109 of 12,904 functions matching.
+The two batches together added 640 exactly matching bytes and four matching functions to the initial regional baseline.
+The complete decompilation remains unfinished.
+
+### Changes and verification
+
+- `TNpcThrow::throwMario` now matches all 324 bytes after removing an unnecessary intermediate yaw variable.
+  Its source object was added to the verified link manifest.
+- `TTalkCursor::associateNPC` now uses the existing matrix translation operation, reproducing the original load/store sequence.
+  Its comparison improved from 93.62857% to 99.6%; the stack layout still differs, so the unit remains nonmatching.
+- `THitActor::calcEntryRadius` and `initHitActor` now have inferred `void` return types, removing the invented height-squared return value.
+  No callers consume their result.
+  The radius routine improved from 97.6129% to 98.258064%, and the affected `TEMario::init` improved from 93.97248% to 97.76147%.
+  These routines remain nonmatching where indicated by the comparison report.
+
+A fresh baseline was captured at commit `1ccb911a` before these source changes.
+All changed source units passed symbol presence, order, and linkage checks.
+A full rebuild of the affected callers and `ninja changes_all` found zero function regressions.
+
+The entire `build/GMSE01` output directory was then moved aside, and Ninja successfully rebuilt from the stored source/configuration and extracted input.
+The clean rebuild passed the expected SHA-1 and a full byte comparison with the input executable.
+A deliberately modified copy of the input was rejected by the configured hash check.
+No original game input was changed during this test.
+
+See [batch 2 measurements](docs/progress/GMSE01-batch2.json).
+The clean-build log is `build/GMSE01-clean-build.log`; the current regression log is `build/GMSE01-changes-batch2.log`.
+The prior build, intermediate experiments, and reports remain in `build/GMSE01-before-clean-v1`.
+
+### Deferred source-link investigations
+
+Further testing confirmed the three deferred objects still break the complete binary match.
+`CameraInbetween` changes constant layout and reduces `.sdata2` by eight meaningful bytes; shared weak-symbol selection also needs investigation.
+`MessageUtil` emits stream getters before `SMSMakeTextBuffer`, shifting its address.
+`PollutionEvent` emits a destructor before `loadAfter`, shifting the latter's address.
+The diagnostic logs are preserved in `build/GMSE01-before-clean-v1/diagnose-*.log`.
+These are pending layout/source-emission tasks, not verified source-link improvements.
+
 ## Verified checkpoint: regional setup and batch 1
 
 The new regional configuration rebuilds `mario.dol` byte-for-byte identically to the executable extracted from the supplied disc.
 Both the expected SHA-1 and a direct `cmp` passed.
-This build currently links 69 verified game objects from source and retains extracted objects for the remaining units.
+That checkpoint linked 69 verified game objects from source and retained extracted objects for the remaining units.
 
 | Measure | Initial baseline | Batch 1 |
 | --- | ---: | ---: |

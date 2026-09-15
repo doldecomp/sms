@@ -6,7 +6,7 @@
 - Local branch: `local/decomp-progress`.
 - Upstream: `https://github.com/doldecomp/sms`, commit `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 - The user has authorized implementation and ongoing progress checks for the local North American ISO.
-- Three game functions now match exactly; 69 verified game objects are linked from source.
+- Four game functions now match exactly after local changes; 70 verified game objects are linked from source.
 - Current checkpoint and remaining limitations are documented in `PROGRESS.md`.
 - The active configuration is now `GMSE01`; an all-extracted-object rebuild has matched the complete input executable.
 - Python 3.12.3 is available, with Ninja installed in `build/venv`.
