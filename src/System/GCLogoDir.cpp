@@ -8,6 +8,7 @@
 #include <JSystem/JDrama/JDRCamera.hpp>
 #include <JSystem/JDrama/JDRScreen.hpp>
 #include <System/Application.hpp>
+#include <System/DummyStrings.hpp>
 #include <System/MarioGamePad.hpp>
 #include <System/Resolution.hpp>
 #include <MSound/MSound.hpp>
