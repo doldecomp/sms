@@ -234,11 +234,11 @@ bool TMarDirector::setupObjects()
 		sceneCommon = JDrama::TNameRefGen::getInstance()->load(stream);
 	}
 
-	JDrama::TNameRef* root
-	    = JDrama::TNameRefGen::search<JDrama::TNameRef>("Root View Obj");
-
+	JDrama::TNameRef* root;
 	JDrama::TNameRefPtrListT<JDrama::TViewObj>* gameObjs;
-	if (root) {
+	if (JDrama::TNameRef* found
+	    = JDrama::TNameRefGen::search<JDrama::TNameRef>("Root View Obj")) {
+		root = found;
 		gameObjs = (JDrama::TNameRefPtrListT<JDrama::TViewObj>*)root->search(
 		    "ゲームオブジェクト");
 	} else {
