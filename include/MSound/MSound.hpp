@@ -184,6 +184,12 @@ public:
 	bool checkUnkA8(u32 flag) { return !(unkA8 & flag) ? false : true; }
 
 public:
+#if defined(VERSION_GMSE01)
+	/* 0x98 */ u8 mWaterFilterOverride;
+	/* 0x9A */ u16 mTimerParameter;
+#endif
+	// The following legacy names/offsets describe the Japanese layout.
+	// In GMSE01 these fields are four bytes later.
 	/* 0x98 */ MSModBgm* unk98;
 	/* 0x9C */ MSBgmXFade* unk9C;
 	/* 0xA0 */ u32 unkA0;

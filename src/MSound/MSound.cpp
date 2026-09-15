@@ -120,6 +120,10 @@ void MSSeCallBack::setWaterCameraFir(bool enabled)
 		smWaterFilter = 0x78;
 	else
 		smWaterFilter = 0;
+#if defined(VERSION_GMSE01)
+	if (MSGMSound->mWaterFilterOverride == 1)
+		smWaterFilter = 0x78;
+#endif
 }
 
 void MSSeCallBack::setWaterFilter(u16 param_1) { }
@@ -133,7 +137,11 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 
 	switch (param_2) {
 	case 15:
+#if defined(VERSION_GMSE01)
+		return MSGMSound->mTimerParameter;
+#else
 		return MSGMSound->unk94;
+#endif
 
 	case 20:
 		for (u16 i = 0; i < 2; ++i) {
@@ -463,7 +471,9 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 	if (param_5 != nullptr)
 		JAInter::TAsnData::asnData = param_5;
 
+#if !defined(VERSION_GMSE01)
 	MSSeCallBack::smWaterFilter = nullptr;
+#endif
 	initDriver(heap, aramSize, 1);
 	initInterface(1);
 	f32 fVar1 = 0.0f;
@@ -491,6 +501,12 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 
 	unk7C = 0;
 	unk80 = 0;
+#if defined(VERSION_GMSE01)
+	// TODO: recover the previous voice ID word at 0x94 once ownership of
+	// JAIBasic's tail fields is established.
+	mWaterFilterOverride = 0;
+	MSSeCallBack::setWaterCameraFir(false);
+#endif
 
 	for (int i = 0; i < 5; ++i)
 		unkC8[i] = 0;
@@ -498,8 +514,12 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 	unkAC[0] = JAInullCamera;
 	unkAC[1] = JAInullCamera;
 
-	unk84    = 0;
-	unk94    = 0;
+	unk84 = 0;
+#if defined(VERSION_GMSE01)
+	mTimerParameter = 0;
+#else
+	unk94 = 0;
+#endif
 	unk8C[0] = 0;
 	unk8C[1] = 0;
 	unkC4    = 0;
@@ -797,36 +817,64 @@ void MSound::playTimer(u32 time)
 		    MSD_SE_SY_TIMER, nullptr, (JAIActor*)0xffffffff, 0, 4);
 
 		if (time > 0x7530) {
+#if defined(VERSION_GMSE01)
+			mTimerParameter = 0x6e;
+#else
 			unk94 = 0x6e;
+#endif
 			return;
 		}
 
 		if (time > 0x3A98) {
+#if defined(VERSION_GMSE01)
+			mTimerParameter = 0x32;
+#else
 			unk94 = 0x32;
+#endif
 			return;
 		}
 
 		if (time > 0x2710) {
+#if defined(VERSION_GMSE01)
+			mTimerParameter = 0x23;
+#else
 			unk94 = 0x23;
+#endif
 			return;
 		}
 
 		if (time > 0x1388) {
+#if defined(VERSION_GMSE01)
+			mTimerParameter = 0x19;
+#else
 			unk94 = 0x19;
+#endif
 			return;
 		}
 
 		if (time > 0x7D0) {
+#if defined(VERSION_GMSE01)
+			mTimerParameter = 10;
+#else
 			unk94 = 10;
+#endif
 			return;
 		}
 
 		if (time > 0x3E8) {
+#if defined(VERSION_GMSE01)
+			mTimerParameter = 3;
+#else
 			unk94 = 3;
+#endif
 			return;
 		}
 
+#if defined(VERSION_GMSE01)
+		mTimerParameter = 0;
+#else
 		unk94 = 0;
+#endif
 	}
 }
 

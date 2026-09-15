@@ -1,0 +1,336 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "399978d6",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.171074,
+    "total_code": "3603748",
+    "matched_code": "1381964",
+    "matched_code_percent": 38.347965,
+    "total_data": "641075",
+    "matched_data": "302115",
+    "matched_data_percent": 47.126312,
+    "total_functions": 12904,
+    "matched_functions": 8204,
+    "matched_functions_percent": 63.577187,
+    "complete_code": "76468",
+    "complete_code_percent": 2.121902,
+    "complete_data": "51024",
+    "complete_data_percent": 7.9591312,
+    "total_units": 732,
+    "complete_units": 73
+  },
+  "source_linked_objects": 73,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 15,
+  "new_exact_code_bytes": 2060,
+  "new_matched_data_bytes": 0,
+  "improvements": [
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "function": "execute__23TNerveBossHanachanSnortCFP24TSpineBase<10TLiveActor>",
+      "before": 99.89535,
+      "after": 99.9186,
+      "size": 344
+    },
+    {
+      "unit": "mario/MSound/MAnmSound",
+      "function": "startAnimSound__12MAnmSoundNPCFPvUlPP8JAISoundP8JAIActorUc",
+      "before": 80.973335,
+      "after": 80.98,
+      "size": 600
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "__ct__6MSoundFP7JKRHeapP7JKRHeapUlPUcPUcUl",
+      "before": 83.15311,
+      "after": 86.89952,
+      "size": 836
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "cameraLooksAtMario__6MSoundFv",
+      "before": 99.90909,
+      "after": 100.0,
+      "size": 88
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "enterStage__6MSoundF13MS_SCENE_WAVEUcUc",
+      "before": 99.91304,
+      "after": 100.0,
+      "size": 92
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "exitStage__6MSoundFv",
+      "before": 99.5625,
+      "after": 99.7625,
+      "size": 320
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "fadeOutAllSound__6MSoundFUl",
+      "before": 76.69118,
+      "after": 76.73529,
+      "size": 272
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "gateCheck__6MSoundFUl",
+      "before": 99.95,
+      "after": 100.0,
+      "size": 80
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "initSound__6MSoundFv",
+      "before": 99.971016,
+      "after": 100.0,
+      "size": 276
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "mainLoop__6MSoundFv",
+      "before": 83.64,
+      "after": 83.76,
+      "size": 200
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "pauseOff__6MSoundFUc",
+      "before": 99.88971,
+      "after": 99.90441,
+      "size": 544
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "pauseOn__6MSoundFb",
+      "before": 99.90124,
+      "after": 99.91358,
+      "size": 324
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "playTimer__6MSoundFUl",
+      "before": 99.745766,
+      "after": 99.881355,
+      "size": 236
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "resetAudioAll__6MSoundFUs",
+      "before": 99.9434,
+      "after": 100.0,
+      "size": 212
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "setParameterSeqSync__12MSSeCallBackFPQ28JASystem6TTrackUs",
+      "before": 95.39319,
+      "after": 95.40247,
+      "size": 1292
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "setPlayerInfo__6MSoundFP3VecP3VecPA4_fb",
+      "before": 99.85714,
+      "after": 100.0,
+      "size": 252
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "setWaterCameraFir__12MSSeCallBackFb",
+      "before": 56.714287,
+      "after": 100.0,
+      "size": 56
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "startBeeSe__6MSoundFP3VecUl",
+      "before": 99.833336,
+      "after": 99.87037,
+      "size": 432
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "startMarioVoice__6MSoundFUlsUc",
+      "before": 98.22851,
+      "after": 98.23529,
+      "size": 1768
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "startSoundActorSpecial__6MSoundFUlPC3VecffUlPP8JAISoundUlUc",
+      "before": 99.771736,
+      "after": 99.78261,
+      "size": 368
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "startSoundSetGrp__6MSoundFUlPC3VecUlfUlUlUc",
+      "before": 99.97143,
+      "after": 100.0,
+      "size": 140
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "startSoundSet__6MSoundFUlPC3VecUlfUlUlUc",
+      "before": 99.97143,
+      "after": 100.0,
+      "size": 140
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "stopAllSound__6MSoundFv",
+      "before": 99.97222,
+      "after": 100.0,
+      "size": 144
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "talkModeIn__6MSoundFb",
+      "before": 99.87302,
+      "after": 99.888885,
+      "size": 252
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "talkModeOut__6MSoundFv",
+      "before": 99.82927,
+      "after": 99.84146,
+      "size": 328
+    },
+    {
+      "unit": "mario/MSound/MSoundSE",
+      "function": "checkSoundArea__Q214MSoundSESystem8MSoundSEFUlRC3Vec",
+      "before": 99.63219,
+      "after": 99.64368,
+      "size": 348
+    },
+    {
+      "unit": "mario/MSound/MSoundSE",
+      "function": "startSoundActorInner__Q214MSoundSESystem8MSoundSEFUlPP8JAISoundP8JAIActorUlUc",
+      "before": 99.1375,
+      "after": 99.145836,
+      "size": 960
+    },
+    {
+      "unit": "mario/Player/MarioSound",
+      "function": "soundMovement__6TMarioFv",
+      "before": 98.25246,
+      "after": 98.25304,
+      "size": 6924
+    },
+    {
+      "unit": "mario/System/MSoundMainSide",
+      "function": "endStageEntranceDemo__10MSMainProcFUcUc",
+      "before": 99.975,
+      "after": 100.0,
+      "size": 160
+    },
+    {
+      "unit": "mario/System/MSoundMainSide",
+      "function": "fromInnerCameraDemo__10MSMainProcFv",
+      "before": 99.75,
+      "after": 100.0,
+      "size": 16
+    },
+    {
+      "unit": "mario/System/MSoundMainSide",
+      "function": "getMonteVillageActorArea__10MSMainProcFRC3Vec",
+      "before": 99.62791,
+      "after": 99.65116,
+      "size": 172
+    },
+    {
+      "unit": "mario/System/MSoundMainSide",
+      "function": "init__7MSStageFUcUc",
+      "before": 82.419914,
+      "after": 82.4329,
+      "size": 924
+    },
+    {
+      "unit": "mario/System/MSoundMainSide",
+      "function": "proc__15MSStageCubeFadeFv",
+      "before": 83.891,
+      "after": 83.900475,
+      "size": 844
+    },
+    {
+      "unit": "mario/System/MSoundMainSide",
+      "function": "proc__15MSStageDistFadeFv",
+      "before": 98.91758,
+      "after": 98.92857,
+      "size": 728
+    },
+    {
+      "unit": "mario/System/MSoundMainSide",
+      "function": "proc__20MSStageCubeFadeMonteFv",
+      "before": 88.48322,
+      "after": 88.50336,
+      "size": 1192
+    },
+    {
+      "unit": "mario/System/MSoundMainSide",
+      "function": "proc__20MSStageDistFadeMonteFv",
+      "before": 98.5279,
+      "after": 98.549355,
+      "size": 932
+    },
+    {
+      "unit": "mario/System/MSoundMainSide",
+      "function": "setMSoundEnterStage__10MSMainProcFUcUc",
+      "before": 93.86943,
+      "after": 93.87261,
+      "size": 2512
+    },
+    {
+      "unit": "mario/System/MSoundMainSide",
+      "function": "startStageBGM__10MSMainProcFUcUc",
+      "before": 99.929825,
+      "after": 100.0,
+      "size": 228
+    },
+    {
+      "unit": "mario/System/MSoundMainSide",
+      "function": "startStageEntranceDemo__10MSMainProcFUcUc",
+      "before": 99.925,
+      "after": 100.0,
+      "size": 160
+    },
+    {
+      "unit": "mario/System/MSoundMainSide",
+      "function": "toInnerCameraDemo__10MSMainProcFv",
+      "before": 99.75,
+      "after": 100.0,
+      "size": 16
+    },
+    {
+      "unit": "mario/System/MarDirectorDirect",
+      "function": "direct__12TMarDirectorFv",
+      "before": 97.65741,
+      "after": 97.666664,
+      "size": 1296
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_map_nerve": true,
+    "symbol_map_msound": false,
+    "symbol_map_msound_unchanged_from_baseline": true,
+    "gameplay_test": false
+  },
+  "notes": [
+    "Recovered GMSE01 water-filter override byte at 0x98 and timer sequence parameter at 0x9A in the game-side MSound class; other regions retain their existing declarations and accesses.",
+    "The shared layout fixes forty-one functions across seven units; fifteen become exact without changing their callers individually.",
+    "Restored the water-filter override check and constructor initialization position; all seven timer writes and the sequence callback read use the recovered parameter.",
+    "The previous-voice-ID word at 0x94 still needs a supervised review of JAIBasic/MSound tail-field ownership; no middleware edits or raw-offset casts were made.",
+    "MSound map check has the same existing missing getDistPowFromCamera function, weak-order warning, and seven UNUSED size warnings as the baseline.",
+    "No source-link promotion; executable verification covers the mixed source/original-object build."
+  ]
+}

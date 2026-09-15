@@ -85,8 +85,6 @@ DEFINE_NERVE(TNerveBossHanachanSnort, TLiveActor)
 	if (spine->getTime() == 200 && boss->checkLiveFlag(LIVE_FLAG_UNK20000)) {
 		boss->offLiveFlag(LIVE_FLAG_UNK20000);
 		MSBgm::startBGM(0x80010029);
-		// TODO: the US binary puts the tempo controller at 0x9C;
-		// the current shared MSound layout places it at 0x98.
 		switch (boss->mHitPoints) {
 		case 2:
 			gpMSound->unk98->changeTempo(0, 1);

@@ -8,7 +8,36 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 17
+## Latest checkpoint: batch 18
+
+Corrected the shared US `MSound` layout using the original constructor, water-filter routine, timer routine, and camera/boss callers.
+The game-side class now declares the water-filter override byte at 0x98 and timer sequence parameter at 0x9A.
+This places the tempo controller at 0x9C, crossfade controller at 0xA0, and later sound fields at their observed US offsets.
+Restored the filter override check and its constructor initialization order, and updated all seven timer writes plus the sequence callback read together.
+Other regions retain their previous layout and accesses through version guards.
+
+**Forty-one functions improved across seven units; fifteen now match exactly, adding 2,060 exact code bytes.**
+The exact gains include camera/player sound setup, stage sound entry, sound gating, reset, water filtering, and both inner-camera demo setters.
+Aggregate exact code is **1,381,964 / 3,603,748 bytes (38.347965%)**, with **8,204 / 12,904 functions** matching.
+There are still **73 source-linked objects**, covering **76,468 code bytes (2.121902%)**.
+
+### Validation and remaining work
+
+Captured `ninja baseline` at `399978d6`, rebuilt affected consumers, ran `ninja changes_all`, and compared all reported functions including missing-function detection: zero regressions.
+The full build, expected SHA-1, and direct byte comparison pass for the mixed source/original-object executable.
+The boss nerve unit passes its symbol-map check.
+The sound unit retains its baseline map failure: missing `getDistPowFromCamera`, weak-symbol ordering warnings, and seven UNUSED size warnings.
+Its complete map-check output is unchanged from the baseline.
+No source-link promotion or gameplay test was performed.
+
+The constructor still lacks the previous-voice-ID word initialization at 0x94; properly recovering that field requires resolving ownership of the existing `JAIBasic` tail under the middleware supervision constraint.
+`playTimer` is 99.881355% and boss Snort is 99.9186%; their field offsets now agree with the original, leaving stack-layout differences.
+The sound callback also has remaining US behavior differences in cases 40 and 110, recorded in the catalog for the next focused pass.
+Next work: reconstruct the missing game-side sound distance helper and callback differences, then continue the boss main-unit reconstruction and remaining nerve stack differences.
+See [batch 18 measurements](docs/progress/GMSE01-batch18.json) and the [shared-fix catalog](docs/MATCHING_CATALOG.md).
+Validation logs are `build/GMSE01-*-batch18.*`.
+
+## Verified checkpoint: batch 17
 
 Reconstructed all seven boss behavior states in the previously empty `BossHanachanNerve.cpp`: graph wandering, tumbling, down, get-up, damage, snort, and death.
 The existing nerve macro supplies the singleton accessors; all 22 mapped functions, including destructors and initialization, are present in the correct order and linkage.

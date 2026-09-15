@@ -354,6 +354,7 @@ A full executable match also does not validate bodies in objects that are still 
   Health 2 changes tempo with (0,1); health 1 uses (1,1); preserve switch case order.
   Its frame is currently 0x28 versus 0x40, with two controller loads from 0x98 instead of 0x9C.
 - Shared layout audit needed: `include/MSound/MSound.hpp` declares `MSModBgm* unk98` at 0x98 and `MSBgmXFade* unk9C` at 0x9C.
+  Follow-up: batch 18 below corrects the US controller offsets through recovered game-side fields; the 0x94 ownership issue remains.
   Original `MSound` constructor at 0x800150BC stores the eight-byte tempo-controller allocation at 0x9C, and 0x800150D8 stores the four-byte crossfade allocation at 0xA0.
   It writes -1 as a word at 0x94 and zero as a byte at 0x98, then reads the byte to choose a water-filter value.
   Current `JAIBasic.hpp` has a u16 at 0x94 and ends before that byte; it explicitly notes uncertainty about which tail fields belong to MSound.
@@ -362,3 +363,38 @@ A full executable match also does not validate bodies in objects that are still 
 - Full build and all-function baseline comparison pass with zero regressions; symbol map passes without warnings.
   All 444 data bytes match; exact code gain is 3,156 bytes across twenty functions.
   Mixed executable byte comparison/SHA-1 pass; the unit remains original-linked until both execute routines match.
+
+## US sound layout: water filter, timer, and shared controller offsets
+
+- Status: verified shared correction, batch 18.
+- Inventory `MSound` fields across `src`, `include`, and the full `MSound.cpp` map entries before changing the header.
+  Relevant direct consumers are `MSound.cpp`, `MSoundSE.cpp`, `MAnmSound.cpp`, `MSoundMainSide.cpp`, `MarDirectorDirect.cpp`, `MarioSound.cpp`, and `BossHanachanNerve.cpp`.
+  Search globals `MSGMSound`, `gpMSound`, and accessor `SMSGetMSound()` as well as unqualified member accesses.
+- In GMSE01, 0x98 is a byte checked for equality with 1 by `MSSeCallBack::setWaterCameraFir`.
+  Declare it as `u8 mWaterFilterOverride` in the game-side class.
+  Keep the original enabled/disabled filter store, then apply the override to 0x78; replacing both steps with a logical OR would change the instruction sequence.
+  The restored 56-byte routine matches exactly.
+- In GMSE01, 0x9A is a halfword written by every branch of `MSound::playTimer` and read by sequence callback case 15.
+  Declare it as `u16 mTimerParameter` and update the seven writes, constructor zero, and callback read as one family.
+  Existing non-US code continues using the base class's `unk94` through version guards.
+  `playTimer` now differs only in stack layout (0x18 versus original 0x20), at 99.881355%.
+- These actual fields place the tempo controller at 0x9C, crossfade controller at 0xA0, flags at 0xAC, camera array at 0xB0, camera sound handle at 0xC8, demo flags at 0xCC, and scene bytes at 0xD1/0xD2.
+  Existing legacy field names and offset comments retain Japanese spelling; the header explains the US shift.
+  Do not compensate with per-caller casts or swap controller types.
+- Constructor evidence: 0x800150BC stores the tempo allocation at 0x9C; 0x800150D8 stores crossfade at 0xA0.
+  Initialize the filter override and call `setWaterCameraFir(false)` after zeroing handles 0x7C/0x80, where the original inlines that filter check.
+  The previous early filter store before `initDriver` is retained only for non-US builds.
+  Constructor improves from 83.15311% to 86.89952%, with remaining register/stack and previous-voice-ID initialization differences.
+- Unresolved: original constructor stores -1 as a word at 0x94, and `startMarioVoice` uses that word as the previous voice ID.
+  Current protected `JAIBasic.hpp` declares a halfword at 0x94 and notes uncertain base/derived ownership.
+  This batch leaves that middleware declaration untouched and records a constructor TODO; adding raw-offset casts or writing only the halfword would misrepresent the evidence.
+- Remaining callback evidence from the complete original diff: case 40 has no US branch, while current source sets `unkD1` and returns zero.
+  Case 110 returns 0xFFFF for scene 8 with episode 6 or 1; current source checks only episode 6 and reloads the scene for the fallback.
+  These behavior changes were not included in the layout batch; read the full diff again before the next focused edit.
+- Results: forty-one improved functions across seven units, fifteen newly exact functions totaling 2,060 bytes, zero regressions including missing-function detection.
+  Both boss Snort controller loads now match without changing the callers; its remaining frame difference is 0x28 versus 0x40 (99.9186%).
+  Full build, `ninja changes_all`, and mixed-executable byte/SHA-1 checks pass; no source-link promotion.
+- Map accounting: 67 MSound symbols, including nine UNUSED entries, were inventoried.
+  Its pre-existing missing `getDistPowFromCamera(const Vec&)`, weak-order warning, and seven UNUSED size warnings are unchanged after this batch.
+  Boss nerve presence/order/linkage passes.
+  Measurements and exact-function names are in `progress/GMSE01-batch18.json`; logs and the full map inventory are under `build/GMSE01-*-batch18.*`.
