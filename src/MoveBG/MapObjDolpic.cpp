@@ -504,13 +504,17 @@ void TDemoCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 void TTurboNozzleDoor::loadAfter()
 {
 	if (strcmp("空港ドアＡ０", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＡ１");
+		unk144 = static_cast<TLiveActor*>(
+		    JDrama::TNameRefGen::search2("空港ドアＡ１"));
 	} else if (strcmp("空港ドアＡ１", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＡ０");
+		unk144 = static_cast<TLiveActor*>(
+		    JDrama::TNameRefGen::search2("空港ドアＡ０"));
 	} else if (strcmp("空港ドアＢ０", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＢ１");
+		unk144 = static_cast<TLiveActor*>(
+		    JDrama::TNameRefGen::search2("空港ドアＢ１"));
 	} else if (strcmp("空港ドアＢ１", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＢ０");
+		unk144 = static_cast<TLiveActor*>(
+		    JDrama::TNameRefGen::search2("空港ドアＢ０"));
 	}
 }
 

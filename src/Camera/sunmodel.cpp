@@ -116,8 +116,8 @@ void TSunModel::load(JSUMemoryInputStream& param_1)
 	unk64->mScaling  = mScaling;
 
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* mirrorScene
-	    = JDrama::TNameRefGen::search<
-	        JDrama::TViewObjPtrListT<JDrama::TViewObj> >("鏡シーン");
+	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
+	        JDrama::TNameRefGen::search2("鏡シーン"));
 	mirrorScene->getChildren().push_back(unk64);
 }
 

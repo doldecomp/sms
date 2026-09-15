@@ -1865,7 +1865,8 @@ void TGCConsole2::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
 
-	unk94 = JDrama::TNameRefGen::search<TConsoleStr>("コンソール文字");
+	unk94 = static_cast<TConsoleStr*>(
+	    JDrama::TNameRefGen::search2("コンソール文字"));
 
 	JUTRect waterBounds(unk2F8->getPane()->mBounds);
 
@@ -2033,9 +2034,10 @@ void TGCConsole2::loadAfter()
 	TNozzleBase* nozzle = gpMarioOriginal->mWaterGun->getCurrentNozzle();
 	unk28               = *(u32*)((u8*)nozzle + 0xCC);
 
-	unkBC = JDrama::TNameRefGen::search<TBathtub>("バスタブ");
-	unkC0 = JDrama::TNameRefGen::search<TBossEel>("めおとウナギ");
-	unkC4 = JDrama::TNameRefGen::search<JDrama::TNameRef>("ピーチ姫");
+	unkBC = static_cast<TBathtub*>(JDrama::TNameRefGen::search2("バスタブ"));
+	unkC0
+	    = static_cast<TBossEel*>(JDrama::TNameRefGen::search2("めおとウナギ"));
+	unkC4 = JDrama::TNameRefGen::search2("ピーチ姫");
 }
 
 void TGCConsole2::entryHelpActor(THelpActor* param_1)
@@ -2043,7 +2045,8 @@ void TGCConsole2::entryHelpActor(THelpActor* param_1)
 	if (unk8C < 32) {
 		unk90[unk8C] = param_1;
 
-		JDrama::TNameRefGen::search<TIdxGroupObj>("マップグループ")
+		static_cast<TIdxGroupObj*>(
+		    JDrama::TNameRefGen::search2("マップグループ"))
 		    ->getChildren()
 		    .push_back(param_1);
 
