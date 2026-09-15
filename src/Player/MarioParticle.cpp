@@ -240,8 +240,7 @@ void TBubbleCallBack::execute(JPABaseEmitter*, JPABaseParticle* particle)
 		particle->getCurrentPosition(pos);
 		if (pos.y > gpMarioOriginal->mFloorPosition.z) {
 			particle->unk10 |= 2;
-			if (gpMarioOriginal->mParticleParams.mBubbleToRipple.get()
-			    != 0.0f) {
+			if (gpMarioOriginal->mParticleParams.mBubbleToRipple.get()) {
 				gpMarioParticleManager->emit(PARTICLE_MS_M_AWAHAMON, &pos, 0,
 				                             nullptr);
 			}
