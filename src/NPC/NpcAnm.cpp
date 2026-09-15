@@ -327,10 +327,9 @@ void TBaseNPC::walkAnmRateChange_()
 			if (dVar13 > dVar10)
 				dVar13 = dVar10;
 
-			f32 dVar131 = MsClamp(
-			    CLBCalcRatio(mIndividualParams->mSLMinMarchSpeed.get(), dVar10,
-			                 dVar13),
-			    0.0f, 1.0f);
+			f32 fVar2 = mIndividualParams->mSLMinMarchSpeed.get();
+			f32 dVar131
+			    = MsClamp(CLBCalcRatio(fVar2, dVar10, dVar13), 0.0f, 1.0f);
 
 			f32 dVar132 = CLBLinearInbetween(fVar1, dVar12, dVar131);
 
