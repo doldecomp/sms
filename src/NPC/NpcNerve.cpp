@@ -123,13 +123,14 @@ DEFINE_NERVE(TNerveNPCWaitMarioApproach, TLiveActor)
 		return true;
 	}
 
-	if (self->getActorType() - 0x400001C > 1) {
+	u32 actorType = self->getActorType();
+	if (actorType - 0x400001C > 1) {
 
 		if (!self->isPeachTired()) {
 
 			if (self->isSunflowerReviving()) {
 				self->sunflowerReviving();
-			} else if (self->getActorType() == 0x4000006) {
+			} else if (actorType == 0x4000006) {
 				self->monteMESetAnmWhenFar();
 				self->execTurnToFirstState();
 			} else {
