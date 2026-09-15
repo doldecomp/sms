@@ -161,14 +161,15 @@ int TMovieDirector::rsetup()
 	THPPlayerGetVideoInfo(&videoInfo);
 
 	JGeometry::TBox2<u32> renderRect;
-	renderRect.i.x = (SMSGetGameRenderWidth() - videoInfo.xSize) / 2;
 	renderRect.i.y = (SMSGetGameRenderHeight() - videoInfo.ySize) / 2;
+	renderRect.i.x = (SMSGetGameRenderWidth() - videoInfo.xSize) / 2;
 	renderRect.f.x = videoInfo.xSize;
 	renderRect.f.y = videoInfo.ySize;
-	thpRender->setParams(renderRect.i.x, renderRect.i.y, renderRect.f.x,
-	                     renderRect.f.y);
 
 	DVDChangeDir("/");
+
+	thpRender->setParams(renderRect.i.x, renderRect.i.y, renderRect.f.x,
+	                     renderRect.f.y);
 
 	return 0;
 }
