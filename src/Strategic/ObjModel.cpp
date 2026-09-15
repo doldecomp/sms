@@ -148,41 +148,11 @@ MActor* TMActorKeeper::createMActorFromNthData(int n, u32 flags)
 MActor* TMActorKeeper::createMActor(const char* model_data_name, u32 flags)
 {
 	TModelDataKeeper* keeper = getModelDataKeeper();
-	u16 key              = JDrama::TNameRef::calcKeyCode(model_data_name);
-	int index            = 0;
-	TModelDataNode* node = &keeper->mHead;
-
-	for (; node && node->getData(); ++index) {
-		if (node->isSameName(model_data_name, key))
-			goto found_data;
-		node = node->getNext();
-	}
-	index = -1;
-
-found_data:
-	;
-
+	int index = keeper->getIndex(model_data_name);
 	if (index < 0) {
-		node = &keeper->mHead;
-		while (node->getNext())
-			node = node->getNext();
-		SDLModelData* data = keeper->loadModelData(
-		    model_data_name, mModelLoaderFlags, keeper->mFolder);
-		node->registerDataAndJoinNewNode(data, model_data_name);
-
-		key   = JDrama::TNameRef::calcKeyCode(model_data_name);
-		index = 0;
-		node  = &keeper->mHead;
-		for (; node && node->getData(); ++index) {
-			if (node->isSameName(model_data_name, key))
-				goto found_new_data;
-			node = node->getNext();
-		}
-		index = -1;
+		keeper->createAndKeepData(model_data_name, mModelLoaderFlags);
+		index = keeper->getModelDataNum() - 1;
 	}
-
-found_new_data:
-	;
 
 	mActorModelDataIndices[mActorNum] = index;
 	const TModelDataNode* nth         = &keeper->mHead;
