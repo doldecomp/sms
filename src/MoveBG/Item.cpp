@@ -766,7 +766,7 @@ void TShine::makeMActors()
 	                                   | (2 << J3DMLF_TevStageNumShift);
 	MActor* result;
 	if (TFlagManager::smInstance->getShineFlag(mEventId)
-	    && strcmp("シャイン（１００枚コイン用）", getName()) != 0) {
+	    && strcmp("シャイン（マニ屋用）", getName()) != 0) {
 		result = initMActor("shine_empty.bmd", nullptr, getSDLModelFlag());
 		unk1B4 = 1;
 	} else {
