@@ -1,10 +1,10 @@
 {
   "region": "GMSE01",
-  "checkpoint": "batch33",
+  "checkpoint": "batch34",
   "notes": [
     "Report-based candidates only; source-link promotion also requires instruction, data, emission, map and executable verification.",
     "Priorities follow DECOMPILATION_PLAN.md. Game objects only; protected THPPlayer objects are excluded even though report metadata classifies them as game.",
-    "Consult the batch 25 through batch 33 closure audits before revisiting stalled candidates."
+    "Consult the batch 25 through batch 34 closure audits before revisiting stalled candidates."
   ],
   "all_code_matching": [
     {
@@ -205,21 +205,7 @@
         {
           "name": "perform__12TSnapTimeObjFUlPQ26JDrama9TGraphics",
           "size": 228,
-          "similarity": 99.54386
-        }
-      ]
-    },
-    {
-      "unit": "mario/Strategic/livemanager",
-      "source": "src/Strategic/livemanager.cpp",
-      "code_bytes": 1272,
-      "unmatched_code_bytes": 252,
-      "unmatched_data_bytes": 0,
-      "nonmatching_functions": [
-        {
-          "name": "perform__12TLiveManagerFUlPQ26JDrama9TGraphics",
-          "size": 252,
-          "similarity": 99.84127
+          "similarity": 99.96491
         }
       ]
     },
@@ -870,21 +856,7 @@
         {
           "name": "perform__12TSnapTimeObjFUlPQ26JDrama9TGraphics",
           "size": 228,
-          "similarity": 99.54386
-        }
-      ]
-    },
-    {
-      "unit": "mario/Strategic/livemanager",
-      "source": "src/Strategic/livemanager.cpp",
-      "code_bytes": 1272,
-      "unmatched_code_bytes": 252,
-      "unmatched_data_bytes": 0,
-      "nonmatching_functions": [
-        {
-          "name": "perform__12TLiveManagerFUlPQ26JDrama9TGraphics",
-          "size": 252,
-          "similarity": 99.84127
+          "similarity": 99.96491
         }
       ]
     },
@@ -1091,25 +1063,6 @@
           "name": "perform__18TMapObjWaterFilterFUlPQ26JDrama9TGraphics",
           "size": 404,
           "similarity": 98.68317
-        }
-      ]
-    },
-    {
-      "unit": "mario/Strategic/objmanager",
-      "source": "src/Strategic/objmanager.cpp",
-      "code_bytes": 1640,
-      "unmatched_code_bytes": 404,
-      "unmatched_data_bytes": 0,
-      "nonmatching_functions": [
-        {
-          "name": "load__11TObjManagerFR20JSUMemoryInputStream",
-          "size": 168,
-          "similarity": 99.92857
-        },
-        {
-          "name": "perform__11TObjManagerFUlPQ26JDrama9TGraphics",
-          "size": 236,
-          "similarity": 99.830505
         }
       ]
     },
@@ -2728,6 +2681,6 @@
     "mario/THPPlayer/THPRead",
     "mario/THPPlayer/THPVideoDecode"
   ],
-  "near_count": 102,
-  "near_unmatched_code_bytes": 92340
+  "near_count": 100,
+  "near_unmatched_code_bytes": 91684
 }

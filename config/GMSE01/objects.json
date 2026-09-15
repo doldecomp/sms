@@ -76,5 +76,7 @@
   "Map/PollutionObj.cpp",
   "GC2D/HelpActor.cpp",
   "Enemy/DemoBossHanachanBase.cpp",
-  "Enemy/SleepBossHanachan.cpp"
+  "Enemy/SleepBossHanachan.cpp",
+  "Strategic/livemanager.cpp",
+  "Strategic/objmanager.cpp"
 ]

@@ -41,6 +41,12 @@ TObjManager::TObjManager(const char* name)
 {
 }
 
+void TObjManager::initObjArray(int capacity)
+{
+	mCapacity = capacity;
+	unk18 = new THitActor*[mCapacity];
+}
+
 void TObjManager::manageObj(THitActor* obj)
 {
 	unk18[mObjNum] = obj;
@@ -56,8 +62,9 @@ void TObjManager::load(JSUMemoryInputStream& stream)
 	unk1C = (TObjChara*)JDrama::TNameRefGen::getInstance()
 	            ->getRootNameRef()
 	            ->search(buffer);
-	mCapacity = stream.readU32();
-	unk18     = new THitActor*[mCapacity];
+	s32 capacity;
+	stream >> capacity;
+	initObjArray(capacity);
 }
 
 MActorAnmData* TObjManager::getMActorAnmData()

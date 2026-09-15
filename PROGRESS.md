@@ -8,7 +8,27 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 33 — two whole files completed
+## Latest checkpoint: batch 34 — shared timer fix completes two managers
+
+Completed and source-linked **livemanager.cpp** and **objmanager.cpp**, adding **2,912 source-linked code bytes**.
+One shared timer-helper reconstruction matches both perform routines; restoring objmanager's mapped initObjArray helper and stream extraction completes its loader.
+Three runtime functions / 656 code bytes become exact, and the recovered UNUSED helper has its exact 60-byte map size.
+SnapTimeObj improves after removing its volatile color workaround, but retains a four-byte stack-slot difference.
+
+| Coverage | Matched code | Source-linked code |
+| --- | ---: | ---: |
+| Game code | **24.97447%** | **3.025361%** |
+| Aggregate | **38.566406%** | **2.3906221%** |
+
+Source linking is now **80 game files / 86,152 code bytes**.
+Baseline at `7e3e3455`; full build, changes_all, all 12,904 function comparisons, DOL byte comparison and expected SHA-1 pass with zero regressions.
+Both completed files pass all code/data and map checks; SnapTimeObj also passes its map check.
+TimeRec retains three pre-existing UNUSED stub-size warnings in an already source-linked file; these remain completion-audit debt.
+No gameplay test was performed.
+The regenerated queue contains 100 authorized small game files / 91,684 unmatched bytes.
+See the [batch 34 audit](docs/progress/GMSE01-closure-audit-batch34.md) and [measurements](docs/progress/GMSE01-batch34.json).
+
+## Verified checkpoint: batch 33 — two whole files completed
 
 Completed and source-linked **DemoBossHanachanBase.cpp** and **SleepBossHanachan.cpp** from the small-file queue.
 This adds **21 exactly matching functions/helpers / 2,440 code bytes / 1,496 data bytes**.

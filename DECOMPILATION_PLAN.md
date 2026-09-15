@@ -6,7 +6,7 @@
 - Local branch: `local/decomp-progress`.
 - Upstream: `https://github.com/doldecomp/sms`, commit `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 - The user has authorized implementation and ongoing progress checks for the local North American ISO.
-- Local changes have added 24,072 exactly matching code bytes and 146 matching functions/helpers across thirty-three batches; 78 verified game objects are linked from source.
+- Local changes have added 24,728 exactly matching code bytes and 149 matching functions/helpers across thirty-four batches; 80 game objects are linked from source.
 - Consult `docs/MATCHING_CATALOG.md` before related edits; inventory shared callers, batch evidence-supported fixes, and record exceptions and validation results.
 - Current checkpoint and remaining limitations are documented in `PROGRESS.md`.
 - The active configuration is now `GMSE01`; an all-extracted-object rebuild has matched the complete input executable.
@@ -145,15 +145,15 @@ Each promotion still requires the full executable SHA-1 and byte comparison.
    - `System/MarDirectorCreateObjects` (24 data bytes differ; see the batch 6 string-table investigation).
    - `System/TargetArrow` (320 data bytes differ).
 2. Game objects with a single nonmatching function, smallest remaining size first, for example:
-   `Player/MarioAccess` (72 bytes left), `Enemy/egggen` (120), `Strategic/HitActor` (124), `MSound/MSoundBGM` (136), `Camera/CameraMode` (144, plus data), `MoveBG/MapObjPollution` (172), `Enemy/DebuTelesa` (176, plus data), `MoveBG/MapObjAirport` (208), `NPC/NpcInbetween` (220), `System/SnapTimeObj` (228), `Strategic/livemanager` (252), `Enemy/enemytable` (276), `Map/MapEventSirena` (280), `MoveBG/MapObjFloat` (288), `M3DUtil/M3UModel` (292), `Map/MapCollisionPlane` (308).
-3. More broadly, 102 unlinked game objects have 2,000 or fewer unmatched code bytes, totalling 92,340 bytes.
+   `Player/MarioAccess` (72 bytes left), `Enemy/egggen` (120), `Strategic/HitActor` (124), `MSound/MSoundBGM` (136), `Camera/CameraMode` (144, plus data), `MoveBG/MapObjPollution` (172), `Enemy/DebuTelesa` (176, plus data), `MoveBG/MapObjAirport` (208), `NPC/NpcInbetween` (220), `System/SnapTimeObj` (228), `Enemy/enemytable` (276), `Map/MapEventSirena` (280), `MoveBG/MapObjFloat` (288), `M3DUtil/M3UModel` (292), `Map/MapCollisionPlane` (308).
+3. More broadly, 100 unlinked game objects have 2,000 or fewer unmatched code bytes, totalling 91,684 bytes.
    Regenerate this list from `report.json` at each checkpoint rather than trusting these numbers.
-   Batch 33 regeneration is saved in `docs/progress/GMSE01-completion-queue.json`: 102 authorized game files with 1..2,000 unmatched bytes, totaling 92,340 unmatched code bytes.
+   Batch 34 regeneration is saved in `docs/progress/GMSE01-completion-queue.json`: 100 authorized game files with 1..2,000 unmatched bytes, totaling 91,684 unmatched code bytes.
    This excludes THPPlayer despite the report classifying it as game code.
-   Consult the batch 25 through batch 33 closure audits in `docs/progress/` before retrying stalled candidates; they record map gaps, shared issues, and rejected trials.
+   Consult the batch 25 through batch 34 closure audits in `docs/progress/` before retrying stalled candidates; they record map gaps, shared issues, and rejected trials.
    `Map/PollutionObj` completed and source-linked in batch 27: 75 game objects / 79,528 code bytes.
    `GC2D/HelpActor` completed and source-linked in batch 29: 76 game objects / 80,800 code bytes.
-   Game coverage is 24.951435% matched / 2.9231017% source-linked; aggregate coverage is 38.548203% / 2.3098176%.
+   Game coverage is 24.97447% matched / 3.025361% source-linked; aggregate coverage is 38.566406% / 2.3906221%.
    Batch 29 also restores an AnimalManager helper and matches CameraTalk/Strategy functions; those files retain recorded blockers.
    Batch 30 audited `MapXlu`, `PollutionPos`, `PerformList`, `BossHanachanNerve`, `MessageLoader` and `MovieRumble`; no additional file was completed.
    MessageLoader's parser improves, but its remaining stack differences prevent promotion.
@@ -163,6 +163,9 @@ Each promotion still requires the full executable SHA-1 and byte comparison.
    CameraSecureView and sunmgr retain frame blockers; further trials and the broader imported-map string discrepancy are recorded in the batch 32 audit.
    Batch 33 completes and source-links DemoBossHanachanBase and SleepBossHanachan: 78 game objects / 83,240 code bytes.
    MapModel, MarDirectorPreEntry and MapEventSirena trials were reverted; the successful named flag-manager pattern does not by itself complete Sirena.
+   Batch 34 completes and source-links livemanager and objmanager: 80 game objects / 86,152 code bytes.
+   Shared timer/color helpers match both perform routines; the restored initObjArray and stream extraction close objmanager's loader.
+   SnapTimeObj retains a four-byte color-slot difference; TimeRec's three pre-existing UNUSED stubs remain completion-audit debt despite its runtime-exact source linking.
    Revisit earlier deferrals when new evidence addresses their recorded blockers; prioritize a hypothesis that can close a file over further partial camera reconstruction.
 
 If an object stalls on a hard function, record the evidence and move to the next object instead of forcing a fakematch.

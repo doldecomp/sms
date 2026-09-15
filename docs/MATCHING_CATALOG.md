@@ -862,3 +862,23 @@ A full executable match also does not validate bodies in objects that are still 
 - Read the [batch 33 audit](progress/GMSE01-closure-audit-batch33.md) for layouts and rejected trials.
   All 12,904 function comparisons pass with zero regressions; no gameplay test.
   Source linking is now 78 game files / 83,240 code bytes.
+
+## Shared timer colors and manager file completion, batch 34
+
+- Inventory `TTimeRec::startTimer` and `endTimer` callers before modifying the game header.
+  The existing JUtility::TColor reproduces the required four-byte color storage without a union or fabricated volatile temporary.
+  Keep conversion before the null check and OSGetTick, as the original reload is preserved across that call.
+- The four-component overload loads the instance before constructing color and names the current time-array pointer.
+  endTimer uses the existing instance accessor.
+  Both livemanager and objmanager perform routines become exact, including frame 0x50 and color slot 0x34.
+  Using the accessor in the four-component start helper instead makes the frame too large; swapping declaration order changes registers.
+- objmanager's map lists initObjArray(int), size 60, between manageObj and its constructor in emission order.
+  Restore it from the inlined capacity assignment/allocation and read capacity through `stream >> capacity` before calling it.
+  Direct readS32 as its argument expands the frame; the extraction form restores the name-buffer and capacity slots and completes the file.
+- SnapTimeObj uses the packed-color overload, with color before the instance accessor and a direct array append.
+  This removes the volatile workaround and improves similarity to 99.96491%, but color slot 0x34 still needs 0x38.
+  Rounded 100.0% CLI output does not justify promotion.
+  Named caller color, outer predicate, declaration-order and conversion variants do not close it.
+- Both manager files now link from source; full code/data/map, all 12,904 function comparisons and final DOL byte/SHA-1 checks pass with zero regressions.
+  TimeRec's three pre-existing UNUSED stubs remain explicit audit debt; no gameplay test.
+  See the [batch 34 audit](progress/GMSE01-closure-audit-batch34.md) for the full exceptions and measurements.

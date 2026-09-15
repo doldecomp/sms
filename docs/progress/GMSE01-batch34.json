@@ -1,0 +1,103 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "7e3e3455",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.61884,
+    "total_code": "3603748",
+    "matched_code": "1389836",
+    "matched_code_percent": 38.566406,
+    "total_data": "641075",
+    "matched_data": "305343",
+    "matched_data_percent": 47.62984,
+    "total_functions": 12904,
+    "matched_functions": 8254,
+    "matched_functions_percent": 63.964664,
+    "complete_code": "86152",
+    "complete_code_percent": 2.3906221,
+    "complete_data": "53620",
+    "complete_data_percent": 8.364077,
+    "total_units": 732,
+    "complete_units": 80
+  },
+  "game_measures": {
+    "fuzzy_match_percent": 69.48712,
+    "total_code": "2847660",
+    "matched_code": "711188",
+    "matched_code_percent": 24.97447,
+    "total_data": "558300",
+    "matched_data": "243368",
+    "matched_data_percent": 43.5909,
+    "total_functions": 9012,
+    "matched_functions": 4457,
+    "matched_functions_percent": 49.45628,
+    "complete_code": "86152",
+    "complete_code_percent": 3.025361,
+    "complete_data": "53620",
+    "complete_data_percent": 9.604156,
+    "total_units": 385,
+    "complete_units": 80
+  },
+  "source_linked_objects": 80,
+  "new_source_linked_objects": [
+    "Strategic/livemanager.cpp",
+    "Strategic/objmanager.cpp"
+  ],
+  "new_source_linked_code_bytes": 2912,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "unexplained_function_regressions": [],
+  "new_exact_functions": 3,
+  "new_exact_code_bytes": 656,
+  "new_matched_data_bytes": 0,
+  "improvements": [
+    {
+      "unit": "mario/Strategic/livemanager",
+      "function": "perform__12TLiveManagerFUlPQ26JDrama9TGraphics",
+      "before": 99.84127,
+      "after": 100.0,
+      "size": 252
+    },
+    {
+      "unit": "mario/Strategic/objmanager",
+      "function": "load__11TObjManagerFR20JSUMemoryInputStream",
+      "before": 99.92857,
+      "after": 100.0,
+      "size": 168
+    },
+    {
+      "unit": "mario/Strategic/objmanager",
+      "function": "perform__11TObjManagerFUlPQ26JDrama9TGraphics",
+      "before": 99.830505,
+      "after": 100.0,
+      "size": 236
+    },
+    {
+      "unit": "mario/System/SnapTimeObj",
+      "function": "perform__12TSnapTimeObjFUlPQ26JDrama9TGraphics",
+      "before": 99.54386,
+      "after": 99.96491,
+      "size": 228
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "all_functions_present": true,
+    "no_exact_function_regressions": true,
+    "symbol_map_livemanager": true,
+    "symbol_map_objmanager": true,
+    "symbol_map_SnapTimeObj": true,
+    "symbol_map_TimeRec": true,
+    "gameplay_test": false
+  },
+  "notes": [
+    "Two whole files source-linked after individual and combined executable byte comparisons and SHA-1 verification.",
+    "Shared game timer helpers use the existing JUtility color class; no middleware edits.",
+    "Recovered TObjManager::initObjArray with its exact 60-byte UNUSED map size.",
+    "SnapTimeObj retains one four-byte color-stack-slot difference despite rounded 100.0% display.",
+    "TimeRec map validator passes with three pre-existing UNUSED stub-size warnings: end, drawSyncCallbackSt and suppleGXTime. These remain completion-audit debt in an already source-linked file."
+  ]
+}
