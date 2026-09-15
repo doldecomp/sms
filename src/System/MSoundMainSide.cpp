@@ -255,11 +255,11 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 			MSStageInfo::stageBgm = MSD_BGM_MAP_SELECT;
 		}
 		if (param_2 == 6) {
-			MSStageInfo::switchBgm = 0xfffffff0;
-			MSStageInfo::demoBgm   = MSD_BGM_CAMERA;
-			MSStageInfo::flags     = 3;
+			MSStageInfo::demoBgm = MSD_BGM_CAMERA;
+			MSStageInfo::flags   = 3;
 			MSStageInfo::volOffCategory -= 0x83;
 			MSStageInfo::fadeEvent           = 1;
+			MSStageInfo::switchBgm           = 0xfffffff0;
 			MSStageInfo::switchBgm2          = 0xfffffff0;
 			MSStageInfo::distFadeStageToKage = 0;
 		} else if (param_2 == 2) {
@@ -309,15 +309,15 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 			break;
 		}
 		if (param_2 == 6) {
-			MSStageInfo::switchBgm = 0xfffffff0;
-			MSStageInfo::demoBgm   = MSD_BGM_CAMERA;
-			MSStageInfo::flags     = 6;
+			MSStageInfo::demoBgm = MSD_BGM_CAMERA;
+			MSStageInfo::flags   = 6;
 			MSStageInfo::volOffCategory -= 0x83;
 			MSStageInfo::fadeEvent  = 1;
+			MSStageInfo::switchBgm  = 0xfffffff0;
 			MSStageInfo::switchBgm2 = 0xfffffff0;
 		} else {
-			MSStageInfo::switchBgm  = 0xfffffff0;
 			MSStageInfo::fadeEvent  = 2;
+			MSStageInfo::switchBgm  = 0xfffffff0;
 			MSStageInfo::switchBgm2 = 0xfffffff0;
 
 			switch (param_2) {
