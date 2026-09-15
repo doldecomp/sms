@@ -516,10 +516,10 @@ Plane sViewPlane[6];
 static void SetViewFrustumClipCheck(f32 top, f32 bottom, f32 left, f32 right,
                                     f32 near, f32 far)
 {
-	f32 farTop    = top * (far / near);
-	f32 farBottom = bottom * (far / near);
 	f32 farLeft   = left * (far / near);
 	f32 farRight  = right * (far / near);
+	f32 farTop    = top * (far / near);
+	f32 farBottom = bottom * (far / near);
 
 	Vec corner[8];
 
