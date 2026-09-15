@@ -42,9 +42,9 @@ static void CheckNerve4Npc_(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num,
 	                                             ? npc->mSpine->getLatestNerve()
 	                                             : npc->mSpine->getCurrentNerve();
 
-	TSpcSlice result;
+	int result = 0;
 	if (actual == expected)
-		result.setDataInt(1);
+		result = 1;
 	interp->push(result);
 }
 
