@@ -1384,6 +1384,8 @@ void TBossEelTearsRecoverCollision::perform(u32 cue,
 	THitActor::perform(cue, graphics);
 }
 
+// TODO: GMSE01 retains frame 0x300 vs 0x310, skin/eye register differences,
+// and an extra heart-model pointer copy before the heart-coin allocation.
 void TBossEel::init(TLiveManager* manager)
 {
 	mManager = manager;
@@ -1406,8 +1408,10 @@ void TBossEel::init(TLiveManager* manager)
 	             mSaveParams->mSLBodyDamageHeight.get());
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 	J3DModel* model = mMActor->getModel();
-	if (!model->getSkinDeform())
-		model->setSkinDeform(new J3DSkinDeform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
+	if (!model->getSkinDeform()) {
+		J3DSkinDeform* deform = new J3DSkinDeform;
+		model->setSkinDeform(deform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
+	}
 	mMActor->resetDL();
 
 	mHeadCollision = new THitActor("めおとウナギの頭部");
@@ -1436,15 +1440,16 @@ void TBossEel::init(TLiveManager* manager)
 
 	JUTNameTab* jntNames = mMActor->getModel()->getModelData()->getJointName();
 
+	void* resource;
 	{
 		static const char* sEyePartsJointTable[]
 		    = { "eye1", "eye2", "eye3", "eye4" };
 
-		void* eyeResource = JKRGetResource("/scene/bosseel/eye.bmd");
+		resource = JKRGetResource("/scene/bosseel/eye.bmd");
 		SDLModelData* eyeModelData
 		    = new SDLModelData(J3DModelLoaderDataBase::load(
-		        eyeResource, J3DMLF_MaterialPEFull | J3DMLF_MaterialTexGenFull
-		                         | (2 << J3DMLF_TevStageNumShift)));
+		        resource, J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		                      | (4 << J3DMLF_TevStageNumShift)));
 		for (s32 i = 0; i < 4; ++i) {
 			s32 jointIndex = jntNames->getIndex(sEyePartsJointTable[i]);
 			mEyes[i]       = new TBossEelEye(this, jointIndex, eyeModelData, 3,
@@ -1461,18 +1466,15 @@ void TBossEel::init(TLiveManager* manager)
 	{
 		SDLModelData* toothModelData[3];
 
-		void* resource1   = JKRGetResource("/scene/bosseel/tooth.bmd");
+		resource = JKRGetResource("/scene/bosseel/tooth.bmd");
 		toothModelData[0] = new SDLModelData(J3DModelLoaderDataBase::load(
-		    resource1,
-		    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift)));
-		void* resource2   = JKRGetResource("/scene/bosseel/bad_tooth.bmd");
-		toothModelData[0] = new SDLModelData(J3DModelLoaderDataBase::load(
-		    resource2,
-		    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift)));
-		void* resource3   = JKRGetResource("/scene/bosseel/gold_tooth.bmd");
-		toothModelData[0] = new SDLModelData(J3DModelLoaderDataBase::load(
-		    resource3,
-		    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift)));
+		    resource, J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift)));
+		resource = JKRGetResource("/scene/bosseel/bad_tooth.bmd");
+		toothModelData[1] = new SDLModelData(J3DModelLoaderDataBase::load(
+		    resource, J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift)));
+		resource = JKRGetResource("/scene/bosseel/gold_tooth.bmd");
+		toothModelData[2] = new SDLModelData(J3DModelLoaderDataBase::load(
+		    resource, J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift)));
 
 		static const char* sToothPartsJointTable[]
 		    = { "ha1", "ha2", "ha3", "ha4", "ha5", "ha6", "ha7", "ha8" };
@@ -1492,12 +1494,11 @@ void TBossEel::init(TLiveManager* manager)
 	}
 
 	{
-		void* heartResource
-		    = JKRGetResource("/scene/bosseel/meoto_heartcoin.bmd");
+		resource = JKRGetResource("/scene/bosseel/meoto_heartcoin.bmd");
 		SDLModelData* heartModelData
 		    = new SDLModelData(J3DModelLoaderDataBase::load(
-		        heartResource, J3DMLF_MaterialPEFull | J3DMLF_MaterialTexGenFull
-		                           | (2 << J3DMLF_TevStageNumShift)));
+		        resource, J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		                      | (4 << J3DMLF_TevStageNumShift)));
 		mHeartCoin = new TBossEelHeartCoin(this, 0, heartModelData, 3,
 		                                   "めおとウナギハートコイン");
 	}
@@ -1514,7 +1515,7 @@ void TBossEel::init(TLiveManager* manager)
 			    = jntNames->getIndex(sCollisionJointTable[i]);
 			mMapCollisions[i] = new TMapCollisionMove;
 			mMapCollisions[i]->init(sCollisionFileTable[i], 2, this);
-			mMapCollisions[i]->moveTrans(mPosition);
+			mMapCollisions[i]->setUpTrans(mPosition);
 		}
 	}
 

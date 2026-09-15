@@ -102,6 +102,8 @@ Unit `mario/Enemy/bosseel`, 2,816 bytes, 99.447%.
 At 0x4dd4, around `SDLModelData` and `operator new(0x80)`, ours copies `r22` into `r23` earlier than the original.
 That points to a temporary or variable that should not exist, or an assignment in the wrong order.
 The frame is 0x310 in the original and 0x300 in ours (0x10 too small).
+Batch 44 also finds and corrects tooth-array indices, eye/heart loader flags and collision setUpTrans; similarity reaches 99.50852%.
+A named skin-deformer local and shared resource pointer improve argument setup/register use; the remaining frame/register/copy differences are a source TODO.
 
 ### 6. `TGCConsole2::load(JSUMemoryInputStream&)`
 

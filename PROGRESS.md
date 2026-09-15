@@ -8,7 +8,16 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 43 — NPC revival helper matched
+## Latest checkpoint: batch 44 — BossEel initialization corrections
+
+`TBossEel::init()` improves **99.44744% → 99.50852%**: restore distinct tooth-model array entries, correct both eye/heart loader flags, and call collision setUpTrans at the original virtual slot.
+A named skin-deformer local restores argument setup order; sharing the resource pointer improves the later loader registers. Frame, eye/skin registers and the extra heart-model copy remain a source TODO.
+No new exact functions or source-linked files; game **25.215933% matched / 3.254321% source-linked**, aggregate **38.757206% / 2.571545%**.
+Baseline at `05ee5955`; full build, changes_all, all 12,904 function comparisons, unit-data checks and DOL byte/SHA-1 checks pass without regressions. No gameplay test performed.
+Map comparison against the original source confirms the existing missing weak TVector::begin, weak-order warning and eight UNUSED-size warnings; no new map errors. BossEel remains incomplete.
+Refreshed queue: 1,263 authorized functions / 727,976 bytes; next reviewed target is `TGCConsole2::load(JSUMemoryInputStream&)`.
+
+## Verified checkpoint: batch 43 — NPC revival helper matched
 
 Following the npcWetting target exposed a neighboring helper: `sunflowerReviving()` now matches all **204 bytes**, with a named animation local restoring its original stack frame.
 NpcWetting retains its frame/register differences; unsuccessful trials are reverted and a source TODO records the remaining regions.
@@ -1178,5 +1187,5 @@ Source, configuration, progress snapshots, and notes are versioned locally.
 ## Next work
 
 Follow [STRATEGY.md](STRATEGY.md) and the refreshed near-matching list.
-Start the next time-box with `TBossEel::init(TLiveManager*)`; consult source TODOs before revisiting npcWetting, jumpMain, specMain, spider or beam.
+Start the next time-box with `TGCConsole2::load(JSUMemoryInputStream&)`; consult source TODOs before revisiting BossEel, npcWetting, jumpMain, specMain, spider or beam.
 Keep the small-file queue and old audits as supporting references; defer from-scratch work until the near-matching group is mostly exhausted.

@@ -17,6 +17,18 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## Near-match operands can hide initialization errors, batch 44
+
+- BossEel::init's tooth-model stores target three consecutive stack slots; the old source assigned all three resources to index zero.
+  Restore indices 0, 1 and 2. Its eye/heart loader immediate is 0x10240000: PEFull, UseUniqueMaterials and four TEV stages, not TexGenFull and two stages.
+  Its post-init map-collision call uses virtual slot 0x1c (setUpTrans), not 0x10 (moveTrans).
+  These are semantic errors despite 99%+ similarity; inspect differing immediates, stack stores and virtual slots before dismissing a diff as register noise.
+- A named skin-deformer allocation local restores r4-then-r3 argument setup; reuse one resource pointer across the eye/tooth/heart loads to match later r24 assignments.
+  Reusing the eye/tooth/collision loop counter loses a required eye-model copy; sharing the model-data pointer and naming the heart-coin allocation do not fix the extra heart-model copy. Reverted.
+  A named skin-deformer getter changes the frame but does not resolve the register differences; reverted rather than retaining an isolated frame adjustment.
+- BossEel::init remains 99.50852% with frame 0x300 versus 0x310 and skin/eye/heart-copy register differences.
+  All function/data checks pass; pre-existing map gaps prevent file completion.
+
 ## Named animation locals and stack reservation, batch 43
 
 - NpcAnm::sunflowerReviving had identical body instructions but frame 0x20 versus the original 0x28.
