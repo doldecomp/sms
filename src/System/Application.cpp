@@ -747,10 +747,9 @@ int TApplication::drawDVDErr()
 	if (error != 0) {
 		ReInitializeGX();
 		SMS_DrawInit();
-		JDrama::TVideo* video = mDisplay->unk60;
-
-		GXSetViewport(0.0f, 0.0f, video->mNextRenderMode.fbWidth,
-		              video->mNextRenderMode.efbHeight, 0.0f, 1.0f);
+		GXRenderModeObj& rmode = mDisplay->unk60->mNextRenderMode;
+		GXSetViewport(0.0f, 0.0f, rmode.fbWidth, rmode.efbHeight, 0.0f,
+		              1.0f);
 		Mtx afStack_260;
 		C_MTXOrtho(afStack_260, 16.0f, 464.0f, 0.0f, 600.0f, -1.0f, 1.0f);
 		GXSetProjection(afStack_260, GX_ORTHOGRAPHIC);
