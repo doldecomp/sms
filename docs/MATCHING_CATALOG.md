@@ -658,3 +658,49 @@ A full executable match also does not validate bodies in objects that are still 
   These are recorded map failures, not complete-unit claims.
 - No new source-linked object or gameplay test.
   Measurements: `docs/progress/GMSE01-batch23.json`; original/current diffs, map checks, and regression results: `build/GMSE01-*-batch23.*`.
+
+## Message utility source-link closure, batch 24
+
+- Priority: close complete game files before pursuing isolated function scores, following the revised `DECOMPILATION_PLAN.md`.
+- Status: both `MessageUtil.cpp` functions, totaling 968 code bytes, now link from source and reproduce the full executable exactly.
+  This resolves the batch 2 deferral.
+
+### Shared stream helper emission
+
+- Search: `rg -n 'isNotDrained\(' src include/JSystem/JSupport`.
+  The message parser was the only game-code caller of this fabricated wrapper; no additional source replacements remain.
+- The original loop calls the stream's length and position virtuals through offsets 0x18 and 0x1C, then tests their difference.
+  Calling inherited `getAvailable() != 0` reproduces the same instructions as `isNotDrained()` but avoids emitting the memory-stream getter overrides in this object.
+- The former source emitted `getPosition__20JSUMemoryInputStreamCFv` and `getLength__20JSUMemoryInputStreamCFv` between the two message functions.
+  Their original selected definitions belong to `MarioPositionObj.cpp` at 0x80280FD8 and 0x80280FE0.
+  Selecting the earlier copies during the mixed link shifted `SMSMakeTextBuffer` by 16 bytes and broke the DOL.
+  The inherited API fixes this in game source without changing middleware, linker rules, or symbol metadata.
+- Rule: identical caller instructions do not prove equivalent whole-file emission.
+  Inspect the object's additional weak definitions when an otherwise exact object shifts later code after promotion.
+
+### Remove the existing parser padding
+
+- Removed both pre-existing `char trash[4]` stack-padding declarations.
+  The parser now uses the real `getPosition()` accessor instead of direct field access.
+- Keep the block tag as `s32`, matching the return type of `readS32()`.
+  Keep the INF1 entry size in a separate `u16 entrySize`, declared with the parser locals before the payload stream, and compute the message's `u32` entry offset after the four-byte skip.
+  The original halfword load, multiplication, and stack-slot order support this separation.
+- These changes reproduce all 744 parser bytes exactly with no dummy stack objects.
+  `SMSMakeTextBuffer` retains its exact 224 bytes.
+- Rejected: chaining the two header reads changes bound temporary offsets; a named DAT1 position intermediate adds a misplaced temporary; changing the data offset to `s32` also shifts temporary offsets.
+  Declaring `entrySize` inside the INF1 case shifts the payload stream by four bytes, while declaring it before that stream matches the original layout.
+
+### Validation and queue
+
+- Baseline at `5d1b2705`; full build, `ninja changes_all`, all-function presence/score comparison, direct DOL comparison, and expected SHA-1 pass.
+  Zero function regressions; the message unit's map check passes without warnings.
+- Added `GC2D/MessageUtil.cpp` to `config/GMSE01/objects.json`: 74 source-linked game objects, 77,436 code bytes.
+  Game code is 24.792425% matched and 2.7192852% source-linked; aggregate code is 38.422554% matched and 2.148763% source-linked.
+  Aggregate exact code/function counts are unchanged because both functions already matched before the emission fix.
+- Refreshed `docs/progress/GMSE01-completion-queue.json` from the final report.
+  It lists complete-code candidates, one-function candidates, and 108 unlinked game objects with 1..2,000 unmatched code bytes (98,036 unmatched bytes total).
+  Candidate scores do not establish promotion readiness; original relocation, data, map, and whole-link evidence still applies.
+- Next Priority 1 candidates: camera interpolation, pollution events, director object creation, and target arrow, followed by the smallest single-function closures.
+  Camera and pollution-event deferrals have been re-read; their existing layout/emission issues remain unresolved.
+  No library object was promoted or edited, and no gameplay test was performed.
+- Measurements: `docs/progress/GMSE01-batch24.json`; validation/diff logs: `build/GMSE01-*-batch24.*`.

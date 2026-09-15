@@ -26,8 +26,7 @@ const char* SMSGetMessageData(void* param_1, u32 param_2)
 		local_40 >> local_84;
 	}
 
-	char trash2[0x4];
-
+	u16 entrySize;
 	int r30      = 0;
 	u32 local_68 = 0;
 
@@ -35,17 +34,17 @@ const char* SMSGetMessageData(void* param_1, u32 param_2)
 
 	const char* r31 = nullptr;
 
-	while ((r30 == 0 || local_68 == 0) && local_74.isNotDrained()) {
-		int iVar3 = local_74.readS32();
+	while ((r30 == 0 || local_68 == 0) && local_74.getAvailable() != 0) {
+		s32 iVar3 = local_74.readS32();
 		s32 r27   = local_74.readS32();
 		switch (iVar3) {
 		case 'INF1': {
 			if (param_2 >= local_74.readU16())
 				return nullptr;
 
-			u32 r24 = local_74.readU16();
+			entrySize = local_74.readU16();
 			local_74.skip(4);
-			r24 = param_2 * r24;
+			u32 r24 = param_2 * entrySize;
 			local_74.skip(r24);
 			local_74 >> local_68;
 			if (!local_68)
@@ -55,9 +54,7 @@ const char* SMSGetMessageData(void* param_1, u32 param_2)
 		}
 
 		case 'DAT1':
-			// TODO: using the virtual method and letting it devirtualize
-			// results in too much stack... one more getter? Or s32/int memes?
-			r30 = local_74.mPosition;
+			r30 = local_74.getPosition();
 			local_74.skip(r27 - 8);
 			break;
 
@@ -66,8 +63,6 @@ const char* SMSGetMessageData(void* param_1, u32 param_2)
 			break;
 		}
 	}
-
-	char trash[0x4];
 
 	if (r30 != 0 && local_68 != 0)
 		r31 = (const char*)param_1 + r30 + local_68 + 0x20;

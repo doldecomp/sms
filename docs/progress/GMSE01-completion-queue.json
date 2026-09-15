@@ -1,0 +1,2954 @@
+{
+  "region": "GMSE01",
+  "checkpoint": "batch24",
+  "notes": [
+    "Report-based candidates only; source-link promotion also requires instruction, data, emission, map and executable verification.",
+    "Priorities follow DECOMPILATION_PLAN.md. Game objects only; library promotion remains pending explicit approval."
+  ],
+  "all_code_matching": [
+    {
+      "unit": "mario/Camera/CameraInbetween",
+      "source": "src/Camera/CameraInbetween.cpp",
+      "code_bytes": 1672,
+      "unmatched_code_bytes": 0,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": []
+    },
+    {
+      "unit": "mario/Map/PollutionEvent",
+      "source": "src/Map/PollutionEvent.cpp",
+      "code_bytes": 916,
+      "unmatched_code_bytes": 0,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": []
+    },
+    {
+      "unit": "mario/System/MarDirectorCreateObjects",
+      "source": "src/System/MarDirectorCreateObjects.cpp",
+      "code_bytes": 120,
+      "unmatched_code_bytes": 0,
+      "unmatched_data_bytes": 24,
+      "nonmatching_functions": []
+    },
+    {
+      "unit": "mario/System/TargetArrow",
+      "source": "src/System/TargetArrow.cpp",
+      "code_bytes": 324,
+      "unmatched_code_bytes": 0,
+      "unmatched_data_bytes": 320,
+      "nonmatching_functions": []
+    },
+    {
+      "unit": "mario/THPPlayer/THPDraw",
+      "source": "src/THPPlayer/THPDraw.c",
+      "code_bytes": 2016,
+      "unmatched_code_bytes": 0,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": []
+    },
+    {
+      "unit": "mario/THPPlayer/THPRead",
+      "source": "src/THPPlayer/THPRead.c",
+      "code_bytes": 708,
+      "unmatched_code_bytes": 0,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": []
+    },
+    {
+      "unit": "mario/THPPlayer/THPVideoDecode",
+      "source": "src/THPPlayer/THPVideoDecode.c",
+      "code_bytes": 1256,
+      "unmatched_code_bytes": 0,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": []
+    }
+  ],
+  "single_nonmatching_function": [
+    {
+      "unit": "mario/Player/MarioAccess",
+      "source": "src/Player/MarioAccess.cpp",
+      "code_bytes": 1152,
+      "unmatched_code_bytes": 72,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "SMS_IsMarioOnWire__Fv",
+          "size": 72,
+          "similarity": 93.833336
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/egggen",
+      "source": "src/Enemy/egggen.cpp",
+      "code_bytes": 888,
+      "unmatched_code_bytes": 120,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "control__13TEggGeneratorFv",
+          "size": 120,
+          "similarity": 99.833336
+        }
+      ]
+    },
+    {
+      "unit": "mario/Strategic/HitActor",
+      "source": "src/Strategic/HitActor.cpp",
+      "code_bytes": 668,
+      "unmatched_code_bytes": 124,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "calcEntryRadius__9THitActorFv",
+          "size": 124,
+          "similarity": 98.258064
+        }
+      ]
+    },
+    {
+      "unit": "mario/MSound/MSoundBGM",
+      "source": "src/MSound/MSoundBGM.cpp",
+      "code_bytes": 2860,
+      "unmatched_code_bytes": 136,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "init__5MSBgmFv",
+          "size": 136,
+          "similarity": 99.85294
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraMode",
+      "source": "src/Camera/CameraMode.cpp",
+      "code_bytes": 1152,
+      "unmatched_code_bytes": 144,
+      "unmatched_data_bytes": 1432,
+      "nonmatching_functions": [
+        {
+          "name": "isNormalCameraCompletely__15CPolarSubCameraCFv",
+          "size": 144,
+          "similarity": 72.861115
+        }
+      ]
+    },
+    {
+      "unit": "mario/MoveBG/MapObjPollution",
+      "source": "src/MoveBG/MapObjPollution.cpp",
+      "code_bytes": 2128,
+      "unmatched_code_bytes": 172,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "loadAfter__23TMapObjRevivalPollutionFv",
+          "size": 172,
+          "similarity": 88.06977
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/DebuTelesa",
+      "source": "src/Enemy/DebuTelesa.cpp",
+      "code_bytes": 2704,
+      "unmatched_code_bytes": 176,
+      "unmatched_data_bytes": 424,
+      "nonmatching_functions": [
+        {
+          "name": "receiveMessage__11TDebuTelesaFP9THitActorUl",
+          "size": 176,
+          "similarity": 99.795456
+        }
+      ]
+    },
+    {
+      "unit": "mario/THPPlayer/THPAudioDecode",
+      "source": "src/THPPlayer/THPAudioDecode.c",
+      "code_bytes": 888,
+      "unmatched_code_bytes": 176,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "AudioDecoderForOnMemory__FPv",
+          "size": 176,
+          "similarity": 89.27273
+        }
+      ]
+    },
+    {
+      "unit": "mario/MoveBG/MapObjAirport",
+      "source": "src/MoveBG/MapObjAirport.cpp",
+      "code_bytes": 2188,
+      "unmatched_code_bytes": 208,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "watch__17TAirportEventSinkFv",
+          "size": 208,
+          "similarity": 79.88461
+        }
+      ]
+    },
+    {
+      "unit": "mario/NPC/NpcInbetween",
+      "source": "src/NPC/NpcInbetween.cpp",
+      "code_bytes": 696,
+      "unmatched_code_bytes": 220,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "execPosInbetween__13TNpcInbetweenFPQ29JGeometry8TVec3<f>",
+          "size": 220,
+          "similarity": 99.09091
+        }
+      ]
+    },
+    {
+      "unit": "mario/System/SnapTimeObj",
+      "source": "src/System/SnapTimeObj.cpp",
+      "code_bytes": 344,
+      "unmatched_code_bytes": 228,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "perform__12TSnapTimeObjFUlPQ26JDrama9TGraphics",
+          "size": 228,
+          "similarity": 99.54386
+        }
+      ]
+    },
+    {
+      "unit": "mario/Strategic/livemanager",
+      "source": "src/Strategic/livemanager.cpp",
+      "code_bytes": 1272,
+      "unmatched_code_bytes": 252,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "perform__12TLiveManagerFUlPQ26JDrama9TGraphics",
+          "size": 252,
+          "similarity": 99.84127
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/enemytable",
+      "source": "src/Enemy/enemytable.cpp",
+      "code_bytes": 1436,
+      "unmatched_code_bytes": 276,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "getMatchedInfo__20TStageEnemyInfoTableFl",
+          "size": 276,
+          "similarity": 92.4058
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/MapEventSirena",
+      "source": "src/Map/MapEventSirena.cpp",
+      "code_bytes": 1712,
+      "unmatched_code_bytes": 280,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "watch__19TMapEventSirenaSinkFv",
+          "size": 280,
+          "similarity": 99.87143
+        }
+      ]
+    },
+    {
+      "unit": "mario/MoveBG/MapObjFloat",
+      "source": "src/MoveBG/MapObjFloat.cpp",
+      "code_bytes": 1680,
+      "unmatched_code_bytes": 288,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "initMapObj__17TMapObjFloatOnSeaFv",
+          "size": 288,
+          "similarity": 97.56944
+        }
+      ]
+    },
+    {
+      "unit": "mario/M3DUtil/M3UModel",
+      "source": "src/M3DUtil/M3UModel.cpp",
+      "code_bytes": 1152,
+      "unmatched_code_bytes": 292,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "updateInMotion__8M3UModelFv",
+          "size": 292,
+          "similarity": 99.9315
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/MapCollisionPlane",
+      "source": "src/Map/MapCollisionPlane.cpp",
+      "code_bytes": 1348,
+      "unmatched_code_bytes": 308,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "checkPlaneGround__20TMapCheckGroundPlaneFfffPPC12TBGCheckData",
+          "size": 308,
+          "similarity": 95.94805
+        }
+      ]
+    },
+    {
+      "unit": "mario/Player/MarioBlend",
+      "source": "src/Player/MarioBlend.cpp",
+      "code_bytes": 580,
+      "unmatched_code_bytes": 348,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "updateInMotion__13M3UModelMarioFv",
+          "size": 348,
+          "similarity": 99.873566
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraMarioData",
+      "source": "src/Camera/CameraMarioData.cpp",
+      "code_bytes": 920,
+      "unmatched_code_bytes": 356,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "calcAndSetMarioData__16TCameraMarioDataFv",
+          "size": 356,
+          "similarity": 99.92135
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraCodeControl",
+      "source": "src/Camera/CameraCodeControl.cpp",
+      "code_bytes": 360,
+      "unmatched_code_bytes": 360,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "controlByCameraCode___15CPolarSubCameraFPi",
+          "size": 360,
+          "similarity": 99.87778
+        }
+      ]
+    },
+    {
+      "unit": "mario/Player/SplashManager",
+      "source": "src/Player/SplashManager.cpp",
+      "code_bytes": 2752,
+      "unmatched_code_bytes": 392,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "makeDL__14TSplashManagerCFPQ26JDrama9TGraphics",
+          "size": 392,
+          "similarity": 99.94898
+        }
+      ]
+    },
+    {
+      "unit": "mario/MarioUtil/ModelUtil",
+      "source": "src/MarioUtil/ModelUtil.cpp",
+      "code_bytes": 1332,
+      "unmatched_code_bytes": 404,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "SMS_RideMoveByGroundActor__FP11TRidingInfoPQ29JGeometry8TVec3<f>Pf",
+          "size": 404,
+          "similarity": 99.821785
+        }
+      ]
+    },
+    {
+      "unit": "mario/MoveBG/MapObjWater",
+      "source": "src/MoveBG/MapObjWater.cpp",
+      "code_bytes": 2288,
+      "unmatched_code_bytes": 404,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "perform__18TMapObjWaterFilterFUlPQ26JDrama9TGraphics",
+          "size": 404,
+          "similarity": 78.38614
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/MapModel",
+      "source": "src/Map/MapModel.cpp",
+      "code_bytes": 2632,
+      "unmatched_code_bytes": 420,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "initUnderpass__9TMapModelFv",
+          "size": 420,
+          "similarity": 99.933334
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraBck",
+      "source": "src/Camera/CameraBck.cpp",
+      "code_bytes": 1116,
+      "unmatched_code_bytes": 452,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "updateDemo__10TCameraBckFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>Pf",
+          "size": 452,
+          "similarity": 98.9646
+        }
+      ]
+    },
+    {
+      "unit": "mario/MarioUtil/EffectUtil",
+      "source": "src/MarioUtil/EffectUtil.cpp",
+      "code_bytes": 968,
+      "unmatched_code_bytes": 488,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "SMS_EmitSinkInPollutionEffect__FRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>b",
+          "size": 488,
+          "similarity": 96.66393
+        }
+      ]
+    },
+    {
+      "unit": "mario/NPC/NpcColor",
+      "source": "src/NPC/NpcColor.cpp",
+      "code_bytes": 560,
+      "unmatched_code_bytes": 560,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "SMS_InitChangeNpcColor__FPC6MActorPC16TColorChangeInfosPC8_GXColor",
+          "size": 560,
+          "similarity": 99.96429
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/PollutionObj",
+      "source": "src/Map/PollutionObj.cpp",
+      "code_bytes": 2092,
+      "unmatched_code_bytes": 564,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "getDepthFromMap__13TPollutionObjFii",
+          "size": 564,
+          "similarity": 99.96454
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraWarp",
+      "source": "src/Camera/CameraWarp.cpp",
+      "code_bytes": 1548,
+      "unmatched_code_bytes": 580,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "warpPosAndAt__15CPolarSubCameraFfs",
+          "size": 580,
+          "similarity": 99.76552
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/areacylinder",
+      "source": "src/Enemy/areacylinder.cpp",
+      "code_bytes": 1824,
+      "unmatched_code_bytes": 604,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "load__13TAreaCylinderFR20JSUMemoryInputStream",
+          "size": 604,
+          "similarity": 99.82781
+        }
+      ]
+    },
+    {
+      "unit": "mario/Animal/Butterfly",
+      "source": "src/Animal/Butterfly.cpp",
+      "code_bytes": 2196,
+      "unmatched_code_bytes": 640,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "load__12TButterfloidFR20JSUMemoryInputStream",
+          "size": 640,
+          "similarity": 99.7
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/Shimmer",
+      "source": "src/Map/Shimmer.cpp",
+      "code_bytes": 2516,
+      "unmatched_code_bytes": 648,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "perform__8TShimmerFUlPQ26JDrama9TGraphics",
+          "size": 648,
+          "similarity": 99.80247
+        }
+      ]
+    },
+    {
+      "unit": "mario/GC2D/ProgSelect",
+      "source": "src/GC2D/ProgSelect.cpp",
+      "code_bytes": 1408,
+      "unmatched_code_bytes": 792,
+      "unmatched_data_bytes": 312,
+      "nonmatching_functions": [
+        {
+          "name": "perform__11TProgSelectFUlPQ26JDrama9TGraphics",
+          "size": 792,
+          "similarity": 99.85859
+        }
+      ]
+    },
+    {
+      "unit": "mario/System/MarNameRefGen_Map",
+      "source": "src/System/MarNameRefGen_Map.cpp",
+      "code_bytes": 824,
+      "unmatched_code_bytes": 824,
+      "unmatched_data_bytes": 448,
+      "nonmatching_functions": [
+        {
+          "name": "getNameRef_Map__14TMarNameRefGenCFPCc",
+          "size": 824,
+          "similarity": 69.88835
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraMultiPlayer",
+      "source": "src/Camera/CameraMultiPlayer.cpp",
+      "code_bytes": 1304,
+      "unmatched_code_bytes": 884,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "ctrlMultiPlayerCamera___15CPolarSubCameraFv",
+          "size": 884,
+          "similarity": 99.085976
+        }
+      ]
+    },
+    {
+      "unit": "mario/System/MarDirectorPreEntry",
+      "source": "src/System/MarDirectorPreEntry.cpp",
+      "code_bytes": 892,
+      "unmatched_code_bytes": 892,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "preEntry__12TMarDirectorFP12TPerformList",
+          "size": 892,
+          "similarity": 99.96861
+        }
+      ]
+    },
+    {
+      "unit": "mario/M3DUtil/M3UJoint",
+      "source": "src/M3DUtil/M3UJoint.cpp",
+      "code_bytes": 2204,
+      "unmatched_code_bytes": 932,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "M3UMtxCalcBlendAux__FUsP16J3DTransformInfoP16J3DTransformInfofb",
+          "size": 932,
+          "similarity": 98.79829
+        }
+      ]
+    },
+    {
+      "unit": "mario/NPC/NpcCallback",
+      "source": "src/NPC/NpcCallback.cpp",
+      "code_bytes": 1312,
+      "unmatched_code_bytes": 1064,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "NPCNeckCallBack__FP7J3DNodei",
+          "size": 1064,
+          "similarity": 92.890976
+        }
+      ]
+    },
+    {
+      "unit": "mario/M3DUtil/SampleCtrlNode",
+      "source": "src/M3DUtil/SampleCtrlNode.cpp",
+      "code_bytes": 1648,
+      "unmatched_code_bytes": 1244,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "__ct__18SampleCtrlMaterialFP11J3DMaterial",
+          "size": 1244,
+          "similarity": 99.97749
+        }
+      ]
+    },
+    {
+      "unit": "mario/Animal/AnimalNerve",
+      "source": "src/Animal/AnimalNerve.cpp",
+      "code_bytes": 1788,
+      "unmatched_code_bytes": 1336,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "execute__23TNerveAnimalGraphWanderCFP24TSpineBase<10TLiveActor>",
+          "size": 1336,
+          "similarity": 99.532936
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/spider",
+      "source": "src/Enemy/spider.cpp",
+      "code_bytes": 1580,
+      "unmatched_code_bytes": 1396,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "bind__7TSpiderFP10TLiveActor",
+          "size": 1396,
+          "similarity": 84.298
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/beam",
+      "source": "src/Enemy/beam.cpp",
+      "code_bytes": 3704,
+      "unmatched_code_bytes": 1680,
+      "unmatched_data_bytes": 8,
+      "nonmatching_functions": [
+        {
+          "name": "calcVertices__9TConeBeamFi",
+          "size": 1680,
+          "similarity": 88.64047
+        }
+      ]
+    },
+    {
+      "unit": "mario/Strategic/liveinterp",
+      "source": "src/Strategic/liveinterp.cpp",
+      "code_bytes": 7004,
+      "unmatched_code_bytes": 1944,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "linGetSRT__FP29TSpcTypedInterp<10TLiveActor>Ul",
+          "size": 1944,
+          "similarity": 96.05761
+        }
+      ]
+    },
+    {
+      "unit": "mario/MarioUtil/ScreenUtil",
+      "source": "src/MarioUtil/ScreenUtil.cpp",
+      "code_bytes": 3616,
+      "unmatched_code_bytes": 1952,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "perform__12TAfterEffectFUlPQ26JDrama9TGraphics",
+          "size": 1952,
+          "similarity": 99.77459
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraJetCoaster",
+      "source": "src/Camera/CameraJetCoaster.cpp",
+      "code_bytes": 3716,
+      "unmatched_code_bytes": 2784,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "ctrlJetCoasterCamera___15CPolarSubCameraFv",
+          "size": 2784,
+          "similarity": 95.90804
+        }
+      ]
+    }
+  ],
+  "at_most_2000_unmatched_code_bytes": [
+    {
+      "unit": "mario/Player/MarioAccess",
+      "source": "src/Player/MarioAccess.cpp",
+      "code_bytes": 1152,
+      "unmatched_code_bytes": 72,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "SMS_IsMarioOnWire__Fv",
+          "size": 72,
+          "similarity": 93.833336
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/egggen",
+      "source": "src/Enemy/egggen.cpp",
+      "code_bytes": 888,
+      "unmatched_code_bytes": 120,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "control__13TEggGeneratorFv",
+          "size": 120,
+          "similarity": 99.833336
+        }
+      ]
+    },
+    {
+      "unit": "mario/Strategic/HitActor",
+      "source": "src/Strategic/HitActor.cpp",
+      "code_bytes": 668,
+      "unmatched_code_bytes": 124,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "calcEntryRadius__9THitActorFv",
+          "size": 124,
+          "similarity": 98.258064
+        }
+      ]
+    },
+    {
+      "unit": "mario/MSound/MSoundBGM",
+      "source": "src/MSound/MSoundBGM.cpp",
+      "code_bytes": 2860,
+      "unmatched_code_bytes": 136,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "init__5MSBgmFv",
+          "size": 136,
+          "similarity": 99.85294
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraMode",
+      "source": "src/Camera/CameraMode.cpp",
+      "code_bytes": 1152,
+      "unmatched_code_bytes": 144,
+      "unmatched_data_bytes": 1432,
+      "nonmatching_functions": [
+        {
+          "name": "isNormalCameraCompletely__15CPolarSubCameraCFv",
+          "size": 144,
+          "similarity": 72.861115
+        }
+      ]
+    },
+    {
+      "unit": "mario/MoveBG/MapObjPollution",
+      "source": "src/MoveBG/MapObjPollution.cpp",
+      "code_bytes": 2128,
+      "unmatched_code_bytes": 172,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "loadAfter__23TMapObjRevivalPollutionFv",
+          "size": 172,
+          "similarity": 88.06977
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/DebuTelesa",
+      "source": "src/Enemy/DebuTelesa.cpp",
+      "code_bytes": 2704,
+      "unmatched_code_bytes": 176,
+      "unmatched_data_bytes": 424,
+      "nonmatching_functions": [
+        {
+          "name": "receiveMessage__11TDebuTelesaFP9THitActorUl",
+          "size": 176,
+          "similarity": 99.795456
+        }
+      ]
+    },
+    {
+      "unit": "mario/THPPlayer/THPAudioDecode",
+      "source": "src/THPPlayer/THPAudioDecode.c",
+      "code_bytes": 888,
+      "unmatched_code_bytes": 176,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "AudioDecoderForOnMemory__FPv",
+          "size": 176,
+          "similarity": 89.27273
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/enemyinterp",
+      "source": null,
+      "code_bytes": 180,
+      "unmatched_code_bytes": 180,
+      "unmatched_data_bytes": 16,
+      "nonmatching_functions": [
+        {
+          "name": "__dt__29TSpcTypedBinary<10TLiveActor>Fv",
+          "size": 100,
+          "similarity": 0
+        },
+        {
+          "name": "SpcTrace__FPCce",
+          "size": 80,
+          "similarity": 0
+        }
+      ]
+    },
+    {
+      "unit": "mario/MoveBG/MapObjAirport",
+      "source": "src/MoveBG/MapObjAirport.cpp",
+      "code_bytes": 2188,
+      "unmatched_code_bytes": 208,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "watch__17TAirportEventSinkFv",
+          "size": 208,
+          "similarity": 79.88461
+        }
+      ]
+    },
+    {
+      "unit": "mario/NPC/NpcInbetween",
+      "source": "src/NPC/NpcInbetween.cpp",
+      "code_bytes": 696,
+      "unmatched_code_bytes": 220,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "execPosInbetween__13TNpcInbetweenFPQ29JGeometry8TVec3<f>",
+          "size": 220,
+          "similarity": 99.09091
+        }
+      ]
+    },
+    {
+      "unit": "mario/System/SnapTimeObj",
+      "source": "src/System/SnapTimeObj.cpp",
+      "code_bytes": 344,
+      "unmatched_code_bytes": 228,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "perform__12TSnapTimeObjFUlPQ26JDrama9TGraphics",
+          "size": 228,
+          "similarity": 99.54386
+        }
+      ]
+    },
+    {
+      "unit": "mario/Strategic/livemanager",
+      "source": "src/Strategic/livemanager.cpp",
+      "code_bytes": 1272,
+      "unmatched_code_bytes": 252,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "perform__12TLiveManagerFUlPQ26JDrama9TGraphics",
+          "size": 252,
+          "similarity": 99.84127
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/enemytable",
+      "source": "src/Enemy/enemytable.cpp",
+      "code_bytes": 1436,
+      "unmatched_code_bytes": 276,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "getMatchedInfo__20TStageEnemyInfoTableFl",
+          "size": 276,
+          "similarity": 92.4058
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/MapEventSirena",
+      "source": "src/Map/MapEventSirena.cpp",
+      "code_bytes": 1712,
+      "unmatched_code_bytes": 280,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "watch__19TMapEventSirenaSinkFv",
+          "size": 280,
+          "similarity": 99.87143
+        }
+      ]
+    },
+    {
+      "unit": "mario/MoveBG/MapObjFloat",
+      "source": "src/MoveBG/MapObjFloat.cpp",
+      "code_bytes": 1680,
+      "unmatched_code_bytes": 288,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "initMapObj__17TMapObjFloatOnSeaFv",
+          "size": 288,
+          "similarity": 97.56944
+        }
+      ]
+    },
+    {
+      "unit": "mario/M3DUtil/M3UModel",
+      "source": "src/M3DUtil/M3UModel.cpp",
+      "code_bytes": 1152,
+      "unmatched_code_bytes": 292,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "updateInMotion__8M3UModelFv",
+          "size": 292,
+          "similarity": 99.9315
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/MapCollisionPlane",
+      "source": "src/Map/MapCollisionPlane.cpp",
+      "code_bytes": 1348,
+      "unmatched_code_bytes": 308,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "checkPlaneGround__20TMapCheckGroundPlaneFfffPPC12TBGCheckData",
+          "size": 308,
+          "similarity": 95.94805
+        }
+      ]
+    },
+    {
+      "unit": "mario/Animal/AnimalManager",
+      "source": "src/Animal/AnimalManager.cpp",
+      "code_bytes": 1552,
+      "unmatched_code_bytes": 316,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "clipEnemies__18TAnimalManagerBaseFPQ26JDrama9TGraphics",
+          "size": 256,
+          "similarity": 94.984375
+        },
+        {
+          "name": "loadAfter__11TMewManagerFv",
+          "size": 60,
+          "similarity": 99.666664
+        }
+      ]
+    },
+    {
+      "unit": "mario/Player/MarioBlend",
+      "source": "src/Player/MarioBlend.cpp",
+      "code_bytes": 580,
+      "unmatched_code_bytes": 348,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "updateInMotion__13M3UModelMarioFv",
+          "size": 348,
+          "similarity": 99.873566
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraMarioData",
+      "source": "src/Camera/CameraMarioData.cpp",
+      "code_bytes": 920,
+      "unmatched_code_bytes": 356,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "calcAndSetMarioData__16TCameraMarioDataFv",
+          "size": 356,
+          "similarity": 99.92135
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraCodeControl",
+      "source": "src/Camera/CameraCodeControl.cpp",
+      "code_bytes": 360,
+      "unmatched_code_bytes": 360,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "controlByCameraCode___15CPolarSubCameraFPi",
+          "size": 360,
+          "similarity": 99.87778
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraTalk",
+      "source": "src/Camera/CameraTalk.cpp",
+      "code_bytes": 448,
+      "unmatched_code_bytes": 376,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "makeMtxForTalk__15CPolarSubCameraFPC8TBaseNPC",
+          "size": 224,
+          "similarity": 99.83929
+        },
+        {
+          "name": "makeMtxForPrevTalk__15CPolarSubCameraFv",
+          "size": 152,
+          "similarity": 99.81579
+        }
+      ]
+    },
+    {
+      "unit": "mario/System/TalkCursor",
+      "source": "src/System/TalkCursor.cpp",
+      "code_bytes": 560,
+      "unmatched_code_bytes": 380,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "loadAfter__11TTalkCursorFv",
+          "size": 240,
+          "similarity": 99.916664
+        },
+        {
+          "name": "associateNPC__11TTalkCursorFP8TBaseNPC",
+          "size": 140,
+          "similarity": 99.6
+        }
+      ]
+    },
+    {
+      "unit": "mario/Player/SplashManager",
+      "source": "src/Player/SplashManager.cpp",
+      "code_bytes": 2752,
+      "unmatched_code_bytes": 392,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "makeDL__14TSplashManagerCFPQ26JDrama9TGraphics",
+          "size": 392,
+          "similarity": 99.94898
+        }
+      ]
+    },
+    {
+      "unit": "mario/MarioUtil/ModelUtil",
+      "source": "src/MarioUtil/ModelUtil.cpp",
+      "code_bytes": 1332,
+      "unmatched_code_bytes": 404,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "SMS_RideMoveByGroundActor__FP11TRidingInfoPQ29JGeometry8TVec3<f>Pf",
+          "size": 404,
+          "similarity": 99.821785
+        }
+      ]
+    },
+    {
+      "unit": "mario/MoveBG/MapObjWater",
+      "source": "src/MoveBG/MapObjWater.cpp",
+      "code_bytes": 2288,
+      "unmatched_code_bytes": 404,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "perform__18TMapObjWaterFilterFUlPQ26JDrama9TGraphics",
+          "size": 404,
+          "similarity": 78.38614
+        }
+      ]
+    },
+    {
+      "unit": "mario/Strategic/objmanager",
+      "source": "src/Strategic/objmanager.cpp",
+      "code_bytes": 1640,
+      "unmatched_code_bytes": 404,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "load__11TObjManagerFR20JSUMemoryInputStream",
+          "size": 168,
+          "similarity": 99.92857
+        },
+        {
+          "name": "perform__11TObjManagerFUlPQ26JDrama9TGraphics",
+          "size": 236,
+          "similarity": 99.830505
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/MapModel",
+      "source": "src/Map/MapModel.cpp",
+      "code_bytes": 2632,
+      "unmatched_code_bytes": 420,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "initUnderpass__9TMapModelFv",
+          "size": 420,
+          "similarity": 99.933334
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraBck",
+      "source": "src/Camera/CameraBck.cpp",
+      "code_bytes": 1116,
+      "unmatched_code_bytes": 452,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "updateDemo__10TCameraBckFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>Pf",
+          "size": 452,
+          "similarity": 98.9646
+        }
+      ]
+    },
+    {
+      "unit": "mario/Strategic/Strategy",
+      "source": "src/Strategic/Strategy.cpp",
+      "code_bytes": 1600,
+      "unmatched_code_bytes": 464,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "__ct__9TStrategyFPCc",
+          "size": 184,
+          "similarity": 87.608696
+        },
+        {
+          "name": "load__9TStrategyFR20JSUMemoryInputStream",
+          "size": 280,
+          "similarity": 99.92857
+        }
+      ]
+    },
+    {
+      "unit": "mario/MoveBG/WoodBarrel",
+      "source": "src/MoveBG/WoodBarrel.cpp",
+      "code_bytes": 2920,
+      "unmatched_code_bytes": 476,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "kill__11TWoodBarrelFv",
+          "size": 168,
+          "similarity": 99.690475
+        },
+        {
+          "name": "appeared__11TWoodBarrelFv",
+          "size": 180,
+          "similarity": 99.888885
+        },
+        {
+          "name": "appear__11TWoodBarrelFv",
+          "size": 128,
+          "similarity": 99.84375
+        }
+      ]
+    },
+    {
+      "unit": "mario/MarioUtil/EffectUtil",
+      "source": "src/MarioUtil/EffectUtil.cpp",
+      "code_bytes": 968,
+      "unmatched_code_bytes": 488,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "SMS_EmitSinkInPollutionEffect__FRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>b",
+          "size": 488,
+          "similarity": 96.66393
+        }
+      ]
+    },
+    {
+      "unit": "mario/GC2D/HelpActor",
+      "source": "src/GC2D/HelpActor.cpp",
+      "code_bytes": 1272,
+      "unmatched_code_bytes": 508,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "load__10THelpActorFR20JSUMemoryInputStream",
+          "size": 164,
+          "similarity": 97.53658
+        },
+        {
+          "name": "perform__10THelpActorFUlPQ26JDrama9TGraphics",
+          "size": 344,
+          "similarity": 99.941864
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/MapXlu",
+      "source": "src/Map/MapXlu.cpp",
+      "code_bytes": 1592,
+      "unmatched_code_bytes": 536,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "changeNormalJoint__7TMapXluFv",
+          "size": 256,
+          "similarity": 99.921875
+        },
+        {
+          "name": "changeXluJoint__7TMapXluFi",
+          "size": 280,
+          "similarity": 99.84286
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/PollutionPos",
+      "source": "src/Map/PollutionPos.cpp",
+      "code_bytes": 1756,
+      "unmatched_code_bytes": 552,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "getEdgeDegree__13TPollutionPosCFii",
+          "size": 340,
+          "similarity": 97.8353
+        },
+        {
+          "name": "isSame__13TPollutionPosCFiif",
+          "size": 212,
+          "similarity": 99.92453
+        }
+      ]
+    },
+    {
+      "unit": "mario/NPC/NpcColor",
+      "source": "src/NPC/NpcColor.cpp",
+      "code_bytes": 560,
+      "unmatched_code_bytes": 560,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "SMS_InitChangeNpcColor__FPC6MActorPC16TColorChangeInfosPC8_GXColor",
+          "size": 560,
+          "similarity": 99.96429
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/PollutionObj",
+      "source": "src/Map/PollutionObj.cpp",
+      "code_bytes": 2092,
+      "unmatched_code_bytes": 564,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "getDepthFromMap__13TPollutionObjFii",
+          "size": 564,
+          "similarity": 99.96454
+        }
+      ]
+    },
+    {
+      "unit": "mario/System/PerformList",
+      "source": "src/System/PerformList.cpp",
+      "code_bytes": 1156,
+      "unmatched_code_bytes": 568,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "perform__12TPerformListFUlPQ26JDrama9TGraphics",
+          "size": 216,
+          "similarity": 99.333336
+        },
+        {
+          "name": "load__12TPerformListFR20JSUMemoryInputStream",
+          "size": 352,
+          "similarity": 99.97727
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraWarp",
+      "source": "src/Camera/CameraWarp.cpp",
+      "code_bytes": 1548,
+      "unmatched_code_bytes": 580,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "warpPosAndAt__15CPolarSubCameraFfs",
+          "size": 580,
+          "similarity": 99.76552
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/areacylinder",
+      "source": "src/Enemy/areacylinder.cpp",
+      "code_bytes": 1824,
+      "unmatched_code_bytes": 604,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "load__13TAreaCylinderFR20JSUMemoryInputStream",
+          "size": 604,
+          "similarity": 99.82781
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanNerve",
+      "source": "src/Enemy/BossHanachanNerve.cpp",
+      "code_bytes": 3784,
+      "unmatched_code_bytes": 628,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "execute__24TNerveBossHanachanTumbleCFP24TSpineBase<10TLiveActor>",
+          "size": 284,
+          "similarity": 99.901405
+        },
+        {
+          "name": "execute__23TNerveBossHanachanSnortCFP24TSpineBase<10TLiveActor>",
+          "size": 344,
+          "similarity": 99.9186
+        }
+      ]
+    },
+    {
+      "unit": "mario/Animal/Butterfly",
+      "source": "src/Animal/Butterfly.cpp",
+      "code_bytes": 2196,
+      "unmatched_code_bytes": 640,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "load__12TButterfloidFR20JSUMemoryInputStream",
+          "size": 640,
+          "similarity": 99.7
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/Shimmer",
+      "source": "src/Map/Shimmer.cpp",
+      "code_bytes": 2516,
+      "unmatched_code_bytes": 648,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "perform__8TShimmerFUlPQ26JDrama9TGraphics",
+          "size": 648,
+          "similarity": 99.80247
+        }
+      ]
+    },
+    {
+      "unit": "mario/GC2D/MessageLoader",
+      "source": "src/GC2D/MessageLoader.cpp",
+      "code_bytes": 880,
+      "unmatched_code_bytes": 680,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "__ct__14TMessageLoaderFPCc",
+          "size": 108,
+          "similarity": 99.81481
+        },
+        {
+          "name": "parseBlock__14TMessageLoaderFUlUlPv",
+          "size": 572,
+          "similarity": 99.64336
+        }
+      ]
+    },
+    {
+      "unit": "mario/Strategic/question",
+      "source": "src/Strategic/question.cpp",
+      "code_bytes": 1448,
+      "unmatched_code_bytes": 692,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "request__16TQuestionManagerFQ29JGeometry8TVec3<f>f",
+          "size": 148,
+          "similarity": 88.702705
+        },
+        {
+          "name": "makeDL__16TQuestionManagerCFPQ26JDrama9TGraphics",
+          "size": 296,
+          "similarity": 84.22973
+        },
+        {
+          "name": "perform__16TQuestionManagerFUlPQ26JDrama9TGraphics",
+          "size": 248,
+          "similarity": 99.854836
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/DemoBossHanachanBase",
+      "source": "src/Enemy/DemoBossHanachanBase.cpp",
+      "code_bytes": 728,
+      "unmatched_code_bytes": 728,
+      "unmatched_data_bytes": 656,
+      "nonmatching_functions": [
+        {
+          "name": "@32@__dt__17TDemoBossHanachanFv",
+          "size": 8,
+          "similarity": 0
+        },
+        {
+          "name": "__dt__24TDemoBossHanachanManagerFv",
+          "size": 100,
+          "similarity": 0
+        },
+        {
+          "name": "__ct__27TDemoBossHanachanSaveParamsFPCc",
+          "size": 204,
+          "similarity": 0
+        },
+        {
+          "name": "clipEnemies__24TDemoBossHanachanManagerFPQ26JDrama9TGraphics",
+          "size": 44,
+          "similarity": 0
+        },
+        {
+          "name": "initBase__17TDemoBossHanachanFP12TLiveManagerUl",
+          "size": 256,
+          "similarity": 0
+        },
+        {
+          "name": "receiveMessage__17TDemoBossHanachanFP9THitActorUl",
+          "size": 8,
+          "similarity": 0
+        },
+        {
+          "name": "__dt__17TDemoBossHanachanFv",
+          "size": 108,
+          "similarity": 0
+        }
+      ]
+    },
+    {
+      "unit": "mario/MSound/MSModBgm",
+      "source": "src/MSound/MSModBgm.cpp",
+      "code_bytes": 1704,
+      "unmatched_code_bytes": 744,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "modBgm__8MSModBgmFUcUc",
+          "size": 252,
+          "similarity": 96.507935
+        },
+        {
+          "name": "xFadeBgm__10MSBgmXFadeFf",
+          "size": 272,
+          "similarity": 99.39706
+        },
+        {
+          "name": "xFadeBgmForce__10MSBgmXFadeFf",
+          "size": 220,
+          "similarity": 99.8
+        }
+      ]
+    },
+    {
+      "unit": "mario/GC2D/MovieRumble",
+      "source": "src/GC2D/MovieRumble.cpp",
+      "code_bytes": 988,
+      "unmatched_code_bytes": 748,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "init__12TMovieRumbleFPCc",
+          "size": 352,
+          "similarity": 98.0
+        },
+        {
+          "name": "perform__12TMovieRumbleFUlPQ26JDrama9TGraphics",
+          "size": 128,
+          "similarity": 99.84375
+        },
+        {
+          "name": "checkRumbleOff__12TMovieRumbleFv",
+          "size": 268,
+          "similarity": 97.44776
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/MapCollisionEntry",
+      "source": "src/Map/MapCollisionEntry.cpp",
+      "code_bytes": 2656,
+      "unmatched_code_bytes": 776,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "moveSRT__17TMapCollisionMoveFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+          "size": 236,
+          "similarity": 99.932205
+        },
+        {
+          "name": "move__17TMapCollisionMoveFv",
+          "size": 164,
+          "similarity": 99.92683
+        },
+        {
+          "name": "init__17TMapCollisionMoveFUlUssPC10TLiveActor",
+          "size": 168,
+          "similarity": 99.7381
+        },
+        {
+          "name": "setUp__17TMapCollisionWarpFv",
+          "size": 208,
+          "similarity": 99.82692
+        }
+      ]
+    },
+    {
+      "unit": "mario/GC2D/ProgSelect",
+      "source": "src/GC2D/ProgSelect.cpp",
+      "code_bytes": 1408,
+      "unmatched_code_bytes": 792,
+      "unmatched_data_bytes": 312,
+      "nonmatching_functions": [
+        {
+          "name": "perform__11TProgSelectFUlPQ26JDrama9TGraphics",
+          "size": 792,
+          "similarity": 99.85859
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraSecureView",
+      "source": "src/Camera/CameraSecureView.cpp",
+      "code_bytes": 800,
+      "unmatched_code_bytes": 800,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "calcSecureViewTarget___15CPolarSubCameraFsPfPf",
+          "size": 288,
+          "similarity": 99.875
+        },
+        {
+          "name": "execSecureView___15CPolarSubCameraFsP3Vec",
+          "size": 512,
+          "similarity": 99.859375
+        }
+      ]
+    },
+    {
+      "unit": "mario/System/MarNameRefGen_Map",
+      "source": "src/System/MarNameRefGen_Map.cpp",
+      "code_bytes": 824,
+      "unmatched_code_bytes": 824,
+      "unmatched_data_bytes": 448,
+      "nonmatching_functions": [
+        {
+          "name": "getNameRef_Map__14TMarNameRefGenCFPCc",
+          "size": 824,
+          "similarity": 69.88835
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/PollutionManager",
+      "source": "src/Map/PollutionManager.cpp",
+      "code_bytes": 4208,
+      "unmatched_code_bytes": 832,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "clean__17TPollutionManagerFffff",
+          "size": 208,
+          "similarity": 99.67308
+        },
+        {
+          "name": "cleanedAll__17TPollutionManagerCFv",
+          "size": 268,
+          "similarity": 96.43284
+        },
+        {
+          "name": "load__17TPollutionManagerFR20JSUMemoryInputStream",
+          "size": 356,
+          "similarity": 99.8764
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraMultiPlayer",
+      "source": "src/Camera/CameraMultiPlayer.cpp",
+      "code_bytes": 1304,
+      "unmatched_code_bytes": 884,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "ctrlMultiPlayerCamera___15CPolarSubCameraFv",
+          "size": 884,
+          "similarity": 99.085976
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/sunmgr",
+      "source": "src/Camera/sunmgr.cpp",
+      "code_bytes": 2044,
+      "unmatched_code_bytes": 884,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "load__7TSunMgrFR20JSUMemoryInputStream",
+          "size": 456,
+          "similarity": 98.97369
+        },
+        {
+          "name": "perform__7TSunMgrFUlPQ26JDrama9TGraphics",
+          "size": 428,
+          "similarity": 98.82243
+        }
+      ]
+    },
+    {
+      "unit": "mario/MoveBG/MapObjCloud",
+      "source": "src/MoveBG/MapObjCloud.cpp",
+      "code_bytes": 2748,
+      "unmatched_code_bytes": 892,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "setGroundCollision__10TRideCloudFv",
+          "size": 120,
+          "similarity": 99.96667
+        },
+        {
+          "name": "control__10TRideCloudFv",
+          "size": 772,
+          "similarity": 96.336784
+        }
+      ]
+    },
+    {
+      "unit": "mario/System/MarDirectorPreEntry",
+      "source": "src/System/MarDirectorPreEntry.cpp",
+      "code_bytes": 892,
+      "unmatched_code_bytes": 892,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "preEntry__12TMarDirectorFP12TPerformList",
+          "size": 892,
+          "similarity": 99.96861
+        }
+      ]
+    },
+    {
+      "unit": "mario/GC2D/SunGlass",
+      "source": "src/GC2D/SunGlass.cpp",
+      "code_bytes": 1948,
+      "unmatched_code_bytes": 916,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "startFade__9TSunGlassFib",
+          "size": 376,
+          "similarity": 99.73404
+        },
+        {
+          "name": "loadAfter__9TSunGlassFv",
+          "size": 168,
+          "similarity": 99.690475
+        },
+        {
+          "name": "load__9TSunGlassFR20JSUMemoryInputStream",
+          "size": 60,
+          "similarity": 99.666664
+        },
+        {
+          "name": "perform__9TSunShineFUlPQ26JDrama9TGraphics",
+          "size": 220,
+          "similarity": 99.89091
+        },
+        {
+          "name": "loadAfter__9TSunShineFv",
+          "size": 92,
+          "similarity": 99.78261
+        }
+      ]
+    },
+    {
+      "unit": "mario/M3DUtil/M3UJoint",
+      "source": "src/M3DUtil/M3UJoint.cpp",
+      "code_bytes": 2204,
+      "unmatched_code_bytes": 932,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "M3UMtxCalcBlendAux__FUsP16J3DTransformInfoP16J3DTransformInfofb",
+          "size": 932,
+          "similarity": 98.79829
+        }
+      ]
+    },
+    {
+      "unit": "mario/Player/MarioUpper",
+      "source": "src/Player/MarioUpper.cpp",
+      "code_bytes": 2016,
+      "unmatched_code_bytes": 964,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "checkPumpEnable__6TMarioFv",
+          "size": 460,
+          "similarity": 99.930435
+        },
+        {
+          "name": "stateMachineUpper__6TMarioFv",
+          "size": 504,
+          "similarity": 72.06349
+        }
+      ]
+    },
+    {
+      "unit": "mario/MoveBG/ItemManager",
+      "source": "src/MoveBG/ItemManager.cpp",
+      "code_bytes": 2668,
+      "unmatched_code_bytes": 992,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "resetNozzleBoxesModel__12TItemManagerFi",
+          "size": 224,
+          "similarity": 78.57143
+        },
+        {
+          "name": "makeShineAppearWithTime__12TItemManagerFPCcifffiii",
+          "size": 176,
+          "similarity": 98.38636
+        },
+        {
+          "name": "makeShineAppearWithDemo__12TItemManagerFPCcPCcfff",
+          "size": 168,
+          "similarity": 98.57143
+        },
+        {
+          "name": "makeShineAppearWithDemoOffset__12TItemManagerFPCcPCcfff",
+          "size": 192,
+          "similarity": 98.75
+        },
+        {
+          "name": "newAndRegisterCoin__12TItemManagerFUl",
+          "size": 232,
+          "similarity": 99.5
+        }
+      ]
+    },
+    {
+      "unit": "mario/THPPlayer/THPPlayer",
+      "source": "src/THPPlayer/THPPlayer.c",
+      "code_bytes": 5428,
+      "unmatched_code_bytes": 992,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "THPPlayerInit",
+          "size": 200,
+          "similarity": 99.86
+        },
+        {
+          "name": "THPPlayerCalcNeedMemory",
+          "size": 168,
+          "similarity": 99.04762
+        },
+        {
+          "name": "THPPlayerPrepare",
+          "size": 624,
+          "similarity": 97.98077
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/Sky",
+      "source": "src/Map/Sky.cpp",
+      "code_bytes": 2168,
+      "unmatched_code_bytes": 1008,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "perform__4TSkyFUlPQ26JDrama9TGraphics",
+          "size": 856,
+          "similarity": 99.77103
+        },
+        {
+          "name": "load__4TSkyFR20JSUMemoryInputStream",
+          "size": 152,
+          "similarity": 99.86842
+        }
+      ]
+    },
+    {
+      "unit": "mario/GC2D/Menu",
+      "source": "src/GC2D/Menu.cpp",
+      "code_bytes": 1564,
+      "unmatched_code_bytes": 1012,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "perform__9TMenuBaseFUlPQ26JDrama9TGraphics",
+          "size": 152,
+          "similarity": 99.68421
+        },
+        {
+          "name": "__ct__10TMenuPlaneFPC13TMarioGamePadP7J2DPaneUlUl",
+          "size": 464,
+          "similarity": 92.55173
+        },
+        {
+          "name": "perform__10TMenuPlaneFUlPQ26JDrama9TGraphics",
+          "size": 396,
+          "similarity": 99.49495
+        }
+      ]
+    },
+    {
+      "unit": "mario/MoveBG/MapObjEx",
+      "source": "src/MoveBG/MapObjEx.cpp",
+      "code_bytes": 3464,
+      "unmatched_code_bytes": 1028,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "receiveMessage__11TMapObjNailFP9THitActorUl",
+          "size": 324,
+          "similarity": 99.93827
+        },
+        {
+          "name": "control__10TJointCoinFv",
+          "size": 284,
+          "similarity": 99.92958
+        },
+        {
+          "name": "makeObj__10TJointCoinFPCcUs",
+          "size": 420,
+          "similarity": 95.37143
+        }
+      ]
+    },
+    {
+      "unit": "mario/System/MarDirector",
+      "source": "src/System/MarDirector.cpp",
+      "code_bytes": 1976,
+      "unmatched_code_bytes": 1028,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "__ct__12TMarDirectorFv",
+          "size": 892,
+          "similarity": 99.995514
+        },
+        {
+          "name": "registerEventWatcher__12TMarDirectorFP13TEventWatcher",
+          "size": 136,
+          "similarity": 99.79412
+        }
+      ]
+    },
+    {
+      "unit": "mario/System/RenderModeObj",
+      "source": "src/System/RenderModeObj.cpp",
+      "code_bytes": 1392,
+      "unmatched_code_bytes": 1036,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "SMSSetupGCLogoRenderingInfo__FPQ26JDrama8TDisplay",
+          "size": 184,
+          "similarity": 99.847824
+        },
+        {
+          "name": "SMSSetupTitleRenderingInfo__FPQ26JDrama8TDisplay",
+          "size": 264,
+          "similarity": 99.92424
+        },
+        {
+          "name": "SMSSetupGameRenderingInfo__FPQ26JDrama8TDisplayb",
+          "size": 316,
+          "similarity": 99.93671
+        },
+        {
+          "name": "SMSSetupMovieRenderingInfo__FPQ26JDrama8TDisplay",
+          "size": 272,
+          "similarity": 99.838234
+        }
+      ]
+    },
+    {
+      "unit": "mario/NPC/NpcCoin",
+      "source": "src/NPC/NpcCoin.cpp",
+      "code_bytes": 1924,
+      "unmatched_code_bytes": 1040,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "requestAppearCoin__8TNpcCoinFRC3Vecfi",
+          "size": 628,
+          "similarity": 99.94904
+        },
+        {
+          "name": "updateCoin__8TNpcCoinFv",
+          "size": 412,
+          "similarity": 99.93204
+        }
+      ]
+    },
+    {
+      "unit": "mario/NPC/NpcCallback",
+      "source": "src/NPC/NpcCallback.cpp",
+      "code_bytes": 1312,
+      "unmatched_code_bytes": 1064,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "NPCNeckCallBack__FP7J3DNodei",
+          "size": 1064,
+          "similarity": 92.890976
+        }
+      ]
+    },
+    {
+      "unit": "mario/MSound/MAnmSound",
+      "source": "src/MSound/MAnmSound.cpp",
+      "code_bytes": 2124,
+      "unmatched_code_bytes": 1068,
+      "unmatched_data_bytes": 48,
+      "nonmatching_functions": [
+        {
+          "name": "startAnimSound__9MAnmSoundFPvUlPP8JAISoundP8JAIActorUc",
+          "size": 120,
+          "similarity": 0
+        },
+        {
+          "name": "startAnimSound__14MAnmSoundMarioFPvUlPP8JAISoundP8JAIActorUc",
+          "size": 248,
+          "similarity": 0
+        },
+        {
+          "name": "sqrtf__3stdFf",
+          "size": 100,
+          "similarity": 0
+        },
+        {
+          "name": "startAnimSound__12MAnmSoundNPCFPvUlPP8JAISoundP8JAIActorUc",
+          "size": 600,
+          "similarity": 80.98
+        }
+      ]
+    },
+    {
+      "unit": "mario/MoveBG/MapObjOption",
+      "source": "src/MoveBG/MapObjOption.cpp",
+      "code_bytes": 2640,
+      "unmatched_code_bytes": 1100,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "touchPlayer__14TFileLoadBlockFP9THitActor",
+          "size": 240,
+          "similarity": 99.916664
+        },
+        {
+          "name": "receiveMessage__14TFileLoadBlockFP9THitActorUl",
+          "size": 244,
+          "similarity": 99.91803
+        },
+        {
+          "name": "loadAfter__14TFileLoadBlockFv",
+          "size": 384,
+          "similarity": 99.875
+        },
+        {
+          "name": "initMapObj__14TFileLoadBlockFv",
+          "size": 232,
+          "similarity": 99.93104
+        }
+      ]
+    },
+    {
+      "unit": "mario/GC2D/MovieSubtitle",
+      "source": "src/GC2D/MovieSubtitle.cpp",
+      "code_bytes": 1372,
+      "unmatched_code_bytes": 1120,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "setupResource__14TMovieSubTitleFPCcP10JKRArchive",
+          "size": 404,
+          "similarity": 99.88119
+        },
+        {
+          "name": "perform__14TMovieSubTitleFUlPQ26JDrama9TGraphics",
+          "size": 532,
+          "similarity": 73.07519
+        },
+        {
+          "name": "setCurMessage__14TMovieSubTitleFv",
+          "size": 184,
+          "similarity": 81.95652
+        }
+      ]
+    },
+    {
+      "unit": "mario/NPC/NpcManager",
+      "source": "src/NPC/NpcManager.cpp",
+      "code_bytes": 11720,
+      "unmatched_code_bytes": 1148,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "makePartsModelData___11TNPCManagerFUlUlP16TModelDataKeeper",
+          "size": 336,
+          "similarity": 99.97619
+        },
+        {
+          "name": "clipEnemies__11TNPCManagerFPQ26JDrama9TGraphics",
+          "size": 448,
+          "similarity": 92.71429
+        },
+        {
+          "name": "perform__11TNPCManagerFUlPQ26JDrama9TGraphics",
+          "size": 364,
+          "similarity": 99.9011
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/bgpoldrop",
+      "source": "src/Enemy/bgpoldrop.cpp",
+      "code_bytes": 2412,
+      "unmatched_code_bytes": 1156,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "move__10TBGPolDropFv",
+          "size": 592,
+          "similarity": 99.79054
+        },
+        {
+          "name": "perform__10TBGPolDropFUlPQ26JDrama9TGraphics",
+          "size": 564,
+          "similarity": 99.971634
+        }
+      ]
+    },
+    {
+      "unit": "mario/GC2D/BoundPane",
+      "source": "src/GC2D/BoundPane.cpp",
+      "code_bytes": 1388,
+      "unmatched_code_bytes": 1156,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "__ct__10TBoundPaneFP9J2DScreenUl",
+          "size": 260,
+          "similarity": 83.50769
+        },
+        {
+          "name": "update__10TBoundPaneFv",
+          "size": 896,
+          "similarity": 54.950893
+        }
+      ]
+    },
+    {
+      "unit": "mario/MarioUtil/MathUtil",
+      "source": "src/MarioUtil/MathUtil.cpp",
+      "code_bytes": 3320,
+      "unmatched_code_bytes": 1240,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "matan__Fff",
+          "size": 676,
+          "similarity": 99.20119
+        },
+        {
+          "name": "MsGetRotFromZaxis__FRCQ29JGeometry8TVec3<f>",
+          "size": 564,
+          "similarity": 98.58865
+        }
+      ]
+    },
+    {
+      "unit": "mario/M3DUtil/SampleCtrlNode",
+      "source": "src/M3DUtil/SampleCtrlNode.cpp",
+      "code_bytes": 1648,
+      "unmatched_code_bytes": 1244,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "__ct__18SampleCtrlMaterialFP11J3DMaterial",
+          "size": 1244,
+          "similarity": 99.97749
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/generator",
+      "source": "src/Enemy/generator.cpp",
+      "code_bytes": 1832,
+      "unmatched_code_bytes": 1268,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "load__10TGeneratorFR20JSUMemoryInputStream",
+          "size": 424,
+          "similarity": 99.57547
+        },
+        {
+          "name": "perform__10TGeneratorFUlPQ26JDrama9TGraphics",
+          "size": 288,
+          "similarity": 99.84722
+        },
+        {
+          "name": "loadAfter__17TOneShotGeneratorFv",
+          "size": 308,
+          "similarity": 99.85714
+        },
+        {
+          "name": "receiveMessage__17TOneShotGeneratorFP9THitActorUl",
+          "size": 248,
+          "similarity": 99.82258
+        }
+      ]
+    },
+    {
+      "unit": "mario/MSound/MSHandle",
+      "source": "src/MSound/MSHandle.cpp",
+      "code_bytes": 2876,
+      "unmatched_code_bytes": 1272,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "setSeDistanceParameters__8MSHandleFv",
+          "size": 336,
+          "similarity": 99.90476
+        },
+        {
+          "name": "setSeDistancePan__8MSHandleFUc",
+          "size": 160,
+          "similarity": 99.825
+        },
+        {
+          "name": "calcPan__8MSHandleFRC3Vecff",
+          "size": 288,
+          "similarity": 99.875
+        },
+        {
+          "name": "calcDolby__8MSHandleFRC3Vecf",
+          "size": 240,
+          "similarity": 98.916664
+        },
+        {
+          "name": "setSeDistanceVolume__8MSHandleFUc",
+          "size": 248,
+          "similarity": 99.645164
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraOption",
+      "source": "src/Camera/CameraOption.cpp",
+      "code_bytes": 1408,
+      "unmatched_code_bytes": 1276,
+      "unmatched_data_bytes": 48,
+      "nonmatching_functions": [
+        {
+          "name": "ctrlOptionCamera___15CPolarSubCameraFv",
+          "size": 904,
+          "similarity": 99.88938
+        },
+        {
+          "name": "__ct__13TCameraOptionFQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "size": 372,
+          "similarity": 99.860214
+        }
+      ]
+    },
+    {
+      "unit": "mario/Animal/AnimalNerve",
+      "source": "src/Animal/AnimalNerve.cpp",
+      "code_bytes": 1788,
+      "unmatched_code_bytes": 1336,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "execute__23TNerveAnimalGraphWanderCFP24TSpineBase<10TLiveActor>",
+          "size": 1336,
+          "similarity": 99.532936
+        }
+      ]
+    },
+    {
+      "unit": "mario/GC2D/ScrnFader",
+      "source": "src/GC2D/ScrnFader.cpp",
+      "code_bytes": 4612,
+      "unmatched_code_bytes": 1336,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "draw_wipe_box__9@unnamed@FRCQ26JDrama5TRectQ28JUtility6TColor",
+          "size": 708,
+          "similarity": 93.768364
+        },
+        {
+          "name": "update__9TSMSFaderFv",
+          "size": 348,
+          "similarity": 99.655174
+        },
+        {
+          "name": "load__9TSMSFaderFR20JSUMemoryInputStream",
+          "size": 280,
+          "similarity": 96.58572
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/wireBinder",
+      "source": "src/Enemy/wireBinder.cpp",
+      "code_bytes": 1712,
+      "unmatched_code_bytes": 1384,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "init__11TWireBinderFRCQ29JGeometry8TVec3<f>",
+          "size": 268,
+          "similarity": 99.64179
+        },
+        {
+          "name": "bind__11TWireBinderFP10TLiveActor",
+          "size": 696,
+          "similarity": 99.56896
+        },
+        {
+          "name": "getDirAtPos__11TWireBinderCFRCQ29JGeometry8TVec3<f>f",
+          "size": 316,
+          "similarity": 99.860756
+        },
+        {
+          "name": "isEndWire__11TWireBinderCFRCQ29JGeometry8TVec3<f>f",
+          "size": 104,
+          "similarity": 99.80769
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/spider",
+      "source": "src/Enemy/spider.cpp",
+      "code_bytes": 1580,
+      "unmatched_code_bytes": 1396,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "bind__7TSpiderFP10TLiveActor",
+          "size": 1396,
+          "similarity": 84.298
+        }
+      ]
+    },
+    {
+      "unit": "mario/M3DUtil/SDLModel",
+      "source": "src/M3DUtil/SDLModel.cpp",
+      "code_bytes": 4796,
+      "unmatched_code_bytes": 1416,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "entrySameMat__12SDLModelDataFP11J3DMaterialP15SDLDrawBufToken",
+          "size": 308,
+          "similarity": 99.93507
+        },
+        {
+          "name": "entrySDLModels__12SDLModelDataFv",
+          "size": 508,
+          "similarity": 99.85827
+        },
+        {
+          "name": "entry__8SDLModelFv",
+          "size": 384,
+          "similarity": 99.75
+        },
+        {
+          "name": "viewCalcSimple__8SDLModelFv",
+          "size": 216,
+          "similarity": 99.796295
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraNormal",
+      "source": "src/Camera/CameraNormal.cpp",
+      "code_bytes": 1676,
+      "unmatched_code_bytes": 1500,
+      "unmatched_data_bytes": 24,
+      "nonmatching_functions": [
+        {
+          "name": "calcTowerCenterPos___15CPolarSubCameraFP3Vec",
+          "size": 296,
+          "similarity": 84.64865
+        },
+        {
+          "name": "ctrlNormalOrTowerCamera___15CPolarSubCameraFv",
+          "size": 1204,
+          "similarity": 98.0897
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/MapWireManager",
+      "source": "src/Map/MapWireManager.cpp",
+      "code_bytes": 4156,
+      "unmatched_code_bytes": 1512,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "getPosInWire__13TMapWireActorCFv",
+          "size": 424,
+          "similarity": 99.33962
+        },
+        {
+          "name": "doActorToWire__20TMapWireActorManagerFv",
+          "size": 484,
+          "similarity": 99.3967
+        },
+        {
+          "name": "getPointPosInNthWire__15TMapWireManagerCFiRCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "size": 96,
+          "similarity": 57.0
+        },
+        {
+          "name": "insert__Q27JGadget26TList_pointer<P9THitActor>FQ37JGadget26TList_pointer<P9THitActor>8iteratorRCP9THitActor",
+          "size": 76,
+          "similarity": 99.42105
+        },
+        {
+          "name": "load__15TMapWireManagerFR20JSUMemoryInputStream",
+          "size": 432,
+          "similarity": 99.78704
+        }
+      ]
+    },
+    {
+      "unit": "mario/Strategic/MirrorActor",
+      "source": "src/Strategic/MirrorActor.cpp",
+      "code_bytes": 2520,
+      "unmatched_code_bytes": 1520,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "checkIsInMirror__12TMirrorActorFv",
+          "size": 452,
+          "similarity": 95.31858
+        },
+        {
+          "name": "perform__12TMirrorActorFUlPQ26JDrama9TGraphics",
+          "size": 316,
+          "similarity": 98.6076
+        },
+        {
+          "name": "entryMirrorDrawBufferAlways__12TMirrorActorFP8J3DModel",
+          "size": 244,
+          "similarity": 99.81967
+        },
+        {
+          "name": "init__12TMirrorActorFP8J3DModelUs",
+          "size": 508,
+          "similarity": 99.91338
+        }
+      ]
+    },
+    {
+      "unit": "mario/NPC/NpcCollision",
+      "source": "src/NPC/NpcCollision.cpp",
+      "code_bytes": 1788,
+      "unmatched_code_bytes": 1568,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "execNpcObjCollision___8TBaseNPCFv",
+          "size": 812,
+          "similarity": 98.53695
+        },
+        {
+          "name": "setVariableDamageRadius___8TBaseNPCFv",
+          "size": 220,
+          "similarity": 97.0
+        },
+        {
+          "name": "bind__8TBaseNPCFv",
+          "size": 536,
+          "similarity": 99.75373
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/MapMakeData",
+      "source": "src/Map/MapMakeData.cpp",
+      "code_bytes": 3240,
+      "unmatched_code_bytes": 1592,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "setCheckData__17TMapCollisionBaseFPCfPCsP12TBGCheckDatai",
+          "size": 612,
+          "similarity": 92.111115
+        },
+        {
+          "name": "updateTrans__17TMapCollisionBaseFRCQ29JGeometry8TVec3<f>",
+          "size": 408,
+          "similarity": 83.68627
+        },
+        {
+          "name": "initAllCheckData__17TMapCollisionBaseFsPCfUsPC10TLiveActor",
+          "size": 572,
+          "similarity": 99.7972
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CubeManagerBase",
+      "source": "src/Camera/CubeManagerBase.cpp",
+      "code_bytes": 2280,
+      "unmatched_code_bytes": 1616,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "__ct__16TCubeManagerBaseFPCcUc",
+          "size": 428,
+          "similarity": 57.757008
+        },
+        {
+          "name": "load__16TCubeManagerBaseFR20JSUMemoryInputStream",
+          "size": 168,
+          "similarity": 99.78571
+        },
+        {
+          "name": "isInCube__16TCubeManagerBaseCFRC3Vecl",
+          "size": 112,
+          "similarity": 99.82143
+        },
+        {
+          "name": "isInAreaCube__16TCubeManagerAreaCFRC3Vec",
+          "size": 332,
+          "similarity": 82.03615
+        },
+        {
+          "name": "SMS_IsInOtherFastCube__FRC3Vec",
+          "size": 296,
+          "similarity": 99.85135
+        },
+        {
+          "name": "SMS_IsInSameCameraCube__FRC3Vec",
+          "size": 280,
+          "similarity": 99.84286
+        }
+      ]
+    },
+    {
+      "unit": "mario/System/DrawSyncManager",
+      "source": "src/System/DrawSyncManager.cpp",
+      "code_bytes": 2076,
+      "unmatched_code_bytes": 1676,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "insert__Q27JGadget116TVector<Q216TDrawSyncManager19TDrawSyncTokenRange,Q27JGadget53TAllocator<Q216TDrawSyncManager19TDrawSyncTokenRange>>FPQ216TDrawSyncManager19TDrawSyncTokenRangeUlRCQ216TDrawSyncManager19TDrawSyncTokenRange",
+          "size": 936,
+          "similarity": 99.17949
+        },
+        {
+          "name": "start__16TDrawSyncManagerFUlUll",
+          "size": 312,
+          "similarity": 98.20513
+        },
+        {
+          "name": "threadFunc__16TDrawSyncManagerFPv",
+          "size": 376,
+          "similarity": 99.85107
+        },
+        {
+          "name": "setCallback__16TDrawSyncManagerFUlUsUsP17TDrawSyncCallback",
+          "size": 52,
+          "similarity": 99.61539
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/beam",
+      "source": "src/Enemy/beam.cpp",
+      "code_bytes": 3704,
+      "unmatched_code_bytes": 1680,
+      "unmatched_data_bytes": 8,
+      "nonmatching_functions": [
+        {
+          "name": "calcVertices__9TConeBeamFi",
+          "size": 1680,
+          "similarity": 88.64047
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/BathtubBinder",
+      "source": "src/Enemy/BathtubBinder.cpp",
+      "code_bytes": 1688,
+      "unmatched_code_bytes": 1688,
+      "unmatched_data_bytes": 320,
+      "nonmatching_functions": [
+        {
+          "name": "__ct__14TBathtubBinderFv",
+          "size": 72,
+          "similarity": 0
+        },
+        {
+          "name": "__dt__14TBathtubBinderFv",
+          "size": 100,
+          "similarity": 0
+        },
+        {
+          "name": "init__14TBathtubBinderFfffff",
+          "size": 296,
+          "similarity": 0
+        },
+        {
+          "name": "bind__14TBathtubBinderFP10TLiveActor",
+          "size": 56,
+          "similarity": 0
+        },
+        {
+          "name": "float___14TBathtubBinderFP10TLiveActor",
+          "size": 1148,
+          "similarity": 0
+        },
+        {
+          "name": "set<f>__Q29JGeometry8TVec3<f>Ffff",
+          "size": 16,
+          "similarity": 0
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/SleepBossHanachan",
+      "source": "src/Enemy/SleepBossHanachan.cpp",
+      "code_bytes": 1712,
+      "unmatched_code_bytes": 1712,
+      "unmatched_data_bytes": 840,
+      "nonmatching_functions": [
+        {
+          "name": "@32@__dt__18TSleepBossHanachanFv",
+          "size": 8,
+          "similarity": 0
+        },
+        {
+          "name": "__dt__25TSleepBossHanachanManagerFv",
+          "size": 116,
+          "similarity": 0
+        },
+        {
+          "name": "__dt__18TSleepBossHanachanFv",
+          "size": 132,
+          "similarity": 0
+        },
+        {
+          "name": "createModelData__25TSleepBossHanachanManagerFv",
+          "size": 52,
+          "similarity": 0
+        },
+        {
+          "name": "init__18TSleepBossHanachanFP12TLiveManager",
+          "size": 448,
+          "similarity": 0
+        },
+        {
+          "name": "calcRootMatrix__18TSleepBossHanachanFv",
+          "size": 4,
+          "similarity": 0
+        },
+        {
+          "name": "getBasNameTable__18TSleepBossHanachanCFv",
+          "size": 8,
+          "similarity": 0
+        },
+        {
+          "name": "startFall__18TSleepBossHanachanFfff",
+          "size": 236,
+          "similarity": 0
+        },
+        {
+          "name": "theNerve__23TNerveSBH_SleepContinueFv",
+          "size": 100,
+          "similarity": 0
+        },
+        {
+          "name": "execute__23TNerveSBH_SleepContinueCFP24TSpineBase<10TLiveActor>",
+          "size": 8,
+          "similarity": 0
+        },
+        {
+          "name": "theNerve__14TNerveSBH_FallFv",
+          "size": 100,
+          "similarity": 0
+        },
+        {
+          "name": "__dt__23TNerveSBH_SleepContinueFv",
+          "size": 92,
+          "similarity": 0
+        },
+        {
+          "name": "execute__14TNerveSBH_FallCFP24TSpineBase<10TLiveActor>",
+          "size": 316,
+          "similarity": 0
+        },
+        {
+          "name": "__dt__14TNerveSBH_FallFv",
+          "size": 92,
+          "similarity": 0
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/CameraDemo",
+      "source": "src/Camera/CameraDemo.cpp",
+      "code_bytes": 2816,
+      "unmatched_code_bytes": 1780,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "updateDemoCamera___15CPolarSubCameraFb",
+          "size": 852,
+          "similarity": 57.830986
+        },
+        {
+          "name": "updateGateDemoCamera___15CPolarSubCameraFv",
+          "size": 228,
+          "similarity": 99.947365
+        },
+        {
+          "name": "startGateDemoCamera__15CPolarSubCameraFPCQ26JDrama6TActor",
+          "size": 280,
+          "similarity": 99.814285
+        },
+        {
+          "name": "ctrlNormalDeadDemo___15CPolarSubCameraFv",
+          "size": 420,
+          "similarity": 99.86667
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/MapArea",
+      "source": "src/Map/MapArea.cpp",
+      "code_bytes": 1808,
+      "unmatched_code_bytes": 1808,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "checkLinesCollision__Fffffffff",
+          "size": 216,
+          "similarity": 99.92593
+        },
+        {
+          "name": "polygonIsInGrid__17TMapCollisionDataFffffP12TBGCheckData",
+          "size": 1592,
+          "similarity": 99.94221
+        }
+      ]
+    },
+    {
+      "unit": "mario/Strategic/ObjModel",
+      "source": "src/Strategic/ObjModel.cpp",
+      "code_bytes": 3252,
+      "unmatched_code_bytes": 1856,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "createAndKeepData__16TModelDataKeeperFPCcUl",
+          "size": 228,
+          "similarity": 99.77193
+        },
+        {
+          "name": "getDataByName__16TModelDataKeeperCFPCc",
+          "size": 284,
+          "similarity": 99.92958
+        },
+        {
+          "name": "getMActor__13TMActorKeeperCFPCc",
+          "size": 252,
+          "similarity": 99.92063
+        },
+        {
+          "name": "createMActor__13TMActorKeeperFPCcUl",
+          "size": 596,
+          "similarity": 60.704697
+        },
+        {
+          "name": "createMActorFromAllBmd__13TMActorKeeperFUl",
+          "size": 280,
+          "similarity": 99.34286
+        },
+        {
+          "name": "__ct__13TMActorKeeperFP12TLiveManager",
+          "size": 216,
+          "similarity": 99.87037
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/PollutionAction",
+      "source": "src/Map/PollutionAction.cpp",
+      "code_bytes": 3064,
+      "unmatched_code_bytes": 1888,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "getPollutedPosNear__15TPollutionLayerFfPQ29JGeometry8TVec3<f>",
+          "size": 580,
+          "similarity": 99.81379
+        },
+        {
+          "name": "fire__15TPollutionLayerFv",
+          "size": 336,
+          "similarity": 99.940475
+        },
+        {
+          "name": "action__15TPollutionLayerFv",
+          "size": 972,
+          "similarity": 99.855965
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/emario",
+      "source": "src/Enemy/emario.cpp",
+      "code_bytes": 3972,
+      "unmatched_code_bytes": 1908,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "load__7TEMarioFR20JSUMemoryInputStream",
+          "size": 720,
+          "similarity": 99.89445
+        },
+        {
+          "name": "init__7TEMarioFP12TLiveManager",
+          "size": 436,
+          "similarity": 97.76147
+        },
+        {
+          "name": "perform__7TEMarioFUlPQ26JDrama9TGraphics",
+          "size": 752,
+          "similarity": 71.90426
+        }
+      ]
+    },
+    {
+      "unit": "mario/Map/MapWarp",
+      "source": "src/Map/MapWarp.cpp",
+      "code_bytes": 2712,
+      "unmatched_code_bytes": 1916,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "changeModel__8TMapWarpFi",
+          "size": 156,
+          "similarity": 99.82051
+        },
+        {
+          "name": "watchToWarp__8TMapWarpFv",
+          "size": 800,
+          "similarity": 66.36
+        },
+        {
+          "name": "initModel__8TMapWarpFv",
+          "size": 152,
+          "similarity": 99.76316
+        },
+        {
+          "name": "init__8TMapWarpFR20JSUMemoryInputStream",
+          "size": 808,
+          "similarity": 93.792076
+        }
+      ]
+    },
+    {
+      "unit": "mario/Camera/lensflare",
+      "source": "src/Camera/lensflare.cpp",
+      "code_bytes": 2076,
+      "unmatched_code_bytes": 1924,
+      "unmatched_data_bytes": 88,
+      "nonmatching_functions": [
+        {
+          "name": "__ct__10TLensFlareFPCc",
+          "size": 328,
+          "similarity": 99.97561
+        },
+        {
+          "name": "set__Q29JGeometry8TVec3<f>FRC3Vec",
+          "size": 28,
+          "similarity": 0
+        },
+        {
+          "name": "JMASSin__Fs",
+          "size": 28,
+          "similarity": 0
+        },
+        {
+          "name": "JMASCos__Fs",
+          "size": 28,
+          "similarity": 0
+        },
+        {
+          "name": "perform__10TLensFlareFUlPQ26JDrama9TGraphics",
+          "size": 1512,
+          "similarity": 76.756615
+        }
+      ]
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanAnm",
+      "source": "src/Enemy/BossHanachanAnm.cpp",
+      "code_bytes": 3644,
+      "unmatched_code_bytes": 1932,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "setHeadAndBodyAnm__13TBossHanachanF23EnumBossHanachanAnmKind36EnumBossHanachanStopMotionBlendOnOff",
+          "size": 288,
+          "similarity": 91.75
+        },
+        {
+          "name": "changeAnmRateAndFrameUpdate___13TBossHanachanFv",
+          "size": 1644,
+          "similarity": 99.89781
+        }
+      ]
+    },
+    {
+      "unit": "mario/System/MarDirectorSetup2",
+      "source": "src/System/MarDirectorSetup2.cpp",
+      "code_bytes": 2720,
+      "unmatched_code_bytes": 1940,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "setup2__12TMarDirectorFv",
+          "size": 1468,
+          "similarity": 94.87466
+        },
+        {
+          "name": "__dt__12TMarDirectorFv",
+          "size": 472,
+          "similarity": 99.94068
+        }
+      ]
+    },
+    {
+      "unit": "mario/Strategic/liveinterp",
+      "source": "src/Strategic/liveinterp.cpp",
+      "code_bytes": 7004,
+      "unmatched_code_bytes": 1944,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "linGetSRT__FP29TSpcTypedInterp<10TLiveActor>Ul",
+          "size": 1944,
+          "similarity": 96.05761
+        }
+      ]
+    },
+    {
+      "unit": "mario/NPC/NpcWalkTurn",
+      "source": "src/NPC/NpcWalkTurn.cpp",
+      "code_bytes": 2164,
+      "unmatched_code_bytes": 1948,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "set<f>__Q29JGeometry8TVec3<f>Ffff",
+          "size": 16,
+          "similarity": 0
+        },
+        {
+          "name": "execWalk__8TBaseNPCFb",
+          "size": 992,
+          "similarity": 92.30645
+        },
+        {
+          "name": "execUTurn__8TBaseNPCFv",
+          "size": 480,
+          "similarity": 98.96667
+        },
+        {
+          "name": "execTurnToFirstState__8TBaseNPCFv",
+          "size": 228,
+          "similarity": 99.73684
+        },
+        {
+          "name": "isNeedTurnToFirstState__8TBaseNPCCFv",
+          "size": 232,
+          "similarity": 99.844826
+        }
+      ]
+    },
+    {
+      "unit": "mario/MarioUtil/ScreenUtil",
+      "source": "src/MarioUtil/ScreenUtil.cpp",
+      "code_bytes": 3616,
+      "unmatched_code_bytes": 1952,
+      "unmatched_data_bytes": 0,
+      "nonmatching_functions": [
+        {
+          "name": "perform__12TAfterEffectFUlPQ26JDrama9TGraphics",
+          "size": 1952,
+          "similarity": 99.77459
+        }
+      ]
+    }
+  ],
+  "near_count": 108,
+  "near_unmatched_code_bytes": 98036
+}

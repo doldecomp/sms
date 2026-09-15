@@ -71,5 +71,6 @@
   "NPC/NpcThrow.cpp",
   "System/marerr.cpp",
   "Enemy/BossHanachanSound.cpp",
-  "Enemy/BossHanachanSave.cpp"
+  "Enemy/BossHanachanSave.cpp",
+  "GC2D/MessageUtil.cpp"
 ]

@@ -8,7 +8,34 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 23
+## Latest checkpoint: batch 24 — Priority 1 file completion
+
+Completed source-link promotion of **`GC2D/MessageUtil.cpp`**, closing its batch 2 deferral.
+The inherited stream availability API avoids two unwanted emitted getters; both message functions still match all **968 code bytes**.
+Removed the parser's two pre-existing stack-padding arrays using the stream position accessor, a signed 32-bit block tag, and a separate 16-bit entry-size variable.
+There are now **74 source-linked game objects / 77,436 code bytes**.
+
+| Coverage | Matched code | Source-linked code |
+| --- | ---: | ---: |
+| Game code | 706,004 / 2,847,660 (**24.792425%**) | 77,436 / 2,847,660 (**2.7192852%**) |
+| Aggregate | 1,384,652 / 3,603,748 (**38.422554%**) | 77,436 / 3,603,748 (**2.148763%**) |
+
+Aggregate exact code and function counts are unchanged: this checkpoint moves an already matching file into the source link.
+
+### Validation and next completion targets
+
+Saved baseline at `5d1b2705`; full build, `ninja changes_all`, all-function presence/score comparison, direct executable byte comparison, and expected SHA-1 checks pass.
+Zero function regressions; the message unit's symbol-map check passes without warnings.
+No gameplay test was performed.
+
+Follow the user's revised priorities in [DECOMPILATION_PLAN.md](DECOMPILATION_PLAN.md): close nearly complete game objects first, then finish the existing boss objects, then resume larger reconstructions.
+The next complete-code candidates are camera interpolation, pollution events, director object creation, and target arrow.
+Record unresolved evidence and move down the completion queue when a candidate stalls.
+The [refreshed completion queue](docs/progress/GMSE01-completion-queue.json) contains 108 unlinked game files with 1..2,000 unmatched code bytes, totaling 98,036 unmatched bytes; these are candidates pending full validation.
+Library promotion and edits remain outside the authorized queue.
+See [batch 24 measurements](docs/progress/GMSE01-batch24.json) and the [matching catalog](docs/MATCHING_CATALOG.md).
+
+## Verified checkpoint: batch 23
 
 Applied an evidence-supported horizontal vector calculation to the boss and NPC walking predicates and the boss's path-transition check.
 Boss walking improves from **76.784% to 95.624%**, and NPC walking improves from **89.435486% to 92.30645%**.
