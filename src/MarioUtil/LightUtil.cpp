@@ -193,10 +193,13 @@ TLightDrawBuffer::TLightDrawBuffer(int param_1, u32 param_2, const char* name)
     , unk80(param_1)
 {
 	snprintf(unk1C, 0x32, "%s%s", name, "opa");
-	mOpaDrawBufferObject = new JDrama::TDrawBufObj(3, param_2, unk1C);
+	JDrama::TDrawBufObj* drawBuffer
+	    = new JDrama::TDrawBufObj(3, param_2, unk1C);
+	mOpaDrawBufferObject = drawBuffer;
 
 	snprintf(unk4E, 0x32, "%s%s", name, "xlu");
-	mXluDrawBufferObject = new JDrama::TDrawBufObj(4, param_2, unk4E);
+	drawBuffer = new JDrama::TDrawBufObj(4, param_2, unk4E);
+	mXluDrawBufferObject = drawBuffer;
 }
 #pragma dont_inline reset
 
