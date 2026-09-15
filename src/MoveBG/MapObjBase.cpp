@@ -224,10 +224,7 @@ void TMapObjBase::startAnim(u16 param_1)
 	}
 
 	const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
-	if (!anim)
-		return;
-
-	if (param_1 >= anim->unk0)
+	if (!anim || anim->unk0 <= param_1)
 		return;
 
 	const TMapObjAnimData* data = &anim->unk4[param_1];
@@ -235,7 +232,7 @@ void TMapObjBase::startAnim(u16 param_1)
 		if (unkFE != 0xffff && anim && anim->unk0 != 0) {
 			const TMapObjAnimData* d2 = &anim->unk4[unkFE];
 			if (d2->unk4 != nullptr) {
-				u8 type = d2->unk8;
+				u32 type = d2->unk8;
 				mMActor->getFrameCtrl(type)->setRate(0.0f);
 				mMActor->getFrameCtrl(type)->setFrame(0.0f);
 				mMActor->getUnk28(type)->unk0 = 0xffffffff;
