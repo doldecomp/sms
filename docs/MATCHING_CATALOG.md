@@ -704,3 +704,19 @@ A full executable match also does not validate bodies in objects that are still 
   Camera and pollution-event deferrals have been re-read; their existing layout/emission issues remain unresolved.
   No library object was promoted or edited, and no gameplay test was performed.
 - Measurements: `docs/progress/GMSE01-batch24.json`; validation/diff logs: `build/GMSE01-*-batch24.*`.
+
+## Priority 1 closure audit and airport sound, batch 25
+
+- Read the [closure audit](progress/GMSE01-closure-audit-batch25.md) before revisiting small nearly complete files.
+  It records full-file map gaps, original/current stack layouts, shared timer and camera-flag issues, and rejected source-shape trials.
+- Restored airport's missing `0x484D` clear-sign sound through existing `MSound::startSoundSystemSE`.
+  Searched other MoveBG callers; they already use this wrapper, so no mass edit was warranted.
+  Removed two fabricated airport singleton getters in favor of the existing director accessor and pollution global.
+- Airport watch improves from 79.88461% to 99.96154%; its passed camera flag remains at `0x34` instead of `0x3C`.
+  The CLI rounds this to `100.0%`, but it is still nonmatching.
+  Its pool constructor and `appear` UNUSED bodies remain undersized.
+- Full build, baseline comparison of all 12,904 functions, changes_all, DOL byte comparison and SHA-1 pass; zero regressions.
+  No exact-code gain or source-link promotion is claimed.
+  Game code remains 24.792425% matched / 2.7192852% source-linked; aggregate 38.422554% / 2.148763%.
+- Queue refresh excludes protected THPPlayer despite game-category metadata.
+  Measurements: `progress/GMSE01-batch25.json`; validation logs: `build/GMSE01-*-batch25.*`.

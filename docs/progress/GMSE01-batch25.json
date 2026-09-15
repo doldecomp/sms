@@ -1,0 +1,73 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "6ed21f59",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.54687,
+    "total_code": "3603748",
+    "matched_code": "1384652",
+    "matched_code_percent": 38.422554,
+    "total_data": "641075",
+    "matched_data": "303535",
+    "matched_data_percent": 47.347813,
+    "total_functions": 12904,
+    "matched_functions": 8222,
+    "matched_functions_percent": 63.71668,
+    "complete_code": "77436",
+    "complete_code_percent": 2.148763,
+    "complete_data": "51024",
+    "complete_data_percent": 7.9591312,
+    "total_units": 732,
+    "complete_units": 74
+  },
+  "game_measures": {
+    "fuzzy_match_percent": 69.396034,
+    "total_code": "2847660",
+    "matched_code": "706004",
+    "matched_code_percent": 24.792425,
+    "total_data": "558300",
+    "matched_data": "241560",
+    "matched_data_percent": 43.26706,
+    "total_functions": 9012,
+    "matched_functions": 4425,
+    "matched_functions_percent": 49.101196,
+    "complete_code": "77436",
+    "complete_code_percent": 2.7192852,
+    "complete_data": "51024",
+    "complete_data_percent": 9.139173,
+    "total_units": 385,
+    "complete_units": 74
+  },
+  "source_linked_objects": 74,
+  "new_source_linked_objects": [],
+  "new_source_linked_code_bytes": 0,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 0,
+  "new_exact_code_bytes": 0,
+  "new_matched_data_bytes": 0,
+  "improvements": [
+    {
+      "unit": "mario/MoveBG/MapObjAirport",
+      "function": "watch__17TAirportEventSinkFv",
+      "before": 79.88461,
+      "after": 99.96154,
+      "size": 208
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_map_airport": true,
+    "symbol_map_airport_unused_size_warnings": 2,
+    "gameplay_test": false
+  },
+  "notes": [
+    "Reread the revised plan and audited Priority 1 file closures; no new source-linked object.",
+    "Restored the original airport clear-sign sound using the shared sound wrapper. The 208-byte watch function improves from 79.88461% to 99.96154%, with only the camera flag stack location different.",
+    "Removed two airport-local fabricated singleton getters in favor of the existing director accessor and pollution global. No new exact code bytes are claimed.",
+    "Saved unresolved closure evidence and rejected trials in GMSE01-closure-audit-batch25.md. Excluded protected THPPlayer objects from the autonomous completion queue."
+  ]
+}

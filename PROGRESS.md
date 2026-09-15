@@ -8,7 +8,30 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 24 — Priority 1 file completion
+## Latest checkpoint: batch 25 — file-closure audit
+
+Reread the revised plan and audited the Priority 1 completion queue.
+**No additional file reached source-link completion**; coverage remains **74 game objects / 77,436 code bytes**.
+Restored the airport clear-sign sound through the existing wrapper, improving its 208-byte `watch` function from 79.88461% to 99.96154%.
+Its camera flag stack location and two UNUSED pool definitions still prevent a completion claim.
+No new exact code bytes or functions are claimed.
+
+| Coverage | Matched code | Source-linked code |
+| --- | ---: | ---: |
+| Game code | 706,004 / 2,847,660 (**24.792425%**) | 77,436 / 2,847,660 (**2.7192852%**) |
+| Aggregate | 1,384,652 / 3,603,748 (**38.422554%**) | 77,436 / 3,603,748 (**2.148763%**) |
+
+Baseline at `6ed21f59`; full build, `ninja changes_all`, comparison of all 12,904 functions, DOL byte comparison and expected SHA-1 pass.
+Zero function regressions.
+Airport map presence/order/linkage pass with two pre-existing UNUSED size warnings.
+No gameplay test was performed.
+
+The [closure audit](docs/progress/GMSE01-closure-audit-batch25.md) records missing definitions, frame/register issues, shared investigation groups and rejected trials.
+The [completion queue](docs/progress/GMSE01-completion-queue.json) now excludes protected THPPlayer objects: **106 authorized small game candidates / 96,868 unmatched bytes**.
+Continue the smallest remaining file closures; next uninspected candidates include `M3DUtil/M3UModel` and `Map/MapCollisionPlane`.
+See [batch 25 measurements](docs/progress/GMSE01-batch25.json).
+
+## Verified checkpoint: batch 24 — Priority 1 file completion
 
 Completed source-link promotion of **`GC2D/MessageUtil.cpp`**, closing its batch 2 deferral.
 The inherited stream availability API avoids two unwanted emitted getters; both message functions still match all **968 code bytes**.

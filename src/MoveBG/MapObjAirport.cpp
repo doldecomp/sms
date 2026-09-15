@@ -4,6 +4,8 @@
 #include <Enemy/GateKeeper.hpp>
 #include <Camera/CameraShake.hpp>
 #include <System/MarDirector.hpp>
+#include <MSound/MSound.hpp>
+#include <MSound/SoundEffects.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 
 // rogue includes needed for matching sinit & bss
@@ -57,21 +59,17 @@ bool TAirportEventSink::control()
 	return TMapEventSinkInPollutionReset::control();
 }
 
-// TODO: this is all fake, need to analyze a bunch of similar functions together
-// and figure out the real inlines
-inline TMarDirector* getMarDirector() { return gpMarDirector; }
-inline TPollutionManager* getPollution() { return gpPollution; }
-
 bool TAirportEventSink::watch()
 {
 	if (!mIsBuildingRecovered[0] && unk6C->checkLiveFlag(LIVE_FLAG_DEAD)) {
-		mRaisingBuildingIdx    = 0;
-		TMarDirector* director = getMarDirector();
-
-		director->fireStartDemoCamera("空港坂上げカメラ", &unk6C->mPosition, -1,
-		                              0.0f, true, nullptr, 0, nullptr,
-		                              JDrama::TFlagT<u16>(0));
-		getPollution()->getLayer(0)->startDecay();
+		mRaisingBuildingIdx = 0;
+		JDrama::TFlagT<u16> flags(0);
+		SMSGetMarDirector()->fireStartDemoCamera(
+		    "空港坂上げカメラ", &unk6C->mPosition, -1, 0.0f, true, nullptr, 0,
+		    nullptr, flags);
+		gpPollution->getLayer(0)->startDecay();
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN_BIG, 0, nullptr,
+		                                 0);
 		return true;
 	}
 

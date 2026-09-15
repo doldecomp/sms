@@ -1,9 +1,10 @@
 {
   "region": "GMSE01",
-  "checkpoint": "batch24",
+  "checkpoint": "batch25",
   "notes": [
     "Report-based candidates only; source-link promotion also requires instruction, data, emission, map and executable verification.",
-    "Priorities follow DECOMPILATION_PLAN.md. Game objects only; library promotion remains pending explicit approval."
+    "Priorities follow DECOMPILATION_PLAN.md. Game objects only; protected THPPlayer objects are excluded even though report metadata classifies them as game.",
+    "Consult GMSE01-closure-audit-batch25.md before revisiting stalled Priority 1 candidates."
   ],
   "all_code_matching": [
     {
@@ -36,30 +37,6 @@
       "code_bytes": 324,
       "unmatched_code_bytes": 0,
       "unmatched_data_bytes": 320,
-      "nonmatching_functions": []
-    },
-    {
-      "unit": "mario/THPPlayer/THPDraw",
-      "source": "src/THPPlayer/THPDraw.c",
-      "code_bytes": 2016,
-      "unmatched_code_bytes": 0,
-      "unmatched_data_bytes": 0,
-      "nonmatching_functions": []
-    },
-    {
-      "unit": "mario/THPPlayer/THPRead",
-      "source": "src/THPPlayer/THPRead.c",
-      "code_bytes": 708,
-      "unmatched_code_bytes": 0,
-      "unmatched_data_bytes": 0,
-      "nonmatching_functions": []
-    },
-    {
-      "unit": "mario/THPPlayer/THPVideoDecode",
-      "source": "src/THPPlayer/THPVideoDecode.c",
-      "code_bytes": 1256,
-      "unmatched_code_bytes": 0,
-      "unmatched_data_bytes": 0,
       "nonmatching_functions": []
     }
   ],
@@ -163,20 +140,6 @@
       ]
     },
     {
-      "unit": "mario/THPPlayer/THPAudioDecode",
-      "source": "src/THPPlayer/THPAudioDecode.c",
-      "code_bytes": 888,
-      "unmatched_code_bytes": 176,
-      "unmatched_data_bytes": 0,
-      "nonmatching_functions": [
-        {
-          "name": "AudioDecoderForOnMemory__FPv",
-          "size": 176,
-          "similarity": 89.27273
-        }
-      ]
-    },
-    {
       "unit": "mario/MoveBG/MapObjAirport",
       "source": "src/MoveBG/MapObjAirport.cpp",
       "code_bytes": 2188,
@@ -186,7 +149,7 @@
         {
           "name": "watch__17TAirportEventSinkFv",
           "size": 208,
-          "similarity": 79.88461
+          "similarity": 99.96154
         }
       ]
     },
@@ -795,22 +758,8 @@
       ]
     },
     {
-      "unit": "mario/THPPlayer/THPAudioDecode",
-      "source": "src/THPPlayer/THPAudioDecode.c",
-      "code_bytes": 888,
-      "unmatched_code_bytes": 176,
-      "unmatched_data_bytes": 0,
-      "nonmatching_functions": [
-        {
-          "name": "AudioDecoderForOnMemory__FPv",
-          "size": 176,
-          "similarity": 89.27273
-        }
-      ]
-    },
-    {
       "unit": "mario/Enemy/enemyinterp",
-      "source": null,
+      "source": "",
       "code_bytes": 180,
       "unmatched_code_bytes": 180,
       "unmatched_data_bytes": 16,
@@ -837,7 +786,7 @@
         {
           "name": "watch__17TAirportEventSinkFv",
           "size": 208,
-          "similarity": 79.88461
+          "similarity": 99.96154
         }
       ]
     },
@@ -1776,30 +1725,6 @@
           "name": "newAndRegisterCoin__12TItemManagerFUl",
           "size": 232,
           "similarity": 99.5
-        }
-      ]
-    },
-    {
-      "unit": "mario/THPPlayer/THPPlayer",
-      "source": "src/THPPlayer/THPPlayer.c",
-      "code_bytes": 5428,
-      "unmatched_code_bytes": 992,
-      "unmatched_data_bytes": 0,
-      "nonmatching_functions": [
-        {
-          "name": "THPPlayerInit",
-          "size": 200,
-          "similarity": 99.86
-        },
-        {
-          "name": "THPPlayerCalcNeedMemory",
-          "size": 168,
-          "similarity": 99.04762
-        },
-        {
-          "name": "THPPlayerPrepare",
-          "size": 624,
-          "similarity": 97.98077
         }
       ]
     },
@@ -2949,6 +2874,13 @@
       ]
     }
   ],
-  "near_count": 108,
-  "near_unmatched_code_bytes": 98036
+  "excluded_protected_units": [
+    "mario/THPPlayer/THPAudioDecode",
+    "mario/THPPlayer/THPDraw",
+    "mario/THPPlayer/THPPlayer",
+    "mario/THPPlayer/THPRead",
+    "mario/THPPlayer/THPVideoDecode"
+  ],
+  "near_count": 106,
+  "near_unmatched_code_bytes": 96868
 }

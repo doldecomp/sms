@@ -6,7 +6,7 @@
 - Local branch: `local/decomp-progress`.
 - Upstream: `https://github.com/doldecomp/sms`, commit `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 - The user has authorized implementation and ongoing progress checks for the local North American ISO.
-- Local changes have added 19,544 exactly matching code bytes and 117 matching functions/helpers across twenty-four batches; 74 verified game objects are linked from source.
+- Local changes have added 19,544 exactly matching code bytes and 117 matching functions/helpers across twenty-five batches; 74 verified game objects are linked from source.
 - Consult `docs/MATCHING_CATALOG.md` before related edits; inventory shared callers, batch evidence-supported fixes, and record exceptions and validation results.
 - Current checkpoint and remaining limitations are documented in `PROGRESS.md`.
 - The active configuration is now `GMSE01`; an all-extracted-object rebuild has matched the complete input executable.
@@ -148,7 +148,10 @@ Each promotion still requires the full executable SHA-1 and byte comparison.
    `Player/MarioAccess` (72 bytes left), `Enemy/egggen` (120), `Strategic/HitActor` (124), `MSound/MSoundBGM` (136), `Camera/CameraMode` (144, plus data), `MoveBG/MapObjPollution` (172), `Enemy/DebuTelesa` (176, plus data), `MoveBG/MapObjAirport` (208), `NPC/NpcInbetween` (220), `System/SnapTimeObj` (228), `Strategic/livemanager` (252), `Enemy/enemytable` (276), `Map/MapEventSirena` (280), `MoveBG/MapObjFloat` (288), `M3DUtil/M3UModel` (292), `Map/MapCollisionPlane` (308).
 3. More broadly, 106 unlinked game objects have 2,000 or fewer unmatched code bytes, totalling 96,868 bytes.
    Regenerate this list from `report.json` at each checkpoint rather than trusting these numbers.
-   Batch 24 regeneration is saved in `docs/progress/GMSE01-completion-queue.json`: 108 files with 1..2,000 unmatched bytes, totaling 98,036 unmatched code bytes.
+   Batch 25 regeneration is saved in `docs/progress/GMSE01-completion-queue.json`: 106 authorized game files with 1..2,000 unmatched bytes, totaling 96,868 unmatched code bytes.
+   This excludes THPPlayer despite the report classifying it as game code.
+   Consult `docs/progress/GMSE01-closure-audit-batch25.md` before retrying stalled candidates; it records map gaps, shared issues, and rejected trials.
+   No file was promoted in batch 25; source-linked coverage remains unchanged.
 
 If an object stalls on a hard function, record the evidence and move to the next object instead of forcing a fakematch.
 
