@@ -48,7 +48,8 @@ void TMario::decHP(int hp)
 {
 	// volatile u32 padding[2];
 	if (isUnderWater() || checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
-		mAir -= hp;
+		f32 air = hp;
+		mAir -= air;
 
 		for (int i = 0; i < 10; ++i) {
 			bubbleFromMouth(i);
@@ -253,7 +254,7 @@ void TMario::floorDamageExec(const TMario::TEParams& params)
 	mFloorHitActor.mPosition.z = mPosition.z + JMASCos(mFaceAngle.y);
 	damageExec(&mFloorHitActor, params.mDamage.get(), params.mDownType.get(),
 	           params.mWaterEmit.get(), params.mMinSpeed.get(),
-	           params.mMotor.get(), params.mDamage.get(),
+	           params.mMotor.get(), params.mDirty.get(),
 	           params.mInvincibleTime.get());
 }
 
