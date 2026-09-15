@@ -78,12 +78,14 @@ void TMario::keepDistance(const JGeometry::TVec3<f32>& target, f32 param_2,
 	JGeometry::TVec3<f32> diff = newPos - mPosition;
 
 	f32 step = diff.length();
-	if (50.0f < step)
-		step = 50.0f;
+	if (step > 0.0f) {
+		if (50.0f < step)
+			step = 50.0f;
 
-	diff.normalize();
+		diff.normalize();
 
-	mPosition += diff * step;
+		mPosition += diff * step;
+	}
 }
 
 void TMario::keepDistance(const THitActor& actor, f32 param_2)
