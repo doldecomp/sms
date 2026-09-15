@@ -265,10 +265,6 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 		return ukuleleFlag;
 
 	case 121:
-	case 123:
-	case 124:
-	case 125:
-	case 126:
 		return ukuleleFlag;
 
 	// TODO: how to get bge? :(
