@@ -217,13 +217,9 @@ void TBaseNPC::releaseTaken_()
 {
 	f32 fVar1 = mPtrSaveNormal->mThrowSpeedXZ.get();
 	s16 uVar4 = CLBDegToShortAngle(unk158->mRotation.y);
-	f32 fVar2 = mPtrSaveNormal->mThrowSpeedY.get();
-	f32 s     = JMASSin(uVar4);
-	f32 c     = JMASCos(uVar4);
-
-	mVelocity.x = fVar1 * s;
-	mVelocity.y = fVar2;
-	mVelocity.z = fVar1 * c;
+	mVelocity.set(fVar1 * JMASSin(uVar4),
+	              mPtrSaveNormal->mThrowSpeedY.get(),
+	              fVar1 * JMASCos(uVar4));
 
 	onLiveFlag(LIVE_FLAG_UNK10000000);
 
