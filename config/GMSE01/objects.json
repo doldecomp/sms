@@ -78,5 +78,7 @@
   "Enemy/DemoBossHanachanBase.cpp",
   "Enemy/SleepBossHanachan.cpp",
   "Strategic/livemanager.cpp",
-  "Strategic/objmanager.cpp"
+  "Strategic/objmanager.cpp",
+  "System/MarDirectorCreateObjects.cpp",
+  "System/TargetArrow.cpp"
 ]

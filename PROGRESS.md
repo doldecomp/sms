@@ -8,7 +8,27 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 34 — shared timer fix completes two managers
+## Latest checkpoint: batch 35 — deferred files linked after metadata correction
+
+Completed source linking for **MarDirectorCreateObjects.cpp** and **TargetArrow.cpp**, adding **444 code bytes**.
+Resolved the imported map's string-boundary discrepancy at Application's two English disc-error messages and corrected downstream regional metadata.
+Verified 1,273 shifted strings, all 17 affected Application strings and 6,502 unchanged strings.
+Removed 35 obsolete gap labels whose bytes now belong to correctly attributed objects.
+
+| Coverage | Matched code | Source-linked code |
+| --- | ---: | ---: |
+| Game code | **24.97447%** | **3.040953%** |
+| Aggregate | **38.566406%** | **2.4029427%** |
+
+Source linking is now **82 game files / 86,596 code bytes**.
+No source implementation changed; the **14,824-byte matched-data increase** reflects corrected comparisons.
+Baseline at `92740f19`; full builds before/after promotion, changes_all, all 12,904 function comparisons, DOL byte comparison and expected SHA-1 pass.
+Function presence/similarity is unchanged, no unit loses matched data, and both promoted files pass code/data/map checks.
+No gameplay test was performed.
+The small-file queue remains 100 authorized game files / 91,684 unmatched bytes; only CameraInbetween and PollutionEvent remain in the deferred exact-code queue.
+See the [batch 35 audit](docs/progress/GMSE01-closure-audit-batch35.md) and [measurements](docs/progress/GMSE01-batch35.json).
+
+## Verified checkpoint: batch 34 — shared timer fix completes two managers
 
 Completed and source-linked **livemanager.cpp** and **objmanager.cpp**, adding **2,912 source-linked code bytes**.
 One shared timer-helper reconstruction matches both perform routines; restoring objmanager's mapped initObjArray helper and stream extraction completes its loader.

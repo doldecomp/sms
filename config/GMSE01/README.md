@@ -54,12 +54,16 @@ Further executable analysis was performed by the pinned decomp-toolkit v1.3.0.
 ### Corrections required for a byte-identical relink
 
 - Section alignment comes from the US layout; Japanese addresses were not reused.
-- The `.rodata` split and final symbol stop at the executable's meaningful section extent, `0x803AB658`, rather than including the map's final eight bytes of padding.
+- The `.rodata` split stops at the executable's meaningful section extent, `0x803AB658`.
+- The imported map overstates two English disc-error string sizes in Application: the local strings are 121 and 106 bytes, rather than 124 and 109.
+  Subsequent Application strings are four bytes earlier; downstream `.rodata` starts eight bytes earlier after section alignment.
+  Batch 35 corrects the affected symbol addresses and all downstream split boundaries together, restoring the final constant's full 64-byte extent at `0x803AB618`.
+  See [the regional layout audit](../../docs/progress/GMSE01-closure-audit-batch35.md) for the verified ranges and string counts.
 - First symbols in seven common BSS groups needed their pre-link sizes restored to account for CodeWarrior's common BSS inflation behavior.
   These were cross-checked against existing declarations and validated by relinking against the US executable.
-- Nonzero retail padding must be retained.
-  `fill_gaps` preserves larger gaps; explicit `retail_padding_*` metadata preserves 35 remaining ranges that fall within ordinary symbol alignment padding.
-  These metadata labels identify bytes to retain and do not assert that they were original source variables.
+- `fill_gaps` preserves gaps from the original executable.
+  The initial configuration's 35 `retail_padding_*` labels were fragments caused by the incorrect downstream addresses.
+  Batch 35 removes them after verifying that all 116 bytes belong to corrected objects; full executable comparison still passes.
 - The MetroTRK exception assembly unit uses its existing repository path and `comment:0` metadata.
 
 An all-extracted-object relink passed a full byte comparison and the expected SHA-1 after these corrections.

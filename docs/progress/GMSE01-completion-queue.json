@@ -1,10 +1,10 @@
 {
   "region": "GMSE01",
-  "checkpoint": "batch34",
+  "checkpoint": "batch35",
   "notes": [
     "Report-based candidates only; source-link promotion also requires instruction, data, emission, map and executable verification.",
     "Priorities follow DECOMPILATION_PLAN.md. Game objects only; protected THPPlayer objects are excluded even though report metadata classifies them as game.",
-    "Consult the batch 25 through batch 34 closure audits before revisiting stalled candidates."
+    "Consult the batch 25 through batch 35 closure audits before revisiting stalled candidates."
   ],
   "all_code_matching": [
     {
@@ -21,22 +21,6 @@
       "code_bytes": 916,
       "unmatched_code_bytes": 0,
       "unmatched_data_bytes": 0,
-      "nonmatching_functions": []
-    },
-    {
-      "unit": "mario/System/MarDirectorCreateObjects",
-      "source": "src/System/MarDirectorCreateObjects.cpp",
-      "code_bytes": 120,
-      "unmatched_code_bytes": 0,
-      "unmatched_data_bytes": 24,
-      "nonmatching_functions": []
-    },
-    {
-      "unit": "mario/System/TargetArrow",
-      "source": "src/System/TargetArrow.cpp",
-      "code_bytes": 324,
-      "unmatched_code_bytes": 0,
-      "unmatched_data_bytes": 320,
       "nonmatching_functions": []
     }
   ],

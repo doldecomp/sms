@@ -69,12 +69,18 @@ A full executable match also does not validate bodies in objects that are still 
 
 ## Imported US map data boundaries
 
-- Status: unresolved; trial reverted in batch 6 (`6718c96a`).
+- Status: resolved in batch 35; the limited batch 6 trial (`6718c96a`) was reverted.
 - `MarDirectorCreateObjects`: native light-manager string starts at `0x803A8DC0`; imported map says `0x803A8DC8`.
 - Several preceding MovieDirector strings are also eight bytes before their mapped addresses.
 - A limited split-boundary correction made the unit compare exactly but left the legacy linker running without producing an executable; that metadata change was reverted.
-- Next action: audit the surrounding string table, relocations, and object boundaries together.
-- Do not globally subtract eight from map addresses.
+- Root cause: Application's two error messages are 121/106 bytes, rather than imported 124/109.
+  Seventeen later Application strings shift by four bytes; section alignment moves the following .rodata boundary eight bytes earlier.
+  All downstream .rodata symbols and boundaries follow that displacement, including the final constant's restored 64-byte extent.
+- Verified 1,273 shifted strings and 6,502 unchanged strings; all 35 old gap labels are now covered by corrected objects.
+  Correct only the documented regional ranges, not unrelated map addresses or sections.
+- Both deferred game files now link from source with exact code/data/map and executable comparison.
+  The 14,824-byte matched-data increase is a measurement correction, not new source reconstruction.
+  See [batch 35 audit](progress/GMSE01-closure-audit-batch35.md) for exact rules and checks.
 
 ## Shared bathtub matrix type
 

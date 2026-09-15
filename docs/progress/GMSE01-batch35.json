@@ -1,0 +1,88 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "92740f19",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.61884,
+    "total_code": "3603748",
+    "matched_code": "1389836",
+    "matched_code_percent": 38.566406,
+    "total_data": "641075",
+    "matched_data": "320167",
+    "matched_data_percent": 49.942207,
+    "total_functions": 12904,
+    "matched_functions": 8254,
+    "matched_functions_percent": 63.964664,
+    "complete_code": "86596",
+    "complete_code_percent": 2.4029427,
+    "complete_data": "54012",
+    "complete_data_percent": 8.425223,
+    "total_units": 732,
+    "complete_units": 82
+  },
+  "game_measures": {
+    "fuzzy_match_percent": 69.48712,
+    "total_code": "2847660",
+    "matched_code": "711188",
+    "matched_code_percent": 24.97447,
+    "total_data": "558292",
+    "matched_data": "248888",
+    "matched_data_percent": 44.580257,
+    "total_functions": 9012,
+    "matched_functions": 4457,
+    "matched_functions_percent": 49.45628,
+    "complete_code": "86596",
+    "complete_code_percent": 3.040953,
+    "complete_data": "54012",
+    "complete_data_percent": 9.674507,
+    "total_units": 385,
+    "complete_units": 82
+  },
+  "source_linked_objects": 82,
+  "new_source_linked_objects": [
+    "System/MarDirectorCreateObjects.cpp",
+    "System/TargetArrow.cpp"
+  ],
+  "new_source_linked_code_bytes": 444,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "unexplained_function_regressions": [],
+  "new_exact_functions": 0,
+  "new_exact_code_bytes": 0,
+  "new_matched_data_bytes": 14824,
+  "improvements": [],
+  "metadata_validation": {
+    "input_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+    "unchanged_strings_verified": 6502,
+    "shifted_strings_verified": 1273,
+    "removed_gap_count": 35,
+    "removed_gap_bytes": 116,
+    "all_removed_gaps_covered_by_corrected_objects": true,
+    "split_lines_changed": 69,
+    "application_error_message_sizes": [
+      121,
+      106
+    ],
+    "final_rodata_end": "0x803AB658",
+    "application_shifted_strings_verified": 17
+  },
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "all_functions_present": true,
+    "no_exact_function_regressions": true,
+    "symbol_map_TargetArrow": true,
+    "symbol_map_MarDirectorCreateObjects": true,
+    "gameplay_test": false
+  },
+  "notes": [
+    "Two deferred game files source-linked after resolving regional rodata metadata discrepancies; no reconstructed code changes.",
+    "Matched data gains reflect corrected object attribution, not new source reconstruction.",
+    "Application data extent shrinks by eight bytes; the previously truncated final constant gains eight bytes. Aggregate data total is unchanged.",
+    "Corrected downstream extracted-object rodata metadata as part of the regional executable layout; no library implementation edits or source-link promotions.",
+    "All 35 obsolete padding labels cover bytes now attributed to corrected objects.",
+    "Full executable byte comparison passes before and after the two source-link promotions."
+  ]
+}
