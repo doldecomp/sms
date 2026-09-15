@@ -295,7 +295,9 @@ BOOL TMario::hangonCheck(const TBGCheckData* wall, const Vec& prev,
 	if (mVel.y > 0.0f)
 		return false;
 
-	if ((curr.x - prev.x) * mVel.x + (curr.z - prev.z) * mVel.z > 0.0f)
+	f32 dz = curr.z - prev.z;
+	f32 dx = curr.x - prev.x;
+	if (dx * mVel.x + dz * mVel.z > 0.0f)
 		return false;
 
 	JGeometry::TVec3<f32> newPos;
@@ -305,7 +307,8 @@ BOOL TMario::hangonCheck(const TBGCheckData* wall, const Vec& prev,
 	const TBGCheckData* ground;
 	checkGroundPlane(newPos.x, curr.y + 160.0f, newPos.z, &newPos.y, &ground);
 
-	if (newPos.y - curr.y <= 100.0f)
+	BOOL isLow = newPos.y - curr.y <= 100.0f;
+	if (isLow)
 		return false;
 
 	if (mFloorPosition.x < newPos.y + 160.0f)
