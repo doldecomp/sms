@@ -32,15 +32,16 @@ void TMapObjGrassGroup::drawNear() const
 		return;
 
 	GXBegin(GX_TRIANGLES, GX_VTXFMT0, unk68 * 3);
-	int iVar7     = 0;
 	const Vec& dv = TMapObjGrassManager::mDrawVec;
+	int iVar7     = 0;
 	for (int i = 0; i < unk68; ++i) {
-		f32 midx = unk6C[i].x + gpMapObjGrassManager->unk20[iVar7];
-		GXPosition3f32(unk6C[i].x - dv.x, mPosition.y, unk6C[i].z - dv.z);
+		const Vec& pos = unk6C[i];
+		f32 midx       = pos.x + gpMapObjGrassManager->unk20[iVar7];
+		GXPosition3f32(pos.x - dv.x, mPosition.y, pos.z - dv.z);
 		GXColor1x8(1);
-		GXPosition3f32(midx, unk6C[i].y, unk6C[i].z);
+		GXPosition3f32(midx, pos.y, pos.z);
 		GXColor1x8(0);
-		GXPosition3f32(unk6C[i].x + dv.x, mPosition.y, unk6C[i].z + dv.z);
+		GXPosition3f32(pos.x + dv.x, mPosition.y, pos.z + dv.z);
 		GXColor1x8(1);
 
 		++iVar7;
