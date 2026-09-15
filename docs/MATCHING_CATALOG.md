@@ -389,6 +389,7 @@ A full executable match also does not validate bodies in objects that are still 
   Current protected `JAIBasic.hpp` declares a halfword at 0x94 and notes uncertain base/derived ownership.
   This batch leaves that middleware declaration untouched and records a constructor TODO; adding raw-offset casts or writing only the halfword would misrepresent the evidence.
 - Remaining callback evidence from the complete original diff: case 40 has no US branch, while current source sets `unkD1` and returns zero.
+  Follow-up: batch 19 below corrects these cases and also commands 123–126.
   Case 110 returns 0xFFFF for scene 8 with episode 6 or 1; current source checks only episode 6 and reloads the scene for the fallback.
   These behavior changes were not included in the layout batch; read the full diff again before the next focused edit.
 - Results: forty-one improved functions across seven units, fifteen newly exact functions totaling 2,060 bytes, zero regressions including missing-function detection.
@@ -398,3 +399,34 @@ A full executable match also does not validate bodies in objects that are still 
   Its pre-existing missing `getDistPowFromCamera(const Vec&)`, weak-order warning, and seven UNUSED size warnings are unchanged after this batch.
   Boss nerve presence/order/linkage passes.
   Measurements and exact-function names are in `progress/GMSE01-batch18.json`; logs and the full map inventory are under `build/GMSE01-*-batch18.*`.
+
+## US sound distance and sequence-command routing
+
+- Status: distance exact, callback behavior corrected with remaining instruction differences, batch 19.
+- `MSound::getDistPowFromCamera(const Vec&)` is a 136-byte global function at 0x800151C8.
+  Its only retained original caller is in `MoveBG/MapObjBianco.s` at 0x801C6D98.
+  Declare/define the US method between `getDistFromCamera` and the constructor in source order, respecting the reversed emission order.
+  The routine captures the camera-position pointer once, calls `powf` on y, x, then z deltas with exponent 2.0f, and sums x+y before the z call.
+  The ordinary expression `powf(dx,2) + powf(dy,2) + powf(dz,2)` using global functions reproduces the entire original, including its 0x20 frame.
+- Failed distance trial: `std::powf` wrappers delay x+y summation until after the z call, retain another floating-point register, and grow the frame to 0x38 (81.4%).
+  Naming the x+y intermediate does not fix that scheduling while the wrappers remain.
+  Do not replace the calls with multiplication or a vector squared-distance helper.
+- Inventory exception: `MSMarioPosVolume::getDistFromMario` is an UNUSED helper in `MAnmSound.cpp` that is inlined in `MAnmSoundNPC::startAnimSound`.
+  That original caller delays the sums until all three `powf` calls have completed, unlike the new camera helper.
+  Its original also calls `std::sqrtf` out of line, whereas current source inlines it.
+  Leave the animation helper unchanged until its own inline context is understood; a global replacement of `std::powf` is not supported.
+- Sequence callback US dispatch: handled commands are 0, 1, 12, 13, 15, 20, 30, 110, 120, 121, and explicit 127.
+  Commands 1 and 127 fall through to `JAIBasic::setParameterSeqSync`.
+  Commands 40 and 123–126 also use the base callback, rather than the extra branches present in the non-US source.
+  Keep explicit case 127: after the non-US-only labels are excluded, the original decision tree and its `bge` for values at least 122 emerge naturally.
+- Case 110 loads the scene and episode bytes, returns 0xFFFF for scene 8 with episode 6 or 1, and otherwise returns the loaded scene.
+  The complete switch-routing and scene-check instruction sequences now match.
+  The function improved from 95.40247% to 98.75232%; remaining differences are a 0x58 versus 0x88 frame, register allocation, and one extra child-track pointer move in case 20.
+- Reverted callback trials: direct `mChildren[i]->mChildren[j]` removed a narrowing instruction and reduced the frame to 0x50, lowering the score to 98.3%.
+  Separating the child pointer declaration from its assignment did not resolve the register/frame mismatch.
+  Keep the existing `getChild` chain until stronger evidence supports a change.
+- Full build, all-function regression comparison including missing entries, `ninja changes_all`, and mixed-executable byte/SHA-1 checks pass.
+  Exact gain: 136 bytes and one function, zero regressions.
+  The MSound map now passes presence/order/linkage, retaining weak-order and seven UNUSED size warnings from the baseline.
+  Several UNUSED bodies are still stubs despite being present; a map pass does not establish completion.
+  See `progress/GMSE01-batch19.json` and the saved `m2c` draft `build/GMSE01/MSound-distance-batch19.c`.

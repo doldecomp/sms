@@ -8,7 +8,36 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 18
+## Latest checkpoint: batch 19
+
+Reconstructed the missing US `MSound::getDistPowFromCamera(const Vec&)` using the original three `powf` calls and evaluation order.
+All **136 bytes match exactly**.
+Corrected sequence callback commands 40 and 123–126 to fall through to the base audio callback, and case 110 to return 0xFFFF for scene 8 in episodes 6 or 1.
+The complete US switch routing now matches the original; the callback improved from 95.40247% to **98.75232%**.
+Other regions retain their existing behavior through version guards.
+
+This batch adds **136 exact code bytes and one matching function**.
+Aggregate exact code is **1,382,100 / 3,603,748 bytes (38.351738%)**, with **8,205 / 12,904 functions** matching.
+There are still **73 source-linked objects**, covering **76,468 code bytes (2.121902%)**.
+
+### Validation and remaining work
+
+Captured `ninja baseline` at `19b7f21f`, rebuilt header consumers, ran `ninja changes_all`, and compared all reported functions including missing-function detection: zero regressions.
+The full build, expected SHA-1, and direct byte comparison pass for the mixed source/original-object executable.
+The sound unit's symbol-map check now passes: all 67 mapped functions, including nine UNUSED entries, are present.
+It retains compiler-controlled weak-order warnings and seven existing UNUSED size warnings, including stubbed routines; the unit is not complete or source-linked.
+No gameplay test was performed.
+
+Remaining callback differences concern register allocation, a child-track pointer move, and a 0x58 versus 0x88 stack frame.
+Direct child-array access and splitting the local declaration/assignment did not resolve the mismatch and were reverted.
+The camera-distance helper needs global `powf`; the existing `std::powf` wrappers delayed summation and added spills.
+The neighboring animation-distance helper has evidence for different scheduling and was left unchanged.
+The [shared-fix catalog](docs/MATCHING_CATALOG.md) records these patterns and exceptions.
+Next work: continue the missing boss main-unit reconstruction, with the sound callback's inline context and UNUSED routines retained in the backlog.
+See [batch 19 measurements](docs/progress/GMSE01-batch19.json).
+Draft and validation logs are under `build/GMSE01/MSound-distance-batch19.c` and `build/GMSE01-*-batch19.*`.
+
+## Verified checkpoint: batch 18
 
 Corrected the shared US `MSound` layout using the original constructor, water-filter routine, timer routine, and camera/boss callers.
 The game-side class now declares the water-filter override byte at 0x98 and timer sequence parameter at 0x9A.

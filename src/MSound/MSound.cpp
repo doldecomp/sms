@@ -253,16 +253,24 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 		return uVar3;
 	}
 
+#if !defined(VERSION_GMSE01)
 	case 40:
 		MSGMSound->unkD1 = 1;
 		return 0;
+#endif
 
 	case 110: {
 		u8 a = MSGMSound->unkCD;
 		u8 b = MSGMSound->unkCE;
+#if defined(VERSION_GMSE01)
+		if (a == 8 && (b == 6 || b == 1))
+			return 0xffff;
+		return a;
+#else
 		if (a == 8 && b == 6)
 			return 0xffff;
 		return MSGMSound->unkCD;
+#endif
 	}
 
 	case 120:
@@ -271,13 +279,14 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 		return ukuleleFlag;
 
 	case 121:
+#if !defined(VERSION_GMSE01)
 	case 123:
 	case 124:
 	case 125:
 	case 126:
+#endif
 		return ukuleleFlag;
 
-	// TODO: how to get bge? :(
 	case 127:
 		break;
 	}
@@ -438,6 +447,16 @@ f32 MSound::getDistFromCamera(Vec* pos)
 {
 	return JALCalc::getDist(pos, mAudioCameras->mPosition);
 }
+
+#if defined(VERSION_GMSE01)
+f32 MSound::getDistPowFromCamera(const Vec& pos)
+{
+	const Vec* camera = mAudioCameras->mPosition;
+	return powf(pos.x - camera->x, 2.0f)
+	       + powf(pos.y - camera->y, 2.0f)
+	       + powf(pos.z - camera->z, 2.0f);
+}
+#endif
 
 MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
                u8* param_5, u32 param_6)

@@ -95,6 +95,9 @@ public:
 	void setPlayerInfo(Vec*, Vec*, MtxPtr, bool);
 	void setCameraInfo(Vec*, Vec*, MtxPtr, u32);
 	f32 getDistFromCamera(Vec*);
+#if defined(VERSION_GMSE01)
+	f32 getDistPowFromCamera(const Vec&);
+#endif
 	bool cameraLooksAtMario();
 
 	void startSoundSet(u32, const Vec*, u32, f32, u32, u32, u8);

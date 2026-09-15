@@ -1,0 +1,60 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "19b7f21f",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 75.17605,
+    "total_code": "3603748",
+    "matched_code": "1382100",
+    "matched_code_percent": 38.351738,
+    "total_data": "641075",
+    "matched_data": "302115",
+    "matched_data_percent": 47.126312,
+    "total_functions": 12904,
+    "matched_functions": 8205,
+    "matched_functions_percent": 63.584934,
+    "complete_code": "76468",
+    "complete_code_percent": 2.121902,
+    "complete_data": "51024",
+    "complete_data_percent": 7.9591312,
+    "total_units": 732,
+    "complete_units": 73
+  },
+  "source_linked_objects": 73,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 1,
+  "new_exact_code_bytes": 136,
+  "new_matched_data_bytes": 0,
+  "improvements": [
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "getDistPowFromCamera__6MSoundFRC3Vec",
+      "before": 0,
+      "after": 100.0,
+      "size": 136
+    },
+    {
+      "unit": "mario/MSound/MSound",
+      "function": "setParameterSeqSync__12MSSeCallBackFPQ28JASystem6TTrackUs",
+      "before": 95.40247,
+      "after": 98.75232,
+      "size": 1292
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_map_msound": true,
+    "gameplay_test": false
+  },
+  "notes": [
+    "Reconstructed the missing US squared camera-distance helper; all 136 bytes match exactly using direct global powf calls.",
+    "Corrected US sequence commands 40 and 123-126 to use the base callback, and case 110 to cover scene 8 episodes 6 and 1.",
+    "Sequence callback improves from 95.40247% to 98.75232%; its stack/register layout and child-track load sequence remain nonmatching.",
+    "All 67 sound-unit map functions are now present, including nine UNUSED entries; seven pre-existing UNUSED size warnings and compiler-controlled weak-order warnings remain.",
+    "No source-link promotion; executable verification covers the mixed source/original-object build."
+  ]
+}
