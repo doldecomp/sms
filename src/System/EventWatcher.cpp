@@ -215,10 +215,12 @@ static void evIsNearActors(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 			f32 dist
 			    = interp->mProcessStack.getFromTop(arg_num - 2).getDataFloat();
 
+			u32 i = 2;
 			count = 1;
-			for (u32 i = 2; i < arg_num; ++i) {
+			for (; i < arg_num; ++i) {
 				THitActor* other = (THitActor*)getNameRefPtr(
-				    interp->mProcessStack.getFromTop(arg_num - i));
+				    interp->mProcessStack.getFromBottom(
+				        interp->mProcessStack.size() - (arg_num - i)));
 				if (other) {
 					JGeometry::TVec3<f32> diff = which->mPosition;
 					diff -= other->mPosition;
@@ -230,7 +232,7 @@ static void evIsNearActors(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 		}
 	}
 
-	for (int i = 0; i < arg_num; ++i)
+	for (int i = 0; i < (int)arg_num; ++i)
 		interp->pop();
 
 	interp->push(count);
