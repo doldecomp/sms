@@ -858,10 +858,11 @@ void MSStageCubeFade::proc()
 
 			Vec local_d0 = info->getUnkC();
 			Vec marioPos = SMS_GetMarioPos();
+			local_d0.y   = marioPos.y;
 
 			f32 d = vec_dist(local_d0, marioPos);
 
-			Vec local_98 = gpMSound->mAudioCameras->toCamSpace(local_2c);
+			Vec local_98 = gpMSound->mAudioCameras->toCamSpace(local_d0);
 			f32 dVar6    = MSHandle::calcPan(local_98, d, 10000.0f);
 			f32 dVar7    = MSHandle::calcDolby(local_98, d);
 			MSBgm::setPan(1, dVar6, 1, 0);
