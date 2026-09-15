@@ -11083,7 +11083,9 @@ void TMapObjBase::makeMActors()
 
 	if (mMapObjData->mAnim) {
 		const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
-		mMActor = initMActor(anim->unk4[0].unk0, nullptr, getSDLModelFlag());
+		mMActor
+		    = initMActor(anim->unk4[0].unk0, anim->unk4[0].unkC,
+		                 getSDLModelFlag());
 
 		for (u16 i = 1; i < anim->unk0; ++i) {
 			if (anim->unk4[i].unk10 && mAnmSound == nullptr)
@@ -11091,7 +11093,8 @@ void TMapObjBase::makeMActors()
 
 			if (anim->unk4[i].unk0 != nullptr
 			    && !isAlreadyRegistered(anim, i)) {
-				initMActor(anim->unk4[i].unk0, nullptr, getSDLModelFlag());
+				initMActor(anim->unk4[i].unk0, anim->unk4[i].unkC,
+				           getSDLModelFlag());
 			}
 		}
 	} else {
