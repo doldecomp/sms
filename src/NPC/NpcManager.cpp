@@ -271,7 +271,7 @@ void TNPCManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_ENTRY) {
 		for (int i = 0, e = mObjNum; i < e; ++i) {
-			TBaseNPC* npc = (TBaseNPC*)unk18[i];
+			TBaseNPC* npc = (TBaseNPC*)getObj(i);
 			npc->onLiveFlag(LIVE_FLAG_UNK1000000);
 		}
 	}
