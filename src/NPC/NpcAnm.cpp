@@ -373,8 +373,9 @@ EnumNpcAnmKind TBaseNPC::getNpcWaitAnmBase_()
 void TBaseNPC::npcWaitIn()
 {
 	EnumNpcAnmKind kind = NPC_ANM_KIND_UNK1;
+	bool canSelectWait   = !checkActionFlag(NPC_ACTION_UNK400);
 
-	if (!checkActionFlag(NPC_ACTION_UNK400)) {
+	if (canSelectWait) {
 		if (!isClean()) {
 			kind = NPC_ANM_KIND_DIRTY;
 		} else if (checkActionFlag(NPC_ACTION_HAPPY)) {
@@ -387,7 +388,8 @@ void TBaseNPC::npcWaitIn()
 				kind = NPC_ANM_KIND_UNK12;
 			}
 		} else {
-			if (!unk124->unk0->isDummy()) {
+			const TGraphWeb* graph = unk124->getGraph();
+			if (!graph->isDummy()) {
 				if (mSpine->getLatestNerve()
 				    == &TNerveNPCGraphWait::theNerve()) {
 					if (!gpMarDirector->isThing())
