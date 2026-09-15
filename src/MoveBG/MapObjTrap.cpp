@@ -82,13 +82,14 @@ void TLampTrapSpike::control()
 {
 	BOOL bVar1 = false;
 	int thing  = unk138;
+	J3DFrameCtrl* ctrl;
 
 	switch (thing) {
 	case 0: {
-		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+		ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+			ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(6.0f);
 			ctrl->setRate(SMSGetAnmFrameRate());
 		}
@@ -101,10 +102,10 @@ void TLampTrapSpike::control()
 	} break;
 
 	case 1: {
-		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+		ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_down");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+			ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(0.0f);
 			ctrl->setRate(SMSGetAnmFrameRate() * 0.8f);
 		}
@@ -119,7 +120,7 @@ void TLampTrapSpike::control()
 	case 2:
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+			ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(ctrl->getEnd());
 			ctrl->setRate(0.0f);
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MVING_FENCT_SET,
@@ -135,7 +136,8 @@ void TLampTrapSpike::control()
 	case 3:
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_down");
-			if (J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK)) {
+			ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+			if (ctrl) {
 				ctrl->setFrame(ctrl->getEnd());
 				ctrl->setRate(0.0f);
 			}
@@ -148,10 +150,10 @@ void TLampTrapSpike::control()
 		break;
 
 	case 4: {
-		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+		ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+			ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(0.0f);
 			ctrl->setRate(SMSGetAnmFrameRate() * 0.1f);
 		}
@@ -165,10 +167,10 @@ void TLampTrapSpike::control()
 
 	default:
 	case 5:
-		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+		ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+			ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(6.0f);
 			ctrl->setRate(-SMSGetAnmFrameRate());
 		}
