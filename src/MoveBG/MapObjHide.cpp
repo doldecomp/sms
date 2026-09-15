@@ -212,7 +212,7 @@ void TFruitBasket::countFruit(THitActor* param_1)
 
 void TFruitBasket::touchFruit(THitActor* param_1)
 {
-	if (fabsf(mRotation.x) < 45.0f) {
+	if (__fabsf(mRotation.x) < 45.0f) {
 		// Upwards facing basket -- check that the fruit's on top of us
 		if (((TLiveActor*)param_1)->getGroundPlane()->getActor() != this)
 			return;
