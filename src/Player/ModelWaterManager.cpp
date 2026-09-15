@@ -72,6 +72,8 @@ const char* prmNames[] = {
 	"/Mario/WTP16_SpRocket.prm",
 };
 
+static const f32 cShineShadowVolumePos[] = { 0.0f, 3600.0f, -7458.0f };
+
 TWaterParticleType::TWaterParticleType(const char* path)
     : TParams(path)
     , PARAM_INIT(mExtension, 0.5f)
