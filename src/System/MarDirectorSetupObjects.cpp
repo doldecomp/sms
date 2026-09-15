@@ -20,7 +20,6 @@
 #include <System/PerformList.hpp>
 #include <System/FlagManager.hpp>
 #include <System/Application.hpp>
-#include <System/StageUtil.hpp>
 #include <System/MSoundMainSide.hpp>
 #include <System/Params.hpp>
 #include <GC2D/ScrnFader.hpp>
@@ -33,6 +32,8 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+
+u8 SMS_getShineStage(u8);
 
 extern void* gpSceneCmnDat;
 extern int gpSceneCmnDatSize;
@@ -313,7 +314,7 @@ bool TMarDirector::setupObjects()
 
 		JDrama::TLookAtCamera* cam
 		    = JDrama::TNameRefGen::search<JDrama::TLookAtCamera>("camera 1");
-		cam->mAspect = (u16)SMSGetGameVideoWidth() * 0.9134614f
+		cam->mAspect = (u16)SMSGetGameVideoWidth() * 0.91346145f
 		               / (u16)SMSGetGameVideoHeight();
 	}
 
