@@ -201,7 +201,8 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 		targetPos.y += 0.5f * actor->mDamageHeight;
 		JGeometry::TVec3<f32> delta = targetPos - mTipPos;
 
-		if (delta.isZero())
+		bool isZero = delta.isZero();
+		if (isZero)
 			continue;
 
 		f32 dist = delta.length();
