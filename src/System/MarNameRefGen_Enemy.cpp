@@ -142,6 +142,47 @@ public:
 	}
 };
 
+inline TMewManager::TMewManager(const char* name)
+    : TAnimalManagerBase(name)
+{
+}
+
+inline TDiffusionNameKuriManager::TDiffusionNameKuriManager(const char* name)
+    : TNameKuriManager(name)
+{
+}
+
+inline TSurfGesso::TSurfGesso(const char* name)
+    : TGesso(name)
+{
+}
+
+inline TLandGesso::TLandGesso(const char* name)
+    : TGesso(name)
+{
+}
+
+inline TNameKuriLauncher::TNameKuriLauncher(const char* name)
+    : TLauncher(name)
+{
+}
+
+inline TSimpleEffect::TSimpleEffect(const char* name)
+    : JDrama::TActor(name)
+    , unk44(1)
+{
+}
+
+inline TEffectPinnaFunsui::TEffectPinnaFunsui(const char* name)
+    : TSimpleEffect(name)
+{
+}
+
+inline TEffectBiancoFunsui::TEffectBiancoFunsui(const char* name)
+    : TSimpleEffect(name)
+{
+}
+
 JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 {
 
