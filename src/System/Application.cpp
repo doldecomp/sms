@@ -335,6 +335,7 @@ void TApplication::initialize_bootAfter()
 
 void TApplication::initialize_nlogoAfter()
 {
+	JKRMemArchive* this_00;
 	JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume("nintendo");
 	arch->unmountFixed();
 	delete arch;
@@ -366,7 +367,7 @@ void TApplication::initialize_nlogoAfter()
 	((JKRExpHeap*)mHeap)->destroy();
 	JKRGetRootHeap()->free(spGameHeapBlock);
 
-	JKRMemArchive* this_00 = new JKRMemArchive(arcBufMario, 0, MBF_0);
+	this_00 = new JKRMemArchive(arcBufMario, 0, MBF_0);
 	gpCardManager->mIcons
 	    = (ResTIMG*)piVar2->getResource("/card/mario_icon.bti") + 1;
 	gpCardManager->mBanner
