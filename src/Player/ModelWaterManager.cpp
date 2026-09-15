@@ -217,9 +217,10 @@ void TModelWaterManager::loadAfter()
 	    && gpMarDirector->getCurrentStage() == 2)
 		fVar1 = 1.0f;
 
-	if (fVar1 < 1.0f)
-		unk5E0C = fVar1 * 24000.0f + 8000.0f;
-	else
+	if (fVar1 < 1.0f) {
+		f32 fVar2 = 24000.0f;
+		unk5E0C   = fVar1 * fVar2 + 8000.0f;
+	} else
 		unk5D60 &= ~0x100;
 }
 
