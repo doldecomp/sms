@@ -952,15 +952,14 @@ void MSStageCubeFadeMonte::proc()
 		}
 
 		if (unk4 != -1 && MSMainProc::MSStageInfo::cubeFadeUsePan) {
-
-			Vec local_e8           = SMS_GetMarioPos();
 			TCubeGeneralInfo* info = gpCubeSoundChange->unk14->begin()[unk4];
 
-			Vec local_d0        = info->getUnkC();
-			const Vec& marioPos = SMS_GetMarioPos();
+			Vec local_d0 = info->getUnkC();
+			Vec marioPos = SMS_GetMarioPos();
+			local_d0.y   = marioPos.y;
 
 			f32 d        = vec_dist(local_d0, marioPos);
-			Vec local_a4 = gpMSound->mAudioCameras->toCamSpace(local_e8);
+			Vec local_a4 = gpMSound->mAudioCameras->toCamSpace(local_d0);
 
 			f32 dVar6 = MSHandle::calcPan(local_a4, d, 10000.0f);
 			f32 dVar7 = MSHandle::calcDolby(local_a4, d);
