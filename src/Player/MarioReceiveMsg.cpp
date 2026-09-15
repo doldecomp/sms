@@ -754,7 +754,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			           mDmgParamsHanachanBoss.mInvincibleTime.get());
 			return TRUE;
 		}
-		// fallthrough
+		break;
 
 	case 0x4000002C: { // big spinning enemy with rotation-based attack window
 		if (mInput & 0x8000) {
@@ -879,7 +879,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 	case 0x40000393: // fruit kick targets (durian & smth else)
 		if (mFreezeImmunityTimer <= 0) {
 			mFreezeTimer = mDeParams.mKickFreezeTime.get();
-			rumbleStart(0x15, mMotorParams.mMotorTrample.get());
+			rumbleStart(0x15, mMotorParams.mMotorWall.get());
 			calcDamagePos(sender->mPosition);
 			kickFruitEffect();
 			return TRUE;
