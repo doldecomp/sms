@@ -9,6 +9,7 @@
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <MarioUtil/LightUtil.hpp>
+#include <MarioUtil/ShadowUtil.hpp>
 #include <Enemy/Graph.hpp>
 #include <Enemy/Conductor.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
@@ -207,7 +208,7 @@ void TRailMapObj::setGroundCollision()
 	}
 }
 
-u32 TRailMapObj::getShadowType() { return 1; }
+u32 TRailMapObj::getShadowType() { return SHADOW_TYPE_SQUARE; }
 
 void TRailMapObj::readRailFlag()
 {

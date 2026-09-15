@@ -25,27 +25,26 @@
 
 TMBindShadowParts::TMBindShadowParts(J3DModel* param_1, u8 param_2,
                                      TMBindShadowBody* param_3, f32 param_4)
-    : unk0(0.01f)
-    , unk4(param_3)
-    , unk8(nullptr)
-    , unkC(nullptr)
-    , unk10(nullptr)
+    : mMinRadius(0.01f)
+    , mBody(param_3)
+    , mJointName(nullptr)
+    , mJointMtx(nullptr)
+    , mChildMtx(nullptr)
     , unk14(true)
-    , unk15(false)
-    , unk16(false)
+    , mIsCircle(false)
+    , mIsBody(false)
 {
 	// TODO: fake
 	(void)0;
 	(void)0;
 	(void)0;
-	unk8 = param_1->getModelData()->getJointName()->getName(param_2);
-	unkC = param_1->getAnmMtx(param_2);
-
-	unk10 = param_1->getAnmMtx(((J3DJoint*)param_1->getModelData()
-	                                ->getJointNodePointer(param_2)
-	                                ->getChild())
-	                               ->getJntNo());
-	unk0  = param_4;
+	mJointName = param_1->getModelData()->getJointName()->getName(param_2);
+	mJointMtx  = param_1->getAnmMtx(param_2);
+	mChildMtx  = param_1->getAnmMtx(((J3DJoint*)param_1->getModelData()
+                                        ->getJointNodePointer(param_2)
+                                        ->getChild())
+	                                    ->getJntNo());
+	mMinRadius = param_4;
 }
 
 void TMBindShadowParts::calc(f32 param_1)
@@ -56,19 +55,19 @@ void TMBindShadowParts::calc(f32 param_1)
 	f32 y1 = param_1;
 	f32 y2 = param_1;
 
-	f32 dist = fabsf(unk4->unk4->mPosition.y - param_1);
+	f32 dist = fabsf(mBody->mActor->mPosition.y - param_1);
 
-	const JGeometry::TVec3<f32>& light = gpBindShadowManager->unk30;
+	const JGeometry::TVec3<f32>& light = gpBindShadowManager->mLightDir;
 
 	f32 lightX = light.x;
 	f32 lightZ = light.z;
-	f32 h1     = unkC[1][3] - dist - param_1;
-	f32 h2     = unk10[1][3] - dist - param_1;
+	f32 h1     = mJointMtx[1][3] - dist - param_1;
+	f32 h2     = mChildMtx[1][3] - dist - param_1;
 	f32 x1, z1, x2, z2;
-	x1 = unkC[0][3] - lightX * h1;
-	z1 = unkC[2][3] - lightZ * h1;
-	x2 = unk10[0][3] - lightX * h2;
-	z2 = unk10[2][3] - lightZ * h2;
+	x1 = mJointMtx[0][3] - lightX * h1;
+	z1 = mJointMtx[2][3] - lightZ * h1;
+	x2 = mChildMtx[0][3] - lightX * h2;
+	z2 = mChildMtx[2][3] - lightZ * h2;
 	JGeometry::TVec3<f32> center;
 	center.set(0.5f * (x1 + x2), 0.5f * (y1 + y2), 0.5f * (z1 + z2));
 	f32 cx = center.x;
@@ -80,91 +79,91 @@ void TMBindShadowParts::calc(f32 param_1)
 	radiusZ = fabsf(cz - z2);
 	radiusX = fabsf(cx - x2);
 
-	if (unk16)
-		unk0 = unk4->unk18;
-	else if (unk15)
-		unk0 = unk4->unk10;
+	if (mIsBody)
+		mMinRadius = mBody->mBodyRadius;
+	else if (mIsCircle)
+		mMinRadius = mBody->mCircleRadius;
 	else
-		unk0 = unk4->unk14;
+		mMinRadius = mBody->mPartsRadius;
 
-	if (radiusX < unk0)
-		radiusX = unk0;
-	if (radiusZ < unk0)
-		radiusZ = unk0;
+	if (radiusX < mMinRadius)
+		radiusX = mMinRadius;
+	if (radiusZ < mMinRadius)
+		radiusZ = mMinRadius;
 
-	if (!unk15) {
+	if (!mIsCircle) {
 		f32 ratio = gpBindShadowManager->unk68;
 		f32 scale = gpBindShadowManager->unk6C;
 		if (radiusZ > radiusX) {
 			if (radiusZ > ratio * radiusX)
 				radiusZ *= scale;
-			if (radiusX > unk0)
-				radiusX = unk0;
+			if (radiusX > mMinRadius)
+				radiusX = mMinRadius;
 		} else if (radiusX > radiusZ) {
 			if (radiusX > ratio * radiusZ)
 				radiusX *= scale;
-			if (radiusZ > unk0)
-				radiusZ = unk0;
+			if (radiusZ > mMinRadius)
+				radiusZ = mMinRadius;
 		}
 	}
 
 	TCircleShadowRequest request;
-	request.unk0.set(cx, cy, cz);
-	request.unkC  = radiusX;
-	request.unk10 = radiusZ;
+	request.mPosition.set(cx, cy, cz);
+	request.mRadiusX = radiusX;
+	request.mRadiusZ = radiusZ;
 
-	if (!unk15 && unk4->unk4->mActorType != 0x80000001
-	    && unk4->unk4->mActorType != 0x8000002) {
+	if (!mIsCircle && mBody->mActor->mActorType != 0x80000001
+	    && mBody->mActor->mActorType != 0x8000002) {
 		f32 rotY = matan(z2 - z1, x2 - x1) * (360.0f / 65536.0f);
 		if (radiusX > radiusZ)
 			rotY -= 90.0f;
-		request.unk14 = rotY;
+		request.mRotationY = rotY;
 	} else {
-		request.unk14 = 0.0f;
+		request.mRotationY = 0.0f;
 	}
 
-	gpBindShadowManager->request(request, unk4->unk4->mActorType);
+	gpBindShadowManager->request(request, mBody->mActor->mActorType);
 }
 
 TMBindShadowBody::TMBindShadowBody(THitActor* param_1, J3DModel* param_2,
                                    f32 param_3)
-    : unk0(nullptr)
-    , unk4(param_1)
-    , unk8(0)
-    , unkC(param_1->getName())
-    , unk10(0.01f)
-    , unk14(0.01f)
-    , unk18(50.0f)
+    : mParts(nullptr)
+    , mActor(param_1)
+    , mPartsNum(0)
+    , mActorName(param_1->getName())
+    , mCircleRadius(0.01f)
+    , mPartsRadius(0.01f)
+    , mBodyRadius(50.0f)
 {
 	switch (param_1->mActorType) {
 	case 0x80000001:
 	case 0x8000002:
-		unk10 = 38.0f;
-		unk14 = 18.0f;
-		unk18 = 25.0f;
+		mCircleRadius = 38.0f;
+		mPartsRadius  = 18.0f;
+		mBodyRadius   = 25.0f;
 		break;
 	case 0x8000001:
-		unk10 = 280.0f;
-		unk14 = 50.0f;
+		mCircleRadius = 280.0f;
+		mPartsRadius  = 50.0f;
 		break;
 	default:
-		unk10 = 50.0f;
-		unk14 = 50.0f;
+		mCircleRadius = 50.0f;
+		mPartsRadius  = 50.0f;
 		break;
 	}
 
-	unk10 *= param_3;
-	unk14 *= param_3;
+	mCircleRadius *= param_3;
+	mPartsRadius *= param_3;
 
 	J3DModelData* modelData = param_2->getModelData();
 
 	for (int i = 0; i < modelData->getJointNum(); i++) {
 		if (modelData->getJointNodePointer((u8)i)->getKind() == 1
 		    && isUseThisJoint(i))
-			unk8++;
+			mPartsNum++;
 	}
 
-	unk0 = new TMBindShadowParts*[unk8];
+	mParts = new TMBindShadowParts*[mPartsNum];
 
 	int count = 0;
 	for (int i = 0; i < modelData->getJointNum(); i++) {
@@ -173,13 +172,16 @@ TMBindShadowBody::TMBindShadowBody(THitActor* param_1, J3DModel* param_2,
 			continue;
 
 		if (isCircleJoint(i)) {
-			unk0[count]        = new TMBindShadowParts(param_2, i, this, unk10);
-			unk0[count]->unk15 = true;
+			mParts[count]
+			    = new TMBindShadowParts(param_2, i, this, mCircleRadius);
+			mParts[count]->mIsCircle = true;
 		} else if (isBodyJoint(i)) {
-			unk0[count]        = new TMBindShadowParts(param_2, i, this, unk18);
-			unk0[count]->unk16 = true;
+			mParts[count]
+			    = new TMBindShadowParts(param_2, i, this, mBodyRadius);
+			mParts[count]->mIsBody = true;
 		} else {
-			unk0[count] = new TMBindShadowParts(param_2, i, this, unk14);
+			mParts[count]
+			    = new TMBindShadowParts(param_2, i, this, mPartsRadius);
 		}
 
 		count++;
@@ -190,7 +192,7 @@ TMBindShadowBody::TMBindShadowBody(THitActor* param_1, J3DModel* param_2,
 
 bool TMBindShadowBody::isUseThisJoint(int param_1)
 {
-	const THitActor* actor = unk4;
+	const THitActor* actor = mActor;
 	switch (actor->mActorType) {
 	case 0x80000001:
 	case 0x8000002:
@@ -206,7 +208,7 @@ bool TMBindShadowBody::isUseThisJoint(int param_1)
 
 bool TMBindShadowBody::isCircleJoint(int param_1)
 {
-	switch (unk4->mActorType) {
+	switch (mActor->mActorType) {
 	case 0x80000001:
 	case 0x8000002:
 		if (param_1 == 0x1a)
@@ -223,7 +225,7 @@ bool TMBindShadowBody::isCircleJoint(int param_1)
 
 bool TMBindShadowBody::isBodyJoint(int param_1)
 {
-	switch (unk4->mActorType) {
+	switch (mActor->mActorType) {
 	case 0x80000001:
 	case 0x8000002:
 		if (param_1 == 2 || param_1 == 0xe)
@@ -238,7 +240,7 @@ void TMBindShadowBody::entryDrawShadow()
 {
 	f32 eps = JGeometry::TUtil<f32>::epsilon();
 
-	if (gpMarioPos->epsilonEquals(unk4->mPosition, eps)) {
+	if (gpMarioPos->epsilonEquals(mActor->mPosition, eps)) {
 		if (!gpBindShadowManager->unk65) {
 			gpBindShadowManager->unk65 = true;
 			calc();
@@ -250,7 +252,7 @@ void TMBindShadowBody::entryDrawShadow()
 
 void TMBindShadowBody::calc()
 {
-	JGeometry::TVec3<f32> pos = unk4->mPosition;
+	JGeometry::TVec3<f32> pos = mActor->mPosition;
 
 	f32 y = pos.y;
 	f32 z = pos.z;
@@ -265,13 +267,13 @@ void TMBindShadowBody::calc()
 	if (ground->isIllegalData())
 		return;
 
-	for (int i = 0; i < unk8; i++)
-		unk0[i]->calc(groundY);
+	for (int i = 0; i < mPartsNum; i++)
+		mParts[i]->calc(groundY);
 }
 
 TSquareShadowInfo::TSquareShadowInfo()
 {
-	for (Vec* p = &unk0[0]; p != &unk0[5]; p++) {
+	for (Vec* p = &mPoints[0]; p != &mPoints[5]; p++) {
 		p->x = 0.0f;
 		p->y = 0.0f;
 		p->y = 0.0f;
@@ -279,19 +281,19 @@ TSquareShadowInfo::TSquareShadowInfo()
 }
 
 TModelShadowInfo::TModelShadowInfo()
-    : unk0(0.0f, 0.0f, 0.0f)
-    , unkC(0)
-    , unkD(1)
+    : mPosition(0.0f, 0.0f, 0.0f)
+    , mIsFar(false)
+    , unkD(true)
     , unk10(0.01f)
 {
 }
 
 void TAlphaShadowQuad::reset()
 {
-	unk0  = 0.01f;
-	unk64 = nullptr;
-	unk68 = nullptr;
-	unk6C = nullptr;
+	mRadius        = 0.01f;
+	mSquareOutline = nullptr;
+	mRequest       = nullptr;
+	mNext          = nullptr;
 }
 
 TModelShadow::TModelShadow(SDLModelData* param_1, void* param_2, int param_3) {
@@ -314,50 +316,49 @@ u8 TMBindShadowManager::mDLSw;
 
 TMBindShadowManager::TMBindShadowManager(const char* name)
     : JDrama::TViewObj(name)
-    , unk14(0)
-    , unk20(0)
-    , unk2C(0)
-    , unk40(0)
+    , mRequestNum(0)
+    , mQuadAryNum(0)
+    , mSquareShadowNum(0)
+    , mModelShadowNum(0)
     , unk44(0)
     , unk48(0)
     , unk49(0)
-    , unk4C()
     , unk60(30.0f)
-    , unk64(0)
+    , unk64(false)
     , unk65(false)
     , unk68(0.5f)
     , unk6C(1.55f)
-    , unk70(nullptr)
+    , mModelShadows(nullptr)
 {
-	unk5C.r = 30;
-	unk5C.g = 50;
-	unk5C.b = 115;
-	unk5C.a = 180;
+	mShadowColor.r = 30;
+	mShadowColor.g = 50;
+	mShadowColor.b = 115;
+	mShadowColor.a = 180;
 
 	switch (gpApplication.mCurrArea.unk0) {
 	case 6:
-		unk5C.r = 9;
-		unk5C.g = 9;
-		unk5C.b = 28;
-		unk5C.a = 116;
+		mShadowColor.r = 9;
+		mShadowColor.g = 9;
+		mShadowColor.b = 28;
+		mShadowColor.a = 116;
 		break;
 	case 7:
-		unk5C.r = 45;
-		unk5C.g = 40;
-		unk5C.b = 60;
-		unk5C.a = 90;
+		mShadowColor.r = 45;
+		mShadowColor.g = 40;
+		mShadowColor.b = 60;
+		mShadowColor.a = 90;
 		break;
 	}
 
 	gpBindShadowManager = this;
 
-	unk10 = new TCircleShadowRequest[0x200];
-	unk18 = new TAlphaShadowQuad[0x200];
-	unk1C = new TAlphaShadowQuadAry[0x100];
-	unk24 = new TAlphaShadowBlendQuad[0x200];
-	unk28 = new TSquareShadowInfo[0x1E];
-	unk70 = new TModelShadowInfo[1];
-	unk3C = new SDLModelData*[5];
+	mRequests     = new TCircleShadowRequest[0x200];
+	mQuads        = new TAlphaShadowQuad[0x200];
+	mQuadArys     = new TAlphaShadowQuadAry[0x100];
+	mBlendQuads   = new TAlphaShadowBlendQuad[0x200];
+	mSquareShadow = new TSquareShadowInfo[0x1E];
+	mModelShadows = new TModelShadowInfo[1];
+	mModelDatas   = new SDLModelData*[5];
 }
 
 void TMBindShadowManager::load(JSUMemoryInputStream& stream)
@@ -365,19 +366,19 @@ void TMBindShadowManager::load(JSUMemoryInputStream& stream)
 	JDrama::TNameRef::load(stream);
 
 	void* resource = JKRFileLoader::getGlbResource("/common/shadowCircle.bmd");
-	unk3C[0]
+	mModelDatas[0]
 	    = new SDLModelData(J3DModelLoaderDataBase::load(resource, 0x10210000));
 
 	resource = JKRFileLoader::getGlbResource("/common/shadowCircleLow.bmd");
-	unk3C[1]
+	mModelDatas[1]
 	    = new SDLModelData(J3DModelLoaderDataBase::load(resource, 0x10210000));
 
 	resource = JKRFileLoader::getGlbResource("/common/shadowCube.bmd");
-	unk3C[2]
+	mModelDatas[2]
 	    = new SDLModelData(J3DModelLoaderDataBase::load(resource, 0x10210000));
 
 	resource = JKRFileLoader::getGlbResource("/common/ShipShadow.bmd");
-	unk3C[3]
+	mModelDatas[3]
 	    = new SDLModelData(J3DModelLoaderDataBase::load(resource, 0x10210000));
 
 	reset();
@@ -385,24 +386,24 @@ void TMBindShadowManager::load(JSUMemoryInputStream& stream)
 
 void TMBindShadowManager::reset()
 {
-	unk49 = 1;
-	unk14 = 0;
-	unk20 = 0;
-	unk65 = false;
-	unk2C = 0;
-	unk40 = 0;
+	unk49            = 1;
+	mRequestNum      = 0;
+	mQuadAryNum      = 0;
+	unk65            = false;
+	mSquareShadowNum = 0;
+	mModelShadowNum  = 0;
 }
 
 void TMBindShadowManager::initEntry(TMBindShadowBody* param_1)
 {
-	unk4C.push_back(param_1);
+	mBodyList.push_back(param_1);
 }
 
 void TMBindShadowManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_VIEW) {
 		unk49 = 0;
-		VECNormalize(gpLightManager->getLightPos(), &unk30);
+		VECNormalize(gpLightManager->getLightPos(), &mLightDir);
 		calcVtx();
 	}
 
@@ -428,24 +429,24 @@ static bool conectCubeDiffer(TAlphaShadowBlendQuad* param_1,
 	    || (param_2->unk18 & 0x40000000))
 		return false;
 
-	if (fabsf(param_1->unk0.y - param_2->unk0.y) > 50.0f)
+	if (fabsf(param_1->mMin.y - param_2->mMin.y) > 50.0f)
 		return false;
 
-	if (param_1->unk0.x <= param_2->unkC.x && param_1->unkC.x >= param_2->unk0.x
-	    && param_1->unk0.z <= param_2->unkC.z
-	    && param_1->unkC.z >= param_2->unk0.z) {
-		if (param_1->unkC.x <= param_2->unkC.x)
-			param_1->unkC.x = param_2->unkC.x;
-		if (param_1->unk0.x >= param_2->unk0.x)
-			param_1->unk0.x = param_2->unk0.x;
-		if (param_1->unkC.z <= param_2->unkC.z)
-			param_1->unkC.z = param_2->unkC.z;
-		if (param_1->unk0.z >= param_2->unk0.z)
-			param_1->unk0.z = param_2->unk0.z;
-		if (param_1->unk0.y >= param_2->unk0.y)
-			param_1->unk0.y = param_2->unk0.y;
-		if (param_1->unkC.y <= param_2->unkC.y)
-			param_1->unkC.y = param_2->unkC.y;
+	if (param_1->mMin.x <= param_2->mMax.x && param_1->mMax.x >= param_2->mMin.x
+	    && param_1->mMin.z <= param_2->mMax.z
+	    && param_1->mMax.z >= param_2->mMin.z) {
+		if (param_1->mMax.x <= param_2->mMax.x)
+			param_1->mMax.x = param_2->mMax.x;
+		if (param_1->mMin.x >= param_2->mMin.x)
+			param_1->mMin.x = param_2->mMin.x;
+		if (param_1->mMax.z <= param_2->mMax.z)
+			param_1->mMax.z = param_2->mMax.z;
+		if (param_1->mMin.z >= param_2->mMin.z)
+			param_1->mMin.z = param_2->mMin.z;
+		if (param_1->mMin.y >= param_2->mMin.y)
+			param_1->mMin.y = param_2->mMin.y;
+		if (param_1->mMax.y <= param_2->mMax.y)
+			param_1->mMax.y = param_2->mMax.y;
 		return true;
 	}
 
@@ -460,25 +461,25 @@ static bool conectCubeSame(TAlphaShadowBlendQuad* param_1,
 
 	f32 dist = TMBindShadowManager::mJoinDist;
 
-	if (fabsf(param_1->unk0.y - param_2->unk0.y) > 50.0f)
+	if (fabsf(param_1->mMin.y - param_2->mMin.y) > 50.0f)
 		return false;
 
-	if (param_1->unk0.x <= param_2->unkC.x - dist
-	    && param_1->unkC.x >= param_2->unk0.x + dist
-	    && param_1->unk0.z <= param_2->unkC.z - dist
-	    && param_1->unkC.z >= param_2->unk0.z + dist) {
-		if (param_1->unkC.x <= param_2->unkC.x - dist)
-			param_1->unkC.x = param_2->unkC.x;
-		if (param_1->unk0.x >= param_2->unk0.x + dist)
-			param_1->unk0.x = param_2->unk0.x;
-		if (param_1->unkC.z <= param_2->unkC.z - dist)
-			param_1->unkC.z = param_2->unkC.z;
-		if (param_1->unk0.z >= param_2->unk0.z + dist)
-			param_1->unk0.z = param_2->unk0.z;
-		if (param_1->unk0.y >= param_2->unk0.y)
-			param_1->unk0.y = param_2->unk0.y;
-		if (param_1->unkC.y <= param_2->unkC.y)
-			param_1->unkC.y = param_2->unkC.y;
+	if (param_1->mMin.x <= param_2->mMax.x - dist
+	    && param_1->mMax.x >= param_2->mMin.x + dist
+	    && param_1->mMin.z <= param_2->mMax.z - dist
+	    && param_1->mMax.z >= param_2->mMin.z + dist) {
+		if (param_1->mMax.x <= param_2->mMax.x - dist)
+			param_1->mMax.x = param_2->mMax.x;
+		if (param_1->mMin.x >= param_2->mMin.x + dist)
+			param_1->mMin.x = param_2->mMin.x;
+		if (param_1->mMax.z <= param_2->mMax.z - dist)
+			param_1->mMax.z = param_2->mMax.z;
+		if (param_1->mMin.z >= param_2->mMin.z + dist)
+			param_1->mMin.z = param_2->mMin.z;
+		if (param_1->mMin.y >= param_2->mMin.y)
+			param_1->mMin.y = param_2->mMin.y;
+		if (param_1->mMax.y <= param_2->mMax.y)
+			param_1->mMax.y = param_2->mMax.y;
 		return true;
 	}
 
@@ -512,10 +513,10 @@ void TMBindShadowManager::drawShadowVolume(bool param_1,
 	// index arrays sit 4 bytes lower than in the map, so one 4-byte local is
 	// still missing after them.
 	f32 height = 50.0f;
-	if (param_2->unk68->unk1C == 1) {
-		if (param_2->unk64 == nullptr) {
-			SMS_SettingDrawShape(unk3C[2]->getModelData(), 0);
-			SMS_DrawShape(unk3C[2]->getModelData(), 0);
+	if (param_2->mRequest->mShadowType == SHADOW_TYPE_SQUARE) {
+		if (param_2->mSquareOutline == nullptr) {
+			SMS_SettingDrawShape(mModelDatas[2]->getModelData(), 0);
+			SMS_DrawShape(mModelDatas[2]->getModelData(), 0);
 		} else {
 			int topIndices[9]    = { 2, 1, 0, 3, 2, 0, 4, 3, 0 };
 			int bottomIndices[9] = { 0, 1, 2, 0, 2, 3, 0, 3, 4 };
@@ -527,12 +528,12 @@ void TMBindShadowManager::drawShadowVolume(bool param_1,
 			GXBegin(GX_TRIANGLES, GX_VTXFMT0, 18);
 
 			for (int i = 0; i < 9; i++) {
-				Vec* v = &param_2->unk64[topIndices[i]];
+				Vec* v = &param_2->mSquareOutline[topIndices[i]];
 				GXPosition3f32(v->x, 50.0f + v->y, v->z);
 			}
 
 			for (int i = 0; i < 9; i++) {
-				Vec* v = &param_2->unk64[bottomIndices[i]];
+				Vec* v = &param_2->mSquareOutline[bottomIndices[i]];
 				GXPosition3f32(v->x, v->y - 50.0f, v->z);
 			}
 
@@ -540,148 +541,208 @@ void TMBindShadowManager::drawShadowVolume(bool param_1,
 
 			GXBegin(GX_TRIANGLES, GX_VTXFMT0, 60);
 
-			GXPosition3f32(param_2->unk64[0].x, param_2->unk64[0].y + height,
-			               param_2->unk64[0].z);
-			GXPosition3f32(param_2->unk64[1].x, param_2->unk64[1].y + height,
-			               param_2->unk64[1].z);
-			GXPosition3f32(param_2->unk64[1].x, param_2->unk64[1].y - 50.0f,
-			               param_2->unk64[1].z);
-			GXPosition3f32(param_2->unk64[1].x, param_2->unk64[1].y - 50.0f,
-			               param_2->unk64[1].z);
-			GXPosition3f32(param_2->unk64[0].x, param_2->unk64[0].y - 50.0f,
-			               param_2->unk64[0].z);
-			GXPosition3f32(param_2->unk64[0].x, param_2->unk64[0].y + height,
-			               param_2->unk64[0].z);
-			GXPosition3f32(param_2->unk64[1].x, param_2->unk64[1].y + height,
-			               param_2->unk64[1].z);
-			GXPosition3f32(param_2->unk64[0].x, param_2->unk64[0].y + height,
-			               param_2->unk64[0].z);
-			GXPosition3f32(param_2->unk64[1].x, param_2->unk64[1].y - 50.0f,
-			               param_2->unk64[1].z);
-			GXPosition3f32(param_2->unk64[1].x, param_2->unk64[1].y - 50.0f,
-			               param_2->unk64[1].z);
-			GXPosition3f32(param_2->unk64[0].x, param_2->unk64[0].y + height,
-			               param_2->unk64[0].z);
-			GXPosition3f32(param_2->unk64[0].x, param_2->unk64[0].y - 50.0f,
-			               param_2->unk64[0].z);
+			GXPosition3f32(param_2->mSquareOutline[0].x,
+			               param_2->mSquareOutline[0].y + height,
+			               param_2->mSquareOutline[0].z);
+			GXPosition3f32(param_2->mSquareOutline[1].x,
+			               param_2->mSquareOutline[1].y + height,
+			               param_2->mSquareOutline[1].z);
+			GXPosition3f32(param_2->mSquareOutline[1].x,
+			               param_2->mSquareOutline[1].y - 50.0f,
+			               param_2->mSquareOutline[1].z);
+			GXPosition3f32(param_2->mSquareOutline[1].x,
+			               param_2->mSquareOutline[1].y - 50.0f,
+			               param_2->mSquareOutline[1].z);
+			GXPosition3f32(param_2->mSquareOutline[0].x,
+			               param_2->mSquareOutline[0].y - 50.0f,
+			               param_2->mSquareOutline[0].z);
+			GXPosition3f32(param_2->mSquareOutline[0].x,
+			               param_2->mSquareOutline[0].y + height,
+			               param_2->mSquareOutline[0].z);
+			GXPosition3f32(param_2->mSquareOutline[1].x,
+			               param_2->mSquareOutline[1].y + height,
+			               param_2->mSquareOutline[1].z);
+			GXPosition3f32(param_2->mSquareOutline[0].x,
+			               param_2->mSquareOutline[0].y + height,
+			               param_2->mSquareOutline[0].z);
+			GXPosition3f32(param_2->mSquareOutline[1].x,
+			               param_2->mSquareOutline[1].y - 50.0f,
+			               param_2->mSquareOutline[1].z);
+			GXPosition3f32(param_2->mSquareOutline[1].x,
+			               param_2->mSquareOutline[1].y - 50.0f,
+			               param_2->mSquareOutline[1].z);
+			GXPosition3f32(param_2->mSquareOutline[0].x,
+			               param_2->mSquareOutline[0].y + height,
+			               param_2->mSquareOutline[0].z);
+			GXPosition3f32(param_2->mSquareOutline[0].x,
+			               param_2->mSquareOutline[0].y - 50.0f,
+			               param_2->mSquareOutline[0].z);
 
-			GXPosition3f32(param_2->unk64[1].x, param_2->unk64[1].y + height,
-			               param_2->unk64[1].z);
-			GXPosition3f32(param_2->unk64[2].x, param_2->unk64[2].y + height,
-			               param_2->unk64[2].z);
-			GXPosition3f32(param_2->unk64[2].x, param_2->unk64[2].y - 50.0f,
-			               param_2->unk64[2].z);
-			GXPosition3f32(param_2->unk64[2].x, param_2->unk64[2].y - 50.0f,
-			               param_2->unk64[2].z);
-			GXPosition3f32(param_2->unk64[1].x, param_2->unk64[1].y - 50.0f,
-			               param_2->unk64[1].z);
-			GXPosition3f32(param_2->unk64[1].x, param_2->unk64[1].y + height,
-			               param_2->unk64[1].z);
-			GXPosition3f32(param_2->unk64[2].x, param_2->unk64[2].y + height,
-			               param_2->unk64[2].z);
-			GXPosition3f32(param_2->unk64[1].x, param_2->unk64[1].y + height,
-			               param_2->unk64[1].z);
-			GXPosition3f32(param_2->unk64[2].x, param_2->unk64[2].y - 50.0f,
-			               param_2->unk64[2].z);
-			GXPosition3f32(param_2->unk64[2].x, param_2->unk64[2].y - 50.0f,
-			               param_2->unk64[2].z);
-			GXPosition3f32(param_2->unk64[1].x, param_2->unk64[1].y + height,
-			               param_2->unk64[1].z);
-			GXPosition3f32(param_2->unk64[1].x, param_2->unk64[1].y - 50.0f,
-			               param_2->unk64[1].z);
+			GXPosition3f32(param_2->mSquareOutline[1].x,
+			               param_2->mSquareOutline[1].y + height,
+			               param_2->mSquareOutline[1].z);
+			GXPosition3f32(param_2->mSquareOutline[2].x,
+			               param_2->mSquareOutline[2].y + height,
+			               param_2->mSquareOutline[2].z);
+			GXPosition3f32(param_2->mSquareOutline[2].x,
+			               param_2->mSquareOutline[2].y - 50.0f,
+			               param_2->mSquareOutline[2].z);
+			GXPosition3f32(param_2->mSquareOutline[2].x,
+			               param_2->mSquareOutline[2].y - 50.0f,
+			               param_2->mSquareOutline[2].z);
+			GXPosition3f32(param_2->mSquareOutline[1].x,
+			               param_2->mSquareOutline[1].y - 50.0f,
+			               param_2->mSquareOutline[1].z);
+			GXPosition3f32(param_2->mSquareOutline[1].x,
+			               param_2->mSquareOutline[1].y + height,
+			               param_2->mSquareOutline[1].z);
+			GXPosition3f32(param_2->mSquareOutline[2].x,
+			               param_2->mSquareOutline[2].y + height,
+			               param_2->mSquareOutline[2].z);
+			GXPosition3f32(param_2->mSquareOutline[1].x,
+			               param_2->mSquareOutline[1].y + height,
+			               param_2->mSquareOutline[1].z);
+			GXPosition3f32(param_2->mSquareOutline[2].x,
+			               param_2->mSquareOutline[2].y - 50.0f,
+			               param_2->mSquareOutline[2].z);
+			GXPosition3f32(param_2->mSquareOutline[2].x,
+			               param_2->mSquareOutline[2].y - 50.0f,
+			               param_2->mSquareOutline[2].z);
+			GXPosition3f32(param_2->mSquareOutline[1].x,
+			               param_2->mSquareOutline[1].y + height,
+			               param_2->mSquareOutline[1].z);
+			GXPosition3f32(param_2->mSquareOutline[1].x,
+			               param_2->mSquareOutline[1].y - 50.0f,
+			               param_2->mSquareOutline[1].z);
 
-			GXPosition3f32(param_2->unk64[2].x, param_2->unk64[2].y + height,
-			               param_2->unk64[2].z);
-			GXPosition3f32(param_2->unk64[3].x, param_2->unk64[3].y + height,
-			               param_2->unk64[3].z);
-			GXPosition3f32(param_2->unk64[3].x, param_2->unk64[3].y - 50.0f,
-			               param_2->unk64[3].z);
-			GXPosition3f32(param_2->unk64[3].x, param_2->unk64[3].y - 50.0f,
-			               param_2->unk64[3].z);
-			GXPosition3f32(param_2->unk64[2].x, param_2->unk64[2].y - 50.0f,
-			               param_2->unk64[2].z);
-			GXPosition3f32(param_2->unk64[2].x, param_2->unk64[2].y + height,
-			               param_2->unk64[2].z);
-			GXPosition3f32(param_2->unk64[3].x, param_2->unk64[3].y + height,
-			               param_2->unk64[3].z);
-			GXPosition3f32(param_2->unk64[2].x, param_2->unk64[2].y + height,
-			               param_2->unk64[2].z);
-			GXPosition3f32(param_2->unk64[3].x, param_2->unk64[3].y - 50.0f,
-			               param_2->unk64[3].z);
-			GXPosition3f32(param_2->unk64[3].x, param_2->unk64[3].y - 50.0f,
-			               param_2->unk64[3].z);
-			GXPosition3f32(param_2->unk64[2].x, param_2->unk64[2].y + height,
-			               param_2->unk64[2].z);
-			GXPosition3f32(param_2->unk64[2].x, param_2->unk64[2].y - 50.0f,
-			               param_2->unk64[2].z);
+			GXPosition3f32(param_2->mSquareOutline[2].x,
+			               param_2->mSquareOutline[2].y + height,
+			               param_2->mSquareOutline[2].z);
+			GXPosition3f32(param_2->mSquareOutline[3].x,
+			               param_2->mSquareOutline[3].y + height,
+			               param_2->mSquareOutline[3].z);
+			GXPosition3f32(param_2->mSquareOutline[3].x,
+			               param_2->mSquareOutline[3].y - 50.0f,
+			               param_2->mSquareOutline[3].z);
+			GXPosition3f32(param_2->mSquareOutline[3].x,
+			               param_2->mSquareOutline[3].y - 50.0f,
+			               param_2->mSquareOutline[3].z);
+			GXPosition3f32(param_2->mSquareOutline[2].x,
+			               param_2->mSquareOutline[2].y - 50.0f,
+			               param_2->mSquareOutline[2].z);
+			GXPosition3f32(param_2->mSquareOutline[2].x,
+			               param_2->mSquareOutline[2].y + height,
+			               param_2->mSquareOutline[2].z);
+			GXPosition3f32(param_2->mSquareOutline[3].x,
+			               param_2->mSquareOutline[3].y + height,
+			               param_2->mSquareOutline[3].z);
+			GXPosition3f32(param_2->mSquareOutline[2].x,
+			               param_2->mSquareOutline[2].y + height,
+			               param_2->mSquareOutline[2].z);
+			GXPosition3f32(param_2->mSquareOutline[3].x,
+			               param_2->mSquareOutline[3].y - 50.0f,
+			               param_2->mSquareOutline[3].z);
+			GXPosition3f32(param_2->mSquareOutline[3].x,
+			               param_2->mSquareOutline[3].y - 50.0f,
+			               param_2->mSquareOutline[3].z);
+			GXPosition3f32(param_2->mSquareOutline[2].x,
+			               param_2->mSquareOutline[2].y + height,
+			               param_2->mSquareOutline[2].z);
+			GXPosition3f32(param_2->mSquareOutline[2].x,
+			               param_2->mSquareOutline[2].y - 50.0f,
+			               param_2->mSquareOutline[2].z);
 
-			GXPosition3f32(param_2->unk64[3].x, param_2->unk64[3].y + height,
-			               param_2->unk64[3].z);
-			GXPosition3f32(param_2->unk64[4].x, param_2->unk64[4].y + height,
-			               param_2->unk64[4].z);
-			GXPosition3f32(param_2->unk64[4].x, param_2->unk64[4].y - 50.0f,
-			               param_2->unk64[4].z);
-			GXPosition3f32(param_2->unk64[4].x, param_2->unk64[4].y - 50.0f,
-			               param_2->unk64[4].z);
-			GXPosition3f32(param_2->unk64[3].x, param_2->unk64[3].y - 50.0f,
-			               param_2->unk64[3].z);
-			GXPosition3f32(param_2->unk64[3].x, param_2->unk64[3].y + height,
-			               param_2->unk64[3].z);
-			GXPosition3f32(param_2->unk64[4].x, param_2->unk64[4].y + height,
-			               param_2->unk64[4].z);
-			GXPosition3f32(param_2->unk64[3].x, param_2->unk64[3].y + height,
-			               param_2->unk64[3].z);
-			GXPosition3f32(param_2->unk64[4].x, param_2->unk64[4].y - 50.0f,
-			               param_2->unk64[4].z);
-			GXPosition3f32(param_2->unk64[4].x, param_2->unk64[4].y - 50.0f,
-			               param_2->unk64[4].z);
-			GXPosition3f32(param_2->unk64[3].x, param_2->unk64[3].y + height,
-			               param_2->unk64[3].z);
-			GXPosition3f32(param_2->unk64[3].x, param_2->unk64[3].y - 50.0f,
-			               param_2->unk64[3].z);
+			GXPosition3f32(param_2->mSquareOutline[3].x,
+			               param_2->mSquareOutline[3].y + height,
+			               param_2->mSquareOutline[3].z);
+			GXPosition3f32(param_2->mSquareOutline[4].x,
+			               param_2->mSquareOutline[4].y + height,
+			               param_2->mSquareOutline[4].z);
+			GXPosition3f32(param_2->mSquareOutline[4].x,
+			               param_2->mSquareOutline[4].y - 50.0f,
+			               param_2->mSquareOutline[4].z);
+			GXPosition3f32(param_2->mSquareOutline[4].x,
+			               param_2->mSquareOutline[4].y - 50.0f,
+			               param_2->mSquareOutline[4].z);
+			GXPosition3f32(param_2->mSquareOutline[3].x,
+			               param_2->mSquareOutline[3].y - 50.0f,
+			               param_2->mSquareOutline[3].z);
+			GXPosition3f32(param_2->mSquareOutline[3].x,
+			               param_2->mSquareOutline[3].y + height,
+			               param_2->mSquareOutline[3].z);
+			GXPosition3f32(param_2->mSquareOutline[4].x,
+			               param_2->mSquareOutline[4].y + height,
+			               param_2->mSquareOutline[4].z);
+			GXPosition3f32(param_2->mSquareOutline[3].x,
+			               param_2->mSquareOutline[3].y + height,
+			               param_2->mSquareOutline[3].z);
+			GXPosition3f32(param_2->mSquareOutline[4].x,
+			               param_2->mSquareOutline[4].y - 50.0f,
+			               param_2->mSquareOutline[4].z);
+			GXPosition3f32(param_2->mSquareOutline[4].x,
+			               param_2->mSquareOutline[4].y - 50.0f,
+			               param_2->mSquareOutline[4].z);
+			GXPosition3f32(param_2->mSquareOutline[3].x,
+			               param_2->mSquareOutline[3].y + height,
+			               param_2->mSquareOutline[3].z);
+			GXPosition3f32(param_2->mSquareOutline[3].x,
+			               param_2->mSquareOutline[3].y - 50.0f,
+			               param_2->mSquareOutline[3].z);
 
-			GXPosition3f32(param_2->unk64[4].x, param_2->unk64[4].y + height,
-			               param_2->unk64[4].z);
-			GXPosition3f32(param_2->unk64[0].x, param_2->unk64[0].y + height,
-			               param_2->unk64[0].z);
-			GXPosition3f32(param_2->unk64[0].x, param_2->unk64[0].y - 50.0f,
-			               param_2->unk64[0].z);
-			GXPosition3f32(param_2->unk64[0].x, param_2->unk64[0].y - 50.0f,
-			               param_2->unk64[0].z);
-			GXPosition3f32(param_2->unk64[4].x, param_2->unk64[4].y - 50.0f,
-			               param_2->unk64[4].z);
-			GXPosition3f32(param_2->unk64[4].x, param_2->unk64[4].y + height,
-			               param_2->unk64[4].z);
-			GXPosition3f32(param_2->unk64[0].x, param_2->unk64[0].y + height,
-			               param_2->unk64[0].z);
-			GXPosition3f32(param_2->unk64[4].x, param_2->unk64[4].y + height,
-			               param_2->unk64[4].z);
-			GXPosition3f32(param_2->unk64[0].x, param_2->unk64[0].y - 50.0f,
-			               param_2->unk64[0].z);
-			GXPosition3f32(param_2->unk64[0].x, param_2->unk64[0].y - 50.0f,
-			               param_2->unk64[0].z);
-			GXPosition3f32(param_2->unk64[4].x, param_2->unk64[4].y + height,
-			               param_2->unk64[4].z);
-			GXPosition3f32(param_2->unk64[4].x, param_2->unk64[4].y - 50.0f,
-			               param_2->unk64[4].z);
+			GXPosition3f32(param_2->mSquareOutline[4].x,
+			               param_2->mSquareOutline[4].y + height,
+			               param_2->mSquareOutline[4].z);
+			GXPosition3f32(param_2->mSquareOutline[0].x,
+			               param_2->mSquareOutline[0].y + height,
+			               param_2->mSquareOutline[0].z);
+			GXPosition3f32(param_2->mSquareOutline[0].x,
+			               param_2->mSquareOutline[0].y - 50.0f,
+			               param_2->mSquareOutline[0].z);
+			GXPosition3f32(param_2->mSquareOutline[0].x,
+			               param_2->mSquareOutline[0].y - 50.0f,
+			               param_2->mSquareOutline[0].z);
+			GXPosition3f32(param_2->mSquareOutline[4].x,
+			               param_2->mSquareOutline[4].y - 50.0f,
+			               param_2->mSquareOutline[4].z);
+			GXPosition3f32(param_2->mSquareOutline[4].x,
+			               param_2->mSquareOutline[4].y + height,
+			               param_2->mSquareOutline[4].z);
+			GXPosition3f32(param_2->mSquareOutline[0].x,
+			               param_2->mSquareOutline[0].y + height,
+			               param_2->mSquareOutline[0].z);
+			GXPosition3f32(param_2->mSquareOutline[4].x,
+			               param_2->mSquareOutline[4].y + height,
+			               param_2->mSquareOutline[4].z);
+			GXPosition3f32(param_2->mSquareOutline[0].x,
+			               param_2->mSquareOutline[0].y - 50.0f,
+			               param_2->mSquareOutline[0].z);
+			GXPosition3f32(param_2->mSquareOutline[0].x,
+			               param_2->mSquareOutline[0].y - 50.0f,
+			               param_2->mSquareOutline[0].z);
+			GXPosition3f32(param_2->mSquareOutline[4].x,
+			               param_2->mSquareOutline[4].y + height,
+			               param_2->mSquareOutline[4].z);
+			GXPosition3f32(param_2->mSquareOutline[4].x,
+			               param_2->mSquareOutline[4].y - 50.0f,
+			               param_2->mSquareOutline[4].z);
 
 			GXEnd();
 		}
-	} else if (param_2->unk68->unk1C == 3) {
-		SMS_SettingDrawShape(unk3C[3]->getModelData(), 0);
-		SMS_DrawShape(unk3C[3]->getModelData(), 0);
+	} else if (param_2->mRequest->mShadowType == SHADOW_TYPE_SHIP) {
+		SMS_SettingDrawShape(mModelDatas[3]->getModelData(), 0);
+		SMS_DrawShape(mModelDatas[3]->getModelData(), 0);
 	} else {
 		if (param_1)
-			SMS_DrawShape(unk3C[0]->getModelData(), 0);
+			SMS_DrawShape(mModelDatas[0]->getModelData(), 0);
 		else
-			SMS_DrawShape(unk3C[1]->getModelData(), 0);
+			SMS_DrawShape(mModelDatas[1]->getModelData(), 0);
 		return;
 	}
 
 	if (param_1)
-		SMS_SettingDrawShape(unk3C[0]->getModelData(), 0);
+		SMS_SettingDrawShape(mModelDatas[0]->getModelData(), 0);
 	else
-		SMS_SettingDrawShape(unk3C[1]->getModelData(), 0);
+		SMS_SettingDrawShape(mModelDatas[1]->getModelData(), 0);
 }
 
 void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
@@ -763,10 +824,6 @@ void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	};
 
-	// TODO: instruction-identical, but the frame is 0x188 against the map's
-	// 0x400. The 8 spill slots sit right below the register save area in
-	// both, so the deficit is a block of locals below them that this
-	// reconstruction does not name yet.
 	GXSetZCompLoc(GX_TRUE);
 
 	static TSetup1 setup1(0x100);
@@ -776,10 +833,10 @@ void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
 
 	MtxPtr viewMtx = param_2->getViewMtx();
 
-	for (int i = 0; i < unk20; i++) {
-		TAlphaShadowQuadAry* ary = &unk1C[i];
+	for (int i = 0; i < mQuadAryNum; i++) {
+		TAlphaShadowQuadAry* ary = &mQuadArys[i];
 
-		if (ary->unk4 == nullptr || ary->unkC == nullptr)
+		if (ary->mQuadHead == nullptr || ary->mBlendHead == nullptr)
 			continue;
 
 		if (!(param_1 & ary->unk0))
@@ -805,7 +862,7 @@ void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
 		static TSetup2 setup2(0x80);
 		setup2.callDL();
 
-		TAlphaShadowBlendQuad* blend = unk1C[i].unkC;
+		TAlphaShadowBlendQuad* blend = mQuadArys[i].mBlendHead;
 
 		f32 minX;
 		f32 y1;
@@ -814,13 +871,13 @@ void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
 		f32 maxZ;
 		f32 y2;
 
-		y2 = blend->unk0.y;
-		y1 = y2 - blend->unkC.y;
-		y2 += blend->unkC.y;
-		minX = blend->unk0.x;
-		minZ = blend->unk0.z;
-		maxX = blend->unkC.x;
-		maxZ = blend->unkC.z;
+		y2 = blend->mMin.y;
+		y1 = y2 - blend->mMax.y;
+		y2 += blend->mMax.y;
+		minX = blend->mMin.x;
+		minZ = blend->mMin.z;
+		maxX = blend->mMax.x;
+		maxZ = blend->mMax.z;
 
 		loadPosMtxImm(param_2->getViewMtx());
 
@@ -852,7 +909,7 @@ void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
 		GXPosition3f32(maxX, y1, maxZ);
 		GXEnd();
 
-		TAlphaShadowQuad* quad = unk1C[i].unk4;
+		TAlphaShadowQuad* quad = mQuadArys[i].mQuadHead;
 		u8 lowPoly             = 0;
 
 		class TSetup3 : public TGDLStatic {
@@ -873,17 +930,17 @@ void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
 
 		static TSetup3 setup3(0x80);
 		setup3.callDL();
-		if (quad->unk68->unk18 < 20000000.0f) {
-			SMS_SettingDrawShape(unk3C[0]->getModelData(), 0);
+		if (quad->mRequest->mCameraDistSq < 20000000.0f) {
+			SMS_SettingDrawShape(mModelDatas[0]->getModelData(), 0);
 			lowPoly = 1;
 		} else {
-			SMS_SettingDrawShape(unk3C[1]->getModelData(), 0);
+			SMS_SettingDrawShape(mModelDatas[1]->getModelData(), 0);
 		}
 
 		while (quad != nullptr) {
-			loadPosMtxImm(quad->unk4);
+			loadPosMtxImm(quad->mMtx);
 			drawShadowVolume(lowPoly, quad);
-			quad = quad->unk6C;
+			quad = quad->mNext;
 		}
 
 		class TSetup4 : public TGDLStatic {
@@ -907,11 +964,11 @@ void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
 		static TSetup4 setup4(0x80);
 		setup4.callDL();
 
-		quad = unk1C[i].unk4;
+		quad = mQuadArys[i].mQuadHead;
 		while (quad != nullptr) {
-			loadPosMtxImm(quad->unk4);
+			loadPosMtxImm(quad->mMtx);
 			drawShadowVolume(lowPoly, quad);
-			quad = quad->unk6C;
+			quad = quad->mNext;
 		}
 
 		class TSetup5 : public TGDLStatic {
@@ -995,14 +1052,14 @@ static inline void initShadowGX(const GXColor& color,
 void TMBindShadowManager::drawShadow(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (!mTestSw) {
-		initShadowGX(unk5C, param_2);
+		initShadowGX(mShadowColor, param_2);
 
 		MtxPtr viewMtx = param_2->getViewMtx();
 
-		for (int i = 0; i < unk20; i++) {
-			TAlphaShadowQuadAry* ary = &unk1C[i];
+		for (int i = 0; i < mQuadAryNum; i++) {
+			TAlphaShadowQuadAry* ary = &mQuadArys[i];
 
-			if (ary->unk4 == nullptr || ary->unkC == nullptr)
+			if (ary->mQuadHead == nullptr || ary->mBlendHead == nullptr)
 				continue;
 
 			if (!(param_1 & ary->unk0))
@@ -1015,25 +1072,25 @@ void TMBindShadowManager::drawShadow(u32 param_1, JDrama::TGraphics* param_2)
 			GXSetZMode(GX_TRUE, GX_ALWAYS, GX_FALSE);
 			GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ONE, GX_LO_NOOP);
 
-			TAlphaShadowBlendQuad* blend = unk1C[i].unkC;
+			TAlphaShadowBlendQuad* blend = mQuadArys[i].mBlendHead;
 
 			JGeometry::TVec3<f32> max;
 			JGeometry::TVec3<f32> min;
 
-			min.set(blend->unk0.x, blend->unk0.y - blend->unkC.y,
-			        blend->unk0.z);
-			max.set(blend->unkC.x, blend->unk0.y + blend->unkC.y,
-			        blend->unkC.z);
+			min.set(blend->mMin.x, blend->mMin.y - blend->mMax.y,
+			        blend->mMin.z);
+			max.set(blend->mMax.x, blend->mMin.y + blend->mMax.y,
+			        blend->mMax.z);
 			SMS_DrawCube(min, max);
 
 			u8 lowPoly             = 0;
-			TAlphaShadowQuad* quad = unk1C[i].unk4;
+			TAlphaShadowQuad* quad = mQuadArys[i].mQuadHead;
 
-			if (quad->unk68->unk18 < 20000000.0f) {
-				SMS_SettingDrawShape(unk3C[0]->getModelData(), 0);
+			if (quad->mRequest->mCameraDistSq < 20000000.0f) {
+				SMS_SettingDrawShape(mModelDatas[0]->getModelData(), 0);
 				lowPoly = 1;
 			} else {
-				SMS_SettingDrawShape(unk3C[1]->getModelData(), 0);
+				SMS_SettingDrawShape(mModelDatas[1]->getModelData(), 0);
 			}
 
 			GXSetDstAlpha(GX_FALSE, 0);
@@ -1042,9 +1099,9 @@ void TMBindShadowManager::drawShadow(u32 param_1, JDrama::TGraphics* param_2)
 			GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
 
 			while (quad != nullptr) {
-				GXLoadPosMtxImm(quad->unk4, GX_PNMTX0);
+				GXLoadPosMtxImm(quad->mMtx, GX_PNMTX0);
 				drawShadowVolume(lowPoly, quad);
-				quad = quad->unk6C;
+				quad = quad->mNext;
 			}
 
 			GXSetBlendMode(GX_BM_BLEND, GX_BL_DSTALPHA, GX_BL_INVDSTALPHA,
@@ -1054,11 +1111,11 @@ void TMBindShadowManager::drawShadow(u32 param_1, JDrama::TGraphics* param_2)
 			GXSetDstAlpha(GX_TRUE, 0);
 			GXSetColorUpdate(GX_TRUE);
 
-			quad = unk1C[i].unk4;
+			quad = mQuadArys[i].mQuadHead;
 			while (quad != nullptr) {
-				GXLoadPosMtxImm(quad->unk4, GX_PNMTX0);
+				GXLoadPosMtxImm(quad->mMtx, GX_PNMTX0);
 				drawShadowVolume(lowPoly, quad);
-				quad = quad->unk6C;
+				quad = quad->mNext;
 			}
 
 			GXSetCullMode(GX_CULL_BACK);
@@ -1066,14 +1123,14 @@ void TMBindShadowManager::drawShadow(u32 param_1, JDrama::TGraphics* param_2)
 			GXSetDstAlpha(GX_TRUE, 0);
 			GXSetZMode(GX_TRUE, GX_ALWAYS, GX_FALSE);
 
-			quad = unk1C[i].unk4;
+			quad = mQuadArys[i].mQuadHead;
 			while (quad != nullptr) {
-				if (quad->unk68->unk1C == 3) {
-					GXLoadPosMtxImm(quad->unk4, GX_PNMTX0);
-					SMS_SettingDrawShape(unk3C[3]->getModelData(), 0);
-					SMS_DrawShape(unk3C[3]->getModelData(), 0);
+				if (quad->mRequest->mShadowType == SHADOW_TYPE_SHIP) {
+					GXLoadPosMtxImm(quad->mMtx, GX_PNMTX0);
+					SMS_SettingDrawShape(mModelDatas[3]->getModelData(), 0);
+					SMS_DrawShape(mModelDatas[3]->getModelData(), 0);
 				}
-				quad = quad->unk6C;
+				quad = quad->mNext;
 			}
 
 			GXClearVtxDesc();
@@ -1091,7 +1148,7 @@ void TMBindShadowManager::drawShadow(u32 param_1, JDrama::TGraphics* param_2)
 			}
 		}
 	} else {
-		initShadowGX(unk5C, param_2);
+		initShadowGX(mShadowColor, param_2);
 
 		Mtx mtx;
 		MTXIdentity(mtx);
@@ -1118,23 +1175,23 @@ void TMBindShadowManager::drawShadow(u32 param_1, JDrama::TGraphics* param_2)
 		GXSetColorUpdate(GX_FALSE);
 		GXSetAlphaUpdate(GX_TRUE);
 		GXSetDstAlpha(GX_FALSE, 0);
-		SMS_SettingDrawShape(unk3C[0]->getModelData(), 0);
+		SMS_SettingDrawShape(mModelDatas[0]->getModelData(), 0);
 
-		for (int i = 0; i < unk14; i++) {
+		for (int i = 0; i < mRequestNum; i++) {
 			if (param_1 & 0x40000000) {
-				if (!(unk18[i].unk68->unk20 & 0x40000000))
+				if (!(mQuads[i].mRequest->mActorType & 0x40000000))
 					continue;
-			} else if (unk18[i].unk68->unk20 & 0x40000000) {
+			} else if (mQuads[i].mRequest->mActorType & 0x40000000) {
 				continue;
 			}
 
-			GXLoadPosMtxImm(unk18[i].unk4, GX_PNMTX0);
+			GXLoadPosMtxImm(mQuads[i].mMtx, GX_PNMTX0);
 			GXSetCullMode(GX_CULL_BACK);
 			GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ONE, GX_LO_NOOP);
-			SMS_DrawShape(unk3C[0]->getModelData(), 0);
+			SMS_DrawShape(mModelDatas[0]->getModelData(), 0);
 			GXSetCullMode(GX_CULL_FRONT);
 			GXSetBlendMode(GX_BM_SUBTRACT, GX_BL_ONE, GX_BL_ONE, GX_LO_NOOP);
-			SMS_DrawShape(unk3C[0]->getModelData(), 0);
+			SMS_DrawShape(mModelDatas[0]->getModelData(), 0);
 		}
 
 		GXSetCurrentMtx(GX_PNMTX0);
@@ -1182,7 +1239,7 @@ void TMBindShadowManager::drawShadow(u32 param_1, JDrama::TGraphics* param_2)
 		GXSetColorUpdate(GX_TRUE);
 		GXSetAlphaUpdate(GX_TRUE);
 		GXSetDstAlpha(GX_TRUE, 0);
-		GXSetChanMatColor(GX_COLOR0A0, unk5C);
+		GXSetChanMatColor(GX_COLOR0A0, mShadowColor);
 		GXSetBlendMode(GX_BM_BLEND, GX_BL_DSTALPHA, GX_BL_INVDSTALPHA,
 		               GX_LO_NOOP);
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
@@ -1203,46 +1260,46 @@ void TMBindShadowManager::request(const TCircleShadowRequest& param_1,
                                   u32 param_2)
 {
 	// TODO: instruction-identical, but the frame is 0x28 short of the map.
-	JGeometry::TVec3<f32> delta = param_1.unk0;
+	JGeometry::TVec3<f32> delta = param_1.mPosition;
 	delta -= gpCamera->unk124;
 	f32 dist = delta.squared();
 
 	f32 range = 6.0f;
-	if (param_1.unk1C == 2)
+	if (param_1.mShadowType == SHADOW_TYPE_TREE)
 		range = 10.0f;
-	if (param_1.unk1C == 1)
+	if (param_1.mShadowType == SHADOW_TYPE_SQUARE)
 		range = 1.0f;
 
 	if (dist > 20000000.0f * range)
 		return;
 
-	if (param_1.unkC < 0.01f || param_1.unk10 < 0.01f)
+	if (param_1.mRadiusX < 0.01f || param_1.mRadiusZ < 0.01f)
 		return;
 
-	if (!gpMap->isInArea(param_1.unk0.x, param_1.unk0.z))
+	if (!gpMap->isInArea(param_1.mPosition.x, param_1.mPosition.z))
 		return;
 
-	if (isnan(param_1.unk0.x) || isnan(param_1.unk0.z))
+	if (isnan(param_1.mPosition.x) || isnan(param_1.mPosition.z))
 		return;
 
-	if (unk14 < 0x200) {
-		unk10[unk14]       = param_1;
-		unk10[unk14].unk20 = param_2;
-		unk10[unk14].unk18 = dist;
+	if (mRequestNum < 0x200) {
+		mRequests[mRequestNum]               = param_1;
+		mRequests[mRequestNum].mActorType    = param_2;
+		mRequests[mRequestNum].mCameraDistSq = dist;
 
-		if (param_1.unk1C == 2) {
-			if (unk40 < 1) {
-				unk70[unk40].unk0 = param_1.unk0;
-				unk70[unk40].unkC = 0;
-				unk70[unk40].unkD = 1;
+		if (param_1.mShadowType == SHADOW_TYPE_TREE) {
+			if (mModelShadowNum < 1) {
+				mModelShadows[mModelShadowNum].mPosition = param_1.mPosition;
+				mModelShadows[mModelShadowNum].mIsFar    = false;
+				mModelShadows[mModelShadowNum].unkD      = true;
 
 				if (dist > 200000000.0f)
-					unk70[unk40].unkC = 1;
+					mModelShadows[mModelShadowNum].mIsFar = true;
 
-				unk40++;
+				mModelShadowNum++;
 			}
 		} else {
-			unk14++;
+			mRequestNum++;
 		}
 	}
 }
@@ -1250,16 +1307,16 @@ void TMBindShadowManager::request(const TCircleShadowRequest& param_1,
 void TMBindShadowManager::forceRequest(const TCircleShadowRequest& param_1,
                                        u32 param_2)
 {
-	JGeometry::TVec3<f32> pos   = param_1.unk0;
+	JGeometry::TVec3<f32> pos   = param_1.mPosition;
 	JGeometry::TVec3<f32> delta = pos;
 	delta -= gpCamera->getUnk124();
 	f32 dist = delta.squared();
 
-	if (unk14 < 0x200) {
-		unk10[unk14]       = param_1;
-		unk10[unk14].unk20 = param_2;
-		unk10[unk14].unk18 = dist;
-		unk14++;
+	if (mRequestNum < 0x200) {
+		mRequests[mRequestNum]               = param_1;
+		mRequests[mRequestNum].mActorType    = param_2;
+		mRequests[mRequestNum].mCameraDistSq = dist;
+		mRequestNum++;
 	}
 }
 
@@ -1270,22 +1327,22 @@ void TMBindShadowManager::calcVtx()
 
 	TCircleShadowRequest* request;
 	int i;
-	TAlphaShadowQuad* quad = unk18;
+	TAlphaShadowQuad* quad = mQuads;
 	MtxPtr viewMtx         = j3dSys.getViewMtx();
 
-	unk2C = 0;
+	mSquareShadowNum = 0;
 
-	for (i = 0; i < unk14; i++) {
-		request = &unk10[i];
+	for (i = 0; i < mRequestNum; i++) {
+		request = &mRequests[i];
 
-		JGeometry::TVec3<f32> oldPos = request->unk0;
+		JGeometry::TVec3<f32> oldPos = request->mPosition;
 
-		if (request->unk1C == 1) {
-			JGeometry::TVec3<f32> foot = request->unk0;
+		if (request->mShadowType == SHADOW_TYPE_SQUARE) {
+			JGeometry::TVec3<f32> foot = request->mPosition;
 			JGeometry::TVec3<f32> head = foot;
 			head.y += mSquareShadowHeight;
 
-			const JGeometry::TVec3<f32>& light = gpBindShadowManager->unk30;
+			const JGeometry::TVec3<f32>& light = gpBindShadowManager->mLightDir;
 
 			f32 h1 = foot.y - foot.y;
 			f32 h2 = head.y - foot.y;
@@ -1295,16 +1352,16 @@ void TMBindShadowManager::calcVtx()
 			JGeometry::TVec3<f32> projectedHead;
 			projectedHead.set(head.x - light.x * h2, foot.y,
 			                  head.z - light.z * h2);
-			request->unk0.set(0.5f * (projectedHead.x + projectedFoot.x),
-			                  0.5f * (projectedFoot.y + projectedHead.y),
-			                  0.5f * (projectedHead.z + projectedFoot.z));
+			request->mPosition.set(0.5f * (projectedHead.x + projectedFoot.x),
+			                       0.5f * (projectedFoot.y + projectedHead.y),
+			                       0.5f * (projectedHead.z + projectedFoot.z));
 		}
 
-		JGeometry::TVec3<f32> pos = request->unk0;
+		JGeometry::TVec3<f32> pos = request->mPosition;
 
 		f32 y;
 		f32 groundY = y = pos.y;
-		if (request->unk1D) {
+		if (request->mNeedsGroundCheck) {
 			f32 z = pos.z;
 
 			const TBGCheckData* ground;
@@ -1315,52 +1372,53 @@ void TMBindShadowManager::calcVtx()
 				                                               &ground);
 		}
 
-		if (request->unk1C != 1)
-			request->unk0.y = groundY;
+		if (request->mShadowType != SHADOW_TYPE_SQUARE)
+			request->mPosition.y = groundY;
 
 		f32 shrink = 1.0f;
-		if (request->unk18 > 20000000.0f || request->unk14 != 0.0f)
+		if (request->mCameraDistSq > 20000000.0f || request->mRotationY != 0.0f)
 			shrink = 0.2f;
 
-		f32 radius = request->unkC;
-		if (request->unkC < request->unk10)
-			radius = request->unk10;
+		f32 radius = request->mRadiusX;
+		if (request->mRadiusX < request->mRadiusZ)
+			radius = request->mRadiusZ;
 
 		f32 treeScale = 1.0f;
-		f32 sx        = 0.08f * request->unkC;
-		f32 sy        = 0.08f * request->unk10;
+		f32 sx        = 0.08f * request->mRadiusX;
+		f32 sy        = 0.08f * request->mRadiusZ;
 		f32 sz        = 0.08f * (radius * shrink);
 
-		JGeometry::TVec3<f32> rotation(90.0f, request->unk14, 0.0f);
+		JGeometry::TVec3<f32> rotation(90.0f, request->mRotationY, 0.0f);
 		JGeometry::TVec3<f32> scale(sx * treeScale, sy * treeScale,
 		                            treeScale * sz);
 
-		if (request->unk1C == 3) {
-			f32 treeScale  = mTreeScale;
-			rotation.x     = 0.0f;
-			scale.y        = 0.2f;
-			scale.x        = sy * treeScale;
-			request->unk10 = 1.0f;
-			scale.z        = sx * treeScale;
-			request->unkC  = 1.0f;
+		if (request->mShadowType == SHADOW_TYPE_SHIP) {
+			f32 treeScale     = mTreeScale;
+			rotation.x        = 0.0f;
+			scale.y           = 0.2f;
+			scale.x           = sy * treeScale;
+			request->mRadiusZ = 1.0f;
+			scale.z           = sx * treeScale;
+			request->mRadiusX = 1.0f;
 		}
 
-		JGeometry::TVec3<f32> trans = request->unk0;
+		JGeometry::TVec3<f32> trans = request->mPosition;
 
-		request->unkC *= 0.8f;
-		request->unk10 *= 0.8f;
+		request->mRadiusX *= 0.8f;
+		request->mRadiusZ *= 0.8f;
 
 		quad->reset();
-		quad->unk68 = request;
-		quad->unk0  = request->unkC;
-		if (request->unkC < request->unk10)
-			quad->unk0 = request->unk10;
-		if (quad->unk0 > 200.0f)
-			quad->unk0 = 200.0f;
-		quad->unk0 *= 1.1f;
+		quad->mRequest = request;
+		quad->mRadius  = request->mRadiusX;
+		if (request->mRadiusX < request->mRadiusZ)
+			quad->mRadius = request->mRadiusZ;
+		if (quad->mRadius > 200.0f)
+			quad->mRadius = 200.0f;
+		quad->mRadius *= 1.1f;
 
-		if (request->unk1C == 1 && unk2C < 0x1D
-		    && fabsf(groundY - request->unk0.y) < 1.0f) {
+		if (request->mShadowType == SHADOW_TYPE_SQUARE
+		    && mSquareShadowNum < 0x1D
+		    && fabsf(groundY - request->mPosition.y) < 1.0f) {
 			bool done = false;
 
 			trans      = oldPos;
@@ -1378,21 +1436,31 @@ void TMBindShadowManager::calcVtx()
 				dx -= base.x;
 				dz -= base.z;
 
-				unk28[unk2C].unk0[0].x = request->unkC;
-				unk28[unk2C].unk0[0].z = -request->unk10;
-				unk28[unk2C].unk0[1].x = dx + request->unkC;
-				unk28[unk2C].unk0[1].z = dz - request->unk10;
-				unk28[unk2C].unk0[2].x = dx - request->unkC;
-				unk28[unk2C].unk0[2].z = dz - request->unk10;
-				unk28[unk2C].unk0[3].x = dx - request->unkC;
-				unk28[unk2C].unk0[3].z = dz + request->unk10;
-				unk28[unk2C].unk0[4].x = -request->unkC;
-				unk28[unk2C].unk0[4].z = request->unk10;
-				unk28[unk2C].unk0[0].y = 0.0f;
-				unk28[unk2C].unk0[1].y = 0.0f;
-				unk28[unk2C].unk0[2].y = 0.0f;
-				unk28[unk2C].unk0[3].y = 0.0f;
-				unk28[unk2C].unk0[4].y = 0.0f;
+				mSquareShadow[mSquareShadowNum].mPoints[0].x
+				    = request->mRadiusX;
+				mSquareShadow[mSquareShadowNum].mPoints[0].z
+				    = -request->mRadiusZ;
+				mSquareShadow[mSquareShadowNum].mPoints[1].x
+				    = dx + request->mRadiusX;
+				mSquareShadow[mSquareShadowNum].mPoints[1].z
+				    = dz - request->mRadiusZ;
+				mSquareShadow[mSquareShadowNum].mPoints[2].x
+				    = dx - request->mRadiusX;
+				mSquareShadow[mSquareShadowNum].mPoints[2].z
+				    = dz - request->mRadiusZ;
+				mSquareShadow[mSquareShadowNum].mPoints[3].x
+				    = dx - request->mRadiusX;
+				mSquareShadow[mSquareShadowNum].mPoints[3].z
+				    = dz + request->mRadiusZ;
+				mSquareShadow[mSquareShadowNum].mPoints[4].x
+				    = -request->mRadiusX;
+				mSquareShadow[mSquareShadowNum].mPoints[4].z
+				    = request->mRadiusZ;
+				mSquareShadow[mSquareShadowNum].mPoints[0].y = 0.0f;
+				mSquareShadow[mSquareShadowNum].mPoints[1].y = 0.0f;
+				mSquareShadow[mSquareShadowNum].mPoints[2].y = 0.0f;
+				mSquareShadow[mSquareShadowNum].mPoints[3].y = 0.0f;
+				mSquareShadow[mSquareShadowNum].mPoints[4].y = 0.0f;
 			}
 
 			if (!done) {
@@ -1401,130 +1469,132 @@ void TMBindShadowManager::calcVtx()
 				f32 dx = pos.x - base.x;
 				f32 dz = pos.z - base.z;
 
-				unk28[unk2C].unk0[0].x = 1.0f;
-				unk28[unk2C].unk0[0].z = 1.0f;
-				unk28[unk2C].unk0[1].x = 1.0f + dx;
-				unk28[unk2C].unk0[1].z = dz - 1.0f;
-				unk28[unk2C].unk0[2].x = dx - 1.0f;
-				unk28[unk2C].unk0[2].z = dz - 1.0f;
-				unk28[unk2C].unk0[3].x = dx - 1.0f;
-				unk28[unk2C].unk0[3].z = 1.0f + dz;
-				unk28[unk2C].unk0[4].x = -1.0f;
-				unk28[unk2C].unk0[4].z = 1.0f;
-				unk28[unk2C].unk0[0].y = 0.0f;
-				unk28[unk2C].unk0[1].y = 0.0f;
-				unk28[unk2C].unk0[2].y = 0.0f;
-				unk28[unk2C].unk0[3].y = 0.0f;
-				unk28[unk2C].unk0[4].y = 0.0f;
+				mSquareShadow[mSquareShadowNum].mPoints[0].x = 1.0f;
+				mSquareShadow[mSquareShadowNum].mPoints[0].z = 1.0f;
+				mSquareShadow[mSquareShadowNum].mPoints[1].x = 1.0f + dx;
+				mSquareShadow[mSquareShadowNum].mPoints[1].z = dz - 1.0f;
+				mSquareShadow[mSquareShadowNum].mPoints[2].x = dx - 1.0f;
+				mSquareShadow[mSquareShadowNum].mPoints[2].z = dz - 1.0f;
+				mSquareShadow[mSquareShadowNum].mPoints[3].x = dx - 1.0f;
+				mSquareShadow[mSquareShadowNum].mPoints[3].z = 1.0f + dz;
+				mSquareShadow[mSquareShadowNum].mPoints[4].x = -1.0f;
+				mSquareShadow[mSquareShadowNum].mPoints[4].z = 1.0f;
+				mSquareShadow[mSquareShadowNum].mPoints[0].y = 0.0f;
+				mSquareShadow[mSquareShadowNum].mPoints[1].y = 0.0f;
+				mSquareShadow[mSquareShadowNum].mPoints[2].y = 0.0f;
+				mSquareShadow[mSquareShadowNum].mPoints[3].y = 0.0f;
+				mSquareShadow[mSquareShadowNum].mPoints[4].y = 0.0f;
 			}
 
-			quad->unk64 = unk28[0].unk0;
-			unk2C++;
+			quad->mSquareOutline = mSquareShadow[0].mPoints;
+			mSquareShadowNum++;
 		}
 
 		f32 stretch = 1.0f;
-		if (request->unk20 == 0x80000001)
+		if (request->mActorType == 0x80000001)
 			stretch = 1.5f;
 
-		MsMtxSetTRS(quad->unk4, trans.x, trans.y, trans.z, rotation.x,
+		MsMtxSetTRS(quad->mMtx, trans.x, trans.y, trans.z, rotation.x,
 		            rotation.y, rotation.z, scale.x, scale.y,
 		            scale.z * stretch);
-		MTXConcat(viewMtx, quad->unk4, quad->unk4);
+		MTXConcat(viewMtx, quad->mMtx, quad->mMtx);
 
 		for (int j = 0; j < 4; j++) {
-			quad->unk34[j].x = request->unk0.x + request->unkC * calctablex[j];
-			quad->unk34[j].z = request->unk0.z + request->unk10 * calctablez[j];
-			quad->unk34[j].y = groundY;
+			quad->mCorners[j].x
+			    = request->mPosition.x + request->mRadiusX * calctablex[j];
+			quad->mCorners[j].z
+			    = request->mPosition.z + request->mRadiusZ * calctablez[j];
+			quad->mCorners[j].y = groundY;
 		}
 
-		if (unk14 >= 0x200)
+		if (mRequestNum >= 0x200)
 			return;
 		quad++;
 	}
 
-	if (unk14 == 0)
+	if (mRequestNum == 0)
 		return;
 	if (mTestSw)
 		return;
 
-	TAlphaShadowQuad* quads       = unk18;
-	TAlphaShadowBlendQuad* blends = unk24;
-	TAlphaShadowQuadAry* arrays   = unk1C;
+	TAlphaShadowQuad* quads       = mQuads;
+	TAlphaShadowBlendQuad* blends = mBlendQuads;
+	TAlphaShadowQuadAry* arrays   = mQuadArys;
 
-	for (int i = 0; i < unk20; i++) {
-		arrays[i].unk4  = nullptr;
-		arrays[i].unkC  = nullptr;
-		arrays[i].unk8  = nullptr;
-		arrays[i].unk10 = nullptr;
-		arrays[i].unk0  = 0x20000000;
+	for (int i = 0; i < mQuadAryNum; i++) {
+		arrays[i].mQuadHead  = nullptr;
+		arrays[i].mBlendHead = nullptr;
+		arrays[i].mQuadTail  = nullptr;
+		arrays[i].mBlendTail = nullptr;
+		arrays[i].unk0       = 0x20000000;
 	}
 
-	unk20 = 0;
+	mQuadAryNum = 0;
 
-	for (int i = 0; i < unk14; i++) {
+	for (int i = 0; i < mRequestNum; i++) {
 		TAlphaShadowQuad* q      = &quads[i];
 		TAlphaShadowBlendQuad* b = &blends[i];
 
-		q->unk6C = nullptr;
-		b->unk1C = nullptr;
+		q->mNext = nullptr;
+		b->mNext = nullptr;
 
 		bool merged = false;
 
-		b->unk0.x = q->unk34[0].x;
-		b->unk0.z = q->unk34[0].z;
-		b->unkC.x = q->unk34[2].x;
-		b->unkC.z = q->unk34[2].z;
-		b->unk0.y = q->unk34[0].y;
-		b->unkC.y = mYScalePlus + q->unk0;
+		b->mMin.x = q->mCorners[0].x;
+		b->mMin.z = q->mCorners[0].z;
+		b->mMax.x = q->mCorners[2].x;
+		b->mMax.z = q->mCorners[2].z;
+		b->mMin.y = q->mCorners[0].y;
+		b->mMax.y = mYScalePlus + q->mRadius;
 		b->unk18  = 0;
 
-		for (int j = 0; j < unk20; j++) {
-			if (conectCubeDiffer(arrays[j].unkC, b)) {
-				merged                 = true;
-				arrays[j].unk8->unk6C  = q;
-				arrays[j].unk8         = q;
-				arrays[j].unk10->unk1C = b;
-				arrays[j].unk10        = b;
+		for (int j = 0; j < mQuadAryNum; j++) {
+			if (conectCubeDiffer(arrays[j].mBlendHead, b)) {
+				merged                      = true;
+				arrays[j].mQuadTail->mNext  = q;
+				arrays[j].mQuadTail         = q;
+				arrays[j].mBlendTail->mNext = b;
+				arrays[j].mBlendTail        = b;
 				break;
 			}
 		}
 
 		if (!merged) {
-			if (unk20 >= 0x100) {
-				unk20 = 0x100;
+			if (mQuadAryNum >= 0x100) {
+				mQuadAryNum = 0x100;
 			} else {
-				arrays[unk20].unk4  = q;
-				arrays[unk20].unk8  = q;
-				arrays[unk20].unkC  = b;
-				arrays[unk20].unk10 = b;
-				arrays[unk20].unk0  = 0x20000000;
-				if (q->unk68->unk20 & 0x40000000)
-					arrays[unk20].unk0 = 0x40000000;
-				unk20++;
+				arrays[mQuadAryNum].mQuadHead  = q;
+				arrays[mQuadAryNum].mQuadTail  = q;
+				arrays[mQuadAryNum].mBlendHead = b;
+				arrays[mQuadAryNum].mBlendTail = b;
+				arrays[mQuadAryNum].unk0       = 0x20000000;
+				if (q->mRequest->mActorType & 0x40000000)
+					arrays[mQuadAryNum].unk0 = 0x40000000;
+				mQuadAryNum++;
 			}
 		}
 	}
 
-	for (int i = 0; i < unk20; i++) {
-		for (int j = 0; j < unk20; j++) {
-			if (i == j || arrays[i].unk4 == nullptr)
+	for (int i = 0; i < mQuadAryNum; i++) {
+		for (int j = 0; j < mQuadAryNum; j++) {
+			if (i == j || arrays[i].mQuadHead == nullptr)
 				continue;
-			if (arrays[j].unk4 == nullptr)
+			if (arrays[j].mQuadHead == nullptr)
 				continue;
-			if (!conectCubeSame(arrays[i].unkC, arrays[j].unkC))
+			if (!conectCubeSame(arrays[i].mBlendHead, arrays[j].mBlendHead))
 				continue;
 
-			arrays[i].unk8->unk6C  = arrays[j].unk4;
-			arrays[i].unk8         = arrays[j].unk8;
-			arrays[i].unk10->unk1C = arrays[j].unkC;
-			arrays[i].unk10        = arrays[j].unk10;
+			arrays[i].mQuadTail->mNext  = arrays[j].mQuadHead;
+			arrays[i].mQuadTail         = arrays[j].mQuadTail;
+			arrays[i].mBlendTail->mNext = arrays[j].mBlendHead;
+			arrays[i].mBlendTail        = arrays[j].mBlendTail;
 
-			if ((arrays[i].unk4->unk68->unk20 & 0x40000000)
-			    || (arrays[j].unk4->unk68->unk20 & 0x40000000))
+			if ((arrays[i].mQuadHead->mRequest->mActorType & 0x40000000)
+			    || (arrays[j].mQuadHead->mRequest->mActorType & 0x40000000))
 				arrays[i].unk0 = 0x40000000;
 
-			arrays[j].unk4 = nullptr;
-			arrays[j].unkC = nullptr;
+			arrays[j].mQuadHead  = nullptr;
+			arrays[j].mBlendHead = nullptr;
 		}
 	}
 }

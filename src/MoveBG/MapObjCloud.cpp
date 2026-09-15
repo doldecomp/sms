@@ -4,6 +4,7 @@
 #include <Enemy/Graph.hpp>
 #include <Player/MarioAccess.hpp>
 #include <MarioUtil/PacketUtil.hpp>
+#include <MarioUtil/ShadowUtil.hpp>
 #include <JSystem/JMath.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 
@@ -90,7 +91,7 @@ void TRideCloud::load(JSUMemoryInputStream& stream)
 	onLiveFlag(LIVE_FLAG_UNK8);
 }
 
-u32 TRideCloud::getShadowType() { return 0; }
+u32 TRideCloud::getShadowType() { return SHADOW_TYPE_CIRCLE; }
 
 void TRideCloud::control()
 {

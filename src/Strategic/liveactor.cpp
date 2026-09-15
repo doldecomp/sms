@@ -262,7 +262,7 @@ void TLiveActor::kill()
 
 BOOL TLiveActor::receiveMessage(THitActor*, u32) { return FALSE; }
 
-u32 TLiveActor::getShadowType() { return 0; }
+u32 TLiveActor::getShadowType() { return SHADOW_TYPE_CIRCLE; }
 
 void TLiveActor::setGroundCollision()
 {
@@ -301,17 +301,17 @@ void TLiveActor::requestShadow()
 	    || (mLiveFlag & LIVE_FLAG_UNK400)) {
 		TCircleShadowRequest local_2c;
 
-		local_2c.unk0 = mPosition;
+		local_2c.mPosition = mPosition;
 
 		if (!isAirborne()) {
-			local_2c.unk0.y = mGroundHeight;
-			local_2c.unk1D  = 0;
+			local_2c.mPosition.y       = mGroundHeight;
+			local_2c.mNeedsGroundCheck = 0;
 		}
 
-		local_2c.unkC = local_2c.unk10 = mScaledBodyRadius;
+		local_2c.mRadiusX = local_2c.mRadiusZ = mScaledBodyRadius;
 
-		local_2c.unk1C = getShadowType();
-		local_2c.unk14 = mRotation.y;
+		local_2c.mShadowType = getShadowType();
+		local_2c.mRotationY  = mRotation.y;
 
 		if (mLiveFlag & LIVE_FLAG_UNK400) {
 			gpBindShadowManager->forceRequest(local_2c, getActorType());
