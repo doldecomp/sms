@@ -234,29 +234,32 @@ void TNPCManager::clipEnemies(JDrama::TGraphics* graphics)
 	if (gpMarDirector->mMap == 1) {
 		CPolarSubCamera* cam = gpCamera;
 
-		// TODO: figure out these inlines. fabricatedInline3 matches in camera
-		// itself but not here for some reason...
-		if (gpCamera->isDemoCamera() || gpCamera->fabricatedInline3())
+		if (gpCamera->isDemoCamera()
+		    || (gpCamera->mMode == CAMERA_MODE_UNDER_GROUND
+		        || (gpCamera->mPrevMode == CAMERA_MODE_UNDER_GROUND
+		            && (gpCamera->isNowInbetween()
+		                || gpCamera->mMode == CAMERA_MODE_JUMP_CODE))))
 			if (farClip < 15000.0f)
 				farClip = 15000.0f;
 	}
 
-	SetViewFrustumClipCheckPerspective(gpCamera->mAspect, gpCamera->mFovy,
-	                                   nearClip, farClip);
+	SetViewFrustumClipCheckPerspective(gpCamera->getFovy(),
+	                                   gpCamera->getAspect(), nearClip, farClip);
 
-	for (int i = 0, e = mObjNum; i < e; ++i) {
-		TBaseNPC* actor = (TBaseNPC*)unk18[i];
+	int e;
+	TBaseNPC* actor;
+	int i;
 
-		JGeometry::TVec3<f32> checkPos = actor->mPosition;
+	for (e = getObjNum(), i = 0; i < e; ++i) {
+		actor = (TBaseNPC*)getObj(i);
+
+		JGeometry::TVec3<f32> checkPos = actor->getPosition();
 		checkPos.y += 75.0f;
 
 		if (actor->checkLiveFlag(LIVE_FLAG_UNK2000)
 		    && SMS_IsInOtherFastCube(checkPos)) {
 			actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-			continue;
-		}
-
-		if (ViewFrustumClipCheck(graphics, actor->mPosition, unk3C)) {
+		} else if (ViewFrustumClipCheck(graphics, &actor->mPosition, unk3C)) {
 			actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		} else {
 			actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
