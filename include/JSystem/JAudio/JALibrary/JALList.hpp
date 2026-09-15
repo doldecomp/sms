@@ -55,8 +55,7 @@ JALListHioNode<T, U>::JALListHioNode(const char* param_1, U param_2, T* param_3)
 {
 }
 
-template <class T, class U>
-class JALListVirtualNode : public JALListS<T, U> {
+template <class T, class U> class JALListVirtualNode : public JALListS<T, U> {
 public:
 	JALListVirtualNode(const char* param_1, U param_2, T* param_3)
 	    : JALListS<T, U>(param_2, param_3)

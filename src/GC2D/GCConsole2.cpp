@@ -418,13 +418,13 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 	if (amount > 8)
 		amount = 8;
 
-	if (airMode && gpMarDirector->mState == TMarDirector::STATE_UNK5) {
+	if (airMode && gpMarDirector->mState == TMarDirector::STATE_PAUSE_MENU) {
 		s16 alpha = console->unk1C4->getPane()->mAlpha - 0x10;
 		if (alpha < 0)
 			alpha = 0;
 		console->unk1C4->getPane()->mAlpha = alpha;
 	} else if (console->unk1C4->getPane()->mAlpha != 0xff
-	           && gpMarDirector->mState != TMarDirector::STATE_UNK5) {
+	           && gpMarDirector->mState != TMarDirector::STATE_PAUSE_MENU) {
 		u16 alpha = console->unk1C4->getPane()->mAlpha + 0x10;
 		if (alpha > 0xff)
 			alpha = 0xff;
@@ -457,7 +457,7 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 			console->startAppearLife(1);
 			amount             = (s16)gpMarioOriginal->mAir;
 			console->unk1CC[0] = amount;
-			if (gpMarDirector->mState == TMarDirector::STATE_UNK5)
+			if (gpMarDirector->mState == TMarDirector::STATE_PAUSE_MENU)
 				console->unk1C4->getPane()->mAlpha = 0;
 			console->unk18 = 4;
 		}
@@ -937,10 +937,10 @@ static inline void updateCounterState(TGCConsole2* console)
 		console->unk20 = coins;
 	}
 
-	bool waitForStarHud = gpMarioOriginal->mStatus == 0xC400201
-	                      && gpMarDirector->mState != TMarDirector::STATE_UNK5
-	                      && !console->unk50
-	                      && !console->unk140->isInterpolatorAtZero();
+	bool waitForStarHud
+	    = gpMarioOriginal->mStatus == 0xC400201
+	      && gpMarDirector->mState != TMarDirector::STATE_PAUSE_MENU
+	      && !console->unk50 && !console->unk140->isInterpolatorAtZero();
 	if (waitForStarHud) {
 		++console->unk30;
 		if (console->unk30 > 0xc8) {
@@ -1066,8 +1066,8 @@ static inline void updateStarHudAutoHide(TGCConsole2* console)
 		return;
 	if (console->unk60)
 		return;
-	if (gpMarDirector->mState == TMarDirector::STATE_UNK5
-	    || gpMarDirector->mState == TMarDirector::STATE_UNK11)
+	if (gpMarDirector->mState == TMarDirector::STATE_PAUSE_MENU
+	    || gpMarDirector->mState == TMarDirector::STATE_CARD_SAVE)
 		return;
 	if (console->unk50 || console->unk16C != 0 || console->unk8A != 0)
 		return;
@@ -1362,7 +1362,7 @@ static inline void updateTelopState(TGCConsole2* console, u32 flags)
 		console->startAppearTelop(true);
 	}
 
-	if (gpMarDirector->mState != TMarDirector::STATE_UNK5
+	if (gpMarDirector->mState != TMarDirector::STATE_PAUSE_MENU
 	    && gpMarDirector->unk124 == 0 && console->unk55C < 0xffffffff)
 		++console->unk55C;
 }
@@ -1377,7 +1377,7 @@ static inline void updateWaterTankState(TGCConsole2* console)
 	}
 
 	if (console->unk46) {
-		if (gpMarDirector->mState == TMarDirector::STATE_UNK5)
+		if (gpMarDirector->mState == TMarDirector::STATE_PAUSE_MENU)
 			console->unk7C = 0;
 
 		if (console->unk7C < 0x46)
@@ -1440,7 +1440,7 @@ static inline void updateMarioAppearState(TGCConsole2* console)
 	if (!console->unk3A && !console->unk3B
 	    && console->unk3A8->getPane()->isVisible()
 	    && gpMarioOriginal->mStatus != 0xC400201
-	    && gpMarDirector->mState != TMarDirector::STATE_UNK5) {
+	    && gpMarDirector->mState != TMarDirector::STATE_PAUSE_MENU) {
 		if (++console->unk70 > 0x190)
 			console->startDisappearMario();
 	}
@@ -2645,7 +2645,7 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 		return true;
 	}
 
-	if (gpMarDirector->mState == TMarDirector::STATE_UNK5 || !unk46)
+	if (gpMarDirector->mState == TMarDirector::STATE_PAUSE_MENU || !unk46)
 		return false;
 
 	unk3F0         = entry->unk4;
@@ -2979,7 +2979,7 @@ void TGCConsole2::setTimer(s32 param_1)
 	}
 
 	if (timerValue != 0 && timerValue < unk518
-	    && gpMarDirector->mState != TMarDirector::STATE_UNK5) {
+	    && gpMarDirector->mState != TMarDirector::STATE_PAUSE_MENU) {
 		SMSGetMSound()->playTimer(timerValue * 10);
 	}
 

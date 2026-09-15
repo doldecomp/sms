@@ -86,22 +86,22 @@ int TMarDirector::direct()
 			gpMSound->unkA8 = bVar7;
 
 			switch (mState) {
-			case STATE_UNK5:
-			case STATE_UNK11:
+			case STATE_PAUSE_MENU:
+			case STATE_CARD_SAVE:
 			case STATE_UNK12:
 				uVar8 |= 2;
 				uVar8 |= 1;
 				break;
 
-			case STATE_UNK10:
+			case STATE_GUIDE:
 				uVar8 |= 2;
 				uVar8 |= 1;
 				break;
 			}
 
 			if (!(uVar8 & 1))
-				++unk58;
-			++unk5C;
+				++mMoveTickCount;
+			++mTickCount;
 			if (unk4C & 0x2000) {
 				if (mState == STATE_UNK4 || mState == STATE_UNK7) {
 					SMSRumbleMgr->update();
@@ -127,7 +127,7 @@ int TMarDirector::direct()
 
 			// inline
 			bool bVar1 = true;
-			if ((unk58 & 1) || (unk58 & 2))
+			if ((mMoveTickCount & 1) || (mMoveTickCount & 2))
 				bVar1 = false;
 
 			if (bVar1)
@@ -137,9 +137,9 @@ int TMarDirector::direct()
 
 			u32 uVar11 = ~uVar8;
 			u32 uVar4  = uVar11;
-			if (unk58 & 1)
+			if (mMoveTickCount & 1)
 				uVar4 &= ~0x100;
-			if (unk58 & 2)
+			if (mMoveTickCount & 2)
 				uVar4 &= ~0x200;
 			if (unk4E & 1)
 				mShinePfLstMov->perform(uVar4, &local_140);
@@ -339,7 +339,7 @@ int TMarDirector::changeState()
 		nextState = updateGameMode();
 		break;
 
-	case STATE_UNK5:
+	case STATE_PAUSE_MENU:
 		switch (unkAC->getNextState()) {
 		case 0:
 			nextState = STATE_UNK4;
@@ -359,12 +359,12 @@ int TMarDirector::changeState()
 		}
 		break;
 
-	case STATE_UNK10:
+	case STATE_GUIDE:
 		if (unk78->unkC4 && gpApplication.mFader->isFullyFadedIn())
 			nextState = STATE_UNK4;
 		break;
 
-	case STATE_UNK11: {
+	case STATE_CARD_SAVE: {
 		switch (unkAC->mCardSave->getNextState()) {
 		case 0:
 			if (unk261 == 7) {
@@ -401,7 +401,7 @@ int TMarDirector::changeState()
 
 	case STATE_UNK7:
 		if (gpApplication.mFader->isFullyFadedOut()
-		    && (MSBgm::getHandle(2) == 0 || unk5C - unk60 >= 1200)) {
+		    && (MSBgm::getHandle(2) == 0 || mTickCount - unk60 >= 1200)) {
 			if (TFlagManager::smInstance->getFlag(0x20001) >= 0) {
 				TFlagManager::smInstance->setBool(true, 0x30002);
 				const TGameSequence& curArea = gpApplication.mCurrArea;
@@ -420,7 +420,7 @@ int TMarDirector::changeState()
 				gpApplication.mFader->startWipe(0xE, 0.3f, 0.0f);
 				gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 0xff));
 				unk261    = 7;
-				nextState = STATE_UNK11;
+				nextState = STATE_CARD_SAVE;
 				mConsole->startDisappearStar();
 				mConsole->startDisappearCoin();
 			}
@@ -482,14 +482,14 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 		unk18[0]->mFlags &= ~0x2;
 		break;
 
-	case STATE_UNK5:
+	case STATE_PAUSE_MENU:
 		unk18[0]->mFlags &= ~0x1;
 		SMSRumbleMgr->finishPause();
 		if (gpApplication.mCurrArea.unk0 == 1)
 			THPPlayerPlay();
 		break;
 
-	case STATE_UNK10:
+	case STATE_GUIDE:
 		unk18[0]->mFlags &= ~0x1;
 		SMSRumbleMgr->finishPause();
 
@@ -503,7 +503,7 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 			THPPlayerPlay();
 		break;
 
-	case STATE_UNK11:
+	case STATE_CARD_SAVE:
 		unk18[0]->mFlags &= ~0x1;
 		SMSRumbleMgr->finishPause();
 		if (gpApplication.mCurrArea.unk0 == 1)
@@ -744,7 +744,7 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 	case 7:
 		gpMarDirector->mConsole->unk94->startAppearMiss();
 		TFlagManager::smInstance->decFlag(0x20001, 1);
-		unk60 = unk5C;
+		unk60 = mTickCount;
 		gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 0xff));
 		if (TFlagManager::smInstance->getFlag(0x20001) >= 0) {
 			MSBgm::startBGM(MSD_BGM_BOSS);
@@ -774,13 +774,13 @@ u8 TMarDirector::updateGameMode()
 
 			if (mMap != 15) {
 				if (unk18[0]->mButton.mTrigger & 0x10) {
-					r29 = STATE_UNK10;
+					r29 = STATE_GUIDE;
 					break;
 				}
 
 				if (unk18[0]->mEnabledFrameMeaning & 0x1) {
 					if (gpMarioOriginal->checkActionThing3()) {
-						r29 = STATE_UNK5;
+						r29 = STATE_PAUSE_MENU;
 						break;
 					}
 
@@ -821,7 +821,7 @@ u8 TMarDirector::updateGameMode()
 
 			if (unk4C & 0x200) {
 				unk4C &= ~0x200;
-				r29 = STATE_UNK11;
+				r29 = STATE_CARD_SAVE;
 				break;
 			}
 
@@ -887,7 +887,7 @@ u8 TMarDirector::updateGameMode()
 			unk4C &= ~0x80;
 		} else {
 			if (!gpCamera->getRestDemoFrames()) {
-				if (!MSBgm::getHandle(2) || unk5C - unk60 >= 1200) {
+				if (!MSBgm::getHandle(2) || mTickCount - unk60 >= 1200) {
 					bVar5  = true;
 					uVar15 = unk12C[unk24D].unk10;
 				}
@@ -979,7 +979,7 @@ u8 TMarDirector::updateGameMode()
 					(*info->unk14)(info->unk18, 0);
 			}
 			OSStopStopwatch(&unkE8);
-			unk60 = unk5C;
+			unk60 = mTickCount;
 			break;
 		}
 
