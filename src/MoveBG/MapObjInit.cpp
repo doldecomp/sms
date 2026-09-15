@@ -11015,11 +11015,11 @@ void TMapObjBase::initBckMoveData()
 		move->unk4 = (J3DAnmTransform*)J3DAnmLoaderDataBase::load(
 		    JKRGetResource(move->unk0));
 
-		J3DModelData* data         = mMActor->getModel()->getModelData();
-		data->mJointNodePointer[0] = data->getJointNodePointer(1);
+		J3DModelData* data = mMActor->getModel()->getModelData();
+		J3DJoint* joint    = data->getJointNodePointer(1);
+		data->mJointNodePointer[0] = joint;
 
-		J3DTransformInfo& info
-		    = data->getJointNodePointer(0)->getTransformInfo();
+		J3DTransformInfo info;
 		info.mScale.x     = 1.0f;
 		info.mScale.y     = 1.0f;
 		info.mScale.z     = 1.0f;
@@ -11029,6 +11029,7 @@ void TMapObjBase::initBckMoveData()
 		info.mTranslate.x = 0.0f;
 		info.mTranslate.y = 0.0f;
 		info.mTranslate.z = 0.0f;
+		data->getJointNodePointer(0)->setTransformInfo(info);
 		move->unk8        = new J3DFrameCtrl(move->unk4->getFrameMax());
 		move->unk8->setAttribute(J3DFrameCtrl::ATTR_LOOP);
 		move->unk8->setRate(SMSGetAnmFrameRate());
