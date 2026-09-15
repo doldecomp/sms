@@ -8,7 +8,16 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 42 — shared Mario spin-angle correction
+## Latest checkpoint: batch 43 — NPC revival helper matched
+
+Following the npcWetting target exposed a neighboring helper: `sunflowerReviving()` now matches all **204 bytes**, with a named animation local restoring its original stack frame.
+NpcWetting retains its frame/register differences; unsuccessful trials are reverted and a source TODO records the remaining regions.
+Game **25.215933% matched / 3.254321% source-linked**; aggregate **38.757206% / 2.571545%**; still **86 source-linked game files / 92,672 code bytes**.
+Baseline at `bbd9ab73`; build, changes_all, all 12,904 function comparisons, unit-data checks and DOL byte/SHA-1 checks pass without regressions. No gameplay test performed.
+NpcAnm map presence/order/linkage pass with four existing UNUSED stub-size warnings; the file remains incomplete.
+Refreshed queue: 1,263 authorized functions / 727,976 bytes; next reviewed target is `TBossEel::init(TLiveManager*)`.
+
+## Verified checkpoint: batch 42 — shared Mario spin-angle correction
 
 A shared negative-multiplier spelling removes the extra sign extension in rotateJumping/jumpMain and makes `TMario::rotating()` exact: **+296 code bytes / one runtime function**.
 Restored `checkJumpingThrowStart` from jumpMain's existing inline body: its 92-byte UNUSED size and definition order now match the map.
@@ -1169,5 +1178,5 @@ Source, configuration, progress snapshots, and notes are versioned locally.
 ## Next work
 
 Follow [STRATEGY.md](STRATEGY.md) and the refreshed near-matching list.
-Start the next time-box with `TBaseNPC::npcWetting()`; consult source TODOs before revisiting jumpMain, specMain, spider or beam.
+Start the next time-box with `TBossEel::init(TLiveManager*)`; consult source TODOs before revisiting npcWetting, jumpMain, specMain, spider or beam.
 Keep the small-file queue and old audits as supporting references; defer from-scratch work until the near-matching group is mostly exhausted.

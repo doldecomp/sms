@@ -17,6 +17,15 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## Named animation locals and stack reservation, batch 43
+
+- NpcAnm::sunflowerReviving had identical body instructions but frame 0x20 versus the original 0x28.
+  Naming `int kind = unkD0->getCurrentAnmKind()` inside the flag guard, then testing it, recovers all 204 bytes.
+  Nested conditions alone leave the smaller frame; an early return changes instructions and is rejected.
+- Its inlined callers npcTalking and npcWetting retain their previous scores; all function/data checks pass.
+  Naming npcWetting's sunflower predicate or final switch value did not fix its register allocation and could enlarge its already oversized frame; do not propagate those trials.
+  NpcWetting remains at frame 0x178 versus 0x160, with predicate r29/r28 and final switch r4/r3 differences noted in source.
+
 ## Spin-angle negative multiplication, batch 42
 
 - `mModelFaceAngle = -(mStatusTimer * 4096)` emits an extra `extsh` after `neg` with MWCC 1.2.5.

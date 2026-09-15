@@ -588,6 +588,8 @@ void TBaseNPC::npcWetIn()
 	resetToTurn_();
 }
 
+// TODO: GMSE01 frame is 0x178 instead of 0x160; remaining register differences
+// are the sunflower predicate (r29/r28) and final animation switch (r4/r3).
 bool TBaseNPC::npcWetting()
 {
 	bool result = false;
@@ -972,16 +974,18 @@ void TBaseNPC::sunflowerReviveIn()
 bool TBaseNPC::sunflowerReviving()
 {
 	bool result = false;
-	if (checkUnk1D8(UNK1D8_FLAG_UNK2)
-	    && unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK1A) {
-		if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
-			offUnk1D8(UNK1D8_FLAG_UNK2);
-			if (checkLiveFlag(LIVE_FLAG_UNK80000)) {
-				requestTalkAnm_();
-			} else {
-				npcWaitIn();
+	if (checkUnk1D8(UNK1D8_FLAG_UNK2)) {
+		int kind = unkD0->getCurrentAnmKind();
+		if (kind == NPC_ANM_KIND_UNK1A) {
+			if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
+				offUnk1D8(UNK1D8_FLAG_UNK2);
+				if (checkLiveFlag(LIVE_FLAG_UNK80000)) {
+					requestTalkAnm_();
+				} else {
+					npcWaitIn();
+				}
+				result = true;
 			}
-			result = true;
 		}
 	}
 	return result;

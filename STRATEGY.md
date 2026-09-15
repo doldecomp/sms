@@ -93,6 +93,8 @@ The frame is 0x88 in the original and 0x60 in ours (0x28 too small), suggesting 
 Unit `mario/NPC/NpcAnm`, 3,176 bytes, 99.806%.
 No structural differences, only the frame and register numbering.
 The frame is 0x160 in the original and 0x178 in ours (0x18 too big).
+Batch 43 leaves these differences as a source TODO and moves on to BossEel.
+The neighboring sunflowerReviving helper now matches all 204 bytes after naming its animation local; its callers do not regress.
 
 ### 5. `TBossEel::init(TLiveManager*)`
 

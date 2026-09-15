@@ -6,7 +6,7 @@
 - Local branch: `local/decomp-progress`.
 - Upstream: `https://github.com/doldecomp/sms`, commit `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 - The user has authorized implementation and ongoing progress checks for the local North American ISO.
-- Local changes have added 31,400 exactly matching code bytes and 155 matching functions/helpers across verified batches; 86 game objects are linked from source.
+- Local changes have added 31,604 exactly matching code bytes and 156 matching functions/helpers across verified batches; 86 game objects are linked from source.
 - Follow [STRATEGY.md](STRATEGY.md) for the active work order.
 - Consult `docs/MATCHING_CATALOG.md` before related edits; inventory shared callers, batch evidence-supported fixes, and record exceptions and validation results.
 - Current checkpoint and remaining limitations are documented in `PROGRESS.md`.
