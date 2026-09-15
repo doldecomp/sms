@@ -302,11 +302,12 @@ void TYoshiTongue::movement()
 		if (target != nullptr && mHeldObject == nullptr) {
 			JGeometry::TVec3<f32> tpos = target->mPosition;
 			tpos.y += 0.5f * target->mDamageHeight;
-			JGeometry::TVec3<f32> step = (tpos - mTipPos) * mExtendAmount;
-			mTipPos += step;
-			mInitialVelocity = step;
+			JGeometry::TVec3<f32> step = mTipPos;
+			mTipPos += (tpos - mTipPos) * mExtendAmount;
+			mInitialVelocity = mTipPos - step;
 
-			JGeometry::TVec3<f32> rem = tpos - mTipPos;
+			JGeometry::TVec3<f32> rem = tpos;
+			rem -= mTipPos;
 			if (rem.length() < 200.0f
 			    && target->receiveMessage(this, HIT_MESSAGE_TAKE) == true) {
 				mHeldObject = (TTakeActor*)target;
@@ -328,13 +329,9 @@ void TYoshiTongue::movement()
 			mState = STATE_RETRACTING;
 		break;
 
-	case STATE_RETRACTING: {
-		JGeometry::TVec3<f32> diff = (mTipPos - mHeadPos) * mRetractAmount;
-
-		mTipPos = mHeadPos;
-		mTipPos += diff;
+	case STATE_RETRACTING:
+		mTipPos = mHeadPos + (mTipPos - mHeadPos) * mRetractAmount;
 		break;
-	}
 
 	case STATE_PULLING:
 	case STATE_PULLING_SLOW: {
