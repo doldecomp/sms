@@ -385,16 +385,19 @@ void TMario::surfingEffect()
 	    PARTICLE_MS_GESOSURF_A, (MtxPtr)getRootAnmMtx(), 3, this);
 	if (emitter != nullptr)
 		emitter->setGlobalScale(scaleVec);
+	MtxPtr mtx = unk1F0;
 	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    PARTICLE_MS_GESOSURF_B, unk1F0, 1, this);
+	    PARTICLE_MS_GESOSURF_B, mtx, 1, this);
 	if (emitter != nullptr)
 		emitter->setGlobalScale(scaleVec);
+	mtx = unk1F0;
 	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    PARTICLE_MS_GESOSURF_D, unk1F0, 1, this);
+	    PARTICLE_MS_GESOSURF_D, mtx, 1, this);
 	if (emitter != nullptr)
 		emitter->setGlobalScale(scaleVec);
+	mtx = unk1F0;
 	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    PARTICLE_MS_GESOSURF_C, unk1F0, 1, this);
+	    PARTICLE_MS_GESOSURF_C, mtx, 1, this);
 	if (emitter != nullptr)
 		emitter->setGlobalScale(scaleVec);
 }
