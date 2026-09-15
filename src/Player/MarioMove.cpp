@@ -122,15 +122,15 @@ bool TMario::isForceSlip()
 
 BOOL TMario::moveRequest(const JGeometry::TVec3<f32>& pos)
 {
-	JGeometry::TVec3<f32> offset = pos - mPosition;
-	mPosition                    = pos;
+	const JGeometry::TVec3<f32> offset = pos - mPosition;
+	mPosition                          = pos;
 
+	unk2BC += offset.y;
 	unk160 += offset;
 	mPrevPosition += offset;
 	mWireStartPos += offset;
 	mWireEndPos += offset;
 	unk2A8 += offset;
-	unk2BC += offset.y;
 	mHeadMtx[0][3] += offset.x;
 	mHeadMtx[1][3] += offset.y;
 	mHeadMtx[2][3] += offset.z;
