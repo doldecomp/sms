@@ -1,0 +1,222 @@
+{
+  "region": "GMSE01",
+  "baseline_commit": "122eab40",
+  "target_dol_sha1": "a6782903ef79d4196c8489ecb1b57decb5b3728f",
+  "measures": {
+    "fuzzy_match_percent": 74.54221,
+    "total_code": "3603748",
+    "matched_code": "1369272",
+    "matched_code_percent": 37.995777,
+    "total_data": "641075",
+    "matched_data": "298283",
+    "matched_data_percent": 46.528564,
+    "total_functions": 12904,
+    "matched_functions": 8146,
+    "matched_functions_percent": 63.127716,
+    "complete_code": "73452",
+    "complete_code_percent": 2.0382113,
+    "complete_data": "49544",
+    "complete_data_percent": 7.728269,
+    "total_units": 732,
+    "complete_units": 72
+  },
+  "source_linked_objects": 72,
+  "byte_comparison": true,
+  "function_regressions": [],
+  "new_exact_functions": 9,
+  "new_exact_code_bytes": 1496,
+  "improvements": [
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "@32@__dt__22TBossHanachanPartsHeadFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 8
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "@32@__dt__22TBossHanachanPartsBodyFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 8
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "__sinit_BossHanachanParts_cpp",
+      "before": 0,
+      "after": 100.0,
+      "size": 764
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "__dt__22TBossHanachanPartsBodyFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 132
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "__ct__22TBossHanachanPartsBaseFP13TBossHanachanUliPCc",
+      "before": 0,
+      "after": 25.666666,
+      "size": 468
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "__ct__22TBossHanachanPartsBodyFP13TBossHanachanPCc",
+      "before": 0,
+      "after": 54.615383,
+      "size": 260
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "__dt__22TBossHanachanPartsBaseFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 108
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "__ct__22TBossHanachanPartsHeadFP13TBossHanachanPCc",
+      "before": 0,
+      "after": 37.208332,
+      "size": 192
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "initMapCollisionAndHitActor___22TBossHanachanPartsBaseFP12TIdxGroupObj",
+      "before": 0,
+      "after": 0.7352941,
+      "size": 544
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "initFootHitActor___22TBossHanachanPartsBodyFP12TIdxGroupObj",
+      "before": 0,
+      "after": 0.95238096,
+      "size": 420
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "changeTumbleAnmRate___22TBossHanachanPartsBaseFv",
+      "before": 0,
+      "after": 2.1276596,
+      "size": 188
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "moveMapCollision___22TBossHanachanPartsBaseFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 80
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "entryCircleShadow___22TBossHanachanPartsBaseFv",
+      "before": 0,
+      "after": 2.0,
+      "size": 200
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "setDamageFog___22TBossHanachanPartsBaseFPQ26JDrama9TGraphics",
+      "before": 0,
+      "after": 1.6666666,
+      "size": 240
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "isCurBckAlreadyEnd___22TBossHanachanPartsBaseCFv",
+      "before": 0,
+      "after": 99.85185,
+      "size": 216
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "copyFrameFromOldAnmToNewAnm___22TBossHanachanPartsBaseFv",
+      "before": 0,
+      "after": 99.75676,
+      "size": 148
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "getSandActor___22TBossHanachanPartsBaseCFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 84
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "calcRotateZWhenGetUp___22TBossHanachanPartsBaseFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 180
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "considerSetAnm___22TBossHanachanPartsBaseF24EnumBossHanachanNerveAnm",
+      "before": 0,
+      "after": 0.21691974,
+      "size": 1844
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "setAnm___22TBossHanachanPartsBodyF23EnumBossHanachanAnmKind36EnumBossHanachanStopMotionBlendOnOff",
+      "before": 0,
+      "after": 1.8181819,
+      "size": 308
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "setAnm___22TBossHanachanPartsHeadF23EnumBossHanachanAnmKind36EnumBossHanachanStopMotionBlendOnOff",
+      "before": 0,
+      "after": 2.7464788,
+      "size": 284
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "receiveMessage__22TBossHanachanPartsBodyFP9THitActorUl",
+      "before": 0,
+      "after": 1.4233576,
+      "size": 548
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "receiveMessage__22TBossHanachanPartsHeadFP9THitActorUl",
+      "before": 0,
+      "after": 1.9019607,
+      "size": 408
+    },
+    {
+      "unit": "mario/Enemy/BossHanachanParts",
+      "function": "__dt__22TBossHanachanPartsHeadFv",
+      "before": 0,
+      "after": 100.0,
+      "size": 132
+    }
+  ],
+  "validation": {
+    "baseline": true,
+    "changes_all": true,
+    "full_build": true,
+    "dol_sha1": true,
+    "symbol_order_parts": true,
+    "symbol_linkage_parts": true,
+    "symbol_presence_parts": false,
+    "missing_parts": [
+      "__dt__13TFootHitActorFv",
+      "CLBPalFrame<s>__Fs",
+      "@32@__dt__13TFootHitActorFv"
+    ],
+    "unused_size_warnings_parts": 3,
+    "symbol_map_sound": true,
+    "gameplay_tested": false
+  },
+  "notes": [
+    "BossHanachanParts remains nonmatching and is not source-linked; owner-dependent behavior and setup remain explicit TODOs.",
+    "Corrected the base vtable null tail to a pure virtual animation setter, established by both derived vtables. The previously recorded padding interpretation was incorrect.",
+    "Identified and reused TNpcInbetween from the boss constructor layout and BossHanachanMain call sites.",
+    "Added docs/MATCHING_CATALOG.md for cross-file findings, exceptions, and pending work.",
+    "NPC previous-animation getter calls already match; the boss frame transfer instead uses the existing current-animation getter. No mass substitution is justified."
+  ]
+}

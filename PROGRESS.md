@@ -6,8 +6,45 @@ Target: North American English, `GMSE01` revision 0, using the local ISO.
 The full decompilation is **not complete**.
 The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
+Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 7
+## Latest checkpoint: batch 8
+
+Started reconstructing `BossHanachanParts.cpp`, with complete mapped base/head/body method declarations and explicit TODO bodies for unfinished behavior.
+Identified the shared motion controller as `TNpcInbetween` from its constructor layout and calls in `BossHanachanMain`.
+Reconstructed ground-actor lookup, moving collision translation, getting-up rotation, frame transfer, animation-end checks, and three UNUSED animation helpers.
+The first three routines match exactly; frame transfer and animation-end checks remain different only in stack offsets.
+The three UNUSED helpers reproduce their original 48-, 12-, and 16-byte sizes.
+
+The derived virtual tables exposed a missing pure virtual animation setter in the base class.
+Its null slot was incorrectly called padding in batch 7.
+The corrected base table now matches all 256 bytes, and the previously source-linked sound object still reproduces the executable exactly.
+
+This batch adds **1,496 exactly matching bytes and nine functions/helpers**, including three destructors, two adjustment thunks, and static initialization.
+Aggregate exact code is now **1,369,272 / 3,603,748 bytes (37.995777%)**, with **8,146 / 12,904 functions** matching.
+Matched data is 298,283 bytes.
+There are still **72 source-linked objects**; the unfinished parts object is not promoted.
+
+### Validation and remaining work
+
+Captured the batch 8 baseline at `122eab40` before edits; ran `ninja changes_all` and compared every reported function with that baseline.
+There are zero function regressions.
+The full build, SHA-1 check, and byte comparison against the original US executable pass.
+No gameplay test was performed.
+The parts object's ordering and linkage pass map checks, but its overall map check fails because the foot destructor/thunk and `CLBPalFrame<short>` are not emitted yet.
+There are three UNUSED-size warnings, including two TODO bodies and the joint-matrix helper.
+The sound object's map check passes.
+
+The main boss class and parameter declarations still need a full-map reconstruction before completing the parts constructor, collision setup, damage effects, and animation/message behavior that depends on them.
+The partially reconstructed constructors are not runnable replacements for the originals yet.
+Do not promote this object based on its matching helper functions.
+
+Added a durable [shared-fix catalog](docs/MATCHING_CATALOG.md) with successful cases, exceptions, search terms, and unresolved cross-file work.
+For example, the boss frame-transfer routine needs the current animation accessor, while the already-exact NPC blend routine needs the previous-animation accessor; a mass replacement would be incorrect.
+See [batch 8 measurements](docs/progress/GMSE01-batch8.json).
+Drafts and validation logs remain under `build/GMSE01` and `build/GMSE01-*-batch8.log`.
+
+## Verified checkpoint: batch 7
 
 Reconstructed `Enemy/BossHanachanSound.cpp` from the original executable's 38-entry animation sound table.
 The table getter and destructor adjustment thunk now match exactly, and the entire object is linked from source.
@@ -28,9 +65,9 @@ The sound object's map presence, ordering, and linkage checks pass.
 The final source-linked executable passes both the expected SHA-1 and a full byte comparison against the US original.
 No gameplay test was performed.
 
-The imported virtual-table symbol includes four alignment bytes after its 252-byte C++ table.
-This makes the detailed object comparison show 99.6% for that symbol even though every virtual entry and the final executable match.
-No artificial padding was added to the source.
+At this checkpoint, four bytes after the reconstructed 252-byte table were interpreted as alignment padding.
+Batch 8 disproved that interpretation: the final slot belongs to a pure virtual animation setter.
+The batch 7 executable matched because padding happened to produce the same null bytes; the class declaration was incomplete.
 
 ### Remaining work
 

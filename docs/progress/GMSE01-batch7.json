@@ -57,7 +57,7 @@
   "notes": [
     "Reconstructed the 38-entry boss animation sound table from original executable pointers and strings, with both functions and the complete linked object verified.",
     "Scaffolded every mapped TBossHanachanPartsBase method, including UNUSED declarations, with TLiveActor inheritance verified against its original vtable and constructor.",
-    "Original vtable symbol includes four alignment bytes after its 252-byte C++ vtable; detailed comparison is 99.6 percent, but all entries and the final linked executable match. No source padding was added.",
+    "The initial padding interpretation of the base vtable tail was disproved in batch 8: derived tables identify a missing pure virtual setAnm_ slot. Batch 7 binary equality did not prove the class interface complete.",
     "BossHanachanParts.cpp remains empty and nonmatching. Animation enums are incomplete and the motion-controller field remains opaque."
   ]
 }
