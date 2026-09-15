@@ -118,8 +118,9 @@ void TLiveActor::calcRideMomentum()
 			mLinearVelocity += rideVelocity;
 
 			if (unkE8 >= 2) {
-				mAngularVelocity.y
-				    += MsAngleDiff(mGroundActor->mRotation.y, mGroundActorYaw);
+				f32 angleDiff
+				    = MsAngleDiff(mGroundActor->mRotation.y, mGroundActorYaw);
+				mAngularVelocity.y = angleDiff + mAngularVelocity.y;
 				mGroundActorYaw = mGroundActor->mRotation.y;
 			}
 		}
