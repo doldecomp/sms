@@ -171,15 +171,17 @@ void TMario::hangPole(THitActor* actor)
 		if (inHangStatus == 1) {
 			f32 dz   = actor->mPosition.z - mPosition.z;
 			f32 dx   = actor->mPosition.x - mPosition.x;
-			f32 dist = std::sqrtf(dx * dx + dz * dz);
+			f32 dist = std::sqrtf(dz * dz + dx * dx);
 			if (dist == 0.0f)
 				dist = 1.0f;
 
-			f32 a = JMASSin(mFaceAngle.y) * (dx / dist)
-			        + JMASCos(mFaceAngle.y) * (dz / dist);
-
 			f32 b = 50.0f + actor->getDamageRadius()
 			        + mBarParams.mCatchRadius.get();
+			JGeometry::TVec2<f32> facing;
+			f32 cos = JMASCos(mFaceAngle.y);
+			f32 sin = JMASSin(mFaceAngle.y);
+			facing.set(sin, cos);
+			f32 a = facing.y * (dz / dist) + facing.x * (dx / dist);
 
 			bool canCatch = true;
 			if (mPrevStatus & MARIO_STATUS_FLAG_UNK100000)
