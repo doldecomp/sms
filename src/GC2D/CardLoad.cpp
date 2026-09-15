@@ -990,11 +990,11 @@ s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 		unk468->getPane()->show();
 
 		if (param_3 == 1) {
-			((J2DPicture*)unk484[0]->getPane())->mWhite = 0xFFFFFFFF;
-			((J2DPicture*)unk484[1]->getPane())->mWhite = 0x00FF00FF;
+			((J2DPicture*)unk484[0]->getPane())->setWhite(0xFFFFFFFF);
+			((J2DPicture*)unk484[1]->getPane())->setWhite(0x00FF00FF);
 		} else {
-			((J2DPicture*)unk484[1]->getPane())->mWhite = 0xFFFFFFFF;
-			((J2DPicture*)unk484[0]->getPane())->mWhite = 0x00FF00FF;
+			((J2DPicture*)unk484[1]->getPane())->setWhite(0xFFFFFFFF);
+			((J2DPicture*)unk484[0]->getPane())->setWhite(0x00FF00FF);
 		}
 		unk480->hide();
 		unk484[0]->getPane()->hide();
@@ -1038,8 +1038,8 @@ s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 		}
 
 		if (unkC4 == 4) {
-			unk484[unkB7]->setCenteredSize(20, unk48C[unkB7].getWidth() * 0.5f,
-			                               unk48C[unkB7].getHeight() * 0.5f,
+			unk484[unkB7]->setCenteredSize(40, unk48C[unkB7].getWidth() * 1.5f,
+			                               unk48C[unkB7].getHeight() * 1.5f,
 			                               unk48C[unkB7].getWidth(),
 			                               unk48C[unkB7].getHeight());
 			JUTRect bounds = unk484[unkB7]->getPane()->mGlobalBounds;
@@ -1053,16 +1053,15 @@ s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 			unkAC->setRotation(0, 0, DEG2SHORTANGLE(12));
 			unkAC->setEmitterScale(JGeometry::TVec3<f32>(0.9f, 1.0f, 0.1f));
 		} else if (unkC4 == 44) {
-			unk484[unkB7]->setCenteredSize(20, unk48C[unkB7].getWidth(),
+			unk484[unkB7]->setCenteredSize(40, unk48C[unkB7].getWidth(),
 			                               unk48C[unkB7].getHeight(),
-			                               unk48C[unkB7].getWidth() * 0.5f,
-			                               unk48C[unkB7].getHeight() * 0.5f);
+			                               unk48C[unkB7].getWidth() * 1.5f,
+			                               unk48C[unkB7].getHeight() * 1.5f);
 		}
 
 		int thing = unkC4 < 40 ? unkC4 : 80 - unkC4;
 		thing     = (thing * 255.0f) / 40.0f;
-		((J2DPicture*)unk484[unkB7]->getPane())->mWhite
-		    = (thing << 24) + 0xFF00FF;
+		((J2DPicture*)unk484[unkB7]->getPane())->setWhite((thing << 24) + 0xFF00FF);
 		unk484[unkB7]->update();
 		unkC4 += 1;
 		if (unkC4 > 80)
@@ -1076,8 +1075,8 @@ s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 			unk484[old]->getPane()->mBounds = unk48C[old];
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_E3_MENU_CURSOR, 0,
 			                                   nullptr, 0);
-			((J2DPicture*)unk484[old]->getPane())->mWhite   = 0xFFFFFFFF;
-			((J2DPicture*)unk484[unkB7]->getPane())->mWhite = 0x00FF00FF;
+			((J2DPicture*)unk484[old]->getPane())->setWhite(0xFFFFFFFF);
+			((J2DPicture*)unk484[unkB7]->getPane())->setWhite(0x00FF00FF);
 		}
 	} break;
 

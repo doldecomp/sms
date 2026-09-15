@@ -50,6 +50,13 @@ public:
 	static u32 cMessageID[];
 
 public:
+	// Fabricated name; the US title animation has five additional panes.
+#if defined(VERSION_GMSE01)
+	enum { TITLE_PANE_COUNT = 18 };
+#else
+	enum { TITLE_PANE_COUNT = 13 };
+#endif
+
 	struct UnkCardLoadStruct {
 		/* 0x0 */ J2DPicture* unk0;
 		/* 0x4 */ J2DPicture* unk4[3];
@@ -90,13 +97,17 @@ public:
 	/* 0xF4 */ TExPane* unkF4;
 	/* 0xF8 */ TExPane* unkF8[11];
 	/* 0x124 */ JUTRect unk124[11];
-	/* 0x1D4 */ TExPane* unk1D4[13];
+	/* 0x1D4 */ TExPane* unk1D4[TITLE_PANE_COUNT];
+	// GMSE01 offsets from unk208 through unk22E are 0x14 larger.
 	/* 0x208 */ J2DPane* unk208;
 	/* 0x20C */ u16 unk20C[11];
 	/* 0x222 */ u8 unk222[11];
-	/* 0x22E */ u16 unk22E[13];
-	/* 0x248 */ u8 unk248[13];
+	/* 0x22E */ u16 unk22E[TITLE_PANE_COUNT];
+	/* 0x248 (GMSE01: 0x266) */ u8 unk248[TITLE_PANE_COUNT];
+#if !defined(VERSION_GMSE01)
 	/* 0x255 */ char unk255[0x258 - 0x255];
+#endif
+	// Offsets below use the original layout; add 0x20 for GMSE01.
 	/* 0x258 */ u16 unk258;
 	/* 0x25C */ J2DPane* unk25C;
 	/* 0x260 */ JUTRect unk260;

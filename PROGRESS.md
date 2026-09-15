@@ -8,7 +8,16 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 51 — shared menu animation fields corrected
+## Latest checkpoint: batch 52 — US CardLoad class layout restored
+
+The US title animation carries five additional panes: `unk1D4` is 18 entries, not 13, shifting `unk208` through `unk22E` by 0x14 and removing the Japanese three-byte tail padding.
+Guarded with `VERSION_GMSE01`. The constructor becomes exact (**+548 code bytes / one function**) and 16 further CardLoad functions improve with no regressions.
+`waitForChoice` reaches **98.36285%** (from 98.30238%); its `setCenteredSize` duration is 40, not 20, with 1.5x start sizes, confirmed by matching `li r4, 0x28` at four call sites.
+Only seven structural differences remain, one scheduling cluster at 0x7de8-0x7e54 driven by the 0x40 frame gap (0x368 vs 0x3a8); left as a source TODO.
+Baseline at `4ea41229`; build, changes_all, unit-data checks and DOL byte/SHA-1 checks pass. Map output unchanged: one missing function, three UNUSED-size warnings, all pre-existing.
+Game **26.15378% matched / 3.254321% source-linked**. No gameplay test performed.
+
+## Verified checkpoint: batch 51 — shared menu animation fields corrected
 
 `updateCenteredSize` must read the offset interpolator at 0x14/0x18, as shown by CardSave and CardLoad callers. The shared correction improves three functions with no regressions.
 `waitForChoice` reaches **98.96596%** (from 98.9611%); using the existing color setter restores eight-byte color-temp spacing and reduces its frame from 0x3B0 to 0x3F8 vs original 0x428. Frame, register and particle-position scheduling differences remain TODOs; no new exact code or source-linked files.
