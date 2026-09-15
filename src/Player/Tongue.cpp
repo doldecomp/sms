@@ -24,6 +24,13 @@ static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
 static const char cDirtyTexName[]  = "H_ma_rak_dummy";
 
+static inline const JGeometry::TVec3<f32>&
+scaleVector(JGeometry::TVec3<f32> vector, f32 scale)
+{
+	vector *= scale;
+	return vector;
+}
+
 void TYoshiTongue::init(TYoshi* yoshi)
 {
 	J3DModelData* modelData = J3DModelLoaderDataBase::load(
@@ -96,7 +103,7 @@ void TYoshiTongue::emit(const JGeometry::TVec3<f32>& src,
 		mHeadPos = src;
 		mHeadDir = dir;
 
-		mInitialVelocity = dir * mInitialSpeed;
+		mInitialVelocity = scaleVector(dir, mInitialSpeed);
 		mInitialVelocity += vel * 0.5f;
 
 		if (mInitialVelocity.y < -50.0f)
