@@ -429,9 +429,11 @@ TLightWithDBSetManager::TLightWithDBSetManager(const char* name)
 
 void TLightWithDBSetManager::loadAfter()
 {
+	GXColor color;
 	JDrama::TLightAry* group
 	    = JDrama::TNameRefGen::search<JDrama::TLightAry>("Light Group");
-	mEffectLightColor = group->getLight(0)->getColor();
+	GXGetLightColor(group->getLight(0)->getLightObj(), &color);
+	mEffectLightColor = color;
 	mEffectLightPos   = group->getLight(0)->mPosition;
 }
 
