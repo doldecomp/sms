@@ -6,7 +6,6 @@
 #include <Player/Yoshi.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <MarioUtil/ShadowUtil.hpp>
-#include <System/StageUtil.hpp>
 #include <System/MarioGamePad.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
 #include <Map/Map.hpp>
@@ -14,6 +13,9 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+
+// StageUtil.hpp also emits static shine tables absent from this unit.
+bool SMS_isMultiPlayerMap();
 
 // TODO: stuff from other rogue includes
 static JGeometry::TVec3<f32> cDeformedTerrainCenter(0.0f, 5000.0f, 0.0f);
@@ -53,7 +55,7 @@ TMario::TMario()
     , mSlipParamsYoshi("/Mario/SlipParamYoshi.prm")
     , mUpperBodyParams("/Mario/UpperBody.prm")
     , mDmgParamsEnemyCommon("/Mario/DmgEnemyCommon.prm")
-    , mDmgParamsHamakuri("/Mario/DmgHamakuri.prm")
+    , mDmgParamsHamakuri("/Mario/DmgHamukuri.prm")
     , mDmgParamsNamekuri("/Mario/DmgNamekuri.prm")
     , mDmgParamsHinokuri("/Mario/DmgHinokuri.prm")
     , mDmgParamsFire("/Mario/DmgFire.prm")
@@ -300,13 +302,13 @@ TMario::TMario()
 	mWireSfxDelay    = 20;
 	mWireQueuedSfxID = 0;
 
-	unk54E             = 0x4000;
+	unk54E             = 0x400;
 	mWireSwingPosAngle = 0x4000;
 	mWireSwingNegAngle = 0xC000;
 
 	mWireRollAngle = 0;
 	mCoinCount     = 0;
-	unk55C         = 50.0f;
+	unk55C         = 204.0f;
 	unk560         = 200.0f;
 	unk564         = 8.0f;
 	unk568         = 128.0f;
@@ -453,6 +455,9 @@ void TMario::resetHistory()
 	unk53A = 0;
 	unk53B = 0;
 }
+
+// UNUSED in the retail executable; the map records a four-byte body.
+void TMario::stageSetting() { }
 
 void TMario::setGamePad(TMarioGamePad* pad) { mGamePad = pad; }
 
@@ -930,12 +935,12 @@ TMario::TDivingParams::TDivingParams(const char* prm)
 TMario::TEParams::TEParams(const char* prm)
     : TParams(prm)
     , PARAM_INIT(mDamage, 1)
-    , PARAM_INIT(mDownType, 0)
+    , PARAM_INIT(mDownType, 1)
     , PARAM_INIT(mWaterEmit, 0)
-    , PARAM_INIT(mMotor, 0)
-    , PARAM_INIT(mMinSpeed, 0.0f)
+    , PARAM_INIT(mMotor, 25)
+    , PARAM_INIT(mMinSpeed, 16.0f)
     , PARAM_INIT(mDirty, 0.0f)
-    , PARAM_INIT(mInvincibleTime, 0)
+    , PARAM_INIT(mInvincibleTime, 300)
 {
 	TParams::load(mPrmPath);
 }
@@ -948,7 +953,7 @@ TMario::TAutoDemoParams::TAutoDemoParams()
     , PARAM_INIT(mWarpInTremble, 15.0f)
     , PARAM_INIT(mWarpInVecBase, 0.3f)
     , PARAM_INIT(mWarpTransTremble, 50.0f)
-    , PARAM_INIT(mReadRotSp, 0x400f)
+    , PARAM_INIT(mReadRotSp, 0x400)
 {
 	TParams::load(mPrmPath);
 }

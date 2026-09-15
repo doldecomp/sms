@@ -17,6 +17,21 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## Shared parameter defaults and unwanted header data, batch 46
+
+- MarioInit's TEParams constructor supplies 29 damage blocks in Mario's constructor.
+  Wrong defaults caused hundreds of register differences: restore down type 1, motor 25, minimum speed 16.0f and invincibility 300 from the original stores/constants.
+  The standalone UNUSED helper grows from 416 to the map's 424 bytes, and repeated register differences disappear.
+- Auto-demo read rotation and field 0x54E both initialize to 0x400; their shared constant explains the original r23 reuse. Field 0x55C initializes to 204.0f.
+  `/Mario/DmgHamukuri.prm` is the original filename; the previous `Hamakuri` spelling prevented the entire string pool from matching.
+- StageUtil.hpp emits static shine/scenario tables even when only SMS_isMultiPlayerMap is called.
+  Those tables are absent from this unit's map and shift the TMario vtable by 0x168.
+  A direct declaration of the existing function removes the unwanted tables and restores the three vtable offsets without changing the shared header.
+  Treat similar include/data-offset differences as search leads; do not remove the header from users of its static helpers.
+- Mario's constructor now matches 20,080 bytes; all function/data regression checks pass.
+  Restore the map's four-byte UNUSED stageSetting as an empty body; all 21 UNUSED sizes, symbol presence/order/linkage now pass.
+  Other MarioInit functions still prevent source linking.
+
 ## Regional console layout and pane receivers, batch 45
 
 - GCConsole2's US constructor writes a u16 at 0x3AE and a byte at 0x3B0; later pointers start at 0x3B4 rather than 0x3B0.

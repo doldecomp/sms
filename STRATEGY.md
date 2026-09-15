@@ -114,7 +114,7 @@ That layout correction plus constructor initialization matches 12 functions / 5,
 Reusing one color temporary reduces the frame from 0x148 to 0x120 versus target 0x118.
 The resource constructor still lacks a pointer copy at 0xe6d4; frame/color/buffer offsets remain TODOs.
 
-### 7. `TMario::TMario()`
+### 7. `TMario::TMario()` — matched in batch 46
 
 Unit `mario/Player/MarioInit`, 20,080 bytes, 99.232%.
 The frame matches.
@@ -122,6 +122,8 @@ Almost all 769 operand differences are register numbering caused by one scheduli
 There the original loads `li r21,0x12c` before `addi r3,r31,0x30d8`; the value is then stored with `sth ...,0x3168(r31)`.
 This is around the `TBaseParam` initializations near offsets 0x3158–0x3168.
 Some string-literal labels also differ: check the unit's string order first, since those differences may be data rather than code.
+Batch 46 corrects TEParams defaults (down type 1, motor 25, minimum speed 16, invincibility 300), auto-demo rotation 0x400, initial fields 0x54E/0x55C, and the Hamukuri filename.
+Removing StageUtil static tables from this unit restores the virtual-table offsets; all 20,080 constructor bytes now match.
 
 ### 8. `TMario::checkCollision()`
 
