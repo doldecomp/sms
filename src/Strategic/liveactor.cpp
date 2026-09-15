@@ -59,7 +59,8 @@ TLiveActor::TLiveActor(const char* name)
 	mRidePos.zero();
 
 	mGroundPlane = TMap::getIllegalCheckData();
-	if (gpMarDirector->getCurrentMap() != 8)
+	u32 currentMap = gpMarDirector->getCurrentMap();
+	if (currentMap != 8)
 		mLiveFlag |= LIVE_FLAG_UNK2000;
 }
 
