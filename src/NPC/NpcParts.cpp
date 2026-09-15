@@ -28,6 +28,21 @@ const char* cPeachHostTextureName  = "H_peach_main_s3tc";
 
 void SetMActorAnmFrame(MActor* param_1, f32 param_2, bool param_3, bool param_4)
 {
+	if (param_1 == nullptr)
+		return;
+
+	J3DFrameCtrl* ctrl;
+	if (param_3) {
+		ctrl = param_1->getFrameCtrl(ANM_TYPE_BCK);
+		if (ctrl != nullptr)
+			ctrl->setFrame(param_2);
+	}
+
+	if (param_4) {
+		ctrl = param_1->getFrameCtrl(ANM_TYPE_BTP);
+		if (ctrl != nullptr)
+			ctrl->setFrame(param_2);
+	}
 }
 
 TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
@@ -177,31 +192,18 @@ void TNpcParts::addJellyFishParts(f32 param_1)
 void TNpcParts::setPartsAnmFrame(f32 param_1)
 {
 	switch (unk60->getActorType()) {
-	case 0x4000010: {
-		if (MActor* mactor = getPartsMActor(9, 0))
-			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(ANM_TYPE_BCK))
-				ctrl->setFrame(param_1);
-	} break;
+	case 0x4000010:
+		SetMActorAnmFrame(getPartsMActor(9, 0), param_1, true, false);
+		break;
 
-	case 0x4000015: {
-		if (MActor* mactor = getPartsMActor(10, 0)) {
-			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(ANM_TYPE_BCK))
-				ctrl->setFrame(param_1);
-			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(ANM_TYPE_BTP))
-				ctrl->setFrame(param_1);
-		}
-	} break;
+	case 0x4000015:
+		SetMActorAnmFrame(getPartsMActor(10, 0), param_1, true, true);
+		break;
 
 	case 0x4000018:
-		if (MActor* mactor = getPartsMActor(0, 0))
-			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(ANM_TYPE_BCK))
-				ctrl->setFrame(param_1);
-		if (MActor* mactor = getPartsMActor(3, 0))
-			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(ANM_TYPE_BCK))
-				ctrl->setFrame(param_1);
-		if (MActor* mactor = getPartsMActor(4, 0))
-			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(ANM_TYPE_BCK))
-				ctrl->setFrame(param_1);
+		SetMActorAnmFrame(getPartsMActor(0, 0), param_1, true, false);
+		SetMActorAnmFrame(getPartsMActor(3, 0), param_1, true, false);
+		SetMActorAnmFrame(getPartsMActor(4, 0), param_1, true, false);
 		break;
 	}
 }
