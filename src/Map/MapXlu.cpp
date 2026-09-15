@@ -25,7 +25,7 @@ bool TMapXlu::changeXluJoint(int prio)
 	if (prio >= mPrioGroupNum)
 		return false;
 
-	for (int i = 0; i < gpMap->getRootJointModel()->getChildrenNum(); ++i)
+	for (int i = 0; i < gpMap->getRootJointModel()->mChildrenNum; ++i)
 		gpMap->getRootJointModel()->getChild(i)->sit();
 
 	for (int i = 0; i < mPrioGroups[prio].mObjectNum; ++i)
