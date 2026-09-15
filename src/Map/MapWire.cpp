@@ -40,25 +40,26 @@ f32 TMapWire::mDrawHeight     = 6.0f;
 
 void TMapWire::drawLower() const
 {
-	f32 xOffset = mDrawAxes.x * mDrawWidth;
-	f32 zOffset = mDrawAxes.y * mDrawWidth;
+	JGeometry::TVec2<f32> drawOffset = mDrawAxes;
+	drawOffset.scale(mDrawWidth);
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, (mNumActiveMapWirePoints + 2) * 2);
 
-	GXPosition3f32(mStartPoint.x - xOffset, mStartPoint.y,
-	               mStartPoint.z - zOffset);
+	GXPosition3f32(mStartPoint.x - drawOffset.x, mStartPoint.y,
+	               mStartPoint.z - drawOffset.y);
 	GXPosition3f32(mStartPoint.x, mStartPoint.y - mDrawHeight, mStartPoint.z);
 
 	for (int i = 0; i < mNumActiveMapWirePoints; i++) {
-		GXPosition3f32(mMapWirePoints[i].mPosition.x - xOffset,
+		GXPosition3f32(mMapWirePoints[i].mPosition.x - drawOffset.x,
 		               mMapWirePoints[i].mPosition.y,
-		               mMapWirePoints[i].mPosition.z - zOffset);
+		               mMapWirePoints[i].mPosition.z - drawOffset.y);
 		GXPosition3f32(mMapWirePoints[i].mPosition.x,
 		               mMapWirePoints[i].mPosition.y - mDrawHeight,
 		               mMapWirePoints[i].mPosition.z);
 	}
 
-	GXPosition3f32(mEndPoint.x - xOffset, mEndPoint.y, mEndPoint.z - zOffset);
+	GXPosition3f32(mEndPoint.x - drawOffset.x, mEndPoint.y,
+	               mEndPoint.z - drawOffset.y);
 	GXPosition3f32(mEndPoint.x, mEndPoint.y - mDrawHeight, mEndPoint.z);
 
 	GXEnd();
@@ -66,20 +67,21 @@ void TMapWire::drawLower() const
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, (mNumActiveMapWirePoints + 2) * 2);
 
 	GXPosition3f32(mStartPoint.x, mStartPoint.y - mDrawHeight, mStartPoint.z);
-	GXPosition3f32(mStartPoint.x + xOffset, mStartPoint.y,
-	               mStartPoint.z + zOffset);
+	GXPosition3f32(mStartPoint.x + drawOffset.x, mStartPoint.y,
+	               mStartPoint.z + drawOffset.y);
 
 	for (int i = 0; i < mNumActiveMapWirePoints; i++) {
 		GXPosition3f32(mMapWirePoints[i].mPosition.x,
 		               mMapWirePoints[i].mPosition.y - mDrawHeight,
 		               mMapWirePoints[i].mPosition.z);
-		GXPosition3f32(mMapWirePoints[i].mPosition.x + xOffset,
+		GXPosition3f32(mMapWirePoints[i].mPosition.x + drawOffset.x,
 		               mMapWirePoints[i].mPosition.y,
-		               mMapWirePoints[i].mPosition.z + zOffset);
+		               mMapWirePoints[i].mPosition.z + drawOffset.y);
 	}
 
 	GXPosition3f32(mEndPoint.x, mEndPoint.y - mDrawHeight, mEndPoint.z);
-	GXPosition3f32(mEndPoint.x + xOffset, mEndPoint.y, mEndPoint.z + zOffset);
+	GXPosition3f32(mEndPoint.x + drawOffset.x, mEndPoint.y,
+	               mEndPoint.z + drawOffset.y);
 
 	GXEnd();
 }
