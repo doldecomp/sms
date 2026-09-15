@@ -171,7 +171,7 @@ A full executable match also does not validate bodies in objects that are still 
 
 ## Owner animation routines and timer families
 
-- Status: all ten routines and four UNUSED helpers reconstructed, batch 12; six linked functions exact.
+- Status: all ten routines and four UNUSED helpers reconstructed in batch 12; eight linked functions exact after batch 13.
 - Search: `rg -n 'setAnmTimerWhen|setTumbleBckRate_|setHeadAndBodyAnm|changeAnmRateAndFrameUpdate_' src/Enemy/BossHanachanAnm.cpp`.
 - Timer loops use `u8` parameter values and signed integer indices.
   Damage/death timers are `delay * CLBAbs(mWeakBodyIndex - i)`, with the head using `mWeakBodyIndex + 1`.
@@ -189,17 +189,27 @@ A full executable match also does not validate bodies in objects that are still 
   Current frame 0xC0 versus original 0x118; the first tumble-loop counter and head actor use r28 instead of r26.
   Walk/run cases are 0/1; preserve frame-copy calls and the separate ratio complements for previous-animation cases.
   The original calls `CLBCalcRatio<float>` out of line and updates animation sound before each model's `frameUpdate()`.
-- `isAllBckAlreadyEnd`: 99.891304%, only stack size differs (0x30 versus 0x28).
-  Named `bool` head/body completion locals reproduce the original normalization groups.
-  Direct conditions remove groups; ternary conditions add extra groups; splitting declaration from assignment has no effect.
-  These trials were reverted.
-- `setTumbleAnm`: 99.85714%, only stack size differs (0x78 versus 0x60).
-  Its shared `setTumbleBckRate_` helper uses `CLBAbs`, explicit reciprocal multiplication, and nested `2 * (40 * SMSGetAnmFrameRate())`.
-  Replacing the two reciprocal products with ordinary division changes instructions and reduces similarity to 87.8%; reverted.
-  The helper itself is 172 bytes versus the UNUSED map's 176; resolve it together with both inline call sites.
+- `isAllBckAlreadyEnd`: 100%, 184 bytes, batch 13.
+  Compare each compound condition explicitly with `false`: `(animationMatches && part->isCurBckAlreadyEnd_()) == false`.
+  This preserves the original normalization groups and the 0x28 stack frame.
+  Named `bool` head/body completion locals reproduce the normalization but enlarge the frame to 0x30.
+  Direct negation removes groups; ternary boolean conditions add extra groups; splitting declaration from assignment has no effect.
+  Exception: using the analogous `(isMotionBlending() || isForcedBlendRatio()) == false` in the parts dispatcher causes the forced-ratio helper to remain out of line and regresses that caller; reverted.
+- `setTumbleAnm`: 100%, 420 bytes, batch 13.
+  In the shared `setTumbleBckRate_` helper, use one float for the signed rotation difference, then `frames = (1.0f / unk198) * (frames >= 0.0f ? frames : -frames)`.
+  Preserve explicit reciprocal multiplication and nested `2 * (40 * SMSGetAnmFrameRate())`.
+  Both inline sites match with the original 0x60 stack frame.
+  Separate distance/frames locals with `CLBAbs` produce a 0x78 frame; one float retaining `CLBAbs` produces 0x70.
+  Direct ternary absolute value with one reused float resolves the inline stack difference; separate ternary and reciprocal assignments give the same instructions.
+  Naming the nested frame-rate expression increases the caller frame to 0x80; ordinary division changes instructions and reduces similarity to 87.8%; reverted.
+  The helper itself is now 180 bytes versus the UNUSED map's 176 (previously 172); do not claim its standalone body is exact from the matching callers.
 - `setHeadAndBodyAnm`: 91.75%, correct 0x68 frame but register allocation and integer-to-float conversion slots/scheduling differ.
   BCK uses an integer remainder; BTP and BTK use a second conversion of that integer to a shared float.
   Preserve both conversions while investigating the original inline context.
+  Removing the shared texture float and passing the integer to both texture setters regresses the routine to 74.1%, with a 0x60 frame and additional conversions; reverted.
+  A separate BCK float local or splitting texture-float declaration/assignment does not change instructions.
+  Moving texture-float initialization before the BCK setter reverses the two conversion slots to the original order but leaves scheduling/register differences (about 91.9%); reverted pending structural evidence.
+  The frame controller's frame field is protected; direct field access is not a viable game-code fix, and no library change was made.
 - All mapped constants (32 bytes) match; no source-link promotion until all linked functions and the whole executable are verified.
 
 ## Shared boss animation setter result: caller establishes bool

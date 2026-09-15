@@ -29,8 +29,8 @@ void TBossHanachan::setHeadAndBodyAnm(
 void TBossHanachan::setTumbleBckRate_(TBossHanachanPartsBase* part)
 {
 	J3DFrameCtrl* ctrl = part->mMActor->getFrameCtrl(ANM_TYPE_BCK);
-	f32 distance = CLBAbs(unk194 - part->mRotation.z);
-	f32 frames = (1.0f / unk198) * distance;
+	f32 frames = unk194 - part->mRotation.z;
+	frames = (1.0f / unk198) * (frames >= 0.0f ? frames : -frames);
 	ctrl->setRate((1.0f / frames) * (2.0f * (40.0f * SMSGetAnmFrameRate())));
 }
 
@@ -106,14 +106,12 @@ bool TBossHanachan::isFinishedGetUp() const
 bool TBossHanachan::isAllBckAlreadyEnd(EnumBossHanachanAnmKind anm) const
 {
 	bool result = true;
-	bool headEnded = mHead->mCurrentAnm == anm && mHead->isCurBckAlreadyEnd_();
-	if (!headEnded) {
+	if ((mHead->mCurrentAnm == anm && mHead->isCurBckAlreadyEnd_()) == false) {
 		result = false;
 	} else {
 		for (int i = 0; i < 8; ++i) {
-			bool bodyEnded = mBodies[i]->mCurrentAnm == anm
-			                 && mBodies[i]->isCurBckAlreadyEnd_();
-			if (!bodyEnded) {
+			if ((mBodies[i]->mCurrentAnm == anm
+			     && mBodies[i]->isCurBckAlreadyEnd_()) == false) {
 				result = false;
 				break;
 			}

@@ -8,7 +8,37 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 12
+## Latest checkpoint: batch 13
+
+Matched `isAllBckAlreadyEnd` (184 bytes) and `setTumbleAnm` (420 bytes) exactly.
+The completion check compares each compound condition explicitly with `false`, preserving the original boolean normalization without the extra stack slots of named boolean locals.
+The tumble helper reuses one float and expresses absolute value directly with a ternary; both inline sites now match the original 0x60-byte stack frame and instruction sequence.
+
+This adds **604 exact code bytes and two matching functions**.
+Aggregate exact code is **1,374,732 / 3,603,748 bytes (38.147285%)**, with **8,160 / 12,904 functions** matching.
+Matched data remains 299,795 bytes.
+There are still **73 source-linked objects**, covering **76,468 code bytes (2.121902%)**.
+Eight of the animation unit's ten linked routines now match; the unit remains original-linked pending the other two.
+
+### Validation and remaining work
+
+Used the saved `ninja baseline` at `75133a1f`, ran `ninja changes_all`, and compared every reported function, including missing-function detection: zero regressions.
+The full build, expected SHA-1, and direct byte comparison pass for the mixed source/original-object executable.
+No gameplay test was performed.
+The animation unit passes map presence, order, and linkage checks.
+The UNUSED tumble helper is 180 bytes versus the map's 176; its two retained inline sites are exact, but the standalone size remains unresolved.
+
+The analogous boolean-expression change in the parts dispatcher regressed inlining and was reverted.
+Frame-conversion trials in `setHeadAndBodyAnm` did not establish a match and were reverted too.
+The shared-fix catalog records these exceptions to prevent repeating them or applying the successful forms blindly elsewhere.
+
+Remaining owner routines are `changeAnmRateAndFrameUpdate_` (99.89781%, stack/register differences) and `setHeadAndBodyAnm` (91.75%, conversion scheduling/register differences).
+Resolve these before testing source-link promotion of the animation unit.
+The existing collision/foot initialization and water-hit field discrepancy remain outstanding in the parts/sub units.
+See [batch 13 measurements](docs/progress/GMSE01-batch13.json) and the [shared-fix catalog](docs/MATCHING_CATALOG.md).
+Logs and trial backups are saved under `build/GMSE01` and `build/GMSE01-*-batch13.log`.
+
+## Verified checkpoint: batch 12
 
 Reconstructed `BossHanachanAnm.cpp`: all ten linked routines and all four UNUSED helpers from the map.
 The routines coordinate walk/run blending, frame preservation, directional tumble rates, animation completion, and staggered head/body transitions.
