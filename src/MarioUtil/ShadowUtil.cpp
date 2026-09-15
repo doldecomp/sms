@@ -396,7 +396,7 @@ void TMBindShadowManager::reset()
 
 void TMBindShadowManager::initEntry(TMBindShadowBody* param_1)
 {
-	mBodyList.push_back(param_1);
+	mBodyList.insert(mBodyList.end(), param_1);
 }
 
 void TMBindShadowManager::perform(u32 cue, JDrama::TGraphics* graphics)
