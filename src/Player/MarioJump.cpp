@@ -17,7 +17,7 @@ BOOL TMario::startJumpWall()
 {
 	if (mWallPlane != NULL) {
 		const JGeometry::TVec3<f32>& normal = mWallPlane->getNormal();
-		s16 angle = matan(mWallPlane->mMinY, normal.x) + 0x8000;
+		s16 angle = matan(normal.z, normal.x) + 0x8000;
 		emitParticle(PARTICLE_MS_WALLKICK_A, angle);
 		emitParticle(PARTICLE_MS_WALLKICK_B, angle);
 	}
