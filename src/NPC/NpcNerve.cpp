@@ -270,7 +270,8 @@ DEFINE_NERVE(TNerveNPCTalk, TLiveActor)
 			self->npcTalkIn();
 		self->npcTalking();
 	} else {
-		if (self->getActorType() == 0x400001C)
+		u32 actorType = self->getActorType();
+		if (actorType == 0x400001C)
 			return true;
 		self->npcTalkOut();
 	}
