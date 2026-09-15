@@ -52,8 +52,10 @@ void TBaseNPC::setNoteEffectMtxPtr_(const JUTNameTab* tab)
 		break;
 	}
 
-	if (jointName)
-		mNoteEffectMtxPtr = getModel()->getAnmMtx(tab->getIndex(jointName));
+	if (jointName) {
+		int index = tab->getIndex(jointName);
+		mNoteEffectMtxPtr = getModel()->getAnmMtx((u16)index);
+	}
 }
 
 void TBaseNPC::setPollutionEffectMtxPtr_(const JUTNameTab* tab)
