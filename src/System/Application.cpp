@@ -339,7 +339,10 @@ void TApplication::initialize_nlogoAfter()
 	arch->unmountFixed();
 	delete arch;
 
-	JKRGetRootHeap()->becomeCurrentHeap();
+	{
+		JKRHeap* heap = JKRGetRootHeap();
+		heap->becomeCurrentHeap();
+	}
 
 	JKRMemArchive* piVar2 = new JKRMemArchive(arcBufCmn, 0, MBF_0);
 
@@ -347,7 +350,8 @@ void TApplication::initialize_nlogoAfter()
 		JDrama::TNameRefGen::instance
 		    = new (JKRGetSystemHeap(), 0) TMarNameRefGen;
 
-		u32 lVar3 = JKRGetRootHeap()->getSize(bufStageArcBin);
+		JKRHeap* heap = JKRGetRootHeap();
+		u32 lVar3   = heap->getSize(bufStageArcBin);
 		JSUMemoryInputStream stream(bufStageArcBin, lVar3);
 		JDrama::TNameRefGen::getInstance()->load(stream);
 		unk30 = JDrama::TNameRefGen::search<
@@ -360,7 +364,7 @@ void TApplication::initialize_nlogoAfter()
 
 	gpRomFont = nullptr;
 	((JKRExpHeap*)mHeap)->destroy();
-	JKRGetRootHeap()->getSize(spGameHeapBlock);
+	JKRGetRootHeap()->free(spGameHeapBlock);
 
 	JKRMemArchive* this_00 = new JKRMemArchive(arcBufMario, 0, MBF_0);
 	gpCardManager->mIcons
