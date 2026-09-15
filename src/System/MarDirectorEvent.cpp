@@ -27,7 +27,10 @@ void isNearMapObj(const JDrama::TActor&, const char*, f32) { }
 
 void is3BarrelNear(const TBaseNPC&) { }
 
-void TMarDirector::getTalkMsgID(TBaseNPC*) { }
+void TMarDirector::getTalkMsgID(TBaseNPC*)
+{
+	(void)"\x83\x6a\x83\x52\x83\x7d\x83\x7d";
+}
 
 void TMarDirector::updateFlag(TBaseNPC*, u32, u32) { }
 
