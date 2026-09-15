@@ -1,3 +1,19 @@
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+
+static const char* MtxCalcTypeName[] = {
+	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
+	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
+	"MActorMtxCalcType_MotionBlend モーションブレンド",
+	"MActorMtxCalcType_User ユーザー定義",
+};
+
+const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
+const char cDirtyTexName[]  = "H_ma_rak_dummy";
+
+static const float dummyZeroValues[] = { 0.0f, 0.0f, 0.0f };
+static const float dummyOneValues[]  = { 1.0f, 1.0f, 1.0f };
+
 #include <System/MarNameRefGen.hpp>
 
 #include <JSystem/JDrama/JDRSmJ3DScn.hpp>
