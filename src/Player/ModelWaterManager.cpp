@@ -604,12 +604,9 @@ void TModelWaterManager::move()
 						if (getFlagBottom4Bits(i) == 1) {
 							JGeometry::TVec3<f32> local_1d4 = r27->getNormal();
 							local_1d4.scale(mParticleSizeSOA[i]);
-
-							JGeometry::TVec3<f32> local_1A4
-							    = mParticlePositionSOA[i];
-							local_1A4 += local_1d4;
+							local_1d4 += mParticlePositionSOA[i];
 							if (MsRandF() < unk5D88[10])
-								gpSplashManager->newSplash(local_1A4, 5.0f);
+								gpSplashManager->newSplash(local_1d4, 5.0f);
 
 							splashSound(mParticlePositionSOA[i],
 							            mParticleSizeSOA[i]);
