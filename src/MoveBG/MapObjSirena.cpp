@@ -58,10 +58,15 @@ TRoulette::TRoulette(const char* name)
     , unk144(0.2f)
     , unk150(nullptr)
 {
-	unk148 = 0;
-	unk14A = 0;
-	unk14C = 0;
-	unk14E = 255;
+	GXColorS10 color;
+	color.r = 0;
+	color.g = 0;
+	color.b = 0;
+	color.a = 255;
+	unk148  = color.r;
+	unk14A  = color.g;
+	unk14C  = color.b;
+	unk14E  = color.a;
 	if (gpApplication.mCurrArea.getStage() == 14
 	    && gpMarDirector->getCurrentStage() == 1) {
 		unk141 = 1;
