@@ -280,6 +280,7 @@ void TMapObjBase::makeObjDefault()
 
 void TMapObjBase::makeObjDead()
 {
+	Mtx mtx;
 	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
 	onLiveFlag(LIVE_FLAG_UNK10);
 
