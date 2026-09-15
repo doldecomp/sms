@@ -11,6 +11,10 @@ const u32 cDispExceptionCommand[6] = { 0x100, 0x200, 0x400, 0x800, 0x1, 0x0 };
 
 }
 
+#if defined(VERSION_GMSE01)
+static const char sStrMapFile[] = "/marioUS.MAP";
+#endif
+
 static void MarErrException(u16, OSContext*, u32, u32)
 {
 	for (int i = 0; cDispExceptionCommand[i] != 0;) {
@@ -29,7 +33,11 @@ void MarErrInit()
 	JUTConsoleManager::createManager(nullptr);
 	JUTException::create(print);
 	JUTException::createConsole(new u8[0x1400], 0x1400);
+#if defined(VERSION_GMSE01)
+	JUTException::appendMapFile(const_cast<char*>(sStrMapFile));
+#else
 	JUTException::appendMapFile("/mario.MAP");
+#endif
 	JUTException::setPreUserCallback(&MarErrException);
 	// fullptr :D
 	JUTException::getManager()->setGamePad((JUTGamePad*)0xffffffff);

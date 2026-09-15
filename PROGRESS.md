@@ -7,7 +7,35 @@ The full decompilation is **not complete**.
 The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 
-## Latest checkpoint: batch 5
+## Latest checkpoint: batch 6
+
+Corrected the US crash-reporting filename to `/marioUS.MAP` and its read-only data placement in `System/marerr.cpp`.
+Both functions and both data symbols now match in the detailed object comparison, and the object is linked from source.
+There are now **71 source-linked objects**, covering **73,432 / 3,603,748 code bytes (2.0376563%)**.
+This adds 284 source-linked code bytes and 40 matched data bytes.
+The aggregate report already counted the two functions as matched before the data/relocation correction, so aggregate exact code remains **1,367,756 bytes (37.95371%)**, with **8,135 matching functions**.
+
+### Validation
+
+Captured `ninja baseline` at `57f560d3` and ran `ninja changes_all` after the final changes.
+Comparing every reported function found zero regressions.
+The crash-reporting object's map presence, ordering, and linkage checks pass.
+The full build, expected SHA-1, and byte comparison against the original US executable pass.
+This remains a mixed source/extracted-object build; no gameplay test was performed.
+
+### Data-layout investigation
+
+The native light-manager name starts at `0x803A8DC0`, eight bytes before its address in the imported map.
+Several preceding movie strings are also eight bytes before their mapped addresses.
+A limited object-boundary correction made the light-manager object compare exactly, but left the legacy linker running for over five minutes with an empty output ELF.
+That experiment was stopped and reverted, and the restored configuration passed the executable checks.
+Audit the surrounding string table and relocations together before attempting another source-link promotion of `MarDirectorCreateObjects.cpp`.
+Matching trials in `MarioAccess.cpp` and `MapObjPollution.cpp` were also reverted; the egg-generator control routine still differs in stack layout.
+
+See [batch 6 measurements](docs/progress/GMSE01-batch6.json).
+Build and change logs remain under `build/GMSE01-*-batch6.log`.
+
+## Verified checkpoint: batch 5
 
 Reconstructed the missing bathtub grip family in `MoveBG/MapObjCorona.cpp` and its header.
 This includes the grip, collision-part base, hard parts, fragile parts, and all 26 bathtub parameters.

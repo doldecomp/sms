@@ -68,5 +68,6 @@
   "System/ProcessMeter.cpp",
   "NPC/NpcBalloon.cpp",
   "System/TimeRec.cpp",
-  "NPC/NpcThrow.cpp"
+  "NPC/NpcThrow.cpp",
+  "System/marerr.cpp"
 ]
