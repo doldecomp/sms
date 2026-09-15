@@ -177,7 +177,35 @@ void TMarDirector::movement()
 #pragma dont_inline on
 void TMarDirector::setNextStage(u16 param_1, JDrama::TActor* param_2)
 {
-	// TODO: wtf is happening in this function it's cursed
+	if (unk4C & 2)
+		return;
+
+	TGameSequence nextArea = TGameSequence();
+	if (param_1 >= 0x100) {
+		nextArea.unk0 = (param_1 >> 8) - 1;
+		nextArea.unk1 = param_1;
+	} else {
+		nextArea.unk0 = param_1;
+		nextArea.unk1 = 0xff;
+	}
+	gpApplication.setNextArea(nextArea);
+
+	if (param_2) {
+		unk4C |= 4;
+		unk250 = param_2;
+	} else if ((gpApplication.mCurrArea.unk0 == 1 && nextArea.unk0 == 5)
+	           || (gpApplication.mCurrArea.unk0 == 1 && nextArea.unk0 == 6)
+	           || (gpApplication.mCurrArea.unk0 == 1 && nextArea.unk0 == 8)) {
+		unk4C |= 8;
+	} else {
+		unk4C |= 2;
+	}
+
+	int stage = nextArea.unk0;
+	if (stage == 0x37) {
+		unk4C |= 0x100;
+		gpApplication.mMovie = 6;
+	}
 }
 #pragma dont_inline off
 
