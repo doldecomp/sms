@@ -804,10 +804,12 @@ JKRMemArchive* TApplication::mountStageArchive()
 	JKRMemArchive* result = nullptr;
 
 	TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >& tmp = *unk30;
-	if (mCurrArea.getStage() < tmp.size()) {
-		if (mCurrArea.getScenario() < tmp[mCurrArea.getStage()].size()) {
+	if (mCurrArea.getStage() < tmp.getChildren().size()) {
+		TNameRefAryT<TScenarioArchiveName>* names
+		    = tmp.getChildren().begin()[mCurrArea.getStage()];
+		if (mCurrArea.getScenario() < names->size()) {
 			const char* scenarioArcName
-			    = tmp[mCurrArea.getStage()][mCurrArea.getScenario()].getName();
+			    = (*names)[mCurrArea.getScenario()].unkC;
 
 			DVDChangeDir("/data/scene");
 			void* archBlob
