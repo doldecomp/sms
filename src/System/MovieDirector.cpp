@@ -76,8 +76,8 @@ int TMovieDirector::rsetup()
 	JKRMemArchive* subtitleArc = new JKRMemArchive;
 	subtitleArc->mountFixed(subtitleArcBlob, MBF_0);
 
-	if (gpApplication.getMovie() < 20) {
-		if (gpApplication.getMovie() < 16) {
+	if ((s32)gpApplication.getMovie() < 20) {
+		if ((s32)gpApplication.getMovie() < 16) {
 			(void)gpApplication.getMovie();
 		} else {
 			void* arcBlob
@@ -115,8 +115,8 @@ int TMovieDirector::rsetup()
 	unk2C->init(movie);
 	group2d->getChildren().push_back(unk2C);
 
-	if (gpApplication.getMovie() < 20) {
-		if (gpApplication.getMovie() < 16) {
+	if ((s32)gpApplication.getMovie() < 20) {
+		if ((s32)gpApplication.getMovie() < 16) {
 			(void)gpApplication.getMovie();
 		} else {
 			unk24 = new TCardSave;
@@ -160,10 +160,13 @@ int TMovieDirector::rsetup()
 	THPVideoInfo videoInfo;
 	THPPlayerGetVideoInfo(&videoInfo);
 
-	// TODO: Huh? TBox2 or something?
-	thpRender->setParams(SMSGetGameRenderWidth() - videoInfo.xSize / 2,
-	                     SMSGetGameRenderHeight() - videoInfo.ySize / 2,
-	                     videoInfo.xSize, videoInfo.ySize);
+	JGeometry::TBox2<u32> renderRect;
+	renderRect.i.x = (SMSGetGameRenderWidth() - videoInfo.xSize) / 2;
+	renderRect.i.y = (SMSGetGameRenderHeight() - videoInfo.ySize) / 2;
+	renderRect.f.x = videoInfo.xSize;
+	renderRect.f.y = videoInfo.ySize;
+	thpRender->setParams(renderRect.i.x, renderRect.i.y, renderRect.f.x,
+	                     renderRect.f.y);
 
 	DVDChangeDir("/");
 
