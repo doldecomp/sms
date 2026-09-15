@@ -68,9 +68,11 @@ void TBaseNPC::setPollutionEffectMtxPtr_(const JUTNameTab* tab)
 
 	const char* pcVar5;
 	if (isNormalMonte()) {
-		unk200 = getModel()->getAnmMtx(tab->getIndex(leftFootJoint));
-		unk204 = getModel()->getAnmMtx(tab->getIndex(rightFootJoint));
-		pcVar5 = koshiNullJoint;
+		int index = tab->getIndex(leftFootJoint);
+		unk200   = getModel()->getAnmMtx((u16)index);
+		index    = tab->getIndex(rightFootJoint);
+		unk204   = getModel()->getAnmMtx((u16)index);
+		pcVar5   = koshiNullJoint;
 	} else if (isNormalMare()) {
 		pcVar5 = koshiJoint;
 	} else if (mActorType == 0x4000016) {
@@ -79,8 +81,10 @@ void TBaseNPC::setPollutionEffectMtxPtr_(const JUTNameTab* tab)
 		pcVar5 = nullptr;
 	}
 
-	if (pcVar5)
-		mPollutionEffectMtxPtr = getModel()->getAnmMtx(tab->getIndex(pcVar5));
+	if (pcVar5) {
+		int index = tab->getIndex(pcVar5);
+		mPollutionEffectMtxPtr = getModel()->getAnmMtx((u16)index);
+	}
 }
 
 void TBaseNPC::setSmokeEffectMtxPtr_(bool param_1)
