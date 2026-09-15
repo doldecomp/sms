@@ -403,18 +403,19 @@ BOOL TMario::doSliding(f32 stopThreshold)
 		if (mStatus == MARIO_STATUS_CATCH) {
 			if (mStatusState == 1)
 				slipFr = mDeParams.mWasOnWaterSlip.get();
-			if (checkFlag(MARIO_FLAG_IN_ANY_WATER))
+			bool inWater = checkFlag(MARIO_FLAG_IN_ANY_WATER) != 0;
+			if (inWater)
 				slipFr = mDeParams.mInWaterSlip.get();
 		}
 	}
 
-	f32 mult   = (0.02f * (mIntendedMag * 0.03125f * cs)) + slipFr;
+	f32 mult   = (0.02f * (mIntendedMag / 32.0f * cs)) + slipFr;
 	f32 oldMag = MsSqrtf(mSlideVelX * mSlideVelX + mSlideVelZ * mSlideVelZ);
 
 	mSlideVelX
-	    += sn * (mSlideVelZ * (mIntendedMag * 0.03125f)) * getSlideStickMult();
+	    += sn * (mSlideVelZ * (mIntendedMag / 32.0f)) * getSlideStickMult();
 	mSlideVelZ = -(
-	    (sn * (mSlideVelX * (mIntendedMag * 0.03125f)) * getSlideStickMult())
+	    (sn * (mSlideVelX * (mIntendedMag / 32.0f)) * getSlideStickMult())
 	    - mSlideVelZ);
 
 	f32 newMag = MsSqrtf(mSlideVelX * mSlideVelX + mSlideVelZ * mSlideVelZ);
