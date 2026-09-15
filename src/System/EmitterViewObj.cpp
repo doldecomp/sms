@@ -602,45 +602,43 @@ void SMSSetEmitterPolColor(JPABaseEmitter* param_1, int param_2)
 	if (param_2 < 0 || param_2 > 7)
 		return;
 
-	int value;
-
 	if (param_2 == 6) {
 		switch (gpMarDirector->mMap) {
 		case 1:
 			if (gpMarDirector->unk7D == 5) {
-				value = 3;
+				param_2 = 3;
 				break;
 			}
 			// FALLTHROUGH
 
 		case 2:
 		case 55:
-			value = 2;
+			param_2 = 2;
 			break;
 
 		case 9:
 		case 0:
 		case 57:
-			value = 1;
+			param_2 = 1;
 			break;
 
 		case 3:
-			value = 3;
+			param_2 = 3;
 			break;
 
 		case 8:
-			value = 4;
+			param_2 = 4;
 			break;
 
 		case 6:
 		case 7:
 		case 14:
 		case 56:
-			value = 5;
+			param_2 = 5;
 			break;
 
 		default:
-			value = 0;
+			param_2 = 0;
 			break;
 		}
 	}
@@ -657,9 +655,9 @@ void SMSSetEmitterPolColor(JPABaseEmitter* param_1, int param_2)
 		{ 0xB7, 0x24, 0x08, 0xFF }, { 0x00, 0x73, 0x6C, 0xFF },
 	};
 
-	param_1->setGlobalPrmColor(prmarray[value].r, prmarray[value].g,
-	                           prmarray[value].b);
+	param_1->setGlobalPrmColor(prmarray[param_2].r, prmarray[param_2].g,
+	                           prmarray[param_2].b);
 
-	param_1->setGlobalEnvColor(envarray[value].r, envarray[value].g,
-	                           envarray[value].b);
+	param_1->setGlobalEnvColor(envarray[param_2].r, envarray[param_2].g,
+	                           envarray[param_2].b);
 }
