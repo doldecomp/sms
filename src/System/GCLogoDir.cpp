@@ -210,11 +210,10 @@ bool TGCLogoDir::direct_nlogo()
 						mProgSelect->unkC = 0;
 						bVar1             = true;
 					}
-				} else {
-					unk44 = 0;
 				}
 			}
 
+			unk44 = bVar1;
 			if (bVar1) {
 				mLogoShowTimer = 0;
 				nextState      = 3;
@@ -223,7 +222,7 @@ bool TGCLogoDir::direct_nlogo()
 		break;
 
 	case 3:
-		if (mProgSelect->unkC.check(0xffff)) {
+		if (mProgSelect->mHideTextBoxes) {
 			mLogoShowTimer = 0;
 			nextState      = 4;
 		}
