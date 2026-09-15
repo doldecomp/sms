@@ -81,7 +81,8 @@ void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
 		switch (mActorType) {
 		case 0x4000018: {
 			bool bVar8 = checkUnk1D8(UNK1D8_FLAG_UNK1);
-			if (MActor* mactor = unk168->getPartsMActor(0, 0)) {
+			MActor* mactor = unk168->getPartsMActor(0, 0);
+			if (mactor != nullptr) {
 				int iVar7;
 				switch (param_1) {
 				case NPC_ANM_KIND_UNK5:
@@ -102,7 +103,8 @@ void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
 					mactor->setBckFromIndex(iVar7);
 			}
 
-			if (MActor* mactor = unk168->getPartsMActor(3, 0)) {
+			mactor = unk168->getPartsMActor(3, 0);
+			if (mactor != nullptr) {
 				int iVar7;
 
 				switch (param_1) {
@@ -133,7 +135,8 @@ void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
 					mactor->setBckFromIndex(iVar7);
 			}
 
-			if (MActor* mactor = unk168->getPartsMActor(4, 0)) {
+			mactor = unk168->getPartsMActor(4, 0);
+			if (mactor != nullptr) {
 				int iVar7;
 				switch (param_1) {
 				case NPC_ANM_KIND_UNK5:
