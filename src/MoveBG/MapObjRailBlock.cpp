@@ -377,7 +377,99 @@ void TRailBlock::calcRootMatrix()
 	model->setBaseScale(mScaling);
 }
 
-void TRailBlock::control() { }
+void TRailBlock::control()
+{
+	TMapObjBase::control();
+	mDamageRadius = 300.0f;
+	mDamageHeight = 50.0f;
+	calcEntryRadius();
+	checkMarioRiding();
+
+	if (!calcRecycle() && !checkRailFlag(2)) {
+		if (moveToNextNode(getUnk144())) {
+			TGraphWeb* graph = unk138->getGraph();
+			TGraphNode& oldNode
+			    = graph->getGraphNode(unk138->getCurGraphIndex());
+			if (oldNode.getRailNode()->mFlags & 0x1000) {
+				unk14A = 180;
+				unk148 = 2;
+			}
+
+			unk138->moveToShortestNext();
+			u16 speed = unk138->getCurrent().getRailNode()->mSpeed;
+			if (speed != 0xffff)
+				unk144 = speed * 0.01f;
+			resetStep(getUnk144());
+
+			if (checkRailFlag(2)) {
+				MTXIdentity(unk174);
+				unk168.zero();
+			} else {
+				unk168 = unk15C;
+				Mtx mtx;
+				MsMtxSetRotRPH(mtx, unk168.x, unk168.y, unk168.z);
+				MTXConcat(mtx, unk174, unk174);
+				unk168.zero();
+
+				JGeometry::TVec3<f32> x;
+				x.x = unk174[0][0];
+				x.y = unk174[1][0];
+				x.z = unk174[2][0];
+				JGeometry::TVec3<f32> y;
+				y.x = unk174[0][1];
+				y.y = unk174[1][1];
+				y.z = unk174[2][1];
+				JGeometry::TVec3<f32> z;
+				z.x = unk174[0][2];
+				z.y = unk174[1][2];
+				z.z = unk174[2][2];
+				VECNormalize(&x, &x);
+				VECNormalize(&y, &y);
+				VECNormalize(&z, &z);
+				x.x -= 1.0f;
+				y.y -= 1.0f;
+				z.z -= 1.0f;
+				if (fabsf(x.x) < 0.02f && fabsf(x.y) < 0.02f
+				    && fabsf(x.z) < 0.02f && fabsf(y.x) < 0.02f
+				    && fabsf(y.y) < 0.02f && fabsf(y.z) < 0.02f
+				    && fabsf(z.x) < 0.02f && fabsf(z.y) < 0.02f
+				    && fabsf(z.z) < 0.02f)
+					MTXIdentity(unk174);
+			}
+
+			TGraphNode& node
+			    = graph->getGraphNode(unk138->getCurGraphIndex());
+			JGeometry::TVec3<f32> point;
+			node.getPoint(&point);
+			f32 step = VECDistance(&mPosition, &point) / unk144;
+			unk15C.x = node.getRailNode()->mPitch;
+			unk15C.y = node.getRailNode()->mYaw;
+			unk15C.z = node.getRailNode()->mRoll;
+			unk150 = (unk15C.x
+			          - MsWrap(unk168.x, unk15C.x - 180.0f,
+			                   unk15C.x + 180.0f))
+			         / step;
+			unk154 = (unk15C.y
+			          - MsWrap(unk168.y, unk15C.y - 180.0f,
+			                   unk15C.y + 180.0f))
+			         / step;
+			unk158 = (unk15C.z
+			          - MsWrap(unk168.z, unk15C.z - 180.0f,
+			                   unk15C.z + 180.0f))
+			         / step;
+		} else {
+			mRotation.x += unk150;
+			mRotation.y += unk154;
+			mRotation.z += unk158;
+			unk168.x += unk150;
+			unk168.y += unk154;
+			unk168.z += unk158;
+			mRotation.x = MsWrap(mRotation.x, 0.0f, 360.0f);
+			mRotation.y = MsWrap(mRotation.y, 0.0f, 360.0f);
+			mRotation.z = MsWrap(mRotation.z, 0.0f, 360.0f);
+		}
+	}
+}
 
 TRollBlock::TRollBlock(const char* name)
     : TMapObjBase(name)
