@@ -292,7 +292,7 @@ static void evIsDemoMode(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
 	int result = 0;
-	if (gpMarDirector->isDemoModeNow())
+	if (gpMarDirector->isDemoModeNow() != 0)
 		result = 1;
 	interp->push(result);
 }
