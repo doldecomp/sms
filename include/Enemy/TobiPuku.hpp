@@ -15,7 +15,8 @@ public:
 	/* 0x32C */ TParamRT<int> mBoundMax;
 	/* 0x340 */ TParamRT<f32> mBoundDamp;
 	/* 0x354 */ TParamRT<int> mPichiTime;
-	/* 0x368 */ u8 unk368[0x390 - 0x368];
+	/* 0x368 */ TParamRT<f32> mFlyGravity;
+	/* 0x37C */ u8 unk37C[0x390 - 0x37C];
 };
 
 class TTobiPukuLaunchPad;
@@ -55,6 +56,10 @@ public:
 	virtual void swimEffect();
 	virtual bool isReachedToGoalXZ();
 	virtual void hitWater();
+	virtual const char** getBasNameTable() const;
+	virtual f32 getGravityY() const;
+	void genEventCoin();
+
 
 	// Overrides the base slot at 0x154.
 	virtual void setDeadAnm();
@@ -128,6 +133,10 @@ public:
 	virtual void swimEffect();
 	virtual bool isReachedToGoalXZ();
 	virtual void hitWater();
+	virtual const char** getBasNameTable() const;
+	virtual f32 getGravityY() const;
+	void genEventCoin();
+
 
 	// Overrides the base slot at 0x154.
 	virtual void setDeadAnm();

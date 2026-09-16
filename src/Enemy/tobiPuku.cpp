@@ -12,6 +12,26 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+static const char* pukupuku_bastable[] = {
+	nullptr,
+	"/scene/pukupuku/bas/pukupuku_death.bas",
+	"/scene/pukupuku/bas/pukupuku_down_air.bas",
+	"/scene/pukupuku/bas/pukupuku_down_land.bas",
+	nullptr,
+	"/scene/pukupuku/bas/pukupuku_fall_end_land.bas",
+	nullptr,
+};
+
+static const char* moepuku_bastable[] = {
+	nullptr,
+	nullptr,
+	"/scene/moepuku/bas/moepuku_down_air.bas",
+	"/scene/moepuku/bas/moepuku_down_land.bas",
+	nullptr,
+	"/scene/moepuku/bas/moepuku_fall_end_land.bas",
+	nullptr,
+};
+
 // Animation slots shared by both variants.
 enum {
 	PUKU_ANM_ATTACK        = 0,
@@ -33,6 +53,7 @@ TTobiPukuParams::TTobiPukuParams(const char* prm)
     , PARAM_INIT(mBoundMax, 3)
     , PARAM_INIT(mBoundDamp, 0.5f)
     , PARAM_INIT(mPichiTime, 60)
+    , PARAM_INIT(mFlyGravity, 0.5f)
 {
 }
 
@@ -553,3 +574,23 @@ DEFINE_NERVE(TNerveTobiPukuGenerate, TLiveActor)
 	}
 	return FALSE;
 }
+
+const char** TTobiPuku::getBasNameTable() const { return pukupuku_bastable; }
+
+const char** TMoePuku::getBasNameTable() const { return moepuku_bastable; }
+
+void TMoePuku::swimEffect() { }
+
+BOOL TTobiPuku::isInhibitedForceMove()
+{
+	return checkLiveFlag(LIVE_FLAG_AIRBORNE) ? TRUE : FALSE;
+}
+
+f32 TTobiPuku::getGravityY() const
+{
+	if (unk194)
+		return unk19C->mFlyGravity.get();
+	return mGravity;
+}
+
+void TTobiPuku::genEventCoin() { isDeadBck(); }
