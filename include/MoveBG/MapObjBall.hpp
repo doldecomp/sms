@@ -101,6 +101,10 @@ class TRandomFruit : public TResetFruit {
 public:
 	TRandomFruit(const char* name = "ランダムフルーツ");
 	virtual void initMapObj();
+
+	// initMapObj picks one of four fruit model names into here and points
+	// unkF4 at it.
+	/* 0x1A8 */ char mModelName[0x20];
 };
 
 class TCoverFruit : public TMapObjBase {
@@ -130,6 +134,10 @@ public:
 	virtual void touchWaterSurface();
 
 	void startEvent();
+
+	/* 0x198 */ int unk198;
+	/* 0x19C */ int unk19C;
+	/* 0x1A0 */ f32 unk1A0;
 };
 
 #endif

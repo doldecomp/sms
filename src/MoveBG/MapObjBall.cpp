@@ -1,5 +1,8 @@
 #include <MoveBG/MapObjBall.hpp>
 #include <MarioUtil/PacketUtil.hpp>
+#include <System/FlagManager.hpp>
+#include <stdio.h>
+#include <string.h>
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
 #include <Map/MapCollisionData.hpp>
@@ -595,4 +598,68 @@ TResetFruit::TResetFruit(const char* name)
 	unk19C.g = 255;
 	unk19C.b = 255;
 	unk19C.a = 255;
+}
+
+void TRandomFruit::initMapObj()
+{
+	switch ((int)(5.0f * MsRandF())) {
+	case 0:
+		snprintf(mModelName, sizeof(mModelName), "FruitCoconut");
+		break;
+	case 1:
+		snprintf(mModelName, sizeof(mModelName), "FruitDurian");
+		break;
+	case 2:
+		snprintf(mModelName, sizeof(mModelName), "FruitPapaya");
+		break;
+	case 3:
+		snprintf(mModelName, sizeof(mModelName), "FruitPine");
+		break;
+	case 4:
+	case 5:
+	default:
+		snprintf(mModelName, sizeof(mModelName), "FruitPine");
+		break;
+	}
+
+	unkF4 = mModelName;
+	TMapObjBall::initMapObj();
+	SMS_InitPacket_OneTevColor(getModel(), 0, GX_TEVREG0, &unk19C);
+}
+
+TRandomFruit::TRandomFruit(const char* name)
+    : TResetFruit(name)
+{
+	memset(mModelName, 0, sizeof(mModelName));
+}
+
+void TCoverFruit::loadAfter()
+{
+	TMapObjBase::loadAfter();
+	if (TFlagManager::smInstance->getBool(0x1038B))
+		makeObjDead();
+}
+
+void TBigWatermelon::checkWallCollision(JGeometry::TVec3<f32>* param_1)
+{
+	TMapObjGeneral::checkWallCollision(param_1);
+}
+
+void TBigWatermelon::touchGround(JGeometry::TVec3<f32>* param_1)
+{
+	TMapObjBall::touchGround(param_1);
+}
+
+void TBigWatermelon::touchWall(JGeometry::TVec3<f32>* param_1,
+                               TBGWallCheckRecord* param_2)
+{
+	TMapObjBall::touchWall(param_1, param_2);
+}
+
+TBigWatermelon::TBigWatermelon(const char* name)
+    : TMapObjBall(name)
+{
+	unk198 = 0;
+	unk19C = 0;
+	unk1A0 = 0.0f;
 }
