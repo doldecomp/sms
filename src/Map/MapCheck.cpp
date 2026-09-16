@@ -434,8 +434,10 @@ static bool LineInLineXZ(const JGeometry::TVec2<f32>& a0,
                          const JGeometry::TVec2<f32>& b0,
                          const JGeometry::TVec2<f32>& b1)
 {
-	if ((b0 - a0).cross(a1 - a0) * (b1 - a0).cross(a1 - a0) <= 0.0f
-	    && (a0 - b0).cross(b1 - b0) * (a1 - b0).cross(b1 - b0) <= 0.0f)
+	f32 value
+	    = (b0 - a0).cross(a1 - a0) * (b1 - a0).cross(a1 - a0);
+	if (value <= 0.0f
+	    && (a1 - b0).cross(b1 - b0) * (a0 - b0).cross(b1 - b0) <= 0.0f)
 		return true;
 
 	return false;
@@ -445,8 +447,8 @@ const TBGCheckData* TMapCollisionData::intersectLine(
     const JGeometry::TVec3<f32>& start, const JGeometry::TVec3<f32>& end,
     bool front_only, JGeometry::TVec3<f32>* hit_pos) const
 {
-	JGeometry::TVec2<int> start2d(start.x, start.z);
 	JGeometry::TVec2<int> end2d(end.x, end.z);
+	JGeometry::TVec2<int> start2d(start.x, start.z);
 
 	int minXi = start2d.x;
 	int maxXi = end2d.x;
@@ -463,9 +465,9 @@ const TBGCheckData* TMapCollisionData::intersectLine(
 	}
 
 	int minGridZ = (int)((minZi + mGridExtentY) * (1.0f / 1024));
-	int minGridX = (int)((minXi + mGridExtentX) * (1.0f / 1024));
-	int maxGridX = (int)((maxXi + mGridExtentX) * (1.0f / 1024));
 	int maxGridZ = (int)((maxZi + mGridExtentY) * (1.0f / 1024));
+	int maxGridX = (int)((maxXi + mGridExtentX) * (1.0f / 1024));
+	int minGridX = (int)((minXi + mGridExtentX) * (1.0f / 1024));
 
 	for (int gridZ = minGridZ; gridZ <= maxGridZ; ++gridZ) {
 		for (int gridX = minGridX; gridX <= maxGridX; ++gridX) {
