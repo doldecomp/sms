@@ -55,15 +55,14 @@ TCameraShake::TCamShakeInfo* TCameraShake::getUseShakeData_()
 void TCameraShake::setShakeAngleOne_(TCameraShake::TCamShakeAngle* angle,
                                      f32 amp, s16 vel, u16 duration, f32 scale)
 {
-	f32 a = amp * scale;
-	s16 v = vel;
+	amp *= scale;
 	if (scale < 0.0f) {
-		a = -a;
-		v = -v;
+		amp = -amp;
+		vel = -vel;
 	}
-	angle->mAmp = a;
-	angle->mDec = a * (1.0f / (f32)duration);
-	angle->mVel = v;
+	angle->mAmp = amp;
+	angle->mDec = amp * (1.0f / (f32)duration);
+	angle->mVel = vel;
 }
 
 void TCameraShake::setShakeAngleAll_(TCameraShake::TCamShakeInfo* info,
