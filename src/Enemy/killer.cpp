@@ -1,18 +1,7 @@
-class TKiller {
-public:
-	static unsigned char mSerialBomb;
-	static unsigned char mTrampleDie;
-};
+#include <Enemy/Killer.hpp>
 
-class TFlyEnemy {
-public:
-	static float mTestSp;
-	static int mInvalidTime;
-	static float mTestMarioSpMax;
-};
-
-unsigned char TKiller::mSerialBomb = 1;
-unsigned char TKiller::mTrampleDie = 1;
-float TFlyEnemy::mTestSp = 2.5f;
-int TFlyEnemy::mInvalidTime = 200;
-float TFlyEnemy::mTestMarioSpMax = 12.0f;
+u8 TKiller::mSerialBomb = 1;
+u8 TKiller::mTrampleDie = 1;
+f32 TFlyEnemy::mTestSp = 2.5f;
+s32 TFlyEnemy::mInvalidTime = 200;
+f32 TFlyEnemy::mTestMarioSpMax = 12.0f;
