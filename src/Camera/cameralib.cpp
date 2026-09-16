@@ -380,11 +380,12 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
 		// [ cosY, 0, sinY]   [1,   0,     0 ]
 		// [   0,  1,   0 ] * [0, cosX, -sinX]
 		// [-sinY, 0, cosY]   [0, sinX,  cosX]
-		local_68.set(local_68.x * cosY
-		                 + (local_68.y * sinX + local_68.z * cosX) * sinY,
-		             local_68.y * cosX - local_68.z * sinX,
-		             -local_68.x * sinY
-		                 + (local_68.y * sinX + local_68.z * cosX) * cosY);
+		f32 y = local_68.y;
+		local_68.y = y * cosX - local_68.z * sinX;
+		local_68.z = y * sinX + local_68.z * cosX;
+		f32 x = local_68.x;
+		local_68.x = x * cosY + local_68.z * sinY;
+		local_68.z = -x * sinY + local_68.z * cosY;
 
 		local_e4.identity33();
 		local_e4.setRotate(local_80, fVar16.z);
@@ -398,11 +399,12 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
 		f32 sinY = JMASSin(out_euler->y);
 		f32 cosY = JMASCos(out_euler->y);
 
-		local_74.set(local_74.x * cosY
-		                 + (local_74.y * sinX + local_74.z * cosX) * sinY,
-		             local_74.y * cosX - local_74.z * sinX,
-		             -local_74.x * sinY
-		                 + (local_74.y * sinX + local_74.z * cosX) * cosY);
+		f32 y = local_74.y;
+		local_74.y = y * cosX - local_74.z * sinX;
+		local_74.z = y * sinX + local_74.z * cosX;
+		f32 x = local_74.x;
+		local_74.x = x * cosY + local_74.z * sinY;
+		local_74.z = -x * sinY + local_74.z * cosY;
 
 		local_118.identity33();
 		local_118.setRotate(local_80, fVar16.z);
