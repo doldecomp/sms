@@ -8,6 +8,7 @@
 #include <Camera/CubeManagerBase.hpp>
 #include <Enemy/PoiHana.hpp>
 #include <MoveBG/Item.hpp>
+#include <JSystem/JGeometry.hpp>
 #include <string.h>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <stdio.h>
@@ -1346,4 +1347,62 @@ BOOL TResetFruit::receiveMessage(THitActor* sender, u32 message)
 
 	touchActor(sender);
 	return TMapObjBall::receiveMessage(sender, message);
+}
+
+void TMapObjBall::calcCurrentMtx()
+{
+	TPosition3f rot;
+	rot.identity();
+
+	// Settle a nearly-stopped ball on flat ground so it does not creep.
+	if (abs(JGeometry::TVec3<f32>(mVelocity).x)
+	    < mMapObjData->mPhysical->unk4->unkC) {
+		if (abs(JGeometry::TVec3<f32>(mVelocity).z)
+		        < mMapObjData->mPhysical->unk4->unkC
+		    && mGroundPlane->mNormal.y == 1.0f) {
+			mVelocity.x = 0.0f;
+			mVelocity.z = 0.0f;
+		}
+	}
+
+	if (abs(JGeometry::TVec3<f32>(mVelocity).x)
+	        > mMapObjData->mPhysical->unk4->unkC
+	    || abs(JGeometry::TVec3<f32>(mVelocity).z)
+	        > mMapObjData->mPhysical->unk4->unkC) {
+		// Roll about the horizontal axis square to the direction of travel,
+		// by the arc length the ball has covered over its own radius.
+		JGeometry::TVec3<f32> axis;
+		getVerticalVecToTargetXZ(
+		    mPosition.x + JGeometry::TVec3<f32>(mVelocity).x,
+		    mPosition.z + JGeometry::TVec3<f32>(mVelocity).z, &axis);
+
+		JGeometry::TVec3<f32> vel(mVelocity);
+		f32 rolled = 2.0f
+		    * (JGeometry::TUtil<f32>::sqrt(
+		           JGeometry::TVec3<f32>(vel).x * JGeometry::TVec3<f32>(vel).x
+		           + JGeometry::TVec3<f32>(vel).z
+		               * JGeometry::TVec3<f32>(vel).z)
+		       / mBodyRadius);
+
+		rot.setRotate(axis, rolled);
+	}
+
+	TPosition3f cur;
+	cur.set(getModel()->getAnmMtx(0));
+	cur.ref(0, 3) = 0.0f;
+	cur.ref(1, 3) = 0.0f;
+	cur.ref(2, 3) = 0.0f;
+	MTXConcat(rot, cur, rot);
+
+	rot.ref(0, 3) = mPosition.x;
+	rot.ref(1, 3) = mPosition.y + mBodyRadius;
+	rot.ref(2, 3) = mPosition.z;
+
+	if (isActorType(0x40000394) && rot.at(1, 1) > 0.0f)
+		rot.ref(1, 3) = -(50.0f * rot.at(1, 1) - rot.at(1, 3));
+
+	if (isActorType(0x40000392))
+		rot.ref(1, 3) = -(10.0f * (1.0f - rot.at(1, 1)) - rot.at(1, 3));
+
+	MTXCopy(rot, getModel()->getAnmMtx(0));
 }
