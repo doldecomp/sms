@@ -88,27 +88,29 @@ void TMapWire::drawLower() const
 
 void TMapWire::drawUpper() const
 {
-	f32 xOffset = mDrawAxes.x * mDrawWidth;
-	f32 zOffset = mDrawAxes.y * mDrawWidth;
+	JGeometry::TVec2<f32> drawOffset = mDrawAxes;
+	drawOffset.scale(mDrawWidth);
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, (mNumActiveMapWirePoints + 2) * 2);
 
-	GXPosition3f32(mStartPoint.x + xOffset, mStartPoint.y,
-	               mStartPoint.z + zOffset);
-	GXPosition3f32(mStartPoint.x - xOffset, mStartPoint.y,
-	               mStartPoint.z - zOffset);
+	GXPosition3f32(mStartPoint.x + drawOffset.x, mStartPoint.y,
+	               mStartPoint.z + drawOffset.y);
+	GXPosition3f32(mStartPoint.x - drawOffset.x, mStartPoint.y,
+	               mStartPoint.z - drawOffset.y);
 
 	for (int index = 0; index < mNumActiveMapWirePoints; index++) {
-		GXPosition3f32(mMapWirePoints[index].mPosition.x + xOffset,
+		GXPosition3f32(mMapWirePoints[index].mPosition.x + drawOffset.x,
 		               mMapWirePoints[index].mPosition.y,
-		               mMapWirePoints[index].mPosition.z + zOffset);
-		GXPosition3f32(mMapWirePoints[index].mPosition.x - xOffset,
+		               mMapWirePoints[index].mPosition.z + drawOffset.y);
+		GXPosition3f32(mMapWirePoints[index].mPosition.x - drawOffset.x,
 		               mMapWirePoints[index].mPosition.y,
-		               mMapWirePoints[index].mPosition.z - zOffset);
+		               mMapWirePoints[index].mPosition.z - drawOffset.y);
 	}
 
-	GXPosition3f32(mEndPoint.x + xOffset, mEndPoint.y, mEndPoint.z + zOffset);
-	GXPosition3f32(mEndPoint.x - xOffset, mEndPoint.y, mEndPoint.z - zOffset);
+	GXPosition3f32(mEndPoint.x + drawOffset.x, mEndPoint.y,
+	               mEndPoint.z + drawOffset.y);
+	GXPosition3f32(mEndPoint.x - drawOffset.x, mEndPoint.y,
+	               mEndPoint.z - drawOffset.y);
 
 	GXEnd();
 }
