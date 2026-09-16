@@ -476,11 +476,10 @@ void TMareEventDepressWall::initCommon()
 	                     ->getJointModel(0)
 	                     ->getModelData()
 	                     ->getJointNodePointer(0)
-	                     ->getChild()
-	                     ->getYounger()
 	                     ->getChild();
 
-	int skipCount = 0x43 - (unk14 + (unk10 - 1));
+	int skipCount = 0x43 - ((unk10 - 1) + unk14);
+	joint = joint->getYounger()->getChild();
 	for (int i = 0; i < skipCount; ++i)
 		joint = joint->getYounger();
 
