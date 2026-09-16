@@ -232,20 +232,22 @@ void TMapWireManager::load(JSUMemoryInputStream& stream)
 	stream >> TMapWire::mDrawWidth;
 	stream >> TMapWire::mDrawHeight;
 
-	s32 val;
-	stream >> val;
-	mUpperSurface.r = val;
-	stream >> val;
-	mUpperSurface.g = val;
-	stream >> val;
-	mUpperSurface.b = val;
+	s32 r;
+	s32 g;
+	s32 b;
+	stream >> r;
+	mUpperSurface.r = r;
+	stream >> g;
+	mUpperSurface.g = g;
+	stream >> b;
+	mUpperSurface.b = b;
 
-	stream >> val;
-	mLowerSurface.r = val;
-	stream >> val;
-	mLowerSurface.g = val;
-	stream >> val;
-	mLowerSurface.b = val;
+	stream >> r;
+	mLowerSurface.r = r;
+	stream >> g;
+	mLowerSurface.g = g;
+	stream >> b;
+	mLowerSurface.b = b;
 
 	unk18 = new TMapWire*[unk14];
 	unk24 = new TMapWireActorManager*[unk20];
