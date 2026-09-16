@@ -1458,6 +1458,21 @@ and inlined). Two hypotheses I have **not** been able to confirm:
   APPEARING/BREAKING arm really is a pasted copy rather than a call, and the
   `length()` sites might call something other than `length()`.
 
+Two later measurements sharpen this. First, the map lists exactly which
+`JGeometry::TVec3<f>` members ever exist as weak symbols -- `add`, `sub`,
+`dot`, `div`, `negate`, `scale`, `scaleAdd`, `setLength`, `setMax`, `setMin`,
+`set(const Vec&)`, three operators and the constructors, plus `TUtil<f>`'s
+`sqrt`, `inv_sqrt`, `mod` and `one` -- and never `length`, `squared`,
+`normalize`, `isZero` or `set(x, y, z)`. Second, and more telling: our build
+emits a weak `sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>` in **35**
+objects, the original in **one** (`Animal/BeeHive.o`), while the original
+*calls* it out of line from `tobiPuku`, `chuuhana` and others. So the
+original both declined to inline it at those sites and declined to emit a
+local copy, which no header-side arrangement I can write reproduces: moving
+those definitions out of the class body with `inline` changed nothing at all
+(`changes_all` empty). Whatever the cause, it is not source shape, and the
+same gap will show up wherever one of the listed members is called.
+
 Do not "fix" these with `#pragma dont_inline` or by pasting bodies; the
 functions are structurally right and are left at their current percentages
 (`hold` 48%, `touchWall` 75%, `TBigWatermelon::touchActor` 61%,

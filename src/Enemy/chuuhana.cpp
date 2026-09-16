@@ -13,6 +13,7 @@
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
 #include <Player/MarioAccess.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <Enemy/PathNode.hpp>
 #include <System/Particles.hpp>
 #include <MSound/MSound.hpp>
@@ -56,6 +57,63 @@ u8 TChuuHana::mDamageSw              = 1;
 static TChuuHana* gpCurChuuHana;
 
 static int ChuuHanaBodyCallback(J3DNode* node, int param);
+
+// Rolls the body joint about the roll axis while the Roll nerve is active.
+static int ChuuHanaBodyCallback(J3DNode* node, int param)
+{
+	if (param != 0)
+		return true;
+	if (gpCurChuuHana == nullptr)
+		return true;
+	if (gpCurChuuHana->mSpine->getCurrentNerve()
+	    != &TNerveChuuHanaRoll::theNerve())
+		return true;
+
+	J3DJoint* joint = (J3DJoint*)node;
+	MtxPtr anmMtx = gpCurChuuHana->getModel()->getAnmMtx(joint->getJntNo());
+
+	Mtx ident;
+	MTXIdentity(ident);
+
+	// The roll axis is the world-space axis at 0x204 with Y dropped, turned
+	// into joint space by projecting onto the joint's own rows.
+	JGeometry::TVec3<f32> axis(gpCurChuuHana->unk204.x, 0.0f,
+	                           gpCurChuuHana->unk204.z);
+	if (axis.x == 0.0f && axis.z == 0.0f)
+		axis.x = 0.001f;
+
+	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
+	JGeometry::TVec3<f32> side;
+	VECCrossProduct(&up, &axis, &side);
+
+	JGeometry::TVec3<f32> local;
+	f32 lenZ = anmMtx[2][0] * anmMtx[2][0] + anmMtx[2][1] * anmMtx[2][1]
+	    + anmMtx[2][2] * anmMtx[2][2];
+	local.z = lenZ == 0.0f ? 0.0f
+	                       : (side.x * anmMtx[2][0] + side.y * anmMtx[2][1]
+	                          + side.z * anmMtx[2][2])
+	                             / lenZ;
+	f32 lenY = anmMtx[1][0] * anmMtx[1][0] + anmMtx[1][1] * anmMtx[1][1]
+	    + anmMtx[1][2] * anmMtx[1][2];
+	local.y = lenY == 0.0f ? 0.0f
+	                       : (side.x * anmMtx[1][0] + side.y * anmMtx[1][1]
+	                          + side.z * anmMtx[1][2])
+	                             / lenY;
+	f32 lenX = anmMtx[0][0] * anmMtx[0][0] + anmMtx[0][1] * anmMtx[0][1]
+	    + anmMtx[0][2] * anmMtx[0][2];
+	local.x = lenX == 0.0f ? 0.0f
+	                       : (side.x * anmMtx[0][0] + side.y * anmMtx[0][1]
+	                          + side.z * anmMtx[0][2])
+	                             / lenX;
+
+	Mtx roll;
+	MTXRotAxisRad(roll, &local, (3.1415927f / 180.0f) * gpCurChuuHana->unk210);
+	MTXConcat(anmMtx, roll, anmMtx);
+	MTXConcat(anmMtx, ident, anmMtx);
+	MTXConcat(J3DSys::mCurrentMtx, roll, J3DSys::mCurrentMtx);
+	MTXConcat(J3DSys::mCurrentMtx, ident, J3DSys::mCurrentMtx);
+	return true;
+}
 
 TChuuHanaSaveLoadParams::TChuuHanaSaveLoadParams(const char* prm)
     : TWalkerEnemyParams(prm)
@@ -295,6 +353,103 @@ void TChuuHana::bind()
 	mLinearVelocity = moved;
 }
 
+void TChuuHana::moveObject()
+{
+	TWalkerEnemy::moveObject();
+
+	// Track the height range over the last mSLCheckFrame frames; a big
+	// enough swing means it is being stretched and must react.
+	if (unk1A0 == 0) {
+		unk19C = mPosition.y;
+		unk198 = mPosition.y;
+		unk1A8 = 0.0f;
+	} else {
+		unk1A0++;
+		if (unk198 > mPosition.y)
+			unk198 = mPosition.y;
+		if (unk19C < mPosition.y)
+			unk19C = mPosition.y;
+
+		if (unk1A0 > unk1B4->mSLCheckFrame.get()) {
+			f32 swing = unk19C - unk198;
+			if (unk1A8 < swing)
+				unk1A8 = swing;
+
+			if (mPosition.y < unk19C) {
+				unk1A8 /= (f32)unk1A0;
+				checkStretchType();
+			} else {
+				if (mSpine->getCurrentNerve()
+				    == &TNerveChuuHanaKeepBalance::theNerve())
+					setBckAnm(7);
+				unk1A0 = 1;
+				unk19C = mPosition.y;
+				unk198 = mPosition.y;
+			}
+		}
+	}
+
+	// A grounded roll rides the ground normal.
+	if (mSpine->getCurrentNerve() == &TNerveChuuHanaRoll::theNerve()) {
+		if (!checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
+			f32 pow = unk1B4->mSLGetGroundPow.get();
+			JGeometry::TVec3<f32> push(pow * mGroundPlane->mNormal.x, 0.0f,
+			                           pow * mGroundPlane->mNormal.z);
+			JGeometry::TVec3<f32> vel(mVelocity);
+			VECAdd(&vel, &push, &vel);
+			vel.y     = 0.0f;
+			mVelocity = vel;
+			mPosition.y += 5.0f;
+			onLiveFlag(LIVE_FLAG_AIRBORNE);
+		}
+	}
+
+	unk194 = MsClamp(unk194 - 0.1f, 0.0f, 1.0f);
+	mMActor->setMotionBlendRatioForBck(unk194);
+
+	unk1EC = mLinearVelocity;
+
+	// Standing on nothing, or on something that is not its mirror: die.
+	if (!checkLiveFlag(LIVE_FLAG_AIRBORNE)
+	    && (mGroundPlane->getActor() == nullptr
+	        || mGroundPlane->getActor() != unk218))
+		kill();
+}
+
+bool TChuuHana::isCollidMove(THitActor* param_1)
+{
+	if (param_1->isActorType(0x10000016)) {
+		TChuuHana* other = (TChuuHana*)param_1;
+		if (other->mSpine->getCurrentNerve() == &TNerveChuuHanaRoll::theNerve()) {
+			// Hit by a rolling one while walking: start rolling too.
+			if (mSpine->getCurrentNerve()
+			    == &TNerveChuuHanaWalkOnPanel::theNerve())
+				mSpine->pushNerve(&TNerveChuuHanaRoll::theNerve());
+		} else if (unk1B2 == 0) {
+			// Bumping a higher-numbered sibling: one time in four, wander.
+			if (mSpine->getCurrentNerve() != &TNerveChuuHanaAttack::theNerve()
+			    && other->mInstanceIndex > mInstanceIndex) {
+				TMsRange<int> chance(0, 100);
+				if (chance.rand() % 4 == 0) {
+					unk1A4 = mCheckOnPanelTime;
+
+					TMsRange<int> range(0, unk124->unk0->unk8);
+					JGeometry::TVec3<f32> point;
+					unk124->unk0->unk0[range.rand()].getPoint((Vec*)&point);
+
+					TPathNode goal(point);
+					unkF4  = goal;
+					unk104 = goal;
+					unk114.clear();
+					unk1B2 = 1;
+				}
+			}
+		}
+	}
+
+	return mSpine->getCurrentNerve() != &TNerveChuuHanaObject::theNerve();
+}
+
 void TChuuHana::calcRootMatrix()
 {
 	gpCurChuuHana = this;
@@ -332,6 +487,73 @@ void TChuuHana::setBckAnm(int index)
 	mMActor->setMotionBlendRatioForBck(unk194);
 	mMActor->setBckOldMotionBlendAnmPtr(mMActor->getBckAnmPtr());
 	TSmallEnemy::setBckAnm(index);
+}
+
+void TChuuHana::behaveToWater(THitActor* param_1)
+{
+	unk165 = true;
+	unk224 = 0;
+	((TChuuHanaManager*)mManager)->unk68++;
+
+	// Sprayed while rolling: shove it away from Mario and pop it up.
+	if (mSpine->getCurrentNerve() == &TNerveChuuHanaRoll::theNerve()) {
+		JGeometry::TVec3<f32> away(mPosition.x - SMS_GetMarioPos().x, 0.0f,
+		                           mPosition.z - SMS_GetMarioPos().z);
+		MsVECNormalize(away, away);
+		away.scale(unk1B4->mSLGetWaterPow.get());
+
+		JGeometry::TVec3<f32> vel(mVelocity);
+		VECAdd(&vel, &away, &vel);
+		vel.y     = 0.0f;
+		mVelocity = vel;
+		onLiveFlag(LIVE_FLAG_AIRBORNE);
+		mPosition.y += 10.0f;
+	}
+
+	if (mSpine->getCurrentNerve() != &TNerveChuuHanaWalkOnPanel::theNerve()
+	    && mSpine->getCurrentNerve() != &TNerveChuuHanaAttack::theNerve()
+	    && mSpine->getCurrentNerve() != &TNerveChuuHanaWait::theNerve()) {
+		if (mNewSw) {
+			if (mSpine->getCurrentNerve() == &TNerveChuuHanaStick::theNerve()) {
+			}
+		}
+		if (!mNewSw) {
+			if (mSpine->getCurrentNerve()
+			    == &TNerveChuuHanaKeepBalance::theNerve()) {
+				JGeometry::TVec3<f32> away(mPosition.x - SMS_GetMarioPos().x,
+				                           10.0f,
+				                           mPosition.z - SMS_GetMarioPos().z);
+				MsVECNormalize(away, away);
+				away.scale(2.0f * unk1B4->mSLGetWaterPow.get());
+				mVelocity = away;
+				onLiveFlag(LIVE_FLAG_AIRBORNE);
+				mPosition.y += 20.0f;
+			}
+		}
+	}
+
+	unk165 = true;
+	if (mAttackVersion)
+		*unk21C = 1;
+
+	JGeometry::TVec3<f32> away(mPosition.x - SMS_GetMarioPos().x, 0.0f,
+	                           mPosition.z - SMS_GetMarioPos().z);
+	MsVECNormalize(away, away);
+	away.scale(unk1B4->mSLGetWaterPow2.get());
+
+	if (!checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
+		if (mCompareHeight)
+			mPosition.y += 2.0f;
+		else
+			mPosition.y += 1.0f;
+	}
+	mVelocity = away;
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
+
+	if (mSpine->getCurrentNerve() != &TNerveChuuHanaStick::theNerve())
+		mSpine->pushNerve(&TNerveChuuHanaStick::theNerve());
+
+	mSprayedByWaterCooldown = 0;
 }
 
 void TChuuHana::attackToMario()
@@ -508,6 +730,70 @@ void TChuuHana::setGoal()
 	unk114.clear();
 	unk1A4 = mCheckOnPanelTime;
 	unk1B2 = 0;
+}
+
+void TChuuHana::checkStretchType()
+{
+	unk1A0    = 0;
+	f32 swing = unk1A8;
+
+	if (mSpine->getCurrentNerve() == &TNerveChuuHanaKeepBalance::theNerve()) {
+		// Balancing: a large enough bounce flips it over.
+		f32 limit = unk1B4->mSLReverseHeightS.get();
+		if (mInstanceIndex > 0)
+			limit = unk1B4->mSLReverseHeightM.get();
+		if (mInstanceIndex > 2)
+			limit = unk1B4->mSLReverseHeightL.get();
+
+		if (swing > limit) {
+			unk1B1 = 1;
+			unk214 = 1;
+			mSpine->pushNerve(&TNerveChuuHanaFall2::theNerve());
+			mSpine->pushNerve(&TNerveChuuHanaJumpPrepare::theNerve());
+		}
+	} else {
+		// Otherwise it is being stretched: big, medium or small.
+		((TChuuHanaManager*)mManager)->unk6C++;
+
+		f32 big = unk1B4->mSLStretchHeightS.get();
+		if (mInstanceIndex > 0)
+			big = unk1B4->mSLStretchHeightM.get();
+		if (mInstanceIndex > 2)
+			big = unk1B4->mSLStretchHeightL.get();
+
+		if (swing > big) {
+			unk1B1 = 0;
+			unk214 = 0;
+			setBckAnm(8);
+			mSpine->pushNerve(&TNerveChuuHanaForceJumped::theNerve());
+		} else {
+			f32 medium = unk1B4->mSLMediumStretchHeightS.get();
+			if (mInstanceIndex > 0)
+				medium = unk1B4->mSLMediumStretchHeightM.get();
+			if (mInstanceIndex > 2)
+				medium = unk1B4->mSLMediumStretchHeightL.get();
+
+			if (swing > medium) {
+				unk1B1 = 0;
+				unk214 = 0;
+				setBckAnm(9);
+				mSpine->pushNerve(&TNerveChuuHanaForceJumped::theNerve());
+			} else {
+				f32 small = unk1B4->mSLSmallStretchHeightS.get();
+				if (mInstanceIndex > 0)
+					small = unk1B4->mSLSmallStretchHeightM.get();
+				if (mInstanceIndex > 2)
+					small = unk1B4->mSLSmallStretchHeightL.get();
+
+				if (swing > small) {
+					unk1B1 = 0;
+					unk214 = 0;
+					setBckAnm(10);
+					mSpine->pushNerve(&TNerveChuuHanaForceJumped::theNerve());
+				}
+			}
+		}
+	}
 }
 
 const char** TChuuHana::getBasNameTable() const { return tyuhana_bastable; }
