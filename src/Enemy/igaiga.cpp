@@ -168,8 +168,8 @@ void TRollEnemy::behaveToWater(THitActor* param_1)
 		f32 attackRadius = getSaveParams()->getSLAttackRadius();
 		f32 attackHeight = getSaveParams()->getSLAttackHeight();
 		f32 damageRadius = getSaveParams()->getSLDamageRadius();
-		f32 ratio        = mBodyScale / unk154;
 		f32 damageHeight = getSaveParams()->getSLDamageHeight();
+		f32 ratio        = mBodyScale / unk154;
 		mAttackRadius    = attackRadius * ratio;
 		mAttackHeight    = attackHeight * ratio;
 		mDamageRadius    = damageRadius * ratio;
@@ -318,6 +318,8 @@ void TIgaigaManager::perform(u32 cue, JDrama::TGraphics* graphics)
 
 // Rolls the body joint about Z by the accumulated roll angle, and lifts it
 // by mTransYOffset.
+// TODO: 82%. The original keeps the roll matrix's address in a callee-saved
+// register across both concats; ours recomputes it from the stack pointer.
 static int RollEnemyBodyCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
@@ -452,14 +454,15 @@ void TIgaiga::moveObject()
 	// It slowly deflates back toward half size after being swollen.
 	unk1CC = MsClamp(unk1CC - 0.0002f, 0.5f, 1.0f);
 
-	f32 base   = unk154 * unk1CC;
-	mBodyScale = MsClamp(unk1E4 * base, base, 3.0f * mBodyScale);
-
 	f32 attackRadius = getSaveParams()->getSLAttackRadius();
 	f32 attackHeight = getSaveParams()->getSLAttackHeight();
 	f32 damageRadius = getSaveParams()->getSLDamageRadius();
-	f32 ratio        = mBodyScale / unk154;
 	f32 damageHeight = getSaveParams()->getSLDamageHeight();
+
+	f32 base   = unk154 * unk1CC;
+	mBodyScale = MsClamp(unk1E4 * base, base, 3.0f * mBodyScale);
+
+	f32 ratio         = mBodyScale / unk154;
 	mScaledBodyRadius = 8.0f * (mBodyScale * mBodyRadius)
 	    * MsClamp(unk1CC * unk1E4, 1.0f, 1.2f);
 	mScaling.x = mScaling.y = mScaling.z = mBodyScale;
@@ -939,6 +942,10 @@ void TGorogoro::forceKill()
 	onLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 }
 
+// TODO: 36%. The original carries TRollEnemy::behaveToWater's whole body
+// inline here (that function itself matches to 99.8%) where our build
+// calls it. Either MWCC inlined the call or the original pasted the body;
+// duplicating it to find out would be a fakematch, so it stays a call.
 void TGorogoro::behaveToWater(THitActor* param_1)
 {
 	TRollEnemy::behaveToWater(param_1);
@@ -1119,8 +1126,9 @@ void TGorogoro::generateByGateKeeper(const JGeometry::TVec3<f32>& pos,
 	if (!target.isZero()) {
 		// Aim up to 15 degrees either side, then jump 0..1500 that way.
 		VECNormalize(&target, &target);
-		f32 s = JMASin(30.0f * MsRandF() - 15.0f);
-		f32 c = JMACos(30.0f * MsRandF() - 15.0f);
+		s16 angle = DEG2SHORTANGLE(30.0f * MsRandF() - 15.0f);
+		f32 s     = JMASSin(angle);
+		f32 c     = JMASCos(angle);
 		Mtx rot;
 		rot[0][0] = c;
 		rot[0][1] = 0.0f;
