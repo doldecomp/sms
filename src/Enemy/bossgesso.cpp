@@ -955,8 +955,7 @@ void TBossGesso::doAttackSingle()
 	}
 
 	for (int i = 0; i < 2; ++i) {
-		static const int idxarray[] = { 2, 3, 5, 6 };
-		TBGTentacle* tentacle       = mTentacles[idxarray[i]];
+		TBGTentacle* tentacle = mTentacles[i + 2];
 
 		if (inSightAngle(getSaveParam()->mSLSightAngle.get() * 0.5f)
 		    && tentacle->mState == 0) {
@@ -1534,7 +1533,7 @@ TBossGessoManager::TBossGessoManager(const char* name)
 
 void TBossGessoManager::createModelData()
 {
-	static TModelDataLoadEntry entry[] = {
+	static const TModelDataLoadEntry entry[] = {
 		{ "bgeso_body.bmd", 0x10300000, 0 },
 		{ "bgeso_hand.bmd", 0x10240000, 0 },
 		{ "bgeso_shand.bmd", 0x200000, 0 },
