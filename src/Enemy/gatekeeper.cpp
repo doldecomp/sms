@@ -488,9 +488,10 @@ void TBiancoGateKeeper::launchNamekuri()
 
 f32 TBiancoGateKeeper::getRumblePow()
 {
+	f32 dist;
 	JGeometry::TVec3<f32> diff = mPosition;
 	diff -= SMS_GetMarioPos();
-	f32 dist = diff.length();
+	dist = diff.length();
 	if (dist == 0.0f)
 		return 1.0f;
 	f32 pow = 2000.0f / dist;
