@@ -76,3 +76,43 @@ BOOL TMoePuku::isJumpStartBck()
 	return isBckAnm(PUKU_ANM_JUMP_START) ? TRUE : FALSE;
 }
 bool TMoePuku::isPichiEffect() { return isBckAnm(PUKU_ANM_PICHI) ? true : false; }
+
+
+// TODO: the nerve bodies below are not reconstructed. Each carries its map
+// size; only their destructors, which the macro emits, match so far.
+
+// TODO: incorrect size. Map records 0xb4 (180 bytes).
+DEFINE_NERVE(TNerveTobiPukuSwimWander, TLiveActor) { return FALSE; }
+
+// TODO: incorrect size. Map records 0x254 (596 bytes).
+DEFINE_NERVE(TNerveTobiPukuReturnLaunch, TLiveActor) { return FALSE; }
+
+// TODO: incorrect size. Map records 0x1a8 (424 bytes).
+DEFINE_NERVE(TNerveTobiPukuPrepareFly, TLiveActor) { return FALSE; }
+
+// TODO: incorrect size. Map records 0x1c8 (456 bytes).
+DEFINE_NERVE(TNerveTobiPukuBound, TLiveActor) { return FALSE; }
+
+// TODO: incorrect size. Map records 0x5a8 (1448 bytes).
+DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor) { return FALSE; }
+
+// TODO: incorrect size. Map records 0x1fc (508 bytes).
+DEFINE_NERVE(TNerveTobiPukuDie, TLiveActor) { return FALSE; }
+
+// TODO: incorrect size. Map records 0x118 (280 bytes).
+DEFINE_NERVE(TNerveTobiPukuPitiPiti, TLiveActor) { return FALSE; }
+
+// TODO: incorrect size. Map records 0x1e4 (484 bytes).
+DEFINE_NERVE(TNerveTobiPukuFall, TLiveActor) { return FALSE; }
+
+// TODO: incorrect size. Map records 0x250 (592 bytes).
+DEFINE_NERVE(TNerveTobiPukuHitWater, TLiveActor) { return FALSE; }
+
+// TODO: incorrect size. Map records 0x198 (408 bytes).
+DEFINE_NERVE(TNerveTobiPukuAttack, TLiveActor) { return FALSE; }
+
+// TODO: incorrect size. Map records 0x194 (404 bytes).
+DEFINE_NERVE(TNerveTobiPukuFly, TLiveActor) { return FALSE; }
+
+// TODO: incorrect size. Map records 0x1ac (428 bytes).
+DEFINE_NERVE(TNerveTobiPukuGenerate, TLiveActor) { return FALSE; }

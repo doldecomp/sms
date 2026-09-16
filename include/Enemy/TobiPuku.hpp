@@ -2,6 +2,7 @@
 #define ENEMY_TOBI_PUKU_HPP
 
 #include <Enemy/WalkerEnemy.hpp>
+#include <Strategic/Nerve.hpp>
 
 // The flying pukupuku. TMoePuku and TPukuPuku are variants that share its
 // whole animation interface and differ only in their vtable.
@@ -53,5 +54,18 @@ public:
 	virtual BOOL isJumpStartBck();
 	virtual bool isPichiEffect();
 };
+
+DECLARE_NERVE(TNerveTobiPukuSwimWander, TLiveActor)
+DECLARE_NERVE(TNerveTobiPukuReturnLaunch, TLiveActor)
+DECLARE_NERVE(TNerveTobiPukuPrepareFly, TLiveActor)
+DECLARE_NERVE(TNerveTobiPukuBound, TLiveActor)
+DECLARE_NERVE(TNerveTobiPukuLand, TLiveActor)
+DECLARE_NERVE(TNerveTobiPukuDie, TLiveActor)
+DECLARE_NERVE(TNerveTobiPukuPitiPiti, TLiveActor)
+DECLARE_NERVE(TNerveTobiPukuFall, TLiveActor)
+DECLARE_NERVE(TNerveTobiPukuHitWater, TLiveActor)
+DECLARE_NERVE(TNerveTobiPukuAttack, TLiveActor)
+DECLARE_NERVE(TNerveTobiPukuFly, TLiveActor)
+DECLARE_NERVE(TNerveTobiPukuGenerate, TLiveActor)
 
 #endif
