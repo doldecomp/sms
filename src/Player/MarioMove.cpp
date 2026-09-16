@@ -764,11 +764,13 @@ BOOL TMario::changePlayerTriJump()
 			// TODO: inline
 			s16 a     = mSlopeAngle + 0x8000;
 			s16 angle = mFaceAngle.y - a;
-			f32 x     = mForwardVel * JMASSin(angle);
-			f32 z     = mForwardVel * JMASCos(angle) * 0.75f;
-			f32 mag   = MsSqrtf(x * x + z * z);
+			f32 x = mForwardVel * JMASSin(angle);
+			f32 z = mForwardVel * JMASCos(angle) * 0.75f;
+			JGeometry::TVec2<f32> velocity(x, z);
+			f32 mag = MsSqrtf(velocity.x * velocity.x
+			                     + velocity.y * velocity.y);
 			setPlayerVelocity(mag);
-			mFaceAngle.y = a + matan(z, x);
+			mFaceAngle.y = a + matan(velocity.y, velocity.x);
 		}
 		dropObject();
 		changePlayerStatus(MARIO_STATUS_MISS_JUMP, 0, false);
