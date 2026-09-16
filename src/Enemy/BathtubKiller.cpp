@@ -490,7 +490,34 @@ void TBathtubKiller::attackToMario()
 	}
 }
 
-bool TBathtubKiller::isCollidMove(THitActor*) { return false; }
+bool TBathtubKiller::isCollidMove(THitActor* actor)
+{
+	if (isAttackable() == TRUE)
+		return false;
+
+	if (actor->isActorType(0x80000029)) {
+		if (isAttackable() == FALSE)
+			mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
+		return true;
+	}
+
+	if (actor->isActorType(0x80000021)
+	    || actor->isActorType(0x8000002A)
+	    || actor->isActorType(0x8000002C)) {
+		if (isAttackable() == FALSE)
+			mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
+		actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
+		return true;
+	}
+
+	if (actor->isActorType(0x80000024) && unk214 <= 0) {
+		if (isAttackable() == FALSE)
+			mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
+		return true;
+	}
+
+	return true;
+}
 
 void TBathtubKiller::behaveToWater(THitActor*) { }
 
