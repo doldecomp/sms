@@ -158,6 +158,7 @@ BOOL TBGBeakHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 	unkA4 += delta;
 
 	mPosition = where_to;
+	return false;
 }
 
 BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
