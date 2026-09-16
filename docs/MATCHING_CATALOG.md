@@ -1548,3 +1548,20 @@ it). `TNerveChuuHanaStick` needed the `else if`; the diff shows it as a single
   an `LIVE_FLAG_UNK` name for it.
 - `MsWrap<f>` is emitted as a local copy in the original in nine TUs; when a
   unit is missing exactly that symbol, it is this and not a lost function.
+
+## Hand-built 3x4 matrices: the translation column is stored first
+
+When a function fills a `Mtx` element by element, the original emits the
+three `[i][3]` stores *before* the diagonal/zero stores, even though the value
+stored is the same constant zero. Writing `m[0][3] = m[1][3] = m[2][3] = 0.0f;`
+(or the three assignments) ahead of the other nine rows reproduces the store
+order exactly (`popo.cpp` joint callbacks: 82.8 -> 99.8). The assignment order
+of the remaining elements is row-major and does not need reordering.
+
+## A member pointer re-read after `theNerve()` is not a second local
+
+`if (mPopo->isRollJump()) return mPopo->receiveMessage(...)` loads `mPopo`
+twice in the original: once before the nerve's static-init block and once
+after it, because `__register_global_object` is a call that invalidates the
+cached load. Caching it in a local (`TPopo* popo = mPopo;`) removes the
+second load and does not match; keep the member access at both sites.
