@@ -119,13 +119,14 @@ void TEnemyManager::createEnemies(int count)
 	if (count + getObjNum() > getCapacity())
 		count = getCapacity() - getObjNum();
 
-	if (unk38 != nullptr && count + getObjNum() > unk38->mSLInstanceNum.get())
-		count = unk38->mSLInstanceNum.get() - getObjNum();
+	if (unk38 != nullptr) {
+		u8 limit = unk38->mSLInstanceNum.get();
+		if (count + getObjNum() > limit)
+			count = limit - getObjNum();
+	}
 
-	if (count < 0)
-		return;
-
-	for (int i = 0; i < count; ++i) {
+	if (count >= 0)
+		for (int i = 0; i < count; ++i) {
 		// TODO: createEnemy() but size won't match :(
 
 		TSpineEnemy* enemy = createEnemyInstance();
