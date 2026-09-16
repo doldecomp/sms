@@ -306,22 +306,25 @@ f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 flags,
 f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 flags,
                                    const TBGCheckData** result) const
 {
-	if (x < -mGridExtentX || mGridExtentX <= x || z < -mGridExtentY
-	    || mGridExtentY <= z) {
+	JGeometry::TVec2<f32> position(x, z);
+	if (position.x < -mGridExtentX || mGridExtentX <= position.x
+	    || position.y < -mGridExtentY || mGridExtentY <= position.y) {
 		*result = &mIllegalCheckData;
 		return -32767.0f;
 	}
 
-	int gridX = (x + mGridExtentX) * (1.0f / 1024);
-	int gridZ = (z + mGridExtentY) * (1.0f / 1024);
+	int gridX = (position.x + mGridExtentX) * (1.0f / 1024);
+	int gridZ = (position.y + mGridExtentY) * (1.0f / 1024);
 
 	const TBGCheckData* local_60;
 	f32 dVar5 = checkGroundList(
-	    x, y, z, flags, getGridRoot18(gridX, gridZ).getRoofList(), &local_60);
+	    x, y, z, flags, getGridRoot18(gridX, gridZ).unk0[0].getNext(),
+	    &local_60);
 
 	const TBGCheckData* local_64;
 	f32 dVar6 = checkGroundList(
-	    x, y, z, flags, getGridRoot14(gridX, gridZ).getRoofList(), &local_64);
+	    x, y, z, flags, getGridRoot14(gridX, gridZ).unk0[0].getNext(),
+	    &local_64);
 
 	if (mGroundPlane != nullptr) {
 		const TBGCheckData* local_68;
