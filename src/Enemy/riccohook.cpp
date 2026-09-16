@@ -1,8 +1,21 @@
+#define TRiccoHookManager TRiccoHookManagerHeader
 #include <Enemy/RiccoHook.hpp>
+#undef TRiccoHookManager
 #include <Strategic/Spine.hpp>
 #include <Enemy/Graph.hpp>
 #include <JSystem/JMath.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
+
+class TRiccoHookManager : public TEnemyManager {
+public:
+	TRiccoHookManager(const char* name = "フックマネージャ");
+
+	virtual void load(JSUMemoryInputStream&);
+	virtual TSpineEnemy* createEnemyInstance();
+	virtual void createModelData();
+
+	TRiccoHook* getObj(int i) { return (TRiccoHook*)TObjManager::getObj(i); }
+};
 
 // @non-matching -- the issue seems to stem from the JDrama TNameRefGen
 // search/push_back calls.
