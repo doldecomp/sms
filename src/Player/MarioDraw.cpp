@@ -1414,6 +1414,9 @@ void TMario::initModel()
 	unk3A4 = new SampleCtrlModelData(mBodyModelData);
 }
 
+const Vec cMarioFootDirZero[2] = { { 0.0f, 0.0f, 0.0f },
+                                   { 0.0f, 0.0f, 0.0f } };
+
 void TMario::initMirrorModel()
 {
 	if (mPlayerType != PLAYER_TYPE_MARIO)
