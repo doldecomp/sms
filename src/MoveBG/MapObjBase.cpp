@@ -469,10 +469,7 @@ void TMapObjBase::setGroundCollision()
 void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (gpMarDirector->isTalkModeNow() && !gpMarDirector->isDemoModeNow()) {
-		if (checkLiveFlag(LIVE_FLAG_DEAD))
-			return;
-
-		if (isActorType(0x4000003B))
+		if (checkLiveFlag(LIVE_FLAG_DEAD) || isActorType(0x4000003B))
 			return;
 
 		if (cue & CUE_MOVE) {
