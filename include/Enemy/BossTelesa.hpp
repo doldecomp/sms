@@ -7,6 +7,7 @@
 
 class TBossTelesa : public TSpineEnemy {
 public:
+	TBossTelesa(const char*); // declared only: suppresses the implicit default constructor
 	// static members (map: .sdata)
 	static f32 mEnemyGenRate;
 	static f32 mItemGenRate;

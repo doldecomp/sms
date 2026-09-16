@@ -7,6 +7,7 @@
 
 class TBombHei : public TWalkerEnemy {
 public:
+	TBombHei(const char*); // declared only: suppresses the implicit default constructor
 	// static members (map: .sdata)
 	static u8 mSerialBomb;
 };

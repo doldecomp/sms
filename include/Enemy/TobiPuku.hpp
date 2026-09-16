@@ -7,6 +7,7 @@
 
 class TTobiPuku : public TWalkerEnemy {
 public:
+	TTobiPuku(const char*); // declared only: suppresses the implicit default constructor
 	// static members (map: .sdata)
 	static f32 mLandAngle;
 	static bool mBoundSw;
