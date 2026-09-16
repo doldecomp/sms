@@ -487,7 +487,6 @@ bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 	enemy->getMActor()->frameUpdate();
 
 	Mtx afStack_5C;
-	MtxPtr wtf = afStack_5C;
 	MtxPtr mtx = enemy->getMActor()->getModel()->getBaseTRMtx();
 
 	const JGeometry::TVec3<f32>& v = enemy->mScaling;
@@ -503,7 +502,7 @@ bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 
 	for (int i = 0; i < unk50; ++i) {
 		MTXConcat(mtx, unk48[f][i], afStack_5C);
-		enemy->getMActor()->getModel()->setAnmMtx(i, wtf);
+		enemy->getMActor()->getModel()->setAnmMtx(i, afStack_5C);
 	}
 
 	if (enemy->getMActor()->getModel()->getModelData()->getWEvlpMtxNum())
