@@ -309,7 +309,8 @@ void TPollutionCounterLayer::drawPollutionLayer(int layer_index) const
 	drawBlack(img->width, img->height);
 	loadPollutionLayer((u8*)img + img->imageDataOffset, img->width, img->height,
 	                   GX_TEXMAP0);
-	initGXforPollutionLayer(layer->mPollutionType, layer->mFlags,
+	u16 flags = layer->mFlags;
+	initGXforPollutionLayer(layer->mPollutionType, flags,
 	                        layer->mPerFrameChangeThreshold,
 	                        layer->mPerFrameChangeDelta);
 
