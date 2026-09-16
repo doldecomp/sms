@@ -1,41 +1,76 @@
 #include <Enemy/Igaiga.hpp>
+
 #include <Enemy/Conductor.hpp>
+
 #include <Enemy/Graph.hpp>
+
 #include <Strategic/LiveActor.hpp>
+
 #include <Strategic/Spine.hpp>
+
 #include <Strategic/ObjModel.hpp>
+
 #include <Strategic/SharedParts.hpp>
+
 #include <M3DUtil/MActor.hpp>
+
 #include <M3DUtil/SDLModel.hpp>
+
 #include <MarioUtil/MathUtil.hpp>
+
 #include <MarioUtil/RandomUtil.hpp>
+
 #include <Player/MarioAccess.hpp>
+
 #include <Player/ModelWaterManager.hpp>
+
 #include <Map/Map.hpp>
+
 #include <Map/MapData.hpp>
+
 #include <JSystem/JKernel/JKRFileLoader.hpp>
+
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
+
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
+
 #include <Map/MapEventSink.hpp>
+
 #include <Enemy/AreaCylinder.hpp>
+
 #include <Map/PollutionManager.hpp>
+
 #include <MarioUtil/RumbleMgr.hpp>
+
 #include <MarioUtil/TexUtil.hpp>
+
 #include <MarioUtil/PacketUtil.hpp>
+
 #include <MoveBG/ItemManager.hpp>
+
 #include <MoveBG/MapObjBianco.hpp>
+
 #include <Map/MapCollisionData.hpp>
+
 #include <Map/MapMirror.hpp>
+
 #include <Strategic/MirrorActor.hpp>
+
 #include <System/Particles.hpp>
+
 #include <JSystem/JParticle/JPAEmitter.hpp>
+
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
+
 #include <MSound/MSound.hpp>
+
 #include <MSound/MSoundSE.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
+
 #include <MSound/MSSetSound.hpp>
+
 #include <MSound/MSoundBGM.hpp>
 
 static const char* igaiga_bastable[] = {
@@ -57,11 +92,16 @@ static const char* gorogoro_bastable[] = {
 };
 
 f32 TRollEnemy::mBoundVal     = 80.0f;
+
 f32 TRollEnemy::mTransYOffset;
+
 f32 TIgaiga::mReachNodeDist   = 300.0f;
+
 // UNUSED in the map; the values are not recoverable from the binary.
 f32 TIgaiga::mTremblePow      = 1.0f;
+
 f32 TIgaiga::mTrembleAcc      = 1.0f;
+
 f32 TIgaiga::mTrembleBrk      = 1.0f;
 
 static TRollEnemy* gpCurRollEnemy;
@@ -78,6 +118,65 @@ TRollEnemySaveLoadParams::TRollEnemySaveLoadParams(const char* prm)
     , PARAM_INIT(mSLGroundOffsetY, 150.0f)
 {
 	TParams::load(mPrmPath);
+}
+
+// UNUSED, 0xf8 in the map: the rolling-along-the-graph step that the three
+// igaiga nerves share.
+void TIgaiga::rollMove()
+{
+	if (isReachedToGoalXZ()) {
+		if (jumpToNextGraphNode() >= 0)
+			flagJump();
+		if (!(unk124->getCurrent().getRailNode()->mFlags & 0x40))
+			goToRandomNextGraphNode();
+	} else {
+		walkBehavior(2, 1.0f);
+	}
+}
+
+// UNUSED, 0x48 in the map: pop after too many sprays.
+void TIgaiga::waterExplosion()
+{
+	onLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
+	mSpine->pushAfterCurrent(&TNerveSmallEnemyDie::theNerve());
+}
+
+// UNUSED, 0x94 in the map: only ever constructed inline by the manager.
+TGorogoro::TGorogoro(const char* name)
+    : TRollEnemy(name)
+{
+	unk1E4            = 0;
+	mGenerateGraphIdx = 0;
+	unk1EC            = 0;
+	gpCurRollEnemy    = nullptr;
+}
+
+// TODO: 36%. The original carries TRollEnemy::behaveToWater's whole body
+// inline here (that function itself matches to 99.8%) where our build
+// calls it. Either MWCC inlined the call or the original pasted the body;
+
+// UNUSED, 0x1e8 in the map.
+// TODO: only the field it sets is known; the body is a guess.
+void TGorogoro::setGenerateGraphIdx(int idx) { mGenerateGraphIdx = idx; }
+
+// UNUSED, 0x24 in the map.
+void TIgaigaManager::requestPolluteModel(JGeometry::TVec3<f32>& pos,
+                                         JGeometry::TVec3<f32>& scale)
+{
+	unk60->generatePolluteModel(pos, scale);
+}
+
+// UNUSED, 0x24 in the map.
+void TGorogoroManager::requestPolluteModel(JGeometry::TVec3<f32>& pos,
+                                           JGeometry::TVec3<f32>& scale)
+{
+	unk6C->generatePolluteModel(pos, scale);
+}
+
+// UNUSED, 0x34 in the map.
+bool TGorogoroManager::inArea(const JGeometry::TVec3<f32>& pos)
+{
+	return unk70 ? unk70->contain(pos) : true;
 }
 
 TRollEnemy::TRollEnemy(const char* name)
@@ -178,42 +277,6 @@ void TRollEnemy::behaveToWater(THitActor* param_1)
 	}
 }
 
-void TRollEnemy::setBehavior()
-{
-	if (mPosition.y > 50.0f + mGroundHeight)
-		return;
-
-	if (mSpine->getTime() % getSaveParams()->mSLPolluteInterval.get() != 0)
-		return;
-	if (checkLiveFlag(LIVE_FLAG_DEAD))
-		return;
-	if (mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve())
-		return;
-	if (!TSmallEnemy::mIsPolluter)
-		return;
-
-	// Stamp goop just ahead of the roll; the amplitude version pulses the
-	// stamp radius with the body scale.
-	f32 range = 2.0f;
-	if (!checkLiveFlag(LIVE_FLAG_HIDDEN)) {
-		if (!TSmallEnemy::mIsAmpPolluter) {
-			range = getSaveParams()->mSLPolluteRange.get();
-		} else {
-			s32 rmin  = getSaveParams()->mSLPolluteRMin.get();
-			s32 rmax  = getSaveParams()->mSLPolluteRMax.get();
-			s32 cycle = getSaveParams()->mSLPolluteCycle.get();
-			range     = rmin
-			    + mBodyScale
-			        * (JMASin(180.0f * (mSpine->getTime() % cycle) / cycle)
-			           * (rmax - rmin));
-		}
-	}
-
-	gpPollution->stampGround(1, unk1AC * mLinearVelocity.x + mPosition.x,
-	                         mPosition.y, unk1AC * mLinearVelocity.z + mPosition.z,
-	                         32.0f * range);
-}
-
 void TRollEnemy::attackToMario() { SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK); }
 
 void TRollEnemy::flagJump()
@@ -253,6 +316,42 @@ bool TRollEnemy::isReachedToGoalXZ()
 	if (MsVECMag2(d) < 200.0f)
 		return true;
 	return false;
+}
+
+void TRollEnemy::setBehavior()
+{
+	if (mPosition.y > 50.0f + mGroundHeight)
+		return;
+
+	if (mSpine->getTime() % getSaveParams()->mSLPolluteInterval.get() != 0)
+		return;
+	if (checkLiveFlag(LIVE_FLAG_DEAD))
+		return;
+	if (mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve())
+		return;
+	if (!TSmallEnemy::mIsPolluter)
+		return;
+
+	// Stamp goop just ahead of the roll; the amplitude version pulses the
+	// stamp radius with the body scale.
+	f32 range = 2.0f;
+	if (!checkLiveFlag(LIVE_FLAG_HIDDEN)) {
+		if (!TSmallEnemy::mIsAmpPolluter) {
+			range = getSaveParams()->mSLPolluteRange.get();
+		} else {
+			s32 rmin  = getSaveParams()->mSLPolluteRMin.get();
+			s32 rmax  = getSaveParams()->mSLPolluteRMax.get();
+			s32 cycle = getSaveParams()->mSLPolluteCycle.get();
+			range     = rmin
+			    + mBodyScale
+			        * (JMASin(180.0f * (mSpine->getTime() % cycle) / cycle)
+			           * (rmax - rmin));
+		}
+	}
+
+	gpPollution->stampGround(1, unk1AC * mLinearVelocity.x + mPosition.x,
+	                         mPosition.y, unk1AC * mLinearVelocity.z + mPosition.z,
+	                         32.0f * range);
 }
 
 void TIgaigaPolluteModelManager::init(TLiveActor* param_1)
@@ -447,6 +546,12 @@ void TIgaiga::reset()
 	unk1E8 = 0;
 }
 
+void TIgaiga::kill()
+{
+	mRollAngle = 0.0f;
+	TSmallEnemy::kill();
+}
+
 void TIgaiga::moveObject()
 {
 	TWalkerEnemy::moveObject();
@@ -530,6 +635,22 @@ void TIgaiga::walkBehavior(int param_1, f32 param_2)
 		((THitActor*)unk138->getActor())->receiveMessage(this, HIT_MESSAGE_ATTACK);
 }
 
+bool TIgaiga::isReachedToGoalXZ()
+{
+	JGeometry::TVec3<f32> d(unk104.getPoint());
+	d.x -= mPosition.x;
+	d.y -= mPosition.y;
+	d.z -= mPosition.z;
+	if (!unk1A8)
+		d.y = 0.0f;
+	d.y = 0.0f;
+	if (MsVECMag2(d) < mReachNodeDist)
+		return true;
+	return false;
+}
+
+void TIgaiga::setWalkAnm() { setBckAnm(3); }
+
 void TIgaiga::setDeadAnm()
 {
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
@@ -598,6 +719,17 @@ void TIgaiga::setMeltAnm()
 	}
 }
 
+const char** TIgaiga::getBasNameTable() const { return igaiga_bastable; }
+
+bool TIgaiga::isHitValid(u32 param_1)
+{
+	// A hip drop is the one hit that does not count as a proper kill.
+	unk1BC = 1;
+	if (param_1 == HIT_MESSAGE_HIP_DROP)
+		unk1BC = 0;
+	return true;
+}
+
 void TIgaiga::bound()
 {
 	if (unk1A0 > 5.0f) {
@@ -611,66 +743,12 @@ void TIgaiga::bound()
 	}
 }
 
-void TIgaiga::kill()
-{
-	mRollAngle = 0.0f;
-	TSmallEnemy::kill();
-}
-
-bool TIgaiga::isReachedToGoalXZ()
-{
-	JGeometry::TVec3<f32> d(unk104.getPoint());
-	d.x -= mPosition.x;
-	d.y -= mPosition.y;
-	d.z -= mPosition.z;
-	if (!unk1A8)
-		d.y = 0.0f;
-	d.y = 0.0f;
-	if (MsVECMag2(d) < mReachNodeDist)
-		return true;
-	return false;
-}
-
-void TIgaiga::setWalkAnm() { setBckAnm(3); }
-
-const char** TIgaiga::getBasNameTable() const { return igaiga_bastable; }
-
-bool TIgaiga::isHitValid(u32 param_1)
-{
-	// A hip drop is the one hit that does not count as a proper kill.
-	unk1BC = 1;
-	if (param_1 == HIT_MESSAGE_HIP_DROP)
-		unk1BC = 0;
-	return true;
-}
-
 void TIgaiga::shoot(JGeometry::TVec3<f32>& velocity)
 {
 	mSpine->setNext(&TNerveIgaigaShootFromCannon::theNerve());
 	mShootVelocity = velocity;
 	offLiveFlag(LIVE_FLAG_UNK10);
 	unk1A8 = 1;
-}
-
-// UNUSED, 0xf8 in the map: the rolling-along-the-graph step that the three
-// igaiga nerves share.
-void TIgaiga::rollMove()
-{
-	if (isReachedToGoalXZ()) {
-		if (jumpToNextGraphNode() >= 0)
-			flagJump();
-		if (!(unk124->getCurrent().getRailNode()->mFlags & 0x40))
-			goToRandomNextGraphNode();
-	} else {
-		walkBehavior(2, 1.0f);
-	}
-}
-
-// UNUSED, 0x48 in the map: pop after too many sprays.
-void TIgaiga::waterExplosion()
-{
-	onLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
-	mSpine->pushAfterCurrent(&TNerveSmallEnemyDie::theNerve());
 }
 
 DEFINE_NERVE(TNerveIgaigaRollOnGraph, TLiveActor)
@@ -790,6 +868,30 @@ TSpineEnemy* TGorogoroManager::createEnemyInstance()
 	return new TGorogoro("ゴロゴロ");
 }
 
+void TGorogoroManager::initSetEnemies()
+{
+	unk6C = new TGorogoroPolluteModelManager;
+	unk6C->init((TLiveActor*)unk18[0]);
+
+	static const char* graphlist[] = { "gorogoro0", "gorogoro1" };
+
+	// Alternate the two graphs; fall back to the first if one is missing.
+	for (int i = 0; i < mObjNum; ++i) {
+		TGraphWeb* web = gpConductor->getGraphByName(graphlist[i % 2]);
+		if (web->isDummy())
+			web = gpConductor->getGraphByName(graphlist[0]);
+		if (web->isDummy())
+			continue;
+
+		TGorogoro* goro = (TGorogoro*)unk18[i];
+		JGeometry::TVec3<f32> point;
+		web->unk0[0].getPoint((Vec*)&point);
+		goro->unk124->setGraph(web);
+		goro->mPosition         = point;
+		goro->mGenerateGraphIdx = web->unk8 - 1;
+	}
+}
+
 void TGorogoroManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
@@ -799,32 +901,82 @@ void TGorogoroManager::createModelData()
 	createModelDataArray(entry);
 }
 
-// UNUSED, 0x94 in the map: only ever constructed inline by the manager.
-TGorogoro::TGorogoro(const char* name)
-    : TRollEnemy(name)
+// TODO: 88%. The original calls a local out-of-line MsWrap<f> twice here
+// (the map's MsWrap<f>__Ffff, 72 bytes, our one missing symbol); ours
+// inlines the header template at both sites.
+void TGorogoroManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	unk1E4            = 0;
-	mGenerateGraphIdx = 0;
-	unk1EC            = 0;
-	gpCurRollEnemy    = nullptr;
-}
+	if (cue & CUE_MOVE) {
+		unk60++;
+		s32 interval = ((TRollEnemySaveLoadParams*)unk38)
+		                   ->mSLGenerateInterval.get();
+		if (unk60 > interval) {
+			unk60 = 0;
 
-void TGorogoro::reset()
-{
-	unk130 = 1;
-	TRollEnemy::reset();
-	offLiveFlag(LIVE_FLAG_UNK1000);
-	mTevKColor.a = 0xFF;
-	unk1AC       = -10.0f;
-	unk1B0 = 1.0f;
-}
+			// Only spawn while Mario is inside the spawning area.
+			if (inArea(SMS_GetMarioPos())) {
+				for (int i = 0; i < getActiveObjNum(); ++i) {
+					TGorogoro* goro = (TGorogoro*)unk18[i];
+					if (!goro->checkLiveFlag(LIVE_FLAG_DEAD))
+						continue;
 
-const char** TGorogoro::getBasNameTable() const { return gorogoro_bastable; }
+					if (unk64 && !unk64->isBuried(1)) {
+						if (unk68) {
+							// First spawn after the ground sinks: seat the
+							// first two on fixed nodes, facing along the
+							// rail, and aim them at the next node.
+							unk68 = 0;
 
-void TGorogoro::setMActorAndKeeper()
-{
-	mMActorKeeper = new TMActorKeeper(mManager, 1);
-	mMActor       = mMActorKeeper->createMActor("bosspaku_head.bmd", 3);
+							goro->reset();
+							JGeometry::TVec3<f32> point;
+							goro->unk124->unk0->unk0[10].getPoint((Vec*)&point);
+							goro->mPosition        = point;
+							goro->unk124->mCurrIdx = 10;
+							goro->unk124->mPrevIdx = 9;
+							goro->unk124->unk0->unk0[11].getPoint((Vec*)&point);
+							JGeometry::TVec3<f32> dir(point.x - goro->mPosition.x,
+							                          0.0f,
+							                          point.z - goro->mPosition.z);
+							goro->mRotation.y
+							    = MsWrap(MsGetRotFromZaxisY(dir), 0.0f, 360.0f);
+							TPathNode goal(point);
+							goro->unkF4  = goal;
+							goro->unk104 = goal;
+							goro->unk114.clear();
+
+							TGorogoro* second = (TGorogoro*)unk18[1];
+							second->reset();
+							second->unk124->unk0->unk0[16].getPoint((Vec*)&point);
+							second->mPosition        = point;
+							second->unk124->mCurrIdx = 16;
+							second->unk124->mPrevIdx = 15;
+							second->unk124->unk0->unk0[17].getPoint((Vec*)&point);
+							JGeometry::TVec3<f32> dir2(
+							    point.x - second->mPosition.x, 0.0f,
+							    point.z - second->mPosition.z);
+							second->mRotation.y
+							    = MsWrap(MsGetRotFromZaxisY(dir2), 0.0f, 360.0f);
+							TPathNode goal2(point);
+							second->unkF4  = goal2;
+							second->unk104 = goal2;
+							second->unk114.clear();
+						} else {
+							goro->reset();
+						}
+					} else if (unk64) {
+						// Still buried: try again next frame.
+						unk60 = interval;
+					} else {
+						goro->reset();
+					}
+					break;
+				}
+			}
+		}
+	}
+
+	TEnemyManager::perform(cue, graphics);
+	unk6C->perform(cue, graphics);
 }
 
 void TGorogoro::init(TLiveManager* manager)
@@ -909,6 +1061,16 @@ void TGorogoro::calcRootMatrix()
 	getModel()->setBaseScale(*(Vec*)&mScaling);
 }
 
+void TGorogoro::reset()
+{
+	unk130 = 1;
+	TRollEnemy::reset();
+	offLiveFlag(LIVE_FLAG_UNK1000);
+	mTevKColor.a = 0xFF;
+	unk1AC       = -10.0f;
+	unk1B0 = 1.0f;
+}
+
 void TGorogoro::kill()
 {
 	mRollAngle = 0.0f;
@@ -942,9 +1104,6 @@ void TGorogoro::forceKill()
 	onLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 }
 
-// TODO: 36%. The original carries TRollEnemy::behaveToWater's whole body
-// inline here (that function itself matches to 99.8%) where our build
-// calls it. Either MWCC inlined the call or the original pasted the body;
 // duplicating it to find out would be a fakematch, so it stays a call.
 void TGorogoro::behaveToWater(THitActor* param_1)
 {
@@ -1086,6 +1245,8 @@ void TGorogoro::bound()
 		SMSRumbleMgr->start(0x15, 10, (Vec*)&mPosition);
 }
 
+const char** TGorogoro::getBasNameTable() const { return gorogoro_bastable; }
+
 bool TGorogoro::isRolling()
 {
 	if (mSpine->getCurrentNerve() == &TNerveGorogoroRollOnGraph::theNerve())
@@ -1093,6 +1254,12 @@ bool TGorogoro::isRolling()
 	if (isBckAnm(1))
 		return true;
 	return false;
+}
+
+void TGorogoro::setMActorAndKeeper()
+{
+	mMActorKeeper = new TMActorKeeper(mManager, 1);
+	mMActor       = mMActorKeeper->createMActor("bosspaku_head.bmd", 3);
 }
 
 void TGorogoro::generateByGateKeeper(const JGeometry::TVec3<f32>& pos,
@@ -1164,54 +1331,6 @@ void TGorogoro::generateByGateKeeper(const JGeometry::TVec3<f32>& pos,
 	}
 
 	unk1A8 = 1;
-}
-
-// UNUSED, 0x1e8 in the map.
-// TODO: only the field it sets is known; the body is a guess.
-void TGorogoro::setGenerateGraphIdx(int idx) { mGenerateGraphIdx = idx; }
-
-void TGorogoroManager::initSetEnemies()
-{
-	unk6C = new TGorogoroPolluteModelManager;
-	unk6C->init((TLiveActor*)unk18[0]);
-
-	static const char* graphlist[] = { "gorogoro0", "gorogoro1" };
-
-	// Alternate the two graphs; fall back to the first if one is missing.
-	for (int i = 0; i < mObjNum; ++i) {
-		TGraphWeb* web = gpConductor->getGraphByName(graphlist[i % 2]);
-		if (web->isDummy())
-			web = gpConductor->getGraphByName(graphlist[0]);
-		if (web->isDummy())
-			continue;
-
-		TGorogoro* goro = (TGorogoro*)unk18[i];
-		JGeometry::TVec3<f32> point;
-		web->unk0[0].getPoint((Vec*)&point);
-		goro->unk124->setGraph(web);
-		goro->mPosition         = point;
-		goro->mGenerateGraphIdx = web->unk8 - 1;
-	}
-}
-
-// UNUSED, 0x24 in the map.
-void TIgaigaManager::requestPolluteModel(JGeometry::TVec3<f32>& pos,
-                                         JGeometry::TVec3<f32>& scale)
-{
-	unk60->generatePolluteModel(pos, scale);
-}
-
-// UNUSED, 0x24 in the map.
-void TGorogoroManager::requestPolluteModel(JGeometry::TVec3<f32>& pos,
-                                           JGeometry::TVec3<f32>& scale)
-{
-	unk6C->generatePolluteModel(pos, scale);
-}
-
-// UNUSED, 0x34 in the map.
-bool TGorogoroManager::inArea(const JGeometry::TVec3<f32>& pos)
-{
-	return unk70 ? unk70->contain(pos) : true;
 }
 
 DEFINE_NERVE(TNerveGorogoroRollOnGraph, TLiveActor)
