@@ -522,7 +522,7 @@ void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
 		fVar3 = 0.0f;
 	} else {
 		f32 s = JMASin(turn_speed);
-		if (fVar3 == 0.0f) {
+		if (s == 0.0f) {
 			fVar3 = 100000.0f;
 		} else {
 			fVar3 = march_speed * JMASin(90.0f - turn_speed * 0.5f) / s;
