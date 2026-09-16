@@ -407,10 +407,7 @@ void TBGAttackHit::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_MOVE) {
 		mPosition = mOwner->mSpline->getPoint(mPosOnSpline);
 
-		if (mOwner->mTakeHit->checkHitFlag(HIT_FLAG_CANNOT_ATTACK)
-		        && mOwner->isThing3()
-		    || mOwner->getState() == 1
-		    || mOwner->mOwner->getAttackMode() == 7) {
+		if (mOwner->isAttackable()) {
 			for (int i = 0; i < mColCount; ++i) {
 				THitActor* col = mCollisions[i];
 				if (gpMarioOriginal->isRoofing())
@@ -617,8 +614,8 @@ void TBGTentacle::incDamage()
 
 void TBGTentacle::throwMario(THitActor* param_1, THitActor* param_2)
 {
-	JGeometry::TVec3<f32> local_e0 = param_1->getPosition();
-	local_e0 -= param_2->getPosition();
+	JGeometry::TVec3<f32> local_e0 = param_1->mPosition;
+	local_e0 -= param_2->mPosition;
 
 	local_e0.normalize();
 	local_e0.scale(2.0f);
