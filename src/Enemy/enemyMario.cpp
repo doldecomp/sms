@@ -980,6 +980,8 @@ void TEnemyMario::emReplayJumpToNearestNode()
 
 	JGeometry::TVec3<f32> marioDirection(*gpMarioPos - currentPoint);
 	marioDirection.normalize();
+	f32 marioDirectionX = marioDirection.x;
+	f32 marioDirectionY = marioDirection.y;
 	TGraphNode* nextNode = nullptr;
 
 	if (mSettingParams->mRandomFlag.get() == 0) {
@@ -999,7 +1001,9 @@ void TEnemyMario::emReplayJumpToNearestNode()
 			JGeometry::TVec3<f32> candidateDirection(candidatePoint
 			                                         - currentPoint);
 			candidateDirection.normalize();
-			f32 dot = marioDirection.dot(candidateDirection);
+			f32 dot = marioDirectionX * candidateDirection.x
+			          + marioDirectionY * candidateDirection.y
+			          + marioDirection.z * candidateDirection.z;
 			if (dot < smallestDot) {
 				smallestDot  = dot;
 				nextNode     = candidate;
@@ -1026,7 +1030,9 @@ void TEnemyMario::emReplayJumpToNearestNode()
 			JGeometry::TVec3<f32> candidateDirection(candidatePoint
 			                                         - currentPoint);
 			candidateDirection.normalize();
-			dots[validCount]       = marioDirection.dot(candidateDirection);
+			dots[validCount] = marioDirectionX * candidateDirection.x
+			                   + marioDirectionY * candidateDirection.y
+			                   + marioDirection.z * candidateDirection.z;
 			validLinks[validCount] = i;
 			++validCount;
 		}
