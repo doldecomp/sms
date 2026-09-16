@@ -784,21 +784,23 @@ void TBossManta::updateAttractor()
 void TBossMantaManager::TMantaBattleState::update()
 {
 	static JAISound* sDefeatSE;
+	JDrama::TFlagT<u16> flag = 0;
 
 	switch (mState) {
 	case 0:
 		if (TFlagManager::getInstance()->getBool(0x50007)) {
 			SMSGetMarDirector()->fireStartDemoCamera(
 			    "sirena_manta", nullptr, -1, 0.0f, true, nullptr, 0, nullptr,
-			    JDrama::TFlagT<u16>(0));
+			    flag);
 			((TBossManta*)unk0->getObj(0))->initNthGeneration(0);
 			MSBgm::stopTrackBGMs(7, 10);
 			mState++;
 		}
 		break;
 	case 1: {
+		int i;
 		bool allMaxGen = true;
-		for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
+		for (i = 0; i < unk0->getActiveObjNum(); ++i) {
 			TBossManta* m = (TBossManta*)unk0->getObj(i);
 			if (m->checkLiveFlag(LIVE_FLAG_DEAD))
 				continue;
@@ -808,7 +810,7 @@ void TBossMantaManager::TMantaBattleState::update()
 			}
 		}
 		if (allMaxGen) {
-			for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
+			for (i = 0; i < unk0->getActiveObjNum(); ++i) {
 				TBossManta* m = (TBossManta*)unk0->getObj(i);
 				if (!m->checkLiveFlag(LIVE_FLAG_DEAD))
 					m->initNthGeneration(5);
@@ -818,8 +820,9 @@ void TBossMantaManager::TMantaBattleState::update()
 		break;
 	}
 	case 2: {
+		int i;
 		bool victory = true;
-		for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
+		for (i = 0; i < unk0->getActiveObjNum(); ++i) {
 			TBossManta* m = (TBossManta*)unk0->getObj(i);
 			if (m->mGeneration != 5)
 				continue;
