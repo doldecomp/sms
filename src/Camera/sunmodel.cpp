@@ -213,8 +213,8 @@ void TSunModel::perform(u32 cue, JDrama::TGraphics*)
 			if (unkF8[0].squared() > 2.0f) {
 				unkB0 = 0.0f;
 			} else {
-				unkB0 = CLBLinearInbetween<f32>(
-				    0.0f, (f32)unk80, 0.5f * (2.0f - distSq) * unk194);
+				f32 ratio = 0.5f * (2.0f - distSq) * unk194;
+				unkB0 = CLBLinearInbetween<f32>(0.0f, (f32)unk80, ratio);
 			}
 		}
 
@@ -226,7 +226,9 @@ void TSunModel::perform(u32 cue, JDrama::TGraphics*)
 		CLBChaseGeneralConstantSpecifySpeed<f32>(&unkAC, unkB0, chase3);
 
 		JGeometry::TVec3<f32> dir;
-		dir.sub(mPosition, gpCamera->getUnk124());
+		JGeometry::TVec3<f32> cameraPos;
+		cameraPos.set(gpCamera->getUnk124());
+		dir.sub(mPosition, cameraPos);
 		MsVECNormalize(&dir, &dir);
 
 		JGeometry::TVec3<f32> camPos;
