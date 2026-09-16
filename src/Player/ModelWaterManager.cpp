@@ -775,7 +775,53 @@ void TModelWaterManager::calcWorldMinMax()
 }
 
 #pragma dont_inline on
-void TModelWaterManager::calcDrawVtx(MtxPtr) { }
+void TModelWaterManager::calcDrawVtx(MtxPtr param_1)
+{
+	unk5D30->reset();
+
+	for (int i = 0; i < mParticleCount; ++i) {
+		if ((mParticleFlagSOA[i] & 0xf) != 1)
+			continue;
+		if (!(mParticleLifetimeSOA[i]
+		      < mWaterParticleTypes[mParticleTypeSOA[i]]->mAlive.get()
+		            - unk5D88[7]))
+			continue;
+
+		JGeometry::TVec3<f32> vel;
+		JGeometry::TVec3<f32> pos;
+		PSMTXMultVec(param_1, &mParticlePositionSOA[i], &pos);
+		if (pos.z > 0.0f || pos.z < -unk5D28)
+			continue;
+
+		PSMTXMultVecSR(param_1, &mParticleVelocitySOA[i], &vel);
+		vel *= mWaterParticleTypes[mParticleTypeSOA[i]]->mExtension.get();
+
+		JGeometry::TVec3<f32> vtx[4];
+		f32 halfSize = 0.5f * mParticleSizeSOA[i];
+		f32 radius   = 1.414f * halfSize;
+		f32 len2     = vel.x * vel.x + vel.y * vel.y;
+		if (len2 > 1.0f) {
+			f32 scale = (1.0f / std::sqrtf(len2)) * radius;
+			f32 x     = vel.x * scale;
+			f32 y     = vel.y * scale;
+
+			vtx[0].set(pos.x + x + vel.x * unk5D18,
+			           pos.y + y + vel.y * unk5D18, pos.z);
+			vtx[1].set(pos.x + y, pos.y - x, pos.z);
+			vtx[2].set(pos.x - x - vel.x * unk5D18,
+			           pos.y - y - vel.y * unk5D18, pos.z);
+			vtx[3].set(pos.x - y, pos.y + x, pos.z);
+		} else {
+			vtx[0].set(pos.x - radius, pos.y + radius, pos.z);
+			vtx[1].set(pos.x + radius, pos.y + radius, pos.z);
+			vtx[2].set(pos.x + radius, pos.y - radius, pos.z);
+			vtx[3].set(pos.x - radius, pos.y - radius, pos.z);
+		}
+		unk5D30->request(vtx);
+	}
+
+	unk5D30->setEnd();
+}
 #pragma dont_inline off
 
 void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
