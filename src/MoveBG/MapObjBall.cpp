@@ -3,6 +3,8 @@
 #include <System/FlagManager.hpp>
 #include <System/MarDirector.hpp>
 #include <System/Particles.hpp>
+#include <Player/ModelWaterManager.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <stdio.h>
 #include <string.h>
 #include <Map/Map.hpp>
@@ -847,4 +849,89 @@ void TResetFruit::waitingToAppear()
 		SMSGetMSound()->startSoundActor(MSD_SE_IT_COMMON_APPEAR, &mPosition, 0,
 		                                nullptr, 0, 4);
 	}
+}
+
+void TBigWatermelon::touchWaterSurface()
+{
+	emitColumnWater();
+	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_DRINA_TO_WATER, &mPosition, 0,
+	                                nullptr, 0, 4);
+	kill();
+}
+
+BOOL TBigWatermelon::receiveMessage(THitActor* sender, u32 message)
+{
+	// Mario always bounces off the big watermelon, whatever the message.
+	if (sender->isActorType(0x80000001)) {
+		boundByActor(sender);
+		return TRUE;
+	}
+
+	if (TMapObjGeneral::receiveMessage(sender, message))
+		return TRUE;
+
+	if (message == HIT_MESSAGE_TAKE && (unkF8 & 0x100000)) {
+		hold((TTakeActor*)sender);
+		return TRUE;
+	}
+
+	if (sender->isActorType(0x80000001)) {
+		if (!isActorType(0x400000D0) && message != HIT_MESSAGE_TAKE) {
+			kicked();
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+void TBigWatermelon::appearing()
+{
+	TMapObjGeneral::appearing();
+
+	MtxPtr mtx = getModel()->getAnmMtx(0);
+	calcRootMatrix();
+	getModel()->calc();
+	mtx[1][3] = mBodyRadius * (mScaling.y / mInitialScaling.y) + mPosition.y;
+
+	mScaledBodyRadius = 50.0f * mScaling.x;
+	mDamageRadius     = 50.0f * mScaling.x;
+	calcEntryRadius();
+
+	// Only once it has finished growing does it become the crushing type.
+	if (isState(STATE_NORMAL)) {
+		mActorType    = 0x400000D0;
+		mAttackRadius = 50.0f * mScaling.x;
+		calcEntryRadius();
+		return;
+	}
+
+	mActorType    = 0x400000DB;
+	mAttackRadius = 0.0f;
+	calcEntryRadius();
+}
+
+void TBigWatermelon::loadAfter()
+{
+	TMapObjGeneral::loadAfter();
+
+	// Park the shine that belongs to this watermelon at its fixed spot.
+	JDrama::TActor* shine
+	    = JDrama::TNameRefGen::search<JDrama::TActor>("シャイン（お化けスイカ用）");
+	shine->mPosition.x = -4659.0f;
+	shine->mPosition.y = 460.0f;
+	shine->mPosition.z = 13620.0f;
+}
+
+void TBigWatermelon::initMapObj()
+{
+	TMapObjBall::initMapObj();
+
+	SMS_LoadParticle("/scene/mapObj/watermelon_bomb.jpa", 0x5D);
+	SMS_LoadParticle("/scene/mapObj/watermelon_bomb_a.jpa", 0x5E);
+	SMS_LoadParticle("/scene/mapObj/watermelon_bomb_b.jpa", 0x5F);
+	SMS_LoadParticle("/scene/mapObj/watermelon_shrink_a.jpa", 0x6B);
+	SMS_LoadParticle("/scene/mapObj/watermelon_shrink_b.jpa", 0x6C);
+
+	unk198 = new TWaterEmitInfo("/watermelon.prm");
 }
