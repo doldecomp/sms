@@ -166,7 +166,7 @@ void TEnemyMario::initModel()
 	mHandModels[1][1]   = nullptr;
 
 	mAnmSoundTbl = new JAIAnimeSound*[199];
-	char buffer[0x10C];
+	char buffer[0x164];
 	for (int i = 0; i < 199; ++i) {
 		snprintf(buffer, 0xff, "/mario/bas/ma_%s.bas", marioAnimeFiles[i].unk4);
 		loadBas((void**)&mAnmSoundTbl[i], buffer);
