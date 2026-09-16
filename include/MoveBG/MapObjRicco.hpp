@@ -9,6 +9,7 @@
 
 class TCraneRotY : public TMapObjBase {
 public:
+	virtual ~TCraneRotY();
 	void calc();
 	void control();
 	void load(JSUMemoryInputStream&);
@@ -17,6 +18,7 @@ public:
 
 class TCraneUpDown : public TMapObjBase {
 public:
+	virtual ~TCraneUpDown();
 	void control();
 	void initMapObj();
 	TCraneUpDown(const char* name = "上下クレーン");
@@ -24,6 +26,7 @@ public:
 
 class TCraneCargo : public TLeanBlock {
 public:
+	virtual ~TCraneCargo();
 	void control();
 	void calc();
 	TCraneCargo()
@@ -34,6 +37,7 @@ public:
 
 class TRiccoWatermill : public TMapObjBase {
 public:
+	virtual ~TRiccoWatermill();
 	u32 touchWater(THitActor*);
 	void control();
 	void calc();
@@ -43,12 +47,14 @@ public:
 
 class TSurfGesoObj : public TItem {
 public:
+	virtual ~TSurfGesoObj();
 	void initMapObj();
 	TSurfGesoObj(const char* name = "イカサーフィン");
 };
 
 class TFruitSwitch : public TMapObjBase {
 public:
+	virtual ~TFruitSwitch();
 	void pullUp();
 	void pushDown();
 	BOOL receiveMessage(THitActor* sender, u32 message);
@@ -57,6 +63,7 @@ public:
 
 class TFruitLauncher : public TMapObjBase {
 public:
+	virtual ~TFruitLauncher();
 	void appearFruit() const;
 	void fireObj();
 	void loadAfter();

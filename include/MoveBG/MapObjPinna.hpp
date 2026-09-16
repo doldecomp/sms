@@ -11,6 +11,7 @@ class TCoin;
 
 class TFerrisWheel : public TMapObjBase {
 public:
+	virtual ~TFerrisWheel();
 	void becomeCalmlyCallback(u32, u32);
 	void control();
 	void initMapObj();
@@ -19,6 +20,7 @@ public:
 
 class THorizontalViking : public TMapObjBase {
 public:
+	virtual ~THorizontalViking();
 	void updateTrans();
 	void moveNormal();
 	void control();
@@ -29,6 +31,7 @@ public:
 
 class TViking : public THorizontalViking {
 public:
+	virtual ~TViking();
 	void roll();
 	void control();
 	void reset();
@@ -39,6 +42,7 @@ public:
 
 class TPinnaShell : public THitActor {
 public:
+	virtual ~TPinnaShell();
 	void opened();
 	BOOL receiveMessage(THitActor* sender, u32 message);
 	void control();
@@ -48,6 +52,7 @@ public:
 
 class TShellCup : public TMapObjBase {
 public:
+	virtual ~TShellCup();
 	void control();
 	void attachCoin(TCoin*, int);
 	void calcAfter();
@@ -59,6 +64,7 @@ public:
 
 class TMerrygoround : public TMapObjBase {
 public:
+	virtual ~TMerrygoround();
 	void control();
 	void draw() const;
 	void initMapObj();
@@ -67,6 +73,7 @@ public:
 
 class TChangeStageMerrygoround : public TMapObjChangeStage {
 public:
+	virtual ~TChangeStageMerrygoround();
 	void touchPlayer(THitActor*);
 	void calc();
 
@@ -82,6 +89,7 @@ public:
 
 class TBalloonKoopaJr : public TMapObjGeneral {
 public:
+	virtual ~TBalloonKoopaJr();
 	void touchActor(THitActor*);
 	void kill();
 	void load(JSUMemoryInputStream&);
@@ -90,18 +98,21 @@ public:
 
 class TPinnaEntrance : public TMapObjBase {
 public:
+	virtual ~TPinnaEntrance();
 	void loadAfter();
 	TPinnaEntrance(const char* name = "ピンナ入り口");
 };
 
 class TWaterRecoverObj : public TMapObjBase {
 public:
+	virtual ~TWaterRecoverObj();
 	void touchPlayer(THitActor*);
 	TWaterRecoverObj(const char* name = "水回復オブジェ");
 };
 
 class TAmiKing : public TMapObjBase {
 public:
+	virtual ~TAmiKing();
 	u32 touchWater(THitActor*);
 	void loadAfter();
 	void initMapObj();
@@ -114,6 +125,7 @@ public:
 
 class TPinnaCoaster : public TMapObjBase {
 public:
+	virtual ~TPinnaCoaster();
 	void control();
 	void initMapObj();
 	TPinnaCoaster(const char* name = "コースター");

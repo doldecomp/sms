@@ -11,6 +11,7 @@ public:
 
 class TRollEnemy : public TWalkerEnemy {
 public:
+	virtual ~TRollEnemy();
 	TRollEnemy(const char*);
 
 	virtual void reset();
@@ -30,6 +31,7 @@ public:
 
 class TIgaigaPolluteModelManager : public TEnemyPolluteModelManager {
 public:
+	virtual ~TIgaigaPolluteModelManager();
 	TIgaigaPolluteModelManager(const char*);
 
 	virtual void init(TLiveActor*);
@@ -37,6 +39,7 @@ public:
 
 class TIgaigaPolluteModel : public TEnemyPolluteModel {
 public:
+	virtual ~TIgaigaPolluteModel();
 	TIgaigaPolluteModel(TLiveActor*, int, SDLModelData*, const char*);
 
 	virtual void setAnm();
@@ -44,6 +47,7 @@ public:
 
 class TIgaigaManager : public TSmallEnemyManager {
 public:
+	virtual ~TIgaigaManager();
 	TIgaigaManager(const char*);
 
 	void load(JSUMemoryInputStream&);
@@ -56,6 +60,7 @@ public:
 
 class TIgaiga : public TRollEnemy {
 public:
+	virtual ~TIgaiga();
 	TIgaiga(const char*);
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
@@ -89,6 +94,7 @@ DECLARE_NERVE(TNerveIgaigaShootFromCannon, TLiveActor);
 
 class TGorogoroPolluteModelManager : public TEnemyPolluteModelManager {
 public:
+	virtual ~TGorogoroPolluteModelManager();
 	TGorogoroPolluteModelManager(const char*);
 
 	virtual void init(TLiveActor*);
@@ -96,6 +102,7 @@ public:
 
 class TGorogoroPolluteModel : public TEnemyPolluteModel {
 public:
+	virtual ~TGorogoroPolluteModel();
 	TGorogoroPolluteModel(TLiveActor*, int, SDLModelData*, const char*);
 
 	virtual void setAnm();
@@ -118,6 +125,7 @@ public:
 
 class TGorogoro : public TRollEnemy {
 public:
+	virtual ~TGorogoro();
 	TGorogoro(const char*);
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);

@@ -24,3 +24,14 @@ DEFINE_NERVE(TNerveGorogoroRollOnGraph, TLiveActor) { return FALSE; }
 
 // TODO: incorrect size. Map records 564 bytes.
 DEFINE_NERVE(TNerveGorogoroDie, TLiveActor) { return FALSE; }
+
+#include <Enemy/Igaiga.hpp>
+
+TRollEnemy::~TRollEnemy() { }
+TGorogoro::~TGorogoro() { }
+TGorogoroPolluteModel::~TGorogoroPolluteModel() { }
+TGorogoroPolluteModelManager::~TGorogoroPolluteModelManager() { }
+TIgaiga::~TIgaiga() { }
+TIgaigaManager::~TIgaigaManager() { }
+TIgaigaPolluteModel::~TIgaigaPolluteModel() { }
+TIgaigaPolluteModelManager::~TIgaigaPolluteModelManager() { }

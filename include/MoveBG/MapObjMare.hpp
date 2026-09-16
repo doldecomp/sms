@@ -9,6 +9,7 @@ struct TBGWallCheckRecord;
 
 class TCogwheelScale : public TMapObjBase {
 public:
+	virtual ~TCogwheelScale();
 	u32 touchWater(THitActor*);
 	BOOL receiveMessage(THitActor* sender, u32 message);
 	void touchPlayer(THitActor*);
@@ -18,6 +19,7 @@ public:
 
 class TCogwheel : public TMapObjBase {
 public:
+	virtual ~TCogwheel();
 	void initDraw() const;
 	void draw() const;
 	void rebound();
@@ -29,6 +31,7 @@ public:
 
 class TMapObjElasticCode : public TMapObjBase {
 public:
+	virtual ~TMapObjElasticCode();
 	void draw() const;
 	void control();
 	void initMapObj();
@@ -37,6 +40,7 @@ public:
 
 class TMapObjGrowTree : public TMapObjBase {
 public:
+	virtual ~TMapObjGrowTree();
 	void getGrowHeightFromRate(float) const;
 	void updateHeight();
 	u32 touchWater(THitActor*);
@@ -48,6 +52,7 @@ public:
 
 class TWireBell : public TMapObjBase {
 public:
+	virtual ~TWireBell();
 	void initDraw() const;
 	void draw() const;
 	void control();
@@ -57,6 +62,7 @@ public:
 
 class TMapObjPuncher : public TMapObjBase {
 public:
+	virtual ~TMapObjPuncher();
 	void touchPlayer(THitActor*);
 	void control();
 	void load(JSUMemoryInputStream&);
@@ -65,6 +71,7 @@ public:
 
 class TMuddyBoat : public TMapObjBase {
 public:
+	virtual ~TMuddyBoat();
 	void moveByWater();
 	void calcRootMatrix();
 	void kill();
@@ -81,6 +88,7 @@ public:
 
 class TMareFall : public TMapObjBase {
 public:
+	virtual ~TMareFall();
 	void calc();
 	void load(JSUMemoryInputStream&);
 	TMareFall(const char* name = "マーレ滝");
@@ -88,6 +96,7 @@ public:
 
 class TMareCork : public TMapObjBase {
 public:
+	virtual ~TMareCork();
 	void loadAfter();
 	void moveObject();
 	void calcRootMatrix();
@@ -98,6 +107,7 @@ public:
 
 class TMareEventPoint : public THitActor {
 public:
+	virtual ~TMareEventPoint();
 	BOOL receiveMessage(THitActor* sender, u32 message);
 	void load(JSUMemoryInputStream&);
 	TMareEventPoint(const char* name = "イベントポイント");

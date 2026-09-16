@@ -8,12 +8,14 @@
 
 class TMapObjMonteRoot : public TMapObjBase {
 public:
+	virtual ~TMapObjMonteRoot();
 	void initMapObj();
 	TMapObjMonteRoot(const char* name = "根っこ");
 };
 
 class TJumpMushroom : public TMapObjBase {
 public:
+	virtual ~TJumpMushroom();
 	BOOL receiveMessage(THitActor*, unsigned long);
 	void load(JSUMemoryInputStream&);
 	TJumpMushroom(const char* name = "ジャンプきのこ");
@@ -21,6 +23,7 @@ public:
 
 class THangingBridgeBoard : public TLeanBlock {
 public:
+	virtual ~THangingBridgeBoard();
 	void drawOneRope(const JGeometry::TVec3<f32>&) const;
 	void drawRopes() const;
 	void push(f32);
@@ -34,6 +37,7 @@ public:
 
 class THangingBridge : public JDrama::TViewObj {
 public:
+	virtual ~THangingBridge();
 	void drawLowerMinus(const JGeometry::TVec3<f32>&,
 	                    const JGeometry::TVec3<f32>&,
 	                    const JGeometry::TVec2<f32>&, int) const;
@@ -53,6 +57,7 @@ public:
 
 class TSwingBoard : public TMapObjBase {
 public:
+	virtual ~TSwingBoard();
 	void drawOneRope(const JGeometry::TVec3<f32>&,
 	                 const JGeometry::TVec3<f32>&) const;
 	void initDraw() const;
@@ -65,6 +70,7 @@ public:
 
 class TGoalFlag : public TMapObjBase {
 public:
+	virtual ~TGoalFlag();
 	f32 getRadiusAtY(f32) const;
 	void touchActor(THitActor*);
 	void initMapObj();
@@ -73,6 +79,7 @@ public:
 
 class TFluff : public TMapObjBase {
 public:
+	virtual ~TFluff();
 	f32 getRadiusAtY(f32) const;
 	u32 touchWater(THitActor*);
 	void move();
@@ -85,6 +92,7 @@ public:
 
 class TFluffManager : public TMapObjBase {
 public:
+	virtual ~TFluffManager();
 	void findNextFluff();
 	void control();
 	void registerNextFluff(TFluff*);
