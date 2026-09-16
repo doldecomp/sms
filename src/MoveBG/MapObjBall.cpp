@@ -6,6 +6,7 @@
 #include <Player/ModelWaterManager.hpp>
 #include <MoveBG/ItemManager.hpp>
 #include <Camera/CubeManagerBase.hpp>
+#include <Enemy/PoiHana.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <stdio.h>
 #include <string.h>
@@ -1152,4 +1153,42 @@ void TResetFruit::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	TMapObjGeneral::perform(cue, graphics);
+}
+
+// TODO: 61.3%. Structurally right, but the original inlines
+// TMapObjBall::touchActor here and our build emits a call, the same
+// -inline deferred budget difference that affects the TUtil<f32>::sqrt
+// call sites. Worth re-checking once the TU is complete.
+void TBigWatermelon::touchActor(THitActor* param_1)
+{
+	if (isState(STATE_APPEARING))
+		return;
+
+	// Once it is falling, touching anything at all bursts it.
+	if (!isState(STATE_NORMAL)) {
+		JGeometry::TVec3<f32> vel(mVelocity);
+		if (vel.y < 0.0f) {
+			kill();
+			return;
+		}
+	}
+
+	if (param_1->isActorType(0x80000001)) {
+		if (mPosition.distance(param_1->mPosition) < 0.6f * mBodyRadius) {
+			kill();
+			return;
+		}
+	}
+
+	// A moving poihana bounces it back up instead.
+	if (param_1->isActorType(0x10000015) && ((TPoiHana*)param_1)->isMoving()) {
+		f32 vy = mVelocity.y;
+		if (abs(vy) < mMapObjData->mPhysical->unk4->unkC) {
+			mVelocity.y = vy + 30.0f;
+			mState      = STATE_LIVING;
+		}
+		return;
+	}
+
+	TMapObjBall::touchActor(param_1);
 }
