@@ -418,12 +418,8 @@ void TWarpInCallBack::execute(JPABaseEmitter* emitter,
 
 	f32 factor = ((((int)particle >> 2) & 0x3F) / 16.0f + 1.0f);
 
-	JGeometry::TVec3<f32> v = *vel;
-
-	v = v * tmp;
-	v = v * timer;
-	v = v * factor;
-
+	JGeometry::TVec3<f32> v = *vel * tmp;
+	v = v * timer * factor;
 	particle->unk14 += v;
 }
 
