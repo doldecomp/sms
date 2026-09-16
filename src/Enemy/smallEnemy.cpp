@@ -931,8 +931,10 @@ void TSmallEnemy::behaveToHitOthers(THitActor* param_1)
 
 	JGeometry::TVec3<f32> result(0.0f, 0.0f, 0.0f);
 
-	JGeometry::TVec3<f32> local_14;
-	local_14.sub(mPosition, param_1->getPosition());
+	JGeometry::TVec3<f32> local_14(
+	    mPosition.x - param_1->getPosition().x,
+	    mPosition.y - param_1->getPosition().y,
+	    mPosition.z - param_1->getPosition().z);
 
 	if (local_14.x == 0.0f && local_14.y == 0.0f && local_14.z == 0.0f)
 		local_14.x += 1.0f;
