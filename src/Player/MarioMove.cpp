@@ -2325,21 +2325,24 @@ void TMario::checkYoshiGetOff()
 
 void TMario::thinkYoshiHeadCollision()
 {
-	if (!onYoshi())
+	BOOL isOnYoshi = onYoshi();
+	if (!isOnYoshi)
 		return;
 
 	JGeometry::TVec3<f32> headPos = mPosition;
 
 	f32 front = mYoshiParams.mHeadFront.get();
-	headPos.x += front * JMASSin(mFaceAngle.y);
-	headPos.z += front * JMASCos(mFaceAngle.y);
+	s16 angle = mFaceAngle.y;
+	headPos.x += front * JMASSin(angle);
+	headPos.z += front * JMASCos(angle);
 
 	TBGWallCheckRecord record(headPos.x, headPos.y + 100.0f, headPos.z,
 	                          mYoshiParams.mHeadRadius.get(), 4, 0);
+	f32 z = headPos.z;
 
 	if (gpMap->isTouchedWallsAndMoveXZ(&record) == true) {
 		f32 dx = record.mCenter.x - headPos.x;
-		f32 dz = record.mCenter.z - headPos.z;
+		f32 dz = record.mCenter.z - z;
 		f32 f4 = std::sqrtf(dx * dx + dz * dz);
 
 		f32 f2 = f4;
