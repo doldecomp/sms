@@ -3,6 +3,7 @@
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/PacketUtil.hpp>
+#include <Map/Map.hpp>
 #include <MoveBG/MapObjCorona.hpp>
 #include <MoveBG/MapObjManager.hpp>
 #include <Strategic/ObjModel.hpp>
@@ -262,7 +263,37 @@ void TBathtubKiller::breakBathtubKiller() { }
 
 void TBathtubKiller::explodeBathtubKiller() { }
 
-void TBathtubKiller::bind() { }
+void TBathtubKiller::bind()
+{
+	JGeometry::TVec3<f32> next = mPosition;
+	next += mLinearVelocity;
+	next += mVelocity;
+	mVelocity += unk1BC;
+
+	if (!isAttackable()) {
+		mGroundHeight = gpMap->checkGround(next.x, next.y + mHeadHeight,
+		                                   next.z, &mGroundPlane);
+		mGroundHeight += 1.0f;
+		if (next.y <= mGroundHeight + 0.05f) {
+			if (!isAttackable())
+				mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
+
+			unk1BC.x = 0.0f;
+			unk1BC.y = 0.0f;
+			unk1BC.z = 0.0f;
+			mVelocity = unk1BC;
+			next.y     = mGroundHeight;
+		}
+
+		if (gpMap->isTouchedOneWallAndMoveXZ(
+		        &next.x, next.y + mHeadHeight, &next.z, mBodyRadius)) {
+			if (!isAttackable())
+				mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
+		}
+	}
+
+	mLinearVelocity = next - mPosition;
+}
 
 void TBathtubKiller::perform(u32 cue, JDrama::TGraphics* graphics)
 {
@@ -351,7 +382,12 @@ void TBathtubKiller::setDeadBathtubKillerAnm() { }
 
 void TBathtubKiller::updateTimers() { }
 
-bool TBathtubKiller::isAttackable() { return false; }
+bool TBathtubKiller::isAttackable()
+{
+	return mSpine->getCurrentNerve()
+	           == &TNerveBathtubKillerExplosion::theNerve()
+	       || mSpine->getCurrentNerve() == &TNerveBathtubKillerBreak::theNerve();
+}
 
 bool TBathtubKiller::isAboided() { return false; }
 
