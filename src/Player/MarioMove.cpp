@@ -952,10 +952,10 @@ void TMario::checkGraffitoSlip()
 
 void TMario::checkGraffitoElec()
 {
-	(void)0;
-	(void)0;
-	(void)0;
-	(void)0;
+	JGeometry::TVec3<f32>();
+	JGeometry::TVec3<f32>();
+	JGeometry::TVec3<f32>();
+	JGeometry::TVec3<f32>();
 
 	if (!checkFlag(MARIO_FLAG_DIRTY))
 		mStandingOnGraffitoTimer = mDeParams.mGraffitoNoDmgTime.get();
