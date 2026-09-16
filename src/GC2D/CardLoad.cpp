@@ -1329,8 +1329,8 @@ s8 TCardLoad::waitForAnyKey(TEProgress progress)
 		break;
 
 	case 3: {
-		unk568->setCenteredSize(20, unk56C.getWidth(), unk56C.getHeight(), 0,
-		                        0);
+		unk568->setCenteredSize(20, 0, 0, unk56C.getWidth(),
+		                        unk56C.getHeight());
 		unk580->hide();
 		unkB4 = 0;
 		unk10 = 4;
