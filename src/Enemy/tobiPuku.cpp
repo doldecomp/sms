@@ -22,6 +22,16 @@ enum {
 	PUKU_ANM_SWIM          = 9,
 };
 
+// TODO: fabricated defaults; the real values come from the .prm file and the
+// map records no constructor for this class, so they are unverified.
+TTobiPukuParams::TTobiPukuParams(const char* prm)
+    : TWalkerEnemyParams(prm)
+    , PARAM_INIT(mBoundMax, 3)
+    , PARAM_INIT(mBoundDamp, 0.5f)
+    , PARAM_INIT(mPichiTime, 60)
+{
+}
+
 f32 TTobiPuku::mLandAngle;
 u8 TTobiPuku::mBoundSw;
 f32 TTobiPuku::mBoundVelocityY;
@@ -130,10 +140,10 @@ DEFINE_NERVE(TNerveTobiPukuBound, TLiveActor)
 	if (spine->getTime() == 0) {
 		puku->unk1AE = 1;
 		int count    = puku->mBoundCount;
-		if (count < puku->unk19C->unk33C) {
+		if (count < puku->unk19C->mBoundMax.get()) {
 			puku->mBoundCount = count + 1;
 
-			f32 damp = puku->unk19C->unk350;
+			f32 damp = puku->unk19C->mBoundDamp.get();
 			JGeometry::TVec3<f32> vel(puku->mLaunchVelocity);
 			vel.x *= damp;
 			vel.z *= damp;
@@ -173,7 +183,7 @@ DEFINE_NERVE(TNerveTobiPukuPitiPiti, TLiveActor)
 		puku->setPichiAnm();
 
 	if (puku->checkCurAnmEnd(0)
-	    && spine->getTime() > puku->getSaveParam2()->unk364) {
+	    && spine->getTime() > puku->getSaveParam2()->mPichiTime.get()) {
 		puku->unk1AD = 0;
 		spine->pushAfterCurrent(&TNerveTobiPukuDie::theNerve());
 		return TRUE;

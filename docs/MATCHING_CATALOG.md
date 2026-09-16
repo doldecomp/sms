@@ -49,6 +49,21 @@ The last two differ only in whether the 1/0 lands in `r0` and is widened, or lan
 
 Working order for a batch of such accessors: get one exact, then apply the same shape to the rest. Here that took 30 functions from 0 to exact in three edits.
 
+## Part of the frame gap is raw param access, batch 68
+
+**Some reserved-local gaps are not mysterious at all: they are `TParamRT` accesses written as raw field reads.**
+
+A `TParamRT<T>` occupies 0x14 bytes and holds its value at **+0x10**. When m2c shows a bare field read, check whether `offset - 0x10` is a clean 0x14-aligned param slot; if it is, the original wrote `mSomething.get()` and the accessor's temporary is the missing stack.
+
+In `tobiPuku` the reads at 0x33C, 0x350 and 0x364 are exactly 0x32C, 0x340 and 0x354 plus 0x10 — three consecutive `TParamRT` fields. Declaring them properly, constructing them with `PARAM_INIT`, and calling `.get()`:
+
+- `TNerveTobiPukuPitiPiti::execute` went from 99.9% with an 8-byte gap to **exact**.
+- `TNerveTobiPukuBound::execute` went from a 32-byte gap to an 8-byte one, recovering 24 bytes.
+
+So the earlier conclusion that near-exact frame gaps are an opaque compiler artifact was too pessimistic. Before treating one as unfixable, check every raw field read in the body against the `+0x10` rule. The remaining gaps may well have similarly concrete causes.
+
+`TParamRT` members cannot be default-constructed; they need `PARAM_INIT(member, default)` in the constructor's initializer list, which means declaring the params class properly rather than padding to the offset.
+
 ## Frame-gap hypotheses ruled out, batch 67
 
 Two plausible causes for the reserved-local gap were tested against `TNerveTobiPukuPitiPiti::execute`, which needs exactly 8 more bytes, and both are wrong. Do not retry them.

@@ -8,17 +8,13 @@
 // whole animation interface and differ only in their vtable.
 class TTobiPukuParams : public TWalkerEnemyParams {
 public:
-	TTobiPukuParams(const char* prm)
-	    : TWalkerEnemyParams(prm)
-	{
-	}
+	TTobiPukuParams(const char* prm);
 
-	/* 0x32C */ u8 unk32C[0x33C - 0x32C];
-	/* 0x33C */ int unk33C;
-	/* 0x340 */ u8 unk340[0x350 - 0x340];
-	/* 0x350 */ f32 unk350;
-	/* 0x354 */ u8 unk354[0x364 - 0x354];
-	/* 0x364 */ int unk364;
+	// Each TParamRT holds its value at +0x10, which is where the accesses
+	// at 0x33C, 0x350 and 0x364 land.
+	/* 0x32C */ TParamRT<int> mBoundMax;
+	/* 0x340 */ TParamRT<f32> mBoundDamp;
+	/* 0x354 */ TParamRT<int> mPichiTime;
 	/* 0x368 */ u8 unk368[0x390 - 0x368];
 };
 
