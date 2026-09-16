@@ -25,6 +25,9 @@ public:
 	void isDown() const;
 	void withering();
 	TSandBase(const char*);
+
+	static int mWitherTime;
+	static f32 mScaleMin;
 };
 
 class TSandLeafBase : public TSandBase {
@@ -67,6 +70,12 @@ public:
 	void loadAfter();
 	void initMapObj();
 	TSandBombBase(const char* name = "すなやま爆弾の土台");
+
+	static f32 mFiringFrameSpeed;
+	static f32 mFiringFrameDownSpeed;
+	static f32 mExplodeFrameSpeed;
+	static f32 mMarioJumpRate;
+	static int mExlodingRumbleTime;
 };
 
 class TSandCastle : public TSandBombBase {
@@ -80,6 +89,8 @@ public:
 	void loadAfter();
 	void initMapObj();
 	TSandCastle(const char* name = "砂の城");
+
+	static f32 mCollisionRate;
 };
 
 class TLeanMirror : public TMapObjBase {
@@ -100,6 +111,10 @@ public:
 	void initMapObj();
 	void load(JSUMemoryInputStream&);
 	TLeanMirror(const char* name = "ぐらぐら鏡");
+
+	static int mGoTargetTime;
+	static int mDemoWaitTime;
+	static int mDemoLightTime;
 };
 
 class TShiningStone : public THitActor {
@@ -118,6 +133,13 @@ public:
 	void initMapObj();
 	void load(JSUMemoryInputStream&);
 	TMammaBlockRotate(const char* name = "太陽の塔ブロック");
+
+	static f32 mRotSpeed;
+	static f32 mRotReturnSpeed;
+	static f32 mRotEnd;
+	static f32 mMapGoSpeed;
+	static f32 mMapBackSpeed;
+	static int mWaitTime;
 };
 
 class TMammaYacht : public TMapObjBase {
