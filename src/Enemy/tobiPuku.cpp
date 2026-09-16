@@ -238,7 +238,31 @@ DEFINE_NERVE(TNerveTobiPukuFall, TLiveActor) { return FALSE; }
 DEFINE_NERVE(TNerveTobiPukuHitWater, TLiveActor) { return FALSE; }
 
 // TODO: incorrect size. Map records 0x198 (408 bytes).
-DEFINE_NERVE(TNerveTobiPukuAttack, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveTobiPukuAttack, TLiveActor)
+{
+	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		puku->setAttackAnm();
+
+	if (puku->isAirborne()) {
+		if (puku->getCurAnmFrameNo(0) >= 6.0f) {
+			puku->unk194 = 0;
+			JGeometry::TVec3<f32> vel(puku->mVelocity);
+			JGeometry::TVec3<f32> stop(0.0f, vel.y, 0.0f);
+			puku->mVelocity = stop;
+			puku->mPosition.y += 2.0f;
+			puku->onLiveFlag(LIVE_FLAG_AIRBORNE);
+		}
+
+		if (puku->checkCurAnmEnd(0)) {
+			spine->pushAfterCurrent(&TNerveTobiPukuFall::theNerve());
+			return TRUE;
+		}
+		return FALSE;
+	}
+	return TRUE;
+}
 
 // TODO: incorrect size. Map records 0x194 (404 bytes).
 DEFINE_NERVE(TNerveTobiPukuFly, TLiveActor) { return FALSE; }
