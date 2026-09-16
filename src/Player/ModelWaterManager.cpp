@@ -1358,8 +1358,8 @@ void init_sphere_glist() { }
 extern "C" void ReInitializeGX();
 
 static u8 tmp_data;
-static void* sphere_glist_p;
-static void* sphere_pos_t;
+static u8* sphere_glist_p;
+static u8* sphere_pos_t;
 
 void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 {
@@ -1369,7 +1369,7 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 		if (!initialized) {
 			sphere_glist_p = &tmp_data;
 			initialized    = 1;
-			sphere_pos_t   = &tmp_data + 1000;
+			sphere_pos_t   = sphere_glist_p + 0x760;
 		}
 
 		f32 f30 = (((unk5E0C + unk5E40) - unk5E0C) / f32(unk5E44 - 1));
@@ -1383,6 +1383,7 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 		Mtx afStack_f8;
 		MTXIdentity(afStack_f8);
 
+		JGeometry::TVec3<f32> local_pos(0.0f, 3600.0f, -7458.0f);
 		Mtx local_c8;
 		local_c8[2][1] = 0.0;
 		local_c8[2][0] = 0.0;
@@ -1390,9 +1391,9 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 		local_c8[1][0] = 0.0;
 		local_c8[0][2] = 0.0;
 		local_c8[0][1] = 0.0;
-		local_c8[0][3] = 0.0;
-		local_c8[1][3] = 3600.0;
-		local_c8[2][3] = -7458.0;
+		local_c8[0][3] = local_pos.x;
+		local_c8[1][3] = local_pos.y;
+		local_c8[2][3] = local_pos.z;
 
 		GXClearVtxDesc();
 		GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
