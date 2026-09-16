@@ -1334,9 +1334,9 @@ void TMario::checkController(JDrama::TGraphics*)
 	unk108->mStickVS16 = (s16)(128.0f * mGamePad->mCompSPos[1]);
 
 	if (isSinking()) {
+		f32 sinkMoveMax = mGraffitoParams.mSinkMoveMax.get();
 		f32 sinkScale
-		    = (mGraffitoParams.mSinkMoveMax.get()
-		       - mGraffitoParams.mSinkMoveMin.get())
+		    = (sinkMoveMax - mGraffitoParams.mSinkMoveMin.get())
 		          * (1.0f - (mSinkTimer / (f32)mGraffitoParams.mSinkTime.get()))
 		      + mGraffitoParams.mSinkMoveMin.get();
 		unk108->mStickHS16 *= sinkScale;
@@ -1464,8 +1464,9 @@ void TMario::checkController(JDrama::TGraphics*)
 		unk108->mStickV = (f32)(unk108->mStickVS16 - 6);
 
 	// Stick distance, then mLengthMult^mLengthMultTimes (unrolled in 8s)
-	f32 dist = (unk108->mStickH * unk108->mStickH)
-	           + (unk108->mStickV * unk108->mStickV);
+	f32 stickDist = (unk108->mStickH * unk108->mStickH)
+	                + (unk108->mStickV * unk108->mStickV);
+	f32 dist = stickDist;
 	if (dist > 0.0f)
 		dist = MsSqrtf(dist);
 
@@ -1475,8 +1476,8 @@ void TMario::checkController(JDrama::TGraphics*)
 	unk108->mStickDist = dist;
 
 	if (unk108->mStickDist > 64.0f) {
-		unk108->mStickH    = unk108->mStickH * (64.0f / unk108->mStickDist);
-		unk108->mStickV    = unk108->mStickV * (64.0f / unk108->mStickDist);
+		unk108->mStickH *= 64.0f / unk108->mStickDist;
+		unk108->mStickV = unk108->mStickV * (64.0f / unk108->mStickDist);
 		unk108->mStickDist = 64.0f;
 	}
 
