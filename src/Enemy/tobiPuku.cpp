@@ -55,15 +55,24 @@ enum {
 	PUKU_ANM_SWIM          = 9,
 };
 
-// TODO: fabricated defaults; the real values come from the .prm file and the
-// map records no constructor for this class, so they are unverified.
-TTobiPukuParams::TTobiPukuParams(const char* prm)
+TTobiPukuSaveLoadParams::TTobiPukuSaveLoadParams(const char* prm)
     : TWalkerEnemyParams(prm)
-    , PARAM_INIT(mBoundMax, 3)
-    , PARAM_INIT(mBoundDamp, 0.5f)
-    , PARAM_INIT(mPichiTime, 60)
-    , PARAM_INIT(mFlyGravity, 0.5f)
-    , PARAM_INIT(mHitWaterPush, 10.0f)
+    , PARAM_INIT(mSLBoundNum, 3)
+    , PARAM_INIT(mSLBoundVal, 0.8f)
+    , PARAM_INIT(mSLLifeTimer, 200)
+    , PARAM_INIT(mSLFlyGravityY, 0.2f)
+    , PARAM_INIT(mSLPowerFromWater, 1.0f)
+{
+}
+
+TTobiPukuLaunchPadSaveLoadParams::TTobiPukuLaunchPadSaveLoadParams(
+    const char* prm)
+    : TSmallEnemyParams(prm)
+    , PARAM_INIT(mSLLaunchInterval, 300)
+    , PARAM_INIT(mSLLaunchVelocityY, 12.0f)
+    , PARAM_INIT(mSLFlyDist, 1000.0f)
+    , PARAM_INIT(mSLFlySpeed, 30.0f)
+    , PARAM_INIT(mSLLaunchAngle, 45.0f)
 {
 }
 
@@ -133,7 +142,7 @@ void TTobiPukuLaunchPad::init(TLiveManager* manager)
 {
 	TSmallEnemy::init(manager);
 	mActorType = 0x10000012;
-	unk198     = (TTobiPukuLaunchPadParams*)getSaveParam();
+	unk198     = (TTobiPukuLaunchPadSaveLoadParams*)getSaveParam();
 }
 
 void TTobiPukuLaunchPad::launch()
@@ -176,7 +185,7 @@ void TTobiPukuLaunchPad::perform(u32 cue, JDrama::TGraphics* graphics)
 			launch();
 	} else {
 		unk194++;
-		if (unk194 > unk198->mLaunchInterval.get()) {
+		if (unk194 > unk198->mSLLaunchInterval.get()) {
 			unk194 = 0;
 			launch();
 		}
@@ -404,10 +413,10 @@ DEFINE_NERVE(TNerveTobiPukuBound, TLiveActor)
 	if (spine->getTime() == 0) {
 		puku->unk1AE = 1;
 		int count    = puku->mBoundCount;
-		if (count < puku->unk19C->mBoundMax.get()) {
+		if (count < puku->unk19C->mSLBoundNum.get()) {
 			puku->mBoundCount = count + 1;
 
-			f32 damp = puku->unk19C->mBoundDamp.get();
+			f32 damp = puku->unk19C->mSLBoundVal.get();
 			JGeometry::TVec3<f32> vel(puku->mLaunchVelocity);
 			vel.x *= damp;
 			vel.z *= damp;
@@ -462,7 +471,7 @@ DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor)
 		}
 
 		if (TTobiPuku::mBoundSw) {
-			if (puku->mBoundCount < puku->unk19C->mBoundMax.get()) {
+			if (puku->mBoundCount < puku->unk19C->mSLBoundNum.get()) {
 				spine->pushAfterCurrent(&TNerveTobiPukuBound::theNerve());
 				return TRUE;
 			}
@@ -564,7 +573,7 @@ DEFINE_NERVE(TNerveTobiPukuPitiPiti, TLiveActor)
 		puku->setPichiAnm();
 
 	if (puku->checkCurAnmEnd(0)
-	    && spine->getTime() > puku->getSaveParam2()->mPichiTime.get()) {
+	    && spine->getTime() > puku->getSaveParam2()->mSLLifeTimer.get()) {
 		puku->unk1AD = 0;
 		spine->pushAfterCurrent(&TNerveTobiPukuDie::theNerve());
 		return TRUE;
@@ -742,7 +751,7 @@ BOOL TTobiPuku::isInhibitedForceMove()
 f32 TTobiPuku::getGravityY() const
 {
 	if (unk194)
-		return unk19C->mFlyGravity.get();
+		return unk19C->mSLFlyGravityY.get();
 	return mGravity;
 }
 
@@ -753,7 +762,7 @@ void TTobiPuku::init(TLiveManager* manager)
 	TWalkerEnemy::init(manager);
 	mActorType = 0x10000012;
 	unk150     = 0x31;
-	unk19C     = (TTobiPukuParams*)getSaveParam();
+	unk19C     = (TTobiPukuSaveLoadParams*)getSaveParam();
 	mMActor->setJointCallback(1, TobiPukuRollCallback);
 }
 
@@ -768,7 +777,7 @@ void TTobiPuku::hitWater()
 
 	MsVECNormalize(away, away);
 
-	f32 push = unk19C->mHitWaterPush.get();
+	f32 push = unk19C->mSLPowerFromWater.get();
 	vel.x    = away.x * push;
 	vel.y    = 2.0f * (away.y * push);
 	vel.z     = away.z * push;
@@ -836,6 +845,16 @@ void TTobiPuku::hitWall()
 	                 &roof);
 	if (roof && roof->getActor() && mVelocity.y > 0.0f)
 		mVelocity.y = 0.0f;
+}
+
+void TTobiPuku::behaveToWater(THitActor* param_1)
+{
+	if (mSpine->getCurrentNerve() == &TNerveTobiPukuHitWater::theNerve())
+		return;
+
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_FLY, &mPosition, 0,
+	                                nullptr, 0, 4);
+	mSpine->pushNerve(&TNerveTobiPukuHitWater::theNerve());
 }
 
 void TTobiPuku::kill()
@@ -1027,4 +1046,22 @@ void TMoePuku::hitWater()
 	// The burning pukupuku hitting water reuses the wanwan sizzle.
 	SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
 	                                nullptr, 0, 4);
+}
+
+void TTobiPukuManager::load(JSUMemoryInputStream& stream)
+{
+	unk38 = new TTobiPukuSaveLoadParams("/enemy/tobipuku.prm");
+	TSmallEnemyManager::load(stream);
+}
+
+void TTobiPukuLaunchPadManager::load(JSUMemoryInputStream& stream)
+{
+	unk38 = new TTobiPukuLaunchPadSaveLoadParams("/enemy/tobipukulaunch.prm");
+	TSmallEnemyManager::load(stream);
+}
+
+void TTobiPukuLaunchPadManager::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	for (int i = 0; i < getActiveObjNum(); ++i)
+		getObj(i)->perform(cue, graphics);
 }

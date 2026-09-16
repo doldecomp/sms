@@ -6,17 +6,19 @@
 
 // The flying pukupuku. TMoePuku and TPukuPuku are variants that share its
 // whole animation interface and differ only in their vtable.
-class TTobiPukuParams : public TWalkerEnemyParams {
+// Names and defaults are the ones PARAM_INIT stringified into .rodata and the
+// ones TTobiPukuManager::load stores, not guesses.
+class TTobiPukuSaveLoadParams : public TWalkerEnemyParams {
 public:
-	TTobiPukuParams(const char* prm);
+	TTobiPukuSaveLoadParams(const char* prm);
 
 	// Each TParamRT holds its value at +0x10, which is where the accesses
 	// at 0x33C, 0x350 and 0x364 land.
-	/* 0x32C */ TParamRT<int> mBoundMax;
-	/* 0x340 */ TParamRT<f32> mBoundDamp;
-	/* 0x354 */ TParamRT<int> mPichiTime;
-	/* 0x368 */ TParamRT<f32> mFlyGravity;
-	/* 0x37C */ TParamRT<f32> mHitWaterPush;
+	/* 0x32C */ TParamRT<s32> mSLBoundNum;
+	/* 0x340 */ TParamRT<f32> mSLBoundVal;
+	/* 0x354 */ TParamRT<s32> mSLLifeTimer;
+	/* 0x368 */ TParamRT<f32> mSLFlyGravityY;
+	/* 0x37C */ TParamRT<f32> mSLPowerFromWater;
 	/* 0x390 */ u8 unk390[0];
 };
 
@@ -25,11 +27,15 @@ public:
 // __ct__23TTobiPukuSaveLoadParams. It cannot derive from TWalkerEnemyParams,
 // because the slot at 0x2D4 that holds the float mSLZigzagCycle there is read
 // as an int here. 0x2D4 is exactly where TSmallEnemyParams ends.
-class TTobiPukuLaunchPadParams : public TSmallEnemyParams {
+class TTobiPukuLaunchPadSaveLoadParams : public TSmallEnemyParams {
 public:
-	TTobiPukuLaunchPadParams(const char* prm);
+	TTobiPukuLaunchPadSaveLoadParams(const char* prm);
 
-	/* 0x2D4 */ TParamRT<int> mLaunchInterval;
+	/* 0x2D4 */ TParamRT<s32> mSLLaunchInterval;
+	/* 0x2E8 */ TParamRT<f32> mSLLaunchVelocityY;
+	/* 0x2FC */ TParamRT<f32> mSLFlyDist;
+	/* 0x310 */ TParamRT<f32> mSLFlySpeed;
+	/* 0x324 */ TParamRT<f32> mSLLaunchAngle;
 };
 
 class TTobiPukuLaunchPad;
@@ -51,6 +57,7 @@ public:
 	virtual void kill();
 	virtual void forceKill();
 	virtual void attackToMario();
+	virtual void behaveToWater(THitActor*);
 
 	// New virtuals, declared in the order the vtable lists them
 	// (0x1b8 onwards).
@@ -84,9 +91,9 @@ public:
 	virtual void setDeadAnm();
 
 	// fabricated
-	TTobiPukuParams* getSaveParam2() const
+	TTobiPukuSaveLoadParams* getSaveParam2() const
 	{
-		return (TTobiPukuParams*)getSaveParam();
+		return (TTobiPukuSaveLoadParams*)getSaveParam();
 	}
 
 	static f32 mLandAngle;
@@ -96,7 +103,7 @@ public:
 
 	/* 0x194 */ u8 unk194;
 	/* 0x198 */ int mBoundCount;
-	/* 0x19C */ TTobiPukuParams* unk19C;
+	/* 0x19C */ TTobiPukuSaveLoadParams* unk19C;
 	/* 0x1A0 */ JGeometry::TVec3<f32> mFlamePos;
 	/* 0x1AC */ u8 unk1AC;
 	/* 0x1AD */ u8 unk1AD;
@@ -185,7 +192,7 @@ public:
 	void forceLaunch(TTobiPuku*);
 
 	/* 0x194 */ int unk194;
-	/* 0x198 */ TTobiPukuLaunchPadParams* unk198;
+	/* 0x198 */ TTobiPukuLaunchPadSaveLoadParams* unk198;
 	/* 0x19C */ f32 unk19C;
 	/* 0x1A0 */ u8 unk1A0[0x1A8 - 0x1A0];
 	/* 0x1A8 */ TTobiPuku* unk1A8;
@@ -208,6 +215,7 @@ public:
 
 	virtual ~TTobiPukuManager();
 	virtual TLiveActor* createEnemyInstance();
+	virtual void load(JSUMemoryInputStream&);
 };
 
 class TMoePukuManager : public TTobiPukuManager {
@@ -229,6 +237,8 @@ public:
 
 	virtual ~TTobiPukuLaunchPadManager();
 	virtual TLiveActor* createEnemyInstance();
+	virtual void load(JSUMemoryInputStream&);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 class TMoePukuLaunchPadManager : public TTobiPukuLaunchPadManager {
