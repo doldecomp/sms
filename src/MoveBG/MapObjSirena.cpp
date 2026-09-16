@@ -996,14 +996,14 @@ void TCloset::moveObject()
 						    fabsf(unk138[i]), 0, 0, nullptr, 0, 4);
 					if ((int)fabsf(unk13C[i]) % 180 == 0) {
 						unk138[i] = 0.0f;
-						if (unk13C[i] < 180.0f || unk13C[i] == 360.0f) {
+						if (unk13C[i] <= 180.0f || unk13C[i] >= 360.0f) {
 							for (int j = 0; j < unk148; ++j) {
 								if (i == j)
 									continue;
 								if (unk138[j] != 0.0f)
 									return;
-								if (!(unk13C[j] < 180.0f
-								      || unk13C[j] >= 360.0f))
+								if (unk13C[j] >= 180.0f
+								    && unk13C[j] < 360.0f)
 									return;
 							}
 							unk16C = 1;
