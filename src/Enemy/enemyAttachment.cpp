@@ -70,32 +70,33 @@ void TEnemyAttachment::bind()
 	JGeometry::TVec3<f32> local_1C = mPosition;
 	local_1C += mLinearVelocity;
 	local_1C += mVelocity;
-	setBehavior();
+	recoverScale();
 	mVelocity.y -= getNowGravity();
 	if (mVelocity.y < mVelocityMinY)
 		mVelocity.y = mVelocityMinY;
+
 	if (!unk168) {
-		const TBGCheckData* local_18;
-		mGroundHeight = gpMap->checkGround(local_1C.x, local_1C.y + mHeadHeight,
-		                                   local_1C.z, &local_18);
+		mGroundHeight = gpMap->checkGround(local_1C.x,
+		                                   local_1C.y + mHeadHeight, local_1C.z,
+		                                   &mGroundPlane);
 		mGroundHeight += 1.0f;
 	}
 
-	if (local_1C.y + mVelocity.y <= mGroundHeight)
+	f32 y = local_1C.y;
+	if (y + mVelocity.y <= mGroundHeight)
 		behaveToHitGround();
 	else
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 
-	JGeometry::TVec3<f32> p = local_1C;
-	p.y += mHeadHeight;
-	TBGWallCheckRecord local_48(p, mBodyRadius * 2.0f, 1, 0);
-	if (gpMap->isTouchedWallsAndMoveXZ(&local_48))
-		behaveToHitWall(local_48.mResultWalls[0]);
+	TBGWallCheckRecord local_48(local_1C.x, y + mHeadHeight, local_1C.z,
+	                                mBodyRadius * 2.0f, 1, 0);
+	if (gpMap->isTouchedWallsAndMoveXZ(&local_48)) {
+		const TBGCheckData* local_18 = local_48.mResultWalls[0];
+		behaveToHitWall(local_18);
+	}
 
-	mPosition                      = local_1C;
-	JGeometry::TVec3<f32> local_68 = local_1C;
-	local_68 -= mPosition;
-	mLinearVelocity = local_68;
+	mPosition       = local_1C;
+	mLinearVelocity = local_1C - mPosition;
 
 	setBehavior();
 	forceKill();
