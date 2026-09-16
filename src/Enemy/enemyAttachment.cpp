@@ -216,6 +216,11 @@ void TEnemyPolluteModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 		unk18[i]->perform(cue, graphics);
 }
 
+static inline bool isWaterSurface(const TBGCheckData* check)
+{
+	return check->isWaterSurface();
+}
+
 void TEnemyPolluteModelManager::generatePolluteModel(
     JGeometry::TVec3<f32>& param_1, JGeometry::TVec3<f32>& param_2)
 {
@@ -223,7 +228,8 @@ void TEnemyPolluteModelManager::generatePolluteModel(
 
 	const TBGCheckData* check;
 	gpMap->checkGround(param_1, &check);
-	if (!check->checkFlag(BG_CHECK_FLAG_ILLEGAL) && !check->isWaterSurface())
+	bool isIllegal = check->checkFlag(BG_CHECK_FLAG_ILLEGAL);
+	if (!isIllegal && !isWaterSurface(check))
 		model->generate(param_1, param_2);
 
 	++unk10;
