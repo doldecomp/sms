@@ -23,12 +23,13 @@ static void dummy(Vec* v)
 
 bool TMapEventSirenaSink::watch()
 {
+	JDrama::TFlagT<u16> flag = 0;
 	if (unk64) {
 		gpPollution->getLayer(0)->startDecay();
 		mRaisingBuildingIdx = 0;
 		SMSGetMarDirector()->fireStartDemoCamera(
 		    "ホテル上げカメラ", &unk68, -1, 0.0f, true, nullptr, 0, nullptr,
-		    JDrama::TFlagT<u16>(0));
+		    flag);
 		gpItemManager->makeShineAppearWithDemo("シャイン（ホテル上げ用）",
 		                                       "ホテル上げシャインカメラ",
 		                                       unk68.x, unk68.y, unk68.z);
