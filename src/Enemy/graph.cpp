@@ -341,7 +341,7 @@ int TGraphWeb::getEscapeFromMarioIndex(int param_1, int param_2,
 			continue;
 
 		JGeometry::TVec3<f32> local_ac;
-		getGraphNode(railNode->mConnections[i]).getPoint(local_ac);
+		unk0[railNode->mConnections[i]].getPoint(&local_ac);
 		local_ac -= param_3;
 		MsVECNormalize(&local_ac, &local_ac);
 
