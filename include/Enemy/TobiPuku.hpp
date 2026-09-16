@@ -13,7 +13,11 @@ public:
 	{
 	}
 
-	/* 0x32C */ u8 unk32C[0x364 - 0x32C];
+	/* 0x32C */ u8 unk32C[0x33C - 0x32C];
+	/* 0x33C */ int unk33C;
+	/* 0x340 */ u8 unk340[0x350 - 0x340];
+	/* 0x350 */ f32 unk350;
+	/* 0x354 */ u8 unk354[0x364 - 0x354];
 	/* 0x364 */ int unk364;
 	/* 0x368 */ u8 unk368[0x390 - 0x368];
 };
@@ -63,10 +67,27 @@ public:
 		return (TTobiPukuParams*)getSaveParam();
 	}
 
-	/* 0x194 */ u8 unk194[0x1AD - 0x194];
+	static f32 mLandAngle;
+	static u8 mBoundSw;
+	static f32 mBoundVelocityY;
+	static u8 mReturnLaunchSw;
+
+	/* 0x194 */ int unk194;
+	/* 0x198 */ int mBoundCount;
+	/* 0x19C */ TTobiPukuParams* unk19C;
+	/* 0x1A0 */ u8 unk1A0[0x1AD - 0x1A0];
 	/* 0x1AD */ u8 unk1AD;
-	/* 0x1AE */ u8 unk1AE[0x1E0 - 0x1AE];
+	/* 0x1AE */ u8 unk1AE;
+	/* 0x1AF */ u8 unk1AF;
+	/* 0x1B0 */ f32 unk1B0;
+	/* 0x1B4 */ f32 mLaunchAngle;
+	/* 0x1B8 */ u8 unk1B8[0x1D0 - 0x1B8];
+	/* 0x1D0 */ JGeometry::TVec3<f32> mLaunchVelocity;
+	/* 0x1DC */ u8 unk1DC[0x1E0 - 0x1DC];
 	/* 0x1E0 */ f32 mSwimBaseY;
+	/* 0x1E4 */ u8 unk1E4[0x1F0 - 0x1E4];
+	/* 0x1F0 */ f32 unk1F0;
+	/* 0x1F4 */ u8 unk1F4[0x1FC - 0x1F4];
 };
 
 class TMoePuku : public TTobiPuku {

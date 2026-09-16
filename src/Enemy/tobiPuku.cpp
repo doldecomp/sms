@@ -21,6 +21,11 @@ enum {
 	PUKU_ANM_SWIM          = 9,
 };
 
+f32 TTobiPuku::mLandAngle;
+u8 TTobiPuku::mBoundSw;
+f32 TTobiPuku::mBoundVelocityY;
+u8 TTobiPuku::mReturnLaunchSw;
+
 TTobiPuku::~TTobiPuku() { }
 TMoePuku::~TMoePuku() { }
 TPukuPuku::~TPukuPuku() { }
@@ -117,7 +122,33 @@ DEFINE_NERVE(TNerveTobiPukuReturnLaunch, TLiveActor) { return FALSE; }
 DEFINE_NERVE(TNerveTobiPukuPrepareFly, TLiveActor) { return FALSE; }
 
 // TODO: incorrect size. Map records 0x1c8 (456 bytes).
-DEFINE_NERVE(TNerveTobiPukuBound, TLiveActor) { return FALSE; }
+// TODO: partial. Only the spine->getTime() == 0 branch is written; the map
+// records 456 bytes and this reaches 44.3%. The rest of the body follows the
+// bound in later frames and is not transcribed yet.
+DEFINE_NERVE(TNerveTobiPukuBound, TLiveActor)
+{
+	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		puku->unk1AE = 1;
+		int count    = puku->mBoundCount;
+		if (count < puku->unk19C->unk33C) {
+			puku->mBoundCount = count + 1;
+
+			f32 damp = puku->unk19C->unk350;
+			JGeometry::TVec3<f32> vel(puku->mLaunchVelocity);
+			vel.x *= damp;
+			vel.z *= damp;
+			vel.y = (TTobiPuku::mBoundVelocityY * damp
+			         * (puku->unk1B0 - puku->mGroundHeight))
+			        / 30.0f;
+
+			puku->mLaunchVelocity = vel;
+			puku->mVelocity       = vel;
+		}
+	}
+	return FALSE;
+}
 
 // TODO: incorrect size. Map records 0x5a8 (1448 bytes).
 DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor) { return FALSE; }
