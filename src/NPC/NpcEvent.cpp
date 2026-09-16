@@ -303,7 +303,7 @@ static void evCheckMonteClear(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->verifyArgNum(1, &arg_num);
 	int fVar1 = interp->pop().getDataInt();
 
-	char buffer[32];
+	char buffer[36];
 	snprintf(buffer, 32, "モンテ%d", fVar1);
 	TBaseNPC* npc = JDrama::TNameRefGen::search<TBaseNPC>(buffer);
 
