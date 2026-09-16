@@ -1666,6 +1666,7 @@ void TEnemyMario::drawHPMeter(MtxPtr viewMtx)
 	worldPosition.y += 210.0f;
 	JGeometry::TVec3<f32> screenPosition;
 	MTXMultVec(viewMtx, &worldPosition, &screenPosition);
+	GXColor color;
 
 	TPosition3f identity;
 	MTXIdentity(identity);
@@ -1694,7 +1695,8 @@ void TEnemyMario::drawHPMeter(MtxPtr viewMtx)
 	f32 borderRight  = left + 96.0f + 5.0f;
 	f32 borderTop    = top - 5.0f;
 	f32 borderBottom = bottom + 5.0f;
-	GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0, 0, 0, 0xC0 });
+	color = (GXColor) { 0, 0, 0, 0xC0 };
+	GXSetChanMatColor(GX_COLOR0A0, color);
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 	GXPosition3f32(borderLeft, borderTop, screenPosition.z);
 	GXPosition3f32(borderRight, borderTop, screenPosition.z);
@@ -1703,7 +1705,8 @@ void TEnemyMario::drawHPMeter(MtxPtr viewMtx)
 	GXEnd();
 
 	f32 right = left + mWaterCounter * 1.5f;
-	GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0x40, 0x40, 0xFF, 0xFF });
+	color = (GXColor) { 0x40, 0x40, 0xFF, 0xFF };
+	GXSetChanMatColor(GX_COLOR0A0, color);
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 	GXPosition3f32(left, top, screenPosition.z);
 	GXPosition3f32(right, top, screenPosition.z);
