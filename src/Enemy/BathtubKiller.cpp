@@ -479,7 +479,16 @@ BOOL TBathtubKiller::receiveMessage(THitActor* sender, u32 message)
 	return false;
 }
 
-void TBathtubKiller::attackToMario() { }
+void TBathtubKiller::attackToMario()
+{
+	if (isAttackable() == FALSE && gpMarioPos->y < mPosition.y) {
+		mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
+		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+		JGeometry::TVec3<f32> throwDirection(0.0f, 1.0f, 0.0f);
+		SMS_ThrowMario(throwDirection, 60.0f);
+		unk21C = 1;
+	}
+}
 
 bool TBathtubKiller::isCollidMove(THitActor*) { return false; }
 
