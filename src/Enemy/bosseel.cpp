@@ -120,9 +120,9 @@ void TBEelTearsDrop::perform(u32 cue, JDrama::TGraphics* graphics)
 			mActive = false;
 	}
 	if (cue & CUE_CALC_ANIM) {
-		Mtx transform;
+		Mtx44 transform;
 		// TODO: inline?
-		MtxPtr ptr = transform;
+		MtxPtr ptr = transform + 1;
 		MsMtxSetXYZRPH(ptr, mPosition.x, mPosition.y, mPosition.z, mRotation.x,
 		               mRotation.y, mRotation.z);
 		mSharedParts->getMActor()->getModel()->setBaseTRMtx(ptr);
