@@ -68,8 +68,8 @@ static inline void lerp_hack(f32& value, f32 target, f32 progress)
 
 DEFINE_NERVE(TNerveMantaMove, TLiveActor)
 {
-	TBossManta* self = (TBossManta*)spine->getBody();
 	s32 time         = spine->getTime();
+	TBossManta* self = (TBossManta*)spine->getBody();
 	TGraphWeb* graph = self->getTracer()->getGraph();
 
 	if (time == 0) {
