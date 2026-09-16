@@ -40,6 +40,50 @@ public:
 	f32 unk1F8;
 };
 
+class TBathtubGrip : public TMapObjBase {
+public:
+	virtual ~TBathtubGrip();
+	virtual void perform(u32, JDrama::TGraphics*);
+	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual Mtx* getRootJointMtx() const;
+	virtual void calcRootMatrix();
+	virtual void control();
+	virtual void kill();
+};
+
+class TBathtubGripParts : public TLiveActor {
+public:
+	virtual ~TBathtubGripParts();
+	virtual Mtx* getRootJointMtx() const;
+};
+
+class TBathtubGripPartsHard : public TBathtubGripParts {
+public:
+	virtual ~TBathtubGripPartsHard();
+	virtual BOOL receiveMessage(THitActor*, u32);
+};
+
+class TBathtubGripPartsFragile : public TBathtubGripParts {
+public:
+	virtual ~TBathtubGripPartsFragile();
+	virtual BOOL receiveMessage(THitActor*, u32);
+};
+
+TBathtubGripParts::~TBathtubGripParts() { }
+
+Mtx* TBathtubGripParts::getRootJointMtx() const { return nullptr; }
+
+TBathtubGripPartsFragile::~TBathtubGripPartsFragile() { }
+
+BOOL TBathtubGripPartsFragile::receiveMessage(THitActor*, u32)
+{
+	return false;
+}
+
+TBathtubGripPartsHard::~TBathtubGripPartsHard() { }
+
+TBathtubGrip::~TBathtubGrip() { }
+
 void TBathtub::loadAfter()
 {
 	SMS_LoadParticle("/scene/map/map/ms_lkp_yuge1.jpa", 0x1be);
