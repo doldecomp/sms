@@ -359,10 +359,25 @@ void TNozzleBase::emit(int param_1)
 // properly
 void TNozzleBase::animation(int param_1)
 {
+	int bckIdleOut;
+	int bckIdle;
+	int bckStart;
+	int bckSwapOut;
+	int bckSwapIn;
+
 	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 
-	if (param_1 != 2)
+	switch (param_1) {
+	case 2:
+		bckIdleOut = 4;
+		bckIdle    = 2;
+		bckStart   = 3;
+		bckSwapOut = 1;
+		bckSwapIn  = 0;
+		break;
+	default:
 		return;
+	}
 
 	if (mFludd->isSwitchingToSecondaryNozzle())
 		unk36C = 4;
@@ -372,102 +387,96 @@ void TNozzleBase::animation(int param_1)
 
 	switch (unk36C) {
 	case 0: {
-
-		// TODO: inline
 		MActor* mactor = unk380;
-		if (!mactor->checkCurBckFromIndex(4))
-			mactor->setBckFromIndex(4);
+		if (!mactor->checkCurBckFromIndex(bckIdleOut))
+			mactor->setBckFromIndex(bckIdleOut);
 
-		bool thing = false;
+		bool finished = false;
 
-		J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
+		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
+		if (frameCtrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
+		                          | J3DFrameCtrl::STATE_LOOPED_ONCE))
+			finished = true;
 
-		if (ctrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
-		                     | J3DFrameCtrl::STATE_LOOPED_ONCE))
-			thing = true;
+		if (frameCtrl->getFrame() > (frameCtrl->getEnd() - 0.1f))
+			finished = true;
 
-		if (ctrl->getFrame() > (ctrl->getEnd() - 0.1f))
-			thing = true;
+		if (finished)
+			unk36C = 1;
 
-		if (!thing)
-			return;
-
-		unk36C = 1;
 		break;
 	}
 
 	case 1: {
 		MActor* mactor = unk380;
-		if (!mactor->checkCurBckFromIndex(2))
-			mactor->setBckFromIndex(2);
+		if (!mactor->checkCurBckFromIndex(bckIdle))
+			mactor->setBckFromIndex(bckIdle);
 
-		TWaterGun* fludd     = mFludd;
-		bool updateAnimation = false;
+		u8 updateAnimation;
+		TWaterGun* fludd = mFludd;
 		if (fludd->mCurrentWater == 0) {
 			updateAnimation = false;
-		} else if (!updateAnimation) {
-			updateAnimation = true;
-			int nozzleKind  = fludd->getCurrentNozzle()->getNozzleKind();
-			if (nozzleKind == 1) {
-				TNozzleTrigger* trigger
-				    = (TNozzleTrigger*)fludd->getCurrentNozzle();
-				if (trigger->unk385 == TNozzleTrigger::ACTIVE) {
+		} else {
+			if (fludd->getNozzle(fludd->mCurrentNozzle)->getNozzleKind() == 1) {
+				if (((TNozzleTrigger*)fludd->getNozzle(fludd->mCurrentNozzle))
+				        ->unk385
+				    == TNozzleTrigger::ACTIVE) {
 					updateAnimation = true;
 				} else {
 					updateAnimation = false;
 				}
-
-			} else if (fludd->getCurrentNozzle()->unk378 > 0.0f) {
-				updateAnimation = true;
 			} else {
-				updateAnimation = false;
+				if (fludd->getNozzle(fludd->mCurrentNozzle)->unk378 > 0.0f) {
+					updateAnimation = true;
+				} else {
+					updateAnimation = false;
+				}
 			}
 		}
 
-		if (updateAnimation)
-			return;
+		if (!updateAnimation)
+			unk36C = 2;
 
-		unk36C = 2;
 		break;
 	}
 
 	case 2: {
 		MActor* mactor = unk380;
-		if (!mactor->checkCurBckFromIndex(3))
-			mactor->setBckFromIndex(3);
+		if (!mactor->checkCurBckFromIndex(bckStart))
+			mactor->setBckFromIndex(bckStart);
 
-		TWaterGun* fludd     = mFludd;
-		bool updateAnimation = false;
+		u8 updateAnimation;
+		TWaterGun* fludd = mFludd;
 		if (fludd->mCurrentWater == 0) {
 			updateAnimation = false;
-		} else if (!updateAnimation) {
-			updateAnimation = true;
-			u32 nozzleKind  = fludd->getCurrentNozzle()->getNozzleKind();
-			if (nozzleKind == 1) {
-				TNozzleTrigger* trigger
-				    = (TNozzleTrigger*)fludd->getCurrentNozzle();
-				if (trigger->unk385 == TNozzleTrigger::ACTIVE) {
+		} else {
+			if (fludd->getNozzle(fludd->mCurrentNozzle)->getNozzleKind() == 1) {
+				if (((TNozzleTrigger*)fludd->getNozzle(fludd->mCurrentNozzle))
+				        ->unk385
+				    == TNozzleTrigger::ACTIVE) {
 					updateAnimation = true;
 				} else {
 					updateAnimation = false;
 				}
-
-			} else if (fludd->getCurrentNozzle()->unk378 > 0.0f) {
-				updateAnimation = true;
 			} else {
-				updateAnimation = false;
+				if (fludd->getNozzle(fludd->mCurrentNozzle)->unk378 > 0.0f) {
+					updateAnimation = true;
+				} else {
+					updateAnimation = false;
+				}
 			}
 		}
 
 		if (updateAnimation == true)
 			unk36C = 0;
+
 		break;
 	}
 
 	case 3: {
 		MActor* mactor = unk380;
-		if (!mactor->checkCurBckFromIndex(1))
-			mactor->setBckFromIndex(1);
+		if (!mactor->checkCurBckFromIndex(bckSwapOut))
+			mactor->setBckFromIndex(bckSwapOut);
 
 		// Use external tween value
 		ctrl->setFrame(
@@ -479,8 +488,8 @@ void TNozzleBase::animation(int param_1)
 
 	case 4:
 		MActor* mactor = unk380;
-		if (!mactor->checkCurBckFromIndex(0))
-			mactor->setBckFromIndex(0);
+		if (!mactor->checkCurBckFromIndex(bckSwapIn))
+			mactor->setBckFromIndex(bckSwapIn);
 
 		// Use external tween value
 		ctrl->setFrame(2.0f * (mFludd->mSwitchToSecondNozzleProgress - 0.5f)
