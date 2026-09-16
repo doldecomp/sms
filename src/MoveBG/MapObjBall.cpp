@@ -1323,3 +1323,27 @@ void TMapObjBall::boundByActor(THitActor* param_1)
 	offLiveFlag(LIVE_FLAG_UNK10);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 }
+
+BOOL TResetFruit::receiveMessage(THitActor* sender, u32 message)
+{
+	if (message == HIT_MESSAGE_UNKB) {
+		if (isState(STATE_NORMAL) || isState(STATE_HOLDING)
+		    || isState(STATE_LIVING)) {
+			makeObjWaitingToAppear();
+			return TRUE;
+		}
+		return FALSE;
+	}
+
+	if (message == HIT_MESSAGE_UNKD) {
+		kill();
+		return TRUE;
+	}
+
+	if (!isState(STATE_NORMAL) && !isState(STATE_HOLDING)
+	    && !isState(STATE_LIVING))
+		return FALSE;
+
+	touchActor(sender);
+	return TMapObjBall::receiveMessage(sender, message);
+}
