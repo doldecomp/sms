@@ -398,7 +398,8 @@ static bool bgIntersectLine(const TBGCheckData* data,
 
 	f32 angleSum = 0.0f;
 
-	angleSum += fabsf(angle_between(a, b));
+	f32 angle = angle_between(a, b);
+	angleSum += fabsf(angle);
 	angleSum += fabsf(angle_between(b, c));
 	angleSum += fabsf(angle_between(c, a));
 
