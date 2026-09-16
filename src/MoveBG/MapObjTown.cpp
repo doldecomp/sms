@@ -392,7 +392,10 @@ void TMapObjWaterSpray::calc()
 	JPABaseEmitter* em
 	    = gpMarioParticleManager->emit(unk138, &mPosition, 1, this);
 	if (em) {
-		em->setRotation(mRotation.x, mRotation.y, mRotation.z);
+		s16 x = mRotation.x;
+		s16 y = mRotation.y;
+		s16 z = mRotation.z;
+		em->setRotation(x, y, z);
 		em->setGlobalScale(mScaling);
 		em->setRate(unk13C);
 		em->setGlobalParticleScale(unk140);
