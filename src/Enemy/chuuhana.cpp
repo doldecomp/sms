@@ -61,16 +61,17 @@ static int ChuuHanaBodyCallback(J3DNode* node, int param);
 // Rolls the body joint about the roll axis while the Roll nerve is active.
 static int ChuuHanaBodyCallback(J3DNode* node, int param)
 {
-	if (param != 0)
-		return true;
-	if (gpCurChuuHana == nullptr)
-		return true;
-	if (gpCurChuuHana->mSpine->getCurrentNerve()
-	    != &TNerveChuuHanaRoll::theNerve())
-		return true;
+	if (param == 0) {
+		TChuuHana* hana = gpCurChuuHana;
+		if (hana) {
+			bool rolling = hana->mSpine->getCurrentNerve()
+			    == &TNerveChuuHanaRoll::theNerve();
+			if (!rolling)
+				return true;
 
-	J3DJoint* joint = (J3DJoint*)node;
-	MtxPtr anmMtx = gpCurChuuHana->getModel()->getAnmMtx(joint->getJntNo());
+			J3DJoint* joint = (J3DJoint*)node;
+			MtxPtr anmMtx
+			    = gpCurChuuHana->getModel()->getAnmMtx(joint->getJntNo());
 
 	Mtx ident;
 	MTXIdentity(ident);
@@ -110,8 +111,10 @@ static int ChuuHanaBodyCallback(J3DNode* node, int param)
 	MTXRotAxisRad(roll, &local, (3.1415927f / 180.0f) * gpCurChuuHana->unk210);
 	MTXConcat(anmMtx, roll, anmMtx);
 	MTXConcat(anmMtx, ident, anmMtx);
-	MTXConcat(J3DSys::mCurrentMtx, roll, J3DSys::mCurrentMtx);
-	MTXConcat(J3DSys::mCurrentMtx, ident, J3DSys::mCurrentMtx);
+			MTXConcat(J3DSys::mCurrentMtx, roll, J3DSys::mCurrentMtx);
+			MTXConcat(J3DSys::mCurrentMtx, ident, J3DSys::mCurrentMtx);
+		}
+	}
 	return true;
 }
 
@@ -396,7 +399,8 @@ void TChuuHana::moveObject()
 			JGeometry::TVec3<f32> push(pow * mGroundPlane->mNormal.x, 0.0f,
 			                           pow * mGroundPlane->mNormal.z);
 			JGeometry::TVec3<f32> vel(mVelocity);
-			VECAdd(&vel, &push, &vel);
+			if (!JGeometry::TVec3<f32>(JGeometry::TVec3<f32>(vel)).isZero())
+				VECAdd(&vel, &push, &vel);
 			vel.y     = 0.0f;
 			mVelocity = vel;
 			mPosition.y += 5.0f;
@@ -503,7 +507,8 @@ void TChuuHana::behaveToWater(THitActor* param_1)
 		away.scale(unk1B4->mSLGetWaterPow.get());
 
 		JGeometry::TVec3<f32> vel(mVelocity);
-		VECAdd(&vel, &away, &vel);
+		if (!JGeometry::TVec3<f32>(JGeometry::TVec3<f32>(vel)).isZero())
+			VECAdd(&vel, &away, &vel);
 		vel.y     = 0.0f;
 		mVelocity = vel;
 		onLiveFlag(LIVE_FLAG_AIRBORNE);

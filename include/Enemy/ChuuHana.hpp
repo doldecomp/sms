@@ -117,7 +117,7 @@ public:
 	/* 0x194 */ f32 unk194;
 	/* 0x198 */ f32 unk198;
 	/* 0x19C */ f32 unk19C;
-	/* 0x1A0 */ u32 unk1A0;
+	/* 0x1A0 */ s32 unk1A0;
 	/* 0x1A4 */ u32 unk1A4;
 	/* 0x1A8 */ f32 unk1A8;
 	/* 0x1AC */ u32 unk1AC;
