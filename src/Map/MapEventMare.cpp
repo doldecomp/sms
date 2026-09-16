@@ -48,7 +48,8 @@ void TMareWallRock::appear()
 
 	unk10C[0]->setUp();
 	unk104->awake();
-	unk10C[0]->moveTrans(JGeometry::TVec3<f32>(0.0f, 0.0f, unkFC));
+	JGeometry::TVec3<f32> trans(0.0f, 0.0f, unkFC);
+	unk10C[0]->moveTrans(trans);
 	f32 rotY = unk128;
 
 	if (JPABaseEmitter* em = gpMarioParticleManager->emit(
