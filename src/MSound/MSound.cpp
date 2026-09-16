@@ -753,7 +753,10 @@ void MSound::fadeOutAllSound(u32 fadeout)
 		}
 	}
 
-	MSBgm::setAllTracksVolume(0.0f, fadeout);
+	u8 mask = 7;
+	for (u8 i = 0; i < 3; ++i)
+		if (mask >> i & 1)
+			MSBgm::setTrackVolume(i, 0.0f, fadeout, 3);
 
 	if (unkC4)
 		unkC4->stop(fadeout);
