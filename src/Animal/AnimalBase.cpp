@@ -184,9 +184,8 @@ void TAnimalBase::perform(u32 cue, JDrama::TGraphics* graphics)
 			if (sharedAnmNum == 0 || mInstanceIndex < sharedAnmNum) {
 				mMActor->viewCalc();
 			} else {
-				J3DModel* shared
-				    = manager->getObj(mInstanceIndex % sharedAnmNum)
-				          ->getModel();
+				int sharedIdx = mInstanceIndex % sharedAnmNum;
+				J3DModel* shared = manager->getObj(sharedIdx)->getModel();
 				J3DModel* model    = getModel();
 				J3DModelData* data = model->getModelData();
 				int count          = data->getDrawMtxNum();
@@ -198,9 +197,8 @@ void TAnimalBase::perform(u32 cue, JDrama::TGraphics* graphics)
 				srcArrays[1] = (Mtx*)shared->getWeightAnmMtx(0);
 
 				for (u16 i = 0; i < count; ++i) {
-					MTXConcat(world,
-					          srcArrays[data->getDrawMtxFlag(i)]
-					                   [data->getDrawMtxIndex(i)],
+					Mtx* srcArray = srcArrays[data->getDrawMtxFlag(i)];
+					MTXConcat(world, srcArray[data->getDrawMtxIndex(i)],
 					          model->getDrawMtx(i));
 				}
 
