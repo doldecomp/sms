@@ -1264,7 +1264,10 @@ BOOL TMario::oilRun()
 	}
 
 	f32 tmp = mDirtyParams.mPolSizeRun.get();
-	gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, tmp);
+	f32 z   = mPosition.z;
+	f32 y   = mPosition.y;
+	f32 x   = mPosition.x;
+	gpPollution->stamp(1, x, y, z, tmp);
 
 	{
 		f32 rotSp = mDirtyParams.mSlipRotate.get();
