@@ -169,7 +169,7 @@ BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
 
 		mOwner->gotEyeDamage();
 
-		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &mPosition, 0,
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition, 0,
 		                             nullptr);
 		return true;
 	}
