@@ -9,6 +9,7 @@
 #include <Enemy/PoiHana.hpp>
 #include <MoveBG/Item.hpp>
 #include <JSystem/JGeometry.hpp>
+#include <MarioUtil/MapUtil.hpp>
 #include <string.h>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <stdio.h>
@@ -1405,4 +1406,128 @@ void TMapObjBall::calcCurrentMtx()
 		rot.ref(1, 3) = -(10.0f * (1.0f - rot.at(1, 1)) - rot.at(1, 3));
 
 	MTXCopy(rot, getModel()->getAnmMtx(0));
+}
+
+// UNUSED, 0xac in the map. Inlined at the end of control()'s living and
+// holding arms: once the countdown expires the fruit is dropped by whoever
+// is carrying it, stopped dead, and starts to rot.
+void TResetFruit::rotting()
+{
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000))
+		return;
+	if (isStateTimerEngaged())
+		return;
+
+	if (mHolder) {
+		mHolder->receiveMessage(this, HIT_MESSAGE_UNK8);
+		mHolder->mHeldObject = nullptr;
+		mHolder              = nullptr;
+	}
+
+	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
+	mState                                  = STATE_ROTTING;
+}
+
+void TResetFruit::control()
+{
+	switch (mState) {
+	case STATE_NORMAL:
+		offHitFlag(HIT_FLAG_NO_COLLISION);
+		for (int i = 0; i < mColCount; ++i)
+			touchActor(mCollisions[i]);
+		if (mGroundPlane->getActor())
+			calcCurrentMtx();
+		break;
+
+	case STATE_LIVING:
+		offHitFlag(HIT_FLAG_NO_COLLISION);
+		if (gpMarDirector->mMap == 4 && checkLiveFlag(LIVE_FLAG_UNK10))
+			offLiveFlag(LIVE_FLAG_UNK10);
+
+		if (mGroundPlane->getActor()) {
+			if (checkLiveFlag(LIVE_FLAG_UNK10))
+				offLiveFlag(LIVE_FLAG_UNK10);
+
+			// Sitting on a rising sand pillar lifts the fruit with it.
+			if (mPosition.y < mGroundHeight + 200.0f) {
+				const TLiveActor* owner = mGroundPlane->getActor();
+				// TODO: the original tests the same type twice here.
+				if (owner->isActorType(0x400000CD)
+				    || owner->isActorType(0x400000CD)) {
+					f32 wasRatio = unk198;
+					unk198       = SMS_GetSandRiseUpRatio(owner);
+					if (unk198 > 0.05f && unk198 > wasRatio)
+						mVelocity.y += 20.0f;
+				}
+			}
+		} else {
+			unk198 = 0.0f;
+		}
+
+		TMapObjBall::control();
+		rotting();
+		break;
+
+	case STATE_HOLDING:
+		TMapObjBall::control();
+		rotting();
+		break;
+
+	case STATE_APPEARING:
+	case STATE_BREAKING:
+		TMapObjGeneral::control();
+		if (unk194 != 0)
+			unk194 -= 1;
+
+		if (isState(STATE_HOLDING)) {
+			Mtx held;
+			MTXCopy(mHolder->getTakingMtx(), held);
+			held[1][3] += unk190;
+			MTXCopy(held, getModel()->getAnmMtx(0));
+			break;
+		}
+
+		{
+			JGeometry::TVec3<f32> vel(mVelocity);
+			if (!vel.isZero() || mGroundPlane->getActor())
+				calcCurrentMtx();
+		}
+		break;
+
+	case STATE_ROTTING:
+		// Sink into the ground, restore the original scale, puff smoke and
+		// sleep until the respawn timer runs out.
+		mPosition.y += mBodyRadius * -0.5f;
+		mScaling.x = mInitialScaling.x;
+		mScaling.y = mInitialScaling.y;
+		mScaling.z = mInitialScaling.z;
+		emitAndScale(0xE5, 0, &mPosition);
+		SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition, 0,
+		                                nullptr, 0, 4);
+		mStateTimer = 240;
+		sleep();
+		mState = STATE_BROKEN;
+		break;
+
+	case STATE_BROKEN:
+		if (isStateTimerEngaged())
+			break;
+
+		unk19C.r = 255;
+		unk19C.g = 255;
+		unk19C.b = 255;
+		awake();
+		mState = STATE_LIVING;
+		makeObjDefault();
+		makeObjDead();
+		calcRootMatrix();
+		getModel()->calc();
+
+		mStateTimer = mFruitWaitTimeToAppear;
+		offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
+		mState = STATE_WAITING_TO_APPEAR;
+		if (gpMarDirector->mMap == 3 && unk1A4)
+			makeObjDead();
+		break;
+	}
 }
