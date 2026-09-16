@@ -133,7 +133,54 @@ void TTobiPukuLaunchPad::init(TLiveManager* manager)
 {
 	TSmallEnemy::init(manager);
 	mActorType = 0x10000012;
-	unk198     = (TTobiPukuParams*)getSaveParam();
+	unk198     = (TTobiPukuLaunchPadParams*)getSaveParam();
+}
+
+void TTobiPukuLaunchPad::launch()
+{
+	TTobiPuku* puku = (TTobiPuku*)gpConductor->makeOneEnemyAppear(
+	    mPosition, "とびプクマネージャー", 1);
+	if (puku) {
+		forceLaunch(puku);
+		unk1A8 = puku;
+	}
+}
+
+void TTobiPukuLaunchPad::load(JSUMemoryInputStream& stream)
+{
+	TSmallEnemy::load(stream);
+
+	int angle;
+	stream.read(&angle, 4);
+	unk19C = angle;
+
+	reset();
+}
+
+void TTobiPukuLaunchPad::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	if (checkLiveFlag(LIVE_FLAG_UNK200))
+		return;
+	if (checkLiveFlag(LIVE_FLAG_DEAD))
+		return;
+	if (!(cue & CUE_MOVE))
+		return;
+
+	if (TTobiPuku::mReturnLaunchSw) {
+		// Hold the next launch until the one already in flight is gone.
+		if (!unk1A8) {
+			launch();
+			return;
+		}
+		if (unk1A8->checkLiveFlag(LIVE_FLAG_DEAD))
+			launch();
+	} else {
+		unk194++;
+		if (unk194 > unk198->mLaunchInterval.get()) {
+			unk194 = 0;
+			launch();
+		}
+	}
 }
 
 void TMoePukuLaunchPad::launch()
@@ -144,6 +191,16 @@ void TMoePukuLaunchPad::launch()
 		forceLaunch(puku);
 		unk1A8 = puku;
 	}
+}
+
+TLiveActor* TTobiPukuLaunchPadManager::createEnemyInstance()
+{
+	return new TTobiPukuLaunchPad("とびプク発射台");
+}
+
+TLiveActor* TMoePukuLaunchPadManager::createEnemyInstance()
+{
+	return new TMoePukuLaunchPad("モエプク発射台");
 }
 
 TLiveActor* TMoePukuManager::createEnemyInstance()
@@ -783,12 +840,7 @@ void TTobiPuku::hitWall()
 
 void TTobiPuku::kill()
 {
-	if (checkLiveFlag(LIVE_FLAG_DEAD))
-		return;
-	// TODO: 98.8%. The original emits `beq +8; b end` here where we fuse to
-	// a single `bne end`. Neither a materialised bool nor an explicit else
-	// reproduces the redundant branch.
-	if (mGroundPlane->isIllegalData())
+	if (checkLiveFlag(LIVE_FLAG_DEAD) || mGroundPlane->isIllegalData())
 		return;
 
 	mHitPoints = 1;

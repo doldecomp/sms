@@ -20,6 +20,18 @@ public:
 	/* 0x390 */ u8 unk390[0];
 };
 
+// The launch pad loads a different .prm class from the puku itself: the map
+// lists UNUSED __ct__32TTobiPukuLaunchPadSaveLoadParams alongside
+// __ct__23TTobiPukuSaveLoadParams. It cannot derive from TWalkerEnemyParams,
+// because the slot at 0x2D4 that holds the float mSLZigzagCycle there is read
+// as an int here. 0x2D4 is exactly where TSmallEnemyParams ends.
+class TTobiPukuLaunchPadParams : public TSmallEnemyParams {
+public:
+	TTobiPukuLaunchPadParams(const char* prm);
+
+	/* 0x2D4 */ TParamRT<int> mLaunchInterval;
+};
+
 class TTobiPukuLaunchPad;
 
 class TTobiPuku : public TWalkerEnemy {
@@ -167,11 +179,13 @@ public:
 	virtual void init(TLiveManager*);
 	virtual void reset();
 	virtual void launch();
+	virtual void load(JSUMemoryInputStream&);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void forceLaunch(TTobiPuku*);
 
 	/* 0x194 */ int unk194;
-	/* 0x198 */ TTobiPukuParams* unk198;
+	/* 0x198 */ TTobiPukuLaunchPadParams* unk198;
 	/* 0x19C */ f32 unk19C;
 	/* 0x1A0 */ u8 unk1A0[0x1A8 - 0x1A0];
 	/* 0x1A8 */ TTobiPuku* unk1A8;
@@ -214,6 +228,7 @@ public:
 	/* 0x60 */ u8 unk60;
 
 	virtual ~TTobiPukuLaunchPadManager();
+	virtual TLiveActor* createEnemyInstance();
 };
 
 class TMoePukuLaunchPadManager : public TTobiPukuLaunchPadManager {
@@ -224,6 +239,7 @@ public:
 	}
 
 	virtual ~TMoePukuLaunchPadManager();
+	virtual TLiveActor* createEnemyInstance();
 };
 
 
