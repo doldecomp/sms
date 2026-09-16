@@ -1137,6 +1137,7 @@ const char** THamuKuri::getBasNameTable() const { return hamukurianm_bastable; }
 
 MtxPtr THamuKuri::getTakingMtx()
 {
+	MtxPtr result = unk1B0;
 	f32 dVar4 = gpMap->checkGround(mPosition.x, mPosition.y + mHeadHeight,
 	                               mPosition.z, &mGroundPlane);
 
@@ -1150,21 +1151,21 @@ MtxPtr THamuKuri::getTakingMtx()
 	MTXConcat(mat, afStack_84, mat);
 
 	// TODO: identity33 but order is transposed?!
-	unk1B0[0][0] = 1.0f;
-	unk1B0[0][1] = 0.0f;
-	unk1B0[0][2] = 0.0f;
+	result[0][0] = 1.0f;
+	result[0][1] = 0.0f;
+	result[0][2] = 0.0f;
 
-	unk1B0[1][0] = 0.0f;
-	unk1B0[1][1] = 1.0f;
-	unk1B0[1][2] = 0.0f;
+	result[1][0] = 0.0f;
+	result[1][1] = 1.0f;
+	result[1][2] = 0.0f;
 
-	unk1B0[2][0] = 0.0f;
-	unk1B0[2][1] = 0.0f;
-	unk1B0[2][2] = 1.0f;
+	result[2][0] = 0.0f;
+	result[2][1] = 0.0f;
+	result[2][2] = 1.0f;
 
-	MTXConcat(mat, unk1B0, unk1B0);
+	MTXConcat(mat, result, result);
 
-	return unk1B0;
+	return result;
 }
 
 bool THamuKuri::isResignationAttack()
