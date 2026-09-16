@@ -210,8 +210,9 @@ void TTamaNokoManager::initSetEnemies()
 
 	for (int i = 0; i < mObjNum; ++i) {
 		TTamaNoko* enemy = (TTamaNoko*)unk18[i];
-		enemy->unk19C
-		    = new TTamaNokoFlower(enemy, 0, modelData, 0x3, "TamaNokoFlower");
+		enemy->unk19C = new TTamaNokoFlower(
+		    enemy, 0, modelData, 0x3,
+		    "\x83\x5e\x83\x7d\x83\x6d\x83\x52\x83\x74\x83\x89\x83\x8f\x81\x5b");
 	}
 }
 
