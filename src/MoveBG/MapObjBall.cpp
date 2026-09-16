@@ -1,6 +1,8 @@
 #include <MoveBG/MapObjBall.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <System/FlagManager.hpp>
+#include <System/MarDirector.hpp>
+#include <System/Particles.hpp>
 #include <stdio.h>
 #include <string.h>
 #include <Map/Map.hpp>
@@ -662,4 +664,76 @@ TBigWatermelon::TBigWatermelon(const char* name)
 	unk198 = 0;
 	unk19C = 0;
 	unk1A0 = 0.0f;
+}
+
+void TResetFruit::makeObjWaitingToAppear()
+{
+	mState = STATE_LIVING;
+	makeObjDefault();
+	makeObjDead();
+	calcRootMatrix();
+	getModel()->calc();
+
+	mStateTimer = mFruitWaitTimeToAppear;
+	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
+	mState = STATE_WAITING_TO_APPEAR;
+
+	// On the map where these are a one-shot, do not queue a respawn.
+	if (gpMarDirector->mMap == 3 && unk1A4)
+		makeObjDead();
+}
+
+void TResetFruit::touchGround(JGeometry::TVec3<f32>* param_1)
+{
+	if (mGroundPlane->isDeathPlane()) {
+		makeObjWaitingToAppear();
+		param_1->set(mPosition);
+		return;
+	}
+
+	TMapObjBall::touchGround(param_1);
+}
+
+void TResetFruit::touchWaterSurface()
+{
+	emitColumnWater();
+	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_DRINA_TO_WATER, &mPosition, 0,
+	                                nullptr, 0, 4);
+	makeObjWaitingToAppear();
+}
+
+void TResetFruit::touchPollution()
+{
+	gpMarioParticleManager->emitAndBindToPosPtr(0x8B, &mPosition, 0, nullptr);
+	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_AWAY_INTO_GRAF, &mPosition, 0,
+	                                nullptr, 0, 4);
+	makeObjDefault();
+	makeObjWaitingToAppear();
+}
+
+void TResetFruit::makeObjAppeared()
+{
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000))
+		makeObjDefault();
+
+	TMapObjBase::makeObjAppeared();
+	calcCurrentMtx();
+
+	MtxPtr mtx = getModel()->getAnmMtx(0);
+	mtx[0][3] = mPosition.x;
+	mtx[1][3] = mPosition.y + mBodyRadius;
+	mtx[2][3] = mPosition.z;
+
+	if (isActorType(0x40000394)) {
+		if (mtx[1][1] > 0.0f)
+			mtx[1][3] = -(50.0f * mtx[1][1] - mtx[1][3]);
+	}
+
+	if (isActorType(0x40000392))
+		mtx[1][3] = -(10.0f * (1.0f - mtx[1][1]) - mtx[1][3]);
+
+	unkE8 = 0;
+
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000))
+		mState = STATE_LIVING;
 }
