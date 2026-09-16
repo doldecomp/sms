@@ -11,11 +11,12 @@ class TKoopa : public JDrama::TNameRef {
 public:
 	TKoopa(const char*);
 	void getDown();
+	void stagger(bool);
 };
 
 class TBathtubParams {
 public:
-	u32 unk0[21];
+	s32 unk0[21];
 	u32 unk54;
 	u32 unk58[4];
 	u32 unk68;
@@ -33,7 +34,26 @@ void TBathtub::loadAfter()
 	SMS_LoadParticle("/scene/map/map/ms_kp_break_b.jpa", 0xf7);
 }
 
-void TBathtub::hipdrop(const JGeometry::TVec3<f32>&) { }
+// Preserve the out-of-line call sites emitted for receiveMessage.
+#pragma dont_inline on
+void TBathtub::hipdrop(const JGeometry::TVec3<f32>& position)
+{
+	if (unk29A || unk250 > unk16C->unk7C)
+		return;
+
+	JGeometry::TVec3<f32> direction(position.x - mPosition.x, 0.0f,
+	                                position.z - mPosition.z);
+	direction.normalize();
+
+	unk250 = unk16C->unk7C;
+	unk258 = unk16C->unk80[4];
+	unk25C = unk16C->unk80[4];
+	unk254 = unk16C->unk7C;
+
+	TKoopa* koopa = JDrama::TNameRefGen::search<TKoopa>("クッパ");
+	koopa->stagger(false);
+}
+#pragma dont_inline off
 
 void TBathtub::quake(const JGeometry::TVec3<f32>& position)
 {
@@ -83,7 +103,27 @@ MtxPtr TBathtub::getKoopaJrMtxInDemo()
 	return mMActor->getModel()->getAnmMtx(mJuniorJntIdx);
 }
 
-BOOL TBathtub::receiveMessage(THitActor* sender, u32 message) { return false; }
+BOOL TBathtub::receiveMessage(THitActor* sender, u32 message)
+{
+	switch (message) {
+	case 0:
+		if (!unk29A && unk250 <= unk16C->unk0[11]) {
+			unk250 = unk16C->unk0[11];
+			unk258 = unk16C->unk0[16];
+			unk25C = unk16C->unk0[16];
+			unk254 = unk16C->unk7C;
+		}
+		return true;
+	case 1:
+		hipdrop(*gpMarioPos);
+		return true;
+	case 3:
+		hipdrop(*gpMarioPos);
+		return true;
+	default:
+		return false;
+	}
+}
 
 Mtx* TBathtub::getRootJointMtx() const { return nullptr; }
 
