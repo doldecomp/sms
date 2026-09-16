@@ -2222,25 +2222,25 @@ void TFireHamuKuri::calcRootMatrix()
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
 		        PARTICLE_MS_MOE_FIRE_C, mMActor->getModel()->getAnmMtx(unk1AC),
 		        3, this)) {
-			emitter->setGlobalScale(mScaling);
+			emitter->setGlobalScale(getScaling());
 		}
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
 		        PARTICLE_MS_MOE_FIRE_A, mMActor->getModel()->getAnmMtx(unk1AC),
 		        1, this)) {
-			emitter->setGlobalScale(mScaling);
+			emitter->setGlobalScale(getScaling());
 		}
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
 		        PARTICLE_MS_MOE_FIRE_B, mMActor->getModel()->getAnmMtx(unk1AC),
 		        1, this)) {
-			emitter->setGlobalScale(mScaling);
+			emitter->setGlobalScale(getScaling());
 		}
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
 		        PARTICLE_MS_MOE_FIRE_D, mMActor->getModel()->getAnmMtx(unk1AC),
 		        1, this)) {
-			emitter->setGlobalScale(mScaling);
+			emitter->setGlobalScale(getScaling());
 		}
 	}
 }
