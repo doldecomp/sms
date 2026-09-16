@@ -158,7 +158,7 @@ bool TMapCollisionData::getGridArea(const TBGCheckData* param_1, int param_2,
                                     int* param_6)
 {
 	f32 minX
-	    = min(min(param_1->mPoint2.x, param_1->mPoint3.x), param_1->mPoint1.x);
+	    = min(min(param_1->mPoint3.x, param_1->mPoint2.x), param_1->mPoint1.x);
 	f32 minZ
 	    = min(min(param_1->mPoint2.z, param_1->mPoint3.z), param_1->mPoint1.z);
 
@@ -186,11 +186,11 @@ bool TMapCollisionData::getGridArea(const TBGCheckData* param_1, int param_2,
 	if (*param_5 >= unk8)
 		*param_5 = unk8 - 1;
 
-	*param_4 = (minZ + mGridExtentX) * 0.0009765625f;
+	*param_4 = (minZ + mGridExtentY) * 0.0009765625f;
 	if (*param_4 < 0)
 		*param_4 = 0;
 
-	*param_6 = (maxZ + mGridExtentX) * 0.0009765625f;
+	*param_6 = (maxZ + mGridExtentY) * 0.0009765625f;
 	if (*param_6 >= unkC)
 		*param_6 = unkC - 1;
 
