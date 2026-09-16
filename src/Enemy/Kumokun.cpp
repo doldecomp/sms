@@ -663,6 +663,7 @@ void TKumokun::calcRootMatrix()
 		return;
 	}
 
+	MtxPtr baseMtx;
 	JGeometry::TVec3<f32> offset(0.0f);
 
 	if (isOnWall() || isOnRoof())
@@ -677,9 +678,10 @@ void TKumokun::calcRootMatrix()
 	getModel()->setBaseTRMtx(mtx);
 
 	if (isFlying()) {
+		baseMtx = getModel()->getBaseTRMtx();
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        PARTICLE_MS_KIL_SMOKE, getModel()->getBaseTRMtx(), 1, this)) {
+		        PARTICLE_MS_KIL_SMOKE, baseMtx, 1, this)) {
 			emitter->setGlobalScale(JGeometry::TVec3<f32>(1.5f));
 			emitter->setGlobalAlpha(128);
 		}
