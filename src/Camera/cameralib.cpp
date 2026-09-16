@@ -25,7 +25,8 @@ static inline void RotateAboutAxis(const JGeometry::TVec3<f32>& param_axis,
 
 	mtxT.identity();
 	mtxT.setRotate(param_axis, angle);
-	mtxT.mult33(*vec);
+	JGeometry::TVec3<f32> old = *vec;
+	mtxT.mult33(old, *vec);
 }
 
 void CLBCalc2DFPos(JGeometry::TVec2<f32>* out_ndc_pos, const f32 (*proj_mtx)[4],
