@@ -923,11 +923,11 @@ void TGorogoro::kill()
 void TGorogoro::forceKill()
 {
 	// Standing on water or bad ground kills it outright.
-	if (!mGroundPlane->isIllegalData() && !mGroundPlane->isPool()
-	    && !mGroundPlane->isWaterSurface())
+	BOOL illegal = mGroundPlane->isIllegalData();
+	if (!illegal && !mGroundPlane->isPool() && !mGroundPlane->isWaterSurface())
 		return;
 
-	if (checkLiveFlag(LIVE_FLAG_AIRBORNE))
+	if (isAirborne())
 		return;
 	if (mSpine->getCurrentNerve() == &TNerveGorogoroDie::theNerve())
 		return;
@@ -1234,8 +1234,8 @@ DEFINE_NERVE(TNerveGorogoroDie, TLiveActor)
 		goro->onHitFlag(HIT_FLAG_NO_COLLISION);
 
 		// Dying over water splashes; dying on land stamps goop.
-		if (goro->mGroundPlane->isWaterSurface()
-		    && !goro->checkLiveFlag(LIVE_FLAG_AIRBORNE))
+		BOOL onWater = goro->mGroundPlane->isWaterSurface();
+		if (onWater && !goro->isAirborne())
 			goro->generateEffectColumWater();
 
 		if (goro->checkLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH)) {
