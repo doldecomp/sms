@@ -480,18 +480,18 @@ void TMapWire::init(const TCubeGeneralInfo* cubeInfo)
 	                       | (1 << J3DMLF_TevStageNumShift),
 	                   1);
 
-	Mtx mtx;
-
-	MsMtxSetXYZRPH(mtx, mStartPoint.x, mStartPoint.y, mStartPoint.z,
+	Mtx startMtx;
+	MsMtxSetXYZRPH(startMtx, mStartPoint.x, mStartPoint.y, mStartPoint.z,
 	               cubeInfo->getUnk18().x, cubeInfo->getUnk18().y,
 	               cubeInfo->getUnk18().z);
-	mStartFittingModel->setBaseTRMtx(mtx);
+	mStartFittingModel->setBaseTRMtx(startMtx);
 	mStartFittingModel->calc();
 
-	MsMtxSetXYZRPH(mtx, mEndPoint.x, mEndPoint.y, mEndPoint.z,
+	Mtx endMtx;
+	MsMtxSetXYZRPH(endMtx, mEndPoint.x, mEndPoint.y, mEndPoint.z,
 	               cubeInfo->getUnk18().x, cubeInfo->getUnk18().y + 180.0f,
 	               cubeInfo->getUnk18().z);
-	mEndFittingModel->setBaseTRMtx(mtx);
+	mEndFittingModel->setBaseTRMtx(endMtx);
 	mEndFittingModel->calc();
 
 	gpMapObjManager->entryStaticDrawBufferSun(mStartFittingModel);
