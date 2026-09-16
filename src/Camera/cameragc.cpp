@@ -466,13 +466,12 @@ void CPolarSubCamera::calcPosAndAt_()
 
 	if (!(unk64 & CAMERA_FLAG_UNK80)) {
 		if (unk284 > 0) {
-			s32 acf   = mCurrentParams->mAutoChaseCompleteFrame;
-			s32 acs   = mCurrentParams->mAutoChaseStartFrame;
-			s32 delta = (acf - unk284) + 1;
-			if (delta <= acs)
+			s32 acf = mCurrentParams->mAutoChaseCompleteFrame;
+			s32 acs = mCurrentParams->mAutoChaseStartFrame;
+			if ((acf - unk284) + 1 <= acs)
 				unk288 = 0.0f;
 			else
-				unk288 = CLBCalcRatio<s32>(acs, acf, delta);
+				unk288 = CLBCalcRatio<s32>(acs, acf, (acf - unk284) + 1);
 		} else {
 			unk288 = 1.0f;
 		}
@@ -590,8 +589,9 @@ void CPolarSubCamera::calcPosAndAt_()
 				    = mCurrentTarget.mYaw + mCurrentParams->mOffsetAngleY;
 
 				if (gpCameraMario->mFrameMoveDistHorizontal >= 0.05f) {
-					s16 mAngle = *gpMarioAngleY - 0x8000;
-					f32 m      = MsClamp<f32>(
+					s16 mAngle = *gpMarioAngleY;
+					mAngle -= 0x8000;
+					f32 m = MsClamp<f32>(
                         (f32)mCurrentParams->mMaxAddAngleY
                             * (0.5f * (1.0f - JMASCos((mAngle - unk258) * 2))),
                         -32766.998f, 32766.998f);
@@ -817,7 +817,8 @@ void CPolarSubCamera::calcPosAndAt_()
 		f32 atY  = mCurrentParams->mAtChaseRateY;
 
 		const JGeometry::TVec3<f32>& v = mInbetween->mAt;
-		CLBChaseDecrease(&mTarget.x, v.x, atXZ, 0.0f);
+		f32 x = v.x;
+		CLBChaseDecrease(&mTarget.x, x, atXZ, 0.0f);
 		CLBChaseDecrease(&mTarget.y, v.y, atY, 0.0f);
 		CLBChaseDecrease(&mTarget.z, v.z, atXZ, 0.0f);
 	}
