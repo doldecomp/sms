@@ -452,7 +452,7 @@ void TTelesa::calcRootMatrix()
 
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        0x188, mMActor->getModel()->getAnmMtx(4), 1, this)) {
+		        0x188, mMActor->getModel()->getAnmMtx(3), 1, this)) {
 			emitter->setGlobalAlpha(mTelesaFadeColor.a);
 		}
 	}
