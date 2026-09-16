@@ -679,8 +679,9 @@ void TMario::getOnWirePosAngle(JGeometry::TVec3<f32>* outPos, s16* outAngle)
 BOOL TMario::wireMove(f32 param_1)
 {
 	JGeometry::TVec3<f32> start = mWireStartPos;
-	JGeometry::TVec3<f32> dir   = mWireEndPos - start;
-	f32 len                     = dir.length();
+	JGeometry::TVec3<f32> dir;
+	dir     = mWireEndPos - start;
+	f32 len = dir.length();
 	f32 delta                   = param_1 / len;
 	f32 margin                  = 100.0f / len;
 
@@ -693,7 +694,7 @@ BOOL TMario::wireMove(f32 param_1)
 		mWirePosRatio = margin;
 		clean         = false;
 	}
-	if (clean)
+	if (clean == TRUE)
 		mWirePosRatio += delta;
 	return clean;
 }
