@@ -8,7 +8,23 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 58 — BathtubBinder reconstructed, five of six exact
+## Latest checkpoint: batch 59 — effectEnemy decompiled, fourteen of eighteen exact
+
+`src/Enemy/effectEnemy.cpp` and `include/Enemy/EffectEnemy.hpp` did not exist. Fourteen of the unit's eighteen functions now match exactly.
+Game matched code **26.18% -> 26.22%**, aggregate **39.52% -> 39.55%**.
+
+`TEffectEnemy : TWalkerEnemy` adds one field, and `TEffectEnemyManager : TSmallEnemyManager` one parameter pointer, so nearly the whole 110-entry vtable is inherited.
+The enemy is "エフェクト敵", recovered from `@3016` in `.rodata`; its parameters load from `/enemy/moveFireEffect.prm`.
+Thirteen functions matched on the first compile once the source order was derived by reversing the map's emission order.
+
+Three fixes came from using existing inlines rather than open-coding, which is what the remaining differences kept pointing at:
+`getMaxHitPoints()` replaces an open-coded save-parameter read; `TBGCheckData::isDeathPlane/isPool/isWaterSurface` replace raw `mBGType` comparisons (69.7% -> 84.9%); and `isAirborne()` replaces `checkLiveFlag(LIVE_FLAG_AIRBORNE)` (84.9% -> 91.8%).
+The original materialises each predicate as a bool with `li 1`/`li 0`, which only the helper that ends `? 1 : 0` reproduces.
+
+Remaining: `perform` 86.5%, `forceKill` 91.8%, `setDeadAnm` 99.8% (frame 0x18 against 0x20), and `__sinit_effectEnemy_cpp` (764B) is still absent, since its JAL sound-list registrations come from includes this file does not yet pull in.
+DOL byte-identical. No gameplay test performed.
+
+## Verified checkpoint: batch 58 — BathtubBinder reconstructed, five of six exact
 
 `src/Enemy/BathtubBinder.cpp` and its header did not exist. Five of the unit's six functions now match exactly (540 of 1,688 bytes): the constructor, destructor, `bind`, `init` and the out-of-line `TVec3<f32>::set<f>`.
 Game matched code **26.157291% -> 26.18%**, aggregate **39.50% -> 39.52%**.
