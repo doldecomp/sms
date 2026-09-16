@@ -250,7 +250,7 @@ void TBEelTearsManager::splitTears(JGeometry::TVec3<f32>& position)
 		drop->mPosition  = dropPosition;
 
 		TMsRange<f32> unused(1.0f, 1.5f);
-		unused.rand();
+		rand();
 
 		f32 scale = drop->mOwner->mTearsParams->mTearsDropScaleRange.rand();
 		drop->mScaling.set(scale, scale, scale);
