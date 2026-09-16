@@ -935,3 +935,99 @@ void TBigWatermelon::initMapObj()
 
 	unk198 = new TWaterEmitInfo("/watermelon.prm");
 }
+
+void TCoverFruit::calcRootMatrix()
+{
+	if (mHolder) {
+		// While carried it simply rides the holder's matrix.
+		MtxPtr held = mHolder->getTakingMtx();
+		MTXCopy(held, getModel()->getBaseTRMtx());
+		mPosition.x = held[0][3];
+		mPosition.y = held[1][3];
+		mPosition.z = held[2][3];
+	} else {
+		MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x,
+		               mPosition.y - mYOffset, mPosition.z, mRotation.x,
+		               mRotation.y, mRotation.z);
+	}
+
+	getModel()->setBaseScale(*(Vec*)&mScaling);
+}
+
+BOOL TCoverFruit::receiveMessage(THitActor* sender, u32 message)
+{
+	// A Yoshi-class actor taking the cover fruit picks it up outright.
+	if (sender->isActorType(0x08000083) && message == HIT_MESSAGE_TAKE) {
+		onHitFlag(HIT_FLAG_NO_COLLISION);
+		mHolder = (TTakeActor*)sender;
+		return TRUE;
+	}
+
+	if (message == HIT_MESSAGE_UNKB) {
+		kill();
+		TFlagManager::smInstance->setBool(true, 0x1038B);
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+void TResetFruit::checkGroundCollision(JGeometry::TVec3<f32>* param_1)
+{
+	u8 map = gpMarDirector->mMap;
+	if (map != 7 && map != 4) {
+		TMapObjGeneral::checkGroundCollision(param_1);
+		return;
+	}
+
+	if (map == 4) {
+		// Probe from well above so a fruit cannot fall through the deck.
+		mGroundHeight = gpMap->checkGround(param_1->x, 200.0f + param_1->y,
+		                                   param_1->z, &mGroundPlane);
+		mGroundHeight += 1.0f;
+		if (param_1->y <= mGroundHeight) {
+			touchGround(param_1);
+			return;
+		}
+		onLiveFlag(LIVE_FLAG_AIRBORNE);
+		return;
+	}
+
+	mGroundHeight = gpMap->checkGround(param_1->x, param_1->y + mHeadHeight,
+	                                   param_1->z, &mGroundPlane);
+
+	if (mGroundPlane->isMapObjThrough()) {
+		mGroundHeight = gpMap->checkGroundExactY(
+		    param_1->x, mGroundHeight - 200.0f, param_1->z, &mGroundPlane);
+	}
+
+	mGroundHeight += 1.0f;
+	if (param_1->y <= mGroundHeight) {
+		touchGround(param_1);
+		return;
+	}
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
+}
+
+void TResetFruit::appearing()
+{
+	Mtx grow;
+	MTXScale(grow, mScaleUpSpeed, mScaleUpSpeed, mScaleUpSpeed);
+
+	MtxPtr mtx = getModel()->getAnmMtx(0);
+	concatOnlyRotFromLeft(grow, mtx, mtx);
+
+	mScaling.y *= mScaleUpSpeed;
+	mScaledBodyRadius = mBodyRadius * mScaling.y;
+	mtx[1][3] = mBodyRadius * mScaling.y + mPosition.y;
+
+	if (mScaling.y >= mInitialScaling.y) {
+		mScaling.x = mInitialScaling.x;
+		mScaling.y = mInitialScaling.y;
+		mScaling.z = mInitialScaling.z;
+		getModel()->calc();
+		offHitFlag(HIT_FLAG_NO_COLLISION);
+		makeObjAppeared();
+		mState = STATE_NORMAL;
+	}
+}

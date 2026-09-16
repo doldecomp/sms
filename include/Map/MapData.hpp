@@ -263,6 +263,18 @@ public:
 			return false;
 	}
 
+	// fabricated: named after the isXThrough family. TResetFruit's
+	// checkGroundCollision tests exactly this pair and materialises a bool,
+	// which is what an inlined predicate produces.
+	bool isMapObjThrough() const
+	{
+		if (mBGType == BG_TYPE_EVERYTHING_BUT_MAP_OBJECTS_PHASE_THROUGH
+		    || mBGType == BG_TYPE_MAP_CHANGE_PHASE_THROUGH)
+			return true;
+		else
+			return false;
+	}
+
 	bool isEnemyThrough() const
 	{
 		if (mBGType == BG_TYPE_EVERYTHING_BUT_MAP_OBJECTS_PHASE_THROUGH
