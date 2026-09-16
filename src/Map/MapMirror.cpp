@@ -88,8 +88,7 @@ TMirrorCamera::TMirrorCamera(const char* name)
 
 static u8 getVertexFormat(const J3DModelData* model_data, GXAttr attr)
 {
-	const GXVtxAttrFmtList* list
-	    = model_data->getVertexData().getVtxAttrFmtList();
+	const GXVtxAttrFmtList* list = model_data->mVertexData.getVtxAttrFmtList();
 	for (; list->attr != GX_VA_NULL; ++list)
 		if (list->attr == attr)
 			return list->type;
@@ -111,18 +110,13 @@ void TMirrorModel::initPlaneInfo()
 	u8 posComp = getVertexFormat(unk4->getModel()->getModelData(), GX_VA_POS);
 
 	if (posComp == GX_S16) {
-		S16Vec* v = (S16Vec*)unk4->getModel()
-		                ->getModelData()
-		                ->getVertexData()
-		                .getVtxPosArray();
+		S16Vec* v
+		    = (S16Vec*)unk4->getModel()->getModelData()->getVtxPosArray();
 		unkC.x = v->x;
 		unkC.y = v->y;
 		unkC.z = v->z;
 	} else {
-		Vec* v = (Vec*)unk4->getModel()
-		             ->getModelData()
-		             ->getVertexData()
-		             .getVtxPosArray();
+		Vec* v = (Vec*)unk4->getModel()->getModelData()->getVtxPosArray();
 		unkC.x = v->x;
 		unkC.y = v->y;
 		unkC.z = v->z;
@@ -131,19 +125,14 @@ void TMirrorModel::initPlaneInfo()
 	u8 normComp = getVertexFormat(unk4->getModel()->getModelData(), GX_VA_NRM);
 
 	if (normComp == GX_S16) {
-		S16Vec* v = (S16Vec*)unk4->getModel()
-		                ->getModelData()
-		                ->getVertexData()
-		                .getVtxNormArray();
+		S16Vec* v
+		    = (S16Vec*)unk4->getModel()->getModelData()->getVtxNormArray();
 		// BUG: probably meant to do a float division here?
 		unk18.x = v->x / 16384;
 		unk18.y = v->y / 16384;
 		unk18.z = v->z / 16384;
 	} else if (normComp == GX_F32) {
-		Vec* v = (Vec*)unk4->getModel()
-		             ->getModelData()
-		             ->getVertexData()
-		             .getVtxNormArray();
+		Vec* v = (Vec*)unk4->getModel()->getModelData()->getVtxNormArray();
 		unk18.x = v->x;
 		unk18.y = v->y;
 		unk18.z = v->z;
