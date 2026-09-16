@@ -784,8 +784,10 @@ DEFINE_NERVE(TNerveBGKSleep, TLiveActor)
 		if (self->unk298 > 0)
 			self->unk298--;
 		if (self->unk298 == 0) {
-			int timer    = self->getSaveParams()->mSLLaunchTimerNormal.get();
-			self->unk298 = (s32)(240.0f * MsRandF()) + timer - 120;
+			int timer = self->getSaveParams()->mSLLaunchTimerNormal.get();
+			timer += (s32)(240.0f * MsRandF());
+			timer = (s16)(timer - 120);
+			self->unk298 = timer;
 			spine->pushAfterCurrent(&TNerveBGKLaunchGoro::theNerve());
 			return true;
 		}
