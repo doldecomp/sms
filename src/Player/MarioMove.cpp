@@ -889,7 +889,8 @@ void TMario::checkGraffitoLava() { }
 
 void TMario::checkGraffitoSlip()
 {
-	if (isTouchGround4cm()) {
+	BOOL isGround = isTouchGround4cm();
+	if (isGround) {
 		mFootPrintTimer = mDeParams.mFootPrintTimerMax.get();
 
 		if (mStatus == MARIO_STATUS_OIL_SLIP
