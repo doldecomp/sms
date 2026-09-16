@@ -240,8 +240,8 @@ void TPauseMenu2::disappearWindow()
 	if (mFadeAnim <= 10.0f) {
 
 		// Fade out menu, background, and shine/stage panel.
-		s32 alpha
-		    = (mMenuPane->getAlpha() - 12) < 0 ? 0 : mMenuPane->getAlpha() - 12;
+		bool isFadedOut = (mMenuPane->getAlpha() - 12) < 0;
+		s32 alpha = isFadedOut ? 0 : mMenuPane->getAlpha() - 12;
 
 		mMenuPane->setAlpha(alpha);
 
@@ -256,8 +256,9 @@ void TPauseMenu2::disappearWindow()
 		// Shrink letters...
 		for (s32 i = 0; i < 5; i++) {
 			JUTRect rect = mPauseLetters[i]->getBounds();
+			s32 y = rect.y1;
 
-			rect.add(0.25f * -rect.y1 + 0.01f * rect.getWidth(),
+			rect.add(0.25f * -y + 0.01f * rect.getWidth(),
 			         0.25f * -rect.x1 + 0.01f * rect.getHeight());
 
 			rect.resize(0.98f * rect.getWidth(), 0.98f * rect.getHeight());
@@ -268,7 +269,8 @@ void TPauseMenu2::disappearWindow()
 		// ... and now shrink the menu items in the same manner.
 		for (s32 i = 0; i < mNumItems; i++) {
 			JUTRect rect = mMenuItems[i]->getBounds();
-			rect.add(0.25f * -rect.y1 + 0.01f * rect.getWidth(),
+			s32 y = rect.y1;
+			rect.add(0.25f * -y + 0.01f * rect.getWidth(),
 			         0.25f * -rect.x1 + 0.01f * rect.getHeight());
 			rect.resize(0.98f * rect.getWidth(), 0.98f * rect.getHeight());
 			mMenuItems[i]->setBounds(rect);
