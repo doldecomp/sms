@@ -608,8 +608,9 @@ void TTamaNoko::setAfterDeadEffect()
 	unk19C->unk34 = 1;
 	unk19C->setBckAnm(0);
 
-	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_TAMA_FLOWER,
-	                                            &mPosition, 0, nullptr);
+	JPABaseEmitter* emitter
+	    = gpMarioParticleManager->emitAndBindToPosPtr(
+	        PARTICLE_MS_TAMA_FLOWER, &mPosition, 0, nullptr);
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_SMOKE, &mPosition, 0,
 	                                nullptr, 0, 4);
 }
