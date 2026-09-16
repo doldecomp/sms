@@ -201,22 +201,26 @@ void TTailRubber::restrict()
 	avgHorLen /= (f32)(unk0.size() - 1);
 
 	if (mFixTailPos) {
+		JGeometry::TVec3<f32> diff;
 		for (Node *e = unk0.begin() - 1, *it = unk0.end() - 2; it != e; --it) {
-			JGeometry::TVec3<f32> diff = (it + 1)->mPos;
+			diff = (it + 1)->mPos;
 			diff -= it->mPos;
 			diff.y = 0.0f;
-			if (avgHorLen < diff.length()) {
-				diff.setLength(diff.length() - avgHorLen);
+			const f32 length = diff.length();
+			if (avgHorLen < length) {
+				diff.setLength(length - avgHorLen);
 				it->mPos += diff;
 			}
 		}
 	} else {
+		JGeometry::TVec3<f32> diff;
 		for (Node *it = unk0.begin() + 1, *e = unk0.end(); it != e; ++it) {
-			JGeometry::TVec3<f32> diff = (it - 1)->mPos;
+			diff = (it - 1)->mPos;
 			diff -= it->mPos;
 			diff.y = 0.0f;
-			if (avgHorLen < diff.length()) {
-				diff.setLength(diff.length() - avgHorLen);
+			const f32 length = diff.length();
+			if (avgHorLen < length) {
+				diff.setLength(length - avgHorLen);
 				it->mPos += diff;
 			}
 		}
