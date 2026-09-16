@@ -565,7 +565,7 @@ void TItemSlotDrum::generateItem()
 			spread = 20.0f;
 		}
 		for (int i = 0; i < count; ++i) {
-			s16 ang = (s16)DEG2SHORTANGLE(spread * ((f32)i - 1.0f)
+			s16 ang = (s16)DEG2SHORTANGLE((f32)i * spread
 			                              + (mRotation.x - spread));
 			f32 s   = JMASSin(ang);
 			f32 c   = JMASCos(ang);
@@ -590,9 +590,9 @@ void TItemSlotDrum::generateItem()
 			if (item != nullptr) {
 				item->mPosition += off;
 				MsVECNormalize(&off, &off);
-				item->mVelocity.x = 12.0f * off.x;
-				item->mVelocity.y = TMsRange<f32>(5.0f, 10.0f).rand();
-				item->mVelocity.z = 12.0f * off.z;
+				item->mVelocity.set(
+				    12.0f * off.x, TMsRange<f32>(5.0f, 10.0f).rand(),
+				    12.0f * off.z);
 				item->offLiveFlag(LIVE_FLAG_UNK10);
 			}
 		}
