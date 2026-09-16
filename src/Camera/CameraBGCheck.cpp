@@ -38,14 +38,16 @@ void CPolarSubCamera::calcInHouseNo_(bool param_1)
 		}
 
 		JGeometry::TVec3<f32> local_120[18];
-		S16Vec SStack_134[9];
+		S16Vec SStack_134;
 
-		CLBCalcNearNinePos(local_120, SStack_134, unk124, unk148,
+		CLBCalcNearNinePos(local_120, &SStack_134, unk124, unk148,
 		                   getFinalAngleZ(), mNear, mFovy, mAspect);
 
 		f32 fVar1 = unk2C4;
-		for (int i = 0; i < 9; ++i) {
+		for (int i = 0; i < 9; i += 3) {
 			local_120[9 + i].scaleAdd(fVar1, local_120[i], unk25C);
+			local_120[10 + i].scaleAdd(fVar1, local_120[1 + i], unk25C);
+			local_120[11 + i].scaleAdd(fVar1, local_120[2 + i], unk25C);
 		}
 
 		f32 tmp = unk2C0;
@@ -53,10 +55,10 @@ void CPolarSubCamera::calcInHouseNo_(bool param_1)
 			for (int j = 0; j < 2; ++j) {
 				f32 fVar2 = 0.0f;
 				for (int k = 0; k < 2; ++k) {
-					JGeometry::TVec3<f32> local_12C(local_120[j * 9 + i].x,
-					                                local_120[j * 9 + i].y
+					JGeometry::TVec3<f32> local_12C(local_120[i + j * 9].x,
+					                                local_120[i + j * 9].y
 					                                    - fVar2 + -78.0f,
-					                                local_120[j * 9 + i].z);
+					                                local_120[i + j * 9].z);
 					const TBGCheckData* local_138;
 					gpMap->checkGroundIgnoreWaterSurface(local_12C, &local_138);
 					if (local_138 && local_138->isOob()) {
