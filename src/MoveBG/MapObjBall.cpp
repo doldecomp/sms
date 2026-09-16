@@ -5,6 +5,7 @@
 #include <System/Particles.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <MoveBG/ItemManager.hpp>
+#include <Camera/CubeManagerBase.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <stdio.h>
 #include <string.h>
@@ -1129,4 +1130,26 @@ void TResetFruit::kicked()
 	SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 	SMSGetMSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN, &mPosition, 0,
 	                                nullptr, 0, 4);
+}
+
+void TResetFruit::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	if (gpMarDirector->mMap == 7) {
+		if (isState(STATE_HOLDING)
+		    || !JGeometry::TVec3<f32>(mVelocity).isZero()) {
+			if (checkLiveFlag(LIVE_FLAG_UNK200))
+				offLiveFlag(LIVE_FLAG_UNK200);
+		} else if (!gpCubeArea->isInAreaCube((const Vec&)mPosition)) {
+			// Settled outside every area cube and away from where it
+			// started: send it back to its spawn point.
+			if (isState(STATE_LIVING)
+			    && (mPosition.x != mInitialPosition.x
+			        || mPosition.z != mInitialPosition.z)) {
+				makeObjWaitingToAppear();
+				return;
+			}
+		}
+	}
+
+	TMapObjGeneral::perform(cue, graphics);
 }
