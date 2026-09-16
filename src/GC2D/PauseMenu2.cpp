@@ -338,7 +338,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 							gpMSound->pauseOff(0);
 							gpMarDirector->getConsole()->pauseOut();
 							mFadeAnim = 0.0f;
-							mState    = MENU_APPEARING;
+							mState    = MENU_DISAPPEARING;
 							break;
 						case 2:
 							mSelectionConfirmed = true;
@@ -462,7 +462,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 					} else {
 						// Loop animation.
 						mBounceAnim = -0.5f;
-						unkFC       = -unkFC;
+						unkFC *= -1;
 					}
 
 					mBounceAnim += 0.5f;
