@@ -507,7 +507,9 @@ void TPollutionCounterLayer::drawRevivalTexStamp(int layer_index) const
 	GXSetNumTexGens(0);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3C, 0, 0x7D);
 	GXSetNumChans(1);
-	GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0xff, 0xff, 0xff, 0x14 });
+	GXColor color;
+	color = (GXColor) { 0xff, 0xff, 0xff, 0x14 };
+	GXSetChanMatColor(GX_COLOR0A0, color);
 	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 	              GX_AF_NONE);
 	GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
