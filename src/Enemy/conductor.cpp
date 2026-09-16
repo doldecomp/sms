@@ -115,8 +115,22 @@ TLiveManager* TConductor::getManagerByName(const char* name)
 {
 	u16 key = JDrama::TNameRef::calcKeyCode(name);
 
+	JGadget::TList<TLiveManager*>::iterator it = unk10.begin(), e = unk10.end();
+	for (; it != e; ++it)
+		if ((*it)->searchF(key, name))
+			return *it;
+
+	return nullptr;
+}
+
+static inline TLiveManager*
+getManagerByNameInline(TConductor* conductor, const char* name)
+{
+	u16 key = JDrama::TNameRef::calcKeyCode(name);
+
 	JGadget::TList<TLiveManager*>::iterator it, e;
-	for (it = unk10.begin(), e = unk10.end(); it != e; ++it)
+	for (it = conductor->unk10.begin(), e = conductor->unk10.end(); it != e;
+	     ++it)
 		if ((*it)->searchF(key, name))
 			return *it;
 
@@ -157,7 +171,7 @@ void TConductor::maskNFlagOfChildren(int, u32) { }
 int TConductor::makeEnemyAppear(const JGeometry::TVec3<f32>& param_1,
                                 const char* param_2, int param_3, int param_4)
 {
-	TLiveManager* mgr = getManagerByName(param_2);
+	TLiveManager* mgr = getManagerByNameInline(this, param_2);
 
 	if (!mgr)
 		return 0;
