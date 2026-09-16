@@ -1,6 +1,28 @@
 #include "MoveBG/MapObjCorona.hpp"
 #include "MoveBG/MapObjBase.hpp"
+#include <Camera/CameraShake.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <MarioUtil/RumbleMgr.hpp>
+#include <Player/MarioAccess.hpp>
 #include <System/Particles.hpp>
+
+class TKoopa : public JDrama::TNameRef {
+public:
+	TKoopa(const char*);
+	void getDown();
+};
+
+class TBathtubParams {
+public:
+	u32 unk0[21];
+	u32 unk54;
+	u32 unk58[4];
+	u32 unk68;
+	u32 unk6C[4];
+	u32 unk7C;
+	u32 unk80[29];
+	u32 unkF4;
+};
 
 void TBathtub::loadAfter()
 {
@@ -12,7 +34,29 @@ void TBathtub::loadAfter()
 
 void TBathtub::hipdrop(const JGeometry::TVec3<f32>&) { }
 
-void TBathtub::quake(const JGeometry::TVec3<f32>&) { }
+void TBathtub::quake(const JGeometry::TVec3<f32>& position)
+{
+	if (unk29A)
+		return;
+
+	JGeometry::TVec3<f32> direction(position.x - mPosition.x, 0.0f,
+	                                position.z - mPosition.z);
+	direction.normalize();
+
+	unk24C = 300;
+	unk250 = unk16C->unk54;
+	unk258 = unk16C->unk68;
+	unk25C = unk16C->unk68;
+	unk254 = unk16C->unk7C;
+	unk248 = unk16C->unkF4;
+
+	TKoopa* koopa = JDrama::TNameRefGen::search<TKoopa>("クッパ");
+	gpCameraShake->startShake((EnumCamShakeMode)0x25, 1.0f);
+	gpCameraShake->startShake((EnumCamShakeMode)0x26, 1.0f);
+	SMSRumbleMgr->start(4, (f32*)nullptr);
+	SMS_ThrowMario(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), 40.0f);
+	koopa->getDown();
+}
 
 u8 TBathtub::getNumGripsDead() const { return 0; }
 
