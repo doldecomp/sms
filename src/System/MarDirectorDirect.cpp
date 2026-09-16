@@ -37,6 +37,12 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
+static void dummy(Vec* v)
+{
+	*v = (Vec) { 0.0f, 0.0f, 0.0f };
+	*v = (Vec) { 1.0f, 1.0f, 1.0f };
+}
+
 extern OSThread gSetupThread;
 
 int TMarDirector::direct()
@@ -1183,16 +1189,14 @@ JStage::TObject* TMarDirector::JSGFindObject(const char* param_1,
                                              JStage::TEObject param_2) const
 {
 	if (strcmp("cam_int1", param_1) == 0) {
-		JDrama::TCamera* cam
-		    = (JDrama::TCamera*)const_cast<TMarDirector*>(this)->search(
-		        "camera 1");
+		TMarDirector* director = const_cast<TMarDirector*>(this);
+		JDrama::TCamera* cam = (JDrama::TCamera*)director->search("camera 1");
 		return cam;
 	}
 
 	if (strcmp("mario", param_1) == 0) {
-		JDrama::TActor* mario
-		    = (JDrama::TActor*)const_cast<TMarDirector*>(this)->search(
-		        "マリオ");
+		TMarDirector* director = const_cast<TMarDirector*>(this);
+		JDrama::TActor* mario = (JDrama::TActor*)director->search("マリオ");
 		return mario;
 	}
 
