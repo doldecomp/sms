@@ -607,9 +607,7 @@ void TRedCoinSwitch::loadAfter()
 void TRedCoinSwitch::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
-	u32 tmp;
-	stream >> tmp;
-	unk138 = tmp;
+	unk138 = stream.readU32();
 	if (unk138 <= 0)
 		unk138 = 1200;
 	else
