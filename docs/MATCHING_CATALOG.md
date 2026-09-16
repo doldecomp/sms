@@ -17,6 +17,23 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## bool-to-BOOL conversion shapes, batch 63
+
+Three distinct return shapes appear for what looks like the same predicate, and the assembly distinguishes them exactly. From `tobiPuku`, where 30 near-identical 48-byte accessors made the comparison clean:
+
+| Source | Assembly tail |
+| --- | --- |
+| `BOOL f() { return field == N; }` | `subfic`/`cntlzw`/`extrwi`, no branch |
+| `BOOL f() { return helper(); }` where helper returns bool | bool materialised, then `clrlwi r3,r0,24` |
+| `BOOL f() { return helper() ? TRUE : FALSE; }` | bool materialised, then `clrlwi.` **and a second branch** to `li r3,1` / `li r3,0` |
+| `bool f() { return helper() ? true : false; }` | branches straight to `li r3,1; blr` / `li r3,0; blr` |
+
+The last two differ only in whether the 1/0 lands in `r0` and is widened, or lands in `r3` directly with two `blr`s. That single distinction decides between a `BOOL` and a `bool` return type.
+
+`TSmallEnemy::isBckAnm(int)` is the helper these accessors call; writing `mCurrentBckAnm == N` inline gives the branchless first form and never matches.
+
+Working order for a batch of such accessors: get one exact, then apply the same shape to the rest. Here that took 30 functions from 0 to exact in three edits.
+
 ## Frame gaps are confirmed pure, batch 61
 
 `TNerveSealWait::execute` was validated with a temporary `volatile char trash[0x10]`, the use `AGENTS.md` sanctions for diagnosis: it reaches **100% with zero instruction differences**. So a function sitting at 99.9% with only `stwu` and save/restore offsets differing is a *correct* reconstruction whose caller is missing an inlined helper's reserved locals. There is nothing to fix in its body.
