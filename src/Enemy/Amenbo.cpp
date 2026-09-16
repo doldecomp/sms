@@ -138,10 +138,12 @@ void TAmenbo::bind()
 void TAmenbo::control()
 {
 	if (mWaterGunHitCooldown > 0)
-		mWaterGunHitCooldown--;
+		mWaterGunHitCooldown = mWaterGunHitCooldown - 1;
 
-	if (mSearchDisableCooldown > 0)
-		mSearchDisableCooldown--;
+	if (mSearchDisableCooldown > 0) {
+		int cooldown = mSearchDisableCooldown - 1;
+		mSearchDisableCooldown = cooldown;
+	}
 
 	updateCollision();
 
@@ -172,7 +174,7 @@ void TAmenbo::checkMarioWaterIn()
 	JGeometry::TVec3<f32> local_60;
 
 	if (!isOverTerritory(&local_60) && mSearchDisableCooldown <= 0) {
-		if (isFreeze() && isChangedBlock()) {
+		if (isFreeze() && !isChangedBlock()) {
 			decideTargetOnFingingMario();
 			mSpine->reset();
 			mSpine->setNext(&TNerveAmenboTurn::theNerve());
