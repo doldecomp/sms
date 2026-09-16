@@ -573,8 +573,8 @@ void THideObjPictureTwin::afterFinishedAnim()
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_TIMECOIN_APPEAR, 0,
 		                                   nullptr, 0);
 
-		SMSGetMarDirector()->fireStartDemoCamera(unk178, &mPosition, -1, 0.0f,
-		                                         true, nullptr, 0, nullptr, 0);
+		SMSGetMarDirector()->fireStartDemoCamera(
+		    unk178, &obj->mPosition, -1, 0.0f, true, nullptr, 0, nullptr, 0);
 	}
 	mState = 3;
 }
