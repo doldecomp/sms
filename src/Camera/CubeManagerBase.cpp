@@ -34,7 +34,10 @@ TCubeManagerBase::TCubeManagerBase(const char* name, u8 param_2)
     , unk14(nullptr)
     , unk18(nullptr)
 {
-	initializer();
+	unk14 = new TNameRefPtrAryT<TCubeGeneralInfo>;
+	unk14->reserve(unk10);
+	for (int i = 0; i < unk10; ++i)
+		unk14->push_back(new TCubeGeneralInfo);
 }
 
 void TCubeManagerBase::initializer()
