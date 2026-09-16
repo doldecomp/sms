@@ -1257,8 +1257,10 @@ void TFireWanwan::updateHitPoint()
 
 void TFireWanwan::emitEffects()
 {
+	JGeometry::TVec3<f32> local_2c;
 	MtxPtr mtx = getModel()->getAnmMtx(mCenterJointIdx);
-	unk1F0.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+	local_2c.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+	unk1F0.set(local_2c);
 
 	if (mHitPoints != 0 && unk194->mIsOnFire) {
 		SMS_EasyEmitParticle(FIREWANWAN_JPA_MS_CAN_YUGAMI, &unk1F0, this,
