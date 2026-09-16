@@ -1375,8 +1375,11 @@ BOOL TMario::oilSlope()
 		mOilBrake   = 0.0f;
 		changePlayerStatus(MARIO_STATUS_CATCH, 0, false);
 	}
-	gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
-	                   mDirtyParams.mPolSizeSlip.get());
+	f32 tmp = mDirtyParams.mPolSizeSlip.get();
+	f32 z   = mPosition.z;
+	f32 y   = mPosition.y;
+	f32 x   = mPosition.x;
+	gpPollution->stamp(1, x, y, z, tmp);
 	return slipBackCommon(MARIO_STATUS_CATCH_LOST, MARIO_STATUS_LANDING, 0x89);
 }
 
