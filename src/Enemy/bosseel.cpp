@@ -867,17 +867,20 @@ void TBossEelTooth::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 
 	if (cue & CUE_MOVE) {
-		TBossEelSaveParams* params = mOwner->mSaveParams;
-		f32 scale                  = mOwner->mScaling.x;
-		f32 attackRadius           = params->mSLToothAttackRadius.get();
-		f32 attackHeight           = params->mSLToothAttackHeight.get();
-		f32 damageHeight           = params->mSLToothDamageHeight.get();
-		f32 damageRadius           = params->mSLToothDamageRadius.get();
-		attackRadius *= scale;
-		attackHeight *= scale;
-		damageRadius *= scale;
-		damageHeight *= scale;
-		setHitParams(attackRadius, attackHeight, damageRadius, damageHeight);
+		{
+			TBossEel* owner            = mOwner;
+			TBossEelSaveParams* params = owner->mSaveParams;
+			f32 scale                  = owner->mScaling.x;
+			f32 attackRadius           = params->mSLToothAttackRadius.get();
+			f32 attackHeight           = params->mSLToothAttackHeight.get();
+			f32 damageHeight           = params->mSLToothDamageHeight.get();
+			f32 damageRadius           = params->mSLToothDamageRadius.get();
+			mAttackRadius              = attackRadius * scale;
+			mAttackHeight              = attackHeight * scale;
+			mDamageRadius              = damageRadius * scale;
+			mDamageHeight              = damageHeight * scale;
+		}
+		calcEntryRadius();
 
 		for (s32 i = 0; i < mColCount; ++i) {
 			THitActor* collision = mCollisions[i];
