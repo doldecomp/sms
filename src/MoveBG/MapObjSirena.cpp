@@ -1037,9 +1037,8 @@ u32 TCloset::touchWater(THitActor* water)
 	if (unk16C != 0)
 		return 0;
 	if (fabsf(mPosition.x - water->mPosition.x) < 50.0f) {
-		f32 halfDepth = 1.1f * unk140;
 		int idx;
-		if (water->mPosition.z < mPosition.z - halfDepth) {
+		if (water->mPosition.z < mPosition.z - 1.1f * unk140) {
 			idx = 0;
 			if (mRotation.y < 0.0f)
 				idx = 3;
@@ -1047,7 +1046,7 @@ u32 TCloset::touchWater(THitActor* water)
 			idx = 1;
 			if (mRotation.y < 0.0f)
 				idx = 2;
-		} else if (water->mPosition.z < mPosition.z + halfDepth) {
+		} else if (water->mPosition.z < mPosition.z + 1.1f * unk140) {
 			idx = 2;
 			if (mRotation.y < 0.0f)
 				idx = 1;
