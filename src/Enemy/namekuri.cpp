@@ -45,7 +45,7 @@ int TNameKuriManager::mStopMinScaleFrame = 8;
 static TNameKuri* gpCurNameKuri;
 
 const char* namekuri2_bastable[] = {
-	nullptr, nullptr, nullptr, "/scene/namekuri2/bas/name_jump_start.base",
+	nullptr, nullptr, nullptr, "/scene/namekuri2/bas/name_jump_start.bas",
 	nullptr, nullptr, nullptr, nullptr,
 };
 
