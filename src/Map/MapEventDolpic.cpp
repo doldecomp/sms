@@ -243,8 +243,8 @@ TDolpicEventRiccoMammaGate::TDolpicEventRiccoMammaGate(const char* name)
     , unk3C(0)
     , unk40(0)
     , unk44(0)
-    , unk60(0.0f)
-    , unk54(0.0f, 0.0f, 0.0f)
-    , unk48(0.0f, 0.0f, 0.0f)
 {
+	unk60 = 0.0f;
+	unk48.zero();
+	unk54.zero();
 }
