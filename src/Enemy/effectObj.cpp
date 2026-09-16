@@ -204,7 +204,8 @@ void TEffectObjManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & (CUE_DRAW | CUE_MOVE)) {
 		JGadget::TList<TEffectObjBase*>::iterator it = unk14.begin();
-		for (; it != unk14.end(); ++it)
+		JGadget::TList<TEffectObjBase*>::iterator e  = unk14.end();
+		for (; it != e; ++it)
 			(*it)->perform(cue, graphics);
 
 		for (int i = 0; i < COOL_EFFECT_OBJ_NUM; ++i)
