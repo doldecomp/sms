@@ -11,7 +11,7 @@ static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
 TCameraOption* gpCameraOption;
-const char* cLoadCamName = "ロードカメラ";
+const char* cLoadCamName = "左サイドカメラ";
 
 void CPolarSubCamera::chaseOptionCamera_(f32 param_1)
 {
