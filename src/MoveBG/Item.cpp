@@ -376,7 +376,8 @@ void TCoinBlue::makeObjAppeared()
 
 void TCoinBlue::taken(THitActor* param_1)
 {
-	SMSGetMarDirector()->fireGetBlueCoin(this);
+	TMarDirector* director = SMSGetMarDirector();
+	director->fireGetBlueCoin(this);
 
 	if (mContainer)
 		mContainer->receiveMessage(this, HIT_MESSAGE_UNK8);
