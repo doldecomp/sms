@@ -961,9 +961,10 @@ void TBossGesso::doAttackSingle()
 		if (inSightAngle(getSaveParam()->mSLSightAngle.get() * 0.5f)
 		    && tentacle->mState == 0) {
 			JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
-			delta -= mPosition;
+			delta -= tentacle->getFirstNode()->getPosition();
 
-			if (delta.squared() > getSaveParam()->mSLSingleAttackLen.get()) {
+			f32 len = getSaveParam()->mSLSingleAttackLen.get();
+			if (delta.squared() < len * len) {
 				tentacle->changeStateAndFixNodes(1);
 				break;
 			}
@@ -971,7 +972,7 @@ void TBossGesso::doAttackSingle()
 	}
 
 	if (mTentacles[3]->isThing2() && mTentacles[1]->isThing2()
-	    && mTentacles[2]->isThing2()) {
+	    && mTentacles[2]->isThing2() && !mTentacles[0]->isThing2()) {
 		if (mTimeInCurrentAttackMode <= getSaveParam()->mSLUnisonInter.get())
 			return;
 
@@ -982,7 +983,72 @@ void TBossGesso::doAttackSingle()
 		return;
 	}
 
-	// TODO: ughhhhhhhhhhhhhh
+	if (tentacleHeld())
+		return;
+
+	JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
+	f32 unisonLen = getSaveParam()->mSLUnisonAttackLen.get();
+	unisonLen *= unisonLen;
+	f32 forceUnisonLen = getSaveParam()->mSLForceUnisonLen.get();
+	forceUnisonLen *= forceUnisonLen;
+	delta -= mPosition;
+
+	if (mBeak->getHolder() != nullptr
+	    && (mTentacles[3]->isThing2() && mTentacles[1]->isThing2())) {
+		TBGTentacle* tentacle = mTentacles[0];
+		if (tentacle->mState != 1 && tentacle->mState != 4
+		    && tentacle->mState != 5 && tentacle->mState != 3
+		    && tentacle->mState != 6)
+			tentacle->changeStateAndFixNodes(1);
+
+		tentacle = mTentacles[2];
+		if (tentacle->mState != 1 && tentacle->mState != 4
+		    && tentacle->mState != 5 && tentacle->mState != 3
+		    && tentacle->mState != 6)
+			tentacle->changeStateAndFixNodes(1);
+		return;
+	}
+
+	f32 dist = delta.squared();
+	if (dist < forceUnisonLen
+	    && gpMarioOriginal->mPosition.y <= gpMarioOriginal->mFloorPosition.y + 4.0f) {
+		changeAttackMode(ASTATE_UNISON);
+		return;
+	}
+
+	if (dist < unisonLen
+	    && gpMarioOriginal->mPosition.y <= gpMarioOriginal->mFloorPosition.y + 4.0f) {
+		if (mTimeInCurrentAttackMode > getSaveParam()->mSLUnisonInter.get()) {
+			if (gpMarDirector->unk7D == 4)
+				changeAttackMode(ASTATE_ROLL);
+			else
+				changeAttackMode(ASTATE_UNISON);
+		}
+		return;
+	}
+
+	for (int i = 0; i < TENTACLE_NUM; ++i)
+		if (mTentacles[i]->mState == 1)
+			return;
+
+	if (mCork->unkC != 0 && unk195 < 3) {
+		f32 shootLen = getSaveParam()->mSLShootRadius.get();
+		shootLen *= shootLen;
+		if (mTimeInCurrentAttackMode > getSaveParam()->mSLUnisonInter.get()
+		    && dist < shootLen) {
+			if (inSightAngle(30.0f)) {
+				changeAttackMode(ASTATE_SHOOT);
+				return;
+			}
+		}
+	}
+
+	if (gpMarDirector->unk7D == 4
+	    && inSightAngle(getSaveParam()->mSLSightAngle.get() * 0.5f)
+	    && mTimeInCurrentAttackMode > getSaveParam()->mSLUnisonInter.get()) {
+		changeAttackMode(ASTATE_ROLL);
+		unk195 = 0;
+	}
 }
 #pragma dont_inline off
 
