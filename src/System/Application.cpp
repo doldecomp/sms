@@ -39,7 +39,6 @@
 #include <System/CardManager.hpp>
 #include <System/ScenarioArchiveName.hpp>
 #include <System/MarNameRefGen.hpp>
-#include <System/StageUtil.hpp>
 #include <System/GCLogoDir.hpp>
 #include <System/MovieDirector.hpp>
 #include <System/SelectDir.hpp>
@@ -72,6 +71,7 @@ TARAMBlock gArBkConsole;
 TARAMBlock gArBkGuide;
 
 extern "C" void ReInitializeGX();
+u8 SMS_getShineIDofExStage(u8);
 
 f32 SMSGetVSyncTimesPerSec()
 {
