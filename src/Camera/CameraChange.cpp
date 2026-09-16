@@ -21,10 +21,20 @@ void CPolarSubCamera::getLButtonCameraModeByNozzle_() { }
 
 s16 CPolarSubCamera::getCameraInbetweenFrame_(int param_1)
 {
-	if (param_1 == -1)
-		param_1 = unk60->getThing();
+	if (param_1 == -1) {
+		CameraUnk60Struct* pTVar2 = unk60;
+		int* pTVar3;
+		if (pTVar2->unk4 <= 0) {
+			pTVar3 = pTVar2->unk8;
+		} else {
+			int iVar2 = pTVar2->unk4 - 1;
+			pTVar3    = pTVar2->unk8;
+			pTVar3 += iVar2;
+		}
+		param_1 = *pTVar3;
+	}
 
-	int iVar3 = 1;
+	s16 iVar3 = 1;
 	if (mMode < CAMERA_MODE_REPRODUCE_DEMO
 	    && param_1 < CAMERA_MODE_REPRODUCE_DEMO) {
 		TCamSaveKindParam* pTVar4 = mSaveKindParam[mMode];
