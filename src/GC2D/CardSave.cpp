@@ -2068,4 +2068,6 @@ void TCardSave::execIssueGX_(JDrama::TGraphics* param_1)
 	}
 
 	param_1->setScissor(scissorRect);
+	if (param_1 != NULL) {
+	}
 }
