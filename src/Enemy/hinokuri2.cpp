@@ -1219,7 +1219,7 @@ DEFINE_NERVE(TNerveHino2PrePol, TLiveActor)
 			uVar5 += 1;
 
 			int wait = self->getSaveParam()->mSLPrePolWait.get();
-			if (wait > uVar5) {
+			if (uVar5 > wait) {
 				f32 prob = self->getSaveParam()->mSLStampProb.get();
 				if (rand() * (1.0f / (RAND_MAX + 1)) < prob) {
 					spine->pushAfterCurrent(&TNerveHino2Pollute::theNerve());
