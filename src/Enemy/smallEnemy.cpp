@@ -767,12 +767,13 @@ void TSmallEnemy::decHpByWater(THitActor* param_1)
 	if (uVar2 < 1)
 		uVar2 = 1;
 
-	if (mHitPoints < uVar2) {
+	u8 uVar1 = mHitPoints;
+	if (uVar1 < uVar2) {
 		mHitPoints = 0;
 		return;
 	}
 
-	mHitPoints -= uVar2;
+	mHitPoints = uVar1 - uVar2;
 }
 
 void TSmallEnemy::kill()
