@@ -380,8 +380,9 @@ void TPoiHana::walkBehavior(int param_1, float param_2)
 	if (mSleepVersion && param_1 == 0) {
 		mGoToSleepTimer += 1;
 		if (checkCurAnmEnd(0)) {
-			if (mGoToSleepTimer
-			    > unk19C->mSLWakeFrame.get() + mInstanceIndex * 100) {
+			int threshold
+			    = unk19C->mSLWakeFrame.get() + mInstanceIndex * 100;
+			if (mGoToSleepTimer > threshold) {
 				mGoToSleepTimer = 0;
 
 				mGoToSleepTimer = TMsRange<s32>(-500, 500).rand();
