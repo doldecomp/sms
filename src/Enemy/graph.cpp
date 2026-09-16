@@ -771,7 +771,7 @@ int TGraphWeb::getNeighborNodeIndexByFlag(int param_1, int param_2,
                                           u32 param_3) const
 {
 	int goodConnectionNum = 0;
-	int goodConnections[8];
+	int goodConnections[10];
 
 	const TRailNode* railNode = getGraphNode(param_1).getRailNode();
 	for (int i = 0; i < railNode->mConnectionNum; ++i) {
@@ -785,7 +785,8 @@ int TGraphWeb::getNeighborNodeIndexByFlag(int param_1, int param_2,
 	if (goodConnectionNum == 0)
 		return -1;
 
-	return goodConnections[(int)(MsRandF() * goodConnectionNum)];
+	int random = MsRandF() * goodConnectionNum;
+	return goodConnections[random];
 }
 
 void TGraphWeb::getDesignatedNodeIndex(u32, int, f32) const { }
