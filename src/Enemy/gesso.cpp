@@ -190,22 +190,23 @@ static int GessoBodyCallback(J3DNode* param_1, int param_2)
 		J3DJoint* joint = (J3DJoint*)param_1;
 		MtxPtr anmMtx   = gpCurGesso->getModel()->getAnmMtx(joint->getJntNo());
 
-		f32 scale = gpCurGesso->getBodyScale();
 		Mtx local_44;
+		local_44[0][3] = 0.0f;
+		local_44[1][3] = 0.0f;
+		local_44[2][3] = 0.0f;
+
+		f32 scale = gpCurGesso->getBodyScale();
 		local_44[0][0] = scale;
 		local_44[0][1] = 0.0f;
 		local_44[0][2] = 0.0f;
-		local_44[0][3] = 0.0f;
 
 		local_44[1][0] = 0.0f;
 		local_44[1][1] = scale;
 		local_44[1][2] = 0.0f;
-		local_44[1][3] = 0.0f;
 
 		local_44[2][0] = 0.0f;
 		local_44[2][1] = 0.0f;
 		local_44[2][2] = scale;
-		local_44[2][3] = 0.0f;
 
 		f32 maxAngle = gpCurGesso->getSaveParams()->mSLBodyAngMax.get();
 		f32 angle = MsClamp(gpCurGesso->mBodyTrackingAngle - 90.0f, -maxAngle,
