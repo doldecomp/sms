@@ -165,7 +165,7 @@ void TJumpBase::initMapObj()
 {
 	TMapObjBase::initMapObj();
 	if (mMapCollisionManager) {
-		TMapCollisionBase* base = mMapCollisionManager->unk8;
+		TMapCollisionBase* base = mMapCollisionManager->getUnk8();
 		base->setAllBGType(7);
 		base->setAllActor(this);
 		base->setAllData(0x2710);
