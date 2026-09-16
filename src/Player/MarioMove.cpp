@@ -1316,7 +1316,7 @@ void TMario::checkReturn()
 
 void TMario::checkThrowObject()
 {
-	if (mModel->unkC[0].checkPass(4.0f)) {
+	if (mModel->getFrameCtrl(0).checkPass(4.0f)) {
 		startVoice(MSD_SE_MV15_EXERT_INST_01);
 		dropObject();
 	}
