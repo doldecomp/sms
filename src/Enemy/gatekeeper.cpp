@@ -132,8 +132,9 @@ BOOL TGateKeeperBase::receiveMessage(THitActor* sender, u32 message)
 			unk154++;
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);
-		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
-		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
+		MSound* sound = SMSGetMSound();
+		sound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &sender->mPosition, 0,
+		                     0.0f, 0, 0, 4);
 		return true;
 	}
 	return false;
