@@ -318,15 +318,16 @@ void TCommonLauncher::stateLaunch()
 		TSpineEnemy* enemy = getProperEnemy(unk164);
 		if (enemy) {
 			JGeometry::TVec3<f32> local_14 = mRotation;
+			JGeometry::TVec3<f32> local_2c;
+			Mtx mtx;
 
 			local_14.x = MsWrap(local_14.x - 270.0f, 0.0f, 360.0f);
 
-			Mtx mtx;
 			MsMtxSetRotRPH(mtx, local_14.x, local_14.y, local_14.z);
-			JGeometry::TVec3<f32> local_20(0.0f, 4.0f, 0.0f);
+			local_2c.set(0.0f, 4.0f, 0.0f);
 			local_14.set(0.0f, 0.0f, 0.0f);
-			MTXMultVec(mtx, &local_20, &local_20);
-			enemy->resetSRTV(mPosition, local_14, enemy->mScaling, local_20);
+			MTXMultVec(mtx, &local_2c, &local_2c);
+			enemy->resetSRTV(mPosition, local_14, enemy->mScaling, local_2c);
 		}
 	}
 
