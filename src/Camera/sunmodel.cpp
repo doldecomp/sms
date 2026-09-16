@@ -50,13 +50,13 @@ TSunModel::TSunModel(bool param_1, const char* name)
 	gpSunModel = this;
 	if (param_1) {
 		unk1AC |= 0x4;
-		unk80 = 0;
+		unk80 = 48;
 	}
 
-	JGeometry::TVec2<f32>* it2 = unkF8;
 	JGeometry::TVec2<s16>* it1 = unkB4;
+	JGeometry::TVec2<f32>* it2 = unkF8;
 	bool* it3                  = unk180;
-	for (int i = 0; i < 17; ++i) {
+	for (int i = 17; i != 0; --i) {
 		it1->x = it1->y = -1;
 		++it1;
 		it2->x = it2->y = 10000.0f;
