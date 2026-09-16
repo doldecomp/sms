@@ -1324,3 +1324,109 @@ to a distance test, a previous-target/previous-yaw pair in a camera. Where the
 byte count is the only evidence, filling the gap is filler, and AGENTS.md
 prohibits committing that. See the table at the end of
 `docs/progress/GMSE01-frame-gaps.md` for the four cases where I stopped.
+
+## Branch shapes tell you whether the source used `||` or separate `if`s
+
+MWCC compiles the two forms differently, and the difference is visible in
+one instruction, so a diff that is otherwise perfect will often name the
+construct for you.
+
+For `if (a || b) return;` the *first* operand gets a direct branch to the
+return and the *last* gets an unfused pair:
+
+```
+    <test a>
+    bne  RET          <- fused
+    <test b>
+    beq  CONT         <- unfused: branch over...
+    b    RET          <- ...a branch to the return
+CONT:
+```
+
+Two separate `if (...) return;` statements fuse both:
+
+```
+    <test a>
+    bne  RET
+    <test b>
+    bne  RET
+```
+
+Both directions came up in `src/Enemy/tobiPuku.cpp` in the same session:
+`TTobiPukuLaunchPad::perform` wanted the separate form and `TTobiPuku::kill`
+wanted the `||`, and swapping each took both to an exact match. If you see
+the redundant `beq +8; b end`, stop trying to restructure the block and just
+join the conditions with `||`.
+
+## A materialised bool usually means an inlined bool-returning helper
+
+When the target builds a bool the long way --
+
+```
+    beq  SET_TRUE     (one of these per condition, all to the same label)
+    ...
+SET_TRUE:
+    li   r0, 1
+    b    TEST
+SET_FALSE:
+    li   r0, 0
+TEST:
+    clrlwi. r0, r0, 24
+    bne  BODY
+```
+
+-- the condition was not written at the call site. It came from a function
+returning `bool` that got inlined, and the materialisation is the return
+value. Check the map's UNUSED list for the TU: in `tobiPuku` this was
+`isRoll__9TTobiPukuFv`, and no arrangement of the same condition written
+inline in the caller reproduced the shape.
+
+The body's shape matters too, and the map's size for the UNUSED symbol is
+the check. `isRoll` as three early returns compiles to 0x150 against the
+map's 0x140 and inlines at 89.7%; as one `a || b || c` return it compiles
+to 0xd4 and drops the caller to 57%.
+
+## Parameter names and defaults are recoverable from `.rodata`
+
+`PARAM_INIT` stringifies its member-name argument, so a `TParams` subclass's
+real member names sit in the TU's `.rodata` next to the `.prm` path, and the
+defaults are the constants the manager's `load()` stores into each
+`TParamRT`'s value slot. Dump the strings from
+`build/<version>/asm/<path>.s` and read the stores in `load()`; do not
+guess. In `tobiPuku` five fabricated names were all wrong and three of the
+five fabricated defaults were wrong too.
+
+Integer parameters are `TParamRT<s32>`, which mangles to `TParamT<l>`.
+Writing `TParamRT<int>` gives `TParamT<i>` and shows up as an operand
+mismatch on the vtable stores.
+
+## Inlining hazards seen while finishing a TU
+
+- **Holding a matrix in a local costs a register.** `TMoePuku::calcRootMatrix`
+  passes `getMActor()->getModel()->getAnmMtx(1)` to three emitters. Binding
+  it to an `MtxPtr` local burns a callee-saved register and stops MWCC
+  folding the joint's `+0x30` into the load offsets of the *inlined base
+  class body*: 86.5% with the local, 99.1% re-fetching per call.
+- **`TLiveActor::getModel()` is out of line**; `getMActor()->getModel()` is
+  the inline path. A stray `bl TLiveActor::getModel()` in the diff means you
+  picked the wrong one.
+- **Routing a field copy through an accessor can cost a temporary.**
+  `mRotation = param_1->getRotation()` matches in `TWalkerEnemy::initAttacker`,
+  which makes no call afterwards, but costs 8 bytes of frame in
+  `TTobiPuku::initAttacker`, which does. `param_1->mRotation` matches both.
+
+## Reordering a TU mechanically
+
+`tools/validate-symbol-order.py` tells you the order is wrong but not what
+to write. The target order is directly readable from the disassembly: take
+the `.fn` lines from `build/<version>/asm/<path>.s` in order, with the
+demangled name from the comment line above each, and reverse it for an
+`-inline deferred` TU. Split the `.cpp` into top-level definition chunks,
+key each by `Class::method` (or the `DEFINE_NERVE` argument), and emit them
+in that order. Assert the key sets match exactly before writing -- if they
+do not, you have either missed a definition or mis-keyed one, and a silent
+partial reorder is much harder to debug than a failed assertion.
+
+Be aware of what this does *not* fix: `.rodata` string-pool offsets also
+depend on objects the original emits and we do not, so an out-of-order TU
+and a correctly-ordered one can have the same operand mismatches.
