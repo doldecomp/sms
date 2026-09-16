@@ -74,8 +74,11 @@ public:
 		STATE_BURIED            = 0x8,
 		STATE_RECOVERING        = 0x9,
 		STATE_WAITING_TO_APPEAR = 0xA,
-		// Added by TResetFruit: alive and counting down to disappear.
+		// Added by TResetFruit: alive and counting down to disappear,
+		// rotting on its way out, and broken and asleep.
 		STATE_LIVING            = 0xB,
+		STATE_ROTTING           = 0xC,
+		STATE_BROKEN            = 0xD,
 	};
 
 public:

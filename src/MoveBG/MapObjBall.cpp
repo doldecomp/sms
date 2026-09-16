@@ -737,3 +737,114 @@ void TResetFruit::makeObjAppeared()
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000))
 		mState = STATE_LIVING;
 }
+
+void TResetFruit::hold(TTakeActor* param_1)
+{
+	JGeometry::TVec3<f32> vel(mVelocity);
+	if (vel.length() > 10.0f)
+		return;
+
+	TMapObjBall::hold(param_1);
+	mVelocity.set(0.0f, 0.0f, 0.0f);
+	onLiveFlag(LIVE_FLAG_UNK10);
+
+	if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000)) {
+		if (!isStateTimerEngaged()) {
+			onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
+			mStateTimer = getLivingTime();
+		}
+	}
+}
+
+void TResetFruit::touchActor(THitActor* param_1)
+{
+	if (isState(STATE_APPEARING))
+		return;
+	if (isState(STATE_BREAKING))
+		return;
+	if (isState(STATE_ROTTING))
+		return;
+	if (isState(STATE_WAITING_TO_APPEAR))
+		return;
+
+	TMapObjBall::touchActor(param_1);
+
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000))
+		return;
+
+	// Being knocked about starts the countdown, unless it is being carried.
+	if (isState(STATE_NORMAL) && !checkLiveFlag(LIVE_FLAG_UNK10))
+		makeObjLiving();
+}
+
+u32 TResetFruit::touchWater(THitActor* param_1)
+{
+	if (!isState(STATE_HOLDING) && !isState(STATE_APPEARING)) {
+		JGeometry::TVec3<f32> vel(mVelocity);
+		JGeometry::TVec3<f32> pushed;
+		pushed.set(vel);
+
+		const JGeometry::TVec3<f32>& flow = getWaterSpeed(param_1);
+		pushed.x += flow.x * unk17C;
+		pushed.y += flow.y * unk17C;
+		pushed.z += flow.z * unk17C;
+		mVelocity = pushed;
+
+		offLiveFlag(LIVE_FLAG_UNK10);
+	}
+
+	makeObjLiving();
+	return 1;
+}
+
+void TResetFruit::breaking()
+{
+	Mtx squash;
+	MTXScale(squash, 1.0f, mBreakingScaleSpeed, 1.0f);
+
+	MtxPtr mtx = getModel()->getAnmMtx(0);
+	concatOnlyRotFromLeft(squash, mtx, mtx);
+
+	mScaling.y *= mBreakingScaleSpeed;
+	mtx[1][3] = mBodyRadius * mScaling.y + mPosition.y;
+
+	if (mScaling.y < 0.2f) {
+		mPosition.y += mBodyRadius * 0.5f;
+		mScaling.x = mInitialScaling.x;
+		mScaling.y = mInitialScaling.y;
+		mScaling.z = mInitialScaling.z;
+
+		emitAndScale(0xE5, 0, &mPosition);
+		SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition, 0,
+		                                nullptr, 0, 4);
+		mStateTimer = 240;
+		sleep();
+		mState = STATE_BROKEN;
+	}
+}
+
+void TResetFruit::waitingToAppear()
+{
+	if (gpMarDirector->mMap == 3 && unk1A4)
+		makeObjDead();
+
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000))
+		return;
+
+	if (!isStateTimerEngaged() && mColCount == 0) {
+		onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
+		makeObjAppeared();
+
+		Mtx small;
+		MTXScale(small, 0.2f, 0.2f, 0.2f);
+		concatOnlyRotFromLeft(small, getModel()->getAnmMtx(0),
+		                      getModel()->getAnmMtx(0));
+
+		mScaling.y = 0.2f;
+		onHitFlag(HIT_FLAG_NO_COLLISION);
+		mState = STATE_APPEARING;
+
+		SMSGetMSound()->startSoundActor(MSD_SE_IT_COMMON_APPEAR, &mPosition, 0,
+		                                nullptr, 0, 4);
+	}
+}
