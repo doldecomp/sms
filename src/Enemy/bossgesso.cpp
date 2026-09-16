@@ -372,9 +372,10 @@ void TBossGessoMtxCalc::calc(u16 param_1)
 	if (param_1 != 26)
 		return;
 
-	if (mOwner->mBeak != nullptr && mOwner->mBeak->isTaken()) {
-		TBGBeakHit* beak = mOwner->mBeak;
-		MtxPtr mtx26     = mOwner->getModel()->getAnmMtx(param_1);
+	TBossGesso* gesso = mOwner;
+	if (gesso->mBeak != nullptr && gesso->mBeak->isTaken()) {
+		TBGBeakHit* beak = gesso->mBeak;
+		MtxPtr mtx26     = gesso->getModel()->getAnmMtx(param_1);
 		mtx26[0][3]      = beak->mPosition.x;
 		mtx26[1][3]      = beak->mPosition.y + 50.0f;
 		mtx26[2][3]      = beak->mPosition.z;
