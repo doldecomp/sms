@@ -1082,10 +1082,10 @@ public:
 		    halfW
 		        - unk800B0
 		              * (unk80134->meshWidth.get()
-		                 * (f32)SMSGetGameRenderHeight()),
+		                 * (f32)SMSGetGameRenderWidth()),
 		    -halfW,
 		    unk800B0
-		            * (unk80134->meshWidth.get() * (f32)SMSGetGameRenderWidth())
+		            * (unk80134->meshWidth.get() * (f32)SMSGetGameRenderHeight())
 		        - halfW,
 		    0.0f, R3 - negR);
 
