@@ -731,15 +731,8 @@ void TModelWaterManager::move()
 void TModelWaterManager::calcWorldMinMax()
 {
 	if (mParticleCount == 0) {
-		JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
-
-		unk5D70.x = marioPos.x;
-		unk5D70.y = marioPos.y;
-		unk5D70.z = marioPos.z;
-
-		unk5D7C.x = marioPos.x;
-		unk5D7C.y = marioPos.y;
-		unk5D7C.z = marioPos.z;
+		unk5D70 = SMS_GetMarioPos();
+		unk5D7C = SMS_GetMarioPos();
 
 		unk5D70.x -= 1.0f;
 		unk5D70.y -= 1.0f;
@@ -751,26 +744,34 @@ void TModelWaterManager::calcWorldMinMax()
 		return;
 	}
 
-	JGeometry::TVec3<f32> fVar789 = mParticlePositionSOA[0];
-	fVar789.x -= 1.0f;
-	fVar789.y -= 1.0f;
-	fVar789.z -= 1.0f;
-	JGeometry::TVec3<f32> fVar123 = mParticlePositionSOA[0];
-	fVar789.x += 1.0f;
-	fVar789.y += 1.0f;
-	fVar789.z += 1.0f;
-	for (int i = 0; i < mParticleCount; ++i) {
-		fVar789.setMax(mParticlePositionSOA[i]);
-		fVar123.setMin(mParticlePositionSOA[i]);
+	f32 fVar789 = mParticlePositionSOA[0].x - 1.0f;
+	f32 fVar788 = mParticlePositionSOA[0].y - 1.0f;
+	f32 fVar787 = mParticlePositionSOA[0].z - 1.0f;
+	f32 fVar123 = mParticlePositionSOA[0].x + 1.0f;
+	f32 fVar122 = mParticlePositionSOA[0].y + 1.0f;
+	f32 fVar121 = mParticlePositionSOA[0].z + 1.0f;
+	for (int i = 1; i < mParticleCount; ++i) {
+		if (fVar789 > mParticlePositionSOA[i].x)
+			fVar789 = mParticlePositionSOA[i].x;
+		if (fVar788 > mParticlePositionSOA[i].y)
+			fVar788 = mParticlePositionSOA[i].y;
+		if (fVar787 > mParticlePositionSOA[i].z)
+			fVar787 = mParticlePositionSOA[i].z;
+		if (fVar123 < mParticlePositionSOA[i].x)
+			fVar123 = mParticlePositionSOA[i].x;
+		if (fVar122 < mParticlePositionSOA[i].y)
+			fVar122 = mParticlePositionSOA[i].y;
+		if (fVar121 < mParticlePositionSOA[i].z)
+			fVar121 = mParticlePositionSOA[i].z;
 	}
 
-	unk5D70.x = fVar789.x - 200.0f;
-	unk5D70.y = fVar789.y - 200.0f;
-	unk5D70.z = fVar789.z - 200.0f;
+	unk5D70.x = fVar789 - 200.0f;
+	unk5D70.y = fVar788 - 200.0f;
+	unk5D70.z = fVar787 - 200.0f;
 
-	unk5D7C.x = fVar123.x + 200.0f;
-	unk5D7C.y = fVar123.y + 200.0f;
-	unk5D7C.z = fVar123.z + 200.0f;
+	unk5D7C.x = fVar123 + 200.0f;
+	unk5D7C.y = fVar122 + 200.0f;
+	unk5D7C.z = fVar121 + 200.0f;
 }
 
 #pragma dont_inline on
