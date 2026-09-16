@@ -1159,10 +1159,13 @@ DEFINE_NERVE(TNerveTelesaFreeze, TLiveActor)
 				self->offHitFlag(HIT_FLAG_UNK10000000);
 				return true;
 			}
-		} else if (self->resetBaseGround() || self->isBckAnm(5))
-			self->setBckAnm(3);
-		else
-			self->setBckAnm(4);
+		} else {
+			bool reset = self->resetBaseGround();
+			if (reset || self->isBckAnm(5))
+				self->setBckAnm(3);
+			else
+				self->setBckAnm(4);
+		}
 	}
 
 	self->reduceFlyForce();
