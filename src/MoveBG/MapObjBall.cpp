@@ -5,6 +5,8 @@
 #include <Player/MarioAccess.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <MSound/MSound.hpp>
+#include <MSound/MSoundSE.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -22,6 +24,33 @@ void TMapObjBall::touchRoof(JGeometry::TVec3<f32>* param_1)
 void TMapObjBall::touchPollution() { kill(); }
 
 void TMapObjBall::touchWaterSurface() { kill(); }
+
+void TMapObjBall::rebound(JGeometry::TVec3<f32>* param_1)
+{
+	calcReflectingVelocity(mGroundPlane, mMapObjData->mPhysical->unk4->unk4,
+	                       &mVelocity);
+	param_1->y = mGroundHeight;
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
+
+	if (isActorType(0x400000D0)) {
+		// The watermelon has a big and a small bounce sample, chosen by how
+		// far it has been scaled up.
+		if (mScaling.y >= 5.0f) {
+			SMSGetMSound()->startSoundActorWithInfo(
+			    MSD_SE_OBJ_WATERMELON_BBUND, &mPosition, nullptr,
+			    abs(mGroundPlane->mNormal.y), 0, 0, nullptr, 0, 4);
+		} else {
+			SMSGetMSound()->startSoundActorWithInfo(
+			    MSD_SE_OBJ_WATERMELON_SBUND, &mPosition, nullptr,
+			    abs(mGroundPlane->mNormal.y), 0, 0, nullptr, 0, 4);
+		}
+	} else {
+		u32 sound = mMapObjData->mSound->unk4->unk0[4];
+		SMSGetMSound()->startSoundActorWithInfo(sound, &mPosition,
+		                                        (Vec*)&mVelocity, 0.0f, 0, 0,
+		                                        nullptr, 0, 4);
+	}
+}
 
 void TMapObjBall::put()
 {
@@ -44,10 +73,33 @@ void TMapObjBall::hold(TTakeActor* param_1)
 	mVelocity.set(0.0f, 0.0f, 0.0f);
 }
 
+u32 TMapObjBall::touchWater(THitActor* param_1)
+{
+	if (isState(STATE_HOLDING) || isState(STATE_APPEARING))
+		return 1;
+
+	// The current drags the ball along, scaled by the per-kind unk17C.
+	JGeometry::TVec3<f32> vel(mVelocity);
+	JGeometry::TVec3<f32> pushed;
+	pushed.set(vel);
+
+	const JGeometry::TVec3<f32>& flow = getWaterSpeed(param_1);
+	pushed.x += flow.x * unk17C;
+	pushed.y += flow.y * unk17C;
+	pushed.z += flow.z * unk17C;
+	mVelocity = pushed;
+
+	offLiveFlag(LIVE_FLAG_UNK10);
+	return 1;
+}
+
 void TMapObjBall::checkWallCollision(JGeometry::TVec3<f32>* param_1)
 {
-	JGeometry::TVec3<f32> centre(param_1->x, param_1->y + mBodyRadius,
-	                             param_1->z);
+	JGeometry::TVec3<f32> centre;
+	centre.x = param_1->x;
+	centre.y = param_1->y + mBodyRadius;
+	centre.z = param_1->z;
+
 	TBGWallCheckRecord check(centre, mBodyRadius, 4,
 	                         mMapObjData->mPhysical->mWallCheckFlags);
 
@@ -82,12 +134,12 @@ void TMapObjBall::makeObjAppeared()
 	mtx[1][3] = mPosition.y + mBodyRadius;
 	mtx[2][3] = mPosition.z;
 
-	if (mActorType == 0x40000394) {
+	if (isActorType(0x40000394)) {
 		if (mtx[1][1] > 0.0f)
 			mtx[1][3] = -(50.0f * mtx[1][1] - mtx[1][3]);
 	}
 
-	if (mActorType == 0x40000392)
+	if (isActorType(0x40000392))
 		mtx[1][3] = -(10.0f * (1.0f - mtx[1][1]) - mtx[1][3]);
 
 	unkE8 = 0;
@@ -100,7 +152,7 @@ void TMapObjBall::control()
 	if (unk194 != 0)
 		unk194 -= 1;
 
-	if (mState == STATE_HOLDING) {
+	if (isState(STATE_HOLDING)) {
 		// While carried the ball rides the holder's matrix, lifted clear of
 		// the hand by unk190.
 		Mtx mtx;
@@ -120,13 +172,15 @@ BOOL TMapObjBall::receiveMessage(THitActor* sender, u32 message)
 	if (TMapObjGeneral::receiveMessage(sender, message))
 		return TRUE;
 
-	if (message == 4 && (unkF8 & 0x100000)) {
-		boundByActor(sender);
+	if (message == HIT_MESSAGE_TAKE && (unkF8 & 0x100000)) {
+		hold((TTakeActor*)sender);
 		return TRUE;
 	}
 
-	if (sender->mActorType == 0x80000001) {
-		if (mActorType != 0x400000D0 && message != 4) {
+	// Mario walking into a ball kicks it, except for the watermelon and
+	// except when he is trying to pick it up.
+	if (sender->isActorType(0x80000001)) {
+		if (!isActorType(0x400000D0) && message != HIT_MESSAGE_TAKE) {
 			kicked();
 			return TRUE;
 		}
