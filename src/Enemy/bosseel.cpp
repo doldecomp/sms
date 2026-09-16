@@ -783,12 +783,12 @@ TBossEelTooth::TBossEelTooth(u8 toothType, TBossEel* owner,
 		                                  &mColor);
 
 	mColor.a   = 0xFF;
-	mHitPoints = mOwner->getBossEelParams().mSLToothMaxHitPoint.get();
+	mHitPoints = mOwner->mSaveParams->mSLToothMaxHitPoint.get();
 	initHitActor(0x08000022, 5, 0x81000000,
-	             mOwner->getBossEelParams().mSLToothAttackRadius.get(),
-	             mOwner->getBossEelParams().mSLToothAttackHeight.get(),
-	             mOwner->getBossEelParams().mSLToothDamageRadius.get(),
-	             mOwner->getBossEelParams().mSLToothDamageHeight.get());
+	             mOwner->mSaveParams->mSLToothAttackRadius.get(),
+	             mOwner->mSaveParams->mSLToothAttackHeight.get(),
+	             mOwner->mSaveParams->mSLToothDamageRadius.get(),
+	             mOwner->mSaveParams->mSLToothDamageHeight.get());
 
 	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
 	    ->getChildren()
