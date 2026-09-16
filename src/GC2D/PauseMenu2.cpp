@@ -571,17 +571,21 @@ void TPauseMenu2::drawAppearPane(J2DPicture* picture, f32 anim, JUTRect& rect,
 		if (picture->isVisible()) {
 			picture->hide();
 		}
-	} else if (!(anim >= 20.0f) && !picture->isVisible()) {
-		picture->show();
-		picture->setAlpha(0);
+	} else if (!(anim >= 20.0f)) {
+		if (!picture->isVisible()) {
+			picture->show();
+			picture->setAlpha(0);
+		}
 
 		if (anim == 2.0f) {
 			JUTRect rect = picture->getGlobalBounds();
 
 			// TODO: This doesn't fully match.
+			s32 width  = rect.getWidth();
+			s32 height = rect.getHeight();
 			gpEmitterManager4D2->createEmitter(
-			    JGeometry::TVec3<f32>(rect.x1 + 0.5f * rect.getWidth(),
-			                          rect.y1 + 0.5f * rect.getHeight(), 0.0f),
+			    JGeometry::TVec3<f32>(rect.x1 + 0.5f * width,
+			                          rect.y1 + 0.5f * height, 0.0f),
 			    0x1F9, nullptr, nullptr);
 		}
 
