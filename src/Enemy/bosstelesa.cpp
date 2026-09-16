@@ -1,3 +1,4 @@
+#include <Enemy/BossTelesaObj.hpp>
 #include <Enemy/BossTelesa.hpp>
 #include <Strategic/LiveActor.hpp>
 #include <Strategic/Spine.hpp>
@@ -45,3 +46,12 @@ DEFINE_NERVE(TNerveBubbleLive, TLiveActor) { return FALSE; }
 
 // TODO: incorrect size. Map records 192 bytes.
 DEFINE_NERVE(TNerveBubbleSplit, TLiveActor) { return FALSE; }
+
+TBossTelesa::~TBossTelesa() { }
+TBossTelesaBody::~TBossTelesaBody() { }
+TBossTelesaKillSmallEnemy::~TBossTelesaKillSmallEnemy() { }
+TBossTelesaManager::~TBossTelesaManager() { }
+TBossTelesaTongue::~TBossTelesaTongue() { }
+TBubble::~TBubble() { }
+TBubbleManager::~TBubbleManager() { }
+TTelesaSlot::~TTelesaSlot() { }

@@ -1,3 +1,4 @@
+#include <Enemy/HanaSamboObj.hpp>
 #include <Enemy/HanaSambo.hpp>
 #include <Strategic/LiveActor.hpp>
 #include <Strategic/Spine.hpp>
@@ -45,3 +46,12 @@ DEFINE_NERVE(TNerveSamboHeadHitWater, TLiveActor) { return FALSE; }
 
 // TODO: incorrect size. Map records 140 bytes.
 DEFINE_NERVE(TNerveSamboHeadRecoverWater, TLiveActor) { return FALSE; }
+
+THanaSambo::~THanaSambo() { }
+THanaSamboHead::~THanaSamboHead() { }
+THanaSamboManager::~THanaSamboManager() { }
+TSamboFlower::~TSamboFlower() { }
+TSamboFlowerManager::~TSamboFlowerManager() { }
+TSamboHead::~TSamboHead() { }
+TSamboHeadManager::~TSamboHeadManager() { }
+TSamboLeaf::~TSamboLeaf() { }
