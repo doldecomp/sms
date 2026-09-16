@@ -515,7 +515,8 @@ bool TBossManta::collidedWithWater()
 			unk19C++;
 
 			const int hitCounts2[6] = { 16, 8, 4, 2, 1, 1 };
-			if (unk19C == hitCounts2[mGeneration]) {
+			const int& hitCount2 = hitCounts2[mGeneration];
+			if (unk19C == hitCount2) {
 				if (mGeneration >= 4)
 					mSpine->pushAfterCurrent(&TNerveMantaDeath::theNerve());
 				else
