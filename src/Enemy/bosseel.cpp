@@ -1555,7 +1555,7 @@ MtxPtr TBossEel::getTakingMtx() { return mMActor->getModel()->getAnmMtx(7); }
 void TBossEel::calcAndSetCollisionCubeBite_()
 {
 	TCubeGeneralInfo* mouthCube
-	    = *mMouthCubeManager->unk14->getChildren().begin();
+	    = mMouthCubeManager->unk14->getChildren().begin()[1];
 	mouthCube->unk18.set(mRotation);
 	mouthCube->unkC.set(mPosition.x, mPosition.y + 1900.0f, mPosition.z);
 	mouthCube->unk24.set(1100.0f, 1000.0f, 1100.0f);
@@ -1777,7 +1777,7 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		TPosition3f collisionMtx;
 		collisionMtx.set(
-		    mMActor->getModel()->getAnmMtx(mMapCollisionJointIndices[0]));
+		    mMActor->getModel()->getAnmMtx(mMapCollisionJointIndices[2]));
 		mMapCollisions[2]->moveMtx(collisionMtx);
 
 		if (mUseMapCollision) {
@@ -1800,23 +1800,29 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 		bodyToHeadDistance *= mScaling.y;
 		mHeadCollision->mPosition.y += bodyToHeadDistance;
 
-		mHeadCollision->setHitParams(
-		    mSaveParams->mSLHeadAttackRadius.get() * mScaling.x,
-		    mSaveParams->mSLHeadAttackHeight.get() * mScaling.x,
-		    mSaveParams->mSLHeadDamageRadius.get() * mScaling.x,
-		    mSaveParams->mSLHeadDamageHeight.get() * mScaling.x);
+		f32 scale        = mScaling.x;
+		f32 attackRadius = mSaveParams->mSLHeadAttackRadius.get();
+		f32 attackHeight = mSaveParams->mSLHeadAttackHeight.get();
+		f32 damageRadius = mSaveParams->mSLHeadDamageRadius.get();
+		f32 damageHeight = mSaveParams->mSLHeadDamageHeight.get();
+		mHeadCollision->setHitParams(attackRadius * scale, attackHeight * scale,
+		                                 damageRadius * scale,
+		                                 damageHeight * scale);
 
-		setHitParams(mSaveParams->mSLBodyAttackRadius.get() * mScaling.x,
-		             mSaveParams->mSLBodyAttackHeight.get() * mScaling.x,
-		             mSaveParams->mSLBodyDamageRadius.get() * mScaling.x,
-		             mSaveParams->mSLBodyDamageHeight.get() * mScaling.x);
+		scale        = mScaling.x;
+		attackRadius = mSaveParams->mSLBodyAttackRadius.get();
+		attackHeight = mSaveParams->mSLBodyAttackHeight.get();
+		damageRadius = mSaveParams->mSLBodyDamageRadius.get();
+		damageHeight = mSaveParams->mSLBodyDamageHeight.get();
+		setHitParams(attackRadius * scale, attackHeight * scale,
+		             damageRadius * scale, damageHeight * scale);
 
 		calcAndSetCollisionCubeBite_();
 
 		if (mHitPoints != 0) {
 			mForceEat = false;
 			for (s32 i = 0; i < mHeadCollision->getColNum(); ++i) {
-				if (mHeadCollision->getCollision(i)->isActorType(0x80000001))
+				if (mHeadCollision->getCollision(i)->mActorType == 0x80000001)
 					mForceEat = true;
 			}
 
