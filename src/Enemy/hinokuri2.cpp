@@ -630,8 +630,9 @@ void THinokuri2::emitWaterParticle()
 	if (mLevel >= 1) {
 		getJointTransByIndex(0x19, &position);
 	} else {
-		position = mPosition;
-		position.y += getSaveParam()->mSLWaterEmitPos.get();
+		position = getPosition();
+		THino2Params* params = getSaveParam();
+		position.y += params->mSLWaterEmitPos.get();
 	}
 	unk19C->mPos.value = position;
 	gpModelWaterManager->emitRequest(*unk19C);
@@ -1413,7 +1414,7 @@ DEFINE_NERVE(TNerveHino2Die, TLiveActor)
 	THinokuri2* self = (THinokuri2*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->changeBck(0xD);
-		JGeometry::TVec3<f32> local_1C = self->mPosition;
+		JGeometry::TVec3<f32> local_1C = self->getPosition();
 		gpItemManager->makeObjAppear(local_1C.x, local_1C.y, local_1C.z,
 		                             0x2000000E, false);
 		self->invalidateCollisionAll();
