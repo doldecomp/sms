@@ -1067,7 +1067,7 @@ static void evEggYoshiStartFruit(TSpcTypedInterp<TEventWatcher>* interp,
 {
 	interp->verifyArgNum(1, &arg_num);
 	TEggYoshi* egg = (TEggYoshi*)getNameRefPtr(interp->pop());
-	if (!egg->checkLiveFlag(LIVE_FLAG_DEAD))
+	if (egg->checkLiveFlag(LIVE_FLAG_DEAD) == false)
 		egg->startFruit();
 	interp->push();
 }
