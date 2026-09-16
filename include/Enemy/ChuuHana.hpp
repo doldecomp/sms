@@ -149,13 +149,13 @@ public:
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void initSetEnemies();
 
-	/* 0x60 */ u32 unk60;
+	/* 0x60 */ s32 unk60;
 	/* 0x64 */ u8 unk64;
 	/* 0x65 */ u8 unk65;
 	/* 0x66 */ u8 unk66;
-	/* 0x68 */ u32 unk68;
-	/* 0x6C */ u32 unk6C;
-	/* 0x70 */ u32 unk70;
+	/* 0x68 */ s32 unk68;
+	/* 0x6C */ s32 unk6C;
+	/* 0x70 */ s32 unk70;
 };
 
 DECLARE_NERVE(TNerveChuuHanaAttack, TLiveActor)

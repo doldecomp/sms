@@ -18,6 +18,8 @@
 #include <System/Particles.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
+#include <System/MarDirector.hpp>
+#include <GC2D/GCConsole2.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
@@ -172,6 +174,41 @@ void TChuuHanaManager::load(JSUMemoryInputStream& stream)
 TSpineEnemy* TChuuHanaManager::createEnemyInstance()
 {
 	return new TChuuHana("チュウハナ");
+}
+
+void TChuuHanaManager::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	// Hint balloons: standing on a panel long enough, a tackle, repeated
+	// stretches and the first flip each get one.
+	if (cue & CUE_CALC_ANIM) {
+		if (SMS_GetMarioGrPlane()->getActor()
+		    && SMS_GetMarioGrPlane()->getActor()->isActorType(0x400000CF)) {
+			if (unk60 < 900) {
+				unk60++;
+				if (unk60 == 900)
+					gpMarDirector->mConsole->startAppearBalloon(0x2E, true);
+			}
+		}
+
+		if (unk68 >= 60 && unk68 < 80) {
+			unk60 = 1000;
+			unk68 = 80;
+			gpMarDirector->mConsole->startAppearBalloon(0x2F, true);
+		}
+
+		if (unk6C == 5 || unk6C == 10) {
+			unk6C++;
+			gpMarDirector->mConsole->startAppearBalloon(0x31, true);
+		}
+
+		if (unk70 == 1) {
+			unk70++;
+			unk68 = 80;
+			gpMarDirector->mConsole->startAppearBalloon(0x30, true);
+		}
+	}
+
+	TEnemyManager::perform(cue, graphics);
 }
 
 void TChuuHanaManager::initSetEnemies()
@@ -803,36 +840,363 @@ void TChuuHana::checkStretchType()
 
 const char** TChuuHana::getBasNameTable() const { return tyuhana_bastable; }
 
-// TODO: the nerve bodies below are not yet reconstructed; each carries its
-// map size.
 
-// TODO: incorrect size. Map records 648 bytes.
-DEFINE_NERVE(TNerveChuuHanaWalkOnPanel, TLiveActor) { return FALSE; }
+// UNUSED, 0x13c in the map: pick a random node of the graph and walk there.
+// Inlined into ForceJumped, KeepBalance, willFall and isCollidMove.
+void TChuuHana::setSafeGoal()
+{
+	unk1A4 = mCheckOnPanelTime;
 
-// TODO: incorrect size. Map records 688 bytes.
-DEFINE_NERVE(TNerveChuuHanaForceJumped, TLiveActor) { return FALSE; }
+	TMsRange<int> range(0, unk124->unk0->unk8);
+	JGeometry::TVec3<f32> point;
+	unk124->unk0->unk0[range.rand()].getPoint((Vec*)&point);
 
-// TODO: incorrect size. Map records 1004 bytes.
-DEFINE_NERVE(TNerveChuuHanaKeepBalance, TLiveActor) { return FALSE; }
+	TPathNode goal(point);
+	unkF4  = goal;
+	unk104 = goal;
+	unk114.clear();
+	unk1B2 = 1;
+}
 
-// TODO: incorrect size. Map records 680 bytes.
-DEFINE_NERVE(TNerveChuuHanaStick, TLiveActor) { return FALSE; }
+// UNUSED, 0x148 in the map: every 20 frames check whether the panel is
+// still there, and drop when it is not. Inlined into WalkOnPanel and Attack.
+bool TChuuHana::checkOnPanel()
+{
+	unk1A4++;
+	if (unk1A4 > 20) {
+		unk1A4 = 0;
+		if (willFall(mCheckOnPanelTime))
+			unk1A4 = -100;
 
-// TODO: incorrect size. Map records 544 bytes.
-DEFINE_NERVE(TNerveChuuHanaRoll, TLiveActor) { return FALSE; }
+		if (!isAirborne() && mGroundPlane->getActor() == nullptr
+		    && 200.0f + mPosition.y < unk1F8.y) {
+			mSpine->setNext(&TNerveChuuHanaFall2::theNerve());
+			return true;
+		}
+	}
+	return false;
+}
+
+// UNUSED, 0x18 in the map.
+void TChuuHana::rollStart()
+{
+	unk210 = 0.0f;
+	unk204.set(0.0f, 0.0f, 0.0f);
+}
+
+// UNUSED, 0x120 in the map: the roll axis follows the velocity, and the roll
+// angle advances by the distance covered over the radius.
+void TChuuHana::rolling()
+{
+	JGeometry::TVec3<f32> vel(mVelocity);
+	unk204.x += 0.2f * (JGeometry::TVec3<f32>(vel).x - unk204.x);
+	unk204.z += 0.2f * (JGeometry::TVec3<f32>(vel).z - unk204.z);
+
+	unk1B8 = 2.0f
+	    * (JGeometry::TUtil<f32>::sqrt(unk204.x * unk204.x + unk204.z * unk204.z)
+	       / mBodyRadius);
+	unk210 += unk1B8;
+	if (unk210 > 360.0f)
+		unk210 -= 360.0f;
+	if (unk210 < 0.0f)
+		unk210 += 360.0f;
+}
+
+// UNUSED, 0xc4 in the map: add a push into the velocity and pop up.
+void TChuuHana::margeVelocity(JGeometry::TVec3<f32>& push)
+{
+	JGeometry::TVec3<f32> vel(mVelocity);
+	if (!JGeometry::TVec3<f32>(JGeometry::TVec3<f32>(vel)).isZero())
+		VECAdd(&vel, &push, &vel);
+	vel.y     = 0.0f;
+	mVelocity = vel;
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
+}
+
+// UNUSED, 0xc4 in the map: start rolling if walking.
+void TChuuHana::forceRoll()
+{
+	if (mSpine->getCurrentNerve() == &TNerveChuuHanaWalkOnPanel::theNerve())
+		mSpine->pushNerve(&TNerveChuuHanaRoll::theNerve());
+}
+
+// UNUSED, 0x118 in the map. TODO: no call site survives; the name and the
+// callback's use of the eye joint suggest this.
+MtxPtr TChuuHana::getEffectMtx()
+{
+	return getMActor()->getModel()->getAnmMtx(mEyeJntIndex);
+}
+
+// UNUSED, 0x4c in the map. TODO: no call site survives.
+void TChuuHana::eventKill()
+{
+	onLiveFlag(LIVE_FLAG_DEAD);
+	kill();
+}
+
+// UNUSED, 0x44 in the map. TODO: no call site survives.
+void TChuuHana::entryCollision() { offHitFlag(HIT_FLAG_NO_COLLISION); }
+
+
+DEFINE_NERVE(TNerveChuuHanaWalkOnPanel, TLiveActor)
+{
+	TChuuHana* hana = (TChuuHana*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		hana->setWalkAnm();
+		*hana->unk21C = 0;
+	}
+
+	// Remember the panel it first lands on; until then just walk.
+	if (hana->unk218 == nullptr) {
+		const TLiveActor* actor = hana->mGroundPlane->getActor();
+		if (actor) {
+			hana->unk1F8 = actor->mPosition;
+			hana->unk218 = (THitActor*)hana->mGroundPlane->getActor();
+		}
+	} else {
+		hana->walkBehavior(2, 1.0f);
+	}
+
+	hana->checkOnPanel();
+
+	if (hana->TWalkerEnemy::isReachedToGoalXZ())
+		hana->setGoal();
+
+	if (*hana->unk21C) {
+		spine->pushAfterCurrent(&TNerveChuuHanaAttack::theNerve());
+		return TRUE;
+	}
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveChuuHanaForceJumped, TLiveActor)
+{
+	TChuuHana* hana = (TChuuHana*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		hana->setSafeGoal();
+
+	// Late in the jump it slams whatever it is standing on.
+	if (hana->unk214 && hana->getCurAnmFrameNo(0) > 80.0f) {
+		if (hana->mGroundPlane->getActor()) {
+			((THitActor*)hana->mGroundPlane->getActor())
+			    ->receiveMessage(hana, HIT_MESSAGE_SUPER_HIP_DROP);
+		}
+		hana->unk214 = 0;
+	}
+
+	if (hana->checkCurAnmEnd(0)) {
+		if (hana->unk1B1) {
+			spine->pushAfterCurrent(&TNerveChuuHanaRoll::theNerve());
+			return TRUE;
+		}
+		spine->reset();
+		spine->setDefaultNext();
+		spine->pushAfterCurrent(spine->getDefault());
+		return TRUE;
+	}
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveChuuHanaKeepBalance, TLiveActor)
+{
+	TChuuHana* hana = (TChuuHana*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		((TChuuHanaManager*)hana->mManager)->unk70++;
+		hana->setBckAnm(2);
+		// Step back along last frame's motion.
+		hana->mPosition.x -= 10.0f * hana->unk1EC.x;
+		hana->mPosition.z -= 10.0f * hana->unk1EC.z;
+	}
+
+	if (hana->checkCurAnmEnd(0)) {
+		if (hana->isBckAnm(2))
+			hana->setBckAnm(1);
+		if (hana->isBckAnm(1)) {
+			if (spine->getTime() > hana->unk1B4->mSLKeepBalanceTime.get())
+				hana->setBckAnm(0);
+			else
+				hana->setBckAnm(1);
+		}
+		if (hana->isBckAnm(0) || hana->isBckAnm(7)) {
+			// Regained its footing: start this nerve over from a safe node.
+			spine->reset();
+			spine->setNext(&TNerveChuuHanaKeepBalance::theNerve());
+			spine->pushAfterCurrent(spine->getDefault());
+			hana->setSafeGoal();
+		}
+	}
+
+	if (TChuuHana::mAttackVersion)
+		*hana->unk21C = 1;
+
+	if (!TChuuHana::mNewSw && hana->mGroundPlane->getActor() == nullptr) {
+		spine->pushAfterCurrent(&TNerveChuuHanaFall::theNerve());
+		return TRUE;
+	}
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveChuuHanaStick, TLiveActor)
+{
+	TChuuHana* hana = (TChuuHana*)spine->getBody();
+
+	if (spine->getTime() != 0) {
+		if (!hana->isBckAnm(4)) {
+			// Stuck for long enough: settle down and wait.
+			hana->unk224++;
+			if (hana->unk224 > hana->unk1B4->mSLHitWaterTimer.get()) {
+				if (hana->checkCurAnmEnd(0)) {
+					*hana->unk21C = 0;
+					spine->pushAfterCurrent(&TNerveChuuHanaWait::theNerve());
+					return TRUE;
+				}
+			}
+			if (hana->checkCurAnmEnd(0))
+				hana->setBckAnm(4);
+		}
+	} else {
+		hana->setBckAnm(4);
+	}
+
+	// Always head for Mario.
+	TPathNode goal(SMS_GetMarioPos());
+	hana->unkF4  = goal;
+	hana->unk104 = goal;
+	hana->unk114.clear();
+
+	if (TChuuHana::mAttackVersion)
+		*hana->unk21C = 1;
+
+	if (TChuuHana::mNewSw && hana->willFall(TChuuHana::mCheckOnPanelTimeRoll)) {
+		spine->pushAfterCurrent(&TNerveChuuHanaKeepBalance::theNerve());
+		return TRUE;
+	}
+
+	hana->walkBehavior(3, 0.2f);
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveChuuHanaRoll, TLiveActor)
+{
+	TChuuHana* hana = (TChuuHana*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		hana->rollStart();
+
+	if (hana->unk1B0 && hana->willFall(TChuuHana::mCheckOnPanelTimeRoll)) {
+		spine->pushAfterCurrent(&TNerveChuuHanaKeepBalance::theNerve());
+		return TRUE;
+	}
+
+	if (spine->getTime() > 5000) {
+	}
+
+	hana->rolling();
+	return FALSE;
+}
 
 DEFINE_NERVE(TNerveChuuHanaFall, TLiveActor) { return FALSE; }
 
-// TODO: incorrect size. Map records 300 bytes.
-DEFINE_NERVE(TNerveChuuHanaFall2, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveChuuHanaFall2, TLiveActor)
+{
+	TChuuHana* hana = (TChuuHana*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		hana->setBckAnm(6);
+
+	hana->unk220 *= 0.98f;
+
+	if (!hana->isAirborne() || spine->getTime() > 800) {
+		spine->pushAfterCurrent(&TNerveChuuHanaObject::theNerve());
+		hana->kill();
+		return TRUE;
+	}
+	return FALSE;
+}
 
 DEFINE_NERVE(TNerveChuuHanaObject, TLiveActor) { return FALSE; }
 
-// TODO: incorrect size. Map records 1024 bytes.
-DEFINE_NERVE(TNerveChuuHanaAttack, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveChuuHanaAttack, TLiveActor)
+{
+	TChuuHana* hana = (TChuuHana*)spine->getBody();
 
-// TODO: incorrect size. Map records 420 bytes.
-DEFINE_NERVE(TNerveChuuHanaJumpPrepare, TLiveActor) { return FALSE; }
+	if (spine->getTime() == 0) {
+		hana->setBckAnm(12);
+		hana->getMActor()->setFrameRate(2.0f * SMSGetAnmFrameRate(), 0);
 
-// TODO: incorrect size. Map records 108 bytes.
-DEFINE_NERVE(TNerveChuuHanaWait, TLiveActor) { return FALSE; }
+		TPathNode goal((THitActor*)gpMarioAddress);
+		hana->unkF4  = goal;
+		hana->unk104 = goal;
+		hana->unk114.clear();
+	}
+
+	// Mario stepping off this panel ends the chase.
+	if ((*gpMarioGroundPlane)->getActor() != hana->unk218)
+		*hana->unk21C = 0;
+
+	if (spine->getTime() > hana->unk1B4->mSLAttackTimer.get()) {
+		spine->pushAfterCurrent(&TNerveChuuHanaWalkOnPanel::theNerve());
+		spine->pushAfterCurrent(&TNerveChuuHanaWait::theNerve());
+		return TRUE;
+	}
+
+	hana->checkOnPanel();
+
+	if (hana->TWalkerEnemy::isReachedToGoalXZ()) {
+		TPathNode goal((THitActor*)gpMarioAddress);
+		hana->unkF4  = goal;
+		hana->unk104 = goal;
+		hana->unk114.clear();
+	}
+
+	hana->walkBehavior(2, hana->unk1B4->mSLDashRate.get());
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveChuuHanaJumpPrepare, TLiveActor)
+{
+	TChuuHana* hana = (TChuuHana*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		hana->setBckAnm(3);
+
+	hana->unk220 = hana->mPosition.y
+	    - hana->getMActor()->getModel()->getAnmMtx(TChuuHana::mFootJntIndex)[1][3];
+
+	// Ten frames in, launch back over the panel it left.
+	if (hana->getMActor()->getFrameCtrl(0)->checkPass(10.0f)) {
+		JGeometry::TVec3<f32> target(2.0f * hana->unk1F8.x - hana->mPosition.x,
+		                             2.0f * hana->unk1F8.y - hana->mPosition.y,
+		                             2.0f * hana->unk1F8.z - hana->mPosition.z);
+		*hana->unk21C = 0;
+		target.y += hana->unk1B4->mSLJumpHeight.get();
+
+		f32 speed = hana->unk1B4->mSLJumpSp.get();
+		JGeometry::TVec3<f32> vel
+		    = hana->calcVelocityToJumpToY(target, speed, hana->getGravityY());
+		vel.y += 10.0f;
+		hana->mPosition.y += 10.0f;
+		hana->mVelocity = vel;
+		hana->onLiveFlag(LIVE_FLAG_AIRBORNE);
+		hana->unk130 = 0;
+	}
+
+	if (hana->checkCurAnmEnd(0))
+		return TRUE;
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveChuuHanaWait, TLiveActor)
+{
+	TChuuHana* hana = (TChuuHana*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		hana->setBckAnm(11);
+
+	if (hana->checkCurAnmEnd(0))
+		return TRUE;
+	return FALSE;
+}
