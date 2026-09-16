@@ -60,11 +60,15 @@ void draw_wipe_box(const JDrama::TRect& param_1, JUtility::TColor param_2)
 		GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA,
 		               GX_LO_NOOP);
 
-	f32 w = param_2.a * (param_1.getWidth() >> 1) / 255.0f;
-	f32 h = param_2.a * (param_1.getHeight() >> 1) / 255.0f;
-
-	JUTRect local_4c(param_1.x1 + int(w), param_1.y1 + int(h),
-	                 param_1.x2 - int(w), param_1.y2 - int(h));
+	JUTRect local_4c(
+	    param_1.x1
+	        + int(param_2.a * (param_1.getWidth() >> 1) / 255.0f),
+	    param_1.y1
+	        + int(param_2.a * (param_1.getHeight() >> 1) / 255.0f),
+	    param_1.x2
+	        - int(param_2.a * (param_1.getWidth() >> 1) / 255.0f),
+	    param_1.y2
+	        - int(param_2.a * (param_1.getHeight() >> 1) / 255.0f));
 
 	u32 color = 0xff;
 	GXBegin(GX_QUADS, GX_VTXFMT0, 0x10);
