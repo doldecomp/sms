@@ -1047,8 +1047,8 @@ DEFINE_NERVE(TNerveBGKDie, TLiveActor)
 		if ((self->mVariant == TBiancoGateKeeper::VARIANT_RICO_GATEKEEPER
 		     || self->mVariant == TBiancoGateKeeper::VARIANT_MAMMA_GATEKEEPER)
 		    && self->unk296 == 0) {
-			self->unk296 += 1;
 			self->mHitPoints = 3;
+			self->unk296 += 1;
 			if (self->mVariant == TBiancoGateKeeper::VARIANT_MAMMA_GATEKEEPER)
 				spine->pushAfterCurrent(&TNerveBGKLaunchName::theNerve());
 			else
