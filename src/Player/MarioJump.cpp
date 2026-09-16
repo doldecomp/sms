@@ -1027,7 +1027,7 @@ BOOL TMario::rotateJumping()
 	if (mStatus == MARIO_STATUS_RIGHT_ROTATE_JUMP)
 		mModelFaceAngle = mStatusTimer * 4096;
 	else
-		mModelFaceAngle = -(mStatusTimer * 4096);
+		mModelFaceAngle = (u16)-(mStatusTimer * 4096);
 
 	if (!(gpMarDirector->unk58 & 0x3F))
 		rumbleStart(0x14, mMotorParams.mMotorWall.get() / 2);
