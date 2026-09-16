@@ -387,15 +387,19 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 				    local_34, returnJumpSp, self->getGravityY());
 				self->mPosition.y += 2.0f;
 				self->setVelocity(vel);
-				self->onHitFlag(LIVE_FLAG_AIRBORNE);
+				self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			}
 		}
 	}
 
 	if (self->unk1EC != 0) {
-		// TODO: one more condition that is kind of like
-		// mGroundPlane->isWaterSurface() but not really
-		if (!self->isReachedToGoal() || self->isAirborne()) {
+		if ((!self->isReachedToGoal() || self->isAirborne())
+		    && !(self->getGroundPlane()->mBGType == BG_TYPE_WATER
+		         || self->getGroundPlane()->mBGType == BG_TYPE_DAMAGING_WATER
+		         || self->getGroundPlane()->mBGType == BG_TYPE_SEA_WATER
+		         || self->getGroundPlane()->mBGType == BG_TYPE_DAMAGING_SEA_WATER
+		         || self->getGroundPlane()->mBGType == BG_TYPE_POOL
+		         || self->getGroundPlane()->mBGType == BG_TYPE_INDOOR_POOL)) {
 			if (!self->isAirborne())
 				self->walkBehavior(2, 1.0f);
 			else
