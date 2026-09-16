@@ -68,7 +68,10 @@ MtxPtr TBathtub::getTakingMtx()
 	return mMActor->getModel()->getAnmMtx(mMarioJntIdx);
 }
 
-MtxPtr TBathtub::getSubmarineMtxInDemo() { return nullptr; }
+MtxPtr TBathtub::getSubmarineMtxInDemo()
+{
+	return mMActor->getModel()->getAnmMtx(mSubmarineJntIdx);
+}
 
 MtxPtr TBathtub::getPeachMtxInDemo() { return nullptr; }
 
