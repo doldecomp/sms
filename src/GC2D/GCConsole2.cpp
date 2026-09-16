@@ -65,12 +65,17 @@ JUTPoint TGCConsole2::cCoinBotPoint(0, 0);
 
 // fabricated
 static inline void setEmitterToPaneCenter(JPABaseEmitter* emitter,
-                                          J2DPane* pane)
+                                          JUTRect bounds)
 {
-	JUTRect bounds(pane->mGlobalBounds);
 	emitter->mGlobalTranslation.set(bounds.x1 + bounds.getWidth() * 0.5f,
 	                                bounds.y1 + bounds.getHeight() * 0.5f,
 	                                0.0f);
+}
+
+static inline void setEmitterToPaneCenter(JPABaseEmitter* emitter,
+                                          J2DPane* pane)
+{
+	setEmitterToPaneCenter(emitter, pane->mGlobalBounds);
 }
 
 // fabricated
@@ -3340,9 +3345,7 @@ bool TGCConsole2::processAppearCoin(int param_1)
 			updateDownBlendPaneState(unkD4[i], isFinished);
 	}
 
-	JUTRect bounds(unkCC->getPane()->mGlobalBounds);
-	unk124->mGlobalTranslation.set(bounds.x1 + bounds.getWidth() * 0.5f,
-	                               bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+	setEmitterToPaneCenter(unk124, unkCC->getPane()->mGlobalBounds);
 
 	return isFinished;
 }
