@@ -1091,8 +1091,7 @@ TBossEelEye::TBossEelEye(const TLiveActor* owner, int jointIndex,
 
 void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	const TBossEel* owner = getOwner();
-	if (owner->mLiveFlag
+	if (getOwner()->mLiveFlag
 	    & (LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT))
 		return;
 
@@ -1102,16 +1101,20 @@ void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
 		    BOSSEEL_JPA_MS_MEO_EYEBLUR, &mBlurPosition, 1, this);
 		if (emitter)
-			emitter->setGlobalScale(owner->mScaling);
+			emitter->setGlobalScale(getOwner()->mScaling);
 
-		Mtx eyeMtx;
+		TPosition3f eyeMtx;
 		MTXCopy(getConnectedMtx(), eyeMtx);
 		getMActor()->getModel()->setBaseTRMtx(eyeMtx);
 		if (mCopyConnectedMtx == 0)
 			MTXCopy(eyeMtx, mBlendMtx);
 
-		mBlendRatio
-		    = JGeometry::TUtil<f32>::clamp(mBlendRatio - 0.01f, 0.0f, 1.0f);
+		f32 blendRatio = mBlendRatio - 0.01f;
+		if (blendRatio > 1.0f)
+			blendRatio = 1.0f;
+		else if (blendRatio < 0.0f)
+			blendRatio = 0.0f;
+		mBlendRatio = blendRatio;
 		getMActor()->setMotionBlendRatioForBck(mBlendRatio);
 		if (mAnimationMode == 1
 		    && getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
