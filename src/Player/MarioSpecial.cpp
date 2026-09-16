@@ -1382,22 +1382,22 @@ BOOL TMario::fenceMove()
 	if (wall != nullptr) {
 		if (mInput & 0x1) {
 			JGeometry::TVec3<f32> newPos = mPosition;
-			newPos.y
-			    += 0.015625f * unk108->mStickV * mJumpParams.mFenceSpeed.get();
+			f32 fenceSpeed = mJumpParams.mFenceSpeed.get();
+			newPos.y += 0.015625f * unk108->mStickV * fenceSpeed;
 
 			s16 camDelta = mFaceAngle.y - gpCamera->unk258;
 			f32 normX, normZ;
 			if (camDelta > -0x4000 && camDelta < 0x4000) {
-				normZ = wall->mNormal.z;
-				normX = -wall->mNormal.x;
+				normX = -wall->mNormal.z;
+				normZ = wall->mNormal.x;
 			} else {
-				normX = wall->mNormal.x;
-				normZ = -wall->mNormal.z;
+				normX = wall->mNormal.z;
+				normZ = -wall->mNormal.x;
 			}
 
 			f32 stickH = 0.015625f * unk108->mStickH;
-			newPos.x += normX * stickH * mJumpParams.mFenceSpeed.get();
-			newPos.z += normZ * stickH * mJumpParams.mFenceSpeed.get();
+			newPos.x += normX * stickH * fenceSpeed;
+			newPos.z += normZ * stickH * fenceSpeed;
 
 			JGeometry::TVec3<f32> sideFront = newPos;
 			sideFront.x += 0.5f * (50.0f * JMASSin(mFaceAngle.y));
@@ -1472,12 +1472,15 @@ BOOL TMario::fenceMove()
 			f32 hDot, vDiff, dist;
 			if (unk2C0 == nullptr) {
 				vDiff    = mPosition.y - mPrevPosition.y;
-				f32 sinY = JMASSin(mFaceAngle.y);
-				f32 cosY = JMASCos(mFaceAngle.y);
+				JGeometry::TVec3<f32> forward(JMASSin(mFaceAngle.y), 0.0f,
+				                              JMASCos(mFaceAngle.y));
+				JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
+				JGeometry::TVec3<f32> side;
+				side.cross(up, forward);
 
 				JGeometry::TVec3<f32> diff = mPosition - mPrevPosition;
 
-				hDot = -cosY * diff.z + sinY * diff.x;
+				hDot = side.dot(diff);
 				dist = diff.length();
 			} else {
 				vDiff = unk300.y - unk2F4.y;
