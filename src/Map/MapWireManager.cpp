@@ -166,8 +166,8 @@ void TMapWireManager::getPointPosInNthWire(int param_1,
                                            const JGeometry::TVec3<f32>& param_2,
                                            JGeometry::TVec3<f32>* param_3) const
 {
-	getWire(param_1)->getPointPosOnWire(getWire(param_1)->getPosInWire(param_2),
-	                                    param_3);
+	f32 pos = getWire(param_1)->getPosInWire(param_2);
+	getWire(param_1)->getPointPosOnWire(pos, param_3);
 }
 
 void TMapWireManager::getPointPosInWire(const JGeometry::TVec3<f32>&,
