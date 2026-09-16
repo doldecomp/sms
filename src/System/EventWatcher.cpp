@@ -531,11 +531,16 @@ static void evIsBossDefeated(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push(gpConductor->isBossDefeated() ? 1 : 0);
 }
 
+static inline TGCConsole2* getConsole()
+{
+	return SMSGetMarDirector()->getConsole();
+}
+
 static void evLaunchEventClearDemo(TSpcTypedInterp<TEventWatcher>* interp,
                                    u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
-	TGCConsole2* console = SMSGetMarDirector()->getConsole();
+	TGCConsole2* console = getConsole();
 	console->unk94->startAppearShineGet();
 	console->unk47 = 1;
 	interp->push();
