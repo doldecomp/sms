@@ -756,7 +756,7 @@ bool TMapObjBase::marioHeadAttack() const
 bool TMapObjBase::marioHipAttack() const
 {
 	if (SMS_GetMarioGrPlane()->getActor() == this && SMS_IsMarioStatusHipDrop()
-	    && (gpMarioPos->y + *gpMarioSpeedY) < SMS_GetMarioGrLevel())
+	    && (SMS_GetMarioPos().y + SMS_GetMarioSpeedY()) < SMS_GetMarioGrLevel())
 		return true;
 	return false;
 }
