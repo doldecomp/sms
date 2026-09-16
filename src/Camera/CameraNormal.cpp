@@ -138,7 +138,7 @@ void CPolarSubCamera::ctrlNormalOrTowerCamera_()
 					f32 f29;
 					f32 f30;
 
-					s16 sVar9 = *gpMarioAngleY - 0x8000;
+					int sVar9 = *gpMarioAngleY - 0x8000;
 					switch (mMode) {
 					case CAMERA_MODE_DIVING:
 					case CAMERA_MODE_HOVERING:
