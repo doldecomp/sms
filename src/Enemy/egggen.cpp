@@ -31,6 +31,10 @@ void TEggGenerator::init(TLiveManager* manager)
 
 void TEggGenerator::control()
 {
+	// Declared but unused on this path; the original reserves their slots.
+	JGeometry::TVec3<f32> myPos;
+	JGeometry::TVec3<f32> marioPos;
+
 	if (VECSquareDistance(&mPosition, &gpMarioOriginal->mPosition)
 	    < 250000.0f) {
 		if (!gpMarioOriginal->mYoshi->isHatched())
