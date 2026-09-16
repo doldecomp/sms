@@ -126,7 +126,21 @@ DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor) { return FALSE; }
 DEFINE_NERVE(TNerveTobiPukuDie, TLiveActor) { return FALSE; }
 
 // TODO: incorrect size. Map records 0x118 (280 bytes).
-DEFINE_NERVE(TNerveTobiPukuPitiPiti, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveTobiPukuPitiPiti, TLiveActor)
+{
+	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		puku->setPichiAnm();
+
+	if (puku->checkCurAnmEnd(0)
+	    && spine->getTime() > puku->getSaveParam2()->unk364) {
+		puku->unk1AD = 0;
+		spine->pushAfterCurrent(&TNerveTobiPukuDie::theNerve());
+		return TRUE;
+	}
+	return FALSE;
+}
 
 // TODO: incorrect size. Map records 0x1e4 (484 bytes).
 DEFINE_NERVE(TNerveTobiPukuFall, TLiveActor) { return FALSE; }

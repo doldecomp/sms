@@ -6,6 +6,18 @@
 
 // The flying pukupuku. TMoePuku and TPukuPuku are variants that share its
 // whole animation interface and differ only in their vtable.
+class TTobiPukuParams : public TWalkerEnemyParams {
+public:
+	TTobiPukuParams(const char* prm)
+	    : TWalkerEnemyParams(prm)
+	{
+	}
+
+	/* 0x32C */ u8 unk32C[0x364 - 0x32C];
+	/* 0x364 */ int unk364;
+	/* 0x368 */ u8 unk368[0x390 - 0x368];
+};
+
 class TTobiPuku : public TWalkerEnemy {
 public:
 	TTobiPuku(const char* name)
@@ -45,7 +57,15 @@ public:
 	// Not virtual: the map records no vtable slot for it.
 	void setDeadAnm();
 
-	/* 0x194 */ u8 unk194[0x1E0 - 0x194];
+	// fabricated
+	TTobiPukuParams* getSaveParam2() const
+	{
+		return (TTobiPukuParams*)getSaveParam();
+	}
+
+	/* 0x194 */ u8 unk194[0x1AD - 0x194];
+	/* 0x1AD */ u8 unk1AD;
+	/* 0x1AE */ u8 unk1AE[0x1E0 - 0x1AE];
 	/* 0x1E0 */ f32 mSwimBaseY;
 };
 
