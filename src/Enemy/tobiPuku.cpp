@@ -723,3 +723,23 @@ void TTobiPuku::moveObject()
 
 	TWalkerEnemy::moveObject();
 }
+
+// TODO: 97.3%. One instruction differs: the original computes &unk104 into a
+// register before the inlined getPoint, which neither the direct expression nor
+// binding the result to a reference reproduces.
+bool TTobiPuku::isReachedToGoalXZ()
+{
+	JGeometry::TVec3<f32> d(unk104.getPoint());
+	d.x -= mPosition.x;
+	d.y -= mPosition.y;
+	d.z -= mPosition.z;
+	d.y = 0.0f;
+
+	if (d.x == 0.0f && d.z == 0.0f)
+		return true;
+
+	if (MsVECMag2(d) < 200.0f)
+		return true;
+
+	return false;
+}
