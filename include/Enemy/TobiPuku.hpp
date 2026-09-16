@@ -33,6 +33,8 @@ public:
 	virtual BOOL isInhibitedForceMove();
 	virtual void generateEffectColumWater();
 	virtual void walkBehavior(int, f32);
+	virtual void scalingChangeActor();
+	virtual void changeOut();
 
 	// New virtuals, declared in the order the vtable lists them
 	// (0x1b8 onwards).
@@ -148,6 +150,9 @@ public:
 	TPukuPuku(const char* name);
 
 	virtual ~TPukuPuku();
+	virtual void load(JSUMemoryInputStream&);
+	virtual void init(TLiveManager*);
+	virtual void reset();
 };
 
 class TTobiPukuLaunchPad : public TSmallEnemy {

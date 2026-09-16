@@ -7,6 +7,9 @@
 #include <Player/MarioAccess.hpp>
 #include <Enemy/PathNode.hpp>
 #include <Enemy/Conductor.hpp>
+#include <MoveBG/MapObjBlock.hpp>
+#include <System/Particles.hpp>
+#include <JSystem/JParticle/JPAEmitter.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
@@ -727,6 +730,52 @@ void TTobiPuku::moveObject()
 // TODO: 97.3%. One instruction differs: the original computes &unk104 into a
 // register before the inlined getPoint, which neither the direct expression nor
 // binding the result to a reference reproduces.
+void TTobiPuku::scalingChangeActor()
+{
+	// The flying variant caps its XZ growth at a fixed 3.0 rather than at
+	// TSmallEnemyManager::mBlockXZScale, which is what TSmallEnemy uses.
+	f32 xzScale = MsClamp(mJuiceBlock->unk140.x + 0.02f, 0.0f, 3.0f);
+
+	mJuiceBlock->unk140.x   = mJuiceBlock->unk140.z = xzScale;
+	mJuiceBlock->mScaling.x = mJuiceBlock->mScaling.z = xzScale;
+
+	f32 yScale              = MsClamp(mJuiceBlock->unk140.y + 0.01f, 0.0f,
+	                                  TSmallEnemyManager::mBlockYScale);
+	mJuiceBlock->unk140.y   = yScale;
+	mJuiceBlock->mScaling.y = yScale;
+}
+
+void TTobiPuku::changeOut()
+{
+	offLiveFlag(LIVE_FLAG_HIDDEN);
+
+	// Note the direction: the puku takes the block's position when it pops
+	// out, where TSmallEnemy::changeOut moves the block to the enemy.
+	mPosition = mJuiceBlock->mPosition;
+
+	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
+	getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
+	mJuiceBlock->kill();
+	mJuiceBlock = nullptr;
+}
+
+void TTobiPuku::swimEffect()
+{
+	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT))
+		return;
+
+	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+	    0x178, getMActor()->getModel()->getAnmMtx(6), 1, this);
+	if (!emitter)
+		return;
+
+	// Deeper water gives the bubble trail a longer life, up to a cap.
+	s16 life = (s16)(mGroundHeight - mPosition.y) * 16 / 100 + 20;
+	if (life > 200)
+		life = 200;
+	emitter->mBaseLifetime = life;
+}
+
 bool TTobiPuku::isReachedToGoalXZ()
 {
 	JGeometry::TVec3<f32> d(unk104.getPoint());
@@ -742,4 +791,11 @@ bool TTobiPuku::isReachedToGoalXZ()
 		return true;
 
 	return false;
+}
+
+void TPukuPuku::load(JSUMemoryInputStream& stream)
+{
+	TSmallEnemy::load(stream);
+	reset();
+	unk1AC = 0;
 }
