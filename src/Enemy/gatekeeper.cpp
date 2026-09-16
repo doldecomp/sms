@@ -467,7 +467,9 @@ void TBiancoGateKeeper::launchNamekuri()
 			scale.set(1.0f, 1.0f, 1.0f);
 			s16 angle = (s16)(182.04445f * (36.0f * (f32)i));
 			JGeometry::TVec3<f32> vel;
-			vel.set(4.0f * JMASSin(angle), 12.0f, 4.0f * JMASCos(angle));
+			vel.x = 4.0f * JMASSin(angle);
+			vel.y = 12.0f;
+			vel.z = 4.0f * JMASCos(angle);
 
 			enemy->reset();
 			enemy->mPosition  = pos;
