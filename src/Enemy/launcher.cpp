@@ -128,7 +128,7 @@ void TLauncher::control()
 
 void TLauncher::resetLaunchTimer()
 {
-	TLauncherParams* params = getSaveParam2();
+	TLauncherParams* params = (TLauncherParams*)getSaveParam();
 	if (!params) {
 		mLaunchCooldown = 0;
 	} else {
