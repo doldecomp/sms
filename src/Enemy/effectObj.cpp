@@ -133,17 +133,17 @@ void TEffectObjBase::moveObject()
 
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_MAP_FIRE_C, &mPosition, 3, this)) {
-			emitter->setGlobalScale(local_1c);
+			emitter->setGlobalScale((const Vec&)local_1c);
 		}
 
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_MAP_FIRE_A, &mPosition, 1, this)) {
-			emitter->setGlobalScale(local_1c);
+			emitter->setGlobalScale((const Vec&)local_1c);
 		}
 
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_MAP_FIRE_B, &mPosition, 1, this)) {
-			emitter->setGlobalScale(local_1c);
+			emitter->setGlobalScale((const Vec&)local_1c);
 		}
 
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_CALM_FLAME, &mPosition, 0,
