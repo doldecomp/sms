@@ -805,7 +805,7 @@ JKRMemArchive* TApplication::mountStageArchive()
 	JKRMemArchive* result = nullptr;
 
 	TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >& tmp = *unk30;
-	if (mCurrArea.getStage() < tmp.getChildren().size()) {
+	if (mCurrArea.getStage() < unk30->size()) {
 		TNameRefAryT<TScenarioArchiveName>* names
 		    = tmp.getChildren().begin()[mCurrArea.getStage()];
 		if (mCurrArea.getScenario() < names->size()) {
@@ -813,10 +813,8 @@ JKRMemArchive* TApplication::mountStageArchive()
 			    = (*names)[mCurrArea.getScenario()].unkC;
 
 			DVDChangeDir("/data/scene");
-			void* archBlob
-			    = SMSLoadArchive(scenarioArcName, nullptr, 0, nullptr);
-
-			if (archBlob) {
+			if (void* archBlob
+			    = SMSLoadArchive(scenarioArcName, nullptr, 0, nullptr)) {
 				JKRMemArchive* arch = new JKRMemArchive;
 				arch->mountFixed(archBlob, MBF_0);
 				result = arch;
