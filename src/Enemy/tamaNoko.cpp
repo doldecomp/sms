@@ -981,8 +981,8 @@ DEFINE_NERVE(TNerveTamaNokoWait, TLiveActor)
 		if (self->isBckAnm(14)) {
 			self->setBckAnm(13);
 		} else if (self->isBckAnm(13)) {
-			if (spine->getTime() > self->unk198->mSLWaitTime.get()
-			    && self->isBckAnm(13))
+			int waitTime = self->unk198->mSLWaitTime.get();
+			if (spine->getTime() > waitTime && self->isBckAnm(13))
 				self->setBckAnm(12);
 		} else if (self->isBckAnm(12)) {
 			spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
