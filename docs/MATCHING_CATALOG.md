@@ -49,6 +49,25 @@ The last two differ only in whether the 1/0 lands in `r0` and is widened, or lan
 
 Working order for a batch of such accessors: get one exact, then apply the same shape to the rest. Here that took 30 functions from 0 to exact in three edits.
 
+## Units one function away from linking, batch 72
+
+Six game units are a single unmatched function away from being source-linkable. These are the cheapest available gains on the **link** metric, which byte-matching alone never moves:
+
+| Unit | Bytes left | Blocking function | State |
+| --- | ---: | --- | --- |
+| `Player/MarioAccess` | 72 of 1152 | `SMS_IsMarioOnWire` | 93.8% |
+| `Enemy/egggen` | 120 of 888 | `TEggGenerator::control` | 99.8%, frame only |
+| `Strategic/HitActor` | 124 of 668 | `THitActor::calcEntryRadius` | 98.3% |
+| `MSound/MSoundBGM` | 136 of 2860 | | |
+| `Camera/CameraTalk` | 152 of 448 | `makeMtxForPrevTalk` | 99.8% |
+| `Map/MapCollisionEntry` | 168 of 2656 | | |
+
+Two investigated in detail, both dead ends worth recording:
+
+**`SMS_IsMarioOnWire`** — the original loads `mHolder` twice, once into r0 to test and once into r3 to dereference, where MWCC gives us one load reused. Four forms tried: short-circuit `&&` (93.8%, best), separate null check then else-if (90.0%), assigning the comparison to the result (54.7%), casting the holder before the member access (93.8%, byte-identical codegen). None defeats the common-subexpression elimination.
+
+**`TEggGenerator::control`** — every instruction matches with 24 bytes of reserved stack missing, exactly two `TVec3`s. The obvious hypothesis, that the original copied both positions into locals MWCC then elided, is **wrong**: adding those locals makes MWCC emit the copies, growing the frame to 0x38 and dropping the function to 55.1%. Unused locals are not elided, so reserved-but-unreferenced stack has some other source.
+
 ## Part of the frame gap is raw param access, batch 68
 
 **Some reserved-local gaps are not mysterious at all: they are `TParamRT` accesses written as raw field reads.**
