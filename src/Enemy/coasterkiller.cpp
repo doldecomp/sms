@@ -37,6 +37,9 @@
 #include <Enemy/EffectObj.hpp>
 #include <macros.h>
 
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
 const char* killer_bastable[] = {
