@@ -571,7 +571,40 @@ void TBathtubKiller::generateExplosion()
 	gpConductor->makeOneEnemyAppear(mPosition, "エフェクト爆発マネージャー", 1);
 }
 
-DEFINE_NERVE(TNerveBathtubKillerWander, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBathtubKillerWander, TLiveActor)
+{
+	TBathtubKiller* self = (TBathtubKiller*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		self->mMActor = self->mMActorKeeper->getMActor(
+		    "bathtubdownkiller_model1.bmd");
+		self->setBckAnm(1);
+	}
+
+	if (!self->canChase()) {
+		spine->pushNerve(&TNerveBathtubKillerStraight::theNerve());
+		return TRUE;
+	}
+
+	bool chase;
+	if (self->unk20C > 0) {
+		chase = false;
+	} else if (self->mPosition.y
+	           > self->getBathtubY() + self->unk200) {
+		chase = false;
+	} else {
+		chase = true;
+	}
+
+	if (chase) {
+		spine->pushNerve(&TNerveBathtubKillerChase::theNerve());
+		return TRUE;
+	}
+
+	self->unk1BC.set(0.0f, -self->getGravityY(), 0.0f);
+	self->makeQuat(self->mVelocity, 0.03f, 0.01f);
+	return FALSE;
+}
 
 DEFINE_NERVE(TNerveBathtubKillerChase, TLiveActor) { return FALSE; }
 
