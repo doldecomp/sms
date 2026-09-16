@@ -487,7 +487,9 @@ void TShine::movingCircle()
 	(void)0;
 	(void)0;
 
-	f32 prevY = mPosition.y;
+	JGeometry::TVec3<f32> prevPos;
+	JGeometry::TVec2<f32> currentPos;
+	prevPos.y = mPosition.y;
 	unk158 += 180.0f / (f32)unk168;
 
 	f32 tmp = (f32)(unk168 - mStateTimer) / (f32)unk168;
@@ -496,7 +498,8 @@ void TShine::movingCircle()
 
 	mPosition.y = unk160 * JMASin(unk158)
 	              + (tmp * (mInitialPosition.y - unk164) + unk164);
-	unk188 = mPosition.y - prevY;
+	currentPos.y = mPosition.y;
+	unk188      = currentPos.y - prevPos.y;
 
 	mPosition.z += unk17C.z;
 	mRotation.y += 7.0f;
