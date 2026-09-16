@@ -5,6 +5,8 @@
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DPEBlocks.hpp>
 #include <dolphin/gd/GDTev.h>
 
+static const GXColor sFogOffColor = { 0, 0, 0, 0 };
+
 static void FifoSetChanMatColor(GXChannelID param_1, GXColor param_2)
 {
 	GXWGFifo.u8  = GX_CMD_LOAD_XF_REG;
