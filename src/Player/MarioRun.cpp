@@ -559,10 +559,10 @@ void TMario::doSurfing()
 	const TBGCheckData* below;
 	gpMap->checkGround(mPosition.x, mPosition.y - mVel.y, mPosition.z, &below);
 
+	f32 powMax;
 	f32 rotMin;
 	f32 rotMax;
 	f32 powMin;
-	f32 powMax;
 
 	if (below->isWaterSurface()) {
 		rotMin = getSurfingParamsWater()->mRotMin.get();
@@ -598,8 +598,9 @@ void TMario::doSurfing()
 	if (mForwardVel > powMax)
 		mForwardVel = powMax;
 
+	f32 tmp = want - powMin;
 	s16 rotSp
-	    = (((want - powMin) / (powMax - powMin)) * (rotMax - rotMin)) + rotMin;
+	    = ((tmp / (powMax - powMin)) * (rotMax - rotMin)) + rotMin;
 	s16 diff     = mIntendedYaw - mFaceAngle.y;
 	mFaceAngle.y = mIntendedYaw - IConverge(diff, 0, rotSp, rotSp);
 	slopeProcess();
