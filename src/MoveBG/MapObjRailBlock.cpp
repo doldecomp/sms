@@ -181,6 +181,7 @@ void TRailMapObj::initMapObj()
 	mMActor->setLightType(LIGHT_TYPE_MAPOBJECT);
 }
 
+#pragma dont_inline on
 void TRailMapObj::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TActor::load(stream);
@@ -194,6 +195,7 @@ void TRailMapObj::load(JSUMemoryInputStream& stream)
 	initMapObj();
 	makeObjAppeared();
 }
+#pragma dont_inline off
 
 void TRailMapObj::setGroundCollision()
 {
@@ -262,7 +264,16 @@ void TNormalLift::resetPosition()
 
 void TNormalLift::load(JSUMemoryInputStream& stream)
 {
-	TRailMapObj::load(stream);
+	JDrama::TActor::load(stream);
+	unkF4 = stream.readString();
+	char buffer[256];
+	stream.readString(buffer, 256);
+	mInitialPosition = mPosition;
+	mInitialRotation = mRotation;
+	mInitialScaling  = mScaling;
+	initGraphTracer(gpConductor->getGraphByName(buffer));
+	initMapObj();
+	makeObjAppeared();
 
 	stream >> unk154;
 	if (unk154 > 0.0f && mMapCollisionManager) {
@@ -605,7 +616,15 @@ BOOL TWoodBlock::calcRecycle()
 
 void TWoodBlock::load(JSUMemoryInputStream& stream)
 {
-	TNormalLift::load(stream);
+	TRailMapObj::load(stream);
+
+	stream >> unk154;
+	if (unk154 > 0.0f && mMapCollisionManager) {
+		TMapCollisionBase* col = mMapCollisionManager->getUnk8();
+		col->setAllBGType(7);
+		col->setAllActor(this);
+		col->setAllData(unk154);
+	}
 
 	s32 local_20, local_24, local_28, local_2C;
 	stream >> local_20 >> local_24 >> local_28 >> local_2C;
