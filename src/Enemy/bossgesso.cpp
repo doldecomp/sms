@@ -1096,7 +1096,8 @@ void TBossGesso::doAttackSkipRope()
 		return;
 	}
 
-	if (inSightAngle(getSaveParam()->mSLSightAngle.get() * 0.5f)) {
+	f32 sightAngle = getSaveParam()->mSLSightAngle.get();
+	if (inSightAngle(sightAngle * 0.5f)) {
 		for (int i = 0; i < 2; ++i) {
 			static const int idxarray[] = { 0, 2 };
 			TBGTentacle* tentacle       = mTentacles[idxarray[i]];
