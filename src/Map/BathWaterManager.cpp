@@ -1603,10 +1603,11 @@ void TBathWaterMeshRenderer::makeNormalMap()
 			f32 b  = unk20[r < unk800AC - 1 ? r + 1 : r][c].y;
 			f32 a2 = unk20[r][c > 0 ? c - 1 : 0].y;
 			f32 b2 = unk20[r][c < unk800AC - 1 ? c + 1 : c].y;
+			f32 z  = b2 - a2;
 
 			unk30020[r][c].x = scale * (b - a);
 			unk30020[r][c].y = scale * scale;
-			unk30020[r][c].z = scale * (b2 - a2);
+			unk30020[r][c].z = z * scale;
 			unk30020[r][c].normalize();
 		}
 	}
