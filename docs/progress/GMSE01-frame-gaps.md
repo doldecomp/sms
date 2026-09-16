@@ -154,3 +154,28 @@ cannot be identified, leave the function and say so.
 
 138 functions, 182932 bytes of code behind them.
 ```
+
+## The four one-function-away units: examined, not recoverable
+
+Each of these units is exactly **one** function from being source-linkable, and in
+each case that function is instruction-perfect and differs only in frame size.
+I examined all four in detail; none of them yields a *recoverable* declaration.
+
+| Unit | Function | Gap | Notes |
+|---|---|---|---|
+| `Map/MapCollisionEntry` | `TMapCollisionMove::init(u32,u16,s16,const TLiveActor*)` | 8 B | Leaf-ish; one call, a 3-store loop. Nothing in the body or in the sibling `init(const char*,...)` overload suggests a second local. |
+| `MSound/MSoundBGM` | `MSBgm::init()` | 0x20 | Checked the by-value-return hypothesis: `JAISoundTable` is 0x7C, not 0x20, so the `mSeTable` access is not a struct return. No other candidate. |
+| `Strategic/HitActor` | `THitActor::calcEntryRadius()` | 0x28 | Pure leaf, no calls at all. The `frsqrte` round-trip temp sits at `0x30(r1)` in the target vs `0xc(r1)` in ours, so ~36 bytes of locals precede it. No semantic hook to name them. |
+| `Player/MarioAccess` | `SMS_IsMarioOnWire()` | — | **Not** a frame gap; a CSE difference. Four source forms tried, all recorded in `MATCHING_CATALOG.md`. |
+
+Why I stopped rather than filling them: the mechanism is real (proved twice, on
+`egggen` and `CameraTalk`), but it only helps when the *declaration* can be
+recovered — a scratch vector that the surrounding code plainly wants, a
+parameter copy, a named temp. Where the byte count is the only evidence, any
+declaration I write is filler with a plausible name on it, and AGENTS.md
+prohibits committing that. Four units' worth of link metric is not worth
+poisoning four TUs with invented locals that the next person would have to
+disprove.
+
+These stay on the list. New evidence — a neighbouring TU that matches with a
+similar shape, a debug string, a sibling overload — is the thing to watch for.
