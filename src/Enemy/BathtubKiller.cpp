@@ -1,5 +1,6 @@
 #include <Enemy/BathtubKiller.hpp>
 #include <Enemy/Conductor.hpp>
+#include <Enemy/EffectObj.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/PacketUtil.hpp>
@@ -698,7 +699,46 @@ DEFINE_NERVE(TNerveBathtubKillerBreak, TLiveActor)
 	return FALSE;
 }
 
-DEFINE_NERVE(TNerveBathtubKillerExplosion, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBathtubKillerExplosion, TLiveActor)
+{
+	TBathtubKiller* self = (TBathtubKiller*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		self->mMActor = self->mMActorKeeper->getMActor(
+		    "bathtubdownkiller_model1.bmd");
+		self->setBckAnm(0);
+		self->mQuat.x = 0.0f;
+		self->mQuat.y = 0.0f;
+		self->mQuat.z = 0.0f;
+		self->mQuat.w = 1.0f;
+		self->unk1BC.x = 0.0f;
+		self->unk1BC.y = 0.0f;
+		self->unk1BC.z = 0.0f;
+		JGeometry::TVec3<f32> velocity;
+		velocity.set(0, 0, 0);
+		self->mVelocity = velocity;
+		self->onLiveFlag(LIVE_FLAG_UNK8);
+		self->unk1E0 = self->unk1D8;
+
+		TEffectExplosion* explosion = (TEffectExplosion*)gpConductor
+		                                  ->makeOneEnemyAppear(
+		                                      self->mPosition,
+		                                      "エフェクト爆発マネージャー", 1);
+		if (explosion != nullptr)
+			explosion->generate(self->mPosition, self->mScaling);
+
+		self->onHitFlag(HIT_FLAG_NO_COLLISION);
+	}
+
+	if (self->checkCurAnmEnd(0)) {
+		self->unk21C = 0;
+		self->onLiveFlag(LIVE_FLAG_DEAD);
+		self->stopAnmSound();
+		return TRUE;
+	}
+
+	return FALSE;
+}
 
 TBathtubKillerManager::TBathtubKillerManager(const char* name)
     : TSmallEnemyManager(name)
