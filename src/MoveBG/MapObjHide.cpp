@@ -29,6 +29,12 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
+static void dummy(Vec* v)
+{
+	*v = (Vec) { 0.0f, 0.0f, 0.0f };
+	*v = (Vec) { 1.0f, 1.0f, 1.0f };
+}
+
 void THideObjBase::appearObj(f32 y_offset)
 {
 	JGeometry::TVec3<f32> pos;
@@ -591,7 +597,7 @@ void THideObjPictureTwin::loadAfter()
 		buffer[2] = mName[len + 2];
 		buffer[3] = mName[len + 3];
 
-		char buffer2[0x4C];
+		char buffer2[0x40];
 		snprintf(buffer2, 0x40, "ふたご落書きＢ００");
 		buffer2[len]     = buffer[0];
 		buffer2[len + 1] = buffer[1];
