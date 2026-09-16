@@ -373,10 +373,10 @@ TCoasterKillerManager::TCoasterKillerManager(const char* name)
 
 void TCoasterKillerManager::load(JSUMemoryInputStream& stream)
 {
-	(void)(unk38 ? unk38 : unk38); // @hack to force cmplwi
+	ASSERT_TEST(!unk38);
 	TSmallEnemyManager::load(stream);
 	unk38 = new TCoasterKillerSaveLoadParams("/enemy/coasterkiller.prm");
-	unk38 = unk38 ? unk38 : unk38; // @hack to force cmplwi
+	ASSERT_TEST(unk38);
 }
 
 void TCoasterKillerManager::loadAfter()
