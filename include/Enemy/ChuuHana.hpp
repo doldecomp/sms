@@ -101,8 +101,8 @@ public:
 		return (TChuuHanaSaveLoadParams*)getSaveParam();
 	}
 
-	static u32 mCheckOnPanelTimeRoll;
-	static u32 mCheckOnPanelTime;
+	static s32 mCheckOnPanelTimeRoll;
+	static s32 mCheckOnPanelTime;
 	static u8 mBodyJntIndex;
 	static u8 mEyeJntIndex;
 	static u8 mFootJntIndex;

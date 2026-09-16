@@ -40,8 +40,8 @@ static const char* tyuhana_bastable[] = {
 	"/scene/tyuhana/bas/tyuhana_walk.bas",
 };
 
-u32 TChuuHana::mCheckOnPanelTimeRoll = 20;
-u32 TChuuHana::mCheckOnPanelTime     = 400;
+s32 TChuuHana::mCheckOnPanelTimeRoll = 20;
+s32 TChuuHana::mCheckOnPanelTime     = 400;
 u8 TChuuHana::mBodyJntIndex          = 1;
 u8 TChuuHana::mEyeJntIndex           = 12;
 u8 TChuuHana::mFootJntIndex          = 5;
@@ -247,10 +247,9 @@ void TChuuHana::reset()
 	unk1A4      = mCheckOnPanelTime;
 
 	// Head for a random node of the graph.
-	TGraphWeb* web = unk124->unk0;
-	TMsRange<int> range(0, web->unk8);
+	TMsRange<int> range(0, unk124->unk0->unk8);
 	JGeometry::TVec3<f32> point;
-	web->unk0[range.rand()].getPoint((Vec*)&point);
+	unk124->unk0->unk0[range.rand()].getPoint((Vec*)&point);
 
 	TPathNode goal(point);
 	unkF4  = goal;
@@ -337,33 +336,32 @@ void TChuuHana::setBckAnm(int index)
 
 void TChuuHana::attackToMario()
 {
-	if (mSpine->getCurrentNerve() == &TNerveChuuHanaObject::theNerve()) {
+	if (mSpine->getCurrentNerve() != &TNerveChuuHanaObject::theNerve()) {
+		if (mDamageSw)
+			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+
+		if (mSpine->getCurrentNerve() == &TNerveChuuHanaAttack::theNerve()) {
+			// The tackle: throw a grounded Mario away along the line
+			// between us.
+			if (SMS_IsMarioTouchGround4cm()) {
+				SMS_SendMessageToMario(this, HIT_MESSAGE_THROWN);
+
+				JGeometry::TVec3<f32> toMario(mPosition);
+				toMario.sub(SMS_GetMarioPos());
+
+				Mtx rot;
+				MsMtxSetRotRPH(rot, 0.0f, MsGetRotFromZaxisY(toMario), 0.0f);
+
+				JGeometry::TVec3<f32> dir(0.0f, 1.0f, -1.0f);
+				MTXMultVec(rot, &dir, &dir);
+				SMS_ThrowMario(dir, unk1B4->mSLTacklePow.get());
+				*unk21C = 0;
+			}
+		} else {
+			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+		}
+	} else {
 		unk215 = 1;
-		return;
-	}
-
-	if (mDamageSw)
-		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
-
-	if (mSpine->getCurrentNerve() != &TNerveChuuHanaAttack::theNerve()) {
-		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
-		return;
-	}
-
-	// The tackle: throw a grounded Mario away along the line between us.
-	if (SMS_IsMarioTouchGround4cm()) {
-		SMS_SendMessageToMario(this, HIT_MESSAGE_THROWN);
-
-		JGeometry::TVec3<f32> toMario(mPosition);
-		toMario.sub(SMS_GetMarioPos());
-
-		Mtx rot;
-		MsMtxSetRotRPH(rot, 0.0f, MsGetRotFromZaxisY(toMario), 0.0f);
-
-		JGeometry::TVec3<f32> dir(0.0f, 1.0f, -1.0f);
-		MTXMultVec(rot, &dir, &dir);
-		SMS_ThrowMario(dir, unk1B4->mSLTacklePow.get());
-		*unk21C = 0;
 	}
 }
 
@@ -471,16 +469,16 @@ bool TChuuHana::willFall(long param_1)
 			// Too far from the mirror's centre: wander back to a node.
 			unk1A4 = mCheckOnPanelTime;
 
-			TGraphWeb* web = unk124->unk0;
-			TMsRange<int> range(0, web->unk8);
+			TMsRange<int> range(0, unk124->unk0->unk8);
 			JGeometry::TVec3<f32> point;
-			web->unk0[range.rand()].getPoint((Vec*)&point);
+			unk124->unk0->unk0[range.rand()].getPoint((Vec*)&point);
 
 			TPathNode goal(point);
 			unkF4  = goal;
 			unk104 = goal;
 			unk114.clear();
 			unk1B2 = 1;
+			return true;
 		}
 	}
 
@@ -492,7 +490,8 @@ void TChuuHana::setGoal()
 {
 	// Pick a point 1000 ahead, with the heading swung by up to 30 degrees
 	// either side, and walk there.
-	JGeometry::TVec3<f32> goal(mPosition);
+	JGeometry::TVec3<f32> goal;
+	goal.set(mPosition);
 	TMsRange<f32> swing(-30.0f, 30.0f);
 
 	Mtx rot;
