@@ -1077,20 +1077,12 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					updated = false;
 				}
 
-				// These are probably inlined functions.
-				u8 alpha              = var2;
-				JUtility::TColor col1 = JUtility::TColor(0, 0, 0, alpha);
-
-				alpha                 = var2;
-				JUtility::TColor col2 = JUtility::TColor(0, 0, 0, alpha);
-
-				alpha                 = var1;
-				JUtility::TColor col3 = JUtility::TColor(0, 0, 0, alpha);
-
-				alpha = var1;
+				JUtility::TColor col1(0, 0, 0, var1);
+				JUtility::TColor col2(0, 0, 0, var1);
+				JUtility::TColor col3(0, 0, 0, var2);
+				JUtility::TColor col4(0, 0, 0, var2);
 				((J2DPicture*)mLetterBoxTop->getPane())
-				    ->setCornerColor(JUtility::TColor(0, 0, 0, alpha), col3,
-				                     col2, col1);
+				    ->setCornerColor(col1, col2, col3, col4);
 			}
 
 			{
@@ -1114,19 +1106,12 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					updated = false;
 				}
 
-				u8 alpha              = var2;
-				JUtility::TColor col1 = JUtility::TColor(0, 0, 0, alpha);
-
-				alpha                 = var2;
-				JUtility::TColor col2 = JUtility::TColor(0, 0, 0, alpha);
-
-				alpha                 = var1;
-				JUtility::TColor col3 = JUtility::TColor(0, 0, 0, alpha);
-
-				alpha = var1;
+				JUtility::TColor col1(0, 0, 0, var1);
+				JUtility::TColor col2(0, 0, 0, var1);
+				JUtility::TColor col3(0, 0, 0, var2);
+				JUtility::TColor col4(0, 0, 0, var2);
 				((J2DPicture*)mLetterBoxBottom->getPane())
-				    ->setCornerColor(JUtility::TColor(0, 0, 0, alpha), col3,
-				                     col2, col1);
+				    ->setCornerColor(col1, col2, col3, col4);
 
 				if (updated) {
 					mMenuState            = WAIT_BEFORE_CLOSE;
@@ -1149,7 +1134,6 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 			ReInitializeGX();
 			SMS_DrawInit();
 			J2DOrthoGraph graph(gfx->getViewport());
-			graph.setup2D();
 			graph.setup2D();
 			mMenuScreen->draw(0, 0, &graph);
 		}
