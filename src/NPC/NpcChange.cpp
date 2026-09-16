@@ -460,7 +460,7 @@ void TBaseNPC::changeNerveProc_()
 		               | LIVE_FLAG_SINK_BOTTOM | LIVE_FLAG_UNK400000)
 		           && !checkActionFlag(NPC_ACTION_BURNING) && isClean()) {
 
-			if (isSunflowerReviving() && isNerveCanGoToTalk()
+			if (isNerveCanGoToTalk()
 			    && (mActorType != 0x4000006
 			        || unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK4)
 			    && !SMS_IsMarioOpeningDoor()) {
