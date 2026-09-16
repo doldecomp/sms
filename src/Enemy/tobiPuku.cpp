@@ -64,25 +64,8 @@ static BOOL TobiPukuRollCallback(J3DNode* param_1, BOOL param_2)
 			MtxPtr mA = gpCurTobiPuku->getMActor()->getModel()->getAnmMtx(
 			    ((J3DJoint*)param_1)->getJntNo());
 
-			s16 a   = DEG2SHORTANGLE(gpCurTobiPuku->unk1EC);
-			f32 sin = JMASSin(a);
-			f32 cos = JMASCos(a);
-
 			Mtx mtx;
-			mtx[0][0] = cos;
-			mtx[0][1] = -sin;
-			mtx[0][2] = 0.0f;
-			mtx[0][3] = 0.0f;
-
-			mtx[1][0] = sin;
-			mtx[1][1] = cos;
-			mtx[1][2] = 0.0f;
-			mtx[1][3] = 0.0f;
-
-			mtx[2][0] = 0.0f;
-			mtx[2][1] = 0.0f;
-			mtx[2][2] = 1.0f;
-			mtx[2][3] = 0.0f;
+			MsMtxSetRotZ(mtx, gpCurTobiPuku->unk1EC);
 
 			MTXConcat(mA, mtx, mA);
 			MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
@@ -203,7 +186,7 @@ void TTobiPukuLaunchPad::load(JSUMemoryInputStream& param_1)
 {
 	TSmallEnemy::load(param_1);
 	s32 launchPower;
-	param_1.read(&launchPower, 4);
+	param_1 >> launchPower;
 	unk19C = launchPower;
 	reset();
 }
@@ -228,8 +211,8 @@ void TTobiPukuLaunchPad::launch()
 void TTobiPukuLaunchPad::forceLaunch(TTobiPuku* param_1)
 {
 	JGeometry::TVec3<f32> pos = mPosition;
-	f32 sinY                  = JMASSin(mRotation.y * 16384.0f / 90.0f);
-	f32 cosY                  = JMASCos(mRotation.y * 16384.0f / 90.0f);
+	f32 sinY                  = MsSin(mRotation.y);
+	f32 cosY                  = MsCos(mRotation.y);
 
 	JGeometry::TVec3<f32> velocity;
 	if (((TTobiPukuLaunchPadManager*)mManager)->unk60) {
@@ -240,9 +223,9 @@ void TTobiPukuLaunchPad::forceLaunch(TTobiPuku* param_1)
 		f32 flyGravityY     = param_1->unk19C->mSLFlyGravityY.get();
 		velocity = calcVelocityToJumpToY(pos, launchVelocityY, flyGravityY);
 	} else {
-		velocity.set(sinY * unk19C * JMASCos(mRotation.x * 16384.0f / 90.0f),
-		             1.0f * unk19C * JMASSin(mRotation.x * 16384.0f / 90.0f),
-		             cosY * unk19C * JMASCos(mRotation.x * 16384.0f / 90.0f));
+		velocity.set(sinY * unk19C * MsCos(mRotation.x),
+		             1.0f * unk19C * MsSin(mRotation.x),
+		             cosY * unk19C * MsCos(mRotation.x));
 	}
 
 	param_1->reset();
@@ -280,7 +263,7 @@ TTobiPuku::TTobiPuku(const char* param_1)
     , unk1E8(0.0f)
     , unk1EC(0.0f)
 {
-	gpCurTobiPuku = 0;
+	gpCurTobiPuku = nullptr;
 }
 
 void TTobiPuku::init(TLiveManager* param_1)
@@ -358,7 +341,8 @@ void TTobiPuku::calcRootMatrix()
 		unk1A0.set(mMActor->getModel()->getAnmMtx(1)[0][3],
 		           mMActor->getModel()->getAnmMtx(1)[1][3],
 		           mMActor->getModel()->getAnmMtx(1)[2][3]);
-		gpMarioParticleManager->emitAndBindToPosPtr(0x177, &unk1A0, 1, this);
+		gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_PUKU_PICHI,
+		                                            &unk1A0, 1, this);
 	}
 }
 
@@ -435,9 +419,8 @@ bool TTobiPuku::isRoll() { return false; }
 void TTobiPuku::behaveToWater(THitActor* param_1)
 {
 	if (mSpine->getCurrentNerve() != &TNerveTobiPukuHitWater::theNerve()) {
-		if (gpMSound->gateCheck(MSD_SE_EN_COMMON_FLY))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_COMMON_FLY, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_FLY, &mPosition, 0,
+		                                nullptr, 0, 4);
 		mSpine->pushNerve(&TNerveTobiPukuHitWater::theNerve());
 	}
 }
@@ -446,11 +429,8 @@ void TTobiPuku::walkBehavior(int param_1, f32 param_2)
 {
 	TWalkerEnemy::walkBehavior(param_1, param_2);
 
-	f32 prevY = mPosition.y;
-	mPosition.y
-	    = unk1E0
-	      + 10.0f
-	            * JMASSin((s32)(182.04445f * (2.0f * (f32)mSpine->getTime())));
+	f32 prevY   = mPosition.y;
+	mPosition.y = unk1E0 + 10.0f * MsSin(2.0f * (f32)mSpine->getTime());
 
 	JGeometry::TVec3<f32> velocity = mLinearVelocity;
 	velocity.y                     = prevY - mPosition.y;
@@ -461,7 +441,8 @@ void TTobiPuku::swimEffect()
 {
 	if (!checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x178, getMActor()->getModel()->getAnmMtx(6), 1, this);
+		    PARTICLE_MS_PUKU_AWA, getMActor()->getModel()->getAnmMtx(6), 1,
+		    this);
 		if (emitter) {
 			s16 lifetime = (s16)(mGroundHeight - mPosition.y) * 16 / 100 + 20;
 			if (lifetime > 200)
@@ -499,12 +480,11 @@ void TTobiPuku::generateEffectColumWater()
 		eff->generate(mPosition, mScaling);
 
 	if (mSpine->getCurrentNerve() != &TNerveTobiPukuGenerate::theNerve()) {
-		if (gpMSound->gateCheck(MSD_SE_EN_TOBIPUKU_TOWATER))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_TOBIPUKU_TOWATER, &mPosition, 0, nullptr, 0, 4);
-	} else if (gpMSound->gateCheck(MSD_SE_EN_TOBIPUKU_FRWATER)) {
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_TOBIPUKU_FRWATER,
-		                                          &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_TOBIPUKU_TOWATER, &mPosition,
+		                                0, nullptr, 0, 4);
+	} else {
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_TOBIPUKU_FRWATER, &mPosition,
+		                                0, nullptr, 0, 4);
 	}
 }
 
@@ -583,7 +563,8 @@ void TTobiPuku::changeOut()
 {
 	offLiveFlag(LIVE_FLAG_HIDDEN);
 	mPosition = mJuiceBlock->mPosition;
-	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
+	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_TLS_CHANGE,
+	                                            &mPosition, 0, nullptr);
 	getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	mJuiceBlock->kill();
 	mJuiceBlock = nullptr;
@@ -644,7 +625,7 @@ void TPukuPuku::init(TLiveManager* param_1)
 	unk19C     = (TTobiPukuSaveLoadParams*)getSaveParam();
 	mMActor->setJointCallback(1, TobiPukuRollCallback);
 	mSpine->initWith(&TNerveTobiPukuSwimWander::theNerve());
-	gpCurTobiPuku = 0;
+	gpCurTobiPuku = nullptr;
 }
 
 void TPukuPuku::reset()
@@ -668,19 +649,18 @@ void TMoePuku::calcRootMatrix()
 		unk1A0.set(mMActor->getModel()->getAnmMtx(1)[0][3],
 		           mMActor->getModel()->getAnmMtx(1)[1][3],
 		           mMActor->getModel()->getAnmMtx(1)[2][3]);
-		gpMarioParticleManager->emitAndBindToPosPtr(0x177, &unk1A0, 1, this);
+		gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_PUKU_PICHI,
+		                                            &unk1A0, 1, this);
 	}
 	if (mSpine->getCurrentNerve() == &TNerveTobiPukuFly::theNerve()) {
-		if (gpMSound->gateCheck(MSD_SE_EN_MOEKURI_FLAME))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_MOEKURI_FLAME, &mPosition, 0, nullptr, 0, 4);
-		// 0x1D1/0x1D2/0x1F8 are ms_mpk_fire_a/b/c.jpa; no enum names exist.
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_MOEKURI_FLAME, &mPosition, 0,
+		                                nullptr, 0, 4);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x1D1, mMActor->getModel()->getAnmMtx(1), 1, this);
+		    PARTICLE_MS_MPK_FIRE_A, mMActor->getModel()->getAnmMtx(1), 1, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x1D2, mMActor->getModel()->getAnmMtx(1), 1, this);
+		    PARTICLE_MS_MPK_FIRE_B, mMActor->getModel()->getAnmMtx(1), 1, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x1F8, mMActor->getModel()->getAnmMtx(1), 3, this);
+		    PARTICLE_MS_MPK_FIRE_C, mMActor->getModel()->getAnmMtx(1), 3, this);
 	}
 }
 
@@ -695,9 +675,8 @@ void TMoePuku::hitWater()
 	        PARTICLE_MS_MOE_FIRE_OFF, &mPosition, 0, nullptr))
 		emitter->setGlobalScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
 
-	if (gpMSound->gateCheck(MSD_SE_BS_WANWAN_TO_COOL))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_WANWAN_TO_COOL,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
+	                                nullptr, 0, 4);
 }
 
 bool TMoePuku::isPichiEffect()
@@ -778,24 +757,17 @@ void TMoePuku::generateEffectColumWater()
 		eff->generate(mPosition, mScaling);
 
 	if (mSpine->getCurrentNerve() != &TNerveTobiPukuGenerate::theNerve()) {
-		if (gpMSound->gateCheck(MSD_SE_EN_MOEPUKU_TOWATER))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_MOEPUKU_TOWATER, &mPosition, 0, nullptr, 0, 4);
-	} else if (gpMSound->gateCheck(MSD_SE_EN_PAKKUN_SHOOT_IMI)) {
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_PAKKUN_SHOOT_IMI,
-		                                          &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_MOEPUKU_TOWATER, &mPosition,
+		                                0, nullptr, 0, 4);
+	} else {
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_PAKKUN_SHOOT_IMI, &mPosition,
+		                                0, nullptr, 0, 4);
 	}
 
 	JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 	    PARTICLE_MS_M_TOBIKOMI_C, &mPosition, 2, nullptr);
-	if (emitter) {
-		emitter->mGlobalDynamicsScale.x = mScaling.x;
-		emitter->mGlobalDynamicsScale.y = mScaling.y;
-		emitter->mGlobalDynamicsScale.z = mScaling.z;
-		emitter->mGlobalParticleScale.x = mScaling.x;
-		emitter->mGlobalParticleScale.y = mScaling.y;
-		emitter->mGlobalParticleScale.z = mScaling.z;
-	}
+	if (emitter)
+		emitter->setGlobalScale(mScaling);
 }
 
 static const char* moepuku_bastable[] = {
@@ -1066,7 +1038,7 @@ DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor)
 		velocity.y = self->unk1E4 * (600.0f - dy) / 600.0f;
 		self->mRotation.x
 		    = MsClamp(self->mRotation.x + self->unk1E8, 0.0f, 180.0f);
-		f32 cos = JMASCos(DEG2SHORTANGLE(self->mRotation.x));
+		f32 cos = MsCos(self->mRotation.x);
 		velocity.x *= cos;
 		velocity.z *= cos;
 		velocity.y = self->unk1E4;
@@ -1125,13 +1097,7 @@ DEFINE_NERVE(TNerveTobiPukuPrepareFly, TLiveActor)
 {
 	TTobiPuku* self = (TTobiPuku*)spine->getBody();
 	if (spine->getTime() == 0) {
-		// MsAngleWrap(self->unk1B4): our headers outline MsWrap, so the
-		// loops are written out; the object has them inlined.
-		f32 angle = self->unk1B4;
-		while (angle >= 360.0f)
-			angle -= 360.0f;
-		while (angle < 0.0f)
-			angle += 360.0f;
+		f32 angle    = MsWrap(self->unk1B4, 0.0f, 360.0f);
 		self->unk1F0 = (angle - self->mRotation.x) / 60.0f;
 	}
 
@@ -1160,10 +1126,7 @@ DEFINE_NERVE(TNerveTobiPukuReturnLaunch, TLiveActor)
 {
 	TTobiPuku* self = (TTobiPuku*)spine->getBody();
 	if (spine->getTime() == 0) {
-		TPathNode node(self->unk1DC->mPosition);
-		self->unkF4  = node;
-		self->unk104 = node;
-		self->unk114.clear();
+		self->setGoalPath(TPathNode(self->unk1DC->mPosition));
 		self->setSwimAnm();
 		self->unk1E0 = self->mPosition.y;
 	}
