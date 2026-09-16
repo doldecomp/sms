@@ -577,7 +577,7 @@ void TRedCoinSwitch::control()
 	TMapObjBase::control();
 	switch (mState) {
 	case 1:
-		break;
+		return;
 	case 2:
 		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			mStateTimer = 120;
