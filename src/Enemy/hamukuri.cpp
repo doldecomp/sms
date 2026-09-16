@@ -899,7 +899,7 @@ void THamuKuri::moveObject()
 
 void THamuKuri::setBehavior()
 {
-	if (isAirborne() && mPosition.y > mGroundHeight + 250.0f
+	if (isAirborne() && getPosition().y > getGroundHeight() + 250.0f
 	    && mSpine->getCurrentNerve() != &TNerveWalkerGenerate::theNerve()) {
 		unk1F0 = 1;
 	}
