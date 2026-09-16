@@ -1170,7 +1170,10 @@ MtxPtr THamuKuri::getTakingMtx()
 
 bool THamuKuri::isResignationAttack()
 {
-	if ((unk104.getPoint() - mPosition).length() > unk194) {
+	JGeometry::TVec3<f32> diff = unk104.getPoint();
+	diff -= mPosition;
+	f32 (*sqrt)(f32) = JGeometry::TUtil<f32>::sqrt;
+	if (sqrt(diff.squared()) > unk194) {
 		unk194 = unk1F4->mSLGiveUpLength.get();
 		return true;
 	}
