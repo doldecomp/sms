@@ -652,8 +652,8 @@ void TOptionSoundUnit::toggle()
 void TOptionSoundUnit::adjust()
 {
 	adjustView();
-	const FabricatedSoundSettings& setting
-	    = cSoundSettings[mSelectionText->getNumber()];
+	int number = mSelectionText->getNumber();
+	const FabricatedSoundSettings& setting = cSoundSettings[number];
 	JAIGlobalParameter::setParamSoundOutputMode(setting.mOutputMode);
 }
 
