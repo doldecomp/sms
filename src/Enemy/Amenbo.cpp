@@ -63,7 +63,7 @@ void TAmenbo::init(TLiveManager* manager)
 	mOutOfWaterDeathTimer  = 0;
 	for (int i = 0; i < 4; ++i) {
 		unk1EC[i].mJointIdx
-		    = getModel()->getModelData()->getMaterialName()->getIndex(
+		    = getModel()->getModelData()->getJointName()->getIndex(
 		        cJointNames[i]);
 	}
 }
