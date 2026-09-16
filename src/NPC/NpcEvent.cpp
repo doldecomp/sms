@@ -92,7 +92,8 @@ static void ev__ForceStartTalkExceptNpc(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->verifyArgNum(1, &arg_num);
 	int result = 0;
 	// TODO: uuuh...
-	(void)interp->pop();
+	TSpcSlice fVar1 = interp->pop();
+	(void)fVar1.mData.asInt;
 
 	if (!gpMarDirector->isTalkOrDemoModeNow() && SMS_IsMarioTouchGround4cm()
 	    && !gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
