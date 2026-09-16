@@ -1477,3 +1477,74 @@ Do not "fix" these with `#pragma dont_inline` or by pasting bodies; the
 functions are structurally right and are left at their current percentages
 (`hold` 48%, `touchWall` 75%, `TBigWatermelon::touchActor` 61%,
 `TResetFruit::control` 52%, `TResetFruit::receiveMessage` 69%).
+
+## `fp_contract` only fuses products of local variables (probed)
+
+A scratch TU compiled with the game's flags settles what `-fp_contract on`
+will and will not fuse in MWCC 1.2.5:
+
+| Expression | Operands | Result |
+|---|---|---|
+| `m.x * m.x + m.z * m.z` (members through `this`, a pointer, a reference, a plain struct or a `Vec`) | memory | `fmuls`, `fmuls`, `fadds` -- never fused |
+| `f32 x = m.x; x * x + m.z * m.z` | one local | `fmuls` for the member product, `fmadds` for the local one |
+| `f32 x = m.x, z = m.z; x * x + z * z` | two locals | `fmuls` for the first, `fmadds` for the second |
+| `m.x += 0.2f * (v.x - m.x)` | product of a computed value | `fmadds` |
+| `d.x = 0.2f * (v.x - m.x); m.x += d.x;` with `d` a local `TVec3` | product parked in a local struct member | `fmuls` then `fadds` |
+
+So a `fmadds` whose product operand was just loaded from memory does not
+happen; when the target shows one, that operand was a local. Conversely, a
+target that keeps `fmuls`/`fadds` apart for a value the source obviously
+computed in registers went through a local struct member (`TVec3 d; d.x = ...`),
+which MWCC scalar-replaces (no stack traffic) but does not contract through.
+This is also why `TVec3::isZero()`/`squared()` on a member are always unfused
+while `squared(const TVec3&)` (locals `dx`, `dy`, `dz`) is fused. Concrete case:
+`TChuuHana::rolling`, whose `x * x + z * z` fuses only the `x` half, so the
+original held `x` in a local and read `unk204.z` from memory.
+
+## `-inline auto` has a per-function budget, and dead statements count
+
+`TChuuHana::rolling` (UNUSED, 0x120) is inlined into the Roll nerve in the
+original. Reconstructions that compile to the *same 0x120 bytes* are refused
+by the auto-inliner as soon as they carry one more statement: adding a dead
+`d.y = 0.0f;` flips a function from inlined to called; an empty `;` does not.
+Replacing two statements with one call (`d.sub(v)` for `d.x -= v.x; d.z -=
+v.z;`) flips it back, even though the call compiles to *more* code. The
+budget is therefore a count of source-level statements/expressions, not of
+emitted instructions, and it is evaluated on the callee alone. When a
+function the map marks UNUSED is being called instead of inlined, and its
+size already matches, look for a cheaper spelling of the same body before
+suspecting the caller.
+
+## Predicates defined out of line still materialise, but only in the `if`/`return` shape
+
+`TChuuHana::isRolling` (UNUSED, 0x8c) written as `return a == b;` compiles
+to a branchless `subf; cntlzw; srwi` (0x84) and its inlined copies fold into
+a bare compare; written as `if (a == b) return true; return false;` it is
+0x8c and every inlined call site shows the `li 1 / li 0 / clrlwi.`
+materialisation the target has. The early-return spelling is what the
+original used; the sites that compare the same nerve *without*
+materialising (`behaveToWater`) are direct compares, not the helper.
+
+## Compound conditions: `else if` vs a following `if`
+
+`if (a) { if (b) {...} } if (c) {...}` and `if (a) { if (b) {...} } else if (c)
+{...}` differ only in the `beq` target after `b`'s test (past `c`'s test, or to
+it). `TNerveChuuHanaStick` needed the `else if`; the diff shows it as a single
+`~ beq {target}` line, so compare the branch targets, not just the opcodes.
+
+## Smaller rules collected while finishing chuuhana and igaiga
+
+- `TSmallEnemyParams::getSL{Attack,Damage}{Radius,Height}()` return `f32`
+  (validated across `TSmallEnemy::moveObject` 83.5 -> 96.8 with no
+  regressions).
+- m2c hoists pure arithmetic above calls in its drafts; read the call/store
+  sequence from the asm and place parameter fetches where the `lwz`/`lfs`
+  actually sit (`igaiga` `behaveToWater` 72 -> 99.8 from that alone).
+- `cmpwi r0, 0` after a materialised bool means the value went through an
+  `int`/`BOOL`-typed local, `clrlwi.` means `bool`; `cmpw` vs `cmplw` on a
+  counter tells you `s32` vs `u32` (`TChuuHana::unk1A4`, `unk224` are `s32`).
+- A nested enum constant (`TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH`) must be
+  qualified outside the class's own members; grep the header before inventing
+  an `LIVE_FLAG_UNK` name for it.
+- `MsWrap<f>` is emitted as a local copy in the original in nine TUs; when a
+  unit is missing exactly that symbol, it is this and not a lost function.
