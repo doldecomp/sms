@@ -337,7 +337,8 @@ void TMapEventSinkBianco::startControl()
 		SMS_ShowJoint(unk64->getMesh(), true);
 		SMS_MarioWarpRequest(unk6C, unk78);
 		unk50[mRaisingBuildingIdx].set(7170.0f, 3675.0f, -185.0f);
-		SMSGetMarDirector()->fireStartDemoCamera(
+		TMarDirector* director = SMSGetMarDirector();
+		director->fireStartDemoCamera(
 		    "bianco0_event0", nullptr, -1, 0.0f, true, nullptr, 0, nullptr,
 		    JDrama::TFlagT<u16>(0));
 	}
