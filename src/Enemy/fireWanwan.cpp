@@ -1570,10 +1570,10 @@ void TFireWanwan::bind()
 
 	JGeometry::TVec3<f32> vel     = mVelocity;
 	JGeometry::TVec3<f32> velStep = mLinearVelocity;
-	velStep += vel;
+	vel += velStep;
 
-	int stepCount = int(velStep.length() / 25.0f) + 1;
-	velStep *= 1.0f / stepCount;
+	int stepCount = int(vel.length() / 25.0f) + 1;
+	vel *= 1.0f / stepCount;
 
 	JGeometry::TVec3<f32> totalNormal(0.0f, 0.0f, 0.0f);
 	int iVar12 = 0;
@@ -1581,9 +1581,10 @@ void TFireWanwan::bind()
 	for (int i = 0; i < stepCount; ++i) {
 		JGeometry::TVec3<f32> boundStep;
 		JGeometry::TVec3<f32> stepNormal;
-		iVar12 += bindBody(&boundStep, &stepNormal, velStep);
+		int collisionNum = bindBody(&boundStep, &stepNormal, vel);
 
-		bVar2 &= checkLiveFlag2(LIVE_FLAG_AIRBORNE);
+		bVar2 &= isAirborne();
+		iVar12 += collisionNum;
 
 		mPosition += boundStep;
 		totalNormal += stepNormal;
