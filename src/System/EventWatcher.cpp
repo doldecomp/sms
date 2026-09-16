@@ -630,7 +630,8 @@ static void evForceCloseTalk(TSpcTypedInterp<TEventWatcher>* interp,
 
 	gpTalk2D->forceCloseTalk();
 
-	interp->push();
+	const TSpcSlice& result = TSpcSlice();
+	interp->push(result);
 }
 
 static void evInsertTimer(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
