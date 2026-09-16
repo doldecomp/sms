@@ -76,11 +76,12 @@ void TMenuPlane::perform(u32 cue, JDrama::TGraphics*)
 		}
 
 		if (unk28 > 1 && unk10->checkFrameMeaning(0x1E)) {
-			unk30[unk2C]->mCharColor = unk24.get();
-			unk30[unk2C]->mGradColor = unk24.get();
+			unk30[unk2C]->mCharColor = unk24.toUInt32();
+			unk30[unk2C]->mGradColor = unk24.toUInt32();
 			if (unk10->checkFrameMeaning(0x18)) {
-				if (unk2C < unk3C) {
-					if (unk28 > unk2C + unk3C) {
+				int index = unk2C;
+				if (index < unk3C) {
+					if (unk28 > index + unk3C) {
 						unk2C += unk3C;
 					}
 				} else {
@@ -100,8 +101,8 @@ void TMenuPlane::perform(u32 cue, JDrama::TGraphics*)
 					unk2C = 0;
 			}
 
-			unk30[unk2C]->mCharColor = unk1C.get();
-			unk30[unk2C]->mGradColor = unk20.get();
+			unk30[unk2C]->mCharColor = unk1C.toUInt32();
+			unk30[unk2C]->mGradColor = unk20.toUInt32();
 		}
 	}
 }
