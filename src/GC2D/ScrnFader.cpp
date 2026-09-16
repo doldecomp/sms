@@ -387,14 +387,11 @@ void TSMSFader::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
 
-	s32 local_1c = stream.readS32();
+	startFadein(stream.readS32());
 
-	startFadein(local_1c);
+	u32 local_18 = stream.readU32();
 
-	u32 local_18;
-	stream >> local_18;
-
-	setColor(JUtility::TColor(local_18 >> 24, local_18 >> 16 & 0xFF,
+	setColor(JUtility::TColor(local_18 >> 24, u8(local_18 >> 16),
 	                          local_18 >> 8 & 0xFF, local_18 & 0xFF));
 }
 
