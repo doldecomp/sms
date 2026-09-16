@@ -212,7 +212,88 @@ DEFINE_NERVE(TNerveTobiPukuBound, TLiveActor)
 }
 
 // TODO: incorrect size. Map records 0x5a8 (1448 bytes).
-DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor) { return FALSE; }
+// TODO: partial, 54.5% of 1448 bytes. Three of the four branches are written:
+// the water landing, the bound hand-off, and the fall-end-land interpolation
+// over twenty frames. The fourth, taken when TTobiPuku::mReturnLaunchSw is set,
+// is **not** written. It halves the launch velocity's x and z, recomputes y
+// from mFlyVelocityY against the 600-unit drop, advances mRotation.x by
+// mReturnPitchStep clamped to 0..180, scales the horizontal velocity by
+// cos(pitch) through the jma table, and hands off once the drop exceeds 600.
+// m2c's rendering of that block is ambiguous about which component receives
+// which product, so it is left out rather than guessed.
+DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor)
+{
+	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
+
+	if (spine->getTime() < 2) {
+		if (puku->mGroundPlane->isWaterSurface()) {
+			f32 y             = puku->mPosition.y;
+			puku->mPosition.y = y - 10.0f;
+			puku->onLiveFlag(LIVE_FLAG_UNK10);
+			puku->generateEffectColumWater();
+			if (TTobiPuku::mReturnLaunchSw) {
+				puku->mFlyVelocityY *= 0.8f;
+				puku->mReturnPitchStep
+				    = (180.0f - puku->mRotation.x)
+				      / fabsf(600.0f / puku->mFlyVelocityY);
+			}
+			return FALSE;
+		}
+
+		if (TTobiPuku::mBoundSw) {
+			if (puku->mBoundCount < puku->unk19C->mBoundMax.get()) {
+				spine->pushAfterCurrent(&TNerveTobiPukuBound::theNerve());
+				return TRUE;
+			}
+			puku->unk1AE = 0;
+		}
+
+		puku->mLandPos = puku->mPosition;
+		puku->setFallEndLandAnm();
+		puku->mRotation.x = 0.0f;
+		return FALSE;
+	}
+
+	if (puku->isFallEndLandBck()) {
+		if (spine->getTime() == 1) {
+			puku->mLandDelta.x = puku->mPosition.x - puku->mLandPos.x;
+			puku->mLandDelta.y = puku->mPosition.y - puku->mLandPos.y;
+			puku->mLandDelta.z = puku->mPosition.z - puku->mLandPos.z;
+		}
+
+		int time = spine->getTime();
+		if (time < 20) {
+			f32 t             = 0.05f * (f32)time;
+			puku->mPosition.x = puku->mLandPos.x;
+			puku->mPosition.y = puku->mLandPos.y;
+			puku->mPosition.z = puku->mLandPos.z;
+			puku->mPosition.x += puku->mLandDelta.x * t;
+			puku->mPosition.y += puku->mLandDelta.y * t;
+			puku->mPosition.z += puku->mLandDelta.z * t;
+		}
+
+		if (puku->checkCurAnmEnd(0)) {
+			spine->pushAfterCurrent(&TNerveTobiPukuPitiPiti::theNerve());
+			return TRUE;
+		}
+		return FALSE;
+	}
+
+	f32 y             = puku->mPosition.y;
+	puku->mPosition.y = y - 12.0f;
+
+	if (puku->isJumpBck()) {
+		f32 pitch = puku->mRotation.x;
+		if (pitch < TTobiPuku::mLandAngle)
+			puku->mRotation.x = pitch + 1.2f;
+	}
+
+	if (spine->getTime() > 100) {
+		puku->onLiveFlag(LIVE_FLAG_DEAD);
+		return TRUE;
+	}
+	return FALSE;
+}
 
 // TODO: incorrect size. Map records 0x1fc (508 bytes).
 DEFINE_NERVE(TNerveTobiPukuDie, TLiveActor)
