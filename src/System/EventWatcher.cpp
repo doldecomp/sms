@@ -842,7 +842,8 @@ static void evChangeNozzle(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 		gpMarioOriginal->setDivHelm();
 	else
 		gpMarioOriginal->mWaterGun->changeNozzle(id, true);
-	interp->push();
+	const TSpcSlice& result = TSpcSlice();
+	interp->push(result);
 }
 
 static void evStartMarioTalking(TSpcTypedInterp<TEventWatcher>* interp,
