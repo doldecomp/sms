@@ -4,7 +4,6 @@
 #include <GC2D/MessageUtil.hpp>
 #include <System/Application.hpp>
 #include <System/MarDirector.hpp>
-#include <System/StageUtil.hpp>
 #include <System/FlagManager.hpp>
 #include <System/DummyStrings.hpp>
 #include <JSystem/J2D/J2DPicture.hpp>
@@ -17,6 +16,58 @@
 #include <JSystem/JUtility/JUTResFont.hpp>
 #include <dolphin/gx/GXCull.h>
 #include <stdio.h>
+
+u8 SMS_getShineStage(u8);
+
+static const u8 scShineTableAirport[] = { 0x56 };
+static const u8 scShineTableBianco[]
+    = { 0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7 };
+static const u8 scShineTableRicco[]
+    = { 0xA, 0xB, 0xC, 0xD, 0xE, 0xF, 0x10, 0x11 };
+static const u8 scShineTableMamma[]
+    = { 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B };
+static const u8 scShineTablePinna[]
+    = { 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25 };
+static const u8 scShineTableSirena[]
+    = { 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F };
+static const u8 scShineTableMare[]
+    = { 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39 };
+static const u8 scShineTableMonte[]
+    = { 0x3C, 0x41, 0x3E, 0x3D, 0x40, 0x3F, 0x42, 0x43 };
+
+static const u8* scShineConvTable[] = {
+	scShineTableAirport, nullptr,
+	scShineTableBianco,  scShineTableRicco,
+	scShineTableMamma,   scShineTablePinna,
+	scShineTableSirena,  scShineTableMonte,
+	scShineTableMare,    nullptr,
+};
+
+static u32 scScenarioNameTable[] = {
+	0x0,  0x1,  0x2,  0x3,  0x4,  0x5,  0x6,  0x7,  0x8,  0x9,  0x32, 0x33,
+	0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0xA,  0xB,  0xC,  0xD,
+	0xE,  0xF,  0x10, 0x11, 0x12, 0x13, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D,
+	0x2E, 0x2F, 0x30, 0x31, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x41, 0x42, 0x43,
+	0x44, 0x45, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D,
+	0x1E, 0x21, 0x20, 0x23, 0x22, 0x1F, 0x24, 0x25, 0x26, 0x27,
+};
+
+static u16 SMS_getNormalStage(u32 param_1)
+{
+	return scScenarioNameTable[param_1];
+}
+
+static s16 SMS_getShineID(u32 stage, u32 scenario, bool)
+{
+	if (stage > 9)
+		return -1;
+
+	const u8* table = scShineConvTable[stage];
+	if (table == nullptr)
+		return -1;
+
+	return table[scenario];
+}
 
 JUTPoint TConsoleStr::cShineGetRight1(150, -50);
 JUTPoint TConsoleStr::cShineGetLeft1(-21, 7);
@@ -661,7 +712,7 @@ void TConsoleStr::startCloseWipe(bool param_1)
 		int local_64     = 224;
 		unk290[0]->setPaneSize(0x2D, local_74.getWidth(), local_64,
 		                       local_74.getWidth(), 0);
-		unk290[0]->setPaneAlpha(30, 255, 0);
+		unk290[0]->setPaneAlpha(45, 255, 0);
 
 		local_74 = unk290[1]->getPane()->getBounds();
 		unk290[1]->setPaneOffset(0x2D, 0, 224 - local_74.y1, 0,
@@ -670,7 +721,7 @@ void TConsoleStr::startCloseWipe(bool param_1)
 		    0x2D, local_74.getWidth(),
 		    local_64 + (465 - unk290[1]->getInitialBounds().y1),
 		    local_74.getWidth(), 0);
-		unk290[1]->setPaneAlpha(30, 255, 0);
+		unk290[1]->setPaneAlpha(45, 255, 0);
 
 		unk2BC = 8;
 		unk2B8 = 4;
@@ -686,7 +737,7 @@ void TConsoleStr::startCloseWipe(bool param_1)
 		int local_78     = 224;
 		unk290[0]->setPaneSize(0x2D, local_88.getWidth(), local_78,
 		                       local_88.getWidth(), local_88.getHeight());
-		unk290[0]->setPaneAlpha(30, 255,
+		unk290[0]->setPaneAlpha(45, 255,
 		                            unk290[0]->getPane()->getAlpha());
 
 		local_88 = unk290[1]->getPane()->getBounds();
@@ -695,7 +746,7 @@ void TConsoleStr::startCloseWipe(bool param_1)
 		unk290[1]->setPaneSize(0x2D, local_88.getWidth(),
 		                       465 - local_78 - 1, local_88.getWidth(),
 		                       local_88.getHeight());
-		unk290[1]->setPaneAlpha(30, 255,
+		unk290[1]->setPaneAlpha(45, 255,
 		                            unk290[1]->getPane()->getAlpha());
 	}
 }
