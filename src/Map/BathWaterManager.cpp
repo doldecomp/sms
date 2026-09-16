@@ -514,18 +514,19 @@ static void drawCap(const JGeometry::TVec3<f32>& pos, f32 radius)
 namespace {
 void clearEFB_alpha(s16 x, s16 y, s16 wd, s16 ht, u8 alpha)
 {
-	Mtx44 m;
 	Mtx pmtx;
+	Mtx44 m;
 
 	if (wd <= 0)
 		wd = SMSGetGameRenderWidth();
 	if (ht <= 0)
 		ht = SMSGetGameRenderHeight();
 
-	f32 fx      = x;
-	f32 fwd     = wd;
-	f32 fy      = y;
-	f32 fht     = ht;
+	f32 fx, fy, fwd, fht;
+	fx          = x;
+	fwd         = wd;
+	fy          = y;
+	fht         = ht;
 	f32 fright  = fx + fwd;
 	f32 fbottom = fy + fht;
 
