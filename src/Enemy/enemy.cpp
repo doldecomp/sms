@@ -401,8 +401,8 @@ static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 
 void TSpineEnemy::goToDirLimitedNextGraphNode(f32 param_1)
 {
-	int currIdx = unk124->mCurrIdx;
 	int prevIdx = unk124->mPrevIdx;
+	int currIdx = unk124->mCurrIdx;
 	if (currIdx < 0) {
 		unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
 	} else {
