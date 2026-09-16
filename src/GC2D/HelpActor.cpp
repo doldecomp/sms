@@ -50,12 +50,14 @@ void THelpActor::perform(u32 cue, JDrama::TGraphics*)
 {
 	if (cue & CUE_MOVE) {
 		if (unk74) {
-			if (getHelpID() == -1)
+			int helpID = getHelpID();
+			if (helpID == -1)
 				if (SMSGetMarDirector()->getConsole()->startDisappearBalloon(
 				        unk68, false))
 					unk74 = false;
 		} else {
-			if (getHelpID() != -1)
+			int helpID = getHelpID();
+			if (helpID != -1)
 				if (SMSGetMarDirector()->getConsole()->startAppearBalloon(
 				        unk68, false))
 					unk74 = true;
