@@ -58,6 +58,8 @@ public:
 	virtual f32 getGravityY() const;
 	void genEventCoin();
 	void init(TLiveManager*);
+	virtual void moveObject();
+	void hitWall();
 
 
 	// Overrides the base slot at 0x154.

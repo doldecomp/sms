@@ -713,3 +713,13 @@ void TTobiPuku::hitWater()
 	unk1B0          = mPosition.y;
 	mRotation.y     = -((*gpMarioAngleY * (360.0f / 65536.0f)) - 180.0f);
 }
+
+void TTobiPuku::moveObject()
+{
+	mTurnSpeed = unk19C->mSLTurnSpeedLow.get();
+
+	if (TTobiPuku::mBoundSw && isAirborne())
+		hitWall();
+
+	TWalkerEnemy::moveObject();
+}
