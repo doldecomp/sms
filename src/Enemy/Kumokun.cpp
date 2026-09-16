@@ -793,15 +793,14 @@ void TKumokun::decideTargetOnGraph() { }
 JGeometry::TVec3<f32>
 TKumokun::rotateGoalDirToLocal(const JGeometry::TVec3<f32>& param_1) const
 {
-	JGeometry::TVec3<f32> diff = param_1;
-	diff -= mPosition;
+	JGeometry::TVec3<f32> result = param_1;
+	result -= mPosition;
 
 	// unit quat, conj = inv
 	JGeometry::TQuat4<f32> inv = getQuat();
 	inv.conjugate();
 
-	JGeometry::TVec3<f32> result;
-	inv.rotate(diff, result);
+	inv.rotate(result, result);
 
 	return result;
 }
