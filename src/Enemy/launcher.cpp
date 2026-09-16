@@ -50,9 +50,9 @@ void TLauncher::init(TLiveManager* param_1)
 	TSpineEnemy::init(param_1);
 
 	mSpine->initWith(&TNerveWaitForever<TLiveActor>::theNerve());
-	TLauncherParams* params = getSaveParam2();
+	TLauncherParams* params = (TLauncherParams*)getSaveParam();
 	if (params) {
-		s32 launchPeriod = params->mSLLaunchPeriod.get();
+		s32 launchPeriod = params->getLaunchPeriod();
 		mLaunchCooldown  = launchPeriod * MsRandF();
 	}
 
