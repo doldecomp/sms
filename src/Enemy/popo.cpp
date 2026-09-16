@@ -1,16 +1,1 @@
-unsigned char mRollSw__5TPopo = 1;
-unsigned char mTriggerSw__5TPopo = 1;
-float mTestAng_x__5TPopo = 90.0f;
-float mTestAng_y__5TPopo = 90.0f;
-float mNozzleOffsetZ__5TPopo = -15.0f;
-unsigned char mCenterJntIndex__5TPopo = 1;
-unsigned char mMouthJntIndex__5TPopo = 2;
-unsigned char mRLegJntIndex__5TPopo = 5;
-unsigned char mLLegJntIndex__5TPopo = 11;
-unsigned char mRHandJntIndex__5TPopo = 7;
-unsigned char mLHandJntIndex__5TPopo = 9;
-float mTestBodyScale__5TPopo = 35.0f;
-unsigned char mBrkFlag__5TPopo = 1;
-float mColOffsetY__5TPopo = 20.0f;
-float mColMinVal__5TPopo = 0.6f;
-unsigned char mLevelShootSw__5TPopo = 1;
+
