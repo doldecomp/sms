@@ -379,13 +379,10 @@ public:
 					     b += bw->unk8C->intersects.get()) {
 						JGeometry::TVec3<f32> local_2D8;
 						local_2D8.sub(b->unk0, a->unk0);
-						(void)&local_2D8;
 						if (!(local_2D8.squared() > sep2)) {
 							f32 dist = local_2D8.length();
 							JGeometry::TVec3<f32> local_2E4;
 							local_2E4.scale(1.0f / dist, local_2D8);
-
-							(void)&local_2E4;
 
 							f32 half = (twoR - dist) / 2.0f;
 
@@ -441,8 +438,7 @@ public:
 			int lifeTime = bw->unk8C->lifeTime.get();
 			if (lifeTime > 0) {
 				for (TDrop* drop = bw->unk88; drop < end2; --end2, ++drop) {
-					drop->unk4C++;
-					if (drop->unk4C > lifeTime)
+					if (++drop->unk4C > lifeTime)
 						bw->eraseDrop(drop);
 				}
 			}
@@ -453,7 +449,7 @@ public:
 					    data.getPos(respawnIdx++, bw->unk70, dropRadius),
 					    bw->unk68.get_float01());
 				}
-			} else if (bw->unk74 > bw->unk8C->numDrops.get()) {
+			} else if (bw->unk8C->numDrops.get() < bw->unk74) {
 				bw->unk74 = bw->unk8C->numDrops.get();
 			}
 		}
@@ -1803,11 +1799,10 @@ static inline bool fakeCalcPos(const TBathtubData& data, f32 radius, f32 rnd1,
 	nAxis.setLength(h);
 
 	JGeometry::TVec3<f32> up2(0.0f, 1.0f, 0.0f);
-	JGeometry::TVec3<f32> center;
-	center.set(data.getThing());
-	out->set(up2.x * radius + nAxis.x + center.x,
-	         up2.y * radius + nAxis.y + center.y,
-	         up2.z * radius + nAxis.z + center.z);
+	up2.scale(radius);
+	up2.add(nAxis);
+	up2.add(data.getThing());
+	out->set(up2);
 	return true;
 }
 
@@ -1820,8 +1815,7 @@ void TBathWaterManager::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_MOVE) {
 		unk30 = unk28[unk18->displaysMesh.get()];
-		unk1C += 1;
-		if (!(unk1C & 3)) {
+		if (!(++unk1C & 3)) {
 			for (int actor = 0; actor < 2; ++actor) {
 				TBathWater* bw           = unk20[actor];
 				const TBathtubData& data = unk24->getBathtubData();
