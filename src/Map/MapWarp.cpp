@@ -28,33 +28,32 @@ void TMapWarp::warp(int) { }
 void TMapWarp::watchToWarp()
 {
 	const TBGCheckData* checkData;
+	int data;
 	f32 fVar8 = gpMap->checkGroundExactY(gpMarioPos->x, gpMarioPos->y + 30.0f,
 	                                     gpMarioPos->z, &checkData);
 
 	if (checkData->isWarp()) {
-		int warp = unk4[checkData->getData()].unk0;
-		if (warp != unk8) {
+		data = checkData->getData();
+		int warp = unk4[data].unk0;
+		if (unk8 != warp) {
 			gpMap->getModelManager()->getJointModel(0)->getChild(unk8)->sleep();
 			gpMap->getModelManager()->getJointModel(0)->getChild(warp)->awake();
-			unk8 = warp;
-
 			// TODO: inlines
-			JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
-			marioPos += unk4[checkData->getData()].unk8;
+			unk8 = unk4[data].unk0;
+			JGeometry::TVec3<f32> marioPos
+			    = SMS_GetMarioPos() + unk4[data].unk8;
 			SMS_MarioWarpRequest(marioPos,
 			                     (*gpMarioAngleY * 180.0f) / 32768.0f);
 		}
 	}
 
 	if (checkData->isMapChange()) {
-		if (checkData->getData() != unk8) {
+		data = checkData->getData();
+		if (unk8 != data) {
 			gpMap->getModelManager()->getJointModel(0)->getChild(unk8)->sleep();
-			gpMap->getModelManager()
-			    ->getJointModel(0)
-			    ->getChild(checkData->getData())
-			    ->awake();
+			gpMap->getModelManager()->getJointModel(0)->getChild(data)->awake();
 
-			unk8 = checkData->getData();
+			unk8 = data;
 		}
 	}
 
@@ -67,7 +66,8 @@ void TMapWarp::watchToWarp()
 	MsMtxSetXYZRPH(mtx, 0.0f, 0.0f, 0.0f, info.unk18.x, info.unk18.y,
 	               info.unk18.z);
 
-	JGeometry::TVec3<f32> vec2(0.0f, 0.0f, info.unk40 * 0.01f);
+	JGeometry::TVec3<f32> vec2(0.0f, 0.0f, 0.0f);
+	vec2.z = info.unk40 * 0.01f;
 	MTXMultVec(mtx, &vec2, &vec2);
 	if ((info.unk38 == 0 ? true : false) || (info.unk38 == 1 ? true : false))
 		SMS_FlowMoveMario(vec2);
