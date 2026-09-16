@@ -5,6 +5,9 @@
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
+#include <Map/MapCollisionEntry.hpp>
+#include <MSound/MSound.hpp>
+#include <Player/Mario.hpp>
 #include <Player/MarioAccess.hpp>
 #include <System/MarDirector.hpp>
 #include <System/Particles.hpp>
@@ -26,6 +29,10 @@ public:
 	u32 unk7C;
 	u32 unk80[29];
 	u32 unkF4;
+	u32 unkF8[59];
+	f32 unk1E4;
+	u32 unk1E8[4];
+	f32 unk1F8;
 };
 
 void TBathtub::loadAfter()
@@ -199,7 +206,89 @@ void TBathtub::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
-void TBathtub::control() { }
+void TBathtub::control()
+{
+	if (unk29A) {
+		if (mMActor->curAnmEndsNext(0, 0)) {
+			switch (unk294++) {
+			case 0:
+				startBck("bath_overturn2");
+				break;
+			case 1:
+				startBck("bath_overturn3");
+				break;
+			}
+		}
+
+		JGeometry::TVec3<f32> scale(0.0f, 0.0f, 0.0f);
+		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+		    0x128, unk29C->getModel()->getAnmMtx(mShineBodyJntIdx), 1, this);
+		if (emitter)
+			emitter->setGlobalScale(scale);
+		emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+		    0x129, unk29C->getModel()->getAnmMtx(mShineBodyJntIdx), 1, this);
+		if (emitter)
+			emitter->setGlobalScale(scale);
+
+		MtxPtr mtx = mMActor->getModel()->getAnmMtx(mStarJntIdx);
+		unk200.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+		gpMSound->startSoundActor(MSD_SE_SHINE_EXIST, &unk200, 0, 0, 0, 4);
+
+		calcRootMatrix();
+		calcBathtubData();
+		for (int i = 0; i < 30; ++i)
+			unk164[i]->remove();
+
+		TLiveActor* mario = SMS_GetMarioLiveActor();
+		if (mario->receiveMessage(this, 4))
+			mHolder = mario;
+		gpMarioOriginal->mFaceAngle.y = 0x7fff;
+		if (unk290 > 0)
+			--unk290;
+		return;
+	}
+
+	if (unk24C > 0)
+		--unk24C;
+	if (unk248 > 0)
+		--unk248;
+
+	if (unk250 > unk16C->unk7C || marioIsOn() && mHolder == 0) {
+		f32 amount = unk16C->unk1E4;
+		if (unk250 > 0)
+			amount += unk16C->unk1F8;
+		if (amount > 0.0000000001f) {
+			static JGeometry::TVec3<f32> yDown(0.0f, -1.0f, 0.0f);
+			JGeometry::TVec3<f32> delta(gpMarioPos->x - mPosition.x,
+			                                 gpMarioPos->y - mPosition.y,
+			                                 gpMarioPos->z - mPosition.z);
+			JGeometry::TVec3<f32> first;
+			first.cross(delta, yDown);
+			unk1E8 += first.x * amount * 0.00000001f;
+			unk1EC += first.y * amount * 0.00000001f;
+			unk1F0 += first.z * amount * 0.00000001f;
+		}
+	}
+
+	updatePosture_();
+	calcRootMatrix();
+	TMapObjBase::control();
+	calcBathtubData();
+	mMActor->getModel()->calc();
+
+	if (mBathtubData.unk0C.x * mBathtubData.unk18.at(1, 0)
+	        + mBathtubData.unk0C.y * mBathtubData.unk18.at(1, 1)
+	        + mBathtubData.unk0C.z * mBathtubData.unk18.at(1, 2)
+	    > 0.995f)
+		gpMarioParticleManager->emit(0x1be, &unk1F4, 1, this);
+
+	if (mHolder == 0) {
+		setupCollisions_();
+	} else {
+		for (int i = 0; i < 30; ++i)
+			unk164[i]->remove();
+	}
+}
 
 void TBathtub::calcBathtubData() { }
 
