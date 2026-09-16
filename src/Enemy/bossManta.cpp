@@ -1105,7 +1105,11 @@ TSpineEnemy* TBossMantaManager::createEnemyInstance() { return new TBossManta; }
 const JUtility::TColor& TBossMantaManager::getMantaColor()
 {
 	if (unk88.mState == 2) {
-		unk84 = (unk84 + 1 > 15) ? 15 : unk84 + 1;
+		int color = unk84;
+		color++;
+		if (color > 15)
+			color = 15;
+		unk84 = color;
 	}
 
 	TBossMantaParams* params = (TBossMantaParams*)getSaveParam();
