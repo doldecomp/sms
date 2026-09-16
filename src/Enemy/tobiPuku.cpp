@@ -3,6 +3,7 @@
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <Map/MapData.hpp>
+#include <Enemy/SmallEnemy.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
@@ -213,7 +214,43 @@ DEFINE_NERVE(TNerveTobiPukuBound, TLiveActor)
 DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor) { return FALSE; }
 
 // TODO: incorrect size. Map records 0x1fc (508 bytes).
-DEFINE_NERVE(TNerveTobiPukuDie, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveTobiPukuDie, TLiveActor)
+{
+	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		if (puku->isAirborne()) {
+			puku->mHitFlags |= HIT_FLAG_NO_COLLISION;
+			JGeometry::TVec3<f32> stop(0.0f, 0.0f, 0.0f);
+			JGeometry::TVec3<f32> vel(puku->mVelocity);
+			stop.y          = vel.y;
+			puku->mVelocity = stop;
+			puku->setDownAirAnm();
+		} else if (puku->unk1AD != 0) {
+			puku->mHitFlags |= HIT_FLAG_NO_COLLISION;
+			puku->setDownLandAnm();
+		} else {
+			puku->onLiveFlag(LIVE_FLAG_UNK20000);
+			puku->setDeadAnm();
+		}
+	}
+
+	if (puku->checkCurAnmEnd(0)) {
+		puku->onLiveFlag(LIVE_FLAG_DEAD);
+		puku->onLiveFlag(LIVE_FLAG_UNK8);
+		puku->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
+		puku->offLiveFlag(LIVE_FLAG_UNK20000);
+		puku->mHolder = nullptr;
+		puku->stopAnmSound();
+		spine->reset();
+		spine->setNext(&TNerveSmallEnemyDie::theNerve());
+		spine->pushAfterCurrent(spine->getDefault());
+		puku->mHitFlags |= HIT_FLAG_NO_COLLISION;
+		puku->genRandomItem();
+		return TRUE;
+	}
+	return FALSE;
+}
 
 // TODO: incorrect size. Map records 0x118 (280 bytes).
 DEFINE_NERVE(TNerveTobiPukuPitiPiti, TLiveActor)

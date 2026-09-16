@@ -56,8 +56,8 @@ public:
 	virtual bool isReachedToGoalXZ();
 	virtual void hitWater();
 
-	// Not virtual: the map records no vtable slot for it.
-	void setDeadAnm();
+	// Overrides the base slot at 0x154.
+	virtual void setDeadAnm();
 
 	// fabricated
 	TTobiPukuParams* getSaveParam2() const
@@ -126,8 +126,8 @@ public:
 	virtual bool isReachedToGoalXZ();
 	virtual void hitWater();
 
-	// Not virtual: the map records no vtable slot for it.
-	void setDeadAnm();
+	// Overrides the base slot at 0x154.
+	virtual void setDeadAnm();
 };
 
 class TPukuPuku : public TTobiPuku {
