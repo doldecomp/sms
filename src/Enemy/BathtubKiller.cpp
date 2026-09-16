@@ -745,11 +745,18 @@ TBathtubKillerManager::TBathtubKillerManager(const char* name)
 {
 }
 
+#define ASSERT_TEST(expr)                                                      \
+	(void)((expr) ? true : ((void)(__FILE__, __LINE__), false));
+
 void TBathtubKillerManager::load(JSUMemoryInputStream& stream)
 {
+	ASSERT_TEST(!unk38);
 	TSmallEnemyManager::load(stream);
 	unk38 = new TBathtubKillerParams("/enemy/bathtubkiller.prm");
+	ASSERT_TEST(unk38);
 }
+
+#undef ASSERT_TEST
 
 void TBathtubKillerManager::loadAfter()
 {
