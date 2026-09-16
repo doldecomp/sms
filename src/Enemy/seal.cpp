@@ -71,6 +71,25 @@ void TSeal::init(TLiveManager* manager)
 
 BOOL TSeal::receiveMessage(THitActor* sender, u32 message)
 {
+	if (sender->mActorType == 0x01000001 && message == 0xF) {
+		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
+		gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &sender->mPosition,
+		                        0, 0.0f, 0, 0, 4);
+
+		if (gpModelWaterManager->unk5D5F) {
+			gpMSound->startSoundSet(MSD_SE_ERASE_SCRAWL, &sender->mPosition, 0,
+			                        0.0f, 0, 0, 4);
+
+			const TNerveBase<TLiveActor>* dieNerve
+			    = &TNerveSealDie::theNerve();
+			if (mSpine->getLatestNerve() != dieNerve) {
+				if (mMapCollisionManager->unk8)
+					mMapCollisionManager->unk8->remove();
+				mSpine->pushNerve(&TNerveSealDie::theNerve());
+			}
+		}
+	}
+
 	return TSpineEnemy::receiveMessage(sender, message);
 }
 

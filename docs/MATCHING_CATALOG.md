@@ -17,6 +17,25 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## The bool-materialisation tell, batches 59-60
+
+When the original wants a `bool`, MWCC emits `li r0,1` / `b` / `li r0,0` then `clrlwi.` and a branch. When it tests a value directly it just branches. That two-instruction difference says which source form was used, and it reads **both ways**:
+
+- Materialised bool in the target, direct branch in ours -> the original called a **predicate helper** whose body ends in `? 1 : 0`. Replace the open-coded comparison. Examples that each moved a function several points: `TBGCheckData::isDeathPlane/isPool/isWaterSurface`, `TLiveActor::isAirborne` (over plain `checkLiveFlag`, which optimises to a direct branch), `THitActor::isActorType`.
+- Direct branch in the target, materialised bool in ours -> the original compared the field **inline**. `TSeal::receiveMessage` tests `mActorType == 0x01000001` directly even though `TSeal::perform`, in the same file, goes through `isActorType`. Do not generalise one site to the whole unit; check each.
+
+Related: prefer the existing overload or helper before open-coding anything.
+`MsMtxSetXYZRPH` has an `f32` degree overload that made `TSeal::calcRootMatrix` exact where writing `(s16)(182.04445f * rot)` by hand did not.
+`TSpineBase::pushAfterCurrent` is a plain stack push; `pushNerve` also writes `mPrevious`. Using the wrong one cost three nerve functions about ten points each.
+`getLatestNerve()` is exactly `mCurrent ? mCurrent : mPrevious`, and `MActor::getModel()` reaches the model through `mMActor` where `TLiveActor::getModel()` is an out-of-line call.
+
+Two further arithmetic tells from `TEffectEnemy::perform`: `divw` with an `xoris` bias means **signed integer** division converted to float afterwards, not a float divide; and a redundant `clrlwi` after `lbz` means the value passed through a `u8` before widening.
+
+## Enemy unit __sinit is include-driven, batches 59-60
+
+`__sinit_effectEnemy_cpp` and `__sinit_seal_cpp` are both exactly 764 bytes and both matched with no code, purely by adding `MSound/MSSetSound.hpp` and `MSound/MSoundBGM.hpp` as rogue includes alongside `M3DUtil/InfectiousStrings.hpp`.
+Their whole body is JAL sound-list registration emitted by the include set. Try this first on any new enemy TU: it is typically the single largest function in the unit.
+
 ## Weak emission order gates source linking, batch 56
 
 `Map/PollutionEvent.cpp` had been unlinkable since batch 2. The cause was not the linked code, which already matched, but *where the compiler emitted its weak functions*.
