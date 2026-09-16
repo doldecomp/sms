@@ -119,6 +119,17 @@ public:
 		mAnmBck->setCalc(calc);
 	}
 
+	// fabricated: TChuuHana::setBckAnm reads the Bck's current anim pointer
+	// (MActorAnmEach::unk24) inline, null-checked, before handing it to
+	// setBckOldMotionBlendAnmPtr.
+	J3DAnmTransform* getBckAnmPtr() const
+	{
+		if (!mAnmBck)
+			return nullptr;
+
+		return mAnmBck->unk24;
+	}
+
 	J3DAnmTransform* getBckOldMotionBlendAnmPtr() const
 	{
 		if (!mAnmBck)
