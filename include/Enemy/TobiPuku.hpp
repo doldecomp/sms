@@ -16,7 +16,8 @@ public:
 	/* 0x340 */ TParamRT<f32> mBoundDamp;
 	/* 0x354 */ TParamRT<int> mPichiTime;
 	/* 0x368 */ TParamRT<f32> mFlyGravity;
-	/* 0x37C */ u8 unk37C[0x390 - 0x37C];
+	/* 0x37C */ TParamRT<f32> mHitWaterPush;
+	/* 0x390 */ u8 unk390[0];
 };
 
 class TTobiPukuLaunchPad;
@@ -56,6 +57,7 @@ public:
 	virtual const char** getBasNameTable() const;
 	virtual f32 getGravityY() const;
 	void genEventCoin();
+	void init(TLiveManager*);
 
 
 	// Overrides the base slot at 0x154.

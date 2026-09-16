@@ -55,6 +55,7 @@ TTobiPukuParams::TTobiPukuParams(const char* prm)
     , PARAM_INIT(mBoundDamp, 0.5f)
     , PARAM_INIT(mPichiTime, 60)
     , PARAM_INIT(mFlyGravity, 0.5f)
+    , PARAM_INIT(mHitWaterPush, 10.0f)
 {
 }
 
@@ -64,6 +65,9 @@ f32 TTobiPuku::mBoundVelocityY;
 u8 TTobiPuku::mReturnLaunchSw;
 
 TMoePuku* gpCurTobiPuku;
+
+static int TobiPukuRollCallback(J3DNode* node, int param);
+
 
 // TODO: 0% of 180 bytes despite initialising the right fields. The original
 // default-constructs mLandPos and mLandDelta through __construct_array with a
@@ -678,3 +682,34 @@ f32 TTobiPuku::getGravityY() const
 }
 
 void TTobiPuku::genEventCoin() { isDeadBck(); }
+
+void TTobiPuku::init(TLiveManager* manager)
+{
+	TWalkerEnemy::init(manager);
+	mActorType = 0x10000012;
+	unk150     = 0x31;
+	unk19C     = (TTobiPukuParams*)getSaveParam();
+	mMActor->setJointCallback(1, TobiPukuRollCallback);
+}
+
+void TTobiPuku::hitWater()
+{
+	JGeometry::TVec3<f32> vel(mVelocity);
+	JGeometry::TVec3<f32> away(mPosition.x - SMS_GetMarioPos().x,
+	                           mPosition.y - SMS_GetMarioPos().y,
+	                           mPosition.z - SMS_GetMarioPos().z);
+	if (away.x == 0.0f && away.y == 0.0f && away.z == 0.0f)
+		away.x += 1.0f;
+
+	MsVECNormalize(away, away);
+
+	f32 push = unk19C->mHitWaterPush.get();
+	vel.x    = away.x * push;
+	vel.y    = 2.0f * (away.y * push);
+	vel.z     = away.z * push;
+	mVelocity = vel;
+
+	mLaunchVelocity = vel;
+	unk1B0          = mPosition.y;
+	mRotation.y     = -((*gpMarioAngleY * (360.0f / 65536.0f)) - 180.0f);
+}
