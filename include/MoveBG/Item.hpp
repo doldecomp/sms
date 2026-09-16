@@ -61,7 +61,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 
 public:
-	/* 0x158 */ u32 unk158;
+	/* 0x158 */ s32 unk158;
 };
 
 class TCoinEmpty : public TCoin {

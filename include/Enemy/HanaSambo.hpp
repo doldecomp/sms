@@ -69,9 +69,9 @@ public:
 
 public:
 	/* 0x194 */ void* unk194;
-	/* 0x198 */ s32 unk198;
+	/* 0x198 */ TSamboFlower* unk198;
 	/* 0x19C */ s32 unk19C;
-	/* 0x1A0 */ char unk1A0[0xC];
+	/* 0x1A0 */ JGeometry::TVec3<f32> unk1A0;
 	/* 0x1AC */ f32 unk1AC;
 	/* 0x1B0 */ u8 unk1B0;
 };
@@ -148,10 +148,10 @@ public:
 	static u8 mPollenJntIndex;
 
 public:
-	/* 0x194 */ THitActor* unk194;
+	/* 0x194 */ THanaSamboHead* unk194;
 	/* 0x198 */ THanaSamboSaveLoadParams* unk198;
 	/* 0x19C */ JGeometry::TVec3<f32> unk19C;
-	/* 0x1A8 */ s32 unk1A8;
+	/* 0x1A8 */ TSamboFlower* unk1A8;
 	/* 0x1AC */ class TMBindShadowBody* unk1AC;
 	/* 0x1B0 */ u8 unk1B0;
 	/* 0x1B4 */ JGeometry::TVec3<f32> unk1B4[4];
@@ -159,7 +159,11 @@ public:
 
 class THanaSamboHead : public THitActor {
 public:
-	THanaSamboHead(); // TODO: constructor not in mario.MAP for this TU
+	THanaSamboHead()
+	    : THitActor("ハナサンボ頭あたり")
+	{
+	}
+
 	virtual BOOL receiveMessage(THitActor*, u32);
 
 	void kill();
@@ -219,7 +223,7 @@ public:
 	/* 0x15C */ s32 unk15C;
 	/* 0x160 */ u8 unk160;
 	/* 0x161 */ char unk161[0x3];
-	/* 0x164 */ TSamboFlowerCoinUnit* unk164;
+	/* 0x164 */ s32* unk164;
 	/* 0x168 */ class TMapObjBase* unk168;
 	/* 0x16C */ TSpineEnemyParams* unk16C;
 };
@@ -279,40 +283,30 @@ public:
 	void generate(JGeometry::TVec3<f32>&);
 
 public:
-	/* 0xC */ char unkC[0x4];
-	/* 0x10 */ void* unk10;
-	/* 0x14 */ f32 unk14;
-	/* 0x18 */ f32 unk18;
-	/* 0x1C */ f32 unk1C;
-	/* 0x20 */ char unk20[0x4];
-	/* 0x24 */ f32 unk24;
-	/* 0x28 */ char unk28[0x4];
-	/* 0x2C */ s32 unk2C;
-	/* 0x30 */ s32 unk30;
-	/* 0x34 */ s32 unk34;
-	/* 0x38 */ f32 unk38;
-	/* 0x3C */ f32 unk3C;
-	/* 0x40 */ f32 unk40;
+	/* 0x10 */ class SDLModel* unk10;
+	/* 0x14 */ JGeometry::TVec3<f32> unk14;
+	/* 0x20 */ JGeometry::TVec3<f32> unk20;
+	/* 0x2C */ JGeometry::TVec3<f32> unk2C;
+	/* 0x38 */ JGeometry::TVec3<f32> unk38;
 	/* 0x44 */ u8 unk44;
 	/* 0x45 */ char unk45[0x3];
-	/* 0x48 */ void* unk48;
+	/* 0x48 */ TSamboFlowerManager* unk48;
 };
 
 class TSamboFlowerCoinUnit {
 public:
 	TSamboFlowerCoinUnit(int);
 
-	bool checkGenCoin();
+	void checkGenCoin();
 	void add(TSamboFlower*);
 
 public:
-	/* 0x0 */ s32 unk0;
-	/* 0x4 */ s32 unk4;
-	/* 0x8 */ s32 unk8;
-	/* 0xC */ s32 unkC;
+	/* 0x0 */ TSamboFlower** unk0;
+	/* 0x4 */ JGeometry::TVec3<f32> unk4;
 	/* 0x10 */ s32 unk10;
-	/* 0x14 */ char unk14[0x4];
-	/* 0x18 */ s32 unk18;
+	/* 0x14 */ s32 unk14;
+	/* 0x18 */ class TFlowerCoin* unk18;
+	/* 0x1C */ s32 unk1C;
 };
 
 #endif // ENEMY_HANASAMBO_HPP
