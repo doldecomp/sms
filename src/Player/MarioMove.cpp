@@ -2251,6 +2251,9 @@ void TMario::thinkSand()
 
 void TMario::thinkParams()
 {
+	JGeometry::TVec3<f32>();
+	JGeometry::TVec3<f32>();
+
 	mRotation.y = SHORTANGLE2DEG(mFaceAngle.y);
 	if (mInvincibilityFrames > 0)
 		mInvincibilityFrames -= 1;
