@@ -699,32 +699,30 @@ DEFINE_NERVE(TNervePoihanaTrapped, TLiveActor)
 			self->mPosition.y += 150.0f;
 			self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			if (self->unk1A8) {
-				// TODO: rand interval class
-				volatile f32 trapJumpMaxSpY
-				    = self->unk19C->mSLTrapJumpMaxSpY.get();
-				volatile f32 trapJumpMaxSpXZ
-				    = self->unk19C->mSLTrapJumpMaxSpXZ.get();
-				volatile f32 trapJumpMinSpY
+				f32 trapJumpMinSpY
 				    = self->unk19C->mSLTrapJumpMinSpY.get();
-				volatile f32 trapJumpMinSpXZ
+				f32 trapJumpMaxSpY
+				    = self->unk19C->mSLTrapJumpMaxSpY.get();
+				f32 trapJumpMaxSpXZ
+				    = self->unk19C->mSLTrapJumpMaxSpXZ.get();
+				f32 trapJumpMinSpXZ
 				    = self->unk19C->mSLTrapJumpMinSpXZ.get();
+				TMsRange<f32> trapJumpSpXZ(trapJumpMinSpXZ, trapJumpMaxSpXZ);
+				TMsRange<f32> trapJumpSpY(trapJumpMinSpY, trapJumpMaxSpY);
 
 				JGeometry::TVec3<f32> local_48;
-				const TLiveActor* groundActor
-				    = self->getGroundPlane()->getActor();
-				if (groundActor)
-					local_48 = self->mPosition - groundActor->mPosition;
+				if (self->getGroundPlane()->getActor())
+					local_48 = self->mPosition
+					           - self->getGroundPlane()->getActor()->mPosition;
 				else
 					local_48 = self->mPosition - SMS_GetMarioPos();
-				if (local_48.x == 0.0f && local_48.y == 0.0f
-				    && local_48.z == 0.0f)
+				if (local_48.x == local_48.y == local_48.z)
 					local_48.x = 1.0f;
 
 				VECNormalize(&local_48, &local_48);
-				// TODO: rand interval class
-				local_48.x *= MsRandF(trapJumpMinSpXZ, trapJumpMaxSpXZ);
-				local_48.y = MsRandF(trapJumpMinSpY, trapJumpMaxSpY);
-				local_48.z *= MsRandF(trapJumpMinSpXZ, trapJumpMaxSpXZ);
+				local_48.x *= trapJumpSpXZ.rand();
+				local_48.y = trapJumpSpY.rand();
+				local_48.z *= trapJumpSpXZ.rand();
 
 				self->mVelocity             = local_48;
 				self->mCurrentFlungVelocity = local_48;
