@@ -325,9 +325,8 @@ void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 			vec2.cross(vec1, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
 			vec2.normalize();
 
-			JGeometry::TVec3<f32> vec3;
-			vec3.cross(vec2, JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f));
-			vec3.normalize();
+			vec1.cross(vec2, JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f));
+			vec1.normalize();
 
 			unk80.mMtx[0][0] = vec2.x;
 			unk80.mMtx[1][0] = vec2.y;
@@ -337,18 +336,16 @@ void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 			unk80.mMtx[1][1] = 1.0f;
 			unk80.mMtx[2][1] = 0.0f;
 
-			unk80.mMtx[0][2] = vec3.x;
-			unk80.mMtx[1][2] = vec3.y;
-			unk80.mMtx[2][2] = vec3.z;
+			unk80.mMtx[0][2] = vec1.x;
+			unk80.mMtx[1][2] = vec1.y;
+			unk80.mMtx[2][2] = vec1.z;
 
-			vec3.scale(mDamageRadius);
+			vec1.scale(mDamageRadius);
+			vec1 += JGeometry::TVec3<f32>(mtx[0][3], mtx[1][3], mtx[2][3]);
 
-			JGeometry::TVec3<f32> tip(mtx[0][3], mtx[1][3], mtx[2][3]);
-			tip += vec3;
-
-			unk80.mMtx[0][3] = tip.x;
-			unk80.mMtx[1][3] = tip.y;
-			unk80.mMtx[2][3] = tip.z;
+			unk80.mMtx[0][3] = vec1.x;
+			unk80.mMtx[1][3] = vec1.y;
+			unk80.mMtx[2][3] = vec1.z;
 
 			JGeometry::TVec3<f32> local_8c
 			    = mOwner->getLastNode()->getVelocity();
