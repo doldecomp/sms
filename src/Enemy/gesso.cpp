@@ -1135,7 +1135,8 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 	TGesso* self = (TGesso*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		self->setGoalPath(TPathNode(SMS_GetMarioPos()));
+		TPathNode point(SMS_GetMarioPos());
+		self->setGoalPath(point);
 
 		if (self->isWandering()) {
 			JGeometry::TVec3<f32> local_80
