@@ -299,7 +299,7 @@ void THamuKuriManager::requestSerialKill(THamuKuri* param_1)
 	s32 trampleBonusNum = params->mSLTrampleBonusNum.get();
 
 	for (int i = 0; i < getActiveObjNum(); ++i) {
-		THamuKuri* obj = (THamuKuri*)unk18[i];
+		THamuKuri* obj = (THamuKuri*)TObjManager::getObj(i);
 		if (obj != param_1 && obj->isBckAnm(3)) {
 			obj->kill();
 			++trampled;
