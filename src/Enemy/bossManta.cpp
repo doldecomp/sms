@@ -1044,8 +1044,10 @@ void TBossMantaManager::loadEffects()
 		"/scene/manta/jpa/ms_man_div2.jpa", "/scene/manta/jpa/ms_man_div3.jpa",
 		"/scene/manta/jpa/ms_man_div4.jpa",
 	};
-	for (int i = 0; i < 5; ++i)
-		SMS_LoadParticle(onetimeFilenames[i], 0xF8 + i);
+	for (int i = 0; i < 5; ++i) {
+		u16 id = 0xF8 + i;
+		SMS_LoadParticle(onetimeFilenames[i], id);
+	}
 
 	static const char* loopFilenames[10] = {
 		"/scene/manta/jpa/ms_man_hit1_a.jpa",
@@ -1059,8 +1061,10 @@ void TBossMantaManager::loadEffects()
 		"/scene/manta/jpa/ms_man_hit4_a2.jpa",
 		"/scene/manta/jpa/ms_man_hit4_b.jpa",
 	};
-	for (int i = 0; i < 10; ++i)
-		SMS_LoadParticle(loopFilenames[i], 0x1C7 + i);
+	for (int i = 0; i < 10; ++i) {
+		u16 id = 0x1C7 + i;
+		SMS_LoadParticle(loopFilenames[i], id);
+	}
 }
 
 void TBossMantaManager::loadAfter()
