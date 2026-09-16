@@ -12,6 +12,7 @@
 #include <JSystem/J2D/J2DScreen.hpp>
 #include <JSystem/J2D/J2DOrthoGraph.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
+#include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/JParticle/JPAEmitterManager.hpp>
 #include <JSystem/JUtility/JUTResFont.hpp>
 #include <dolphin/gx/GXCull.h>
@@ -399,40 +400,92 @@ extern JPAEmitterManager* gpEmitterManager4D2;
 
 bool TConsoleStr::processGo(float param_1)
 {
-	if (param_1 >= 90.0f) {
-		if (param_1 >= 95.0f) {
-			if (param_1 == 95.0f) {
-				unk28[0]->setPanePosition(0x50, JUTPoint(0, 0),
-				                          JUTPoint(170, 180),
-				                          JUTPoint(340, 360));
-				unk28[1]->setPanePosition(0x50, JUTPoint(0, 0),
-				                          JUTPoint(170, 180),
-				                          JUTPoint(340, 360));
-				unk28[2]->setPanePosition(0x50, JUTPoint(0, 0),
-				                          JUTPoint(170, 180),
-				                          JUTPoint(340, 360));
-				for (int i = 0; i < 3; ++i) {
-					for (int j = 0; j < 16; ++j) {
-						// TODO: all wrong
-						// JUTRect local_88 = unk28[i]->unk24;
-					}
+	bool result = false;
 
-					JGeometry::TVec3<f32> local_a4;
-					gpEmitterManager4D2->createEmitter(local_a4, 0x1FD, nullptr,
-					                                   nullptr);
-					unk2A0[i]->mVisible = gpEmitterManager4D2->unkC8[0][0];
-				}
-			} else if (param_1 >= 175.0f) {
-				if (param_1 == 175.0f) {
-					for (int i = 0; i < 3; ++i) {
-						//
-					}
-				} else {
-					// TODO:
-				}
+	if (param_1 < 90.0f) {
+		for (int i = 0; i < 3; ++i) {
+			if (param_1 == i * 10) {
+				unk28[i]->setPanePosition(0x28, JUTPoint(0, 60),
+				                          JUTPoint(0, -40), JUTPoint(0, -40));
+				unk28[i]->getPane()->show();
 			}
 		}
+
+		for (int i = 0; i < 3; ++i) {
+			JUTRect bounds = unk28[i]->getPane()->getBounds();
+			if (unk28[i]->update()
+			    && (unk28[i]->unk14.x1 != 0 || unk28[i]->unk14.y1 != 0)) {
+				unk28[i]->setPanePosition(0x1E, JUTPoint(0, -40),
+				                          JUTPoint(0, -40), JUTPoint(0, 0));
+			}
+		}
+	} else if (param_1 >= 95.0f) {
+		if (param_1 == 95.0f) {
+			unk28[0]->setPanePosition(0x50, JUTPoint(0, 0),
+			                          JUTPoint(-170, -180),
+			                          JUTPoint(-340, -360));
+			unk28[1]->setPanePosition(0x50, JUTPoint(0, 0),
+			                          JUTPoint(-220, -220),
+			                          JUTPoint(-440, -440));
+			unk28[2]->setPanePosition(0x50, JUTPoint(0, 0),
+			                          JUTPoint(160, -180),
+			                          JUTPoint(320, -360));
+
+			for (int i = 0; i < 3; ++i) {
+				for (int j = 0; j < 16; ++j) {
+					JUTRect rect = unk28[i]->getPane()->getGlobalBounds();
+					unk34[i * 22 + j] = JUTPoint(rect.x1, rect.y1);
+				}
+
+				JUTRect bounds = unk28[i]->getPane()->getBounds();
+				JGeometry::TVec3<f32> pos(
+				    bounds.x1 + bounds.getWidth() * 0.5f,
+				    bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+				gpEmitterManager4D2->createEmitter(pos, 0x1FD, nullptr, nullptr);
+				(&unk2AC)[i] = gpEmitterManager4D2->unkC8[0][0];
+			}
+		} else if (param_1 < 175.0f) {
+			int frame = param_1;
+			for (int i = 0; i < 3; ++i) {
+				int alpha = unk28[i]->getPane()->getAlpha() - 4;
+				if (alpha < 0)
+					alpha = 0;
+
+				JUTRect rect = unk28[i]->getPane()->getGlobalBounds();
+				unk28[i]->getPane()->setAlpha(alpha);
+				unk28[i]->getPane()->resize(rect.getWidth() + 2,
+				                            rect.getHeight() + 2);
+
+				JPABaseEmitter* emitter = (JPABaseEmitter*)(&unk2AC)[i];
+				emitter->mGlobalTranslation.set(
+				    rect.x1 + rect.getWidth() * 0.5f,
+				    rect.y1 + rect.getHeight() * 0.5f, 0.0f);
+				unk28[i]->update();
+
+				if ((frame % 2) == 0) {
+					for (int j = 15; j > 0; --j)
+						unk34[i * 22 + j] = unk34[i * 22 + j - 1];
+					unk34[i * 22] = JUTPoint(rect.x1, rect.y1);
+				}
+			}
+		} else if (param_1 == 175.0f) {
+			for (int i = 0; i < 3; ++i) {
+				JUTRect rect = unk28[i]->getPane()->getBounds();
+				unk28[i]->getPane()->resize(rect.getWidth() - 80,
+				                            rect.getHeight() - 80);
+			}
+		} else {
+			for (int i = 0; i < 3; ++i) {
+				unk28[i]->getPane()->hide();
+				JPABaseEmitter* emitter = (JPABaseEmitter*)(&unk2AC)[i];
+				if (emitter != nullptr)
+					emitter->mStatus |= 1;
+			}
+			result = true;
+		}
 	}
+
+	return result;
 }
 
 bool TConsoleStr::processShineGet(int param_1)
