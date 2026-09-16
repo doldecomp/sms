@@ -1189,7 +1189,7 @@ bool THamuKuri::isResignationAttack()
 bool THamuKuri::isHitValid(u32 param_1)
 {
 	if (isBckAnm(3)) {
-		getManager()->requestSerialKill(this);
+		((THamuKuriManager*)mManager)->requestSerialKill(this);
 		return true;
 	}
 
