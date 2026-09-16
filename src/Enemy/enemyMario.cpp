@@ -1717,8 +1717,8 @@ void TEnemyMario::drawHPMeter(MtxPtr viewMtx)
 
 void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	MActor* emarioActor   = nullptr;
 	J3DModel* emarioModel = nullptr;
+	MActor* emarioActor   = nullptr;
 
 	if (mSpecialModel == nullptr) {
 		emarioActor = mEMario->getMActor();
