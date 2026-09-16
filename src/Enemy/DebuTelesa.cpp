@@ -14,6 +14,19 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+static const int unk1490[]  = { 0, 0, 0 };
+static const char unk1937[] = "メモリが足りません\n";
+
+static const char* MtxCalcTypeName[] = {
+	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
+	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
+	"MActorMtxCalcType_MotionBlend モーションブレンド",
+	"MActorMtxCalcType_User ユーザー定義",
+};
+
+static const int unk2602[] = { 0, 0, 0 };
+static const int unk2604[] = { 0x3f800000, 0x3f800000, 0x3f800000 };
+
 static const char* DebuTelesa_bastable[] = {
 	"/scene/DebuTelesa/bas/debuTelesa_wait.bas",
 };
