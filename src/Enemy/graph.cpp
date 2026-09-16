@@ -860,13 +860,13 @@ TGraphTracer::TGraphTracer()
 void TGraphTracer::setParamFromGraph()
 {
 	if (mCurrIdx >= 0) {
-		unk10 = (u16)unk0->unk0[mCurrIdx].unk0->mPitch * (1.0f / 65535.0f);
+		unk10 = (u16)getCurrent().getRailNode()->mPitch * (1.0f / 65535.0f);
 	} else {
 		unk10 = 0.0f;
 	}
 
 	if (mPrevIdx >= 0)
-		unkC = (u16)unk0->unk0[mPrevIdx].unk0->mYaw * 0.01f;
+		unkC = (u16)getPrevious().getRailNode()->mYaw * 0.01f;
 }
 
 void TGraphTracer::setTo(int node_idx)
