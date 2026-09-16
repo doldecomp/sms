@@ -460,12 +460,15 @@ void TSmallEnemy::moveObject()
 	f32 damageRadius = getSaveParams()->getSLDamageRadius();
 	f32 damageHeight = getSaveParams()->getSLDamageHeight();
 
-	f32 scale = mBodyScale;
+	attackRadius *= mBodyScale;
+	attackHeight *= mBodyScale;
+	damageRadius *= mBodyScale;
+	damageHeight *= mBodyScale;
 
-	mAttackRadius = attackRadius * scale;
-	mAttackHeight = attackHeight * scale;
-	mDamageRadius = damageRadius * scale;
-	mDamageHeight = damageHeight * scale;
+	mAttackRadius = attackRadius;
+	mAttackHeight = attackHeight;
+	mDamageRadius = damageRadius;
+	mDamageHeight = damageHeight;
 
 	calcEntryRadius();
 	ensureTakeSituation();
