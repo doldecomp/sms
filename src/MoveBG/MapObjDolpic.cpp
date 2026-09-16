@@ -274,7 +274,8 @@ BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 
 		unk154 = unk154 - 1;
 
-		unk138.a = (u8)(unk154 * 100 / 1000);
+		int alpha = unk154 * 100 / 1000;
+		unk138.a = (u8)alpha;
 
 		if (unk154 == 0) {
 			if (unk13C == 0) {
