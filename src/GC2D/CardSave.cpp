@@ -1376,7 +1376,10 @@ s8 TCardSave::waitForAnyKeyBM(TEProgress param_1)
 	switch (unk10) {
 	case 0:
 		setMessage(unk12C, 0x200, getCurMessageID());
-		setMessage(unk130, 0x200, getCurMessageID());
+		{
+			u16 messageID = getCurMessageID();
+			setMessage(unk130, 0x200, messageID);
+		}
 
 		unkF8->hide();
 		unk128->hide();
