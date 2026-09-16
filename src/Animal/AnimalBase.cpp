@@ -303,9 +303,8 @@ void TAnimalBase::execWalk(bool moving)
 	getRotationFlyToDir(&mRotation, diff, marchSpeed, turnSpeed);
 
 	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
-	JGeometry::TVec3<f32> tmp;
-	// TODO: quaternions are still wrong
-	quat.rotate(JGeometry::TVec3<f32>(0.0f, 0.0f, marchSpeed), tmp);
+	JGeometry::TVec3<f32> tmp(0.0f, 0.0f, marchSpeed);
+	quat.rotate(tmp, tmp);
 	mLinearVelocity = tmp;
 }
 
