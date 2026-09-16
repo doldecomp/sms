@@ -2843,7 +2843,15 @@ void TGCConsole2::drawWaterBack()
 		f32 hiddenRatio = 1.0f - pressure / pressureMax;
 		int fillTop     = bounds.y1 + (int)(hiddenRatio * bounds.getHeight());
 
-		drawGaugeQuadF32(bounds, bounds.y1, fillTop, 0.0f, hiddenRatio);
+		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+		GXPosition2f32((f32)bounds.x1, (f32)bounds.y1);
+		GXTexCoord2f32(0.0f, 0.0f);
+		GXPosition2f32((f32)bounds.x2, (f32)bounds.y1);
+		GXTexCoord2f32(1.0f, 0.0f);
+		GXPosition2f32((f32)bounds.x2, (f32)fillTop);
+		GXTexCoord2f32(1.0f, hiddenRatio);
+		GXPosition2f32((f32)bounds.x1, (f32)fillTop);
+		GXTexCoord2f32(0.0f, hiddenRatio);
 
 		if (!unk50 && pressure != 0.0f && !unk48) {
 			unk14 = 1;
@@ -2857,7 +2865,17 @@ void TGCConsole2::drawWaterBack()
 			if (unk30C >= 25)
 				unk30C = 0;
 
-			u32 color = getPressureFlashColor(unk30C);
+			u32 color = 0xff3f3f00;
+			if (unk30C < 10) {
+				color += ((u32)(s16)(s32)((f32)unk30C * -6.3f)) << 8;
+				color += ((u32)(s32)((f32)unk30C * 19.2f)) << 16;
+			} else if (unk30C < 15) {
+				color = 0xffff0000;
+			} else if (unk30C < 25) {
+				u8 fade = 25 - unk30C;
+				color += ((u32)(s16)(s32)((f32)fade * -6.3f)) << 8;
+				color += ((u32)(s32)((f32)fade * 19.2f)) << 16;
+			}
 			GXSetTevColor(GX_TEVREG0, JUtility::TColor(color + 0xc8));
 			GXSetTevColor(GX_TEVREG1, JUtility::TColor(color));
 			++unk30C;
@@ -2868,18 +2886,32 @@ void TGCConsole2::drawWaterBack()
 			GXSetTevColor(GX_TEVREG1, JUtility::TColor(0xff3f3f00));
 		}
 
-		drawGaugeQuadF32(bounds, fillTop, bounds.y2, hiddenRatio, 1.0f);
-	} else if (unk48) {
-		if (unk30C != 0) {
+		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+		GXPosition2f32((f32)bounds.x1, (f32)fillTop);
+		GXTexCoord2f32(0.0f, hiddenRatio);
+		GXPosition2f32((f32)bounds.x2, (f32)fillTop);
+		GXTexCoord2f32(1.0f, hiddenRatio);
+		GXPosition2f32((f32)bounds.x2, (f32)bounds.y2);
+		GXTexCoord2f32(1.0f, 1.0f);
+		GXPosition2f32((f32)bounds.x1, (f32)bounds.y2);
+		GXTexCoord2f32(0.0f, 1.0f);
+	} else {
+		if (unk48 && unk30C != 0) {
 			unk274->setPanePosition(90, JUTPoint(0, 0), JUTPoint(0, -100),
 			                        JUTPoint(0, 0));
 			unk30C = 0;
 			unk49  = 1;
 		}
 
-		drawGaugeQuadF32(bounds, bounds.y1, bounds.y2, 0.0f, 1.0f);
-	} else {
-		drawGaugeQuadF32(bounds, bounds.y1, bounds.y2, 0.0f, 1.0f);
+		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+		GXPosition2f32((f32)bounds.x1, (f32)bounds.y1);
+		GXTexCoord2f32(0.0f, 0.0f);
+		GXPosition2f32((f32)bounds.x2, (f32)bounds.y1);
+		GXTexCoord2f32(1.0f, 0.0f);
+		GXPosition2f32((f32)bounds.x2, (f32)bounds.y2);
+		GXTexCoord2f32(1.0f, 1.0f);
+		GXPosition2f32((f32)bounds.x1, (f32)bounds.y2);
+		GXTexCoord2f32(0.0f, 1.0f);
 	}
 
 	if (unk334[unk330]->isVisible())
