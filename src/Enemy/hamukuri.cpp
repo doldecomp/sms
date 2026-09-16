@@ -919,7 +919,8 @@ void THamuKuri::selectCapHolder()
 		sendAttackMsgToMario();
 	} else {
 		sendAttackMsgToMario();
-		if (getManager()->unk70 == nullptr) {
+		THamuKuriManager* manager = getManager();
+		if (manager->unk70 == nullptr) {
 			TMapObjBase* obj = gpItemManager->makeObjAppear(
 			    mPosition.x, mPosition.y, mPosition.z, 0x2000003C, false);
 
@@ -2234,7 +2235,20 @@ void TDoroHamuKuri::attackToMario()
 			SMSRumbleMgr->start(0x15, 5, (f32*)nullptr);
 		}
 	} else {
-		THamuKuri::selectCapHolder();
+		if (!gpMarioOriginal->isWearingCap()) {
+			sendAttackMsgToMario();
+		} else {
+			sendAttackMsgToMario();
+			if (getManager()->unk70 == nullptr) {
+				TMapObjBase* obj = gpItemManager->makeObjAppear(
+				    mPosition.x, mPosition.y, mPosition.z, 0x2000003C, false);
+
+				if (obj) {
+					offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
+					makeCapFly(obj);
+				}
+			}
+		}
 	}
 }
 
