@@ -130,7 +130,47 @@ DEFINE_NERVE(TNerveTobiPukuSwimWander, TLiveActor)
 DEFINE_NERVE(TNerveTobiPukuReturnLaunch, TLiveActor) { return FALSE; }
 
 // TODO: incorrect size. Map records 0x1a8 (424 bytes).
-DEFINE_NERVE(TNerveTobiPukuPrepareFly, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveTobiPukuPrepareFly, TLiveActor)
+{
+	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		f32 angle = puku->mLaunchRot.x;
+		while (angle >= 360.0f)
+			angle -= 360.0f;
+		while (angle < 0.0f)
+			angle += 360.0f;
+		puku->mRotStep = (angle - puku->mRotation.x) / 60.0f;
+	}
+
+	f32 x = puku->mPosition.x;
+	puku->mPosition.x
+	    = (1.0f / 60.0f) * (puku->mLaunchPad->mPosition.x - x) + x;
+	f32 y = puku->mPosition.y;
+	puku->mPosition.y
+	    = (1.0f / 60.0f) * (puku->mLaunchPad->mPosition.y - y) + y;
+	f32 z = puku->mPosition.z;
+	puku->mPosition.z
+	    = (1.0f / 60.0f) * (puku->mLaunchPad->mPosition.z - z) + z;
+
+	f32 spread = puku->unk1EC - 3.0f;
+	if (spread > 180.0f)
+		spread = 180.0f;
+	else if (spread < 0.0f)
+		spread = 0.0f;
+	puku->unk1EC = spread;
+
+	puku->mRotation.x += puku->mRotStep;
+
+	if (spine->getTime() == 50.0f)
+		puku->setJumpStartAnm();
+
+	if (spine->getTime() > 60.0f) {
+		puku->mLaunchPad->forceLaunch(puku);
+		puku->reset();
+	}
+	return FALSE;
+}
 
 // TODO: incorrect size. Map records 0x1c8 (456 bytes).
 DEFINE_NERVE(TNerveTobiPukuBound, TLiveActor)

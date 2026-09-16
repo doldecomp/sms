@@ -18,6 +18,8 @@ public:
 	/* 0x368 */ u8 unk368[0x390 - 0x368];
 };
 
+class TTobiPukuLaunchPad;
+
 class TTobiPuku : public TWalkerEnemy {
 public:
 	TTobiPuku(const char* name)
@@ -79,10 +81,11 @@ public:
 	/* 0x1B4 */ JGeometry::TVec3<f32> mLaunchRot;
 	/* 0x1C0 */ u8 unk1C0[0x1D0 - 0x1C0];
 	/* 0x1D0 */ JGeometry::TVec3<f32> mLaunchVelocity;
-	/* 0x1DC */ u8 unk1DC[0x1E0 - 0x1DC];
+	/* 0x1DC */ TTobiPukuLaunchPad* mLaunchPad;
 	/* 0x1E0 */ f32 mSwimBaseY;
-	/* 0x1E4 */ u8 unk1E4[0x1F0 - 0x1E4];
-	/* 0x1F0 */ f32 unk1F0;
+	/* 0x1E4 */ u8 unk1E4[0x1EC - 0x1E4];
+	/* 0x1EC */ f32 unk1EC;
+	/* 0x1F0 */ f32 mRotStep;
 	/* 0x1F4 */ u8 unk1F4[0x1FC - 0x1F4];
 };
 
@@ -144,6 +147,8 @@ public:
 	}
 
 	virtual ~TTobiPukuLaunchPad();
+
+	void forceLaunch(TTobiPuku*);
 };
 
 class TMoePukuLaunchPad : public TTobiPukuLaunchPad {
