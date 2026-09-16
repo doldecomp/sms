@@ -1733,16 +1733,26 @@ void TMario::checkCurrentPlane()
 
 		// TODO: do we have to use a TPartition here after all?
 		if (record.mResultWallsNum == 2
-		    && record.mResultWalls[0]->getNormal().squared() < -0.9f) {
+		    && record.mResultWalls[0]->getNormal().y
+		               * record.mResultWalls[1]->getNormal().y
+		               + record.mResultWalls[0]->getNormal().x
+		                     * record.mResultWalls[1]->getNormal().x
+		               + record.mResultWalls[0]->getNormal().z
+		                     * record.mResultWalls[1]->getNormal().z
+		           < -0.9f) {
 
 			JGeometry::TVec3<f32> normal1 = record.mResultWalls[0]->getNormal();
 			JGeometry::TVec3<f32> normal2 = record.mResultWalls[1]->getNormal();
 
-			f32 planeDist1 = record.mResultWalls[0]->getPlaneDistance();
-			f32 planeDist2 = record.mResultWalls[1]->getPlaneDistance();
+			JGeometry::TPartition3<f32> partition1(mPosition, normal1);
+			JGeometry::TPartition3<f32> partition2(mPosition, normal2);
 
-			f32 dist1 = normal1.dot(mPosition) + planeDist1;
-			f32 dist2 = normal2.dot(mPosition) + planeDist2;
+			f32 dist1
+			    = partition1.mDist
+			      + record.mResultWalls[0]->getPlaneDistance();
+			f32 dist2
+			    = partition2.mDist
+			      + record.mResultWalls[1]->getPlaneDistance();
 
 			if ((record.mResultWalls[0]->getActor() != nullptr
 			     && record.mResultWalls[0]->getActor()->getActorType()
