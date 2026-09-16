@@ -202,10 +202,10 @@ bool CPolarSubCamera::execRoofCheck_(Vec param_1)
 	}
 
 	if (skipCheck || should_clip_fabricated(roof)) {
-		if (mCurrentTarget.mPosition.y
-		    > roofHeight - mSaveEx->mSLRoofHeight.get()) {
-			mCurrentTarget.mPosition.y
-			    = roofHeight - mSaveEx->mSLRoofHeight.get();
+		f32 currentY  = mCurrentTarget.mPosition.y;
+		f32 roofLimit = roofHeight - mSaveEx->mSLRoofHeight.get();
+		if (currentY > roofLimit) {
+			mCurrentTarget.mPosition.y = roofLimit;
 			moved = true;
 		}
 	}
