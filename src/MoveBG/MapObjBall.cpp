@@ -5,6 +5,7 @@
 #include <Player/MarioAccess.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 
@@ -73,6 +74,42 @@ void TMapObjBall::hold(TTakeActor* param_1)
 	mVelocity.set(0.0f, 0.0f, 0.0f);
 }
 
+void TMapObjBall::kicked()
+{
+	// Only a downward or level kick does anything.
+	JGeometry::TVec3<f32> vel(mVelocity);
+	if (JGeometry::TVec3<f32>(vel).y > 0.0f)
+		return;
+
+	if (JGeometry::TVec3<f32>(vel).y == 0.0f) {
+		mVelocity.y = unk178;
+	} else {
+		mVelocity.y = unk174 * SMS_GetMarioSpeedY()
+		    - unk160 * JGeometry::TVec3<f32>(vel).y;
+	}
+
+	mVelocity.x += unk170 * SMS_GetMarioSpeedX();
+	mVelocity.z += unk170 * SMS_GetMarioSpeedZ();
+
+	// A ball kicked straight down would otherwise sit still, so give it a
+	// random nudge in XZ.
+	f32 minSpeed = mMapObjData->mPhysical->unk4->unkC;
+	if (abs(mVelocity.x) < minSpeed && abs(mVelocity.z) < minSpeed) {
+		mVelocity.x = 2.0f * MsRandF() - 1.0f;
+		mVelocity.z = 2.0f * MsRandF() - 1.0f;
+	}
+
+	unk194 = 10;
+	offLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
+	SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+
+	if (!isActorType(0x400000D0)) {
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN, &mPosition, 0,
+		                                nullptr, 0, 4);
+	}
+}
+
 u32 TMapObjBall::touchWater(THitActor* param_1)
 {
 	if (isState(STATE_HOLDING) || isState(STATE_APPEARING))
@@ -91,6 +128,30 @@ u32 TMapObjBall::touchWater(THitActor* param_1)
 
 	offLiveFlag(LIVE_FLAG_UNK10);
 	return 1;
+}
+
+void TMapObjBall::touchActor(THitActor* param_1)
+{
+	// unk194 is a short cooldown after a kick, so one kick cannot chain.
+	if (unk194 != 0)
+		return;
+	if (isState(STATE_HOLDING))
+		return;
+	if (isHideObj(param_1))
+		return;
+	if (param_1->isActorType(0x08000083)
+	    || param_1->isActorType(0x400000CA)
+	    || param_1->isActorType(0x400000CC))
+		return;
+
+	if (param_1->isActorType(0x80000001)) {
+		if (!isActorType(0x400000D0) && SMS_GetMarioSpeedY() != 0.0f) {
+			kicked();
+			return;
+		}
+	}
+
+	boundByActor(param_1);
 }
 
 void TMapObjBall::checkWallCollision(JGeometry::TVec3<f32>* param_1)
