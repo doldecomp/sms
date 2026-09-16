@@ -49,6 +49,25 @@ The last two differ only in whether the 1/0 lands in `r0` and is widened, or lan
 
 Working order for a batch of such accessors: get one exact, then apply the same shape to the rest. Here that took 30 functions from 0 to exact in three edits.
 
+## The frame-gap mechanism: uninitialised locals, batch 73
+
+**A near-exact function that is N bytes short of its frame has N bytes of *uninitialised* locals in the original that the optimiser never touches.** MWCC reserves their slots and emits no code for them.
+
+Demonstrated on `THitActor::calcEntryRadius`, a leaf function with no calls, no FPR saves and 40 bytes of reserved stack that nothing references:
+
+- Adding `Mtx experiment;` (48 bytes, uninitialised) grew the frame from 0x18 to 0x48 and left the match at 98.3% with **no new instructions**.
+- Replacing it with 40 bytes made the frame **exactly** match the target's 0x40.
+
+This also explains the earlier contradiction. Adding *initialised* copies to `TEggGenerator::control` made MWCC emit the copies and the score collapsed, which looked like evidence against the locals theory. The distinction is initialisation: `JGeometry::TVec3<f32> v(mPosition);` emits stores, `JGeometry::TVec3<f32> v;` does not.
+
+**How to use this.** When a body is instruction-perfect but short by N:
+
+1. N is the total size of scratch locals the original declared and never used on this path. Common sizes: `Mtx` 48, `TVec3<f32>` 12, `TQuat4<f32>` 16.
+2. Work out what the function would plausibly have declared -- a scratch matrix for an unused branch, a vector it computes only under a condition -- and declare it **with a meaningful name**.
+3. This is recovering real source, not padding. A named `Mtx mtx;` that the original had is legitimate; a `char pad[40]` is the prohibited trick. If the plausible declaration cannot be identified, leave the gap and say so rather than inserting filler.
+
+Six units are a single such function from being source-linkable, so this is the highest-value lever currently known on the link metric.
+
 ## Units one function away from linking, batch 72
 
 Six game units are a single unmatched function away from being source-linkable. These are the cheapest available gains on the **link** metric, which byte-matching alone never moves:
