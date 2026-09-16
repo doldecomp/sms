@@ -1616,7 +1616,8 @@ void TEnemyMario::checkController(JDrama::TGraphics*)
 	unk108->mFrameInput = unk108->mInput & (unk108->mInput ^ previousInput);
 
 	f32 stickRatio = unk108->mStickDist * (1.0f / 64.0f);
-	mIntendedMag   = 64.0f * (stickRatio * stickRatio) * 0.5f;
+	stickRatio *= stickRatio;
+	mIntendedMag = 64.0f * stickRatio * 0.5f;
 	if (mIntendedMag > 0.0f)
 		mIntendedYaw = matan(-unk108->mStickV, unk108->mStickH);
 	else
