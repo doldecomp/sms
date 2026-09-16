@@ -360,9 +360,8 @@ f32 TMapWire::getPosInWire(const JGeometry::TVec3<f32>& point) const
 	JGeometry::TVec3<f32> perpPoint
 	    = MsPerpendicFootToLineR(flatStart, flatEnd, point);
 
-	f32 totalLength   = (flatEnd - flatStart).length();
-	f32 partialLength = (perpPoint - flatStart).length();
-	return partialLength / totalLength;
+	return JGeometry::TVec3<f32>(perpPoint - flatStart).length()
+	       / JGeometry::TVec3<f32>(flatEnd - flatStart).length();
 }
 
 /**
