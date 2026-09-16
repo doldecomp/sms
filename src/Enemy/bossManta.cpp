@@ -890,8 +890,11 @@ void TBossMantaManager::TMantaMessageState::update()
 TBossMantaAdditionalCollisionSet::TBossMantaAdditionalCollisionSet()
 {
 	unkC = nullptr;
-	for (int i = 0; i < 3; ++i)
-		unk0[i] = new TBossMantaAdditionalCollision("マンタ追加コリジョン");
+	TBossMantaAdditionalCollision* collision;
+	for (int i = 0; i < 3; ++i) {
+		collision = new TBossMantaAdditionalCollision("マンタ追加コリジョン");
+		unk0[i] = collision;
+	}
 }
 
 void TBossMantaAdditionalCollisionSet::adapt(TBossManta* manta)
