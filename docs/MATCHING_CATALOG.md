@@ -1565,3 +1565,50 @@ twice in the original: once before the nerve's static-init block and once
 after it, because `__register_global_object` is a call that invalidates the
 cached load. Caching it in a local (`TPopo* popo = mPopo;`) removes the
 second load and does not match; keep the member access at both sites.
+
+## The inliner gives up on a big body four levels deep
+
+Probed with the game flags (`-O4,p -inline auto,deferred`): a small inline
+function is expanded through four levels of wrappers and left as a call at
+the fifth; a body the size of `std::fmodf` (about twenty instructions, two
+runtime calls) is expanded through three levels and left as a weak
+out-of-line copy at the fourth. Declaration form (namespace inline, class
+static, template specialisation) makes no difference, and neither does the
+caller's size: eighty `normalize()` expansions in one function all inline.
+That is why `TUtil<f32>::inv_sqrt` is always a call (it sits under
+`normalize` -> `setLength`) while `sqrt` under `length()` is expanded.
+
+The binary calls `std::fmodf` and `TUtil<f32>::mod` out of line at every site
+(`koopajr.cpp`, `MapObjCorona.cpp`, `wireTrap.cpp`) and the two weak copies
+have the same 0x5c body: compare magnitudes, return `x` if `|y| > |x|`, else
+`x - y * (f32)(s64)(u64)(x / y)`. `TUtil<f32>::mod` carries that body in
+`JGUtil.hpp`. `std::fmodf` in `math.h` keeps the `::fmod` wrapper because
+writing the body there inlines it everywhere and scores worse; the original
+must reach it through more wrapper levels than we have found.
+
+## Smaller rules from `koopajr`
+
+- `TParamT::get()` returns a reference, so `f(getSaveParams()->a.get(),
+  getSaveParams()->b.get())` defers both loads to the call. The original
+  loads each value as soon as its `getSaveParam()` returns; copy each into a
+  local first (`TKoopaJrSubmarine::init` 87.8 -> 94.4).
+- `new T(args...)` evaluates `operator new` before any argument, so param
+  fetches used as ctor arguments must not be hoisted into locals above the
+  `new` (the opposite of the rule above).
+- `JGeometry::min(a, b)` is `a >= b ? b : a` next to the existing `max`; a
+  clamp written as `x = min(limit, x)` gives `fcmpo limit, x; cror eq,gt,eq`
+  with `x` loaded before the param fetch, which `if (x > limit) x = limit`
+  never does (`moveSwing` 64 -> 88.7).
+- A `u8`-returning getter makes the caller mask with `clrlwi.`; if the
+  original compares the register directly, the getter returned `int`
+  (`TBathtub::getNumKillerLaunchable/Burstable`).
+- `MTXCopy(mtx, getModel()->getBaseTRMtx())` evaluates `getModel()` first;
+  when the original calls the source-matrix getter first, hold its result in
+  a local before the copy.
+- A quaternion built with `setEulerY` / `setEulerZ` / `setEulerX` and
+  multiplied with the two-argument `mul` reproduces the zero-product terms
+  the original keeps (`0 * cos`, `sin * 0`); do not simplify them away.
+- `atan2f(v.x, v.z)` loads `x` first; the original loads `z` first, which
+  copying both into locals (`z` declared first) reproduces.
+- `0.5f * x` and `x * 0.5f` both compile to `fmuls x, 0.5` with the constant
+  second only when written constant-first (`makeCollisionPositions`).
