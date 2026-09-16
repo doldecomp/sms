@@ -1717,8 +1717,9 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 			unk2D8[i]->hide();
 			unk2FC[i]->hide();
 			unk2A4[i]->getPane()->show();
-			unk2A4[i]->setCenteredSize(30, unk2B0.getWidth(),
-			                           unk2B0.getHeight(), 0, 0);
+			TExPane* pane = unk2A4[i];
+			pane->setCenteredSize(30, unk2B0.getWidth(), unk2B0.getHeight(), 0,
+			                      0);
 			unk32C[i]->hide();
 		}
 
@@ -1749,7 +1750,8 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 
 					unk2CC[i]->hide();
 
-					u16 score = unk40[i].unk1C > 999 ? 999 : unk40[i].unk1C;
+					int tmp = unk40[i].unk1C;
+					u16 score = tmp > 999 ? 999 : unk40[i].unk1C;
 					if (score < 100) {
 						unk2E4[i]->changeTexture(
 						    unkC8[score / 10]->getTexInfo(), 0);
@@ -1760,7 +1762,7 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 					} else {
 						unk308[i]->changeTexture(
 						    unkC8[score / 100]->getTexInfo(), 0);
-						score -= int(score * 0.01f) * 100;
+						score = score - int(score * 0.01f) * 100;
 						unk314[i]->changeTexture(
 						    unkC8[score / 10]->getTexInfo(), 0);
 						unk320[i]->changeTexture(
@@ -1812,7 +1814,7 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 			if (param_3) {
 				for (int i = 0; i < 3; ++i)
 					if (i != unkB0 || unk1C == PROGRESS_UNK1C
-					    || unk40[i].unk0 == 1)
+					    || unk40[unkB0].unk0 == 1)
 						unk2A4[i]->getPane()->hide();
 			}
 			unk10 = 5;
@@ -1833,8 +1835,9 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 	}
 
 	for (int i = 0; i < 3; ++i) {
-		u32 uVar5       = unk338;
-		J2DPicture* pic = unk32C[i];
+		u32 uVar5          = unk338;
+		J2DPicture* tmpPic = unk32C[i];
+		J2DPicture* pic    = tmpPic;
 		if (uVar5 % 72 == 0) {
 			if ((uVar5 / 72) % 2 == 0) {
 				pic->setBlendKonstColor(0, 1, 0, 0);
