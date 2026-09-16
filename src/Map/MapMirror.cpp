@@ -232,10 +232,10 @@ bool TMirrorModelManager::isUpperThanMirrorPlane(
 	const JGeometry::TVec3<f32>* normal
 	    = unk18 != -1 ? &unk1C[unk18]->getNormalVec() : nullptr;
 
-	f32 d   = unk18 != -1 ? unk1C[unk18]->getD() : 0.0f;
-	f32 dot = normal->dot(param_1);
-
-	return dot + d < -50.0f ? false : true;
+	return normal->dot(param_1) + (unk18 != -1 ? unk1C[unk18]->getD() : 0.0f)
+	               < -50.0f
+	           ? false
+	           : true;
 }
 
 bool TMirrorModelManager::isInMirror(JGeometry::TVec3<f32>& param_1) const
