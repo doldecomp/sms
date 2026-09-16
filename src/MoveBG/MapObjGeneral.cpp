@@ -544,8 +544,9 @@ void TMapObjGeneral::bind()
 void TMapObjGeneral::control()
 {
 	TMapObjBase::control();
-	if (checkMapObjFlag(MAP_OBJ_FLAG_CAN_SINK) && isState(STATE_NORMAL)
-	    && !isAirborne() && isPollutedGround(mPosition))
+	BOOL canSink = checkMapObjFlag(MAP_OBJ_FLAG_CAN_SINK);
+	if (canSink && isState(STATE_NORMAL) && !isAirborne()
+	    && isPollutedGround(mPosition))
 		sink();
 
 	work();
