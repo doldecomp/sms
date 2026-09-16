@@ -370,6 +370,8 @@ void MSoundSE::construct()
 		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
 		// clang-format on
 	}
+
+	(void)180.0f;
 }
 
 u32 MSoundSE::getRandomID(u32 id)
