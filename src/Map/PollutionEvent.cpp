@@ -4,6 +4,12 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+TPollutionEventModelStampMario::~TPollutionEventModelStampMario() { }
+
+TPollutionEventModelStamp::~TPollutionEventModelStamp() { }
+
+TPollutionEventMaze::~TPollutionEventMaze() { }
+
 void TPollutionTest::registerEvent(JDrama::TViewObj*) { }
 
 void TPollutionTest::loadAfter() { JDrama::TViewObj::loadAfter(); }
@@ -31,3 +37,5 @@ void TPollutionEventAreaObj::perform(u32 cue, JDrama::TGraphics* graphics) { }
 void TPollutionEventAreaObj::init(const char*) { }
 
 TPollutionEventAreaObj::TPollutionEventAreaObj(const char*) { }
+
+TPollutionEventAreaObj::~TPollutionEventAreaObj() { }

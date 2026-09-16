@@ -8,7 +8,23 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 55 — THPPlayer linked; frame gap measured
+## Latest checkpoint: batch 56 — PollutionEvent linked after four batches deferred
+
+`Map/PollutionEvent.cpp` links byte-identically at last, deferred since batch 2 as "emits a destructor before loadAfter".
+Game files 89 -> 90, **3.386243% -> 3.428571% source-linked**.
+
+Cause: the four event classes were declared with no base, no virtual functions and no destructor, but the map gives each a vtable of 0xa0-0xa4 and a virtual destructor.
+Without them the compiler flushed its weak queue early, emitting `TPollutionTest::__dt` and `perform` *before* `loadAfter`; the original emits them after.
+Declaring the four destructors restores the original emission order, and placing them to match the map (ModelStampMario, ModelStamp and Maze first in source; AreaObj last, since emission reverses source order) makes `validate-symbol-order` report **order matches the map**.
+
+Still missing from that unit: the four `@32@` destructor thunks and `TVec3<f>::set`, all UNUSED.
+The thunks imply multiple inheritance with a second base at offset 0x20, which is unreconstructed; they are deadstripped so the link is unaffected.
+
+`Camera/CameraInbetween.cpp` remains the last fully matching unlinked object. It fails differently, shifting the DOL header at byte 204, so a section size changes rather than code content.
+
+Game **26.15378% matched / 3.428571% source-linked**; `cmp` and SHA-1 verified. No gameplay test performed.
+
+## Verified checkpoint: batch 55 — THPPlayer linked; frame gap measured
 
 The three fully matching THPPlayer objects link cleanly now that the library restriction is lifted: game files 86 -> 89, **3.254321% -> 3.386243% source-linked**, DOL still byte-identical.
 
