@@ -32,6 +32,13 @@ static const char* MtxCalcTypeName[] = {
 const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
 const char cDirtyTexName[]  = "H_ma_rak_dummy";
 
+// Literals emitted by an inlined dependency in the original build.
+static const char dummyCameraBckString1[]
+    = "/common/camera/camera_demo_shine_get_inside";
+static const char dummyCameraBckString2[]
+    = "/common/camera/camera_demo_shine_get_outside";
+static const char dummyCameraBckString3[] = "/common/camera/camera_demo_gate_in";
+
 CPolarSubCamera* gpCamera;
 
 const char* cStartCamName          = "開始カメラ";
