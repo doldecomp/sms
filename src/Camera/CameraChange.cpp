@@ -283,14 +283,20 @@ void CPolarSubCamera::changeCamModeSub_(int mode, int tween_frames, bool force)
 {
 	bool bVar11 = false;
 	if (mode == -1) {
-		mode   = unk60->getThing();
+		CameraUnk60Struct* pTVar2 = unk60;
+		int* pTVar3;
+		if (pTVar2->unk4 <= 0) {
+			pTVar3 = pTVar2->unk8;
+		} else {
+			int iVar2 = pTVar2->unk4 - 1;
+			pTVar3    = pTVar2->unk8;
+			pTVar3 += iVar2;
+		}
+		mode   = *pTVar3;
 		bVar11 = true;
 	}
 
-	if (!force && mMode == mode)
-		return;
-
-	if (tween_frames < 0)
+	if ((!force && mMode == mode) || tween_frames < 0)
 		return;
 
 	if (tween_frames == 0)
