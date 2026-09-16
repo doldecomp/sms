@@ -368,12 +368,10 @@ void TEnemyManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	int num = getActiveObjNum();
-	if (cue & CUE_MOVE) {
-		for (int i = num; i < mObjNum; ++i)
-			getObj(i)->onLiveFlag(LIVE_FLAG_DEAD);
-	} else {
-		for (s32 i = num; i < mObjNum; ++i)
-			; // TODO: debug print or something?
+	for (int i = num; i < mObjNum; ++i) {
+		TSpineEnemy* enemy = getObj(i);
+		if (cue & CUE_MOVE)
+			enemy->onHitFlag(HIT_FLAG_NO_COLLISION);
 	}
 
 	for (int i = 0; i < num; ++i)
