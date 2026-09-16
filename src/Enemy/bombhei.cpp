@@ -1,6 +1,3 @@
-class TBombHei {
-public:
-	static unsigned char mSerialBomb;
-};
+#include <Enemy/BombHei.hpp>
 
-unsigned char TBombHei::mSerialBomb = 1;
+u8 TBombHei::mSerialBomb = 1;
