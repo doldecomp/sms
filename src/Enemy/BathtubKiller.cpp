@@ -773,7 +773,15 @@ void TBathtubKillerManager::loadAfter()
 
 void TBathtubKillerManager::generateMushroom(JGeometry::TVec3<f32>) { }
 
-int TBathtubKillerManager::countActiveKillers() { return 0; }
+int TBathtubKillerManager::countActiveKillers()
+{
+	int result = 0;
+	for (int i = 0; i < getActiveObjNum(); ++i)
+		if (!getObj(i)->checkLiveFlag(LIVE_FLAG_DEAD))
+			++result;
+
+	return result;
+}
 
 int TBathtubKillerManager::countActiveShineKillers() { return 0; }
 
