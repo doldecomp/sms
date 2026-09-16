@@ -1,6 +1,7 @@
 #include "MoveBG/MapObjCorona.hpp"
 #include "MoveBG/MapObjBase.hpp"
 #include <Camera/CameraShake.hpp>
+#include <Enemy/BathtubKiller.hpp>
 #include <GC2D/GCConsole2.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <M3DUtil/MActor.hpp>
@@ -9,6 +10,8 @@
 #include <MSound/MSound.hpp>
 #include <Player/Mario.hpp>
 #include <Player/MarioAccess.hpp>
+#include <Player/MarioStatus.hpp>
+#include <Player/WaterGun.hpp>
 #include <System/MarDirector.hpp>
 #include <System/Particles.hpp>
 
@@ -298,7 +301,46 @@ void TBathtub::removeCollisions_() { } // Unused
 
 void TBathtub::startDemo() { }
 
-bool TBathtub::allowsTumble() const { return false; }
+bool TBathtub::allowsTumble() const
+{
+	JGeometry::TVec3<f32> marioPos = *gpMarioPos;
+	f32 grip;
+	if (!getNearGrip(marioPos, 18.0f, &grip))
+		return false;
+
+	JGeometry::TVec3<f32> delta;
+	mBathtubData.unk18.mult(
+	    JGeometry::TVec3<f32>(marioPos.x - mBathtubData.mPos.x,
+	                          marioPos.y - mBathtubData.mPos.y,
+	                          marioPos.z - mBathtubData.mPos.z),
+	    delta);
+
+	JGeometry::TVec3<f32> horizontal = delta;
+	horizontal.y                     = 0.0f;
+	f32 distance                     = horizontal.length();
+	if (distance < 4200.0f)
+		return false;
+	if (distance <= 4700.0f)
+		return true;
+	if (mBathtubData.unk18.at(1, 1) <= 0.99f)
+		return false;
+
+	TBathtubKillerManager* manager
+	    = JDrama::TNameRefGen::search<TBathtubKillerManager>(
+	        "バスタブキラーマネージャー");
+	u32 status = SMS_GetMarioStatus();
+	if (status == MARIO_STATUS_HIP_DROP || status == MARIO_STATUS_ROCKET
+	    || status == MARIO_STATUS_ROCKET_LANDING)
+		return false;
+
+	if (gpMarioOriginal->mWaterGun) {
+		TNozzleBase* nozzle = gpMarioOriginal->mWaterGun->getCurrentNozzle();
+		if (nozzle && nozzle->getNozzleKind() == 1 && nozzle->unk378 > 0.0f)
+			return false;
+	}
+
+	return manager->countActiveKillers() != 0;
+}
 
 void TBathtub::calcRootMatrix() { }
 
