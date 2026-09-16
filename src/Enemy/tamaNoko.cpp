@@ -711,8 +711,8 @@ DEFINE_NERVE(TNerveTamaNokoAttack, TLiveActor)
 			return true;
 		}
 
-		JGeometry::TVec3<f32> local_54 = self->getVelocity();
-		if (local_54.y < 0.0f) {
+		local_48 = self->getVelocity();
+		if (local_48.y < 0.0f) {
 			MtxPtr mtx = self->getMActor()->getModel()->getAnmMtx(1);
 			self->unk1AC.set(mtx[0][3], mtx[1][3] - 200.0f, mtx[2][3]);
 			if (JPABaseEmitter* emitter
