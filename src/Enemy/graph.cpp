@@ -823,7 +823,8 @@ void TGraphGroup::initGraphGroup()
 		if (unk8[i]->unk10 >= 0)
 			continue;
 
-		unk8[i]->initGoalIndex(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
+		JGeometry::TVec3<f32> pos(0.0f, 0.0f, 0.0f);
+		unk8[i]->initGoalIndex(pos);
 		unk8[i]->attachToGround();
 	}
 }
