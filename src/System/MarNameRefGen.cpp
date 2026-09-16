@@ -193,7 +193,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 		return new TGuide;
 
 	if (strcmp(name, "SunGlass") == 0)
-		return new TSunGlass(JUtility::TColor(0, 0, 0, 80));
+		return new TSunGlass;
 
 	if (strcmp(name, "SunShine") == 0)
 		return new TSunShine;
