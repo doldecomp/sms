@@ -1,6 +1,7 @@
 #include <Enemy/TobiPuku.hpp>
 #include <Strategic/Spine.hpp>
 #include <M3DUtil/MActor.hpp>
+#include <MarioUtil/MathUtil.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
@@ -122,9 +123,6 @@ DEFINE_NERVE(TNerveTobiPukuReturnLaunch, TLiveActor) { return FALSE; }
 DEFINE_NERVE(TNerveTobiPukuPrepareFly, TLiveActor) { return FALSE; }
 
 // TODO: incorrect size. Map records 0x1c8 (456 bytes).
-// TODO: partial. Only the spine->getTime() == 0 branch is written; the map
-// records 456 bytes and this reaches 44.3%. The rest of the body follows the
-// bound in later frames and is not transcribed yet.
 DEFINE_NERVE(TNerveTobiPukuBound, TLiveActor)
 {
 	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
@@ -145,7 +143,17 @@ DEFINE_NERVE(TNerveTobiPukuBound, TLiveActor)
 
 			puku->mLaunchVelocity = vel;
 			puku->mVelocity       = vel;
+			puku->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		}
+	}
+
+	JGeometry::TVec3<f32> vel(puku->mVelocity);
+	if (vel.y > 0.0f)
+		puku->unk1B0 = puku->mPosition.y;
+
+	if (!puku->isAirborne()) {
+		spine->pushAfterCurrent(&TNerveTobiPukuLand::theNerve());
+		return TRUE;
 	}
 	return FALSE;
 }
@@ -186,4 +194,33 @@ DEFINE_NERVE(TNerveTobiPukuAttack, TLiveActor) { return FALSE; }
 DEFINE_NERVE(TNerveTobiPukuFly, TLiveActor) { return FALSE; }
 
 // TODO: incorrect size. Map records 0x1ac (428 bytes).
-DEFINE_NERVE(TNerveTobiPukuGenerate, TLiveActor) { return FALSE; }
+// TODO: 86.9% of 428 bytes. The structure and call order are right; what
+// differs is how the two MsGetRotFromZaxis results are stored. The original
+// keeps its returned vector in a stack temporary and copies a single float to
+// mRotation, where this assigns the whole vector.
+DEFINE_NERVE(TNerveTobiPukuGenerate, TLiveActor)
+{
+	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		puku->onLiveFlag(LIVE_FLAG_UNK10);
+		puku->mPosition.y -= 300.0f;
+		puku->mRotation = MsGetRotFromZaxis(puku->mVelocity);
+		puku->setJumpAnm();
+	}
+
+	puku->mPosition.y += puku->mLaunchVelocity.y;
+
+	if (puku->mPosition.y > puku->unk1B0) {
+		puku->mBoundCount = 0;
+		puku->unk194      = 1;
+		puku->mVelocity   = puku->mLaunchVelocity;
+		puku->mLaunchRot  = MsGetRotFromZaxis(puku->mLaunchVelocity);
+		puku->generateEffectColumWater();
+		puku->onLiveFlag(LIVE_FLAG_AIRBORNE);
+		puku->offLiveFlag(LIVE_FLAG_UNK10);
+		spine->pushAfterCurrent(&TNerveTobiPukuFly::theNerve());
+		return TRUE;
+	}
+	return FALSE;
+}

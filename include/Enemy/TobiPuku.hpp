@@ -72,7 +72,7 @@ public:
 	static f32 mBoundVelocityY;
 	static u8 mReturnLaunchSw;
 
-	/* 0x194 */ int unk194;
+	/* 0x194 */ u8 unk194;
 	/* 0x198 */ int mBoundCount;
 	/* 0x19C */ TTobiPukuParams* unk19C;
 	/* 0x1A0 */ u8 unk1A0[0x1AD - 0x1A0];
@@ -80,8 +80,8 @@ public:
 	/* 0x1AE */ u8 unk1AE;
 	/* 0x1AF */ u8 unk1AF;
 	/* 0x1B0 */ f32 unk1B0;
-	/* 0x1B4 */ f32 mLaunchAngle;
-	/* 0x1B8 */ u8 unk1B8[0x1D0 - 0x1B8];
+	/* 0x1B4 */ JGeometry::TVec3<f32> mLaunchRot;
+	/* 0x1C0 */ u8 unk1C0[0x1D0 - 0x1C0];
 	/* 0x1D0 */ JGeometry::TVec3<f32> mLaunchVelocity;
 	/* 0x1DC */ u8 unk1DC[0x1E0 - 0x1DC];
 	/* 0x1E0 */ f32 mSwimBaseY;
