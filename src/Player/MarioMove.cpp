@@ -2066,7 +2066,7 @@ void TMario::thinkWaterSurface()
 		return;
 
 	BOOL wasInWater = checkFlag(MARIO_FLAG_IN_ANY_WATER);
-	bool isInWater  = false;
+	BOOL isInWater  = false;
 	if (checkFlag(MARIO_FLAG_IN_ANY_WATER) == true)
 		isInWater = true;
 	else
