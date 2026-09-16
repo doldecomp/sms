@@ -813,7 +813,7 @@ DEFINE_NERVE(TNerveTamaNokoDown, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		// If hit sand -- we get stuck
-		if (self->getGroundPlane()->isSand()) {
+		if (self->mGroundPlane->isSand()) {
 			spine->pushAfterCurrent(&TNerveTamaNokoSink::theNerve());
 			if (TEffectColumSand* sand
 			    = (TEffectColumSand*)gpConductor->makeOneEnemyAppear(
