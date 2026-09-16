@@ -17,6 +17,38 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## Stack-frame deltas dominate the near-exact game backlog, batch 55
+
+Measured over the 70 largest game functions scoring 99.9% or better but not exact, by parsing the opening `stwu r1` on both sides of the diff:
+
+| Frame delta (ours - target) | Functions |
+| --- | ---: |
+| too small | 60 |
+| exact | 4 |
+| too large | 6 |
+| leaf, no frame | 6 |
+
+The remaining near-exact game code is therefore almost entirely blocked on **missing inlined helpers that reserved locals**, not on wrong instructions.
+MWCC reserves an inlined function's local slots even when the body's values end up entirely in registers, so a caller can be instruction-for-instruction identical and still carry a short frame.
+Most common shortfalls: 8 bytes (12 functions), 24 (7), 32 (6), 16 (5), 40 (4).
+
+Consequences for the work order:
+- A function whose whole diff is the `stwu` and the register save/restore offsets is **not** an instruction problem. Do not rewrite its body; find the inline it is missing.
+- The 8-byte group spans unrelated subsystems (Player, Enemy, Camera, Map, M3DUtil), so it is not one shared helper. `TGesso::rollCheck` is the cleanest specimen: byte-identical apart from 0x70 vs 0x68, with no stack access in the body at all, and neither `getSightDirection` (returns `f32`) nor `MsIsInSight` (a real call) accounts for it.
+- Reproduce the survey after any shared-inline fix; a correct inline should move a whole delta group at once.
+
+A caveat on reading `tools/decomp-diff.py` output in bulk: `-d` with a mangled name that is not present prints `Symbol not found` and exits, which a marker count reads as a perfect match.
+Confirm the header line shows a real percentage before trusting a zero-difference result.
+
+## Pre-existing frame padding in game code
+
+These functions reach their score with fabricated stack padding, which `AGENTS.md` prohibits committing.
+They are inherited, not introduced by recent batches, but their scores are not evidence of a reconstruction:
+
+`GC2D/SelectMenu.cpp:583`, `System/MarioGamePad.cpp:16` (`u32 stackAlloc[83]`), `Enemy/bgtentacle.cpp:204`, `MarioUtil/MathUtil.cpp:236,297,323`, `Player/MarioDraw.cpp:472`, `Enemy/graph.cpp:55`, `Map/MapData.cpp:11`.
+
+`TMarioGamePad::updateMeaning` additionally has a genuine r4/r5 allocation swap (old button bits versus loop counter) that is fixable on its own, but any exact score it reaches remains fake while the padding stands.
+
 ## Menu interpolation fields and color parameters, batch 51
 
 - CardSave::waitForChoice loads 0x18/0x14 at all four updateCenteredSize sites; the fabricated helper previously used 0x30/0x2C.
