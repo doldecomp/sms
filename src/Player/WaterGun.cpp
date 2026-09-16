@@ -1553,7 +1553,6 @@ void TWaterGun::movement()
 void TWaterGun::setBaseTRMtx(Mtx mtx)
 {
 	Mtx result;
-	Mtx temp;
 
 	f32 initialAngle = mtx[1][0];
 	if (initialAngle < 0.0f)
@@ -1563,6 +1562,7 @@ void TWaterGun::setBaseTRMtx(Mtx mtx)
 	s16 angle = initialAngle * (unk1D04 - unk1D06) + unk1D06;
 
 	f32 angleDegrees = SHORTANGLE2DEG(angle);
+	Mtx temp;
 	MsMtxSetRotRPH(temp, 0.0f, 0.0f, angleDegrees);
 
 	MTXConcat(mtx, temp, result);
