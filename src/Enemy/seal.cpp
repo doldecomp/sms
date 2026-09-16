@@ -78,9 +78,7 @@ void TSeal::calcRootMatrix()
 {
 	J3DModel* model = getModel();
 	MsMtxSetXYZRPH(model->getBaseTRMtx(), mPosition.x, mPosition.y, mPosition.z,
-	               (s16)(182.04445f * mRotation.x),
-	               (s16)(182.04445f * mRotation.y),
-	               (s16)(182.04445f * mRotation.z));
+	               mRotation.x, mRotation.y, mRotation.z);
 	model->setBaseScale(mScaling);
 }
 
@@ -88,8 +86,8 @@ void TSeal::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!(mLiveFlag & (LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN)) && (cue & 1)) {
 		for (int i = 0; i < mColCount; ++i) {
-			THitActor* other = mCollisions[i];
-			if (other->mActorType == 0x80000001)
+			THitActor* other = getCollision(i);
+			if (other->isActorType(0x80000001))
 				other->receiveMessage(this, 0xE);
 		}
 	}
@@ -138,7 +136,7 @@ DEFINE_NERVE(TNerveSealSleep, TLiveActor)
 	}
 
 	if (seal->mDistToMarioSquared < 1000000.0f) {
-		spine->pushNerve(&TNerveSealWait::theNerve());
+		spine->pushAfterCurrent(&TNerveSealWait::theNerve());
 		return TRUE;
 	}
 
@@ -164,7 +162,7 @@ DEFINE_NERVE(TNerveSealWait, TLiveActor)
 	if (seal->mDistToMarioSquared > 2250000.0f
 	    && seal->getMActor()->curAnmEndsNext(0, nullptr)) {
 		seal->getMActor()->setBckFromIndex(1);
-		spine->pushNerve(&TNerveSealSleep::theNerve());
+		spine->pushAfterCurrent(&TNerveSealSleep::theNerve());
 		return TRUE;
 	}
 	return FALSE;
@@ -176,7 +174,7 @@ DEFINE_NERVE(TNerveSealDie, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		seal->getMActor()->setBckFromIndex(0);
-		MtxPtr mtx = seal->getModel()->getBaseTRMtx();
+		MtxPtr mtx = seal->getMActor()->getModel()->getBaseTRMtx();
 		JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(0xD1, mtx, 0, seal);
 		if (emitter)
@@ -195,7 +193,7 @@ DEFINE_NERVE(TNerveSealDie, TLiveActor)
 	if (seal->getMActor()->curAnmEndsNext(0, nullptr)) {
 		seal->mHitFlags |= HIT_FLAG_NO_COLLISION;
 		seal->kill();
-		spine->pushNerve(&TNerveSealSleep::theNerve());
+		spine->pushAfterCurrent(&TNerveSealSleep::theNerve());
 		return TRUE;
 	}
 	return FALSE;
