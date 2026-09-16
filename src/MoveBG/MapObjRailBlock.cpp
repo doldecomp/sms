@@ -315,7 +315,8 @@ void TNormalLift::control()
 					readRailFlag();
 					unk138->moveToShortestNext();
 
-					u32 yaw = unk138->getCurrent().getRailNode()->mYaw;
+					TGraphNode& graphNode = unk138->getCurrent();
+					u32 yaw = graphNode.getRailNode()->mYaw;
 					if (yaw != 0xffff)
 						unk144 = yaw * 0.01f;
 
