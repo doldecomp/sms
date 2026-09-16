@@ -1209,11 +1209,14 @@ bool THamuKuri::isCollidMove(THitActor* param_1)
 	    || param_1->isActorType(0x10000013)
 	    || param_1->isActorType(0x10000011)) {
 		THamuKuri* hamu = (THamuKuri*)param_1;
-		if (hamu->mSpine->getCurrentNerve()
-		        != &TNerveHamuKuriBoundFreeze::theNerve()
-		    && hamu->mSpine->getCurrentNerve()
+		if ((hamu->mSpine->getCurrentNerve()
+		         == &TNerveHamuKuriBoundFreeze::theNerve()
+		     ? true
+		     : false)
+		    && mSpine->getCurrentNerve() != &TNerveSmallEnemyDie::theNerve()
+		    && mSpine->getCurrentNerve()
 		           != &TNerveHamuKuriBoundFreeze::theNerve()
-		    && hamu->mSpine->getCurrentNerve()
+		    && mSpine->getCurrentNerve()
 		           != &TNerveHamuKuriWallDie::theNerve()) {
 			if (!isHitWallInBound()) {
 				unk1A3 = 1;
@@ -1224,12 +1227,15 @@ bool THamuKuri::isCollidMove(THitActor* param_1)
 	}
 
 	// TODO: need more checks & HitActor inlines
-	if ((param_1->getActorType() & 0xFFFF0000) == 0x40000000) {
+	if ((param_1->getActorType() & 0xFFFF0000) == 0x40000000
+	    && param_1->getActorType() >= 0x40000390
+	    && param_1->getActorType() <= 0x40000394) {
 		TLiveActor* enemy         = (TLiveActor*)param_1;
 		JGeometry::TVec3<f32> vel = enemy->mVelocity;
-		if (abs(vel.x) > 2.0f && abs(vel.y) > 2.0f && abs(vel.z) > 2.0f) {
+		if (abs(vel.x) > 2.0f
+		    && (abs(vel.y) > 2.0f || abs(vel.z) > 2.0f)) {
 			if (mSpine->getCurrentNerve() != &TNerveHamuKuriJitabata::theNerve()
-			    && isAirborne()) {
+			    && !isAirborne()) {
 				mSpine->pushNerve(&TNerveHamuKuriJitabata::theNerve());
 			}
 		}
