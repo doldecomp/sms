@@ -8,19 +8,6 @@ static const double digit_values[] = {
 	1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8,
 };
 
-// TODO: this TU is the last library object that cannot be source-linked.
-// The map records a second, deadstripped function here:
-//   UNUSED 0x2a4 __dec2num   ansi_fp.c
-// along with its own deadstripped .sdata2 literal @269. Because that function
-// is missing, our float literal pool allocates in the wrong order: the map has
-// @268=0.0, @270=1.0, @272=<int->double magic 0x4330000080000000>, @362=0.1,
-// @363=10.0, while we emit the magic constant last. The code below already
-// matches byte-for-byte -- objdiff compares the symbolic reference, so it
-// reports 100% -- but after linking, four @sda21 displacements inside
-// __num2dec and the literal block itself differ, 23 bytes in all.
-// Reconstructing __dec2num (decimal -> double, the inverse of this function)
-// should restore the pool order. Its 0x2a4 size is the verification
-// constraint. Until then the object stays out of config/GMSE01/objects.json.
 void __num2dec(const decform* f, double x, decimal* d)
 {
 	int sp30;
@@ -134,4 +121,79 @@ void __num2dec(const decform* f, double x, decimal* d)
 	}
 
 	d->exp = exp;
+}
+
+// TODO: incorrect size. The map records __dec2num as UNUSED at 0x2a4 (676
+// bytes); this body compiles to 0x100 (256), so it is NOT the original
+// implementation -- the real one is 420 bytes larger and presumably handles
+// cases this does not (empty significand, the 'I'/'N' infinity and NaN texts
+// __num2dec emits, exponent overflow to HUGE_VAL).
+//
+// It is nevertheless required, and load-bearing. The function is deadstripped,
+// so its body never reaches the binary, but the compiler allocates this TU's
+// .sdata2 float literals in first-use order across the whole file, and this
+// function is emitted first (-inline deferred reverses source order). Its
+// literal usage must therefore be exactly 0.0, then 1.0, then the int-to-double
+// magic 0x4330000080000000, and it must not reference 10.0 or 0.1 as literals,
+// or the pool order shifts and four @sda21 displacements inside __num2dec
+// resolve to the wrong addresses. That is why the digit accumulation below uses
+// integer arithmetic and the digit_values table rather than multiplying by
+// 10.0. The resulting pool matches the map: @268=0.0, @270=1.0, @272=magic,
+// @362=0.1, @363=10.0, with @269 belonging to this function and dropped.
+//
+// Anyone reworking this body must keep that literal sequence intact and
+// re-verify the DOL, not just the object comparison.
+double __dec2num(const decimal* d)
+{
+	double x;
+	double var_f1;
+	int var_r4;
+	const double* var_r5;
+	const unsigned char* p;
+	int digits;
+	int var_r12;
+	int var_r11;
+	int var_r6;
+
+	x       = 0.0;
+	var_f1  = 1.0;
+	var_r4  = d->exp;
+	var_r5  = bit_values;
+	if (var_r4 < 0) {
+		var_r4 = -var_r4;
+	}
+	while (var_r4 != 0) {
+		if (var_r4 & 1) {
+			var_f1 *= *var_r5;
+		}
+		var_r4 >>= 1;
+		var_r5++;
+	}
+
+	p      = d->sig.text;
+	digits = d->sig.length;
+	while (digits != 0) {
+		var_r12 = digits;
+		if (digits > 8) {
+			var_r12 = 8;
+		}
+		digits -= var_r12;
+		var_r6  = 0;
+		var_r11 = var_r12 + 1;
+		while (--var_r11 != 0) {
+			var_r6 = var_r6 * 10 + (*p++ - '0');
+		}
+		x = x * digit_values[var_r12 - 1] + var_r6;
+	}
+
+	if (d->exp < 0) {
+		x /= var_f1;
+	} else {
+		x *= var_f1;
+	}
+
+	if (d->sign) {
+		x = -x;
+	}
+	return x;
 }

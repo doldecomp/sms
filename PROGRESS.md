@@ -8,7 +8,25 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 53 — library objects source-linked
+## Latest checkpoint: batch 54 — all matching library objects linked
+
+Reconstructing the deadstripped `__dec2num` restores `ansi_fp.c`'s `.sdata2` pool order, so the last held-back library object links.
+**Every library object that matches in code and data is now source-linked: 394 files, 17.639089%.** SDK reaches 92.22% linked; JSystem holds at 61.61%; the DOL stays byte-identical.
+
+The fix is a literal-ordering constraint, not a code change. The compiler allocates this TU's float literals in first-use order across the whole file, and `-inline deferred` emits `__dec2num` first.
+Its literal sequence must be exactly 0.0, 1.0, then the int-to-double magic `0x4330000080000000`, with no 10.0 or 0.1 literal, which is why digit accumulation uses integer arithmetic and `digit_values` rather than multiplying by 10.0.
+The pool then matches the map: @268=0.0, @270=1.0, @272=magic, @362=0.1, @363=10.0.
+
+**Caveat:** the reconstructed body is 0x100 (256 bytes) against the map's 0x2a4 (676), so it is not the original implementation and is marked `// TODO: incorrect size`.
+The real function is 420 bytes larger and presumably handles the empty significand, the 'I'/'N' texts `__num2dec` emits, and exponent overflow.
+Because the function is deadstripped, only its literal usage reaches the binary, so the link is sound while the body remains wrong.
+
+Verified: `cmp` against `orig/GMSE01/sys/main.dol` identical, SHA-1 `a6782903ef79d4196c8489ecb1b57decb5b3728f`, matched code unchanged at 1,423,420 bytes.
+Game code untouched at **26.15378% matched / 3.254321% source-linked**. No gameplay test performed.
+
+Remaining unlinked: 32 JSystem and 7 SDK objects that do not yet fully match, plus 299 game files. These need decompilation, not promotion.
+
+## Verified checkpoint: batch 53 — library objects source-linked
 
 The user lifted the library prohibition, so the 308 JSystem/MSL/SDK objects that already matched in code and data were promoted through `config/GMSE01/objects.json`.
 307 of them link cleanly: source-linked code rises from **2.571545% to 17.609865%** (+541,944 bytes, 86 -> 393 files) with the DOL still byte-identical.
