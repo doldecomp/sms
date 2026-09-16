@@ -1242,8 +1242,9 @@ void TModelWaterManager::drawMirror(MtxPtr param_1)
 	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
 	SMS_SettingDrawShape(unk5D54, 0);
 
-	const TBGCheckData* pTVar4 = SMS_GetMarioGroundPlane();
+	const TBGCheckData* pTVar4 = *gpMarioGroundPlane;
 	f32 fVar1                  = pTVar4->getPlaneDistance();
+	const JGeometry::TVec3<f32>& normal = pTVar4->getNormal();
 	for (int i = 0; i < mParticleCount; ++i) {
 		if ((mParticleFlagSOA[i] & 0xf) == 2
 		    && SMS_GetMarioGroundPlane()->isLegal()) {
@@ -1251,25 +1252,17 @@ void TModelWaterManager::drawMirror(MtxPtr param_1)
 			SMS_DrawShape(unk5D54, 0);
 		}
 	}
-	JGeometry::TVec3<f32> local_bc[4][2];
+	JGeometry::TVec3<f32> local_bc[8];
 
-	f32 fVar3 = 1.0 / pTVar4->getNormal().y;
+	f32 fVar3 = 1.0f / normal.y;
 
-	for (int i = 0; i < 4; ++i) {
-		local_bc[i][0].x = SMS_GetMarioPos().x + JMASSin(i * 0x4000) * 1000.0f;
-		local_bc[i][0].z = SMS_GetMarioPos().z + JMASCos(i * 0x4000) * 1000.0f;
-		local_bc[i][0].y
+	for (int i = 0; i < 8; ++i) {
+		local_bc[i].x = SMS_GetMarioPos().x + JMASSin(i * 0x2000) * 1000.0f;
+		local_bc[i].z = SMS_GetMarioPos().z + JMASCos(i * 0x2000) * 1000.0f;
+		local_bc[i].y
 		    = fVar3
-		          * -(fVar1 + pTVar4->getNormal().x * local_bc[0][0].x
-		              + pTVar4->getNormal().z * local_bc[0][0].z)
-		      + 4.0f;
-
-		local_bc[i][1].x = JMASSin(i * 0x4000) * 1000.0f + SMS_GetMarioPos().x;
-		local_bc[i][1].z = JMASSin(i * 0x4000) * 1000.0f + SMS_GetMarioPos().z;
-		local_bc[i][1].y
-		    = fVar3
-		          * -(fVar1 + pTVar4->getNormal().x * local_bc[0][0].x
-		              + pTVar4->getNormal().z * local_bc[0][0].z)
+		          * -(normal.z * local_bc[i].z + normal.x * local_bc[i].x
+		              + fVar1)
 		      + 4.0f;
 	}
 
@@ -1301,23 +1294,23 @@ void TModelWaterManager::drawMirror(MtxPtr param_1)
 	GXPosition3f32(SMS_GetMarioPos().x, SMS_GetMarioPos().y + 4.0f,
 	               SMS_GetMarioPos().z);
 	GXColor4u8(0xff, 0xff, 0xff, unk5D64);
-	GXPosition3f32(local_bc[0][0].x, local_bc[0][0].y, local_bc[0][0].z);
+	GXPosition3f32(local_bc[0].x, local_bc[0].y, local_bc[0].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[0][1].x, local_bc[0][1].y, local_bc[0][1].z);
+	GXPosition3f32(local_bc[1].x, local_bc[1].y, local_bc[1].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[1][0].x, local_bc[1][0].y, local_bc[1][0].z);
+	GXPosition3f32(local_bc[2].x, local_bc[2].y, local_bc[2].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[1][1].x, local_bc[1][1].y, local_bc[1][1].z);
+	GXPosition3f32(local_bc[3].x, local_bc[3].y, local_bc[3].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[2][0].x, local_bc[2][0].y, local_bc[2][0].z);
+	GXPosition3f32(local_bc[4].x, local_bc[4].y, local_bc[4].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[2][1].x, local_bc[2][1].y, local_bc[2][1].z);
+	GXPosition3f32(local_bc[5].x, local_bc[5].y, local_bc[5].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[3][0].x, local_bc[3][0].y, local_bc[3][0].z);
+	GXPosition3f32(local_bc[6].x, local_bc[6].y, local_bc[6].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[3][1].x, local_bc[3][1].y, local_bc[3][1].z);
+	GXPosition3f32(local_bc[7].x, local_bc[7].y, local_bc[7].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[0][0].x, local_bc[0][0].y, local_bc[0][0].z);
+	GXPosition3f32(local_bc[0].x, local_bc[0].y, local_bc[0].z);
 	GXColor4u8(0, 0, 0, 0);
 	GXEnd();
 
@@ -1335,23 +1328,23 @@ void TModelWaterManager::drawMirror(MtxPtr param_1)
 	GXPosition3f32(SMS_GetMarioPos().x, SMS_GetMarioPos().y + 4.0f,
 	               SMS_GetMarioPos().z);
 	GXColor4u8(0xff, 0xff, 0xff, unk5D64);
-	GXPosition3f32(local_bc[0][0].x, local_bc[0][0].y, local_bc[0][0].z);
+	GXPosition3f32(local_bc[0].x, local_bc[0].y, local_bc[0].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[0][1].x, local_bc[0][1].y, local_bc[0][1].z);
+	GXPosition3f32(local_bc[1].x, local_bc[1].y, local_bc[1].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[1][0].x, local_bc[1][0].y, local_bc[1][0].z);
+	GXPosition3f32(local_bc[2].x, local_bc[2].y, local_bc[2].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[1][1].x, local_bc[1][1].y, local_bc[1][1].z);
+	GXPosition3f32(local_bc[3].x, local_bc[3].y, local_bc[3].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[2][0].x, local_bc[2][0].y, local_bc[2][0].z);
+	GXPosition3f32(local_bc[4].x, local_bc[4].y, local_bc[4].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[2][1].x, local_bc[2][1].y, local_bc[2][1].z);
+	GXPosition3f32(local_bc[5].x, local_bc[5].y, local_bc[5].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[3][0].x, local_bc[3][0].y, local_bc[3][0].z);
+	GXPosition3f32(local_bc[6].x, local_bc[6].y, local_bc[6].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[3][1].x, local_bc[3][1].y, local_bc[3][1].z);
+	GXPosition3f32(local_bc[7].x, local_bc[7].y, local_bc[7].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[0][0].x, local_bc[0][0].y, local_bc[0][0].z);
+	GXPosition3f32(local_bc[0].x, local_bc[0].y, local_bc[0].z);
 	GXColor4u8(0, 0, 0, 0);
 	GXEnd();
 
