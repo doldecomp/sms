@@ -1,10 +1,12 @@
 #include "MoveBG/MapObjCorona.hpp"
 #include "MoveBG/MapObjBase.hpp"
 #include <Camera/CameraShake.hpp>
+#include <GC2D/GCConsole2.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <Player/MarioAccess.hpp>
+#include <System/MarDirector.hpp>
 #include <System/Particles.hpp>
 
 class TKoopa : public JDrama::TNameRef {
@@ -127,7 +129,75 @@ BOOL TBathtub::receiveMessage(THitActor* sender, u32 message)
 
 Mtx* TBathtub::getRootJointMtx() const { return nullptr; }
 
-void TBathtub::perform(u32 cue, JDrama::TGraphics* graphics) { }
+void TBathtub::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	TMapObjBase::perform(cue, graphics);
+
+	if (cue & 1) {
+		PSMTXCopy(mMActor->getModel()->getAnmMtx(mStarJntIdx),
+		          unk29C->getModel()->getBaseTRMtx());
+		unk29C->getModel()->setBaseScale(
+		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
+	}
+
+	if (cue & 1) {
+		int numDead = getNumGripsDead();
+		int frame   = gpMarDirector->unk58;
+		switch (numDead) {
+		case 0:
+			if (frame >= 0x1c20) {
+				if (!(unk2A0 & 2))
+					gpMarDirector->getConsole()->startAppearBalloon(0xe001f,
+					                                               true);
+				unk2A0 |= 2;
+			} else if (frame >= 0xe10) {
+				if (!(unk2A0 & 1))
+					gpMarDirector->getConsole()->startAppearBalloon(0xe001e,
+					                                               true);
+				unk2A0 |= 1;
+			}
+			break;
+		case 1:
+			if (!(unk2A0 & 4))
+				gpMarDirector->getConsole()->startAppearBalloon(0xe0020, true);
+			unk2A0 |= 4;
+			break;
+		case 2:
+			if (!(unk2A0 & 8))
+				gpMarDirector->getConsole()->startAppearBalloon(0xe0021, true);
+			unk2A0 |= 8;
+			break;
+		case 3:
+			if (!(unk2A0 & 0x10))
+				gpMarDirector->getConsole()->startAppearBalloon(0xe0022, true);
+			unk2A0 |= 0x10;
+			break;
+		case 4:
+			if (!(unk2A0 & 0x40000))
+				gpMarDirector->getConsole()->startAppearBalloon(0xe0030, true);
+			unk2A0 |= 0x40000;
+			break;
+		case 5:
+			if (!(unk2A0 & 0x20))
+				gpMarDirector->getConsole()->startAppearBalloon(0xe0023, true);
+			unk2A0 |= 0x20;
+			break;
+		}
+	}
+
+	if (cue & 2)
+		unk29C->calc();
+	if (cue & 4)
+		unk29C->viewCalc();
+	if (cue & 0x200) {
+		JGeometry::TVec3<f32> position(
+		    unk29C->getModel()->getBaseTRMtx()[0][3],
+		    unk29C->getModel()->getBaseTRMtx()[1][3],
+		    unk29C->getModel()->getBaseTRMtx()[2][3]);
+		unk29C->setLightData(mGroundPlane, position);
+		unk29C->entry();
+	}
+}
 
 void TBathtub::control() { }
 
