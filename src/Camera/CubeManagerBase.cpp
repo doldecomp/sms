@@ -52,7 +52,8 @@ void TCubeManagerBase::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TNameRef::load(stream);
 	TNameRefPtrAryT<TCubeGeneralInfo>* ary
-	    = JDrama::TNameRefGen::search<TNameRefPtrAryT<TCubeGeneralInfo> >(unk18);
+	    = static_cast<TNameRefPtrAryT<TCubeGeneralInfo>*>(
+	        JDrama::TNameRefGen::search(unk18));
 
 	if (ary == nullptr)
 		return;
