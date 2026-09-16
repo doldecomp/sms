@@ -144,14 +144,15 @@ void TSunModel::calcOtherFPosFromCenterAndRadius_(
 	param_1[7].y = param_2.y + fVar1;
 }
 
-// TODO: mark as inline or even move to the header maybe?
 void TSunModel::calcDispRatioAndScreenPos_()
 {
 	unk191   = 0;
 	bool* it = unk180;
-	for (int i = 0; i < 17; ++i, ++it)
+	for (int i = 17; i != 0; --i) {
 		if (*it)
 			unk191 += 1;
+		++it;
+	}
 
 	unk194 = (f32)unk191 * (1.0f / 17.0f);
 
@@ -169,7 +170,7 @@ void TSunModel::calcDispRatioAndScreenPos_()
 
 	it1 = unkB4;
 	it2 = unkF8;
-	for (i = 0; i < 17; ++i) {
+	for (i = 17; i != 0; --i) {
 		CLBScreenFPosToSPos(it1, *it2);
 		++it1;
 		++it2;
