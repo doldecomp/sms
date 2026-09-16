@@ -658,33 +658,45 @@ void TConsoleStr::startCloseWipe(bool param_1)
 		unk2A0[1]->hide();
 
 		JUTRect local_74 = unk290[0]->getPane()->getBounds();
-		unk290[0]->setPaneSize(0x2D, local_74.getWidth(), 0,
-		                       local_74.getHeight(), 0);
-		unk290[0]->setPaneAlpha(30, 100, 255);
+		int local_64     = 224;
+		unk290[0]->setPaneSize(0x2D, local_74.getWidth(), local_64,
+		                       local_74.getWidth(), 0);
+		unk290[0]->setPaneAlpha(30, 255, 0);
 
+		local_74 = unk290[1]->getPane()->getBounds();
 		unk290[1]->setPaneOffset(0x2D, 0, 224 - local_74.y1, 0,
 		                         465 - unk290[1]->getInitialBounds().y1);
-		unk290[1]->setPaneSize(0x2D, local_74.getWidth(), 0,
-		                       local_74.getHeight(), 0);
-		unk290[1]->setPaneAlpha(30, 100, 255);
+		unk290[1]->setPaneSize(
+		    0x2D, local_74.getWidth(),
+		    local_64 + (465 - unk290[1]->getInitialBounds().y1),
+		    local_74.getWidth(), 0);
+		unk290[1]->setPaneAlpha(30, 255, 0);
 
 		unk2BC = 8;
 		unk2B8 = 4;
 		unk2A8 = 1;
-	} else if (unk2BC == 1) {
+	} else {
+		if (unk2BC != 1) {
+			unk2A8 = 1;
+			return;
+		}
+
 		unk2BC           = 2;
 		JUTRect local_88 = unk290[0]->getPane()->getBounds();
-		unk290[0]->setPaneSize(0x2D, local_88.getWidth(), 0,
+		int local_78     = 224;
+		unk290[0]->setPaneSize(0x2D, local_88.getWidth(), local_78,
 		                       local_88.getWidth(), local_88.getHeight());
-		unk290[0]->setPaneAlpha(30, 100, 255);
+		unk290[0]->setPaneAlpha(30, 255,
+		                            unk290[0]->getPane()->getAlpha());
 
+		local_88 = unk290[1]->getPane()->getBounds();
 		unk290[1]->setPaneOffset(0x2D, 0, 224 - local_88.y1, 0,
 		                         465 - unk290[1]->getInitialBounds().y1);
-		unk290[1]->setPaneSize(0x2D, local_88.getWidth(), 0,
-		                       local_88.getHeight(), 0);
-		unk290[1]->setPaneAlpha(30, 100, 255);
-	} else {
-		unk2A8 = 1;
+		unk290[1]->setPaneSize(0x2D, local_88.getWidth(),
+		                       465 - local_78 - 1, local_88.getWidth(),
+		                       local_88.getHeight());
+		unk290[1]->setPaneAlpha(30, 255,
+		                            unk290[1]->getPane()->getAlpha());
 	}
 }
 
