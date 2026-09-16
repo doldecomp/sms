@@ -839,8 +839,8 @@ void TBGTentacle::returnToDefaultState() { }
 
 void TBGTentacle::moveNode()
 {
-	f32 fVar1 = mParams->mVibrationSpeed.get();
 	f32 fVar2 = mParams->mVibrationForce.get();
+	f32 fVar1 = mParams->mVibrationSpeed.get();
 
 	if (mState == 4) {
 		fVar2 *= mParams->mDamagePropF.get();
