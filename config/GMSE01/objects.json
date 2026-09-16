@@ -396,5 +396,6 @@
   "THPPlayer/THPDraw.c",
   "THPPlayer/THPVideoDecode.c",
   "THPPlayer/THPRead.c",
-  "Map/PollutionEvent.cpp"
+  "Map/PollutionEvent.cpp",
+  "Enemy/enemyinterp.cpp"
 ]

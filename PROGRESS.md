@@ -8,7 +8,23 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 56 — PollutionEvent linked after four batches deferred
+## Latest checkpoint: batch 57 — enemyinterp decompiled from scratch and linked
+
+`src/Enemy/enemyinterp.cpp` did not exist. It is now written, fully matching and source-linked, so **game matched code moves for the first time this run: 26.15378% -> 26.157291%**, and game files reach 91 (3.428571% -> 3.471861%).
+
+The whole TU contributes only three symbols to the binary, all weak, and all now exact: `SpcTrace(const char*, ...)` (80B), `TSpcTypedBinary<TLiveActor>::~TSpcTypedBinary()` (100B) and that template's 16-byte vtable.
+`SpcTrace` is a varargs debug stub with an empty body; its 0x50 is entirely MWCC's PPC EABI varargs register-save prologue, which is why an empty function is 80 bytes.
+Nothing in the file emits those symbols directly. Declaring `TEinBinary : TSpcTypedBinary<TLiveActor>` is what instantiates the template's weak destructor and vtable, and the `ein*` builtins' `SpcTrace` calls are what force its out-of-line copy, since MWCC cannot inline a varargs function.
+
+Source order was derived by reversing the map's `.text` emission order, and `validate-symbol-order` reports presence, order and linkage all correct on the first attempt.
+
+Seven `ein*` builtins and `TEinBinary::initUserBuiltin` are UNUSED with no assembly to compare against, so their bodies are reconstructed from their names alone and are marked `// TODO: incorrect size`.
+`TEinBinary::~TEinBinary` already matches the map's 0x74 exactly; the other six are between 8 and 224 bytes short.
+They are deadstripped, so the link is unaffected.
+
+Verified: `cmp` identical, SHA-1 `a6782903ef79d4196c8489ecb1b57decb5b3728f`. No gameplay test performed.
+
+## Verified checkpoint: batch 56 — PollutionEvent linked after four batches deferred
 
 `Map/PollutionEvent.cpp` links byte-identically at last, deferred since batch 2 as "emits a destructor before loadAfter".
 Game files 89 -> 90, **3.386243% -> 3.428571% source-linked**.
