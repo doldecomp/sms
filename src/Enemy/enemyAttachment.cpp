@@ -197,10 +197,10 @@ void TEnemyPolluteModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
 		f32 f31 = 100.0f;
+		f32 farClip = gpConductor->getCondParams().mEnemyFarClip.get();
 		SetViewFrustumClipCheckPerspective(
 		    gpCamera->getFovy(), gpCamera->getAspect(),
-		    graphics->getNearPlane(),
-		    gpConductor->getCondParams().mEnemyFarClip.get());
+		    graphics->getNearPlane(), farClip);
 
 		for (int i = 0; i < unk14; ++i) {
 			if (unk18[i]->unk5D) {
