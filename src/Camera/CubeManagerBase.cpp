@@ -152,7 +152,7 @@ bool SMS_IsInOtherFastCube(const Vec& pos)
 bool SMS_IsInSameCameraCube(const Vec& pos)
 {
 	bool result  = false;
-	Vec marioPos = SMS_GetMarioPos();
+	Vec marioPos = *gpMarioPos;
 	marioPos.y += 75.0f;
 	int uVar7 = gpCubeCamera->getInCubeNo(marioPos);
 	int uVar4 = gpCubeCamera->getInCubeNo(pos);
