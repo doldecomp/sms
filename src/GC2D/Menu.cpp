@@ -8,8 +8,7 @@
 void TMenuBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_DRAW) {
-		const JDrama::TRect& viewport = graphics->getViewport();
-		J2DOrthoGraph orthoGraph(viewport);
+		J2DOrthoGraph orthoGraph(graphics->getViewport());
 		orthoGraph.setup2D();
 		unk10->draw(0, 0, &orthoGraph);
 		const JUTRect& rect = graphics->getScissor();
@@ -75,13 +74,17 @@ void TMenuPlane::perform(u32 cue, JDrama::TGraphics*)
 			return;
 		}
 
-		if (unk28 > 1 && unk10->checkFrameMeaning(0x1E)) {
-			unk30[unk2C]->mCharColor = unk24.toUInt32();
-			unk30[unk2C]->mGradColor = unk24.toUInt32();
-			if (unk10->checkFrameMeaning(0x18)) {
-				int index = unk2C;
-				if (index < unk3C) {
-					if (unk28 > index + unk3C) {
+		if (unk28 > 1
+		    && unk10->checkFrameMeaning(TMarioGamePad::MEANING_MENU_UP
+		                                | TMarioGamePad::MEANING_MENU_DOWN
+		                                | TMarioGamePad::MEANING_MENU_LEFT
+		                                | TMarioGamePad::MEANING_MENU_RIGHT)) {
+			unk30[unk2C]->mCharColor = unk24.get();
+			unk30[unk2C]->mGradColor = unk24.get();
+			if (unk10->checkFrameMeaning(TMarioGamePad::MEANING_MENU_LEFT
+			                             | TMarioGamePad::MEANING_MENU_RIGHT)) {
+				if (unk2C < unk3C) {
+					if (unk28 > unk2C + unk3C) {
 						unk2C += unk3C;
 					}
 				} else {
@@ -89,20 +92,21 @@ void TMenuPlane::perform(u32 cue, JDrama::TGraphics*)
 				}
 			}
 
-			if (unk10->checkFrameMeaning(0x2)) {
+			if (unk10->checkFrameMeaning(TMarioGamePad::MEANING_MENU_UP)) {
 				{
 					if (unk2C == 0)
 						unk2C = unk28;
 					unk2C -= 1;
 				}
-			} else if (unk10->checkFrameMeaning(0x4)) {
+			} else if (unk10->checkFrameMeaning(
+			               TMarioGamePad::MEANING_MENU_DOWN)) {
 				unk2C += 1;
 				if (unk2C >= unk28)
 					unk2C = 0;
 			}
 
-			unk30[unk2C]->mCharColor = unk1C.toUInt32();
-			unk30[unk2C]->mGradColor = unk20.toUInt32();
+			unk30[unk2C]->mCharColor = unk1C.get();
+			unk30[unk2C]->mGradColor = unk20.get();
 		}
 	}
 }

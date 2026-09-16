@@ -1,10 +1,8 @@
 #include <System/MarNameRefGen.hpp>
 #include <Enemy/EffectObj.hpp>
-#include <Enemy/EggGen.hpp>
 #include <Enemy/EnemyManager.hpp>
 #include <Enemy/Gesso.hpp>
 #include <Enemy/HamuKuri.hpp>
-#include <Enemy/Igaiga.hpp>
 #include <Enemy/Launcher.hpp>
 #include <Enemy/MameGesso.hpp>
 #include <Enemy/NameKuri.hpp>
@@ -15,58 +13,19 @@
 #include <Enemy/TamaNoko.hpp>
 #include <Enemy/Telesa.hpp>
 #include <Enemy/DebuTelesa.hpp>
+#include <Enemy/GateKeeper.hpp>
 #include <Enemy/TypicalEnemy.hpp>
 #include <Enemy/WalkerEnemy.hpp>
 #include <Enemy/FireWanwan.hpp>
-#include <Enemy/GateKeeper.hpp>
 #include <Enemy/beam.hpp>
 #include <Enemy/Amenbo.hpp>
 #include <Enemy/Kumokun.hpp>
+#include <Enemy/EggGen.hpp>
+#include <Enemy/Igaiga.hpp>
 #include <Animal/AnimalBase.hpp>
 #include <Animal/AnimalManager.hpp>
 #include <Animal/Butterfly.hpp>
 #include <Animal/fishoid.hpp>
-
-inline TMewManager::TMewManager(const char* name)
-    : TAnimalManagerBase(name)
-{
-}
-
-inline TDiffusionNameKuriManager::TDiffusionNameKuriManager(const char* name)
-    : TNameKuriManager(name)
-{
-}
-
-inline TSurfGesso::TSurfGesso(const char* name)
-    : TGesso(name)
-{
-}
-
-inline TLandGesso::TLandGesso(const char* name)
-    : TGesso(name)
-{
-}
-
-inline TNameKuriLauncher::TNameKuriLauncher(const char* name)
-    : TLauncher(name)
-{
-}
-
-inline TSimpleEffect::TSimpleEffect(const char* name)
-    : JDrama::TActor(name)
-    , unk44(1)
-{
-}
-
-inline TEffectPinnaFunsui::TEffectPinnaFunsui(const char* name)
-    : TSimpleEffect(name)
-{
-}
-
-inline TEffectBiancoFunsui::TEffectBiancoFunsui(const char* name)
-    : TSimpleEffect(name)
-{
-}
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 {
@@ -155,16 +114,16 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 		return new TButterfloid(2, "蝶Ｃ");
 
 	if (strcmp(name, "ButterflyManager") == 0)
-		return new TButterfloidManager("ButterflyManager");
+		return new TButterfloidManager("");
 
 	if (strcmp(name, "EggGenerator") == 0)
-		return new TEggGenerator("タマゴジェネレータ");
+		return new TEggGenerator;
 
 	if (strcmp(name, "WickedEggGenerator") == 0)
-		return new TEggGenerator("タマゴジェネレータ");
+		return new TEggGenerator;
 
 	if (strcmp(name, "EggGenManager") == 0)
-		return new TEggGenManager("タマゴジェネレータマネージャ");
+		return new TEggGenManager;
 
 	if (strcmp(name, "EffectColumWaterManager") == 0)
 		return new TEffectColumWaterManager;
@@ -289,9 +248,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 	// if ( strcmp( name, "Popo" ) == 0 )
 	//     return new TPopo;
 
-	// TODO:
-	// if ( strcmp(name, "GorogoroManager") == 0)
-	//     return new TGorogoroManager;
+	if (strcmp(name, "GorogoroManager") == 0)
+		return new TGorogoroManager;
 
 	if (strcmp(name, "GessoManager") == 0)
 		return new TGessoManager;
@@ -338,10 +296,10 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 		return new TMarioModokiTelesa;
 
 	if (strcmp(name, "DebuTelesaManager") == 0)
-		return new TDebuTelesaManager("デブテルサマネージャー");
+		return new TDebuTelesaManager;
 
 	if (strcmp(name, "DebuTelesa") == 0)
-		return new TDebuTelesa("デブテレサ");
+		return new TDebuTelesa;
 
 	if (strcmp(name, "PoiHanaManager") == 0)
 		return new TPoiHanaManager;
@@ -469,10 +427,10 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 		return new TCommonLauncherManager;
 
 	if (strcmp(name, "GateKeeper") == 0)
-		return new TBiancoGateKeeper("ゲートキーパー（ビアンコ）");
+		return new TBiancoGateKeeper;
 
 	if (strcmp(name, "GateKeeperManager") == 0)
-		return new TBiancoGateKeeperManager("ゲートキーパーマネージャー");
+		return new TBiancoGateKeeperManager;
 
 	// TODO:
 	// if ( strcmp(name, "OrangeSeal") == 0)
@@ -497,7 +455,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 	// 	return new TNamekuriLauncherManager("ナメクリランチャーマネージャー");
 
 	if (strcmp(name, "IgaigaManager") == 0)
-		return new TIgaigaManager("イガイガマネージャー");
+		return new TIgaigaManager;
 
 	if (strcmp(name, "TamaNokoManager") == 0)
 		return new TTamaNokoManager;

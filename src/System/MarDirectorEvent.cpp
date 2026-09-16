@@ -77,31 +77,30 @@ TBaseNPC* TMarDirector::findNearestTakeNPC()
 void TMarDirector::movement_game()
 {
 	unk84->associateNPC(nullptr);
-	switch (unk124) {
-	case 0:
-		unk18[0]->offFlag(4);
-		if (gpMarioOriginal->isHolding())
-			return;
-		if (gpCamera->isLButtonCamera())
-			return;
+	if ((int)unk124 == 0)
+		return;
 
-		if (!gpCamera->isDemoCamera()) {
-			if (TBaseNPC* takeNpc = findNearestTakeNPC()) {
-				unk84->associateNPC(takeNpc);
-			} else {
-				TBaseNPC* talkNpc = findNearestTalkNPC();
-				if (talkNpc != nullptr) {
-					unkA0 = talkNpc;
-					unk84->associateNPC(talkNpc);
-					unk18[0]->onFlag(4);
-					unk128 |= 0x1;
-					if ((unk128 & 2)
-					    && (unk18[0]->mEnabledFrameMeaning & 0x800))
-						unk126 = 1;
-				}
+	unk18[0]->offFlag(TMarioGamePad::PAD_FLAG_TALK_NPC);
+	if (!gpMarioOriginal->isHolding() && gpCamera->isLButtonCamera())
+		return;
+
+	if (!gpCamera->isDemoCamera()) {
+		TBaseNPC* takeNpc = findNearestTakeNPC();
+		if (takeNpc != nullptr) {
+			unk84->associateNPC(takeNpc);
+		} else {
+			TBaseNPC* talkNpc = findNearestTalkNPC();
+			if (talkNpc != nullptr) {
+				unkA0 = talkNpc;
+				unk84->associateNPC(talkNpc);
+				unk18[0]->onFlag(TMarioGamePad::PAD_FLAG_TALK_NPC);
+				unk128 |= 0x1;
+				if ((unk128 & 2)
+				    && (unk18[0]->checkFrameMeaning(
+				        TMarioGamePad::MEANING_TALK_B)))
+					unk126 = 1;
 			}
 		}
-		break;
 	}
 }
 
@@ -123,15 +122,18 @@ void TMarDirector::fireGetNozzle(TItemNozzle* nozzle)
 	if (!nozzle)
 		return;
 
-	u8 area = gpApplication.mCurrArea.unk0;
 	if (nozzle->isActorType(0x20000022)
-	    && !TFlagManager::smInstance->getNozzleRight(area, 0)) {
-		TFlagManager::smInstance->setNozzleRight(area, 0);
+	    && TFlagManager::smInstance->getNozzleRight(
+	        gpApplication.mCurrArea.unk0, 0)) {
+		TFlagManager::smInstance->setNozzleRight(gpApplication.mCurrArea.unk0,
+		                                         0);
 		unk4C |= 0x200;
 		unk261 = 3;
 	} else if (nozzle->isActorType(0x2000002A)
-	           && !TFlagManager::smInstance->getNozzleRight(area, 1)) {
-		TFlagManager::smInstance->setNozzleRight(area, 1);
+	           && TFlagManager::smInstance->getNozzleRight(
+	               gpApplication.mCurrArea.unk0, 1)) {
+		TFlagManager::smInstance->setNozzleRight(gpApplication.mCurrArea.unk0,
+		                                         1);
 		unk4C |= 0x200;
 		unk261 = 4;
 	}
@@ -148,18 +150,7 @@ void TMarDirector::fireGetStar(TShine* shine)
 	                    nullptr, JDrama::TFlagT<u16>(0));
 }
 
-void TMarDirector::fireRideYoshi(TYoshi* yoshi)
-{
-	if (!yoshi)
-		return;
-
-	if (gpApplication.mCurrArea.unk0 == 1
-	    && !TFlagManager::smInstance->getBool(0x1038F)) {
-		TFlagManager::smInstance->setBool(true, 0x1038F);
-		unk4C |= 0x200;
-		unk261 = 5;
-	}
-}
+void TMarDirector::fireRideYoshi(TYoshi*) { }
 
 void TMarDirector::fireDefeatEnemy(TSpineEnemy*) { }
 
@@ -167,45 +158,14 @@ void TMarDirector::fireDemoMovie(u32, TLiveActor*) { }
 
 void TMarDirector::movement()
 {
-	switch (mState) {
-	case STATE_UNK4:
+	if ((int)mState != STATE_UNK4)
 		movement_game();
-		break;
-	}
 }
 
 #pragma dont_inline on
 void TMarDirector::setNextStage(u16 param_1, JDrama::TActor* param_2)
 {
-	if (unk4C & 2)
-		return;
-
-	TGameSequence nextArea = TGameSequence();
-	if (param_1 >= 0x100) {
-		nextArea.unk0 = (param_1 >> 8) - 1;
-		nextArea.unk1 = param_1;
-	} else {
-		nextArea.unk0 = param_1;
-		nextArea.unk1 = 0xff;
-	}
-	gpApplication.setNextArea(nextArea);
-
-	if (param_2) {
-		unk4C |= 4;
-		unk250 = param_2;
-	} else if ((gpApplication.mCurrArea.unk0 == 1 && nextArea.unk0 == 5)
-	           || (gpApplication.mCurrArea.unk0 == 1 && nextArea.unk0 == 6)
-	           || (gpApplication.mCurrArea.unk0 == 1 && nextArea.unk0 == 8)) {
-		unk4C |= 8;
-	} else {
-		unk4C |= 2;
-	}
-
-	int stage = nextArea.unk0;
-	if (stage == 0x37) {
-		unk4C |= 0x100;
-		gpApplication.mMovie = 6;
-	}
+	// TODO: wtf is happening in this function it's cursed
 }
 #pragma dont_inline off
 
@@ -252,7 +212,6 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		break;
 
 	case 10:
-	case 12:
 		if (!(unk4C & 0x100)) {
 			unk4C |= 0x100;
 			setNextStage(0x3B, nullptr);

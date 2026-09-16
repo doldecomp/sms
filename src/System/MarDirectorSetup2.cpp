@@ -89,7 +89,7 @@ void TMarDirector::setup2()
 	if (mMap == 15) {
 		unkAC->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 		unkB0->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
-		unk18[0]->onFlag(0x20);
+		unk18[0]->onFlag(TMarioGamePad::PAD_FLAG_NO_B);
 	} else {
 		unk70->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 	}
@@ -155,7 +155,7 @@ TMarDirector::~TMarDirector()
 	if (JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume("scene"))
 		arch->unmountFixed();
 
-	unk18[0]->offFlag(0x20);
+	unk18[0]->offFlag(TMarioGamePad::PAD_FLAG_NO_B);
 	if (mMap == 1 || (mMap == 0 && unk7D == 0)) {
 		THPPlayerStop();
 		THPPlayerClose();

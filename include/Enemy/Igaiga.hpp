@@ -44,7 +44,7 @@ public:
 
 class TIgaigaManager : public TSmallEnemyManager {
 public:
-	TIgaigaManager(const char*);
+	TIgaigaManager(const char* name = "イガイガマネージャー");
 
 	void load(JSUMemoryInputStream&);
 	void createModelData();
@@ -101,15 +101,15 @@ public:
 	virtual void setAnm();
 };
 
-class TGorogoroManager {
+class TGorogoroManager : public TSmallEnemyManager {
 public:
-	TGorogoroManager(const char*);
+	TGorogoroManager(const char* name = "ゴロゴロマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
-	virtual void createEnemyInstance();
+	virtual TSmallEnemy* createEnemyInstance();
 	virtual void initSetEnemies();
 
 	void inArea(const JGeometry::TVec3<f32>&);
