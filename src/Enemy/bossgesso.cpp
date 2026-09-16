@@ -415,9 +415,14 @@ TBGBinder::TBGBinder() { }
 void TBGBinder::bind(TLiveActor* param_1)
 {
 	TBossGesso* gesso = (TBossGesso*)param_1;
+	const TBGCheckData* pTStack_4c;
+	const TBGCheckData* pTStack_50;
+	const TBGCheckData* local_60;
+	const TBGCheckData* local_64;
 
-	JGeometry::TVec3<f32> local_3c = gesso->mPosition;
-	local_3c += gesso->mLinearVelocity;
+	JGeometry::TVec3<f32> local_30 = gesso->mPosition;
+	JGeometry::TVec3<f32> local_3c = gesso->mLinearVelocity;
+	local_3c += local_30;
 
 	if (gesso->isAirborne()) {
 		JGeometry::TVec3<f32> local_48 = gesso->mVelocity;
@@ -431,10 +436,7 @@ void TBGBinder::bind(TLiveActor* param_1)
 	if (gesso->getLatestNerve() == &TNerveBGDie::theNerve()
 	    && gesso->getMActor()->checkCurBckFromIndex(6)) {
 
-		// TODO: defo an inline
-		JGeometry::TVec3<f32> local_b4 = local_3c;
-		local_b4 -= gesso->mPosition;
-		gesso->mLinearVelocity = local_b4;
+		gesso->mLinearVelocity = local_3c - gesso->mPosition;
 
 		if (gpMarDirector->mMap != 9
 		    && gesso->mPosition.y - local_3c.y > 0.0f) {
@@ -442,12 +444,10 @@ void TBGBinder::bind(TLiveActor* param_1)
 			// TODO: this is likely an inline where xyz are passed as separate
 			// args
 			f32 someZ = local_3c.z;
-			const TBGCheckData* pTStack_4c;
 			f32 dVar7 = gpMap->checkGround(local_3c.x,
 			                               local_3c.y + gesso->getHeadHeight(),
 			                               someZ, &pTStack_4c);
 			dVar7 += 1.0f;
-			const TBGCheckData* pTStack_50;
 			f32 dVar8 = gpMap->checkGround(
 			    local_3c.x, gesso->mPosition.y + gesso->getHeadHeight(), someZ,
 			    &pTStack_50);
@@ -479,14 +479,12 @@ void TBGBinder::bind(TLiveActor* param_1)
 		f32 someY = local_3c.y;
 		f32 someZ = local_3c.z;
 
-		const TBGCheckData* local_60;
 		f32 fVar1 = gpMap->checkGround(
 		    local_3c.x, someY + gesso->getHeadHeight(), someZ, &local_60);
 		fVar1 += 1.0f;
 
 		f32 gessoY = gesso->mPosition.y;
 		if (gessoY - someY > 0.0f) {
-			const TBGCheckData* local_64;
 			f32 dVar8 = gpMap->checkGround(
 			    local_3c.x, gessoY + gesso->getHeadHeight(), someZ, &local_64);
 			dVar8 += 1.0f;
@@ -509,10 +507,7 @@ void TBGBinder::bind(TLiveActor* param_1)
 		gesso->mGroundHeight = fVar1;
 		gesso->mGroundPlane  = local_60;
 
-		// TODO: defo an inline
-		JGeometry::TVec3<f32> local_c0 = local_3c;
-		local_c0 -= gesso->mPosition;
-		gesso->mLinearVelocity = local_c0;
+		gesso->mLinearVelocity = local_3c - gesso->mPosition;
 	}
 }
 
