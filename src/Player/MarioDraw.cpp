@@ -2072,7 +2072,7 @@ void TMario::drawSpecial(JDrama::TGraphics* graphics)
 
 void TMario::drawLogic()
 {
-	// volatile u32 padding[2];
+	GXColor color;
 	j3dSys.mFlags |= 2;
 	j3dSys.unk4C = 7;
 	SMS_DrawInit();
@@ -2081,7 +2081,8 @@ void TMario::drawLogic()
 	              GX_AF_NONE);
 	GXSetChanCtrl(GX_COLOR1A1, FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 	              GX_AF_NONE);
-	GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0xff, 0xff, 0xff, 0xff });
+	color = (GXColor) { 0xff, 0xff, 0xff, 0xff };
+	GXSetChanMatColor(GX_COLOR0A0, color);
 	GXSetNumTexGens(0);
 	GXSetNumTevStages(1);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
