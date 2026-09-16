@@ -619,11 +619,15 @@ const char** TTamaNoko::getBasNameTable() const { return tamaNoko_bastable; }
 
 f32 TTamaNoko::getGravityY() const
 {
-	if (mSpine->getCurrentNerve() == &TNerveTamaNokoAttack::theNerve())
-		return unk198->mSLAttackGravityY.get();
+	if (mSpine->getCurrentNerve() == &TNerveTamaNokoAttack::theNerve()) {
+		f32 result = unk198->mSLAttackGravityY.get();
+		return result;
+	}
 
-	if (mSpine->getCurrentNerve() == &TNerveTamaNokoThrown::theNerve())
-		return unk198->mSLThrownGravityY.get();
+	if (mSpine->getCurrentNerve() == &TNerveTamaNokoThrown::theNerve()) {
+		f32 result = unk198->mSLThrownGravityY.get();
+		return result;
+	}
 
 	return mGravity;
 }
