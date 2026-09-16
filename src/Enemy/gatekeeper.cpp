@@ -30,7 +30,15 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+
+// This TU carries the dummy strings, but not their small-data pointers.
+#define SYSTEM_DUMMY_STRINGS_HPP
+static const char dummyMactorStringValue1[] = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char SMS_NO_MEMORY_MESSAGE[]   = "メモリが足りません\n";
 #include <M3DUtil/InfectiousStrings.hpp>
+
+static float unk_3012 = 3.0f;
+static float unk_3014 = -3.0f;
 
 static const char* gatekeeper_bastable[] = {
 	"/scene/gatekeeper/bas/gene_pakkun_appear1.bas",
@@ -256,9 +264,9 @@ void TBGKMtxCalc::calc(u16 param_1)
 				f32 delta = MsAngleDiff(yaw, cur);
 				f32 turn;
 				if (0.0f < delta)
-					turn = 3.0f > delta ? delta : 3.0f;
+					turn = unk_3012 > delta ? delta : unk_3012;
 				else
-					turn = -3.0f < delta ? delta : -3.0f;
+					turn = unk_3014 < delta ? delta : unk_3014;
 
 				f32 newYaw     = (turn + cur) - mOwner->mRotation.y;
 				mOwner->unk180 = MsWrap(newYaw, 0.0f, 360.0f);
