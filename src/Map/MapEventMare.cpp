@@ -604,8 +604,9 @@ u32 TMareEventBumpyWall::touchWater(THitActor*)
 void TMareEventBumpyWall::bumpDownZ()
 {
 	f32 z = TMapObjBase::getJointTransZ(unk13C);
-	JGeometry::TVec3<f32> trans(z, 0.0f, 0.0f);
-	if (z > -unk144) {
+	JGeometry::TVec3<f32> trans(0.0f, 0.0f, z);
+	f32 max = unk144;
+	if (z > -max) {
 		if (!TMapObjBase::isDemo()) {
 			z -= unk140;
 			SMSRumbleMgr->start(0x13, -1, (f32*)nullptr);
@@ -619,8 +620,8 @@ void TMareEventBumpyWall::bumpDownZ()
 		unk14C->moveTrans(trans);
 		return;
 	}
-	trans.z = -unk144;
-	TMapObjBase::setJointTransZ(unk13C, -unk144);
+	trans.z = -max;
+	TMapObjBase::setJointTransZ(unk13C, -max);
 	unk14C->remove();
 	unk148->setUpTrans(trans);
 	SMSRumbleMgr->stop(0x13);
