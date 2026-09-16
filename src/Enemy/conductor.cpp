@@ -128,7 +128,7 @@ getManagerByNameInline(TConductor* conductor, const char* name)
 {
 	u16 key = JDrama::TNameRef::calcKeyCode(name);
 
-	JGadget::TList<TLiveManager*>::iterator it, e;
+	JGadget::TList<TLiveManager*>::iterator e, it;
 	for (it = conductor->unk10.begin(), e = conductor->unk10.end(); it != e;
 	     ++it)
 		if ((*it)->searchF(key, name))
