@@ -957,8 +957,9 @@ BOOL TFireWanwan::receiveMessage(THitActor* sender, u32 message)
 		return false;
 
 	case HIT_MESSAGE_SPRAYED_BY_WATER: {
+		JGeometry::TVec3<f32> scale;
 		SMS_EasyEmitParticle(PARTICLE_MS_ENM_WATHIT, &sender->getPosition(),
-		                     nullptr, JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
+		                     nullptr, (scale.set(1.0f, 1.0f, 1.0f), scale));
 		u8 maxHp = getMaxHitPoints();
 		if (maxHp == mHitPoints)
 			SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_1ST_WATER,
