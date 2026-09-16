@@ -958,6 +958,7 @@ bool TOptionControl::isChangedSetting() const
 
 void TOptionControl::resetChangedSetting()
 {
-	mInitialRumbleValue = mRumbleOption->getValue();
+	TOptionRumbleUnit::RumbleType value = mRumbleOption->getValue();
+	mInitialRumbleValue = value;
 	mInitialSoundValue  = mSoundOption->getValue();
 }
