@@ -6,7 +6,6 @@
 #include <Player/Yoshi.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <MarioUtil/ShadowUtil.hpp>
-#include <System/StageUtil.hpp>
 #include <System/MarioGamePad.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
 #include <Map/Map.hpp>
@@ -16,6 +15,8 @@
 #include <MSound/MSoundBGM.hpp>
 
 // TODO: stuff from other rogue includes
+bool SMS_isMultiPlayerMap();
+
 static JGeometry::TVec3<f32> cDeformedTerrainCenter(0.0f, 5000.0f, 0.0f);
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
@@ -459,7 +460,7 @@ void TMario::setGamePad(TMarioGamePad* pad) { mGamePad = pad; }
 
 TMario::TDeParams::TDeParams()
     : TParams("/Mario/Mario.prm")
-    , PARAM_INIT(mHpMax, 8)
+    , mHpMax(this, 8, JDrama::TNameRef::calcKeyCode("mHPMax"), "mHPMax")
     , PARAM_INIT(mRunningMax, 45.0f)
     , PARAM_INIT(mDashMax, 60.0f)
     , PARAM_INIT(mDashAcc, 0.5f)
@@ -934,7 +935,7 @@ TMario::TEParams::TEParams(const char* prm)
     , PARAM_INIT(mDownType, 0)
     , PARAM_INIT(mWaterEmit, 0)
     , PARAM_INIT(mMotor, 25)
-    , PARAM_INIT(mMinSpeed, 0.0f)
+    , PARAM_INIT(mMinSpeed, 16.0f)
     , PARAM_INIT(mDirty, 0.0f)
     , PARAM_INIT(mInvincibleTime, 300)
 {
