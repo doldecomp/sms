@@ -54,12 +54,12 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 		if (mNoticeActor->mPosition.squared(*gpMarioPos)
 		    < CLBSquared<f32>(mSaveNotice->mOffDist.get())) {
 			JGeometry::TVec2<f32> clipPos;
+			f32 clipMax = mSaveNotice->mOffClipRatio.get();
 			CLBCalc2DFPos(&clipPos, unk16C, unk1EC, mNoticeActor->mPosition,
 			              nullptr, false);
 
 			// TODO: inline
-			f32 clipMax  = mSaveNotice->mOffClipRatio.get();
-			f32 clipMin  = mSaveNotice->mOffClipRatio.get();
+			f32 clipMin  = -clipMax;
 			bool inClipX = false;
 			bool inClipY = false;
 			if (clipMin <= clipPos.x && clipPos.x <= clipMax)
@@ -68,7 +68,8 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 			if (inClipX && clipMin <= clipPos.y && clipPos.y <= clipMax)
 				inClipY = true;
 
-			if (inClipY)
+			bool isInside = inClipX && inClipY;
+			if (isInside)
 				return mNoticeActor;
 		}
 	}
@@ -89,12 +90,12 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 			continue;
 
 		JGeometry::TVec2<f32> clipPos;
+		f32 clipMax = mSaveNotice->mOnClipRatio.get();
 		CLBCalc2DFPos(&clipPos, unk16C, unk1EC, unk2A0[i]->mPosition, nullptr,
 		              false);
 
 		// TODO: inline
-		f32 clipMax  = mSaveNotice->mOnClipRatio.get();
-		f32 clipMin  = mSaveNotice->mOnClipRatio.get();
+		f32 clipMin  = -clipMax;
 		bool inClipX = false;
 		bool inClipY = false;
 		if (clipMin <= clipPos.x && clipPos.x <= clipMax) {
@@ -103,7 +104,8 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 		if (inClipX && clipMin <= clipPos.y && clipPos.y <= clipMax) {
 			inClipY = true;
 		}
-		if (!inClipY)
+		bool isInside = inClipX && inClipY;
+		if (!isInside)
 			continue;
 
 		if (!MsIsInSight(*gpMarioPos, DEG2SHORTANGLE(*gpMarioAngleY),
