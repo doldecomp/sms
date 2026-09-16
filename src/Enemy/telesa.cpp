@@ -53,7 +53,6 @@ static const GXColorS10 cTelesaColor[2] = {
 };
 
 static const GXColor cTelesaColorStart = { 0, 0, 0, 0 };
-static const GXColor cTelesaColorEnd   = { 255, 255, 255, 255 };
 
 TTelesaSaveLoadParams::TTelesaSaveLoadParams(const char* path)
     : TWalkerEnemyParams(path)
@@ -352,8 +351,8 @@ void TTelesa::attackToMario()
 	    || !(mPosition.y + mAttackHeight - 50.0f < SMS_GetMarioPos().y)) {
 		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 		if (unk184) {
-			if (mSpine->getCurrentNerve()
-			    != &TNerveWalkerPostAttack::theNerve())
+			const TNerveBase<TLiveActor>* nerve = mSpine->getCurrentNerve();
+			if (nerve != &TNerveWalkerPostAttack::theNerve())
 				; // huh???
 		}
 	}
