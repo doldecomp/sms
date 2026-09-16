@@ -979,8 +979,8 @@ void TBaseNPC::sunflowerReviveIn()
 bool TBaseNPC::sunflowerReviving()
 {
 	bool result = false;
-	if (checkUnk1D8(UNK1D8_FLAG_UNK2)
-	    && unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK1A) {
+	bool bVar1 = checkUnk1D8(UNK1D8_FLAG_UNK2);
+	if (bVar1 && unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK1A) {
 		if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 			offUnk1D8(UNK1D8_FLAG_UNK2);
 			if (checkLiveFlag(LIVE_FLAG_UNK80000)) {
