@@ -2003,9 +2003,10 @@ static s32 hoseiDiveCameraCallback(u32 actorAddress, u32 state)
 	if (state == 1) {
 		const TLiveActor* actor
 		    = reinterpret_cast<const TLiveActor*>(actorAddress);
+		JGeometry::TVec3<f32>* marioPos = gpMarioPos;
 		JGeometry::TVec3<f32> position = actor->mPosition;
 		position.y += 12300.0f;
-		gpCamera->warpPosAndAt(position, *gpMarioPos);
+		gpCamera->warpPosAndAt(position, *marioPos);
 	}
 	return 0;
 }
