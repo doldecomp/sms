@@ -794,9 +794,11 @@ void TMapObjBase::emitAndRotateScale(s32 param_1, u8 param_2,
 	    = gpMarioParticleManager->emit(param_1, param_3, param_2, this);
 
 	if (emitter) {
-		emitter->setRotation(mRotation.x / 180.0f * 32768.0f,
-		                     mRotation.y / 180.0f * 32768.0f,
-		                     mRotation.z / 180.0f * 32768.0f);
+		JGeometry::TVec3<s16> rotation(
+		    mRotation.x / 180.0f * 32768.0f,
+		    mRotation.y / 180.0f * 32768.0f,
+		    mRotation.z / 180.0f * 32768.0f);
+		emitter->setRotation(rotation.x, rotation.y, rotation.z);
 		emitter->setGlobalScale(mScaling);
 	}
 }
