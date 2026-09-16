@@ -250,11 +250,12 @@ BOOL TBGTakeHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 		    gpMarioOriginal->getIntendedMag()
 		        * mOwner->mOwner->getSaveParam()->getSLTentacleStretch());
 
-		JGeometry::TVec3<f32> local_44 = mOwner->getOwner()->getPosition();
+		TBGTentacle* tentacle = mOwner;
+		JGeometry::TVec3<f32> local_44 = tentacle->getOwner()->getPosition();
 		local_44 -= local_EC;
 
 		if (local_44.dot(unk74) < 0.0f)
-			mOwner->incDamage();
+			tentacle->incDamage();
 
 		mOwner->getLastNode()->setPosition(local_EC);
 		return false;
