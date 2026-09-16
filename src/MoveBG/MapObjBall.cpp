@@ -4,6 +4,7 @@
 #include <System/MarDirector.hpp>
 #include <System/Particles.hpp>
 #include <Player/ModelWaterManager.hpp>
+#include <MoveBG/ItemManager.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <stdio.h>
 #include <string.h>
@@ -1030,4 +1031,52 @@ void TResetFruit::appearing()
 		makeObjAppeared();
 		mState = STATE_NORMAL;
 	}
+}
+
+void TBigWatermelon::rebound(JGeometry::TVec3<f32>* param_1)
+{
+	// A second bounce while already rotting bursts it.
+	if (isState(STATE_ROTTING)) {
+		kill();
+		*param_1 = mPosition;
+		return;
+	}
+
+	TMapObjBall::rebound(param_1);
+
+	if (isState(STATE_LIVING))
+		mState = STATE_ROTTING;
+}
+
+void TBigWatermelon::kill()
+{
+	emitAndScale(0x5D, 0, &mPosition);
+	emitAndScale(0x5E, 0, &mPosition);
+	emitAndScale(0x5F, 0, &mPosition);
+
+	JGeometry::TVec3<f32> scale(1.0f, 1.0f, 1.0f);
+	emitAndScale(0x6B, 0, &mPosition, scale);
+	emitAndScale(0x6C, 0, &mPosition, scale);
+
+	// Splash the juice through the water manager.
+	unk198->mPos.value = mPosition;
+	gpModelWaterManager->emitRequest(*unk198);
+
+	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_WATERMELON_BLOCK, &mPosition, 0,
+	                                nullptr, 0, 4);
+
+	// Each burst drops one coin, up to ten over the object's lifetime.
+	if (unk19C < 10) {
+		TMapObjBase* coin = gpItemManager->makeObjAppear(
+		    mPosition.x, mPosition.y, mPosition.z, 0x2000000E, true);
+		if (coin) {
+			coin->mVelocity.x = 0.0f;
+			coin->mVelocity.y = 25.0f;
+			coin->mVelocity.z = 0.0f;
+			coin->offLiveFlag(LIVE_FLAG_UNK10);
+			unk19C++;
+		}
+	}
+
+	TMapObjGeneral::kill();
 }
