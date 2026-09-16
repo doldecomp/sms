@@ -2050,7 +2050,8 @@ DEFINE_NERVE(TNerveFireWanwanHungTail, TLiveActor)
 	JGeometry::TVec3<f32> vec = self->mPosition;
 	vec -= SMS_GetMarioPos();
 
-	self->mRotation.y = MsGetRotFromZaxisY(vec);
+	f32 rot           = MsGetRotFromZaxisY(vec);
+	self->mRotation.y = rot;
 	if (self->isReadyToFly()) {
 		spine->pushAfterCurrent(&TNerveFireWanwanFly::theNerve());
 		return true;
