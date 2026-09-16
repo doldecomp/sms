@@ -74,6 +74,8 @@ public:
 		STATE_BURIED            = 0x8,
 		STATE_RECOVERING        = 0x9,
 		STATE_WAITING_TO_APPEAR = 0xA,
+		// Added by TResetFruit: alive and counting down to disappear.
+		STATE_LIVING            = 0xB,
 	};
 
 public:

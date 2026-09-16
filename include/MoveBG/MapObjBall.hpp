@@ -64,7 +64,7 @@ public:
 	virtual void initMapObj();
 	virtual void touchActor(THitActor*);
 	virtual u32 touchWater(THitActor*);
-	virtual u32 getLivingTime() const;
+	virtual u32 getLivingTime() const { return mFruitLivingTime; }
 	virtual void appearing();
 	virtual void breaking();
 	virtual void waitingToAppear();
@@ -84,12 +84,17 @@ public:
 	void makeObjLiving();
 	void makeObjWaitingToAppear();
 
-	u32 mFruitLivingTime;
-	u32 mScaleUpSpeed;
-	u32 mRottingScaleSpeed;
-	u32 mBreakingScaleSpeed;
-	u32 mFruitWaitTimeToAppear;
-	u32 mRottenColor;
+	// The map records all six of these as globals, not members.
+	static u32 mFruitLivingTime;
+	static f32 mScaleUpSpeed;
+	static f32 mRottingScaleSpeed;
+	static f32 mBreakingScaleSpeed;
+	static u32 mFruitWaitTimeToAppear;
+	static GXColorS10 mRottenColor;
+
+	/* 0x198 */ f32 unk198;
+	/* 0x19C */ GXColorS10 unk19C;
+	/* 0x1A4 */ u8 unk1A4;
 };
 
 class TRandomFruit : public TResetFruit {

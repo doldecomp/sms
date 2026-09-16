@@ -1,4 +1,5 @@
 #include <MoveBG/MapObjBall.hpp>
+#include <MarioUtil/PacketUtil.hpp>
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
 #include <Map/MapCollisionData.hpp>
@@ -544,4 +545,54 @@ TMapObjBall::TMapObjBall(const char* name)
 	mInitialScaling.z = 0.0f;
 	mInitialScaling.y = 0.0f;
 	mInitialScaling.x = 0.0f;
+}
+
+u32 TResetFruit::mFruitLivingTime       = 14400;
+f32 TResetFruit::mScaleUpSpeed          = 1.05f;
+// UNUSED in the map; the value is not recoverable from the binary.
+f32 TResetFruit::mRottingScaleSpeed     = 0.99f;
+f32 TResetFruit::mBreakingScaleSpeed    = 0.96f;
+u32 TResetFruit::mFruitWaitTimeToAppear = 360;
+// UNUSED in the map; the value is not recoverable from the binary.
+GXColorS10 TResetFruit::mRottenColor    = { 0, 0, 0, 0 };
+
+void TResetFruit::makeObjLiving()
+{
+	if (!isStateTimerEngaged()) {
+		onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
+		mStateTimer = getLivingTime();
+	}
+	offLiveFlag(LIVE_FLAG_UNK10);
+	mState = STATE_LIVING;
+}
+
+void TResetFruit::thrown()
+{
+	TMapObjGeneral::thrown();
+	mState = STATE_LIVING;
+}
+
+void TResetFruit::killByTimer(int param_1)
+{
+	mStateTimer = param_1;
+	onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
+	mState = STATE_LIVING;
+}
+
+void TResetFruit::initMapObj()
+{
+	TMapObjBall::initMapObj();
+	SMS_InitPacket_OneTevColor(getModel(), 0, GX_TEVREG0, &unk19C);
+}
+
+TResetFruit::TResetFruit(const char* name)
+    : TMapObjBall(name)
+{
+	unk198 = 0.0f;
+	unk1A4 = 0;
+
+	unk19C.r = 255;
+	unk19C.g = 255;
+	unk19C.b = 255;
+	unk19C.a = 255;
 }
