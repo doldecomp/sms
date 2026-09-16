@@ -1,1 +1,11 @@
-
+static float value1 = 1.0f;
+static float value2 = 1.0f;
+static float value3 = 15.0f;
+static float value4 = 0.08f;
+static float value5 = 3300.0f;
+static float value6 = 5400.0f;
+static float value7 = 100.0f;
+static float value8 = 300.0f;
+static float value9 = 2.0f;
+static int value10   = 120;
+static int value11   = 600;
