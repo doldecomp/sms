@@ -38,6 +38,7 @@ public:
 	virtual void reset();
 	virtual void kill();
 	virtual void forceKill();
+	virtual void attackToMario();
 
 	// New virtuals, declared in the order the vtable lists them
 	// (0x1b8 onwards).
@@ -84,7 +85,7 @@ public:
 	/* 0x194 */ u8 unk194;
 	/* 0x198 */ int mBoundCount;
 	/* 0x19C */ TTobiPukuParams* unk19C;
-	/* 0x1A0 */ u8 unk1A0[0x1AC - 0x1A0];
+	/* 0x1A0 */ JGeometry::TVec3<f32> mFlamePos;
 	/* 0x1AC */ u8 unk1AC;
 	/* 0x1AD */ u8 unk1AD;
 	/* 0x1AE */ u8 unk1AE;

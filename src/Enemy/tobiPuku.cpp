@@ -3,6 +3,8 @@
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <Map/MapData.hpp>
+#include <Map/Map.hpp>
+#include <Map/MapCollisionData.hpp>
 #include <Enemy/SmallEnemy.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Enemy/PathNode.hpp>
@@ -733,6 +735,52 @@ void TTobiPuku::moveObject()
 // TODO: 97.3%. One instruction differs: the original computes &unk104 into a
 // register before the inlined getPoint, which neither the direct expression nor
 // binding the result to a reference reproduces.
+void TTobiPuku::attackToMario()
+{
+	SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+
+	if (mSpine->getCurrentNerve() == &TNerveTobiPukuAttack::theNerve())
+		return;
+	if (unk1AE)
+		return;
+	if (SMS_CheckMarioFlag(MARIO_FLAG_IN_WATER))
+		return;
+
+	JGeometry::TVec3<f32> stop(0.0f, 0.0f, 0.0f);
+	mLaunchVelocity = stop;
+	mSpine->pushNerve(&TNerveTobiPukuAttack::theNerve());
+}
+
+void TTobiPuku::hitWall()
+{
+	TBGWallCheckRecord record(mPosition.x, mPosition.y + mHeadHeight,
+	                          mPosition.z, 1.1f * (mBodyScale * mWallRadius),
+	                          1, 0);
+
+	if (gpMap->isTouchedWallsAndMoveXZ(&record)) {
+		const TBGCheckData* wall = record.mResultWalls[0];
+		// TODO: 95.2%. Two loads short: the original re-reads mNormal.x and
+		// mVelocity.x after the dot product instead of keeping them live,
+		// and its frame is 0x40 larger.
+		f32 bounce
+		    = -(2.0f
+		        * (mVelocity.y * wall->mNormal.y + mVelocity.x * wall->mNormal.x
+		           + mVelocity.z * wall->mNormal.z));
+		mVelocity.x += bounce * wall->mNormal.x;
+		mVelocity.y *= 0.5f;
+		mVelocity.z += bounce * wall->mNormal.z;
+		mLaunchVelocity = mVelocity;
+		unk1B0          = mPosition.y;
+		return;
+	}
+
+	const TBGCheckData* roof;
+	gpMap->checkRoof(mPosition.x, mPosition.y + mHeadHeight, mPosition.z,
+	                 &roof);
+	if (roof && roof->getActor() && mVelocity.y > 0.0f)
+		mVelocity.y = 0.0f;
+}
+
 void TTobiPuku::kill()
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
@@ -907,4 +955,24 @@ void TPukuPuku::reset()
 {
 	TTobiPuku::reset();
 	mSpine->initWith(&TNerveTobiPukuSwimWander::theNerve());
+}
+
+void TMoePuku::hitWater()
+{
+	TTobiPuku::hitWater();
+
+	// The flame trails the head joint rather than the actor origin.
+	MtxPtr mtx = getMActor()->getModel()->getAnmMtx(1);
+	mFlamePos.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+
+	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
+	    0x8B, &mPosition, 0, nullptr);
+	if (emitter) {
+		JGeometry::TVec3<f32> scale(2.0f, 2.0f, 2.0f);
+		emitter->setGlobalScale(scale);
+	}
+
+	// The burning pukupuku hitting water reuses the wanwan sizzle.
+	SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
+	                                nullptr, 0, 4);
 }
