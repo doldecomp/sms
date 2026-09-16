@@ -130,6 +130,14 @@ bool SMS_IsMarioTouchGround4cm()
 		return false;
 }
 
+// TODO: 93.8%, and the only function keeping MarioAccess.cpp from being
+// source-linked. The original loads mHolder twice -- once into r0 for the null
+// test, once into r3 to dereference -- where MWCC gives us one load reused.
+// Four source forms were tried and none reproduces it: the short-circuit &&
+// (93.8%, best), a separate null check then else-if (90.0%), assigning the
+// comparison to the result (54.7%), and casting the holder before the member
+// access (93.8%, identical codegen). Whatever defeats the common-subexpression
+// elimination here is not reachable from these shapes.
 bool SMS_IsMarioOnWire()
 {
 	bool ret;
