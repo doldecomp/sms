@@ -89,9 +89,11 @@ bool CPolarSubCamera::isNeedGroundCheck_()
 	} else if (mMode != CAMERA_MODE_SLIDER
 	           && (isNormalCameraSpecifyMode(mMode)
 	               || isTowerCameraSpecifyMode(mMode))) {
-		f32 a = mCurrentParams->mDistMin * JMASSin(mCurrentParams->mXAngleMin);
+		f32 a = mCurrentParams->mDistMin;
+		a *= JMASSin(mCurrentParams->mXAngleMin);
 		f32 b = mCurrentParams->mDistMax * JMASSin(mCurrentParams->mXAngleMax);
-		f32 distY = mPosition.y - mTarget.y;
+		f32 distY = mPosition.y;
+		distY -= mTarget.y;
 		if (a > b)
 			b = a;
 		if (distY > 1.25f * b) {
