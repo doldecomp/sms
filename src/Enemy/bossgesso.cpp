@@ -122,6 +122,7 @@ TBossGessoParams::TBossGessoParams(const char* path)
 TBGBeakHit::TBGBeakHit(TBossGesso* owner, const char* name)
     : TTakeActor(name)
     , mOwner(owner)
+    , unk74(TMtx34f())
 {
 	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
 	    ->getChildren()
