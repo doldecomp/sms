@@ -138,18 +138,19 @@ static void evConnectDummyNpc(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->verifyArgNum(1, &arg_num);
 
 	int result = 0;
+	int actorAddress;
 
 	TBaseNPC* dummyNpc = JDrama::TNameRefGen::search<TBaseNPC>("ダミーＮＰＣ");
 	if (dummyNpc != nullptr) {
-		const JDrama::TActor* actor
-		    = (const JDrama::TActor*)interp->pop().getDataInt();
+		actorAddress = interp->pop().getDataInt();
+		const JDrama::TActor* actor = (const JDrama::TActor*)actorAddress;
 		dummyNpc->setDummyConnectActor(actor);
 		result = 1;
 	} else {
 		interp->pop();
 	}
 
-	interp->push(result);
+	interp->push(TSpcSlice(result));
 }
 
 static void evOnTalkToDummyNpc(TSpcTypedInterp<TEventWatcher>* interp,
