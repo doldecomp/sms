@@ -800,6 +800,7 @@ void TBossEelTooth::changeToothAlpha(u8 alpha) { mColor.a = alpha; }
 
 BOOL TBossEelTooth::receiveMessage(THitActor* sender, u32 message)
 {
+	MtxPtr detachedMtx;
 	BOOL result = false;
 	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (mDamageCooldown == 0 && !mOwner->mToothBroken && mHitPoints > 1) {
@@ -817,8 +818,9 @@ BOOL TBossEelTooth::receiveMessage(THitActor* sender, u32 message)
 				mOwner->forceShedTears(mCanShedTears);
 
 			if (mHitPoints == 1) {
-				mColor.a = 0;
-				MTXCopy(mSharedParts->getConnectedMtx(), mDetachedMtx);
+				mColor.a    = 0;
+				detachedMtx = mDetachedMtx;
+				MTXCopy(mSharedParts->getConnectedMtx(), detachedMtx);
 				if (mToothType == 1) {
 					SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEATH_COMEOFF,
 					                                &mPosition, 0, nullptr, 0,
