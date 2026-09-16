@@ -241,8 +241,8 @@ void TMapObjPlane::perform(u32 cue, JDrama::TGraphics*)
 
 void TMapObjPlane::makeMountain()
 {
-	int width = (unk118[0x15] << 24) + (unk118[0x14] << 16)
-	            + (unk118[0x13] << 8) + unk118[0x12];
+	int tmp = (unk118[0x15] << 24) + (unk118[0x14] << 16);
+	int width = tmp + (unk118[0x13] << 8) + unk118[0x12];
 
 	int height = (unk118[0x19] << 24) + (unk118[0x18] << 16)
 	             + (unk118[0x17] << 8) + unk118[0x16];
