@@ -177,23 +177,14 @@ void TMonumentShine::control()
 				}
 			} else {
 				mAngularVelocity.y -= 0.1f;
-				f32 step = 360.0f;
-				f32 zero = 0.0f;
-				while (mRotation.y + mAngularVelocity.y < zero) {
-					mRotation.y += step;
+				while (mRotation.y + mAngularVelocity.y < 0.0f) {
+					mRotation.y += 360.0f;
 					unk144++;
 				}
 			}
 		}
 	} else {
-		f32 rot   = mRotation.y;
-		f32 limit = 360.0f;
-		while (rot >= limit)
-			rot -= limit;
-		f32 zero = 0.0f;
-		while (rot < zero)
-			rot += limit;
-		mRotation.y = rot;
+		mRotation.y = MsWrap(mRotation.y, 0.0f, 360.0f);
 	}
 }
 
