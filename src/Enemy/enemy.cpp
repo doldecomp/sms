@@ -91,13 +91,13 @@ void TSpineEnemy::calcEnemyRootMatrix()
 		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
 	} else {
 		if (unk130 >= 2 && !isAirborne() && unk138 != nullptr) {
+			JGeometry::TVec3<f32> v3(0.0f, 1.0f, 0.0f);
 			JGeometry::TVec3<f32> v2 = unk138->getNormal();
 
 			JGeometry::TVec3<f32> v1;
-			v1.cross(v2, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
+			v1.cross(v2, v3);
 			v1.normalize();
 
-			JGeometry::TVec3<f32> v3;
 			v3.cross(v1, v2);
 			v3.normalize();
 
@@ -116,14 +116,14 @@ void TSpineEnemy::calcEnemyRootMatrix()
 		} else {
 			if (unk130 >= 1
 			    && !mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
-				JGeometry::TVec3<f32> v1(JMASin(mRotation.y), 0.0f,
+				JGeometry::TVec3<f32> v3(JMASin(mRotation.y), 0.0f,
 				                         JMACos(mRotation.y));
 
 				JGeometry::TVec3<f32> v2 = mGroundPlane->getNormal();
-				v1.cross(v2, v1);
+				JGeometry::TVec3<f32> v1;
+				v1.cross(v2, v3);
 				v1.normalize();
 
-				JGeometry::TVec3<f32> v3;
 				v3.cross(v1, v2);
 				v3.normalize();
 
