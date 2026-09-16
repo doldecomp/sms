@@ -6,6 +6,7 @@
 #include <Map/Map.hpp>
 #include <MoveBG/MapObjCorona.hpp>
 #include <MoveBG/MapObjManager.hpp>
+#include <Player/MarioAccess.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/Spine.hpp>
 #include <System/Particles.hpp>
@@ -13,7 +14,9 @@
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
+#include <MSound/MSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <MSound/MSoundSE.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
 static const char* bathtubkiller_bastable[] = {
@@ -300,6 +303,55 @@ void TBathtubKiller::perform(u32 cue, JDrama::TGraphics* graphics)
 	TSmallEnemy::perform(cue, graphics);
 	if (unk1CC == nullptr)
 		unk1CC = JDrama::TNameRefGen::search<TBathtub>("バスタブ");
+
+	if ((cue & CUE_MOVE) && !checkLiveFlag(LIVE_FLAG_DEAD)) {
+		updateTimers();
+
+		if (unk208 <= 0 && !isAttackable())
+			mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
+
+		if (!gpMap->isInArea(mPosition.x, mPosition.z)) {
+			unk21C = 0;
+			onLiveFlag(LIVE_FLAG_DEAD);
+			stopAnmSound();
+		}
+
+		if (unk1CC->unk29A != 0) {
+			unk21C = 0;
+			onLiveFlag(LIVE_FLAG_DEAD);
+			stopAnmSound();
+		}
+	}
+
+	if ((cue & CUE_CALC_ANIM) && !checkLiveFlag(LIVE_FLAG_DEAD)
+	    && !isAttackable()) {
+		if (unk194 == 2) {
+			unk1FC += unk1F8;
+			if (unk1FC > 1.0f) {
+				unk1FC = 1.0f;
+				unk1F8 = -getSaveParam2()->mSLColorChangeRateDelta.get();
+			}
+			if (unk1FC < 0.0f) {
+				unk1FC = 0.0f;
+				unk1F8 = getSaveParam2()->mSLColorChangeRateDelta.get();
+			}
+			unk1E0.r = 50.0f * unk1FC;
+		}
+
+		unk1D4++;
+		if (unk1D4 >= getSaveParam2()->mSLSmokeInterval.get()) {
+			unk1D4 = 0;
+			static_cast<TPosition3f&>(unk220).setQT(mQuat, mPosition);
+			gpMarioParticleManager->emitAndBindToMtxPtr(0x1BD, unk220, 1,
+			                                            this);
+		}
+
+		if (SMSGetMSound()->gateCheck(MSD_SE_EN_KILLER_FLY)) {
+			SMSGetMSound()->startSoundActorWithInfo(
+			    MSD_SE_EN_KILLER_FLY, &mPosition, nullptr,
+			    mPosition.distance(SMS_GetMarioPos()), 0, 0, nullptr, 0, 4);
+		}
+	}
 }
 
 void TBathtubKiller::makeNoseColor() { }
@@ -380,7 +432,19 @@ void TBathtubKiller::setStraightBathtubKillerAnm() { }
 
 void TBathtubKiller::setDeadBathtubKillerAnm() { }
 
-void TBathtubKiller::updateTimers() { }
+void TBathtubKiller::updateTimers()
+{
+	if (unk208 > 0)
+		unk208--;
+	if (unk20C > 0)
+		unk20C--;
+	if (unk210 > 0)
+		unk210--;
+	if (unk214 > 0)
+		unk214--;
+	if (unk218 > 0)
+		unk218--;
+}
 
 bool TBathtubKiller::isAttackable()
 {
