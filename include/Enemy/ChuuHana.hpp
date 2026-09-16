@@ -118,7 +118,7 @@ public:
 	/* 0x198 */ f32 unk198;
 	/* 0x19C */ f32 unk19C;
 	/* 0x1A0 */ s32 unk1A0;
-	/* 0x1A4 */ u32 unk1A4;
+	/* 0x1A4 */ s32 unk1A4;
 	/* 0x1A8 */ f32 unk1A8;
 	/* 0x1AC */ u32 unk1AC;
 	/* 0x1B0 */ u8 unk1B0;
@@ -136,7 +136,7 @@ public:
 	/* 0x218 */ THitActor* unk218;
 	/* 0x21C */ u8* unk21C;
 	/* 0x220 */ f32 unk220;
-	/* 0x224 */ u32 unk224;
+	/* 0x224 */ s32 unk224;
 	/* 0x228 */ TChuuHanaAseParCallback mAseParCallback;
 };
 
