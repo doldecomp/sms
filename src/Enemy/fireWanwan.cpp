@@ -1678,10 +1678,11 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
                             const JGeometry::TVec3<f32>& param_3, f32 radius,
                             TBGWallCheckRecord* out_record)
 {
+	const TBGCheckData* local_30;
+	const TBGCheckData* local_34;
+
 	JGeometry::TVec3<f32> actualPoint = point;
 	actualPoint += param_3;
-
-	const TBGCheckData* local_30;
 
 	if (checkLiveFlag(LIVE_FLAG_UNK1000))
 		mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
@@ -1697,7 +1698,6 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
 	if (point.y > actualPoint.y && !local_30->isIllegalData()) {
 		if (!local_30->isEnemyThrough()) {
 			f32 dVar9;
-			const TBGCheckData* local_34;
 			if (checkLiveFlag(LIVE_FLAG_UNK1000))
 				dVar9 = gpMap->checkGroundIgnoreWaterSurface(
 				    actualPoint.x, actualPoint.y + mHeadHeight, actualPoint.z,
