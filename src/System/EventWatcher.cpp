@@ -860,7 +860,7 @@ static void evCheckWoodBox(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	int p1 = interp->pop().getDataInt();
 	int p2 = interp->pop().getDataInt();
 
-	int count = p2 - p1 + 1;
+	int count = p1 - p2 + 1;
 
 	char buffer[] = "ゲーム木箱00";
 	for (int i = p2; i <= p1; ++i) {
