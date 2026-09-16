@@ -457,7 +457,27 @@ f32 TBathtubKiller::getGravityY() const
 
 void TBathtubKiller::calcRootMatrix() { }
 
-BOOL TBathtubKiller::receiveMessage(THitActor*, u32) { return false; }
+BOOL TBathtubKiller::receiveMessage(THitActor* sender, u32 message)
+{
+	if (message == HIT_MESSAGE_SUPER_HIP_DROP
+	    || message == HIT_MESSAGE_TRAMPLE || message == HIT_MESSAGE_HIP_DROP) {
+		if (!isAttackable())
+			mSpine->pushNerve(&TNerveBathtubKillerBreak::theNerve());
+		return true;
+	} else if (message == HIT_MESSAGE_UNKA) {
+		if (!isAttackable())
+			mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
+		return true;
+	} else if (message == HIT_MESSAGE_UNKD) {
+		attackToMario();
+		return true;
+	} else if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
+		behaveToWater(sender);
+		return true;
+	}
+
+	return false;
+}
 
 void TBathtubKiller::attackToMario() { }
 
