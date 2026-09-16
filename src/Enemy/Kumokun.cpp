@@ -496,7 +496,7 @@ void TKumokun::bindOnFlying()
 
 void TKumokun::moveObject()
 {
-	if (unk1D0 > 0)
+	if (isCrashing())
 		unk1D0 -= 1;
 
 	updateAnimation();
@@ -822,7 +822,7 @@ void TKumokun::prepareFly()
 {
 	JGeometry::TVec3<f32> vel = getPlaneNormal();
 	vel.setLength(getSaveParam2()->mFlySpeed.get());
-	mLinearVelocity = vel;
+	mVelocity = vel;
 
 	resetHitPlaneCounter();
 
@@ -894,7 +894,9 @@ bool TKumokun::isFlying() const
 	return mSpine->getLatestNerve() == &TNerveKumokunFly::theNerve();
 }
 
-bool TKumokun::isCrashing() const { }
+// TODO: mario.MAP gives this 76 bytes, so the body is longer than the guard
+// TKumokun::moveObject inlines, which is only the unk1D0 test.
+bool TKumokun::isCrashing() const { return unk1D0 > 0; }
 
 bool TKumokun::isHitPlane() const { return mHitPlaneCounter > 0; }
 
@@ -1032,7 +1034,7 @@ void TKumokunManager::load(JSUMemoryInputStream& stream)
 
 	params->mSLAttackRadius.set(60);
 	params->mSLAttackHeight.set(50);
-	params->mSLDamageRadius.set(60);
+	params->mSLDamageRadius.set(65);
 	params->mSLDamageHeight.set(70);
 	TSmallEnemyManager::load(stream);
 }

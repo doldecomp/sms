@@ -22,7 +22,7 @@ public:
 
 class TKumokunManager : public TSmallEnemyManager {
 public:
-	TKumokunManager(const char* name = "くもくんマネージャ");
+	TKumokunManager(const char* name = "くもくんマネージャー");
 
 	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();

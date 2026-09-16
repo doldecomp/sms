@@ -38,9 +38,9 @@ public:
 	}
 
 	// fabricated and wrong
-	T top() const { return operator[](mSize - 1); }
+	const T& top() const { return operator[](mSize - 1); }
 	// fabricated and wrong
-	T operator[](int index) const { return mData[index]; }
+	const T& operator[](int index) const { return mData[index]; }
 
 	// fabricated
 	BOOL contain(const T& value) const
