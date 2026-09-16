@@ -77,13 +77,12 @@ void TMapWarp::watchToWarp()
 
 void TMapWarp::initModel()
 {
-	// TODO: inlines
 	int num = gpMap->getModelManager()->getJointModel(0)->mChildrenNum;
 	for (int i = 0; i < num; ++i)
 		if (i != unk8)
 			gpMap->getModelManager()
 			    ->getJointModel(0)
-			    ->mChildren[(u16)i]
+			    ->getChild((u16)i)
 			    ->sleep();
 }
 
