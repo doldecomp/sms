@@ -715,14 +715,14 @@ f32 TBossManta::getPolluteRadius()
 
 void TBossManta::updateAttractor()
 {
-	JGeometry::TVec3<f32> local_108 = mPosition;
-	local_108 -= unk158;
+	JGeometry::TVec3<f32> local_108 = unk158;
+	local_108 -= mPosition;
 	local_108.y = 0.0f;
 	local_108.normalize();
 	local_108 *= getSaveParams()->mSLAttractorPower.get();
 
 	JGeometry::TVec3<f32> facing = unk170;
-	facing *= getSaveParams()->mSLPusherPower.get();
+	facing *= getSaveParams()->mSLEscapeLookPoint.get();
 
 	JGeometry::TVec3<f32> selfPos = mPosition;
 	selfPos += facing;
@@ -734,23 +734,30 @@ void TBossManta::updateAttractor()
 		    || other->getInstanceIndex() == getInstanceIndex())
 			continue;
 
-		JGeometry::TVec3<f32> otherFacing = other->unk170;
-		otherFacing *= getSaveParams()->mSLPusherPower.get();
+		JGeometry::TVec3<f32> delta = selfPos;
 
-		JGeometry::TVec3<f32> otherPos = mPosition;
+		JGeometry::TVec3<f32> otherFacing = other->unk170;
+		otherFacing *= getSaveParams()->mSLEscapeLookedPoint.get();
+
+		JGeometry::TVec3<f32> otherPos = other->mPosition;
 		otherPos += otherFacing;
 
-		JGeometry::TVec3<f32> delta;
-		delta.sub(selfPos, otherPos);
+		delta -= otherPos;
 		delta.y = 0.0f;
 
-		if (0.1f < delta.length()
-		    && delta.length() < getSaveParams()->mSLEscapeRegion.get()) {
-			JGeometry::TVec3<f32> thing;
-			thing.set(delta);
-			thing.normalize();
-			thing *= getSaveParams()->mSLPusherPower.get() / thing.length();
-			local_108 += thing;
+		f32 deltaSquared = delta.squared();
+		if (0.1f < JGeometry::TUtil<f32>::sqrt(deltaSquared)
+		    && JGeometry::TUtil<f32>::sqrt(deltaSquared)
+		           < getSaveParams()->mSLEscapeRegion.get()) {
+			if (deltaSquared <= JGeometry::TUtil<f32>::epsilon()) {
+				delta.zero();
+			} else {
+				delta.scale(JGeometry::TUtil<f32>::one()
+				                * JGeometry::TUtil<f32>::inv_sqrt(deltaSquared),
+				            delta);
+			}
+			delta *= getSaveParams()->mSLPusherPower.get() / delta.length();
+			local_108 += delta;
 		}
 	}
 
