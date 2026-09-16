@@ -565,8 +565,9 @@ DEFINE_NERVE(TNerveBEelTearsMarioRecover, TLiveActor)
 {
 	TBEelTears* tears = static_cast<TBEelTears*>(spine->getBody());
 	if (!tears->mRecoverCollision->mRecovering) {
+		JGeometry::TVec3<f32>* marioPos = gpMarioPos;
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
-		    BOSSEELTEARS_MS_MEO_TEAR_AWAGET, gpMarioPos, 0, nullptr);
+		    BOSSEELTEARS_MS_MEO_TEAR_AWAGET, marioPos, 0, nullptr);
 		if (emitter)
 			emitter->setGlobalScale(tears->mScaling);
 		tears->kill();
