@@ -8,7 +8,38 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 62 — hauntLeg started, fifteen of twenty-eight exact
+## Latest checkpoint: batch 69 — nerve bodies, and a real cause for the frame gaps
+
+Game matched code **28.28%**, aggregate **41.18%**, source-linked **17.78%** (399 of 732 files). DOL byte-identical throughout. No gameplay test performed.
+
+### The frame-gap finding, and a correction
+
+Batch 61 concluded that near-exact frame gaps were an opaque compiler artifact and catalogued the class as blocked. **That was wrong for at least some of them.**
+
+A `TParamRT<T>` occupies 0x14 bytes and holds its value at **+0x10**, so a raw field read at, say, 0x364 is really `.get()` on a param declared at 0x354, and the accessor's temporary is the missing stack. In `tobiPuku` three consecutive reads turned out to be exactly this. Declaring the params properly, constructing them with `PARAM_INIT` and calling `.get()` took `TNerveTobiPukuPitiPiti::execute` from a stubborn 8-byte gap to **exact**, and cut `Bound`'s gap from 32 bytes to 8.
+
+Before writing off any frame gap, check every raw field read against the `+0x10` rule. Generated `u8 unkNNN[...]` padding blocks actively hide params.
+
+Two other hypotheses were tested and **disproven**: `TSolidStack::push` taking `const T&` (no frame change, 65 regressions) and holding the nerve in a local before pushing (no frame change, worse score). Both are recorded so they are not retried.
+
+### Nerve bodies
+
+Nine of twelve `tobiPuku` nerves are written. `SwimWander` and `PitiPiti` are exact; `Die`, `Fly`, `Attack`, `Bound` and `PrepareFly` are 99.3-99.9% with **zero structural differences**; `Generate` is 96.2% with only a register swap; `Fall` is 98.3%.
+`HitWater`, `ReturnLaunch` and `Land` are still placeholders carrying their map sizes.
+
+Reconstructing a nerve body requires the actor's virtuals declared in vtable order first, since the calls compile to fixed offsets. `docs/MATCHING_CATALOG.md` has the one-liner that dumps a vtable with slot offsets. Read the **whole** dump: a partial read led to `setDeadAnm` being declared non-virtual when it overrides the slot at 0x154.
+
+### Structural seams, now spent
+
+Earlier batches took game matched code from 26.15% to 28.28% mostly through structure rather than bodies: 308 library objects source-linked (2.57% -> 17.61%), 209 nerve accessors across ~30 units, and class hierarchies recovered from destructor vtable chains in another dozen. Those seams are exhausted; what remains is per-function reconstruction.
+
+### Still open
+
+- **The branch exists only on this disk.** 45+ commits, no fork configured. This is the one outstanding risk and needs a remote from the user.
+- `Camera/CameraInbetween` remains the last fully matching game object that will not link; its diagnosis is in the catalog.
+- ~200 nerve bodies and the bulk of every enemy and MoveBG unit's real methods are unwritten.
+
+## Verified checkpoint: batch 62 — hauntLeg started, fifteen of twenty-eight exact
 
 `src/Enemy/hauntLeg.cpp` and `include/Enemy/HauntLeg.hpp` did not exist. Fifteen of twenty-eight functions match on the first working build.
 Game matched code **26.32% -> 26.36%**, aggregate **39.63% -> 39.66%**.
