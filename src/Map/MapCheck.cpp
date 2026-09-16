@@ -256,6 +256,8 @@ f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 flags,
                                        const TBGCheckList* head,
                                        const TBGCheckData** result)
 {
+	s32 ignoreWaterThrough = flags & IGNORE_WATER_THROUGH;
+	s32 ignoreWaterSurface = flags & IGNORE_WATER_SURFACE;
 	while (head) {
 		const TBGCheckData* data = head->unk8;
 		head                     = head->getNext();
@@ -263,14 +265,17 @@ f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 flags,
 		if (data->mMinY > y)
 			continue;
 
-		if ((flags & IGNORE_WATER_THROUGH) && data->isWaterThrough())
+		if ((s32)ignoreWaterThrough != 0 && data->isWaterThrough())
 			continue;
 
-		if ((flags & IGNORE_WATER_SURFACE) && data->isWaterSurface())
+		if ((s32)ignoreWaterSurface != 0 && data->isWaterSurface())
 			continue;
 
-		if ((data->mPoint1.z - z) * (data->mPoint2.x - data->mPoint1.x)
-		        - (data->mPoint1.x - x) * (data->mPoint2.z - data->mPoint1.z)
+		f32 x1 = data->mPoint1.x;
+		f32 z1 = data->mPoint1.z;
+
+		if ((z1 - z) * (data->mPoint2.x - x1)
+		        - (x1 - x) * (data->mPoint2.z - z1)
 		    < -1.0f)
 			continue;
 
@@ -279,8 +284,8 @@ f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 flags,
 		    < -1.0f)
 			continue;
 
-		if ((data->mPoint3.z - z) * (data->mPoint1.x - data->mPoint3.x)
-		        - (data->mPoint3.x - x) * (data->mPoint1.z - data->mPoint3.z)
+		if ((data->mPoint3.z - z) * (x1 - data->mPoint3.x)
+		        - (data->mPoint3.x - x) * (z1 - data->mPoint3.z)
 		    < -1.0f)
 			continue;
 
