@@ -644,14 +644,15 @@ int TSmallEnemy::getChangeBlockTime()
 
 bool TSmallEnemy::changeMove()
 {
-	if (TSmallEnemyManager::mBlockWaitTime * 0.2f <= mSpine->getTime()) {
+	if (!(TSmallEnemyManager::mBlockWaitTime * 0.2f < mSpine->getTime())) {
 		f32 time = TSmallEnemyManager::mBlockWaitTime * 0.2f;
 
-		mJuiceBlock->mPosition.y += unk188 * 2.0f
-		                            * JMASin(mSpine->getTime() * 130.0f / time)
-		                            * TSmallEnemyManager::mBlockWaitMoveY;
+		mJuiceBlock->mPosition.y
+		    += 2.0f * TSmallEnemyManager::mBlockWaitMoveY
+		       * JMASin(mSpine->getTime() * 130.0f / time) * unk188;
 
-		mJuiceBlock->mRotation.y += mSpine->getTime() * 1080.0f / time;
+		mJuiceBlock->mRotation.y
+		    = mJuiceBlock->mRotation.y + mSpine->getTime() * 1080.0f / time;
 	} else {
 		if (mSpine->getTime() > TSmallEnemyManager::mBlockWaitTime) {
 			if (mSpine->getTime() > getChangeBlockTime() - 200) {
@@ -697,7 +698,7 @@ bool TSmallEnemy::changeMove()
 				                         mJuiceBlock->mPosition.y + mHeadHeight,
 				                         mJuiceBlock->mPosition.z, &local_2C);
 				if (local_2C && mJuiceBlock->mPosition.y + mHeadHeight > d
-				    && local_2C->mActor != mJuiceBlock)
+				    && mJuiceBlock != local_2C->mActor)
 					return 1;
 				break;
 			}
