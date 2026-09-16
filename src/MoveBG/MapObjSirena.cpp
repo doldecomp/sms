@@ -510,11 +510,13 @@ u32 TItemSlotDrum::touchWater(THitActor* water)
 	if (unk194 || !unk1A2)
 		return 1;
 
-	unk1A4 = TMsRange<s32>(100, 150).rand();
+	TMsRange<s32> range(100, 150);
+	unk1A4 = range.rand();
 	for (int i = 0; i < unk148; ++i) {
 		unk19F[i] = true;
 		unk19C[i] = false;
-		unk138[i] = unk158 * TMsRange<f32>(0.5f, 0.8f).rand();
+		TMsRange<f32> range2(0.5f, 0.8f);
+		unk138[i] = unk158 * range2.rand();
 	}
 	unk1A2 = false;
 
