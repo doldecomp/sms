@@ -116,7 +116,8 @@ void TEMario::init(TLiveManager* manager)
 			for (int i = 0;
 			     i < mMActor->getModel()->getModelData()->getMaterialNum();
 			     i++) {
-				SMS_InitPacket_Fog(mMActor->getModel(), i);
+				J3DModel* model = mMActor->getModel();
+				SMS_InitPacket_Fog(model, i);
 			}
 			mMActor->setBtk("kagemario_scroll");
 		}
