@@ -262,7 +262,10 @@ void TBathtubKiller::generateItemBathtubKiller() { }
 
 void TBathtubKiller::killBathtubKiller() { }
 
-void TBathtubKiller::breakBathtubKiller() { }
+void TBathtubKiller::breakBathtubKiller()
+{
+	mSpine->pushNerve(&TNerveBathtubKillerBreak::theNerve());
+}
 
 void TBathtubKiller::explodeBathtubKiller() { }
 
@@ -519,7 +522,11 @@ bool TBathtubKiller::isCollidMove(THitActor* actor)
 	return true;
 }
 
-void TBathtubKiller::behaveToWater(THitActor*) { }
+void TBathtubKiller::behaveToWater(THitActor*)
+{
+	if (!isAttackable())
+		breakBathtubKiller();
+}
 
 const char** TBathtubKiller::getBasNameTable() const
 {
