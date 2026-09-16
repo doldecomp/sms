@@ -251,20 +251,22 @@ public:
 			                        data.unk18.at(1, 2));
 			JGeometry::TVec3<f32> delta;
 			delta.sub(unk0, data.mPos);
-			f32 outerR = data.unk40 + radius;
-			f32 innerR = data.unk3C - radius;
-			f32 distSq = delta.squared();
-			f32 proj   = m.dot(delta);
+			JGeometry::TVec3<f32> n;
+			JGeometry::TVec3<f32> point;
+			f32 outerR  = data.unk40 + radius;
+			f32 innerR  = data.unk3C - radius;
+			f32 outerR2 = outerR * outerR;
+			f32 innerR2 = innerR * innerR;
+			f32 distSq  = delta.squared();
+			f32 proj    = m.dot(delta);
 
-			if (distSq <= outerR * outerR) {
+			if (distSq <= outerR2) {
 				if (proj < 0.0f) {
-					if (distSq >= innerR * innerR) {
+					if (distSq >= innerR2) {
 						f32 dist = JGeometry::TUtil<f32>::sqrt(distSq);
 						f32 pen  = dist - innerR;
 						f32 inv  = -1.0f / dist;
-						JGeometry::TVec3<f32> n;
 						n.scale(inv, delta);
-						JGeometry::TVec3<f32> point;
 						point.scale(pen, n);
 						unk18.extend(point);
 
@@ -272,20 +274,18 @@ public:
 						if (c < 0.0f)
 							c = 0.0f;
 
-						JGeometry::TVec3<f32> point2;
-						point2.scale(c, n);
-						point2 += data.unk58;
-						unk30.extend(point2);
+						point.scale(c, n);
+						point += data.unk58;
+						unk30.extend(point);
 					} else {
 						f32 f = radius + (data.mPos.y - data.unk44);
 						if (unk0.y < f) {
 							f32 pen = f - unk0.y;
-							JGeometry::TVec3<f32> point(0.0f, pen, 0.0f);
+							point.set(0.0f, pen, 0.0f);
 							unk18.extend(point);
-							JGeometry::TVec3<f32> point2(0.0f, -1.0f * unkC.y,
-							                             0.0f);
-							point2 += data.unk58;
-							unk30.extend(point2);
+							point.set(0.0f, -1.0f * unkC.y, 0.0f);
+							point += data.unk58;
+							unk30.extend(point);
 						} else {
 							count++;
 							accum.add(unk0);
@@ -298,18 +298,15 @@ public:
 				unk30.extend(grav1);
 			} else {
 				if (proj > 0.0f && proj < radius + data.unk48
-				    && distSq > innerR * innerR && distSq < outerR * outerR) {
-					JGeometry::TVec3<f32> point;
-					point.scale((radius + data.unk48) - proj, m);
+				    && distSq > innerR2 && distSq < outerR2) {
+					point.scale((radius + data.unk48) + -proj, m);
 					unk18.extend(point);
 
-					JGeometry::TVec3<f32> r;
-					r.scale(1.5f * -m.dot(unkC), m);
-					JGeometry::TVec3<f32> thing;
-					thing.set(delta);
-					thing.setLength(0.01f * radius);
-					r.add(thing);
-					unk30.extend(r);
+					point.scale(1.5f * -m.dot(unkC), m);
+					n.set(delta);
+					n.setLength(0.01f * radius);
+					point.add(n);
+					unk30.extend(point);
 					unk30.extend(grav2);
 				} else {
 					unk30.extend(grav2);
