@@ -599,11 +599,13 @@ void TNameKuri::reset()
 {
 	gpCurNameKuri = this;
 	TWalkerEnemy::reset();
+	JGeometry::TVec3<f32> local_20;
 	unk1B0 = 1.0f;
 	unk1B4 = TMsRange<f32>(0.0f, 360.0f).rand();
 	unk194 = 0;
 	unk198 = 0;
-	setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
+	local_20.set(0.0f, 0.0f, 0.0f);
+	setVelocity(local_20);
 	mScaling.setAll(mBodyScale);
 
 	unk1BC.a = 0;
