@@ -1150,7 +1150,6 @@ DEFINE_NERVE(TNerveKumokunWait, TLiveActor)
 
 DEFINE_NERVE(TNerveKumokunFreeze, TLiveActor)
 {
-	JGeometry::TVec3<f32> position;
 	TKumokun* self = (TKumokun*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->clearAnmStack();
