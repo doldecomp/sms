@@ -452,7 +452,7 @@ bool TKumokun::checkOnMovingRoof(JGeometry::TVec3<f32>* param_1,
 
 void TKumokun::bindOnFlying()
 {
-	bool hit = false;
+	BOOL hit = false;
 
 	JGeometry::TVec3<f32> local_74 = mPosition;
 	local_74 += mLinearVelocity;
@@ -975,9 +975,9 @@ const TBGCheckData* TKumokun::checkRoofPlane(JGeometry::TVec3<f32>* param_1,
 	const TBGCheckData* roof = nullptr;
 	f32 y                    = param_1->y;
 	f32 dVar6 = gpMap->checkRoof(param_1->x, y, param_1->z, &roof);
-	f32 fVar8 = dVar6 - 1.0f - y;
-	if (0.0f <= fVar8 && fVar8 < param_2)
-		param_1->y = fVar8;
+	dVar6 -= 1.0f;
+	if (0.0f <= dVar6 - y && dVar6 - y < param_2)
+		param_1->y = dVar6;
 	else
 		roof = nullptr;
 
