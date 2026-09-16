@@ -1,5 +1,13 @@
 #include <Enemy/BathtubKiller.hpp>
+#include <Enemy/Conductor.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <M3DUtil/MActor.hpp>
+#include <MarioUtil/PacketUtil.hpp>
+#include <MoveBG/MapObjCorona.hpp>
+#include <MoveBG/MapObjManager.hpp>
 #include <Strategic/ObjModel.hpp>
+#include <System/Particles.hpp>
+#include <JSystem/JUtility/JUTNameTab.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -115,7 +123,44 @@ void TBathtubKiller::init(TLiveManager* manager)
 	resetBathtubKiller();
 }
 
-void TBathtubKiller::setMActorAndKeeper() { }
+void TBathtubKiller::setMActorAndKeeper()
+{
+	mMActorKeeper = new TMActorKeeper(mManager, 2);
+	mMActor = mMActorKeeper->createMActor("bathtubkiller_model1.bmd", 0);
+	mMActorKeeper->createMActor("bathtubdownkiller_model1.bmd", 3);
+
+	s32 noseMatIdx = getActorKeeper()
+	                     ->getMActor("bathtubkiller_model1.bmd")
+	                     ->getModel()
+	                     ->getModelData()
+	                     ->getMaterialName()
+	                     ->getIndex("_nosemat1");
+	s32 eyesMatIdx = getActorKeeper()
+	                     ->getMActor("bathtubkiller_model1.bmd")
+	                     ->getModel()
+	                     ->getModelData()
+	                     ->getMaterialName()
+	                     ->getIndex("_eyesmat1");
+	s32 bodyMatIdx = getActorKeeper()
+	                     ->getMActor("bathtubkiller_model1.bmd")
+	                     ->getModel()
+	                     ->getModelData()
+	                     ->getMaterialName()
+	                     ->getIndex("_body1");
+
+	SMS_InitPacket_OneTevColor(
+	    getActorKeeper()->getMActor("bathtubkiller_model1.bmd")->getModel(),
+	    noseMatIdx, GX_TEVREG0, &unk1E0);
+	SMS_InitPacket_OneTevColor(
+	    getActorKeeper()->getMActor("bathtubkiller_model1.bmd")->getModel(),
+	    eyesMatIdx, GX_TEVREG0, &unk1E8);
+	SMS_InitPacket_OneTevColor(
+	    getActorKeeper()->getMActor("bathtubkiller_model1.bmd")->getModel(),
+	    bodyMatIdx, GX_TEVREG0, &unk1D8);
+	SMS_InitPacket_OneTevColor(
+	    getActorKeeper()->getMActor("bathtubdownkiller_model1.bmd")->getModel(),
+	    0, GX_TEVREG0, &unk1F0);
+}
 
 void TBathtubKiller::reset() { }
 
@@ -133,7 +178,12 @@ void TBathtubKiller::explodeBathtubKiller() { }
 
 void TBathtubKiller::bind() { }
 
-void TBathtubKiller::perform(u32 cue, JDrama::TGraphics* graphics) { }
+void TBathtubKiller::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	TSmallEnemy::perform(cue, graphics);
+	if (unk1CC == nullptr)
+		unk1CC = JDrama::TNameRefGen::search<TBathtub>("バスタブ");
+}
 
 void TBathtubKiller::makeNoseColor() { }
 
@@ -221,7 +271,10 @@ bool TBathtubKiller::isAboided() { return false; }
 
 bool TBathtubKiller::canChase() { return false; }
 
-void TBathtubKiller::generateExplosion() { }
+void TBathtubKiller::generateExplosion()
+{
+	gpConductor->makeOneEnemyAppear(mPosition, "エフェクト爆発マネージャー", 1);
+}
 
 DEFINE_NERVE(TNerveBathtubKillerWander, TLiveActor) { return FALSE; }
 
@@ -240,9 +293,24 @@ TBathtubKillerManager::TBathtubKillerManager(const char* name)
 {
 }
 
-void TBathtubKillerManager::load(JSUMemoryInputStream&) { }
+void TBathtubKillerManager::load(JSUMemoryInputStream& stream)
+{
+	TSmallEnemyManager::load(stream);
+	unk38 = new TBathtubKillerParams("/enemy/bathtubkiller.prm");
+}
 
-void TBathtubKillerManager::loadAfter() { }
+void TBathtubKillerManager::loadAfter()
+{
+	TSmallEnemyManager::loadAfter();
+
+	TMapObjBaseManager::newAndRegisterObj("mushroom1up");
+	TMapObjBaseManager::newAndRegisterObj("mushroom1up");
+
+	static const char* loopFilenames[] = {
+		"/scene/map/map/ms_kp_kill_smoke.jpa",
+	};
+	SMS_LoadParticle(loopFilenames[0], 0x1BD);
+}
 
 void TBathtubKillerManager::generateMushroom(JGeometry::TVec3<f32>) { }
 
