@@ -244,7 +244,8 @@ BOOL NameKuriAttackCallback(J3DNode* param_1, int param_2)
 		MtxPtr mA = gpCurNameKuri->getMActor()->getModel()->getAnmMtx(
 		    ((J3DJoint*)param_1)->getJntNo());
 
-		f32 s = JMASin(gpCurNameKuri->unk1AC);
+		f32 s = gpCurNameKuri->unk1AC;
+		s     = JMASin(s);
 		f32 c = JMACos(gpCurNameKuri->unk1AC);
 
 		Mtx local_48;
