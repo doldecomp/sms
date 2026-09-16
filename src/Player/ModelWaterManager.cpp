@@ -50,7 +50,7 @@ TWaterEmitInfo::TWaterEmitInfo(const char* name)
     , PARAM_INIT(mDirTremble, 0.0f)
     , PARAM_INIT(mPow, 0.0f)
     , PARAM_INIT(mPowTremble, 0.0f)
-    , PARAM_INIT(mSize, 0.0f)
+    , PARAM_INIT(mSize, 17.0f)
     , PARAM_INIT(mSizeTremble, 0.0f)
     , PARAM_INIT(mHitRadius, 0.0f)
     , PARAM_INIT(mHitHeight, 0.0f)
@@ -326,7 +326,7 @@ void TModelWaterManager::splashGround(int i)
 	gpPollution->clean(
 	    mParticlePositionSOA[i].x, mParticlePositionSOA[i].y,
 	    mParticlePositionSOA[i].z,
-	    mWaterParticleTypes[mParticleTypeSOA[i]]->mCleanSize.get() * 10.0f);
+	    mWaterParticleTypes[mParticleTypeSOA[i]]->mCleanSize.get() * 32.0f);
 }
 
 void TModelWaterManager::touchingExec(int i) { }
@@ -834,13 +834,13 @@ void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
 
 	f32 fVar6  = param_2 * param_4.x;
 	f32 fVar8  = param_2 * param_4.z;
-	f32 fVar11 = param_4.y * 2.0 + param_3.y;
+	f32 fVar11 = param_4.y * 2.0f + param_3.y;
 	f32 fVar12 = -fVar6;
 
-	f32 fVar10 = param_4.x * 2.0 + param_3.x;
+	f32 fVar10 = param_4.x * 2.0f + param_3.x;
 	f32 fVar7  = param_2 * param_4.y;
 	f32 fVar13 = -fVar8;
-	f32 fVar9  = param_4.z * 2.0 + param_3.z;
+	f32 fVar9  = param_4.z * 2.0f + param_3.z;
 
 	{
 		f32 fVar1     = param_1[0][1];
@@ -887,8 +887,8 @@ void TModelWaterManager::calcVMMtxWall(MtxPtr param_1, f32 scale,
 	f32 fVar12 = param_3.y;
 	f32 fVar8  = scale * param_4.z;
 	f32 fVar11 = -fVar7;
-	f32 fVar10 = param_4.x * 2.0 + param_3.x;
-	f32 fVar9  = param_4.z * 2.0 + param_3.z;
+	f32 fVar10 = param_4.x * 2.0f + param_3.x;
+	f32 fVar9  = param_4.z * 2.0f + param_3.z;
 
 	{
 		f32 fVar1     = param_1[0][1];
@@ -1645,7 +1645,8 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 			sphere_pos_t   = sphere_glist_p + 0x760;
 		}
 
-		f32 f30 = (((unk5E0C + unk5E40) - unk5E0C) / f32(unk5E44 - 1));
+		int r31 = unk5E44;
+		f32 f30 = (((unk5E0C + unk5E40) - unk5E0C) / f32(r31 - 1));
 		f32 f31 = unk5E0C;
 
 		GXColor local_2C;
@@ -1707,8 +1708,7 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 		GXEnd();
 
 		GXColor local_28;
-		int r31    = unk5E44;
-		local_28.a = f32(0xff - unk5E45) / unk5E44 + 0.5f;
+		local_28.a = f32(0xff - r27) / r31 + 0.5f;
 		GXSetTevColor(GX_TEVREG0, local_28);
 		GXSetZMode(GX_TRUE, GX_GREATER, GX_TRUE);
 		GXClearVtxDesc();
