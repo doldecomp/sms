@@ -78,7 +78,10 @@ MtxPtr TBathtub::getPeachMtxInDemo()
 	return mMActor->getModel()->getAnmMtx(mDuckJntIdx);
 }
 
-MtxPtr TBathtub::getKoopaJrMtxInDemo() { return nullptr; }
+MtxPtr TBathtub::getKoopaJrMtxInDemo()
+{
+	return mMActor->getModel()->getAnmMtx(mJuniorJntIdx);
+}
 
 BOOL TBathtub::receiveMessage(THitActor* sender, u32 message) { return false; }
 
