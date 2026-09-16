@@ -621,9 +621,11 @@ void TEnemyMario::startMonteReplay(u32 replayIndex)
 	    ->getGraph()
 	    ->getGraphNode(nodeIndex + 1)
 	    .getPoint(&nextPoint);
+	JGeometry::TVec3<s16> direction;
 	f32 xDifference = nextPoint.x - currentPoint.x;
 	f32 zDifference = nextPoint.z - currentPoint.z;
-	mFaceAngle.y    = matan(zDifference, xDifference);
+	direction.y = matan(zDifference, xDifference);
+	mFaceAngle.y = direction.y;
 	resetReplayStatus();
 	mReplayIndex = replayIndex;
 	mInputReplays[mReplayIndex]->reset();
