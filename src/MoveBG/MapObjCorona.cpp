@@ -566,13 +566,13 @@ TBathtub::TBathtub(const char* name)
 // Unused
 bool TBathtub::isKillerLaunchable() const { return false; }
 
-u8 TBathtub::getNumKillerLaunchable() const { return 0; }
+int TBathtub::getNumKillerLaunchable() const { return 0; }
 
 bool TBathtub::isKillerAttackable() const { return false; }
 
 // Unused
 bool TBathtub::isBreaking() const { return false; }
 
-u8 TBathtub::getNumKillerBurstable() const { return 0; }
+int TBathtub::getNumKillerBurstable() const { return 0; }
 
 TBathtub::~TBathtub() { }

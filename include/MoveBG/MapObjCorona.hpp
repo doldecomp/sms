@@ -41,9 +41,9 @@ public:
 	u8 getNextGrip(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&,
 	               f32, f32*) const;
 	void updatePosture_();
-	u8 getNumKillerLaunchable() const;
+	int getNumKillerLaunchable() const;
 	bool isKillerAttackable() const;
-	u8 getNumKillerBurstable() const;
+	int getNumKillerBurstable() const;
 	bool isBreaking() const;                                // Unused
 	bool isKillerLaunchable() const;                        // Unused
 	void showMessage(u32);                                  // Unused

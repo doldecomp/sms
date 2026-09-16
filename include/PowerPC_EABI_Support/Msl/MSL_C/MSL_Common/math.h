@@ -94,6 +94,12 @@ inline float atan2(float x, float y) { return atan2f(x, y); }
 namespace std {
 inline float fabsf(float f) { return ::fabsf(f); }
 inline float abs(float f) { return ::fabs(f); }
+// The binary never inlines this: wireTrap.cpp, MapObjCorona.cpp and
+// koopajr.cpp each carry a weak 0x5c copy and call it. That copy's body is
+// the same as JGeometry::TUtil<f32>::mod (compare magnitudes, divide,
+// truncate through u64, subtract). Writing that body here inlines it
+// everywhere under our flags and scores worse than this wrapper, so the
+// wrapper stays until the inlining difference is understood.
 inline float fmodf(float x, float y) { return ::fmod(x, y); }
 inline float atan2f(float y, float x) { return ::atan2((double)y, (double)x); }
 inline float sinf(float x) { return ::sin((double)x); }
