@@ -317,9 +317,7 @@ void TMapObjBase::makeObjDead()
 void TMapObjBase::makeObjAppeared()
 {
 	offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK8);
-	mVelocity.x = 0.0f;
-	mVelocity.y = 0.0f;
-	mVelocity.z = 0.0f;
+	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
 	onLiveFlag(LIVE_FLAG_UNK10);
 	mStateTimer = 0;
 	offHitFlag(HIT_FLAG_NO_COLLISION);
@@ -356,28 +354,7 @@ void TMapObjBase::makeObjAppeared()
 		SMS_ShowAllShapePacket(getModel());
 
 	mPosition.y -= mYOffset;
-	if (mMapObjData->mCollision && mMapObjData->mCollision->unk4[0].unk0 != 0) {
-		f32 x = mPosition.x;
-		f32 y = mPosition.y - mYOffset;
-		f32 z = mPosition.z;
-		mMapCollisionManager->changeCollision(0);
-		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8)) {
-			MtxPtr mtx = getModel()->getAnmMtx(0);
-
-			TMapCollisionBase* col = mMapCollisionManager->getUnk8();
-			col->setMtx(mtx);
-			col->setUp();
-		} else {
-			Mtx mtx;
-			TMapCollisionManager* manager = mMapCollisionManager;
-			MsMtxSetTRS(mtx, x, y, z, mRotation.x, mRotation.y, mRotation.z,
-			            mScaling.x, mScaling.y, mScaling.z);
-
-			TMapCollisionBase* col = manager->getUnk8();
-			col->setMtx(mtx);
-			col->setUp();
-		}
-	}
+	setUpMapCollision(0);
 	mPosition.y += mYOffset;
 	mState = STATE_NORMAL;
 }
