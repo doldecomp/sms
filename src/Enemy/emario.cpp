@@ -207,7 +207,9 @@ void TEMario::perform(u32 cue, JDrama::TGraphics* graphics)
 	for (s32 i = 0; i < mColCount; ++i) {
 		switch (mCollisions[i]->mActorType) {
 		case 0x80000001: {
-			if (mPosition.distance(mCollisions[i]->getPosition())
+			JGeometry::TVec3<f32> distance
+			    = mPosition - mCollisions[i]->getPosition();
+			if (JGeometry::TVec3<f32>(distance).length()
 			    < mEnemyMario->mAttackRange) {
 				mCollisions[i]->receiveMessage(this, HIT_MESSAGE_ATTACK);
 			}
@@ -216,7 +218,9 @@ void TEMario::perform(u32 cue, JDrama::TGraphics* graphics)
 		case 0x400000bc: {
 			if (!mEnemyMario->checkStatusType(0x10000)) {
 
-				if (mCollisions[i]->getPosition().distance(mPosition)
+				JGeometry::TVec3<f32> distance
+				    = mCollisions[i]->getPosition() - mPosition;
+				if (JGeometry::TVec3<f32>(distance).length()
 				    < (mCollisions[i]->getAttackRadius()
 				       + mEnemyMario->getDamageRadius())) {
 					mEnemyMario->changePlayerStatus(0x810446, 0, false);
