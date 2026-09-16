@@ -7,7 +7,8 @@ class TMarioGamePad;
 
 class TSunGlass : public JDrama::TViewObj {
 public:
-	TSunGlass(JUtility::TColor param_1, const char* name = "<SunGlass>")
+	TSunGlass(JUtility::TColor param_1 = JUtility::TColor(0, 0, 0, 80),
+	          const char* name         = "<SunGlass>")
 	    : JDrama::TViewObj(name)
 	    , unk10(nullptr)
 	    , unk14(param_1)

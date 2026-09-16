@@ -603,7 +603,7 @@ int TApplication::gameLoop()
 		TMarioGamePad::read();
 		for (int i = 0; i < 4; i++) {
 			mGamePads[i]->updateMeaning();
-			mGamePads[i]->onFlag(0x40);
+			mGamePads[i]->onFlag(TMarioGamePad::PAD_FLAG_0x40);
 		}
 
 		if (int dvderr = drawDVDErr()) {

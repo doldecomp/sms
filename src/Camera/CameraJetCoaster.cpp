@@ -95,7 +95,7 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 		drawJetCoasterBalloonMessage_();
 
 	bool startedLButton = false;
-	if (unk120->checkFrameMeaning(0x4000)) {
+	if (unk120->checkFrameMeaning(TMarioGamePad::MEANING_Y)) {
 		startedLButton = true;
 		u32 soundID    = 0x4825;
 		unk2B8->toggleLButtonMode();
