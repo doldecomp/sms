@@ -1243,17 +1243,28 @@ void TBGTentacle::calcAttackGuideAnm()
 
 	JGeometry::TVec3<f32> local_30 = getFirstNode()->getPosition();
 	JGeometry::TVec3<f32> local_3c = unk84;
-	local_3c -= local_30;
+	local_3c.x -= local_30.x;
+	f32 y = local_30.y;
+	local_3c.y -= y;
+	f32 z = local_30.z;
+	local_3c.z -= z;
 	JGeometry::TVec3<f32> local_b4 = MsGetRotFromZaxis(local_3c);
 
-	if (mState != 10) {
-		unk80->checkCurBckFromIndex(20);
-		// TODO: a bunch of stuff ghidra refuses to show
+	f32 scale;
+	if (mState == 10) {
+		scale = 1.875f;
+	} else if (unk80->checkCurBckFromIndex(20)) {
+		scale = local_3c.length() * (1.0f / 1500.0f);
+	} else {
+		scale = local_3c.length() * (1.0f / 1200.0f);
 	}
 
+	if (scale > 2.0f)
+		scale = 2.0f;
+
 	Mtx afStack_78;
-	MsMtxSetTRS(afStack_78, local_30.x, local_30.y, local_30.z, local_b4.x,
-	            local_b4.y, local_b4.z, 1.875f, 1.875f, 1.875f);
+	MsMtxSetTRS(afStack_78, local_30.x, y, z, local_b4.x,
+	            local_b4.y, local_b4.z, 1.875f, 1.875f, scale);
 
 	Mtx local_a8;
 	if (mState == 10) {
