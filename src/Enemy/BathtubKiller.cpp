@@ -382,7 +382,30 @@ void TBathtubKiller::makeInitialVelocity(JGeometry::TVec3<f32> velocity)
 
 void TBathtubKiller::moveParabolic() { }
 
-void TBathtubKiller::moveChasing() { }
+void TBathtubKiller::moveChasing()
+{
+	JGeometry::TVec3<f32> target = *gpMarioPos;
+	f32 minY = (*unk1CC->getRootJointMtx())[1][3] + unk200;
+	f32 maxY = (*unk1CC->getRootJointMtx())[1][3] + unk204;
+	target.y = (minY + maxY) * 0.5f;
+
+	JGeometry::TVec3<f32> direction;
+	direction.sub(target, mPosition);
+	direction.normalize();
+	unk1BC.scale(unk19C, direction);
+	makeQuat(unk1BC, unk198, 0.1f);
+
+	JGeometry::TVec3<f32> velocity;
+	mQuat.getZDir(velocity);
+	velocity.normalize();
+
+	if (mPosition.y > maxY && 0.0f < velocity.y)
+		velocity.y = 0.0f;
+	if (mPosition.y < minY && 0.0f > velocity.y)
+		velocity.y = 0.0f;
+
+	mVelocity.scale(unk1A0, velocity);
+}
 
 void TBathtubKiller::moveStraight() { }
 
