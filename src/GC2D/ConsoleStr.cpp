@@ -525,14 +525,16 @@ bool TConsoleStr::processShineGet(int param_1)
 		}
 
 		if (param_1 < i * 6 + 40) {
-			u16 alpha = unk244[i]->getPane()->getAlpha() + 7;
+			u16 alpha = unk244[i]->getPane()->getAlpha();
+			alpha += 7;
 			if (alpha > 0xff)
 				alpha = 0xff;
 			unk244[i]->getPane()->setAlpha(alpha);
 		}
 
 		if (param_1 > i * 6 + 200) {
-			s16 alpha = unk244[i]->getPane()->getAlpha() - 7;
+			s16 alpha = unk244[i]->getPane()->getAlpha();
+			alpha -= 7;
 			if (alpha < 0)
 				alpha = 0;
 			unk244[i]->getPane()->setAlpha(alpha);
