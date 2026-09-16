@@ -539,9 +539,8 @@ void TYoshi::thinkAnimation()
 				newIdx = 12;
 		}
 	} else if ((status & MARIO_STATUS_FLAG_UNK200)
-	           && (status == MARIO_STATUS_CATCH_LOST
-	               || status == MARIO_STATUS_BRAKE_END
-	               || status == MARIO_STATUS_SLIP_END)) {
+	           && (status == MARIO_STATUS_CATCH_LOST || status == 0xC000023D
+	               || status == 0xC000023E)) {
 		newIdx = 18;
 	} else {
 		bool sliding = (status & MARIO_STATUS_FLAG_UNK8000) ? true : false;
@@ -553,25 +552,23 @@ void TYoshi::thinkAnimation()
 				switch (type) {
 				case 0:
 					newIdx = 22;
-					goto selected;
+					break;
 				case 1:
 					newIdx = 16;
-					goto selected;
+					break;
 				case 2:
 					newIdx = 17;
-					goto selected;
+					break;
 				}
-			}
-			if (mMario->mGamePad->checkMeaning(0x400)) {
+			} else if (mMario->mGamePad->checkMeaning(0x400)) {
 				newIdx = 13;
-				goto selected;
 			} else {
 				goto walking;
 			}
 		} else {
 		walking:
 			u32 act = mMario->mStatus;
-			if (act == MARIO_STATUS_HIP_ATTACK_END)
+			if (act == 0x8023C)
 				newIdx = 6;
 			else if (act == MARIO_STATUS_WIN_DEMO)
 				newIdx = 2;
@@ -580,7 +577,6 @@ void TYoshi::thinkAnimation()
 		}
 	}
 
-selected:
 	if (curIdx == 24)
 		curIdx = 15;
 	if (newIdx == 24)
