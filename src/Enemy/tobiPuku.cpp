@@ -6,6 +6,7 @@
 #include <Enemy/SmallEnemy.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Enemy/PathNode.hpp>
+#include <Enemy/Conductor.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
@@ -106,6 +107,36 @@ TPukuPuku::TPukuPuku(const char* name)
 TLiveActor* TTobiPukuManager::createEnemyInstance()
 {
 	return new TTobiPuku("とびプク");
+}
+
+TTobiPukuLaunchPad::TTobiPukuLaunchPad(const char* name)
+    : TSmallEnemy(name)
+{
+	unk194 = 0;
+	unk19C = 0.0f;
+	unk1A8 = nullptr;
+}
+
+void TTobiPukuLaunchPad::init(TLiveManager* manager)
+{
+	TSmallEnemy::init(manager);
+	mActorType = 0x10000012;
+	unk198     = (TTobiPukuParams*)getSaveParam();
+}
+
+void TMoePukuLaunchPad::launch()
+{
+	TTobiPuku* puku = (TTobiPuku*)gpConductor->makeOneEnemyAppear(
+	    mPosition, "モエプクマネージャー", 1);
+	if (puku) {
+		forceLaunch(puku);
+		unk1A8 = puku;
+	}
+}
+
+TLiveActor* TMoePukuManager::createEnemyInstance()
+{
+	return new TMoePuku("モエプク");
 }
 
 void TTobiPukuLaunchPad::reset()

@@ -151,13 +151,17 @@ public:
 	TTobiPukuLaunchPad(const char* name);
 
 	virtual ~TTobiPukuLaunchPad();
+	virtual void init(TLiveManager*);
 	virtual void reset();
+	virtual void launch();
 
 	void forceLaunch(TTobiPuku*);
 
 	/* 0x194 */ int unk194;
-	/* 0x198 */ u8 unk198[0x1A8 - 0x198];
-	/* 0x1A8 */ void* unk1A8;
+	/* 0x198 */ TTobiPukuParams* unk198;
+	/* 0x19C */ f32 unk19C;
+	/* 0x1A0 */ u8 unk1A0[0x1A8 - 0x1A0];
+	/* 0x1A8 */ TTobiPuku* unk1A8;
 };
 
 class TMoePukuLaunchPad : public TTobiPukuLaunchPad {
@@ -168,6 +172,7 @@ public:
 	}
 
 	virtual ~TMoePukuLaunchPad();
+	virtual void launch();
 };
 
 class TTobiPukuManager : public TSmallEnemyManager {
@@ -186,13 +191,14 @@ public:
 	}
 
 	virtual ~TMoePukuManager();
+	virtual TLiveActor* createEnemyInstance();
 };
 
 class TTobiPukuLaunchPadManager : public TSmallEnemyManager {
 public:
 	TTobiPukuLaunchPadManager(const char* name);
 
-	/* 0x60 */ int unk60;
+	/* 0x60 */ u8 unk60;
 
 	virtual ~TTobiPukuLaunchPadManager();
 };
