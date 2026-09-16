@@ -11,6 +11,7 @@
 #include "Map/Sky.hpp"
 #include "Map/StickyStainManager.hpp"
 #include <System/MarNameRefGen.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_Map(const char* name) const
 {
