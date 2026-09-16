@@ -51,10 +51,8 @@ void TCubeManagerBase::initializer()
 void TCubeManagerBase::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TNameRef::load(stream);
-	JDrama::TNameRef* root
-	    = JDrama::TNameRefGen::getInstance()->getRootNameRef();
 	TNameRefPtrAryT<TCubeGeneralInfo>* ary
-	    = (TNameRefPtrAryT<TCubeGeneralInfo>*)root->search(unk18);
+	    = JDrama::TNameRefGen::search<TNameRefPtrAryT<TCubeGeneralInfo> >(unk18);
 
 	if (ary == nullptr)
 		return;
