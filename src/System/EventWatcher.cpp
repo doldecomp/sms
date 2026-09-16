@@ -675,7 +675,8 @@ static void evStartMonteman(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	if (monteMan)
 		monteMan->startMonteReplay(id);
 
-	interp->push();
+	const TSpcSlice& result = TSpcSlice();
+	interp->push(result);
 }
 
 static void evStopTimer(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
