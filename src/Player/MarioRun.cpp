@@ -966,7 +966,7 @@ BOOL TMario::surfing()
 		s16 maxAngle;
 		f32 minSpeed;
 
-		if (mWallPlane->isWaterSurface()) {
+		if (mGroundPlane->isWaterSurface()) {
 			maxAngle = getSurfingParamsWater()->mClashAngle.get();
 			minSpeed = getSurfingParamsWater()->mClashSpeed.get();
 		} else {
