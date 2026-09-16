@@ -69,9 +69,9 @@ BOOL TTobiPuku::isFallEndLandBck()
 	return isBckAnm(PUKU_ANM_FALL_END_LAND) ? TRUE : FALSE;
 }
 BOOL TTobiPuku::isJumpBck() { return isBckAnm(PUKU_ANM_JUMP) ? TRUE : FALSE; }
-BOOL TTobiPuku::isJumpStartBck()
+bool TTobiPuku::isJumpStartBck()
 {
-	return isBckAnm(PUKU_ANM_JUMP_START) ? TRUE : FALSE;
+	return isBckAnm(PUKU_ANM_JUMP_START) ? true : false;
 }
 bool TTobiPuku::isPichiEffect() { return isBckAnm(PUKU_ANM_PICHI) ? true : false; }
 
@@ -97,9 +97,9 @@ BOOL TMoePuku::isFallEndLandBck()
 	return isBckAnm(PUKU_ANM_FALL_END_LAND) ? TRUE : FALSE;
 }
 BOOL TMoePuku::isJumpBck() { return isBckAnm(PUKU_ANM_JUMP) ? TRUE : FALSE; }
-BOOL TMoePuku::isJumpStartBck()
+bool TMoePuku::isJumpStartBck()
 {
-	return isBckAnm(PUKU_ANM_JUMP_START) ? TRUE : FALSE;
+	return isBckAnm(PUKU_ANM_JUMP_START) ? true : false;
 }
 bool TMoePuku::isPichiEffect() { return isBckAnm(PUKU_ANM_PICHI) ? true : false; }
 
@@ -265,7 +265,30 @@ DEFINE_NERVE(TNerveTobiPukuAttack, TLiveActor)
 }
 
 // TODO: incorrect size. Map records 0x194 (404 bytes).
-DEFINE_NERVE(TNerveTobiPukuFly, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveTobiPukuFly, TLiveActor)
+{
+	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		puku->setJumpStartAnm();
+		puku->offLiveFlag(LIVE_FLAG_UNK10);
+	}
+
+	if (puku->checkCurAnmEnd(0) && puku->isJumpStartBck())
+		puku->setJumpAnm();
+
+	if (!puku->isAirborne()) {
+		spine->pushAfterCurrent(&TNerveTobiPukuLand::theNerve());
+		return TRUE;
+	}
+
+	JGeometry::TVec3<f32> vel(puku->mVelocity);
+	puku->mFlyVelocityY = vel.y;
+
+	JGeometry::TVec3<f32> dir(puku->mVelocity);
+	puku->mRotation.x = MsGetRotFromZaxis(dir).x;
+	return FALSE;
+}
 
 // TODO: incorrect size. Map records 0x1ac (428 bytes).
 // TODO: 86.9% of 428 bytes. The structure and call order are right; what
@@ -279,7 +302,8 @@ DEFINE_NERVE(TNerveTobiPukuGenerate, TLiveActor)
 	if (spine->getTime() == 0) {
 		puku->onLiveFlag(LIVE_FLAG_UNK10);
 		puku->mPosition.y -= 300.0f;
-		puku->mRotation = MsGetRotFromZaxis(puku->mVelocity);
+		JGeometry::TVec3<f32> dir(puku->mVelocity);
+		puku->mRotation.x = MsGetRotFromZaxis(dir).x;
 		puku->setJumpAnm();
 	}
 
@@ -289,7 +313,7 @@ DEFINE_NERVE(TNerveTobiPukuGenerate, TLiveActor)
 		puku->mBoundCount = 0;
 		puku->unk194      = 1;
 		puku->mVelocity   = puku->mLaunchVelocity;
-		puku->mLaunchRot  = MsGetRotFromZaxis(puku->mLaunchVelocity);
+		puku->mLaunchRot.x = MsGetRotFromZaxis(puku->mVelocity).x;
 		puku->generateEffectColumWater();
 		puku->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		puku->offLiveFlag(LIVE_FLAG_UNK10);

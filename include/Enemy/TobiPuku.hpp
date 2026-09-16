@@ -40,7 +40,7 @@ public:
 	virtual bool isPichiEffect();
 	virtual BOOL isJumpBck();
 	virtual BOOL isDeadBck();
-	virtual BOOL isJumpStartBck();
+	virtual bool isJumpStartBck();
 	virtual BOOL isAttackBck();
 	virtual BOOL isFallEndLandBck();
 	virtual void setJumpAnm();
@@ -83,7 +83,8 @@ public:
 	/* 0x1D0 */ JGeometry::TVec3<f32> mLaunchVelocity;
 	/* 0x1DC */ TTobiPukuLaunchPad* mLaunchPad;
 	/* 0x1E0 */ f32 mSwimBaseY;
-	/* 0x1E4 */ u8 unk1E4[0x1EC - 0x1E4];
+	/* 0x1E4 */ f32 mFlyVelocityY;
+	/* 0x1E8 */ u8 unk1E8[0x1EC - 0x1E8];
 	/* 0x1EC */ f32 unk1EC;
 	/* 0x1F0 */ f32 mRotStep;
 	/* 0x1F4 */ u8 unk1F4[0x1FC - 0x1F4];
@@ -109,7 +110,7 @@ public:
 	virtual bool isPichiEffect();
 	virtual BOOL isJumpBck();
 	virtual BOOL isDeadBck();
-	virtual BOOL isJumpStartBck();
+	virtual bool isJumpStartBck();
 	virtual BOOL isAttackBck();
 	virtual BOOL isFallEndLandBck();
 	virtual void setJumpAnm();
