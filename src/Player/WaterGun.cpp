@@ -1221,11 +1221,11 @@ void TWaterGun::init()
 	mNozzleList[Yoshi]         = &mNozzleYoshiDeform;
 	mNozzleList[Hover]         = &mNozzleHover;
 	mNozzleList[Turbo]         = &mNozzleTurbo;
-	mCurrentNozzle             = Spray;
-	mSecondNozzle              = Hover;
-	mNozzleRocket.unk38C       = MSD_SE_PO_ROCKET_TRIGGER;
-	mNozzleTurbo.unk38C        = MSD_SE_PO_SNIPER_TRIGGER;
-	mNozzleDeform.mBomb.unk38C = MSD_SE_PO_SHOTGUN_TRIGGER;
+	mCurrentNozzle       = Spray;
+	mSecondNozzle        = Hover;
+	mNozzleRocket.unk38C = MSD_SE_PO_ROCKET_TRIGGER;
+	TNozzleTrigger* bomb = &mNozzleDeform.mBomb;
+	bomb->unk38C         = MSD_SE_PO_SHOTGUN_TRIGGER;
 	mCurrentWater = mNozzleList[mCurrentNozzle]->mEmitParams.mAmountMax.get();
 	mIsEmitWater  = false;
 	unk1C88       = 0.0f;
@@ -1245,7 +1245,7 @@ void TWaterGun::init()
 	mEmitInfo = new TWaterEmitInfo("/Mario/GunEmit.prm");
 
 	unk1D08                         = 0;
-	mNozzleDeform.mBomb.unk384      = true;
+	bomb->unk384                      = true;
 	mNozzleYoshiDeform.mBomb.unk384 = true;
 
 	// TODO: wrong
