@@ -275,7 +275,8 @@ void TCommonLauncher::stateHitByWater()
 		decHitPoints();
 	}
 
-	if (mMActor->curAnmEndsNext()) {
+	BOOL anmEndsNext = mMActor->curAnmEndsNext();
+	if (anmEndsNext) {
 		if (mHitPoints == 0)
 			changeState(STATE_DIE);
 		else
