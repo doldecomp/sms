@@ -450,7 +450,10 @@ void TBathtubKiller::makeQuat(JGeometry::TVec3<f32> axis, f32 moveAmountY,
 
 void TBathtubKiller::makeScrewQuat(JGeometry::TVec3<f32>, f32, f32) { }
 
-f32 TBathtubKiller::getGravityY() const { return 0.0f; }
+f32 TBathtubKiller::getGravityY() const
+{
+	return getSaveParam2()->mSLFlyingGravityY.get();
+}
 
 void TBathtubKiller::calcRootMatrix() { }
 
