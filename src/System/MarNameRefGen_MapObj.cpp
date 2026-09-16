@@ -37,13 +37,6 @@
 #include "MoveBG/Pool.hpp"
 #include "MoveBG/WoodBarrel.hpp"
 #include <System/MarNameRefGen.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
-
-static void dummy(Vec* v)
-{
-	*v = (Vec) { 0.0f, 0.0f, 0.0f };
-	*v = (Vec) { 1.0f, 1.0f, 1.0f };
-}
 
 inline TCoverFruit::TCoverFruit(const char* name)
     : TMapObjBase(name)
@@ -94,11 +87,9 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "MapWireManager") == 0)
 		return new TMapWireManager;
 
-	// TODO: TMapObjFlagManager is not yet declared.
-	if (strcmp(name, "MapObjFlagManager") == 0) {
-		strcmp(name, "旗管理");
-		return nullptr;
-	}
+	// TODO:
+	// if ( strcmp( name, "MapObjFlagManager" ) == 0 )
+	//     return new TMapObjFlagManager   ( "旗管理" );
 
 	if (strcmp(name, "MapObjPoleManager") == 0)
 		return new TMapObjPoleManager;
@@ -106,11 +97,9 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "MapObjWave") == 0)
 		return new TMapObjWave;
 
-	// TODO: TMapObjFlag is not yet declared.
-	if (strcmp(name, "MapObjFlag") == 0) {
-		strcmp(name, "旗");
-		return nullptr;
-	}
+	// TODO:
+	// if ( strcmp( name, "MapObjFlag" ) == 0 )
+	//     return new TMapObjFlag  ("旗");
 
 	if (strcmp(name, "RockPlane") == 0)
 		return new TRockPlane;
@@ -295,11 +284,9 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "craneUpDown") == 0)
 		return new TCraneUpDown;
 
-	// TODO: TWoodLog is not yet declared.
-	if (strcmp(name, "RiccoLog") == 0) {
-		strcmp(name, "丸太");
-		return nullptr;
-	}
+	// TODO:
+	// if ( strcmp(name, "RiccoLog") == 0 )
+	// 	return new TWoodLog("丸太");
 
 	if (strcmp(name, "GesoSurfBoard") == 0)
 		return new TItem;
@@ -325,69 +312,55 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "RiccoSwitchShine") == 0)
 		return new TFruitLauncher;
 
-	// TODO: The Bianco windmill classes are not yet declared.
-	if (strcmp(name, "BigWindmill") == 0) {
-		strcmp(name, "巨大風車");
-		return nullptr;
-	}
+	// TODO:
+	// if ( strcmp(name, "BigWindmill") == 0 )
+	// 	return new TBigWindmill("巨大風車");
 
-	if (strcmp(name, "MiniWindmill") == 0) {
-		strcmp(name, "風車（ビアンコ小）");
-		return nullptr;
-	}
+	// TODO:
+	// if ( strcmp(name, "MiniWindmill") == 0 )
+	// 	return new TBiancoMiniWindmill("風車（ビアンコ小）");
 
 	if (strcmp(name, "WindmillRoof") == 0)
 		return new TMapObjBase;
 
-	// TODO: The remaining Bianco classes are not yet declared.
-	if (strcmp(name, "MapObjRootPakkun") == 0) {
-		strcmp(name, "ボスパックンの根");
-		return nullptr;
-	}
+	// TODO:
+	// if ( strcmp(name, "MapObjRootPakkun") == 0 )
+	// 	return new TMapObjRootPakkun("ボスパックンの根");
 
-	if (strcmp(name, "BiaBell") == 0) {
-		strcmp(name, "ベル水車");
-		return nullptr;
-	}
+	// TODO:
+	// if (strcmp(name, "BiaBell") == 0)
+	// 	return new TBiancoBell("ベル水車");
 
-	if (strcmp(name, "BiaWatermill") == 0) {
-		strcmp(name, "水車（ビアンコ大）");
-		return nullptr;
-	}
+	// TODO:
+	// if ( strcmp(name, "BiaWatermill") == 0 )
+	// 	return new TBiancoWatermill("水車（ビアンコ大）");
 
-	if (strcmp(name, "BellWatermill") == 0) {
-		strcmp(name, "ベル水車");
-		return nullptr;
-	}
+	// TODO:
+	// if ( strcmp(name, "BellWatermill") == 0 )
+	// 	return new TBellWatermill("ベル水車");
 
-	if (strcmp(name, "BiaWatermillVertical") == 0) {
-		strcmp(name, "水車（ビアンコ垂直）");
-		return nullptr;
-	}
+	// TODO:
+	// if ( strcmp(name, "BiaWatermillVertical") == 0 )
+	// 	return new TBiancoWatermillVertical("水車（ビアンコ垂直）");
 
 	if (strcmp(name, "BiaTurnBridge") == 0)
 		return new TMapObjBase;
 
-	// TODO: The leaf boat and lamp seesaw classes are not yet declared.
-	if (strcmp(name, "LeafBoat") == 0) {
-		strcmp(name, "リーフボート");
-		return nullptr;
-	}
+	// TODO:
+	// if ( strcmp(name, "LeafBoat") == 0 )
+	// 	return new TLeafBoat("リーフボート");
 
-	if (strcmp(name, "LeafBoatRotten") == 0) {
-		strcmp(name, "腐ったリーフボート");
-		return nullptr;
-	}
+	// TODO:
+	// if ( strcmp(name, "LeafBoatRotten") == 0 )
+	// 	return new TLeafBoatRotten("腐ったリーフボート");
 
-	if (strcmp(name, "LampSeesawMain") == 0) {
-		strcmp(name, "ランプシーソー");
-		return nullptr;
-	}
+	// TODO:
+	// if ( strcmp(name, "LampSeesawMain") == 0 )
+	// 	return new TLampSeesawMain("ランプシーソー");
 
-	if (strcmp(name, "LampSeesaw") == 0) {
-		strcmp(name, "ランプシーソー（従）");
-		return nullptr;
-	}
+	// TODO:
+	// if ( strcmp(name, "LampSeesaw") == 0 )
+	// 	return new TLampSeesaw("ランプシーソー（従）");
 
 	if (strcmp(name, "SandBird") == 0)
 		return new TSandBird;
@@ -509,11 +482,9 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "ItemSlotDrum") == 0)
 		return new TItemSlotDrum;
 
-	// TODO: TTelesaSlot is not yet declared.
-	if (strcmp(name, "TelesaSlot") == 0) {
-		strcmp(name, "btelesaSlot");
-		return nullptr;
-	}
+	// TODO:
+	// if ( strcmp(name, "TelesaSlot") == 0 )
+	// 	return new TTelesaSlot("btelesaSlot");
 
 	if (strcmp(name, "CasinoPanelGate") == 0)
 		return new TCasinoPanelGate;
