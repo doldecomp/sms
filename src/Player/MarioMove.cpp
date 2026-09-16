@@ -611,7 +611,8 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 	case MARIO_STATUS_WIRE_ROLL_JUMP: {
 		if (arg == 0) {
-			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * 1.0f;
+			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get()
+			                * mWireParams.mWireJumpMult.get();
 			mVel.y        = jumpPower * JMASSin(0xE000);
 
 			mForwardVel = jumpPower * -JMASCos(0xE000);
@@ -620,7 +621,8 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 			mVel.x      = mSlideVelX;
 			mVel.z      = mSlideVelZ;
 		} else {
-			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * 1.0f;
+			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get()
+			                * mWireParams.mWireJumpMult.get();
 			mVel.y        = jumpPower * JMASSin(0x6000);
 
 			mForwardVel = jumpPower * -JMASCos(0x6000);
@@ -664,8 +666,9 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 	if (onYoshi()) {
 		mVel.y *= mYoshiParams.mJumpYoshiMult.get();
-		mYoshi->mFlutterState = 0;
-		mYoshi->mFlutterTimer = mYoshi->mMaxFlutterTimer;
+		TYoshi* yoshi = mYoshi;
+		yoshi->mFlutterState = 0;
+		yoshi->mFlutterTimer = yoshi->mMaxFlutterTimer;
 	}
 
 	unk104 = mPosition.y;
