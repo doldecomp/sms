@@ -316,7 +316,8 @@ void TMapObjGeneral::hold(TTakeActor* actor)
 void TMapObjGeneral::ensureTakeSituation()
 {
 	TMapObjBase::ensureTakeSituation();
-	if (isState(STATE_HOLDING) && mHolder == nullptr) {
+	BOOL holding = isState(STATE_HOLDING);
+	if (holding && mHolder == nullptr) {
 		mState = STATE_NORMAL;
 		offLiveFlag(LIVE_FLAG_UNK10);
 	}
