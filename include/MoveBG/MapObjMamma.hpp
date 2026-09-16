@@ -1,164 +1,179 @@
-#ifndef MOVE_BG_MAP_OBJ_MAMMA_HPP
-#define MOVE_BG_MAP_OBJ_MAMMA_HPP
+#ifndef MOVEBG_MAPOBJMAMMA_HPP
+#define MOVEBG_MAPOBJMAMMA_HPP
 
 #include <MoveBG/MapObjBase.hpp>
 #include <MoveBG/MapObjEx.hpp>
+#include <Strategic/HitActor.hpp>
+#include <JSystem/JDrama/JDRViewObj.hpp>
 
-// TODO: mark virtual methods as such
+// Class hierarchy recovered from each destructor's vtable chain. Only the
+// destructors are reconstructed; no other member is written yet.
 
-class TSandLeaf : public TMapObjBase {
+class TSandEgg : public TMapObjBase {
 public:
-	u32 touchWater(THitActor*);
-	void control();
-	TSandLeaf(const char* name = "すなやまの芽")
-	    : TMapObjBase(name)
-	    , unk138(0)
+	// fabricated: the original supplies its own name here.
+	TSandEgg()
+	    : TMapObjBase()
 	{
 	}
 
-public:
-	/* 0x138 */ u32 unk138;
+	virtual ~TSandEgg();
 };
 
 class TSandBase : public TMapObjBase {
 public:
-	void isDown() const;
-	void withering();
-	TSandBase(const char*);
-};
-
-class TSandLeafBase : public TSandBase {
-public:
-	void grow();
-	void control();
-	void initMapObj();
-	TSandLeafBase(const char* name = "すなやまの芽の土台");
-};
-
-class TSandBomb : public TSandLeaf {
-public:
-	void makeObjAppeared();
-	u32 touchWater(THitActor*);
-	u32 getSDLModelFlag() const;
-	void initMapObj();
-
-	TSandBomb()
-	    : TSandLeaf("すなやま爆弾")
-	    , unk13C(0)
-	    , unk140(0)
+	// fabricated: the original supplies its own name here.
+	TSandBase()
+	    : TMapObjBase()
 	{
 	}
 
-public:
-	/* 0x13C */ u32 unk13C;
-	/* 0x140 */ u8 unk140;
+	virtual ~TSandBase();
 };
 
 class TSandBombBase : public TSandBase {
 public:
-	void withered();
-	void expanded();
-	void exploding();
-	void explode();
-	void waitBeforeExplode();
-	void grow();
-	void control();
-	void findTriggerActor();
-	void loadAfter();
-	void initMapObj();
-	TSandBombBase(const char* name = "すなやま爆弾の土台");
-};
+	// fabricated: the original supplies its own name here.
+	TSandBombBase()
+	    : TSandBase()
+	{
+	}
 
-class TSandCastle : public TSandBombBase {
-public:
-	void withering();
-	void expanded();
-	void explode();
-	void waitBeforeExplode();
-	void calcRootMatrix();
-	void findTriggerActor();
-	void loadAfter();
-	void initMapObj();
-	TSandCastle(const char* name = "砂の城");
-};
-
-class TLeanMirror : public TMapObjBase {
-public:
-	void enemyIsOn() const;
-	void draw() const;
-	void updateSpeedVec(const JGeometry::TVec3<f32>&, f32);
-	BOOL receiveMessage(THitActor* sender, u32 message);
-	void touchPlayer(THitActor*);
-	void touchEnemy(THitActor*);
-	void calcCurrentMtx(MtxPtr);
-	void release();
-	void controlGoTarget();
-	void controlShake();
-	void control();
-	void loadAfter();
-	u32 getSDLModelFlag() const;
-	void initMapObj();
-	void load(JSUMemoryInputStream&);
-	TLeanMirror(const char* name = "ぐらぐら鏡");
-};
-
-class TShiningStone : public THitActor {
-public:
-	void endDemo();
-	void putOnLight(TLiveActor*);
-	void perform(u32 cue, JDrama::TGraphics* graphics);
-	void load(JSUMemoryInputStream&);
-	TShiningStone(const char* name = "太陽石");
-};
-
-class TMammaBlockRotate : public TMapObjBase {
-public:
-	u32 touchWater(THitActor*);
-	void control();
-	void initMapObj();
-	void load(JSUMemoryInputStream&);
-	TMammaBlockRotate(const char* name = "太陽の塔ブロック");
-};
-
-class TMammaYacht : public TMapObjBase {
-public:
-	void control();
-	void initMapObj();
-	TMammaYacht(const char* name = "砂の城");
-};
-
-class TSandBird : public TJointCoin {
-public:
-	virtual void control();
-	virtual void initMapObj();
-	virtual TMapObjBase* makeObjFromJointName(const char*, unsigned short);
-	virtual bool nameIsObj(const char*);
-
-	TSandBird(const char* name = "おおすな鳥");
-};
-
-class TGoalWatermelon : public TMapObjBase {
-public:
-	void touchActor(THitActor*);
-	void control();
-	void loadAfter();
-	void load(JSUMemoryInputStream&);
-	TGoalWatermelon(const char* name = "スイカゴール");
+	virtual ~TSandBombBase();
 };
 
 class TMammaMirrorMapOperator : public JDrama::TViewObj {
 public:
-	void show(int);
-	void hide(int);
-	void perform(u32 cue, JDrama::TGraphics* graphics);
-	void loadAfter();
-	TMammaMirrorMapOperator(const char* name = "鏡内地形操作");
+	// fabricated: the original supplies its own name here.
+	TMammaMirrorMapOperator()
+	    : JDrama::TViewObj()
+	{
+	}
+
+	virtual ~TMammaMirrorMapOperator();
+	// fabricated: TViewObj::perform is pure virtual and the map records no
+	// out-of-line override for this class.
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics) { }
 };
 
-class TSandEgg : public TMapObjBase {
+class TGoalWatermelon : public TMapObjBase {
 public:
-	u32 getSDLModelFlag() const;
-	TSandEgg(const char* name = "すなのたまご");
+	// fabricated: the original supplies its own name here.
+	TGoalWatermelon()
+	    : TMapObjBase()
+	{
+	}
+
+	virtual ~TGoalWatermelon();
+};
+
+class TWatermelonStatic : public TMapObjBase {
+public:
+	// fabricated: the original supplies its own name here.
+	TWatermelonStatic()
+	    : TMapObjBase()
+	{
+	}
+
+	virtual ~TWatermelonStatic();
+};
+
+class TSandBird : public TJointCoin {
+public:
+	// fabricated: the original supplies its own name here.
+	TSandBird()
+	    : TJointCoin()
+	{
+	}
+
+	virtual ~TSandBird();
+};
+
+class TMammaYacht : public TMapObjBase {
+public:
+	// fabricated: the original supplies its own name here.
+	TMammaYacht()
+	    : TMapObjBase()
+	{
+	}
+
+	virtual ~TMammaYacht();
+};
+
+class TMammaBlockRotate : public TMapObjBase {
+public:
+	// fabricated: the original supplies its own name here.
+	TMammaBlockRotate()
+	    : TMapObjBase()
+	{
+	}
+
+	virtual ~TMammaBlockRotate();
+};
+
+class TShiningStone : public THitActor {
+public:
+	// fabricated: the original supplies its own name here.
+	TShiningStone()
+	    : THitActor()
+	{
+	}
+
+	virtual ~TShiningStone();
+};
+
+class TLeanMirror : public TMapObjBase {
+public:
+	// fabricated: the original supplies its own name here.
+	TLeanMirror()
+	    : TMapObjBase()
+	{
+	}
+
+	virtual ~TLeanMirror();
+};
+
+class TSandCastle : public TSandBombBase {
+public:
+	// fabricated: the original supplies its own name here.
+	TSandCastle()
+	    : TSandBombBase()
+	{
+	}
+
+	virtual ~TSandCastle();
+};
+
+class TSandLeafBase : public TSandBase {
+public:
+	// fabricated: the original supplies its own name here.
+	TSandLeafBase()
+	    : TSandBase()
+	{
+	}
+
+	virtual ~TSandLeafBase();
+};
+
+class TSandLeaf : public TSandLeafBase {
+public:
+	TSandLeaf()
+	    : TSandLeafBase()
+	{
+	}
+
+	// Defined in MapObjManager.cpp, not here.
+	virtual ~TSandLeaf();
+};
+
+class TSandBomb : public TSandLeaf {
+public:
+	TSandBomb()
+	    : TSandLeaf()
+	{
+	}
+
+	virtual ~TSandBomb();
 };
 
 #endif
