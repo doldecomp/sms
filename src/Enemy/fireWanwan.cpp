@@ -1186,7 +1186,8 @@ void TFireWanwan::updateCollisionFromParam()
 void TFireWanwan::updateCameraShake()
 {
 	f32 shakeRange = getSaveParam2()->mCamShakeRange.get();
-	if (!isWalking() && !isAttacking()) {
+	if ((isWalking() || isAttacking())
+	    && mDistToMarioSquared < shakeRange * shakeRange) {
 		gpCameraShake->keepShake(CAM_SHAKE_MODE_UNK3, 0.5f);
 	}
 }
