@@ -254,9 +254,7 @@ void TBellDolpic::ring(const JGeometry::TVec3<f32>& pos)
 
 	unk150 -= 0.5f;
 
-	int r   = rand();
-	f32 tmp = (f32)r * 0.000030517578f;
-	unk158  = (int)(tmp * 14400.0f) + 0x5460;
+	unk158 = (int)((f32)rand() * 0.000030517578f * 14400.0f) + 0x5460;
 }
 
 void TBellDolpic::touchPlayer(THitActor* actor) { ring(actor->mPosition); }
