@@ -181,7 +181,7 @@ bool CLBIsPointInCube(const Vec& param_1, const Vec& param_2,
 
 	if (param_3.y != 0.0f || param_3.x != 0.0f || param_3.z != 0.0f) {
 		if (param_3.z != 0.0f) {
-			s16 zAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.z));
+			s16 zAngle = CLBDegToShortAngle(-param_3.z);
 			f32 cosZ   = JMASCos(zAngle);
 			f32 sinZ   = JMASSin(zAngle);
 
@@ -192,7 +192,7 @@ bool CLBIsPointInCube(const Vec& param_1, const Vec& param_2,
 		}
 
 		if (param_3.y != 0.0f) {
-			s16 yAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.y));
+			s16 yAngle = CLBDegToShortAngle(-param_3.y);
 			f32 cosY   = JMASCos(yAngle);
 			f32 sinY   = JMASSin(yAngle);
 
@@ -203,7 +203,7 @@ bool CLBIsPointInCube(const Vec& param_1, const Vec& param_2,
 		}
 
 		if (param_3.x != 0.0f) {
-			s16 xAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.x));
+			s16 xAngle = CLBDegToShortAngle(-param_3.x);
 			f32 cosX   = JMASCos(xAngle);
 			f32 sinX   = JMASSin(xAngle);
 
