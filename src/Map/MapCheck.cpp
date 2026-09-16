@@ -13,11 +13,6 @@ static inline f32 skewProduct(f32 x1, f32 y1, f32 x2, f32 y2)
 }
 
 // either this or have to use gotos
-static inline f32 dotProduct(f32 x1, f32 y1, f32 x2, f32 y2)
-{
-	return x1 * x2 + y1 * y2;
-}
-
 inline static bool someUnknownInline(TBGCheckData* r31, TBGWallCheckRecord* r29)
 {
 	f32 radius = r29->mRadius;
@@ -36,17 +31,15 @@ inline static bool someUnknownInline(TBGCheckData* r31, TBGWallCheckRecord* r29)
 	f32 cy = r29->mCenter.y;
 	f32 cz = r29->mCenter.z;
 
-	f32 d = r31->getPlaneDistance();
+	f32 nx = r31->getNormal().x;
+	f32 ny = r31->getNormal().y;
+	f32 nz = r31->getNormal().z;
+	f32 d  = r31->getPlaneDistance();
 
-	f32 signedDist
-	    = d + (dotProduct(cx, cy, r31->getNormal().x, r31->getNormal().y)
-	           + cz * r31->getNormal().z);
+	f32 signedDist = d + (cx * nx + cy * ny + cz * nz);
 
 	if (signedDist < -radius || radius < signedDist)
 		return false;
-
-	f32 nx = r31->getNormal().x;
-	f32 nz = r31->getNormal().z;
 
 	f32 y1 = r31->getPoint1().y;
 	f32 y2 = r31->getPoint2().y;
@@ -136,7 +129,6 @@ int TMapCollisionData::checkWallList(const TBGCheckList* param_1,
 	int r30 = 0;
 	while (param_1) {
 		TBGCheckData* r31 = param_1->unk8;
-		TBGCheckData* r3  = r31;
 		param_1           = param_1->mNext;
 
 		if (r31->mMinY > f27)
@@ -145,7 +137,7 @@ int TMapCollisionData::checkWallList(const TBGCheckList* param_1,
 		if (r31->mMaxY < f27)
 			return r30;
 
-		if (!someUnknownInline(r3, param_2))
+		if (!someUnknownInline(r31, param_2))
 			continue;
 
 		++r30;
