@@ -933,11 +933,14 @@ static void evIsInsideCube(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->verifyArgNum(1, &arg_num);
 	int cubeId = interp->pop().getDataInt();
 
+	int value;
+
 	// TODO: getPos10cmAbove or something like that?
 	JGeometry::TVec3<f32> pos = gpMarioOriginal->mPosition;
 	pos.y += 10.0f;
 
-	interp->push(gpCubeArea->isInCube(pos, cubeId) ? 1 : 0);
+	value = gpCubeArea->isInCube(pos, cubeId) ? 1 : 0;
+	interp->push(value);
 }
 
 static void evSetMarioWaiting(TSpcTypedInterp<TEventWatcher>* interp,
