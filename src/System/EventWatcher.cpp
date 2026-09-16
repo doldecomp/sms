@@ -468,6 +468,7 @@ static void evSetEventEnd(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 
 static void evSetNextStage(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
+	u16 nextStage;
 	interp->verifyArgNum(2, &arg_num);
 	int scenario = TSpcSlice(interp->pop()).getDataInt();
 	int stage    = TSpcSlice(interp->pop()).getDataInt();
@@ -475,8 +476,8 @@ static void evSetNextStage(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	// This function reads the global directly. The rest of the file goes
 	// through SMSGetMarDirector(), but here the accessor makes the match worse
 	// (94.8% -> 92.4%), so the original must have had the bare global.
-	gpMarDirector->setNextStage((scenario & 0xff) + ((stage + 1) << 8),
-	                            nullptr);
+	nextStage = (scenario & 0xff) + ((stage + 1) << 8);
+	gpMarDirector->setNextStage(nextStage, nullptr);
 
 	interp->push();
 }
