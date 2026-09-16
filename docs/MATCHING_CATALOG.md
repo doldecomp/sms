@@ -68,6 +68,14 @@ This also explains the earlier contradiction. Adding *initialised* copies to `TE
 
 Six units are a single such function from being source-linkable, so this is the highest-value lever currently known on the link metric.
 
+## Frame-gap worklist, batch 74
+
+`docs/progress/GMSE01-frame-gaps.md` lists **138 game functions totalling 182,932 bytes** that match the original instruction for instruction and differ only in frame size. That is roughly 6.4 points of game code behind a single, now-understood mechanism.
+
+Regenerate it by scanning the 99-100% band, discarding anything with a `|`, `<` or `>` marker, and comparing the two `stwu r1` operands.
+
+One scripting trap worth avoiding: in Python, `'' [:1] in "|<>"` is **True**, so a naive `l[:1] in "|<>"` test counts every blank line as a structural difference and the scan silently returns nothing. Use `l and l[0] in "|<>"`.
+
 ## Units one function away from linking, batch 72
 
 Six game units are a single unmatched function away from being source-linkable. These are the cheapest available gains on the **link** metric, which byte-matching alone never moves:
