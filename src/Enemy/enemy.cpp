@@ -451,25 +451,14 @@ bool TSpineEnemy::turnToCurPathNode(f32 param_1)
 void TSpineEnemy::walkToCurPathNode(f32 march_speed, f32 turn_speed,
                                     f32 param_3)
 {
-	JGeometry::TVec3<f32> tmp = getUnkF4().getPoint();
+	JGeometry::TVec3<f32> tmp = unkF4.getPoint();
 	tmp -= mPosition;
 
 	f32 fVar7 = tmp.length();
 	f32 angle = MsWrap(param_3 + MsGetRotFromZaxisY(tmp), 0.0f, 360.0f);
 	f32 fVar2 = MsAngleDiff(angle, mRotation.y);
 
-	// TODO: identical to a piece of code below, what is this?
-	f32 fVar3;
-	if (turn_speed >= 90.0f) {
-		fVar3 = 0.0f;
-	} else {
-		f32 s = JMASin(turn_speed);
-		if (fVar3 == 0.0f) {
-			fVar3 = 100000.0f;
-		} else {
-			fVar3 = march_speed * JMASin(90.0f - turn_speed * 0.5f) / s;
-		}
-	}
+	f32 fVar3 = calcMinimumTurnRadius(march_speed, turn_speed);
 
 	// TODO: tons of thi stuff should actually be inlines
 	f32 fVar5 = fVar2;
