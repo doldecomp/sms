@@ -1017,19 +1017,20 @@ static void evIsInsideFastCube(TSpcTypedInterp<TEventWatcher>* interp,
 static void evSetTransScale(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(7, &arg_num);
-	f32 tz = interp->pop().getDataFloat();
-	f32 ty = interp->pop().getDataFloat();
-	f32 tx = interp->pop().getDataFloat();
 	f32 sz = interp->pop().getDataFloat();
 	f32 sy = interp->pop().getDataFloat();
 	f32 sx = interp->pop().getDataFloat();
+	f32 tz = interp->pop().getDataFloat();
+	f32 ty = interp->pop().getDataFloat();
+	f32 tx = interp->pop().getDataFloat();
 
 	TMapObjBase* obj = (TMapObjBase*)getNameRefPtr(interp->pop());
 
 	obj->makeObjAppeared();
-	obj->changeObjSRT(JGeometry::TVec3<f32>(sx, sy, sz),
-	                  JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
-	                  JGeometry::TVec3<f32>(tx, ty, tz));
+	JGeometry::TVec3<f32> trans(tx, ty, tz);
+	JGeometry::TVec3<f32> rot(0.0f, 0.0f, 0.0f);
+	JGeometry::TVec3<f32> scale(sx, sy, sz);
+	obj->changeObjSRT(trans, rot, scale);
 
 	interp->push();
 }
@@ -1287,9 +1288,9 @@ static void evIsWaterMelonIsReached(TSpcTypedInterp<TEventWatcher>* interp,
 	TBigWatermelon* melon = (TBigWatermelon*)interp->pop().getDataInt();
 
 	int result = 0;
-	f32 dx     = -4660.0f - melon->mPosition.x;
-	f32 dz     = 12000.0f - melon->mPosition.z;
-	if (dx * dx + dz * dz <= 90000.0f)
+	JGeometry::TVec3<f32> diff(-4660.0f - melon->mPosition.x, 0.0f,
+	                            12000.0f - melon->mPosition.z);
+	if (diff.squared() <= 90000.0f)
 		result = 1;
 
 	interp->push(result);
