@@ -399,7 +399,7 @@ public:
 
 							local_2D8.set(local_2E4.x * half,
 							              (local_2E4.y + 1.0f) * hny,
-							              local_2E4.z * half);
+							              half * local_2E4.z);
 							b->unk18.extend(local_2D8);
 							local_2D8.x = -local_2D8.x;
 							local_2D8.z = -local_2D8.z;
@@ -407,7 +407,7 @@ public:
 							a->unk18.extend(local_2D8);
 
 							f32 mag = hny;
-							if (mag < twoR - dist)
+							if (twoR - dist > mag)
 								mag = twoR - dist;
 
 							local_2E4.x *= mag * bw->unk8C->bounceXZ.get();
