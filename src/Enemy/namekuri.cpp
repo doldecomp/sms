@@ -357,21 +357,25 @@ void TNameKuri::calcRootMatrix()
 		unk1A8 = true;
 		JGeometry::TVec3<f32> local_30(0.0f, 1.0f, 0.0f);
 
-		JGeometry::TVec3<f32> normal = unk138->getNormal();
+		const JGeometry::TVec3<f32> normal = unk138->getNormal();
+		const f32 normalY = normal.y;
 
 		JGeometry::TVec3<f32> local_a0;
 		local_a0.cross(normal, local_30);
 		MsVECNormalize(&local_a0, &local_a0);
 
 		local_30.cross(local_a0, normal);
-		MsVECNormalize(&local_30, &local_30);
+		{
+			Vec* local_24 = &local_30;
+			MsVECNormalize(local_24, &local_30);
+		}
 
 		anmMtx[0][0] = local_a0.x;
 		anmMtx[1][0] = local_a0.y;
 		anmMtx[2][0] = local_a0.z;
 
 		anmMtx[0][1] = normal.x;
-		anmMtx[1][1] = normal.y;
+		anmMtx[1][1] = normalY;
 		anmMtx[2][1] = normal.z;
 
 		anmMtx[0][2] = local_30.x;
@@ -410,14 +414,17 @@ void TNameKuri::calcRootMatrix()
 		JGeometry::TVec3<f32> local_88(JMASin(mRotation.y), 0.0f,
 		                               JMACos(mRotation.y));
 
-		JGeometry::TVec3<f32> normal = unk138->getNormal();
+		JGeometry::TVec3<f32> normal = mGroundPlane->getNormal();
 
 		JGeometry::TVec3<f32> local_a0;
 		local_a0.cross(normal, local_88);
 		MsVECNormalize(&local_a0, &local_a0);
 
 		local_88.cross(local_a0, normal);
-		MsVECNormalize(&local_88, &local_88);
+		{
+			Vec* local_24 = &local_88;
+			MsVECNormalize(&local_88, local_24);
+		}
 
 		anmMtx[0][0] = local_a0.x;
 		anmMtx[1][0] = local_a0.y;
