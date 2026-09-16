@@ -431,15 +431,16 @@ void TMapObjBase::makeRootMtxRotX(MtxPtr ptr)
 {
 	f32 fVar1 = sinf(mRotation.x * (M_PI / 180.0f));
 	f32 fVar2 = cosf(mRotation.x * (M_PI / 180.0f));
+	JGeometry::TVec3<f32> row(0.0f, fVar2, -fVar1);
 
 	ptr[0][0] = 1.0f;
 	ptr[0][1] = 0.0f;
 	ptr[0][2] = 0.0f;
 	ptr[0][3] = mPosition.x;
 
-	ptr[1][0] = 0.0f;
-	ptr[1][1] = fVar2;
-	ptr[1][2] = -fVar1;
+	ptr[1][0] = row.x;
+	ptr[1][1] = row.y;
+	ptr[1][2] = row.z;
 	ptr[1][3] = mPosition.y - mYOffset;
 
 	ptr[2][0] = 0.0f;
