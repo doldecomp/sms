@@ -900,7 +900,7 @@ BOOL THinokuri2::receiveMessage(THitActor* sender, u32 message)
 
 template <class T> static inline T symmetric_clamp(T v, T r)
 {
-	return v > 0 ? (v > r ? v : r) : (v > -r ? -r : v);
+	return v > 0 ? (v > r ? r : v) : (v > -r ? v : -r);
 }
 
 void THinokuri2::moveObject()
@@ -1184,7 +1184,7 @@ DEFINE_NERVE(TNerveHino2Turn, TLiveActor)
 {
 	THinokuri2* self = (THinokuri2*)spine->getBody();
 
-	JGeometry::TVec3<f32> posDiff = self->unk104.getPoint();
+	JGeometry::TVec3<f32> posDiff = self->getUnk104().getPoint();
 
 	posDiff -= self->mPosition;
 
