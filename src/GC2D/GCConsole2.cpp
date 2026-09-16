@@ -1935,7 +1935,19 @@ void TGCConsole2::loadAfter()
 	int blueCoinValue = unk168 - spentBlueCoins * 10;
 	if (blueCoinValue < 0)
 		blueCoinValue = 0;
-	setBlueCoinDigits(unk154, unkE0, blueCoinValue);
+	if (blueCoinValue < 100) {
+		setDigitPane(unk154[0], unkE0, (int)(blueCoinValue * 0.1f));
+		setDigitPane(unk154[1], unkE0, blueCoinValue % 10);
+		if (unk154[2]->getPane()->isVisible())
+			unk154[2]->getPane()->hide();
+	} else {
+		setDigitPane(unk154[0], unkE0, (int)(blueCoinValue * 0.01f));
+		int remainder = blueCoinValue - (int)(blueCoinValue * 0.01f) * 100;
+		setDigitPane(unk154[1], unkE0, (int)(remainder * 0.1f));
+		setDigitPane(unk154[2], unkE0, remainder % 10);
+		if (!unk154[2]->getPane()->isVisible())
+			unk154[2]->getPane()->show();
+	}
 	unk170 = blueCoinValue;
 
 	unk20 = TFlagManager::smInstance->getFlag(0x40002);
@@ -1944,7 +1956,15 @@ void TGCConsole2::loadAfter()
 	else if (unk20 < 0)
 		unk20 = 0;
 	unk6C = unk20;
-	setCounterDigits(unkD4, unkE0, unk20);
+	if (unk20 < 100) {
+		setDigitPane(unkD4[0], unkE0, (int)(unk20 * 0.1f));
+		setDigitPane(unkD4[1], unkE0, unk20 % 10);
+	} else {
+		setDigitPane(unkD4[0], unkE0, (int)(unk20 * 0.01f));
+		int remainder = unk20 - (int)(unk20 * 0.01f) * 100;
+		setDigitPane(unkD4[1], unkE0, (int)(remainder * 0.1f));
+		setDigitPane(unkD4[2], unkE0, remainder % 10);
+	}
 
 	unk24 = TFlagManager::smInstance->getFlag(0x40000);
 	if (unk24 > 999)
@@ -1952,13 +1972,24 @@ void TGCConsole2::loadAfter()
 	else if (unk24 < 0)
 		unk24 = 0;
 	unk64 = unk24;
-	setShineDigits(unk134, unkE0, unk24);
+	if (unk24 < 100) {
+		setDigitPane(unk134[0], unkE0, (int)(unk24 * 0.1f));
+		setDigitPane(unk134[1], unkE0, unk24 % 10);
+	} else {
+		if (!unk134[2]->getPane()->isVisible())
+			unk134[2]->getPane()->show();
+		setDigitPane(unk134[0], unkE0, (int)(unk24 * 0.01f));
+		int remainder = unk24 - (int)(unk24 * 0.01f) * 100;
+		setDigitPane(unk134[1], unkE0, (int)(remainder * 0.1f));
+		setDigitPane(unk134[2], unkE0, remainder % 10);
+	}
 
 	int lives = TFlagManager::smInstance->getFlag(0x20001);
 	if (lives > 99)
 		lives = 99;
 	unk3AC[0] = lives;
-	setTwoDigits(unk39C, unkE0, lives);
+	setDigitPane(unk39C[0], unkE0, (int)(lives * 0.1f));
+	setDigitPane(unk39C[1], unkE0, lives % 10);
 
 	unk39 = 1;
 
