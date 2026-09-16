@@ -14,6 +14,8 @@ public:
 	void touchPlayer(THitActor*);
 	void control();
 	TCogwheelScale(const char*);
+
+	static f32 mWaterLeakSpeed;
 };
 
 class TCogwheel : public TMapObjBase {
@@ -25,6 +27,11 @@ public:
 	void control();
 	void initMapObj();
 	TCogwheel(const char* name = "天秤");
+
+	static f32 mRopeWidthX;
+	static f32 mRopeWidthZ;
+	static f32 mTexPosRate;
+	static f32 mMinSpeed;
 };
 
 class TMapObjElasticCode : public TMapObjBase {
