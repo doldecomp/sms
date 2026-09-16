@@ -1011,7 +1011,7 @@ void TBGTentacle::moveConstraint()
 				local_38.y += getNodeLen();
 			}
 		} else {
-			static int jntidx[] = { 8, 14, 16, 34 };
+			static int jntidx[] = { 8, 14, 28, 34 };
 			int iVar15          = jntidx[mIndex];
 			for (int i = 0; i < mNodeNum; ++i) {
 				MtxPtr mtx = mOwner->getModel()->getAnmMtx(i + iVar15);
