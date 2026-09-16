@@ -49,6 +49,17 @@ The last two differ only in whether the 1/0 lands in `r0` and is widened, or lan
 
 Working order for a batch of such accessors: get one exact, then apply the same shape to the rest. Here that took 30 functions from 0 to exact in three edits.
 
+## Frame-gap hypotheses ruled out, batch 67
+
+Two plausible causes for the reserved-local gap were tested against `TNerveTobiPukuPitiPiti::execute`, which needs exactly 8 more bytes, and both are wrong. Do not retry them.
+
+- **`TSolidStack::push` taking `const T&`.** Binding a const reference to a pointer rvalue should force a stack temporary, so changing it to `push(T value)` looked promising. The frame did not move at all, and a full `changes_all` showed **65 regressions against 1 improvement**. Reverted; zero regressions after.
+- **Holding the nerve in a local before pushing.** Writing `const TNerveBase<TLiveActor>* nerve = &TNerveX::theNerve(); spine->pushAfterCurrent(nerve);` also left the frame unchanged and dropped the function from 99.9% to 98.0%.
+
+What the data says: `SwimWander` matches with no gap and pushes no nerve; `PitiPiti` is 8 short and `Bound` 32 short, and both push one. So pushing correlates with a gap but does not determine its size, and neither the argument-passing convention nor an explicit local is the mechanism.
+
+Method note: always `ninja baseline` before touching a shared header like `SolidStack.hpp`. The push change looked harmless in the one function under test while silently costing 65 others.
+
 ## Frame gaps are confirmed pure, batch 61
 
 `TNerveSealWait::execute` was validated with a temporary `volatile char trash[0x10]`, the use `AGENTS.md` sanctions for diagnosis: it reaches **100% with zero instruction differences**. So a function sitting at 99.9% with only `stwu` and save/restore offsets differing is a *correct* reconstruction whose caller is missing an inlined helper's reserved locals. There is nothing to fix in its body.
