@@ -779,7 +779,10 @@ void TMapObjBase::emitAndSRT(s32 param_1, u8 param_2,
 	    = gpMarioParticleManager->emit(param_1, param_3, param_2, param_3);
 
 	if (emitter) {
-		emitter->setRotation(param_4.x, param_4.y, param_4.z);
+		s16 x = param_4.x;
+		s16 y = param_4.y;
+		s16 z = param_4.z;
+		emitter->setRotation(x, y, z);
 		emitter->setGlobalScale(param_5);
 	}
 }
