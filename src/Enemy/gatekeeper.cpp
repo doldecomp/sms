@@ -969,8 +969,10 @@ DEFINE_NERVE(TNerveBGKSleepDamage, TLiveActor)
 		if (self->unk298 > 0)
 			self->unk298--;
 		if (self->unk298 == 0) {
-			int timer    = self->getSaveParams()->mSLLaunchTimerDamage.get();
-			self->unk298 = (s32)(240.0f * MsRandF()) - 120 + timer;
+			int timer = self->getSaveParams()->mSLLaunchTimerDamage.get();
+			timer += (s32)(240.0f * MsRandF());
+			timer = (s16)(timer - 120);
+			self->unk298 = timer;
 			self->launchGorogoro();
 			self->rumblePad();
 		}
