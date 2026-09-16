@@ -581,6 +581,7 @@ bool CPolarSubCamera::isChangeToParallelCameraCByMoveBG_() const
 
 // TODO: inlining is NOT working out in a bunch of places in this function,
 // hence the hacks above...
+#pragma inline_depth(2)
 void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 {
 	if (SMS_isMultiPlayerMap()) {
@@ -597,7 +598,7 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 		return;
 
 	if (unk64 & CAMERA_FLAG_NOTICE_ACTIVE)
-		execNoticeOnOffProc_(NOTICE_MODE_UNK0);
+		execNoticeOnOffProc_(NOTICE_MODE_UNK1);
 
 	int prevMode = mMode;
 
@@ -623,20 +624,15 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 			if (unk64 & CAMERA_FLAG_UNK10) {
 				unk64 &= ~CAMERA_FLAG_UNK10;
 				doLButtonCameraOn_();
-			} else if (unk120->checkFrameMeaning(0xC000)) {
-				bool doCheck = true;
-				if (unk120->checkFrameMeaning(0x4000)) {
-					if (unk282 != 0)
-						doCheck = false;
-					else
-						execNoticeOnOffProc_((EnumNoticeOnOffMode)2);
-				}
-				if (doCheck) {
-					if (unk64 & CAMERA_FLAG_NOTICE_ACTIVE) {
-						doLButtonCameraOn_();
-					} else if (!isLButtonCameraInbetween()) {
-						execFrontRotate_();
-					}
+			} else if (unk120->checkFrameMeaning(0xC000)
+			           && (!unk120->checkFrameMeaning(0x4000)
+			               || unk282 == 0)) {
+				if (unk120->checkFrameMeaning(0x4000))
+					execNoticeOnOffProc_(NOTICE_MODE_UNK2);
+				if (unk64 & CAMERA_FLAG_NOTICE_ACTIVE) {
+					doLButtonCameraOn_();
+				} else if (!isLButtonCameraInbetween()) {
+					execFrontRotate_();
 				}
 			}
 		}
