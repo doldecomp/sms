@@ -275,9 +275,7 @@ void TSpineEnemy::setGoalPathFromGraph()
 	JGeometry::TVec3<f32> local_48;
 	unk124->getCurrent().getPoint(&local_48);
 	TPathNode local_3c(local_48);
-	unkF4  = local_3c;
-	unk104 = local_3c;
-	unk114.clear();
+	setGoalPath(local_3c);
 }
 
 void TSpineEnemy::goToInitialVisibleNode(f32, f32) { }
