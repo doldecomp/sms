@@ -8,7 +8,22 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 57 — enemyinterp decompiled from scratch and linked
+## Latest checkpoint: batch 58 — BathtubBinder reconstructed, five of six exact
+
+`src/Enemy/BathtubBinder.cpp` and its header did not exist. Five of the unit's six functions now match exactly (540 of 1,688 bytes): the constructor, destructor, `bind`, `init` and the out-of-line `TVec3<f32>::set<f>`.
+Game matched code **26.157291% -> 26.18%**, aggregate **39.50% -> 39.52%**.
+
+The class is a `TBinder` that floats an actor on the bath water. `init` resolves two Shift-JIS named objects, `@2160` = "バスタブ" and `@2161` = "バスタブの水", recovered from `.rodata`.
+`init` returns **`bool`, not `BOOL`**: with `BOOL` the compiler adds a `clrlwi r3,r0,24` byte widening the original does not have. That one change took it from 98.6% to exact.
+`bind` tests `mBathtub->unk29A` directly, matching how `GCConsole2` and `BathWaterManager` already read that flag.
+
+`float_` (1,148B) remains at 65.7%. It samples the water ahead of and behind the actor, clamps each point inside the tub circle, then blends height and pitch.
+The clamp is expanded three times with no symbol in the map, so it is a header inline; it is written as `clampToTub` and the shared `TBathtubData::getThing()` already had the exact expression the assembly uses.
+Its frame is 0x148 against 0x178, 0x30 short, and the original caches the two matrix elements `rot[0][2]` and `rot[2][2]` in f30/f31 across the whole function where we reload them. The missing stack is consistent with each inlined clamp keeping both the returned temporary and a named copy of the centre.
+
+The unit cannot be source-linked until `float_` matches. DOL remains byte-identical. No gameplay test performed.
+
+## Verified checkpoint: batch 57 — enemyinterp decompiled from scratch and linked
 
 `src/Enemy/enemyinterp.cpp` did not exist. It is now written, fully matching and source-linked, so **game matched code moves for the first time this run: 26.15378% -> 26.157291%**, and game files reach 91 (3.428571% -> 3.471861%).
 
