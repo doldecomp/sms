@@ -829,8 +829,8 @@ void TGesso::turnOut()
 inline bool TGesso::checkDropInWater()
 {
 	// Don't skip your calculus class, kids.
-	JGeometry::TVec3<f32> position = mPosition;
-	JGeometry::TVec3<f32> velocity = mVelocity;
+	JGeometry::TVec3<f32> position = getPosition();
+	JGeometry::TVec3<f32> velocity = getVelocity();
 	for (int i = 0; i < 50; ++i) {
 		position += velocity;
 		velocity.y -= getGravityY();
