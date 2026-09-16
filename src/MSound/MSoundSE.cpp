@@ -10,6 +10,7 @@
 
 // rogue
 #include <MSound/MSoundBGM.hpp>
+#include <System/DummyStrings.hpp>
 
 using namespace MSoundSESystem;
 
