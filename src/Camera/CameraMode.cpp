@@ -187,10 +187,16 @@ bool CPolarSubCamera::isNormalCameraSpecifyMode(int param) const
 	return result;
 }
 
+static inline bool isNormalCameraSpecifyMode(const CPolarSubCamera* camera,
+                                             int mode)
+{
+	return camera->isNormalCameraSpecifyMode(mode);
+}
+
 bool CPolarSubCamera::isNormalCameraCompletely() const
 {
 	bool result = false;
-	if (isNormalCameraSpecifyMode(mMode)
+	if (::isNormalCameraSpecifyMode(this, mMode)
 	    && (!isNowInbetween() || isNormalCameraSpecifyMode(mPrevMode)))
 		result = true;
 
