@@ -2,6 +2,7 @@
 #include "MoveBG/MapObjBase.hpp"
 #include <Camera/CameraShake.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <Player/MarioAccess.hpp>
 #include <System/Particles.hpp>
@@ -62,7 +63,10 @@ u8 TBathtub::getNumGripsDead() const { return 0; }
 
 void TBathtub::tumble(f32, f32) { }
 
-MtxPtr TBathtub::getTakingMtx() { return nullptr; }
+MtxPtr TBathtub::getTakingMtx()
+{
+	return mMActor->getModel()->getAnmMtx(mMarioJntIdx);
+}
 
 MtxPtr TBathtub::getSubmarineMtxInDemo() { return nullptr; }
 
