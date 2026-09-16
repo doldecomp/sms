@@ -788,7 +788,8 @@ evAppearShineFromNPCWithoutDemo(TSpcTypedInterp<TEventWatcher>* interp,
 	shine->mPosition.set(npc->mPosition);
 	shine->makeObjAppeared();
 
-	interp->push();
+	const TSpcSlice& result = TSpcSlice();
+	interp->push(result);
 }
 
 static void evAppearShineFromKageMario(TSpcTypedInterp<TEventWatcher>* interp,
