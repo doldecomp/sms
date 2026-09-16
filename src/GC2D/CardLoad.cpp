@@ -486,12 +486,13 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 		switch (unk14) {
 		case 0: {
 			changeScene();
-			int alpha = unk25C->getAlpha();
+			u8& paneAlpha = unk25C->mAlpha;
+			int alpha     = paneAlpha;
 			if (unk275 && alpha < 255) {
 				alpha += 8;
 				if (alpha > 255)
 					alpha = 255;
-				unk25C->setAlpha(alpha);
+				paneAlpha = alpha;
 			}
 
 			if (!unk275 && alpha > 0) {
