@@ -410,7 +410,16 @@ void TBathtubKiller::moveChasing()
 	mVelocity.scale(unk1A0, velocity);
 }
 
-void TBathtubKiller::moveStraight() { }
+void TBathtubKiller::moveStraight()
+{
+	JGeometry::TVec3<f32> velocity;
+	mQuat.getZDir(velocity);
+	velocity.y = 0.0f;
+	velocity.normalize();
+	velocity.scale(unk1A0);
+	mVelocity.set(velocity);
+	makeQuat(mVelocity, unk198, 0.1f);
+}
 
 void TBathtubKiller::makeVelocityQuat() { }
 
@@ -636,7 +645,22 @@ DEFINE_NERVE(TNerveBathtubKillerChase, TLiveActor)
 
 DEFINE_NERVE(TNerveBathtubKillerChaseStraight, TLiveActor) { return FALSE; }
 
-DEFINE_NERVE(TNerveBathtubKillerStraight, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBathtubKillerStraight, TLiveActor)
+{
+	TBathtubKiller* self = (TBathtubKiller*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		self->mMActor = self->mMActorKeeper->getMActor(
+		    "bathtubdownkiller_model1.bmd");
+		self->setBckAnm(2);
+	}
+
+	if (self->unk218 <= 0)
+		self->offHitFlag(HIT_FLAG_NO_COLLISION);
+
+	self->moveStraight();
+	return FALSE;
+}
 
 DEFINE_NERVE(TNerveBathtubKillerBreak, TLiveActor) { return FALSE; }
 
@@ -685,4 +709,35 @@ void TBathtubKillerManager::createModelData()
 TSpineEnemy* TBathtubKillerManager::createEnemyInstance()
 {
 	return new TBathtubKiller;
+}
+
+static void forceSdata2Order(void)
+{
+	(void)1.0f;
+	(void)0.0f;
+	(void)4503601774854144.0;
+	(void)2.0f;
+	(void)3.81469727e-06f;
+	(void)0.100000001f;
+	(void)0.5f;
+	(void)3.0f;
+	(void)100.0f;
+	(void)5.0f;
+	(void)60.0f;
+	(void)0.785398185f;
+	(void)255.0f;
+	(void)0.0500000007f;
+	(void)3.05175781e-05f;
+	(void)4.0f;
+	(void)120.0f;
+	(void)240.0f;
+	(void)0.200000003f;
+	(void)15.0f;
+	(void)50.0f;
+	(void)20.0f;
+	(void)500.0f;
+	(void)200.0f;
+	(void)1000.0f;
+	(void)300.0f;
+	(void)10.0f;
 }
