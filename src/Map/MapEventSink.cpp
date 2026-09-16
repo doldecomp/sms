@@ -232,6 +232,16 @@ void TMapEventSinkInPollution::initBuriedBuilding()
 			makeBuildingRecovered(i);
 }
 
+static inline void loadAfterInPollution(TMapEventSinkInPollution* sink)
+{
+	sink->TMapEventSink::loadAfter();
+	for (int i = 0; i < sink->mBuildingNum; ++i) {
+		gpPollution->getCounterObj().registerPollutionObj(
+		    sink->getPollutionObj(i), &sink->getPollutionObj(i)->mCounter);
+	}
+}
+
+#pragma dont_inline on
 void TMapEventSinkInPollution::loadAfter()
 {
 	TMapEventSink::loadAfter();
@@ -240,6 +250,7 @@ void TMapEventSinkInPollution::loadAfter()
 		    getPollutionObj(i), &getPollutionObj(i)->mCounter);
 	}
 }
+#pragma dont_inline off
 
 TPollutionObj* TMapEventSinkInPollutionReset::getResetPollutionObj(int i)
 {
@@ -256,10 +267,20 @@ void TMapEventSinkInPollutionReset::makeBuildingRecovered(int i)
 
 void TMapEventSinkInPollutionReset::loadAfter()
 {
-	TMapEventSinkInPollution::loadAfter();
+	loadAfterInPollution(this);
 	for (int i = 0; i < mBuildingNum; ++i) {
 		getPollutionObj(i)->alive();
 		getResetPollutionObj(i)->kill();
+	}
+}
+
+static inline void loadAfterInPollutionReset(
+    TMapEventSinkInPollutionReset* sink)
+{
+	sink->TMapEventSinkInPollution::loadAfter();
+	for (int i = 0; i < sink->mBuildingNum; ++i) {
+		sink->getPollutionObj(i)->alive();
+		sink->getResetPollutionObj(i)->kill();
 	}
 }
 
@@ -368,7 +389,7 @@ bool TMapEventSinkBianco::watch()
 
 void TMapEventSinkBianco::loadAfter()
 {
-	TMapEventSinkInPollutionReset::loadAfter();
+	loadAfterInPollutionReset(this);
 
 	TMapStaticObj* ref = JDrama::TNameRefGen::search<TMapStaticObj>("鏡内地形");
 	unk64              = ref->getModelData()->getJointNodePointer(2);
