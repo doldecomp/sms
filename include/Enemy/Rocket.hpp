@@ -14,6 +14,12 @@ public:
 
 	// TODO: add other methods
 	bool isAttack();
+
+public:
+	// static members (map: .sdata)
+	static f32 mTestAng_y;
+	static f32 mNozzleOffsetZ;
+	static f32 mColOffsetY;
 };
 
 #endif
