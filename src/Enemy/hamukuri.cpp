@@ -760,7 +760,7 @@ void THamuKuri::behaveToWater(THitActor* param_1)
 		}
 
 		if (mVelocity.y < 0.0f)
-			forceRoll(SMS_GetMarioPos(), true);
+			forceRoll(*gpMarioPos, true);
 	}
 }
 
