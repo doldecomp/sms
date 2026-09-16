@@ -1,4 +1,5 @@
 #include <Player/Mario.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
 #include <Player/MarioAnimeData.hpp>
 #include <Player/MarioCap.hpp>
 #include <Player/WaterGun.hpp>
@@ -28,7 +29,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 TMario* gpMarioForCallBack;
 
