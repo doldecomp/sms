@@ -1309,7 +1309,7 @@ void TBossMantaManager::createEnemies(int num)
 		num = getCapacity() - getObjNum();
 
 	if (unk38 != nullptr) {
-		u8 limit = unk38->mSLActiveEnemyNum.get();
+		u8 limit = unk38->mSLInstanceNum.get();
 		if (num + getObjNum() > limit)
 			num = limit - getObjNum();
 	}
