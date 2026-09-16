@@ -318,8 +318,7 @@ void TBEelTears::setMActorAndKeeper()
 
 void TBEelTears::moveObject()
 {
-	TBEelTearsSaveLoadParams* params = mTearsParams;
-	f32 liveHeight                   = params->mSLTearsLiveHeight.get();
+	f32 liveHeight = mTearsParams->mSLTearsLiveHeight.get();
 	mVelocity.x *= 0.9f;
 	mVelocity.z *= 0.9f;
 	mPosition.x += mVelocity.x;
@@ -333,10 +332,10 @@ void TBEelTears::moveObject()
 	}
 
 	f32 scale        = mScaling.x;
-	s32 attackRadius = params->mSLTearsAttackRadius.get();
-	s32 attackHeight = params->mSLTearsAttackHeight.get();
-	s32 damageRadius = params->mSLTearsDamageRadius.get();
-	s32 damageHeight = params->mSLTearsDamageHeight.get();
+	f32 attackRadius = mTearsParams->mSLTearsAttackRadius.get();
+	f32 attackHeight = mTearsParams->mSLTearsAttackHeight.get();
+	f32 damageRadius = mTearsParams->mSLTearsDamageRadius.get();
+	f32 damageHeight = mTearsParams->mSLTearsDamageHeight.get();
 	setHitParams(attackRadius * scale, attackHeight * scale,
 	             damageRadius * scale, damageHeight * scale);
 
