@@ -732,7 +732,8 @@ static void evAppearMushroom1up(TSpcTypedInterp<TEventWatcher>* interp,
 	TMushroom1up* mushroom = (TMushroom1up*)getNameRefPtr(interp->pop());
 	mushroom->appear();
 	SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_1UP_APPEAR, 0, nullptr, 0);
-	interp->push();
+	const TSpcSlice& result = TSpcSlice();
+	interp->push(result);
 }
 
 static void evAppearShineFromNPC(TSpcTypedInterp<TEventWatcher>* interp,
