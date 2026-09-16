@@ -376,6 +376,8 @@ void TNpcEvent::reviveOneSunflower()
 		snprintf(acStack_50, 0x40, "%s%d", sViewObjName, idx);
 
 		TBaseNPC* npc = JDrama::TNameRefGen::search<TBaseNPC>(acStack_50);
+		const JGeometry::TVec3<f32>& position = npc->unk1B8;
+		TMarDirector* director = gpMarDirector;
 		--mDownSunflowerNum;
 
 		static const char* sCameraNames[] = {
@@ -383,14 +385,15 @@ void TNpcEvent::reviveOneSunflower()
 			"ひまわりカメラ3", "ひまわりカメラ4",
 		};
 
-		gpMarDirector->fireStartDemoCamera(sCameraNames[idx], &npc->unk1B8, -1,
+		director->fireStartDemoCamera(sCameraNames[idx], &position, -1,
 		                                   0.0f, true, &ReviveSunflowerCallBack,
-		                                   (u32)npc, nullptr, 0);
+		                                   (u32)npc, nullptr,
+		                                   JDrama::TFlagT<u16>());
 
 		if (mDownSunflowerNum == 0) {
 			gpItemManager->makeShineAppearWithDemo(
-			    "ひまわり用シャイン", "ひまわりシャインカメラ", npc->unk1B8.x,
-			    npc->unk1B8.y + 500.0f, npc->unk1B8.z);
+			    "ひまわり用シャイン", "ひまわりシャインカメラ", position.x,
+			    position.y + 500.0f, position.z);
 			TFlagManager::getInstance()->setBool(false, 0x50003);
 		}
 	}
