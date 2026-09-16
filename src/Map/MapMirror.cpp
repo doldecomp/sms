@@ -70,9 +70,12 @@ TMirrorCamera::TMirrorCamera(const char* name)
 	unk94->mipmapCount     = 1;
 	unk94->imageDataOffset = 0x20;
 
-	GXInitTexObj(&unk60, (u8*)unk94 + unk94->imageDataOffset, unk94->width,
-	             unk94->height, (GXTexFmt)unk94->format, GX_REPEAT, GX_REPEAT,
-	             0);
+	GXTexFmt local_format = (GXTexFmt)unk94->format;
+	u16 local_height      = unk94->height;
+	void* local_image     = (u8*)unk94 + unk94->imageDataOffset;
+	u16 local_width       = unk94->width;
+	GXInitTexObj(&unk60, local_image, local_width, local_height, local_format,
+	             GX_REPEAT, GX_REPEAT, 0);
 
 	GXInitTexObjLOD(&unk60, GX_LINEAR, GX_LINEAR, 0.0f, 0.0f, 0.0f, GX_FALSE,
 	                GX_FALSE, GX_ANISO_1);
