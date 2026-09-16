@@ -183,15 +183,19 @@ f32 TMapCollisionData::checkRoofList(f32 x, f32 y, f32 z, u8 param_4,
                                      const TBGCheckList* head,
                                      const TBGCheckData** result)
 {
+	param_4 &= 0x4;
 	while (head) {
 		const TBGCheckData* data = head->unk8;
 		head                     = head->mNext;
 
-		if (param_4 & 0x4 && data->isWaterThrough())
+		if ((s32)param_4 != 0 && data->isWaterThrough())
 			continue;
 
-		if ((data->mPoint1.z - z) * (data->mPoint2.x - data->mPoint1.x)
-		        - (data->mPoint1.x - x) * (data->mPoint2.z - data->mPoint1.z)
+		f32 x1 = data->mPoint1.x;
+		f32 z1 = data->mPoint1.z;
+
+		if ((z1 - z) * (data->mPoint2.x - x1)
+		        - (x1 - x) * (data->mPoint2.z - z1)
 		    > 1.0f)
 			continue;
 
@@ -200,8 +204,8 @@ f32 TMapCollisionData::checkRoofList(f32 x, f32 y, f32 z, u8 param_4,
 		    > 1.0f)
 			continue;
 
-		if ((data->mPoint3.z - z) * (data->mPoint1.x - data->mPoint3.x)
-		        - (data->mPoint3.x - x) * (data->mPoint1.z - data->mPoint3.z)
+		if ((data->mPoint3.z - z) * (x1 - data->mPoint3.x)
+		        - (data->mPoint3.x - x) * (z1 - data->mPoint3.z)
 		    > 1.0f)
 			continue;
 
