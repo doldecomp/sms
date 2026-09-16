@@ -91,8 +91,8 @@ void TMareJellyFishManager::createModelData()
 
 	const ResTIMG* realTex
 	    = (const ResTIMG*)JKRFileLoader::getGlbResource(cJellyFishRealTexName);
-	TScreenTexture* screenTex
-	    = JDrama::TNameRefGen::search<TScreenTexture>(cScreenTexViewObjName);
+	TScreenTexture* screenTex = static_cast<TScreenTexture*>(
+	    JDrama::TNameRefGen::search(cScreenTexViewObjName));
 	const ResTIMG* screenTexInfo = screenTex->getTexture()->getTexInfo();
 
 	J3DModelData* modelData;
@@ -190,8 +190,7 @@ void TNPCManager::makePartsModelData_(u32 npc_type, u32 flags,
 			char path[0x100];
 			snprintf(path, sizeof(path), "%s/%s", keeper->mFolder,
 			         modelData->unk8[j]);
-			void* resource = JKRGetResource(path);
-			if (resource == nullptr)
+			if (JKRGetResource(path) == nullptr)
 				continue;
 
 			SDLModelData* sdlModel
@@ -234,32 +233,29 @@ void TNPCManager::clipEnemies(JDrama::TGraphics* graphics)
 	if (gpMarDirector->mMap == 1) {
 		CPolarSubCamera* cam = gpCamera;
 
-		if (gpCamera->isDemoCamera()
-		    || (gpCamera->mMode == CAMERA_MODE_UNDER_GROUND
-		        || (gpCamera->mPrevMode == CAMERA_MODE_UNDER_GROUND
-		            && (gpCamera->isNowInbetween()
-		                || gpCamera->mMode == CAMERA_MODE_JUMP_CODE))))
+		// TODO: figure out these inlines. fabricatedInline3 matches in camera
+		// itself but not here for some reason...
+		if (gpCamera->isDemoCamera() || gpCamera->fabricatedInline3())
 			if (farClip < 15000.0f)
 				farClip = 15000.0f;
 	}
 
-	SetViewFrustumClipCheckPerspective(gpCamera->getFovy(),
-	                                   gpCamera->getAspect(), nearClip, farClip);
+	SetViewFrustumClipCheckPerspective(gpCamera->mAspect, gpCamera->mFovy,
+	                                   nearClip, farClip);
 
-	int e;
-	TBaseNPC* actor;
-	int i;
+	for (int i = 0, e = mObjNum; i < e; ++i) {
+		TBaseNPC* actor = (TBaseNPC*)unk18[i];
 
-	for (e = getObjNum(), i = 0; i < e; ++i) {
-		actor = (TBaseNPC*)getObj(i);
-
-		JGeometry::TVec3<f32> checkPos = actor->getPosition();
+		JGeometry::TVec3<f32> checkPos = actor->mPosition;
 		checkPos.y += 75.0f;
 
 		if (actor->checkLiveFlag(LIVE_FLAG_UNK2000)
 		    && SMS_IsInOtherFastCube(checkPos)) {
 			actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-		} else if (ViewFrustumClipCheck(graphics, &actor->mPosition, unk3C)) {
+			continue;
+		}
+
+		if (ViewFrustumClipCheck(graphics, actor->mPosition, unk3C)) {
 			actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		} else {
 			actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
@@ -271,7 +267,7 @@ void TNPCManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_ENTRY) {
 		for (int i = 0, e = mObjNum; i < e; ++i) {
-			TBaseNPC* npc = (TBaseNPC*)getObj(i);
+			TBaseNPC* npc = (TBaseNPC*)unk18[i];
 			npc->onLiveFlag(LIVE_FLAG_UNK1000000);
 		}
 	}

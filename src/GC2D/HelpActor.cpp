@@ -30,8 +30,8 @@ void THelpActor::load(JSUMemoryInputStream& stream)
 void THelpActor::loadAfter()
 {
 	THitActor::loadAfter();
-	unk70 = JDrama::TNameRefGen::search<TLiveActor>(unk6C);
-	JDrama::TNameRefGen::search<TGCConsole2>("GCコンソール")
+	unk70 = static_cast<TLiveActor*>(JDrama::TNameRefGen::search(unk6C));
+	static_cast<TGCConsole2*>(JDrama::TNameRefGen::search("GCコンソール"))
 	    ->entryHelpActor(this);
 }
 
@@ -50,14 +50,12 @@ void THelpActor::perform(u32 cue, JDrama::TGraphics*)
 {
 	if (cue & CUE_MOVE) {
 		if (unk74) {
-			int helpID = getHelpID();
-			if (helpID == -1)
+			if (getHelpID() == -1)
 				if (SMSGetMarDirector()->getConsole()->startDisappearBalloon(
 				        unk68, false))
 					unk74 = false;
 		} else {
-			int helpID = getHelpID();
-			if (helpID != -1)
+			if (getHelpID() != -1)
 				if (SMSGetMarDirector()->getConsole()->startAppearBalloon(
 				        unk68, false))
 					unk74 = true;

@@ -116,7 +116,7 @@ TCardSave::TCardSave(const char* name, bool param_2)
 void TCardSave::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
-	initData(SMSGetMarDirector()->getGamePad());
+	initData(gpMarDirector->unk18[0]);
 }
 
 void TCardSave::initData(TMarioGamePad* param_1)
@@ -134,15 +134,13 @@ void TCardSave::initData(TMarioGamePad* param_1)
 
 	for (int i = 0; i < 10; ++i) {
 		char acStack_48[0x28];
-		JUTTexture* texture;
 		if (unk18) {
 			snprintf(acStack_48, 0x28, "/endsave/timg/coin_number_%d.bti", i);
 		} else {
 			snprintf(acStack_48, 0x28, "/game_6/timg/coin_number_%d.bti", i);
 		}
 
-		texture = new JUTTexture((ResTIMG*)JKRGetResource(acStack_48));
-		unk1C[i] = texture;
+		unk1C[i] = new JUTTexture((ResTIMG*)JKRGetResource(acStack_48));
 	}
 	unk48 = new TExPane(unk14, 0x775f30);
 	unk4C = unk48->getPane()->getBounds();
@@ -276,7 +274,8 @@ void TCardSave::initData(TMarioGamePad* param_1)
 	unk14->search(0x6d61736b)->hide();
 	unk2E4 = JKRGetResource("/common/2d/savemessage.bmg");
 	if (!unk18)
-		unk2D8 = JDrama::TNameRefGen::search<TPauseMenu2>("ポーズメニュー");
+		unk2D8 = static_cast<TPauseMenu2*>(
+		    JDrama::TNameRefGen::search("ポーズメニュー"));
 	unk270 = param_1;
 }
 
@@ -956,7 +955,7 @@ s8 TCardSave::drawMessageBM(TEProgress param_1)
 
 s8 TCardSave::waitForAnyKey(TEProgress param_1)
 {
-	s8 result = -1;
+	s32 result = -1;
 
 	switch (unk10) {
 	case 0:
@@ -1298,7 +1297,7 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 		break;
 
 	case 2: {
-		s8 oldSelect = unk2E9;
+		u8 oldSelect = unk2E9;
 		u32 input    = unk270->mEnabledFrameMeaning;
 
 		if (input & 0x20) {
@@ -1376,10 +1375,7 @@ s8 TCardSave::waitForAnyKeyBM(TEProgress param_1)
 	switch (unk10) {
 	case 0:
 		setMessage(unk12C, 0x200, getCurMessageID());
-		{
-			u16 messageID = getCurMessageID();
-			setMessage(unk130, 0x200, messageID);
-		}
+		setMessage(unk130, 0x200, getCurMessageID());
 
 		unkF8->hide();
 		unk128->hide();
@@ -2071,6 +2067,4 @@ void TCardSave::execIssueGX_(JDrama::TGraphics* param_1)
 	}
 
 	param_1->setScissor(scissorRect);
-	if (param_1 != NULL) {
-	}
 }

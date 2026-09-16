@@ -48,8 +48,7 @@ void TMareWallRock::appear()
 
 	unk10C[0]->setUp();
 	unk104->awake();
-	JGeometry::TVec3<f32> trans(0.0f, 0.0f, unkFC);
-	unk10C[0]->moveTrans(trans);
+	unk10C[0]->moveTrans(JGeometry::TVec3<f32>(0.0f, 0.0f, unkFC));
 	f32 rotY = unk128;
 
 	if (JPABaseEmitter* em = gpMarioParticleManager->emit(
@@ -198,8 +197,8 @@ void TMareWallRock::loadAfter()
 	unk104          = TMapObjBase::getBuildingJointObj(unkF8 + 1);
 	unk108          = unkF8;
 	J3DJoint* joint = unk104->getJoint();
-	const Vec& min  = joint->getMin();
 	const Vec& max  = joint->getMax();
+	const Vec& min  = joint->getMin();
 	mPosition.x     = (max.x + min.x) / 2.0f;
 	mPosition.y     = (max.y + min.y) / 2.0f;
 	mPosition.z     = (max.z + min.z) / 2.0f;
@@ -225,8 +224,8 @@ void TMareEventWallRock::load(JSUMemoryInputStream& stream)
 	JDrama::TNameRef::load(stream);
 	unk14 = new TMareWallRock[unk10];
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* group
-	    = JDrama::TNameRefGen::search<
-	        JDrama::TViewObjPtrListT<JDrama::TViewObj> >("マップグループ");
+	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
+	        JDrama::TNameRefGen::search("マップグループ"));
 	for (int i = 0; i < unk10; ++i) {
 		unk14[i].unkF8 = i;
 		group->getChildren().push_back((JDrama::TViewObj*)&unk14[i]);
@@ -476,10 +475,11 @@ void TMareEventDepressWall::initCommon()
 	                     ->getJointModel(0)
 	                     ->getModelData()
 	                     ->getJointNodePointer(0)
+	                     ->getChild()
+	                     ->getYounger()
 	                     ->getChild();
 
-	int skipCount = 0x43 - ((unk10 - 1) + unk14);
-	joint = joint->getYounger()->getChild();
+	int skipCount = 0x43 - (unk14 + (unk10 - 1));
 	for (int i = 0; i < skipCount; ++i)
 		joint = joint->getYounger();
 
@@ -511,7 +511,7 @@ void TMareEventDepressWall::init3rdEvent()
 	unk14 = 43;
 	initCommon();
 	TMapModelActor* actor
-	    = JDrama::TNameRefGen::search<TMapModelActor>("mareEP2");
+	    = static_cast<TMapModelActor*>(JDrama::TNameRefGen::search("mareEP2"));
 	if (actor) {
 		actor->setActor((MActor*)this);
 		unk18[0] = 2400;
@@ -536,7 +536,7 @@ void TMareEventDepressWall::init2ndEvent()
 	unk14 = 19;
 	initCommon();
 	TMapModelActor* actor
-	    = JDrama::TNameRefGen::search<TMapModelActor>("mareEP1");
+	    = static_cast<TMapModelActor*>(JDrama::TNameRefGen::search("mareEP1"));
 	if (actor) {
 		actor->setActor((MActor*)this);
 		unk18[0] = 3600;
@@ -551,7 +551,7 @@ void TMareEventDepressWall::init1stEvent()
 	unk14 = 8;
 	initCommon();
 	TMapModelActor* actor
-	    = JDrama::TNameRefGen::search<TMapModelActor>("mareEP0");
+	    = static_cast<TMapModelActor*>(JDrama::TNameRefGen::search("mareEP0"));
 	if (actor) {
 		actor->setActor((MActor*)this);
 		unk18[0] = 3600;
@@ -604,9 +604,8 @@ u32 TMareEventBumpyWall::touchWater(THitActor*)
 void TMareEventBumpyWall::bumpDownZ()
 {
 	f32 z = TMapObjBase::getJointTransZ(unk13C);
-	JGeometry::TVec3<f32> trans(0.0f, 0.0f, z);
-	f32 max = unk144;
-	if (z > -max) {
+	JGeometry::TVec3<f32> trans(z, 0.0f, 0.0f);
+	if (z > -unk144) {
 		if (!TMapObjBase::isDemo()) {
 			z -= unk140;
 			SMSRumbleMgr->start(0x13, -1, (f32*)nullptr);
@@ -620,8 +619,8 @@ void TMareEventBumpyWall::bumpDownZ()
 		unk14C->moveTrans(trans);
 		return;
 	}
-	trans.z = -max;
-	TMapObjBase::setJointTransZ(unk13C, -max);
+	trans.z = -unk144;
+	TMapObjBase::setJointTransZ(unk13C, -unk144);
 	unk14C->remove();
 	unk148->setUpTrans(trans);
 	SMSRumbleMgr->stop(0x13);
@@ -631,9 +630,8 @@ void TMareEventBumpyWall::bumpDownZ()
 void TMareEventBumpyWall::bumpUpZ()
 {
 	f32 z = TMapObjBase::getJointTransZ(unk13C);
-	JGeometry::TVec3<f32> trans(0.0f, 0.0f, z);
-	f32 max;
-	if (z < (max = unk144)) {
+	JGeometry::TVec3<f32> trans(z, 0.0f, 0.0f);
+	if (z < unk144) {
 		if (!TMapObjBase::isDemo()) {
 			z += unk140;
 			SMSRumbleMgr->start(0x13, -1, (f32*)nullptr);
@@ -647,8 +645,8 @@ void TMareEventBumpyWall::bumpUpZ()
 		unk14C->moveTrans(trans);
 		return;
 	}
-	trans.z = max;
-	TMapObjBase::setJointTransZ(unk13C, max);
+	trans.z = unk144;
+	TMapObjBase::setJointTransZ(unk13C, unk144);
 	unk14C->remove();
 	unk148->setUpTrans(trans);
 	SMSRumbleMgr->stop(0x13);
@@ -659,8 +657,7 @@ void TMareEventBumpyWall::bumpDownX()
 {
 	f32 x = TMapObjBase::getJointTransX(unk13C);
 	JGeometry::TVec3<f32> trans(x, 0.0f, 0.0f);
-	f32 max;
-	if (x > -(max = unk144)) {
+	if (x > -unk144) {
 		if (!TMapObjBase::isDemo()) {
 			x -= unk140;
 			SMSRumbleMgr->start(0x13, -1, (f32*)nullptr);
@@ -674,8 +671,8 @@ void TMareEventBumpyWall::bumpDownX()
 		unk14C->moveTrans(trans);
 		return;
 	}
-	trans.x = -max;
-	TMapObjBase::setJointTransX(unk13C, -max);
+	trans.x = -unk144;
+	TMapObjBase::setJointTransX(unk13C, -unk144);
 	unk14C->remove();
 	unk148->setUpTrans(trans);
 	SMSRumbleMgr->stop(0x13);
@@ -686,8 +683,7 @@ void TMareEventBumpyWall::bumpUpX()
 {
 	f32 x = TMapObjBase::getJointTransX(unk13C);
 	JGeometry::TVec3<f32> trans(x, 0.0f, 0.0f);
-	f32 max;
-	if (x < (max = unk144)) {
+	if (x < unk144) {
 		if (!TMapObjBase::isDemo()) {
 			x += unk140;
 			SMSRumbleMgr->start(0x13, -1, (f32*)nullptr);
@@ -701,8 +697,8 @@ void TMareEventBumpyWall::bumpUpX()
 		unk14C->moveTrans(trans);
 		return;
 	}
-	trans.x = max;
-	TMapObjBase::setJointTransX(unk13C, max);
+	trans.x = unk144;
+	TMapObjBase::setJointTransX(unk13C, unk144);
 	unk14C->remove();
 	unk148->setUpTrans(trans);
 	SMSRumbleMgr->stop(0x13);

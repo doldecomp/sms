@@ -201,26 +201,22 @@ void TTailRubber::restrict()
 	avgHorLen /= (f32)(unk0.size() - 1);
 
 	if (mFixTailPos) {
-		JGeometry::TVec3<f32> diff;
 		for (Node *e = unk0.begin() - 1, *it = unk0.end() - 2; it != e; --it) {
-			diff = (it + 1)->mPos;
+			JGeometry::TVec3<f32> diff = (it + 1)->mPos;
 			diff -= it->mPos;
 			diff.y = 0.0f;
-			const f32 length = diff.length();
-			if (avgHorLen < length) {
-				diff.setLength(length - avgHorLen);
+			if (avgHorLen < diff.length()) {
+				diff.setLength(diff.length() - avgHorLen);
 				it->mPos += diff;
 			}
 		}
 	} else {
-		JGeometry::TVec3<f32> diff;
 		for (Node *it = unk0.begin() + 1, *e = unk0.end(); it != e; ++it) {
-			diff = (it - 1)->mPos;
+			JGeometry::TVec3<f32> diff = (it - 1)->mPos;
 			diff -= it->mPos;
 			diff.y = 0.0f;
-			const f32 length = diff.length();
-			if (avgHorLen < length) {
-				diff.setLength(length - avgHorLen);
+			if (avgHorLen < diff.length()) {
+				diff.setLength(diff.length() - avgHorLen);
 				it->mPos += diff;
 			}
 		}
@@ -312,7 +308,7 @@ void TFireWanwanManager::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (!gpMap->isInArea(wanwan->mPosition.x, wanwan->mPosition.z)
 		    || (wanwan->getGroundPlane()
 		        && wanwan->getGroundPlane()->isDeathPlane())) {
-			wanwan->reset();
+			wanwan->kill();
 		}
 	}
 
@@ -518,7 +514,7 @@ void TFireWanwanTailHit::init()
 		actor->getModel()->calc();
 	}
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 	initHitActor(0x10000028, 0, 0, 0.0f, 0.0f, 30.0f, 200.0f);
@@ -749,9 +745,9 @@ void TFireWanwan::init(TLiveManager* manager)
 	initParticle();
 
 	mCenterJointIdx
-	    = getModel()->getModelData()->getJointName()->getIndex("center");
+	    = getModel()->getModelData()->getMaterialName()->getIndex("center");
 	mHeadJointIdx
-	    = getModel()->getModelData()->getJointName()->getIndex("jnt_head");
+	    = getModel()->getModelData()->getMaterialName()->getIndex("jnt_head");
 	int idx
 	    = getModel()->getModelData()->getMaterialName()->getIndex("_mat_body");
 	SMS_InitPacket_OneTevColor(mMActor->getModel(), idx, GX_TEVREG0,
@@ -913,11 +909,12 @@ bool TFireWanwan::isFindMario(f32 param_1)
 	return isFindMarioFromParam(param_1);
 }
 
-static inline f32 dist(JGeometry::TVec3<f32> a,
+static inline f32 dist(const JGeometry::TVec3<f32>& a,
                        const JGeometry::TVec3<f32>& b)
 {
-	a.sub(b);
-	return a.length();
+	JGeometry::TVec3<f32> tmp = a;
+	tmp.sub(b);
+	return tmp.length();
 }
 
 bool TFireWanwan::isMissMario() const
@@ -957,9 +954,8 @@ BOOL TFireWanwan::receiveMessage(THitActor* sender, u32 message)
 		return false;
 
 	case HIT_MESSAGE_SPRAYED_BY_WATER: {
-		JGeometry::TVec3<f32> scale;
 		SMS_EasyEmitParticle(PARTICLE_MS_ENM_WATHIT, &sender->getPosition(),
-		                     nullptr, (scale.set(1.0f, 1.0f, 1.0f), scale));
+		                     nullptr, JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 		u8 maxHp = getMaxHitPoints();
 		if (maxHp == mHitPoints)
 			SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_1ST_WATER,
@@ -1101,10 +1097,7 @@ void TFireWanwan::calcRootMatrix()
 		return;
 	{
 		MtxPtr mtx = getModel()->getBaseTRMtx();
-		JGeometry::TVec3<f32> v1;
-		v1.x = mtx[0][1];
-		v1.y = mtx[1][1];
-		v1.z = mtx[2][1];
+		JGeometry::TVec3<f32> v1(mtx[0][1], mtx[1][1], mtx[2][1]);
 		JGeometry::TVec3<f32> v2(mtx[0][2], mtx[1][2], mtx[2][2]);
 		v1.normalize();
 		v2.normalize();
@@ -1186,8 +1179,7 @@ void TFireWanwan::updateCollisionFromParam()
 void TFireWanwan::updateCameraShake()
 {
 	f32 shakeRange = getSaveParam2()->mCamShakeRange.get();
-	if ((isWalking() || isAttacking())
-	    && mDistToMarioSquared < shakeRange * shakeRange) {
+	if (!isWalking() && !isAttacking()) {
 		gpCameraShake->keepShake(CAM_SHAKE_MODE_UNK3, 0.5f);
 	}
 }
@@ -1227,10 +1219,7 @@ void TFireWanwan::updatePollute()
 
 	mPolluteTimer = getSaveParam2()->mPolluteTimerMax.get();
 	MtxPtr mtx    = getModel()->getBaseTRMtx();
-	JGeometry::TVec3<f32> v1;
-	v1.x = mtx[0][0];
-	v1.y = mtx[1][0];
-	v1.z = mtx[2][0];
+	JGeometry::TVec3<f32> v1(mtx[0][0], mtx[1][0], mtx[2][0]);
 	v1.scaleAdd((MsRandF() - 0.5f) * 2.0f * mAttackRadius, mPosition, v1);
 
 	f32 radius = 375.0f;
@@ -1257,10 +1246,8 @@ void TFireWanwan::updateHitPoint()
 
 void TFireWanwan::emitEffects()
 {
-	JGeometry::TVec3<f32> local_2c;
 	MtxPtr mtx = getModel()->getAnmMtx(mCenterJointIdx);
-	local_2c.set(mtx[0][3], mtx[1][3], mtx[2][3]);
-	unk1F0.set(local_2c);
+	unk1F0.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 
 	if (mHitPoints != 0 && unk194->mIsOnFire) {
 		SMS_EasyEmitParticle(FIREWANWAN_JPA_MS_CAN_YUGAMI, &unk1F0, this,
@@ -1385,13 +1372,7 @@ void TFireWanwan::emitTailHitEffect() { }
 // correct but popCurr is incorrect
 void TFireWanwan::initTurnNextGraphNode()
 {
-	int result = unk124->mPrevIdx;
-	int curr   = unk124->mCurrIdx;
-	if (result == -1)
-		result = curr;
-	int* prev = &unk124->mPrevIdx;
-	*prev     = curr;
-	unk124->mCurrIdx = result;
+	unk124->mCurrIdx = unk124->popCurr();
 	setGoalPathFromGraph();
 	unk128 = 0;
 	unk12C = 0.0f;
@@ -1546,7 +1527,7 @@ void TFireWanwan::attackToMario()
 	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
 	if (nerve != &TNerveFireWanwanFly::theNerve()
 	    && nerve != &TNerveFireWanwanEscape::theNerve()
-	    && nerve != &TNerveFireWanwanRecoverGraph::theNerve()) {
+	    && nerve != &TNerveFireWanwanRecover::theNerve()) {
 		if (isFreeze()) {
 			(void)nerve;
 		} else {
@@ -1576,10 +1557,10 @@ void TFireWanwan::bind()
 
 	JGeometry::TVec3<f32> vel     = mVelocity;
 	JGeometry::TVec3<f32> velStep = mLinearVelocity;
-	vel += velStep;
+	velStep += vel;
 
-	int stepCount = int(vel.length() / 25.0f) + 1;
-	vel *= 1.0f / stepCount;
+	int stepCount = int(velStep.length() / 25.0f) + 1;
+	velStep *= 1.0f / stepCount;
 
 	JGeometry::TVec3<f32> totalNormal(0.0f, 0.0f, 0.0f);
 	int iVar12 = 0;
@@ -1587,10 +1568,9 @@ void TFireWanwan::bind()
 	for (int i = 0; i < stepCount; ++i) {
 		JGeometry::TVec3<f32> boundStep;
 		JGeometry::TVec3<f32> stepNormal;
-		int collisionNum = bindBody(&boundStep, &stepNormal, vel);
+		iVar12 += bindBody(&boundStep, &stepNormal, velStep);
 
-		bVar2 &= isAirborne();
-		iVar12 += collisionNum;
+		bVar2 &= checkLiveFlag2(LIVE_FLAG_AIRBORNE);
 
 		mPosition += boundStep;
 		totalNormal += stepNormal;
@@ -1684,11 +1664,10 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
                             const JGeometry::TVec3<f32>& param_3, f32 radius,
                             TBGWallCheckRecord* out_record)
 {
-	const TBGCheckData* local_30;
-	const TBGCheckData* local_34;
-
 	JGeometry::TVec3<f32> actualPoint = point;
 	actualPoint += param_3;
+
+	const TBGCheckData* local_30;
 
 	if (checkLiveFlag(LIVE_FLAG_UNK1000))
 		mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
@@ -1704,6 +1683,7 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
 	if (point.y > actualPoint.y && !local_30->isIllegalData()) {
 		if (!local_30->isEnemyThrough()) {
 			f32 dVar9;
+			const TBGCheckData* local_34;
 			if (checkLiveFlag(LIVE_FLAG_UNK1000))
 				dVar9 = gpMap->checkGroundIgnoreWaterSurface(
 				    actualPoint.x, actualPoint.y + mHeadHeight, actualPoint.z,
@@ -1848,8 +1828,6 @@ DEFINE_NERVE(TNerveFireWanwanGraphWander, TLiveActor)
 
 DEFINE_NERVE(TNerveFireWanwanTurn, TLiveActor)
 {
-	JGeometry::TVec3<f32> local_68;
-	JGeometry::TVec3<f32> local_74;
 	TFireWanwan* self = (TFireWanwan*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->prepareTurn();
@@ -2050,8 +2028,7 @@ DEFINE_NERVE(TNerveFireWanwanHungTail, TLiveActor)
 	JGeometry::TVec3<f32> vec = self->mPosition;
 	vec -= SMS_GetMarioPos();
 
-	f32 rot           = MsGetRotFromZaxisY(vec);
-	self->mRotation.y = rot;
+	self->mRotation.y = MsGetRotFromZaxisY(vec);
 	if (self->isReadyToFly()) {
 		spine->pushAfterCurrent(&TNerveFireWanwanFly::theNerve());
 		return true;
@@ -2063,10 +2040,9 @@ DEFINE_NERVE(TNerveFireWanwanHungTail, TLiveActor)
 // TODO: fake
 static inline JGeometry::TVec3<f32> fromPolar(f32 theta, f32 radius)
 {
-	JGeometry::TVec3<f32> result(
-	    radius * JMASSin(theta * (65536.0f / 360.0f)), 0.0f,
-	    radius * JMASCos(theta * (65536.0f / 360.0f)));
-	return result;
+	return JGeometry::TVec3<f32>(radius * JMASSin(theta * (65536.0f / 360.0f)),
+	                             0.0f,
+	                             radius * JMASCos(theta * (65536.0f / 360.0f)));
 }
 
 DEFINE_NERVE(TNerveFireWanwanFly, TLiveActor)

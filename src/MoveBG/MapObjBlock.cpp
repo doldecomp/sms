@@ -164,9 +164,8 @@ void TLeanBlock::initMapObj()
 	unk140 = 0.01f;
 	unk144 = 0.005f;
 	unk148 = 1.0f;
-	f32 half = 0.5f;
-	unk138 = mScaling.x * 100.0f * half;
-	unk13C = mScaling.z * 100.0f * half;
+	unk138 = (mScaling.x * 100.0f) / 2.0f;
+	unk13C = (mScaling.z * 100.0f) / 2.0f;
 	calcDefaultMtx();
 }
 

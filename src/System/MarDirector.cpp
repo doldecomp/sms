@@ -46,10 +46,10 @@ TMarDirector::TMarDirector()
     , unk25C(nullptr)
     , unk260(0)
 {
-	gpMarDirector = this;
-	unk58         = 0;
-	unk5C         = 0;
-	mState        = STATE_UNK0;
+	gpMarDirector  = this;
+	mMoveTickCount = 0;
+	mTickCount     = 0;
+	mState         = STATE_UNK0;
 	unk88.reserve(100);
 	initLoadParticle();
 	unk126 = 0;
@@ -81,7 +81,5 @@ u32 TMarDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad** param_2,
 
 void TMarDirector::registerEventWatcher(TEventWatcher* param_1)
 {
-	JDrama::TViewObj* obj;
-	obj = param_1;
-	unk80->insert(obj);
+	unk80->insert(param_1);
 }

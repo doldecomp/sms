@@ -10855,11 +10855,9 @@ void TMapObjBase::initUnique()
 		setMatTable(gpMapObjManager->unk94);
 		SMS_UnifyMaterial(getModel());
 		break;
-	case 0x40000263: {
-		const char* name = unkF4;
-		startAllAnim(mMActor, name);
+	case 0x40000263:
+		startAllAnim(mMActor, unkF4);
 		break;
-	}
 	case 0x4000003C:
 		mMActor->initSimpleMotionBlend(0x14);
 		break;
@@ -11015,8 +11013,8 @@ void TMapObjBase::initBckMoveData()
 		move->unk4 = (J3DAnmTransform*)J3DAnmLoaderDataBase::load(
 		    JKRGetResource(move->unk0));
 
-		J3DModelData* data = mMActor->getModel()->getModelData();
-		J3DJoint* joint    = data->getJointNodePointer(1);
+		J3DModelData* data         = mMActor->getModel()->getModelData();
+		J3DJoint* joint            = data->getJointNodePointer(1);
 		data->mJointNodePointer[0] = joint;
 
 		J3DTransformInfo info;
@@ -11030,7 +11028,7 @@ void TMapObjBase::initBckMoveData()
 		info.mTranslate.y = 0.0f;
 		info.mTranslate.z = 0.0f;
 		data->getJointNodePointer(0)->setTransformInfo(info);
-		move->unk8        = new J3DFrameCtrl(move->unk4->getFrameMax());
+		move->unk8 = new J3DFrameCtrl(move->unk4->getFrameMax());
 		move->unk8->setAttribute(J3DFrameCtrl::ATTR_LOOP);
 		move->unk8->setRate(SMSGetAnmFrameRate());
 	}
@@ -11083,9 +11081,7 @@ void TMapObjBase::makeMActors()
 
 	if (mMapObjData->mAnim) {
 		const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
-		mMActor
-		    = initMActor(anim->unk4[0].unk0, anim->unk4[0].unkC,
-		                 getSDLModelFlag());
+		mMActor = initMActor(anim->unk4[0].unk0, nullptr, getSDLModelFlag());
 
 		for (u16 i = 1; i < anim->unk0; ++i) {
 			if (anim->unk4[i].unk10 && mAnmSound == nullptr)
@@ -11093,8 +11089,7 @@ void TMapObjBase::makeMActors()
 
 			if (anim->unk4[i].unk0 != nullptr
 			    && !isAlreadyRegistered(anim, i)) {
-				initMActor(anim->unk4[i].unk0, anim->unk4[i].unkC,
-				           getSDLModelFlag());
+				initMActor(anim->unk4[i].unk0, nullptr, getSDLModelFlag());
 			}
 		}
 	} else {
@@ -11143,7 +11138,8 @@ void TMapObjBase::initActorData()
 	mMapObjData = sObjDataTable[i];
 	unkF8       = mMapObjData->unk34;
 
-	mManager = JDrama::TNameRefGen::search<TLiveManager>(mMapObjData->unk8);
+	mManager = static_cast<TLiveManager*>(
+	    JDrama::TNameRefGen::search(mMapObjData->unk8));
 	mManager->manageActor(this);
 	if (mMapObjData->mHit)
 		mYOffset = mScaling.y * mMapObjData->mHit->unk8;
@@ -11177,8 +11173,8 @@ void TMapObjBase::initMapObj()
 		mLiveFlag |= LIVE_FLAG_UNK8;
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8000) && !isActorType(0x40000084)) {
-		TScreenTexture* ref = JDrama::TNameRefGen::search<TScreenTexture>(
-		    "スクリーンテクスチャ");
+		TScreenTexture* ref = static_cast<TScreenTexture*>(
+		    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 		const ResTIMG* img = ref->getTexture()->getTexInfo();
 		getModel()->getModelData()->getTexture()->setResTIMG(2, *img);
 		mMActor->setLightType(LIGHT_TYPE_INDIRECT);

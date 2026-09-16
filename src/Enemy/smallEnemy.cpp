@@ -244,16 +244,15 @@ void TSmallEnemy::attackToMario()
 	JGeometry::TVec3<f32> local_14(0, 0, 0);
 	(void)&local_14;
 
-	JGeometry::TVec3<f32> local_20(mPosition.x - SMS_GetMarioPos().x,
-	                                 mPosition.y - SMS_GetMarioPos().y,
-	                                 mPosition.z - SMS_GetMarioPos().z);
+	JGeometry::TVec3<f32> local_20;
+	local_20.sub(mPosition, SMS_GetMarioPos());
 	MsVECNormalize(&local_20, &local_20);
-	mVelocity.x = local_20.x;
-	mVelocity.z = local_20.z;
+	mVelocity.set(local_20);
 
-	local_20.scale(mBodyScale * mBodyRadius, local_20);
-	local_14 += local_20;
-	mLinearVelocity = local_14;
+	JGeometry::TVec3<f32> v;
+	v.scale(mBodyScale * mBodyRadius, local_20);
+	v += local_14;
+	mLinearVelocity = v;
 }
 
 void TSmallEnemy::reset()
@@ -350,7 +349,7 @@ void TSmallEnemy::genEventCoin()
 
 	if (mCoin) {
 		TCoin* coin;
-		if (mCoin->isActorType(0x2000000E)) {
+		if (isActorType(0x2000000E)) {
 			coin = (TCoin*)gpItemManager->makeObjAppear(0x2000000E);
 		} else {
 			coin = mCoin;
@@ -366,28 +365,13 @@ void TSmallEnemy::genEventCoin()
 	}
 
 	if (unk18C > 0) {
-		Mtx local_c0;
-		Vec local_d0;
 		for (int i = 0; i < unk18C; ++i) {
+			Mtx44 local_c0;
+
 			f32 angle = 360.0f / unk18C * i + mRotation.y;
-			f32 s     = JMASin(angle);
-			f32 c     = JMACos(angle);
+			MsMtxSetRotY(local_c0, angle);
 
-			local_c0[0][0] = c;
-			local_c0[0][1] = 0.0f;
-			local_c0[0][2] = s;
-			local_c0[0][3] = 0.0f;
-
-			local_c0[1][0] = 0.0f;
-			local_c0[1][1] = 1.0f;
-			local_c0[1][2] = 0.0f;
-			local_c0[1][3] = 0.0f;
-
-			local_c0[2][0] = -s;
-			local_c0[2][1] = 0.0f;
-			local_c0[2][2] = c;
-			local_c0[2][3] = 0.0f;
-
+			Vec local_d0;
 			local_d0.x = 0.0f;
 			local_d0.y = 0.0f;
 			local_d0.z = 100.0f;
@@ -429,8 +413,7 @@ void TSmallEnemy::setAfterDeadEffect()
 
 void TSmallEnemy::generateItem()
 {
-	TMsRange<f32> range(0.0f, 100.0f);
-	f32 rand = range.rand();
+	f32 rand = TMsRange<f32>(0.0f, 100.0f).rand();
 	(void)rand; // TODO: due to rand being incorrect
 	f32 eggRate  = getSaveParams()->mSLGenEggRate.get();
 	f32 itemRate = getSaveParams()->mSLGenItemRate.get();
@@ -460,15 +443,12 @@ void TSmallEnemy::moveObject()
 	f32 damageRadius = getSaveParams()->getSLDamageRadius();
 	f32 damageHeight = getSaveParams()->getSLDamageHeight();
 
-	attackRadius *= mBodyScale;
-	attackHeight *= mBodyScale;
-	damageRadius *= mBodyScale;
-	damageHeight *= mBodyScale;
+	f32 scale = mBodyScale;
 
-	mAttackRadius = attackRadius;
-	mAttackHeight = attackHeight;
-	mDamageRadius = damageRadius;
-	mDamageHeight = damageHeight;
+	mAttackRadius = attackRadius * scale;
+	mAttackHeight = attackHeight * scale;
+	mDamageRadius = damageRadius * scale;
+	mDamageHeight = damageHeight * scale;
 
 	calcEntryRadius();
 	ensureTakeSituation();
@@ -597,8 +577,7 @@ bool TSmallEnemy::changeByJuice()
 
 		mJuiceBlock->mScaling.set(0.1f, 0.1f, 0.1f);
 		mJuiceBlock->unk140.set(0.0f, 0.0f, 0.0f);
-		mJuiceBlock->mRotation.set(
-		    JGeometry::TVec3<f32>(0.0f, mRotation.y, 0.0f));
+		mJuiceBlock->mRotation.set(0.0f, mRotation.y, 0.0f);
 
 		mJuiceBlock->unk14C = this;
 		mJuiceBlock->offLiveFlag(LIVE_FLAG_HIDDEN);
@@ -644,15 +623,14 @@ int TSmallEnemy::getChangeBlockTime()
 
 bool TSmallEnemy::changeMove()
 {
-	if (!(TSmallEnemyManager::mBlockWaitTime * 0.2f < mSpine->getTime())) {
+	if (TSmallEnemyManager::mBlockWaitTime * 0.2f <= mSpine->getTime()) {
 		f32 time = TSmallEnemyManager::mBlockWaitTime * 0.2f;
 
-		mJuiceBlock->mPosition.y
-		    += 2.0f * TSmallEnemyManager::mBlockWaitMoveY
-		       * JMASin(mSpine->getTime() * 130.0f / time) * unk188;
+		mJuiceBlock->mPosition.y += unk188 * 2.0f
+		                            * MsSin(mSpine->getTime() * 130.0f / time)
+		                            * TSmallEnemyManager::mBlockWaitMoveY;
 
-		mJuiceBlock->mRotation.y
-		    = mJuiceBlock->mRotation.y + mSpine->getTime() * 1080.0f / time;
+		mJuiceBlock->mRotation.y += mSpine->getTime() * 1080.0f / time;
 	} else {
 		if (mSpine->getTime() > TSmallEnemyManager::mBlockWaitTime) {
 			if (mSpine->getTime() > getChangeBlockTime() - 200) {
@@ -698,7 +676,7 @@ bool TSmallEnemy::changeMove()
 				                         mJuiceBlock->mPosition.y + mHeadHeight,
 				                         mJuiceBlock->mPosition.z, &local_2C);
 				if (local_2C && mJuiceBlock->mPosition.y + mHeadHeight > d
-				    && mJuiceBlock != local_2C->mActor)
+				    && local_2C->mActor != mJuiceBlock)
 					return 1;
 				break;
 			}
@@ -751,7 +729,7 @@ void TSmallEnemy::changeOut()
 	                                nullptr, 0, 4);
 
 	kill();
-	mPosition = mJuiceBlock->mPosition;
+	mJuiceBlock->mPosition = mPosition;
 
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
 	getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
@@ -767,18 +745,17 @@ void TSmallEnemy::decHpByWater(THitActor* param_1)
 	if (uVar2 < 1)
 		uVar2 = 1;
 
-	u8 uVar1 = mHitPoints;
-	if (uVar1 < uVar2) {
+	if (mHitPoints < uVar2) {
 		mHitPoints = 0;
 		return;
 	}
 
-	mHitPoints = uVar1 - uVar2;
+	mHitPoints -= uVar2;
 }
 
 void TSmallEnemy::kill()
 {
-	if (checkLiveFlag(LIVE_FLAG_DEAD))
+	if (!checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
 	mHitPoints = 1;
@@ -786,9 +763,9 @@ void TSmallEnemy::kill()
 		mSpine->reset();
 		mSpine->setNext(&TNerveSmallEnemyDie::theNerve());
 		mSpine->pushAfterCurrent(&TNerveSmallEnemyDie::theNerve());
-	}
 
-	onLiveFlag(LIVE_FLAG_UNK40);
+		onLiveFlag(LIVE_FLAG_UNK40);
+	}
 }
 
 bool TSmallEnemy::isFindMario(float param_1)
@@ -802,7 +779,11 @@ bool TSmallEnemy::isFindMario(float param_1)
 	if (isAirborne())
 		return false;
 
-	bool result = !isMarioInWater() && isFindMarioFromParam(param_1);
+	bool result = false;
+
+	if (!isMarioInWater() && isFindMarioFromParam(param_1))
+		result = true;
+
 	return result;
 }
 
@@ -829,11 +810,8 @@ bool TSmallEnemy::isFindMarioFromParam(float param_1) const
 		f32 searchAngle  = prms->mSLSearchAngle.get();
 		f32 searchAware  = prms->mSLSearchAware.get();
 
-		searchLength *= param_1;
-		searchAngle *= param_1;
-		searchAware *= param_1;
-
-		if (isInSight(marioPos, searchLength, searchAngle, searchAware))
+		if (isInSight(marioPos, searchLength * param_1, searchAngle * param_1,
+		              searchAware * param_1))
 			return true;
 		else
 			return false;
@@ -871,14 +849,17 @@ void TSmallEnemy::setBckAnm(int index)
 
 void TSmallEnemy::expandCollision()
 {
-	f32 attackRadius = getSaveParams()->mSLAttackRadius.get();
-	f32 attackHeight = getSaveParams()->mSLAttackHeight.get();
-	f32 damageRadius = getSaveParams()->mSLDamageRadius.get();
-	f32 damageHeight = getSaveParams()->mSLDamageHeight.get();
+	f32 attackRadius = getSaveParams()->getSLAttackRadius();
+	f32 attackHeight = getSaveParams()->getSLAttackHeight();
+	f32 damageRadius = getSaveParams()->getSLDamageRadius();
+	f32 damageHeight = getSaveParams()->getSLDamageHeight();
 
-	f32 scale = unk190 / unk154;
-	setHitParams(attackRadius * scale, attackHeight * scale,
-	             damageRadius * scale, damageHeight * scale);
+	attackRadius *= unk190 / unk154;
+	attackHeight *= unk190 / unk154;
+	damageRadius *= unk190 / unk154;
+	damageHeight *= unk190 / unk154;
+
+	setHitParams(attackRadius, attackHeight, damageRadius, damageHeight);
 }
 
 bool TSmallEnemy::isEaten()
@@ -931,10 +912,8 @@ void TSmallEnemy::behaveToHitOthers(THitActor* param_1)
 
 	JGeometry::TVec3<f32> result(0.0f, 0.0f, 0.0f);
 
-	JGeometry::TVec3<f32> local_14(
-	    mPosition.x - param_1->getPosition().x,
-	    mPosition.y - param_1->getPosition().y,
-	    mPosition.z - param_1->getPosition().z);
+	JGeometry::TVec3<f32> local_14;
+	local_14.sub(mPosition, param_1->getPosition());
 
 	if (local_14.x == 0.0f && local_14.y == 0.0f && local_14.z == 0.0f)
 		local_14.x += 1.0f;
@@ -1033,7 +1012,7 @@ DEFINE_NERVE(TNerveSmallEnemyFreeze, TLiveActor)
 {
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 
-	int freezeTime = self->getSaveParams()->mSLFreezeWait.get();
+	int freezeTime = self->getSaveParams()->getSLFreezeWait();
 
 	if (spine->getTime() == 0)
 		self->setFreezeAnm();
@@ -1048,7 +1027,7 @@ DEFINE_NERVE(TNerveSmallEnemyJump, TLiveActor)
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		if ((self->mLiveFlag & LIVE_FLAG_UNK8000 ? 1 : 0)
+		if (self->checkLiveFlag2(LIVE_FLAG_UNK8000)
 		    || self->checkLiveFlag(LIVE_FLAG_UNK40000))
 			return true;
 
@@ -1073,7 +1052,7 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		if ((self->mLiveFlag & LIVE_FLAG_UNK8000 ? 1 : 0)
+		if (self->checkLiveFlag2(0x8000)
 		    || self->checkLiveFlag(LIVE_FLAG_UNK40000))
 			return true;
 

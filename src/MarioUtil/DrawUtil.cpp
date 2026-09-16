@@ -50,9 +50,7 @@ void TSilhouette::loadAfter()
 	// three sample points atten = {0.9, 0.5, 0.05} at distances
 	// d = {30, 650, 1500}. k0 is eliminated by subtracting adjacent equations
 	// scaled by a[i]*a[i+1], leaving a 2x2 system solved via Cramer's rule.
-	f32 m2[2];
-	f32 m1[2];
-	f32 m0[2];
+	f32 m[3][2];
 	f32 dist[3];
 	f32 atten[3] = { 0.9f, 0.5f, 0.05f };
 
@@ -60,16 +58,16 @@ void TSilhouette::loadAfter()
 		dist[i] = unk24[i];
 
 	for (int i = 0; i < 2; ++i) {
-		m0[i]
+		m[0][i]
 		    = atten[i + 1]
 		      * (atten[i] * (dist[i] * dist[i] - dist[i + 1] * dist[i + 1]));
-		m1[i] = atten[i + 1] * (atten[i] * (dist[i] - dist[i + 1]));
-		m2[i] = atten[i + 1] - atten[i];
+		m[1][i] = atten[i + 1] * (atten[i] * (dist[i] - dist[i + 1]));
+		m[2][i] = atten[i + 1] - atten[i];
 	}
 
-	unk38 = (m2[0] * m1[1] - m2[1] * m1[0])
-	        / (m0[0] * m1[1] - m0[1] * m1[0]);
-	unk34 = (m2[0] - m0[0] * unk38) / m1[0];
+	unk38 = (m[2][0] * m[1][1] - m[2][1] * m[1][0])
+	        / (m[0][0] * m[1][1] - m[0][1] * m[1][0]);
+	unk34 = (m[2][0] - m[0][0] * unk38) / m[1][0];
 	unk30 = atten[0] - (dist[0] * dist[0] * unk38 + dist[0] * unk34);
 	unk3C = 8e-05f;
 
@@ -88,9 +86,7 @@ void TSilhouette::loadAfter()
 
 void TSilhouette::setting(MtxPtr param_1)
 {
-	const GXColor& color
-	    = (GXColor) { unk12.r, unk12.g, unk12.b, 0 };
-	GXSetChanAmbColor(GX_COLOR0A0, color);
+	GXSetChanAmbColor(GX_COLOR0A0, (GXColor) { unk12.r, unk12.g, unk12.b, 0 });
 	GXLightObj GStack_54;
 	Vec local_60;
 	Vec local_6C = SMS_GetMarioPos();
@@ -306,11 +302,9 @@ void TTrembleModelEffect::clash(f32 magnitude)
 		for (u32 i = 0; i < unk0->getModelData()->getVertexData().getVtxNum();
 		     ++i) {
 			JGeometry::TVec3<s16> t = unk14[i] + unk20[i];
-			JGeometry::TVec3<s16> t2;
-			t2 = t;
-			unk14[i]                 = t;
-			unk18[0][i]              = t2;
-			unk18[1][i]              = t2;
+			unk14[i]                = t;
+			unk18[0][i]             = t;
+			unk18[1][i]             = t;
 		}
 		break;
 
@@ -318,11 +312,9 @@ void TTrembleModelEffect::clash(f32 magnitude)
 		for (u32 i = 0; i < unk0->getModelData()->getVertexData().getVtxNum();
 		     ++i) {
 			JGeometry::TVec3<f32> t = unk28[i] + unk34[i];
-			JGeometry::TVec3<f32> t2;
-			t2 = t;
-			unk28[i]                 = t;
-			unk2C[0][i]              = t2;
-			unk2C[1][i]              = t2;
+			unk28[i]                = t;
+			unk2C[0][i]             = t;
+			unk2C[1][i]             = t;
 		}
 		break;
 	}
@@ -434,13 +426,9 @@ void SMS_AddDamageFogEffect(J3DModelData* param_1,
 
 	f32 startBase = -700.0f;
 	f32 endBase   = 500.0f;
-	f32 s         = JMASSin((s16)(gpMarDirector->unk58 * 0x888));
-	f32 startOsc  = -400.0f;
-	f32 endOsc    = 800.0f;
-	startOsc -= startBase;
-	endOsc -= endBase;
-	startOsc *= s;
-	endOsc *= s;
+	f32 s         = JMASSin((s16)(gpMarDirector->mMoveTickCount * 0x888));
+	f32 startOsc  = (-400.0f - startBase) * s;
+	f32 endOsc    = (800.0f - endBase) * s;
 
 	for (u16 i = 0; i < param_1->getMaterialNum(); i++) {
 		J3DFog* fog
@@ -457,8 +445,7 @@ void SMS_ResetDamageFogEffect(J3DModelData* param_1)
 	for (u16 i = 0; i < param_1->getMaterialNum(); i++) {
 		J3DFog* fog
 		    = param_1->getMaterialNodePointer(i)->getPEBlock()->getFog();
-		f32 nearZ    = gpCamera->getNear();
-		fog->mNearZ  = nearZ;
+		fog->mNearZ  = gpCamera->getNear();
 		fog->mFarZ   = gpCamera->getFar();
 		fog->mEndZ   = fog->mFarZ;
 		fog->mStartZ = fog->mEndZ - 1.0f;
@@ -516,10 +503,10 @@ Plane sViewPlane[6];
 static void SetViewFrustumClipCheck(f32 top, f32 bottom, f32 left, f32 right,
                                     f32 near, f32 far)
 {
-	f32 farLeft   = left * (far / near);
-	f32 farRight  = right * (far / near);
 	f32 farTop    = top * (far / near);
 	f32 farBottom = bottom * (far / near);
+	f32 farLeft   = left * (far / near);
+	f32 farRight  = right * (far / near);
 
 	Vec corner[8];
 
@@ -667,8 +654,7 @@ int SMS_CountPolygonNumInShape(J3DShape* shape)
 		while (p - dl < shape->getShapeDraw(i)->getDisplayListSize()) {
 			u8 op = *p;
 			if (op == GX_TRIANGLEFAN || op == GX_TRIANGLESTRIP) {
-				u8* p2 = p + 1;
-				u16 n  = *(u16*)p2;
+				u16 n   = *(u16*)(p + 1);
 				polyNum = n + polyNum;
 				p += vtxSize * n;
 				polyNum -= 2;

@@ -12,6 +12,8 @@
 
 // rogue include
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 TEffectObjManager* gpEffectObjManager;
 
@@ -133,17 +135,17 @@ void TEffectObjBase::moveObject()
 
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_MAP_FIRE_C, &mPosition, 3, this)) {
-			emitter->setGlobalScale((const Vec&)local_1c);
+			emitter->setGlobalScale(local_1c);
 		}
 
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_MAP_FIRE_A, &mPosition, 1, this)) {
-			emitter->setGlobalScale((const Vec&)local_1c);
+			emitter->setGlobalScale(local_1c);
 		}
 
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_MAP_FIRE_B, &mPosition, 1, this)) {
-			emitter->setGlobalScale((const Vec&)local_1c);
+			emitter->setGlobalScale(local_1c);
 		}
 
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_CALM_FLAME, &mPosition, 0,
@@ -203,9 +205,9 @@ void TEffectObjManager::load(JSUMemoryInputStream& stream)
 void TEffectObjManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & (CUE_DRAW | CUE_MOVE)) {
-		JGadget::TList<TEffectObjBase*>::iterator it = unk14.begin();
-		JGadget::TList<TEffectObjBase*>::iterator e  = unk14.end();
-		for (; it != e; ++it)
+		JGadget::TList<TEffectObjBase*>::iterator it  = unk14.begin();
+		JGadget::TList<TEffectObjBase*>::iterator end = unk14.end();
+		for (; it != end; ++it)
 			(*it)->perform(cue, graphics);
 
 		for (int i = 0; i < COOL_EFFECT_OBJ_NUM; ++i)

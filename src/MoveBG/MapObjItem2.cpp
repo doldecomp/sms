@@ -93,11 +93,10 @@ void TMushroom1up::control()
 		}
 
 		JGeometry::TVec3<f32> pos = SMS_GetMarioPos();
-		s16 angle = DEG2SHORTANGLE(5.0f * t);
-		pos.x += 1.5f * (50.0f * JMASCos(angle));
+		pos.x += 1.5f * (50.0f * MsCos(5.0f * t));
 		pos.y += 200.0f;
-		pos.z += 1.5f * (50.0f * JMASSin(angle));
-		mPosition = pos;
+		pos.z += 1.5f * (50.0f * MsSin(5.0f * t));
+		mPosition.set(pos);
 
 		mScaling.set(1.5f, 1.5f, 1.5f);
 		mLinearVelocity.zero();
@@ -132,9 +131,9 @@ void TMushroom1up::control()
 	f32 delta = MsAngleDiff(angle, mRotation.y);
 	f32 step;
 	if (delta > 0.0f)
-		step = delta > 1.0f ? 1.0f : delta;
+		step = MsClamp(delta, -1.0f, 1.0f);
 	else
-		step = delta < -1.0f ? -1.0f : delta;
+		step = MsClamp(delta, -1.0f, 1.0f);
 
 	mRotation.y = MsWrap(mRotation.y + step, 0.0f, 360.0f);
 
@@ -146,7 +145,7 @@ void TMushroom1up::control()
 void TMushroom1up::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk139 != 2 && mStateTimer < 240 && (cue & CUE_ENTRY)
-	    && gpMarDirector->unk58 % 6 > 2)
+	    && gpMarDirector->mMoveTickCount % 6 > 2)
 		cue &= ~CUE_ENTRY;
 
 	if ((cue & CUE_MOVE) && unk13A == 0 && unk139 != 2 && mStateTimer <= 0)
@@ -165,7 +164,7 @@ void TJumpBase::initMapObj()
 {
 	TMapObjBase::initMapObj();
 	if (mMapCollisionManager) {
-		TMapCollisionBase* base = mMapCollisionManager->getUnk8();
+		TMapCollisionBase* base = mMapCollisionManager->unk8;
 		base->setAllBGType(7);
 		base->setAllActor(this);
 		base->setAllData(0x2710);

@@ -1,21 +1,8 @@
-#define TRiccoHookManager TRiccoHookManagerHeader
 #include <Enemy/RiccoHook.hpp>
-#undef TRiccoHookManager
 #include <Strategic/Spine.hpp>
 #include <Enemy/Graph.hpp>
-#include <JSystem/JMath.hpp>
+#include <MarioUtil/MathUtil.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
-
-class TRiccoHookManager : public TEnemyManager {
-public:
-	TRiccoHookManager(const char* name = "フックマネージャ");
-
-	virtual void load(JSUMemoryInputStream&);
-	virtual TSpineEnemy* createEnemyInstance();
-	virtual void createModelData();
-
-	TRiccoHook* getObj(int i) { return (TRiccoHook*)TObjManager::getObj(i); }
-};
 
 // @non-matching -- the issue seems to stem from the JDrama TNameRefGen
 // search/push_back calls.
@@ -29,7 +16,8 @@ THookTake::THookTake(TRiccoHook* owner, const char* name)
 	             mOwner->getSaveLoadParam()->mSLHitRadius.get(),
 	             mOwner->getSaveLoadParam()->mSLHitHeight.get());
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
+	static_cast<TIdxGroupObj*>(
+	    JDrama::TNameRefGen::search("オブジェクトグループ"))
 	    ->getChildren()
 	    .push_back(this);
 }
@@ -143,8 +131,8 @@ TSpineEnemy* TRiccoHookManager::createEnemyInstance() { return nullptr; }
 // Can't find any other way to get the * 1.0f's to emit
 static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 {
-	f32 c = radius * JMACos(theta);
-	f32 s = radius * JMASin(theta);
+	f32 c = radius * MsCos(theta);
+	f32 s = radius * MsSin(theta);
 	return JGeometry::TVec3<f32>(s, 0.0f, c);
 }
 
@@ -159,10 +147,7 @@ DEFINE_NERVE(TNerveRHGraphWander, TLiveActor)
 		self->goToDirectedNextGraphNode(polar);
 	}
 
-	JGeometry::TVec3<f32> diff = self->unk104.getPoint();
-	diff.sub(self->getPosition());
-	f32 (*sqrt)(f32) = JGeometry::TUtil<f32>::sqrt;
-	if (sqrt(diff.squared()) < 10.0f) {
+	if (self->unk104.getPoint().distance(self->getPosition()) < 10.0f) {
 		TGraphNode& node = self->unk124->getCurrent();
 
 		if (node.checkFlag(0x800)) {

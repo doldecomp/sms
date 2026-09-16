@@ -341,24 +341,27 @@ void THino2Mask::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (cue & CUE_CALC_ANIM) {
 			Mtx afStack_58;
 			Mtx afStack_88;
-			MTXIdentity(afStack_58);
-			afStack_58[0][3] = unk28.x;
-			afStack_58[1][3] = unk28.y;
-			afStack_58[2][3] = unk28.z;
-			MsMtxSetRotRPH(afStack_88, 0.0f, 360.0f - unk8, 0.0f);
-			MTXConcat(getUnk4C(), afStack_88, afStack_88);
-			MTXConcat(afStack_58, afStack_88, afStack_58);
-			MtxPtr mtx = afStack_58;
-			unk14->getModel()->setBaseTRMtx(mtx);
+			{
+				MTXIdentity(afStack_58);
+				afStack_58[0][3] = unk28.x;
+				afStack_58[1][3] = unk28.y;
+				afStack_58[2][3] = unk28.z;
+				MsMtxSetRotRPH(afStack_88, 0.0f, 360.0f - unk8, 0.0f);
+				MTXConcat(getUnk4C(), afStack_88, afStack_88);
+				MTXConcat(afStack_58, afStack_88, afStack_58);
+				unk14->getModel()->setBaseTRMtx(afStack_58);
+			}
 
-			PSMTXIdentity(mtx);
-			mtx[0][3] = unk1C.x;
-			mtx[1][3] = unk1C.y;
-			mtx[2][3] = unk1C.z;
-			MsMtxSetRotRPH(afStack_88, 0.0f, unk8, 0.0f);
-			MTXConcat(getUnk4C(), mtx, mtx);
-			MTXConcat(mtx, afStack_88, mtx);
-			unk18->getModel()->setBaseTRMtx(mtx);
+			{
+				PSMTXIdentity(afStack_58);
+				afStack_58[0][3] = unk1C.x;
+				afStack_58[1][3] = unk1C.y;
+				afStack_58[2][3] = unk1C.z;
+				MsMtxSetRotRPH(afStack_88, 0.0f, unk8, 0.0f);
+				MTXConcat(getUnk4C(), afStack_58, afStack_58);
+				MTXConcat(afStack_58, afStack_88, afStack_58);
+				unk18->getModel()->setBaseTRMtx(afStack_58);
+			}
 		}
 
 		if ((cue & CUE_ENTRY) && unk8 > 60 && unk8 % 6 >= 3)
@@ -376,66 +379,34 @@ static int Hino2HeadCallback(J3DNode* param_1, int param_2)
 		    ((J3DJoint*)param_1)->getJntNo());
 
 		if (gpCurHinokuri->mLevel == 1) {
+			f32 scale = gpCurHinokuri->unk194;
+
 			Mtx local_44;
-			Mtx local_74;
-			MtxPtr mB = local_74;
-			local_44[0][3] = 0.0f;
-			local_44[1][3] = 0.0f;
-			local_44[2][3] = 0.0f;
-
-			f32 scale      = gpCurHinokuri->unk194;
 			local_44[0][0] = scale;
-			local_44[0][1] = 0.0f;
-			local_44[0][2] = 0.0f;
+			local_44[0][1] = 0.0;
+			local_44[0][2] = 0.0;
+			local_44[0][3] = 0.0;
 
-			local_44[1][0] = 0.0f;
+			local_44[1][0] = 0.0;
 			local_44[1][1] = scale;
-			local_44[1][2] = 0.0f;
+			local_44[1][2] = 0.0;
+			local_44[1][3] = 0.0;
 
-			local_44[2][0] = 0.0f;
-			local_44[2][1] = 0.0f;
+			local_44[2][0] = 0.0;
+			local_44[2][1] = 0.0;
 			local_44[2][2] = scale;
+			local_44[2][3] = 0.0;
 
-			f32 s = JMASin(gpCurHinokuri->unk198);
-			f32 c = JMACos(gpCurHinokuri->unk198);
+			Mtx local_74;
+			MsMtxSetRotY(local_74, gpCurHinokuri->unk198);
 
-			local_74[0][0] = c;
-			local_74[0][1] = 0.0;
-			local_74[0][2] = s;
-			local_74[0][3] = 0.0;
-
-			local_74[1][0] = 0.0;
-			local_74[1][1] = 1.0;
-			local_74[1][2] = 0.0;
-			local_74[1][3] = 0.0;
-
-			local_74[2][0] = -s;
-			local_74[2][1] = 0.0;
-			local_74[2][2] = c;
-			local_74[2][3] = 0.0;
-
-			MTXConcat(mA, mB, mA);
+			MTXConcat(mA, local_74, mA);
 			MTXConcat(mA, local_44, mA);
-			MTXConcat(J3DSys::mCurrentMtx, mB, J3DSys::mCurrentMtx);
+			MTXConcat(J3DSys::mCurrentMtx, local_74, J3DSys::mCurrentMtx);
 			MTXConcat(J3DSys::mCurrentMtx, local_44, J3DSys::mCurrentMtx);
 		} else {
 			Mtx local_a4;
-			f32 s          = JMASin(gpCurHinokuri->unk198);
-			f32 c          = JMACos(gpCurHinokuri->unk198);
-			local_a4[0][0] = c;
-			local_a4[0][1] = 0.0;
-			local_a4[0][2] = s;
-			local_a4[0][3] = 0.0;
-
-			local_a4[1][0] = 0.0;
-			local_a4[1][1] = 1.0;
-			local_a4[1][2] = 0.0;
-			local_a4[1][3] = 0.0;
-
-			local_a4[2][0] = -s;
-			local_a4[2][1] = 0.0;
-			local_a4[2][2] = c;
-			local_a4[2][3] = 0.0;
+			MsMtxSetRotY(local_a4, gpCurHinokuri->unk198);
 
 			MTXConcat(mA, local_a4, mA);
 			MTXConcat(J3DSys::mCurrentMtx, local_a4, J3DSys::mCurrentMtx);
@@ -496,7 +467,7 @@ void THinokuri2::init(TLiveManager* param_1)
 	unk150 = new TMBindShadowBody(this, getModel(), 1.0f);
 
 	TIdxGroupObj* enemiesGrp
-	    = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
 	enemiesGrp->getChildren().push_back(mHead);
 	enemiesGrp->getChildren().push_back(mBody);
 	enemiesGrp->getChildren().push_back(unk178);
@@ -630,9 +601,8 @@ void THinokuri2::emitWaterParticle()
 	if (mLevel >= 1) {
 		getJointTransByIndex(0x19, &position);
 	} else {
-		position = getPosition();
-		THino2Params* params = getSaveParam();
-		position.y += params->mSLWaterEmitPos.get();
+		position = mPosition;
+		position.y += getSaveParam()->mSLWaterEmitPos.get();
 	}
 	unk19C->mPos.value = position;
 	gpModelWaterManager->emitRequest(*unk19C);
@@ -726,10 +696,12 @@ void THinokuri2::changeBck(int param_1)
 		    || curBck == 0x16 && param_1 == 0xB
 		    || curBck == 0xB && param_1 == 0x18) {
 			unk1A0->addTransform(
-			    mMActorKeeper->getMActorAnmData()->getUnk2C()->getAnmPtr(param_1));
+			    getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
+			        param_1));
 		} else {
 			unk1A0->setAnmTransform(
-			    mMActorKeeper->getMActorAnmData()->getUnk2C()->getAnmPtr(param_1));
+			    getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
+			        param_1));
 		}
 
 		getMActor()->getAnmBck()->setFrameCtrl(param_1);
@@ -740,7 +712,7 @@ void THinokuri2::changeBck(int param_1)
 	J3DFrameCtrl* pJVar7 = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (pJVar7 != nullptr) {
 		if (mLevel == 0 && (param_1 - 23U <= 1 || param_1 - 26U <= 1))
-			pJVar7->setRate(getSaveParam()->mSLWalkSpeedRateLv0.value);
+			pJVar7->setRate(getSaveParam()->mSLWalkSpeedRateLv0.get());
 		else
 			pJVar7->setRate(1.0f);
 	}
@@ -793,16 +765,15 @@ BOOL THinokuri2::receiveMessageLv1(THitActor* sender, u32 message)
 		if (dmgAmount <= 0)
 			return true;
 
-		int hitPoints = mHitPoints;
-		if (dmgAmount >= hitPoints)
+		if (mHitPoints >= dmgAmount)
 			mHitPoints = 0;
 		else
-			mHitPoints = hitPoints - dmgAmount;
+			mHitPoints -= dmgAmount;
 
 		++unk18C;
 
-		if (mSpine->getCurrentNerve() != &TNerveHino2Damage::theNerve())
-			mSpine->setNext(&TNerveHino2Damage::theNerve());
+		if (mSpine->getCurrentNerve() != &TNerveHino2Freeze::theNerve())
+			mSpine->setNext(&TNerveHino2Freeze::theNerve());
 
 		return true;
 	}
@@ -901,7 +872,7 @@ BOOL THinokuri2::receiveMessage(THitActor* sender, u32 message)
 
 template <class T> static inline T symmetric_clamp(T v, T r)
 {
-	return v > 0 ? (v > r ? r : v) : (v > -r ? v : -r);
+	return v > 0 ? (v > r ? v : r) : (v > -r ? -r : v);
 }
 
 void THinokuri2::moveObject()
@@ -915,17 +886,15 @@ void THinokuri2::moveObject()
 	if (mLevel == 1) {
 		f32 dhp    = calcHitPoints() - mHitPoints;
 		f32 fVar12 = (getSaveParam()->getSLDamageHeadScale() - 1.0f)
-		                 * (dhp / calcHitPoints())
-		             + 1.0f - unk194;
+		                 * (1.0f + dhp / calcHitPoints())
+		             - unk194;
 
-		unk194 += fVar12 > 0.0f
-		              ? (fVar12 > 0.004f ? 0.004f : fVar12)
-		              : (fVar12 > -0.004f ? fVar12 : -0.004f);
+		unk194 += symmetric_clamp(fVar12, 0.004f);
 	} else {
 		unk194 = 1.0f;
 	}
 
-	if (gpMarDirector->unk58 % 600 == 0)
+	if (gpMarDirector->mMoveTickCount % 600 == 0)
 		generateEnemy();
 
 	doShortCut();
@@ -1148,7 +1117,7 @@ DEFINE_NERVE(TNerveHino2JumpIn, TLiveActor)
 		self->changeBck(0x9);
 
 	if (self->getMActor()->curAnmEndsNext()) {
-		const JGeometry::TVec3<f32>& p = self->getUnk104().getPoint();
+		const JGeometry::TVec3<f32>& p = self->unk104.getPoint();
 		f32 f                          = self->unk124->unkC;
 		f32 grav                       = self->getGravityY();
 		self->mVelocity = self->calcVelocityToJumpToY(p, f, grav);
@@ -1185,7 +1154,7 @@ DEFINE_NERVE(TNerveHino2Turn, TLiveActor)
 {
 	THinokuri2* self = (THinokuri2*)spine->getBody();
 
-	JGeometry::TVec3<f32> posDiff = self->getUnk104().getPoint();
+	JGeometry::TVec3<f32> posDiff = self->unk104.getPoint();
 
 	posDiff -= self->mPosition;
 
@@ -1220,7 +1189,7 @@ DEFINE_NERVE(TNerveHino2PrePol, TLiveActor)
 			uVar5 += 1;
 
 			int wait = self->getSaveParam()->mSLPrePolWait.get();
-			if (uVar5 > wait) {
+			if (wait > uVar5) {
 				f32 prob = self->getSaveParam()->mSLStampProb.get();
 				if (rand() * (1.0f / (RAND_MAX + 1)) < prob) {
 					spine->pushAfterCurrent(&TNerveHino2Pollute::theNerve());
@@ -1264,7 +1233,7 @@ DEFINE_NERVE(TNerveHino2Pollute, TLiveActor)
 			int polWait = self->getSaveParam()->mSLPolWaitCount.get();
 			if (uVar1 > polWait) {
 				self->unk180 = FALSE;
-				self->changeBck(16);
+				self->changeBck(3);
 				uVar1 = 0;
 			}
 			self->mWaitTimer = uVar1;
@@ -1274,7 +1243,7 @@ DEFINE_NERVE(TNerveHino2Pollute, TLiveActor)
 
 	if (self->mCurrentBck == 16) {
 		if (self->getMActor()->curAnmEndsNext()) {
-			self->changeBck(17);
+			self->changeBck(3);
 			self->unk15C = 0;
 
 			JGeometry::TVec3<f32> local_40;
@@ -1282,7 +1251,7 @@ DEFINE_NERVE(TNerveHino2Pollute, TLiveActor)
 				local_40 = self->mPosition;
 				local_40.y += 500.0f;
 			} else {
-				self->getJointTransByIndex(0x18, &local_40);
+				self->getJointTransByIndex(0x14, &local_40);
 			}
 		}
 		return false;
@@ -1414,7 +1383,7 @@ DEFINE_NERVE(TNerveHino2Die, TLiveActor)
 	THinokuri2* self = (THinokuri2*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->changeBck(0xD);
-		JGeometry::TVec3<f32> local_1C = self->getPosition();
+		JGeometry::TVec3<f32> local_1C = self->mPosition;
 		gpItemManager->makeObjAppear(local_1C.x, local_1C.y, local_1C.z,
 		                             0x2000000E, false);
 		self->invalidateCollisionAll();

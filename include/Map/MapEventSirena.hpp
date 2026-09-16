@@ -5,7 +5,7 @@
 
 class TMapEventSirenaSink : public TMapEventSink {
 public:
-	TMapEventSirenaSink(const char*);
+	TMapEventSirenaSink(const char* = "ホテル沈む");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();

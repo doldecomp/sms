@@ -53,6 +53,7 @@ static const GXColorS10 cTelesaColor[2] = {
 };
 
 static const GXColor cTelesaColorStart = { 0, 0, 0, 0 };
+static const GXColor cTelesaColorEnd   = { 255, 255, 255, 255 };
 
 TTelesaSaveLoadParams::TTelesaSaveLoadParams(const char* path)
     : TWalkerEnemyParams(path)
@@ -214,7 +215,7 @@ void TTelesa::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);
 	reset();
-	mDampenedGroundHeight = getPosition().y;
+	mDampenedGroundHeight = mPosition.y;
 	setTypeNormal();
 }
 
@@ -231,8 +232,8 @@ void TTelesa::init(TLiveManager* manager)
 
 	setFlyParam(1.0f);
 
-	TScreenTexture* tex
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
+	TScreenTexture* tex = static_cast<TScreenTexture*>(
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 	const ResTIMG* img    = tex->getTexture()->getTexInfo();
 	J3DSkinDeform* deform = new J3DSkinDeform;
 	mMActor->getModel()->setSkinDeform(deform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
@@ -241,7 +242,7 @@ void TTelesa::init(TLiveManager* manager)
 	                     *img);
 	mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 	if (mInstanceIndex == 0) {
-		for (u8 i = 0; i < getModel()->getModelData()->getJointNum(); ++i)
+		for (u16 i = 0; i < getModel()->getModelData()->getJointNum(); ++i)
 			;
 	}
 
@@ -283,14 +284,14 @@ void TTelesa::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (!checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_DEAD)) {
 		if (mImitatedBmd) {
 			if (cue & CUE_CALC_ANIM) {
-				Mtx afStack_58;
 				const TBGCheckData* pTStack_5c;
-				f32 groundY = gpMap->checkGround(mPosition.x, mPosition.y,
-				                                  mPosition.z, &pTStack_5c);
-				MtxPtr ptr = afStack_58;
-				MsMtxSetXYZRPH(ptr, mPosition.x, groundY, mPosition.z,
-				               mRotation.x, mRotation.y, mRotation.z);
-				mImitatedBmd->getMActor()->getModel()->setBaseTRMtx(ptr);
+				gpMap->checkGround(mPosition.x, mPosition.y, mPosition.z,
+				                   &pTStack_5c);
+				Mtx afStack_58;
+				MsMtxSetXYZRPH(afStack_58, mPosition.x, mPosition.y,
+				               mPosition.z, mRotation.x, mRotation.y,
+				               mRotation.z);
+				mImitatedBmd->getMActor()->getModel()->setBaseTRMtx(afStack_58);
 				mImitatedBmd->getMActor()->getModel()->setBaseScale(
 				    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 			}
@@ -337,8 +338,8 @@ void TTelesa::setBehavior()
 		mFlyBobPhase = 0.0f;
 
 	f32 phase      = (mFlyBobPhase * 360.0f) / mFlyBobFrequency;
-	mFlyBobOffsetY = mFlyBobAmplitude * JMASin(phase);
-	f32 newRotX    = 10.0f - mFlyAngMax * JMACos(phase);
+	mFlyBobOffsetY = mFlyBobAmplitude * MsSin(phase);
+	f32 newRotX    = 10.0f - mFlyAngMax * MsCos(phase);
 	if (abs(newRotX - mRotation.x) > 5.0f)
 		mRotation.x == -newRotX; // HUH???
 	else
@@ -351,8 +352,8 @@ void TTelesa::attackToMario()
 	    || !(mPosition.y + mAttackHeight - 50.0f < SMS_GetMarioPos().y)) {
 		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 		if (unk184) {
-			const TNerveBase<TLiveActor>* nerve = mSpine->getCurrentNerve();
-			if (nerve != &TNerveWalkerPostAttack::theNerve())
+			if (mSpine->getCurrentNerve()
+			    != &TNerveWalkerPostAttack::theNerve())
 				; // huh???
 		}
 	}
@@ -452,7 +453,7 @@ void TTelesa::calcRootMatrix()
 
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        0x188, mMActor->getModel()->getAnmMtx(3), 1, this)) {
+		        0x188, mMActor->getModel()->getAnmMtx(4), 1, this)) {
 			emitter->setGlobalAlpha(mTelesaFadeColor.a);
 		}
 	}
@@ -504,7 +505,7 @@ void TTelesa::bind()
 	if (nextPos.y <= mGroundHeight + 0.05f) {
 		offLiveFlag(LIVE_FLAG_AIRBORNE);
 		mVelocity.set(0.0f, 0.0f, 0.0f);
-		if (mSpine->getCurrentNerve() == &TNerveTelesaDie::theNerve())
+		if (mSpine->getCurrentNerve() != &TNerveTelesaDie::theNerve())
 			nextPos.y = mGroundHeight;
 	} else {
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
@@ -516,7 +517,7 @@ void TTelesa::bind()
 
 BOOL TTelesa::isReachedToGoal() const
 {
-	JGeometry::TVec3<f32> local_c = getUnk104().getPoint();
+	JGeometry::TVec3<f32> local_c = unk104.getPoint();
 	local_c -= mPosition;
 	local_c.y = 0.0f;
 
@@ -580,7 +581,7 @@ void TTelesa::changeOut()
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELSA_RECOVER, &mPosition, 0,
 	                                nullptr, 0, 4);
 	offLiveFlag(LIVE_FLAG_HIDDEN);
-	mPosition = mJuiceBlock->getPosition();
+	mPosition = mJuiceBlock->mPosition;
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
 	getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	mJuiceBlock->kill();
@@ -680,9 +681,8 @@ void TTelesa::initAttacker(THitActor* param_1)
 	unk184 = 1;
 	mSpine->initWith(&TNerveTelesaAttackMario::theNerve());
 
-	TLiveActor& actor = *(TLiveActor*)param_1;
-	MtxPtr mtx          = actor.getModel()->getAnmMtx(5);
-	mPosition.set(mtx[0][3], mtx[1][3] - 150.0f, mtx[2][3]);
+	MtxPtr mtx = ((TLiveActor*)param_1)->getModel()->getAnmMtx(5);
+	mPosition.set(mtx[3][0], mtx[3][1] - 150.0f, mtx[3][2]);
 	mDampenedGroundHeight = mPosition.y;
 
 	mVelocity.set(0.0f, 8.0f, 0.0f);
@@ -710,8 +710,7 @@ void TTelesa::initItemAttacker(THitActor* param_1)
 	setTypeNormal();
 	mSpine->initWith(&TNerveTelesaAttackMario::theNerve());
 	mDampenedGroundHeight = SMS_GetMarioGrLevel() - 50.0f;
-	TLiveActor& actor      = *(TLiveActor*)param_1;
-	mRotation             = actor.mRotation;
+	mRotation             = param_1->mRotation;
 
 	setFlyParam(1.0f);
 	unk150 &= ~0x40;
@@ -775,11 +774,11 @@ void TTelesa::setFirstAttackPoint()
 	JGeometry::TVec3<f32> pos = mPosition;
 
 	// TODO: probably done via TRotation calls? Why is is all so inlined ;(
-	f32 c = JMACos(mRotation.y);
-	f32 s = JMASin(mRotation.y);
+	f32 s = MsSin(mRotation.y);
+	f32 c = MsCos(mRotation.y);
 
-	pos.x += s * 1000.0f;
-	pos.z += c * 1000.0f;
+	pos.x += c * 1000.0f;
+	pos.z += s * 1000.0f;
 
 	setGoalPath(TPathNode(pos));
 }
@@ -1033,9 +1032,9 @@ void TMarioModokiTelesa::imitateAnm()
 
 DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 {
-	TSharedParts* imitatedItem
-	    = ((TTelesa*)spine->getBody())->mImitatedBmd;
 	TTelesa* self = (TTelesa*)spine->getBody();
+
+	TSharedParts* imitatedItem = self->mImitatedBmd;
 
 	if (gpApplication.mCurrArea.unk0 != 7
 	    && gpApplication.mCurrArea.unk0 != 14) {
@@ -1073,23 +1072,25 @@ DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 	if (!self->checkLiveFlag(LIVE_FLAG_DEAD)) {
 		// TODO: this is an inline
 
-		if (self->resetBaseGround()
-		    || self->isInSight(SMS_GetMarioPos(), 0.0f, 0.0f, searchAware)) {
-			gpMarioParticleManager->emitAndBindToPosPtr(
-			    0xCD, &self->mPosition, 0, nullptr);
-
-			self->mImitatedBmd = nullptr;
-			self->setFlyParam(1.0f);
-
-			spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
-
-			SMSGetMSound()->startSoundActor(MSD_SE_EN_KM_TELSA_REVEAL,
-			                                &self->mPosition, 0, nullptr, 0, 4);
-
-			// end of inline
-
-			return true;
+		if (!self->resetBaseGround()) {
+			if (self->isInSight(SMS_GetMarioPos(), 0.0f, 0.0f, searchAware))
+				return false;
 		}
+
+		gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &self->mPosition, 0,
+		                                            nullptr);
+
+		self->mImitatedBmd = nullptr;
+		self->setFlyParam(1.0f);
+
+		spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
+
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_KM_TELSA_REVEAL,
+		                                &self->mPosition, 0, nullptr, 0, 4);
+
+		// end of inline
+
+		return true;
 	}
 
 	return false;
@@ -1159,13 +1160,10 @@ DEFINE_NERVE(TNerveTelesaFreeze, TLiveActor)
 				self->offHitFlag(HIT_FLAG_UNK10000000);
 				return true;
 			}
-		} else {
-			bool reset = self->resetBaseGround();
-			if (reset || self->isBckAnm(5))
-				self->setBckAnm(3);
-			else
-				self->setBckAnm(4);
-		}
+		} else if (self->resetBaseGround() || self->isBckAnm(5))
+			self->setBckAnm(3);
+		else
+			self->setBckAnm(4);
 	}
 
 	self->reduceFlyForce();
@@ -1242,8 +1240,8 @@ void TKageMarioModoki::init(TLiveManager* manager)
 	mMActor->resetDL();
 	mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 
-	TScreenTexture* tex
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
+	TScreenTexture* tex = static_cast<TScreenTexture*>(
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 	const ResTIMG* img = tex->getTexture()->getTexInfo();
 	SMS_ChangeTextureAll(mMActor->getModel()->getModelData(),
 	                     "H_kagemario_dummy", *img);

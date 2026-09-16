@@ -18,35 +18,18 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-void TMirrorCamera::makeMirrorViewMtx()
-{
-	JGeometry::TVec3<f32> local_24;
-	local_24.set(unk84);
-
-	f32 fVar1 = (local_24.dot(gpCamera->unk124) - -unk90) * -2.0f;
-	unk98.scaleAdd(fVar1, gpCamera->unk124, local_24);
-
-	JGeometry::TVec3<f32> local_30;
-	fVar1 = (local_24.dot(gpCamera->unk148) - -unk90) * -2.0f;
-	local_30.scaleAdd(fVar1, gpCamera->unk148, local_24);
-
-	JGeometry::TVec3<f32> local_3C;
-	fVar1 = (local_24.dot(gpCamera->mUp) - -unk90) * -2.0f;
-	local_3C.scaleAdd(fVar1, gpCamera->mUp, local_24);
-	C_MTXLookAt(unk30, &unk98, &local_3C, &local_30);
-}
+void TMirrorCamera::makeMirrorViewMtx() { }
 
 void TMirrorCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)) {
-		MtxPtr projMtx = graphics->mProjMtx.mMtx;
-		C_MTXPerspective(projMtx, unk80 * gpCamera->mFovy, gpCamera->mAspect,
-		                 gpCamera->mNear, gpCamera->mFar);
+		C_MTXPerspective(graphics->mProjMtx.mMtx, unk80 * gpCamera->mFovy,
+		                 gpCamera->mAspect, gpCamera->mNear, gpCamera->mFar);
 		MTXCopy(unk30, graphics->mViewMtx);
 		graphics->mNearPlane = gpCamera->mNear;
 		graphics->mFarPlane  = gpCamera->mFar;
 		if (cue & CUE_SET_PROJECTION)
-			GXSetProjection(projMtx, GX_PERSPECTIVE);
+			GXSetProjection(graphics->mProjMtx.mMtx, GX_PERSPECTIVE);
 		GXSetAlphaUpdate(GX_TRUE);
 	}
 }
@@ -55,8 +38,8 @@ void TMirrorCamera::drawSetting(MtxPtr param_1)
 {
 	GXLoadTexObj(&unk60, GX_TEXMAP0);
 	Mtx afStack_38;
-	C_MTXLightPerspective(afStack_38, unk80 * gpCamera->getFovy(),
-	                      gpCamera->getAspect(), 0.5f, -0.5f, 0.5f, 0.5f);
+	C_MTXLightPerspective(afStack_38, unk80 * gpCamera->mFovy,
+	                      gpCamera->mAspect, 1.0f, -1.0f, 1.0f, 1.0f);
 
 	Mtx afStack_68;
 	MTXConcat(getUnk30(), param_1, afStack_68);
@@ -86,12 +69,9 @@ TMirrorCamera::TMirrorCamera(const char* name)
 	unk94->mipmapCount     = 1;
 	unk94->imageDataOffset = 0x20;
 
-	GXTexFmt local_format = (GXTexFmt)unk94->format;
-	u16 local_height      = unk94->height;
-	void* local_image     = (u8*)unk94 + unk94->imageDataOffset;
-	u16 local_width       = unk94->width;
-	GXInitTexObj(&unk60, local_image, local_width, local_height, local_format,
-	             GX_REPEAT, GX_REPEAT, 0);
+	GXInitTexObj(&unk60, (u8*)unk94 + unk94->imageDataOffset, unk94->width,
+	             unk94->height, (GXTexFmt)unk94->format, GX_REPEAT, GX_REPEAT,
+	             0);
 
 	GXInitTexObjLOD(&unk60, GX_LINEAR, GX_LINEAR, 0.0f, 0.0f, 0.0f, GX_FALSE,
 	                GX_FALSE, GX_ANISO_1);
@@ -104,7 +84,8 @@ TMirrorCamera::TMirrorCamera(const char* name)
 
 static u8 getVertexFormat(const J3DModelData* model_data, GXAttr attr)
 {
-	const GXVtxAttrFmtList* list = model_data->mVertexData.getVtxAttrFmtList();
+	const GXVtxAttrFmtList* list
+	    = model_data->getVertexData().getVtxAttrFmtList();
 	for (; list->attr != GX_VA_NULL; ++list)
 		if (list->attr == attr)
 			return list->type;
@@ -126,13 +107,18 @@ void TMirrorModel::initPlaneInfo()
 	u8 posComp = getVertexFormat(unk4->getModel()->getModelData(), GX_VA_POS);
 
 	if (posComp == GX_S16) {
-		S16Vec* v
-		    = (S16Vec*)unk4->getModel()->getModelData()->getVtxPosArray();
+		S16Vec* v = (S16Vec*)unk4->getModel()
+		                ->getModelData()
+		                ->getVertexData()
+		                .getVtxPosArray();
 		unkC.x = v->x;
 		unkC.y = v->y;
 		unkC.z = v->z;
 	} else {
-		Vec* v = (Vec*)unk4->getModel()->getModelData()->getVtxPosArray();
+		Vec* v = (Vec*)unk4->getModel()
+		             ->getModelData()
+		             ->getVertexData()
+		             .getVtxPosArray();
 		unkC.x = v->x;
 		unkC.y = v->y;
 		unkC.z = v->z;
@@ -141,14 +127,19 @@ void TMirrorModel::initPlaneInfo()
 	u8 normComp = getVertexFormat(unk4->getModel()->getModelData(), GX_VA_NRM);
 
 	if (normComp == GX_S16) {
-		S16Vec* v
-		    = (S16Vec*)unk4->getModel()->getModelData()->getVtxNormArray();
+		S16Vec* v = (S16Vec*)unk4->getModel()
+		                ->getModelData()
+		                ->getVertexData()
+		                .getVtxNormArray();
 		// BUG: probably meant to do a float division here?
 		unk18.x = v->x / 16384;
 		unk18.y = v->y / 16384;
 		unk18.z = v->z / 16384;
 	} else if (normComp == GX_F32) {
-		Vec* v = (Vec*)unk4->getModel()->getModelData()->getVtxNormArray();
+		Vec* v = (Vec*)unk4->getModel()
+		             ->getModelData()
+		             ->getVertexData()
+		             .getVtxNormArray();
 		unk18.x = v->x;
 		unk18.y = v->y;
 		unk18.z = v->z;
@@ -213,9 +204,12 @@ TMirrorModel::TMirrorModel()
 void TMirrorModelObj::setPlane()
 {
 	MtxPtr mtx = unk4->getModel()->getAnmMtx(0);
-	Vec* v = (Vec*)unk4->getModel()->getModelData()->getVtxPosArray();
+	Vec* v     = (Vec*)unk4->getModel()
+	             ->getModelData()
+	             ->getVertexData()
+	             .getVtxPosArray();
 
-	Vec local_18;
+	JGeometry::TVec3<f32> local_18;
 	local_18.x = v->x;
 	local_18.y = v->y;
 	local_18.z = v->z;
@@ -225,7 +219,7 @@ void TMirrorModelObj::setPlane()
 	unk18.z = mtx[2][1];
 
 	MTXMultVec(mtx, &local_18, &local_18);
-	unk24 = -VECDotProduct(&unk18, &local_18);
+	unk24 = -VECDotProduct(unk18, local_18);
 	unk8->setUnk84AndUnk90(unk18.x, unk18.y, unk18.z, unk24);
 }
 
@@ -248,10 +242,10 @@ bool TMirrorModelManager::isUpperThanMirrorPlane(
 	const JGeometry::TVec3<f32>* normal
 	    = unk18 != -1 ? &unk1C[unk18]->getNormalVec() : nullptr;
 
-	return normal->dot(param_1) + (unk18 != -1 ? unk1C[unk18]->getD() : 0.0f)
-	               < -50.0f
-	           ? false
-	           : true;
+	f32 d   = unk18 != -1 ? unk1C[unk18]->getD() : 0.0f;
+	f32 dot = normal->dot(param_1);
+
+	return dot + d < -50.0f ? false : true;
 }
 
 bool TMirrorModelManager::isInMirror(JGeometry::TVec3<f32>& param_1) const
@@ -263,18 +257,18 @@ bool TMirrorModelManager::isInMirror(JGeometry::TVec3<f32>& param_1) const
 
 void TMirrorModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (cue & CUE_MOVE) {
-		JGeometry::TVec3<f32> local_44 = *gpMarioPos;
-		unk18 = gpCubeMirror->getDataNo(gpCubeMirror->getInCubeNo(local_44));
-		if (!(unk18 != -1 ? true : false)
-		    && !gpMarioGroundPlane[0]->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
-			unk24->setUnk84AndUnk90(
-			    gpMarioGroundPlane[1]->mNormal.x,
-			    gpMarioGroundPlane[1]->mNormal.y,
-			    gpMarioGroundPlane[1]->mNormal.z,
-			    gpMarioGroundPlane[1]->mPlaneDistance);
-			unk24->makeMirrorViewMtx();
-		}
+	JGeometry::TVec3<f32> local_44 = *gpMarioPos;
+	unk18 = gpCubeMirror->getDataNo(gpCubeMirror->getInCubeNo(local_44));
+	if (!(unk18 != -1 ? true : false)
+	    && !gpMarioGroundPlane[0]->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
+		unk24->unk84 = gpMarioGroundPlane[1]->mNormal;
+		unk24->unk90 = gpMarioGroundPlane[1]->mPlaneDistance;
+
+		JGeometry::TVec3<f32> local_7C;
+		local_7C.set(unk24->unk84);
+		f32 fVar4 = (local_7C.dot(gpCamera->unk124) - -unk24->unk90) * -2.0f;
+		unk24->unk98.scaleAdd(fVar4, gpCamera->unk124, local_7C);
+		// TODO: awful vector math, one of unused functions inlined
 	}
 
 	if (unk18 != -1) {
@@ -285,31 +279,17 @@ void TMirrorModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 			unk1C[unk18]->unk4->viewCalc();
 
 		if (cue & CUE_ENTRY) {
-			TMirrorModel* model = unk1C[unk18];
-			model->setPlane();
+			unk1C[unk18]->setPlane();
 
-			model->unk8->makeMirrorViewMtx();
-
-			Mtx lightPerspective;
-			C_MTXLightPerspective(lightPerspective,
-			                      model->unk8->unk80 * gpCamera->getFovy(),
-			                      gpCamera->getAspect(), 0.5f, -0.5f, 0.5f,
-			                      0.5f);
-			Mtx effectMtx;
-			MTXConcat(lightPerspective, model->unk8->getUnk30(), effectMtx);
-			J3DMaterial* material = model->unk4->getModel()
-			                            ->getModelData()
-			                            ->getMaterialNodePointer(0);
-			material->change();
-			material->getTexGenBlock()->getTexMtx(0)->setEffectMtx(effectMtx);
-			model->unk4->entry();
+			// TODO: awful vector math, one of unused functions inlined
 		}
 	}
 }
 
 void TMirrorModelManager::findMirrorCamera()
 {
-	unk24 = JDrama::TNameRefGen::search<TMirrorCamera>("鏡カメラ");
+	unk24
+	    = static_cast<TMirrorCamera*>(JDrama::TNameRefGen::search("鏡カメラ"));
 }
 
 void TMirrorModelManager::loadAfter()

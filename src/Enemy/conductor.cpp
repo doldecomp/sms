@@ -115,22 +115,8 @@ TLiveManager* TConductor::getManagerByName(const char* name)
 {
 	u16 key = JDrama::TNameRef::calcKeyCode(name);
 
-	JGadget::TList<TLiveManager*>::iterator it = unk10.begin(), e = unk10.end();
-	for (; it != e; ++it)
-		if ((*it)->searchF(key, name))
-			return *it;
-
-	return nullptr;
-}
-
-static inline TLiveManager*
-getManagerByNameInline(TConductor* conductor, const char* name)
-{
-	u16 key = JDrama::TNameRef::calcKeyCode(name);
-
-	JGadget::TList<TLiveManager*>::iterator e, it;
-	for (it = conductor->unk10.begin(), e = conductor->unk10.end(); it != e;
-	     ++it)
+	JGadget::TList<TLiveManager*>::iterator it, e;
+	for (it = unk10.begin(), e = unk10.end(); it != e; ++it)
 		if ((*it)->searchF(key, name))
 			return *it;
 
@@ -171,7 +157,7 @@ void TConductor::maskNFlagOfChildren(int, u32) { }
 int TConductor::makeEnemyAppear(const JGeometry::TVec3<f32>& param_1,
                                 const char* param_2, int param_3, int param_4)
 {
-	TLiveManager* mgr = getManagerByNameInline(this, param_2);
+	TLiveManager* mgr = getManagerByName(param_2);
 
 	if (!mgr)
 		return 0;
@@ -230,8 +216,7 @@ TConductor::makeOneEnemyAppear(const JGeometry::TVec3<f32>& param_1,
 	if (!mgr)
 		return nullptr;
 
-	TSpineEnemy* actor = (TSpineEnemy*)mgr->getActorByFlag(0x1);
-	if (actor) {
+	if (TSpineEnemy* actor = (TSpineEnemy*)mgr->getActorByFlag(0x1)) {
 		actor->resetToPosition(param_1);
 		return actor;
 	}
@@ -239,8 +224,7 @@ TConductor::makeOneEnemyAppear(const JGeometry::TVec3<f32>& param_1,
 	if (param_3 == 0)
 		return nullptr;
 
-	actor = (TSpineEnemy*)mgr->getActorByFlag(0x804);
-	if (actor) {
+	if (TSpineEnemy* actor = (TSpineEnemy*)mgr->getActorByFlag(0x804)) {
 		actor->resetToPosition(param_1);
 		return actor;
 	}
@@ -248,17 +232,17 @@ TConductor::makeOneEnemyAppear(const JGeometry::TVec3<f32>& param_1,
 	if (param_3 == 1)
 		return nullptr;
 
-	actor = mgr->getObj(0);
-	actor->resetToPosition(param_1);
-	return actor;
+	TSpineEnemy* enemy = mgr->getObj(0);
+	enemy->resetToPosition(param_1);
+	return enemy;
 }
 
 void TConductor::killEnemiesWithin(const JGeometry::TVec3<f32>& param_1,
                                    f32 param_2)
 {
-	JGadget::TList<TEnemyManager*>::iterator it = unk20.begin(), e = unk20.end();
-	for (; it != e; ++it) {
-		if (!(*it)->search("ボスワンワンマネージャー"))
+	JGadget::TList<TEnemyManager*>::iterator it, e;
+	for (it = unk20.begin(), e = unk20.end(); it != e; ++it) {
+		if ((*it)->search("ボスワンワンマネージャー") == nullptr)
 			(*it)->killChildrenWithin(param_1, param_2);
 	}
 }
@@ -271,7 +255,7 @@ void TConductor::genEnemyFromPollution()
 	if (!unkF0)
 		return;
 
-	if (gpMarDirector->unk58 % unk84.mGenerateTime.get() != 1)
+	if (gpMarDirector->mMoveTickCount % unk84.mGenerateTime.get() != 1)
 		return;
 
 	TStageEnemyInfo* info = unkF0->getMatchedInfo(0x1);
@@ -285,9 +269,8 @@ void TConductor::genEnemyFromPollution()
 		return;
 
 	JGeometry::TVec3<f32> targetPos = *gpMarioPos;
-	f32 min = unk84.mGenerateRadiusMin.get();
-	f32 max = unk84.mGenerateRadiusMax.get();
-	f32 r   = MsRandF(min, max);
+	f32 r                           = MsRandF(unk84.mGenerateRadiusMin.get(),
+	                                          unk84.mGenerateRadiusMax.get());
 
 	f32 theta = MsRandF() * 360 * (65536.0f / 360.0f);
 	targetPos.x += r * JMASSin(theta);

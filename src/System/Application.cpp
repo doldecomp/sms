@@ -39,6 +39,7 @@
 #include <System/CardManager.hpp>
 #include <System/ScenarioArchiveName.hpp>
 #include <System/MarNameRefGen.hpp>
+#include <System/StageUtil.hpp>
 #include <System/GCLogoDir.hpp>
 #include <System/MovieDirector.hpp>
 #include <System/SelectDir.hpp>
@@ -71,7 +72,6 @@ TARAMBlock gArBkConsole;
 TARAMBlock gArBkGuide;
 
 extern "C" void ReInitializeGX();
-u8 SMS_getShineIDofExStage(u8);
 
 f32 SMSGetVSyncTimesPerSec()
 {
@@ -91,14 +91,9 @@ f32 SMSGetVSyncTimesPerSec()
 
 f32 SMSGetAnmFrameRate() { return 60.0f / SMSGetVSyncTimesPerSec(); }
 
-inline TMarioGamePad::~TMarioGamePad() { }
-
 TApplication::TApplication()
     : mSelf(this)
     , mDirector(nullptr)
-    , mPrevArea()
-    , mCurrArea()
-    , mNextArea(TGameSequence())
     , mDisplay(nullptr)
     , unk30(nullptr)
     , unk3C(0)
@@ -242,14 +237,13 @@ void TApplication::initialize()
 
 	SMSRumbleMgr = new RumbleMgr(true, true, true, true);
 	SMSRumbleMgr->init();
-	mFader = new TSmplFader(JUtility::TColor(0, 0, 0, 0xff),
+	mFader = new TSmplFader(JUtility::TColor(0, 0, 0, 0),
 	                        SMSGetVSyncTimesPerSec(), "ルートフェーダー");
 	mFader->setDisplaySize(SMSGetGCLogoRenderWidth(),
 	                       SMSGetGCLogoRenderHeight());
 	TFlagManager::start(JKRGetCurrentHeap());
 	TTimeRec::start(0xDFC0);
-	u16& flags = TTimeRec::instance()->unk81C;
-	flags |= 1;
+	TTimeRec::instance()->unk81C |= 1;
 	TDrawSyncManager::smInstance->setCallback(0, 0xDFC0, 0xDFFF,
 	                                          TTimeRec::instance());
 	mMeter = new TProcessMeter(2);
@@ -300,16 +294,15 @@ void TApplication::initialize_bootAfter()
 	this_01->mountFixed(arcBufNLogo, MBF_0);
 
 	this_01->becomeCurrent("/font");
-	void* resource = this_01->getResource("standard_fontEx.bfn");
-	u32 uVar1      = this_01->getResSize(resource);
-	ResFONT* font  = (ResFONT*)new (0x20) u8[uVar1];
+	u32 uVar1
+	    = this_01->getResSize(this_01->getResource("standard_fontEx.bfn"));
+	ResFONT* font = (ResFONT*)new (0x20) u8[uVar1];
 	this_01->readResource(font, uVar1, "standard_fontEx.bfn");
 	gpSystemFont = new JUTResFont(font, nullptr);
 
 	this_01->becomeCurrent("/audi");
-	void* resource2 = this_01->getResource("mSound.aaf");
-	u32 uVar3        = this_01->getResSize(resource2);
-	u8* buf          = new u8[uVar3];
+	u32 uVar3 = this_01->getResSize(this_01->getResource("mSound.aaf"));
+	u8* buf   = new u8[uVar3];
 	this_01->readResource(buf, uVar3, "mSound.aaf");
 	JKRHeap* prevHeap = JKRGetCurrentHeap();
 	gpMSound = new MSound(prevHeap, nullptr, 0xF40000, buf, nullptr, 0xb00000);
@@ -337,15 +330,11 @@ void TApplication::initialize_bootAfter()
 
 void TApplication::initialize_nlogoAfter()
 {
-	JKRMemArchive* this_00;
 	JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume("nintendo");
 	arch->unmountFixed();
 	delete arch;
 
-	{
-		JKRHeap* heap = JKRGetRootHeap();
-		heap->becomeCurrentHeap();
-	}
+	JKRGetRootHeap()->becomeCurrentHeap();
 
 	JKRMemArchive* piVar2 = new JKRMemArchive(arcBufCmn, 0, MBF_0);
 
@@ -353,13 +342,12 @@ void TApplication::initialize_nlogoAfter()
 		JDrama::TNameRefGen::instance
 		    = new (JKRGetSystemHeap(), 0) TMarNameRefGen;
 
-		JKRHeap* heap = JKRGetRootHeap();
-		u32 lVar3   = heap->getSize(bufStageArcBin);
+		u32 lVar3 = JKRGetRootHeap()->getSize(bufStageArcBin);
 		JSUMemoryInputStream stream(bufStageArcBin, lVar3);
 		JDrama::TNameRefGen::getInstance()->load(stream);
-		unk30 = JDrama::TNameRefGen::search<
-		    TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> > >(
-		    "ステージ毎シナリオアーカイブ名群");
+		unk30 = static_cast<
+		    TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >*>(
+		    JDrama::TNameRefGen::search("ステージ毎シナリオアーカイブ名群"));
 
 		delete JDrama::TNameRefGen::instance;
 		JDrama::TNameRefGen::instance = nullptr;
@@ -367,9 +355,9 @@ void TApplication::initialize_nlogoAfter()
 
 	gpRomFont = nullptr;
 	((JKRExpHeap*)mHeap)->destroy();
-	JKRGetRootHeap()->free(spGameHeapBlock);
+	JKRGetRootHeap()->getSize(spGameHeapBlock);
 
-	this_00 = new JKRMemArchive(arcBufMario, 0, MBF_0);
+	JKRMemArchive* this_00 = new JKRMemArchive(arcBufMario, 0, MBF_0);
 	gpCardManager->mIcons
 	    = (ResTIMG*)piVar2->getResource("/card/mario_icon.bti") + 1;
 	gpCardManager->mBanner
@@ -431,7 +419,7 @@ bool TApplication::checkAdditionalMovie()
 
 	const TGameSequence& currArea = gpApplication.mCurrArea;
 
-	u8 uVar1 = SMS_getShineIDofExStage(currArea.getStage());
+	u8 uVar1 = SMS_getShineIDofExStage(currArea.unk0);
 	if (uVar1 != 0xFF) {
 		if (!TFlagManager::getInstance()->getShineFlag(uVar1)) {
 			if (!TFlagManager::getInstance()->getBool(0x3000D)) {
@@ -441,9 +429,9 @@ bool TApplication::checkAdditionalMovie()
 			}
 		}
 	} else {
-		switch (currArea.getStage()) {
+		switch (currArea.unk0) {
 		case 0:
-			if (currArea.getScenario() == 0) {
+			if (currArea.unk1 == 0) {
 				if (!TFlagManager::getInstance()->getBool(0x30009)) {
 					mMovie = 1;
 					TFlagManager::getInstance()->setBool(true, 0x30009);
@@ -453,13 +441,13 @@ bool TApplication::checkAdditionalMovie()
 			break;
 
 		case 1:
-			if (currArea.getScenario() == 0) {
+			if (currArea.unk1 == 0) {
 				if (!TFlagManager::getInstance()->getBool(0x3000B)) {
 					mMovie = 3;
 					TFlagManager::getInstance()->setBool(true, 0x3000B);
 					result = true;
 				}
-			} else if (currArea.getScenario() == 1) {
+			} else if (currArea.unk1 == 1) {
 				if (!TFlagManager::getInstance()->getBool(0x3000C)) {
 					mMovie = 4;
 					TFlagManager::getInstance()->setBool(true, 0x3000C);
@@ -469,7 +457,7 @@ bool TApplication::checkAdditionalMovie()
 			break;
 
 		case 8:
-			if (currArea.getScenario() == 2) {
+			if (currArea.unk1 == 2) {
 				if (!TFlagManager::getInstance()->getBool(0x3000D)) {
 					mMovie = 5;
 					TFlagManager::getInstance()->setBool(true, 0x3000D);
@@ -508,7 +496,7 @@ void TApplication::proc()
 			TMenuDirector* dir = new TMenuDirector;
 			mDirector          = dir;
 			dir->setup(mDisplay, mGamePads[0]);
-			TFlagManager::getInstance()->setFlag(0x20001, 3);
+			TFlagManager::getInstance()->setFlag(3, 0x20001);
 			mCurrArea.set(1, 0, 0);
 		} break;
 
@@ -561,8 +549,7 @@ void TApplication::proc()
 		if (!iVar9)
 			nextState = gameLoop();
 
-		if (mDirector != nullptr)
-			mDirector->~TDirector();
+		delete mDirector;
 		mDirector = nullptr;
 
 		switch (mAppState) {
@@ -750,9 +737,10 @@ int TApplication::drawDVDErr()
 	if (error != 0) {
 		ReInitializeGX();
 		SMS_DrawInit();
-		GXRenderModeObj& rmode = mDisplay->unk60->mNextRenderMode;
-		GXSetViewport(0.0f, 0.0f, rmode.fbWidth, rmode.efbHeight, 0.0f,
-		              1.0f);
+		JDrama::TVideo* video = mDisplay->unk60;
+
+		GXSetViewport(0.0f, 0.0f, video->mNextRenderMode.fbWidth,
+		              video->mNextRenderMode.efbHeight, 0.0f, 1.0f);
 		Mtx afStack_260;
 		C_MTXOrtho(afStack_260, 16.0f, 464.0f, 0.0f, 600.0f, -1.0f, 1.0f);
 		GXSetProjection(afStack_260, GX_ORTHOGRAPHIC);
@@ -807,16 +795,16 @@ JKRMemArchive* TApplication::mountStageArchive()
 	JKRMemArchive* result = nullptr;
 
 	TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >& tmp = *unk30;
-	if (mCurrArea.getStage() < unk30->size()) {
-		TNameRefAryT<TScenarioArchiveName>* names
-		    = tmp.getChildren().begin()[mCurrArea.getStage()];
-		if (mCurrArea.getScenario() < names->size()) {
+	if (mCurrArea.getStage() < tmp.size()) {
+		if (mCurrArea.getScenario() < tmp[mCurrArea.getStage()].size()) {
 			const char* scenarioArcName
-			    = (*names)[mCurrArea.getScenario()].unkC;
+			    = tmp[mCurrArea.getStage()][mCurrArea.getScenario()].getName();
 
 			DVDChangeDir("/data/scene");
-			if (void* archBlob
-			    = SMSLoadArchive(scenarioArcName, nullptr, 0, nullptr)) {
+			void* archBlob
+			    = SMSLoadArchive(scenarioArcName, nullptr, 0, nullptr);
+
+			if (archBlob) {
 				JKRMemArchive* arch = new JKRMemArchive;
 				arch->mountFixed(archBlob, MBF_0);
 				result = arch;

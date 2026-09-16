@@ -42,26 +42,13 @@ static const s32 cParticleIDs[] = {
 
 void TMario::initParticle()
 {
-	const char* fileName;
-	bool* loadedFlag;
 	for (int i = 0; i < 3; ++i) {
-		fileName = cParticleFileNames[i];
+		const char* fileName = cParticleFileNames[i];
 		if (JKRFileLoader::getGlbResource(fileName)) {
-			if (i < 1) {
-				u16 id     = cParticleIDs[i];
-				loadedFlag = &gParticleFlagLoaded[id];
-				if (!*loadedFlag) {
-					gpResourceManager->load(fileName, id);
-					*loadedFlag = true;
-				}
-			} else {
-				u16 id     = cParticleIDs[i];
-				loadedFlag = &gParticleFlagLoaded[id];
-				if (!*loadedFlag) {
-					gpResourceManager->load(fileName, id);
-					*loadedFlag = true;
-				}
-			}
+			if (i < 1)
+				SMS_LoadParticle(fileName, cParticleIDs[i]);
+			else
+				SMS_LoadParticle(fileName, cParticleIDs[i]);
 		}
 	}
 }
@@ -126,7 +113,7 @@ void TMario::emitSweat(s16 rot)
 void TMario::emitSweatSometimes()
 {
 	s16 angle = mFaceAngle.y;
-	if (!(gpMarDirector->unk58 & 0xF))
+	if (!(gpMarDirector->mMoveTickCount & 0xF))
 		emitSweat(angle);
 }
 
@@ -139,9 +126,8 @@ void TMario::emitGetEffect()
 
 void TMario::emitGetWaterEffect()
 {
-	JGeometry::TVec3<f32>* pos = &unk160;
-	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ITEMGET1_B, pos, 0,
-	                                            nullptr);
+	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ITEMGET1_B, &unk160,
+	                                            0, nullptr);
 }
 
 void TMario::emitGetCoinEffect(JGeometry::TVec3<f32>* pos)
@@ -177,10 +163,9 @@ void TMario::rippleEffect()
 		SMS_EmitRipplePool(unk220, this);
 	} else {
 		SMS_EmitRippleSea(unk220, this);
-		if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING)) {
-			f32 waveEmitSpeed = mParticleParams.mWaveEmitSpeed.get();
-			if (mForwardVel > waveEmitSpeed)
-				mWaterWakeAlpha = 0xFF;
+		if ((checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
+		    && mForwardVel > mParticleParams.mWaveEmitSpeed.get()) {
+			mWaterWakeAlpha = 0xFF;
 		}
 	}
 }
@@ -188,8 +173,7 @@ void TMario::rippleEffect()
 void TMario::inOutWaterEffect(f32 waterY)
 {
 	JGeometry::TVec3<f32> pos = mPosition;
-	f32 floorY                = mFloorPosition.z;
-	pos.y                     = floorY;
+	pos.y                     = mFloorPosition.z;
 
 	if (checkFlag(MARIO_FLAG_IN_SHALLOW_WATER)
 	    || checkPrevFlag(MARIO_FLAG_IN_SHALLOW_WATER)) {
@@ -240,7 +224,8 @@ void TBubbleCallBack::execute(JPABaseEmitter*, JPABaseParticle* particle)
 		particle->getCurrentPosition(pos);
 		if (pos.y > gpMarioOriginal->mFloorPosition.z) {
 			particle->unk10 |= 2;
-			if (gpMarioOriginal->mParticleParams.mBubbleToRipple.get()) {
+			if (gpMarioOriginal->mParticleParams.mBubbleToRipple.get()
+			    != 0.0f) {
 				gpMarioParticleManager->emit(PARTICLE_MS_M_AWAHAMON, &pos, 0,
 				                             nullptr);
 			}
@@ -359,9 +344,8 @@ void TMario::frontSlipEffect()
 			    PARTICLE_MS_M_SLIDESAND_A, &mCenterPos, 1, this);
 			return;
 		}
-		MtxPtr mtx = mModel->getModel()->getAnmMtx(0);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    PARTICLE_MS_M_SLIPSMOKE, mtx, 1, this);
+		    PARTICLE_MS_M_SLIPSMOKE, mModel->getModel()->getAnmMtx(0), 1, this);
 	}
 }
 
@@ -385,19 +369,16 @@ void TMario::surfingEffect()
 	    PARTICLE_MS_GESOSURF_A, (MtxPtr)getRootAnmMtx(), 3, this);
 	if (emitter != nullptr)
 		emitter->setGlobalScale(scaleVec);
-	MtxPtr mtx = unk1F0;
 	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    PARTICLE_MS_GESOSURF_B, mtx, 1, this);
+	    PARTICLE_MS_GESOSURF_B, unk1F0, 1, this);
 	if (emitter != nullptr)
 		emitter->setGlobalScale(scaleVec);
-	mtx = unk1F0;
 	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    PARTICLE_MS_GESOSURF_D, mtx, 1, this);
+	    PARTICLE_MS_GESOSURF_D, unk1F0, 1, this);
 	if (emitter != nullptr)
 		emitter->setGlobalScale(scaleVec);
-	mtx = unk1F0;
 	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    PARTICLE_MS_GESOSURF_C, mtx, 1, this);
+	    PARTICLE_MS_GESOSURF_C, unk1F0, 1, this);
 	if (emitter != nullptr)
 		emitter->setGlobalScale(scaleVec);
 }
@@ -418,8 +399,12 @@ void TWarpInCallBack::execute(JPABaseEmitter* emitter,
 
 	f32 factor = ((((int)particle >> 2) & 0x3F) / 16.0f + 1.0f);
 
-	JGeometry::TVec3<f32> v = *vel * tmp;
-	v = v * timer * factor;
+	JGeometry::TVec3<f32> v = *vel;
+
+	v = v * tmp;
+	v = v * timer;
+	v = v * factor;
+
 	particle->unk14 += v;
 }
 
@@ -721,11 +706,12 @@ void TMario::elecEndEffect()
 void TMario::kickRoofEffect()
 {
 	if (getMotionFrameCtrl().checkPass(8.0f)) {
-		MtxPtr mtx      = mModel->getModel()->getAnmMtx(mJointIdChnFootR);
+		MtxPtr mtx      = mModel->getModel()->getAnmMtx(mJointIdHead);
 		mFootprintPos.x = mtx[0][3];
 		mFootprintPos.y = mtx[1][3];
 		mFootprintPos.z = mtx[2][3];
-		emitParticle(PARTICLE_MS_M_AMIATTACK, &mFootprintPos);
+		gpMarioParticleManager->emit(PARTICLE_MS_M_AMIATTACK, &mFootprintPos, 0,
+		                             nullptr);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
 }
@@ -746,12 +732,10 @@ void TMario::sleepingEffectKill()
 
 void TMario::toroccoEffect()
 {
-	const JGeometry::TVec3<f32>& delta = mPosition - mToroccoPos;
-	f32 dist = JGeometry::TVec3<f32>(delta).length();
+	f32 dist = JGeometry::TVec3<f32>(mPosition - mToroccoPos).length();
 
-	J3DModel* model = mTorocco->getModel();
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    PARTICLE_MS_TORO_WIND, model->getAnmMtx(0), 1, this);
+	    PARTICLE_MS_TORO_WIND, mTorocco->getModel()->getAnmMtx(0), 1, this);
 	if (emitter != nullptr) {
 		emitter->setRate(dist * mParticleParams.mToroccoWind.get());
 	}
@@ -771,7 +755,7 @@ void TMario::kickFruitEffect()
 		emitter->setGlobalScale(scale);
 		JGeometry::TVec3<f32> pos = mPosition;
 		pos.y += 30.0f;
-		emitter->setGlobalTranslation(pos);
+		emitter->setEmitterTranslation(pos);
 	}
 }
 

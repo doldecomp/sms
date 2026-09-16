@@ -45,7 +45,7 @@ int TNameKuriManager::mStopMinScaleFrame = 8;
 static TNameKuri* gpCurNameKuri;
 
 const char* namekuri2_bastable[] = {
-	nullptr, nullptr, nullptr, "/scene/namekuri2/bas/name_jump_start.bas",
+	nullptr, nullptr, nullptr, "/scene/namekuri2/bas/name_jump_start.base",
 	nullptr, nullptr, nullptr, nullptr,
 };
 
@@ -54,14 +54,14 @@ void TNameKuriLauncher::stateLaunch()
 	if (mTicksSpentInCurState == 0) {
 		TSpineEnemy* enemy = getProperEnemy("ナメクリマネージャー");
 		if (enemy) {
-			JGeometry::TVec3<f32> local_14;
-			JGeometry::TVec3<f32> local_20;
 			Mtx mtx;
 			MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
 
-			f32 zero = 0.0f;
-			local_20.set(zero, 4.0f, zero);
-			local_14.set(zero, zero, zero);
+			JGeometry::TVec3<f32> local_14;
+			JGeometry::TVec3<f32> local_20;
+
+			local_20.set(0.0f, 4.0f, 0.0f);
+			local_14.set(0.0f, 0.0f, 0.0f);
 			MTXMultVec(mtx, &local_20, &local_20);
 
 			enemy->resetSRTV(mPosition, local_14, enemy->mScaling, local_20);
@@ -188,24 +188,8 @@ void TNameIndParCallback::execute(JPABaseEmitter* param_1,
 	if (mOwner->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		MtxPtr mA = mOwner->getMActor()->getModel()->getAnmMtx(1);
 
-		f32 s = JMASin(mOwner->unk1AC);
-		f32 c = JMACos(mOwner->unk1AC);
-
 		Mtx local_4c;
-		local_4c[0][0] = 1.0f;
-		local_4c[0][1] = 0.0f;
-		local_4c[0][2] = 0.0f;
-		local_4c[0][3] = 0.0f;
-
-		local_4c[1][0] = 0.0f;
-		local_4c[1][1] = c;
-		local_4c[1][2] = -s;
-		local_4c[1][3] = 0.0f;
-
-		local_4c[2][0] = 0.0f;
-		local_4c[2][1] = s;
-		local_4c[2][2] = c;
-		local_4c[2][3] = 0.0f;
+		MsMtxSetRotX(local_4c, mOwner->unk1AC);
 
 		MTXConcat(mA, local_4c, mA);
 
@@ -244,25 +228,8 @@ BOOL NameKuriAttackCallback(J3DNode* param_1, int param_2)
 		MtxPtr mA = gpCurNameKuri->getMActor()->getModel()->getAnmMtx(
 		    ((J3DJoint*)param_1)->getJntNo());
 
-		f32 s = gpCurNameKuri->unk1AC;
-		s     = JMASin(s);
-		f32 c = JMACos(gpCurNameKuri->unk1AC);
-
 		Mtx local_48;
-		local_48[0][0] = 1.0f;
-		local_48[0][1] = 0.0f;
-		local_48[0][2] = 0.0f;
-		local_48[0][3] = 0.0f;
-
-		local_48[1][0] = 0.0f;
-		local_48[1][1] = c;
-		local_48[1][2] = -s;
-		local_48[1][3] = 0.0f;
-
-		local_48[2][0] = 0.0f;
-		local_48[2][1] = s;
-		local_48[2][2] = c;
-		local_48[2][3] = 0.0f;
+		MsMtxSetRotX(local_48, gpCurNameKuri->unk1AC);
 
 		MTXConcat(mA, local_48, mA);
 		MTXConcat(J3DSys::mCurrentMtx, local_48, J3DSys::mCurrentMtx);
@@ -277,12 +244,25 @@ BOOL NameKuriScaleCallback(J3DNode* param_1, int param_2)
 		if (gpCurNameKuri == nullptr || !gpCurNameKuri->isHitWaterJump())
 			return true;
 
-		u16 jntNo = ((J3DJoint*)param_1)->getJntNo();
-		MtxPtr mA = gpCurNameKuri->getMActor()->getModel()->getAnmMtx(jntNo);
+		MtxPtr mA = gpCurNameKuri->getMActor()->getModel()->getAnmMtx(
+		    ((J3DJoint*)param_1)->getJntNo());
 
-		TPosition3f local_3c;
-		local_3c.setTrans(0.0f, 0.0f, 0.0f);
-		local_3c.setScale(0.4f, 4.0f, 0.4f);
+		Mtx local_3c;
+
+		local_3c[0][0] = 0.4;
+		local_3c[0][1] = 0.0;
+		local_3c[0][2] = 0.0;
+		local_3c[0][3] = 0.0;
+
+		local_3c[1][0] = 0.0;
+		local_3c[1][1] = 4.0;
+		local_3c[1][2] = 0.0;
+		local_3c[1][3] = 0.0;
+
+		local_3c[2][0] = 0.0;
+		local_3c[2][1] = 0.0;
+		local_3c[2][2] = 0.4;
+		local_3c[2][3] = 0.0;
 
 		MTXConcat(mA, local_3c, mA);
 		MTXConcat(J3DSys::mCurrentMtx, local_3c, J3DSys::mCurrentMtx);
@@ -324,8 +304,8 @@ void TNameKuri::init(TLiveManager* param_1)
 	getMActor()->setJointCallback(1, &NameKuriScaleCallback);
 	getMActor()->resetDL();
 	getMActor()->setLightType(LIGHT_TYPE_INDIRECT);
-	TScreenTexture* tex
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
+	TScreenTexture* tex = static_cast<TScreenTexture*>(
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 
 	SMS_ChangeTextureAll(getMActor()->getModel()->getModelData(),
 	                     "H_ma_rak_dummy", *tex->getTexture()->getTexInfo());
@@ -357,25 +337,21 @@ void TNameKuri::calcRootMatrix()
 		unk1A8 = true;
 		JGeometry::TVec3<f32> local_30(0.0f, 1.0f, 0.0f);
 
-		const JGeometry::TVec3<f32> normal = unk138->getNormal();
-		const f32 normalY = normal.y;
+		JGeometry::TVec3<f32> normal = unk138->getNormal();
 
 		JGeometry::TVec3<f32> local_a0;
 		local_a0.cross(normal, local_30);
 		MsVECNormalize(&local_a0, &local_a0);
 
 		local_30.cross(local_a0, normal);
-		{
-			Vec* local_24 = &local_30;
-			MsVECNormalize(local_24, &local_30);
-		}
+		MsVECNormalize(&local_30, &local_30);
 
 		anmMtx[0][0] = local_a0.x;
 		anmMtx[1][0] = local_a0.y;
 		anmMtx[2][0] = local_a0.z;
 
 		anmMtx[0][1] = normal.x;
-		anmMtx[1][1] = normalY;
+		anmMtx[1][1] = normal.y;
 		anmMtx[2][1] = normal.z;
 
 		anmMtx[0][2] = local_30.x;
@@ -388,43 +364,22 @@ void TNameKuri::calcRootMatrix()
 
 		f32 angle = (1.0f - getWalker()->unk2C->unk10) * 90.0f;
 
-		f32 s = JMASin(angle);
-		f32 c = JMACos(angle);
-
 		Mtx local_7c;
-
-		local_7c[0][0] = 1.0f;
-		local_7c[1][0] = 0.0f;
-		local_7c[2][0] = 0.0f;
-
-		local_7c[0][1] = 0.0f;
-		local_7c[1][1] = c;
-		local_7c[2][1] = s;
-
-		local_7c[0][2] = 0.0f;
-		local_7c[1][2] = -s;
-		local_7c[2][2] = c;
-
-		local_7c[0][3] = 0.0f;
-		local_7c[1][3] = 0.0f;
-		local_7c[2][3] = 0.0f;
+		MsMtxSetRotX(local_7c, angle);
 
 		MTXConcat(anmMtx, local_7c, anmMtx);
 	} else {
-		JGeometry::TVec3<f32> local_88(JMASin(mRotation.y), 0.0f,
-		                               JMACos(mRotation.y));
+		JGeometry::TVec3<f32> local_88(MsSin(mRotation.y), 0.0f,
+		                               MsCos(mRotation.y));
 
-		JGeometry::TVec3<f32> normal = mGroundPlane->getNormal();
+		JGeometry::TVec3<f32> normal = unk138->getNormal();
 
 		JGeometry::TVec3<f32> local_a0;
 		local_a0.cross(normal, local_88);
 		MsVECNormalize(&local_a0, &local_a0);
 
 		local_88.cross(local_a0, normal);
-		{
-			Vec* local_24 = &local_88;
-			MsVECNormalize(&local_88, local_24);
-		}
+		MsVECNormalize(&local_88, &local_88);
 
 		anmMtx[0][0] = local_a0.x;
 		anmMtx[1][0] = local_a0.y;
@@ -449,9 +404,10 @@ void TNameKuri::perform(u32 cue, JDrama::TGraphics* graphics)
 	TWalkerEnemy::perform(cue, graphics);
 	unk1CC->perform(cue, graphics);
 	if (cue & CUE_CALC_ANIM) {
-		Mtx44 afStack_50;
+		Mtx afStack_50;
 		SMS_GetLightPerspectiveForEffectMtx(afStack_50);
 
+		// TODO: need one more inline here somewhere?
 		mMActor->getModel()
 		    ->getModelData()
 		    ->getMaterialNodePointer(0)
@@ -465,11 +421,11 @@ void TNameKuri::moveObject()
 {
 	TWalkerEnemy::moveObject();
 
-	JGeometry::TVec3<f32> local_50 = getVelocity();
+	JGeometry::TVec3<f32> local_50 = mVelocity;
 	if (local_50.y < 0.0f
 	    && (mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()
 	        || mSpine->getCurrentNerve() == &TNerveWalkerEscape::theNerve())
-	    && getPosition().y - mGroundHeight > unk1A4->mSLLandHeight.get()) {
+	    && mPosition.y - mGroundHeight > unk1A4->mSLLandHeight.get()) {
 		mSpine->pushNerve(&TNerveNameKuriLand::theNerve());
 	}
 
@@ -599,13 +555,11 @@ void TNameKuri::reset()
 {
 	gpCurNameKuri = this;
 	TWalkerEnemy::reset();
-	JGeometry::TVec3<f32> local_20;
 	unk1B0 = 1.0f;
 	unk1B4 = TMsRange<f32>(0.0f, 360.0f).rand();
 	unk194 = 0;
 	unk198 = 0;
-	local_20.set(0.0f, 0.0f, 0.0f);
-	setVelocity(local_20);
+	setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
 	mScaling.setAll(mBodyScale);
 
 	unk1BC.a = 0;
@@ -702,10 +656,10 @@ DEFINE_NERVE(TNerveNameKuriLand, TLiveActor)
 {
 	TNameKuri* self = (TNameKuri*)spine->getBody();
 
-	if (self->isBckAnm(4)) {
-		if (self->checkCurAnmEnd(0))
-			return true;
-	} else if (!self->isAirborne())
+	if (self->isBckAnm(4) && self->checkCurAnmEnd(0))
+		return true;
+
+	if (!self->isAirborne())
 		self->setBckAnm(4);
 
 	return false;
@@ -713,12 +667,10 @@ DEFINE_NERVE(TNerveNameKuriLand, TLiveActor)
 
 DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 {
-	JGeometry::TVec3<f32> local_6c;
 	TNameKuri* self = (TNameKuri*)spine->getBody();
 
 	if (spine->getTime() <= 1) {
-		TPathNode local_7c(SMS_GetMarioHitActor());
-		self->setGoalPath(local_7c);
+		self->setGoalPath(SMS_GetMarioHitActor());
 
 		self->unk1B0 = self->mScaling.y;
 		self->unk1AC = 0.0f;
@@ -738,7 +690,7 @@ DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 			        ->checkPass(62.0f)) {
 				JGeometry::TVec3<f32> local_44 = SMS_GetMarioPos();
 				f32 jumpAttackSp = self->getSaveParams()->mSLJumpAttackSp.get();
-				local_6c = self->calcVelocityToJumpToY(
+				JGeometry::TVec3<f32> local_6c = self->calcVelocityToJumpToY(
 				    local_44, jumpAttackSp, self->getGravityY());
 				self->mPosition.y += 2.0f;
 				self->setVelocity(local_6c);
@@ -746,8 +698,7 @@ DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 				self->unk1AC = 0.0f;
 				self->unk1B8 = 0.0f;
 
-				TPathNode local_7c(SMS_GetMarioPos());
-				self->setGoalPath(local_7c);
+				self->setGoalPath(SMS_GetMarioPos());
 			}
 
 			self->walkToCurPathNode(0.0f, 6.0f, 0.0f);
@@ -760,7 +711,7 @@ DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 				self->unk1BC.r = self->unk1BC.g = self->unk1BC.b = sVar5;
 			} else {
 				s16 col
-				    = abs(JMASin(colorChangeRate * spine->getTime())) * 255.0f;
+				    = abs(MsSin(colorChangeRate * spine->getTime())) * 255.0f;
 				self->unk1BC.r = self->unk1BC.g = self->unk1BC.b = col;
 			}
 

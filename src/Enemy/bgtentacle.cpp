@@ -44,7 +44,7 @@ inline bool TBGTentacle::isAttackable()
 const char* tstatestr[] = {
 	"TSTATE_WAIT",     "TSTATE_ATTACK", "TSTATE_REST", "TSTATE_HELD",
 	"TSTATE_AMPUTEE",  "TSTATE_STUN",   "TSTATE_HIDE", "TSTATE_FOLLOWBODY",
-	"TSTATE_SYNCBODY", "TSTATE_GUARD", nullptr,
+	"TSTATE_SYNCBODY", "TSTATE_GUARD",
 };
 
 TBGTentacle::TTentacleParams::TTentacleParams(const char* path)
@@ -103,10 +103,10 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 		MtxPtr mtx2 = mOwner->getUnk2C()->getModel()->getAnmMtx(param_1 - 1);
 		JGeometry::TVec3<f32> vec2(mtx2[0][3], mtx2[1][3], mtx2[2][3]);
 
-		JGeometry::TVec3<f32> vec3 = vec2 - vec1;
+		vec1 -= vec2;
 
-		if (!vec3.isZero()) {
-			VECNormalize(&vec3, &local_68);
+		if (!vec1.isZero()) {
+			VECNormalize(&vec1, &local_68);
 		} else {
 			local_68.set(1.0f, 0.0f, 0.0f);
 		}
@@ -200,13 +200,15 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 	dst[0][2] = local_80.x;
 	dst[1][2] = local_80.y;
 	dst[2][2] = local_80.z;
+
+	char trash[0x10]; // TODO: removeme
 }
 
 TBGTakeHit::TBGTakeHit(TBGTentacle* owner, const char* name)
     : TTakeActor(name)
     , mOwner(owner)
 {
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 
@@ -250,12 +252,11 @@ BOOL TBGTakeHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 		    gpMarioOriginal->getIntendedMag()
 		        * mOwner->mOwner->getSaveParam()->getSLTentacleStretch());
 
-		TBGTentacle* tentacle = mOwner;
-		JGeometry::TVec3<f32> local_44 = tentacle->getOwner()->getPosition();
+		JGeometry::TVec3<f32> local_44 = mOwner->getOwner()->getPosition();
 		local_44 -= local_EC;
 
 		if (local_44.dot(unk74) < 0.0f)
-			tentacle->incDamage();
+			mOwner->incDamage();
 
 		mOwner->getLastNode()->setPosition(local_EC);
 		return false;
@@ -325,8 +326,9 @@ void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 			vec2.cross(vec1, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
 			vec2.normalize();
 
-			vec1.cross(vec2, JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f));
-			vec1.normalize();
+			JGeometry::TVec3<f32> vec3;
+			vec3.cross(vec2, JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f));
+			vec3.normalize();
 
 			unk80.mMtx[0][0] = vec2.x;
 			unk80.mMtx[1][0] = vec2.y;
@@ -336,16 +338,18 @@ void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 			unk80.mMtx[1][1] = 1.0f;
 			unk80.mMtx[2][1] = 0.0f;
 
-			unk80.mMtx[0][2] = vec1.x;
-			unk80.mMtx[1][2] = vec1.y;
-			unk80.mMtx[2][2] = vec1.z;
+			unk80.mMtx[0][2] = vec3.x;
+			unk80.mMtx[1][2] = vec3.y;
+			unk80.mMtx[2][2] = vec3.z;
 
-			vec1.scale(mDamageRadius);
-			vec1 += JGeometry::TVec3<f32>(mtx[0][3], mtx[1][3], mtx[2][3]);
+			vec3.scale(mDamageRadius);
 
-			unk80.mMtx[0][3] = vec1.x;
-			unk80.mMtx[1][3] = vec1.y;
-			unk80.mMtx[2][3] = vec1.z;
+			JGeometry::TVec3<f32> tip(mtx[0][3], mtx[1][3], mtx[2][3]);
+			tip += vec3;
+
+			unk80.mMtx[0][3] = tip.x;
+			unk80.mMtx[1][3] = tip.y;
+			unk80.mMtx[2][3] = tip.z;
 
 			JGeometry::TVec3<f32> local_8c
 			    = mOwner->getLastNode()->getVelocity();
@@ -395,7 +399,7 @@ TBGAttackHit::TBGAttackHit(TBGTentacle* owner, f32 pos_on_spline,
     , mOwner(owner)
     , mPosOnSpline(pos_on_spline)
 {
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 	initHitActor(0x8000007, 1, -0x80000000, 50.0f, 50.0f, 50.0f, 50.0f);
@@ -407,7 +411,10 @@ void TBGAttackHit::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_MOVE) {
 		mPosition = mOwner->mSpline->getPoint(mPosOnSpline);
 
-		if (mOwner->isAttackable()) {
+		if (mOwner->mTakeHit->checkHitFlag(HIT_FLAG_CANNOT_ATTACK)
+		        && mOwner->isThing3()
+		    || mOwner->getState() == 1
+		    || mOwner->mOwner->getAttackMode() == 7) {
 			for (int i = 0; i < mColCount; ++i) {
 				THitActor* col = mCollisions[i];
 				if (gpMarioOriginal->isRoofing())
@@ -614,8 +621,8 @@ void TBGTentacle::incDamage()
 
 void TBGTentacle::throwMario(THitActor* param_1, THitActor* param_2)
 {
-	JGeometry::TVec3<f32> local_e0 = param_1->mPosition;
-	local_e0 -= param_2->mPosition;
+	JGeometry::TVec3<f32> local_e0 = param_1->getPosition();
+	local_e0 -= param_2->getPosition();
 
 	local_e0.normalize();
 	local_e0.scale(2.0f);
@@ -715,7 +722,11 @@ void TBGTentacle::setAttackTarget()
 		local_3c.cross(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), local_148);
 		local_3c.normalize();
 
-		unk84 += local_3c * iVar9 * 80.0f;
+		JGeometry::TVec3<f32> local_cc = local_3c;
+		local_cc.scale(iVar9);
+		JGeometry::TVec3<f32> local_ac = local_3c;
+		local_ac.scale(80.0f);
+		unk84 += local_ac;
 	}
 
 	if (mOwner->is2ndFightNow() && unk84.y < mOwner->mPosition.y + 20.0f)
@@ -759,18 +770,18 @@ void TBGTentacle::changeStateAndFixNodes(int new_state)
 
 	switch (mState) {
 	case 1:
-		mNodes[0].onUnk24();
+		getFirstNode()->onUnk24();
 		setAttackTarget();
 		break;
 
 	case 4:
 		if (unk48) {
-			mNodes[mNodeNum - 1].onUnk24();
+			getLastNode()->onUnk24();
 			break;
 		}
 
 		{
-			mNodes[mNodeNum - 1].onUnk24();
+			getLastNode()->onUnk24();
 			mOwner->gotTentacleDamage();
 			unk48        = 1;
 			mDamageCount = 0;
@@ -780,12 +791,12 @@ void TBGTentacle::changeStateAndFixNodes(int new_state)
 			gpMarioParticleManager->emitAndBindToMtxPtr(0x95, mtx, 0, nullptr);
 			gpMarioParticleManager->emitAndBindToMtxPtr(0x96, mtx, 0, nullptr);
 
-			mOwner->rumblePad(1, mOwner->mPosition);
+			mOwner->rumblePad(1, mOwner->getPosition());
 		}
 		break;
 
 	case 5: {
-		mNodes[0].onUnk24();
+		getFirstNode()->onUnk24();
 		if (mOwner->getAttackMode() == 6)
 			mNodes[1].onUnk24();
 		JGeometry::TVec3<f32> zero;
@@ -796,12 +807,12 @@ void TBGTentacle::changeStateAndFixNodes(int new_state)
 	}
 
 	case 3:
-		mNodes[0].onUnk24();
-		mNodes[mNodeNum - 1].onUnk24();
+		getFirstNode()->onUnk24();
+		getLastNode()->onUnk24();
 		break;
 
 	case 10:
-		mNodes[0].onUnk24();
+		getFirstNode()->onUnk24();
 		unk80->setBckFromIndex(0x16);
 		break;
 
@@ -809,16 +820,16 @@ void TBGTentacle::changeStateAndFixNodes(int new_state)
 	case 2:
 	case 7:
 	case 8:
-		mNodes[0].onUnk24();
+		getFirstNode()->onUnk24();
 		break;
 
 	case 9:
-		mNodes[0].onUnk24();
+		getFirstNode()->onUnk24();
 		mNodes[1].onUnk24();
 		break;
 
 	case 6:
-		mNodes[0].onUnk24();
+		getFirstNode()->onUnk24();
 		mDamageCount = 0;
 		unk48        = 0;
 		break;
@@ -839,8 +850,8 @@ void TBGTentacle::returnToDefaultState() { }
 
 void TBGTentacle::moveNode()
 {
-	f32 fVar2 = mParams->mVibrationForce.get();
 	f32 fVar1 = mParams->mVibrationSpeed.get();
+	f32 fVar2 = mParams->mVibrationForce.get();
 
 	if (mState == 4) {
 		fVar2 *= mParams->mDamagePropF.get();
@@ -855,24 +866,24 @@ void TBGTentacle::moveNode()
 	JGeometry::TVec3<f32> local_88;
 	switch (mIndex) {
 	case 0:
-		local_88.x = JMASin(unk40) * -1.9f * fVar2;
-		local_88.y = JMASin(unk40) * 1.0f * fVar2;
-		local_88.z = JMACos(unk44) * 1.8f * fVar2;
+		local_88.x = MsSin(unk40) * -1.9f * fVar2;
+		local_88.y = MsSin(unk40) * 1.0f * fVar2;
+		local_88.z = MsCos(unk44) * 1.8f * fVar2;
 		break;
 	case 1:
-		local_88.x = JMASin(unk40) * -1.0f * fVar2;
-		local_88.y = JMASin(unk44) * 0.8f * fVar2;
-		local_88.z = JMACos(unk44) * 1.1f * fVar2;
+		local_88.x = MsSin(unk40) * -1.0f * fVar2;
+		local_88.y = MsSin(unk44) * 0.8f * fVar2;
+		local_88.z = MsCos(unk44) * 1.1f * fVar2;
 		break;
 	case 3:
-		local_88.x = JMASin(unk40) * 1.0f * fVar2;
-		local_88.y = JMASin(unk40) * 0.8f * fVar2;
-		local_88.z = JMACos(unk44) * 1.1f * fVar2;
+		local_88.x = MsSin(unk40) * 1.0f * fVar2;
+		local_88.y = MsSin(unk40) * 0.8f * fVar2;
+		local_88.z = MsCos(unk44) * 1.1f * fVar2;
 		break;
 	default:
-		local_88.x = JMASin(unk40) * 1.9f * fVar2;
-		local_88.y = JMASin(unk44) * 1.0f * fVar2;
-		local_88.z = JMACos(unk44) * 1.8f * fVar2;
+		local_88.x = MsSin(unk40) * 1.9f * fVar2;
+		local_88.y = MsSin(unk44) * 1.0f * fVar2;
+		local_88.z = MsCos(unk44) * 1.8f * fVar2;
 		break;
 	}
 
@@ -1011,7 +1022,7 @@ void TBGTentacle::moveConstraint()
 				local_38.y += getNodeLen();
 			}
 		} else {
-			static int jntidx[] = { 8, 14, 28, 34 };
+			static int jntidx[] = { 8, 14, 16, 34 };
 			int iVar15          = jntidx[mIndex];
 			for (int i = 0; i < mNodeNum; ++i) {
 				MtxPtr mtx = mOwner->getModel()->getAnmMtx(i + iVar15);
@@ -1149,7 +1160,7 @@ void TBGTentacle::calcAtkParticleAndSE()
 	                ? 7
 	                : mOwner->getSaveParam()->mSLBlurJoint.get();
 
-	PSMTXCopy(unk80->getModel()->getAnmMtx(3), unk50);
+	unk80->getModel()->setAnmMtx(3, unk50);
 	MTXScaleApply(unk50, unk50, fVar2, fVar2, fVar2);
 
 	MtxPtr mtx  = unk2C->getModel()->getAnmMtx(iVar5);
@@ -1243,106 +1254,31 @@ void TBGTentacle::calcAttackGuideAnm()
 
 	JGeometry::TVec3<f32> local_30 = getFirstNode()->getPosition();
 	JGeometry::TVec3<f32> local_3c = unk84;
-	local_3c.x -= local_30.x;
-	f32 y = local_30.y;
-	local_3c.y -= y;
-	f32 z = local_30.z;
-	local_3c.z -= z;
+	local_3c -= local_30;
 	JGeometry::TVec3<f32> local_b4 = MsGetRotFromZaxis(local_3c);
 
-	f32 scale;
-	if (mState == 10) {
-		scale = 1.875f;
-	} else if (unk80->checkCurBckFromIndex(20)) {
-		scale = local_3c.length() * (1.0f / 1500.0f);
-	} else {
-		scale = local_3c.length() * (1.0f / 1200.0f);
+	if (mState != 10) {
+		unk80->checkCurBckFromIndex(20);
+		// TODO: a bunch of stuff ghidra refuses to show
 	}
 
-	if (scale > 2.0f)
-		scale = 2.0f;
-
 	Mtx afStack_78;
-	MsMtxSetTRS(afStack_78, local_30.x, y, z, local_b4.x,
-	            local_b4.y, local_b4.z, 1.875f, 1.875f, scale);
+	MsMtxSetTRS(afStack_78, local_30.x, local_30.y, local_30.z, local_b4.x,
+	            local_b4.y, local_b4.z, 1.875f, 1.875f, 1.875f);
 
 	Mtx local_a8;
 	if (mState == 10) {
 		static const f32 zangle[] = { 80.0f, 60.0f, -80.0f, -60.0f };
-		f32 s                     = JMASin(zangle[mIndex]);
-		f32 c                     = JMACos(zangle[mIndex]);
-
-		local_a8[0][0] = c;
-		local_a8[0][1] = -s;
-		local_a8[0][2] = 0.0f;
-		local_a8[0][3] = 0.0f;
-
-		local_a8[1][0] = s;
-		local_a8[1][1] = c;
-		local_a8[1][2] = 0.0f;
-		local_a8[1][3] = 0.0f;
-
-		local_a8[2][0] = 0.0f;
-		local_a8[2][1] = 0.0f;
-		local_a8[2][2] = 1.0f;
-		local_a8[2][3] = 0.0f;
+		MsMtxSetRotZ(local_a8, zangle[mIndex]);
 	} else if (mOwner->getAttackMode() == 2 || mOwner->getAttackMode() == 1) {
 		static const f32 zangle[] = { 65.0f, 40.0f, -65.0f, -40.0f };
-		f32 s                     = JMASin(zangle[mIndex]);
-		f32 c                     = JMACos(zangle[mIndex]);
-
-		local_a8[0][0] = c;
-		local_a8[0][1] = -s;
-		local_a8[0][2] = 0.0f;
-		local_a8[0][3] = 0.0f;
-
-		local_a8[1][0] = s;
-		local_a8[1][1] = c;
-		local_a8[1][2] = 0.0f;
-		local_a8[1][3] = 0.0f;
-
-		local_a8[2][0] = 0.0f;
-		local_a8[2][1] = 0.0f;
-		local_a8[2][2] = 1.0f;
-		local_a8[2][3] = 0.0f;
+		MsMtxSetRotZ(local_a8, zangle[mIndex]);
 	} else if (mOwner->getAttackMode() == 4) {
 		static const f32 zangle[] = { 80.0f, 70.0f, -80.0f, -70.0f };
-		f32 s                     = JMASin(zangle[mIndex]);
-		f32 c                     = JMACos(zangle[mIndex]);
-
-		local_a8[0][0] = c;
-		local_a8[0][1] = -s;
-		local_a8[0][2] = 0.0f;
-		local_a8[0][3] = 0.0f;
-
-		local_a8[1][0] = s;
-		local_a8[1][1] = c;
-		local_a8[1][2] = 0.0f;
-		local_a8[1][3] = 0.0f;
-
-		local_a8[2][0] = 0.0f;
-		local_a8[2][1] = 0.0f;
-		local_a8[2][2] = 1.0f;
-		local_a8[2][3] = 0.0f;
+		MsMtxSetRotZ(local_a8, zangle[mIndex]);
 	} else {
 		static const f32 zangle[] = { 20.0f, 7.5f, -20.0f, -7.5f };
-		f32 s                     = JMASin(zangle[mIndex]);
-		f32 c                     = JMACos(zangle[mIndex]);
-
-		local_a8[0][0] = c;
-		local_a8[0][1] = -s;
-		local_a8[0][2] = 0.0f;
-		local_a8[0][3] = 0.0f;
-
-		local_a8[1][0] = s;
-		local_a8[1][1] = c;
-		local_a8[1][2] = 0.0f;
-		local_a8[1][3] = 0.0f;
-
-		local_a8[2][0] = 0.0f;
-		local_a8[2][1] = 0.0f;
-		local_a8[2][2] = 1.0f;
-		local_a8[2][3] = 0.0f;
+		MsMtxSetRotZ(local_a8, zangle[mIndex]);
 	}
 
 	MTXConcat(afStack_78, local_a8, afStack_78);

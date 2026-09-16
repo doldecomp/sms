@@ -162,7 +162,7 @@ void TGessoManager::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TGessoManager::initSetEnemies()
 {
-	unk60 = new TGessoPolluteModelManager("ゲッソーモデル汚染");
+	unk60 = new TGessoPolluteModelManager;
 	unk60->init((TLiveActor*)unk18[0]);
 }
 
@@ -190,46 +190,29 @@ static int GessoBodyCallback(J3DNode* param_1, int param_2)
 		J3DJoint* joint = (J3DJoint*)param_1;
 		MtxPtr anmMtx   = gpCurGesso->getModel()->getAnmMtx(joint->getJntNo());
 
-		Mtx local_44;
-		local_44[0][3] = 0.0f;
-		local_44[1][3] = 0.0f;
-		local_44[2][3] = 0.0f;
-
 		f32 scale = gpCurGesso->getBodyScale();
+		Mtx local_44;
 		local_44[0][0] = scale;
 		local_44[0][1] = 0.0f;
 		local_44[0][2] = 0.0f;
+		local_44[0][3] = 0.0f;
 
 		local_44[1][0] = 0.0f;
 		local_44[1][1] = scale;
 		local_44[1][2] = 0.0f;
+		local_44[1][3] = 0.0f;
 
 		local_44[2][0] = 0.0f;
 		local_44[2][1] = 0.0f;
 		local_44[2][2] = scale;
+		local_44[2][3] = 0.0f;
 
 		f32 maxAngle = gpCurGesso->getSaveParams()->mSLBodyAngMax.get();
 		f32 angle = MsClamp(gpCurGesso->mBodyTrackingAngle - 90.0f, -maxAngle,
 		                    maxAngle);
 
-		f32 s = JMASin(angle);
-		f32 c = JMACos(angle);
-
 		Mtx local_74;
-		local_74[0][0] = 1.0f;
-		local_74[0][1] = 0.0f;
-		local_74[0][2] = 0.0f;
-		local_74[0][3] = 0.0f;
-
-		local_74[1][0] = 0.0f;
-		local_74[1][1] = c;
-		local_74[1][2] = -s;
-		local_74[1][3] = 0.0f;
-
-		local_74[2][0] = 0.0f;
-		local_74[2][1] = s;
-		local_74[2][2] = c;
-		local_74[2][3] = 0.0f;
+		MsMtxSetRotX(local_74, angle);
 
 		MTXConcat(anmMtx, local_74, anmMtx);
 		MTXConcat(anmMtx, local_44, anmMtx);
@@ -481,7 +464,7 @@ void TGesso::polluteBehavior()
 	if (mSpine->getCurrentNerve() == &TNerveGessoPollute::theNerve())
 		return;
 
-	if (mPollutionTimer <= unk1E8->mSLPollutionInterval.get())
+	if (mPollutionTimer < unk1E8->mSLPollutionInterval.get())
 		return;
 
 	if (!MsIsInSight(mPosition, getSightDirection(), SMS_GetMarioPos(),
@@ -504,12 +487,14 @@ void TGesso::setPolluteGoal()
 
 	if (unk1D8 == 0) {
 		TMsRange<f32> range(-100.0f, 100.0f);
+		(void)&range; // TODO: due to range.rand() being wrong
 		mPolluteVelocity.set(SMS_GetMarioPos().x + range.rand(),
 		                     SMS_GetMarioPos().y,
 		                     SMS_GetMarioPos().z + range.rand());
 
-		mPolluteVelocity = calcVelocityToJumpToY(
-		    mPolluteVelocity, polluteObjSpeed, polluteObjGravity);
+		JGeometry::TVec3<f32> local;
+		calcVelocityToJumpToY(local, polluteObjSpeed, polluteObjGravity);
+		mPolluteVelocity = local;
 	} else {
 		mPolluteVelocity = SMS_GetMarioPos();
 		mPolluteVelocity.x -= mPosition.x;
@@ -686,24 +671,8 @@ void TGesso::calcRootMatrix()
 		MsMtxSetXYZRPH(mA, mPosition.x, mPosition.y + unk1D0, mPosition.z,
 		               mRotation.x, mRotation.y, mRotation.z);
 
-		f32 s = JMASin(mStayYaw);
-		f32 c = JMACos(mStayYaw);
 		Mtx local_68;
-
-		local_68[0][0] = c;
-		local_68[0][1] = 0.0f;
-		local_68[0][2] = s;
-		local_68[0][3] = 0.0f;
-
-		local_68[1][0] = 0.0f;
-		local_68[1][1] = 1.0f;
-		local_68[1][2] = 0.0f;
-		local_68[1][3] = 0.0f;
-
-		local_68[2][0] = -s;
-		local_68[2][1] = 0.0f;
-		local_68[2][2] = c;
-		local_68[2][3] = 0.0f;
+		MsMtxSetRotY(local_68, mStayYaw);
 
 		MTXConcat(mA, local_68, mA);
 
@@ -733,9 +702,7 @@ void TGesso::behaveToFindMario()
 		mSpine->pushAfterCurrent(&TNerveSmallEnemyJump::theNerve());
 	} else {
 		setGoalPathMario();
-		const TNerveBase<TLiveActor>* nerve
-		    = &TNerveWalkerGraphWander::theNerve();
-		mSpine->pushAfterCurrent(nerve);
+		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
 		mSpine->pushAfterCurrent(&TNerveWalkerAttack::theNerve());
 		if (unk1B4 == 0) {
 			mSpine->pushAfterCurrent(&TNerveGessoFindMario::theNerve());
@@ -804,11 +771,10 @@ void TGesso::turnIn()
 
 bool TGesso::turning()
 {
-	f32 step = 7.2f;
-	if (mTurnAngle + step <= 180.0f) {
+	if (mTurnAngle + 7.2f <= 180.0f) {
 		mBodyTrackingAngle = 90.0f;
-		mRotation.y += step;
-		mTurnAngle += step;
+		mRotation.y += 7.2f;
+		mTurnAngle += 7.2f;
 		return false;
 	}
 
@@ -830,8 +796,8 @@ void TGesso::turnOut()
 inline bool TGesso::checkDropInWater()
 {
 	// Don't skip your calculus class, kids.
-	JGeometry::TVec3<f32> position = getPosition();
-	JGeometry::TVec3<f32> velocity = getVelocity();
+	JGeometry::TVec3<f32> position = mPosition;
+	JGeometry::TVec3<f32> velocity = mVelocity;
 	for (int i = 0; i < 50; ++i) {
 		position += velocity;
 		velocity.y -= getGravityY();
@@ -892,9 +858,9 @@ void TGessoPolluteObj::loadInit(TSpineEnemy* param_1, const char* param_2)
 	TEnemyAttachment::loadInit(param_1, param_2);
 
 	unk16C = (TGesso*)unk160;
-	TIdxGroupObj* group
-	    = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
-	group->getChildren().push_back(this);
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
+	    ->getChildren()
+	    .push_back(this);
 
 	THitActor::initHitActor(0x10000006, 1, -0x80000000, 10.0f, 10.0f, 10.0f,
 	                        10.0f);
@@ -905,12 +871,11 @@ void TGessoPolluteObj::loadInit(TSpineEnemy* param_1, const char* param_2)
 
 f32 TGessoPolluteObj::getNowGravity()
 {
-	TGesso* gesso = unk16C;
-	f32 gravity = gesso->getSaveParams()->mSLPolluteObjGravity.get();
-	if (gesso->unk1D8 == 0)
+	f32 gravity = unk16C->getSaveParams()->mSLPolluteObjGravity.get();
+	if (unk16C->unk1D8 == 0)
 		return gravity;
 
-	return gesso->getSaveParams()->mSLPolluteObjLinerG.get();
+	return unk16C->getSaveParams()->mSLPolluteObjLinerG.get();
 }
 
 void TGessoPolluteObj::pollute()
@@ -941,11 +906,8 @@ void TGessoPolluteObj::rebirth()
 
 	if (unk158 == 10) {
 		mVelocity.y = -15.0f;
-		f32 range = 0.5f * (TGesso::mPollRange * 32.0f);
-		f32 z = mPosition.z;
-		f32 y = mPosition.y;
-		f32 x = mPosition.x;
-		gpPollution->stamp(1, x, y, z, range);
+		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
+		                   TGesso::mPollRange * 32.0f * 0.5f);
 
 		((TGesso*)unk160)
 		    ->getManager()
@@ -999,9 +961,8 @@ void TGessoPolluteObj::calcRootMatrix()
 
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_GESO_GERO_FLY, &mPosition, 0,
 	                                nullptr, 0, 4);
-	JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_GESO_KISEKI,
-	                                                  &mPosition, 1, this);
+	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_GESO_KISEKI,
+	                                            &mPosition, 1, this);
 }
 
 void TGessoPolluteObj::sendMessage()
@@ -1136,8 +1097,7 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 	TGesso* self = (TGesso*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		TPathNode point(SMS_GetMarioPos());
-		self->setGoalPath(point);
+		self->setGoalPath(TPathNode(SMS_GetMarioPos()));
 
 		if (self->isWandering()) {
 			JGeometry::TVec3<f32> local_80

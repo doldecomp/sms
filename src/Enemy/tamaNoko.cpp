@@ -78,39 +78,19 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 				if (!gpMarDirector->isDemoModeNow()) {
 					unk1C = 1;
 
-					Mtx local_b8;
-					MtxPtr local_mtx = local_b8;
 					for (int i = 0; i < 5; ++i) {
 						JGeometry::TVec3<f32> local_88(0.0f, 0.0f, 350.0f);
+						Mtx local_b8;
 
-						f32 s = JMASin((i + 1) * 72.0f);
-						f32 c = JMACos((i + 1) * 72.0f);
+						MsMtxSetRotY(local_b8, (i + 1) * 72.0f);
 
-						local_mtx[0][0] = c;
-						local_mtx[0][1] = 0.0f;
-						local_mtx[0][2] = s;
-						local_mtx[0][3] = 0.0f;
-
-						local_mtx[1][0] = 0.0f;
-						local_mtx[1][1] = 1.0f;
-						local_mtx[1][2] = 0.0f;
-						local_mtx[1][3] = 0.0f;
-
-						local_mtx[2][0] = -s;
-						local_mtx[2][1] = 0.0f;
-						local_mtx[2][2] = c;
-						local_mtx[2][3] = 0.0f;
-
-						MTXMultVec(local_mtx, &local_88, &local_88);
+						MTXMultVec(local_b8, &local_88, &unk20);
 
 						JGeometry::TVec3<f32> local_c4 = unk10->getPosition();
-						f32 local_x = local_c4.x;
-						f32 local_y = local_c4.y;
-						f32 local_z = local_c4.z;
 						if (TMapObjBase* mapObj = gpItemManager->makeObjAppear(
-						        local_x + local_88.x, local_y,
-						        local_z + local_88.z, 0x2000000e, true)) {
-							mapObj->mPosition.y = local_y;
+						        local_c4.x + local_88.x, local_c4.y,
+						        local_c4.z + local_88.z, 0x2000000e, true)) {
+							mapObj->mPosition.y = local_c4.y;
 							MsVECNormalize(&local_88, &local_88);
 							mapObj->mVelocity.set(local_88.x * 4.0f, 20.0f,
 							                      local_88.z * 4.0f);
@@ -210,9 +190,8 @@ void TTamaNokoManager::initSetEnemies()
 
 	for (int i = 0; i < mObjNum; ++i) {
 		TTamaNoko* enemy = (TTamaNoko*)unk18[i];
-		enemy->unk19C = new TTamaNokoFlower(
-		    enemy, 0, modelData, 0x3,
-		    "\x83\x5e\x83\x7d\x83\x6d\x83\x52\x83\x74\x83\x89\x83\x8f\x81\x5b");
+		enemy->unk19C
+		    = new TTamaNokoFlower(enemy, 0, modelData, 0x3, "TamaNokoFlower");
 	}
 }
 
@@ -326,8 +305,7 @@ void TTamaNoko::walkBehavior(int param_1, f32 param_2)
 	mTurnSpeed  = getSaveParams2()->mSLTurnSpeedLow.get();
 	mMarchSpeed = getSaveParams2()->mSLMarchSpeedLow.get();
 
-	TPathNode& local_28 = getUnkF4();
-	JGeometry::TVec3<f32> local_34 = local_28.getPoint();
+	JGeometry::TVec3<f32> local_34 = unkF4.getPoint();
 	local_34 -= mPosition;
 	VECMag(&local_34);
 
@@ -475,14 +453,15 @@ void TTamaNoko::calcRootMatrix()
 				gpCameraShake->startShake(CAM_SHAKE_MODE_UNK7, 1.0f);
 				SMSRumbleMgr->start(8, 1, (float*)nullptr);
 
-				JGeometry::TVec3<f32> scale(2.0f, 2.0f, 2.0f);
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				        PARTICLE_MS_SMB_AP_ROCK, &mPosition, 0, nullptr)) {
-					emitter->setGlobalScale(scale);
+					emitter->setGlobalScale(
+					    JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
 				}
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				        PARTICLE_MS_SMB_AP_SMOKE, &mPosition, 0, nullptr)) {
-					emitter->setGlobalScale(scale);
+					emitter->setGlobalScale(
+					    JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
 				}
 			}
 		}
@@ -561,27 +540,27 @@ void TTamaNoko::landEffect()
 	if (mGroundPlane->isSand()) {
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_HIPDROP_C, &mPosition, 0, nullptr)) {
-			emitter->setGlobalScale(mScaling * 0.8f);
+			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_POI_SAND, &mPosition, 0, nullptr)) {
-			emitter->setGlobalScale(mScaling * 0.8f);
+			emitter->setGlobalScale(mScaling);
 		}
+	}
+
+	const TBGCheckData* local_10;
+	gpMap->checkGround(mPosition.x, mPosition.y + 500.0f, mPosition.z,
+	                   &local_10);
+	if (local_10 && local_10->isWaterSurface()) {
+		generateEffectColumWater();
 	} else {
-		const TBGCheckData* local_10;
-		gpMap->checkGround(mPosition.x, mPosition.y + 500.0f, mPosition.z,
-		                   &local_10);
-		if (local_10 && local_10->isWaterSurface()) {
-			generateEffectColumWater();
-		} else {
-			if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
-			        PARTICLE_MS_HIPDROP_C, &mPosition, 0, nullptr)) {
-				emitter->setGlobalScale(mScaling * 0.8f);
-			}
-			if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
-			        PARTICLE_MS_HIPDROP_B, &mPosition, 0, nullptr)) {
-				emitter->setGlobalScale(mScaling * 0.8f);
-			}
+		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+		        PARTICLE_MS_HIPDROP_C, &mPosition, 0, nullptr)) {
+			emitter->setGlobalScale(mScaling);
+		}
+		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+		        PARTICLE_MS_HIPDROP_B, &mPosition, 0, nullptr)) {
+			emitter->setGlobalScale(mScaling);
 		}
 	}
 
@@ -609,9 +588,8 @@ void TTamaNoko::setAfterDeadEffect()
 	unk19C->unk34 = 1;
 	unk19C->setBckAnm(0);
 
-	JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emitAndBindToPosPtr(
-	        PARTICLE_MS_TAMA_FLOWER, &mPosition, 0, nullptr);
+	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_TAMA_FLOWER,
+	                                            &mPosition, 0, nullptr);
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_SMOKE, &mPosition, 0,
 	                                nullptr, 0, 4);
 }
@@ -620,15 +598,11 @@ const char** TTamaNoko::getBasNameTable() const { return tamaNoko_bastable; }
 
 f32 TTamaNoko::getGravityY() const
 {
-	if (mSpine->getCurrentNerve() == &TNerveTamaNokoAttack::theNerve()) {
-		f32 result = unk198->mSLAttackGravityY.get();
-		return result;
-	}
+	if (mSpine->getCurrentNerve() == &TNerveTamaNokoAttack::theNerve())
+		return unk198->mSLAttackGravityY.get();
 
-	if (mSpine->getCurrentNerve() == &TNerveTamaNokoThrown::theNerve()) {
-		f32 result = unk198->mSLThrownGravityY.get();
-		return result;
-	}
+	if (mSpine->getCurrentNerve() == &TNerveTamaNokoThrown::theNerve())
+		return unk198->mSLThrownGravityY.get();
 
 	return mGravity;
 }
@@ -639,14 +613,13 @@ void TTamaNoko::setDeadAnm() { setBckAnm(3); }
 
 BOOL TTamaNoko::isReachedToGoal() const
 {
-	JGeometry::TVec3<f32> local_c = getUnk104().getPoint();
-	local_c -= mPosition;
-	local_c.y = 0.0f;
-
-	if (local_c.x == 0.0f && local_c.z == 0.0f)
+	JGeometry::TVec3<f32> pos = unk104.getPoint();
+	pos -= mPosition;
+	pos.y = 0.0f;
+	if (pos.x == 0.0f && pos.z == 0.0f)
 		return true;
 
-	if (MsVECMag2(&local_c) < 200.0f)
+	if (MsVECMag2(&pos) < 200.0f)
 		return true;
 
 	return false;
@@ -712,8 +685,8 @@ DEFINE_NERVE(TNerveTamaNokoAttack, TLiveActor)
 			return true;
 		}
 
-		local_48 = self->getVelocity();
-		if (local_48.y < 0.0f) {
+		JGeometry::TVec3<f32> local_54 = self->getVelocity();
+		if (local_54.y < 0.0f) {
 			MtxPtr mtx = self->getMActor()->getModel()->getAnmMtx(1);
 			self->unk1AC.set(mtx[0][3], mtx[1][3] - 200.0f, mtx[2][3]);
 			if (JPABaseEmitter* emitter
@@ -814,7 +787,7 @@ DEFINE_NERVE(TNerveTamaNokoDown, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		// If hit sand -- we get stuck
-		if (self->mGroundPlane->isSand()) {
+		if (self->getGroundPlane()->isSand()) {
 			spine->pushAfterCurrent(&TNerveTamaNokoSink::theNerve());
 			if (TEffectColumSand* sand
 			    = (TEffectColumSand*)gpConductor->makeOneEnemyAppear(
@@ -870,16 +843,15 @@ DEFINE_NERVE(TNerveTamaNokoThrown, TLiveActor)
 	if (spine->getTime() == 0) {
 		TTamaNokoSaveLoadParams* params = self->getSaveParams2();
 
-		s16 angle = *gpMarioAngleY;
+		int angle = *gpMarioAngleY;
 		f32 fVar2 = *gpMarioThrowPower;
-		f32 velX = fVar2 * JMASSin((u16)angle);
-		f32 velZ = fVar2 * JMASCos(angle);
+		f32 s     = JMASSin(angle);
+		f32 c     = JMASCos(angle);
 		f32 fVar3 = params->mSLThrownRateXZ.get();
-		JGeometry::TVec3<f32> velocity;
-		velocity.x = fVar3 * velX;
-		velocity.y = params->mSLThrownVY.get();
-		velocity.z = fVar3 * velZ;
-		self->setVelocity(velocity);
+		f32 fVar4 = params->mSLThrownVY.get();
+
+		self->setVelocity(
+		    JGeometry::TVec3<f32>(fVar3 * fVar2 * c, fVar4, fVar3 * fVar2 * s));
 
 		self->mPosition.y += 2.0f;
 
@@ -913,8 +885,7 @@ DEFINE_NERVE(TNerveTamaNokoSink, TLiveActor)
 		// The less tamanokos remain, the faster they get back up
 		f32 fVar1 = 0.0f;
 		for (int i = 0; i < manager->getObjNum(); ++i)
-			if (!((TTamaNoko*)manager->unk18[i])
-			         ->checkLiveFlag(LIVE_FLAG_DEAD))
+			if (!manager->getObj(i)->checkLiveFlag(LIVE_FLAG_DEAD))
 				fVar1 += 1.0f;
 		fVar1 /= manager->getObjNum();
 
@@ -982,8 +953,8 @@ DEFINE_NERVE(TNerveTamaNokoWait, TLiveActor)
 		if (self->isBckAnm(14)) {
 			self->setBckAnm(13);
 		} else if (self->isBckAnm(13)) {
-			int waitTime = self->unk198->mSLWaitTime.get();
-			if (spine->getTime() > waitTime && self->isBckAnm(13))
+			if (spine->getTime() > self->unk198->mSLWaitTime.get()
+			    && self->isBckAnm(13))
 				self->setBckAnm(12);
 		} else if (self->isBckAnm(12)) {
 			spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());

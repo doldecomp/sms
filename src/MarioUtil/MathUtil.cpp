@@ -127,13 +127,7 @@ static u16 GetAtanTable(f32 param_1, f32 param_2)
 	if (param_1 == 0)
 		return atntable[0];
 
-	f32 tmp = __fres(param_1);
-	return atntable[(int)(param_2 * tmp * 1024.0f + 0.5f)];
-}
-
-static inline f32 matanNegate(f32 param_1)
-{
-	return -param_1;
+	return atntable[(int)(param_2 * __fres(param_1) * 1024.0f + 0.5f)];
 }
 
 s16 matan(f32 param_1, f32 param_2)
@@ -156,7 +150,7 @@ s16 matan(f32 param_1, f32 param_2)
 				result = 0x8000 - GetAtanTable(param_1, param_2);
 		}
 	} else {
-		param_2 = matanNegate(param_2);
+		param_2 = -param_2;
 
 		if (param_1 < 0.0f) {
 			param_1 = -param_1;
@@ -199,21 +193,20 @@ static inline void MsGetRotFromZaxisY2(const JGeometry::TVec3<f32>& axis,
 static inline void MsGetRotFromZaxisX2(const JGeometry::TVec3<f32>& axis,
                                        f32* out)
 {
-	f32 y = axis.y;
-	if (y == 1.0f) {
+	if (axis.y == 1.0f) {
 		*out = 90.0f;
 		return;
-	} else if (y == -1.0f) {
+	} else if (axis.y == -1.0f) {
 		*out = -90.0f;
 		return;
 	}
 
-	f32 a = 1.0f - y * y;
+	f32 a = 1.0f - axis.y * axis.y;
 
 	// TODO: it smells to me like this entire function is not real but a result
 	// of MWCC optimizing out stuff for once
 
-	*out = -(matan(MsSqrtf(a), y) * (360.0f / 65536.0f));
+	*out = -(matan(MsSqrtf(a), axis.y) * (360.0f / 65536.0f));
 }
 
 JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>& param_1)
@@ -232,13 +225,13 @@ JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>& param_1)
 
 void MsMtxSetRotRPH(MtxPtr param_1, f32 r, f32 p, f32 h)
 {
-	f32 sr = JMASin(r);
-	f32 sp = JMASin(p);
-	f32 sh = JMASin(h);
+	f32 sr = MsSin(r);
+	f32 sp = MsSin(p);
+	f32 sh = MsSin(h);
 
-	f32 cr = JMACos(r);
-	f32 cp = JMACos(p);
-	f32 ch = JMACos(h);
+	f32 cr = MsCos(r);
+	f32 cp = MsCos(p);
+	f32 ch = MsCos(h);
 
 	char trash[0x4]; // TODO: skill issue
 
@@ -293,13 +286,13 @@ void MsMtxSetXYZRPH(MtxPtr param_1, f32 x, f32 y, f32 z, s16 r, s16 p, s16 h)
 void MsMtxSetTRS(MtxPtr param_1, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h,
                  f32 sx, f32 sy, f32 sz)
 {
-	f32 sr = JMASin(r);
-	f32 sp = JMASin(p);
-	f32 sh = JMASin(h);
+	f32 sr = MsSin(r);
+	f32 sp = MsSin(p);
+	f32 sh = MsSin(h);
 
-	f32 cr = JMACos(r);
-	f32 cp = JMACos(p);
-	f32 ch = JMACos(h);
+	f32 cr = MsCos(r);
+	f32 cp = MsCos(p);
+	f32 ch = MsCos(h);
 
 	char trash[0x8]; // TODO: skill issue
 

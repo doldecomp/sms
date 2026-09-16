@@ -206,8 +206,8 @@ void TCoin::taken(THitActor* param_1)
 		mContainer->receiveMessage(this, HIT_MESSAGE_UNK8);
 
 	if (TFlagManager::smInstance->getFlag(0x40002) == 100) {
-		TShine* shine = JDrama::TNameRefGen::search<TShine>(
-		    "シャイン（１００枚コイン用）");
+		TShine* shine = static_cast<TShine*>(
+		    JDrama::TNameRefGen::search("シャイン（１００枚コイン用）"));
 
 		gpItemManager->makeShineAppearWithDemo(
 		    "シャイン（１００枚コイン用）",
@@ -310,8 +310,7 @@ void TCoin::loadAfter()
 			return;
 	}
 
-	TMirrorActor* actor = new TMirrorActor("コインin鏡");
-	unk154             = actor;
+	unk154 = new TMirrorActor("コインin鏡");
 	unk154->init(getModel(), 0x18);
 }
 
@@ -376,8 +375,7 @@ void TCoinBlue::makeObjAppeared()
 
 void TCoinBlue::taken(THitActor* param_1)
 {
-	TMarDirector* director = SMSGetMarDirector();
-	director->fireGetBlueCoin(this);
+	SMSGetMarDirector()->fireGetBlueCoin(this);
 
 	if (mContainer)
 		mContainer->receiveMessage(this, HIT_MESSAGE_UNK8);
@@ -397,9 +395,8 @@ void TCoinBlue::loadBeforeInit(JSUMemoryInputStream& stream)
 void TCoinBlue::load(JSUMemoryInputStream& stream)
 {
 	TCoin::load(stream);
-	u32 eventId = getEventId();
 	if (TFlagManager::getInstance()->getBlueCoinFlag(
-	        gpMarDirector->getCurrentMap(), eventId))
+	        gpMarDirector->getCurrentMap(), getEventId()))
 		makeObjDead();
 }
 
@@ -487,19 +484,16 @@ void TShine::movingCircle()
 	(void)0;
 	(void)0;
 
-	JGeometry::TVec3<f32> prevPos;
-	JGeometry::TVec2<f32> currentPos;
-	prevPos.y = mPosition.y;
+	f32 prevY = mPosition.y;
 	unk158 += 180.0f / (f32)unk168;
 
 	f32 tmp = (f32)(unk168 - mStateTimer) / (f32)unk168;
 
 	mPosition.x += unk17C.x;
 
-	mPosition.y = unk160 * JMASin(unk158)
+	mPosition.y = unk160 * MsSin(unk158)
 	              + (tmp * (mInitialPosition.y - unk164) + unk164);
-	currentPos.y = mPosition.y;
-	unk188      = currentPos.y - prevPos.y;
+	unk188 = mPosition.y - prevY;
 
 	mPosition.z += unk17C.z;
 	mRotation.y += 7.0f;
@@ -645,8 +639,7 @@ BOOL TShine::receiveMessage(THitActor* sender, u32 message)
 {
 	unkF8 &= 0xF7FFFFFF;
 	mPosition.set(SMS_GetMarioPos());
-	f32 angle   = 180.0f * (f32)*gpMarioAngleY / 32768.0f;
-	mRotation.y = angle;
+	mRotation.y = 180.0f * (f32)*gpMarioAngleY / 32768.0f;
 
 	MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x,
 	               mPosition.y - mYOffset, mPosition.z, mRotation.x,
@@ -730,7 +723,7 @@ s32 TShine::appearWithTimeCallback(u32 param_1, u32 param_2)
 void TShine::appearSimple(int param_1)
 {
 	TItem::appear();
-	TFlagManager::getInstance()->setBool(true, 0x50000);
+	TFlagManager::smInstance->setBool(true, 0x50000);
 
 	unk174   = 60;
 	unk170   = param_1;
@@ -753,11 +746,9 @@ void TShine::appearSimple(int param_1)
 
 void TShine::appearWithDemo(const char* param_1)
 {
-	TCameraMapTool* tool
-	    = JDrama::TNameRefGen::instance->search<TCameraMapTool>(param_1);
-	unk18C = tool->mDemoLengthFrames;
-	TMarDirector* director = SMSGetMarDirector();
-	director->fireStartDemoCamera(
+	unk18C = static_cast<TCameraMapTool*>(JDrama::TNameRefGen::search(param_1))
+	             ->mDemoLengthFrames;
+	SMSGetMarDirector()->fireStartDemoCamera(
 	    param_1, &mPosition, -1, 0.0f, true, appearWithTimeCallback, (u32)this,
 	    nullptr, JDrama::TFlagT<u16>());
 }
@@ -918,10 +909,9 @@ void TEggYoshi::touchFruit(THitActor* fruit)
 	if (unk14C == (u32)fruit->mActorType) {
 		startAnim(1);
 		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(11.0f);
-		JGeometry::TVec3<f32> diff;
-		diff.sub(fruit->mPosition, mPosition);
-		mRotation.y
-		    = (360.0f / 65536.0f) * matan(diff.z, diff.x);
+		mRotation.y = (360.0f / 65536.0f)
+		              * matan(fruit->mPosition.z - mPosition.z,
+		                      fruit->mPosition.x - mPosition.x);
 		mState = 0xB;
 		unk150 = fruit;
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_COLLECT_PRETTY, 0, nullptr,

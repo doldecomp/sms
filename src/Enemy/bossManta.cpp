@@ -35,7 +35,6 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-
 f32 TBossManta::sScale[] = { 20.0f, 10.0f, 5.0f, 2.0f, 1.0f, 1.0f };
 int TBossManta::sCenterJointIndex;
 int TBossManta::sBodyJointIndex;
@@ -69,8 +68,8 @@ static inline void lerp_hack(f32& value, f32 target, f32 progress)
 
 DEFINE_NERVE(TNerveMantaMove, TLiveActor)
 {
-	s32 time         = spine->getTime();
 	TBossManta* self = (TBossManta*)spine->getBody();
+	s32 time         = spine->getTime();
 	TGraphWeb* graph = self->getTracer()->getGraph();
 
 	if (time == 0) {
@@ -197,7 +196,7 @@ DEFINE_NERVE(TNerveMantaHitWater, TLiveActor)
 		    = { MSD_SE_BS_MANTA_DAMAGE_1, MSD_SE_BS_MANTA_DAMAGE_2,
 			    MSD_SE_BS_MANTA_DAMAGE_3, MSD_SE_BS_MANTA_DAMAGE_4,
 			    MSD_SE_BS_MANTA_DAMAGE_5, MSD_SE_BS_MANTA_DAMAGE_5 };
-		const u32& snd = hitSounds[self->mGeneration];
+		u32 snd = hitSounds[self->mGeneration];
 		SMSGetMSound()->startSoundActor(snd, &self->mPosition, 0, nullptr, 0,
 		                                4);
 	}
@@ -300,7 +299,7 @@ DEFINE_NERVE(TNerveMantaAppearDemo, TLiveActor)
 	if (time == 0) {
 		self->mPosition.x = 0.0f;
 		self->mPosition.y = 0.0f;
-		self->mPosition.z = self->getSaveParams()->mSLAppearDemoInitialZ.value;
+		self->mPosition.z = self->getSaveParams()->mSLAppearDemoInitialZ.get();
 		self->unk170.x    = 0.0f;
 		self->unk170.y    = 0.0f;
 		self->unk170.z    = -1.0f;
@@ -457,7 +456,8 @@ void TBossManta::init(TLiveManager* manager)
 	calcRootMatrix();
 	kill();
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
+	static_cast<TIdxGroupObj*>(
+	    JDrama::TNameRefGen::search("オブジェクトグループ"))
 	    ->getChildren()
 	    .push_back(this);
 
@@ -516,8 +516,7 @@ bool TBossManta::collidedWithWater()
 			unk19C++;
 
 			const int hitCounts2[6] = { 16, 8, 4, 2, 1, 1 };
-			const int& hitCount2 = hitCounts2[mGeneration];
-			if (unk19C == hitCount2) {
+			if (unk19C == hitCounts2[mGeneration]) {
 				if (mGeneration >= 4)
 					mSpine->pushAfterCurrent(&TNerveMantaDeath::theNerve());
 				else
@@ -703,10 +702,8 @@ f32 TBossManta::getPolluteRadius()
 	case 0:
 	case 1:
 	case 2:
-	case 3: {
-		const f32& radius = getSaveParams()->mSLPolluteRadius.get();
-		return radius * mScaling.x;
-	}
+	case 3:
+		return getSaveParams()->mSLPolluteRadius.get() * mScaling.x;
 	case 4:
 	case 5:
 		return 100.0f;
@@ -716,14 +713,14 @@ f32 TBossManta::getPolluteRadius()
 
 void TBossManta::updateAttractor()
 {
-	JGeometry::TVec3<f32> local_108 = unk158;
-	local_108 -= mPosition;
+	JGeometry::TVec3<f32> local_108 = mPosition;
+	local_108 -= unk158;
 	local_108.y = 0.0f;
 	local_108.normalize();
 	local_108 *= getSaveParams()->mSLAttractorPower.get();
 
 	JGeometry::TVec3<f32> facing = unk170;
-	facing *= getSaveParams()->mSLEscapeLookPoint.get();
+	facing *= getSaveParams()->mSLPusherPower.get();
 
 	JGeometry::TVec3<f32> selfPos = mPosition;
 	selfPos += facing;
@@ -735,30 +732,23 @@ void TBossManta::updateAttractor()
 		    || other->getInstanceIndex() == getInstanceIndex())
 			continue;
 
-		JGeometry::TVec3<f32> delta = selfPos;
-
 		JGeometry::TVec3<f32> otherFacing = other->unk170;
-		otherFacing *= getSaveParams()->mSLEscapeLookedPoint.get();
+		otherFacing *= getSaveParams()->mSLPusherPower.get();
 
-		JGeometry::TVec3<f32> otherPos = other->mPosition;
+		JGeometry::TVec3<f32> otherPos = mPosition;
 		otherPos += otherFacing;
 
-		delta -= otherPos;
+		JGeometry::TVec3<f32> delta;
+		delta.sub(selfPos, otherPos);
 		delta.y = 0.0f;
 
-		f32 deltaSquared = delta.squared();
-		if (0.1f < JGeometry::TUtil<f32>::sqrt(deltaSquared)
-		    && JGeometry::TUtil<f32>::sqrt(deltaSquared)
-		           < getSaveParams()->mSLEscapeRegion.get()) {
-			if (deltaSquared <= JGeometry::TUtil<f32>::epsilon()) {
-				delta.zero();
-			} else {
-				delta.scale(JGeometry::TUtil<f32>::one()
-				                * JGeometry::TUtil<f32>::inv_sqrt(deltaSquared),
-				            delta);
-			}
-			delta *= getSaveParams()->mSLPusherPower.get() / delta.length();
-			local_108 += delta;
+		if (0.1f < delta.length()
+		    && delta.length() < getSaveParams()->mSLEscapeRegion.get()) {
+			JGeometry::TVec3<f32> thing;
+			thing.set(delta);
+			thing.normalize();
+			thing *= getSaveParams()->mSLPusherPower.get() / thing.length();
+			local_108 += thing;
 		}
 	}
 
@@ -785,23 +775,21 @@ void TBossManta::updateAttractor()
 void TBossMantaManager::TMantaBattleState::update()
 {
 	static JAISound* sDefeatSE;
-	JDrama::TFlagT<u16> flag = 0;
 
 	switch (mState) {
 	case 0:
 		if (TFlagManager::getInstance()->getBool(0x50007)) {
 			SMSGetMarDirector()->fireStartDemoCamera(
 			    "sirena_manta", nullptr, -1, 0.0f, true, nullptr, 0, nullptr,
-			    flag);
+			    JDrama::TFlagT<u16>(0));
 			((TBossManta*)unk0->getObj(0))->initNthGeneration(0);
 			MSBgm::stopTrackBGMs(7, 10);
 			mState++;
 		}
 		break;
 	case 1: {
-		int i;
 		bool allMaxGen = true;
-		for (i = 0; i < unk0->getActiveObjNum(); ++i) {
+		for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
 			TBossManta* m = (TBossManta*)unk0->getObj(i);
 			if (m->checkLiveFlag(LIVE_FLAG_DEAD))
 				continue;
@@ -811,7 +799,7 @@ void TBossMantaManager::TMantaBattleState::update()
 			}
 		}
 		if (allMaxGen) {
-			for (i = 0; i < unk0->getActiveObjNum(); ++i) {
+			for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
 				TBossManta* m = (TBossManta*)unk0->getObj(i);
 				if (!m->checkLiveFlag(LIVE_FLAG_DEAD))
 					m->initNthGeneration(5);
@@ -821,9 +809,8 @@ void TBossMantaManager::TMantaBattleState::update()
 		break;
 	}
 	case 2: {
-		int i;
 		bool victory = true;
-		for (i = 0; i < unk0->getActiveObjNum(); ++i) {
+		for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
 			TBossManta* m = (TBossManta*)unk0->getObj(i);
 			if (m->mGeneration != 5)
 				continue;
@@ -843,8 +830,8 @@ void TBossMantaManager::TMantaBattleState::update()
 	}
 	case 3:
 		if (sDefeatSE == nullptr) {
-			JDrama::TNameRefGen::search<TMapEventSirenaSink>(
-			    "イベント（ホテル沈む）")
+			static_cast<TMapEventSirenaSink*>(
+			    JDrama::TNameRefGen::search("イベント（ホテル沈む）"))
 			    ->unk64
 			    = true;
 			mState++;
@@ -891,11 +878,8 @@ void TBossMantaManager::TMantaMessageState::update()
 TBossMantaAdditionalCollisionSet::TBossMantaAdditionalCollisionSet()
 {
 	unkC = nullptr;
-	TBossMantaAdditionalCollision* collision;
-	for (int i = 0; i < 3; ++i) {
-		collision = new TBossMantaAdditionalCollision("マンタ追加コリジョン");
-		unk0[i] = collision;
-	}
+	for (int i = 0; i < 3; ++i)
+		unk0[i] = new TBossMantaAdditionalCollision("マンタ追加コリジョン");
 }
 
 void TBossMantaAdditionalCollisionSet::adapt(TBossManta* manta)
@@ -931,45 +915,41 @@ void TBossMantaAdditionalCollisionSet::update(u32 cue,
 		for (int i = 0; i < 3; ++i)
 			unk0[i]->perform(cue, graphics);
 
-		MtxPtr centerMtx
-		    = unkC->getModel()->getAnmMtx(TBossManta::sCenterJointIndex);
-		JGeometry::TVec3<f32> center;
-		center.x = centerMtx[0][3];
-		center.y = centerMtx[1][3];
-		center.z = centerMtx[2][3];
+		int centerIdx    = TBossManta::sCenterJointIndex;
+		MtxPtr centerMtx = unkC->getModel()->getAnmMtx(centerIdx);
+		f32 centerX      = centerMtx[0][3];
+		f32 centerY      = centerMtx[1][3];
+		f32 centerZ      = centerMtx[2][3];
 
-		MtxPtr bodyMtx
-		    = unkC->getModel()->getAnmMtx(TBossManta::sBodyJointIndex);
-		JGeometry::TVec3<f32> body;
-		body.x = bodyMtx[0][3];
-		body.y = bodyMtx[1][3];
-		body.z = bodyMtx[2][3];
+		int bodyIdx    = TBossManta::sBodyJointIndex;
+		MtxPtr bodyMtx = unkC->getModel()->getAnmMtx(bodyIdx);
+		f32 bodyX      = bodyMtx[0][3];
+		f32 bodyY      = bodyMtx[1][3];
+		f32 bodyZ      = bodyMtx[2][3];
 
-		MtxPtr rwingMtx
-		    = unkC->getModel()->getAnmMtx(TBossManta::sRwingJointIndex);
-		JGeometry::TVec3<f32> rwing;
-		rwing.x = rwingMtx[0][3];
-		rwing.y = rwingMtx[1][3];
-		rwing.z = rwingMtx[2][3];
+		int rwingIdx    = TBossManta::sRwingJointIndex;
+		MtxPtr rwingMtx = unkC->getModel()->getAnmMtx(rwingIdx);
+		f32 rwingX      = rwingMtx[0][3];
+		f32 rwingY      = rwingMtx[1][3];
+		f32 rwingZ      = rwingMtx[2][3];
 
-		MtxPtr lwingMtx
-		    = unkC->getModel()->getAnmMtx(TBossManta::sLwingJointIndex);
-		JGeometry::TVec3<f32> lwing;
-		lwing.x = lwingMtx[0][3];
-		lwing.y = lwingMtx[1][3];
-		lwing.z = lwingMtx[2][3];
+		int lwingIdx    = TBossManta::sLwingJointIndex;
+		MtxPtr lwingMtx = unkC->getModel()->getAnmMtx(lwingIdx);
+		f32 lwingX      = lwingMtx[0][3];
+		f32 lwingY      = lwingMtx[1][3];
+		f32 lwingZ      = lwingMtx[2][3];
 
-		unk0[0]->mPosition.set(-0.15f * (body.x - center.x) + center.x,
-		                       -0.15f * (body.y - center.y) + center.y,
-		                       -0.15f * (body.z - center.z) + center.z);
+		unk0[0]->mPosition.set(-0.15f * (bodyX - centerX) + centerX,
+		                       -0.15f * (bodyY - centerY) + centerY,
+		                       -0.15f * (bodyZ - centerZ) + centerZ);
 
-		unk0[1]->mPosition.set(0.75f * (rwing.x - center.x) + center.x,
-		                       0.75f * (rwing.y - center.y) + center.y,
-		                       0.75f * (rwing.z - center.z) + center.z);
+		unk0[1]->mPosition.set(0.75f * (rwingX - centerX) + centerX,
+		                       0.75f * (rwingY - centerY) + centerY,
+		                       0.75f * (rwingZ - centerZ) + centerZ);
 
-		unk0[2]->mPosition.set(0.75f * (lwing.x - center.x) + center.x,
-		                       0.75f * (lwing.y - center.y) + center.y,
-		                       0.75f * (lwing.z - center.z) + center.z);
+		unk0[2]->mPosition.set(0.75f * (lwingX - centerX) + centerX,
+		                       0.75f * (lwingY - centerY) + centerY,
+		                       0.75f * (lwingZ - centerZ) + centerZ);
 	}
 }
 
@@ -980,7 +960,8 @@ TBossMantaAdditionalCollision::TBossMantaAdditionalCollision(const char* name)
 	initHitActor(0x08000004, 1, 0x80000000, 0.0f, 0.0f, 0.0f, 0.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
+	static_cast<TIdxGroupObj*>(
+	    JDrama::TNameRefGen::search("オブジェクトグループ"))
 	    ->insert(this);
 }
 
@@ -1005,7 +986,7 @@ void TBossMantaAdditionalCollision::perform(u32 cue,
 	if (cue & CUE_MOVE) {
 		for (int i = 0; i < mColCount; ++i)
 			if (mCollisions[i]->isActorType(0x80000001))
-				AttackMario(this);
+				AttackMario(mCollisions[i]);
 	}
 }
 
@@ -1044,10 +1025,8 @@ void TBossMantaManager::loadEffects()
 		"/scene/manta/jpa/ms_man_div2.jpa", "/scene/manta/jpa/ms_man_div3.jpa",
 		"/scene/manta/jpa/ms_man_div4.jpa",
 	};
-	for (int i = 0; i < 5; ++i) {
-		u16 id = 0xF8 + i;
-		SMS_LoadParticle(onetimeFilenames[i], id);
-	}
+	for (int i = 0; i < 5; ++i)
+		SMS_LoadParticle(onetimeFilenames[i], 0xF8 + i);
 
 	static const char* loopFilenames[10] = {
 		"/scene/manta/jpa/ms_man_hit1_a.jpa",
@@ -1061,10 +1040,8 @@ void TBossMantaManager::loadEffects()
 		"/scene/manta/jpa/ms_man_hit4_a2.jpa",
 		"/scene/manta/jpa/ms_man_hit4_b.jpa",
 	};
-	for (int i = 0; i < 10; ++i) {
-		u16 id = 0x1C7 + i;
-		SMS_LoadParticle(loopFilenames[i], id);
-	}
+	for (int i = 0; i < 10; ++i)
+		SMS_LoadParticle(loopFilenames[i], 0x1C7 + i);
 }
 
 void TBossMantaManager::loadAfter()
@@ -1074,7 +1051,8 @@ void TBossMantaManager::loadAfter()
 	for (int i = 0; i < 7; ++i) {
 		char name[0x40];
 		snprintf(name, 0x40, "palmOugi %d", i);
-		TLiveActor* palm = JDrama::TNameRefGen::search<TLiveActor>(name);
+		TLiveActor* palm
+		    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search(name));
 		unk74[i].set(palm->mPosition.x, 0.0f, palm->mPosition.z);
 	}
 
@@ -1105,11 +1083,7 @@ TSpineEnemy* TBossMantaManager::createEnemyInstance() { return new TBossManta; }
 const JUtility::TColor& TBossMantaManager::getMantaColor()
 {
 	if (unk88.mState == 2) {
-		int color = unk84;
-		color++;
-		if (color > 15)
-			color = 15;
-		unk84 = color;
+		unk84 = (unk84 + 1 > 15) ? 15 : unk84 + 1;
 	}
 
 	TBossMantaParams* params = (TBossMantaParams*)getSaveParam();
@@ -1227,8 +1201,7 @@ void TBossMantaManager::updateMantaEscape()
 	TBossManta::sEscapeFromMario = 0;
 
 	JGeometry::TVec3<f32> marioPos2 = SMS_GetMarioPos();
-	marioPos2.y = 0.0f;
-	JGeometry::TVec3<f32> marioPos(marioPos2.x, marioPos2.y, marioPos2.z);
+	JGeometry::TVec3<f32> marioPos(marioPos2.x, 0.0f, marioPos2.z);
 
 	for (int i = 0; i < 7; ++i) {
 		if (unk74[i].distance(marioPos) < 350.0f)
@@ -1309,7 +1282,7 @@ void TBossMantaManager::createEnemies(int num)
 		num = getCapacity() - getObjNum();
 
 	if (unk38 != nullptr) {
-		u8 limit = unk38->mSLInstanceNum.get();
+		u8 limit = unk38->mSLActiveEnemyNum.get();
 		if (num + getObjNum() > limit)
 			num = limit - getObjNum();
 	}
@@ -1350,7 +1323,8 @@ void TBossMantaManager::createEnemy()
 {
 	TSpineEnemy* enemy = createEnemyInstance();
 	if (enemy != nullptr) {
-		JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
+		static_cast<TIdxGroupObj*>(
+		    JDrama::TNameRefGen::search("オブジェクトグループ"))
 		    ->getChildren()
 		    .push_back(enemy);
 		enemy->init(this);

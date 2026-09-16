@@ -74,17 +74,12 @@ void TMapObjFloatOnSea::calc()
 	}
 }
 
-static inline const char* getParamName(int idx)
-{
-	return param_table[idx].unk0;
-}
-
 void TMapObjFloatOnSea::initMapObj()
 {
 	TLeanBlock::initMapObj();
 
 	int idx = 0;
-	while (strcmp(getParamName(idx), unkF4))
+	while (strcmp(param_table[idx].unk0, getUnkF4()))
 		++idx;
 
 	unk140 = param_table[idx].unk4;

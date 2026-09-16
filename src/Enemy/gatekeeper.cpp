@@ -30,15 +30,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-
-// This TU carries the dummy strings, but not their small-data pointers.
-#define SYSTEM_DUMMY_STRINGS_HPP
-static const char dummyMactorStringValue1[] = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char SMS_NO_MEMORY_MESSAGE[]   = "メモリが足りません\n";
 #include <M3DUtil/InfectiousStrings.hpp>
-
-static float unk_3012 = 3.0f;
-static float unk_3014 = -3.0f;
 
 static const char* gatekeeper_bastable[] = {
 	"/scene/gatekeeper/bas/gene_pakkun_appear1.bas",
@@ -81,7 +73,7 @@ TGKHitObj::TGKHitObj(TGateKeeperBase* owner, int joint_idx, const char* name)
 {
 	initHitActor(0x10000022, 1, 0x80000000, 0.0f, 0.0f, 150.0f, 200.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 }
@@ -94,9 +86,8 @@ BOOL TGKHitObj::receiveMessage(THitActor* sender, u32 message)
 			mOwner->unk154++;
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);
-		MSound* sound = SMSGetMSound();
-		sound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &sender->mPosition, 0,
-		                     0.0f, 0, 0, 4);
+		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
+		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
 		return true;
 	}
 	return mOwner->receiveMessage(sender, message);
@@ -140,9 +131,8 @@ BOOL TGateKeeperBase::receiveMessage(THitActor* sender, u32 message)
 			unk154++;
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);
-		MSound* sound = SMSGetMSound();
-		sound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &sender->mPosition, 0,
-		                     0.0f, 0, 0, 4);
+		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
+		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
 		return true;
 	}
 	return false;
@@ -214,7 +204,7 @@ void TBiancoGateKeeperManager::createModelData()
 }
 
 TBGKMtxCalc::TBGKMtxCalc(TBiancoGateKeeper* owner)
-    : M3UMtxCalcSIAnmBlendQuat(true)
+    : M3UMtxCalcSIAnmBlendQuat(false)
     , mOwner(owner)
 {
 }
@@ -264,30 +254,17 @@ void TBGKMtxCalc::calc(u16 param_1)
 				f32 delta = MsAngleDiff(yaw, cur);
 				f32 turn;
 				if (0.0f < delta)
-					turn = unk_3012 > delta ? delta : unk_3012;
+					turn = 3.0f > delta ? delta : 3.0f;
 				else
-					turn = unk_3014 < delta ? delta : unk_3014;
+					turn = -3.0f > delta ? -3.0f : delta;
 
 				f32 newYaw     = (turn + cur) - mOwner->mRotation.y;
 				mOwner->unk180 = MsWrap(newYaw, 0.0f, 360.0f);
 			}
 		}
 
-		f32 s = JMASin(mOwner->unk180);
-		f32 c = JMACos(mOwner->unk180);
 		Mtx rot;
-		rot[0][0] = c;
-		rot[0][1] = 0.0f;
-		rot[0][2] = s;
-		rot[0][3] = 0.0f;
-		rot[1][0] = 0.0f;
-		rot[1][1] = 1.0f;
-		rot[1][2] = 0.0f;
-		rot[1][3] = 0.0f;
-		rot[2][0] = -s;
-		rot[2][1] = 0.0f;
-		rot[2][2] = c;
-		rot[2][3] = 0.0f;
+		MsMtxSetRotY(rot, mOwner->unk180);
 		MTXConcat(mtx, rot, mtx);
 		MTXCopy(mtx, J3DSys::mCurrentMtx);
 	}
@@ -300,7 +277,7 @@ TBGKObstacle::TBGKObstacle(TBiancoGateKeeper* owner, const char* name)
 	mPosition.y -= 1000.0f;
 	initHitActor(0x10000022, 1, 0x80000000, 800.0f, 800.0f, 800.0f, 800.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 }
@@ -364,7 +341,7 @@ void TBiancoGateKeeper::init(TLiveManager* manager)
 	}
 
 	initHitActor(0x10000022, 5, 0x81000000, 400.0f, 150.0f, 400.0f, 150.0f);
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
@@ -382,7 +359,7 @@ void TBiancoGateKeeper::init(TLiveManager* manager)
 
 	MActorAnmData* anmData = mMActorKeeper->getMActorAnmData();
 	mMultiBtk              = new TMultiBtk(2, getModel()->getModelData());
-	for (int i = 0; i <= 1; i++)
+	for (int i = 0; i < 2; i++)
 		mMultiBtk->setNthData(i, anmData->getUnk38()->getAnmPtr(i));
 
 	mObstacle = new TBGKObstacle(this, "TBGKObstacle");
@@ -456,11 +433,11 @@ void TBiancoGateKeeper::launchGorogoro()
 
 void TBiancoGateKeeper::launchNamekuri()
 {
-	TNameKuriManager* mgr = JDrama::TNameRefGen::search<TNameKuriManager>(
-	    "拡散ナメクリマネージャー");
+	TNameKuriManager* mgr = static_cast<TNameKuriManager*>(
+	    JDrama::TNameRefGen::search("拡散ナメクリマネージャー"));
 	if (mgr == NULL)
-		mgr = JDrama::TNameRefGen::search<TNameKuriManager>(
-		    "ナメクリマネージャー");
+		mgr = static_cast<TNameKuriManager*>(
+		    JDrama::TNameRefGen::search("ナメクリマネージャー"));
 
 	if (mgr != NULL) {
 		for (int i = 0; i < 10; i++) {
@@ -475,9 +452,7 @@ void TBiancoGateKeeper::launchNamekuri()
 			scale.set(1.0f, 1.0f, 1.0f);
 			s16 angle = (s16)(182.04445f * (36.0f * (f32)i));
 			JGeometry::TVec3<f32> vel;
-			vel.x = 4.0f * JMASSin(angle);
-			vel.y = 12.0f;
-			vel.z = 4.0f * JMASCos(angle);
+			vel.set(4.0f * JMASSin(angle), 12.0f, 4.0f * JMASCos(angle));
 
 			enemy->reset();
 			enemy->mPosition  = pos;
@@ -496,10 +471,9 @@ void TBiancoGateKeeper::launchNamekuri()
 
 f32 TBiancoGateKeeper::getRumblePow()
 {
-	f32 dist;
 	JGeometry::TVec3<f32> diff = mPosition;
 	diff -= SMS_GetMarioPos();
-	dist = diff.length();
+	f32 dist = diff.length();
 	if (dist == 0.0f)
 		return 1.0f;
 	f32 pow = 2000.0f / dist;
@@ -792,10 +766,8 @@ DEFINE_NERVE(TNerveBGKSleep, TLiveActor)
 		if (self->unk298 > 0)
 			self->unk298--;
 		if (self->unk298 == 0) {
-			int timer = self->getSaveParams()->mSLLaunchTimerNormal.get();
-			timer += (s32)(240.0f * MsRandF());
-			timer = (s16)(timer - 120);
-			self->unk298 = timer;
+			int timer    = self->getSaveParams()->mSLLaunchTimerNormal.get();
+			self->unk298 = (s32)(240.0f * MsRandF()) + timer - 120;
 			spine->pushAfterCurrent(&TNerveBGKLaunchGoro::theNerve());
 			return true;
 		}
@@ -977,10 +949,8 @@ DEFINE_NERVE(TNerveBGKSleepDamage, TLiveActor)
 		if (self->unk298 > 0)
 			self->unk298--;
 		if (self->unk298 == 0) {
-			int timer = self->getSaveParams()->mSLLaunchTimerDamage.get();
-			timer += (s32)(240.0f * MsRandF());
-			timer = (s16)(timer - 120);
-			self->unk298 = timer;
+			int timer    = self->getSaveParams()->mSLLaunchTimerDamage.get();
+			self->unk298 = (s32)(240.0f * MsRandF()) - 120 + timer;
 			self->launchGorogoro();
 			self->rumblePad();
 		}
@@ -1055,8 +1025,8 @@ DEFINE_NERVE(TNerveBGKDie, TLiveActor)
 		if ((self->mVariant == TBiancoGateKeeper::VARIANT_RICO_GATEKEEPER
 		     || self->mVariant == TBiancoGateKeeper::VARIANT_MAMMA_GATEKEEPER)
 		    && self->unk296 == 0) {
-			self->mHitPoints = 3;
 			self->unk296 += 1;
+			self->mHitPoints = 3;
 			if (self->mVariant == TBiancoGateKeeper::VARIANT_MAMMA_GATEKEEPER)
 				spine->pushAfterCurrent(&TNerveBGKLaunchName::theNerve());
 			else
@@ -1087,10 +1057,8 @@ DEFINE_NERVE(TNerveBGKDive, TLiveActor)
 
 	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		if (self->mVariant == TBiancoGateKeeper::VARIANT_GENERIC) {
-			int timer = self->getSaveParams()->mSLLaunchTimerNormal.get();
-			timer += (s32)(240.0f * MsRandF());
-			timer = (s16)(timer - 120);
-			self->unk298 = timer;
+			int timer    = self->getSaveParams()->mSLLaunchTimerNormal.get();
+			self->unk298 = (s32)(240.0f * MsRandF()) + timer - 120;
 			self->launchGorogoro();
 			self->rumblePad();
 		}

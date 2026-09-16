@@ -29,12 +29,6 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-static void dummy(Vec* v)
-{
-	*v = (Vec) { 0.0f, 0.0f, 0.0f };
-	*v = (Vec) { 1.0f, 1.0f, 1.0f };
-}
-
 void THideObjBase::appearObj(f32 y_offset)
 {
 	JGeometry::TVec3<f32> pos;
@@ -218,7 +212,7 @@ void TFruitBasket::countFruit(THitActor* param_1)
 
 void TFruitBasket::touchFruit(THitActor* param_1)
 {
-	if (__fabsf(mRotation.x) < 45.0f) {
+	if (fabsf(mRotation.x) < 45.0f) {
 		// Upwards facing basket -- check that the fruit's on top of us
 		if (((TLiveActor*)param_1)->getGroundPlane()->getActor() != this)
 			return;
@@ -579,8 +573,8 @@ void THideObjPictureTwin::afterFinishedAnim()
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_TIMECOIN_APPEAR, 0,
 		                                   nullptr, 0);
 
-		SMSGetMarDirector()->fireStartDemoCamera(
-		    unk178, &obj->mPosition, -1, 0.0f, true, nullptr, 0, nullptr, 0);
+		SMSGetMarDirector()->fireStartDemoCamera(unk178, &mPosition, -1, 0.0f,
+		                                         true, nullptr, 0, nullptr, 0);
 	}
 	mState = 3;
 }
@@ -597,16 +591,15 @@ void THideObjPictureTwin::loadAfter()
 		buffer[2] = mName[len + 2];
 		buffer[3] = mName[len + 3];
 
-		char buffer2[0x40];
+		char buffer2[0x4C];
 		snprintf(buffer2, 0x40, "ふたご落書きＢ００");
 		buffer2[len]     = buffer[0];
 		buffer2[len + 1] = buffer[1];
 		buffer2[len + 2] = buffer[2];
 		buffer2[len + 3] = buffer[3];
 
-		THideObjPictureTwin* hitActor
-		    = JDrama::TNameRefGen::getInstance()->search<THideObjPictureTwin>(
-		        buffer2);
+		THideObjPictureTwin* hitActor = static_cast<THideObjPictureTwin*>(
+		    JDrama::TNameRefGen::search(buffer2));
 		unk174         = hitActor;
 		unk174->unk174 = this;
 	}

@@ -69,7 +69,8 @@ void TSpineEnemy::load(JSUMemoryInputStream& stream)
 
 	char buffer[256];
 	stream.readString(buffer, 256);
-	TLiveManager* mgr = JDrama::TNameRefGen::search<TLiveManager>(buffer);
+	TLiveManager* mgr
+	    = static_cast<TLiveManager*>(JDrama::TNameRefGen::search(buffer));
 
 	char buffer2[256];
 	stream.readString(buffer2, 256);
@@ -91,13 +92,13 @@ void TSpineEnemy::calcEnemyRootMatrix()
 		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
 	} else {
 		if (unk130 >= 2 && !isAirborne() && unk138 != nullptr) {
-			JGeometry::TVec3<f32> v3(0.0f, 1.0f, 0.0f);
 			JGeometry::TVec3<f32> v2 = unk138->getNormal();
 
 			JGeometry::TVec3<f32> v1;
-			v1.cross(v2, v3);
+			v1.cross(v2, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
 			v1.normalize();
 
+			JGeometry::TVec3<f32> v3;
 			v3.cross(v1, v2);
 			v3.normalize();
 
@@ -116,14 +117,14 @@ void TSpineEnemy::calcEnemyRootMatrix()
 		} else {
 			if (unk130 >= 1
 			    && !mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
-				JGeometry::TVec3<f32> v3(JMASin(mRotation.y), 0.0f,
-				                         JMACos(mRotation.y));
+				JGeometry::TVec3<f32> v1(MsSin(mRotation.y), 0.0f,
+				                         MsCos(mRotation.y));
 
 				JGeometry::TVec3<f32> v2 = mGroundPlane->getNormal();
-				JGeometry::TVec3<f32> v1;
-				v1.cross(v2, v3);
+				v1.cross(v2, v1);
 				v1.normalize();
 
+				JGeometry::TVec3<f32> v3;
 				v3.cross(v1, v2);
 				v3.normalize();
 
@@ -153,7 +154,7 @@ void TSpineEnemy::calcEnemyRootMatrix()
 void TSpineEnemy::calcRootMatrix()
 {
 	if (mHolder && mHolder->getHeldObject() == this) {
-		MtxPtr src = mHolder->getTakingMtx();
+		MtxPtr src = getTakingMtx();
 		if (src) {
 			getModel()->setBaseTRMtx(src);
 			mPosition.set(src[0][3], src[1][3], src[2][3]);
@@ -208,11 +209,11 @@ f32 TSpineEnemy::calcMinimumTurnRadius(f32 param_1, f32 param_2) const
 	if (param_2 >= 90.0f) {
 		result = 0.0f;
 	} else {
-		f32 thing = JMASin(param_2);
+		f32 thing = MsSin(param_2);
 		if (thing == 0.0f)
 			result = 100000.0f;
 		else
-			result = param_1 * JMASin(-(param_2 * 0.5f - 90.0f)) / thing;
+			result = param_1 * MsSin(-(param_2 * 0.5f - 90.0f)) / thing;
 	}
 	return result;
 }
@@ -232,13 +233,11 @@ f32 TSpineEnemy::calcTurnSpeedToReach(f32 march_speed, f32 param_2) const
 	if (dVar11 == -1.0f)
 		return 180.0f;
 
-	JGeometry::TVec2<f32> v;
-	v.set(dVar11, 1.0f - dVar11 * dVar11);
+	f32 fVar32 = -(dVar11 * dVar11 - 1.0f);
 
 	// TODO: THitActor::calcEntryRadius has same problem
-	f64 estimate   = __frsqrte(v.y);
-	volatile f32 f = v.y * estimate;
-	f32 tmp        = matan(f, v.x) * (360.0f / 65536.0f);
+	volatile f32 f = fVar32 * __frsqrte(fVar32);
+	f32 tmp        = matan(f, dVar11) * (360.0f / 65536.0f);
 	return 90.0f - tmp;
 }
 
@@ -275,7 +274,9 @@ void TSpineEnemy::setGoalPathFromGraph()
 	JGeometry::TVec3<f32> local_48;
 	unk124->getCurrent().getPoint(&local_48);
 	TPathNode local_3c(local_48);
-	setGoalPath(local_3c);
+	unkF4  = local_3c;
+	unk104 = local_3c;
+	unk114.clear();
 }
 
 void TSpineEnemy::goToInitialVisibleNode(f32, f32) { }
@@ -394,15 +395,15 @@ void TSpineEnemy::goToDirectedNextGraphNode(
 // TODO: fake
 static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 {
-	f32 c = radius * JMACos(theta);
-	f32 s = radius * JMASin(theta);
+	f32 c = radius * MsCos(theta);
+	f32 s = radius * MsSin(theta);
 	return JGeometry::TVec3<f32>(s, 0.0f, c);
 }
 
 void TSpineEnemy::goToDirLimitedNextGraphNode(f32 param_1)
 {
-	int prevIdx = unk124->mPrevIdx;
 	int currIdx = unk124->mCurrIdx;
+	int prevIdx = unk124->mPrevIdx;
 	if (currIdx < 0) {
 		unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
 	} else {
@@ -423,8 +424,7 @@ void TSpineEnemy::updateStayCount(f32) { }
 
 bool TSpineEnemy::turnToCurPathNode(f32 param_1)
 {
-	const JGeometry::TVec3<f32>& point = getUnkF4().getPoint();
-	JGeometry::TVec3<f32> tmp         = point;
+	JGeometry::TVec3<f32> tmp = getUnkF4().getPoint();
 	tmp -= mPosition;
 
 	f32 rot = MsAngleDiff(MsGetRotFromZaxisY(tmp), mRotation.y);
@@ -451,14 +451,25 @@ bool TSpineEnemy::turnToCurPathNode(f32 param_1)
 void TSpineEnemy::walkToCurPathNode(f32 march_speed, f32 turn_speed,
                                     f32 param_3)
 {
-	JGeometry::TVec3<f32> tmp = unkF4.getPoint();
+	JGeometry::TVec3<f32> tmp = getUnkF4().getPoint();
 	tmp -= mPosition;
 
 	f32 fVar7 = tmp.length();
 	f32 angle = MsWrap(param_3 + MsGetRotFromZaxisY(tmp), 0.0f, 360.0f);
 	f32 fVar2 = MsAngleDiff(angle, mRotation.y);
 
-	f32 fVar3 = calcMinimumTurnRadius(march_speed, turn_speed);
+	// TODO: identical to a piece of code below, what is this?
+	f32 fVar3;
+	if (turn_speed >= 90.0f) {
+		fVar3 = 0.0f;
+	} else {
+		f32 s = MsSin(turn_speed);
+		if (fVar3 == 0.0f) {
+			fVar3 = 100000.0f;
+		} else {
+			fVar3 = march_speed * MsSin(90.0f - turn_speed * 0.5f) / s;
+		}
+	}
 
 	// TODO: tons of thi stuff should actually be inlines
 	f32 fVar5 = fVar2;
@@ -509,7 +520,7 @@ void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
 	dVar13 *= 360.0f * (1.0f / cycle);
 	dVar13 += getPhaseShift();
 
-	f29 *= JMASin(dVar13);
+	f29 *= MsSin(dVar13);
 
 	JGeometry::TVec3<f32> local_58 = unkF4.getPoint();
 	local_58 -= mPosition;
@@ -521,11 +532,11 @@ void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
 	if (turn_speed >= 90.0f) {
 		fVar3 = 0.0f;
 	} else {
-		f32 s = JMASin(turn_speed);
-		if (s == 0.0f) {
+		f32 s = MsSin(turn_speed);
+		if (fVar3 == 0.0f) {
 			fVar3 = 100000.0f;
 		} else {
-			fVar3 = march_speed * JMASin(90.0f - turn_speed * 0.5f) / s;
+			fVar3 = march_speed * MsSin(90.0f - turn_speed * 0.5f) / s;
 		}
 	}
 
@@ -563,8 +574,7 @@ void TSpineEnemy::doShortCut()
 		return;
 	}
 
-	TPathNode node;
-	node = unk114.pop();
+	TPathNode node = unk114.pop();
 
 	JGeometry::TVec3<f32> local_28 = node.getPoint() - mPosition;
 	if (local_28.x == 0.0f && local_28.y == 0.0f && local_28.z == 0.0f)

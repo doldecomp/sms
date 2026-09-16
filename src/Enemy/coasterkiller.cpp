@@ -42,9 +42,6 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-static f32 unk_2842 = 20.0f;
-static f32 unk_2843 = 16.0f;
-
 const char* killer_bastable[] = {
 	"/scene/killer/bas/downkiller_down1.bas", nullptr, nullptr,
 	"/scene/killer/bas/killer_search1.bas",   nullptr,
@@ -110,32 +107,33 @@ void TCoasterEnemy::moveCoaster()
 	JGeometry::TVec3<f32> forward;
 	mQuat.getZDir(forward);
 
+	JGeometry::TVec3<f32> axis;
+	axis.cross(forward, delta);
+
 	JGeometry::TVec3<f32> up;
 	mQuat.getYDir(up);
 
 	JGeometry::TQuat4<f32> steer;
-	{
-		JGeometry::TVec3<f32> axis;
-		axis.set(delta);
-		steer.setRotate(forward, axis, 0.1f);
-	}
+	steer.setRotate(forward, axis, 0.1f);
 	mQuat.mul(steer);
 
 	// Y-axis rotation
-	JGeometry::TVec3<f32> axis;
-	axis.cross(forward, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
-	if (axis.length() > 0.0f) {
-		axis.normalize();
+	JGeometry::TVec3<f32> right;
+	right.cross(forward, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
+	if (right.length() > 0.0f) {
+		right.normalize();
 
-		JGeometry::TQuat4<f32> tilt;
-		tilt.setRotate(axis, M_PI / 2.0f);
-		tilt.rotate(forward, axis);
+		JGeometry::TQuat4<f32> tiltQuat;
+		tiltQuat.setRotate(right, M_PI / 2.0f);
 
-		steer.setRotate(up, axis, 0.1f);
+		JGeometry::TVec3<f32> curUp;
+		tiltQuat.rotate(forward, curUp);
+
+		steer.setRotate(up, curUp, 0.1f);
 		mQuat.mul(steer);
 	}
 
-	mQuat.normalize();
+	static_cast<JGeometry::TVec4<f32>&>(mQuat).normalize();
 }
 
 void TCoasterEnemy::calcRootMatrix()
@@ -324,12 +322,12 @@ void TCoasterKiller::setDeadAnm()
 {
 	mMActor = getActorKeeper()->getMActor("downkiller_model1.bmd");
 	setBckAnm(0);
-	TSpineEnemy* effectBase = gpConductor->makeOneEnemyAppear(
-	    mPosition, "エフェクト爆発マネージャー", 1);
-	if (effectBase != nullptr) {
-		TEffectExplosion* effect = (TEffectExplosion*)effectBase;
+	TEffectExplosion* effect
+	    = (TEffectExplosion*)gpConductor->makeOneEnemyAppear(
+	        mPosition, "エフェクト爆発マネージャー", 1);
+	if (effect != nullptr) {
 		effect->generate(mPosition, mScaling);
-		mScaling *= 0.6f;
+		effect->mScaling *= 0.6f;
 	}
 }
 
@@ -379,10 +377,10 @@ TCoasterKillerManager::TCoasterKillerManager(const char* name)
 
 void TCoasterKillerManager::load(JSUMemoryInputStream& stream)
 {
-	ASSERT_TEST(!unk38);
+	(void)(unk38 ? unk38 : unk38); // @hack to force cmplwi
 	TSmallEnemyManager::load(stream);
 	unk38 = new TCoasterKillerSaveLoadParams("/enemy/coasterkiller.prm");
-	ASSERT_TEST(unk38);
+	unk38 = unk38 ? unk38 : unk38; // @hack to force cmplwi
 }
 
 void TCoasterKillerManager::loadAfter()

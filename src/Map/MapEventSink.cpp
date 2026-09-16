@@ -44,11 +44,7 @@ f32 TMapEventSink::getSinkOffsetY() const
 
 TPollutionObj* TMapEventSink::getPollutionObj(int i)
 {
-	u16 layerIndex             = unk60[i].unk0;
-	TPollutionManager* manager = gpPollution;
-	TPollutionLayer* layer     = manager->getLayer(layerIndex);
-	TPollutionObj* obj         = layer->getObj(unk60[i].unk2);
-	return obj;
+	return gpPollution->getLayer(unk60[i].unk0)->getObj(unk60[i].unk2);
 }
 
 bool TMapEventSink::isFinishedAll() const
@@ -143,7 +139,7 @@ void TMapEventSink::startControl()
 	unk3C     = dVar4 / iVar3;
 	unk4C     = unk40;
 
-	unk5C[mRaisingBuildingIdx]->setUpTrans(JGeometry::TVec3<f32>(
+	unk5C[mRaisingBuildingIdx]->moveTrans(JGeometry::TVec3<f32>(
 	    info.mTranslate.x, info.mTranslate.y, info.mTranslate.z));
 }
 
@@ -232,16 +228,6 @@ void TMapEventSinkInPollution::initBuriedBuilding()
 			makeBuildingRecovered(i);
 }
 
-static inline void loadAfterInPollution(TMapEventSinkInPollution* sink)
-{
-	sink->TMapEventSink::loadAfter();
-	for (int i = 0; i < sink->mBuildingNum; ++i) {
-		gpPollution->getCounterObj().registerPollutionObj(
-		    sink->getPollutionObj(i), &sink->getPollutionObj(i)->mCounter);
-	}
-}
-
-#pragma dont_inline on
 void TMapEventSinkInPollution::loadAfter()
 {
 	TMapEventSink::loadAfter();
@@ -250,7 +236,6 @@ void TMapEventSinkInPollution::loadAfter()
 		    getPollutionObj(i), &getPollutionObj(i)->mCounter);
 	}
 }
-#pragma dont_inline off
 
 TPollutionObj* TMapEventSinkInPollutionReset::getResetPollutionObj(int i)
 {
@@ -267,38 +252,30 @@ void TMapEventSinkInPollutionReset::makeBuildingRecovered(int i)
 
 void TMapEventSinkInPollutionReset::loadAfter()
 {
-	loadAfterInPollution(this);
+	TMapEventSinkInPollution::loadAfter();
 	for (int i = 0; i < mBuildingNum; ++i) {
 		getPollutionObj(i)->alive();
 		getResetPollutionObj(i)->kill();
 	}
 }
 
-static inline void loadAfterInPollutionReset(
-    TMapEventSinkInPollutionReset* sink)
-{
-	sink->TMapEventSinkInPollution::loadAfter();
-	for (int i = 0; i < sink->mBuildingNum; ++i) {
-		sink->getPollutionObj(i)->alive();
-		sink->getResetPollutionObj(i)->kill();
-	}
-}
-
 void TMapEventSinkBianco::finishControl()
 {
-	char buffer[96];
+	char buffer[64];
 	if (mRaisingBuildingIdx == 0) {
 		TMapObjBase::setJointTransY(unk64, 0.0f);
 		for (int i = 0; i < 6; ++i) {
 			snprintf(buffer, 0x40, "バナナツリー（スケール） %d", i);
-			JDrama::TNameRefGen::search<TLiveActor>(buffer)->receiveMessage(
-			    gpModelWaterManager->unk2514[0], HIT_MESSAGE_SPRAYED_BY_WATER);
+			static_cast<TLiveActor*>(JDrama::TNameRefGen::search(buffer))
+			    ->receiveMessage(gpModelWaterManager->unk2514[0],
+			                     HIT_MESSAGE_SPRAYED_BY_WATER);
 		}
 
 		for (int i = 0; i < 7; ++i) {
 			snprintf(buffer, 0x40, "落書き内%02d", i);
-			JDrama::TNameRefGen::search<TLiveActor>(buffer)->receiveMessage(
-			    gpModelWaterManager->unk2514[0], HIT_MESSAGE_SPRAYED_BY_WATER);
+			static_cast<TLiveActor*>(JDrama::TNameRefGen::search(buffer))
+			    ->receiveMessage(gpModelWaterManager->unk2514[0],
+			                     HIT_MESSAGE_SPRAYED_BY_WATER);
 		}
 	}
 
@@ -358,8 +335,7 @@ void TMapEventSinkBianco::startControl()
 		SMS_ShowJoint(unk64->getMesh(), true);
 		SMS_MarioWarpRequest(unk6C, unk78);
 		unk50[mRaisingBuildingIdx].set(7170.0f, 3675.0f, -185.0f);
-		TMarDirector* director = SMSGetMarDirector();
-		director->fireStartDemoCamera(
+		SMSGetMarDirector()->fireStartDemoCamera(
 		    "bianco0_event0", nullptr, -1, 0.0f, true, nullptr, 0, nullptr,
 		    JDrama::TFlagT<u16>(0));
 	}
@@ -377,7 +353,9 @@ bool TMapEventSinkBianco::watch()
 
 	for (int i = 1; i < mBuildingNum; ++i) {
 		if (!mIsBuildingRecovered[i]) {
-			if (getPollutionObj(i)->isCleaned()) {
+			if (gpPollution->getLayer(unk60[i].unk0)
+			        ->getObj(unk60[i].unk2)
+			        ->isCleaned()) {
 				mRaisingBuildingIdx = i;
 				return true;
 			}
@@ -389,14 +367,15 @@ bool TMapEventSinkBianco::watch()
 
 void TMapEventSinkBianco::loadAfter()
 {
-	loadAfterInPollutionReset(this);
+	TMapEventSinkInPollutionReset::loadAfter();
 
-	TMapStaticObj* ref = JDrama::TNameRefGen::search<TMapStaticObj>("鏡内地形");
-	unk64              = ref->getModelData()->getJointNodePointer(2);
+	TMapStaticObj* ref
+	    = static_cast<TMapStaticObj*>(JDrama::TNameRefGen::search("鏡内地形"));
+	unk64 = ref->getModelData()->getJointNodePointer(2);
 	TMapObjBase::moveJoint(unk64, 0.0f, -1700.0f, 0.0f);
 	SMS_ShowJoint(unk64->getMesh(), false);
-	mGateKeeper
-	    = JDrama::TNameRefGen::search<TGateKeeperBase>("ゲートキーパー");
+	mGateKeeper = static_cast<TGateKeeperBase*>(
+	    JDrama::TNameRefGen::search("ゲートキーパー"));
 }
 
 void TMapEventSinkBianco::load(JSUMemoryInputStream& stream)
@@ -430,9 +409,11 @@ void TMapEventSinkShadowMario::loadAfter()
 {
 	TMapEventSink::loadAfter();
 	for (int i = 0; i < mBuildingNum; ++i) {
-		unk64[i] = JDrama::TNameRefGen::search<JDrama::TPlacement>(unk68[i]);
-		J3DJoint* joint = getBuilding(i)->getJoint();
-		unk64[i]->mPosition.y -= joint->getMax().y - joint->getMin().y;
+		unk64[i] = static_cast<JDrama::TPlacement*>(
+		    JDrama::TNameRefGen::search(unk68[i]));
+		TJointObj* obj = getBuilding(i);
+		unk64[i]->mPosition.y
+		    -= obj->getJoint()->getMax().y - obj->getJoint()->getMin().y;
 	}
 }
 

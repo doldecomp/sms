@@ -50,7 +50,7 @@ TSunModel::TSunModel(bool param_1, const char* name)
 	gpSunModel = this;
 	if (param_1) {
 		unk1AC |= 0x4;
-		unk80 = '0';
+		unk80 = 48;
 	}
 
 	JGeometry::TVec2<s16>* it1 = unkB4;
@@ -116,8 +116,8 @@ void TSunModel::load(JSUMemoryInputStream& param_1)
 	unk64->mScaling  = mScaling;
 
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* mirrorScene
-	    = JDrama::TNameRefGen::search<
-	        JDrama::TViewObjPtrListT<JDrama::TViewObj> >("鏡シーン");
+	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
+	        JDrama::TNameRefGen::search("鏡シーン"));
 	mirrorScene->getChildren().push_back(unk64);
 }
 
@@ -144,15 +144,14 @@ void TSunModel::calcOtherFPosFromCenterAndRadius_(
 	param_1[7].y = param_2.y + fVar1;
 }
 
+// TODO: mark as inline or even move to the header maybe?
 void TSunModel::calcDispRatioAndScreenPos_()
 {
 	unk191   = 0;
 	bool* it = unk180;
-	for (int i = 17; i != 0; --i) {
+	for (int i = 0; i < 17; ++i, ++it)
 		if (*it)
 			unk191 += 1;
-		++it;
-	}
 
 	unk194 = (f32)unk191 * (1.0f / 17.0f);
 
@@ -170,7 +169,7 @@ void TSunModel::calcDispRatioAndScreenPos_()
 
 	it1 = unkB4;
 	it2 = unkF8;
-	for (i = 17; i != 0; --i) {
+	for (i = 0; i < 17; ++i) {
 		CLBScreenFPosToSPos(it1, *it2);
 		++it1;
 		++it2;
@@ -213,8 +212,8 @@ void TSunModel::perform(u32 cue, JDrama::TGraphics*)
 			if (unkF8[0].squared() > 2.0f) {
 				unkB0 = 0.0f;
 			} else {
-				f32 ratio = 0.5f * (2.0f - distSq) * unk194;
-				unkB0 = CLBLinearInbetween<f32>(0.0f, (f32)unk80, ratio);
+				unkB0 = CLBLinearInbetween<f32>(
+				    0.0f, (f32)unk80, 0.5f * (2.0f - distSq) * unk194);
 			}
 		}
 
@@ -226,9 +225,7 @@ void TSunModel::perform(u32 cue, JDrama::TGraphics*)
 		CLBChaseGeneralConstantSpecifySpeed<f32>(&unkAC, unkB0, chase3);
 
 		JGeometry::TVec3<f32> dir;
-		JGeometry::TVec3<f32> cameraPos;
-		cameraPos.set(gpCamera->getUnk124());
-		dir.sub(mPosition, cameraPos);
+		dir.sub(mPosition, gpCamera->getUnk124());
 		MsVECNormalize(&dir, &dir);
 
 		JGeometry::TVec3<f32> camPos;

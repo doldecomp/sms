@@ -67,21 +67,14 @@ void TMonumentShine::hitByWater(THitActor* actor)
 
 	JGeometry::TVec3<f32> waterDir = actor->mPosition;
 
-	f32 x = mPosition.x;
-	waterDir.x -= x;
-	f32 y = mPosition.y;
-	waterDir.y -= y;
-	f32 z = mPosition.z;
-	waterDir.z -= z;
+	waterDir -= mPosition;
 	waterDir.y = 0.0f;
 
 	if (waterDir.squared() <= JGeometry::TUtil<f32>::epsilon())
 		return;
 
 	JGeometry::TVec3<f32> marioDir = SMS_GetMarioPos();
-	marioDir.x -= x;
-	marioDir.y -= y;
-	marioDir.z -= z;
+	marioDir -= mPosition;
 	marioDir.y = 0.0f;
 
 	if (marioDir.squared() <= JGeometry::TUtil<f32>::epsilon())
@@ -104,9 +97,8 @@ BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 	if (sender->isActorType(0x01000001)) {
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);
-		MSound* sound = SMSGetMSound();
-		sound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &sender->mPosition, 0,
-		                     0.0f, 0, 0, 4);
+		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
+		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
 
 		if (unk13C == 0)
 			return 1;
@@ -153,7 +145,7 @@ void TMonumentShine::control()
 		if (unk144 == 2) {
 			if (unk148 > 0) {
 				f32 diff
-				    = MsAngleDiff(mRotation.y, mInitialRotation.y + 360.0f);
+				    = MsAngleDiff(mInitialRotation.y + 360.0f, mRotation.y);
 				if (diff > 0.1f)
 					diff = 0.1f;
 				if (0.0f == diff)
@@ -161,7 +153,7 @@ void TMonumentShine::control()
 				mAngularVelocity.y += diff;
 			} else {
 				f32 diff
-				    = MsAngleDiff(mRotation.y, mInitialRotation.y - 360.0f);
+				    = MsAngleDiff(mInitialRotation.y - 360.0f, mRotation.y);
 				if (diff < -0.1f)
 					diff = -0.1f;
 				if (0.0f == diff)
@@ -177,14 +169,23 @@ void TMonumentShine::control()
 				}
 			} else {
 				mAngularVelocity.y -= 0.1f;
-				while (mRotation.y + mAngularVelocity.y < 0.0f) {
-					mRotation.y += 360.0f;
+				f32 step = 360.0f;
+				f32 zero = 0.0f;
+				while (mRotation.y + mAngularVelocity.y < zero) {
+					mRotation.y += step;
 					unk144++;
 				}
 			}
 		}
 	} else {
-		mRotation.y = MsWrap(mRotation.y, 0.0f, 360.0f);
+		f32 rot   = mRotation.y;
+		f32 limit = 360.0f;
+		while (rot >= limit)
+			rot -= limit;
+		f32 zero = 0.0f;
+		while (rot < zero)
+			rot += limit;
+		mRotation.y = rot;
 	}
 }
 
@@ -230,7 +231,7 @@ void TBellDolpic::calcRootMatrix()
 	TMapObjBase::calcRootMatrix();
 	J3DModel* model = getModel();
 	Mtx temp;
-	PSMTXRotAxisRad(temp, &unk140, 0.017453292f * unk14C);
+	PSMTXRotAxisRad(temp, &unk140, DEG_TO_RAD(unk14C));
 	PSMTXConcat(model->getBaseTRMtx(), temp, model->getBaseTRMtx());
 }
 
@@ -254,7 +255,8 @@ void TBellDolpic::ring(const JGeometry::TVec3<f32>& pos)
 
 	unk150 -= 0.5f;
 
-	unk158 = (int)((f32)rand() * 0.000030517578f * 14400.0f) + 0x5460;
+	f32 tmp = (f32)rand() * 0.000030517578f;
+	unk158  = (int)(tmp * 14400.0f) + 0x5460;
 }
 
 void TBellDolpic::touchPlayer(THitActor* actor) { ring(actor->mPosition); }
@@ -274,8 +276,7 @@ BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 
 		unk154 = unk154 - 1;
 
-		int alpha = unk154 * 100 / 1000;
-		unk138.a = (u8)alpha;
+		unk138.a = (u8)(unk154 * 100 / 1000);
 
 		if (unk154 == 0) {
 			if (unk13C == 0) {
@@ -316,7 +317,7 @@ void TBellDolpic::control()
 
 	TMapObjBase::control();
 
-	f32 sinVal = -JMASin(unk14C);
+	f32 sinVal = -MsSin(unk14C);
 	unk150     = 0.01f * sinVal + unk150;
 
 	unk14C = unk14C + unk150;
@@ -418,7 +419,6 @@ void TDemoCannon::initMapObj()
 {
 	TMapObjBase::initMapObj();
 
-	TDemoCannon* self = this;
 	mMActor->setBck("democannon_dpt");
 	J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 	frameCtrl->setFrame(frameCtrl->getEnd());
@@ -430,15 +430,15 @@ void TDemoCannon::initMapObj()
 
 	JUTNameTab* jointName = mMActor->getModel()->getModelData()->getJointName();
 
-	TSharedParts* parts = new TSharedParts(self, jointName->getIndex("nullA"),
+	TSharedParts* parts = new TSharedParts(this, jointName->getIndex("nullA"),
 	                                       sdlData, 3, "<TSharedParts>");
 	unk138              = parts;
 
 	res = JKRFileLoader::getGlbResource("/scene/mapObj/demoCannon_mario.bmd");
-	sdlData = new SDLModelData(J3DModelLoaderDataBase::load(
+	SDLModelData* sdlData2 = new SDLModelData(J3DModelLoaderDataBase::load(
 	    res, J3DMLF_MaterialPEFull | (1 << J3DMLF_TevStageNumShift)));
 
-	parts  = new TSharedParts(self, 0, sdlData, 3, "<TSharedParts>");
+	parts  = new TSharedParts(this, 0, sdlData2, 3, "<TSharedParts>");
 	unk13C = parts;
 }
 
@@ -505,13 +505,17 @@ void TDemoCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 void TTurboNozzleDoor::loadAfter()
 {
 	if (strcmp("空港ドアＡ０", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＡ１");
+		unk144 = static_cast<TLiveActor*>(
+		    JDrama::TNameRefGen::search("空港ドアＡ１"));
 	} else if (strcmp("空港ドアＡ１", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＡ０");
+		unk144 = static_cast<TLiveActor*>(
+		    JDrama::TNameRefGen::search("空港ドアＡ０"));
 	} else if (strcmp("空港ドアＢ０", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＢ１");
+		unk144 = static_cast<TLiveActor*>(
+		    JDrama::TNameRefGen::search("空港ドアＢ１"));
 	} else if (strcmp("空港ドアＢ１", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＢ０");
+		unk144 = static_cast<TLiveActor*>(
+		    JDrama::TNameRefGen::search("空港ドアＢ０"));
 	}
 }
 

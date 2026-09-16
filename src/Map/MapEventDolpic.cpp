@@ -62,7 +62,7 @@ bool TDolpicEventBiancoGate::watch()
 void TDolpicEventBiancoGate::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
-	unk20 = JDrama::TNameRefGen::search<TMapObjBase>("dptKing");
+	unk20 = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("dptKing"));
 	unk20->kill();
 	unk20->mPosition.y -= 1800.0f;
 }
@@ -83,8 +83,7 @@ bool TDolpicEventRiccoMammaGate::isFinishedAll() const
 
 void TDolpicEventRiccoMammaGate::rising()
 {
-	f32 scale = TMapObjBase::getJointScaleY(unk20);
-	scale += unk34;
+	f32 scale = TMapObjBase::getJointScaleY(unk20) + unk34;
 
 	TPosition3f mtx;
 	mtx.identity();
@@ -202,8 +201,7 @@ void TDolpicEventRiccoMammaGate::load(JSUMemoryInputStream& stream)
 
 	unk24 = TMapObjBase::newAndInitBuildingCollisionMove(idx + 1, nullptr);
 	unk28 = TMapObjBase::newAndInitBuildingCollisionWarp(idx + 1, nullptr);
-	u32 flag = unk2C;
-	if (TFlagManager::getInstance()->getBool(flag)) {
+	if (TFlagManager::getInstance()->getBool(unk2C)) {
 		unk20 = getBuilding(idx + 1)->getJoint();
 		TMapObjBase::setJointScaleY(unk20, 0.008f);
 		TMapObjBase::setJointTransY(unk20, 295.0f);
@@ -243,8 +241,8 @@ TDolpicEventRiccoMammaGate::TDolpicEventRiccoMammaGate(const char* name)
     , unk3C(0)
     , unk40(0)
     , unk44(0)
+    , unk60(0.0f)
+    , unk54(0.0f, 0.0f, 0.0f)
+    , unk48(0.0f, 0.0f, 0.0f)
 {
-	unk60 = 0.0f;
-	unk48.zero();
-	unk54.zero();
 }

@@ -1,19 +1,3 @@
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
-
-static const char* MtxCalcTypeName[] = {
-	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
-	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
-	"MActorMtxCalcType_MotionBlend モーションブレンド",
-	"MActorMtxCalcType_User ユーザー定義",
-};
-
-const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-const char cDirtyTexName[]  = "H_ma_rak_dummy";
-
-static const float dummyZeroValues[] = { 0.0f, 0.0f, 0.0f };
-static const float dummyOneValues[]  = { 1.0f, 1.0f, 1.0f };
-
 #include <System/MarNameRefGen.hpp>
 
 #include <JSystem/JDrama/JDRSmJ3DScn.hpp>
@@ -163,10 +147,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 	if (strcmp(name, "MirrorMapDrawBuf") == 0)
 		return new TMirrorMapDrawBuf;
 
-	if (strcmp(name, "Silhouette") == 0) {
-		(void)"<TSilhouette>";
+	if (strcmp(name, "Silhouette") == 0)
 		return new TSilhouette;
-	}
 
 	if (strcmp(name, "ScrnFader") == 0)
 		return new TSmplFader;
@@ -272,35 +254,31 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 		return new TMapEventSinkShadowMario;
 
 	if (strcmp(name, "MapEventSirenaSink") == 0)
-		return new TMapEventSirenaSink("ホテル沈む");
+		return new TMapEventSirenaSink;
 
 	if (strcmp(name, "MapEventSinkBianco") == 0)
 		return new TMapEventSinkBianco;
 
 	if (strcmp(name, "DolpicEventBiancoGate") == 0)
-		return new TDolpicEventBiancoGate("イベント（ビアンコゲート）");
+		return new TDolpicEventBiancoGate;
 
 	if (strcmp(name, "DolpicEventRiccoGate") == 0)
-		return new TDolpicEventRiccoMammaGate(
-		    "イベント（リコ、マンマゲート）");
+		return new TDolpicEventRiccoMammaGate;
 
 	if (strcmp(name, "DolpicEventMammaGate") == 0)
-		return new TDolpicEventRiccoMammaGate(
-		    "イベント（リコ、マンマゲート）");
+		return new TDolpicEventRiccoMammaGate;
 
 	if (strcmp(name, "MareEventBumpyWall") == 0)
-		return new TMareEventBumpyWall("凸凹壁");
+		return new TMareEventBumpyWall;
 
 	if (strcmp(name, "MareEventWallRock") == 0)
-		return new TMareEventWallRock("イベント（マーレ壁の岩）");
+		return new TMareEventWallRock;
 
 	if (strcmp(name, "StageEnemyInfoHeader") == 0)
 		return new TStageEnemyInfoTable;
 
-	if (strcmp(name, "StageEnemyInfo") == 0) {
-		(void)"<TStageEnemyInfo>";
+	if (strcmp(name, "StageEnemyInfo") == 0)
 		return new TStageEnemyInfo;
-	}
 
 	if (strcmp(name, "EventTable") == 0)
 		return new TNameRefAryT<TStageEventInfo>;
@@ -359,15 +337,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 	if (strcmp(name, "SMSDrawInit") == 0)
 		return new TSMSDrawInit;
 
-	if (strcmp(name, "ZBufferCatch") == 0) {
-		(void)"<ZBufferCatch>";
+	if (strcmp(name, "ZBufferCatch") == 0)
 		return new TZBufferCatch;
-	}
 
-	if (strcmp(name, "AlphaCatch") == 0) {
-		(void)"<AlphaCatch>";
+	if (strcmp(name, "AlphaCatch") == 0)
 		return new TAlphaCatch;
-	}
 
 	if (strcmp(name, "J3DSysFlag") == 0)
 		return new TJ3DSysFlag;
@@ -375,8 +349,5 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 	if (strcmp(name, "Conductor") == 0)
 		return gpConductor = new TConductor;
 
-	(void)"<StagePositionInfo>";
-	(void)"<TCameraMapTool>";
 	return JDrama::TNameRefGen::getNameRef(name);
 }
-

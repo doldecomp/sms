@@ -2,7 +2,6 @@
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/question.hpp>
 #include <Strategic/Spine.hpp>
-#include <Strategic/spcinterp.hpp>
 #include <Strategic/Binder.hpp>
 #include <System/MarDirector.hpp>
 #include <MarioUtil/MtxUtil.hpp>
@@ -60,8 +59,7 @@ TLiveActor::TLiveActor(const char* name)
 	mRidePos.zero();
 
 	mGroundPlane = TMap::getIllegalCheckData();
-	u32 currentMap = gpMarDirector->getCurrentMap();
-	if (currentMap != 8)
+	if (gpMarDirector->getCurrentMap() != 8)
 		mLiveFlag |= LIVE_FLAG_UNK2000;
 }
 
@@ -119,9 +117,8 @@ void TLiveActor::calcRideMomentum()
 			mLinearVelocity += rideVelocity;
 
 			if (unkE8 >= 2) {
-				f32 angleDiff
-				    = MsAngleDiff(mGroundActor->mRotation.y, mGroundActorYaw);
-				mAngularVelocity.y = angleDiff + mAngularVelocity.y;
+				mAngularVelocity.y
+				    += MsAngleDiff(mGroundActor->mRotation.y, mGroundActorYaw);
 				mGroundActorYaw = mGroundActor->mRotation.y;
 			}
 		}
@@ -173,7 +170,8 @@ void TLiveActor::load(JSUMemoryInputStream& stream)
 
 	char buffer[256];
 	stream.readString(buffer, 256);
-	TLiveManager* mgr = JDrama::TNameRefGen::search<TLiveManager>(buffer);
+	TLiveManager* mgr
+	    = static_cast<TLiveManager*>(JDrama::TNameRefGen::search(buffer));
 
 	mGroundPlane = TMap::getIllegalCheckData();
 
@@ -232,18 +230,19 @@ void TLiveActor::bind()
 
 void TLiveActor::control()
 {
-	if (unk90 == nullptr || (s32)((TSpcInterp*)unk90)->mStepsToDo == 0) {
+	// TODO: what is unk90???
+	if (unk90 == nullptr || *(int*)((char*)unk90 + 4) == 0) {
 		if (mSpine)
 			mSpine->update();
 	} else {
 		if (!mSpine) {
-			if (unk90 && (s32)((TSpcInterp*)unk90)->mStepsToDo != 0)
-				((TSpcInterp*)unk90)->update();
-		} else if (mSpine->getCurrentNerve() != nullptr
-		           || mSpine->getVertebraeCount() > 0) {
-			mSpine->update();
+			if (unk90 && *(int*)((char*)unk90 + 4) != 0) {
+				// call on unk90
+			}
+		} else if (mSpine->isIdle()) {
+			// call on unk90
 		} else {
-			((TSpcInterp*)unk90)->update();
+			mSpine->update();
 		}
 	}
 }
@@ -443,15 +442,10 @@ void TLiveActor::initAnmSound()
 	if (mAnmSound)
 		return;
 
-	MAnmSoundNPC* npcAnmSound;
-	MAnmSound* anmSound;
-	if (checkActorType(0x4000000)) {
-		npcAnmSound = new MAnmSoundNPC(SMSGetMSound());
-		mAnmSound = npcAnmSound;
-	} else {
-		anmSound = new MAnmSound(SMSGetMSound());
-		mAnmSound = anmSound;
-	}
+	if (checkActorType(0x4000000))
+		mAnmSound = new MAnmSoundNPC(SMSGetMSound());
+	else
+		mAnmSound = new MAnmSound(SMSGetMSound());
 
 	mAnmSound->initAnmSound(nullptr, 1, 0.0f);
 }

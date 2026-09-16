@@ -216,8 +216,7 @@ void TPaneScalingControl::update()
 	int iVar5  = mInitialBounds.getHeight();
 
 	f32 progress = (f32)mFrameCtrl.getFrame() / (f32)mFrameCtrl.getEnd();
-	f32 fVar2 = mAmplitude
-	            * JMASin(progress * (2 * M_PI) * (180.0f / M_PI));
+	f32 fVar2    = mAmplitude * MsSin(RAD_TO_DEG(progress * (2 * M_PI)));
 
 	int uVar6 = fVar2 * iVar10;
 	int uVar1 = fVar2 * iVar5;
@@ -540,13 +539,11 @@ void TOptionSoundUnit::initMonoAnm()
 	TPatternAnmControl** ary = mMonoAnimations;
 
 	ary[0] = new TPatternAnmControl(mScreen);
-	ary[0]->mChunks.set(cMonoMonteAnm, ARRAY_COUNT(cMonoMonteAnm));
-	ary[0]->hide();
+	ary[0]->set(cMonoMonteAnm, ARRAY_COUNT(cMonoMonteAnm));
 	ary[0]->setupAnm();
 
 	ary[1] = new TPatternAnmControl(mScreen);
-	ary[1]->mChunks.set(cMonoSpeakerAnm, ARRAY_COUNT(cMonoSpeakerAnm));
-	ary[1]->hide();
+	ary[1]->set(cMonoSpeakerAnm, ARRAY_COUNT(cMonoSpeakerAnm));
 	ary[1]->setupAnm();
 
 	mMonteIcons[0].set(mMonoAnimations, ARRAY_COUNT(mMonoAnimations));
@@ -557,8 +554,7 @@ void TOptionSoundUnit::initSteleoAnm()
 	TPatternAnmControl** ary = mStereoAnimations;
 
 	ary[0] = new TPatternAnmControl(mScreen);
-	TPatternAnmControl* anm = ary[0];
-	anm->set(cSteMonteAnm, ARRAY_COUNT(cSteMonteAnm));
+	ary[0]->set(cSteMonteAnm, ARRAY_COUNT(cSteMonteAnm));
 	ary[0]->setupAnm();
 
 	ary[1] = new TPatternAnmControl(mScreen);
@@ -577,8 +573,7 @@ void TOptionSoundUnit::initSurroundAnm()
 	TPatternAnmControl** ary = mSurroundAnimations;
 
 	ary[0] = new TPatternAnmControl(mScreen);
-	TPatternAnmControl* anm = ary[0];
-	anm->set(cSurMonteAnm, ARRAY_COUNT(cSurMonteAnm));
+	ary[0]->set(cSurMonteAnm, ARRAY_COUNT(cSurMonteAnm));
 	ary[0]->setupAnm();
 
 	ary[1] = new TPatternAnmControl(mScreen);
@@ -653,8 +648,8 @@ void TOptionSoundUnit::toggle()
 void TOptionSoundUnit::adjust()
 {
 	adjustView();
-	int number = mSelectionText->getNumber();
-	const FabricatedSoundSettings& setting = cSoundSettings[number];
+	const FabricatedSoundSettings& setting
+	    = cSoundSettings[mSelectionText->getNumber()];
 	JAIGlobalParameter::setParamSoundOutputMode(setting.mOutputMode);
 }
 
@@ -943,14 +938,9 @@ void TOptionControl::writeValue()
 
 bool TOptionControl::isChangedSetting() const
 {
-	TOptionRumbleUnit::RumbleType value
-	    = (TOptionRumbleUnit::RumbleType)mInitialRumbleValue;
-	TToggleControl* toggle = mRumbleOption->mSelectionText;
-	TOptionRumbleUnit::RumbleType current
-	    = (TOptionRumbleUnit::RumbleType)toggle->getNumber();
 	bool result = true;
 
-	if (value == current
+	if (mInitialRumbleValue == mRumbleOption->getValue()
 	    && mInitialSoundValue == mSoundOption->getValue())
 		result = false;
 
@@ -959,7 +949,6 @@ bool TOptionControl::isChangedSetting() const
 
 void TOptionControl::resetChangedSetting()
 {
-	TOptionRumbleUnit::RumbleType value = mRumbleOption->getValue();
-	mInitialRumbleValue = value;
+	mInitialRumbleValue = mRumbleOption->getValue();
 	mInitialSoundValue  = mSoundOption->getValue();
 }

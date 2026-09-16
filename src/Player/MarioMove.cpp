@@ -35,8 +35,7 @@ f32 TMario::getJumpSlideControl() const
 	if (mStatus == MARIO_STATUS_WIRE_JUMP)
 		return mWireParams.mWireJumpSlideControl.get();
 
-	BOOL isOnYoshi = onYoshi();
-	if (isOnYoshi && (mYoshi->mFlutterState == 1 ? true : false))
+	if (onYoshi() && (mYoshi->mFlutterState == 1 ? true : false))
 		return mYoshiParams.mHoldOutSldCtrl.get();
 
 	return mJumpParams.mJumpSlideControl.get();
@@ -86,8 +85,7 @@ bool TMario::isInvincible() const
 bool TMario::isWallInFront() const
 {
 	if (mWallPlane != nullptr) {
-		s16 angle = getWallAngle();
-		s16 diff  = angle - mFaceAngle.y;
+		s16 diff = getWallAngle() - mFaceAngle.y;
 		if (diff < -0x71C7 || diff > 0x71C7)
 			return true;
 	}
@@ -122,15 +120,15 @@ bool TMario::isForceSlip()
 
 BOOL TMario::moveRequest(const JGeometry::TVec3<f32>& pos)
 {
-	const JGeometry::TVec3<f32> offset = pos - mPosition;
-	mPosition                          = pos;
+	JGeometry::TVec3<f32> offset = pos - mPosition;
+	mPosition                    = pos;
 
-	unk2BC += offset.y;
 	unk160 += offset;
 	mPrevPosition += offset;
 	mWireStartPos += offset;
 	mWireEndPos += offset;
 	unk2A8 += offset;
+	unk2BC += offset.y;
 	mHeadMtx[0][3] += offset.x;
 	mHeadMtx[1][3] += offset.y;
 	mHeadMtx[2][3] += offset.z;
@@ -413,13 +411,9 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	u32 nextStatus = status;
 
 	unk2BC = mPosition.y;
-	if (mFootPrintTimer > mDeParams.mFootPrintTimerMax.get() / 2) {
-		f32 size = mDirtyParams.mPolSizeJump.get();
-		f32 z = mPosition.z;
-		f32 y = mPosition.y;
-		f32 x = mPosition.x;
-		gpPollution->stamp(1, x, y, z, size);
-	}
+	if (mSlopeAngle > mDeParams.mRocketRotSp.get() / 2)
+		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
+		                   mDirtyParams.mPolSizeJump.get());
 
 	switch (status) {
 	case MARIO_STATUS_JUMP:
@@ -611,8 +605,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 	case MARIO_STATUS_WIRE_ROLL_JUMP: {
 		if (arg == 0) {
-			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get()
-			                * mWireParams.mWireJumpMult.get();
+			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * 1.0f;
 			mVel.y        = jumpPower * JMASSin(0xE000);
 
 			mForwardVel = jumpPower * -JMASCos(0xE000);
@@ -621,8 +614,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 			mVel.x      = mSlideVelX;
 			mVel.z      = mSlideVelZ;
 		} else {
-			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get()
-			                * mWireParams.mWireJumpMult.get();
+			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * 1.0f;
 			mVel.y        = jumpPower * JMASSin(0x6000);
 
 			mForwardVel = jumpPower * -JMASCos(0x6000);
@@ -649,8 +641,8 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	}
 
 	if (isSinking()) {
-		f32 sinkJumpRateMax = mGraffitoParams.mSinkJumpRateMax.get();
-		f32 scale = ((sinkJumpRateMax - mGraffitoParams.mSinkJumpRateMin.get())
+		f32 scale = ((mGraffitoParams.mSinkJumpRateMax.get()
+		              - mGraffitoParams.mSinkJumpRateMin.get())
 		             * (1.0f - (mSinkTimer / mGraffitoParams.mSinkTime.get())))
 		            + mGraffitoParams.mSinkJumpRateMin.get();
 
@@ -666,9 +658,8 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 	if (onYoshi()) {
 		mVel.y *= mYoshiParams.mJumpYoshiMult.get();
-		TYoshi* yoshi = mYoshi;
-		yoshi->mFlutterState = 0;
-		yoshi->mFlutterTimer = yoshi->mMaxFlutterTimer;
+		mYoshi->mFlutterState = 0;
+		mYoshi->mFlutterTimer = mYoshi->mMaxFlutterTimer;
 	}
 
 	unk104 = mPosition.y;
@@ -682,7 +673,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 u32 TMario::setStatusToRunning(u32 status, u32)
 {
-	f32 mag = mIntendedMag >= 8.0f ? mIntendedMag : 8.0f;
+	f32 mag = mIntendedMag <= 8.0f ? 8.0f : mIntendedMag;
 
 	switch (status) {
 	case MARIO_STATUS_RUN:
@@ -764,13 +755,11 @@ BOOL TMario::changePlayerTriJump()
 			// TODO: inline
 			s16 a     = mSlopeAngle + 0x8000;
 			s16 angle = mFaceAngle.y - a;
-			f32 x = mForwardVel * JMASSin(angle);
-			f32 z = mForwardVel * JMASCos(angle) * 0.75f;
-			JGeometry::TVec2<f32> velocity(x, z);
-			f32 mag = MsSqrtf(velocity.x * velocity.x
-			                     + velocity.y * velocity.y);
+			f32 x     = mForwardVel * JMASSin(angle);
+			f32 z     = mForwardVel * JMASCos(angle) * 0.75f;
+			f32 mag   = MsSqrtf(x * x + z * z);
 			setPlayerVelocity(mag);
-			mFaceAngle.y = a + matan(velocity.y, velocity.x);
+			mFaceAngle.y = a + matan(z, x);
 		}
 		dropObject();
 		changePlayerStatus(MARIO_STATUS_MISS_JUMP, 0, false);
@@ -793,13 +782,11 @@ int TMario::changePlayerJumping(u32 param_1, u32 param_2)
 			// TODO: inline
 			s16 a     = mSlopeAngle + 0x8000;
 			s16 angle = mFaceAngle.y - a;
-			f32 x = mForwardVel * JMASSin(angle);
-			f32 z = mForwardVel * JMASCos(angle) * 0.75f;
-			JGeometry::TVec2<f32> velocity(x, z);
-			f32 mag = MsSqrtf(velocity.x * velocity.x
-			                     + velocity.y * velocity.y);
+			f32 x     = mForwardVel * JMASSin(angle);
+			f32 z     = mForwardVel * JMASCos(angle) * 0.75f;
+			f32 mag   = MsSqrtf(x * x + z * z);
 			setPlayerVelocity(mag);
-			mFaceAngle.y = a + matan(velocity.y, velocity.x);
+			mFaceAngle.y = a + matan(z, x);
 		}
 		dropObject();
 		changePlayerStatus(MARIO_STATUS_MISS_JUMP, 0, false);
@@ -889,8 +876,7 @@ void TMario::checkGraffitoLava() { }
 
 void TMario::checkGraffitoSlip()
 {
-	BOOL isGround = isTouchGround4cm();
-	if (isGround) {
+	if (isTouchGround4cm()) {
 		mFootPrintTimer = mDeParams.mFootPrintTimerMax.get();
 
 		if (mStatus == MARIO_STATUS_OIL_SLIP
@@ -952,10 +938,10 @@ void TMario::checkGraffitoSlip()
 
 void TMario::checkGraffitoElec()
 {
-	JGeometry::TVec3<f32>();
-	JGeometry::TVec3<f32>();
-	JGeometry::TVec3<f32>();
-	JGeometry::TVec3<f32>();
+	(void)0;
+	(void)0;
+	(void)0;
+	(void)0;
 
 	if (!checkFlag(MARIO_FLAG_DIRTY))
 		mStandingOnGraffitoTimer = mDeParams.mGraffitoNoDmgTime.get();
@@ -1167,14 +1153,11 @@ void TMario::thinkDirty()
 			mDirty += mDirtyParams.mIncSlipping.get();
 	}
 
-	{
-		bool isInWater = checkFlag(MARIO_FLAG_IN_ANY_WATER);
-		if (isInWater) {
-			if (mPosition.y > mFloorPosition.z - 1.0f)
-				meltInWaterEffect();
-			mFootPrintTimer = 0;
-			mDirty -= mDirtyParams.mDecSwimming.get();
-		}
+	if (checkFlag(MARIO_FLAG_IN_ANY_WATER)) {
+		if (mPosition.y > mFloorPosition.z - 1.0f)
+			meltInWaterEffect();
+		mFootPrintTimer = 0;
+		mDirty -= mDirtyParams.mDecSwimming.get();
 	}
 
 	if (mStatus == MARIO_STATUS_LEFT_ROTATE_JUMP
@@ -1197,7 +1180,7 @@ void TMario::thinkDirty()
 
 void TMario::thinkHeight()
 {
-	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) != 0) {
+	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
 		f32 height = mPosition.y - mFloorPosition.y;
 		if (unk36C < height)
 			unk36C = height;
@@ -1240,7 +1223,8 @@ void TMario::checkSink()
 				             * mGraffitoParams.mSinkDmgDepth.get();
 			}
 
-			if (gpMarDirector->unk58 % mGraffitoParams.mSinkDmgTime.get()
+			if (gpMarDirector->mMoveTickCount
+			        % mGraffitoParams.mSinkDmgTime.get()
 			    == 0) {
 				floorDamageExec(1, 3, 0, mMotorParams.mMotorReturn.get());
 			}
@@ -1316,7 +1300,7 @@ void TMario::checkReturn()
 
 void TMario::checkThrowObject()
 {
-	if (mModel->getFrameCtrl(0).checkPass(4.0f)) {
+	if (mModel->unkC[0].checkPass(4.0f)) {
 		startVoice(MSD_SE_MV15_EXERT_INST_01);
 		dropObject();
 	}
@@ -1334,9 +1318,9 @@ void TMario::checkController(JDrama::TGraphics*)
 	unk108->mStickVS16 = (s16)(128.0f * mGamePad->mCompSPos[1]);
 
 	if (isSinking()) {
-		f32 sinkMoveMax = mGraffitoParams.mSinkMoveMax.get();
 		f32 sinkScale
-		    = (sinkMoveMax - mGraffitoParams.mSinkMoveMin.get())
+		    = (mGraffitoParams.mSinkMoveMax.get()
+		       - mGraffitoParams.mSinkMoveMin.get())
 		          * (1.0f - (mSinkTimer / (f32)mGraffitoParams.mSinkTime.get()))
 		      + mGraffitoParams.mSinkMoveMin.get();
 		unk108->mStickHS16 *= sinkScale;
@@ -1464,9 +1448,8 @@ void TMario::checkController(JDrama::TGraphics*)
 		unk108->mStickV = (f32)(unk108->mStickVS16 - 6);
 
 	// Stick distance, then mLengthMult^mLengthMultTimes (unrolled in 8s)
-	f32 stickDist = (unk108->mStickH * unk108->mStickH)
-	                + (unk108->mStickV * unk108->mStickV);
-	f32 dist = stickDist;
+	f32 dist = (unk108->mStickH * unk108->mStickH)
+	           + (unk108->mStickV * unk108->mStickV);
 	if (dist > 0.0f)
 		dist = MsSqrtf(dist);
 
@@ -1476,8 +1459,8 @@ void TMario::checkController(JDrama::TGraphics*)
 	unk108->mStickDist = dist;
 
 	if (unk108->mStickDist > 64.0f) {
-		unk108->mStickH *= 64.0f / unk108->mStickDist;
-		unk108->mStickV = unk108->mStickV * (64.0f / unk108->mStickDist);
+		unk108->mStickH    = unk108->mStickH * (64.0f / unk108->mStickDist);
+		unk108->mStickV    = unk108->mStickV * (64.0f / unk108->mStickDist);
 		unk108->mStickDist = 64.0f;
 	}
 
@@ -1733,26 +1716,16 @@ void TMario::checkCurrentPlane()
 
 		// TODO: do we have to use a TPartition here after all?
 		if (record.mResultWallsNum == 2
-		    && record.mResultWalls[0]->getNormal().y
-		               * record.mResultWalls[1]->getNormal().y
-		               + record.mResultWalls[0]->getNormal().x
-		                     * record.mResultWalls[1]->getNormal().x
-		               + record.mResultWalls[0]->getNormal().z
-		                     * record.mResultWalls[1]->getNormal().z
-		           < -0.9f) {
+		    && record.mResultWalls[0]->getNormal().squared() < -0.9f) {
 
 			JGeometry::TVec3<f32> normal1 = record.mResultWalls[0]->getNormal();
 			JGeometry::TVec3<f32> normal2 = record.mResultWalls[1]->getNormal();
 
-			JGeometry::TPartition3<f32> partition1(mPosition, normal1);
-			JGeometry::TPartition3<f32> partition2(mPosition, normal2);
+			f32 planeDist1 = record.mResultWalls[0]->getPlaneDistance();
+			f32 planeDist2 = record.mResultWalls[1]->getPlaneDistance();
 
-			f32 dist1
-			    = partition1.mDist
-			      + record.mResultWalls[0]->getPlaneDistance();
-			f32 dist2
-			    = partition2.mDist
-			      + record.mResultWalls[1]->getPlaneDistance();
+			f32 dist1 = normal1.dot(mPosition) + planeDist1;
+			f32 dist2 = normal2.dot(mPosition) + planeDist2;
 
 			if ((record.mResultWalls[0]->getActor() != nullptr
 			     && record.mResultWalls[0]->getActor()->getActorType()
@@ -1824,7 +1797,7 @@ void TMario::checkRideMovement()
 
 	const TLiveActor* groundActor = mGroundPlane->getActor();
 
-	if (groundActor != nullptr && !checkStatusType(MARIO_STATUS_FLAG_JUMPING)
+	if (wall != nullptr && !checkStatusType(MARIO_STATUS_FLAG_JUMPING)
 	    && (isTouchGround4cm()))
 		actor = groundActor;
 
@@ -2066,7 +2039,7 @@ void TMario::thinkWaterSurface()
 		return;
 
 	BOOL wasInWater = checkFlag(MARIO_FLAG_IN_ANY_WATER);
-	BOOL isInWater  = false;
+	bool isInWater  = false;
 	if (checkFlag(MARIO_FLAG_IN_ANY_WATER) == true)
 		isInWater = true;
 	else
@@ -2251,9 +2224,6 @@ void TMario::thinkSand()
 
 void TMario::thinkParams()
 {
-	JGeometry::TVec3<f32>();
-	JGeometry::TVec3<f32>();
-
 	mRotation.y = SHORTANGLE2DEG(mFaceAngle.y);
 	if (mInvincibilityFrames > 0)
 		mInvincibilityFrames -= 1;
@@ -2325,24 +2295,21 @@ void TMario::checkYoshiGetOff()
 
 void TMario::thinkYoshiHeadCollision()
 {
-	BOOL isOnYoshi = onYoshi();
-	if (!isOnYoshi)
+	if (!onYoshi())
 		return;
 
 	JGeometry::TVec3<f32> headPos = mPosition;
 
 	f32 front = mYoshiParams.mHeadFront.get();
-	s16 angle = mFaceAngle.y;
-	headPos.x += front * JMASSin(angle);
-	headPos.z += front * JMASCos(angle);
+	headPos.x += front * JMASSin(mFaceAngle.y);
+	headPos.z += front * JMASCos(mFaceAngle.y);
 
 	TBGWallCheckRecord record(headPos.x, headPos.y + 100.0f, headPos.z,
 	                          mYoshiParams.mHeadRadius.get(), 4, 0);
-	f32 z = headPos.z;
 
 	if (gpMap->isTouchedWallsAndMoveXZ(&record) == true) {
 		f32 dx = record.mCenter.x - headPos.x;
-		f32 dz = record.mCenter.z - z;
+		f32 dz = record.mCenter.z - headPos.z;
 		f32 f4 = std::sqrtf(dx * dx + dz * dz);
 
 		f32 f2 = f4;
@@ -2366,7 +2333,7 @@ void TMario::thinkDiving() { }
 
 void TMario::thinkTorocco()
 {
-	mToroccoAngle += unk108->mStickHS16 * mDeParams.mToroccoRotSp.get();
+	mToroccoAngle += unk108->mStickH * mDeParams.mRecoverTimer.get();
 }
 
 void TMario::thinkSound()
@@ -2473,7 +2440,7 @@ void TMario::playerControl(JDrama::TGraphics* param_1)
 {
 	unk9C         = mFaceAngle.y;
 	mPrevPosition = mPosition;
-	offUnk114(UNK114_FLAG_UNK8);
+	offUnk114(UNK114_FLAG_PROFILE);
 
 	if (gpMarDirector->unk124 == 1 && mStatus != MARIO_STATUS_READ_BILLBOARD)
 		changePlayerStatus(MARIO_STATUS_READ_BILLBOARD, 0, false);

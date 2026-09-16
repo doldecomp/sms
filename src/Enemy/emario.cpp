@@ -82,8 +82,8 @@ void TEMario::load(JSUMemoryInputStream& stream)
 
 	// "Mario Character"
 	const char marioCharName[] = "マリオ キャラ";
-	mEnemyMario->setCharacter(
-	    JDrama::TNameRefGen::search<JDrama::TCharacter>(marioCharName));
+	mEnemyMario->setCharacter(static_cast<JDrama::TCharacter*>(
+	    JDrama::TNameRefGen::search(marioCharName)));
 
 	mEnemyMario->initValues();
 
@@ -116,8 +116,7 @@ void TEMario::init(TLiveManager* manager)
 			for (int i = 0;
 			     i < mMActor->getModel()->getModelData()->getMaterialNum();
 			     i++) {
-				J3DModel* model = mMActor->getModel();
-				SMS_InitPacket_Fog(model, i);
+				SMS_InitPacket_Fog(mMActor->getModel(), i);
 			}
 			mMActor->setBtk("kagemario_scroll");
 		}
@@ -207,9 +206,7 @@ void TEMario::perform(u32 cue, JDrama::TGraphics* graphics)
 	for (s32 i = 0; i < mColCount; ++i) {
 		switch (mCollisions[i]->mActorType) {
 		case 0x80000001: {
-			JGeometry::TVec3<f32> distance
-			    = mPosition - mCollisions[i]->getPosition();
-			if (JGeometry::TVec3<f32>(distance).length()
+			if (mPosition.distance(mCollisions[i]->getPosition())
 			    < mEnemyMario->mAttackRange) {
 				mCollisions[i]->receiveMessage(this, HIT_MESSAGE_ATTACK);
 			}
@@ -218,9 +215,7 @@ void TEMario::perform(u32 cue, JDrama::TGraphics* graphics)
 		case 0x400000bc: {
 			if (!mEnemyMario->checkStatusType(0x10000)) {
 
-				JGeometry::TVec3<f32> distance
-				    = mCollisions[i]->getPosition() - mPosition;
-				if (JGeometry::TVec3<f32>(distance).length()
+				if (mCollisions[i]->getPosition().distance(mPosition)
 				    < (mCollisions[i]->getAttackRadius()
 				       + mEnemyMario->getDamageRadius())) {
 					mEnemyMario->changePlayerStatus(0x810446, 0, false);

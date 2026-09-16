@@ -67,20 +67,18 @@ void TMapObjManager::loadAfter()
 
 void TMapObjManager::initDrawBuffer()
 {
-	mDrawBufferSunOpa = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	    "DrawBuf StaticMapObj SunOpa");
-	mDrawBufferSunXlu = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	    "DrawBuf StaticMapObj SunXlu");
-	mDrawBufferShadowOpa = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	    "DrawBuf StaticMapObj ShadowOpa");
-	mDrawBufferShadowXlu = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	    "DrawBuf StaticMapObj ShadowXlu");
-	mDrawBufferAfterIndirectOpa
-	    = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	        "DrawBuf AfterIndirect Opa");
-	mDrawBufferAfterIndirectXlu
-	    = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	        "DrawBuf AfterIndirect Xlu");
+	mDrawBufferSunOpa = static_cast<JDrama::TDrawBufObj*>(
+	    JDrama::TNameRefGen::search("DrawBuf StaticMapObj SunOpa"));
+	mDrawBufferSunXlu = static_cast<JDrama::TDrawBufObj*>(
+	    JDrama::TNameRefGen::search("DrawBuf StaticMapObj SunXlu"));
+	mDrawBufferShadowOpa = static_cast<JDrama::TDrawBufObj*>(
+	    JDrama::TNameRefGen::search("DrawBuf StaticMapObj ShadowOpa"));
+	mDrawBufferShadowXlu = static_cast<JDrama::TDrawBufObj*>(
+	    JDrama::TNameRefGen::search("DrawBuf StaticMapObj ShadowXlu"));
+	mDrawBufferAfterIndirectOpa = static_cast<JDrama::TDrawBufObj*>(
+	    JDrama::TNameRefGen::search("DrawBuf AfterIndirect Opa"));
+	mDrawBufferAfterIndirectXlu = static_cast<JDrama::TDrawBufObj*>(
+	    JDrama::TNameRefGen::search("DrawBuf AfterIndirect Xlu"));
 }
 
 J3DMaterialTable* TMapObjManager::loadMatTable(const char* name)
@@ -217,9 +215,9 @@ TMapObjBase* TMapObjBaseManager::makeObjAppear(f32 x, f32 y, f32 z, u32 param_4,
 {
 	f32 y2;
 	if (param_5) {
-		const TBGCheckData* checkData[1];
-		y2 = gpMap->checkGround(x, y + 5.0f, z, checkData);
-		if (checkData[0]->checkFlag(BG_CHECK_FLAG_ILLEGAL))
+		const TBGCheckData* checkData;
+		y2 = gpMap->checkGround(x, y + 5.0f, z, &checkData);
+		if (checkData->checkFlag(BG_CHECK_FLAG_ILLEGAL))
 			return nullptr;
 	} else {
 		y2 = y;
@@ -397,9 +395,9 @@ TMapObjBase* TMapObjBaseManager::newAndRegisterObjByEventID(u32 event_id,
 
 	switch (event_id) {
 	case 777: {
-		char buffer[256];
-		snprintf(buffer, 256, "シャイン（%s）", name);
-		return (TMapObjBase*)JDrama::TNameRefGen::search2(buffer);
+		char buffer[64];
+		snprintf(buffer, 64, "シャイン（%s）", name);
+		return static_cast<TMapObjBase*>(JDrama::TNameRefGen::search(buffer));
 	} break;
 
 	case 1000:

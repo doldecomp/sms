@@ -112,9 +112,9 @@ void TAnimalBase::initNoLoad_(TAnimalBase* other)
 	other->mGroundPlane = TMap::getIllegalCheckData();
 	other->init(mManager);
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
-	    .push_back(this);
+	    .push_back(other);
 }
 
 void TAnimalBase::load(JSUMemoryInputStream& stream)
@@ -184,8 +184,9 @@ void TAnimalBase::perform(u32 cue, JDrama::TGraphics* graphics)
 			if (sharedAnmNum == 0 || mInstanceIndex < sharedAnmNum) {
 				mMActor->viewCalc();
 			} else {
-				int sharedIdx = mInstanceIndex % sharedAnmNum;
-				J3DModel* shared = manager->getObj(sharedIdx)->getModel();
+				J3DModel* shared
+				    = manager->getObj(mInstanceIndex % sharedAnmNum)
+				          ->getModel();
 				J3DModel* model    = getModel();
 				J3DModelData* data = model->getModelData();
 				int count          = data->getDrawMtxNum();
@@ -197,8 +198,9 @@ void TAnimalBase::perform(u32 cue, JDrama::TGraphics* graphics)
 				srcArrays[1] = (Mtx*)shared->getWeightAnmMtx(0);
 
 				for (u16 i = 0; i < count; ++i) {
-					Mtx* srcArray = srcArrays[data->getDrawMtxFlag(i)];
-					MTXConcat(world, srcArray[data->getDrawMtxIndex(i)],
+					MTXConcat(world,
+					          srcArrays[data->getDrawMtxFlag(i)]
+					                   [data->getDrawMtxIndex(i)],
 					          model->getDrawMtx(i));
 				}
 
@@ -232,9 +234,7 @@ void TAnimalBase::resetRandomCurPathNode()
 		pos.y -= 250.0f * MsRandF();
 	}
 
-	curNode.unk0 = nullptr;
-	curNode.unk4 = pos;
-	setGoalPath(curNode);
+	setGoalPath(pos);
 }
 
 void TAnimalBase::getRotationFlyToDir(JGeometry::TVec3<f32>* current_rot,
@@ -303,8 +303,9 @@ void TAnimalBase::execWalk(bool moving)
 	getRotationFlyToDir(&mRotation, diff, marchSpeed, turnSpeed);
 
 	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
-	JGeometry::TVec3<f32> tmp(0.0f, 0.0f, marchSpeed);
-	quat.rotate(tmp, tmp);
+	JGeometry::TVec3<f32> tmp;
+	// TODO: quaternions are still wrong
+	quat.rotate(JGeometry::TVec3<f32>(0.0f, 0.0f, marchSpeed), tmp);
 	mLinearVelocity = tmp;
 }
 

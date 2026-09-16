@@ -50,9 +50,9 @@ void TLauncher::init(TLiveManager* param_1)
 	TSpineEnemy::init(param_1);
 
 	mSpine->initWith(&TNerveWaitForever<TLiveActor>::theNerve());
-	TLauncherParams* params = (TLauncherParams*)getSaveParam();
+	TLauncherParams* params = getSaveParam2();
 	if (params) {
-		s32 launchPeriod = params->getLaunchPeriod();
+		s32 launchPeriod = params->mSLLaunchPeriod.get();
 		mLaunchCooldown  = launchPeriod * MsRandF();
 	}
 
@@ -76,11 +76,10 @@ BOOL TLauncher::receiveMessage(THitActor* sender, u32 message)
 
 	if (sender->getActorType() == 0x1000001) {
 		if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-			gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
-			                             &sender->mPosition, 0, nullptr);
-			MSound* sound = SMSGetMSound();
-			sound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
-			                     &sender->mPosition, 0, 0.0f, 0, 0, 4);
+			gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &mPosition, 0,
+			                             nullptr);
+			gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
+			                        0.0f, 0, 0, 4);
 			if (mState == STATE_HITBYWATER)
 				return true;
 
@@ -128,7 +127,7 @@ void TLauncher::control()
 
 void TLauncher::resetLaunchTimer()
 {
-	TLauncherParams* params = (TLauncherParams*)getSaveParam();
+	TLauncherParams* params = getSaveParam2();
 	if (!params) {
 		mLaunchCooldown = 0;
 	} else {
@@ -224,14 +223,13 @@ void TCommonLauncher::init(TLiveManager* param_1)
 	mMActor       = mMActorKeeper->createMActor("generator_model1.bmd", 0);
 	mSpine->initWith(&TNerveWaitForever<TLiveActor>::theNerve());
 
-	s32 launchPeriod = mLaunchPeriod;
-	mLaunchCooldown  = launchPeriod * MsRandF();
+	mLaunchCooldown = mLaunchPeriod * MsRandF();
 
 	mMActor->setLightType(LIGHT_TYPE_OBJECT);
 	initHitActor(0x10000014, 1, -0x7f000000, 150.0f, 100.0f, 150.0f, 100.0f);
 	offHitFlag(0x1);
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 
@@ -275,8 +273,7 @@ void TCommonLauncher::stateHitByWater()
 		decHitPoints();
 	}
 
-	BOOL anmEndsNext = mMActor->curAnmEndsNext();
-	if (anmEndsNext) {
+	if (mMActor->curAnmEndsNext()) {
 		if (mHitPoints == 0)
 			changeState(STATE_DIE);
 		else
@@ -318,16 +315,15 @@ void TCommonLauncher::stateLaunch()
 		TSpineEnemy* enemy = getProperEnemy(unk164);
 		if (enemy) {
 			JGeometry::TVec3<f32> local_14 = mRotation;
-			JGeometry::TVec3<f32> local_2c;
-			Mtx mtx;
 
 			local_14.x = MsWrap(local_14.x - 270.0f, 0.0f, 360.0f);
 
+			Mtx mtx;
 			MsMtxSetRotRPH(mtx, local_14.x, local_14.y, local_14.z);
-			local_2c.set(0.0f, 4.0f, 0.0f);
+			JGeometry::TVec3<f32> local_20(0.0f, 4.0f, 0.0f);
 			local_14.set(0.0f, 0.0f, 0.0f);
-			MTXMultVec(mtx, &local_2c, &local_2c);
-			enemy->resetSRTV(mPosition, local_14, enemy->mScaling, local_2c);
+			MTXMultVec(mtx, &local_20, &local_20);
+			enemy->resetSRTV(mPosition, local_14, enemy->mScaling, local_20);
 		}
 	}
 

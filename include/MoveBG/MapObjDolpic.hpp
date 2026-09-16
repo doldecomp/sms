@@ -108,9 +108,9 @@ class TTurboNozzleDoor : public TMapObjBase {
 public:
 	TTurboNozzleDoor(const char* name = "ターボノズルドア")
 	    : TMapObjBase(name)
-	    , unk138()
 	    , unk144(nullptr)
 	{
+		unk138.zero();
 	}
 
 	virtual void loadAfter();

@@ -25,9 +25,9 @@
 
 void TMapObjBase::changeObjMtx(MtxPtr mtx)
 {
-	mPosition.x = mtx[0][3];
-	mPosition.y = mtx[1][3] + mYOffset;
-	mPosition.z = mtx[2][3];
+	mPosition.x = mtx[3][0];
+	mPosition.y = mtx[3][1] + mYOffset;
+	mPosition.z = mtx[3][2];
 	if (mMActor) {
 		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK100)) {
 			setModelMtx(mtx);
@@ -108,11 +108,7 @@ void TMapObjBase::setUpCurrentMapCollision()
 	} else {
 		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,
 		                          mPosition.z);
-		Mtx mtx;
-		MsMtxSetTRS(mtx, pos.x, pos.y, pos.z, mRotation.x, mRotation.y,
-		            mRotation.z, mScaling.x, mScaling.y, mScaling.z);
-		TMapCollisionBase* col = colman->getUnk8();
-		col->setUpMtx(mtx);
+		colman->setUpUnk8TRS(pos, mRotation, mScaling);
 	}
 }
 
@@ -137,11 +133,7 @@ void TMapObjBase::soundBas(u32 param_1, f32 param_2, f32 param_3)
 {
 	f32 currFrame = mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
 	if (currFrame <= param_2 && param_2 < currFrame + param_3) {
-		if (gpMSound->gateCheck(param_1)) {
-			u32 id = param_1;
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    id, getPosition(), 0, nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActor(param_1, &mPosition, 0, nullptr, 0, 4);
 	}
 }
 
@@ -224,7 +216,10 @@ void TMapObjBase::startAnim(u16 param_1)
 	}
 
 	const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
-	if (!anim || anim->unk0 <= param_1)
+	if (!anim)
+		return;
+
+	if (param_1 >= anim->unk0)
 		return;
 
 	const TMapObjAnimData* data = &anim->unk4[param_1];
@@ -232,7 +227,7 @@ void TMapObjBase::startAnim(u16 param_1)
 		if (unkFE != 0xffff && anim && anim->unk0 != 0) {
 			const TMapObjAnimData* d2 = &anim->unk4[unkFE];
 			if (d2->unk4 != nullptr) {
-				u32 type = d2->unk8;
+				u8 type = d2->unk8;
 				mMActor->getFrameCtrl(type)->setRate(0.0f);
 				mMActor->getFrameCtrl(type)->setFrame(0.0f);
 				mMActor->getUnk28(type)->unk0 = 0xffffffff;
@@ -280,7 +275,6 @@ void TMapObjBase::makeObjDefault()
 
 void TMapObjBase::makeObjDead()
 {
-	Mtx mtx;
 	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
 	onLiveFlag(LIVE_FLAG_UNK10);
 
@@ -317,7 +311,9 @@ void TMapObjBase::makeObjDead()
 void TMapObjBase::makeObjAppeared()
 {
 	offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK8);
-	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
+	mVelocity.x = 0.0f;
+	mVelocity.y = 0.0f;
+	mVelocity.z = 0.0f;
 	onLiveFlag(LIVE_FLAG_UNK10);
 	mStateTimer = 0;
 	offHitFlag(HIT_FLAG_NO_COLLISION);
@@ -354,7 +350,28 @@ void TMapObjBase::makeObjAppeared()
 		SMS_ShowAllShapePacket(getModel());
 
 	mPosition.y -= mYOffset;
-	setUpMapCollision(0);
+	if (mMapObjData->mCollision && mMapObjData->mCollision->unk4[0].unk0 != 0) {
+		f32 x = mPosition.x;
+		f32 y = mPosition.y - mYOffset;
+		f32 z = mPosition.z;
+		mMapCollisionManager->changeCollision(0);
+		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8)) {
+			MtxPtr mtx = getModel()->getAnmMtx(0);
+
+			TMapCollisionBase* col = mMapCollisionManager->getUnk8();
+			col->setMtx(mtx);
+			col->setUp();
+		} else {
+			Mtx mtx;
+			TMapCollisionManager* manager = mMapCollisionManager;
+			MsMtxSetTRS(mtx, x, y, z, mRotation.x, mRotation.y, mRotation.z,
+			            mScaling.x, mScaling.y, mScaling.z);
+
+			TMapCollisionBase* col = manager->getUnk8();
+			col->setMtx(mtx);
+			col->setUp();
+		}
+	}
 	mPosition.y += mYOffset;
 	mState = STATE_NORMAL;
 }
@@ -430,46 +447,47 @@ void TMapObjBase::setGroundCollision()
 {
 	if (!mMapCollisionManager)
 		return;
-	switch (mMapCollisionManager->unk8->mKind) {
-	case TMapCollisionBase::KIND_MOVE:
-		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2)) {
-			if (mColCount == 0 && unk102 == 0)
-				return;
-			--unk102;
-			if (mColCount != 0)
-				unk102 = 4;
-		}
+	if (mMapCollisionManager->unk8->mKind != TMapCollisionBase::KIND_MOVE)
+		return;
 
-		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8)) {
-			MtxPtr mtx = getModel()->getAnmMtx(0);
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2)) {
+		if (mColCount == 0 && unk102 == 0)
+			return;
+		--unk102;
+		if (mColCount != 0)
+			unk102 = 4;
+	}
+
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8)) {
+		MtxPtr mtx = getModel()->getAnmMtx(0);
+		if (mMapCollisionManager->unk8)
+			mMapCollisionManager->unk8->moveMtx(mtx);
+	} else {
+		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,
+		                          mPosition.z);
+		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4)) {
+			mMapCollisionManager->unk8->offFlag(
+			    TMapCollisionBase::FLAG_UNK8000);
+			mMapCollisionManager->unk8->offFlag(
+			    TMapCollisionBase::FLAG_UNK4000);
 			if (mMapCollisionManager->unk8)
-				mMapCollisionManager->unk8->moveMtx(mtx);
+				mMapCollisionManager->unk8->moveSRT(pos, mRotation, mScaling);
 		} else {
-			JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,
-			                          mPosition.z);
-			if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4)) {
-				mMapCollisionManager->unk8->offFlag(
-				    TMapCollisionBase::FLAG_UNK8000);
-				mMapCollisionManager->unk8->offFlag(
-				    TMapCollisionBase::FLAG_UNK4000);
-				if (mMapCollisionManager->unk8)
-					mMapCollisionManager->unk8->moveSRT(pos, mRotation,
-					                                        mScaling);
-			} else {
-				mMapCollisionManager->unk8->offFlag(
-				    TMapCollisionBase::FLAG_UNK4000);
-				if (mMapCollisionManager->unk8)
-					mMapCollisionManager->unk8->moveTrans(pos);
-			}
+			mMapCollisionManager->unk8->offFlag(
+			    TMapCollisionBase::FLAG_UNK4000);
+			if (mMapCollisionManager->unk8)
+				mMapCollisionManager->unk8->moveTrans(pos);
 		}
-		break;
 	}
 }
 
 void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (gpMarDirector->isTalkModeNow() && !gpMarDirector->isDemoModeNow()) {
-		if (checkLiveFlag(LIVE_FLAG_DEAD) || isActorType(0x4000003B))
+		if (checkLiveFlag(LIVE_FLAG_DEAD))
+			return;
+
+		if (isActorType(0x4000003B))
 			return;
 
 		if (cue & CUE_MOVE) {
@@ -612,9 +630,9 @@ void TMapObjBase::initAndRegister(const char* param_1)
 	unkF4 = param_1;
 	initMapObj();
 	if (mMapObjData->unkC) {
-		TIdxGroupObj* group
-		    = JDrama::TNameRefGen::search<TIdxGroupObj>(mMapObjData->unkC);
-		group->getChildren().push_back(this);
+		static_cast<TIdxGroupObj*>(
+		    JDrama::TNameRefGen::search(mMapObjData->unkC))
+		    ->push_back(this);
 	}
 }
 

@@ -42,9 +42,9 @@ static void CheckNerve4Npc_(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num,
 	                                             ? npc->mSpine->getLatestNerve()
 	                                             : npc->mSpine->getCurrentNerve();
 
-	int result = 0;
+	TSpcSlice result;
 	if (actual == expected)
-		result = 1;
+		result.setDataInt(1);
 	interp->push(result);
 }
 
@@ -54,8 +54,8 @@ static void evGetAddressFromViewObjName(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->verifyArgNum(1, &arg_num);
 	const char* name = interp->pop().getDataString();
 	JDrama::TViewObj* viewObj
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>(name);
-	interp->push(TSpcSlice((int)viewObj));
+	    = static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search(name));
+	interp->push((int)viewObj);
 }
 
 static void evCheckCurNerve4Npc(TSpcTypedInterp<TEventWatcher>* interp,
@@ -92,14 +92,13 @@ static void ev__ForceStartTalkExceptNpc(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->verifyArgNum(1, &arg_num);
 	int result = 0;
 	// TODO: uuuh...
-	TSpcSlice fVar1 = interp->pop();
-	(void)fVar1.mData.asInt;
+	(void)interp->pop();
 
 	if (!gpMarDirector->isTalkOrDemoModeNow() && SMS_IsMarioTouchGround4cm()
 	    && !gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
 
-		TBaseNPC* dummyNpc
-		    = JDrama::TNameRefGen::search<TBaseNPC>("ダミーＮＰＣ");
+		TBaseNPC* dummyNpc = static_cast<TBaseNPC*>(
+		    JDrama::TNameRefGen::search("ダミーＮＰＣ"));
 
 		if (dummyNpc) {
 			gpMarDirector->unkA0  = dummyNpc;
@@ -138,19 +137,19 @@ static void evConnectDummyNpc(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->verifyArgNum(1, &arg_num);
 
 	int result = 0;
-	int actorAddress;
 
-	TBaseNPC* dummyNpc = JDrama::TNameRefGen::search<TBaseNPC>("ダミーＮＰＣ");
+	TBaseNPC* dummyNpc
+	    = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search("ダミーＮＰＣ"));
 	if (dummyNpc != nullptr) {
-		actorAddress = interp->pop().getDataInt();
-		const JDrama::TActor* actor = (const JDrama::TActor*)actorAddress;
+		const JDrama::TActor* actor
+		    = (const JDrama::TActor*)interp->pop().getDataInt();
 		dummyNpc->setDummyConnectActor(actor);
 		result = 1;
 	} else {
 		interp->pop();
 	}
 
-	interp->push(TSpcSlice(result));
+	interp->push(result);
 }
 
 static void evOnTalkToDummyNpc(TSpcTypedInterp<TEventWatcher>* interp,
@@ -158,7 +157,7 @@ static void evOnTalkToDummyNpc(TSpcTypedInterp<TEventWatcher>* interp,
 {
 	interp->verifyArgNum(0, &arg_num);
 	TBaseNPC* dummyNpc
-	    = (TBaseNPC*)JDrama::TNameRefGen::search2("ダミーＮＰＣ");
+	    = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search("ダミーＮＰＣ"));
 	if (dummyNpc != nullptr) {
 		dummyNpc->offLiveFlag(LIVE_FLAG_DEAD);
 		dummyNpc->offLiveFlag(LIVE_FLAG_UNK40000);
@@ -282,9 +281,9 @@ static void evFireStartDemoCamera(TSpcTypedInterp<TEventWatcher>* interp,
 {
 	interp->verifyArgNum(1, &arg_num);
 	const char* cameraName = interp->pop().getDataString();
-	TMarDirector* director = gpMarDirector;
-	director->fireStartDemoCamera(cameraName, nullptr, -1, 0.0f, true, nullptr, 0,
-	                              nullptr, JDrama::TFlagT<u16>());
+	gpMarDirector->fireStartDemoCamera(cameraName, nullptr, -1, 0.0f, true,
+	                                   nullptr, 0, nullptr,
+	                                   JDrama::TFlagT<u16>());
 	interp->push();
 }
 
@@ -292,7 +291,7 @@ static void evIsDemoMode(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
 	int result = 0;
-	if (gpMarDirector->isDemoModeNow() != 0)
+	if (gpMarDirector->isDemoModeNow())
 		result = 1;
 	interp->push(result);
 }
@@ -303,9 +302,9 @@ static void evCheckMonteClear(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->verifyArgNum(1, &arg_num);
 	int fVar1 = interp->pop().getDataInt();
 
-	char buffer[36];
+	char buffer[32];
 	snprintf(buffer, 32, "モンテ%d", fVar1);
-	TBaseNPC* npc = JDrama::TNameRefGen::search<TBaseNPC>(buffer);
+	TBaseNPC* npc = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search(buffer));
 
 	int b;
 	if (!npc->checkLiveFlag(LIVE_FLAG_UNK400000) && npc->isClean())
@@ -375,9 +374,8 @@ void TNpcEvent::reviveOneSunflower()
 		int idx = 5 - mDownSunflowerNum;
 		snprintf(acStack_50, 0x40, "%s%d", sViewObjName, idx);
 
-		TBaseNPC* npc = JDrama::TNameRefGen::search<TBaseNPC>(acStack_50);
-		const JGeometry::TVec3<f32>& position = npc->unk1B8;
-		TMarDirector* director = gpMarDirector;
+		TBaseNPC* npc
+		    = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search(acStack_50));
 		--mDownSunflowerNum;
 
 		static const char* sCameraNames[] = {
@@ -385,15 +383,14 @@ void TNpcEvent::reviveOneSunflower()
 			"ひまわりカメラ3", "ひまわりカメラ4",
 		};
 
-		director->fireStartDemoCamera(sCameraNames[idx], &position, -1,
+		gpMarDirector->fireStartDemoCamera(sCameraNames[idx], &npc->unk1B8, -1,
 		                                   0.0f, true, &ReviveSunflowerCallBack,
-		                                   (u32)npc, nullptr,
-		                                   JDrama::TFlagT<u16>());
+		                                   (u32)npc, nullptr, 0);
 
 		if (mDownSunflowerNum == 0) {
 			gpItemManager->makeShineAppearWithDemo(
-			    "ひまわり用シャイン", "ひまわりシャインカメラ", position.x,
-			    position.y + 500.0f, position.z);
+			    "ひまわり用シャイン", "ひまわりシャインカメラ", npc->unk1B8.x,
+			    npc->unk1B8.y + 500.0f, npc->unk1B8.z);
 			TFlagManager::getInstance()->setBool(false, 0x50003);
 		}
 	}

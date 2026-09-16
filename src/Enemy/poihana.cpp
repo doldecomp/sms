@@ -150,7 +150,7 @@ void TPoiHana::init(TLiveManager* param_1)
 	unk19C = (TPoihanaSaveLoadParams*)getSaveParam();
 	unk1BC = new TPoiHanaCollision;
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(unk1BC);
 
@@ -356,9 +356,9 @@ bool TPoiHana::isCollidMove(THitActor* param_1)
 		if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()) {
 			mSpine->pushNerve(&TNervePoihanaFreeze::theNerve());
 			JGeometry::TVec3<f32> vel = mLinearVelocity;
-			vel.x *= -2.0f;
-			vel.y *= 5.0f;
-			vel.z *= -2.0f;
+			mLinearVelocity.x *= -2.0f;
+			mLinearVelocity.y *= 5.0f;
+			mLinearVelocity.z *= -2.0f;
 			mVelocity = vel;
 
 			mPosition.y += 10.0f;
@@ -380,9 +380,8 @@ void TPoiHana::walkBehavior(int param_1, float param_2)
 	if (mSleepVersion && param_1 == 0) {
 		mGoToSleepTimer += 1;
 		if (checkCurAnmEnd(0)) {
-			int threshold
-			    = unk19C->mSLWakeFrame.get() + mInstanceIndex * 100;
-			if (mGoToSleepTimer > threshold) {
+			if (mGoToSleepTimer
+			    > unk19C->mSLWakeFrame.get() + mInstanceIndex * 100) {
 				mGoToSleepTimer = 0;
 
 				mGoToSleepTimer = TMsRange<s32>(-500, 500).rand();
@@ -661,9 +660,9 @@ DEFINE_NERVE(TNervePoihanaThrow, TLiveActor)
 		if (self->mThrowTimer > 16) {
 			SMS_SendMessageToMario(self, HIT_MESSAGE_THROWN);
 			f32 backThrowVal = self->unk19C->mSLBackThrowVal.get();
-			Mtx44 afStack_4c;
-			MsMtxSetRotRPH(afStack_4c, self->mRotation.x, self->mRotation.y,
-			               self->mRotation.z);
+			Mtx afStack_4c;
+			MsMtxSetRotRPH(afStack_4c, self->mPosition.x, self->mPosition.y,
+			               self->mPosition.z);
 			JGeometry::TVec3<f32> local_58(0.0f, 1.0f, -backThrowVal);
 			MTXMultVec(afStack_4c, &local_58, &local_58);
 			SMS_ThrowMario(local_58, self->unk19C->mSLThrowSpeed.get());
@@ -699,30 +698,32 @@ DEFINE_NERVE(TNervePoihanaTrapped, TLiveActor)
 			self->mPosition.y += 150.0f;
 			self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			if (self->unk1A8) {
-				f32 trapJumpMinSpY
-				    = self->unk19C->mSLTrapJumpMinSpY.get();
-				f32 trapJumpMaxSpY
+				// TODO: rand interval class
+				volatile f32 trapJumpMaxSpY
 				    = self->unk19C->mSLTrapJumpMaxSpY.get();
-				f32 trapJumpMaxSpXZ
+				volatile f32 trapJumpMaxSpXZ
 				    = self->unk19C->mSLTrapJumpMaxSpXZ.get();
-				f32 trapJumpMinSpXZ
+				volatile f32 trapJumpMinSpY
+				    = self->unk19C->mSLTrapJumpMinSpY.get();
+				volatile f32 trapJumpMinSpXZ
 				    = self->unk19C->mSLTrapJumpMinSpXZ.get();
-				TMsRange<f32> trapJumpSpXZ(trapJumpMinSpXZ, trapJumpMaxSpXZ);
-				TMsRange<f32> trapJumpSpY(trapJumpMinSpY, trapJumpMaxSpY);
 
 				JGeometry::TVec3<f32> local_48;
-				if (self->getGroundPlane()->getActor())
-					local_48 = self->mPosition
-					           - self->getGroundPlane()->getActor()->mPosition;
+				const TLiveActor* groundActor
+				    = self->getGroundPlane()->getActor();
+				if (groundActor)
+					local_48 = self->mPosition - groundActor->mPosition;
 				else
 					local_48 = self->mPosition - SMS_GetMarioPos();
-				if (local_48.x == local_48.y == local_48.z)
+				if (local_48.x == 0.0f && local_48.y == 0.0f
+				    && local_48.z == 0.0f)
 					local_48.x = 1.0f;
 
 				VECNormalize(&local_48, &local_48);
-				local_48.x *= trapJumpSpXZ.rand();
-				local_48.y = trapJumpSpY.rand();
-				local_48.z *= trapJumpSpXZ.rand();
+				// TODO: rand interval class
+				local_48.x *= MsRandF(trapJumpMinSpXZ, trapJumpMaxSpXZ);
+				local_48.y = MsRandF(trapJumpMinSpY, trapJumpMaxSpY);
+				local_48.z *= MsRandF(trapJumpMinSpXZ, trapJumpMaxSpXZ);
 
 				self->mVelocity             = local_48;
 				self->mCurrentFlungVelocity = local_48;

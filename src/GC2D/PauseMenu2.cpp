@@ -25,51 +25,8 @@
 #include <System/MarDirector.hpp>
 #include <System/MarDirector.hpp>
 #include <System/MarioGamePad.hpp>
+#include <System/StageUtil.hpp>
 #include <stdio.h>
-
-u8 SMS_getShineStage(u8);
-
-static const u8 scShineTableAirport[] = { 0x56 };
-static const u8 scShineTableBianco[]
-    = { 0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7 };
-static const u8 scShineTableRicco[]
-    = { 0xA, 0xB, 0xC, 0xD, 0xE, 0xF, 0x10, 0x11 };
-static const u8 scShineTableMamma[]
-    = { 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B };
-static const u8 scShineTablePinna[]
-    = { 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25 };
-static const u8 scShineTableSirena[]
-    = { 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F };
-static const u8 scShineTableMare[]
-    = { 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39 };
-static const u8 scShineTableMonte[]
-    = { 0x3C, 0x41, 0x3E, 0x3D, 0x40, 0x3F, 0x42, 0x43 };
-
-static const u8* scShineConvTable[] = {
-	scShineTableAirport, nullptr,
-	scShineTableBianco,  scShineTableRicco,
-	scShineTableMamma,   scShineTablePinna,
-	scShineTableSirena,  scShineTableMonte,
-	scShineTableMare,    nullptr,
-};
-
-static u32 scScenarioNameTable[] = {
-	0x0,  0x1,  0x2,  0x3,  0x4,  0x5,  0x6,  0x7,  0x8,  0x9,  0x32, 0x33,
-	0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0xA,  0xB,  0xC,  0xD,
-	0xE,  0xF,  0x10, 0x11, 0x12, 0x13, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D,
-	0x2E, 0x2F, 0x30, 0x31, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x41, 0x42, 0x43,
-	0x44, 0x45, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D,
-	0x1E, 0x21, 0x20, 0x23, 0x22, 0x1F, 0x24, 0x25, 0x26, 0x27,
-};
-
-static u16 SMS_getNormalStage(u32 stage) { return scScenarioNameTable[stage]; }
-
-static s16 SMS_getShineID(u32 stage, u32 scenario, bool)
-{
-	if (stage > 9 || scShineConvTable[stage] == nullptr)
-		return -1;
-	return scShineConvTable[stage][scenario];
-}
 
 extern JPAEmitterManager* gpEmitterManager4D2;
 
@@ -128,14 +85,14 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 	mMenuPane   = mScreen->search('t_0');
 
 	for (s32 i = 0; i < 5; i++) {
-		mPauseLetters[i] = (J2DPicture*)mScreen->search('pa00' + i);
+		mPauseLetters[i] = (J2DPicture*)mScreen->search('t_0' + i);
 	}
 
 	for (s32 i = 0; i < 3; i++) {
 		mMenuItems[i] = (J2DPicture*)mScreen->search('tx_1' + i);
 
 		if (mNumItems == 2) {
-			mMenuItems[i]->add(0, 20);
+			mMenuItems[i]->add(0, 14);
 		}
 		mMenuItems[i]->mVisible = false;
 	}
@@ -176,7 +133,8 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 void TPauseMenu2::loadAfter()
 {
 	// "Save data"
-	mCardSave = JDrama::TNameRefGen::search<TCardSave>("データセーブ");
+	mCardSave
+	    = static_cast<TCardSave*>(JDrama::TNameRefGen::search("データセーブ"));
 
 	mItemColor = mMenuItems[0]->getWhite();
 
@@ -283,8 +241,8 @@ void TPauseMenu2::disappearWindow()
 	if (mFadeAnim <= 10.0f) {
 
 		// Fade out menu, background, and shine/stage panel.
-		bool isFadedOut = (mMenuPane->getAlpha() - 12) < 0;
-		s32 alpha = isFadedOut ? 0 : mMenuPane->getAlpha() - 12;
+		s32 alpha
+		    = (mMenuPane->getAlpha() - 12) < 0 ? 0 : mMenuPane->getAlpha() - 12;
 
 		mMenuPane->setAlpha(alpha);
 
@@ -299,10 +257,9 @@ void TPauseMenu2::disappearWindow()
 		// Shrink letters...
 		for (s32 i = 0; i < 5; i++) {
 			JUTRect rect = mPauseLetters[i]->getBounds();
-			s32 y = rect.y1;
 
-			rect.add(0.025f * -y + 0.01f * rect.getWidth(),
-			         0.025f * -rect.x1 + 0.01f * rect.getHeight());
+			rect.add(0.25f * -rect.y1 + 0.01f * rect.getWidth(),
+			         0.25f * -rect.x1 + 0.01f * rect.getHeight());
 
 			rect.resize(0.98f * rect.getWidth(), 0.98f * rect.getHeight());
 
@@ -312,9 +269,8 @@ void TPauseMenu2::disappearWindow()
 		// ... and now shrink the menu items in the same manner.
 		for (s32 i = 0; i < mNumItems; i++) {
 			JUTRect rect = mMenuItems[i]->getBounds();
-			s32 y = rect.y1;
-			rect.add(0.025f * -y + 0.01f * rect.getWidth(),
-			         0.025f * -rect.x1 + 0.01f * rect.getHeight());
+			rect.add(0.25f * -rect.y1 + 0.01f * rect.getWidth(),
+			         0.25f * -rect.x1 + 0.01f * rect.getHeight());
 			rect.resize(0.98f * rect.getWidth(), 0.98f * rect.getHeight());
 			mMenuItems[i]->setBounds(rect);
 		}
@@ -331,7 +287,7 @@ void TPauseMenu2::disappearWindow()
 
 void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (gpMarDirector->mState == TMarDirector::STATE_UNK5) {
+	if (gpMarDirector->mState == TMarDirector::STATE_PAUSE_MENU) {
 		if (mState == MENU_SAVING) {
 			if (cue & CUE_MOVE) {
 				if (mCardSave->unk2DF != 0) {
@@ -381,7 +337,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 							gpMSound->pauseOff(0);
 							gpMarDirector->getConsole()->pauseOut();
 							mFadeAnim = 0.0f;
-							mState    = MENU_DISAPPEARING;
+							mState    = MENU_APPEARING;
 							break;
 						case 2:
 							mSelectionConfirmed = true;
@@ -505,7 +461,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 					} else {
 						// Loop animation.
 						mBounceAnim = -0.5f;
-						unkFC *= -1;
+						unkFC       = -unkFC;
 					}
 
 					mBounceAnim += 0.5f;
@@ -614,21 +570,17 @@ void TPauseMenu2::drawAppearPane(J2DPicture* picture, f32 anim, JUTRect& rect,
 		if (picture->isVisible()) {
 			picture->hide();
 		}
-	} else if (!(anim >= 20.0f)) {
-		if (!picture->isVisible()) {
-			picture->show();
-			picture->setAlpha(0);
-		}
+	} else if (!(anim >= 20.0f) && !picture->isVisible()) {
+		picture->show();
+		picture->setAlpha(0);
 
 		if (anim == 2.0f) {
 			JUTRect rect = picture->getGlobalBounds();
 
 			// TODO: This doesn't fully match.
-			s32 width  = rect.getWidth();
-			s32 height = rect.getHeight();
 			gpEmitterManager4D2->createEmitter(
-			    JGeometry::TVec3<f32>(rect.x1 + 0.5f * width,
-			                          rect.y1 + 0.5f * height, 0.0f),
+			    JGeometry::TVec3<f32>(rect.x1 + 0.5f * rect.getWidth(),
+			                          rect.y1 + 0.5f * rect.getHeight(), 0.0f),
 			    0x1F9, nullptr, nullptr);
 		}
 

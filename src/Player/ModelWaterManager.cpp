@@ -10,6 +10,7 @@
 #include <Map/MapMirror.hpp>
 #include <System/FlagManager.hpp>
 #include <System/MarDirector.hpp>
+#include <System/StageUtil.hpp>
 #include <System/TimeRec.hpp>
 #include <MSound/MSound.hpp>
 #include <MarioUtil/DLUtil.hpp>
@@ -22,8 +23,6 @@
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 #include <JSystem/JMath.hpp>
 #include <stdlib.h>
-
-bool SMS_isDivingMap();
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -50,7 +49,7 @@ TWaterEmitInfo::TWaterEmitInfo(const char* name)
     , PARAM_INIT(mDirTremble, 0.0f)
     , PARAM_INIT(mPow, 0.0f)
     , PARAM_INIT(mPowTremble, 0.0f)
-    , PARAM_INIT(mSize, 17.0f)
+    , PARAM_INIT(mSize, 0.0f)
     , PARAM_INIT(mSizeTremble, 0.0f)
     , PARAM_INIT(mHitRadius, 0.0f)
     , PARAM_INIT(mHitHeight, 0.0f)
@@ -72,8 +71,6 @@ const char* prmNames[] = {
 	"/Mario/WTP14_Rocket.prm",     "/Mario/WTP15_Hover.prm",
 	"/Mario/WTP16_SpRocket.prm",
 };
-
-static const f32 cShineShadowVolumePos[] = { 0.0f, 3600.0f, -7458.0f };
 
 TWaterParticleType::TWaterParticleType(const char* path)
     : TParams(path)
@@ -204,9 +201,9 @@ void TModelWaterManager::load(JSUMemoryInputStream& stream)
 
 void TModelWaterManager::loadAfter()
 {
-	unk5D34
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ")
-	          ->getTexture();
+	unk5D34 = static_cast<TScreenTexture*>(
+	              JDrama::TNameRefGen::search("スクリーンテクスチャ"))
+	              ->getTexture();
 
 	int flag = TFlagManager::getInstance()->getFlag(0x40000);
 	if (flag > 60)
@@ -218,10 +215,9 @@ void TModelWaterManager::loadAfter()
 	    && gpMarDirector->getCurrentStage() == 2)
 		fVar1 = 1.0f;
 
-	if (fVar1 < 1.0f) {
-		f32 fVar2 = 24000.0f;
-		unk5E0C   = fVar1 * fVar2 + 8000.0f;
-	} else
+	if (fVar1 < 1.0f)
+		unk5E0C = fVar1 * 24000.0f + 8000.0f;
+	else
 		unk5D60 &= ~0x100;
 }
 
@@ -251,10 +247,7 @@ bool TModelWaterManager::askHitWaterParticleOnGround(
 }
 
 static inline f32 MsRandF() { return rand() * (1.f / (RAND_MAX + 1)); }
-static inline f32 rand11()
-{
-	return (1.0f / 128.0f) * ((rand() & 0xff) - 128);
-}
+static inline f32 rand11() { return ((rand() & 0xff) - 128) / 128.0f; }
 
 void TModelWaterManager::makeEmit(const TWaterEmitInfo& param_1)
 {
@@ -308,8 +301,7 @@ u8 TModelWaterManager::emitRequest(const TWaterEmitInfo& param_1)
 		mParticleCount += 1;
 	}
 
-	u8 result = (param_1.mNum.get() - particlesToSpawn) & 0xff;
-	return result;
+	return (param_1.mNum.get() - particlesToSpawn) & 0xff;
 }
 
 void TModelWaterManager::splashSound(const JGeometry::TVec3<f32>& pos,
@@ -326,7 +318,7 @@ void TModelWaterManager::splashGround(int i)
 	gpPollution->clean(
 	    mParticlePositionSOA[i].x, mParticlePositionSOA[i].y,
 	    mParticlePositionSOA[i].z,
-	    mWaterParticleTypes[mParticleTypeSOA[i]]->mCleanSize.get() * 32.0f);
+	    mWaterParticleTypes[mParticleTypeSOA[i]]->mCleanSize.get() * 10.0f);
 }
 
 void TModelWaterManager::touchingExec(int i) { }
@@ -605,9 +597,12 @@ void TModelWaterManager::move()
 						if (getFlagBottom4Bits(i) == 1) {
 							JGeometry::TVec3<f32> local_1d4 = r27->getNormal();
 							local_1d4.scale(mParticleSizeSOA[i]);
-							local_1d4 += mParticlePositionSOA[i];
+
+							JGeometry::TVec3<f32> local_1A4
+							    = mParticlePositionSOA[i];
+							local_1A4 += local_1d4;
 							if (MsRandF() < unk5D88[10])
-								gpSplashManager->newSplash(local_1d4, 5.0f);
+								gpSplashManager->newSplash(local_1A4, 5.0f);
 
 							splashSound(mParticlePositionSOA[i],
 							            mParticleSizeSOA[i]);
@@ -732,8 +727,15 @@ void TModelWaterManager::move()
 void TModelWaterManager::calcWorldMinMax()
 {
 	if (mParticleCount == 0) {
-		unk5D70 = SMS_GetMarioPos();
-		unk5D7C = SMS_GetMarioPos();
+		JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
+
+		unk5D70.x = marioPos.x;
+		unk5D70.y = marioPos.y;
+		unk5D70.z = marioPos.z;
+
+		unk5D7C.x = marioPos.x;
+		unk5D7C.y = marioPos.y;
+		unk5D7C.z = marioPos.z;
 
 		unk5D70.x -= 1.0f;
 		unk5D70.y -= 1.0f;
@@ -745,84 +747,30 @@ void TModelWaterManager::calcWorldMinMax()
 		return;
 	}
 
-	f32 fVar789 = mParticlePositionSOA[0].x - 1.0f;
-	f32 fVar788 = mParticlePositionSOA[0].y - 1.0f;
-	f32 fVar787 = mParticlePositionSOA[0].z - 1.0f;
-	f32 fVar123 = mParticlePositionSOA[0].x + 1.0f;
-	f32 fVar122 = mParticlePositionSOA[0].y + 1.0f;
-	f32 fVar121 = mParticlePositionSOA[0].z + 1.0f;
-	for (int i = 1; i < mParticleCount; ++i) {
-		if (fVar789 > mParticlePositionSOA[i].x)
-			fVar789 = mParticlePositionSOA[i].x;
-		if (fVar788 > mParticlePositionSOA[i].y)
-			fVar788 = mParticlePositionSOA[i].y;
-		if (fVar787 > mParticlePositionSOA[i].z)
-			fVar787 = mParticlePositionSOA[i].z;
-		if (fVar123 < mParticlePositionSOA[i].x)
-			fVar123 = mParticlePositionSOA[i].x;
-		if (fVar122 < mParticlePositionSOA[i].y)
-			fVar122 = mParticlePositionSOA[i].y;
-		if (fVar121 < mParticlePositionSOA[i].z)
-			fVar121 = mParticlePositionSOA[i].z;
+	JGeometry::TVec3<f32> fVar789 = mParticlePositionSOA[0];
+	fVar789.x -= 1.0f;
+	fVar789.y -= 1.0f;
+	fVar789.z -= 1.0f;
+	JGeometry::TVec3<f32> fVar123 = mParticlePositionSOA[0];
+	fVar789.x += 1.0f;
+	fVar789.y += 1.0f;
+	fVar789.z += 1.0f;
+	for (int i = 0; i < mParticleCount; ++i) {
+		fVar789.setMax(mParticlePositionSOA[i]);
+		fVar123.setMin(mParticlePositionSOA[i]);
 	}
 
-	unk5D70.x = fVar789 - 200.0f;
-	unk5D70.y = fVar788 - 200.0f;
-	unk5D70.z = fVar787 - 200.0f;
+	unk5D70.x = fVar789.x - 200.0f;
+	unk5D70.y = fVar789.y - 200.0f;
+	unk5D70.z = fVar789.z - 200.0f;
 
-	unk5D7C.x = fVar123 + 200.0f;
-	unk5D7C.y = fVar122 + 200.0f;
-	unk5D7C.z = fVar121 + 200.0f;
+	unk5D7C.x = fVar123.x + 200.0f;
+	unk5D7C.y = fVar123.y + 200.0f;
+	unk5D7C.z = fVar123.z + 200.0f;
 }
 
 #pragma dont_inline on
-void TModelWaterManager::calcDrawVtx(MtxPtr param_1)
-{
-	unk5D30->reset();
-
-	for (int i = 0; i < mParticleCount; ++i) {
-		if ((mParticleFlagSOA[i] & 0xf) != 1)
-			continue;
-		if (!(mParticleLifetimeSOA[i]
-		      < mWaterParticleTypes[mParticleTypeSOA[i]]->mAlive.get()
-		            - unk5D88[7]))
-			continue;
-
-		JGeometry::TVec3<f32> vel;
-		JGeometry::TVec3<f32> pos;
-		PSMTXMultVec(param_1, &mParticlePositionSOA[i], &pos);
-		if (pos.z > 0.0f || pos.z < -unk5D28)
-			continue;
-
-		PSMTXMultVecSR(param_1, &mParticleVelocitySOA[i], &vel);
-		vel *= mWaterParticleTypes[mParticleTypeSOA[i]]->mExtension.get();
-
-		JGeometry::TVec3<f32> vtx[4];
-		f32 halfSize = 0.5f * mParticleSizeSOA[i];
-		f32 radius   = 1.414f * halfSize;
-		f32 len2     = vel.x * vel.x + vel.y * vel.y;
-		if (len2 > 1.0f) {
-			f32 scale = (1.0f / std::sqrtf(len2)) * radius;
-			f32 x     = vel.x * scale;
-			f32 y     = vel.y * scale;
-
-			vtx[0].set(pos.x + x + vel.x * unk5D18,
-			           pos.y + y + vel.y * unk5D18, pos.z);
-			vtx[1].set(pos.x + y, pos.y - x, pos.z);
-			vtx[2].set(pos.x - x - vel.x * unk5D18,
-			           pos.y - y - vel.y * unk5D18, pos.z);
-			vtx[3].set(pos.x - y, pos.y + x, pos.z);
-		} else {
-			vtx[0].set(pos.x - radius, pos.y + radius, pos.z);
-			vtx[1].set(pos.x + radius, pos.y + radius, pos.z);
-			vtx[2].set(pos.x + radius, pos.y - radius, pos.z);
-			vtx[3].set(pos.x - radius, pos.y - radius, pos.z);
-		}
-		unk5D30->request(vtx);
-	}
-
-	unk5D30->setEnd();
-}
+void TModelWaterManager::calcDrawVtx(MtxPtr) { }
 #pragma dont_inline off
 
 void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
@@ -833,24 +781,24 @@ void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
 	// TODO: matching this is ewwwwwwwwwwwwwwwwww
 
 	f32 fVar6  = param_2 * param_4.x;
-	f32 fVar8  = param_2 * param_4.z;
-	f32 fVar11 = param_4.y * 2.0f + param_3.y;
+	f32 fVar7  = param_2 * param_4.y;
+	f32 fVar11 = param_4.y * 2.0 + param_3.y;
 	f32 fVar12 = -fVar6;
 
-	f32 fVar10 = param_4.x * 2.0f + param_3.x;
-	f32 fVar7  = param_2 * param_4.y;
+	f32 fVar10 = param_4.x * 2.0 + param_3.x;
+	f32 fVar8  = param_2 * param_4.z;
+	f32 fVar9  = param_4.z * 2.0 + param_3.z;
 	f32 fVar13 = -fVar8;
-	f32 fVar9  = param_4.z * 2.0f + param_3.z;
 
 	{
-		f32 fVar1     = param_1[0][1];
-		f32 fVar2     = param_1[0][2];
-		f32 fVar3     = param_1[0][0];
-		f32 fVar4     = param_1[0][3];
-		param_5[0][0] = fVar3 * fVar7 + fVar1 * fVar12;
-		param_5[0][1] = fVar2 * fVar8 + fVar3 * fVar6 + fVar1 * fVar7;
-		param_5[0][2] = fVar1 * fVar13 + fVar2 * fVar7;
-		param_5[0][3] = fVar4 + fVar2 * fVar9 + fVar3 * fVar10 + fVar1 * fVar11;
+		f32 fVar4     = param_1[0][0];
+		f32 fVar2     = param_1[0][1];
+		f32 fVar1     = param_1[0][2];
+		f32 fVar5     = param_1[0][3];
+		param_5[0][0] = fVar4 * fVar7 + fVar2 * fVar12;
+		param_5[0][1] = fVar1 * fVar8 + fVar4 * fVar6 + fVar2 * fVar7;
+		param_5[0][2] = fVar2 * fVar13 + fVar1 * fVar7;
+		param_5[0][3] = fVar5 + fVar1 * fVar9 + fVar4 * fVar10 + fVar2 * fVar11;
 	}
 
 	{
@@ -858,8 +806,8 @@ void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
 		f32 fVar2     = param_1[1][2];
 		f32 fVar3     = param_1[1][0];
 		f32 fVar4     = param_1[1][3];
-		param_5[1][0] = fVar7 * fVar3 + fVar1 * fVar12;
-		param_5[1][1] = fVar2 * fVar8 + fVar6 * fVar3 + fVar1 * fVar7;
+		param_5[1][0] = fVar3 * fVar7 + fVar1 * fVar12;
+		param_5[1][1] = fVar2 * fVar8 + fVar3 * fVar6 + fVar1 * fVar7;
 		param_5[1][2] = fVar1 * fVar13 + fVar2 * fVar7;
 		param_5[1][3] = fVar4 + fVar2 * fVar9 + fVar3 * fVar10 + fVar1 * fVar11;
 	}
@@ -870,8 +818,8 @@ void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
 		f32 fVar3     = param_1[2][0];
 		f32 fVar4     = param_1[2][3];
 		param_5[2][0] = fVar3 * fVar7 + fVar1 * fVar12;
-		param_5[2][1] = fVar2 * fVar8 + fVar3 * fVar6 + fVar7 * fVar1;
-		param_5[2][2] = fVar1 * fVar13 + fVar7 * fVar2;
+		param_5[2][1] = fVar2 * fVar8 + fVar3 * fVar6 + fVar1 * fVar7;
+		param_5[2][2] = fVar1 * fVar13 + fVar2 * fVar7;
 		param_5[2][3] = fVar4 + fVar2 * fVar9 + fVar3 * fVar10 + fVar1 * fVar11;
 	}
 }
@@ -884,41 +832,41 @@ void TModelWaterManager::calcVMMtxWall(MtxPtr param_1, f32 scale,
 	// TODO: matching this is ewwwwwwwwwwwwwwwwww
 
 	f32 fVar7  = scale * param_4.x;
-	f32 fVar12 = param_3.y;
+	f32 fVar4  = param_3.y;
 	f32 fVar8  = scale * param_4.z;
 	f32 fVar11 = -fVar7;
-	f32 fVar10 = param_4.x * 2.0f + param_3.x;
-	f32 fVar9  = param_4.z * 2.0f + param_3.z;
+	f32 fVar10 = param_4.x * 2.0 + param_3.x;
+	f32 fVar9  = param_4.z * 2.0 + param_3.z;
 
 	{
-		f32 fVar1     = param_1[0][1];
-		f32 fVar2     = param_1[0][2];
-		f32 fVar3     = param_1[0][0];
-		f32 fVar4     = param_1[0][3];
-		param_5[0][0] = fVar2 * fVar11 + fVar3 * fVar8;
-		param_5[0][1] = fVar1 * scale;
-		param_5[0][2] = fVar2 * fVar8 + fVar3 * fVar7;
-		param_5[0][3] = fVar1 * fVar12 + fVar3 * fVar10 + fVar2 * fVar9 + fVar4;
+		f32 fVar3     = param_1[0][1];
+		f32 fVar5     = param_1[0][2];
+		f32 fVar6     = param_1[0][0];
+		f32 fVar1     = param_1[0][3];
+		(*param_5)[0] = fVar6 * fVar8 + fVar5 * fVar11;
+		(*param_5)[1] = fVar3 * scale;
+		(*param_5)[2] = fVar6 * fVar7 + fVar5 * fVar8;
+		(*param_5)[3] = fVar1 + fVar5 * fVar9 + fVar6 * fVar10 + fVar3 * fVar4;
 	}
 	{
-		f32 fVar1     = param_1[1][1];
-		f32 fVar2     = param_1[1][2];
+		f32 fVar1     = param_1[1][2];
+		f32 fVar2     = param_1[1][1];
 		f32 fVar3     = param_1[1][0];
-		f32 fVar4     = param_1[1][3];
-		param_5[1][0] = fVar2 * fVar11 + fVar3 * fVar8;
-		param_5[1][1] = fVar1 * scale;
-		param_5[1][2] = fVar2 * fVar8 + fVar3 * fVar7;
-		param_5[1][3] = fVar1 * fVar12 + fVar3 * fVar10 + fVar2 * fVar9 + fVar4;
+		f32 fVar5     = param_1[1][3];
+		param_5[1][0] = fVar3 * fVar8 + fVar1 * fVar11;
+		param_5[1][1] = fVar2 * scale;
+		param_5[1][2] = fVar3 * fVar7 + fVar1 * fVar8;
+		param_5[1][3] = fVar5 + fVar1 * fVar9 + fVar3 * fVar10 + fVar2 * fVar4;
 	}
 	{
-		f32 fVar1     = param_1[2][1];
-		f32 fVar2     = param_1[2][2];
+		f32 fVar1     = param_1[2][2];
+		f32 fVar2     = param_1[2][1];
 		f32 fVar3     = param_1[2][0];
-		f32 fVar4     = param_1[2][3];
-		param_5[2][0] = fVar2 * fVar11 + fVar3 * fVar8;
-		param_5[2][1] = fVar1 * scale;
-		param_5[2][2] = fVar2 * fVar8 + fVar3 * fVar7;
-		param_5[2][3] = fVar1 * fVar12 + fVar3 * fVar10 + fVar2 * fVar9 + fVar4;
+		f32 fVar5     = param_1[2][3];
+		param_5[2][0] = fVar3 * fVar8 + fVar1 * fVar11;
+		param_5[2][1] = fVar2 * scale;
+		param_5[2][2] = fVar3 * fVar7 + fVar1 * fVar8;
+		param_5[2][3] = fVar5 + fVar1 * fVar9 + fVar3 * fVar10 + fVar2 * fVar4;
 	}
 }
 
@@ -1025,7 +973,7 @@ void TModelWaterManager::drawSilhouette(MtxPtr param_1)
 
 	SMS_SettingDrawShape(unk5D58, 0);
 	for (int i = 0; i < mParticleCount; ++i) {
-		if ((mParticleFlagSOA[i] & 0xf) == 3) {
+		if ((mParticleFlagSOA[i] & 0xf) == 2) {
 			GXLoadPosMtxImm(unk2D14[i], GX_PNMTX0);
 			SMS_DrawShape(unk5D58, 0);
 		}
@@ -1040,7 +988,7 @@ void TModelWaterManager::drawSilhouette(MtxPtr param_1)
 	GXSetChanMatColor(
 	    GX_COLOR0A0,
 	    (GXColor) { 0xff, 0xff, 0xff,
-	                unk5D5D * (gpSilhouetteManager->unk48 * 0.00390625f) });
+	                unk5D5D * gpSilhouetteManager->unk48 * 0.00390625f });
 	GXSetBlendMode(GX_BM_BLEND, GX_BL_DSTALPHA, GX_BL_ZERO, GX_LO_NOOP);
 	if (unk5D60 & 0x20)
 		SMS_DrawCube(unk5D70, unk5D7C);
@@ -1165,7 +1113,7 @@ void TModelWaterManager::drawWaterVolume(MtxPtr param_1)
 		GXSetBlendMode(GX_BM_BLEND, GX_BL_DSTALPHA, GX_BL_ONE, GX_LO_NOOP);
 		GXSetColorUpdate(GX_FALSE);
 		GXSetAlphaUpdate(GX_TRUE);
-		GXSetDstAlpha(GX_FALSE, 0);
+		GXSetDstAlpha(GX_TRUE, 0);
 		if (unk5D60 & 0x10)
 			for (int i = 0; i < unk5D63; ++i)
 				drawTouchingMask();
@@ -1243,9 +1191,8 @@ void TModelWaterManager::drawMirror(MtxPtr param_1)
 	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
 	SMS_SettingDrawShape(unk5D54, 0);
 
-	const TBGCheckData* pTVar4 = *gpMarioGroundPlane;
+	const TBGCheckData* pTVar4 = SMS_GetMarioGroundPlane();
 	f32 fVar1                  = pTVar4->getPlaneDistance();
-	const JGeometry::TVec3<f32>& normal = pTVar4->getNormal();
 	for (int i = 0; i < mParticleCount; ++i) {
 		if ((mParticleFlagSOA[i] & 0xf) == 2
 		    && SMS_GetMarioGroundPlane()->isLegal()) {
@@ -1253,17 +1200,25 @@ void TModelWaterManager::drawMirror(MtxPtr param_1)
 			SMS_DrawShape(unk5D54, 0);
 		}
 	}
-	JGeometry::TVec3<f32> local_bc[8];
+	JGeometry::TVec3<f32> local_bc[4][2];
 
-	f32 fVar3 = 1.0f / normal.y;
+	f32 fVar3 = 1.0 / pTVar4->getNormal().y;
 
-	for (int i = 0; i < 8; ++i) {
-		local_bc[i].x = SMS_GetMarioPos().x + JMASSin(i * 0x2000) * 1000.0f;
-		local_bc[i].z = SMS_GetMarioPos().z + JMASCos(i * 0x2000) * 1000.0f;
-		local_bc[i].y
+	for (int i = 0; i < 4; ++i) {
+		local_bc[i][0].x = SMS_GetMarioPos().x + JMASSin(i * 0x4000) * 1000.0f;
+		local_bc[i][0].z = SMS_GetMarioPos().z + JMASCos(i * 0x4000) * 1000.0f;
+		local_bc[i][0].y
 		    = fVar3
-		          * -(normal.z * local_bc[i].z + normal.x * local_bc[i].x
-		              + fVar1)
+		          * -(fVar1 + pTVar4->getNormal().x * local_bc[0][0].x
+		              + pTVar4->getNormal().z * local_bc[0][0].z)
+		      + 4.0f;
+
+		local_bc[i][1].x = JMASSin(i * 0x4000) * 1000.0f + SMS_GetMarioPos().x;
+		local_bc[i][1].z = JMASSin(i * 0x4000) * 1000.0f + SMS_GetMarioPos().z;
+		local_bc[i][1].y
+		    = fVar3
+		          * -(fVar1 + pTVar4->getNormal().x * local_bc[0][0].x
+		              + pTVar4->getNormal().z * local_bc[0][0].z)
 		      + 4.0f;
 	}
 
@@ -1295,23 +1250,23 @@ void TModelWaterManager::drawMirror(MtxPtr param_1)
 	GXPosition3f32(SMS_GetMarioPos().x, SMS_GetMarioPos().y + 4.0f,
 	               SMS_GetMarioPos().z);
 	GXColor4u8(0xff, 0xff, 0xff, unk5D64);
-	GXPosition3f32(local_bc[0].x, local_bc[0].y, local_bc[0].z);
+	GXPosition3f32(local_bc[0][0].x, local_bc[0][0].y, local_bc[0][0].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[1].x, local_bc[1].y, local_bc[1].z);
+	GXPosition3f32(local_bc[0][1].x, local_bc[0][1].y, local_bc[0][1].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[2].x, local_bc[2].y, local_bc[2].z);
+	GXPosition3f32(local_bc[1][0].x, local_bc[1][0].y, local_bc[1][0].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[3].x, local_bc[3].y, local_bc[3].z);
+	GXPosition3f32(local_bc[1][1].x, local_bc[1][1].y, local_bc[1][1].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[4].x, local_bc[4].y, local_bc[4].z);
+	GXPosition3f32(local_bc[2][0].x, local_bc[2][0].y, local_bc[2][0].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[5].x, local_bc[5].y, local_bc[5].z);
+	GXPosition3f32(local_bc[2][1].x, local_bc[2][1].y, local_bc[2][1].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[6].x, local_bc[6].y, local_bc[6].z);
+	GXPosition3f32(local_bc[3][0].x, local_bc[3][0].y, local_bc[3][0].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[7].x, local_bc[7].y, local_bc[7].z);
+	GXPosition3f32(local_bc[3][1].x, local_bc[3][1].y, local_bc[3][1].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[0].x, local_bc[0].y, local_bc[0].z);
+	GXPosition3f32(local_bc[0][0].x, local_bc[0][0].y, local_bc[0][0].z);
 	GXColor4u8(0, 0, 0, 0);
 	GXEnd();
 
@@ -1329,23 +1284,23 @@ void TModelWaterManager::drawMirror(MtxPtr param_1)
 	GXPosition3f32(SMS_GetMarioPos().x, SMS_GetMarioPos().y + 4.0f,
 	               SMS_GetMarioPos().z);
 	GXColor4u8(0xff, 0xff, 0xff, unk5D64);
-	GXPosition3f32(local_bc[0].x, local_bc[0].y, local_bc[0].z);
+	GXPosition3f32(local_bc[0][0].x, local_bc[0][0].y, local_bc[0][0].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[1].x, local_bc[1].y, local_bc[1].z);
+	GXPosition3f32(local_bc[0][1].x, local_bc[0][1].y, local_bc[0][1].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[2].x, local_bc[2].y, local_bc[2].z);
+	GXPosition3f32(local_bc[1][0].x, local_bc[1][0].y, local_bc[1][0].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[3].x, local_bc[3].y, local_bc[3].z);
+	GXPosition3f32(local_bc[1][1].x, local_bc[1][1].y, local_bc[1][1].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[4].x, local_bc[4].y, local_bc[4].z);
+	GXPosition3f32(local_bc[2][0].x, local_bc[2][0].y, local_bc[2][0].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[5].x, local_bc[5].y, local_bc[5].z);
+	GXPosition3f32(local_bc[2][1].x, local_bc[2][1].y, local_bc[2][1].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[6].x, local_bc[6].y, local_bc[6].z);
+	GXPosition3f32(local_bc[3][0].x, local_bc[3][0].y, local_bc[3][0].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[7].x, local_bc[7].y, local_bc[7].z);
+	GXPosition3f32(local_bc[3][1].x, local_bc[3][1].y, local_bc[3][1].z);
 	GXColor4u8(0, 0, 0, 0);
-	GXPosition3f32(local_bc[0].x, local_bc[0].y, local_bc[0].z);
+	GXPosition3f32(local_bc[0][0].x, local_bc[0][0].y, local_bc[0][0].z);
 	GXColor4u8(0, 0, 0, 0);
 	GXEnd();
 
@@ -1358,281 +1313,9 @@ void init_sphere_glist() { }
 
 extern "C" void ReInitializeGX();
 
-extern "C" void showGPR__12JUTExceptionFP9OSContext();
-
-static void* tmp_data[] ATTRIBUTE_ALIGN(32) = {
-	(void*)0x98001600, (void*)0x00000100, (void*)0x0B000C00, (void*)0x20002100,
-	(void*)0x35003600, (void*)0x4A004B00, (void*)0x5F006000, (void*)0x74007500,
-	(void*)0x89008A00, (void*)0x9E009F00, (void*)0xB300B400, (void*)0xC800C998,
-	(void*)0x00160001, (void*)0x0002000C, (void*)0x000D0021, (void*)0x00220036,
-	(void*)0x0037004B, (void*)0x004C0060, (void*)0x00610075, (void*)0x0076008A,
-	(void*)0x008B009F, (void*)0x00A000B4, (void*)0x00B500C9, (void*)0x00CA9800,
-	(void*)0x16000200, (void*)0x03000D00, (void*)0x0E002200, (void*)0x23003700,
-	(void*)0x38004C00, (void*)0x4D006100, (void*)0x62007600, (void*)0x77008B00,
-	(void*)0x8C00A000, (void*)0xA100B500, (void*)0xB600CA00, (void*)0xCB980016,
-	(void*)0x00030004, (void*)0x000E000F, (void*)0x00230024, (void*)0x00380039,
-	(void*)0x004D004E, (void*)0x00620063, (void*)0x00770078, (void*)0x008C008D,
-	(void*)0x00A100A2, (void*)0x00B600B7, (void*)0x00CB00CC, (void*)0x98001600,
-	(void*)0x04000500, (void*)0x0F001000, (void*)0x24002500, (void*)0x39003A00,
-	(void*)0x4E004F00, (void*)0x63006400, (void*)0x78007900, (void*)0x8D008E00,
-	(void*)0xA200A300, (void*)0xB700B800, (void*)0xCC00CD98, (void*)0x00160005,
-	(void*)0x00060010, (void*)0x00110025, (void*)0x0026003A, (void*)0x003B004F,
-	(void*)0x00500064, (void*)0x00650079, (void*)0x007A008E, (void*)0x008F00A3,
-	(void*)0x00A400B8, (void*)0x00B900CD, (void*)0x00CE9800, (void*)0x16000600,
-	(void*)0x07001100, (void*)0x12002600, (void*)0x27003B00, (void*)0x3C005000,
-	(void*)0x51006500, (void*)0x66007A00, (void*)0x7B008F00, (void*)0x9000A400,
-	(void*)0xA500B900, (void*)0xBA00CE00, (void*)0xCF980016, (void*)0x00070008,
-	(void*)0x00120013, (void*)0x00270028, (void*)0x003C003D, (void*)0x00510052,
-	(void*)0x00660067, (void*)0x007B007C, (void*)0x00900091, (void*)0x00A500A6,
-	(void*)0x00BA00BB, (void*)0x00CF00D0, (void*)0x98001600, (void*)0x08000900,
-	(void*)0x13001400, (void*)0x28002900, (void*)0x3D003E00, (void*)0x52005300,
-	(void*)0x67006800, (void*)0x7C007D00, (void*)0x91009200, (void*)0xA600A700,
-	(void*)0xBB00BC00, (void*)0xD000D198, (void*)0x00160009, (void*)0x000A0014,
-	(void*)0x00150029, (void*)0x002A003E, (void*)0x003F0053, (void*)0x00540068,
-	(void*)0x0069007D, (void*)0x007E0092, (void*)0x009300A7, (void*)0x00A800BC,
-	(void*)0x00BD00D1, (void*)0x00D29800, (void*)0x16001500, (void*)0x0A001600,
-	(void*)0x09001700, (void*)0x08001800, (void*)0x07001900, (void*)0x06001A00,
-	(void*)0x05001B00, (void*)0x04001C00, (void*)0x03001D00, (void*)0x02001E00,
-	(void*)0x01001F00, (void*)0x00980016, (void*)0x002A0015, (void*)0x002B0016,
-	(void*)0x002C0017, (void*)0x002D0018, (void*)0x002E0019, (void*)0x002F001A,
-	(void*)0x0030001B, (void*)0x0031001C, (void*)0x0032001D, (void*)0x0033001E,
-	(void*)0x0034001F, (void*)0x98001600, (void*)0x3F002A00, (void*)0x40002B00,
-	(void*)0x41002C00, (void*)0x42002D00, (void*)0x43002E00, (void*)0x44002F00,
-	(void*)0x45003000, (void*)0x46003100, (void*)0x47003200, (void*)0x48003300,
-	(void*)0x49003498, (void*)0x00160054, (void*)0x003F0055, (void*)0x00400056,
-	(void*)0x00410057, (void*)0x00420058, (void*)0x00430059, (void*)0x0044005A,
-	(void*)0x0045005B, (void*)0x0046005C, (void*)0x0047005D, (void*)0x0048005E,
-	(void*)0x00499800, (void*)0x16006900, (void*)0x54006A00, (void*)0x55006B00,
-	(void*)0x56006C00, (void*)0x57006D00, (void*)0x58006E00, (void*)0x59006F00,
-	(void*)0x5A007000, (void*)0x5B007100, (void*)0x5C007200, (void*)0x5D007300,
-	(void*)0x5E980016, (void*)0x007E0069, (void*)0x007F006A, (void*)0x0080006B,
-	(void*)0x0081006C, (void*)0x0082006D, (void*)0x0083006E, (void*)0x0084006F,
-	(void*)0x00850070, (void*)0x00860071, (void*)0x00870072, (void*)0x00880073,
-	(void*)0x98001600, (void*)0x93007E00, (void*)0x94007F00, (void*)0x95008000,
-	(void*)0x96008100, (void*)0x97008200, (void*)0x98008300, (void*)0x99008400,
-	(void*)0x9A008500, (void*)0x9B008600, (void*)0x9C008700, (void*)0x9D008898,
-	(void*)0x001600A8, (void*)0x009300A9, (void*)0x009400AA, (void*)0x009500AB,
-	(void*)0x009600AC, (void*)0x009700AD, (void*)0x009800AE, (void*)0x009900AF,
-	(void*)0x009A00B0, (void*)0x009B00B1, (void*)0x009C00B2, (void*)0x009D9800,
-	(void*)0x1600BD00, (void*)0xA800BE00, (void*)0xA900BF00, (void*)0xAA00C000,
-	(void*)0xAB00C100, (void*)0xAC00C200, (void*)0xAD00C300, (void*)0xAE00C400,
-	(void*)0xAF00C500, (void*)0xB000C600, (void*)0xB100C700, (void*)0xB2980016,
-	(void*)0x00D200BD, (void*)0x00D300BE, (void*)0x00D400BF, (void*)0x00D500C0,
-	(void*)0x00D600C1, (void*)0x00D700C2, (void*)0x00D800C3, (void*)0x00D900C4,
-	(void*)0x00DA00C5, (void*)0x00DB00C6, (void*)0x00DC00C7, (void*)0x98001601,
-	(void*)0x7E019101, (void*)0x7D019001, (void*)0x7C018F01, (void*)0x7B018E01,
-	(void*)0x7A018D01, (void*)0x79018C01, (void*)0x78018B01, (void*)0x77018A01,
-	(void*)0x76018901, (void*)0x75018800, (void*)0x0B000098, (void*)0x0016016B,
-	(void*)0x017E016A, (void*)0x017D0169, (void*)0x017C0168, (void*)0x017B0167,
-	(void*)0x017A0166, (void*)0x01790165, (void*)0x01780164, (void*)0x01770163,
-	(void*)0x01760162, (void*)0x01750020, (void*)0x000B9800, (void*)0x16015801,
-	(void*)0x6B015701, (void*)0x6A015601, (void*)0x69015501, (void*)0x68015401,
-	(void*)0x67015301, (void*)0x66015201, (void*)0x65015101, (void*)0x64015001,
-	(void*)0x63014F01, (void*)0x62003500, (void*)0x20980016, (void*)0x01450158,
-	(void*)0x01440157, (void*)0x01430156, (void*)0x01420155, (void*)0x01410154,
-	(void*)0x01400153, (void*)0x013F0152, (void*)0x013E0151, (void*)0x013D0150,
-	(void*)0x013C014F, (void*)0x004A0035, (void*)0x98001601, (void*)0x32014501,
-	(void*)0x31014401, (void*)0x30014301, (void*)0x2F014201, (void*)0x2E014101,
-	(void*)0x2D014001, (void*)0x2C013F01, (void*)0x2B013E01, (void*)0x2A013D01,
-	(void*)0x29013C00, (void*)0x5F004A98, (void*)0x0016011F, (void*)0x0132011E,
-	(void*)0x0131011D, (void*)0x0130011C, (void*)0x012F011B, (void*)0x012E011A,
-	(void*)0x012D0119, (void*)0x012C0118, (void*)0x012B0117, (void*)0x012A0116,
-	(void*)0x01290074, (void*)0x005F9800, (void*)0x16010C01, (void*)0x1F010B01,
-	(void*)0x1E010A01, (void*)0x1D010901, (void*)0x1C010801, (void*)0x1B010701,
-	(void*)0x1A010601, (void*)0x19010501, (void*)0x18010401, (void*)0x17010301,
-	(void*)0x16008900, (void*)0x74980016, (void*)0x00F9010C, (void*)0x00F8010B,
-	(void*)0x00F7010A, (void*)0x00F60109, (void*)0x00F50108, (void*)0x00F40107,
-	(void*)0x00F30106, (void*)0x00F20105, (void*)0x00F10104, (void*)0x00F00103,
-	(void*)0x009E0089, (void*)0x98001600, (void*)0xE600F900, (void*)0xE500F800,
-	(void*)0xE400F700, (void*)0xE300F600, (void*)0xE200F500, (void*)0xE100F400,
-	(void*)0xE000F300, (void*)0xDF00F200, (void*)0xDE00F100, (void*)0xDD00F000,
-	(void*)0xB3009E98, (void*)0x001600D2, (void*)0x00E600D1, (void*)0x00E500D0,
-	(void*)0x00E400CF, (void*)0x00E300CE, (void*)0x00E200CD, (void*)0x00E100CC,
-	(void*)0x00E000CB, (void*)0x00DF00CA, (void*)0x00DE00C9, (void*)0x00DD00C8,
-	(void*)0x00B39800, (void*)0x16000001, (void*)0x88001F01, (void*)0x87003401,
-	(void*)0x74004901, (void*)0x61005E01, (void*)0x4E007301, (void*)0x3B008801,
-	(void*)0x28009D01, (void*)0x1500B201, (void*)0x0200C700, (void*)0xEF00DC00,
-	(void*)0xDB980016, (void*)0x01880189, (void*)0x01870186, (void*)0x01740173,
-	(void*)0x01610160, (void*)0x014E014D, (void*)0x013B013A, (void*)0x01280127,
-	(void*)0x01150114, (void*)0x01020101, (void*)0x00EF00EE, (void*)0x00DB00DA,
-	(void*)0x98001601, (void*)0x89018A01, (void*)0x86018501, (void*)0x73017201,
-	(void*)0x60015F01, (void*)0x4D014C01, (void*)0x3A013901, (void*)0x27012601,
-	(void*)0x14011301, (void*)0x01010000, (void*)0xEE00ED00, (void*)0xDA00D998,
-	(void*)0x0016018A, (void*)0x018B0185, (void*)0x01840172, (void*)0x0171015F,
-	(void*)0x015E014C, (void*)0x014B0139, (void*)0x01380126, (void*)0x01250113,
-	(void*)0x01120100, (void*)0x00FF00ED, (void*)0x00EC00D9, (void*)0x00D89800,
-	(void*)0x16018B01, (void*)0x8C018401, (void*)0x83017101, (void*)0x70015E01,
-	(void*)0x5D014B01, (void*)0x4A013801, (void*)0x37012501, (void*)0x24011201,
-	(void*)0x1100FF00, (void*)0xFE00EC00, (void*)0xEB00D800, (void*)0xD7980016,
-	(void*)0x018C018D, (void*)0x01830182, (void*)0x0170016F, (void*)0x015D015C,
-	(void*)0x014A0149, (void*)0x01370136, (void*)0x01240123, (void*)0x01110110,
-	(void*)0x00FE00FD, (void*)0x00EB00EA, (void*)0x00D700D6, (void*)0x98001601,
-	(void*)0x8D018E01, (void*)0x82018101, (void*)0x6F016E01, (void*)0x5C015B01,
-	(void*)0x49014801, (void*)0x36013501, (void*)0x23012201, (void*)0x10010F00,
-	(void*)0xFD00FC00, (void*)0xEA00E900, (void*)0xD600D598, (void*)0x0016018E,
-	(void*)0x018F0181, (void*)0x0180016E, (void*)0x016D015B, (void*)0x015A0148,
-	(void*)0x01470135, (void*)0x01340122, (void*)0x0121010F, (void*)0x010E00FC,
-	(void*)0x00FB00E9, (void*)0x00E800D5, (void*)0x00D49800, (void*)0x16018F01,
-	(void*)0x90018001, (void*)0x7F016D01, (void*)0x6C015A01, (void*)0x59014701,
-	(void*)0x46013401, (void*)0x33012101, (void*)0x20010E01, (void*)0x0D00FB00,
-	(void*)0xFA00E800, (void*)0xE700D400, (void*)0xD3980016, (void*)0x01900191,
-	(void*)0x017F017E, (void*)0x016C016B, (void*)0x01590158, (void*)0x01460145,
-	(void*)0x01330132, (void*)0x0120011F, (void*)0x010D010C, (void*)0x00FA00F9,
-	(void*)0x00E700E6, (void*)0x00D300D2, (void*)0x00000000, (void*)0x00000000,
-	(void*)0x00008001, (void*)0x00000000, (void*)0x80C9F1DD, (void*)0x000083D3,
-	(void*)0xE0F50000, (void*)0x8A5ACD94, (void*)0x00009580, (void*)0xB9000000,
-	(void*)0xA57EA57E, (void*)0x0000B900, (void*)0x95800000, (void*)0xCD948A5A,
-	(void*)0x0000E0F5, (void*)0x83D30000, (void*)0xF1DD80C9, (void*)0x00000000,
-	(void*)0x8001F1DD, (void*)0x80C90000, (void*)0xF03F81F5, (void*)0xF03FEE95,
-	(void*)0x8613DD2A, (void*)0xED218EC5, (void*)0xC762EC40, (void*)0x9D40B100,
-	(void*)0xEC40B100, (void*)0x9D40ED21, (void*)0xC7628EC5, (void*)0xEE95DD2A,
-	(void*)0x8613F03F, (void*)0xF03F81F5, (void*)0xF1DD0000, (void*)0x80C90000,
-	(void*)0x0E2380C9, (void*)0x0E230000, (void*)0x80C90FC1, (void*)0xF03F81F5,
-	(void*)0x116BDD2A, (void*)0x861312DF, (void*)0xC7628EC5, (void*)0x13C0B100,
-	(void*)0x9D4013C0, (void*)0x9D40B100, (void*)0x12DF8EC5, (void*)0xC762116B,
-	(void*)0x8613DD2A, (void*)0x0FC181F5, (void*)0xF03F0E23, (void*)0x80C90000,
-	(void*)0xE0F583D3, (void*)0x0000DD2A, (void*)0x8613EE95, (void*)0xD9688C39,
-	(void*)0xD968D679, (void*)0x982EC1B5, (void*)0xD556AAAB, (void*)0xAAABD679,
-	(void*)0xC1B5982E, (void*)0xD968D968, (void*)0x8C39DD2A, (void*)0xEE958613,
-	(void*)0xE0F50000, (void*)0x83D3F03F, (void*)0x0FC181F5, (void*)0x00001F0B,
-	(void*)0x83D30FC1, (void*)0x0FC181F5, (void*)0x1F0B0000, (void*)0x83D322D6,
-	(void*)0xEE958613, (void*)0x2698D968, (void*)0x8C392987, (void*)0xC1B5982E,
-	(void*)0x2AAAAAAB, (void*)0xAAAB2987, (void*)0x982EC1B5, (void*)0x26988C39,
-	(void*)0xD96822D6, (void*)0x8613EE95, (void*)0x1F0B83D3, (void*)0x0000CD94,
-	(void*)0x8A5A0000, (void*)0xC7628EC5, (void*)0xED21C1B5, (void*)0x982ED679,
-	(void*)0xBE26A832, (void*)0xBE26BE26, (void*)0xBE26A832, (void*)0xC1B5D679,
-	(void*)0x982EC762, (void*)0xED218EC5, (void*)0xCD940000, (void*)0x8A5ADD2A,
-	(void*)0x116B8613, (void*)0xEE9522D6, (void*)0x86130000, (void*)0x326C8A5A,
-	(void*)0x116B22D6, (void*)0x861322D6, (void*)0x116B8613, (void*)0x326C0000,
-	(void*)0x8A5A389E, (void*)0xED218EC5, (void*)0x3E4BD679, (void*)0x982E41DA,
-	(void*)0xBE26A832, (void*)0x41DAA832, (void*)0xBE263E4B, (void*)0x982ED679,
-	(void*)0x389E8EC5, (void*)0xED21326C, (void*)0x8A5A0000, (void*)0xB9009580,
-	(void*)0x0000B100, (void*)0x9D40EC40, (void*)0xAAABAAAB, (void*)0xD556A832,
-	(void*)0xBE26BE26, (void*)0xAAABD556, (void*)0xAAABB100, (void*)0xEC409D40,
-	(void*)0xB9000000, (void*)0x9580C762, (void*)0x12DF8EC5, (void*)0xD9682698,
-	(void*)0x8C39ED21, (void*)0x389E8EC5, (void*)0x00004700, (void*)0x958012DF,
-	(void*)0x389E8EC5, (void*)0x26982698, (void*)0x8C39389E, (void*)0x12DF8EC5,
-	(void*)0x47000000, (void*)0x95804F00, (void*)0xEC409D40, (void*)0x5555D556,
-	(void*)0xAAAB57CE, (void*)0xBE26BE26, (void*)0x5555AAAB, (void*)0xD5564F00,
-	(void*)0x9D40EC40, (void*)0x47009580, (void*)0x0000A57E, (void*)0xA57E0000,
-	(void*)0x9D40B100, (void*)0xEC40982E, (void*)0xC1B5D679, (void*)0x982ED679,
-	(void*)0xC1B59D40, (void*)0xEC40B100, (void*)0xA57E0000, (void*)0xA57EB100,
-	(void*)0x13C09D40, (void*)0xC1B52987, (void*)0x982ED679, (void*)0x3E4B982E,
-	(void*)0xEC404F00, (void*)0x9D400000, (void*)0x5A82A57E, (void*)0x13C04F00,
-	(void*)0x9D402987, (void*)0x3E4B982E, (void*)0x3E4B2987, (void*)0x982E4F00,
-	(void*)0x13C09D40, (void*)0x5A820000, (void*)0xA57E62C0, (void*)0xEC40B100,
-	(void*)0x67D2D679, (void*)0xC1B567D2, (void*)0xC1B5D679, (void*)0x62C0B100,
-	(void*)0xEC405A82, (void*)0xA57E0000, (void*)0x9580B900, (void*)0x00008EC5,
-	(void*)0xC762ED21, (void*)0x8C39D968, (void*)0xD9688EC5, (void*)0xED21C762,
-	(void*)0x95800000, (void*)0xB9009D40, (void*)0x13C0B100, (void*)0xAAAB2AAA,
-	(void*)0xAAABBE26, (void*)0x41DAA832, (void*)0xD5565555, (void*)0xAAABEC40,
-	(void*)0x62C0B100, (void*)0x00006A80, (void*)0xB90013C0, (void*)0x62C0B100,
-	(void*)0x2AAA5555, (void*)0xAAAB41DA, (void*)0x41DAA832, (void*)0x55552AAA,
-	(void*)0xAAAB62C0, (void*)0x13C0B100, (void*)0x6A800000, (void*)0xB900713B,
-	(void*)0xED21C762, (void*)0x73C7D968, (void*)0xD968713B, (void*)0xC762ED21,
-	(void*)0x6A80B900, (void*)0x00008A5A, (void*)0xCD940000, (void*)0x8613DD2A,
-	(void*)0xEE958613, (void*)0xEE95DD2A, (void*)0x8A5A0000, (void*)0xCD948EC5,
-	(void*)0x12DFC762, (void*)0x982E2987, (void*)0xC1B5A832, (void*)0x41DABE26,
-	(void*)0xBE2657CE, (void*)0xBE26D679, (void*)0x67D2C1B5, (void*)0xED21713B,
-	(void*)0xC7620000, (void*)0x75A6CD94, (void*)0x12DF713B, (void*)0xC7622987,
-	(void*)0x67D2C1B5, (void*)0x41DA57CE, (void*)0xBE2657CE, (void*)0x41DABE26,
-	(void*)0x67D22987, (void*)0xC1B5713B, (void*)0x12DFC762, (void*)0x75A60000,
-	(void*)0xCD9479ED, (void*)0xEE95DD2A, (void*)0x79EDDD2A, (void*)0xEE9575A6,
-	(void*)0xCD940000, (void*)0x83D3E0F5, (void*)0x000081F5, (void*)0xF03FF03F,
-	(void*)0x83D30000, (void*)0xE0F58613, (void*)0x116BDD2A, (void*)0x8C392698,
-	(void*)0xD968982E, (void*)0x3E4BD679, (void*)0xAAAB5555, (void*)0xD556C1B5,
-	(void*)0x67D2D679, (void*)0xD96873C7, (void*)0xD968EE95, (void*)0x79EDDD2A,
-	(void*)0x00007C2D, (void*)0xE0F5116B, (void*)0x79EDDD2A, (void*)0x269873C7,
-	(void*)0xD9683E4B, (void*)0x67D2D679, (void*)0x55555555, (void*)0xD55667D2,
-	(void*)0x3E4BD679, (void*)0x73C72698, (void*)0xD96879ED, (void*)0x116BDD2A,
-	(void*)0x7C2D0000, (void*)0xE0F57E0B, (void*)0xF03FF03F, (void*)0x7C2DE0F5,
-	(void*)0x000080C9, (void*)0xF1DD0000, (void*)0x80C90000, (void*)0xF1DD81F5,
-	(void*)0x0FC1F03F, (void*)0x861322D6, (void*)0xEE958EC5, (void*)0x389EED21,
-	(void*)0x9D404F00, (void*)0xEC40B100, (void*)0x62C0EC40, (void*)0xC762713B,
-	(void*)0xED21DD2A, (void*)0x79EDEE95, (void*)0xF03F7E0B, (void*)0xF03F0000,
-	(void*)0x7F37F1DD, (void*)0x0FC17E0B, (void*)0xF03F22D6, (void*)0x79EDEE95,
-	(void*)0x389E713B, (void*)0xED214F00, (void*)0x62C0EC40, (void*)0x62C04F00,
-	(void*)0xEC40713B, (void*)0x389EED21, (void*)0x79ED22D6, (void*)0xEE957E0B,
-	(void*)0x0FC1F03F, (void*)0x7F370000, (void*)0xF1DD7F37, (void*)0xF1DD0000,
-	(u8*)showGPR__12JUTExceptionFP9OSContext + 0x18, (void*)0x000080C9, (void*)0x0E230000, (void*)0x83D31F0B,
-	(void*)0x00008A5A, (void*)0x326C0000, (void*)0x95804700, (void*)0x0000A57E,
-	(void*)0x5A820000, (void*)0xB9006A80, (void*)0x0000CD94, (void*)0x75A60000,
-	(void*)0xE0F57C2D, (void*)0x0000F1DD, (void*)0x7F370000, (void*)0x00007FFF,
-	(void*)0x00000E23, (void*)0x7F370000, (void*)0x1F0B7C2D, (void*)0x0000326C,
-	(void*)0x75A60000, (void*)0x47006A80, (void*)0x00005A82, (void*)0x5A820000,
-	(void*)0x6A804700, (void*)0x000075A6, (void*)0x326C0000, (void*)0x7C2D1F0B,
-	(void*)0x00007F37, (void*)0x0E230000, (void*)0x7FFF0000, (void*)0x000080C9,
-	(void*)0x00000E23, (void*)0x81F50FC1, (void*)0x0FC18613, (void*)0x22D6116B,
-	(void*)0x8EC5389E, (void*)0x12DF9D40, (void*)0x4F0013C0, (void*)0xB10062C0,
-	(void*)0x13C0C762, (void*)0x713B12DF, (void*)0xDD2A79ED, (void*)0x116BF03F,
-	(void*)0x7E0B0FC1, (void*)0x00007F37, (void*)0x0E230FC1, (void*)0x7E0B0FC1,
-	(void*)0x22D679ED, (void*)0x116B389E, (void*)0x713B12DF, (void*)0x4F0062C0,
-	(void*)0x13C062C0, (void*)0x4F0013C0, (void*)0x713B389E, (void*)0x12DF79ED,
-	(void*)0x22D6116B, (void*)0x7E0B0FC1, (void*)0x0FC17F37, (void*)0x00000E23,
-	(void*)0x81F5F03F, (void*)0x0FC183D3, (void*)0x00001F0B, (void*)0x8613116B,
-	(void*)0x22D68C39, (void*)0x26982698, (void*)0x982E3E4B, (void*)0x2987AAAB,
-	(void*)0x55552AAA, (void*)0xC1B567D2, (void*)0x2987D968, (void*)0x73C72698,
-	(void*)0xEE9579ED, (void*)0x22D60000, (void*)0x7C2D1F0B, (void*)0x116B79ED,
-	(void*)0x22D62698, (void*)0x73C72698, (void*)0x3E4B67D2, (void*)0x29875555,
-	(void*)0x55552AAA, (void*)0x67D23E4B, (void*)0x298773C7, (void*)0x26982698,
-	(void*)0x79ED116B, (void*)0x22D67C2D, (void*)0x00001F0B, (void*)0x7E0BF03F,
-	(void*)0x0FC18613, (void*)0xDD2A116B, (void*)0x8613EE95, (void*)0x22D68A5A,
-	(void*)0x0000326C, (void*)0x8EC512DF, (void*)0x389E982E, (void*)0x29873E4B,
-	(void*)0xA83241DA, (void*)0x41DABE26, (void*)0x57CE41DA, (void*)0xD67967D2,
-	(void*)0x3E4BED21, (void*)0x713B389E, (void*)0x000075A6, (void*)0x326C12DF,
-	(void*)0x713B389E, (void*)0x298767D2, (void*)0x3E4B41DA, (void*)0x57CE41DA,
-	(void*)0x57CE41DA, (void*)0x41DA67D2, (void*)0x29873E4B, (void*)0x713B12DF,
-	(void*)0x389E75A6, (void*)0x0000326C, (void*)0x79EDEE95, (void*)0x22D679ED,
-	(void*)0xDD2A116B, (void*)0x8EC5C762, (void*)0x12DF8C39, (void*)0xD9682698,
-	(void*)0x8EC5ED21, (void*)0x389E9580, (void*)0x00004700, (void*)0x9D4013C0,
-	(void*)0x4F00AAAB, (void*)0x2AAA5555, (void*)0xBE2641DA, (void*)0x57CED556,
-	(void*)0x55555555, (void*)0xEC4062C0, (void*)0x4F000000, (void*)0x6A804700,
-	(void*)0x13C062C0, (void*)0x4F002AAA, (void*)0x55555555, (void*)0x41DA41DA,
-	(void*)0x57CE5555, (void*)0x2AAA5555, (void*)0x62C013C0, (void*)0x4F006A80,
-	(void*)0x00004700, (void*)0x713BED21, (void*)0x389E73C7, (void*)0xD9682698,
-	(void*)0x713BC762, (void*)0x12DF9D40, (void*)0xB10013C0, (void*)0x982EC1B5,
-	(void*)0x2987982E, (void*)0xD6793E4B, (void*)0x9D40EC40, (void*)0x4F00A57E,
-	(void*)0x00005A82, (void*)0xB10013C0, (void*)0x62C0C1B5, (void*)0x298767D2,
-	(void*)0xD6793E4B, (void*)0x67D2EC40, (void*)0x4F0062C0, (void*)0x00005A82,
-	(void*)0x5A8213C0, (void*)0x4F0062C0, (void*)0x29873E4B, (void*)0x67D23E4B,
-	(void*)0x298767D2, (void*)0x4F0013C0, (void*)0x62C05A82, (void*)0x00005A82,
-	(void*)0x62C0EC40, (void*)0x4F0067D2, (void*)0xD6793E4B, (void*)0x67D2C1B5,
-	(void*)0x298762C0, (void*)0xB10013C0, (void*)0xB1009D40, (void*)0x13C0AAAB,
-	(void*)0xAAAB2AAA, (void*)0xA832BE26, (void*)0x41DAAAAB, (void*)0xD5565555,
-	(void*)0xB100EC40, (void*)0x62C0B900, (void*)0x00006A80, (void*)0xC76212DF,
-	(void*)0x713BD968, (void*)0x269873C7, (void*)0xED21389E, (void*)0x713B0000,
-	(void*)0x47006A80, (void*)0x12DF389E, (void*)0x713B2698, (void*)0x269873C7,
-	(void*)0x389E12DF, (void*)0x713B4700, (void*)0x00006A80, (void*)0x4F00EC40,
-	(void*)0x62C05555, (void*)0xD5565555, (void*)0x57CEBE26, (void*)0x41DA5555,
-	(void*)0xAAAB2AAA, (void*)0x4F009D40, (void*)0x13C0C762, (void*)0x8EC512DF,
-	(void*)0xC1B5982E, (void*)0x2987BE26, (void*)0xA83241DA, (void*)0xBE26BE26,
-	(void*)0x57CEC1B5, (void*)0xD67967D2, (void*)0xC762ED21, (void*)0x713BCD94,
-	(void*)0x000075A6, (void*)0xDD2A116B, (void*)0x79EDEE95, (void*)0x22D679ED,
-	(void*)0x0000326C, (void*)0x75A6116B, (void*)0x22D679ED, (void*)0x22D6116B,
-	(void*)0x79ED326C, (void*)0x000075A6, (void*)0x389EED21, (void*)0x713B3E4B,
-	(void*)0xD67967D2, (void*)0x41DABE26, (void*)0x57CE41DA, (void*)0xA83241DA,
-	(void*)0x3E4B982E, (void*)0x2987389E, (void*)0x8EC512DF, (void*)0xDD2A8613,
-	(void*)0x116BD968, (void*)0x8C392698, (void*)0xD679982E, (void*)0x3E4BD556,
-	(void*)0xAAAB5555, (void*)0xD679C1B5, (void*)0x67D2D968, (void*)0xD96873C7,
-	(void*)0xDD2AEE95, (void*)0x79EDE0F5, (void*)0x00007C2D, (void*)0xF03F0FC1,
-	(void*)0x7E0B0000, (void*)0x1F0B7C2D, (void*)0x0FC10FC1, (void*)0x7E0B1F0B,
-	(void*)0x00007C2D, (void*)0x22D6EE95, (void*)0x79ED2698, (void*)0xD96873C7,
-	(void*)0x2987C1B5, (void*)0x67D22AAA, (void*)0xAAAB5555, (void*)0x2987982E,
-	(void*)0x3E4B2698, (void*)0x8C392698, (void*)0x22D68613, (void*)0x116BF03F,
-	(void*)0x81F50FC1, (void*)0xEE958613, (void*)0x22D6ED21, (void*)0x8EC5389E,
-	(void*)0xEC409D40, (void*)0x4F00EC40, (void*)0xB10062C0, (void*)0xED21C762,
-	(void*)0x713BEE95, (void*)0xDD2A79ED, (void*)0xF03FF03F, (void*)0x7E0BF1DD,
-	(void*)0x00007F37, (void*)0x00000E23, (void*)0x7F370E23, (void*)0x00007F37,
-	(void*)0x0FC1F03F, (void*)0x7E0B116B, (void*)0xDD2A79ED, (void*)0x12DFC762,
-	(void*)0x713B13C0, (void*)0xB10062C0, (void*)0x13C09D40, (void*)0x4F0012DF,
-	(void*)0x8EC5389E, (void*)0x116B8613, (void*)0x22D60FC1, (void*)0x81F50FC1,
-	(void*)0x000080C9, (void*)0x0E230000, (void*)0x83D31F0B, (void*)0x00008A5A,
-	(void*)0x326C0000, (void*)0x95804700, (void*)0x0000A57E, (void*)0x5A820000,
-	(void*)0xB9006A80, (void*)0x0000CD94, (void*)0x75A60000, (void*)0xE0F57C2D,
-	(void*)0x0000F1DD, (void*)0x7F370000, (void*)0x00007FFF,
-};
-static u8* sphere_glist_p;
-static u8* sphere_pos_t;
+static u8 tmp_data;
+static void* sphere_glist_p;
+static void* sphere_pos_t;
 
 void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 {
@@ -1640,13 +1323,12 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 	if (gpMarDirector->getCurrentMap() == 1) {
 		static bool initialized = false;
 		if (!initialized) {
-			sphere_glist_p = (u8*)tmp_data;
+			sphere_glist_p = &tmp_data;
 			initialized    = 1;
-			sphere_pos_t   = sphere_glist_p + 0x760;
+			sphere_pos_t   = &tmp_data + 1000;
 		}
 
-		int r31 = unk5E44;
-		f32 f30 = (((unk5E0C + unk5E40) - unk5E0C) / f32(r31 - 1));
+		f32 f30 = (((unk5E0C + unk5E40) - unk5E0C) / f32(unk5E44 - 1));
 		f32 f31 = unk5E0C;
 
 		GXColor local_2C;
@@ -1657,7 +1339,6 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 		Mtx afStack_f8;
 		MTXIdentity(afStack_f8);
 
-		JGeometry::TVec3<f32> local_pos(0.0f, 3600.0f, -7458.0f);
 		Mtx local_c8;
 		local_c8[2][1] = 0.0;
 		local_c8[2][0] = 0.0;
@@ -1665,9 +1346,9 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 		local_c8[1][0] = 0.0;
 		local_c8[0][2] = 0.0;
 		local_c8[0][1] = 0.0;
-		local_c8[0][3] = local_pos.x;
-		local_c8[1][3] = local_pos.y;
-		local_c8[2][3] = local_pos.z;
+		local_c8[0][3] = 0.0;
+		local_c8[1][3] = 3600.0;
+		local_c8[2][3] = -7458.0;
 
 		GXClearVtxDesc();
 		GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
@@ -1708,7 +1389,8 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 		GXEnd();
 
 		GXColor local_28;
-		local_28.a = f32(0xff - r27) / r31 + 0.5f;
+		int r31    = unk5E44;
+		local_28.a = f32(0xff - unk5E45) / unk5E44 + 0.5f;
 		GXSetTevColor(GX_TEVREG0, local_28);
 		GXSetZMode(GX_TRUE, GX_GREATER, GX_TRUE);
 		GXClearVtxDesc();
@@ -1802,9 +1484,7 @@ void TModelWaterManager::drawRefracAndSpec() const
 	unk5D34->load(GX_TEXMAP0);
 	unk5D38->load(GX_TEXMAP1);
 	unk5D3C->load(GX_TEXMAP2);
-	GXColor local_color;
-	local_color = (GXColor) { 0, 0, 0, unk5D65 };
-	GXSetTevColor(GX_TEVREG0, local_color);
+	GXSetTevColor(GX_TEVREG0, (GXColor) { 0, 0, 0, unk5D65 });
 	GXSetNumTevStages(2);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
 	GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO,

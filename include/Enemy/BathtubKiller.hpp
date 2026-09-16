@@ -14,6 +14,12 @@ public:
 	void makeFast(const TBathtubKillerParams*);
 	void makeShine(const TBathtubKillerParams*);
 	void makeNormal(const TBathtubKillerParams*);
+
+	/* 0x00 */ f32 unk0;
+	/* 0x04 */ f32 unk4;
+	/* 0x08 */ f32 unk8;
+	/* 0x0C */ f32 unkC;
+	/* 0x10 */ s32 unk10;
 };
 
 class TBathtubKillerParams : public TSmallEnemyParams {
@@ -105,21 +111,17 @@ public:
 
 public:
 	/* 0x194 */ u8 unk194;
-	/* 0x198 */ f32 unk198;
-	/* 0x19C */ f32 unk19C;
-	/* 0x1A0 */ f32 unk1A0;
-	/* 0x1A4 */ f32 unk1A4;
-	/* 0x1A8 */ s32 unk1A8;
+	/* 0x198 */ TBathtubKillerPersonality unk198;
 	/* 0x1AC */ JGeometry::TQuat4<f32> mQuat;
 	/* 0x1BC */ JGeometry::TVec3<f32> unk1BC;
 	/* 0x1C8 */ char unk1C8[4];
 	/* 0x1CC */ TBathtub* unk1CC;
 	/* 0x1D0 */ char unk1D0[4];
 	/* 0x1D4 */ int unk1D4;
-	/* 0x1D8 */ GXColorS10 unk1D8;
-	/* 0x1E0 */ GXColorS10 unk1E0;
-	/* 0x1E8 */ GXColorS10 unk1E8;
-	/* 0x1F0 */ GXColorS10 unk1F0;
+	/* 0x1D8 */ GXColorS10 mBodyColor;
+	/* 0x1E0 */ GXColorS10 mNoseColor;
+	/* 0x1E8 */ GXColorS10 mEyesColor;
+	/* 0x1F0 */ GXColorS10 mBaseColor;
 	/* 0x1F8 */ f32 unk1F8;
 	/* 0x1FC */ f32 unk1FC;
 	/* 0x200 */ f32 unk200;
@@ -129,8 +131,8 @@ public:
 	/* 0x210 */ int unk210;
 	/* 0x214 */ int unk214;
 	/* 0x218 */ int unk218;
-	/* 0x21C */ u32 unk21C;
-	/* 0x220 */ TMtx34f unk220;
+	/* 0x21C */ int unk21C;
+	/* 0x220 */ TPosition3f unk220;
 };
 
 DECLARE_NERVE(TNerveBathtubKillerWander, TLiveActor);
@@ -152,6 +154,12 @@ public:
 	void generateMushroom(JGeometry::TVec3<f32>);
 	int countActiveKillers();
 	int countActiveShineKillers();
+
+public:
+	/* 0x60 */ s8 unk60;
+	/* 0x64 */ TLiveActor* unk64;
+	/* 0x68 */ u8 unk68;
+	/* 0x69 */ s8 unk69;
 };
 
 #endif

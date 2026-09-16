@@ -46,15 +46,15 @@ void TWalkerEnemy::init(TLiveManager* param_1)
 // TODO: fake
 static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 {
-	f32 c = radius * JMACos(theta);
-	f32 s = radius * JMASin(theta);
+	f32 c = radius * MsCos(theta);
+	f32 s = radius * MsSin(theta);
 	return JGeometry::TVec3<f32>(s, 0.0f, c);
 }
 
 void TWalkerEnemy::moveObject()
 {
 	if (!mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL)
-	    && (mInstanceIndex & 0xF) == (gpMarDirector->unk58 & 0xF)) {
+	    && (mInstanceIndex & 0xF) == (gpMarDirector->mMoveTickCount & 0xF)) {
 		doShortCut();
 	}
 

@@ -88,8 +88,8 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 void TShimmer::loadAfter()
 {
 	JDrama::TActor::loadAfter();
-	TScreenTexture* ref
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
+	TScreenTexture* ref = static_cast<TScreenTexture*>(
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 	unk44->getTexture()->setResTIMG(1, *ref->getTexture()->getTexInfo());
 }
 

@@ -18,8 +18,6 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-bool TEnemyManager::mIsCopyAnmMtx = true;
-
 TSpineEnemyParams::TSpineEnemyParams(const char* path)
     : TParams(path)
     , PARAM_INIT(mSLHeadHeight, 120.0f)
@@ -121,14 +119,13 @@ void TEnemyManager::createEnemies(int count)
 	if (count + getObjNum() > getCapacity())
 		count = getCapacity() - getObjNum();
 
-	if (unk38 != nullptr) {
-		u8 limit = unk38->mSLInstanceNum.get();
-		if (count + getObjNum() > limit)
-			count = limit - getObjNum();
-	}
+	if (unk38 != nullptr && count + getObjNum() > unk38->mSLInstanceNum.get())
+		count = unk38->mSLInstanceNum.get() - getObjNum();
 
-	if (count >= 0)
-		for (int i = 0; i < count; ++i) {
+	if (count < 0)
+		return;
+
+	for (int i = 0; i < count; ++i) {
 		// TODO: createEnemy() but size won't match :(
 
 		TSpineEnemy* enemy = createEnemyInstance();
@@ -136,7 +133,8 @@ void TEnemyManager::createEnemies(int count)
 		if (!enemy)
 			continue;
 
-		JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")->add(enemy);
+		static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
+		    ->add(enemy);
 
 		enemy->init(this);
 	}
@@ -262,8 +260,7 @@ void TEnemyManager::copyFromShared()
 
 void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 {
-	if (unk30 & 1)
-		TTimeRec::startTimer();
+	TTimeRec::startTimer();
 
 	int num2     = getActiveObjNum();
 	int aliveNum = 0;
@@ -279,13 +276,9 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 
 	if (param_1 & CUE_CALC_ANIM) {
 		clipEnemies(param_2);
-		int j;
-		TSharedMActorSet* set;
-		for (int i = 0; i < unk44; ++i) {
-			set = &unk40[i];
-			for (j = 0; j < set->unk4; ++j)
-				set->unk0[j]->calcAnm();
-		}
+		for (int i = 0; i < unk44; ++i)
+			for (int j = 0; j < unk40[i].unk4; ++j)
+				unk40[i].unk0[j]->calcAnm();
 		setSharedFlags();
 		updateAnmSoundShared();
 	}
@@ -325,20 +318,20 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 			} else {
 				enemy->getMActor()->matAnmFrameUpdate();
 			}
-		}
 
-		if (param_1 & CUE_CALC_VIEW)
-			enemy->requestShadow();
+			if (param_1 & CUE_CALC_VIEW)
+				enemy->requestShadow();
 
-		if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN
-		                          | LIVE_FLAG_CLIPPED_OUT)) {
-			if ((param_1 & CUE_CALC_VIEW)
-			    && !enemy->checkLiveFlag(LIVE_FLAG_UNK4000))
-				enemy->getMActor()->viewCalc();
-			if (param_1 & CUE_ENTRY) {
-				enemy->getMActor()->setLightData(enemy->getGroundPlane(),
-				                                 enemy->mPosition);
-				enemy->getMActor()->entry();
+			if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN
+			                          | LIVE_FLAG_CLIPPED_OUT)) {
+				if ((param_1 & CUE_CALC_VIEW)
+				    && !enemy->checkLiveFlag(LIVE_FLAG_UNK4000))
+					enemy->getMActor()->viewCalc();
+				if (param_1 & CUE_ENTRY) {
+					enemy->getMActor()->setLightData(enemy->getGroundPlane(),
+					                                 enemy->mPosition);
+					enemy->getMActor()->entry();
+				}
 			}
 		}
 	}
@@ -370,10 +363,12 @@ void TEnemyManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	int num = getActiveObjNum();
-	for (int i = num; i < mObjNum; ++i) {
-		TSpineEnemy* enemy = getObj(i);
-		if (cue & CUE_MOVE)
-			enemy->onHitFlag(HIT_FLAG_NO_COLLISION);
+	if (cue & CUE_MOVE) {
+		for (int i = num; i < mObjNum; ++i)
+			getObj(i)->onLiveFlag(LIVE_FLAG_DEAD);
+	} else {
+		for (s32 i = num; i < mObjNum; ++i)
+			; // TODO: debug print or something?
 	}
 
 	for (int i = 0; i < num; ++i)
@@ -489,6 +484,7 @@ bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 	enemy->getMActor()->frameUpdate();
 
 	Mtx afStack_5C;
+	MtxPtr wtf = afStack_5C;
 	MtxPtr mtx = enemy->getMActor()->getModel()->getBaseTRMtx();
 
 	const JGeometry::TVec3<f32>& v = enemy->mScaling;
@@ -504,7 +500,7 @@ bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 
 	for (int i = 0; i < unk50; ++i) {
 		MTXConcat(mtx, unk48[f][i], afStack_5C);
-		enemy->getMActor()->getModel()->setAnmMtx(i, afStack_5C);
+		enemy->getMActor()->getModel()->setAnmMtx(i, wtf);
 	}
 
 	if (enemy->getMActor()->getModel()->getModelData()->getWEvlpMtxNum())

@@ -34,8 +34,8 @@ void TMapObjSeaIndirect::init()
 	        | J3DMLF_UseUniqueMaterials | (1 << J3DMLF_TevStageNumShift));
 
 	unk44->setBtk("underwater");
-	TScreenTexture* ref
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
+	TScreenTexture* ref = static_cast<TScreenTexture*>(
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 	const ResTIMG* img = ref->getTexture()->getTexInfo();
 	unk44->getModel()->getModelData()->getTexture()->setResTIMG(1, *img);
 }
@@ -53,24 +53,20 @@ void TMapObjWaterFilter::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (!unk44 || gpMarDirector->unk124 != 0)
 		return;
 
-	CPolarSubCamera* camera = gpCamera;
-	bool bVar1             = true;
-	if (!camera->isSimpleDemoCamera() && !camera->isBckDemoCamera()) {
+	bool bVar1 = true;
+	if (!gpCamera->isSimpleDemoCamera() && !gpCamera->isBckDemoCamera()) {
 		bVar1 = false;
 	}
 
 	if (bVar1 ? true : false)
 		return;
 
-	Vec* cameraPos = &gpCamera->unk124;
-	if (cameraPos->y > 0.0f
-	    && cameraPos->y >= gpMapObjWave->getHeight(
-	           cameraPos->x, cameraPos->y, cameraPos->z))
+	if (gpCamera->unk124.y > 0.0f
+	    && gpCamera->unk124.y >= gpMapObjWave->getHeight(
+	           gpCamera->unk124.x, gpCamera->unk124.y, gpCamera->unk124.z))
 		return;
 
 	if (cue & CUE_CALC_ANIM) {
-		MtxPtr viewMtx = graphics->mViewMtx;
-
 		J3DTransformInfo info;
 		info.mScale.x     = 1.0f;
 		info.mScale.y     = 1.0f;
@@ -86,7 +82,7 @@ void TMapObjWaterFilter::perform(u32 cue, JDrama::TGraphics* graphics)
 		Mtx afStack_a8;
 		PSMTXScale(afStack_a8, mScaling.x, mScaling.y, mScaling.z);
 		Mtx afStack_48;
-		MTXInverse(viewMtx, afStack_48);
+		MTXInverse(graphics->mViewMtx, afStack_48);
 		MTXConcat(afStack_48, afStack_78, afStack_48);
 		MTXConcat(afStack_48, afStack_a8, afStack_48);
 		unk44->getModel()->setBaseTRMtx(afStack_48);

@@ -32,13 +32,6 @@ static const char* MtxCalcTypeName[] = {
 const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
 const char cDirtyTexName[]  = "H_ma_rak_dummy";
 
-// Literals emitted by an inlined dependency in the original build.
-static const char dummyCameraBckString1[]
-    = "/common/camera/camera_demo_shine_get_inside";
-static const char dummyCameraBckString2[]
-    = "/common/camera/camera_demo_shine_get_outside";
-static const char dummyCameraBckString3[] = "/common/camera/camera_demo_gate_in";
-
 CPolarSubCamera* gpCamera;
 
 const char* cStartCamName          = "開始カメラ";
@@ -108,9 +101,8 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 		mSaveKindParam[i] = new TCamSaveKindParam(mCamKindNameSaveFile[i]);
 	if (SMS_isMultiPlayerMap())
 		createMultiPlayer(4);
-	u8 stage = gpMarDirector->getCurrentStage();
-	if (gpMarDirector->getCurrentMap() == 58
-	    && !(stage != 0 && stage != 1)) {
+	int stage = gpMarDirector->getCurrentStage();
+	if (gpMarDirector->getCurrentMap() == 58 && (stage == 0 || stage == 1)) {
 		unk64 |= CAMERA_FLAG_JET_COASTER_SCENE;
 		unk2B8 = new TCameraJetCoaster;
 		switch (stage) {
@@ -128,7 +120,7 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 void CPolarSubCamera::startJetCoasterCam1()
 {
 	unk2B0->startDemo(cJetCoasterCam1BckName, nullptr);
-	unk2B0->setFrame(gpMarDirector->unk58 * 0.5f);
+	unk2B0->setFrame(gpMarDirector->mMoveTickCount * 0.5f);
 }
 
 static s32 JetCoasterDemoCallBack(u32 param_1, u32 param_2)
@@ -227,12 +219,13 @@ void CPolarSubCamera::loadAfter()
 	mCurrentTarget.unk18.set(mPosition);
 	mCurrentTarget.mTarget.set(mTarget);
 
+	TCameraOption* option = gpCameraOption;
 	if (SMS_isOptionMap()) {
-		mCurrentTarget.mPosition.set(mPosition);
-		mCurrentTarget.mTarget.set(mTarget);
-		gpCameraOption
-		    = new TCameraOption(mPosition, &mCurrentTarget.mTarget);
+		mCurrentTarget.mPosition = mPosition;
+		mCurrentTarget.mTarget   = mTarget;
+		option = new TCameraOption(mPosition, &mCurrentTarget.mTarget);
 	}
+	gpCameraOption = option;
 
 	unk256 = mCurrentTarget.mPitch;
 	unk258 = mCurrentTarget.mYaw;
@@ -473,12 +466,13 @@ void CPolarSubCamera::calcPosAndAt_()
 
 	if (!(unk64 & CAMERA_FLAG_UNK80)) {
 		if (unk284 > 0) {
-			s32 acf = mCurrentParams->mAutoChaseCompleteFrame;
-			s32 acs = mCurrentParams->mAutoChaseStartFrame;
-			if ((acf - unk284) + 1 <= acs)
+			s32 acf   = mCurrentParams->mAutoChaseCompleteFrame;
+			s32 acs   = mCurrentParams->mAutoChaseStartFrame;
+			s32 delta = (acf - unk284) + 1;
+			if (delta <= acs)
 				unk288 = 0.0f;
 			else
-				unk288 = CLBCalcRatio<s32>(acs, acf, (acf - unk284) + 1);
+				unk288 = CLBCalcRatio<s32>(acs, acf, delta);
 		} else {
 			unk288 = 1.0f;
 		}
@@ -596,9 +590,8 @@ void CPolarSubCamera::calcPosAndAt_()
 				    = mCurrentTarget.mYaw + mCurrentParams->mOffsetAngleY;
 
 				if (gpCameraMario->mFrameMoveDistHorizontal >= 0.05f) {
-					s16 mAngle = *gpMarioAngleY;
-					mAngle -= 0x8000;
-					f32 m = MsClamp<f32>(
+					s16 mAngle = *gpMarioAngleY - 0x8000;
+					f32 m      = MsClamp<f32>(
                         (f32)mCurrentParams->mMaxAddAngleY
                             * (0.5f * (1.0f - JMASCos((mAngle - unk258) * 2))),
                         -32766.998f, 32766.998f);
@@ -824,8 +817,7 @@ void CPolarSubCamera::calcPosAndAt_()
 		f32 atY  = mCurrentParams->mAtChaseRateY;
 
 		const JGeometry::TVec3<f32>& v = mInbetween->mAt;
-		f32 x = v.x;
-		CLBChaseDecrease(&mTarget.x, x, atXZ, 0.0f);
+		CLBChaseDecrease(&mTarget.x, v.x, atXZ, 0.0f);
 		CLBChaseDecrease(&mTarget.y, v.y, atY, 0.0f);
 		CLBChaseDecrease(&mTarget.z, v.z, atXZ, 0.0f);
 	}

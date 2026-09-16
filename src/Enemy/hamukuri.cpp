@@ -78,19 +78,17 @@ void THamuKuriLauncher::stateLaunch()
 		THamuKuri* hamukuri
 		    = (THamuKuri*)getProperEnemy("ハムクリマネージャー");
 		if (hamukuri) {
-			JGeometry::TVec3<f32> local_30;
-			JGeometry::TVec3<f32> local_3c;
 			Mtx afStack_6c;
 			MsMtxSetRotRPH(afStack_6c, mRotation.x, mRotation.y, mRotation.z);
-			local_3c.set(0.0f, 4.0f, 4.0f);
-			local_30.set(0.0f, mRotation.y, 0.0f);
+			JGeometry::TVec3<f32> local_3c(0.0f, 4.0f, 4.0f);
+			JGeometry::TVec3<f32> local_30(0.0f, mRotation.y, 0.0f);
 			hamukuri->unk1A1 = 0;
-			int iVar2 = mRotation.x;
-			const TBGCheckData* apTStack_74;
-			int iVar1 = iVar2 / 180 + (iVar2 >> 15);
+			int iVar2        = mRotation.x;
+			int iVar1        = iVar2 / 180 + (iVar2 >> 15);
 			if ((int)mRotation.x % 180 != 0) {
 				hamukuri->unk1A1 = 1;
-				float dVar5 = THamuKuri::mLandAnmFrameNum;
+				float dVar5      = THamuKuri::mLandAnmFrameNum;
+				const TBGCheckData* apTStack_74;
 				float dVar3
 				    = gpMap->checkGround(mPosition.x, mPosition.y + 10.0f,
 				                         mPosition.z, &apTStack_74);
@@ -199,7 +197,8 @@ void THamuKuriManager::loadAfter()
 static const char* anmlist[] = {
 	"hamukuri_walk",
 	"hamukuri_run",
-	"default.bmd",
+	// TODO: this shouldn't be here but rodata ordering looks like it should?!
+	// "default.bmd",
 	"hanekuri_wait",
 };
 
@@ -260,11 +259,9 @@ void THamuKuriManager::setSearchHamuKuri()
 			f32 canSearchDist = params->mSLCanSearchDist.get();
 
 			TMapObjBase* pTVar18 = nullptr;
-			int count              = unk68;
-			f32 fVar1              = canSearchDist;
-			fVar1 *= canSearchDist;
+			f32 fVar1            = canSearchDist * canSearchDist;
 
-			for (int i = 0; i < count; ++i) {
+			for (int i = 0; i < unk68; ++i) {
 				TMapObjBase* uVar16 = unk64[i];
 				if (uVar16->checkLiveFlag(LIVE_FLAG_DEAD
 				                          | LIVE_FLAG_CLIPPED_OUT))
@@ -278,8 +275,8 @@ void THamuKuriManager::setSearchHamuKuri()
 				f32 len_sq = tmp.squared();
 
 				if (len_sq < fVar1) {
-					fVar1   = len_sq;
 					pTVar18 = uVar16;
+					fVar1   = len_sq;
 				}
 			}
 
@@ -298,7 +295,7 @@ void THamuKuriManager::requestSerialKill(THamuKuri* param_1)
 	s32 trampleBonusNum = params->mSLTrampleBonusNum.get();
 
 	for (int i = 0; i < getActiveObjNum(); ++i) {
-		THamuKuri* obj = (THamuKuri*)TObjManager::getObj(i);
+		THamuKuri* obj = (THamuKuri*)unk18[i];
 		if (obj != param_1 && obj->isBckAnm(3)) {
 			obj->kill();
 			++trampled;
@@ -382,7 +379,6 @@ void THaneHamuKuriManager::createAnmData() { TObjManager::createAnmData(); }
 
 TDoroHaneKuriManager::TDoroHaneKuriManager(const char* name)
     : THaneHamuKuriManager(name)
-    , unk74(nullptr)
 {
 }
 
@@ -527,8 +523,7 @@ void TFireHamuKuriManager::initSetEnemies()
 			{ 200, 160, 130, 255 },
 		};
 
-		THitActor* first = unk18[0];
-		u32 matBodyBottom1Idx = ((TFireHamuKuri*)first)
+		u32 matBodyBottom1Idx = ((TFireHamuKuri*)unk18[0])
 		                            ->getModel()
 		                            ->getModelData()
 		                            ->getMaterialName()
@@ -760,7 +755,7 @@ void THamuKuri::behaveToWater(THitActor* param_1)
 		}
 
 		if (mVelocity.y < 0.0f)
-			forceRoll(*gpMarioPos, true);
+			forceRoll(SMS_GetMarioPos(), true);
 	}
 }
 
@@ -899,7 +894,7 @@ void THamuKuri::moveObject()
 
 void THamuKuri::setBehavior()
 {
-	if (isAirborne() && getPosition().y > getGroundHeight() + 250.0f
+	if (isAirborne() && mPosition.y > mGroundHeight + 250.0f
 	    && mSpine->getCurrentNerve() != &TNerveWalkerGenerate::theNerve()) {
 		unk1F0 = 1;
 	}
@@ -919,8 +914,7 @@ void THamuKuri::selectCapHolder()
 		sendAttackMsgToMario();
 	} else {
 		sendAttackMsgToMario();
-		THamuKuriManager* manager = getManager();
-		if (manager->unk70 == nullptr) {
+		if (getManager()->unk70 == nullptr) {
 			TMapObjBase* obj = gpItemManager->makeObjAppear(
 			    mPosition.x, mPosition.y, mPosition.z, 0x2000003C, false);
 
@@ -940,60 +934,52 @@ void THamuKuri::makeCapFly(TMapObjBase* param_1)
 
 	// TODO: control flow all over the place, definitely inlines needed
 
-	THamuKuri* holder
-	    = (THamuKuri*)getManager()->getHolder(mInstanceIndex);
-	if (holder == nullptr) {
-		if (!mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL)
-		    && !mGroundPlane->isPool() && !mGroundPlane->isWaterSurface()) {
-			holder = this;
-		} else {
-			param_1->mPosition = SMS_GetMarioPos();
-			param_1->mVelocity.set(0.0f, 10.0f, 0.0f);
-			param_1->offLiveFlag(LIVE_FLAG_UNK10);
-			return;
-		}
-	}
-
-	holder->mPosition = local_3c;
-	holder->mPosition.y += 100.0f;
-	param_1->mPosition.y = holder->mPosition.y;
-
-	if (param_1->receiveMessage(holder, HIT_MESSAGE_TAKE)) {
-		holder->reset();
-		holder->onHaveCap();
-		holder->mHeldObject = param_1;
-		int uVar11;
-		int uVar10 = -1;
-		holder->onLiveFlag(LIVE_FLAG_HIDDEN);
-		holder->offLiveFlag(LIVE_FLAG_DEAD);
-		holder->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-		holder->onHitFlag(HIT_FLAG_NO_COLLISION);
-		getManager()->unk70 = holder;
-
-		// TODO: this is an inline
-		uVar11 = unk124->getCurGraphIndex();
-
-		TMsRange<s32> range(2, 3);
-		int count = range.rand();
-		for (int i = 0; i < count; ++i) {
-			int next = unk124->unk0->getRandomNextIndex(uVar11, uVar10,
-			                                            0xffffffff);
-			uVar10   = uVar11;
-			uVar11   = next;
-		}
-
-		if (uVar11 < 0)
-			uVar11 = 0;
-
-		JGeometry::TVec3<f32> VStack_60;
-		unk124->getGraph()->getGraphNode(uVar11).getPoint(&VStack_60);
-
-		JGeometry::TVec3<f32> local_6c
-		    = calcVelocityToJumpToY(VStack_60, mCapSpeed, getGravityY());
-		holder->onLiveFlag(LIVE_FLAG_AIRBORNE);
-		holder->mVelocity = local_6c;
+	TSmallEnemy* holder = getManager()->getHolder(mInstanceIndex);
+	if (holder == nullptr && mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL)
+	    && mGroundPlane->isPool() && mGroundPlane->isWaterSurface()) {
+		mPosition = SMS_GetMarioPos();
+		mVelocity.set(0.0f, 10.0f, 0.0f);
+		offLiveFlag(LIVE_FLAG_UNK10);
 	} else {
-		holder->onLiveFlag(LIVE_FLAG_DEAD);
+		mPosition = local_3c;
+		mPosition.y += 100.0f;
+		param_1->mPosition.y = mPosition.y;
+
+		if (param_1->receiveMessage(this, HIT_MESSAGE_TAKE)) {
+			onLiveFlag(LIVE_FLAG_DEAD);
+		} else {
+			reset();
+			onHaveCap();
+			mHeldObject = param_1;
+			onLiveFlag(LIVE_FLAG_HIDDEN);
+			offLiveFlag(LIVE_FLAG_DEAD);
+			offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
+			onHitFlag(HIT_FLAG_NO_COLLISION);
+			getManager()->unk70 = this;
+
+			// TODO: this is an inline
+			int uVar11 = unk124->getCurGraphIndex();
+
+			int count  = MsRandF(2, 3);
+			int uVar10 = -1;
+			for (int i = 0; i < count; ++i) {
+				int next = unk124->unk0->getRandomNextIndex(uVar11, uVar10,
+				                                            0xffffffff);
+				uVar10   = uVar11;
+				uVar11   = next;
+			}
+
+			if (uVar11 < 0)
+				uVar11 = 0;
+
+			JGeometry::TVec3<f32> VStack_60;
+			unk124->getGraph()->getGraphNode(uVar11).getPoint(&VStack_60);
+
+			JGeometry::TVec3<f32> local_6c
+			    = calcVelocityToJumpToY(VStack_60, mCapSpeed, getGravityY());
+			onLiveFlag(LIVE_FLAG_AIRBORNE);
+			mVelocity = local_6c;
+		}
 	}
 }
 
@@ -1137,7 +1123,6 @@ const char** THamuKuri::getBasNameTable() const { return hamukurianm_bastable; }
 
 MtxPtr THamuKuri::getTakingMtx()
 {
-	MtxPtr result = unk1B0;
 	f32 dVar4 = gpMap->checkGround(mPosition.x, mPosition.y + mHeadHeight,
 	                               mPosition.z, &mGroundPlane);
 
@@ -1151,29 +1136,26 @@ MtxPtr THamuKuri::getTakingMtx()
 	MTXConcat(mat, afStack_84, mat);
 
 	// TODO: identity33 but order is transposed?!
-	result[0][0] = 1.0f;
-	result[0][1] = 0.0f;
-	result[0][2] = 0.0f;
+	unk1B0[0][0] = 1.0f;
+	unk1B0[0][1] = 0.0f;
+	unk1B0[0][2] = 0.0f;
 
-	result[1][0] = 0.0f;
-	result[1][1] = 1.0f;
-	result[1][2] = 0.0f;
+	unk1B0[1][0] = 0.0f;
+	unk1B0[1][1] = 1.0f;
+	unk1B0[1][2] = 0.0f;
 
-	result[2][0] = 0.0f;
-	result[2][1] = 0.0f;
-	result[2][2] = 1.0f;
+	unk1B0[2][0] = 0.0f;
+	unk1B0[2][1] = 0.0f;
+	unk1B0[2][2] = 1.0f;
 
-	MTXConcat(mat, result, result);
+	MTXConcat(mat, unk1B0, unk1B0);
 
-	return result;
+	return unk1B0;
 }
 
 bool THamuKuri::isResignationAttack()
 {
-	JGeometry::TVec3<f32> diff = unk104.getPoint();
-	diff -= mPosition;
-	f32 (*sqrt)(f32) = JGeometry::TUtil<f32>::sqrt;
-	if (sqrt(diff.squared()) > unk194) {
+	if ((unk104.getPoint() - mPosition).length() > unk194) {
 		unk194 = unk1F4->mSLGiveUpLength.get();
 		return true;
 	}
@@ -1189,7 +1171,7 @@ bool THamuKuri::isResignationAttack()
 bool THamuKuri::isHitValid(u32 param_1)
 {
 	if (isBckAnm(3)) {
-		((THamuKuriManager*)mManager)->requestSerialKill(this);
+		getManager()->requestSerialKill(this);
 		return true;
 	}
 
@@ -1209,14 +1191,11 @@ bool THamuKuri::isCollidMove(THitActor* param_1)
 	    || param_1->isActorType(0x10000013)
 	    || param_1->isActorType(0x10000011)) {
 		THamuKuri* hamu = (THamuKuri*)param_1;
-		if ((hamu->mSpine->getCurrentNerve()
-		         == &TNerveHamuKuriBoundFreeze::theNerve()
-		     ? true
-		     : false)
-		    && mSpine->getCurrentNerve() != &TNerveSmallEnemyDie::theNerve()
-		    && mSpine->getCurrentNerve()
+		if (hamu->mSpine->getCurrentNerve()
+		        != &TNerveHamuKuriBoundFreeze::theNerve()
+		    && hamu->mSpine->getCurrentNerve()
 		           != &TNerveHamuKuriBoundFreeze::theNerve()
-		    && mSpine->getCurrentNerve()
+		    && hamu->mSpine->getCurrentNerve()
 		           != &TNerveHamuKuriWallDie::theNerve()) {
 			if (!isHitWallInBound()) {
 				unk1A3 = 1;
@@ -1227,15 +1206,12 @@ bool THamuKuri::isCollidMove(THitActor* param_1)
 	}
 
 	// TODO: need more checks & HitActor inlines
-	if ((param_1->getActorType() & 0xFFFF0000) == 0x40000000
-	    && param_1->getActorType() >= 0x40000390
-	    && param_1->getActorType() <= 0x40000394) {
+	if ((param_1->getActorType() & 0xFFFF0000) == 0x40000000) {
 		TLiveActor* enemy         = (TLiveActor*)param_1;
 		JGeometry::TVec3<f32> vel = enemy->mVelocity;
-		if (abs(vel.x) > 2.0f
-		    && (abs(vel.y) > 2.0f || abs(vel.z) > 2.0f)) {
+		if (abs(vel.x) > 2.0f && abs(vel.y) > 2.0f && abs(vel.z) > 2.0f) {
 			if (mSpine->getCurrentNerve() != &TNerveHamuKuriJitabata::theNerve()
-			    && !isAirborne()) {
+			    && isAirborne()) {
 				mSpine->pushNerve(&TNerveHamuKuriJitabata::theNerve());
 			}
 		}
@@ -1322,125 +1298,7 @@ void THaneHamuKuri::reset()
 	unk21C = 0.0f;
 }
 
-void THaneHamuKuri::walkBehavior(int param_1, f32 param_2)
-{
-	f32 flyBaseHeight = unk22C->mSLFlyBaseHeight.get();
-
-	if (mBoundFly) {
-		if (!isAirborne()) {
-			f32 velocity = unk22C->mSLNormalJumpVy.get();
-			if (param_1 == 2)
-				velocity = unk22C->mSLAttackJumpVy.get();
-			JGeometry::TVec3<f32> local_48(0.0f, velocity, 0.0f);
-			mPosition.y += 10.0f;
-			onLiveFlag(LIVE_FLAG_AIRBORNE);
-			mVelocity = local_48;
-		}
-	} else {
-		if (unk21C == 0.0f) {
-			if (unk214 == 0.0f && fabsf(unk230 - mGroundHeight) > 5.0f) {
-				unk214 = (mGroundHeight - unk230) / 120.0f;
-				if (unk214 > 10.0f)
-					unk214 = 10.0f;
-				if (unk214 < -10.0f)
-					unk214 = -10.0f;
-			}
-
-			if (unk214 > 0.0f) {
-				unk230 += unk214;
-				if (unk230 > mGroundHeight)
-					unk214 = 0.0f;
-			}
-			if (unk214 < 0.0f) {
-				unk230 += unk214;
-				if (unk230 < mGroundHeight) {
-					unk214 = 0.0f;
-					unk230 = mGroundHeight + 1.0f;
-				}
-			}
-		}
-
-		f32 flyBaseFrequency = unk22C->mSLFlyBaseFrequency.get();
-		f32 flyBaseAmplitude = unk22C->mSLFlyBaseAmplitude.get();
-		if (mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()
-		    || mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()
-		    || mSpine->getCurrentNerve()
-		           == &TNerveDoroHanePrepareAttack::theNerve()) {
-			if (unk21C == 0.0f) {
-				unk20C += 1.0f;
-				if (unk20C > flyBaseFrequency)
-					unk20C = 0.0f;
-				if (unk234 < flyBaseHeight)
-					unk234 += 1.0f;
-				if (unk234 > flyBaseHeight)
-					unk234 -= 1.0f;
-			}
-		}
-
-		if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()
-		    || mSpine->getCurrentNerve()
-		           == &TNerveWalkerGraphWander::theNerve()) {
-			if (unk21C != 0.0f) {
-				mGroundHeight = gpMap->checkGround(
-				    mPosition.x, mPosition.y + mHeadHeight * 2.0f,
-				    mPosition.z, &mGroundPlane);
-				if (unk210 + unk230 + unk234 > mGroundHeight) {
-					param_1 = 3;
-					unk234 -= 15.0f;
-					unk230 = mGroundHeight;
-					unk210 = unk214 = unk20C = 0.0f;
-					if (unk234 + unk210 > 200.0f) {
-						mRotation.x = MsClamp(mRotation.x * 1.1f,
-						                      0.0f, mScaling.x * 1.3f);
-					} else {
-						mRotation.x = MsClamp(mRotation.y * 0.8f,
-						                      mScaling.x * 0.5f,
-						                      mScaling.x * 1.3f);
-					}
-				} else {
-					unk21C = unk214 = unk210 = unk234 = unk20C = 0.0f;
-					gpMarioParticleManager->emit(20, &mPosition, 0, nullptr);
-					SMSRumbleMgr->start(0x15, 5, (f32*)nullptr);
-					SMSGetMSound()->startSoundActor(
-					    MSD_SE_EN_HANEKURI_ATTACK, &mPosition, 0, nullptr, 0, 4);
-					setGoalPath((THitActor*)gpMarioAddress);
-					mSpine->pushNerve(&TNerveHaneHamuKuriUpWait::theNerve());
-				}
-			} else if (isReachedToGoal()
-			           && unk234 > flyBaseHeight - 1.0f) {
-				unk21C = 1.0f;
-				mSpine->pushNerve(
-				    &TNerveDoroHanePrepareAttack::theNerve());
-			}
-		} else if (unk234 > 0.0f) {
-			unk234 -= 1.0f;
-		}
-
-		if (unk21C == 0.0f)
-			unk210 = JMASin(unk20C * 360.0f / flyBaseFrequency)
-			         * flyBaseAmplitude;
-		mPosition.y = unk210 + unk230 + unk234;
-	}
-
-	if (mSpine->getCurrentNerve() == &TNerveHaneHamuKuriUpWait::theNerve()
-	    && unk234 < flyBaseHeight)
-		unk234 += 1.0f;
-
-	JGeometry::TVec3<f32> local_38 = mPosition;
-	local_38.sub(unk220);
-	MsVECNormalize(&local_38, &local_38);
-	if (mSpine->getCurrentNerve() == &TNerveHaneHamuKuriUpWait::theNerve())
-		mRotation.z *= 0.9f;
-	mRotation.y = MsGetRotFromZaxis(local_38).z;
-
-	if (unk21C == 0.0f && !isBckAnm(4))
-		TWalkerEnemy::walkBehavior(param_1, param_2);
-
-	unk220 = mPosition;
-	unk218 = mRotation.x;
-	if (unk21C != 0.0f && mPosition.y < mGroundHeight)
-		mPosition.y = mGroundHeight;
-}
+void THaneHamuKuri::walkBehavior(int, f32) { }
 
 void THaneHamuKuri::bind()
 {
@@ -1477,8 +1335,7 @@ void THaneHamuKuri::bind()
 
 BOOL THaneHamuKuri::isReachedToGoal() const
 {
-	const TPathNode* node = &unk104;
-	JGeometry::TVec3<f32> local_c = node->getPoint();
+	JGeometry::TVec3<f32> local_c = unk104.getPoint();
 	local_c -= mPosition;
 	local_c.y = 0.0f;
 	if (MsVECMag2(&local_c) < 100.0f)
@@ -1593,7 +1450,7 @@ void TDoroHaneKuri::attackToMario()
 			mSpine->pushNerve(&TNerveDoroHaneRise::theNerve());
 			onHaveCap();
 			MtxPtr mtx = mMActor->getModel()->getAnmMtx(unk1AC);
-			unk200.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+			unk200.set(mtx[3][0], mtx[3][1], mtx[3][2]);
 			gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &unk200, 0,
 			                                            nullptr);
 		}
@@ -1692,8 +1549,8 @@ void THaneHamuKuri2::walkBehavior(int param_1, f32 param_2)
 	if (unk234 > flyBaseHeight)
 		unk234 -= 1.0f;
 
-	unk210      = JMASin(unk20C * 360.0f / flyBaseFrequency) * flyBaseAmplitude;
-	mPosition.y = unk230 + unk234 + unk210;
+	unk210      = MsSin(unk20C * 360.0f / flyBaseFrequency) * flyBaseAmplitude;
+	mPosition.y = unk210 + unk230 + unk234;
 	mTurnSpeed
 	    = ((THaneHamuKuriSaveLoadParams*)getSaveParam())->mSLTurnSpeedLow.get();
 	mMarchSpeed = ((THaneHamuKuriSaveLoadParams*)getSaveParam())
@@ -1705,12 +1562,7 @@ void THaneHamuKuri2::walkBehavior(int param_1, f32 param_2)
 
 BOOL THaneHamuKuri2::isReachedToGoal() const
 {
-	THitActor* actor;
-	const TPathNode* node = &unk104;
-	actor = node->unk0;
-	const JGeometry::TVec3<f32>& point
-	    = actor != 0 ? actor->mPosition : node->unk4;
-	JGeometry::TVec3<f32> local_c = point;
+	JGeometry::TVec3<f32> local_c = unk104.getPoint();
 	local_c -= mPosition;
 	local_c.y = 0.0f;
 	if (MsVECMag2(&local_c) < 20.0f)
@@ -1829,19 +1681,21 @@ void TDangoHamuKuri::calcRootMatrix()
 {
 	getModel()->setBaseScale(mPosition);
 	if (mHolder && mHolder->mHeldObject == this) {
-		MtxPtr takingMtx = mHolder->getTakingMtx();
+		MtxPtr takingMtx = getTakingMtx();
 		if (takingMtx) {
 			if (unk230) {
 				unk210 += 40.0f;
 				if (unk210 > 360.0f) {
-					unk210 = -TMsRange<f32>(10.0f, 20.0f).rand();
+					// TODO: should be a rand interval
+					unk210 = -MsRandF(10.0f, 20.0f);
 					unk230 = 0;
 				}
-				if (((TDangoHamuKuri*)mHolder)->unk230)
-					unk210 = -((TDangoHamuKuri*)mHolder)->unk210;
-				takingMtx[0][3] += unk21C;
-				takingMtx[1][3] += unk220;
-				takingMtx[2][3] += unk224;
+				TDangoHamuKuri* holder = (TDangoHamuKuri*)mHolder;
+				if (holder->unk230)
+					unk210 = -holder->unk210;
+				takingMtx[3][0] += unk21C;
+				takingMtx[3][1] += unk220;
+				takingMtx[3][2] += unk224;
 
 				getModel()->setBaseScale(mScaling);
 				Mtx afStack_68;
@@ -1849,8 +1703,8 @@ void TDangoHamuKuri::calcRootMatrix()
 				MTXConcat(takingMtx, afStack_68, takingMtx);
 				getModel()->setBaseTRMtx(takingMtx);
 
-				mPosition.set(takingMtx[0][3], takingMtx[1][3],
-				              takingMtx[2][3]);
+				mPosition.set(takingMtx[3][0], takingMtx[3][1],
+				              takingMtx[3][2]);
 				return;
 			}
 		}
@@ -1865,7 +1719,8 @@ void TDangoHamuKuri::reset()
 	mPrev = nullptr;
 	mNext = nullptr;
 	mBoss = nullptr;
-	unk20C = TMsRange<f32>(0.0f, 1.0f).rand();
+	// TODO: rand interval
+	unk20C = MsRandF(0.0f, 1.0f);
 	mMActor->calc();
 }
 
@@ -1903,8 +1758,8 @@ BOOL TDangoHamuKuri::receiveMessage(THitActor* sender, u32 message)
 	}
 
 	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
-		                             0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &mPosition, 0,
+		                             nullptr);
 		gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0.0f,
 		                        0.0f, 0, 0, 4);
 		if (mSprayedByWaterCooldown == 0) {
@@ -2007,7 +1862,7 @@ void TDangoHamuKuri::swingBody()
 		if (mAttackSw) {
 			if (mPrev != nullptr) {
 				if (mPrev == mBoss) {
-					mRotation = mBoss->mRotation;
+					mPosition = mBoss->mPosition;
 					unk210 += 10.0f;
 				}
 
@@ -2022,13 +1877,12 @@ void TDangoHamuKuri::swingBody()
 		fVar1 = 16.0f;
 	}
 
-	unk21C = fVar1 * JMACos(unk20C * 360.0f);
-	unk224 = fVar1 * JMASin(unk20C * 360.0f);
+	unk21C = fVar1 * MsCos(unk20C * 360.0f);
+	unk224 = fVar1 * MsSin(unk20C * 360.0f);
 }
 
 TBossDangoHamuKuri::TBossDangoHamuKuri(const char* name)
     : TDangoHamuKuri(name)
-    , unk238(0)
 {
 }
 
@@ -2189,7 +2043,7 @@ void TFireHamuKuri::behaveToWater(THitActor* param_1)
 void TFireHamuKuri::reset()
 {
 	THamuKuri::reset();
-	mHitPoints = getMaxHitPoints();
+	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 	unk150 &= ~0x2;
 	unk150 |= 0x1;
 	unk214 = 0;
@@ -2202,10 +2056,9 @@ void TFireHamuKuri::setMActorAndKeeper()
 	mMActor       = mMActorKeeper->createMActor("default.bmd", 3);
 	ResTIMG* img
 	    = (ResTIMG*)JKRGetResource("/scene/map/pollution/H_ma_rak.bti");
-	if (img) {
-		J3DModelData* modelData = mMActor->getModel()->getModelData();
-		SMS_ChangeTextureAll(modelData, "H_ma_rak_dummy", *img);
-	}
+	if (img)
+		SMS_ChangeTextureAll(mMActor->getModel()->getModelData(),
+		                     "H_ma_rak_dummy", *img);
 }
 
 void TFireHamuKuri::moveObject()
@@ -2222,25 +2075,25 @@ void TFireHamuKuri::calcRootMatrix()
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
 		        PARTICLE_MS_MOE_FIRE_C, mMActor->getModel()->getAnmMtx(unk1AC),
 		        3, this)) {
-			emitter->setGlobalScale(getScaling());
+			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
 		        PARTICLE_MS_MOE_FIRE_A, mMActor->getModel()->getAnmMtx(unk1AC),
 		        1, this)) {
-			emitter->setGlobalScale(getScaling());
+			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
 		        PARTICLE_MS_MOE_FIRE_B, mMActor->getModel()->getAnmMtx(unk1AC),
 		        1, this)) {
-			emitter->setGlobalScale(getScaling());
+			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
 		        PARTICLE_MS_MOE_FIRE_D, mMActor->getModel()->getAnmMtx(unk1AC),
 		        1, this)) {
-			emitter->setGlobalScale(getScaling());
+			emitter->setGlobalScale(mScaling);
 		}
 	}
 }
@@ -2375,20 +2228,7 @@ void TDoroHamuKuri::attackToMario()
 			SMSRumbleMgr->start(0x15, 5, (f32*)nullptr);
 		}
 	} else {
-		if (!gpMarioOriginal->isWearingCap()) {
-			sendAttackMsgToMario();
-		} else {
-			sendAttackMsgToMario();
-			if (getManager()->unk70 == nullptr) {
-				TMapObjBase* obj = gpItemManager->makeObjAppear(
-				    mPosition.x, mPosition.y, mPosition.z, 0x2000003C, false);
-
-				if (obj) {
-					offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-					makeCapFly(obj);
-				}
-			}
-		}
+		THamuKuri::selectCapHolder();
 	}
 }
 

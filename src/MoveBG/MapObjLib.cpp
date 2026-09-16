@@ -52,18 +52,15 @@ bool TMapObjBase::isDemo()
 	if (gpMarDirector->unk124 != 1 && gpMarDirector->unk124 != 2)
 		b1 = false;
 
-	if (b1)
-		goto demo;
-
-	bool b2 = true;
-	if (gpMarDirector->unk124 != 3 && gpMarDirector->unk124 != 4)
-		b2 = false;
-	if (!b2)
-		goto not_demo;
-
-demo:
-	return true;
-not_demo:
+	if (!b1) {
+		// TODO: should be OR, but need fancy inlines for that...
+		bool b2 = true;
+		if (gpMarDirector->unk124 != 3 && gpMarDirector->unk124 != 4)
+			b2 = false;
+		if (b2) {
+			return true;
+		}
+	}
 	return false;
 }
 
@@ -92,9 +89,8 @@ void TMapObjBase::checkOnManhole()
 {
 	mGroundHeight = gpMap->checkGround(mPosition.x, mPosition.y + 20.0f,
 	                                   mPosition.z, &mGroundPlane);
-	if (mGroundPlane->getActor() != nullptr
-	    && mGroundPlane->getActor()->isActorType(0x4000000b)) {
-		((TManhole*)mGroundPlane->getActor())->makeManholeUnuseful(this);
+	if (mGroundPlane->mActor && mGroundPlane->mActor->isActorType(0x4000000b)) {
+		((TManhole*)mGroundPlane->mActor)->makeManholeUnuseful(this);
 	}
 }
 
@@ -107,11 +103,7 @@ void TMapObjBase::throwObjToFront(TMapObjBase* object, f32 y_offset, f32 speed,
                                   f32 vertical_speed) const
 {
 	object->appear();
-	Vec position;
-	position.x = mPosition.x;
-	position.y = mPosition.y + y_offset;
-	position.z = mPosition.z;
-	object->mPosition.set(position);
+	object->mPosition.set(mPosition.x, mPosition.y + y_offset, mPosition.z);
 	if (mMActor) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
 		object->mVelocity.set(mtx[0][2] * speed,
@@ -136,17 +128,14 @@ void TMapObjBase::throwObjToFrontFromPoint(TMapObjBase* object,
 	object->mPosition.set(point);
 	if (mMActor) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
-		object->mVelocity.set(mtx[0][2] * speed,
-		                      mtx[1][2] * speed + y_speed,
+		object->mVelocity.set(mtx[0][2] * speed, mtx[1][2] * speed + y_speed,
 		                      mtx[2][2] * speed);
 		object->offLiveFlag(LIVE_FLAG_UNK10);
 	} else {
-		JGeometry::TVec3<f32> velocity;
 		Mtx mtx;
 		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
-		velocity.set(mtx[0][2] * speed, mtx[1][2] * speed + y_speed,
-		             mtx[2][2] * speed);
-		object->mVelocity.set(velocity);
+		object->mVelocity.set(mtx[0][2] * speed, mtx[1][2] * speed + y_speed,
+		                      mtx[2][2] * speed);
 		object->offLiveFlag(LIVE_FLAG_UNK10);
 	}
 }
@@ -211,10 +200,9 @@ void TMapObjBase::startAllAnim(MActor* param_1, const char* param_2)
 void TMapObjBase::joinToGroup(const char* param_1, THitActor* param_2)
 {
 	// TODO: The group type here is a wild guess
-	JDrama::TViewObjPtrListT<THitActor>* group
-	    = JDrama::TNameRefGen::search<
-	        JDrama::TViewObjPtrListT<THitActor> >(param_1);
-	group->getChildren().push_back(param_2);
+	static_cast<JDrama::TViewObjPtrListT<THitActor>*>(
+	    JDrama::TNameRefGen::search(param_1))
+	    ->push_back(param_2);
 }
 
 TMapCollisionWarp*
@@ -377,8 +365,8 @@ void TMapObjBase::makeLowerStr(const char* in, char* out)
 
 void TMapObjBase::makeRootMtxRotZ(MtxPtr ptr)
 {
-	f32 fVar1 = sinf(mRotation.z * 0.017453294f);
-	f32 fVar2 = cosf(mRotation.z * 0.017453294f);
+	f32 fVar1 = sinf(mRotation.z * (M_PI / 180.0f));
+	f32 fVar2 = cosf(mRotation.z * (M_PI / 180.0f));
 
 	ptr[0][0] = fVar2;
 	ptr[0][1] = -fVar1;
@@ -403,8 +391,8 @@ void TMapObjBase::setRootMtxRotZ()
 
 void TMapObjBase::makeRootMtxRotY(MtxPtr ptr)
 {
-	f32 fVar1 = sinf(mRotation.y * 0.017453294f);
-	f32 fVar2 = cosf(mRotation.y * 0.017453294f);
+	f32 fVar1 = sinf(mRotation.y * (M_PI / 180.0f));
+	f32 fVar2 = cosf(mRotation.y * (M_PI / 180.0f));
 
 	ptr[0][0] = fVar2;
 	ptr[0][1] = 0.0f;
@@ -429,18 +417,17 @@ void TMapObjBase::setRootMtxRotY()
 
 void TMapObjBase::makeRootMtxRotX(MtxPtr ptr)
 {
-	f32 fVar1 = sinf(mRotation.x * 0.017453294f);
-	f32 fVar2 = cosf(mRotation.x * 0.017453294f);
-	JGeometry::TVec3<f32> row(0.0f, fVar2, -fVar1);
+	f32 fVar1 = sinf(mRotation.x * (M_PI / 180.0f));
+	f32 fVar2 = cosf(mRotation.x * (M_PI / 180.0f));
 
 	ptr[0][0] = 1.0f;
 	ptr[0][1] = 0.0f;
 	ptr[0][2] = 0.0f;
 	ptr[0][3] = mPosition.x;
 
-	ptr[1][0] = row.x;
-	ptr[1][1] = row.y;
-	ptr[1][2] = row.z;
+	ptr[1][0] = 0.0f;
+	ptr[1][1] = fVar2;
+	ptr[1][2] = -fVar1;
 	ptr[1][3] = mPosition.y - mYOffset;
 
 	ptr[2][0] = 0.0f;
@@ -553,11 +540,12 @@ void TMapObjBase::makeObjMtxRotByAxis(const JGeometry::TVec3<f32>& param_1,
 void TMapObjBase::calcReflectingVelocity(const TBGCheckData* wall, f32 param_2,
                                          JGeometry::TVec3<f32>* velocity) const
 {
-	f32 dot     = velocity->dot(wall->getNormal());
-	f32 onePlus = 1.0f + param_2;
-	velocity->x -= onePlus * (dot * wall->getNormal().x);
-	velocity->y -= onePlus * (dot * wall->getNormal().y);
-	velocity->z -= onePlus * (dot * wall->getNormal().z);
+	const JGeometry::TVec3<f32>& normal = wall->getNormal();
+	f32 onePlus                         = 1.0f + param_2;
+	f32 dot                             = velocity->dot(normal);
+	velocity->x -= onePlus * dot * normal.x;
+	velocity->y -= onePlus * dot * normal.y;
+	velocity->z -= onePlus * dot * normal.z;
 }
 
 // TODO: fabricated hack
@@ -756,7 +744,7 @@ bool TMapObjBase::marioHeadAttack() const
 bool TMapObjBase::marioHipAttack() const
 {
 	if (SMS_GetMarioGrPlane()->getActor() == this && SMS_IsMarioStatusHipDrop()
-	    && (SMS_GetMarioPos().y + SMS_GetMarioSpeedY()) < SMS_GetMarioGrLevel())
+	    && (gpMarioPos->y + *gpMarioSpeedY) < SMS_GetMarioGrLevel())
 		return true;
 	return false;
 }
@@ -779,10 +767,7 @@ void TMapObjBase::emitAndSRT(s32 param_1, u8 param_2,
 	    = gpMarioParticleManager->emit(param_1, param_3, param_2, param_3);
 
 	if (emitter) {
-		s16 x = param_4.x;
-		s16 y = param_4.y;
-		s16 z = param_4.z;
-		emitter->setRotation(x, y, z);
+		emitter->setRotation(param_4.x, param_4.y, param_4.z);
 		emitter->setGlobalScale(param_5);
 	}
 }
@@ -794,11 +779,9 @@ void TMapObjBase::emitAndRotateScale(s32 param_1, u8 param_2,
 	    = gpMarioParticleManager->emit(param_1, param_3, param_2, this);
 
 	if (emitter) {
-		JGeometry::TVec3<s16> rotation(
-		    mRotation.x / 180.0f * 32768.0f,
-		    mRotation.y / 180.0f * 32768.0f,
-		    mRotation.z / 180.0f * 32768.0f);
-		emitter->setRotation(rotation.x, rotation.y, rotation.z);
+		emitter->setRotation(mRotation.x / 180.0f * 32768.0f,
+		                     mRotation.y / 180.0f * 32768.0f,
+		                     mRotation.z / 180.0f * 32768.0f);
 		emitter->setGlobalScale(mScaling);
 	}
 }
@@ -922,7 +905,27 @@ u32 TMapObjTurn::touchWater(THitActor*)
 			obj = mHiddenObj;
 
 		if (obj) {
-			throwObjToFront(obj, 200.0f, mAppearSpeed, mAppearYSpeed);
+			f32 speed;
+			f32 ySpeed;
+
+			ySpeed = mAppearYSpeed;
+			speed  = mAppearSpeed;
+			obj->appear();
+			obj->mPosition.set(mPosition.x, mPosition.y + 200.0f, mPosition.z);
+			if (mMActor) {
+				MtxPtr mtx = getModel()->getAnmMtx(0);
+				obj->mVelocity.set(mtx[0][2] * speed,
+				                   mtx[1][2] * speed + ySpeed,
+				                   mtx[2][2] * speed);
+				obj->offLiveFlag(LIVE_FLAG_UNK10);
+			} else {
+				Mtx mtx;
+				MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
+				obj->mVelocity.set(mtx[0][2] * speed,
+				                   mtx[1][2] * speed + ySpeed,
+				                   mtx[2][2] * speed);
+				obj->offLiveFlag(LIVE_FLAG_UNK10);
+			}
 			unk168 = 0;
 		}
 	}
@@ -945,63 +948,6 @@ void TMapObjTurn::turn()
 	}
 }
 
-// fabricated
-static inline void makeRotXMtx(MtxPtr mtx, f32 angle)
-{
-	f32 s     = JMASin(angle);
-	f32 c     = JMACos(angle);
-	mtx[0][0] = 1.0f;
-	mtx[0][1] = 0.0f;
-	mtx[0][2] = 0.0f;
-	mtx[0][3] = 0.0f;
-	mtx[1][0] = 0.0f;
-	mtx[1][1] = c;
-	mtx[1][2] = -s;
-	mtx[1][3] = 0.0f;
-	mtx[2][0] = 0.0f;
-	mtx[2][1] = s;
-	mtx[2][2] = c;
-	mtx[2][3] = 0.0f;
-}
-
-// fabricated
-static inline void makeRotYMtx(MtxPtr mtx, f32 angle)
-{
-	f32 s     = JMASin(angle);
-	f32 c     = JMACos(angle);
-	mtx[0][0] = c;
-	mtx[0][1] = 0.0f;
-	mtx[0][2] = s;
-	mtx[0][3] = 0.0f;
-	mtx[1][0] = 0.0f;
-	mtx[1][1] = 1.0f;
-	mtx[1][2] = 0.0f;
-	mtx[1][3] = 0.0f;
-	mtx[2][0] = -s;
-	mtx[2][1] = 0.0f;
-	mtx[2][2] = c;
-	mtx[2][3] = 0.0f;
-}
-
-// fabricated
-static inline void makeRotZMtx(MtxPtr mtx, f32 angle)
-{
-	f32 s     = JMASin(angle);
-	f32 c     = JMACos(angle);
-	mtx[0][0] = c;
-	mtx[0][1] = -s;
-	mtx[0][2] = 0.0f;
-	mtx[0][3] = 0.0f;
-	mtx[1][0] = s;
-	mtx[1][1] = c;
-	mtx[1][2] = 0.0f;
-	mtx[1][3] = 0.0f;
-	mtx[2][0] = 0.0f;
-	mtx[2][1] = 0.0f;
-	mtx[2][2] = 1.0f;
-	mtx[2][3] = 0.0f;
-}
-
 void TMapObjTurn::control()
 {
 	TMapObjBase::control();
@@ -1014,30 +960,30 @@ void TMapObjTurn::control()
 	switch (unk150) {
 	case 0:
 		mRotation.x = MsWrap(unk154 + mInitialRotation.x, 0.0f, 360.0f);
-		makeRotXMtx(mtx, mRotation.x);
+		MsMtxSetRotX(mtx, mRotation.x);
 		if (mRotation.y != 0.0f) {
-			makeRotXMtx(mtx, mRotation.x);
-			makeRotYMtx(yRot, mRotation.y);
+			MsMtxSetRotX(mtx, mRotation.x);
+			MsMtxSetRotY(yRot, mRotation.y);
 			MTXConcat(yRot, mtx, mtx);
 		} else {
-			makeRotXMtx(mtx, mRotation.x);
+			MsMtxSetRotX(mtx, mRotation.x);
 		}
 		break;
 
 	case 1:
 		mRotation.y = MsWrap(unk154 + mInitialRotation.y, 0.0f, 360.0f);
-		makeRotYMtx(mtx, mRotation.y);
+		MsMtxSetRotY(mtx, mRotation.y);
 		break;
 
 	case 2:
 		mRotation.z = MsWrap(unk154 + mInitialRotation.z, 0.0f, 360.0f);
-		makeRotZMtx(mtx, mRotation.z);
+		MsMtxSetRotZ(mtx, mRotation.z);
 		if (mRotation.y != 0.0f) {
-			makeRotZMtx(mtx, mRotation.z);
-			makeRotYMtx(yRot, mRotation.y);
+			MsMtxSetRotZ(mtx, mRotation.z);
+			MsMtxSetRotY(yRot, mRotation.y);
 			MTXConcat(yRot, mtx, mtx);
 		} else {
-			makeRotZMtx(mtx, mRotation.z);
+			MsMtxSetRotZ(mtx, mRotation.z);
 		}
 		break;
 	}

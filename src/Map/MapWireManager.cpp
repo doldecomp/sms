@@ -57,8 +57,8 @@ void TMapWireActor::init(TMapWireActorManager* manager)
 	initHitActor(0x40000098, 1, -0x80000000, TMapWireActor::mCommonAttackRadius,
 	             TMapWireActor::mCommonAttackHeight, 0.0f, 0.0f);
 
-	TIdxGroupObj* group
-	    = JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ");
+	TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
+	    JDrama::TNameRefGen::search("アイテムグループ"));
 	group->getChildren().push_back(this);
 }
 
@@ -110,7 +110,7 @@ void TMapWireActorManager::doActorToWire()
 		unk4.unk70       = 1;
 	}
 
-	if (unk4.unk74->unk7C != nullptr) {
+	if (unk0->mHeldObject != nullptr) {
 		for (int i = 0; i < unk4.mColCount; ++i) {
 			THitActor* col = unk4.mCollisions[i];
 			if (col->isActorType(0x80000001)
@@ -166,8 +166,8 @@ void TMapWireManager::getPointPosInNthWire(int param_1,
                                            const JGeometry::TVec3<f32>& param_2,
                                            JGeometry::TVec3<f32>* param_3) const
 {
-	f32 pos = getWire(param_1)->getPosInWire(param_2);
-	getWire(param_1)->getPointPosOnWire(pos, param_3);
+	getWire(param_1)->getPointPosOnWire(getWire(param_1)->getPosInWire(param_2),
+	                                    param_3);
 }
 
 void TMapWireManager::getPointPosInWire(const JGeometry::TVec3<f32>&,
@@ -232,22 +232,20 @@ void TMapWireManager::load(JSUMemoryInputStream& stream)
 	stream >> TMapWire::mDrawWidth;
 	stream >> TMapWire::mDrawHeight;
 
-	s32 r;
-	s32 g;
-	s32 b;
-	stream >> r;
-	mUpperSurface.r = r;
-	stream >> g;
-	mUpperSurface.g = g;
-	stream >> b;
-	mUpperSurface.b = b;
+	s32 val;
+	stream >> val;
+	mUpperSurface.r = val;
+	stream >> val;
+	mUpperSurface.g = val;
+	stream >> val;
+	mUpperSurface.b = val;
 
-	stream >> r;
-	mLowerSurface.r = r;
-	stream >> g;
-	mLowerSurface.g = g;
-	stream >> b;
-	mLowerSurface.b = b;
+	stream >> val;
+	mLowerSurface.r = val;
+	stream >> val;
+	mLowerSurface.g = val;
+	stream >> val;
+	mLowerSurface.b = val;
 
 	unk18 = new TMapWire*[unk14];
 	unk24 = new TMapWireActorManager*[unk20];

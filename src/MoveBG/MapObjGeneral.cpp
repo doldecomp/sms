@@ -52,13 +52,13 @@ void TMapObjGeneral::waitingToAppear()
 
 	if (isActorType(0x4000005a)) {
 		f32 damageRadius = getDamageRadius();
-		if (distToMario(mInitialPosition)
-		    < SMS_GetMarioDamageRadius() + damageRadius + 100.0f)
+		if (SMS_GetMarioDamageRadius() + damageRadius + 100.0f
+		    > distToMario(mInitialPosition))
 			appear();
 	} else {
 		f32 damageRadius = getDamageRadius();
-		if (distToMario(mInitialPosition)
-		    < SMS_GetMarioDamageRadius() + damageRadius)
+		if (SMS_GetMarioDamageRadius() + damageRadius
+		    > distToMario(mInitialPosition))
 			appear();
 	}
 }
@@ -115,13 +115,14 @@ void TMapObjGeneral::thrown()
 	unk138        = 0;
 	mHolder       = nullptr;
 
-	s16 angle = *gpMarioAngleY;
-	mVelocity.set(JMASSin((u16)angle) * *gpMarioThrowPower
-	                      * mMapObjData->mPhysical->unk4->unk2C
+	mVelocity.set(*gpMarioThrowPower
+	                      * (JMASSin((s32)*gpMarioAngleY)
+	                         * mMapObjData->mPhysical->unk4->unk2C)
 	                  + (mNormalThrowSpeedRate * *gpMarioSpeedX),
 	              mMapObjData->mPhysical->unk4->unk30,
-	              JMASCos(angle) * *gpMarioThrowPower
-	                      * mMapObjData->mPhysical->unk4->unk2C
+	              *gpMarioThrowPower
+	                      * (JMASCos((s32)*gpMarioAngleY)
+	                         * mMapObjData->mPhysical->unk4->unk2C)
 	                  + (mNormalThrowSpeedRate * *gpMarioSpeedZ));
 
 	offLiveFlag(LIVE_FLAG_UNK10);
@@ -159,12 +160,12 @@ void TMapObjGeneral::recovering()
 	if (hasModelOrAnimData(6)) {
 		J3DModel* model = getModel();
 		MtxPtr mat      = model->getAnmMtx(0);
-		f32 fVar1       = mat[1][3] - unk144;
+		f32 fVar1       = mat[3][1] - unk144;
 		mDamageHeight += fVar1;
 		calcEntryRadius();
 		if (mHeldObject)
 			mHeldObject->mPosition.y += fVar1;
-		unk144 = mat[1][3];
+		unk144 = mat[3][1];
 		if (!animIsFinished())
 			return;
 	} else if (mPosition.y < unk144) {
@@ -223,7 +224,7 @@ void TMapObjGeneral::appearing()
 		mScaling.x += mNormalAppearingScaleUp;
 		mScaling.y += mNormalAppearingScaleUp;
 		mScaling.z += mNormalAppearingScaleUp;
-		if (mInitialScaling.x > mScaling.x)
+		if (mScaling.x < mInitialScaling.x)
 			return;
 
 		mScaling.set(mInitialScaling);
@@ -316,8 +317,7 @@ void TMapObjGeneral::hold(TTakeActor* actor)
 void TMapObjGeneral::ensureTakeSituation()
 {
 	TMapObjBase::ensureTakeSituation();
-	BOOL holding = isState(STATE_HOLDING);
-	if (holding && mHolder == nullptr) {
+	if (isState(STATE_HOLDING) && mHolder == nullptr) {
 		mState = STATE_NORMAL;
 		offLiveFlag(LIVE_FLAG_UNK10);
 	}
@@ -471,7 +471,7 @@ void TMapObjGeneral::checkGroundCollision(JGeometry::TVec3<f32>* param_1)
 
 void TMapObjGeneral::calcVelocity()
 {
-	if (mLiveFlag & LIVE_FLAG_AIRBORNE ? 1 : 0) {
+	if (checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
 		f32 dVar5 = getGravityY();
 		mVelocity.y -= dVar5;
 
@@ -544,9 +544,8 @@ void TMapObjGeneral::bind()
 void TMapObjGeneral::control()
 {
 	TMapObjBase::control();
-	BOOL canSink = checkMapObjFlag(MAP_OBJ_FLAG_CAN_SINK);
-	if (canSink && isState(STATE_NORMAL) && !isAirborne()
-	    && isPollutedGround(mPosition))
+	if (checkMapObjFlag(MAP_OBJ_FLAG_CAN_SINK) && isState(STATE_NORMAL)
+	    && !isAirborne() && isPollutedGround(mPosition))
 		sink();
 
 	work();
@@ -560,23 +559,24 @@ void TMapObjGeneral::calcRootMatrix()
 		if (mMapObjData->mHold) {
 			TMapObjHoldData* hold = mMapObjData->mHold;
 
-			MtxPtr src = mHolder->getTakingMtx();
+			MtxPtr src = getTakingMtx();
 			MTXCopy(src, hold->unkC->getBaseTRMtx());
 			hold->unkC->calc();
 
 			MtxPtr src2 = hold->unk10;
 			MTXCopy(src2, model->getBaseTRMtx());
-			mPosition.set(src2[0][3], src2[1][3], src2[2][3]);
+			mPosition.set(src2[3][0], src2[3][1], src2[3][2]);
 		} else {
-			MtxPtr src = mHolder->getTakingMtx();
+			MtxPtr src = getTakingMtx();
 			MTXCopy(src, checkMapObjFlag(MAP_OBJ_FLAG_UNK100)
 			                 ? model->getAnmMtx(0)
 			                 : model->getBaseTRMtx());
-			mPosition.set(src[0][3], src[1][3], src[2][3]);
+			mPosition.set(src[3][0], src[3][1], src[3][2]);
 		}
 	} else {
-		MsMtxSetXYZRPH(model->getBaseTRMtx(), mPosition.x,
-		               mPosition.y - mYOffset, mPosition.z, mRotation.x,
+		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,
+		                          mPosition.z);
+		MsMtxSetXYZRPH(model->getBaseTRMtx(), pos.x, pos.y, pos.z, mRotation.x,
 		               mRotation.y, mRotation.z);
 	}
 	model->setBaseScale(mScaling);

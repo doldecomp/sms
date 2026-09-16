@@ -76,7 +76,7 @@ void TManhole::touchPlayer(THitActor*)
 {
 	mState = STATE_NORMAL;
 	if (!animationFinished()) {
-		mPosition.y = getInitialPosition().y;
+		mPosition.y = mInitialPosition.y;
 		return;
 	}
 	if (gpMarioOriginal->getStatus() == MARIO_STATUS_HIP_DROP
@@ -119,12 +119,12 @@ void TManhole::touchPlayer(THitActor*)
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_DOWN, &mPosition,
 			                                0, nullptr, 0, 4);
 		}
-		if (mPosition.y > getInitialPosition().y - mDownHeight)
+		if (mPosition.y > mInitialPosition.y - mDownHeight)
 			mPosition.y = mPosition.y - mDownSpeed;
 		else
-			mPosition.y = getInitialPosition().y - mDownHeight;
+			mPosition.y = mInitialPosition.y - mDownHeight;
 		unk148 = 1.0f;
-		unk14C = getInitialPosition().y - mPosition.y;
+		unk14C = mInitialPosition.y - mPosition.y;
 		offMapObjFlag(MAP_OBJ_FLAG_UNK100);
 		return;
 	}
@@ -392,10 +392,7 @@ void TMapObjWaterSpray::calc()
 	JPABaseEmitter* em
 	    = gpMarioParticleManager->emit(unk138, &mPosition, 1, this);
 	if (em) {
-		s16 x = mRotation.x;
-		s16 y = mRotation.y;
-		s16 z = mRotation.z;
-		em->setRotation(x, y, z);
+		em->setRotation(mRotation.x, mRotation.y, mRotation.z);
 		em->setGlobalScale(mScaling);
 		em->setRate(unk13C);
 		em->setGlobalParticleScale(unk140);
@@ -489,7 +486,6 @@ void TMapObjSwitch::control()
 
 BOOL TMapObjSwitch::receiveMessage(THitActor*, u32 message)
 {
-	JDrama::TFlagT<u16> flag(0);
 	if (message == HIT_MESSAGE_HIP_DROP) {
 		startBck("objswitch");
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_AP_BUTTON, &mPosition, 0,
@@ -499,7 +495,7 @@ BOOL TMapObjSwitch::receiveMessage(THitActor*, u32 message)
 			unk144[i]->action(unk140);
 		SMSGetMarDirector()->fireStartDemoCamera(
 		    "オブジェスイッチ用カメラ", nullptr, -1, 0.0f, true, nullptr, 0,
-		    nullptr, flag);
+		    nullptr, JDrama::TFlagT<u16>(0));
 		mStateTimer = unk140;
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 		return TRUE;
@@ -577,7 +573,7 @@ void TRedCoinSwitch::control()
 	TMapObjBase::control();
 	switch (mState) {
 	case 1:
-		return;
+		break;
 	case 2:
 		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			mStateTimer = 120;
@@ -598,16 +594,17 @@ void TRedCoinSwitch::loadAfter()
 	for (int i = 0; i < 8; ++i) {
 		char buf[0x40];
 		snprintf(buf, 0x40, "赤コイン %d", i);
-		TMapObjBase* obj
-		    = JDrama::TNameRefGen::getInstance()->search<TMapObjBase>(buf);
-		obj->makeObjDead();
+		static_cast<TMapObjBase*>(JDrama::TNameRefGen::search(buf))
+		    ->makeObjDead();
 	}
 }
 
 void TRedCoinSwitch::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
-	unk138 = stream.readU32();
+	u32 tmp;
+	stream >> tmp;
+	unk138 = tmp;
 	if (unk138 <= 0)
 		unk138 = 1200;
 	else
