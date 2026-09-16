@@ -1337,7 +1337,10 @@ BOOL TMario::oilSlip()
 	}
 
 	f32 tmp = mDirtyParams.mPolSizeSlip.get();
-	gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, tmp);
+	f32 z   = mPosition.z;
+	f32 y   = mPosition.y;
+	f32 x   = mPosition.x;
+	gpPollution->stamp(1, x, y, z, tmp);
 	SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_POLLUT_CP, &mPosition, 0,
 	                                nullptr, 0, 4);
 
