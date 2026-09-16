@@ -8,7 +8,23 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 60 — seal decompiled from scratch, eleven of eighteen exact
+## Latest checkpoint: batch 62 — hauntLeg started, fifteen of twenty-eight exact
+
+`src/Enemy/hauntLeg.cpp` and `include/Enemy/HauntLeg.hpp` did not exist. Fifteen of twenty-eight functions match on the first working build.
+Game matched code **26.32% -> 26.36%**, aggregate **39.63% -> 39.66%**.
+
+Three classes: `THauntedObject : TTakeActor`, `THauntLeg : TWalkerEnemy` (size 0x1B0) and `THauntLegManager : TSmallEnemyManager`, plus one nerve.
+Exact so far: all three destructors bar `THauntedObject`'s, the manager constructor and `load`, `setMActorAndKeeper`, `reset`, `setDeadAnm`, the four animation setters, `getBasNameTable`, `THauntedObject::receiveMessage` and both `@32@` thunks.
+`mHolder`/`mHeldObject` at 0x68/0x6C are `TTakeActor` fields, and `THauntedObject::receiveMessage` forwards a kill to its holder.
+
+Near-exact: `__sinit` 99.9% (again 764 bytes from the MSound rogue includes), `attackToMario` 99.8%, `createModelData` 99.2%, `createEnemyInstance` 60.7%, `THauntedObject::~THauntedObject` 81.4%.
+Not yet written: the nerve and its destructor, `getTakingMtx`, `isCollidMove`, `calcRootMatrix` (1,032B), `init`, `initSetEnemies` and the `HauntLegCallback` J3D node callback.
+
+Also this batch: `TNerveSealWait::execute` was validated with temporary padding and reaches 100% with zero instruction differences, confirming the near-exact frame gaps are pure reservation rather than wrong code. See `docs/MATCHING_CATALOG.md`.
+
+DOL byte-identical. No gameplay test performed.
+
+## Verified checkpoint: batch 60 — seal decompiled from scratch, eleven of eighteen exact
 
 `src/Enemy/seal.cpp` and `include/Enemy/Seal.hpp` did not exist. Eleven of eighteen functions match, 1,404 of 4,292 bytes.
 Game matched code **26.27% -> 26.32%**, aggregate **39.59% -> 39.63%**.
