@@ -746,10 +746,12 @@ void TMario::sleepingEffectKill()
 
 void TMario::toroccoEffect()
 {
-	f32 dist = JGeometry::TVec3<f32>(mPosition - mToroccoPos).length();
+	const JGeometry::TVec3<f32>& delta = mPosition - mToroccoPos;
+	f32 dist = JGeometry::TVec3<f32>(delta).length();
 
+	J3DModel* model = mTorocco->getModel();
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    PARTICLE_MS_TORO_WIND, mTorocco->getModel()->getAnmMtx(0), 1, this);
+	    PARTICLE_MS_TORO_WIND, model->getAnmMtx(0), 1, this);
 	if (emitter != nullptr) {
 		emitter->setRate(dist * mParticleParams.mToroccoWind.get());
 	}
