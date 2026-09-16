@@ -77,7 +77,7 @@ void TGCLogoDir::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 {
 	unk14            = new JDrama::TDStageGroup(param_1);
 	mGamePad         = param_2;
-	mGamePad->mFlags = 1;
+	mGamePad->mFlags = TMarioGamePad::PAD_FLAG_MENU_INPUT;
 
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* rootViewObjs
 	    = new JDrama::TViewObjPtrListT<JDrama::TViewObj>("root View Objs");
@@ -123,7 +123,10 @@ void TGCLogoDir::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 	gpApplication.mFader->startWipe(14, 0.4f, 0.0f);
 }
 
-TGCLogoDir::~TGCLogoDir() { mGamePad->offFlag(0x1); }
+TGCLogoDir::~TGCLogoDir()
+{
+	mGamePad->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
+}
 
 static inline bool checkProgressiveSelect(TGCLogoDir* director)
 {
