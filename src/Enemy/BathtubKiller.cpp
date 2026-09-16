@@ -606,7 +606,33 @@ DEFINE_NERVE(TNerveBathtubKillerWander, TLiveActor)
 	return FALSE;
 }
 
-DEFINE_NERVE(TNerveBathtubKillerChase, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBathtubKillerChase, TLiveActor)
+{
+	TBathtubKiller* self = (TBathtubKiller*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		self->mMActor = self->mMActorKeeper->getMActor(
+		    "bathtubdownkiller_model1.bmd");
+		self->setBckAnm(1);
+	}
+
+	if (!self->unk1CC->isKillerAttackable()) {
+		spine->pushNerve(&TNerveBathtubKillerStraight::theNerve());
+		return TRUE;
+	}
+
+	if (self->isAboided()) {
+		if (self->unk194 == 1)
+			spine->pushNerve(
+			    &TNerveBathtubKillerChaseStraight::theNerve());
+		else
+			spine->pushNerve(&TNerveBathtubKillerStraight::theNerve());
+		return TRUE;
+	}
+
+	self->moveChasing();
+	return FALSE;
+}
 
 DEFINE_NERVE(TNerveBathtubKillerChaseStraight, TLiveActor) { return FALSE; }
 
