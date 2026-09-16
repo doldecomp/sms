@@ -710,7 +710,8 @@ void TTelesa::initItemAttacker(THitActor* param_1)
 	setTypeNormal();
 	mSpine->initWith(&TNerveTelesaAttackMario::theNerve());
 	mDampenedGroundHeight = SMS_GetMarioGrLevel() - 50.0f;
-	mRotation             = param_1->mRotation;
+	TLiveActor& actor      = *(TLiveActor*)param_1;
+	mRotation             = actor.mRotation;
 
 	setFlyParam(1.0f);
 	unk150 &= ~0x40;
