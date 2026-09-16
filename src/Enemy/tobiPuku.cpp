@@ -2,6 +2,7 @@
 #include <Strategic/Spine.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <Map/MapData.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
@@ -232,7 +233,34 @@ DEFINE_NERVE(TNerveTobiPukuPitiPiti, TLiveActor)
 }
 
 // TODO: incorrect size. Map records 0x1e4 (484 bytes).
-DEFINE_NERVE(TNerveTobiPukuFall, TLiveActor) { return FALSE; }
+// TODO: 98.3%. The only difference is how the water-type test is grouped:
+// TBGCheckData::isWaterSurface compiles to == 0x100, == 0x101, 0x102..0x105,
+// == 0x4104, while the original groups 0x101..0x105 into one range. Same set of
+// types, so the original's source lists them in a different order. Fixing it
+// means editing the shared predicate in Map/MapData.hpp, which other matched
+// callers depend on.
+DEFINE_NERVE(TNerveTobiPukuFall, TLiveActor)
+{
+	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		puku->mRotation.x = 0.0f;
+		puku->setFallAnm();
+	}
+
+	if (!puku->isAirborne()) {
+		if (puku->mGroundPlane->isWaterSurface()) {
+			spine->pushAfterCurrent(&TNerveTobiPukuDie::theNerve());
+			puku->generateEffectColumWater();
+			puku->onLiveFlag(LIVE_FLAG_UNK20000);
+		} else {
+			spine->pushAfterCurrent(&TNerveTobiPukuDie::theNerve());
+			puku->onLiveFlag(LIVE_FLAG_UNK20000);
+		}
+		return TRUE;
+	}
+	return FALSE;
+}
 
 // TODO: incorrect size. Map records 0x250 (592 bytes).
 DEFINE_NERVE(TNerveTobiPukuHitWater, TLiveActor) { return FALSE; }
