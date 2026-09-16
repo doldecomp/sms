@@ -1080,3 +1080,53 @@ void TBigWatermelon::kill()
 
 	TMapObjGeneral::kill();
 }
+
+void TResetFruit::kicked()
+{
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000))
+		return;
+	if (isState(STATE_HOLDING))
+		return;
+
+	// TODO: 84.5%. The original leaves this last guard's branch unfused,
+	// which usually means a disjunction, but joining it to either of the
+	// two checks above costs two points rather than gaining.
+	f32 marioSpeedY = SMS_GetMarioSpeedY();
+	if (marioSpeedY < 0.0f)
+		return;
+
+	JGeometry::TVec3<f32> vel(mVelocity);
+	if (JGeometry::TVec3<f32>(vel).y > 0.0f)
+		return;
+
+	// Already in the air and heading away from Mario: leave it alone.
+	if (checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
+		JGeometry::TVec3<f32> away(vel);
+		if (away.x * (SMS_GetMarioPos().x - mPosition.x) + away.y * 0.0f
+		        + away.z * (SMS_GetMarioPos().z - mPosition.z)
+		    > 0.0f)
+			return;
+	}
+
+	if (JGeometry::TVec3<f32>(vel).y == 0.0f) {
+		mVelocity.y = unk178;
+	} else {
+		mVelocity.y = unk174 * marioSpeedY
+		    - unk160 * JGeometry::TVec3<f32>(vel).y;
+	}
+
+	mVelocity.x += unk170 * SMS_GetMarioSpeedX();
+	mVelocity.z += unk170 * SMS_GetMarioSpeedZ();
+
+	f32 minSpeed = mMapObjData->mPhysical->unk4->unkC;
+	if (abs(mVelocity.x) < minSpeed && abs(mVelocity.z) < minSpeed) {
+		mVelocity.x = 2.0f * MsRandF() - 1.0f;
+		mVelocity.z = 2.0f * MsRandF() - 1.0f;
+	}
+
+	unk194 = 10;
+	offLiveFlag(LIVE_FLAG_UNK10);
+	SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+	SMSGetMSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN, &mPosition, 0,
+	                                nullptr, 0, 4);
+}
