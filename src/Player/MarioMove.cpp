@@ -1167,11 +1167,14 @@ void TMario::thinkDirty()
 			mDirty += mDirtyParams.mIncSlipping.get();
 	}
 
-	if (checkFlag(MARIO_FLAG_IN_ANY_WATER)) {
-		if (mPosition.y > mFloorPosition.z - 1.0f)
-			meltInWaterEffect();
-		mFootPrintTimer = 0;
-		mDirty -= mDirtyParams.mDecSwimming.get();
+	{
+		bool isInWater = checkFlag(MARIO_FLAG_IN_ANY_WATER);
+		if (isInWater) {
+			if (mPosition.y > mFloorPosition.z - 1.0f)
+				meltInWaterEffect();
+			mFootPrintTimer = 0;
+			mDirty -= mDirtyParams.mDecSwimming.get();
+		}
 	}
 
 	if (mStatus == MARIO_STATUS_LEFT_ROTATE_JUMP
