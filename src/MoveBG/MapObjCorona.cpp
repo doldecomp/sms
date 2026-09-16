@@ -4,6 +4,8 @@
 #include <Enemy/BathtubKiller.hpp>
 #include <GC2D/GCConsole2.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <Map/MapCollisionEntry.hpp>
@@ -368,7 +370,70 @@ TBathtub::TBathtub(const char* name)
 {
 }
 
-void TBathtub::load(JSUMemoryInputStream&) { }
+void TBathtub::load(JSUMemoryInputStream& stream)
+{
+	unk24C = 0;
+	TMapObjBase::load(stream);
+	mPosition.set(mInitialPosition);
+
+	unk164 = new TMapCollisionMove*[30];
+	const char* collisionFiles[] = {
+		"/scene/mapObj/bath_col_inside3.col",
+		"/scene/mapObj/bath_col_inside2.col",
+		"/scene/mapObj/bath_col_inside1.col",
+		"/scene/mapObj/bath_col_inside6.col",
+		"/scene/mapObj/bath_col_inside5.col",
+		"/scene/mapObj/bath_col_inside4.col",
+	};
+	for (int i = 0; i < 30; ++i) {
+		unk164[i] = new TMapCollisionMove;
+		unk164[i]->init(collisionFiles[i % 6], 0, this);
+		unk164[i]->setUp();
+	}
+
+	mBathtubData.mPos = mInitialPosition;
+	mBathtubData.unk18.identity();
+	mBathtubData.unk3C = 3000.0f;
+	mBathtubData.unk40 = 3600.0f;
+	mBathtubData.unk44 = mBathtubData.unk3C * sinf(0.27925268f);
+	mBathtubData.unk48 = 100.0f;
+	mBathtubData.unk4C = 0.0f;
+	mBathtubData.unk50 = 0.0f;
+	mBathtubData.unk54 = 0.0f;
+	mBathtubData.unk58.set(0.0f, 0.0f, 0.0f);
+	mBathtubData.unk64 = 0;
+	mBathtubData.unk0C.set(0.0f, 1.0f, 0.0f);
+
+	unk168 = new TBathtubGrip*[5];
+	unk138 = new MActorAnmData;
+	unk138->init("scene/map/map/stand_effect", nullptr);
+
+	JUTNameTab* names = mMActor->getModel()->getModelData()->getJointName();
+	mMarioJntIdx = names->getIndex("mario");
+	mStarJntIdx = names->getIndex("star");
+	mKoopaJntIdx = names->getIndex("water4");
+	mWater4JntIdx = names->getIndex("water5");
+	mWater1JntIdx = names->getIndex("water1");
+	mWater2JntIdx = names->getIndex("water2");
+	mWater3JntIdx = names->getIndex("water3");
+	mDuckJntIdx = names->getIndex("ahiru");
+	mSubmarineJntIdx = names->getIndex("submarin");
+	mJuniorJntIdx = names->getIndex("Jr");
+	mKoopaJntIdx = names->getIndex("koopa");
+
+	MActorAnmData* shineData = new MActorAnmData;
+	shineData->init("/scene/map/map/shine", nullptr);
+	unk29C = new MActor(shineData);
+	void* resource = JKRFileLoader::getGlbResource(
+	    "/scene/map/map/shine/shine_3bai.bmd");
+	unk29C->setModel(new J3DModel(
+	                     J3DModelLoaderDataBase::load(resource, 0x10000000), 0,
+	                     1),
+	                 0x10000000);
+	mShineBodyJntIdx
+	    = unk29C->getModel()->getModelData()->getJointName()->getIndex("body");
+	unk298 = 1;
+}
 
 u8 TBathtub::getNumKillerLaunchable() const { return 0; }
 
