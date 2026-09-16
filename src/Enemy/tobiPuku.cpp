@@ -5,6 +5,7 @@
 #include <Map/MapData.hpp>
 #include <Enemy/SmallEnemy.hpp>
 #include <Player/MarioAccess.hpp>
+#include <Enemy/PathNode.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
@@ -130,7 +131,53 @@ DEFINE_NERVE(TNerveTobiPukuSwimWander, TLiveActor)
 }
 
 // TODO: incorrect size. Map records 0x254 (596 bytes).
-DEFINE_NERVE(TNerveTobiPukuReturnLaunch, TLiveActor) { return FALSE; }
+// TODO: 88.2% of 596 bytes. Structure and call order match. The remaining
+// difference is that the original *calls* JGeometry::TVec3<f>::sub out of line
+// where ours inlines its three fsubs; both use the same header inline, so what
+// makes MWCC emit the call here has not been identified.
+DEFINE_NERVE(TNerveTobiPukuReturnLaunch, TLiveActor)
+{
+	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		TTobiPukuLaunchPad* pad = puku->mLaunchPad;
+		TPathNode node(pad->mPosition);
+		puku->unkF4  = node;
+		puku->unk104 = node;
+		puku->unk114.clear();
+		puku->setSwimAnm();
+		puku->mSwimBaseY = puku->mPosition.y;
+	}
+
+	puku->swimEffect();
+
+	if (puku->isReachedToGoalXZ()) {
+		spine->pushAfterCurrent(&TNerveTobiPukuPrepareFly::theNerve());
+		return TRUE;
+	}
+
+	JGeometry::TVec3<f32> toPad(puku->mLaunchPad->mPosition);
+	toPad.sub(puku->mPosition);
+
+	JGeometry::TVec3<f32> dir(toPad);
+	dir.y = 0.0f;
+	MsVECNormalize(dir, dir);
+
+	f32 speed = puku->mMarchSpeed;
+	puku->mLaunchVelocity.x *= 0.99f;
+	puku->mLaunchVelocity.z *= 0.99f;
+	puku->mPosition.x += dir.x * speed - puku->mLaunchVelocity.x;
+	puku->mPosition.z += dir.z * speed - puku->mLaunchVelocity.z;
+
+	f32 spread = 1.0f + puku->unk1EC;
+	if (spread > 180.0f)
+		spread = 180.0f;
+	else if (spread < 0.0f)
+		spread = 0.0f;
+	puku->unk1EC = spread;
+
+	return FALSE;
+}
 
 // TODO: incorrect size. Map records 0x1a8 (424 bytes).
 DEFINE_NERVE(TNerveTobiPukuPrepareFly, TLiveActor)
