@@ -296,12 +296,6 @@ void TAlphaShadowQuad::reset()
 	mNext          = nullptr;
 }
 
-static const Vec cModelShadowOrigin = { 0.0f, 0.0f, 0.0f };
-static const char cModelShadowAllocError[]
-    = "\x83\x81\x83\x82\x83\x8a\x82\xaa\x91\xab\x82\xe8\x82\xdc\x82\xb9\x82\xf1\n";
-static const f32 cModelShadowTexCoordS[4] = { 1.0f, 1.0f, -1.0f, -1.0f };
-static const f32 cModelShadowTexCoordT[4] = { 1.0f, -1.0f, 1.0f, -1.0f };
-
 TModelShadow::TModelShadow(SDLModelData* param_1, void* param_2, int param_3) {
 }
 
