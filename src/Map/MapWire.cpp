@@ -325,9 +325,9 @@ void TMapWire::move()
 			}
 			bounceFinished = false;
 
-			mHangOrBouncePoint.y = mBounceAmplitude
-			                       * JMASCos(mMoveTimer * 32768.0f)
-			                       * mBounceRemainingPower;
+			f32 bounceCos = JMASCos(mMoveTimer * 32768.0f);
+			mHangOrBouncePoint.y
+			    = bounceCos * mBounceAmplitude * mBounceRemainingPower;
 		}
 
 		if (bounceFinished) {
