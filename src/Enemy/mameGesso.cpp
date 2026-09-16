@@ -584,6 +584,7 @@ DEFINE_NERVE(TNerveMameGessoThrown, TLiveActor)
 DEFINE_NERVE(TNerveMameGessoObject, TLiveActor)
 {
 	TMameGesso* self = (TMameGesso*)spine->getBody();
+	JGeometry::TVec3<f32> position;
 
 	if (SMS_IsMarioStatusTypeSwimming()) {
 		self->offHitFlag(HIT_FLAG_NO_COLLISION);
