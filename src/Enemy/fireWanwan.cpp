@@ -2063,9 +2063,10 @@ DEFINE_NERVE(TNerveFireWanwanHungTail, TLiveActor)
 // TODO: fake
 static inline JGeometry::TVec3<f32> fromPolar(f32 theta, f32 radius)
 {
-	return JGeometry::TVec3<f32>(radius * JMASSin(theta * (65536.0f / 360.0f)),
-	                             0.0f,
-	                             radius * JMASCos(theta * (65536.0f / 360.0f)));
+	JGeometry::TVec3<f32> result(
+	    radius * JMASSin(theta * (65536.0f / 360.0f)), 0.0f,
+	    radius * JMASCos(theta * (65536.0f / 360.0f)));
+	return result;
 }
 
 DEFINE_NERVE(TNerveFireWanwanFly, TLiveActor)
