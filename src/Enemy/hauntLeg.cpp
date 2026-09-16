@@ -14,8 +14,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-static int HauntLegCallback(J3DNode* node, int param);
-
 static const char* hauntleg_bastable[] = {
 	nullptr,
 	nullptr,
@@ -94,6 +92,34 @@ void THauntLeg::reset()
 	unk198 = 0;
 	unk199 = 1;
 	TWalkerEnemy::reset();
+}
+
+// TODO: not reconstructed. The map records 0x170 (368 bytes). The body
+// rewrites the joint matrix of the leg's current node from gpCurHauntLeg's
+// position and its angle field at 0x1AC, but only while the Haunt nerve is
+// current; otherwise it leaves the matrix alone. Writing it needs THauntLeg's
+// tail fields at 0x1A0..0x1B0 named first.
+int HauntLegCallback(J3DNode* node, int param)
+{
+	if (param == 0 && gpCurHauntLeg != nullptr
+	    && gpCurHauntLeg->mSpine->getCurrentNerve()
+	           == &TNerveHauntLegHaunt::theNerve()) {
+	}
+	return 1;
+}
+
+BOOL THauntLeg::isCollidMove(THitActor* other)
+{
+	if (mSpine->getCurrentNerve() != &TNerveHauntLegHaunt::theNerve()
+	    && unk198 == 0 && !(mLiveFlag & LIVE_FLAG_CLIPPED_OUT)
+	    && ((other->mActorType & 0xFFFF0000) == 0x20000000
+	        || (other->mActorType & 0xFFFF0000) == 0x40000000)) {
+		if (((TTakeActor*)other)->mHolder == nullptr || other != unk19C) {
+			unk19C = other;
+			mSpine->setNext(&TNerveHauntLegHaunt::theNerve());
+		}
+	}
+	return FALSE;
 }
 
 void THauntLeg::attackToMario()

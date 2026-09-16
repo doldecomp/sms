@@ -4,6 +4,8 @@
 #include <Enemy/WalkerEnemy.hpp>
 #include <Strategic/Nerve.hpp>
 
+class J3DNode;
+
 // An object a haunting leg has possessed. Forwards a kill to its holder.
 class THauntedObject : public THitActor {
 public:
@@ -67,5 +69,7 @@ public:
 DECLARE_NERVE(TNerveHauntLegHaunt, TLiveActor)
 
 extern THauntLeg* gpCurHauntLeg;
+
+int HauntLegCallback(J3DNode* node, int param);
 
 #endif
