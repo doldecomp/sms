@@ -748,7 +748,7 @@ void TEnemyMario::emWalkAround()
 		return;
 	}
 	if (rand() < 100) {
-		mTargetAngle = rand();
+		mTargetAngle = (u16)rand();
 		changeEMDoing(EM_DOING_TURNING);
 		return;
 	}
@@ -757,8 +757,10 @@ void TEnemyMario::emWalkAround()
 		return;
 	}
 	if (rand() < 50) {
-		TPollutionManager* pollution = gpPollution;
-		pollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, 384.0f);
+		f32 z = mPosition.z;
+		f32 y = mPosition.y;
+		f32 x = mPosition.x;
+		gpPollution->stamp(1, x, y, z, 384.0f);
 		changeEMDoing(EM_DOING_HIDE);
 	}
 	if (mWallPlane != nullptr) {
