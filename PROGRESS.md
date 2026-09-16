@@ -8,7 +8,21 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 54 — all matching library objects linked
+## Latest checkpoint: batch 55 — THPPlayer linked; frame gap measured
+
+The three fully matching THPPlayer objects link cleanly now that the library restriction is lifted: game files 86 -> 89, **3.254321% -> 3.386243% source-linked**, DOL still byte-identical.
+
+The other two unlinked fully-matching game objects still fail, as they have since batch 2, and they fail differently.
+`Camera/CameraInbetween.cpp` shifts the DOL header at byte 204, so a section size changes.
+`Map/PollutionEvent.cpp` shifts text at byte 1,700,992; its unit is missing nine UNUSED symbols, the virtual destructors of four event classes plus their `@32@` thunks and a `TVec3<f>::set` inline, and ten UNUSED stubs are 4 bytes against map sizes up to 388.
+
+Measured the real blocker for the near-exact backlog: across the 70 largest game functions at 99.9%+, **60 have frames that are too small**, 4 exact, 6 too large, 6 leaf.
+The remaining 343 near-exact functions (217,272 bytes) are therefore gated on missing inlined helpers that reserved locals, not on wrong instructions.
+Details and the diagnostic rule are in `docs/MATCHING_CATALOG.md`.
+
+Game code **26.15378% matched / 3.386243% source-linked**; all 399 linked files verified with `cmp` and SHA-1. No gameplay test performed.
+
+## Verified checkpoint: batch 54 — all matching library objects linked
 
 Reconstructing the deadstripped `__dec2num` restores `ansi_fp.c`'s `.sdata2` pool order, so the last held-back library object links.
 **Every library object that matches in code and data is now source-linked: 394 files, 17.639089%.** SDK reaches 92.22% linked; JSystem holds at 61.61%; the DOL stays byte-identical.

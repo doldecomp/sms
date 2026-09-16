@@ -392,5 +392,8 @@
   "dolphin/exi/EXIUart.c",
   "dolphin/thp/THPDec.c",
   "dolphin/thp/THPAudio.c",
-  "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/ansi_fp.c"
+  "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/ansi_fp.c",
+  "THPPlayer/THPDraw.c",
+  "THPPlayer/THPVideoDecode.c",
+  "THPPlayer/THPRead.c"
 ]
