@@ -645,7 +645,8 @@ BOOL TShine::receiveMessage(THitActor* sender, u32 message)
 {
 	unkF8 &= 0xF7FFFFFF;
 	mPosition.set(SMS_GetMarioPos());
-	mRotation.y = 180.0f * (f32)*gpMarioAngleY / 32768.0f;
+	f32 angle   = 180.0f * (f32)*gpMarioAngleY / 32768.0f;
+	mRotation.y = angle;
 
 	MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x,
 	               mPosition.y - mYOffset, mPosition.z, mRotation.x,
