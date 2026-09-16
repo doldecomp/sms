@@ -820,8 +820,28 @@ BOOL TMario::wireWaitToSWaitL()
 	return 0;
 }
 
-// TODO: specMain inlines the endpoint swap at stack 0x68; ours uses 0x7c.
-// Hoisting or splitting the temporary declaration does not fix its stack slot.
+// TODO: specMain inlines this endpoint swap at stack 0x68/0x6c/0x70; ours
+// lands at 0x7c/0x80/0x84. This is the only thing keeping specMain from being
+// exact -- 6 operand differences, frame size already correct, every other
+// instruction identical.
+//
+// Measured layout of specMain's frame, both sides (offset: reference count):
+//   target: 0x50 0x54 0x58 0x5c 0x60 0x64 | 0x68 0x6c 0x70 |       0x94..0xa4
+//   ours:   0x50 0x54 0x58 0x5c 0x60 0x64 |       0x7c 0x80 0x84 | 0x94..0xa4
+// Every other slot matches. The region 0x68..0x94 is 44 bytes on both sides and
+// holds this 12-byte temporary plus 32 bytes of inline locals that were
+// register-allocated and are never referenced. The original places the
+// temporary first in that region; we place it after 20 bytes of those unused
+// locals. So this is purely the order in which inline bodies get their slots,
+// not a missing or extra local.
+//
+// Ruled out:
+//   - hoisting or splitting the temporary's declaration (batch 40)
+//   - moving `case MARIO_STATUS_WIRE_WAIT_TO_S_WAIT_R` earlier in specMain's
+//     switch: case source order also drives the branch structure, not just
+//     inline expansion order, and this drops specMain to 90.0% / 89 diffs.
+// Note decomp-diff prints this function as "100.0%" while it is still
+// nonmatching; check the marker count, not the rounded percentage.
 BOOL TMario::wireWaitToSWaitR()
 {
 	getOnWirePosAngle(&mPosition, &mModelFaceAngle);
