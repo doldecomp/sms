@@ -807,7 +807,8 @@ static void evAppearShineFromKageMario(TSpcTypedInterp<TEventWatcher>* interp,
 	shine->mPosition = uuuh->mPosition;
 	shine->appearSimple(arg1);
 
-	interp->push();
+	const TSpcSlice& result = TSpcSlice();
+	interp->push(result);
 }
 
 static void evAppearShineForWoodBox(TSpcTypedInterp<TEventWatcher>* interp,
