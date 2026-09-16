@@ -350,7 +350,7 @@ void TSmallEnemy::genEventCoin()
 
 	if (mCoin) {
 		TCoin* coin;
-		if (isActorType(0x2000000E)) {
+		if (mCoin->isActorType(0x2000000E)) {
 			coin = (TCoin*)gpItemManager->makeObjAppear(0x2000000E);
 		} else {
 			coin = mCoin;
@@ -366,9 +366,9 @@ void TSmallEnemy::genEventCoin()
 	}
 
 	if (unk18C > 0) {
+		Mtx local_c0;
+		Vec local_d0;
 		for (int i = 0; i < unk18C; ++i) {
-			Mtx44 local_c0;
-
 			f32 angle = 360.0f / unk18C * i + mRotation.y;
 			f32 s     = JMASin(angle);
 			f32 c     = JMACos(angle);
@@ -388,7 +388,6 @@ void TSmallEnemy::genEventCoin()
 			local_c0[2][2] = c;
 			local_c0[2][3] = 0.0f;
 
-			Vec local_d0;
 			local_d0.x = 0.0f;
 			local_d0.y = 0.0f;
 			local_d0.z = 100.0f;
