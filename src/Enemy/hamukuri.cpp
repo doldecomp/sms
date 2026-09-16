@@ -528,7 +528,8 @@ void TFireHamuKuriManager::initSetEnemies()
 			{ 200, 160, 130, 255 },
 		};
 
-		u32 matBodyBottom1Idx = ((TFireHamuKuri*)unk18[0])
+		THitActor* first = unk18[0];
+		u32 matBodyBottom1Idx = ((TFireHamuKuri*)first)
 		                            ->getModel()
 		                            ->getModelData()
 		                            ->getMaterialName()
