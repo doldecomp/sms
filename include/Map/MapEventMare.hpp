@@ -53,7 +53,7 @@ public:
 
 class TMareEventWallRock : public JDrama::TViewObj {
 public:
-	TMareEventWallRock(const char* name);
+	TMareEventWallRock(const char* name = "イベント（マーレ壁の岩）");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics) { }
@@ -107,7 +107,7 @@ public:
 
 class TMareEventBumpyWall : public TMapObjBase {
 public:
-	TMareEventBumpyWall(const char*);
+	TMareEventBumpyWall(const char* name = "凸凹壁");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void control();
