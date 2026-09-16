@@ -1470,17 +1470,17 @@ void TBossEel::init(TLiveManager* manager)
 	{
 		SDLModelData* toothModelData[3];
 
-		void* resource1   = JKRGetResource("/scene/bosseel/tooth.bmd");
+		void* resource = JKRGetResource("/scene/bosseel/tooth.bmd");
 		toothModelData[0] = new SDLModelData(J3DModelLoaderDataBase::load(
-		    resource1,
+		    resource,
 		    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift)));
-		void* resource2   = JKRGetResource("/scene/bosseel/bad_tooth.bmd");
-		toothModelData[0] = new SDLModelData(J3DModelLoaderDataBase::load(
-		    resource2,
+		resource = JKRGetResource("/scene/bosseel/bad_tooth.bmd");
+		toothModelData[1] = new SDLModelData(J3DModelLoaderDataBase::load(
+		    resource,
 		    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift)));
-		void* resource3   = JKRGetResource("/scene/bosseel/gold_tooth.bmd");
-		toothModelData[0] = new SDLModelData(J3DModelLoaderDataBase::load(
-		    resource3,
+		resource = JKRGetResource("/scene/bosseel/gold_tooth.bmd");
+		toothModelData[2] = new SDLModelData(J3DModelLoaderDataBase::load(
+		    resource,
 		    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift)));
 
 		static const char* sToothPartsJointTable[]
