@@ -86,7 +86,7 @@ void TMameGessoManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	for (int i = 0; i < mObjNum; i++) {
 		if (!(cue & CUE_MOVE))
 			continue;
-		TMameGesso* gesso = getObj(i);
+		TMameGesso* gesso = (TMameGesso*)TSmallEnemyManager::getObj(i);
 		if (gesso->checkLiveFlag(LIVE_FLAG_DEAD) && gesso->unk1D2) {
 			gesso->unk1CC += 1;
 			if (gesso->unk1CC > gesso->unk194->mSLGenerateInterval.get()) {
