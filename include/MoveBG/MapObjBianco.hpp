@@ -43,6 +43,8 @@ public:
 	virtual ~TBiancoMiniWindmill();
 };
 
+class TBGCheckData;
+
 class TBiancoWatermill : public TMapObjBase {
 public:
 	TBiancoWatermill()
@@ -51,6 +53,8 @@ public:
 	}
 
 	virtual ~TBiancoWatermill();
+
+	void turnByEnemy(THitActor*, const TBGCheckData*);
 };
 
 class TBiancoWatermillVertical : public TMapObjBase {
