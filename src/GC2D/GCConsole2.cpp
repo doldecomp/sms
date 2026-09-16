@@ -2274,12 +2274,14 @@ void TGCConsole2::startDisappearCoin()
 	unk4D = true;
 	unk5A = true;
 
+	int offset;
 	if (unk140->isInterpolatorAtZero())
 		unk140->updatePaneOffset(
 		    40, 0,
-		    -(unk140->mInitialBounds.y2 + unk128->getPane()->getHeight() + 1));
+		    -(1 + unk140->mInitialBounds.y2 + unk128->getPane()->getHeight()));
 
-	int offset = -(unk108->mInitialBounds.y2 + 1);
+	int coinOffset = -(unk108->mInitialBounds.y2 + 1);
+	offset         = coinOffset;
 	unk108->updatePaneOffset(40, 0, offset - unkC8->getPane()->getHeight());
 
 	unk124->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
