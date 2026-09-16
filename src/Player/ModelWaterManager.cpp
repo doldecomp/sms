@@ -1528,7 +1528,9 @@ void TModelWaterManager::drawRefracAndSpec() const
 	unk5D34->load(GX_TEXMAP0);
 	unk5D38->load(GX_TEXMAP1);
 	unk5D3C->load(GX_TEXMAP2);
-	GXSetTevColor(GX_TEVREG0, (GXColor) { 0, 0, 0, unk5D65 });
+	GXColor local_color;
+	local_color = (GXColor) { 0, 0, 0, unk5D65 };
+	GXSetTevColor(GX_TEVREG0, local_color);
 	GXSetNumTevStages(2);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
 	GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO,
