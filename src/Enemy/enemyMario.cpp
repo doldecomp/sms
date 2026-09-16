@@ -770,15 +770,9 @@ void TEnemyMario::emWalkAround()
 	setStickToAngle(mFaceAngle.y, 0.5f);
 }
 
-static inline const JGeometry::TVec3<f32>&
-getPathNodePoint(const TPathNode& node)
-{
-	return node.getPoint();
-}
-
 void TEnemyMario::emWalkGraph()
 {
-	if ((getPathNodePoint(mEMario->getUnk104()) - mEMario->mPosition).length()
+	if ((mEMario->getUnk104().getPoint() - mEMario->mPosition).length()
 	    < 100.0f) {
 		if (mDistanceToMario > 3000.0f)
 			mEMario->goToRandomNextGraphNode();
