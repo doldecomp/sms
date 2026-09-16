@@ -847,6 +847,31 @@ void TTobiPuku::hitWall()
 		mVelocity.y = 0.0f;
 }
 
+void TTobiPuku::calcRootMatrix()
+{
+	gpCurTobiPuku = (TMoePuku*)this;
+	TSpineEnemy::calcRootMatrix();
+
+	if (mRotation.x != 0.0f) {
+		if (isEaten())
+			return;
+
+		// Tipping over on landing lifts the body so it pivots on its edge
+		// rather than sinking into the ground.
+		MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x,
+		               mPosition.y
+		                   + 70.0f * mRotation.x / TTobiPuku::mLandAngle,
+		               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
+	}
+
+	if (isPichiEffect()) {
+		MtxPtr mtx = getMActor()->getModel()->getAnmMtx(1);
+		mFlamePos.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+		gpMarioParticleManager->emitAndBindToPosPtr(0x177, &mFlamePos, 1,
+		                                            this);
+	}
+}
+
 void TTobiPuku::behaveToWater(THitActor* param_1)
 {
 	if (mSpine->getCurrentNerve() == &TNerveTobiPukuHitWater::theNerve())
@@ -1064,4 +1089,49 @@ void TTobiPukuLaunchPadManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	for (int i = 0; i < getActiveObjNum(); ++i)
 		getObj(i)->perform(cue, graphics);
+}
+
+void TMoePuku::generateEffectColumWater()
+{
+	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT))
+		return;
+
+	TEffectColumWater* enemy
+	    = (TEffectColumWater*)gpConductor->makeOneEnemyAppear(
+	        mPosition, "エフェクト水柱マネージャー", 0);
+
+	if (enemy)
+		enemy->generate(mPosition, mScaling);
+
+	if (mSpine->getCurrentNerve() != &TNerveTobiPukuGenerate::theNerve())
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_MOEPUKU_TOWATER, &mPosition,
+		                                0, nullptr, 0, 4);
+	else
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_PAKKUN_SHOOT_IMI, &mPosition,
+		                                0, nullptr, 0, 4);
+
+	// The flame gets doused: a steam puff scaled to the body.
+	JPABaseEmitter* emitter
+	    = gpMarioParticleManager->emit(0x1D4, &mPosition, 2, nullptr);
+	if (emitter)
+		emitter->setGlobalScale(mScaling);
+}
+
+void TMoePuku::calcRootMatrix()
+{
+	TTobiPuku::calcRootMatrix();
+
+	// The flame only burns while the puku is airborne on the Fly nerve.
+	if (mSpine->getCurrentNerve() != &TNerveTobiPukuFly::theNerve())
+		return;
+
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_MOEKURI_FLAME, &mPosition, 0,
+	                                nullptr, 0, 4);
+
+	gpMarioParticleManager->emitAndBindToMtxPtr(
+	    0x1D1, getMActor()->getModel()->getAnmMtx(1), 1, this);
+	gpMarioParticleManager->emitAndBindToMtxPtr(
+	    0x1D2, getMActor()->getModel()->getAnmMtx(1), 1, this);
+	gpMarioParticleManager->emitAndBindToMtxPtr(
+	    0x1F8, getMActor()->getModel()->getAnmMtx(1), 3, this);
 }

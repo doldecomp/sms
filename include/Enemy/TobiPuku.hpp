@@ -58,6 +58,7 @@ public:
 	virtual void forceKill();
 	virtual void attackToMario();
 	virtual void behaveToWater(THitActor*);
+	virtual void calcRootMatrix();
 
 	// New virtuals, declared in the order the vtable lists them
 	// (0x1b8 onwards).
@@ -138,6 +139,7 @@ public:
 	virtual BOOL isInhibitedForceMove();
 	virtual void generateEffectColumWater();
 	virtual void walkBehavior(int, f32);
+	virtual void calcRootMatrix();
 
 	// New virtuals, declared in the order the vtable lists them
 	// (0x1b8 onwards).
