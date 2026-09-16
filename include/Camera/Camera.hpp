@@ -310,10 +310,10 @@ public:
 			unk8 = new int[unk0];
 		}
 
-		int getThing() const
+		const int& getThing() const
 		{
 			if (unk4 <= 0)
-				return (int)unk8; // what
+				return unk8[0];
 
 			return unk8[unk4 - 1];
 		}

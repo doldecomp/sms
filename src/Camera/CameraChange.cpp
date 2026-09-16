@@ -24,7 +24,7 @@ s16 CPolarSubCamera::getCameraInbetweenFrame_(int param_1)
 	if (param_1 == -1)
 		param_1 = unk60->getThing();
 
-	int iVar3 = 1;
+	s16 iVar3 = 1;
 	if (mMode < CAMERA_MODE_REPRODUCE_DEMO
 	    && param_1 < CAMERA_MODE_REPRODUCE_DEMO) {
 		TCamSaveKindParam* pTVar4 = mSaveKindParam[mMode];
