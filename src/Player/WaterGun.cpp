@@ -995,9 +995,6 @@ void TNozzleDeform::emit(int param_1)
 
 void TNozzleDeform::animation(int param)
 {
-	volatile u8 stackPad[0x118];
-	(void)stackPad;
-
 	bool check = 0;
 	if (param == 0)
 		check = 1;
@@ -1080,18 +1077,19 @@ void TNozzleDeform::animation(int param)
 			mactor->setBckFromIndex(5);
 
 		bool updateAnimation = false;
-		if (mFludd->mCurrentWater == 0) {
+		TWaterGun* fludd = mFludd;
+		if (fludd->mCurrentWater == 0) {
 			updateAnimation = false;
-		} else if (mFludd->getNozzle(mFludd->mCurrentNozzle)->getNozzleKind()
+		} else if (fludd->getNozzle(fludd->mCurrentNozzle)->getNozzleKind()
 		           == 1) {
-			if (((TNozzleTrigger*)mFludd->getNozzle(mFludd->mCurrentNozzle))
+			if (((TNozzleTrigger*)fludd->getNozzle(fludd->mCurrentNozzle))
 			        ->unk385
 			    == TNozzleTrigger::ACTIVE)
 				updateAnimation = true;
 			else
 				updateAnimation = false;
 		} else {
-			if (mFludd->getNozzle(mFludd->mCurrentNozzle)->unk378 > 0.0f)
+			if (fludd->getNozzle(fludd->mCurrentNozzle)->unk378 > 0.0f)
 				updateAnimation = true;
 			else
 				updateAnimation = false;
@@ -1108,16 +1106,19 @@ void TNozzleDeform::animation(int param)
 			mactor->setBckFromIndex(6);
 
 		bool updateAnimation = false;
-		if (mFludd->mCurrentWater == 0) {
+		TWaterGun* fludd = mFludd;
+		if (fludd->mCurrentWater == 0) {
 			updateAnimation = false;
-		} else if (mFludd->getCurrentNozzle()->getNozzleKind() == 1) {
-			if (((TNozzleTrigger*)mFludd->getCurrentNozzle())->unk385
+		} else if (fludd->getNozzle(fludd->mCurrentNozzle)->getNozzleKind()
+		           == 1) {
+			if (((TNozzleTrigger*)fludd->getNozzle(fludd->mCurrentNozzle))
+			        ->unk385
 			    == TNozzleTrigger::ACTIVE)
 				updateAnimation = true;
 			else
 				updateAnimation = false;
 		} else {
-			if (mFludd->getCurrentNozzle()->unk378 > 0.0f)
+			if (fludd->getNozzle(fludd->mCurrentNozzle)->unk378 > 0.0f)
 				updateAnimation = true;
 			else
 				updateAnimation = false;
@@ -1126,16 +1127,16 @@ void TNozzleDeform::animation(int param)
 		if (updateAnimation == true)
 			unk36C = 2;
 
-		bool finished           = false;
+		check                   = false;
 		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 		if (frameCtrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
 		                          | J3DFrameCtrl::STATE_LOOPED_ONCE))
-			finished = true;
+			check = true;
 
 		if (frameCtrl->getFrame() > (frameCtrl->getEnd() - 0.1f))
-			finished = true;
+			check = true;
 
-		if (finished && !(mFludd->unk1CEC == 0.0f ? true : false))
+		if (check && !(mFludd->unk1CEC == 0.0f ? true : false))
 			unk36C = 0;
 
 		break;
