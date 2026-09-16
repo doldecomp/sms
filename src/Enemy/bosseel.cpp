@@ -373,12 +373,12 @@ void TBEelTears::calcRootMatrix()
 
 		if (mSpine->getCurrentNerve() == &TNerveBEelTearsGenerate::theNerve()) {
 			TPosition3f transform(mPosition.x, mPosition.y, mPosition.z);
-			transform.ref(0, 3)
-			    = transform.at(0, 3)
-			      + (mSpawnMtx[0][3] - transform.at(0, 3)) * 0.1f;
-			transform.ref(2, 3)
-			    = transform.at(2, 3)
-			      + (mSpawnMtx[2][3] - transform.at(2, 3)) * 0.1f;
+			transform.mMtx[0][3]
+			    = transform.mMtx[0][3]
+			      + (mSpawnMtx[0][3] - transform.mMtx[0][3]) * 0.1f;
+			transform.mMtx[2][3]
+			    = transform.mMtx[2][3]
+			      + (mSpawnMtx[2][3] - transform.mMtx[2][3]) * 0.1f;
 
 			mScaling.setAll(mTearsParams->mSLBodyScaleLow.get());
 			mMActor->getModel()->setBaseScale(mScaling);
