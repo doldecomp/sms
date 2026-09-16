@@ -265,7 +265,7 @@ void TMapEventSinkInPollutionReset::loadAfter()
 
 void TMapEventSinkBianco::finishControl()
 {
-	char buffer[64];
+	char buffer[96];
 	if (mRaisingBuildingIdx == 0) {
 		TMapObjBase::setJointTransY(unk64, 0.0f);
 		for (int i = 0; i < 6; ++i) {
