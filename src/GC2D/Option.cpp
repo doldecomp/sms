@@ -942,9 +942,14 @@ void TOptionControl::writeValue()
 
 bool TOptionControl::isChangedSetting() const
 {
+	TOptionRumbleUnit::RumbleType value
+	    = (TOptionRumbleUnit::RumbleType)mInitialRumbleValue;
+	TToggleControl* toggle = mRumbleOption->mSelectionText;
+	TOptionRumbleUnit::RumbleType current
+	    = (TOptionRumbleUnit::RumbleType)toggle->getNumber();
 	bool result = true;
 
-	if (mInitialRumbleValue == mRumbleOption->getValue()
+	if (value == current
 	    && mInitialSoundValue == mSoundOption->getValue())
 		result = false;
 
