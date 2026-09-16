@@ -1954,7 +1954,8 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 	}
 
 	if (mYoshi != nullptr) {
-		MActor* yoshiActor = mYoshi->mActor;
+		MActor* actor = mYoshi->mActor;
+		MActor* yoshiActor = actor;
 		if (yoshiActor->getCurAnmIdx(ANM_TYPE_BCK) == 0xf) {
 			yoshiActor->initNormalMotionBlend();
 			yoshiActor->setMotionBlendRatioForBck(unk414.z);
