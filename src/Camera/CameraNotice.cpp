@@ -1,3 +1,7 @@
+#define inv_sqrt inv_sqrt(f32); static f32 inv_sqrt_inline
+#include <JSystem/JGeometry/JGUtil.hpp>
+#undef inv_sqrt
+
 #include <Camera/Camera.hpp>
 #include <Camera/CameraKindParam.hpp>
 #include <Camera/CameraMarioData.hpp>
@@ -13,6 +17,8 @@
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JMath.hpp>
 #include <Enemy/Enemy.hpp>
+
+template <> s16 CLBRoundf<s16>(f32);
 
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
@@ -108,7 +114,7 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 		if (!isInside)
 			continue;
 
-		if (!MsIsInSight(*gpMarioPos, DEG2SHORTANGLE(*gpMarioAngleY),
+		if (!MsIsInSight(*gpMarioPos, SHORTANGLE2DEG(*gpMarioAngleY),
 		                 unk2A0[i]->mPosition, dist2,
 		                 mSaveNotice->mOnDegree.get(), -1.0f))
 			continue;
@@ -166,7 +172,7 @@ void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
 		                dx - mCurrentTarget.mTarget.x);
 		s16 angleDiff = mCurrentTarget.mYaw - ang;
 		int absAngle  = angleDiff >= 0 ? angleDiff : -angleDiff;
-		f32 ratio    = DEG2SHORTANGLE(1.0f) * (f32)absAngle;
+		f32 ratio    = (1.0f / 32768.0f) * (f32)absAngle;
 
 		f32 chase;
 		if (dist2 > farClip2) {
