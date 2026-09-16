@@ -415,8 +415,11 @@ bool TBaseNPC::npcRecoverFromSinking()
 {
 	bool result = false;
 
-	if (!checkLiveFlag(LIVE_FLAG_UNK8000000)) {
-		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(32.0f)) {
+	bool bVar2 = checkLiveFlag(LIVE_FLAG_UNK8000000);
+	if (!bVar2) {
+		bool bVar3
+		    = mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(32.0f);
+		if (bVar3) {
 			onLiveFlag(LIVE_FLAG_UNK8000000);
 			f32 dVar6 = getGravityY();
 			f32 fVar1 = 0.0f;
