@@ -2480,7 +2480,7 @@ void TGCConsole2::startDisappearTelop()
 
 void TGCConsole2::startDisappearTimer()
 {
-	unk44C->updatePaneOffset(40, 0, 525 - unk44C->getInitialBounds().y1);
+	unk44C->updatePaneOffset(40, 0, getOffsetForBelowScreen(unk44C) + 60);
 	unk3F = 1;
 	unk5A = 1;
 }
