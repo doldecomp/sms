@@ -197,12 +197,9 @@ TMirrorModel::TMirrorModel()
 void TMirrorModelObj::setPlane()
 {
 	MtxPtr mtx = unk4->getModel()->getAnmMtx(0);
-	Vec* v     = (Vec*)unk4->getModel()
-	             ->getModelData()
-	             ->getVertexData()
-	             .getVtxPosArray();
+	Vec* v = (Vec*)unk4->getModel()->getModelData()->getVtxPosArray();
 
-	JGeometry::TVec3<f32> local_18;
+	Vec local_18;
 	local_18.x = v->x;
 	local_18.y = v->y;
 	local_18.z = v->z;
@@ -212,7 +209,7 @@ void TMirrorModelObj::setPlane()
 	unk18.z = mtx[2][1];
 
 	MTXMultVec(mtx, &local_18, &local_18);
-	unk24 = -VECDotProduct(unk18, local_18);
+	unk24 = -VECDotProduct(&unk18, &local_18);
 	unk8->setUnk84AndUnk90(unk18.x, unk18.y, unk18.z, unk24);
 }
 
