@@ -8,6 +8,7 @@
 #include "Enemy/Emario.hpp"
 #include "Enemy/Hinokuri2.hpp"
 #include <System/MarNameRefGen.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 {
