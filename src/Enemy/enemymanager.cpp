@@ -18,6 +18,8 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
+bool TEnemyManager::mIsCopyAnmMtx = true;
+
 TSpineEnemyParams::TSpineEnemyParams(const char* path)
     : TParams(path)
     , PARAM_INIT(mSLHeadHeight, 120.0f)
