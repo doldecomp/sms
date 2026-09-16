@@ -487,7 +487,8 @@ static void evRegisterMovie(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->verifyArgNum(1, &arg_num);
 	int movieId = TSpcSlice(interp->pop()).getDataInt();
 	SMSGetMarDirector()->fireStreamingMovie(movieId);
-	interp->push();
+	const TSpcSlice& result = TSpcSlice();
+	interp->push(result);
 }
 
 static void evGameOver(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
