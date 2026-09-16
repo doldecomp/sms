@@ -597,7 +597,8 @@ bool TSmallEnemy::changeByJuice()
 
 		mJuiceBlock->mScaling.set(0.1f, 0.1f, 0.1f);
 		mJuiceBlock->unk140.set(0.0f, 0.0f, 0.0f);
-		mJuiceBlock->mRotation.set(0.0f, mRotation.y, 0.0f);
+		mJuiceBlock->mRotation.set(
+		    JGeometry::TVec3<f32>(0.0f, mRotation.y, 0.0f));
 
 		mJuiceBlock->unk14C = this;
 		mJuiceBlock->offLiveFlag(LIVE_FLAG_HIDDEN);
