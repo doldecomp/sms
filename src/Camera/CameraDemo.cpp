@@ -112,8 +112,9 @@ void CPolarSubCamera::updateGateDemoCamera_()
 	f32 fovy;
 	unk2B0->updateDemo(nullptr, nullptr, nullptr, &fovy);
 
-	int v = mInbetween->getUnk4();
-	if (unk70 != mCameraDemo->unk8 && v > 0)
+	int v  = mInbetween->getUnk4();
+	bool b = unk70 != mCameraDemo->unk8;
+	if (b && v > 0)
 		CLBChaseConstantSpecifyFrame<f32>(&mFovy, fovy, (f32)v);
 	else
 		mFovy = fovy;
