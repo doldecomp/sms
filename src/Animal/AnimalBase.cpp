@@ -232,7 +232,9 @@ void TAnimalBase::resetRandomCurPathNode()
 		pos.y -= 250.0f * MsRandF();
 	}
 
-	setGoalPath(pos);
+	curNode.unk0 = nullptr;
+	curNode.unk4 = pos;
+	setGoalPath(curNode);
 }
 
 void TAnimalBase::getRotationFlyToDir(JGeometry::TVec3<f32>* current_rot,
