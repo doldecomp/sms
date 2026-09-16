@@ -350,7 +350,7 @@ bool TKumokun::checkOnMovingFloor(JGeometry::TVec3<f32>* param_1,
 
 	JGeometry::TVec3<f32> local_1C = param_3;
 	JGeometry::TVec3<f32> local_98 = local_1C;
-	JGeometry::TVec3<f32> local_8C = local_98;
+	JGeometry::TVec3<f32> local_8C = local_1C;
 
 	local_8C += param_4;
 
@@ -358,9 +358,10 @@ bool TKumokun::checkOnMovingFloor(JGeometry::TVec3<f32>* param_1,
 	local_80 *= -10.0f;
 	local_8C += local_80;
 
+	const TBGCheckData* local_7C;
 	f32 yTmp   = local_8C.y;
 	f32 dVar10 = gpMap->checkGround(local_8C.x, yTmp + mHeadHeight, local_8C.z,
-	                                param_2);
+	                                &local_7C);
 	dVar10 += 1.0f;
 	if (yTmp <= dVar10 + 0.05f) {
 		if (30.0f < dVar10 - yTmp) {
