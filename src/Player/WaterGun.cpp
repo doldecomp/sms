@@ -34,6 +34,11 @@
 static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
 static const char cDirtyTexName[]  = "H_ma_rak_dummy";
 
+#pragma force_active on
+static const f32 cWaterGunZero[3] = { 0.0f, 0.0f, 0.0f };
+static const f32 cWaterGunOne[3]  = { 1.0f, 1.0f, 1.0f };
+#pragma force_active off
+
 TNozzleBmdData nozzleBmdData = {
 	{
 	    {
@@ -1362,7 +1367,7 @@ void TWaterGun::init()
 	                              ->unk380->getModel()
 	                              ->getModelData()
 	                              ->getJointName()
-	                              ->getIndex("chn_muzzle_l"))
+	                              ->getIndex("chn_muzzle_1"))
 	    ->setCallBack(&NozzleCtrl);
 
 	mNozzleList[Spray]
