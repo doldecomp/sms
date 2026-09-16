@@ -2357,7 +2357,7 @@ void TCardLoad::changeScene()
 					unk378[unkB0][i]->getPane()->hide();
 				JUTRect local_6c = unk348[unkB0];
 				unk33C[unkB0]->updatePaneSize(30, local_6c.getWidth(), 0);
-				unk33C[unkB0]->updatePaneOffset(30, local_6c.getWidth(), 0);
+				unk33C[unkB0]->updatePaneOffset(30, 0, local_6c.getWidth());
 				unk10 = 4;
 			}
 
@@ -2391,7 +2391,7 @@ void TCardLoad::changeScene()
 			if (rc == CARD_RESULT_READY) {
 				if (unk10 == 2)
 					unk10 = 3;
-				drawMessage(PROGRESS_UNK20);
+				drawMessageBM(PROGRESS_UNK20);
 				gpCardManager->probe();
 				if (unk10 == 5)
 					SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_DECIDE, 0,
@@ -2399,7 +2399,7 @@ void TCardLoad::changeScene()
 			} else {
 				if (unk10 == 2)
 					unk10 = 3;
-				drawMessage(PROGRESS_UNK21);
+				drawMessageBM(PROGRESS_UNK21);
 			}
 		} else {
 			drawMessageBM(PROGRESS_UNK0);
