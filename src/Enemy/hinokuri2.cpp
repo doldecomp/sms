@@ -914,10 +914,12 @@ void THinokuri2::moveObject()
 	if (mLevel == 1) {
 		f32 dhp    = calcHitPoints() - mHitPoints;
 		f32 fVar12 = (getSaveParam()->getSLDamageHeadScale() - 1.0f)
-		                 * (1.0f + dhp / calcHitPoints())
-		             - unk194;
+		                 * (dhp / calcHitPoints())
+		             + 1.0f - unk194;
 
-		unk194 += symmetric_clamp(fVar12, 0.004f);
+		unk194 += fVar12 > 0.0f
+		              ? (fVar12 > 0.004f ? 0.004f : fVar12)
+		              : (fVar12 > -0.004f ? fVar12 : -0.004f);
 	} else {
 		unk194 = 1.0f;
 	}
