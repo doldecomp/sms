@@ -918,9 +918,10 @@ void TEggYoshi::touchFruit(THitActor* fruit)
 	if (unk14C == (u32)fruit->mActorType) {
 		startAnim(1);
 		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(11.0f);
-		mRotation.y = (360.0f / 65536.0f)
-		              * matan(fruit->mPosition.z - mPosition.z,
-		                      fruit->mPosition.x - mPosition.x);
+		JGeometry::TVec3<f32> diff;
+		diff.sub(fruit->mPosition, mPosition);
+		mRotation.y
+		    = (360.0f / 65536.0f) * matan(diff.z, diff.x);
 		mState = 0xB;
 		unk150 = fruit;
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_COLLECT_PRETTY, 0, nullptr,
