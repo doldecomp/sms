@@ -754,13 +754,13 @@ void TKumokun::decideTargetAtDir(const JGeometry::TVec3<f32>& param_1)
 	local_C4.y = 0.0f;
 	local_C4.normalize();
 
-	JGeometry::TVec3<f32> forward(0.0f, 0.0f, 1.0f);
-
 	JGeometry::TQuat4<f32> local_A4;
-	if (is_antiparallel(local_C4, forward)) {
+	if (is_antiparallel(local_C4,
+	                    JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f))) {
 		local_A4.setEulerY(JGeometry::TUtil<f32>::PI());
 	} else {
-		local_A4.setRotate(forward, local_C4, 1.0f);
+		local_A4.setRotate(JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f),
+		                   local_C4, 1.0f);
 	}
 
 	local_b4.mul(local_A4);
