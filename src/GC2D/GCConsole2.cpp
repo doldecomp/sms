@@ -3400,8 +3400,8 @@ bool TGCConsole2::processDrawTelop(u32)
 {
 	bool isFinished = false;
 
-	JUTRect paneBounds(unk524->getPane()->mGlobalBounds);
-	JUTRect textBounds(unk528->mBounds);
+	JUTRect paneBounds(unk524->getPane()->getGlobalBounds());
+	JUTRect textBounds(unk528->getBounds());
 
 	if (unk534.x1 < paneBounds.x1 - mTelopTextWidth) {
 		isFinished = true;
