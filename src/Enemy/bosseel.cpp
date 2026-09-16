@@ -1321,7 +1321,7 @@ void TBossEelAwaCollision::behaveToMario()
 	JGeometry::TVec3<f32> marioTarget(0.0f, 10.0f, 0.0f);
 	marioTarget.y  = 15.0f;
 	*gpMarioSpeedY = 0.0f;
-	marioTarget.add(*gpMarioPos);
+	marioTarget += SMS_GetMarioPos();
 	SMS_MarioMoveRequest(marioTarget);
 }
 
