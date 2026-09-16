@@ -3013,6 +3013,8 @@ void TGCConsole2::setTimer(s32 param_1)
 				timerValue = unk514 - timerValue;
 			}
 		}
+	} else {
+		timerValue = param_1;
 	}
 
 	// Cap at 5999.99 seconds (99:59.99)
@@ -3040,11 +3042,11 @@ void TGCConsole2::setTimer(s32 param_1)
 		    ->changeTexture(unkE0[centis % 10]->getTexInfo(), 0);
 	} else {
 		if (timerValue < 1000
-		    && ((J2DPicture*)unk458[9]->getPane())->mWhite != unk508) {
+		    && ((J2DPicture*)unk458[9]->getPane())->getWhite() != unk508) {
 			for (int i = 6; i <= 9; i++) {
-				((J2DPicture*)unk458[i]->getPane())->mWhite = unk508;
+				((J2DPicture*)unk458[i]->getPane())->setWhite(unk508);
 			}
-			((J2DPicture*)unk480[2]->getPane())->mWhite = unk508;
+			((J2DPicture*)unk480[2]->getPane())->setWhite(unk508);
 		}
 		((J2DPicture*)unk458[6]->getPane())
 		    ->changeTexture(unkE0[seconds / 10]->getTexInfo(), 0);
@@ -3061,7 +3063,7 @@ void TGCConsole2::setTimer(s32 param_1)
 		SMSGetMSound()->playTimer(timerValue * 10);
 	}
 
-	unk4FC = param_1;
+	unk4FC = timerValue;
 }
 
 void TGCConsole2::startMoveTimer(int param_1)
