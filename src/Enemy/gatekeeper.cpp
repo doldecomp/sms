@@ -206,7 +206,7 @@ void TBiancoGateKeeperManager::createModelData()
 }
 
 TBGKMtxCalc::TBGKMtxCalc(TBiancoGateKeeper* owner)
-    : M3UMtxCalcSIAnmBlendQuat(false)
+    : M3UMtxCalcSIAnmBlendQuat(true)
     , mOwner(owner)
 {
 }
@@ -374,7 +374,7 @@ void TBiancoGateKeeper::init(TLiveManager* manager)
 
 	MActorAnmData* anmData = mMActorKeeper->getMActorAnmData();
 	mMultiBtk              = new TMultiBtk(2, getModel()->getModelData());
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i <= 1; i++)
 		mMultiBtk->setNthData(i, anmData->getUnk38()->getAnmPtr(i));
 
 	mObstacle = new TBGKObstacle(this, "TBGKObstacle");
