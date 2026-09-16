@@ -730,7 +730,7 @@ s32 TShine::appearWithTimeCallback(u32 param_1, u32 param_2)
 void TShine::appearSimple(int param_1)
 {
 	TItem::appear();
-	TFlagManager::smInstance->setBool(true, 0x50000);
+	TFlagManager::getInstance()->setBool(true, 0x50000);
 
 	unk174   = 60;
 	unk170   = param_1;
