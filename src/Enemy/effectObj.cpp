@@ -12,6 +12,8 @@
 
 // rogue include
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 TEffectObjManager* gpEffectObjManager;
 
@@ -203,8 +205,9 @@ void TEffectObjManager::load(JSUMemoryInputStream& stream)
 void TEffectObjManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & (CUE_DRAW | CUE_MOVE)) {
-		JGadget::TList<TEffectObjBase*>::iterator it = unk14.begin();
-		for (; it != unk14.end(); ++it)
+		JGadget::TList<TEffectObjBase*>::iterator it  = unk14.begin();
+		JGadget::TList<TEffectObjBase*>::iterator end = unk14.end();
+		for (; it != end; ++it)
 			(*it)->perform(cue, graphics);
 
 		for (int i = 0; i < COOL_EFFECT_OBJ_NUM; ++i)
@@ -232,7 +235,7 @@ void TEffectModel::init(TLiveManager* param_1)
 void TEffectModel::reset()
 {
 	TSpineEnemy::reset();
-	mRotation.y = MsRandF(0.0f, 360.0f);
+	mRotation.y = TMsRange<f32>(0.0f, 360.0f).rand();
 	onLiveFlag(LIVE_FLAG_UNK8);
 	onLiveFlag(LIVE_FLAG_UNK10);
 	offLiveFlag(LIVE_FLAG_DEAD);
