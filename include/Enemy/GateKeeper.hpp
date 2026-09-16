@@ -53,7 +53,7 @@ public:
 
 class TBiancoGateKeeperManager : public TEnemyManager {
 public:
-	TBiancoGateKeeperManager(const char*);
+	TBiancoGateKeeperManager(const char* name = "ゲートキーパーマネージャー");
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();
 	virtual void initJParticle();
@@ -81,7 +81,7 @@ public:
 
 class TBiancoGateKeeper : public TGateKeeperBase {
 public:
-	TBiancoGateKeeper(const char*);
+	TBiancoGateKeeper(const char* name = "ビアンコゲートキーパー");
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void init(TLiveManager*);
