@@ -8,7 +8,22 @@ The local branch is `local/decomp-progress`.
 The upstream starting commit is `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 Before related edits, consult the [shared-fix catalog](docs/MATCHING_CATALOG.md) and search for other callers.
 
-## Latest checkpoint: batch 59 — effectEnemy decompiled, fourteen of eighteen exact
+## Latest checkpoint: batch 60 — seal decompiled from scratch, eleven of eighteen exact
+
+`src/Enemy/seal.cpp` and `include/Enemy/Seal.hpp` did not exist. Eleven of eighteen functions match, 1,404 of 4,292 bytes.
+Game matched code **26.27% -> 26.32%**, aggregate **39.59% -> 39.63%**.
+
+`TSeal : TSpineEnemy` with `TSealManager : TEnemyManager` and three nerves (Sleep, Wait, Die).
+The enemy is the orange seal: model `gene_orange_model1.bmd`, collision `gene_orange_col1.col`, scene `/scene/seal`, confirmed by `MSD_SE_EN_ORANGESEAL_WAIT`.
+`init` registers the actor into the `"敵グループ"` group list, the same idiom `AnimalBase` uses.
+`__sinit_seal_cpp` (764B) matched immediately from the same MSound rogue includes that fixed effectEnemy, confirming that pattern generalises.
+
+Exact so far: both destructors, both constructors, the whole manager (load, createModelData, constructor, destructor), the Sleep nerve's destructor, `@32@__dt` and `__sinit`.
+Remaining: `init` 97.4%, `perform` 93.0%, `TNerveSealWait` 89.2%, `TNerveSealSleep` 88.7%, `TNerveSealDie` 87.8%, `calcRootMatrix` 85.2%, and `receiveMessage` at 6.0%, which is still only a call to the base and needs real reconstruction.
+
+DOL byte-identical. No gameplay test performed.
+
+## Verified checkpoint: batch 59 — effectEnemy decompiled, fourteen of eighteen exact
 
 `src/Enemy/effectEnemy.cpp` and `include/Enemy/EffectEnemy.hpp` did not exist. Fourteen of the unit's eighteen functions now match exactly.
 Game matched code **26.18% -> 26.22%**, aggregate **39.52% -> 39.55%**.

@@ -1,1 +1,202 @@
+#include <Enemy/Seal.hpp>
+#include <Strategic/Spine.hpp>
+#include <Strategic/ObjModel.hpp>
+#include <System/Particles.hpp>
+#include <M3DUtil/MActor.hpp>
+#include <Map/Map.hpp>
+#include <Map/MapCollisionManager.hpp>
+#include <Map/MapCollisionEntry.hpp>
+#include <Strategic/Strategy.hpp>
+#include <MarioUtil/MathUtil.hpp>
+#include <Player/ModelWaterManager.hpp>
+#include <MSound/MSound.hpp>
+#include <MSound/MSoundSE.hpp>
+#include <MSound/SoundEffects.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
 
+// rogue includes needed for matching sinit & bss
+#include <M3DUtil/InfectiousStrings.hpp>
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+
+TSeal::~TSeal() { }
+
+TSealManager::~TSealManager() { }
+
+TSeal::TSeal(const char* name)
+    : TSpineEnemy(name)
+{
+	unk150 = 0;
+	mLiveFlag |= LIVE_FLAG_UNK10;
+}
+
+void TSeal::init(TLiveManager* manager)
+{
+	mManager = manager;
+	mManager->manageActor(this);
+
+	mMActorKeeper = new TMActorKeeper(mManager, 2);
+	mMActor       = mMActorKeeper->createMActor("gene_orange_model1.bmd", 0);
+	mMActor->offMakeDL();
+
+	f32 radius = 100.0f * mScaling.x;
+	initHitActor(0x10000024, 1, 0x81000000, radius, radius, radius, radius);
+	mHitFlags &= ~HIT_FLAG_NO_COLLISION;
+
+	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	    ->getChildren()
+	    .push_back(this);
+
+	f32 angle = 270.0f + mRotation.x;
+	while (angle >= 360.0f)
+		angle -= 360.0f;
+	while (angle < 0.0f)
+		angle += 360.0f;
+	mRotation.x = angle;
+
+	mMapCollisionManager = new TMapCollisionManager(1, "/scene/seal", this);
+	mMapCollisionManager->init("gene_orange_col1.col", 2, nullptr);
+
+	Mtx mtx;
+	MsMtxSetTRS(mtx, mPosition.x, mPosition.y, mPosition.z, mRotation.x,
+	            mRotation.y, mRotation.z, mScaling.x, mScaling.y, mScaling.z);
+	TMapCollisionBase* col = mMapCollisionManager->unk8;
+	col->setMtx(mtx);
+	col->setUp();
+
+	mHitPoints = getMaxHitPoints();
+
+	mSpine->initWith(&TNerveSealSleep::theNerve());
+}
+
+BOOL TSeal::receiveMessage(THitActor* sender, u32 message)
+{
+	return TSpineEnemy::receiveMessage(sender, message);
+}
+
+void TSeal::calcRootMatrix()
+{
+	J3DModel* model = getModel();
+	MsMtxSetXYZRPH(model->getBaseTRMtx(), mPosition.x, mPosition.y, mPosition.z,
+	               (s16)(182.04445f * mRotation.x),
+	               (s16)(182.04445f * mRotation.y),
+	               (s16)(182.04445f * mRotation.z));
+	model->setBaseScale(mScaling);
+}
+
+void TSeal::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	if (!(mLiveFlag & (LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN)) && (cue & 1)) {
+		for (int i = 0; i < mColCount; ++i) {
+			THitActor* other = mCollisions[i];
+			if (other->mActorType == 0x80000001)
+				other->receiveMessage(this, 0xE);
+		}
+	}
+
+	TSpineEnemy::perform(cue, graphics);
+
+	if (cue & 1) {
+		updateSquareToMario();
+		unk150 = 0;
+	}
+
+	if ((cue & 2) && !(mLiveFlag & (LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN))
+	    && mDistToMarioSquared < 2250000.0f
+	    && gpMSound->gateCheck(MSD_SE_EN_ORANGESEAL_WAIT)) {
+		MSoundSESystem::MSoundSE::startSoundActor(
+		    MSD_SE_EN_ORANGESEAL_WAIT, &mPosition, 0, nullptr, 0, 4);
+	}
+}
+
+TSealManager::TSealManager(const char* name)
+    : TEnemyManager(name)
+{
+}
+
+void TSealManager::createModelData()
+{
+	static const TModelDataLoadEntry entry[] = {
+		{ "gene_orange_model1.bmd", 0x11210000, 0 },
+		{ nullptr, 0, 0 },
+	};
+	createModelDataArray(entry);
+}
+
+void TSealManager::load(JSUMemoryInputStream& stream)
+{
+	TEnemyManager::load(stream);
+}
+
+DEFINE_NERVE(TNerveSealSleep, TLiveActor)
+{
+	TSeal* seal = (TSeal*)spine->getBody();
+
+	if (spine->getTime() == 0
+	    && !seal->getMActor()->checkCurBckFromIndex(1)) {
+		seal->getMActor()->setBckFromIndex(-1);
+	}
+
+	if (seal->mDistToMarioSquared < 1000000.0f) {
+		spine->pushNerve(&TNerveSealWait::theNerve());
+		return TRUE;
+	}
+
+	if (seal->getMActor()->curAnmEndsNext(0, nullptr)
+	    && seal->getMActor()->checkCurBckFromIndex(1)) {
+		seal->getMActor()->setBckFromIndex(-1);
+	}
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveSealWait, TLiveActor)
+{
+	TSeal* seal = (TSeal*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		seal->getMActor()->setBckFromIndex(3);
+
+	if (seal->getMActor()->curAnmEndsNext(0, nullptr)
+	    && seal->getMActor()->checkCurBckFromIndex(3)) {
+		seal->getMActor()->setBckFromIndex(2);
+	}
+
+	if (seal->mDistToMarioSquared > 2250000.0f
+	    && seal->getMActor()->curAnmEndsNext(0, nullptr)) {
+		seal->getMActor()->setBckFromIndex(1);
+		spine->pushNerve(&TNerveSealSleep::theNerve());
+		return TRUE;
+	}
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveSealDie, TLiveActor)
+{
+	TSeal* seal = (TSeal*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		seal->getMActor()->setBckFromIndex(0);
+		MtxPtr mtx = seal->getModel()->getBaseTRMtx();
+		JPABaseEmitter* emitter
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(0xD1, mtx, 0, seal);
+		if (emitter)
+			emitter->setGlobalScale(seal->mScaling);
+		emitter
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(0xD2, mtx, 0, seal);
+		if (emitter)
+			emitter->setGlobalScale(seal->mScaling);
+	}
+
+	if (gpMSound->gateCheck(MSD_SE_WT_BOSS_FADEAWAY)) {
+		MSoundSESystem::MSoundSE::startSoundActor(
+		    MSD_SE_WT_BOSS_FADEAWAY, &seal->mPosition, 0, nullptr, 0, 4);
+	}
+
+	if (seal->getMActor()->curAnmEndsNext(0, nullptr)) {
+		seal->mHitFlags |= HIT_FLAG_NO_COLLISION;
+		seal->kill();
+		spine->pushNerve(&TNerveSealSleep::theNerve());
+		return TRUE;
+	}
+	return FALSE;
+}
