@@ -1147,7 +1147,7 @@ DEFINE_NERVE(TNerveHino2JumpIn, TLiveActor)
 		self->changeBck(0x9);
 
 	if (self->getMActor()->curAnmEndsNext()) {
-		const JGeometry::TVec3<f32>& p = self->unk104.getPoint();
+		const JGeometry::TVec3<f32>& p = self->getUnk104().getPoint();
 		f32 f                          = self->unk124->unkC;
 		f32 grav                       = self->getGravityY();
 		self->mVelocity = self->calcVelocityToJumpToY(p, f, grav);
