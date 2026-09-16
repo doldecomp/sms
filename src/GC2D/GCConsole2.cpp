@@ -2648,6 +2648,19 @@ void TGCConsole2::pauseOut()
 	unk5A = 0;
 }
 
+static inline bool startDisappearBalloonImpl(TGCConsole2* console, u32 param_1,
+                                             bool param_2)
+{
+	if (!param_2 && console->unk3F4 == 0xffffffff
+	    && (param_1 != console->unk3E0 || console->unk3E4 != 0))
+		return false;
+
+	console->unk3B8->hide();
+	console->unk48 = 0;
+	console->unk10 = 4;
+	return true;
+}
+
 // TODO: figure out inlining without pragmas
 #pragma dont_inline on
 bool TGCConsole2::startDisappearBalloon(u32 param_1, bool param_2)
@@ -2675,13 +2688,7 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 			return false;
 
 		unk3F4 = messageID;
-		// The ROM compares unk3E0 with itself here, so the middle term is
-		// always true. Probably a copy-paste slip in the original source.
-		if (unk3F4 != 0xffffffff || (unk3E0 == unk3E0 && unk3E4 == 0)) {
-			unk3B8->hide();
-			unk48 = 0;
-			unk10 = 4;
-		}
+		startDisappearBalloonImpl(this, unk3E0, false);
 		return true;
 	}
 
@@ -2692,9 +2699,8 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 	unk3B0->mAlpha = 0;
 	unk3B0->show();
 
-	// TODO: the ROM copies the contents rect twice here, as if
-	// J2DWindow::getContentsBounds() returned a JUTRect by value.
-	JUTRect contents(unk3B0->getContentsBounds());
+	JUTRect contentsBounds(unk3B0->getContentsBounds());
+	JUTRect contents(contentsBounds);
 	unk3B0->resize(unk3BC.getWidth(),
 	               unk3BC.getHeight() - contents.getHeight());
 	unk3B0->add(0, contents.getHeight());
