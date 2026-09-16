@@ -998,8 +998,9 @@ void TGessoPolluteObj::calcRootMatrix()
 
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_GESO_GERO_FLY, &mPosition, 0,
 	                                nullptr, 0, 4);
-	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_GESO_KISEKI,
-	                                            &mPosition, 1, this);
+	JPABaseEmitter* emitter
+	    = gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_GESO_KISEKI,
+	                                                  &mPosition, 1, this);
 }
 
 void TGessoPolluteObj::sendMessage()
