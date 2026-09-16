@@ -17,6 +17,29 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## Weak emission order gates source linking, batch 56
+
+`Map/PollutionEvent.cpp` had been unlinkable since batch 2. The cause was not the linked code, which already matched, but *where the compiler emitted its weak functions*.
+
+Its four event classes were declared with no base, no virtual members and no destructor, while the map gives each a vtable of 0xa0-0xa4 and a virtual destructor.
+Without any virtual member the compiler flushed its weak queue early, emitting `TPollutionTest::__dt` and `perform` **before** `loadAfter`; the original emits them after.
+Declaring the four destructors moved the weak pair after `loadAfter` and the object linked byte-identically.
+
+Generalisation worth trying elsewhere: when an object matches in code and data but perturbs the link, compare the *emission order* of weak symbols against the map before suspecting the code.
+`tools/validate-symbol-order.py` downgrades weak disorder to a warning, so a unit can report only warnings and still be unlinkable.
+Placement follows source order reversed, so a symbol that must be emitted first goes last in the file.
+
+## CameraInbetween remains unlinkable, batch 56
+
+The last fully matching game object still shifts the DOL. Measured precisely:
+
+- DOL section 14 (`.sdata2`, base 0x8040eba0) is **0x8c40 in ours against 0x8c60 in the original**, exactly 0x20 short, which is the whole size of this TU's literal block.
+- Our object emits **7** local literals (`@191`-`@247`); the extracted original has **5** (`@1655`, `@1657`, `@1663`, `@1708`, `@1709`) plus a dtk gap symbol. The map lists two further UNUSED literals, `@1758` and `@1759`, which are deadstripped.
+- `nm` classifies ours as `d` (writable) and the original's as `r` (read only). The same missing READONLY attribute on `.sdata2` appeared in `ansi_fp.c` and did not by itself block that link once the pool order was right.
+- `validate-symbol-order` **passes** this unit: all symbols present, order and linkage correct. The only warnings are the two UNUSED stubs `setInbetModePosAngleY` (map 0xbc, ours 4) and `execInbetweenAndCalcPosAndAt` (map 0xec, ours 4).
+
+The two stubbed UNUSED functions are the prime suspects, by analogy with `ansi_fp.c`: reconstructing them should fix which literals exist and in what order. Not yet attempted.
+
 ## Stack-frame deltas dominate the near-exact game backlog, batch 55
 
 Measured over the 70 largest game functions scoring 99.9% or better but not exact, by parsing the opening `stwu r1` on both sides of the diff:
