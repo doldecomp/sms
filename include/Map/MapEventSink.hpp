@@ -113,7 +113,11 @@ public:
 class TMapEventSinkShadowMario : public TMapEventSink {
 public:
 	TMapEventSinkShadowMario(const char* name = "建物沈む（影マリオ）")
-	    : TMapEventSink(name) { };
+	    : TMapEventSink(name)
+	    , unk64(nullptr)
+	    , unk68(nullptr)
+	{
+	}
 
 	virtual void loadAfter();
 
