@@ -38,7 +38,15 @@ The last fully matching game object still shifts the DOL. Measured precisely:
 - `nm` classifies ours as `d` (writable) and the original's as `r` (read only). The same missing READONLY attribute on `.sdata2` appeared in `ansi_fp.c` and did not by itself block that link once the pool order was right.
 - `validate-symbol-order` **passes** this unit: all symbols present, order and linkage correct. The only warnings are the two UNUSED stubs `setInbetModePosAngleY` (map 0xbc, ours 4) and `execInbetweenAndCalcPosAndAt` (map 0xec, ours 4).
 
-The two stubbed UNUSED functions are the prime suspects, by analogy with `ansi_fp.c`: reconstructing them should fix which literals exist and in what order. Not yet attempted.
+Traced further, and the UNUSED stubs are **not** the cause:
+
+- The two extra literals are `0.5f` and `-0.5f`, which come from `CLBRoundf<s16>` in `Camera/cameralib.hpp`. It is inlined by the `s16` overload of `CLBChaseConstantSpecifyFrame`, which `execCameraInbetween` calls for the pitch and yaw fields.
+- `CameraBGCheck.o` is the **only** extracted object defining `CLBRoundf<s>__Ff`, so in the retail link its weak copy won the dedup and every other TU's copy was discarded. That left this TU's `@1758` and `@1759` unreferenced, which is why the map marks exactly those two literals UNUSED.
+- `configure.py` already lists `CameraBGCheck.cpp` (line 1238) before `CameraInbetween.cpp` (line 1243), so link order is not the problem.
+
+What does not yet add up: the DOL loses **0x20**, the TU's entire literal block, not the 8 bytes the two orphaned floats would account for. Dedup of the weak function alone does not explain the whole contribution disappearing. Next step is to inspect the map/ELF for where our `.sdata2` block actually lands, rather than assuming it is dropped.
+
+The `.sdata2` writable-versus-readonly difference is a red herring: `ansi_fp.c` has the same attribute mismatch and links byte-identically.
 
 ## Stack-frame deltas dominate the near-exact game backlog, batch 55
 
