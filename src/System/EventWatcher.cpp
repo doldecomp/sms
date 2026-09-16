@@ -511,8 +511,8 @@ static void evSetGraffitoMultiplied(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->verifyArgNum(1, &arg_num);
 	int enable = TSpcSlice(interp->pop()).getDataInt();
 
-	TPollutionManager* pollution = gpPollution;
 	int i                        = 0;
+	TPollutionManager* pollution = gpPollution;
 	if (enable) {
 		for (; i < pollution->getJointModelNum(); ++i)
 			pollution->getLayer(i)->startSpread();
