@@ -1546,13 +1546,13 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 	if (mStatus == MARIO_STATUS_TOROCCO) {
 		if (mRailType == 0) {
 			mPinaRail->calcAnm();
-			MTXCopy(mPinaRail->getModel()->getAnmMtx(0),
-			        mTorocco->getModel()->getBaseTRMtx());
+			MtxPtr railMtx = mPinaRail->getModel()->getAnmMtx(0);
+			MTXCopy(railMtx, mTorocco->getModel()->getBaseTRMtx());
 		}
 		if (mRailType == 1) {
 			mKoopaRail->calcAnm();
-			MTXCopy(mKoopaRail->getModel()->getAnmMtx(0),
-			        mTorocco->getModel()->getBaseTRMtx());
+			MtxPtr railMtx = mKoopaRail->getModel()->getAnmMtx(0);
+			MTXCopy(railMtx, mTorocco->getModel()->getBaseTRMtx());
 		}
 
 		mTorocco->calcAnm();
@@ -1707,7 +1707,7 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 			s16 limitP = (s16)((f32)delta * mForwardVel * pitchScale);
 			if (limitR > rMax)
 				limitR = rMax;
-			if (limitR < -rMax)
+			if (-rMax > limitR)
 				limitR = -rMax;
 
 			if (limitP > pMax)
