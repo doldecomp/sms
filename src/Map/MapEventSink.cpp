@@ -431,9 +431,8 @@ void TMapEventSinkShadowMario::loadAfter()
 	TMapEventSink::loadAfter();
 	for (int i = 0; i < mBuildingNum; ++i) {
 		unk64[i] = JDrama::TNameRefGen::search<JDrama::TPlacement>(unk68[i]);
-		TJointObj* obj = getBuilding(i);
-		unk64[i]->mPosition.y
-		    -= obj->getJoint()->getMax().y - obj->getJoint()->getMin().y;
+		J3DJoint* joint = getBuilding(i)->getJoint();
+		unk64[i]->mPosition.y -= joint->getMax().y - joint->getMin().y;
 	}
 }
 
