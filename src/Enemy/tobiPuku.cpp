@@ -21,6 +21,16 @@ enum {
 	PUKU_ANM_SWIM          = 9,
 };
 
+TTobiPuku::~TTobiPuku() { }
+TMoePuku::~TMoePuku() { }
+TPukuPuku::~TPukuPuku() { }
+TTobiPukuLaunchPad::~TTobiPukuLaunchPad() { }
+TMoePukuLaunchPad::~TMoePukuLaunchPad() { }
+TTobiPukuManager::~TTobiPukuManager() { }
+TMoePukuManager::~TMoePukuManager() { }
+TTobiPukuLaunchPadManager::~TTobiPukuLaunchPadManager() { }
+TMoePukuLaunchPadManager::~TMoePukuLaunchPadManager() { }
+
 void TTobiPuku::setAttackAnm() { setBckAnm(PUKU_ANM_ATTACK); }
 void TTobiPuku::setDeadAnm() { setBckAnm(PUKU_ANM_DEAD); }
 void TTobiPuku::setDownAirAnm() { setBckAnm(PUKU_ANM_DOWN_AIR); }

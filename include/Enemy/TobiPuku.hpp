@@ -55,6 +55,77 @@ public:
 	virtual bool isPichiEffect();
 };
 
+class TPukuPuku : public TTobiPuku {
+public:
+	TPukuPuku(const char* name)
+	    : TTobiPuku(name)
+	{
+	}
+
+	virtual ~TPukuPuku();
+};
+
+class TTobiPukuLaunchPad : public TSmallEnemy {
+public:
+	TTobiPukuLaunchPad(const char* name)
+	    : TSmallEnemy(name)
+	{
+	}
+
+	virtual ~TTobiPukuLaunchPad();
+};
+
+class TMoePukuLaunchPad : public TTobiPukuLaunchPad {
+public:
+	TMoePukuLaunchPad(const char* name)
+	    : TTobiPukuLaunchPad(name)
+	{
+	}
+
+	virtual ~TMoePukuLaunchPad();
+};
+
+class TTobiPukuManager : public TSmallEnemyManager {
+public:
+	TTobiPukuManager(const char* name)
+	    : TSmallEnemyManager(name)
+	{
+	}
+
+	virtual ~TTobiPukuManager();
+};
+
+class TMoePukuManager : public TTobiPukuManager {
+public:
+	TMoePukuManager(const char* name)
+	    : TTobiPukuManager(name)
+	{
+	}
+
+	virtual ~TMoePukuManager();
+};
+
+class TTobiPukuLaunchPadManager : public TSmallEnemyManager {
+public:
+	TTobiPukuLaunchPadManager(const char* name)
+	    : TSmallEnemyManager(name)
+	{
+	}
+
+	virtual ~TTobiPukuLaunchPadManager();
+};
+
+class TMoePukuLaunchPadManager : public TTobiPukuLaunchPadManager {
+public:
+	TMoePukuLaunchPadManager(const char* name)
+	    : TTobiPukuLaunchPadManager(name)
+	{
+	}
+
+	virtual ~TMoePukuLaunchPadManager();
+};
+
+
 DECLARE_NERVE(TNerveTobiPukuSwimWander, TLiveActor)
 DECLARE_NERVE(TNerveTobiPukuReturnLaunch, TLiveActor)
 DECLARE_NERVE(TNerveTobiPukuPrepareFly, TLiveActor)
