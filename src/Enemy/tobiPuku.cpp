@@ -62,6 +62,59 @@ u8 TTobiPuku::mBoundSw;
 f32 TTobiPuku::mBoundVelocityY;
 u8 TTobiPuku::mReturnLaunchSw;
 
+TMoePuku* gpCurTobiPuku;
+
+// TODO: 0% of 180 bytes despite initialising the right fields. The original
+// default-constructs mLandPos and mLandDelta through __construct_array with a
+// count of 2, and keeps `this` in a stack slot across the base call; ours
+// inlines both TVec3 constructors instead. The field set and their values are
+// confirmed by the assembly, so only the construction form is wrong.
+TTobiPuku::TTobiPuku(const char* name)
+    : TWalkerEnemy(name)
+{
+	unk194   = 0;
+	mBoundCount = 0;
+	unk19C   = nullptr;
+	unk1AC   = 1;
+	unk1AD   = 1;
+	unk1AE   = 0;
+	unk1B0   = 0.0f;
+	mLaunchAngle = 0.0f;
+	mSwimBaseY      = 0.0f;
+	mFlyVelocityY   = 0.0f;
+	mReturnPitchStep = 0.0f;
+	unk1EC          = 0.0f;
+	gpCurTobiPuku   = nullptr;
+}
+
+TTobiPukuManager::TTobiPukuManager(const char* name)
+    : TSmallEnemyManager(name)
+{
+}
+
+TTobiPukuLaunchPadManager::TTobiPukuLaunchPadManager(const char* name)
+    : TSmallEnemyManager(name)
+{
+	unk60 = 0;
+}
+
+TPukuPuku::TPukuPuku(const char* name)
+    : TTobiPuku(name)
+{
+}
+
+TLiveActor* TTobiPukuManager::createEnemyInstance()
+{
+	return new TTobiPuku("とびプク");
+}
+
+void TTobiPukuLaunchPad::reset()
+{
+	TSmallEnemy::reset();
+	unk194 = 0;
+	unk1A8 = nullptr;
+}
+
 TTobiPuku::~TTobiPuku() { }
 TMoePuku::~TMoePuku() { }
 TPukuPuku::~TPukuPuku() { }

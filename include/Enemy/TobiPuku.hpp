@@ -23,10 +23,7 @@ class TTobiPukuLaunchPad;
 
 class TTobiPuku : public TWalkerEnemy {
 public:
-	TTobiPuku(const char* name)
-	    : TWalkerEnemy(name)
-	{
-	}
+	TTobiPuku(const char* name);
 
 	virtual ~TTobiPuku();
 
@@ -78,7 +75,8 @@ public:
 	/* 0x194 */ u8 unk194;
 	/* 0x198 */ int mBoundCount;
 	/* 0x19C */ TTobiPukuParams* unk19C;
-	/* 0x1A0 */ u8 unk1A0[0x1AD - 0x1A0];
+	/* 0x1A0 */ u8 unk1A0[0x1AC - 0x1A0];
+	/* 0x1AC */ u8 unk1AC;
 	/* 0x1AD */ u8 unk1AD;
 	/* 0x1AE */ u8 unk1AE;
 	/* 0x1AF */ u8 unk1AF;
@@ -95,7 +93,6 @@ public:
 	/* 0x1E8 */ f32 mReturnPitchStep;
 	/* 0x1EC */ f32 unk1EC;
 	/* 0x1F0 */ f32 mRotStep;
-	/* 0x1F4 */ u8 unk1F4[0x1FC - 0x1F4];
 };
 
 class TMoePuku : public TTobiPuku {
@@ -144,24 +141,23 @@ public:
 
 class TPukuPuku : public TTobiPuku {
 public:
-	TPukuPuku(const char* name)
-	    : TTobiPuku(name)
-	{
-	}
+	TPukuPuku(const char* name);
 
 	virtual ~TPukuPuku();
 };
 
 class TTobiPukuLaunchPad : public TSmallEnemy {
 public:
-	TTobiPukuLaunchPad(const char* name)
-	    : TSmallEnemy(name)
-	{
-	}
+	TTobiPukuLaunchPad(const char* name);
 
 	virtual ~TTobiPukuLaunchPad();
+	virtual void reset();
 
 	void forceLaunch(TTobiPuku*);
+
+	/* 0x194 */ int unk194;
+	/* 0x198 */ u8 unk198[0x1A8 - 0x198];
+	/* 0x1A8 */ void* unk1A8;
 };
 
 class TMoePukuLaunchPad : public TTobiPukuLaunchPad {
@@ -176,12 +172,10 @@ public:
 
 class TTobiPukuManager : public TSmallEnemyManager {
 public:
-	TTobiPukuManager(const char* name)
-	    : TSmallEnemyManager(name)
-	{
-	}
+	TTobiPukuManager(const char* name);
 
 	virtual ~TTobiPukuManager();
+	virtual TLiveActor* createEnemyInstance();
 };
 
 class TMoePukuManager : public TTobiPukuManager {
@@ -196,10 +190,9 @@ public:
 
 class TTobiPukuLaunchPadManager : public TSmallEnemyManager {
 public:
-	TTobiPukuLaunchPadManager(const char* name)
-	    : TSmallEnemyManager(name)
-	{
-	}
+	TTobiPukuLaunchPadManager(const char* name);
+
+	/* 0x60 */ int unk60;
 
 	virtual ~TTobiPukuLaunchPadManager();
 };
@@ -227,5 +220,7 @@ DECLARE_NERVE(TNerveTobiPukuHitWater, TLiveActor)
 DECLARE_NERVE(TNerveTobiPukuAttack, TLiveActor)
 DECLARE_NERVE(TNerveTobiPukuFly, TLiveActor)
 DECLARE_NERVE(TNerveTobiPukuGenerate, TLiveActor)
+
+extern TMoePuku* gpCurTobiPuku;
 
 #endif
