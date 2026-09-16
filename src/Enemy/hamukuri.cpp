@@ -78,17 +78,19 @@ void THamuKuriLauncher::stateLaunch()
 		THamuKuri* hamukuri
 		    = (THamuKuri*)getProperEnemy("ハムクリマネージャー");
 		if (hamukuri) {
+			JGeometry::TVec3<f32> local_30;
+			JGeometry::TVec3<f32> local_3c;
 			Mtx afStack_6c;
 			MsMtxSetRotRPH(afStack_6c, mRotation.x, mRotation.y, mRotation.z);
-			JGeometry::TVec3<f32> local_3c(0.0f, 4.0f, 4.0f);
-			JGeometry::TVec3<f32> local_30(0.0f, mRotation.y, 0.0f);
+			local_3c.set(0.0f, 4.0f, 4.0f);
+			local_30.set(0.0f, mRotation.y, 0.0f);
 			hamukuri->unk1A1 = 0;
-			int iVar2        = mRotation.x;
-			int iVar1        = iVar2 / 180 + (iVar2 >> 15);
+			int iVar2 = mRotation.x;
+			const TBGCheckData* apTStack_74;
+			int iVar1 = iVar2 / 180 + (iVar2 >> 15);
 			if ((int)mRotation.x % 180 != 0) {
 				hamukuri->unk1A1 = 1;
-				float dVar5      = THamuKuri::mLandAnmFrameNum;
-				const TBGCheckData* apTStack_74;
+				float dVar5 = THamuKuri::mLandAnmFrameNum;
 				float dVar3
 				    = gpMap->checkGround(mPosition.x, mPosition.y + 10.0f,
 				                         mPosition.z, &apTStack_74);
