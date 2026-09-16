@@ -46,6 +46,13 @@ bool SMS_isDivingMap();
 #include <MSound/MSoundBGM.hpp>
 #include <System/DummyStrings.hpp>
 
+// Fabricated inline to help bring panes off-screen
+static int getOffsetForBelowScreen(TExPane* pane)
+{
+	// setPaneOffset moves this to y1 = 465
+	return 465 - pane->mInitialBounds.y1;
+}
+
 JUTPoint TGCConsole2::cDownTopPoint(0, -100);
 JUTPoint TGCConsole2::cDownMidPoint(0, 30);
 JUTPoint TGCConsole2::cDownBotPoint(0, 0);
@@ -2404,17 +2411,17 @@ void TGCConsole2::startDownLeftBot()
 	unk5A = 1;
 
 	if (unk44C->getPane()->isVisible() && unk44C->isInterpolatorAtZero()) {
-		unk44C->updatePaneOffset(20, 0, 525 - unk44C->getInitialBounds().y1);
+		unk44C->updatePaneOffset(20, 0, getOffsetForBelowScreen(unk44C) + 60);
 		unk51C = 1;
 	}
 
 	if (unk428->getPane()->isVisible()) {
-		unk428->updatePaneOffset(20, 0, 525 - unk428->getInitialBounds().y1);
+		unk428->updatePaneOffset(20, 0, getOffsetForBelowScreen(unk428) + 60);
 		unk448 = 1;
 	}
 
 	if (unk3FC->getPane()->isVisible()) {
-		unk3FC->updatePaneOffset(20, 0, 525 - unk3FC->getInitialBounds().y1);
+		unk3FC->updatePaneOffset(20, 0, getOffsetForBelowScreen(unk3FC) + 60);
 		unk426 = 1;
 	}
 }
