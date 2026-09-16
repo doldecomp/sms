@@ -1,0 +1,166 @@
+# Codegen tells: reading source shape from the asm
+
+Rules measured in this clone, each tied to a function where it was verified.
+General MWCC guidance is in `docs/AGENT_MATCHING_TIPS.md`; this file does not repeat it.
+
+## Booleans and predicates
+
+**Return shapes.** From 30 near-identical 48-byte accessors in `tobiPuku`:
+
+| Source | Assembly tail |
+| --- | --- |
+| `BOOL f() { return field == N; }` | `subfic`/`cntlzw`/`extrwi`, no branch |
+| `BOOL f() { return helper(); }`, helper returns `bool` | bool materialised, then `clrlwi r3,r0,24` |
+| `BOOL f() { return helper() ? TRUE : FALSE; }` | bool materialised, `clrlwi.` **and a second branch** to `li r3,1` / `li r3,0` |
+| `bool f() { return helper() ? true : false; }` | branches straight to `li r3,1; blr` / `li r3,0; blr` |
+
+`TSmallEnemy::isBckAnm(int)` is the helper those accessors call; writing `mCurrentBckAnm == N` inline never matches.
+Get one accessor exact, then apply the shape to the rest.
+
+**Materialised bool = inlined bool-returning helper.**
+`li r0,1` / `b` / `li r0,0` / `clrlwi. r0,r0,24` / branch means the condition came from an inlined function returning `bool`, not from the call site.
+Check the TU's UNUSED list (`isRoll__9TTobiPukuFv` in `tobiPuku`; no inline spelling of the same condition reproduced it).
+It reads both ways:
+- Materialised in the target, direct branch in ours: call the predicate. Verified with `TBGCheckData::isDeathPlane/isPool/isWaterSurface`, `TLiveActor::isAirborne` (over plain `checkLiveFlag`), `THitActor::isActorType`.
+- Direct branch in the target, materialised in ours: the original compared inline. `TSeal::receiveMessage` tests `mActorType == 0x01000001` directly while `TSeal::perform` uses `isActorType`; boss `perform`'s three collision loops also compare directly. Check each site.
+
+The helper body shape matters, and the map size checks it:
+- `isRoll` as three early returns is 0x150 (map 0x140) and inlines at 89.7%; as one `a || b || c` it is 0xd4 and drops the caller to 57%.
+- `TChuuHana::isRolling` as `return a == b;` is branchless 0x84 and folds to a bare compare when inlined; as `if (a == b) return true; return false;` it is the map's 0x8c and materialises at every call site.
+
+**Normalisation groups.**
+- `(checkHitFlag(0x80000000) ? true : false)` restores a group a direct condition lacks (boss head/body collision transitions).
+- `(a && b) == false` preserves groups that `!` removes (`isAllBckAlreadyEnd`); the same trick regresses the parts dispatcher.
+- `ground && (ground->isIllegalData() == true ? false : true)` reproduces both conversions (boss `bind`, sphere chain).
+- `(completed || looped) || frame + 0.1f >= end` assigned to a `bool` local matches; `BOOL` adds normalisation.
+- Explicit `if`/`else` assigning a bool reproduced TMario's mushroom guard; direct assignment hoists a zero, a ternary adds a merge.
+
+**Type tells.**
+- `cmpwi r0,0` after a materialised bool: the value went through an `int`/`BOOL` local. `clrlwi.`: `bool`.
+- `clrlwi.` on a byte flag register (`clrlwi. r0,r29,24`): the local was `bool` (MarioSpecial `noHold`).
+- A caller masking a getter result with `clrlwi.` means the getter returns `u8`/`bool`; comparing the register directly means `int` (`TBathtub::getNumKillerLaunchable/Burstable`).
+- A caller's result handling resolves a callee's return type when callee streams are indistinguishable (boss `setAnm_` is `bool`, proven by `clrlwi.` at the owner's call).
+- `cmpw` vs `cmplw` on a counter: `s32` vs `u32`.
+- `divw` with an `xoris` bias: signed integer division converted to float afterwards, not a float divide.
+- A redundant `clrlwi` after `lbz`: the value passed through a `u8`.
+
+## Control flow
+
+**`||` vs separate `if`s.** For `if (a || b) return;` the first operand branches directly and the last is unfused:
+
+```
+    <test a>
+    bne  RET
+    <test b>
+    beq  CONT
+    b    RET
+CONT:
+```
+
+Two separate `if (...) return;` fuse both (`bne RET` twice).
+`TTobiPukuLaunchPad::perform` wanted separate ifs, `TTobiPuku::kill` wanted `||`.
+If you see the redundant `beq +8; b end`, join the conditions.
+
+**`else if` vs a following `if`.** `if (a) { if (b) {...} } if (c)` and `... else if (c)` differ only in the `beq` target after `b`'s test.
+The diff shows a single `~ beq {target}`; compare branch targets, not just opcodes (`TNerveChuuHanaStick` needed `else if`).
+
+**Switches.** Decode case *destinations* and branch intervals, not just compared constants.
+Moving one case ID gives the wrong comparison tree; moving the whole original interval restores tree and registers (TMario `checkCollision`, `receiveMessage`).
+
+**Loops.**
+- Timer loops over a reversed order: ascending `i = 0..7` with `mBodies[7 - i]` times `i` matches; counting down leaves runtime arithmetic after unrolling (boss get-up timers).
+- `fabs(mBodies[i]->mRotation.z)` compared directly, then assigned to the member, fully unrolls; a local `angle` breaks it (`getBodyMaxRotateZ`).
+- An `s32` counter with a signed bound keeps the initial branch before sixteen unrolled stores (Strategy constructor).
+
+## Inlining
+
+**Depth limit.** With `-O4,p -inline auto,deferred`, a small inline expands through four wrapper levels and is called at the fifth; a body the size of `std::fmodf` (about 20 instructions, two runtime calls) expands through three and becomes a weak out-of-line copy at the fourth.
+Declaration form and caller size make no difference (eighty `normalize()` expansions in one function all inline).
+That is why `TUtil<f32>::inv_sqrt` (under `normalize` -> `setLength`) is always called while `sqrt` under `length()` expands.
+
+**Per-callee budget counts statements.** `TChuuHana::rolling` (UNUSED 0x120) is inlined in the original.
+Same-size reconstructions with one more statement are refused: a dead `d.y = 0.0f;` flips it to a call, an empty `;` does not, and replacing two statements with `d.sub(v)` flips it back despite more code.
+When a size-matched UNUSED function is called instead of inlined, look for a cheaper spelling of its body.
+
+**Per-call-site differences (open).** In `MapObjBall` the original inlines differently from us *per call site*:
+
+| Callee | Original | Ours |
+| --- | --- | --- |
+| `TUtil<f32>::sqrt` in `calcCurrentMtx`, `TBigWatermelon::touchActor` | inlined | inlined |
+| same `sqrt` via `length()` in `hold`, `touchGround`, `touchWall` | **called** (weak from `boid.cpp`) | inlined |
+| `TMapObjBall::control` from `TResetFruit::control` LIVING/HOLDING | **called** | inlined |
+| `TResetFruit::touchActor` from `control`'s loop and `receiveMessage` | inlined | **called** |
+
+The map lists exactly which `JGeometry::TVec3<f>` members exist as weak symbols (`add`, `sub`, `dot`, `div`, `negate`, `scale`, `scaleAdd`, `setLength`, `setMax`, `setMin`, `set(const Vec&)`, three operators, constructors; `TUtil<f>` `sqrt`, `inv_sqrt`, `mod`, `one`) and never `length`, `squared`, `normalize`, `isZero` or `set(x,y,z)`.
+Our build emits weak `TVec3::sub` in 35 objects; the original in one (`Animal/BeeHive.o`), yet calls it out of line from `tobiPuku`, `chuuhana` and others.
+Moving those definitions out of the class body with `inline` changed nothing.
+Do not force these with `#pragma dont_inline` or pasted bodies; leave the functions at their current scores.
+
+**`fmodf` / `mod`.** The binary calls `std::fmodf` and `TUtil<f32>::mod` out of line everywhere (`koopajr`, `MapObjCorona`, `wireTrap`), with the same 0x5c body: return `x` if `|y| > |x|`, else `x - y * (f32)(s64)(u64)(x / y)`.
+`TUtil<f32>::mod` carries that body in `JGUtil.hpp`; `std::fmodf` keeps the `::fmod` wrapper because the body there inlines everywhere.
+
+**Specific helpers.**
+- `TLiveActor::getModel()` is out of line; `getMActor()->getModel()` is the inline path. A stray `bl TLiveActor::getModel()` means the wrong one — but boss head/body constructors really do call the out-of-line one.
+- `TSpineBase::pushAfterCurrent` is a plain push; `pushNerve` also writes `mPrevious`. The wrong one cost three nerves about ten points each.
+- `getLatestNerve()` is exactly `mCurrent ? mCurrent : mPrevious`.
+- `MsMtxSetXYZRPH` has an `f32` degree overload; use it instead of `(s16)(182.04445f * rot)`.
+- `MsWrap<f>` is a local copy in nine TUs; a unit missing exactly that symbol is not missing a real function. `MsAngleWrap(...)` adds the inline boundary that keeps it called.
+- `MsSqrtf` (one double-precision refinement) is not `JGeometry` sqrt nor MSL's three-refinement sqrt.
+- Default arguments vs explicit arguments change inlining depth (`TPollutionTest` default name).
+- Use `group->getChildren().push_back(actor)`; the fabricated `group->add(actor)` changes iterator inlining.
+
+## Floating point
+
+**`fp_contract` only fuses products of locals** (probed in a scratch TU with game flags):
+
+| Expression | Result |
+| --- | --- |
+| `m.x * m.x + m.z * m.z` (members via `this`, pointer, reference, struct, `Vec`) | `fmuls`, `fmuls`, `fadds` — never fused |
+| `f32 x = m.x; x * x + m.z * m.z` | `fmuls` for the member, `fmadds` for the local |
+| `m.x += 0.2f * (v.x - m.x)` | `fmadds` |
+| `d.x = 0.2f * (v.x - m.x); m.x += d.x;` with local `TVec3 d` | `fmuls` then `fadds` |
+
+A target `fmadds` whose product operand was loaded from memory does not happen: that operand was a local.
+Kept-apart `fmuls`/`fadds` for a register value means it went through a local struct member.
+Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&)` is fused (`TChuuHana::rolling`).
+
+**Other float rules.**
+- `mModelFaceAngle = mStatusTimer * -4096` matches; `-(mStatusTimer * 4096)` adds an `extsh` (MarioJump, MarioRun).
+- `0.5f * x` and `x * 0.5f` both give `fmuls x, 0.5`, constant second only when written constant-first.
+- Literal `0.0f * sin` is folded away; building a vector and reading its components keeps the zero products. Quaternions from `setEulerY/Z/X` with two-argument `mul` also keep them (`koopajr`).
+- Declaring the cosine local before sine reproduces sine/cosine table register order (`CalcRevisionPosByRotateZ`, `execSlip`).
+- `atan2f(v.x, v.z)` loads `x` first; if the original loads `z` first, copy both to locals with `z` declared first.
+- `fabsf` into a float local; global `fabs` adds an `frsp`.
+- `remaining = end - frame` named before loading the rate matches; passing `end - frame` as an argument spills registers (`changeTumbleAnmRate_`).
+- `powf(dx,2) + powf(dy,2) + powf(dz,2)` with global functions matches `MSound::getDistPowFromCamera`; `std::powf` wrappers delay the sum.
+- Constructor yaw truncates `yaw * (65536.0f / 360.0f)`; BHS helpers use rounding `CLBDegToShortAngle`. Do not swap them.
+- `JGeometry::min(a, b)` is `a >= b ? b : a`; `x = min(limit, x)` gives `fcmpo limit, x; cror eq,gt,eq` with `x` loaded before the param fetch (`moveSwing` 64 -> 88.7).
+
+## Load and store order
+
+- **Param fetches:** `TParamT::get()` returns a reference, so `f(p->a.get(), p->b.get())` defers both loads to the call. If the original loads each value as soon as its getter returns, copy to locals first (`TKoopaJrSubmarine::init` 87.8 -> 94.4).
+- **But** `new T(args...)` evaluates `operator new` first, so do not hoist ctor-argument param fetches above the `new`.
+- m2c hoists pure arithmetic above calls; place fetches where the `lwz`/`lfs` actually sit (`igaiga` `behaveToWater` 72 -> 99.8).
+- `MsRandF() < param.get()` binds the parameter address before `rand()` and reads after, matching the original.
+- `MTXCopy(mtx, getModel()->getBaseTRMtx())` evaluates `getModel()` first; if the original calls the source getter first, hold it in a local.
+- **Hand-built `Mtx`:** the three `[i][3]` stores come *first*, then the rest row-major (`popo` joint callbacks 82.8 -> 99.8).
+- **Member re-read after `theNerve()`:** `if (mPopo->isRollJump()) return mPopo->receiveMessage(...)` loads `mPopo` twice because `__register_global_object` is a call. Keep the member access; a local removes the second load.
+- Name a `TSmallEnemy*` receiver before a virtual call to get vtable-load-before-this-copy order (TMario `checkCollision`).
+
+## Vectors and locals
+
+- `.squared()` directly on a horizontal-vector temporary keeps separate multiplies; a named vector gets scalarised and fused (`isCanWalk`, boss 100-unit check).
+- Construct an opposite vector from `(-v.x, -v.y, -v.z)`; copy-then-`negate()` forces integer copies and stack (boss `perform`).
+- Copy position to a local goal, add, then `setGoalPath(goal)`; `setGoalPath(mPosition + dir)` adds an out-of-line add.
+- A named displacement local restores six copy instructions (`bind`).
+- A plain `Vec` copy followed by scalar sums keeps Y/Z in float registers where `TVec3` blocks it (Spider).
+- Default-construct then assign fields separately; the by-value constructor emits integer copies (Beam partition).
+- Normalising cross-products in place saves a float register (EffectUtil).
+- **Holding a matrix in a local costs a register** and blocks folding `+0x30` into the inlined base body's load offsets (`TMoePuku::calcRootMatrix` 86.5% vs 99.1% re-fetching).
+- `mRotation = p->getRotation()` costs 8 bytes of frame when a call follows (`TTobiPuku::initAttacker`); `p->mRotation` matches both sites.
+- Keep a computed matrix in a local rather than re-reading the member it was stored to.
+- `s16` narrowing on jump animation locals adds sign extensions; don't narrow without evidence.
+- A single initialised `JUtility::TColor` shared by two conversions shares their slot (GCConsole2).
+- `J2DPicture::setWhite` reproduces eight-byte spacing between temporary colours (CardSave).
+- `CLBAbs<s16>` narrows after negation and mishandles -32768; keep an int.
+- `u16 index = names->getIndex(name); model->getAnmMtx(index)` narrows the local, not `getIndex` (boss joints).

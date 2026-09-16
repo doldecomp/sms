@@ -1,0 +1,73 @@
+# Reconstructing a TU: layout, declarations and order
+
+Do these before writing bodies in a from-scratch unit.
+`docs/PROGRAM_STRUCTURE_REVVING.md` covers the general procedure; this file is what this clone learned on top of it.
+
+## Virtual order from the vtable
+
+Virtual calls compile to fixed offsets, so nerve bodies cannot match until the class declares its virtuals in vtable order.
+Dump every slot:
+
+```
+awk '/\.obj "?__vt__9TTobiPuku"?/,/endobj/' build/GMSE01/asm/Enemy/tobiPuku.s \
+  | awk 'NR>=2 && /4byte/{printf "0x%03x %s\n",(NR-2)*4,$2}'
+```
+
+That shows which methods are virtual, which override base slots, which are new, and the header order.
+Read the **whole** dump: `TTobiPuku`'s base `TWalkerEnemy` table ends at 0x1b4 and eighteen new virtuals follow; a partial read once led to `setDeadAnm` being declared non-virtual when it overrides slot 0x154.
+Reordering the header cost zero regressions and turned `TNerveTobiPukuSwimWander::execute` from unmatchable into exact.
+
+**Null tail slots are pure virtuals, not padding.**
+`TBossHanachanPartsBase`'s 256-byte table ends in a null at 0xFC; both derived tables put `setAnm_` there, so the base declares it pure virtual.
+Padding preserved the executable bytes but hid the interface. Inspect derived tables before calling a null padding.
+
+## Names and defaults from `.rodata`
+
+`PARAM_INIT` stringifies the member name, so real param names sit in `.rodata` next to the `.prm` path, and defaults are the constants `load()` stores into each `TParamRT`.
+Dump the strings from `build/GMSE01/asm/<path>.s` and read the stores; do not guess (five fabricated `tobiPuku` names were all wrong, three of five defaults too).
+Integer params are `TParamRT<s32>` (mangles `TParamT<l>`); `TParamRT<int>` gives `TParamT<i>` and shows as a vtable-store operand mismatch.
+Filenames matter too: `/Mario/DmgHamukuri.prm`, not `Hamakuri`, or the whole string pool shifts.
+Wrong defaults cause register differences far from the store (TMario constructor: `TEParams` down type 1, motor 25, minimum speed 16.0f, invincibility 300).
+
+## String-pool prefixes
+
+If every string offset in a unit is off by a constant, a shared header supplies the prefix.
+- `System/DummyStrings.hpp`: 12 zero bytes plus the 20-byte Shift-JIS memory-error string (UNUSED `SMS_NO_MEMORY_MESSAGE`). Fixed `SelectDir` (+688 data bytes) and both boss save-param constructors (32 bytes before the first param name).
+- `M3DUtil/InfectiousStrings.hpp` has a 0xE0-byte prefix; it must precede `SunModel` in `MarNameRefGen_Map`.
+- A header can also add unwanted data: `StageUtil.hpp` emits static shine/scenario tables even when only `SMS_isMultiPlayerMap` is used, shifting TMario's vtable by 0x168. Declare the one function directly instead.
+- Trailing zero bytes in `.sdata2` can come from linker alignment; no dummy definition needed.
+
+## `__sinit` in enemy units
+
+`__sinit_effectEnemy_cpp`, `__sinit_seal_cpp`, the hauntLeg and BossHanachanNerve `__sinit`s are all 764 bytes and match with no code: add `MSound/MSSetSound.hpp` and `MSound/MSoundBGM.hpp` as rogue includes next to `M3DUtil/InfectiousStrings.hpp`.
+The body is JAL sound-list registration from the include set, typically the largest function in the unit. Try it first.
+
+## Reordering a TU mechanically
+
+`validate-symbol-order.py` says the order is wrong but not what to write.
+Take the `.fn` lines from `build/GMSE01/asm/<path>.s` in order (demangled name in the comment above each), reverse for `-inline deferred`, split the `.cpp` into top-level chunks keyed by `Class::method` or `DEFINE_NERVE` argument, and emit them in that order.
+Assert the key sets match before writing.
+Reordering does not fix `.rodata` offsets that depend on objects the original emits and we do not.
+
+## Layout evidence
+
+- **Zero stores prove extent and initialisation order, not vector boundaries.** Boss body history looked like three vectors from 0x120 but is scalar 0x120, previous position 0x124, older position 0x130, previous roll 0x13C, older roll 0x140; copy sites proved it.
+- **Two access widths on one offset can be a union.** `TWaterHitActor` 0x68 is read as `lwz` particle index (`TSmallEnemy::decHpByWater`, `TBossManta::receiveMessage`) and as `lha`/`sth` signed countdown (boss). Current source: anonymous union `int mParticleIndex` / `s16 mWaterHitCounter`. The original declaration is not established; do not split into a field at 0x6A.
+- **Reuse existing types** when constructor stores and a caller's method call match: boss parts 0x110 is `TNpcInbetween*` (44 bytes), not a private struct.
+- **Move a class to a shared header only for real cross-unit use** (`TFootHitActor` into `BossHanachan.hpp` for offset 0x6C `mJointMtx`), not to force inlining.
+- Unresolved: `TBathtubData` at 0x188 — the original constructor calls `SMatrix33R<float>` but a type-only change regressed water consumers (`MapObjCorona`, `BathWaterManager`, `GCConsole2`). Coordinate type and access changes per caller.
+
+## UNUSED functions
+
+- Size agreement with the map is necessary, not proof: the body was dead-stripped.
+- UNUSED bodies go in the `.cpp`. Explicit `inline` on a cpp helper dropped its UNUSED definition.
+- Moving a header-defined constructor to its map-ordered cpp position emits a missing UNUSED body without breaking inlined callers (`TMapCollisionBase`).
+- Restore UNUSED helpers from repeated branches: `InitChangeOneColor_Base`/`TwoColor_Base` (48/80 bytes), `initObjArray(int)` (60), `loadSaveParams_` (128), `checkJumpingThrowStart` (92).
+- A map pass with four-byte stub bodies is not completion.
+
+## Return types
+
+Inspect all callers before changing one; identical mangled names do not establish return types.
+`TBathtub::getNumGripsDead` returns `int` (not `u8`); the grip constructor's `u16` store is that caller's own conversion.
+`TSmallEnemyParams::getSL{Attack,Damage}{Radius,Height}()` return `f32` (`TSmallEnemy::moveObject` 83.5 -> 96.8).
+A nested enum constant such as `TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH` must be qualified outside the class; grep before inventing a name.

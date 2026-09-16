@@ -23,20 +23,16 @@ The `GMSJ01` and `GMSP01` configs still exist in the tree but have no input imag
 **Neither `python` nor `ninja` is on `PATH`.**
 Commands copied verbatim from upstream documentation will fail with "command not found"; use the invocations in the table above.
 
-Two tools need explicit overrides because their defaults point at the Japanese setup:
-
-```bash
-# validate-symbol-order.py defaults to the GMSJ01 map and a Windows nm
-NM=build/binutils/powerpc-eabi-nm build/venv/bin/python3 tools/validate-symbol-order.py \
-    -u mario/GC2D/CardLoad --map orig/GMSE01/files/marioUS.MAP
-```
+`tools/validate-symbol-order.py` also defaults to the Japanese map and a Windows `nm`; its section below gives the overrides.
+Wherever this guide says `ninja` or `mario.MAP`, read `build/venv/bin/ninja` and `marioUS.MAP`.
 
 The US map is a real linker map shipped on the disc, so it is a priority source of truth exactly as `mario.MAP` is upstream.
-Region-specific layout differences between the Japanese and US binaries are real and recurring — see `docs/MATCHING_CATALOG.md`.
+Region-specific layout differences between the Japanese and US binaries are real and recurring — see `docs/catalog/region-us.md`.
 Guard them with `#if defined(VERSION_GMSE01)` rather than silently changing shared offsets, since the other regions cannot be rebuilt here to catch a regression.
 
-Current state, active work order and per-batch history live in `PROGRESS.md`, `STRATEGY.md` and `DECOMPILATION_PLAN.md`.
-`STRATEGY.md` defines the current work order and supersedes the older file-completion queue.
+`STRATEGY.md` is the work order and `PROGRESS.md` holds the current numbers and open risks; `DECOMPILATION_PLAN.md` indexes the rest.
+What this clone has learned about matching is in `docs/catalog/`: read its short `README.md` index, then only the topic file that fits the problem.
+Old batch history is archived under `docs/progress/` and does not need reading.
 
 ## Project Goal
 
@@ -88,10 +84,8 @@ docs/                 — documentation on reverse-engineering methodology
 Upstream forbids autonomous work on the MSL runtime, MetroTRK, THPPlayer, the Dolphin SDK and JSystem middleware.
 **That prohibition is lifted here.**
 All libraries are in scope: decompiling them, linking already-matching objects from source, and fixing their build configuration.
-The **308** library objects that already match byte-for-byte (code **and** data) but are not source-linked are a standing, high-value target: linking them takes source-linked code from 2.57% to about 17.64%.
-298 of them carry code; the other 10 are data-only TUs such as `errno.c` and `JUTVideo.cpp`, which still need linking even though they contribute no code bytes.
-Beware when recounting: a zero-code unit reports `complete_code_percent` of 100 vacuously, so filtering on that field undercounts by exactly those 10.
-Filter on membership in `config/GMSE01/objects.json` instead.
+The 308 library objects that already matched byte-for-byte have all been source-linked.
+When counting linked objects, filter on membership in `config/GMSE01/objects.json`: a zero-code unit reports `complete_code_percent` of 100 vacuously.
 
 One rule survives the lift, and it is not negotiable:
 
@@ -109,7 +103,7 @@ A batch is committable when `ninja changes_all` shows no function regressions **
 If either check fails, fix or revert; never commit a red batch.
 
 Do **not** push.
-There is no fork configured, and all 51+ batches exist only on this disk — raise that with the user rather than inventing a remote.
+There is no fork configured, and every batch exists only on this disk — raise that with the user rather than inventing a remote.
 
 Keep commit messages in the existing style: imperative mood, one line naming what was restored or corrected, and the `Claude-Session:` trailer.
 
@@ -238,9 +232,8 @@ symbol's linkage is *unknowable from the map*: an UNUSED symbol **can** be weak.
 The map's `UNUSED` marker says nothing about linkage, so the tool only validates
 binding for linked symbols.
 
-This runs in CI: `tools/check-changed-symbol-order.py` maps every changed
-`.cpp` in a PR/push to its unit and runs the check, gating the "symbol map"
-items in the Pre-PR checklist below.
+Upstream CI runs it through `tools/check-changed-symbol-order.py`; there is no CI
+here, so run it yourself on each changed unit as part of the checklist below.
 
 ### Always prefer using `m2c` for from-scratch decompilation
 
@@ -331,7 +324,8 @@ Each `.o` file maps 1:1 to a `.cpp` file. The path is listed in `configure.py` u
 - BSS ordering is affected by include order — "rogue includes" are sometimes needed just to match BSS/SBSS layout. These are marked with comments like `// rogue includes needed for matching sinit & bss`.
 
 Before starting any deocmpilation or matching tasks, you **must** read **[docs/AGENT_MATCHING_TIPS.md](docs/AGENT_MATCHING_TIPS.md)**.
-Expand this document as you notice new patterns, but always ask for human review afterwards — some patterns might be red herrings.
+Expand this document only with general MWCC patterns, and ask for human review afterwards — some patterns might be red herrings.
+Findings specific to this clone's units go in the matching `docs/catalog/` topic file instead.
 
 ## Key Data Files
 
@@ -503,9 +497,9 @@ UNUSED functions must still be reconstructed in the source because:
 - **Always remove marker calls after mapping**. Any extra call can change register allocation/scheduling and inhibit matching, so markers are strictly temporary debugging aids.
 - **Read [docs/AGENT_MATCHING_TIPS.md](docs/AGENT_MATCHING_TIPS.md)** for detailed MWCC codegen patterns that come up repeatedly.
 
-### Pre-PR checklist
+### Pre-commit checklist
 
-Before submitting a PR with matching work, make sure to check the following:
+Before committing matching work, make sure to check the following:
 - Run `tools/validate-symbol-order.py -u <unit>` on each changed TU (CI runs it
   automatically on every changed `.cpp`). It automates several of the items
   below: symbol **presence**, non-weak **ordering**, and linked-symbol

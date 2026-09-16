@@ -1,0 +1,73 @@
+# Other units: exceptions and rejected trials
+
+Per-unit notes that do not generalise.
+Search this file for the unit name before retrying a stalled function.
+Scores are as of the batch noted and may be stale.
+Longer evidence for batches 25-39 is in `docs/progress/GMSE01-closure-audit-batch<N>.md`.
+
+## Camera
+
+- **CameraMode** (linked): current-mode check is an out-of-line call, previous-mode check an inline switch. Added a fabricated current-mode predicate analogous to `isLButtonCamera`, used only for the current-mode branch.
+- **CameraTalk** (linked): existing Mario-angle accessor restores talk setup.
+- **Sun bounds** (`sunmgr`, `lensglow`, `lensflare`): `isInBounds` via a const reference to the first position recovers `lfsu`/offset-4 accesses. Exception: the `sunmodel` self-call addresses members directly, with a named bound.
+- **CameraSecureView, sunmgr**: accessor/ABS/predicate and stream-chain/array/loop trials failed (batch 32 audit).
+- CameraWarp, area-cylinder, multiplayer-camera frame trials: batch 28 audit.
+
+## Enemy
+
+- **BossEel::init**: tooth-model stores use indices 0, 1, 2; eye/heart loader flag is 0x10240000; post-init collision uses virtual slot 0x1c (`setUpTrans`). A named skin-deformer allocation local and one shared resource pointer help. Open: frame 0x300 vs 0x310, eye/heart copy registers. Rule: inspect differing immediates, stack stores and virtual slots even at 99%.
+- **SleepBossHanachan** (linked): fall nerve declares position before a named `BOOL` animation result via `getMActor`, assigning inside the success branch.
+- **egggen** (linked). A vector `squared` method removes a required SDK call.
+- **seal / effectEnemy**: see `../codegen-tells.md` bool rules.
+- **Spider, Beam**: see vectors in `../codegen-tells.md`. Beam's `coneInPlane` UNUSED body must stay 348 bytes.
+- **AnimalNerve**: two `MsRandI(hi, lo)` calls corrected to `(lo, hi)`. Open: frame 0x118 vs 0xE8.
+
+## GC2D
+
+- **CardSave::waitForChoice** and siblings: `updateCenteredSize` sites use 0x18/0x14 (`mOffsetInterpolator`), not 0x30/0x2C. Naming width/height or expanding to `setPaneSize`/`setPaneOffset` regresses; `pos.set` and reversed additions don't fix particle scheduling. `CardLoad::selectFunction` accesses members 0x20 above the current layout; check the constructor first.
+- **GCConsole2::load**: health-pane pairs use `i*2`, `i*2+1`. At 0xec04 `stwu` updates `unk2AC`, but the following blend calls use `unk2A0` (r25); only hide uses `unk2AC`. Default-constructed colour local and named texture allocation rejected.
+- **SelectDir::rsetup**: explicit `TDStageDisp("<DStageDisp>", 0)` places the flag temporary better. Naming the three camera vectors before allocation regresses (98.4%). Open: frame 0x610 vs 0x648.
+- **ProgSelect**: removed old selector padding (explained small regression). Hoisted controller booleans add normalisation; `u8` selection local no effect.
+- **MessageLoader**: tag/length declarations before the outer stream, typed advancing INF1 cursor, named discarded entry-size read. Chained extractions and extra locals regress.
+- **MessageUtil** (linked): tag `s32` (matches `readS32`), `u16 entrySize` declared with parser locals before the payload stream.
+
+## Map
+
+- **MapCollisionEntry**: name the translation-only flag in `move` and warp `setUp`; warp also declares its vector before the predicate and uses `set`. Remaining: see `../frame-gaps.md`.
+- **MapCollisionPlane** (linked): fabricated `worldToGridIndex` computes `mOneOverScale * (v + mExtent)` into a named `int`. `MapObjPlane::depress` keeps the fractional API.
+- **MarNameRefGen_Map** (linked): `TPollutionTest` inline ctor initialises only `TViewObj` (size 0x10); call with no name argument.
+- **PollutionObj** (linked): ground-query pointer at slot 0x54 declared first; named `is_near` and centre-height results.
+- **Water-filter / Shimmer**: reuse `isDemoCamera()`/`getUnk124()`; declare inverse-view, translation and scale matrices before transform info. Shimmer needs model `calc`, `viewCalc`, `entry` (vtable 0x10, 0x14, 0x0C).
+- **SplashManager** (linked): colour at 0x54, by-value copy at 0x58 via a compound literal at `requestCol`; alpha named before vertex writes.
+- **MapModel, MapXlu, PollutionPos, PollutionManager, MapObjWater, MapObjFloat, MapEventSirena**: trials in batch 30/31/33/37 audits. Sirena: named flag-manager result only partially shifts the slot.
+
+## MSound
+
+- **MSModBgm**: repeated zero-load mismatch survives bool/u8, integer-zero, assignment-order and early-return trials. `getTiming` optional-output behaviour lacks evidence.
+- **MovieRumble**: `init`/`checkRumbleOff` share a missing pointer move inside `readCurInfo`; getter placement, validity locals, signed group, const pointer all fail.
+
+## NPC
+
+- **NpcAnm::npcWetting**: naming the sunflower predicate or final switch value doesn't fix registers and can grow the frame (0x178 vs 0x160).
+- **NpcCallback**: `checkLiveFlag` inside the conditional bool; named Mario Y across the range call.
+- **NpcColor**: direct two-colour arguments and named material lookup don't fix the frame.
+- **NpcInbetween**: ratio accessor recovers float registers but grows the frame by 8.
+- **isCanWalk / execWalk**: horizontal `(dx, 0, dz)` against `CLBSquared(10.0f)` (not 3D with 2.5625). `fabsf(mRotation.y - angle)` before `MsWrap`. Direction copied by vector assignment. `unkF4.getPoint() - mPosition` adds an out-of-line `sub`.
+- `TNerveNPCGraphWander::execute` has an existing `(void)&local_58` workaround; not investigated.
+
+## System
+
+- **TTimeRec::startTimer/endTimer**: existing `JUtility::TColor` gives four-byte colour storage; convert before the null check and `OSGetTick`. Four-component overload loads the instance before constructing colour. Fixed livemanager/objmanager `perform` (both linked). TimeRec has three UNUSED stubs.
+- **objmanager**: `stream >> capacity` then `initObjArray(capacity)`; direct `readS32` as the argument grows the frame.
+- **SnapTimeObj**: packed-colour overload; open colour slot 0x34 vs 0x38.
+- **Strategy / ObjHitCheck**: `s32` counter keeps the initial branch; ObjHitCheck already matches.
+- **PerformList**: `load` differs by one stream-read slot; by-value iterator in `perform`.
+- **MarioGamePad**: see padding list in `../frame-gaps.md`.
+
+## MoveBG and Animal
+
+- **MapObjAirport**: `0x484D` clear-sign sound via `MSound::startSoundSystemSE`; use the director accessor and pollution global. Open: passed camera flag 0x34 vs 0x3C; pool ctor and `appear` UNUSED bodies undersized.
+- **MapObjBall**: per-call-site inlining, see `../codegen-tells.md`. Scores: `hold` 48%, `touchWall` 75%, `TBigWatermelon::touchActor` 61%, `TResetFruit::control` 52%, `receiveMessage` 69%.
+- **MapObjPollution**: accessor/loop trial reached the right frame with wrong registers (batch 39 audit).
+- **AnimalManager**: `loadSaveParams_` restored; named near-plane input for clipping.
+- **EffectUtil**: missing one UNUSED definition; two `cross2` calls regress.
