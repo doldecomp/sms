@@ -21,8 +21,14 @@ Three fixes came from using existing inlines rather than open-coding, which is w
 `getMaxHitPoints()` replaces an open-coded save-parameter read; `TBGCheckData::isDeathPlane/isPool/isWaterSurface` replace raw `mBGType` comparisons (69.7% -> 84.9%); and `isAirborne()` replaces `checkLiveFlag(LIVE_FLAG_AIRBORNE)` (84.9% -> 91.8%).
 The original materialises each predicate as a bool with `li 1`/`li 0`, which only the helper that ends `? 1 : 0` reproduces.
 
-Remaining: `perform` 86.5%, `forceKill` 91.8%, `setDeadAnm` 99.8% (frame 0x18 against 0x20), and `__sinit_effectEnemy_cpp` (764B) is still absent, since its JAL sound-list registrations come from includes this file does not yet pull in.
-DOL byte-identical. No gameplay test performed.
+Continued to **seventeen of eighteen exact**, 2,448 of 2,572 bytes. Game matched code **26.22% -> 26.27%**, aggregate **39.55% -> 39.59%**.
+
+- `__sinit_effectEnemy_cpp` (764B, the unit's largest function) matches once `MSound/MSSetSound.hpp` and `MSound/MSoundBGM.hpp` are added as rogue includes; its whole body is JAL sound-list registration driven by include set, not by code.
+- `perform` 86.5% -> exact. The particle scale is **integer** division converted afterwards, `(f32)((s32)mHitPoints / (s32)(u8)getMaxHitPoints())`, not a float divide: the original emits `divw` plus the `xoris` signed bias, and the `(u8)` cast reproduces a `clrlwi` that the u32 return alone does not.
+- `forceKill` 91.8% -> exact by inverting the guard so both paths fall into a **single** `kill()` call, which is the shape the original's shared tail has.
+
+Only `setDeadAnm` remains at 99.8%: every instruction matches and the frame is 0x18 against 0x20, the familiar 8-byte reserved-inline-local gap.
+The unit still cannot be source-linked until that closes. DOL byte-identical. No gameplay test performed.
 
 ## Verified checkpoint: batch 58 — BathtubBinder reconstructed, five of six exact
 

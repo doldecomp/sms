@@ -12,6 +12,8 @@
 
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 TEffectEnemyManager::~TEffectEnemyManager() { }
 
@@ -57,18 +59,16 @@ void TEffectEnemy::kill()
 
 void TEffectEnemy::forceKill()
 {
-	if (!mGroundPlane->isIllegalData()) {
-		if (mGroundPlane->isDeathPlane() || mGroundPlane->isPool()
-		    || mGroundPlane->isWaterSurface()) {
-			if (!isAirborne() && !checkLiveFlag(LIVE_FLAG_UNK10)) {
-				kill();
-				return;
-			}
-		}
+	// Both paths fall into a single kill() call, as the original does.
+	if (mGroundPlane->isIllegalData()
+	    || !(mGroundPlane->isDeathPlane() || mGroundPlane->isPool()
+	         || mGroundPlane->isWaterSurface())
+	    || isAirborne() || checkLiveFlag(LIVE_FLAG_UNK10)) {
+		if (gpMap->isInArea(mPosition.x, mPosition.z))
+			return;
 	}
 
-	if (!gpMap->isInArea(mPosition.x, mPosition.z))
-		kill();
+	kill();
 }
 
 void TEffectEnemy::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -81,7 +81,8 @@ void TEffectEnemy::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if ((cue & 2) && !(mLiveFlag & LIVE_FLAG_CLIPPED_OUT)) {
 		JGeometry::TVec3<f32> scale;
-		VECScale(&mScaling, &scale, (f32)mHitPoints / (f32)getMaxHitPoints());
+		VECScale(&mScaling, &scale,
+		         (f32)((s32)mHitPoints / (s32)(u8)getMaxHitPoints()));
 
 		gpMarioParticleManager->emitAndBindToPosPtr(0x1ED, &mPosition, 3, this);
 		gpMarioParticleManager->emitAndBindToPosPtr(0x135, &mPosition, 1, this);
@@ -126,7 +127,7 @@ void TEffectEnemy::setDeadAnm()
 		MSoundSESystem::MSoundSE::startSoundActor(
 		    MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0, nullptr, 0, 4);
 	}
-	mLiveFlag |= LIVE_FLAG_UNK20000;
+	onLiveFlag(LIVE_FLAG_UNK20000);
 }
 
 TEffectEnemy::~TEffectEnemy() { }
