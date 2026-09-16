@@ -593,10 +593,11 @@ static void draw_mist(u16 x, u16 y, u16 wd, u16 ht, void* buffer)
 	GXColor tev_color = { 0x03, 0x03, 0x03, 0x00 };
 	u8 vFilter[7]     = { 0x15, 0x00, 0x00, 0x16, 0x00, 0x00, 0x15 };
 
-	f32 f_left   = x;
-	f32 f_wd     = wd;
-	f32 f_top    = y;
-	f32 f_ht     = ht;
+	f32 f_left = x;
+	f32 f_top;
+	f32 f_wd = wd;
+	f_top     = y;
+	f32 f_ht  = ht;
 	f32 f_right  = f_left + f_wd;
 	f32 f_bottom = f_top + f_ht;
 	f32 offset_x = (4.0f / f_wd);
