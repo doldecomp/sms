@@ -320,12 +320,18 @@ void TEnemyMario::initEnemyValues()
 	}
 
 	J3DModelData* specialModelData = nullptr;
-	if (modelIndex >= 0 && modelIndex < 4) {
+	switch (modelIndex) {
+	case 0:
+	case 1:
+	case 2:
+	case 3:
 		mPlayerType = PLAYER_TYPE_SHADOW_MARIO;
-	} else if (modelIndex == 4) {
+		break;
+	case 4:
 		specialModelData = J3DModelLoaderDataBase::load(
 		    JKRGetResource(bmdFileNames[modelIndex]), 0x10040000);
 		mPlayerType = PLAYER_TYPE_MONTE_MAN;
+		break;
 	}
 
 	mBrushModel                = nullptr;
@@ -368,15 +374,20 @@ void TEnemyMario::initEnemyValues()
 		mEMario->offHitFlag(HIT_FLAG_NO_COLLISION);
 	}
 
-	if (shadowMarioEvent == 2) {
+	switch (shadowMarioEvent) {
+	case 2:
 		mPadIndex      = 1;
 		mSettingParams = new TSettingParams("/../map/pad2/Setting.prm");
-	} else if (shadowMarioEvent == 3) {
+		break;
+	case 3:
 		mPadIndex      = 2;
 		mSettingParams = new TSettingParams("/../map/pad3/Setting.prm");
-	} else if (shadowMarioEvent == 0 || shadowMarioEvent == 1) {
+		break;
+	case 0:
+	case 1:
 		mPadIndex      = 0;
 		mSettingParams = new TSettingParams("/../map/pad/Setting.prm");
+		break;
 	}
 
 	mWaterCounter          = mSettingParams->mWaterCtMax.get();
@@ -403,9 +414,10 @@ void TEnemyMario::initEnemyValues()
 
 		u32 nodeCount;
 		stream.read(&nodeCount, sizeof(nodeCount));
-		mReplayLinks    = new TReplayLink[nodeCount][3];
-		replayFileNames = new char*[nodeCount * 3];
-		for (u32 i = 0; i < nodeCount * 3; ++i) {
+		u32 replayLinkCount = nodeCount * 3;
+		mReplayLinks        = new TReplayLink[nodeCount][3];
+		replayFileNames     = new char*[replayLinkCount];
+		for (u32 i = 0; i < replayLinkCount; ++i) {
 			replayFileNames[i] = new char[3];
 		}
 
@@ -487,14 +499,15 @@ void TEnemyMario::initEnemyValues()
 		mEMDoing = EM_DOING_DISAPPEAR;
 
 	switch (shadowMarioEvent) {
+	case 0:
+	case 1:
+		mReplayIndex = mEMario->unk158;
+		break;
 	case 2:
 		mReplayIndex = mEMario->unk15C;
 		break;
 	case 3:
 		mReplayIndex = mEMario->unk160;
-		break;
-	default:
-		mReplayIndex = mEMario->unk158;
 		break;
 	}
 	mEMario->getTracer()
