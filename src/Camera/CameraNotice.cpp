@@ -160,13 +160,12 @@ void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
 		                           mPos.z - target.z);
 		MsVECNormalize(&diff, &diff);
 		// TODO: many inlines from cameralib maybe?
-		f32 dx       = diff.x * 500.0f + mPos.x;
-		f32 dz       = diff.z * 500.0f + mPos.z;
-		s16 ang      = matan(dz - mCurrentTarget.mTarget.z,
-		                     dx - mCurrentTarget.mTarget.x);
-		int absAngle = ang - mCurrentTarget.mYaw >= 0
-		                   ? ang - mCurrentTarget.mYaw
-		                   : -(ang - mCurrentTarget.mYaw);
+		f32 dx  = diff.x * 500.0f + mPos.x;
+		f32 dz  = diff.z * 500.0f + mPos.z;
+		s16 ang = matan(dz - mCurrentTarget.mTarget.z,
+		                dx - mCurrentTarget.mTarget.x);
+		s16 angleDiff = mCurrentTarget.mYaw - ang;
+		int absAngle  = angleDiff >= 0 ? angleDiff : -angleDiff;
 		f32 ratio    = DEG2SHORTANGLE(1.0f) * (f32)absAngle;
 
 		f32 chase;
