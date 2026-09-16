@@ -829,8 +829,11 @@ bool TSmallEnemy::isFindMarioFromParam(float param_1) const
 		f32 searchAngle  = prms->mSLSearchAngle.get();
 		f32 searchAware  = prms->mSLSearchAware.get();
 
-		if (isInSight(marioPos, searchLength * param_1, searchAngle * param_1,
-		              searchAware * param_1))
+		searchLength *= param_1;
+		searchAngle *= param_1;
+		searchAware *= param_1;
+
+		if (isInSight(marioPos, searchLength, searchAngle, searchAware))
 			return true;
 		else
 			return false;
