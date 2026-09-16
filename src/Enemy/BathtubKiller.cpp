@@ -102,13 +102,26 @@ TBathtubKiller::TBathtubKiller(const char* name)
 {
 }
 
-void TBathtubKiller::init(TLiveManager*) { }
+void TBathtubKiller::init(TLiveManager* manager)
+{
+	TSmallEnemy::init(manager);
+	mActorType = 0x8000024;
+	unk150     = 17;
+	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_DEAD);
+	onLiveFlag(LIVE_FLAG_UNK8);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+	unk194 = 0;
+	resetBathtubKiller();
+}
 
 void TBathtubKiller::setMActorAndKeeper() { }
 
 void TBathtubKiller::reset() { }
 
+#pragma dont_inline on
 void TBathtubKiller::resetBathtubKiller() { }
+#pragma dont_inline off
 
 void TBathtubKiller::generateItemBathtubKiller() { }
 
