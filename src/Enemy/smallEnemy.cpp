@@ -802,11 +802,7 @@ bool TSmallEnemy::isFindMario(float param_1)
 	if (isAirborne())
 		return false;
 
-	bool result = false;
-
-	if (!isMarioInWater() && isFindMarioFromParam(param_1))
-		result = true;
-
+	bool result = !isMarioInWater() && isFindMarioFromParam(param_1);
 	return result;
 }
 
