@@ -1,28 +1,14 @@
-class TChuuHana {
-public:
-	static unsigned long mCheckOnPanelTimeRoll;
-	static unsigned long mCheckOnPanelTime;
-	static unsigned char mBodyJntIndex;
-	static unsigned char mEyeJntIndex;
-	static unsigned char mFootJntIndex;
-	static unsigned char mNewSw;
-	static unsigned char mCompareHeight;
-	static float mSmallMirrorR;
-	static float mMediumMirrorR;
-	static float mLargeMirrorR;
-	static unsigned char mAttackVersion;
-	static unsigned char mDamageSw;
-};
+#include <Enemy/ChuuHana.hpp>
 
-unsigned long TChuuHana::mCheckOnPanelTimeRoll = 20;
-unsigned long TChuuHana::mCheckOnPanelTime = 400;
-unsigned char TChuuHana::mBodyJntIndex = 1;
-unsigned char TChuuHana::mEyeJntIndex = 12;
-unsigned char TChuuHana::mFootJntIndex = 5;
-unsigned char TChuuHana::mNewSw = 1;
-unsigned char TChuuHana::mCompareHeight = 1;
-float TChuuHana::mSmallMirrorR = 650.0f;
-float TChuuHana::mMediumMirrorR = 900.0f;
-float TChuuHana::mLargeMirrorR = 1100.0f;
-unsigned char TChuuHana::mAttackVersion = 1;
-unsigned char TChuuHana::mDamageSw = 1;
+u32 TChuuHana::mCheckOnPanelTimeRoll = 20;
+u32 TChuuHana::mCheckOnPanelTime = 400;
+u8 TChuuHana::mBodyJntIndex = 1;
+u8 TChuuHana::mEyeJntIndex = 12;
+u8 TChuuHana::mFootJntIndex = 5;
+u8 TChuuHana::mNewSw = 1;
+u8 TChuuHana::mCompareHeight = 1;
+f32 TChuuHana::mSmallMirrorR = 650.0f;
+f32 TChuuHana::mMediumMirrorR = 900.0f;
+f32 TChuuHana::mLargeMirrorR = 1100.0f;
+u8 TChuuHana::mAttackVersion = 1;
+u8 TChuuHana::mDamageSw = 1;
