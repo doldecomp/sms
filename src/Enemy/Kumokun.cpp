@@ -401,9 +401,13 @@ bool TKumokun::checkOnMovingRoof(JGeometry::TVec3<f32>* param_1,
 
 	JGeometry::TVec3<f32> local_C0 = getPlaneNormal();
 	local_C0 *= -mHeadHeight / 2.0f;
+	f32 fVar31 = local_C0.y;
+	f32 fVar30 = local_C0.z;
 
 	JGeometry::TVec3<f32> local_b4 = param_3;
-	local_b4 += local_C0;
+	local_b4.x += local_C0.x;
+	local_b4.y += fVar31;
+	local_b4.z += fVar30;
 
 	JGeometry::TVec3<f32> local_A8 = local_b4;
 	local_A8 += param_4;
@@ -417,9 +421,9 @@ bool TKumokun::checkOnMovingRoof(JGeometry::TVec3<f32>* param_1,
 	    = gpMap->checkRoof(local_A8.x, yTmp - mHeadHeight, local_A8.z, param_2);
 	dVar10 -= 1.0f;
 	if (yTmp > dVar10 - 0.05f) {
-		local_A8.y = yTmp;
-	} else if (mHeadHeight < dVar10 - yTmp) {
-		local_A8.y = yTmp;
+		local_A8.y = dVar10;
+	} else if (dVar10 - yTmp < mHeadHeight) {
+		local_A8.y = dVar10;
 	} else {
 		uVar7 = true;
 		local_A8.set(local_b4);
@@ -436,7 +440,9 @@ bool TKumokun::checkOnMovingRoof(JGeometry::TVec3<f32>* param_1,
 		local_A8.z = local_8C.z;
 	}
 
-	local_A8 -= local_C0;
+	local_A8.x -= local_C0.x;
+	local_A8.y -= fVar31;
+	local_A8.z -= fVar30;
 
 	param_1->set(local_A8);
 	param_1->sub(param_3);
@@ -932,11 +938,11 @@ JGeometry::TVec3<f32> TKumokun::getPlaneNormal() const
 const TBGCheckData* TKumokun::checkWallPlane(JGeometry::TVec3<f32>* param_1,
                                              f32 param_2, f32 param_3)
 {
+	const TBGCheckData* wall = nullptr;
 	TBGWallCheckRecord record(param_1->x, param_1->y + param_2, param_1->z,
 	                          param_3, 1, 0);
 
-	const TBGCheckData* wall = nullptr;
-	if (gpMap->isTouchedWallsAndMoveXZ(&record))
+	if (gpMap->isTouchedWallsAndMoveXZ(&record) > 0)
 		wall = record.mResultWalls[0];
 
 	param_1->x = record.mCenter.x;
