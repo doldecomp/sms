@@ -114,7 +114,7 @@ int TMarDirector::direct()
 					pad->mButton.mRelease = 0;
 
 					unk18[i]->updateMeaning();
-					unk18[i]->offFlag(0x10);
+					unk18[i]->offFlag(TMarioGamePad::PAD_FLAG_0x40);
 				}
 			}
 
@@ -310,7 +310,10 @@ int TMarDirector::changeState()
 			if (iVar2 <= str->getWipeCloseTime()
 			    || ((curArea.getStage() != 1 || curArea.getScenario() != 1)
 			        && (curArea.getStage() != 1 || curArea.getScenario() != 9)
-			        && (unk18[0]->mEnabledFrameMeaning & 0x61))) {
+			        && unk18[0]->checkFrameMeaning(
+			            TMarioGamePad::MEANING_START
+			            | TMarioGamePad::MEANING_MENU_A
+			            | TMarioGamePad::MEANING_MENU_B))) {
 				unk4E |= 4;
 				mConsole->unk94->startCloseWipe((unk50 & 8) != 0);
 				unk50 &= ~0x8;
@@ -469,7 +472,7 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 		break;
 
 	case STATE_UNK1:
-		unk18[0]->mFlags &= ~0x1;
+		unk18[0]->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		gpCamera->endDemoCamera();
 		mConsole->unk94->startOpenWipe();
 		MSMainProc::endStageEntranceDemo(gpApplication.mCurrArea.unk0,
@@ -479,18 +482,18 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 	case STATE_UNK4:
 		if (unk124 == 0)
 			OSStopStopwatch(&unkE8);
-		unk18[0]->mFlags &= ~0x2;
+		unk18[0]->offFlag(TMarioGamePad::PAD_FLAG_GAME_INPUT);
 		break;
 
 	case STATE_PAUSE_MENU:
-		unk18[0]->mFlags &= ~0x1;
+		unk18[0]->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		SMSRumbleMgr->finishPause();
 		if (gpApplication.mCurrArea.unk0 == 1)
 			THPPlayerPlay();
 		break;
 
 	case STATE_GUIDE:
-		unk18[0]->mFlags &= ~0x1;
+		unk18[0]->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		SMSRumbleMgr->finishPause();
 
 		static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search("Group 2D"))
@@ -504,7 +507,7 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 		break;
 
 	case STATE_CARD_SAVE:
-		unk18[0]->mFlags &= ~0x1;
+		unk18[0]->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		SMSRumbleMgr->finishPause();
 		if (gpApplication.mCurrArea.unk0 == 1)
 			THPPlayerPlay();
@@ -612,7 +615,7 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 	switch (next_state) {
 	case 1: {
 		const char* pcVar8 = "startcamera";
-		unk18[0]->onFlag(0x1);
+		unk18[0]->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		unk68 = 0;
 		if (gpApplication.mCurrArea.unk0 == 1 && (unk4E & 2)) {
 			if (gpApplication.mCurrArea.unk1 == 8) {
@@ -682,7 +685,7 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		}
 		if (!unk124)
 			OSStartStopwatch(&unkE8);
-		unk18[0]->onFlag(0x2);
+		unk18[0]->onFlag(TMarioGamePad::PAD_FLAG_GAME_INPUT);
 		break;
 
 	case 12:
@@ -709,7 +712,7 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		unkAC->setDrawStart();
 		for (int i = 0; i < 4; ++i)
 			JUTGamePad::CRumble::stopMotor(unk18[i]->mPortNum);
-		unk18[0]->onFlag(0x1);
+		unk18[0]->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		break;
 
 	case 10:
@@ -718,7 +721,7 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		SMSRumbleMgr->startPause();
 		for (int i = 0; i < 4; ++i)
 			JUTGamePad::CRumble::stopMotor(unk18[i]->mPortNum);
-		unk18[0]->onFlag(0x1);
+		unk18[0]->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search("Group 2D"))
 		    ->unkC.on(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 		static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search("Guide"))
@@ -738,7 +741,7 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		unkAC->mCardSave->init(unk261);
 		for (int i = 0; i < 4; ++i)
 			JUTGamePad::CRumble::stopMotor(unk18[i]->mPortNum);
-		unk18[0]->onFlag(0x1);
+		unk18[0]->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		break;
 
 	case 7:
@@ -778,7 +781,7 @@ u8 TMarDirector::updateGameMode()
 					break;
 				}
 
-				if (unk18[0]->mEnabledFrameMeaning & 0x1) {
+				if (unk18[0]->checkFrameMeaning(TMarioGamePad::MEANING_START)) {
 					if (gpMarioOriginal->checkActionThing3()) {
 						r29 = STATE_PAUSE_MENU;
 						break;
@@ -930,7 +933,7 @@ u8 TMarDirector::updateGameMode()
 			if (unk126 == 0) {
 				unkA0 = 0;
 				unkA4 = 0;
-				unk18[0]->mFlags &= ~0x2;
+				unk18[0]->offFlag(TMarioGamePad::PAD_FLAG_TALK_SELECT);
 				OSStartStopwatch(&unkE8);
 			}
 			break;
@@ -941,7 +944,7 @@ u8 TMarDirector::updateGameMode()
 				MSMainProc::fromTalkingCameraDemo(unk124 == 4);
 			else
 				MSMainProc::fromInnerCameraDemo();
-			unk18[0]->mFlags &= ~0x80;
+			unk18[0]->offFlag(TMarioGamePad::PAD_FLAG_NO_INPUT);
 			OSStartStopwatch(&unkE8);
 			break;
 		}
@@ -953,7 +956,7 @@ u8 TMarDirector::updateGameMode()
 		case 1:
 			unkA0->onLiveFlag(LIVE_FLAG_UNK40000);
 			unkA0->unkC.off(CUE_MOVE | CUE_CALC_ANIM);
-			unk18[0]->mFlags |= 0x8;
+			unk18[0]->onFlag(TMarioGamePad::PAD_FLAG_TALK_SELECT);
 			OSStopStopwatch(&unkE8);
 			break;
 
@@ -968,7 +971,7 @@ u8 TMarDirector::updateGameMode()
 				MSMainProc::toTalkingCameraDemo();
 			else
 				MSMainProc::toInnerCameraDemo();
-			unk18[0]->mFlags |= 0x10;
+			unk18[0]->onFlag(TMarioGamePad::PAD_FLAG_NO_INPUT);
 			if (unk12C[unk24D].unk20.mValue == 1) {
 				gpCamera->startGateDemoCamera(unk12C[unk24D].unk1C);
 			} else {
