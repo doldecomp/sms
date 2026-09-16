@@ -2,6 +2,7 @@
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
 #include <Map/MapCollisionData.hpp>
+#include <Map/PollutionManager.hpp>
 #include <Player/MarioAccess.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/MathUtil.hpp>
@@ -20,6 +21,59 @@ void TMapObjBall::touchRoof(JGeometry::TVec3<f32>* param_1)
 
 	calcReflectingVelocity(unk13C, mMapObjData->mPhysical->unk4->unk4,
 	                       &mVelocity);
+}
+
+void TMapObjBall::touchWall(JGeometry::TVec3<f32>* param_1,
+                            TBGWallCheckRecord* param_2)
+{
+	// Hitting a wall while rolling on the ground pops the ball up a little,
+	// scaled by how fast it was going. The watermelon is too heavy for that.
+	if (!checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
+		if (!isActorType(0x400000D0)) {
+			JGeometry::TVec3<f32> vel(mVelocity);
+			mVelocity.y += unk184 * vel.length();
+		}
+	}
+
+	for (int i = 0; i < param_2->mResultWallsNum; ++i) {
+		const TBGCheckData* wall = param_2->mResultWalls[i];
+
+		JGeometry::TVec3<f32> vel(mVelocity);
+		f32 into = vel.x * wall->mNormal.x + vel.y * wall->mNormal.y
+		    + vel.z * wall->mNormal.z;
+		if (into >= 0.0f)
+			continue;
+
+		// Push the ball back out to exactly one radius from the plane.
+		f32 dist = param_1->x * wall->mNormal.x + param_1->y * wall->mNormal.y
+		        + param_1->z * wall->mNormal.z
+		    + wall->mPlaneDistance;
+		param_1->x += (mBodyRadius - dist) * wall->mNormal.x;
+		param_1->z += (mBodyRadius - dist) * wall->mNormal.z;
+
+		f32 bounce = into * -(1.0f + mMapObjData->mPhysical->unk4->unk8);
+		mVelocity.x += bounce * wall->mNormal.x;
+		mVelocity.z += bounce * wall->mNormal.z;
+
+		if (isActorType(0x400000D0)) {
+			if (mScaling.y >= 5.0f) {
+				JGeometry::TVec3<f32> after(mVelocity);
+				SMSGetMSound()->startSoundActorWithInfo(
+				    MSD_SE_OBJ_WATERMELON_BROLL, &mPosition, nullptr,
+				    abs(after.length()), 0, 0, nullptr, 0, 4);
+			} else {
+				JGeometry::TVec3<f32> after(mVelocity);
+				SMSGetMSound()->startSoundActorWithInfo(
+				    MSD_SE_OBJ_WATERMELON_SROLL, &mPosition, nullptr,
+				    abs(after.length()), 0, 0, nullptr, 0, 4);
+			}
+		} else {
+			u32 sound = mMapObjData->mSound->unk4->unk0[4];
+			SMSGetMSound()->startSoundActorWithInfo(sound, &mPosition,
+			                                        (Vec*)&mVelocity, 0.0f, 0,
+			                                        0, nullptr, 0, 4);
+		}
+	}
 }
 
 void TMapObjBall::touchPollution() { kill(); }
@@ -51,6 +105,56 @@ void TMapObjBall::rebound(JGeometry::TVec3<f32>* param_1)
 		                                        (Vec*)&mVelocity, 0.0f, 0, 0,
 		                                        nullptr, 0, 4);
 	}
+}
+
+void TMapObjBall::touchGround(JGeometry::TVec3<f32>* param_1)
+{
+	JGeometry::TVec3<f32> vel(mVelocity);
+	f32 speed = abs(vel.length());
+	if (speed > 0.05f) {
+		if (isActorType(0x400000D0)) {
+			// Big and small rolling samples, same split as rebound().
+			if (mScaling.y >= 5.0f) {
+				SMSGetMSound()->startSoundActorWithInfo(
+				    MSD_SE_OBJ_WATERMELON_BROLL, &mPosition, nullptr, speed, 0,
+				    0, nullptr, 0, 4);
+			} else {
+				SMSGetMSound()->startSoundActorWithInfo(
+				    MSD_SE_OBJ_WATERMELON_SROLL, &mPosition, nullptr, speed, 0,
+				    0, nullptr, 0, 4);
+			}
+		}
+	}
+
+	if (mGroundPlane->isWaterSurface()) {
+		touchWaterSurface();
+		param_1->set(mPosition);
+		return;
+	}
+
+	if (gpPollution->isPolluted(param_1->x, param_1->y, param_1->z)) {
+		touchPollution();
+		param_1->set(mPosition);
+		return;
+	}
+
+	// A slow enough impact settles instead of bouncing.
+	if (mVelocity.y > -unk188) {
+		offLiveFlag(LIVE_FLAG_AIRBORNE);
+		mVelocity.y = 0.0f;
+		param_1->y  = mGroundHeight;
+	} else {
+		rebound(param_1);
+	}
+
+	// Rolling downhill: the ground normal drags the ball along.
+	if (!checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
+		mVelocity.x += unk180 * mGroundPlane->mNormal.x;
+		mVelocity.z += unk180 * mGroundPlane->mNormal.z;
+	}
+
+	mVelocity.x *= mMapObjData->mPhysical->unk4->unk10;
+	mVelocity.z *= mMapObjData->mPhysical->unk4->unk10;
 }
 
 void TMapObjBall::put()
