@@ -312,7 +312,7 @@ void TFireWanwanManager::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (!gpMap->isInArea(wanwan->mPosition.x, wanwan->mPosition.z)
 		    || (wanwan->getGroundPlane()
 		        && wanwan->getGroundPlane()->isDeathPlane())) {
-			wanwan->kill();
+			wanwan->reset();
 		}
 	}
 
