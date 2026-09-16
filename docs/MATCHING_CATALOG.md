@@ -62,6 +62,14 @@ Six game units are a single unmatched function away from being source-linkable. 
 | `Camera/CameraTalk` | 152 of 448 | `makeMtxForPrevTalk` | 99.8% |
 | `Map/MapCollisionEntry` | 168 of 2656 | | |
 
+**All of the ones examined are blocked by the same frame-gap problem**, which means that gap gates the *link* metric too, not only matched bytes:
+
+- `TEggGenerator::control` — instruction-perfect, 24 bytes short.
+- `CPolarSubCamera::makeMtxForPrevTalk` — instruction-perfect, 16 bytes short.
+- `THitActor::calcEntryRadius` — no structural differences, 40 bytes short, plus register numbering. Its source already carries a `volatile f32` and a TODO asking whether a fast-sqrt helper exists; the target's `frsqrte`/`frsp`/`stfs`/`lfs` sequence has no Newton refinement, so it is **not** `JGeometry::TUtil<f32>::sqrt`, whose body adds one.
+
+So closing any single frame gap would likely convert a unit from unlinked to linked, which is worth more than the same effort spent on matched bytes elsewhere.
+
 Two investigated in detail, both dead ends worth recording:
 
 **`SMS_IsMarioOnWire`** — the original loads `mHolder` twice, once into r0 to test and once into r3 to dereference, where MWCC gives us one load reused. Four forms tried: short-circuit `&&` (93.8%, best), separate null check then else-if (90.0%), assigning the comparison to the result (54.7%), casting the holder before the member access (93.8%, byte-identical codegen). None defeats the common-subexpression elimination.
