@@ -1227,7 +1227,10 @@ void TFireWanwan::updatePollute()
 
 	mPolluteTimer = getSaveParam2()->mPolluteTimerMax.get();
 	MtxPtr mtx    = getModel()->getBaseTRMtx();
-	JGeometry::TVec3<f32> v1(mtx[0][0], mtx[1][0], mtx[2][0]);
+	JGeometry::TVec3<f32> v1;
+	v1.x = mtx[0][0];
+	v1.y = mtx[1][0];
+	v1.z = mtx[2][0];
 	v1.scaleAdd((MsRandF() - 0.5f) * 2.0f * mAttackRadius, mPosition, v1);
 
 	f32 radius = 375.0f;
