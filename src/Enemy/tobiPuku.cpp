@@ -138,7 +138,7 @@ DEFINE_NERVE(TNerveTobiPukuPrepareFly, TLiveActor)
 	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		f32 angle = puku->mLaunchRot.x;
+		f32 angle = puku->mLaunchAngle;
 		while (angle >= 360.0f)
 			angle -= 360.0f;
 		while (angle < 0.0f)
@@ -416,7 +416,7 @@ DEFINE_NERVE(TNerveTobiPukuGenerate, TLiveActor)
 		puku->mBoundCount = 0;
 		puku->unk194      = 1;
 		puku->mVelocity   = puku->mLaunchVelocity;
-		puku->mLaunchRot.x = MsGetRotFromZaxis(puku->mVelocity).x;
+		puku->mLaunchAngle = MsGetRotFromZaxis(puku->mVelocity).x;
 		puku->generateEffectColumWater();
 		puku->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		puku->offLiveFlag(LIVE_FLAG_UNK10);

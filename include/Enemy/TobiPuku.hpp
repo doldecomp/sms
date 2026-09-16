@@ -78,13 +78,16 @@ public:
 	/* 0x1AE */ u8 unk1AE;
 	/* 0x1AF */ u8 unk1AF;
 	/* 0x1B0 */ f32 unk1B0;
-	/* 0x1B4 */ JGeometry::TVec3<f32> mLaunchRot;
-	/* 0x1C0 */ u8 unk1C0[0x1D0 - 0x1C0];
+	// 0x1B4 is a scalar, not a vector: the Land nerve uses 0x1B8 onwards as
+	// its own landing position and delta.
+	/* 0x1B4 */ f32 mLaunchAngle;
+	/* 0x1B8 */ JGeometry::TVec3<f32> mLandPos;
+	/* 0x1C4 */ JGeometry::TVec3<f32> mLandDelta;
 	/* 0x1D0 */ JGeometry::TVec3<f32> mLaunchVelocity;
 	/* 0x1DC */ TTobiPukuLaunchPad* mLaunchPad;
 	/* 0x1E0 */ f32 mSwimBaseY;
 	/* 0x1E4 */ f32 mFlyVelocityY;
-	/* 0x1E8 */ u8 unk1E8[0x1EC - 0x1E8];
+	/* 0x1E8 */ f32 mReturnPitchStep;
 	/* 0x1EC */ f32 unk1EC;
 	/* 0x1F0 */ f32 mRotStep;
 	/* 0x1F4 */ u8 unk1F4[0x1FC - 0x1F4];
