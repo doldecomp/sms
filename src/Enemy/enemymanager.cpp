@@ -260,7 +260,8 @@ void TEnemyManager::copyFromShared()
 
 void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 {
-	TTimeRec::startTimer();
+	if (unk30 & 1)
+		TTimeRec::startTimer();
 
 	int num2     = getActiveObjNum();
 	int aliveNum = 0;
@@ -276,9 +277,13 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 
 	if (param_1 & CUE_CALC_ANIM) {
 		clipEnemies(param_2);
-		for (int i = 0; i < unk44; ++i)
-			for (int j = 0; j < unk40[i].unk4; ++j)
-				unk40[i].unk0[j]->calcAnm();
+		int j;
+		TSharedMActorSet* set;
+		for (int i = 0; i < unk44; ++i) {
+			set = &unk40[i];
+			for (j = 0; j < set->unk4; ++j)
+				set->unk0[j]->calcAnm();
+		}
 		setSharedFlags();
 		updateAnmSoundShared();
 	}
@@ -318,20 +323,20 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 			} else {
 				enemy->getMActor()->matAnmFrameUpdate();
 			}
+		}
 
-			if (param_1 & CUE_CALC_VIEW)
-				enemy->requestShadow();
+		if (param_1 & CUE_CALC_VIEW)
+			enemy->requestShadow();
 
-			if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN
-			                          | LIVE_FLAG_CLIPPED_OUT)) {
-				if ((param_1 & CUE_CALC_VIEW)
-				    && !enemy->checkLiveFlag(LIVE_FLAG_UNK4000))
-					enemy->getMActor()->viewCalc();
-				if (param_1 & CUE_ENTRY) {
-					enemy->getMActor()->setLightData(enemy->getGroundPlane(),
-					                                 enemy->mPosition);
-					enemy->getMActor()->entry();
-				}
+		if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN
+		                          | LIVE_FLAG_CLIPPED_OUT)) {
+			if ((param_1 & CUE_CALC_VIEW)
+			    && !enemy->checkLiveFlag(LIVE_FLAG_UNK4000))
+				enemy->getMActor()->viewCalc();
+			if (param_1 & CUE_ENTRY) {
+				enemy->getMActor()->setLightData(enemy->getGroundPlane(),
+				                                 enemy->mPosition);
+				enemy->getMActor()->entry();
 			}
 		}
 	}
