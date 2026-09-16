@@ -109,8 +109,9 @@ bool TWireBinder::isEndWire(const JGeometry::TVec3<f32>& param_1,
 {
 	f32 posInWire = getRangePos(param_1);
 	f32 targetPos = 0.0f < param_2 ? 1.0f : 0.0f;
+	f32 fVar = posInWire - targetPos;
 
-	return fabsf(posInWire - targetPos) < 0.015f;
+	return fabsf(fVar) < 0.015f;
 }
 
 void TWireBinder::getStartRangePos(f32) { }
