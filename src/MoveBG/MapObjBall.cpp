@@ -7,6 +7,8 @@
 #include <MoveBG/ItemManager.hpp>
 #include <Camera/CubeManagerBase.hpp>
 #include <Enemy/PoiHana.hpp>
+#include <MoveBG/Item.hpp>
+#include <string.h>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <stdio.h>
 #include <string.h>
@@ -1191,4 +1193,47 @@ void TBigWatermelon::touchActor(THitActor* param_1)
 	}
 
 	TMapObjBall::touchActor(param_1);
+}
+
+void TBigWatermelon::startEvent()
+{
+	// Only the one big watermelon on the Sirena roof runs the shine demo;
+	// the others just burst into coins.
+	if (strcmp(getName(), "スイカ（大）") == 0) {
+		mPosition.x = -4660.0f;
+		mPosition.y = 1300.0f;
+		mPosition.z = 13600.0f;
+
+		offMapObjFlag(MAP_OBJ_FLAG_UNK100);
+		onLiveFlag(LIVE_FLAG_UNK10);
+		mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
+		onLiveFlag(LIVE_FLAG_UNK10);
+		startAnim(7);
+
+		gpMarDirector->fireStartDemoCamera("スイカゴールカメラ", &mPosition, -1,
+		                                   0.0f, true, nullptr, 0, nullptr,
+		                                   JDrama::TFlagT<u16>(0));
+		gpItemManager->makeShineAppearWithDemoOffset(
+		    "シャイン（お化けスイカ用）", "スイカシャインカメラ", 0.0f, 0.0f,
+		    0.0f);
+
+		mStateTimer = 380;
+		mState      = STATE_BROKEN;
+		return;
+	}
+
+	for (int i = 0; i < 10; ++i) {
+		TCoin* coin = (TCoin*)gpItemManager->makeObjAppear(
+		    SMS_GetMarioPos().x, SMS_GetMarioPos().y, SMS_GetMarioPos().z,
+		    0x2000000E, true);
+		if (coin) {
+			coin->mVelocity.set(20.0f * (MsRandF() - 0.5f),
+			                    20.0f * MsRandF() + 20.0f,
+			                    20.0f * (MsRandF() - 0.5f));
+			coin->offLiveFlag(LIVE_FLAG_UNK10);
+			coin->unk14C = 0x3C0;
+		}
+	}
+
+	makeObjDead();
 }
