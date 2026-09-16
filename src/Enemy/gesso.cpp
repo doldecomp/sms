@@ -481,7 +481,7 @@ void TGesso::polluteBehavior()
 	if (mSpine->getCurrentNerve() == &TNerveGessoPollute::theNerve())
 		return;
 
-	if (mPollutionTimer < unk1E8->mSLPollutionInterval.get())
+	if (mPollutionTimer <= unk1E8->mSLPollutionInterval.get())
 		return;
 
 	if (!MsIsInSight(mPosition, getSightDirection(), SMS_GetMarioPos(),
