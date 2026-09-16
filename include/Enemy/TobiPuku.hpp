@@ -41,7 +41,7 @@ public:
 	virtual BOOL isJumpBck();
 	virtual BOOL isDeadBck();
 	virtual bool isJumpStartBck();
-	virtual BOOL isAttackBck();
+	virtual bool isAttackBck();
 	virtual BOOL isFallEndLandBck();
 	virtual void setJumpAnm();
 	virtual void setJumpStartAnm();
@@ -111,7 +111,7 @@ public:
 	virtual BOOL isJumpBck();
 	virtual BOOL isDeadBck();
 	virtual bool isJumpStartBck();
-	virtual BOOL isAttackBck();
+	virtual bool isAttackBck();
 	virtual BOOL isFallEndLandBck();
 	virtual void setJumpAnm();
 	virtual void setJumpStartAnm();

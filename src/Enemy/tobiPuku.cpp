@@ -4,6 +4,7 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <Map/MapData.hpp>
 #include <Enemy/SmallEnemy.hpp>
+#include <Player/MarioAccess.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
@@ -64,7 +65,7 @@ void TTobiPuku::setJumpStartAnm()
 void TTobiPuku::setPichiAnm() { setBckAnm(PUKU_ANM_PICHI); }
 void TTobiPuku::setSwimAnm() { setBckAnm(PUKU_ANM_SWIM); }
 
-BOOL TTobiPuku::isAttackBck() { return isBckAnm(PUKU_ANM_ATTACK) ? TRUE : FALSE; }
+bool TTobiPuku::isAttackBck() { return isBckAnm(PUKU_ANM_ATTACK) ? true : false; }
 BOOL TTobiPuku::isDeadBck() { return isBckAnm(PUKU_ANM_DEAD) ? TRUE : FALSE; }
 BOOL TTobiPuku::isFallEndLandBck()
 {
@@ -92,7 +93,7 @@ void TMoePuku::setJumpStartAnm()
 void TMoePuku::setPichiAnm() { setBckAnm(PUKU_ANM_PICHI); }
 void TMoePuku::setSwimAnm() { setBckAnm(PUKU_ANM_SWIM); }
 
-BOOL TMoePuku::isAttackBck() { return isBckAnm(PUKU_ANM_ATTACK) ? TRUE : FALSE; }
+bool TMoePuku::isAttackBck() { return isBckAnm(PUKU_ANM_ATTACK) ? true : false; }
 BOOL TMoePuku::isDeadBck() { return isBckAnm(PUKU_ANM_DEAD) ? TRUE : FALSE; }
 BOOL TMoePuku::isFallEndLandBck()
 {
@@ -300,7 +301,44 @@ DEFINE_NERVE(TNerveTobiPukuFall, TLiveActor)
 }
 
 // TODO: incorrect size. Map records 0x250 (592 bytes).
-DEFINE_NERVE(TNerveTobiPukuHitWater, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveTobiPukuHitWater, TLiveActor)
+{
+	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		if (puku->isAirborne()) {
+			if (puku->mPosition.y - puku->mGroundHeight > 50.0f) {
+				puku->setAttackAnm();
+				puku->hitWater();
+			}
+		} else if (puku->unk1AE != 0) {
+			puku->setPichiAnm();
+		}
+	}
+
+	if (!puku->isAirborne()) {
+		JGeometry::TVec3<f32> away(puku->mPosition.x - SMS_GetMarioPos().x,
+		                           0.0f,
+		                           puku->mPosition.z - SMS_GetMarioPos().z);
+		if (away.x == 0.0f && away.y == 0.0f && away.z == 0.0f)
+			away.x += 1.0f;
+
+		MsVECNormalize(away, away);
+		away.y = 5.0f;
+		away.x *= 5.0f;
+		away.z *= 5.0f;
+		puku->mVelocity = away;
+		puku->onLiveFlag(LIVE_FLAG_AIRBORNE);
+		puku->mPosition.y += away.y;
+	}
+
+	if (puku->checkCurAnmEnd(0)) {
+		if (puku->isAttackBck())
+			spine->pushAfterCurrent(&TNerveTobiPukuFall::theNerve());
+		return TRUE;
+	}
+	return FALSE;
+}
 
 // TODO: incorrect size. Map records 0x198 (408 bytes).
 DEFINE_NERVE(TNerveTobiPukuAttack, TLiveActor)
