@@ -1024,7 +1024,7 @@ void TModelWaterManager::drawSilhouette(MtxPtr param_1)
 
 	SMS_SettingDrawShape(unk5D58, 0);
 	for (int i = 0; i < mParticleCount; ++i) {
-		if ((mParticleFlagSOA[i] & 0xf) == 2) {
+		if ((mParticleFlagSOA[i] & 0xf) == 3) {
 			GXLoadPosMtxImm(unk2D14[i], GX_PNMTX0);
 			SMS_DrawShape(unk5D58, 0);
 		}
@@ -1039,7 +1039,7 @@ void TModelWaterManager::drawSilhouette(MtxPtr param_1)
 	GXSetChanMatColor(
 	    GX_COLOR0A0,
 	    (GXColor) { 0xff, 0xff, 0xff,
-	                unk5D5D * gpSilhouetteManager->unk48 * 0.00390625f });
+	                unk5D5D * (gpSilhouetteManager->unk48 * 0.00390625f) });
 	GXSetBlendMode(GX_BM_BLEND, GX_BL_DSTALPHA, GX_BL_ZERO, GX_LO_NOOP);
 	if (unk5D60 & 0x20)
 		SMS_DrawCube(unk5D70, unk5D7C);
