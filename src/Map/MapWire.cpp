@@ -173,7 +173,11 @@ void TMapWire::updateMovePointAtReleased() { }
 void TMapWire::initPointAtJustReleased(f32 pos, TMapWirePoint* point)
 {
 	point->mPosOnWire = pos;
-	getPointPosAtReleased(pos, &point->mPosition);
+
+	JGeometry::TVec3<f32> outPoint;
+	getPointPosAtReleased(pos, &outPoint);
+	point->mPosition.set(outPoint.x, outPoint.y, outPoint.z);
+
 	point->mPosReturnRate = (point->mDefaultPosOnWire - pos) / 1000.0f;
 }
 
@@ -204,15 +208,14 @@ void TMapWire::release()
 
 	if (mNumMapWirePoints - halfNumPoints != 0) {
 		f32 posAdvancePerPoint
-		    = (1.0f - mHangPos) / (mNumActiveMapWirePoints - halfNumPoints);
+		    = (1.0f - mHangPos) / (mNumMapWirePoints - halfNumPoints);
 
 		for (int i = halfNumPoints; i < mNumActiveMapWirePoints; i++) {
-			TMapWirePoint* mapWirePoint = &mMapWirePoints[i];
-			mapWirePoint->reset();
+			mMapWirePoints[i].reset();
 
 			initPointAtJustReleased(posAdvancePerPoint * (i - halfNumPoints + 1)
 			                            + mHangPos,
-			                        mapWirePoint);
+			                        &mMapWirePoints[i]);
 		}
 	}
 
