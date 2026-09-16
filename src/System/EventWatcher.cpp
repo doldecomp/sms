@@ -720,7 +720,8 @@ static void evKillMushroom1up(TSpcTypedInterp<TEventWatcher>* interp,
                               u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
-	((TMushroom1up*)getNameRefPtr(interp->pop()))->kill();
+	TMushroom1up* mushroom = (TMushroom1up*)getNameRefPtr(interp->pop());
+	mushroom->kill();
 	interp->push();
 }
 
