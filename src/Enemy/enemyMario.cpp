@@ -683,8 +683,12 @@ void TEnemyMario::emWaiting()
 	if (mDistanceToMario < 800.0f)
 		changeEMDoing(EM_DOING_RUN_AWAY);
 
-	if (mDistanceToMario > 1500.0f || rand() < 0x88)
-		changeEMWalkGraph();
+	if (mDistanceToMario > 1500.0f || rand() < 0x88) {
+		TEMario* emario = mEMario;
+		emario->getTracer()->reset();
+		emario->goToShortestNextGraphNode();
+		changeEMDoing(EM_DOING_WALK_GRAPH);
+	}
 }
 
 void TEnemyMario::emRunAway()
