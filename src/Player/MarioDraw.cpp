@@ -1459,8 +1459,8 @@ void TMario::considerWaist()
 {
 	// volatile u32 padding[6];
 	f32 maxPitch;
-	f32 targetPitch;
 	f32 angleChangeRate;
+	f32 targetPitch;
 
 	// Possibly unused get params function?
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
@@ -1499,8 +1499,8 @@ void TMario::considerWaist()
 	targetPitch = targetPitchCopy;
 	mWaistPitch += angleChangeRate * (targetPitch - mWaistPitch);
 
-	f32 rollMax;
 	f32 targetRoll;
+	f32 rollMax;
 	s16 diffAngle = mFaceAngle.y - unk9C;
 	// Possibly unused get params function?
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
