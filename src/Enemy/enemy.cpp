@@ -232,11 +232,13 @@ f32 TSpineEnemy::calcTurnSpeedToReach(f32 march_speed, f32 param_2) const
 	if (dVar11 == -1.0f)
 		return 180.0f;
 
-	f32 fVar32 = -(dVar11 * dVar11 - 1.0f);
+	JGeometry::TVec2<f32> v;
+	v.set(dVar11, 1.0f - dVar11 * dVar11);
 
 	// TODO: THitActor::calcEntryRadius has same problem
-	volatile f32 f = fVar32 * __frsqrte(fVar32);
-	f32 tmp        = matan(f, dVar11) * (360.0f / 65536.0f);
+	f64 estimate   = __frsqrte(v.y);
+	volatile f32 f = v.y * estimate;
+	f32 tmp        = matan(f, v.x) * (360.0f / 65536.0f);
 	return 90.0f - tmp;
 }
 
