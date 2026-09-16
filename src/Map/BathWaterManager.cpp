@@ -1707,10 +1707,33 @@ f32 TBathWaterManager::getWaterHeight(f32 x, f32 z) const
 }
 
 namespace {
-void CalcJumpVelocityY(const JGeometry::TVec3<f32>&,
-                       const JGeometry::TVec3<f32>&, f32, f32, f32,
-                       JGeometry::TVec3<f32>*)
+inline void CalcJumpVelocityY(const JGeometry::TVec3<f32>& param_1,
+                              const JGeometry::TVec3<f32>& param_2, f32 param_3,
+                              f32 param_4, f32 param_5,
+                              JGeometry::TVec3<f32>* param_6)
 {
+	f32 currY    = param_2.y;
+	f32 desiredY = param_1.y;
+
+	int ticks = 1;
+	for (f32 ySpeed = param_3;;) {
+		currY += ySpeed;
+		if (ySpeed < 0.0f && currY <= desiredY)
+			break;
+		ySpeed -= param_4;
+		if (ySpeed < param_5)
+			ySpeed = param_5;
+		++ticks;
+	}
+
+	f32 dx;
+	f32 dz;
+	f32 frequency = 1.0f / ticks;
+	dx            = param_1.x - param_2.x;
+	dz            = param_1.z - param_2.z;
+	param_6->x    = frequency * dx;
+	param_6->y    = param_3;
+	param_6->z    = frequency * dz;
 }
 } // namespace
 
@@ -1719,10 +1742,15 @@ void TBathWaterManager::throwMario(f32 param_1)
 	const TBathtubData& data = unk24->getBathtubData();
 
 	JGeometry::TVec3<f32> diff;
-	diff.sub(SMS_GetMarioPos(), data.mPos);
+	diff.sub(*gpMarioPos, data.mPos);
 
 	JGeometry::TVec3<f32> local;
-	data.unk18.mult33(diff, local);
+	local.set(data.unk18.at(2, 0) * diff.z + data.unk18.at(0, 0) * diff.x
+	              + data.unk18.at(1, 0) * diff.y,
+	          data.unk18.at(2, 1) * diff.z + data.unk18.at(0, 1) * diff.x
+	              + data.unk18.at(1, 1) * diff.y,
+	          data.unk18.at(2, 2) * diff.z + data.unk18.at(0, 2) * diff.x
+	              + data.unk18.at(1, 2) * diff.y);
 
 	JGeometry::TVec3<f32> horiz;
 	horiz   = local;
@@ -1733,27 +1761,15 @@ void TBathWaterManager::throwMario(f32 param_1)
 		horiz.setLength(4150.0f);
 
 		JGeometry::TVec3<f32> w;
-		data.unk18.mult33(horiz, w);
-		w += data.mPos;
-		w.y += 120.0f;
+		w.set(data.mPos.x + data.unk18.at(2, 0) * horiz.x
+		          + data.unk18.at(0, 0) * horiz.z,
+		      data.mPos.y + data.unk18.at(2, 1) * horiz.x
+		          + data.unk18.at(0, 1) * horiz.z + 120.0f,
+		      data.mPos.z + data.unk18.at(2, 2) * horiz.x
+		          + data.unk18.at(0, 2) * horiz.z);
 
-		f32 gravity = SMS_GetMarioGravity();
-		int count   = 1;
-		f32 vy      = 100.0f;
-		f32 y       = gpMarioPos->y;
-		while (true) {
-			y += vy;
-			if (vy < 0.0f && y <= w.y)
-				break;
-			vy -= gravity;
-			if (vy < -75.0f)
-				vy = -75.0f;
-			count++;
-		}
-
-		vel.x = (w.x - gpMarioPos->x) / (f32)count;
-		vel.y = 100.0f;
-		vel.z = (w.z - gpMarioPos->z) / (f32)count;
+		CalcJumpVelocityY(w, *gpMarioPos, 100.0f, SMS_GetMarioGravity(),
+		                  -75.0f, &vel);
 	} else {
 		vel.x = 0.0f;
 		vel.y = param_1;
