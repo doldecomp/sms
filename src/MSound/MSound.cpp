@@ -795,7 +795,7 @@ void MSound::setSeExtParameter(JAISound* sound)
 void MSound::playTimer(u32 time)
 {
 	if (checkUnkA8(1)) {
-		MSoundSESystem::MSoundSE::startSoundActorInner(
+		JAISound* sound = MSoundSESystem::MSoundSE::startSoundActorInner(
 		    MSD_SE_SY_TIMER, nullptr, (JAIActor*)0xffffffff, 0, 4);
 
 		if (time > 0x7530) {
