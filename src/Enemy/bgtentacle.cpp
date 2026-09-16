@@ -44,7 +44,7 @@ inline bool TBGTentacle::isAttackable()
 const char* tstatestr[] = {
 	"TSTATE_WAIT",     "TSTATE_ATTACK", "TSTATE_REST", "TSTATE_HELD",
 	"TSTATE_AMPUTEE",  "TSTATE_STUN",   "TSTATE_HIDE", "TSTATE_FOLLOWBODY",
-	"TSTATE_SYNCBODY", "TSTATE_GUARD",
+	"TSTATE_SYNCBODY", "TSTATE_GUARD", nullptr,
 };
 
 TBGTentacle::TTentacleParams::TTentacleParams(const char* path)
@@ -759,18 +759,18 @@ void TBGTentacle::changeStateAndFixNodes(int new_state)
 
 	switch (mState) {
 	case 1:
-		getFirstNode()->onUnk24();
+		mNodes[0].onUnk24();
 		setAttackTarget();
 		break;
 
 	case 4:
 		if (unk48) {
-			getLastNode()->onUnk24();
+			mNodes[mNodeNum - 1].onUnk24();
 			break;
 		}
 
 		{
-			getLastNode()->onUnk24();
+			mNodes[mNodeNum - 1].onUnk24();
 			mOwner->gotTentacleDamage();
 			unk48        = 1;
 			mDamageCount = 0;
@@ -780,12 +780,12 @@ void TBGTentacle::changeStateAndFixNodes(int new_state)
 			gpMarioParticleManager->emitAndBindToMtxPtr(0x95, mtx, 0, nullptr);
 			gpMarioParticleManager->emitAndBindToMtxPtr(0x96, mtx, 0, nullptr);
 
-			mOwner->rumblePad(1, mOwner->getPosition());
+			mOwner->rumblePad(1, mOwner->mPosition);
 		}
 		break;
 
 	case 5: {
-		getFirstNode()->onUnk24();
+		mNodes[0].onUnk24();
 		if (mOwner->getAttackMode() == 6)
 			mNodes[1].onUnk24();
 		JGeometry::TVec3<f32> zero;
@@ -796,12 +796,12 @@ void TBGTentacle::changeStateAndFixNodes(int new_state)
 	}
 
 	case 3:
-		getFirstNode()->onUnk24();
-		getLastNode()->onUnk24();
+		mNodes[0].onUnk24();
+		mNodes[mNodeNum - 1].onUnk24();
 		break;
 
 	case 10:
-		getFirstNode()->onUnk24();
+		mNodes[0].onUnk24();
 		unk80->setBckFromIndex(0x16);
 		break;
 
@@ -809,16 +809,16 @@ void TBGTentacle::changeStateAndFixNodes(int new_state)
 	case 2:
 	case 7:
 	case 8:
-		getFirstNode()->onUnk24();
+		mNodes[0].onUnk24();
 		break;
 
 	case 9:
-		getFirstNode()->onUnk24();
+		mNodes[0].onUnk24();
 		mNodes[1].onUnk24();
 		break;
 
 	case 6:
-		getFirstNode()->onUnk24();
+		mNodes[0].onUnk24();
 		mDamageCount = 0;
 		unk48        = 0;
 		break;
