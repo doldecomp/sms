@@ -757,6 +757,9 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 	return 1;
 }
 
+const Vec cMarioFootDirZero[2] = { { 0.0f, 0.0f, 0.0f },
+                                   { 0.0f, 0.0f, 0.0f } };
+
 void TMario::getJumpIntoWaterModelData() { }
 
 void TMario::getHeadRot() { }
@@ -1121,9 +1124,9 @@ void TMario::initModel()
 	    JKRFileLoader::getGlbResource("/mario/bmd/ma_mdl1.bmd"),
 	    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift));
 	mJointIdCenter = mBodyModelData->getJointName()->getIndex("center");
-	mJointIdChest  = mBodyModelData->getJointName()->getIndex("jnt_chest");
 	mJointIdChnChest
 	    = mBodyModelData->getJointName()->getIndex("chn_chest");
+	mJointIdChest = mBodyModelData->getJointName()->getIndex("jnt_chest");
 	mJointIdArmR1    = mBodyModelData->getJointName()->getIndex("jnt_arm_R1");
 	mJointIdArmL1    = mBodyModelData->getJointName()->getIndex("jnt_arm_L1");
 	mJointIdHandR    = mBodyModelData->getJointName()->getIndex("jnt_hand_R");
@@ -1413,9 +1416,6 @@ void TMario::initModel()
 
 	unk3A4 = new SampleCtrlModelData(mBodyModelData);
 }
-
-const Vec cMarioFootDirZero[2] = { { 0.0f, 0.0f, 0.0f },
-                                   { 0.0f, 0.0f, 0.0f } };
 
 void TMario::initMirrorModel()
 {
@@ -2265,3 +2265,4 @@ void TMario::addDamageFog(JDrama::TGraphics* graphics)
 		}
 	}
 }
+
