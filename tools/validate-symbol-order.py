@@ -54,8 +54,44 @@ from typing import Dict, List, Optional, Tuple
 script_dir = os.path.dirname(os.path.realpath(__file__))
 root_dir = os.path.abspath(os.path.join(script_dir, ".."))
 
-DEFAULT_MAP = os.path.join(root_dir, "orig", "GMSJ01", "files", "mario.MAP")
-NM = os.environ.get("NM", os.path.join(root_dir, "build", "binutils", "powerpc-eabi-nm.exe"))
+def _default_map() -> str:
+    """Pick the map for the version this tree is configured for.
+
+    The map lives under a version-specific directory and the US disc spells it
+    `marioUS.MAP`, so a hardcoded GMSJ01 path makes the check unrunnable on any
+    other version. Prefer whatever `build/` was configured for, then fall back
+    to the first candidate that exists.
+    """
+    candidates = [
+        ("GMSJ01", "mario.MAP"),
+        ("GMSE01", "marioUS.MAP"),
+        ("GMSP01", "mario.MAP"),
+    ]
+    configured = None
+    for version, _ in candidates:
+        if os.path.isdir(os.path.join(root_dir, "build", version)):
+            configured = version
+            break
+    if configured is not None:
+        candidates.sort(key=lambda c: c[0] != configured)
+    for version, name in candidates:
+        path = os.path.join(root_dir, "orig", version, "files", name)
+        if os.path.isfile(path):
+            return path
+    return os.path.join(root_dir, "orig", "GMSJ01", "files", "mario.MAP")
+
+
+DEFAULT_MAP = _default_map()
+def _default_nm() -> str:
+    """binutils ships unsuffixed on Linux and as `.exe` on Windows."""
+    base = os.path.join(root_dir, "build", "binutils", "powerpc-eabi-nm")
+    for path in (base, base + ".exe"):
+        if os.path.isfile(path):
+            return path
+    return base + ".exe"
+
+
+NM = os.environ.get("NM", _default_nm())
 OBJDIFF_JSON = os.path.join(root_dir, "objdiff.json")
 
 
