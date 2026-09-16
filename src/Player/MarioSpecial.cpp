@@ -1024,7 +1024,23 @@ BOOL TMario::wireRolling()
 	s16 initialAngle = mFaceAngle.x;
 
 	s16 wireAngle;
-	getOnWirePosAngle(&mPosition, &wireAngle);
+	JGeometry::TVec3<f32> start = mWireStartPos;
+	JGeometry::TVec3<f32> dir;
+	dir = mWireEndPos - start;
+	mPosition = dir * mWirePosRatio + start;
+	mPosition.y -= 160.0f;
+	Mtx rotA;
+	J3DGetTranslateRotateMtx(mFaceAngle.x, 0, 0, 0.0f, 0.0f, 0.0f, rotA);
+	Mtx rotB;
+	J3DGetTranslateRotateMtx(0, mFaceAngle.y, 0, 0.0f, 0.0f, 0.0f, rotB);
+	Mtx concat;
+	MTXConcat(rotB, rotA, concat);
+	JGeometry::TVec3<f32> sagVec(0.0f, -mWireSag * 1.0f, 0.0f);
+	MTXMultVec(concat, &sagVec, &sagVec);
+	mPosition.x += sagVec.x;
+	mPosition.y += sagVec.y;
+	mPosition.z += sagVec.z;
+	wireAngle = matan(dir.z, dir.x);
 
 	if (mInput & 0x2)
 		mStatusState |= 1;
