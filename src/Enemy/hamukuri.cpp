@@ -1705,7 +1705,12 @@ void THaneHamuKuri2::walkBehavior(int param_1, f32 param_2)
 
 BOOL THaneHamuKuri2::isReachedToGoal() const
 {
-	JGeometry::TVec3<f32> local_c = unk104.getPoint();
+	THitActor* actor;
+	const TPathNode* node = &unk104;
+	actor = node->unk0;
+	const JGeometry::TVec3<f32>& point
+	    = actor != 0 ? actor->mPosition : node->unk4;
+	JGeometry::TVec3<f32> local_c = point;
 	local_c -= mPosition;
 	local_c.y = 0.0f;
 	if (MsVECMag2(&local_c) < 20.0f)
