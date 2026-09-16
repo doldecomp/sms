@@ -1,3 +1,4 @@
+#include <M3DUtil/InfectiousStrings.hpp>
 #include <Map/Map.hpp>
 #include <Map/MapCollisionData.hpp>
 #include <Map/MapModel.hpp>
@@ -26,7 +27,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 TMap* gpMap;
 
@@ -84,19 +84,19 @@ static void initMare()
 
 	{
 		TMareEventDepressWall* event
-		    = new TMareEventDepressWall("イベント(マーレへこむ壁)");
+		    = new TMareEventDepressWall("イベント（マーレへこむ壁）");
 		event->init1stEvent();
 		group->getChildren().push_back(event);
 	}
 	{
 		TMareEventDepressWall* event
-		    = new TMareEventDepressWall("イベント(マーレへこむ壁)");
+		    = new TMareEventDepressWall("イベント（マーレへこむ壁）");
 		event->init2ndEvent();
 		group->getChildren().push_back(event);
 	}
 	{
 		TMareEventDepressWall* event
-		    = new TMareEventDepressWall("イベント(マーレへこむ壁)");
+		    = new TMareEventDepressWall("イベント（マーレへこむ壁）");
 		event->init3rdEvent();
 		group->getChildren().push_back(event);
 	}
