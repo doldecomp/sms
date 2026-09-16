@@ -35,6 +35,7 @@ public:
 	virtual void walkBehavior(int, f32);
 	virtual void scalingChangeActor();
 	virtual void changeOut();
+	virtual void reset();
 
 	// New virtuals, declared in the order the vtable lists them
 	// (0x1b8 onwards).

@@ -8,6 +8,9 @@
 #include <Enemy/PathNode.hpp>
 #include <Enemy/Conductor.hpp>
 #include <MoveBG/MapObjBlock.hpp>
+#include <Enemy/EffectObj.hpp>
+#include <MSound/MSound.hpp>
+#include <MSound/MSoundSE.hpp>
 #include <System/Particles.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
 
@@ -730,6 +733,61 @@ void TTobiPuku::moveObject()
 // TODO: 97.3%. One instruction differs: the original computes &unk104 into a
 // register before the inlined getPoint, which neither the direct expression nor
 // binding the result to a reference reproduces.
+void TTobiPuku::initAttacker(THitActor* param_1)
+{
+	mRotation = param_1->mRotation;
+	mSpine->pushNerve(&TNerveTobiPukuFly::theNerve());
+	unk184 = 1;
+}
+
+void TTobiPuku::generateEffectColumWater()
+{
+	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT))
+		return;
+
+	TEffectColumWater* enemy
+	    = (TEffectColumWater*)gpConductor->makeOneEnemyAppear(
+	        mPosition, "エフェクト水柱マネージャー", 0);
+
+	if (enemy)
+		enemy->generate(mPosition, mScaling);
+
+	// Coming up out of the water while the Generate nerve is still running
+	// is the "from water" cue; anything else is an entry splash.
+	if (mSpine->getCurrentNerve() != &TNerveTobiPukuGenerate::theNerve())
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_TOBIPUKU_TOWATER,
+		                                &mPosition, 0, nullptr, 0, 4);
+	else
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_TOBIPUKU_FRWATER,
+		                                &mPosition, 0, nullptr, 0, 4);
+}
+
+void TTobiPuku::walkBehavior(int param_1, f32 param_2)
+{
+	TWalkerEnemy::walkBehavior(param_1, param_2);
+
+	f32 prevY   = mPosition.y;
+	mPosition.y = mSwimBaseY + 10.0f * JMASin(2.0f * mSpine->getTime());
+
+	// Only the pitch is taken: the bob is vertical, so yaw and roll are
+	// left to whatever TWalkerEnemy::walkBehavior set.
+	JGeometry::TVec3<f32> vel(mLinearVelocity);
+	vel.y         = prevY - mPosition.y;
+	mRotation.x = MsGetRotFromZaxis(vel).x;
+}
+
+void TTobiPuku::reset()
+{
+	gpCurTobiPuku = (TMoePuku*)this;
+	TWalkerEnemy::reset();
+	mSpine->initWith(&TNerveTobiPukuGenerate::theNerve());
+	unk1AD          = 1;
+	unk194          = 0;
+	mLandDelta      = mPosition;
+	mLandPos        = mLandDelta;
+	mSwimBaseY      = mPosition.y;
+}
+
 void TTobiPuku::scalingChangeActor()
 {
 	// The flying variant caps its XZ growth at a fixed 3.0 rather than at
