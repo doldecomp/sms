@@ -284,14 +284,14 @@ void TTelesa::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (!checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_DEAD)) {
 		if (mImitatedBmd) {
 			if (cue & CUE_CALC_ANIM) {
-				const TBGCheckData* pTStack_5c;
-				gpMap->checkGround(mPosition.x, mPosition.y, mPosition.z,
-				                   &pTStack_5c);
 				Mtx afStack_58;
-				MsMtxSetXYZRPH(afStack_58, mPosition.x, mPosition.y,
-				               mPosition.z, mRotation.x, mRotation.y,
-				               mRotation.z);
-				mImitatedBmd->getMActor()->getModel()->setBaseTRMtx(afStack_58);
+				const TBGCheckData* pTStack_5c;
+				f32 groundY = gpMap->checkGround(mPosition.x, mPosition.y,
+				                                  mPosition.z, &pTStack_5c);
+				MtxPtr ptr = afStack_58;
+				MsMtxSetXYZRPH(ptr, mPosition.x, groundY, mPosition.z,
+				               mRotation.x, mRotation.y, mRotation.z);
+				mImitatedBmd->getMActor()->getModel()->setBaseTRMtx(ptr);
 				mImitatedBmd->getMActor()->getModel()->setBaseScale(
 				    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 			}
