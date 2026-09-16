@@ -2,6 +2,9 @@
 #include <Strategic/Spine.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/TakeActor.hpp>
+#include <Strategic/Strategy.hpp>
+#include <Enemy/Walker.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
@@ -10,6 +13,8 @@
 #include <M3DUtil/InfectiousStrings.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+
+static int HauntLegCallback(J3DNode* node, int param);
 
 static const char* hauntleg_bastable[] = {
 	nullptr,
@@ -37,14 +42,13 @@ void THauntLegManager::load(JSUMemoryInputStream& stream)
 
 TLiveActor* THauntLegManager::createEnemyInstance()
 {
-	return new THauntLeg("ゆうれい足");
+	return new THauntLeg("ハントレッグ");
 }
 
 void THauntLegManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "hauntleg.bmd", 0x11210000, 0 },
-		{ nullptr, 0, 0 },
+		{ "hauntleg.bmd", 0x10220000, 0 },
 	};
 	createModelDataArray(entry);
 }
@@ -52,12 +56,30 @@ void THauntLegManager::createModelData()
 BOOL THauntedObject::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message <= 1) {
-		((TLiveActor*)mHolder)->kill();
+		mHaunter->kill();
 		return TRUE;
 	}
 	if (message == 0xF)
 		return TRUE;
 	return FALSE;
+}
+
+void THauntLeg::init(TLiveManager* manager)
+{
+	TWalkerEnemy::init(manager);
+
+	mActorType = 0x10000025;
+	unk150     = 0x3A;
+	mHitFlags |= 0x60000000;
+	((TWalker*)mBinder)->setMode(1);
+	unk130 = 2;
+	mMActor->setJointCallback(1, HauntLegCallback);
+
+	unk194 = new THauntedObject("ハントオブジェクト");
+
+	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	    ->getChildren()
+	    .push_back(unk194);
 }
 
 void THauntLeg::setMActorAndKeeper()
@@ -100,3 +122,7 @@ void THauntLeg::setRunAnm() { setBckAnm(1); }
 void THauntLeg::setGenerateAnm() { setBckAnm(0); }
 
 const char** THauntLeg::getBasNameTable() const { return hauntleg_bastable; }
+
+// TODO: not reconstructed. The map records 0x2f4 (756 bytes). Only the
+// nerve's destructor is expected to match until this body is written.
+DEFINE_NERVE(TNerveHauntLegHaunt, TLiveActor) { return FALSE; }

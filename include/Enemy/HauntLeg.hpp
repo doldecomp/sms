@@ -5,20 +5,30 @@
 #include <Strategic/Nerve.hpp>
 
 // An object a haunting leg has possessed. Forwards a kill to its holder.
-class THauntedObject : public TTakeActor {
+class THauntedObject : public THitActor {
 public:
 	THauntedObject(const char* name)
-	    : TTakeActor(name)
+	    : THitActor(name)
 	{
 	}
 
 	virtual ~THauntedObject();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+
+	/* 0x68 */ TLiveActor* mHaunter;
 };
 
 class THauntLeg : public TWalkerEnemy {
 public:
-	THauntLeg(const char* name);
+	// Always inlined: the map records no out-of-line constructor.
+	THauntLeg(const char* name)
+	    : TWalkerEnemy(name)
+	{
+		unk194 = nullptr;
+		unk198 = 0;
+		unk199 = 1;
+		unk19C = nullptr;
+	}
 
 	virtual ~THauntLeg();
 	virtual void init(TLiveManager*);
