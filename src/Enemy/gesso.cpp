@@ -733,7 +733,9 @@ void TGesso::behaveToFindMario()
 		mSpine->pushAfterCurrent(&TNerveSmallEnemyJump::theNerve());
 	} else {
 		setGoalPathMario();
-		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
+		const TNerveBase<TLiveActor>* nerve
+		    = &TNerveWalkerGraphWander::theNerve();
+		mSpine->pushAfterCurrent(nerve);
 		mSpine->pushAfterCurrent(&TNerveWalkerAttack::theNerve());
 		if (unk1B4 == 0) {
 			mSpine->pushAfterCurrent(&TNerveGessoFindMario::theNerve());
