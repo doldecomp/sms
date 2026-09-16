@@ -8,25 +8,45 @@
 // whole animation interface and differ only in their vtable.
 class TTobiPuku : public TWalkerEnemy {
 public:
-	TTobiPuku(const char* name);
+	TTobiPuku(const char* name)
+	    : TWalkerEnemy(name)
+	{
+	}
 
 	virtual ~TTobiPuku();
-	virtual void setAttackAnm();
-	virtual void setDeadAnm();
-	virtual void setDownAirAnm();
-	virtual void setDownLandAnm();
-	virtual void setFallAnm();
-	virtual void setFallEndLandAnm();
+
+	// Overrides of base virtuals; these occupy inherited slots.
+	virtual void initAttacker(THitActor*);
+	virtual BOOL isInhibitedForceMove();
+	virtual void generateEffectColumWater();
+	virtual void walkBehavior(int, f32);
+
+	// New virtuals, declared in the order the vtable lists them
+	// (0x1b8 onwards).
+	virtual bool isPichiEffect();
+	virtual BOOL isJumpBck();
+	virtual BOOL isDeadBck();
+	virtual BOOL isJumpStartBck();
+	virtual BOOL isAttackBck();
+	virtual BOOL isFallEndLandBck();
 	virtual void setJumpAnm();
 	virtual void setJumpStartAnm();
-	virtual void setPichiAnm();
 	virtual void setSwimAnm();
-	virtual BOOL isAttackBck();
-	virtual BOOL isDeadBck();
-	virtual BOOL isFallEndLandBck();
-	virtual BOOL isJumpBck();
-	virtual BOOL isJumpStartBck();
-	virtual bool isPichiEffect();
+	virtual void setAttackAnm();
+	virtual void setPichiAnm();
+	virtual void setFallAnm();
+	virtual void setDownAirAnm();
+	virtual void setDownLandAnm();
+	virtual void setFallEndLandAnm();
+	virtual void swimEffect();
+	virtual bool isReachedToGoalXZ();
+	virtual void hitWater();
+
+	// Not virtual: the map records no vtable slot for it.
+	void setDeadAnm();
+
+	/* 0x194 */ u8 unk194[0x1E0 - 0x194];
+	/* 0x1E0 */ f32 mSwimBaseY;
 };
 
 class TMoePuku : public TTobiPuku {
@@ -37,22 +57,36 @@ public:
 	}
 
 	virtual ~TMoePuku();
-	virtual void setAttackAnm();
-	virtual void setDeadAnm();
-	virtual void setDownAirAnm();
-	virtual void setDownLandAnm();
-	virtual void setFallAnm();
-	virtual void setFallEndLandAnm();
+
+	// Overrides of base virtuals; these occupy inherited slots.
+	virtual void initAttacker(THitActor*);
+	virtual BOOL isInhibitedForceMove();
+	virtual void generateEffectColumWater();
+	virtual void walkBehavior(int, f32);
+
+	// New virtuals, declared in the order the vtable lists them
+	// (0x1b8 onwards).
+	virtual bool isPichiEffect();
+	virtual BOOL isJumpBck();
+	virtual BOOL isDeadBck();
+	virtual BOOL isJumpStartBck();
+	virtual BOOL isAttackBck();
+	virtual BOOL isFallEndLandBck();
 	virtual void setJumpAnm();
 	virtual void setJumpStartAnm();
-	virtual void setPichiAnm();
 	virtual void setSwimAnm();
-	virtual BOOL isAttackBck();
-	virtual BOOL isDeadBck();
-	virtual BOOL isFallEndLandBck();
-	virtual BOOL isJumpBck();
-	virtual BOOL isJumpStartBck();
-	virtual bool isPichiEffect();
+	virtual void setAttackAnm();
+	virtual void setPichiAnm();
+	virtual void setFallAnm();
+	virtual void setDownAirAnm();
+	virtual void setDownLandAnm();
+	virtual void setFallEndLandAnm();
+	virtual void swimEffect();
+	virtual bool isReachedToGoalXZ();
+	virtual void hitWater();
+
+	// Not virtual: the map records no vtable slot for it.
+	void setDeadAnm();
 };
 
 class TPukuPuku : public TTobiPuku {

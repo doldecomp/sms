@@ -92,7 +92,23 @@ bool TMoePuku::isPichiEffect() { return isBckAnm(PUKU_ANM_PICHI) ? true : false;
 // size; only their destructors, which the macro emits, match so far.
 
 // TODO: incorrect size. Map records 0xb4 (180 bytes).
-DEFINE_NERVE(TNerveTobiPukuSwimWander, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveTobiPukuSwimWander, TLiveActor)
+{
+	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		puku->mSwimBaseY = puku->mPosition.y;
+		puku->setSwimAnm();
+		puku->initialGraphNode();
+		puku->mLiveFlag |= LIVE_FLAG_UNK10;
+	}
+
+	if (puku->isReachedToGoalXZ())
+		puku->goToRandomNextGraphNode();
+
+	puku->walkBehavior(0, 1.5f);
+	return FALSE;
+}
 
 // TODO: incorrect size. Map records 0x254 (596 bytes).
 DEFINE_NERVE(TNerveTobiPukuReturnLaunch, TLiveActor) { return FALSE; }

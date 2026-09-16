@@ -17,6 +17,21 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## Reconstructing a nerve body needs the caller's vtable order, batch 66
+
+A nerve `execute` that makes virtual calls cannot match until the actor class declares its virtuals in the order the vtable lists them, because the call sites compile to fixed offsets. Recovering that order is mechanical:
+
+```
+awk '/\.obj "?__vt__9TTobiPuku"?/,/endobj/' build/GMSE01/asm/Enemy/tobiPuku.s \
+  | awk 'NR>=2 && /4byte/{printf "0x%03x %s\n",(NR-2)*4,$2}'
+```
+
+That prints every slot with its function name, which gives three things at once: which methods are virtual, which are overrides of base slots versus new virtuals appended after them, and the exact declaration order the header needs. For `TTobiPuku` the base `TWalkerEnemy` vtable ends at 0x1b4 and eighteen new virtuals follow from 0x1b8; `setDeadAnm` appears nowhere in the table, so it is **not** virtual despite sitting beside the ones that are.
+
+Reordering the header to match cost nothing (`changes_all`: zero regressions) and turned `TNerveTobiPukuSwimWander::execute` from unmatchable into exact. The last difference was a `clrlwi.` against a `cmpwi`, the usual tell that a predicate returns `bool` rather than `BOOL`.
+
+Do this before attempting any nerve body in a from-scratch unit; it is also the pre-PR checklist item about virtual ordering, so it has to be right regardless.
+
 ## bool-to-BOOL conversion shapes, batch 63
 
 Three distinct return shapes appear for what looks like the same predicate, and the assembly distinguishes them exactly. From `tobiPuku`, where 30 near-identical 48-byte accessors made the comparison clean:
