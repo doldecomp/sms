@@ -146,7 +146,10 @@ DEFINE_NERVE(TNerveRHGraphWander, TLiveActor)
 		self->goToDirectedNextGraphNode(polar);
 	}
 
-	if (self->unk104.getPoint().distance(self->getPosition()) < 10.0f) {
+	JGeometry::TVec3<f32> diff = self->unk104.getPoint();
+	diff.sub(self->getPosition());
+	f32 (*sqrt)(f32) = JGeometry::TUtil<f32>::sqrt;
+	if (sqrt(diff.squared()) < 10.0f) {
 		TGraphNode& node = self->unk124->getCurrent();
 
 		if (node.checkFlag(0x800)) {
