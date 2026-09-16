@@ -250,7 +250,8 @@ bool TAmenbo::doKeepDistance() { return !isAttacking(); }
 
 void TAmenbo::attackToMario()
 {
-	if (isAttacking())
+	BOOL attacking = isAttacking();
+	if (attacking)
 		sendAttackMsgToMario();
 }
 
