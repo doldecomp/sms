@@ -754,7 +754,8 @@ static void evAppearShineFromNPC(TSpcTypedInterp<TEventWatcher>* interp,
 		shine->mPosition        = npc->mPosition;
 		shine->appearWithTime(1200, -1, -1, -1);
 	}
-	interp->push();
+	const TSpcSlice& result = TSpcSlice();
+	interp->push(result);
 }
 
 static void evAppearShine(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
