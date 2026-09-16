@@ -1567,6 +1567,8 @@ void TBossEel::calcAndSetCollisionCubeBite_()
 
 void TBossEel::updateTearsCnt()
 {
+	Mtx44 transform;
+	JGeometry::TVec3<f32> position;
 	static const s32 eyeTable[] = { 0, 2, 1, 3 };
 
 	++mTearCycleTimer;
