@@ -648,7 +648,6 @@ static int MarioFootPosLCtrl(J3DNode* param_1, int param_2)
 	if (param_2 == 0) {
 
 		BOOL check2;
-		bool check;
 
 		// Definitely some inline shenanigans
 		// And this is wrong
@@ -657,10 +656,7 @@ static int MarioFootPosLCtrl(J3DNode* param_1, int param_2)
 		    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
 		    && gpMarioForCallBack->onYoshi() == 0) {
 
-			check2 = !(gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEPY
-			           && gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEP)
-			             ? TRUE
-			             : FALSE;
+			check2 = gpMarioForCallBack->isSleeping() == false ? TRUE : FALSE;
 		}
 
 		if (check2) {
