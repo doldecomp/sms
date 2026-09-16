@@ -437,7 +437,7 @@ void TBathtub::load(JSUMemoryInputStream& stream)
 
 u8 TBathtub::getNumKillerLaunchable() const { return 0; }
 
-bool TBathtub::isKillerAttackable() const { return false; }
+bool TBathtub::isKillerAttackable() const { return unk248 <= 0; }
 
 u8 TBathtub::getNumKillerBurstable() const { return 0; }
 
