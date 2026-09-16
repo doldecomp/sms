@@ -308,8 +308,8 @@ bool TMap::isTouchedOneWallAndMoveXZ(f32* x, f32 y, f32* z, f32 radius) const
 {
 	TBGWallCheckRecord record(*x, y, *z, radius, 1, 0);
 
-	int r = mCollisionData->checkWalls(&record);
-	if (r != 0 ? true : false) {
+	bool r = mCollisionData->checkWalls(&record) != 0 ? true : false;
+	if (r) {
 		*x = record.mCenter.x;
 		*z = record.mCenter.z;
 		return true;
