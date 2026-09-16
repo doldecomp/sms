@@ -775,11 +775,11 @@ void TTelesa::setFirstAttackPoint()
 	JGeometry::TVec3<f32> pos = mPosition;
 
 	// TODO: probably done via TRotation calls? Why is is all so inlined ;(
-	f32 s = JMASin(mRotation.y);
 	f32 c = JMACos(mRotation.y);
+	f32 s = JMASin(mRotation.y);
 
-	pos.x += c * 1000.0f;
-	pos.z += s * 1000.0f;
+	pos.x += s * 1000.0f;
+	pos.z += c * 1000.0f;
 
 	setGoalPath(TPathNode(pos));
 }
