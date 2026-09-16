@@ -91,6 +91,8 @@ f32 SMSGetVSyncTimesPerSec()
 
 f32 SMSGetAnmFrameRate() { return 60.0f / SMSGetVSyncTimesPerSec(); }
 
+inline TMarioGamePad::~TMarioGamePad() { }
+
 TApplication::TApplication()
     : mSelf(this)
     , mDirector(nullptr)
