@@ -54,14 +54,14 @@ void TNameKuriLauncher::stateLaunch()
 	if (mTicksSpentInCurState == 0) {
 		TSpineEnemy* enemy = getProperEnemy("ナメクリマネージャー");
 		if (enemy) {
+			JGeometry::TVec3<f32> local_14;
+			JGeometry::TVec3<f32> local_20;
 			Mtx mtx;
 			MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
 
-			JGeometry::TVec3<f32> local_14;
-			JGeometry::TVec3<f32> local_20;
-
-			local_20.set(0.0f, 4.0f, 0.0f);
-			local_14.set(0.0f, 0.0f, 0.0f);
+			f32 zero = 0.0f;
+			local_20.set(zero, 4.0f, zero);
+			local_14.set(zero, zero, zero);
 			MTXMultVec(mtx, &local_20, &local_20);
 
 			enemy->resetSRTV(mPosition, local_14, enemy->mScaling, local_20);
