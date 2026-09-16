@@ -922,27 +922,7 @@ u32 TMapObjTurn::touchWater(THitActor*)
 			obj = mHiddenObj;
 
 		if (obj) {
-			f32 speed;
-			f32 ySpeed;
-
-			ySpeed = mAppearYSpeed;
-			speed  = mAppearSpeed;
-			obj->appear();
-			obj->mPosition.set(mPosition.x, mPosition.y + 200.0f, mPosition.z);
-			if (mMActor) {
-				MtxPtr mtx = getModel()->getAnmMtx(0);
-				obj->mVelocity.set(mtx[0][2] * speed,
-				                   mtx[1][2] * speed + ySpeed,
-				                   mtx[2][2] * speed);
-				obj->offLiveFlag(LIVE_FLAG_UNK10);
-			} else {
-				Mtx mtx;
-				MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
-				obj->mVelocity.set(mtx[0][2] * speed,
-				                   mtx[1][2] * speed + ySpeed,
-				                   mtx[2][2] * speed);
-				obj->offLiveFlag(LIVE_FLAG_UNK10);
-			}
+			throwObjToFront(obj, 200.0f, mAppearSpeed, mAppearYSpeed);
 			unk168 = 0;
 		}
 	}
