@@ -61,12 +61,13 @@ public:
 	void makeObjLiving();
 	void makeObjWaitingToAppear();
 
-	u32 mFruitLivingTime;
-	u32 mScaleUpSpeed;
 	u32 mRottingScaleSpeed;
-	u32 mBreakingScaleSpeed;
-	u32 mFruitWaitTimeToAppear;
 	u32 mRottenColor;
+
+	static u32 mFruitLivingTime;
+	static f32 mScaleUpSpeed;
+	static f32 mBreakingScaleSpeed;
+	static u32 mFruitWaitTimeToAppear;
 };
 
 class TRandomFruit : public TResetFruit {
