@@ -1000,11 +1000,11 @@ void TBossEelVortex::perform(u32 cue, JDrama::TGraphics* graphics)
 		{
 			TBossEel* owner            = mOwner;
 			TBossEelSaveParams* params = owner->mSaveParams;
-			f32 scale                  = owner->mScaling.x;
 			f32 attackRadius           = params->mSLVortexAttackRadius.get();
 			f32 attackHeight           = params->mSLVortexAttackHeight.get();
 			f32 damageHeight           = params->mSLVortexDamageHeight.get();
 			f32 damageRadius           = params->mSLVortexDamageRadius.get();
+			f32 scale                  = owner->mScaling.x;
 			mAttackRadius              = attackRadius * scale;
 			mAttackHeight              = attackHeight * scale;
 			mDamageRadius              = damageRadius * scale;
