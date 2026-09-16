@@ -1477,7 +1477,8 @@ void THaneHamuKuri::bind()
 
 BOOL THaneHamuKuri::isReachedToGoal() const
 {
-	JGeometry::TVec3<f32> local_c = unk104.getPoint();
+	const TPathNode* node = &unk104;
+	JGeometry::TVec3<f32> local_c = node->getPoint();
 	local_c -= mPosition;
 	local_c.y = 0.0f;
 	if (MsVECMag2(&local_c) < 100.0f)
