@@ -1237,3 +1237,89 @@ void TBigWatermelon::startEvent()
 
 	makeObjDead();
 }
+
+void TMapObjBall::boundByActor(THitActor* param_1)
+{
+	JGeometry::TVec3<f32> away;
+	away.set(param_1->mPosition.x - mPosition.x, 0.0f,
+	         param_1->mPosition.z - mPosition.z);
+
+	f32 reach;
+	if (isActorType(0x400000D0))
+		reach = mAttackRadius + param_1->mDamageRadius;
+	else
+		reach = mDamageRadius;
+
+	if (reach * reach < away.x * away.x + away.z * away.z)
+		return;
+
+	if (away.x != 0.0f && away.z != 0.0f)
+		MsVECNormalize(away, away);
+
+	if (param_1->isActorType(0x80000001)) {
+		if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000)) {
+			// Mario walking into it nudges it harder than standing on it.
+			f32 minSpeed = mMapObjData->mPhysical->unk4->unkC;
+			if (abs(SMS_GetMarioSpeedX()) > minSpeed
+			    || abs(SMS_GetMarioSpeedZ()) > minSpeed) {
+				mVelocity.y += unk150;
+				if (!isActorType(0x400000D0)) {
+					SMSGetMSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN,
+					                                &mPosition, 0, nullptr, 0,
+					                                4);
+				}
+			} else {
+				mVelocity.y += unk154;
+			}
+
+			mVelocity.x += unk148 * SMS_GetMarioSpeedX() - away.x * unk14C;
+			mVelocity.z += unk148 * SMS_GetMarioSpeedZ() - away.z * unk14C;
+			param_1->receiveMessage(this, HIT_MESSAGE_ATTACK);
+		}
+	} else {
+		JGeometry::TVec3<f32> vel(mVelocity);
+		f32 into = JGeometry::TVec3<f32>(vel).dot(away);
+
+		if (into <= 0.0f
+		    && abs(JGeometry::TVec3<f32>(vel).x)
+		        > mMapObjData->mPhysical->unk4->unkC
+		    && abs(JGeometry::TVec3<f32>(mVelocity).z)
+		        > mMapObjData->mPhysical->unk4->unkC) {
+			mVelocity.x = -((1.0f + unk16C) * (away.x * into) - mVelocity.x);
+			mVelocity.y += unk168;
+			mVelocity.z = -((1.0f + unk16C) * (away.z * into) - mVelocity.z);
+			param_1->receiveMessage(this, HIT_MESSAGE_UNK10);
+
+			if (!isActorType(0x400000D0)) {
+				SMSGetMSound()->startSoundActor(MSD_SE_IT_DRIAN_BOUND,
+				                                &mPosition, 0, nullptr, 0, 4);
+			}
+		} else {
+			mVelocity.x = -(away.x * unk164 - mVelocity.x);
+			mVelocity.y += unk168;
+			mVelocity.z = -(away.z * unk164 - mVelocity.z);
+		}
+	}
+
+	// A falling ball that lands on Mario's head bounces off him.
+	if (param_1->isActorType(0x80000001)
+	    && !checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000)) {
+		JGeometry::TVec3<f32> vel(mVelocity);
+		if (JGeometry::TVec3<f32>(vel).y < 0.0f
+		    && 130.0f + SMS_GetMarioPos().y < mPosition.y + mBodyRadius) {
+			mVelocity.y = unk160 * -JGeometry::TVec3<f32>(vel).y;
+			mVelocity.x += unk158 * SMS_GetMarioSpeedX();
+			mVelocity.y += unk15C * SMS_GetMarioSpeedY();
+			mVelocity.z += unk158 * SMS_GetMarioSpeedZ();
+
+			if (!isActorType(0x400000D0)) {
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN,
+				                                &mPosition, 0, nullptr, 0, 4);
+			}
+		}
+	}
+
+	unk194 = 10;
+	offLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
+}
