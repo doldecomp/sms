@@ -84,11 +84,11 @@ public:
 	                     s32 initial_h)
 	{
 		setPaneSize(time, target_w, target_h, initial_w, initial_h);
-		s32 initH = mInitialBounds.getHeight();
-		s32 initW = mInitialBounds.getWidth();
-		setPaneOffset(time, (initW - target_w) * 0.5f,
-		              (initH - target_h) * 0.5f, (initW - initial_w) * 0.5f,
-		              (initH - initial_h) * 0.5f);
+		setPaneOffset(
+		    time, (mInitialBounds.x2 - mInitialBounds.x1 - target_w) * 0.5f,
+		    (mInitialBounds.y2 - mInitialBounds.y1 - target_h) * 0.5f,
+		    (mInitialBounds.x2 - mInitialBounds.x1 - initial_w) * 0.5f,
+		    (mInitialBounds.y2 - mInitialBounds.y1 - initial_h) * 0.5f);
 	}
 
 	// fabricated
