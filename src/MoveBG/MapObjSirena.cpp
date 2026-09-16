@@ -1194,7 +1194,8 @@ TWarpAreaActor::TWarpAreaActor(const char* name)
 
 u32 TChestRevolve::touchWater(THitActor* actor)
 {
-	if (isState(STATE_NORMAL)) {
+	bool state = isState(STATE_NORMAL);
+	if (state) {
 		mState = STATE_REVOLVING;
 		startAnim(1);
 		setUpMapCollision(1);
