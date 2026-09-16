@@ -362,12 +362,10 @@ bool TConsoleStr::processReady(int param_1)
 	for (int i = 0; i < 5; ++i) {
 		if (param_1 == i * 10) {
 			JUTRect local_d8 = unk27C[i]->getPane()->getBounds();
-			unk27C[i]->setPaneSize(
+			unk27C[i]->setCenteredSize(
 			    0x1E, local_d8.getWidth(), local_d8.getHeight(),
 			    local_d8.getWidth() + 80, local_d8.getHeight() + 80);
-			// TODO: wrong args
-			unk27C[i]->setPaneOffset(0x1E, 0, 0, 0, 0);
-		} else if (param_1 >= i * 10 + 30) {
+		} else if (param_1 < i * 10 + 30) {
 			unk27C[i]->update();
 			u16 alpha = unk27C[i]->getPane()->getAlpha();
 			alpha += 9;
@@ -378,11 +376,9 @@ bool TConsoleStr::processReady(int param_1)
 			if (param_1 == i * 10 + 130) {
 				JUTRect local_e8 = unk27C[i]->getPane()->getBounds();
 
-				unk27C[i]->setPaneSize(
+				unk27C[i]->setCenteredSize(
 				    0x1E, local_e8.getWidth() - 20, local_e8.getHeight() - 20,
 				    local_e8.getWidth(), local_e8.getHeight());
-				// TODO: wrong args
-				unk27C[i]->setPaneOffset(0x1E, 0, 0, 0, 0);
 			} else if (param_1 < i * 10 + 160) {
 				unk27C[i]->update();
 				s16 alpha = unk27C[i]->getPane()->getAlpha();
