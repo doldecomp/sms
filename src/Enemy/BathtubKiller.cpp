@@ -6,6 +6,7 @@
 #include <MoveBG/MapObjCorona.hpp>
 #include <MoveBG/MapObjManager.hpp>
 #include <Strategic/ObjModel.hpp>
+#include <Strategic/Spine.hpp>
 #include <System/Particles.hpp>
 #include <JSystem/JUtility/JUTNameTab.hpp>
 
@@ -165,7 +166,92 @@ void TBathtubKiller::setMActorAndKeeper()
 void TBathtubKiller::reset() { }
 
 #pragma dont_inline on
-void TBathtubKiller::resetBathtubKiller() { }
+void TBathtubKiller::resetBathtubKiller()
+{
+	mSpine->initWith(&TNerveBathtubKillerWander::theNerve());
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
+
+	unk208 = 0;
+	unk20C = 0;
+	unk210 = 0;
+	unk214 = 0;
+	unk218 = 0;
+
+	mQuat.x = 0.0f;
+	mQuat.y = 0.0f;
+	mQuat.z = 0.0f;
+	mQuat.w = 1.0f;
+	mVelocity.x = 0.0f;
+	mVelocity.y = 0.0f;
+	mVelocity.z = 0.0f;
+	unk1BC.x = 0.0f;
+	unk1BC.y = 0.0f;
+	unk1BC.z = 0.0f;
+	unk21C = 0;
+	unk1D4 = 0;
+
+	if (unk194 == 1) {
+		unk1D8.r = 50;
+		unk1D8.g = 70;
+		unk1D8.b = 160;
+		unk1D8.a = 0;
+		unk1E0 = unk1D8;
+		unk1E8 = unk1D8;
+		unk1F0 = unk1D8;
+
+		TBathtubKillerParams* params = getSaveParam2();
+		unk198 = params->shineAccelerationQuatRate.get();
+		unk19C = params->shineChaseAcceleration.get();
+		unk1A0 = params->shineChaseSpeed.get();
+		unk1A4 = params->shineInitialSpeed.get();
+		unk1A8 = params->shineDeadPeriod.get();
+	} else {
+		unk1D8.r = 0;
+		unk1D8.g = 0;
+		unk1D8.b = 0;
+		unk1D8.a = 0;
+		unk1E0 = unk1D8;
+		unk1E8 = unk1D8;
+		unk1F0 = unk1D8;
+
+		if (unk194 == 2) {
+			TBathtubKillerParams* params = getSaveParam2();
+			unk198 = params->fastAccelerationQuatRate.get();
+			unk19C = params->fastChaseAcceleration.get();
+			unk1A0 = params->fastChaseSpeed.get();
+			unk1A4 = params->fastInitialSpeed.get();
+			unk1A8 = params->fastDeadPeriod.get();
+		} else {
+			TBathtubKillerParams* params = getSaveParam2();
+			unk198 = params->mSLAccelerationQuatRate.get();
+			unk19C = params->mSLChaseAcceleration.get();
+			unk1A0 = params->mSLChaseSpeed.get();
+			unk1A4 = params->mSLInitialSpeed.get();
+			unk1A8 = params->mSLDeadPeriod.get();
+		}
+	}
+
+	unk1FC = 0.0f;
+	unk1F8 = getSaveParam2()->mSLColorChangeRateDelta.get();
+	unk208 = unk1A8;
+	unk20C = getSaveParam2()->mSLLaunchingPeriod.get();
+	unk214 = getSaveParam2()->noCollisionAmongKillers.get();
+	unk200 = getSaveParam2()->mSLChaseMinY.get();
+	unk204 = getSaveParam2()->mSLChaseMaxY.get();
+
+	if (unk194 == 2) {
+		f32 random = (rand() * (1.0f / 32768.0f)) * 4.0f;
+		f32 colorOffset = 0.0f;
+		s32 random1 = (s32)random;
+		s32 random2 = (s32)random;
+		if (random1 == 0)
+			colorOffset = 120.0f;
+		else if (random2 == 1)
+			colorOffset = 240.0f;
+		unk200 += colorOffset;
+		unk204 += colorOffset;
+	}
+}
 #pragma dont_inline off
 
 void TBathtubKiller::generateItemBathtubKiller() { }
