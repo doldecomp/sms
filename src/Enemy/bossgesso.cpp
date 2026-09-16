@@ -1059,11 +1059,11 @@ void TBossGesso::doAttackDouble()
 		return;
 	}
 
-	JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
-	delta -= mPosition;
+	JGeometry::TVec3<f32> delta = mPosition;
+	delta -= SMS_GetMarioPos();
 
-	f32 doubleAttackLen2 = getSaveParam()->mSLUnisonAttackLen.value;
-	doubleAttackLen2 *= doubleAttackLen2;
+	f32 doubleAttackLen = getSaveParam()->mSLDoubleAttackLen.value;
+	f32 doubleAttackLen2 = doubleAttackLen * doubleAttackLen;
 
 	if (inSightAngle(getSaveParam()->mSLSightAngle.get() * 0.5f)
 	    && delta.squared() < doubleAttackLen2) {
