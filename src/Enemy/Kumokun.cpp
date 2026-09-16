@@ -1174,6 +1174,7 @@ DEFINE_NERVE(TNerveKumokunFreeze, TLiveActor)
 
 DEFINE_NERVE(TNerveKumokunPostFreeze, TLiveActor)
 {
+	JGeometry::TVec2<f32> position;
 	TKumokun* self = (TKumokun*)spine->getBody();
 	if (spine->getTime() == 0)
 		self->changeBck("kumo_hit_end");
