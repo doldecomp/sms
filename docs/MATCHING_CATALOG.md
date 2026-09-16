@@ -17,6 +17,14 @@ General compiler guidance remains in [AGENT_MATCHING_TIPS.md](AGENT_MATCHING_TIP
 Similar source text is a search lead, not proof of equivalent code generation.
 A full executable match also does not validate bodies in objects that are still linked from the original binary.
 
+## Frame gaps are confirmed pure, batch 61
+
+`TNerveSealWait::execute` was validated with a temporary `volatile char trash[0x10]`, the use `AGENTS.md` sanctions for diagnosis: it reaches **100% with zero instruction differences**. So a function sitting at 99.9% with only `stwu` and save/restore offsets differing is a *correct* reconstruction whose caller is missing an inlined helper's reserved locals. There is nothing to fix in its body.
+
+Measured gaps within one file, seal: `perform` -8, `SealSleep` -8, `receiveMessage` -8, `SealWait` -16, `SealDie` -32, `init` **+8**. All are 8-byte multiples and they do not correlate with call-site count, with whether the function pushes a nerve, or with whether it calls `startSoundActor`. Functions in the same file with the same helpers differ, and one is too *large*, so a single missing shared inline does not explain it.
+
+Practical consequence: treat this class as blocked and spend time elsewhere. Do not rewrite bodies that the padding test proves correct, and do not commit the padding.
+
 ## The bool-materialisation tell, batches 59-60
 
 When the original wants a `bool`, MWCC emits `li r0,1` / `b` / `li r0,0` then `clrlwi.` and a branch. When it tests a value directly it just branches. That two-instruction difference says which source form was used, and it reads **both ways**:
