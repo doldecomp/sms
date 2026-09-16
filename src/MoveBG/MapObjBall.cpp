@@ -354,6 +354,169 @@ BOOL TMapObjBall::receiveMessage(THitActor* sender, u32 message)
 	return FALSE;
 }
 
+void TMapObjBall::initMapObj()
+{
+	TMapObjGeneral::initMapObj();
+
+	mInitialScaling.x = mScaling.x;
+	mInitialScaling.y = mScaling.y;
+	mInitialScaling.z = mScaling.z;
+
+	// Per-kind physics. The layout is identical in every arm, so the switch
+	// is really a table of tunables keyed on the object type.
+	switch (mActorType) {
+	case 0x400000D0: // watermelon
+		unk14C = 4.0f;
+		unk150 = 0.0f;
+		unk154 = 0.0f;
+		unk158 = 0.15f;
+		unk15C = 0.0f;
+		unk160 = 0.9f;
+		unk164 = 0.06f;
+		unk168 = 1.5f;
+		unk16C = 0.5f;
+		unk170 = 0.5f;
+		unk174 = 0.2f;
+		unk178 = 2.5f;
+		unk17C = 0.001f;
+		unk180 = 0.3f;
+		unk184 = 1.5f;
+		unk188 = 1.5f;
+		mBodyRadius = 50.0f * mScaling.y;
+		unk18C      = mBodyRadius / 3.0f;
+		break;
+
+	case 0x40000064:
+		unk148 = 0.6f;
+		unk14C = 2.0f;
+		unk150 = 0.02f;
+		unk154 = 0.0f;
+		unk158 = 0.055f;
+		unk15C = 0.02f;
+		unk160 = 0.83f;
+		unk170 = 0.9f;
+		unk174 = 0.13f;
+		unk178 = 20.0f;
+		unk164 = 0.5f;
+		unk168 = 0.02f;
+		unk16C = 0.5f;
+		unk17C = 1.2f;
+		unk180 = 0.8f;
+		unk184 = 1.0f;
+		unk188 = 1.5f;
+		mBodyRadius = 50.0f * mScaling.y;
+		unk18C      = mBodyRadius / 3.0f;
+		break;
+
+	case 0x40000390:
+	case 0x40000391:
+	case 0x40000392:
+		unk148 = 0.4f;
+		unk14C = 0.2f;
+		unk150 = 1.3f;
+		unk154 = 0.0f;
+		unk158 = 1.2f;
+		unk15C = 0.8f;
+		unk160 = 0.5f;
+		unk170 = 0.9f;
+		unk174 = 0.13f;
+		unk178 = 20.0f;
+		unk164 = 2.0f;
+		unk168 = 0.02f;
+		unk16C = 0.3f;
+		unk17C = 0.05f;
+		unk180 = 0.5f;
+		unk184 = 1.0f;
+		unk188 = 1.5f;
+		mBodyRadius = 50.0f * mScaling.y;
+		unk18C      = 50.0f;
+		break;
+
+	case 0x40000393:
+		unk148 = 0.6f;
+		unk14C = 0.2f;
+		unk150 = 1.3f;
+		unk154 = 15.0f;
+		unk158 = 0.5f;
+		unk15C = 1.3f;
+		unk160 = 1.0f;
+		unk170 = 0.9f;
+		unk174 = 0.13f;
+		unk178 = 20.0f;
+		unk164 = 2.0f;
+		unk168 = 0.02f;
+		unk16C = 0.3f;
+		unk17C = 0.05f;
+		unk180 = 0.5f;
+		unk184 = 1.0f;
+		unk188 = 1.5f;
+		mBodyRadius = 50.0f * mScaling.y;
+		unk18C      = 50.0f;
+		break;
+
+	case 0x40000394:
+		unk148 = 0.2f;
+		unk14C = 0.0f;
+		unk150 = 0.0f;
+		unk154 = 0.0f;
+		unk158 = 0.0f;
+		unk15C = 0.0f;
+		unk160 = 0.0f;
+		unk170 = 0.0f;
+		unk174 = 0.0f;
+		unk178 = 0.0f;
+		unk164 = 0.0f;
+		unk168 = 0.0f;
+		unk16C = 0.0f;
+		unk17C = 0.05f;
+		unk180 = 0.5f;
+		unk184 = 1.0f;
+		unk188 = 1.5f;
+		mBodyRadius = 50.0f * mScaling.y;
+		unk18C      = 50.0f;
+		break;
+
+	case 0x40000395:
+		unk148 = 0.4f;
+		unk14C = 0.2f;
+		unk150 = 1.3f;
+		unk154 = 0.0f;
+		unk158 = 1.2f;
+		unk15C = 0.8f;
+		unk160 = 0.5f;
+		unk170 = 0.9f;
+		unk174 = 0.13f;
+		unk178 = 20.0f;
+		unk164 = 2.0f;
+		unk168 = 0.02f;
+		unk16C = 0.3f;
+		unk17C = 0.05f;
+		unk180 = 0.5f;
+		unk184 = 1.0f;
+		unk188 = 1.5f;
+		mBodyRadius = 50.0f * mScaling.y;
+		unk18C      = 50.0f;
+		break;
+
+	}
+
+	// unk190 is the lift applied while the ball is carried.
+	if (isActorType(0x40000393)) {
+		mBodyRadius = 45.0f * mScaling.y;
+		unk190      = mBodyRadius;
+	}
+	if (isActorType(0x40000390)) {
+		mBodyRadius = 40.0f * mScaling.y;
+		unk190      = 20.0f;
+	}
+	if (isActorType(0x40000391)) {
+		mBodyRadius = 40.0f * mScaling.y;
+		unk190      = 20.0f;
+	}
+	if (isActorType(0x40000392))
+		unk190 = 10.0f;
+}
+
 TMapObjBall::TMapObjBall(const char* name)
     : TMapObjGeneral(name)
 {
