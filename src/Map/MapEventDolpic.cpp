@@ -83,7 +83,8 @@ bool TDolpicEventRiccoMammaGate::isFinishedAll() const
 
 void TDolpicEventRiccoMammaGate::rising()
 {
-	f32 scale = TMapObjBase::getJointScaleY(unk20) + unk34;
+	f32 scale = TMapObjBase::getJointScaleY(unk20);
+	scale += unk34;
 
 	TPosition3f mtx;
 	mtx.identity();
