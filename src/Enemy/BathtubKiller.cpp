@@ -258,7 +258,9 @@ void TBathtubKiller::resetBathtubKiller()
 }
 #pragma dont_inline off
 
+#pragma dont_inline on
 void TBathtubKiller::generateItemBathtubKiller() { }
+#pragma dont_inline off
 
 void TBathtubKiller::killBathtubKiller() { }
 
@@ -662,7 +664,39 @@ DEFINE_NERVE(TNerveBathtubKillerStraight, TLiveActor)
 	return FALSE;
 }
 
-DEFINE_NERVE(TNerveBathtubKillerBreak, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBathtubKillerBreak, TLiveActor)
+{
+	TBathtubKiller* self = (TBathtubKiller*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		self->mMActor = self->mMActorKeeper->getMActor(
+		    "bathtubdownkiller_model1.bmd");
+		self->setBckAnm(0);
+		self->mQuat.x = 0.0f;
+		self->mQuat.y = 0.0f;
+		self->mQuat.z = 0.0f;
+		self->mQuat.w = 1.0f;
+		self->unk1BC.x = 0.0f;
+		self->unk1BC.y = 0.0f;
+		self->unk1BC.z = 0.0f;
+		JGeometry::TVec3<f32> velocity;
+		velocity.set(0, 0, 0);
+		self->mLinearVelocity = velocity;
+		self->onLiveFlag(LIVE_FLAG_UNK8);
+		self->unk1E0 = self->unk1D8;
+		self->generateItemBathtubKiller();
+		self->onLiveFlag(LIVE_FLAG_DEAD);
+	}
+
+	if (self->checkCurAnmEnd(0)) {
+		self->unk21C = 0;
+		self->onLiveFlag(LIVE_FLAG_DEAD);
+		self->stopAnmSound();
+		return TRUE;
+	}
+
+	return FALSE;
+}
 
 DEFINE_NERVE(TNerveBathtubKillerExplosion, TLiveActor) { return FALSE; }
 
