@@ -39,6 +39,9 @@
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
+static u32 scNormalStageTable[]
+    = { 0, 1, 2, 3, 4, 13, 6, 8, 9, 10 };
+
 // fabricated and not matching
 inline void bzero(void* pDst, u32 len)
 {
