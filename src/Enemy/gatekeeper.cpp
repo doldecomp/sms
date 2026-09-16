@@ -258,7 +258,7 @@ void TBGKMtxCalc::calc(u16 param_1)
 				if (0.0f < delta)
 					turn = 3.0f > delta ? delta : 3.0f;
 				else
-					turn = -3.0f > delta ? -3.0f : delta;
+					turn = -3.0f < delta ? delta : -3.0f;
 
 				f32 newYaw     = (turn + cur) - mOwner->mRotation.y;
 				mOwner->unk180 = MsWrap(newYaw, 0.0f, 360.0f);
