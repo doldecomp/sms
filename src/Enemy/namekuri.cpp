@@ -713,10 +713,12 @@ DEFINE_NERVE(TNerveNameKuriLand, TLiveActor)
 
 DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 {
+	JGeometry::TVec3<f32> local_6c;
 	TNameKuri* self = (TNameKuri*)spine->getBody();
 
 	if (spine->getTime() <= 1) {
-		self->setGoalPath(SMS_GetMarioHitActor());
+		TPathNode local_7c(SMS_GetMarioHitActor());
+		self->setGoalPath(local_7c);
 
 		self->unk1B0 = self->mScaling.y;
 		self->unk1AC = 0.0f;
@@ -736,7 +738,7 @@ DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 			        ->checkPass(62.0f)) {
 				JGeometry::TVec3<f32> local_44 = SMS_GetMarioPos();
 				f32 jumpAttackSp = self->getSaveParams()->mSLJumpAttackSp.get();
-				JGeometry::TVec3<f32> local_6c = self->calcVelocityToJumpToY(
+				local_6c = self->calcVelocityToJumpToY(
 				    local_44, jumpAttackSp, self->getGravityY());
 				self->mPosition.y += 2.0f;
 				self->setVelocity(local_6c);
@@ -744,7 +746,8 @@ DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 				self->unk1AC = 0.0f;
 				self->unk1B8 = 0.0f;
 
-				self->setGoalPath(SMS_GetMarioPos());
+				TPathNode local_7c(SMS_GetMarioPos());
+				self->setGoalPath(local_7c);
 			}
 
 			self->walkToCurPathNode(0.0f, 6.0f, 0.0f);
