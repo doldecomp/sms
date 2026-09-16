@@ -1060,12 +1060,14 @@ void TYoshi::entry()
 	if (!isHatched())
 		return;
 
+	s32 tmp;
 	bool bVar1 = true;
 	if (mState == STATE_UNMOUNTED || mState == STATE_MOUNTED) {
-		if (unkC >= 360 && unkC < 600 && !(unkC & 0x10))
+		tmp = unkC;
+		if (tmp >= 360 && tmp < 600 && !(tmp & 0x10))
 			bVar1 = false;
 
-		if (unkC < 360 && !(unkC & 0x8))
+		if (unkC < 360 && !(tmp & 0x8))
 			bVar1 = false;
 	}
 
@@ -1085,39 +1087,29 @@ void TYoshi::entry()
 	s16 g = (s16)unk84.y;
 	s16 b = (s16)unk84.z;
 
+	GXColorS10 tevColor;
+	tevColor.r = r;
+	tevColor.g = g;
+	tevColor.b = b;
+	tevColor.a = 0xFF;
+
 	J3DModelData* modelData = mActor->getModel()->getModelData();
 	for (u16 i = 0; i < modelData->getMaterialNum(); ++i) {
-		J3DGXColorS10 tevColor;
-		tevColor.color.r = r;
-		tevColor.color.g = g;
-		tevColor.color.b = b;
-		tevColor.color.a = 0xFF;
-		modelData->getMaterialNodePointer(i)->setTevColor(2, &tevColor);
+		modelData->getMaterialNodePointer(i)->getTevBlock()->setTevColor(
+		    2, tevColor);
 	}
 
-	{
-		J3DGXColorS10 tevColor;
-		tevColor.color.r = r;
-		tevColor.color.g = g;
-		tevColor.color.b = b;
-		tevColor.color.a = 0xFF;
-		mMirrorModels[0]
-		    ->getModelData()
-		    ->getMaterialNodePointer(0)
-		    ->setTevColor(2, &tevColor);
-	}
+	mMirrorModels[0]
+	    ->getModelData()
+	    ->getMaterialNodePointer(0)
+	    ->getTevBlock()
+	    ->setTevColor(2, tevColor);
 
-	{
-		J3DGXColorS10 tevColor;
-		tevColor.color.r = r;
-		tevColor.color.g = g;
-		tevColor.color.b = b;
-		tevColor.color.a = 0xFF;
-		mMirrorModels[1]
-		    ->getModelData()
-		    ->getMaterialNodePointer(0)
-		    ->setTevColor(2, &tevColor);
-	}
+	mMirrorModels[1]
+	    ->getModelData()
+	    ->getMaterialNodePointer(0)
+	    ->getTevBlock()
+	    ->setTevColor(2, tevColor);
 
 	mActor->entry();
 	mMirrorModels[0]->entry();
