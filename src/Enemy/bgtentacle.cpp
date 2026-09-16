@@ -1149,7 +1149,7 @@ void TBGTentacle::calcAtkParticleAndSE()
 	                ? 7
 	                : mOwner->getSaveParam()->mSLBlurJoint.get();
 
-	unk80->getModel()->setAnmMtx(3, unk50);
+	PSMTXCopy(unk80->getModel()->getAnmMtx(3), unk50);
 	MTXScaleApply(unk50, unk50, fVar2, fVar2, fVar2);
 
 	MtxPtr mtx  = unk2C->getModel()->getAnmMtx(iVar5);
