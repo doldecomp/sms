@@ -398,5 +398,6 @@
   "THPPlayer/THPRead.c",
   "Map/PollutionEvent.cpp",
   "Enemy/enemyinterp.cpp",
-  "Enemy/egggen.cpp"
+  "Enemy/egggen.cpp",
+  "Camera/CameraTalk.cpp"
 ]

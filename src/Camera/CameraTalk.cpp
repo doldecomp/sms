@@ -34,6 +34,11 @@ void CPolarSubCamera::makeMtxForTalk(const TBaseNPC* param_1)
 
 void CPolarSubCamera::makeMtxForPrevTalk()
 {
+	// Declared but unused on this path; the original reserves their slots.
+	// Their names are inferred from the surrounding camera code, not recovered.
+	JGeometry::TVec3<f32> prevTarget;
+	f32 prevYaw;
+
 	if (isTalkCameraSpecifyMode(mMode)) {
 		mCurrentTarget.mYaw = mCurrentTarget.unk2C;
 
