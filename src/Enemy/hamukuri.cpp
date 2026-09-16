@@ -2202,9 +2202,10 @@ void TFireHamuKuri::setMActorAndKeeper()
 	mMActor       = mMActorKeeper->createMActor("default.bmd", 3);
 	ResTIMG* img
 	    = (ResTIMG*)JKRGetResource("/scene/map/pollution/H_ma_rak.bti");
-	if (img)
-		SMS_ChangeTextureAll(mMActor->getModel()->getModelData(),
-		                     "H_ma_rak_dummy", *img);
+	if (img) {
+		J3DModelData* modelData = mMActor->getModel()->getModelData();
+		SMS_ChangeTextureAll(modelData, "H_ma_rak_dummy", *img);
+	}
 }
 
 void TFireHamuKuri::moveObject()
