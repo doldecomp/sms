@@ -1121,8 +1121,9 @@ void TBossGesso::doAttackUnison()
 
 	f32 unisonAttackLen2 = getSaveParam()->mSLUnisonAttackLen.value;
 	unisonAttackLen2 *= unisonAttackLen2;
+	f32 sightAngle = getSaveParam()->mSLSightAngle.get();
 
-	if (inSightAngle(getSaveParam()->mSLSightAngle.get() * 0.5f)
+	if (inSightAngle(sightAngle * 0.5f)
 	    && gpMarioOriginal->isTouchGround4cm()
 	    && delta.squared() < unisonAttackLen2) {
 
