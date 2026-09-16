@@ -946,8 +946,8 @@ void TNozzleDeform::emit(int param_1)
 			emitSizeLerp = 0.0f;
 		} else {
 			if (localUnk378 < sizeMaxPressure) {
-				emitSizeLerp = (sizeMinPressure - localUnk378)
-				               / (sizeMaxPressure - localUnk378);
+				emitSizeLerp = (localUnk378 - sizeMinPressure)
+				               / (sizeMaxPressure - sizeMinPressure);
 			} else {
 				emitSizeLerp = 1.0f;
 			}
@@ -980,8 +980,8 @@ void TNozzleDeform::emit(int param_1)
 			f32 directionScale = (-dirX * sinAngle - cosAngle * dirZ);
 
 			f32 velocity = reaction;
-			velocity *= directionScale;
 			velocity *= refEmitPow;
+			velocity *= directionScale;
 
 			mFludd->mMario->addVelocity(velocity);
 
