@@ -124,7 +124,7 @@ void TRollEnemy::walkBehavior(int param_1, f32 param_2)
 	if (!unk1A8)
 		TWalkerEnemy::walkBehavior(param_1, param_2);
 
-	if (checkLiveFlag(LIVE_FLAG_AIRBORNE) && mPosition.y > 20.0f + mGroundHeight) {
+	if (isAirborne() && mPosition.y > 20.0f + mGroundHeight) {
 		// Remember the highest point of the arc, in bounce units.
 		f32 height = MsWrap((mPosition.y - mGroundHeight) / mBoundVal, 0.0f,
 		                    unk1A4->mSLBoundVYMax.get());
@@ -165,11 +165,15 @@ void TRollEnemy::behaveToWater(THitActor* param_1)
 		mScaledBodyRadius *= rate;
 		mScaling.x = mScaling.y = mScaling.z = mScaling.z * rate;
 
-		f32 ratio     = mBodyScale / unk154;
-		mAttackRadius = getSaveParams()->mSLAttackRadius.get() * ratio;
-		mAttackHeight = getSaveParams()->mSLAttackHeight.get() * ratio;
-		mDamageRadius = getSaveParams()->mSLDamageRadius.get() * ratio;
-		mDamageHeight = getSaveParams()->mSLDamageHeight.get() * ratio;
+		f32 attackRadius = getSaveParams()->getSLAttackRadius();
+		f32 attackHeight = getSaveParams()->getSLAttackHeight();
+		f32 damageRadius = getSaveParams()->getSLDamageRadius();
+		f32 ratio        = mBodyScale / unk154;
+		f32 damageHeight = getSaveParams()->getSLDamageHeight();
+		mAttackRadius    = attackRadius * ratio;
+		mAttackHeight    = attackHeight * ratio;
+		mDamageRadius    = damageRadius * ratio;
+		mDamageHeight    = damageHeight * ratio;
 		calcEntryRadius();
 	}
 }
@@ -324,8 +328,9 @@ static int RollEnemyBodyCallback(J3DNode* node, int param)
 		MtxPtr anmMtx
 		    = gpCurRollEnemy->getModel()->getAnmMtx(joint->getJntNo());
 
-		f32 s = JMASin(gpCurRollEnemy->mRollAngle);
-		f32 c = JMACos(gpCurRollEnemy->mRollAngle);
+		s16 angle = DEG2SHORTANGLE(gpCurRollEnemy->mRollAngle);
+		f32 s     = JMASSin(angle);
+		f32 c     = JMASCos(angle);
 
 		Mtx roll;
 		roll[0][0] = 1.0f;
@@ -450,14 +455,18 @@ void TIgaiga::moveObject()
 	f32 base   = unk154 * unk1CC;
 	mBodyScale = MsClamp(unk1E4 * base, base, 3.0f * mBodyScale);
 
-	f32 ratio         = mBodyScale / unk154;
+	f32 attackRadius = getSaveParams()->getSLAttackRadius();
+	f32 attackHeight = getSaveParams()->getSLAttackHeight();
+	f32 damageRadius = getSaveParams()->getSLDamageRadius();
+	f32 ratio        = mBodyScale / unk154;
+	f32 damageHeight = getSaveParams()->getSLDamageHeight();
 	mScaledBodyRadius = 8.0f * (mBodyScale * mBodyRadius)
 	    * MsClamp(unk1CC * unk1E4, 1.0f, 1.2f);
 	mScaling.x = mScaling.y = mScaling.z = mBodyScale;
-	mAttackRadius = getSaveParams()->mSLAttackRadius.get() * ratio;
-	mAttackHeight = getSaveParams()->mSLAttackHeight.get() * ratio;
-	mDamageRadius = getSaveParams()->mSLDamageRadius.get() * ratio;
-	mDamageHeight = getSaveParams()->mSLDamageHeight.get() * ratio;
+	mAttackRadius = attackRadius * ratio;
+	mAttackHeight = attackHeight * ratio;
+	mDamageRadius = damageRadius * ratio;
+	mDamageHeight = damageHeight * ratio;
 	calcEntryRadius();
 
 	mMarchSpeed = unk1A4->mSLMarchSpeedLow.get();
@@ -474,9 +483,9 @@ void TIgaiga::moveObject()
 
 void TIgaiga::rollSE()
 {
-	gpMSound->startSoundActorSpecial(MSD_SE_EN_IGAIGA_ROLL, &mPosition,
-	                                 mScaling.x, mMarchSpeed, 0, nullptr, 0,
-	                                 4);
+	SMSGetMSound()->startSoundActorSpecial(MSD_SE_EN_IGAIGA_ROLL, &mPosition,
+	                                       mScaling.x, mMarchSpeed, 0, nullptr,
+	                                       0, 4);
 }
 
 void TIgaiga::boundSE()
@@ -509,7 +518,7 @@ void TIgaiga::walkBehavior(int param_1, f32 param_2)
 	}
 
 	// Whatever it is resting on or leaning against gets hit.
-	if (!checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
+	if (!isAirborne()) {
 		if (mGroundPlane && mGroundPlane->getActor())
 			((THitActor*)mGroundPlane->getActor())
 			    ->receiveMessage(this, HIT_MESSAGE_ATTACK);
@@ -668,7 +677,7 @@ DEFINE_NERVE(TNerveIgaigaRollOnGraph, TLiveActor)
 	if (spine->getTime() == 0)
 		igaiga->setWalkAnm();
 
-	if (igaiga->checkCurAnmEnd(0) && igaiga->mCurrentBckAnm == 2)
+	if (igaiga->checkCurAnmEnd(0) && igaiga->isBckAnm(2))
 		igaiga->setBckAnm(3);
 
 	igaiga->rollMove();
@@ -699,7 +708,7 @@ DEFINE_NERVE(TNerveIgaigaWaterHit, TLiveActor)
 		}
 	}
 
-	if (igaiga->checkCurAnmEnd(0) && igaiga->mCurrentBckAnm == 2)
+	if (igaiga->checkCurAnmEnd(0) && igaiga->isBckAnm(2))
 		igaiga->setBckAnm(3);
 
 	igaiga->rollMove();
@@ -717,7 +726,7 @@ DEFINE_NERVE(TNerveIgaigaShootFromCannon, TLiveActor)
 		igaiga->onLiveFlag(LIVE_FLAG_AIRBORNE);
 	}
 
-	if (igaiga->checkCurAnmEnd(0) && !igaiga->checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
+	if (igaiga->checkCurAnmEnd(0) && !igaiga->isAirborne()) {
 		igaiga->bound();
 		spine->pushAfterCurrent(&TNerveIgaigaRollOnGraph::theNerve());
 		return TRUE;
@@ -971,7 +980,7 @@ void TGorogoro::walkBehavior(int param_1, f32 param_2)
 		const TBGCheckData* ground = mGroundPlane;
 		if (ground) {
 			const TLiveActor* actor = ground->getActor();
-			if (actor && actor->isActorType(0x4000009A)) {
+			if (actor && actor->mActorType == 0x4000009A) {
 				((TBiancoWatermill*)actor)->turnByEnemy(this, ground);
 				TRollEnemy::walkBehavior(param_1, 0.2f * param_2);
 			}
@@ -982,7 +991,7 @@ void TGorogoro::walkBehavior(int param_1, f32 param_2)
 		                 &roof);
 		if (roof) {
 			const TLiveActor* actor = roof->getActor();
-			if (actor && actor->isActorType(0x4000009A)) {
+			if (actor && actor->mActorType == 0x4000009A) {
 				((TBiancoWatermill*)actor)->turnByEnemy(this, roof);
 				TRollEnemy::walkBehavior(param_1, 0.3f * param_2);
 			}
@@ -996,7 +1005,7 @@ void TGorogoro::walkBehavior(int param_1, f32 param_2)
 				for (int i = 0; i < record.mResultWallsNum; ++i) {
 					const TBGCheckData* wall = record.mResultWalls[i];
 					const TLiveActor* actor  = wall->getActor();
-					if (actor && actor->isActorType(0x4000009A))
+					if (actor && actor->mActorType == 0x4000009A)
 						((TBiancoWatermill*)actor)->turnByEnemy(this, wall);
 				}
 				TRollEnemy::walkBehavior(param_1, 0.2f * param_2);
@@ -1074,7 +1083,9 @@ bool TGorogoro::isRolling()
 {
 	if (mSpine->getCurrentNerve() == &TNerveGorogoroRollOnGraph::theNerve())
 		return true;
-	return mCurrentBckAnm == 1;
+	if (isBckAnm(1))
+		return true;
+	return false;
 }
 
 void TGorogoro::generateByGateKeeper(const JGeometry::TVec3<f32>& pos,
