@@ -576,7 +576,8 @@ void TOptionSoundUnit::initSurroundAnm()
 	TPatternAnmControl** ary = mSurroundAnimations;
 
 	ary[0] = new TPatternAnmControl(mScreen);
-	ary[0]->set(cSurMonteAnm, ARRAY_COUNT(cSurMonteAnm));
+	TPatternAnmControl* anm = ary[0];
+	anm->set(cSurMonteAnm, ARRAY_COUNT(cSurMonteAnm));
 	ary[0]->setupAnm();
 
 	ary[1] = new TPatternAnmControl(mScreen);
