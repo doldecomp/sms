@@ -586,7 +586,8 @@ BOOL TMario::stayWall()
 
 	if (mStatusTimer < 20) {
 		mStatusTimer += 1;
-		mVel.set(0.0f, 0.0f, 0.0f);
+		f32 zero = 0.0f;
+		mVel.set(zero, zero, zero);
 	} else {
 		mVel.y = -mStatusTimer * 0.5f;
 	}
