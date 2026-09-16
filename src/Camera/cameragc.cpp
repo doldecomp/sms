@@ -220,13 +220,12 @@ void CPolarSubCamera::loadAfter()
 	mCurrentTarget.unk18.set(mPosition);
 	mCurrentTarget.mTarget.set(mTarget);
 
-	TCameraOption* option = gpCameraOption;
 	if (SMS_isOptionMap()) {
-		mCurrentTarget.mPosition = mPosition;
-		mCurrentTarget.mTarget   = mTarget;
-		option = new TCameraOption(mPosition, &mCurrentTarget.mTarget);
+		mCurrentTarget.mPosition.set(mPosition);
+		mCurrentTarget.mTarget.set(mTarget);
+		gpCameraOption
+		    = new TCameraOption(mPosition, &mCurrentTarget.mTarget);
 	}
-	gpCameraOption = option;
 
 	unk256 = mCurrentTarget.mPitch;
 	unk258 = mCurrentTarget.mYaw;
