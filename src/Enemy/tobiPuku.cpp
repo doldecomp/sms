@@ -847,6 +847,23 @@ void TTobiPuku::hitWall()
 		mVelocity.y = 0.0f;
 }
 
+// UNUSED, 0x140 in the map. Inlined into TobiPukuRollCallback, where the
+// materialised bool it returns is what shapes that function's branches.
+bool TTobiPuku::isRoll()
+{
+	// TODO: 0x150 against the map's 0x140, and when inlined the original's
+	// three tests converge on one `li r0, 1` where ours each get their own.
+	// Writing the body as a single `a || b || c` return gets the size down
+	// to 0xd4 but makes the inlined form much worse, so this stays.
+	if (mSpine->getCurrentNerve() == &TNerveTobiPukuLand::theNerve())
+		return true;
+	if (mSpine->getCurrentNerve() == &TNerveTobiPukuPrepareFly::theNerve())
+		return true;
+	if (mSpine->getCurrentNerve() == &TNerveTobiPukuReturnLaunch::theNerve())
+		return true;
+	return false;
+}
+
 void TTobiPuku::calcRootMatrix()
 {
 	gpCurTobiPuku = (TMoePuku*)this;
@@ -1134,4 +1151,85 @@ void TMoePuku::calcRootMatrix()
 	    0x1D2, getMActor()->getModel()->getAnmMtx(1), 1, this);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
 	    0x1F8, getMActor()->getModel()->getAnmMtx(1), 3, this);
+}
+
+void TTobiPukuLaunchPad::forceLaunch(TTobiPuku* puku)
+{
+	JGeometry::TVec3<f32> target(mPosition);
+
+	// 16384/90 is 65536/360 written the long way; the original spells the
+	// conversion out here rather than going through DEG2SHORTANGLE.
+	s16 yaw   = (s16)(16384.0f * mRotation.y / 90.0f);
+	f32 sinYaw = JMASSin(yaw);
+	f32 cosYaw = JMASCos(yaw);
+
+	JGeometry::TVec3<f32> velocity;
+	if (((TTobiPukuLaunchPadManager*)getManager())->unk60) {
+		// Aim at a point mSLFlyDist ahead and solve for the arc.
+		f32 dist = unk198->mSLFlyDist.get();
+		target.x += sinYaw * dist;
+		target.z += cosYaw * dist;
+		velocity = calcVelocityToJumpToY(
+		    target, unk198->mSLLaunchVelocityY.get(),
+		    puku->unk19C->mSLFlyGravityY.get());
+	} else {
+		// Otherwise just fire along the pad's own facing at its own speed.
+		f32 speed    = unk19C;
+		s16 pitch    = (s16)(16384.0f * mRotation.x / 90.0f);
+		f32 cosPitch = JMASCos(pitch);
+		velocity.x   = sinYaw * speed * cosPitch;
+		velocity.y   = 1.0f * speed * JMASSin(pitch);
+		velocity.z   = cosYaw * speed * cosPitch;
+	}
+
+	puku->reset();
+	puku->mPosition       = mPosition;
+	puku->mRotation       = mRotation;
+	puku->mLaunchVelocity = velocity;
+	puku->unk1B0          = mPosition.y;
+	puku->mLaunchPad      = this;
+
+	JGeometry::TVec3<f32> vel(mVelocity);
+	puku->mLaunchAngle = MsGetRotFromZaxis(vel).x;
+}
+
+// Rolls the whole model about Z while the puku is being flung, so it tumbles
+// instead of gliding flat. Only the three launch-related nerves want it.
+static int TobiPukuRollCallback(J3DNode* param_1, int param_2)
+{
+	if (param_2 == 0) {
+		TMoePuku* puku = gpCurTobiPuku;
+		if (puku) {
+			if (puku->isRoll()) {
+				J3DJoint* joint = (J3DJoint*)param_1;
+				MtxPtr anmMtx   = gpCurTobiPuku->getMActor()
+				                    ->getModel()
+				                    ->getAnmMtx(joint->getJntNo());
+
+				f32 s = JMASin(gpCurTobiPuku->unk1EC);
+				f32 c = JMACos(gpCurTobiPuku->unk1EC);
+
+				Mtx local_44;
+				local_44[0][0] = c;
+				local_44[0][1] = -s;
+				local_44[0][2] = 0.0f;
+				local_44[0][3] = 0.0f;
+
+				local_44[1][0] = s;
+				local_44[1][1] = c;
+				local_44[1][2] = 0.0f;
+				local_44[1][3] = 0.0f;
+
+				local_44[2][0] = 0.0f;
+				local_44[2][1] = 0.0f;
+				local_44[2][2] = 1.0f;
+				local_44[2][3] = 0.0f;
+
+				MTXConcat(anmMtx, local_44, anmMtx);
+				MTXConcat(J3DSys::mCurrentMtx, local_44,
+				          J3DSys::mCurrentMtx);
+			}
+		}
+	}
+	return true;
 }

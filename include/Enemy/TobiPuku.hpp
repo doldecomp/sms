@@ -86,6 +86,7 @@ public:
 	void init(TLiveManager*);
 	virtual void moveObject();
 	void hitWall();
+	bool isRoll();
 
 
 	// Overrides the base slot at 0x154.
