@@ -871,17 +871,14 @@ void TSmallEnemy::setBckAnm(int index)
 
 void TSmallEnemy::expandCollision()
 {
-	f32 attackRadius = getSaveParams()->getSLAttackRadius();
-	f32 attackHeight = getSaveParams()->getSLAttackHeight();
-	f32 damageRadius = getSaveParams()->getSLDamageRadius();
-	f32 damageHeight = getSaveParams()->getSLDamageHeight();
+	f32 attackRadius = getSaveParams()->mSLAttackRadius.get();
+	f32 attackHeight = getSaveParams()->mSLAttackHeight.get();
+	f32 damageRadius = getSaveParams()->mSLDamageRadius.get();
+	f32 damageHeight = getSaveParams()->mSLDamageHeight.get();
 
-	attackRadius *= unk190 / unk154;
-	attackHeight *= unk190 / unk154;
-	damageRadius *= unk190 / unk154;
-	damageHeight *= unk190 / unk154;
-
-	setHitParams(attackRadius, attackHeight, damageRadius, damageHeight);
+	f32 scale = unk190 / unk154;
+	setHitParams(attackRadius * scale, attackHeight * scale,
+	             damageRadius * scale, damageHeight * scale);
 }
 
 bool TSmallEnemy::isEaten()
