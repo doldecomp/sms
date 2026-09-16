@@ -913,12 +913,11 @@ bool TFireWanwan::isFindMario(f32 param_1)
 	return isFindMarioFromParam(param_1);
 }
 
-static inline f32 dist(const JGeometry::TVec3<f32>& a,
+static inline f32 dist(JGeometry::TVec3<f32> a,
                        const JGeometry::TVec3<f32>& b)
 {
-	JGeometry::TVec3<f32> tmp = a;
-	tmp.sub(b);
-	return tmp.length();
+	a.sub(b);
+	return a.length();
 }
 
 bool TFireWanwan::isMissMario() const
