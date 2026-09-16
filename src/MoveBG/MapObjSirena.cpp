@@ -639,7 +639,8 @@ int TItemSlotDrum::getForcastResult(int idx)
 				break;
 		}
 	}
-	return getResultFromAng((int)(angle / unk168) * unk168);
+	angle = unk168 * (int)(angle / unk168);
+	return getResultFromAng(angle);
 }
 
 int TItemSlotDrum::getResultFromAng(f32 ang)
