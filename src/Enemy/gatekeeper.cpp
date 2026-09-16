@@ -1079,8 +1079,10 @@ DEFINE_NERVE(TNerveBGKDive, TLiveActor)
 
 	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		if (self->mVariant == TBiancoGateKeeper::VARIANT_GENERIC) {
-			int timer    = self->getSaveParams()->mSLLaunchTimerNormal.get();
-			self->unk298 = (s32)(240.0f * MsRandF()) + timer - 120;
+			int timer = self->getSaveParams()->mSLLaunchTimerNormal.get();
+			timer += (s32)(240.0f * MsRandF());
+			timer = (s16)(timer - 120);
+			self->unk298 = timer;
 			self->launchGorogoro();
 			self->rumblePad();
 		}
