@@ -356,9 +356,9 @@ bool TPoiHana::isCollidMove(THitActor* param_1)
 		if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()) {
 			mSpine->pushNerve(&TNervePoihanaFreeze::theNerve());
 			JGeometry::TVec3<f32> vel = mLinearVelocity;
-			mLinearVelocity.x *= -2.0f;
-			mLinearVelocity.y *= 5.0f;
-			mLinearVelocity.z *= -2.0f;
+			vel.x *= -2.0f;
+			vel.y *= 5.0f;
+			vel.z *= -2.0f;
 			mVelocity = vel;
 
 			mPosition.y += 10.0f;
