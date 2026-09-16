@@ -437,7 +437,7 @@ bool TAmenbo::isOverTerritory(JGeometry::TVec3<f32>* param_1) const
 	*param_1 -= mPosition;
 	param_1->y = 0.0f;
 	f32 range  = getSaveParam2()->mTerritoryRange.get();
-	return param_1->squared() < range * range;
+	return range * range > param_1->squared();
 }
 
 bool TAmenbo::isAttacking() const
