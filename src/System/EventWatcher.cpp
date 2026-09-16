@@ -321,7 +321,7 @@ static void evIsTalkModeNow(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
 	int value = SMSGetMarDirector()->isTalkModeNow() ? 1 : 0;
-	interp->push(value);
+	interp->push(TSpcSlice(value));
 }
 
 static void evSetFlagNPCCanTaken(TSpcTypedInterp<TEventWatcher>* interp,
