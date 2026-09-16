@@ -580,7 +580,7 @@ void TTelesa::changeOut()
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELSA_RECOVER, &mPosition, 0,
 	                                nullptr, 0, 4);
 	offLiveFlag(LIVE_FLAG_HIDDEN);
-	mPosition = mJuiceBlock->mPosition;
+	mPosition = mJuiceBlock->getPosition();
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
 	getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	mJuiceBlock->kill();
