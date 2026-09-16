@@ -924,7 +924,8 @@ static void evKillWoodBox(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 			obj->makeObjDead();
 	}
 
-	interp->push();
+	const TSpcSlice& result = TSpcSlice();
+	interp->push(result);
 }
 
 static void evIsInsideCube(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
