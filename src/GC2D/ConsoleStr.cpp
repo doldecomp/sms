@@ -6,6 +6,7 @@
 #include <System/MarDirector.hpp>
 #include <System/StageUtil.hpp>
 #include <System/FlagManager.hpp>
+#include <System/DummyStrings.hpp>
 #include <JSystem/J2D/J2DPicture.hpp>
 #include <JSystem/J2D/J2DTextBox.hpp>
 #include <JSystem/J2D/J2DScreen.hpp>
@@ -84,7 +85,7 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 	if (gpMarDirector->mMap != 15) {
 		void* pvVar10 = JKRGetResource("/common/2d/scenarioname.bmg");
 
-		s16 uVar2 = SMS_getShineID(uVar1, uVar9, false);
+		s16 uVar2 = SMS_getShineID(uVar1, (u8)uVar9, false);
 
 		const void* puVar15;
 		if (pvVar10 == nullptr || uVar2 == -1)
