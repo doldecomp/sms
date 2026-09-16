@@ -900,7 +900,8 @@ static void evRefreshWoodBox(TSpcTypedInterp<TEventWatcher>* interp,
 			obj->appear();
 	}
 
-	interp->push();
+	const TSpcSlice& result = TSpcSlice();
+	interp->push(result);
 }
 
 static void evKillWoodBox(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
