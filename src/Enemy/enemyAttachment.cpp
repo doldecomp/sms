@@ -146,7 +146,7 @@ void TEnemyAttachment::sendMessage()
 		}
 
 		if (mCollisions[i] != unk160) {
-			((TLiveActor*)mCollisions[i])->kill();
+			kill();
 		}
 	}
 }
