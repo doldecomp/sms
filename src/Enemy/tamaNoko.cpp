@@ -325,7 +325,8 @@ void TTamaNoko::walkBehavior(int param_1, f32 param_2)
 	mTurnSpeed  = getSaveParams2()->mSLTurnSpeedLow.get();
 	mMarchSpeed = getSaveParams2()->mSLMarchSpeedLow.get();
 
-	JGeometry::TVec3<f32> local_34 = unkF4.getPoint();
+	TPathNode& local_28 = getUnkF4();
+	JGeometry::TVec3<f32> local_34 = local_28.getPoint();
 	local_34 -= mPosition;
 	VECMag(&local_34);
 
