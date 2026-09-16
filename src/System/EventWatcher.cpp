@@ -619,7 +619,8 @@ static void evRaiseBuilding(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	if (event)
 		event->raiseBuilding(id);
 
-	interp->push();
+	const TSpcSlice& result = TSpcSlice();
+	interp->push(result);
 }
 
 static void evForceCloseTalk(TSpcTypedInterp<TEventWatcher>* interp,
