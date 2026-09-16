@@ -688,19 +688,14 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 	if (param_2 == 0) {
 
 		BOOL check2;
-		bool check;
 
 		// Definitely some inline shenanigans
 		// And this is wrong
-		if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK)
-		        == MARIO_STATUS_TYPE_WAITING
+		if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK) == 0
 		    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
 		    && gpMarioForCallBack->onYoshi() == 0) {
 
-			check2 = !(gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEPY
-			           && gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEP)
-			             ? TRUE
-			             : FALSE;
+			check2 = gpMarioForCallBack->isSleeping() == false ? TRUE : FALSE;
 		}
 
 		if (check2) {
@@ -713,15 +708,15 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 			if (!checkData->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
 
 				// A lot of stuff is not matching with these copies
-				Vec currentMtxDir;
-				currentMtxDir.x = J3DSys::mCurrentMtx[0][0];
-				currentMtxDir.y = J3DSys::mCurrentMtx[1][0];
-				currentMtxDir.z = J3DSys::mCurrentMtx[2][0];
+				Vec currentMtxDir = { 0.0f, 0.0f, 0.0f };
+				currentMtxDir.x   = J3DSys::mCurrentMtx[0][0];
+				currentMtxDir.y   = J3DSys::mCurrentMtx[1][0];
+				currentMtxDir.z   = J3DSys::mCurrentMtx[2][0];
 
-				Vec normalDir;
-				normalDir.x = -checkData->getNormal().x;
-				normalDir.y = -checkData->getNormal().y;
-				normalDir.z = -checkData->getNormal().z;
+				Vec normalDir = { 0.0f, 0.0f, 0.0f };
+				normalDir.x   = -checkData->getNormal().x;
+				normalDir.y   = -checkData->getNormal().y;
+				normalDir.z   = -checkData->getNormal().z;
 
 				Vec currentNormalCross1;
 				Vec currentNormalCross2;
@@ -750,7 +745,7 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 
 				footMtx[0][1] = normalDir.x;
 				footMtx[1][1] = normalDir.y;
-				footMtx[2][1] = normalDir.z;
+				footMtx[2][2] = normalDir.z;
 
 				footMtx[0][2] = currentNormalCross1.x;
 				footMtx[1][2] = currentNormalCross1.y;
