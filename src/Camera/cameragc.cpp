@@ -101,8 +101,9 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 		mSaveKindParam[i] = new TCamSaveKindParam(mCamKindNameSaveFile[i]);
 	if (SMS_isMultiPlayerMap())
 		createMultiPlayer(4);
-	int stage = gpMarDirector->getCurrentStage();
-	if (gpMarDirector->getCurrentMap() == 58 && (stage == 0 || stage == 1)) {
+	u8 stage = gpMarDirector->getCurrentStage();
+	if (gpMarDirector->getCurrentMap() == 58
+	    && !(stage != 0 && stage != 1)) {
 		unk64 |= CAMERA_FLAG_JET_COASTER_SCENE;
 		unk2B8 = new TCameraJetCoaster;
 		switch (stage) {
