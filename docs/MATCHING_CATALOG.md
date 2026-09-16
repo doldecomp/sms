@@ -1430,3 +1430,35 @@ partial reorder is much harder to debug than a failed assertion.
 Be aware of what this does *not* fix: `.rodata` string-pool offsets also
 depend on objects the original emits and we do not, so an out-of-order TU
 and a correctly-ordered one can have the same operand mismatches.
+
+## Inlining decisions differ from ours per call site, not per function (open)
+
+`src/MoveBG/MapObjBall.cpp` is now fully written, and the residuals in it are
+dominated by one thing: MWCC inlined differently for the original than it
+does for us, and it did so **per call site**. The evidence, all from one TU:
+
+| Callee | Original | Ours |
+|---|---|---|
+| `JGeometry::TUtil<f32>::sqrt` in `calcCurrentMtx`, `TBigWatermelon::touchActor` | inlined | inlined |
+| the same `sqrt` in `hold`, `touchGround`, `touchWall` (via `length()`) | **called** (weak symbol emitted from `boid.cpp`) | inlined |
+| `TMapObjBall::control` from `TResetFruit::control` LIVING / HOLDING arms | **called** | inlined |
+| the same body in the APPEARING / BREAKING arm | present as literal code | -- |
+| `TResetFruit::touchActor` from `TResetFruit::control`'s loop and `receiveMessage` | inlined | **called** |
+
+So neither "the original inlines more" nor "less" holds; size alone is not the
+rule (`TMapObjBall::control` is 68 instructions and called, `touchActor` is 77
+and inlined). Two hypotheses I have **not** been able to confirm:
+
+- **A per-function inlining budget.** The `sqrt` sites that stay out of line
+  are the ones reached through `length()` (which itself inlines `squared()` and
+  `dot()`), so the caller may already have spent its budget before reaching
+  `sqrt`. Completing the TU did not change any of these, so it is not a
+  whole-TU budget.
+- **The source at those sites is different from what we wrote** -- e.g. the
+  APPEARING/BREAKING arm really is a pasted copy rather than a call, and the
+  `length()` sites might call something other than `length()`.
+
+Do not "fix" these with `#pragma dont_inline` or by pasting bodies; the
+functions are structurally right and are left at their current percentages
+(`hold` 48%, `touchWall` 75%, `TBigWatermelon::touchActor` 61%,
+`TResetFruit::control` 52%, `TResetFruit::receiveMessage` 69%).
