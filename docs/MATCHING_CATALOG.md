@@ -1290,3 +1290,37 @@ They are inherited, not introduced by recent batches, but their scores are not e
 - NpcInbetween's ratio accessor recovers the original floating-point registers but enlarges its frame by eight bytes.
   Const and split-declaration variations do not solve it; all NPC trials reverted.
   See the [batch 38 audit](progress/GMSE01-closure-audit-batch38.md) before related retries.
+
+## Frame gaps are not a compiler-flag artifact (disproven hypothesis)
+
+Our stack frames are *systematically* smaller than the target's, never larger,
+across all 138 functions in `docs/progress/GMSE01-frame-gaps.md`. A one-sided
+bias like that looks like a build-configuration difference, so I tested it
+directly on `THitActor::calcEntryRadius` (target `0x40`, ours `0x18`) by
+recompiling `src/Strategic/HitActor.cpp` with the real command line and varying
+one knob at a time:
+
+| Variation | Frame |
+|---|---|
+| baseline (`-O4,p -inline auto -opt all,nostrength -inline deferred -prefix SMS.mch`) | `0x18` |
+| without `-prefix SMS.mch` (no PCH) | `0x18` |
+| `-opt all` (drop `nostrength`) | `0x18` |
+| `-O4` (drop `,p`) | `0x18` |
+| `-inline on`, or dropping `-inline deferred` | `0x18` |
+| `-opt all,nostrength,noschedule` | `0x18` |
+| `-sym on` | `0x18` |
+| `-O3,p` | `0x18` |
+| `-O0` | `0x30` — and the instructions change completely |
+
+Nothing reproduces the target frame while keeping the instructions identical.
+**The gaps are a source-level property of each function**, so the worklist's
+premise holds and there is no global fix to be found.
+
+One honest caveat on the two successes (`egggen`, `CameraTalk`): adding *N*
+bytes of any local fixes an *N*-byte gap, so those matches confirm the size,
+not the declaration. What makes them defensible is that the recovered locals
+were ones the surrounding code plainly wanted — a scratch position vector next
+to a distance test, a previous-target/previous-yaw pair in a camera. Where the
+byte count is the only evidence, filling the gap is filler, and AGENTS.md
+prohibits committing that. See the table at the end of
+`docs/progress/GMSE01-frame-gaps.md` for the four cases where I stopped.
