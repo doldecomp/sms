@@ -356,9 +356,7 @@ bool TMapEventSinkBianco::watch()
 
 	for (int i = 1; i < mBuildingNum; ++i) {
 		if (!mIsBuildingRecovered[i]) {
-			if (gpPollution->getLayer(unk60[i].unk0)
-			        ->getObj(unk60[i].unk2)
-			        ->isCleaned()) {
+			if (getPollutionObj(i)->isCleaned()) {
 				mRaisingBuildingIdx = i;
 				return true;
 			}
