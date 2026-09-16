@@ -1205,7 +1205,8 @@ static void evSetEventForWaterMelon(TSpcTypedInterp<TEventWatcher>* interp,
 static void evAppearReadyGo(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
-	SMSGetMarDirector()->getConsole()->unk94->startAppearReady();
+	TGCConsole2* console = getConsole();
+	console->unk94->startAppearReady();
 	interp->push();
 }
 
