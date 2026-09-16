@@ -36,6 +36,8 @@ public:
 	virtual void scalingChangeActor();
 	virtual void changeOut();
 	virtual void reset();
+	virtual void kill();
+	virtual void forceKill();
 
 	// New virtuals, declared in the order the vtable lists them
 	// (0x1b8 onwards).

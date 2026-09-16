@@ -733,6 +733,44 @@ void TTobiPuku::moveObject()
 // TODO: 97.3%. One instruction differs: the original computes &unk104 into a
 // register before the inlined getPoint, which neither the direct expression nor
 // binding the result to a reference reproduces.
+void TTobiPuku::kill()
+{
+	if (checkLiveFlag(LIVE_FLAG_DEAD))
+		return;
+	// TODO: 98.8%. The original emits `beq +8; b end` here where we fuse to
+	// a single `bne end`. Neither a materialised bool nor an explicit else
+	// reproduces the redundant branch.
+	if (mGroundPlane->isIllegalData())
+		return;
+
+	mHitPoints = 1;
+	if (mSpine->getCurrentNerve() != &TNerveTobiPukuDie::theNerve()
+	    || !unk1AD) {
+		unk1AD = 1;
+		mSpine->reset();
+		mSpine->setNext(&TNerveTobiPukuDie::theNerve());
+		mSpine->pushAfterCurrent(mSpine->getDefault());
+	}
+}
+
+void TTobiPuku::forceKill()
+{
+	// TODO: the trailing isJumpBck() is evaluated and tested but its result
+	// goes nowhere, like genEventCoin() above. Whatever consumed it was
+	// compiled out of the retail build.
+	if (mSpine->getCurrentNerve() == &TNerveTobiPukuDie::theNerve())
+		return;
+	if (mSpine->getCurrentNerve() == &TNerveTobiPukuPrepareFly::theNerve())
+		return;
+	if (mSpine->getCurrentNerve() == &TNerveTobiPukuFly::theNerve())
+		return;
+	if (checkLiveFlag(LIVE_FLAG_UNK10))
+		return;
+
+	if (!isJumpBck())
+		return;
+}
+
 void TTobiPuku::initAttacker(THitActor* param_1)
 {
 	mRotation = param_1->mRotation;
@@ -856,4 +894,17 @@ void TPukuPuku::load(JSUMemoryInputStream& stream)
 	TSmallEnemy::load(stream);
 	reset();
 	unk1AC = 0;
+}
+
+void TPukuPuku::init(TLiveManager* manager)
+{
+	TTobiPuku::init(manager);
+	mSpine->initWith(&TNerveTobiPukuSwimWander::theNerve());
+	gpCurTobiPuku = nullptr;
+}
+
+void TPukuPuku::reset()
+{
+	TTobiPuku::reset();
+	mSpine->initWith(&TNerveTobiPukuSwimWander::theNerve());
 }
