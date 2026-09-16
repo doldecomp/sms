@@ -1035,11 +1035,12 @@ void TYoshi::calcAnim()
 	}
 
 	u32 soundFlags = mMario->mSoundFlags;
+	f32 rate = mActor->getFrameCtrl(ANM_TYPE_BCK)->getRate();
+	MActor* actor = mActor;
 
-	mBodyAnmSound->animeLoop(&mTranslation,
-	                         mActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame(),
-	                         mActor->getFrameCtrl(ANM_TYPE_BCK)->getRate(),
-	                         soundFlags + 0x10000000, 4);
+	mBodyAnmSound->animeLoop(
+	    &mTranslation, actor->getFrameCtrl(ANM_TYPE_BCK)->getFrame(), rate,
+	    soundFlags + 0x10000000, 4);
 	mTongueAnmSound->animeLoop(&unkFC, unk5C.getFrame(), unk5C.getRate(),
 	                           soundFlags + 0x10000000, 4);
 }
