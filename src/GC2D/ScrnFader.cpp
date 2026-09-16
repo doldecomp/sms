@@ -167,7 +167,8 @@ void TSMSFader::updateRequest()
 	if (mWipeRequest.unk0 == UNK30_UNK_18)
 		return;
 
-	f32 fVar1 = mWipeRequest.unk8 - 1.0f / mRate;
+	f32 fVar1 = mWipeRequest.unk8;
+	fVar1 -= 1.0f / mRate;
 	if (fVar1 < 0.0f)
 		fVar1 = 0.0f;
 	mWipeRequest.unk8 = fVar1;
