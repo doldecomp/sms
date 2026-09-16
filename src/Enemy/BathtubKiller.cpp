@@ -98,6 +98,7 @@ TBathtubKillerParams::TBathtubKillerParams(const char* prm)
 
 TBathtubKiller::TBathtubKiller(const char* name)
     : TSmallEnemy(name)
+    , unk1CC(nullptr)
 {
 }
 
