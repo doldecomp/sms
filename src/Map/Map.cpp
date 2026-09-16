@@ -300,7 +300,8 @@ const TBGCheckData* TMap::intersectLine(const JGeometry::TVec3<f32>& param_1,
 
 bool TMap::isTouchedOneWall(f32 x, f32 y, f32 z, f32 radius) const
 {
-	return isTouchedOneWallAndMoveXZ(&x, y, &z, radius);
+	bool result = isTouchedOneWallAndMoveXZ(&x, y, &z, radius);
+	return result;
 }
 
 bool TMap::isTouchedOneWallAndMoveXZ(f32* x, f32 y, f32* z, f32 radius) const
