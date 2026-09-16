@@ -671,8 +671,10 @@ void TPollutionCounterLayer::calcViewMtx()
 		TPollutionLayer* layer = gpPollution->getLayer(i);
 
 		TPosition3f local_a4;
-		makeWorldToPollutionMtx(layer->mPos.mInverseTexelScale, layer->mMinX,
-		                        layer->mMinZ, &local_a4);
+		f32 z = layer->mMinZ;
+		f32 x = layer->mMinX;
+		makeWorldToPollutionMtx(layer->mPos.mInverseTexelScale, z, x,
+		                        &local_a4);
 
 		j3dSys.setViewMtx(local_a4);
 		j3dSys.setDrawBuffer(mModelStampDrawBuffers[i], 0);
