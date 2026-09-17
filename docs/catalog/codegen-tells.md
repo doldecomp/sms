@@ -208,6 +208,17 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `MapObjCorona`
+
+- The MSound rogue-include pair has an order per TU: read the JAL-list order off the target `__sinit` (registrations run in reverse declaration order) before choosing `MSSetSound.hpp` before or after `MSoundBGM.hpp` (97.6 -> 100 here; `Talk2D2` needed the same order, `MapObjWave`/enemies the other).
+- A TU-local local-yaw helper `s16 getDir(MtxPtr, const TVec3&)` = `getXDir/getZDir/getTrans` + `sub` + `matan(z.rel, x.rel)`, with a three-argument form adding `radial.setLength(rel, 1.0f)` and `tangent.scaleAdd(-radial.dot(offset), offset, radial)` (`getNearGrip` 71 -> 98, `getNextGrip`/`getNextJuncture` 1 -> 98). Naming its two dot products is worth 8 bytes of the *caller's* frame and the `s16` result at the site another 8.
+- Statement count, not size, decides a 300-byte helper: with two named dot locals MWCC refused to inline `getDir` (45.8%), without them it expanded (97.8%) with an identical instruction stream.
+- A lone `bl TUtil<f32>::inv_sqrt` guard with no stores is `dir.sub(a, b); dir.y = 0.0f; dir.normalize();` on a vector nothing reads: the `y = 0.0f` propagates into `dot` and gives the `lfs 0.0; fmadds` opening; the constructor and `set(x, 0.0f, z)` lose it.
+- `1.0f - m.at(1,1) * m.at(1,1)` does not contract; `f32 c = m.at(1,1); 1.0f - c * c` gives `fnmsubs` (extends the `fp_contract` locals rule to an inline accessor's result).
+- `setQT` is one level too deep for `setQuat` here: `mtx.setQuat(q); mtx.setTrans(p);` spelled out took `TBathtub::calcRootMatrix` 51 -> 88 (mirror of the BeeHive case; per site).
+- Surviving `* 0.0`/`* 1.0` products in a concat prove the right operand is a real local matrix built by `setEularY(a)` + `setTrans(0, 0, 0)`.
+- Open: `TBathtub::hipdrop` is instruction-exact with a 16-byte gap, and closing it does not stop retail's two `receiveMessage` callers from inlining it (both lose to that one expansion); `TKoopa::allowsLaunch()`/`effectsTumble()` return `bool` (callers `clrlwi.`).
+
 ## Rules from `bosstelesa`
 
 - Three `rand()` results into one vector: per-component `v.x = r.rand(); v.y = ...` stores each result straight to its slot as retail does; the constructor form batches (`TBubble::split` 85 -> 100). A `TMsRange` used in a loop is declared *before* the loop.
