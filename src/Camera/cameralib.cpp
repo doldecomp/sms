@@ -11,7 +11,15 @@ const JGeometry::TVec3<f32> CLBConstUpVec(0.0f, 1.0f, 0.0f);
 static const f32 SHORTANGLE_TO_DEGREES = 0.005493164f; // 360/65536
 static const f32 DEGREES_TO_RADIANS    = 0.017453294f; // pi/180
 
-// TODO: These are very fake
+// TODO: fabricated, and only the levels they add are evidence. Every site
+// needs TVec3::normalize() below the statement that spells it, so that
+// TVec3::setLength lands past its depth allowance and stays the ROM's `bl`;
+// called directly, setLength expands and its dot/inv_sqrt/scale leaves become
+// the calls instead. Two levels is what makes the UNUSED CLBCalcNearClipAngle
+// 0x150 against the map's 0x154 (one level gives 0x190), at the cost of 1.2
+// points on CLBCalcNearNinePos, which inlines it. The real names are unknown
+// -- nothing weak or UNUSED in the map covers them -- so they are parked here
+// rather than in cameralib.hpp.
 static void normalizeInner1(JGeometry::TVec3<f32>& vec) { vec.normalize(); }
 static void normalizeInner2(JGeometry::TVec3<f32>& vec)
 {
@@ -329,6 +337,30 @@ void CLBCalcScaleTranslateMatrix(MtxPtr mtx, const Vec& scale,
 	mtx[2][3] = translate.z;
 }
 
+// UNUSED in the map (0x154); ours is 0x150. The body is CLBCalcNearNinePos'
+// own head: the name, the argument list (NinePos' minus the near-plane
+// dimensions), the emission position (between setRotate and
+// CLBCalcScaleTranslateMatrix, so immediately before NinePos in source order)
+// and the size all agree.
+void CLBCalcNearClipAngle(JGeometry::TVec3<f32>* out_center, S16Vec* out_euler,
+                          const JGeometry::TVec3<f32>& origin,
+                          const JGeometry::TVec3<f32>& lookat, s16 roll,
+                          f32 near_dist)
+{
+	JGeometry::TVec3<f32> dir;
+
+	dir.sub(lookat, origin);
+	normalizeInner2(dir);
+
+	out_center->scaleAdd(near_dist, origin, dir);
+
+	f32 xzDistance = MsSqrtf(((origin.x - lookat.x) * (origin.x - lookat.x)
+	                          + (origin.z - lookat.z) * (origin.z - lookat.z)));
+	out_euler->x   = -matan(xzDistance, origin.y - lookat.y);
+	out_euler->y   = matan(origin.z - lookat.z, origin.x - lookat.x);
+	out_euler->z   = roll;
+}
+
 void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
                         const JGeometry::TVec3<f32>& origin,
                         const JGeometry::TVec3<f32>& lookat, s16 roll,
@@ -349,17 +381,8 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
 	JGeometry::TVec3<f32> local_74;
 	JGeometry::TVec3<f32> local_68;
 
-	local_a8.sub(lookat, origin);
-	normalizeInner2(local_a8);
-
-	// Center point
-	out_grid[4].scaleAdd(near_dist, origin, local_a8);
-
-	f32 xzDistance = MsSqrtf(((origin.x - lookat.x) * (origin.x - lookat.x)
-	                          + (origin.z - lookat.z) * (origin.z - lookat.z)));
-	out_euler->x   = -matan(xzDistance, origin.y - lookat.y);
-	out_euler->y   = matan(origin.z - lookat.z, origin.x - lookat.x);
-	out_euler->z   = roll;
+	CLBCalcNearClipAngle(&out_grid[4], out_euler, origin, lookat, roll,
+	                     near_dist);
 
 	local_68.set(0.0f, 1.0f, 0.0f);
 	local_74.set(1.0f, 0.0f, 0.0f);
@@ -445,4 +468,30 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
 	out_grid[2].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
 	local_90.negate();
 	out_grid[6].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
+}
+
+// UNUSED in the map (0x104), and emitted before CLBCalcNearNinePos, so in
+// source order it is the last function in the file and may call NinePos.
+// The body is reconstructed, but it compiles to the map's 0x104 exactly: a
+// nine-point grid local, one call to NinePos, and five vector copies out. The
+// four points are the near plane's corners -- the grid entries NinePos writes
+// with the half-diagonal -- and the second output is the plane centre. The
+// parameter names are guesses.
+void CLBCalcNearFourPos(JGeometry::TVec3<f32>* out_quad,
+                        JGeometry::TVec3<f32>* out_center, S16Vec* out_euler,
+                        const JGeometry::TVec3<f32>& origin,
+                        const JGeometry::TVec3<f32>& lookat, s16 roll,
+                        f32 near_dist,
+                        const JGeometry::TVec2<f32>& near_dims)
+{
+	JGeometry::TVec3<f32> grid[9];
+
+	CLBCalcNearNinePos(grid, out_euler, origin, lookat, roll, near_dist,
+	                   near_dims);
+
+	out_quad[0].set(grid[0]);
+	out_quad[1].set(grid[2]);
+	out_quad[2].set(grid[6]);
+	out_quad[3].set(grid[8]);
+	out_center->set(grid[4]);
 }
