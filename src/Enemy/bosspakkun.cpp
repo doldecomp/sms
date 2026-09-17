@@ -80,29 +80,6 @@ static const char* bosspakkun_bastable[] = {
 	nullptr,
 };
 
-// fabricated. The yaw of an axis measured off +Z, in degrees. It is the same
-// arithmetic as MathUtil.hpp's MsGetRotFromZaxisY, but this TU compares the
-// zero constant first (`fcmpu 0.0, z`) and reads only the two components it
-// needs, so it cannot be the shared header inline: the head-direction code
-// feeds it two elements of a joint matrix, where a TVec3 would have loaded
-// all three.
-static inline f32 BPGetRotFromZaxisY(f32 x, f32 z)
-{
-	if (0.0f == z) {
-		if (x >= 0.0f)
-			return 90.0f;
-		else
-			return -90.0f;
-	}
-
-	if (z >= 0.0f) {
-		return (360.0f / 65536.0f) * matan(z, x);
-	} else {
-		f32 theta = matan(-z, x) * (360.0f / 65536.0f);
-		return 180.0f - theta;
-	}
-}
-
 TBossPakkunParams::TBossPakkunParams(const char* prm)
     : TSpineEnemyParams(prm)
     , PARAM_INIT(mSLWaitFrameStg0, 400)
@@ -572,8 +549,8 @@ BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 
 	// The wrapped value is overwritten before it is ever read: the ROM
 	// computes the head-to-Mario yaw twice here.
-	f32 angle = MsAngleWrap(BPGetRotFromZaxisY(toMario.x, toMario.z));
-	angle     = BPGetRotFromZaxisY(toMario.x, toMario.z);
+	f32 angle = MsAngleWrap(MsGetRotFromZaxisY(toMario));
+	angle     = MsGetRotFromZaxisY(toMario);
 	f32 diff  = MsAngleDiff(angle, mOwner->mRotation.y);
 
 	if (fabsf(diff) < 0.5f * mOwner->getSaveParam2()->mSLDamageAngle.get()) {
@@ -745,33 +722,32 @@ void TBossPakkunMtxCalc::calcHeadDir(u16 joint)
 	toMario.y -= jointMtx[1][3];
 	toMario.z -= jointMtx[2][3];
 
-	f32 yaw     = mOwner->mHeadYaw;
-	f32 anmYaw  = BPGetRotFromZaxisY(jointMtx[0][1], jointMtx[2][1]);
+	f32 yaw = mOwner->mHeadYaw;
+
+	JGeometry::TVec3<f32> headAxis(jointMtx[0][1], jointMtx[1][1],
+	                               jointMtx[2][1]);
+	f32 anmYaw = MsGetRotFromZaxisY(headAxis);
 
 	f32 goal;
-	if (mOwner->getMActor()->checkCurBckFromIndex(BOSSPAKU_BCK_WAIT)) {
-		goal = yaw + BPGetRotFromZaxisY(toMario.x, toMario.z);
-		while (goal >= 360.0f)
-			goal -= 360.0f;
-		while (goal < 0.0f)
-			goal += 360.0f;
-	} else {
+	if (mOwner->getMActor()->checkCurBckFromIndex(BOSSPAKU_BCK_WAIT))
+		goal = MsWrap(yaw + MsGetRotFromZaxisY(toMario), 0.0f, 360.0f);
+	else
 		goal = anmYaw;
-	}
 
 	f32 diff  = MsAngleDiff(goal, anmYaw);
 	f32 limit = mOwner->getSaveParam2()->mSLHeadHomingLimit.get();
+
+	f32 turn;
 	if (diff > 0.0f) {
 		if (diff > limit)
 			diff = limit;
-		goal = diff;
+		turn = diff;
 	} else {
-		if (diff <= -limit)
-			diff = -limit;
-		goal = diff;
+		diff = diff > -limit ? diff : -limit;
+		turn = diff;
 	}
 
-	f32 step = MsAngleDiff(goal, yaw);
+	f32 step = MsAngleDiff(turn, yaw);
 	if (step > 0.0f)
 		step = std::min(step, 1.0f);
 	else
@@ -1466,7 +1442,7 @@ DEFINE_NERVE(TNerveBPWait, TLiveActor)
 		JGeometry::TVec3<f32> toMarioBack(-toMario.x, -toMario.y, -toMario.z);
 		JGeometry::TVec3<f32> facing = toMarioBack;
 
-		f32 angle = BPGetRotFromZaxisY(facing.x, facing.z);
+		f32 angle = MsGetRotFromZaxisY(facing);
 		if (fabsf(MsAngleDiff(angle, boss->mRotation.y)) < 60.0f) {
 			spine->pushAfterCurrent(&TNerveBPWait::theNerve());
 			spine->pushAfterCurrent(&TNerveBPSwing::theNerve());
