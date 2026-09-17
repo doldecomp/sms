@@ -153,7 +153,11 @@ public:
 		move();
 	}
 	virtual void moveTrans(const JGeometry::TVec3<f32>&);
-	virtual void moveMtx(MtxPtr mtx) { MTXCopy(mtx, unk20); }
+	virtual void moveMtx(MtxPtr mtx)
+	{
+		MTXCopy(mtx, unk20);
+		move();
+	}
 
 	void init(u32, u16 bg_type, s16 data, const TLiveActor* actor);
 	void move();
