@@ -4,6 +4,16 @@
  * @brief The screen-wipe library ("Hx"): the shutter, iris, door, sweep and
  * logo transitions TScrnFader drives.
  *
+ * TODO: this TU was built with auto-inlining OFF. Nothing here is inlined in
+ * retail -- Hx_Warning (an empty function), Hx_SetVFilter, Hx_CameraInit,
+ * Hx_TimerCountDown and Frb2_InitBlackBox are all called out of line -- while
+ * the MSL header inlines (sqrtf's Newton iterations) still expand. Building
+ * this object with `extra_cflags=["-inline noauto"]` in configure.py takes it
+ * from nine exact functions to sixteen (Hx_UpdateWipe, Hx_ProvideResource,
+ * Hx_ProvideResourceEx, Hx_RemoveResource, Hx_Test1, Frb2_InitGx and
+ * Hx_FrBufferMorf all become byte-exact) and lifts the unit from 50.9% to
+ * roughly 84% fuzzy. The flag change is out of scope for this batch.
+ *
  * @details Everything lives in one file-scope work struct.  TScrnFader calls
  * Hx_ResetWipe() once with the display size, Hx_ProvideResource() to hand over
  * a .bti when a wipe needs one, Hx_StartWipe() to pick a pattern, then
@@ -82,7 +92,7 @@ static void Hx_GxInit(int tex, int blend);
 static void Hgx_DrawCircle(f32 cx, f32 cy, f32 r, u32 color);
 static void Hgx_init_tobj_resource(GXTexObj* obj, const ResTIMG* timg);
 static void Hgx_ReadTexture(char* path, void* buffer);
-static void Hx_GetFrBuffer(void* dest, u16 left, u16 top, u16 wd, u16 ht);
+static void Hx_GetFrBuffer(void* dest, u32 left, u32 top, u32 wd, u32 ht);
 static void Hx_SetVFilter(f32 rate);
 static void Hx_SetVFilterFade(f32 rate);
 static void __Hx_FrBufferMorf(u16 x, u16 y);
@@ -262,7 +272,7 @@ static void Hgx_ReadTexture(char* path, void* buffer)
 	}
 }
 
-static void Hx_GetFrBuffer(void* dest, u16 left, u16 top, u16 wd, u16 ht)
+static void Hx_GetFrBuffer(void* dest, u32 left, u32 top, u32 wd, u32 ht)
 {
 	GXColor black = { 0, 0, 0, 0 };
 
@@ -675,7 +685,7 @@ static void Hxs1_Circle(f32 r)
 	for (y = 0; y <= hx.centerY; y++) {
 		f32 dy = hx.centerY - y;
 
-		if (dy == r) {
+		if (dy >= r) {
 			GXBegin(GX_LINES, GX_VTXFMT0, 4);
 			GXPosition3f32(0.0f, y, 1.0f);
 			GXColor1u32(0xFF);
@@ -727,7 +737,7 @@ static void Hxs2_Circle(u8 alpha, f32 r_in, f32 r_out)
 		if (dx_out > 0.0f)
 			dx_out = sqrtf(dx_out);
 
-		if (dy == r_in) {
+		if (dy >= r_in) {
 			GXBegin(GX_LINES, GX_VTXFMT0, 4);
 			GXPosition3f32(hx.centerX - dx_out, y, 1.0f);
 			GXColor1u32(alpha);
