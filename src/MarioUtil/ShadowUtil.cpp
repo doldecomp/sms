@@ -51,6 +51,10 @@ TMBindShadowParts::TMBindShadowParts(J3DModel* param_1, u8 param_2,
 	mMinRadius = param_4;
 }
 
+// TODO: instruction-identical (98.7%) but the frame is 0x90 against retail's
+// 0x128: 40 bytes of named locals declared before `request` and 112 bytes of
+// inline-expansion temporaries are missing, with no evidence for either beyond
+// the byte counts.
 void TMBindShadowParts::calc(f32 param_1)
 {
 	if (!unk14)
@@ -118,9 +122,10 @@ void TMBindShadowParts::calc(f32 param_1)
 
 	if (!mIsCircle && mBody->mActor->getActorType() != 0x80000001
 	    && mBody->mActor->getActorType() != 0x8000002) {
-		f32 rotY = matan(z2 - z1, x2 - x1) * (360.0f / 65536.0f);
+		f32 angle = matan(z2 - z1, x2 - x1) * (360.0f / 65536.0f);
+		f32 rotY  = angle;
 		if (radiusX > radiusZ)
-			rotY -= 90.0f;
+			rotY = angle - 90.0f;
 		request.mRotationY = rotY;
 	} else {
 		request.mRotationY = 0.0f;
@@ -522,6 +527,10 @@ static inline void loadPosMtxImm(MtxPtr mtx)
 	GXParam1f32(mtx[2][3]);
 }
 
+// TODO: instruction-identical; the frame matches at 0x1b0 but retail has four
+// more bytes of inline-expansion temporaries and four fewer bytes of frame
+// padding, so the two index tables sit at 0x158/0x17c instead of 0x154/0x178.
+// One more inlined accessor read somewhere in this function would close it.
 void TMBindShadowManager::drawShadowVolume(bool param_1,
                                            TAlphaShadowQuad* param_2)
 {
@@ -758,6 +767,12 @@ void TMBindShadowManager::drawShadowVolume(bool param_1,
 		SMS_SettingDrawShape(mModelDatas[1]->getModelData(), 0);
 }
 
+// TODO: two instructions apart (98.8%) -- one GXPosition3f32 in the first cube
+// wants f25 where we emit f28, and one local-static registration pair is
+// ordered differently -- but the frame is 0x190 against retail's 0x400. The
+// 624 missing bytes are all unreferenced inline-expansion stack; the only
+// numeric coincidence found is 800 + 48 (TCylinder::makeDL's two f32[100]
+// tables), which cannot be reached from this scope.
 void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
 {
 	class TCylinder : public TGDLStatic {
@@ -1323,6 +1338,11 @@ void TMBindShadowManager::request(const TCircleShadowRequest& param_1,
 	}
 }
 
+// TODO: retail copies the position into a slot at the bottom of the frame
+// (0x14) and `delta` into a named slot at 0x48, i.e. the first copy is an
+// inline-expansion temporary and only `delta` is a named local; ours names
+// both.  It also forwards that low copy into the `mRequests[n] = param_1`
+// struct assignment, which we reload from r4.
 void TMBindShadowManager::forceRequest(const TCircleShadowRequest& param_1,
                                        u32 param_2)
 {
