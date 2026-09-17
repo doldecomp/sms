@@ -142,20 +142,21 @@ public:
 	/* 0x120 */ MAnmSound* mTongueAnmSound;
 };
 
-// TODO: dumb hack, but why is it not getting inlined in the original?!
+// The two-return `if` form, not `mState == STATE_MOUNTED ? TRUE : FALSE`.
+// Both compile to the same seven instructions (0x1c, the map's size), but MWCC
+// refuses to expand a two-return body on the right of a short-circuit `&&`
+// while it always expands the ternary one, which is why retail `bl`s this from
+// TMario::onYoshi and from sixteen more sites in MarioMove.o. Measured in a
+// scratch TU with the game flags: the same two bodies behind
+// `return mA != 0 && mA->f();` give a call for the `if` form and an expansion
+// for the ternary, and the calling function comes out byte-identical to
+// TMario::onYoshi at 0x48. (The ten `(void)0;` that used to sit here were
+// inert: statement count does not gate depth 1.)
 inline BOOL TYoshi::onYoshi()
 {
-	(void)0;
-	(void)0;
-	(void)0;
-	(void)0;
-	(void)0;
-	(void)0;
-	(void)0;
-	(void)0;
-	(void)0;
-	(void)0;
-	return mState == STATE_MOUNTED ? TRUE : FALSE;
+	if (mState == STATE_MOUNTED)
+		return TRUE;
+	return FALSE;
 }
 
 #endif
