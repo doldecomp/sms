@@ -640,15 +640,18 @@ void TBeeHive::prepareReset()
 // Grows the hive back after a reset; true once it is at full size again.
 bool TBeeHive::doScaling()
 {
+	bool grown = false;
+
 	mScaling.x += 0.01f;
 	if (1.0f <= mScaling.x) {
 		mScaling.set(1.0f, 1.0f, 1.0f);
-		return true;
+		grown = true;
+	} else {
+		mScaling.y += 0.01f;
+		mScaling.z += 0.01f;
 	}
 
-	mScaling.y += 0.01f;
-	mScaling.z += 0.01f;
-	return false;
+	return grown;
 }
 
 bool TBeeHive::isMissMario() const
@@ -859,7 +862,8 @@ DEFINE_NERVE(TNerveBeeHiveReset, TLiveActor)
 	if (spine->getTime() == 0)
 		hive->prepareReset();
 
-	if (hive->doScaling()) {
+	bool grown = hive->doScaling();
+	if (grown) {
 		spine->pushAfterCurrent(&TNerveBeeHiveWait::theNerve());
 		return TRUE;
 	}
