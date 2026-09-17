@@ -752,7 +752,7 @@ TTinKoopaMtxCalc::TTinKoopaMtxCalc(TTinKoopa* tin_koopa)
 void TTinKoopaMtxCalc::joinAnm(int index)
 {
 	M3UMtxCalcSIAnmBlendQuat::joinAnm(
-	    mTinKoopa->getMActor()->getBckAnmPtr());
+	    mTinKoopa->getMActor()->getCurBckAnmPtr());
 }
 
 void TTinKoopaMtxCalc::calc(u16 joint)

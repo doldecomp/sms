@@ -1728,7 +1728,7 @@ void TBossTelesa::setBckAnm(int index)
 	unk160 = index;
 	unk168 = 1.0f;
 
-	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getBckAnmPtr());
+	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getCurBckAnmPtr());
 	getMActor()->setBckFromIndex(index);
 	getMActor()->setMotionBlendRatioForBck(unk168);
 

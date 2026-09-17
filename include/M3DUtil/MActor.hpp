@@ -121,10 +121,19 @@ public:
 		mAnmBck->setCalc(calc);
 	}
 
-	// fabricated: TChuuHana::setBckAnm reads the Bck's current anim pointer
-	// (MActorAnmEach::unk24) inline, null-checked, before handing it to
+	// The map has this as UNUSED 0x1c in bosstelesa.cpp, which is where the
+	// name comes from; the body is still a guess from the call sites, which
+	// read MActorAnmEach::unk24 null-checked before handing it to
 	// setBckOldMotionBlendAnmPtr.
-	J3DAnmTransform* getBckAnmPtr() const
+	// TODO: the mangled name getCurBckAnmPtr__6MActorFv carries no C, so the
+	// original was non-const, but dropping const here costs
+	// TChuuHana::setBckAnm 95.7 -> 93.2 and its frame 0x30 -> 0x18: MWCC then
+	// CSEs the mAnmBck load between this accessor and the
+	// setBckOldMotionBlendAnmPtr expansion beside it, where retail caches
+	// mMActor in r5 and re-reads 0xc(r5) for each. Adding a named local for
+	// the result at that site is worse still (90.1%). Something else at that
+	// site has to break the CSE before the const can come off.
+	J3DAnmTransform* getCurBckAnmPtr() const
 	{
 		if (!mAnmBck)
 			return nullptr;
