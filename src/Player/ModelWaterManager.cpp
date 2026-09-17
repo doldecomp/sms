@@ -773,7 +773,84 @@ void TModelWaterManager::calcWorldMinMax()
 }
 
 #pragma dont_inline on
-void TModelWaterManager::calcDrawVtx(MtxPtr) { }
+// TODO: instruction-identical and the frame matches at 0xe0, but every local
+// sits 12 bytes low: retail has one more 12-byte inline-expansion temporary
+// below `viewVel` (temporaries grow up from 0xc), so `vtx` lands at 0x54 there
+// and 0x48 here. No candidate for that expansion found.
+void TModelWaterManager::calcDrawVtx(MtxPtr viewMtx)
+{
+	unk5D30->reset();
+
+	for (int i = 0; i < mParticleCount; i++) {
+		JGeometry::TVec3<f32> vtx[4];
+
+		if (getFlagBottom4Bits(i) != 1)
+			continue;
+
+		f32 fadeTime = unk5D88[7];
+		u8 type      = mParticleTypeSOA[i];
+		f32 life     = mParticleLifetimeSOA[i];
+		if (!(life < mWaterParticleTypes[type]->mAlive.get() - fadeTime))
+			continue;
+
+		JGeometry::TVec3<f32> viewPos;
+		MTXMultVec(viewMtx, &mParticlePositionSOA[i], &viewPos);
+		if (viewPos.z > 0.0f)
+			continue;
+		if (viewPos.z < -unk5D28)
+			continue;
+
+		JGeometry::TVec3<f32> viewVel;
+		MTXMultVecSR(viewMtx, &mParticleVelocitySOA[i], &viewVel);
+
+		f32 extension = mWaterParticleTypes[mParticleTypeSOA[i]]
+		                    ->mExtension.get();
+		viewVel.x *= extension;
+		viewVel.y *= extension;
+		viewVel.z *= extension;
+
+		f32 speedSq = viewVel.x * viewVel.x + viewVel.y * viewVel.y;
+		f32 radius  = 1.414f * (0.5f * mParticleSizeSOA[i]);
+
+		if (speedSq > 1.0f) {
+			f32 stretch = (1.0f / MsSqrtf(speedSq)) * radius;
+			f32 sx      = viewVel.x * stretch;
+			f32 sy      = viewVel.y * stretch;
+			f32 px      = sy;
+			f32 py      = -sx;
+
+			vtx[0].x = viewPos.x + sx + viewVel.x * unk5D18;
+			vtx[0].y = viewPos.y + sy + viewVel.y * unk5D18;
+			vtx[0].z = viewPos.z;
+			vtx[1].x = viewPos.x + px;
+			vtx[1].y = viewPos.y + py;
+			vtx[1].z = viewPos.z;
+			vtx[2].x = viewPos.x - sx - viewVel.x * unk5D18;
+			vtx[2].y = viewPos.y - sy - viewVel.y * unk5D18;
+			vtx[2].z = viewPos.z;
+			vtx[3].x = viewPos.x - px;
+			vtx[3].y = viewPos.y - py;
+			vtx[3].z = viewPos.z;
+		} else {
+			vtx[0].x = viewPos.x - radius;
+			vtx[0].y = viewPos.y + radius;
+			vtx[0].z = viewPos.z;
+			vtx[1].x = viewPos.x + radius;
+			vtx[1].y = viewPos.y + radius;
+			vtx[1].z = viewPos.z;
+			vtx[2].x = viewPos.x + radius;
+			vtx[2].y = viewPos.y - radius;
+			vtx[2].z = viewPos.z;
+			vtx[3].x = viewPos.x - radius;
+			vtx[3].y = viewPos.y - radius;
+			vtx[3].z = viewPos.z;
+		}
+
+		unk5D30->request(vtx);
+	}
+
+	unk5D30->setEnd();
+}
 #pragma dont_inline off
 
 void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
