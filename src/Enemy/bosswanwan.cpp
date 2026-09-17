@@ -817,8 +817,8 @@ TBossWanwan::TBossWanwan(const char* name)
     , mCoolDownTimer(0)
     , mPulledTimer(0)
     , mIsLeashStretched(0)
-    , mIsInBath(false)
-    , mShineAppeared(false)
+    , mIsInBath(0)
+    , mShineAppeared(0)
     , mSparkRequest(0)
     , mIsPicketFixed(1)
     , mSplashDone(0)
@@ -1763,15 +1763,43 @@ DEFINE_NERVE(TNerveBWDie, TLiveActor)
 		return TRUE;
 	}
 
-	if (spine->getTime() == 0)
-		boss->takeBath();
+	if (spine->getTime() == 0) {
+		// TBossWanwan::takeBath (UNUSED, 0x184) is exactly this block, but
+		// MWCC will not expand it from here, so it is spelled out; see the
+		// comment on that function.
+		gpMarDirector->fireStartDemoCamera("bwanwan_down_camera", nullptr, -1,
+		                                   0.0f, true, nullptr, 0, nullptr, 0);
+		boss->mIsRolling = 0;
+		boss->mRollAngle = 0.0f;
+		boss->mIsInBath  = 1;
+		boss->mPosition  = BW_BATH_POS;
+
+		JGeometry::TVec3<f32> center(boss->mPosition);
+		center.y += 500.0f;
+
+		JGeometry::TVec3<f32> scale(boss->mScaling);
+		scale.scale(1.1f);
+
+		boss->getMapCollisionManager()->setUpUnk8TRS(center, boss->mRotation,
+		                                             scale);
+
+		boss->mHits[0]->onHitFlag(HIT_FLAG_NO_COLLISION);
+		boss->mHits[1]->onHitFlag(HIT_FLAG_NO_COLLISION);
+		for (int i = 0; i < boss->getLeash()->getRope()->mNumPoints; ++i)
+			boss->getLeash()->getNode(i)->onHitFlag(HIT_FLAG_NO_COLLISION);
+		boss->getPicket()->onHitFlag(HIT_FLAG_NO_COLLISION);
+
+		boss->changeBck(BWANWAN_BCK_DOWN);
+		actor->setBtpFromIndex(0);
+		actor->setBrkFromIndex(1);
+	}
 
 	if (spine->getTime() > 60 && !boss->mShineAppeared
 	    && !gpMarDirector->isDemoMode3()) {
 		gpItemManager->makeShineAppearWithDemo(
 		    "シャイン（ボス用）", "ボスシャインカメラ", boss->mPosition.x,
 		    boss->mPosition.y, boss->mPosition.z);
-		boss->mShineAppeared = true;
+		boss->mShineAppeared = 1;
 	}
 
 	if (actor->curAnmEndsNext(ANM_TYPE_BRK, nullptr))
