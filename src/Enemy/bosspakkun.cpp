@@ -638,6 +638,10 @@ TBPNavel::TBPNavel(TBossPakkun* owner, const char* name)
 
 BOOL TBPNavel::receiveMessage(THitActor* sender, u32 message)
 {
+	// TODO: retail calls TSpineBase<TLiveActor>::getLatestNerve() out of line
+	// at this site and in TBPHeadHit::receiveMessage, while inlining it in
+	// TBossPakkun::setGroundCollision; our build expands all three. Same open
+	// item as bosswanwan and boss-hanachan. It is the whole residual here.
 	if (&TNerveBPSleep::theNerve() == mOwner->mSpine->getLatestNerve())
 		return mOwner->receiveMessage(sender, message);
 
