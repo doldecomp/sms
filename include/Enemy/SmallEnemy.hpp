@@ -144,7 +144,11 @@ public:
 	virtual void attackToMario();
 	virtual void forceKill();
 	virtual void setMActorAndKeeper();
-	virtual void initAttacker(THitActor*);
+	// Weak in the map with an UNREFERENCED DUPLICATE (0xc, linked from
+	// pakkun.cpp), so it was defined here rather than in smallenemy.cpp. The
+	// whole body is the one stb: TWalkerEnemy's override copies the attacker's
+	// rotation first and then does the same store.
+	virtual void initAttacker(THitActor*) { unk184 = 1; }
 	virtual bool isHitValid(u32)
 	{
 		return checkLiveFlag(LIVE_FLAG_HIDDEN) ? false : true;
