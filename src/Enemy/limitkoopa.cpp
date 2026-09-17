@@ -410,27 +410,27 @@ void TLimitKoopa::perform(u32 cue, JDrama::TGraphics* graphics)
 
 			JPABaseEmitter* emitter
 			    = gpMarioParticleManager->emitAndBindToMtxPtr(
-			        0x1F3, getHeadMtx(), 3, this);
+			        KOOPA_JPA_MS_KP_FIRE_E, getHeadMtx(), 3, this);
 			if (emitter)
 				emitter->setGlobalScale(flameScale);
 
 			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-			    0x1C3, getHeadMtx(), 1, this);
+			    KOOPA_JPA_MS_KP_FIRE_D, getHeadMtx(), 1, this);
 			if (emitter)
 				emitter->setGlobalScale(flameScale);
 
 			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-			    0x1C2, getHeadMtx(), 1, this);
+			    KOOPA_JPA_MS_KP_FIRE_C, getHeadMtx(), 1, this);
 			if (emitter)
 				emitter->setGlobalScale(flameScale);
 
 			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-			    0x1C1, getHeadMtx(), 1, this);
+			    KOOPA_JPA_MS_KP_FIRE_B, getHeadMtx(), 1, this);
 			if (emitter)
 				emitter->setGlobalScale(flameScale);
 
 			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-			    0x1C0, getHeadMtx(), 1, this);
+			    KOOPA_JPA_MS_KP_FIRE_A, getHeadMtx(), 1, this);
 			if (emitter)
 				emitter->setGlobalScale(flameScale);
 		}
@@ -736,11 +736,14 @@ void TLimitKoopaManager::load(JSUMemoryInputStream& stream)
 void TLimitKoopaManager::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
-	// TODO: particle ids 0x1C0..0x1C3 and 0x1F3 have no enumerand in
-	// include/System/Particles.hpp yet; naming them is a shared-header change.
-	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_a.jpa", 0x1C0);
-	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_b.jpa", 0x1C1);
-	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_c.jpa", 0x1C2);
-	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_d.jpa", 0x1C3);
-	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_e.jpa", 0x1F3);
+	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_a.jpa",
+	                 KOOPA_JPA_MS_KP_FIRE_A);
+	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_b.jpa",
+	                 KOOPA_JPA_MS_KP_FIRE_B);
+	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_c.jpa",
+	                 KOOPA_JPA_MS_KP_FIRE_C);
+	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_d.jpa",
+	                 KOOPA_JPA_MS_KP_FIRE_D);
+	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_e.jpa",
+	                 KOOPA_JPA_MS_KP_FIRE_E);
 }

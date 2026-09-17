@@ -32,12 +32,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// TODO: shared-header changes this unit wants but must not make:
-//  * Particles.hpp has no names for the six ids this unit loads:
-//    0x148/0x149 "/scene/mapObj/mareFallSplash.jpa" pair,
-//    0x14A "/scene/mapObj/mareFallSmoke.jpa",
-//    0x14C/0x14D/0x14E "/scene/map/map/ms_mare_gunwat_{a,b,c}.jpa".
-
 f32 TCogwheelScale::mWaterLeakSpeed = 0.01f;
 
 /// Distance from the wheel's centre to either rope.
@@ -1082,17 +1076,18 @@ void TMareFall::calc()
 	                          nullptr, 0, 4);
 
 	// TODO: Particles.hpp has no names for these two; they are
-	// "/scene/mapObj/mareFallSplash.jpa" and "/scene/mapObj/mareFallSmoke.jpa".
-	gpMarioParticleManager->emit(0x149, &mPosition, 1, this);
-	gpMarioParticleManager->emit(0x14A, &mPosition, 1, this);
+	gpMarioParticleManager->emit(MAPOBJ_MAREFALLSPLASH, &mPosition, 1, this);
+	gpMarioParticleManager->emit(MAPOBJ_MAREFALLSMOKE, &mPosition, 1, this);
 }
 
 void TMareFall::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
 
-	SMS_LoadParticle("/scene/mapObj/mareFallSplash.jpa", 0x149);
-	SMS_LoadParticle("/scene/mapObj/mareFallSmoke.jpa", 0x14A);
+	SMS_LoadParticle("/scene/mapObj/mareFallSplash.jpa",
+	                 MAPOBJ_MAREFALLSPLASH);
+	SMS_LoadParticle("/scene/mapObj/mareFallSmoke.jpa",
+	                 MAPOBJ_MAREFALLSMOKE);
 }
 
 void TMareCork::loadAfter()
@@ -1101,9 +1096,12 @@ void TMareCork::loadAfter()
 	if (mCannon->receiveMessage(this, HIT_MESSAGE_TAKE))
 		mHeldObject = mCannon;
 
-	SMS_LoadParticle("/scene/map/map/ms_mare_gunwat_a.jpa", 0x14C);
-	SMS_LoadParticle("/scene/map/map/ms_mare_gunwat_b.jpa", 0x14D);
-	SMS_LoadParticle("/scene/map/map/ms_mare_gunwat_c.jpa", 0x14E);
+	SMS_LoadParticle("/scene/map/map/ms_mare_gunwat_a.jpa",
+	                 MAP_MAP_MS_MARE_GUNWAT_A);
+	SMS_LoadParticle("/scene/map/map/ms_mare_gunwat_b.jpa",
+	                 MAP_MAP_MS_MARE_GUNWAT_B);
+	SMS_LoadParticle("/scene/map/map/ms_mare_gunwat_c.jpa",
+	                 MAP_MAP_MS_MARE_GUNWAT_C);
 
 	TMapObjBase::loadAfter();
 
@@ -1160,14 +1158,12 @@ void TMareCork::drawObject(JDrama::TGraphics* graphics)
 		gpMSound->startSoundActor(MSD_SE_ENV_FALL_JET_LEVEL, &mSoundPos, 0,
 		                          nullptr, 0, 4);
 
-		// TODO: Particles.hpp has no names for these three; they are
-		// "/scene/map/map/ms_mare_gunwat_{a,b,c}.jpa".
-		gpMarioParticleManager->emitAndBindToPosPtr(0x14C, &mEffectPos, 1,
-		                                            this);
-		gpMarioParticleManager->emitAndBindToPosPtr(0x14D, &mEffectPos, 1,
-		                                            this);
-		gpMarioParticleManager->emitAndBindToPosPtr(0x14E, &mEffectPos, 1,
-		                                            this);
+		gpMarioParticleManager->emitAndBindToPosPtr(
+		    MAP_MAP_MS_MARE_GUNWAT_A, &mEffectPos, 1, this);
+		gpMarioParticleManager->emitAndBindToPosPtr(
+		    MAP_MAP_MS_MARE_GUNWAT_B, &mEffectPos, 1, this);
+		gpMarioParticleManager->emitAndBindToPosPtr(
+		    MAP_MAP_MS_MARE_GUNWAT_C, &mEffectPos, 1, this);
 	}
 }
 

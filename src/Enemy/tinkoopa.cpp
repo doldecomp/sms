@@ -75,42 +75,6 @@ enum {
 	TINKOOPA_JOINT_NUM          = 15,
 };
 
-// TODO: none of these particle ids has a name in include/System/Particles.hpp
-// yet; they belong there. This batch is only allowed to touch tinkoopa's own
-// two files, so the ids are spelled out at the call sites instead. The seven
-// one-shot slots are 0xEE..0xF4 and the looping ones 0x1AC..0x1BC plus the
-// indirect 0x1F2; TTinKoopaManager::loadAfter is the authority on which file
-// is which.
-enum {
-	TINKOOPA_JPA_HIBANA_D1HE = 0xEE,
-	TINKOOPA_JPA_KILLER      = 0xEF,
-	TINKOOPA_JPA_SMOKE1      = 0xF0,
-	TINKOOPA_JPA_PARGE_B14   = 0xF1,
-	TINKOOPA_JPA_PARGE_B23   = 0xF2,
-	TINKOOPA_JPA_FLAME_YUGE  = 0xF3,
-	TINKOOPA_JPA_KEMU_PARTS  = 0xF4,
-
-	TINKOOPA_JPA_HIBANA_W1BR = 0x1AC,
-	TINKOOPA_JPA_HIBANA_W3AR = 0x1AD,
-	TINKOOPA_JPA_HIBANA_W4AR = 0x1AE,
-	TINKOOPA_JPA_BIRI_W1ST   = 0x1AF,
-	TINKOOPA_JPA_BIRI_W1AR   = 0x1B0,
-	TINKOOPA_JPA_BIRI_W1FE   = 0x1B1,
-	TINKOOPA_JPA_BIRI_W1HE   = 0x1B2,
-	TINKOOPA_JPA_BIRI_D1BR_A = 0x1B3,
-	TINKOOPA_JPA_BIRI_D1BR_B = 0x1B4,
-	TINKOOPA_JPA_KEMU_B1AR   = 0x1B5,
-	TINKOOPA_JPA_KEMU_W2BR_A = 0x1B6,
-	TINKOOPA_JPA_KEMU_W2BR_B = 0x1B7,
-	TINKOOPA_JPA_KEMU_B1HE   = 0x1B8,
-	TINKOOPA_JPA_KEMU_B1FE_L = 0x1B9,
-	TINKOOPA_JPA_KEMU_B1FE_R = 0x1BA,
-	TINKOOPA_JPA_FIRE_A      = 0x1BB,
-	TINKOOPA_JPA_FIRE_B      = 0x1BC,
-
-	TINKOOPA_JPA_FIRE_C = 0x1F2,
-};
-
 // TODO: the balloon ids the fight starts are not named in GCConsole2.hpp yet.
 enum {
 	TINKOOPA_MESSAGE_KILLER_APPROACHING = 0x9,
@@ -418,7 +382,7 @@ void TTinKoopaFlame::hitWater()
 
 	if (!mSprayed) {
 		mSprayed = true;
-		gpMarioParticleManager->emitAndBindToPosPtr(TINKOOPA_JPA_FLAME_YUGE,
+		gpMarioParticleManager->emitAndBindToPosPtr(TINKOOPA_JPA_MS_MKP_FLAME_YUGE,
 		                                            &mPosition, 0, this);
 	}
 }
@@ -502,16 +466,16 @@ void TTinKoopaFlame::emitFlameEffects()
 	JGeometry::TVec3<f32> flameScale(scale, scaleY, scale);
 
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    TINKOOPA_JPA_FIRE_A, mtx, 1, this);
+	    TINKOOPA_JPA_MS_MKP_FIRE_A, mtx, 1, this);
 	if (emitter)
 		emitter->setGlobalScale(flameScale);
 
-	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(TINKOOPA_JPA_FIRE_B,
+	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(TINKOOPA_JPA_MS_MKP_FIRE_B,
 	                                                      mtx, 1, this);
 	if (emitter)
 		emitter->setGlobalScale(flameScale);
 
-	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(TINKOOPA_JPA_FIRE_C,
+	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(TINKOOPA_JPA_MS_MKP_FIRE_C,
 	                                                      mtx, 3, this);
 	if (emitter)
 		emitter->setGlobalScale(flameScale);
@@ -695,7 +659,7 @@ void TTinKoopaPartsBase::emitPartsTrackEffects(const char** joint_names,
 		mEffectPos[i].set(mtx[0][3], mtx[1][3], mtx[2][3]);
 
 		gpMarioParticleManager->emitAndBindToPosPtr(
-		    TINKOOPA_JPA_KEMU_PARTS, &mEffectPos[i], 0, mTinKoopa);
+		    TINKOOPA_JPA_MS_MKP_KEMU_PARTS, &mEffectPos[i], 0, mTinKoopa);
 	}
 }
 
@@ -1139,7 +1103,7 @@ void TTinKoopa::launchKiller(int direction)
 	killer->mPathDir = direction;
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    TINKOOPA_JPA_KILLER, getModel()->getAnmMtx(joint), 0, this);
+	    TINKOOPA_JPA_MS_MKP_KILLER, getModel()->getAnmMtx(joint), 0, this);
 
 	gpMSound->startSoundActor(MSD_SE_EN_KILLER_FIRE, &killer->mPosition, 0,
 	                          nullptr, 0, 4);
@@ -1259,19 +1223,19 @@ void TTinKoopa::emitTinKoopaEffects()
 	mtx = getModel()->getAnmMtx(TTinKoopa_getJointIndex(TINKOOPA_JOINT_LARM));
 	mLeftArmPos.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 
-	gpMarioParticleManager->emitAndBindToPosPtr(TINKOOPA_JPA_HIBANA_W1BR,
+	gpMarioParticleManager->emitAndBindToPosPtr(TINKOOPA_JPA_MS_MKP_HIBANA_W1BR,
 	                                            &mBreastPos, 1, this);
 
 	if (mDamageStage > 1)
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    TINKOOPA_JPA_HIBANA_W3AR,
+		    TINKOOPA_JPA_MS_MKP_HIBANA_W3AR,
 		    getModel()->getAnmMtx(
 		        TTinKoopa_getJointIndex(TINKOOPA_JOINT_RARM)),
 		    1, this);
 
 	if (mDamageStage > 2)
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    TINKOOPA_JPA_HIBANA_W4AR,
+		    TINKOOPA_JPA_MS_MKP_HIBANA_W4AR,
 		    getModel()->getAnmMtx(
 		        TTinKoopa_getJointIndex(TINKOOPA_JOINT_LARM)),
 		    1, this);
@@ -1279,38 +1243,38 @@ void TTinKoopa::emitTinKoopaEffects()
 	if (mDamageStage <= 0) {
 		if (mSpine->getCurrentNerve() == &TNerveTinKoopaWait::theNerve())
 			gpMarioParticleManager->emitAndBindToMtxPtr(
-			    TINKOOPA_JPA_BIRI_W1ST,
+			    TINKOOPA_JPA_MS_MKP_BIRI_W1ST,
 			    getModel()->getAnmMtx(
 			        TTinKoopa_getJointIndex(TINKOOPA_JOINT_STOMACH)),
 			    1, this);
 	}
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    TINKOOPA_JPA_BIRI_W1AR,
+	    TINKOOPA_JPA_MS_MKP_BIRI_W1AR,
 	    getModel()->getAnmMtx(TTinKoopa_getJointIndex(TINKOOPA_JOINT_RARM)), 1,
 	    this);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    TINKOOPA_JPA_BIRI_W1AR,
+	    TINKOOPA_JPA_MS_MKP_BIRI_W1AR,
 	    getModel()->getAnmMtx(TTinKoopa_getJointIndex(TINKOOPA_JOINT_LARM)), 1,
 	    this + 1);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    TINKOOPA_JPA_BIRI_W1FE,
+	    TINKOOPA_JPA_MS_MKP_BIRI_W1FE,
 	    getModel()->getAnmMtx(TTinKoopa_getJointIndex(TINKOOPA_JOINT_FEMUR)),
 	    1, this);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    TINKOOPA_JPA_BIRI_W1HE,
+	    TINKOOPA_JPA_MS_MKP_BIRI_W1HE,
 	    getModel()->getAnmMtx(TTinKoopa_getJointIndex(TINKOOPA_JOINT_HEAD)), 1,
 	    this);
 
 	if (mSpine->getCurrentNerve() == &TNerveTinKoopaDamage::theNerve()
 	    || mSpine->getCurrentNerve() == &TNerveTinKoopaBreak::theNerve()) {
-		gpMarioParticleManager->emitAndBindToPosPtr(TINKOOPA_JPA_BIRI_D1BR_A,
+		gpMarioParticleManager->emitAndBindToPosPtr(TINKOOPA_JPA_MS_MKP_BIRI_D1BR_A,
 		                                            &mBreastPos, 1, this);
-		gpMarioParticleManager->emitAndBindToPosPtr(TINKOOPA_JPA_BIRI_D1BR_A,
+		gpMarioParticleManager->emitAndBindToPosPtr(TINKOOPA_JPA_MS_MKP_BIRI_D1BR_A,
 		                                            &mBreastPos, 1, this + 1);
-		gpMarioParticleManager->emitAndBindToPosPtr(TINKOOPA_JPA_BIRI_D1BR_B,
+		gpMarioParticleManager->emitAndBindToPosPtr(TINKOOPA_JPA_MS_MKP_BIRI_D1BR_B,
 		                                            &mBreastPos, 1, this);
-		gpMarioParticleManager->emitAndBindToPosPtr(TINKOOPA_JPA_BIRI_D1BR_B,
+		gpMarioParticleManager->emitAndBindToPosPtr(TINKOOPA_JPA_MS_MKP_BIRI_D1BR_B,
 		                                            &mBreastPos, 1, this + 1);
 	}
 
@@ -1318,7 +1282,7 @@ void TTinKoopa::emitTinKoopaEffects()
 	     && mDamageStage > 1)
 	    || mSpine->getCurrentNerve() == &TNerveTinKoopaDamage::theNerve()
 	    || mSpine->getCurrentNerve() == &TNerveTinKoopaBreak::theNerve())
-		gpMarioParticleManager->emitAndBindToPosPtr(TINKOOPA_JPA_KEMU_B1AR,
+		gpMarioParticleManager->emitAndBindToPosPtr(TINKOOPA_JPA_MS_MKP_KEMU_B1AR,
 		                                            &mRightArmPos, 1, this);
 
 	if ((mSpine->getCurrentNerve() == &TNerveTinKoopaWait::theNerve()
@@ -1326,7 +1290,7 @@ void TTinKoopa::emitTinKoopaEffects()
 	    || mSpine->getCurrentNerve() == &TNerveTinKoopaDamage::theNerve()
 	    || mSpine->getCurrentNerve() == &TNerveTinKoopaBreak::theNerve())
 		gpMarioParticleManager->emitAndBindToPosPtr(
-		    TINKOOPA_JPA_KEMU_B1AR, &mLeftArmPos, 1, this + 1);
+		    TINKOOPA_JPA_MS_MKP_KEMU_B1AR, &mLeftArmPos, 1, this + 1);
 
 	if ((mSpine->getCurrentNerve() == &TNerveTinKoopaWait::theNerve()
 	     && mDamageStage > 0)
@@ -1336,9 +1300,9 @@ void TTinKoopa::emitTinKoopaEffects()
 	        && (mDamageStage == 1 || mDamageStage == 2))) {
 		MtxPtr breast = getModel()->getAnmMtx(
 		    TTinKoopa_getJointIndex(TINKOOPA_JOINT_BREAST));
-		gpMarioParticleManager->emitAndBindToMtxPtr(TINKOOPA_JPA_KEMU_W2BR_A,
+		gpMarioParticleManager->emitAndBindToMtxPtr(TINKOOPA_JPA_MS_MKP_KEMU_W2BR_A,
 		                                            breast, 1, this);
-		gpMarioParticleManager->emitAndBindToMtxPtr(TINKOOPA_JPA_KEMU_W2BR_B,
+		gpMarioParticleManager->emitAndBindToMtxPtr(TINKOOPA_JPA_MS_MKP_KEMU_W2BR_B,
 		                                            breast, 1, this);
 	}
 
@@ -1346,16 +1310,16 @@ void TTinKoopa::emitTinKoopaEffects()
 	     && mDamageStage > 2)
 	    || mSpine->getCurrentNerve() == &TNerveTinKoopaDamage::theNerve()
 	    || mSpine->getCurrentNerve() == &TNerveTinKoopaBreak::theNerve())
-		gpMarioParticleManager->emitAndBindToPosPtr(TINKOOPA_JPA_KEMU_B1HE,
+		gpMarioParticleManager->emitAndBindToPosPtr(TINKOOPA_JPA_MS_MKP_KEMU_B1HE,
 		                                            &mHeadPos, 1, this);
 
 	if (mSpine->getCurrentNerve() == &TNerveTinKoopaDamage::theNerve()
 	    || mSpine->getCurrentNerve() == &TNerveTinKoopaBreak::theNerve()) {
 		MtxPtr femur = getModel()->getAnmMtx(
 		    TTinKoopa_getJointIndex(TINKOOPA_JOINT_FEMUR));
-		gpMarioParticleManager->emitAndBindToMtxPtr(TINKOOPA_JPA_KEMU_B1FE_R,
+		gpMarioParticleManager->emitAndBindToMtxPtr(TINKOOPA_JPA_MS_MKP_KEMU_B1FE_R,
 		                                            femur, 1, this);
-		gpMarioParticleManager->emitAndBindToMtxPtr(TINKOOPA_JPA_KEMU_B1FE_L,
+		gpMarioParticleManager->emitAndBindToMtxPtr(TINKOOPA_JPA_MS_MKP_KEMU_B1FE_L,
 		                                            femur, 1, this);
 	}
 
@@ -1371,7 +1335,7 @@ void TTinKoopa::emitTinKoopaEffects()
 		if ((mDamageStage == 0 || mDamageStage == 3)
 		    && getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(108.0f))
 			gpMarioParticleManager->emitAndBindToMtxPtr(
-			    TINKOOPA_JPA_SMOKE1,
+			    TINKOOPA_JPA_MS_MKP_SMOKE1,
 			    getModel()->getAnmMtx(
 			        TTinKoopa_getJointIndex(TINKOOPA_JOINT_STOMACH)),
 			    0, this);
@@ -1379,7 +1343,7 @@ void TTinKoopa::emitTinKoopaEffects()
 		if (mDamageStage == 0
 		    && getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(100.0f))
 			gpMarioParticleManager->emitAndBindToMtxPtr(
-			    TINKOOPA_JPA_PARGE_B14,
+			    TINKOOPA_JPA_MS_MKP_PARGE_B14,
 			    getModel()->getAnmMtx(
 			        TTinKoopa_getJointIndex(TINKOOPA_JOINT_STOMACH)),
 			    0, this);
@@ -1387,7 +1351,7 @@ void TTinKoopa::emitTinKoopaEffects()
 		if (mDamageStage == 3
 		    && getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(100.0f))
 			gpMarioParticleManager->emitAndBindToMtxPtr(
-			    TINKOOPA_JPA_PARGE_B14,
+			    TINKOOPA_JPA_MS_MKP_PARGE_B14,
 			    getModel()->getAnmMtx(
 			        TTinKoopa_getJointIndex(TINKOOPA_JOINT_BREAST)),
 			    0, this);
@@ -1395,7 +1359,7 @@ void TTinKoopa::emitTinKoopaEffects()
 		if (mDamageStage == 1
 		    && getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(106.0f))
 			gpMarioParticleManager->emitAndBindToMtxPtr(
-			    TINKOOPA_JPA_PARGE_B23,
+			    TINKOOPA_JPA_MS_MKP_PARGE_B23,
 			    getModel()->getAnmMtx(
 			        TTinKoopa_getJointIndex(TINKOOPA_JOINT_RARM)),
 			    0, this);
@@ -1403,7 +1367,7 @@ void TTinKoopa::emitTinKoopaEffects()
 		if (mDamageStage == 2
 		    && getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(106.0f))
 			gpMarioParticleManager->emitAndBindToMtxPtr(
-			    TINKOOPA_JPA_PARGE_B23,
+			    TINKOOPA_JPA_MS_MKP_PARGE_B23,
 			    getModel()->getAnmMtx(
 			        TTinKoopa_getJointIndex(TINKOOPA_JOINT_LARM)),
 			    0, this);
@@ -1445,7 +1409,7 @@ void TTinKoopaManager::loadAfter()
 		"/scene/tinkoopa/jpa/ms_mkp_kemu_parts.jpa",
 	};
 	for (int i = 0; i < 7; i++)
-		SMS_LoadParticle(onetimeFilenames[i], TINKOOPA_JPA_HIBANA_D1HE + i);
+		SMS_LoadParticle(onetimeFilenames[i], TINKOOPA_JPA_MS_MKP_HIBANA_D1HE + i);
 
 	static const char* loopFilenames[17] = {
 		"/scene/tinkoopa/jpa/ms_mkp_hibana_w1br.jpa",
@@ -1467,13 +1431,13 @@ void TTinKoopaManager::loadAfter()
 		"/scene/tinkoopa/jpa/ms_mkp_fire_b.jpa",
 	};
 	for (int i = 0; i < 17; i++)
-		SMS_LoadParticle(loopFilenames[i], TINKOOPA_JPA_HIBANA_W1BR + i);
+		SMS_LoadParticle(loopFilenames[i], TINKOOPA_JPA_MS_MKP_HIBANA_W1BR + i);
 
 	static const char* loopIndirectFilenames[1] = {
 		"/scene/tinkoopa/jpa/ms_mkp_fire_c.jpa",
 	};
 	for (int i = 0; i < 1; i++)
-		SMS_LoadParticle(loopIndirectFilenames[i], TINKOOPA_JPA_FIRE_C + i);
+		SMS_LoadParticle(loopIndirectFilenames[i], TINKOOPA_JPA_MS_MKP_FIRE_C + i);
 }
 
 // Mecha-Bowser is placed by hand, so the manager never makes one.
@@ -1504,7 +1468,7 @@ DEFINE_NERVE(TNerveTinKoopaDamage, TLiveActor)
 		tinKoopa->changeBck(
 		    TTinKoopa_getDamageAnimationIndex(tinKoopa->mDamageStage));
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    TINKOOPA_JPA_HIBANA_D1HE,
+		    TINKOOPA_JPA_MS_MKP_HIBANA_D1HE,
 		    tinKoopa->getModel()->getAnmMtx(
 		        TTinKoopa_getJointIndex(TINKOOPA_JOINT_HEAD)),
 		    0, this);
@@ -1531,7 +1495,7 @@ DEFINE_NERVE(TNerveTinKoopaBreak, TLiveActor)
 		tinKoopa->changeBck(
 		    TTinKoopa_getBreakAnimationIndex(tinKoopa->mDamageStage));
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    TINKOOPA_JPA_HIBANA_D1HE,
+		    TINKOOPA_JPA_MS_MKP_HIBANA_D1HE,
 		    tinKoopa->getModel()->getAnmMtx(
 		        TTinKoopa_getJointIndex(TINKOOPA_JOINT_HEAD)),
 		    0, this);

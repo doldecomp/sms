@@ -58,16 +58,6 @@ enum {
 	DENNOKO_ANM_WAIT1         = 17,
 };
 
-// TODO: four of these particle ids have no name in include/System/Particles.hpp
-// yet, and they belong there next to PARTICLE_MS_DNK_SHIBIRE_A. This batch is
-// only allowed to touch elecNokonoko's own two files, so the names live here.
-enum {
-	DENNOKO_JPA_SPARK_A = 0x17A,
-	DENNOKO_JPA_SPARK_B = 0x17B,
-	DENNOKO_JPA_SPARK_C = 0x17C,
-	DENNOKO_JPA_FLASH   = 0x17F,
-};
-
 static const char* dennoko_bastable[] = {
 	"/scene/dennoko/bas/dennoko_catch1.bas",
 	"/scene/dennoko/bas/dennoko_down1.bas",
@@ -287,19 +277,19 @@ void TElecNokonoko::calcRootMatrix()
 
 			JPABaseEmitter* emitter
 			    = gpMarioParticleManager->emitAndBindToMtxPtr(
-			        DENNOKO_JPA_SPARK_A, getMActor()->getModel()->getAnmMtx(7),
+			        PARTICLE_MS_DNK_BIRI, getMActor()->getModel()->getAnmMtx(7),
 			        1, this);
 			if (emitter)
 				emitter->setGlobalScale(mScaling);
 
 			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-			    DENNOKO_JPA_SPARK_B, getMActor()->getModel()->getAnmMtx(7), 1,
+			    PARTICLE_MS_DNK_SPARK_L, getMActor()->getModel()->getAnmMtx(7), 1,
 			    this);
 			if (emitter)
 				emitter->setGlobalScale(mScaling);
 
 			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-			    DENNOKO_JPA_SPARK_C, getMActor()->getModel()->getAnmMtx(7), 1,
+			    PARTICLE_MS_DNK_SPARK_R, getMActor()->getModel()->getAnmMtx(7), 1,
 			    this);
 			if (emitter)
 				emitter->setGlobalScale(mScaling);
@@ -323,7 +313,7 @@ void TElecNokonoko::calcRootMatrix()
 
 		if (getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(72.0f)) {
 			emitter = gpMarioParticleManager->emitAndBindToPosPtr(
-			    DENNOKO_JPA_FLASH, &mEffectPos, 1, this);
+			    PARTICLE_MS_BOMB_LIMIT, &mEffectPos, 1, this);
 			if (emitter)
 				emitter->setGlobalScale(mScaling);
 		}
@@ -785,17 +775,17 @@ void TElecCarapace::calcRootMatrix()
 	                          0, 4);
 
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    DENNOKO_JPA_SPARK_A, getMActor()->getModel()->getAnmMtx(2), 1, this);
+	    PARTICLE_MS_DNK_BIRI, getMActor()->getModel()->getAnmMtx(2), 1, this);
 	if (emitter)
 		emitter->setGlobalScale(mNokonoko->mScaling);
 
 	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    DENNOKO_JPA_SPARK_B, getMActor()->getModel()->getAnmMtx(2), 1, this);
+	    PARTICLE_MS_DNK_SPARK_L, getMActor()->getModel()->getAnmMtx(2), 1, this);
 	if (emitter)
 		emitter->setGlobalScale(mNokonoko->mScaling);
 
 	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    DENNOKO_JPA_SPARK_C, getMActor()->getModel()->getAnmMtx(2), 1, this);
+	    PARTICLE_MS_DNK_SPARK_R, getMActor()->getModel()->getAnmMtx(2), 1, this);
 	if (emitter)
 		emitter->setGlobalScale(mNokonoko->mScaling);
 }
