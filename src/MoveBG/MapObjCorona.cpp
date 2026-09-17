@@ -1,5 +1,7 @@
 #include <MoveBG/MapObjCorona.hpp>
 #include <System/DummyStrings.hpp>
+#include <GC2D/GCConsole2.hpp>
+#include <System/MarDirector.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 #include <Map/MapCollisionManager.hpp>
 #include <Camera/CameraShake.hpp>
@@ -527,7 +529,69 @@ Mtx* TBathtub::getRootJointMtx() const
 	return (Mtx*)getModel()->getBaseTRMtx();
 }
 
-void TBathtub::perform(u32 cue, JDrama::TGraphics* graphics) { }
+void TBathtub::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	TMapObjBase::perform(cue, graphics);
+	u32 calcCue = cue & 1;
+	if (calcCue) {
+		MTXCopy(mMActor->getModel()->getAnmMtx(mStarJntIdx),
+		    unk29C->getModel()->getBaseTRMtx());
+		JGeometry::TVec3<f32> scale(3.0f, 3.0f, 3.0f);
+		unk29C->getModel()->setBaseScale(scale);
+	}
+	if (calcCue) {
+		int time = gpMarDirector->unk58;
+		switch (getNumGripsDead()) {
+		case 0:
+			if (time >= 7200) {
+				if (!(unk2A0 & 0x2))
+					gpMarDirector->getConsole()->startAppearBalloon(0x1F, true);
+				unk2A0 |= 0x2;
+			} else if (time >= 3600) {
+				if (!(unk2A0 & 0x1))
+					gpMarDirector->getConsole()->startAppearBalloon(0x1E, true);
+				unk2A0 |= 0x1;
+			}
+			break;
+		case 1:
+			if (!(unk2A0 & 0x4))
+				gpMarDirector->getConsole()->startAppearBalloon(0x20, true);
+			unk2A0 |= 0x4;
+			break;
+		case 2:
+			if (!(unk2A0 & 0x8))
+				gpMarDirector->getConsole()->startAppearBalloon(0x21, true);
+			unk2A0 |= 0x8;
+			break;
+		case 3:
+			if (!(unk2A0 & 0x10))
+				gpMarDirector->getConsole()->startAppearBalloon(0x22, true);
+			unk2A0 |= 0x10;
+			break;
+		case 4:
+			if (!(unk2A0 & 0x8000))
+				gpMarDirector->getConsole()->startAppearBalloon(0x2D, true);
+			unk2A0 |= 0x8000;
+			break;
+		case 5:
+			if (!(unk2A0 & 0x20))
+				gpMarDirector->getConsole()->startAppearBalloon(0x23, true);
+			unk2A0 |= 0x20;
+			break;
+		}
+	}
+	if (cue & 0x2)
+		unk29C->calc();
+	if (cue & 0x4)
+		unk29C->viewCalc();
+	if (cue & 0x200) {
+		MtxPtr mtx = unk29C->getModel()->getBaseTRMtx();
+		JGeometry::TVec3<f32> pos;
+		pos.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+		unk29C->setLightData(mGroundPlane, pos);
+		unk29C->entry();
+	}
+}
 
 void TBathtub::control() { }
 
