@@ -66,6 +66,14 @@ void TMario::thinkAloha()
 	}
 }
 
+// TODO: frame 0x100 vs 0x168. Every instruction matches. All eleven referenced
+// slots sit within the top 0x3c of the locals, so the 104-byte residue is
+// entirely below them (outgoing args plus inline-expansion temporaries). One
+// ordering detail is visible too: retail puts startTimer's four-byte colour
+// temporary immediately below `dir`, where we put three scalars first.
+// checkUnk114() for the raw `unk114 &` tests is wrong -- it materialises a
+// bool retail does not have. getMActor()->getModel() and a getShadow()
+// wrapper over unk390 are both worth zero here.
 void TMario::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk114 & UNK114_FLAG_PROFILE)
