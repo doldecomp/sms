@@ -38,6 +38,8 @@ public:
 	bool getNearGrip(const JGeometry::TVec3<f32>&, f32, f32*) const;
 	u8 getNextJuncture(const JGeometry::TVec3<f32>&,
 	                   const JGeometry::TVec3<f32>&) const;
+	// u8, not BOOL: the three TKoopa callers keep the result in a u8 local and
+	// test it twice, and retail reloads it as a byte both times.
 	u8 getNextGrip(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&,
 	               f32, f32*) const;
 	void updatePosture_();
