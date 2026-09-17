@@ -13,11 +13,15 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+// TODO: frame 0x20 vs 0x28. stayWall, which shares the wall-normal matan and
+// the mFloorPosition.x ceiling test, is short by the same 8 bytes; the named
+// normal reference and getGroundPlane()/getIntendedMag() are all worth zero
+// here, so the missing local is elsewhere in the pair.
 BOOL TMario::startJumpWall()
 {
 	if (mWallPlane != NULL) {
 		const JGeometry::TVec3<f32>& normal = mWallPlane->getNormal();
-		s16 angle = matan(mWallPlane->mMinY, normal.x) + 0x8000;
+		s16 angle = matan(normal.z, normal.x) + 0x8000;
 		emitParticle(PARTICLE_MS_WALLKICK_A, angle);
 		emitParticle(PARTICLE_MS_WALLKICK_B, angle);
 	}
@@ -36,6 +40,17 @@ void TMario::checkJumpingThrowStart()
 		if (mInput & 0x2000 ? true : false)
 			changePlayerStatus(MARIO_STATUS_JUMP_THROW, 0, 0);
 }
+
+// TODO: UNUSED, 0x180 in the map. Fully inlined; its body is still unknown.
+// Placed here because the map emits it between checkJumpingThrowStart and
+// doSpinJumping, i.e. after them in source order under -inline deferred.
+void TMario::doSlipJumping() { }
+
+// TODO: UNUSED, 0x148 in the map. Fully inlined; body still unknown.
+void TMario::doSpinJumping() { }
+
+// TODO: UNUSED, 0x7c in the map. Fully inlined; body still unknown.
+void TMario::setJumpingAttackArea() { }
 
 void TMario::doJumping()
 {
@@ -361,10 +376,10 @@ BOOL TMario::backJumping()
 
 BOOL TMario::landing()
 {
-	if (mVel.y < 0.0f) {
+	if (mVel.y < 0.0f && mStatusArg < 3) {
 		if (mStatusTimer++ > 240) {
 			mStatusTimer = 240;
-			startSoundActor(MSD_SE_MV10B_CRY_JUMP_01);
+			startVoice(MSD_SE_MV10B_CRY_JUMP_01);
 			mStatusArg = 3;
 		}
 	}
@@ -712,7 +727,7 @@ BOOL TMario::fireDowning()
 	if (mInput & 1) {
 		u16 angleDiff = mIntendedYaw - mFaceAngle.y;
 		f32 velIncrement
-		    = 0.03125f * mIntendedMag * mJumpParams.mFireDownControl.get();
+		    = 0.03125f * getIntendedMag() * mJumpParams.mFireDownControl.get();
 
 		mForwardVel += velIncrement * JMASCos(angleDiff);
 		mFaceAngle.y += 1024.0f * (velIncrement * JMASSin(angleDiff));
