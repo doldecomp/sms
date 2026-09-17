@@ -50,14 +50,6 @@ enum {
 // (src/Camera/CamShakeDefine.cpp) names entries 0x0E-0x11
 // "/Camera/shakeBopaDown.prm", "shakeBopaPopo.prm", "shakeBopaGetup.prm" and
 // "shakeBopaDownLoop.prm", and "Bopa" is this boss.
-// TODO: these belong in Camera/CameraShake.hpp's EnumCamShakeMode; this header
-// only holds them because a batch may not edit shared headers.
-enum {
-	CAM_SHAKE_MODE_BOPA_DOWN      = 0x0E,
-	CAM_SHAKE_MODE_BOPA_POPO      = 0x0F,
-	CAM_SHAKE_MODE_BOPA_GETUP     = 0x10,
-	CAM_SHAKE_MODE_BOPA_DOWN_LOOP = 0x11,
-};
 
 // The splash the pollution ball makes when it lands. Unnamed in
 // System/Particles.hpp (it sits in the 0x52 hole next to PARTICLE_MS_POI_SAND).

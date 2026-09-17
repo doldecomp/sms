@@ -34,6 +34,7 @@ Every command in `CLAUDE.md` works unchanged inside the worktree (`build/venv/bi
 ## Rules
 
 - Edit only your units' `.cpp` files and their own headers. Any other header change: leave a `// TODO:` describing it and report it; do not make it.
+- Likewise, enumerators that belong in a shared enum (particle ids, camera-shake modes, hit messages) are parked under a **TU-prefixed name** (`BOSSPAKKUN_CAM_SHAKE_BOPA_DOWN`), not the canonical name: a header batch may add the canonical enumerator while you work, and two definitions of one name break every TU that includes both.
 - If your unit needs a helper that belongs in a shared header (the map shows it weak, i.e. a header inline), park it as `static inline` **in your `.cpp`**, never in your unit's header: two units parking the same name in two headers broke the build for every TU that includes both.
 - No stack padding (`volatile char trash[]`, `u32 pad[]`), no `#pragma dont_inline`, no reinterpret casts, no fakematches. Temporary padding to confirm a body is otherwise exact is fine if removed.
 - One change at a time; rebuild and re-diff.

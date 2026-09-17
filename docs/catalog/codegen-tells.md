@@ -208,6 +208,19 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `bosspakkun`
+
+- Constant-first nerve identity tests: `&Nerve::theNerve() == spine->getLatestNerve()` is this TU's spelling; the natural order hoists the `mSpine`/`getLatestNerve` loads above the `theNerve()` static-init guard (`setGroundCollision` 56 -> 72 from the swap alone; applied to 14 sites). A named `const TNerveBase*` local flips the `cmplw` operands the other way.
+- One body statement can push a constructor out of line: splitting `search<T>(...)->getChildren().push_back(this)` into a named `group` plus the `push_back` made `TBPPolDrop`'s 79-instruction ctor retail's `bl` (`init` 85 -> 99); moving six initialisers into the body did not, so the statement budget counts body statements, not initialiser-list entries.
+- A dead inline expansion survives only through a reassignment: `f32 a = MsAngleWrap(helper()); a = helper();` keeps both expansions and the wrap loops; the bare statement pushes the helper out of line; dropping it loses the loops.
+- The water-gun actor types `0x1000000D` (nozzle hit actor) and `0x1000001` (droplet actor) are always compared directly (`getActorType() ==`, no materialised bool; `receiveMessage` 77 -> 97).
+- `isAirborne()` over `checkLiveFlag(LIVE_FLAG_AIRBORNE)` where the ROM materialises and tests with `cmpwi`.
+- A shared `FALSE` exit: `else if (!(a && b && c)) mIsMarioRiding = 0;` lets both chains fall into one `li r3,0` (`checkMarioRiding` exact).
+- Recompute a named float before each gate check (`-mVelocity.y` reassigned before the second `gateCheck`) to get the ROM's two `f31` round trips.
+- Full-width Shift-JIS parentheses (0x8169/0x816A) in `"シャイン（ボス用）"`: ASCII is two bytes short. Two block-scope `static const TModelDataLoadEntry entry[]` in one function must both be named `entry` (`entry$3613`/`entry$3618`).
+- `startTornadoBlur` (0x58) is only the two `ms_bopa_blur1` emitters; including the `swing1` one makes it 0x78: the map size prunes helper contents.
+- Open: `TSpineEnemy::turnToCurPathNode` returns `int`/`BOOL` (ROM `cmpwi r3, 0`, ours `clrlwi.`) — needs a sweep; `getLatestNerve` through `mOwner->mSpine` is a `bl` while through `this->mSpine` it inlines (receiver depth); the `set<f>` sites that retail calls pass computed products where Kazekun's inlined ones pass constants (possible discriminator).
+
 ## Rules from `MapObjCorona`
 
 - The MSound rogue-include pair has an order per TU: read the JAL-list order off the target `__sinit` (registrations run in reverse declaration order) before choosing `MSSetSound.hpp` before or after `MSoundBGM.hpp` (97.6 -> 100 here; `Talk2D2` needed the same order, `MapObjWave`/enemies the other).
