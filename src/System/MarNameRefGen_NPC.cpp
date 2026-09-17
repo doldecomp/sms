@@ -32,6 +32,19 @@ public:
 	}
 };
 
+// TODO: the 28 manager branches below each differ from retail by exactly four
+// instructions, because retail defined every one of those manager constructors
+// in-class: the branch is `bl <base ctor>` with the "?" name plus the derived
+// class's own vtable store, and no `__ct__<derived>Fv` exists anywhere in the
+// map.  NPC/NpcManager.hpp declares them without bodies (and TKinopioManager,
+// TKinojiiManager, TPeachManager, TRaccoonDogManager, TSunflowerLManager,
+// TSunflowerSManager, TMonteWCManager and TBoardNpcManager declare no
+// constructor at all), so this unit cannot reach them.  The bodies are
+//   TMonteMManager()  : TMonteMBaseManager("?") { }        (and siblings)
+//   TMonteMEManager() : TMonteMSpecialManager() { }        (the E/F/G/H four)
+//   TBoardNpcManager(): TLiveManager("?") { }
+// Measured: adding the 28 bodies to NPC/NpcManager.hpp takes this function from
+// 87.9% to 100.0% and the whole unit to fully matching, with zero regressions.
 JDrama::TNameRef* TMarNameRefGen::getNameRef_NPC(const char* name) const
 {
 	if (strcmp(name, "NPCMonteM") == 0)

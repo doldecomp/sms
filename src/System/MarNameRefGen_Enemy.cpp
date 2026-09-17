@@ -77,6 +77,29 @@ public:
 	}
 };
 
+// TODO: this function is instruction-exact except for eight constructors that
+// retail defined in-class (the factory shows `bl <base ctor>` plus the derived
+// class's own vtable stores, and the derived constructor's own mangled name is
+// absent from the whole map) and two wrong class sizes.  All of them live in
+// other units' headers, so they are not fixed here.  Measured: applying the
+// list below took this function from 96.8% to 100.0%, this object's data from
+// 0% to 100%, and caused zero regressions anywhere else.
+//   Animal/AnimalManager.hpp   TMewManager(name) : TAnimalManagerBase(name)
+//   Enemy/NameKuri.hpp         TDiffusionNameKuriManager, TNameKuriLauncher
+//   Enemy/Pakkun.hpp           TStayPakkun
+//   Enemy/Gesso.hpp            TSurfGesso, TLandGesso
+//   Enemy/HanaSamboObj.hpp     TSamboFlowerManager, which also zeroes
+//                              mCoinUnits/mCoinUnitNum/unk5C/mLeaves
+//                              (the branch stores 0 to 0x54..0x60); its
+//                              out-of-line copy in hanasambo.cpp must go
+//   Enemy/EffectObj.hpp        TSimpleEffect (: TActor(name), unk44(true)),
+//                              TEffectPinnaFunsui, TEffectBiancoFunsui; and
+//                              TSimpleEffect::unk44 is a `bool` at 0x44 while
+//                              unk48 is a TRotation3f, not a Mtx -- retail
+//                              calls the empty TRotation3 constructor there,
+//                              which is one of this TU's five map symbols
+//   Enemy/KazekunNerve.hpp     sizeof(TKazekunManager) is 0x64, not 0x60, and
+//                              sizeof(TKazekun) is 0x1d4, not 0x1b4
 JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 {
 	if (strcmp(name, "TypicalEnemy") == 0)
