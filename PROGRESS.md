@@ -7,14 +7,14 @@ Per-batch history through batch 69 is archived in [docs/progress/history.md](doc
 
 ## Current numbers
 
-Measured from `build/GMSE01/report.json` on 2026-09-16 after batch 1 of the goal run (MapCollisionEntry linked).
+Measured from `build/GMSE01/report.json` on 2026-09-16 after batch 2 of the goal run.
 
 | | Matched code | Source-linked code | Linked units |
 | --- | ---: | ---: | ---: |
-| Game | 29.29% | 3.57% | 94 / 385 |
+| Game | 29.34% | 3.57% | 94 / 385 |
 | JSystem | 87.11% | 61.61% | 166 / 198 |
 | SDK | 95.07% | 92.22% | 142 / 149 |
-| All | 41.98% | 17.89% | 402 / 732 |
+| All | 42.02% | 17.89% | 402 / 732 |
 
 9,072 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
 
@@ -26,6 +26,7 @@ Since then, work has been **whole-TU enemy reconstruction from the map**: scaffo
 | Unit | Unit match | Exact functions |
 | --- | ---: | ---: |
 | `Enemy/effectEnemy` | 99.99% | 17 / 18 |
+| `Enemy/feetinv` | 95.18% | 24 / 25 |
 | `Enemy/seal` | 98.65% | 12 / 18 |
 | `Enemy/hanasambo` | 97.51% | 63 / 96 |
 | `Enemy/cannon` | 97.26% | 33 / 55 |
