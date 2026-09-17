@@ -24,21 +24,6 @@ static JUtility::TColor sColor;
 
 TMapObjWave* gpMapObjWave;
 
-// fabricated. The ROM materialises a bool for this test, which is what an
-// inlined bool-returning predicate produces, and the two-return shape is what
-// the rest of the TBGCheckData predicate family uses.
-// TODO: this really is a TBGCheckData method and belongs in Map/MapData.hpp
-// next to isSand() (BG_TYPE_SAND is the neighbouring 0x701); that header was
-// out of scope for this batch. `inline` keeps the helper from being emitted as
-// a TU-local symbol the map does not have.
-static inline bool isSeaFloor(const TBGCheckData* data)
-{
-	if (data->mBGType == 0x700)
-		return true;
-	else
-		return false;
-}
-
 void TMapObjWave::initDraw()
 {
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
@@ -208,7 +193,7 @@ void TMapObjWave::updateHeightAndAlpha()
 		    gpMarioPos->x, 0.0f, gpMarioPos->z, &surface);
 
 		f32 heightDepth = mHeightFadeDepth + floorY;
-		if (heightDepth < 0.0f || isSeaFloor(surface)) {
+		if (heightDepth < 0.0f || surface->isSeaFloor()) {
 			mWaveHeightX = mWaveHeightMaxX;
 			mWaveHeightZ = mWaveHeightMaxZ;
 		} else {
@@ -220,7 +205,7 @@ void TMapObjWave::updateHeightAndAlpha()
 		}
 
 		f32 alphaDepth = mAlphaFadeDepth + floorY;
-		if (alphaDepth < 0.0f || isSeaFloor(surface)) {
+		if (alphaDepth < 0.0f || surface->isSeaFloor()) {
 			mAlpha = mAlphaMax;
 		} else {
 			f32 rate = 1.0f - alphaDepth / mAlphaFadeDepth;

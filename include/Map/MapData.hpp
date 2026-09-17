@@ -53,7 +53,13 @@ enum BGTypeBits {
 
 	BG_TYPE_OOB = 0x600,
 
-	BG_TYPE_SAND = 0x701,
+	// fabricated name: the only reader is TMapObjWave::updateHeightAndAlpha,
+	// which forces the wave height and alpha to their maxima when the floor
+	// under Mario (water surfaces ignored) is this type, i.e. open sea bottom.
+	// The alternative reading is that 0x700 is plain sand and 0x701 the
+	// special one, but nothing in the binary tests 0x700 for sand behaviour.
+	BG_TYPE_SEA_FLOOR = 0x700,
+	BG_TYPE_SAND      = 0x701,
 
 	BG_TYPE_DEATH_PLANE                              = 0x800,
 	BG_TYPE_EVERYTHING_BUT_MAP_OBJECTS_PHASE_THROUGH = 0x801,
@@ -171,6 +177,15 @@ public:
 	bool isLegal() const
 	{
 		return checkFlag(BG_CHECK_FLAG_ILLEGAL) == 1 ? false : true;
+	}
+
+	// fabricated, see BG_TYPE_SEA_FLOOR
+	bool isSeaFloor() const
+	{
+		if (mBGType == BG_TYPE_SEA_FLOOR)
+			return true;
+		else
+			return false;
 	}
 
 	bool isSand() const
