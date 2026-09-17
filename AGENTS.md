@@ -96,6 +96,25 @@ One rule survives the lift, and it is not negotiable:
 
 Publicly documented headers, SDK documentation, other clean-room decomp projects and compiler behaviour are all fine evidence.
 
+### Parallel agents and worktrees
+
+Several agents can work at once, each in its own git worktree, as long as they edit disjoint units.
+`build/` and `orig/` are untracked, so a bare `git worktree add` cannot build; use the helper instead:
+
+```bash
+tools/worktree.sh add <name>      # ../sms-wt/<name> on branch wt/<name>, built, with a baseline (~1 min)
+tools/worktree.sh merge <name>    # rebase wt/<name> onto the current branch and fast-forward it in
+tools/worktree.sh remove <name>
+```
+
+Inside a worktree every command in this guide works unchanged: `build/venv/bin/ninja`, `decomp-diff.py`, `validate-symbol-order.py` and `ninja baseline`/`changes_all` all run against that worktree's own `build/GMSE01`.
+The toolchain and disc files are shared read-only symlinks.
+
+Rules for a worktree agent:
+- Edit only the unit you were given (its `.cpp` and header). A change that needs a shared header is reported back, not made, because it perturbs every other agent's units.
+- Verify inside the worktree (`changes_all`, symbol order), commit on `wt/<name>`, and do not touch the main checkout.
+- The orchestrator merges with `tools/worktree.sh merge`, then reruns `ninja changes_all` and the DOL SHA-1 check in the main checkout before anything counts as committed. A merge conflict or a red check stops the batch.
+
 ### Committing
 
 Commit each batch yourself once it passes verification — no need to ask.

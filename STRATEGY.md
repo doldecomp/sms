@@ -25,6 +25,7 @@ This reflects what recent batches have actually done (see `git log`); the user h
 - **Time-box a function to about 20-30 minutes.** If it is still stuck, leave a `// TODO:` naming the remaining difference and move on.
 - **Group by shared cause.** When a fix works, check the same pattern in neighbouring functions and headers (batch 18's sound-layout fix made 15 functions exact at once).
 - **Verify cheaply but always.** A batch touching one `.cpp` can reuse the last baseline; take a fresh `ninja baseline` before any header change. Run `ninja changes_all`, `validate-symbol-order.py` on changed units, and the DOL SHA-1 check every batch.
+- **Parallel agents work in worktrees.** `tools/worktree.sh add <name>` gives each agent a buildable checkout; agents own disjoint units and never edit shared headers. See "Parallel agents and worktrees" in `CLAUDE.md`.
 - **Keep docs small.** Commit messages carry the batch detail. Update `PROGRESS.md` numbers in place. Edit the matching `docs/catalog/` entry only when a finding is reusable; do not write per-batch audit files.
 
 ## Refreshing the near-match list
