@@ -28,6 +28,20 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+// TODO: this stands in for a member the original surely had --
+// `TRealoidActor::checkFlag(int) const`, declared next to onFlag/offFlag in
+// Animal/fishoid.hpp, mirroring TLiveActor::checkLiveFlag and
+// THitActor::checkHitFlag. Reading the flags through a *const* inline is what
+// keeps the second mFlags load that the ROM has in every on/offFlag following
+// a test (appearBee, disappearBee, receiveMessageFromChild, controlCollision,
+// controlSound); see "const on an inline's pointer parameter also defeats CSE"
+// in docs/AGENT_MATCHING_TIPS.md. Move it to fishoid.hpp as a method and
+// delete this -- that header was out of scope for the batch that found it.
+static inline bool checkRealoidFlag(const TRealoidActor* actor, int flag)
+{
+	return (actor->mFlags & flag) != 0;
+}
+
 namespace {
 
 // 67.5 degrees. The initialiser goes through halfPI(), so it cannot be folded
@@ -222,7 +236,7 @@ void TBeeHive::setBoidParamOnMarioWaterIn()
 
 void TBeeHive::receiveMessageFromChild(TBee* child)
 {
-	if (child->mFlags & TRealoidActor::FLAG_UNK4)
+	if (checkRealoidFlag(child, TRealoidActor::FLAG_UNK4))
 		return;
 
 	child->onFlag(TRealoidActor::FLAG_UNK4);
@@ -292,24 +306,7 @@ BOOL TBeeHive::receiveMessage(THitActor* sender, u32 message)
 		JGeometry::TVec3<f32> toMario = mPosition;
 		toMario.sub(*gpMarioPos);
 
-		if (mSpine->getLatestNerve() != &TNerveBeeHiveFall::theNerve()) {
-			JGeometry::TVec3<f32> dir = toMario;
-			dir.y                     = 0.0f;
-			dir.normalize();
-
-			f32 sign;
-			if (fabsf(mSwingSpeed) < 0.0001f)
-				sign = 1.0f;
-			else
-				sign = (f32)(mSwingSpeed > 0.0f
-				                 ? 1
-				                 : (mSwingSpeed < 0.0f ? -1 : 0));
-
-			JGeometry::TVec3<f32> up(0.0f, 0.0f, 1.0f);
-			mGoalRotation.setRotate(up, dir, 1.0f);
-
-			mSwingSpeed += sign * getSaveParams()->mShakePower.get();
-		}
+		setShakePower(toMario);
 
 		SMS_EmitWaterHitParticleAndSound(&sender->mPosition);
 		return TRUE;
@@ -318,7 +315,7 @@ BOOL TBeeHive::receiveMessage(THitActor* sender, u32 message)
 	case HIT_MESSAGE_TRAMPLE:
 	case HIT_MESSAGE_HIP_DROP:
 	case HIT_MESSAGE_PUNCH:
-		if (mSpine->getLatestNerve() == &TNerveBeeHiveWait::theNerve()) {
+		if (isWaiting()) {
 			mSpine->reset();
 			mSpine->setNext(&TNerveBeeHiveFall::theNerve());
 		}
@@ -407,7 +404,7 @@ void TBeeHive::controlCollision()
 		next = 0;
 
 	TRealoidActor* nextBee = unk154[next];
-	if (!(nextBee->mFlags & TRealoidActor::FLAG_UNK2_OR_UNK4))
+	if (!checkRealoidFlag(nextBee, TRealoidActor::FLAG_UNK2_OR_UNK4))
 		nextBee->offHitFlag(HIT_FLAG_CANNOT_ATTACK);
 }
 
@@ -424,7 +421,7 @@ void TBeeHive::controlSound()
 
 	for (int i = 0; i < num; ++i) {
 		TRealoidActor* bee = unk154[i];
-		if (bee->mFlags & TRealoidActor::FLAG_UNK2_OR_UNK4)
+		if (checkRealoidFlag(bee, TRealoidActor::FLAG_UNK2_OR_UNK4))
 			continue;
 
 		alive += 1;
@@ -554,9 +551,9 @@ void TBeeHive::appearBee(int index)
 {
 	TRealoidActor* bee = unk154[index];
 
-	if (bee->mFlags & TRealoidActor::FLAG_UNK4)
+	if (checkRealoidFlag(bee, TRealoidActor::FLAG_UNK4))
 		return;
-	if (!(bee->mFlags & TRealoidActor::FLAG_UNK2))
+	if (!checkRealoidFlag(bee, TRealoidActor::FLAG_UNK2))
 		return;
 
 	bee->offFlag(TRealoidActor::FLAG_UNK2);
@@ -569,7 +566,7 @@ void TBeeHive::disappearBee(int index)
 {
 	TRealoidActor* bee = unk154[index];
 
-	if (bee->mFlags & TRealoidActor::FLAG_UNK2)
+	if (checkRealoidFlag(bee, TRealoidActor::FLAG_UNK2))
 		return;
 
 	bee->onFlag(TRealoidActor::FLAG_UNK2);
@@ -663,10 +660,9 @@ bool TBeeHive::isMissMario() const
 	return range * range <= toMario.squared();
 }
 
-// TODO: incorrect size. Map records 0x2d4; the body below is what
-// receiveMessage()'s water handler contains, factored out, but out of line it
-// compiles to about 0x2f0 because setRotate() expands here. Keep looking for a
-// spelling that both matches the map size and leaves receiveMessage exact.
+// UNUSED (0x2d4). receiveMessage() inlines this, and it has to: the extra
+// inline level is what keeps normalize()'s dot/inv_sqrt/scale and setRotate
+// out of line there, exactly as the ROM has them.
 void TBeeHive::setShakePower(const JGeometry::TVec3<f32>& to_mario)
 {
 	if (isFalling())
