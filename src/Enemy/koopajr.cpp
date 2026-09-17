@@ -90,14 +90,21 @@ void TDirectionCalc::normalize() { mDirection = WrapRadian(mDirection); }
 // takes the shorter way round.
 f32 TDirectionCalc::calcNearerDirection(f32 dir)
 {
-	mDirection = WrapRadianF(mDirection);
+	f32 lo     = 0.0f;
+	f32 hi     = TWO_PI;
+	f32 range  = hi - lo;
+	f32 offset = mDirection - lo;
+	mDirection = lo + std::fmodf(range + offset, range);
+
 	if (dir >= mDirection) {
-		f32 diff = dir - mDirection;
-		if (TWO_PI - diff < diff)
+		f32 diff  = dir - mDirection;
+		f32 other = TWO_PI - diff;
+		if (other < diff)
 			dir -= TWO_PI;
 	} else {
-		f32 diff = mDirection - dir;
-		if (TWO_PI - diff < diff)
+		f32 diff  = mDirection - dir;
+		f32 other = TWO_PI - diff;
+		if (other < diff)
 			dir += TWO_PI;
 	}
 	return dir;
@@ -171,9 +178,17 @@ f32 TDirectionCalc::absDirection(f32 dir)
 	return fabsf(diff);
 }
 
-f32 TDirectionCalc::d2r(f32 deg) { return 3.1415927f * deg / 180.0f; }
+f32 TDirectionCalc::d2r(f32 deg)
+{
+	// TUtil<f32>::PI(), not the literal: an inlined call returning the
+	// constant keeps the parameter as the multiply's first operand.
+	return deg * JGeometry::TUtil<f32>::PI() / 180.0f;
+}
 
-f32 TDirectionCalc::r2d(f32 rad) { return 180.0f * rad / 3.1415927f; }
+f32 TDirectionCalc::r2d(f32 rad)
+{
+	return 180.0f * rad / JGeometry::TUtil<f32>::PI();
+}
 
 // ---------------------------------------------------------------------------
 // Params
