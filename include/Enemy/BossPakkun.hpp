@@ -12,6 +12,7 @@
 class MActor;
 class TBossPakkun;
 class TLiveActor;
+class TAreaCylinderManager;
 class TWaterEmitInfo;
 
 // Petey Piranha. Two managers are registered: "BossPakkunManager" with flag 0
@@ -333,7 +334,9 @@ public:
 	// the full version loads it.
 	/* 0x180 */ MActor* mEndMActor;
 	/* 0x184 */ f32 mHeadYaw;
-	/* 0x188 */ int unk188;
+	// The "ゲロエリアマネージャー" area the light variant checks Mario against
+	// before spitting; looked up lazily.
+	/* 0x188 */ TAreaCylinderManager* mVomitArea;
 	/* 0x18C */ TWaterEmitInfo* mWaterEmitInfo;
 	/* 0x190 */ s8 mIsMarioRiding;
 	/* 0x194 */ JGeometry::TVec3<f32> unk194;
@@ -342,7 +345,7 @@ public:
 	/* 0x1B8 */ int unk1B8;
 	/* 0x1BC */ s8 unk1BC;
 	/* 0x1C0 */ u32 mBalloonsShown;
-	/* 0x1C4 */ u8 unk1C4;
+	/* 0x1C4 */ s8 unk1C4;
 	/* 0x1C5 */ u8 unk1C5[3];
 	/* 0x1C8 */ f32 mRumblePower;
 	/* 0x1CC */ u8 unk1CC;

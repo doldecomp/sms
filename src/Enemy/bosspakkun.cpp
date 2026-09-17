@@ -1,5 +1,6 @@
 #include <Enemy/BossPakkun.hpp>
 #include <Camera/CameraShake.hpp>
+#include <Enemy/AreaCylinder.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Enemy/Graph.hpp>
 #include <Enemy/Walker.hpp>
@@ -498,15 +499,19 @@ void TBPTornado::perform(u32 cue, JDrama::TGraphics* graphics)
 	mMActor->perform(cue, graphics);
 }
 
-// UNUSED, 0xc0 in the map: the Tornado nerve spells it out.
+// UNUSED, 0xc0 in the map: the Tornado nerve inlines it.
 void TBPTornado::launch(const JGeometry::TVec3<f32>& target)
 {
-	mTarget   = target;
-	mCenter   = mOwner->mPosition;
-	mPosition = mOwner->mPosition;
-	mMove     = mOwner->getSaveParam2()->mSLTornadoMoveInit.get();
 	mState    = BOSSPAKU_TORNADO_MOVING;
+	mTarget   = target;
+	mPosition = mOwner->mPosition;
+	mCenter   = mOwner->mPosition;
+	mMove     = mOwner->getSaveParam2()->mSLTornadoMoveInit.get();
 	offHitFlag(HIT_FLAG_NO_COLLISION);
+
+	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BRK);
+	ctrl->setFrame(0.0f);
+	ctrl->setRate(0.0f);
 }
 
 // UNUSED, 0x94 in the map: TBossPakkun::init spells it out.
@@ -817,7 +822,7 @@ TBossPakkun::TBossPakkun(const char* name)
     , unk17C(0)
     , mEndMActor(nullptr)
     , mHeadYaw(0.0f)
-    , unk188(0)
+    , mVomitArea(nullptr)
     , mWaterEmitInfo(nullptr)
     , mIsMarioRiding(0)
     , unk1B8(0)
@@ -994,8 +999,24 @@ void TBossPakkun::ignoreWaterCheck() { }
 // TODO: not reconstructed. Map size 0x58.
 void TBossPakkun::startTornadoBlur() { }
 
-// TODO: not reconstructed. Map size 0xa4.
-void TBossPakkun::resetWaterMark() { }
+// UNUSED, 0xa4 in the map: the StompReact, TumbleOut and PreDie nerves all
+// spell it out. Spits the swallowed water back out and starts the belly
+// deflating.
+void TBossPakkun::resetWaterMark()
+{
+	unk17C = 1;
+	unk174 = 0;
+	unk170 = 0;
+	unk1B8 = 50;
+
+	if (mWaterEmitInfo) {
+		JGeometry::TVec3<f32> mouth;
+		getJointTransByIndex(0x12, &mouth);
+		mouth.y += 250.0f;
+		mWaterEmitInfo->mPos.value = mouth;
+		gpModelWaterManager->emitRequest(*mWaterEmitInfo);
+	}
+}
 
 // TODO: not reconstructed. Map size 0xa0.
 bool TBossPakkun::inArea(const JGeometry::TVec3<f32>& pos) { return false; }
@@ -1092,8 +1113,15 @@ void TBossPakkun::launchPolDrop()
 // TODO: not reconstructed. Map size 0xc4.
 void TBossPakkun::launchTornado() { }
 
-// TODO: not reconstructed. Map size 0x6c.
-void TBossPakkun::killSmallEnemies() { }
+// UNUSED, 0x6c in the map: the PreDie nerve spells it out. The slugs the boss
+// spat out go with it.
+void TBossPakkun::killSmallEnemies()
+{
+	TEnemyManager* manager
+	    = JDrama::TNameRefGen::search<TEnemyManager>("ナメクリマネージャー");
+	if (manager)
+		manager->killChildren();
+}
 
 void TBossPakkun::changeBck(int index)
 {
@@ -1448,8 +1476,30 @@ DEFINE_NERVE(TNerveBPCannon, TLiveActor)
 // TODO: incorrect size. Map records 864 bytes.
 DEFINE_NERVE(TNerveBPVomit, TLiveActor) { return FALSE; }
 
-// TODO: incorrect size. Map records 380 bytes.
-DEFINE_NERVE(TNerveBPTornado, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBPTornado, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	MActor* actor     = boss->getMActor();
+
+	if (spine->getTime() == 0) {
+		boss->changeBck(BOSSPAKU_BCK_TORNADO);
+		gpMarioParticleManager->emitAndBindToSRTMtxPtr(
+		    BOSSPAKKUN_JPA_MS_BOPA_SWING1, boss->getModel()->getAnmMtx(3), 0,
+		    boss);
+		gpMarioParticleManager->emitAndBindToPosPtr(
+		    BOSSPAKKUN_JPA_MS_BOPA_BLUR1, &boss->unk194, 0, nullptr);
+		gpMarioParticleManager->emitAndBindToPosPtr(
+		    BOSSPAKKUN_JPA_MS_BOPA_BLUR1, &boss->unk1A0, 0, nullptr);
+	}
+
+	if (spine->getTime() == 150)
+		boss->mTornado->launch(*gpMarioPos);
+
+	if (actor->isCurAnmAlreadyEnd(ANM_TYPE_BCK))
+		return TRUE;
+
+	return FALSE;
+}
 
 DEFINE_NERVE(TNerveBPPivot, TLiveActor)
 {
@@ -1479,17 +1529,134 @@ DEFINE_NERVE(TNerveBPPivot, TLiveActor)
 	return FALSE;
 }
 
-// TODO: incorrect size. Map records 496 bytes.
-DEFINE_NERVE(TNerveBPSwallow, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBPSwallow, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
 
-// TODO: incorrect size. Map records 340 bytes.
-DEFINE_NERVE(TNerveBPTumbleIn, TLiveActor) { return FALSE; }
+	if (spine->getTime() == 0)
+		boss->changeBck(BOSSPAKU_BCK_WATER_HIT);
 
-// TODO: incorrect size. Map records 376 bytes.
-DEFINE_NERVE(TNerveBPTumble, TLiveActor) { return FALSE; }
+	if (boss->mWaterMark
+	    >= boss->getSaveParam2()->mSLWaterMarkLimit.get()) {
+		spine->pushAfterCurrent(&TNerveBPTumbleIn::theNerve());
+		boss->mState = BOSSPAKU_STATE_NORMAL;
+		boss->unk170 = 0;
+		return TRUE;
+	}
 
-// TODO: incorrect size. Map records 628 bytes.
-DEFINE_NERVE(TNerveBPTumbleOut, TLiveActor) { return FALSE; }
+	MtxPtr mouth = boss->getModel()->getAnmMtx(18);
+	gpMarioParticleManager->emitAndBindToMtxPtr(
+	    BOSSPAKKUN_JPA_MS_BOPA_WATHIT, mouth, 1, boss);
+	gpMarioParticleManager->emitAndBindToMtxPtr(
+	    BOSSPAKKUN_JPA_MS_BOPA_WATHIT_W, mouth, 1, boss + 1);
+
+	if (boss->unk170 != 0) {
+		boss->changeBck(BOSSPAKU_BCK_WATER_HIT);
+		boss->unk170 = 0;
+		return FALSE;
+	}
+
+	boss->mState = BOSSPAKU_STATE_NORMAL;
+	spine->pushAfterCurrent(&TNerveBPWait::theNerve());
+	return TRUE;
+}
+
+DEFINE_NERVE(TNerveBPTumbleIn, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	MActor* actor     = boss->getMActor();
+
+	if (spine->getTime() == 0)
+		boss->changeBck(BOSSPAKU_BCK_DOWN);
+
+	if (spine->getTime() == 336)
+		gpMarioParticleManager->emitAndBindToMtxPtr(
+		    BOSSPAKKUN_JPA_MS_BOPA_DOWN, boss->getModel()->getAnmMtx(14), 0,
+		    boss);
+
+	if (spine->getTime() == 348) {
+		gpCameraShake->startShake(
+		    (EnumCamShakeMode)CAM_SHAKE_MODE_BOPA_DOWN, 1.0f);
+		boss->rumblePad(2, boss->mPosition);
+	}
+
+	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		spine->pushAfterCurrent(&TNerveBPTumble::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveBPTumble, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		boss->changeBck(BOSSPAKU_BCK_DOWN_LOOP);
+		boss->mState = BOSSPAKU_STATE_BELLY_UP;
+	}
+
+	// TODO: the ROM's owner key is `boss + 8` bytes, which is
+	// JDrama::TNameRef::mKeyCode's address; that member is private, so the
+	// expression the original used is still unknown. One operand short.
+	gpMarioParticleManager->emitAndBindToMtxPtr(
+	    BOSSPAKKUN_JPA_MS_BOPA_JITA, boss->getModel()->getAnmMtx(0), 1, boss);
+	gpCameraShake->keepShake(
+	    (EnumCamShakeMode)CAM_SHAKE_MODE_BOPA_DOWN_LOOP, 1.0f);
+
+	if ((spine->getTime() / 60) % 2)
+		boss->rumblePad(0, boss->mPosition);
+
+	if (spine->getTime() >= boss->getSaveParam2()->mSLTumbleTime.get()) {
+		boss->mState = BOSSPAKU_STATE_NORMAL;
+		spine->pushAfterCurrent(&TNerveBPTumbleOut::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveBPTumbleOut, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	MActor* actor     = boss->getMActor();
+
+	if (spine->getTime() == 0) {
+		boss->changeBck(BOSSPAKU_BCK_GETUP);
+		gpCameraShake->startShake(
+		    (EnumCamShakeMode)CAM_SHAKE_MODE_BOPA_GETUP, 1.0f);
+		boss->rumblePad(0, boss->mPosition);
+	}
+
+	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_GETUP)) {
+			boss->changeBck(BOSSPAKU_BCK_RETURN);
+			// Every third get-up of the first fight raises the "spray its
+			// mouth" hint again.
+			if (!boss->is2ndFightNow()) {
+				boss->unk1C4 -= 1;
+				if (boss->unk1C4 <= 0) {
+					gpMarDirector->getConsole()->startAppearBalloon(1, true);
+					boss->unk1C4 = 3;
+				}
+			}
+		} else {
+			spine->pushAfterCurrent(&TNerveBPWait::theNerve());
+			return TRUE;
+		}
+	}
+
+	if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_RETURN)) {
+		f32 frame = actor->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
+		if (140.0f < frame && frame < 160.0f && !boss->unk17C)
+			boss->resetWaterMark();
+		if (35.0f < frame)
+			boss->unk1BC = 1;
+	}
+
+	return FALSE;
+}
 
 DEFINE_NERVE(TNerveBPGetUp, TLiveActor)
 {
@@ -1581,8 +1748,27 @@ DEFINE_NERVE(TNerveBPJumpReact, TLiveActor)
 	return FALSE;
 }
 
-// TODO: incorrect size. Map records 472 bytes.
-DEFINE_NERVE(TNerveBPPreDie, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBPPreDie, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	MActor* actor     = boss->getMActor();
+
+	if (spine->getTime() == 0) {
+		boss->changeBck(BOSSPAKU_BCK_UNK5);
+		boss->mHeadHit->onHitFlag(HIT_FLAG_NO_COLLISION);
+		if (!boss->unk17C)
+			boss->resetWaterMark();
+		boss->killSmallEnemies();
+		MSBgm::stopTrackBGM(1, 10);
+	}
+
+	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		spine->pushAfterCurrent(&TNerveBPDie::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
+}
 
 DEFINE_NERVE(TNerveBPDie, TLiveActor)
 {
@@ -1613,14 +1799,68 @@ DEFINE_NERVE(TNerveBPDie, TLiveActor)
 	return FALSE;
 }
 
-// TODO: incorrect size. Map records 552 bytes.
-DEFINE_NERVE(TNerveBPTakeOff, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBPTakeOff, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	MActor* actor     = boss->getMActor();
+
+	if (spine->getTime() == 0) {
+		boss->onLiveFlag(LIVE_FLAG_UNK10);
+		boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
+		boss->changeBck(BOSSPAKU_BCK_FLY_START);
+	}
+
+	if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_FLY_START)
+	    && actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
+		boss->changeBck(BOSSPAKU_BCK_FLY);
+
+	if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_FLY)) {
+		boss->mPosition.y += 5.0f;
+
+		JGeometry::TVec3<f32> goal = boss->getUnk104().getPoint();
+		if (goal.y < boss->mPosition.y) {
+			boss->mPosition.y = goal.y;
+			if (boss->unk124->getGraph())
+				spine->pushAfterCurrent(&TNerveBPFly::theNerve());
+			else
+				spine->pushAfterCurrent(&TNerveBPTouchDown::theNerve());
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
 
 // TODO: incorrect size. Map records 716 bytes.
 DEFINE_NERVE(TNerveBPFly, TLiveActor) { return FALSE; }
 
-// TODO: incorrect size. Map records 400 bytes.
-DEFINE_NERVE(TNerveBPTouchDown, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBPTouchDown, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	MActor* actor     = boss->getMActor();
+
+	if (spine->getTime() == 0)
+		boss->changeBck(BOSSPAKU_BCK_FLY);
+
+	if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_FLY)) {
+		boss->mPosition.y -= 5.0f;
+
+		JGeometry::TVec3<f32> goal = boss->getUnk104().getPoint();
+		if (goal.y > boss->mPosition.y) {
+			boss->mPosition.y = goal.y;
+			boss->changeBck(BOSSPAKU_BCK_LAND);
+			boss->offLiveFlag(LIVE_FLAG_UNK10);
+		}
+	}
+
+	if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_LAND)
+	    && actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		spine->pushAfterCurrent(&TNerveBPWait::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
+}
 
 DEFINE_NERVE(TNerveBPFlyCannon, TLiveActor)
 {
@@ -1688,8 +1928,35 @@ DEFINE_NERVE(TNerveBPBreakSleep, TLiveActor)
 	return FALSE;
 }
 
-// TODO: incorrect size. Map records 564 bytes.
-DEFINE_NERVE(TNerveBPWaitL, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBPWaitL, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	MActor* actor     = boss->getMActor();
+
+	if (spine->getTime() == 0)
+		actor->setBck("bosspaku_wait");
+
+	if (spine->getTime()
+	    >= boss->getSaveParam2()->mSLWaitFrameStg0.get()) {
+		if (!boss->mVomitArea)
+			boss->mVomitArea = (TAreaCylinderManager*)gpConductor->search(
+			    "ゲロエリアマネージャー");
+
+		if (boss->mVomitArea && boss->mVomitArea->contain(*gpMarioPos)) {
+			if (!SMS_GetMarioGroundPlane()->isWaterSurface()) {
+				spine->pushAfterCurrent(&TNerveBPCannonL::theNerve());
+				return TRUE;
+			}
+		}
+
+		if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+			spine->pushAfterCurrent(&TNerveBPWaitL::theNerve());
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
 
 DEFINE_NERVE(TNerveBPCannonL, TLiveActor)
 {
