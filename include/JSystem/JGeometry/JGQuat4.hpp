@@ -149,6 +149,50 @@ public:
 	}
 
 	// Assumes unit quaternion. These were renamed to "transform" in SMG.
+	//
+	// The body below reproduces the retail instruction stream exactly: the map
+	// emits this function out of line and weak in Kumokun.cpp (0x80117d08, size
+	// 0x98) and that copy is a leaf with *no stack frame at all*, which our
+	// build matches instruction-for-instruction (only float register numbering
+	// differs, hence the "Incollect regalloc" note below).
+	//
+	// TODO: the local set is still wrong, and it is wrong in the *inlined*
+	// direction. Every inline site is too big, because an inlined callee's
+	// locals keep their stack homes even when the values live in registers:
+	//
+	//   caller                          target  ours   sites
+	//   TYumbo::shotSeeds               0x158   0x1a0    2
+	//   TBathtubKiller::makeQuat        0x1e0   0x218    ?
+	//   TCoasterEnemy::moveCoaster      0x208   0x258    ?
+	//   TAnimalBase::execWalk            0xf0   0x118    1
+	//   TKumokun::rotateGoalDirToLocal    0x60    0x88    1
+	//   TFireWanwan::bindBody           0x1e8   0x1f8    1
+	//   TBathtubData::getGravityDir       0xd0    0xd8    1
+	//
+	// Measured cost of the locals per expansion: the two TQuat4 temporaries are
+	// worth 32 bytes, vx/vy/vz only 4 (just one of the three gets a home), and
+	// w/z/y/x none. Dropping both temporaries (q/q2 written as seven f32 locals,
+	// rDest.set(rx, ry, rz)) makes shotSeeds' frame *exactly* 0x158 and takes it
+	// 95.69% -> 96.67%, and cuts the summed frame error of the table above from
+	// 312 to 136 bytes -- but it renumbers the float registers at the other six
+	// inline sites, so changes_all reports 1 improvement against 6 regressions
+	// (Kumokun's out-of-line copy 90.39 -> 84.21, makeQuat 90.54 -> 87.73,
+	// getGravityDir 82.76 -> 82.37, moveCoaster 82.42 -> 82.22, bindBody
+	// 99.40 -> 99.26, rotateGoalDirToLocal 93.59 -> 93.47). Left in place for
+	// that reason. Note the remaining gaps are not a common multiple of any
+	// object count, so several of those callers have frame problems of their own
+	// and cannot be used as evidence here.
+	//
+	// Ruled out: reading this->x/y/z/w directly instead of through the four
+	// locals (shotSeeds 95.69 -> 90.6, Kumokun's copy 90.39 -> 50.3), and
+	// dropping only vx/vy/vz (frame moves 8 bytes, Kumokun's copy -> 83.9).
+	//
+	// The residual shotSeeds difference is not the frame: retail merges the
+	// axis.z load inside the inlined MsGetRotFromZaxisY with this function's
+	// v.z read and parks it in f31 across matan/sinf/cosf, while we load v.z
+	// again afterwards. See the "const on an inline's pointer parameter also
+	// defeats CSE" rule in docs/AGENT_MATCHING_TIPS.md -- the suspect is
+	// MsGetRotFromZaxisY's const reference parameter, not this header.
 	void rotate(const TVec3<T>& v, TVec3<T>& rDest) const
 	{
 		// Incollect regalloc

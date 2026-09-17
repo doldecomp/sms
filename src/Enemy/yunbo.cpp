@@ -329,14 +329,14 @@ bool TYumbo::isChangedBlock() const
 	return mSpine->getLatestNerve() == &TNerveSmallEnemyChange::theNerve();
 }
 
-// TODO: 0x68 bytes of frame too big. Every instruction but the register
+// TODO: 0x48 bytes of frame too big. Every instruction but the register
 // numbering around the first rotate matches; the retail build keeps dir.z in
 // f31 across matan/sinf/cosf and reuses it as the rotate's vz, ours reloads it.
-// The excess frame is the two JGeometry::TQuat4<f32>::rotate expansions: our
-// JGQuat4.hpp body declares vx/vy/vz plus w/z/y/x plus two TQuat4 temporaries
-// (60 bytes of locals per site, and the header itself flags "Incollect
-// regalloc"). Fixing that needs a change to JGQuat4.hpp, which is out of scope
-// for this unit.
+// The excess frame is the two JGeometry::TQuat4<f32>::rotate expansions, whose
+// two TQuat4 temporaries are worth exactly 0x40 of it; dropping them makes this
+// frame exact but renumbers registers at six other inline sites, so the header
+// was left alone. The measurements are tabulated next to rotate() in
+// JGQuat4.hpp.
 void TYumbo::shotSeeds()
 {
 	TYumboSeed* seed = getUnusedSeed();
