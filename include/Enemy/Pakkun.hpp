@@ -77,9 +77,6 @@ public:
 	void createPakkunSmoke(JGeometry::TVec3<f32>& pos);
 	bool isHideEnd() const;
 
-	// fabricated
-	TPakkunSaveLoadParams* getSaveParams() const { return mSaveParams; }
-
 	// Index of the "null_seed" joint, the point the seed sits on while it is
 	// still in the mouth. The model is shared, so one lookup serves them all.
 	static u8 mHeadJntIndex;
