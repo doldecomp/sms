@@ -11,10 +11,10 @@ Measured from `build/GMSE01/report.json` on 2026-09-16 on 2026-09-17 during the 
 
 | | Matched code | Source-linked code | Linked units |
 | --- | ---: | ---: | ---: |
-| Game | 35.31% | 3.74% | 96 / 385 |
+| Game | 35.37% | 3.74% | 96 / 385 |
 | JSystem | 87.11% | 61.61% | 166 / 198 |
 | SDK | 95.07% | 92.22% | 142 / 149 |
-| All | 46.73% | 18.02% | 404 / 732 |
+| All | 46.78% | 18.02% | 404 / 732 |
 
 9,072 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
 
@@ -76,10 +76,10 @@ Since then, work has been **whole-TU enemy reconstruction from the map**: scaffo
 | `MoveBG/MapObjBianco` | 97.84% | 49 / 74 |
 | `MoveBG/MapObjMare` | 96.46% | 38 / 67 |
 | `MoveBG/MapObjCorona` | 93.01% | 28 / 52 |
-| `MoveBG/MapObjBall` | 87.60% | 32 / 72 |
+| `MoveBG/MapObjBall` | 98.65% | 35 / 72 |
 | `Player/ModelWaterManager` | 94.97% | 10 / 25 |
 | `MarioUtil/ShadowUtil` | 79.68% | 25 / 49 |
-| `Enemy/koopajr` | 85.58% | 45 / 81 |
+| `Enemy/koopajr` | 90.50% | 48 / 81 |
 | `Enemy/wireTrap` | 85.92% | 24 / 35 |
 | `Enemy/hauntLeg` | 96.04% | 20 / 28 |
 | `Enemy/BathtubKiller` | 90.52% | 24 / 45 |
