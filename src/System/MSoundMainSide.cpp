@@ -731,7 +731,10 @@ MSStageDistFade::MSStageDistFade(const Vec* param_1, f32 param_2, f32 param_3,
 	(void)0;
 }
 
-static f32 vec_dist(const Vec& a, const Vec& b)
+// TU-local: the map has no distance helper for this file, and `static inline`
+// is the only spelling that leaves no symbol behind while still reproducing
+// the four inlined `frsqrte` + three-refinement std::sqrtf chains.
+static inline f32 vec_dist(const Vec& a, const Vec& b)
 {
 	return std::sqrtf((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)
 	                  + (a.z - b.z) * (a.z - b.z));
@@ -1046,6 +1049,19 @@ void MSStageCubeFadeMonte::proc()
 	unk14 = unk10;
 }
 
+// UNUSED, 0x108: inlined into all four callers (proc, MSStageCubeFadeMonte and
+// MSStageCubeFadeDouble's procs and setBgmVolumeForce), which is why each of
+// them has exactly one out-of-line
+// JGadget::TVector<void*>::begin() call -- the ROM reaches it one level deep
+// there while the ear-position read at depth 0 folds it away.
+//
+// TODO: our expansion still inlines that begin(), and every caller's frame is
+// 60-170 bytes short of the ROM's (proc 0xe8 vs 0x190, Monte 0x138 vs 0x1c8,
+// Double 0x118 vs 0x1a0, setBgmVolumeForce 0x68 vs 0xa0). Per
+// docs/catalog/codegen-tells.md ("caller size gates two-instruction
+// accessors") the stray inline is a symptom of those missing locals, not of a
+// wrong spelling here: the ROM's low region runs from 0xc to 0xc0 with nothing
+// referenced in it, i.e. ~120 bytes of inline temporaries we do not reproduce.
 f32 MSStageCubeFade::calcParamRatioInCube(s32 id)
 {
 	Vec local_74;
