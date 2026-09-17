@@ -91,10 +91,6 @@ public:
 	/* 0x140 */ f32 mSwingSpeedInit;
 	/* 0x144 */ f32 mSwingSpeed;
 	/* 0x148 */ f32 mSwingAngle;
-	/* 0x14C */ int mMode;
-	/* 0x150 */ f32 mSwingSpeedMin;
-	/* 0x154 */ f32 mSpeedGainFwd;
-	/* 0x158 */ f32 mSpeedGainBack;
 };
 
 /// The Pinna Park pirate ship. Same geometry as THorizontalViking, but it can
@@ -108,7 +104,24 @@ public:
 	virtual void reset();
 	virtual void loadAfter();
 	virtual void initMapObj();
+
+	// The constructor stores TViking's vtable before initialising the four
+	// fields below, so they belong to this class and not to
+	// THorizontalViking even though nothing but TViking reads them.
 	TViking(const char* name = "バイキング");
+
+public:
+	enum {
+		/// Plain back-and-forth swing (THorizontalViking behaviour).
+		MODE_SWING = 0x0,
+		/// Full loops, see roll().
+		MODE_ROLL = 0x1,
+	};
+
+	/* 0x14C */ int mMode;
+	/* 0x150 */ f32 mSwingSpeedMin;
+	/* 0x154 */ f32 mSpeedGainFwd;
+	/* 0x158 */ f32 mSpeedGainBack;
 };
 
 /// One of the six shells of the shell cup ride. Not a TMapObjBase: it is a
@@ -293,7 +306,7 @@ public:
 class TAmiKing : public TMapObjBase {
 public:
 	virtual ~TAmiKing() { }
-	virtual u32 touchWater(THitActor*) { return 0; }
+	virtual u32 touchWater(THitActor*) { return 1; }
 	virtual void loadAfter();
 	virtual void initMapObj();
 	virtual void moveObject();
