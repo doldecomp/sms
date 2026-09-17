@@ -63,19 +63,24 @@ void TRailMapObj::resetStep(float param_1)
 
 BOOL TRailMapObj::moveToNextNode(float param_1)
 {
-	if (!unk138->unk0 || unk138->unk0->isDummy())
+	TGraphWeb* web = unk138->getGraph();
+	if (!web || web->isDummy())
 		return false;
 
 	if (unk138->unk0->unk14 ? TRUE : FALSE) {
 
-		bool result = unk138->traceSpline(unk138->calcSplineSpeed(param_1));
-		JGeometry::TVec3<f32> local_1C;
-		JGeometry::TVec3<f32> local_28;
-		unk138->unk0->unk14->getPosAndRot(unk138->unk14, &local_1C, &local_28);
-		local_1C.sub(mPosition);
-		mLinearVelocity.add(local_1C);
+		// TODO: the ROM stores this with a bare `mr r30, r3` and returns it
+		// the same way, so TGraphTracer::traceSpline returns BOOL, not bool,
+		// in retail; with `bool` in Enemy/Graph.hpp the assignment costs a
+		// `clrlwi`, which is the one remaining instruction difference here.
+		BOOL result = unk138->traceSpline(unk138->calcSplineSpeed(param_1));
+		JGeometry::TVec3<f32> pos;
+		JGeometry::TVec3<f32> rot;
+		unk138->unk0->unk14->getPosAndRot(unk138->unk14, &pos, &rot);
+		pos.sub(mPosition);
+		mLinearVelocity.add(pos);
 
-		mRotation = local_28;
+		mRotation = rot;
 		if (result)
 			readRailFlag();
 		if (unk13C > 0)
@@ -83,18 +88,16 @@ BOOL TRailMapObj::moveToNextNode(float param_1)
 		return result;
 	}
 
-	JGeometry::TVec3<f32> local_40
-	    = unk138->unk0->indexToPoint(unk138->mCurrIdx);
-	JGeometry::TVec3<f32> local_34;
-	local_34.sub(local_40, mPosition);
-	if (local_34.squared() < param_1 * param_1 * 2.0f || unk13C == 0) {
+	JGeometry::TVec3<f32> toNext = unk138->getCurrentPos();
+	toNext.sub(mPosition);
+	if (toNext.squared() < param_1 * param_1 * 2.0f || unk13C == 0) {
 		readRailFlag();
-		unk138->unk0->getGraphNode(unk138->mCurrIdx).getPoint(mPosition);
+		web->getGraphNode(unk138->getCurGraphIndex()).getPoint(mPosition);
 		return true;
 	} else {
-		VECNormalize(&local_34, &local_34);
-		local_34.scale(param_1);
-		mLinearVelocity.add(local_34);
+		VECNormalize(&toNext, &toNext);
+		toNext.scale(param_1);
+		mLinearVelocity.add(toNext);
 		if (unk13C > 0)
 			--unk13C;
 		return false;
@@ -192,7 +195,11 @@ void TRailMapObj::load(JSUMemoryInputStream& stream)
 	mInitialPosition = mPosition;
 	mInitialRotation = mRotation;
 	mInitialScaling  = mScaling;
-	initGraphTracer(gpConductor->getGraphByName(buffer));
+	// The graph is named in its own statement: that is the tenth statement
+	// of this function, which is what keeps it a `bl` where TWoodBlock::load
+	// reaches it at depth 2 (the depth-2 allowance is nine).
+	TGraphWeb* graph = gpConductor->getGraphByName(buffer);
+	initGraphTracer(graph);
 	initMapObj();
 	makeObjAppeared();
 }
