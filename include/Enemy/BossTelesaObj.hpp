@@ -207,7 +207,7 @@ public:
 public:
 	/* 0x150 */ u8 unk150;
 	/* 0x154 */ int unk154;
-	/* 0x158 */ f32 unk158;
+	/* 0x158 */ int unk158;
 	/* 0x15C */ TBossTelesaSaveLoadParams* mParams;
 	/* 0x160 */ int unk160;
 	/* 0x164 */ int unk164;
@@ -226,7 +226,7 @@ public:
 	/* 0x1A8 */ int unk1A8;
 	/* 0x1AC */ TLiveActor* mSlotItems[50];
 	/* 0x274 */ int mSlotItemNum;
-	/* 0x278 */ Mtx unk278;
+	/* 0x278 */ JGeometry::SMatrix34C<f32> unk278;
 	/* 0x2A8 */ TMapObjBase* mFruits[20];
 	/* 0x2F8 */ TMapObjBase* mPeppers[10];
 	/* 0x320 */ TCoin* mCoins[10];

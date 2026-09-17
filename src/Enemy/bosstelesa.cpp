@@ -10,11 +10,13 @@
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
+#include <JSystem/JGeometry/JGMatrix34.hpp>
 #include <JSystem/JMath.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/SDLModel.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
+#include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/LightUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/MtxUtil.hpp>
@@ -22,11 +24,13 @@
 #include <MarioUtil/RandomUtil.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
+#include <GC2D/GCConsole2.hpp>
 #include <MoveBG/Item.hpp>
 #include <MoveBG/ItemManager.hpp>
 #include <MoveBG/MapObjManager.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Strategic/LiveActor.hpp>
+#include <System/MarDirector.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/SharedParts.hpp>
 #include <Strategic/Spine.hpp>
@@ -792,6 +796,31 @@ int TBossTelesa::mEnemyTestType;
 
 TBossTelesa::TBossTelesa(const char* name)
     : TSpineEnemy(name)
+    , unk150(1)
+    , unk154(0)
+    , unk158(0)
+    , mParams(nullptr)
+    , unk160(-1)
+    , unk164(-1)
+    , unk168(0.0f)
+    , mBody(nullptr)
+    , mSlot(nullptr)
+    , mSlotFrame(nullptr)
+    , unk18C(false)
+    , unk1A8(0)
+    , mSlotItemNum(0)
+    , unk350(false)
+    , mTelesaManager(nullptr)
+    , mMarioHP(0)
+    , unk35A(true)
+    , unk35B(true)
+    , unk35C(0)
+    , unk360(0.0f)
+    , unk364(0.0f)
+    , unk368(0)
+    , unk36C(0)
+    , unk370(3)
+    , unk384(false)
 {
 }
 
@@ -799,34 +828,209 @@ void TBossTelesa::init(TLiveManager* live_manager) { }
 
 void TBossTelesa::loadAfter() { }
 
-void TBossTelesa::reset() { }
+void TBossTelesa::reset()
+{
+	TSpineEnemy::reset();
+
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_HIDDEN);
+	unk18C = false;
+
+	setHitParams(mParams->mSLAttackRadius.get(), mParams->mSLAttackHeight.get(),
+	             mParams->mSLDamageRadius.get(),
+	             mParams->mSLDamageHeight.get());
+
+	gpMarDirector->fireStartDemoCamera("btelesa_roll_camera", nullptr, -1, 0.0f,
+	                                   true, nullptr, 0, nullptr, 0);
+}
 
 void TBossTelesa::moveObject() { }
 
-void TBossTelesa::kill() { }
+void TBossTelesa::kill()
+{
+	if (mSpine->getCurrentNerve() != &TNerveBossTelesaDie::theNerve())
+		mSpine->pushNerve(&TNerveBossTelesaDie::theNerve());
+}
 
-MtxPtr TBossTelesa::getTakingMtx() { return nullptr; }
+MtxPtr TBossTelesa::getTakingMtx()
+{
+	unk278.set(mRoulettes[0]->getMActor()->getModel()->getAnmMtx(1));
+	unk278.ref(1, 3) = mRoulettes[0]->mPosition.y - 120.0f;
+	return unk278;
+}
 
 // TODO: incorrect size. Map records 472 bytes.
 void TBossTelesa::prepareGenerate() { }
 
 void TBossTelesa::calcRootMatrix() { }
 
-void TBossTelesa::perform(u32 cue, JDrama::TGraphics* graphics) { }
+void TBossTelesa::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	if (cue & CUE_ENTRY
+	    && !checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_CLIPPED_OUT)) {
+		if (mSpine->getCurrentNerve() == &TNerveBossTelesaDie::theNerve()
+		    && unk350) {
+			getMActor()->offMakeDL();
+			SMS_AddDamageFogEffect(getMActor()->getModel()->getModelData(),
+			                       mPosition, graphics);
+		}
+	}
+
+	offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
+
+	TSpineEnemy::perform(cue, graphics);
+	mBody->THitActor::perform(cue, graphics);
+	mTongue->THitActor::perform(cue, graphics);
+	mKillSmallEnemy->THitActor::perform(cue, graphics);
+
+	if (mSlot)
+		mSlot->testPerform(cue, graphics);
+	if (mSlotFrame)
+		mSlotFrame->testPerform(cue, graphics);
+}
 
 BOOL TBossTelesa::receiveMessage(THitActor* sender, u32 message)
 {
 	return false;
 }
 
+
 // TODO: incorrect size. Map records 588 bytes.
 BOOL TBossTelesa::checkMessage(THitActor* sender, u32 message) { return false; }
 
-void TBossTelesa::checkHitObject(THitActor* actor) { }
+void TBossTelesa::checkHitObject(THitActor* actor)
+{
+	unk380 = -1;
 
-void TBossTelesa::setSpicy(TLiveActor* actor) { }
+	if ((actor->getActorType() & ACTOR_TYPE_MASK) != ACTOR_TYPE_UNK40000000)
+		return;
 
-void TBossTelesa::damageRecover() { }
+	if (mSpine->getCurrentNerve() != &TNerveBossTelesaPrepareSlot::theNerve())
+		return;
+
+	switch (actor->getActorType()) {
+	case 0x40000390: // FruitCoconut
+		unk348.r = 0xE6;
+		unk348.g = 0x64;
+		unk348.b = 0xB4;
+		unk380   = 0xD8; // ms_btls_fhit_pe
+		kill();
+		break;
+
+	case 0x40000391: // FruitPapaya
+	case 0x40000392: // FruitPine
+		unk348.r = 0xE6;
+		unk348.g = 0xB4;
+		unk348.b = 0;
+		unk380   = 0xDA; // ms_btls_fhit_or
+		kill();
+		break;
+
+	case 0x40000393: // FruitDurian
+		unk348.r = 0x96;
+		unk348.g = 0x32;
+		unk348.b = 0xE6;
+		unk380   = 0xD9; // ms_btls_fhit_gr
+		kill();
+		break;
+
+	case 0x40000395: // RedPepper -- swallowed without taking damage
+		break;
+
+	default:
+		return;
+	}
+
+	if (!unk350 && actor->getActorType() != 0x40000395) {
+		if (unk35A) {
+			unk35A = false;
+			gpMarDirector->getConsole()->startAppearBalloon(0xF, true);
+		}
+
+		unk35C += 1;
+		if (unk35C > 2)
+			gpMarDirector->getConsole()->startAppearBalloon(0x10, true);
+	} else {
+		unk35C = 0;
+	}
+
+	unk374 = actor->mPosition;
+	gpMarioParticleManager->emit(0xD7, &unk374, 0, nullptr);
+
+	if (unk380 >= 0)
+		gpMarioParticleManager->emit(unk380, &unk374, 0, nullptr);
+
+	if (unk350)
+		gpMarioParticleManager->emit(0xDB, &unk374, 0, nullptr); // damage
+	else
+		gpMSound->startSoundActor(MSD_SE_BS_TELESA_FRUIT_HIT, &mPosition, 0,
+		                          nullptr, 0, 4);
+
+	TMapObjBase* fruit = (TMapObjBase*)actor;
+	fruit->makeObjDead();
+}
+
+void TBossTelesa::setSpicy(TLiveActor* actor)
+{
+	if (mSpine->getCurrentNerve() != &TNerveBossTelesaSpitSlotItem::theNerve()
+	    && !getMActor()->checkCurBckFromIndex(1)) {
+		unk350 = true;
+		setBckAnm(1);
+
+		if (unk35B) {
+			unk35B = false;
+			gpMarDirector->getConsole()->startAppearBalloon(0x11, true);
+		}
+
+		actor->kill();
+	}
+}
+
+void TBossTelesa::damageRecover()
+{
+	for (int i = 0; i < 20; ++i) {
+		if (!mFruits[i]->checkLiveFlag(LIVE_FLAG_DEAD)) {
+			if (mFruits[i]->mHolder == nullptr)
+				SMS_SendMessageToMario(mFruits[i], HIT_MESSAGE_UNK8);
+
+			mFruits[i]->makeObjDead();
+			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
+			                             &mFruits[i]->mPosition, 0, nullptr);
+			mFruits[i]->mPosition.set(0.0f, 0.0f, 0.0f);
+		}
+	}
+
+	for (int i = 0; i < 10; ++i) {
+		if (!mPeppers[i]->checkLiveFlag(LIVE_FLAG_DEAD)) {
+			if (mPeppers[i]->mHolder == nullptr)
+				SMS_SendMessageToMario(mPeppers[i], HIT_MESSAGE_UNK8);
+
+			mPeppers[i]->makeObjDead();
+			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
+			                             &mPeppers[i]->mPosition, 0, nullptr);
+			mPeppers[i]->mPosition.set(0.0f, 0.0f, 0.0f);
+		}
+
+		if (!mCoins[i]->checkLiveFlag(LIVE_FLAG_DEAD)) {
+			mCoins[i]->makeObjDead();
+			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
+			                             &mCoins[i]->mPosition, 0, nullptr);
+			mCoins[i]->mPosition.set(0.0f, 0.0f, 0.0f);
+		}
+	}
+
+	if (unk350)
+		gpMSound->startSoundActor(MSD_SE_BS_TELESA_ESCAPE, &mPosition, 0,
+		                          nullptr, 0, 4);
+	else
+		gpMSound->startSoundActor(MSD_SE_BS_TELESA_DISAPPEAR, &mPosition, 0,
+		                          nullptr, 0, 4);
+
+	mSpine->pushAfterCurrent(&TNerveBossTelesaHide::theNerve());
+	unk368 = 0;
+}
 
 // TODO: incorrect size. Map records 284 bytes.
 void TBossTelesa::tongueHitWater() { }
@@ -850,8 +1054,20 @@ const char** TBossTelesa::getBasNameTable() const { return btelesa_bastable; }
 
 void TBossTelesa::genAttacker() { }
 
-// TODO: incorrect size. Map records 212 bytes.
-void TBossTelesa::setBckAnm(int index) { }
+void TBossTelesa::setBckAnm(int index)
+{
+	unk36C = 0;
+	unk164 = getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
+	unk160 = index;
+	unk168 = 1.0f;
+
+	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getBckAnmPtr());
+	getMActor()->setBckFromIndex(index);
+	getMActor()->setMotionBlendRatioForBck(unk168);
+
+	const char** table = getBasNameTable();
+	setAnmSound(table == nullptr ? nullptr : table[index]);
+}
 
 // TODO: incorrect size. Map records 140 bytes.
 bool TBossTelesa::isInDamage() { return false; }
@@ -878,7 +1094,25 @@ void TBossTelesa::checkSlot() { }
 // TODO: incorrect size. Map records 84 bytes.
 bool TBossTelesa::checkAllItemDead() { return false; }
 
-void TBossTelesa::forceAllItemKill() { }
+void TBossTelesa::forceAllItemKill()
+{
+	for (int i = 0; i < mSlotItemNum; ++i) {
+		if (mSlotItems[i]->mHolder != nullptr) {
+			SMS_SendMessageToMario(mSlotItems[i], HIT_MESSAGE_UNK8);
+			mSlotItems[i]->mHolder = nullptr;
+		}
+
+		mSlotItems[i]->mPosition.set(0.0f, 0.0f, 0.0f);
+		mSlotItems[i]->onHitFlag(HIT_FLAG_NO_COLLISION);
+
+		if (!mSlotItems[i]->checkLiveFlag(LIVE_FLAG_DEAD)) {
+			mSlotItems[i]->kill();
+			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
+			                             &mSlotItems[i]->mPosition, 0,
+			                             nullptr);
+		}
+	}
+}
 
 // TODO: incorrect size. Map records 116 bytes.
 void TBossTelesa::rollRouletteCircle() { }
@@ -886,7 +1120,25 @@ void TBossTelesa::rollRouletteCircle() { }
 // TODO: incorrect size. Map records 84 bytes.
 bool TBossTelesa::isForceRestart() { return false; }
 
-void TBossTelesa::forceHide() { }
+void TBossTelesa::forceHide()
+{
+	if (mSpine->getCurrentNerve() != &TNerveBossTelesaDie::theNerve()
+	    && !getMActor()->checkCurBckFromIndex(4)
+	    && !getMActor()->checkCurBckFromIndex(0)) {
+		forceAllItemKill();
+		unk368 = 0;
+
+		if (unk350)
+			gpMSound->startSoundActor(MSD_SE_BS_TELESA_ESCAPE, &mPosition, 0,
+			                          nullptr, 0, 4);
+		else
+			gpMSound->startSoundActor(MSD_SE_BS_TELESA_DISAPPEAR, &mPosition, 0,
+			                          nullptr, 0, 4);
+
+		mSpine->reset();
+		mSpine->setNext(&TNerveBossTelesaHide::theNerve());
+	}
+}
 
 // Called from TTelesaSlot::moveObject once all three drums have stopped. The
 // out-of-line copy the map sizes at 496 bytes expands getSlotResult three
