@@ -25,6 +25,20 @@
 #include <Enemy/EffectObj.hpp>
 #include <Enemy/Graph.hpp>
 
+// TODO: three shared-header gaps hold this unit back and none of them can be
+// fixed from here:
+//   * TSpineBase<T>::getLatestNerve() is in-class (weak, 0x1c, emitted from
+//     Animal/Bird.o in retail) but retail *calls* it from every nerve compare
+//     in this TU while we expand it, which also reorders the theNerve() guard
+//     against the spine read. Costs TBWPicket::moveRequest, TBWBinder::bind,
+//     TBossWanwan::perform and the GraphWander and Stun nerves.
+//   * TMActorKeeper::getMActorAnmData() (in-class, weak, 0x8, emitted from
+//     Enemy/bossgesso.o) is likewise a `bl` in retail at all seven
+//     changeBck sites and expands for us: the "caller size gates
+//     two-instruction accessors" case from docs/catalog/codegen-tells.md.
+//   * MsPerpendicFootToLineR in MarioUtil/MathUtil.hpp is 73% against its
+//     retail body; TBWBinder::bind is its only caller here.
+
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
@@ -961,8 +975,8 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 			gpMSound->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
 			                          nullptr, 0, 4);
 		} else {
-			gpMSound->startSoundActor(MSD_SE_BS_WANWAN_COOL, &mPosition, 0, nullptr,
-			                          0, 4);
+			gpMSound->startSoundActor(MSD_SE_BS_WANWAN_COOL, &mPosition, 0,
+			                          nullptr, 0, 4);
 		}
 
 		decHitPoints();
@@ -985,7 +999,13 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 	return TSpineEnemy::receiveMessage(sender, message);
 }
 
-// UNUSED, 0x184 in the map: TNerveBWDie::execute spells this out.
+// UNUSED, 0x184 in the map: TNerveBWDie::execute spells this out, because
+// MWCC will not expand a body this big from there.
+// TODO: this standalone copy is 0x27c because at depth 1 it expands both
+// changeBck and TMapCollisionBase::setMtx; retail's 0x184 means one of the two
+// stayed a call in the dead copy. That is also why the weak setMtx the map
+// lists for this TU is missing from our object -- the Die nerve inlines it at
+// every spelling tried (setUpUnk8TRS, setUpMtx, setMtx + setUp).
 void TBossWanwan::takeBath()
 {
 	gpMarDirector->fireStartDemoCamera("bwanwan_down_camera", nullptr, -1, 0.0f,
@@ -1077,6 +1097,9 @@ bool TBossWanwan::isMarioInSight() { return true; }
 
 // UNUSED, 0x70 in the map: TBossWanwan::control, TNerveBWStun::execute and
 // TNerveBWGraphWander::execute all spell this out.
+// TODO: 0xa0 here. All three call sites reproduce the two materialised bools
+// exactly, so the shape is right and the standalone copy is carrying twelve
+// instructions the original did not.
 BOOL TBossWanwan::isHeadPulled()
 {
 	if (mPicket->isTaken()) {
@@ -1115,12 +1138,21 @@ void TBossWanwan::reverseNextGraphNode()
 }
 
 // UNUSED, 0x150 in the map: TNerveBWGraphWander::execute spells this out.
+// TODO: 0x160 here. The balloon guard is part of it -- without it the body is
+// 0x100, a good 0x50 short -- but four instructions are still unaccounted for.
 void TBossWanwan::rollNextGraphNode()
 {
 	TGraphTracer* tracer   = getTracer();
 	int curr               = tracer->getCurGraphIndex();
 	int prev               = tracer->getPrevIndex();
 	const TGraphWeb* graph = tracer->getGraph();
+
+	// Standing at a fork long enough into the fight earns the hint about
+	// leading the boss to the hot spring.
+	if (curr >= 0
+	    && graph->getGraphNode(curr).getRailNode()->mConnectionNum >= 2
+	    && gpMarDirector->unk58 >= 14400)
+		showMessage(BALLOON_MSG_BWANWAN_LEAD_TO_HOT);
 
 	JGeometry::TVec3<f32> facing = MsGetVecFromRotY(mRotation.y, 1.0f);
 
