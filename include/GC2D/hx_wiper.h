@@ -7,34 +7,36 @@
 extern "C" {
 #endif
 
-void Hx_Test5();
-void Hx_Test4();
-void Hx_Test2R();
-void Hx_Test2();
-void Hx_Test1();
-int Hx_MovieStartSyncEx();
-void Hx_MovieStartSync();
-void Hx_Logo();
-void Hx_GameOver();
-void Hx_Door();
-void Hx_Circle();
-void Hx_MotionUpdate();
-void Hx_MotionSet();
-void Hx_TimerCountDown();
-u32 Hx_UpdateWipe(f32);
-int Hx_GetWipeType(int);
-void Hx_StartWipe(int, int);
-void Hx_RemoveResource();
-void Hx_ProvideResourceEx(void*);
-void Hx_ProvideResource(void*, int);
-void Hx_ResetWipe(u32, u32);
-void Hx_Warning();
-void Hx_FrBufferMorf();
-void Hx_SetVFilterFade();
-void Hx_SetVFilter();
-void Hx_GetFrBuffer();
-void Hx_GxInit();
-void Hx_CameraInit();
+/**
+ * @brief The public face of the screen-wipe library in GC2D/hx_wiper.c.
+ *
+ * @details Every wipe pattern and helper in that file is static; the map
+ * lists exactly these eight as global, so nothing else belongs here.
+ */
+
+/// Forget any loaded resource and record the display size.
+void Hx_ResetWipe(u32 width, u32 height);
+
+/// Hand the library a .bti for the wipes that draw a texture.
+void Hx_ProvideResource(void* resource, int size);
+
+/// Hand the library a second .bti (the logo wipe's small title texture).
+void Hx_ProvideResourceEx(void* resource);
+
+void Hx_RemoveResource(void);
+
+/// Begin wipe @p wipe_no (an index into the pattern table).
+void Hx_StartWipe(int wipe_no, int param);
+
+/// 0 if wipe @p wipe_no closes the screen, 1 if it opens it.
+int Hx_GetWipeType(int wipe_no);
+
+/// Advance the running wipe by @p rate; returns 3 once it is finished.
+u32 Hx_UpdateWipe(f32 rate);
+
+/// 1 when the logo wipe has reached its pen-draw phase, 2 once the emblem is
+/// complete, 0 otherwise. Each answer is reported only once.
+int Hx_MovieStartSyncEx(void);
 
 #if __cplusplus
 }
