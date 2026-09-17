@@ -128,6 +128,8 @@ void THangingBridgeBoard::pushNeighbor(f32 accel)
 	}
 }
 
+// TODO: 89.3%. pushNeighbor is expanded twice here as in retail; the residual
+// is register numbering around mBridge's two rates.
 void THangingBridgeBoard::control()
 {
 	TLeanBlock::control();
@@ -261,6 +263,9 @@ void THangingBridge::drawLowerMinus(const JGeometry::TVec3<f32>& from,
 	}
 }
 
+// TODO: 88.4%. Same instructions as retail; only float-register numbering and
+// the scheduling of the 1.0f/divide load differ (declaring step first changes
+// nothing).
 void THangingBridge::drawLowerPlus(const JGeometry::TVec3<f32>& from,
                                    const JGeometry::TVec3<f32>& to,
                                    const JGeometry::TVec2<f32>& width,
@@ -328,8 +333,8 @@ void THangingBridge::drawRopeBetweenBoards(f32 yOffset, int divide) const
 	f32 offsetX = mSideDir.x * mRopeOffset;
 	f32 offsetZ = mSideDir.y * mRopeOffset;
 
-	JGeometry::TVec2<f32> width(mSideDir.x * mRopeWidthBetweenBoards,
-	                            mSideDir.y * mRopeWidthBetweenBoards);
+	JGeometry::TVec2<f32> width(mSideDir);
+	width.scale(mRopeWidthBetweenBoards);
 
 	int vertexNum = ((mBoardNum + 2) * divide * 2) & ~1;
 
@@ -339,84 +344,84 @@ void THangingBridge::drawRopeBetweenBoards(f32 yOffset, int divide) const
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, vertexNum);
 	from.set(mStart.x + offsetX, mStart.y + yOffset, mStart.z + offsetZ);
 	for (int i = 0; i < mBoardNum; i++) {
-		to.set(mBoards[i]->mRopeTop[0]);
+		to = mBoards[i]->mRopeTop[0];
 		to.y += yOffset;
 		drawLowerMinus(from, to, width, divide);
-		from.set(to);
+		from = to;
 	}
 	to.set(mEnd.x + offsetX, mEnd.y + yOffset, mEnd.z + offsetZ);
 	drawLowerMinus(from, to, width, divide);
-	from.set(to);
+	from = to;
 	drawLowerMinus(from, to, width, divide);
 	GXEnd();
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, vertexNum);
 	from.set(mStart.x + offsetX, mStart.y + yOffset, mStart.z + offsetZ);
 	for (int i = 0; i < mBoardNum; i++) {
-		to.set(mBoards[i]->mRopeTop[0]);
+		to = mBoards[i]->mRopeTop[0];
 		to.y += yOffset;
 		drawLowerPlus(from, to, width, divide);
-		from.set(to);
+		from = to;
 	}
 	to.set(mEnd.x + offsetX, mEnd.y + yOffset, mEnd.z + offsetZ);
 	drawLowerPlus(from, to, width, divide);
-	from.set(to);
+	from = to;
 	drawLowerPlus(from, to, width, divide);
 	GXEnd();
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, vertexNum);
 	from.set(mStart.x + offsetX, mStart.y + yOffset, mStart.z + offsetZ);
 	for (int i = 0; i < mBoardNum; i++) {
-		to.set(mBoards[i]->mRopeTop[0]);
+		to = mBoards[i]->mRopeTop[0];
 		to.y += yOffset;
 		drawUpper(from, to, width, divide);
-		from.set(to);
+		from = to;
 	}
 	to.set(mEnd.x + offsetX, mEnd.y + yOffset, mEnd.z + offsetZ);
 	drawUpper(from, to, width, divide);
-	from.set(to);
+	from = to;
 	drawUpper(from, to, width, divide);
 	GXEnd();
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, vertexNum);
 	from.set(mStart.x - offsetX, mStart.y + yOffset, mStart.z - offsetZ);
 	for (int i = 0; i < mBoardNum; i++) {
-		to.set(mBoards[i]->mRopeTop[1]);
+		to = mBoards[i]->mRopeTop[1];
 		to.y += yOffset;
 		drawLowerMinus(from, to, width, divide);
-		from.set(to);
+		from = to;
 	}
 	to.set(mEnd.x - offsetX, mEnd.y + yOffset, mEnd.z - offsetZ);
 	drawLowerMinus(from, to, width, divide);
-	from.set(to);
+	from = to;
 	drawLowerMinus(from, to, width, divide);
 	GXEnd();
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, vertexNum);
 	from.set(mStart.x - offsetX, mStart.y + yOffset, mStart.z - offsetZ);
 	for (int i = 0; i < mBoardNum; i++) {
-		to.set(mBoards[i]->mRopeTop[1]);
+		to = mBoards[i]->mRopeTop[1];
 		to.y += yOffset;
 		drawLowerPlus(from, to, width, divide);
-		from.set(to);
+		from = to;
 	}
 	to.set(mEnd.x - offsetX, mEnd.y + yOffset, mEnd.z - offsetZ);
 	drawLowerPlus(from, to, width, divide);
-	from.set(to);
+	from = to;
 	drawLowerPlus(from, to, width, divide);
 	GXEnd();
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, vertexNum);
 	from.set(mStart.x - offsetX, mStart.y + yOffset, mStart.z - offsetZ);
 	for (int i = 0; i < mBoardNum; i++) {
-		to.set(mBoards[i]->mRopeTop[1]);
+		to = mBoards[i]->mRopeTop[1];
 		to.y += yOffset;
 		drawUpper(from, to, width, divide);
-		from.set(to);
+		from = to;
 	}
 	to.set(mEnd.x - offsetX, mEnd.y + yOffset, mEnd.z - offsetZ);
 	drawUpper(from, to, width, divide);
-	from.set(to);
+	from = to;
 	drawUpper(from, to, width, divide);
 	GXEnd();
 }
@@ -474,9 +479,9 @@ void THangingBridge::perform(u32 cue, JDrama::TGraphics* graphics)
 		for (int i = 0; i < mBoardNum; i++) {
 			THangingBridgeBoard* board = mBoards[i];
 			JGeometry::TVec3<f32> top;
-			top.set(board->mRopeTop[0]);
+			top = board->mRopeTop[0];
 			board->drawOneRope(top);
-			top.set(board->mRopeTop[1]);
+			top = board->mRopeTop[1];
 			board->drawOneRope(top);
 		}
 
@@ -726,11 +731,12 @@ void TSwingBoard::draw() const
 	JGeometry::TVec3<f32> top;
 
 	f32 width = mBoardWidth;
-	top.set(width * mtx[0][0] + mInitialPosition.x,
-	        mRopeLength + mInitialPosition.y,
-	        width * mtx[2][0] + mInitialPosition.z);
-	bottom.set(width * mtx[0][0] + mPosition.x, 60.0f + mPosition.y,
-	           width * mtx[2][0] + mPosition.z);
+	top.x     = width * mtx[0][0] + mInitialPosition.x;
+	top.y     = mRopeLength + mInitialPosition.y;
+	top.z     = width * mtx[2][0] + mInitialPosition.z;
+	bottom.x  = width * mtx[0][0] + mPosition.x;
+	bottom.y  = 60.0f + mPosition.y;
+	bottom.z  = width * mtx[2][0] + mPosition.z;
 	drawOneRope(bottom, top);
 
 	width    = mBoardWidth;
@@ -921,6 +927,8 @@ u32 TFluff::touchWater(THitActor* actor)
 	return 1;
 }
 
+// TODO: 87.4%. Load order around the wind vector and the swing term still
+// differs; the wind is probably read through a named local in the original.
 void TFluff::move()
 {
 	mPosition.y -= mFallSpeed;
@@ -1037,6 +1045,8 @@ void TFluff::control()
 	}
 }
 
+// TODO: 89.9%. The three MsRandF draws are evaluated in the right order but
+// the manager pointer is re-read where retail keeps it.
 void TFluff::appear()
 {
 	makeObjAppeared();
@@ -1097,6 +1107,9 @@ void TFluffManager::findNextFluff()
 	}
 }
 
+// TODO: 70.3%. The instruction stream is close but the frame is 0x68 short
+// and the search loop's float registers are renumbered; the missing locals
+// are somewhere in the STATE_CALM hand-off.
 void TFluffManager::control()
 {
 	switch (mState) {
@@ -1240,12 +1253,12 @@ void TFluffManager::load(JSUMemoryInputStream& stream)
 	mRangeZ       = 5000.0f;
 	mWindDownRate = 0.998f;
 
-	Mtx mtx;
+	JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > mtx;
 	MsMtxSetXYZRPH(mtx, 0.0f, 0.0f, 0.0f, mRotation.x, mRotation.y,
 	               mRotation.z);
 
 	mWind.set(0.0f, 0.0f, 1.0f);
-	MTXMultVec(mtx, mWind, mWind);
+	mtx.mult(mWind, mWind);
 	mWind.scale(power);
 }
 

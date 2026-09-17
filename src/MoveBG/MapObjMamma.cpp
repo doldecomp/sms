@@ -96,6 +96,8 @@ TSandBase::TSandBase(const char* name)
 	mTrigger     = nullptr;
 }
 
+// TODO: 80.6%. Retail keeps mMapCollisionManager and its entry in callee-saved
+// registers across MsMtxSetTRS; ours reloads one of them.
 void TSandLeafBase::grow()
 {
 	if (mState == STATE_GROWN || mState == STATE_GROWING) {
@@ -248,6 +250,8 @@ void TSandBombBase::expanded()
 		mState = STATE_WITHER;
 }
 
+// TODO: 77.9%. The frame-control advance and the Mario throw are right; the
+// residual is the order of the mTrigger reloads.
 void TSandBombBase::exploding()
 {
 	mMActor->getFrameCtrl(0)->setFrame(mExplodeFrameSpeed
@@ -427,6 +431,8 @@ TSandBombBase::TSandBombBase(const char* name)
 
 f32 TSandCastle::mCollisionRate = 1.7f;
 
+// TODO: 76.2%. The animation advance matches; the scale term and the
+// stage-change kill still differ in register use.
 bool TSandCastle::withering()
 {
 	mMActor->getFrameCtrl(0)->setFrame(mWitherSpeed
@@ -804,6 +810,10 @@ void TLeanMirror::controlShake()
 	}
 }
 
+// TODO: 27.3%. Retail calls controlGoTarget out of line; ours still inlines
+// it, because our calcCurrentMtx compiles to 0x84 where the map records
+// 0x100, leaving controlGoTarget under MWCC's per-callee budget. The switch's
+// comparison tree also pivots on 2 rather than retail's 3.
 void TLeanMirror::control()
 {
 	TMapObjBase::control();
