@@ -2303,7 +2303,7 @@ DEFINE_NERVE(TNerveBossEelDie, TLiveActor)
 		                                &eel->mPosition, 0, nullptr, 0, 4);
 		gpMarDirector->getConsole()->startAppearBalloon(0xE0014, true);
 		MSBgm::stopTrackBGMs(7, 10);
-		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK1E, 1.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_BEEL_DIE, 1.0f);
 		eel->setBckAnm(3);
 		eel->invalidateAllCollision();
 		eel->mHeartCoin->generate(eel->mPosition);
@@ -2354,11 +2354,11 @@ DEFINE_NERVE(TNerveBossEelMouthOpenWait, TLiveActor)
 		if (eel->mToothBroken)
 			eel->mToothBroken = false;
 		eel->setBckAnm(13);
-		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK1B, 1.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_BEEL_SUCK_OPEN, 1.0f);
 	} else if (eel->checkCurAnmEnd(0)) {
 		if (eel->mMActor->checkCurBckFromIndex(13)) {
 			eel->setBckAnm(14);
-			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK1C, 1.0f);
+			gpCameraShake->startShake(CAM_SHAKE_MODE_BEEL_SUCK_LOOP, 1.0f);
 			eel->generateVortex();
 		} else {
 			s32 openFrames = eel->mSaveParams->mSLMouthOpenFrame.get();
@@ -2373,7 +2373,7 @@ DEFINE_NERVE(TNerveBossEelMouthOpenWait, TLiveActor)
 			if (spine->getTime() > openFrames) {
 				if (eel->mMActor->checkCurBckFromIndex(2))
 					return true;
-				gpCameraShake->startShake(CAM_SHAKE_MODE_UNK1D, 1.0f);
+				gpCameraShake->startShake(CAM_SHAKE_MODE_BEEL_SUCK_CLOSE, 1.0f);
 				eel->setBckAnm(2);
 			}
 		}

@@ -54,7 +54,7 @@ bool TAirportEventSink::control()
 		gpPollution->offLayer(0);
 
 	if (unk4C > unk48)
-		gpCameraShake->keepShake(CAM_SHAKE_MODE_UNK5, 0.1);
+		gpCameraShake->keepShake(CAM_SHAKE_MODE_BUILDING_APPEAR, 0.1);
 
 	return TMapEventSinkInPollutionReset::control();
 }

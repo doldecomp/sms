@@ -279,7 +279,7 @@ void TMapObjTreeScale::control()
 		    || (!SMSGetMarDirector()->isDemoModeNow()
 		        && (unk2E0 == nullptr || unk2E0->isBuried(1)))) {
 			SMSRumbleMgr->start(0x13, &mPosition);
-			gpCameraShake->keepShake(CAM_SHAKE_MODE_UNK5, 1.0f);
+			gpCameraShake->keepShake(CAM_SHAKE_MODE_BUILDING_APPEAR, 1.0f);
 		}
 
 		if (mParticleEmitTimer > sWaitTime) {

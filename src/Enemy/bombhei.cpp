@@ -229,7 +229,7 @@ void TBombHei::setDeadAnm()
 	mKeepDistance = false;
 	setBckAnm(BOMBHEI_ANM_DOWN1);
 
-	gpCameraShake->startShake(CAM_SHAKE_MODE_UNK6, 1.0f);
+	gpCameraShake->startShake(CAM_SHAKE_MODE_KILLER, 1.0f);
 	SMSRumbleMgr->start(0x15, 5, (f32*)nullptr);
 }
 

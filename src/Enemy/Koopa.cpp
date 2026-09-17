@@ -162,18 +162,12 @@ BOOL TNerveKoopaTumble::execute(TSpineBase<TLiveActor>* spine) const
 	koopa->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 
 	if (spine->getTime() == 190) {
-		// TODO: CameraShake.hpp should gain
-		// CAM_SHAKE_MODE_KOOPA_HIPDROP = 0x27; entry 0x27 of
-		// TCameraShake::mCamShakeNameSave is "/Camera/shakeKoopaHipdrop.prm".
-		gpCameraShake->startShake((EnumCamShakeMode)0x27, 1.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_KOOPA_HIPDROP, 1.0f);
 
 		static TBathtub* bathtub
 		    = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
-		// TODO: System/Particles.hpp should gain
-		// KOOPA_JPA_MS_KP_HIPDROP = 0xF5 for this; TKoopaManager::loadAfter
-		// loads /scene/koopa/jpa/ms_kp_hipdrop.jpa into that slot.
 		gpMarioParticleManager->emitAndBindToMtx(
-		    0xF5, *bathtub->getRootJointMtx(), 0, this);
+		    KOOPA_JPA_MS_KP_HIPDROP, *bathtub->getRootJointMtx(), 0, this);
 		if (SMS_IsMarioTouchGround4cm())
 			SMSRumbleMgr->start(1, (f32*)nullptr);
 	}
@@ -1511,7 +1505,8 @@ void TKoopaManager::loadAfter()
 	                 KOOPA_JPA_MS_KP_FIRE_C);
 	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_d.jpa",
 	                 KOOPA_JPA_MS_KP_FIRE_D);
-	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_hipdrop.jpa", 0xF5);
+	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_hipdrop.jpa",
+	                 KOOPA_JPA_MS_KP_HIPDROP);
 	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_e.jpa",
 	                 KOOPA_JPA_MS_KP_FIRE_E);
 }

@@ -466,7 +466,7 @@ void TTamaNoko::calcRootMatrix()
 			if (mGroundPlane->isSand()) {
 				landEffect();
 			} else {
-				gpCameraShake->startShake(CAM_SHAKE_MODE_UNK7, 1.0f);
+				gpCameraShake->startShake(CAM_SHAKE_MODE_TAMANOKO, 1.0f);
 				SMSRumbleMgr->start(8, 1, (float*)nullptr);
 
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
@@ -580,7 +580,7 @@ void TTamaNoko::landEffect()
 		}
 	}
 
-	gpCameraShake->startShake(CAM_SHAKE_MODE_UNK7, 1.0f);
+	gpCameraShake->startShake(CAM_SHAKE_MODE_TAMANOKO, 1.0f);
 	SMSRumbleMgr->start(8, 1, (float*)nullptr);
 }
 #pragma dont_inline off
@@ -817,7 +817,7 @@ DEFINE_NERVE(TNerveTamaNokoDown, TLiveActor)
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_TAMANOKO_DROPOK,
 		                                &self->mPosition, 0, nullptr, 0, 4);
 		self->unk164 = 1;
-		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK7, 1.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_TAMANOKO, 1.0f);
 		self->setBckAnm(4);
 	}
 

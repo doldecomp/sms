@@ -88,7 +88,7 @@ void TMareWallRock::movement()
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &mPosition, 0,
 			                                nullptr, 0, 4);
 			SMSRumbleMgr->start(0x13, -1, (f32*)nullptr);
-			gpCameraShake->keepShake(CAM_SHAKE_MODE_UNK5, 0.5f);
+			gpCameraShake->keepShake(CAM_SHAKE_MODE_BUILDING_APPEAR, 0.5f);
 		}
 
 		unk104->getJoint()->setTransformInfo(transformInfo);
@@ -321,7 +321,7 @@ void TMareEventDepressWall::depressing()
 				if (!TMapObjBase::isDemo()) {
 					x += mDepressSpeed;
 					SMSRumbleMgr->start(0x13, -1, (f32*)nullptr);
-					gpCameraShake->keepShake(CAM_SHAKE_MODE_UNK5, 0.5f);
+					gpCameraShake->keepShake(CAM_SHAKE_MODE_BUILDING_APPEAR, 0.5f);
 					SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &unk34[i],
 					                                0, nullptr, 0, 4);
 					JPABaseEmitter* em = gpMarioParticleManager->emit(
@@ -352,7 +352,7 @@ void TMareEventDepressWall::depressing()
 				if (!TMapObjBase::isDemo()) {
 					x -= mDepressSpeed;
 					SMSRumbleMgr->start(0x13, -1, (f32*)nullptr);
-					gpCameraShake->keepShake(CAM_SHAKE_MODE_UNK5, 0.5f);
+					gpCameraShake->keepShake(CAM_SHAKE_MODE_BUILDING_APPEAR, 0.5f);
 					SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &unk34[i],
 					                                0, nullptr, 0, 4);
 					JPABaseEmitter* em = gpMarioParticleManager->emit(
@@ -609,7 +609,7 @@ void TMareEventBumpyWall::bumpDownZ()
 		if (!TMapObjBase::isDemo()) {
 			z -= unk140;
 			SMSRumbleMgr->start(0x13, -1, (f32*)nullptr);
-			gpCameraShake->keepShake(CAM_SHAKE_MODE_UNK5, 0.5f);
+			gpCameraShake->keepShake(CAM_SHAKE_MODE_BUILDING_APPEAR, 0.5f);
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &mPosition, 0,
 			                                nullptr, 0, 4);
 		} else {
@@ -635,7 +635,7 @@ void TMareEventBumpyWall::bumpUpZ()
 		if (!TMapObjBase::isDemo()) {
 			z += unk140;
 			SMSRumbleMgr->start(0x13, -1, (f32*)nullptr);
-			gpCameraShake->keepShake(CAM_SHAKE_MODE_UNK5, 0.5f);
+			gpCameraShake->keepShake(CAM_SHAKE_MODE_BUILDING_APPEAR, 0.5f);
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &mPosition, 0,
 			                                nullptr, 0, 4);
 		} else {
@@ -661,7 +661,7 @@ void TMareEventBumpyWall::bumpDownX()
 		if (!TMapObjBase::isDemo()) {
 			x -= unk140;
 			SMSRumbleMgr->start(0x13, -1, (f32*)nullptr);
-			gpCameraShake->keepShake(CAM_SHAKE_MODE_UNK5, 0.5f);
+			gpCameraShake->keepShake(CAM_SHAKE_MODE_BUILDING_APPEAR, 0.5f);
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &mPosition, 0,
 			                                nullptr, 0, 4);
 		} else {
@@ -687,7 +687,7 @@ void TMareEventBumpyWall::bumpUpX()
 		if (!TMapObjBase::isDemo()) {
 			x += unk140;
 			SMSRumbleMgr->start(0x13, -1, (f32*)nullptr);
-			gpCameraShake->keepShake(CAM_SHAKE_MODE_UNK5, 0.5f);
+			gpCameraShake->keepShake(CAM_SHAKE_MODE_BUILDING_APPEAR, 0.5f);
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &mPosition, 0,
 			                                nullptr, 0, 4);
 		} else {

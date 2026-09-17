@@ -1109,7 +1109,7 @@ DEFINE_NERVE(TNerveHino2GraphWander, TLiveActor)
 	    && !self->isAirborne() && (frame == 0x24 || frame == 0x55)) {
 		f32 ws = self->getSaveParam()->mSLWalkShake.get();
 		if (!(ws * ws < self->mDistToMarioSquared))
-			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK3, 0.8f);
+			gpCameraShake->startShake(CAM_SHAKE_MODE_ENEMY, 0.8f);
 
 		JGeometry::TVec3<f32> TStack_3C;
 		if (frame == 0x24)
@@ -1168,7 +1168,7 @@ DEFINE_NERVE(TNerveHino2Landing, TLiveActor)
 		self->changeBck(0xE);
 		f32 js = self->getSaveParam()->mSLJumpShake.get();
 		if (!(js * js < self->mDistToMarioSquared))
-			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK4, 0.8f);
+			gpCameraShake->startShake(CAM_SHAKE_MODE_ENEMY2, 0.8f);
 	}
 
 	// TODO: asserts or something? Hard to match
@@ -1374,7 +1374,7 @@ DEFINE_NERVE(TNerveHino2Squat, TLiveActor)
 		if (self->mCurrentBck == 0x13) {
 			f32 js = self->getSaveParam()->mSLJumpShake.get();
 			if (!(js * js < self->mDistToMarioSquared))
-				gpCameraShake->startShake(CAM_SHAKE_MODE_UNK4, 0.8f);
+				gpCameraShake->startShake(CAM_SHAKE_MODE_ENEMY2, 0.8f);
 			self->changeBck(0x14);
 		}
 
@@ -1458,7 +1458,7 @@ DEFINE_NERVE(TNerveHino2Stamp, TLiveActor)
 	if (!self->isAirborne() && (frame == 0x1C || frame == 0x3E)) {
 		f32 js = self->getSaveParam()->mSLJumpShake.get();
 		if (!(js * js < self->getDistToMarioSquared()))
-			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK4, 0.8f);
+			gpCameraShake->startShake(CAM_SHAKE_MODE_ENEMY2, 0.8f);
 
 		f32 sql = self->getSaveParam()->mSLStampQuakeLen.get();
 		sql     = sql * sql;

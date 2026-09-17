@@ -377,7 +377,7 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 
 	// I hope this is bcs of inlines
 	if (damageAnimType != 3) {
-		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK2, 1.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_DAMAGE, 1.0f);
 	}
 
 	if (damageAnimType != 3) {

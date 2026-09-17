@@ -1318,11 +1318,11 @@ void TTinKoopa::emitTinKoopaEffects()
 	if (mSpine->getCurrentNerve() == &TNerveTinKoopaBreak::theNerve()) {
 		if ((mDamageStage == 0 || mDamageStage == 3)
 		    && getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(100.0f))
-			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK6, 1.0f);
+			gpCameraShake->startShake(CAM_SHAKE_MODE_KILLER, 1.0f);
 
 		if ((mDamageStage == 1 || mDamageStage == 2)
 		    && getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(104.0f))
-			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK6, 1.0f);
+			gpCameraShake->startShake(CAM_SHAKE_MODE_KILLER, 1.0f);
 
 		if ((mDamageStage == 0 || mDamageStage == 3)
 		    && getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(108.0f))
@@ -1464,7 +1464,7 @@ DEFINE_NERVE(TNerveTinKoopaDamage, TLiveActor)
 		    tinKoopa->getModel()->getAnmMtx(
 		        TTinKoopa_getJointIndex(TINKOOPA_JOINT_HEAD)),
 		    0, this);
-		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK6, 1.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_KILLER, 1.0f);
 	}
 
 	if (tinKoopa->getMActor()->checkCurBckFromIndex(
@@ -1491,7 +1491,7 @@ DEFINE_NERVE(TNerveTinKoopaBreak, TLiveActor)
 		    tinKoopa->getModel()->getAnmMtx(
 		        TTinKoopa_getJointIndex(TINKOOPA_JOINT_HEAD)),
 		    0, this);
-		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK6, 1.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_KILLER, 1.0f);
 
 		// The last plate is the cue for the killers to stop coming and for
 		// the boss music to fade out.

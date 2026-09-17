@@ -1207,7 +1207,7 @@ void TFireWanwan::updateCameraShake()
 {
 	f32 shakeRange = getSaveParam2()->mCamShakeRange.get();
 	if (!isWalking() && !isAttacking()) {
-		gpCameraShake->keepShake(CAM_SHAKE_MODE_UNK3, 0.5f);
+		gpCameraShake->keepShake(CAM_SHAKE_MODE_ENEMY, 0.5f);
 	}
 }
 
@@ -1623,7 +1623,7 @@ void TFireWanwan::bind()
 
 		emitEffectsOnHittingWall(totalNormal, JGeometry::TVec3<f32>());
 
-		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK3, 8.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_ENEMY, 8.0f);
 		stopTriggerSound();
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_REFLECT, &mPosition, 0,
 		                                nullptr, 0, 4);

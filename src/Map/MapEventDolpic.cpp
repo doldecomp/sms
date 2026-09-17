@@ -34,7 +34,7 @@ bool TDolpicEventBiancoGate::isFinishedAll() const
 bool TDolpicEventBiancoGate::control()
 {
 	unk20->mPosition.y += unk24;
-	gpCameraShake->keepShake(CAM_SHAKE_MODE_UNK5, 1.0f);
+	gpCameraShake->keepShake(CAM_SHAKE_MODE_BUILDING_APPEAR, 1.0f);
 	SMSRumbleMgr->start(0, (f32*)nullptr);
 	{
 		JGeometry::TVec3<f32>& pos = unk20->mPosition;
@@ -90,7 +90,7 @@ void TDolpicEventRiccoMammaGate::rising()
 	mtx.ref(1, 1) = scale;
 	unk24->moveMtx(mtx.mMtx);
 
-	gpCameraShake->keepShake(CAM_SHAKE_MODE_UNK5, 1.0f);
+	gpCameraShake->keepShake(CAM_SHAKE_MODE_BUILDING_APPEAR, 1.0f);
 	SMSRumbleMgr->start(0, (f32*)nullptr);
 	TMapObjBase::setJointScaleY(unk20, scale);
 	TMapObjBase::setJointTransY(unk20, 300.0f * (1.0f - scale));

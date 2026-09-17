@@ -615,7 +615,7 @@ void TKiller::setDeadAnm()
 	if (explosion)
 		explosion->generate(mPosition, mScaling);
 
-	gpCameraShake->startShake(CAM_SHAKE_MODE_UNK6, 1.0f);
+	gpCameraShake->startShake(CAM_SHAKE_MODE_KILLER, 1.0f);
 	SMSRumbleMgr->start(0x15, 5, (f32*)nullptr);
 }
 

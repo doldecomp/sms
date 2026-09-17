@@ -8,6 +8,7 @@
 #include <M3DUtil/M3UJoint.hpp>
 #include <JSystem/JGeometry.hpp>
 #include <JSystem/JDrama/JDRViewObj.hpp>
+#include <Camera/CameraShake.hpp>
 #include <Enemy/Enemy.hpp>
 #include <Enemy/EnemyManager.hpp>
 
@@ -21,31 +22,6 @@ class TRope;
 // hanging off a TRope, and the stake that holds the chain down is a
 // TBWPicket that Mario can pull out. Two extra TBWHit actors give the head
 // and the body their own attack volumes.
-
-// Particle ids this unit loads. The .jpa path of each is right next to the id
-// in TBossWanwanManager::load.
-// TODO: these belong in System/Particles.hpp's EnumParticle, in the 0xA9-0xB5
-// gap next to BWANWAN_JPA_MS_BWAN_KIRA (0x168); this header only holds them
-// because a batch may not edit shared headers.
-enum {
-	BWANWAN_JPA_MS_BWAN_JUMP_ROCK  = 0xAD,
-	BWANWAN_JPA_MS_BWAN_JUMP_SMOKE = 0xAE,
-	BWANWAN_JPA_MS_BWAN_HIBANA     = 0xAF,
-	BWANWAN_JPA_MS_BWAN_DOWNYUGE   = 0xB0,
-	BWANWAN_JPA_MS_BWAN_DEADYUGE   = 0xB1,
-	BWANWAN_JPA_MS_BWAN_HITYUGE    = 0x167,
-	BWANWAN_JPA_MS_BWAN_YUGAMI     = 0x1EE,
-};
-
-// The two camera shakes the boss uses. TCameraShake::mCamShakeNameSave
-// (src/Camera/CamShakeDefine.cpp) names entry 22 "/Camera/shakeBowaLand1.prm"
-// and entry 23 "/Camera/shakeBowaLand2.prm", and "Bowa" is this boss.
-// TODO: these belong in Camera/CameraShake.hpp's EnumCamShakeMode; this header
-// only holds them because a batch may not edit shared headers.
-enum {
-	CAM_SHAKE_MODE_BOWA_LAND1 = 0x16,
-	CAM_SHAKE_MODE_BOWA_LAND2 = 0x17,
-};
 
 // Balloon hints raised once each; the bit is remembered in mBalloonsShown.
 enum {

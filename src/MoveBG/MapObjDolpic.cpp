@@ -476,7 +476,7 @@ void TDemoCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	frameCtrl = unk13C->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (frameCtrl->checkPass(174.0f)) {
-		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK24, 1.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_CANNON_DEMO, 1.0f);
 		SMSRumbleMgr->start(21, 10, (f32*)nullptr);
 
 		MtxPtr mtx = unk138->getMActor()->getModel()->getAnmMtx(0);

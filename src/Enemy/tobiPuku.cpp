@@ -536,7 +536,7 @@ void TTobiPuku::swimEffect()
 		return;
 
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    0x178, getMActor()->getModel()->getAnmMtx(6), 1, this);
+	    PARTICLE_MS_PUKU_AWA, getMActor()->getModel()->getAnmMtx(6), 1, this);
 	if (!emitter)
 		return;
 

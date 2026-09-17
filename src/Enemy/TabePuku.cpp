@@ -325,12 +325,8 @@ void TTabePuku::calcRootMatrix()
 // water gives it a longer life, and the attack nerve thickens it.
 void TTabePuku::emitEffects()
 {
-	// TODO: 0x178 is ms_puku_awa.jpa; System/Particles.hpp is missing the
-	// PARTICLE_MS_PUKU_AWA name for it, and the cast is only here because this
-	// batch may not touch that header.
 	JPABaseEmitter* emitter = SMS_EasyEmitParticle(
-	    (E_SMS_EFFECT_LOOP_NORMAL)0x178,
-	    getModel()->getAnmMtx(mMouthJointIndex), this,
+	    PARTICLE_MS_PUKU_AWA, getModel()->getAnmMtx(mMouthJointIndex), this,
 	    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 	if (!emitter)
 		return;

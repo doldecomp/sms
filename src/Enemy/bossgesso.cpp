@@ -1623,17 +1623,17 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 	}
 
 	if (spine->getTime() == 18) {
-		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK12, 1.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_BOGE_BEAK_HIT, 1.0f);
 		self->rumblePad(1, self->mPosition);
 	}
 
 	if (spine->getTime() == 234) {
-		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK13, 1.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_BOGE_TUMBLE, 1.0f);
 		self->rumblePad(2, self->mPosition);
 	}
 
 	if (spine->getTime() == 510) {
-		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK14, 1.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_BOGE_LAND, 1.0f);
 		self->rumblePad(1, self->mPosition);
 	}
 
@@ -1695,12 +1695,12 @@ DEFINE_NERVE(TNerveBGTentacleDamage, TLiveActor)
 	}
 
 	if (spine->getTime() == 10) {
-		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK15, 1.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_BOGE_TE_HIT, 1.0f);
 		self->rumblePad(1, self->mPosition);
 	}
 
 	if (spine->getTime() == 304) {
-		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK14, 1.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_BOGE_LAND, 1.0f);
 		self->rumblePad(1, self->mPosition);
 	}
 
@@ -1905,7 +1905,7 @@ DEFINE_NERVE(TNerveBGPollute, TLiveActor)
 	}
 
 	if (spine->getTime() == 230) {
-		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK14, 1.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_BOGE_LAND, 1.0f);
 		self->rumblePad(2, self->mPosition);
 	}
 

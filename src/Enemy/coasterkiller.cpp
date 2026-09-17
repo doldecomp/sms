@@ -337,7 +337,7 @@ DEFINE_NERVE(TNerveCoasterKillerExplosion, TLiveActor)
 		               * self->getBodyScale() / self->getAttackRadius();
 		self->mRotation.x = 0.0f;
 		self->setDeadAnm();
-		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK6, 1.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_KILLER, 1.0f);
 	}
 
 	if (self->unk190 < self->get1AC()) {
