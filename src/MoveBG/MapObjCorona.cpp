@@ -652,7 +652,101 @@ void TBathtub::updatePosture_()
 	mQuat.normalize();
 }
 
-void TBathtub::load(JSUMemoryInputStream&) { }
+void TBathtub::load(JSUMemoryInputStream& stream)
+{
+	unk24C = 0;
+	TMapObjBase::load(stream);
+	mPosition.x = mInitialPosition.x;
+	mPosition.y = mInitialPosition.y;
+	mPosition.z = mInitialPosition.z;
+
+	unk164 = new TMapCollisionMove*[30];
+	for (int i = 0; i < 30; ++i) {
+		unk164[i] = new TMapCollisionMove;
+		const char* path = nullptr;
+		switch (i % 6) {
+		case 0:
+			path = "/scene/mapObj/bath_col_inside3.col";
+			break;
+		case 1:
+			path = "/scene/mapObj/bath_col_inside2.col";
+			break;
+		case 2:
+			path = "/scene/mapObj/bath_col_inside1.col";
+			break;
+		case 3:
+			path = "/scene/mapObj/bath_col_inside6.col";
+			break;
+		case 4:
+			path = "/scene/mapObj/bath_col_inside5.col";
+			break;
+		case 5:
+			path = "/scene/mapObj/bath_col_inside4.col";
+			break;
+		}
+		unk164[i]->init(path, 0, this);
+		unk164[i]->setUp();
+	}
+
+	mBathtubData.mPos.x = mInitialPosition.x;
+	mBathtubData.mPos.y = mInitialPosition.y;
+	mBathtubData.mPos.z = mInitialPosition.z;
+	// TODO: the store order proves mBathtubData.unk18 is a
+	// JGeometry::TRotation3<TMatrix33<SMatrix33R<f32> > >: with the row-major
+	// base, identity()'s chained assignments write [2][1], [2][0], [1][2],
+	// [1][0], [0][2], [0][1] and then the diagonal, exactly as retail does,
+	// and the 4-byte weak __ct__Q29JGeometry13SMatrix33R<f>Fv the map lists
+	// for this TU appears. The declaration lives in Map/BathWaterManager.hpp,
+	// which this batch may not touch; changing it also transposes every
+	// at()/ref() in BathWaterManager, GCConsole2 and the bathtub units.
+	mBathtubData.unk18.identity();
+	mBathtubData.unk3C = 3000.0f;
+	mBathtubData.unk40 = 3600.0f;
+	mBathtubData.unk44 = mBathtubData.unk3C * sinf(0.27925268f);
+	mBathtubData.unk4C = mBathtubData.unk50 = mBathtubData.unk54 = 0.0f;
+	mBathtubData.unk58.zero();
+	mBathtubData.unk48 = 100.0f;
+	mBathtubData.unk64 = 0;
+	mBathtubData.unk0C.set(0.0f, 1.0f, 0.0f);
+
+	unk168 = new TBathtubGrip*[5];
+	unk138 = new MActorAnmData;
+	unk138->init("scene/map/map/stand_effect", nullptr);
+	for (int i = 0; i < 5; ++i) {
+		f32 angle     = 360.0f * (0.5f + (f32)i) / 5.0f;
+		f32 gripAngle = angle - 180.0f;
+		unk168[i % 5] = new TBathtubGrip(this, gripAngle, unk138,
+		    "\x89\xf3\x82\xea\x82\xa9\x82\xaf\x82\xcc\x83\x6f\x83"
+		    "\x58\x83\x5e\x83\x75\x82\xcc\x8e\xe6\x82\xc1\x8e\xe8");
+		unk168[i % 5]->appear();
+		unk13C[i] = -180.0f + angle;
+		unk150[i] = -180.0f + 360.0f * (f32)i / 5.0f;
+	}
+
+	JUTNameTab* names = getModel()->getModelData()->getJointName();
+	mMarioJntIdx     = names->getIndex("mario");
+	mStarJntIdx      = names->getIndex("star");
+	mWater4JntIdx    = names->getIndex("water4");
+	mWater5JntIdx    = names->getIndex("water5");
+	mWater1JntIdx    = names->getIndex("water1");
+	mWater2JntIdx    = names->getIndex("water2");
+	mWater3JntIdx    = names->getIndex("water3");
+	mDuckJntIdx      = names->getIndex("ahiru");
+	mSubmarineJntIdx = names->getIndex("submarin");
+	mJuniorJntIdx    = names->getIndex("Jr");
+	mKoopaJntIdx     = names->getIndex("koopa");
+
+	MActorAnmData* shineAnm = new MActorAnmData;
+	shineAnm->init("/scene/map/map/shine", nullptr);
+	unk29C = new MActor(shineAnm);
+	void* resource = JKRGetResource("/scene/map/map/shine/shine_3bai.bmd");
+	unk29C->setModel(
+	    new J3DModel(J3DModelLoaderDataBase::load(resource, 0x10000000), 0, 1),
+	    0x10000000);
+	mShineBodyJntIdx
+	    = unk29C->getModel()->getModelData()->getJointName()->getIndex("body");
+	unk298 = 1;
+}
 
 // TODO: The original calls SMatrix33R's constructor for mBathtubData.unk18.
 // Correct that shared matrix type together with its water-physics consumers.
