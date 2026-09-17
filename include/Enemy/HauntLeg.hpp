@@ -14,62 +14,59 @@ public:
 	{
 	}
 
-	virtual ~THauntedObject();
+	virtual ~THauntedObject() { }
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+
+	void kill();
+	void checkHit();
 
 	/* 0x68 */ TLiveActor* mHaunter;
 };
 
 class THauntLeg : public TWalkerEnemy {
 public:
-	// Always inlined: the map records no out-of-line constructor.
-	THauntLeg(const char* name)
-	    : TWalkerEnemy(name)
-	{
-		unk194 = nullptr;
-		unk198 = 0;
-		unk199 = 1;
-		unk19C = nullptr;
-	}
+	// UNUSED in the map (0x5c), so it is defined out of line in the .cpp:
+	// an UNUSED symbol is never weak and therefore never an in-class body.
+	THauntLeg(const char* name);
 
-	virtual ~THauntLeg();
+	virtual ~THauntLeg() { }
+	virtual MtxPtr getTakingMtx();
 	virtual void init(TLiveManager*);
-	virtual void setMActorAndKeeper();
-	virtual void reset();
 	virtual void calcRootMatrix();
-	virtual void setGenerateAnm();
-	virtual void setWaitAnm();
-	virtual void setWalkAnm();
-	virtual void setRunAnm();
-	virtual void setDeadAnm();
-	virtual void attackToMario();
-	virtual BOOL isCollidMove(THitActor*);
 	virtual const char** getBasNameTable() const;
+	virtual void reset();
+	virtual void setGenerateAnm();
+	virtual void setWalkAnm();
+	virtual void setDeadAnm();
+	virtual void setWaitAnm();
+	virtual void setRunAnm();
+	virtual void attackToMario();
+	virtual void setMActorAndKeeper();
+	virtual BOOL isCollidMove(THitActor*);
 
-	MtxPtr getTakingMtx();
+	bool isUseCallBack();
 
 	/* 0x194 */ THauntedObject* unk194;
 	/* 0x198 */ u8 unk198;
 	/* 0x199 */ u8 unk199;
 	/* 0x19C */ THitActor* unk19C;
-	/* 0x1A0 */ u8 unk1A0[0x1B0 - 0x1A0];
+	/* 0x1A0 */ JGeometry::TVec3<f32> mJumpVelocity;
+	/* 0x1AC */ f32 mSpinAngle;
 };
 
 class THauntLegManager : public TSmallEnemyManager {
 public:
 	THauntLegManager(const char* name);
 
-	virtual ~THauntLegManager();
+	virtual ~THauntLegManager() { }
 	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
-	virtual TLiveActor* createEnemyInstance();
+	virtual TSpineEnemy* createEnemyInstance();
 	virtual void initSetEnemies();
 };
 
 DECLARE_NERVE(TNerveHauntLegHaunt, TLiveActor)
 
 extern THauntLeg* gpCurHauntLeg;
-
-int HauntLegCallback(J3DNode* node, int param);
 
 #endif
