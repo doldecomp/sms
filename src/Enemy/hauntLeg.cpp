@@ -55,6 +55,10 @@ static const char* hauntleg_bastable[] = {
 	nullptr,
 };
 
+// Local in the map: the joint callback is a free function, so the leg whose
+// matrix J3D is currently building has to be reachable without a `this`.
+static THauntLeg* gpCurHauntLeg;
+
 // The leg's own joint callback: while it is haunting, the possessed joint (and
 // the matrix J3D is currently building with) get an extra spin about Z.
 static int HauntLegCallback(J3DNode* node, int param)
@@ -311,7 +315,7 @@ void THauntLeg::attackToMario()
 		sendAttackMsgToMario();
 }
 
-BOOL THauntLeg::isCollidMove(THitActor* other)
+bool THauntLeg::isCollidMove(THitActor* other)
 {
 	if (mSpine->getCurrentNerve() != &TNerveHauntLegHaunt::theNerve()
 	    && unk198 == 0 && !(mLiveFlag & LIVE_FLAG_CLIPPED_OUT)
@@ -322,7 +326,7 @@ BOOL THauntLeg::isCollidMove(THitActor* other)
 			mSpine->setNext(&TNerveHauntLegHaunt::theNerve());
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 const char** THauntLeg::getBasNameTable() const { return hauntleg_bastable; }

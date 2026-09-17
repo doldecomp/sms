@@ -42,7 +42,7 @@ public:
 	virtual void setRunAnm();
 	virtual void attackToMario();
 	virtual void setMActorAndKeeper();
-	virtual BOOL isCollidMove(THitActor*);
+	virtual bool isCollidMove(THitActor*);
 
 	bool isUseCallBack();
 
@@ -66,7 +66,5 @@ public:
 };
 
 DECLARE_NERVE(TNerveHauntLegHaunt, TLiveActor)
-
-extern THauntLeg* gpCurHauntLeg;
 
 #endif
