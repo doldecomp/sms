@@ -73,6 +73,7 @@ public:
 	void startDisappearMario();
 	void startAppearMario(bool);
 	void processMoveNozzle();
+	u32* checkDolpic8();
 	void changeNum(TBlendPane*, int, int);
 	void setTimer(s32);
 	void startMoveTimer(int);

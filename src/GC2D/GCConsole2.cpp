@@ -1512,13 +1512,6 @@ static const s32 scNozzleSoundList[] = {
 	0x88B6, 0x88B7, 0x88B8, 0x88B9, 0x88BA, -1,
 };
 
-// TODO: three dead .data objects the original TU still emits, recovered from
-// the ROM. They are never read, so which function's statics they were is
-// unknown; they are placed here only to keep the .data layout right.
-static f32 scUnusedScale1[] = { 1.0f, 1.0f, 1.0f };
-static f32 scUnusedScale2[] = { 1.0f, 1.0f, 1.0f };
-static int scUnusedTable[]  = { 0, 2, 1, 3 };
-
 static u32 scDolpicNewsDolpic0[]   = { 0x000E0000, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic1[]   = { 0x000E0001, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic5_1[] = { 0x000E0009, 0x000E0011, 0xFFFFFFFF };
@@ -1527,14 +1520,87 @@ static u32 scDolpicNewsDolpic5_3[] = { 0x000E0013, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic5_4[] = { 0x000E0012, 0x000E0013, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic6[]   = { 0x000E0002, 0x000E0004, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic7[]   = { 0x000E0005, 0x000E0006, 0xFFFFFFFF };
-static u32 scDolpicNewsDolpic8_1[] = { 0x000E0003, 0xFFFFFFFF };
-static u32 scDolpicNewsDolpic8_2[] = { 0x000E0007, 0x000E0003, 0xFFFFFFFF };
-static u32 scDolpicNewsDolpic8_3[] = { 0x000E0008, 0x000E0003, 0xFFFFFFFF };
-static u32 scDolpicNewsDolpic8_4[] = { 0x000E000E, 0x000E0003, 0xFFFFFFFF };
-static u32 scDolpicNewsDolpic8_5[] = { 0x000E000F, 0x000E0003, 0xFFFFFFFF };
-static u32 scDolpicNewsDolpic8_6[]
+// The Dolpic 8 news is US-only in this shape: checkDolpic8() picks one of
+// these by three independent selectors, and the array name spells them out.
+// The upper letter is the story suffix (A: 0x0003, B: 0x0003 + 0x0010,
+// C: 0x0010, D: none), the lower letter the prefix (a: 0x0007, b: 0x0008,
+// c: none) and the digit the nozzle middle (1: 0x000E, 2: 0x000E + 0x000F,
+// 3: 0x000F, 4: none). Dc4 would be empty, so it does not exist and
+// checkDolpic8() reports no news at all for that combination.
+static u32 scDolpicNewsDolpic8_Aa1[]
+    = { 0x000E0007, 0x000E000E, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Aa2[]
+    = { 0x000E0007, 0x000E000E, 0x000E000F, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Aa3[]
+    = { 0x000E0007, 0x000E000F, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Aa4[] = { 0x000E0007, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ab1[]
+    = { 0x000E0008, 0x000E000E, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ab2[]
+    = { 0x000E0008, 0x000E000E, 0x000E000F, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ab3[]
+    = { 0x000E0008, 0x000E000F, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ab4[] = { 0x000E0008, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ac1[] = { 0x000E000E, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ac2[]
     = { 0x000E000E, 0x000E000F, 0x000E0003, 0xFFFFFFFF };
-static u32 scDolpicNewsDolpic8_7[] = { 0x000E0010, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ac3[] = { 0x000E000F, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ac4[] = { 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ba1[]
+    = { 0x000E0007, 0x000E000E, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ba2[]
+    = { 0x000E0007, 0x000E000E, 0x000E000F, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ba3[]
+    = { 0x000E0007, 0x000E000F, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ba4[]
+    = { 0x000E0007, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Bb1[]
+    = { 0x000E0008, 0x000E000E, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Bb2[]
+    = { 0x000E0008, 0x000E000E, 0x000E000F, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Bb3[]
+    = { 0x000E0008, 0x000E000F, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Bb4[]
+    = { 0x000E0008, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Bc1[]
+    = { 0x000E000E, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Bc2[]
+    = { 0x000E000E, 0x000E000F, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Bc3[]
+    = { 0x000E000F, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Bc4[] = { 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ca1[]
+    = { 0x000E0007, 0x000E000E, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ca2[]
+    = { 0x000E0007, 0x000E000E, 0x000E000F, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ca3[]
+    = { 0x000E0007, 0x000E000F, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ca4[] = { 0x000E0007, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Cb1[]
+    = { 0x000E0008, 0x000E000E, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Cb2[]
+    = { 0x000E0008, 0x000E000E, 0x000E000F, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Cb3[]
+    = { 0x000E0008, 0x000E000F, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Cb4[] = { 0x000E0008, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Cc1[] = { 0x000E000E, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Cc2[]
+    = { 0x000E000E, 0x000E000F, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Cc3[] = { 0x000E000F, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Cc4[] = { 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Da1[] = { 0x000E0007, 0x000E000E, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Da2[]
+    = { 0x000E0007, 0x000E000E, 0x000E000F, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Da3[] = { 0x000E0007, 0x000E000F, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Da4[] = { 0x000E0007, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Db1[] = { 0x000E0008, 0x000E000E, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Db2[]
+    = { 0x000E0008, 0x000E000E, 0x000E000F, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Db3[] = { 0x000E0008, 0x000E000F, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Db4[] = { 0x000E0008, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Dc1[] = { 0x000E000E, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Dc2[] = { 0x000E000E, 0x000E000F, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Dc3[] = { 0x000E000F, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic9[]   = { 0x000E000A, 0x000E000B, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic10[]  = { 0x000E000C, 0x000E000D, 0xFFFFFFFF };
 
@@ -2945,6 +3011,293 @@ void TGCConsole2::processMoveNozzle()
 	}
 }
 
+// The three selectors below choose the upper letter, the lower letter and the
+// digit of one of the scDolpicNewsDolpic8_* arrays above.
+//
+// NOTE: the ROM really has no `break` anywhere inside `case 0` of the
+// kindUpper switch, so the whole A group falls through into the B group and
+// the Aa/Ab/Ac arrays can never be the result. Every arm of the asm's first
+// group branches into the next group's compare tree instead of the epilogue,
+// and B, C and D all break normally, so this is a bug in the shipped code, not
+// a decoding mistake. Do not "fix" it.
+u32* TGCConsole2::checkDolpic8()
+{
+	int kindUpper;
+	int kindLower;
+	int kindNumber;
+
+	if (TFlagManager::getInstance()->getBool(0x103AA)) {
+		if (TFlagManager::getInstance()->getBool(0x50004)
+		    && !TFlagManager::getInstance()->getBool(0x103AD))
+			kindUpper = 2;
+		else
+			kindUpper = 3;
+	} else {
+		if (TFlagManager::getInstance()->getBool(0x50004)
+		    && !TFlagManager::getInstance()->getBool(0x103AD))
+			kindUpper = 1;
+		else
+			kindUpper = 0;
+	}
+
+	switch (TFlagManager::getInstance()->getFlag(0x60003)) {
+	case 3:
+		if (TFlagManager::getInstance()->getNozzleRight(1, 0))
+			kindLower = 2;
+		else
+			kindLower = 1;
+		break;
+	case 2:
+		if (TFlagManager::getInstance()->getNozzleRight(1, 1))
+			kindLower = 2;
+		else
+			kindLower = 1;
+		break;
+	case 1:
+		if (TFlagManager::getInstance()->getFlag(0x1038F) != 0)
+			kindLower = 2;
+		else
+			kindLower = 0;
+		break;
+	default:
+		kindLower = 2;
+		break;
+	}
+
+	// TODO: the inner getFlag(0x60003) test is redundant inside the then arm,
+	// but the ROM evaluates the whole nozzle predicate separately in both
+	// arms, so it was spelled out twice rather than hoisted.
+	if (TFlagManager::getInstance()->getFlag(0x60003) == 0
+	    && TFlagManager::getInstance()->getFlag(0x1038F) != 0) {
+		if (TFlagManager::getInstance()->getFlag(0x60003) == 0
+		    && (TFlagManager::getInstance()->getNozzleRight(1, 0)
+		        || TFlagManager::getInstance()->getNozzleRight(1, 1)))
+			kindNumber = 1;
+		else
+			kindNumber = 0;
+	} else {
+		if (TFlagManager::getInstance()->getFlag(0x60003) == 0
+		    && (TFlagManager::getInstance()->getNozzleRight(1, 0)
+		        || TFlagManager::getInstance()->getNozzleRight(1, 1)))
+			kindNumber = 2;
+		else
+			kindNumber = 3;
+	}
+
+	u32* news = unk570;
+	switch (kindUpper) {
+	case 0:
+		switch (kindLower) {
+		case 0:
+			switch (kindNumber) {
+			case 0:
+				news = scDolpicNewsDolpic8_Aa1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Aa2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Aa3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Aa4;
+				break;
+			}
+		case 1:
+			switch (kindNumber) {
+			case 0:
+				news = scDolpicNewsDolpic8_Ab1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Ab2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Ab3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Ab4;
+				break;
+			}
+		case 2:
+			switch (kindNumber) {
+			case 0:
+				news = scDolpicNewsDolpic8_Ac1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Ac2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Ac3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Ac4;
+				break;
+			}
+		}
+		// FALLTHROUGH (see the note above)
+	case 1:
+		switch (kindLower) {
+		case 0:
+			switch (kindNumber) {
+			case 0:
+				news = scDolpicNewsDolpic8_Ba1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Ba2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Ba3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Ba4;
+				break;
+			}
+			break;
+		case 1:
+			switch (kindNumber) {
+			case 0:
+				news = scDolpicNewsDolpic8_Bb1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Bb2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Bb3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Bb4;
+				break;
+			}
+			break;
+		case 2:
+			switch (kindNumber) {
+			case 0:
+				news = scDolpicNewsDolpic8_Bc1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Bc2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Bc3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Bc4;
+				break;
+			}
+			break;
+		}
+		break;
+	case 2:
+		switch (kindLower) {
+		case 0:
+			switch (kindNumber) {
+			case 0:
+				news = scDolpicNewsDolpic8_Ca1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Ca2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Ca3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Ca4;
+				break;
+			}
+			break;
+		case 1:
+			switch (kindNumber) {
+			case 0:
+				news = scDolpicNewsDolpic8_Cb1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Cb2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Cb3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Cb4;
+				break;
+			}
+			break;
+		case 2:
+			switch (kindNumber) {
+			case 0:
+				news = scDolpicNewsDolpic8_Cc1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Cc2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Cc3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Cc4;
+				break;
+			}
+			break;
+		}
+		break;
+	case 3:
+		switch (kindLower) {
+		case 0:
+			switch (kindNumber) {
+			case 0:
+				news = scDolpicNewsDolpic8_Da1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Da2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Da3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Da4;
+				break;
+			}
+			break;
+		case 1:
+			switch (kindNumber) {
+			case 0:
+				news = scDolpicNewsDolpic8_Db1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Db2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Db3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Db4;
+				break;
+			}
+			break;
+		case 2:
+			switch (kindNumber) {
+			case 0:
+				news = scDolpicNewsDolpic8_Dc1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Dc2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Dc3;
+				break;
+			case 3:
+				// There is no Dc4: with nothing to report the news is
+				// cleared instead.
+				news = nullptr;
+				break;
+			}
+			break;
+		}
+		break;
+	}
+
+	return news;
+}
+
 void TGCConsole2::changeNum(TBlendPane*, int, int) { }
 
 void TGCConsole2::setTimer(s32 param_1)
@@ -3367,6 +3720,9 @@ bool TGCConsole2::processDrawTelop(u32)
 
 void TGCConsole2::checkChangeTelopArray()
 {
+	// TODO: 48 bytes of frame short. The instructions are exact; the original
+	// declared 0x30 bytes of locals here that the optimiser never touches and
+	// there is no other evidence for what they were.
 	u32* oldArray = unk570;
 
 	if (gpMarDirector->mMap == 1) {
@@ -3393,54 +3749,23 @@ void TGCConsole2::checkChangeTelopArray()
 			unk570 = scDolpicNewsDolpic10;
 			break;
 		case 5:
+			// One message per flag, both messages when both are set and the
+			// generic pair when neither is.
 			if (TFlagManager::smInstance->getBool(0x50001)) {
 				if (TFlagManager::smInstance->getBool(0x50002))
-					unk570 = scDolpicNewsDolpic5_1;
+					unk570 = scDolpicNewsDolpic5_4;
 				else
 					unk570 = scDolpicNewsDolpic5_2;
 			} else {
 				if (TFlagManager::smInstance->getBool(0x50002))
 					unk570 = scDolpicNewsDolpic5_3;
 				else
-					unk570 = scDolpicNewsDolpic5_4;
+					unk570 = scDolpicNewsDolpic5_1;
 			}
 			break;
-		case 8: {
-			int eventState = TFlagManager::smInstance->getFlag(0x60003);
-			switch (eventState) {
-			case 0:
-				if (TFlagManager::smInstance->getBool(0x1038F)) {
-					if (TFlagManager::smInstance->getNozzleRight(1, 0)
-					    || TFlagManager::smInstance->getNozzleRight(1, 1))
-						unk570 = scDolpicNewsDolpic8_6;
-					else
-						unk570 = scDolpicNewsDolpic8_4;
-				} else {
-					if (TFlagManager::smInstance->getNozzleRight(1, 0)
-					    || TFlagManager::smInstance->getNozzleRight(1, 1))
-						unk570 = scDolpicNewsDolpic8_5;
-					else if (TFlagManager::smInstance->getFlag(0x40000) >= 20)
-						unk570 = scDolpicNewsDolpic8_7;
-					else
-						unk570 = scDolpicNewsDolpic8_1;
-				}
-				break;
-			case 1:
-				if (TFlagManager::smInstance->getBool(0x1038F))
-					unk570 = scDolpicNewsDolpic8_1;
-				else
-					unk570 = scDolpicNewsDolpic8_2;
-				break;
-			default:
-				if (TFlagManager::smInstance->getNozzleRight(1, 0)
-				    || TFlagManager::smInstance->getNozzleRight(1, 1))
-					unk570 = scDolpicNewsDolpic8_1;
-				else
-					unk570 = scDolpicNewsDolpic8_3;
-				break;
-			}
+		case 8:
+			unk570 = checkDolpic8();
 			break;
-		}
 		default:
 			unk570 = nullptr;
 			break;
