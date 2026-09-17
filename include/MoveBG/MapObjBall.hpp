@@ -125,7 +125,7 @@ public:
 
 	virtual void loadAfter();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
-	virtual void control() { }
+	virtual void control();
 	virtual void kill();
 	virtual void initMapObj();
 	virtual void touchActor(THitActor*);

@@ -1197,6 +1197,66 @@ void TBigWatermelon::touchActor(THitActor* param_1)
 	TMapObjBall::touchActor(param_1);
 }
 
+void TBigWatermelon::control()
+{
+	TMapObjGeneral::control();
+	if (unk194 != 0)
+		unk194 -= 1;
+
+	if (isState(STATE_HOLDING)) {
+		Mtx held;
+		MTXCopy(mHolder->getTakingMtx(), held);
+		held[1][3] += unk190;
+		MTXCopy(held, getModel()->getAnmMtx(0));
+	} else {
+		JGeometry::TVec3<f32> vel(mVelocity);
+		if (!vel.isZero() || mGroundPlane->getActor())
+			calcCurrentMtx();
+	}
+
+	switch (mState) {
+	case STATE_NORMAL:
+		if (checkLiveFlag(LIVE_FLAG_UNK10))
+			offLiveFlag(LIVE_FLAG_UNK10);
+
+		{
+			// Sitting on a rising sand pillar lifts the watermelon with it,
+			// the same way TResetFruit::control does.
+			const TLiveActor* owner = mGroundPlane->getActor();
+			if (mPosition.y < mGroundHeight + 200.0f && owner) {
+				// TODO: the original tests the same type twice here, as it
+				// also does in TResetFruit::control.
+				if (owner->isActorType(0x400000CD)
+				    || owner->isActorType(0x400000CD)) {
+					f32 wasRatio = unk1A0;
+					unk1A0       = SMS_GetSandRiseUpRatio(owner);
+					if (unk1A0 > 0.05f && unk1A0 > wasRatio)
+						mVelocity.y += 20.0f;
+				}
+			}
+		}
+		break;
+
+	case STATE_APPEARING:
+	case STATE_WAITING_TO_APPEAR:
+	case STATE_LIVING:
+	case STATE_ROTTING:
+		break;
+
+	case STATE_BROKEN:
+		if (!isStateTimerEngaged()) {
+			JGeometry::TVec3<f32> scale(1.0f, 1.0f, 1.0f);
+			emitAndScale(0x6B, 0, &mPosition, scale);
+			emitAndScale(0x6C, 0, &mPosition, scale);
+			mStateTimer = 30;
+		}
+
+		if (animIsFinished())
+			makeObjDead();
+		break;
+	}
+}
+
 void TBigWatermelon::startEvent()
 {
 	// Only the one big watermelon on the Sirena roof runs the shine demo;
