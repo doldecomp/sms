@@ -1357,8 +1357,9 @@ void TMBindShadowManager::calcVtx()
 		JGeometry::TVec3<f32> oldPos = request->mPosition;
 
 		if (request->mShadowType == SHADOW_TYPE_SQUARE) {
-			JGeometry::TVec3<f32> foot = request->mPosition;
-			JGeometry::TVec3<f32> head = foot;
+			JGeometry::TVec3<f32> head, foot;
+			foot = request->mPosition;
+			head = foot;
 			head.y += mSquareShadowHeight;
 
 			const JGeometry::TVec3<f32>& light = gpBindShadowManager->mLightDir;
@@ -1402,12 +1403,15 @@ void TMBindShadowManager::calcVtx()
 		if (request->mRadiusX < request->mRadiusZ)
 			radius = request->mRadiusZ;
 
+		// The .sdata2 pool orders 90.0f before 0.08f, so the rotation was
+		// built before the scale terms.
+		JGeometry::TVec3<f32> rotation(90.0f, request->mRotationY, 0.0f);
+
 		f32 treeScale = 1.0f;
 		f32 sx        = 0.08f * request->mRadiusX;
 		f32 sy        = 0.08f * request->mRadiusZ;
 		f32 sz        = 0.08f * (radius * shrink);
 
-		JGeometry::TVec3<f32> rotation(90.0f, request->mRotationY, 0.0f);
 		JGeometry::TVec3<f32> scale(sx * treeScale, sy * treeScale,
 		                            treeScale * sz);
 
