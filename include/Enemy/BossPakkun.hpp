@@ -307,7 +307,7 @@ public:
 	/* 0x160 */ TBPTornado* mTornado;
 	/* 0x164 */ TBPHeadHit* mHeadHit;
 	/* 0x168 */ TBPNavel* mNavel;
-	/* 0x16C */ u8 mState;
+	/* 0x16C */ s8 mState;
 	/* 0x170 */ int unk170;
 	/* 0x174 */ int unk174;
 	// Water the boss has swallowed. It drains while mIsDrinking is set and
