@@ -108,7 +108,7 @@ public:
 
 	virtual void kill();
 	virtual void init(TLiveManager*);
-	virtual void shakeCamera(int shakeType);
+	void shakeCamera(int shakeType);
 	BOOL receiveMessage(THitActor* sender, u32 message);
 	void calcRootMatrix();
 	void slideToCurPathNode(float, float);
@@ -117,12 +117,28 @@ public:
 	void perform(u32 cue, JDrama::TGraphics* graphics);
 
 private:
-	/* 0x24 */
-	/* 0x1A0 */ BOOL unk0;
+	/* 0x150 */ TBWLeash* mLeash;
+	/* 0x154 */ TBWPicket* mPicket;
+	/* 0x158 */ TBWLeashNode* mChainRoot;
+	/* 0x15C */ u16 unk15C;
+	/* 0x160 */ u32 unk160;
+	/* 0x164 */ u32 unk164;
+	/* 0x168 */ u32 unk168;
+	/* 0x16C */ u32 unk16C;
+	/* 0x170 */ u32 unk170;
+	/* 0x174 */ u32 unk174;
+	/* 0x178 */ u32 unk178;
+	/* 0x17C */ u32 unk17C;
+	/* 0x180 */ u32 unk180;
+	/* 0x184 */ u32 unk184;
+	/* 0x188 */ u32 unk188;
+	/* 0x18C */ u32 unk18C;
+	/* 0x190 */ u16 unk190;
+	/* 0x1A0 */ BOOL unk1a0;
 	/* 0x1A8 */ u32 mWaterHitCount;
 	/* 0x1AC */ u32 mDistToMarioSquared;
 	/* 0x1B0 */ TBWParams* mParams;
-	/* 0x18C */ u8 msInvincible; // fabricated
+	/* 0x18C */ u8 msInvincible;
 };
 
 class TBossWanwanMtxCalc : public J3DMtxCalcSoftimageAnm {
