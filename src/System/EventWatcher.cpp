@@ -1400,6 +1400,10 @@ static void evIsWaterMelonIsReached(TSpcTypedInterp<TEventWatcher>* interp,
 // MSD_BGM_CAMERA_KAGE) while MSD_BGM_FANFARE_RACE is 0x80010025. Two
 // independent function names off by exactly one id suggests the tail of that
 // enum is shifted by one entry; the values here are the binary's, not a guess.
+// TODO: 99.9%, every instruction matching, 4 bytes short in the low region.
+// The `startSoundSystemSE` wrapper is right: spelling out its
+// `gateCheck` + `MSoundSE::startSoundSystemSE` body, or reaching it through
+// the bare `gpMSound`, each cost 8 bytes of frame instead.
 static void evStartMontemanBGM(TSpcTypedInterp<TEventWatcher>* interp,
                                u32 arg_num)
 {
