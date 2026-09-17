@@ -223,7 +223,7 @@ public:
 	void showMessage(u32);
 	void rollNextGraphNode();
 	void reverseNextGraphNode();
-	bool isHeadPulled();
+	BOOL isHeadPulled();
 	bool isMarioInSight();
 	bool isTailBurning();
 	bool isBurning();

@@ -1096,14 +1096,14 @@ bool TBossWanwan::isMarioInSight() { return true; }
 
 // UNUSED, 0x70 in the map: TBossWanwan::control, TNerveBWStun::execute and
 // TNerveBWGraphWander::execute all spell this out.
-bool TBossWanwan::isHeadPulled()
+BOOL TBossWanwan::isHeadPulled()
 {
 	if (mPicket->isTaken()) {
 		if (mPullVelocity.squared() < getSaveParam2()->mSLPullLimit.get())
-			return false;
-		return true;
+			return FALSE;
+		return TRUE;
 	}
-	return false;
+	return FALSE;
 }
 
 void TBossWanwan::calcRootMatrix()
@@ -1121,7 +1121,7 @@ void TBossWanwan::reverseNextGraphNode()
 	TGraphTracer* tracer = getTracer();
 	int prev             = tracer->getPrevIndex();
 
-	JGeometry::TVec3<f32> toMario(*gpMarioPos);
+	JGeometry::TVec3<f32> toMario = *gpMarioPos;
 	toMario -= mPosition;
 
 	getTracer()->mPrevIdx = tracer->getGraph()->getAimToDirNextIndex(
