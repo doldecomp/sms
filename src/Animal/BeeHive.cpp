@@ -285,7 +285,7 @@ void TBeeHive::loadCoin(JSUMemoryInputStream& stream)
 	mCoins = new TMapObjBase*[unk150->getBoidNum()];
 
 	TMapObjBase** it  = mCoins;
-	TMapObjBase** end = &mCoins[unk150->getBoidNum() - 1];
+	TMapObjBase** end = mCoins + unk150->getBoidNum() - 1;
 	for (; it != end; ++it)
 		*it = TMapObjBaseManager::newAndRegisterObj("coin");
 
