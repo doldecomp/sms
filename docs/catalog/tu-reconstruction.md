@@ -29,6 +29,18 @@ Integer params are `TParamRT<s32>` (mangles `TParamT<l>`); `TParamRT<int>` gives
 Filenames matter too: `/Mario/DmgHamukuri.prm`, not `Hamakuri`, or the whole string pool shifts.
 Wrong defaults cause register differences far from the store (TMario constructor: `TEParams` down type 1, motor 25, minimum speed 16.0f, invincibility 300).
 
+## Animation indices from the `.bas` table
+
+A unit's `_bastable` names only some animation slots, but the model's `.bck` files are indexed in alphabetical order, so filling the gaps alphabetically recovers every name and every `setBckAnm`/`isBckAnm` constant (`amiNoko`: six named slots gave all sixteen, including the `end/loop/start` triples three apart that a flag selects between).
+
+## Owner keys of `this + 1`, `this + 2`
+
+An effect owner argument of `this + sizeof(T)` or `this + 2 * sizeof(T)` is the original's `this + 1` / `this + 2`, giving each looping emitter a distinct key; it also confirms the class size (`TAmiNoko::emitEffects`, 0x214).
+
+## Override return types
+
+`TEnemyManager::createEnemyInstance()` returns `TSpineEnemy*`; an override declared with a different return type (`TLiveActor*`) is not covariant and gets a **new vtable slot** instead of overriding. Check any manager whose vtable is not exact for this.
+
 ## String-pool prefixes
 
 If every string offset in a unit is off by a constant, a shared header supplies the prefix.

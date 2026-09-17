@@ -172,7 +172,7 @@ public:
 
 	virtual ~TCannonManager() { }
 	virtual void load(JSUMemoryInputStream&);
-	virtual TLiveActor* createEnemyInstance();
+	virtual TSpineEnemy* createEnemyInstance();
 	virtual void clipEnemies(JDrama::TGraphics*) { }
 };
 

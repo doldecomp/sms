@@ -144,7 +144,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
-	virtual TLiveActor* createEnemyInstance();
+	virtual TSpineEnemy* createEnemyInstance();
 	virtual void initSetEnemies();
 
 	/* 0x60 */ u8 mIsNozzleFree;

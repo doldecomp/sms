@@ -107,7 +107,7 @@ void TPopoManager::load(JSUMemoryInputStream& stream)
 	mExplosionWater = new TWaterEmitInfo("/enemy/popoexpwater.prm");
 }
 
-TLiveActor* TPopoManager::createEnemyInstance() { return new TPopo("ポポ"); }
+TSpineEnemy* TPopoManager::createEnemyInstance() { return new TPopo("ポポ"); }
 
 void TPopoManager::initSetEnemies()
 {

@@ -95,7 +95,7 @@ void TCannonManager::load(JSUMemoryInputStream& stream)
 	unk38 = new TCannonSaveLoadParams("/enemy/cannon.prm");
 }
 
-TLiveActor* TCannonManager::createEnemyInstance() { return new TCannon("砲台"); }
+TSpineEnemy* TCannonManager::createEnemyInstance() { return new TCannon("砲台"); }
 
 TChorobei::TChorobei(TCannon* cannon, int jnt_idx, const char* name)
     : THitActor(name)
