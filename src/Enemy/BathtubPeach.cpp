@@ -213,15 +213,16 @@ void TBathtubPeach::changeAnm(int bck, int btp, f32 rate)
 {
 	if (!getMActor()->checkCurBckFromIndex(bck)) {
 		getMActor()->setBckFromIndex(bck);
-		setAnmSound(getBasNameTable() ? getBasNameTable()[bck] : nullptr);
+
+		const char** table = getBasNameTable();
+		setAnmSound(table == nullptr ? nullptr : table[bck]);
 	}
 
 	if (getMActor()->getCurAnmIdx(ANM_TYPE_BTP) != btp)
 		getMActor()->setBtpFromIndex(btp);
 
-	getMActor()
-	    ->getFrameCtrl(ANM_TYPE_BCK)
-	    ->setRate(rate * (2.0f * SMSGetAnmFrameRate()));
+	J3DFrameCtrl* frameCtrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
+	frameCtrl->setRate(rate * (2.0f * SMSGetAnmFrameRate()));
 }
 
 const char** TBathtubPeach::getBasNameTable() const
