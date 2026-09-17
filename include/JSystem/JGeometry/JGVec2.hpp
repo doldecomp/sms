@@ -102,6 +102,12 @@ public:
 		y *= scale;
 	}
 
+	void scale(f32 scale, const TVec2& b)
+	{
+		x = b.x * scale;
+		y = b.y * scale;
+	}
+
 	// fabricated
 	void rotate(f32 angle)
 	{
@@ -169,20 +175,27 @@ public:
 
 	// === normalize stuff lifted from JGVec3.hpp ===
 
-	// fabricated
-	void setLength(f32 length)
+	// The two-argument forwarder is not cosmetic: it is the inline level that
+	// puts TVec2::dot at depth five inside TBathtubPeach::goTo, so MWCC emits
+	// the weak dot__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f> the map
+	// lists for BathtubPeach.cpp instead of expanding it. TVec3 has the same
+	// pair in JGVec3.hpp.
+	void setLength(f32 length) { setLength(*this, length); }
+
+	void normalize() { setLength(*this, TUtil<f32>::one()); }
+
+	void normalize(const TVec2& other) { setLength(other, TUtil<f32>::one()); }
+
+	void setLength(const TVec2& v, f32 length)
 	{
-		f32 lsq = squared();
+		f32 lsq = v.squared();
 		if (lsq <= TUtil<f32>::epsilon()) {
 			zero();
 			return;
 		}
 
-		scale(length * JGeometry::TUtil<f32>::inv_sqrt(lsq));
+		scale(length * JGeometry::TUtil<f32>::inv_sqrt(lsq), v);
 	}
-
-	// fabricated
-	void normalize() { setLength(1.0f); }
 
 	T x;
 	T y;

@@ -86,32 +86,22 @@ public:
 // Paddles around the rim of the bathtub so as to stay `angle` degrees away
 // from Mario, always facing him.
 //
-// TODO: 83.5%. Every remaining instruction difference comes from two shared
-// headers this batch was not allowed to touch; there is nothing left to fix in
-// this file. Both were measured, not guessed:
+// TODO: 93.5%. The remaining instruction differences all come from one shared
+// header, and they were measured rather than guessed:
+// include/PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h -- the ROM calls
+// fmodf__3stdFff (0x5c, emitted weak from wireTrap.cpp) at all six sites in
+// this function. Our std::fmodf is an `inline` wrapper around ::fmod, so every
+// site expands to `bl fmod` plus an `frsp` and an extra `lfd` of the double
+// 360.0. That accounts for the whole residual, including the float-register
+// renumbering and the frame gap. `#pragma dont_inline` does not help (explicit
+// `inline` wins) and giving it the real 0x5c body inlines it too; it needs a
+// declaration in the header with the body in a .cpp.
 //
-//  1. include/JSystem/JGeometry/JGVec2.hpp -- TVec2 needs the same pair of
-//     setLength overloads TVec3 already has in JGVec3.hpp:
-//         void setLength(f32 length) { setLength(*this, length); }
-//         void setLength(const TVec2& v, f32 length) { ...current body... }
-//         void normalize() { setLength(*this, TUtil<f32>::one()); }
-//     The extra forwarder puts TVec2::dot at inline depth five inside
-//     goTo(), so MWCC emits it out of line -- which is the weak
-//     dot__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f> the map lists for
-//     this TU, and which in turn forces `dir` onto the stack the way the ROM
-//     has it at 0x1dc/0x1e0. With just this change the nerve goes 83.5% ->
-//     93.4%, `dot` appears, and `ninja changes_all` shows zero other units
-//     affected.
-//
-//  2. include/PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h -- the ROM
-//     calls fmodf__3stdFff (0x5c, emitted weak from wireTrap.cpp) at all six
-//     sites in this function. Our std::fmodf is an `inline` wrapper around
-//     ::fmod, so every site expands to `bl fmod` plus an `frsp` and an extra
-//     `lfd` of the double 360.0. That accounts for the whole residual after
-//     (1), including the float-register renumbering and the 0xf8 frame gap.
-//     `#pragma dont_inline` does not help (explicit `inline` wins) and giving
-//     it the real 0x5c body inlines it too (389 instructions); it needs a
-//     declaration in the header with the body in a .cpp.
+// The TVec2::setLength forwarders this nerve also needed are in place now (see
+// JGVec2.hpp): that level of nesting is what puts TVec2::dot at inline depth
+// five inside goTo() and makes MWCC emit the weak
+// dot__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f> the map lists for this
+// TU, which in turn keeps `dir` on the stack the way the ROM has it.
 class TNervePeachEscape : public TNerveBase<TLiveActor> {
 public:
 	static const TNervePeachEscape& theNerve()
@@ -200,12 +190,10 @@ TBathtubPeach::TBathtubPeach(const char* name)
 // that one inline level is also what pushes TVec2::dot out of line there, which
 // is how we know the nerve calls goTo rather than spelling the body out.
 //
-// TODO: 0xb4 here against the map's 0xc4. 0xc of that is the missing
-// TVec2::setLength(const TVec2&, f32) forwarder (see the escape nerve), which
-// keeps `dir` in memory instead of letting MWCC scalarise it; the last 4 bytes
-// are the second speed fetch, which the ROM does twice (once inlined for the
-// comparison, once through an out-of-line TEnemyManager::getSaveParam() for the
-// setLength argument) and MWCC merges for us.
+// TODO: 0xc0 here against the map's 0xc4. The last 4 bytes are the second speed
+// fetch, which the ROM does twice (once inlined for the comparison, once
+// through an out-of-line TEnemyManager::getSaveParam() for the setLength
+// argument) and MWCC merges for us.
 void TBathtubPeach::goTo(const JGeometry::TVec3<f32>& goal)
 {
 	JGeometry::TVec2<f32> dir(goal.x - mPosition.x, goal.z - mPosition.z);
