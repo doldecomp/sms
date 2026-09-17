@@ -191,7 +191,7 @@ static unkTMarioAnimeFilesStruct marioAnimeFiles[199] = {
 	/* 0xA0 */ { 0x00000000, "swim_p_damage" },
 	/* 0xA1 */ { 0x00000000, "swim_p_down" },
 	/* 0xA2 */ { 0x00000001, "pivot" },
-	/* 0xA3 */ { 0x00000000, "demo_gate_out_get2" },
+	/* 0xA3 */ { 0x00000001, "demo_gate_out_get2" },
 	/* 0xA4 */ { 0x00000001, "demo_gate_out_appear" },
 	/* 0xA5 */ { 0x00000000, "belt_up" },
 	/* 0xA6 */ { 0x00000000, "yawn" },
@@ -224,7 +224,7 @@ static unkTMarioAnimeFilesStruct marioAnimeFiles[199] = {
 	/* 0xC1 */ { 0x00000000, "yo_hip_pose" },
 	/* 0xC2 */ { 0x00000000, "yo_hip_end" },
 	/* 0xC3 */ { 0x00000000, "yo_damage" },
-	/* 0xC4 */ { 0x00000001, "demo_shine_get_yo" },
+	/* 0xC4 */ { 0x00000000, "demo_shine_get_yo" },
 	/* 0xC5 */ { 0x00000001, "yo_slide_pose" },
 	/* 0xC6 */ { 0x00000001, "yo_slide_end" },
 };
