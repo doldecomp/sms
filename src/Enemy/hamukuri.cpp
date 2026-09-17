@@ -1009,7 +1009,7 @@ void THamuKuri::setAfterDeadEffect()
 {
 	if (unk198) {
 		TMapObjBase* obj = gpItemManager->makeObjAppear(
-		    mPosition.x, mPosition.y, mPosition.z, 0x2000003c, true);
+		    mPosition.x, 200.0f + mPosition.y, mPosition.z, 0x2000003c, true);
 
 		if (obj) {
 			unk200.set(mPosition.x, mGroundHeight, mPosition.z);
@@ -1143,6 +1143,8 @@ MtxPtr THamuKuri::getTakingMtx()
 	MsMtxSetRotRPH(afStack_84, 0.0f, 0.0f, 0.0f);
 	MTXConcat(mat, afStack_84, mat);
 
+	MtxPtr takingMtx = unk1B0;
+
 	// TODO: identity33 but order is transposed?!
 	unk1B0[0][0] = 1.0f;
 	unk1B0[0][1] = 0.0f;
@@ -1156,9 +1158,9 @@ MtxPtr THamuKuri::getTakingMtx()
 	unk1B0[2][1] = 0.0f;
 	unk1B0[2][2] = 1.0f;
 
-	MTXConcat(mat, unk1B0, unk1B0);
+	MTXConcat(mat, takingMtx, takingMtx);
 
-	return unk1B0;
+	return takingMtx;
 }
 
 bool THamuKuri::isResignationAttack()
@@ -1208,27 +1210,27 @@ bool THamuKuri::isCollidMove(THitActor* param_1)
 	    || param_1->isActorType(0x10000013)
 	    || param_1->isActorType(0x10000011)) {
 		THamuKuri* hamu = (THamuKuri*)param_1;
-		if (hamu->mSpine->getCurrentNerve()
-		        != &TNerveHamuKuriBoundFreeze::theNerve()
-		    && hamu->mSpine->getCurrentNerve()
+		if (hamu->isAttackToHam()
+		    && mSpine->getCurrentNerve() != &TNerveSmallEnemyDie::theNerve()
+		    && mSpine->getCurrentNerve()
 		           != &TNerveHamuKuriBoundFreeze::theNerve()
-		    && hamu->mSpine->getCurrentNerve()
-		           != &TNerveHamuKuriWallDie::theNerve()) {
-			if (!isHitWallInBound()) {
-				unk1A3 = 1;
-				forceRoll(mPosition, false);
-				return false;
-			}
+		    && mSpine->getCurrentNerve() != &TNerveHamuKuriWallDie::theNerve()
+		    && !isHitWallInBound()) {
+			unk1A3 = 1;
+			forceRoll(param_1->mPosition, false);
+			return false;
 		}
 	}
 
-	// TODO: need more checks & HitActor inlines
-	if ((param_1->getActorType() & 0xFFFF0000) == 0x40000000) {
+	if ((param_1->getActorType() & 0xFFFF0000) == 0x40000000
+	    && param_1->getActorType() >= 0x40000390
+	    && param_1->getActorType() <= 0x40000394) {
 		TLiveActor* enemy         = (TLiveActor*)param_1;
 		JGeometry::TVec3<f32> vel = enemy->mVelocity;
-		if (abs(vel.x) > 2.0f && abs(vel.y) > 2.0f && abs(vel.z) > 2.0f) {
+		if (fabsf(vel.y) > 2.0f
+		    && (fabsf(vel.x) > 2.0f || fabsf(vel.z) > 2.0f)) {
 			if (mSpine->getCurrentNerve() != &TNerveHamuKuriJitabata::theNerve()
-			    && isAirborne()) {
+			    && !isAirborne()) {
 				mSpine->pushNerve(&TNerveHamuKuriJitabata::theNerve());
 			}
 		}
@@ -1246,7 +1248,17 @@ bool THamuKuri::isCollidMove(THitActor* param_1)
 	return false;
 }
 
-void THamuKuri::isAttackToHam() { }
+// UNUSED (0x8c). The materialised bool at THamuKuri::isCollidMove's first
+// nerve test is an inlined bool predicate, and this is the only UNUSED
+// candidate of the right size; the `if`/`return true` shape (rather than
+// `return a == b;`) is what materialises at the call site.
+bool THamuKuri::isAttackToHam()
+{
+	if (mSpine->getCurrentNerve() == &TNerveHamuKuriBoundFreeze::theNerve())
+		return true;
+
+	return false;
+}
 
 void THamuKuri::isSerialWallDie() { }
 
@@ -2468,7 +2480,7 @@ bool TDoroHamuKuri::isCollidMove(THitActor* param_1)
 			other->onLiveFlag(LIVE_FLAG_AIRBORNE);
 
 			if (!isAirborne()) {
-				JGeometry::TVec3<f32> local_4c = mPosition;
+				JGeometry::TVec3<f32> local_4c = param_1->mPosition;
 				mVelocity
 				    = calcVelocityToJumpToY(local_4c, 6.0f, getGravityY());
 				mPosition.y += 2.0f;
@@ -2484,7 +2496,7 @@ bool TDoroHamuKuri::isCollidMove(THitActor* param_1)
 					return true;
 				}
 
-				if (receiveMessage(param_1, HIT_MESSAGE_PUT)) {
+				if (pTVar1->receiveMessage(param_1, HIT_MESSAGE_PUT)) {
 					pTVar1->mPosition = param_1->mPosition;
 					if (pTVar1->receiveMessage(this, HIT_MESSAGE_TAKE)) {
 						other->unk198      = 0;
@@ -2492,24 +2504,26 @@ bool TDoroHamuKuri::isCollidMove(THitActor* param_1)
 						onHaveCap();
 						mHeldObject = pTVar1;
 
-						// TODO: this is an inline
-						int uVar11 = unk124->getCurGraphIndex();
+						// The cap hops along the *other* hamukuri's graph.
+						int uVar11 = other->getTracer()->getCurGraphIndex();
 
-						int count  = MsRandF(2, 3);
 						int uVar10 = -1;
+						TMsRange<s32> hops(2, 3);
+						int count = hops.rand();
 						for (int i = 0; i < count; ++i) {
-							int next = unk124->unk0->getRandomNextIndex(
-							    uVar11, uVar10, 0xffffffff);
+							int next
+							    = other->getTracer()->getGraph()
+							          ->getRandomNextIndex(uVar11, uVar10,
+							                               0xffffffff);
 							uVar10 = uVar11;
 							uVar11 = next;
 						}
 
-						if (uVar11 < 0)
-							uVar11 = 0;
-
 						JGeometry::TVec3<f32> VStack_60;
-						unk124->getGraph()->getGraphNode(uVar11).getPoint(
-						    &VStack_60);
+						other->getTracer()
+						    ->getGraph()
+						    ->getGraphNode(uVar11)
+						    .getPoint(&VStack_60);
 
 						JGeometry::TVec3<f32> local_6c = calcVelocityToJumpToY(
 						    VStack_60, mCapSpeed, getGravityY());

@@ -257,7 +257,7 @@ public:
 	void makeCapFly(TMapObjBase*);
 	void setWallDeadEffect();
 	void setAppearAnm();
-	void isAttackToHam();
+	bool isAttackToHam();
 	void isSerialWallDie();
 	void forceRoll(JGeometry::TVec3<f32>, bool);
 
