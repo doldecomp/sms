@@ -24,6 +24,10 @@ enum THitMessageType {
 	HIT_MESSAGE_PUT              = 0x6,
 	HIT_MESSAGE_THROWN           = 0x7,
 	HIT_MESSAGE_UNK8             = 0x8,
+	// The only receiver is TMario::receiveMessage's elec-attacker group
+	// (actor types 0x1000000B / 0x10000021 / 0x10000034), where it runs
+	// elecEffect() and MARIO_STATUS_ELECTRIC_DAMAGE.
+	HIT_MESSAGE_ELECTRIC_SHOCK   = 0x9,
 	HIT_MESSAGE_UNKA             = 0xA, // burn?
 	HIT_MESSAGE_UNKB             = 0xB,
 	HIT_MESSAGE_PUNCH            = 0xC,

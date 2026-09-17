@@ -220,8 +220,7 @@ void TAmiNoko::attackToMario()
 	}
 
 	if (canAttack) {
-		// TODO: message 9 has no name in THitMessageType yet.
-		if (SMS_SendMessageToMario(this, 9)) {
+		if (SMS_SendMessageToMario(this, HIT_MESSAGE_ELECTRIC_SHOCK)) {
 			if (mSpine->getCurrentNerve()
 			    != &TNerveAmiNokoFreeze::theNerve()) {
 				mSpine->pushNerve(&TNerveAmiNokoFreeze::theNerve());
