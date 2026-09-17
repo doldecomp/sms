@@ -43,10 +43,10 @@ void TMapObjBall::touchWall(JGeometry::TVec3<f32>* param_1,
 {
 	// Hitting a wall while rolling on the ground pops the ball up a little,
 	// scaled by how fast it was going. The watermelon is too heavy for that.
-	if (!checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
+	if (!isAirborne()) {
 		if (!isActorType(0x400000D0)) {
-			JGeometry::TVec3<f32> vel(mVelocity);
-			mVelocity.y += unk184 * vel.length();
+			mVelocity.y
+			    += unk184 * JGeometry::TVec3<f32>(mVelocity).length();
 		}
 	}
 
@@ -54,39 +54,43 @@ void TMapObjBall::touchWall(JGeometry::TVec3<f32>* param_1,
 		const TBGCheckData* wall = param_2->mResultWalls[i];
 
 		JGeometry::TVec3<f32> vel(mVelocity);
-		f32 into = vel.x * wall->mNormal.x + vel.y * wall->mNormal.y
-		    + vel.z * wall->mNormal.z;
-		if (into >= 0.0f)
-			continue;
+		f32 into = vel.x * wall->getNormal().x + vel.y * wall->getNormal().y
+		    + vel.z * wall->getNormal().z;
+		if (into < 0.0f) {
+			// Push the ball back out to exactly one radius from the plane.
+			// TODO: 98%. The ROM re-reads wall->mNormal.x and param_1->x
+			// after dist is complete; every spelling tried here (the raw
+			// member, getNormal(), a named normal reference) lets MWCC
+			// reuse the earlier loads.
+			f32 dist = param_1->x * wall->getNormal().x
+			        + param_1->y * wall->getNormal().y
+			        + param_1->z * wall->getNormal().z
+			    + wall->mPlaneDistance;
+			param_1->x += (mBodyRadius - dist) * wall->getNormal().x;
+			param_1->z += (mBodyRadius - dist) * wall->getNormal().z;
 
-		// Push the ball back out to exactly one radius from the plane.
-		f32 dist = param_1->x * wall->mNormal.x + param_1->y * wall->mNormal.y
-		        + param_1->z * wall->mNormal.z
-		    + wall->mPlaneDistance;
-		param_1->x += (mBodyRadius - dist) * wall->mNormal.x;
-		param_1->z += (mBodyRadius - dist) * wall->mNormal.z;
+			f32 bounce = into * -(1.0f + mMapObjData->mPhysical->unk4->unk8);
+			mVelocity.x += bounce * wall->getNormal().x;
+			mVelocity.z += bounce * wall->getNormal().z;
 
-		f32 bounce = into * -(1.0f + mMapObjData->mPhysical->unk4->unk8);
-		mVelocity.x += bounce * wall->mNormal.x;
-		mVelocity.z += bounce * wall->mNormal.z;
-
-		if (isActorType(0x400000D0)) {
-			if (mScaling.y >= 5.0f) {
-				JGeometry::TVec3<f32> after(mVelocity);
-				SMSGetMSound()->startSoundActorWithInfo(
-				    MSD_SE_OBJ_WATERMELON_BROLL, &mPosition, nullptr,
-				    abs(after.length()), 0, 0, nullptr, 0, 4);
+			if (isActorType(0x400000D0)) {
+				if (mScaling.y >= 5.0f) {
+					SMSGetMSound()->startSoundActorWithInfo(
+					    MSD_SE_OBJ_WATERMELON_BROLL, &mPosition, nullptr,
+					    abs(JGeometry::TVec3<f32>(mVelocity).length()), 0, 0,
+					    nullptr, 0, 4);
+				} else {
+					SMSGetMSound()->startSoundActorWithInfo(
+					    MSD_SE_OBJ_WATERMELON_SROLL, &mPosition, nullptr,
+					    abs(JGeometry::TVec3<f32>(mVelocity).length()), 0, 0,
+					    nullptr, 0, 4);
+				}
 			} else {
-				JGeometry::TVec3<f32> after(mVelocity);
+				u32 sound = mMapObjData->mSound->unk4->unk0[4];
 				SMSGetMSound()->startSoundActorWithInfo(
-				    MSD_SE_OBJ_WATERMELON_SROLL, &mPosition, nullptr,
-				    abs(after.length()), 0, 0, nullptr, 0, 4);
+				    sound, &mPosition, (Vec*)&mVelocity, 0.0f, 0, 0, nullptr,
+				    0, 4);
 			}
-		} else {
-			u32 sound = mMapObjData->mSound->unk4->unk0[4];
-			SMSGetMSound()->startSoundActorWithInfo(sound, &mPosition,
-			                                        (Vec*)&mVelocity, 0.0f, 0,
-			                                        0, nullptr, 0, 4);
 		}
 	}
 }
