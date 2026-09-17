@@ -516,7 +516,7 @@ TBPHeadHit::TBPHeadHit(TBossPakkun* owner, const char* name)
 
 BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 {
-	if (mOwner->mSpine->getLatestNerve() == &TNerveBPSleep::theNerve())
+	if (&TNerveBPSleep::theNerve() == mOwner->mSpine->getLatestNerve())
 		return mOwner->receiveMessage(sender, message);
 
 	s8 state = mOwner->mState;
@@ -563,8 +563,7 @@ BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 				mOwner->unk174
 				    = mOwner->getSaveParam2()->mSLWaterHitTimer.get();
 
-				if (mOwner->mSpine->getLatestNerve()
-				    != &TNerveBPSwallow::theNerve()) {
+				if (&TNerveBPSwallow::theNerve() != mOwner->mSpine->getLatestNerve()) {
 					mOwner->mSpine->reset();
 					mOwner->mSpine->setNext(&TNerveBPSwallow::theNerve());
 				}
@@ -574,7 +573,7 @@ BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 	}
 
 	if (mOwner->is2ndFightNow()) {
-		if (mOwner->mSpine->getLatestNerve() == &TNerveBPFly::theNerve())
+		if (&TNerveBPFly::theNerve() == mOwner->mSpine->getLatestNerve())
 			mOwner->showMessage(2);
 	}
 
@@ -646,7 +645,7 @@ TBPNavel::TBPNavel(TBossPakkun* owner, const char* name)
 
 BOOL TBPNavel::receiveMessage(THitActor* sender, u32 message)
 {
-	if (mOwner->mSpine->getLatestNerve() == &TNerveBPSleep::theNerve())
+	if (&TNerveBPSleep::theNerve() == mOwner->mSpine->getLatestNerve())
 		return mOwner->receiveMessage(sender, message);
 
 	if (sender->isActorType(ACTOR_TYPE_ENEMY | 1))
@@ -1006,9 +1005,9 @@ void TBossPakkun::gotHipDropDamage()
 	mState = BOSSPAKU_STATE_NORMAL;
 
 	if (getHitPoints() == 0) {
-		if (mSpine->getLatestNerve() == &TNerveBPPreDie::theNerve())
+		if (&TNerveBPPreDie::theNerve() == mSpine->getLatestNerve())
 			return;
-		if (mSpine->getLatestNerve() == &TNerveBPDie::theNerve())
+		if (&TNerveBPDie::theNerve() == mSpine->getLatestNerve())
 			return;
 
 		mSpine->setNext(&TNerveBPPreDie::theNerve());
@@ -1019,7 +1018,7 @@ void TBossPakkun::gotHipDropDamage()
 		return;
 	}
 
-	if (mSpine->getLatestNerve() == &TNerveBPTumbleOut::theNerve())
+	if (&TNerveBPTumbleOut::theNerve() == mSpine->getLatestNerve())
 		return;
 
 	if (gpMSound->gateCheck(MSD_SE_BS_BSPAKU_DAMAGE))
@@ -1146,15 +1145,15 @@ const char** TBossPakkun::getBasNameTable() const { return bosspakkun_bastable; 
 
 void TBossPakkun::setGroundCollision()
 {
-	if (mSpine->getLatestNerve() == &TNerveBPDie::theNerve())
+	if (&TNerveBPDie::theNerve() == mSpine->getLatestNerve())
 		return;
-	if (mSpine->getLatestNerve() == &TNerveBPTumbleOut::theNerve())
+	if (&TNerveBPTumbleOut::theNerve() == mSpine->getLatestNerve())
 		return;
 	if (!mMapCollisionManager)
 		return;
 
-	Mtx mtx;
-	JGeometry::gekko_ps_copy12(mtx, getModel()->getAnmMtx(2));
+	JGeometry::SMatrix34C<f32> mtx;
+	mtx.set(getModel()->getAnmMtx(2));
 	if (mMapCollisionManager->getUnk8())
 		mMapCollisionManager->getUnk8()->moveMtx(mtx);
 }
@@ -1177,7 +1176,7 @@ BOOL TBossPakkun::receiveMessage(THitActor* sender, u32 message)
 	if (((TBossPakkunManager*)getManager())->mIsLightVersion)
 		return FALSE;
 
-	if (mSpine->getLatestNerve() == &TNerveBPSleep::theNerve()) {
+	if (&TNerveBPSleep::theNerve() == mSpine->getLatestNerve()) {
 		if (sender->isActorType(0x1000000D)) {
 			mSpine->reset();
 			mSpine->setNext(&TNerveBPBreakSleep::theNerve());
@@ -1254,7 +1253,7 @@ void TBossPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 
 		if (mState == BOSSPAKU_STATE_BELLY_UP && checkMarioRiding()) {
-			if (mSpine->getLatestNerve() != &TNerveBPJumpReact::theNerve())
+			if (&TNerveBPJumpReact::theNerve() != mSpine->getLatestNerve())
 				mSpine->pushNerve(&TNerveBPJumpReact::theNerve());
 		}
 	}
@@ -1302,7 +1301,7 @@ void TBossPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (!((TBossPakkunManager*)mManager)->mIsLightVersion) {
 		// The death animation lives on its own model, so the base class is
 		// handed mEndMActor for one frame.
-		if (mSpine->getLatestNerve() == &TNerveBPDie::theNerve()) {
+		if (&TNerveBPDie::theNerve() == mSpine->getLatestNerve()) {
 			MActor* body = getMActor();
 			mMActor      = mEndMActor;
 			TSpineEnemy::perform(cue, graphics);
@@ -1329,9 +1328,8 @@ void TBossPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (!((TBossPakkunManager*)mManager)->mIsLightVersion && (cue & 0x200)) {
-		if (mSpine->getLatestNerve() == &TNerveBPPreDie::theNerve()
-		    || mSpine->getLatestNerve()
-		           == &TNerveBPStompReact::theNerve()) {
+		if (&TNerveBPPreDie::theNerve() == mSpine->getLatestNerve()
+		    || &TNerveBPStompReact::theNerve() == mSpine->getLatestNerve()) {
 			getMActor()->offMakeDL();
 			SMS_AddDamageFogEffect(getMActor()->getModel()->getModelData(),
 			                       mPosition, graphics);
