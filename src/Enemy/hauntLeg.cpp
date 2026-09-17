@@ -22,33 +22,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// TODO: fabricated. MathUtil.hpp has header inlines for the X and Y rotations
-// (both weak in the map, from MapObjPinna.o and MapObjFence.o) but none for Z,
-// and the map has no MsMtxSetRotZ symbol anywhere, so either it was written out
-// at this one call site or it is a third sibling inline that happens to be
-// expanded in every TU that uses it. Parked here as a TU-local per the batch
-// rules rather than added to the shared header.
-static inline void MsMtxSetRotZ(MtxPtr mtx, f32 angle)
-{
-	f32 sin = JMASSin(DEG2SHORTANGLE(angle));
-	f32 cos = JMASCos(DEG2SHORTANGLE(angle));
-
-	mtx[0][0] = cos;
-	mtx[0][1] = -sin;
-	mtx[0][2] = 0.0f;
-	mtx[0][3] = 0.0f;
-
-	mtx[1][0] = sin;
-	mtx[1][1] = cos;
-	mtx[1][2] = 0.0f;
-	mtx[1][3] = 0.0f;
-
-	mtx[2][0] = 0.0f;
-	mtx[2][1] = 0.0f;
-	mtx[2][2] = 1.0f;
-	mtx[2][3] = 0.0f;
-}
-
 static const char* hauntleg_bastable[] = {
 	nullptr,
 	nullptr,

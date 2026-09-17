@@ -144,6 +144,30 @@ inline void MsMtxSetRotY(MtxPtr mtx, f32 angle)
 	mtx[2][2] = cos;
 	mtx[2][3] = 0.0f;
 }
+// The third sibling. The map has no MsMtxSetRotZ symbol anywhere, so unlike
+// MsMtxSetRotX and MsMtxSetRotY it happens to be expanded in every TU that
+// uses it; it still belongs beside them rather than in hauntLeg.cpp.
+inline void MsMtxSetRotZ(MtxPtr mtx, f32 angle)
+{
+	f32 sin = JMASSin(DEG2SHORTANGLE(angle));
+	f32 cos = JMASCos(DEG2SHORTANGLE(angle));
+
+	mtx[0][0] = cos;
+	mtx[0][1] = -sin;
+	mtx[0][2] = 0.0f;
+	mtx[0][3] = 0.0f;
+
+	mtx[1][0] = sin;
+	mtx[1][1] = cos;
+	mtx[1][2] = 0.0f;
+	mtx[1][3] = 0.0f;
+
+	mtx[2][0] = 0.0f;
+	mtx[2][1] = 0.0f;
+	mtx[2][2] = 1.0f;
+	mtx[2][3] = 0.0f;
+}
+
 void MsMtxSetXYZRPH(MtxPtr mtx, f32 x, f32 y, f32 z, s16 r, s16 p, s16 h);
 inline void MsMtxSetXYZRPH(MtxPtr mtx, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h)
 {
