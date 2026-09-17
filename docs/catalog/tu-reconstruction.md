@@ -29,6 +29,14 @@ Integer params are `TParamRT<s32>` (mangles `TParamT<l>`); `TParamRT<int>` gives
 Filenames matter too: `/Mario/DmgHamukuri.prm`, not `Hamakuri`, or the whole string pool shifts.
 Wrong defaults cause register differences far from the store (TMario constructor: `TEParams` down type 1, motor 25, minimum speed 16.0f, invincibility 300).
 
+## Literal numbering and dead-code data
+
+- Aggregate-initialiser templates are emitted at parse time, dead code included: a `.rodata` `@NNNN` object can belong to a function the linker stripped, so a missing prefix in the section blob may only be recoverable by reconstructing (or stubbing) a dead body. `.rodata` is one blob per TU under `-str reuse,readonly`, so it must match even for UNUSED functions; `.data` entries are individually strippable and the map marks them UNUSED. Proved by `ShadowUtil`'s two `f32[4]` corner tables (`TModelShadow::draw`) and the unreferenced `J3DJoint.hpp` literals present in both objects.
+- `@NNNN`/`$NNNN` numbers come from one counter read at two times: named local statics, aggregate templates and function-local classes take theirs at **parse** (monotonic in source line); string literals at **deferred codegen** (higher than every parse-time number). A function-local class's `$NNNN` is the one thing a smaller include set makes unmatchable: `ShadowUtil`'s six local classes are off by a constant 1277 with byte-identical bodies (4,116 bytes reported missing/extra on the name alone). Not fixable inside the unit.
+- `.sdata2` interleaves each short `PARAM_INIT` name with the literal for its default, so a lone unexplained constant between two names names its parameter (`TWaterEmitInfo::mSize` = 17.0f).
+- dtk can infer a false relocation inside a data blob (`tmp_data` scores 99.9% forever because four bytes at 0xc10 look like an address); check before hunting a data mismatch that does not exist.
+- `System/StageUtil.hpp` emits its four static tables (400 bytes of `.data`) into every includer; declare the one function you need instead (second confirmation).
+
 ## Animation indices from the `.bas` table
 
 A unit's `_bastable` names only some animation slots, but the model's `.bck` files are indexed in alphabetical order, so filling the gaps alphabetically recovers every name and every `setBckAnm`/`isBckAnm` constant (`amiNoko`: six named slots gave all sixteen, including the `end/loop/start` triples three apart that a flag selects between).

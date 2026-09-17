@@ -225,6 +225,16 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `ShadowUtil` and `ModelWaterManager` (GX)
+
+- Per-component member assignment vs `set(x, y, z)` is a frame lever, not just store order: `set()` on a stack array element reserved three slots per call (`calcDrawVtx` 48 bytes over), and per-component stores also force the member re-reads retail has.
+- A double literal in a float expression shows three ways: an `lfd` of an 8-byte `@NNNN`, `fmadd`/`fmul` instead of the `s` forms, and a trailing `frsp`; in the data listing as a 4-byte `.sdata2` constant missing or at 66-75%. `2.0` -> `2.0f` was +28 and +10 points on two matrix builders.
+- Six scalar min/max accumulators seeded from `p[0] ± 1.0f`, not `TVec3::setMin/setMax` (which forces memory) (`calcWorldMinMax` 10 -> 100).
+- The stretch factor `(1.0f / MsSqrtf(speedSq)) * (1.414f * 0.5f * size)`; `vtx[4]` declared first in the loop body; `TDLTexQuad` slots 0x10/0x14/0x18 are `reset`/`request`/`setEnd`.
+- A rotation clamp with an extra `fmr` is `f32 rotY = angle; if (rx > rz) rotY = angle - 90.0f;` (ternary 96.1, `-=` 97.4, this 98.7).
+- `JUtility::TColor(GXColor)` takes its argument by value, costing a third dead slot at every `GXSetChanMatColor(..., TColor(c))` site; retail has two. A `const GXColor&` parameter would fix it (global; open).
+- `new J3DMtxCalcBasicAnm(...)` in a dead constructor instantiates nine weak J3D symbols byte-identically; a `.sdata2` order (`90.0f` before `0.08f`) can fix source statement order.
+
 ## Rules from `bossgesso`
 
 - A missing base-class initialiser shows as a string in the wrong section: omitting `THitActor(name)` never emits the TU's `"胴体"` (`.sdata2`) and adds an extra `"HitActor"` in `.rodata`. Literals of 8 bytes or less land in `.sdata2`, longer in `.rodata`.
