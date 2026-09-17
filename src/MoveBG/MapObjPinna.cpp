@@ -16,6 +16,7 @@
 #include <Map/MapCollisionEntry.hpp>
 #include <Map/MapCollisionManager.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Player/Yoshi.hpp>
 #include <Strategic/ObjManager.hpp>
@@ -386,8 +387,7 @@ void TPinnaShell::control()
 	case STATE_CLOSED:
 		// Drifting shut again at a randomised rate.
 		if (mRotX < 0.0f)
-			mRotX += TShellCup::mCloseAccel
-			         * (0.5f * (3.0517578e-05f * (f32)rand()) + 0.5f);
+			mRotX += TShellCup::mCloseAccel * (0.5f * MsRandF() + 0.5f);
 		else
 			mRotX = 0.0f;
 		break;
@@ -583,8 +583,7 @@ void TShellCup::initMapObj()
 		mShells[i].mJointMtx   = getModel()->getAnmMtx(i + 1);
 		mShells[i].mJoint
 		    = getModel()->getModelData()->getJointNodePointer(i + 1);
-		mShells[i].mTimer
-		    = (int)(1200.0f * (3.0517578e-05f * (f32)rand()));
+		mShells[i].mTimer = (int)(1200.0f * MsRandF());
 		mShells[i].mOwner = this;
 
 		joinToGroup("オブジェクトグループ", &mShells[i]);
@@ -867,6 +866,12 @@ void TAmiKing::moveObject()
 		// Wake up when the gate the net is sitting on gets broken.
 		TMapObjBase* gate = (TMapObjBase*)mGroundPlane->mActor;
 		if (gate->mActorType == 0x4000006A) {
+			// TODO: 92.8%. Retail normalises the whole chain once more after
+			// the fourth test (li 1 / li 0 / clrlwi. / beq) where this form
+			// branches straight into the body. Assigning the chain to a bool
+			// local and routing it through a bool-returning helper both give
+			// three nested flag registers instead of retail's one, so neither
+			// is it.
 			if (gate->isState(TMapObjGeneral::STATE_BREAKING)
 			    || gate->isState(TMapObjGeneral::STATE_TOUCHING_WATER)
 			    || gate->isState(TMapObjGeneral::STATE_TOUCHING_PLAYER)
