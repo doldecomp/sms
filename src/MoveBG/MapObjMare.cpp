@@ -23,6 +23,7 @@
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
+#include <JSystem/JUtility/JUTColor.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <string.h>
 
@@ -145,7 +146,7 @@ void TCogwheel::initDraw() const
 	              GX_AF_NONE);
 
 	GXColor color = { 0, 0, 100, 255 };
-	GXSetChanMatColor(GX_COLOR0A0, color);
+	GXSetChanMatColor(GX_COLOR0A0, JUtility::TColor(color));
 
 	GXSetNumTexGens(1);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY,
@@ -165,8 +166,8 @@ void TCogwheel::initDraw() const
 	GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
 	                GX_TRUE, GX_TEVPREV);
 
-	GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ZERO, GX_LO_NOOP);
-	GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+	GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
+	GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_OR, GX_ALWAYS, 0);
 	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
 	GXSetCullMode(GX_CULL_BACK);
 }
@@ -300,10 +301,16 @@ void TCogwheel::initMapObj()
 {
 	TMapObjBase::initMapObj();
 
-	f32 radius = sRadius;
-	f32 rad    = 0.017453294f * mRotation.y;
-	f32 cos    = cosf(rad);
-	f32 sin    = sinf(rad);
+	// TODO: the ROM keeps a literal `0.0f * sin` and `0.0f * cos` here (the
+	// z component of the unrotated (sRadius, 0, 0) offset), which means the
+	// rotation came out of an inlined helper -- MWCC only fails to fold a
+	// multiply by zero across an inline boundary. No such helper has been
+	// found: TMapObjBase::rotateVecByAxisY is a full three-axis rotation and
+	// is never called here, and spelling the zeros out folds them away.
+	f32 radius  = sRadius;
+	f32 rad     = 0.017453294f * mRotation.y;
+	f32 cos     = cosf(rad);
+	f32 sin     = sinf(rad);
 	f32 offsetX = radius * cos - 0.0f * sin;
 	f32 offsetZ = radius * sin + 0.0f * cos;
 
@@ -314,11 +321,9 @@ void TCogwheel::initMapObj()
 	    "cogwheel_plate", pos, mRotation, scale);
 	mPlate->mIsUpper  = true;
 	mPlate->mCogwheel = this;
-	mPlate->initMapObj();
+	mPlate->appear();
 
-	mPlateRopePos.x = pos.x;
-	mPlateRopePos.y = mPosition.y;
-	mPlateRopePos.z = pos.z;
+	mPlateRopePos.set(pos.x, mPosition.y, pos.z);
 
 	pos.set(mPosition.x - offsetX, mPosition.y, mPosition.z + offsetZ);
 	JGeometry::TVec3<f32> potScale(1.0f, 1.0f, 1.0f);
@@ -326,11 +331,9 @@ void TCogwheel::initMapObj()
 	    "cogwheel_pot", pos, mRotation, potScale);
 	mPot->mIsUpper  = false;
 	mPot->mCogwheel = this;
-	mPot->initMapObj();
+	mPot->appear();
 
-	mPotRopePos.x = pos.x;
-	mPotRopePos.y = mPosition.y;
-	mPotRopePos.z = pos.z;
+	mPotRopePos.set(pos.x, mPosition.y, pos.z);
 
 	// The Noki Bay pair of balances differ only in tuning; the upper one is
 	// slower and has a shorter rope.
@@ -362,7 +365,7 @@ void TCogwheel::initMapObj()
 		mPlate->mWaterAmountMax = 0.0f;
 	}
 
-	mPlateRopeLength = mRopeLength * 0.5f;
+	mPlateRopeLength = mRopeLength / 2.0f;
 }
 
 TCogwheel::TCogwheel(const char* name)
@@ -399,7 +402,7 @@ void TMapObjElasticCode::draw() const
 	              GX_AF_NONE);
 
 	GXColor color = { 0, 0, 100, 255 };
-	GXSetChanMatColor(GX_COLOR0A0, color);
+	GXSetChanMatColor(GX_COLOR0A0, JUtility::TColor(color));
 
 	GXSetNumTexGens(0);
 	GXSetNumTevStages(1);
@@ -413,8 +416,8 @@ void TMapObjElasticCode::draw() const
 	GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
 	                GX_TRUE, GX_TEVPREV);
 
-	GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ZERO, GX_LO_NOOP);
-	GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+	GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
+	GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_OR, GX_ALWAYS, 0);
 	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
 	GXSetCullMode(GX_CULL_NONE);
 	GXSetLineWidth(24, GX_TO_ZERO);
@@ -501,9 +504,9 @@ u32 TMapObjGrowTree::touchWater(THitActor* water)
 	if (water->mPosition.y > mPosition.y + mInitialHeight)
 		return 0;
 
-	if (mState == 1) {
+	if (isState(1)) {
 		startAnim(1);
-		getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
+		getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.0f);
 		mState = 2;
 	}
 
@@ -514,8 +517,9 @@ u32 TMapObjGrowTree::touchWater(THitActor* water)
 		soundBas(MSD_SE_OBJ_SANDBOMB_WATER_3, 103.0f, mGrowSpeed);
 		soundBas(MSD_SE_OBJ_SANDBOMB_WATER_4, 137.0f, mGrowSpeed);
 
+		f32 rate = mGrowSpeed;
 		getMActor()->getFrameCtrl(ANM_TYPE_BCK)
-		    ->setFrame(mGrowSpeed
+		    ->setFrame(rate
 		               + getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame());
 		updateHeight();
 
@@ -539,7 +543,7 @@ void TMapObjGrowTree::control()
 {
 	TMapObjBase::control();
 
-	if (mState == 2 && mColCount == 0 && !isStateTimerEngaged()
+	if (isState(2) && mColCount == 0 && !isStateTimerEngaged()
 	    && getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame() > 0.0f) {
 		if (getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
 		    < mGrowEndFrame)
@@ -555,8 +559,8 @@ void TMapObjGrowTree::control()
 			return;
 		}
 
-		if (67.0f < getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
-		    && getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame() < 240.0f)
+		f32 frame = getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
+		if (67.0f <= frame && frame <= 240.0f)
 			gpMSound->startSoundActor(MSD_SE_OBJ_SAMDBOMB_REVERSE, &mPosition,
 			                          0, nullptr, 0, 4);
 
@@ -617,7 +621,7 @@ void TWireBell::initDraw() const
 	              GX_AF_NONE);
 
 	GXColor color = { 0, 0, 100, 255 };
-	GXSetChanMatColor(GX_COLOR0A0, color);
+	GXSetChanMatColor(GX_COLOR0A0, JUtility::TColor(color));
 
 	GXSetNumTexGens(1);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY,
@@ -637,8 +641,8 @@ void TWireBell::initDraw() const
 	GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
 	                GX_TRUE, GX_TEVPREV);
 
-	GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ZERO, GX_LO_NOOP);
-	GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+	GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
+	GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_OR, GX_ALWAYS, 0);
 	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
 	GXSetCullMode(GX_CULL_BACK);
 }
@@ -716,9 +720,7 @@ void TMapObjPuncher::touchPlayer(THitActor* player)
 	makeVecToLocalZ(1.0f, &dir);
 
 	JGeometry::TVec3<f32> dest(*gpMarioPos);
-	JGeometry::TVec3<f32> offset(dir);
-	offset.scale(100.0f);
-	dest.add(offset);
+	dest += dir * 100.0f;
 	SMS_MarioMoveRequest(dest);
 	SMS_SendMessageToMario(this, HIT_MESSAGE_THROWN);
 	SMS_ThrowMario(dir, mThrowSpeed);
@@ -774,21 +776,21 @@ void TMuddyBoat::moveByWater()
 	JGeometry::TVec3<f32> spray(-emitMtx[0][0], 0.0f, -emitMtx[2][0]);
 	MsVECNormalize(&spray, &spray);
 
+	// The boat's heading, flat in XZ. Keeping the y as a literal 0.0f inside a
+	// real vector is what leaves the ROM's trivial `y * 0.0f` products in both
+	// dot products; spelling the dots out folds them away.
 	MtxPtr mtx = getModel()->getAnmMtx(0);
-	f32 dirX   = mtx[0][2];
-	f32 dirZ   = mtx[2][2];
-	f32 push   = spray.z * dirZ + (spray.x * dirX + spray.y * 0.0f);
+	JGeometry::TVec3<f32> dir(mtx[0][2], 0.0f, mtx[2][2]);
+	f32 push = spray.dot(dir);
 
 	JGeometry::TVec3<f32> toMario;
 	getNormalVecFromTargetXZ(gpMarioPos->x, gpMarioPos->z, &toMario);
 	if (toMario.x != 0.0f || toMario.z != 0.0f)
 		MsVECNormalize(&toMario, &toMario);
 
-	// Cross the spray direction against the boat's heading to decide which way
-	// the hit spins it.
-	f32 side = dirZ * (spray.x - dirX) - dirX * (spray.z - dirZ);
-	f32 into = dirZ * toMario.z + (dirX * toMario.x + 0.0f * toMario.y);
-	if (side * into > 0.0f)
+	// Which side of the boat the spray landed on decides the turn direction.
+	f32 side = dir.z * (spray.x - dir.x) - dir.x * (spray.z - dir.z);
+	if (side * dir.dot(toMario) > 0.0f)
 		mTurnSpeed += mTurnAccel * (1.0f - fabsf(push));
 	else
 		mTurnSpeed -= mTurnAccel * (1.0f - fabsf(push));
@@ -842,7 +844,7 @@ void TMuddyBoat::touchWall(JGeometry::TVec3<f32>* pos,
 	mEffectPos.y = 100.0f + (mPosition.y - mYOffset);
 	mEffectPos.z = z;
 
-	pos->set(mPosition);
+	*pos = mPosition;
 	kill();
 	mLinearVelocity.zero();
 }
@@ -880,34 +882,40 @@ void TMuddyBoat::bind()
 		Mtx flow;
 		MsMtxSetXYZRPH(flow, 0.0f, 0.0f, 0.0f, info.unk18.x, info.unk18.y,
 		               info.unk18.z);
-		mSpeed += 0.0001f
-		    * ((mtx[0][2] * flow[0][2] + 0.0f + mtx[2][2] * flow[2][2])
-		       * info.unk40);
+		f32 alongHeading = 0.0f;
+		alongHeading += mtx[0][2] * flow[0][2];
+		alongHeading += mtx[2][2] * flow[2][2];
+		mSpeed += 0.0001f * (alongHeading * info.unk40);
 	}
 
-	f32 waterY = mPosition.y - mYOffset;
 	const TBGCheckData* ground;
-	if (gpMap->checkGroundIgnoreWaterSurface(next, &ground) > waterY - 100.0f
-	    || ground->isIllegalData()) {
-		next.set(mPosition);
+	f32 groundY = gpMap->checkGroundIgnoreWaterSurface(next, &ground);
+	f32 waterY  = mPosition.y - mYOffset;
+	if (groundY > waterY - 100.0f || ground->isIllegalData()) {
+		next = mPosition;
 		kill();
 		mLinearVelocity.zero();
 		return;
 	}
 
-	JGeometry::TVec3<f32> probe(mtx[0][2] * mFrontOffset + next.x, waterY,
-	                            mtx[2][2] * mFrontOffset + next.z);
+	JGeometry::TVec3<f32> probe;
+	probe.x = mtx[0][2] * mFrontOffset + next.x;
+	probe.y = waterY;
+	probe.z = mtx[2][2] * mFrontOffset + next.z;
 	bindToWall(probe, mWallRadiusFront, &next);
 	if (checkLiveFlag(LIVE_FLAG_UNK10))
 		return;
 
-	probe.set(-(mtx[0][2] * mBackOffset - next.x), mPosition.y - mYOffset,
-	          -(mtx[2][2] * mBackOffset - next.z));
+	probe.x = -(mtx[0][2] * mBackOffset - next.x);
+	probe.y = mPosition.y - mYOffset;
+	probe.z = -(mtx[2][2] * mBackOffset - next.z);
 	bindToWall(probe, mWallRadiusBack, &next);
 	if (checkLiveFlag(LIVE_FLAG_UNK10))
 		return;
 
-	probe.set(next.x, mPosition.y - mYOffset, next.z);
+	probe.x = next.x;
+	probe.y = mPosition.y - mYOffset;
+	probe.z = next.z;
 	bindToWall(probe, mWallRadiusCenter, &next);
 	if (checkLiveFlag(LIVE_FLAG_UNK10))
 		return;
@@ -932,7 +940,7 @@ void TMuddyBoat::control()
 		                                  nullptr, 0, 4);
 		if (mTurnSpeed != 0.0f) {
 			mRotation.y += mTurnSpeed;
-			mRotation.y = MsAngleWrap(mRotation.y);
+			mRotation.y = MsWrap(mRotation.y, 0.0f, 360.0f);
 			mTurnSpeed *= mTurnDecay;
 			if (fabsf(mTurnSpeed) < 0.0001f)
 				mTurnSpeed = 0.0f;
@@ -980,7 +988,21 @@ void TMuddyBoat::calc()
 	MsMtxSetXYZRPH(getModel()->getAnmMtx(0), x, waveY, z, 0,
 	               (s16)(182.04445f * yaw), 0);
 
+	// The redundant identity initialiser is the ROM's: MTXScale overwrites
+	// all twelve elements right after it.
 	Mtx scale;
+	scale[0][0] = 1.0f;
+	scale[0][1] = 0.0f;
+	scale[0][2] = 0.0f;
+	scale[0][3] = 0.0f;
+	scale[1][0] = 0.0f;
+	scale[1][1] = 1.0f;
+	scale[1][2] = 0.0f;
+	scale[1][3] = 0.0f;
+	scale[2][0] = 0.0f;
+	scale[2][1] = 0.0f;
+	scale[2][2] = 1.0f;
+	scale[2][3] = 0.0f;
 	MTXScale(scale, mInitialScaling.x, mInitialScaling.y, mInitialScaling.z);
 	MTXConcat(getModel()->getAnmMtx(0), scale, getModel()->getAnmMtx(0));
 
