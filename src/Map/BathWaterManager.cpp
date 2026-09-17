@@ -481,7 +481,28 @@ public:
 	/* 0x8C */ TBathWaterParams* unk8C;
 };
 
-static void initScreen2D(s16, s16) { }
+// UNUSED (0x150): inlined at every 2D-overlay site. It has to be a real
+// function, not the block written out, because it is the extra inline level
+// that leaves `bl SMatrix34C<f>::SMatrix34C()` for the scratch matrix: at
+// depth 1 the whole TPosition3f constructor chain expands.
+static void initScreen2D(s16 w, s16 h)
+{
+	TPosition3f mtx;
+	mtx.identity();
+	Mtx44 ortho;
+	C_MTXOrtho(ortho, 0.0f, (f32)h, 0.0f, (f32)w, -1.0f, 1.0f);
+	GXSetProjection(ortho, GX_ORTHOGRAPHIC);
+	GXSetViewport(0.0f, 0.0f, (f32)w, (f32)h, 0.0f, 1.0f);
+	GXSetScissor(0, 0, w, h);
+	GXLoadPosMtxImm(mtx, GX_PNMTX0);
+	GXSetCurrentMtx(GX_PNMTX0);
+	GXSetCullMode(GX_CULL_BACK);
+	GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
+	GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA,
+	               GX_LO_NOOP);
+	GXSetColorUpdate(GX_TRUE);
+	GXSetAlphaUpdate(GX_FALSE);
+}
 
 static void drawCap(const JGeometry::TVec3<f32>& pos, f32 radius)
 {
@@ -855,7 +876,7 @@ public:
 		GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
 		                GX_TRUE, GX_TEVPREV);
 		GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_OR, GX_ALWAYS, 0);
-		GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
+		GXSetZMode(GX_TRUE, GX_LESS, GX_FALSE);
 		GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ONE, GX_LO_NOOP);
 		GXSetColorUpdate(GX_FALSE);
 		GXSetAlphaUpdate(GX_TRUE);
@@ -875,8 +896,8 @@ public:
 			TBathWaterParams* p = params[i];
 			if (p->isVisible.get()) {
 				f32 size = p->texScale.get() * p->dropRadius.get();
-				f32 rx = r0 * size, ry = r1 * size, rz = r2 * size;
 				f32 ux = u0 * size, uy = u1 * size, uz = u2 * size;
+				f32 rx = r0 * size, ry = r1 * size, rz = r2 * size;
 				GXBegin(GX_QUADS, GX_VTXFMT0, (waters[i]->unk74 * 4) & 0xfffc);
 				for (TBathWater::TDrop* d = waters[i]->unk88;
 				     d < waters[i]->unk88 + waters[i]->unk74; ++d) {
@@ -946,21 +967,7 @@ public:
 
 		s16 w2 = SMSGetGameRenderWidth();
 		s16 h2 = SMSGetGameRenderHeight();
-		TPosition3f mtx;
-		mtx.identity();
-		Mtx44 ortho;
-		C_MTXOrtho(ortho, 0.0f, (f32)h2, 0.0f, (f32)w2, -1.0f, 1.0f);
-		GXSetProjection(ortho, GX_ORTHOGRAPHIC);
-		GXSetViewport(0.0f, 0.0f, (f32)w2, (f32)h2, 0.0f, 1.0f);
-		GXSetScissor(0, 0, w2, h2);
-		GXLoadPosMtxImm(mtx, GX_PNMTX0);
-		GXSetCurrentMtx(GX_PNMTX0);
-		GXSetCullMode(GX_CULL_BACK);
-		GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
-		GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA,
-		               GX_LO_NOOP);
-		GXSetColorUpdate(GX_TRUE);
-		GXSetAlphaUpdate(GX_FALSE);
+		initScreen2D(w2, h2);
 
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 		GXPosition2s16(0, 0);
