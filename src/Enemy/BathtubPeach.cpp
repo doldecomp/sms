@@ -90,7 +90,8 @@ public:
 	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const
 	{
 		TBathtubPeach* peach = (TBathtubPeach*)spine->getBody();
-		TBathtub* bathtub = JDrama::TNameRefGen::search<TBathtub>("バスタブ");
+		TBathtub* bathtub
+		    = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
 
 		if (bathtub->unk29A)
 			return FALSE;
@@ -270,7 +271,8 @@ BOOL TBathtubPeach::receiveMessage(THitActor* sender, u32 message)
 
 void TBathtubPeach::calcRootMatrix()
 {
-	TBathtub* bathtub = JDrama::TNameRefGen::search<TBathtub>("バスタブ");
+	TBathtub* bathtub
+	    = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
 
 	if (bathtub && bathtub->unk29A)
 		MTXCopy(bathtub->getPeachMtxInDemo(), getModel()->getBaseTRMtx());
