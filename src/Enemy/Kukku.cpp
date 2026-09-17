@@ -397,25 +397,39 @@ void TKukku::doFlyToCurPathNode()
 	mLinearVelocity = calcMomentum(getSaveParams()->getMarchSpeed());
 }
 
-// TODO: 99.8%, and our frame is 0x18 *larger* than the target's 0x70.
-// The bigger open problem is that both nerves expand this function while
-// retail calls it at depth 1 (`mr r3, r30; bl updateRotation`), which by the
-// measured budget in docs/catalog/codegen-tells.md means retail's body had at
-// least 15 counted statements; this one has 12. Four throwaway counted
-// statements confirm the mechanism and the prize: TNerveKukkuRecoverGraph
-// 0.0 -> 67.7% and TNerveKukkuGraphWander 42.0 -> 92.9%, with this function
-// still at 99.8%. Three or four *real* statements are needed, and they must
-// cost no frame, since the frame is already over. Splitting an initialised
-// declaration does not help (`f32 x; x = e;` counts the same as `f32 x = e;`),
-// and neither does an uninitialised declaration or an empty statement.
-// Likely candidates, unverified: a named calcMinimumTurnRadius() result, and
-// the two isFalling() factors written as their own statements.
+// Instruction-exact (99.8%); the residual is a 0x18 frame excess against the
+// target's 0x70, which is the same excess the twelve-statement version had.
+//
+// Retail *calls* this at depth 1 (`mr r3, r30; bl updateRotation`), so by the
+// statement budget in docs/catalog/codegen-tells.md its body needed 15 counted
+// statements. The three that were missing are the ones written out below, and
+// all three are readable off the asm rather than guessed:
+//   - `length()` split into `squared()` plus TUtil<f32>::sqrt: the ROM's three
+//     `fmuls`/two `fadds`, the `fcmpo 0.0f` guard and the single Newton step
+//     are exactly that pair, and the split is also worth 8 bytes of frame.
+//   - the two banking factors named per component, because the ROM expands
+//     isFalling() twice (two `getLatestNerve` reads and four theNerve()
+//     calls) instead of reusing one value.
+// Together they take TNerveKukkuRecoverGraph::execute 0.0 -> 67.7% and
+// TNerveKukkuGraphWander::execute 42.0 -> 92.9%.
+//
+// Measured and rejected: naming `0.5f * dist` inside the branch instead of one
+// of the above (14 statements, both nerves back to 0.0/42.0); splitting the
+// two parameter fetches into declaration plus assignment (no effect at all);
+// keeping `length()` with the two bank locals (nerves back to 0.0/42.0 *and*
+// frame 0x90).
+//
+// TODO: the remaining 0x18 is 0x14 of inline-expansion temporaries below
+// `toGoal` plus one extra 4-byte named local above it -- the ROM has exactly
+// one there, we have two -- so one of our four scalars wants a register home
+// we cannot give it.
 void TKukku::updateRotation()
 {
 	JGeometry::TVec3<f32> toGoal(getUnkF4().getPoint());
 	toGoal.sub(mPosition);
 
-	f32 dist = toGoal.length();
+	f32 distSq = toGoal.squared();
+	f32 dist   = JGeometry::TUtil<f32>::sqrt(distSq);
 	if (dist < 100.0f)
 		return;
 
@@ -430,8 +444,10 @@ void TKukku::updateRotation()
 
 	// A falling gull keeps the yaw it had but loses its banking; retail
 	// evaluates isFalling() once per component.
-	mRotation.x *= isFalling() ? 0.0f : 1.0f;
-	mRotation.z *= isFalling() ? 0.0f : 1.0f;
+	f32 bankX = isFalling() ? 0.0f : 1.0f;
+	mRotation.x *= bankX;
+	f32 bankZ = isFalling() ? 0.0f : 1.0f;
+	mRotation.z *= bankZ;
 }
 
 // TODO: 92.9%. Size-exact against the map but expanded at every call site,
