@@ -20,6 +20,20 @@
 // rogue include needed for matching the .rodata string pool prefix
 #include <System/DummyStrings.hpp>
 
+// TODO: System/StageUtil.hpp's scScenarioNameTable is the Japanese table; the
+// US one skips message ids 8 and 9 and shifts every later group by two:
+//   { 0, 1, 2, 3, 4, 5, 6, 7, 0xA, 0xB,
+//     0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D,
+//     0xC, 0xD, 0xE, 0xF, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15,
+//     0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33,
+//     0x3E, 0x3F, 0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47,
+//     0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,
+//     0x20, 0x23, 0x22, 0x25, 0x24, 0x21, 0x26, 0x27, 0x28, 0x29 }
+// It is the only remaining .data mismatch in this TU, and it is shared with
+// GC2D/SelectMenu, GC2D/Guide and GC2D/CardLoad, so it is not changed here.
+// The header is also missing scNormalStageTable (UNUSED here, linked in five
+// TUs), and SMS_getNormalStage() compiles to 0x1c against the map's 0x18.
+
 JUTPoint TConsoleStr::cShineGetRight1(150, -50);
 JUTPoint TConsoleStr::cShineGetLeft1(-21, 7);
 JUTPoint TConsoleStr::cShineGetRight2(0, 0);
@@ -203,20 +217,25 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 			unk18 += 0.5f;
 		}
 
+		// The "GO!" emitters are paused while the game is paused.
 		if (!unk2A5 && gpMarDirector->mState != 4) {
 			if (unk2A8[0])
-				;
-
-			// TODO: uknown stuff
+				unk2A8[0]->stopCreateParticle();
+			if (unk2A8[1])
+				unk2A8[1]->stopCreateParticle();
+			if (unk2A8[2])
+				unk2A8[2]->stopCreateParticle();
 
 			unk2A5 = true;
 		}
 
-		if (unk2A5 && gpMarDirector->mState != 4) {
+		if (unk2A5 && gpMarDirector->mState == 4) {
 			if (unk2A8[0])
-				;
-
-			// TODO: uknown stuff
+				unk2A8[0]->playCreateParticle();
+			if (unk2A8[1])
+				unk2A8[1]->playCreateParticle();
+			if (unk2A8[2])
+				unk2A8[2]->playCreateParticle();
 
 			unk2A5 = false;
 		}
@@ -327,7 +346,7 @@ void TConsoleStr::startAppearMiss()
 	unk2B4 = 3;
 	unk18  = 0.0f;
 
-	for (int i = 0; i < 5; ++i) {
+	for (int i = 0; i < 7; ++i) {
 		unk25C[i]->getPane()->hide();
 		unk25C[i]->getPane()->setAlpha(0);
 	}
@@ -417,8 +436,11 @@ bool TConsoleStr::processGo(f32 param_1)
 		for (int i = 0; i < 3; ++i) {
 			JUTRect rect = unk28[i]->getPane()->getBounds();
 			if (unk28[i]->update()) {
-				J2DPane* pane = unk28[i]->getPane();
-				bool landed  = pane->mBounds.x1 == 0 && pane->mBounds.y1 == 0;
+				// The test is on TBoundPane's own target rect, not on the
+				// pane's bounds: the ROM reads +0x14/+0x18 off the
+				// TBoundPane itself.
+				bool landed
+				    = unk28[i]->unk14.x1 == 0 && unk28[i]->unk14.y1 == 0;
 				if (!landed) {
 					unk28[i]->setPanePosition(0x1E, JUTPoint(0, -40),
 					                          JUTPoint(0, -40),
@@ -426,8 +448,10 @@ bool TConsoleStr::processGo(f32 param_1)
 				}
 			}
 		}
-	} else if (param_1 >= 95.0f) {
-		if (param_1 == 95.0f) {
+	} else if (param_1 < 95.0f) {
+		// nothing: the letters hold still for five frames
+	} else {
+		if (95.0f == param_1) {
 			// The three letters fly apart, each trailing a particle emitter.
 			unk28[0]->setPanePosition(0x50, JUTPoint(0, 0),
 			                          JUTPoint(-170, -180),
@@ -458,15 +482,14 @@ bool TConsoleStr::processGo(f32 param_1)
 			int frame = param_1;
 
 			for (int i = 0; i < 3; ++i) {
-				J2DPane* pane = unk28[i]->getPane();
-
-				s32 alpha = pane->getAlpha() - 4;
+				s32 alpha = unk28[i]->getPane()->getAlpha() - 4;
 				if (alpha < 0)
 					alpha = 0;
 
-				JUTRect global = pane->getGlobalBounds();
-				pane->setAlpha(alpha);
-				pane->resize(global.getWidth() + 2, global.getHeight() + 2);
+				JUTRect global = unk28[i]->getPane()->getGlobalBounds();
+				unk28[i]->getPane()->setAlpha(alpha);
+				unk28[i]->getPane()->resize(global.getWidth() + 2,
+				                            global.getHeight() + 2);
 
 				unk2A8[i]->setGlobalTranslation(
 				    global.x1 + global.getWidth() * 0.5f,
@@ -550,7 +573,8 @@ bool TConsoleStr::processShineGet(int param_1)
 		}
 
 		if (param_1 > i * 6 + 200) {
-			s16 alpha = unk244[i]->getPane()->getAlpha() - 7;
+			s16 alpha = unk244[i]->getPane()->getAlpha();
+			alpha -= 7;
 			if (alpha < 0)
 				alpha = 0;
 			unk244[i]->getPane()->setAlpha(alpha);
@@ -575,7 +599,7 @@ bool TConsoleStr::processMiss(int param_1)
 {
 	bool result = true;
 
-	for (int i = 0; i < 5; ++i) {
+	for (int i = 0; i < 7; ++i) {
 		if (param_1 == i * 10) {
 			unk25C[i]->getPane()->show();
 			unk25C[i]->setPanePosition(0x3C, JUTPoint(0, -270),
@@ -606,7 +630,7 @@ bool TConsoleStr::processMiss(int param_1)
 			                           JUTPoint(0, 150));
 		}
 
-		if (param_1 < i * 10) {
+		if (param_1 < i * 10 + 60) {
 			u16 alpha = unk25C[i]->getPane()->getAlpha();
 			alpha += 12;
 			if (alpha > 0xff)
@@ -622,8 +646,8 @@ bool TConsoleStr::processMiss(int param_1)
 				result = false;
 			}
 		} else {
-			if (param_1 < i * 10) {
-				unk25C[i]->getPane()->mRotation = (i - param_1) * 6;
+			if (param_1 < i * 10 + 60) {
+				unk25C[i]->getPane()->mRotation = (i * 10 - param_1) * 6;
 			}
 
 			result = false;
