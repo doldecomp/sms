@@ -546,6 +546,10 @@ void TBathtubKiller::makeAccelerationQuat()
 	makeQuat(mAcceleration, mPersonality.mAccelerationQuatRate, 0.1f);
 }
 
+// TODO: 90.8%, frame 0x218 against the ROM's 0x1e0. This is the open
+// JGQuat4.hpp item already recorded in that header: an inlined
+// TQuat4::setRotate keeps its two TQuat4 temporaries' stack homes at every
+// expansion site, and this function has three of them.
 void TBathtubKiller::makeQuat(JGeometry::TVec3<f32> axis, f32 moveAmountY,
                               f32 moveAmountX)
 {
@@ -1000,9 +1004,18 @@ void TBathtubKillerManager::loadAfter()
 	mMushroom = nullptr;
 	mDroppedFinalMushroom = false;
 	mMushroomDropCount = 0;
+	// The ROM reads mParams and compares it against null here with no branch
+	// and no use of the result. `getActiveObjNum()` opens with exactly that
+	// test, so a discarded call to it is what is left of whatever used the
+	// count; it also accounts for the whole 32-byte frame difference.
+	getActiveObjNum();
 	static const char* loopFilenames[] = {
 		"/scene/map/map/ms_kp_kill_smoke.jpa",
 	};
+	// TODO: 90.6%. The residual is scheduling inside the inlined
+	// SMS_LoadParticle: the ROM hoists the flag's address and the stored `1`
+	// into r30/r31 before the test, ours materialises the `1` after the load
+	// call. Particles.hpp is a shared header, so it is not touched here.
 	SMS_LoadParticle(loopFilenames[0], PARTICLE_MAP_MS_KP_KILL_SMOKE);
 }
 
