@@ -1219,8 +1219,20 @@ static void evAppear8RedCoinsAndTimer(TSpcTypedInterp<TEventWatcher>* interp,
                                       u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
+
+	// The name has to be its own local. `search<T>` uses it twice, and with
+	// the literal written inline MWCC spends a callee-saved register on a
+	// .rodata base pointer and addresses both the name and the stack-overflow
+	// string through it, which renumbers every register in the function
+	// (92.2% -> 99.9%).
+	// TODO: all 122 instructions now match; the frame is 0x88 against
+	// retail's 0xa0 and the whole 24-byte shortfall is in the low region.
+	// Ruled out (no frame change): a named `f32` for the timer seconds, a
+	// named `MtxPtr` for the animation matrix, a named `int` for the
+	// per-coin kill timer.
+	const char* switchName = "赤コイン用スイッチ";
 	TRedCoinSwitch* swtch
-	    = JDrama::TNameRefGen::search<TRedCoinSwitch>("赤コイン用スイッチ");
+	    = JDrama::TNameRefGen::search<TRedCoinSwitch>(switchName);
 
 	int iVar9 = swtch->unk138;
 	for (int i = 0; i < 8; ++i) {
@@ -1316,10 +1328,19 @@ static void evIsWaterMelonIsReached(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->verifyArgNum(1, &arg_num);
 	TBigWatermelon* melon = (TBigWatermelon*)interp->pop().getDataInt();
 
+	// The zero y component is real: retail starts the sum of squares from a
+	// 0.0f literal (`fmadds f1, f3, f3, f1` with f1 loaded from the float
+	// pool), which is what `squared()`'s y term folds to. Spelling the test
+	// as `dx * dx + dz * dz` instead gives an `fmuls` and a 0x48 frame
+	// against retail's 0x68.
+	// TODO: 99.4%, every instruction matching. The residue is float register
+	// numbering (retail keeps -4660.0f in f3 and the x component in f1, we
+	// use f1/f0) and 8 bytes of low-region temporaries below the pushed
+	// slice; declaring `diff` before `result` changes neither.
 	int result = 0;
-	f32 dx     = -4660.0f - melon->mPosition.x;
-	f32 dz     = 12000.0f - melon->mPosition.z;
-	if (dx * dx + dz * dz <= 90000.0f)
+	JGeometry::TVec3<f32> diff(-4660.0f - melon->mPosition.x, 0.0f,
+	                           12000.0f - melon->mPosition.z);
+	if (diff.squared() <= 90000.0f)
 		result = 1;
 
 	interp->push(result);
