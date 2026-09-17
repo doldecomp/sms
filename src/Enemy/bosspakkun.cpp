@@ -12,6 +12,7 @@
 #include <Strategic/Strategy.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <MarioUtil/DrawUtil.hpp>
@@ -1473,8 +1474,74 @@ DEFINE_NERVE(TNerveBPCannon, TLiveActor)
 	return FALSE;
 }
 
-// TODO: incorrect size. Map records 864 bytes.
-DEFINE_NERVE(TNerveBPVomit, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBPVomit, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	MActor* actor     = boss->getMActor();
+
+	if (spine->getTime() == 0)
+		boss->changeBck(BOSSPAKU_BCK_POLLUT_START);
+
+	// The mouth is only open -- and only sprayable -- for the middle of the
+	// wind-up animation.
+	if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_POLLUT_START)) {
+		f32 frame = actor->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
+		if (25.0f < frame && frame < 165.0f)
+			boss->mState = BOSSPAKU_STATE_UNK2;
+		else
+			boss->mState = BOSSPAKU_STATE_NORMAL;
+	}
+
+	if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_POLLUT_END)) {
+		if (MsRandF() < 0.2f && spine->getTime() == 500) {
+			JGeometry::TVec3<f32> dir;
+			dir.set(700.0f * MsSin(boss->mRotation.y), 0.0f,
+			        700.0f * MsCos(boss->mRotation.y));
+			JGeometry::TVec3<f32> front = dir;
+			gpItemManager->makeObjAppear(boss->mPosition.x + front.x,
+			                             1.0f + boss->mPosition.y,
+			                             boss->mPosition.z + front.z,
+			                             0x20000002, false);
+		}
+	}
+
+	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_POLLUT_START)) {
+			boss->mState = BOSSPAKU_STATE_NORMAL;
+			boss->changeBck(BOSSPAKU_BCK_POLLUT_END);
+
+			TBPVomit* vomit = boss->mVomit;
+			vomit->mMActor->setBckFromIndex(0);
+			vomit->mStampMActor->setBckFromIndex(1);
+
+			MtxPtr base = vomit->mOwner->getModel()->getBaseTRMtx();
+			MTXCopy(base, vomit->mMActor->getModel()->getBaseTRMtx());
+			vomit->mMActor->getModel()->setBaseScale(vomit->mOwner->mScaling);
+			MTXCopy(base, vomit->mStampMActor->getModel()->getBaseTRMtx());
+			vomit->mStampMActor->getModel()->setBaseScale(
+			    vomit->mOwner->mScaling);
+
+			boss->rumblePad(1, boss->mPosition);
+		} else {
+			// showMessage(0) spelled out: the ROM folds the mask for the
+			// constant balloon id into this site.
+			if (!boss->is2ndFightNow()) {
+				if (!(boss->mBalloonsShown & 1))
+					gpMarDirector->getConsole()->startAppearBalloon(0, true);
+				boss->mBalloonsShown |= 1;
+			}
+			return TRUE;
+		}
+	}
+
+	if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_POLLUT_END)) {
+		JGeometry::TVec3<f32> wind(MsSin(boss->mRotation.y), 0.0f,
+		                           MsCos(boss->mRotation.y));
+		gpModelWaterManager->wind(wind);
+	}
+
+	return FALSE;
+}
 
 DEFINE_NERVE(TNerveBPTornado, TLiveActor)
 {
@@ -1831,8 +1898,56 @@ DEFINE_NERVE(TNerveBPTakeOff, TLiveActor)
 	return FALSE;
 }
 
-// TODO: incorrect size. Map records 716 bytes.
-DEFINE_NERVE(TNerveBPFly, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBPFly, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		boss->changeBck(BOSSPAKU_BCK_FLY);
+		boss->goToRandomNextGraphNode();
+		if (!boss->unk1CC) {
+			MSBgm::startBGM(0x8001000D);
+			boss->unk1CC = 1;
+		}
+	}
+
+	JGeometry::TVec3<f32> toGoal = boss->getUnk104().getPoint();
+	toGoal.x -= boss->mPosition.x;
+	toGoal.y -= boss->mPosition.y;
+	toGoal.z -= boss->mPosition.z;
+	toGoal.y = 0.0f;
+
+	if (VECMag(toGoal) < 100.0f) {
+		// A graph node flagged 0x800 is one the boss hovers over instead of
+		// flying straight past.
+		if (boss->getTracer()->getCurrent().checkFlag(0x800)) {
+			spine->pushAfterCurrent(&TNerveBPHover::theNerve());
+			return TRUE;
+		}
+		boss->goToRandomNextGraphNode();
+	}
+
+	f32 turn  = boss->mTurnSpeed;
+	f32 speed = boss->getSaveParam2()->mSLFlySpeed.get();
+	boss->turnToCurPathNode(turn);
+
+	JGeometry::TVec3<f32> step = boss->getUnkF4().getPoint();
+	step.x -= boss->mPosition.x;
+	step.y -= boss->mPosition.y;
+	step.z -= boss->mPosition.z;
+	VECNormalize(step, step);
+	step.x *= speed;
+	step.y *= speed;
+	step.z *= speed;
+
+	JGeometry::TVec3<f32> velocity = boss->mLinearVelocity;
+	velocity.x += step.x;
+	velocity.y += step.y;
+	velocity.z += step.z;
+	boss->mLinearVelocity = velocity;
+
+	return FALSE;
+}
 
 DEFINE_NERVE(TNerveBPTouchDown, TLiveActor)
 {
@@ -1895,11 +2010,95 @@ DEFINE_NERVE(TNerveBPFlyPivot, TLiveActor)
 	return FALSE;
 }
 
-// TODO: incorrect size. Map records 904 bytes.
-DEFINE_NERVE(TNerveBPHover, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBPHover, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
 
-// TODO: incorrect size. Map records 1308 bytes.
-DEFINE_NERVE(TNerveBPFall, TLiveActor) { return FALSE; }
+	if (spine->getTime() == 0) {
+		boss->changeBck(BOSSPAKU_BCK_HOVERING);
+		boss->mState = BOSSPAKU_STATE_FLYING;
+	}
+
+	f32 range = boss->getSaveParam2()->mSLPollBallRange.get();
+
+	if (!boss->mVomitArea)
+		boss->mVomitArea = (TAreaCylinderManager*)gpConductor->search(
+		    "ゲロエリアマネージャー");
+
+	if (boss->mVomitArea && boss->mVomitArea->contain(*gpMarioPos)
+	    && boss->mDistToMarioSquared < range * range) {
+		spine->pushAfterCurrent(&TNerveBPHover::theNerve());
+		spine->pushAfterCurrent(&TNerveBPFlyCannon::theNerve());
+
+		TPathNode node(*gpMarioPos);
+		boss->unk114.push(boss->unkF4);
+		boss->unkF4 = node;
+
+		spine->pushAfterCurrent(&TNerveBPFlyPivot::theNerve());
+		return TRUE;
+	}
+
+	if (spine->getTime() >= boss->getSaveParam2()->mSLHoverTimer.get()) {
+		spine->pushAfterCurrent(&TNerveBPFly::theNerve());
+		boss->mState = BOSSPAKU_STATE_NORMAL;
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveBPFall, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	MActor* actor     = boss->getMActor();
+
+	if (spine->getTime() == 0) {
+		boss->offLiveFlag(LIVE_FLAG_UNK10);
+		boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
+		boss->changeBck(BOSSPAKU_BCK_FALL_START);
+	}
+
+	if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_FALL_START)) {
+		if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
+			boss->changeBck(BOSSPAKU_BCK_FALL_LOOP);
+	} else if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_FALL_LOOP)) {
+		if (!boss->checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
+			boss->changeBck(BOSSPAKU_BCK_FALL_END);
+			gpCameraShake->startShake(
+			    (EnumCamShakeMode)CAM_SHAKE_MODE_BOPA_POPO, 1.0f);
+			boss->rumblePad(2, boss->mPosition);
+		}
+	} else if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_FALL_END)) {
+		if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+			boss->changeBck(BOSSPAKU_BCK_GETUP);
+			gpCameraShake->startShake(
+			    (EnumCamShakeMode)CAM_SHAKE_MODE_BOPA_GETUP, 1.0f);
+			boss->rumblePad(0, boss->mPosition);
+		}
+	} else if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_GETUP)) {
+		if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+			if (boss->is2ndFightNow()) {
+				f32 prop = boss->getSaveParam2()->mSLTornadoProp.get();
+				if (boss->mTornado->mState != BOSSPAKU_TORNADO_DEAD
+				    || MsRandF() < prop) {
+					spine->pushAfterCurrent(&TNerveBPTakeOff::theNerve());
+					spine->pushAfterCurrent(&TNerveBPVomit::theNerve());
+				} else if (boss->mTornado->mState
+				           == BOSSPAKU_TORNADO_DEAD) {
+					spine->pushAfterCurrent(&TNerveBPWait::theNerve());
+					spine->pushAfterCurrent(&TNerveBPTornado::theNerve());
+				} else {
+					spine->pushAfterCurrent(&TNerveBPWait::theNerve());
+				}
+			} else {
+				spine->pushAfterCurrent(&TNerveBPWait::theNerve());
+			}
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
 
 DEFINE_NERVE(TNerveBPSleep, TLiveActor)
 {
