@@ -449,6 +449,12 @@ bool CPolarSubCamera::isMomentDefinite_() const
 	return result;
 }
 
+// TODO: 94.9%. Two residues besides the checkStatusType block (see the note on
+// isMarioReadyGun_): frame 0x110 against the ROM's 0xd0, which is about five
+// more vector-sized locals than the five we declare and one more saved
+// register (r28), and the ground-plane predicate materialises its false value
+// with `li r0, 0` where the ROM reuses the already-zeroed result register, the
+// shape of a single `&&` chain rather than two statements.
 void CPolarSubCamera::calcSlopeAngleX_(s16* param_1)
 {
 	s16 result = 0;
@@ -505,6 +511,16 @@ void CPolarSubCamera::calcSlopeAngleX_(s16* param_1)
 	                   mSaveEx->mSLLimitMaxAngleX.get());
 }
 
+// TODO: 92.2%. Every member access matches; what is left is the frame and the
+// two inline decisions it drags along. (1) Frame 0x2d0 against the ROM's
+// 0x1d0 -- 0x100 of locals we do not allocate -- and the ROM saves r27 as
+// well, so one more value stays live across a call; nearly every remaining
+// mismatch is an r1 offset shifted by that 0x100. (2) The ROM *calls* MsSqrtf
+// out of the CLBCrossToPolar below the wall check while inlining it at the
+// earlier site in this same function (one frsqrte in the ROM's body, two in
+// ours), so that site sits two inline levels deeper than ours; one fabricated
+// wrapper around the call was measured and is not enough. (3) The two
+// checkStatusType blocks: see the note on isMarioReadyGun_.
 void CPolarSubCamera::calcPosAndAt_()
 {
 	if (gpCameraMario->mFrameMoveDistHorizontal >= 0.05f)
@@ -524,37 +540,39 @@ void CPolarSubCamera::calcPosAndAt_()
 		}
 	}
 
-	s16 yawDelta  = 0;
-	f32 distDelta = 0.0f;
-	s16 yawSpeed  = CLBLinearInbetween<s16>(
-        mCurrentParams->mYAngleManualSpeedXMin,
-        mCurrentParams->mYAngleManualSpeedXMax, mCurrentTarget.unk28);
-	f32 distSpeed = CLBLinearInbetween<f32>(mCurrentParams->mHoldAddDistXZMin,
-	                                        mCurrentParams->mHoldAddDistXZMax,
-	                                        mCurrentTarget.unk28);
+	s16 holdOffsetAngleX = 0;
+	f32 holdAddDistXZ    = 0.0f;
+	s16 offsetAngleXRange
+	    = CLBLinearInbetween<s16>(mCurrentParams->mHoldOffsetAngleXMin,
+	                              mCurrentParams->mHoldOffsetAngleXMax,
+	                              mCurrentTarget.unk28);
+	f32 addDistXZRange
+	    = CLBLinearInbetween<f32>(mCurrentParams->mHoldAddDistXZMin,
+	                              mCurrentParams->mHoldAddDistXZMax,
+	                              mCurrentTarget.unk28);
 
 	if (isNormalCameraSpecifyMode(mMode)) {
 		if (isMarioReadyGun_()) {
-			f32 mag   = gpCameraMario->unk1C;
-			distDelta = mag * distSpeed;
-			yawDelta  = (s16)(mag * (f32)yawSpeed);
+			f32 mag          = gpCameraMario->unk1C;
+			holdAddDistXZ    = mag * addDistXZRange;
+			holdOffsetAngleX = (s16)(mag * (f32)offsetAngleXRange);
 		}
 	}
 
-	CLBChaseAngleDecrease(&unk2AC->unk0, yawDelta,
+	CLBChaseAngleDecrease(&unk2AC->unk0, holdOffsetAngleX,
 	                      mSaveEx->mSLAimAngleYChaseMin.get());
-	CLBChaseDecrease(&unk2AC->unk4, distDelta, mSaveEx->mSLHoldDistChase.get(),
+	CLBChaseDecrease(&unk2AC->unk4, holdAddDistXZ, mSaveEx->mSLHoldDistChase.get(),
 	                 0.0f);
 
-	if (distSpeed < 0.001f) {
-		if (yawSpeed != 0) {
-			s16 absSpeed = CLBAbs(yawSpeed);
-			s16 absDelta = CLBAbs(yawDelta);
+	if (addDistXZRange < 0.001f) {
+		if (offsetAngleXRange != 0) {
+			s16 absSpeed = CLBAbs(offsetAngleXRange);
+			s16 absDelta = CLBAbs(holdOffsetAngleX);
 			unk2AC->unkC = (f32)absDelta * (1.0f / (f32)absSpeed);
 			unk2AC->unkC = MsClamp(unk2AC->unkC, 0.0f, 1.0f);
 		}
 	} else {
-		unk2AC->unkC = distDelta * (1.0f / distSpeed);
+		unk2AC->unkC = holdAddDistXZ * (1.0f / addDistXZRange);
 		unk2AC->unkC = MsClamp(unk2AC->unkC, 0.0f, 1.0f);
 	}
 
@@ -783,17 +801,18 @@ void CPolarSubCamera::calcPosAndAt_()
 						}
 					}
 				}
-				mPosition.x = mCurrentTarget.mPosition.x;
-				mPosition.z = mCurrentTarget.mPosition.z;
+				mCurrentTarget.mPosition.x = mCurrentTarget.unk18.x;
+				mCurrentTarget.mPosition.z = mCurrentTarget.unk18.z;
 				execHeightPan_();
-				finalAt.y = mCurrentTarget.unk18.y;
+				finalAt.y = mCurrentTarget.mTarget.y;
 				Vec posCpy;
-				posCpy = mPosition;
+				posCpy = mCurrentTarget.mPosition;
 				if (isNeedWallCheck_() && execWallCheck_(&posCpy)) {
-					CLBCrossToPolar(mCurrentTarget.mTarget, mPosition,
+					CLBCrossToPolar(mCurrentTarget.mTarget,
+					                mCurrentTarget.mPosition,
 					                &mCurrentTarget.mPitch,
 					                &mCurrentTarget.mYaw);
-					mCurrentTarget.unk28 = mCurrentTarget.unk30;
+					mCurrentTarget.unk28 = mPreviousTarget.unk28;
 				}
 				if (isNeedRoofCheck_()) {
 					Vec roofCheck = posCpy;
