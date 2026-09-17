@@ -1164,14 +1164,14 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 			unk4CC[unkB0]->show();
 			TCardBookmarkInfo& info = unk40[unkB0];
 			if (info.unk0 == 1) {
-				strncpy(unk51C->getStringPtr(), "こわれています", 0x14);
-				strncpy(unk520->getStringPtr(), "こわれています", 0x14);
+				setMessage(unk51C, 0x14, 0);
+				setMessage(unk520, 0x14, 0);
 				unk520->show();
 				unk500->hide();
 				unk510->hide();
 			} else if (info.unk18 == 0) {
-				strncpy(unk51C->getStringPtr(), "NEW", 0x14);
-				strncpy(unk520->getStringPtr(), "NEW", 0x14);
+				setMessage(unk51C, 0x14, 0x1B);
+				setMessage(unk520, 0x14, 0x1B);
 				unk520->show();
 				unk500->hide();
 				unk510->hide();
@@ -1390,14 +1390,14 @@ s8 TCardLoad::waitForAnyKeyBM(TEProgress param_1)
 				unkB0 = unkB1;
 			TCardBookmarkInfo& info = unk40[unkB0];
 			if (info.unk0 == 1) {
-				strncpy(unk51C->getStringPtr(), "こわれています", 0x14);
-				strncpy(unk520->getStringPtr(), "こわれています", 0x14);
+				setMessage(unk51C, 0x14, 0);
+				setMessage(unk520, 0x14, 0);
 				unk520->show();
 				unk500->hide();
 				unk510->hide();
 			} else if (info.unk18 == 0) {
-				strncpy(unk51C->getStringPtr(), "NEW", 0x14);
-				strncpy(unk520->getStringPtr(), "NEW", 0x14);
+				setMessage(unk51C, 0x14, 0x1B);
+				setMessage(unk520, 0x14, 0x1B);
 				unk520->show();
 				unk500->hide();
 				unk510->hide();
@@ -1622,13 +1622,13 @@ s8 TCardLoad::drawMessageBM(TEProgress param_1)
 			unk4CC[unkB0]->show();
 			TCardBookmarkInfo* bm = &unk40[unkB0];
 			if (bm->unk0 == 1) {
-				strncpy(unk51C->getStringPtr(), "こわれています", 20);
-				strncpy(unk520->getStringPtr(), "こわれています", 20);
+				setMessage(unk51C, 0x14, 0);
+				setMessage(unk520, 0x14, 0);
 				unk520->show();
 				unk500->hide();
 			} else if (bm->unk18 == 0) {
-				strncpy(unk51C->getStringPtr(), "NEW", 20);
-				strncpy(unk520->getStringPtr(), "NEW", 20);
+				setMessage(unk51C, 0x14, 0x1B);
+				setMessage(unk520, 0x14, 0x1B);
 				unk520->show();
 				unk500->hide();
 			} else {
@@ -1740,13 +1740,13 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 			unk2A0->show();
 			for (int i = 0; i < 3; ++i) {
 				if (unk40[i].unk0 == 1) {
-					strncpy(unk2C0[i]->getStringPtr(), "こわれています", 20);
-					strncpy(unk2CC[i]->getStringPtr(), "こわれています", 20);
+					setMessage(unk2C0[i], 0x14, 0);
+					setMessage(unk2CC[i], 0x14, 0);
 					unk2CC[i]->show();
 					unk2D8[i]->hide();
 				} else if (unk40[i].unk18 == 0) {
-					strncpy(unk2C0[i]->getStringPtr(), "NEW", 20);
-					strncpy(unk2CC[i]->getStringPtr(), "NEW", 20);
+					setMessage(unk2C0[i], 0x14, 0x1B);
+					setMessage(unk2CC[i], 0x14, 0x1B);
 					unk2CC[i]->show();
 					unk2D8[i]->hide();
 				} else {
@@ -1917,13 +1917,13 @@ s8 TCardLoad::selectFunction()
 			((J2DPicture*)unk378[unkB0][unkB6]->getPane())->mWhite = 0x00FF00FF;
 			for (int i = 0; i < 3; ++i) {
 				if (unk40[i].unk0 == 1) {
-					strncpy(unk2C0[i]->getStringPtr(), "こわれています", 20);
-					strncpy(unk2CC[i]->getStringPtr(), "こわれています", 20);
+					setMessage(unk2C0[i], 0x14, 0);
+					setMessage(unk2CC[i], 0x14, 0);
 					unk2CC[i]->show();
 					unk2D8[i]->hide();
 				} else if (unk40[i].unk18 == 0) {
-					strncpy(unk2C0[i]->getStringPtr(), "NEW", 20);
-					strncpy(unk2CC[i]->getStringPtr(), "NEW", 20);
+					setMessage(unk2C0[i], 0x14, 0x1B);
+					setMessage(unk2CC[i], 0x14, 0x1B);
 					unk2CC[i]->show();
 					unk2D8[i]->hide();
 				} else {
