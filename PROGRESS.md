@@ -7,7 +7,7 @@ Per-batch history through batch 69 is archived in [docs/progress/history.md](doc
 
 ## Current numbers
 
-Measured from `build/GMSE01/report.json` on 2026-09-16 at `1205e0fd` (plus uncommitted `hanasambo` work in the tree).
+Measured from `build/GMSE01/report.json` on 2026-09-16 at `hanasambo`'s commit.
 
 | | Matched code | Source-linked code | Linked units |
 | --- | ---: | ---: | ---: |
@@ -27,7 +27,7 @@ Since then, work has been **whole-TU enemy reconstruction from the map**: scaffo
 | --- | ---: | ---: |
 | `Enemy/effectEnemy` | 99.99% | 17 / 18 |
 | `Enemy/seal` | 98.65% | 12 / 18 |
-| `Enemy/hanasambo` (uncommitted) | 97.30% | 62 / 96 |
+| `Enemy/hanasambo` | 97.51% | 63 / 96 |
 | `Enemy/cannon` | 97.26% | 33 / 55 |
 | `Enemy/popo` | 96.95% | 30 / 54 |
 | `Enemy/tobiPuku` | 94.71% | 90 / 120 |
