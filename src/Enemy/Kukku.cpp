@@ -450,12 +450,17 @@ void TKukku::updateRotation()
 	mRotation.z *= bankZ;
 }
 
-// TODO: 92.9%. Size-exact against the map but expanded at every call site,
-// where retail calls it (`addi r3, r1, 0x30; bl calcMomentum`). Four
-// statements is far under the 14-statement depth-1 budget, so retail's body
-// cannot have been these three JGeometry calls: 0x11c is 71 instructions, so
-// the original spelled the Euler-to-quaternion conversion and the rotate out
-// component by component. See the note on updateRotation().
+// TODO: 92.9%, and every one of the 71 instructions is the right opcode in the
+// right place -- the whole residual is float-register numbering plus a 0x20
+// frame excess against the target's 0x78, both downstream of the frame.
+// Size-exact against the map, but expanded at every call site where retail
+// calls it (`addi r3, r1, 0x30; bl calcMomentum`). Four statements is far
+// under the 14-statement depth-1 budget, so retail's body cannot have been
+// these three JGeometry calls; spelling the Euler-to-quaternion conversion and
+// the rotate out component by component would reach the budget, but it would
+// also rewrite an already instruction-exact stream on no evidence beyond the
+// statement count. See the note on updateRotation(), where the same budget
+// problem was closed with statements the asm actually names.
 JGeometry::TVec3<f32> TKukku::calcMomentum(f32 speed)
 {
 	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
