@@ -1179,30 +1179,33 @@ void TMario::initModel()
 	    "/mario/bmd/ma_hnd4r.bmd",
 	    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift));
 
-	// possible inlines around setting ResTIMG through J3DTexture?
-	mHandModels[0][0]->getModelData()->getTexture()->setResTIMG(
+	// The ROM keeps each hand model's data in a register across the
+	// setResTIMG call and re-reads only getTexture(), so the model data was
+	// a named local.
+	J3DModelData* handData = mHandModels[0][0]->getModelData();
+	handData->getTexture()->setResTIMG(
 	    0, *mBodyModelData->getTexture()->getResTIMG(0));
-	DCFlushRange(mHandModels[0][0]->getModelData()->getTexture()->getResTIMG(0),
-	             0x20);
+	DCFlushRange(handData->getTexture()->getResTIMG(0), 0x20);
 
-	mHandModels[0][1]->getModelData()->getTexture()->setResTIMG(
+	handData = mHandModels[0][1]->getModelData();
+	handData->getTexture()->setResTIMG(
 	    0, *mBodyModelData->getTexture()->getResTIMG(0));
-	DCFlushRange(mHandModels[0][1]->getModelData()->getTexture()->getResTIMG(0),
-	             0x20);
+	DCFlushRange(handData->getTexture()->getResTIMG(0), 0x20);
 
-	mHandModels[1][0]->getModelData()->getTexture()->setResTIMG(
+	handData = mHandModels[1][0]->getModelData();
+	handData->getTexture()->setResTIMG(
 	    0, *mBodyModelData->getTexture()->getResTIMG(0));
-	DCFlushRange(mHandModels[1][0]->getModelData()->getTexture()->getResTIMG(0),
-	             0x20);
-	mHandModels[1][1]->getModelData()->getTexture()->setResTIMG(
-	    0, *mBodyModelData->getTexture()->getResTIMG(0));
-	DCFlushRange(mHandModels[1][1]->getModelData()->getTexture()->getResTIMG(0),
-	             0x20);
+	DCFlushRange(handData->getTexture()->getResTIMG(0), 0x20);
 
-	mRHand4ndModel->getModelData()->getTexture()->setResTIMG(
+	handData = mHandModels[1][1]->getModelData();
+	handData->getTexture()->setResTIMG(
 	    0, *mBodyModelData->getTexture()->getResTIMG(0));
-	DCFlushRange(mRHand4ndModel->getModelData()->getTexture()->getResTIMG(0),
-	             0x20);
+	DCFlushRange(handData->getTexture()->getResTIMG(0), 0x20);
+
+	handData = mRHand4ndModel->getModelData();
+	handData->getTexture()->setResTIMG(
+	    0, *mBodyModelData->getTexture()->getResTIMG(0));
+	DCFlushRange(handData->getTexture()->getResTIMG(0), 0x20);
 
 	mBodyModelData->getShapeNodePointer(4)->onFlag(J3DShpFlag_Visible);
 
@@ -1235,10 +1238,11 @@ void TMario::initModel()
 	for (int i = 0; i < 0x18; ++i) {
 		loadAnmTexPattern(&anmTexPattern[i], marioAnimeTexPatternFilenames[i],
 		                  mBodyModelData);
-		u16 matCount   = anmTexPattern[i]->getUpdateMaterialNum();
-		anmTexNoAnm[i] = new J3DTexNoAnm[matCount];
+		anmTexNoAnm[i]
+		    = new J3DTexNoAnm[anmTexPattern[i]->getUpdateMaterialNum()];
 
-		for (int j = 0; j < matCount; ++i) {
+		// The count is re-read every iteration, so it was never a local.
+		for (int j = 0; j < anmTexPattern[i]->getUpdateMaterialNum(); ++j) {
 			anmTexNoAnm[i][j].setAnmIndex(j);
 			anmTexNoAnm[i][j].setAnmTexPattern(anmTexPattern[i]);
 		}
