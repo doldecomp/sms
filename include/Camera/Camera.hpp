@@ -296,6 +296,17 @@ private:
 	                                             int tween_frames);
 	void execFrontRotate_();
 	void doLButtonCameraOn_();
+	// Fabricated name; the body and the fact that there is a body are
+	// measured. In execCameraModeChangeProc_ every exit of this block branches
+	// to the join after the whole mode-change if/else rather than to the
+	// epilogue -- the early-return shape of an inlined helper, not a
+	// materialised flag -- and the level it adds is what turns
+	// changeCamModeSpecifyFrame_ into the ROM's `bl` under
+	// doLButtonCameraOn_ (depth 4) while the same helper stays inlined for
+	// the two changeCamMode_ calls at the top of the function (depth 2).
+	// Defined in CameraChange.cpp because Camera.hpp only forward-declares
+	// TMarioGamePad.
+	void execLButtonCameraOnProc_();
 	void doLButtonCameraOff_(bool);
 	bool isChangeToBossGesoCamera_() const;
 	bool isChangeToCancanCamera_() const;

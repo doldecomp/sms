@@ -471,6 +471,29 @@ void CPolarSubCamera::execFrontRotate_()
 	}
 }
 
+inline void CPolarSubCamera::execLButtonCameraOnProc_()
+{
+	if (unk64 & CAMERA_FLAG_UNK10) {
+		unk64 &= ~CAMERA_FLAG_UNK10;
+		doLButtonCameraOn_();
+		return;
+	}
+
+	if (!unk120->checkFrameMeaning(0xC000))
+		return;
+
+	if (unk120->checkFrameMeaning(0x4000)) {
+		if (unk282 != 0)
+			return;
+		execNoticeOnOffProc_(NOTICE_MODE_UNK2);
+	}
+
+	if (unk64 & CAMERA_FLAG_NOTICE_ACTIVE)
+		doLButtonCameraOn_();
+	else if (!isLButtonCameraInbetween())
+		execFrontRotate_();
+}
+
 void CPolarSubCamera::doLButtonCameraOn_()
 {
 	if (!isLButtonCameraSpecifyMode(mMode) && !isLButtonCameraInbetween()) {
@@ -582,11 +605,15 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 		return;
 	}
 
-	if (isFixOrDefiniteCameraSpecifyMode(param_1))
+	if (isFixOrDefiniteCameraSpecifyMode(param_1)) {
+		if (unk120->checkFrameMeaning(0x4000))
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_NOT_COLLECT, 0,
+			                                   nullptr, 0);
 		return;
+	}
 
 	if (unk64 & CAMERA_FLAG_NOTICE_ACTIVE)
-		execNoticeOnOffProc_(NOTICE_MODE_UNK0);
+		execNoticeOnOffProc_(NOTICE_MODE_UNK1);
 
 	int prevMode = mMode;
 
@@ -599,6 +626,9 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 			doLButtonCameraOff_(true);
 		if (unk120->checkFrameMeaning(0x8000))
 			execFrontRotate_();
+		if (unk120->checkFrameMeaning(0x4000))
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_NOT_COLLECT, 0,
+			                                   nullptr, 0);
 	} else {
 		if (isLButtonCameraSpecifyMode(mMode)) {
 			if (SMS_GetMarioStatus() & MARIO_STATUS_FLAG_UNK20000) {
@@ -609,25 +639,7 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 			}
 		} else if (isNormalCameraSpecifyMode(mMode)
 		           || isTowerCameraSpecifyMode(mMode)) {
-			if (unk64 & CAMERA_FLAG_UNK10) {
-				unk64 &= ~CAMERA_FLAG_UNK10;
-				doLButtonCameraOn_();
-			} else if (unk120->checkFrameMeaning(0xC000)) {
-				bool doCheck = true;
-				if (unk120->checkFrameMeaning(0x4000)) {
-					if (unk282 != 0)
-						doCheck = false;
-					else
-						execNoticeOnOffProc_((EnumNoticeOnOffMode)2);
-				}
-				if (doCheck) {
-					if (unk64 & CAMERA_FLAG_NOTICE_ACTIVE) {
-						doLButtonCameraOn_();
-					} else if (!isLButtonCameraInbetween()) {
-						execFrontRotate_();
-					}
-				}
-			}
+			execLButtonCameraOnProc_();
 		}
 	}
 
@@ -641,7 +653,9 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 	int currentMap = gpMarDirector->getCurrentMap();
 
 	int newMode;
-	if (gpMarioOriginal->checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
+	if (param_1 == CAMERA_MODE_FOLLOW_D) {
+		newMode = param_1;
+	} else if (gpMarioOriginal->checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
 		newMode = CAMERA_MODE_DIVING;
 	} else if (SMS_CheckMarioFlag(2)) {
 		if (currentMap == 9)
