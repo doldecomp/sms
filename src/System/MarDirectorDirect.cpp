@@ -6,7 +6,6 @@
 #include <System/MSoundMainSide.hpp>
 #include <System/MarioGamePad.hpp>
 #include <System/PerformList.hpp>
-#include <System/StageUtil.hpp>
 #include <System/FlagManager.hpp>
 #include <System/CardManager.hpp>
 #include <Player/Mario.hpp>
@@ -36,6 +35,14 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <Map/MapCollisionEntry.hpp>
+
+// Declared rather than pulled in through System/StageUtil.hpp: that header
+// emits its static shine tables into every includer, and the map has none of
+// them for this TU.
+u8 SMS_getShineIDofExStage(u8);
+u8 SMS_getShineStage(u8);
+bool SMS_isExMap();
 
 extern OSThread gSetupThread;
 
