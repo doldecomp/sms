@@ -2,6 +2,7 @@
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <Map/Map.hpp>
+#include <Map/MapCollisionManager.hpp>
 #include <MoveBG/MapObjCorona.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Strategic/LiveActor.hpp>
@@ -134,20 +135,11 @@ public:
 			                          - -180.0f),
 			                   360.0f);
 
-		JGeometry::TVec2<f32> dir(
-		    peach->getParam()->radius.get()
-		            * JMASSin(DEG2SHORTANGLE(goalAngle))
-		        + tubX - peach->mPosition.x,
-		    peach->getParam()->radius.get()
-		            * JMASCos(DEG2SHORTANGLE(goalAngle))
-		        + tubZ - peach->mPosition.z);
+		f32 radius = peach->getParam()->radius.get();
 
-		f32 speed = peach->getParam()->speed.get();
-		if (dir.squared() >= speed * speed)
-			dir.setLength(peach->getParam()->speed.get());
-
-		peach->mPosition.x += dir.x;
-		peach->mPosition.z += dir.y;
+		peach->goTo(JGeometry::TVec3<f32>(
+		    radius * JMASSin(DEG2SHORTANGLE(goalAngle)) + tubX, 0.0f,
+		    radius * JMASCos(DEG2SHORTANGLE(goalAngle)) + tubZ));
 
 		peach->faceTo(*gpMarioPos, peach->getParam()->turnSpeed2.get());
 
@@ -188,7 +180,8 @@ void TBathtubPeach::faceTo(const JGeometry::TVec3<f32>& target, f32 turn_speed)
 	if (dx * dx + dz * dz <= JGeometry::TUtil<f32>::epsilon())
 		return;
 
-	f32 goal = (360.0f / 65536.0f) * matan(dz, dx) - 90.0f;
+	f32 angle = (360.0f / 65536.0f) * matan(dz, dx);
+	f32 goal  = angle - 90.0f;
 	f32 diff = -180.0f
 	           + std::fmodf(360.0f + ((goal - mRotation.y) - -180.0f), 360.0f);
 
