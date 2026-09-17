@@ -2,6 +2,10 @@
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <Map/Map.hpp>
+// Nothing here names a collision type, but TMapCollisionBase::setUpTrans emits
+// the {0,0,0} and {1,1,1} vector literals that sit between the
+// InfectiousStrings block and this unit's own strings in .rodata (map @2852 and
+// @2854). Without it every string offset in the unit is 0x18 too low.
 #include <Map/MapCollisionManager.hpp>
 #include <MoveBG/MapObjCorona.hpp>
 #include <Player/MarioAccess.hpp>
@@ -79,6 +83,33 @@ public:
 
 // Paddles around the rim of the bathtub so as to stay `angle` degrees away
 // from Mario, always facing him.
+//
+// TODO: 83.5%. Every remaining instruction difference comes from two shared
+// headers this batch was not allowed to touch; there is nothing left to fix in
+// this file. Both were measured, not guessed:
+//
+//  1. include/JSystem/JGeometry/JGVec2.hpp -- TVec2 needs the same pair of
+//     setLength overloads TVec3 already has in JGVec3.hpp:
+//         void setLength(f32 length) { setLength(*this, length); }
+//         void setLength(const TVec2& v, f32 length) { ...current body... }
+//         void normalize() { setLength(*this, TUtil<f32>::one()); }
+//     The extra forwarder puts TVec2::dot at inline depth five inside
+//     goTo(), so MWCC emits it out of line -- which is the weak
+//     dot__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f> the map lists for
+//     this TU, and which in turn forces `dir` onto the stack the way the ROM
+//     has it at 0x1dc/0x1e0. With just this change the nerve goes 83.5% ->
+//     93.4%, `dot` appears, and `ninja changes_all` shows zero other units
+//     affected.
+//
+//  2. include/PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h -- the ROM
+//     calls fmodf__3stdFff (0x5c, emitted weak from wireTrap.cpp) at all six
+//     sites in this function. Our std::fmodf is an `inline` wrapper around
+//     ::fmod, so every site expands to `bl fmod` plus an `frsp` and an extra
+//     `lfd` of the double 360.0. That accounts for the whole residual after
+//     (1), including the float-register renumbering and the 0xf8 frame gap.
+//     `#pragma dont_inline` does not help (explicit `inline` wins) and giving
+//     it the real 0x5c body inlines it too (389 instructions); it needs a
+//     declaration in the header with the body in a .cpp.
 class TNervePeachEscape : public TNerveBase<TLiveActor> {
 public:
 	static const TNervePeachEscape& theNerve()
@@ -90,6 +121,12 @@ public:
 	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const
 	{
 		TBathtubPeach* peach = (TBathtubPeach*)spine->getBody();
+		// search2 rather than search<TBathtub>: the template's internal
+		// static_cast leaves the result as a compiler temporary, so
+		// later blocks re-read it out of r3, while the ROM reads the
+		// bathtub through the local's own register (r28 here, r31 in
+		// calcRootMatrix). The cast at the call site is also why
+		// JDRNameRefGen.hpp doubts the template ever existed.
 		TBathtub* bathtub
 		    = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
 
@@ -156,9 +193,17 @@ TBathtubPeach::TBathtubPeach(const char* name)
 	offLiveFlag(LIVE_FLAG_UNK10);
 }
 
-// TODO: UNUSED, 0xc4 in the map. The escape nerve pastes this body verbatim
-// rather than calling it (same shape as TFruitsBoat::rowToCurPathNode), so the
-// only evidence is the size.
+// Steps at most `speed` units along the horizontal line towards `goal`. UNUSED
+// in the map (0xc4) because the escape nerve is its only caller and inlines it;
+// that one inline level is also what pushes TVec2::dot out of line there, which
+// is how we know the nerve calls goTo rather than spelling the body out.
+//
+// TODO: 0xb4 here against the map's 0xc4. 0xc of that is the missing
+// TVec2::setLength(const TVec2&, f32) forwarder (see the escape nerve), which
+// keeps `dir` in memory instead of letting MWCC scalarise it; the last 4 bytes
+// are the second speed fetch, which the ROM does twice (once inlined for the
+// comparison, once through an out-of-line TEnemyManager::getSaveParam() for the
+// setLength argument) and MWCC merges for us.
 void TBathtubPeach::goTo(const JGeometry::TVec3<f32>& goal)
 {
 	JGeometry::TVec2<f32> dir(goal.x - mPosition.x, goal.z - mPosition.z);
@@ -173,6 +218,14 @@ void TBathtubPeach::goTo(const JGeometry::TVec3<f32>& goal)
 
 // Turns mRotation.y towards `target` by at most `turn_speed` degrees. UNUSED,
 // 0x12c in the map, and inlined into the escape nerve.
+//
+// The product is named because the ROM keeps `fmuls` and `fsubs` apart here;
+// writing (360.0f / 65536.0f) * matan(dz, dx) - 90.0f contracts them into one
+// fmsubs (see docs/catalog/codegen-tells.md, fp_contract).
+//
+// TODO: 0x144 here against the map's 0x12c. The 0x18 of surplus is exactly the
+// six instructions our three inlined std::fmodf expansions add (an `frsp` plus
+// an extra `lfd` of the double 360.0 each); see the note on the escape nerve.
 void TBathtubPeach::faceTo(const JGeometry::TVec3<f32>& target, f32 turn_speed)
 {
 	f32 dz = target.z - mPosition.z;
