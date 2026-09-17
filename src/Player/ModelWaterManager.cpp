@@ -1284,7 +1284,7 @@ void TModelWaterManager::drawMirror(MtxPtr param_1)
 	}
 	JGeometry::TVec3<f32> local_bc[4][2];
 
-	f32 fVar3 = 1.0 / pTVar4->getNormal().y;
+	f32 fVar3 = 1.0f / pTVar4->getNormal().y;
 
 	for (int i = 0; i < 4; ++i) {
 		local_bc[i][0].x = SMS_GetMarioPos().x + JMASSin(i * 0x4000) * 1000.0f;
@@ -1303,6 +1303,11 @@ void TModelWaterManager::drawMirror(MtxPtr param_1)
 		              + pTVar4->getNormal().z * local_bc[0][0].z)
 		      + 4.0f;
 	}
+	// TODO: retail binds the ground plane's normal once (r31 = plane + 0x34,
+	// reads at 4(r31)/0xc(r31)), but a `const TVec3&` local for it costs more
+	// than it buys here (90.9 -> 90.3); the residue is the jmaSinTable lookup
+	// (retail keeps the indexed `lfsx`, we recompute the address) and the
+	// unrolled-by-two loop.
 
 	GXClearVtxDesc();
 	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
