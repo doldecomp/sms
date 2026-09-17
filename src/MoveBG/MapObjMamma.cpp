@@ -106,12 +106,14 @@ void TSandLeafBase::grow()
 
 			if (mState == STATE_GROWN) {
 				mMapCollisionManager->changeCollision(1);
+				TMapCollisionManager* manager = mMapCollisionManager;
 				Mtx mtx;
 				MsMtxSetTRS(mtx, mPosition.x, mPosition.y, mPosition.z,
 				            mRotation.x, mRotation.y, mRotation.z, mScaling.x,
 				            mScaling.y, mScaling.z);
-				mMapCollisionManager->unk8->setMtx(mtx);
-				mMapCollisionManager->unk8->setUp();
+				TMapCollisionBase* entry = manager->unk8;
+				entry->setMtx(mtx);
+				entry->setUp();
 				mTrigger->startControlAnim(2);
 				mState = STATE_GROWING;
 			}
@@ -137,12 +139,14 @@ void TSandLeafBase::control()
 		if (withering()) {
 			SMSRumbleMgr->stop(0x13);
 			mMapCollisionManager->changeCollision(0);
+			TMapCollisionManager* manager = mMapCollisionManager;
 			Mtx mtx;
 			MsMtxSetTRS(mtx, mPosition.x, mPosition.y, mPosition.z,
 			            mRotation.x, mRotation.y, mRotation.z, mScaling.x,
 			            mScaling.y, mScaling.z);
-			mMapCollisionManager->unk8->setMtx(mtx);
-			mMapCollisionManager->unk8->setUp();
+			TMapCollisionBase* entry = manager->unk8;
+			entry->setMtx(mtx);
+			entry->setUp();
 			mStateTimer = mReviveTime;
 			mState      = STATE_REVIVING;
 			break;
@@ -233,8 +237,9 @@ void TSandBombBase::withered()
 
 void TSandBombBase::expanded()
 {
-	mTrigger->getMActor()->getFrameCtrl(0)->setFrame(
-	    mExpandFrameSpeed + mTrigger->getMActor()->getFrameCtrl(0)->getFrame());
+	TSandBomb* trigger = mTrigger;
+	trigger->getMActor()->getFrameCtrl(0)->setFrame(
+	    mExpandFrameSpeed + trigger->getMActor()->getFrameCtrl(0)->getFrame());
 
 	gpMSound->startSoundActor(MSD_SE_OBJ_SAMDBOMB_REVERSE,
 	                          &mTrigger->mPosition, 0, nullptr, 0, 4);
@@ -309,29 +314,12 @@ void TSandBombBase::control()
 	case STATE_GROWN: {
 		f32 frame = mTrigger->getMActor()->getFrameCtrl(0)->getFrame()
 		    - mFiringFrameDownSpeed;
-		if (!(frame < 0.0f)) {
+		if (frame >= 0.0f) {
 			mTrigger->getMActor()->getFrameCtrl(0)->setFrame(frame);
 			mTrigger->getMActor()->getFrameCtrl(5)->setFrame(frame);
 		}
 		break;
 	}
-
-	case STATE_WITHER:
-		SMSRumbleMgr->start(0x13, -1, &mPosition);
-		if (withering()) {
-			withered();
-			SMSRumbleMgr->stop(0x13);
-		}
-		break;
-
-	case STATE_REVIVING:
-		if (!isStateTimerEngaged()) {
-			mState = STATE_GROWN;
-			mTrigger->awake();
-			mTrigger->startControlAnim(1);
-			mTrigger->startControlAnim(2);
-		}
-		break;
 
 	case STATE_FIRING:
 		mTrigger->getMActor()->getFrameCtrl(0)->setFrame(
@@ -358,6 +346,23 @@ void TSandBombBase::control()
 
 	case STATE_EXPANDED:
 		expanded();
+		break;
+
+	case STATE_WITHER:
+		SMSRumbleMgr->start(0x13, -1, &mPosition);
+		if (withering()) {
+			withered();
+			SMSRumbleMgr->stop(0x13);
+		}
+		break;
+
+	case STATE_REVIVING:
+		if (!isStateTimerEngaged()) {
+			mState = STATE_GROWN;
+			mTrigger->awake();
+			mTrigger->startControlAnim(1);
+			mTrigger->startControlAnim(2);
+		}
 		break;
 	}
 
@@ -450,8 +455,9 @@ bool TSandCastle::withering()
 
 void TSandCastle::expanded()
 {
-	mTrigger->getMActor()->getFrameCtrl(0)->setFrame(
-	    mExpandFrameSpeed + mTrigger->getMActor()->getFrameCtrl(0)->getFrame());
+	TSandBomb* trigger = mTrigger;
+	trigger->getMActor()->getFrameCtrl(0)->setFrame(
+	    mExpandFrameSpeed + trigger->getMActor()->getFrameCtrl(0)->getFrame());
 
 	gpMSound->startSoundActor(MSD_SE_OBJ_SAMDBOMB_REVERSE,
 	                          &mTrigger->mPosition, 0, nullptr, 0, 4);
@@ -503,10 +509,10 @@ static s32 SandCastleCallBack(u32 param_1, u32 param_2)
 		gpTargetArrow->unk14 = 1;
 		gpTargetArrow->setPos(
 		    JGeometry::TVec3<f32>(8400.0f, 300.0f, 8150.0f));
-		gpCamera->warpPosAndAt(
-		    gpCamera->mCurrentTarget.unk28,
-		    matan(gpCamera->unk124.z - gpCamera->unk148.z,
-		          gpCamera->unk124.x - gpCamera->unk148.x));
+		const JGeometry::TVec3<f32>& eye = gpCamera->unk124;
+		const JGeometry::TVec3<f32>& at  = gpCamera->unk148;
+		gpCamera->warpPosAndAt(gpCamera->mCurrentTarget.unk28,
+		                       matan(eye.z - at.z, eye.x - at.x));
 	}
 
 	return 1;
@@ -524,7 +530,7 @@ void TSandCastle::waitBeforeExplode()
 
 void TSandCastle::calcRootMatrix()
 {
-	if (mState != STATE_WITHER)
+	if (!isState(STATE_WITHER))
 		TMapObjBase::calcRootMatrix();
 }
 
@@ -565,10 +571,17 @@ int TLeanMirror::mGoTargetTime  = 600;
 int TLeanMirror::mDemoWaitTime  = -1;
 int TLeanMirror::mDemoLightTime = 360;
 
-// UNUSED (0x1c) and called from nowhere: only the name is evidence, so this
-// is left as a placeholder rather than a guess.
-// TODO: recover the real body; 0x1c is about seven instructions.
-bool TLeanMirror::enemyIsOn() const { return false; }
+// UNUSED (0x1c). controlShake's first condition is a materialised bool built
+// from mHitNum, the count of chuu-hanas still riding the mirror, so this is
+// the predicate it was factored out of. The explicit return true/return false
+// shape is what materialises at the call site.
+bool TLeanMirror::enemyIsOn() const
+{
+	if (mHitNum != 0)
+		return true;
+
+	return false;
+}
 
 void TLeanMirror::draw() const
 {
@@ -634,7 +647,7 @@ void TLeanMirror::touchPlayer(THitActor* actor)
 		updateSpeedVec(actor->mPosition, mMarioPower);
 		if (!mBgmStarted) {
 			MSBgm::startBGM(MSD_BGM_EXTRA);
-			MSBgm::setTrackVolume(0xA, 0.0f, 0, 0);
+			MSBgm::setTrackVolume(0, 0.0f, 0xA, 0);
 			mBgmStarted = true;
 		}
 	}
@@ -648,13 +661,15 @@ void TLeanMirror::touchEnemy(THitActor* actor)
 		updateSpeedVec(actor->mPosition, mEnemyPower);
 }
 
-// UNUSED: the matrix build shared by controlShake and controlGoTarget.
-// TODO: 0x100 in the map; check the compiled size against that.
+// UNUSED (0x100): the rotation step shared by controlShake and
+// controlGoTarget. TMatrix34::identity()'s chained assignments reproduce the
+// ROM's exact store order for the scratch matrix.
 void TLeanMirror::calcCurrentMtx(Mtx mtx)
 {
-	makeMtxRotByAxis(mRotAxis, mRotSpeed, mtx);
-	concatOnlyRotFromLeft(mtx, getModel()->getAnmMtx(0),
-	                      getModel()->getAnmMtx(0));
+	JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > rot;
+	rot.identity();
+	makeMtxRotByAxis(mRotAxis, mRotSpeed, rot);
+	concatOnlyRotFromLeft(rot, mtx, mtx);
 }
 
 void TLeanMirror::release()
@@ -700,15 +715,14 @@ void TLeanMirror::release()
 		    JDrama::TFlagT<u16>(0));
 	}
 
-	MSBgm::stopTrackBGM(0xA, 1);
+	MSBgm::stopTrackBGM(1, 0xA);
 }
 
 static s32 startCameraShakeSE(u32 param_1, u32 param_2) { return 0; }
 
 void TLeanMirror::controlGoTarget()
 {
-	Mtx mtx;
-	calcCurrentMtx(mtx);
+	calcCurrentMtx(getModel()->getAnmMtx(0));
 
 	if (!isStateTimerEngaged()) {
 		mShiningStone->putOnLight(this);
@@ -740,10 +754,12 @@ void TLeanMirror::controlGoTarget()
 
 void TLeanMirror::controlShake()
 {
-	if (mHitNum != 0 && mBgmStarted && SMS_IsMarioTouchGround4cm()
+	if (enemyIsOn() && mBgmStarted && SMS_IsMarioTouchGround4cm()
 	    && SMS_GetMarioGrPlane()->mActor != this) {
-		MSBgm::stopTrackBGM(0xA, 1);
-		MSBgm::setTrackVolume(0xA, 1.0f, 0, 0);
+		// TODO: the argument order below is what the ROM passes; it disagrees
+		// with the parameter names guessed in MSound/MSoundBGM.hpp.
+		MSBgm::stopTrackBGM(1, 0xA);
+		MSBgm::setTrackVolume(0, 1.0f, 0xA, 0);
 		mBgmStarted = false;
 	}
 
@@ -759,14 +775,10 @@ void TLeanMirror::controlShake()
 		rotateVecByAxisY(&axis, 1.5707963f);
 		mRotAxis.set(axis);
 
-		f32 mag = mSpeed.x * mSpeed.x + mSpeed.z * mSpeed.z;
-		if (mag > 0.0f)
-			mag = JGeometry::TUtil<f32>::sqrt(mag);
-		mRotSpeed = mag * mSpeedRate;
+		mRotSpeed = MsSqrtf(mSpeed.x * mSpeed.x + mSpeed.z * mSpeed.z)
+		    * mSpeedRate;
 
-		Mtx current;
-		makeMtxRotByAxis(mRotAxis, mRotSpeed, current);
-		concatOnlyRotFromLeft(current, mtx, mtx);
+		calcCurrentMtx(mtx);
 
 		if (getModel()->getAnmMtx(0)[1][1] < mLeanLimit) {
 			MtxPtr now = getModel()->getAnmMtx(0);
@@ -817,7 +829,7 @@ void TLeanMirror::control()
 		if (!isStateTimerEngaged()) {
 			TShiningStone* stone = mShiningStone;
 			if (stone->getLightNum() < 3) {
-				MSBgm::setTrackVolume(0xA, 1.0f, 0, 0);
+				MSBgm::setTrackVolume(0, 1.0f, 0xA, 0);
 				if (stone->getLightNum() == 1)
 					gpMarDirector->getConsole()->startAppearBalloon(0x32,
 					                                                true);
@@ -843,9 +855,9 @@ void TLeanMirror::loadAfter()
 
 	mShiningStone = (TShiningStone*)JDrama::TNameRefGen::search2("ShiningStone");
 
-	JGeometry::TVec3<f32> toStone(mShiningStone->mPosition);
+	JGeometry::TVec3<f32> toStone = mShiningStone->mPosition;
 	toStone.sub(mPosition);
-	mToStone.set(toStone);
+	mToStone = toStone;
 	mToStone.setLength(1.0f);
 }
 
@@ -1076,9 +1088,9 @@ int TMammaBlockRotate::mWaitTime       = 600;
 
 u32 TMammaBlockRotate::touchWater(THitActor* actor)
 {
-	if (mState == STATE_WAIT) {
-		mRotation.x += mRotSpeed;
-		if (mRotation.x > mRotEnd)
+	if (isState(STATE_WAIT)) {
+		mRotation.y += mRotSpeed;
+		if (mRotation.y > mRotEnd)
 			mState = STATE_GOING;
 	}
 
@@ -1091,10 +1103,10 @@ void TMammaBlockRotate::control()
 
 	switch (mState) {
 	case STATE_WAIT:
-		if (mRotation.x > 0.0f)
-			mRotation.x -= mRotReturnSpeed;
+		if (mRotation.y > 0.0f)
+			mRotation.y -= mRotReturnSpeed;
 		else
-			mRotation.x = 0.0f;
+			mRotation.y = 0.0f;
 		break;
 
 	case STATE_GOING: {
@@ -1209,15 +1221,10 @@ void TMammaYacht::initMapObj()
 	TMapObjBase::initMapObj();
 
 	mFlag = new TMapObjFlag("旗");
-	mFlag->mPosition.x = mPosition.x + 2.0f;
-	mFlag->mPosition.y = (mPosition.y + 1315.0f) - 190.0f;
-	mFlag->mPosition.z = mPosition.z - 15.0f;
-	mFlag->mRotation.x = 0.0f;
-	mFlag->mRotation.y = 180.0f;
-	mFlag->mRotation.z = 0.0f;
-	mFlag->mScaling.x  = 1.0f;
-	mFlag->mScaling.y  = 2.5f;
-	mFlag->mScaling.z  = 3.8f;
+	mFlag->mPosition.set(2.0f + mPosition.x, (1315.0f + mPosition.y) - 190.0f,
+	                     mPosition.z - 15.0f);
+	mFlag->mRotation.set(0.0f, 180.0f, 0.0f);
+	mFlag->mScaling.set(1.0f, 2.5f, 3.8f);
 	mFlag->init("MammaYacht00");
 }
 
@@ -1312,11 +1319,12 @@ u32 TWatermelonStatic::touchWater(THitActor* actor) { return 1; }
 
 void TGoalWatermelon::touchActor(THitActor* actor)
 {
-	if (mState == STATE_NORMAL && actor->isActorType(0x400000D0)) {
+	if (isState(STATE_NORMAL) && actor->isActorType(0x400000D0)) {
 		mWatermelon = (TMapObjBase*)actor;
 		mWatermelon->getMActor()->setBck("watermelon_shrink");
 		mWatermelon->offMapObjFlag(MAP_OBJ_FLAG_UNK100);
-		mWatermelon->mVelocity.set(0.0f, 0.0f, 0.0f);
+		JGeometry::TVec3<f32> stop(0.0f, 0.0f, 0.0f);
+		mWatermelon->mVelocity = stop;
 		gpMarDirector->fireStartDemoCamera(
 		    "スイカゴールカメラ", &mWatermelon->mPosition, -1, 0.0f, true,
 		    nullptr, 0, nullptr, JDrama::TFlagT<u16>(0));
