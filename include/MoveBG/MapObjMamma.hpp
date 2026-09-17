@@ -4,6 +4,7 @@
 #include <MoveBG/MapObjBall.hpp>
 #include <MoveBG/MapObjBase.hpp>
 #include <MoveBG/MapObjEx.hpp>
+#include <MoveBG/MapObjFlag.hpp>
 #include <Strategic/HitActor.hpp>
 #include <JSystem/JDrama/JDRViewObj.hpp>
 
@@ -13,31 +14,6 @@ class TJointModel;
 class TJointObj;
 class TSandBase;
 class TSandBomb;
-
-// TODO: TMapObjFlag belongs in its own MoveBG/MapObjFlag.hpp - the empty
-// src/MoveBG/MapObjFlag.cpp is its translation unit and the map lists
-// load/init/draw/update/updateVertex plus the static mFlutterSpeed for it.
-// Only what TMammaYacht needs is declared here, sized to the 0xC0 the inlined
-// `new TMapObjFlag` in MarNameRefGen_MapObj.cpp asks for. The destructor is
-// deliberately left undefined so this unit does not emit the class's vtable,
-// which retail's MapObjMamma.o does not carry either.
-class TMapObjFlag : public THitActor {
-public:
-	TMapObjFlag(const char* name = "旗");
-
-	virtual ~TMapObjFlag();
-	virtual void load(JSUMemoryInputStream&);
-	virtual void draw();
-
-	void init(const char*);
-	void update();
-	void updateVertex();
-
-	static f32 mFlutterSpeed;
-
-public:
-	/* 0x68 */ u8 unk68[0xC0 - 0x68]; // fabricated padding
-};
 
 /// Hides the parts of the 太陽の塔 building that the mirror camera cannot see.
 /// Owns one entry per mirror joint of the "舞台地形" static map model.
