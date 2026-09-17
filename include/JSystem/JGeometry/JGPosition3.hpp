@@ -63,6 +63,17 @@ public:
 		this->setQuat(quat);
 		this->setTrans(trans);
 	}
+	// The scaled sibling of setQT. It is never emitted (no symbol in the map),
+	// but it is the level that keeps TRotation3::setSQ a `bl` at the one place
+	// the ROM calls it out of line, TBeeHive::calcRootMatrix -- setSQ inlines
+	// at depth 1 however it is spelled, and this one-line forwarder is what
+	// pushes it to depth 2.
+	void setSQT(const TVec3<f32>& scale, const TQuat4<f32>& quat,
+	            const TVec3<f32>& trans)
+	{
+		this->setSQ(scale, quat);
+		this->setTrans(trans);
+	}
 
 	void makeRotate(const JGeometry::TVec3<f32>&, f32);
 	void setPositionFromLookAt(const TPosition3<T>&);

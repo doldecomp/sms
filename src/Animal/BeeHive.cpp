@@ -32,25 +32,6 @@ typedef JGeometry::TPosition3<
     JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > >
     TBeeHiveMtx;
 
-// TODO: this stands in for `TPosition3<T>::setSQT(scale, quat, trans)`, a
-// sibling of the setQT already in JSystem/JGeometry/JGPosition3.hpp. The ROM
-// calls TRotation3::setSQ out of line from calcRootMatrix, which only happens
-// when the call sits one inline level deeper than the function body -- and the
-// same TU calls identity33() and SMatrix34C's empty constructor out of line,
-// which is what declaring the matrix as TPosition3 (three nested trivial
-// constructors) produces. Move this into JGPosition3.hpp as a member and
-// delete it; that header was out of scope for the batch that found it.
-// With the member instead of this wrapper the codegen is identical
-// (calcRootMatrix 18.6% -> 71.5%, setSQ emitted and exact).
-static inline void SetSQT(TBeeHiveMtx& mtx,
-                          const JGeometry::TVec3<f32>& scale,
-                          const JGeometry::TQuat4<f32>& quat,
-                          const JGeometry::TVec3<f32>& trans)
-{
-	mtx.setSQ(scale, quat);
-	mtx.setTrans(trans);
-}
-
 // TODO: this stands in for a member the original surely had --
 // `TRealoidActor::checkFlag(int) const`, declared next to onFlag/offFlag in
 // Animal/fishoid.hpp, mirroring TLiveActor::checkLiveFlag and
@@ -492,7 +473,7 @@ void TBeeHive::calcRootMatrix()
 	quat.mul(quat, swing);
 
 	TBeeHiveMtx rot;
-	SetSQT(rot, mScaling, quat, mPosition);
+	rot.setSQT(mScaling, quat, mPosition);
 	rot.ref(1, 3) += 120.0f;
 
 	MTXCopy(rot, getModel()->getBaseTRMtx());
