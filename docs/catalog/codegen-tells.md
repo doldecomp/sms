@@ -204,6 +204,20 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `BathtubKiller` and `hauntLeg`
+
+- A discarded call whose body opens with a null test can account for an entire frame gap: a bare `getActiveObjNum();` (its inline opens `if (!unk38) return getObjNum();`) reproduced both the dead `lwz`/`cmplwi` and the whole 32 bytes (`loadAfter` 84.5 -> 90.6).
+- Param defaults are the constants stored to `param + 0x10` in the *first* pass of the params constructor; the post-`load()` `.set()` overrides are the second pass and park their literals in `.sdata`. Twenty-five wrong defaults hid a 1,832-byte constructor; a missing 4-byte `.sdata2` constant among a params class's names is a wrong default.
+- A POD member goes in the initialiser list when the ROM stores it before a member's constructor call (`: TSmallEnemy(name), unk1CC(nullptr)` before `bl TMatrix34::TMatrix34()`; `createEnemyInstance` 76 -> 100).
+- An empty counted loop unrolls unless it counts down: `for (int i = n; i != 0; --i) {}` gives the bare `mtctr`/`bdnz` (`checkHit` 0x18, size-exact).
+- `normalize()` over `setLength(1.0f)` when the ROM hoists the 1.0f into a callee-saved register: `normalize()` goes through `TUtil<f32>::one()`, whose bound temporary survives the `dot`/`inv_sqrt` calls (Straight nerve 75 -> 87).
+- `v.scale(k); dst.set(v)` stores back into `v` then copies interleaved; `dst.scale(k, v)` multiplies straight into `dst`'s stores. Both occur in one unit.
+- Name the length before the parameter fetch (`f32 speed = v.length(); f32 max = p->get();`) to put the inlined `length()` before the virtual `getSaveParam()` (`makeInitialVelocity` 87 -> 96).
+- `operator-` into a *named* `TVec3` keeps `TVec3::sub` out of line where `TVec3<f32>(a - b).length()` expands it (Haunt nerve 80 -> 96): which spelling you want depends on whether `sub` or `sqrt` is the out-of-line one.
+- Two `li r3, 0` blocks mean two `return false;` statements. `TPosition3::translation(x, y, z)` binds the three floats before the out-of-line `identity33()`; the `TVec3&` overload loads after.
+- `theNerve()` expansion is emergent per function from identical source: retail inlines the first nerve comparison in three functions and calls it in two others, emitting `bl TNerveBase<TLiveActor>::TNerveBase()` inside the expansions. Every instruction matches; the artefact is the whole residual (54-79%). A `TSpineBase::isCurrentNerve()` wrapper does not explain it.
+- Header layout tells from `hauntLeg`: `getTakingMtx` is virtual (slot 0xa4); an override returning `BOOL` where the base says `bool` loses the slot; `entry$NNNN` non-`const` lands in `.data`.
+
 ## Rules from `pakkun`
 
 - A `const` accessor can *cost* a match in a constant multiply: `3.0f * self->getTurnSpeed()` loads the member into the destination register; `3.0f * self->mTurnSpeed` loads the constant first (Hide nerve 99.2 -> 100).
