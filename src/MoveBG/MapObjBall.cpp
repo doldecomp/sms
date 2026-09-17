@@ -1515,6 +1515,85 @@ void TMapObjBall::calcCurrentMtx()
 	MTXCopy(rot, getModel()->getAnmMtx(0));
 }
 
+// UNUSED, 0x254 in the map.
+// TODO: incorrect size -- this body compiles to about 0x134, the same as
+// touchActor(), which is the only evidence available: same class, a
+// THitActor argument, and exactly the per-collision "knock it about, then
+// start the countdown" flow that control()'s NORMAL loop performs. The
+// missing ~0x120 is about the size of TMapObjBall::touchActor, so the
+// original probably expanded that here rather than calling it; no spelling
+// tried reproduces both the size and touchActor's own instruction stream.
+void TResetFruit::pick(THitActor* actor)
+{
+	if (isState(STATE_APPEARING))
+		return;
+	if (isState(STATE_BREAKING))
+		return;
+	if (isState(STATE_ROTTING))
+		return;
+	if (isState(STATE_WAITING_TO_APPEAR))
+		return;
+
+	TMapObjBall::touchActor(actor);
+
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000))
+		return;
+
+	if (isState(STATE_NORMAL) && !checkLiveFlag(LIVE_FLAG_UNK10))
+		makeObjLiving();
+}
+
+// UNUSED, 0x188 in the map. The body of control()'s LIVING arm, which the
+// original spells out there rather than calling: at sixteen statements it is
+// over MWCC's depth-1 inline budget, so a call would not have expanded.
+void TResetFruit::living()
+{
+	offHitFlag(HIT_FLAG_NO_COLLISION);
+	if (gpMarDirector->mMap == 4 && checkLiveFlag(LIVE_FLAG_UNK10))
+		offLiveFlag(LIVE_FLAG_UNK10);
+
+	if (mGroundPlane->getActor()) {
+		if (checkLiveFlag(LIVE_FLAG_UNK10))
+			offLiveFlag(LIVE_FLAG_UNK10);
+
+		const TLiveActor* owner = getGroundPlane()->getActor();
+		if (mPosition.y < mGroundHeight + 200.0f) {
+			if (owner->isActorType(0x400000CD)
+			    || owner->isActorType(0x400000CD)) {
+				f32 wasRatio = unk198;
+				unk198       = SMS_GetSandRiseUpRatio(owner);
+				if (unk198 > 0.05f && unk198 > wasRatio)
+					mVelocity.y += 20.0f;
+			}
+		}
+	} else {
+		unk198 = 0.0f;
+	}
+
+	TMapObjBall::control();
+	rotting();
+}
+
+// UNUSED, 0xac in the map. The appear-effect half of waitingToAppear(): the
+// original spells it out there, so this standalone copy is dead.
+void TResetFruit::waitEffect()
+{
+	onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
+	makeObjAppeared();
+
+	Mtx small;
+	MTXScale(small, 0.2f, 0.2f, 0.2f);
+	concatOnlyRotFromLeft(small, getModel()->getAnmMtx(0),
+	                      getModel()->getAnmMtx(0));
+
+	mScaling.y = 0.2f;
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+	mState = STATE_APPEARING;
+
+	SMSGetMSound()->startSoundActor(MSD_SE_IT_COMMON_APPEAR, &mPosition, 0,
+	                                nullptr, 0, 4);
+}
+
 // UNUSED, 0xac in the map. Inlined at the end of control()'s living and
 // holding arms: once the countdown expires the fruit is dropped by whoever
 // is carrying it, stopped dead, and starts to rot.
