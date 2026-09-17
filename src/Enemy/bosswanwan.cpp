@@ -181,7 +181,7 @@ void TBWLeashNode::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (mLeash->mOwner->getHitPoints() != 0 && mIndex < 8) {
 			for (int i = 0; i < getColNum(); ++i) {
 				THitActor* actor = getCollision(i);
-				if (actor->isActorType(0x80000001))
+				if (actor->getActorType() == 0x80000001)
 					actor->receiveMessage(this, HIT_MESSAGE_UNKA);
 			}
 		}
@@ -228,19 +228,19 @@ TBWLeash::TBWLeash(TBossWanwan* owner, int node_num, const char* name)
     , mRope(nullptr)
     , mNodes(nullptr)
 {
-	mRope = new TRope(node_num, mOwner->mPosition,
-	                  mOwner->getSaveParam2()->mSLLeashNodeLen.get(),
-	                  mOwner->getSaveParam2()->mSLChainGroundRadius.get(), 0.7f,
-	                  -2.0f);
+	f32 nodeLen      = mOwner->getSaveParam2()->mSLLeashNodeLen.get();
+	f32 groundRadius = mOwner->getSaveParam2()->mSLChainGroundRadius.get();
+	mRope  = new TRope(node_num, mOwner->mPosition, nodeLen, groundRadius, 0.7f,
+	                   -2.0f);
 	mNodes = new TBWLeashNode*[node_num];
 
 	for (int i = 0; i < node_num; ++i)
 		mNodes[i] = new TBWLeashNode(this, i, "鎖部品");
 
+	TIdxGroupObj* group = JDrama::TNameRefGen::search<TIdxGroupObj>(
+	    "敵グループ");
 	for (int i = 0; i < node_num; ++i) {
-		JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
-		    ->getChildren()
-		    .push_back(mNodes[i]);
+		group->getChildren().push_back(mNodes[i]);
 
 		// Only the two links nearest the stake collide with the map, and only
 		// the two links nearest the stake are excluded from hitting Mario.
@@ -521,14 +521,13 @@ BOOL TBWHit::receiveMessage(THitActor* sender, u32 message)
 void TBWHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
-		int joint = mJointIndex;
-		if (joint >= 0)
-			mOwner->getJointTransByIndex(joint, &mPosition);
+		if (mJointIndex >= 0)
+			mOwner->getJointTransByIndex(mJointIndex, &mPosition);
 
 		for (int i = 0; i < getColNum(); ++i) {
 			THitActor* actor = getCollision(i);
 			if (mOwner->getHitPoints() != 0
-			    && actor->isActorType(0x80000001))
+			    && actor->getActorType() == 0x80000001)
 				actor->receiveMessage(this, HIT_MESSAGE_UNKA);
 		}
 	}
