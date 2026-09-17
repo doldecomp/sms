@@ -1935,7 +1935,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 	TBossGesso* self = (TBossGesso*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		self->changeBck(5);
+		self->changeBck(2);
 
 		self->getMActor()->setBtpFromIndex(1);
 
@@ -1957,7 +1957,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 			gpMarDirector->fireStartDemoCamera("bgeso_fall_camera3", nullptr,
 			                                   -1, 0.0f, true, nullptr, 0,
 			                                   nullptr, JDrama::TFlagT<u16>(0));
-		} else if (gpMarDirector->unk7D == 4) {
+		} else if (self->is2ndFightNow()) {
 			gpMarDirector->fireStartDemoCamera("bgeso_fall_camera2", nullptr,
 			                                   -1, 0.0f, true, nullptr, 0,
 			                                   nullptr, JDrama::TFlagT<u16>(0));
@@ -1970,7 +1970,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		if (gpMarDirector->mMap == 3 || gpMarDirector->mMap == 59) {
 			gpItemManager->makeShineAppearWithDemo(
 			    "シャイン（ボス用）", "ボスシャインカメラ", self->mPosition.x,
-			    self->mPosition.y + 6000.0f, self->mPosition.z);
+			    6000.0f + self->mPosition.y, self->mPosition.z);
 		}
 
 		TNameKuriManager* nameKuriMgr
@@ -1995,7 +1995,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 	}
 
 	if (self->getMActor()->checkCurBckFromIndex(2)
-	    || self->getMActor()->curAnmEndsNext()) {
+	    && self->getMActor()->curAnmEndsNext()) {
 
 		self->changeBck(6);
 		self->changeAllTentacleState(8);
@@ -2003,18 +2003,12 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		JGeometry::TVec3<f32> local_24;
 		local_24.x = self->mPosition.x;
 		local_24.y = -5000.0f;
-		local_24.z = self->mPosition.z + 7000.0f;
+		local_24.z = 7000.0f + self->mPosition.z;
 
-		self->unkF4.unk0 = nullptr;
-		self->unkF4.unk4 = local_24;
+		self->setGoalPath(local_24);
 
-		self->unk104.unk0 = nullptr;
-		self->unk104.unk4 = local_24;
-
-		self->unk114.clear();
-
-		self->mVelocity
-		    = self->calcVelocityToJumpToY(local_24, 0.0f, self->getGravityY());
+		self->mVelocity = self->calcVelocityToJumpToY(local_24, 50.0f,
+		                                              self->getGravityY());
 		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		return false;
 	}
@@ -2141,9 +2135,9 @@ DEFINE_NERVE(TNerveBGRoll, TLiveActor)
 			self->changeBck(19);
 
 		if (mactor->curAnmEndsNext()) {
-			if (mactor->checkCurBckFromIndex(13)) {
+			if (mactor->checkCurBckFromIndex(14)) {
 				if (self->unk196 < 3) {
-					self->changeBck(13);
+					self->changeBck(14);
 					self->unk196 += 1;
 				} else {
 					self->changeBck(18);
@@ -2151,7 +2145,7 @@ DEFINE_NERVE(TNerveBGRoll, TLiveActor)
 				}
 			} else {
 				if (mactor->checkCurBckFromIndex(19))
-					self->changeBck(13);
+					self->changeBck(14);
 				else
 					return true;
 			}
