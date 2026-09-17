@@ -155,25 +155,30 @@ void TBWLeashNode::calcTemperature()
 		return;
 	}
 
-	f32 delta = mLeash->mNodes[mIndex - 1]->mTemperature - mTemperature;
+	f32 delta = mLeash->getNode(mIndex - 1)->mTemperature - mTemperature;
 	f32 step;
-	if (delta >= 0.0) {
-		step = 0.005f;
-		if (delta > 0.1) {
+
+	if (delta < 0.0f) {
+		if (delta < 0.1f) {
 			step = 0.02f;
+		} else {
+			step = 0.005f;
 		}
 	} else {
-		step = -0.005f;
-		if (delta < -0.1) {
+		if (delta > -0.1f) {
 			step = -0.02f;
+		} else {
+			step = -0.005f;
 		}
 	}
 
-	this->unk0 += step;
+	this->mTemperature += step;
 
-	if (this->unk0 < 0.0f) {
-		this->unk0 = 0.0f;
-	} else if (this->unk0 > 1.0f) {
-		this->unk0 = 1.0f;
+	if (this->mTemperature < 0.0f) {
+		this->mTemperature = 0.0f;
+	}
+
+	if (this->mTemperature > 1.0f) {
+		this->mTemperature = 1.0f;
 	}
 }

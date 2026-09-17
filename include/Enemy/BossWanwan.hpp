@@ -41,11 +41,18 @@ public:
 	virtual void bind(TLiveActor*);
 };
 
-class TBWLeash : public THitActor {
+class TBWLeash {
 public:
 	TBWLeash(TBossWanwan*, int, const char*);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	TBWLeashNode** mNodes;
+	TBWLeashNode* getNode(s32 idx) const { return mNodes[idx]; } // fabricated
+
+	u32 unk0; // fabr
+	u32 unk1; // fabr
+	u32 unk2; // fabr
+	f32 unk3; // fabr
+	f32 unk4; // fabr
+	/* 0x18 */ TBWLeashNode** mNodes;
 };
 
 class TBWLeashNode : public THitActor {
@@ -59,9 +66,9 @@ public:
 private:
 	// THitActor ends at 0x68
 	TBWLeash* mLeash; // +0x68
-	f32 mTemperature; // +0x6C
-	f32 unk0;         // +0x70
-	u32 mIndex;       // +0x74
+	f32 unk0;         // +0x6C
+	f32 mTemperature; // +0x70
+	int mIndex;       // +0x74
 };
 
 class TBWParams : public TSpineEnemyParams {
