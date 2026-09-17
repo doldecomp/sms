@@ -54,15 +54,14 @@ public:
 	virtual void kill();
 
 	BOOL isEndWire() const;
-	// TODO: BOOL in the ROM; blocked on WireBinder.hpp. See the definition.
-	void isStartWire() const;
+	BOOL isStartWire() const;
 	TWireBinder* getWireBinder() const;
 	TWireBinder* getWireBinder();
 	f32 getRangePosInWire() const;
 	static const TNerveBase<TLiveActor>* getNerveFromMode(int mode);
 	BOOL isReflect() const;
 	// TODO: the ROM returns a reference here (0xc bytes); see the definition.
-	JGeometry::TVec3<f32> getWireDir() const;
+	const JGeometry::TVec3<f32>& getWireDir() const;
 	JGeometry::TVec3<f32> getDirAtWirePos() const;
 	void setMoveMode(int mode);
 	void emitEffects();

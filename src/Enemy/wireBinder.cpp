@@ -102,7 +102,18 @@ TMapWire* TWireBinder::getWire() const
 	return gpMapWireManager->getWire(mWireNumber);
 }
 
-void TWireBinder::isStartWire(const JGeometry::TVec3<f32>&, f32) const { }
+// UNUSED, 0x6c in the map -- four bytes more than isEndWire, and it is called
+// out of line from TWireTrap::isStartWire, so it really returns an answer.
+// TODO: the body is a guess mirroring isEndWire's; only the target position
+// flips.
+bool TWireBinder::isStartWire(const JGeometry::TVec3<f32>& param_1,
+                              f32 param_2) const
+{
+	f32 posInWire = getRangePos(param_1);
+	f32 targetPos = 0.0f < param_2 ? 0.0f : 1.0f;
+
+	return fabsf(posInWire - targetPos) < 0.015f;
+}
 
 bool TWireBinder::isEndWire(const JGeometry::TVec3<f32>& param_1,
                             f32 param_2) const

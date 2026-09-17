@@ -134,19 +134,22 @@ void TWireTrap::initWire()
 	// The 1.0f factors are live loads from .sdata2 in the ROM, not folded
 	// constants, so they came through TUtil<f32>::one() rather than a
 	// literal.
-	// TODO: retail materialises `facing` on the stack and reaches it with a
-	// call to the local out-of-line copy of TVec3::set<f32>(f,f,f) (map:
-	// `set<f>__Q29JGeometry8TVec3<f>Ffff`, local, 0x10). Here the
-	// constructor's set() is expanded instead and the vector is scalarised
-	// away, which costs load about nine instructions. Spelling the vector as
-	// an unnamed temporary receiver -- `TVec3<f32>(...).dot(...)` -- does
-	// materialise it (load 80.4% -> 87.4%) but still expands set(), so it is
-	// not the mechanism and the readable form is kept.
-	JGeometry::TVec3<f32> facing(
-	    JGeometry::TUtil<f32>::one() * JMASin(mRotation.y), 0.0f,
-	    JGeometry::TUtil<f32>::one() * JMACos(mRotation.y));
-
-	if (0.0f <= facing.dot(getWireBinder()->getDir()))
+	// The facing vector is an unnamed temporary, which is what gives it the
+	// stack home retail reads back at 0x80/0x84/0x88(r1); a named `facing`
+	// local is scalarised into registers instead and costs load about nine
+	// instructions (80.4% against 87.4% here).
+	//
+	// TODO: retail still reaches that temporary through a *call* to the local
+	// out-of-line copy of TVec3::set<f32>(f,f,f) (map:
+	// `set<f>__Q29JGeometry8TVec3<f>Ffff`, local, 0x10, present in over twenty
+	// objects), and no spelling here can produce that -- see the note on
+	// JGVec3.hpp in the batch report. Until then the last nine instructions of
+	// the block differ.
+	if (0.0f
+	    <= JGeometry::TVec3<f32>(
+	           JGeometry::TUtil<f32>::one() * JMASin(mRotation.y), 0.0f,
+	           JGeometry::TUtil<f32>::one() * JMACos(mRotation.y))
+	           .dot(getWireBinder()->getDir()))
 		mMoveDir = 1.0f;
 	else
 		mMoveDir = -1.0f;
@@ -329,9 +332,6 @@ void TWireTrap::moveObject()
 // MWCC expands `TVec3::scale` there, while the ROM calls it out of line from
 // every nerve. Going through `operator*=` restores that call and took the
 // three moving nerves from 66-91% to 99%.
-// TODO: this compiles to 0xf4 rather than 0xdc only because
-// TWireBinder::getDir() still returns by value (see getWireDir below); with
-// the one-word header fix it is size-exact.
 void TWireTrap::calcMomentum()
 {
 	JGeometry::TVec3<f32> momentum = getWireDir();
@@ -475,6 +475,14 @@ void TWireTrap::checkHitActors()
 			// not `this` -- it reads like a copy-paste slip the original
 			// kept). MWCC here inlines the first call and refuses the
 			// second, so both stay calls and this function sits at 32%.
+			// That also explains the two `bl`s retail has above, to
+			// TWireTrap::getWireBinder and TWireBinder::getDir: with both
+			// bodies expanded the function is four times this size (frame
+			// 0x1c0 against 0x98) and the inliner stops taking even the
+			// two-instruction accessors. The momentum copies themselves are
+			// right -- `= getWireBinder()->getDir()`, ctor-parenthesis,
+			// declare-then-assign and `= getWireDir()` all compile to the
+			// same 32.2%.
 			// Pasting the body out twice reaches 64% but is not source, and
 			// still leaves retail's twelve out-of-line TVec3::scale calls
 			// expanded. See behaveHitWireTrap: at 0x294 it is 0x3c over the
@@ -526,18 +534,9 @@ JGeometry::TVec3<f32> TWireTrap::getDirAtWirePos() const
 	return getWireBinder()->getDirAtPos(mPosition, mMoveDir);
 }
 
-// TODO: the ROM's copy is 0xc bytes -- `lwz 0x88; addi 8; blr` -- so it hands
-// back a reference, and so does TWireBinder::getDir() (weak, 0x8, a bare
-// `addi r3, r3, 8; blr`). Reproducing that needs one word changed in
-// include/Enemy/WireBinder.hpp: `getDir()` must return
-// `const JGeometry::TVec3<f32>&`, not a value. mDir is private, so this TU
-// cannot reach it any other way, and wireTrap.cpp is getDir's only caller in
-// the whole tree, so the change is local in effect. Measured with it applied:
-// this function and TWireBinder::getDir become exact, calcMomentum and
-// behaveHitWater reach their map sizes, and the Search/ReturnMove/OnewayMove
-// nerves go 89.9/95.5/97.6% -> 98.4/99.0/99.5%. That header is out of scope
-// for this batch, so the value return stays here.
-JGeometry::TVec3<f32> TWireTrap::getWireDir() const
+// 0xc in the map -- `lwz 0x88; addi 8; blr` -- so this forwards
+// TWireBinder::getDir()'s reference rather than copying the vector out.
+const JGeometry::TVec3<f32>& TWireTrap::getWireDir() const
 {
 	return getWireBinder()->getDir();
 }
@@ -582,13 +581,9 @@ TWireBinder* TWireTrap::getWireBinder() const
 
 // UNUSED, 0x30 in the map -- the same size as isEndWire, so this really
 // returns the binder's answer.
-// TODO: TWireBinder::isStartWire() is declared `void` in
-// include/Enemy/WireBinder.hpp, so the value cannot be forwarded yet. That
-// header is out of scope for this batch; changing its return type to `bool`
-// (like isEndWire) is the fix.
-void TWireTrap::isStartWire() const
+BOOL TWireTrap::isStartWire() const
 {
-	getWireBinder()->isStartWire(mPosition, mMoveDir);
+	return getWireBinder()->isStartWire(mPosition, mMoveDir);
 }
 
 // UNUSED, 0x30 in the map.
