@@ -526,28 +526,27 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 	return 1;
 }
 
+// UNUSED (0x80 -- CheckMarioFootPosCtrl). Dead: all four foot callbacks carry
+// this guard written out.
+static BOOL CheckMarioFootPosCtrl()
+{
+	if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK)
+	        == MARIO_STATUS_TYPE_WAITING
+	    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
+	    && !gpMarioForCallBack->onYoshi()
+	    && (gpMarioForCallBack->mStatus == MARIO_STATUS_SLEEPY
+	        || gpMarioForCallBack->mStatus == MARIO_STATUS_SLEEP)
+	           == false)
+		return TRUE;
+	return FALSE;
+}
+
 static int MarioFootPosRCtrl(J3DNode* param_1, int param_2)
 {
 	// volatile u32 padding[9];
 	if (param_2 == 0) {
 
-		BOOL check2;
-		bool check;
-
-		// Definitely some inline shenanigans
-		// And this is wrong
-		if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK)
-		        == MARIO_STATUS_TYPE_WAITING
-		    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
-		    && gpMarioForCallBack->onYoshi() == 0) {
-
-			check2 = !(gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEPY
-			           && gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEP)
-			             ? TRUE
-			             : FALSE;
-		}
-
-		if (check2) {
+		if (CheckMarioFootPosCtrl()) {
 
 			MtxPtr footMtx = gpMarioForCallBack->mModel->getModel()->getAnmMtx(
 			    gpMarioForCallBack->mJointIdChnFootR);
@@ -575,23 +574,7 @@ static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
 
-		BOOL check2;
-		bool check;
-
-		// Definitely some inline shenanigans
-		// And this is wrong
-		if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK)
-		        == MARIO_STATUS_TYPE_WAITING
-		    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
-		    && gpMarioForCallBack->onYoshi() == 0) {
-
-			check2 = !(gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEPY
-			           && gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEP)
-			             ? TRUE
-			             : FALSE;
-		}
-
-		if (check2) {
+		if (CheckMarioFootPosCtrl()) {
 
 			MtxPtr footMtx = gpMarioForCallBack->mModel->getModel()->getAnmMtx(
 			    gpMarioForCallBack->mJointIdFootR);
@@ -650,23 +633,7 @@ static int MarioFootPosLCtrl(J3DNode* param_1, int param_2)
 	// volatile u32 padding[9];
 	if (param_2 == 0) {
 
-		BOOL check2;
-		bool check;
-
-		// Definitely some inline shenanigans
-		// And this is wrong
-		if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK)
-		        == MARIO_STATUS_TYPE_WAITING
-		    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
-		    && gpMarioForCallBack->onYoshi() == 0) {
-
-			check2 = !(gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEPY
-			           && gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEP)
-			             ? TRUE
-			             : FALSE;
-		}
-
-		if (check2) {
+		if (CheckMarioFootPosCtrl()) {
 
 			MtxPtr footMtx = gpMarioForCallBack->mModel->getModel()->getAnmMtx(
 			    gpMarioForCallBack->mJointIdChnFootL);
@@ -694,23 +661,7 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
 
-		BOOL check2;
-		bool check;
-
-		// Definitely some inline shenanigans
-		// And this is wrong
-		if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK)
-		        == MARIO_STATUS_TYPE_WAITING
-		    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
-		    && gpMarioForCallBack->onYoshi() == 0) {
-
-			check2 = !(gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEPY
-			           && gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEP)
-			             ? TRUE
-			             : FALSE;
-		}
-
-		if (check2) {
+		if (CheckMarioFootPosCtrl()) {
 
 			MtxPtr footMtx = gpMarioForCallBack->mModel->getModel()->getAnmMtx(
 			    gpMarioForCallBack->mJointIdFootL);
