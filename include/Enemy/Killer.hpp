@@ -7,15 +7,6 @@
 #include <JSystem/JMath.hpp>
 #include <JSystem/JGeometry.hpp>
 
-// TODO: MsSin/MsCos belong in MarioUtil/MathUtil.hpp next to MsWrap and
-// MsAngleWrap; killer.cpp is the only translation unit in the ROM that emits
-// them, so they live here until a batch is allowed to touch the shared header.
-// They must stay one wrapper level above JMASSin/JMASCos: called through
-// JMASin/JMACos they keep the table lookup out of line, which is what the two
-// 0x38-byte weak copies in killer.o are.
-inline f32 MsSin(f32 degrees) { return JMASin(degrees); }
-inline f32 MsCos(f32 degrees) { return JMACos(degrees); }
-
 class TFlyEnemyParams : public TWalkerEnemyParams {
 public:
 	TFlyEnemyParams(const char* prm);

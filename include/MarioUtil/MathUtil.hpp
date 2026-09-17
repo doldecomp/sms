@@ -2,6 +2,7 @@
 #define MARIO_UTIL_MATH_UTIL_HPP
 
 #include <JSystem/JGeometry.hpp>
+#include <JSystem/JMath.hpp>
 
 /**
  * @brief Steps an integer @p value one increment towards @p target without
@@ -46,6 +47,13 @@ f32 FConverge(f32 value, f32 target, f32 inc, f32 dec);
  * @return the angle of (@p x, @p y) as a signed 16-bit binary angle
  */
 s16 matan(f32 x, f32 y);
+
+// The game's degree-argument sine and cosine. They must stay one wrapper level
+// above JMASSin/JMASCos: reached through JMASin/JMACos the table lookup stays
+// out of line, which is what the two 0x38-byte weak copies in killer.o are.
+// killer.cpp is the only translation unit in the ROM that emits them.
+inline f32 MsSin(f32 degrees) { return JMASin(degrees); }
+inline f32 MsCos(f32 degrees) { return JMACos(degrees); }
 
 // fabricated
 inline f32 MsAtan2(f32 y, f32 x)
