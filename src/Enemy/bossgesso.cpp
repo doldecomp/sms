@@ -71,7 +71,10 @@ const char* bgeso_bastable[] = {
 	"/scene/bgeso/bas/bgeso_wait3.bas",
 };
 
-static void getAttackModeStr(int) { }
+// TODO: 8 bytes in the map, i.e. `li r3, 0; blr`, so the debug name table this
+// returned was stripped from the retail build and only the null return is
+// left. The return type is a guess from the name.
+static const char* getAttackModeStr(int) { return nullptr; }
 
 // fabricated: a TBGTentacle predicate over the same state set as the one
 // changeAllTentacleState() tests, but with the comparisons emitted in the
@@ -382,7 +385,12 @@ void TBossGessoMtxCalc::joinAnm(int param_1)
 	        param_1));
 }
 
-void TBossGessoMtxCalc::setAnm(int param_1) { }
+void TBossGessoMtxCalc::setAnm(int param_1)
+{
+	M3UMtxCalcSIAnmBlendQuat::setAnm(
+	    mOwner->getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
+	        param_1));
+}
 
 void TBossGessoMtxCalc::calc(u16 param_1)
 {
@@ -688,9 +696,17 @@ void TBossGesso::rumblePad(int param_1, const JGeometry::TVec3<f32>& param_2)
 	SMSRumbleMgr->start(8, &unk1A4);
 }
 
-void TBossGesso::definiteRumble() { }
+void TBossGesso::definiteRumble()
+{
+	unk1A4 = 1.0f;
+	SMSRumbleMgr->start(8, &unk1A4);
+}
 
-void TBossGesso::continuousRumble() { }
+void TBossGesso::continuousRumble()
+{
+	if (mBeak->mHolder != nullptr && mTimeInCurrentAttackMode % 4 == 0)
+		rumblePad(1, mBeak->mPosition);
+}
 
 // TODO: retail keeps this a `bl` inside perform while our build expands it
 // there (perform's largest remaining loss); splitting the two locals'
@@ -951,7 +967,20 @@ void TBossGesso::launchPolDrop()
 	unk195 += 1;
 }
 
-void TBossGesso::setEyeDamageBtp(int) { }
+// TODO: map size 0x8c (140 bytes); this body is 0x64 and the two spellings
+// used by the nerves (index 1 with frame 1.5/rate 0, index 2 with frame 0)
+// both have to fit, so the real body probably branches on the index. Not
+// called anywhere: retail pastes the block at each nerve site.
+void TBossGesso::setEyeDamageBtp(int index)
+{
+	getMActor()->setBtpFromIndex(index);
+
+	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BTP);
+	ctrl->setFrame(1.5f);
+	ctrl->setRate(0.0f);
+
+	getMActor()->resetDL();
+}
 
 BOOL TBossGesso::tentacleHeld() const
 {
@@ -1282,9 +1311,13 @@ void TBossGesso::doAttackGuard()
 	delta -= mPosition;
 
 	f32 guardLen = getSaveParam2()->mSLGuardLen.get();
-	if (!(guardLen * guardLen < delta.squared())
-	    && (!mTentacles[3]->isThing2() || !mTentacles[1]->isThing2()))
-		return;
+	if (!(guardLen * guardLen < delta.squared())) {
+		if (!mTentacles[3]->isThing2())
+			return;
+
+		if (!mTentacles[1]->isThing2())
+			return;
+	}
 
 	changeAllTentacleState(0);
 	changeAttackMode(ASTATE_SINGLE);
