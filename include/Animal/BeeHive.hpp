@@ -40,7 +40,7 @@ public:
 	virtual void control();
 	virtual void bind();
 	virtual void reset();
-	virtual TBee* createRealoidActor(MActor*);
+	virtual TRealoidActor* createRealoidActor(MActor*);
 
 	void loadCoin(JSUMemoryInputStream&);
 	void initCollision();

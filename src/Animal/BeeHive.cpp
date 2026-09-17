@@ -294,7 +294,7 @@ void TBeeHive::loadCoin(JSUMemoryInputStream& stream)
 		*it = TMapObjBaseManager::newAndRegisterObj("coin");
 }
 
-TBee* TBeeHive::createRealoidActor(MActor* actor)
+TRealoidActor* TBeeHive::createRealoidActor(MActor* actor)
 {
 	return new TBee(actor, this);
 }
