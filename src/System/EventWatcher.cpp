@@ -1203,14 +1203,34 @@ static void evAppear8RedCoinsAndTimer(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push();
 }
 
-// fabricated and wrong
-JGeometry::TVec3<f32> rotateY(JGeometry::TVec3<f32> vec, s16 angleY)
+// fabricated: mario.MAP keeps no symbol for this helper, so the name is a
+// guess, but the signature is read off evWarpFrontToMario. It rotates its
+// argument in place through a `Vec&` -- retail builds the vector once and
+// rewrites `x` and `z` in it, with no copy for the parameter -- and returns a
+// `TVec3<f32>`, so that the `return` converts through `TVec3<f32>(const Vec&)`
+// and leaves the `bl JGeometry::TVec3<float>::set(const Vec&)` retail calls
+// here. `set(const Vec&)` only wins over the exact `set<TY>(const TVec3<TY>&)`
+// when the source really is a `Vec`, which is what fixes the parameter type.
+//
+// `vec.x` is read into `x` before the first assignment: the store to `vec.x`
+// invalidates every cached load of the struct, which is why retail reloads
+// `vec.z` and both table entries for the second component but keeps the
+// pre-store `-vec.x` in a register.
+//
+// Trials, all measured on evWarpFrontToMario:
+//   Vec& param, TVec3<f32> return, bare gpMarioPos      99.8%  <- kept
+//   Vec& param, TVec3<f32> return, SMS_GetMarioPos()    99.7%  (frame +8)
+//   Vec by value, TVec3<f32> return                     86.0%  (argument copy)
+//   Vec& param, const Vec& return                       76.2%
+//   TVec3<f32> by value, Vec return                     78.5%
+//   TVec3<f32> by value, const Vec& return              84.6%  (set inlined)
+//   TVec3<f32> by value, TVec3<f32> return (original)   84.1%
+static JGeometry::TVec3<f32> rotateY(Vec& vec, s16 angleY)
 {
-	f32 x = vec.x * JMASCos(angleY) + vec.z * JMASSin(angleY);
-	f32 z = -vec.x * JMASSin(angleY) + vec.z * JMASCos(angleY);
-	vec.x = x;
-	vec.z = z;
-	return JGeometry::TVec3<f32>(vec.x, vec.y, vec.z);
+	f32 x = vec.x;
+	vec.x = x * JMASCos(angleY) + vec.z * JMASSin(angleY);
+	vec.z = -x * JMASSin(angleY) + vec.z * JMASCos(angleY);
+	return vec;
 }
 
 static void evWarpFrontToMario(TSpcTypedInterp<TEventWatcher>* interp,
@@ -1221,10 +1241,13 @@ static void evWarpFrontToMario(TSpcTypedInterp<TEventWatcher>* interp,
 
 	s16 angleY = SMS_GetMarioAngleY();
 
-	// TODO: codegen very wrong
-	actor->mPosition = SMS_GetMarioPos()
-	                   + rotateY(JGeometry::TVec3<f32>(0.0f, 0.0f, 400.0f),
-	                             SMS_GetMarioAngleY());
+	// TODO: every instruction and the frame size match; the only residue is
+	// the position of operator+'s by-value `fst` temporary, which retail
+	// allocates at the bottom of the low region (0x44) while we place it
+	// third (0x74). Low-region temporaries are laid out in expansion order,
+	// so retail expanded operator+ before the pop and the push.
+	JGeometry::TVec3<f32> front(0.0f, 0.0f, 400.0f);
+	actor->mPosition   = *gpMarioPos + rotateY(front, SMS_GetMarioAngleY());
 	actor->mRotation.y = SHORTANGLE2DEG((s16)(angleY - 0x8000));
 
 	interp->push();
