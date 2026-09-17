@@ -373,13 +373,15 @@ TTinKoopaFlame::TTinKoopaFlame(const char* name, TTinKoopa* tin_koopa)
 void TTinKoopaFlame::makeHitCollision()
 {
 	if (mTinKoopa->getDamageStage() == 0)
-		setHitParams(0.0f, 0.0f,
-		             mTinKoopa->getSaveParams()->getSLFlameDamageRadius0(),
-		             mTinKoopa->getSaveParams()->getSLFlameDamageHeight0());
+		setHitParams(
+		    0.0f, 0.0f,
+		    mTinKoopa->getSaveParams()->mSLFlameDamageRadius0.get(),
+		    mTinKoopa->getSaveParams()->mSLFlameDamageHeight0.get());
 	else if (mTinKoopa->getDamageStage() == 1)
-		setHitParams(0.0f, 0.0f,
-		             mTinKoopa->getSaveParams()->getSLFlameDamageRadius1(),
-		             mTinKoopa->getSaveParams()->getSLFlameDamageHeight1());
+		setHitParams(
+		    0.0f, 0.0f,
+		    mTinKoopa->getSaveParams()->mSLFlameDamageRadius1.get(),
+		    mTinKoopa->getSaveParams()->mSLFlameDamageHeight1.get());
 }
 
 void TTinKoopaFlame::resetTinKoopaFlame()
@@ -431,7 +433,9 @@ void TTinKoopaFlame::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & 2) {
 		MtxPtr mtx = mTinKoopa->getModel()->getAnmMtx(
 		    TTinKoopa_getJointIndex(TINKOOPA_JOINT_FIRE_COL));
-		mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+		mPosition.x = mtx[0][3];
+		mPosition.y = mtx[1][3];
+		mPosition.z = mtx[2][3];
 
 		emitFlameEffects();
 
@@ -767,10 +771,9 @@ void TTinKoopaPartsBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TLiveActor::perform(cue, graphics);
 
-	if (cue & 1) {
-		int joint = TTinKoopa_getJointIndex(mPartsIndex);
-		mCollision->moveMtx(mTinKoopa->getModel()->getAnmMtx(joint));
-	}
+	if (cue & 1)
+		mCollision->moveMtx(mTinKoopa->getModel()->getAnmMtx(
+		    TTinKoopa_getJointIndex(mPartsIndex)));
 
 	if ((cue & 2) && mBreaking) {
 		if (mPartsMActor && mPartsMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
@@ -864,9 +867,7 @@ bool TTinKoopa::checkKillerApproachingFromBack(TCoasterKiller* killer,
 	int marioNode  = mKillerGraph->findNearestNodeIndex(pos, -1);
 	int killerNode = killer->getPathIdx();
 
-	f32 distance = calcCoasterDistanceInOrder(killerNode, marioNode);
-
-	return distance <= limit;
+	return calcCoasterDistanceInOrder(killerNode, marioNode) <= limit;
 }
 
 void TTinKoopa::reset()
@@ -884,10 +885,7 @@ void TTinKoopa::reset()
 	changeBck(TTinKoopa_getWaitAnimationIndex(mDamageStage));
 }
 
-// TODO: 94.7%. Instruction-exact apart from two the retail object has and we
-// do not: right after the search it loads mKillerManager->unk38 and tests it
-// for null without using the result, so something the original wrote here went
-// through the killer manager's save params. The frame is 0x50 against 0x88.
+// Instruction-exact; the frame is 0x70 against the ROM's 0x88.
 void TTinKoopa::resetTinKoopa()
 {
 	if (!mKillerManager)
@@ -897,6 +895,12 @@ void TTinKoopa::resetTinKoopa()
 	// TODO: the retail object reads mKillerManager->unk38 here and throws the
 	// value away, so something the original wrote between the search and the
 	// rail fetch went through the manager's save params. One dead `lwz`.
+	// The retail object asks the killer manager for its active count here and
+	// throws the answer away: all that is left of the statement is the two
+	// loads and the null test getActiveObjNum() starts with. Dropping it
+	// loses exactly those two instructions.
+	mKillerManager->getActiveObjNum();
+
 	mTruckMActor = gpMarioOriginal->mKoopaRail;
 
 	mDamageStage = 0;
@@ -930,11 +934,11 @@ void TTinKoopa::resetTinKoopa()
 void TTinKoopa::makeHitCollision()
 {
 	if (mDamageStage == 0)
-		setHitParams(0.0f, 0.0f, getSaveParams()->getSLDamageRadius(),
-		             getSaveParams()->getSLDamageHeight0());
+		setHitParams(0.0f, 0.0f, getSaveParams()->mSLDamageRadius.get(),
+		             getSaveParams()->mSLDamageHeight0.get());
 	else if (mDamageStage == 1)
-		setHitParams(0.0f, 0.0f, getSaveParams()->getSLDamageRadius(),
-		             getSaveParams()->getSLDamageHeight1());
+		setHitParams(0.0f, 0.0f, getSaveParams()->mSLDamageRadius.get(),
+		             getSaveParams()->mSLDamageHeight1.get());
 	else if (mDamageStage == 2) { }
 
 	mFlame->makeHitCollision();
@@ -1045,6 +1049,11 @@ void TTinKoopa::makeEyeBeamEffect()
 }
 
 // UNUSED, 0x4c in the map: the three countdowns of perform's movement cue.
+// TODO: the retail object takes the address of each timer before storing it
+// back (`addi r4, this, 0x178` then `stw r0, 0(r4)`), which is what an inlined
+// helper taking a pointer looks like; writing one (`countDownTimer(int*)`,
+// inline so it leaves no symbol) gives byte-identical code to the plain form,
+// so the address-of has another cause.
 void TTinKoopa::updateTimers()
 {
 	if (mKillerIntervalTimer > 0)
