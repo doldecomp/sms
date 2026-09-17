@@ -114,7 +114,7 @@ public:
 	/* 0x194 */ u8 unk194;
 	/* 0x198 */ TBathtubKillerPersonality mPersonality;
 	/* 0x1AC */ JGeometry::TQuat4<f32> mQuat;
-	/* 0x1BC */ JGeometry::TVec3<f32> unk1BC;
+	/* 0x1BC */ JGeometry::TVec3<f32> mAcceleration;
 	/* 0x1C8 */ char unk1C8[4];
 	/* 0x1CC */ TBathtub* unk1CC;
 	/* 0x1D0 */ char unk1D0[4];
@@ -133,7 +133,7 @@ public:
 	/* 0x214 */ int unk214;
 	/* 0x218 */ int unk218;
 	/* 0x21C */ u32 unk21C;
-	/* 0x220 */ TMtx34f unk220;
+	/* 0x220 */ TPosition3f unk220;
 };
 
 DECLARE_NERVE(TNerveBathtubKillerWander, TLiveActor);
