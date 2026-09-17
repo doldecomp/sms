@@ -6,6 +6,27 @@
 
 namespace std {
 
+// Both the signature and the comparison direction are measured on the clamp in
+// TFruitsBoat::moveObject, which is byte-exact with this pair:
+//   - the const-reference parameters put that clamp's 1.0f and -1.0f in .sdata
+//     instead of .sdata2, because a literal has to be materialised as an
+//     addressable object to bind to them (fruitsboat data 99.44% -> 100.00%);
+//   - the return type is T and not the standard const T&: by reference MWCC
+//     selects the *address* (`li r3, @1095@sda21` / `addi r3, r1, 0xc0` then
+//     `lfs f0, 0(r3)`) and spills the clamped local, where the ROM selects the
+//     value with two `fmr`s (moveObject 93.95% -> 92.22% by reference);
+//   - `a > b` gives the ROM's `fcmpo a, b` plus a bare `ble`; the usual
+//     `b < a` would compare the other way round.
+template <class T> inline T min(const T& a, const T& b)
+{
+	return a > b ? b : a;
+}
+
+template <class T> inline T max(const T& a, const T& b)
+{
+	return a > b ? a : b;
+}
+
 template <class T, bool = Metrowerks::is_POD<T>::value, bool = sizeof(T) < 4>
 struct __copy {
 	static T* copy(T* first, T* last, T* result)

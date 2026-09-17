@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include <Enemy/FruitsBoat.hpp>
 #include <Enemy/Graph.hpp>
 #include <Enemy/Conductor.hpp>
@@ -390,16 +392,13 @@ void TFruitsBoat::moveObject()
 	// other units (the table is next to the declaration there), so the reload
 	// has to come from this call site's own shape instead.
 	f32 pitchStep = MsAngleDiff(rot.x, mRotation.x);
-	// TODO: the 1.0f/-1.0f limits live in .sdata, which only a const-reference
-	// parameter produces, so the original clamped with std::min/std::max --
-	// MSL_Common/algorithm in this tree has neither. Adding
-	//     template <class T> inline const T& min(const T& a, const T& b)
-	//     { return a > b ? b : a; }
-	// (and max) to that header would restore the two .sdata words.
+	// The limits go through std::min/std::max rather than a ternary because the
+	// ROM keeps 1.0f and -1.0f in .sdata, and a literal only lands there when
+	// it has to be materialised to bind to a const reference.
 	if (pitchStep >= 0.0f)
-		pitchStep = pitchStep > 1.0f ? 1.0f : pitchStep;
+		pitchStep = std::min(pitchStep, 1.0f);
 	else
-		pitchStep = pitchStep > -1.0f ? pitchStep : -1.0f;
+		pitchStep = std::max(pitchStep, -1.0f);
 	mRotation.x += pitchStep;
 
 	const TBGCheckData* ground = SMS_GetMarioGrPlane();
