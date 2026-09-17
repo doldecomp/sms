@@ -204,6 +204,36 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `SelectShine2` and `Guide` (GC2D)
+
+- A member-initialiser list moves an array member's `__construct_array` after every scalar store; assignment in the body constructs the array first. It can also place a scalar store *between* two `JUTRect` member constructions (`TGuide::TGuide` 78 -> 100, `TSelectShineManager` ctor 76 -> 100).
+- `return T(args...)` vs a named local plus `return` is a size oracle for a by-value UNUSED accessor (`getPosition` 0xa8 vs the map's 0x8c); the caller keeps one extra 12-byte temporary either way.
+- Two unnamed `TVec2` temporaries as inline arguments keep literal products in registers; a named axis local is materialised and read back (the opposite of the `TVec3` rule from `wireTrap::load`).
+- A `u16` copy of an `s16` timer parameter, not a cast at the modulo: `u16 t = timer;` removes an `extsh` at every inline site (`linkSelect` 88 -> 94).
+- Drop `T& ref = arr[i]` for a small member array: retail computes `this + i * stride` and folds the field offset into each load.
+- A clamped value that is both stored and accumulated wants its own local (`resetObjects` 93 -> 95); same for `x / 100` used twice.
+- `u8 acc = 1; acc = acc & f();` keeps the raw `and` with `clrlwi.` only at the test; `bool` adds normalisation.
+- An explicit bound check before a jump-table switch duplicates the table's own `cmplwi; bgt`; and spell the early exit as a real `else { return; }` to get retail's pair of branches, one dead (`perform` 73 -> 79).
+- Pane-tag arithmetic digit by digit: sequential panes add the counter to the low byte (`'ss_1' + i`); two-digit groups are `((i / 10) << 8) + (i % 10 + '00')`; the four-character form needs `('00' << 16)`.
+- Open header items: `JGVec2.hpp`'s float copy constructor and `operator=` exist in SMS (retail `lfs`/`stfs` for all three copies in `getAngle`; the header's "SMS didn't have them yet" note is wrong); `StageUtil.hpp` needs `static u32 scNormalStageTable[] = { 0, 1, 2, 3, 4, 0xD, 6, 8, 9, 0xA };` after `scScenarioNameTable` (map: five TUs); `TExPane::setPaneSize/setPaneAlpha/setPaneOffset` are called out of line by the big `TGuide::perform` (caller-size family).
+
+## Rules from `bosswanwan`
+
+- `MsSqrtf` is recognisable by its guard: `frsqrte` with one double-precision refinement, a `stfs`/`lfs` round trip, and a bare `fcmpo; ble` skipping it (no `cror`) is `MsSqrtf(x)` inlined whole, the `x > 0.0f` test included (`shakeCamera` 78 -> 96). A single-precision refinement with `cror eq,lt,eq` is `TUtil<f32>::sqrt`, i.e. `v.length()`.
+- Yaw wrap depth is per site: `MsWrap(x, 0.0f, 360.0f)` written out inlines the loops, `MsAngleWrap(x)` keeps `MsWrap<f>` a `bl`; in one TU both occur (`slideToCurPathNode`/`control`/`TBWLeash::perform` direct, `TBWBinder::bind` wrapped). `MsAngleDiff`'s internal `MsWrap` stays a call everywhere.
+- Turn clamps want ternaries (`turn = turn > limit ? limit : turn`); `if (diff <= limit)` adds `cror` per arm.
+- The three `TVec3` copy shapes decide many diffs: integer `lwz`/`stw` is `a = b` or the copy constructor; `lfs`/`stfs` per component is `a.set(b.x, b.y, b.z)`; interleaved `lfs`/`stfs` is `a.set(b)`. Nine sites in this unit.
+- `SMatrix34C<f32>::zero()` fills column by column (`[2][3],[1][3],[0][3]`, then columns 2, 1, 0); a sequential row-major fill is `set()` with twelve arguments. A scratch `SMatrix34C<f32>` plus a named `MtxPtr` from it holds the address in a callee-saved register; a `bl SMatrix34C<f>::SMatrix34C()` at a member's construction means the member is `SMatrix34C<f32>`, not `Mtx`.
+- `MsGetVecFromRotY` by value with `JMASSin(DEG2SHORTANGLE(x))` (the `fruitsboat` form) beats the by-reference form; `MsSin`/`MsCos` inside it push the lookups out of line.
+- A materialised bool retail lacks means the original compared inline (`getActorType() == 0x80000001` at four sites, 68 -> 96); retail *does* materialise for `0x4000005A`, so that one is `isActorType`. `cmpwi r0, 0` after a materialised predicate means it returns `BOOL`.
+- `if (guard) { ...; } return FALSE;` branches to the shared `li r3,0`; `if (!guard) return FALSE;` emits its own copy plus a `b`.
+- A transition that writes `mPrevious`/`mCurrent`/`mTime` with no stack push and no null test is `TSpineBase::setNext`; `pushNerve` has both.
+- Jump nerves: name the target (`const TVec3&`), the speed and the velocity, and store the velocity *after* `setGoalPath` (four nerves 92-95 -> 97.8-99.8).
+- A named `J3DFrameCtrl*` before `setRate(SMSGetAnmFrameRate())` puts `getFrameCtrl` before the rate call.
+- A dead computation can be load-bearing: `TBWBinder::bind` subtracts two graph points into an address-taken vector it never reads; the stores survive. `next - actor->mPosition` keeps `TVec3::sub` out of line there.
+- Pasted-UNUSED again: `TBossWanwan::takeBath` (0x184) is pasted into the Die nerve (36 -> 96); its standalone copy then expands `changeBck` and `setMtx` (0x27c).
+- Open header items: `TSpineBase<T>::getLatestNerve()` is *called* by retail (weak 0x1c from `Bird.o`) at every nerve comparison here while we expand it (the largest remaining loss; also noted under `boss-hanachan`); `TMActorKeeper::getMActorAnmData()` (0x8, weak from `bossgesso.o`) is `bl`-ed at all seven `changeBck` sites; `MsPerpendicFootToLineR` is 73% against retail.
+
 ## Rules from `MapObjFence`, `MapObjFlag`, `ModelGate`
 
 - An empty leading case group counts toward the switch pivot but collapses out of the tree: with cases {3,4,5,6} MWCC pivots on label index n/2; adding `case 1: case 2: break;` (same destination as the default) moves the pivot and the low arm collapses into the default's `b` (`controlWall` 98.7 -> 100). Four identical bodies never tail-merge.
