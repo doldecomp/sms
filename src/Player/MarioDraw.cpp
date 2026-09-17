@@ -470,17 +470,21 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 
 static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 {
-	volatile u32 padding[3];
 	if (param_2 == 0) {
 		TMario* mario = gpMarioForCallBack;
-		s16* unk      = &mario->unkFC; // This feels wrong
+		// TODO: unkFC..unk102 are one s16 array in TMario; the ROM forms
+		// &unkFC once and indexes it here and in MarioHeadCtrl. Needs a
+		// Mario.hpp change to spell properly.
+		s16* bodyAngle = &mario->unkFC;
 		if (mario == gpMarioOriginal && gpCamera->isLButtonCamera() == true
 		    && gpMarioForCallBack->canBendBody() != 0
 		    && gpCamera->mCurrentTarget.mPitch > 0) {
-			*unk = gpCamera->mCurrentTarget.mPitch;
+			bodyAngle[0] = gpCamera->mCurrentTarget.mPitch;
 			Mtx transform;
-			MsMtxSetRotRPH(transform, SHORTANGLE2DEG(-mario->unk100), 0.0f,
-			               SHORTANGLE2DEG(gpCamera->mCurrentTarget.mPitch));
+			s16 waistPitch = -bodyAngle[2];
+			s16 waistYaw   = bodyAngle[0];
+			MsMtxSetRotRPH(transform, SHORTANGLE2DEG(waistPitch), 0.0f,
+			               SHORTANGLE2DEG(waistYaw));
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
 		} else if (gpMarioForCallBack->checkStatusType(MARIO_FLAG_HAS_FLUDD)
@@ -515,8 +519,8 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
 		} else {
-			*unk          = 0;
-			mario->unk100 = 0;
+			bodyAngle[0] = 0;
+			bodyAngle[2] = 0;
 		}
 	}
 	return 1;
@@ -1018,7 +1022,7 @@ f32 TMario::setAnimation(int anm_id, f32 rate)
 		}
 
 		bool check = false;
-		if (checkFlag(MARIO_FLAG_HAS_FLUDD) && mWaterGun->canSpray()) {
+		if (checkFlag(MARIO_FLAG_HAS_FLUDD) && mWaterGun->isEmitting()) {
 			check = true;
 		}
 
