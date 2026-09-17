@@ -227,6 +227,18 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `EventWatcher`
+
+- A missing function *permutes* the string pool, it does not merely shift it: two absent builtins reordered the `TSpcStack` trace literals and ~60 functions showed a bare `addi rX, base, imm` diff. Diff the two `.rodata` blobs before chasing operands per function (data 14 -> 100, 15 functions to exact from writing the two).
+- A literal used twice wants its own `const char*` local when retail addresses it directly (`lis rX, @NNNN@ha; addi r0, rX, @NNNN@l; mr rN, r0`); `grep 'addi r0, r[0-9]*, "@'` over the asm finds the sites (`evAppear8RedCoinsAndTimer` 92 -> 99.9).
+- Return-by-value through a base class selects the converting constructor: `rotateY(Vec&) -> TVec3<f32>` is what leaves `bl TVec3<float>::set(const Vec&)`; the non-template overload only wins when the source really is a `Vec`.
+- Storing to a struct member invalidates the cached loads of its siblings: retail reloads `vec.z` and the sin/cos entries after a store but keeps a pre-store `f32 x = vec.x;`.
+- Depth budget pair: `TUtil<f32>::sqrt` (4 statements) is a `bl` only at depth 4; `TVec3::dot` (1 statement) drops out at depth 5.
+- New frame-gap family, "push an inlined accessor result": every builtin whose pushed value comes from an inlined accessor is 4-8 bytes short in the low region and reads the member one instruction later than we do; those pushing a `bl` result match exactly. The temporaries belong to the accessor side, not `push()`. Six functions; no lever yet.
+- `for (int i = 0; i < (int)arg_num; ++i)` gives `cmpw`; mixing `int i` with a `u32` bound gives `cmplw`. `getFromTop(arg_num - i - 1)` folds the `-1` into the accessor's `mSize - 1`.
+- `fmadds f, d, d, f` with `f` loaded as `0.0f` is a 3-component `squared()` whose y term folded, not a hand-written 2-D distance.
+- Open header items: `length()` spelled `TUtil<f32>::sqrt(dot(*this))` instead of `sqrt(squared())` (retail calls `sqrt` while expanding `dot`; `evIsNearActors` 88.5 -> 97.3, but `boid` and `Kazekun` regress ~1.3 each; `squared()` as `x*x + y*y + z*z` regresses ~25 units); `TSpcTypedInterp<T>::dispatchBuiltin` tests `mNativeCall` in one register then copies to `r12`; `BackgroundMusic.hpp`'s tail looks shifted by one (`evStartMontemanFanfare` plays 0x80010026, `evStartMontemanBGM` 0x8001002f). Ruled out: making `JDrama::TNameRefGen::search<T>` delegate to `search2` breaks a source-linked object and the DOL.
+
 ## Settled in header round 8
 
 - **A two-`return` body is refused expansion on the right of a short-circuit `&&`; the equivalent single-`return` ternary always expands.** Both compile to the same seven instructions, so the map's weak 0x1c symbol plus a `bl` at depth 1 is the tell, and the fix is the `if (c) return TRUE; return FALSE;` spelling (`TYoshi::onYoshi`; `TMario::onYoshi` 22 -> 100, the `(void)0` hack gone). Depth and statement count are both ruled out for this case; in an if-condition the same body still expands. This qualifies the "no limit at depth 1 for `inline`" row.
