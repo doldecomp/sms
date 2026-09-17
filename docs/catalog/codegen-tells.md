@@ -204,6 +204,16 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `MapObjMamma` and `MapObjMonte`
+
+- `TMatrix34<T>::identity()`'s chained assignments give a fixed 12-store order (`[2][3],[1][3],[0][3]; [1][2],[0][2]; [2][1],[0][1]; [2][0],[1][0]; [2][2],[1][1],[0][0]`): that order means a `TMatrix34<SMatrix34C<f32>>` local plus `identity()`, not `PSMTXIdentity`.
+- A row term `m[i][3] + (m[i][0]*x + m[i][1]*y + m[i][2]*z)` with no `bl` is `TMatrix34::mult(v, out)`; `MTXMultVec` always stays a call (`TFluffManager::load` 65 -> 100).
+- Reaching `gekko_ps_copy12` through `SMatrix34C<f32>::set(ConstArrType*)` keeps the `bl`; calling it directly expands the twelve `psq_l`/`psq_st` pairs (`calcDefaultMtx` 54 -> 99.6).
+- A materialised bool before a state compare is `TMapObjBase::isState(N)`, not `mState == N` (three functions to 100).
+- `stfsu` + two `stfs` on a member position is `mPosition.set(x, y, z)` with constants first (`2.0f + mPosition.x`); three independent `stfs` is per-component. For a *stack* vector the opposite: interleaved compute/store means per-component.
+- `operator=` vs `.set()` on a member vector decides between a stack temp (`lwz`/`stw` triple) and passing the member's address (`drawRopeBetweenBoards` 61 -> 97.7).
+- Open: `TLeanMirror::calcCurrentMtx`'s best-evidenced body compiles to 0x84 against the map's 0x100, so `controlGoTarget` stays under the budget and inlines where retail calls it.
+
 ## Rules from `killer` and `limitkoopa`
 
 - Chained assignment reproduces reverse-order field stores (right to left): `mEyesColor.r = mEyesColor.g = mEyesColor.b = 0;` stores b, g, r.

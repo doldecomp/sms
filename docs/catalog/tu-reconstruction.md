@@ -37,6 +37,15 @@ A unit's `_bastable` names only some animation slots, but the model's `.bck` fil
 
 An effect owner argument of `this + sizeof(T)` or `this + 2 * sizeof(T)` is the original's `this + 1` / `this + 2`, giving each looping emitter a distinct key; it also confirms the class size (`TAmiNoko::emitEffects`, 0x214).
 
+## MoveBG: names, sizes and depth from the factory
+
+- For classes whose constructor is inlined everywhere (no `__ct__` in the map), `MarNameRefGen_MapObj.cpp`'s string pool pairs the lookup name with the Japanese default in adjacent `@NNNN` objects, and `li r3, 0xNNN; bl __nw__` at each site gives `sizeof` (every name and size in `MapObjMamma`/`MapObjMonte`, including copy-pasted defaults and classes that add no fields).
+- Destructor size is an inheritance-depth oracle: a weak dtor for a direct `TMapObjBase` child is 0x84, a grandchild 0x9c (two extra vtable stores), and at three levels MWCC emits `bl __dt__11TMapObjBaseFv` while staying 0x9c (`TSandLeaf` sits under `TMapObjBase`, not `TSandLeafBase`).
+- Switch case order is read off the jump table's `.rel` entries, not the compared constants (`TSandBombBase::control` 7.3 -> 80.3 from reordering alone).
+- A weak 8-byte `getRadiusAtY` (`lfs f1, <const>; blr`) is an in-class `return 20.0f;`; defining it out of line drops the class's whole vtable from the object.
+- `-inline deferred` emission is strict reverse **definition** order, UNUSED helpers included; they do not float to the end.
+- objdiff can score a whole `.data` section 0 when our object also emits dead-stripped vtables the extracted target lacks (`MapObjMamma`: ours 0x15a8, the map's size; target `.o` 0x1360). Check the per-vtable diffs before believing a data percentage.
+
 ## Override return types
 
 `TEnemyManager::createEnemyInstance()` returns `TSpineEnemy*`; an override declared with a different return type (`TLiveActor*`) is not covariant and gets a **new vtable slot** instead of overriding. A *covariant* return (`TBee*` for the base's `TRealoidActor*`) also gets a second slot with the same pointer. Declare the base return type; check any class whose vtable is not exact for this (`BeeHive` data 60.4 -> 100).
