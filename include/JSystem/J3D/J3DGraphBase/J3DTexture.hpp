@@ -15,19 +15,19 @@ public:
 	    : mNum(num)
 	    , mResources(res)
 	{
-		J3D_ASSERT_NULLPTR(16, res != nullptr || num == 0);
+		J3D_ASSERT_NULLPTR(res != nullptr || num == 0);
 	}
 	virtual ~J3DTexture() { }
 
 	u16 getNum() const { return mNum; }
 	ResTIMG* getResTIMG(u16 index) const
 	{
-		J3D_ASSERT_RANGE(72, index < mNum);
+		J3D_ASSERT_RANGE(index < mNum);
 		return &mResources[index];
 	}
 	void setResTIMG(u16 index, const ResTIMG& timg)
 	{
-		J3D_ASSERT_RANGE(28, index < mNum);
+		J3D_ASSERT_RANGE(index < mNum);
 
 		mResources[index] = timg;
 		mResources[index].imageDataOffset

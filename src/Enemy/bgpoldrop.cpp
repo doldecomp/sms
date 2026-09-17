@@ -96,22 +96,7 @@ void TBGPolDrop::perform(u32 cue, JDrama::TGraphics* graphics)
 		MtxPtr m = unk50->getModel()->getBaseTRMtx();
 		if (unk58 == 1) {
 			Mtx local_60;
-			f32 s          = JMASin(-90.0f);
-			f32 c          = JMACos(-90.0f);
-			local_60[0][0] = 1.0;
-			local_60[0][1] = 0.0;
-			local_60[0][2] = 0.0;
-			local_60[0][3] = 0.0;
-
-			local_60[1][0] = 0.0;
-			local_60[1][1] = c;
-			local_60[1][2] = -s;
-			local_60[1][3] = 0.0;
-
-			local_60[2][0] = 0.0;
-			local_60[2][1] = s;
-			local_60[2][2] = c;
-			local_60[2][3] = 0.0;
+			MsMtxSetRotX(local_60, -90.0f);
 
 			mRotation = MsGetRotFromZaxis(unk44);
 

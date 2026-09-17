@@ -43,7 +43,8 @@ void CPolarSubCamera::setNoticeInfo()
 		}
 	}
 
-	unk2A8 = JDrama::TNameRefGen::search<TLiveActor>(bossGesoViewObjName);
+	unk2A8 = static_cast<TLiveActor*>(
+	    JDrama::TNameRefGen::search(bossGesoViewObjName));
 }
 
 TLiveActor* CPolarSubCamera::getNoticeActor_()

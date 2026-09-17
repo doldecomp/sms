@@ -271,19 +271,17 @@ void TMapStaticObj::initUnique()
 	}
 
 	if (strcmp(mActorName, "ReflectSky") == 0) {
-		TSky* sky = JDrama::TNameRefGen::getInstance()->search<TSky>("空");
+		TSky* sky = static_cast<TSky*>(JDrama::TNameRefGen::search("空"));
 
 		getModelData()->setMaterialTable(gpMapObjManager->getUnk68(),
 		                                 J3DMatCopyFlag_All);
 		mMActor->initDL();
 
-		JDrama::TDrawBufObj* dboOpa
-		    = JDrama::TNameRefGen::getInstance()->search<JDrama::TDrawBufObj>(
-		        "DrawBuf MirrorSky Opa");
+		JDrama::TDrawBufObj* dboOpa = static_cast<JDrama::TDrawBufObj*>(
+		    JDrama::TNameRefGen::search("DrawBuf MirrorSky Opa"));
 		j3dSys.setDrawBuffer(dboOpa->getDrawBuffer(), 0);
-		JDrama::TDrawBufObj* dboXlu
-		    = JDrama::TNameRefGen::getInstance()->search<JDrama::TDrawBufObj>(
-		        "DrawBuf MirrorSky Xlu");
+		JDrama::TDrawBufObj* dboXlu = static_cast<JDrama::TDrawBufObj*>(
+		    JDrama::TNameRefGen::search("DrawBuf MirrorSky Xlu"));
 		j3dSys.setDrawBuffer(dboXlu->getDrawBuffer(), 1);
 
 		getModel()->calc();
@@ -371,15 +369,14 @@ void TMapStaticObj::init(const char* name)
 	}
 
 	if (mActorData->mIdxGroupName != nullptr) {
-		TIdxGroupObj* group
-		    = JDrama::TNameRefGen::getInstance()->search<TIdxGroupObj>(
-		        mActorData->mIdxGroupName);
+		TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
+		    JDrama::TNameRefGen::search(mActorData->mIdxGroupName));
 		group->getChildren().push_back(this);
 	}
 
 	if (mActorData->mFlags & TActorData::FLAG_IS_INDIRECT) {
-		TScreenTexture* ref = JDrama::TNameRefGen::search<TScreenTexture>(
-		    "スクリーンテクスチャ");
+		TScreenTexture* ref = static_cast<TScreenTexture*>(
+		    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 		const ResTIMG* img = ref->getTexture()->getTexInfo();
 		mMActor->getModel()->getModelData()->getTexture()->setResTIMG(1, *img);
 
@@ -430,21 +427,21 @@ void TMapModelActor::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TMapObjSoundGroup::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (unk14->isDummy())
+	if (mGraph->isDummy())
 		return;
 
 	if (cue & CUE_MOVE) {
 		JGeometry::TVec3<f32> local_c18[0x100];
 		JGeometry::TVec3<f32> local_c24;
-		unk14->unk0->getPoint(&local_c24);
+		mGraph->unk0->getPoint(&local_c24);
 
 		JGeometry::TVec3<f32> tmp;
 		JGeometry::TVec3<f32>& camPos = tmp;
 
 		int count = 0;
-		for (int i = 1; i < unk14->getNodeNum(); ++i) {
+		for (int i = 1; i < mGraph->getNodeNum(); ++i) {
 			JGeometry::TVec3<f32> local_c30;
-			unk14->getGraphNode(i).getPoint(&local_c30);
+			mGraph->getGraphNode(i).getPoint(&local_c30);
 
 			camPos.set(gpCamera->unk124);
 
@@ -454,15 +451,15 @@ void TMapObjSoundGroup::perform(u32 cue, JDrama::TGraphics* graphics)
 
 			local_c24 = local_c30;
 
-			if (unk14->getGraphNode(i).getRailNode()->mConnectionNum == 1
-			    && i < unk14->getNodeNum() - 1) {
+			if (mGraph->getGraphNode(i).getRailNode()->mConnectionNum == 1
+			    && i < mGraph->getNodeNum() - 1) {
 				++i;
-				unk14->getGraphNode(i).getPoint(&local_c24);
+				mGraph->getGraphNode(i).getPoint(&local_c24);
 			}
 
 			++count;
 		}
-		unk10->frameLoop(unk18, local_c18, count);
+		mSceneSE->frameLoop(mSoundID, local_c18, count);
 	}
 }
 
@@ -490,18 +487,18 @@ void TMapObjSoundGroup::load(JSUMemoryInputStream& stream)
 {
 	TViewObj::load(stream);
 	const char* graphName = stream.readString();
-	unk14                 = gpConductor->getGraphByName(graphName);
-	if (!unk14 || unk14->isDummy())
+	mGraph                = gpConductor->getGraphByName(graphName);
+	if (!mGraph || mGraph->isDummy())
 		return;
 
-	unk18 = getSoundID(graphName);
-	unk10 = new MSSceneSE(0xffffffff);
+	mSoundID = getSoundID(graphName);
+	mSceneSE = new MSSceneSE(0xffffffff);
 }
 
 TMapObjSoundGroup::TMapObjSoundGroup(const char* name)
     : JDrama::TViewObj(name)
-    , unk10(0)
-    , unk14(nullptr)
-    , unk18(0)
+    , mSceneSE(0)
+    , mGraph(nullptr)
+    , mSoundID(0)
 {
 }

@@ -16,28 +16,27 @@ class MAnmSound : public JAIAnimeSound {
 public:
 	MAnmSound(MSound* sound);
 
-	virtual void startAnimSound(void* ptr, u32 ul, JAISound** sound,
-	                            JAIActor* actor, u8 uc);
+	virtual void startAnimSound(void* interface, u32 id,
+	                            JAISoundHandle* out_handle, JAIActor* actor,
+	                            u8 camera_idx);
 
-	void animeLoop(Vec* vec, f32 f1, f32 f2, u32 ul, u8 uc);
-	void initAnmSound(void* ptr, u32 ul, f32 f);
-	void setSpeedModifySound(JAISound* sound, JAIAnimeFrameSoundData* data,
-	                         f32 f);
+	void animeLoop(Vec* position, f32 frame, f32 speed, u32 ground_no, u8);
+	void initAnmSound(void* interface, u32 param_2, f32 frame);
+	void setSpeedModifySound(JAISound* sound,
+	                         JAIAnimeFrameSoundData* frame_data, f32 speed);
 };
-
-// fabricated
-inline u8 random_u8() { return JAIConst::random.get_ufloat_1() * 255; }
 
 class MAnmSoundNPC : public MAnmSound {
 public:
 	MAnmSoundNPC(MSound* sound)
 	    : MAnmSound(sound)
-	    , unk98(random_u8())
+	    , unk98(JAIConst::random.get_uint8(255))
 	{
 	}
 
-	virtual void startAnimSound(void* ptr, u32 ul, JAISound** sound,
-	                            JAIActor* actor, u8 uc);
+	virtual void startAnimSound(void* interface, u32 sound_id,
+	                            JAISound** out_handle, JAIActor* actor,
+	                            u8 camera_idx);
 
 public:
 	/* 0x98 */ u8 unk98;

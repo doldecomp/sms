@@ -46,7 +46,7 @@ inline void CPolarSubCamera::drawJetCoasterBalloonMessage_()
 		unk2B8->unk38 = 300;
 		balloonCode   = 0xE002D;
 	} else {
-		switch (gpMarDirector->unk58) {
+		switch (gpMarDirector->mMoveTickCount) {
 		case 0x3C:
 			gpMarDirector->getConsole()->startAppearJetBalloon(0, objCount);
 			break;
@@ -95,7 +95,7 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 		drawJetCoasterBalloonMessage_();
 
 	bool startedLButton = false;
-	if (unk120->checkFrameMeaning(0x4000)) {
+	if (unk120->checkFrameMeaning(TMarioGamePad::MEANING_Y)) {
 		startedLButton = true;
 		u32 soundID    = 0x4825;
 		unk2B8->toggleLButtonMode();

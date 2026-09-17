@@ -5,41 +5,56 @@
 #include <dolphin/mtx.h>
 
 struct JAIMoveParaSet;
-class JAISeqParameter;
-class JAISeParameter;
-class JAIStreamParameter;
+struct JAISeqParameter;
+struct JAISeParameter;
+struct JAIStreamParameter;
 class JAIBasic;
+
+#define JAISoundID_IndexMask     0x000003FF
+#define JAISoundID_TypeMask      0xC0000000
+#define JAISoundID_Type_Se       0x00000000
+#define JAISoundID_Type_Sequence 0x80000000
+#define JAISoundID_Type_Stream   0xC0000000
+
+enum JAISoundState {
+	SOUNDSTATE_Inactive = 0,
+	SOUNDSTATE_Stored   = 1,
+	SOUNDSTATE_Prepared = 2,
+	SOUNDSTATE_Started  = 3,
+	SOUNDSTATE_Playing  = 4,
+	SOUNDSTATE_Stopping = 5,
+};
 
 class JAISound {
 public:
 	struct FabricatedPositionInfo {
-		/* 0x00 */ Vec unk0;
-		/* 0x0C */ Vec unkC;
+		/* 0x00 */ Vec mCamSpacePos;
+		/* 0x0C */ Vec mPrevCamSpacePos;
 		/* 0x18 */ f32 unk18;
 	};
 
-	/* 0x0 */ u8 unk0;
-	/* 0x1 */ u8 unk1;
-	/* 0x2 */ u8 unk2;
-	/* 0x3 */ u8 unk3;
-	/* 0x4 */ u8 unk4;
+	/* 0x0 */ u8 mTrack;
+	/* 0x1 */ u8 mState;
+	/* 0x2 */ u8 mWaitTimer;
+	/* 0x3 */ u8 mRandom;
+	/* 0x4 */ u8 mCameraIdx;
 	/* 0x5 */ u8 unk5;
-	/* 0x6 */ s16 unk6;
-	/* 0x8 */ u32 unk8;
-	/* 0xC */ u32 unkC;
-	/* 0x10 */ u32 unk10;
-	/* 0x14 */ u32 unk14;
-	/* 0x18 */ u32 unk18;
+	/* 0x6 */ s16 mAdjustPrio;
+	/* 0x8 */ u32 mSoundID;
+	/* 0xC */ u32 mPriority;
+	/* 0x10 */ u32 mFadeCounter;
+	/* 0x14 */ u32 mPlayGameFrameCounter;
+	/* 0x18 */ u32 mActorGroundNumber;
 	/* 0x1C */ FabricatedPositionInfo* unk1C;
-	/* 0x20 */ const Vec* unk20;
-	/* 0x24 */ const Vec* unk24;
+	/* 0x20 */ const void* mActor;
+	/* 0x24 */ const Vec* mActorTrans;
 	/* 0x28 */ const Vec* unk28;
-	/* 0x2C */ JAISound* unk2C;
-	/* 0x30 */ JAISound* unk30;
-	/* 0x34 */ JAISound** unk34;
+	/* 0x2C */ JAISound* mPrevSound;
+	/* 0x30 */ JAISound* mNextSound;
+	/* 0x34 */ JAISound** mMainSoundPPointer;
 	// JAISeqParameter* or JAIStreamParameter* or JAISeParameter*
-	/* 0x38 */ void* unk38;
-	/* 0x3C */ void* unk3C;
+	/* 0x38 */ void* mCustomParameter;
+	/* 0x3C */ void* mInfo;
 	/* 0x40 */ // vtable
 
 public:
@@ -57,7 +72,7 @@ public:
 	virtual f32 setDistanceVolumeCommon(f32, u8);
 	virtual f32 setDistancePanCommon();
 
-	int initMoveParameter(JAIMoveParaSet*, f32, u32);
+	int initMoveParameter(JAIMoveParaSet* set, f32 target, u32 moveTime);
 	void initMultiMoveParameter(JAIMoveParaSet*, u8, u32, f32, f32, u32);
 	u32 getSeCategoryNumber();
 	void getDataInfoHeader();
@@ -67,7 +82,7 @@ public:
 	void clearMainSoundPPointer();
 	void release();
 	void start(u32);
-	void stop(u32);
+	void stop(u32 fadeout);
 	void setVolume(f32, u32, u8);
 	void setDirectVolume(f32, u32);
 	void setPan(f32, u32, u8);
@@ -85,7 +100,7 @@ public:
 	void setSeqInterVolume(u8, f32, u32);
 	void setSeqInterPan(u8, f32, u32);
 	void setSeqInterPitch(u8, f32, u32);
-	void setSeqInterFxmix(u8, f32, u32);
+	void setSeqInterFxmix(u8 param, f32 fxmix, u32 moveTime);
 	void setSeqInterDolby(u8, f32, u32);
 	void setSeqTempoProportion(f32, u32);
 	void setSeqPortData(u8, u16, u32);
@@ -106,9 +121,9 @@ public:
 	void setTrackFirU7(u8, u8, u32);
 	void setTrackFirMultiU7(u8, u32, u8, u32);
 	void setTrackPortData(u8, u8, u16);
-	void setSeInterMovePara(JAIMoveParaSet*, u32);
+	void setSeInterMovePara(JAIMoveParaSet* set, u32 moveTime);
 	void setSeInterRandomPara(f32*, u32, f32, f32);
-	void setSeInterVolume(u8, f32, u32, u8);
+	void setSeInterVolume(u8 param, f32 volume, u32 moveTime, u8 random);
 	void setSeInterPan(u8, f32, u32, u8);
 	void setSeInterFxmix(u8, f32, u32, u8);
 	void setSeInterFir(u8, u8, u32, u8);
@@ -122,7 +137,7 @@ public:
 	void setStreamInterPan(u8, f32, u32);
 	void setStreamPrepareFlag(u8);
 	void checkStreamReady();
-	void setPauseMode(u8, u8);
+	void setPauseMode(u8 mode, u8 volume);
 	void setSeqPrepareFlag(u8);
 	void checkSeqReady();
 	void getVolume(u8);
@@ -146,18 +161,77 @@ public:
 	void getSeParametermeterF32(u8, u8);
 	f32 getStreamInterVolume(u8);
 	void getStreamInterPitch(u8);
-	void getActorGroundNumber();
+	u32 getActorGroundNumber();
 	JAISeqParameter* getSeqParameter();
 	JAISeParameter* getSeParameter();
 	JAIStreamParameter* getStreamParameter();
 	u32 getTrackPortRoute(u8, u8);
-	void getSeInfoPointer();
+	void* getSeInfoPointer();
 
-	u32 getUnk8() { return unk8; }
+	u32 getID() const { return mSoundID; }
+	void setID(u32 id) { mSoundID = id; }
 
-	u32 getUnk8Lo() { return unk8 & 0x3FF; }
+	u8 getStatus() const { return mState; }
+	void setStatus(u8 state) { mState = state; }
+
+	u8 getWait() const { return mWaitTimer; }
+	void setWait(u8 wait) { mWaitTimer = wait; }
+	void decWait() { mWaitTimer--; }
+
+	u8 getTrack() const { return mTrack; }
+	void setTrack(u8 track) { mTrack = track; }
+
+	void setCustomParameterPointer(void* param) { mCustomParameter = param; }
+
+	JAISound* getPrevSound() const { return mPrevSound; }
+	void setPrevSound(JAISound* prev) { mPrevSound = prev; }
+
+	JAISound* getNextSound() const { return mNextSound; }
+	void setNextSound(JAISound* next) { mNextSound = next; }
+
+	u32 getFadetime() const { return mFadeCounter; }
+	void setFadetime(u32 fadeTime) { mFadeCounter = fadeTime; }
+
+	void setMainSoundPPointer(JAISound** pp) { mMainSoundPPointer = pp; }
+
+	u32 getPlayGameFrameCounter() const { return mPlayGameFrameCounter; }
+	void incPlayGameFrameCounter() { mPlayGameFrameCounter++; }
+
+	const void* getAct() const { return mActor; }
+	const Vec* getTrans() const { return mActorTrans; }
+
+	void setRandom(u8 random) { mRandom = random; }
+	s16 getAdjustPriority() { return mAdjustPrio; }
+
+	u32 getPriority() const { return mPriority; }
+	void setPriority(u32 priority) { mPriority = priority; }
+
+	void setSeqInterVolumeU7(u8 param, u8 value, u32 moveTime)
+	{
+		f32 volume = value / 127.0f;
+		setSeqInterVolume(param, volume, moveTime);
+	}
+
+	void setSeInterFxmixU7(u8 param, u8 value, u32 moveTime, u8 random)
+	{
+		f32 fxmix = value / 127.0f;
+		setSeInterFxmix(param, fxmix, moveTime, random);
+	}
+
+	void setSeInterDolbyU7(u8 param, u8 value, u32 moveTime, u8 random)
+	{
+		f32 dolby = value / 127.0f;
+		setSeInterDolby(param, dolby, moveTime, random);
+	}
+
+	void setVolumeU7(u8 param_1, u32 param_2, u8 param_3)
+	{
+		setVolume(param_1 / 127.0f, param_2, param_3);
+	}
 
 	static JAIBasic* interPointer;
 };
+
+typedef JAISound* JAISoundHandle;
 
 #endif // JAISOUND_HPP

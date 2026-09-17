@@ -211,24 +211,8 @@ static int GessoBodyCallback(J3DNode* param_1, int param_2)
 		f32 angle = MsClamp(gpCurGesso->mBodyTrackingAngle - 90.0f, -maxAngle,
 		                    maxAngle);
 
-		f32 s = JMASin(angle);
-		f32 c = JMACos(angle);
-
 		Mtx local_74;
-		local_74[0][0] = 1.0f;
-		local_74[0][1] = 0.0f;
-		local_74[0][2] = 0.0f;
-		local_74[0][3] = 0.0f;
-
-		local_74[1][0] = 0.0f;
-		local_74[1][1] = c;
-		local_74[1][2] = -s;
-		local_74[1][3] = 0.0f;
-
-		local_74[2][0] = 0.0f;
-		local_74[2][1] = s;
-		local_74[2][2] = c;
-		local_74[2][3] = 0.0f;
+		MsMtxSetRotX(local_74, angle);
 
 		MTXConcat(anmMtx, local_74, anmMtx);
 		MTXConcat(anmMtx, local_44, anmMtx);
@@ -687,24 +671,8 @@ void TGesso::calcRootMatrix()
 		MsMtxSetXYZRPH(mA, mPosition.x, mPosition.y + unk1D0, mPosition.z,
 		               mRotation.x, mRotation.y, mRotation.z);
 
-		f32 s = JMASin(mStayYaw);
-		f32 c = JMACos(mStayYaw);
 		Mtx local_68;
-
-		local_68[0][0] = c;
-		local_68[0][1] = 0.0f;
-		local_68[0][2] = s;
-		local_68[0][3] = 0.0f;
-
-		local_68[1][0] = 0.0f;
-		local_68[1][1] = 1.0f;
-		local_68[1][2] = 0.0f;
-		local_68[1][3] = 0.0f;
-
-		local_68[2][0] = -s;
-		local_68[2][1] = 0.0f;
-		local_68[2][2] = c;
-		local_68[2][3] = 0.0f;
+		MsMtxSetRotY(local_68, mStayYaw);
 
 		MTXConcat(mA, local_68, mA);
 
@@ -890,7 +858,7 @@ void TGessoPolluteObj::loadInit(TSpineEnemy* param_1, const char* param_2)
 	TEnemyAttachment::loadInit(param_1, param_2);
 
 	unk16C = (TGesso*)unk160;
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 

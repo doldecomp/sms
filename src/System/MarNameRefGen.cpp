@@ -30,6 +30,9 @@
 #include <GC2D/SunGlass.hpp>
 #include <Map/MapMirror.hpp>
 #include <Map/MapEventSink.hpp>
+#include <Map/MapEventSirena.hpp>
+#include <Map/MapEventDolpic.hpp>
+#include <Map/MapEventMare.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Enemy/EffectObj.hpp>
 #include <Enemy/AreaCylinder.hpp>
@@ -43,6 +46,20 @@
 #include <Camera/Camera.hpp>
 #include <Camera/CameraMapTool.hpp>
 #include <JSystem/JDrama/JDRViewObjPtrList.tpp>
+
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
+
+const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
+const char cDirtyTexName[]  = "H_ma_rak_dummy";
+
+static void dummy(Vec* v)
+{
+	*v = (Vec) { 0.0f, 0.0f, 0.0f };
+	*v = (Vec) { 1.0f, 1.0f, 1.0f };
+}
 
 namespace JDrama {
 template class TViewObjPtrListT<THitActor, TViewObj>;
@@ -190,7 +207,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 		return new TGuide;
 
 	if (strcmp(name, "SunGlass") == 0)
-		return new TSunGlass(JUtility::TColor(0, 0, 0, 80));
+		return new TSunGlass;
 
 	if (strcmp(name, "SunShine") == 0)
 		return new TSunShine;
@@ -250,28 +267,26 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 	if (strcmp(name, "MapEventSinkShadowMario") == 0)
 		return new TMapEventSinkShadowMario;
 
-	// TODO:
-	// if (strcmp(name, "MapEventSirenaSink") == 0)
-	// 	return new TMapEventSirenaSink;
+	if (strcmp(name, "MapEventSirenaSink") == 0)
+		return new TMapEventSirenaSink;
 
 	if (strcmp(name, "MapEventSinkBianco") == 0)
 		return new TMapEventSinkBianco;
 
-	// TODO:
-	// if (strcmp(name, "DolpicEventBiancoGate") == 0)
-	// 	return new TDolpicEventBiancoGate;
+	if (strcmp(name, "DolpicEventBiancoGate") == 0)
+		return new TDolpicEventBiancoGate;
 
-	// if (strcmp(name, "DolpicEventRiccoGate") == 0)
-	// 	return new TDolpicEventRiccoMammaGate;
+	if (strcmp(name, "DolpicEventRiccoGate") == 0)
+		return new TDolpicEventRiccoMammaGate;
 
-	// if (strcmp(name, "DolpicEventMammaGate") == 0)
-	// 	return new TDolpicEventRiccoMammaGate;
+	if (strcmp(name, "DolpicEventMammaGate") == 0)
+		return new TDolpicEventRiccoMammaGate;
 
-	// if (strcmp(name, "MareEventBumpyWall") == 0)
-	// 	return new TMareEventBumpyWall;
+	if (strcmp(name, "MareEventBumpyWall") == 0)
+		return new TMareEventBumpyWall;
 
-	// if (strcmp(name, "MareEventWallRock") == 0)
-	// 	return new TMareEventWallRock;
+	if (strcmp(name, "MareEventWallRock") == 0)
+		return new TMareEventWallRock;
 
 	if (strcmp(name, "StageEnemyInfoHeader") == 0)
 		return new TStageEnemyInfoTable;

@@ -84,7 +84,7 @@ static void initAudio()
 
 static void quitAudio() { JASystem::Kernel::registerMixCallback(nullptr, 0); }
 
-BOOL THPPlayerInit()
+BOOL THPPlayerInit(s32)
 {
 	BOOL inter;
 

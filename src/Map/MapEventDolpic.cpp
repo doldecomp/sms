@@ -62,7 +62,7 @@ bool TDolpicEventBiancoGate::watch()
 void TDolpicEventBiancoGate::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
-	unk20 = JDrama::TNameRefGen::search<TMapObjBase>("dptKing");
+	unk20 = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("dptKing"));
 	unk20->kill();
 	unk20->mPosition.y -= 1800.0f;
 }

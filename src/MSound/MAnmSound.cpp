@@ -8,25 +8,17 @@
 
 MAnmSound::MAnmSound(MSound* sound) { mData = nullptr; }
 
-void MAnmSound::animeLoop(Vec* param_1, f32 param_2, f32 param_3, u32 param_4,
+void MAnmSound::initAnmSound(void* interface, u32 param_2, f32 frame)
+{
+	initActorAnimSound(interface, param_2, frame);
+}
+
+void MAnmSound::animeLoop(Vec* position, f32 frame, f32 speed, u32 ground_no,
                           u8 param_5)
 {
 	if (mData != nullptr)
-		setAnimSoundVec(JAIBasic::basic, param_1, param_2, param_3, param_4,
-		                param_5);
-}
-
-void MAnmSound::initAnmSound(void* param_1, u32 param_2, f32 param_3)
-{
-	initActorAnimSound(param_1, param_2, param_3);
-}
-
-void MAnmSound::setSpeedModifySound(JAISound* param_1,
-                                    JAIAnimeFrameSoundData* param_2,
-                                    f32 param_3)
-{
-	if (MSound::getSwitch(param_1->getUnk8(), 0x100000, 0x14))
-		JAIAnimeSound::setSpeedModifySound(param_1, param_2, param_3);
+		setAnimSoundVec(JAIBasic::getInterface(), position, frame, speed,
+		                ground_no, param_5);
 }
 
 // TODO: find a home for this
@@ -47,35 +39,57 @@ static u32 get_thing(u32 param_1)
 	return 0xffffffff;
 }
 
-void MAnmSound::startAnimSound(void* param_1, u32 param_2, JAISound** param_3,
-                               JAIActor* param_4, u8 param_5)
+void MAnmSound::startAnimSound(void* interface, u32 id,
+                               JAISoundHandle* out_handle, JAIActor* actor,
+                               u8 camera_idx)
 {
-	if (MSGMSound->gateCheck(param_2)) {
-		switch (get_thing(param_2)) {
+	if (MSGMSound->gateCheck(id)) {
+		switch (get_thing(id)) {
 		case 0:
-			if ((param_4->unkC & 0x1000) == 0x1000)
+			if ((actor->mGroundNumber & 0x1000) == 0x1000)
 				return;
 			break;
 
 		case 7: {
-			u32 bVar2 = param_4->unkC >> 24;
+			u32 bVar2 = actor->mGroundNumber >> 24;
 			u32 a     = bVar2 & 0xF;
 			u8 b      = bVar2 >> 4;
-			MSGMSound->startMarioVoice(param_2, a, b);
+			MSGMSound->startMarioVoice(id, a, b);
 			return;
 		}
 		}
 
-		MSoundSESystem::MSoundSE::startSoundActorInner(param_2, param_3,
-		                                               param_4, 0, param_5);
+		MSoundSESystem::MSoundSE::startSoundActorInner(id, out_handle, actor, 0,
+		                                               camera_idx);
 	}
 }
 
-void MAnmSoundNPC::startAnimSound(void* param_1, u32 param_2,
-                                  JAISound** param_3, JAIActor* param_4,
-                                  u8 param_5)
+void MAnmSound::setSpeedModifySound(JAISound* sound,
+                                    JAIAnimeFrameSoundData* frame_data,
+                                    f32 speed)
 {
-	if (MSGMSound->gateCheck(param_2)) {
+	if (MSound::getSwitch(sound->getID(), MSSeSwBit_AnimeSpeed,
+	                      MSSeSwBit_AnimeSpeedShift))
+		JAIAnimeSound::setSpeedModifySound(sound, frame_data, speed);
+}
+
+f32 MSMarioPosVolume::getDistFromMario(const Vec& pos)
+{
+	if (MSGMSound->cameraLooksAtMario()) {
+		const Vec* mario = MSGMSound->unkAC[0].mPosition;
+		return std::sqrtf(std::powf(pos.x - mario->x, 2.0f)
+		                  + std::powf(pos.y - mario->y, 2.0f)
+		                  + std::powf(pos.z - mario->z, 2.0f));
+	}
+
+	return 0.0f;
+}
+
+void MAnmSoundNPC::startAnimSound(void* interface, u32 sound_id,
+                                  JAISound** out_handle, JAIActor* actor,
+                                  u8 camera_idx)
+{
+	if (MSGMSound->gateCheck(sound_id)) {
 		JAIAnimeSoundData* ptr = mData;
 
 		if (ptr->mEntries[mDataCounter].unk10 & 0xFFFF0000) {
@@ -83,8 +97,8 @@ void MAnmSoundNPC::startAnimSound(void* param_1, u32 param_2,
 				u32 uVar5 = mLoopCount;
 				u32 uVar6 = (uVar5 >> 24) + 1;
 				if (uVar5 != 0) {
-					u32 uVar3 = uVar5 + (unk98 - (unk98 / uVar6) * uVar6);
-					if (uVar3 - (uVar3 / uVar6) * uVar6 != 0)
+					u32 uVar3 = uVar5 + unk98 % uVar6;
+					if (uVar3 % uVar6 != 0)
 						return;
 				}
 			}
@@ -98,33 +112,24 @@ void MAnmSoundNPC::startAnimSound(void* param_1, u32 param_2,
 			}
 		}
 
-		if (MSoundSESystem::MSoundSE::checkMonoSound(param_2, param_4)) {
-			MSoundSESystem::MSoundSE::startSoundActorInner(param_2, param_3,
-			                                               param_4, 0, param_5);
+		if (MSoundSESystem::MSoundSE::checkMonoSound(sound_id, actor)) {
+			MSoundSESystem::MSoundSE::startSoundActorInner(
+			    sound_id, out_handle, actor, 0, camera_idx);
 
-			if (*param_3 != nullptr
+			if (*out_handle != nullptr
 			    && !(ptr->mEntries[mDataCounter].unk10 & 0x8000)) {
 
 				f32 dVar10 = 1.0f;
 
-				const Vec* pfVar7 = param_4->unk4;
-				f32 fVar11;
-				if (MSGMSound->cameraLooksAtMario()) {
-					const Vec* pVVar8 = MSGMSound->unkAC[0].unk0;
-					fVar11
-					    = std::sqrtf(std::powf(pfVar7->x - pVVar8->x, 2.0f)
-					                 + std::powf(pfVar7->y - pVVar8->y, 2.0f)
-					                 + std::powf(pfVar7->z - pVVar8->z, 2.0f));
-				} else {
-					fVar11 = 0.0f;
-				}
+				f32 fVar11
+				    = MSMarioPosVolume::getDistFromMario(*actor->mTranslation);
 
 				if (fVar11 != 0.0f)
 					dVar10 = MSHandle::calcVolume(
 					    fVar11, 2000.0f, 600.0f,
 					    ptr->mEntries[mDataCounter].unk10 >> 12 & 7, 8);
 
-				(*param_3)->setSeInterVolume(0, dVar10, 0, 0);
+				(*out_handle)->setSeInterVolume(0, dVar10, 0, 0);
 			}
 		}
 	}

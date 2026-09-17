@@ -7,6 +7,7 @@
 #include <JSystem/JAudio/JASystem/JASDriverIF.hpp>
 #include <JSystem/JAudio/JASystem/JASDriverTables.hpp>
 #include <JSystem/JAudio/JASystem/JASCalc.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 #include <types.h>
 
 namespace JASystem {
@@ -143,7 +144,7 @@ namespace Driver {
 
 	static void __UpdateJcToDSP(TChannel* channel)
 	{
-		DSPInterface::DSPBuffer* buf = channel->unk20->unkC;
+		DSPInterface::DSPBuffer* buf = channel->unk20->mDSPHandle;
 		if (channel->unkD0) {
 			for (u8 i = 0; i < 6; ++i)
 				buf->setMixerVolumeOnly(i, channel->unkB4[i]);
@@ -158,7 +159,7 @@ namespace Driver {
 
 			if (channel->unk4->unk61 & 0x20)
 				buf->setIIRFilterParam(channel->unk4->unk3C);
-			if (channel->unk4->unk61 & 0x1)
+			if (channel->unk4->unk61 & 0x1f)
 				buf->setFIR8FilterParam(channel->unk4->unk2C);
 
 			buf->setFilterMode(channel->unk4->unk61);
@@ -169,10 +170,10 @@ namespace Driver {
 
 	static void __UpdateJcToDSPInit(TChannel* channel)
 	{
-		DSPInterface::DSPBuffer* buf = channel->unk20->unkC;
+		DSPInterface::DSPBuffer* buf = channel->unk20->mDSPHandle;
 
-		if (channel->unkA8[0].mWhole == 0xffff) {
-			buf->initAutoMixer();
+		if (channel->isDolbyMode()) {
+			channel->unk20->mDSPHandle->initAutoMixer();
 		} else {
 			buf->setMixerInitDelayMax(channel->unk4->unk60);
 			for (u8 i = 0; i < 6; ++i)
@@ -183,7 +184,7 @@ namespace Driver {
 		buf->setPitch(channel->unk98);
 		if (channel->unk4->unk61 & 0x20)
 			buf->setIIRFilterParam(channel->unk4->unk3C);
-		if (channel->unk4->unk61 & 0x1)
+		if (channel->unk4->unk61 & 0x1f)
 			buf->setFIR8FilterParam(channel->unk4->unk2C);
 
 		buf->setFilterMode(channel->unk4->unk61);
@@ -223,7 +224,7 @@ namespace Driver {
 				channel->releaseOsc(i);
 
 			if (channel->unk20)
-				channel->unk20->unk3 = channel->unkC0 >> 8;
+				channel->unk20->mPriority = channel->getReleasePriority();
 
 			if (mgr->cutList(channel) != -1) {
 				mgr->addListTail(channel, 2);
@@ -234,7 +235,8 @@ namespace Driver {
 			if (mgr->unk4 != 0) {
 				if (mgr->cutList(channel) != -1) {
 					--mgr->unk4;
-					if (u32 thing = channel->unkC8) {
+					if (channel->unkC8) {
+						u32 thing      = channel->unkC8;
 						channel->unkC8 = 0;
 						mgr->checkLimitStop(channel, thing);
 					}
@@ -242,7 +244,8 @@ namespace Driver {
 				}
 			} else {
 				if (mgr->cutList(channel) != -1) {
-					if (u32 thing = channel->unkC8) {
+					if (channel->unkC8) {
+						u32 thing      = channel->unkC8;
 						channel->unkC8 = 0;
 						mgr->checkLimitStop(channel, thing);
 					}
@@ -286,16 +289,21 @@ namespace Driver {
 	static void updateAutoMixer(TChannel* channel, f32 volume, f32 pan,
 	                            f32 fxmix, f32 dolby)
 	{
-		channel->unk20->unkC->setAutoMixer(volume * 32767.5f, pan * 127.5f,
-		                                   dolby * 127.5f, fxmix * 127.5f,
-		                                   channel->unkA8[1].mWhole);
+		channel->unk20->mDSPHandle->setAutoMixer(
+		    volume * 32767.5f, pan * 127.5f, dolby * 127.5f, fxmix * 127.5f,
+		    channel->unkA8[1].mWhole);
 	}
 
 	static void updateMixer(TChannel* channel, f32 volume, f32 pan, f32 fxmix,
 	                        f32 dolby)
 	{
+		f32 vol;
+		f32 invPan   = 1.0f - pan;
+		f32 invFxmix = 1.0f - fxmix;
+		f32 invDolby = 1.0f - dolby;
+
 		for (u32 i = 0; i < 6; i++) {
-			f32 vol = volume;
+			vol = volume;
 
 			TChannel::MixConfig config = channel->unkA8[i];
 			if (config.mParts.u == 0) {
@@ -315,13 +323,13 @@ namespace Driver {
 						scale = dolby;
 						break;
 					case 5:
-						scale = 1.0f - pan;
+						scale = invPan;
 						break;
 					case 6:
-						scale = 1.0f - fxmix;
+						scale = invFxmix;
 						break;
 					case 7:
-						scale = 1.0f - dolby;
+						scale = invDolby;
 						break;
 					}
 
@@ -340,13 +348,13 @@ namespace Driver {
 						scale = dolby;
 						break;
 					case 5:
-						scale = 1.0f - pan;
+						scale = invPan;
 						break;
 					case 6:
-						scale = 1.0f - fxmix;
+						scale = invFxmix;
 						break;
 					case 7:
-						scale = 1.0f - dolby;
+						scale = invDolby;
 						break;
 					}
 
@@ -379,8 +387,8 @@ namespace Driver {
 		u32 r28 = 0;
 
 		if (channel == nullptr) {
-			dspChannel->unk10 = nullptr;
-			dspChannel->unk3  = 0;
+			dspChannel->mCallback = nullptr;
+			dspChannel->setPriority(0);
 			killBrokenLogicalChannels(dspChannel);
 			return 0;
 		}
@@ -410,7 +418,8 @@ namespace Driver {
 				return 0;
 			}
 
-			if (channel->unk10 != nullptr && channel->unk10->unk24[0] == 0) {
+			if (channel->mWaveData != nullptr
+			    && channel->mWaveData->mLoadFlagPtr[0] == 0) {
 				channel->unk20->forceStop();
 				return -1;
 			}
@@ -418,8 +427,8 @@ namespace Driver {
 			if (param == 4) {
 				u8 priority = channel->getLifeTimePriority();
 				if (channel->unk20 != nullptr) {
-					if (priority < channel->unk20->unk3) {
-						channel->unk20->unk3 = priority;
+					if (priority < channel->unk20->mPriority) {
+						channel->unk20->mPriority = priority;
 					}
 				}
 				return 0;
@@ -435,11 +444,11 @@ namespace Driver {
 			}
 
 			if (param == 0) {
-				channel->unk8C         = 1.0f;
-				channel->unk90         = 1.0f;
-				channel->unk68.mEffect = 0.5f;
-				channel->unk74.mEffect = 0.0f;
-				channel->unk80.mEffect = 0.0f;
+				channel->unk8C            = 1.0f;
+				channel->unk90            = 1.0f;
+				channel->unk68[0].mEffect = 0.5f;
+				channel->unk68[1].mEffect = 0.0f;
+				channel->unk68[2].mEffect = 0.0f;
 
 				for (i = 0; i < 4; i++) {
 					if (!channel->isOsc(i))
@@ -502,16 +511,16 @@ namespace Driver {
 
 void TChannel::init()
 {
-	unk28 = nullptr;
-	unk2C = nullptr;
-	unk30 = 0;
-	unk34 = 0;
-	unk10 = nullptr;
-	unkC  = 0;
-	unk14 = 0;
-	unk18 = 0;
-	unk1C = 0;
-	unkD0 = 0;
+	unk28            = nullptr;
+	unk2C            = nullptr;
+	unk30            = 0;
+	unk34            = 0;
+	mWaveData        = nullptr;
+	mLogicalChanType = 0;
+	unk14            = 0;
+	unk18            = 0;
+	unk1C            = 0;
+	unkD0            = 0;
 	if (!unk4) {
 		unkA8[0].mWhole = 0x150;
 		unkA8[1].mWhole = 0x210;
@@ -528,12 +537,14 @@ void TChannel::init()
 		for (int i = 0; i < 6; i++)
 			unkA8[i].mWhole = unk4->unk4E[i];
 
-		unkC0 = unk4->unk68;
-		unkC4 = unk4->unk6C;
-		for (int i = 0; i < 3; i++)
-			unk58[i] = unk4->unk62[i];
+		unkC0    = unk4->unk68;
+		unkC4    = unk4->unk6C;
+		unk58[0] = unk4->unk62[0];
+		unk58[1] = unk4->unk62[1];
+		unk58[2] = unk4->unk62[2];
 	}
 	for (u32 i = 0; i < 4; i++) {
+		JUT_ASSERT(osc[i]);
 		unk38[i]->setOsc(nullptr);
 		unk38[i]->init();
 	}
@@ -545,38 +556,45 @@ void TChannel::init()
 
 void TChannel::setOscillator(u32 index, TOscillator* oscillator)
 {
+	JUT_ASSERT(index < 4);
 	unk38[index] = oscillator;
 }
 
 void TChannel::setOscInit(u32 index, const TOscillator::Osc_* osc)
 {
+	JUT_ASSERT(index < 4);
 	unk38[index]->setOsc(osc);
 	unk38[index]->initStart();
 }
 
 bool TChannel::forceStopOsc(u32 index)
 {
+	JUT_ASSERT(index < 4);
 	return unk38[index]->isOsc() ? unk38[index]->forceStop() : false;
 }
 
 bool TChannel::releaseOsc(u32 index)
 {
+	JUT_ASSERT(index < 4);
 	return unk38[index]->isOsc() ? unk38[index]->release() : false;
 }
 
 void TChannel::directReleaseOsc(u32 index, u16 release)
 {
+	JUT_ASSERT(index < 4);
 	unk38[index]->releaseDirect(release);
 }
 
 f32 TChannel::bankOscToOfs(u32 index)
 {
+	JUT_ASSERT(index < 4);
 	return unk38[index]->isOsc() ? unk38[index]->getOffset() : 1.0f;
 }
 
 void TChannel::effectOsc(u32 index, f32 effect)
 {
-	switch (unk38[index]->getOsc()->unk0) {
+	JUT_ASSERT(index < 4);
+	switch (unk38[index]->getTarget()) {
 	case 1:
 		unk8C *= effect;
 		break;
@@ -584,23 +602,32 @@ void TChannel::effectOsc(u32 index, f32 effect)
 		unk90 *= effect;
 		break;
 	case 2:
-		unk68.mEffect = effect;
+		unk68[0].mEffect = effect;
 		break;
 	case 3:
-		unk74.mEffect = effect;
+		unk68[1].mEffect = effect;
 		break;
 	case 4:
-		unk80.mEffect = effect;
+		unk68[2].mEffect = effect;
 		break;
 	}
 }
 
-u8 TChannel::getOscState(u32 index) const { return unk38[index]->mState; }
+u8 TChannel::getOscState(u32 index) const
+{
+	JUT_ASSERT(index < 4);
+	return unk38[index]->mState;
+}
 
-BOOL TChannel::isOsc(u32 index) { return unk38[index]->isOsc(); }
+BOOL TChannel::isOsc(u32 index)
+{
+	JUT_ASSERT(index < 4);
+	return unk38[index]->isOsc();
+}
 
 void TChannel::copyOsc(u32 index, TOscillator::Osc_* dest)
 {
+	JUT_ASSERT(index < 4);
 	if (isOsc(index)) {
 		*dest = *unk38[index]->getOsc();
 	}
@@ -608,6 +635,7 @@ void TChannel::copyOsc(u32 index, TOscillator::Osc_* dest)
 
 void TChannel::overwriteOsc(u32 index, TOscillator::Osc_* src)
 {
+	JUT_ASSERT(index < 4);
 	setOscInit(index, src);
 	effectOsc(index, bankOscToOfs(index));
 }
@@ -625,10 +653,10 @@ void TChannel::setKeySweepTarget(u8 key, u32 target)
 {
 	s32 thing;
 
-	if (unkC == 2 || unk10 == 0)
+	if (mLogicalChanType == 2 || mWaveData == 0)
 		thing = key;
 	else
-		thing = key + 0x3C - unk10->unk2;
+		thing = key + 0x3C - mWaveData->mKey;
 
 	if (thing < 0)
 		thing = 0;
@@ -676,7 +704,7 @@ void TChannel::setDolbyParam(const f32* pan, const f32* dolby, const f32* fx) {
 
 BOOL TChannel::checkLogicalChannel()
 {
-	if (!unk10 && unkC == 0)
+	if (!mWaveData && mLogicalChanType == 0)
 		return false;
 
 	return true;
@@ -692,7 +720,7 @@ bool TChannel::resetInitialVolume()
 
 	updateEffectorParam();
 	Driver::__UpdateJcToDSPInit(this);
-	unk20->unkC->flushChannel();
+	unk20->mDSPHandle->flushChannel();
 
 	return true;
 }
@@ -705,7 +733,7 @@ BOOL TChannel::play(u32 param)
 	unk30 = param;
 	unk34 = unk30;
 	unk28 = &Driver::updatecallLogicalChannel;
-	unk20 = TDSPChannel::alloc(0, (u32)this);
+	unk20 = TDSPChannel::alloc(0, (uintptr_t)this);
 
 	if (unk20 == nullptr) {
 		if (checkLogicalChannel() == TRUE) {
@@ -720,7 +748,7 @@ BOOL TChannel::play(u32 param)
 	}
 
 	if (playLogicalChannel() == FALSE) {
-		TDSPChannel::free(unk20, (u32)this);
+		TDSPChannel::free(unk20, (uintptr_t)this);
 		unk20 = nullptr;
 		unk4->addListTail(this, 0);
 		return false;
@@ -745,7 +773,7 @@ void TChannel::stop(u16 release)
 void TChannel::updateJcToDSP()
 {
 	Driver::__UpdateJcToDSP(this);
-	unk20->unkC->flushChannel();
+	unk20->mDSPHandle->flushChannel();
 }
 
 BOOL TChannel::forceStopLogicalChannel()
@@ -762,10 +790,10 @@ BOOL TChannel::stopLogicalChannel()
 	if (!unk20)
 		return FALSE;
 
-	unk20->unk10 = 0;
-	unk20->unk6  = 0;
+	unk20->mCallback   = 0;
+	unk20->mCBInterval = 0;
 	unk20->stop();
-	TDSPChannel::free(unk20, (u32)this);
+	TDSPChannel::free(unk20, (uintptr_t)this);
 	unk20 = nullptr;
 
 	return TRUE;
@@ -779,14 +807,14 @@ BOOL TChannel::playLogicalChannel()
 	if (!checkLogicalChannel())
 		return FALSE;
 
-	unk20->unk10 = &Driver::updatecallDSPChannel;
-	unk20->unk6  = 1;
+	unk20->mCallback   = &Driver::updatecallDSPChannel;
+	unk20->mCBInterval = 1;
 
-	DSPInterface::DSPBuffer* buf = unk20->unkC;
+	DSPInterface::DSPBuffer* buf = unk20->mDSPHandle;
 
-	switch (unkC) {
+	switch (mLogicalChanType) {
 	case 0:
-		buf->setWaveInfo(unk10, unk14);
+		buf->setWaveInfo(mWaveData, unk14);
 		break;
 	case 2:
 		buf->setOscInfo(unk14);
@@ -827,26 +855,15 @@ BOOL TChannel::playLogicalChannel()
 
 	for (u32 i = 0; i < 4; ++i)
 		if (unk38[i]->isOsc())
-			effectOsc(i, unk38[i]->isOsc() ? unk38[i]->getOffset() : 1.0f);
+			effectOsc(i, bankOscToOfs(i));
 
 	updateEffectorParam();
 	Driver::__UpdateJcToDSPInit(this);
-	unk20->unk3 = unkC0;
-	unk20->unk4 = unkC4;
+	unk20->setPriority(getNoteOnPriority());
+	unk20->setPriorityTime(unkC4);
 	unk20->play();
 
 	return TRUE;
-}
-
-// fabricated
-static inline f32 clamp01(f32 value)
-{
-	if (value <= 0.0f)
-		return 0.0f;
-	else if (value >= 1.0f)
-		return 1.0f;
-	else
-		return value;
 }
 
 void TChannel::updateEffectorParam()
@@ -856,11 +873,11 @@ void TChannel::updateEffectorParam()
 	f32 dolby = 0.0f;
 
 	if (unk9C == unk4) {
-		unkA0          = unk4->mPitch;
-		unkA4          = unk4->mVolume;
-		unk68.mChannel = unk4->mPan;
-		unk74.mChannel = unk4->mFxmix;
-		unk80.mChannel = unk4->mDolby;
+		unkA0             = unk4->mPitch;
+		unkA4             = unk4->mVolume;
+		unk68[0].mChannel = unk4->mPan;
+		unk68[1].mChannel = unk4->mFxmix;
+		unk68[2].mChannel = unk4->mDolby;
 		for (int i = 0; i < 3; i++)
 			unk58[i] = unk4->unk62[i];
 	}
@@ -869,31 +886,31 @@ void TChannel::updateEffectorParam()
 	case 0:
 		pan   = 0.5f;
 		dolby = 0.0f;
-		fxmix = calcEffect(&unk74, &unk5C, unk58[1]);
+		fxmix = calcEffect(&unk68[1], &unk5C, unk58[1]);
 		break;
 	case 1:
 		if (unk58[0] == CALC_None)
 			pan = 0.5f;
 		else
-			pan = calcPan(&unk68, &unk5C, unk58[0]);
-		fxmix = calcEffect(&unk74, &unk5C, unk58[1]);
+			pan = calcPan(&unk68[0], &unk5C, unk58[0]);
+		fxmix = calcEffect(&unk68[1], &unk5C, unk58[1]);
 		dolby = 0.0f;
 		break;
 	case 2:
 		if (unk58[0] == CALC_None)
 			pan = 0.5f;
 		else
-			pan = calcPan(&unk68, &unk5C, unk58[0]);
-		fxmix = calcEffect(&unk74, &unk5C, unk58[1]);
-		dolby = calcEffect(&unk80, &unk5C, unk58[2]);
+			pan = calcPan(&unk68[0], &unk5C, unk58[0]);
+		fxmix = calcEffect(&unk68[1], &unk5C, unk58[1]);
+		dolby = calcEffect(&unk68[2], &unk5C, unk58[2]);
 		break;
 	}
 
-	f32 volume = unkA4 * (unk50 * unk90);
+	f32 volume = unkA4 * (unk54 * unk90);
 
-	pan   = clamp01(pan);
-	fxmix = clamp01(fxmix);
-	dolby = clamp01(dolby);
+	pan   = Driver::Clamp01(pan);
+	fxmix = Driver::Clamp01(fxmix);
+	dolby = Driver::Clamp01(dolby);
 
 	unk98 = 4096.0f * (unkA0 * (unk50 * unk8C));
 

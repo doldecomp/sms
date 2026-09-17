@@ -9,7 +9,7 @@ JPATextureResource::JPATextureResource(u32 num, JKRHeap* heap)
 	registNum    = 0;
 	maxNum       = num;
 	pTexResArray = new (heap, 0) JPATexture*[maxNum];
-	JUT_ASSERT(24, pTexResArray);
+	JUT_ASSERT(pTexResArray);
 	defaultTex.initialize(heap);
 }
 
@@ -22,7 +22,7 @@ int JPATextureResource::registration(const u8* data, JKRHeap* heap)
 			return i;
 	}
 
-	JUT_ASSERT(76, registNum < maxNum);
+	JUT_ASSERT(registNum < maxNum);
 	pTexResArray[registNum] = new (heap, 0) JPATexture(data, heap);
 	return registNum++;
 }
@@ -32,12 +32,12 @@ JPAEmitterResource::JPAEmitterResource(u32 num, JKRHeap* heap)
 	registNum     = 0;
 	maxNum        = num;
 	pEmtrResArray = new (heap, 0) JPAEmitterData*[maxNum];
-	JUT_ASSERT(93, pEmtrResArray);
+	JUT_ASSERT(pEmtrResArray);
 }
 
 int JPAEmitterResource::registration(JPAEmitterData* res, u16 userIndex)
 {
-	JUT_ASSERT(107, registNum < maxNum);
+	JUT_ASSERT(registNum < maxNum);
 	if (registNum < maxNum) {
 		res->setUserIndex(userIndex);
 		pEmtrResArray[registNum] = res;
@@ -57,12 +57,12 @@ JPAEmitterData* JPAEmitterResource::getByUserIndex(u16 userIndex)
 JPAResourceManager::JPAResourceManager(u32 eArraySize, u32 tArraySize,
                                        JKRHeap* heap)
 {
-	JUT_ASSERT(60, (eArraySize != 0) && (tArraySize != 0));
+	JUT_ASSERT((eArraySize != 0) && (tArraySize != 0));
 	pHeap = heap ? heap : JKRGetCurrentHeap();
 
 	pEmtrResMgr = new (pHeap, 0) JPAEmitterResource(eArraySize, pHeap);
 	pTexResMgr  = new (pHeap, 0) JPATextureResource(tArraySize, pHeap);
-	JUT_ASSERT(65, pEmtrResMgr && pTexResMgr);
+	JUT_ASSERT(pEmtrResMgr && pTexResMgr);
 }
 
 int JPAResourceManager::load(const char* name, u16 userIndex)
@@ -74,7 +74,7 @@ int JPAResourceManager::load(const char* name, u16 userIndex)
 
 int JPAResourceManager::load(const void* binData, u16 userIndex)
 {
-	JUT_ASSERT(77, binData);
+	JUT_ASSERT(binData);
 	JPAEmitterData* emtrData
 	    = JPAEmitterLoaderDataBase::load((const u8*)binData, pHeap, pTexResMgr);
 	int ret = getEmitterResource()->registration(emtrData, userIndex);

@@ -169,7 +169,7 @@ TChannel* TChannelMgr::getListHead(u32 param)
 	return head;
 }
 
-u32 TChannelMgr::countList(u32 param) { return 0; }
+u32 TChannelMgr::countList(u32 param) const { return 0; }
 
 int TChannelMgr::cutList(TChannel* channel)
 {
@@ -234,8 +234,7 @@ TChannel* TChannelMgr::getLogicalChannel(u32 param)
 			if (chan != nullptr) {
 				chan->forceStopOsc(0);
 				addListHead(chan, 3);
-				if (chan->unk20 != nullptr)
-					chan->unk20->forceStop();
+				TDSPChannel::forceStop(chan->unk20);
 			}
 		}
 	}

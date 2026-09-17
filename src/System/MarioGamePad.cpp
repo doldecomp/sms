@@ -7,74 +7,65 @@ void TMarioGamePad::reset()
 {
 	setButtonRepeat(0xf00000f, 20.0f / SMSGetAnmFrameRate(),
 	                6.0f / SMSGetAnmFrameRate());
-	_E4             = 0;
-	mDisabledFrames = 0;
+	mNeutralKeyTimer = 0;
+	mDisabledFrames  = 0;
 }
 
 void TMarioGamePad::updateMeaning()
 {
-	u32 stackAlloc[83]; // A lot of stack space still missing
-
-	if (mDisabledFrames > 0) {
+	if (mDisabledFrames > 0)
 		mDisabledFrames -= 1;
-	}
 
 	u32 prevMeaning = resetMeaning();
 
-	updateMeaning(START, MEANING_0x1, prevMeaning);
+	updateMeaning(START, MEANING_START, prevMeaning);
 
-	if (checkFlag(PAD_FLAG_0x80)) {
-		updateMeaning(A, MEANING_0x20, prevMeaning);
-		updateMeaning(B, MEANING_0x40, prevMeaning);
+	if (checkFlag(PAD_FLAG_GUIDE_INPUT)) {
+		updateMeaning(A, MEANING_MENU_A, prevMeaning);
+		updateMeaning(B, MEANING_MENU_B, prevMeaning);
 		mCompSPos[4 * 2]     = mMainStick.mPosX;
 		mCompSPos[4 * 2 + 1] = mMainStick.mPosY;
 		goto finalize;
 	}
 
-	if (checkFlag(PAD_FLAG_0x1)) {
+	if (checkFlag(PAD_FLAG_MENU_INPUT)) {
 		// Some kind of 2d menu navigation, i think maybe for debug menu
-		if (mButton.mRepeat & (MAINSTICK_UP | DPAD_UP)) {
-			mMeaning |= MEANING_0x2;
-		}
-		if (mButton.mRepeat & (MAINSTICK_DOWN | DPAD_DOWN)) {
-			mMeaning |= MEANING_0x4;
-		}
-		if (mButton.mRepeat & (MAINSTICK_LEFT | DPAD_LEFT)) {
-			mMeaning |= MEANING_0x8;
-		}
-		if (mButton.mRepeat & (MAINSTICK_RIGHT | DPAD_RIGHT)) {
-			mMeaning |= MEANING_0x10;
-		}
-		updateMeaning(A, MEANING_0x20, prevMeaning);
-		updateMeaning(B, MEANING_0x40, prevMeaning);
+		if (mButton.mRepeat & (MAINSTICK_UP | DPAD_UP))
+			mMeaning |= MEANING_MENU_UP;
+		if (mButton.mRepeat & (MAINSTICK_DOWN | DPAD_DOWN))
+			mMeaning |= MEANING_MENU_DOWN;
+		if (mButton.mRepeat & (MAINSTICK_LEFT | DPAD_LEFT))
+			mMeaning |= MEANING_MENU_LEFT;
+		if (mButton.mRepeat & (MAINSTICK_RIGHT | DPAD_RIGHT))
+			mMeaning |= MEANING_MENU_RIGHT;
+
+		updateMeaning(A, MEANING_MENU_A, prevMeaning);
+		updateMeaning(B, MEANING_MENU_B, prevMeaning);
 		goto finalize;
 	}
 
-	if (!checkFlag(PAD_FLAG_0x2)) {
+	if (!checkFlag(PAD_FLAG_GAME_INPUT))
 		goto finalize;
-	}
 
-	if (checkFlag(PAD_FLAG_0x8)) {
+	if (checkFlag(PAD_FLAG_TALK_SELECT)) {
 		// Menu navigation
-		if (mButton.mRepeat & (MAINSTICK_UP | DPAD_UP)) {
-			mMeaning |= MEANING_0x80000;
-		}
-		if (mButton.mRepeat & (MAINSTICK_DOWN | DPAD_DOWN)) {
-			mMeaning |= MEANING_0x100000;
-		}
-		updateMeaning(A, MEANING_0x20000, prevMeaning);
-		updateMeaning(B, MEANING_0x40000, prevMeaning);
+		if (mButton.mRepeat & (MAINSTICK_UP | DPAD_UP))
+			mMeaning |= MEANING_SELECT_UP;
+		if (mButton.mRepeat & (MAINSTICK_DOWN | DPAD_DOWN))
+			mMeaning |= MEANING_SELECT_DOWN;
+
+		updateMeaning(A, MEANING_SELECT_A, prevMeaning);
+		updateMeaning(B, MEANING_SELECT_B, prevMeaning);
 		mCompSPos[1 * 2]     = (f32)(mButton.mAnalogL);
 		mCompSPos[1 * 2 + 1] = (f32)(mButton.mAnalogR);
-		updateMeaning(R, MEANING_0x400, prevMeaning);
-		updateMeaning(Z, MEANING_0x1000, prevMeaning);
-		updateMeaning(L, MEANING_0x2000, prevMeaning);
+		updateMeaning(R, MEANING_R, prevMeaning);
+		updateMeaning(Z, MEANING_Z, prevMeaning);
+		updateMeaning(L, MEANING_L, prevMeaning);
 		goto finalize;
 	}
 
-	if (checkFlag(PAD_FLAG_0x10)) {
+	if (checkFlag(PAD_FLAG_NO_INPUT))
 		goto finalize;
-	}
 
 	if (mDisabledFrames <= 0) {
 		bool isLButtonCameraSpecifyMode = gpCamera->isLButtonCamera();
@@ -83,74 +74,51 @@ void TMarioGamePad::updateMeaning()
 			mCompSPos[1 * 2]     = (f32)mButton.mAnalogL;
 			mCompSPos[1 * 2 + 1] = (f32)mButton.mAnalogR;
 
-			updateMeaning(R, MEANING_0x400, prevMeaning);
-			updateMeaning(Z, MEANING_0x1000, prevMeaning);
-			updateMeaning(L, MEANING_0x2000, prevMeaning);
+			updateMeaning(R, MEANING_R, prevMeaning);
+			updateMeaning(Z, MEANING_Z, prevMeaning);
+			updateMeaning(L, MEANING_L, prevMeaning);
 			mCompSPos[2 * 2]     = mMainStick.mPosX;
 			mCompSPos[2 * 2 + 1] = mMainStick.mPosY;
-			updateMeaning(A, MEANING_0x10000, prevMeaning);
-			updateMeaning(B, MEANING_0x10000, prevMeaning);
-			updateMeaning(Y, MEANING_0x4000, prevMeaning);
+			updateMeaning(A, MEANING_CAM_AB, prevMeaning);
+			updateMeaning(B, MEANING_CAM_AB, prevMeaning);
+			updateMeaning(Y, MEANING_Y, prevMeaning);
 
 			if (((_DE & 0x1) != 0)
-			    || (((_DC & 1) != 0 && ((prevMeaning & MEANING_0x200) != 0)))) {
-				mMeaning |= MEANING_0x200;
+			    || (((_DC & 1) != 0
+			         && ((prevMeaning & MEANING_UNK200) != 0)))) {
+				mMeaning |= MEANING_UNK200;
 			}
 
-			updateMeaning(X, MEANING_0x200000, prevMeaning);
+			updateMeaning(X, MEANING_X, prevMeaning);
 		} else {
-			f32 stickScaling = 1.0f;
-			bool _unk3       = false;
-			if (0 < _E4) {
-				_E4 -= 1;
-			}
-
-			if (0 < _E4) {
-				s16 _unk2 = 0x3d - _E4;
-				_unk3     = true;
-				if (_unk2 <= 0x28) {
-					stickScaling = 0.0f;
-				} else {
-					stickScaling = CLBCalcRatio<s16>(0x28, 0x3c, _unk2);
-				}
-			}
-
-			if (_unk3) {
-				mCompSPos[0 * 2]     = stickScaling * mMainStick.mPosX;
-				mCompSPos[0 * 2 + 1] = stickScaling * mMainStick.mPosY;
-			} else {
-				mCompSPos[0 * 2]     = mMainStick.mPosX;
-				mCompSPos[0 * 2 + 1] = mMainStick.mPosY;
-			}
+			considerMarioStick(&mCompSPos[0 * 2]);
 
 			mCompSPos[1 * 2]     = (f32)mButton.mAnalogL;
 			mCompSPos[1 * 2 + 1] = (f32)mButton.mAnalogR;
-			updateMeaning(A, MEANING_0x80, prevMeaning);
+			updateMeaning(A, MEANING_A, prevMeaning);
 
-			if ((mFlags & 0x4) != 0) {
-				updateMeaning(B, MEANING_0x800, prevMeaning);
-			} else {
-				if ((mFlags & 0x20) == 0) {
-					updateMeaning(B, MEANING_0x100, prevMeaning);
-				}
-			}
+			if (checkFlag(PAD_FLAG_TALK_NPC))
+				updateMeaning(B, MEANING_TALK_B, prevMeaning);
+			else if (!checkFlag(PAD_FLAG_NO_B))
+				updateMeaning(B, MEANING_B, prevMeaning);
 
-			updateMeaning(R, MEANING_0x400, prevMeaning);
-			updateMeaning(Z, MEANING_0x1000, prevMeaning);
-			updateMeaning(L, MEANING_0x2000, prevMeaning);
+			updateMeaning(R, MEANING_R, prevMeaning);
+			updateMeaning(Z, MEANING_Z, prevMeaning);
+			updateMeaning(L, MEANING_L, prevMeaning);
 
 			mCompSPos[3 * 2]     = mSubStick.mPosX;
 			mCompSPos[3 * 2 + 1] = mSubStick.mPosY;
 
-			updateMeaning(Y, MEANING_0x4000, prevMeaning);
-			updateMeaning(L, MEANING_0x8000, prevMeaning);
+			updateMeaning(Y, MEANING_Y, prevMeaning);
+			updateMeaning(L, MEANING_CAM_L, prevMeaning);
 
 			if (((_DE & 0x1) != 0)
-			    || (((_DC & 1) != 0 && ((prevMeaning & MEANING_0x200) != 0)))) {
-				mMeaning |= MEANING_0x200;
+			    || (((_DC & 1) != 0
+			         && ((prevMeaning & MEANING_UNK200) != 0)))) {
+				mMeaning |= MEANING_UNK200;
 			}
 
-			updateMeaning(X, MEANING_0x200000, prevMeaning);
+			updateMeaning(X, MEANING_X, prevMeaning);
 		}
 	}
 
@@ -159,15 +127,41 @@ finalize:
 	mDisabledFrameMeaning = prevMeaning & ~mMeaning;
 }
 
-void TMarioGamePad::onNeutralMarioKey() { _E4 = 0x3c; }
+void TMarioGamePad::considerMarioStick(f32* stick)
+{
+	f32 stickScaling = 1.0f;
+	bool isScaled    = false;
 
-u32 TMarioGamePad::read()
+	if (0 < mNeutralKeyTimer)
+		mNeutralKeyTimer -= 1;
+
+	if (0 < mNeutralKeyTimer) {
+		s16 frame = 0x3d - mNeutralKeyTimer;
+		isScaled  = true;
+		stickScaling
+		    = frame <= 0x28 ? 0.0f : CLBCalcRatio<s16>(0x28, 0x3c, frame);
+	}
+
+	if (isScaled) {
+		stick[0] = stickScaling * mMainStick.mPosX;
+		stick[1] = stickScaling * mMainStick.mPosY;
+	} else {
+		stick[0] = mMainStick.mPosX;
+		stick[1] = mMainStick.mPosY;
+	}
+}
+
+void TMarioGamePad::onNeutralMarioKey() { mNeutralKeyTimer = 0x3c; }
+
+void TMarioGamePad::read()
 {
 	JUTGamePad::read();
 
-	// TODO: I could not make the register check work properly here.
 	s32 resetPort = 0;
-	if (checkReset(&resetPort)) {
+	if (checkReset(&resetPort))
 		handleReset(resetPort);
-	}
 }
+
+void TMarioGamePad::rumble(TType type, u32 length) { }
+
+void TMarioGamePad::keepRumble(TType type) { }

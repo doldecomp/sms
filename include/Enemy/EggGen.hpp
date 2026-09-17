@@ -6,7 +6,7 @@
 
 class TEggGenerator : public TSpineEnemy {
 public:
-	TEggGenerator(const char*);
+	TEggGenerator(const char* name = "タマゴジェネレータ");
 
 	virtual void init(TLiveManager*);
 	virtual void control();
@@ -14,7 +14,7 @@ public:
 
 class TEggGenManager : public TEnemyManager {
 public:
-	TEggGenManager(const char*);
+	TEggGenManager(const char* name = "タマゴジェネレータマネージャ");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();

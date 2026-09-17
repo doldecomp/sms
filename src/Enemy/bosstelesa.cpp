@@ -147,8 +147,8 @@ void TBubble::init(TLiveManager* manager)
 	mSpine->initWith(&TNerveBubbleLive::theNerve());
 	mMActor->setLightType(3);
 
-	TScreenTexture* tex
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
+	TScreenTexture* tex = static_cast<TScreenTexture*>(
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 	SMS_ChangeTextureAll(mMActor->getModel()->getModelData(), "H_ma_rak_dummy",
 	                     *tex->getTexture()->getTexInfo());
 }
@@ -947,23 +947,25 @@ void TBossTelesa::init(TLiveManager* manager)
 
 	unk16C = new TBossTelesaBody("ボステレサ体コリジョン");
 	TIdxGroupObj* enemyGroup
-	    = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
 	enemyGroup->getChildren().push_back(unk16C);
 	unk16C->initHitActor(0x08000013, 5, 0xD1000000, 350.0f, 550.0f, 300.0f,
 	                     500.0f);
 	((TBossTelesaBody*)unk16C)->unk68 = this;
 	unk16C->offHitFlag(HIT_FLAG_NO_COLLISION);
 
-	unk170     = new TBossTelesaTongue("ボステレサ舌コリジョン");
-	enemyGroup = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+	unk170 = new TBossTelesaTongue("ボステレサ舌コリジョン");
+	enemyGroup
+	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
 	enemyGroup->getChildren().push_back(unk170);
 	unk170->initHitActor(0x08000013, 5, 0xC0000000, 180.0f, 350.0f, 180.0f,
 	                     350.0f);
 	((TBossTelesaTongue*)unk170)->unk68 = this;
 	unk170->offHitFlag(HIT_FLAG_NO_COLLISION);
 
-	unk174     = new TBossTelesaKillSmallEnemy("ボステレサ雑魚敵死コリジョン");
-	enemyGroup = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+	unk174 = new TBossTelesaKillSmallEnemy("ボステレサ雑魚敵死コリジョン");
+	enemyGroup
+	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
 	enemyGroup->getChildren().push_back(unk174);
 	unk174->initHitActor(0x1000000C, 5, 0x10000000, 400.0f, 300.0f, 400.0f,
 	                     300.0f);
@@ -972,8 +974,8 @@ void TBossTelesa::init(TLiveManager* manager)
 
 	mMActor->setLightType(3);
 
-	JDrama::TViewObj* screenTex
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("スクリーンテクスチャ");
+	JDrama::TViewObj* screenTex = static_cast<JDrama::TViewObj*>(
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 	void* dataOwner  = *(void**)((u8*)screenTex + 0x10);
 	ResTIMG* texture = *(ResTIMG**)((u8*)dataOwner + 0x20);
 	SMS_ChangeTextureAll(mMActor->mModel->getModelData(), "H_ma_rak_dummy",
@@ -1044,29 +1046,49 @@ void TBossTelesa::loadAfter()
 		unk2A8[i]->makeObjDead();
 	}
 
-	unk2F8[0] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 0");
-	unk2F8[1] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 1");
-	unk2F8[2] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 2");
-	unk2F8[3] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 3");
-	unk2F8[4] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 4");
-	unk2F8[5] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 5");
-	unk2F8[6] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 6");
-	unk2F8[7] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 7");
-	unk2F8[8] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 8");
-	unk2F8[9] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 9");
+	unk2F8[0]
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("唐辛子 0"));
+	unk2F8[1]
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("唐辛子 1"));
+	unk2F8[2]
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("唐辛子 2"));
+	unk2F8[3]
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("唐辛子 3"));
+	unk2F8[4]
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("唐辛子 4"));
+	unk2F8[5]
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("唐辛子 5"));
+	unk2F8[6]
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("唐辛子 6"));
+	unk2F8[7]
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("唐辛子 7"));
+	unk2F8[8]
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("唐辛子 8"));
+	unk2F8[9]
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("唐辛子 9"));
 	for (int i = 0; i < 10; ++i)
 		unk2F8[i]->makeObjDead();
 
-	unk320[0] = JDrama::TNameRefGen::search<TLiveActor>("コイン 0");
-	unk320[1] = JDrama::TNameRefGen::search<TLiveActor>("コイン 1");
-	unk320[2] = JDrama::TNameRefGen::search<TLiveActor>("コイン 2");
-	unk320[3] = JDrama::TNameRefGen::search<TLiveActor>("コイン 3");
-	unk320[4] = JDrama::TNameRefGen::search<TLiveActor>("コイン 4");
-	unk320[5] = JDrama::TNameRefGen::search<TLiveActor>("コイン 5");
-	unk320[6] = JDrama::TNameRefGen::search<TLiveActor>("コイン 6");
-	unk320[7] = JDrama::TNameRefGen::search<TLiveActor>("コイン 7");
-	unk320[8] = JDrama::TNameRefGen::search<TLiveActor>("コイン 8");
-	unk320[9] = JDrama::TNameRefGen::search<TLiveActor>("コイン 9");
+	unk320[0]
+	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 0"));
+	unk320[1]
+	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 1"));
+	unk320[2]
+	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 2"));
+	unk320[3]
+	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 3"));
+	unk320[4]
+	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 4"));
+	unk320[5]
+	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 5"));
+	unk320[6]
+	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 6"));
+	unk320[7]
+	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 7"));
+	unk320[8]
+	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 8"));
+	unk320[9]
+	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 9"));
 	for (int i = 0; i < 10; ++i)
 		((TMapObjBase*)unk320[i])->makeObjDead();
 
@@ -1075,7 +1097,8 @@ void TBossTelesa::loadAfter()
 	slot->unk1E4[1]   = 0.0f;
 	slot->unk1E4[2]   = 0.0f;
 
-	unk354 = JDrama::TNameRefGen::search<TObjManager>("テレサマネージャー");
+	unk354 = static_cast<TObjManager*>(
+	    JDrama::TNameRefGen::search("テレサマネージャー"));
 
 	for (int i = 0; i < 5; ++i)
 		TMapObjBaseManager::newAndRegisterObj(
@@ -1134,11 +1157,13 @@ void TBossTelesa::loadAfter()
 	unk188
 	    = new TSharedParts((TLiveActor*)unk184, 0, data, 3, "<TSharedParts>");
 
-	TLiveActor* gesso0 = JDrama::TNameRefGen::search<TLiveActor>("ゲッソー 0");
+	TLiveActor* gesso0
+	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("ゲッソー 0"));
 	if (gesso0)
 		gesso0->onLiveFlag(LIVE_FLAG_DEAD);
 
-	TLiveActor* gesso1 = JDrama::TNameRefGen::search<TLiveActor>("ゲッソー 1");
+	TLiveActor* gesso1
+	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("ゲッソー 1"));
 	if (gesso1)
 		gesso1->onLiveFlag(LIVE_FLAG_DEAD);
 

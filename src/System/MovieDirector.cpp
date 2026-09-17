@@ -60,7 +60,7 @@ void TMovieDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 {
 	unk14         = new JDrama::TDStageGroup(param_1);
 	unk20         = param_2;
-	unk20->mFlags = 1;
+	unk20->mFlags = TMarioGamePad::PAD_FLAG_MENU_INPUT;
 
 	SMSRumbleMgr->reset();
 
@@ -141,7 +141,7 @@ int TMovieDirector::rsetup()
 	screen->assignCamera(camera);
 	screen->assignViewObj(group2d);
 
-	THPPlayerInit();
+	THPPlayerInit(0);
 	THPPlayerOpen(movie, 0);
 	u32 mem = THPPlayerCalcNeedMemory();
 	THPPlayerSetBuffer(new (0x20) u8[mem]);
@@ -180,12 +180,12 @@ TMovieDirector::~TMovieDirector()
 	    = (JKRMemArchive*)JKRFileLoader::getVolume("subtitle"))
 		arc->unmountFixed();
 
-	gpMSound->stopAllSound();
+	SMSGetMSound()->stopAllSound();
 	THPPlayerStop();
 	THPPlayerClose();
 	THPPlayerQuit();
 	SMSRumbleMgr->reset();
-	unk20->offFlag(0x1);
+	unk20->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 }
 
 u32 TMovieDirector::decideNextMode(s32* param_1)
@@ -298,7 +298,9 @@ int TMovieDirector::direct()
 	case STATE_FADE_IN:
 		if (TFlagManager::getInstance()->getBool(gpApplication.getMovie()
 		                                         + 0x10391)
-		    && unk20->checkFrameMeaning(0x61)) {
+		    && unk20->checkFrameMeaning(TMarioGamePad::MEANING_START
+		                                | TMarioGamePad::MEANING_MENU_A
+		                                | TMarioGamePad::MEANING_MENU_B)) {
 			nextState = STATE_FADE_OUT;
 		} else if (gpApplication.mFader->isFullyFadedIn()) {
 			nextState = STATE_PLAYING;
@@ -308,7 +310,9 @@ int TMovieDirector::direct()
 	case STATE_PLAYING:
 		if (TFlagManager::getInstance()->getBool(gpApplication.getMovie()
 		                                         + 0x10391)
-		    && unk20->checkFrameMeaning(0x61)) {
+		    && unk20->checkFrameMeaning(TMarioGamePad::MEANING_START
+		                                | TMarioGamePad::MEANING_MENU_A
+		                                | TMarioGamePad::MEANING_MENU_B)) {
 			nextState = STATE_FADE_OUT;
 		} else if (THPPlayerGetState() == 5) {
 			nextState = STATE_FADE_OUT;

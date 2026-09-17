@@ -561,7 +561,8 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 	if (canSpray == true) {
 		unk388 += 150.0f * controllerWork.mAnalogR;
 		if (!unk384 && unk385 == TNozzleTrigger::INACTIVE) {
-			if (gpMarDirector->unk58 % (int)mFludd->mMario->unk568 == 0)
+			if (gpMarDirector->mMoveTickCount % (int)mFludd->mMario->unk568
+			    == 0)
 				SMSRumbleMgr->start(20, (int)mFludd->mMario->unk564,
 				                    (f32*)nullptr);
 		}
@@ -653,7 +654,7 @@ void TNozzleTrigger::emit(int param_1)
 			mFludd->depleteWater(emittedWater * mEmitParams.mDecRate.get());
 
 			if ((mFludd->mCurrentNozzle == TWaterGun::Hover)
-			    && ((gpMarDirector->unk58 & 0x7u) == 0u)) {
+			    && ((gpMarDirector->mMoveTickCount & 0x7u) == 0u)) {
 				SMSRumbleMgr->start(20, 2, (f32*)nullptr);
 			}
 
@@ -954,7 +955,7 @@ void TNozzleDeform::emit(int param_1)
 		if (emittedWater != 0) {
 			mFludd->depleteWater(emittedWater * mEmitParams.mDecRate.get());
 
-			if ((gpMarDirector->unk58 & 0x7u) == 0u) {
+			if ((gpMarDirector->mMoveTickCount & 0x7u) == 0u) {
 				SMSRumbleMgr->start(20, 2, (f32*)nullptr);
 			}
 

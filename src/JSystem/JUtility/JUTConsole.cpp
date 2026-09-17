@@ -346,8 +346,8 @@ void JUTConsoleManager::destroyManager(JUTConsoleManager* manager) { }
 
 void JUTConsoleManager::appendConsole(JUTConsole* console)
 {
-	JUT_ASSERT(961, sManager != NULL && console != NULL);
-	JUT_ASSERT(964, soLink_.Find(console) == soLink_.end());
+	JUT_ASSERT(sManager != NULL && console != NULL);
+	JUT_ASSERT(soLink_.Find(console) == soLink_.end());
 
 	soLink_.Push_back(console);
 

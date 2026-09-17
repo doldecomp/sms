@@ -201,9 +201,9 @@ void TModelWaterManager::load(JSUMemoryInputStream& stream)
 
 void TModelWaterManager::loadAfter()
 {
-	unk5D34
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ")
-	          ->getTexture();
+	unk5D34 = static_cast<TScreenTexture*>(
+	              JDrama::TNameRefGen::search("スクリーンテクスチャ"))
+	              ->getTexture();
 
 	int flag = TFlagManager::getInstance()->getFlag(0x40000);
 	if (flag > 60)

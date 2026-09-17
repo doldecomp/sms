@@ -32,7 +32,7 @@ namespace Driver {
 		if (cur_waits == waitMax)
 			return false;
 
-		if (!TDSPChannel::breakLower(channel->unkC0))
+		if (!TDSPChannel::breakLower(channel->getNoteOnPriority()))
 			return false;
 
 		waittime[cur_tail] = 0;
@@ -51,7 +51,7 @@ namespace Driver {
 			TChannel* chan;
 			chan = waitp[cur_top];
 			if (chan) {
-				TDSPChannel* dspChan = TDSPChannel::alloc(0, (u32)chan);
+				TDSPChannel* dspChan = TDSPChannel::alloc(0, (uintptr_t)chan);
 				if (!dspChan)
 					return;
 				chan->unk20 = dspChan;

@@ -288,7 +288,8 @@ void TMirrorModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TMirrorModelManager::findMirrorCamera()
 {
-	unk24 = JDrama::TNameRefGen::search<TMirrorCamera>("鏡カメラ");
+	unk24
+	    = static_cast<TMirrorCamera*>(JDrama::TNameRefGen::search("鏡カメラ"));
 }
 
 void TMirrorModelManager::loadAfter()

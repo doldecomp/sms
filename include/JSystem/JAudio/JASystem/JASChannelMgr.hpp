@@ -15,7 +15,7 @@ public:
 	TChannel* getLogicalChannel(u32);
 	void initAllocChannel(u32);
 	TChannel* getListHead(u32);
-	u32 countList(u32);
+	u32 countList(u32) const;
 	int cutList(TChannel*);
 	void addListHead(TChannel*, u32);
 	void addListTail(TChannel*, u32);

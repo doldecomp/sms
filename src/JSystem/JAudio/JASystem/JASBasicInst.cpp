@@ -7,29 +7,29 @@
 namespace JASystem {
 
 TBasicInst::TBasicInst()
-    : unk4(1.0f)
-    , unk8(1.0f)
-    , unkC(nullptr)
-    , unk10(0)
-    , unk14(nullptr)
-    , unk18(0)
-    , unk1C(0)
-    , unk20(nullptr)
+    : mVolume(1.0f)
+    , mPitch(1.0f)
+    , mEffects(nullptr)
+    , mEffectCount(0)
+    , mOscillators(nullptr)
+    , mOscillatorCount(0)
+    , mKeyRegionCount(0)
+    , mKeyRegions(nullptr)
 {
 }
 
 TBasicInst::~TBasicInst()
 {
-	delete[] unk20;
-	delete[] unkC;
-	delete[] unk14;
+	delete[] mKeyRegions;
+	delete[] mEffects;
+	delete[] mOscillators;
 }
 
 TBasicInst::TKeymap* TBasicInst::searchKeymap(int key) const
 {
-	for (int i = 0; i < unk1C; i++) {
-		if (key <= unk20[i].unk0) {
-			return &unk20[i];
+	for (int i = 0; i < mKeyRegionCount; i++) {
+		if (key <= mKeyRegions[i].mHighKey) {
+			return &mKeyRegions[i];
 		}
 	}
 	return nullptr;
@@ -37,44 +37,42 @@ TBasicInst::TKeymap* TBasicInst::searchKeymap(int key) const
 
 bool TBasicInst::getParam(int key, int velo, TInstParam* param) const
 {
-	char trash[4]; // TODO: what is this
+	param->mSourceType = 0;
+	param->mFixedPitch = 0;
+	param->mOscData    = mOscillators;
+	param->mOscCount   = mOscillatorCount;
+	param->mVolume *= mVolume;
+	param->mPitch *= mPitch;
 
-	param->unk0      = 0;
-	param->unk38     = 0;
-	param->mOscData  = unk14;
-	param->mOscCount = unk18;
-	param->unk10 *= unk4;
-	param->unk14 *= unk8;
-
-	for (int i = 0; i < unk10; i++) {
-		TInstEffect* effect = unkC[i];
+	for (int i = 0; i < mEffectCount; i++) {
+		TInstEffect* effect = mEffects[i];
 		if (!effect)
 			continue;
 
 		f32 y = effect->getY(key, velo);
-		switch (effect->unk4) {
+		switch (effect->mTarget) {
 		case 0:
-			param->unk18 *= y;
+			param->mEffectVolume *= y;
 			break;
 		case 1:
-			param->unk1C *= y;
+			param->mEffectPitch *= y;
 			break;
 		case 2:
-			param->unk2C = y;
+			param->mEffectPan = y;
 			break;
 		case 3:
-			param->unk30 = y;
+			param->mEffectFxmix = y;
 			break;
 		case 4:
-			param->unk34 = y;
+			param->mEffectDolby = y;
 			break;
 		}
 	}
 
 	const TKeymap* keymap = nullptr;
-	for (int i = 0; i < unk1C; i++) {
-		if (key <= unk20[i].unk0) {
-			keymap       = &unk20[i];
+	for (int i = 0; i < mKeyRegionCount; i++) {
+		if (key <= mKeyRegions[i].mHighKey) {
+			keymap       = &mKeyRegions[i];
 			param->unk3C = i;
 			break;
 		}
@@ -83,12 +81,12 @@ bool TBasicInst::getParam(int key, int velo, TInstParam* param) const
 	if (!keymap)
 		return false;
 
-	for (int i = 0; i < keymap->unk4; i++) {
+	for (int i = 0; i < keymap->getVeloRegionCount(); i++) {
 		const TVeloRegion* region = keymap->getVeloRegion(i);
 		if (velo <= region->unk0) {
-			param->unk10 *= region->unk8;
-			param->unk14 *= region->unkC;
-			param->unk4 = region->unk4;
+			param->mVolume *= region->unk8;
+			param->mPitch *= region->unkC;
+			param->mWaveId = region->unk4;
 			return true;
 		}
 	}
@@ -100,86 +98,86 @@ int TBasicInst::getKeymapIndex(int index) const { return index; }
 
 void TBasicInst::setKeyRegionCount(u32 count)
 {
-	delete[] unk20;
-	unk20 = new (TBank::getCurrentHeap(), 0) TKeymap[count];
-	unk1C = count;
+	delete[] mKeyRegions;
+	mKeyRegions     = new (TBank::getCurrentHeap(), 0) TKeymap[count];
+	mKeyRegionCount = count;
 }
 
 void TBasicInst::setEffectCount(u32 count)
 {
-	delete[] unkC;
-	unk10 = count;
+	delete[] mEffects;
+	mEffectCount = count;
 	if (!count) {
-		unkC = nullptr;
+		mEffects = nullptr;
 		return;
 	}
 
-	unkC = new (TBank::getCurrentHeap(), 0) TInstEffect*[count];
-	Calc::bzero(unkC, count * sizeof(TInstEffect*));
+	mEffects = new (TBank::getCurrentHeap(), 0) TInstEffect*[count];
+	Calc::bzero(mEffects, count * sizeof(TInstEffect*));
 }
 
 void TBasicInst::setEffect(int index, TInstEffect* effect)
 {
-	unkC[index] = effect;
+	mEffects[index] = effect;
 }
 
-TInstEffect* TBasicInst::getEffect(int index) { return unkC[index]; }
+TInstEffect* TBasicInst::getEffect(int index) { return mEffects[index]; }
 
 void TBasicInst::setOscCount(u32 count)
 {
-	delete[] unk14;
-	unk18 = count;
+	delete[] mOscillators;
+	mOscillatorCount = count;
 	if (!count) {
-		unk14 = nullptr;
+		mOscillators = nullptr;
 		return;
 	}
 
-	unk14 = new (TBank::getCurrentHeap(), 0) TOscillator::Osc_*[count];
-	Calc::bzero(unk14, count * sizeof(TOscillator::Osc_*));
+	mOscillators = new (TBank::getCurrentHeap(), 0) TOscillator::Osc_*[count];
+	Calc::bzero(mOscillators, count * sizeof(TOscillator::Osc_*));
 }
 
 void TBasicInst::setOsc(int index, TOscillator::Osc_* osc)
 {
-	unk14[index] = osc;
+	mOscillators[index] = osc;
 }
 
-TOscillator::Osc_* TBasicInst::getOsc(int index) { return unk14[index]; }
+TOscillator::Osc_* TBasicInst::getOsc(int index) { return mOscillators[index]; }
 
 TBasicInst::TKeymap* TBasicInst::getKeyRegion(int index)
 {
-	if (index >= unk1C)
+	if (index >= mKeyRegionCount)
 		return nullptr;
-	return &unk20[index];
+	return &mKeyRegions[index];
 }
 
 const TBasicInst::TKeymap* TBasicInst::getKeyRegion(int index) const
 {
-	if (index >= unk1C)
+	if (index >= mKeyRegionCount)
 		return nullptr;
-	return &unk20[index];
+	return &mKeyRegions[index];
 }
 
-TBasicInst::TKeymap::~TKeymap() { delete[] unk8; }
+TBasicInst::TKeymap::~TKeymap() { delete[] mVeloRegions; }
 
 void TBasicInst::TKeymap::setVeloRegionCount(u32 count)
 {
-	delete[] unk8;
-	unk8 = new (TBank::getCurrentHeap(), 0) TVeloRegion[count];
-	unk4 = count;
+	delete[] mVeloRegions;
+	mVeloRegions     = new (TBank::getCurrentHeap(), 0) TVeloRegion[count];
+	mVeloRegionCount = count;
 }
 
 TVeloRegion* TBasicInst::TKeymap::getVeloRegion(int index)
 {
-	if (index >= unk4)
+	if (index >= mVeloRegionCount)
 		return nullptr;
-	return &unk8[index];
+	return &mVeloRegions[index];
 }
 
 const TVeloRegion* TBasicInst::TKeymap::getVeloRegion(int index) const
 {
-	if (index >= unk4)
+	if (index >= mVeloRegionCount)
 		return nullptr;
-	return &unk8[index];
+	return &mVeloRegions[index];
 }
 
 } // namespace JASystem

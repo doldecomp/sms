@@ -224,8 +224,8 @@ void TMareEventWallRock::load(JSUMemoryInputStream& stream)
 	JDrama::TNameRef::load(stream);
 	unk14 = new TMareWallRock[unk10];
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* group
-	    = JDrama::TNameRefGen::search<
-	        JDrama::TViewObjPtrListT<JDrama::TViewObj> >("マップグループ");
+	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
+	        JDrama::TNameRefGen::search("マップグループ"));
 	for (int i = 0; i < unk10; ++i) {
 		unk14[i].unkF8 = i;
 		group->getChildren().push_back((JDrama::TViewObj*)&unk14[i]);
@@ -511,7 +511,7 @@ void TMareEventDepressWall::init3rdEvent()
 	unk14 = 43;
 	initCommon();
 	TMapModelActor* actor
-	    = JDrama::TNameRefGen::search<TMapModelActor>("mareEP2");
+	    = static_cast<TMapModelActor*>(JDrama::TNameRefGen::search("mareEP2"));
 	if (actor) {
 		actor->setActor((MActor*)this);
 		unk18[0] = 2400;
@@ -536,7 +536,7 @@ void TMareEventDepressWall::init2ndEvent()
 	unk14 = 19;
 	initCommon();
 	TMapModelActor* actor
-	    = JDrama::TNameRefGen::search<TMapModelActor>("mareEP1");
+	    = static_cast<TMapModelActor*>(JDrama::TNameRefGen::search("mareEP1"));
 	if (actor) {
 		actor->setActor((MActor*)this);
 		unk18[0] = 3600;
@@ -551,7 +551,7 @@ void TMareEventDepressWall::init1stEvent()
 	unk14 = 8;
 	initCommon();
 	TMapModelActor* actor
-	    = JDrama::TNameRefGen::search<TMapModelActor>("mareEP0");
+	    = static_cast<TMapModelActor*>(JDrama::TNameRefGen::search("mareEP0"));
 	if (actor) {
 		actor->setActor((MActor*)this);
 		unk18[0] = 3600;

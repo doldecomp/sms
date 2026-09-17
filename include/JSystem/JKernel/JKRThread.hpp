@@ -40,15 +40,14 @@ private:
 	static JKRThreadSwitch_PostCallback mUserPostCallback;
 
 private:
-	JKRHeap* mHeap;              // _04
-	bool mSetNextHeap;           // _08
-	u8 _09[3];                   // _09, padding?
-	u32 _0C;                     // _0C
-	u32 _10;                     // _10
-	u8 _14[4];                   // _14 - unknown/padding
-	s64 _18;                     // _18
-	JUTConsole* mConsole;        // _20
-	JKRThreadName_* mThreadName; // _24
+	/* 0x04 */ JKRHeap* mHeap;
+	/* 0x08 */ bool mSetNextHeap;
+	/* 0x0C */ u32 _0C;
+	/* 0x10 */ u32 _10;
+	/* 0x14 */ char _14[4];
+	/* 0x18 */ s64 _18;
+	/* 0x20 */ JUTConsole* mConsole;
+	/* 0x24 */ JKRThreadName_* mThreadName;
 };
 
 class JKRThread : public JKRDisposer {
@@ -104,6 +103,18 @@ protected:
 	/* 0x54 */ int mMesgCount;
 	/* 0x58 */ void* mStackMemory;
 	/* 0x5C */ u32 mStackSize;
+};
+
+class JKRTask : public JKRThread {
+public:
+	JKRTask();
+
+	virtual ~JKRTask();
+	virtual void* run();
+
+	static JKRTask* create();
+	void destroy();
+	void request(void (*)(void*), void*);
 };
 
 #endif
