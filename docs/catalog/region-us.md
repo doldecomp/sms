@@ -19,7 +19,13 @@ Inventory before changing the header: `MSound.cpp`, `MSoundSE.cpp`, `MAnmSound.c
 ## `GCConsole2`
 
 The US constructor writes a `u16` at 0x3AE and a byte at 0x3B0; later pointers start at 0x3B4.
-Their US timer/flag behaviour is not reconstructed yet, and existing `unk3AC[1]` users are a follow-up.
+0x3B0 is `mAppearFromDemo` (JP 0x3AD): written by `startAppearMario(bool)`, read by `perform`'s camera-demo guard; the US byte at 0x3AD is still unidentified.
+US-only in this shape: `checkDolpic8()` and the 47 `scDolpicNewsDolpic8_<A-D><a-c><1-4>` tables (upper letter = story suffix, lower = prefix, digit = nozzle middle); the ROM's outer `case 0:` has no `break`, so the whole A group is dead in the shipped game (reproduced deliberately).
+Dolpic 5: both flags -> `5_4`, one each -> `5_2`/`5_3`, neither -> `5_1`.
+Balloon colour markers are single ASCII bytes (`@` green, `#` orange, `%` yellow, `+`/`<`/`>`/`0xA5` grey, `$` light blue); the escape is `\033FX[30]\033FY[26]`; `case 0` falls through into `case 0x0A`.
+Telop font size is `gpSystemFont->getWidth() << 10` with one shared `JUTRect` (that is why `JUTResFont::getWidth` is the map's weak symbol).
+Life sounds: `0x480C` under water, `0x4823` on land, `0x4801` on gain; segment colours are `setWhite` only.
+`memset(p, 0, 0x400)` is inlined by retail as an 8-byte `stb` loop where we `bl memset` (`string.h` declares it `__declspec(section ".init")`; open).
 
 ## Strings and IDs
 

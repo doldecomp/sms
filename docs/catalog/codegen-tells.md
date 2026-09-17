@@ -225,6 +225,19 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `GCConsole2` (GC2D)
+
+- `TFlagManager::getInstance()` vs `smInstance->` is a codegen lever: the accessor materialises the pointer into `r0` and adds `mr r3, r0` at a function's first call (`checkDolpic8` 96 -> 99 with `smInstance`); per function.
+- A `static inline` wrapper costs exactly one level, usable on whole functions: `startAppearTank()` (292 B) behind a one-line `updateTankAppear(console)` stays a `bl`. The converse is the systemic cost of decomposing a big function into fabricated helpers: everything inside sits one level deeper than retail.
+- `JUTRect r(other)` emits `bl JUTRect::copy`; `r = other` four `lwz`/`stw` pairs; several copies landing on one slot is construct-then-assign.
+- `pane->setWhite(JUtility::TColor(r, g, b, a))` is the shape behind `bl JUtility::TColor::set(u8, u8, u8, u8)` (three levels); a `mWhite = 0xRRGGBBAA` store hides the symbol.
+- Leading `@NNNN` `.data` objects may be temporaries your own code already emits: three fabricated dead arrays duplicated `@163`/`@154`/`@134` and shifted every later offset by 0x28. Check the object's own symbol table before fabricating.
+- A member reread across a call cannot be replaced by a by-value helper parameter (`countShine` reads `unk170` three times because each `changeTexture` invalidates it).
+- `u8 done = 1; done = done & pane->update();` reads off as `and`; the `if (!update()) done = false;` form as `clrlwi.` + branch.
+- Case-label order decides block order in a compare-tree switch (`case 3, 2, 1, default`); an explicit `case 0:` grouped with `default:` gives `cmpwi r0, 0` rather than `1`.
+- Reordering a decomposed `perform` back into the ROM's block order is the single highest-value edit (49 -> 70 in one edit).
+- Open header items: `TYoshi::onYoshi()` carries eight `(void)0;` as an anti-inline hack (a fakematch); `GCConsole2` needs the unpadded predicate (no null test on `mYoshi`, `cmpwi` BOOL) and parks a local. `SoundEffects.hpp` lacks `0x405C`.
+
 ## Rules from `hamukuri`
 
 - A one-more-level `getManager()` forwarder is a per-class frame lever: `(THamuKuriManager*)TLiveActor::getManager()` instead of `(THamuKuriManager*)mManager` took `makeCapFly` from a 64-byte gap to exact and made three more functions exact in one edit.
