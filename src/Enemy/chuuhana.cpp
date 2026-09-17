@@ -357,8 +357,8 @@ void TChuuHana::reset()
 void TChuuHana::setBckAnm(int index)
 {
 	unk194 = 1.0f;
-	mMActor->setMotionBlendRatioForBck(unk194);
-	mMActor->setBckOldMotionBlendAnmPtr(mMActor->getCurBckAnmPtr());
+	getMActor()->setMotionBlendRatioForBck(unk194);
+	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getCurBckAnmPtr());
 	TSmallEnemy::setBckAnm(index);
 }
 

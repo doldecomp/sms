@@ -125,15 +125,14 @@ public:
 	// name comes from; the body is still a guess from the call sites, which
 	// read MActorAnmEach::unk24 null-checked before handing it to
 	// setBckOldMotionBlendAnmPtr.
-	// TODO: the mangled name getCurBckAnmPtr__6MActorFv carries no C, so the
-	// original was non-const, but dropping const here costs
-	// TChuuHana::setBckAnm 95.7 -> 93.2 and its frame 0x30 -> 0x18: MWCC then
-	// CSEs the mAnmBck load between this accessor and the
-	// setBckOldMotionBlendAnmPtr expansion beside it, where retail caches
-	// mMActor in r5 and re-reads 0xc(r5) for each. Adding a named local for
-	// the result at that site is worse still (90.1%). Something else at that
-	// site has to break the CSE before the const can come off.
-	J3DAnmTransform* getCurBckAnmPtr() const
+	// Non-const, as getCurBckAnmPtr__6MActorFv's missing C says. The receiver
+	// has to go through getMActor() for that to work: with the raw mMActor
+	// member on both halves of the statement MWCC CSEs the mAnmBck load and
+	// TChuuHana::setBckAnm drops to 93.2%, where the accessor's extra level
+	// gives retail's two independent `lwz 0xc(r5)` reads and 99.8%
+	// (instruction-exact, 16 bytes of frame short). bosstelesa and tinkoopa
+	// already spelled their sites that way.
+	J3DAnmTransform* getCurBckAnmPtr()
 	{
 		if (!mAnmBck)
 			return nullptr;
