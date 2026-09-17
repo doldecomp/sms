@@ -520,11 +520,7 @@ void TDemoCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 			s16 hp        = SMS_GetMarioHP();
 			sound->startMarioVoice(30911, hp, 0);
 
-			// TODO: MSound::checkMarioVoicePlaying is declared to return
-			// void*; every caller treats it as a JAISound*, so the shared
-			// header should probably say so and drop this cast.
-			JAISound* voice
-			    = (JAISound*)gpMSound->checkMarioVoicePlaying(0);
+			JAISound* voice = gpMSound->checkMarioVoicePlaying(0);
 			if (voice)
 				voice->setVolume(0.0f, 60, 0);
 		}

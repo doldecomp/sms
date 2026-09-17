@@ -1126,7 +1126,7 @@ void MSound::stopMarioVoice(u32 id, u8 param_2)
 	}
 }
 
-void* MSound::checkMarioVoicePlaying(u8 param_1)
+JAISound* MSound::checkMarioVoicePlaying(u8 param_1)
 {
 	u8 iVar1 = param_1 & 2 ? 1 : 0;
 	return unk8C[iVar1];
