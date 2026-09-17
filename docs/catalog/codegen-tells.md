@@ -107,6 +107,8 @@ Do not force these with `#pragma dont_inline` or pasted bodies; leave the functi
 **`fmodf` / `mod`.** The binary calls `std::fmodf` and `TUtil<f32>::mod` out of line everywhere (`koopajr`, `MapObjCorona`, `wireTrap`), with the same 0x5c body: return `x` if `|y| > |x|`, else `x - y * (f32)(s64)(u64)(x / y)`.
 `TUtil<f32>::mod` carries that body in `JGUtil.hpp`; `std::fmodf` keeps the `::fmod` wrapper because the body there inlines everywhere.
 
+**Trivial constructors and one-line wrappers buy a level.** Declaring a scratch matrix as `TPosition3<TMatrix34<SMatrix34C<f32>>>` rather than `TRotation3<...>` makes MWCC call the 4-byte empty `SMatrix34C<f>::SMatrix34C()` and `TRotation3::identity33()` out of line, exactly as the ROM does; a weak 4-byte constructor for the innermost matrix class in the map is the tell (`BeeHive` `receiveMessage` 88.5 -> 92.4). `setSQ` (0x100, 21 statements) inlines at depth 1 however it is spelled; through a one-line `setSQT(scale, quat, trans)` it becomes the ROM's call. And an UNUSED one-liner can exist to *be* the call: routing `TBee::receiveMessage` through `TBee::behaveToEat` (just `mBeeHive->receiveMessageFromChild(this)`) kept the callee out of line, 0 -> 99.8; same for `setShakePower` and `SMS_EmitWaterHitParticleAndSound`.
+
 **Mutating operators are depth spacers.** `TVec3<f32>::scale(f32)` is called out of line throughout `wireTrap`; `v.scale(k)` expands it, `v *= k` routes through the one-line `operator*=` forwarder and adds the level that keeps `scale` a `bl` (three nerves 66/81/37 -> 99.0/99.5/98.4). Generalises the forwarder rule to the mutating `TVec3` operators.
 
 **Ternaries cut the statement budget without changing codegen.** `f32 r; if (t > 0) r = 1 + f(); else r = 1;` and `f32 r = t > 0 ? 1 + f() : 1;` emit the same instructions, but the ternary made an UNUSED helper 48 bytes smaller and flipped it from called to inlined (`doSearchMove` 440 vs 528; its nerve 37.5 -> 98.4).
@@ -190,6 +192,17 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Out-param reassignment inside the guard:** `mGroundPlane = plane; if (mGroundPlane) { plane = mGroundPlane; ... }` lets MWCC forward the register; reassigning before the test reloads.
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
+
+## Rules from `BeeHive`
+
+- A `const` accessor restores a second member load: a named `u32 flags = obj->mFlags;` does not reproduce the ROM's re-read of `mFlags` in the `on/offFlag` after a test; only reading through a const-qualified inline does (`appearBee` 85.6 -> 100). `TRealoidActor` needs `bool checkFlag(int) const` (open fix in `fishoid.hpp`).
+- `JGeometry::TUtil<f32>::clamp` emits `fcmpo; bge L; b STORE` twice; a nested ternary matches only when the low bound is a literal already in the result register, and costs `fmr` + `b` when it is an `fneg`. Use `clamp()`.
+- `epsilonEquals` overloads: one `lfs` of the epsilon plus `fneg` is the three-argument form; two loads of the literal is the fabricated two-argument form.
+- In-place accumulate: `v.scale(s); mDst.set(v.x, v.y, v.z)` multiplies into the accumulators' registers and lands the frame where `mDst.set(a * s, b * s, c * s)` allocates fresh ones (`controlSound` 99.3 -> 100); `mDst.set(v)` loses 16 bytes of frame.
+- `mCoins + n - 1` is `add` then `subi 4`; `&mCoins[n - 1]` is `subi`, `slwi`, `add`.
+- `a += b * c` contracts to `fmadds` even with memory operands; naming the product keeps `fmuls`/`fadds`.
+- **Real bug in `JGQuat4.hpp`**: `mul(const TQuat4&)` computes `_y = w*oy + y*ow + x*oz - z*ox`; the ROM has `+ z*ox - x*oz` (the two-argument `mul` beside it is right). Blocks `TBeeHive::calcRootMatrix` past 71.5%. Also open there: `setRotate(from, to, amount)` is an f28-f31 permutation around the inlined `cross()`/`length()`; `slerp` folds `1.0f - t` in the epsilon branch but not the acos branch; `TRotation3::setSQ` should load `qt.y, qt.z, qt.x, qt.w` in that order; `TPosition3` needs `setSQT`.
+- Ruled out: `TPathNode(THitActor*) : unk4(0, 0, 0)` reproduces the out-of-line `TVec3::set<f>(0,0,0)` and improves four BeeHive nerves, but regresses ~15 other units. Per call site; do not push into `PathNode.hpp`.
 
 ## Load and store order
 

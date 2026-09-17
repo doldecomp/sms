@@ -39,7 +39,11 @@ An effect owner argument of `this + sizeof(T)` or `this + 2 * sizeof(T)` is the 
 
 ## Override return types
 
-`TEnemyManager::createEnemyInstance()` returns `TSpineEnemy*`; an override declared with a different return type (`TLiveActor*`) is not covariant and gets a **new vtable slot** instead of overriding. Check any manager whose vtable is not exact for this.
+`TEnemyManager::createEnemyInstance()` returns `TSpineEnemy*`; an override declared with a different return type (`TLiveActor*`) is not covariant and gets a **new vtable slot** instead of overriding. A *covariant* return (`TBee*` for the base's `TRealoidActor*`) also gets a second slot with the same pointer. Declare the base return type; check any class whose vtable is not exact for this (`BeeHive` data 60.4 -> 100).
+
+The map size is a shape oracle for dead helpers: `TBeeHive::doFall` at 0x24 is four instructions more than `mSwingAngle += mSwingSpeed;`, exactly a trailing `return !checkLiveFlag(...)`.
+
+The MSound rogue-include set also supplies the 15 zero-filled 12-byte `.bss` objects enemy TUs carry, and the 12-byte `@NNNN` `.bss` objects paired with `instance$`/`init$` in `.sbss` are `__register_global_object` chain nodes, one per `theNerve()` singleton.
 
 ## String-pool prefixes
 
