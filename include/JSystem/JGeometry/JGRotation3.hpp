@@ -163,6 +163,16 @@ public:
 
 	void getQuat(JGeometry::TQuat4<f32>& quat) const
 	{
+		// TODO: 99.5% against the weak copy in Kazekun.o (0x2b0), and the only
+		// difference is one instruction: retail adds the diagonal sum to the
+		// literal as `fadds f3, f2(sum), f0(1.0)` where we emit
+		// `fadds f4, f0, f2`, after which f3/f4 are swapped for the rest of the
+		// branch. Tried and no better: hoisting the sum into a named `trace`
+		// local (99.5, byte-identical), `sqrt(at(2,2) + (at(0,0) + at(1,1))
+		// + 1.0f)` (99.5, byte-identical) and `sqrt(1.0f + at(0,0) + at(1,1)
+		// + at(2,2))` (97.8). MWCC reassociates the sum onto the CSE from the
+		// condition above regardless of how it is written here.
+		//
 		// TODO: nasty regswap
 		if (this->at(0, 0) + this->at(1, 1) + this->at(2, 2) >= 0.0f) {
 			f32 scale = TUtil<f32>::sqrt(this->at(0, 0) + this->at(1, 1)

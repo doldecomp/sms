@@ -126,6 +126,15 @@ public:
 		this->w = cosf(pAngle * 0.5f);
 	}
 
+	// TODO: 98.8% against the weak copy in BeeHive.o (0x15c). Every
+	// instruction matches; the four callee-saved float registers around the
+	// inlined cross()/length() are permuted. Retail holds cross.x/y/z in
+	// f30/f29/f28 (descending) and the squared length in f31; we get
+	// f29/f30/f31 ascending with the length in f28. cross() batches its three
+	// components through set(x, y, z), so the order is decided inside that
+	// inline and no spelling here reaches it -- the same family as the
+	// "An inline's locals are numbered in reverse" rule in
+	// docs/AGENT_MATCHING_TIPS.md.
 	void setRotate(const TVec3<T>& from, const TVec3<T>& to, T amount)
 	{
 		TVec3<T> axis;
@@ -232,6 +241,16 @@ public:
 		this->slerp(a2, a3);
 	}
 
+	// TODO: 99.8% against the weak copy in fireWanwan.o (0x248), and it is a
+	// pure frame gap: all 146 instructions match and the frame is 0xa8 against
+	// retail's 0xb8. A temporary `volatile char trash[16]` takes it to exactly
+	// 100.0%, so the body below is right and retail declared one more 16-byte
+	// aggregate -- a third TQuat4 -- that nothing in the code needs. Ruled out:
+	// `TQuat4<f32> q1 = *this; q1.normalize();` and the ctor-parenthesis form
+	// both move the frame the wrong way (0x68) and drop it to 35.4%, because
+	// normalize() then reads the quaternion back out of memory. The byte count
+	// is the only evidence for the missing local, so per
+	// docs/catalog/frame-gaps.md it stays unwritten.
 	void slerp(const TQuat4<T>& param_1, T param_2)
 	{
 		TQuat4<f32> q1;
