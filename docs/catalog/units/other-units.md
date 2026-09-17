@@ -22,6 +22,7 @@ Longer evidence for batches 25-39 is in `docs/progress/GMSE01-closure-audit-batc
 - **hanasambo**: `TSamboFlower(const char* name = "サンボフラワー")` with `new TSamboFlower` in `createEnemyInstance`. The map lists the constructor as a weak out-of-line symbol (duplicated in `MarNameRefGen_Enemy`); spelling the name at the call site inlines it. Open: UNUSED `hide` is 0xb8 vs map 0x50 and `isUseCallBack` 0x150 vs 0x140.
 - **Spider, Beam**: see vectors in `../codegen-tells.md`. Beam's `coneInPlane` UNUSED body must stay 348 bytes.
 - **AnimalNerve**: two `MsRandI(hi, lo)` calls corrected to `(lo, hi)`. Open: frame 0x118 vs 0xE8.
+- **popo / rocket**: the emit-matrix normalisation has a real bug that is in the ROM: the three zero guards are rotated one step against the divisors (`if (lenZ != 0) col0 /= lenX;` ...). Both objects' disassembly agrees; do not "fix" it. The two units share the nozzle-possession protocol and statics.
 
 ## GC2D
 
