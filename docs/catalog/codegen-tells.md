@@ -204,6 +204,17 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `MapObjMare` and `MapObjBianco`
+
+- `dest += dir * 100.0f` keeps `TVec3::scale` out of line: the friend `operator*(TVec3 fst, f32)` takes and returns by value, costing two 12-byte copies and putting `scale` at depth 3 (`TMapObjPuncher::touchPlayer` 80 -> 99.6). `v *= k` alone leaves it at depth 2, where it still expands.
+- `MsAngleWrap` vs `MsWrap` cuts both ways: at some depths `MsAngleWrap` pushes `MsWrap` out of line and emits a weak symbol the TU lacks; writing `MsWrap(mRotation.y, 0.0f, 360.0f)` directly took `TMuddyBoat::control` 93 -> 99.9.
+- A 12-element `Mtx` fill is twelve element assignments, never an aggregate initialiser (which compiles to a `lwz`/`stw` copy from `.rodata`); a hand-built rotation must name its `sin`/`cos` in locals or the table lookup is recomputed per element (`TBellWatermill::control` 81 -> 96).
+- GX constants that read wrong from a decompiler: source factor 1 is `GX_BL_ONE` (not `GX_BL_SRCALPHA`), alpha op 1 is `GX_AOP_OR`. `GXSetChanMatColor(GX_COLOR0A0, JUtility::TColor(c))` gives the conversion temporary plus the by-value copy the ROM has.
+- `cmpwi N; beq caseN; bge end; b end` (two branches to one label, no second compare) is a switch with an empty `case 1: break;` folded into the default.
+- Two stacked bool materialisations are `TMapCollisionBase::isSetUp()` (`if (checkFlag(...)) return false; return true;`), not `!checkFlag(...)`.
+- Statics are declared per class, interleaved with that class's methods: `.sdata`/`.sbss` order follows the reverse class order of `.text`, each class's statics at the head of its own block.
+- Open: `TCogwheel::initMapObj` keeps literal `0.0f * sin`/`0.0f * cos` for the z of an unrotated `(sRadius, 0, 0)` offset; every direct spelling folds them and `rotateVecByAxisY` is never called there. `TLeafBoat::bind` calls `TVec3::sub` where `TMuddyBoat::bind`'s identical spelling inlines it.
+
 ## Rules from `tinkoopa` and `elecNokonoko`
 
 - A deeply inlined param read must skip the params class's wrapper: at depth 3 `p->getSLFoo()` pushes `TParamT<T>::get()` out of line and emits a stray `bl`; `p->mSLFoo.get()` is one level shallower (`TNerveTinKoopaBreak::execute` 96.0 -> 99.2). This is a codegen lever, not only a frame one.
