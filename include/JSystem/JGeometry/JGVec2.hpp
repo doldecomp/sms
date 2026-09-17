@@ -12,7 +12,23 @@ public:
 	template <typename U> TVec2(U x_, U y_) { set(x_, y_); }
 
 	// NOTE: Present in TP, presumably to force use of stfs/lfs instead of
-	// stw/lwz, but it seems like SMS didn't have them yet?
+	// stw/lwz. SMS does not have the assignment operator, and this was
+	// measured rather than assumed: TCameraMapTool holds a TVec2 at 0x18 and
+	// std::__copy<TCameraMapTool> (System/MarNameRefGen.cpp) copies those two
+	// words with a *paired* lwz/lwz/stw/stw, which is how MWCC moves an
+	// aggregate sub-object with no user-declared operator=. Declaring one
+	// takes that function from exact to 88.3%, and spelling the field out as
+	// two f32 members does the same, because MWCC copies scalar float members
+	// with lfs/stfs. So the 0x18 field is an aggregate and the aggregate has
+	// no operator=.
+	//
+	// Enabling operator= does gain TSelectShineManager::initData 97.3 -> 98.0
+	// and ::perform 79.6 -> 80.3, and getAngle's UNUSED body only reaches the
+	// map's 0x88 with float copies -- but against the above that means
+	// getAngle reaches its lfs/stfs some other way (a component-wise sub()
+	// against a temporary rather than `toCenter = toCenter - ...`), not
+	// through operator=. The copy constructor on its own changes nothing
+	// anywhere, so it stays out too.
 
 	// TVec2(const TVec2& other)
 	// {

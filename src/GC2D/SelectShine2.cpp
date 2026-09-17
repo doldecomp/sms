@@ -110,13 +110,17 @@ void TSelectShineManager::initData(u8* shine_states, u8 shine_num, u8 index,
 	mShines[mIndex]->playEmitters();
 }
 
-// TODO: open, needs a shared-header change. Retail copies the TVec2 with
-// lfs/stfs at all three points here (into operator-'s by-value argument, out
-// of its returned reference, and into `toCenter`), which needs the float copy
-// constructor and operator= that JGVec2.hpp currently keeps commented out
-// ("seems like SMS didn't have them yet?"). This TU is the evidence that it
-// did. Ours copies with lwz/stw, which also leaves the UNUSED body 0x20 over
-// the map's 0x88.
+// TODO: open, but no longer a JGVec2.hpp item. Retail copies the TVec2 with
+// lfs/stfs here and ours copies with lwz/stw, leaving the UNUSED body 0x20 over
+// the map's 0x88 -- yet TVec2 cannot have the operator= that would fix it:
+// std::__copy<TCameraMapTool> (System/MarNameRefGen.cpp) moves the TVec2 that
+// class holds at 0x18 with a paired lwz/lwz/stw/stw, the aggregate copy MWCC
+// only emits when there is no user-declared operator=, and declaring one takes
+// that exact function to 88.3%. Enabling it here is worth +0.7 on initData and
+// +0.7 on perform, so the float moves are real; they have to come from a
+// different spelling of this function -- most likely a component-wise
+// sub() against a TVec2 temporary instead of `toCenter = toCenter - ...`.
+// The trial table is in JGVec2.hpp.
 s16 TSelectShineManager::getAngle(const JGeometry::TVec3<f32>& position)
 {
 	JGeometry::TVec2<f32> toCenter(300.0f, 1300.0f);
