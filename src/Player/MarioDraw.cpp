@@ -1843,6 +1843,34 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 	MTXConcat(mtx, unk318, mtx);
 }
 
+// UNUSED (0x74). Dead: `calcAnim` carries the same block written out.
+void TMario::calcAnimBody(u32 param_1, JDrama::TGraphics* graphics)
+{
+	Mtx baseMtx;
+	calcBaseMtx(baseMtx);
+	considerWaist();
+	MTXCopy(baseMtx, mModel->unk8->getBaseTRMtx());
+	mModel->perform(param_1, graphics);
+}
+
+// UNUSED (0x148). Dead: `calcAnim` carries the same block written out.
+void TMario::calcAnimHands()
+{
+	if (mHandModels[0][0] != nullptr) {
+		mHandModels[0][0]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
+		mHandModels[0][1]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandL));
+		mHandModels[1][0]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
+		mHandModels[1][1]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandL));
+		mRHand4ndModel->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
+
+		mHandModels[0][0]->calc();
+		mHandModels[0][1]->calc();
+		mHandModels[1][0]->calc();
+		mHandModels[1][1]->calc();
+		mRHand4ndModel->calc();
+	}
+}
+
 void TMario::addCallBack(JDrama::TGraphics* graphics)
 {
 	// volatile u32 padding[27];
@@ -1967,6 +1995,19 @@ void TMario::addUpper()
 			}
 		}
 	}
+}
+
+// UNUSED (0x90). Dead: `calcAnim` carries the same block written out.
+void TMario::removeCallBack()
+{
+	gpMarioForCallBack      = nullptr;
+	J3DModelData* modelData = mModel->unk8->getModelData();
+	modelData->getJointNodePointer(mJointIdHead)->setCallBack(nullptr);
+	modelData->getJointNodePointer(mJointIdChest)->setCallBack(nullptr);
+	modelData->getJointNodePointer(mJointIdChnFootR)->setCallBack(nullptr);
+	modelData->getJointNodePointer(mJointIdFootR)->setCallBack(nullptr);
+	modelData->getJointNodePointer(mJointIdChnFootL)->setCallBack(nullptr);
+	modelData->getJointNodePointer(mJointIdFootL)->setCallBack(nullptr);
 }
 
 void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
