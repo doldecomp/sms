@@ -389,8 +389,11 @@ void TFruitsBoat::moveObject()
 	// TODO: the ROM re-reads rot.x from the stack after the MsWrap call, which
 	// a `const f32&` first parameter on MsAngleDiff would produce -- but that
 	// signature was tried in MathUtil.hpp and regresses nine functions in six
-	// other units (the table is next to the declaration there), so the reload
-	// has to come from this call site's own shape instead.
+	// other units (the table is next to the declaration there). Spelling
+	// MsAngleDiff out here as `rot.x - MsWrap(mRotation.x, rot.x - 180.0f,
+	// rot.x + 180.0f)` does give the reload and is worse still (93.95% ->
+	// 89.82%), so neither the helper's signature nor this statement is the
+	// reason; something earlier has to leave rot.x live in memory.
 	f32 pitchStep = MsAngleDiff(rot.x, mRotation.x);
 	// The limits go through std::min/std::max rather than a ternary because the
 	// ROM keeps 1.0f and -1.0f in .sdata, and a literal only lands there when
