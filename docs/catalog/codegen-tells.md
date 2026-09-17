@@ -259,6 +259,21 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - A nerve pushed via `pushNerve` reaches `TNerveBase`'s ctor one level deeper than the same nerve in a comparison (retail `bl`s it). `default: return;` with two ids sharing a case in a fruit switch. `TNerveBubbleLive::theNerve()` sits before `TBubble::appendItem` in the map, so that nerve cannot come from `DEFINE_NERVE`; its halves are spelled out around the helpers.
 - Open header items: nine `TMapObjBase` virtuals are declared only (`getRadiusAtY`, `getTakingMtx`, `setModelMtx`, `loadBeforeInit`, `calc`, `draw`, `dead`, `getHitObjNumMax`, `touchWater`); the map has them weak (8/52/56/4/4/4/4/8/8) in `bosstelesa.cpp`, bodies readable at 0x800C6E94 onwards; `MActor::getBckAnmPtr()` is really `getCurBckAnmPtr()` (UNUSED 0x1c); `getObjNumWithActorType` returns `u32`.
 
+## Rules from `Option` and `ConsoleStr` (GC2D)
+
+- `ary.begin()`/`end()` over the raw `mData`/`mSize` members costs one 4-byte temporary each per inline expansion and no instructions: an accessor-using inline expanded twelve times added exactly 96 bytes of frame and made `adjustView` exact. A gap that is a multiple of 8 x expansion count is this.
+- An UNUSED wrapper can exist purely to demote a set of large calls, and the split point matters: `TOptionControl::movementCommon` holds the three unit `update()`s at depth 2 (refused, the ROM's three `bl`s) while `mBackArrow->update()` must stay at depth 1 or its helpers drop out of line (`movementOption` 38 -> 97).
+- `ArrayWrapper<const T>` is the wrong instantiation: the map's `begin__...ArrayWrapper<Ul>` says `ArrayWrapper<u32>` with a cast at the call. Check a stray `const` template argument before anything else when a container's `begin()` is MISSING.
+- `s16 x = f() - k;` emits two `extsh`; `s16 x = f(); x -= k;` emits one (`subi` then a single `extsh.`). The `u16 + k` counterpart needs one `clrlwi` either way.
+- A literal the ROM converts at run time (`li 0xe0` + magic conversion, `subfic r0, r28, 0x1d0`) is a named local declared inside each branch; at function scope it takes a callee-saved register and displaces `this`.
+- A dead call is real code and its shape identifies the caller: a discarded inlined `isChangedSetting()` folds away except the compare and `bl typeToFlag`; a discarded `getValue()` leaves a stray `bl ArrayWrapper::begin()`.
+- An *empty* `else if (x < 95.0f) { }` produces the bare `fcmpo; blt end` where `else if (x >= 95.0f)` adds a `cror`.
+- A member read once and used by two switches is a local held in `r3` across both trees.
+- A named `JUTRect` local keeps `JUTRect::JUTRect(int, int, int, int)` a `bl`; as a temporary in `setBounds(JUTRect(...))` it expands to `bl JUTRect::set`. `A + B + C` with contracted products accumulates from the *last* term.
+- `TBoundPane`'s own target rect (+0x14/+0x18), not the `J2DPane`'s `mBounds`, is what a materialised bool reads; `getPane()` adds a `lwz`.
+- `TBalloonControl` does not exist in GMSE01 and `TOptionSubtitleUnit` (the US subtitle row) does; both were proven by allocation sizes and the map's closure. US layout differences keep turning up in GC2D: check `region-us.md` and the `new` sizes first.
+- Open header items: `StageUtil.hpp`'s `scScenarioNameTable` is the Japanese table (the US one skips ids 8/9 and shifts later groups by two; the 70 values are in `ConsoleStr.cpp`'s TODO), and `SMS_getNormalStage()`'s `u16` return adds a `clrlwi` (0x1c vs 0x18); `MSound` may inherit `JAIGlobalParameter` (a dead `bl SMSGetMSound` before `bl setParamSoundOutputMode` is `SMSGetMSound()->setParamSoundOutputMode(mode)` on an inherited static); `math.h`'s `RAD_TO_DEG` fudge (`+ 0.000005f`) is one ULP off the ROM's `57.295776f` and should go; `ExPane.hpp`'s `setCenteredSize` is correct (its "fabricated and incorrect" comment is wrong; `processReady` matched with it).
+
 ## Rules from `Talk2D2` and `hx_wiper` (GC2D)
 
 - A ternary over two calls suppresses inlining that an if/else does not: `if (mIsBoard ? openBoardWindow() : openNormalWindow())` leaves both as `bl` with a shared `clrlwi./beq`; the if/else form inlined the 228-byte board path (`perform` 66 -> 82).
