@@ -898,7 +898,10 @@ static void evCheckWoodBox(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	int p1 = interp->pop().getDataInt();
 	int p2 = interp->pop().getDataInt();
 
-	int count = p2 - p1 + 1;
+	// p1 is the upper bound (the loop below runs p2..p1), so the span is
+	// p1 - p2 + 1; retail's `subf r5, r6, r29` has the operands this way
+	// round and the other order was a sign error.
+	int count = p1 - p2 + 1;
 
 	char buffer[] = "ゲーム木箱00";
 	for (int i = p2; i <= p1; ++i) {
@@ -917,6 +920,13 @@ static void evCheckWoodBox(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->push(count);
 }
 
+// TODO: the three wood-box builtins are each exactly 4 bytes short in the low
+// region (every instruction matches). They differ from the matching builtins
+// only in reaching the actor through `TNameRefGen::search<T>` instead of
+// `getNameRefPtr`. Making `search<T>` delegate to the neighbouring `search2`
+// -- one more inline level, which is the obvious reason for both to exist --
+// was tried in JDRNameRefGen.hpp and is NOT viable: it changes a
+// source-linked object and breaks the DOL SHA-1.
 static void evRefreshWoodBox(TSpcTypedInterp<TEventWatcher>* interp,
                              u32 arg_num)
 {
