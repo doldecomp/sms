@@ -204,6 +204,20 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `Koopa`
+
+- Get the shared animation setter exact first: `J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(t); ctrl->setRate(expr);` (the chained form evaluates `expr` first) plus `table == nullptr ? nullptr : table[i]` took `TKoopa::changeAnm` 76 -> 100, and because it inlines at ~15 sites the unit went 22 -> 84% in one edit.
+- A `switch` is the only way to get a signed compare on a `u32` message parameter (`case HIT_MESSAGE_...: return FALSE;` gives `cmpwi`; `==` gives `cmplwi`). A dense three-case set is a switch too (`idx == 3 || 4 || 5` folds to `subi`/`cmplwi`; the switch keeps `cmpwi 6; bge; cmpwi 3; bge`).
+- For a dense jump table the table is in case order and says nothing about source order; the code blocks do (`getNeckFocus` blocks 6, 2, 0, 1, 7, 9, 8, 14, 4, 5, 3, 12; reordering alone 78 -> 98).
+- `x = <other arm>; if (cond) x = <this arm>;` is how retail hoists a ternary's other value into the result register; both ternary spellings add an `fmr`.
+- A dead assignment of the value a variable already holds keeps an empty `if` arm from being inverted (`if (frame <= 200) { focus = 1.0f; break; }` gives the unfused `bne +8; b end`).
+- Pasted-UNUSED, fifth and sixth: `TKoopa::breathFlame` (0x1c0) and `resetFlame_` (0x9c) written out inside `setUpHitActors` (37 -> 98).
+- An `||` whose second operand is compound is an inlined bool helper and the map size names its shape: `isProvoking` (0x78) only as nested ifs to one shared `li 0`.
+- Two bools for a two-step predicate declared together give `li r4,0; addi r5,r4,0`. Read `mSpine` directly in a nerve-identity test; a local flips the `cmplw` operands.
+- Nerve destructor size is a depth oracle: 0x5c for a direct `TNerveBase<T>` child, 0x6c through an abstract intermediate. A nerve whose `execute` is *weak* in the map had its body in the class, which forces the nerve set into a header that can see the actor; and inline `theNerve()` bodies in a header another TU includes cost that TU 12 bytes of `.bss` per nerve (broke `__sinit_koopajr_cpp` until the nerve header included the actor header, never the reverse).
+- `u8`, not `bool`, for a byte-returning collision query kept in a local, or MWCC adds `neg/subic/subfe`.
+- Open header items: `TMatrix34<T>::concat` bodies are wrong (indices transposed, reading past a 3x4); the ROM form is `r[i][j] = a[i][0]*b[0][j] + a[i][1]*b[1][j] + a[i][2]*b[2][j]`, `r[i][3] = a[i][3] + (...)` into `SMatrix34C::set(12 floats)`. `LIMITKOOPA_ANM_*` is mostly wrong; `koopa_bastable` names the shared model's slots (DOWN 0, DOWN_WAIT 1, FALL 2, FIRE_END 3, FIRE_LOOP 4, FIRE_START 5, FIRST 6, GETUP 7, HIPDROP 8, STAGGER 9, TURN_L 10, TURN_R 11, WAIT 12, 13, WATERHIT 14), and `TLimitKoopa::getNeckFocus` returns `f32`. `TSpineBase::pushNerve` stays a `bl` inside the ROM's inlined `TKoopa::stagger`.
+
 ## Rules from `SelectShine2` and `Guide` (GC2D)
 
 - A member-initialiser list moves an array member's `__construct_array` after every scalar store; assignment in the body constructs the array first. It can also place a scalar store *between* two `JUTRect` member constructions (`TGuide::TGuide` 78 -> 100, `TSelectShineManager` ctor 76 -> 100).
