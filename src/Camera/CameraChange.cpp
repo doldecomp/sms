@@ -459,7 +459,7 @@ void CPolarSubCamera::execFrontRotate_()
 	    && SMS_GetMarioStatus() != MARIO_STATUS_HIP_DROP) {
 		unk64 &= ~CAMERA_FLAG_UNK10;
 		unk64 |= CAMERA_FLAG_UNK4;
-		unk274 = *gpMarioAngleY - 0x8000;
+		unk274 = SMS_GetMarioAngleY() - 0x8000;
 		if (unk120->checkFrameMeaning(0x4000)) {
 			unk276 = mSaveEx->mYButtonRotateChase.get();
 			unk64 |= CAMERA_FLAG_UNK8;

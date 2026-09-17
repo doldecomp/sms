@@ -401,22 +401,35 @@ void CPolarSubCamera::onMoveApproach_()
 	                           mCurrentParams->mDistMax, mCurrentTarget.unk28);
 }
 
+// TODO: the ROM reaches TMario::checkStatusType through an out-of-line `bl`
+// from every one of the five sites this helper is inlined into
+// (calcPosAndAt_ twice, calcSlopeAngleX_, and the two predicates below), and
+// emits it as the weak 0x1c symbol the map lists for this TU. Measured in this
+// worktree: with the call forced, isMarioCrabWalk_/isMarioAimWithGun_ go
+// 53.5 -> 99.8%, calcSlopeAngleX_ 94.9 -> 98.1%, calcPosAndAt_ 92.2 -> 94.1%
+// and the unit 95.3 -> 97.3%; the flat body below is then byte-exact bar the
+// call, since 0x50 (ours, leaf) + 0x18 of prologue/epilogue is the map's 0x68.
+// The blocker is depth: the in-class one-statement body in Player/Mario.hpp is
+// reached at depth 2 here, where the allowance measured 10 statements, so MWCC
+// always expands it. Three extra inline levels (or two plus a three-statement
+// body) put it past the limit -- both reproduced here -- so either Mario.hpp's
+// checkStatusType is spelled with three statements and the ROM reaches it at
+// depth 4, or two inline levels above it are still missing. Neither is decided
+// by evidence, and Mario.hpp is a shared header, so this is left alone.
 bool CPolarSubCamera::isMarioReadyGun_() const
 {
-	// NOTE: it is a complete MYSTERY to me as to why this
-	// checkStatusType isn't inlined...
 	return gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)
 	       && gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_UNK8000);
 }
 
 bool CPolarSubCamera::isMarioAimWithGun_() const
 {
-	return isMarioReadyGun_() && unk120->checkFrameMeaning(0x400);
+	return isMarioReadyGun_() && unk120->checkMeaning(0x400);
 }
 
 bool CPolarSubCamera::isMarioCrabWalk_() const
 {
-	return isMarioReadyGun_() && unk120->checkFrameMeaning(0x8000);
+	return isMarioReadyGun_() && unk120->checkMeaning(0x8000);
 }
 
 void CPolarSubCamera::execInvalidAutoChase_()
