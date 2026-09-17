@@ -1871,7 +1871,7 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 			}
 			if (gpMarDirector->mMap == 59
 			    && MSStageCubeFade::smInstance != nullptr)
-				MSStageCubeFade::setBgmVolumeForce();
+				MSStageCubeFade::smInstance->setBgmVolumeForce();
 		}
 
 		return true;

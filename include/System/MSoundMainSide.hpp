@@ -44,7 +44,9 @@ public:
 
 	f32 calcParamRatioInCube(s32);
 
-	static void setBgmVolumeForce();
+	// Not static: the only caller (TBossGesso, 0x80074D58) loads smInstance
+	// into r3 and tests it before the bl, i.e. `smInstance->setBgmVolumeForce()`.
+	void setBgmVolumeForce();
 
 	static MSStageCubeFade* smInstance;
 
@@ -54,10 +56,25 @@ public:
 	/* 0xC */ f32 unkC;
 };
 
+// The two-cube variant used by Bianco Hills episode 5 (the two gate keepers).
+// MSStage::init hands each cube's BGM an enable flag that the gate keepers
+// raise through MSMainProc::setGateKeeperBGMPlayFlag.
+class MSStageCubeFadeDouble : public MSStageCubeFade {
+public:
+	MSStageCubeFadeDouble();
+
+	virtual void proc();
+
+	static MSStageCubeFadeDouble* smInstance;
+
+public:
+	/* 0x10 */ u8 unk10[2];
+};
+
 class MSStageCubeSwitch : public MSStageCubeFade {
 public:
-	MSStageCubeSwitch(u8 param_1)
-	    : unk10(param_1)
+	MSStageCubeSwitch()
+	    : unk10(0)
 	{
 	}
 
@@ -129,6 +146,8 @@ void setBossLivesFlag2(bool);
 bool getBossLivesFlag();
 bool getBossLivesFlag2();
 void setBossNotDamagedFlag(bool);
+void setGateKeeperBGMPlayFlag(u32, bool);
+bool getGateKeeperBGMStopFlag();
 void setMSoundEnterStage(u8, u8);
 void startStageEntranceDemo(u8, u8);
 void entranceDemoLoop(u32);
