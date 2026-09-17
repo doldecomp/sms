@@ -29,16 +29,6 @@ enum {
 	KAZEKUN_ANM_WAIT   = 4, // "kazekun_wait"
 };
 
-// TODO: these three particle ids have no names in include/System/Particles.hpp
-// yet; they belong there. This batch is only allowed to touch Kazekun's own
-// two files, so they live here for now. The names come from the .jpa paths
-// TKazekun::initParticle loads.
-enum {
-	KAZEKUN_JPA_MS_KAZE_APPEAR = 0xCF,
-	KAZEKUN_JPA_MS_KAZE_WIND   = 0x189,
-	KAZEKUN_JPA_MS_KAZE_BLUR   = 0x18A,
-};
-
 static const char* Kazekun_bastable[] = {
 	"/scene/Kazekun/bas/kazekun_appear.bas",
 	"/scene/Kazekun/bas/kazekun_attack.bas",

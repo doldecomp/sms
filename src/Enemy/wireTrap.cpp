@@ -27,15 +27,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// TODO: these two ids have no name in include/System/Particles.hpp yet; they
-// belong in E_SMS_EFFECT_LOOP_NORMAL next to FIREWANWAN_JPA_MS_CAN_HITYUGE.
-// This batch may only touch wireTrap's own two files, so they live here. The
-// names come from the .jpa paths init() loads.
-enum {
-	WIRETRAP_JPA_MS_WRT_BIRI_A = 0x190,
-	WIRETRAP_JPA_MS_WRT_BIRI_B = 0x191,
-};
-
 namespace {
 // The one material of wire_trap.bmd whose TEV colour the mode tints.
 const char cMatName[] = "_mat_1";
