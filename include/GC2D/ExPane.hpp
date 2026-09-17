@@ -79,7 +79,9 @@ public:
 		mAlphaAnimPending = true;
 	}
 
-	// fabricated and incorrect
+	// Fabricated name: the map has no setCenteredSize, so it was inlined at
+	// every site. The body is right, though -- ConsoleStr::processReady
+	// matches exactly with the offsets as written here.
 	void setCenteredSize(s32 time, s32 target_w, s32 target_h, s32 initial_w,
 	                     s32 initial_h)
 	{
