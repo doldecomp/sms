@@ -127,6 +127,11 @@ public:
 	f32 getWaterPowerY() const;
 	f32 getWaterDamageRate() const;
 
+	// fabricated: reading through the const accessor is what makes control()
+	// load mHitTimer twice, as retail does.
+	int getHitTimer() const { return mHitTimer; }
+	int getShootTimer() const { return mShootTimer; }
+
 	// fabricated
 	TKukkuParams* getSaveParams() const
 	{

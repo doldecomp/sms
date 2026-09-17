@@ -201,13 +201,16 @@ void TTPHitActor::checkHitActors()
 {
 	THitActor** end = &mCollisions[mColCount];
 	for (THitActor** col = mCollisions; col != end; col++) {
-		// TODO: retail hoists 0x80000001 into a register before the loop and
-		// compares with a signed cmpw, so the constant was not a literal here.
-		// (s32)/-0x7FFFFFFF/(ACTOR_TYPE_PLAYER | 1) all still give the
-		// addis+cmplwi equality trick.
-		if ((*col)->mActorType != 0x80000001)
-			continue;
-		mOwner->attackToMario();
+		// A switch, not an `if`: only the switch's comparison materialises
+		// 0x80000001 in a register and compares it with a signed cmpw, which
+		// is what retail does. Every `if` spelling (plain literal, (s32) cast,
+		// -0x7FFFFFFF, ACTOR_TYPE_PLAYER | 1, a hoisted int local) folds into
+		// MWCC's addis+cmplwi equality trick instead.
+		switch ((*col)->mActorType) {
+		case 0x80000001:
+			mOwner->attackToMario();
+			break;
+		}
 	}
 }
 

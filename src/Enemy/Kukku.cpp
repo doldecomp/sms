@@ -96,7 +96,10 @@ void TKukkuBall::perform(u32 cue, JDrama::TGraphics* graphics)
 		JGeometry::TPosition3<
 		    JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > >
 		    mtx;
-		mtx.translation(mPosition);
+		// Spelled out: behind translation() the identity33() expansion would be
+		// one level deeper and retail keeps it inline.
+		mtx.identity33();
+		mtx.setTrans(mPosition);
 		mMActor->getModel()->setBaseScale(mScaling);
 		MTXCopy(mtx, mMActor->getModel()->getBaseTRMtx());
 		mMActor->getModel()->calc();
@@ -148,10 +151,12 @@ void TKukkuBall::checkHitActors()
 {
 	THitActor** end = &mCollisions[mColCount];
 	for (THitActor** col = mCollisions; col != end; col++) {
-		if ((*col)->mActorType != 0x80000001)
-			continue;
-		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
-		kill();
+		switch ((*col)->mActorType) {
+		case 0x80000001:
+			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+			kill();
+			break;
+		}
 	}
 }
 
@@ -283,7 +288,7 @@ BOOL TKukku::receiveMessage(THitActor* sender, u32 message)
 
 void TKukku::control()
 {
-	if (mHitTimer > 0)
+	if (getHitTimer() > 0)
 		mHitTimer--;
 
 	TLiveActor::control();
@@ -295,10 +300,14 @@ void TKukku::calcRootMatrix()
 		// Dead: lie flat against whatever it landed on instead of using the
 		// spine enemy's upright matrix.
 		JGeometry::TVec3<f32> up;
-		if (mGroundPlane)
-			up.normalize(mGroundPlane->getNormal());
-		else
+		if (mGroundPlane) {
+			// Copying the normal into the local first is what lets the
+			// squared length contract into fmadds, as retail does.
+			up.set(mGroundPlane->getNormal());
+			up.normalize();
+		} else {
 			up.set(0.0f, 1.0f, 0.0f);
+		}
 
 		JGeometry::TQuat4<f32> yaw;
 		yaw.setEulerY(0.017453294f * mRotation.y);
@@ -311,16 +320,28 @@ void TKukku::calcRootMatrix()
 		JGeometry::TPosition3<
 		    JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > >
 		    mtx;
-		mtx.setQuat(tilt);
-		mtx.setTrans(mPosition);
+		// setQT() is the one-line forwarder that keeps setQuat() a `bl`.
+		mtx.setQT(tilt, mPosition);
 
-		MTXCopy(mtx, getModel()->getBaseTRMtx());
+		MtxPtr src      = mtx;
+		J3DModel* model = getModel();
+		MTXCopy(src, model->getBaseTRMtx());
 		getModel()->setBaseScale(mScaling);
 	} else {
 		TSpineEnemy::calcRootMatrix();
 	}
 
 	updateEffect();
+}
+
+void TKukku::bind() { TLiveActor::bind(); }
+
+void TKukku::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	TSmallEnemy::perform(cue, graphics);
+
+	for (TKukkuBall** ball = mBalls; ball != &mBalls[3]; ball++)
+		(*ball)->perform(cue, graphics);
 }
 
 // UNUSED, 0x130 in the map: the sweat trail while falling and the wing puff
@@ -336,23 +357,6 @@ void TKukku::updateEffect()
 		    0x18c, getModel()->getAnmMtx(mCenterJointIndex), 1, this);
 }
 
-void TKukku::bind() { TLiveActor::bind(); }
-
-void TKukku::perform(u32 cue, JDrama::TGraphics* graphics)
-{
-	TSmallEnemy::perform(cue, graphics);
-
-	for (TKukkuBall** ball = mBalls; ball != &mBalls[3]; ball++)
-		(*ball)->perform(cue, graphics);
-}
-
-// UNUSED, 0x58 in the map.
-void TKukku::behaveHitTrample()
-{
-	mSpine->reset();
-	mSpine->setNext(&TNerveSmallEnemyDie::theNerve());
-}
-
 void TKukku::behaveToWater(THitActor* water)
 {
 	if (isFalling())
@@ -363,6 +367,13 @@ void TKukku::behaveToWater(THitActor* water)
 
 	mSpine->reset();
 	mSpine->setNext(&TNerveKukkuFall::theNerve());
+}
+
+// UNUSED, 0x58 in the map.
+void TKukku::behaveHitTrample()
+{
+	mSpine->reset();
+	mSpine->setNext(&TNerveSmallEnemyDie::theNerve());
 }
 
 // UNUSED, 0x2c8 in the map. TODO: fabricated. The GraphWander nerve holds this
@@ -376,7 +387,7 @@ void TKukku::doFlyToCurPathNode()
 	}
 
 	if (isFindOutMario()) {
-		if (mShootTimer >= 0)
+		if (getShootTimer() >= 0)
 			mShootTimer--;
 		else
 			shotBall();
@@ -386,14 +397,12 @@ void TKukku::doFlyToCurPathNode()
 	mLinearVelocity = calcMomentum(getSaveParams()->getMarchSpeed());
 }
 
-JGeometry::TVec3<f32> TKukku::calcMomentum(f32 speed)
-{
-	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
-	JGeometry::TVec3<f32> velocity(0.0f, 0.0f, speed);
-	quat.rotate(velocity, velocity);
-	return velocity;
-}
-
+// TODO: 99.8%, a pure 0x18 frame gap. The bigger open problem is that both
+// nerves *expand* this function while retail calls it: no statement-count
+// lever tried here (naming the two isFalling() factors, splitting the early
+// return) flips MWCC's depth-1 decision, and the same is true of
+// calcMomentum(). That is what holds TNerveKukkuGraphWander and
+// TNerveKukkuRecoverGraph down.
 void TKukku::updateRotation()
 {
 	JGeometry::TVec3<f32> toGoal(getUnkF4().getPoint());
@@ -412,9 +421,20 @@ void TKukku::updateRotation()
 	TAnimalBase::getRotationFlyToDir(&mRotation, toGoal, marchSpeed,
 	                                 turnSpeed);
 
-	// A falling gull keeps the yaw it had but loses its banking.
+	// A falling gull keeps the yaw it had but loses its banking; retail
+	// evaluates isFalling() once per component.
 	mRotation.x *= isFalling() ? 0.0f : 1.0f;
 	mRotation.z *= isFalling() ? 0.0f : 1.0f;
+}
+
+// TODO: 92.9%. Size-exact against the map but expanded at every call site,
+// where retail calls it; see the note on updateRotation().
+JGeometry::TVec3<f32> TKukku::calcMomentum(f32 speed)
+{
+	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
+	JGeometry::TVec3<f32> velocity(0.0f, 0.0f, speed);
+	quat.rotate(velocity, velocity);
+	return velocity;
 }
 
 // UNUSED, 0xa0 in the map. TODO: fabricated, see doFlyToCurPathNode().
@@ -466,6 +486,9 @@ void TKukku::shotBall()
 	                          4);
 }
 
+// TODO: 78.5%. Instruction differences are confined to one stfsu and one
+// reload of mOneUp; the rest is a 0x90 frame gap from the two inlined
+// TQuat4::rotate() expansions.
 void TKukku::dropCoins()
 {
 	if (mDroppedCoins > 10)
@@ -530,9 +553,9 @@ bool TKukku::isFalling() const
 // UNUSED, 0x98 in the map.
 bool TKukku::isRecoveringGraph() const
 {
-	if (mSpine->getLatestNerve() == &TNerveKukkuRecoverGraph::theNerve())
-		return true;
-	return false;
+	if (mSpine->getLatestNerve() != &TNerveKukkuRecoverGraph::theNerve())
+		return false;
+	return true;
 }
 
 // UNUSED, 0x4c in the map. TODO: dead and fabricated.
@@ -642,12 +665,14 @@ void TKukkuManager::createModelData()
 
 const char** TKukku::getBasNameTable() const { return tori_bastable; }
 
+// TODO: 42.0%, almost entirely because updateRotation() expands here; see its
+// definition.
 DEFINE_NERVE(TNerveKukkuGraphWander, TLiveActor)
 {
 	TKukku* kukku = (TKukku*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		kukku->mVelocity.set(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
+		kukku->setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
 		kukku->getTracer()->reset();
 		kukku->goToShortestNextGraphNode();
 		kukku->decideFlyingAnm();
@@ -660,7 +685,7 @@ DEFINE_NERVE(TNerveKukkuGraphWander, TLiveActor)
 	}
 
 	if (kukku->isFindOutMario()) {
-		if (kukku->mShootTimer >= 0)
+		if (kukku->getShootTimer() >= 0)
 			kukku->mShootTimer--;
 		else
 			kukku->shotBall();
@@ -695,14 +720,16 @@ DEFINE_NERVE(TNerveKukkuFall, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		kukku->changeBck("tori_wait");
-		kukku->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setRate(
-		    2.0f * SMSGetAnmFrameRate());
-		kukku->mVelocity.set(JGeometry::TVec3<f32>(
+		J3DFrameCtrl* ctrl = kukku->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
+		ctrl->setRate(2.0f * SMSGetAnmFrameRate());
+		kukku->setVelocity(JGeometry::TVec3<f32>(
 		    0.0f, -kukku->getSaveParams()->getWaterPowerY(), 0.0f));
 		kukku->dropCoins();
 	}
 
-	if (!kukku->isAirborne()) {
+	// checkLiveFlag(), not isAirborne(): retail branches on the flag directly
+	// instead of materialising isAirborne()'s BOOL.
+	if (!kukku->checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
 		SMS_EasyEmitParticle((E_SMS_EFFECT_ONETIME_NORMAL)0xa1,
 		                     &kukku->mPosition, nullptr,
 		                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
@@ -722,7 +749,7 @@ DEFINE_NERVE(TNerveKukkuFall, TLiveActor)
 		landed     = true;
 		velocity.y = 0.0f;
 	}
-	kukku->mVelocity.set(velocity);
+	kukku->setVelocity(velocity);
 
 	if (landed) {
 		spine->pushAfterCurrent(&TNerveKukkuRecoverGraph::theNerve());
@@ -738,7 +765,7 @@ DEFINE_NERVE(TNerveKukkuPostFall, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		kukku->changeBck("tori_back");
-		kukku->mVelocity.set(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
+		kukku->setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
 	}
 
 	if (kukku->checkCurAnmEnd(ANM_TYPE_BCK)
@@ -750,13 +777,15 @@ DEFINE_NERVE(TNerveKukkuPostFall, TLiveActor)
 	return FALSE;
 }
 
+// TODO: 0.0% for the same reason as TNerveKukkuGraphWander: retail calls both
+// updateRotation() and calcMomentum() and our build expands both.
 DEFINE_NERVE(TNerveKukkuRecoverGraph, TLiveActor)
 {
 	TKukku* kukku = (TKukku*)spine->getBody();
 
 	if (spine->getTime() == 0) {
 		kukku->changeBck("tori_back");
-		kukku->mVelocity.set(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
+		kukku->setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
 	}
 
 	if (kukku->getSaveParams()->getHabatakiTimer() < spine->getTime()) {
