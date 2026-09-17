@@ -137,7 +137,7 @@ public:
 	// fabricated
 	u8 getCurrentMap() { return mMap; }
 	u8 getCurrentStage() { return unk7D; }
-	bool checkUnk4CFlag(int flag) { return unk4C & flag; }
+	bool checkUnk4CFlag(int flag) const { return unk4C & flag; }
 	void onUnk4CFlag(int flag) { unk4C |= flag; }
 	void offUnk4CFlag(int flag) { unk4C &= ~flag; }
 	TGCConsole2* getConsole() { return mConsole; }

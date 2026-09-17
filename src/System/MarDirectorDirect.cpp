@@ -794,9 +794,9 @@ u8 TMarDirector::updateGameMode()
 
 	switch (unk124) {
 	case 0:
-		if (!(unk4C & 0x1FFF)) {
+		if (!checkUnk4CFlag(0x1FFF)) {
 			if (SMS_CheckMarioFlag(MARIO_FLAG_GAME_OVER)) {
-				unk4C |= 0x20;
+				onUnk4CFlag(0x20);
 				break;
 			}
 
@@ -817,15 +817,15 @@ u8 TMarDirector::updateGameMode()
 				}
 			}
 		} else {
-			if (unk4C & 0x20) {
-				unk4C &= ~0x20;
+			if (checkUnk4CFlag(0x20)) {
+				offUnk4CFlag(0x20);
 				r29 = STATE_UNK7;
 				TFlagManager::getInstance()->setFlag(0x40002, 0);
 				break;
 			}
 
-			if (unk4C & 0x1) {
-				unk4C &= ~0x1;
+			if (checkUnk4CFlag(0x1)) {
+				offUnk4CFlag(0x1);
 				unk126 = 3;
 
 				TGCConsole2* console = gpMarDirector->mConsole;
@@ -834,28 +834,33 @@ u8 TMarDirector::updateGameMode()
 				MSBgm::startBGM(MSD_BGM_CHUBOSS);
 				TFlagManager::getInstance()->setBool(true, 0x30006);
 				TFlagManager::getInstance()->setShineFlag(unk25C->getEventId());
+				// TODO: the ROM keeps a real `fmuls` by 1.0f here (the
+				// .sdata2 literal @3909 exists only for it); every spelling
+				// of `1.0f * rate` MWCC folds away, so the first argument
+				// must reach the multiply through something it cannot
+				// constant-fold. Two instructions short.
 				f32 fVar3 = unkDC->mRate;
-				unkDC->registFadeout(fVar3 * 1.0f, fVar3 * 5.3333333f);
-				unk4C |= 0x8202;
+				unkDC->registFadeout(1.0f * fVar3, 5.3333333f * fVar3);
+				onUnk4CFlag(0x8202);
 				unk261 = 6;
 				decideNextStage();
 				break;
 			}
 
-			if (unk4C & 0x40) {
+			if (checkUnk4CFlag(0x40)) {
 				unk126 = 3;
 				break;
 			}
 
-			if (unk4C & 0x200) {
-				unk4C &= ~0x200;
+			if (checkUnk4CFlag(0x200)) {
+				offUnk4CFlag(0x200);
 				r29 = STATE_UNK11;
 				break;
 			}
 
-			if (unk4C & 0x8) {
-				unk4C &= ~0x8;
-				unk4C |= 0x2;
+			if (checkUnk4CFlag(0x8)) {
+				offUnk4CFlag(0x8);
+				onUnk4CFlag(0x2);
 				unk126 = 3;
 				if (gpApplication.mNextArea.getStage() == 5) {
 					fireStartDemoCamera("hodai_dpt_pinna1", nullptr, -1, 0.0f,
@@ -880,16 +885,16 @@ u8 TMarDirector::updateGameMode()
 				break;
 			}
 
-			if (unk4C & 0x4) {
-				unk4C &= ~0x4;
-				unk4C |= 0x2;
+			if (checkUnk4CFlag(0x4)) {
+				offUnk4CFlag(0x4);
+				onUnk4CFlag(0x2);
 				unk126 = 3;
 				fireStartDemoCamera(nullptr, nullptr, -1, 0.0f, false, nullptr,
 				                    0, unk250, 0);
 				break;
 			}
 
-			if (unk4C & 0x2) {
+			if (checkUnk4CFlag(0x2)) {
 				moveStage();
 				r29 = STATE_UNK9;
 				break;
@@ -898,7 +903,7 @@ u8 TMarDirector::updateGameMode()
 		break;
 
 	case 2:
-		if (unk4C & 0x40) {
+		if (checkUnk4CFlag(0x40)) {
 			unk126 = 4;
 		} else {
 			if (unkB0->getTalkMode() == TTalk2D2::TALK_MODE_IDLE)
@@ -909,10 +914,10 @@ u8 TMarDirector::updateGameMode()
 	case 4: {
 		bool bVar5  = false;
 		bool uVar15 = 0;
-		if (unk4C & 0x80) {
+		if (checkUnk4CFlag(0x80)) {
 			uVar15 = 1;
 			bVar5  = true;
-			unk4C &= ~0x80;
+			offUnk4CFlag(0x80);
 		} else {
 			if (!gpCamera->getRestDemoFrames()) {
 				if (!MSBgm::getHandle(2) || unk5C - unk60 >= 1200) {
@@ -931,24 +936,26 @@ u8 TMarDirector::updateGameMode()
 				if (info->unk14 != nullptr)
 					(*info->unk14)(info->unk18, 1);
 
+				// The camera that starts is the one the *new* index names.
+				info = &unk12C[unk24D];
 				gpCamera->startDemoCamera(info->unk0, info->unk4, info->unk8,
 				                          info->unkC, info->unk10);
 				if (info->unk14 != nullptr)
 					(*info->unk14)(info->unk18, 0);
 			} else {
-				unk4C &= ~0x40;
+				offUnk4CFlag(0x40);
 				unk126 = unk124 == 4 ? 2 : 0;
 				if (uVar15 != 0)
 					gpCamera->endDemoCamera();
-				if (unk12C[prev].unk14 != nullptr)
-					(*unk12C[prev].unk14)(unk12C[prev].unk18, 1);
+				if (info->unk14 != nullptr)
+					(*info->unk14)(info->unk18, 1);
 			}
 		}
 	} break;
 	}
 
 	if (unk24D == unk24C)
-		unk4C &= ~0x80;
+		offUnk4CFlag(0x80);
 
 	unk125 = unk124;
 
