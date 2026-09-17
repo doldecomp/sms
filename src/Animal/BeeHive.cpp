@@ -473,17 +473,14 @@ void TBeeHive::controlSound()
 	gpMSound->startBeeSe(mBeeCenter, alive);
 }
 
-// TODO: blocked on a shared header. `JGeometry::TQuat4<f>::mul(const TQuat4&)`
-// in JSystem/JGeometry/JGQuat4.hpp has a sign error in its y component: it
-// computes `w*oy + y*ow + x*oz - z*ox`, and the two products the ROM emits here
-// are `+ z*ox - x*oz`. The two-argument mul() right next to it already has the
-// correct Hamilton product, and the one-argument body carries a "definitely not
-// correct ATM" TODO, so the fix is to mirror the two-argument spelling:
-//   T _y = this->w * other.y + this->y * other.w + this->z * other.x
-//          - this->x * other.z;
-// Until that lands both quaternion products below compute the wrong y and the
-// register allocation diverges from there; the rest of the function (the two
-// muls, setSQ out of line, the translation and the MTXCopy) is in place.
+// TODO: 75.5%. Both products are the *two-argument* mul(a, b) written in
+// place: the standalone `fmuls` MWCC leaves for the second source term is
+// `this->w * other.x` here, and per the overload tell in
+// docs/catalog/codegen-tells.md that is mul(quat, other); the one-argument
+// overload would have given `this->x * other.w`. What is left is the frame,
+// 0xc8 against the ROM's 0xa0 -- we hold 40 bytes of locals the ROM does not,
+// which is the SetSQT stand-in below plus the `swing` quaternion the ROM
+// scalarises away.
 void TBeeHive::calcRootMatrix()
 {
 	JGeometry::TQuat4<f32> quat = mBaseRotation;
@@ -491,8 +488,8 @@ void TBeeHive::calcRootMatrix()
 	JGeometry::TQuat4<f32> swing;
 	swing.setEulerX(mSwingAngle);
 
-	quat.mul(mRotation168);
-	quat.mul(swing);
+	quat.mul(quat, mRotation168);
+	quat.mul(quat, swing);
 
 	TBeeHiveMtx rot;
 	SetSQT(rot, mScaling, quat, mPosition);
