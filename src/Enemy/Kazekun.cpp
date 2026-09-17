@@ -279,18 +279,18 @@ void TKazekun::getAroundQuat(JGeometry::TQuat4<f32>& quat,
                              const JGeometry::TVec3<f32>& dir, f32 rate)
 {
 	TPosition3f mtx;
+	JGeometry::TQuat4<f32> around;
+	JGeometry::TVec3<f32> axis;
 	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
+
 	SMS_CalcToDirMatrix(mtx, dir, up);
 	mtx.getQuat(quat);
-
-	JGeometry::TVec3<f32> axis;
 	mtx.getYDir(axis);
 
 	// rate 0 turns a full right angle away from `dir`, rate 2 heads straight
 	// along it. Spelling this as setRotate rather than a named half-angle plus
 	// scale/cos keeps the helper cheap enough for MWCC to expand it inside the
 	// inlined doAttack, which is what the retail Attack nerve does.
-	JGeometry::TQuat4<f32> around;
 	around.setRotate(axis, (2.0f - rate) * 1.5707964f);
 
 	quat.mul(quat, around);
@@ -347,10 +347,10 @@ void TKazekun::doAttack(bool start)
 		mVelocity = toGoal;
 	}
 
+	JGeometry::TQuat4<f32> target;
 	JGeometry::TQuat4<f32> quat = mQuat;
 	JGeometry::TVec3<f32> dir   = mVelocity;
 
-	JGeometry::TQuat4<f32> target;
 	getAroundQuat(target, dir, 2.0f);
 
 	quat.slerp(target, 0.1f);
