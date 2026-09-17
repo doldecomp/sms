@@ -47,6 +47,13 @@ class THaneHamuKuriSaveLoadParams : public THamuKuriSaveLoadParams {
 public:
 	THaneHamuKuriSaveLoadParams(const char* path);
 
+	// fabricated
+	f32 getSLNormalJumpVy() const { return mSLNormalJumpVy.get(); }
+	f32 getSLAttackJumpVy() const { return mSLAttackJumpVy.get(); }
+	f32 getSLFlyBaseHeight() const { return mSLFlyBaseHeight.get(); }
+	f32 getSLFlyBaseAmplitude() const { return mSLFlyBaseAmplitude.get(); }
+	f32 getSLFlyBaseFrequency() const { return mSLFlyBaseFrequency.get(); }
+
 	/* 0x444 */ TParamRT<f32> mSLNormalJumpVy;
 	/* 0x458 */ TParamRT<f32> mSLAttackJumpVy;
 	/* 0x46C */ TParamRT<f32> mSLFlyBaseHeight;
@@ -312,6 +319,13 @@ public:
 
 	void resetFlyParam();
 
+	// fabricated: retail reads this flag through a const accessor (the member
+	// lands in the destination register, so it is loaded before the 0.0f
+	// literal), while the neighbouring raw reads of unk214 load the literal
+	// first -- see docs/catalog/codegen-tells.md, `pakkun` const-accessor rule.
+	// fabricated
+	THaneHamuKuriSaveLoadParams* getSaveLoadParam() const { return unk22C; }
+
 	static bool mBoundFly;
 
 public:
@@ -320,7 +334,7 @@ public:
 	/* 0x214 */ f32 unk214;
 	/* 0x218 */ f32 unk218;
 	/* 0x21C */ f32 unk21C;
-	/* 0x220 */ Vec unk220;
+	/* 0x220 */ JGeometry::TVec3<f32> unk220;
 	/* 0x22C */ THaneHamuKuriSaveLoadParams* unk22C;
 	/* 0x230 */ f32 unk230;
 	/* 0x234 */ f32 unk234;

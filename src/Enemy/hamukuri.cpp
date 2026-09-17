@@ -1298,7 +1298,174 @@ void THaneHamuKuri::reset()
 	unk21C = 0.0f;
 }
 
-void THaneHamuKuri::walkBehavior(int, f32) { }
+// fabricated: the squash clamp in THaneHamuKuri::walkBehavior tests the upper
+// bound first, so it is not JGeometry::TUtil<f32>::clamp (which tests the lower
+// bound first, confirmed by BeeHive).
+static inline f32 HaneClampScale(f32 value, f32 min, f32 max)
+{
+	if (value > max)
+		value = max;
+	else if (value < min)
+		value = min;
+	return value;
+}
+
+// TODO: instruction-exact with the right frame size (0x190); the only residue
+// is slot assignment for the `operator-` parameter temporary (retail 0x94, ours
+// 0x118, i.e. retail puts it in the inline-expansion region and leaves a
+// 12-byte hole at 0x118 -- looks like an unreferenced TVec3 local we have not
+// identified), the amplitude/frequency load order (declaring the amplitude
+// first fixes the order but swaps f29/f30) and the params pointer landing in
+// r5 instead of r6.
+void THaneHamuKuri::walkBehavior(int param_1, f32 param_2)
+{
+	f32 flyBaseHeight = getSaveLoadParam()->getSLFlyBaseHeight();
+
+	if (mBoundFly) {
+		if (!isAirborne()) {
+			f32 jumpVy = getSaveLoadParam()->getSLNormalJumpVy();
+			if (param_1 == 2)
+				jumpVy = getSaveLoadParam()->getSLAttackJumpVy();
+
+			JGeometry::TVec3<f32> vel(0.0f, jumpVy, 0.0f);
+			mPosition.y += 10.0f;
+			onLiveFlag(LIVE_FLAG_AIRBORNE);
+			setVelocity(vel);
+		}
+	} else {
+		if (!unk21C) {
+			if (unk214 == 0.0f) {
+				if (fabsf(unk230 - mGroundHeight) > 5.0f) {
+					unk214 = (mGroundHeight - unk230) / 120.0f;
+					if (unk214 > 10.0f)
+						unk214 = 10.0f;
+					if (unk214 < -10.0f)
+						unk214 = -10.0f;
+				}
+			}
+
+			if (unk214 > 0.0f) {
+				unk230 += unk214;
+				if (unk230 > mGroundHeight)
+					unk214 = 0.0f;
+			}
+
+			if (unk214 < 0.0f) {
+				unk230 += unk214;
+				if (unk230 < mGroundHeight) {
+					unk214 = 0.0f;
+					unk230 = 1.0f + mGroundHeight;
+				}
+			}
+		}
+
+		f32 flyBaseFrequency = getSaveLoadParam()->getSLFlyBaseFrequency();
+		f32 flyBaseAmplitude = getSaveLoadParam()->getSLFlyBaseAmplitude();
+
+		if (mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()
+		    || mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()
+		    || mSpine->getCurrentNerve()
+		        == &TNerveDoroHanePrepareAttack::theNerve()) {
+			if (!unk21C) {
+				unk20C += 1.0f;
+				if (unk20C > flyBaseFrequency)
+					unk20C = 0.0f;
+
+				if (unk234 < flyBaseHeight)
+					unk234 += 1.0f;
+
+				if (unk234 > flyBaseHeight)
+					unk234 -= 1.0f;
+			}
+
+			if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()
+			    || mSpine->getCurrentNerve()
+			        == &TNerveWalkerGraphWander::theNerve()) {
+				if (unk21C) {
+					mGroundHeight = gpMap->checkGround(
+					    mPosition.x, mPosition.y + 2.0f * mHeadHeight,
+					    mPosition.z, &mGroundPlane);
+
+					if (unk210 + (unk230 + unk234) > mGroundHeight) {
+						param_1 = 3;
+						unk234 -= 15.0f;
+						unk230 = mGroundHeight;
+						unk210 = 0.0f;
+						unk214 = 0.0f;
+						unk20C = 0.0f;
+
+						if (unk234 + unk210 > 200.0f) {
+							mScaling.y = HaneClampScale(1.1f * mScaling.y, 0.0f,
+							                            1.3f * mBodyScale);
+						} else {
+							f32 maxScale = 1.3f * getBodyScale();
+							mScaling.y   = HaneClampScale(0.8f * mScaling.x,
+							                              0.5f * getBodyScale(),
+							                              maxScale);
+						}
+					} else {
+						unk21C = 0.0f;
+						unk214 = 0.0f;
+						unk210 = 0.0f;
+						unk234 = 0.0f;
+						unk20C = 0.0f;
+
+						gpMarioParticleManager->emit(PARTICLE_MS_HIPDROP_C,
+						                             &mPosition, 0, nullptr);
+						SMSRumbleMgr->start(0x15, 5, (f32*)nullptr);
+						SMSGetMSound()->startSoundActor(MSD_SE_MA_HIP_ATTACK,
+						                                &mPosition, 0, nullptr,
+						                                0, 4);
+
+						setGoalPath((THitActor*)gpMarioAddress);
+						mSpine->pushNerve(
+						    &TNerveHaneHamuKuriUpWait::theNerve());
+					}
+				} else if (isReachedToGoal()
+				           && unk234 > flyBaseHeight - 10.0f) {
+					unk21C = 1.0f;
+					mSpine->pushNerve(
+					    &TNerveDoroHanePrepareAttack::theNerve());
+				}
+			}
+		} else {
+			if (unk234 > 0.0f)
+				unk234 -= 1.0f;
+		}
+
+		if (!unk21C)
+			unk210 = JMASin(360.0f * unk20C / flyBaseFrequency)
+			         * flyBaseAmplitude;
+
+		mPosition.y = unk210 + (unk230 + unk234);
+	}
+
+	if (mSpine->getCurrentNerve() == &TNerveHaneHamuKuriUpWait::theNerve()) {
+		if (unk234 < flyBaseHeight)
+			unk234 += 1.0f;
+	}
+
+	JGeometry::TVec3<f32> dir = mPosition - unk220;
+	MsVECNormalize(&dir, &dir);
+
+	if (mSpine->getCurrentNerve() == &TNerveHaneHamuKuriUpWait::theNerve())
+		mRotation.x *= 0.8f;
+
+	mRotation.z = MsGetRotFromZaxis(dir).z;
+
+	if (!unk21C) {
+		if (!isBckAnm(4))
+			TWalkerEnemy::walkBehavior(param_1, param_2);
+	}
+
+	unk220 = mPosition;
+	unk218 = mRotation.y;
+
+	if (unk21C) {
+		if (mPosition.y < mGroundHeight)
+			mPosition.y = mGroundHeight;
+	}
+}
 
 void THaneHamuKuri::bind()
 {
