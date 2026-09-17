@@ -204,6 +204,21 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `Talk2D2` and `hx_wiper` (GC2D)
+
+- A ternary over two calls suppresses inlining that an if/else does not: `if (mIsBoard ? openBoardWindow() : openNormalWindow())` leaves both as `bl` with a shared `clrlwi./beq`; the if/else form inlined the 228-byte board path (`perform` 66 -> 82).
+- Spelling an UNUSED helper's body out at its call site can be what keeps the *caller* out of line: calling the size-exact `closeTalkWindow()` shrank `checkBoardControler` enough for MWCC to inline it into `perform`; pasting kept it a call (95.8).
+- A one-case `switch` is the shape behind `cmpwi` + `beq body; b end` (`switch (gpMarDirector->unk124) { case 2: ... }`, not `== 2` on a `u8`).
+- A `u32` member holding a colour, not `JUtility::TColor`: passing it to a by-value `TColor` parameter costs two stack stores where a `TColor` member costs one; `cColorTable` is `u32[6]` (a `TColor[6]` needs dynamic initialisation and shows in `__sinit`).
+- `__sinit`'s JAL-list order follows rogue-include order: `MSound/MSSetSound.hpp` before `MSound/MSoundBGM.hpp` or the fifteen registrations rotate by one.
+- `arr[a + b + k]` with the literal last folds `k * 4` into the displacement; in the middle it costs an `addi`; `(arr + a + b)[k]` is worse.
+- The signed/unsigned int-to-float magic constant is a type oracle: `0.7f * width + 4.0f` with the unsigned magic means the raw `u8 TWidth` field, not `getWidth(int)`.
+- Rounded coordinates want named `s16` locals (the nested `move((s16)..., (s16)...)` evaluates right to left).
+- `snprintf(box->getStringPtr(), 94, fmt, ...)`, not `setString(fmt, ...)`, for J2D text boxes in this subsystem (`moveTalkWindow` 84 -> 93.5).
+- `fcmpo` + `cror eq,gt,eq` + `bne` is `>=`, which m2c drafts as `==`.
+- A `.float` of a tiny denormal in a mixed static table is an `s32` read with `lwz` (`drawpath_table` is `{ f32, f32, s32 }`); `$NNN` suffixes on local statics are monotonic in source position, so they prove definition order and reverse emission for a C TU.
+- `hx_wiper` (C) has nothing inlined in retail (an empty `Hx_Warning` is still called): measured `-inline noauto` for that object takes it 9 -> 16 exact on the same source. `math.h`'s `sqrtf` body sits behind `#ifdef __cplusplus`, so C TUs get an out-of-line call where retail inlines it (open).
+
 ## Rules from `BathtubKiller` and `hauntLeg`
 
 - A discarded call whose body opens with a null test can account for an entire frame gap: a bare `getActiveObjNum();` (its inline opens `if (!unk38) return getObjNum();`) reproduced both the dead `lwz`/`cmplwi` and the whole 32 bytes (`loadAfter` 84.5 -> 90.6).
