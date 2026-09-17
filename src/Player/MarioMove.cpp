@@ -1358,13 +1358,15 @@ void TMario::checkController(JDrama::TGraphics*)
 	// for unk108->mAnalogR (R trigger), unk108->mAnalogL (L trigger),
 	// then again for unk10C (L) and unk110 (R) Mario-side copies.
 	// TODO: doesn't match at all!
+	s32 rawR = (s32)mGamePad->mCompSPos[3];
+	s32 rawL = (s32)mGamePad->mCompSPos[2];
 	{
 		u8 zero    = mControllerParams.mAnalogLRToZeroVal.get();
 		u8 middle  = mControllerParams.mAnalogLRToMiddleVal.get();
 		u8 max     = mControllerParams.mAnalogLRToMaxVal.get();
 		f32 midLvl = mControllerParams.mAnalogLRMiddleLevel.get();
-		u8 v       = (u8)(s32)mGamePad->mCompSPos[3];
 		f32 out;
+		u8 v       = rawR;
 		if (v < zero)
 			out = 0.0f;
 		else if (v < middle)
@@ -1382,8 +1384,8 @@ void TMario::checkController(JDrama::TGraphics*)
 		u8 middle  = mControllerParams.mAnalogLRToMiddleVal.get();
 		u8 max     = mControllerParams.mAnalogLRToMaxVal.get();
 		f32 midLvl = mControllerParams.mAnalogLRMiddleLevel.get();
-		u8 v       = (u8)(s32)mGamePad->mCompSPos[2];
 		f32 out;
+		u8 v       = rawL;
 		if (v < zero)
 			out = 0.0f;
 		else if (v < middle)
@@ -1401,8 +1403,8 @@ void TMario::checkController(JDrama::TGraphics*)
 		u8 middle  = mControllerParams.mAnalogLRToMiddleVal.get();
 		u8 max     = mControllerParams.mAnalogLRToMaxVal.get();
 		f32 midLvl = mControllerParams.mAnalogLRMiddleLevel.get();
-		u8 v       = (u8)(s32)mGamePad->mCompSPos[2];
 		f32 out;
+		u8 v       = rawL;
 		if (v < zero)
 			out = 0.0f;
 		else if (v < middle)
@@ -1420,8 +1422,8 @@ void TMario::checkController(JDrama::TGraphics*)
 		u8 middle  = mControllerParams.mAnalogLRToMiddleVal.get();
 		u8 max     = mControllerParams.mAnalogLRToMaxVal.get();
 		f32 midLvl = mControllerParams.mAnalogLRMiddleLevel.get();
-		u8 v       = (u8)(s32)mGamePad->mCompSPos[3];
 		f32 out;
+		u8 v       = rawR;
 		if (v < zero)
 			out = 0.0f;
 		else if (v < middle)
