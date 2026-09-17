@@ -858,16 +858,14 @@ void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
                                          const JGeometry::TVec3<f32>& param_4,
                                          MtxPtr param_5)
 {
-	// TODO: matching this is ewwwwwwwwwwwwwwwwww
-
 	f32 fVar6  = param_2 * param_4.x;
 	f32 fVar7  = param_2 * param_4.y;
-	f32 fVar11 = param_4.y * 2.0 + param_3.y;
+	f32 fVar11 = 2.0f * param_4.y + param_3.y;
 	f32 fVar12 = -fVar6;
 
-	f32 fVar10 = param_4.x * 2.0 + param_3.x;
+	f32 fVar10 = 2.0f * param_4.x + param_3.x;
 	f32 fVar8  = param_2 * param_4.z;
-	f32 fVar9  = param_4.z * 2.0 + param_3.z;
+	f32 fVar9  = 2.0f * param_4.z + param_3.z;
 	f32 fVar13 = -fVar8;
 
 	{
@@ -876,9 +874,10 @@ void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
 		f32 fVar1     = param_1[0][2];
 		f32 fVar5     = param_1[0][3];
 		param_5[0][0] = fVar4 * fVar7 + fVar2 * fVar12;
-		param_5[0][1] = fVar1 * fVar8 + fVar4 * fVar6 + fVar2 * fVar7;
+		param_5[0][1] = fVar4 * fVar6 + fVar2 * fVar7 + fVar1 * fVar8;
 		param_5[0][2] = fVar2 * fVar13 + fVar1 * fVar7;
-		param_5[0][3] = fVar5 + fVar1 * fVar9 + fVar4 * fVar10 + fVar2 * fVar11;
+		param_5[0][3]
+		    = fVar5 + (fVar4 * fVar10 + fVar2 * fVar11 + fVar1 * fVar9);
 	}
 
 	{
@@ -887,9 +886,10 @@ void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
 		f32 fVar3     = param_1[1][0];
 		f32 fVar4     = param_1[1][3];
 		param_5[1][0] = fVar3 * fVar7 + fVar1 * fVar12;
-		param_5[1][1] = fVar2 * fVar8 + fVar3 * fVar6 + fVar1 * fVar7;
+		param_5[1][1] = fVar3 * fVar6 + fVar1 * fVar7 + fVar2 * fVar8;
 		param_5[1][2] = fVar1 * fVar13 + fVar2 * fVar7;
-		param_5[1][3] = fVar4 + fVar2 * fVar9 + fVar3 * fVar10 + fVar1 * fVar11;
+		param_5[1][3]
+		    = fVar4 + (fVar3 * fVar10 + fVar1 * fVar11 + fVar2 * fVar9);
 	}
 
 	{
@@ -898,9 +898,10 @@ void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
 		f32 fVar3     = param_1[2][0];
 		f32 fVar4     = param_1[2][3];
 		param_5[2][0] = fVar3 * fVar7 + fVar1 * fVar12;
-		param_5[2][1] = fVar2 * fVar8 + fVar3 * fVar6 + fVar1 * fVar7;
+		param_5[2][1] = fVar3 * fVar6 + fVar1 * fVar7 + fVar2 * fVar8;
 		param_5[2][2] = fVar1 * fVar13 + fVar2 * fVar7;
-		param_5[2][3] = fVar4 + fVar2 * fVar9 + fVar3 * fVar10 + fVar1 * fVar11;
+		param_5[2][3]
+		    = fVar4 + (fVar3 * fVar10 + fVar1 * fVar11 + fVar2 * fVar9);
 	}
 }
 
@@ -909,14 +910,12 @@ void TModelWaterManager::calcVMMtxWall(MtxPtr param_1, f32 scale,
                                        const JGeometry::TVec3<f32>& param_4,
                                        MtxPtr param_5)
 {
-	// TODO: matching this is ewwwwwwwwwwwwwwwwww
-
 	f32 fVar7  = scale * param_4.x;
 	f32 fVar4  = param_3.y;
 	f32 fVar8  = scale * param_4.z;
 	f32 fVar11 = -fVar7;
-	f32 fVar10 = param_4.x * 2.0 + param_3.x;
-	f32 fVar9  = param_4.z * 2.0 + param_3.z;
+	f32 fVar10 = 2.0f * param_4.x + param_3.x;
+	f32 fVar9  = 2.0f * param_4.z + param_3.z;
 
 	{
 		f32 fVar3     = param_1[0][1];
@@ -926,7 +925,8 @@ void TModelWaterManager::calcVMMtxWall(MtxPtr param_1, f32 scale,
 		(*param_5)[0] = fVar6 * fVar8 + fVar5 * fVar11;
 		(*param_5)[1] = fVar3 * scale;
 		(*param_5)[2] = fVar6 * fVar7 + fVar5 * fVar8;
-		(*param_5)[3] = fVar1 + fVar5 * fVar9 + fVar6 * fVar10 + fVar3 * fVar4;
+		(*param_5)[3]
+		    = fVar1 + (fVar6 * fVar10 + fVar3 * fVar4 + fVar5 * fVar9);
 	}
 	{
 		f32 fVar1     = param_1[1][2];
@@ -936,7 +936,8 @@ void TModelWaterManager::calcVMMtxWall(MtxPtr param_1, f32 scale,
 		param_5[1][0] = fVar3 * fVar8 + fVar1 * fVar11;
 		param_5[1][1] = fVar2 * scale;
 		param_5[1][2] = fVar3 * fVar7 + fVar1 * fVar8;
-		param_5[1][3] = fVar5 + fVar1 * fVar9 + fVar3 * fVar10 + fVar2 * fVar4;
+		param_5[1][3]
+		    = fVar5 + (fVar3 * fVar10 + fVar2 * fVar4 + fVar1 * fVar9);
 	}
 	{
 		f32 fVar1     = param_1[2][2];
@@ -946,7 +947,8 @@ void TModelWaterManager::calcVMMtxWall(MtxPtr param_1, f32 scale,
 		param_5[2][0] = fVar3 * fVar8 + fVar1 * fVar11;
 		param_5[2][1] = fVar2 * scale;
 		param_5[2][2] = fVar3 * fVar7 + fVar1 * fVar8;
-		param_5[2][3] = fVar5 + fVar1 * fVar9 + fVar3 * fVar10 + fVar2 * fVar4;
+		param_5[2][3]
+		    = fVar5 + (fVar3 * fVar10 + fVar2 * fVar4 + fVar1 * fVar9);
 	}
 }
 
