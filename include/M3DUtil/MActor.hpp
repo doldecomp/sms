@@ -72,7 +72,9 @@ public:
 	void matAnmFrameUpdate();
 	void perform(u32 cue, JDrama::TGraphics* graphics);
 	BOOL checkCurAnm(const char* name, int type);
-	bool checkCurAnmFromIndex(int index, int type);
+	// BOOL and not bool: the ROM's callers test the result with `cmpwi r3, 0`
+	// rather than masking it with `clrlwi.` (TNerveBombHeiWaitExplosion).
+	BOOL checkCurAnmFromIndex(int index, int type);
 	bool checkAnmFileExist(const char* name, int type);
 	J3DFrameCtrl* getFrameCtrl(int type);
 	BOOL checkBckPass(f32 pass_frame);

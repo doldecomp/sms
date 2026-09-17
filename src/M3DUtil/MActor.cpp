@@ -428,7 +428,7 @@ BOOL MActor::checkCurAnm(const char* name, int type)
 	return false;
 }
 
-bool MActor::checkCurAnmFromIndex(int index, int type)
+BOOL MActor::checkCurAnmFromIndex(int index, int type)
 {
 	if (!mAnmByType[type])
 		return false;

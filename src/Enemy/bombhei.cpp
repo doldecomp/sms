@@ -517,13 +517,7 @@ DEFINE_NERVE(TNerveBombHeiWalkExplosion, TLiveActor)
 	return FALSE;
 }
 
-// TODO: 99.5%, two problems.
-// 1. The ROM tests MActor::checkCurAnmFromIndex's result with `cmpwi r3, 0`,
-//    so that method returns int, not bool. Declaring it `int` in
-//    include/M3DUtil/MActor.hpp fixes this line, but the definition in
-//    src/M3DUtil/MActor.cpp has to change with it and neither file is in this
-//    batch's scope.
-// 2. The frame is 0x68 against the ROM's 0x78.
+// TODO: the frame is 0x68 against the ROM's 0x78.
 DEFINE_NERVE(TNerveBombHeiWaitExplosion, TLiveActor)
 {
 	TBombHei* bombHei = (TBombHei*)spine->getBody();
