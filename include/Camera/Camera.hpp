@@ -161,19 +161,6 @@ public:
 	}
 
 private:
-	// fabricated
-	void fabricatedInline2()
-	{
-		CLBCrossToPolar(mTarget, mPosition, &unk256, &unk258);
-
-		unk25C.set(unk148.x - unk124.x, unk148.y - unk124.y,
-		           unk148.z - unk124.z);
-		unk25C.normalize();
-		unk270 = MsClamp(CLBCalcRatio(mCurrentParams->mXAngleMin,
-		                              mCurrentParams->mXAngleMax, unk256),
-		                 0.0f, 1.0f);
-	}
-
 	void calcSecureViewTarget_(s16, f32*, f32*);
 	void execSecureView_(s16, Vec*);
 
@@ -203,6 +190,19 @@ private:
 	void calcPosAndAt_();
 	void calcFinalPosAndAt_();
 	void calcExternalData_();
+
+	// Fabricated name. This level is measured, not invented: the ROM reaches
+	// MsSqrtf (inside CLBCrossToPolar) and TVec3::setLength (inside
+	// normalize) one step deeper than calcExternalData_'s own body, while the
+	// MsClamp of the X-rotation ratio is one step shallower and still expands.
+	// Fully inlined at both sites, so the map carries no symbol for it.
+	void calcLookatPolar_()
+	{
+		CLBCrossToPolar(mTarget, mPosition, &unk256, &unk258);
+		unk25C.set(unk148.x - unk124.x, unk148.y - unk124.y,
+		           unk148.z - unk124.z);
+		unk25C.normalize();
+	}
 	void ctrlGameCamera_();
 
 	void drawJetCoasterBalloonMessage_();

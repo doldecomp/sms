@@ -159,6 +159,13 @@ static s32 JetCoasterDemoCallBack(u32 param_1, u32 param_2)
 	return true;
 }
 
+// TODO: 99.6%, frame 0xc8 against the ROM's 0x140. Every instruction matches
+// once the stack is padded out: 92 bytes below everything (a local declared
+// last, or inline-expansion temporaries), plus 20 more between the snprintf
+// buffer and `marPos`. What padding cannot reproduce is where the by-value
+// TCameraOption(TVec3) argument temporary lands -- 0xdc in the ROM, i.e. in
+// the named-local region, against 0x5c here -- and the r3/r4 numbering of the
+// two TTargetCamera copies, which follows the frame.
 void CPolarSubCamera::loadAfter()
 {
 	JDrama::TLookAtCamera::loadAfter();
@@ -247,13 +254,11 @@ void CPolarSubCamera::loadAfter()
 	mCurrentTarget.unk18.set(mPosition);
 	mCurrentTarget.mTarget.set(mTarget);
 
-	TCameraOption* option = gpCameraOption;
 	if (SMS_isOptionMap()) {
-		mCurrentTarget.mPosition = mPosition;
-		mCurrentTarget.mTarget   = mTarget;
-		option = new TCameraOption(mPosition, &mCurrentTarget.mTarget);
+		mCurrentTarget.mPosition.set(mPosition);
+		mCurrentTarget.mTarget.set(mTarget);
+		gpCameraOption = new TCameraOption(mPosition, &mCurrentTarget.mTarget);
 	}
-	gpCameraOption = option;
 
 	unk256 = mCurrentTarget.mPitch;
 	unk258 = mCurrentTarget.mYaw;
@@ -276,7 +281,7 @@ void CPolarSubCamera::loadAfter()
 	mInbetween->initCameraInbetween(mPosition, mTarget, SMS_GetMarioPos());
 
 	C_MTXPerspective(unk16C, mFovy, mAspect, mNear, mFar);
-	C_MTXLookAt(unk1EC, unk124, mUp, unk148);
+	C_MTXLookAt(unk1EC, &unk124, &mUp, &unk148);
 
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
@@ -284,7 +289,7 @@ void CPolarSubCamera::loadAfter()
 
 	MTXCopy(unk1EC, unk21C);
 
-	fabricatedInline2();
+	calcExternalData_();
 
 	if ((unk64 & CAMERA_FLAG_JET_COASTER_SCENE) && gpMarDirector->unk7D == 1) {
 		gpMarDirector->fireStartDemoCamera(
@@ -880,7 +885,16 @@ void CPolarSubCamera::calcFinalPosAndAt_()
 	}
 }
 
-void CPolarSubCamera::calcExternalData_() { }
+// UNUSED (map size 0x13c): inlined into both loadAfter() and perform(), which
+// is where the polar angles, the lookat direction and the X-rotation ratio are
+// recomputed from the freshly calculated position and target.
+void CPolarSubCamera::calcExternalData_()
+{
+	calcLookatPolar_();
+	unk270 = MsClamp(CLBCalcRatio(mCurrentParams->mXAngleMin,
+	                              mCurrentParams->mXAngleMax, unk256),
+	                 0.0f, 1.0f);
+}
 
 // TODO: this should be weak/inline
 void CPolarSubCamera::ctrlGameCamera_()
@@ -974,6 +988,12 @@ void CPolarSubCamera::ctrlGameCamera_()
 	unk148.set(mTarget);
 }
 
+// TODO: 94.7%. Two residues. (1) Frame 0x48 against the ROM's 0x68, which also
+// flips the argument-setup order of TCameraBck::updateDemo and of the view
+// matrix copy from right-to-left to left-to-right. (2) calcExternalData_ is
+// inlined here exactly as in loadAfter, yet the ROM calls TVec3::set<f>,
+// TUtil<f32>::one() and MsClamp<f> from this site and expands all three in
+// loadAfter -- the per-call-site inlining family from docs/catalog.
 void CPolarSubCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -994,12 +1014,12 @@ void CPolarSubCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 				ctrlGameCamera_();
 			calcFinalPosAndAt_();
 
-			fabricatedInline2();
+			calcExternalData_();
 		}
 
 		if (mMode != CAMERA_MODE_REPRODUCE_DEMO) {
 			C_MTXPerspective(unk16C, mFovy, mAspect, mNear, mFar);
-			C_MTXLookAt(unk1EC, unk124, mUp, unk148);
+			C_MTXLookAt(unk1EC, &unk124, &mUp, &unk148);
 		}
 
 		bool flag2 = (graphics->unk0 & 2) ? true : false;
