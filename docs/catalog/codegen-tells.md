@@ -107,6 +107,10 @@ Do not force these with `#pragma dont_inline` or pasted bodies; leave the functi
 **`fmodf` / `mod`.** The binary calls `std::fmodf` and `TUtil<f32>::mod` out of line everywhere (`koopajr`, `MapObjCorona`, `wireTrap`), with the same 0x5c body: return `x` if `|y| > |x|`, else `x - y * (f32)(s64)(u64)(x / y)`.
 `TUtil<f32>::mod` carries that body in `JGUtil.hpp`; `std::fmodf` keeps the `::fmod` wrapper because the body there inlines everywhere.
 
+**Mutating operators are depth spacers.** `TVec3<f32>::scale(f32)` is called out of line throughout `wireTrap`; `v.scale(k)` expands it, `v *= k` routes through the one-line `operator*=` forwarder and adds the level that keeps `scale` a `bl` (three nerves 66/81/37 -> 99.0/99.5/98.4). Generalises the forwarder rule to the mutating `TVec3` operators.
+
+**Ternaries cut the statement budget without changing codegen.** `f32 r; if (t > 0) r = 1 + f(); else r = 1;` and `f32 r = t > 0 ? 1 + f() : 1;` emit the same instructions, but the ternary made an UNUSED helper 48 bytes smaller and flipped it from called to inlined (`doSearchMove` 440 vs 528; its nerve 37.5 -> 98.4).
+
 **One statement flips the decision both ways.** `TFruitsBoat::setBckTrack` (0x118, called in the ROM) was being inlined into `load`; naming one param fetch (`f32 speed; speed = ...->getSLBckMoveSpeed();`) pushed it over the budget and took `load` 29.9 -> 100.
 
 **Paying the statement budget with wrappers.** A size-exact UNUSED body that is *called* instead of inlined can be fixed without changing its codegen: `TRocket::checkTrigger` (0x148) was refused at ~15 statements; replacing two `if (gpMSound->gateCheck(id)) MSoundSE::startSoundActor(...)` pairs with `gpMSound->startSoundActor(...)` took it under the limit with identical instructions (`TNerveRocketPossessedNozzle::execute` 55.7 -> 99.3).
@@ -209,6 +213,10 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - Normalising cross-products in place saves a float register (EffectUtil).
 - **A `TVec3` array defeats scalar replacement where three separate locals do not.** Three named column vectors get promoted to registers and their `squared()` products fuse; the same three as `TVec3<f32> dir[3]` with constant indices get a stack home, are read back with `lfs`, and stay unfused (`TRocket::calcRootMatrix` 85.2 -> 96.7). Contiguous 12-byte slots in the target are the tell. `mtx.getXDir(v)` does not force the memory home, and an unrolled loop fails when the body has `length()`.
 - `JGeometry::TRotation3::getXDir/getYDir/getZDir` use `dst.set(at(0,0), at(1,0), at(2,0))`, which batches the loads; the ROM interleaves `lfs`/`stfs`, so the original bodies were per-component (`popo` and `rocket` `calcRootMatrix` work around it locally; open shared fix in `JGRotation3.hpp`).
+- Particle scale vectors are unnamed temporaries: `SMS_EasyEmitParticle(id, &mPosition, nullptr, TVec3<f32>(1, 1, 1))` matches; a named `scale` local lands below the other locals (`TWireTrap::kill`).
+- `TSpineBase::initWith` already clears the vertebrae; a separate `mSpine->reset()` before it adds three instructions.
+- `calcRootMatrix` levers (`wireTrap`): the up vector as an unnamed `TVec3<f32>(0, 1, 0)`; in-place `quat.mul(quat, spin)` instead of a third quaternion (-16); a named `J3DModel* model = getModel()` before `MTXCopy` (-8); declare `mtx`, then the quaternions, then the vectors.
+- Open (same family as `MapObjBall`): `behaveHitWireTrap` (UNUSED 0x258) is expanded twice in retail's `checkHitActors`; MWCC inlines at most one expansion for us. `TVec3<f>::set<f>(f, f, f)` is emitted **local** at 0x10 in `wireTrap.cpp` and `Kazekun.cpp`; our constructor expands it and scalarises the vector.
 - **Holding a matrix in a local costs a register** and blocks folding `+0x30` into the inlined base body's load offsets (`TMoePuku::calcRootMatrix` 86.5% vs 99.1% re-fetching).
 - `mRotation = p->getRotation()` costs 8 bytes of frame when a call follows (`TTobiPuku::initAttacker`); `p->mRotation` matches both sites.
 - Keep a computed matrix in a local rather than re-reading the member it was stored to.
