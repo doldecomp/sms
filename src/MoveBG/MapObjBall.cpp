@@ -329,16 +329,25 @@ void TMapObjBall::control()
 {
 	TMapObjGeneral::control();
 
-	if (unk194 != 0)
-		unk194 -= 1;
+	// The three named locals below are what keeps this body at fifteen
+	// statements, which is one over MWCC's depth-1 inline budget; without
+	// them TResetFruit::control's LIVING and HOLDING arms expand this
+	// function instead of calling it, as the ROM does. The register
+	// evidence agrees: the countdown is loaded into a register and tested
+	// there, and both matrix pointers are fetched into their own registers.
+	int timer = unk194;
+	if (timer != 0)
+		unk194 = timer - 1;
 
 	if (isState(STATE_HOLDING)) {
 		// While carried the ball rides the holder's matrix, lifted clear of
 		// the hand by unk190.
 		Mtx mtx;
-		MTXCopy(mHolder->getTakingMtx(), mtx);
+		MtxPtr taking = mHolder->getTakingMtx();
+		MTXCopy(taking, mtx);
 		mtx[1][3] += unk190;
-		MTXCopy(mtx, getModel()->getAnmMtx(0));
+		MtxPtr anm = getModel()->getAnmMtx(0);
+		MTXCopy(mtx, anm);
 		return;
 	}
 
