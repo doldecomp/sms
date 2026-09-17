@@ -204,6 +204,22 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `Bird` and `limitkoopajr`
+
+- `JGPosition3::setQT(quat, trans)` is the level that keeps `TRotation3::setQuat` a `bl`; `setQuat` + `setTrans` written out expand (`TLimitKoopaJr::calcRootMatrix` 39 -> 98). `TQuat4::rotate(v, v)` is the form the ROM inlines; the one-argument forwarder emits a weak copy and a `bl` (`doFlyToCurPathNode` 78.5 -> 95.3).
+- Third pasted-UNUSED instance: `TAnimalBird::doWalk` (0x198, size-exact) must be pasted into its caller; behind the call `rotate` sits at depth 2 and becomes a `bl`.
+- Nerve singletons need exactly one extra wrapper level to stay `bl`s (`moveObject -> checkChangeToItem -> isChangeToItem -> isChanged -> theNerve`); inlining the condition one level up expands them. The price is a 3-instruction `&&` bool merge the ROM lacks: a genuine open conflict.
+- A float predicate materialises `cror; bne; li 0/li 1; clrlwi.` at its inline site only as two statements: `if (a <= b) return false; return true;` (`canRun`: Wait 0 -> 79, Run 83 -> 98).
+- Two plain `cmplwi` with no pivot tree is an `if`/`if` chain. `&&`/`||` grouping maps 1:1 onto flag registers: `bind`'s `mWireBinder && (isOnGroundNerve() || latest == PreLanding)` reproduces the r26-r29 ladder exactly, with the helper's own `(a || b) || c` supplying the inner two.
+- A `TSpineBase<T>*` local in a nerve predicate keeps the spine in one register across `theNerve()` calls; reading `mSpine` per term reloads it.
+- `setVelocity(TVec3<f32>(0, 0, 0))` gives forward stores plus the integer copy the ROM has; `mVelocity.zero()` stores z, y, x directly (`Landing` nerve to 100).
+- A per-instance factor used in several arguments gets one CSE'd load *after* the `getSaveParam()` calls; naming it loads before them (`isFindMario` 88 -> 100). A `THitActor*` member dereferenced per component needs `const TVec3& center = actor->mPosition;` or it reloads three times.
+- `MtxPtr src = (MtxPtr)mtx;` plus a named `J3DModel* model` before `MTXCopy` reproduces the r30/r31 split.
+- Ruled out: `dir.setLength(dir, TUtil<f32>::one())` to push `setLength` out of line (worse); a static helper taking `int&`/`int*` for eagerly materialised timer addresses (folded back, plus a symbol the map lacks).
+- A local template instantiation (`MsWrap<f>`, `set<f>`) is emitted next to its **last source-order user**, so `validate-symbol-order.py` can fail on placement with every real symbol in order.
+- A wrong `J3DMLF` flag word in a `TModelDataLoadEntry` shows only as a ~93% data object; read it off the `entry$NNNN` `.rodata` dump.
+- Open header items: `TVec3::cross()`'s store order (retail stores x and y, reloads `offset.x`, then z); `MsAngleDiff` should read `180.0f + alpha` (constant first).
+
 ## Rules from `MapObjPinna` and `MapObjRicco`
 
 - An UNUSED helper can supply the *shallower* level: `TShellCup::perform` reaches `MsMtxSetRotX` (0x7c) as a `bl` through a per-shell `calcJointMtx()`, which puts the 0x7c body at depth 2 where it is refused (42 -> 90.7); the same helper expands at depth 1 in `TPinnaShell::control`.

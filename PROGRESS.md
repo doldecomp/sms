@@ -11,10 +11,10 @@ Measured from `build/GMSE01/report.json` on 2026-09-16 on 2026-09-17 during the 
 
 | | Matched code | Source-linked code | Linked units |
 | --- | ---: | ---: | ---: |
-| Game | 31.86% | 3.60% | 95 / 385 |
+| Game | 32.10% | 3.60% | 95 / 385 |
 | JSystem | 87.11% | 61.61% | 166 / 198 |
 | SDK | 95.07% | 92.22% | 142 / 149 |
-| All | 44.01% | 17.91% | 403 / 732 |
+| All | 44.20% | 17.91% | 403 / 732 |
 
 9,072 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
 
@@ -32,7 +32,9 @@ Since then, work has been **whole-TU enemy reconstruction from the map**: scaffo
 | `Enemy/killer` | 97.48% | 39 / 54 |
 | `Enemy/limitkoopa` | 87.00% | 38 / 58 |
 | `Enemy/Kazekun` | 96.37% | 35 / 43 |
+| `Animal/Bird` | 96.73% | 37 / 51 |
 | `Animal/BeeHive` | 95.97% | 33 / 49 |
+| `Enemy/limitkoopajr` | 94.92% | 19 / 27 |
 | `Enemy/BathtubPeach` | 94.13% | 19 / 21 |
 | `Enemy/fruitsboat` | 98.40% | 18 / 24 |
 | `Enemy/rocket` | 99.16% | 26 / 33 |
