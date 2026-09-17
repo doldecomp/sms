@@ -1,23 +1,428 @@
 #include <Enemy/LimitKoopaJr.hpp>
+#include <Enemy/Enemy.hpp>
+#include <JSystem/JGeometry.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DShape.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <M3DUtil/MActor.hpp>
+#include <M3DUtil/MActorAnm.hpp>
+#include <MarioUtil/MathUtil.hpp>
+#include <Player/MarioAccess.hpp>
 #include <Strategic/LiveActor.hpp>
+#include <Strategic/ObjManager.hpp>
+#include <Strategic/ObjModel.hpp>
 #include <Strategic/Spine.hpp>
+#include <math.h>
 
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <Map/MapCollisionManager.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// TODO: no nerve body below is reconstructed; each carries its map size.
-// Defining them emits theNerve() and the destructor, both compiler-generated.
+// Only the damage, shoot and yahoo slots carry an ambient sound; the .bck at
+// index 2 (run) has none.
+static const char* koopajr_bastable[] = {
+	"/scene/koopajr/bas/koopajr_damage.bas",
+	"/scene/koopajr/bas/koopajr_shoot.bas",
+	nullptr,
+	"/scene/koopajr/bas/koopajr_yahoo.bas",
+};
 
-// TODO: incorrect size. Map records 308 bytes.
-DEFINE_NERVE(TNerveLimitKoopaJrLaunch, TLiveActor) { return FALSE; }
+TLimitKoopaJrParams::TLimitKoopaJrParams(const char* prm)
+    : TSpineEnemyParams(prm)
+    , PARAM_INIT(mSLAcceleration, 1.0f)
+    , PARAM_INIT(mSLRotationSpeed, 1.0f)
+    , PARAM_INIT(mSLSpeedMax, 8.0f)
+    , PARAM_INIT(mSLRoundAngleVelocity, 0.05f)
+    , PARAM_INIT(mSLRoundRadius, 2000.0f)
+    , PARAM_INIT(mSLRoundHeight, 0.0f)
+    , PARAM_INIT(mSLDamageRadius, 1000.0f)
+    , PARAM_INIT(mSLDamageHeight, 4000.0f)
+    , PARAM_INIT(mSLKoopaJrScale, 1.6f)
+    , PARAM_INIT(mSLShotDoodlePeriod, 1200)
+    , PARAM_INIT(mSLDamagePeriod, 360)
+{
+	TParams::load(mPrmPath);
 
-// TODO: incorrect size. Map records 424 bytes.
-DEFINE_NERVE(TNerveLimitKoopaJrRun, TLiveActor) { return FALSE; }
+	// The eleven overrides land in .sdata because TParamRT<T>::set takes a
+	// reference, so the literals need an address.
+	mSLAcceleration.set(1.0f);
+	mSLRotationSpeed.set(1.0f);
+	mSLSpeedMax.set(15.0f);
+	mSLRoundAngleVelocity.set(0.08f);
+	mSLRoundRadius.set(3300.0f);
+	mSLRoundHeight.set(5400.0f);
+	mSLDamageRadius.set(100.0f);
+	mSLDamageHeight.set(300.0f);
+	mSLKoopaJrScale.set(2.0f);
+	mSLDamagePeriod.set(120);
+	mSLShotDoodlePeriod.set(600);
+}
 
-// TODO: incorrect size. Map records 884 bytes.
-DEFINE_NERVE(TNerveLimitKoopaJrWait, TLiveActor) { return FALSE; }
+TLimitKoopaJr::TLimitKoopaJr(const char* name)
+    : TSpineEnemy(name)
+    , mBathtub(nullptr)
+{
+	onLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_UNK100);
+}
 
-// TODO: incorrect size. Map records 280 bytes.
-DEFINE_NERVE(TNerveLimitKoopaJrYahoo, TLiveActor) { return FALSE; }
+void TLimitKoopaJr::init(TLiveManager* live_manager)
+{
+	mManager = live_manager;
+	mManager->manageActor(this);
+
+	mMActorKeeper = new TMActorKeeper(mManager, 1);
+	mMActor       = mMActorKeeper->createMActor("koopajr_model.bmd", 0);
+	mMActor->setLightType(1);
+
+	initAnmSound();
+
+	f32 damageHeight = getSaveParams()->mSLDamageHeight.get();
+	initHitActor(0x0800002E, 1, 0, 0.0f, 0.0f,
+	             getSaveParams()->mSLDamageRadius.get(), damageHeight);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
+
+	mSpine->initWith(&TNerveLimitKoopaJrRun::theNerve());
+
+	f32 scale = getSaveParams()->mSLKoopaJrScale.get();
+	mScaling.set(scale, scale, scale);
+
+	resetLimitKoopaJr();
+
+	J3DModelData* modelData = getModel()->getModelData();
+	for (u16 i = 0; i < modelData->getShapeNum(); ++i)
+		modelData->getShapeNodePointer(i)->onFlag(1);
+}
+
+void TLimitKoopaJr::reset()
+{
+	TSpineEnemy::reset();
+	resetLimitKoopaJr();
+}
+
+void TLimitKoopaJr::resetLimitKoopaJr()
+{
+	mSpine->reset();
+
+	unk158     = 0;
+	mShotTimer = 0;
+	mShotTimer = getSaveParams()->mSLShotDoodlePeriod.get();
+
+	unk160.x = 0.0f;
+	unk160.y = 0.0f;
+	unk160.z = 0.0f;
+	unk16C   = 1.0f;
+
+	mBodyDirection.mDirection  = 0.0f;
+	mRoundDirection.mDirection = 0.0f;
+}
+
+void TLimitKoopaJr::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	if (mKoopa == nullptr)
+		mKoopa = ((TEnemyManager*)JDrama::TNameRefGen::search<TEnemyManager>(
+		             "クッパマネージャー"))
+		             ->getObj(0);
+
+	if (mBathtub == nullptr)
+		mBathtub = JDrama::TNameRefGen::search<THitActor>("バスタブ");
+
+	if (cue & 1) {
+		updateTimers();
+		checkNerve();
+	}
+
+	TSpineEnemy::perform(cue, graphics);
+}
+
+void TLimitKoopaJr::bind() { }
+
+void TLimitKoopaJr::calcRootMatrix()
+{
+	JGeometry::TQuat4<f32> quat;
+	quat.setEulerY(mBodyDirection.mDirection);
+
+	// setQT is the level that keeps TRotation3::setQuat the ROM's bl; spelled
+	// as setQuat + setTrans it expands in place.
+	TPosition3f mtx;
+	mtx.setQT(quat, mPosition);
+
+	MtxPtr src      = (MtxPtr)mtx;
+	J3DModel* model = getModel();
+	MTXCopy(src, model->getBaseTRMtx());
+
+	getModel()->setBaseScale(mScaling);
+}
+
+// TODO: incorrect size. Map records 44 bytes and this is 60; the body is a
+// guess -- mKoopa is the only thing a "start message" would forward to, and
+// the ROM has no call site left to read the argument's meaning from.
+void TLimitKoopaJr::startKoopaJrMessage(u32 message)
+{
+	mKoopa->receiveMessage(this, message);
+}
+
+void TLimitKoopaJr::emitKoopaJrEffects() { }
+
+void TLimitKoopaJr::setAnimationIndex(int index)
+{
+	getMActor()->setBckFromIndex(index);
+
+	const char** table = getBasNameTable();
+	setAnmSound(table == nullptr ? nullptr : table[index]);
+}
+
+// TODO: incorrect size. Map records 52 bytes, ours 44: the ROM materialises
+// &unk158 and &mShotTimer and stores through the pointer while still loading
+// the value at a displacement off `this` (visible in perform, 97.9%). Neither
+// a static helper taking int& nor one taking int* reproduces it -- MWCC folds
+// the address back into the store and, worse, emits a symbol the map lacks.
+void TLimitKoopaJr::updateTimers()
+{
+	if (unk158 > 0)
+		unk158 -= 1;
+
+	if (mShotTimer > 0)
+		mShotTimer -= 1;
+}
+
+const char** TLimitKoopaJr::getBasNameTable() const { return koopajr_bastable; }
+
+BOOL TLimitKoopaJr::receiveMessage(THitActor* sender, u32 message)
+{
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER)
+		return TRUE;
+
+	return FALSE;
+}
+
+// The second theNerve() is only evaluated for its static-init side effect:
+// emitKoopaJrEffects() is empty, so MWCC keeps the registration but drops the
+// comparison and the branch.
+void TLimitKoopaJr::checkNerve()
+{
+	if (mSpine->getCurrentNerve() != &TNerveLimitKoopaJrWait::theNerve()
+	    && mSpine->getCurrentNerve() != &TNerveLimitKoopaJrRun::theNerve())
+		emitKoopaJrEffects();
+}
+
+// TODO: 77.7%. The arithmetic and call order match; what is left is the frame
+// (0x118 vs 0xf0), the batched vs interleaved stores of the new position, and
+// JGVec3.hpp's cross() store order, which is flagged "Incorrect!!!" in that
+// header and is not this unit's to change.
+void TLimitKoopaJr::moveRun()
+{
+	f32 angleVelocity
+	    = 0.017453294f * getSaveParams()->mSLRoundAngleVelocity.get();
+
+	TDirectionCalc target = calcTargetDirection();
+
+	TDirectionCalc next(
+	    mRoundDirection.calcTurnDirection(target.get(), angleVelocity));
+	f32 turn                   = next.sub(mRoundDirection.mDirection);
+	mRoundDirection.mDirection = next.get();
+
+	mRoundRadius = getSaveParams()->mSLRoundRadius.get();
+
+	JGeometry::TVec3<f32> offset = mRoundDirection.calcDirectionVector();
+	offset.scale(mRoundRadius);
+
+	const JGeometry::TVec3<f32>& center = mBathtub->mPosition;
+	mPosition.x                         = center.x + offset.x;
+	mPosition.y                         = center.y + offset.y;
+	mPosition.z                         = center.z + offset.z;
+	mPosition.y = getSaveParams()->mSLRoundHeight.get();
+
+	offset.normalize();
+
+	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
+	JGeometry::TVec3<f32> forward;
+	forward.cross(up, offset);
+	forward.normalize();
+
+	if (turn < 0.0f) {
+		forward.x = -forward.x;
+		forward.y = -forward.y;
+		forward.z = -forward.z;
+	}
+
+	JGeometry::TVec3<f32> dir(forward);
+	dir.normalize();
+
+	TDirectionCalc bodyTarget(dir);
+	mBodyDirection.mDirection = mBodyDirection.calcTurnDirection(
+	    bodyTarget.get(),
+	    mBodyDirection.d2r(getSaveParams()->mSLRotationSpeed.get()));
+}
+
+bool TLimitKoopaJr::canRun()
+{
+	if (mRoundDirection.absDirection(calcTargetDirection().get())
+	    <= 0.62831855f)
+		return false;
+
+	return true;
+}
+
+bool TLimitKoopaJr::canYahoo() { return SMS_IsMarioStatusTypeJumping(); }
+
+// TODO: incorrect size. Map records 288 bytes and this is 336, and the Wait
+// nerve stalls at 89.0% for the same reason: the ROM calls
+// TVec3::setLength(const TVec3&, f32) out of line here, while both setLength(f32)
+// and normalize() expand it in place for us. Same family as the per-call-site
+// inlining table in docs/catalog/codegen-tells.md.
+void TLimitKoopaJr::moveWait()
+{
+	JGeometry::TVec3<f32> toMario;
+	toMario.x = gpMarioPos->x - mPosition.x;
+	toMario.y = gpMarioPos->y - mPosition.y;
+	toMario.z = gpMarioPos->z - mPosition.z;
+	toMario.y = 0.0f;
+
+	JGeometry::TVec3<f32> dir = toMario;
+	dir.normalize();
+
+	TDirectionCalc target(dir);
+	mBodyDirection.mDirection = mBodyDirection.calcTurnDirection(
+	    target.get(),
+	    mBodyDirection.d2r(getSaveParams()->mSLRotationSpeed.get()));
+}
+
+TDirectionCalc TLimitKoopaJr::calcTargetDirection()
+{
+	TDirectionCalc calc;
+
+	THitActor* bathtub = mBathtub;
+	JGeometry::TVec3<f32> toMario;
+	toMario.x = bathtub->mPosition.x - gpMarioPos->x;
+	toMario.y = bathtub->mPosition.y - gpMarioPos->y;
+	toMario.z = bathtub->mPosition.z - gpMarioPos->z;
+	toMario.y = 0.0f;
+	calc.makeDirection(toMario);
+
+	return calc;
+}
+
+// TODO: incorrect size. Map records 256 bytes and this is 164. Nothing calls
+// it -- calcTargetDirection spells the same block out against mBathtub, which
+// is what the three live sites show -- so the extra 92 bytes are unexplained;
+// a setLength/normalize step on the result would be the obvious candidate.
+TDirectionCalc TLimitKoopaJr::makeDirection(JGeometry::TVec3<f32> point)
+{
+	TDirectionCalc calc;
+
+	JGeometry::TVec3<f32> toMario;
+	toMario.x = point.x - gpMarioPos->x;
+	toMario.y = point.y - gpMarioPos->y;
+	toMario.z = point.z - gpMarioPos->z;
+	toMario.y = 0.0f;
+	calc.makeDirection(toMario);
+
+	return calc;
+}
+
+DEFINE_NERVE(TNerveLimitKoopaJrRun, TLiveActor)
+{
+	TLimitKoopaJr* koopaJr = (TLimitKoopaJr*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		koopaJr->setAnimationIndex(TLimitKoopaJr::LIMITKOOPAJR_ANM_RUN);
+
+	if (!koopaJr->canRun()) {
+		spine->pushAfterCurrent(&TNerveLimitKoopaJrWait::theNerve());
+		return TRUE;
+	}
+
+	koopaJr->moveRun();
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveLimitKoopaJrWait, TLiveActor)
+{
+	TLimitKoopaJr* koopaJr = (TLimitKoopaJr*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		koopaJr->setAnimationIndex(TLimitKoopaJr::LIMITKOOPAJR_ANM_RUN);
+
+	if (koopaJr->canRun()) {
+		spine->pushAfterCurrent(&TNerveLimitKoopaJrRun::theNerve());
+		return TRUE;
+	}
+
+	if (koopaJr->canYahoo()) {
+		spine->pushAfterCurrent(&TNerveLimitKoopaJrYahoo::theNerve());
+		return TRUE;
+	}
+
+	if (koopaJr->mShotTimer <= 0) {
+		spine->pushAfterCurrent(&TNerveLimitKoopaJrLaunch::theNerve());
+		return TRUE;
+	}
+
+	koopaJr->moveWait();
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveLimitKoopaJrLaunch, TLiveActor)
+{
+	TLimitKoopaJr* koopaJr = (TLimitKoopaJr*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		koopaJr->setAnimationIndex(TLimitKoopaJr::LIMITKOOPAJR_ANM_DAMAGE);
+		koopaJr->mShotTimer
+		    = koopaJr->getSaveParams()->mSLShotDoodlePeriod.get();
+	}
+
+	if (koopaJr->getMActor()->curAnmEndsNext(0, nullptr)) {
+		spine->pushAfterCurrent(&TNerveLimitKoopaJrWait::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveLimitKoopaJrYahoo, TLiveActor)
+{
+	TLimitKoopaJr* koopaJr = (TLimitKoopaJr*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		koopaJr->setAnimationIndex(TLimitKoopaJr::LIMITKOOPAJR_ANM_YAHOO);
+
+	if (koopaJr->getMActor()->curAnmEndsNext(0, nullptr)) {
+		spine->pushAfterCurrent(&TNerveLimitKoopaJrWait::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+TLimitKoopaJrManager::TLimitKoopaJrManager(const char* name)
+    : TEnemyManager(name)
+{
+}
+
+void TLimitKoopaJrManager::createModelData()
+{
+	static const TModelDataLoadEntry entry[] = {
+		{ "koopajr_model.bmd",
+		  J3DMLF_MtxCalcMaya | J3DMLF_MaterialUseIndirect
+		      | J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ nullptr, 0, 0 },
+	};
+
+	createModelDataArray(entry);
+}
+
+void TLimitKoopaJrManager::load(JSUMemoryInputStream& stream)
+{
+	TEnemyManager::load(stream);
+	unk38 = new TLimitKoopaJrParams("/enemy/limitkoopajr.prm");
+}
+
+void TLimitKoopaJrManager::loadAfter() { }
+
+TSpineEnemy* TLimitKoopaJrManager::createEnemyInstance() { return nullptr; }
