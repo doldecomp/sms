@@ -1865,8 +1865,8 @@ void TDangoHamuKuri::calcRootMatrix()
 			if (unk230) {
 				unk210 += 40.0f;
 				if (unk210 > 360.0f) {
-					// TODO: should be a rand interval
-					unk210 = -MsRandF(10.0f, 20.0f);
+					TMsRange<f32> spin(10.0f, 20.0f);
+					unk210 = -spin.rand();
 					unk230 = 0;
 				}
 				TDangoHamuKuri* holder = (TDangoHamuKuri*)mHolder;
@@ -1898,8 +1898,8 @@ void TDangoHamuKuri::reset()
 	mPrev = nullptr;
 	mNext = nullptr;
 	mBoss = nullptr;
-	// TODO: rand interval
-	unk20C = MsRandF(0.0f, 1.0f);
+	TMsRange<f32> phase(0.0f, 1.0f);
+	unk20C = phase.rand();
 	mMActor->calc();
 }
 
@@ -2041,7 +2041,7 @@ void TDangoHamuKuri::swingBody()
 		if (mAttackSw) {
 			if (mPrev != nullptr) {
 				if (mPrev == mBoss) {
-					mPosition = mBoss->mPosition;
+					mRotation = mBoss->mRotation;
 					unk210 += 10.0f;
 				}
 
