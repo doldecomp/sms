@@ -1264,8 +1264,8 @@ void TFireWanwan::updateHitPoint()
 		mRecoverTimer += getSaveParam2()->mRecoverRate.get();
 		if (1.0f <= mRecoverTimer) {
 			mRecoverTimer -= 1.0f;
-			mHitPoints = JGeometry::TUtil<u32>::clamp((u8)(mHitPoints + 1), 0,
-			                                          getMaxHitPoints());
+			mHitPoints = JGeometry::TUtil<u8>::clamp(mHitPoints + 1, 0,
+			                                         getMaxHitPoints());
 		}
 	}
 	ensureTakeSituation();

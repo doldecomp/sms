@@ -81,8 +81,11 @@ void TEffectEnemy::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if ((cue & 2) && !(mLiveFlag & LIVE_FLAG_CLIPPED_OUT)) {
 		JGeometry::TVec3<f32> scale;
+		// Both are u8 (getMaxHitPoints() narrows the param), so this is an
+		// int division; reading the hit points through the accessor rather
+		// than the field is what puts the dividend in the higher register.
 		VECScale(&mScaling, &scale,
-		         (f32)((s32)mHitPoints / (s32)(u8)getMaxHitPoints()));
+		         (f32)(getHitPoints() / getMaxHitPoints()));
 
 		gpMarioParticleManager->emitAndBindToPosPtr(0x1ED, &mPosition, 3, this);
 		gpMarioParticleManager->emitAndBindToPosPtr(0x135, &mPosition, 1, this);

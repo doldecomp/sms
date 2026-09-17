@@ -133,13 +133,8 @@ static int PakkunRootCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
 		if (gpCurPakkun == nullptr
-		    // TODO: the clrlwi the original has here says the maximum was
-		    // compared as a u8, i.e. TSpineEnemy::getMaxHitPoints returned
-		    // u8 rather than u32. Changing the header costs
-		    // TEffectEnemy::perform (exact -> 99.8%) and TFireWanwan::
-		    // moveObject, so the truncation lives here for now.
 		    || gpCurPakkun->getHitPoints()
-		           == (u8)gpCurPakkun->getMaxHitPoints())
+		           == gpCurPakkun->getMaxHitPoints())
 			return 1;
 
 		J3DJoint* joint = (J3DJoint*)node;
@@ -887,9 +882,7 @@ void TStayPakkun::setBehavior()
 	if (isBckAnm(PAKKUN_ANM_UNK4))
 		mHitPoints--;
 
-	// TODO: the same u8 truncation of getMaxHitPoints as in
-	// PakkunRootCallback; here it is what makes the division signed.
-	mBodyColor.a = mHitPoints * 255 / (u8)getMaxHitPoints();
+	mBodyColor.a = mHitPoints * 255 / getMaxHitPoints();
 	mExplosionScale
 	    = 1.0f
 	      + TPakkunManager::mRootExplosionScaleRate * (255 - mBodyColor.a)

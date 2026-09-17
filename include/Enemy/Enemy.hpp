@@ -84,9 +84,17 @@ public:
 	f32 getWallRadius() const { return mBodyScale * mWallRadius; }
 	f32 getBodyRadius() const { return mBodyScale * mBodyRadius; }
 	f32 getBodyScale() const { return mBodyScale; }
-	u32 getMaxHitPoints() const
+	// u8, not u32: TStayPakkun::setBehavior divides by it with divwu and
+	// PakkunRootCallback compares against it after a clrlwi, both of which
+	// need the narrowed type. The (u8) on the constant matters too -- with a
+	// plain 1 the ternary is an int expression and MWCC narrows it on the way
+	// out, which is one instruction more than TFireWanwan::updateHitPoint has
+	// (73.4 against 73.9); with both operands u8 the narrowing moves into the
+	// clamp's comparison where retail has it. Writing the body as two returns
+	// does the same.
+	u8 getMaxHitPoints() const
 	{
-		return getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
+		return getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : (u8)1;
 	}
 
 	// fabricated TODO: remove
