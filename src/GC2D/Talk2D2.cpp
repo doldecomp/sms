@@ -7,7 +7,6 @@
 #include <Camera/Camera.hpp>
 #include <MSound/BackgroundMusic.hpp>
 #include <MSound/MSound.hpp>
-#include <MSound/MSoundBGM.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <MSound/SoundEffects.hpp>
 #include <MarioUtil/DrawUtil.hpp>
@@ -37,6 +36,7 @@
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 #include <System/DummyStrings.hpp>
 
@@ -66,7 +66,7 @@ TTalk2D2* gpTalk2D;
  * -1 means "this message is silent". Entry 0x82 is the race fanfare, a BGM
  * rather than an SE, which is why setMessageID() has to test bit 31.
  */
-static s32 scTalkSoundList[] = {
+static const s32 scTalkSoundList[] = {
 	MSD_SE_NPC_VM_PEACH_NORMAL, MSD_SE_NPC_VM_PEACH_SURPRS,
 	MSD_SE_NPC_VM_PEACH_WORRY, MSD_SE_NPC_VM_PEACH_ANGER_L,
 	MSD_SE_NPC_VM_PEACH_APPEAL, MSD_SE_NPC_VM_PEACH_DOUBT,
@@ -137,7 +137,7 @@ static s32 scTalkSoundList[] = {
 };
 
 /// The six colours a `\033\x02\xff\x00` colour tag can select.
-JUtility::TColor TTalk2D2::cColorTable[6] = {
+u32 TTalk2D2::cColorTable[6] = {
 	0xffffffff, 0xffffffff, 0xffb48cff, 0x6ee6ffff, 0xffff00ff, 0xaaff50ff,
 };
 
@@ -846,17 +846,18 @@ void TTalk2D2::moveTalkWindow()
 			cursor->setAlpha(alpha);
 
 			if (mSelectedValue == 1) {
-				mSelectTextBox->setString(
+				snprintf(
+				    mSelectTextBox->getStringPtr(), 94,
 				    "\033CC[ffffff60]\033GC[ffffff60]%s\033CC[ffffff%02x]"
 				    "\033GC[ffffff%02x]\n%s",
 				    mSelectString[0], (u8)alpha, (u8)alpha,
 				    mSelectString[1]);
 			} else if (mSelectedValue == 0) {
-				mSelectTextBox->setString(
-				    "\033CC[ffffff%02x]\033GC[ffffff%02x]%s\n"
-				    "\033CC[ffffff60]\033GC[ffffff60]%s",
-				    (u8)alpha, (u8)alpha, mSelectString[0],
-				    mSelectString[1]);
+				snprintf(mSelectTextBox->getStringPtr(), 94,
+				         "\033CC[ffffff%02x]\033GC[ffffff%02x]%s\n"
+				         "\033CC[ffffff60]\033GC[ffffff60]%s",
+				         (u8)alpha, (u8)alpha, mSelectString[0],
+				         mSelectString[1]);
 			}
 		} else {
 			pane->show();
@@ -1382,14 +1383,14 @@ void TTalk2D2::setupTextBox(const void* data, JMSMesgEntry* entry)
 
 	if (mSelectedValue != -1) {
 		if (mSelectedValue == 0) {
-			mSelectTextBox->setString(
-			    "%s\n\033CC[7f7f7f]\033GC[7f7f7f]%s", mSelectString[0],
-			    mSelectString[1]);
+			snprintf(mSelectTextBox->getStringPtr(), 94,
+			         "%s\n\033CC[7f7f7f]\033GC[7f7f7f]%s", mSelectString[0],
+			         mSelectString[1]);
 		} else {
-			mSelectTextBox->setString(
-			    "\033CC[7f7f7f]\033GC[7f7f7f]%s"
-			    "\033CC[ffffff]\033GC[ffffff]\n%s",
-			    mSelectString[0], mSelectString[1]);
+			snprintf(mSelectTextBox->getStringPtr(), 94,
+			         "\033CC[7f7f7f]\033GC[7f7f7f]%s"
+			         "\033CC[ffffff]\033GC[ffffff]\n%s",
+			         mSelectString[0], mSelectString[1]);
 		}
 	}
 

@@ -123,7 +123,9 @@ public:
 	void setTagParam(JSUMemoryInputStream&, J2DTextBox&, int*, int*);
 	void openWindow(s8, f32);
 
-	static JUtility::TColor cColorTable[6];
+	/// Packed RGBA, not JUtility::TColor: retail initialises the table
+	/// statically, which TColor's constructors would prevent.
+	static u32 cColorTable[6];
 
 	u32 getTalkMode() const { return mTalkMode; }
 	s8 getSelectedValue() const { return mSelectedValue; }
