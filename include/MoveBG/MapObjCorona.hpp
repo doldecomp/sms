@@ -67,13 +67,10 @@ public:
 	/* 0x168 */ TBathtubGrip** unk168;
 	/* 0x16C */ TBathtubParams* unk16C;
 	/* 0x170 */ TBathtubData mBathtubData;
-	/* 0x1D8 */ f32 unk1D8;
-	/* 0x1DC */ f32 unk1DC;
-	/* 0x1E0 */ f32 unk1E0;
-	/* 0x1E4 */ f32 unk1E4;
-	/* 0x1E8 */ f32 unk1E8;
-	/* 0x1EC */ f32 unk1EC;
-	/* 0x1F0 */ f32 unk1F0;
+	/// Bathtub tilt, as a unit quaternion.
+	/* 0x1D8 */ JGeometry::TQuat4<f32> mQuat;
+	/// Angular velocity that integrates into mQuat each frame.
+	/* 0x1E8 */ JGeometry::TVec3<f32> mAngleVel;
 	/* 0x1F4 */ JGeometry::TVec3<f32> unk1F4;
 	/* 0x200 */ JGeometry::TVec3<f32> unk200;
 	/* 0x20C */ u8 unk20C[0x30];
@@ -83,9 +80,9 @@ public:
 	/* 0x248 */ int unk248;
 	/* 0x24C */ int unk24C;
 	/* 0x250 */ int unk250;
-	/* 0x254 */ u32 unk254;
-	/* 0x258 */ u32 unk258;
-	/* 0x25C */ u32 unk25C;
+	/* 0x254 */ int unk254;
+	/* 0x258 */ int unk258;
+	/* 0x25C */ int unk25C;
 	/* 0x260 */ int mMarioJntIdx;
 	/* 0x264 */ int mStarJntIdx;
 	/* 0x268 */ int mShineBodyJntIdx;

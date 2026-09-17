@@ -1,21 +1,27 @@
 #include <MoveBG/MapObjCorona.hpp>
-#include <Map/MapCollisionEntry.hpp>
-#include <M3DUtil/MActor.hpp>
+#include <System/DummyStrings.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
+#include <Map/MapCollisionManager.hpp>
+#include <Camera/CameraShake.hpp>
 #include <Enemy/BathtubKiller.hpp>
+#include <Enemy/Koopa.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <JSystem/JMath.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
+#include <JSystem/JKernel/JKRFileLoader.hpp>
+#include <JSystem/JUtility/JUTNameTab.hpp>
+#include <M3DUtil/MActor.hpp>
+#include <Map/MapCollisionEntry.hpp>
+#include <MarioUtil/RumbleMgr.hpp>
+#include <MSound/MSound.hpp>
+#include <MSound/MSoundSE.hpp>
+#include <MSound/SoundEffects.hpp>
 #include <Player/Mario.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Player/WaterGun.hpp>
 #include <System/Application.hpp>
 #include <System/Particles.hpp>
-#include <MarioUtil/RumbleMgr.hpp>
-#include <MSound/MSound.hpp>
-#include <MSound/MSoundSE.hpp>
-#include <MSound/SoundEffects.hpp>
-#include <JSystem/JDrama/JDRNameRefGen.hpp>
-#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
-#include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
-#include <JSystem/JKernel/JKRFileLoader.hpp>
-#include <JSystem/JUtility/JUTNameTab.hpp>
 #include <stdio.h>
 #include <math.h>
 
@@ -343,9 +349,50 @@ void TBathtubGrip::control()
 
 void TBathtub::loadAfter() { }
 
-void TBathtub::hipdrop(const JGeometry::TVec3<f32>&) { }
+void TBathtub::hipdrop(const JGeometry::TVec3<f32>& pos)
+{
+	if (unk29A)
+		return;
+	if (unk250 > unk16C->hipdropRelease.get())
+		return;
+	// Same discarded direction as quake().
+	// TODO: body exact, frame 0x88 against retail's 0x98 (a 16-byte local).
+	JGeometry::TVec3<f32> dir;
+	dir.sub(pos, getInitialPosition());
+	dir.y = 0.0f;
+	dir.normalize();
+	unk250 = unk16C->hipdropRelease.get();
+	unk258 = unk16C->hipdropRecover.get();
+	unk25C = unk16C->hipdropRecover.get();
+	unk254 = unk16C->hipdropRelease.get();
+	JDrama::TNameRefGen::search<TKoopa>("\x83\x4e\x83\x62\x83\x70")
+	    ->stagger(false);
+}
 
-void TBathtub::quake(const JGeometry::TVec3<f32>&) { }
+void TBathtub::quake(const JGeometry::TVec3<f32>& pos)
+{
+	if (unk29A)
+		return;
+	// The direction is thrown away in the shipped build; only the inlined
+	// inv_sqrt guard survives.
+	// TODO: body exact, frame 0x98 against retail's 0xa0 (one 8-byte local).
+	JGeometry::TVec3<f32> dir;
+	dir.sub(pos, getInitialPosition());
+	dir.y = 0.0f;
+	dir.normalize();
+	unk24C = 300;
+	unk250 = unk16C->quakeRelease.get();
+	unk258 = unk16C->quakeRecover.get();
+	unk25C = unk16C->quakeRecover.get();
+	unk254 = unk16C->hipdropRelease.get();
+	unk248 = unk16C->launchStopCount.get();
+	TKoopa* koopa = JDrama::TNameRefGen::search<TKoopa>("\x83\x4e\x83\x62\x83\x70");
+	gpCameraShake->startShake((EnumCamShakeMode)0x25, 1.0f);
+	gpCameraShake->startShake((EnumCamShakeMode)0x26, 1.0f);
+	SMSRumbleMgr->start(4, (f32*)nullptr);
+	SMS_ThrowMario(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), 10.0f);
+	koopa->getDown();
+}
 
 int TBathtub::getNumGripsDead() const
 {
@@ -370,7 +417,14 @@ void TBathtub::trample(const JGeometry::TVec3<f32>&)
 // Unused
 void TBathtub::liftMario(const JGeometry::TVec3<f32>&) { }
 
-void TBathtub::tumble(f32, f32) { }
+void TBathtub::tumble(f32 angle, f32 power)
+{
+	if (unk29A)
+		return;
+	f32 amount = power * 0.0001f;
+	mAngleVel.add(JGeometry::TVec3<f32>(amount * JMACos(angle), 0.0f,
+	    amount * -JMASin(angle)));
+}
 
 MtxPtr TBathtub::getTakingMtx()
 {
@@ -404,7 +458,26 @@ MtxPtr TBathtub::getKoopaJrMtxInDemo()
 	return mMActor->getModel()->getAnmMtx(mJuniorJntIdx);
 }
 
-BOOL TBathtub::receiveMessage(THitActor* sender, u32 message) { return false; }
+// TODO: retail calls hipdrop() from both hip-drop cases and only inlines
+// trample(); we inline all three. hipdrop is instruction-exact on its own, so
+// the difference is the per-caller inline budget, not its body.
+BOOL TBathtub::receiveMessage(THitActor* sender, u32 message)
+{
+	switch (message) {
+	case HIT_MESSAGE_HIP_DROP:
+		hipdrop(*gpMarioPos);
+		return true;
+	case HIT_MESSAGE_SUPER_HIP_DROP:
+		hipdrop(*gpMarioPos);
+		return true;
+	case HIT_MESSAGE_TRAMPLE:
+		trample(*gpMarioPos);
+		return true;
+	case HIT_MESSAGE_PUSH_UP:
+	default:
+		return false;
+	}
+}
 
 Mtx* TBathtub::getRootJointMtx() const
 {
@@ -532,7 +605,52 @@ u8 TBathtub::getNextGrip(const JGeometry::TVec3<f32>&,
 // Unused
 void TBathtub::showMessage(u32) { }
 
-void TBathtub::updatePosture_() { }
+void TBathtub::updatePosture_()
+{
+	static JGeometry::TVec3<f32> y(0.0f, 1.0f, 0.0f);
+
+	if (unk250 != 0) {
+		unk250--;
+	} else {
+		f32 rate;
+		if (unk258 == 0) {
+			rate = 1.0f;
+		} else {
+			unk258--;
+			rate = 1.0f - (f32)unk258 / (f32)unk25C;
+		}
+		JGeometry::TVec3<f32> up;
+		mQuat.getYDir(up);
+		JGeometry::TVec3<f32> axis;
+		axis.cross(y, up);
+		axis.normalize();
+		axis.scale(unk16C->rebound.get() * (rate * -acosf(y.dot(up))));
+		mAngleVel.scaleAdd(unk16C->angleVelDamp.get(), axis, mAngleVel);
+	}
+
+	JGeometry::TQuat4<f32> dq;
+	dq.x = 0.5f * mAngleVel.x;
+	dq.y = 0.5f * mAngleVel.y;
+	dq.z = 0.5f * mAngleVel.z;
+	dq.w = 0.0f;
+	dq.mul(dq, mQuat);
+	mQuat.x += dq.x;
+	mQuat.y += dq.y;
+	mQuat.z += dq.z;
+	mQuat.w += dq.w;
+	mQuat.normalize();
+
+	JGeometry::TVec3<f32> up;
+	mQuat.getYDir(up);
+	f32 angle = acosf(y.dot(up));
+	f32 excess = angle - unk16C->maxAngle.get() * 0.017453292f;
+	if (excess > 0.0f) {
+		JGeometry::TQuat4<f32> limit;
+		limit.setRotate(up, y, excess / angle);
+		mQuat.mul(limit, mQuat);
+	}
+	mQuat.normalize();
+}
 
 void TBathtub::load(JSUMemoryInputStream&) { }
 
@@ -544,12 +662,9 @@ TBathtub::TBathtub(const char* name)
     , unk290(0)
 {
 	unk16C = new TBathtubParams;
-	unk1D8 = 0.0f;
-	unk1DC = 0.0f;
-	unk1E0 = 0.0f;
-	unk1E4 = 1.0f;
+	mQuat.set(0.0f, 0.0f, 0.0f, 1.0f);
 	mPosition.x = mPosition.y = mPosition.z = 0.0f;
-	unk1E8 = unk1EC = unk1F0 = 0.0f;
+	mAngleVel.zero();
 	unk250 = 0;
 	unk254 = 1;
 	unk258 = 0;
@@ -564,15 +679,58 @@ TBathtub::TBathtub(const char* name)
 }
 
 // Unused
-bool TBathtub::isKillerLaunchable() const { return false; }
+bool TBathtub::isKillerLaunchable() const
+{
+	if (unk29A)
+		return false;
+	if (!JDrama::TNameRefGen::search<TKoopa>("\x83\x4e\x83\x62\x83\x70")
+	         ->allowsLaunch())
+		return false;
+	return isKillerAttackable();
+}
 
-int TBathtub::getNumKillerLaunchable() const { return 0; }
+int TBathtub::getNumKillerLaunchable() const
+{
+	if (!isKillerLaunchable())
+		return 0;
+	int num = getNumGripsDead() + 1;
+	if (num < 2)
+		num = 2;
+	if (num > 4)
+		num = 4;
+	return num;
+}
 
-bool TBathtub::isKillerAttackable() const { return false; }
+bool TBathtub::isKillerAttackable() const { return unk248 <= 0; }
 
-// Unused
-bool TBathtub::isBreaking() const { return false; }
+// Unused; TODO: size 0x84 in the map, our guess compiles smaller.
+bool TBathtub::isBreaking() const { return getNumGripsDead() >= 4; }
 
-int TBathtub::getNumKillerBurstable() const { return 0; }
+int TBathtub::getNumKillerBurstable() const
+{
+	if (!isKillerLaunchable())
+		return 0;
+	int dead = getNumGripsDead();
+	if (dead >= 4)
+		return 8;
+	if (allowsTumble())
+		return 0;
+	if (unk250 != 0)
+		return 0;
+	if (unk258 != 0)
+		return 0;
+	switch (dead) {
+	case 1:
+		return 4;
+	case 2:
+		return 6;
+	case 3:
+		return 8;
+	case 4:
+		return 8;
+	default:
+		return 0;
+	}
+}
 
 TBathtub::~TBathtub() { }
