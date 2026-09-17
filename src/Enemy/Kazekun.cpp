@@ -283,14 +283,15 @@ void TKazekun::getAroundQuat(JGeometry::TQuat4<f32>& quat,
 	SMS_CalcToDirMatrix(mtx, dir, up);
 	mtx.getQuat(quat);
 
-	f32 halfAngle = 0.5f * ((2.0f - rate) * 1.5707964f);
-
 	JGeometry::TVec3<f32> axis;
 	mtx.getYDir(axis);
 
+	// rate 0 turns a full right angle away from `dir`, rate 2 heads straight
+	// along it. Spelling this as setRotate rather than a named half-angle plus
+	// scale/cos keeps the helper cheap enough for MWCC to expand it inside the
+	// inlined doAttack, which is what the retail Attack nerve does.
 	JGeometry::TQuat4<f32> around;
-	around.xyz().scale(sinf(halfAngle), axis);
-	around.w = cosf(halfAngle);
+	around.setRotate(axis, (2.0f - rate) * 1.5707964f);
 
 	quat.mul(quat, around);
 }
@@ -302,25 +303,17 @@ void TKazekun::doAttackPose(bool start)
 	toMario.y = 0.0f;
 
 	if (start) {
-		TPosition3f mtx;
-		JGeometry::TVec3<f32> up;
-		up.set(0.0f, 1.0f, 0.0f);
-		SMS_CalcToDirMatrix(mtx, toMario, up);
-
+		// rate 1 is halfway between flying around Mario and flying
+		// straight at him, so the pose leans 45 degrees into the charge;
+		// MWCC folds getAroundQuat's angle down to sinf/cosf(pi/4).
 		JGeometry::TQuat4<f32> quat;
-		mtx.getQuat(quat);
-
-		JGeometry::TQuat4<f32> lean;
-		lean.xyz().scale(sinf(0.7853982f),
-		                 JGeometry::TVec3<f32>(mtx.at(0, 1), mtx.at(1, 1),
-		                                       mtx.at(2, 1)));
-		lean.w = cosf(0.7853982f);
-
-		quat.mul(lean);
+		getAroundQuat(quat, toMario, 1.0f);
 		mQuat = quat;
 
-		JGeometry::TVec3<f32> vel(0.0f, 0.0f, getSaveParams()->getPoseSpeed());
-		quat.rotate(vel);
+		TKazekunParams* params = getSaveParams();
+		JGeometry::TVec3<f32> vel(0.0f, 0.0f,
+		                          getSaveParams()->mPoseSpeed.get());
+		quat.rotate(vel, vel);
 		mVelocity = vel;
 	}
 
@@ -329,20 +322,41 @@ void TKazekun::doAttackPose(bool start)
 
 	JGeometry::TQuat4<f32> spin;
 	spin.setRotate(down, 3.1415927f * getSaveParams()->getPoseOmegaRate());
-	spin.mul(mQuat);
+	spin.mul(spin, mQuat);
 	mQuat = spin;
 
-	JGeometry::TVec3<f32> vel = mVelocity;
-	JGeometry::TVec3<f32> forward(0.0f, 0.0f, vel.length());
-	mQuat.rotate(forward);
+	JGeometry::TVec3<f32> velocity = mVelocity;
+	JGeometry::TVec3<f32> forward(0.0f, 0.0f, velocity.length());
+	spin.rotate(forward, forward);
 	mVelocity = forward;
 }
 
-// UNUSED, 0x4b0 in the map, and dead: nothing in the TU has the right shape
-// for a call to it, and doAttackPose is what the nerves use instead. Left
-// unreconstructed rather than guessed at 300 instructions.
-// TODO: incorrect size. Map records 1200 bytes.
-void TKazekun::doAttack(bool start) { }
+// UNUSED, 0x4b0 in the map. TNerveKazekunAttack inlines it twice: once with
+// `start` true, to aim the charge at the goal path node, and once with it
+// false, to keep easing the facing towards the flight direction. Only the
+// charge gets the full right angle (rate 2), which MWCC folds getAroundQuat's
+// angle down to sinf/cosf(0).
+void TKazekun::doAttack(bool start)
+{
+	if (start) {
+		changeBck("kazekun_attack");
+
+		JGeometry::TVec3<f32> toGoal(getUnk104().getPoint());
+		toGoal.sub(mPosition);
+		toGoal.setLength(getSaveParams()->getAttackSpeed());
+		mVelocity = toGoal;
+	}
+
+	JGeometry::TQuat4<f32> quat = mQuat;
+	JGeometry::TVec3<f32> dir   = mVelocity;
+
+	JGeometry::TQuat4<f32> target;
+	getAroundQuat(target, dir, 2.0f);
+
+	quat.slerp(target, 0.1f);
+	quat.normalize();
+	mQuat = quat;
+}
 
 // UNUSED, 0x4c in the map: the spirit is invisible between attack runs.
 void TKazekun::setVisible(bool visible)
@@ -496,24 +510,10 @@ DEFINE_NERVE(TNerveKazekunAttack, TLiveActor)
 {
 	TKazekun* kazekun = (TKazekun*)spine->getBody();
 
-	if (spine->getTime() == 0) {
-		kazekun->changeBck("kazekun_attack");
+	if (spine->getTime() == 0)
+		kazekun->doAttack(true);
 
-		JGeometry::TVec3<f32> toGoal(kazekun->getUnk104().getPoint());
-		toGoal.sub(kazekun->mPosition);
-		toGoal.setLength(toGoal, kazekun->getSaveParams()->getAttackSpeed());
-		kazekun->mVelocity = toGoal;
-
-		JGeometry::TQuat4<f32> quat = kazekun->mQuat;
-		JGeometry::TVec3<f32> dir   = kazekun->mVelocity;
-		kazekun->getAroundQuat(quat, dir, 2.0f);
-		kazekun->mQuat = quat;
-	}
-
-	JGeometry::TQuat4<f32> quat = kazekun->mQuat;
-	JGeometry::TVec3<f32> dir   = kazekun->mVelocity;
-	kazekun->getAroundQuat(quat, dir, 2.0f);
-	kazekun->mQuat = quat;
+	kazekun->doAttack(false);
 
 	JGeometry::TVec3<f32> vel = kazekun->mVelocity;
 	vel.scale(kazekun->getSaveParams()->getAirFric());
