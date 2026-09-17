@@ -70,6 +70,14 @@ static u32 scScenarioNameTable[] = {
 	0x1E, 0x21, 0x20, 0x23, 0x22, 0x1F, 0x24, 0x25, 0x26, 0x27,
 };
 
+// The ten normal stage ids in menu order. Linked in SelectMenu.cpp and
+// Guide.cpp and UNUSED (0x28) in PauseMenu2.cpp, CardLoad.cpp and
+// ConsoleStr.cpp, and its .data slot sits right after scScenarioNameTable in
+// both objects that keep it, so it is declared here and next to it.
+static u32 scNormalStageTable[] = {
+	0x0, 0x1, 0x2, 0x3, 0x4, 0xD, 0x6, 0x8, 0x9, 0xA,
+};
+
 // size matches
 static u16 SMS_getNormalStage(u32 param_1)
 {

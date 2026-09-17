@@ -27,15 +27,6 @@
 #include <MSound/MSoundBGM.hpp>
 #include <System/DummyStrings.hpp>
 
-// TODO: belongs in System/StageUtil.hpp next to scScenarioNameTable -- the
-// map lists it (0x28, ten words) in every TU that includes that header
-// (PauseMenu2, CardLoad, ConsoleStr as UNUSED, SelectMenu and Guide linked),
-// and its .data position is right after scScenarioNameTable. Kept local here
-// so the shared header stays untouched; moving it needs its own baseline.
-static u32 scNormalStageTable[] = {
-	0x0, 0x1, 0x2, 0x3, 0x4, 0xD, 0x6, 0x8, 0x9, 0xA,
-};
-
 /// Frames left before the guide archive is swapped in. In .sbss, so it
 /// survives the screen being torn down and rebuilt.
 static u8 setup_wait;
