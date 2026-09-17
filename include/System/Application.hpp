@@ -26,12 +26,12 @@ f32 SMSGetAnmFrameRate();
 void* SMSLoadArchive(const char*, void*, u32, JKRHeap*);
 
 struct TARAMBlock {
-	/* 0x0 */ JKRAramBlock* unk0;
-	/* 0x4 */ bool unk4;
+	/* 0x0 */ JKRAramBlock* mBlock;
+	/* 0x4 */ bool mIsCompressed;
 };
-void SMSLoadArchiveARAM(TARAMBlock*, const char*);
-void SMSMountAramArchive(JKRMemArchive*, TARAMBlock&);
-JKRArchive* SMSSwitch2DArchive(const char*, TARAMBlock&);
+void SMSLoadArchiveARAM(TARAMBlock* out_block, const char* path);
+void SMSMountAramArchive(JKRMemArchive* archive, TARAMBlock& block);
+JKRArchive* SMSSwitch2DArchive(const char* arc_path, TARAMBlock& block);
 extern TARAMBlock gArBkConsole;
 extern TARAMBlock gArBkGuide;
 extern JUTResFont* gpSystemFont;
