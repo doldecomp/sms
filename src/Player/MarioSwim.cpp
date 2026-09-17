@@ -34,7 +34,7 @@ void TMario::doSwimming()
 		rotMaxF = (f32)mSwimParams.mSwimmingRotSpMax.get();
 	}
 
-	s16 rotSp    = mForwardVel / 32.0f * (rotMaxF - rotMinF) + rotMinF;
+	s16 rotSp    = mForwardVel * (rotMaxF - rotMinF) / 32.0f + rotMinF;
 	s16 diff     = mIntendedYaw - mFaceAngle.y;
 	mFaceAngle.y = mIntendedYaw - IConverge(diff, 0, rotSp, rotSp);
 
@@ -50,7 +50,7 @@ void TMario::doSwimming()
 		depthRatio = 1.0f;
 
 	if (mAnimationId == ANIM_SWIM_WAIT || mAnimationId == ANIM_SWIM_START
-	    || mStatus == MARIO_STATUS_SWIM_WAIT)
+	    || getStatus() == MARIO_STATUS_SWIM_WAIT)
 		depthRatio *= mSwimParams.mWaitBouyancy.get();
 	else
 		depthRatio *= mSwimParams.mMoveBouyancy.get();
@@ -80,11 +80,11 @@ void TMario::doSwimming()
 
 	if (mFloorPosition.z > mFloorPosition.y + 400.0f
 	    && mPosition.y < mFloorPosition.y + 100.0f
-	    && mStatus != MARIO_STATUS_SWIM_WAIT) {
-		unk1B4   = mPosition;
-		unk1B4.y = mFloorPosition.y;
+	    && getStatus() != MARIO_STATUS_SWIM_WAIT) {
+		mFootprintPos   = mPosition;
+		mFootprintPos.y = mFloorPosition.y;
 		gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_M_SEASMOKE,
-		                                            &unk1B4, 1, this);
+		                                            &mFootprintPos, 1, this);
 	}
 
 	if (mPosition.y < mFloorPosition.y + 35.0f)
@@ -102,7 +102,7 @@ BOOL TMario::checkSwimJump()
 
 		if (mFloorPosition.z - mSwimParams.mCanJumpDepth.get() < mPosition.y) {
 			bool doJump = false;
-			if (mIntendedMag == 0.0f)
+			if (getIntendedMag() == 0.0f)
 				doJump = true;
 			if (mWallPlane != nullptr)
 				doJump = true;
@@ -116,7 +116,7 @@ BOOL TMario::checkSwimJump()
 			}
 		}
 
-		if (mIntendedMag == 0.0f)
+		if (getIntendedMag() == 0.0f)
 			return changePlayerStatus(MARIO_STATUS_SWIM_UP, 0, false);
 		return changePlayerStatus(MARIO_STATUS_SWIM_PADDLE_START, 0, false);
 	}
@@ -125,7 +125,8 @@ BOOL TMario::checkSwimJump()
 
 BOOL TMario::checkSwimToHangFence()
 {
-	if (mIntendedMag > 0.0f && mWallPlane != nullptr && mWallPlane->isFence()) {
+	if (getIntendedMag() > 0.0f && mWallPlane != nullptr
+	    && mWallPlane->isFence()) {
 		s16 wallAng
 		    = matan(mWallPlane->getNormal().z, mWallPlane->getNormal().x);
 		s16 diff = mFaceAngle.y - wallAng;
@@ -217,7 +218,7 @@ BOOL TMario::swimPaddle()
 		startSoundActor(MSD_SE_MA_SURF_WATER);
 	}
 
-	if (mIntendedMag == 0.0f)
+	if (getIntendedMag() == 0.0f)
 		changePlayerStatus(MARIO_STATUS_SWIM_PADDLE_END, 0, false);
 
 	doSwimming();
@@ -330,6 +331,12 @@ BOOL TMario::swimPDown()
 	return 0;
 }
 
+// TODO: frame 0x60 vs 0x68 -- 8 bytes of locals still missing. getStatus() for
+// the three mStatus reads here and getIntendedMag() inside the inlined
+// checkSwimToHangFence each bought 8; naming checkSwimJump()'s result and
+// jumpProcess()'s result in doSwimming bought nothing (scalar slots saturate).
+// The residue is probably a local in one of the eleven UNUSED swim* bodies
+// inlined below, all of which are size-exact against the map.
 BOOL TMario::swimMain()
 {
 	if (checkFlag(MARIO_FLAG_GAME_OVER))
@@ -347,11 +354,11 @@ BOOL TMario::swimMain()
 	unk2A8.y = mFloorPosition.z;
 
 	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING))
-		if (mStatus != MARIO_STATUS_SWIM_PADDLE_START
-		    && mStatus != MARIO_STATUS_SWIM_PADDLE)
+		if (getStatus() != MARIO_STATUS_SWIM_PADDLE_START
+		    && getStatus() != MARIO_STATUS_SWIM_PADDLE)
 			return changePlayerStatus(MARIO_STATUS_SWIM_PADDLE_START, 0, false);
 
-	switch (mStatus) {
+	switch (getStatus()) {
 	case MARIO_STATUS_SWIM_START:
 		return swimStart();
 
