@@ -180,7 +180,7 @@ public:
 	/* 0x270 */ u32 mFlags;
 	/* 0x274 */ int mCurrentLine;
 	/* 0x278 */ int mTextOffset;
-	/* 0x27C */ JUtility::TColor mCharColor;
+	/* 0x27C */ u32 mCharColor; // see the TColor(u32) conversions at every use
 	/* 0x280 */ u8 mCharDelay;
 	/* 0x281 */ u8 mCharDelays[CHAR_NUM];
 	/* 0x2DC */ s16 mCharTimer;

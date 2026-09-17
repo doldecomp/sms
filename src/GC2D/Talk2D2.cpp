@@ -40,6 +40,23 @@
 #include <M3DUtil/InfectiousStrings.hpp>
 #include <System/DummyStrings.hpp>
 
+/**
+ * @brief Set a text box's two gradient colours.
+ *
+ * @details TODO: this is J2DTextBox::setGradColor(TColor, TColor), which
+ * belongs in JSystem/J2D/J2DTextBox.hpp next to setBlackWhite (retail builds
+ * the two by-value TColor temporaries on the stack exactly as an out-of-line
+ * pair of by-value parameters would). Parked here so the shared J2D header
+ * stays untouched for now.
+ */
+static inline void SMSSetTextBoxGradColor(J2DTextBox* box,
+                                          JUtility::TColor char_color,
+                                          JUtility::TColor grad_color)
+{
+	box->mCharColor = char_color;
+	box->mGradColor = grad_color;
+}
+
 TTalk2D2* gpTalk2D;
 
 /**
@@ -147,7 +164,7 @@ TTalk2D2::TTalk2D2(const char* name)
     , mFlags(1)
     , mCurrentLine(0)
     , mTextOffset(0)
-    , mCharColor()
+    , mCharColor(0xffffffff)
     , mCharDelay(0)
     , mCharTimer(0)
     , mBaseX(0)
@@ -296,8 +313,7 @@ void TTalk2D2::loadAfter()
 	};
 
 	for (int i = 0; i < 10; i++) {
-		mNpcMessages[i].mNpc = JDrama::TNameRefGen::getInstance()->getNameRef(
-		    names[i]);
+		mNpcMessages[i].mNpc = JDrama::TNameRefGen::search2(names[i]);
 		mNpcMessages[i].mMessageID = ids[i];
 	}
 }
@@ -1287,8 +1303,9 @@ void TTalk2D2::setupTextBox(const void* data, JMSMesgEntry* entry)
 			}
 
 			u16 idx = col + line * LINE_LENGTH;
-			mCharBox[idx]->setBlackWhite(mCharColor,
-			                             mCharColor & 0xffffff00);
+			SMSSetTextBoxGradColor(mCharBox[idx], mCharColor, mCharColor);
+			mCharBox[idx]->setBlackWhite(mCharColor & 0xffffff00,
+			                             mCharColor);
 			mCharDelays[mCharIndex] = mCharDelay;
 			mCharIndex              = idx;
 			col++;
@@ -1323,12 +1340,15 @@ void TTalk2D2::setupTextBox(const void* data, JMSMesgEntry* entry)
 void TTalk2D2::setTagParam(JSUMemoryInputStream& stream, J2DTextBox& box,
                            int* col, int* line)
 {
-	u8 size;
-	stream.read(&size, 1);
-	u8 group;
-	stream.read(&group, 1);
-	u16 tag;
-	stream.read(&tag, 2);
+	u8 sizeByte;
+	stream.read(&sizeByte, 1);
+	int size = sizeByte;
+	u8 groupByte;
+	stream.read(&groupByte, 1);
+	int group = groupByte;
+	u16 tagHalf;
+	stream.read(&tagHalf, 2);
+	u16 tag = tagHalf;
 
 	switch (group) {
 	case 0:
@@ -1349,30 +1369,32 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& stream, J2DTextBox& box,
 
 	case 1:
 		switch (tag) {
-		case 0:
+		case 0: {
 			if (mSelectedValue == -1) {
 				mSelectedValue = 0;
 				mSelectCursor[1]->setAlpha(254);
 				mSelectCursor[1]->hide();
 				mSelectCursor[0]->show();
 			}
-			snprintf(mSelectString[0],
-			         size - 4 < 17 ? size - 4 : 17, "%s",
+			int len = size - 4 < 17 ? size - 4 : 17;
+			snprintf(mSelectString[0], len, "%s",
 			         (const char*)stream.getCurrent());
 			stream.skip(size - 5);
 			return;
-		case 1:
+		}
+		case 1: {
 			if (mSelectedValue == -1) {
 				mSelectedValue = 1;
 				mSelectCursor[0]->setAlpha(254);
 				mSelectCursor[0]->hide();
 				mSelectCursor[1]->show();
 			}
-			snprintf(mSelectString[1],
-			         size - 4 < 17 ? size - 4 : 17, "%s",
+			int len = size - 4 < 17 ? size - 4 : 17;
+			snprintf(mSelectString[1], len, "%s",
 			         (const char*)stream.getCurrent());
 			stream.skip(size - 5);
 			return;
+		}
 		default:
 			stream.skip(size - 5);
 			return;
@@ -1380,37 +1402,96 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& stream, J2DTextBox& box,
 
 	case 2:
 		switch (tag) {
+		case 0:
+		case 1:
+		case 6: {
+			// A stopwatch: mm:ss:hh, eight boxes wide.
+			int time;
+			if (tag == 0)
+				time = TFlagManager::getInstance()->getFlag(0x20003);
+			else if (tag == 1)
+				time = TFlagManager::getInstance()->getFlag(0x20002);
+			else if (tag == 6)
+				time = TFlagManager::getInstance()->getFlag(0x20014);
+
+			if (time > 599999)
+				time = 599999;
+			if (time < 0)
+				time = 0;
+
+			int minutes = (u16)((time - time % 100) / 6000);
+			int rest    = time - minutes * 6000;
+			int seconds = 0.01 * rest;
+			int hundreds = rest - (u16)seconds * 100;
+
+			snprintf(mCharBox[*col + *line * LINE_LENGTH]->getStringPtr(), 2,
+			         "%d", minutes / 10);
+			snprintf(
+			    mCharBox[*col + *line * LINE_LENGTH + 1]->getStringPtr(), 2,
+			    "%d", minutes % 10);
+			snprintf(
+			    mCharBox[*col + *line * LINE_LENGTH + 2]->getStringPtr(), 2,
+			    ":");
+			snprintf(
+			    mCharBox[*col + *line * LINE_LENGTH + 3]->getStringPtr(), 2,
+			    "%d", (u16)seconds / 10);
+			snprintf(
+			    mCharBox[*col + *line * LINE_LENGTH + 4]->getStringPtr(), 2,
+			    "%d", (u16)seconds % 10);
+			snprintf(
+			    mCharBox[*col + *line * LINE_LENGTH + 5]->getStringPtr(), 2,
+			    ":");
+			snprintf(
+			    mCharBox[*col + *line * LINE_LENGTH + 6]->getStringPtr(), 2,
+			    "%d", (u16)hundreds / 10);
+			snprintf(
+			    mCharBox[*col + *line * LINE_LENGTH + 7]->getStringPtr(), 2,
+			    "%d", (u16)hundreds % 10);
+
+			for (int i = 0; i < 8; i++) {
+				SMSSetTextBoxGradColor(
+				    mCharBox[*col + i + *line * LINE_LENGTH], mCharColor,
+				    mCharColor);
+				mCharBox[*col + i + *line * LINE_LENGTH]->setBlackWhite(
+				    mCharColor & 0xffffff00, mCharColor);
+				mCharDelays[i + *col + *line * LINE_LENGTH] = mCharDelay;
+			}
+			*col += 8;
+			return;
+		}
+
 		case 2: {
-			f32 coins = 0.01f
-			            * (TFlagManager::getInstance()->getFlag(0x20004) + 99);
-			int value = coins;
-			if (value < 10) {
+			int coins
+			    = 0.01f
+			      * (TFlagManager::getInstance()->getFlag(0x20004) + 99);
+			if (coins < 10) {
 				snprintf(mCharBox[*col + *line * LINE_LENGTH]->getStringPtr(),
-				         2, "%d", value);
+				         2, "%d", coins);
 				*col += 1;
 				return;
 			}
 			snprintf(mCharBox[*col + *line * LINE_LENGTH]->getStringPtr(), 2,
-			         "%d", (int)coins / 10);
+			         "%d", coins / 10);
 			snprintf(
-			    mCharBox[*col + 1 + *line * LINE_LENGTH]->getStringPtr(), 2,
-			    "%d", (int)coins % 10);
+			    mCharBox[*col + *line * LINE_LENGTH + 1]->getStringPtr(), 2,
+			    "%d", coins % 10);
 			*col += 2;
 			return;
 		}
 
 		case 3: {
-			int total = TFlagManager::getInstance()->getFlag(0x40001);
+			int value = TFlagManager::getInstance()->getFlag(0x40001);
 			int spent = 0;
 			for (int i = 0x46; i < 0x56; i++) {
-				if (TFlagManager::getInstance()->getFlag(0x10000 + i))
+				if (TFlagManager::getInstance()->getFlag(0x10000 + i) != 0)
 					spent++;
 			}
 			for (int i = 0x6c; i <= 0x73; i++) {
-				if (TFlagManager::getInstance()->getFlag(0x10000 + i))
+				if (TFlagManager::getInstance()->getFlag(0x10000 + i) != 0)
 					spent++;
 			}
-			int value = total - spent * 10;
+			value -= spent * 10;
+
 			if (value < 100) {
 				snprintf(mCharBox[*col + *line * LINE_LENGTH]->getStringPtr(),
 				         2, "%d", value / 10);
@@ -1419,9 +1500,10 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& stream, J2DTextBox& box,
 			}
 			snprintf(mCharBox[*col + *line * LINE_LENGTH]->getStringPtr(), 2,
 			         "%d", value / 100);
+			value %= 100;
 			snprintf(
-			    mCharBox[*col + 1 + *line * LINE_LENGTH]->getStringPtr(), 2,
-			    "%d", value % 100 / 10);
+			    mCharBox[*col + *line * LINE_LENGTH + 1]->getStringPtr(), 2,
+			    "%d", value / 10);
 			*col += 2;
 			return;
 		}
@@ -1430,30 +1512,30 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& stream, J2DTextBox& box,
 			u8 which;
 			stream.read(&which, 1);
 
-			JDrama::TNameRef* basket = nullptr;
-			int max                  = 0;
-			int kind                 = 0;
+			TFruitBasketEvent* basket;
+			int max;
+			int kind;
 			switch (which) {
 			case 0:
-				basket = JDrama::TNameRefGen::getInstance()->getNameRef(
+				basket = JDrama::TNameRefGen::search<TFruitBasketEvent>(
 				    "フルーツかごＡ");
 				max  = 3;
 				kind = 0;
 				break;
 			case 1:
-				basket = JDrama::TNameRefGen::getInstance()->getNameRef(
+				basket = JDrama::TNameRefGen::search<TFruitBasketEvent>(
 				    "フルーツかごＢ");
 				max  = 3;
 				kind = 4;
 				break;
 			case 2:
-				basket = JDrama::TNameRefGen::getInstance()->getNameRef(
+				basket = JDrama::TNameRefGen::search<TFruitBasketEvent>(
 				    "フルーツかごＣ");
 				max  = 3;
 				kind = 3;
 				break;
 			case 3:
-				basket = JDrama::TNameRefGen::getInstance()->getNameRef(
+				basket = JDrama::TNameRefGen::search<TFruitBasketEvent>(
 				    "フルーツかごＤ");
 				kind = 1;
 				max  = 3;
@@ -1461,89 +1543,29 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& stream, J2DTextBox& box,
 			}
 
 			if (basket != nullptr) {
-				int left
-				    = max
-				      - ((TFruitBasketEvent*)basket)->getFruitNum(kind);
-				if (left < 0 || left > 9)
-					left = 0;
+				max -= basket->getFruitNum(kind);
+				if (max < 0 || max > 9)
+					max = 0;
 				snprintf(mCharBox[*col + *line * LINE_LENGTH]->getStringPtr(),
-				         2, "%d", left);
+				         2, "%d", max);
 				snprintf(
-				    mCharBox[*col + 1 + *line * LINE_LENGTH]->getStringPtr(),
+				    mCharBox[*col + *line * LINE_LENGTH + 1]->getStringPtr(),
 				    2, " ");
 				*col += 2;
 			}
 			return;
 		}
-
-		case 0:
-		case 1:
-		case 6:
-		default: {
-			int time = 0;
-			switch (tag) {
-			case 0:
-				time = TFlagManager::getInstance()->getFlag(0x20003);
-				break;
-			case 1:
-				time = TFlagManager::getInstance()->getFlag(0x20002);
-				break;
-			case 6:
-				time = TFlagManager::getInstance()->getFlag(0x20014);
-				break;
-			}
-
-			if (time > 599999)
-				time = 599999;
-			if (time < 0)
-				time = 0;
-
-			int frames  = time % 100;
-			int rest    = time - (u16)((time - frames) / 6000) * 6000;
-			int minutes = (time - frames) / 6000;
-			int seconds = 0.01 * rest;
-
-			snprintf(mCharBox[*col + *line * LINE_LENGTH]->getStringPtr(), 2,
-			         "%d", minutes / 10);
-			snprintf(
-			    mCharBox[*col + 1 + *line * LINE_LENGTH]->getStringPtr(), 2,
-			    "%d", minutes % 10);
-			snprintf(
-			    mCharBox[*col + 2 + *line * LINE_LENGTH]->getStringPtr(), 2,
-			    ":");
-			snprintf(
-			    mCharBox[*col + 3 + *line * LINE_LENGTH]->getStringPtr(), 2,
-			    "%d", seconds / 10);
-			snprintf(
-			    mCharBox[*col + 4 + *line * LINE_LENGTH]->getStringPtr(), 2,
-			    "%d", seconds % 10);
-			snprintf(
-			    mCharBox[*col + 5 + *line * LINE_LENGTH]->getStringPtr(), 2,
-			    ":");
-			snprintf(
-			    mCharBox[*col + 6 + *line * LINE_LENGTH]->getStringPtr(), 2,
-			    "%d", (rest - seconds * 100) / 10);
-			snprintf(
-			    mCharBox[*col + 7 + *line * LINE_LENGTH]->getStringPtr(), 2,
-			    "%d", (rest - seconds * 100) % 10);
-
-			for (int i = 0; i < 8; i++) {
-				mCharBox[*col + *line * LINE_LENGTH + i]->setBlackWhite(
-				    mCharColor, mCharColor & 0xffffff00);
-				mCharDelays[i + *col + *line * LINE_LENGTH] = mCharDelay;
-			}
-			*col += 8;
-			return;
 		}
-		}
+		return;
 
-	case 0xff:
+	case 0xff: {
 		if (tag != 0)
 			return;
 		u8 index;
 		stream.read(&index, 1);
 		mCharColor = cColorTable[index];
 		return;
+	}
 
 	default:
 		stream.skip(size - 5);
