@@ -1706,13 +1706,15 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 			s16 roll  = (s16)((f32)delta * mForwardVel * rollRate);
 			if (pitch > pitchMax)
 				pitch = pitchMax;
-			if (pitch < -pitchMax)
-				pitch = -pitchMax;
+			s16 pitchMin = -pitchMax;
+			if (pitch < pitchMin)
+				pitch = pitchMin;
 
 			if (roll > rollMax)
 				roll = rollMax;
-			if (roll < -rollMax)
-				roll = -rollMax;
+			s16 rollMin = -rollMax;
+			if (roll < rollMin)
+				roll = rollMin;
 
 			unk414.y = ((f32)pitch - unk414.y)
 			               * mSurfingParamsWaterRed.mAngleChangeRate.get()
@@ -1732,13 +1734,15 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 			s16 roll  = (s16)((f32)delta * mForwardVel * rollRate);
 			if (pitch > pitchMax)
 				pitch = pitchMax;
-			if (pitch < -pitchMax)
-				pitch = -pitchMax;
+			s16 pitchMin = -pitchMax;
+			if (pitch < pitchMin)
+				pitch = pitchMin;
 
 			if (roll > rollMax)
 				roll = rollMax;
-			if (roll < -rollMax)
-				roll = -rollMax;
+			s16 rollMin = -rollMax;
+			if (roll < rollMin)
+				roll = rollMin;
 
 			unk414.y = ((f32)pitch - unk414.y)
 			               * mSurfingParamsGroundRed.mAngleChangeRate.get()
