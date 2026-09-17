@@ -583,7 +583,8 @@ void TMarDirector::setMario()
 		gpMarioOriginal->toroccoStart();
 		break;
 
-	case 3:
+	case 0:
+	default:
 		const JGeometry::TVec3<f32>* pos = nullptr;
 		if (uVar10)
 			pos = &marioSetPosition->getUnk10(uVar10 - 1);
@@ -591,23 +592,43 @@ void TMarDirector::setMario()
 		break;
 	}
 
-	switch (gpApplication.mCurrArea.getStage()) {
-	case 0x3C:
-		gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Rocket, true);
-		break;
+	const TGameSequence& currArea = gpApplication.mCurrArea;
 
-		// TODO: crazy cases
-	case 0:
-	case 7:
-		gpMarioOriginal->mWaterGun->changeNozzle(
-		    (TWaterGun::TNozzleType)TFlagManager::getInstance()->getFlag(
-		        0x40004),
-		    true);
-		gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Spray, true);
-		break;
+	// Every stage that is not one of the listed exceptions restores the
+	// nozzle the save file remembers; the exception list is read off the
+	// ROM's comparison tree (groups 1-6, 8-9, 0x10, 0x2C, 0x34, 0x39).
+	if (gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)) {
+		switch (currArea.getStage()) {
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 8:
+		case 9:
+		case 0x10:
+		case 0x2C:
+		case 0x34:
+		case 0x39:
+			break;
+
+		case 0x3C:
+			gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Rocket, true);
+			break;
+
+		default: {
+			TWaterGun* waterGun = gpMarioOriginal->mWaterGun;
+			waterGun->changeNozzle(
+			    (TWaterGun::TNozzleType)TFlagManager::getInstance()->getFlag(
+			        0x40004),
+			    true);
+			gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Spray, true);
+		} break;
+		}
 	}
 
-	u32 uVar6 = SMS_getShineIDofExStage(gpApplication.mCurrArea.getStage());
+	u8 uVar6 = SMS_getShineIDofExStage(currArea.getStage());
 	if (uVar6 != 0xff && TFlagManager::getInstance()->getShineFlag(uVar6) == 0)
 		gpMarioOriginal->offFlag(MARIO_FLAG_HAS_FLUDD);
 }
