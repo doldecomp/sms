@@ -167,6 +167,8 @@ static void evSetFlagNPCDead(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push();
 }
 
+// TODO: 93.3%. Blocked on the same expanded-instead-of-called
+// JGeometry::TUtil<f32>::sqrt as evIsNearActors; see the trial table there.
 static void evIsNearSameActors(TSpcTypedInterp<TEventWatcher>* interp,
                                u32 arg_num)
 {
@@ -202,6 +204,43 @@ static void evIsNearSameActors(TSpcTypedInterp<TEventWatcher>* interp,
 /// Counts how many of the actors named by arguments 2..n sit within a given
 /// distance of the actor named by argument 0. The arguments stay on the process
 /// stack until the end, because the count of them is only known at run time.
+// TODO: 88.5%, and every remaining difference here and in evIsNearSameActors
+// follows from one inline decision: retail *calls*
+// JGeometry::TUtil<f32>::sqrt for `diff.length()` while we expand it. The call
+// is what clobbers r3 (so retail parks the search result in r27 in
+// evIsNearSameActors), what forces gpMapObjManager to be re-read every
+// iteration there, and what stops MWCC from turning that loop into
+// mtctr/bdnz.
+//
+// Measured, with `length()` reached from the builtin through n inlined
+// wrappers (fabricated statics taking the two actors):
+//   n=0 (this shape)                sqrt expanded          88.5%
+//   n=1                             sqrt expanded          87.0%
+//   n=2                             sqrt called, but the
+//                                   `diff -= p` sub goes
+//                                   out of line too        83.7%
+//   n=2 + `diff.x -= p.x` spelled   sqrt called, but
+//        out per component          TVec3::dot goes out
+//                                   of line                90.2%
+// So sqrt (4 statements) needs depth 4 to stay a call, while dot (1
+// statement) must still be inlined at that depth -- impossible while
+// `length()` reaches `dot()` through `squared()`, which adds a level.
+//
+// Two shared-header shapes in include/JSystem/JGeometry/JGVec3.hpp remove
+// that level; both were measured over the whole tree and are NOT applied
+// here:
+//   `squared()` spelled `x * x + y * y + z * z`
+//       this function 95.8%, but Total fuzzy 96.47% -> 96.44%, regressing
+//       boid, BeeHive, four Camera units, ten Enemy units and more.
+//   `length()` spelled `TUtil<f32>::sqrt(dot(*this))`
+//       this function 97.3% with every register matching, Total fuzzy
+//       96.47% -> 96.48% and only boid (98.04 -> 96.79) and Kazekun
+//       (96.37 -> 96.07) regressing. This is the candidate worth revisiting
+//       once boid is understood.
+//
+// Also still open: retail computes the loop's stack index as one subtraction
+// (`mCount - (arg_num - i)`) while `arg_num - i - 1` lets MWCC hoist
+// `arg_num - 1` and strength-reduce; `arg_num - (i + 1)` was not tried.
 static void evIsNearActors(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	int count = 0;
@@ -216,7 +255,7 @@ static void evIsNearActors(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 			count = 1;
 			for (u32 i = 2; i < arg_num; ++i) {
 				THitActor* other = (THitActor*)getNameRefPtr(
-				    interp->mProcessStack.getFromTop(arg_num - 1 - i));
+				    interp->mProcessStack.getFromTop(arg_num - i - 1));
 				if (other) {
 					JGeometry::TVec3<f32> diff = which->mPosition;
 					diff -= other->mPosition;
@@ -227,7 +266,7 @@ static void evIsNearActors(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 		}
 	}
 
-	for (int i = 0; i < arg_num; ++i)
+	for (int i = 0; i < (int)arg_num; ++i)
 		interp->pop();
 
 	interp->push(count);
