@@ -680,7 +680,7 @@ void THamuKuri::reset()
 void THamuKuri::bind()
 {
 	if (unk1A4) {
-		if (mSpine->getTime() > unk1F4->mSLFlyTimer.get()
+		if (mSpine->getTime() > unk1F4->getFlyTimer()
 		    || getGroundPlane()->isWaterSurface())
 			unk1A4 = 0;
 
@@ -874,20 +874,11 @@ void THamuKuri::moveObject()
 		}
 	}
 
-	// TODO: inline
-	bool bVar1;
-	if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()
-	    || mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()) {
-		bVar1 = true;
-	} else {
-		bVar1 = false;
-	}
-
-	if (bVar1)
+	if (canGoForSearchActor())
 		unk19C += 1;
 
 	if (mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()) {
-		s32 kyoroTimer = unk1F4->mSLKyoroTimer.get();
+		s32 kyoroTimer = unk1F4->getKyoroTimer();
 		unk1A8 += 1;
 
 		if (unk1A8 > kyoroTimer) {
@@ -1093,8 +1084,19 @@ void THamuKuri::setRollAnm() { setBckAnm(7); }
 
 void THamuKuri::setCrashAnm()
 {
-	if (unk198)
-		releaseCap();
+	// Pasted rather than routed through releaseCap(): the call costs this
+	// function 16 bytes of frame, while both setDeadAnm overrides want it.
+	if (unk198 && mHeldObject != nullptr
+	    && mHeldObject->receiveMessage(this, HIT_MESSAGE_PUT)) {
+		TMapObjBase* heldObj = (TMapObjBase*)mHeldObject;
+		heldObj->mHolder     = nullptr;
+		heldObj->offLiveFlag(LIVE_FLAG_HIDDEN);
+		heldObj->mPosition   = mPosition;
+		heldObj->mPosition.y = mGroundHeight;
+		heldObj->offHitFlag(HIT_FLAG_NO_COLLISION);
+		heldObj->makeObjDead();
+		mHeldObject = nullptr;
+	}
 
 	unk1A4 = 0;
 	setBckAnm(1);
@@ -1318,7 +1320,7 @@ void THamuKuri::forceRoll(JGeometry::TVec3<f32> param_1, bool param_2)
 	mPosition.y += 10.0f;
 
 	if (param_2) {
-		local_20.y = unk1F4->mSLFirstVelocityY.get();
+		local_20.y = unk1F4->getFirstVelocityY();
 	} else {
 		local_20.y = unk1F4->mSLFirstKickVelocityY.get();
 		unk1A4     = 1;
@@ -2196,7 +2198,7 @@ void TBossDangoHamuKuri::genEventCoin()
 
 void TBossDangoHamuKuri::generateBody()
 {
-	s32 numArray = unk23C->mSLNumArray.get();
+	s32 numArray = unk23C->getNumArray();
 	if (unk238 >= numArray)
 		return;
 
@@ -2641,7 +2643,7 @@ DEFINE_NERVE(TNerveHamuKuriBoundFreeze, TLiveActor)
 	if (self->unk1A4 == 0 && !self->isAirborne()) {
 		THamuKuriSaveLoadParams* params
 		    = (THamuKuriSaveLoadParams*)self->getSaveParam();
-		if (self->unk1E0 >= params->mSLBoundNum.get()) {
+		if (self->unk1E0 >= params->getBoundNum()) {
 			self->mRotation.x = 0;
 			spine->reset();
 			spine->setNext(&TNerveWalkerGraphWander::theNerve());

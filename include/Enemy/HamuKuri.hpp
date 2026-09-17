@@ -24,6 +24,14 @@ class THamuKuriSaveLoadParams : public TWalkerEnemyParams {
 public:
 	THamuKuriSaveLoadParams(const char* path);
 
+	f32 getWaterCoeff() const { return mSLWaterCoeff.get(); }
+	f32 getWaterAttackCoeff() const { return mSLWaterAttackCoeff.get(); }
+	f32 getFirstVelocityY() const { return mSLFirstVelocityY.get(); }
+	f32 getVelocityRate() const { return mSLVelocityRate.get(); }
+	s32 getBoundNum() const { return mSLBoundNum.get(); }
+	s32 getFlyTimer() const { return mSLFlyTimer.get(); }
+	f32 getFirstKickVelocityY() const { return mSLFirstKickVelocityY.get(); }
+	s32 getKyoroTimer() const { return mSLKyoroTimer.get(); }
 	s32 getTrampleBonusNum() const { return mSLTrampleBonusNum.get(); }
 	s32 getCrashBonusNum() const { return mSLCrashBonusNum.get(); }
 	s32 getSerialCrashFrame() const { return mSLSerialCrashFrame.get(); }
@@ -65,6 +73,8 @@ public:
 class TBossDangoHamuKuriSaveLoadParams : public THamuKuriSaveLoadParams {
 public:
 	TBossDangoHamuKuriSaveLoadParams(const char* path);
+
+	s32 getNumArray() const { return mSLNumArray.get(); }
 
 public:
 	/* 0x444 */ TParamRT<s32> mSLNumArray;
