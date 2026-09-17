@@ -68,7 +68,7 @@ public:
 
 	void setVisible(bool);
 	void doAttack(bool);
-	void doAttackPose(bool);
+	bool doAttackPose(bool);
 	void getAroundQuat(JGeometry::TQuat4<f32>&,
 	                   const JGeometry::TVec3<f32>&, f32);
 	f32 getAroundRate(const JGeometry::TVec3<f32>&) const;

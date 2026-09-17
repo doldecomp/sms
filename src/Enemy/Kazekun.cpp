@@ -296,7 +296,7 @@ void TKazekun::getAroundQuat(JGeometry::TQuat4<f32>& quat,
 	quat.mul(quat, around);
 }
 
-void TKazekun::doAttackPose(bool start)
+bool TKazekun::doAttackPose(bool start)
 {
 	JGeometry::TVec3<f32> toMario(*gpMarioPos);
 	toMario.sub(mPosition);
@@ -329,6 +329,8 @@ void TKazekun::doAttackPose(bool start)
 	JGeometry::TVec3<f32> forward(0.0f, 0.0f, velocity.length());
 	spin.rotate(forward, forward);
 	mVelocity = forward;
+
+	return false;
 }
 
 // UNUSED, 0x4b0 in the map. TNerveKazekunAttack inlines it twice: once with
