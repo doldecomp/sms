@@ -67,14 +67,14 @@ void TMonumentShine::hitByWater(THitActor* actor)
 
 	JGeometry::TVec3<f32> waterDir = actor->mPosition;
 
-	waterDir -= mPosition;
+	waterDir.sub(mPosition);
 	waterDir.y = 0.0f;
 
 	if (waterDir.squared() <= JGeometry::TUtil<f32>::epsilon())
 		return;
 
 	JGeometry::TVec3<f32> marioDir = SMS_GetMarioPos();
-	marioDir -= mPosition;
+	marioDir.sub(mPosition);
 	marioDir.y = 0.0f;
 
 	if (marioDir.squared() <= JGeometry::TUtil<f32>::epsilon())
@@ -82,10 +82,21 @@ void TMonumentShine::hitByWater(THitActor* actor)
 
 	static JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 
+	// TODO: 5 instructions from exact, all reloads: retail keeps
+	// mPosition.x/y/z in f7-f9 across both subtractions and waterDir.y/z in
+	// f5/f6 from the first squared() into the dot, where our build reloads
+	// all five. The frame is exact (the named `side` below is the missing 8
+	// bytes), so the local set is right; what differs is only which values
+	// the allocator keeps live. Ruled out: sub() for -= , getPosition() for
+	// mPosition (lands the frame but hoists the address into a register),
+	// isZero() for the spelled-out epsilon test (identical output), cross2()
+	// for cross().
 	JGeometry::TVec3<f32> cross;
 	cross.cross(up, marioDir);
 
-	if (cross.dot(waterDir) > 0.0f) {
+	f32 side = cross.dot(waterDir);
+
+	if (side > 0.0f) {
 		unk140 += 0.004f;
 	} else {
 		unk140 -= 0.004f;
@@ -525,13 +536,13 @@ void TDemoCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 void TTurboNozzleDoor::loadAfter()
 {
 	if (strcmp("空港ドアＡ０", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＡ１");
+		unk144 = JDrama::TNameRefGen::search<TMapObjBase>("空港ドアＡ１");
 	} else if (strcmp("空港ドアＡ１", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＡ０");
+		unk144 = JDrama::TNameRefGen::search<TMapObjBase>("空港ドアＡ０");
 	} else if (strcmp("空港ドアＢ０", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＢ１");
+		unk144 = JDrama::TNameRefGen::search<TMapObjBase>("空港ドアＢ１");
 	} else if (strcmp("空港ドアＢ１", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＢ０");
+		unk144 = JDrama::TNameRefGen::search<TMapObjBase>("空港ドアＢ０");
 	}
 }
 
@@ -544,7 +555,7 @@ void TTurboNozzleDoor::touchPlayer(THitActor* player)
 		startBck("nozzledoor");
 	} else {
 		makeObjDead();
-		((TMapObjBase*)unk144)->makeObjDead();
+		unk144->makeObjDead();
 	}
 
 	SMSGetMSound()->startSoundActor(MSD_SE_IT_BARREL_CRASH, &mPosition, 0,
@@ -552,9 +563,16 @@ void TTurboNozzleDoor::touchPlayer(THitActor* player)
 	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_GLASS_BREAK, &mPosition, 0,
 	                                nullptr, 0, 4);
 
+	// TODO: 8 bytes of frame short (0x40 vs 0x48) with every instruction
+	// exact. The three `getPosition()` reads below are worth +16 with no
+	// instruction change; `SMSGetMarDirector()->mMap` over
+	// `gpMarDirector->mMap`, a three-argument `scale` constructor and three
+	// unnamed scale temporaries are all worth nothing here, and
+	// `&getPosition()` for either sound call hoists the address out of the
+	// call.
 	JGeometry::TVec3<f32> scale(1.3f);
 
-	unk138.set(mPosition.x, mPosition.y + 100.0f, mPosition.z);
+	unk138.set(getPosition().x, getPosition().y + 100.0f, getPosition().z);
 
 	emitAndScale(24, 0, &unk138, scale);
 	emitAndScale(25, 0, &unk138, scale);

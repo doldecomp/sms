@@ -138,7 +138,7 @@ public:
 
 public:
 	/* 0x138 */ JGeometry::TVec3<f32> unk138;
-	/* 0x144 */ TLiveActor* unk144;
+	/* 0x144 */ TMapObjBase* unk144;
 };
 
 #endif
