@@ -1,4 +1,4 @@
-#include <Enemy/LimitKoopa.hpp>
+#include <Enemy/LimitKoopaNerve.hpp>
 #include <Enemy/Enemy.hpp>
 #include <Enemy/KoopaJr.hpp>
 #include <M3DUtil/MActor.hpp>
