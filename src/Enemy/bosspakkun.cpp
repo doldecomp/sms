@@ -185,14 +185,17 @@ void TBPPolDrop::move()
 			if (gpMap->isTouchedOneWallAndMoveXZ(&pos.x, pos.y, &pos.z, 80.0f))
 				mState = BOSSPAKU_POLDROP_DEAD;
 
+			f32 fallSpeed = -mVelocity.y;
 			if (gpMSound->gateCheck(MSD_SE_BS_BSPAKU_POLLUT_IMI))
 				MSoundSESystem::MSoundSE::startSoundActorWithInfo(
 				    MSD_SE_BS_BSPAKU_POLLUT_IMI, &mPosition, nullptr,
-				    -mVelocity.y, 0, 0, nullptr, 0, 4);
+				    fallSpeed, 0, 0, nullptr, 0, 4);
+
+			fallSpeed = -mVelocity.y;
 			if (gpMSound->gateCheck(MSD_SE_BS_BSPAKU_POLLUT_FLY))
 				MSoundSESystem::MSoundSE::startSoundActorWithInfo(
 				    MSD_SE_BS_BSPAKU_POLLUT_FLY, &mPosition, nullptr,
-				    -mVelocity.y, 0, 0, nullptr, 0, 4);
+				    fallSpeed, 0, 0, nullptr, 0, 4);
 		}
 	} else if (mState == BOSSPAKU_POLDROP_STAMPED) {
 		if (mStampMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
@@ -1003,8 +1006,20 @@ void TBossPakkun::resetWaterMark()
 	}
 }
 
-// TODO: not reconstructed. Map size 0xa0.
-bool TBossPakkun::inArea(const JGeometry::TVec3<f32>& pos) { return false; }
+// UNUSED, 0xa0 in the map: the Wait, WaitL and Hover nerves all inline it.
+// The area manager is looked up lazily, because it is placed in the stage and
+// so does not exist yet when the boss is created.
+BOOL TBossPakkun::inArea(const JGeometry::TVec3<f32>& pos)
+{
+	if (!mVomitArea)
+		mVomitArea = (TAreaCylinderManager*)gpConductor->search(
+		    "ゲロエリアマネージャー");
+
+	if (mVomitArea == nullptr)
+		return FALSE;
+
+	return mVomitArea->contain(pos);
+}
 
 // TODO: not reconstructed. Map size 0xd0.
 void TBossPakkun::gotFlyingDamage() { }
@@ -1468,11 +1483,7 @@ DEFINE_NERVE(TNerveBPWait, TLiveActor)
 	    && boss->getMActor()->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 		if (gpMarDirector->mMap == 2
 		    && (gpMarDirector->unk7D == 0 || gpMarDirector->unk7D == 1)) {
-			if (!boss->mVomitArea)
-				boss->mVomitArea = (TAreaCylinderManager*)gpConductor->search(
-				    "ゲロエリアマネージャー");
-
-			if (boss->mVomitArea && boss->mVomitArea->contain(*gpMarioPos)) {
+			if (boss->inArea(*gpMarioPos)) {
 				if (!SMS_GetMarioGroundPlane()->isWaterSurface()) {
 					spine->pushAfterCurrent(&TNerveBPCannon::theNerve());
 					return TRUE;
@@ -1983,11 +1994,12 @@ DEFINE_NERVE(TNerveBPFly, TLiveActor)
 	if (VECMag(toGoal) < 100.0f) {
 		// A graph node flagged 0x800 is one the boss hovers over instead of
 		// flying straight past.
-		if (boss->getTracer()->getCurrent().checkFlag(0x800)) {
+		if (!boss->getTracer()->getCurrent().checkFlag(0x800)) {
+			boss->goToRandomNextGraphNode();
+		} else {
 			spine->pushAfterCurrent(&TNerveBPHover::theNerve());
 			return TRUE;
 		}
-		boss->goToRandomNextGraphNode();
 	}
 
 	f32 turn  = boss->mTurnSpeed;
@@ -2084,11 +2096,7 @@ DEFINE_NERVE(TNerveBPHover, TLiveActor)
 
 	f32 range = boss->getSaveParam2()->mSLPollBallRange.get();
 
-	if (!boss->mVomitArea)
-		boss->mVomitArea = (TAreaCylinderManager*)gpConductor->search(
-		    "ゲロエリアマネージャー");
-
-	if (boss->mVomitArea && boss->mVomitArea->contain(*gpMarioPos)
+	if (boss->inArea(*gpMarioPos)
 	    && boss->mDistToMarioSquared < range * range) {
 		spine->pushAfterCurrent(&TNerveBPHover::theNerve());
 		spine->pushAfterCurrent(&TNerveBPFlyCannon::theNerve());
@@ -2200,11 +2208,7 @@ DEFINE_NERVE(TNerveBPWaitL, TLiveActor)
 
 	if (spine->getTime()
 	    >= boss->getSaveParam2()->mSLWaitFrameStg0.get()) {
-		if (!boss->mVomitArea)
-			boss->mVomitArea = (TAreaCylinderManager*)gpConductor->search(
-			    "ゲロエリアマネージャー");
-
-		if (boss->mVomitArea && boss->mVomitArea->contain(*gpMarioPos)) {
+		if (boss->inArea(*gpMarioPos)) {
 			if (!SMS_GetMarioGroundPlane()->isWaterSurface()) {
 				spine->pushAfterCurrent(&TNerveBPCannonL::theNerve());
 				return TRUE;

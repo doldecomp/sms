@@ -295,7 +295,7 @@ public:
 	void ignoreWaterCheck();
 	void startTornadoBlur();
 	void resetWaterMark();
-	bool inArea(const JGeometry::TVec3<f32>&);
+	BOOL inArea(const JGeometry::TVec3<f32>&);
 	void gotFlyingDamage();
 	void gotWaterDamage();
 	void gotHipDropDamage();
@@ -348,7 +348,7 @@ public:
 	/* 0x1C4 */ s8 unk1C4;
 	/* 0x1C5 */ u8 unk1C5[3];
 	/* 0x1C8 */ f32 mRumblePower;
-	/* 0x1CC */ u8 unk1CC;
+	/* 0x1CC */ s8 unk1CC;
 };
 
 class TBossPakkunManager : public TEnemyManager {
