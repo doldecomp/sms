@@ -48,20 +48,6 @@ enum {
 	AMINOKO_ANM_WAIT1         = 15,
 };
 
-// TODO: these particle ids have no names in include/System/Particles.hpp yet;
-// they belong there next to AMENBO_JPA_MS_AME_HAMON. This batch is only allowed
-// to touch amiNoko's own two files, so they live here for now. The names are
-// guesses from the call sites, not from the binary.
-enum {
-	AMINOKO_JPA_MS_AMI_HIT     = 0xCA,
-	AMINOKO_JPA_MS_AMI_FREEZE  = 0x17D,
-	AMINOKO_JPA_MS_AMI_FREEZE2 = 0x17E,
-	AMINOKO_JPA_MS_AMI_ELEC_A  = 0x180,
-	AMINOKO_JPA_MS_AMI_ELEC_B  = 0x181,
-	AMINOKO_JPA_MS_AMI_ELEC_C  = 0x182,
-	AMINOKO_JPA_MS_AMI_ELEC_D  = 0x183,
-};
-
 static const char* amiNoko_bastable[] = {
 	nullptr,
 	"/scene/amiNoko/bas/aminoko_flying1_start.bas",
@@ -411,22 +397,22 @@ void TAmiNoko::emitEffects()
 	// Three arcs bound to three joints. The owner key has to differ per arc
 	// or the particle manager would reuse a single slot for all of them.
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    AMINOKO_JPA_MS_AMI_ELEC_A, getMActor()->getModel()->getAnmMtx(11), 1,
+	    PARTICLE_MS_AMN_BIRI, getMActor()->getModel()->getAnmMtx(11), 1,
 	    this);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    AMINOKO_JPA_MS_AMI_ELEC_A, getMActor()->getModel()->getAnmMtx(10), 1,
+	    PARTICLE_MS_AMN_BIRI, getMActor()->getModel()->getAnmMtx(10), 1,
 	    this + 1);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    AMINOKO_JPA_MS_AMI_ELEC_A, getMActor()->getModel()->getAnmMtx(9), 1,
+	    PARTICLE_MS_AMN_BIRI, getMActor()->getModel()->getAnmMtx(9), 1,
 	    this + 2);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    AMINOKO_JPA_MS_AMI_ELEC_C, getMActor()->getModel()->getAnmMtx(11), 1,
+	    PARTICLE_MS_AMN_SPARK_R, getMActor()->getModel()->getAnmMtx(11), 1,
 	    this);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    AMINOKO_JPA_MS_AMI_ELEC_B, getMActor()->getModel()->getAnmMtx(11), 1,
+	    PARTICLE_MS_AMN_SPARK_L, getMActor()->getModel()->getAnmMtx(11), 1,
 	    this);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    AMINOKO_JPA_MS_AMI_ELEC_D, getMActor()->getModel()->getAnmMtx(11), 1,
+	    PARTICLE_MS_AMN_SPARK_M, getMActor()->getModel()->getAnmMtx(11), 1,
 	    this);
 
 	if (mSpine->getCurrentNerve() == &TNerveAmiNokoFreeze::theNerve()
@@ -434,7 +420,7 @@ void TAmiNoko::emitEffects()
 		JGeometry::TVec3<f32> scale(2.0f, 2.0f, 2.0f);
 
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-		    AMINOKO_JPA_MS_AMI_FREEZE, getMActor()->getModel()->getAnmMtx(0),
+		    PARTICLE_MS_DNK_SHIBIRE_A, getMActor()->getModel()->getAnmMtx(0),
 		    1, this);
 		if (emitter)
 			emitter->setGlobalScale(scale);
@@ -442,7 +428,7 @@ void TAmiNoko::emitEffects()
 		MtxPtr mtx = getMActor()->getModel()->getAnmMtx(6);
 		mSparkPos.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 		emitter = gpMarioParticleManager->emitAndBindToPosPtr(
-		    AMINOKO_JPA_MS_AMI_FREEZE2, &mSparkPos, 1, this);
+		    PARTICLE_MS_DNK_HIBANA, &mSparkPos, 1, this);
 		if (emitter)
 			emitter->setGlobalScale(scale);
 	}
@@ -773,7 +759,7 @@ DEFINE_NERVE(TNerveAmiNokoFreeze, TLiveActor)
 	if (spine->getTime() == 0) {
 		amiNoko->setBckAnm(AMINOKO_ANM_HIT1);
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-		    AMINOKO_JPA_MS_AMI_HIT,
+		    PARTICLE_MS_DNK_SHIBIRE_B,
 		    amiNoko->getMActor()->getModel()->getAnmMtx(0), 0, nullptr);
 		if (emitter)
 			emitter->setGlobalScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
