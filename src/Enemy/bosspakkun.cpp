@@ -1,4 +1,5 @@
 #include <Enemy/BossPakkun.hpp>
+#include <Camera/CameraShake.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Enemy/Graph.hpp>
 #include <Enemy/Walker.hpp>
@@ -15,6 +16,8 @@
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/ShadowUtil.hpp>
 #include <Map/Map.hpp>
+#include <MoveBG/ItemManager.hpp>
+#include <Player/ModelWaterManager.hpp>
 #include <Map/MapData.hpp>
 #include <Map/PollutionManager.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
@@ -29,6 +32,7 @@
 #include <System/Particles.hpp>
 #include <System/TargetArrow.hpp>
 #include <GC2D/GCConsole2.hpp>
+#include <MSound/MSModBgm.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <MSound/SoundEffects.hpp>
@@ -1420,8 +1424,26 @@ void TBossPakkunManager::load(JSUMemoryInputStream& stream)
 // TODO: incorrect size. Map records 3088 bytes.
 DEFINE_NERVE(TNerveBPWait, TLiveActor) { return FALSE; }
 
-// TODO: incorrect size. Map records 292 bytes.
-DEFINE_NERVE(TNerveBPCannon, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBPCannon, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	MActor* actor     = boss->getMActor();
+
+	if (spine->getTime() == 0)
+		boss->changeBck(BOSSPAKU_BCK_POLLUT_START);
+
+	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_POLLUT_START)) {
+			boss->changeBck(BOSSPAKU_BCK_BALL_END);
+			boss->launchPolDrop();
+		} else {
+			spine->pushAfterCurrent(&TNerveBPWait::theNerve());
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
 
 // TODO: incorrect size. Map records 864 bytes.
 DEFINE_NERVE(TNerveBPVomit, TLiveActor) { return FALSE; }
@@ -1429,8 +1451,33 @@ DEFINE_NERVE(TNerveBPVomit, TLiveActor) { return FALSE; }
 // TODO: incorrect size. Map records 380 bytes.
 DEFINE_NERVE(TNerveBPTornado, TLiveActor) { return FALSE; }
 
-// TODO: incorrect size. Map records 344 bytes.
-DEFINE_NERVE(TNerveBPPivot, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBPPivot, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		boss->changeBck(BOSSPAKU_BCK_WAIT);
+
+	JGeometry::TVec3<f32> toMario = boss->mPosition;
+	toMario.x -= gpMarioPos->x;
+	toMario.y -= gpMarioPos->y;
+	toMario.z -= gpMarioPos->z;
+
+	f32 turn;
+	if (toMario.squared()
+	    < boss->getSaveParam2()->mSLSwingLength.get()
+	          * boss->getSaveParam2()->mSLSwingLength.get())
+		turn = boss->getSaveParam2()->mSLPivotSpeedAware.get();
+	else
+		turn = boss->getSaveParam2()->mSLPivotSpeed.get();
+
+	if (boss->turnToCurPathNode(turn)) {
+		boss->switchNextGoalPath();
+		return TRUE;
+	}
+
+	return FALSE;
+}
 
 // TODO: incorrect size. Map records 496 bytes.
 DEFINE_NERVE(TNerveBPSwallow, TLiveActor) { return FALSE; }
@@ -1444,23 +1491,127 @@ DEFINE_NERVE(TNerveBPTumble, TLiveActor) { return FALSE; }
 // TODO: incorrect size. Map records 628 bytes.
 DEFINE_NERVE(TNerveBPTumbleOut, TLiveActor) { return FALSE; }
 
-// TODO: incorrect size. Map records 184 bytes.
-DEFINE_NERVE(TNerveBPGetUp, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBPGetUp, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	MActor* actor     = boss->getMActor();
 
-// TODO: incorrect size. Map records 176 bytes.
-DEFINE_NERVE(TNerveBPSwing, TLiveActor) { return FALSE; }
+	if (spine->getTime() == 0) {
+		boss->changeBck(BOSSPAKU_BCK_GETUP);
+		gpCameraShake->startShake((EnumCamShakeMode)CAM_SHAKE_MODE_BOPA_GETUP, 1.0f);
+		boss->rumblePad(0, boss->mPosition);
+	}
 
-// TODO: incorrect size. Map records 316 bytes.
-DEFINE_NERVE(TNerveBPStompReact, TLiveActor) { return FALSE; }
+	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_GETUP))
+			boss->changeBck(BOSSPAKU_BCK_PANPAN);
+		else
+			return TRUE;
+	}
 
-// TODO: incorrect size. Map records 100 bytes.
-DEFINE_NERVE(TNerveBPJumpReact, TLiveActor) { return FALSE; }
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveBPSwing, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	MActor* actor     = boss->getMActor();
+
+	if (spine->getTime() == 0)
+		boss->changeBck(BOSSPAKU_BCK_HEAD);
+
+	if (spine->getTime() == 0)
+		gpMarioParticleManager->emitAndBindToSRTMtxPtr(
+		    BOSSPAKKUN_JPA_MS_BOPA_SWING2, boss->getModel()->getAnmMtx(18), 0,
+		    boss);
+
+	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
+		return TRUE;
+
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveBPStompReact, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	MActor* actor     = boss->getMActor();
+
+	if (spine->getTime() == 0) {
+		boss->changeBck(BOSSPAKU_BCK_UNK5);
+		boss->mHeadHit->onHitFlag(HIT_FLAG_NO_COLLISION);
+	}
+
+	if (spine->getTime() == 30 && !boss->unk17C) {
+		boss->unk17C = 1;
+		boss->unk174 = 0;
+		boss->unk170 = 0;
+		boss->unk1B8 = 50;
+
+		if (boss->mWaterEmitInfo) {
+			JGeometry::TVec3<f32> mouth;
+			boss->getJointTransByIndex(0x12, &mouth);
+			mouth.y += 250.0f;
+			boss->mWaterEmitInfo->mPos.value = mouth;
+			gpModelWaterManager->emitRequest(*boss->mWaterEmitInfo);
+		}
+	}
+
+	if (spine->getTime() == 50)
+		boss->unk1BC = 1;
+
+	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		boss->mHeadHit->offHitFlag(HIT_FLAG_NO_COLLISION);
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveBPJumpReact, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	MActor* actor     = boss->getMActor();
+
+	if (spine->getTime() == 0)
+		boss->changeBck(BOSSPAKU_BCK_JUMP_REACTION);
+
+	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
+		return TRUE;
+
+	return FALSE;
+}
 
 // TODO: incorrect size. Map records 472 bytes.
 DEFINE_NERVE(TNerveBPPreDie, TLiveActor) { return FALSE; }
 
-// TODO: incorrect size. Map records 280 bytes.
-DEFINE_NERVE(TNerveBPDie, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBPDie, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	MActor* actor     = boss->getMActor();
+
+	// TODO: both arms of this test compile to the same call. The original
+	// must have written two spellings that fold together; only the branch
+	// itself is evidence.
+	if (spine->getTime() == 0)
+		gpMSound->unk98->modBgm(0, 1);
+	else
+		gpMSound->unk98->modBgm(0, 1);
+
+	if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_DOWN_START)
+	    && spine->getTime() == 680)
+		boss->onLiveFlag(LIVE_FLAG_UNK8);
+
+	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)
+	    && actor->checkCurBckFromIndex(BOSSPAKU_BCK_DOWN_START)) {
+		boss->kill();
+		gpItemManager->makeShineAppearWithDemo(
+		    "シャイン(ボス用)", "ボスシャインカメラ", boss->mPosition.x,
+		    boss->mPosition.y, boss->mPosition.z);
+		return TRUE;
+	}
+
+	return FALSE;
+}
 
 // TODO: incorrect size. Map records 552 bytes.
 DEFINE_NERVE(TNerveBPTakeOff, TLiveActor) { return FALSE; }
@@ -1471,11 +1622,38 @@ DEFINE_NERVE(TNerveBPFly, TLiveActor) { return FALSE; }
 // TODO: incorrect size. Map records 400 bytes.
 DEFINE_NERVE(TNerveBPTouchDown, TLiveActor) { return FALSE; }
 
-// TODO: incorrect size. Map records 148 bytes.
-DEFINE_NERVE(TNerveBPFlyCannon, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBPFlyCannon, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	MActor* actor     = boss->getMActor();
 
-// TODO: incorrect size. Map records 172 bytes.
-DEFINE_NERVE(TNerveBPFlyPivot, TLiveActor) { return FALSE; }
+	if (spine->getTime() == 0)
+		boss->changeBck(BOSSPAKU_BCK_FLY_POLLUT);
+
+	if (spine->getTime() == 168)
+		boss->launchPolDrop();
+
+	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
+		return TRUE;
+
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveBPFlyPivot, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		boss->changeBck(BOSSPAKU_BCK_FLY);
+
+	if (boss->turnToCurPathNode(
+	        boss->getSaveParam2()->mSLPivotSpeed.get())) {
+		boss->switchNextGoalPath();
+		return TRUE;
+	}
+
+	return FALSE;
+}
 
 // TODO: incorrect size. Map records 904 bytes.
 DEFINE_NERVE(TNerveBPHover, TLiveActor) { return FALSE; }
@@ -1483,14 +1661,53 @@ DEFINE_NERVE(TNerveBPHover, TLiveActor) { return FALSE; }
 // TODO: incorrect size. Map records 1308 bytes.
 DEFINE_NERVE(TNerveBPFall, TLiveActor) { return FALSE; }
 
-// TODO: incorrect size. Map records 56 bytes.
-DEFINE_NERVE(TNerveBPSleep, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBPSleep, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
 
-// TODO: incorrect size. Map records 244 bytes.
-DEFINE_NERVE(TNerveBPBreakSleep, TLiveActor) { return FALSE; }
+	if (spine->getTime() == 0)
+		boss->changeBck(BOSSPAKU_BCK_SLEEP);
+
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveBPBreakSleep, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		boss->changeBck(BOSSPAKU_BCK_GETUP);
+		MSBgm::stopTrackBGMs(7, 10);
+	}
+
+	if (boss->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		spine->pushAfterCurrent(&TNerveBPTakeOff::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
+}
 
 // TODO: incorrect size. Map records 564 bytes.
 DEFINE_NERVE(TNerveBPWaitL, TLiveActor) { return FALSE; }
 
-// TODO: incorrect size. Map records 312 bytes.
-DEFINE_NERVE(TNerveBPCannonL, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBPCannonL, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	MActor* actor     = boss->getMActor();
+
+	if (spine->getTime() == 0)
+		actor->setBck("bosspaku_pollut_start");
+
+	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		if (actor->checkCurAnm("bosspaku_pollut_start", ANM_TYPE_BCK)) {
+			actor->setBck("bosspaku_ball_end");
+			boss->launchPolDrop();
+		} else {
+			spine->pushAfterCurrent(&TNerveBPWaitL::theNerve());
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
