@@ -141,7 +141,7 @@ public:
 	/* 0x1AC */ Mtx unk1AC;
 	/* 0x1DC */ TMapCollisionMove* unk1DC;
 	/* 0x1E0 */ u8 unk1E0;
-	/* 0x1E4 */ JGeometry::TVec3<f32> unk1E4;
+	/* 0x1E4 */ f32 mRollSp[3];
 };
 
 class TBossTelesa : public TSpineEnemy {
@@ -297,7 +297,7 @@ public:
 
 public:
 	/* 0x194 */ TBubbleSaveLoadParams* mParams;
-	/* 0x198 */ TSmallEnemy* mEnemyInside;
+	/* 0x198 */ TLiveActor* mEnemyInside;
 	/* 0x19C */ TPosition3f unk19C;
 	/* 0x1CC */ f32 mFloatHeight;
 	/* 0x1D0 */ bool mIsSplit;

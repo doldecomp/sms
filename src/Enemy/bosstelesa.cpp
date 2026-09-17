@@ -1,5 +1,6 @@
 #include <Enemy/BossTelesaObj.hpp>
 #include <Enemy/BossTelesa.hpp>
+#include <Camera/CameraShake.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Enemy/HamuKuri.hpp>
 #include <Enemy/Telesa.hpp>
@@ -22,12 +23,14 @@
 #include <MarioUtil/MtxUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
+#include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <GC2D/GCConsole2.hpp>
 #include <MoveBG/Item.hpp>
 #include <MoveBG/ItemManager.hpp>
 #include <MoveBG/MapObjManager.hpp>
+#include <Player/Mario.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Strategic/LiveActor.hpp>
 #include <System/MarDirector.hpp>
@@ -1035,14 +1038,106 @@ void TBossTelesa::damageRecover()
 // TODO: incorrect size. Map records 284 bytes.
 void TBossTelesa::tongueHitWater() { }
 
-bool TBossTelesa::rouletteFall() { return false; }
+bool TBossTelesa::rouletteFall()
+{
+	f32 y      = mRoulettes[0]->mPosition.y;
+	f32 restY  = mRoulettes[1]->mPosition.y;
 
-bool TBossTelesa::slotFall() { return false; }
+	if (y > restY) {
+		mRoulettes[0]->mPosition.y = y - 2.0f;
+		mRoulettes[0]->getMActor()->setBck("rulet00");
+
+		if (mRoulettes[0]->mPosition.y > 3.0f + mRoulettes[1]->mPosition.y) {
+			if (SMS_SendMessageToMario(this, HIT_MESSAGE_TAKE))
+				mHeldObject = (TTakeActor*)SMS_GetMarioHitActor();
+		} else if (SMS_SendMessageToMario(this, HIT_MESSAGE_UNK8)) {
+			gpMSound->startSoundActor(MSD_SE_BS_TELESA_RLT_SET, &mPosition, 0,
+			                          nullptr, 0, 4);
+			mHeldObject = nullptr;
+		}
+
+		gpMSound->startSoundActor(MSD_SE_BS_TELESA_V_LAUGH1B, &mPosition, 0,
+		                          nullptr, 0, 4);
+		gpMSound->startSoundActor(MSD_SE_BS_TELESA_RLT_DOWN, &mPosition, 0,
+		                          nullptr, 0, 4);
+		gpMarioOriginal->mGamePad->onNeutralMarioKey();
+
+		return false;
+	}
+
+	mRoulettes[0]->mPosition.y = restY;
+
+	return true;
+}
+
+bool TBossTelesa::slotFall()
+{
+	f32 y = mSlot->mPosition.y;
+	if (y > mRoulettes[0]->mPosition.y - 800.0f) {
+		mSlot->mPosition.y = y - 5.0f;
+		return false;
+	}
+
+	mSlot->mPosition.y = y - 1.0f;
+
+	if (mSlot->mPosition.y < mRoulettes[0]->mPosition.y - 900.0f) {
+		if (isForceRestart())
+			rouletteStart();
+	}
+
+	if (mSlot->mPosition.y < mRoulettes[0]->mPosition.y - 1100.0f)
+		return true;
+
+	mRoulettes[0]->unk150->setHitParams(280.0f, 100.0f, 280.0f, 100.0f);
+	mRoulettes[1]->unk150->setHitParams(280.0f, 100.0f, 280.0f, 100.0f);
+
+	return false;
+}
 
 // TODO: incorrect size. Map records 44 bytes.
 void TBossTelesa::openWaterPlace() { }
 
-void TBossTelesa::flashItem(int index) { }
+void TBossTelesa::flashItem(int timer)
+{
+	int phase = timer % 16;
+
+	for (int i = 0; i < 20; ++i) {
+		// The reference is what the ROM's `addi rN, obj, 0xf0` before the
+		// dead test comes from; the accessors keep the base+offset form.
+		TMapObjBase* fruit = mFruits[i];
+		u32& fruitFlags    = fruit->mLiveFlag;
+		if (!fruit->checkLiveFlag(LIVE_FLAG_DEAD)
+		    && fruit->mHolder == nullptr) {
+			if (phase < 8)
+				fruitFlags |= LIVE_FLAG_HIDDEN;
+			else
+				fruitFlags &= ~LIVE_FLAG_HIDDEN;
+		}
+	}
+
+	for (int i = 0; i < 10; ++i) {
+		TMapObjBase* pepper = mPeppers[i];
+		u32& pepperFlags    = pepper->mLiveFlag;
+		if (!pepper->checkLiveFlag(LIVE_FLAG_DEAD)
+		    && pepper->mHolder == nullptr) {
+			if (phase < 8)
+				pepperFlags |= LIVE_FLAG_HIDDEN;
+			else
+				pepperFlags &= ~LIVE_FLAG_HIDDEN;
+		}
+
+		// TODO: the ROM computes &coin->mLiveFlag here as well, but binding a
+		// reference the way the fruit and pepper loops do makes MWCC fuse the
+		// address into an `lwzu` and costs more than the two instructions.
+		TCoin* coin = mCoins[i];
+		if (!coin->checkLiveFlag(LIVE_FLAG_DEAD)) {
+			if (phase < 8)
+				coin->onLiveFlag(LIVE_FLAG_HIDDEN);
+			else
+				coin->offLiveFlag(LIVE_FLAG_HIDDEN);
+		}
+	}
+}
 
 // TODO: incorrect size. Map records 48 bytes.
 void TBossTelesa::onAllCollision() { }
@@ -1052,7 +1147,67 @@ void TBossTelesa::offAllCollision() { }
 
 const char** TBossTelesa::getBasNameTable() const { return btelesa_bastable; }
 
-void TBossTelesa::genAttacker() { }
+void TBossTelesa::genAttacker()
+{
+	if (unk150) {
+		TTelesa* telesa = (TTelesa*)gpConductor->makeOneEnemyAppear(
+		    mPosition, "テレサマネージャー", 1);
+		if (telesa)
+			telesa->initAttacker(this);
+
+		return;
+	}
+
+	int num         = mParams->mSLNumGenBubble.get();
+	MtxPtr mouthMtx = getMActor()->getModel()->getAnmMtx(5);
+	f32 step        = 180.0f / (f32)num;
+	f32 halfSpread  = step * (f32)num * 0.5f;
+
+	for (int i = 0; i < num; ++i) {
+		TBubble* bubble = (TBubble*)gpConductor->makeOneEnemyAppear(
+		    mPosition, "バブルマネージャー", 1);
+		if (!bubble)
+			return;
+
+		JGeometry::TVec3<f32> velocity(0.0f, 0.0f, -50.0f);
+		Mtx mtx;
+		MsMtxSetRotRPH(mtx, mRotation.x,
+		               (step * (f32)i) + (mRotation.y - halfSpread),
+		               mRotation.z);
+		MTXMultVec(mtx, velocity, velocity);
+		MsVECNormalize(velocity, velocity);
+		velocity.y = 2.0f;
+
+		f32 speed = mParams->mSL1stBubbleSp.get();
+		velocity.x *= speed;
+		velocity.z *= speed;
+
+		bubble->mPosition.set(mouthMtx[0][3], mouthMtx[1][3] - 50.0f,
+		                      mouthMtx[2][3]);
+		bubble->setVelocity(velocity);
+		bubble->mPosition.y += 10.0f;
+		bubble->onLiveFlag(LIVE_FLAG_AIRBORNE);
+
+		TMsRange<f32> chance(0.0f, 1.0f);
+		if (chance.rand() < mItemGenRate) {
+			bubble->mEnemyInside = nullptr;
+
+			TItem* item = (TItem*)gpItemManager->makeObjAppear(
+			    bubble->mPosition.x, bubble->mPosition.y, bubble->mPosition.z,
+			    0x20000008, true);
+			if (item && item->receiveMessage(bubble, HIT_MESSAGE_TAKE)) {
+				item->appear();
+				item->mPosition = bubble->mPosition;
+				item->mVelocity.set(0.0f, 15.0f, 0.0f);
+				item->offLiveFlag(LIVE_FLAG_UNK10);
+				bubble->mHeldObject  = item;
+				bubble->mEnemyInside = item;
+			}
+		} else if (chance.rand() < mEnemyGenRate) {
+			bubble->appendEnemy();
+		}
+	}
+}
 
 void TBossTelesa::setBckAnm(int index)
 {
@@ -1072,7 +1227,48 @@ void TBossTelesa::setBckAnm(int index)
 // TODO: incorrect size. Map records 140 bytes.
 bool TBossTelesa::isInDamage() { return false; }
 
-void TBossTelesa::rouletteStart() { }
+void TBossTelesa::rouletteStart()
+{
+	// A real ROM bug: the count is never used, so only the three speed loads
+	// and compares survive.
+	int spinning = 0;
+	for (int i = 0; i < 3; ++i) {
+		if (mRoulettes[i]->unk13C != 0.0f)
+			spinning += 1;
+	}
+
+	TMsRange<f32> speedRange(0.05f, 0.1f);
+	TMsRange<f32> directionRange(-1.0f, 1.0f);
+
+	f32 direction = directionRange.rand();
+	// TODO: the u8 local is what puts the ROM's `clrlwi` after the merge of
+	// getMaxHitPoints()' two arms; TSpineEnemy::getMaxHitPoints() probably
+	// returned u8 rather than u32 (open shared-header fix in Enemy.hpp).
+	u8 maxHitPoints = getMaxHitPoints();
+	f32 speedUp     = mRouletteUpRate * (f32)(maxHitPoints - mHitPoints);
+
+	for (int i = 0; i < 3; ++i) {
+		f32 sign;
+		if (direction > 0.0f) {
+			sign = -1.0f;
+			if (i == 0 || i == 2)
+				sign = 1.0f;
+		} else {
+			sign = 1.0f;
+			if (i == 0 || i == 2)
+				sign = -1.0f;
+		}
+
+		mRoulettes[i]->unk144 = sign * (speedUp + speedRange.rand());
+		mSlot->mRollSp[i]     = sign * (speedUp + speedRange.rand());
+	}
+
+	rollRouletteCircle();
+
+	SMSRumbleMgr->start(0x14, 0xF, (f32*)nullptr);
+	// mCamShakeNameSave[0x23] is "/Camera/shakeBTelesaRoll.prm".
+	gpCameraShake->startShake((EnumCamShakeMode)0x23, 1.0f);
+}
 
 // TODO: incorrect size. Map records 64 bytes.
 void TBossTelesa::slotStart() { }
@@ -1114,11 +1310,23 @@ void TBossTelesa::forceAllItemKill()
 	}
 }
 
-// TODO: incorrect size. Map records 116 bytes.
-void TBossTelesa::rollRouletteCircle() { }
+void TBossTelesa::rollRouletteCircle()
+{
+	for (int i = 0; i < 3; ++i)
+		mRoulettes[i]->setRollSp(mSlot->mRollSp[i]);
+}
 
-// TODO: incorrect size. Map records 84 bytes.
-bool TBossTelesa::isForceRestart() { return false; }
+bool TBossTelesa::isForceRestart()
+{
+	int spinning = 0;
+
+	for (int i = 0; i < 3; ++i) {
+		if (mRoulettes[i]->unk13C != 0.0f)
+			spinning += 1;
+	}
+
+	return spinning != 3;
+}
 
 void TBossTelesa::forceHide()
 {
