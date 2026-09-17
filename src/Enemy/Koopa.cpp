@@ -1367,9 +1367,10 @@ BOOL TKoopa::receiveMessage(THitActor* sender, u32 message)
 // Bowser rides the bathtub: his world matrix is the tub's matrix times his own
 // Y rotation, with the origin pushed 1500 units down the tub's up axis.
 //
-// TODO: JGeometry::TMatrix34<T>::concat() cannot be used for the product. Its
-// indices are transposed against this one and it reads a.at(3, 0)/b.at(3, 1),
-// which are past the end of a 3x4, so the twelve terms are written out here.
+// JGeometry::TMatrix34<T>::concat(a, b) now carries exactly these twelve terms,
+// but it takes both operands as const T&, and here the left one is the bathtub's
+// joint matrix, an MtxPtr with no JGeometry wrapper to bind to. Hence the terms
+// stay written out; nothing but a cast would let the call be used.
 void TKoopa::calcRootMatrix()
 {
 	TBathtub* bathtub = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
