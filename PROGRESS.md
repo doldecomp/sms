@@ -7,14 +7,14 @@ Per-batch history through batch 69 is archived in [docs/progress/history.md](doc
 
 ## Current numbers
 
-Measured from `build/GMSE01/report.json` on 2026-09-16 after the six-batch goal run of 2026-09-16/17.
+Measured from `build/GMSE01/report.json` on 2026-09-16 on 2026-09-17 during the second parallel run.
 
 | | Matched code | Source-linked code | Linked units |
 | --- | ---: | ---: | ---: |
-| Game | 29.75% | 3.60% | 95 / 385 |
+| Game | 29.96% | 3.60% | 95 / 385 |
 | JSystem | 87.11% | 61.61% | 166 / 198 |
 | SDK | 95.07% | 92.22% | 142 / 149 |
-| All | 42.34% | 17.91% | 403 / 732 |
+| All | 42.50% | 17.91% | 403 / 732 |
 
 9,072 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
 
@@ -27,6 +27,7 @@ Since then, work has been **whole-TU enemy reconstruction from the map**: scaffo
 | --- | ---: | ---: |
 | `MoveBG/MapObjWave` | 99.99% | 11 / 12 |
 | `Enemy/effectEnemy` | 99.99% | 17 / 18 |
+| `Enemy/bombhei` | 99.10% | 38 / 48 |
 | `Enemy/yunbo` | 99.22% | 27 / 35 |
 | `Enemy/amiNoko` | 98.70% | 27 / 37 |
 | `Enemy/feetinv` | 95.18% | 24 / 25 |

@@ -76,6 +76,8 @@ Reordering does not fix `.rodata` offsets that depend on objects the original em
 - Moving a header-defined constructor to its map-ordered cpp position emits a missing UNUSED body without breaking inlined callers (`TMapCollisionBase`).
 - Restore UNUSED helpers from repeated branches: `InitChangeOneColor_Base`/`TwoColor_Base` (48/80 bytes), `initObjArray(int)` (60), `loadSaveParams_` (128), `checkJumpingThrowStart` (92).
 - A map pass with four-byte stub bodies is not completion.
+- An UNUSED helper can also be genuinely dead, and the caller's codegen decides. `TBombHei::bombIn` is size-exact, but *calling* it from `behaveToRelease` pushes the inlined `theNerve()` constructor a level too deep and emits a `bl TNerveBase::TNerveBase()` the ROM lacks; spelling the push out and leaving the helper uncalled matches. `UNUSED` cannot distinguish "inlined everywhere" from "never called".
+- `@NNNN` literal numbers are assigned at deferred code generation, not at parse: a params constructor defined first still gets the highest `@NNNN`, so literal order is not evidence against reverse emission order.
 - An UNUSED helper can exist *for* the extra inline level. `TMapObjWave::movement` (UNUSED, 0xd8) must be called from `perform`: with its body pasted in, `updateTime` sits at depth 1 and expands (0%); behind `movement()` it is at depth 2 and stays a `bl` as in the ROM. The out-of-line `movement` copy inlines `updateTime`, which is what makes it 0xd8.
 
 ## Return types
