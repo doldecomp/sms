@@ -23,6 +23,8 @@ bool WaveArcLoader::init()
 	return true;
 }
 
+void WaveArcLoader::init(u32) { }
+
 void WaveArcLoader::setCurrentDir(const char* dir)
 {
 	strcpy(sCurrentDir, dir);
@@ -43,7 +45,7 @@ bool WaveArcLoader::loadWave(TObject* obj)
 	if (!heap)
 		return false;
 
-	if (heap->getUnk8() != nullptr)
+	if (heap->getBase() != nullptr)
 		return false;
 
 	char buffer[128];
@@ -59,7 +61,7 @@ bool WaveArcLoader::loadWave(TObject* obj)
 
 	u32* flagPtr = obj->getLoadFlagPtr();
 	*flagPtr     = 0;
-	s32 res      = Dvd::loadToAramDvdT(0, buffer, heap->getUnk8(), 0, extent,
+	s32 res      = Dvd::loadToAramDvdT(0, buffer, heap->getBase(), 0, extent,
 	                                   flagPtr, nullptr);
 	if (res == -1) {
 		heap->free();
@@ -75,7 +77,7 @@ bool WaveArcLoader::eraseWave(TObject* obj)
 	if (!heap)
 		return false;
 
-	if (!heap->getUnk8())
+	if (!heap->getBase())
 		return false;
 
 	u32* flagPtr = obj->getLoadFlagPtr();

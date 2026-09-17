@@ -143,12 +143,12 @@ if not config.non_matching:
     config.asm_dir = None
 
 # Tool versions
-config.binutils_tag = "2.42-1"
-config.compilers_tag = "20250520"
-config.dtk_tag = "v1.3.0"
-config.objdiff_tag = "v3.7.1"
-config.sjiswrap_tag = "v1.2.0"
-config.wibo_tag = "0.6.11"
+config.binutils_tag = "2.42-2"
+config.compilers_tag = "20251118"
+config.dtk_tag = "v1.8.4"
+config.objdiff_tag = "v3.8.1"
+config.sjiswrap_tag = "v1.2.2"
+config.wibo_tag = "1.1.0"
 
 # Project
 config.config_path = Path("config") / config.version / "config.yml"
@@ -422,16 +422,16 @@ config.libs = [
             # JADebug
             Object(Matching, "JSystem/JAudio/JADebug/JADHioNode.cpp"),
             # JALibrary
-            Object(NonMatching, "JSystem/JAudio/JALibrary/JALCalc.cpp"),
+            Object(Matching, "JSystem/JAudio/JALibrary/JALCalc.cpp"),
             Object(NonMatching, "JSystem/JAudio/JALibrary/JALModSe.cpp"),
             # JAInterface
             Object(Matching, "JSystem/JAudio/JAInterface/JAIAsnData.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JAInterface/JAIAnimation.cpp"),
+            Object(Matching, "JSystem/JAudio/JAInterface/JAIAnimation.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAInterface/JAIBasic.cpp"),
             Object(Matching, "JSystem/JAudio/JAInterface/JAIConst.cpp"),
             Object(Matching, "JSystem/JAudio/JAInterface/JAIDebug.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JAInterface/JAIData.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JAInterface/JAIEntry.cpp"),
+            Object(Matching, "JSystem/JAudio/JAInterface/JAIData.cpp"),
+            Object(Matching, "JSystem/JAudio/JAInterface/JAIEntry.cpp"),
             Object(Matching, "JSystem/JAudio/JAInterface/JAIEntrySe.cpp"),
             Object(Matching, "JSystem/JAudio/JAInterface/JAIEntrySequence.cpp"),
             Object(Matching, "JSystem/JAudio/JAInterface/JAIEntryStream.cpp"),
@@ -439,24 +439,24 @@ config.libs = [
             Object(NonMatching, "JSystem/JAudio/JAInterface/JAIGFrameSequence.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAInterface/JAIGFrameStream.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAInterface/JAIGlobalParameter.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JAInterface/JAISound.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JAInterface/JAISystemInterface.cpp"),
+            Object(Matching, "JSystem/JAudio/JAInterface/JAISound.cpp"),
+            Object(Matching, "JSystem/JAudio/JAInterface/JAISystemInterface.cpp"),
             # JASystem
             Object(Matching, "JSystem/JAudio/JASystem/JASBank.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASBankMgr.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASBankMgr.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASBasicBank.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASBasicInst.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASBasicWaveBank.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASBNKParser.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASBasicWaveBank.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASBNKParser.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASDrumSet.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASInstEffect.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASInstRand.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASInstRand.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASInstSense.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASSimpleWaveBank.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASWaveArcLoader.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASWaveBank.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASWaveBankMgr.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASWSParser.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASWSParser.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASAudioThread.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASChAllocQueue.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASChannel.cpp"),
@@ -466,20 +466,20 @@ config.libs = [
             Object(Matching, "JSystem/JAudio/JASystem/JASDriverIF.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASDSPBuf.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASDSPChannel.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASDSPInterface.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASDSPInterface.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASOscillator.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASAiCtrl.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASCalc.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASCallback.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASCmdStack.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASDvdThread.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASDvdThread.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASHardStream.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASHeapCtrl.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASRate.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASKernelDebug.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASProbe.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASSystemHeap.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASVload.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASVload.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASNoteMgr.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASOuterParam.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASPlayer_impl.cpp"),
@@ -489,7 +489,7 @@ config.libs = [
             Object(Matching, "JSystem/JAudio/JASystem/JASTrackInterrupt.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASTrackMgr.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASTrackPort.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JASystem/JASSeqParser.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASSeqParser.cpp"),
 
             # J2D
             Object(Matching, "JSystem/J2D/J2DPane.cpp"),

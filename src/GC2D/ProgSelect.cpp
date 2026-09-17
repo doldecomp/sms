@@ -50,17 +50,19 @@ void TProgSelect::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 
 		u32 prevSelection = mSelection;
-		if (mGamePad->checkFrameMeaning(0x8)) {
+		if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_LEFT)) {
 			if (mSelection) {
 				mSelection = 0;
 				unk128     = 0;
 			}
-		} else if (mGamePad->checkFrameMeaning(0x10)) {
+		} else if (mGamePad->checkFrameMeaning(
+		               TMarioGamePad::MEANING_MENU_RIGHT)) {
 			if (mSelection != 1) {
 				mSelection = 1;
 				unk128     = 0;
 			}
-		} else if (mGamePad->checkFrameMeaning(0x20) || thing()) {
+		} else if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)
+		           || thing()) {
 			{
 				if (!mSelection) {
 					snprintf(unk1C, 256,

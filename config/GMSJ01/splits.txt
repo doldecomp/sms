@@ -17,9 +17,6 @@ main.cpp:
 	.ctors      start:0x8036FBA4 end:0x8036FBA8
 	.bss        start:0x803E6000 end:0x803E6050
 
-PowerPC_EABI_Support/Runtime/__mem.c:
-	.init       start:0x80003100 end:0x80003244
-
 JSystem/JKernel/JKRArchivePri.cpp:
 	.text       start:0x8000566C end:0x80005E1C
 	.sbss       start:0x804097C0 end:0x804097C8
@@ -1224,6 +1221,9 @@ TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/notify.c:
 
 TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Processor/ppc/Generic/flush_cache.c:
 	.text       start:0x8008A33C end:0x8008A374
+
+PowerPC_EABI_Support/Runtime/__mem.c:
+	.init       start:0x80003100 end:0x80003244
 
 TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/mem_TRK.c:
 	.init       start:0x80003244 end:0x80003298
@@ -4243,13 +4243,13 @@ Camera/CameraMode.cpp:
 	.rodata     start:0x803A6D20 end:0x803A74B8
 	.data       start:0x803E4CF0 end:0x803E5288
 
-Camera/CameraSecureView.cpp:
-	.text       start:0x80363414 end:0x80363734
-	.sdata2     start:0x80413D38 end:0x80413D50
-
 Camera/CamShakeDefine.cpp:
 	.rodata     start:0x803A74B8 end:0x803A7998
 	.data       start:0x803E5288 end:0x803E5330
+
+Camera/CameraSecureView.cpp:
+	.text       start:0x80363414 end:0x80363734
+	.sdata2     start:0x80413D38 end:0x80413D50
 
 Animal/boid.cpp:
 	.text       start:0x80363734 end:0x80364AC8

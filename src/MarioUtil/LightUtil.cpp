@@ -37,8 +37,10 @@ TLightCommon::TLightCommon(const char* name)
 
 void TLightCommon::loadAfter()
 {
-	mAmbAry    = JDrama::TNameRefGen::search<JDrama::TAmbAry>("Ambient Group");
-	mLightAry  = JDrama::TNameRefGen::search<JDrama::TLightAry>("Light Group");
+	mAmbAry = static_cast<JDrama::TAmbAry*>(
+	    JDrama::TNameRefGen::search("Ambient Group"));
+	mLightAry = static_cast<JDrama::TLightAry*>(
+	    JDrama::TNameRefGen::search("Light Group"));
 	mLightPos  = &mLightAry->getLight(0)->mPosition;
 	mShininess = 50.0f;
 	for (int i = 0; i < 4; ++i) {
@@ -427,8 +429,8 @@ TLightWithDBSetManager::TLightWithDBSetManager(const char* name)
 
 void TLightWithDBSetManager::loadAfter()
 {
-	JDrama::TLightAry* group
-	    = JDrama::TNameRefGen::search<JDrama::TLightAry>("Light Group");
+	JDrama::TLightAry* group = static_cast<JDrama::TLightAry*>(
+	    JDrama::TNameRefGen::search("Light Group"));
 	mEffectLightColor = group->getLight(0)->getColor();
 	mEffectLightPos   = group->getLight(0)->mPosition;
 }

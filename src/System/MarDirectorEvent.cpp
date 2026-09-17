@@ -80,7 +80,7 @@ void TMarDirector::movement_game()
 	if ((int)unk124 == 0)
 		return;
 
-	unk18[0]->offFlag(0x2);
+	unk18[0]->offFlag(TMarioGamePad::PAD_FLAG_TALK_NPC);
 	if (!gpMarioOriginal->isHolding() && gpCamera->isLButtonCamera())
 		return;
 
@@ -93,9 +93,11 @@ void TMarDirector::movement_game()
 			if (talkNpc != nullptr) {
 				unkA0 = talkNpc;
 				unk84->associateNPC(talkNpc);
-				unk18[0]->onFlag(4);
+				unk18[0]->onFlag(TMarioGamePad::PAD_FLAG_TALK_NPC);
 				unk128 |= 0x1;
-				if ((unk128 & 2) && (unk18[0]->mEnabledFrameMeaning & 0x800))
+				if ((unk128 & 2)
+				    && (unk18[0]->checkFrameMeaning(
+				        TMarioGamePad::MEANING_TALK_B)))
 					unk126 = 1;
 			}
 		}

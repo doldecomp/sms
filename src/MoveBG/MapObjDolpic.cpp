@@ -6,6 +6,7 @@
 #include <System/EmitterViewObj.hpp>
 #include <System/FlagManager.hpp>
 #include <MSound/MSound.hpp>
+#include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <MarioUtil/MathUtil.hpp>
@@ -144,7 +145,7 @@ void TMonumentShine::control()
 		if (unk144 == 2) {
 			if (unk148 > 0) {
 				f32 diff
-				    = MsAngleDiff(mRotation.y, mInitialRotation.y + 360.0f);
+				    = MsAngleDiff(mInitialRotation.y + 360.0f, mRotation.y);
 				if (diff > 0.1f)
 					diff = 0.1f;
 				if (0.0f == diff)
@@ -152,7 +153,7 @@ void TMonumentShine::control()
 				mAngularVelocity.y += diff;
 			} else {
 				f32 diff
-				    = MsAngleDiff(mRotation.y, mInitialRotation.y - 360.0f);
+				    = MsAngleDiff(mInitialRotation.y - 360.0f, mRotation.y);
 				if (diff < -0.1f)
 					diff = -0.1f;
 				if (0.0f == diff)
@@ -230,7 +231,7 @@ void TBellDolpic::calcRootMatrix()
 	TMapObjBase::calcRootMatrix();
 	J3DModel* model = getModel();
 	Mtx temp;
-	PSMTXRotAxisRad(temp, &unk140, 0.017453292f * unk14C);
+	PSMTXRotAxisRad(temp, &unk140, DEG_TO_RAD(unk14C));
 	PSMTXConcat(model->getBaseTRMtx(), temp, model->getBaseTRMtx());
 }
 
@@ -254,8 +255,7 @@ void TBellDolpic::ring(const JGeometry::TVec3<f32>& pos)
 
 	unk150 -= 0.5f;
 
-	int r   = rand();
-	f32 tmp = (f32)r * 0.000030517578f;
+	f32 tmp = (f32)rand() * 0.000030517578f;
 	unk158  = (int)(tmp * 14400.0f) + 0x5460;
 }
 
@@ -317,7 +317,7 @@ void TBellDolpic::control()
 
 	TMapObjBase::control();
 
-	f32 sinVal = -JMASin(unk14C);
+	f32 sinVal = -MsSin(unk14C);
 	unk150     = 0.01f * sinVal + unk150;
 
 	unk14C = unk14C + unk150;
@@ -505,13 +505,17 @@ void TDemoCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 void TTurboNozzleDoor::loadAfter()
 {
 	if (strcmp("空港ドアＡ０", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＡ１");
+		unk144 = static_cast<TLiveActor*>(
+		    JDrama::TNameRefGen::search("空港ドアＡ１"));
 	} else if (strcmp("空港ドアＡ１", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＡ０");
+		unk144 = static_cast<TLiveActor*>(
+		    JDrama::TNameRefGen::search("空港ドアＡ０"));
 	} else if (strcmp("空港ドアＢ０", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＢ１");
+		unk144 = static_cast<TLiveActor*>(
+		    JDrama::TNameRefGen::search("空港ドアＢ１"));
 	} else if (strcmp("空港ドアＢ１", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＢ０");
+		unk144 = static_cast<TLiveActor*>(
+		    JDrama::TNameRefGen::search("空港ドアＢ０"));
 	}
 }
 

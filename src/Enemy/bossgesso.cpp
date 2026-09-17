@@ -123,7 +123,7 @@ TBGBeakHit::TBGBeakHit(TBossGesso* owner, const char* name)
     : TTakeActor(name)
     , mOwner(owner)
 {
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 
@@ -285,7 +285,7 @@ TBGEyeHit::TBGEyeHit(TBossGesso* owner, int joint_index, const char* name)
     , mOwner(owner)
     , mJointIndex(joint_index)
 {
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 
@@ -322,7 +322,7 @@ TBGBodyHit::TBGBodyHit(TBossGesso* owner, int joint_index, const char* name)
     : mOwner(owner)
     , mJointIndex(joint_index)
 {
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 
@@ -921,7 +921,7 @@ void TBossGesso::doAttackSingle()
 		unk17C = 0;
 	}
 
-	if (gpMarDirector->unk58 < 0x1E0)
+	if (gpMarDirector->mMoveTickCount < 0x1E0)
 		return;
 
 	if (gpMarDirector->isTalkOrDemoModeNow())
@@ -1234,24 +1234,7 @@ void TBossGesso::calcRootMatrix()
 		               mRotation.y, mRotation.z);
 
 		Mtx local_50;
-
-		f32 s = JMASSin(0x4000);
-		f32 c = JMASCos(0x4000);
-
-		local_50[0][0] = 1.0;
-		local_50[0][1] = 0.0;
-		local_50[0][2] = 0.0;
-		local_50[0][3] = 0.0;
-
-		local_50[1][0] = 0.0;
-		local_50[1][1] = c;
-		local_50[1][2] = -s;
-		local_50[1][3] = 0.0;
-
-		local_50[2][0] = 0.0;
-		local_50[2][1] = s;
-		local_50[2][2] = c;
-		local_50[2][3] = 0.0;
+		MsMtxSetRotX(local_50, 90.0f);
 
 		MTXConcat(mA, local_50, mA);
 
@@ -1303,7 +1286,8 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (mAttackMode == 6) {
 		if (cue & CUE_CALC_ANIM) {
-			if (JDrama::TNameRefGen::search<THitActor>("container")
+			if (static_cast<THitActor*>(
+			        JDrama::TNameRefGen::search("container"))
 			    == nullptr) {
 				changeAttackMode(0);
 			} else if (mTentacles[0]->mState != 4) {
@@ -1353,18 +1337,18 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 		TCircleShadowRequest request;
 
 		MtxPtr joint = mMActor->getModel()->getAnmMtx(1);
-		request.unk0
+		request.mPosition
 		    = JGeometry::TVec3<f32>(joint[0][3], mPosition.y, joint[2][3]);
 
 		JGeometry::TVec3<f32> right(joint[0][0], joint[1][0], joint[2][0]);
 		JGeometry::TVec3<f32> front(joint[0][2], joint[1][2], joint[2][2]);
 
-		request.unkC  = VECMag(right);
-		request.unk10 = VECMag(front);
-		request.unkC *= mScaledBodyRadius;
-		request.unk10 *= mScaledBodyRadius;
-		request.unk1C = getShadowType();
-		request.unk14 = mRotation.y;
+		request.mRadiusX = VECMag(right);
+		request.mRadiusZ = VECMag(front);
+		request.mRadiusX *= mScaledBodyRadius;
+		request.mRadiusZ *= mScaledBodyRadius;
+		request.mShadowType = getShadowType();
+		request.mRotationY  = mRotation.y;
 
 		gpBindShadowManager->request(request, getActorType());
 	}
@@ -1802,9 +1786,8 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 			    self->mPosition.y + 6000.0f, self->mPosition.z);
 		}
 
-		TNameKuriManager* nameKuriMgr
-		    = JDrama::TNameRefGen::search<TNameKuriManager>(
-		        "ナメクリマネージャー");
+		TNameKuriManager* nameKuriMgr = static_cast<TNameKuriManager*>(
+		    JDrama::TNameRefGen::search("ナメクリマネージャー"));
 		if (nameKuriMgr)
 			nameKuriMgr->killChildren();
 
@@ -1859,8 +1842,8 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		self->changeAllTentacleState(0);
 		self->kill();
 
-		THitActor* block = JDrama::TNameRefGen::search<THitActor>(
-		    "マーレボスゲッソー用ブロック");
+		THitActor* block = static_cast<THitActor*>(
+		    JDrama::TNameRefGen::search("マーレボスゲッソー用ブロック"));
 
 		if (block != nullptr) {
 			block->receiveMessage(self, HIT_MESSAGE_ATTACK);

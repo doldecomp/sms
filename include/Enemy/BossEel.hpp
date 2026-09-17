@@ -117,7 +117,7 @@ public:
 
 class TOilBall : public TBEelTears {
 public:
-	TOilBall(const char*);
+	TOilBall(const char* name = "油ダマ");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void calcRootMatrix();
@@ -339,7 +339,7 @@ public:
 	static bool mToothDamageAnm;
 	static f32 mTestAngY;
 
-	TBossEel(const char*);
+	TBossEel(const char* name = "㼀");
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message)

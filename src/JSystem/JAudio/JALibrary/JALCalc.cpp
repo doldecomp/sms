@@ -14,49 +14,50 @@ f32 linearTransform(f32 x, f32 xStart, f32 xEnd, f32 yStart, f32 yEnd,
 	if (unbounded)
 		return result;
 
-	if (yStart < yEnd) {
+	if (yStart < yEnd)
 		return result > yEnd ? yEnd : (result < yStart ? yStart : result);
-	} else {
+	else
 		return result > yStart ? yStart : (result < yEnd ? yEnd : result);
-	}
 }
 
 f32 getParamByExp(f32 x, f32 xStart, f32 xEnd, f32 y, f32 yStart, f32 yEnd,
                   CurveSign curve)
 {
-	f32 result;
+	f32 param;
 	if (curve == CS_POSITIVE_CURVE) {
-		f32 newX = expf(linearTransform(x, xStart, xEnd, 0.0f, y, true));
-		result   = linearTransform(newX, 1.0f, expf(y), yStart, yEnd, true);
+		param = linearTransform(x, xStart, xEnd, 0.0f, y, true);
+		param = expf(param);
+		param = linearTransform(param, 1.0f, expf(y), yStart, yEnd, true);
 	} else if (curve == CS_NEGATIVE_CURVE) {
-		f32 newX = expf(linearTransform(x, xStart, xEnd, y, 0.0f, true));
-		result   = linearTransform(newX, expf(y), 1.0f, yStart, yEnd, true);
+		param = linearTransform(x, xStart, xEnd, y, 0.0f, true);
+		param = expf(param);
+		param = linearTransform(param, expf(y), 1.0f, yStart, yEnd, true);
 	} else {
-		result = linearTransform(x, xStart, xEnd, yStart, yEnd, false);
+		param = linearTransform(x, xStart, xEnd, yStart, yEnd, false);
 	}
 
-	if (result > yEnd) {
+	if (param > yEnd)
 		return yEnd;
-	}
 
-	if (result < yStart) {
+	if (param < yStart)
 		return yStart;
-	}
 
-	return result;
+	return param;
 }
 
-f32 getRandom(f32 p1, f32 p2, f32 p3)
+f32 getParamByExp_0_1(f32, f32, f32, f32, CurveSign) { return 0.0f; }
+
+f32 getRandom(f32 amplitude, f32 curveSlope, f32 plusSlope)
 {
-	f32 val0 = 2.0f * p3;
-	f32 val1 = -2.0f * (1.0f - p3);
+	f32 val0 = 2.0f * plusSlope;
+	f32 val1 = -2.0f * (1.0f - plusSlope);
 
-	f32 val2 = getRandom_0_1() < p3 ? val0 : val1;
+	f32 val2 = getRandom_0_1() < plusSlope ? val0 : val1;
 
-	p1 *= val2;
+	amplitude *= val2;
 
-	f32 val3 = powf(getRandom_0_1(), p2);
-	return val3 * p1;
+	f32 val3 = powf(getRandom_0_1(), curveSlope);
+	return val3 * amplitude;
 }
 
 f32 getRandom_0_1()
@@ -64,6 +65,12 @@ f32 getRandom_0_1()
 	static JMath::TRandom_fast_ oRandom(0);
 	return oRandom.get_ufloat_1();
 }
+
+s32 getRandom_Sign() { return 0; }
+
+f32 pow2(f32) { return 0.0f; }
+
+f32 getRint(f32) { return 0.0f; }
 
 f32 getDist(Vec* vec1, Vec* vec2) { return std::sqrtf(getDistPow(vec1, vec2)); }
 

@@ -200,7 +200,8 @@ void TMapObjBase::startAllAnim(MActor* param_1, const char* param_2)
 void TMapObjBase::joinToGroup(const char* param_1, THitActor* param_2)
 {
 	// TODO: The group type here is a wild guess
-	JDrama::TNameRefGen::search<JDrama::TViewObjPtrListT<THitActor> >(param_1)
+	static_cast<JDrama::TViewObjPtrListT<THitActor>*>(
+	    JDrama::TNameRefGen::search(param_1))
 	    ->push_back(param_2);
 }
 
@@ -947,63 +948,6 @@ void TMapObjTurn::turn()
 	}
 }
 
-// fabricated
-static inline void makeRotXMtx(MtxPtr mtx, f32 angle)
-{
-	f32 s     = JMASin(angle);
-	f32 c     = JMACos(angle);
-	mtx[0][0] = 1.0f;
-	mtx[0][1] = 0.0f;
-	mtx[0][2] = 0.0f;
-	mtx[0][3] = 0.0f;
-	mtx[1][0] = 0.0f;
-	mtx[1][1] = c;
-	mtx[1][2] = -s;
-	mtx[1][3] = 0.0f;
-	mtx[2][0] = 0.0f;
-	mtx[2][1] = s;
-	mtx[2][2] = c;
-	mtx[2][3] = 0.0f;
-}
-
-// fabricated
-static inline void makeRotYMtx(MtxPtr mtx, f32 angle)
-{
-	f32 s     = JMASin(angle);
-	f32 c     = JMACos(angle);
-	mtx[0][0] = c;
-	mtx[0][1] = 0.0f;
-	mtx[0][2] = s;
-	mtx[0][3] = 0.0f;
-	mtx[1][0] = 0.0f;
-	mtx[1][1] = 1.0f;
-	mtx[1][2] = 0.0f;
-	mtx[1][3] = 0.0f;
-	mtx[2][0] = -s;
-	mtx[2][1] = 0.0f;
-	mtx[2][2] = c;
-	mtx[2][3] = 0.0f;
-}
-
-// fabricated
-static inline void makeRotZMtx(MtxPtr mtx, f32 angle)
-{
-	f32 s     = JMASin(angle);
-	f32 c     = JMACos(angle);
-	mtx[0][0] = c;
-	mtx[0][1] = -s;
-	mtx[0][2] = 0.0f;
-	mtx[0][3] = 0.0f;
-	mtx[1][0] = s;
-	mtx[1][1] = c;
-	mtx[1][2] = 0.0f;
-	mtx[1][3] = 0.0f;
-	mtx[2][0] = 0.0f;
-	mtx[2][1] = 0.0f;
-	mtx[2][2] = 1.0f;
-	mtx[2][3] = 0.0f;
-}
-
 void TMapObjTurn::control()
 {
 	TMapObjBase::control();
@@ -1016,30 +960,30 @@ void TMapObjTurn::control()
 	switch (unk150) {
 	case 0:
 		mRotation.x = MsWrap(unk154 + mInitialRotation.x, 0.0f, 360.0f);
-		makeRotXMtx(mtx, mRotation.x);
+		MsMtxSetRotX(mtx, mRotation.x);
 		if (mRotation.y != 0.0f) {
-			makeRotXMtx(mtx, mRotation.x);
-			makeRotYMtx(yRot, mRotation.y);
+			MsMtxSetRotX(mtx, mRotation.x);
+			MsMtxSetRotY(yRot, mRotation.y);
 			MTXConcat(yRot, mtx, mtx);
 		} else {
-			makeRotXMtx(mtx, mRotation.x);
+			MsMtxSetRotX(mtx, mRotation.x);
 		}
 		break;
 
 	case 1:
 		mRotation.y = MsWrap(unk154 + mInitialRotation.y, 0.0f, 360.0f);
-		makeRotYMtx(mtx, mRotation.y);
+		MsMtxSetRotY(mtx, mRotation.y);
 		break;
 
 	case 2:
 		mRotation.z = MsWrap(unk154 + mInitialRotation.z, 0.0f, 360.0f);
-		makeRotZMtx(mtx, mRotation.z);
+		MsMtxSetRotZ(mtx, mRotation.z);
 		if (mRotation.y != 0.0f) {
-			makeRotZMtx(mtx, mRotation.z);
-			makeRotYMtx(yRot, mRotation.y);
+			MsMtxSetRotZ(mtx, mRotation.z);
+			MsMtxSetRotY(yRot, mRotation.y);
 			MTXConcat(yRot, mtx, mtx);
 		} else {
-			makeRotZMtx(mtx, mRotation.z);
+			MsMtxSetRotZ(mtx, mRotation.z);
 		}
 		break;
 	}

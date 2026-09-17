@@ -153,7 +153,7 @@ public:
 		s32 mState;
 	};
 
-	TBossMantaManager(const char*);
+	TBossMantaManager(const char* name = "ボスマンタマネージャ");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();

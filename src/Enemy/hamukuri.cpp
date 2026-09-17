@@ -1549,7 +1549,7 @@ void THaneHamuKuri2::walkBehavior(int param_1, f32 param_2)
 	if (unk234 > flyBaseHeight)
 		unk234 -= 1.0f;
 
-	unk210      = JMASin(unk20C * 360.0f / flyBaseFrequency) * flyBaseAmplitude;
+	unk210      = MsSin(unk20C * 360.0f / flyBaseFrequency) * flyBaseAmplitude;
 	mPosition.y = unk210 + unk230 + unk234;
 	mTurnSpeed
 	    = ((THaneHamuKuriSaveLoadParams*)getSaveParam())->mSLTurnSpeedLow.get();
@@ -1877,8 +1877,8 @@ void TDangoHamuKuri::swingBody()
 		fVar1 = 16.0f;
 	}
 
-	unk21C = fVar1 * JMACos(unk20C * 360.0f);
-	unk224 = fVar1 * JMASin(unk20C * 360.0f);
+	unk21C = fVar1 * MsCos(unk20C * 360.0f);
+	unk224 = fVar1 * MsSin(unk20C * 360.0f);
 }
 
 TBossDangoHamuKuri::TBossDangoHamuKuri(const char* name)

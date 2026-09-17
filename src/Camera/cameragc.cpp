@@ -120,7 +120,7 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 void CPolarSubCamera::startJetCoasterCam1()
 {
 	unk2B0->startDemo(cJetCoasterCam1BckName, nullptr);
-	unk2B0->setFrame(gpMarDirector->unk58 * 0.5f);
+	unk2B0->setFrame(gpMarDirector->mMoveTickCount * 0.5f);
 }
 
 static s32 JetCoasterDemoCallBack(u32 param_1, u32 param_2)
@@ -378,12 +378,14 @@ bool CPolarSubCamera::isMarioReadyGun_() const
 
 bool CPolarSubCamera::isMarioAimWithGun_() const
 {
-	return isMarioReadyGun_() && unk120->checkFrameMeaning(0x400);
+	return isMarioReadyGun_()
+	       && unk120->checkFrameMeaning(TMarioGamePad::MEANING_R);
 }
 
 bool CPolarSubCamera::isMarioCrabWalk_() const
 {
-	return isMarioReadyGun_() && unk120->checkFrameMeaning(0x8000);
+	return isMarioReadyGun_()
+	       && unk120->checkFrameMeaning(TMarioGamePad::MEANING_CAM_L);
 }
 
 void CPolarSubCamera::execInvalidAutoChase_()
