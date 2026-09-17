@@ -204,6 +204,22 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `MapObjFence`, `MapObjFlag`, `ModelGate`
+
+- An empty leading case group counts toward the switch pivot but collapses out of the tree: with cases {3,4,5,6} MWCC pivots on label index n/2; adding `case 1: case 2: break;` (same destination as the default) moves the pivot and the low arm collapses into the default's `b` (`controlWall` 98.7 -> 100). Four identical bodies never tail-merge.
+- A discarded return value keeps a small inline out of line: `MsWrap(mRotation.y, 0.0f, 360.0f);` as a bare statement (a real ROM bug: the wrap never lands) is a `bl` at four sites where the assigned form expands.
+- An UNUSED helper can be size-exact *because* it inlines everywhere: `calcCurrentMtx` (0x10c) inlines into four cases and keeps the 0x7c `MsMtxSetRotY` a `bl` there; its out-of-line copy expands it, which is the 0x10c. `TRailFence::falling` (0x11c) is refused as a call yet size-exact uncalled.
+- Spell out `setToNearest`: `mTracer->setTo(mTracer->getGraph()->findNearestNodeIndex(pos, -1))` reloads the member across the call as retail does.
+- Constant-first float comparisons: `-180.0f < x` gives `fcmpo f0, f3; bge`; `x > -180.0f` gives `fcmpo f3, f0; ble`.
+- `getRotYFromAxisZ(SMS_GetMarioPos())` loads `gpMarioPos` before `this`; `*gpMarioPos` sets `r3` first.
+- Hoist a repeated inline argument to the first statement of a loop body (`f32 rate = (f32)z / (f32)mNumZ;` before the angle; folded in, the conversion lands after the inlined `MsWrap`, +11 instructions).
+- Bind the array element (`TVec3<f32>& vertex = mVertices[y][z];`), not the array expression; but no `Info*` local for a member array of structs (a local pointer adds an `addi`).
+- The rogue-include set is not always all three: `MapObjFlag.cpp` needs `DummyStrings.hpp` and the MSound pair but **not** `InfectiousStrings.hpp` (its `.data` UNUSED list lacks `MtxCalcTypeName`); check that list first.
+- `static int total_use_size = 0;` *does* get an `init$NNNN` guard, contrary to `AGENT_MATCHING_TIPS.md`.
+- `J3DTevStage::setTevStageInfo` is the shape behind `bl setTevColorOp`, nibble stores to +2/+3, the alpha bit fiddle on +6/+7, `bl setTevAlphaOp`; weak out-of-line `setTevColorOp`/`setTevAlphaOp` mean depth 2.
+- Three double-precision Newton steps after `frsqrte` mean `std::sqrtf`; `MsSqrtf` has one; `TUtil<f32>::sqrt` differs again.
+- Open: `web->unk0[i].unk0` folds to one `lwzx` in retail (`goOnRail`); `dist.length()` at depth 2 where retail calls `sqrt`.
+
 ## Rules from `TabePuku` and `Kukku`
 
 - An actor-type equality test against `0x80000001` is a `switch`, not an `if`: retail hoists the constant and compares with signed `cmpw`; every `if` spelling (literal, `(s32)` cast, `-0x7FFFFFFF`, `| 1`, hoisted `int` local) folds into the `addis`/`cmplwi` trick. `switch (x) { case 0x80000001: ... }` matches (`TTPHitActor::checkHitActors` size-exact; `TTabePuku::control` 82 -> 99.9).
