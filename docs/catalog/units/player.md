@@ -1,5 +1,12 @@
 # Player and FLUDD units
 
+## Sweep of 2026-09-17
+
+Closed: `checkCollision` (4,972 B; `u32 colType = getCollision(i)->getActorType()` plus `getCollision`/`getColNum`/`getStatus`), `waitMain` (calls `checkCollision`, not `checkReturn`; `getHeldObject()`), `landing` (missing `mStatusArg < 3` guard; `startVoice`), `checkSwimJump`/`fireDowning` (`getIntendedMag()`), `sleeping` (`startVoice` twice).
+The FLUDD spray predicate is the out-of-line `TWaterGun::isEmitting()`, not the inline `canSpray()` (which expands to ~30 instructions): `rocketCheck` 50 -> 99.9, `doJumping` 81 -> 99.9, `rocketing` 89 -> 99.9; `MarioDraw.cpp:424,1020` still use `canSpray()` and `MarioMove.cpp:2460` calls `checkCollision()` where its siblings call `checkReturn()` (both unchecked).
+Other fixes: `mFootprintPos` is 0x1A8; `barWait`'s lost-holder branch goes to `LAND_SAFE_DOWN`, input bit `0x8000`, height `<= 100.0f`; `startJumpWall` reads the wall normal's `.z`; `TUtil<f32>::one()` reproduces a `fmuls` by 1.0f a written `* 1.0f` folds away; declare the x delta second for retail's f5/f6 pairing in `sqrtf(dx*dx + dz*dz)`.
+Open: where `getOnWirePosAngle` inlines (`wireWait`, `wireSWait`, `wireHanging`, `wireRolling`, `hanging`) retail calls `TVec3::operator*=` and the copy constructor and inlines `scale`; we do the opposite at depth 4 (~78-140 instructions each; a `JGVec3.hpp` change plus sweep). `MarioJump.cpp` UNUSED stubs: `askStrongGroundTouch` (0x168), `checkWallJumping` (0x60), `doSlipJumping` (0x180), `doSpinJumping` (0x148), `setJumpingAttackArea` (0x7c); `isSwimWaiting` (0x1c, declared `void`, probably a `bool` predicate). `TMarioCap::TMarioCap` 99.0 suggests `unk30` is indexed.
+
 Scores are as of the batch noted and may be stale.
 
 ## `TWaterGun::isEmitting` (batch 50)
