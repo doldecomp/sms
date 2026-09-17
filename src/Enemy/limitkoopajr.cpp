@@ -408,7 +408,7 @@ void TLimitKoopaJrManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
 		{ "koopajr_model.bmd",
-		  J3DMLF_MtxCalcMaya | J3DMLF_MaterialUseIndirect
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialTexGenFull
 		      | J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift),
 		  0 },
 		{ nullptr, 0, 0 },
