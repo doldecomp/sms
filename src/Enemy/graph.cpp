@@ -926,10 +926,10 @@ f32 TGraphTracer::calcSplineSpeed(f32 param_1)
 	return param_1 * (fVar2 - fVar1) / fVar13;
 }
 
-bool TGraphTracer::traceSpline(f32 param_1)
+BOOL TGraphTracer::traceSpline(f32 param_1)
 {
 	if (!unk0->unk14)
-		return false;
+		return FALSE;
 
 	f32 dVar8 = unk14;
 	f32 dVar9 = dVar8 + param_1;
@@ -947,12 +947,12 @@ bool TGraphTracer::traceSpline(f32 param_1)
 		dVar10 = unk0->unk14->getNthT(uVar7);
 	}
 
-	bool result;
+	BOOL result;
 	if ((param_1 >= 0.0f && dVar8 <= dVar10 && dVar10 <= dVar9)
 	    || (param_1 < 0.0f && dVar9 <= dVar10 && dVar10 <= dVar8)) {
-		result = true;
+		result = TRUE;
 	} else {
-		result = false;
+		result = FALSE;
 	}
 
 	unk14 = unk0->unk14->wrapT(dVar9);

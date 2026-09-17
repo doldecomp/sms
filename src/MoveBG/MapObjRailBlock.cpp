@@ -77,10 +77,6 @@ BOOL TRailMapObj::moveToNextNode(float param_1)
 
 	if (unk138->unk0->unk14 ? TRUE : FALSE) {
 
-		// TODO: the ROM stores this with a bare `mr r30, r3` and returns it
-		// the same way, so TGraphTracer::traceSpline returns BOOL, not bool,
-		// in retail; with `bool` in Enemy/Graph.hpp the assignment costs a
-		// `clrlwi`, which is the one remaining instruction difference here.
 		BOOL result = unk138->traceSpline(unk138->calcSplineSpeed(param_1));
 		JGeometry::TVec3<f32> pos;
 		JGeometry::TVec3<f32> rot;
@@ -417,12 +413,7 @@ void TRailBlock::control()
 
 			unk138->moveToShortestNext();
 
-			// TODO: TRailNode::mSpeed is declared s16 in Enemy/Graph.hpp,
-			// but the ROM reads it with `lhz` and converts it with the
-			// unsigned 0x4330 trick, exactly like the u16 mPitch/mYaw/mRoll
-			// beside it; the shared header should make it u16 and this cast
-			// should go.
-			u32 speed = (u16)unk138->getCurrent().getRailNode()->mSpeed;
+			u32 speed = unk138->getCurrent().getRailNode()->mSpeed;
 			if (speed != 0xffff)
 				unk144 = 0.01f * speed;
 
