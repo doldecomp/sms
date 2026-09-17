@@ -116,20 +116,21 @@ void TFlyEnemy::fly()
 	nextPos.add(drift);
 	nextPos.y += mGravityY;
 
-	mGroundHeight = gpMap->checkGround(nextPos.x, nextPos.y + mHeadHeight,
+	f32 nextY     = nextPos.y;
+	mGroundHeight = gpMap->checkGround(nextPos.x, nextY + mHeadHeight,
 	                                   nextPos.z, &mGroundPlane);
 	mGroundHeight += 1.0f;
-	if (nextPos.y <= mGroundHeight) {
+	if (nextY <= mGroundHeight) {
 		if (mFlyTime > TFlyEnemy::mInvalidTime) {
 			offLiveFlag(LIVE_FLAG_AIRBORNE);
 			mVelocity.set(0.0f, 0.0f, 0.0f);
 			nextPos.y = mGroundHeight;
 		}
 
-		TLiveActor* rider = (TLiveActor*)mGroundPlane->getActor();
+		const TLiveActor* rider = mGroundPlane->getActor();
 		if (rider) {
 			if (rider->isActorType(0x4000000A))
-				rider->kill();
+				((TLiveActor*)rider)->kill();
 		}
 
 		if (mGroundPlane->isIllegalData())
@@ -174,9 +175,10 @@ void TFlyEnemy::calcChaseParam()
 		if (mFlyState != FLY_STATE_CHASE || toMario.y > 150.0f) {
 			mFlyState = FLY_STATE_NORMAL;
 			MsVECNormalize((Vec*)&toMario, (Vec*)&toMario);
-			velocity.x = toMario.x * mFlyParams->mSLNormalFlySpeed.get();
-			velocity.z = toMario.z * mFlyParams->mSLNormalFlySpeed.get();
-			mGravityY  = mFlyParams->mSLForceGravityY.get();
+			TFlyEnemyParams* params = mFlyParams;
+			velocity.x              = toMario.x * params->mSLNormalFlySpeed.get();
+			velocity.z              = toMario.z * params->mSLNormalFlySpeed.get();
+			mGravityY               = params->mSLForceGravityY.get();
 		} else {
 			mPosition.y -= 3.0f;
 		}
@@ -387,9 +389,7 @@ static int KillerBodyCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
 		TKiller* killer = gpCurKiller;
-		if (killer == nullptr || !TKiller::mRollSw)
-			return 1;
-		if (!killer->isRollFly())
+		if (killer == nullptr || !TKiller::mRollSw || !killer->isRollFly())
 			return 1;
 
 		J3DJoint* joint = (J3DJoint*)node;
@@ -472,19 +472,19 @@ void TKiller::setMActorAndKeeper()
 	mMActor       = mMActorKeeper->createMActor("killer_model1.bmd", 3);
 	mMActorKeeper->createMActor("downkiller_model1.bmd", 3);
 
-	u16 noseMatIdx = getActorKeeper()
+	s32 noseMatIdx = getActorKeeper()
 	                     ->getMActor("killer_model1.bmd")
 	                     ->getModel()
 	                     ->getModelData()
 	                     ->getMaterialName()
 	                     ->getIndex("_nosemat1");
-	u16 eyesMatIdx = getActorKeeper()
+	s32 eyesMatIdx = getActorKeeper()
 	                     ->getMActor("killer_model1.bmd")
 	                     ->getModel()
 	                     ->getModelData()
 	                     ->getMaterialName()
 	                     ->getIndex("_eyesmat1");
-	u16 bodyMatIdx = getActorKeeper()
+	s32 bodyMatIdx = getActorKeeper()
 	                     ->getMActor("killer_model1.bmd")
 	                     ->getModel()
 	                     ->getModelData()
@@ -511,7 +511,9 @@ void TKiller::behaveToWater(THitActor* water)
 	if (mSpine->getCurrentNerve() != &TNerveKillerExplosion::theNerve()) {
 		mSpine->pushNerve(&TNerveKillerExplosion::theNerve());
 		onHitFlag(HIT_FLAG_NO_COLLISION);
-		mVelocity.set(0.0f, 0.0f, 0.0f);
+
+		JGeometry::TVec3<f32> velocity(0.0f, 0.0f, 0.0f);
+		mVelocity = velocity;
 	}
 }
 
@@ -548,9 +550,7 @@ void TKiller::genEventCoin()
 		if (coin) {
 			coin->mPosition.y = mPosition.y;
 			MsVECNormalize((Vec*)&offset, (Vec*)&offset);
-			coin->mVelocity.x = 3.0f * offset.x;
-			coin->mVelocity.y = 20.0f;
-			coin->mVelocity.z = 3.0f * offset.z;
+			coin->mVelocity.set(3.0f * offset.x, 20.0f, 3.0f * offset.z);
 			coin->offLiveFlag(LIVE_FLAG_UNK10);
 		}
 	}
@@ -668,11 +668,12 @@ void TKiller::reset()
 	gpCurKiller = this;
 	TFlyEnemy::reset();
 
+	TMsRange<f32> goldRate(0.0f, 1.0f);
+
 	mBaseColor.r = mBaseColor.g = mBaseColor.b = 0;
 	mBodyColor.r = mBodyColor.g = mBodyColor.b = 0;
 
 	mIsGold = false;
-	TMsRange<f32> goldRate(0.0f, 1.0f);
 	if (goldRate.rand() < 0.05f) {
 		mIsGold      = true;
 		mBodyColor.r = 200;
@@ -829,7 +830,9 @@ bool TKiller::isFindMario(f32 rate)
 	f32 searchHeight = params->mSLSearchHeight.get();
 
 	if (fabsf(SMS_GetMarioPos().y - mPosition.y) < searchHeight) {
-		JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
+		JGeometry::TVec3<f32> marioPos(SMS_GetMarioPos().x,
+		                               SMS_GetMarioPos().y,
+		                               SMS_GetMarioPos().z);
 
 		f32 searchLength = params->mSLSearchLength.get();
 		f32 searchAngle  = params->mSLSearchAngle.get();
