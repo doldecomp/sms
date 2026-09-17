@@ -379,6 +379,7 @@ void THaneHamuKuriManager::createAnmData() { TObjManager::createAnmData(); }
 
 TDoroHaneKuriManager::TDoroHaneKuriManager(const char* name)
     : THaneHamuKuriManager(name)
+    , unk74(nullptr)
 {
 }
 
@@ -1883,6 +1884,7 @@ void TDangoHamuKuri::swingBody()
 
 TBossDangoHamuKuri::TBossDangoHamuKuri(const char* name)
     : TDangoHamuKuri(name)
+    , unk238(0)
 {
 }
 
