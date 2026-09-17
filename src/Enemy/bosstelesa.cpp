@@ -500,30 +500,276 @@ void TBossTelesaKillSmallEnemy::checkHit()
 	}
 }
 
-void TTelesaSlot::initMapObj() { }
+void TTelesaSlot::initMapObj()
+{
+	TSlotDrum::initMapObj();
 
-void TTelesaSlot::randomReset() { }
+	onLiveFlag(LIVE_FLAG_UNK10);
+	unk14C = 160.0f;
+	unk150 = mPosition.y;
+	unk154 = 2.0f;
+	unk158 = 2.0f;
+	unk15C = 0.01f;
+	unk160 = 0.5f;
+	unk164 = 0;
+	unk168 = 45;
+	unk140 = getDamageRadius() / 3.0f;
+	unk144 = getDamageHeight();
 
-void TTelesaSlot::calcRootMatrix() { }
+	unk1DC = new TMapCollisionMove;
+	unk1DC->init(2, 0, 0, nullptr);
 
-void TTelesaSlot::moveObject() { }
+	randomReset();
+}
 
-void TTelesaSlot::moveStart() { }
+void TTelesaSlot::randomReset()
+{
+	TMsRange<s32> stop(0, 8);
+
+	for (int i = 0; i < 3; ++i) {
+		unk13C[i]     = unk168 * stop.rand();
+		mIsRolling[i] = false;
+	}
+}
+
+void TTelesaSlot::calcRootMatrix()
+{
+	bool rolling = false;
+	for (int i = 0; i < 3; ++i) {
+		if (unk138[i] != 0.0f)
+			rolling = true;
+	}
+
+	if (rolling) {
+		// Every other frame, so that the spin loop does not retrigger itself.
+		if (unk1E0)
+			gpMSound->startSoundActor(MSD_SE_OBJ_SLOT_SPIN, &mPosition, 0,
+			                          nullptr, 0, 4);
+
+		unk1E0 = 1 - unk1E0;
+	}
+
+	TSlotDrum::calcRootMatrix();
+}
+
+void TTelesaSlot::moveObject()
+{
+	TLiveActor::moveObject();
+
+	for (int i = 0; i < unk148; ++i) {
+		if (mForceHit[i] && mForcedResult == getForcastResult(i)) {
+			mIsRolling[i] = false;
+			mForceHit[i]  = false;
+		}
+
+		f32 speed = unk138[i];
+		if (speed == 0.0f)
+			continue;
+
+		if (fabs(speed) > unk160) {
+			unk13C[i] += speed;
+
+			if (!mIsRolling[i]) {
+				if (unk138[i] > 0.0f)
+					unk138[i] -= unk15C;
+				else
+					unk138[i] += unk15C;
+			}
+
+			if (unk13C[i] >= 360.0f)
+				unk13C[i] -= 360.0f;
+			if (unk13C[i] <= 0.0f)
+				unk13C[i] += 360.0f;
+		} else {
+			unk13C[i] += speed;
+
+			if (unk13C[i] >= 360.0f)
+				unk13C[i] -= 360.0f;
+			if (unk13C[i] <= 0.0f)
+				unk13C[i] += 360.0f;
+
+			if (!mIsRolling[i]) {
+				if ((s32)fabs(unk13C[i]) % unk168 == 0) {
+					unk13C[i] = unk168 * (s32)(unk13C[i] / (f32)unk168);
+					unk138[i] = 0.0f;
+
+					gpMSound->startSoundActor(MSD_SE_BS_TELESA_SLT_STOP,
+					                          &mPosition, 0, nullptr, 0, 4);
+
+					for (int j = 0; j < unk148; ++j) {
+						if (mIsRolling[j]) {
+							TMsRange<f32> chance(0.0f, 1.0f);
+							f32 rate
+							    = mOwner->mParams->mSLSlotHitCollectRate.get();
+							if (chance.rand() <= rate)
+								mForceHit[j] = true;
+							else
+								mIsRolling[j] = false;
+						}
+					}
+
+					bool allStopped = true;
+					for (int j = 0; j < 3; ++j) {
+						if (unk138[j] != 0.0f)
+							allStopped = false;
+					}
+
+					if (allStopped)
+						mOwner->fanfale();
+				}
+			}
+		}
+	}
+}
+
+void TTelesaSlot::moveStart()
+{
+	mStopRequested = true;
+	unk19B         = true;
+
+	for (int i = 0; i < 3; ++i) {
+		mIsRolling[i] = true;
+		mForceHit[i]  = false;
+
+		f32 direction = 1.0f;
+		if (i == 0)
+			direction = -1.0f;
+		if (i == 1)
+			direction = -0.8f;
+
+		unk138[i] = direction * unk158;
+	}
+}
 
 u32 TTelesaSlot::touchWater(THitActor* actor) { return 0; }
 
-void TTelesaSlot::forceStopSlot(int index) { }
+void TTelesaSlot::forceStopSlot(int index)
+{
+	TMsRange<f32> chance(0.0f, 1.0f);
 
-bool TTelesaSlot::isRollDrum() { return false; }
+	if (!mStopRequested)
+		return;
 
-int TTelesaSlot::getSlotResult() { return -1; }
+	f32 rate = mOwner->mParams->mSLSlotFirstHitCollectRate.get();
+	if (SMS_GetMarioHP() == 1)
+		rate = 0.9f;
 
-// TODO: incorrect size. Map records 44 bytes.
-int TTelesaSlot::getDrumResult(int index) { return 0; }
+	if (chance.rand() <= rate) {
+		mForcedResult = 2;
+		if (SMS_GetMarioHP() <= 3)
+			mForcedResult = 0;
 
-int TTelesaSlot::getForcastResult(int index) { return 0; }
+		mForceHit[index] = true;
+	} else {
+		mForcedResult     = getForcastResult(index);
+		mIsRolling[index] = false;
+	}
 
-int TTelesaSlot::getResultFromAng(f32 angle) { return 0; }
+	if (mForcedResult == mOwner->unk1A8)
+		mForcedResult = 3;
+
+	if (mForcedResult == 0) {
+		if (!mOwner->unk370)
+			mForcedResult = 1;
+		else if (SMS_GetMarioHP() >= 6)
+			mForcedResult = 3;
+	}
+
+	mStopRequested = false;
+}
+
+bool TTelesaSlot::isRollDrum()
+{
+	if (mIsRolling[0])
+		return true;
+	if (mIsRolling[1])
+		return true;
+	if (mIsRolling[2])
+		return true;
+
+	unk19B = false;
+	return false;
+}
+
+int TTelesaSlot::getSlotResult()
+{
+	int result = getDrumResult(0);
+
+	for (int i = 1; i < 3; ++i) {
+		int drum = getDrumResult(i);
+		if (result != drum)
+			return -1;
+	}
+
+	return result;
+}
+
+int TTelesaSlot::getDrumResult(int index)
+{
+	return getResultFromAng(unk13C[index]);
+}
+
+int TTelesaSlot::getForcastResult(int index)
+{
+	int guard  = 0;
+	f32 angle  = unk13C[index];
+	f32 speed  = unk138[index];
+
+	while (true) {
+		if (fabs(speed) > unk160) {
+			angle += speed;
+
+			if (speed > 0.0f)
+				speed -= unk15C;
+			else
+				speed += unk15C;
+
+			if (angle >= 360.0f)
+				angle -= 360.0f;
+			if (angle <= 0.0f)
+				angle += 360.0f;
+		} else {
+			angle += speed;
+
+			if (angle >= 360.0f)
+				angle -= 360.0f;
+			if (angle <= 0.0f)
+				angle += 360.0f;
+
+			if ((s32)fabs(angle) % unk168 == 0) {
+				angle = unk168 * (s32)(angle / (f32)unk168);
+				break;
+			}
+		}
+
+		if (++guard > 10000)
+			break;
+	}
+
+	return getResultFromAng(angle);
+}
+
+int TTelesaSlot::getResultFromAng(f32 angle)
+{
+	if (angle < 44.0f)
+		return 0;
+	if (angle < 89.0f)
+		return 1;
+	if (angle < 134.0f)
+		return 3;
+	if (angle < 179.0f)
+		return 2;
+	if (angle < 224.0f)
+		return 0;
+	if (angle < 269.0f)
+		return 1;
+	if (angle < 314.0f)
+		return 3;
+	if (angle < 359.0f)
+		return 2;
+
+	return 2;
+}
 
 // TODO: incorrect size. Map records 412 bytes.
 void TTelesaSlot::calcObjCollision() { }
@@ -642,8 +888,26 @@ bool TBossTelesa::isForceRestart() { return false; }
 
 void TBossTelesa::forceHide() { }
 
-// TODO: incorrect size. Map records 496 bytes.
-void TBossTelesa::fanfale() { }
+// Called from TTelesaSlot::moveObject once all three drums have stopped. The
+// out-of-line copy the map sizes at 496 bytes expands getSlotResult three
+// times; at the call site it sits one level deeper and stays a call.
+void TBossTelesa::fanfale()
+{
+	if (mSlot->getSlotResult() == 2 || mSlot->getSlotResult() == 0) {
+		unk374.set(0.0f, 0.0f, 0.0f);
+		gpMarioParticleManager->emit(0xE1, &unk374, 0, nullptr);
+
+		if (mSlot->getSlotResult() == 2)
+			gpMSound->startSoundActor(MSD_SE_BS_TELESA_FANFALE_1, &mPosition, 0,
+			                          nullptr, 0, 4);
+		else
+			gpMSound->startSoundActor(MSD_SE_BS_TELESA_FANFALE_2, &mPosition, 0,
+			                          nullptr, 0, 4);
+	} else {
+		gpMSound->startSoundActor(MSD_SE_BS_TELESA_FANFALE_3, &mPosition, 0,
+		                          nullptr, 0, 4);
+	}
+}
 
 // TODO: no nerve body below is reconstructed; each carries its map size.
 

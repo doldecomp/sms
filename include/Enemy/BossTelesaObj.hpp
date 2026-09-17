@@ -139,8 +139,8 @@ public:
 	/* 0x1A4 */ int mForcedResult;
 	/* 0x1A8 */ bool mForceHit[3];
 	/* 0x1AC */ Mtx unk1AC;
-	/* 0x1DC */ int unk1DC;
-	/* 0x1E0 */ bool unk1E0;
+	/* 0x1DC */ TMapCollisionMove* unk1DC;
+	/* 0x1E0 */ u8 unk1E0;
 	/* 0x1E4 */ JGeometry::TVec3<f32> unk1E4;
 };
 
