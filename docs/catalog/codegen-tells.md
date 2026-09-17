@@ -204,6 +204,17 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `MapObjPinna` and `MapObjRicco`
+
+- An UNUSED helper can supply the *shallower* level: `TShellCup::perform` reaches `MsMtxSetRotX` (0x7c) as a `bl` through a per-shell `calcJointMtx()`, which puts the 0x7c body at depth 2 where it is refused (42 -> 90.7); the same helper expands at depth 1 in `TPinnaShell::control`.
+- Name both `jmaSinTable` lookups before a matrix fill, and keep `DEG2SHORTANGLE` at the use site: a shared `s16 a` local is worth exactly 8 bytes of frame (`MsMtxSetRotX` 6 -> 100).
+- `MsRandF()` wherever `rand()` feeds arithmetic: the inline boundary at the random value blocks contraction (`mObjSpeedXZ * (MsRandF() - 0.5f)` keeps `fmuls`/`fsubs`; the expanded `3.0517578e-05f * (f32)rand()` contracts to `fmsubs`).
+- Empty `case` labels are visible in the comparison tree (`case STATE_DOWN: break;` costs a `cmpwi; beq default` retail has); case *order* is block address order, not numeric (`TCraneUpDown::control` 1, 0, 3, 2).
+- Which class owns a field is decided by where the derived vptr store lands: `TViking`'s constructor writes its vtable between 0x138-0x148 and 0x14c-0x158, so the last four fields are `TViking`'s, not `THorizontalViking`'s (84 -> 100).
+- `TVec3<f32>(a - b).length()` is the speed-for-sound idiom (`TPinnaCoaster::control` 73 -> 98.7; same as `TMario::soundTorocco`): by-value `operator-` gives the integer copy plus per-component `fsubs`, the copy constructor the second aggregate, and the extra level puts `sqrt` out of line.
+- Destructors weak in the map are in-class even when the vtable forces them into the object; constructors with no map symbol are in-class too.
+- Open: a four-term `isState` `||` chain that retail normalises once more after the last term (`TAmiKing::moveObject`); `TLiveActor::getMActor` (8 bytes) emitted as a real symbol from `MapObjRicco.o` for one site (`TFruitLauncher::fireObj`), needing a wrapper level we cannot find.
+
 ## Rules from `MapObjMare` and `MapObjBianco`
 
 - `dest += dir * 100.0f` keeps `TVec3::scale` out of line: the friend `operator*(TVec3 fst, f32)` takes and returns by value, costing two 12-byte copies and putting `scale` at depth 3 (`TMapObjPuncher::touchPlayer` 80 -> 99.6). `v *= k` alone leaves it at depth 2, where it still expands.

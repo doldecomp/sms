@@ -11,10 +11,10 @@ Measured from `build/GMSE01/report.json` on 2026-09-16 on 2026-09-17 during the 
 
 | | Matched code | Source-linked code | Linked units |
 | --- | ---: | ---: | ---: |
-| Game | 31.64% | 3.60% | 95 / 385 |
+| Game | 31.86% | 3.60% | 95 / 385 |
 | JSystem | 87.11% | 61.61% | 166 / 198 |
 | SDK | 95.07% | 92.22% | 142 / 149 |
-| All | 43.84% | 17.91% | 403 / 732 |
+| All | 44.00% | 17.91% | 403 / 732 |
 
 9,072 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
 
@@ -49,6 +49,8 @@ Since then, work has been **whole-TU enemy reconstruction from the map**: scaffo
 | `Enemy/chuuhana` | 93.59% | 33 / 57 |
 | `MoveBG/MapObjMamma` | 90.52% | 66 / 103 |
 | `MoveBG/MapObjMonte` | 94.35% | 28 / 54 |
+| `MoveBG/MapObjRicco` | 99.42% | 23 / 32 |
+| `MoveBG/MapObjPinna` | 99.28% | 50 / 68 |
 | `MoveBG/MapObjBianco` | 97.84% | 49 / 74 |
 | `MoveBG/MapObjMare` | 96.46% | 38 / 67 |
 | `MoveBG/MapObjBall` | 87.60% | 32 / 72 |
