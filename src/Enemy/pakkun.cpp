@@ -59,16 +59,6 @@ enum {
 	PAKKUN_ANM_WAIT          = 9,
 };
 
-// TEnemyAttachment::unk150 values the seed uses. 3 and 4 pick which gravity
-// TPakkunSeed::getNowGravity hands back, so they are the two shot arcs.
-enum {
-	SEED_STATE_DEAD  = 0,
-	SEED_STATE_HELD  = 1,
-	SEED_STATE_DROP  = 2,
-	SEED_STATE_LINER = 3,
-	SEED_STATE_CURVE = 4,
-};
-
 static const char* pakkun_bastable[] = {
 	"/scene/pakkun/bas/pakun_crush_to_hide.bas",
 	"/scene/pakkun/bas/pakun_damage.bas",
@@ -124,8 +114,9 @@ static int PakkunSeedCallback(J3DNode* node, int param)
 		spin[2][2] = 1.0f;
 		spin[2][3] = 0.0f;
 
-		MTXConcat(anmMtx, spin, anmMtx);
-		MTXConcat(J3DSys::mCurrentMtx, spin, J3DSys::mCurrentMtx);
+		MtxPtr spinMtx = spin;
+		MTXConcat(anmMtx, spinMtx, anmMtx);
+		MTXConcat(J3DSys::mCurrentMtx, spinMtx, J3DSys::mCurrentMtx);
 	}
 	return 1;
 }
@@ -135,9 +126,14 @@ static int PakkunSeedCallback(J3DNode* node, int param)
 static int PakkunRootCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
-		if (gpCurPakkun == nullptr)
-			return 1;
-		if (gpCurPakkun->getHitPoints() == gpCurPakkun->getMaxHitPoints())
+		if (gpCurPakkun == nullptr
+		    // TODO: the clrlwi the original has here says the maximum was
+		    // compared as a u8, i.e. TSpineEnemy::getMaxHitPoints returned
+		    // u8 rather than u32. Changing the header costs
+		    // TEffectEnemy::perform (exact -> 99.8%) and TFireWanwan::
+		    // moveObject, so the truncation lives here for now.
+		    || gpCurPakkun->getHitPoints()
+		           == (u8)gpCurPakkun->getMaxHitPoints())
 			return 1;
 
 		J3DJoint* joint = (J3DJoint*)node;
@@ -345,7 +341,7 @@ void TPakkun::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);
 	reset();
-	setGoalPath(TPathNode((THitActor*)gpMarioAddress));
+	setGoalPathMario();
 }
 
 void TPakkun::init(TLiveManager* manager)
@@ -356,7 +352,7 @@ void TPakkun::init(TLiveManager* manager)
 	mSaveParams = (TPakkunSaveLoadParams*)getSaveParam();
 
 	mSpine->initWith(&TNervePakkunGenerate::theNerve());
-	setGoalPath(TPathNode((THitActor*)gpMarioAddress));
+	setGoalPathMario();
 
 	if (mInstanceIndex == 0) {
 		for (u8 i = 0;
@@ -769,12 +765,14 @@ void TPakkunSeed::set()
 	mPosition.z = mtx[2][3];
 }
 
-// TODO: dead code. 0x3c bytes reads as the guarded half of set() that the
-// generate nerve spells out: place the seed and grow it back to size.
+// Puts the seed back on its joint without repositioning it, and grows it back
+// to full size. Inlined into TNervePakkunGenerate, which is where the direct
+// call to the base set() comes from: the seed's own override would have been a
+// vtable dispatch, and the map's 0x3c leaves no room for one.
 void TPakkunSeed::seedSet()
 {
-	set();
-	mScaling.z = mScaling.y = mScaling.x = unk164;
+	TEnemyAttachment::set();
+	mScaling.x = mScaling.y = mScaling.z = unk164;
 }
 
 void TPakkunSeed::forceKill()
@@ -795,7 +793,7 @@ void TStayPakkun::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);
 	reset();
-	setGoalPath(TPathNode((THitActor*)gpMarioAddress));
+	setGoalPathMario();
 	mIsStay = 1;
 }
 
@@ -959,9 +957,8 @@ DEFINE_NERVE(TNervePakkunGenerate, TLiveActor)
 		return FALSE;
 
 	TPakkunSeed* seed = self->mSeed;
-	if (seed->unk150 == SEED_STATE_HELD) {
-		seed->set();
-		seed->mScaling.z = seed->mScaling.y = seed->mScaling.x = seed->unk164;
+	if (seed->isHeld()) {
+		seed->seedSet();
 
 		if (spine->getTime() % 5 == 0) {
 			self->updateSquareToMario();
@@ -1169,7 +1166,7 @@ DEFINE_NERVE(TNervePakkunShoot, TLiveActor)
 	self->walkToCurPathNode(0.0f, self->getTurnSpeed(), 0.0f);
 
 	if (self->checkCurAnmEnd(0)) {
-		self->setGoalPath(TPathNode((THitActor*)gpMarioAddress));
+		self->setGoalPathMario();
 		return TRUE;
 	}
 	return FALSE;

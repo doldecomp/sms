@@ -17,6 +17,16 @@ class TWaterEmitInfo;
 //
 // Names and defaults are the ones PARAM_INIT stringified into .rodata and the
 // constants TPakkunManager::load stores into each TParamRT.
+// TEnemyAttachment::unk150 values the seed uses. 3 and 4 pick which gravity
+// TPakkunSeed::getNowGravity hands back, so they are the two shot arcs.
+enum {
+	SEED_STATE_DEAD  = 0,
+	SEED_STATE_HELD  = 1,
+	SEED_STATE_DROP  = 2,
+	SEED_STATE_LINER = 3,
+	SEED_STATE_CURVE = 4,
+};
+
 class TPakkunSaveLoadParams : public TSmallEnemyParams {
 public:
 	TPakkunSaveLoadParams(const char* prm);
@@ -150,6 +160,16 @@ public:
 	virtual void shoot();
 
 	void seedSet();
+
+	// fabricated. The generate nerve materialises a bool at this test, which
+	// is what an inlined predicate written with an explicit return looks
+	// like; comparing unk150 inline folds to a bare branch.
+	bool isHeld() const
+	{
+		if (unk150 == SEED_STATE_HELD)
+			return true;
+		return false;
+	}
 
 public:
 	/* 0x16C */ TPakkun* mPakkun;
