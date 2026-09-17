@@ -71,6 +71,9 @@ public:
 	virtual void shootIn();
 	virtual void shoot();
 
+	// fabricated
+	TPakkunSaveLoadParams* getSaveLoadParam() const { return mSaveParams; }
+
 	void onShootLiner(JGeometry::TVec3<f32>& dir);
 	void onShootCurve(JGeometry::TVec3<f32>& dir);
 	void seedPollute(JGeometry::TVec3<f32>& pos);

@@ -482,7 +482,7 @@ void TPakkun::seedPollute(JGeometry::TVec3<f32>& pos)
 // along the direction so the plant keeps facing the shot.
 void TPakkun::onShootLiner(JGeometry::TVec3<f32>& dir)
 {
-	JGeometry::TVec3<f32> goal(mPosition.x, mPosition.y, mPosition.z);
+	JGeometry::TVec3<f32> goal(mPosition);
 	goal.x += 200.0f * dir.x;
 	goal.z += 200.0f * dir.z;
 	setGoalPath(TPathNode(goal));
@@ -490,14 +490,14 @@ void TPakkun::onShootLiner(JGeometry::TVec3<f32>& dir)
 
 	if (dir.x == 0.0f && dir.y == 0.0f && dir.z == 0.0f)
 		dir.x += 1.0f;
-	MsVECNormalize(dir, dir);
+	MsVECNormalize(&dir, &dir);
 
-	f32 speed = mSaveParams->getSLSeedSpeedS();
+	f32 speed = getSaveLoadParam()->getSLSeedSpeedS();
 	dir.x *= speed;
 	dir.y = -5.0f;
 	dir.z *= speed;
 
-	mSeed->mVelocity.set(dir.x, dir.y, dir.z);
+	mSeed->mVelocity = dir;
 }
 
 // Lobs the seed at a goal point instead of spitting it straight: the arc is
@@ -512,8 +512,8 @@ void TPakkun::onShootCurve(JGeometry::TVec3<f32>& goal)
 {
 	setGoalPath(TPathNode(goal));
 	JGeometry::TVec3<f32> vel
-	    = calcVelocityToJumpToY(mPosition, mSaveParams->getSLSeedSpeedC(),
-	                            mSaveParams->getSLSeedGravityC());
+	    = calcVelocityToJumpToY(mPosition, getSaveLoadParam()->getSLSeedSpeedC(),
+	                            getSaveLoadParam()->getSLSeedGravityC());
 	mIsCurveShot = 1;
 	mSeed->mVelocity.set(vel.x, vel.y, vel.z);
 	mSeed->mRotation.set(TPakkunManager::mTestFlyAngX, 0.0f, 0.0f);
@@ -521,6 +521,9 @@ void TPakkun::onShootCurve(JGeometry::TVec3<f32>& goal)
 
 // Being sprayed knocks four points off and sends the plant into the freeze
 // animation, unless it is already reacting to water.
+// TODO: instruction-exact with an 8-byte frame gap. getHitPoints(),
+// getGroundHeight() and naming the current nerve all change instructions
+// instead of only the frame.
 void TPakkun::behaveToWater(THitActor* sender)
 {
 	mSprayedByWaterCooldown = 0;
@@ -619,15 +622,12 @@ void TPakkunSeed::behaveToHost()
 
 void TPakkunSeed::behaveToHitWall(const TBGCheckData* wall)
 {
-	f32 bounce = 1.5f
-	             * (mVelocity.x * wall->mNormal.x
-	                + mVelocity.y * wall->mNormal.y
-	                + mVelocity.z * wall->mNormal.z);
-	mVelocity.x -= bounce * wall->mNormal.x;
-	mVelocity.y -= bounce * wall->mNormal.y;
+	f32 bounce = -(1.5f * mVelocity.dot(wall->getNormal()));
+	mVelocity.x += bounce * wall->getNormal().x;
+	mVelocity.y += bounce * wall->getNormal().y;
 	if (unk150 == SEED_STATE_LINER)
 		mVelocity.y = -5.0f;
-	mVelocity.z -= bounce * wall->mNormal.z;
+	mVelocity.z += bounce * wall->getNormal().z;
 	mPakkun->mSeedHitWall = 1;
 }
 
@@ -666,9 +666,9 @@ f32 TPakkunSeed::getNowGravity()
 {
 	TPakkunSaveLoadParams* params
 	    = (TPakkunSaveLoadParams*)mPakkun->getSaveParam();
-	f32 gravity = params->getSLSeedGravityS();
+	f32 gravity = params->mSLSeedGravityS.get();
 	if (unk150 == SEED_STATE_CURVE)
-		gravity = params->getSLSeedGravityC();
+		gravity = params->mSLSeedGravityC.get();
 	return gravity;
 }
 
@@ -718,7 +718,7 @@ void TPakkunSeed::rebirth()
 	}
 
 	unk158++;
-	if (unk158 > mPakkun->mSaveParams->getSLGenerateSeedTime()
+	if (unk158 > mPakkun->getSaveLoadParam()->getSLGenerateSeedTime()
 	    || mPakkun->mIsHoldingSeed != 0) {
 		unk150 = SEED_STATE_DEAD;
 		unk158 = 0;
@@ -965,7 +965,7 @@ DEFINE_NERVE(TNervePakkunGenerate, TLiveActor)
 
 		if (spine->getTime() % 5 == 0) {
 			self->updateSquareToMario();
-			f32 dist = self->mSaveParams->getSLGenerateSeedDist();
+			f32 dist = self->getSaveLoadParam()->getSLGenerateSeedDist();
 			if (self->getDistToMarioSquared() < dist * dist)
 				self->mSeed->unk150 = SEED_STATE_DROP;
 		}
@@ -991,7 +991,7 @@ DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 		self->setWaitAnm();
 
 	s32 waitTime  = self->getSaveParams()->getSLWaitTime();
-	s32 readyTime = self->mSaveParams->getSLReadyTime();
+	s32 readyTime = self->getSaveLoadParam()->getSLReadyTime();
 
 	if (self->mSeed->isUnk150Zero() && self->checkCurAnmEnd(0)
 	    && (!(spine->getTime() < readyTime) || spine->getTime() >= waitTime
@@ -1007,7 +1007,7 @@ DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 			rate = 3.0f;
 
 		JGeometry::TVec3<f32> marioPos(SMS_GetMarioPos());
-		if (dist < self->mSaveParams->getSLShootRange() * rate
+		if (dist < self->getSaveLoadParam()->getSLShootRange() * rate
 		    || self->mIsStay != 0) {
 			f32 searchHeight
 			    = self->getSaveParams()->getSLSearchHeight() * rate;
@@ -1035,8 +1035,8 @@ DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 						JGeometry::TVec3<f32> vel
 						    = self->calcVelocityToJumpToY(
 						        self->mPosition,
-						        self->mSaveParams->getSLSeedSpeedC(),
-						        self->mSaveParams->getSLSeedGravityC());
+						        self->getSaveLoadParam()->getSLSeedSpeedC(),
+						        self->getSaveLoadParam()->getSLSeedGravityC());
 						self->mIsCurveShot = 1;
 						self->mSeed->mVelocity.set(vel.x, vel.y, vel.z);
 						self->mSeed->mRotation.set(TPakkunManager::mTestFlyAngX,
@@ -1058,7 +1058,7 @@ DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 			toGoal2.y -= self->mPosition.y;
 			toGoal2.z -= self->mPosition.z;
 
-			TPakkunSaveLoadParams* params = self->mSaveParams;
+			TPakkunSaveLoadParams* params = self->getSaveLoadParam();
 			if (toGoal2.length() > params->getSLLimitMove()) {
 				goal.x = SMS_GetMarioPos().x - self->mPosition.x;
 				goal.y = 0.0f;
@@ -1066,13 +1066,13 @@ DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 				if (goal.x == 0.0f && goal.y == 0.0f && goal.z == 0.0f)
 					goal.x += 1.0f;
 				MsVECNormalize(goal, goal);
-				f32 dist = self->mSaveParams->getSLMoveDist();
+				f32 dist = self->getSaveLoadParam()->getSLMoveDist();
 				goal.x   = goal.x * dist + self->mPosition.x;
 				goal.z   = goal.z * dist + self->mPosition.z;
 				self->setGoalPath(TPathNode(goal));
 				JGeometry::TVec3<f32> vel = self->calcVelocityToJumpToY(
-				    self->mPosition, self->mSaveParams->getSLSeedSpeedC(),
-				    self->mSaveParams->getSLSeedGravityC());
+				    self->mPosition, self->getSaveLoadParam()->getSLSeedSpeedC(),
+				    self->getSaveLoadParam()->getSLSeedGravityC());
 				self->mIsCurveShot = 1;
 				self->mSeed->mVelocity.set(vel.x, vel.y, vel.z);
 				self->mSeed->mRotation.set(TPakkunManager::mTestFlyAngX, 0.0f,
@@ -1083,8 +1083,8 @@ DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 				goal.z += circle * JMASSin(yaw);
 				self->setGoalPath(TPathNode(goal));
 				JGeometry::TVec3<f32> vel = self->calcVelocityToJumpToY(
-				    self->mPosition, self->mSaveParams->getSLSeedSpeedC(),
-				    self->mSaveParams->getSLSeedGravityC());
+				    self->mPosition, self->getSaveLoadParam()->getSLSeedSpeedC(),
+				    self->getSaveLoadParam()->getSLSeedGravityC());
 				self->mIsCurveShot = 1;
 				self->mSeed->mVelocity.set(vel.x, vel.y, vel.z);
 				self->mSeed->mRotation.set(TPakkunManager::mTestFlyAngX, 0.0f,
@@ -1216,7 +1216,8 @@ DEFINE_NERVE(TNerveStayPakkunHide, TLiveActor)
 		self->mSeed->kill();
 	} else {
 		if (self->mDamageHiding != 0
-		    && spine->getTime() > self->mSaveParams->getSLDamageHideTime())
+		    && spine->getTime()
+		           > self->getSaveLoadParam()->getSLDamageHideTime())
 			self->mDamageHiding = 0;
 
 		if (self->checkCurAnmEnd(0)) {
