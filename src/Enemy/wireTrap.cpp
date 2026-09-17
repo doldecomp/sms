@@ -240,22 +240,15 @@ void TWireTrap::behaveHitWireTrap(TWireTrap* partner,
 	mCollideTimer = 30;
 
 	JGeometry::TVec3<f32> myMomentum = getWireDir();
-	f32 myRate;
-	if (mWaterTimer > 0)
-		myRate = 1.0f + getWaterPow();
-	else
-		myRate = 1.0f;
-	myMomentum.scale(mMoveDir * myRate);
-	myMomentum.scale(mSpeed);
+	f32 myRate = mWaterTimer > 0 ? 1.0f + getWaterPow() : 1.0f;
+	myMomentum *= mMoveDir * myRate;
+	myMomentum *= mSpeed;
 
 	JGeometry::TVec3<f32> hisMomentum = partner->getWireDir();
-	f32 hisRate;
-	if (partner->mWaterTimer > 0)
-		hisRate = 1.0f + partner->getWaterPow();
-	else
-		hisRate = 1.0f;
-	hisMomentum.scale(partner->mMoveDir * hisRate);
-	hisMomentum.scale(partner->mSpeed);
+	f32 hisRate
+	    = partner->mWaterTimer > 0 ? 1.0f + partner->getWaterPow() : 1.0f;
+	hisMomentum *= partner->mMoveDir * hisRate;
+	hisMomentum *= partner->mSpeed;
 
 	if (mine.dot(theirs) < 0.0f)
 		mMoveDir *= -1.0f;
@@ -316,23 +309,19 @@ void TWireTrap::moveObject()
 }
 
 // UNUSED, 0xdc in the map, so the retail copy is inlined everywhere.
-// TODO: ours is 0xf4 because TWireBinder::getDir() returns by value (see
-// getWireDir below): the returned temporary costs one extra 12-byte copy, and
-// that pushes the body past MWCC's inline budget, so the three moving nerves
-// call it instead of expanding it. Fixing getDir's return type fixes all of
-// them at once.
+// Note the `*=`: `momentum.scale(v)` would be one inline level shallower and
+// MWCC expands `TVec3::scale` there, while the ROM calls it out of line from
+// every nerve. Going through `operator*=` restores that call and took the
+// three moving nerves from 66-91% to 99%.
+// TODO: this compiles to 0xf4 rather than 0xdc only because
+// TWireBinder::getDir() still returns by value (see getWireDir below); with
+// the one-word header fix it is size-exact.
 void TWireTrap::calcMomentum()
 {
 	JGeometry::TVec3<f32> momentum = getWireDir();
-
-	f32 rate;
-	if (mWaterTimer > 0)
-		rate = 1.0f + getWaterPow();
-	else
-		rate = 1.0f;
-
-	momentum.scale(mMoveDir * rate);
-	momentum.scale(mSpeed);
+	f32 rate = mWaterTimer > 0 ? 1.0f + getWaterPow() : 1.0f;
+	momentum *= mMoveDir * rate;
+	momentum *= mSpeed;
 	setLinearVelocity(momentum);
 }
 
@@ -386,14 +375,7 @@ bool TWireTrap::doSearchMove()
 	toMario -= mPosition;
 
 	f32 along = toMario.dot(getWireBinder()->getDir());
-	int dir;
-	if (along > 0.0f)
-		dir = 1;
-	else if (along < 0.0f)
-		dir = -1;
-	else
-		dir = 0;
-	mMoveDir = dir;
+	mMoveDir = along > 0.0f ? 1 : (along < 0.0f ? -1 : 0);
 
 	calcMomentum();
 	return false;
@@ -458,8 +440,8 @@ void TWireTrap::checkHitActors()
 				myRate = 1.0f + getWaterPow();
 			else
 				myRate = 1.0f;
-			myMomentum.scale(mMoveDir * myRate);
-			myMomentum.scale(mSpeed);
+			myMomentum *= mMoveDir * myRate;
+			myMomentum *= mSpeed;
 
 			JGeometry::TVec3<f32> hisMomentum
 			    = trap->getWireBinder()->getDir();
@@ -468,8 +450,8 @@ void TWireTrap::checkHitActors()
 				hisRate = 1.0f + trap->getWaterPow();
 			else
 				hisRate = 1.0f;
-			hisMomentum.scale(trap->mMoveDir * hisRate);
-			hisMomentum.scale(trap->mSpeed);
+			hisMomentum *= trap->mMoveDir * hisRate;
+			hisMomentum *= trap->mSpeed;
 
 			behaveHitWireTrap(trap, myMomentum, hisMomentum);
 			// TODO: retail passes `trap` here too, so the momenta the second
@@ -522,11 +504,16 @@ JGeometry::TVec3<f32> TWireTrap::getDirAtWirePos() const
 }
 
 // TODO: the ROM's copy is 0xc bytes -- `lwz 0x88; addi 8; blr` -- so it hands
-// back a reference. Reproducing that needs one word changed in
-// include/Enemy/WireBinder.hpp: TWireBinder::getDir() must return
+// back a reference, and so does TWireBinder::getDir() (weak, 0x8, a bare
+// `addi r3, r3, 8; blr`). Reproducing that needs one word changed in
+// include/Enemy/WireBinder.hpp: `getDir()` must return
 // `const JGeometry::TVec3<f32>&`, not a value. mDir is private, so this TU
-// cannot get at it any other way. This batch may not edit that header, so the
-// value return stays and every caller that copies the result pays for it.
+// cannot reach it any other way, and wireTrap.cpp is getDir's only caller in
+// the whole tree, so the change is local in effect. Measured with it applied:
+// this function and TWireBinder::getDir become exact, calcMomentum and
+// behaveHitWater reach their map sizes, and the Search/ReturnMove/OnewayMove
+// nerves go 89.9/95.5/97.6% -> 98.4/99.0/99.5%. That header is out of scope
+// for this batch, so the value return stays here.
 JGeometry::TVec3<f32> TWireTrap::getWireDir() const
 {
 	return getWireBinder()->getDir();
