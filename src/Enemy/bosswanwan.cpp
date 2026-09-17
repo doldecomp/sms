@@ -271,7 +271,7 @@ void TBWLeash::pullTail(const JGeometry::TVec3<f32>& where_to)
 	mRope->constraintTail(where_to);
 	before -= mRope->mPoints[0].unkC;
 	before.negate();
-	mOwner->mPullVelocity.set(before.x, before.y, before.z);
+	mOwner->mPullVelocity = before;
 }
 
 void TBWLeash::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -287,7 +287,7 @@ void TBWLeash::perform(u32 cue, JDrama::TGraphics* graphics)
 			mRope->constraintTail(mOwner->mPicket->mPosition);
 			before -= mRope->mPoints[0].unkC;
 			before.negate();
-			mOwner->mPullVelocity.set(before.x, before.y, before.z);
+			mOwner->mPullVelocity = before;
 
 			JGeometry::TVec3<f32> toTail = mRope->mPoints[0].unkC;
 			JGeometry::TVec3<f32> headPos(mOwner->mPosition);
@@ -372,26 +372,27 @@ TBWPicket::TBWPicket(TBossWanwan* owner, const char* name)
 
 BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message)
 {
-	if (!sender->isActorType(0x80000001))
-		return FALSE;
+	if (sender->getActorType() == 0x80000001) {
+		if (message == HIT_MESSAGE_HIP_DROP) {
+			TBossWanwan* owner      = mOwner;
+			owner->mIsPicketPlanted = 1;
+			owner->mPulledTimer     = 0;
+			gpMSound->startSoundActor(MSD_SE_BS_WANWAN_LOCK, &mPosition, 0,
+			                          nullptr, 0, 4);
+			return TRUE;
+		}
 
-	if (message == HIT_MESSAGE_HIP_DROP) {
-		mOwner->mIsPicketPlanted = 1;
-		mOwner->mPulledTimer     = 0;
-		gpMSound->startSoundActor(MSD_SE_BS_WANWAN_LOCK, &mPosition, 0,
-		                          nullptr, 0, 4);
-		return TRUE;
-	}
+		if (message == HIT_MESSAGE_TAKE) {
+			TBossWanwan* owner = mOwner;
+			owner->releasePicket();
+			mHolder = (TTakeActor*)sender;
+			return TRUE;
+		}
 
-	if (message == HIT_MESSAGE_TAKE) {
-		mOwner->releasePicket();
-		mHolder = (TTakeActor*)sender;
-		return TRUE;
-	}
-
-	if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_UNK8) {
-		mHolder = nullptr;
-		return TRUE;
+		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_UNK8) {
+			mHolder = nullptr;
+			return TRUE;
+		}
 	}
 
 	return FALSE;
@@ -399,10 +400,8 @@ BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message)
 
 BOOL TBWPicket::moveRequest(const JGeometry::TVec3<f32>& where_to)
 {
-	if (mOwner->mSpine->getLatestNerve() == &TNerveBWJumpToBath::theNerve())
-		return FALSE;
-
-	if (mOwner->mSpine->getLatestNerve() == &TNerveBWDie::theNerve())
+	if (mOwner->mSpine->getLatestNerve() == &TNerveBWJumpToBath::theNerve()
+	    || mOwner->mSpine->getLatestNerve() == &TNerveBWDie::theNerve())
 		return FALSE;
 
 	if (mOwner->getHitPoints() != 0)
@@ -556,7 +555,7 @@ void TBWBinder::bind(TLiveActor* actor)
 		speed.y -= actor->getGravityY();
 		if (speed.y < TLiveActor::mVelocityMinY)
 			speed.y = TLiveActor::mVelocityMinY;
-		actor->mVelocity.set(speed.x, speed.y, speed.z);
+		actor->mVelocity = speed;
 	}
 
 	if (boss->mSpine->getLatestNerve() == &TNerveBWJumpToBath::theNerve()
@@ -1025,9 +1024,15 @@ void TBossWanwan::releasePicket()
 	if (mIsPicketPlanted) {
 		JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		    BWANWAN_JPA_MS_BWAN_JUMP_SMOKE, &mPicket->mPosition, 0, nullptr);
-		if (emitter)
-			emitter->setGlobalScale(
-			    JGeometry::TVec3<f32>(0.3f, 0.5f, 0.3f));
+		// TODO: setGlobalScale(const TVec3&) would bind a stack temporary the
+		// retail code does not have; JPAEmitter.hpp wants three-float
+		// setGlobalDynamicsScale/setGlobalParticleScale overloads.
+		if (emitter) {
+			emitter->mGlobalDynamicsScale.set(0.3f, 0.5f, 0.3f);
+			emitter->mGlobalParticleScale.x = 0.3f;
+			emitter->mGlobalParticleScale.y = 0.5f;
+			emitter->mGlobalParticleScale.z = 0.3f;
+		}
 	}
 
 	mIsPicketFixed   = 0;
