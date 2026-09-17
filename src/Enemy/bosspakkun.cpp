@@ -1418,27 +1418,27 @@ void TBossPakkunManager::initJParticle()
 
 void TBossPakkunManager::createModelData()
 {
-	static const TModelDataLoadEntry lightEntries[] = {
-		{ "bosspaku_model.bmd", 0x10010000 },
-		{ "pollut_ball.bmd", 0x11040000 },
-		{ "pollut_ball_stamp.bmd", 0x10010000 },
-		{ nullptr, 0 },
-	};
-	static const TModelDataLoadEntry entries[] = {
-		{ "bosspaku_model.bmd", 0x10010000 },
-		{ "bosspaku_end.bmd", 0x10100000 },
-		{ "pollut_ball.bmd", 0x11040000 },
-		{ "pollut_ball_stamp.bmd", 0x10010000 },
-		{ "bosspakuPollut.bmd", 0x11020000 },
-		{ "bosspakuPollut_white.bmd", 0x10010000 },
-		{ "trunade.bmd", 0x10020000 },
-		{ nullptr, 0 },
-	};
-
-	if (mIsLightVersion)
-		createModelDataArray(lightEntries);
-	else
-		createModelDataArray(entries);
+	if (mIsLightVersion) {
+		static const TModelDataLoadEntry entry[] = {
+			{ "bosspaku_model.bmd", 0x10010000 },
+			{ "pollut_ball.bmd", 0x11040000 },
+			{ "pollut_ball_stamp.bmd", 0x10010000 },
+			{ nullptr, 0 },
+		};
+		createModelDataArray(entry);
+	} else {
+		static const TModelDataLoadEntry entry[] = {
+			{ "bosspaku_model.bmd", 0x10010000 },
+			{ "bosspaku_end.bmd", 0x10100000 },
+			{ "pollut_ball.bmd", 0x11040000 },
+			{ "pollut_ball_stamp.bmd", 0x10010000 },
+			{ "bosspakuPollut.bmd", 0x11020000 },
+			{ "bosspakuPollut_white.bmd", 0x10010000 },
+			{ "trunade.bmd", 0x10020000 },
+			{ nullptr, 0 },
+		};
+		createModelDataArray(entry);
+	}
 }
 
 void TBossPakkunManager::load(JSUMemoryInputStream& stream)
@@ -1944,7 +1944,7 @@ DEFINE_NERVE(TNerveBPDie, TLiveActor)
 	    && actor->checkCurBckFromIndex(BOSSPAKU_BCK_DOWN_START)) {
 		boss->kill();
 		gpItemManager->makeShineAppearWithDemo(
-		    "シャイン(ボス用)", "ボスシャインカメラ", boss->mPosition.x,
+		    "シャイン（ボス用）", "ボスシャインカメラ", boss->mPosition.x,
 		    boss->mPosition.y, boss->mPosition.z);
 		return TRUE;
 	}
