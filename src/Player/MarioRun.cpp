@@ -125,7 +125,9 @@ BOOL TMario::doRunningAnimation()
 	if (sp < 4.0f)
 		sp = 4.0f;
 
-	while (loop) {
+	// The counter is the ROM's safety valve: the switch can re-enter with a
+	// freshly set animation, so it gives up after a few passes.
+	for (int i = 0; loop; i++) {
 		switch (mAnimationId) {
 		default:
 		case ANIM_RUN2:
@@ -189,6 +191,9 @@ BOOL TMario::doRunningAnimation()
 			}
 			break;
 		}
+
+		if (++i > 4)
+			break;
 	}
 	return 1;
 }
@@ -973,6 +978,7 @@ BOOL TMario::surfing()
 			BOOL ret = changePlayerStatus(MARIO_STATUS_JUMP_BACK_DOWN, 0, true);
 			mForwardVel = 0.8f * -mForwardVel;
 			mVel.y      = 50.0f;
+			gpMSound->startSoundSystemSE(MSD_SE_SY_DAMAGE, 0, nullptr, 0);
 			return ret;
 		}
 		setPlayerVelocity(0.0f);
