@@ -119,8 +119,8 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 			sender->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 			this->mHitPoints = 0;
 			this->mWaterHitCount++;
-			if (!this->unk0) {
-				this->unk0 = true;
+			if (!this->unk1a0) {
+				this->unk1a0 = true;
 			}
 
 			MtxPtr mtx = this->getModel()->getAnmMtx(1);
@@ -173,6 +173,107 @@ void TBossWanwan::shakeCamera(int shakeType)
 
 	gpCameraShake->startShake((EnumCamShakeMode)shakeType, power * ratio);
 	SMSRumbleMgr->start(8, &this->mPosition);
+}
+
+void TBossWanwan::emitEffects()
+{
+
+	bool emit = false;
+
+	if (mMActor->checkCurBckFromIndex(4) != 0
+	    || mMActor->checkCurBckFromIndex(5) != 0) {
+		if (mMActor->checkBckPass(8.0f) != 0) {
+			emit = true;
+		}
+	} else {
+		if (mMActor->checkCurBckFromIndex(2) != 0
+		    && mMActor->checkBckPass(38.0f) != 0) {
+			emit = true;
+		}
+	}
+
+	if (emit) {
+		gpMarioParticleManager->emit(BWAN_JPA_JUMP_ROCK, &mPosition, 0,
+		                             nullptr);
+		gpMarioParticleManager->emit(BWAN_JPA_JUMP_SMOKE, &mPosition, 0,
+		                             nullptr);
+
+		if (mHitPoints == 0) {
+			SMSGetMSound()->startSoundActor(0x2975, &mPicket->mPosition, 0,
+			                                nullptr, 0, 4);
+
+			SMSGetMSound()->startSoundActor(0x2976, &mChainRoot->mPosition, 0,
+			                                nullptr, 0, 4);
+
+		} else {
+			SMSGetMSound()->startSoundActor(0x2973, &mPicket->mPosition, 0,
+			                                nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(0x2974, &mChainRoot->mPosition, 0,
+			                                nullptr, 0, 4);
+		}
+	}
+
+	bool emit2 = false;
+
+	if (mMActor->checkCurBckFromIndex(0)) {
+		if (mMActor->checkBckPass(72.0f)) {
+			emit2 = true;
+		}
+	} else if (mMActor->checkCurBckFromIndex(4)
+	           || mMActor->checkCurBckFromIndex(5)) {
+		if (mMActor->checkBckPass(6.0f) || mMActor->checkBckPass(12.0f)) {
+			emit2 = true;
+		}
+	} else if (mMActor->checkCurBckFromIndex(2)) {
+		if (mMActor->checkBckPass(4.0f)) {
+			emit2 = true;
+		}
+	}
+
+	if (emit2) {
+		MtxPtr jointMtx = getModel()->getAnmMtx(1);
+		gpMarioParticleManager->emitAndBindToMtxPtr(0xaf, jointMtx, 0, this);
+	}
+
+	if ((mMActor->checkCurBckFromIndex(4) || mMActor->checkCurBckFromIndex(5))
+	    && mMActor->checkBckPass(10.0f)) {
+		shakeCamera(0x16);
+	}
+
+	if (mMActor->checkCurBckFromIndex(0)) {
+		J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(0);
+
+		if (frameCtrl->checkPass(60.0f) || frameCtrl->checkPass(127.0f)) {
+			shakeCamera(0x16);
+			gpMarioParticleManager->emit(BWAN_JPA_JUMP_ROCK, &mPosition, 0,
+			                             nullptr);
+			gpMarioParticleManager->emit(BWAN_JPA_JUMP_SMOKE, &mPosition, 0,
+			                             nullptr);
+		}
+
+		if (frameCtrl->checkPass(202.0f)) {
+			shakeCamera(0x17);
+			gpMarioParticleManager->emit(BWAN_JPA_JUMP_ROCK, &mPosition, 0,
+			                             nullptr);
+			gpMarioParticleManager->emit(BWAN_JPA_JUMP_SMOKE, &mPosition, 0,
+			                             nullptr);
+		}
+	}
+
+	if (mMActor->checkCurBckFromIndex(2) && mMActor->checkBckPass(40.0f)) {
+		shakeCamera(0x16);
+	}
+
+	if (mHitPoints != 0) {
+		MtxPtr jointMtx = getModel()->getAnmMtx(1);
+		gpMarioParticleManager->emitAndBindToMtxPtr(0x1ee, jointMtx, 3, this);
+	}
+
+	if (this->unk190 != 0 && mHitPoints != 0) {
+		MtxPtr jointMtx = getModel()->getAnmMtx(1);
+		gpMarioParticleManager->emitAndBindToMtxPtr(0x167, jointMtx, 1, this);
+		this->unk190 = 0;
+	}
 }
 
 TSpineEnemy* TBossWanwanManager::createEnemyInstance()
