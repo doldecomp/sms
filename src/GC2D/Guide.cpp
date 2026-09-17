@@ -316,11 +316,11 @@ void TGuide::resetScore()
 		if (i == 9)
 			continue;
 
+		u32 tag   = (i << 24) + '0c_1';
 		u16 coins = mScores[i].mCoinNum;
 		if (coins > 999)
 			coins = 999;
 
-		u32 tag           = (i << 24) + '0c_1';
 		J2DPicture* digit100 = (J2DPicture*)mScreen->search(tag);
 		J2DPicture* digit10  = (J2DPicture*)mScreen->search(tag + 1);
 		J2DPicture* digit1   = (J2DPicture*)mScreen->search(tag + 2);
@@ -330,9 +330,10 @@ void TGuide::resetScore()
 			digit10->changeTexture(mNumberTextures[rest / 10]->mTexInfo, 0);
 			digit1->changeTexture(mNumberTextures[rest % 10]->mTexInfo, 0);
 		} else {
+			u16 hundreds       = rest / 100;
 			digit100->mVisible = true;
-			digit100->changeTexture(mNumberTextures[rest / 100]->mTexInfo, 0);
-			coins -= rest / 100 * 100;
+			digit100->changeTexture(mNumberTextures[hundreds]->mTexInfo, 0);
+			coins -= hundreds * 100;
 			rest = coins;
 			digit10->changeTexture(mNumberTextures[rest / 10]->mTexInfo, 0);
 			digit1->changeTexture(mNumberTextures[rest % 10]->mTexInfo, 0);
@@ -377,9 +378,10 @@ void TGuide::resetScore()
 		total10->changeTexture(mNumberTextures[allShines / 10]->mTexInfo, 0);
 		total1->changeTexture(mNumberTextures[allShines % 10]->mTexInfo, 0);
 	} else {
+		s32 hundreds       = allShines / 100;
 		total100->mVisible = true;
-		total100->changeTexture(mNumberTextures[allShines / 100]->mTexInfo, 0);
-		allShines -= allShines / 100 * 100;
+		total100->changeTexture(mNumberTextures[hundreds]->mTexInfo, 0);
+		allShines -= hundreds * 100;
 		total10->changeTexture(mNumberTextures[allShines / 10]->mTexInfo, 0);
 		total1->changeTexture(mNumberTextures[allShines % 10]->mTexInfo, 0);
 	}
@@ -725,10 +727,11 @@ void TGuide::changeBotStatus(int stage)
 			mCoinDigits[1]->changeTexture(
 			    mNumberTextures[coins % 10]->mTexInfo, 0);
 		} else {
+			int hundreds             = coins / 100;
 			mCoinDigits[2]->mVisible = true;
 			mCoinDigits[0]->changeTexture(
-			    mNumberTextures[coins / 100]->mTexInfo, 0);
-			coins -= coins / 100 * 100;
+			    mNumberTextures[hundreds]->mTexInfo, 0);
+			coins -= hundreds * 100;
 			mCoinDigits[1]->changeTexture(
 			    mNumberTextures[coins / 10]->mTexInfo, 0);
 			mCoinDigits[2]->changeTexture(
