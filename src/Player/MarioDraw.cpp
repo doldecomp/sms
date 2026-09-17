@@ -2235,7 +2235,11 @@ void TMario::drawLogic()
 
 void TMario::boxDrawPrepare(MtxPtr mtx)
 {
-	// Some weird stack stuff happening here
+	// TODO: 8 bytes of frame short, and they belong in the named-local
+	// region: the ROM leaves a dead 4-byte slot above psave (0x8c) and
+	// another between psave and wpsave (0x6c). `getPosition()` over
+	// `mPosition` lands the same 8 bytes in the *temporary* region instead
+	// and shifts every local by 8.
 	f32 psave[7];
 	GXGetProjectionv(psave);
 
@@ -2244,7 +2248,11 @@ void TMario::boxDrawPrepare(MtxPtr mtx)
 
 	JGeometry::TVec3<f32> pos = mPosition;
 	pos.y += 80.0f;
-	GXProject(pos.x, pos.y, pos.z, mtx, psave, wpsave, &mMarioScreenPos.x,
+	// The ROM parks these two in f31/f30 across every GX call and reuses them
+	// for the matrix translation, which only a named local does.
+	f32 boxY = pos.y;
+	f32 boxZ = pos.z;
+	GXProject(pos.x, boxY, boxZ, mtx, psave, wpsave, &mMarioScreenPos.x,
 	          &mMarioScreenPos.y, &mMarioScreenPos.z);
 
 	GXClearVtxDesc();
@@ -2255,8 +2263,8 @@ void TMario::boxDrawPrepare(MtxPtr mtx)
 	Mtx stackMtx;
 	MTXScale(stackMtx, 200.0f, 200.0f, 200.0f);
 	stackMtx[0][3] = pos.x;
-	stackMtx[1][3] = pos.y;
-	stackMtx[2][3] = pos.z;
+	stackMtx[1][3] = boxY;
+	stackMtx[2][3] = boxZ;
 
 	MTXConcat(mtx, stackMtx, stackMtx);
 
