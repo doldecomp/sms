@@ -237,16 +237,7 @@ void THamuKuriManager::setSearchHamuKuri()
 	for (int i = 0; i < getActiveObjNum(); ++i) {
 		THamuKuri* kuri = (THamuKuri*)getObj(i);
 
-		// TODO: inline
-		bool bVar6;
-		if (kuri->mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()
-		    || kuri->mSpine->getCurrentNerve()
-		           == &TNerveWalkerGraphWander::theNerve())
-			bVar6 = true;
-		else
-			bVar6 = false;
-
-		if (!bVar6)
+		if (!kuri->canGoForSearchActor())
 			continue;
 
 		if (kuri->checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
@@ -328,16 +319,7 @@ void THamuKuriManager::checkSerialKill()
 		for (int i = 0; i < getActiveObjNum(); ++i) {
 			THamuKuri* obj = (THamuKuri*)getObj(i);
 
-			bool bVar1;
-
-			if (obj->unk1A3 != 0
-			    && obj->mSpine->getCurrentNerve()
-			           == &TNerveHamuKuriWallDie::theNerve())
-				bVar1 = true;
-			else
-				bVar1 = false;
-
-			if (bVar1) {
+			if (obj->isSerialWallDie()) {
 				++count;
 				rep = obj;
 			}
@@ -741,7 +723,23 @@ void THamuKuri::bind()
 	}
 }
 
-void THamuKuri::releaseCap() { }
+// UNUSED (0xb4). Both setDeadAnm overrides open with this exact block, so it
+// is the obvious candidate; they paste it rather than call it (see the
+// pasted-UNUSED family in docs/catalog).
+void THamuKuri::releaseCap()
+{
+	if (mHeldObject != nullptr
+	    && mHeldObject->receiveMessage(this, HIT_MESSAGE_PUT)) {
+		TMapObjBase* heldObj = (TMapObjBase*)mHeldObject;
+		heldObj->mHolder     = nullptr;
+		heldObj->offLiveFlag(LIVE_FLAG_HIDDEN);
+		heldObj->mPosition   = mPosition;
+		heldObj->mPosition.y = mGroundHeight;
+		heldObj->offHitFlag(HIT_FLAG_NO_COLLISION);
+		heldObj->makeObjDead();
+		mHeldObject = nullptr;
+	}
+}
 
 void THamuKuri::behaveToWater(THitActor* param_1)
 {
@@ -828,7 +826,16 @@ void THamuKuri::jumpToSearchActor()
 	}
 }
 
-void THamuKuri::canGoForSearchActor() { }
+// UNUSED (0x64), size-exact: the materialised bool that
+// THamuKuriManager::setSearchHamuKuri pastes for every object it scans.
+bool THamuKuri::canGoForSearchActor()
+{
+	if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()
+	    || mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve())
+		return true;
+
+	return false;
+}
 
 void THamuKuri::behaveToFindMario()
 {
@@ -1061,17 +1068,8 @@ void THamuKuri::setWalkAnm() { setBckAnm(4); }
 
 void THamuKuri::setDeadAnm()
 {
-	if (unk198 && mHeldObject != nullptr
-	    && mHeldObject->receiveMessage(this, HIT_MESSAGE_PUT)) {
-		TMapObjBase* heldObj = (TMapObjBase*)mHeldObject;
-		heldObj->mHolder     = nullptr;
-		heldObj->offLiveFlag(LIVE_FLAG_HIDDEN);
-		heldObj->mPosition   = mPosition;
-		heldObj->mPosition.y = mGroundHeight;
-		heldObj->offHitFlag(HIT_FLAG_NO_COLLISION);
-		heldObj->makeObjDead();
-		mHeldObject = nullptr;
-	}
+	if (unk198)
+		releaseCap();
 
 	if (unk184) {
 		onLiveFlag(LIVE_FLAG_UNK20000);
@@ -1095,17 +1093,8 @@ void THamuKuri::setRollAnm() { setBckAnm(7); }
 
 void THamuKuri::setCrashAnm()
 {
-	if (unk198 && mHeldObject != nullptr
-	    && mHeldObject->receiveMessage(this, HIT_MESSAGE_PUT)) {
-		TMapObjBase* heldObj = (TMapObjBase*)mHeldObject;
-		heldObj->mHolder     = nullptr;
-		heldObj->offLiveFlag(LIVE_FLAG_HIDDEN);
-		heldObj->mPosition   = mPosition;
-		heldObj->mPosition.y = mGroundHeight;
-		heldObj->offHitFlag(HIT_FLAG_NO_COLLISION);
-		heldObj->makeObjDead();
-		mHeldObject = nullptr;
-	}
+	if (unk198)
+		releaseCap();
 
 	unk1A4 = 0;
 	setBckAnm(1);
@@ -1263,7 +1252,16 @@ bool THamuKuri::isAttackToHam()
 	return false;
 }
 
-void THamuKuri::isSerialWallDie() { }
+// UNUSED (0x98), size-exact: the materialised bool that
+// THamuKuriManager::checkSerialKill pastes for every object it scans.
+bool THamuKuri::isSerialWallDie()
+{
+	if (unk1A3 != 0
+	    && mSpine->getCurrentNerve() == &TNerveHamuKuriWallDie::theNerve())
+		return true;
+
+	return false;
+}
 
 void THamuKuri::forceRoll(JGeometry::TVec3<f32> param_1, bool param_2)
 {
@@ -1576,17 +1574,8 @@ void THaneHamuKuri::setCrashAnm() { setBckAnm(0); }
 
 void THaneHamuKuri::setDeadAnm()
 {
-	if (unk198 && mHeldObject != nullptr
-	    && mHeldObject->receiveMessage(this, HIT_MESSAGE_PUT)) {
-		TMapObjBase* heldObj = (TMapObjBase*)mHeldObject;
-		heldObj->mHolder     = nullptr;
-		heldObj->offLiveFlag(LIVE_FLAG_HIDDEN);
-		heldObj->mPosition   = mPosition;
-		heldObj->mPosition.y = mGroundHeight;
-		heldObj->offHitFlag(HIT_FLAG_NO_COLLISION);
-		heldObj->makeObjDead();
-		mHeldObject = nullptr;
-	}
+	if (unk198)
+		releaseCap();
 	setBckAnm(1);
 }
 
@@ -1606,7 +1595,16 @@ bool THaneHamuKuri::isHitValid(u32 param_1)
 	return true;
 }
 
-void THaneHamuKuri::resetFlyParam() { }
+// UNUSED (0x1c): exactly the five zero stores THaneHamuKuri::reset makes, in
+// that order (one lfs, five stfs, blr).
+void THaneHamuKuri::resetFlyParam()
+{
+	unk214 = 0.0f;
+	unk210 = 0.0f;
+	unk234 = 0.0f;
+	unk20C = 0.0f;
+	unk21C = 0.0f;
+}
 
 const char** THaneHamuKuri::getBasNameTable() const
 {
@@ -2009,7 +2007,13 @@ void TDangoHamuKuri::forceKill()
 	}
 }
 
-void TDangoHamuKuri::nerveInit() { }
+// UNUSED (0x9c). One theNerve() expansion plus initWith compiles to 0x8c, so
+// four instructions are still missing -- probably one or two member resets
+// before the initWith, but nothing in the TU names them.
+void TDangoHamuKuri::nerveInit()
+{
+	mSpine->initWith(&TNerveDangoHamuKuriWait::theNerve());
+}
 
 void TDangoHamuKuri::behaveToWater(THitActor* param_1)
 {
@@ -2467,14 +2471,6 @@ void TDoroHamuKuri::setBehavior()
 	} else {
 		THamuKuri::setBehavior();
 	}
-}
-
-void TDoroHamuKuri::onHaveCap()
-{
-	unk198                    = 1;
-	TDoroHamuKuriManager* man = (TDoroHamuKuriManager*)getManager();
-	man->unk70                = this;
-	man->unk74->setOwner(this);
 }
 
 bool TDoroHamuKuri::isCollidMove(THitActor* param_1)

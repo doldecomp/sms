@@ -251,14 +251,14 @@ public:
 	void setSearchActor(THitActor*);
 	bool isGiveUpSearchActor();
 	void jumpToSearchActor();
-	void canGoForSearchActor();
+	bool canGoForSearchActor();
 	void changeCapHolder();
 	void selectCapHolder();
 	void makeCapFly(TMapObjBase*);
 	void setWallDeadEffect();
 	void setAppearAnm();
 	bool isAttackToHam();
-	void isSerialWallDie();
+	bool isSerialWallDie();
 	void forceRoll(JGeometry::TVec3<f32>, bool);
 
 	static f32 mCapGravityY;
@@ -486,7 +486,15 @@ public:
 	virtual void attackToMario();
 	virtual void setMActorAndKeeper();
 	virtual bool isCollidMove(THitActor*);
-	virtual void onHaveCap();
+
+	// Weak in the map, so it was defined in the class.
+	virtual void onHaveCap()
+	{
+		unk198                    = 1;
+		TDoroHamuKuriManager* man = (TDoroHamuKuriManager*)getManager();
+		man->unk70                = this;
+		man->unk74->setOwner(this);
+	}
 };
 
 // ============= nerves =============
