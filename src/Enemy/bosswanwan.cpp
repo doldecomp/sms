@@ -52,7 +52,6 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 	if (actorType == 0x80000001) {
 		return false;
 	} else if (actorType == 0x1000001) {
-		// fabricated
 		if (!this->msInvincible) {
 			gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
 			                             &sender->mPosition, 0, 0);
@@ -139,15 +138,42 @@ void TBossWanwan::shakeCamera(int shakeType)
 		power = 1.0f;
 	}
 
-	power *= ratio;
-
-	gpCameraShake->startShake((EnumCamShakeMode)shakeType, power);
+	gpCameraShake->startShake((EnumCamShakeMode)shakeType, power * ratio);
 	SMSRumbleMgr->start(8, &this->mPosition);
 }
 
 TSpineEnemy* TBossWanwanManager::createEnemyInstance()
 {
-	return new TBossWanwan();
+	return new TBossWanwan;
 }
 
 void TBossWanwanManager::createModelData() { }
+
+void TBWLeashNode::calcTemperature()
+{
+	if (mIndex == 0) {
+		return;
+	}
+
+	f32 delta = mLeash->mNodes[mIndex - 1]->mTemperature - mTemperature;
+	f32 step;
+	if (delta >= 0.0) {
+		step = 0.005f;
+		if (delta > 0.1) {
+			step = 0.02f;
+		}
+	} else {
+		step = -0.005f;
+		if (delta < -0.1) {
+			step = -0.02f;
+		}
+	}
+
+	this->unk0 += step;
+
+	if (this->unk0 < 0.0f) {
+		this->unk0 = 0.0f;
+	} else if (this->unk0 > 1.0f) {
+		this->unk0 = 1.0f;
+	}
+}
