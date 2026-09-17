@@ -14,6 +14,7 @@
 #include <Player/MarioAccess.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <Camera/CameraShake.hpp>
+#include <Camera/CubeManagerBase.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/ShadowUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
@@ -1857,27 +1858,20 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 		if (gpMarDirector->mMap == 3 || gpMarDirector->mMap == 59) {
 			MSBgm::startBGM(MSD_BGM_CHUBOSS_MANTA);
 
-			// TODO: retail restores the cube BGM volume here, which needs two
-			// declarations this unit may not add to
-			// System/MSoundMainSide.hpp (not its header):
-			//     static MSStageCubeFade* smInstance;
-			//     static void setBgmVolumeForce();
-			// (mangled smInstance__15MSStageCubeFade and
-			// setBgmVolumeForce__15MSStageCubeFadeFv in the map). With them
-			// declared, this block takes the nerve 87.3% -> 96.1% and is the
-			// only user of the unit's missing `@5198` (75.0f):
-			//
-			//   if (gpCubeSoundChange != nullptr) {
-			//       TVec3<f32> earPos = SMS_GetMarioPos();
-			//       earPos.y += 75.0f;
-			//       if (gpCubeSoundChange->getInCubeNo(earPos) == -1) {
-			//           MSBgm::setTrackVolume(1, 0.0f, 0, 0);
-			//           return true;
-			//       }
-			//   }
-			//   if (gpMarDirector->mMap == 59
-			//       && MSStageCubeFade::smInstance != nullptr)
-			//       MSStageCubeFade::setBgmVolumeForce();
+			// Mario's ear is 75 units above his feet: outside every sound
+			// cube the boss theme plays on a muted track, and inside one the
+			// Sirena hotel (map 59) hands the volume back to the cube fader.
+			if (gpCubeSoundChange != nullptr) {
+				JGeometry::TVec3<f32> earPos = SMS_GetMarioPos();
+				earPos.y += 75.0f;
+				if (gpCubeSoundChange->getInCubeNo(earPos) == -1) {
+					MSBgm::setTrackVolume(1, 0.0f, 0, 0);
+					return true;
+				}
+			}
+			if (gpMarDirector->mMap == 59
+			    && MSStageCubeFade::smInstance != nullptr)
+				MSStageCubeFade::setBgmVolumeForce();
 		}
 
 		return true;

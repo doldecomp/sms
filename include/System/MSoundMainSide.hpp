@@ -44,6 +44,10 @@ public:
 
 	f32 calcParamRatioInCube(s32);
 
+	static void setBgmVolumeForce();
+
+	static MSStageCubeFade* smInstance;
+
 public:
 	/* 0x4 */ int unk4;
 	/* 0x8 */ int unk8;
