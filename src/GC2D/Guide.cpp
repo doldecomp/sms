@@ -49,10 +49,8 @@ TGuide::TGuide(const char* name)
     , unkC5(0)
     , mMapAlpha(0xFF)
     , mCursorBlinkUp(1)
+    , mSelectedPoint(-1)
 {
-	mMapRect.set(0, 0, 0, 0);
-	mSelectedPoint = -1;
-	unk48C.set(0, 0, 0, 0);
 }
 
 void TGuide::load(JSUMemoryInputStream& stream)
@@ -286,9 +284,8 @@ void TGuide::resetScore()
 		if (i <= 1)
 			continue;
 
-		TStageScore& score = mScores[i];
 		for (int j = 0; j < 8; ++j) {
-			if (j < score.mShineNum)
+			if (j < mScores[i].mShineNum)
 				mScreen->search((i << 24) + '0ss1' + j)->mVisible = true;
 			else
 				mScreen->search((i << 24) + '0ss1' + j)->mVisible = false;
@@ -298,28 +295,27 @@ void TGuide::resetScore()
 		etc1->mVisible    = false;
 		J2DPane* etc2     = mScreen->search((i << 24) + '0sq2');
 		etc2->mVisible    = false;
-		if (score.mEtcShineNum != 0)
+		if (mScores[i].mEtcShineNum != 0)
 			etc1->mVisible = true;
-		if (score.mEtcShineNum > 1)
+		if (mScores[i].mEtcShineNum > 1)
 			etc2->mVisible = true;
 
-		etcTotal += score.mEtcShineNum;
-		total += score.mShineNum;
+		etcTotal += mScores[i].mEtcShineNum;
+		total += mScores[i].mShineNum;
 	}
 
+	total += etcTotal;
 	if ((u8)etcTotal == 0)
 		mScreen->search('lqus')->mVisible = false;
 	else
 		mScreen->search('lqus')->mVisible = true;
-	total += etcTotal;
 
 	for (int i = 1; i < 10; ++i) {
 		mMarkerPanes[i] = mScreen->search('mi00' + i);
 		if (i == 9)
 			continue;
 
-		TStageScore& score = mScores[i];
-		u16 coins          = score.mCoinNum;
+		u16 coins = mScores[i].mCoinNum;
 		if (coins > 999)
 			coins = 999;
 
@@ -341,7 +337,7 @@ void TGuide::resetScore()
 			digit1->changeTexture(mNumberTextures[rest % 10]->mTexInfo, 0);
 		}
 
-		if (score.mHasFirstEtcShine) {
+		if (mScores[i].mHasFirstEtcShine) {
 			mScreen->search((i << 24) + '0c_s')->mVisible = true;
 			total++;
 		} else {
@@ -521,7 +517,7 @@ void TGuide::linkSelect()
 	rotatePattern(mBirdPane2, mTimer, 90, -45);
 
 	shinePattern(mShineBoundPane, mTimer, 90);
-	if (mTimer % 180 < 130)
+	if (mTimer % 180u < 130)
 		mClickPane->mAlpha = 255;
 	else
 		mClickPane->mAlpha = 0;
@@ -558,8 +554,9 @@ void TGuide::linkSelect()
 // UNUSED; inlined into linkSelect for all nine decorative panes.
 void TGuide::changePattern(J2DPicture* pane, s16 timer, u32 period)
 {
-	if (timer % period == 0) {
-		if ((timer / period) % 2 == 0) {
+	u16 t = timer;
+	if (t % period == 0) {
+		if ((t / period) % 2 == 0) {
 			pane->setBlendKonstColor(0.0f, 1.0f, 0.0f, 0.0f);
 			pane->setBlendKonstAlpha(0.0f, 1.0f, 0.0f, 0.0f);
 		} else {
@@ -572,8 +569,9 @@ void TGuide::changePattern(J2DPicture* pane, s16 timer, u32 period)
 // UNUSED
 void TGuide::mirrorPattern(J2DPicture* pane, s16 timer, u32 period)
 {
-	if (timer % period == 0) {
-		if ((timer / period) % 2 == 0)
+	u16 t = timer;
+	if (t % period == 0) {
+		if ((t / period) % 2 == 0)
 			pane->mMirror = MIRROR0;
 		else
 			pane->mMirror = J2DMirror_X;
@@ -583,8 +581,9 @@ void TGuide::mirrorPattern(J2DPicture* pane, s16 timer, u32 period)
 // UNUSED
 void TGuide::rotatePattern(J2DPicture* pane, s16 timer, u32 period, s16 angle)
 {
-	if (timer % period == 0) {
-		if ((timer / period) % 2 == 0)
+	u16 t = timer;
+	if (t % period == 0) {
+		if ((t / period) % 2 == 0)
 			pane->mRotation = 0.0f;
 		else
 			pane->mRotation = angle;
@@ -594,10 +593,11 @@ void TGuide::rotatePattern(J2DPicture* pane, s16 timer, u32 period, s16 angle)
 // UNUSED
 void TGuide::shinePattern(TBoundPane* pane, s16 timer, u32 period)
 {
-	if (timer % period == 0)
+	u16 t = timer;
+	if (t % period == 0)
 		pane->setPanePosition(45, JUTPoint(0, 0), JUTPoint(0, -5),
 		                      JUTPoint(0, 0));
-	else if (timer % period == 45)
+	else if (t % period == 45)
 		pane->setPanePosition(45, JUTPoint(0, 0), JUTPoint(0, 5),
 		                      JUTPoint(0, 0));
 }
@@ -605,8 +605,9 @@ void TGuide::shinePattern(TBoundPane* pane, s16 timer, u32 period)
 // UNUSED
 void TGuide::mmarkPattern(TExPane* pane, s16 timer, u32 period)
 {
-	if (timer % period == 0) {
-		if ((timer / period) % 2 == 0)
+	u16 t = timer;
+	if (t % period == 0) {
+		if ((t / period) % 2 == 0)
 			pane->setPaneAlpha(period, 0, mMarkAlpha);
 		else
 			pane->setPaneAlpha(period, mMarkAlpha, 0);
@@ -797,9 +798,9 @@ void TGuide::placeMario()
 	JGeometry::TVec3<f32> pos = *gpMarioPos;
 	int mapWidth              = mMapRect.x2 - mMapRect.x1;
 	int mapHeight             = mMapRect.y2 - mMapRect.y1;
-	pos.x                     = pos.x * (f32)mapWidth / 21200.0f;
+	pos.x                     = pos.x * (f32)mapWidth / 25000.0f;
 	pos.y                     = 0.0f;
-	pos.z                     = pos.z * (f32)mapHeight / 25000.0f;
+	pos.z                     = pos.z * (f32)mapHeight / 21200.0f;
 
 	J2DPane* marker = mMarioMarker;
 	int paneWidth   = marker->mBounds.x2 - marker->mBounds.x1;
@@ -836,8 +837,8 @@ void TGuide::appearGuidePane(int stage)
 	JUTRect bounds = mStagePanes[stage]->mBounds;
 
 	mOpenPanelA->getPane()->mVisible = true;
-	int width                        = rect.x2 - rect.x1;
 	int height                       = rect.y2 - rect.y1;
+	int width                        = rect.x2 - rect.x1;
 	mOpenPanelA->setCenteredSize(20, width, height, 0, 0);
 	// TODO: rect.x1 twice really is what retail subtracts; the y term looks
 	// like a copy-paste slip in the original.
@@ -871,8 +872,8 @@ void TGuide::disappearGuidePane(int stage)
 	JUTRect rect   = mPanelRects[stage];
 	JUTRect bounds = mStagePanes[stage]->mBounds;
 
-	int width  = rect.x2 - rect.x1;
 	int height = rect.y2 - rect.y1;
+	int width  = rect.x2 - rect.x1;
 	mOpenPanelA->setCenteredSize(20, 0, 0, width, height);
 	mOpenPanelA->setPaneOffset(20, bounds.x1 - rect.x1,
 	                           bounds.y1 - rect.x1 - 40, 0, 0);
@@ -885,22 +886,23 @@ void TGuide::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (setup_wait != 0) {
 		setup_wait--;
-		if (setup_wait != 0)
+		if (setup_wait == 0) {
+			SMSSwitch2DArchive("game_6", gArBkGuide);
+			unkC4         = 0;
+			s16 stage     = SMS_getShineStage(gpMarDirector->mMap);
+			mCurrentStage = stage;
+			resetObjects();
+			changeBotStatus(stage);
+			for (int i = 0; i < 10; ++i) {
+				if (i == stage)
+					mMarkerPanes[i]->mVisible = true;
+				else
+					mMarkerPanes[i]->mVisible = false;
+			}
+			mCursorBlinkUp = 0;
+		} else {
 			return;
-
-		SMSSwitch2DArchive("game_6", gArBkGuide);
-		unkC4      = 0;
-		s16 stage  = SMS_getShineStage(gpMarDirector->mMap);
-		mCurrentStage = stage;
-		resetObjects();
-		changeBotStatus(stage);
-		for (int i = 0; i < 10; ++i) {
-			if (i == stage)
-				mMarkerPanes[i]->mVisible = true;
-			else
-				mMarkerPanes[i]->mVisible = false;
 		}
-		mCursorBlinkUp = 0;
 	}
 
 	if (cue & CUE_DRAW) {
@@ -914,10 +916,7 @@ void TGuide::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (!(cue & CUE_MOVE))
 		return;
 
-	bool done = true;
-	if (mState > 11)
-		return;
-
+	u8 done = 1;
 	switch (mState) {
 	case STATE_MOVE_CURSOR:
 		if (unkC5 && gpApplication.mFader->isFullyFadedOut()) {
