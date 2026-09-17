@@ -907,6 +907,10 @@ void THamuKuri::setBehavior()
 	}
 }
 
+// TODO: UNUSED (0x1b4 = 109 instructions), still a stub. It takes no
+// arguments, so it cannot be the cap-hop block that makeCapFly and
+// TDoroHamuKuri::isCollidMove share (those are parameterised on the other
+// actor); the only other cap bookkeeping in the TU is selectCapHolder.
 void THamuKuri::changeCapHolder() { }
 
 void THamuKuri::selectCapHolder()
@@ -1712,17 +1716,8 @@ void TDoroHaneKuri::behaveToWater(THitActor*)
 
 void TDoroHaneKuri::setBehavior()
 {
-	if (mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve()
-	    && mHeldObject && mHeldObject->receiveMessage(this, HIT_MESSAGE_PUT)) {
-		TMapObjBase* held = (TMapObjBase*)mHeldObject;
-		held->mHolder     = nullptr;
-		held->offLiveFlag(LIVE_FLAG_HIDDEN);
-		held->mPosition   = mPosition;
-		held->mPosition.y = mGroundHeight;
-		held->offHitFlag(HIT_FLAG_NO_COLLISION);
-		held->makeObjDead();
-		mHeldObject = nullptr;
-	}
+	if (mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve())
+		releaseCap();
 }
 
 bool TDoroHaneKuri::isCollidMove(THitActor* param_1)
@@ -2401,6 +2396,9 @@ bool TFireHamuKuri::isHitValid(u32 param_1)
 }
 
 // TODO: this is the wrong inline, size doesn't match at all!
+// TODO: UNUSED (0x88) but ours is 0xa8. The inlined copy inside
+// changeTevColor is instruction-exact, so the shape is right at the call site;
+// the standalone copy is eight instructions over, probably the `result` local.
 bool TFireHamuKuri::recoverFire()
 {
 	bool result = false;
@@ -2422,6 +2420,10 @@ bool TFireHamuKuri::recoverFire()
 
 void TFireHamuKuri::setWalkAnm() { setBckAnm(14); }
 
+// TODO: UNUSED (0x24 = 9 instructions), still a stub. Nine instructions is a
+// frame plus a single non-virtual call with one argument; the flag block that
+// TFireHamuKuri::reset and TNerveFireHamuKuriRecover share is already 10
+// instructions on its own, so it is not that.
 void TFireHamuKuri::genFire() { }
 
 // UNUSED (0xe8): the fire going out, as TFireHamuKuri::behaveToWater performs
@@ -2514,11 +2516,11 @@ void TDoroHamuKuri::attackToMario()
 void TDoroHamuKuri::setBehavior()
 {
 	TDoroHamuKuriManager* man = (TDoroHamuKuriManager*)getManager();
-	if (!unk198 && man->unk70) {
+	if (!unk198 && man->getUnk70()) {
 		if (mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()
 		    && !isAirborne()) {
 			mSpine->pushNerve(&TNerveDoroHamuKuriRobCap::theNerve());
-			unk1F8 = man->unk70;
+			unk1F8 = man->getUnk70();
 		}
 	} else {
 		THamuKuri::setBehavior();
@@ -2754,6 +2756,11 @@ DEFINE_NERVE(TNerveDangoHamuKuriWait, TLiveActor)
 	return false;
 }
 
+// TODO: UNUSED (0xb4), still a stub, and the nerve is dead (its vtable is
+// UNUSED too). 0xb4 is exactly the size of TNerveDangoHamuKuriWait::execute,
+// so the body is very likely that shape with a different animation setter --
+// but setWaitAnm, setRunAnm and setRollAnm all compile to the same size, so
+// nothing here discriminates.
 DEFINE_NERVE(TNerveDangoHamuKuriAttack, TLiveActor) { }
 
 DEFINE_NERVE(TNerveHaneHamuKuriUpWait, TLiveActor)
