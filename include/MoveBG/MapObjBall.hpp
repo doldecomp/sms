@@ -16,7 +16,7 @@ public:
 	virtual void touchActor(THitActor*);
 	virtual u32 touchWater(THitActor*);
 	virtual void makeObjDefault();
-	virtual void getDepthAtFloating() { }
+	virtual f32 getDepthAtFloating() { return mDepthAtFloating; }
 	virtual void hold(TTakeActor*);
 	virtual void put();
 	virtual void touchGround(JGeometry::TVec3<f32>*);
@@ -50,7 +50,8 @@ public:
 	/* 0x180 */ f32 unk180;
 	/* 0x184 */ f32 unk184;
 	/* 0x188 */ f32 unk188;
-	/* 0x18C */ f32 unk18C;
+	/// How deep the ball sits when floating on water.
+	/* 0x18C */ f32 mDepthAtFloating;
 	/* 0x190 */ f32 unk190;
 	/* 0x194 */ int unk194;
 };

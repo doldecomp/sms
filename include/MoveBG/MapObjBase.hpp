@@ -183,7 +183,7 @@ public:
 	virtual void touchBoss(THitActor*);
 	virtual void makeObjDefault();
 	virtual u16 getHitObjNumMax();
-	virtual void getDepthAtFloating();
+	virtual f32 getDepthAtFloating() { return 0.0f; }
 
 	void initAndRegister(const char*);
 	void moveByBck();

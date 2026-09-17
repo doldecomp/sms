@@ -398,7 +398,7 @@ void TMapObjBall::initMapObj()
 		unk184 = 1.5f;
 		unk188 = 1.5f;
 		mBodyRadius = 50.0f * mScaling.y;
-		unk18C      = mBodyRadius / 3.0f;
+		mDepthAtFloating      = mBodyRadius / 3.0f;
 		break;
 
 	case 0x40000064:
@@ -420,7 +420,7 @@ void TMapObjBall::initMapObj()
 		unk184 = 1.0f;
 		unk188 = 1.5f;
 		mBodyRadius = 50.0f * mScaling.y;
-		unk18C      = mBodyRadius / 3.0f;
+		mDepthAtFloating      = mBodyRadius / 3.0f;
 		break;
 
 	case 0x40000390:
@@ -444,7 +444,7 @@ void TMapObjBall::initMapObj()
 		unk184 = 1.0f;
 		unk188 = 1.5f;
 		mBodyRadius = 50.0f * mScaling.y;
-		unk18C      = 50.0f;
+		mDepthAtFloating      = 50.0f;
 		break;
 
 	case 0x40000393:
@@ -466,7 +466,7 @@ void TMapObjBall::initMapObj()
 		unk184 = 1.0f;
 		unk188 = 1.5f;
 		mBodyRadius = 50.0f * mScaling.y;
-		unk18C      = 50.0f;
+		mDepthAtFloating      = 50.0f;
 		break;
 
 	case 0x40000394:
@@ -488,7 +488,7 @@ void TMapObjBall::initMapObj()
 		unk184 = 1.0f;
 		unk188 = 1.5f;
 		mBodyRadius = 50.0f * mScaling.y;
-		unk18C      = 50.0f;
+		mDepthAtFloating      = 50.0f;
 		break;
 
 	case 0x40000395:
@@ -510,7 +510,7 @@ void TMapObjBall::initMapObj()
 		unk184 = 1.0f;
 		unk188 = 1.5f;
 		mBodyRadius = 50.0f * mScaling.y;
-		unk18C      = 50.0f;
+		mDepthAtFloating      = 50.0f;
 		break;
 
 	}
@@ -552,7 +552,7 @@ TMapObjBall::TMapObjBall(const char* name)
 	unk180 = 0.0f;
 	unk184 = 0.0f;
 	unk188 = 0.0f;
-	unk18C = 0.0f;
+	mDepthAtFloating = 0.0f;
 	unk190 = 0.0f;
 	unk194 = 0;
 
