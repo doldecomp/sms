@@ -909,72 +909,73 @@ static inline void updateCoinCounterAnimation(TGCConsole2* console)
 // fabricated
 static inline void updateJetCounterAnimation(TGCConsole2* console)
 {
-	int flag   = -1;
-	bool blend = false;
-
+	// The two rows are spelled out separately in the ROM rather than sharing a
+	// "blend" flag: the nozzle row cross-fades between the old and the new
+	// digit, the rocket row just swaps the texture.
 	if (console->unk404 == console->unk408) {
-		flag  = 0x60001;
-		blend = true;
-	} else if (console->unk404 == console->unk40C) {
-		flag = 0x60002;
-	}
+		int target = TFlagManager::smInstance->getFlag(0x60001);
+		if (target > 99)
+			target = 99;
+		if (target < (int)console->unk2C)
+			return;
 
-	if (flag < 0)
-		return;
+		u8 done = console->unk414[0]->update();
+		done    = done & console->unk414[1]->update();
+		if (!done)
+			return;
 
-	int target = TFlagManager::smInstance->getFlag(flag);
-	if (target > 99)
-		target = 99;
-
-	if (blend && target < (int)console->unk2C)
-		return;
-
-	bool done = console->unk414[0]->update();
-	done      = console->unk414[1]->update() && done;
-	if (!done)
-		return;
-
-	if (console->unk2C > 99)
-		console->unk2C = 99;
-
-	if (blend) {
+		if ((int)console->unk2C > 99)
+			console->unk2C = 99;
 		if ((int)console->unk2C == target)
 			return;
-	} else {
+		++console->unk2C;
+
+		if ((int)console->unk2C >= 10) {
+			if (!console->unk414[0]->getPane()->isVisible())
+				console->unk414[0]->getPane()->show();
+
+			int tens = console->unk2C / 10;
+			console->unk414[0]->setPaneBlend(12, console->unkE0[tens],
+			                                 console->unkE0[tens - 1]);
+		} else {
+			if (console->unk414[0]->getPane()->isVisible())
+				console->unk414[0]->getPane()->hide();
+		}
+
+		int ones = console->unk2C % 10;
+		console->unk414[1]->setPaneBlend(12, console->unkE0[ones],
+		                                 console->unkE0[ones - 1]);
+	} else if (console->unk404 == console->unk40C) {
+		int target = TFlagManager::smInstance->getFlag(0x60002);
+
+		u8 done = 1;
+		done    = done & console->unk414[0]->update();
+		done    = done & console->unk414[1]->update();
+		if (!done)
+			return;
+
+		if (target > 99)
+			target = 99;
 		if (target < 0)
 			target = 0;
 		if ((int)console->unk2C >= target)
 			return;
+		++console->unk2C;
+
+		if ((int)console->unk2C >= 10) {
+			if (!console->unk414[0]->getPane()->isVisible())
+				console->unk414[0]->getPane()->show();
+
+			if (console->unk2C % 10 == 0)
+				setDigitPane(console->unk414[0], console->unkE0,
+				             console->unk2C / 10);
+		} else {
+			if (console->unk414[0]->getPane()->isVisible())
+				console->unk414[0]->getPane()->hide();
+		}
+
+		setDigitPane(console->unk414[1], console->unkE0, console->unk2C % 10);
 	}
-
-	++console->unk2C;
-
-	int value = (int)console->unk2C;
-	if (value < 0)
-		value = 0;
-	if (value > 99)
-		value = 99;
-
-	if (value >= 10) {
-		console->unk414[0]->getPane()->show();
-		int tens = value / 10;
-		if (blend)
-			((TBlendPane*)console->unk414[0])
-			    ->setPaneBlend(12, console->unkE0[tens],
-			                   console->unkE0[(tens + 9) % 10]);
-		else if (value % 10 == 0)
-			setDigitPane(console->unk414[0], console->unkE0, tens);
-	} else {
-		console->unk414[0]->getPane()->hide();
-	}
-
-	int ones = value % 10;
-	if (blend)
-		((TBlendPane*)console->unk414[1])
-		    ->setPaneBlend(12, console->unkE0[ones],
-		                   console->unkE0[(ones + 9) % 10]);
-	else
-		setDigitPane(console->unk414[1], console->unkE0, ones);
 }
 
 // fabricated
