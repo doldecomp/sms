@@ -885,15 +885,16 @@ BOOL TMario::isAnimeLoopOrStop()
 	return FALSE;
 }
 
-// Fabricated - Probably somewhere else
-void flagOnAllShapes(J3DModelData* modelData, u32 flag)
+// Fabricated - Probably somewhere else; absent from the whole map, so it was
+// inlined into every caller: `static` keeps our object from emitting a copy.
+static inline void flagOnAllShapes(J3DModelData* modelData, u32 flag)
 {
 	for (u16 i = 0; i < modelData->getShapeNum(); ++i)
 		modelData->getShapeNodePointer(i)->onFlag(flag);
 }
 
 // Fabricated - Probably somewhere else
-void flagOffAllShapes(J3DModelData* modelData, u32 flag)
+static inline void flagOffAllShapes(J3DModelData* modelData, u32 flag)
 {
 	for (u16 i = 0; i < modelData->getShapeNum(); ++i) {
 		modelData->getShapeNodePointer(i)->offFlag(flag);
@@ -1088,20 +1089,20 @@ f32 TMario::setReverseAnimation(int anm_id, f32 rate)
 	return getCurrentFrame(0);
 }
 
+void TMario::loadAnm(J3DAnmTransform** param_1, const char* param_2)
+{
+	void* data = JKRFileLoader::getGlbResource(param_2);
+	if (data != nullptr) {
+		*param_1 = (J3DAnmTransform*)J3DAnmLoaderDataBase::load(data);
+	}
+}
+
 void TMario::loadBas(void** param_1, const char* param_2)
 {
 	if (param_2 != nullptr) {
 		*param_1 = JKRFileLoader::getGlbResource(param_2);
 	} else {
 		*param_1 = nullptr;
-	}
-}
-
-void TMario::loadAnm(J3DAnmTransform** param_1, const char* param_2)
-{
-	void* data = JKRFileLoader::getGlbResource(param_2);
-	if (data != nullptr) {
-		*param_1 = (J3DAnmTransform*)J3DAnmLoaderDataBase::load(data);
 	}
 }
 
